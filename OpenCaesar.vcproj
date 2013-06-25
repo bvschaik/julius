@@ -175,6 +175,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\UI\Advisor_Entertainment.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\UI\Advisor_Health.cpp"
 				>
 			</File>

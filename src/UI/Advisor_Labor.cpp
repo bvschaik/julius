@@ -1,4 +1,13 @@
 #include "Advisors_private.h"
+#include "../Data/Mouse.h"
+
+static void arrowButtonWages(int param1, int param2);
+
+
+static ArrowButton wageButtons[2] = {
+	{158, 354, 17, 24, arrowButtonWages, 1, 0},
+	{182, 354, 15, 24, arrowButtonWages, 0, 0}
+};
 
 void UI_Advisor_Labor_drawBackground()
 {
@@ -54,4 +63,77 @@ void UI_Advisor_Labor_drawBackground()
 	width += Widget_Text_drawNumber(Data_CityInfo.estimatedYearlyWages, '@', " Dn",
 		baseOffsetX + 64 + width, baseOffsetY + 390, Font_NormalBlack, 0
 	);
+}
+
+void UI_Advisor_Labor_drawForeground()
+{
+	int baseOffsetX = Data_Screen.offset640x480.x;
+	int baseOffsetY = Data_Screen.offset640x480.y;
+
+	Widget_Button_drawArrowButtons(
+		baseOffsetX, baseOffsetY, wageButtons, 2);
+
+	Widget_Panel_drawInnerPanel(baseOffsetX + 32, baseOffsetY + 70, 36, 15);
+
+	for (int i = 0; i < 9; i++) {
+		int focus = i == Data_Mouse.focusButtonId;
+		Widget_Panel_drawButtonBorder(
+			baseOffsetX + 40, baseOffsetY + 77 + 25 * i,
+			560, 22, focus
+		);
+		if (0) {
+			Graphics_drawImage(GraphicId(ID_Graphic_LaborPriorityLock),
+				baseOffsetX + 70, baseOffsetY + 80 + 25 * i);
+			//Widget_Text_drawNumber();
+		}
+		int width = Widget_GameText_draw(50, i + 1,
+			baseOffsetX + 170, baseOffsetY + 82 + 25 * i, Font_NormalWhite, 0);
+
+	}
+/*
+    for ( i = 0; i < 9; ++i )
+    {
+      focus = i == mouseover_button_id - 1;
+      j_fun_drawBorderedButton(0, dialog_x + 40, dialog_y + 25 * i + 77, 560, 22, focus);
+      if ( *(int *)((char *)&cityinfo_labor_category_priority[4517 * ciid] + 20 * i) )
+      {
+        j_fun_drawGraphic(graphic_laborPriorityLock, dialog_x + 70, dialog_y + 25 * i + 80);
+        j_fun_drawNumber(
+          *(int *)((char *)&cityinfo_labor_category_priority[4517 * ciid] + 20 * i),
+          64,
+          L" ",
+          dialog_x + 90,
+          dialog_y + 25 * i + 82,
+          graphic_font + F_NormalWhite,
+          0);
+      }
+      text_xoffset = 0;
+      j_fun_drawGameText(50, i + 1, dialog_x + 170, dialog_y + 25 * i + 82, graphic_font + F_NormalWhite, 0);
+      j_fun_drawNumber(
+        *(int *)((char *)&cityinfo_labor_category_numWorkersNeeded[4517 * ciid] + 20 * i),
+        64,
+        L" ",
+        dialog_x + 410,
+        dialog_y + 25 * i + 82,
+        graphic_font + F_NormalWhite,
+        0);
+      font = graphic_font + F_NormalWhite;
+      if ( *(int *)((char *)&cityinfo_labor_category_workersAllocated[4517 * ciid] + 20 * i) != *(int *)((char *)&cityinfo_labor_category_numWorkersNeeded[4517 * ciid] + 20 * i) )
+        font = graphic_font + F_NormalRed;
+      j_fun_drawNumber(
+        *(int *)((char *)&cityinfo_labor_category_workersAllocated[4517 * ciid] + 20 * i),
+        64,
+        L" ",
+        dialog_x + 510,
+        dialog_y + 25 * i + 82,
+        font,
+        0);
+    }
+*/
+}
+
+
+static void arrowButtonWages(int param1, int param2)
+{
+	// TODO
 }

@@ -63,7 +63,6 @@ void UI_Advisor_Religion_drawBackground()
 		baseOffsetX + 460, baseOffsetY + 66, Font_NormalWhite, 0
 	);
 	for (int i = 0; i < Data_CityInfo.godWrathCeres / 10; i++) {
-		// TODO width += ?
 		Graphics_drawImage(graphicIdBolt,
 			10 * i + baseOffsetX + width + 460, baseOffsetY + 62
 		);
@@ -88,7 +87,6 @@ void UI_Advisor_Religion_drawBackground()
 		baseOffsetX + 460, baseOffsetY + 86, Font_NormalWhite, 0
 	);
 	for (int i = 0; i < Data_CityInfo.godWrathNeptune / 10; i++) {
-		// TODO width += ?
 		Graphics_drawImage(graphicIdBolt,
 			10 * i + baseOffsetX + width + 460, baseOffsetY + 82
 		);
@@ -113,7 +111,6 @@ void UI_Advisor_Religion_drawBackground()
 		baseOffsetX + 460, baseOffsetY + 106, Font_NormalWhite, 0
 	);
 	for (int i = 0; i < Data_CityInfo.godWrathMercury / 10; i++) {
-		// TODO width += ?
 		Graphics_drawImage(graphicIdBolt,
 			10 * i + baseOffsetX + width + 460, baseOffsetY + 102
 		);
@@ -138,7 +135,6 @@ void UI_Advisor_Religion_drawBackground()
 		baseOffsetX + 460, baseOffsetY + 126, Font_NormalWhite, 0
 	);
 	for (int i = 0; i < Data_CityInfo.godWrathMars / 10; i++) {
-		// TODO width += ?
 		Graphics_drawImage(graphicIdBolt,
 			10 * i + baseOffsetX + width + 460, baseOffsetY + 122
 		);
@@ -163,11 +159,17 @@ void UI_Advisor_Religion_drawBackground()
 		baseOffsetX + 460, baseOffsetY + 146, Font_NormalWhite, 0
 	);
 	for (int i = 0; i < Data_CityInfo.godWrathVenus / 10; i++) {
-		// TODO width += ?
 		Graphics_drawImage(graphicIdBolt,
 			10 * i + baseOffsetX + width + 460, baseOffsetY + 142
 		);
 	}
+
+	// oracles
+	Widget_GameText_draw(59, 8, baseOffsetX + 40, baseOffsetY + 166, Font_NormalWhite, 0);
+	Widget_Text_drawNumberCentered(
+		Data_CityInfo_Buildings.oracle.total, '@', " ",
+		baseOffsetX + 230, baseOffsetY + 166, 50, Font_NormalWhite, 0
+	);
 	
 	CityInfoUpdater_Gods_calculateLeastHappy();
 

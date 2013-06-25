@@ -7,6 +7,7 @@ enum {
 	ID_Graphic_Font = 16,
 	ID_Graphic_HouseTent = 18,
 	ID_Graphic_HouseShack = 19,
+	ID_Graphic_LaborPriorityLock = 94,
 	ID_Graphic_PanelWindows = 95,
 	ID_Graphic_AdvisorIcons = 128,
 	ID_Graphic_DialogBackground = 132,

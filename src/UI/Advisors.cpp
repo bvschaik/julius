@@ -4,23 +4,7 @@
 static void drawGeneralBackground();
 static void buttonChangeAdvisor(int param1, int param2);
 
-enum {
-	Advisor_None = 0,
-	Advisor_Labor = 1,
-	Advisor_Military = 2,
-	Advisor_Imperial = 3,
-	Advisor_Ratings = 4,
-	Advisor_Trade = 5,
-	Advisor_Population = 6,
-	Advisor_Health = 7,
-	Advisor_Education = 8,
-	Advisor_Entertainment = 9,
-	Advisor_Religion = 10,
-	Advisor_Financial = 11,
-	Advisor_Chief = 12
-};
-
-CustomButton advisorButtons[13] = {
+static CustomButton advisorButtons[13] = {
 	{ 12, 1, 52, 41, buttonChangeAdvisor, Widget_Button_doNothing, 1, 1, 0},
 	{ 60, 1, 100, 41, buttonChangeAdvisor, Widget_Button_doNothing, 1, 2, 0},
 	{ 108, 1, 148, 41, buttonChangeAdvisor, Widget_Button_doNothing, 1, 3, 0},
@@ -71,7 +55,7 @@ void UI_Advisors_drawBackground()
 			UI_Advisor_Education_drawBackground();
 			break;
 		case Advisor_Entertainment:
-			// TODO UI_Advisor_Entertainment_drawBackground();
+			UI_Advisor_Entertainment_drawBackground();
 			break;
 		case Advisor_Religion:
 			UI_Advisor_Religion_drawBackground();
@@ -96,7 +80,7 @@ void UI_Advisors_drawForeground()
 	*/
 	switch (currentAdvisor) {
 		case Advisor_Labor:
-			// TODO j_fun_drawArrowButtonCollection(dialog_x, dialog_y, &arrowbuttons_laborAdvisor, 2);j_fun_drawLaborAdvisorCategories();
+			UI_Advisor_Labor_drawForeground();
 			break;
 		case Advisor_Military:
 			// TODO j_fun_drawMilitaryAdvisorButtons();
