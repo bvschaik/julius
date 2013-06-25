@@ -9,6 +9,7 @@
 #include "../src/UI/Window.h"
 #include "../src/Data/Screen.h"
 #include "../src/Data/Mouse.h"
+#include "../src/Data/CityInfo.h"
 #include "../src/Loader.h"
 #include "../src/Language.h"
 #include "../src/Graphics.h"
@@ -208,6 +209,7 @@ int main()
 	printf("Load language: %d\n", Language_load("c3.eng", 0));
 	UI_Window_goTo(Window_MainMenu);
 	
+	Data_CityInfo.godWrathMercury = 40;
 	// end C3 setup
 	
 	mainLoop(surface);

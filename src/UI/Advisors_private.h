@@ -9,8 +9,13 @@
 #include "../Data/Constants.h"
 #include "../Data/Graphics.h"
 
+void UI_Advisor_Labor_drawBackground();
+
 void UI_Advisor_Health_drawBackground();
 
 void UI_Advisor_Education_drawBackground();
+
+void UI_Advisor_Religion_drawBackground();
+
 
 #endif

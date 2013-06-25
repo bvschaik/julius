@@ -1,6 +1,8 @@
 #include "Advisors_private.h"
+#include "Window.h"
 
 static void drawGeneralBackground();
+static void buttonChangeAdvisor(int param1, int param2);
 
 enum {
 	Advisor_None = 0,
@@ -18,8 +20,24 @@ enum {
 	Advisor_Chief = 12
 };
 
+CustomButton advisorButtons[13] = {
+	{ 12, 1, 52, 41, buttonChangeAdvisor, Widget_Button_doNothing, 1, 1, 0},
+	{ 60, 1, 100, 41, buttonChangeAdvisor, Widget_Button_doNothing, 1, 2, 0},
+	{ 108, 1, 148, 41, buttonChangeAdvisor, Widget_Button_doNothing, 1, 3, 0},
+	{ 156, 1, 196, 41, buttonChangeAdvisor, Widget_Button_doNothing, 1, 4, 0},
+	{ 204, 1, 244, 41, buttonChangeAdvisor, Widget_Button_doNothing, 1, 5, 0},
+	{ 252, 1, 292, 41, buttonChangeAdvisor, Widget_Button_doNothing, 1, 6, 0},
+	{ 300, 1, 340, 41, buttonChangeAdvisor, Widget_Button_doNothing, 1, 7, 0},
+	{ 348, 1, 388, 41, buttonChangeAdvisor, Widget_Button_doNothing, 1, 8, 0},
+	{ 396, 1, 436, 41, buttonChangeAdvisor, Widget_Button_doNothing, 1, 9, 0},
+	{ 444, 1, 484, 41, buttonChangeAdvisor, Widget_Button_doNothing, 1, 10, 0},
+	{ 492, 1, 532, 41, buttonChangeAdvisor, Widget_Button_doNothing, 1, 11, 0},
+	{ 540, 1, 580, 41, buttonChangeAdvisor, Widget_Button_doNothing, 1, 12, 0},
+	{ 588, 1, 624, 41, buttonChangeAdvisor, Widget_Button_doNothing, 1, 0, 0},
+};
+
 static const int dialogHeights[13] = {
-	0, 0, 0, 0, 0, 0, 0, 18, 16, 0, 0, 0
+	0, 0, 0, 0, 0, 0, 0, 18, 16, 0, 0, 0, 0
 };
 
 static int currentAdvisor = Advisor_Education;
@@ -29,7 +47,7 @@ void UI_Advisors_drawBackground()
 	drawGeneralBackground();
 	switch (currentAdvisor) {
 		case Advisor_Labor:
-			// TODO UI_Advisor__drawBackground();
+			UI_Advisor_Labor_drawBackground();
 			break;
 		case Advisor_Military:
 			// TODO UI_Advisor__drawBackground();
@@ -56,7 +74,7 @@ void UI_Advisors_drawBackground()
 			// TODO UI_Advisor_Entertainment_drawBackground();
 			break;
 		case Advisor_Religion:
-			// TODO UI_Advisor__drawBackground();
+			UI_Advisor_Religion_drawBackground();
 			break;
 		case Advisor_Financial:
 			// TODO UI_Advisor__drawBackground();
@@ -145,4 +163,26 @@ static void drawGeneralBackground()
   }*/
 }
 
+void UI_Advisors_handleMouse()
+{
+	int baseOffsetX = Data_Screen.offset640x480.x;
+	int baseOffsetY = Data_Screen.offset640x480.y;
+	if (Widget_Button_handleCustomButtons(baseOffsetX, baseOffsetY + 440, advisorButtons, 13)) {
+		return;
+	}
+
+	// TODO help button
+	// TODO other advisors
+}
+
+
+static void buttonChangeAdvisor(int param1, int param2)
+{
+	if (param1) {
+		currentAdvisor = param1;
+		UI_Window_requestRefresh();
+	} else {
+		UI_Window_goTo(Window_City);
+	}
+}
 

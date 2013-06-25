@@ -179,11 +179,23 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\UI\Advisor_Labor.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\UI\Advisor_Religion.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\UI\Advisors.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\src\Calc.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\CityInfoUpdater_Gods.cpp"
 				>
 			</File>
 			<File
@@ -321,6 +333,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\CityInfoUpdater.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Data\Constants.h"
 				>
 			</File>
@@ -361,19 +377,19 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\KeyboardInput.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\KeyboardInput.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Language.h"
+				RelativePath=".\src\Data\KeyboardInput.h"
 				>
 			</File>
 			<File
 				RelativePath=".\src\Data\Language.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Language.h"
 				>
 			</File>
 			<File
@@ -393,11 +409,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Random.h"
+				RelativePath=".\src\data\Random.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\data\Random.h"
+				RelativePath=".\src\Random.h"
 				>
 			</File>
 			<File

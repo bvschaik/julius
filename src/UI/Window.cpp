@@ -28,7 +28,7 @@ static struct Window windows[] = {
 	{ UI_SoundOptions_init, noop, UI_SoundOptions_drawForeground, UI_SoundOptions_handleMouse },
 	{ UI_SoundOptions_init, noop, UI_SpeedOptions_drawForeground, UI_SpeedOptions_handleMouse },
 	{ noop, noop, UI_DifficultyOptions_drawForeground, UI_DifficultyOptions_handleMouse },
-	{ noop, UI_Advisors_drawBackground, noop, rightClickToExit },
+	{ noop, UI_Advisors_drawBackground, UI_Advisors_drawForeground, UI_Advisors_handleMouse },
 };
 
 static WindowId currentWindow;

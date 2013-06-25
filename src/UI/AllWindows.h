@@ -20,5 +20,7 @@ void UI_SpeedOptions_handleMouse();
 
 void UI_Advisors_drawBackground();
 void UI_Advisors_drawForeground();
+void UI_Advisors_handleMouse();
+
 
 #endif
