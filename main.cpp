@@ -64,7 +64,7 @@ int main(int argc, char **argv)
 	Widget_Panel_drawButtonBorder(220, 220, 160, 160, 0);
 	Widget_Panel_drawSmallLabelButton(1, 300, 140, 12, 1, 2);
 	*/
-	Data_Mouse.focusButtonId = 1;
+	//Data_Mouse.focusButtonId = 1;
 	//UI_DifficultyOptions_draw();
 	//UI_SpeedOptions_draw();
 	//UI_DisplayOptions_draw();

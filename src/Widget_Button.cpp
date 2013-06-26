@@ -120,10 +120,12 @@ static int getArrowButton(int xOffset, int yOffset, ArrowButton *buttons, int nu
 	return 0;
 }
 
-int Widget_Button_handleCustomButtons(int xOffset, int yOffset, CustomButton *buttons, int numButtons)
+int Widget_Button_handleCustomButtons(int xOffset, int yOffset, CustomButton *buttons, int numButtons, int *focusButtonId)
 {
 	int buttonId = getCustomButton(xOffset, yOffset, buttons, numButtons);
-	Data_Mouse.focusButtonId = buttonId;
+	if (focusButtonId) {
+		*focusButtonId = buttonId;
+	}
 	if (!buttonId) {
 		return 0;
 	}

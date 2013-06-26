@@ -27,12 +27,19 @@ enum {
 
 void UI_Advisor_Labor_drawBackground();
 void UI_Advisor_Labor_drawForeground();
+void UI_Advisor_Labor_handleMouse();
+
+
+void UI_Advisor_Trade_drawBackground();
+
 
 void UI_Advisor_Health_drawBackground();
 
 void UI_Advisor_Education_drawBackground();
 
 void UI_Advisor_Entertainment_drawBackground();
+void UI_Advisor_Entertainment_drawForeground();
+void UI_Advisor_Entertainment_handleMouse();
 
 
 void UI_Advisor_Religion_drawBackground();

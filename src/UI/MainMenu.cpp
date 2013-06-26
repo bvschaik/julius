@@ -12,6 +12,8 @@
 
 static void buttonClick(int param1, int param2);
 
+static int focusButtonId;
+
 static CustomButton buttons[4] = {
 	{
 		192, 100, 448, 125,
@@ -51,23 +53,22 @@ void UI_MainMenu_drawForeground()
 {
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
-	int focusButton = Data_Mouse.focusButtonId;
 
 	Widget_Panel_drawLargeLabelButton(6,
 		baseOffsetX + 192, baseOffsetY + 100,
-		16, focusButton == 1 ? 1 : 0
+		16, focusButtonId == 1 ? 1 : 0
 	);
 	Widget_Panel_drawLargeLabelButton(6,
 		baseOffsetX + 192, baseOffsetY + 140,
-		16, focusButton == 2 ? 1 : 0
+		16, focusButtonId == 2 ? 1 : 0
 	);
 	Widget_Panel_drawLargeLabelButton(6,
 		baseOffsetX + 192, baseOffsetY + 180,
-		16, focusButton == 3 ? 1 : 0
+		16, focusButtonId == 3 ? 1 : 0
 	);
 	Widget_Panel_drawLargeLabelButton(6,
 		baseOffsetX + 192, baseOffsetY + 220,
-		16, focusButton == 4 ? 1 : 0
+		16, focusButtonId == 4 ? 1 : 0
 	);
 
 	Widget_GameText_drawCentered(30, 1,
@@ -92,23 +93,23 @@ void UI_MainMenu_handleMouse()
 {
 	Widget_Button_handleCustomButtons(
 		Data_Screen.offset640x480.x, Data_Screen.offset640x480.y,
-		buttons, 4);
+		buttons, 4, &focusButtonId);
 }
 
 static void buttonClick(int param1, int param2)
 {
 	// TODO old stuff
-	if (Data_Mouse.focusButtonId == 1) {
+	if (focusButtonId == 1) {
 		UI_Window_goTo(Window_SoundOptions);
 	}
-	if (Data_Mouse.focusButtonId == 2) {
+	if (focusButtonId == 2) {
 		UI_Window_goTo(Window_SpeedOptions);
 	}
-	if (Data_Mouse.focusButtonId == 3) {
+	if (focusButtonId == 3) {
 		UI_Window_goTo(Window_DifficultyOptions);
 	}
-	if (Data_Mouse.focusButtonId == 4) {
+	if (focusButtonId == 4) {
 		UI_Window_goTo(Window_Advisors);
 	}
-	printf("Clicked: %d\n", Data_Mouse.focusButtonId);
+	printf("Clicked: %d\n", focusButtonId);
 }

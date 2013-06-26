@@ -191,6 +191,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\UI\Advisor_Trade.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\UI\Advisors.cpp"
 				>
 			</File>

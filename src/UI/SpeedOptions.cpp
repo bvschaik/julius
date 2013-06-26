@@ -41,6 +41,8 @@ static ArrowButton arrowButtons[4] = {
 static int original_gameSpeed;
 static int original_scrollSpeed;
 
+static int focusButtonId;
+
 void UI_SpeedOptions_init()
 {
 	original_gameSpeed = Data_Settings.gameSpeed;
@@ -51,7 +53,6 @@ void UI_SpeedOptions_drawForeground()
 {
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
-	int focusButton = Data_Mouse.focusButtonId;
 	
 	Widget_Panel_drawOuterPanel(
 		baseOffsetX + 96, baseOffsetY + 80,
@@ -60,11 +61,11 @@ void UI_SpeedOptions_drawForeground()
 	
 	Widget_Panel_drawSmallLabelButton(4,
 		baseOffsetX + 144, baseOffsetY + 232,
-		12, 0, focusButton == 1 ? 1 : 2
+		12, 0, focusButtonId == 1 ? 1 : 2
 	);
 	Widget_Panel_drawSmallLabelButton(4,
 		baseOffsetX + 144, baseOffsetY + 262,
-		12, 0, focusButton == 2 ? 1 : 2
+		12, 0, focusButtonId == 2 ? 1 : 2
 	);
 	
 	Color colorNormal = 0x02bf;
@@ -75,11 +76,11 @@ void UI_SpeedOptions_drawForeground()
 	);
 	Widget_GameText_drawCentered(45, 4,
 		baseOffsetX + 128, baseOffsetY + 236,
-		224, Font_SmallBrown, focusButton == 1 ? colorHighlight : colorNormal
+		224, Font_SmallBrown, focusButtonId == 1 ? colorHighlight : colorNormal
 	);
 	Widget_GameText_drawCentered(45, 1,
 		baseOffsetX + 128, baseOffsetY + 266,
-		224, Font_SmallBrown, focusButton == 2 ? colorHighlight : colorNormal
+		224, Font_SmallBrown, focusButtonId == 2 ? colorHighlight : colorNormal
 	);
 	Widget_GameText_draw(45, 2,
 		baseOffsetX + 144, baseOffsetY + 146,
@@ -117,7 +118,7 @@ void UI_SpeedOptions_handleMouse()
 		int baseOffsetX = Data_Screen.offset640x480.x;
 		int baseOffsetY = Data_Screen.offset640x480.y;
 		if (!Widget_Button_handleCustomButtons(
-				baseOffsetX, baseOffsetY, buttons, 2)) {
+				baseOffsetX, baseOffsetY, buttons, 2, &focusButtonId)) {
 			Widget_Button_handleArrowButtons(
 				baseOffsetX + 128, baseOffsetY + 40, arrowButtons, 4);
 		}

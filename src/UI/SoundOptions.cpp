@@ -81,6 +81,8 @@ static int original_soundMusicPercentage;
 static int original_soundSpeechPercentage;
 static int original_soundCityPercentage;
 
+static int focusButtonId;
+
 void UI_SoundOptions_init()
 {
 	original_soundEffectsEnabled = Data_Settings.soundEffectsEnabled;
@@ -97,7 +99,6 @@ void UI_SoundOptions_drawForeground()
 {
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
-	int focusButton = Data_Mouse.focusButtonId;
 	
 	Widget_Panel_drawOuterPanel(
 		baseOffsetX + 48, baseOffsetY + 80,
@@ -106,27 +107,27 @@ void UI_SoundOptions_drawForeground()
 	
 	Widget_Panel_drawSmallLabelButton(3,
 		baseOffsetX + 64, baseOffsetY + 162,
-		14, 0, focusButton == 1 ? 1 : 2
+		14, 0, focusButtonId == 1 ? 1 : 2
 	);
 	Widget_Panel_drawSmallLabelButton(3,
 		baseOffsetX + 64, baseOffsetY + 192,
-		14, 0, focusButton == 2 ? 1 : 2
+		14, 0, focusButtonId == 2 ? 1 : 2
 	);
 	Widget_Panel_drawSmallLabelButton(3,
 		baseOffsetX + 64, baseOffsetY + 222,
-		14, 0, focusButton == 3 ? 1 : 2
+		14, 0, focusButtonId == 3 ? 1 : 2
 	);
 	Widget_Panel_drawSmallLabelButton(3,
 		baseOffsetX + 64, baseOffsetY + 252,
-		14, 0, focusButton == 4 ? 1 : 2
+		14, 0, focusButtonId == 4 ? 1 : 2
 	);
 	Widget_Panel_drawSmallLabelButton(3,
 		baseOffsetX + 144, baseOffsetY + 296,
-		12, 0, focusButton == 5 ? 1 : 2
+		12, 0, focusButtonId == 5 ? 1 : 2
 	);
 	Widget_Panel_drawSmallLabelButton(3,
 		baseOffsetX + 144, baseOffsetY + 326,
-		12, 0, focusButton == 6 ? 1 : 2
+		12, 0, focusButtonId == 6 ? 1 : 2
 	);
 	
 	Color colorNormal = 0x02bf;
@@ -138,11 +139,11 @@ void UI_SoundOptions_drawForeground()
 	
 	Widget_GameText_drawCentered(46, 12,
 		baseOffsetX + 128, baseOffsetY + 300,
-		224, Font_SmallBrown, focusButton == 5 ? colorHighlight : colorNormal
+		224, Font_SmallBrown, focusButtonId == 5 ? colorHighlight : colorNormal
 	);
 	Widget_GameText_drawCentered(46, 9,
 		baseOffsetX + 128, baseOffsetY + 330,
-		224, Font_SmallBrown, focusButton == 6 ? colorHighlight : colorNormal
+		224, Font_SmallBrown, focusButtonId == 6 ? colorHighlight : colorNormal
 	);
 	
 	Widget_GameText_draw(46, 10,
@@ -207,7 +208,7 @@ void UI_SoundOptions_handleMouse()
 		int baseOffsetX = Data_Screen.offset640x480.x;
 		int baseOffsetY = Data_Screen.offset640x480.y;
 		if (!Widget_Button_handleCustomButtons(
-				baseOffsetX, baseOffsetY, buttons, 6)) {
+				baseOffsetX, baseOffsetY, buttons, 6, &focusButtonId)) {
 			Widget_Button_handleArrowButtons(
 				baseOffsetX + 208, baseOffsetY + 60, arrowButtons, 8);
 		}

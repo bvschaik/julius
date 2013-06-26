@@ -4,7 +4,6 @@
 extern struct Data_Mouse {
 	int x;
 	int y;
-	int focusButtonId;
 	int isLeftClick;
 	int isRightClick;
 } Data_Mouse;
