@@ -1,4 +1,5 @@
 #include "Advisors_private.h"
+#include "../CityInfoUpdater.h"
 
 static void drawFestivalBackground();
 
@@ -12,8 +13,8 @@ static int focusButtonId;
 
 void UI_Advisor_Entertainment_drawBackground()
 {
-	// TODO calculateGodHappiness
-	// TODO gatherEntertainmentInfo
+	CityInfoUpdater_Gods_calculate();
+	CityInfoUpdater_Entertainment_calculate();
 
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
@@ -123,7 +124,18 @@ void UI_Advisor_Entertainment_drawBackground()
 
 	int adviceId;
 
-	// TODO ...
+	if (Data_CityInfo.housesRequiringEntertainmentToEvolve > Data_CityInfo.housesRequiringMoreEntertainmentToEvolve) {
+		adviceId = 3;
+	} else if (!Data_CityInfo.housesRequiringMoreEntertainmentToEvolve) {
+		adviceId = Data_CityInfo.housePercentageEntertainmentNeedsMet ? 1 : 0;
+	} else if (Data_CityInfo.entertainmentNeedingShowsMost) {
+		adviceId = 3 + Data_CityInfo.entertainmentNeedingShowsMost;
+	} else {
+		adviceId = 2;
+	}
+	Widget_GameText_drawMultiline(58, 7 + adviceId,
+		baseOffsetX + 60, baseOffsetY + 148, 512, Font_NormalBlack, 0);
+
 	drawFestivalBackground();
 }
 //----- (00516930) --------------------------------------------------------
@@ -182,6 +194,8 @@ static void drawFestivalBackground()
 	Widget_Panel_drawInnerPanel(baseOffsetX + 48, baseOffsetY + 252, 34, 6);
 	Graphics_drawImage(GraphicId(ID_Graphic_PanelWindows) + 15,
 		baseOffsetX + 460, baseOffsetY + 255);
+	Widget_GameText_draw(58, 17, baseOffsetX + 52, baseOffsetY + 224, Font_LargeBlack, 0);
+
 	int width = Widget_GameText_drawNumberWithDescription(
 		8, 4, Data_CityInfo.monthsSinceFestival,
 		baseOffsetX + 112, baseOffsetY + 260, Font_NormalWhite, 0

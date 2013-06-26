@@ -988,25 +988,13 @@ extern struct Data_CityInfo {
 	char __unknown_4265;
 	char __unknown_4266;
 	char __unknown_4267;
-	char __unknown_4268;
-	char __unknown_4269;
-	char __unknown_426a;
-	char __unknown_426b;
-	char __unknown_426c;
-	char __unknown_426d;
-	char __unknown_426e;
-	char __unknown_426f;
-	char __unknown_4270;
-	char __unknown_4271;
-	char __unknown_4272;
-	char __unknown_4273;
-	char __unknown_4274;
-	char __unknown_4275;
-	char __unknown_4276;
-	char __unknown_4277;
-	int serviceEducationRequired;
-	int serviceSchoolRequired;
-	int serviceLibraryRequired;
+	int housesRequiringFountainToEvolve;//4268
+	int housesRequiringWaterToEvolve;//426c
+	int housesRequiringMoreEntertainmentToEvolve;//4270
+	int housesRequiringMoreEducationToEvolve;//4274
+	int housesRequiringEducationToEvolve;//4278
+	int housesRequiringSchool;//427c
+	int housesRequiringLibrary;//4280
 	char __unknown_4284;
 	char __unknown_4285;
 	char __unknown_4286;
@@ -1043,9 +1031,9 @@ extern struct Data_CityInfo {
 	char __unknown_42a5;
 	char __unknown_42a6;
 	char __unknown_42a7;
-	int serviceBarberRequired;
-	int serviceBathhouseRequired;
-	int serviceClinicRequired;
+	int housesRequiringBarber;
+	int housesRequiringBathhouse;
+	int housesRequiringClinic;
 	char __unknown_42b4;
 	char __unknown_42b5;
 	char __unknown_42b6;
@@ -1079,18 +1067,9 @@ extern struct Data_CityInfo {
 	char __unknown_42e1;
 	char __unknown_42e2;
 	char __unknown_42e3;
-	char __unknown_42e4;
-	char __unknown_42e5;
-	char __unknown_42e6;
-	char __unknown_42e7;
-	char __unknown_42e8;
-	char __unknown_42e9;
-	char __unknown_42ea;
-	char __unknown_42eb;
-	char __unknown_42ec;
-	char __unknown_42ed;
-	char __unknown_42ee;
-	char __unknown_42ef;
+	int entertainmentNeedingShowsMost;
+	int housePercentageEntertainmentNeedsMet;
+	int housesRequiringEntertainmentToEvolve;
 	int monthsSinceFestival;
 	char __unknown_42f4;
 	char __unknown_42f5;

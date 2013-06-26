@@ -98,13 +98,13 @@ void UI_Advisor_Health_drawBackground()
 
 	switch (Data_CityInfo.healthDemand) {
 		case 1:
-			adviceId = Data_CityInfo.serviceBathhouseRequired ? 1 : 0;
+			adviceId = Data_CityInfo.housesRequiringBathhouse ? 1 : 0;
 			break;
 		case 2:
-			adviceId = Data_CityInfo.serviceBarberRequired ? 3 : 2;
+			adviceId = Data_CityInfo.housesRequiringBarber ? 3 : 2;
 			break;
 		case 3:
-			adviceId = Data_CityInfo.serviceClinicRequired ? 5 : 4;
+			adviceId = Data_CityInfo.housesRequiringClinic ? 5 : 4;
 			break;
 		case 4:
 			adviceId = 6;

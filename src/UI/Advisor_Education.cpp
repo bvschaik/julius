@@ -110,18 +110,18 @@ void UI_Advisor_Education_drawBackground()
 
 	int adviceId;
 	if (Data_CityInfo.educationDemand == 1) {
-		adviceId = Data_CityInfo.serviceSchoolRequired ? 1 : 0;
+		adviceId = Data_CityInfo.housesRequiringSchool ? 1 : 0;
 	} else if (Data_CityInfo.educationDemand == 2) {
-		adviceId = Data_CityInfo.serviceLibraryRequired ? 3 : 2;
+		adviceId = Data_CityInfo.housesRequiringLibrary ? 3 : 2;
 	} else if (Data_CityInfo.educationDemand == 3) {
 		adviceId = 4;
 	} else {
 		int coverageSchool = Data_CityInfo_CultureCoverage.school;
 		int coverageAcademy = Data_CityInfo_CultureCoverage.academy;
 		int coverageLibrary = Data_CityInfo_CultureCoverage.library;
-		if (!Data_CityInfo.serviceSchoolRequired) {
+		if (!Data_CityInfo.housesRequiringSchool) {
 			adviceId = 5; // no demands yet
-		} else if (!Data_CityInfo.serviceLibraryRequired) {
+		} else if (!Data_CityInfo.housesRequiringLibrary) {
 			if (coverageSchool >= 100 && coverageAcademy >= 100) {
 				adviceId = 6; // education is perfect
 			} else if (coverageSchool < coverageAcademy) {
