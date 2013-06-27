@@ -131,22 +131,6 @@ static void drawGeneralBackground()
 			baseOffsetX + 48 * i + 12, baseOffsetY + 441
 		);
 	}
-/*
-  for ( i = 0; i < 13; ++i )
-  {
-    if ( currentAdvisor )
-    {
-      if ( i == currentAdvisor - 1 )
-        v0 = 13;
-      else
-        v0 = 0;
-    }
-    else
-    {
-      v0 = 0;
-    }
-    j_fun_drawGraphic(v0 + i + graphic_advisorIcons, screen_640x480_x + 48 * i + 12, screen_640x480_y + 441);
-  }*/
 }
 
 void UI_Advisors_handleMouse()
@@ -158,6 +142,7 @@ void UI_Advisors_handleMouse()
 	}
 
 	// TODO help button
+
 	switch (currentAdvisor) {
 		case Advisor_Labor:
 			UI_Advisor_Labor_handleMouse();

@@ -2,6 +2,7 @@
 #define DATA_CITYINFO_H
 
 extern struct Data_CityInfo {
+	char __otherPlayer[18068];
 	char __unknown_00a0;
 	char __unknown_00a1;
 	char __unknown_00a2;

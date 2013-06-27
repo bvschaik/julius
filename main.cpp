@@ -10,6 +10,7 @@
 #include "src/Graphics_Footprint.h"
 #include "src/String.h"
 #include "src/FileSystem.h"
+#include "src/GameFile.h"
 
 #include "src/UI/AllWindows.h"
 
@@ -49,13 +50,14 @@ int main(int argc, char **argv)
 	assert("Empire object list", 12800, sizeof(Data_Empire_Objects));
 	assert("Trade city", 66, sizeof(struct Data_Empire_City));
 	assert("Trade city list", 2706, sizeof(Data_Empire_Cities));
-	assert("City info", 18068, sizeof(Data_CityInfo));
+	assert("City info", 2*18068, sizeof(Data_CityInfo));
 	printf("sizeof(Data_Scenario_settings) = %x\n", sizeof(Data_Settings));
 
 	Loader_Graphics_initGraphics();
 	printf("Load images: %d\n", Loader_Graphics_loadMainGraphics(0));
 	printf("Load model: %d\n", Loader_Model_loadC3ModelTxt());
 	printf("Load language: %d\n", Language_load("c3.eng", 0));
+	GameFile_loadSavedGame("1.sav");
 	/*
 	Widget_Panel_drawOuterPanel(2, 3, 50, 37);
 	Widget_Panel_drawInnerPanel(100, 100, 10, 10);

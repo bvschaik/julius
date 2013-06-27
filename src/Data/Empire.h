@@ -63,8 +63,8 @@ extern struct Data_Empire_City {
 } Data_Empire_Cities[41];
 
 extern struct Data_Empire_Trade {
-	char maxPerYear[20][16];
-	char tradedThisYear[20][16];
+	int maxPerYear[20][16];
+	int tradedThisYear[20][16];
 } Data_Empire_Trade;
 
 #endif

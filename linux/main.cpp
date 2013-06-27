@@ -13,6 +13,7 @@
 #include "../src/Loader.h"
 #include "../src/Language.h"
 #include "../src/Graphics.h"
+#include "../src/GameFile.h"
 
 
 /*
@@ -209,7 +210,8 @@ int main()
 	printf("Load language: %d\n", Language_load("c3.eng", 0));
 	UI_Window_goTo(Window_MainMenu);
 	
-	Data_CityInfo.godWrathMercury = 40;
+	GameFile_loadSavedGame("1.sav");
+	//Data_CityInfo.godWrathMercury = 40;
 	// end C3 setup
 	
 	mainLoop(surface);

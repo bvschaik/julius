@@ -20,7 +20,7 @@ void UI_Advisor_Entertainment_drawBackground()
 	int baseOffsetY = Data_Screen.offset640x480.y;
 
 	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, 23);
-	Graphics_drawImage(GraphicId(ID_Graphic_AdvisorIcons) + Advisor_Entertainment + 1,
+	Graphics_drawImage(GraphicId(ID_Graphic_AdvisorIcons) + Advisor_Entertainment - 1,
 		baseOffsetX + 10, baseOffsetY + 10);
 
 	Widget_GameText_draw(58, 0, baseOffsetX + 60, baseOffsetY + 12, Font_LargeBlack, 0);
