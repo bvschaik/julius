@@ -14,6 +14,8 @@ enum {
 	ID_Graphic_SunkenTextboxBackground = 133,
 	ID_Graphic_AdvisorBackground = 136,
 	ID_Graphic_WinGame = 160,
+	ID_Graphic_RatingsColumn = 189,
+	ID_Graphic_RatingsBackground = 195,
 	ID_Graphic_BorderedButton = 208,
 	ID_Graphic_GodBolt = 225,
 	ID_Graphic_LoadingScreen = 251,

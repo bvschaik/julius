@@ -29,6 +29,9 @@ void UI_Advisor_Labor_drawBackground();
 void UI_Advisor_Labor_drawForeground();
 void UI_Advisor_Labor_handleMouse();
 
+void UI_Advisor_Ratings_drawBackground();
+void UI_Advisor_Ratings_drawForeground();
+void UI_Advisor_Ratings_handleMouse();
 
 void UI_Advisor_Trade_drawBackground();
 

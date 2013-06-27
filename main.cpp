@@ -44,7 +44,7 @@ int main(int argc, char **argv)
 	Zip_compress(inputData, strlen(inputData)+1, compressedBuf, &compressedLength);
 	Zip_decompress(compressedBuf, compressedLength, decompressedBuf, &decompressedLength);
 
-	assert("Scenario settings", 1720, sizeof(Data_Scenario_Settings));
+	assert("Scenario settings", 1720, sizeof(Data_Scenario));
 	assert("Empire object", 64, sizeof(struct Data_Empire_Object));
 	assert("Empire object list", 12800, sizeof(Data_Empire_Objects));
 	assert("Trade city", 66, sizeof(struct Data_Empire_City));

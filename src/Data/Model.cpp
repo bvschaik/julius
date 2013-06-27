@@ -14,7 +14,7 @@
 struct Data_Model_House Data_Model_Houses[20];
 struct Data_Model_Building Data_Model_Buildings[130];
 
-struct Data_Scenario_Settings Data_Scenario_Settings;
+struct Data_Scenario Data_Scenario;
 
 struct Data_Settings Data_Settings;
 struct Data_Settings_Map Data_Settings_Map;

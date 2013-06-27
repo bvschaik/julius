@@ -59,7 +59,7 @@ static GameFilePart scenarioParts[SCENARIO_PARTS] = {
 	{0, &Data_Tutorial_tutorial1.fire, 4},
 	{0, &Data_Settings_Map.camera.x, 4},
 	{0, &Data_Settings_Map.camera.y, 4},
-	{0, &Data_Scenario_Settings, 1720},
+	{0, &Data_Scenario, 1720},
 };
 
 static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
