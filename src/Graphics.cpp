@@ -236,6 +236,14 @@ void Graphics_setClipRectangle(int x, int y, int width, int height)
 	clipRectangle.yEnd = y + height;
 }
 
+void Graphics_resetClipRectangle()
+{
+	clipRectangle.xStart = 0;
+	clipRectangle.xEnd = Data_Screen.width;
+	clipRectangle.yStart = 0;
+	clipRectangle.yEnd = Data_Screen.height;
+}
+
 GraphicsClipInfo *Graphics_getClipInfo(int xOffset, int yOffset, int width, int height)
 {
 	setClipX(xOffset, width);

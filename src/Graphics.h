@@ -13,6 +13,7 @@ void Graphics_drawInsetRect(int x, int y, int width, int height);
 void Graphics_fillRect(int x, int y, int width, int height, Color color);
 
 void Graphics_setClipRectangle(int x, int y, int width, int height);
+void Graphics_resetClipRectangle();
 
 GraphicsClipInfo *Graphics_getClipInfo(int xOffset, int yOffset, int width, int height);
 

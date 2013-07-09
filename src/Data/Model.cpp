@@ -41,3 +41,4 @@ struct Data_Language_Text Data_Language_Text;
 struct Data_CityInfo Data_CityInfo;
 struct Data_CityInfo_Buildings Data_CityInfo_Buildings;
 struct Data_CityInfo_CultureCoverage Data_CityInfo_CultureCoverage;
+struct Data_CityInfo_Extra Data_CityInfo_Extra;

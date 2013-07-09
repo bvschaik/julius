@@ -138,7 +138,7 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{0, &Data_CityInfo_Buildings.largeTempleMars.total, 4},
 	{0, &Data_CityInfo_Buildings.largeTempleVenus.total, 4},
 	{0, &Data_CityInfo_Buildings.oracle.total, 4},
-	{0, &tmp, 4}, //{0, &populationAdvisor_graphOrder, 4},
+	{0, &Data_CityInfo_Extra.populationGraphOrder, 4},
 	{0, &tmp, 4}, //{0, &unk_650060, 4},
 	{0, &tmp, 4}, //{0, &event_emperorChange_gameYear, 4},
 	{0, &tmp, 4}, //{0, &event_emperorChange_month, 4},

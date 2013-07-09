@@ -35,6 +35,9 @@ void UI_Advisor_Ratings_handleMouse();
 
 void UI_Advisor_Trade_drawBackground();
 
+void UI_Advisor_Population_drawBackground();
+void UI_Advisor_Population_drawForeground();
+void UI_Advisor_Population_handleMouse();
 
 void UI_Advisor_Health_drawBackground();
 

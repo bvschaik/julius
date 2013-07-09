@@ -13,6 +13,7 @@ enum {
 	ID_Graphic_DialogBackground = 132,
 	ID_Graphic_SunkenTextboxBackground = 133,
 	ID_Graphic_AdvisorBackground = 136,
+	ID_Graphic_PopulationGraphBar = 157,
 	ID_Graphic_WinGame = 160,
 	ID_Graphic_RatingsColumn = 189,
 	ID_Graphic_RatingsBackground = 195,
@@ -22,6 +23,7 @@ enum {
 };
 
 #define Color_Black 0
+#define Color_Red 0xf800
 #define Color_Transparent 0xf81f
 #define Color_InsetLight 0xffff
 #define Color_InsetDark 0x8410

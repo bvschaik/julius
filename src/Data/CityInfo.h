@@ -57,7 +57,7 @@ extern struct Data_CityInfo {
 	char __unknown_265e;
 	char __unknown_265f;
 	int monthsSinceStart;
-	short populationCensus[100];
+	short populationPerAge[100];
 	int populationPerLevel[20];
 	char __unknown_277c;
 	char __unknown_277d;
@@ -2170,5 +2170,9 @@ extern struct Data_CityInfo_CultureCoverage {
 	int religionVenus;
 	int oracles;
 } Data_CityInfo_CultureCoverage;
+
+extern struct Data_CityInfo_Extra {
+	int populationGraphOrder;
+} Data_CityInfo_Extra;
 
 #endif

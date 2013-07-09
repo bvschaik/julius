@@ -48,7 +48,7 @@ void UI_Advisors_drawBackground()
 			UI_Advisor_Trade_drawBackground();
 			break;
 		case Advisor_Population:
-			// TODO UI_Advisor__drawBackground();
+			UI_Advisor_Population_drawBackground();
 			break;
 		case Advisor_Health:
 			UI_Advisor_Health_drawBackground();
@@ -97,7 +97,7 @@ void UI_Advisors_drawForeground()
 			// TODO j_fun_drawTradeAdvisorButtons();
 			break;
 		case Advisor_Population:
-			// TODO j_fun_drawPopulationAdvisorButtons();
+			UI_Advisor_Population_drawForeground();
 			break;
 		case Advisor_Entertainment:
 			UI_Advisor_Entertainment_drawForeground();
@@ -149,6 +149,9 @@ void UI_Advisors_handleMouse()
 			break;
 		case Advisor_Ratings:
 			UI_Advisor_Ratings_handleMouse();
+			break;
+		case Advisor_Population:
+			UI_Advisor_Population_handleMouse();
 			break;
 		case Advisor_Entertainment:
 			UI_Advisor_Entertainment_handleMouse();
