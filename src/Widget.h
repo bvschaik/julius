@@ -18,6 +18,8 @@ void Widget_Text_drawNumberCentered(int value, char prefix, const char *postfix,
 
 int Widget_GameText_drawNumberWithDescription(int group, int number, int amount, int xOffset, int yOffset, Font font, Color color);
 
+int Widget_GameText_drawYear(int year, int xOffset, int yOffset, Font font, Color color);
+
 int Widget_Text_drawMultiline(const char *str, int xOffset, int yOffset, int boxWidth, Font font, Color color);
 
 int Widget_GameText_drawMultiline(int group, int number, int xOffset, int yOffset, int boxWidth, Font font, Color color);

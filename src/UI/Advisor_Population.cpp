@@ -1,11 +1,13 @@
 #include "Advisors_private.h"
 #include "Window.h"
+#include "../Data/Scenario.h"
 
 static void drawHistoryGraph(int fullSize, int x, int y);
 static void drawCensusGraph(int fullSize, int x, int y);
 static void drawSocietyGraph(int fullSize, int x, int y);
 static void getYAxis(int maxValue, int *yMax, int *yShift);
 static int getPopulationAtMonth(int max, int month);
+static void getMinMaxMonthYear(int maxMonths, int *startMonth, int *startYear, int *endMonth, int *endYear);
 static void buttonGraph(int param1, int param2);
 
 static CustomButton graphButtons[2] = {
@@ -151,14 +153,22 @@ static void drawHistoryGraph(int fullSize, int x, int y)
 	int yMax, yShift;
 	getYAxis(maxValue, &yMax, &yShift);
 	if (fullSize) {
-		// Y axis
+		// y axis
 		Widget_Text_drawNumberCentered(yMax, '@', " ",
 			x - 66, y - 3, 60, Font_SmallPlain, 0);
 		Widget_Text_drawNumberCentered(yMax / 2, '@', " ",
 			x - 66, y + 96, 60, Font_SmallPlain, 0);
 		Widget_Text_drawNumberCentered(0, '@', " ",
 			x - 66, y + 196, 60, Font_SmallPlain, 0);
-		// TODO X axis
+		// x axis
+		int startMonth, startYear, endMonth, endYear;
+		getMinMaxMonthYear(maxMonths, &startMonth, &startYear, &endMonth, &endYear);
+
+		int width = Widget_GameText_draw(25, startMonth, x - 20, y + 210, Font_SmallPlain, 0);
+		Widget_GameText_drawYear(startYear, x + width - 20, y + 210, Font_SmallPlain, 0);
+
+		width = Widget_GameText_draw(25, endMonth, x + 380, y + 210, Font_SmallPlain, 0);
+		Widget_GameText_drawYear(startYear, x + width + 380, y + 210, Font_SmallPlain, 0);
 	}
 
 	if (fullSize) {
@@ -359,6 +369,25 @@ static int getPopulationAtMonth(int max, int month)
 	}
 	int index = (startOffset + month) % 2400;
 	return Data_CityInfo.monthlyPopulation[index];
+}
+
+static void getMinMaxMonthYear(int maxMonths, int *startMonth, int *startYear, int *endMonth, int *endYear)
+{
+	if (Data_CityInfo.monthsSinceStart > maxMonths) {
+		*endMonth = Data_CityInfo_Extra.gameTimeMonth - 1;
+		*endYear = Data_CityInfo_Extra.gameTimeYear;
+		if (*endMonth < 0) {
+			*endMonth += 12;
+			*endYear -= 1;
+		}
+		*startMonth = 11 - (maxMonths % 12);
+		*startYear = *endYear - maxMonths / 12;
+	} else {
+		*startMonth = 0;
+		*startYear = Data_Scenario.startYear;
+		*endMonth = (maxMonths + *startMonth) % 12;
+		*endYear = (maxMonths + *startMonth) / 12 + *startYear;
+	}
 }
 
 static void buttonGraph(int param1, int param2)

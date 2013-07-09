@@ -2173,6 +2173,10 @@ extern struct Data_CityInfo_CultureCoverage {
 
 extern struct Data_CityInfo_Extra {
 	int populationGraphOrder;
+	int gameTimeMonth;
+	int gameTimeYear;
+	int gameTimeTotalWeeks;
+
 } Data_CityInfo_Extra;
 
 #endif

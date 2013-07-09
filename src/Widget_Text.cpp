@@ -273,6 +273,19 @@ int Widget_GameText_drawNumberWithDescription(int group, int number, int amount,
 		xOffset + descOffsetX, yOffset, font, color);
 }
 
+int Widget_GameText_drawYear(int year, int xOffset, int yOffset, Font font, Color color)
+{
+	int width = 0;
+	if (year >= 0) {
+		width += Widget_GameText_draw(20, 1, xOffset + width, yOffset, font, color);
+		width += Widget_Text_drawNumber(year, ' ', " ", xOffset + width, yOffset, font, color);
+	} else {
+		width += Widget_Text_drawNumber(-year, ' ', " ", xOffset + width, yOffset, font, color);
+		width += Widget_GameText_draw(20, 0, xOffset + width, yOffset, font, color);
+	}
+	return width;
+}
+
 int Widget_Text_drawMultiline(const char *str, int xOffset, int yOffset, int boxWidth, Font font, Color color)
 {
 	int lineHeight;
