@@ -1658,7 +1658,7 @@ extern struct Data_CityInfo {
 	char __unknown_457d;
 	char __unknown_457e;
 	char __unknown_457f;
-	char __unknown_4580;
+	char distantBattleTradeCity;
 	char __unknown_4581;
 	char __unknown_4582;
 	char __unknown_4583;

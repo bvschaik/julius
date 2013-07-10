@@ -11,6 +11,7 @@
 #include "src/String.h"
 #include "src/FileSystem.h"
 #include "src/GameFile.h"
+#include "src/Empire.h"
 
 #include "src/UI/AllWindows.h"
 
@@ -48,8 +49,8 @@ int main(int argc, char **argv)
 	assert("Scenario settings", 1720, sizeof(Data_Scenario));
 	assert("Empire object", 64, sizeof(struct Data_Empire_Object));
 	assert("Empire object list", 12800, sizeof(Data_Empire_Objects));
-	assert("Trade city", 66, sizeof(struct Data_Empire_City));
-	assert("Trade city list", 2706, sizeof(Data_Empire_Cities));
+	assert("Trade city", 66, sizeof(struct Data_Empire_TradeCity));
+	assert("Trade city list", 2706, sizeof(Data_Empire_TradeCities));
 	assert("City info", 2*18068, sizeof(Data_CityInfo));
 	printf("sizeof(Data_Scenario_settings) = %x\n", sizeof(Data_Settings));
 
@@ -58,6 +59,14 @@ int main(int argc, char **argv)
 	printf("Load model: %d\n", Loader_Model_loadC3ModelTxt());
 	printf("Load language: %d\n", Language_load("c3.eng", 0));
 	GameFile_loadSavedGame("1.sav");
+
+	for (int i = 0; i < 40; i++) {
+		Empire_load(0, i);
+	}
+	for (int i = 0; i < 40; i++) {
+		Empire_load(1, i);
+	}
+
 	/*
 	Widget_Panel_drawOuterPanel(2, 3, 50, 37);
 	Widget_Panel_drawInnerPanel(100, 100, 10, 10);

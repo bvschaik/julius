@@ -15,6 +15,7 @@ enum {
 	ID_Graphic_AdvisorBackground = 136,
 	ID_Graphic_PopulationGraphBar = 157,
 	ID_Graphic_WinGame = 160,
+	ID_Graphic_EmpireCity = 174,
 	ID_Graphic_RatingsColumn = 189,
 	ID_Graphic_RatingsBackground = 195,
 	ID_Graphic_BorderedButton = 208,
@@ -28,5 +29,25 @@ enum {
 #define Color_InsetLight 0xffff
 #define Color_InsetDark 0x8410
 #define Color_NoMask 0xffff
+
+enum {
+	EmpireObject_Ornament = 0,
+	EmpireObject_City = 1,
+	EmpireObject_BattleIcon = 2,
+	EmpireObject_LandTradeRoute = 4,
+	EmpireObject_SeaTradeRoute = 5,
+	EmpireObject_RomanArmy = 6,
+	EmpireObject_EnemyArmy = 7,
+};
+
+enum {
+	EmpireCity_DistantRoman = 0,
+	EmpireCity_Ours = 1,
+	EmpireCity_Trade = 2,
+	EmpireCity_FutureTrade = 3,
+	EmpireCity_DistantForeign = 4,
+	EmpireCity_VulnerableRoman = 5,
+	EmpireCity_FutureRoman = 6,
+};
 
 #endif

@@ -145,7 +145,7 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{0, &tmp, 4}, //{0, &empire_scroll_x, 4},
 	{0, &tmp, 4}, //{0, &empire_scroll_y, 4},
 	{0, &tmp, 4}, //{0, &empire_selectedCity, 4},
-	{1, &Data_Empire_Cities, 2706},
+	{1, &Data_Empire_TradeCities, 2706},
 	{0, &Data_CityInfo_Buildings.industry.total, 64},
 	{0, &Data_CityInfo_Buildings.industry.working, 64},
 	{0, &tmp, 128}, //{0, &tradeprices_buy, 0x80},
