@@ -1,12 +1,6 @@
 #include "CityInfoUpdater.h"
 #include "Data/CityInfo.h"
 
-// TODO move to separate file when implemented
-void CityInfoUpdater_Entertainment_calculate()
-{
-	// TODO implement
-}
-
 void CityInfoUpdater_Gods_calculate()
 {
 	// TODO implement

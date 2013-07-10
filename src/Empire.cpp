@@ -8,7 +8,6 @@
 #include "Data/CityInfo.h"
 
 #include <string.h>
-#include <stdio.h>
 
 static void fixGraphicIds();
 static int isSeaTradeRoute(int routeId);
@@ -33,7 +32,6 @@ void Empire_load(int isCustomScenario, int empireId)
 		FileSystem_readFilePartIntoBuffer("c3.emp",
 			Data_Empire_Objects, 12800, offset);
 	}
-	printf("Empire %d: ", empireId);
 	fixGraphicIds();
 }
 
@@ -154,7 +152,6 @@ static void fixGraphicIds()
 			break;
 		}
 	}
-	printf("Graphic ID = %d (%d)\n", graphicId, GraphicId(ID_Graphic_EmpireCity));
 	if (graphicId > 0 && graphicId != GraphicId(ID_Graphic_EmpireCity)) {
 		// empire map uses old version of graphics: increase every graphic id
 		int offset = GraphicId(ID_Graphic_EmpireCity) - graphicId;

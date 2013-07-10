@@ -43,3 +43,5 @@ struct Data_CityInfo Data_CityInfo;
 struct Data_CityInfo_Buildings Data_CityInfo_Buildings;
 struct Data_CityInfo_CultureCoverage Data_CityInfo_CultureCoverage;
 struct Data_CityInfo_Extra Data_CityInfo_Extra;
+
+int Constant_SalaryForRank[11] = {0, 2, 5, 8, 12, 20, 30, 40, 60, 80, 100};

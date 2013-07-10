@@ -22,5 +22,9 @@ void UI_Advisors_drawBackground();
 void UI_Advisors_drawForeground();
 void UI_Advisors_handleMouse();
 
+void UI_SetSalaryDialog_drawBackground();
+void UI_SetSalaryDialog_drawForeground();
+void UI_SetSalaryDialog_handleMouse();
+
 
 #endif

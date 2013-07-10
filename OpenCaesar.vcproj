@@ -183,6 +183,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\UI\Advisor_Imperial.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\UI\Advisor_Labor.cpp"
 				>
 			</File>
@@ -208,6 +212,10 @@
 			</File>
 			<File
 				RelativePath=".\src\Calc.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\CityInfoUpdater.cpp"
 				>
 			</File>
 			<File
@@ -284,6 +292,10 @@
 			</File>
 			<File
 				RelativePath=".\src\Random.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\UI\SetSalaryDialog.cpp"
 				>
 			</File>
 			<File

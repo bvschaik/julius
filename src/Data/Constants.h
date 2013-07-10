@@ -10,6 +10,7 @@ enum {
 	ID_Graphic_LaborPriorityLock = 94,
 	ID_Graphic_PanelWindows = 95,
 	ID_Graphic_AdvisorIcons = 128,
+	ID_Graphic_ResourceIcons = 129,
 	ID_Graphic_DialogBackground = 132,
 	ID_Graphic_SunkenTextboxBackground = 133,
 	ID_Graphic_AdvisorBackground = 136,
@@ -49,5 +50,7 @@ enum {
 	EmpireCity_VulnerableRoman = 5,
 	EmpireCity_FutureRoman = 6,
 };
+
+extern int Constant_SalaryForRank[11];
 
 #endif

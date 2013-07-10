@@ -10,6 +10,7 @@ typedef enum {
 	Window_SpeedOptions = 3,//12,
 	Window_DifficultyOptions = 4,//69
 	Window_Advisors = 5, // 7
+	Window_SetSalaryDialog = 6, //44
 } WindowId;
 
 void UI_Window_goTo(WindowId windowId);

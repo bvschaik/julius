@@ -1,7 +1,6 @@
 #include "Advisors_private.h"
 #include "Window.h"
 
-static void drawGeneralBackground();
 static void buttonChangeAdvisor(int param1, int param2);
 
 static CustomButton advisorButtons[13] = {
@@ -30,7 +29,7 @@ static int focusButtonId;
 
 void UI_Advisors_drawBackground()
 {
-	drawGeneralBackground();
+	UI_Advisor_drawGeneralBackground();
 	switch (currentAdvisor) {
 		case Advisor_Labor:
 			UI_Advisor_Labor_drawBackground();
@@ -39,7 +38,7 @@ void UI_Advisors_drawBackground()
 			// TODO UI_Advisor__drawBackground();
 			break;
 		case Advisor_Imperial:
-			// TODO UI_Advisor__drawBackground();
+			UI_Advisor_Imperial_drawBackground();
 			break;
 		case Advisor_Ratings:
 			UI_Advisor_Ratings_drawBackground();
@@ -88,7 +87,7 @@ void UI_Advisors_drawForeground()
 			// TODO j_fun_drawMilitaryAdvisorButtons();
 			break;
 		case Advisor_Imperial:
-			// TODO j_fun_drawImperialAdvisorButtons();
+			UI_Advisor_Imperial_drawForeground();
 			break;
 		case Advisor_Ratings:
 			UI_Advisor_Ratings_drawForeground();
@@ -108,7 +107,7 @@ void UI_Advisors_drawForeground()
 	}
 }
 
-static void drawGeneralBackground()
+void UI_Advisor_drawGeneralBackground()
 {
 	if (Data_Screen.width > 1024 || Data_Screen.height > 768) {
 		Graphics_clearScreen();
@@ -146,6 +145,9 @@ void UI_Advisors_handleMouse()
 	switch (currentAdvisor) {
 		case Advisor_Labor:
 			UI_Advisor_Labor_handleMouse();
+			break;
+		case Advisor_Imperial:
+			UI_Advisor_Imperial_handleMouse();
 			break;
 		case Advisor_Ratings:
 			UI_Advisor_Ratings_handleMouse();
