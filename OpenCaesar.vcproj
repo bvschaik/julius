@@ -223,6 +223,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\CityInfoUpdater_Ratings.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Data\Data.cpp"
 				>
 			</File>
