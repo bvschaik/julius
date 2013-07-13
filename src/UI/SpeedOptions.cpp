@@ -2,6 +2,7 @@
 #include "Window.h"
 
 #include "../Widget.h"
+#include "../Util.h"
 
 #include "../Data/Screen.h"
 #include "../Data/Mouse.h"
@@ -144,12 +145,7 @@ static void arrowButtonGame(int param1, int param2)
 	} else if (param1 == 0) {
 		Data_Settings.gameSpeed += 10;
 	}
-	if (Data_Settings.gameSpeed < 10) {
-		Data_Settings.gameSpeed = 10;
-	}
-	if (Data_Settings.gameSpeed > 100) {
-		Data_Settings.gameSpeed = 100;
-	}
+	BOUND(Data_Settings.gameSpeed, 10, 100);
 	UI_Window_requestRefresh();
 }
 
@@ -160,11 +156,6 @@ static void arrowButtonScroll(int param1, int param2)
 	} else if (param1 == 0) {
 		Data_Settings.scrollSpeed += 10;
 	}
-	if (Data_Settings.scrollSpeed < 10) {
-		Data_Settings.scrollSpeed = 10;
-	}
-	if (Data_Settings.scrollSpeed > 100) {
-		Data_Settings.scrollSpeed = 100;
-	}
+	BOUND(Data_Settings.scrollSpeed, 10, 100);
 	UI_Window_requestRefresh();
 }

@@ -76,21 +76,22 @@ void Empire_initTradeRoutes()
 				route->buysResourceFlag[resource] = 1;
 			}
 			int amountCode = getTradeAmountCode(i, resource);
+			int routeId = route->routeId;
 			switch (amountCode) {
 				case 1:
-					Data_Empire_Trade.maxPerYear[route->routeId][resource] = 15;
+					Data_Empire_Trade.maxPerYear[routeId][resource] = 15;
 					break;
 				case 2:
-					Data_Empire_Trade.maxPerYear[route->routeId][resource] = 25;
+					Data_Empire_Trade.maxPerYear[routeId][resource] = 25;
 					break;
 				case 3:
-					Data_Empire_Trade.maxPerYear[route->routeId][resource] = 40;
+					Data_Empire_Trade.maxPerYear[routeId][resource] = 40;
 					break;
 				default:
-					Data_Empire_Trade.maxPerYear[route->routeId][resource] = 0;
+					Data_Empire_Trade.maxPerYear[routeId][resource] = 0;
 					break;
 			}
-			Data_Empire_Trade.tradedThisYear[route->routeId][resource] = 0;
+			Data_Empire_Trade.tradedThisYear[routeId][resource] = 0;
 		}
 		route->__unused2 = 10;
 		route->traderEntryDelay = 4;
@@ -134,8 +135,9 @@ void Empire_resetYearlyTradeAmounts()
 {
 	for (int i = 0; i < 41; i++) {
 		if (Data_Empire_TradeCities[i].inUse && Data_Empire_TradeCities[i].isOpen) {
+			int routeId = Data_Empire_TradeCities[i].routeId;
 			for (int resource = 1; resource <= 15; resource++) {
-				Data_Empire_Trade.tradedThisYear[Data_Empire_TradeCities[i].routeId][resource] = 0;
+				Data_Empire_Trade.tradedThisYear[routeId][resource] = 0;
 			}
 		}
 	}

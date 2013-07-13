@@ -100,6 +100,7 @@ static void buttonSetSalary(int param1, int param2)
 
 static void buttonGiftToCaesar(int param1, int param2)
 {
+	UI_Window_goTo(Window_SendGiftToCaesarDialog);
 }
 
 static void buttonRequest(int param1, int param2)

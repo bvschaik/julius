@@ -1,5 +1,6 @@
 #include "AllWindows.h"
 #include "Window.h"
+#include "../Util.h"
 /*
 #include "../Graphics.h"
 #include "../Data/Graphics.h"
@@ -276,12 +277,7 @@ static void arrowButtonMusic(int param1, int param2)
 	} else if (param1 == 0) {
 		Data_Settings.soundMusicPercentage++;
 	}
-	if (Data_Settings.soundMusicPercentage < 0) {
-		Data_Settings.soundMusicPercentage = 0;
-	}
-	if (Data_Settings.soundMusicPercentage > 100) {
-		Data_Settings.soundMusicPercentage = 100;
-	}
+	BOUND(Data_Settings.soundMusicPercentage, 0, 100);
 	// TODO set channel percentage
 
 	UI_Window_requestRefresh();
@@ -294,12 +290,7 @@ static void arrowButtonSpeech(int param1, int param2)
 	} else if (param1 == 0) {
 		Data_Settings.soundSpeechPercentage++;
 	}
-	if (Data_Settings.soundSpeechPercentage < 0) {
-		Data_Settings.soundSpeechPercentage = 0;
-	}
-	if (Data_Settings.soundSpeechPercentage > 100) {
-		Data_Settings.soundSpeechPercentage = 100;
-	}
+	BOUND(Data_Settings.soundSpeechPercentage, 0, 100);
 	// TODO set channel percentage
 
 	UI_Window_requestRefresh();
@@ -312,12 +303,7 @@ static void arrowButtonEffects(int param1, int param2)
 	} else if (param1 == 0) {
 		Data_Settings.soundEffectsPercentage++;
 	}
-	if (Data_Settings.soundEffectsPercentage < 0) {
-		Data_Settings.soundEffectsPercentage = 0;
-	}
-	if (Data_Settings.soundEffectsPercentage > 100) {
-		Data_Settings.soundEffectsPercentage = 100;
-	}
+	BOUND(Data_Settings.soundEffectsPercentage, 0, 100);
 	// TODO set channel percentage
 
 	UI_Window_requestRefresh();
@@ -330,12 +316,7 @@ static void arrowButtonCity(int param1, int param2)
 	} else if (param1 == 0) {
 		Data_Settings.soundCityPercentage++;
 	}
-	if (Data_Settings.soundCityPercentage < 0) {
-		Data_Settings.soundCityPercentage = 0;
-	}
-	if (Data_Settings.soundCityPercentage > 100) {
-		Data_Settings.soundCityPercentage = 100;
-	}
+	BOUND(Data_Settings.soundCityPercentage, 0, 100);
 	// TODO set channel percentage
 
 	UI_Window_requestRefresh();
