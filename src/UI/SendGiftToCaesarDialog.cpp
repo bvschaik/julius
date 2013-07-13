@@ -28,7 +28,7 @@ void UI_SendGiftToCaesarDialog_init()
 		Data_CityInfo.giftCost_lavish > Data_CityInfo.personalSavings) {
 		Data_CityInfo.giftSizeSelected = 1;
 	}
-	if (Data_CityInfo.giftSizeSelected == 2 &&
+	if (Data_CityInfo.giftSizeSelected == 1 &&
 		Data_CityInfo.giftCost_generous > Data_CityInfo.personalSavings) {
 		Data_CityInfo.giftSizeSelected = 0;
 	}
@@ -46,7 +46,6 @@ void UI_SendGiftToCaesarDialog_drawBackground()
 		baseOffsetX + 128, baseOffsetY + 160);
 	Widget_GameText_drawCentered(52, 69,
 		baseOffsetX + 128, baseOffsetY + 160, 432, Font_LargeBlack, 0);
-	Widget_Panel_drawInnerPanel(baseOffsetX + 112, baseOffsetY + 208, 28, 5);
 
 	int width = Widget_GameText_draw(52, 50,
 		baseOffsetX + 144, baseOffsetY + 304, Font_NormalBlack, 0);
@@ -61,6 +60,8 @@ void UI_SendGiftToCaesarDialog_drawForeground()
 {
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
+
+	Widget_Panel_drawInnerPanel(baseOffsetX + 112, baseOffsetY + 208, 28, 5); // BUGFIX red/white letters overlapping
 
 	if (Data_CityInfo.giftCost_modest <= Data_CityInfo.personalSavings) {
 		Widget_GameText_draw(52, 63,
