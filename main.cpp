@@ -49,8 +49,8 @@ int main(int argc, char **argv)
 	assert("Scenario settings", 1720, sizeof(Data_Scenario));
 	assert("Empire object", 64, sizeof(struct Data_Empire_Object));
 	assert("Empire object list", 12800, sizeof(Data_Empire_Objects));
-	assert("Trade city", 66, sizeof(struct Data_Empire_TradeCity));
-	assert("Trade city list", 2706, sizeof(Data_Empire_TradeCities));
+	assert("Trade city", 66, sizeof(struct Data_Empire_City));
+	assert("Trade city list", 2706, sizeof(Data_Empire_Cities));
 	assert("City info", 2*18068, sizeof(Data_CityInfo));
 	printf("sizeof(Data_Scenario_settings) = %x\n", sizeof(Data_Settings));
 

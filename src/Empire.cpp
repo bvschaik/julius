@@ -1,11 +1,13 @@
 #include "Empire.h"
 #include "FileSystem.h"
+#include "PlayerMessage.h"
 
 #include "Data/Empire.h"
 #include "Data/Scenario.h"
 #include "Data/Constants.h"
 #include "Data/Graphics.h"
 #include "Data/CityInfo.h"
+#include "Data/Screen.h"
 
 #include <string.h>
 
@@ -24,7 +26,7 @@ void Empire_load(int isCustomScenario, int empireId)
 			Data_Empire_Index, 1280, 0);
 	}
 	memset(Data_Empire_Objects, 0, 12800);
-	int offset = 1280 + 12800 * /*Data_Scenario.*/empireId;
+	int offset = 1280 + 12800 * Data_Scenario.empireId;
 	if (isCustomScenario) {
 		FileSystem_readFilePartIntoBuffer("c32.emp",
 			Data_Empire_Objects, 12800, offset);
@@ -35,9 +37,9 @@ void Empire_load(int isCustomScenario, int empireId)
 	fixGraphicIds();
 }
 
-void Empire_initTradeRoutes()
+void Empire_initCities()
 {
-	memset(Data_Empire_TradeCities, 0, 2706);
+	memset(Data_Empire_Cities, 0, 2706);
 	int routeIndex = 0;
 	for (int i = 0; i < 200; i++) {
 		if (!Data_Empire_Objects[i].inUse
@@ -45,7 +47,7 @@ void Empire_initTradeRoutes()
 			continue;
 		}
 		struct Data_Empire_Object *city = &Data_Empire_Objects[i];
-		struct Data_Empire_TradeCity *route = &Data_Empire_TradeCities[routeIndex++];
+		struct Data_Empire_City *route = &Data_Empire_Cities[routeIndex++];
 		route->inUse = 1;
 		route->cityType = city->cityType;
 		route->cityNameId = city->cityNameId;
@@ -99,6 +101,62 @@ void Empire_initTradeRoutes()
 	}
 }
 
+void Empire_scrollMap(int direction)
+{
+	if (direction == Direction_None) {
+		return;
+	}
+	switch (direction) {
+		case Direction_Top:
+			Data_Empire.scrollY -= 20;
+			break;
+		case Direction_TopRight:
+			Data_Empire.scrollX += 20;
+			Data_Empire.scrollY -= 20;
+			break;
+		case Direction_Right:
+			Data_Empire.scrollX += 20;
+			break;
+		case Direction_BottomRight:
+			Data_Empire.scrollX += 20;
+			Data_Empire.scrollY += 20;
+			break;
+		case Direction_Bottom:
+			Data_Empire.scrollY += 20;
+			break;
+		case Direction_BottomLeft:
+			Data_Empire.scrollX -= 20;
+			Data_Empire.scrollY += 20;
+			break;
+		case Direction_Left:
+			Data_Empire.scrollX -= 20;
+			break;
+		case Direction_TopLeft:
+			Data_Empire.scrollX -= 20;
+			Data_Empire.scrollY -= 20;
+			break;
+	};
+	Empire_checkScrollBoundaries();
+}
+
+void Empire_checkScrollBoundaries()
+{
+	if (Data_Empire.scrollX < 0) {
+		Data_Empire.scrollX = 0;
+	}
+	int maxX = Data_Empire_Sizes.width - (Data_Screen.width - 2 * Data_Empire_Sizes.borderSides);
+	if (Data_Empire.scrollX >= maxX) {
+		Data_Empire.scrollX = maxX;
+	}
+	if (Data_Empire.scrollY < 0) {
+		Data_Empire.scrollY = 0;
+	}
+	int maxY = Data_Empire_Sizes.height - (Data_Screen.height - Data_Empire_Sizes.borderTop - Data_Empire_Sizes.borderBottom);
+	if (Data_Empire.scrollY >= maxY) {
+		Data_Empire.scrollY = maxY - 1;
+	}
+}
+
 int Empire_cityBuysResource(int index, int resource)
 {
 	for (int i = 0; i < 10; i++) {
@@ -123,8 +181,8 @@ void Empire_determineDistantBattleCity()
 {
 	Data_CityInfo.distantBattleTradeCity = 0;
 	for (int i = 0; i < 41; i++) {
-		if (Data_Empire_TradeCities[i].inUse) {
-			if (Data_Empire_TradeCities[i].cityType == EmpireCity_VulnerableRoman) {
+		if (Data_Empire_Cities[i].inUse) {
+			if (Data_Empire_Cities[i].cityType == EmpireCity_VulnerableRoman) {
 				Data_CityInfo.distantBattleTradeCity = i;
 			}
 		}
@@ -134,8 +192,8 @@ void Empire_determineDistantBattleCity()
 void Empire_resetYearlyTradeAmounts()
 {
 	for (int i = 0; i < 41; i++) {
-		if (Data_Empire_TradeCities[i].inUse && Data_Empire_TradeCities[i].isOpen) {
-			int routeId = Data_Empire_TradeCities[i].routeId;
+		if (Data_Empire_Cities[i].inUse && Data_Empire_Cities[i].isOpen) {
+			int routeId = Data_Empire_Cities[i].routeId;
 			for (int resource = 1; resource <= 15; resource++) {
 				Data_Empire_Trade.tradedThisYear[routeId][resource] = 0;
 			}
@@ -231,3 +289,65 @@ static void setTradeAmountCode(int index, int resource, int amountCode)
 	}
 }
 
+int Empire_getCityForObject(int empireObjectId)
+{
+	for (int i = 0; i < 41; i++) {
+		if (Data_Empire_Cities[i].inUse && Data_Empire_Cities[i].empireObjectId == empireObjectId) {
+			return i;
+		}
+	}
+	return 0;
+}
+
+int Empire_getCityForTradeRoute(int routeId)
+{
+	for (int i = 0; i < 41; i++) {
+		if (Data_Empire_Cities[i].inUse && Data_Empire_Cities[i].routeId == routeId) {
+			return i;
+		}
+	}
+	return 0;
+}
+
+int Empire_isTradeWithCityOpen(int routeId)
+{
+	for (int i = 0; i < 41; i++) {
+		if (Data_Empire_Cities[i].inUse && Data_Empire_Cities[i].routeId == routeId) {
+			return Data_Empire_Cities[i].isOpen ? 1 : 0;
+		}
+	}
+	return 0;
+}
+
+void Empire_handleExpandEvent()
+{
+	if (Data_Scenario.empireHasExpanded || Data_Scenario.empireExpansionYear <= 0) {
+		return;
+	}
+	if (Data_CityInfo_Extra.gameTimeYear < Data_Scenario.empireExpansionYear + Data_Scenario.startYear) {
+		return;
+	}
+
+	for (int i = 0; i < 41; i++) {
+		if (!Data_Empire_Cities[i].inUse) {
+			continue;
+		}
+		if (Data_Empire_Cities[i].cityType == EmpireCity_FutureTrade) {
+			Data_Empire_Cities[i].cityType = EmpireCity_Trade;
+		} else if (Data_Empire_Cities[i].cityType == EmpireCity_FutureRoman) {
+			Data_Empire_Cities[i].cityType = EmpireCity_DistantRoman;
+		} else {
+			continue;
+		}
+		int objectId = Data_Empire_Cities[i].empireObjectId;
+		Data_Empire_Objects[objectId].cityType = Data_Empire_Cities[i].cityType;
+		if (Data_Empire_Cities[i].cityType == EmpireCity_Trade) {
+			Data_Empire_Objects[i].graphicIdExpanded = GraphicId(ID_Graphic_EmpireCityTrade);
+		} else if (Data_Empire_Cities[i].cityType == EmpireCity_DistantRoman) {
+			Data_Empire_Objects[i].graphicIdExpanded = GraphicId(ID_Graphic_EmpireCityDistantRoman);
+		}
+	}
+
+	Data_Scenario.empireHasExpanded = 1;
+	PlayerMessage_post(1, 77, 0, 0);
+}

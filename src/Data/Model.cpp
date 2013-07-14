@@ -22,9 +22,11 @@ struct Data_Settings_Map Data_Settings_Map;
 struct Data_Message Data_Message;
 struct Data_Random Data_Random;
 
+struct Data_Empire Data_Empire;
+struct Data_Empire_Sizes Data_Empire_Sizes = {2000, 1000, 16, 16, 120};
 struct Data_Empire_Index Data_Empire_Index[40];
 struct Data_Empire_Object Data_Empire_Objects[200];
-struct Data_Empire_TradeCity Data_Empire_TradeCities[41];
+struct Data_Empire_City Data_Empire_Cities[41];
 struct Data_Empire_Trade Data_Empire_Trade;
 
 struct Data_Graphics_Main Data_Graphics_Main;

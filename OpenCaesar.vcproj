@@ -295,6 +295,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\PlayerMessage.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Random.cpp"
 				>
 			</File>
@@ -421,19 +425,19 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\KeyboardInput.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\Data\KeyboardInput.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Language.h"
+				RelativePath=".\src\KeyboardInput.h"
 				>
 			</File>
 			<File
 				RelativePath=".\src\Language.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Data\Language.h"
 				>
 			</File>
 			<File
@@ -453,11 +457,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\data\Random.h"
+				RelativePath=".\src\PlayerMessage.h"
 				>
 			</File>
 			<File
 				RelativePath=".\src\Random.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\data\Random.h"
 				>
 			</File>
 			<File

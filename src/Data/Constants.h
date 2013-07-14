@@ -17,6 +17,8 @@ enum {
 	ID_Graphic_PopulationGraphBar = 157,
 	ID_Graphic_WinGame = 160,
 	ID_Graphic_EmpireCity = 174,
+	ID_Graphic_EmpireCityTrade = 175,
+	ID_Graphic_EmpireCityDistantRoman = 176,
 	ID_Graphic_RatingsColumn = 189,
 	ID_Graphic_RatingsBackground = 195,
 	ID_Graphic_BorderedButton = 208,
@@ -49,6 +51,18 @@ enum {
 	EmpireCity_DistantForeign = 4,
 	EmpireCity_VulnerableRoman = 5,
 	EmpireCity_FutureRoman = 6,
+};
+
+enum {
+	Direction_Top = 0,
+	Direction_TopRight = 1,
+	Direction_Right = 2,
+	Direction_BottomRight = 3,
+	Direction_Bottom = 4,
+	Direction_BottomLeft = 5,
+	Direction_Left = 6,
+	Direction_TopLeft = 7,
+	Direction_None = 8,
 };
 
 extern int Constant_SalaryForRank[11];
