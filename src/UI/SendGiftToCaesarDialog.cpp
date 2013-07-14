@@ -20,7 +20,7 @@ static CustomButton buttons[5] = {
 	{400, 336, 560, 356, buttonCancel, Widget_Button_doNothing, 1, 0, 0},
 };
 
-int focusButtonId;
+static int focusButtonId;
 
 void UI_SendGiftToCaesarDialog_init()
 {

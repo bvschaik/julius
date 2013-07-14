@@ -1132,10 +1132,7 @@ extern struct Data_CityInfo {
 	char __unknown_4381;
 	char __unknown_4382;
 	char __unknown_4383;
-	char __unknown_4384;
-	char __unknown_4385;
-	char __unknown_4386;
-	char __unknown_4387;
+	int donateAmount;
 	char __unknown_4388;
 	char __unknown_4389;
 	char __unknown_438a;

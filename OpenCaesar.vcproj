@@ -239,6 +239,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\UI\DonateToCityDialog.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Empire.cpp"
 				>
 			</File>

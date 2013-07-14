@@ -26,6 +26,11 @@ void UI_SetSalaryDialog_drawBackground();
 void UI_SetSalaryDialog_drawForeground();
 void UI_SetSalaryDialog_handleMouse();
 
+void UI_DonateToCityDialog_init();
+void UI_DonateToCityDialog_drawBackground();
+void UI_DonateToCityDialog_drawForeground();
+void UI_DonateToCityDialog_handleMouse();
+
 void UI_SendGiftToCaesarDialog_init();
 void UI_SendGiftToCaesarDialog_drawBackground();
 void UI_SendGiftToCaesarDialog_drawForeground();

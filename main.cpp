@@ -60,6 +60,11 @@ int main(int argc, char **argv)
 	printf("Load language: %d\n", Language_load("c3.eng", 0));
 	GameFile_loadSavedGame("1.sav");
 
+	for (int i = 0; i < 10000; i++) {
+		if (Data_Graphics_Main.index[i].unknown_3A) {
+			printf("%d: %d\n", i, Data_Graphics_Main.index[i].unknown_3A);
+		}
+	}
 	/*
 	Widget_Panel_drawOuterPanel(2, 3, 50, 37);
 	Widget_Panel_drawInnerPanel(100, 100, 10, 10);

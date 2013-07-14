@@ -91,6 +91,7 @@ void UI_Advisor_Imperial_handleMouse()
 
 static void buttonDonateToCity(int param1, int param2)
 {
+	UI_Window_goTo(Window_DonateToCityDialog);
 }
 
 static void buttonSetSalary(int param1, int param2)

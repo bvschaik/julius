@@ -11,7 +11,8 @@ typedef enum {
 	Window_DifficultyOptions = 4,//69
 	Window_Advisors = 5, // 7
 	Window_SetSalaryDialog = 6, //44
-	Window_SendGiftToCaesarDialog = 7, //46
+	Window_DonateToCityDialog = 7, //45
+	Window_SendGiftToCaesarDialog = 8, //46
 } WindowId;
 
 void UI_Window_goTo(WindowId windowId);
