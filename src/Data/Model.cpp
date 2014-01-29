@@ -10,6 +10,7 @@
 #include "Buttons.h"
 #include "Language.h"
 #include "CityInfo.h"
+#include "KeyboardInput.h"
 
 struct Data_Model_House Data_Model_Houses[20];
 struct Data_Model_Building Data_Model_Buildings[130];
@@ -45,5 +46,7 @@ struct Data_CityInfo Data_CityInfo;
 struct Data_CityInfo_Buildings Data_CityInfo_Buildings;
 struct Data_CityInfo_CultureCoverage Data_CityInfo_CultureCoverage;
 struct Data_CityInfo_Extra Data_CityInfo_Extra;
+
+struct Data_KeyboardInput Data_KeyboardInput;
 
 int Constant_SalaryForRank[11] = {0, 2, 5, 8, 12, 20, 30, 40, 60, 80, 100};

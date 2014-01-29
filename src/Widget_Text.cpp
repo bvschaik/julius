@@ -2,6 +2,7 @@
 
 #include "Data/Constants.h"
 #include "Data/Graphics.h"
+#include "Data/KeyboardInput.h"
 
 #include "Graphics.h"
 #include "Language.h"

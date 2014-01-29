@@ -104,7 +104,7 @@ void UI_SpeedOptions_drawForeground()
 
 	Widget_Button_drawArrowButtons(
 		baseOffsetX + 128, baseOffsetY + 40,
-		arrowButtons, 8
+		arrowButtons, 4
 	);
 
 	// TODO: reset clip region() ?

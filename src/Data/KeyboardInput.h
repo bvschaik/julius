@@ -8,11 +8,13 @@ struct Data_KeyboardInputLine {
 	char text[65];
 };
 
-struct Data_KeyboardInput {
+extern struct Data_KeyboardInput {
 	struct Data_KeyboardInputLine lines;
 	struct Data_KeyboardInputLine *current;
 	int isInsert;
 	int accepted;
+	int cursorOffsetX;
+	int cursorOffsetY;
 } Data_KeyboardInput;
 
 #endif

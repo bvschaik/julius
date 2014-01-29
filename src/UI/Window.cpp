@@ -26,7 +26,7 @@ static struct Window windows[] = {
 	{ noop, UI_MainMenu_drawBackground, UI_MainMenu_drawForeground, UI_MainMenu_handleMouse },
 	{ noop, noop, noop, noop },
 	{ UI_SoundOptions_init, noop, UI_SoundOptions_drawForeground, UI_SoundOptions_handleMouse },
-	{ UI_SoundOptions_init, noop, UI_SpeedOptions_drawForeground, UI_SpeedOptions_handleMouse },
+	{ UI_SpeedOptions_init, noop, UI_SpeedOptions_drawForeground, UI_SpeedOptions_handleMouse },
 	{ noop, noop, UI_DifficultyOptions_drawForeground, UI_DifficultyOptions_handleMouse },
 	{ noop, UI_Advisors_drawBackground, UI_Advisors_drawForeground, UI_Advisors_handleMouse },
 	{ noop, UI_SetSalaryDialog_drawBackground, UI_SetSalaryDialog_drawForeground, UI_SetSalaryDialog_handleMouse },
