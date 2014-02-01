@@ -38,39 +38,32 @@ void UI_DisplayOptions_drawForeground()
 		14, 0, focusButtonId == 5 ? 1 : 2
 	);
 	
-	Color colorNormal = 0x02bf;
-	Color colorHighlight = 0xfac1;
 	Widget_GameText_drawCentered(42, 0,
 		baseOffsetX + 128, baseOffsetY + 94,
-		224, Font_LargeBlack, 0
+		224, Font_LargeBlack
 	);
 	
 	Widget_GameText_drawCentered(42,
 		Data_Settings.fullscreen ? 2 : 1,
 		baseOffsetX + 128, baseOffsetY + 140,
-		224, Font_SmallBrown,
-		focusButtonId == 1 ? colorHighlight : colorNormal
+		224, Font_SmallBrown
 	);
 	
 	Widget_GameText_drawCentered(42, 3,
 		baseOffsetX + 128, baseOffsetY + 164,
-		224, Font_SmallBrown,
-		focusButtonId == 2 ? colorHighlight : colorNormal
+		224, Font_SmallBrown
 	);
 	Widget_GameText_drawCentered(42, 4,
 		baseOffsetX + 128, baseOffsetY + 188,
-		224, Font_SmallBrown,
-		focusButtonId == 3 ? colorHighlight : colorNormal
+		224, Font_SmallBrown
 	);
 	Widget_GameText_drawCentered(42, 5,
 		baseOffsetX + 128, baseOffsetY + 212,
-		224, Font_SmallBrown,
-		focusButtonId == 4 ? colorHighlight : colorNormal
+		224, Font_SmallBrown
 	);
 	Widget_GameText_drawCentered(42, 6,
 		baseOffsetX + 128, baseOffsetY + 236,
-		224, Font_SmallBrown,
-		focusButtonId == 5 ? colorHighlight : colorNormal
+		224, Font_SmallBrown
 	);
 	
 	// TODO: reset clip region() ?

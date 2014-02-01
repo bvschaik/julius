@@ -73,33 +73,33 @@ void UI_SpeedOptions_drawForeground()
 	Color colorHighlight = 0xfac1;
 	Widget_GameText_drawCentered(45, 0,
 		baseOffsetX + 128, baseOffsetY + 92,
-		224, Font_LargeBlack, Color_Black
+		224, Font_LargeBlack
 	);
 	Widget_GameText_drawCentered(45, 4,
 		baseOffsetX + 128, baseOffsetY + 236,
-		224, Font_SmallBrown, focusButtonId == 1 ? colorHighlight : colorNormal
+		224, Font_SmallBrown
 	);
 	Widget_GameText_drawCentered(45, 1,
 		baseOffsetX + 128, baseOffsetY + 266,
-		224, Font_SmallBrown, focusButtonId == 2 ? colorHighlight : colorNormal
+		224, Font_SmallBrown
 	);
 	Widget_GameText_draw(45, 2,
 		baseOffsetX + 144, baseOffsetY + 146,
-		Font_NormalPlain, Color_Black
+		Font_NormalPlain
 	);
 	Widget_Text_drawNumber(
 		Data_Settings.gameSpeed, 64, "%",
 		baseOffsetX + 296, baseOffsetY + 146,
-		Font_NormalPlain, Color_Black
+		Font_NormalPlain
 	);
 	Widget_GameText_draw(45, 3,
 		baseOffsetX + 144, baseOffsetY + 182,
-		Font_NormalPlain, Color_Black
+		Font_NormalPlain
 	);
 	Widget_Text_drawNumber(
 		Data_Settings.scrollSpeed, 64, "%",
 		baseOffsetX + 296, baseOffsetY + 182,
-		Font_NormalPlain, Color_Black
+		Font_NormalPlain
 	);
 
 	Widget_Button_drawArrowButtons(

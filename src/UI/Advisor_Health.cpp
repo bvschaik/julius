@@ -8,89 +8,89 @@ void UI_Advisor_Health_drawBackground()
 	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, 18);
 	Graphics_drawImage(GraphicId(ID_Graphic_AdvisorIcons) + 6, baseOffsetX + 10, baseOffsetY + 10);
 
-	Widget_GameText_draw(56, 0, baseOffsetX + 60, baseOffsetY + 12, Font_LargeBlack, 0);
+	Widget_GameText_draw(56, 0, baseOffsetX + 60, baseOffsetY + 12, Font_LargeBlack);
 	if (Data_CityInfo.population >= 200) {
 		Widget_GameText_drawMultiline(56,
 			Data_CityInfo.healthRate / 10 + 16,
 			baseOffsetX + 60, baseOffsetY + 46,
-			512, Font_NormalBlack, 0
+			512, Font_NormalBlack
 		);
 	} else {
 		Widget_GameText_drawMultiline(56, 15,
 			baseOffsetX + 60, baseOffsetY + 46,
-			512, Font_NormalBlack, 0
+			512, Font_NormalBlack
 		);
 	}
-	Widget_GameText_draw(56, 3, baseOffsetX + 180, baseOffsetY + 94, Font_SmallPlain, 0);
-	Widget_GameText_draw(56, 4, baseOffsetX + 290, baseOffsetY + 94, Font_SmallPlain, 0);
-	Widget_GameText_draw(56, 5, baseOffsetX + 478, baseOffsetY + 94, Font_SmallPlain, 0);
+	Widget_GameText_draw(56, 3, baseOffsetX + 180, baseOffsetY + 94, Font_SmallPlain);
+	Widget_GameText_draw(56, 4, baseOffsetX + 290, baseOffsetY + 94, Font_SmallPlain);
+	Widget_GameText_draw(56, 5, baseOffsetX + 478, baseOffsetY + 94, Font_SmallPlain);
 
 	Widget_Panel_drawInnerPanel(baseOffsetX + 32, baseOffsetY + 108, 36, 5);
 
 	// bathhouses
 	Widget_GameText_drawNumberWithDescription(8, 24,
 		Data_CityInfo_Buildings.bathhouse.total,
-		baseOffsetX + 40, baseOffsetY + 112, Font_SmallBrown, 0
+		baseOffsetX + 40, baseOffsetY + 112, Font_SmallBrown
 	);
 	Widget_Text_drawNumberCentered(
 		Data_CityInfo_Buildings.bathhouse.total, '@', " ",
-		baseOffsetX + 150, baseOffsetY + 112, 100, Font_SmallBrown, 0
+		baseOffsetX + 150, baseOffsetY + 112, 100, Font_SmallBrown
 	);
-	Widget_GameText_draw(56, 2, baseOffsetX + 300, baseOffsetY + 112, Font_SmallBrown, 0);
-	Widget_GameText_draw(56, 2, baseOffsetX + 504, baseOffsetY + 112, Font_SmallBrown, 0);
+	Widget_GameText_draw(56, 2, baseOffsetX + 300, baseOffsetY + 112, Font_SmallBrown);
+	Widget_GameText_draw(56, 2, baseOffsetX + 504, baseOffsetY + 112, Font_SmallBrown);
 
 	// barbers
 	Widget_GameText_drawNumberWithDescription(8, 26,
 		Data_CityInfo_Buildings.barber.total,
-		baseOffsetX + 40, baseOffsetY + 132, Font_SmallBrown, 0
+		baseOffsetX + 40, baseOffsetY + 132, Font_SmallBrown
 	);
 	Widget_Text_drawNumberCentered(
 		Data_CityInfo_Buildings.barber.working, '@', " ",
-		baseOffsetX + 150, baseOffsetY + 132, 100, Font_SmallBrown, 0
+		baseOffsetX + 150, baseOffsetY + 132, 100, Font_SmallBrown
 	);
-	Widget_GameText_draw(56, 2, baseOffsetX + 300, baseOffsetY + 132, Font_SmallBrown, 0);
-	Widget_GameText_draw(56, 2, baseOffsetX + 504, baseOffsetY + 132, Font_SmallBrown, 0);
+	Widget_GameText_draw(56, 2, baseOffsetX + 300, baseOffsetY + 132, Font_SmallBrown);
+	Widget_GameText_draw(56, 2, baseOffsetX + 504, baseOffsetY + 132, Font_SmallBrown);
 
 	// clinics
 	Widget_GameText_drawNumberWithDescription(8, 28,
 		Data_CityInfo_Buildings.clinic.total,
-		baseOffsetX + 40, baseOffsetY + 152, Font_SmallBrown, 0
+		baseOffsetX + 40, baseOffsetY + 152, Font_SmallBrown
 	);
 	Widget_Text_drawNumberCentered(
 		Data_CityInfo_Buildings.clinic.working, '@', " ",
-		baseOffsetX + 150, baseOffsetY + 152, 100, Font_SmallBrown, 0
+		baseOffsetX + 150, baseOffsetY + 152, 100, Font_SmallBrown
 	);
-	Widget_GameText_draw(56, 2, baseOffsetX + 300, baseOffsetY + 152, Font_SmallBrown, 0);
-	Widget_GameText_draw(56, 2, baseOffsetX + 504, baseOffsetY + 152, Font_SmallBrown, 0);
+	Widget_GameText_draw(56, 2, baseOffsetX + 300, baseOffsetY + 152, Font_SmallBrown);
+	Widget_GameText_draw(56, 2, baseOffsetX + 504, baseOffsetY + 152, Font_SmallBrown);
 
 	// hospitals
 	Widget_GameText_drawNumberWithDescription(8, 30,
 		Data_CityInfo_Buildings.hospital.total,
-		baseOffsetX + 40, baseOffsetY + 172, Font_SmallBrown, 0
+		baseOffsetX + 40, baseOffsetY + 172, Font_SmallBrown
 	);
 	Widget_Text_drawNumberCentered(
 		Data_CityInfo_Buildings.hospital.working, '@', " ",
-		baseOffsetX + 150, baseOffsetY + 172, 100, Font_SmallBrown, 0
+		baseOffsetX + 150, baseOffsetY + 172, 100, Font_SmallBrown
 	);
 
 	int width = Widget_Text_drawNumber(
 		1000 * Data_CityInfo_Buildings.hospital.working,
-		'@', " ", baseOffsetX + 280, baseOffsetY + 172, Font_SmallBrown, 0
+		'@', " ", baseOffsetX + 280, baseOffsetY + 172, Font_SmallBrown
 	);
-	Widget_GameText_draw(56, 6, baseOffsetX + 280 + width, baseOffsetY + 172, Font_SmallBrown, 0);
+	Widget_GameText_draw(56, 6, baseOffsetX + 280 + width, baseOffsetY + 172, Font_SmallBrown);
 
 	if (Data_CityInfo_CultureCoverage.hospital == 0) {
 		Widget_GameText_drawCentered(57, 10,
-			baseOffsetX + 420, baseOffsetY + 172, 200, Font_SmallBrown, 0
+			baseOffsetX + 420, baseOffsetY + 172, 200, Font_SmallBrown
 		);
 	} else if (Data_CityInfo_CultureCoverage.hospital < 100) {
 		Widget_GameText_drawCentered(57,
 			Data_CityInfo_CultureCoverage.hospital / 10 + 11,
-			baseOffsetX + 420, baseOffsetY + 172, 200, Font_SmallBrown, 0
+			baseOffsetX + 420, baseOffsetY + 172, 200, Font_SmallBrown
 		);
 	} else {
 		Widget_GameText_drawCentered(57, 21,
-			baseOffsetX + 420, baseOffsetY + 172, 200, Font_SmallBrown, 0
+			baseOffsetX + 420, baseOffsetY + 172, 200, Font_SmallBrown
 		);
 	}
 
@@ -114,6 +114,6 @@ void UI_Advisor_Health_drawBackground()
 			break;
 	}
 	Widget_GameText_drawMultiline(56, 7 + adviceId,
-		baseOffsetX + 60, baseOffsetY + 194, 512, Font_NormalBlack, 0
+		baseOffsetX + 60, baseOffsetY + 194, 512, Font_NormalBlack
 	);
 }

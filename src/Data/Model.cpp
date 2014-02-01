@@ -38,7 +38,7 @@ struct Data_Screen Data_Screen = { 800, 600, {80, 60} };
 
 struct Data_Mouse Data_Mouse;
 
-struct Data_Buttons_Arrow Data_Buttons_Arrow;
+//struct Data_Buttons_Arrow Data_Buttons_Arrow;
 
 struct Data_Language_Text Data_Language_Text;
 

@@ -49,24 +49,24 @@ void UI_DonateToCityDialog_drawBackground()
 	Graphics_drawImage(GraphicId(ID_Graphic_ResourceIcons) + 16,
 		baseOffsetX + 96, baseOffsetY + 176);
 	Widget_GameText_drawCentered(52, 16,
-		baseOffsetX + 80, baseOffsetY + 176, 496, Font_LargeBlack, 0);
+		baseOffsetX + 80, baseOffsetY + 176, 496, Font_LargeBlack);
 
 	Widget_Panel_drawInnerPanel(baseOffsetX + 112, baseOffsetY + 208, 26, 4);
 
-	Widget_Text_drawNumberCentered(0, '@', " ", baseOffsetX + 124, baseOffsetY + 221, 64, Font_NormalWhite, 0);
-	Widget_Text_drawNumberCentered(500, '@', " ", baseOffsetX + 204, baseOffsetY + 221, 64, Font_NormalWhite, 0);
-	Widget_Text_drawNumberCentered(2000, '@', " ", baseOffsetX + 284, baseOffsetY + 221, 64, Font_NormalWhite, 0);
-	Widget_Text_drawNumberCentered(5000, '@', " ", baseOffsetX + 364, baseOffsetY + 221, 64, Font_NormalWhite, 0);
-	Widget_GameText_drawCentered(52, 19, baseOffsetX + 444, baseOffsetY + 221, 64, Font_NormalWhite, 0);
+	Widget_Text_drawNumberCentered(0, '@', " ", baseOffsetX + 124, baseOffsetY + 221, 64, Font_NormalWhite);
+	Widget_Text_drawNumberCentered(500, '@', " ", baseOffsetX + 204, baseOffsetY + 221, 64, Font_NormalWhite);
+	Widget_Text_drawNumberCentered(2000, '@', " ", baseOffsetX + 284, baseOffsetY + 221, 64, Font_NormalWhite);
+	Widget_Text_drawNumberCentered(5000, '@', " ", baseOffsetX + 364, baseOffsetY + 221, 64, Font_NormalWhite);
+	Widget_GameText_drawCentered(52, 19, baseOffsetX + 444, baseOffsetY + 221, 64, Font_NormalWhite);
 
-	Widget_GameText_draw(52, 17, baseOffsetX + 128, baseOffsetY + 248, Font_NormalWhite, 0);
+	Widget_GameText_draw(52, 17, baseOffsetX + 128, baseOffsetY + 248, Font_NormalWhite);
 	Widget_Text_drawNumber(Data_CityInfo.donateAmount, '@', " ",
-		baseOffsetX + 316, baseOffsetY + 248, Font_NormalWhite, 0);
+		baseOffsetX + 316, baseOffsetY + 248, Font_NormalWhite);
 
 	Widget_GameText_drawCentered(13, 4,
-		baseOffsetX + 336, baseOffsetY + 288, 160, Font_NormalBlack, 0);
+		baseOffsetX + 336, baseOffsetY + 288, 160, Font_NormalBlack);
 	Widget_GameText_drawCentered(52, 18,
-		baseOffsetX + 144, baseOffsetY + 288, 160, Font_NormalBlack, 0);
+		baseOffsetX + 144, baseOffsetY + 288, 160, Font_NormalBlack);
 }
 
 void UI_DonateToCityDialog_drawForeground()

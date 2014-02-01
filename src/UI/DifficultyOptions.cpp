@@ -29,17 +29,17 @@ void UI_DifficultyOptions_drawForeground()
 	
 	Widget_GameText_drawCentered(153, 0,
 		baseOffsetX + 48, baseOffsetY + 94,
-		384, Font_LargeBlack, 0
+		384, Font_LargeBlack
 	);
 	
 	Widget_GameText_drawCentered(153, Data_Settings.difficulty + 1,
 		baseOffsetX + 80, baseOffsetY + 142,
-		224, Font_NormalBlack, 0
+		224, Font_NormalBlack
 	);
 	Widget_GameText_drawCentered(
 		153, Data_Settings.godsEnabled ? 7 : 6,
 		baseOffsetX + 80, baseOffsetY + 190,
-		224, Font_NormalBlack, 0
+		224, Font_NormalBlack
 	);
 	Widget_Button_drawArrowButtons(
 		baseOffsetX + 288, baseOffsetY + 80,
@@ -47,7 +47,7 @@ void UI_DifficultyOptions_drawForeground()
 	);
 	Widget_GameText_drawCentered(153, 8,
 		baseOffsetX + 48, baseOffsetY + 246,
-		384, Font_NormalBlack, 0
+		384, Font_NormalBlack
 	);
 }
 

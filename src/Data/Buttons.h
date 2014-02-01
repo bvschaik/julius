@@ -4,11 +4,11 @@
 struct Data_Buttons_ArrowButton {
 	int foo;
 };
-
+/*
 extern struct Data_Buttons_Arrow {
 	struct Data_Buttons_ArrowButton difficultyOptions[3];
 } Data_Buttons_Arrow;
-
+*/
 typedef struct {
 	short xOffset;
 	short yOffset;
@@ -57,5 +57,19 @@ typedef struct {
 	char field_F;
 } ArrowButton;
 
+typedef struct {
+	short yOffset;
+	short textNumber;
+	void (*leftClickHandler)(int param);
+	int parameter;
+} MenuItem;
+
+typedef struct {
+	short xOffset;
+	short yOffset;
+	short textGroup;
+	MenuItem *items;
+	int numItems;
+} MenuBarItem;
 
 #endif

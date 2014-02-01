@@ -82,8 +82,8 @@ int main(int argc, char **argv)
 	//Widget_Text_draw("test", 10 + offset, 10, Font_NormalWhite, 0);
 	Widget_Panel_drawOuterPanel(0, 0, 8, 8);
 	Widget_Text_drawMultiline("this is a very long body of text which should be split across multiple lines",
-		10, 10, 108, Font_NormalBlack, 0);
-	Widget_Text_drawNumber(100, '@', "test", 200, 200, Font_NormalWhite, 0);
+		10, 10, 108, Font_NormalBlack);
+	Widget_Text_drawNumber(100, '@', "test", 200, 200, Font_NormalWhite);
 	//Graphics_drawImage(GraphicId(160), 0, 0);
 
 	Graphics_drawRect(200, 200, 191, 191, 0xf000);

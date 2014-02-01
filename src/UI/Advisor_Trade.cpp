@@ -11,8 +11,8 @@ void UI_Advisor_Trade_drawBackground()
 	Graphics_drawImage(GraphicId(ID_Graphic_AdvisorIcons) + 4,
 		baseOffsetX + 10, baseOffsetY + 10);
 
-	Widget_GameText_draw(54, 0, baseOffsetX + 60, baseOffsetY + 12, Font_LargeBlack, 0);
+	Widget_GameText_draw(54, 0, baseOffsetX + 60, baseOffsetY + 12, Font_LargeBlack);
 
-	Widget_GameText_draw(54, 1, baseOffsetX + 400, baseOffsetY + 38, Font_NormalBlack, 0);
+	Widget_GameText_draw(54, 1, baseOffsetX + 400, baseOffsetY + 38, Font_NormalBlack);
 }
 

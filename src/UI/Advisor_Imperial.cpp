@@ -35,11 +35,11 @@ void UI_Advisor_Imperial_drawBackground()
 
 	Widget_Text_draw(Data_Settings.playerName, baseOffsetX + 60, baseOffsetY + 12, Font_LargeBlack, 0);
 
-	int width = Widget_GameText_draw(52, 0, baseOffsetX + 60, baseOffsetY + 44, Font_NormalBlack, 0);
-	Widget_Text_drawNumber(Data_CityInfo.ratingFavor, '@', " ", baseOffsetX + 60 + width, baseOffsetY + 44, Font_NormalBlack, 0);
+	int width = Widget_GameText_draw(52, 0, baseOffsetX + 60, baseOffsetY + 44, Font_NormalBlack);
+	Widget_Text_drawNumber(Data_CityInfo.ratingFavor, '@', " ", baseOffsetX + 60 + width, baseOffsetY + 44, Font_NormalBlack);
 
 	Widget_GameText_drawMultiline(52, Data_CityInfo.ratingFavor / 5 + 22,
-		baseOffsetX + 60, baseOffsetY + 60, 544, Font_NormalBlack, 0);
+		baseOffsetX + 60, baseOffsetY + 60, 544, Font_NormalBlack);
 
 	Widget_Panel_drawInnerPanel(baseOffsetX + 32, baseOffsetY + 90, 36, 14);
 	
@@ -54,28 +54,28 @@ void UI_Advisor_Imperial_drawForeground()
 	Widget_Panel_drawInnerPanel(baseOffsetX + 64, baseOffsetY + 324, 32, 6);
 
 	Widget_GameText_draw(32, Data_CityInfo.playerRank,
-		baseOffsetX + 72, baseOffsetY + 338, Font_LargeBrown, 0);
+		baseOffsetX + 72, baseOffsetY + 338, Font_LargeBrown);
 	
 	int width = Widget_GameText_draw(52, 1,
-		baseOffsetX + 72, baseOffsetY + 372, Font_NormalWhite, 0);
+		baseOffsetX + 72, baseOffsetY + 372, Font_NormalWhite);
 	Widget_Text_drawNumber(Data_CityInfo.personalSavings, '@', " Dn",
-		baseOffsetX + 72 + width, baseOffsetY + 372, Font_NormalWhite, 0);
+		baseOffsetX + 72 + width, baseOffsetY + 372, Font_NormalWhite);
 
 	Widget_Panel_drawButtonBorder(baseOffsetX + 320, baseOffsetY + 367,
 		250, 20, focusButtonId == 1);
-	Widget_GameText_drawCentered(52, 2, baseOffsetX + 320, baseOffsetY + 372, 250, Font_NormalWhite, 0);
+	Widget_GameText_drawCentered(52, 2, baseOffsetX + 320, baseOffsetY + 372, 250, Font_NormalWhite);
 
 	Widget_Panel_drawButtonBorder(baseOffsetX + 70, baseOffsetY + 393,
 		500, 20, focusButtonId == 2);
 	width = Widget_GameText_draw(52, Data_CityInfo.salaryRank + 4,
-		baseOffsetX + 120, baseOffsetY + 398, Font_NormalWhite, 0);
+		baseOffsetX + 120, baseOffsetY + 398, Font_NormalWhite);
 	width += Widget_Text_drawNumber(Data_CityInfo.salaryAmount, '@', " ",
-		baseOffsetX + 120 + width, baseOffsetY + 398, Font_NormalWhite, 0);
-	Widget_GameText_draw(52, 3, baseOffsetX + 120 + width, baseOffsetY + 398, Font_NormalWhite, 0);
+		baseOffsetX + 120 + width, baseOffsetY + 398, Font_NormalWhite);
+	Widget_GameText_draw(52, 3, baseOffsetX + 120 + width, baseOffsetY + 398, Font_NormalWhite);
 
 	Widget_Panel_drawButtonBorder(baseOffsetX + 320, baseOffsetY + 341,
 		250, 20, focusButtonId == 3);
-	Widget_GameText_drawCentered(52, 49, baseOffsetX + 320, baseOffsetY + 346, 250, Font_NormalWhite, 0);
+	Widget_GameText_drawCentered(52, 49, baseOffsetX + 320, baseOffsetY + 346, 250, Font_NormalWhite);
 
 	// Request buttons
 	// TODO

@@ -229,34 +229,47 @@ static void numberToString(char *str, int value, char prefix, const char *postfi
 	str[offset] = 0;
 }
 
-int Widget_Text_drawNumber(int value, char prefix, const char *postfix, int xOffset, int yOffset, Font font, Color color)
+int Widget_Text_drawNumber(int value, char prefix, const char *postfix, int xOffset, int yOffset, Font font)
+{
+	char str[100];
+	numberToString(str, value, prefix, postfix);
+	return Widget_Text_draw(str, xOffset, yOffset, font, 0);
+}
+
+int Widget_Text_drawNumberColored(int value, char prefix, const char *postfix, int xOffset, int yOffset, Font font, Color color)
 {
 	char str[100];
 	numberToString(str, value, prefix, postfix);
 	return Widget_Text_draw(str, xOffset, yOffset, font, color);
 }
 
-void Widget_Text_drawNumberCentered(int value, char prefix, const char *postfix, int xOffset, int yOffset, int boxWidth, Font font, Color color)
+void Widget_Text_drawNumberCentered(int value, char prefix, const char *postfix, int xOffset, int yOffset, int boxWidth, Font font)
 {
 	char str[100];
 	numberToString(str, value, prefix, postfix);
-	Widget_Text_drawCentered(str, xOffset, yOffset, boxWidth, font, color);
+	Widget_Text_drawCentered(str, xOffset, yOffset, boxWidth, font, 0);
 }
 
 
-int Widget_GameText_draw(int group, int number, int xOffset, int yOffset, Font font, Color color)
+int Widget_GameText_draw(int group, int number, int xOffset, int yOffset, Font font)
+{
+	const char *str = Language_getString(group, number);
+	return Widget_Text_draw(str, xOffset, yOffset, font, 0);
+}
+
+int Widget_GameText_drawColored(int group, int number, int xOffset, int yOffset, Font font, Color color)
 {
 	const char *str = Language_getString(group, number);
 	return Widget_Text_draw(str, xOffset, yOffset, font, color);
 }
 
-void Widget_GameText_drawCentered(int group, int number, int xOffset, int yOffset, int boxWidth, Font font, Color color)
+void Widget_GameText_drawCentered(int group, int number, int xOffset, int yOffset, int boxWidth, Font font)
 {
 	const char *str = Language_getString(group, number);
-	Widget_Text_drawCentered(str, xOffset, yOffset, boxWidth, font, color);
+	Widget_Text_drawCentered(str, xOffset, yOffset, boxWidth, font, 0);
 }
 
-int Widget_GameText_drawNumberWithDescription(int group, int number, int amount, int xOffset, int yOffset, Font font, Color color)
+int Widget_GameText_drawNumberWithDescription(int group, int number, int amount, int xOffset, int yOffset, Font font)
 {
 	int amountOffset = 1;
 	if (amount == 1 || amount == -1) {
@@ -265,42 +278,55 @@ int Widget_GameText_drawNumberWithDescription(int group, int number, int amount,
 	int descOffsetX;
 	if (amount >= 0) {
 		descOffsetX = Widget_Text_drawNumber(amount, ' ', " ",
-			xOffset, yOffset, font, color);
+			xOffset, yOffset, font);
 	} else {
 		descOffsetX = Widget_Text_drawNumber(-amount, '-', " ",
-			xOffset, yOffset, font, color);
+			xOffset, yOffset, font);
 	}
 	return descOffsetX + Widget_GameText_draw(group, number + amountOffset,
-		xOffset + descOffsetX, yOffset, font, color);
+		xOffset + descOffsetX, yOffset, font);
 }
 
-int Widget_GameText_drawYear(int year, int xOffset, int yOffset, Font font, Color color)
+int Widget_GameText_drawYear(int year, int xOffset, int yOffset, Font font)
 {
 	int width = 0;
 	if (year >= 0) {
-		width += Widget_GameText_draw(20, 1, xOffset + width, yOffset, font, color);
-		width += Widget_Text_drawNumber(year, ' ', " ", xOffset + width, yOffset, font, color);
+		width += Widget_GameText_draw(20, 1, xOffset + width, yOffset, font);
+		width += Widget_Text_drawNumber(year, ' ', " ", xOffset + width, yOffset, font);
 	} else {
-		width += Widget_Text_drawNumber(-year, ' ', " ", xOffset + width, yOffset, font, color);
-		width += Widget_GameText_draw(20, 0, xOffset + width, yOffset, font, color);
+		width += Widget_Text_drawNumber(-year, ' ', " ", xOffset + width, yOffset, font);
+		width += Widget_GameText_draw(20, 0, xOffset + width, yOffset, font);
 	}
 	return width;
 }
 
-int Widget_GameText_drawYearNoSpacing(int year, int xOffset, int yOffset, Font font, Color color)
+int Widget_GameText_drawYearColored(int year, int xOffset, int yOffset, Font font, Color color)
 {
 	int width = 0;
 	if (year >= 0) {
-		width += Widget_GameText_draw(20, 1, xOffset + width, yOffset, font, color);
-		width += Widget_Text_drawNumber(year, ' ', " ", xOffset + width, yOffset, font, color);
+		width += Widget_GameText_drawColored(20, 1, xOffset + width, yOffset, font, color);
+		width += Widget_Text_drawNumberColored(year, ' ', " ", xOffset + width, yOffset, font, color);
 	} else {
-		width += Widget_Text_drawNumber(-year, ' ', " ", xOffset + width, yOffset, font, color);
-		width += Widget_GameText_draw(20, 0, xOffset + width - 8, yOffset, font, color);
+		width += Widget_Text_drawNumberColored(-year, ' ', " ", xOffset + width, yOffset, font, color);
+		width += Widget_GameText_drawColored(20, 0, xOffset + width, yOffset, font, color);
 	}
 	return width;
 }
 
-int Widget_Text_drawMultiline(const char *str, int xOffset, int yOffset, int boxWidth, Font font, Color color)
+int Widget_GameText_drawYearNoSpacing(int year, int xOffset, int yOffset, Font font)
+{
+	int width = 0;
+	if (year >= 0) {
+		width += Widget_GameText_draw(20, 1, xOffset + width, yOffset, font);
+		width += Widget_Text_drawNumber(year, ' ', " ", xOffset + width, yOffset, font);
+	} else {
+		width += Widget_Text_drawNumber(-year, ' ', " ", xOffset + width, yOffset, font);
+		width += Widget_GameText_draw(20, 0, xOffset + width - 8, yOffset, font);
+	}
+	return width;
+}
+
+int Widget_Text_drawMultiline(const char *str, int xOffset, int yOffset, int boxWidth, Font font)
 {
 	int lineHeight;
 	switch (font) {
@@ -352,15 +378,15 @@ int Widget_Text_drawMultiline(const char *str, int xOffset, int yOffset, int box
 				}
 			}
 		}
-		Widget_Text_draw(tmpLine, xOffset, y, font, color);
+		Widget_Text_draw(tmpLine, xOffset, y, font, 0);
 		y += lineHeight + 5;
 	}
 	return y - yOffset;
 }
 
-int Widget_GameText_drawMultiline(int group, int number, int xOffset, int yOffset, int boxWidth, Font font, Color color)
+int Widget_GameText_drawMultiline(int group, int number, int xOffset, int yOffset, int boxWidth, Font font)
 {
 	const char *str = Language_getString(group, number);
-	return Widget_Text_drawMultiline(str, xOffset, yOffset, boxWidth, font, color);
+	return Widget_Text_drawMultiline(str, xOffset, yOffset, boxWidth, font);
 }
 
