@@ -179,6 +179,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\UI\Advisor_Financial.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\UI\Advisor_Health.cpp"
 				>
 			</File>
@@ -216,6 +220,10 @@
 			</File>
 			<File
 				RelativePath=".\src\CityInfoUpdater.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\CityInfoUpdater_Finance.cpp"
 				>
 			</File>
 			<File
@@ -409,11 +417,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Graphics.h"
+				RelativePath=".\src\Data\Graphics.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Graphics.h"
+				RelativePath=".\src\Graphics.h"
 				>
 			</File>
 			<File
@@ -429,11 +437,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\KeyboardInput.h"
+				RelativePath=".\src\KeyboardInput.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\KeyboardInput.h"
+				RelativePath=".\src\Data\KeyboardInput.h"
 				>
 			</File>
 			<File
@@ -465,11 +473,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Random.h"
+				RelativePath=".\src\data\Random.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\data\Random.h"
+				RelativePath=".\src\Random.h"
 				>
 			</File>
 			<File

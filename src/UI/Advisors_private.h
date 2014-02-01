@@ -56,5 +56,6 @@ void UI_Advisor_Entertainment_handleMouse();
 
 void UI_Advisor_Religion_drawBackground();
 
+void UI_Advisor_Financial_drawBackground();
 
 #endif

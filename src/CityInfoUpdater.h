@@ -18,4 +18,7 @@ void CityInfoUpdater_Ratings_updatePeaceExplanation();
 void CityInfoUpdater_Ratings_sendGiftToCaesar();
 void CityInfoUpdater_Ratings_increaseFavor(int amount);
 
+void CityInfoUpdater_Finance_calculateTotals();
+void CityInfoUpdater_Finance_calculateTribute();
+
 #endif
