@@ -702,10 +702,7 @@ extern struct Data_CityInfo {
 	char __unknown_2b6d;
 	char __unknown_2b6e;
 	char __unknown_2b6f;
-	char __unknown_2b70;
-	char __unknown_2b71;
-	char __unknown_2b72;
-	char __unknown_2b73;
+	int financeWagesPaidThisYear;
 	int financeWagesThisYear;
 	int financeWagesLastYear;
 	char __unknown_2b7c;

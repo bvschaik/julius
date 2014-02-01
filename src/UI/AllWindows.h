@@ -36,5 +36,8 @@ void UI_SendGiftToCaesarDialog_drawBackground();
 void UI_SendGiftToCaesarDialog_drawForeground();
 void UI_SendGiftToCaesarDialog_handleMouse();
 
+void UI_LaborPriorityDialog_drawBackground();
+void UI_LaborPriorityDialog_drawForeground();
+void UI_LaborPriorityDialog_handleMouse();
 
 #endif

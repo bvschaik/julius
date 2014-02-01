@@ -13,6 +13,7 @@ typedef enum {
 	Window_SetSalaryDialog = 6, //44
 	Window_DonateToCityDialog = 7, //45
 	Window_SendGiftToCaesarDialog = 8, //46
+	Window_LaborPriorityDialog = 9, // 42
 } WindowId;
 
 void UI_Window_goTo(WindowId windowId);

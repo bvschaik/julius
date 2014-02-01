@@ -20,5 +20,6 @@ void CityInfoUpdater_Ratings_increaseFavor(int amount);
 
 void CityInfoUpdater_Finance_calculateTotals();
 void CityInfoUpdater_Finance_calculateTribute();
+void CityInfoUpdater_Finance_calculateEstimatedWages();
 
 #endif

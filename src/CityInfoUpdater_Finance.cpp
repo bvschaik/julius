@@ -33,3 +33,13 @@ void CityInfoUpdater_Finance_calculateTribute()
 	// the method, always sets it to zero... let's take a shortcut
 	Data_CityInfo.financeTributeThisYear = 0;
 }
+
+void CityInfoUpdater_Finance_calculateEstimatedWages()
+{
+	int monthlyWages = Data_CityInfo.wages *
+		Data_CityInfo.workersEmployed / 10 / 12;
+	Data_CityInfo.financeWagesThisYear = Data_CityInfo.financeWagesPaidThisYear;
+	Data_CityInfo.estimatedYearlyWages =
+		(11 - Data_CityInfo_Extra.gameTimeMonth + 1) * monthlyWages +
+		Data_CityInfo.financeWagesPaidThisYear;
+}

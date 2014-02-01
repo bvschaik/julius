@@ -125,6 +125,21 @@ void Graphics_fillRect(int x, int y, int width, int height, Color color)
 	}
 }
 
+void Graphics_shadeRect(int x, int y, int width, int height, int darkness)
+{
+	for (int yy = y; yy < y + height; yy++) {
+		for (int xx = x; xx < x + width; xx++) {
+			Color pixel = ScreenPixel(xx, yy);
+			int r = (pixel & 0xf800) >> 11;
+			int g = (pixel & 0x7e0) >> 6;
+			int b = (pixel & 0x1f);
+			int grey = (r + g + b) / 3 >> darkness;
+			Color newPixel = (Color) (grey << 11 | grey << 6 | grey);
+			ScreenPixel(xx, yy) = newPixel;
+		}
+	}
+}
+
 void Graphics_drawImage(int graphicId, int xOffset, int yOffset)
 {
 	Data_Graphics_Index *index = &Data_Graphics_Main.index[graphicId];

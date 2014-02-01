@@ -11,6 +11,7 @@ void Graphics_drawRect(int x, int y, int width, int height, Color color);
 void Graphics_drawInsetRect(int x, int y, int width, int height);
 
 void Graphics_fillRect(int x, int y, int width, int height, Color color);
+void Graphics_shadeRect(int x, int y, int width, int height, int darkness);
 
 void Graphics_setClipRectangle(int x, int y, int width, int height);
 void Graphics_resetClipRectangle();

@@ -1,8 +1,12 @@
 #include "Advisors_private.h"
+#include "../UI/Window.h"
+#include "../CityInfoUpdater.h"
 #include "../Data/Mouse.h"
+#include "../Util.h"
 
 static void arrowButtonWages(int param1, int param2);
 static void buttonPriority(int param1, int param2);
+static void buttonSetPriority(int param1, int param2);
 
 static CustomButton categoryButtons[9] = {
 	{40, 77, 600, 99, buttonPriority, Widget_Button_doNothing, 1, 0, 0},
@@ -22,6 +26,24 @@ static ArrowButton wageButtons[2] = {
 };
 
 static int focusButtonId;
+
+// labor priority stuff
+static int prioritySelectedCategory;
+static int priorityMaxItems;
+static int priorityFocusButtonId;
+
+static CustomButton priorityButtons[10] = {
+	{180, 256, 460, 281, buttonSetPriority, Widget_Button_doNothing, 1, 0, 0}, // no prio
+	{178, 221, 205, 248, buttonSetPriority, Widget_Button_doNothing, 1, 1, 0},
+	{210, 221, 237, 248, buttonSetPriority, Widget_Button_doNothing, 1, 2, 0},
+	{242, 221, 269, 248, buttonSetPriority, Widget_Button_doNothing, 1, 3, 0},
+	{274, 221, 301, 248, buttonSetPriority, Widget_Button_doNothing, 1, 4, 0},
+	{306, 221, 333, 248, buttonSetPriority, Widget_Button_doNothing, 1, 5, 0},
+	{338, 221, 365, 248, buttonSetPriority, Widget_Button_doNothing, 1, 6, 0},
+	{370, 221, 397, 248, buttonSetPriority, Widget_Button_doNothing, 1, 7, 0},
+	{402, 221, 429, 248, buttonSetPriority, Widget_Button_doNothing, 1, 8, 0},
+	{434, 221, 461, 248, buttonSetPriority, Widget_Button_doNothing, 1, 9, 0},
+};
 
 void UI_Advisor_Labor_drawBackground()
 {
@@ -125,10 +147,90 @@ void UI_Advisor_Labor_handleMouse()
 
 static void arrowButtonWages(int param1, int param2)
 {
-	// TODO
+	if (param1 == 1) {
+		Data_CityInfo.wages--;
+	} else if (param1 == 0) {
+		Data_CityInfo.wages++;
+	}
+	BOUND(Data_CityInfo.wages, 0, 100);
+	CityInfoUpdater_Finance_calculateEstimatedWages();
+	CityInfoUpdater_Finance_calculateTotals();
+	CityInfoUpdater_Finance_calculateTribute();
+	UI_Window_requestRefresh();
 }
 
 static void buttonPriority(int param1, int param2)
 {
-	// TODO
+	prioritySelectedCategory = param1;
+	priorityMaxItems = 0;
+	for (int i = 0; i < 9; i++) {
+		if (Data_CityInfo.laborCategory[i].priority > 0) {
+			++priorityMaxItems;
+		}
+	}
+	if (priorityMaxItems < 9 && !Data_CityInfo.laborCategory[prioritySelectedCategory].priority) {
+		// allow space for new priority...
+		++priorityMaxItems;
+	}
+	UI_Window_goTo(Window_LaborPriorityDialog);
+}
+
+void UI_LaborPriorityDialog_drawBackground()
+{
+	int baseOffsetX = Data_Screen.offset640x480.x;
+	int baseOffsetY = Data_Screen.offset640x480.y;
+
+	UI_Advisor_Labor_drawBackground();
+	UI_Advisor_Labor_drawForeground();
+
+	Widget_Panel_drawOuterPanel(baseOffsetX + 160, baseOffsetY + 176, 20, 9);
+	Widget_GameText_drawCentered(50, 25, baseOffsetX + 160, baseOffsetY + 185, 320, Font_LargeBlack, 0);
+	for (int i = 0; i < 9; i++) {
+		Graphics_drawRect(baseOffsetX + 178 + 32 * i, baseOffsetY + 221, 27, 27, Color_Black);
+		Widget_GameText_drawCentered(50, 27 + i, baseOffsetX + 178 + 32 * i, baseOffsetY + 224, 27, Font_LargeBlack, 0);
+		if (i >= priorityMaxItems) {
+			Graphics_shadeRect(baseOffsetX + 179 + 32 * i, baseOffsetY + 222, 25, 25, 1);
+		}
+	}
+
+	Graphics_drawRect(baseOffsetX + 180, baseOffsetY + 256, 280, 25, Color_Black);
+	Widget_GameText_drawCentered(50, 26, baseOffsetX + 180, baseOffsetY + 263, 280, Font_NormalBlack, 0);
+	Widget_GameText_drawCentered(13, 3, baseOffsetX + 160, baseOffsetY + 296, 320, Font_NormalBlack, 0);
+}
+
+void UI_LaborPriorityDialog_drawForeground()
+{
+	int baseOffsetX = Data_Screen.offset640x480.x;
+	int baseOffsetY = Data_Screen.offset640x480.y;
+	
+	Color color;
+	for (int i = 0; i < 9; i++) {
+		color = Color_Black;
+		if (i == priorityFocusButtonId - 2) {
+			color = Color_Red;
+		}
+		Graphics_drawRect(baseOffsetX + 178 + 32 * i, baseOffsetY + 221, 27, 27, color);
+	}
+	color = Color_Black;
+	if (priorityFocusButtonId == 1) {
+		color = Color_Red;
+	}
+	Graphics_drawRect(baseOffsetX + 180, baseOffsetY + 256, 280, 25, color);
+}
+
+void UI_LaborPriorityDialog_handleMouse()
+{
+	if (Data_Mouse.isRightClick) {
+		UI_Window_goTo(Window_Advisors);
+	} else {
+		int offsetX = Data_Screen.offset640x480.x;
+		int offsetY = Data_Screen.offset640x480.y;
+		Widget_Button_handleCustomButtons(offsetX, offsetY, priorityButtons, 10, &priorityFocusButtonId);
+	}
+}
+
+void buttonSetPriority(int param1, int param2)
+{
+	// TODO fun_setLaborPriorityDialog_priority
+	UI_Window_goTo(Window_Advisors);
 }

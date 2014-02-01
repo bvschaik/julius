@@ -11,9 +11,6 @@ void UI_Advisor_Financial_drawBackground()
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
 
-//  advisor_dialog_width = 40;
-//  advisor_dialog_height = 26;
-
 	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, 26);
 	Graphics_drawImage(GraphicId(ID_Graphic_AdvisorIcons) + 10, baseOffsetX + 10, baseOffsetY + 10);
 
