@@ -14,9 +14,13 @@ typedef enum {
 	Window_DonateToCityDialog = 7, //45
 	Window_SendGiftToCaesarDialog = 8, //46
 	Window_LaborPriorityDialog = 9, // 42
+	Window_TopMenu = 11, // 3
 } WindowId;
 
+WindowId UI_Window_getId();
 void UI_Window_goTo(WindowId windowId);
+void UI_Window_goBack();
+
 void UI_Window_refresh(int force);
 void UI_Window_requestRefresh();
 

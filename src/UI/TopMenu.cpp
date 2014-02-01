@@ -5,7 +5,12 @@
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
 #include "../Data/Graphics.h"
+#include "../Data/Mouse.h"
 #include "../Data/Screen.h"
+
+// TODO debug
+#include <stdio.h>
+static void drawBackground();
 
 static void menuFile_newGame(int param);
 static void menuFile_replayMap(int param);
@@ -13,6 +18,11 @@ static void menuFile_loadGame(int param);
 static void menuFile_saveGame(int param);
 static void menuFile_deleteGame(int param);
 static void menuFile_exitGame(int param);
+
+static void menuOptions_display(int param);
+static void menuOptions_sound(int param);
+static void menuOptions_speed(int param);
+static void menuOptions_difficulty(int param);
 
 static MenuItem menuFile[] = {
 	{0, 1, menuFile_newGame, 0},
@@ -23,20 +33,32 @@ static MenuItem menuFile[] = {
 	{100, 5, menuFile_exitGame, 0},
 };
 
+static MenuItem menuOptions[] = {
+	{0, 1, menuOptions_display, 0},
+	{20, 2, menuOptions_sound, 0},
+	{40, 3, menuOptions_speed, 0},
+	{60, 6, menuOptions_difficulty, 0},
+};
+
 static MenuBarItem menu[] = {
-	{10, 6, 1, menuFile, 6},
+	{10, 0, 6, 1, menuFile, 6},
+	{10, 0, 6, 2, menuOptions, 4},
+	{10, 0, 6, 3, menuFile, 0},
+	{10, 0, 6, 4, menuFile, 0},
 };
 
 static int offsetFunds;
 static int offsetPopulation;
 static int offsetDate;
 
-static void drawBackground();
+static int openSubMenu = 0;
+static int focusMenuId;
+static int focusSubMenuId;
 
-void UI_TopMenu_draw()
+void UI_TopMenu_drawBackground()
 {
 	drawBackground();
-	Widget_Menu_drawMenuBar(menu, 1);
+	Widget_Menu_drawMenuBar(menu, 4);
 
 	int width;
 	Color treasureColor = Color_White;
@@ -106,9 +128,56 @@ static void drawBackground()
 	}
 }
 
+void UI_TopMenu_drawForeground()
+{
+	if (!openSubMenu) {
+		return;
+	}
+	Widget_Menu_drawSubMenu(&menu[openSubMenu-1], focusSubMenuId);
+}
+
+static void clearState()
+{
+	openSubMenu = 0;
+	focusMenuId = 0;
+	focusSubMenuId = 0;
+}
+
+static void handleMouseSubmenu()
+{
+	if (Data_Mouse.isRightClick) {
+		clearState();
+		UI_Window_goBack();
+		return;
+	}
+	int menuId = Widget_Menu_handleMenuBar(menu, 4, &focusMenuId);
+	if (menuId && menuId != openSubMenu) {
+		openSubMenu = menuId;
+	}
+	if (!Widget_Menu_handleMenuItem(&menu[openSubMenu-1], &focusSubMenuId)) {
+		if (Data_Mouse.isLeftClick) {
+			clearState();
+			UI_Window_goBack();
+		}
+	}
+}
+
+static void handleMouseMenu()
+{
+	int menuId = Widget_Menu_handleMenuBar(menu, 4, &focusMenuId);
+	if (menuId && Data_Mouse.isLeftClick) {
+		openSubMenu = menuId;
+		UI_Window_goTo(Window_TopMenu);
+	}
+}
+
 void UI_TopMenu_handleMouse()
 {
-
+	if (openSubMenu) {
+		handleMouseSubmenu();
+	} else {
+		handleMouseMenu();
+	}
 }
 
 
@@ -118,3 +187,27 @@ static void menuFile_loadGame(int param) {}
 static void menuFile_saveGame(int param) {}
 static void menuFile_deleteGame(int param) {}
 static void menuFile_exitGame(int param) {}
+
+static void menuOptions_display(int param)
+{
+	clearState();
+	UI_Window_goTo(Window_DisplayOptions);
+}
+
+static void menuOptions_sound(int param)
+{
+	clearState();
+	UI_Window_goTo(Window_SoundOptions);
+}
+
+static void menuOptions_speed(int param)
+{
+	clearState();
+	UI_Window_goTo(Window_SpeedOptions);
+}
+
+static void menuOptions_difficulty(int param)
+{
+	clearState();
+	UI_Window_goTo(Window_DifficultyOptions);
+}

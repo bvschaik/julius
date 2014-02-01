@@ -29,6 +29,7 @@ enum {
 
 #define Color_Black 0
 #define Color_Red 0xf800
+#define Color_Orange 0xfac1
 #define Color_Yellow 0xe70b
 #define Color_White 0xffff
 #define Color_Transparent 0xf81f

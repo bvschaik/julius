@@ -69,8 +69,6 @@ void UI_SpeedOptions_drawForeground()
 		12, 0, focusButtonId == 2 ? 1 : 2
 	);
 	
-	Color colorNormal = 0x02bf;
-	Color colorHighlight = 0xfac1;
 	Widget_GameText_drawCentered(45, 0,
 		baseOffsetX + 128, baseOffsetY + 92,
 		224, Font_LargeBlack

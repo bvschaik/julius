@@ -22,7 +22,7 @@ static struct ClipRectangle {
 
 static GraphicsClipInfo clipInfo;
 
-static void drawImageUncompressed(Data_Graphics_Index *index, const Color *data, int xOffset, int yOffset);
+static void drawImageUncompressed(Data_Graphics_Index *index, const Color *data, int xOffset, int yOffset, Color color);
 static void drawImageCompressed(Data_Graphics_Index *index, const unsigned char *data, int xOffset, int yOffset, Color color);
 static void setClipX(int xOffset, int width);
 static void setClipY(int yOffset, int height);
@@ -182,7 +182,7 @@ void Graphics_drawImage(int graphicId, int xOffset, int yOffset)
 	if (index->isFullyCompressed) {
 		drawImageCompressed(index, (unsigned char*)data, xOffset, yOffset, 0);
 	} else {
-		drawImageUncompressed(index, (Color*)data, xOffset, yOffset);
+		drawImageUncompressed(index, (Color*)data, xOffset, yOffset, 0);
 	}
 }
 
@@ -196,18 +196,14 @@ void Graphics_drawLetter(int graphicId, int xOffset, int yOffset, Color color)
 		data = &Data_Graphics_PixelData.main[index->offset];
 	}
 
-	if (index->type == 20) { // colorable letter
+	if (index->isFullyCompressed) {
 		drawImageCompressed(index, (unsigned char*)data, xOffset, yOffset, color);
 	} else {
-		if (index->isFullyCompressed) {
-			drawImageCompressed(index, (unsigned char*)data, xOffset, yOffset, color);
-		} else {
-			drawImageUncompressed(index, (Color*)data, xOffset, yOffset);
-		}
+		drawImageUncompressed(index, (Color*)data, xOffset, yOffset, color);
 	}
 }
 
-static void drawImageUncompressed(Data_Graphics_Index *index, const Color *data, int xOffset, int yOffset)
+static void drawImageUncompressed(Data_Graphics_Index *index, const Color *data, int xOffset, int yOffset, Color color)
 {
 	GraphicsClipInfo *clip = Graphics_getClipInfo(
 		xOffset, yOffset, index->width, index->height);
@@ -219,7 +215,7 @@ static void drawImageUncompressed(Data_Graphics_Index *index, const Color *data,
 		data += clip->clippedPixelsLeft;
 		for (int x = clip->clippedPixelsLeft; x < index->width - clip->clippedPixelsRight; x++) {
 			if (*data != Color_Transparent) {
-				ScreenPixel(xOffset + x, yOffset + y) = *data;
+				ScreenPixel(xOffset + x, yOffset + y) = color ? color : *data;
 			}
 			data++;
 		}

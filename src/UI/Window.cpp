@@ -1,5 +1,6 @@
 #include "Window.h"
 #include "AllWindows.h"
+#include "TopMenu.h"
 
 #include "../Data/Mouse.h"
 
@@ -33,16 +34,29 @@ static struct Window windows[] = {
 	{ UI_DonateToCityDialog_init, UI_DonateToCityDialog_drawBackground, UI_DonateToCityDialog_drawForeground, UI_DonateToCityDialog_handleMouse },
 	{ UI_SendGiftToCaesarDialog_init, UI_SendGiftToCaesarDialog_drawBackground, UI_SendGiftToCaesarDialog_drawForeground, UI_SendGiftToCaesarDialog_handleMouse },
 	{ noop, UI_LaborPriorityDialog_drawBackground, UI_LaborPriorityDialog_drawForeground, UI_LaborPriorityDialog_handleMouse },
-	{ noop, UI_City_drawBackground, noop, noop },
+	{ noop, UI_City_drawBackground, noop, UI_City_handleMouse },
+	{ noop, UI_City_drawBackground, UI_TopMenu_drawForeground, UI_TopMenu_handleMouse },
 };
 
+static WindowId previousWindow;
 static WindowId currentWindow;
+
+WindowId UI_Window_getId()
+{
+	return currentWindow;
+}
 
 void UI_Window_goTo(WindowId windowId)
 {
+	previousWindow = currentWindow;
 	currentWindow = windowId;
 	windows[currentWindow].init();
 	UI_Window_requestRefresh();
+}
+
+void UI_Window_goBack()
+{
+	UI_Window_goTo(previousWindow);
 }
 
 void UI_Window_refresh(int force)

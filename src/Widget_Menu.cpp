@@ -1,42 +1,97 @@
 #include "Widget.h"
+#include "Graphics.h"
+#include "Data/Constants.h"
+#include "Data/Mouse.h"
+
+static int getMenuBarItem(MenuBarItem *items, int numItems);
+static int getMenuItem(MenuBarItem *menu);
 
 void Widget_Menu_drawMenuBar(MenuBarItem *items, int numItems)
 {
-	int xOffset = items[0].xOffset;
+	int xOffset = items[0].xStart;
 	for (int i = 0; i < numItems; i++) {
-		
+		items[i].xStart = xOffset;
+		xOffset += Widget_GameText_draw(items[i].textGroup, 0, xOffset, items[i].yStart, Font_SmallBrown);
+		items[i].xEnd = xOffset;
+		xOffset += 32; // spacing
 	}
 }
-/*
-void __cdecl fun_drawMenuBar(struct C3Menu *menu, signed int numItems)
-{
-  int y; // [sp+54h] [bp-10h]@3
-  int x; // [sp+58h] [bp-Ch]@3
-  int group; // [sp+5Ch] [bp-8h]@3
-  signed int i; // [sp+60h] [bp-4h]@1
 
-  text_xoffset = menu->xOffset;
-  for ( i = 1; i <= numItems; ++i )
-  {
-    group = menu->textGroup;
-    menu->xOffset = text_xoffset;
-    x = (signed __int16)text_xoffset;
-    y = menu->yOffset;
-    j_fun_getGameTextString(group, 0);
-    if ( i == selectedMainMenuItemId )
-    {
-      drawtext_forceColor = 1;
-      j_fun_getStringWidth(gametext_result, graphic_font);
-      j_fun_drawGameText(group, 0, x, y, graphic_font + F_SmallBrown, 0xFAC1u);
-      drawtext_forceColor = 0;
-    }
-    else
-    {
-      j_fun_drawGameText(group, 0, x, y, graphic_font + F_SmallBrown, 0);
-    }
-    menu->xEnd = text_xoffset;
-    text_xoffset += 32;                         // spacing
-    ++menu;
-  }
+void Widget_Menu_drawSubMenu(MenuBarItem *menu, int focusSubMenu)
+{
+	Widget_Panel_drawUnborderedPanel(menu->xStart, menu->yStart + 18,
+		10, (20 + 20 * menu->numItems) / 16);
+	for (int i = 0; i < menu->numItems; i++) {
+		MenuItem *sub = &menu->items[i];
+		int yOffset = 30 + menu->yStart + sub->yStart;
+		if (i == focusSubMenu - 1) {
+			Graphics_fillRect(menu->xStart, yOffset - 2,
+				160, 16, Color_Black);
+			Widget_GameText_drawColored(menu->textGroup, sub->textNumber,
+				menu->xStart + 8, yOffset, Font_NormalPlain, Color_Orange
+			);
+		} else {
+			Widget_GameText_draw(menu->textGroup, sub->textNumber,
+				menu->xStart + 8, yOffset, Font_NormalBlack
+			);
+		}
+	}
 }
-*/
+
+int Widget_Menu_handleMenuBar(MenuBarItem *items, int numItems, int *focusMenuId)
+{
+	int menuId = getMenuBarItem(items, numItems);
+	if (focusMenuId) {
+		*focusMenuId = menuId;
+	}
+	if (!menuId) {
+		return 0;
+	}
+	return menuId;
+}
+
+static int getMenuBarItem(MenuBarItem *items, int numItems)
+{
+	int mouseX = Data_Mouse.x;
+	int mouseY = Data_Mouse.y;
+	for (int i = 0; i < numItems; i++) {
+		if (items[i].xStart <= mouseX &&
+			items[i].xEnd > mouseX &&
+			items[i].yStart <= mouseY &&
+			items[i].yStart + 12 > mouseY) {
+			return i + 1;
+		}
+	}
+	return 0;
+}
+
+int Widget_Menu_handleMenuItem(MenuBarItem *menu, int *focusSubMenuId)
+{
+	int subMenuId = getMenuItem(menu);
+	if (focusSubMenuId) {
+		*focusSubMenuId = subMenuId;
+	}
+	if (!subMenuId) {
+		return 0;
+	}
+	if (Data_Mouse.isLeftClick) {
+		MenuItem *item = &menu->items[subMenuId-1];
+		item->leftClickHandler(item->parameter);
+	}
+	return subMenuId;
+}
+
+static int getMenuItem(MenuBarItem *menu)
+{
+	int mouseX = Data_Mouse.x;
+	int mouseY = Data_Mouse.y;
+	for (int i = 0; i < menu->numItems; i++) {
+		if (menu->xStart <= mouseX &&
+			menu->xStart + 160 > mouseX &&
+			menu->yStart + menu->items[i].yStart + 30 <= mouseY &&
+			menu->yStart + menu->items[i].yStart + 45 > mouseY) {
+			return i + 1;
+		}
+	}
+	return 0;
+}

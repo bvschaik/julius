@@ -41,5 +41,6 @@ void UI_LaborPriorityDialog_drawForeground();
 void UI_LaborPriorityDialog_handleMouse();
 
 void UI_City_drawBackground();
+void UI_City_handleMouse();
 
 #endif

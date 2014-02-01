@@ -6,10 +6,14 @@
 void UI_City_drawBackground()
 {
 	Graphics_clearScreen();
-	UI_TopMenu_draw();
+	UI_TopMenu_drawBackground();
 
 }
 
+void UI_City_handleMouse()
+{
+	UI_TopMenu_handleMouse();
+}
 /*
 void __cdecl fun_drawCityScreenForeground()
 {

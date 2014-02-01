@@ -58,15 +58,16 @@ typedef struct {
 } ArrowButton;
 
 typedef struct {
-	short yOffset;
+	short yStart;
 	short textNumber;
 	void (*leftClickHandler)(int param);
 	int parameter;
 } MenuItem;
 
 typedef struct {
-	short xOffset;
-	short yOffset;
+	short xStart;
+	short xEnd;
+	short yStart;
 	short textGroup;
 	MenuItem *items;
 	int numItems;
