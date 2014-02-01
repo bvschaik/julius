@@ -327,6 +327,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\UI\Sidebar.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\UI\SoundOptions.cpp"
 				>
 			</File>
@@ -502,6 +506,10 @@
 			</File>
 			<File
 				RelativePath=".\src\Data\Settings.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\UI\Sidebar.h"
 				>
 			</File>
 			<File

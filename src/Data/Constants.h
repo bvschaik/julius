@@ -3,6 +3,7 @@
 
 enum {
 	ID_Graphic_TopMenuSidebar = 11,
+	ID_Graphic_SidePanel = 12,
 	ID_Graphic_MainMenuBackground = 14,
 	ID_Graphic_PanelButton = 15,
 	ID_Graphic_Font = 16,
