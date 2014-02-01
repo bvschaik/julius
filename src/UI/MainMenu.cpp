@@ -100,7 +100,7 @@ static void buttonClick(int param1, int param2)
 {
 	// TODO old stuff
 	if (focusButtonId == 1) {
-		UI_Window_goTo(Window_SoundOptions);
+		UI_Window_goTo(Window_City);
 	}
 	if (focusButtonId == 2) {
 		UI_Window_goTo(Window_SpeedOptions);

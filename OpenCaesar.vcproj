@@ -219,6 +219,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\UI\City.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\CityInfoUpdater.cpp"
 				>
 			</File>
@@ -332,6 +336,10 @@
 			</File>
 			<File
 				RelativePath=".\src\String.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\UI\TopMenu.cpp"
 				>
 			</File>
 			<File
@@ -494,6 +502,10 @@
 			</File>
 			<File
 				RelativePath=".\src\String.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\UI\TopMenu.h"
 				>
 			</File>
 			<File

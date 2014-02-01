@@ -4,7 +4,7 @@
 // TODO numbers
 typedef enum {
 	Window_MainMenu = 0,
-	Window_City = 0,
+	Window_City = 10, // 0?
 	Window_DisplayOptions = 1,//10,
 	Window_SoundOptions = 2,//11,
 	Window_SpeedOptions = 3,//12,

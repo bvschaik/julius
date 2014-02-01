@@ -23,7 +23,7 @@ static struct ClipRectangle {
 static GraphicsClipInfo clipInfo;
 
 static void drawImageUncompressed(Data_Graphics_Index *index, const Color *data, int xOffset, int yOffset);
-static void drawImageCompressed(Data_Graphics_Index *index, const unsigned char *data, int xOffset, int yOffset);
+static void drawImageCompressed(Data_Graphics_Index *index, const unsigned char *data, int xOffset, int yOffset, Color color);
 static void setClipX(int xOffset, int width);
 static void setClipY(int yOffset, int height);
 
@@ -180,9 +180,30 @@ void Graphics_drawImage(int graphicId, int xOffset, int yOffset)
 		graphicId);*/
 	
 	if (index->isFullyCompressed) {
-		drawImageCompressed(index, (unsigned char*)data, xOffset, yOffset);
+		drawImageCompressed(index, (unsigned char*)data, xOffset, yOffset, 0);
 	} else {
 		drawImageUncompressed(index, (Color*)data, xOffset, yOffset);
+	}
+}
+
+void Graphics_drawLetter(int graphicId, int xOffset, int yOffset, Color color)
+{
+	Data_Graphics_Index *index = &Data_Graphics_Main.index[graphicId];
+	const char *data;
+	if (index->isExternal) {
+		data = Loader_Graphics_loadExternalImagePixelData(graphicId);
+	} else {
+		data = &Data_Graphics_PixelData.main[index->offset];
+	}
+
+	if (index->type == 20) { // colorable letter
+		drawImageCompressed(index, (unsigned char*)data, xOffset, yOffset, color);
+	} else {
+		if (index->isFullyCompressed) {
+			drawImageCompressed(index, (unsigned char*)data, xOffset, yOffset, color);
+		} else {
+			drawImageUncompressed(index, (Color*)data, xOffset, yOffset);
+		}
 	}
 }
 
@@ -206,7 +227,7 @@ static void drawImageUncompressed(Data_Graphics_Index *index, const Color *data,
 	}
 }
 
-static void drawImageCompressed(Data_Graphics_Index *index, const unsigned char *data, int xOffset, int yOffset)
+static void drawImageCompressed(Data_Graphics_Index *index, const unsigned char *data, int xOffset, int yOffset, Color color)
 {
 	GraphicsClipInfo *clip = Graphics_getClipInfo(
 		xOffset, yOffset, index->width, index->height);
@@ -231,7 +252,7 @@ static void drawImageCompressed(Data_Graphics_Index *index, const unsigned char 
 				Color *pixels = (Color*) data;
 				while (b) {
 					if (x >= clip->clippedPixelsLeft && x < index->width - clip->clippedPixelsRight) {
-						ScreenPixel(xOffset + x, yOffset + y) = *pixels;
+						ScreenPixel(xOffset + x, yOffset + y) = color ? color : *pixels;
 					}
 					x++;
 					pixels++;

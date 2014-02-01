@@ -31,7 +31,7 @@ static const int map_charToFontGraphic[] = {
 
 static char tmpLine[200];
 
-static int drawCharacter(Font font, unsigned int c, int x, int y, int lineHeight);
+static int drawCharacter(Font font, unsigned int c, int x, int y, int lineHeight, Color color);
 
 int Widget_Text_getWidth(const char *str, Font font)
 {
@@ -184,7 +184,7 @@ int Widget_Text_draw(const char *str, int x, int y, Font font, Color color)
 			if (graphic == 0) {
 				width = spaceWidth;
 			} else {
-				width = letterSpacing + drawCharacter(font, c, currentX, y, lineHeight);
+				width = letterSpacing + drawCharacter(font, c, currentX, y, lineHeight, color);
 			}
 			currentX += width;
 		}
@@ -196,7 +196,7 @@ int Widget_Text_draw(const char *str, int x, int y, Font font, Color color)
 	return currentX - x;
 }
 
-static int drawCharacter(Font font, unsigned int c, int x, int y, int lineHeight)
+static int drawCharacter(Font font, unsigned int c, int x, int y, int lineHeight, Color color)
 {
 	int graphicOffset = map_charToFontGraphic[c];
 	if (!graphicOffset) {
@@ -211,7 +211,7 @@ static int drawCharacter(Font font, unsigned int c, int x, int y, int lineHeight
 	if (c < 128 || c == 231) { // Some exceptions...
 		height = 0;
 	}
-	Graphics_drawImage(graphicId, x, y - height);
+	Graphics_drawLetter(graphicId, x, y - height, color);
 	return Data_Graphics_Main.index[graphicId].width;
 }
 
@@ -283,6 +283,19 @@ int Widget_GameText_drawYear(int year, int xOffset, int yOffset, Font font, Colo
 	} else {
 		width += Widget_Text_drawNumber(-year, ' ', " ", xOffset + width, yOffset, font, color);
 		width += Widget_GameText_draw(20, 0, xOffset + width, yOffset, font, color);
+	}
+	return width;
+}
+
+int Widget_GameText_drawYearNoSpacing(int year, int xOffset, int yOffset, Font font, Color color)
+{
+	int width = 0;
+	if (year >= 0) {
+		width += Widget_GameText_draw(20, 1, xOffset + width, yOffset, font, color);
+		width += Widget_Text_drawNumber(year, ' ', " ", xOffset + width, yOffset, font, color);
+	} else {
+		width += Widget_Text_drawNumber(-year, ' ', " ", xOffset + width, yOffset, font, color);
+		width += Widget_GameText_draw(20, 0, xOffset + width - 8, yOffset, font, color);
 	}
 	return width;
 }

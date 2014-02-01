@@ -2,6 +2,7 @@
 #define DATA_CONSTANTS_H
 
 enum {
+	ID_Graphic_TopMenuSidebar = 11,
 	ID_Graphic_MainMenuBackground = 14,
 	ID_Graphic_PanelButton = 15,
 	ID_Graphic_Font = 16,
@@ -28,6 +29,8 @@ enum {
 
 #define Color_Black 0
 #define Color_Red 0xf800
+#define Color_Yellow 0xe70b
+#define Color_White 0xffff
 #define Color_Transparent 0xf81f
 #define Color_InsetLight 0xffff
 #define Color_InsetDark 0x8410
