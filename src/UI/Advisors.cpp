@@ -27,6 +27,11 @@ static int currentAdvisor = Advisor_Education;
 
 static int focusButtonId;
 
+void UI_Advisors_setAdvisor(int advisor)
+{
+	currentAdvisor = advisor;
+}
+
 void UI_Advisors_drawBackground()
 {
 	UI_Advisor_drawGeneralBackground();

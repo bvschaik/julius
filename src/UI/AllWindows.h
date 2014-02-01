@@ -18,6 +18,7 @@ void UI_SpeedOptions_init();
 void UI_SpeedOptions_drawForeground();
 void UI_SpeedOptions_handleMouse();
 
+void UI_Advisors_setAdvisor(int advisor);
 void UI_Advisors_drawBackground();
 void UI_Advisors_drawForeground();
 void UI_Advisors_handleMouse();

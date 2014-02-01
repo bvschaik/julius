@@ -1,5 +1,6 @@
 #include "TopMenu.h"
 #include "Window.h"
+#include "AllWindows.h"
 #include "../Graphics.h"
 #include "../Widget.h"
 #include "../Data/CityInfo.h"
@@ -24,6 +25,8 @@ static void menuOptions_sound(int param);
 static void menuOptions_speed(int param);
 static void menuOptions_difficulty(int param);
 
+static void menuAdvisors_goTo(int param);
+
 static MenuItem menuFile[] = {
 	{0, 1, menuFile_newGame, 0},
 	{20, 2, menuFile_replayMap, 0},
@@ -40,11 +43,26 @@ static MenuItem menuOptions[] = {
 	{60, 6, menuOptions_difficulty, 0},
 };
 
+static MenuItem menuAdvisors[] = {
+	{0, 1, menuAdvisors_goTo, 1},
+	{20, 2, menuAdvisors_goTo, 2},
+	{40, 3, menuAdvisors_goTo, 3},
+	{60, 4, menuAdvisors_goTo, 4},
+	{80, 5, menuAdvisors_goTo, 5},
+	{100, 6, menuAdvisors_goTo, 6},
+	{120, 7, menuAdvisors_goTo, 7},
+	{140, 8, menuAdvisors_goTo, 8},
+	{160, 9, menuAdvisors_goTo, 9},
+	{180, 10, menuAdvisors_goTo, 10},
+	{200, 11, menuAdvisors_goTo, 11},
+	{220, 12, menuAdvisors_goTo, 12},
+};
+
 static MenuBarItem menu[] = {
 	{10, 0, 6, 1, menuFile, 6},
 	{10, 0, 6, 2, menuOptions, 4},
 	{10, 0, 6, 3, menuFile, 0},
-	{10, 0, 6, 4, menuFile, 0},
+	{10, 0, 6, 4, menuAdvisors, 12},
 };
 
 static int offsetFunds;
@@ -210,4 +228,12 @@ static void menuOptions_difficulty(int param)
 {
 	clearState();
 	UI_Window_goTo(Window_DifficultyOptions);
+}
+
+static void menuAdvisors_goTo(int advisor)
+{
+	clearState();
+	UI_Advisors_setAdvisor(advisor);
+	UI_Window_goTo(Window_Advisors);
+	// TODO restrictions and extra functionality from fun_gotoAdvisorFromButton 
 }
