@@ -315,6 +315,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\UI\PopupDialog.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Random.cpp"
 				>
 			</File>
@@ -489,11 +493,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\data\Random.h"
+				RelativePath=".\src\UI\PopupDialog.h"
 				>
 			</File>
 			<File
 				RelativePath=".\src\Random.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\data\Random.h"
 				>
 			</File>
 			<File

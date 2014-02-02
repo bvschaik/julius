@@ -2,6 +2,7 @@
 #include "Graphics.h"
 
 #include "Data/Mouse.h"
+#include "Data/Graphics.h"
 
 static int getArrowButton(int xOffset, int yOffset, ArrowButton *buttons, int numButtons);
 static int getCustomButton(int xOffset, int yOffset, CustomButton *buttons, int numButtons);
@@ -164,3 +165,89 @@ static int getCustomButton(int xOffset, int yOffset, CustomButton *buttons, int 
 	return 0;
 }
 
+void Widget_Button_drawImageButtons(int xOffset, int yOffset, ImageButton *buttons, int numButtons)
+{
+	for (int i = 0; i < numButtons; i++) {
+		ImageButton *btn = &buttons[i];
+		int graphicId = GraphicId(btn->graphicCollection) + btn->graphicIdOffset;
+		if (btn->enabled) {
+			if (btn->hasClickEffect) {
+				graphicId += 2;
+			} else if (btn->hasFocus) {
+				graphicId += 1;
+			}
+		} else {
+			graphicId += 3;
+		}
+		Graphics_drawImage(graphicId, xOffset + btn->xOffset, yOffset + btn->yOffset);
+	}
+}
+
+int Widget_Button_handleImageButtons(int xOffset, int yOffset, ImageButton *buttons, int numButtons)
+{
+	// TODO field_19 manipulation
+	for (int i = 0; i < numButtons; i++) {
+		ImageButton *btn = &buttons[i];
+		if (btn->hasClickEffect) {
+			if (btn->field_8 == 4 || btn->field_8 == 6) {
+				btn->hasClickEffect--;
+				if (btn->hasClickEffect <= 0) {
+					btn->hasClickEffect = 0;
+				}
+			}
+		}
+	}
+	// end field_19 manipulation
+	int mouseX = Data_Mouse.x;
+	int mouseY = Data_Mouse.y;
+	int change = 0;
+	ImageButton *hitButton = 0;
+	int hitIndex = 0;
+	for (int i = 0; i < numButtons; i++) {
+		ImageButton *btn = &buttons[i];
+		if (btn->hasFocus) {
+			btn->hasFocus--;
+			if (!btn->hasFocus) {
+				change = 1;
+			}
+		}
+		if (btn->enabled) {
+			if (xOffset + btn->xOffset <= mouseX &&
+				xOffset + btn->xOffset + btn->width > mouseX &&
+				yOffset + btn->yOffset <= mouseY &&
+				yOffset + btn->yOffset + btn->height > mouseY) {
+				// TODO button_x = Data_Mouse.x; button_y = Data_Mouse.y
+				if (!btn->hasFocus) {
+					change = 1;
+				}
+				btn->hasFocus = 2;
+				hitButton = btn;
+				hitIndex = i + 1;
+			}
+		}
+	}
+	if (!hitButton) {
+		return 0;
+	}
+	// TODO field_19 manipulation
+	if (hitButton->field_8 == 2) {
+		for (int i = 0; i < numButtons; i++) {
+			ImageButton *btn = &buttons[i];
+			if (btn->hasClickEffect) {
+				if (btn->field_8 == 2) {
+					btn->hasClickEffect = 0;
+				}
+			}
+		}
+	}
+	// TODO sound playing?
+	if (Data_Mouse.isLeftClick) {
+		// TODO play sound
+		hitButton->hasClickEffect = 20;
+		hitButton->leftClickHandler(hitButton->parameter1, hitButton->parameter2);
+	} else if (Data_Mouse.isRightClick) {
+		hitButton->hasClickEffect = 20;
+		hitButton->rightClickHandler(hitButton->parameter1, hitButton->parameter2);
+	}
+	return hitIndex;
+}

@@ -1,6 +1,7 @@
 #include "Window.h"
 #include "AllWindows.h"
 #include "TopMenu.h"
+#include "PopupDialog.h"
 
 #include "../Data/Mouse.h"
 
@@ -24,18 +25,21 @@ static void rightClickToExit()
 }
 
 static struct Window windows[] = {
+	// 0
 	{ noop, UI_MainMenu_drawBackground, UI_MainMenu_drawForeground, UI_MainMenu_handleMouse },
-	{ noop, noop, noop, noop },
-	{ UI_SoundOptions_init, noop, UI_SoundOptions_drawForeground, UI_SoundOptions_handleMouse },
-	{ UI_SpeedOptions_init, noop, UI_SpeedOptions_drawForeground, UI_SpeedOptions_handleMouse },
+	{ noop, UI_City_drawBackground, noop, UI_City_handleMouse },
+	{ noop, UI_PopupDialog_drawBackground, UI_PopupDialog_drawForeground, UI_PopupDialog_handleMouse },
+	{ noop, UI_City_drawBackground, UI_TopMenu_drawForeground, UI_TopMenu_handleMouse },
 	{ noop, noop, UI_DifficultyOptions_drawForeground, UI_DifficultyOptions_handleMouse },
 	{ noop, UI_Advisors_drawBackground, UI_Advisors_drawForeground, UI_Advisors_handleMouse },
 	{ noop, UI_SetSalaryDialog_drawBackground, UI_SetSalaryDialog_drawForeground, UI_SetSalaryDialog_handleMouse },
 	{ UI_DonateToCityDialog_init, UI_DonateToCityDialog_drawBackground, UI_DonateToCityDialog_drawForeground, UI_DonateToCityDialog_handleMouse },
 	{ UI_SendGiftToCaesarDialog_init, UI_SendGiftToCaesarDialog_drawBackground, UI_SendGiftToCaesarDialog_drawForeground, UI_SendGiftToCaesarDialog_handleMouse },
 	{ noop, UI_LaborPriorityDialog_drawBackground, UI_LaborPriorityDialog_drawForeground, UI_LaborPriorityDialog_handleMouse },
-	{ noop, UI_City_drawBackground, noop, UI_City_handleMouse },
-	{ noop, UI_City_drawBackground, UI_TopMenu_drawForeground, UI_TopMenu_handleMouse },
+	// 10
+	{ noop, noop, noop, noop },
+	{ UI_SoundOptions_init, noop, UI_SoundOptions_drawForeground, UI_SoundOptions_handleMouse },
+	{ UI_SpeedOptions_init, noop, UI_SpeedOptions_drawForeground, UI_SpeedOptions_handleMouse },
 };
 
 static WindowId previousWindow;

@@ -1,5 +1,6 @@
 #include "AllWindows.h"
 #include "Window.h"
+#include "PopupDialog.h"
 
 #include "../Widget.h"
 #include "../Graphics.h"
@@ -96,6 +97,10 @@ void UI_MainMenu_handleMouse()
 		buttons, 4, &focusButtonId);
 }
 
+static void test(int accepted)
+{
+}
+
 static void buttonClick(int param1, int param2)
 {
 	// TODO old stuff
@@ -103,7 +108,8 @@ static void buttonClick(int param1, int param2)
 		UI_Window_goTo(Window_City);
 	}
 	if (focusButtonId == 2) {
-		UI_Window_goTo(Window_SpeedOptions);
+		UI_PopupDialog_show(14, test, 1);
+		//UI_Window_goTo(Window_SpeedOptions);
 	}
 	if (focusButtonId == 3) {
 		UI_Window_goTo(Window_DifficultyOptions);

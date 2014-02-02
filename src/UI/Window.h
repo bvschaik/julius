@@ -4,17 +4,18 @@
 // TODO numbers
 typedef enum {
 	Window_MainMenu = 0,
-	Window_City = 10, // 0?
-	Window_DisplayOptions = 1,//10,
-	Window_SoundOptions = 2,//11,
-	Window_SpeedOptions = 3,//12,
+	Window_City = 1, // 1?
+	Window_ConfirmDialog = 2, //63
+	Window_TopMenu = 3, // 3
 	Window_DifficultyOptions = 4,//69
 	Window_Advisors = 5, // 7
 	Window_SetSalaryDialog = 6, //44
 	Window_DonateToCityDialog = 7, //45
 	Window_SendGiftToCaesarDialog = 8, //46
 	Window_LaborPriorityDialog = 9, // 42
-	Window_TopMenu = 11, // 3
+	Window_DisplayOptions = 10,//10,
+	Window_SoundOptions = 11,//11,
+	Window_SpeedOptions = 12,//12,
 } WindowId;
 
 WindowId UI_Window_getId();

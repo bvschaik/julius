@@ -52,7 +52,9 @@ void Widget_Button_drawArrowButtons(int xOffset, int yOffset, ArrowButton *butto
 
 int Widget_Button_handleArrowButtons(int xOffset, int yOffset, ArrowButton *buttons, int numButtons);
 
-//void Widget_Button_drawImageButtons();
+void Widget_Button_drawImageButtons(int xOffset, int yOffset, ImageButton *buttons, int numButtons);
+
+int Widget_Button_handleImageButtons(int xOffset, int yOffset, ImageButton *buttons, int numButtons);
 
 int Widget_Button_handleCustomButtons(int xOffset, int yOffset, CustomButton *buttons, int numButtons, int *focusButtonId);
 

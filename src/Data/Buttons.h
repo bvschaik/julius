@@ -1,10 +1,10 @@
 #ifndef DATA_BUTTONS_H
 #define DATA_BUTTONS_H
 
+/*
 struct Data_Buttons_ArrowButton {
 	int foo;
 };
-/*
 extern struct Data_Buttons_Arrow {
 	struct Data_Buttons_ArrowButton difficultyOptions[3];
 } Data_Buttons_Arrow;
@@ -15,13 +15,13 @@ typedef struct {
 	short width;
 	short height;
 	short field_8;
-	short field_A;
-	short field_C;
-	void *(leftClickHandler)(int param1, int param2);
-	void *(rightClickHandler)(int param1, int param2);
+	short graphicCollection;
+	short graphicIdOffset;
+	void (*leftClickHandler)(int param1, int param2);
+	void (*rightClickHandler)(int param1, int param2);
 	char enabled;
-	char field_19;
-	char field_1A;
+	char hasClickEffect;
+	char hasFocus;
 	char field_1B;
 	int parameter1;
 	int parameter2;
