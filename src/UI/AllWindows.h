@@ -44,4 +44,8 @@ void UI_LaborPriorityDialog_handleMouse();
 void UI_City_drawBackground();
 void UI_City_handleMouse();
 
+void UI_Empire_drawBackground();
+void UI_Empire_handleMouse();
+
+
 #endif

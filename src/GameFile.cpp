@@ -144,7 +144,7 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{0, &tmp, 4}, //{0, &event_emperorChange_month, 4},
 	{0, &Data_Empire.scrollX, 4},
 	{0, &Data_Empire.scrollY, 4},
-	{0, &Data_Empire.selectedCity, 4},
+	{0, &Data_Empire.selectedObject, 4},
 	{1, &Data_Empire_Cities, 2706},
 	{0, &Data_CityInfo_Buildings.industry.total, 64},
 	{0, &Data_CityInfo_Buildings.industry.working, 64},

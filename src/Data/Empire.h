@@ -4,7 +4,7 @@
 extern struct Data_Empire {
 	int scrollX;
 	int scrollY;
-	int selectedCity;
+	int selectedObject;
 } Data_Empire;
 
 extern struct Data_Empire_Sizes {

@@ -179,11 +179,11 @@ int Empire_citySellsResource(int index, int resource)
 
 void Empire_determineDistantBattleCity()
 {
-	Data_CityInfo.distantBattleTradeCity = 0;
+	Data_CityInfo.distantBattleCityId = 0;
 	for (int i = 0; i < 41; i++) {
 		if (Data_Empire_Cities[i].inUse) {
 			if (Data_Empire_Cities[i].cityType == EmpireCity_VulnerableRoman) {
-				Data_CityInfo.distantBattleTradeCity = i;
+				Data_CityInfo.distantBattleCityId = i;
 			}
 		}
 	}

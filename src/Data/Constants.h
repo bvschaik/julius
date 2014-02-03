@@ -18,6 +18,7 @@ enum {
 	ID_Graphic_AdvisorBackground = 136,
 	ID_Graphic_PopulationGraphBar = 157,
 	ID_Graphic_WinGame = 160,
+	ID_Graphic_EmpirePanels = 172,
 	ID_Graphic_EmpireCity = 174,
 	ID_Graphic_EmpireCityTrade = 175,
 	ID_Graphic_EmpireCityDistantRoman = 176,

@@ -3,4 +3,6 @@
 
 void UI_Sidebar_drawBackground();
 
+void UI_Sidebar_handleMouse();
+
 #endif

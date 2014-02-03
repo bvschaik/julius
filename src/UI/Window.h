@@ -16,6 +16,7 @@ typedef enum {
 	Window_DisplayOptions = 10,//10,
 	Window_SoundOptions = 11,//11,
 	Window_SpeedOptions = 12,//12,
+	Window_Empire = 13,//20
 } WindowId;
 
 WindowId UI_Window_getId();

@@ -140,6 +140,7 @@ int main()
 	SDL_Surface *surface = SDL_SetVideoMode(
 	//	vidInfo->current_w, vidInfo->current_h, 16, /*SDL_FULLSCREEN*/0);
 		1680, 1050, 16, 0);
+	//	1440, 900, 16, 0);
 	if (surface) {
 		printf("Surface created\n");
 		printf("  flags: %d %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s\n",

@@ -259,6 +259,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\UI\EmpireMap.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\FileSystem.cpp"
 				>
 			</File>
@@ -421,11 +425,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Empire.h"
+				RelativePath=".\src\Empire.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Empire.h"
+				RelativePath=".\src\Data\Empire.h"
 				>
 			</File>
 			<File
@@ -465,11 +469,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Language.h"
+				RelativePath=".\src\Data\Language.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Language.h"
+				RelativePath=".\src\Language.h"
 				>
 			</File>
 			<File
@@ -497,11 +501,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Random.h"
+				RelativePath=".\src\data\Random.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\data\Random.h"
+				RelativePath=".\src\Random.h"
 				>
 			</File>
 			<File
@@ -518,6 +522,10 @@
 			</File>
 			<File
 				RelativePath=".\src\UI\Sidebar.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Data\State.h"
 				>
 			</File>
 			<File

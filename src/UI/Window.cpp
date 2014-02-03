@@ -40,6 +40,7 @@ static struct Window windows[] = {
 	{ noop, noop, noop, noop },
 	{ UI_SoundOptions_init, noop, UI_SoundOptions_drawForeground, UI_SoundOptions_handleMouse },
 	{ UI_SpeedOptions_init, noop, UI_SpeedOptions_drawForeground, UI_SpeedOptions_handleMouse },
+	{ noop, UI_Empire_drawBackground, noop, UI_Empire_handleMouse },
 };
 
 static WindowId previousWindow;

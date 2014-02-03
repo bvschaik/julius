@@ -243,10 +243,10 @@ int Widget_Button_handleImageButtons(int xOffset, int yOffset, ImageButton *butt
 	// TODO sound playing?
 	if (Data_Mouse.isLeftClick) {
 		// TODO play sound
-		hitButton->hasClickEffect = 20;
+		hitButton->hasClickEffect = 10;
 		hitButton->leftClickHandler(hitButton->parameter1, hitButton->parameter2);
 	} else if (Data_Mouse.isRightClick) {
-		hitButton->hasClickEffect = 20;
+		hitButton->hasClickEffect = 10;
 		hitButton->rightClickHandler(hitButton->parameter1, hitButton->parameter2);
 	}
 	return hitIndex;
