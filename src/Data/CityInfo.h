@@ -1484,7 +1484,7 @@ extern struct Data_CityInfo {
 	char distantBattleMonthsToBattle;
 	char distantBattleRomanMonthsToReturn;
 	char distantBattleRomanMonthsToTravel;
-	char distantBattleConqueredCityMonthsLeft;
+	char distantBattleCityMonthsUntilRoman;
 	char __unknown_4587;
 	char __unknown_4588;
 	char __unknown_4589;

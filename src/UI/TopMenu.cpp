@@ -9,8 +9,6 @@
 #include "../Data/Mouse.h"
 #include "../Data/Screen.h"
 
-// TODO debug
-#include <stdio.h>
 static void drawBackground();
 
 static void menuFile_newGame(int param);

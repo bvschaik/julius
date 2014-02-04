@@ -25,8 +25,7 @@ extern struct Data_Empire_Index {
 extern struct Data_Empire_Object {
 	char type;
 	char inUse;
-	char unknown03;
-	char __unused1;
+	short animationIndex;
 	short x;
 	short y;
 	short width;

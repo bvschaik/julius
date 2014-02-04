@@ -10,7 +10,9 @@
 #include "../src/Data/Screen.h"
 #include "../src/Data/Mouse.h"
 #include "../src/Data/CityInfo.h"
+#include "../src/Data/Scenario.h"
 #include "../src/Loader.h"
+#include "../src/Empire.h"
 #include "../src/Language.h"
 #include "../src/Graphics.h"
 #include "../src/GameFile.h"
@@ -212,6 +214,7 @@ int main()
 	UI_Window_goTo(Window_MainMenu);
 	
 	GameFile_loadSavedGame("1.sav");
+	Empire_load(0, Data_Scenario.empireId);
 	//Data_CityInfo.godWrathMercury = 40;
 	// end C3 setup
 	

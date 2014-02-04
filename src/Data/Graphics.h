@@ -2,6 +2,9 @@
 #define DATA_GRAPHICS_H
 
 #define GraphicId(index) (Data_Graphics_Main.graphicIds[index])
+#define GraphicHasAnimationSprite(id) (Data_Graphics_Main.index[id].animationSpeedId)
+#define GraphicAnimationTopOffset(id) (Data_Graphics_Main.index[id].spriteTopOffset)
+#define GraphicAnimationLeftOffset(id) (Data_Graphics_Main.index[id].spriteLeftOffset)
 
 struct Data_Graphics_Index {
 	int offset;
@@ -13,7 +16,7 @@ struct Data_Graphics_Index {
 	short height;
 	int unused_18;
 	short unused_1C;
-	short unknown_1E;
+	short numAnimationSprites;
 	short unused_20;
 	short spriteTopOffset;
 	short spriteLeftOffset;
@@ -26,7 +29,7 @@ struct Data_Graphics_Index {
 	char buildingSize;
 	char bitmapId;
 	char unused_39;
-	char unknown_3A;
+	char animationSpeedId;
 	char unused_3B;
 	char unknown_3C;
 	char unknown_3D;

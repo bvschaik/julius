@@ -9,6 +9,7 @@ enum {
 	ID_Graphic_Font = 16,
 	ID_Graphic_HouseTent = 18,
 	ID_Graphic_HouseShack = 19,
+	ID_Graphic_EmpireMap = 47,
 	ID_Graphic_LaborPriorityLock = 94,
 	ID_Graphic_PanelWindows = 95,
 	ID_Graphic_AdvisorIcons = 128,
@@ -25,6 +26,7 @@ enum {
 	ID_Graphic_RatingsColumn = 189,
 	ID_Graphic_RatingsBackground = 195,
 	ID_Graphic_BorderedButton = 208,
+	ID_Graphic_EmpireForeignCity = 223,
 	ID_Graphic_GodBolt = 225,
 	ID_Graphic_LoadingScreen = 251,
 };
@@ -42,7 +44,7 @@ enum {
 enum {
 	EmpireObject_Ornament = 0,
 	EmpireObject_City = 1,
-	EmpireObject_BattleIcon = 2,
+	EmpireObject_BattleIcon = 3,
 	EmpireObject_LandTradeRoute = 4,
 	EmpireObject_SeaTradeRoute = 5,
 	EmpireObject_RomanArmy = 6,

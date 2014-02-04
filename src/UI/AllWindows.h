@@ -45,6 +45,7 @@ void UI_City_drawBackground();
 void UI_City_handleMouse();
 
 void UI_Empire_drawBackground();
+void UI_Empire_drawForeground();
 void UI_Empire_handleMouse();
 
 
