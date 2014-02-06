@@ -77,12 +77,12 @@ void UI_PopupDialog_handleMouse()
 
 void buttonOk(int param1, int param2)
 {
-	data.closeFunc(1);
 	UI_Window_goBack();
+	data.closeFunc(1);
 }
 
 void buttonCancel(int param1, int param2)
 {
-	data.closeFunc(0);
 	UI_Window_goBack();
+	data.closeFunc(0);
 }

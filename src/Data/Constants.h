@@ -20,6 +20,7 @@ enum {
 	ID_Graphic_PopulationGraphBar = 157,
 	ID_Graphic_WinGame = 160,
 	ID_Graphic_EmpirePanels = 172,
+	ID_Graphic_EmpireResource = 173,
 	ID_Graphic_EmpireCity = 174,
 	ID_Graphic_EmpireCityTrade = 175,
 	ID_Graphic_EmpireCityDistantRoman = 176,
@@ -28,6 +29,7 @@ enum {
 	ID_Graphic_BorderedButton = 208,
 	ID_Graphic_EmpireForeignCity = 223,
 	ID_Graphic_GodBolt = 225,
+	ID_Graphic_TradeAmount = 243,
 	ID_Graphic_LoadingScreen = 251,
 };
 
@@ -71,6 +73,27 @@ enum {
 	Direction_Left = 6,
 	Direction_TopLeft = 7,
 	Direction_None = 8,
+};
+
+enum {
+	Resource_None = 0,
+	Resource_Wheat = 1,
+	Resource_Vegetables = 2,
+	Resource_Fruit = 3,
+	Resource_Olives = 4,
+	Resource_Vines = 5,
+	Resource_Meat = 6,
+	Resource_Wine = 7,
+	Resource_Oil = 8,
+	Resource_Iron = 9,
+	Resource_Timber = 10,
+	Resource_Clay = 11,
+	Resource_Marble = 12,
+	Resource_Weapons = 13,
+	Resource_Furniture = 14,
+	Resource_Pottery = 15,
+	Resource_Denarii = 16,
+	Resource_Troops = 17
 };
 
 extern int Constant_SalaryForRank[11];

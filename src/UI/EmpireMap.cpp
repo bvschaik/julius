@@ -1,7 +1,10 @@
 #include "Window.h"
+#include "AllWindows.h"
+#include "PopupDialog.h"
 #include "../Graphics.h"
 #include "../Widget.h"
 #include "../Empire.h"
+#include "../Resource.h"
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
 #include "../Data/Empire.h"
@@ -10,8 +13,7 @@
 #include "../Data/Scenario.h"
 #include "../Data/Screen.h"
 #include "../Util.h"
-
-#include <stdio.h>
+#include "../Calc.h"
 
 #define MAX_WIDTH 2032
 #define MAX_HEIGHT 1136
@@ -22,9 +24,32 @@ static void drawPanelInfoCity();
 static void drawPanelInfoBattleIcon();
 static void drawPanelInfoRomanArmy();
 static void drawPanelInfoEnemyArmy();
+static void drawPanelInfoCityName();
+static void drawPanelButtons();
 static void drawEmpireMap();
 static short getNextAnimationIndex(int graphicId, short currentAnimationIndex);
+static int getSelectedObject();
 
+static void buttonHelp(int param1, int param2);
+static void buttonReturnToCity(int param1, int param2);
+static void buttonAdvisor(int param1, int param2);
+static void buttonOpenTrade(int param1, int param2);
+static void confirmOpenTrade(int accepted);
+
+ImageButton imageButtonHelp[] = {
+	{0, 0, 27, 27, 4, 134, 0, buttonHelp, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0}
+};
+ImageButton imageButtonReturnToCity[] = {
+	{0, 0, 24, 24, 4, 134, 4, buttonReturnToCity, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0}
+};
+ImageButton imageButtonAdvisor[] = {
+	{-4, 0, 24, 24, 4, 199, 12, buttonAdvisor, Widget_Button_doNothing, 1, 0, 0, 0, 5, 0}
+};
+CustomButton customButtonOpenTrade[] = {
+	{50, 68, 450, 91, buttonOpenTrade, Widget_Button_doNothing, 1, 0, 0}
+};
+
+static int selectedButton = 0;
 static int selectedCity = 1;
 static int xMin, xMax, yMin, yMax;
 
@@ -42,6 +67,8 @@ void UI_Empire_drawBackground()
 void UI_Empire_drawForeground()
 {
 	drawEmpireMap();
+	drawPanelInfoCityName();
+	drawPanelButtons();
 }
 
 static void drawPaneling()
@@ -105,14 +132,14 @@ void drawPanelInfo()
 				break;
 		}
 	} else {
-		Widget_GameText_drawCentered(47, 8, xMin, yMax - 48, xMax - xMin, Font_NormalBlack);
+		Widget_GameText_drawCentered(47, 8, xMin, yMax - 48, xMax - xMin, Font_SmallBrown);
 	}
 }
 
 static void drawPanelInfoCity()
 {
 	int objectId = Data_Empire.selectedObject - 1;
-	int xOffset = xMin + (xMax - xMin - 240) / 2;
+	int xOffset = (xMin + xMax - 240) / 2;
 	int yOffset = yMax - 88;
 
 	if (Data_Empire_Cities[selectedCity].cityType == EmpireCity_DistantRoman) {
@@ -141,186 +168,145 @@ static void drawPanelInfoCity()
 		return;
 	}
 	// trade city
-	xOffset = xMin + (xMax - xMin - 500) / 2;
+	xOffset = (xMin + xMax - 500) / 2;
 	yOffset = yMax - 108;
 	if (Data_Empire_Cities[selectedCity].isOpen) {
 		Widget_GameText_draw(47, 10, xOffset + 40, yOffset + 30, Font_SmallBrown);
 		int goodOffset = 0;
 		for (int good = 1; good <= 15; good++) {
-			if (Empire_citySellsResource(objectId, good)) {
-				Graphics_drawInsetRect(xOffset + 100 * goodOffset + 120, yOffset + 21, 26, 26);
-
+			if (!Empire_citySellsResource(objectId, good)) {
+				continue;
 			}
+			Graphics_drawInsetRect(xOffset + 100 * goodOffset + 120, yOffset + 21, 26, 26);
+			int graphicId = good + GraphicId(ID_Graphic_EmpireResource);
+			int resourceOffset = Resource_getGraphicId(good, 3);
+			Graphics_drawImage(graphicId + resourceOffset, xOffset + 100 * goodOffset + 121, yOffset + 22);
+			int routeId = Data_Empire_Cities[selectedCity].routeId;
+			switch (Data_Empire_Trade.maxPerYear[routeId][good]) {
+				case 15:
+					Graphics_drawImage(GraphicId(ID_Graphic_TradeAmount),
+						xOffset + 100 * goodOffset + 141, yOffset + 20);
+					break;
+				case 25:
+					Graphics_drawImage(GraphicId(ID_Graphic_TradeAmount) + 1,
+						xOffset + 100 * goodOffset + 137, yOffset + 20);
+					break;
+				case 40:
+					Graphics_drawImage(GraphicId(ID_Graphic_TradeAmount) + 2,
+						xOffset + 100 * goodOffset + 133, yOffset + 20);
+					break;
+			}
+			int tradeNow = Data_Empire_Trade.tradedThisYear[routeId][good];
+			int tradeMax = Data_Empire_Trade.maxPerYear[routeId][good];
+			if (tradeNow > tradeMax) {
+				tradeMax = tradeNow;
+			}
+			int textWidth = Widget_Text_drawNumber(tradeNow, '@', "",
+				xOffset + 100 * goodOffset + 150, yOffset + 30, Font_SmallBrown);
+			textWidth += Widget_GameText_draw(47, 11,
+				xOffset + 100 * goodOffset + 148 + textWidth, yOffset + 30, Font_SmallBrown);
+			Widget_Text_drawNumber(tradeMax, '@', "",
+				xOffset + 100 * goodOffset + 138 + textWidth, yOffset + 30, Font_SmallBrown);
+			goodOffset++;
+		}
+		Widget_GameText_draw(47, 9, xOffset + 40, yOffset + 60, Font_SmallBrown);
+		goodOffset = 0;
+		for (int good = 1; good <= 15; good++) {
+			if (!Empire_cityBuysResource(objectId, good)) {
+				continue;
+			}
+			Graphics_drawInsetRect(xOffset + 100 * goodOffset + 120, yOffset + 51, 26, 26);
+			int graphicId = good + GraphicId(ID_Graphic_EmpireResource);
+			int resourceOffset = Resource_getGraphicId(good, 3);
+			Graphics_drawImage(graphicId + resourceOffset, xOffset + 100 * goodOffset + 121, yOffset + 52);
+			int routeId = Data_Empire_Cities[selectedCity].routeId;
+			switch (Data_Empire_Trade.maxPerYear[routeId][good]) {
+				case 15:
+					Graphics_drawImage(GraphicId(ID_Graphic_TradeAmount),
+						xOffset + 100 * goodOffset + 141, yOffset + 50);
+					break;
+				case 25:
+					Graphics_drawImage(GraphicId(ID_Graphic_TradeAmount) + 1,
+						xOffset + 100 * goodOffset + 137, yOffset + 50);
+					break;
+				case 40:
+					Graphics_drawImage(GraphicId(ID_Graphic_TradeAmount) + 2,
+						xOffset + 100 * goodOffset + 133, yOffset + 50);
+					break;
+			}
+			int tradeNow = Data_Empire_Trade.tradedThisYear[routeId][good];
+			int tradeMax = Data_Empire_Trade.maxPerYear[routeId][good];
+			if (tradeNow > tradeMax) {
+				tradeMax = tradeNow;
+			}
+			int textWidth = Widget_Text_drawNumber(tradeNow, '@', "",
+				xOffset + 100 * goodOffset + 150, yOffset + 60, Font_SmallBrown);
+			textWidth += Widget_GameText_draw(47, 11,
+				xOffset + 100 * goodOffset + 148 + textWidth, yOffset + 60, Font_SmallBrown);
+			Widget_Text_drawNumber(tradeMax, '@', "",
+				xOffset + 100 * goodOffset + 138 + textWidth, yOffset + 60, Font_SmallBrown);
+			goodOffset++;
 		}
 	} else { // trade is closed
-		
+		int goodOffset = Widget_GameText_draw(47, 5, xOffset + 50, yOffset + 42, Font_SmallBrown);
+		for (int good = 1; good <= 15; good++) {
+			if (!Empire_citySellsResource(objectId, good)) {
+				continue;
+			}
+			Graphics_drawInsetRect(xOffset + goodOffset + 60, yOffset + 33, 26, 26);
+			int graphicId = good + GraphicId(ID_Graphic_EmpireResource);
+			int resourceOffset = Resource_getGraphicId(good, 3);
+			Graphics_drawImage(graphicId + resourceOffset, xOffset + goodOffset + 61, yOffset + 34);
+			int routeId = Data_Empire_Cities[selectedCity].routeId;
+			switch (Data_Empire_Trade.maxPerYear[routeId][good]) {
+				case 15:
+					Graphics_drawImage(GraphicId(ID_Graphic_TradeAmount),
+						xOffset + goodOffset + 81, yOffset + 32);
+					break;
+				case 25:
+					Graphics_drawImage(GraphicId(ID_Graphic_TradeAmount) + 1,
+						xOffset + goodOffset + 77, yOffset + 32);
+					break;
+				case 40:
+					Graphics_drawImage(GraphicId(ID_Graphic_TradeAmount) + 2,
+						xOffset + goodOffset + 73, yOffset + 32);
+					break;
+			}
+			goodOffset += 32;
+		}
+		goodOffset += Widget_GameText_draw(47, 4, xOffset + goodOffset + 100, yOffset + 42, Font_SmallBrown);
+		for (int good = 1; good <= 15; good++) {
+			if (!Empire_cityBuysResource(objectId, good)) {
+				continue;
+			}
+			Graphics_drawInsetRect(xOffset + goodOffset + 110, yOffset + 33, 26, 26);
+			int graphicId = good + GraphicId(ID_Graphic_EmpireResource);
+			int resourceOffset = Resource_getGraphicId(good, 3);
+			Graphics_drawImage(graphicId + resourceOffset, xOffset + goodOffset + 110, yOffset + 34);
+			int routeId = Data_Empire_Cities[selectedCity].routeId;
+			switch (Data_Empire_Trade.maxPerYear[routeId][good]) {
+				case 15:
+					Graphics_drawImage(GraphicId(ID_Graphic_TradeAmount),
+						xOffset + goodOffset + 130, yOffset + 32);
+					break;
+				case 25:
+					Graphics_drawImage(GraphicId(ID_Graphic_TradeAmount) + 1,
+						xOffset + goodOffset + 126, yOffset + 32);
+					break;
+				case 40:
+					Graphics_drawImage(GraphicId(ID_Graphic_TradeAmount) + 2,
+						xOffset + goodOffset + 122, yOffset + 32);
+					break;
+			}
+			goodOffset += 32;
+		}
+		Widget_Panel_drawButtonBorder(xOffset + 50, yOffset + 68, 400, 20, selectedButton);
+		goodOffset = Widget_GameText_drawNumberWithDescription(8, 0,
+			Data_Empire_Cities[selectedCity].costToOpen,
+			xOffset + 60, yOffset + 73, Font_SmallBrown);
+		Widget_GameText_draw(47, 6, xOffset + goodOffset + 60, yOffset + 73, Font_SmallBrown);
 	}
 }
-/*
-void __cdecl fun_drawEmpireInfoPanelCity()
-{
-    if ( trade_isOpen[66 * trade_selectedCity] )
-    {
-      v10 = 0;
-      j_fun_drawGameText(47, 10, v26 + 40, v24 + 30, graphic_font + 1072, 0);
-      for ( i = 1; i <= 15; ++i )
-      {
-        if ( j_fun_empireCitySellsGood(objectId, i) )
-        {
-          j_fun_drawInsetRect(v26 + 100 * v10 + 120, v24 + 21, 26, 26);
-          v6 = i + word_6E6D0A;
-          v7 = j_fun_getResourceGraphicIdOffset(i, 3);
-          j_fun_drawGraphic(v7 + v6, v26 + 100 * v10 + 121, v24 + 22);
-          switch ( *((_DWORD *)&tradeQuotas[64 * (unsigned __int8)trade_routeId[66 * trade_selectedCity]] + i) )
-          {
-            case 0xF:
-              j_fun_drawGraphic(graphic_tradeAmount, v26 + 100 * v10 + 141, v24 + 20);
-              break;
-            case 0x19:
-              j_fun_drawGraphic(graphic_tradeAmount + 1, v26 + 100 * v10 + 137, v24 + 20);
-              break;
-            case 0x28:
-              j_fun_drawGraphic(graphic_tradeAmount + 2, v26 + 100 * v10 + 133, v24 + 20);
-              break;
-          }
-          v20 = *(int *)((char *)&tradedSoFar[16 * (unsigned __int8)trade_routeId[66 * trade_selectedCity]]
-                       + 4 * i);
-          v18 = *((_DWORD *)&tradeQuotas[64 * (unsigned __int8)trade_routeId[66 * trade_selectedCity]] + i);
-          if ( v20 > v18 )
-            v18 = *(int *)((char *)&tradedSoFar[16 * (unsigned __int8)trade_routeId[66 * trade_selectedCity]]
-                         + 4 * i);
-          text_xoffset = 0;
-          j_fun_drawNumber(v20, 64, byte_5E357C, v26 + 100 * v10 + 150, v24 + 30, graphic_font + 1072, 0);
-          j_fun_drawGameText(47, 11, v26 + 100 * v10 + text_xoffset + 148, v24 + 30, graphic_font + 1072, 0);
-          j_fun_drawNumber(
-            v18,
-            64,
-            byte_5E357C,
-            v26 + 100 * v10++ + text_xoffset + 138,
-            v24 + 30,
-            graphic_font + 1072,
-            0);
-        }
-      }
-      v11 = 0;
-      j_fun_drawGameText(47, 9, v26 + 40, v24 + 60, graphic_font + 1072, 0);
-      for ( j = 1; j <= 15; ++j )
-      {
-        if ( j_fun_empireCityBuysGood(objectId, j) )
-        {
-          j_fun_drawInsetRect(v26 + 100 * v11 + 120, v24 + 51, 26, 26);
-          v8 = j + word_6E6D0A;
-          v9 = j_fun_getResourceGraphicIdOffset(j, 3);
-          j_fun_drawGraphic(v9 + v8, v26 + 100 * v11 + 121, v24 + 52);
-          switch ( *((_DWORD *)&tradeQuotas[64 * (unsigned __int8)trade_routeId[66 * trade_selectedCity]] + j) )
-          {
-            case 0xF:
-              j_fun_drawGraphic(graphic_tradeAmount, v26 + 100 * v11 + 141, v24 + 50);
-              break;
-            case 0x19:
-              j_fun_drawGraphic(graphic_tradeAmount + 1, v26 + 100 * v11 + 137, v24 + 50);
-              break;
-            case 0x28:
-              j_fun_drawGraphic(graphic_tradeAmount + 2, v26 + 100 * v11 + 133, v24 + 50);
-              break;
-          }
-          v21 = *(int *)((char *)&tradedSoFar[16 * (unsigned __int8)trade_routeId[66 * trade_selectedCity]]
-                       + 4 * j);
-          v19 = *((_DWORD *)&tradeQuotas[64 * (unsigned __int8)trade_routeId[66 * trade_selectedCity]] + j);
-          if ( v21 > v19 )
-            v19 = *(int *)((char *)&tradedSoFar[16 * (unsigned __int8)trade_routeId[66 * trade_selectedCity]]
-                         + 4 * j);
-          text_xoffset = 0;
-          j_fun_drawNumber(v21, 64, byte_5E357C, v26 + 100 * v11 + 150, v24 + 60, graphic_font + 1072, 0);
-          j_fun_drawGameText(47, 11, v26 + 100 * v11 + text_xoffset + 148, v24 + 60, graphic_font + 1072, 0);
-          j_fun_drawNumber(
-            v19,
-            64,
-            byte_5E357C,
-            v26 + 100 * v11++ + text_xoffset + 138,
-            v24 + 60,
-            graphic_font + 1072,
-            0);
-        }
-      }
-    }
-    else
-    {
-      text_xoffset = 0;
-      j_fun_drawGameText(47, 5, v26 + 50, v24 + 42, graphic_font + 1072, 0);
-      v14 = 1;
-      v12 = 0;
-      while ( v14 <= 15 )
-      {
-        if ( j_fun_empireCitySellsGood(objectId, v14) )
-        {
-          j_fun_drawInsetRect(v26 + text_xoffset + 60, v24 + 33, 26, 26);
-          v0 = v26 + text_xoffset + 61;
-          v1 = v14 + word_6E6D0A;
-          v2 = j_fun_getResourceGraphicIdOffset(v14, 3);
-          j_fun_drawGraphic(v2 + v1, v0, v24 + 34);
-          switch ( *((_DWORD *)&tradeQuotas[64 * (unsigned __int8)trade_routeId[66 * trade_selectedCity]] + v14) )
-          {
-            case 0xF:
-              j_fun_drawGraphic(graphic_tradeAmount, v26 + text_xoffset + 81, v24 + 32);
-              break;
-            case 0x19:
-              j_fun_drawGraphic(graphic_tradeAmount + 1, v26 + text_xoffset + 77, v24 + 32);
-              break;
-            case 0x28:
-              j_fun_drawGraphic(graphic_tradeAmount + 2, v26 + text_xoffset + 73, v24 + 32);
-              break;
-          }
-          text_xoffset += 32;
-          ++v12;
-        }
-        ++v14;
-      }
-      j_fun_drawGameText(47, 4, v26 + text_xoffset + 100, v24 + 42, graphic_font + 1072, 0);
-      v15 = 1;
-      v13 = 0;
-      while ( v15 <= 15 )
-      {
-        if ( j_fun_empireCityBuysGood(objectId, v15) )
-        {
-          j_fun_drawInsetRect(v26 + text_xoffset + 110, v24 + 33, 26, 26);
-          v3 = v26 + text_xoffset + 110;
-          v4 = v15 + word_6E6D0A;
-          v5 = j_fun_getResourceGraphicIdOffset(v15, 3);
-          j_fun_drawGraphic(v5 + v4, v3, v24 + 34);
-          switch ( *((_DWORD *)&tradeQuotas[64 * (unsigned __int8)trade_routeId[66 * trade_selectedCity]] + v15) )
-          {
-            case 0xF:
-              j_fun_drawGraphic(graphic_tradeAmount, v26 + text_xoffset + 130, v24 + 32);
-              break;
-            case 0x19:
-              j_fun_drawGraphic(graphic_tradeAmount + 1, v26 + text_xoffset + 126, v24 + 32);
-              break;
-            case 0x28:
-              j_fun_drawGraphic(graphic_tradeAmount + 2, v26 + text_xoffset + 122, v24 + 32);
-              break;
-          }
-          text_xoffset += 32;
-          ++v13;
-        }
-        ++v15;
-      }
-      if ( mouseover_button_id_main )
-        j_fun_drawBorderedButton(0, v26 + 50, v24 + 68, 400, 20, 1);
-      else
-        j_fun_drawBorderedButton(0, v26 + 50, v24 + 68, 400, 20, 0);
-      j_fun_drawNumberSingularPlural(
-        8,
-        0,
-        trade_costToOpen[33 * trade_selectedCity],
-        v26 + 60,
-        v24 + 73,
-        graphic_font + 1072,
-        0);
-      j_fun_drawGameText(47, 6, v26 + text_xoffset + 60, v24 + 73, graphic_font + 1072, 0);
-    }
-}
-*/
 
 static void drawPanelInfoBattleIcon()
 {
@@ -333,7 +319,7 @@ static void drawPanelInfoRomanArmy()
 		Data_CityInfo.distantBattleRomanMonthsToReturn > 0) {
 		if (Data_CityInfo.distantBattleRomanMonthsTraveled ==
 			Data_Empire_Objects[Data_Empire.selectedObject].distantBattleTravelMonths) {
-			int xOffset = xMin + (xMax - xMin - 240) / 2;
+			int xOffset = (xMin + xMax - 240) / 2;
 			int yOffset = yMax - 88;
 			int textId;
 			if (Data_CityInfo.distantBattleRomanMonthsToTravel) {
@@ -352,9 +338,38 @@ static void drawPanelInfoEnemyArmy()
 		if (Data_CityInfo.distantBattleEnemyMonthsTraveled ==
 			Data_Empire_Objects[Data_Empire.selectedObject].distantBattleTravelMonths) {
 			Widget_GameText_drawMultiline(47, 14,
-				xMin + (xMax - xMin - 240) / 2,
+				(xMin + xMax - 240) / 2,
 				yMax - 68,
 				240, Font_NormalBlack);
+		}
+	}
+}
+
+static void drawPanelInfoCityName()
+{
+	int graphicBase = GraphicId(ID_Graphic_EmpirePanels);
+	Graphics_drawImage(graphicBase + 6, xMin + 2, yMax - 199);
+	Graphics_drawImage(graphicBase + 7, xMax - 84, yMax - 199);
+	Graphics_drawImage(graphicBase + 8, (xMin + xMax - 332) / 2, yMax - 181);
+	if (Data_Empire.selectedObject > 0) {
+		if (Data_Empire_Objects[Data_Empire.selectedObject-1].type == EmpireObject_City) {
+			Widget_GameText_drawCentered(21, Data_Empire_Cities[selectedCity].cityNameId,
+				(xMin + xMax - 332) / 2 + 64, yMax - 118, 268, Font_LargeBlack);
+		}
+	}
+}
+
+static void drawPanelButtons()
+{
+	Widget_Button_drawImageButtons(xMin + 20, yMax - 44, imageButtonHelp, 1);
+	Widget_Button_drawImageButtons(xMax - 44, yMax - 44, imageButtonReturnToCity, 1);
+	Widget_Button_drawImageButtons(xMax - 44, yMax - 100, imageButtonAdvisor, 1);
+	if (Data_Empire.selectedObject) {
+		if (Data_Empire_Objects[Data_Empire.selectedObject-1].type == EmpireObject_City) {
+			selectedCity = Empire_getCityForObject(Data_Empire.selectedObject-1);
+			if (Data_Empire_Cities[selectedCity].cityType == EmpireCity_Trade && !Data_Empire_Cities[selectedCity].isOpen) {
+				Widget_Panel_drawButtonBorder((xMin + xMax - 500) / 2 + 50, yMax - 40, 400, 20, selectedButton);
+			}
 		}
 	}
 }
@@ -432,9 +447,110 @@ static short getNextAnimationIndex(int graphicId, short currentAnimationIndex)
 	return 1;
 }
 
+static int getSelectedObject()
+{
+	if (!Data_Mouse.isLeftClick) {
+		return -1;
+	}
+	if (Data_Mouse.x < xMin + 16 || Data_Mouse.x >= xMax - 16 ||
+		Data_Mouse.y < yMin + 16 || Data_Mouse.y >= yMax - 120) {
+		return -1;
+	}
+	int xMap = Data_Mouse.x + Data_Empire.scrollX - xMin - 16;
+	int yMap = Data_Mouse.y + Data_Empire.scrollY - yMin - 16;
+	int minDist = 10000;
+	int objId = 0;
+	for (int i = 0; i < 200 && Data_Empire_Objects[i].inUse; i++) {
+		Data_Empire_Object *obj = &Data_Empire_Objects[i];
+		int xObj, yObj;
+		if (Data_Scenario.empireHasExpanded) {
+			xObj = obj->xExpanded;
+			yObj = obj->yExpanded;
+		} else {
+			xObj = obj->x;
+			yObj = obj->y;
+		}
+		if (xObj - 8 > xMap || xObj + obj->width + 8 <= xMap) {
+			continue;
+		}
+		if (yObj - 8 > yMap || yObj + obj->height + 8 <= yMap) {
+			continue;
+		}
+		int dist = Calc_distanceMaximum(xMap, yMap,
+			xObj + obj->width / 2, yObj + obj->height / 2);
+		if (dist < minDist) {
+			minDist = dist;
+			objId = i + 1;
+		}
+	}
+	return objId;
+}
+
 void UI_Empire_handleMouse()
 {
+	// TODO scrolling
+	//j_fun_scrollEmpireMap(j_fun_getMapScrollDirection());
+	if (Widget_Button_handleImageButtons(xMin + 20, yMax - 44, imageButtonHelp, 1)) {
+		return;
+	}
+	if (Widget_Button_handleImageButtons(xMax - 44, yMax - 44, imageButtonReturnToCity, 1)) {
+		return;
+	}
+	if (Widget_Button_handleImageButtons(xMax - 44, yMax - 100, imageButtonAdvisor, 1)) {
+		return;
+	}
+	int objectId = getSelectedObject();
+	if (objectId > 0) {
+		Data_Empire.selectedObject = objectId;
+	} else if (objectId == 0) {
+		Data_Empire.selectedObject = 0;
+	}
 	if (Data_Mouse.isRightClick) {
-		UI_Window_goTo(Window_City);
+		Data_Empire.selectedObject = 0;
+		UI_Window_requestRefresh();
+	}
+	if (Data_Empire.selectedObject) {
+		if (Data_Empire_Objects[Data_Empire.selectedObject-1].type == EmpireObject_City) {
+			selectedCity = Empire_getCityForObject(Data_Empire.selectedObject-1);
+			if (Data_Empire_Cities[selectedCity].cityType == EmpireCity_Trade && !Data_Empire_Cities[selectedCity].isOpen) {
+				Widget_Button_handleCustomButtons((xMin + xMax - 500) / 2, yMax - 105, customButtonOpenTrade, 1, &selectedButton);
+			}
+		}
+	}
+}
+
+static void buttonHelp(int param1, int param2)
+{
+	// TODO
+	// UI_HelpDialog_show(32, 1);
+}
+
+static void buttonReturnToCity(int param1, int param2)
+{
+	UI_Window_goTo(Window_City);
+}
+
+static void buttonAdvisor(int advisor, int param2)
+{
+	// TODO consolidate all go-to-advisor actions into 1 function (just like original)
+	UI_Advisors_setAdvisor(advisor);
+	UI_Window_goTo(Window_Advisors);
+}
+
+static void buttonOpenTrade(int param1, int param2)
+{
+	UI_PopupDialog_show(2, confirmOpenTrade, 2);
+}
+
+static void confirmOpenTrade(int accepted)
+{
+	if (accepted) {
+		// TODO
+		//j_fun_spendMoneyConstruction(ciid, trade_costToOpen[33 * trade_selectedCity]);
+		Data_Empire_Cities[selectedCity].isOpen = 1;
+		//j_fun_enableBuildingMenuItems();
+		//j_fun_enableSidebarButtons();
+		//UI_Window_goTo(Window_???);
+		//confirmDialog_windowId = 38;
 	}
 }

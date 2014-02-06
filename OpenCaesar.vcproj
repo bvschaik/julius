@@ -327,6 +327,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\Resource.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\UI\SendGiftToCaesarDialog.cpp"
 				>
 			</File>
@@ -506,6 +510,10 @@
 			</File>
 			<File
 				RelativePath=".\src\Random.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Resource.h"
 				>
 			</File>
 			<File
