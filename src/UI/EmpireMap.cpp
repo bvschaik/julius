@@ -34,6 +34,7 @@ static void buttonHelp(int param1, int param2);
 static void buttonReturnToCity(int param1, int param2);
 static void buttonAdvisor(int param1, int param2);
 static void buttonOpenTrade(int param1, int param2);
+static void buttonEmpireMap(int param1, int param2);
 static void confirmOpenTrade(int accepted);
 
 ImageButton imageButtonHelp[] = {
@@ -47,6 +48,11 @@ ImageButton imageButtonAdvisor[] = {
 };
 CustomButton customButtonOpenTrade[] = {
 	{50, 68, 450, 91, buttonOpenTrade, Widget_Button_doNothing, 1, 0, 0}
+};
+
+ImageButton imageButtonsTradeOpened[] = {
+	{92, 248, 28, 28, 4, 199, 12, buttonAdvisor, Widget_Button_doNothing, 1, 0, 0, 0, 5, 0},
+	{522, 252, 24, 24, 4, 134, 4, buttonEmpireMap, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0},
 };
 
 static int selectedButton = 0;
@@ -170,6 +176,7 @@ static void drawPanelInfoCity()
 	// trade city
 	xOffset = (xMin + xMax - 500) / 2;
 	yOffset = yMax - 108;
+	Data_Empire_Cities[selectedCity].isOpen = 0;
 	if (Data_Empire_Cities[selectedCity].isOpen) {
 		Widget_GameText_draw(47, 10, xOffset + 40, yOffset + 30, Font_SmallBrown);
 		int goodOffset = 0;
@@ -542,6 +549,11 @@ static void buttonOpenTrade(int param1, int param2)
 	UI_PopupDialog_show(2, confirmOpenTrade, 2);
 }
 
+static void buttonEmpireMap(int param1, int param2)
+{
+	UI_Window_goTo(Window_Empire);
+}
+
 static void confirmOpenTrade(int accepted)
 {
 	if (accepted) {
@@ -550,7 +562,35 @@ static void confirmOpenTrade(int accepted)
 		Data_Empire_Cities[selectedCity].isOpen = 1;
 		//j_fun_enableBuildingMenuItems();
 		//j_fun_enableSidebarButtons();
-		//UI_Window_goTo(Window_???);
-		//confirmDialog_windowId = 38;
+		UI_Window_goTo(Window_TradeOpenedDialog);
 	}
+}
+
+void UI_TradeOpenedDialog_drawBackground()
+{
+	int xOffset = Data_Screen.offset640x480.x;
+	int yOffset = Data_Screen.offset640x480.y;
+	Widget_Panel_drawOuterPanel(xOffset + 80, yOffset + 64, 30, 14);
+	Widget_GameText_drawCentered(142, 0, xOffset + 80, yOffset + 80, 480, Font_LargeBlack);
+	if (Data_Empire_Cities[selectedCity].isSeaTrade) {
+		Widget_GameText_drawMultiline(142, 1, xOffset + 112, yOffset + 120, 416, Font_NormalBlack);
+		Widget_GameText_drawMultiline(142, 3, xOffset + 112, yOffset + 184, 416, Font_NormalBlack);
+	} else {
+		Widget_GameText_drawMultiline(142, 1, xOffset + 112, yOffset + 152, 416, Font_NormalBlack);
+	}
+	Widget_GameText_draw(142, 2, xOffset + 128, yOffset + 256, Font_NormalBlack);
+}
+
+void UI_TradeOpenedDialog_drawForeground()
+{
+	Widget_Button_drawImageButtons(
+		Data_Screen.offset640x480.x, Data_Screen.offset640x480.y,
+		imageButtonsTradeOpened, 2);
+}
+
+void UI_TradeOpenedDialog_handleMouse()
+{
+	Widget_Button_handleImageButtons(
+		Data_Screen.offset640x480.x, Data_Screen.offset640x480.y,
+		imageButtonsTradeOpened, 2);
 }

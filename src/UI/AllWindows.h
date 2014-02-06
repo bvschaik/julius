@@ -48,5 +48,8 @@ void UI_Empire_drawBackground();
 void UI_Empire_drawForeground();
 void UI_Empire_handleMouse();
 
+void UI_TradeOpenedDialog_drawBackground();
+void UI_TradeOpenedDialog_drawForeground();
+void UI_TradeOpenedDialog_handleMouse();
 
 #endif
