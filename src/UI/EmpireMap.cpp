@@ -5,6 +5,7 @@
 #include "../Widget.h"
 #include "../Empire.h"
 #include "../Resource.h"
+#include "../Animation.h"
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
 #include "../Data/Empire.h"
@@ -27,7 +28,6 @@ static void drawPanelInfoEnemyArmy();
 static void drawPanelInfoCityName();
 static void drawPanelButtons();
 static void drawEmpireMap();
-static short getNextAnimationIndex(int graphicId, short currentAnimationIndex);
 static int getSelectedObject();
 
 static void buttonHelp(int param1, int param2);
@@ -37,20 +37,20 @@ static void buttonOpenTrade(int param1, int param2);
 static void buttonEmpireMap(int param1, int param2);
 static void confirmOpenTrade(int accepted);
 
-ImageButton imageButtonHelp[] = {
+static ImageButton imageButtonHelp[] = {
 	{0, 0, 27, 27, 4, 134, 0, buttonHelp, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0}
 };
-ImageButton imageButtonReturnToCity[] = {
+static ImageButton imageButtonReturnToCity[] = {
 	{0, 0, 24, 24, 4, 134, 4, buttonReturnToCity, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0}
 };
-ImageButton imageButtonAdvisor[] = {
+static ImageButton imageButtonAdvisor[] = {
 	{-4, 0, 24, 24, 4, 199, 12, buttonAdvisor, Widget_Button_doNothing, 1, 0, 0, 0, 5, 0}
 };
-CustomButton customButtonOpenTrade[] = {
+static CustomButton customButtonOpenTrade[] = {
 	{50, 68, 450, 91, buttonOpenTrade, Widget_Button_doNothing, 1, 0, 0}
 };
 
-ImageButton imageButtonsTradeOpened[] = {
+static ImageButton imageButtonsTradeOpened[] = {
 	{92, 248, 28, 28, 4, 199, 12, buttonAdvisor, Widget_Button_doNothing, 1, 0, 0, 0, 5, 0},
 	{522, 252, 24, 24, 4, 134, 4, buttonEmpireMap, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0},
 };
@@ -120,7 +120,7 @@ static void drawPaneling()
 	Graphics_resetClipRectangle();
 }
 
-void drawPanelInfo()
+static void drawPanelInfo()
 {
 	if (Data_Empire.selectedObject) {
 		switch (Data_Empire_Objects[Data_Empire.selectedObject-1].type) {
@@ -176,7 +176,6 @@ static void drawPanelInfoCity()
 	// trade city
 	xOffset = (xMin + xMax - 500) / 2;
 	yOffset = yMax - 108;
-	Data_Empire_Cities[selectedCity].isOpen = 0;
 	if (Data_Empire_Cities[selectedCity].isOpen) {
 		Widget_GameText_draw(47, 10, xOffset + 40, yOffset + 30, Font_SmallBrown);
 		int goodOffset = 0;
@@ -438,7 +437,7 @@ static void drawEmpireMap()
 		}
 		Graphics_drawImage(graphicId, xOffset + x, yOffset + y);
 		if (GraphicHasAnimationSprite(graphicId)) {
-			obj->animationIndex = getNextAnimationIndex(graphicId, obj->animationIndex);
+			obj->animationIndex = Animation_getIndexForEmpireMap(graphicId, obj->animationIndex);
 			Graphics_drawImage(graphicId + obj->animationIndex,
 				xOffset + x + GraphicAnimationTopOffset(graphicId),
 				yOffset + y + GraphicAnimationLeftOffset(graphicId));
@@ -446,12 +445,6 @@ static void drawEmpireMap()
 	}
 
 	Graphics_resetClipRectangle();
-}
-
-static short getNextAnimationIndex(int graphicId, short currentAnimationIndex)
-{
-	// TODO animation timers
-	return 1;
 }
 
 static int getSelectedObject()

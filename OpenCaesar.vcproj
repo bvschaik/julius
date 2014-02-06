@@ -215,6 +215,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\Animation.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Calc.cpp"
 				>
 			</File>
@@ -284,6 +288,10 @@
 			</File>
 			<File
 				RelativePath=".\src\Graphics_Footprint.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\UI\HoldFestivalDialog.cpp"
 				>
 			</File>
 			<File
@@ -405,6 +413,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\Animation.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Data\Buttons.h"
 				>
 			</File>
@@ -429,11 +441,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Empire.h"
+				RelativePath=".\src\Data\Empire.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Empire.h"
+				RelativePath=".\src\Empire.h"
 				>
 			</File>
 			<File
@@ -473,11 +485,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Language.h"
+				RelativePath=".\src\Language.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Language.h"
+				RelativePath=".\src\Data\Language.h"
 				>
 			</File>
 			<File
@@ -554,6 +566,10 @@
 			</File>
 			<File
 				RelativePath=".\src\Util.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Data\Walker.h"
 				>
 			</File>
 			<File

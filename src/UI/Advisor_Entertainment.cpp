@@ -1,3 +1,4 @@
+#include "Window.h"
 #include "Advisors_private.h"
 #include "../CityInfoUpdater.h"
 
@@ -203,5 +204,7 @@ void UI_Advisor_Entertainment_handleMouse()
 
 void buttonHoldFestival(int param1, int param2)
 {
-	// TODO
+	if (!Data_CityInfo.plannedFestivalSize) {
+		UI_Window_goTo(Window_HoldFestivalDialog);
+	}
 }

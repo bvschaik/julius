@@ -16,6 +16,7 @@
 #include "../src/Language.h"
 #include "../src/Graphics.h"
 #include "../src/GameFile.h"
+#include "../src/Animation.h"
 
 
 /*
@@ -41,6 +42,7 @@ void refresh(SDL_Surface *surface) {
 	
 	Data_Screen.drawBuffer = (Color*)surface->pixels;
 	
+	Animation_updateTimers(SDL_GetTicks());
 	UI_Window_refresh(1);
 	//UI_MainMenu_drawBackground();
 	//UI_MainMenu_drawForeground();
