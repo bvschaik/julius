@@ -12,6 +12,11 @@ static CustomButton holdFestivalButtons[1] = {
 
 static int focusButtonId;
 
+void UI_Advisor_Entertainment_init()
+{
+	focusButtonId = 0;
+}
+
 void UI_Advisor_Entertainment_drawBackground()
 {
 	CityInfoUpdater_Gods_calculate();

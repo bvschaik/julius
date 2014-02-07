@@ -2,7 +2,7 @@
 #define ANIMATION_H
 
 void Animation_resetTimers();
-void Animation_updateTimers(unsigned int currentTime);
+void Animation_updateTimers();
 
 int Animation_getIndexForCityMap(int graphicId, int gridOffset);
 int Animation_getIndexForEmpireMap(int graphicId, int currentIndex);

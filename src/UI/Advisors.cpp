@@ -1,5 +1,6 @@
 #include "Advisors_private.h"
 #include "Window.h"
+#include "AllWindows.h"
 
 static void buttonChangeAdvisor(int param1, int param2);
 
@@ -30,6 +31,15 @@ static int focusButtonId;
 void UI_Advisors_setAdvisor(int advisor)
 {
 	currentAdvisor = advisor;
+	UI_Advisors_init();
+}
+
+void UI_Advisors_init()
+{
+	switch (currentAdvisor) {
+		case Advisor_Entertainment:
+			UI_Advisor_Entertainment_init();
+	}
 }
 
 void UI_Advisors_drawBackground()
@@ -172,7 +182,7 @@ void UI_Advisors_handleMouse()
 static void buttonChangeAdvisor(int param1, int param2)
 {
 	if (param1) {
-		currentAdvisor = param1;
+		UI_Advisors_setAdvisor(param1);
 		UI_Window_requestRefresh();
 	} else {
 		UI_Window_goTo(Window_City);

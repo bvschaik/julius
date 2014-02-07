@@ -1171,7 +1171,7 @@ extern struct Data_CityInfo {
 	int festivalCostLarge;
 	int festivalCostGrand;
 	int festivalWineGrand;
-	int festivalNoWineAvailable;
+	int festivalNotEnoughWine;
 	char __unknown_443c;
 	char __unknown_443d;
 	char __unknown_443e;

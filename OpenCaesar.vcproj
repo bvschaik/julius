@@ -363,6 +363,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\Time.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\UI\TopMenu.cpp"
 				>
 			</File>
@@ -485,11 +489,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Language.h"
+				RelativePath=".\src\Data\Language.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Language.h"
+				RelativePath=".\src\Language.h"
 				>
 			</File>
 			<File
@@ -517,11 +521,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\data\Random.h"
+				RelativePath=".\src\Random.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Random.h"
+				RelativePath=".\src\data\Random.h"
 				>
 			</File>
 			<File
@@ -550,6 +554,10 @@
 			</File>
 			<File
 				RelativePath=".\src\String.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Time.h"
 				>
 			</File>
 			<File

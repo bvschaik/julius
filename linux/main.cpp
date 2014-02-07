@@ -16,8 +16,8 @@
 #include "../src/Language.h"
 #include "../src/Graphics.h"
 #include "../src/GameFile.h"
+#include "../src/Time.h"
 #include "../src/Animation.h"
-
 
 /*
 typedef struct{
@@ -42,7 +42,8 @@ void refresh(SDL_Surface *surface) {
 	
 	Data_Screen.drawBuffer = (Color*)surface->pixels;
 	
-	Animation_updateTimers(SDL_GetTicks());
+	Time_setMillis(SDL_GetTicks());
+	Animation_updateTimers();
 	UI_Window_refresh(1);
 	//UI_MainMenu_drawBackground();
 	//UI_MainMenu_drawForeground();
@@ -57,6 +58,7 @@ void refresh(SDL_Surface *surface) {
 void mainLoop(SDL_Surface *surface) {
 	SDL_Event event;
 	
+	refresh(surface);
     /* While the program is running */
     while (1) {
 		int active = 1;
@@ -100,6 +102,10 @@ void mainLoop(SDL_Surface *surface) {
 				
 				case SDL_QUIT:
 					return;
+
+				default:
+					printf("Unknown event: %d\n", event.type);
+					break;
 			}
         }
 		if (active) {

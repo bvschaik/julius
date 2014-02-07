@@ -49,6 +49,7 @@ void UI_Advisor_Health_drawBackground();
 
 void UI_Advisor_Education_drawBackground();
 
+void UI_Advisor_Entertainment_init();
 void UI_Advisor_Entertainment_drawBackground();
 void UI_Advisor_Entertainment_drawForeground();
 void UI_Advisor_Entertainment_handleMouse();

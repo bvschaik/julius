@@ -1,5 +1,6 @@
 #include "Animation.h"
 #include "Data/Graphics.h"
+#include "Time.h"
 
 static unsigned int lastUpdate[51];
 static int shouldUpdate[51];
@@ -12,8 +13,9 @@ void Animation_resetTimers()
 	}
 }
 
-void Animation_updateTimers(unsigned int currentTimeMillis)
+void Animation_updateTimers()
 {
+	unsigned int currentTimeMillis = Time_getMillis();
 	for (int i = 0; i < 51; i++) {
 		shouldUpdate[i] = 0;
 	}
