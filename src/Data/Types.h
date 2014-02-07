@@ -2,6 +2,7 @@
 #define TYPES_H
 
 typedef unsigned short Color;
+typedef unsigned int ScreenColor;
 
 typedef enum {
 	Font_NormalPlain = 0,

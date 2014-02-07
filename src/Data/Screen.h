@@ -3,7 +3,8 @@
 
 #include "Types.h"
 
-#define SCREEN_REF(x, y) (&Data_Screen.drawBuffer[(x) + Data_Screen.width * (y)])
+// TODO scanline?
+#define ScreenPixel(x,y) ((ScreenColor*)Data_Screen.drawBuffer)[(y) * Data_Screen.width + (x)]
 
 extern struct Data_Screen {
 	int width;
@@ -12,7 +13,8 @@ extern struct Data_Screen {
 		int x, y;
 	} offset640x480;
 	int format; // 555, 565, ...
-	Color *drawBuffer; //[800*600];
+	void *drawBuffer; //[800*600];
+	int scanlineBytes;
 } Data_Screen;
 
 #endif

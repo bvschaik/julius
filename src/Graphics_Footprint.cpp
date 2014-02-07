@@ -1,5 +1,6 @@
 #include "Graphics_Footprint.h"
 #include "Graphics.h"
+#include "Graphics_private.h"
 
 #include "Data/Graphics.h"
 #include "Data/Screen.h"
@@ -28,7 +29,7 @@ static void drawFootprintTile(Color *data, int xOffset, int yOffset, Color color
 	if (clip->clipY != ClipTop) {
 		int dataIndex = 0;
 		for (int y = 0; y < 15; y++) {
-			Color *buffer = SCREEN_REF(xOffset, yOffset + y);
+			ScreenColor *buffer = &ScreenPixel(xOffset, yOffset + y);
 			int xMax = 4 * y + 2;
 			int xOffset = 29 - 1 - 2 * y;
 			if (clipLeft || clipRight) {
@@ -39,7 +40,7 @@ static void drawFootprintTile(Color *data, int xOffset, int yOffset, Color color
 				dataIndex += xMax;
 			}
 			for (int x = 0; x < xMax; x++) {
-				buffer[xOffset + x] = data[dataIndex++] & colorMask;
+				buffer[xOffset + x] = ColorLookup[data[dataIndex++] & colorMask];
 			}
 			if (clipRight) {
 				dataIndex += xMax;
@@ -49,7 +50,7 @@ static void drawFootprintTile(Color *data, int xOffset, int yOffset, Color color
 	if (clip->clipY != ClipBottom) {
 		int dataIndex = 900 / 2;
 		for (int y = 0; y < 15; y++) {
-			Color *buffer = SCREEN_REF(xOffset, 15 + y + yOffset);
+			ScreenColor *buffer = &ScreenPixel(xOffset, 15 + y + yOffset);
 			int xMax = 4 * (15 - 1 - y) + 2;
 			int xOffset = 2 * y;
 			if (clipLeft || clipRight) {
@@ -60,7 +61,7 @@ static void drawFootprintTile(Color *data, int xOffset, int yOffset, Color color
 				dataIndex += xMax;
 			}
 			for (int x = 0; x < xMax; x++) {
-				buffer[xOffset + x] = data[dataIndex++] & colorMask;
+				buffer[xOffset + x] = ColorLookup[data[dataIndex++] & colorMask];
 			}
 			if (clipRight) {
 				dataIndex += xMax;

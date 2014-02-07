@@ -28,21 +28,29 @@ static void setClipX(int xOffset, int width);
 static void setClipY(int yOffset, int height);
 
 
-// TODO scanline?
-#define ScreenPixel(x,y) Data_Screen.drawBuffer[(y) * Data_Screen.width + (x)]
+ScreenColor ColorLookup[65536];
 
+void Graphics_initialize()
+{
+	for (int c = 0; c < 65536; c++) {
+		ColorLookup[c] =
+			((c & 0xf800) << 8) | ((c & 0xe000) << 3) |
+			((c & 0x7e0) << 5)  | ((c & 0x600) >> 1) |
+			((c & 0x1f) << 3)   | ((c & 0x1c) >> 2);
+	}
+}
 
 void Graphics_clearScreen()
 {
 	// TODO scanline?
-	memset(Data_Screen.drawBuffer, 0, sizeof(Color) * Data_Screen.width * Data_Screen.height);
+	memset(Data_Screen.drawBuffer, 0, sizeof(ScreenColor) * Data_Screen.width * Data_Screen.height);
 }
 
 static void drawDot(int x, int y, Color color)
 {
 	if (x >= 0 && x < Data_Screen.width) {
 		if (y >= 0 && y < Data_Screen.height) {
-			ScreenPixel(x, y) = color;
+			ScreenPixel(x, y) = ColorLookup[color];
 		}
 	}
 }
@@ -129,13 +137,13 @@ void Graphics_shadeRect(int x, int y, int width, int height, int darkness)
 {
 	for (int yy = y; yy < y + height; yy++) {
 		for (int xx = x; xx < x + width; xx++) {
-			Color pixel = ScreenPixel(xx, yy);
-			int r = (pixel & 0xf800) >> 11;
-			int g = (pixel & 0x7e0) >> 6;
-			int b = (pixel & 0x1f);
+			ScreenColor pixel = ScreenPixel(xx, yy);
+			int r = (pixel & 0xf80000) >> 19;
+			int g = (pixel & 0xfc00) >> 11;
+			int b = (pixel & 0xf8) >> 3;
 			int grey = (r + g + b) / 3 >> darkness;
 			Color newPixel = (Color) (grey << 11 | grey << 6 | grey);
-			ScreenPixel(xx, yy) = newPixel;
+			ScreenPixel(xx, yy) = ColorLookup[newPixel];
 		}
 	}
 }
@@ -215,7 +223,7 @@ static void drawImageUncompressed(Data_Graphics_Index *index, const Color *data,
 		data += clip->clippedPixelsLeft;
 		for (int x = clip->clippedPixelsLeft; x < index->width - clip->clippedPixelsRight; x++) {
 			if (*data != Color_Transparent) {
-				ScreenPixel(xOffset + x, yOffset + y) = color ? color : *data;
+				ScreenPixel(xOffset + x, yOffset + y) = ColorLookup[color ? color : *data];
 			}
 			data++;
 		}
@@ -248,7 +256,7 @@ static void drawImageCompressed(Data_Graphics_Index *index, const unsigned char 
 				Color *pixels = (Color*) data;
 				while (b) {
 					if (x >= clip->clippedPixelsLeft && x < index->width - clip->clippedPixelsRight) {
-						ScreenPixel(xOffset + x, yOffset + y) = color ? color : *pixels;
+						ScreenPixel(xOffset + x, yOffset + y) = ColorLookup[color ? color : *pixels];
 					}
 					x++;
 					pixels++;
@@ -376,14 +384,14 @@ void Graphics_saveScreenshot(const char *filename)
 		12, 800, 600, 1, 24
 	};
 	unsigned char *pixels = (unsigned char*) malloc(800 * 3);
-	Data_Screen.drawBuffer[0] = (short)(0x1f << 10);
-	Data_Screen.drawBuffer[1] = (short)(0x1f << 5);
-	Data_Screen.drawBuffer[2] = (short)(0x1f << 0);
+	//Data_Screen.drawBuffer[0] = (short)(0x1f << 10);
+	//Data_Screen.drawBuffer[1] = (short)(0x1f << 5);
+	//Data_Screen.drawBuffer[2] = (short)(0x1f << 0);
 	FILE *fp = fopen(filename, "wb");
 	fwrite(&header.B, 1, 26, fp);
 	for (int y = 599; y >= 0; y--) {
 		for (int x = 0; x < 800; x++) {
-			pixel(Data_Screen.drawBuffer[y*800+x],
+			pixel(((Color*)Data_Screen.drawBuffer)[y*800+x],
 				&pixels[3*x+2], &pixels[3*x+1], &pixels[3*x]);
 		}
 		fwrite(pixels, 1, 3 * 800, fp);

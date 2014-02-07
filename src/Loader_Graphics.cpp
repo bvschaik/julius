@@ -4,6 +4,7 @@
 #include <string.h>
 
 #include "FileSystem.h"
+#include "Graphics.h"
 #include "Data/Screen.h"
 #include "Data/Constants.h"
 
@@ -41,6 +42,7 @@ int Loader_Graphics_initGraphics()
 	Data_Graphics_PixelData.main = ptr;
 	Data_Graphics_PixelData.enemy = &ptr[12100000];
 	imagesScratchSpace = (char*) malloc(2000 * 1000 * 2);
+	Graphics_initialize();
 	return 1;
 }
 

@@ -52,7 +52,9 @@ void refresh(SDL_Surface *surface) {
 	if (SDL_MUSTLOCK(surface)) {
 		SDL_UnlockSurface(surface);
 	}
-	SDL_UpdateRect(surface, 0, 0, 0, 0);
+	//SDL_UpdateRect(surface, 0, 0, 0, 0);
+	SDL_Flip(surface);
+	//printf("Refresh: %d ms\n", SDL_GetTicks() - Time_getMillis());
 }
 
 void mainLoop(SDL_Surface *surface) {
@@ -149,10 +151,11 @@ int main()
 	//SDL_Surface *surface = SDL_SetVideoMode(800, 600, 16, /*SDL_FULLSCREEN|*/SDL_HWSURFACE|SDL_DOUBLEBUF);
 	SDL_Surface *surface = SDL_SetVideoMode(
 	//	vidInfo->current_w, vidInfo->current_h, 16, /*SDL_FULLSCREEN*/0);
-		1680, 1050, 16, 0);
+		//1680, 1050, 16, SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_ANYFORMAT);
+		1920, 1200, 16, SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_ANYFORMAT|SDL_FULLSCREEN);
 	//	1440, 900, 16, 0);
 	if (surface) {
-		printf("Surface created\n");
+		printf("Surface created with scanline %d\n", surface->pitch);
 		printf("  flags: %d %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s\n",
 		surface->flags,
 		surface->flags & SDL_SWSURFACE ? "SDL_SWSURFACE" : "",
@@ -184,7 +187,7 @@ int main()
 	}
 	
 	// Get available fullscreen/hardware modes
-	modes = SDL_ListModes(&format, SDL_DOUBLEBUF);
+	modes = SDL_ListModes(&format, SDL_HWSURFACE|SDL_DOUBLEBUF);
 	
 	// Check is there are any modes available
 	if (modes == (SDL_Rect **) 0) {

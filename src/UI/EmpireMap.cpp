@@ -66,6 +66,9 @@ void UI_Empire_drawBackground()
 	yMin = Data_Screen.height <= MAX_HEIGHT ? 0 : (Data_Screen.height - MAX_HEIGHT) / 2;
 	yMax = Data_Screen.height <= MAX_HEIGHT ? Data_Screen.height : yMin + MAX_HEIGHT;
 
+	if (xMin || yMin) {
+		Graphics_clearScreen();
+	}
 	drawPaneling();
 	drawPanelInfo();
 }
