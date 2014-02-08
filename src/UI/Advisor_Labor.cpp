@@ -220,7 +220,7 @@ void UI_LaborPriorityDialog_drawForeground()
 
 void UI_LaborPriorityDialog_handleMouse()
 {
-	if (Data_Mouse.isRightClick) {
+	if (Data_Mouse.right.wentUp) {
 		UI_Window_goTo(Window_Advisors);
 	} else {
 		int offsetX = Data_Screen.offset640x480.x;

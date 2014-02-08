@@ -1,4 +1,5 @@
 #include "Sidebar.h"
+//#include "Minimap.h"
 #include "Window.h"
 #include "../Graphics.h"
 #include "../Widget.h"
@@ -16,6 +17,7 @@ static void drawFillerBorders();
 static void drawSidebar();
 static void drawButtons();
 static void drawOverlayText();
+static void drawMinimap(int force);
 
 static void buttonBuild(int param1, int param2);
 static void buttonBuild(int param1, int param2);
@@ -79,17 +81,6 @@ ImageButton buttonTopExpanded[] = {
 	{84, 184, 33, 22, 4, 89, 6, buttonRotate, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0},
 	{123, 184, 33, 22, 4, 89, 9, buttonRotate, Widget_Button_doNothing, 1, 0, 0, 0, 1, 0},
 };
-/*
-.data:005EF168                 C3ImageButton <2Eh, 0B8h, 21h, 16h, 4, 59h, 3, 0, \
-.data:005EF168                                offset j_fun_sidePanel_north, \
-.data:005EF168                                offset j_fun_clickDoNothing, 1, 0, 0, 0, 0, 0>
-.data:005EF168                 C3ImageButton <54h, 0B8h, 21h, 16h, 4, 59h, 6, 0, \
-.data:005EF168                                offset j_fun_sidePanel_rotate, \
-.data:005EF168                                offset j_fun_clickDoNothing, 1, 0, 0, 0, 0, 0>
-.data:005EF168                 C3ImageButton <7Bh, 0B8h, 21h, 16h, 4, 59h, 9, 0, \
-.data:005EF168                                offset j_fun_sidePanel_rotate, \
-.data:005EF168                                offset j_fun_clickDoNothing, 1, 0, 0, 0, 1, 0>
-*/
 
 void UI_Sidebar_drawBackground()
 {
@@ -112,7 +103,7 @@ static void drawSidebar()
 	drawButtons();
 	drawOverlayText();
     //j_fun_drawCitySidepanelBuildingGraphic(0, cityscreen_width_withControlpanel + 6);
-    //j_fun_drawCitySidepanelMinimap(1);
+    drawMinimap(1);
 	//j_fun_drawCitySidepanelNumMessages(1);
 
 	// relief images below panel
@@ -171,6 +162,18 @@ static void drawOverlayText()
 		} else {
 			Widget_GameText_drawCentered(6, 4, xOffset, 32, 117, Font_SmallBrown);
 		}
+	}
+}
+
+static void drawMinimap(int force)
+{
+	if (!Data_State.sidebarCollapsed) {
+		int xOffset = XOFFSET_EXPANDED;
+		// TODO force?
+		//UI_Minimap_draw(xOffset + 8, 59, 73, 111);
+		Graphics_drawLine(xOffset + 7, 58, xOffset + 153, 58, Color_Minimap_Dark);
+		Graphics_drawLine(xOffset + 7, 59, xOffset + 7, 170, Color_Minimap_Dark);
+		Graphics_drawLine(xOffset + 153, 59, xOffset + 153, 170, Color_Minimap_Light);
 	}
 }
 

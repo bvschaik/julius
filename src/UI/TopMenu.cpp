@@ -161,7 +161,7 @@ static void clearState()
 
 static void handleMouseSubmenu()
 {
-	if (Data_Mouse.isRightClick) {
+	if (Data_Mouse.right.wentUp) {
 		clearState();
 		UI_Window_goBack();
 		return;
@@ -171,7 +171,7 @@ static void handleMouseSubmenu()
 		openSubMenu = menuId;
 	}
 	if (!Widget_Menu_handleMenuItem(&menu[openSubMenu-1], &focusSubMenuId)) {
-		if (Data_Mouse.isLeftClick) {
+		if (Data_Mouse.left.wentDown) {
 			clearState();
 			UI_Window_goBack();
 		}
@@ -181,7 +181,7 @@ static void handleMouseSubmenu()
 static void handleMouseMenu()
 {
 	int menuId = Widget_Menu_handleMenuBar(menu, 4, &focusMenuId);
-	if (menuId && Data_Mouse.isLeftClick) {
+	if (menuId && Data_Mouse.left.wentDown) {
 		openSubMenu = menuId;
 		UI_Window_goTo(Window_TopMenu);
 	}

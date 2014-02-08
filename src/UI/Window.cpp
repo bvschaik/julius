@@ -16,14 +16,6 @@ static void noop()
 {
 }
 
-static void rightClickToExit()
-{
-	if (Data_Mouse.isRightClick) {
-		// cancel dialog
-		UI_Window_goTo(Window_City);
-	}
-}
-
 static struct Window windows[] = {
 	// 0
 	{ noop, UI_MainMenu_drawBackground, UI_MainMenu_drawForeground, UI_MainMenu_handleMouse },
@@ -66,8 +58,39 @@ void UI_Window_goBack()
 	UI_Window_goTo(previousWindow);
 }
 
+static void handleMouse()
+{
+	int prevLeftIsDown = Data_Mouse.left.isDown;
+	int prevRightIsDown = Data_Mouse.right.isDown;
+	Data_Mouse.left.isDown = 0;
+	Data_Mouse.left.wentDown = 0;
+	Data_Mouse.left.wentUp = 0;
+	Data_Mouse.right.isDown = 0;
+	Data_Mouse.right.wentDown = 0;
+	Data_Mouse.right.wentUp = 0;
+
+	Data_Mouse.left.isDown = Data_Mouse.leftDown;
+	Data_Mouse.right.isDown = Data_Mouse.rightDown;
+
+	if (Data_Mouse.left.isDown != prevLeftIsDown) {
+		if (Data_Mouse.left.isDown) {
+			Data_Mouse.left.wentDown = 1;
+		} else {
+			Data_Mouse.left.wentUp = 1;
+		}
+	}
+	if (Data_Mouse.right.isDown != prevRightIsDown) {
+		if (Data_Mouse.right.isDown) {
+			Data_Mouse.right.wentDown = 1;
+		} else {
+			Data_Mouse.right.wentUp = 1;
+		}
+	}
+}
+
 void UI_Window_refresh(int force)
 {
+	handleMouse();
 	if (force) {
 		windows[currentWindow].drawBackground();
 	}

@@ -200,7 +200,7 @@ void UI_SoundOptions_drawForeground()
 
 void UI_SoundOptions_handleMouse()
 {
-	if (Data_Mouse.isRightClick) {
+	if (Data_Mouse.right.wentUp) {
 		// cancel dialog
 		UI_Window_goTo(Window_City);
 	} else {

@@ -452,7 +452,7 @@ static void drawEmpireMap()
 
 static int getSelectedObject()
 {
-	if (!Data_Mouse.isLeftClick) {
+	if (!Data_Mouse.left.wentDown) {
 		return -1;
 	}
 	if (Data_Mouse.x < xMin + 16 || Data_Mouse.x >= xMax - 16 ||
@@ -508,7 +508,7 @@ void UI_Empire_handleMouse()
 	} else if (objectId == 0) {
 		Data_Empire.selectedObject = 0;
 	}
-	if (Data_Mouse.isRightClick) {
+	if (Data_Mouse.right.wentDown) {
 		Data_Empire.selectedObject = 0;
 		UI_Window_requestRefresh();
 	}

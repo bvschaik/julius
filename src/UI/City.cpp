@@ -15,6 +15,11 @@ void UI_City_drawBackground()
 	UI_TopMenu_drawBackground();
 }
 
+void UI_City_drawForeground()
+{
+
+}
+
 
 void UI_City_handleMouse()
 {

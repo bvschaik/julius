@@ -102,7 +102,7 @@ void UI_DonateToCityDialog_drawForeground()
 
 void UI_DonateToCityDialog_handleMouse()
 {
-	if (Data_Mouse.isRightClick) {
+	if (Data_Mouse.right.wentUp) {
 		UI_Window_goTo(Window_Advisors);
 	} else {
 		int offsetX = Data_Screen.offset640x480.x;

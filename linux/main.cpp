@@ -90,13 +90,25 @@ void mainLoop(SDL_Surface *surface) {
 					break;
 				
 				case SDL_MOUSEBUTTONDOWN:
-					Data_Mouse.isLeftClick = event.button.button == SDL_BUTTON_LEFT;
-					Data_Mouse.isRightClick = event.button.button == SDL_BUTTON_RIGHT;
+					Data_Mouse.x = event.button.x;
+					Data_Mouse.y = event.button.y;
+					if (event.button.button == SDL_BUTTON_LEFT) {
+						Data_Mouse.leftDown = 1;
+					}
+					if (event.button.button == SDL_BUTTON_RIGHT) {
+						Data_Mouse.rightDown = 1;
+					}
 					break;
 				
 				case SDL_MOUSEBUTTONUP:
-					Data_Mouse.isLeftClick = 0;
-					Data_Mouse.isRightClick = 0;
+					Data_Mouse.x = event.button.x;
+					Data_Mouse.y = event.button.y;
+					if (event.button.button == SDL_BUTTON_LEFT) {
+						Data_Mouse.leftDown = 0;
+					}
+					if (event.button.button == SDL_BUTTON_RIGHT) {
+						Data_Mouse.rightDown = 0;
+					}
 					break;
 				
 				case SDL_VIDEORESIZE:
@@ -112,8 +124,6 @@ void mainLoop(SDL_Surface *surface) {
         }
 		if (active) {
 			refresh(surface);
-			Data_Mouse.isLeftClick = 0;
-			Data_Mouse.isRightClick = 0;
 		} else {
 			SDL_WaitEvent(NULL);
 		}
@@ -151,8 +161,8 @@ int main()
 	//SDL_Surface *surface = SDL_SetVideoMode(800, 600, 16, /*SDL_FULLSCREEN|*/SDL_HWSURFACE|SDL_DOUBLEBUF);
 	SDL_Surface *surface = SDL_SetVideoMode(
 	//	vidInfo->current_w, vidInfo->current_h, 16, /*SDL_FULLSCREEN*/0);
-		//1680, 1050, 16, SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_ANYFORMAT);
-		1920, 1200, 16, SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_ANYFORMAT|SDL_FULLSCREEN);
+		1680, 1050, 32, SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_ANYFORMAT);
+		//1920, 1200, 32, SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_ANYFORMAT|SDL_FULLSCREEN);
 	//	1440, 900, 16, 0);
 	if (surface) {
 		printf("Surface created with scanline %d\n", surface->pitch);

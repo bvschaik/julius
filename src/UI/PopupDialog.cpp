@@ -69,7 +69,7 @@ void UI_PopupDialog_handleMouse()
 {
 	if (data.hasButtons) {
 		Widget_Button_handleImageButtons(data.x, data.y, buttons, 2);
-	} else if (Data_Mouse.isRightClick) {
+	} else if (Data_Mouse.right.wentUp) {
 		data.closeFunc(0);
 		UI_Window_goBack();
 	}

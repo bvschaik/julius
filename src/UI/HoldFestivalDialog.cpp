@@ -119,7 +119,7 @@ static void drawButtons()
 
 void UI_HoldFestivalDialog_handleMouse()
 {
-	if (Data_Mouse.isRightClick) {
+	if (Data_Mouse.right.wentUp) {
 		UI_Window_goTo(Window_Advisors);
 		return;
 	}

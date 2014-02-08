@@ -41,6 +41,8 @@ enum {
 #define Color_Transparent 0xf81f
 #define Color_InsetLight 0xffff
 #define Color_InsetDark 0x8410
+#define Color_Minimap_Dark 0x4208
+#define Color_Minimap_Light 0xC618
 #define Color_NoMask 0xffff
 
 enum {
@@ -94,6 +96,12 @@ enum {
 	Resource_Pottery = 15,
 	Resource_Denarii = 16,
 	Resource_Troops = 17
+};
+
+enum {
+	Climate_Central = 0,
+	Climate_Northern = 1,
+	Climate_Desert = 2
 };
 
 extern int Constant_SalaryForRank[11];

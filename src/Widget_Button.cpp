@@ -1,5 +1,6 @@
 #include "Widget.h"
 #include "Graphics.h"
+#include "Time.h"
 
 #include "Data/Mouse.h"
 #include "Data/Graphics.h"
@@ -19,91 +20,73 @@ void Widget_Button_drawArrowButtons(int xOffset, int yOffset, ArrowButton *butto
 		if (buttons[i].field_D) {
 			graphicId += 1;
 		}
-		
+
 		Graphics_drawImage(graphicId,
 			xOffset + buttons[i].xOffset, yOffset + buttons[i].yOffset);
-		if (buttons[i].field_D) {
-			// TODO request refresh
-		}
 	}
 }
 
 int Widget_Button_handleArrowButtons(int xOffset, int yOffset, ArrowButton *buttons, int numButtons)
 {
-	/*
-	static int lastTime = Time_getTime();
-	int now = Time_getTime();
+	static int lastTime = 0;
 
+	int currTime = Time_getMillis();
 	int shouldRepeat = 0;
-	if (now - lastTime >= 30) {
+	if (currTime - lastTime >= 30) {
 		shouldRepeat = 1;
-		lastTime = now;
+		lastTime = currTime;
 	}
-	*/
 	for (int i = 0; i < numButtons; i++) {
-		if (buttons[i].field_D) {
-			buttons[i].field_D--;
-			if (!buttons[i].field_D) {
-				buttons[i].field_C = 1;
-				buttons[i].field_E = 0;
+		ArrowButton *btn = &buttons[i];
+		if (btn->field_D) {
+			btn->field_D--;
+			if (!btn->field_D) {
+				btn->field_C = 1;
+				btn->field_E = 0;
 			}
 		} else {
-			buttons[i].field_E = 0;
+			btn->field_E = 0;
 		}
 	}
 	int buttonId = getArrowButton(xOffset, yOffset, buttons, numButtons);
 	if (!buttonId) {
 		return 0;
 	}
-
-	// TODO simple implementation
-	ArrowButton *button = &buttons[buttonId-1];
-	if (Data_Mouse.isLeftClick) {
-		button->leftClickHandler(button->parameter1, button->parameter2);
+	ArrowButton *btn = &buttons[buttonId-1];
+	if (Data_Mouse.left.wentDown) {
+		btn->field_D = 3;
+		btn->field_E = 0;
+		btn->field_C = 1;
+		btn->leftClickHandler(btn->parameter1, btn->parameter2);
+		return buttonId;
 	}
-	return buttonId;
-/*
-  if ( byte_660B94[0] || mouseInfo_buttonIsDown )
-  {
-    buttons->field_D = 3;
-    buttons->field_E = 0;
-    buttons->field_C = 1;
-    currentButton_parameter = buttons->parameter;
-    currentButton_parameter2 = buttons->parameter2;
-    dword_6ADD18 = 0;
-    buttons->mouseClickHandler();
-    return j + 1;
-  }
-  if ( !mouse_isLeftClick )
-    return 0;
-  buttons->field_D = 3;
-  if ( shouldRepeat )
-  {
-    ++buttons->field_E;
-    if ( buttons->field_E < 48 )
-    {
-      if ( buttons->field_E < 8 )
-        return 0;
-      if ( !byte_5F1098[buttons->field_E] )
-        return 0;
-    }
-    else
-    {
-      buttons->field_E = 47;
-    }
-    currentButton_parameter = buttons->parameter;
-    currentButton_parameter2 = buttons->parameter2;
-    dword_6ADD18 = buttons->field_E;
-    buttons->mouseClickHandler();
-    result = j + 1;
-  }
-  else
-  {
-    result = 0;
-  }
-
+	if (Data_Mouse.left.isDown) {
+		btn->field_D = 3;
+		if (shouldRepeat) {
+			btn->field_E++;
+			if (btn->field_E < 48) {
+				if (btn->field_E < 8) {
+					return 0;
+				}
+				int foo[] = {
+					0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0,
+					0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0,
+					1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0
+				};
+				if (!foo[btn->field_E]) {
+					return 0;
+				}
+			} else {
+				btn->field_E = 47;
+			}
+			btn->leftClickHandler(btn->parameter1, btn->parameter2);
+			return buttonId;
+		} else {
+			return 0;
+		}
+	} else {
+		return 0;
 	}
-	*/
 }
 
 static int getArrowButton(int xOffset, int yOffset, ArrowButton *buttons, int numButtons)
@@ -142,9 +125,9 @@ int Widget_Button_handleCustomButtons(int xOffset, int yOffset, CustomButton *bu
 	}
 
 	// TODO simple implementation
-	if (Data_Mouse.isLeftClick) {
+	if (Data_Mouse.left.wentDown) {
 		button->leftClickHandler(button->parameter1, button->parameter2);
-	} else if (Data_Mouse.isRightClick) {
+	} else if (Data_Mouse.right.wentUp) {
 		button->rightClickHandler(button->parameter1, button->parameter2);
 	}
 	return buttonId;
@@ -241,11 +224,11 @@ int Widget_Button_handleImageButtons(int xOffset, int yOffset, ImageButton *butt
 		}
 	}
 	// TODO sound playing?
-	if (Data_Mouse.isLeftClick) {
+	if (Data_Mouse.left.wentDown) {
 		// TODO play sound
 		hitButton->hasClickEffect = 10;
 		hitButton->leftClickHandler(hitButton->parameter1, hitButton->parameter2);
-	} else if (Data_Mouse.isRightClick) {
+	} else if (Data_Mouse.right.wentUp) {
 		hitButton->hasClickEffect = 10;
 		hitButton->rightClickHandler(hitButton->parameter1, hitButton->parameter2);
 	}

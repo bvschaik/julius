@@ -74,7 +74,7 @@ int Widget_Menu_handleMenuItem(MenuBarItem *menu, int *focusSubMenuId)
 	if (!subMenuId) {
 		return 0;
 	}
-	if (Data_Mouse.isLeftClick) {
+	if (Data_Mouse.left.wentDown) {
 		MenuItem *item = &menu->items[subMenuId-1];
 		item->leftClickHandler(item->parameter);
 	}

@@ -54,7 +54,7 @@ typedef struct {
 	char field_C;
 	char field_D;
 	char field_E;
-	char field_F;
+	char field_F;//always 4 in game
 } ArrowButton;
 
 typedef struct {
