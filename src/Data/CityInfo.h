@@ -1413,10 +1413,7 @@ extern struct Data_CityInfo {
 	char __unknown_4551;
 	char __unknown_4552;
 	char __unknown_4553;
-	char __unknown_4554;
-	char __unknown_4555;
-	char __unknown_4556;
-	char __unknown_4557;
+	int numImperialSoldiersInCity;
 	char __unknown_4558;
 	char __unknown_4559;
 	char __unknown_455a;
@@ -1429,10 +1426,7 @@ extern struct Data_CityInfo {
 	char __unknown_4561;
 	char __unknown_4562;
 	char __unknown_4563;
-	char __unknown_4564;
-	char __unknown_4565;
-	char __unknown_4566;
-	char __unknown_4567;
+	int numEnemiesInCity;
 	char __unknown_4568;
 	char __unknown_4569;
 	char __unknown_456a;

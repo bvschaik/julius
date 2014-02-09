@@ -13,6 +13,7 @@
 #include "KeyboardInput.h"
 #include "State.h"
 #include "Walker.h"
+#include "Building.h"
 #include "Sound.h"
 
 struct Data_Model_House Data_Model_Houses[20];
@@ -55,6 +56,8 @@ struct Data_KeyboardInput Data_KeyboardInput;
 struct Data_State Data_State;
 
 struct Data_Walker_NameSequence Data_Walker_NameSequence;
+
+struct Data_Building Data_Buildings[2000];
 
 struct Data_Sound_City Data_Sound_City[70];
 

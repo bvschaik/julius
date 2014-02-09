@@ -379,6 +379,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\Terrain.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Time.cpp"
 				>
 			</File>
@@ -434,6 +438,10 @@
 			</File>
 			<File
 				RelativePath=".\src\Animation.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Data\Building.h"
 				>
 			</File>
 			<File
@@ -505,11 +513,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Language.h"
+				RelativePath=".\src\Data\Language.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Language.h"
+				RelativePath=".\src\Language.h"
 				>
 			</File>
 			<File
@@ -537,11 +545,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\data\Random.h"
+				RelativePath=".\src\Random.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Random.h"
+				RelativePath=".\src\data\Random.h"
 				>
 			</File>
 			<File
@@ -565,11 +573,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Sound.h"
+				RelativePath=".\src\Sound.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Sound.h"
+				RelativePath=".\src\Data\Sound.h"
 				>
 			</File>
 			<File
@@ -582,6 +590,10 @@
 			</File>
 			<File
 				RelativePath=".\src\String.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Terrain.h"
 				>
 			</File>
 			<File

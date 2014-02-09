@@ -3,7 +3,7 @@
 #include "Data.h"
 
 #define Int16_Grid(x) short x[GRID_SIZE * GRID_SIZE]
-#define Int8_Grid(x) char x[GRID_SIZE * GRID_SIZE]
+#define Int8_Grid(x) unsigned char x[GRID_SIZE * GRID_SIZE]
 
 enum {
 	GRID_SIZE = 162,

@@ -10,6 +10,7 @@
 #include "Data/Walker.h"
 #include "Data/Tutorial.h"
 #include "Data/Sound.h"
+#include "Data/Building.h"
 
 #include "Zip.h"
 
@@ -93,7 +94,7 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{0, &tmp, 2}, //{0, &byte_658DCC, 2},
 	{0, &tmp, 64}, //{0, &save_player0name, 0x40},
 	{0, &tmp, 4}, //{0, &ciid, 4},
-	{1, &tmp, 256000}, //{1, &building_inUse, 0x3E800},
+	{1, &Data_Buildings, 256000},
 	{0, &tmp, 4}, //{0, &mapOrientation, 4},
 	{0, &tmp, 4}, //{0, &game_ticks, 4},
 	{0, &tmp, 4}, //{0, &game_weeks, 4},
