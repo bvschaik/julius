@@ -1,13 +1,13 @@
 #include "Time.h"
 
-static unsigned int currentMillis;
+static TimeMillis currentMillis;
 
-void Time_setMillis(unsigned int millis)
+void Time_setMillis(TimeMillis millis)
 {
 	currentMillis = millis;
 }
 
-unsigned int Time_getMillis()
+TimeMillis Time_getMillis()
 {
 	return currentMillis;
 }

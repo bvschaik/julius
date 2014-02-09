@@ -1,7 +1,9 @@
 #ifndef TIME_H
 #define TIME_H
 
-void Time_setMillis(unsigned int millis);
-unsigned int Time_getMillis();
+#include "Data/Types.h"
+
+void Time_setMillis(TimeMillis millis);
+TimeMillis Time_getMillis();
 
 #endif

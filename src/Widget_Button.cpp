@@ -30,7 +30,7 @@ int Widget_Button_handleArrowButtons(int xOffset, int yOffset, ArrowButton *butt
 {
 	static int lastTime = 0;
 
-	int currTime = Time_getMillis();
+	TimeMillis currTime = Time_getMillis();
 	int shouldRepeat = 0;
 	if (currTime - lastTime >= 30) {
 		shouldRepeat = 1;

@@ -15,7 +15,7 @@ void Animation_resetTimers()
 
 void Animation_updateTimers()
 {
-	unsigned int currentTimeMillis = Time_getMillis();
+	TimeMillis currentTimeMillis = Time_getMillis();
 	for (int i = 0; i < 51; i++) {
 		shouldUpdate[i] = 0;
 	}
