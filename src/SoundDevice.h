@@ -1,8 +1,8 @@
 #ifndef SOUNDDEVICE_H
 #define SOUNDDEVICE_H
 
-//void SoundDevice_open();
-//void SoundDevice_close();
+void SoundDevice_open();
+void SoundDevice_close();
 
 //void SoundDevice_initChannels(/* TODO args */);
 int SoundDevice_hasChannel(int channel);

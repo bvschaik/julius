@@ -1,6 +1,12 @@
 #ifndef TERRAIN_H
 #define TERRAIN_H
 
+int Terrain_getClosestRoadWithinRadius(int x, int y, int size, int radius, int *xTile, int *yTile);
+
+int Terrain_isAdjacentToWall(int x, int y, int size);
+int Terrain_isAdjacentToWater(int x, int y, int size);
+int Terrain_getAdjacentRoadOrClearLand(int x, int y, int size, int *xTile, int *yTile);
+
 void Terrain_setWithRadius(int x, int y, int size, int radius, unsigned short typeToAdd);
 void Terrain_clearWithRadius(int x, int y, int size, int radius, unsigned short typeToKeep);
 

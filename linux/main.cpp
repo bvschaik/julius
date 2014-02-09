@@ -18,6 +18,7 @@
 #include "../src/GameFile.h"
 #include "../src/Time.h"
 #include "../src/Animation.h"
+#include "../src/SoundDevice.h"
 
 /*
 typedef struct{
@@ -221,6 +222,7 @@ int main()
 	// C3 setup
 	
 	chdir("../data");
+	SoundDevice_open();
 	Data_Screen.format = 565; // TODO derive later
 	Data_Screen.width = vidInfo->current_w;
 	Data_Screen.height = vidInfo->current_h;
@@ -246,6 +248,7 @@ int main()
 	printf("Quiting SDL.\n");
 	
 	// Shutdown all subsystems
+	SoundDevice_close();
 	SDL_Quit();
 	
 	printf("Quiting....\n");

@@ -8,13 +8,13 @@ static int nextCheck = 0;
 
 static const char tracks[][32] = {
 	"",
-	"wavs/rome1.wav",
-	"wavs/rome2.wav",
-	"wavs/rome3.wav",
-	"wavs/rome4.wav",
-	"wavs/rome5.wav",
+	"wavs/ROME1.WAV",
+	"wavs/ROME2.WAV",
+	"wavs/ROME3.WAV",
+	"wavs/ROME4.WAV",
+	"wavs/ROME5.WAV",
 	"wavs/Combat_Long.wav",
-	"wavs/Combat_short.wav"
+	"wavs/Combat_Short.wav"
 };
 
 void Sound_Music_reset()
