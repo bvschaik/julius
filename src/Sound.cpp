@@ -2,6 +2,46 @@
 #include "SoundDevice.h"
 #include "Data/Settings.h"
 
+#define SPEECH_CHANNEL 0
+
+void Sound_setMusicVolume(int percentage)
+{
+	SoundDevice_setMusicVolume(percentage);
+}
+
+void Sound_setSpeechVolume(int percentage)
+{
+	SoundDevice_setChannelVolume(SPEECH_CHANNEL, percentage);
+}
+
+void Sound_setEffectsVolume(int percentage)
+{
+	for (int i = 1; i < 10; i++) {
+		if (SoundDevice_hasChannel(i)) {
+			SoundDevice_setChannelVolume(i, percentage);
+		}
+	}
+}
+
+void Sound_setCityVolume(int percentage)
+{
+	for (int i = 10; i < 150; i++) {
+		if (SoundDevice_hasChannel(i)) {
+			SoundDevice_setChannelVolume(i, percentage);
+		}
+	}
+}
+
+void Sound_stopMusic()
+{
+	SoundDevice_stopMusic();
+}
+
+void Sound_stopSpeech()
+{
+	SoundDevice_stopChannel(SPEECH_CHANNEL);
+}
+
 void Sound_playCityChannel(int channel, int direction)
 {
 	if (!Data_Settings.soundCityEnabled) {

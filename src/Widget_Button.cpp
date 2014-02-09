@@ -73,7 +73,7 @@ int Widget_Button_handleArrowButtons(int xOffset, int yOffset, ArrowButton *butt
 					0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0,
 					1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0
 				};
-				if (!foo[btn->field_E]) {
+				if (!foo[(int)btn->field_E]) {
 					return 0;
 				}
 			} else {

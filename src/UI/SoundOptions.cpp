@@ -1,11 +1,7 @@
 #include "AllWindows.h"
 #include "Window.h"
 #include "../Util.h"
-/*
-#include "../Graphics.h"
-#include "../Data/Graphics.h"
-*/
-
+#include "../Sound.h"
 #include "../Widget.h"
 
 #include "../Data/Constants.h"
@@ -194,8 +190,6 @@ void UI_SoundOptions_drawForeground()
 		baseOffsetX + 208, baseOffsetY + 60,
 		arrowButtons, 8
 	);
-
-	// TODO: reset clip region() ?
 }
 
 void UI_SoundOptions_handleMouse()
@@ -220,16 +214,17 @@ static void buttonToggle(int param1, int param2)
 		case 1: // music
 			Data_Settings.soundMusicEnabled = Data_Settings.soundMusicEnabled ? 0 : 1;
 			if (Data_Settings.soundMusicEnabled) {
-				// TODO start background music
+				Sound_Music_reset();
+				Sound_Music_update();
 			} else {
-				// TODO stop background music
+				Sound_stopMusic();
 			}
 			break;
 
 		case 2: // speech
 			Data_Settings.soundSpeechEnabled = Data_Settings.soundSpeechEnabled ? 0 : 1;
 			if (!Data_Settings.soundSpeechEnabled) {
-				// TODO stop talking persons
+				Sound_stopSpeech();
 			}
 			break;
 
@@ -259,11 +254,15 @@ static void buttonCancel(int param1, int param2)
 	Data_Settings.soundSpeechPercentage = original_soundSpeechPercentage;
 	Data_Settings.soundCityPercentage = original_soundCityPercentage;
 	if (Data_Settings.soundMusicEnabled) {
-		// TODO start background music
+		Sound_Music_reset();
+		Sound_Music_update();
 	} else {
-		// TODO stop background music
+		Sound_stopMusic();
 	}
-	// TODO set channel percentages
+	Sound_setMusicVolume(Data_Settings.soundMusicPercentage);
+	Sound_setSpeechVolume(Data_Settings.soundSpeechPercentage);
+	Sound_setEffectsVolume(Data_Settings.soundEffectsPercentage);
+	Sound_setCityVolume(Data_Settings.soundCityPercentage);
 
 	UI_Window_goTo(Window_City);
 }
@@ -276,7 +275,7 @@ static void arrowButtonMusic(int param1, int param2)
 		Data_Settings.soundMusicPercentage++;
 	}
 	BOUND(Data_Settings.soundMusicPercentage, 0, 100);
-	// TODO set channel percentage
+	Sound_setMusicVolume(Data_Settings.soundMusicPercentage);
 
 	UI_Window_requestRefresh();
 }
@@ -289,7 +288,7 @@ static void arrowButtonSpeech(int param1, int param2)
 		Data_Settings.soundSpeechPercentage++;
 	}
 	BOUND(Data_Settings.soundSpeechPercentage, 0, 100);
-	// TODO set channel percentage
+	Sound_setSpeechVolume(Data_Settings.soundSpeechPercentage);
 
 	UI_Window_requestRefresh();
 }
@@ -302,7 +301,7 @@ static void arrowButtonEffects(int param1, int param2)
 		Data_Settings.soundEffectsPercentage++;
 	}
 	BOUND(Data_Settings.soundEffectsPercentage, 0, 100);
-	// TODO set channel percentage
+	Sound_setEffectsVolume(Data_Settings.soundEffectsPercentage);
 
 	UI_Window_requestRefresh();
 }
@@ -315,7 +314,7 @@ static void arrowButtonCity(int param1, int param2)
 		Data_Settings.soundCityPercentage++;
 	}
 	BOUND(Data_Settings.soundCityPercentage, 0, 100);
-	// TODO set channel percentage
+	Sound_setCityVolume(Data_Settings.soundCityPercentage);
 
 	UI_Window_requestRefresh();
 }

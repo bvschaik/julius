@@ -359,6 +359,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\Sound_Music.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\SoundDeviceDummy.cpp"
 				>
 			</File>

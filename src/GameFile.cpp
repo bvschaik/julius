@@ -9,6 +9,7 @@
 #include "Data/CityInfo.h"
 #include "Data/Walker.h"
 #include "Data/Tutorial.h"
+#include "Data/Sound.h"
 
 #include "Zip.h"
 
@@ -211,7 +212,7 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{0, &tmp, 4}, //{0, &setting_currentMissionId, 4},
 	{1, &tmp, 3232}, //{1, &byte_98EF40, 0xCA0},
 	{0, &tmp, 4}, //{0, &setting_isCustomScenario, 4},
-	{0, &tmp, 8960}, //{0, &dword_9D82E0, 0x2300},
+	{0, &Data_Sound_City, 8960},
 	{0, &tmp, 4}, //{0, &buildingId_highestInUse, 4},
 	{0, &tmp, 4800}, //{0, &dword_993F60, 0x12C0},
 	{0, &tmp, 4}, //{0, &dword_990CD8, 4},
