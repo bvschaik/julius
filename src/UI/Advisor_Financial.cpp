@@ -1,10 +1,19 @@
 #include "Advisors_private.h"
+#include "Window.h"
+#include "../Util.h"
 
 #define VAL(val,x,y) Widget_Text_drawNumber(val, '@', " ", baseOffsetX + x, baseOffsetY + y, Font_NormalBlack)
 #define ROW(tgr,tid,y,valLy,valTy) \
 	Widget_GameText_draw(tgr, tid, baseOffsetX + 80, baseOffsetY + y, Font_NormalBlack);\
 	Widget_Text_drawNumber(valLy, '@', " ", baseOffsetX + 290, baseOffsetY + y, Font_NormalBlack);\
 	Widget_Text_drawNumber(valTy, '@', " ", baseOffsetX + 430, baseOffsetY + y, Font_NormalBlack)
+
+static void buttonChangeTaxes(int param1, int param2);
+
+static ArrowButton arrowButtonsTaxes[] = {
+	{180, 70, 17, 24, buttonChangeTaxes, 1, 0},
+	{204, 70, 15, 24, buttonChangeTaxes, 0, 0}
+};
 
 void UI_Advisor_Financial_drawBackground()
 {
@@ -82,4 +91,32 @@ void UI_Advisor_Financial_drawBackground()
 	ROW(60, 17, 335, Data_CityInfo.financeTotalExpensesLastYear, Data_CityInfo.financeTotalExpensesThisYear);
 	ROW(60, 18, 358, Data_CityInfo.financeNetInOutLastYear, Data_CityInfo.financeNetInOutThisYear);
 	ROW(60, 19, 381, Data_CityInfo.financeBalanceLastYear, Data_CityInfo.financeBalanceThisYear);
+}
+
+void UI_Advisor_Financial_drawForeground()
+{
+	int baseOffsetX = Data_Screen.offset640x480.x;
+	int baseOffsetY = Data_Screen.offset640x480.y;
+	Widget_Button_drawArrowButtons(baseOffsetX, baseOffsetY, arrowButtonsTaxes, 2);
+}
+
+void UI_Advisor_Financial_handleMouse()
+{
+	int baseOffsetX = Data_Screen.offset640x480.x;
+	int baseOffsetY = Data_Screen.offset640x480.y;
+	Widget_Button_handleArrowButtons(baseOffsetX, baseOffsetY, arrowButtonsTaxes, 2);
+}
+
+static void buttonChangeTaxes(int isDown, int param2)
+{
+	if (isDown) {
+		--Data_CityInfo.taxPercentage;
+	} else {
+		++Data_CityInfo.taxPercentage;
+	}
+	BOUND(Data_CityInfo.taxPercentage, 0, 25);
+	// TODO j_fun_updateFinanceTaxes()
+	// TODO j_fun_calculateFinanceTotals();
+	// TODO j_fun_calculateTributeThisYear();
+	UI_Window_requestRefresh();
 }

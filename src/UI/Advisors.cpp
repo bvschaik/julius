@@ -117,7 +117,7 @@ void UI_Advisors_drawForeground()
 			UI_Advisor_Entertainment_drawForeground();
 			break;
 		case Advisor_Financial:
-			// TODO j_fun_drawArrowButtonCollection(dialog_x, dialog_y, &arrowbuttons_financeAdvisor, 2);
+			UI_Advisor_Financial_drawForeground();
 			break;
 	}
 }
@@ -172,6 +172,9 @@ void UI_Advisors_handleMouse()
 			break;
 		case Advisor_Entertainment:
 			UI_Advisor_Entertainment_handleMouse();
+			break;
+		case Advisor_Financial:
+			UI_Advisor_Financial_handleMouse();
 			break;
 
 		// TODO other advisors
