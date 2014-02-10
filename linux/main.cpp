@@ -11,6 +11,7 @@
 #include "../src/Data/Mouse.h"
 #include "../src/Data/CityInfo.h"
 #include "../src/Data/Scenario.h"
+#include "../src/Data/Settings.h"
 #include "../src/Loader.h"
 #include "../src/Empire.h"
 #include "../src/Language.h"
@@ -18,7 +19,7 @@
 #include "../src/GameFile.h"
 #include "../src/Time.h"
 #include "../src/Animation.h"
-#include "../src/SoundDevice.h"
+#include "../src/Sound.h"
 
 /*
 typedef struct{
@@ -222,12 +223,24 @@ int main()
 	// C3 setup
 	
 	chdir("../data");
-	SoundDevice_open();
+	Sound_init();
 	Data_Screen.format = 565; // TODO derive later
 	Data_Screen.width = vidInfo->current_w;
 	Data_Screen.height = vidInfo->current_h;
 	Data_Screen.offset640x480.x = (Data_Screen.width - 640) / 2;
 	Data_Screen.offset640x480.y = (Data_Screen.height - 480) / 2;
+	
+	//TODO real settings loading
+	Data_Settings.soundEffectsEnabled = 1;
+	Data_Settings.soundMusicEnabled = 1;
+	Data_Settings.soundSpeechEnabled = 1;
+	Data_Settings.soundCityEnabled = 1;
+	Data_Settings.soundEffectsPercentage = 100;
+	Data_Settings.soundMusicPercentage = 100;
+	Data_Settings.soundSpeechPercentage = 100;
+	Data_Settings.soundCityPercentage = 100;
+	// end settings
+	
 	Graphics_setClipRectangle(0, 0, Data_Screen.width, Data_Screen.height);
 	
 	Loader_Graphics_initGraphics();
@@ -248,7 +261,7 @@ int main()
 	printf("Quiting SDL.\n");
 	
 	// Shutdown all subsystems
-	SoundDevice_close();
+	Sound_shutdown();
 	SDL_Quit();
 	
 	printf("Quiting....\n");

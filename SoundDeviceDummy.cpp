@@ -5,7 +5,7 @@ void SoundDevice_open()
 void SoundDevice_close()
 {}
 
-void SoundDevice_initChannels(/* TODO args */)
+void SoundDevice_initChannels(int numChannels, const char filenames[][32])
 {}
 int SoundDevice_hasChannel(int channel)
 {
@@ -25,7 +25,7 @@ void SoundDevice_setChannelPanning(int channel, int left, int right)
 
 void SoundDevice_playMusic(const char *filename)
 {}
-void SoundDevice_playSound(const char *filename)
+void SoundDevice_playSoundOnChannel(const char *filename, int channel)
 {}
 void SoundDevice_playChannel(int channel)
 {}

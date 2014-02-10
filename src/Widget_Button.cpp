@@ -1,6 +1,7 @@
 #include "Widget.h"
 #include "Graphics.h"
 #include "Time.h"
+#include "Sound.h"
 
 #include "Data/Mouse.h"
 #include "Data/Graphics.h"
@@ -223,9 +224,8 @@ int Widget_Button_handleImageButtons(int xOffset, int yOffset, ImageButton *butt
 			}
 		}
 	}
-	// TODO sound playing?
 	if (Data_Mouse.left.wentDown) {
-		// TODO play sound
+		Sound_Effects_playChannel(SoundChannel_Icon);
 		hitButton->hasClickEffect = 10;
 		hitButton->leftClickHandler(hitButton->parameter1, hitButton->parameter2);
 	} else if (Data_Mouse.right.wentUp) {

@@ -55,6 +55,7 @@ void Sound_Music_update()
 
 	SoundDevice_stopMusic();
 	SoundDevice_playMusic(tracks[track]);
+	SoundDevice_setMusicVolume(Data_Settings.soundMusicPercentage);
 	currentTrack = track;
 	nextCheck = 10;
 }
