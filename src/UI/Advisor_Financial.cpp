@@ -51,7 +51,7 @@ void UI_Advisor_Financial_drawBackground()
 	);
 
 	// percentage taxpayers
-	width = Widget_Text_drawNumber(Data_CityInfo.percentageRegisteredForTax, '@', "%",
+	width = Widget_Text_drawNumber(Data_CityInfo.percentageTaxedPeople, '@', "%",
 		baseOffsetX + 70, baseOffsetY + 98, Font_NormalWhite
 	);
 	Widget_GameText_draw(60, 5, baseOffsetX + 70 + width, baseOffsetY + 98, Font_NormalWhite);

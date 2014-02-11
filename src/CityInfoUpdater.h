@@ -22,4 +22,7 @@ void CityInfoUpdater_Finance_calculateTotals();
 void CityInfoUpdater_Finance_calculateTribute();
 void CityInfoUpdater_Finance_calculateEstimatedWages();
 
+void CityInfoUpdater_Finance_handleMonthChange();
+void CityInfoUpdater_Finance_handleYearChange();
+
 #endif

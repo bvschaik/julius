@@ -15,7 +15,7 @@ Calculates which percentage 'value' of 'total' is
 @param total Total amount
 @return 100 * value / total
 */
-int Calc_calculatePercentage(int value, int total);
+int Calc_getPercentage(int value, int total);
 
 int Calc_distanceTotal(int x1, int y1, int x2, int y2);
 

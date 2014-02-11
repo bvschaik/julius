@@ -36,4 +36,10 @@ extern struct Data_Model_Building {
 		int __unused2;
 } Data_Model_Buildings[130];
 
+extern struct Data_Model_Difficulty {
+	int moneyPercentage[5];
+	int enemyPercentage[5];
+	int startingFavor[5];
+} Data_Model_Difficulty;
+
 #endif

@@ -18,6 +18,11 @@
 
 struct Data_Model_House Data_Model_Houses[20];
 struct Data_Model_Building Data_Model_Buildings[130];
+struct Data_Model_Difficulty Data_Model_Difficulty = {
+	{300, 200, 150, 100, 75}, // money percentage
+	{40, 60, 80, 100, 120}, // enemy percentage
+	{70, 60, 50, 50, 40} // starting favor
+};
 
 struct Data_Scenario Data_Scenario;
 
@@ -42,8 +47,6 @@ struct Data_Screen Data_Screen = { 800, 600, {80, 60} };
 
 struct Data_Mouse Data_Mouse;
 
-//struct Data_Buttons_Arrow Data_Buttons_Arrow;
-
 struct Data_Language_Text Data_Language_Text;
 
 struct Data_CityInfo Data_CityInfo;
@@ -57,7 +60,7 @@ struct Data_State Data_State;
 
 struct Data_Walker_NameSequence Data_Walker_NameSequence;
 
-struct Data_Building Data_Buildings[2000];
+struct Data_Building Data_Buildings[MAX_BUILDINGS];
 
 struct Data_Sound_City Data_Sound_City[70];
 

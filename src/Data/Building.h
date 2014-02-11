@@ -1,6 +1,8 @@
 #ifndef DATA_BUILDING_H
 #define DATA_BUILDING_H
 
+#define MAX_BUILDINGS 2000
+
 enum {
 	Building_Menu_Farms = 2,
 	Building_Menu_RawMaterials = 3,
@@ -121,15 +123,18 @@ extern struct Data_Building {
 	char inUse;
 	char __unknown_01;
 	char __unknown_02;
-	char __unknown_03;
-	char __unknown_04;
-	char __unknown_05;
+	char size;
+	char houseIsMerged;
+	char houseSize;
 	char x;
 	char y;
 	short gridOffset;
 	short type;
-	char __unknown_0c;
-	char __unknown_0d;
+	union {
+		short houseLevel;
+		short warehouseResourceId;
+		short orientation;
+	} subtype;
 	char __unknown_0e;
 	char __unknown_0f;
 	char __unknown_10;
@@ -138,8 +143,7 @@ extern struct Data_Building {
 	char __unknown_13;
 	char __unknown_14;
 	char __unknown_15;
-	char __unknown_16;
-	char __unknown_17;
+	short housePopulation;
 	char __unknown_18;
 	char __unknown_19;
 	char __unknown_1a;
@@ -161,7 +165,7 @@ extern struct Data_Building {
 	char __unknown_2a;
 	char __unknown_2b;
 	char __unknown_2c;
-	char __unknown_2d;
+	char hasWaterAccess;
 	char __unknown_2e;
 	char __unknown_2f;
 	char __unknown_30;
@@ -171,7 +175,7 @@ extern struct Data_Building {
 	char __unknown_34;
 	char __unknown_35;
 	char __unknown_36;
-	char __unknown_37;
+	char houseHasWellAccess;
 	char __unknown_38;
 	char __unknown_39;
 	char __unknown_3a;
@@ -186,7 +190,7 @@ extern struct Data_Building {
 	char __unknown_43;
 	char __unknown_44;
 	char __unknown_45;
-	char __unknown_46;
+	char houseHasTaxCoverage;
 	char __unknown_47;
 	char __unknown_48;
 	char __unknown_49;
@@ -232,18 +236,15 @@ extern struct Data_Building {
 	char __unknown_71;
 	char __unknown_72;
 	char __unknown_73;
-	char __unknown_74;
-	char __unknown_75;
-	char __unknown_76;
-	char __unknown_77;
+	int taxIncomeOrStorage;
 	char __unknown_78;
-	char __unknown_79;
-	char __unknown_7a;
-	char __unknown_7b;
-	char __unknown_7c;
-	char __unknown_7d;
-	char __unknown_7e;
-	char __unknown_7f;
-} Data_Buildings[2000];
+	char ruinHasPlague;
+	char desirability;
+	char isDeleted;
+	char isAdjacentToWater;
+	char storageId;
+	char crimeRisk;
+	char showOnProblemOverlay;
+} Data_Buildings[MAX_BUILDINGS];
 
 #endif

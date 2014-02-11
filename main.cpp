@@ -22,8 +22,9 @@
 #include "src/Data/Graphics.h"
 #include "src/Data/Mouse.h"
 #include "src/Data/CityInfo.h"
+#include "src/Data/Building.h"
 
-Color screen[480000];
+Color screen[960000];
 
 void assert(const char *msg, int expected, int actual)
 {
@@ -52,12 +53,14 @@ int main(int argc, char **argv)
 	assert("Trade city", 66, sizeof(struct Data_Empire_City));
 	assert("Trade city list", 2706, sizeof(Data_Empire_Cities));
 	assert("City info", 2*18068, sizeof(Data_CityInfo));
+	assert("Building object", 128, sizeof(struct Data_Building));
 	printf("sizeof(Data_Scenario_settings) = %x\n", sizeof(Data_Settings));
 
 	Loader_Graphics_initGraphics();
 	printf("Load images: %d\n", Loader_Graphics_loadMainGraphics(0));
 	printf("Load model: %d\n", Loader_Model_loadC3ModelTxt());
 	printf("Load language: %d\n", Language_load("c3.eng", 0));
+	printf("Text string: %s\n", Language_getString(30, 1));
 	GameFile_loadSavedGame("1.sav");
 
 	for (int i = 0; i < 10000; i++) {
