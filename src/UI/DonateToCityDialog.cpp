@@ -134,7 +134,6 @@ static void buttonDonate(int param1, int param2)
 	Data_CityInfo.financeDonatedThisYear += Data_CityInfo.donateAmount;
 	Data_CityInfo.personalSavings -= Data_CityInfo.donateAmount;
 	CityInfoUpdater_Finance_calculateTotals();
-	CityInfoUpdater_Finance_calculateTribute();
 	UI_Window_goTo(Window_Advisors);
 }
 

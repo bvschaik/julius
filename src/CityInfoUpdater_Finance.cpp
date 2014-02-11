@@ -168,7 +168,7 @@ static void payTribute()
 	}
 
 	Data_CityInfo.treasury -= Data_CityInfo.financeTributeLastYear;
-	CityInfoUpdater_Finance_calculateTribute();
+	Data_CityInfo.financeTributeThisYear = 0;
 
 	Data_CityInfo.financeBalanceLastYear = Data_CityInfo.treasury;
 	Data_CityInfo.financeTotalIncomeLastYear = income;
@@ -187,10 +187,8 @@ void CityInfoUpdater_Finance_handleYearChange()
 	
 	// reset tax income in building list
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse) {
-			if (Data_Buildings[i].houseSize) {
-				Data_Buildings[i].taxIncomeOrStorage = 0;
-			}
+		if (Data_Buildings[i].inUse && Data_Buildings[i].houseSize) {
+			Data_Buildings[i].taxIncomeOrStorage = 0;
 		}
 	}
 
@@ -255,10 +253,7 @@ void CityInfoUpdater_Finance_calculateTotals()
 	Data_CityInfo.financeBalanceThisYear =
 		Data_CityInfo.financeNetInOutThisYear +
 		Data_CityInfo.financeBalanceLastYear;
-}
 
-void CityInfoUpdater_Finance_calculateTribute()
-{
 	// NB the code in the game calculates tribute, and at the end of
 	// the method, always sets it to zero... let's take a shortcut
 	Data_CityInfo.financeTributeThisYear = 0;
@@ -272,4 +267,44 @@ void CityInfoUpdater_Finance_calculateEstimatedWages()
 	Data_CityInfo.estimatedYearlyWages =
 		(11 - Data_CityInfo_Extra.gameTimeMonth + 1) * monthlyWages +
 		Data_CityInfo.financeWagesPaidThisYear;
+}
+
+void CityInfoUpdater_Finance_calculateEstimatedTaxes()
+{
+	Data_CityInfo.monthlyCollectedTaxFromPlebs = 0;
+	Data_CityInfo.monthlyCollectedTaxFromPatricians = 0;
+	for (int i = 0; i < MAX_BUILDINGS; i++) {
+		if (Data_Buildings[i].inUse && Data_Buildings[i].houseSize && Data_Buildings[i].houseHasTaxCoverage) {
+			int isPatrician = Data_Buildings[i].subtype.houseLevel >= 12; // TODO housing level constants
+			int trm = Calc_adjustWithPercentage(
+				Data_Model_Houses[Data_Buildings[i].subtype.houseLevel].taxMultiplier,
+				Data_Model_Difficulty.moneyPercentage[Data_Settings.difficulty]);
+			if (isPatrician) {
+				Data_CityInfo.monthlyCollectedTaxFromPatricians += Data_Buildings[i].housePopulation * trm;
+			} else {
+				Data_CityInfo.monthlyCollectedTaxFromPlebs += Data_Buildings[i].housePopulation * trm;
+			}
+		}
+	}
+	int monthlyPatricians = Calc_adjustWithPercentage(
+		Data_CityInfo.monthlyCollectedTaxFromPatricians / 2,
+		Data_CityInfo.taxPercentage);
+	int monthlyPlebs = Calc_adjustWithPercentage(
+		Data_CityInfo.monthlyCollectedTaxFromPlebs / 2,
+		Data_CityInfo.taxPercentage);
+	int estimatedRestOfYear = (12 - Data_CityInfo_Extra.gameTimeMonth) * (monthlyPatricians + monthlyPlebs);
+
+	Data_CityInfo.financeTaxesThisYear =
+		Data_CityInfo.yearlyCollectedTaxFromPlebs + Data_CityInfo.yearlyCollectedTaxFromPatricians;
+	Data_CityInfo.estimatedTaxIncome = Data_CityInfo.financeTaxesThisYear + estimatedRestOfYear;
+}
+
+void CityInfoUpdater_Finance_updateInterest()
+{
+	Data_CityInfo.financeInterestThisYear = Data_CityInfo.financeInterestPaidThisYear;
+}
+
+void CityInfoUpdater_Finance_updateSalary()
+{
+	Data_CityInfo.financeSalaryThisYear = Data_CityInfo.financeSalaryPaidThisYear;
 }

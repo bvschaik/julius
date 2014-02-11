@@ -155,7 +155,6 @@ static void arrowButtonWages(int param1, int param2)
 	BOUND(Data_CityInfo.wages, 0, 100);
 	CityInfoUpdater_Finance_calculateEstimatedWages();
 	CityInfoUpdater_Finance_calculateTotals();
-	CityInfoUpdater_Finance_calculateTribute();
 	UI_Window_requestRefresh();
 }
 
