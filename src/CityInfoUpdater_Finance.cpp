@@ -33,7 +33,7 @@ static void collectMonthlyTaxes()
 		Data_CityInfo.populationPerLevel[Data_Buildings[i].subtype.houseLevel] += population;
 
 		int tax = population * trm;
-		if (Data_Buildings[i].houseHasTaxCoverage) {
+		if (Data_Buildings[i].houseTaxCoverage) {
 			if (isPatrician) {
 				Data_CityInfo.monthlyTaxedPatricians += population;
 				Data_CityInfo.monthlyCollectedTaxFromPatricians += tax;
@@ -274,7 +274,7 @@ void CityInfoUpdater_Finance_calculateEstimatedTaxes()
 	Data_CityInfo.monthlyCollectedTaxFromPlebs = 0;
 	Data_CityInfo.monthlyCollectedTaxFromPatricians = 0;
 	for (int i = 0; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse && Data_Buildings[i].houseSize && Data_Buildings[i].houseHasTaxCoverage) {
+		if (Data_Buildings[i].inUse && Data_Buildings[i].houseSize && Data_Buildings[i].houseTaxCoverage) {
 			int isPatrician = Data_Buildings[i].subtype.houseLevel >= 12; // TODO housing level constants
 			int trm = Calc_adjustWithPercentage(
 				Data_Model_Houses[Data_Buildings[i].subtype.houseLevel].taxMultiplier,

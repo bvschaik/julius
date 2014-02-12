@@ -391,6 +391,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\Walker_Service.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Widget_Button.cpp"
 				>
 			</File>
