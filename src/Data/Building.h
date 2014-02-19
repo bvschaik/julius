@@ -238,11 +238,19 @@ extern struct Data_Building {
 			char __unknown_73;
 		} unknown;
 		struct {
-			short food[4];
-			short wine;
-			short oil;
-			short furniture;
-			short pottery;
+			union {
+				short all[8];
+				struct {
+					short wheat;
+					short fruit; // TODO order?
+					short vegetables;
+					short meat;
+					short wine;
+					short oil;
+					short furniture;
+					short pottery;
+				} one;
+			} inventory;
 			char theater; //5a
 			char amphitheaterActor;
 			char amphitheaterGladiator;

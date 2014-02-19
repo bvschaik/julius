@@ -1,5 +1,5 @@
 #include "Sidebar.h"
-//#include "Minimap.h"
+#include "Minimap.h"
 #include "Window.h"
 #include "../Graphics.h"
 #include "../Widget.h"
@@ -170,7 +170,7 @@ static void drawMinimap(int force)
 	if (!Data_State.sidebarCollapsed) {
 		int xOffset = XOFFSET_EXPANDED;
 		// TODO force?
-		//UI_Minimap_draw(xOffset + 8, 59, 73, 111);
+		UI_Minimap_draw(xOffset + 8, 59, 73, 111);
 		Graphics_drawLine(xOffset + 7, 58, xOffset + 153, 58, Color_Minimap_Dark);
 		Graphics_drawLine(xOffset + 7, 59, xOffset + 7, 170, Color_Minimap_Dark);
 		Graphics_drawLine(xOffset + 153, 59, xOffset + 153, 170, Color_Minimap_Light);

@@ -7,6 +7,7 @@
 #include "../Data/Constants.h"
 #include "../Data/Graphics.h"
 #include "../Data/Screen.h"
+#include "../Data/State.h"
 
 void UI_City_drawBackground()
 {

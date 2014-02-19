@@ -44,4 +44,14 @@ EXTERN Int8_Grid(Data_Grid_animation);
 EXTERN Int8_Grid(Data_Grid_desirability);
 EXTERN Int8_Grid(Data_Grid_buildingDamage);
 
+enum {
+	Bitfield_Size2 = 0x01,
+	Bitfield_Size3 = 0x02,
+	Bitfield_Size4 = 0x04,
+	Bitfield_Size5 = 0x08,
+	Bitfield_Sizes = 0x0f,
+	Bitfield_Plaza = 0x80,
+	Edge_leftmostTile = 0x40,
+};
+
 #endif

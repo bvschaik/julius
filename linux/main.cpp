@@ -20,6 +20,7 @@
 #include "../src/Time.h"
 #include "../src/Animation.h"
 #include "../src/Sound.h"
+#include "../src/CityView.h"
 
 /*
 typedef struct{
@@ -61,12 +62,14 @@ void refresh(SDL_Surface *surface) {
 
 void mainLoop(SDL_Surface *surface) {
 	SDL_Event event;
+	SDL_Event refreshEvent;
+	refreshEvent.user.type = SDL_USEREVENT;
 	
 	refresh(surface);
     /* While the program is running */
     while (1) {
 		int active = 1;
-        /* Check for new events */
+        /* Process event queue */
         while (SDL_PollEvent(&event)) {
 			switch (event.type) {
 				case SDL_ACTIVEEVENT:
@@ -118,12 +121,17 @@ void mainLoop(SDL_Surface *surface) {
 				
 				case SDL_QUIT:
 					return;
-
+				
+				case SDL_USEREVENT:
+					break;
+				
 				default:
 					printf("Unknown event: %d\n", event.type);
 					break;
 			}
         }
+		// Push user refresh event
+		SDL_PushEvent(&refreshEvent);
 		if (active) {
 			refresh(surface);
 		} else {
@@ -244,12 +252,16 @@ int main()
 	Graphics_setClipRectangle(0, 0, Data_Screen.width, Data_Screen.height);
 	
 	Loader_Graphics_initGraphics();
+	
+	CityView_setViewport(0, 24, (Data_Screen.width - (Data_Screen.width - 20) % 60 - 162) / 60, (Data_Screen.height - 24) / 15);
+	
 	printf("Load images: %d\n", Loader_Graphics_loadMainGraphics(0));
 	printf("Load model: %d\n", Loader_Model_loadC3ModelTxt());
 	printf("Load language: %d\n", Language_load("c3.eng", 0));
 	UI_Window_goTo(Window_MainMenu);
 	
 	GameFile_loadSavedGame("1.sav");
+	CityView_calculateLookup(); // TODO should be part of loading file
 	Empire_load(0, Data_Scenario.empireId);
 	//Data_CityInfo.godWrathMercury = 40;
 	// end C3 setup
