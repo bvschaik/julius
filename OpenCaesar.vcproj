@@ -227,6 +227,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\UI\CityBuildings.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\CityInfoUpdater.cpp"
 				>
 			</File>

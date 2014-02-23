@@ -5,13 +5,37 @@
 #include "../Data/Constants.h"
 #include "../Data/Graphics.h"
 #include "../Data/Grid.h"
+#include "../Data/Mouse.h"
 #include "../Data/Scenario.h"
 #include "../Data/Settings.h"
 
+#define FOREACH_XY_VIEW(block)\
+	int odd = 0;\
+	int yAbs = minimapAbsoluteY - 4;\
+	int yView = yOffset - 4;\
+	for (int yRel = -4; yRel < heightTiles + 4; yRel++, yAbs++, yView++) {\
+		int xView;\
+		if (odd) {\
+			xView = xOffset - 9;\
+			odd = 0;\
+		} else {\
+			xView = xOffset - 8;\
+			odd = 1;\
+		}\
+		int xAbs = minimapAbsoluteX - 4;\
+		for (int xRel = -4; xRel < widthTiles; xRel++, xAbs++, xView += 2) {\
+			if (xAbs < 0 || xAbs >= VIEW_X_MAX) continue;\
+			if (yAbs < 0 || yAbs >= VIEW_Y_MAX) continue;\
+			block;\
+		}\
+	}
+
 static void setBounds(int xOffset, int yOffset, int widthTiles, int heightTiles);
 static void drawMinimap(int xOffset, int yOffset, int widthTiles, int heightTiles);
+static int drawWalker(int xView, int yView, int gridOffset);
 static void drawTile(int xView, int yView, int gridOffset);
 static void drawViewportRectangle(int xView, int yView, int widthTiles, int heightTiles);
+static int getMouseGridOffset(int xOffset, int yOffset, int widthTiles, int heightTiles);
 
 static int minimapAbsoluteX;
 static int minimapAbsoluteY;
@@ -71,26 +95,10 @@ static void setBounds(int xOffset, int yOffset, int widthTiles, int heightTiles)
 
 static void drawMinimap(int xOffset, int yOffset, int widthTiles, int heightTiles)
 {
-	int odd = 0;
-	int yAbs = minimapAbsoluteY - 4;
-	int yView = yOffset - 4;
-	for (int yRel = -4; yRel < heightTiles + 4; yRel++, yAbs++, yView++) {
-		int xView;
-		if (odd) {
-			xView = xOffset - 9;
-			odd = 0;
-		} else {
-			xView = xOffset - 8;
-			odd = 1;
-		}
-		int xAbs = minimapAbsoluteX - 4;
-		for (int xRel = -4; xRel < widthTiles; xRel++, xAbs++, xView += 2) {
-			if (xAbs < 0 || xAbs >= VIEW_X_MAX) continue;
-			if (yAbs < 0 || yAbs >= VIEW_Y_MAX) continue;
-			int gridOffset = ViewToGridOffset(xAbs, yAbs);
-			drawTile(xView, yView, gridOffset);
-		}
-	}
+	FOREACH_XY_VIEW(
+		int gridOffset = ViewToGridOffset(xAbs, yAbs);
+		drawTile(xView, yView, gridOffset);
+	);
 }
 
 static int drawWalker(int xView, int yView, int gridOffset)
@@ -196,4 +204,21 @@ static void drawViewportRectangle(int xView, int yView, int widthTiles, int heig
 		Data_CityView.widthInTiles * 2 + 4,
 		Data_CityView.heightInTiles - 4,
 		Color_Yellow);
+}
+
+static int getMouseGridOffset(int xOffset, int yOffset, int widthTiles, int heightTiles)
+{
+	setBounds(xOffset, yOffset, widthTiles, heightTiles);
+	FOREACH_XY_VIEW(
+		if (Data_Mouse.y == yView && (Data_Mouse.x == xView || Data_Mouse.x == xView + 1)) {
+			int gridOffset = ViewToGridOffset(xAbs, yAbs);
+			return gridOffset < 0 ? 0 : gridOffset;
+		}
+	);
+	return 0;
+}
+
+void UI_Minimap_handleClick()
+{
+
 }

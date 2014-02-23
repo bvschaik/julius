@@ -1,6 +1,6 @@
 CC=g++
 LDFLAGS=-L../../sdl/lib -lSDL -lSDL_mixer
-CFLAGS=-I../../sdl/include/SDL -Wall
+CFLAGS=-I../../sdl/include/SDL -Wall -Wno-unused-function
 LD_RUN_PATH=../../sdl/lib
 
 c3:

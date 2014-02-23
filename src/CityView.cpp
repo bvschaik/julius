@@ -9,6 +9,8 @@ void CityView_setViewport(
 {
 	Data_CityView.xOffsetInPixels = xOffset;
 	Data_CityView.yOffsetInPixels = yOffset;
+	Data_CityView.widthInPixels = widthInTiles * 60 - 2;
+	Data_CityView.heightInPixels = heightInTiles * 15;
 	Data_CityView.widthInTiles = widthInTiles;
 	Data_CityView.heightInTiles = heightInTiles;
 	Data_CityView.xInTiles = GRID_SIZE / 2;

@@ -440,6 +440,7 @@ int GameFile_loadSavedGame(const char *filename)
 		}
 	}
 	fclose(fp);
+	Data_Settings_Map.gridStartOffset = Data_Scenario.gridFirstElement;
 	// TODO setup
 	return 0;
 }

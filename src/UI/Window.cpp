@@ -19,7 +19,7 @@ static void noop()
 static struct Window windows[] = {
 	// 0
 	{ noop, UI_MainMenu_drawBackground, UI_MainMenu_drawForeground, UI_MainMenu_handleMouse },
-	{ noop, UI_City_drawBackground, noop, UI_City_handleMouse },
+	{ noop, UI_City_drawBackground, UI_City_drawForeground, UI_City_handleMouse },
 	{ noop, UI_PopupDialog_drawBackground, UI_PopupDialog_drawForeground, UI_PopupDialog_handleMouse },
 	{ noop, UI_City_drawBackground, UI_TopMenu_drawForeground, UI_TopMenu_handleMouse },
 	{ noop, noop, UI_DifficultyOptions_drawForeground, UI_DifficultyOptions_handleMouse },

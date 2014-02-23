@@ -18,7 +18,6 @@ static void drawFootprintTile(Color *data, int xOffset, int yOffset, Color color
 	if (!colorMask) {
 		colorMask = Color_NoMask;
 	}
-	// TODO clip
 	GraphicsClipInfo *clip = Graphics_getClipInfo(xOffset, yOffset, 58, 30);
 	if (!clip->isVisible) {
 		return;
@@ -33,17 +32,17 @@ static void drawFootprintTile(Color *data, int xOffset, int yOffset, Color color
 			int xMax = 4 * y + 2;
 			int xOffset = 29 - 1 - 2 * y;
 			if (clipLeft || clipRight) {
-				xMax /= 2;
+				xMax = 2 * y;
 			}
 			if (clipLeft) {
-				xOffset = 29;
-				dataIndex += xMax;
+				xOffset = 30;
+				dataIndex += xMax + 2;
 			}
 			for (int x = 0; x < xMax; x++) {
 				buffer[xOffset + x] = ColorLookup[data[dataIndex++] & colorMask];
 			}
 			if (clipRight) {
-				dataIndex += xMax;
+				dataIndex += xMax + 2;
 			}
 		}
 	}
@@ -54,17 +53,17 @@ static void drawFootprintTile(Color *data, int xOffset, int yOffset, Color color
 			int xMax = 4 * (15 - 1 - y) + 2;
 			int xOffset = 2 * y;
 			if (clipLeft || clipRight) {
-				xMax /= 2;
+				xMax = xMax / 2 - 1;
 			}
 			if (clipLeft) {
-				xOffset = 29;
-				dataIndex += xMax;
+				xOffset = 30;
+				dataIndex += xMax + 2;
 			}
 			for (int x = 0; x < xMax; x++) {
 				buffer[xOffset + x] = ColorLookup[data[dataIndex++] & colorMask];
 			}
 			if (clipRight) {
-				dataIndex += xMax;
+				dataIndex += xMax + 2;
 			}
 		}
 	}

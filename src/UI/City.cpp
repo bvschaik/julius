@@ -8,6 +8,10 @@
 #include "../Data/Graphics.h"
 #include "../Data/Screen.h"
 #include "../Data/State.h"
+#include "../Data/Settings.h"
+
+// TODO move to header
+void UI_CityBuildings_drawForeground(int x, int y);
 
 void UI_City_drawBackground()
 {
@@ -18,7 +22,8 @@ void UI_City_drawBackground()
 
 void UI_City_drawForeground()
 {
-
+	UI_CityBuildings_drawForeground(
+		Data_Settings_Map.camera.x, Data_Settings_Map.camera.y);
 }
 
 

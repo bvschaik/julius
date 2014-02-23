@@ -10,8 +10,8 @@
 #include "../Data/Screen.h"
 #include "../Data/State.h"
 
-#define SIDEBAR_BORDER ((Data_Screen.width - 20) % 60)
-#define XOFFSET_EXPANDED (Data_Screen.width - (Data_Screen.width - 20) % 60 - 162)
+#define SIDEBAR_BORDER ((Data_Screen.width + 20) % 60)
+#define XOFFSET_EXPANDED (Data_Screen.width - (Data_Screen.width + 20) % 60 - 162)
 
 static void drawFillerBorders();
 static void drawSidebar();

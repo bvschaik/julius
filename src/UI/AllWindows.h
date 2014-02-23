@@ -47,6 +47,7 @@ void UI_HoldFestivalDialog_drawForeground();
 void UI_HoldFestivalDialog_handleMouse();
 
 void UI_City_drawBackground();
+void UI_City_drawForeground();
 void UI_City_handleMouse();
 
 void UI_Empire_drawBackground();

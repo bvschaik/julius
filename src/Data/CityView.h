@@ -7,6 +7,8 @@
 extern struct Data_CityView {
 	int xOffsetInPixels;
 	int yOffsetInPixels;
+	int widthInPixels;
+	int heightInPixels;
 
 	int xInTiles;
 	int yInTiles;

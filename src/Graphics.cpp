@@ -23,7 +23,7 @@ static struct ClipRectangle {
 static GraphicsClipInfo clipInfo;
 
 static void drawImageUncompressed(Data_Graphics_Index *index, const Color *data, int xOffset, int yOffset, Color color);
-static void drawImageCompressed(Data_Graphics_Index *index, const unsigned char *data, int xOffset, int yOffset, Color color);
+static void drawImageCompressed(Data_Graphics_Index *index, const unsigned char *data, int xOffset, int yOffset, int height, Color color);
 static void setClipX(int xOffset, int width);
 static void setClipY(int yOffset, int height);
 
@@ -148,6 +148,75 @@ void Graphics_shadeRect(int x, int y, int width, int height, int darkness)
 	}
 }
 
+void Graphics_drawIsometricFootprint(int graphicId, int xOffset, int yOffset, Color colorMask)
+{
+	Data_Graphics_Index *index = &Data_Graphics_Main.index[graphicId];
+	const char *data;
+	if (index->isExternal) {
+		data = Loader_Graphics_loadExternalImagePixelData(graphicId);
+	} else {
+		data = &Data_Graphics_PixelData.main[index->offset];
+	}
+	if (index->type == 30) { // isometric
+		switch (index->width) {
+			case 58:
+				Graphics_Footprint_drawSize1(graphicId, xOffset, yOffset, colorMask);
+				break;
+			case 118:
+				Graphics_Footprint_drawSize2(graphicId, xOffset, yOffset, colorMask);
+				break;
+			case 178:
+				Graphics_Footprint_drawSize3(graphicId, xOffset, yOffset, colorMask);
+				break;
+			case 238:
+				Graphics_Footprint_drawSize4(graphicId, xOffset, yOffset, colorMask);
+				break;
+			case 298:
+				Graphics_Footprint_drawSize5(graphicId, xOffset, yOffset, colorMask);
+				break;
+		}
+	}
+}
+
+void Graphics_drawIsometricTop(int graphicId, int xOffset, int yOffset, Color colorMask)
+{
+	Data_Graphics_Index *index = &Data_Graphics_Main.index[graphicId];
+	if (!index->hasCompressedPart) {
+		return;
+	}
+	const char *data = &Data_Graphics_PixelData.main[index->offset];
+	data += index->uncompressedLength;
+
+	int height = index->height;
+	switch (index->width) {
+		case 58:
+			yOffset -= index->height - 30;
+			height -= 16;
+			break;
+		case 118:
+			xOffset -= 30;
+			yOffset -= index->height - 60;
+			height -= 31;
+			break;
+		case 178:
+			xOffset -= 60;
+			yOffset -= index->height - 90;
+			height -= 46;
+			break;
+		case 238:
+			xOffset -= 90;
+			yOffset -= index->height - 120;
+			height -= 61;
+			break;
+		case 298:
+			xOffset -= 120;
+			yOffset -= index->height - 150;
+			height -= 76;
+			break;
+	}
+	drawImageCompressed(index, (unsigned char*)data, xOffset, yOffset, height, colorMask);
+}
+
 void Graphics_drawImage(int graphicId, int xOffset, int yOffset)
 {
 	Data_Graphics_Index *index = &Data_Graphics_Main.index[graphicId];
@@ -159,28 +228,10 @@ void Graphics_drawImage(int graphicId, int xOffset, int yOffset)
 	}
 
 	if (index->type == 30) { // isometric
-		switch (index->width) {
-			case 58:
-				Graphics_Footprint_drawSize1(graphicId, xOffset, yOffset, 0);
-				break;
-			case 118:
-				Graphics_Footprint_drawSize2(graphicId, xOffset, yOffset, 0);
-				break;
-			case 178:
-				Graphics_Footprint_drawSize3(graphicId, xOffset, yOffset, 0);
-				break;
-			case 238:
-				Graphics_Footprint_drawSize4(graphicId, xOffset, yOffset, 0);
-				break;
-			case 298:
-				Graphics_Footprint_drawSize5(graphicId, xOffset, yOffset, 0);
-				break;
-		}
-		if (index->hasCompressedPart) {
-			// TODO
-			//drawImageCompressed();
-		}
+		printf("ERROR: use Graphics_drawIsometricFootprint for isometric!\n");
+		return;
 	}
+
 	//TODO
 	/*printf("DrawImage at(%d,%d) size(%d,%d), %d)\n",
 		xOffset, yOffset,
@@ -188,7 +239,7 @@ void Graphics_drawImage(int graphicId, int xOffset, int yOffset)
 		graphicId);*/
 	
 	if (index->isFullyCompressed) {
-		drawImageCompressed(index, (unsigned char*)data, xOffset, yOffset, 0);
+		drawImageCompressed(index, (unsigned char*)data, xOffset, yOffset, index->height, 0);
 	} else {
 		drawImageUncompressed(index, (Color*)data, xOffset, yOffset, 0);
 	}
@@ -205,7 +256,7 @@ void Graphics_drawLetter(int graphicId, int xOffset, int yOffset, Color color)
 	}
 
 	if (index->isFullyCompressed) {
-		drawImageCompressed(index, (unsigned char*)data, xOffset, yOffset, color);
+		drawImageCompressed(index, (unsigned char*)data, xOffset, yOffset, index->height, color);
 	} else {
 		drawImageUncompressed(index, (Color*)data, xOffset, yOffset, color);
 	}
@@ -231,15 +282,15 @@ static void drawImageUncompressed(Data_Graphics_Index *index, const Color *data,
 	}
 }
 
-static void drawImageCompressed(Data_Graphics_Index *index, const unsigned char *data, int xOffset, int yOffset, Color color)
+static void drawImageCompressed(Data_Graphics_Index *index, const unsigned char *data, int xOffset, int yOffset, int height, Color color)
 {
 	GraphicsClipInfo *clip = Graphics_getClipInfo(
-		xOffset, yOffset, index->width, index->height);
+		xOffset, yOffset, index->width, height);
 	if (!clip->isVisible) {
 		return;
 	}
 
-	for (int y = 0; y < index->height - clip->clippedPixelsBottom; y++) {
+	for (int y = 0; y < height - clip->clippedPixelsBottom; y++) {
 		int x = 0;
 		while (x < index->width) {
 			unsigned char b = *data;
@@ -274,6 +325,14 @@ void Graphics_setClipRectangle(int x, int y, int width, int height)
 	clipRectangle.xEnd = x + width;
 	clipRectangle.yStart = y;
 	clipRectangle.yEnd = y + height;
+	if (clipRectangle.xEnd > Data_Screen.width) {
+		printf("ERROR: clip rectangle x end (%d) > screen width\n", clipRectangle.xEnd);
+		clipRectangle.xEnd = Data_Screen.width;
+	}
+	if (clipRectangle.yEnd > Data_Screen.height) {
+		printf("ERROR: clip rectangle y end (%d) > screen height\n", clipRectangle.yEnd);
+		clipRectangle.yEnd = Data_Screen.height-15;
+	}
 }
 
 void Graphics_resetClipRectangle()

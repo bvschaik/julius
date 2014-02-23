@@ -2,6 +2,9 @@
 #define DATA_CONSTANTS_H
 
 enum {
+	ID_Graphic_TerrainBlack = 1,
+	ID_Graphic_TerrainWater = 5,
+	ID_Graphic_TerrainOverlay = 10,
 	ID_Graphic_TopMenuSidebar = 11,
 	ID_Graphic_SidePanel = 12,
 	ID_Graphic_MainMenuBackground = 14,
