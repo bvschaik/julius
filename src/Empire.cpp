@@ -101,6 +101,32 @@ void Empire_initCities()
 	}
 }
 
+void Empire_initTradeAmountCodes()
+{
+	for (int i = 0; i < 200; i++) {
+		if (!Data_Empire_Objects[i].inUse
+			|| Data_Empire_Objects[i].type != EmpireObject_City) {
+			continue;
+		}
+		int totalAmount = 0;
+		for (int res = 1; res <= 15; res++) {
+			totalAmount += getTradeAmountCode(i, res);
+		}
+		if (totalAmount) {
+			for (int res = 1; res <= 15; res++) {
+				if (!Empire_citySellsResource(i, res) && !Empire_cityBuysResource(i, res)) {
+					setTradeAmountCode(i, res, 0);
+				}
+			}
+		} else {
+			// reset everything to 25
+			for (int res = 1; res <= 15; res++) {
+				setTradeAmountCode(i, res, 2);
+			}
+		}
+	}
+}
+
 void Empire_scrollMap(int direction)
 {
 	if (direction == Direction_None) {

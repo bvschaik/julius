@@ -19,6 +19,7 @@ enum {
 	ID_Graphic_ResourceIcons = 129,
 	ID_Graphic_DialogBackground = 132,
 	ID_Graphic_SunkenTextboxBackground = 133,
+	ID_Graphic_TerrainDesirability = 135,
 	ID_Graphic_AdvisorBackground = 136,
 	ID_Graphic_MinimapEmptyLand = 141,
 	ID_Graphic_MinimapWater = 142,

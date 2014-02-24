@@ -2,8 +2,10 @@
 #define DATA_GRID_H
 #include "Data.h"
 
-#define Int16_Grid(x) unsigned short x[GRID_SIZE * GRID_SIZE]
-#define Int8_Grid(x) unsigned char x[GRID_SIZE * GRID_SIZE]
+#define Int16_Grid(x) short x[GRID_SIZE * GRID_SIZE]
+#define Int8_Grid(x) char x[GRID_SIZE * GRID_SIZE]
+#define UInt16_Grid(x) unsigned short x[GRID_SIZE * GRID_SIZE]
+#define UInt8_Grid(x) unsigned char x[GRID_SIZE * GRID_SIZE]
 
 enum {
 	GRID_SIZE = 162,
@@ -27,22 +29,23 @@ enum {
 	Terrain_Wall = 0x4000,
 	Terrain_Gatehouse = 0x8000,
 	// flagged items
-	Terrain_NotClear = 0xd77f
+	Terrain_NotClear = 0xd77f,
+	Terrain_NaturalElements = 0x1677
 };
 
-EXTERN Int16_Grid(Data_Grid_graphicIds);
-EXTERN Int16_Grid(Data_Grid_buildingIds);
-EXTERN Int16_Grid(Data_Grid_walkerIds);
-EXTERN Int16_Grid(Data_Grid_terrain);
+EXTERN UInt16_Grid(Data_Grid_graphicIds);
+EXTERN UInt16_Grid(Data_Grid_buildingIds);
+EXTERN UInt16_Grid(Data_Grid_walkerIds);
+EXTERN UInt16_Grid(Data_Grid_terrain);
 
-EXTERN Int8_Grid(Data_Grid_edge);
-EXTERN Int8_Grid(Data_Grid_bitfields);
-EXTERN Int8_Grid(Data_Grid_random);
-EXTERN Int8_Grid(Data_Grid_elevation);
-EXTERN Int8_Grid(Data_Grid_aqueducts);
-EXTERN Int8_Grid(Data_Grid_animation);
+EXTERN UInt8_Grid(Data_Grid_edge);
+EXTERN UInt8_Grid(Data_Grid_bitfields);
+EXTERN UInt8_Grid(Data_Grid_random);
+EXTERN UInt8_Grid(Data_Grid_elevation);
+EXTERN UInt8_Grid(Data_Grid_aqueducts);
+EXTERN UInt8_Grid(Data_Grid_animation);
 EXTERN Int8_Grid(Data_Grid_desirability);
-EXTERN Int8_Grid(Data_Grid_buildingDamage);
+EXTERN UInt8_Grid(Data_Grid_buildingDamage);
 
 enum {
 	Bitfield_Size1 = 0x00,
