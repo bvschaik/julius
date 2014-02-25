@@ -56,7 +56,8 @@ enum {
 	Bitfield_Sizes = 0x0f,
 	Bitfield_Overlay = 0x10,
 	Bitfield_Plaza = 0x80,
-	Edge_leftmostTile = 0x40,
+	Edge_LeftmostTile = 0x40,
+	Edge_NativeLand = 0x80,
 };
 
 #endif

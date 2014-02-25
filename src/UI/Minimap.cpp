@@ -139,7 +139,7 @@ static void drawTile(int xView, int yView, int gridOffset)
 	}
 
 	if (terrain & Terrain_Building) {
-		if (Data_Grid_edge[gridOffset] & Edge_leftmostTile) {
+		if (Data_Grid_edge[gridOffset] & Edge_LeftmostTile) {
 			int graphicId;
 			int buildingId = Data_Grid_buildingIds[gridOffset];
 			if (Data_Buildings[buildingId].houseSize) {

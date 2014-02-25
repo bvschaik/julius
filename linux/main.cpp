@@ -257,7 +257,7 @@ int main()
 		(Data_Screen.width - 160) / 60,
 		(Data_Screen.height - 24) / 15);
 	
-	printf("Load images: %d\n", Loader_Graphics_loadMainGraphics(0));
+	printf("Load images: %d\n", Loader_Graphics_loadMainGraphics(2));
 	printf("Load model: %d\n", Loader_Model_loadC3ModelTxt());
 	printf("Load language: %d\n", Language_load("c3.eng", 0));
 	UI_Window_goTo(Window_MainMenu);
