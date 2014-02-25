@@ -176,8 +176,7 @@ extern struct Data_Building {
 	char __unknown_35;
 	char __unknown_36;
 	char houseHasWellAccess;
-	char __unknown_38;
-	char __unknown_39;
+	short numWorkers;
 	char __unknown_3a;
 	char __unknown_3b;
 	char __unknown_3c;

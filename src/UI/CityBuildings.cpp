@@ -107,7 +107,7 @@ void UI_CityBuildings_drawForeground(int x, int y)
 	}
 
 	// TODO overlay and stuff
-	Data_State.currentOverlay = Overlay_Fire;
+	//Data_State.currentOverlay = Overlay_Fire;
 	if (Data_State.currentOverlay) {
 		drawOverlayFootprints();
 	} else {
@@ -199,8 +199,6 @@ static void drawOverlayFootprints()
 			int terrain = Data_Grid_terrain[gridOffset];
 			if (Data_State.currentOverlay == Overlay_Water) {
 				drawFootprintForWaterOverlay(gridOffset, xGraphic, yGraphic);
-				//TODO
-				drawTopForWaterOverlay(gridOffset, xGraphic, yGraphic);
 			} else if (Data_State.currentOverlay == Overlay_Native) {
 				drawFootprintForNativeOverlay(gridOffset, xGraphic, yGraphic);
 			} else if (terrain & (Terrain_Aqueduct | Terrain_Wall)) {

@@ -1,8 +1,28 @@
 #include "Sound.h"
 #include "Data/Sound.h"
+#include "Data/Building.h"
+#include "Data/CityInfo.h"
 #include "Time.h"
 
 #include <string.h>
+
+static int buildingIdToChannelId[] = {
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //0-9
+	1, 1, 1, 1, 1, 1, 2, 2, 2, 2, //10-19
+	3, 3, 3, 3, 4, 4, 4, 4, 5, 5, //20-29
+	6, 7, 8, 9, 10, 11, 12, 13, 0, 14, //30-39
+	0, 0, 0, 0, 0, 0, 15, 16, 17, 18, //40-49
+	0, 19, 20, 21, 0, 22, 0, 23, 24, 24, //50-59
+	25, 26, 27, 28, 29, 25, 26, 27, 28, 29, //60-69
+	30, 31, 32, 0, 33, 34, 35, 36, 36, 36, //70-79
+	63, 37, 0, 0, 38, 38, 39, 39, 0, 0, // 80-89
+	40, 0, 0, 0, 43, 0, 0, 0, 44, 45, //90-99
+	46, 47, 48, 49, 50, 51, 52, 53, 54, 55, //100-109
+	56, 57, 58, 59, 60, 0, 0, 0, 0, 0, //110-119
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //120-129
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //130-139
+	0, 0, 0, 0, 0, 0 //140-145
+};
 
 static TimeMillis lastUpdateTime;
 
@@ -86,7 +106,26 @@ void Sound_City_init()
 
 void Sound_City_markBuildingView(int buildingId, int direction)
 {
-	// TODO
+	if (!Data_Buildings[buildingId].inUse) {
+		return;
+	}
+	int channel = buildingIdToChannelId[buildingId];
+	if (!channel) {
+		return;
+	}
+	int type = Data_Buildings[buildingId].type;
+	if (type == Building_Theater || type == Building_Amphitheater ||
+		type == Building_GladiatorSchool || type == Building_Hippodrome) {
+		// entertainment is shut off when caesar invades
+		if (Data_Buildings[buildingId].numWorkers <= 0 ||
+			Data_CityInfo.numImperialSoldiersInCity > 0) {
+			return;
+		}
+	}
+
+	Data_Sound_City[channel].available = 1;
+	++Data_Sound_City[channel].totalViews;
+	++Data_Sound_City[channel].directionViews[direction];
 }
 
 void Sound_City_decayViews()
