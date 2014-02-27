@@ -6,7 +6,7 @@
 
 #include <string.h>
 
-static int buildingIdToChannelId[] = {
+static int buildingTypeToChannelId[] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //0-9
 	1, 1, 1, 1, 1, 1, 2, 2, 2, 2, //10-19
 	3, 3, 3, 3, 4, 4, 4, 4, 5, 5, //20-29
@@ -109,11 +109,11 @@ void Sound_City_markBuildingView(int buildingId, int direction)
 	if (!Data_Buildings[buildingId].inUse) {
 		return;
 	}
-	int channel = buildingIdToChannelId[buildingId];
+	int type = Data_Buildings[buildingId].type;
+	int channel = buildingTypeToChannelId[type];
 	if (!channel) {
 		return;
 	}
-	int type = Data_Buildings[buildingId].type;
 	if (type == Building_Theater || type == Building_Amphitheater ||
 		type == Building_GladiatorSchool || type == Building_Hippodrome) {
 		// entertainment is shut off when caesar invades
