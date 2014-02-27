@@ -17,6 +17,7 @@ void CityInfoUpdater_Ratings_updatePeaceExplanation();
 
 void CityInfoUpdater_Ratings_sendGiftToCaesar();
 void CityInfoUpdater_Ratings_increaseFavor(int amount);
+void CityInfoUpdater_Ratings_setMaxFavor(int maxFavor);
 
 void CityInfoUpdater_Finance_calculateTotals();
 void CityInfoUpdater_Finance_calculateEstimatedWages();
@@ -27,5 +28,7 @@ void CityInfoUpdater_Finance_updateSalary();
 
 void CityInfoUpdater_Finance_handleMonthChange();
 void CityInfoUpdater_Finance_handleYearChange();
+
+void CityInfoUpdater_Population_recordMonthlyPopulation();
 
 #endif

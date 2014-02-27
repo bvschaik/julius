@@ -266,3 +266,10 @@ void CityInfoUpdater_Ratings_increaseFavor(int amount)
 	Data_CityInfo.ratingFavor += amount;
 	BOUND(Data_CityInfo.ratingFavor, 0, 100);
 }
+
+void CityInfoUpdater_Ratings_setMaxFavor(int maxFavor)
+{
+	if (Data_CityInfo.ratingFavor > maxFavor) {
+		Data_CityInfo.ratingFavor = maxFavor;
+	}
+}

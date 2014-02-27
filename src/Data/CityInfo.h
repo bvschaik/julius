@@ -40,10 +40,7 @@ extern struct Data_CityInfo {
 	int populationMaxSupported;
 	int populationRoomInHouses;
 	int monthlyPopulation[2400];
-	char __unknown_265c;
-	char __unknown_265d;
-	char __unknown_265e;
-	char __unknown_265f;
+	int monthlyPopulationNextIndex;
 	int monthsSinceStart;
 	short populationPerAge[100];
 	int populationPerLevel[20];//272c

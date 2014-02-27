@@ -243,6 +243,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\CityInfoUpdater_Population.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\CityInfoUpdater_Ratings.cpp"
 				>
 			</File>
