@@ -33,6 +33,7 @@ enum {
 	ID_Graphic_MinimapAqueduct = 151,
 	ID_Graphic_MinimapBlack = 152,
 	ID_Graphic_PopulationGraphBar = 157,
+	ID_Graphic_Bullet = 158,
 	ID_Graphic_WinGame = 160,
 	ID_Graphic_EmpirePanels = 172,
 	ID_Graphic_EmpireResource = 173,

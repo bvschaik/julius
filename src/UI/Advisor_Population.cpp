@@ -24,8 +24,15 @@ void UI_Advisor_Population_drawBackground()
 
 	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, 27);
 	Graphics_drawImage(GraphicId(ID_Graphic_AdvisorIcons) + 5, baseOffsetX + 10, baseOffsetY + 10);
-	
-	//Widget_GameText_draw(50, 0, baseOffsetX + 60, baseOffsetY + 12, Font_LargeBlack, 0);
+
+	// Title: depends on big graph shown
+	if (Data_CityInfo_Extra.populationGraphOrder < 2) {
+		Widget_GameText_draw(55, 0, baseOffsetX + 60, baseOffsetY + 12, Font_LargeBlack);
+	} else if (Data_CityInfo_Extra.populationGraphOrder < 4) {
+		Widget_GameText_draw(55, 1, baseOffsetX + 60, baseOffsetY + 12, Font_LargeBlack);
+	} else {
+		Widget_GameText_draw(55, 2, baseOffsetX + 60, baseOffsetY + 12, Font_LargeBlack);
+	}
 
 	Graphics_drawImage(GraphicId(ID_Graphic_PanelWindows) + 14, baseOffsetX + 56, baseOffsetY + 60);
 	
@@ -94,7 +101,75 @@ void UI_Advisor_Population_drawBackground()
 	topGraph(0, baseOffsetX + 505, baseOffsetY + 63);
 	botGraph(0, baseOffsetX + 505, baseOffsetY + 163);
 
-	// TODO other population info
+	// food/migration info panel
+	Widget_Panel_drawInnerPanel(baseOffsetX + 48, baseOffsetY + 336, 34, 5);
+	int graphicId = GraphicId(ID_Graphic_Bullet);
+	int width;
+	Graphics_drawImage(graphicId, baseOffsetX + 56, baseOffsetY + 344);
+	Graphics_drawImage(graphicId, baseOffsetX + 56, baseOffsetY + 362);
+	Graphics_drawImage(graphicId, baseOffsetX + 56, baseOffsetY + 380);
+	Graphics_drawImage(graphicId, baseOffsetX + 56, baseOffsetY + 398);
+
+	// food stores
+	if (Data_Scenario.romeSuppliesWheat) {
+		Widget_GameText_draw(55, 11, baseOffsetX + 75, baseOffsetY + 342, Font_NormalWhite);
+	} else {
+		width = Widget_GameText_drawNumberWithDescription(
+			8, 6, Data_CityInfo.foodInfoNumOperatingGranaries,
+			baseOffsetX + 75, baseOffsetY + 342, Font_NormalWhite);
+		if (Data_CityInfo.foodInfoFoodSupplyMonths > 0) {
+			width += Widget_GameText_draw(55, 12, baseOffsetX + 75 + width, baseOffsetY + 342, Font_NormalWhite);
+			Widget_GameText_drawNumberWithDescription(
+				8, 4, Data_CityInfo.foodInfoFoodSupplyMonths,
+				baseOffsetX + 75 + width, baseOffsetY + 342, Font_NormalWhite);
+		} else if (Data_CityInfo.foodInfoFoodStoredInGranaries > Data_CityInfo.foodInfoFoodNeededPerMonth / 2) {
+			Widget_GameText_draw(55, 13, baseOffsetX + 75 + width, baseOffsetY + 342, Font_NormalWhite);
+		} else if (Data_CityInfo.foodInfoFoodStoredInGranaries > 0) {
+			Widget_GameText_draw(55, 15, baseOffsetX + 75 + width, baseOffsetY + 342, Font_NormalWhite);
+		} else {
+			Widget_GameText_draw(55, 14, baseOffsetX + 75 + width, baseOffsetY + 342, Font_NormalWhite);
+		}
+	}
+
+	// food types eaten
+	width = Widget_GameText_draw(55, 16, baseOffsetX + 75, baseOffsetY + 360, Font_NormalWhite);
+	Widget_Text_drawNumber(Data_CityInfo.foodInfoFoodTypesEaten, '@', " ",
+		baseOffsetX + 75 + width, baseOffsetY + 360, Font_NormalWhite);
+
+	// immigration
+	if (Data_CityInfo.populationNewcomersThisMonth >= 5) {
+		Widget_GameText_draw(55, 24, baseOffsetX + 75, baseOffsetY + 378, Font_NormalWhite);
+		width = Widget_Text_drawNumber(Data_CityInfo.populationNewcomersThisMonth, '@', " ",
+			baseOffsetX + 75, baseOffsetY + 396, Font_NormalWhite);
+		Widget_GameText_draw(55, 17, baseOffsetX + 75 + width, baseOffsetY + 396, Font_NormalWhite);
+	} else if (Data_CityInfo.populationRefusedImmigrantsNoRoom || Data_CityInfo.populationRoomInHouses <= 0) {
+		Widget_GameText_draw(55, 24, baseOffsetX + 75, baseOffsetY + 378, Font_NormalWhite);
+		Widget_GameText_draw(55, 19, baseOffsetX + 75, baseOffsetY + 396, Font_NormalWhite);
+	} else if (Data_CityInfo.populationMigrationPercentage < 80) {
+		Widget_GameText_draw(55, 25, baseOffsetX + 75, baseOffsetY + 378, Font_NormalWhite);
+		int textId;
+		switch (Data_CityInfo.populationEmigrationCause) {
+			case 0: textId = 20; break;
+			case 1: textId = 21; break;
+			case 2: textId = 22; break;
+			case 3: textId = 23; break;
+			case 4: textId = 31; break;
+			case 5: textId = 32; break;
+			default: textId = 0; break;
+		}
+		if (textId) {
+			Widget_GameText_draw(55, textId, baseOffsetX + 75, baseOffsetY + 396, Font_NormalWhite);
+		}
+	} else {
+		Widget_GameText_draw(55, 24, baseOffsetX + 75, baseOffsetY + 378, Font_NormalWhite);
+		width = Widget_Text_drawNumber(Data_CityInfo.populationNewcomersThisMonth, '@', " ",
+			baseOffsetX + 75, baseOffsetY + 396, Font_NormalWhite);
+		if (Data_CityInfo.populationNewcomersThisMonth == 1) {
+			Widget_GameText_draw(55, 18, baseOffsetX + 75 + width, baseOffsetY + 396, Font_NormalWhite);
+		} else {
+			Widget_GameText_draw(55, 17, baseOffsetX + 75 + width, baseOffsetY + 396, Font_NormalWhite);
+		}
+	}
 }
 
 void UI_Advisor_Population_drawForeground()
