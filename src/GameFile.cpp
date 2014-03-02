@@ -12,6 +12,7 @@
 #include "Data/Sound.h"
 #include "Data/Building.h"
 #include "Data/Invasion.h"
+#include "Data/Trade.h"
 
 #include "Zip.h"
 
@@ -151,7 +152,7 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{1, &Data_Empire_Cities, 2706},
 	{0, &Data_CityInfo_Buildings.industry.total, 64},
 	{0, &Data_CityInfo_Buildings.industry.working, 64},
-	{0, &tmp, 128}, //{0, &tradeprices_buy, 0x80},
+	{0, &Data_TradePrices, 128},
 	{0, &Data_Walker_NameSequence.citizen, 4},
 	{0, &Data_Walker_NameSequence.patrician, 4},
 	{0, &Data_Walker_NameSequence.female, 4},

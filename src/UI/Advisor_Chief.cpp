@@ -1,6 +1,6 @@
 #include "Advisors_private.h"
 #include "../Calc.h"
-#include "../Invasion.h"
+#include "../Event.h"
 #include "../Data/Scenario.h"
 
 void UI_Advisor_Chief_drawBackground()
@@ -116,7 +116,7 @@ void UI_Advisor_Chief_drawBackground()
 		Widget_GameText_draw(61, 76, baseOffsetX + 240, baseOffsetY + 166, Font_NormalRed);
 	} else if (Data_CityInfo.numEnemiesInCity) {
 		Widget_GameText_draw(61, 75, baseOffsetX + 240, baseOffsetY + 166, Font_NormalRed);
-	} else if (Invasion_existsUpcomingInvasion()) {
+	} else if (Event_existsUpcomingInvasion()) {
 		Widget_GameText_draw(61, 74, baseOffsetX + 240, baseOffsetY + 166, Font_NormalRed);
 	} else if (Data_CityInfo.distantBattleRomanMonthsToReturn > 0 ||
 			Data_CityInfo.distantBattleRomanMonthsToTravel > 0) {

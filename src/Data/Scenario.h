@@ -8,7 +8,7 @@ extern struct Data_Scenario {
     short __unused2[4];
     struct Data_Scenario_Requests {
 		short year[20];
-		short good[20];
+		short resourceId[20];
 		short amount[20];
 		short deadlineYears[20];
 	} requests;
@@ -42,14 +42,14 @@ extern struct Data_Scenario {
 	struct {
 		short year[20];
 		char month[20];
-		char goodId[20];
+		char resourceId[20];
 		char routeId[20];
 		char isRise[20];
 	} demandChanges;
 	struct {
 		short year[20];
 		char month[20];
-		char goodId[20];
+		char resourceId[20];
 		char amount[20];
 		char isRise[20];
 	} priceChanges;

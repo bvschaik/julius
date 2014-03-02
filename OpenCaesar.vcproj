@@ -283,6 +283,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\Event.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\FileSystem.cpp"
 				>
 			</File>
@@ -308,10 +312,6 @@
 			</File>
 			<File
 				RelativePath=".\src\UI\HoldFestivalDialog.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\Invasion.cpp"
 				>
 			</File>
 			<File
@@ -513,6 +513,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\Event.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\FileSystem.h"
 				>
 			</File>
@@ -545,10 +549,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Invasion.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\Data\KeyboardInput.h"
 				>
 			</File>
@@ -557,11 +557,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Language.h"
+				RelativePath=".\src\Language.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Language.h"
+				RelativePath=".\src\Data\Language.h"
 				>
 			</File>
 			<File
@@ -593,11 +593,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Random.h"
+				RelativePath=".\src\data\Random.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\data\Random.h"
+				RelativePath=".\src\Random.h"
 				>
 			</File>
 			<File
@@ -621,11 +621,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Sound.h"
+				RelativePath=".\src\Sound.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Sound.h"
+				RelativePath=".\src\Data\Sound.h"
 				>
 			</File>
 			<File
@@ -650,6 +650,10 @@
 			</File>
 			<File
 				RelativePath=".\src\UI\TopMenu.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Data\Trade.h"
 				>
 			</File>
 			<File
