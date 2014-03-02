@@ -46,24 +46,24 @@ void UI_DisplayOptions_drawForeground()
 	Widget_GameText_drawCentered(42,
 		Data_Settings.fullscreen ? 2 : 1,
 		baseOffsetX + 128, baseOffsetY + 140,
-		224, Font_SmallBrown
+		224, Font_NormalGreen
 	);
 	
 	Widget_GameText_drawCentered(42, 3,
 		baseOffsetX + 128, baseOffsetY + 164,
-		224, Font_SmallBrown
+		224, Font_NormalGreen
 	);
 	Widget_GameText_drawCentered(42, 4,
 		baseOffsetX + 128, baseOffsetY + 188,
-		224, Font_SmallBrown
+		224, Font_NormalGreen
 	);
 	Widget_GameText_drawCentered(42, 5,
 		baseOffsetX + 128, baseOffsetY + 212,
-		224, Font_SmallBrown
+		224, Font_NormalGreen
 	);
 	Widget_GameText_drawCentered(42, 6,
 		baseOffsetX + 128, baseOffsetY + 236,
-		224, Font_SmallBrown
+		224, Font_NormalGreen
 	);
 	
 	// TODO: reset clip region() ?

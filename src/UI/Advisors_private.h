@@ -61,5 +61,6 @@ void UI_Advisor_Financial_drawBackground();
 void UI_Advisor_Financial_drawForeground();
 void UI_Advisor_Financial_handleMouse();
 
+void UI_Advisor_Chief_drawBackground();
 
 #endif

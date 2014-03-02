@@ -14,7 +14,7 @@ typedef enum {
 	Font_LargeBlack = 670,
 	Font_LargeBrown = 804,
 	Font_SmallPlain = 938,
-	Font_SmallBrown = 1072,
+	Font_NormalGreen = 1072,
 	Font_SmallBlack = 1206
 } Font;
 

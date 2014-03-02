@@ -11,7 +11,7 @@ void Widget_Menu_drawMenuBar(MenuBarItem *items, int numItems)
 	int xOffset = items[0].xStart;
 	for (int i = 0; i < numItems; i++) {
 		items[i].xStart = xOffset;
-		xOffset += Widget_GameText_draw(items[i].textGroup, 0, xOffset, items[i].yStart, Font_SmallBrown);
+		xOffset += Widget_GameText_draw(items[i].textGroup, 0, xOffset, items[i].yStart, Font_NormalGreen);
 		items[i].xEnd = xOffset;
 		xOffset += 32; // spacing
 	}

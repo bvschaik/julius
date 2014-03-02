@@ -16,6 +16,7 @@
 #include "Building.h"
 #include "Sound.h"
 #include "CityView.h"
+#include "Invasion.h"
 
 struct Data_Model_House Data_Model_Houses[20];
 struct Data_Model_Building Data_Model_Buildings[130];
@@ -67,5 +68,7 @@ struct Data_Building Data_Buildings[MAX_BUILDINGS];
 struct Data_Sound_City Data_Sound_City[70];
 
 struct Data_CityView Data_CityView;
+
+struct Data_InvasionWarning Data_InvasionWarnings[101];
 
 int Constant_SalaryForRank[11] = {0, 2, 5, 8, 12, 20, 30, 40, 60, 80, 100};

@@ -158,9 +158,9 @@ static void drawOverlayText()
 	if (!Data_State.sidebarCollapsed) {
 		int xOffset = XOFFSET_EXPANDED + 4;
 		if (Data_State.currentOverlay) {
-			Widget_GameText_drawCentered(14, Data_State.currentOverlay, xOffset, 32, 117, Font_SmallBrown);
+			Widget_GameText_drawCentered(14, Data_State.currentOverlay, xOffset, 32, 117, Font_NormalGreen);
 		} else {
-			Widget_GameText_drawCentered(6, 4, xOffset, 32, 117, Font_SmallBrown);
+			Widget_GameText_drawCentered(6, 4, xOffset, 32, 117, Font_NormalGreen);
 		}
 	}
 }

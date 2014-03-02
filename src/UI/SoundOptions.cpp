@@ -134,11 +134,11 @@ void UI_SoundOptions_drawForeground()
 	
 	Widget_GameText_drawCentered(46, 12,
 		baseOffsetX + 128, baseOffsetY + 300,
-		224, Font_SmallBrown
+		224, Font_NormalGreen
 	);
 	Widget_GameText_drawCentered(46, 9,
 		baseOffsetX + 128, baseOffsetY + 330,
-		224, Font_SmallBrown
+		224, Font_NormalGreen
 	);
 	
 	Widget_GameText_draw(46, 10,
@@ -152,7 +152,7 @@ void UI_SoundOptions_drawForeground()
 	
 	Widget_GameText_drawCentered(46, Data_Settings.soundMusicEnabled ? 2 : 1,
 		baseOffsetX + 64, baseOffsetY + 166,
-		224, Font_SmallBrown
+		224, Font_NormalGreen
 	);
 	Widget_Text_drawNumber(Data_Settings.soundMusicPercentage, 64, "%",
 		baseOffsetX + 374, baseOffsetY + 166,
@@ -161,7 +161,7 @@ void UI_SoundOptions_drawForeground()
 	
 	Widget_GameText_drawCentered(46, Data_Settings.soundSpeechEnabled ? 4 : 3,
 		baseOffsetX + 64, baseOffsetY + 196,
-		224, Font_SmallBrown
+		224, Font_NormalGreen
 	);
 	Widget_Text_drawNumber(Data_Settings.soundSpeechPercentage, 64, "%",
 		baseOffsetX + 374, baseOffsetY + 196,
@@ -170,7 +170,7 @@ void UI_SoundOptions_drawForeground()
 	
 	Widget_GameText_drawCentered(46, Data_Settings.soundEffectsEnabled ? 6 : 5,
 		baseOffsetX + 64, baseOffsetY + 226,
-		224, Font_SmallBrown
+		224, Font_NormalGreen
 	);
 	Widget_Text_drawNumber(Data_Settings.soundEffectsPercentage, 64, "%",
 		baseOffsetX + 374, baseOffsetY + 226,
@@ -179,7 +179,7 @@ void UI_SoundOptions_drawForeground()
 	
 	Widget_GameText_drawCentered(46, Data_Settings.soundCityEnabled ? 8 : 7,
 		baseOffsetX + 64, baseOffsetY + 256,
-		224, Font_SmallBrown
+		224, Font_NormalGreen
 	);
 	Widget_Text_drawNumber(Data_Settings.soundCityPercentage, 64, "%",
 		baseOffsetX + 374, baseOffsetY + 256,

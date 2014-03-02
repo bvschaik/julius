@@ -75,11 +75,11 @@ void UI_SpeedOptions_drawForeground()
 	);
 	Widget_GameText_drawCentered(45, 4,
 		baseOffsetX + 128, baseOffsetY + 236,
-		224, Font_SmallBrown
+		224, Font_NormalGreen
 	);
 	Widget_GameText_drawCentered(45, 1,
 		baseOffsetX + 128, baseOffsetY + 266,
-		224, Font_SmallBrown
+		224, Font_NormalGreen
 	);
 	Widget_GameText_draw(45, 2,
 		baseOffsetX + 144, baseOffsetY + 146,

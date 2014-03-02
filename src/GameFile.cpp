@@ -11,6 +11,7 @@
 #include "Data/Tutorial.h"
 #include "Data/Sound.h"
 #include "Data/Building.h"
+#include "Data/Invasion.h"
 
 #include "Zip.h"
 
@@ -211,7 +212,7 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{0, &tmp, 4}, //{0, &startingFavor, 4},
 	{0, &tmp, 4}, //{0, &personalSavings_lastMission, 4},
 	{0, &tmp, 4}, //{0, &setting_currentMissionId, 4},
-	{1, &tmp, 3232}, //{1, &byte_98EF40, 0xCA0},
+	{1, &Data_InvasionWarnings, 3232},
 	{0, &tmp, 4}, //{0, &setting_isCustomScenario, 4},
 	{0, &Data_Sound_City, 8960},
 	{0, &tmp, 4}, //{0, &buildingId_highestInUse, 4},

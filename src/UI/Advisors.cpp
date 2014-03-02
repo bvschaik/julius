@@ -80,7 +80,7 @@ void UI_Advisors_drawBackground()
 			UI_Advisor_Financial_drawBackground();
 			break;
 		case Advisor_Chief:
-			// TODO UI_Advisor__drawBackground();
+			UI_Advisor_Chief_drawBackground();
 			break;
 	}
 }

@@ -89,11 +89,11 @@ void UI_TopMenu_drawBackground()
 		width = Widget_GameText_drawColored(6, 0, 350, 5, Font_NormalPlain, treasureColor);
 		Widget_Text_drawNumberColored(Data_CityInfo.treasury, '@', " ", 346 + width, 5, Font_NormalPlain, treasureColor);
 
-		width = Widget_GameText_draw(6, 1, 458, 5, Font_SmallBrown);
-		Widget_Text_drawNumber(Data_CityInfo.population, '@', " ", 450 + width, 5, Font_SmallBrown);
+		width = Widget_GameText_draw(6, 1, 458, 5, Font_NormalGreen);
+		Widget_Text_drawNumber(Data_CityInfo.population, '@', " ", 450 + width, 5, Font_NormalGreen);
 
-		width = Widget_GameText_draw(25, Data_CityInfo_Extra.gameTimeMonth, 552, 5, Font_SmallBrown);
-		Widget_GameText_drawYearNoSpacing(Data_CityInfo_Extra.gameTimeYear, 541 + width, 5, Font_SmallBrown);
+		width = Widget_GameText_draw(25, Data_CityInfo_Extra.gameTimeMonth, 552, 5, Font_NormalGreen);
+		Widget_GameText_drawYearNoSpacing(Data_CityInfo_Extra.gameTimeYear, 541 + width, 5, Font_NormalGreen);
 	} else if (Data_Screen.width < 1024) {
 		offsetFunds = 338;
 		offsetPopulation = 458;
