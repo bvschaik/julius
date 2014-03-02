@@ -120,6 +120,18 @@ enum {
 	Climate_Desert = 2
 };
 
+enum {
+	LaborCategory_IndustryCommerce = 0,
+	LaborCategory_FoodProduction = 1,
+	LaborCategory_Engineering = 2,
+	LaborCategory_Water = 3,
+	LaborCategory_Prefectures = 4,
+	LaborCategory_Military = 5,
+	LaborCategory_Entertainment = 6,
+	LaborCategory_HealthEducation = 7,
+	LaborCategory_GovernanceReligion = 8
+};
+
 extern int Constant_SalaryForRank[11];
 
 #endif

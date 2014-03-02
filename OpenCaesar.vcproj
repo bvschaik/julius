@@ -247,6 +247,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\CityInfoUpdater_Labor.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\CityInfoUpdater_Population.cpp"
 				>
 			</File>

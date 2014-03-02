@@ -31,4 +31,7 @@ void CityInfoUpdater_Finance_handleYearChange();
 
 void CityInfoUpdater_Population_recordMonthlyPopulation();
 
+void CityInfoUpdater_Labor_calculateWorkersNeededPerCategory();
+void CityInfoUpdater_Labor_calculateUnemployment();
+
 #endif

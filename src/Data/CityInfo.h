@@ -210,7 +210,7 @@ extern struct Data_CityInfo {
 	short resourcesStored[16];
 	short resourceTradeStatus[16];
 	short resourceTradeExportOver[16];
-	short resourceMothballed[16];
+	short resourceIndustryMothballed[16];
 	char __unknown_28ca;
 	char __unknown_28cb;
 	char __unknown_28cc;
@@ -648,7 +648,7 @@ extern struct Data_CityInfo {
 	struct {
 		int workersNeeded;
 		int workersAllocated;
-		int unknownRelatedToEmployeeAccess;
+		int totalHousesCovered;
 		int buildings;
 		int priority;
 	} laborCategory[10];
