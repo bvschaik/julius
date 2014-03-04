@@ -302,7 +302,7 @@ int Empire_canImportResource(int resource)
 	return 0;
 }
 
-static int Empire_canImportResourcePotentially(int resource)
+int Empire_canImportResourcePotentially(int resource)
 {
 	for (int i = 0; i < MAX_CITIES; i++) {
 		if (Data_Empire_Cities[i].inUse &&
