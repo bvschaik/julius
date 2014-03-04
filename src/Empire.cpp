@@ -11,6 +11,8 @@
 
 #include <string.h>
 
+#define MAX_CITIES 41
+
 static void fixGraphicIds();
 static int isSeaTradeRoute(int routeId);
 static int getTradeAmountCode(int index, int resource);
@@ -183,20 +185,224 @@ void Empire_checkScrollBoundaries()
 	}
 }
 
-int Empire_cityBuysResource(int index, int resource)
+int Empire_cityBuysResource(int objectId, int resource)
 {
 	for (int i = 0; i < 10; i++) {
-		if (Data_Empire_Objects[index].citySells[i] == resource) {
+		if (Data_Empire_Objects[objectId].citySells[i] == resource) {
 			return 1;
 		}
 	}
 	return 0;
 }
 
-int Empire_citySellsResource(int index, int resource)
+int Empire_citySellsResource(int objectId, int resource)
 {
 	for (int i = 0; i < 10; i++) {
-		if (Data_Empire_Objects[index].cityBuys[i] == resource) {
+		if (Data_Empire_Objects[objectId].cityBuys[i] == resource) {
+			return 1;
+		}
+	}
+	return 0;
+}
+
+int Empire_canExportResourceToCity(int cityId, int resource)
+{
+	int routeId = Data_Empire_Cities[cityId].routeId;
+	if (cityId &&
+		Data_Empire_Trade.tradedThisYear[routeId][resource] >=
+		Data_Empire_Trade.maxPerYear[routeId][resource]) {
+		// quota reached
+		return 0;
+	}
+	if (Data_CityInfo.resourcesStored[resource] <= Data_CityInfo.resourceTradeExportOver[resource]) {
+		// stocks too low
+		return 0;
+	}
+	if (Data_Empire_Cities[cityId].buysResourceFlag[resource] || cityId == 0) {
+		return Data_CityInfo.resourceTradeStatus[resource] == TradeStatus_Export;
+	} else {
+		return 0;
+	}
+}
+
+int Empire_canImportResourceFromCity(int cityId, int resource)
+{
+	if (!Data_Empire_Cities[cityId].sellsResourceFlag[resource]) {
+		return 0;
+	}
+	if (Data_CityInfo.resourceTradeStatus[resource] != TradeStatus_Import) {
+		return 0;
+	}
+	if (Data_Empire_Trade.tradedThisYear[cityId][resource] >=
+		Data_Empire_Trade.maxPerYear[cityId][resource]) {
+		return 0;
+	}
+
+	int inStock = Data_CityInfo.resourcesStored[resource];
+	int maxInStock;
+	int finishedGood = Resource_None;
+	switch (resource) {
+		// food and finished materials
+		case Resource_Wheat:
+		case Resource_Vegetables:
+		case Resource_Fruit:
+		case Resource_Meat:
+		case Resource_Pottery:
+		case Resource_Furniture:
+		case Resource_Oil:
+		case Resource_Wine:
+			if (Data_CityInfo.population < 2000) {
+				maxInStock = 10;
+			} else if (Data_CityInfo.population < 4000) {
+				maxInStock = 20;
+			} else if (Data_CityInfo.population < 4000) {
+				maxInStock = 30;
+			} else if (Data_CityInfo.population < 4000) {
+				maxInStock = 40;
+			}
+			break;
+
+		case Resource_Marble:
+		case Resource_Weapons:
+			maxInStock = 10;
+			break;
+
+		case Resource_Clay:
+			finishedGood = Resource_Pottery;
+			break;
+		case Resource_Timber:
+			finishedGood = Resource_Furniture;
+			break;
+		case Resource_Olives:
+			finishedGood = Resource_Oil;
+			break;
+		case Resource_Vines:
+			finishedGood = Resource_Wine;
+			break;
+		case Resource_Iron:
+			finishedGood = Resource_Weapons;
+			break;
+	}
+	if (finishedGood) {
+		maxInStock = 2 * Data_CityInfo_Buildings.industry.working[resource];
+	}
+	return inStock < maxInStock;
+}
+
+int Empire_canImportResource(int resource)
+{
+	for (int i = 0; i < MAX_CITIES; i++) {
+		if (Data_Empire_Cities[i].inUse &&
+			Data_Empire_Cities[i].cityType == EmpireCity_Trade &&
+			Data_Empire_Cities[i].isOpen &&
+			Data_Empire_Cities[i].sellsResourceFlag[resource] == 1) {
+			return 1;
+		}
+	}
+	return 0;
+}
+
+static int Empire_canImportResourcePotentially(int resource)
+{
+	for (int i = 0; i < MAX_CITIES; i++) {
+		if (Data_Empire_Cities[i].inUse &&
+			Data_Empire_Cities[i].cityType == EmpireCity_Trade &&
+			Data_Empire_Cities[i].sellsResourceFlag[resource] == 1) {
+			return 1;
+		}
+	}
+	return 0;
+}
+
+int Empire_canExportResource(int resource)
+{
+	for (int i = 0; i < MAX_CITIES; i++) {
+		if (Data_Empire_Cities[i].inUse &&
+			Data_Empire_Cities[i].cityType == EmpireCity_Trade &&
+			Data_Empire_Cities[i].isOpen &&
+			Data_Empire_Cities[i].buysResourceFlag[resource] == 1) {
+			return 1;
+		}
+	}
+	return 0;
+}
+
+int Empire_ourCityCanProduceResourcePotentially(int resource)
+{
+	// finished goods: check imports of raw materials
+	switch (resource) {
+		case Resource_Pottery:
+			if (Empire_canImportResourcePotentially(Resource_Clay)) {
+				return 1;
+			}
+			break;
+		case Resource_Furniture:
+			if (Empire_canImportResourcePotentially(Resource_Timber)) {
+				return 1;
+			}
+			break;
+		case Resource_Oil:
+			if (Empire_canImportResourcePotentially(Resource_Olives)) {
+				return 1;
+			}
+			break;
+		case Resource_Wine:
+			if (Empire_canImportResourcePotentially(Resource_Vines)) {
+				return 1;
+			}
+			break;
+		case Resource_Weapons:
+			if (Empire_canImportResourcePotentially(Resource_Iron)) {
+				return 1;
+			}
+			break;
+	}
+	// check if we can produce it
+	for (int i = 0; i < MAX_CITIES; i++) {
+		if (Data_Empire_Cities[i].inUse &&
+			Data_Empire_Cities[i].cityType == EmpireCity_Ours &&
+			Data_Empire_Cities[i].sellsResourceFlag[resource] == 1) {
+			return 1;
+		}
+	}
+	return 0;
+}
+
+int Empire_ourCityCanProduceResource(int resource)
+{
+	// finished goods: check imports of raw materials
+	switch (resource) {
+		case Resource_Wine:
+			if (Empire_canImportResource(Resource_Vines)) {
+				return 1;
+			}
+			break;
+		case Resource_Oil:
+			if (Empire_canImportResource(Resource_Olives)) {
+				return 1;
+			}
+			break;
+		case Resource_Furniture:
+			if (Empire_canImportResource(Resource_Timber)) {
+				return 1;
+			}
+			break;
+		case Resource_Pottery:
+			if (Empire_canImportResource(Resource_Clay)) {
+				return 1;
+			}
+			break;
+		case Resource_Weapons:
+			if (Empire_canImportResource(Resource_Iron)) {
+				return 1;
+			}
+			break;
+	}
+	// check if we can produce it
+	for (int i = 0; i < MAX_CITIES; i++) {
+		if (Data_Empire_Cities[i].inUse &&
+			Data_Empire_Cities[i].cityType == EmpireCity_Ours &&
+			Data_Empire_Cities[i].sellsResourceFlag[resource] == 1) {
 			return 1;
 		}
 	}
@@ -206,7 +412,7 @@ int Empire_citySellsResource(int index, int resource)
 void Empire_determineDistantBattleCity()
 {
 	Data_CityInfo.distantBattleCityId = 0;
-	for (int i = 0; i < 41; i++) {
+	for (int i = 0; i < MAX_CITIES; i++) {
 		if (Data_Empire_Cities[i].inUse) {
 			if (Data_Empire_Cities[i].cityType == EmpireCity_VulnerableRoman) {
 				Data_CityInfo.distantBattleCityId = i;
@@ -217,7 +423,7 @@ void Empire_determineDistantBattleCity()
 
 void Empire_resetYearlyTradeAmounts()
 {
-	for (int i = 0; i < 41; i++) {
+	for (int i = 0; i < MAX_CITIES; i++) {
 		if (Data_Empire_Cities[i].inUse && Data_Empire_Cities[i].isOpen) {
 			int routeId = Data_Empire_Cities[i].routeId;
 			for (int resource = 1; resource <= 15; resource++) {
@@ -317,7 +523,7 @@ static void setTradeAmountCode(int index, int resource, int amountCode)
 
 int Empire_getCityForObject(int empireObjectId)
 {
-	for (int i = 0; i < 41; i++) {
+	for (int i = 0; i < MAX_CITIES; i++) {
 		if (Data_Empire_Cities[i].inUse && Data_Empire_Cities[i].empireObjectId == empireObjectId) {
 			return i;
 		}
@@ -327,7 +533,7 @@ int Empire_getCityForObject(int empireObjectId)
 
 int Empire_getCityForTradeRoute(int routeId)
 {
-	for (int i = 0; i < 41; i++) {
+	for (int i = 0; i < MAX_CITIES; i++) {
 		if (Data_Empire_Cities[i].inUse && Data_Empire_Cities[i].routeId == routeId) {
 			return i;
 		}
@@ -337,7 +543,7 @@ int Empire_getCityForTradeRoute(int routeId)
 
 int Empire_isTradeWithCityOpen(int routeId)
 {
-	for (int i = 0; i < 41; i++) {
+	for (int i = 0; i < MAX_CITIES; i++) {
 		if (Data_Empire_Cities[i].inUse && Data_Empire_Cities[i].routeId == routeId) {
 			return Data_Empire_Cities[i].isOpen ? 1 : 0;
 		}
@@ -354,7 +560,7 @@ void Empire_handleExpandEvent()
 		return;
 	}
 
-	for (int i = 0; i < 41; i++) {
+	for (int i = 0; i < MAX_CITIES; i++) {
 		if (!Data_Empire_Cities[i].inUse) {
 			continue;
 		}

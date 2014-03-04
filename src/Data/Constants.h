@@ -132,6 +132,12 @@ enum {
 	LaborCategory_GovernanceReligion = 8
 };
 
+enum {
+	TradeStatus_None = 0,
+	TradeStatus_Import = 1,
+	TradeStatus_Export = 2
+};
+
 extern int Constant_SalaryForRank[11];
 
 #endif
