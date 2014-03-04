@@ -30,4 +30,10 @@ extern struct Data_Message {
 	} populationMessagesShown;
 } Data_Message;
 
+// TODO message delay ticks
+enum {
+	MessageType_WorkersNeeded
+};
+extern short Data_Message_Delay[50];
+
 #endif

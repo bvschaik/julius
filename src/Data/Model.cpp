@@ -33,6 +33,7 @@ struct Data_Settings Data_Settings;
 struct Data_Settings_Map Data_Settings_Map;
 
 struct Data_Message Data_Message;
+short Data_Message_Delay[50];
 struct Data_Random Data_Random;
 
 struct Data_Empire Data_Empire;

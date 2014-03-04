@@ -641,10 +641,7 @@ extern struct Data_CityInfo {
 	char __unknown_2a81;
 	char __unknown_2a82;
 	char __unknown_2a83;
-	char __unknown_2a84;
-	char __unknown_2a85;
-	char __unknown_2a86;
-	char __unknown_2a87;
+	int workersAvailable;
 	struct {
 		int workersNeeded;
 		int workersAllocated;
@@ -655,10 +652,7 @@ extern struct Data_CityInfo {
 	int workersEmployed;
 	int workersUnemployed;
 	int unemploymentPercentage;
-	char __unknown_2b5c;
-	char __unknown_2b5d;
-	char __unknown_2b5e;
-	char __unknown_2b5f;
+	int unemploymentPercentageForSenate;
 	int workersNeeded;
 	int wages;
 	int wagesRome;
