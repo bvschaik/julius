@@ -85,14 +85,8 @@ extern struct Data_CityInfo {
 	char __unknown_27a5;
 	char __unknown_27a6;
 	char __unknown_27a7;
-	char __unknown_27a8;
-	char __unknown_27a9;
-	char __unknown_27aa;
-	char __unknown_27ab;
-	char __unknown_27ac;
-	char __unknown_27ad;
-	char __unknown_27ae;
-	char __unknown_27af;
+	int populationPeopleInTentsShacks;
+	int populationPeopleInVillasPalaces;
 	char __unknown_27b0;
 	char __unknown_27b1;
 	char __unknown_27b2;
@@ -765,23 +759,14 @@ extern struct Data_CityInfo {
 	char __unknown_4245;
 	char __unknown_4246;
 	char __unknown_4247;
-	char __unknown_4248;
-	char __unknown_4249;
-	char __unknown_424a;
-	char __unknown_424b;
+	int ratingProsperityTreasuryLastYear;
 	int ratingCulturePointsTheater;
 	int ratingCulturePointsReligion;
 	int ratingCulturePointsSchool;
 	int ratingCulturePointsLibrary;
 	int ratingCulturePointsAcademy;
-	char __unknown_4260;
-	char __unknown_4261;
-	char __unknown_4262;
-	char __unknown_4263;
-	char __unknown_4264;
-	char __unknown_4265;
-	char __unknown_4266;
-	char __unknown_4267;
+	int ratingPeaceNumCriminalsThisYear;
+	int ratingPeaceNumRiotersThisYear;
 	int housesRequiringFountainToEvolve;//4268
 	int housesRequiringWaterToEvolve;//426c
 	int housesRequiringMoreEntertainmentToEvolve;//4270
@@ -1327,14 +1312,8 @@ extern struct Data_CityInfo {
 	char __unknown_4575;
 	char __unknown_4576;
 	char __unknown_4577;
-	char __unknown_4578;
-	char __unknown_4579;
-	char __unknown_457a;
-	char __unknown_457b;
-	char __unknown_457c;
-	char __unknown_457d;
-	char __unknown_457e;
-	char __unknown_457f;
+	int ratingPeaceNumDestroyedBuildingsThisYear;
+	int ratingPeaceYearsOfPeace;
 	char distantBattleCityId;
 	char distantBattleEnemyStrength;
 	char distantBattleRomanStrength;
@@ -1401,10 +1380,7 @@ extern struct Data_CityInfo {
 	char __unknown_45c5;
 	char __unknown_45c6;
 	char __unknown_45c7;
-	char __unknown_45c8;
-	char __unknown_45c9;
-	char __unknown_45ca;
-	char __unknown_45cb;
+	int ratingProsperityMax;
 	char __unknown_45cc;
 	char __unknown_45cd;
 	char __unknown_45ce;

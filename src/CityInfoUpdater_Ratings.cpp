@@ -1,17 +1,22 @@
 #include "CityInfoUpdater.h"
 #include "Data/CityInfo.h"
 #include "Data/Scenario.h"
+#include "Data/Building.h"
+#include "Data/Model.h"
 #include "Util.h"
+#include "Calc.h"
 
 static void updateCultureRating();
 static void updateFavorRating(int isYearlyUpdate);
 static void updateProsperityRating();
+static void calculateMaxProsperity();
 static void updatePeaceRating();
 
 void CityInfoUpdater_Ratings_calculate(int isYearlyUpdate)
 {
 	updateCultureRating();
 	updateFavorRating(isYearlyUpdate);
+	calculateMaxProsperity();
 	if (isYearlyUpdate) {
 		updateProsperityRating();
 		updatePeaceRating();
@@ -179,11 +184,204 @@ void CityInfoUpdater_Ratings_updateFavorExplanation()
 
 static void updateProsperityRating()
 {
-	// TODO
+	int change = 0;
+	// unemployment: -1 for too high, +1 for low
+	if (Data_CityInfo.unemploymentPercentage < 5) {
+		change += 1;
+	} else if (Data_CityInfo.unemploymentPercentage >= 15) {
+		change -= 1;
+	}
+	// losing/earning money: -1 for losing, +5 for profit
+	if (Data_CityInfo.financeConstructionLastYear + Data_CityInfo.treasury <=
+		Data_CityInfo.ratingProsperityTreasuryLastYear) {
+		change -= 1;
+	} else {
+		change += 5;
+	}
+	// food types: +1 for multiple foods
+	if (Data_CityInfo.foodInfoFoodTypesEaten >= 2) {
+		change += 1;
+	}
+	// wages: +1 for wages 2+ above Rome, -1 for wages below Rome
+	int avgWage = Data_CityInfo.wageRatePaidLastYear / 12;
+	if (avgWage >= Data_CityInfo.wagesRome + 2) {
+		change += 1;
+	} else if (avgWage < Data_CityInfo.wagesRome) {
+		change -= 1;
+	}
+	// high percentage poor: -1, high percentage rich: +1
+	if (Calc_getPercentage(Data_CityInfo.populationPeopleInTentsShacks, Data_CityInfo.population) > 30) {
+		change -= 1;
+	}
+	if (Calc_getPercentage(Data_CityInfo.populationPeopleInVillasPalaces, Data_CityInfo.population) > 10) {
+		change += 1;
+	}
+	// tribute not paid: -1
+	if (Data_CityInfo.tributeNotPaidLastYear) {
+		change -= 1;
+	}
+	// working hippodrome: +1
+	if (Data_CityInfo.entertainmentHippodromeShows > 0) {
+		change += 1;
+	}
+	Data_CityInfo.ratingProsperity += change;
+	BOUND(Data_CityInfo.ratingProsperity, 0, 100);
+
+	CityInfoUpdater_Ratings_updateProsperityExplanation();
 }
+
+void CityInfoUpdater_Ratings_updateProsperityExplanation()
+{
+	int change = 0;
+	int profit = 0;
+	// unemployment: -1 for too high, +1 for low
+	if (Data_CityInfo.unemploymentPercentage < 5) {
+		change += 1;
+	} else if (Data_CityInfo.unemploymentPercentage >= 15) {
+		change -= 1;
+	}
+	// losing/earning money: -1 for losing, +5 for profit
+	if (Data_CityInfo.financeConstructionLastYear + Data_CityInfo.treasury <=
+		Data_CityInfo.ratingProsperityTreasuryLastYear) {
+		change -= 1;
+	} else {
+		change += 5;
+		profit = 1;
+	}
+	// food types: +1 for multiple foods
+	if (Data_CityInfo.foodInfoFoodTypesEaten >= 2) {
+		change += 1;
+	}
+	// wages: +1 for wages 2+ above Rome, -1 for wages below Rome
+	int avgWage = Data_CityInfo.wageRatePaidLastYear / 12;
+	if (avgWage >= Data_CityInfo.wagesRome + 2) {
+		change += 1;
+	} else if (avgWage < Data_CityInfo.wagesRome) {
+		change -= 1;
+	}
+	// high percentage poor: -1, high percentage rich: +1
+	int pctTents = Calc_getPercentage(Data_CityInfo.populationPeopleInTentsShacks, Data_CityInfo.population);
+	if (pctTents > 30) {
+		change -= 1;
+	}
+	if (Calc_getPercentage(Data_CityInfo.populationPeopleInVillasPalaces, Data_CityInfo.population) > 10) {
+		change += 1;
+	}
+	// tribute not paid: -1
+	if (Data_CityInfo.tributeNotPaidLastYear) {
+		change -= 1;
+	}
+	// working hippodrome: +1
+	if (Data_CityInfo.entertainmentHippodromeShows > 0) {
+		change += 1;
+	}
+
+	int reason;
+	if (Data_CityInfo.ratingProsperity <= 0 || Data_CityInfo_Extra.gameTimeYear == Data_Scenario.startYear) {
+		reason = 0;
+	} else if (Data_CityInfo.ratingProsperity >= Data_CityInfo.ratingProsperityMax) {
+		reason = 1;
+	} else if (change > 0) {
+		reason = 2;
+	} else if (!profit) {
+		reason = 3;
+	} else if (Data_CityInfo.unemploymentPercentage >= 15) {
+		reason = 4;
+	} else if (avgWage < Data_CityInfo.wagesRome) {
+		reason = 5;
+	} else if (pctTents > 30) {
+		reason = 6;
+	} else if (Data_CityInfo.tributeNotPaidLastYear) {
+		reason = 7;
+	} else {
+		reason = 9;
+	}
+	// 8 = for bailout
+	Data_CityInfo.ratingAdvisorExplanationProsperity = reason;
+}
+
+void CityInfoUpdater_Ratings_reduceProsperityAfterBailout()
+{
+	Data_CityInfo.ratingProsperity -= 3;
+	if (Data_CityInfo.ratingProsperity < 0) {
+		Data_CityInfo.ratingProsperity = 0;
+	}
+	Data_CityInfo.ratingAdvisorExplanationProsperity = 8;
+}
+
+static void calculateMaxProsperity()
+{
+	int points = 0;
+	int houses = 0;
+	for (int i = 1; i < MAX_BUILDINGS; i++) {
+		if (Data_Buildings[i].inUse && Data_Buildings[i].houseSize) {
+			points += Data_Model_Houses[Data_Buildings[i].subtype.houseLevel].prosperity;
+			houses++;
+		}
+	}
+	if (houses > 0) {
+		Data_CityInfo.ratingProsperityMax = points / houses;
+	} else {
+		Data_CityInfo.ratingProsperityMax = 0;
+	}
+}
+
 static void updatePeaceRating()
 {
-	// TODO
+	int change = 0;
+	if (Data_CityInfo.ratingPeaceYearsOfPeace < 2) {
+		change += 2;
+	} else {
+		change += 5;
+	}
+	if (Data_CityInfo.ratingPeaceNumCriminalsThisYear) {
+		change -= 1;
+	}
+	if (Data_CityInfo.ratingPeaceNumRiotersThisYear) {
+		change -= 5;
+	}
+	if (Data_CityInfo.ratingPeaceNumDestroyedBuildingsThisYear) {
+		change -= 1;
+	}
+	if (Data_CityInfo.ratingPeaceNumRiotersThisYear || Data_CityInfo.ratingPeaceNumDestroyedBuildingsThisYear) {
+		Data_CityInfo.ratingPeaceYearsOfPeace = 0;
+	} else {
+		Data_CityInfo.ratingPeaceYearsOfPeace += 1;
+	}
+	Data_CityInfo.ratingPeaceNumCriminalsThisYear = 0;
+	Data_CityInfo.ratingPeaceNumRiotersThisYear = 0;
+	Data_CityInfo.ratingPeaceNumDestroyedBuildingsThisYear = 0;
+
+	Data_CityInfo.ratingPeace += change;
+	BOUND(Data_CityInfo.ratingPeace, 0, 100);
+	CityInfoUpdater_Ratings_updatePeaceExplanation();
+}
+
+void CityInfoUpdater_Ratings_updatePeaceExplanation()
+{
+	int reason;
+	if (Data_CityInfo.numImperialSoldiersInCity) {
+		reason = 8; // BUGFIX: 7+8 interchanged
+	} else if (Data_CityInfo.numEnemiesInCity) {
+		reason = 7;
+	} else if (Data_CityInfo.numRiotersInCity) {
+		reason = 6;
+	} else {
+		if (Data_CityInfo.ratingPeace < 10) {
+			reason = 0;
+		} else if (Data_CityInfo.ratingPeace < 30) {
+			reason = 1;
+		} else if (Data_CityInfo.ratingPeace < 60) {
+			reason = 2;
+		} else if (Data_CityInfo.ratingPeace < 90) {
+			reason = 3;
+		} else if (Data_CityInfo.ratingPeace < 100) {
+			reason = 4;
+		} else { // >= 100
+			reason = 5;
+		}
+	}
+	Data_CityInfo.ratingAdvisorExplanationPeace = reason;
 }
 
 void CityInfoUpdater_Ratings_sendGiftToCaesar()
