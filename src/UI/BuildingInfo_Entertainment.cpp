@@ -1,0 +1,204 @@
+#include "BuildingInfo.h"
+#include "../Sound.h"
+#include "../Widget.h"
+#include "../Data/Building.h"
+
+void UI_BuildingInfo_drawAmphitheater(BuildingInfoContext *c)
+{
+	c->helpId = 72;
+	if (c->canPlaySound) {
+		Sound_Speech_playFile("wavs/amphitheatre.wav");
+		c->canPlaySound = 0;
+	}
+	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
+	Widget_GameText_drawCentered(71, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, Font_LargeBlack);
+	Data_Building *b = &Data_Buildings[c->buildingId];
+	if (!c->hasRoadAccess) {
+		DRAW_DESC(69, 25);
+	} else if (b->numWorkers <= 0) {
+		DRAW_DESC(71, 6);
+	} else if (!b->data.entertainment.numShows) {
+		DRAW_DESC(71, 2);
+	} else if (b->data.entertainment.numShows == 2) {
+		DRAW_DESC(71, 3);
+	} else if (b->data.entertainment.days1) {
+		DRAW_DESC(71, 4);
+	} else if (b->data.entertainment.days2) {
+		DRAW_DESC(71, 5);
+	}
+
+	Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 7);
+	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 138);
+	if (b->data.entertainment.days1 > 0) {
+		int width = Widget_GameText_draw(71, 8, c->xOffset + 32, c->yOffset + 182, Font_SmallBlack);
+		Widget_GameText_drawNumberWithDescription(8, 44, 2 * b->data.entertainment.days1,
+			c->xOffset + width + 32, c->yOffset + 182, Font_SmallBlack);
+	} else {
+		Widget_GameText_draw(71, 7, c->xOffset + 32, c->yOffset + 182, Font_SmallBlack);
+	}
+	if (b->data.entertainment.days2 > 0) {
+		int width = Widget_GameText_draw(71, 10, c->xOffset + 32, c->yOffset + 202, Font_SmallBlack);
+		Widget_GameText_drawNumberWithDescription(8, 44, 2 * b->data.entertainment.days2,
+			c->xOffset + width + 32, c->yOffset + 202, Font_SmallBlack);
+		Widget_GameText_draw(72, 7 + b->data.entertainment.show,
+			c->xOffset + 32, c->yOffset + 222, Font_SmallBlack);
+	} else {
+		Widget_GameText_draw(71, 9, c->xOffset + 32, c->yOffset + 202, Font_SmallBlack);
+	}
+}
+
+void UI_BuildingInfo_drawTheater(BuildingInfoContext *c)
+{
+	c->helpId = 71;
+	if (c->canPlaySound) {
+		Sound_Speech_playFile("wavs/theatre.wav");
+		c->canPlaySound = 0;
+	}
+	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
+	Widget_GameText_drawCentered(72, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, Font_LargeBlack);
+	Data_Building *b = &Data_Buildings[c->buildingId];
+	if (!c->hasRoadAccess) {
+		DRAW_DESC(69, 25);
+	} else if (b->numWorkers <= 0) {
+		DRAW_DESC(72, 4);
+	} else if (!b->data.entertainment.numShows) {
+		DRAW_DESC(72, 2);
+	} else if (b->data.entertainment.days1) {
+		DRAW_DESC(72, 3);
+	}
+
+	Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 6);
+	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 138);
+	if (b->data.entertainment.days1 > 0) {
+		int width = Widget_GameText_draw(72, 6, c->xOffset + 32, c->yOffset + 182, Font_SmallBlack);
+		Widget_GameText_drawNumberWithDescription(8, 44, 2 * b->data.entertainment.days1,
+			c->xOffset + width + 32, c->yOffset + 182, Font_SmallBlack);
+		Widget_GameText_draw(72, 7 + b->data.entertainment.show,
+			c->xOffset + 32, c->yOffset + 202, Font_SmallBlack);
+	} else {
+		Widget_GameText_draw(72, 5, c->xOffset + 32, c->yOffset + 182, Font_SmallBlack);
+	}
+}
+
+void UI_BuildingInfo_drawHippodrome(BuildingInfoContext *c)
+{
+	c->helpId = 74;
+	if (c->canPlaySound) {
+		Sound_Speech_playFile("wavs/hippodrome.wav");
+		c->canPlaySound = 0;
+	}
+	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
+	Widget_GameText_drawCentered(73, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, Font_LargeBlack);
+	Data_Building *b = &Data_Buildings[c->buildingId];
+	if (!c->hasRoadAccess) {
+		DRAW_DESC(69, 25);
+	} else if (b->numWorkers <= 0) {
+		DRAW_DESC(73, 4);
+	} else if (!b->data.entertainment.numShows) {
+		DRAW_DESC(73, 2);
+	} else if (b->data.entertainment.days1) {
+		DRAW_DESC(73, 3);
+	}
+
+	Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 6);
+	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 138);
+	if (b->data.entertainment.days1 > 0) {
+		int width = Widget_GameText_draw(73, 6, c->xOffset + 32, c->yOffset + 202, Font_SmallBlack);
+		Widget_GameText_drawNumberWithDescription(8, 44, 2 * b->data.entertainment.days1,
+			c->xOffset + width + 32, c->yOffset + 202, Font_SmallBlack);
+	} else {
+		Widget_GameText_draw(73, 5, c->xOffset + 32, c->yOffset + 202, Font_SmallBlack);
+	}
+}
+
+void UI_BuildingInfo_drawColosseum(BuildingInfoContext *c)
+{
+	c->helpId = 73;
+	if (c->canPlaySound) {
+		Sound_Speech_playFile("wavs/colloseum.wav");
+		c->canPlaySound = 0;
+	}
+	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
+	Widget_GameText_drawCentered(74, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, Font_LargeBlack);
+	Data_Building *b = &Data_Buildings[c->buildingId];
+	if (!c->hasRoadAccess) {
+		DRAW_DESC(69, 25);
+	} else if (b->numWorkers <= 0) {
+		DRAW_DESC(74, 6);
+	} else if (!b->data.entertainment.numShows) {
+		DRAW_DESC(74, 2);
+	} else if (b->data.entertainment.numShows == 2) {
+		DRAW_DESC(74, 3);
+	} else if (b->data.entertainment.days1) {
+		DRAW_DESC(74, 5);
+	} else if (b->data.entertainment.days2) {
+		DRAW_DESC(74, 4);
+	}
+
+	Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 6);
+	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 138);
+	if (b->data.entertainment.days1 > 0) {
+		int width = Widget_GameText_draw(74, 8, c->xOffset + 32, c->yOffset + 182, Font_SmallBlack);
+		Widget_GameText_drawNumberWithDescription(8, 44, 2 * b->data.entertainment.days1,
+			c->xOffset + width + 32, c->yOffset + 182, Font_SmallBlack);
+	} else {
+		Widget_GameText_draw(74, 7, c->xOffset + 32, c->yOffset + 182, Font_SmallBlack);
+	}
+	if (b->data.entertainment.days2 > 0) {
+		int width = Widget_GameText_draw(74, 10, c->xOffset + 32, c->yOffset + 202, Font_SmallBlack);
+		Widget_GameText_drawNumberWithDescription(8, 44, 2 * b->data.entertainment.days2,
+			c->xOffset + width + 32, c->yOffset + 202, Font_SmallBlack);
+	} else {
+		Widget_GameText_draw(74, 9, c->xOffset + 32, c->yOffset + 202, Font_SmallBlack);
+	}
+}
+
+static void drawEntertainmentSchool(BuildingInfoContext *c, int groupId, const char *soundFile)
+{
+	c->helpId = 75;
+	if (c->canPlaySound) {
+		Sound_Speech_playFile(soundFile);
+		c->canPlaySound = 0;
+	}
+
+	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
+	Widget_GameText_drawCentered(groupId, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, Font_LargeBlack);
+	if (!c->hasRoadAccess) {
+		DRAW_DESC(69, 25);
+	} else if (Data_Buildings[c->buildingId].numWorkers <= 0) {
+		DRAW_DESC(groupId, 7);
+	} else if (c->workerPercentage >= 100) {
+		DRAW_DESC(groupId, 2);
+	} else if (c->workerPercentage >= 75) {
+		DRAW_DESC(groupId, 3);
+	} else if (c->workerPercentage >= 50) {
+		DRAW_DESC(groupId, 4);
+	} else if (c->workerPercentage >= 25) {
+		DRAW_DESC(groupId, 5);
+	} else {
+		DRAW_DESC(groupId, 6);
+	}
+	Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
+	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 142);
+}
+
+void UI_BuildingInfo_drawGladiatorSchool(BuildingInfoContext *c)
+{
+	drawEntertainmentSchool(c, 75, "wavs/glad_pit.wav");
+}
+
+void UI_BuildingInfo_drawLionHouse(BuildingInfoContext *c)
+{
+	drawEntertainmentSchool(c, 76, "wavs/lion_pit.wav");
+}
+
+void UI_BuildingInfo_drawActorColony(BuildingInfoContext *c)
+{
+	drawEntertainmentSchool(c, 77, "wavs/art_pit.wav");
+}
+
+void UI_BuildingInfo_drawChariotMaker(BuildingInfoContext *c)
+{
+	drawEntertainmentSchool(c, 78, "wavs/char_pit.wav");
+}
+

@@ -18,6 +18,7 @@
 #include "CityView.h"
 #include "Invasion.h"
 #include "Trade.h"
+#include "Formation.h"
 
 struct Data_Model_House Data_Model_Houses[20];
 struct Data_Model_Building Data_Model_Buildings[130];
@@ -74,5 +75,7 @@ struct Data_CityView Data_CityView;
 struct Data_InvasionWarning Data_InvasionWarnings[101];
 
 struct Data_TradePrice Data_TradePrices[16];
+
+struct Data_Formation Data_Formations[MAX_FORMATIONS];
 
 int Constant_SalaryForRank[11] = {0, 2, 5, 8, 12, 20, 30, 40, 60, 80, 100};

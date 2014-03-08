@@ -216,7 +216,7 @@ extern struct Data_Building {
 			char __unknown_62;
 			char __unknown_63;
 			char __unknown_64;
-			char __unknown_65;
+			char __unknown_65; // dock number of ships
 			char __unknown_66;
 			char __unknown_67;
 			char __unknown_68;
@@ -231,7 +231,14 @@ extern struct Data_Building {
 			char __unknown_71;
 			char __unknown_72;
 			char __unknown_73;
-		} unknown;
+		} other;
+		struct {
+			char __padding[26];
+			char numShows; // 64
+			char days1; // also: dock number of ships
+			char days2;
+			char show;
+		} entertainment;
 		struct {
 			union {
 				short all[8];

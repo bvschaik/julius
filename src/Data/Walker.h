@@ -38,6 +38,7 @@ enum {
 	Walker_BathhouseWorker = 32,
 	Walker_Doctor = 33,
 	Walker_Surgeon = 34,
+	Walker_35 = 35,
 	Walker_MapFlag = 36,
 	Walker_Flotsam = 37,
 	Walker_Dockman = 38,
@@ -57,9 +58,9 @@ enum {
 	Walker_Enemy52_Horse = 52,
 	Walker_Enemy53 = 53,
 	Walker_Enemy54 = 54,
-	Walker_Enemy55 = 55,
-	Walker_Enemy56 = 56,
-	Walker_Enemy57 = 57,
+	Walker_Enemy55_Javelin = 55,
+	Walker_Enemy56_Mounted = 56,
+	Walker_Enemy57_Legionary = 57,
 	Walker_NativeTrader = 58,
 	Walker_Arrow = 59,
 	Walker_Javelin = 60,
@@ -78,9 +79,9 @@ enum {
 };
 
 extern struct Data_Walker_NameSequence {
-	int citizen;
+	int citizenMale;
 	int patrician;
-	int female;
+	int citizenFemale;
 	int taxCollector;
 	int engineer;
 	int prefect;
@@ -92,13 +93,13 @@ extern struct Data_Walker_NameSequence {
 	int lionTamer;
 	int charioteer;
 	int barbarian;
-	int greek;
-	int egyptian;
-	int arabian;
+	int enemyGreek;
+	int enemyEgyptian;
+	int enemyArabian;
 	int trader;
 	int tradeShip;
-	int unknown1;
-	int unknown2;
+	int warShip;
+	int enemyShip;
 } Data_Walker_NameSequence;
 
 extern struct Data_Walker {
@@ -107,6 +108,8 @@ extern struct Data_Walker {
 	char y;
 	int minMaxSeen;// TODO char
 	short buildingId;
+	char name;
+	char formationId;
 } Data_Walkers[MAX_WALKERS];
 
 #endif

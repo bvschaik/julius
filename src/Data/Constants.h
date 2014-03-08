@@ -138,6 +138,41 @@ enum {
 	TradeStatus_Export = 2
 };
 
+enum {
+	EnemyType_Barbarian = 0,
+	EnemyType_Numidian = 1,
+	EnemyType_French = 2,
+	EnemyType_British = 3,
+	EnemyType_Goth = 4,
+	EnemyType_Pergamum = 5,
+	EnemyType_Seleucid = 6,
+	EnemyType_Etruscan = 7,
+	EnemyType_Greek = 8,
+	EnemyType_Egyptian = 9,
+	EnemyType_Carthaginian = 10
+};
+/*
+0x00: Barbarians
+0x01: Etruscans
+0x02: Samnites
+0x03: Carthaginians
+0x04: Macedonians
+0x05: Graeci
+0x06: Egyptians
+0x07: Pergamum
+0x08: Seleucids
+0x09: Picts
+0x0A: Celts
+0x0B: Britons
+0x0C: Gauls
+0x0D: Helvetii
+0x0E: Goths
+0x0F: Visigoths
+0x10: Huns
+0x11: Iberians
+0x12: Numidians
+0x13: Judaeans
+*/
 extern int Constant_SalaryForRank[11];
 
 #endif
