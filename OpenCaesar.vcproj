@@ -227,6 +227,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\UI\BuildingInfo_Culture.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\UI\BuildingInfo_Entertainment.cpp"
 				>
 			</File>
