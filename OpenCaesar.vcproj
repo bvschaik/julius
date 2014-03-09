@@ -235,6 +235,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\UI\BuildingInfo_Industry.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Calc.cpp"
 				>
 			</File>

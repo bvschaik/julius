@@ -9,10 +9,7 @@
 static void drawInfo(BuildingInfoContext *c, int helpId, const char *soundFile, int groupId)
 {
 	c->helpId = helpId;
-	if (c->canPlaySound) {
-		Sound_Speech_playFile(soundFile);
-		c->canPlaySound = 0;
-	}
+	PLAY_SOUND(soundFile);
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(groupId, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, Font_LargeBlack);
 
@@ -40,10 +37,7 @@ void UI_BuildingInfo_drawHospital(BuildingInfoContext *c)
 void UI_BuildingInfo_drawBathhouse(BuildingInfoContext *c)
 {
 	c->helpId = 64;
-	if (c->canPlaySound) {
-		Sound_Speech_playFile("wavs/baths.wav");
-		c->canPlaySound = 0;
-	}
+	PLAY_SOUND("wavs/baths.wav");
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(83, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, Font_LargeBlack);
 
@@ -83,10 +77,7 @@ void UI_BuildingInfo_drawLibrary(BuildingInfoContext *c)
 static void drawTemple(BuildingInfoContext *c, const char *soundFile, int groupId, int graphicOffset)
 {
 	c->helpId = 67;
-	if (c->canPlaySound) {
-		Sound_Speech_playFile(soundFile);
-		c->canPlaySound = 0;
-	}
+	PLAY_SOUND(soundFile);
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(groupId, 0, c->xOffset, c->yOffset + 12, 16 * c->widthBlocks, Font_LargeBlack);
 	Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 56, c->widthBlocks - 2, 4);

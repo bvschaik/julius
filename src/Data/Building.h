@@ -222,7 +222,7 @@ extern struct Data_Building {
 			char __unknown_68;
 			char __unknown_69;
 			char __unknown_6a;
-			char __unknown_6b;
+			char __unknown_6b; // farm cursed
 			char __unknown_6c;
 			char __unknown_6d;
 			char __unknown_6e;
@@ -232,6 +232,11 @@ extern struct Data_Building {
 			char __unknown_72;
 			char __unknown_73;
 		} other;
+		struct {
+			char progress;
+			char __padding[32];
+			char curseWeeksLeft;
+		} industry;
 		struct {
 			char __padding[26];
 			char numShows; // 64

@@ -6,10 +6,7 @@
 void UI_BuildingInfo_drawAmphitheater(BuildingInfoContext *c)
 {
 	c->helpId = 72;
-	if (c->canPlaySound) {
-		Sound_Speech_playFile("wavs/amphitheatre.wav");
-		c->canPlaySound = 0;
-	}
+	PLAY_SOUND("wavs/amphitheatre.wav");
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(71, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, Font_LargeBlack);
 	Data_Building *b = &Data_Buildings[c->buildingId];
@@ -50,10 +47,7 @@ void UI_BuildingInfo_drawAmphitheater(BuildingInfoContext *c)
 void UI_BuildingInfo_drawTheater(BuildingInfoContext *c)
 {
 	c->helpId = 71;
-	if (c->canPlaySound) {
-		Sound_Speech_playFile("wavs/theatre.wav");
-		c->canPlaySound = 0;
-	}
+	PLAY_SOUND("wavs/theatre.wav");
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(72, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, Font_LargeBlack);
 	Data_Building *b = &Data_Buildings[c->buildingId];
@@ -83,10 +77,7 @@ void UI_BuildingInfo_drawTheater(BuildingInfoContext *c)
 void UI_BuildingInfo_drawHippodrome(BuildingInfoContext *c)
 {
 	c->helpId = 74;
-	if (c->canPlaySound) {
-		Sound_Speech_playFile("wavs/hippodrome.wav");
-		c->canPlaySound = 0;
-	}
+	PLAY_SOUND("wavs/hippodrome.wav");
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(73, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, Font_LargeBlack);
 	Data_Building *b = &Data_Buildings[c->buildingId];
@@ -114,10 +105,7 @@ void UI_BuildingInfo_drawHippodrome(BuildingInfoContext *c)
 void UI_BuildingInfo_drawColosseum(BuildingInfoContext *c)
 {
 	c->helpId = 73;
-	if (c->canPlaySound) {
-		Sound_Speech_playFile("wavs/colloseum.wav");
-		c->canPlaySound = 0;
-	}
+	PLAY_SOUND("wavs/colloseum.wav");
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(74, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, Font_LargeBlack);
 	Data_Building *b = &Data_Buildings[c->buildingId];
@@ -156,10 +144,7 @@ void UI_BuildingInfo_drawColosseum(BuildingInfoContext *c)
 static void drawEntertainmentSchool(BuildingInfoContext *c, int groupId, const char *soundFile)
 {
 	c->helpId = 75;
-	if (c->canPlaySound) {
-		Sound_Speech_playFile(soundFile);
-		c->canPlaySound = 0;
-	}
+	PLAY_SOUND(soundFile);
 
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(groupId, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, Font_LargeBlack);
