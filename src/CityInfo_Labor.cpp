@@ -1,4 +1,4 @@
-#include "CityInfoUpdater.h"
+#include "CityInfo.h"
 #include "Calc.h"
 #include "PlayerMessage.h"
 #include "Data/CityInfo.h"
@@ -85,7 +85,7 @@ static int shouldHaveWorkers(int buildingId, int checkAccess)
 	return 1;
 }
 
-void CityInfoUpdater_Labor_calculateWorkersNeededPerCategory()
+void CityInfo_Labor_calculateWorkersNeededPerCategory()
 {
 	for (int cat = 0; cat < 10; cat++) {
 		Data_CityInfo.laborCategory[cat].buildings = 0;
@@ -110,10 +110,10 @@ void CityInfoUpdater_Labor_calculateWorkersNeededPerCategory()
 	}
 }
 
-void CityInfoUpdater_Labor_checkEmployment()
+void CityInfo_Labor_checkEmployment()
 {
 	int origNeeded = Data_CityInfo.workersNeeded;
-	CityInfoUpdater_Labor_allocateWorkersToCategories();
+	CityInfo_Labor_allocateWorkersToCategories();
 	// senate unemployment display is delayed when unemployment is rising
 	if (Data_CityInfo.unemploymentPercentage < Data_CityInfo.unemploymentPercentageForSenate) {
 		Data_CityInfo.unemploymentPercentageForSenate = Data_CityInfo.unemploymentPercentage;
@@ -137,7 +137,7 @@ void CityInfoUpdater_Labor_checkEmployment()
 	}
 }
 
-void CityInfoUpdater_Labor_allocateWorkersToCategories()
+void CityInfo_Labor_allocateWorkersToCategories()
 {
 	int workersNeeded = 0;
 	for (int i = 0; i < 10; i++) {
@@ -202,7 +202,7 @@ void CityInfoUpdater_Labor_allocateWorkersToCategories()
 		Calc_getPercentage(Data_CityInfo.workersUnemployed, Data_CityInfo.workersAvailable);
 }
 
-void CityInfoUpdater_Labor_allocateWorkersToBuildings()
+void CityInfo_Labor_allocateWorkersToBuildings()
 {
 	setWorkerPercentages();
 	allocateWorkersToWater();

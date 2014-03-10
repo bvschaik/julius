@@ -1,12 +1,12 @@
-#include "CityInfoUpdater.h"
+#include "CityInfo.h"
 #include "Data/CityInfo.h"
 
-void CityInfoUpdater_Gods_calculate()
+void CityInfo_Gods_calculate()
 {
 	// TODO implement
 }
 
-void CityInfoUpdater_Gods_calculateLeastHappy()
+void CityInfo_Gods_calculateLeastHappy()
 {
 	int maxGod = 0;
 	int maxWrath = 0;

@@ -1,7 +1,7 @@
 #include "Advisors_private.h"
 #include "Window.h"
 
-#include "../CityInfoUpdater.h"
+#include "../CityInfo.h"
 
 #include "../Data/Settings.h"
 
@@ -25,7 +25,7 @@ static int focusButtonId;
 
 void UI_Advisor_Imperial_drawBackground()
 {
-	CityInfoUpdater_Imperial_calculateGiftCosts();
+	CityInfo_Imperial_calculateGiftCosts();
 
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;

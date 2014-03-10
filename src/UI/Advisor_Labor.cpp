@@ -1,6 +1,6 @@
 #include "Advisors_private.h"
 #include "../UI/Window.h"
-#include "../CityInfoUpdater.h"
+#include "../CityInfo.h"
 #include "../Data/Mouse.h"
 #include "../Util.h"
 
@@ -153,8 +153,8 @@ static void arrowButtonWages(int param1, int param2)
 		Data_CityInfo.wages++;
 	}
 	BOUND(Data_CityInfo.wages, 0, 100);
-	CityInfoUpdater_Finance_calculateEstimatedWages();
-	CityInfoUpdater_Finance_calculateTotals();
+	CityInfo_Finance_calculateEstimatedWages();
+	CityInfo_Finance_calculateTotals();
 	UI_Window_requestRefresh();
 }
 

@@ -251,27 +251,27 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\CityInfoUpdater.cpp"
+				RelativePath=".\src\CityInfo.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\CityInfoUpdater_Finance.cpp"
+				RelativePath=".\src\CityInfo_Finance.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\CityInfoUpdater_Gods.cpp"
+				RelativePath=".\src\CityInfo_Gods.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\CityInfoUpdater_Labor.cpp"
+				RelativePath=".\src\CityInfo_Labor.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\CityInfoUpdater_Population.cpp"
+				RelativePath=".\src\CityInfo_Population.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\CityInfoUpdater_Ratings.cpp"
+				RelativePath=".\src\CityInfo_Ratings.cpp"
 				>
 			</File>
 			<File
@@ -513,7 +513,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\CityInfoUpdater.h"
+				RelativePath=".\src\CityInfo.h"
 				>
 			</File>
 			<File

@@ -1,4 +1,4 @@
-#include "CityInfoUpdater.h"
+#include "CityInfo.h"
 #include "Calc.h"
 
 #include "Data/CityInfo.h"
@@ -107,7 +107,7 @@ static void payMonthlySalary()
 	}
 }
 
-void CityInfoUpdater_Finance_handleMonthChange()
+void CityInfo_Finance_handleMonthChange()
 {
 	collectMonthlyTaxes();
 	payMonthlyWages();
@@ -175,7 +175,7 @@ static void payTribute()
 	Data_CityInfo.financeTotalExpensesLastYear = Data_CityInfo.financeTributeLastYear + expenses;
 }
 
-void CityInfoUpdater_Finance_handleYearChange()
+void CityInfo_Finance_handleYearChange()
 {
 	// taxes
 	Data_CityInfo.financeTaxesLastYear =
@@ -229,7 +229,7 @@ void CityInfoUpdater_Finance_handleYearChange()
 	payTribute();
 }
 
-void CityInfoUpdater_Finance_calculateTotals()
+void CityInfo_Finance_calculateTotals()
 {
 	Data_CityInfo.financeTotalIncomeThisYear =
 		Data_CityInfo.financeDonatedThisYear +
@@ -259,7 +259,7 @@ void CityInfoUpdater_Finance_calculateTotals()
 	Data_CityInfo.financeTributeThisYear = 0;
 }
 
-void CityInfoUpdater_Finance_calculateEstimatedWages()
+void CityInfo_Finance_calculateEstimatedWages()
 {
 	int monthlyWages = Data_CityInfo.wages *
 		Data_CityInfo.workersEmployed / 10 / 12;
@@ -269,7 +269,7 @@ void CityInfoUpdater_Finance_calculateEstimatedWages()
 		Data_CityInfo.financeWagesPaidThisYear;
 }
 
-void CityInfoUpdater_Finance_calculateEstimatedTaxes()
+void CityInfo_Finance_calculateEstimatedTaxes()
 {
 	Data_CityInfo.monthlyCollectedTaxFromPlebs = 0;
 	Data_CityInfo.monthlyCollectedTaxFromPatricians = 0;
@@ -299,12 +299,12 @@ void CityInfoUpdater_Finance_calculateEstimatedTaxes()
 	Data_CityInfo.estimatedTaxIncome = Data_CityInfo.financeTaxesThisYear + estimatedRestOfYear;
 }
 
-void CityInfoUpdater_Finance_updateInterest()
+void CityInfo_Finance_updateInterest()
 {
 	Data_CityInfo.financeInterestThisYear = Data_CityInfo.financeInterestPaidThisYear;
 }
 
-void CityInfoUpdater_Finance_updateSalary()
+void CityInfo_Finance_updateSalary()
 {
 	Data_CityInfo.financeSalaryThisYear = Data_CityInfo.financeSalaryPaidThisYear;
 }

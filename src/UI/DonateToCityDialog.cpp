@@ -2,7 +2,7 @@
 #include "Window.h"
 #include "../Widget.h"
 #include "../Graphics.h"
-#include "../CityInfoUpdater.h"
+#include "../CityInfo.h"
 #include "../Util.h"
 #include "Advisors_private.h"
 #include "../Data/CityInfo.h"
@@ -133,7 +133,7 @@ static void buttonDonate(int param1, int param2)
 	Data_CityInfo.treasury += Data_CityInfo.donateAmount;
 	Data_CityInfo.financeDonatedThisYear += Data_CityInfo.donateAmount;
 	Data_CityInfo.personalSavings -= Data_CityInfo.donateAmount;
-	CityInfoUpdater_Finance_calculateTotals();
+	CityInfo_Finance_calculateTotals();
 	UI_Window_goTo(Window_Advisors);
 }
 

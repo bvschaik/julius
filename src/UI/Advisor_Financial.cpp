@@ -1,7 +1,7 @@
 #include "Advisors_private.h"
 #include "Window.h"
 #include "../Util.h"
-#include "../CityInfoUpdater.h"
+#include "../CityInfo.h"
 
 #define VAL(val,x,y) Widget_Text_drawNumber(val, '@', " ", baseOffsetX + x, baseOffsetY + y, Font_NormalBlack)
 #define ROW(tgr,tid,y,valLy,valTy) \
@@ -117,7 +117,7 @@ static void buttonChangeTaxes(int isDown, int param2)
 	}
 	BOUND(Data_CityInfo.taxPercentage, 0, 25);
 
-	CityInfoUpdater_Finance_calculateEstimatedTaxes();
-	CityInfoUpdater_Finance_calculateTotals();
+	CityInfo_Finance_calculateEstimatedTaxes();
+	CityInfo_Finance_calculateTotals();
 	UI_Window_requestRefresh();
 }

@@ -1,6 +1,6 @@
 #include "Window.h"
 #include "Advisors_private.h"
-#include "../CityInfoUpdater.h"
+#include "../CityInfo.h"
 
 static void drawFestivalBackground();
 
@@ -19,8 +19,8 @@ void UI_Advisor_Entertainment_init()
 
 void UI_Advisor_Entertainment_drawBackground()
 {
-	CityInfoUpdater_Gods_calculate();
-	CityInfoUpdater_Entertainment_calculate();
+	CityInfo_Gods_calculate();
+	CityInfo_Entertainment_calculate();
 
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;

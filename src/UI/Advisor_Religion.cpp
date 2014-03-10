@@ -1,6 +1,6 @@
 #include "Advisors_private.h"
 #include "../Data/Settings.h"
-#include "../CityInfoUpdater.h"
+#include "../CityInfo.h"
 
 enum {
 	Ceres = 1,
@@ -171,7 +171,7 @@ void UI_Advisor_Religion_drawBackground()
 		baseOffsetX + 230, baseOffsetY + 166, 50, Font_NormalWhite
 	);
 	
-	CityInfoUpdater_Gods_calculateLeastHappy();
+	CityInfo_Gods_calculateLeastHappy();
 
 	int adviceId;
 	if (Data_CityInfo.godLeastHappy <= 0 || wrathOfGod(Data_CityInfo.godLeastHappy) <= 4) {

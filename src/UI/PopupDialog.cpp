@@ -2,7 +2,7 @@
 #include "Window.h"
 #include "../Widget.h"
 #include "../Graphics.h"
-#include "../CityInfoUpdater.h"
+#include "../CityInfo.h"
 #include "../Data/CityInfo.h"
 #include "../Data/Screen.h"
 #include "../Data/Mouse.h"

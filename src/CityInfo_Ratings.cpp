@@ -1,4 +1,4 @@
-#include "CityInfoUpdater.h"
+#include "CityInfo.h"
 #include "Data/CityInfo.h"
 #include "Data/Scenario.h"
 #include "Data/Building.h"
@@ -12,7 +12,7 @@ static void updateProsperityRating();
 static void calculateMaxProsperity();
 static void updatePeaceRating();
 
-void CityInfoUpdater_Ratings_calculate(int isYearlyUpdate)
+void CityInfo_Ratings_calculate(int isYearlyUpdate)
 {
 	updateCultureRating();
 	updateFavorRating(isYearlyUpdate);
@@ -112,10 +112,10 @@ static void updateCultureRating()
 	Data_CityInfo.ratingCulture += Data_CityInfo.ratingCulturePointsLibrary;
 
 	BOUND(Data_CityInfo.ratingCulture, 0, 100);
-	CityInfoUpdater_Ratings_updateCultureExplanation();
+	CityInfo_Ratings_updateCultureExplanation();
 }
 
-void CityInfoUpdater_Ratings_updateCultureExplanation()
+void CityInfo_Ratings_updateCultureExplanation()
 {
 	int minPercentage = 100;
 	int reason = 0;
@@ -161,10 +161,10 @@ static void updateFavorRating(int isYearlyUpdate)
 	if (Data_CityInfo.ratingFavor > 100) {
 		Data_CityInfo.ratingFavor = 100;
 	}
-	CityInfoUpdater_Ratings_updateFavorExplanation();
+	CityInfo_Ratings_updateFavorExplanation();
 }
 
-void CityInfoUpdater_Ratings_updateFavorExplanation()
+void CityInfo_Ratings_updateFavorExplanation()
 {
 	Data_CityInfo.salaryDifferenceFromRank = 0;
 	int salaryDifference = Data_CityInfo.salaryRank - Data_CityInfo.playerRank;
@@ -227,10 +227,10 @@ static void updateProsperityRating()
 	Data_CityInfo.ratingProsperity += change;
 	BOUND(Data_CityInfo.ratingProsperity, 0, 100);
 
-	CityInfoUpdater_Ratings_updateProsperityExplanation();
+	CityInfo_Ratings_updateProsperityExplanation();
 }
 
-void CityInfoUpdater_Ratings_updateProsperityExplanation()
+void CityInfo_Ratings_updateProsperityExplanation()
 {
 	int change = 0;
 	int profit = 0;
@@ -300,7 +300,7 @@ void CityInfoUpdater_Ratings_updateProsperityExplanation()
 	Data_CityInfo.ratingAdvisorExplanationProsperity = reason;
 }
 
-void CityInfoUpdater_Ratings_reduceProsperityAfterBailout()
+void CityInfo_Ratings_reduceProsperityAfterBailout()
 {
 	Data_CityInfo.ratingProsperity -= 3;
 	if (Data_CityInfo.ratingProsperity < 0) {
@@ -354,10 +354,10 @@ static void updatePeaceRating()
 
 	Data_CityInfo.ratingPeace += change;
 	BOUND(Data_CityInfo.ratingPeace, 0, 100);
-	CityInfoUpdater_Ratings_updatePeaceExplanation();
+	CityInfo_Ratings_updatePeaceExplanation();
 }
 
-void CityInfoUpdater_Ratings_updatePeaceExplanation()
+void CityInfo_Ratings_updatePeaceExplanation()
 {
 	int reason;
 	if (Data_CityInfo.numImperialSoldiersInCity) {
@@ -384,7 +384,7 @@ void CityInfoUpdater_Ratings_updatePeaceExplanation()
 	Data_CityInfo.ratingAdvisorExplanationPeace = reason;
 }
 
-void CityInfoUpdater_Ratings_sendGiftToCaesar()
+void CityInfo_Ratings_sendGiftToCaesar()
 {
 	int cost;
 	if (Data_CityInfo.giftSizeSelected == 0) {
@@ -402,38 +402,38 @@ void CityInfoUpdater_Ratings_sendGiftToCaesar()
 	if (Data_CityInfo.giftOverdosePenalty <= 0) {
 		Data_CityInfo.giftOverdosePenalty = 1;
 		if (Data_CityInfo.giftSizeSelected == 0) {
-			CityInfoUpdater_Ratings_increaseFavor(3);
+			CityInfo_Ratings_increaseFavor(3);
 		} else if (Data_CityInfo.giftSizeSelected == 1) {
-			CityInfoUpdater_Ratings_increaseFavor(5);
+			CityInfo_Ratings_increaseFavor(5);
 		} else if (Data_CityInfo.giftSizeSelected == 2) {
-			CityInfoUpdater_Ratings_increaseFavor(10);
+			CityInfo_Ratings_increaseFavor(10);
 		}
 	} else if (Data_CityInfo.giftOverdosePenalty == 1) {
 		Data_CityInfo.giftOverdosePenalty = 2;
 		if (Data_CityInfo.giftSizeSelected == 0) {
-			CityInfoUpdater_Ratings_increaseFavor(1);
+			CityInfo_Ratings_increaseFavor(1);
 		} else if (Data_CityInfo.giftSizeSelected == 1) {
-			CityInfoUpdater_Ratings_increaseFavor(3);
+			CityInfo_Ratings_increaseFavor(3);
 		} else if (Data_CityInfo.giftSizeSelected == 2) {
-			CityInfoUpdater_Ratings_increaseFavor(5);
+			CityInfo_Ratings_increaseFavor(5);
 		}
 	} else if (Data_CityInfo.giftOverdosePenalty == 2) {
 		Data_CityInfo.giftOverdosePenalty = 3;
 		if (Data_CityInfo.giftSizeSelected == 0) {
-			CityInfoUpdater_Ratings_increaseFavor(0);
+			CityInfo_Ratings_increaseFavor(0);
 		} else if (Data_CityInfo.giftSizeSelected == 1) {
-			CityInfoUpdater_Ratings_increaseFavor(1);
+			CityInfo_Ratings_increaseFavor(1);
 		} else if (Data_CityInfo.giftSizeSelected == 2) {
-			CityInfoUpdater_Ratings_increaseFavor(3);
+			CityInfo_Ratings_increaseFavor(3);
 		}
 	} else if (Data_CityInfo.giftOverdosePenalty == 3) {
 		Data_CityInfo.giftOverdosePenalty = 4;
 		if (Data_CityInfo.giftSizeSelected == 0) {
-			CityInfoUpdater_Ratings_increaseFavor(0);
+			CityInfo_Ratings_increaseFavor(0);
 		} else if (Data_CityInfo.giftSizeSelected == 1) {
-			CityInfoUpdater_Ratings_increaseFavor(0);
+			CityInfo_Ratings_increaseFavor(0);
 		} else if (Data_CityInfo.giftSizeSelected == 2) {
-			CityInfoUpdater_Ratings_increaseFavor(1);
+			CityInfo_Ratings_increaseFavor(1);
 		}
 	}
 
@@ -459,13 +459,13 @@ void CityInfoUpdater_Ratings_sendGiftToCaesar()
 	Data_CityInfo.personalSavings -= cost;
 }
 
-void CityInfoUpdater_Ratings_increaseFavor(int amount)
+void CityInfo_Ratings_increaseFavor(int amount)
 {
 	Data_CityInfo.ratingFavor += amount;
 	BOUND(Data_CityInfo.ratingFavor, 0, 100);
 }
 
-void CityInfoUpdater_Ratings_setMaxFavor(int maxFavor)
+void CityInfo_Ratings_setMaxFavor(int maxFavor)
 {
 	if (Data_CityInfo.ratingFavor > maxFavor) {
 		Data_CityInfo.ratingFavor = maxFavor;
