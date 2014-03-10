@@ -19,10 +19,7 @@ extern struct Data_CityInfo {
 	char __unknown_00b6;
 	char __unknown_00b7;
 	int healthRate;
-	char __unknown_00bc;
-	char __unknown_00bd;
-	char __unknown_00be;
-	char __unknown_00bf;
+	int numHospitalWorkers;
 	char __unknown_00c0;
 	char __unknown_00c1;
 	char __unknown_00c2;
@@ -926,26 +923,7 @@ extern struct Data_CityInfo {
 	int financeDonatedLastYear;
 	int financeDonatedThisYear;
 	int donateAmount;
-	char __unknown_4388;
-	char __unknown_4389;
-	char __unknown_438a;
-	char __unknown_438b;
-	char __unknown_438c;
-	char __unknown_438d;
-	char __unknown_438e;
-	char __unknown_438f;
-	char __unknown_4390;
-	char __unknown_4391;
-	char __unknown_4392;
-	char __unknown_4393;
-	char __unknown_4394;
-	char __unknown_4395;
-	char __unknown_4396;
-	char __unknown_4397;
-	char __unknown_4398;
-	char __unknown_4399;
-	char __unknown_439a;
-	char __unknown_439b;
+	short workingDockBuildingIds[10];
 	char __unknown_439c;
 	char __unknown_439d;
 	char __unknown_439e;
@@ -962,14 +940,11 @@ extern struct Data_CityInfo {
 	char __unknown_43a9;
 	char __unknown_43aa;
 	char __unknown_43ab;
-	char __unknown_43ac;
-	char __unknown_43ad;
+	short numWorkingDocks;
 	char __unknown_43ae;
 	char __unknown_43af;
-	char __unknown_43b0;
-	char __unknown_43b1;
-	char __unknown_43b2;
-	char __unknown_43b3;
+	short numWorkingWharfs;
+	char __padding_43b2[2];
 	short financeStolenThisYear;
 	short financeStolenLastYear;
 	char __unknown_43b8;
@@ -1278,10 +1253,7 @@ extern struct Data_CityInfo {
 	char __unknown_454d;
 	char __unknown_454e;
 	char __unknown_454f;
-	char __unknown_4550;
-	char __unknown_4551;
-	char __unknown_4552;
-	char __unknown_4553;
+	int shipyardBoatsRequested;
 	int numEnemiesInCity;
 	char __unknown_4558;
 	char __unknown_4559;
@@ -1784,9 +1756,9 @@ extern struct Data_CityInfo_Buildings {
 		oracle,
 		// government
 		forum,
-		upgradedForum,
+		forumUpgraded,
 		senate,
-		upgradedSenate,
+		senateUpgraded,
 		// water
 		//well, // ?
 		fountain,

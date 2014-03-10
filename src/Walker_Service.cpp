@@ -266,7 +266,7 @@ static int provideLaborSeekerCoverage(int x, int y)
 	return serviced;
 }
 
-static int provideTaxCollectorCoverage(int x, int y, int *maxTaxMultiplier)
+static int provideTaxCollectorCoverage(int x, int y, char *maxTaxMultiplier)
 {
 	int serviced = 0;
 	FOR_XY_RADIUS(

@@ -156,8 +156,7 @@ extern struct Data_Building {
 	char __unknown_23;
 	char __unknown_24;
 	char __unknown_25;
-	char __unknown_26;
-	char __unknown_27;
+	short immigrantWalkerId;
 	char __unknown_28;
 	char __unknown_29;
 	char __unknown_2a;
@@ -229,8 +228,8 @@ extern struct Data_Building {
 			char __unknown_6f;
 			char __unknown_70;
 			char __unknown_71;
-			char __unknown_72;
-			char __unknown_73;
+			short boatWalkerId; // 72 + 73
+			//char __unknown_73;
 		} other;
 		struct {
 			char progress;

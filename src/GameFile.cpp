@@ -13,6 +13,7 @@
 #include "Data/Building.h"
 #include "Data/Invasion.h"
 #include "Data/Trade.h"
+#include "Data/Walker.h"
 
 #include "Zip.h"
 
@@ -85,7 +86,7 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{1, &Data_Grid_buildingDamage, 26244},
 	{1, &tmp, 26244}, //{1, &undo_grid_aqueducts, 26244},
 	{1, &tmp, 26244}, //{1, &undo_grid_animation, 26244},
-	{1, &tmp, 128000}, //{1, &walker_inUse, 0x1F400},
+	{1, &Data_Walkers, 128000},
 	{1, &tmp, 1200}, //{1, &destinationpath_index, 0x4B0},
 	{1, &tmp, 300000}, //{1, &destinationpath_data, 0x493E0},
 	{1, &tmp, 6400}, //{1, &formation_start_inUse, 0x1900},

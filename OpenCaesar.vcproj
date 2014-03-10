@@ -275,6 +275,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\CityInfo_Tick.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\CityView.cpp"
 				>
 			</File>
