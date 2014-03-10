@@ -185,7 +185,7 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{0, &Data_CityInfo_CultureCoverage.religionMercury, 4},
 	{0, &Data_CityInfo_CultureCoverage.religionMars, 4},
 	{0, &Data_CityInfo_CultureCoverage.religionVenus, 4},
-	{0, &Data_CityInfo_CultureCoverage.oracles, 4},
+	{0, &Data_CityInfo_CultureCoverage.oracle, 4},
 	{0, &Data_CityInfo_CultureCoverage.school, 4},
 	{0, &Data_CityInfo_CultureCoverage.library, 4},
 	{0, &Data_CityInfo_CultureCoverage.academy, 4},

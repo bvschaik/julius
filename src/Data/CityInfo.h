@@ -1790,7 +1790,7 @@ extern struct Data_CityInfo_CultureCoverage {
 	int religionMercury;
 	int religionMars;
 	int religionVenus;
-	int oracles;
+	int oracle;
 } Data_CityInfo_CultureCoverage;
 
 extern struct Data_CityInfo_Extra {

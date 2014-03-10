@@ -287,3 +287,67 @@ void CityInfo_Tick_countBuildingTypes()
 		Data_CityInfo_Buildings.hippodrome.working = 1;
 	}
 }
+
+void CityInfo_Tick_distributeTreasuryOverForumsAndSenates()
+{
+	int units =
+		5 * Data_CityInfo_Buildings.senate.working +
+		1 * Data_CityInfo_Buildings.forum.working +
+		8 * Data_CityInfo_Buildings.senateUpgraded.working +
+		2 * Data_CityInfo_Buildings.forumUpgraded.working;
+	int amountPerUnit;
+	int remainder;
+	if (Data_CityInfo.treasury > 0 && units > 0) {
+		amountPerUnit = Data_CityInfo.treasury / units;
+		remainder = Data_CityInfo.treasury - units * amountPerUnit;
+	} else {
+		amountPerUnit = 0;
+		remainder = 0;
+	}
+
+	for (int i = 1; i < MAX_BUILDINGS; i++) {
+		if (Data_Buildings[i].inUse != 1 || Data_Buildings[i].houseSize) {
+			continue;
+		}
+		Data_Buildings[i].taxIncomeOrStorage = 0;
+		if (Data_Buildings[i].numWorkers <= 0) {
+			continue;
+		}
+		switch (Data_Buildings[i].type) {
+			// ordered based on importance: most important gets the remainder
+			case Building_SenateUpgraded:
+				Data_Buildings[i].taxIncomeOrStorage = 8 * amountPerUnit + remainder;
+				remainder = 0;
+				break;
+			case Building_Senate:
+				if (remainder && !Data_CityInfo_Buildings.senateUpgraded.working) {
+					Data_Buildings[i].taxIncomeOrStorage = 5 * amountPerUnit + remainder;
+					remainder = 0;
+				} else {
+					Data_Buildings[i].taxIncomeOrStorage = 5 * amountPerUnit;
+				}
+				break;
+			case Building_ForumUpgraded:
+				if (remainder && !(
+					Data_CityInfo_Buildings.senateUpgraded.working ||
+					Data_CityInfo_Buildings.senate.working)) {
+					Data_Buildings[i].taxIncomeOrStorage = 2 * amountPerUnit + remainder;
+					remainder = 0;
+				} else {
+					Data_Buildings[i].taxIncomeOrStorage = 2 * amountPerUnit;
+				}
+				break;
+			case Building_Forum:
+				if (remainder && !(
+					Data_CityInfo_Buildings.senateUpgraded.working ||
+					Data_CityInfo_Buildings.senate.working ||
+					Data_CityInfo_Buildings.forumUpgraded.working)) {
+					Data_Buildings[i].taxIncomeOrStorage = amountPerUnit + remainder;
+					remainder = 0;
+				} else {
+					Data_Buildings[i].taxIncomeOrStorage = amountPerUnit;
+				}
+				break;
+		}
+	}
+}

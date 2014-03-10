@@ -255,6 +255,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\CityInfo_Culture.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\CityInfo_Finance.cpp"
 				>
 			</File>
