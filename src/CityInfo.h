@@ -37,4 +37,6 @@ void CityInfo_Labor_checkEmployment();
 void CityInfo_Labor_allocateWorkersToCategories();
 void CityInfo_Labor_allocateWorkersToBuildings();
 
+void CityInfo_Resource_calculateAvailableResources();
+
 #endif

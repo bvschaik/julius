@@ -279,6 +279,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\CityInfo_Resource.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\CityInfo_Tick.cpp"
 				>
 			</File>

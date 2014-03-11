@@ -189,7 +189,7 @@ static void drawPanelInfoCity()
 			}
 			Graphics_drawInsetRect(xOffset + 100 * goodOffset + 120, yOffset + 21, 26, 26);
 			int graphicId = good + GraphicId(ID_Graphic_EmpireResource);
-			int resourceOffset = Resource_getGraphicId(good, 3);
+			int resourceOffset = Resource_getGraphicIdOffset(good, 3);
 			Graphics_drawImage(graphicId + resourceOffset, xOffset + 100 * goodOffset + 121, yOffset + 22);
 			int routeId = Data_Empire_Cities[selectedCity].routeId;
 			switch (Data_Empire_Trade.maxPerYear[routeId][good]) {
@@ -227,7 +227,7 @@ static void drawPanelInfoCity()
 			}
 			Graphics_drawInsetRect(xOffset + 100 * goodOffset + 120, yOffset + 51, 26, 26);
 			int graphicId = good + GraphicId(ID_Graphic_EmpireResource);
-			int resourceOffset = Resource_getGraphicId(good, 3);
+			int resourceOffset = Resource_getGraphicIdOffset(good, 3);
 			Graphics_drawImage(graphicId + resourceOffset, xOffset + 100 * goodOffset + 121, yOffset + 52);
 			int routeId = Data_Empire_Cities[selectedCity].routeId;
 			switch (Data_Empire_Trade.maxPerYear[routeId][good]) {
@@ -265,7 +265,7 @@ static void drawPanelInfoCity()
 			}
 			Graphics_drawInsetRect(xOffset + goodOffset + 60, yOffset + 33, 26, 26);
 			int graphicId = good + GraphicId(ID_Graphic_EmpireResource);
-			int resourceOffset = Resource_getGraphicId(good, 3);
+			int resourceOffset = Resource_getGraphicIdOffset(good, 3);
 			Graphics_drawImage(graphicId + resourceOffset, xOffset + goodOffset + 61, yOffset + 34);
 			int routeId = Data_Empire_Cities[selectedCity].routeId;
 			switch (Data_Empire_Trade.maxPerYear[routeId][good]) {
@@ -291,7 +291,7 @@ static void drawPanelInfoCity()
 			}
 			Graphics_drawInsetRect(xOffset + goodOffset + 110, yOffset + 33, 26, 26);
 			int graphicId = good + GraphicId(ID_Graphic_EmpireResource);
-			int resourceOffset = Resource_getGraphicId(good, 3);
+			int resourceOffset = Resource_getGraphicIdOffset(good, 3);
 			Graphics_drawImage(graphicId + resourceOffset, xOffset + goodOffset + 110, yOffset + 34);
 			int routeId = Data_Empire_Cities[selectedCity].routeId;
 			switch (Data_Empire_Trade.maxPerYear[routeId][good]) {

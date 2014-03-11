@@ -40,6 +40,8 @@ void UI_Advisor_Ratings_drawForeground();
 void UI_Advisor_Ratings_handleMouse();
 
 void UI_Advisor_Trade_drawBackground();
+void UI_Advisor_Trade_drawForeground();
+void UI_Advisor_Trade_handleMouse();
 
 void UI_Advisor_Population_drawBackground();
 void UI_Advisor_Population_drawForeground();
@@ -53,7 +55,6 @@ void UI_Advisor_Entertainment_init();
 void UI_Advisor_Entertainment_drawBackground();
 void UI_Advisor_Entertainment_drawForeground();
 void UI_Advisor_Entertainment_handleMouse();
-
 
 void UI_Advisor_Religion_drawBackground();
 

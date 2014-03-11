@@ -58,6 +58,7 @@ struct Data_CityInfo Data_CityInfo;
 struct Data_CityInfo_Buildings Data_CityInfo_Buildings;
 struct Data_CityInfo_CultureCoverage Data_CityInfo_CultureCoverage;
 struct Data_CityInfo_Extra Data_CityInfo_Extra;
+struct Data_CityInfo_Resource Data_CityInfo_Resource;
 
 struct Data_KeyboardInput Data_KeyboardInput;
 

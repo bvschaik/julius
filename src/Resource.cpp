@@ -2,7 +2,7 @@
 #include "Data/Constants.h"
 #include "Data/Scenario.h"
 
-int Resource_getGraphicId(int resource, int type)
+int Resource_getGraphicIdOffset(int resource, int type)
 {
 	if (resource == Resource_Meat && Data_Scenario.allowedBuildings.wharf) {
 		switch (type) {

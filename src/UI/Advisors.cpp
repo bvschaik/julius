@@ -108,7 +108,7 @@ void UI_Advisors_drawForeground()
 			UI_Advisor_Ratings_drawForeground();
 			break;
 		case Advisor_Trade:
-			// TODO j_fun_drawTradeAdvisorButtons();
+			UI_Advisor_Trade_drawForeground();
 			break;
 		case Advisor_Population:
 			UI_Advisor_Population_drawForeground();
@@ -166,6 +166,9 @@ void UI_Advisors_handleMouse()
 			break;
 		case Advisor_Ratings:
 			UI_Advisor_Ratings_handleMouse();
+			break;
+		case Advisor_Trade:
+			UI_Advisor_Trade_handleMouse();
 			break;
 		case Advisor_Population:
 			UI_Advisor_Population_handleMouse();

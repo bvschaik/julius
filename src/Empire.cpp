@@ -214,7 +214,7 @@ int Empire_canExportResourceToCity(int cityId, int resource)
 		// quota reached
 		return 0;
 	}
-	if (Data_CityInfo.resourcesStored[resource] <= Data_CityInfo.resourceTradeExportOver[resource]) {
+	if (Data_CityInfo.resourceStored[resource] <= Data_CityInfo.resourceTradeExportOver[resource]) {
 		// stocks too low
 		return 0;
 	}
@@ -238,7 +238,7 @@ int Empire_canImportResourceFromCity(int cityId, int resource)
 		return 0;
 	}
 
-	int inStock = Data_CityInfo.resourcesStored[resource];
+	int inStock = Data_CityInfo.resourceStored[resource];
 	int maxInStock;
 	int finishedGood = Resource_None;
 	switch (resource) {
