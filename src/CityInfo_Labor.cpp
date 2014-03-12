@@ -145,7 +145,7 @@ void CityInfo_Labor_allocateWorkersToCategories()
 		workersNeeded += Data_CityInfo.laborCategory[i].workersNeeded;
 	}
 	Data_CityInfo.workersNeeded = 0;
-	if (workersNeeded >= Data_CityInfo.workersAvailable) {
+	if (workersNeeded <= Data_CityInfo.workersAvailable) {
 		for (int i = 0; i < 10; i++) {
 			Data_CityInfo.laborCategory[i].workersAllocated = Data_CityInfo.laborCategory[i].workersNeeded;
 		}
@@ -190,7 +190,7 @@ void CityInfo_Labor_allocateWorkersToCategories()
 				}
 			}
 		} while (available > 0);
-		
+
 		Data_CityInfo.workersEmployed = Data_CityInfo.workersAvailable;
 		for (int i = 0; i < 9; i++) {
 			Data_CityInfo.workersNeeded +=

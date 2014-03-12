@@ -228,8 +228,46 @@ void UI_LaborPriorityDialog_handleMouse()
 	}
 }
 
-void buttonSetPriority(int param1, int param2)
+static void buttonSetPriority(int newPriority, int param2)
 {
-	// TODO fun_setLaborPriorityDialog_priority
+	int oldPriority = Data_CityInfo.laborCategory[prioritySelectedCategory].priority;
+	if (oldPriority != newPriority) {
+		int shift;
+		int fromPrio;
+		int toPrio;
+		if (!oldPriority && newPriority) {
+			// shift all bigger than 'newPriority' by one down (+1)
+			shift = 1;
+			fromPrio = newPriority;
+			toPrio = 9;
+		} else if (oldPriority && !newPriority) {
+			// shift all bigger than 'oldPriority' by one up (-1)
+			shift = -1;
+			fromPrio = oldPriority;
+			toPrio = 9;
+		} else if (newPriority < oldPriority) {
+			// shift all between new and old by one down (+1)
+			shift = 1;
+			fromPrio = newPriority;
+			toPrio = oldPriority;
+		} else {
+			// shift all between old and new by one up (-1)
+			shift = -1;
+			fromPrio = oldPriority;
+			toPrio = newPriority;
+		}
+		Data_CityInfo.laborCategory[prioritySelectedCategory].priority = newPriority;
+		for (int i = 0; i < 9; i++) {
+			if (i == prioritySelectedCategory) {
+				continue;
+			}
+			int curPrio = Data_CityInfo.laborCategory[i].priority;
+			if (fromPrio <= curPrio && curPrio <= toPrio) {
+				Data_CityInfo.laborCategory[i].priority += shift;
+			}
+		}
+		CityInfo_Labor_allocateWorkersToCategories();
+		CityInfo_Labor_allocateWorkersToBuildings();
+	}
 	UI_Window_goTo(Window_Advisors);
 }
