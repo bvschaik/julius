@@ -1230,7 +1230,7 @@ extern struct Data_CityInfo {
 	char distantBattleRomanMonthsToReturn;
 	char distantBattleRomanMonthsToTravel;
 	char distantBattleCityMonthsUntilRoman;
-	char __unknown_4587;
+	char triumphalArchesAvailable;
 	char __unknown_4588;
 	char __unknown_4589;
 	char distantBattleEnemyMonthsTraveled;
@@ -1239,7 +1239,7 @@ extern struct Data_CityInfo {
 	char __unknown_458d;
 	char __unknown_458e;
 	char __unknown_458f;
-	char __unknown_4590;
+	char triumphalArchesPlaced;
 	char __unknown_4591;
 	char __unknown_4592;
 	char __unknown_4593;

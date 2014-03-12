@@ -6,6 +6,7 @@
 #include "../Empire.h"
 #include "../Resource.h"
 #include "../Animation.h"
+#include "../SidebarMenu.h"
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
 #include "../Data/Empire.h"
@@ -564,7 +565,7 @@ static void confirmOpenTrade(int accepted)
 		// TODO
 		//j_fun_spendMoneyConstruction(ciid, trade_costToOpen[33 * trade_selectedCity]);
 		Data_Empire_Cities[selectedCity].isOpen = 1;
-		//j_fun_enableBuildingMenuItems();
+		SidebarMenu_enableBuildingMenuItems();
 		//j_fun_enableSidebarButtons();
 		UI_Window_goTo(Window_TradeOpenedDialog);
 	}

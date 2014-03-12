@@ -407,6 +407,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\SidebarMenu.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Sound.cpp"
 				>
 			</File>
@@ -601,11 +605,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Language.h"
+				RelativePath=".\src\Language.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Language.h"
+				RelativePath=".\src\Data\Language.h"
 				>
 			</File>
 			<File
@@ -665,11 +669,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Sound.h"
+				RelativePath=".\src\SidebarMenu.h"
 				>
 			</File>
 			<File
 				RelativePath=".\src\Sound.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Data\Sound.h"
 				>
 			</File>
 			<File

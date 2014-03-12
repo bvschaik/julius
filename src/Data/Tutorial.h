@@ -5,8 +5,8 @@
 EXTERN struct Tutorial1 {
 	int fire;
 	int crime;
-	int prefectureBuilt;
-	int senateEngineerBuilt;
+	int collapse;
+	int senateBuilt;
 } Data_Tutorial_tutorial1;
 
 EXTERN struct Tutorial2 {
