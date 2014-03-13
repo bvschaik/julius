@@ -1,14 +1,25 @@
 #include "Advisors_private.h"
 #include "Window.h"
 #include "../CityInfo.h"
+#include "../Empire.h"
 #include "../Resource.h"
+#include "../Util.h"
 #include "../Data/CityInfo.h"
 #include "../Data/Mouse.h"
+#include "../Data/Scenario.h"
 #include "../Data/Trade.h"
 
 static void buttonPrices(int param1, int param2);
 static void buttonEmpire(int param1, int param2);
 static void buttonResource(int param1, int param2);
+
+static void resourceSettingsHelp(int param1, int param2);
+static void resourceSettingsOk(int param1, int param2);
+static void resourceSettingsExportUpDown(int param1, int param2);
+
+static void resourceSettingsToggleIndustry(int param1, int param2);
+static void resourceSettingsToggleTrade(int param1, int param2);
+static void resourceSettingsToggleStockpile(int param1, int param2);
 
 static CustomButton resourceButtons[18] = {
 	{400, 398, 600, 421, buttonPrices, Widget_Button_doNothing, 1, 1, 0},
@@ -30,7 +41,26 @@ static CustomButton resourceButtons[18] = {
 	{80, 364, 560, 384, buttonResource, Widget_Button_doNothing, 1, 14, 0}
 };
 
+static ImageButton resourceImageButtons[2] = {
+	{58, 332, 27, 27, 4, 134, 0, resourceSettingsHelp, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0},
+	{558, 335, 24, 24, 4, 134, 4, resourceSettingsOk, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0}
+};
+
+static ArrowButton resourceArrowButtons[2] = {
+	{314, 215, 17, 24, resourceSettingsExportUpDown, 1, 0},
+	{338, 215, 15, 24, resourceSettingsExportUpDown, 0, 0}
+};
+
+static CustomButton resourceCustomButtons[3] = {
+	{98, 250, 530, 280, resourceSettingsToggleIndustry, Widget_Button_doNothing, 1, 0, 0},
+	{98, 212, 530, 242, resourceSettingsToggleTrade, Widget_Button_doNothing, 1, 0, 0},
+	{98, 288, 530, 338, resourceSettingsToggleStockpile, Widget_Button_doNothing, 1, 0, 0},
+};
+
 static int focusButtonId;
+
+static int selectedResourceId;
+static int resourceFocusButtonId;
 
 void UI_Advisor_Trade_drawBackground()
 {
@@ -109,9 +139,11 @@ static void buttonEmpire(int param1, int param2)
 	UI_Window_goTo(Window_Empire);
 }
 
-static void buttonResource(int param1, int param2)
+static void buttonResource(int resourceIndex, int param2)
 {
 	// TODO
+	selectedResourceId = Data_CityInfo_Resource.availableResources[resourceIndex];
+	UI_Window_goTo(Window_ResourceSettingsDialog);
 }
 
 void UI_TradePricesDialog_drawBackground()
@@ -140,5 +172,209 @@ void UI_TradePricesDialog_handleMouse()
 {
 	if (Data_Mouse.right.wentUp) {
 		UI_Window_goTo(Window_Advisors);
+	}
+}
+
+void UI_ResourceSettingsDialog_drawBackground()
+{
+	UI_Advisor_Trade_drawBackground();
+	UI_Advisor_Trade_drawForeground();
+}
+
+void UI_ResourceSettingsDialog_drawForeground()
+{
+	int baseOffsetX = Data_Screen.offset640x480.x;
+	int baseOffsetY = Data_Screen.offset640x480.y;
+
+	Widget_Panel_drawOuterPanel(baseOffsetX + 48, baseOffsetY + 128, 34, 15);
+	int graphicOffset = selectedResourceId + Resource_getGraphicIdOffset(selectedResourceId, 3);
+	Graphics_drawImage(GraphicId(ID_Graphic_ResourceIcons) + graphicOffset,
+			baseOffsetX + 58, baseOffsetY + 136);
+
+	Widget_GameText_draw(23, selectedResourceId, baseOffsetX + 92, baseOffsetY + 137, Font_LargeBlack);
+
+	if (Empire_ourCityCanProduceResource(selectedResourceId)) {
+		if (Data_CityInfo_Buildings.industry.total[selectedResourceId] <= 0) {
+			Widget_GameText_draw(54, 7, baseOffsetX + 98, baseOffsetY + 172, Font_NormalBlack);
+		} else if (Data_CityInfo.resourceIndustryMothballed[selectedResourceId] == 1) {
+			int width = Widget_Text_drawNumber(
+				Data_CityInfo_Buildings.industry.total[selectedResourceId], '@', " ",
+				baseOffsetX + 98, baseOffsetY + 172, Font_NormalBlack);
+			if (Data_CityInfo_Buildings.industry.total[selectedResourceId] == 1) {
+				Widget_GameText_draw(54, 10, baseOffsetX + 98 + width, baseOffsetY + 172, Font_NormalBlack);
+			} else {
+				Widget_GameText_draw(54, 11, baseOffsetX + 98 + width, baseOffsetY + 172, Font_NormalBlack);
+			}
+		} else if (Data_CityInfo_Buildings.industry.total[selectedResourceId] ==
+			Data_CityInfo_Buildings.industry.working[selectedResourceId]) {
+			// not mothballed, all working
+			int width = Widget_Text_drawNumber(
+				Data_CityInfo_Buildings.industry.total[selectedResourceId], '@', " ",
+				baseOffsetX + 98, baseOffsetY + 172, Font_NormalBlack);
+			if (Data_CityInfo_Buildings.industry.total[selectedResourceId] == 1) {
+				Widget_GameText_draw(54, 8, baseOffsetX + 98 + width, baseOffsetY + 172, Font_NormalBlack);
+			} else {
+				Widget_GameText_draw(54, 9, baseOffsetX + 98 + width, baseOffsetY + 172, Font_NormalBlack);
+			}
+		} else {
+			// not mothballed, some working
+			int width = Widget_Text_drawNumber(
+				Data_CityInfo_Buildings.industry.working[selectedResourceId], '@', " ",
+				baseOffsetX + 98, baseOffsetY + 172, Font_NormalBlack);
+			width += Widget_GameText_draw(54, 12, baseOffsetX + 98 + width, baseOffsetY + 172, Font_NormalBlack);
+			width += Widget_Text_drawNumber(
+				Data_CityInfo_Buildings.industry.total[selectedResourceId] -
+				Data_CityInfo_Buildings.industry.working[selectedResourceId], '@', " ",
+				baseOffsetX + 98 + width, baseOffsetY + 172, Font_NormalBlack);
+			if (Data_CityInfo_Buildings.industry.working[selectedResourceId] == 1) {
+				Widget_GameText_draw(54, 13, baseOffsetX + 98 + width, baseOffsetY + 172, Font_NormalBlack);
+			} else {
+				Widget_GameText_draw(54, 14, baseOffsetX + 98 + width, baseOffsetY + 172, Font_NormalBlack);
+			}
+		}
+	} else if (selectedResourceId != Resource_Meat || !Data_Scenario.allowedBuildings.wharf) {
+		// we cannot produce this good
+		Widget_GameText_draw(54, 25, baseOffsetX + 98, baseOffsetY + 172, Font_NormalBlack);
+	}
+
+	int width = Widget_GameText_drawNumberWithDescription(8, 10,
+		Data_CityInfo.resourceStored[selectedResourceId],
+		baseOffsetX + 98, baseOffsetY + 192, Font_NormalBlack);
+	Widget_GameText_draw(54, 15, baseOffsetX + 98 + width, baseOffsetY + 192, Font_NormalBlack);
+
+	int tradeFlags = TradeStatus_None;
+	if (Empire_canImportResource(selectedResourceId)) {
+		tradeFlags |= TradeStatus_Import;
+	}
+	if (Empire_canExportResource(selectedResourceId)) {
+		tradeFlags |= TradeStatus_Export;
+	}
+	if (!tradeFlags) {
+		Widget_GameText_draw(54, 24, baseOffsetX + 98, baseOffsetY + 212, Font_NormalBlack);
+	} else {
+		Widget_Panel_drawButtonBorder(baseOffsetX + 98, baseOffsetY + 212, 432, 30,
+			resourceFocusButtonId == 2);
+		switch (Data_CityInfo.resourceTradeStatus[selectedResourceId]) {
+			case TradeStatus_None:
+				Widget_GameText_drawCentered(54, 18,
+					baseOffsetX + 114, baseOffsetY + 221, 400, Font_NormalBlack);
+				break;
+			case TradeStatus_Import:
+				Widget_GameText_drawCentered(54, 19,
+					baseOffsetX + 114, baseOffsetY + 221, 400, Font_NormalBlack);
+				break;
+			case TradeStatus_Export:
+				Widget_GameText_drawCentered(54, 20,
+					baseOffsetX + 114, baseOffsetY + 221, 200, Font_NormalBlack);
+				break;
+		}
+	}
+
+	if (Data_CityInfo.resourceTradeStatus[selectedResourceId] == TradeStatus_Export) {
+		Widget_GameText_drawNumberWithDescription(8, 10,
+			Data_CityInfo.resourceTradeExportOver[selectedResourceId],
+			baseOffsetX + 386, baseOffsetY + 221, Font_NormalBlack);
+	}
+
+	if (Data_CityInfo_Buildings.industry.total[selectedResourceId] > 0) {
+		Widget_Panel_drawButtonBorder(baseOffsetX + 98, baseOffsetY + 250, 432, 30,
+			resourceFocusButtonId == 1);
+		if (Data_CityInfo.resourceIndustryMothballed[selectedResourceId]) {
+			Widget_GameText_drawCentered(54, 17, baseOffsetX + 114, baseOffsetY + 259, 400, Font_NormalBlack);
+		} else {
+			Widget_GameText_drawCentered(54, 16, baseOffsetX + 114, baseOffsetY + 259, 400, Font_NormalBlack);
+		}
+	}
+
+	Widget_Panel_drawButtonBorder(baseOffsetX + 98, baseOffsetY + 288, 432, 50,
+		resourceFocusButtonId == 3);
+	if (Data_CityInfo.resourceStockpiled[selectedResourceId]) {
+		Widget_GameText_drawCentered(54, 26, baseOffsetX + 114, baseOffsetY + 296, 400, Font_NormalBlack);
+		Widget_GameText_drawCentered(54, 27, baseOffsetX + 114, baseOffsetY + 316, 400, Font_NormalBlack);
+	} else {
+		Widget_GameText_drawCentered(54, 28, baseOffsetX + 114, baseOffsetY + 296, 400, Font_NormalBlack);
+		Widget_GameText_drawCentered(54, 29, baseOffsetX + 114, baseOffsetY + 316, 400, Font_NormalBlack);
+	}
+
+	Widget_Button_drawImageButtons(baseOffsetX, baseOffsetY, resourceImageButtons, 2);
+	if (Data_CityInfo.resourceTradeStatus[selectedResourceId] == TradeStatus_Export) {
+		Widget_Button_drawArrowButtons(baseOffsetX, baseOffsetY, resourceArrowButtons, 2);
+	}
+}
+
+void UI_ResourceSettingsDialog_handleMouse()
+{
+	int baseOffsetX = Data_Screen.offset640x480.x;
+	int baseOffsetY = Data_Screen.offset640x480.y;
+
+	if (Data_Mouse.right.wentUp) {
+		UI_Window_goTo(Window_Advisors);
+	} else if (Widget_Button_handleImageButtons(baseOffsetX, baseOffsetY, resourceImageButtons, 2)) {
+		return;
+	} else if (Data_CityInfo.resourceTradeStatus[selectedResourceId] == TradeStatus_Export &&
+			Widget_Button_handleArrowButtons(baseOffsetX, baseOffsetY, resourceArrowButtons, 2)) {
+		return;
+	} else {
+		Widget_Button_handleCustomButtons(baseOffsetX, baseOffsetY,
+			resourceCustomButtons, 3, &resourceFocusButtonId);
+	}
+}
+
+static void resourceSettingsHelp(int param1, int param2)
+{
+	// TODO
+}
+static void resourceSettingsOk(int param1, int param2)
+{
+	UI_Window_goTo(Window_Advisors);
+}
+
+static void resourceSettingsExportUpDown(int isDown, int param2)
+{
+	if (isDown) {
+		--Data_CityInfo.resourceTradeExportOver[selectedResourceId];
+	} else {
+		++Data_CityInfo.resourceTradeExportOver[selectedResourceId];
+	}
+	BOUND(Data_CityInfo.resourceTradeExportOver[selectedResourceId], 0, 100);
+}
+
+static void resourceSettingsToggleIndustry(int param1, int param2)
+{
+	if (Data_CityInfo_Buildings.industry.total[selectedResourceId] > 0) {
+		if (Data_CityInfo.resourceIndustryMothballed[selectedResourceId]) {
+			Data_CityInfo.resourceIndustryMothballed[selectedResourceId] = 0;
+		} else {
+			Data_CityInfo.resourceIndustryMothballed[selectedResourceId] = 1;
+		}
+	}
+}
+
+static void resourceSettingsToggleTrade(int param1, int param2)
+{
+	++Data_CityInfo.resourceTradeStatus[selectedResourceId];
+	if (Data_CityInfo.resourceTradeStatus[selectedResourceId] > TradeStatus_Export) {
+		Data_CityInfo.resourceTradeStatus[selectedResourceId] = TradeStatus_None;
+	}
+
+	if (Data_CityInfo.resourceTradeStatus[selectedResourceId] == TradeStatus_Import &&
+		!Empire_canImportResource(selectedResourceId)) {
+		Data_CityInfo.resourceTradeStatus[selectedResourceId] = TradeStatus_Export;
+	}
+	if (Data_CityInfo.resourceTradeStatus[selectedResourceId] == TradeStatus_Export &&
+		!Empire_canExportResource(selectedResourceId)) {
+		Data_CityInfo.resourceTradeStatus[selectedResourceId] = TradeStatus_None;
+	}
+}
+
+static void resourceSettingsToggleStockpile(int param1, int param2)
+{
+	if (Data_CityInfo.resourceStockpiled[selectedResourceId]) {
+		Data_CityInfo.resourceStockpiled[selectedResourceId] = 0;
+	} else {
+		Data_CityInfo.resourceStockpiled[selectedResourceId] = 1;
+		if (Data_CityInfo.resourceTradeStatus[selectedResourceId] == TradeStatus_Export) {
+			Data_CityInfo.resourceTradeStatus[selectedResourceId] = TradeStatus_None;
+		}
 	}
 }

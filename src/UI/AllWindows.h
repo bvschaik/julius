@@ -45,6 +45,10 @@ void UI_SendGiftToCaesarDialog_handleMouse();
 void UI_TradePricesDialog_drawBackground();
 void UI_TradePricesDialog_handleMouse();
 
+void UI_ResourceSettingsDialog_drawBackground();
+void UI_ResourceSettingsDialog_drawForeground();
+void UI_ResourceSettingsDialog_handleMouse();
+
 void UI_HoldFestivalDialog_drawBackground();
 void UI_HoldFestivalDialog_drawForeground();
 void UI_HoldFestivalDialog_handleMouse();

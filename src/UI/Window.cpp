@@ -36,6 +36,7 @@ static struct Window windows[] = {
 	{ noop, UI_TradeOpenedDialog_drawBackground, UI_TradeOpenedDialog_drawForeground, UI_TradeOpenedDialog_handleMouse },
 	{ noop, UI_HoldFestivalDialog_drawBackground, UI_HoldFestivalDialog_drawForeground, UI_HoldFestivalDialog_handleMouse },
 	{ noop, UI_TradePricesDialog_drawBackground, noop, UI_TradePricesDialog_handleMouse },
+	{ noop, UI_ResourceSettingsDialog_drawBackground, UI_ResourceSettingsDialog_drawForeground, UI_ResourceSettingsDialog_handleMouse },
 };
 
 static WindowId previousWindow;
