@@ -109,12 +109,11 @@ extern struct Data_Walker {
 	char __unknown_03;
 	char __unknown_04;
 	char __unknown_05;
-	char __unknown_06;
-	char __unknown_07;
+	short resourceGraphicId;
 	char __unknown_08;
 	char __unknown_09;
 	char type;
-	char __unknown_0b;
+	char resourceId;
 	char __unknown_0c;
 	char __unknown_0d;
 	char state;

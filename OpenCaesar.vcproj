@@ -347,6 +347,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\HouseEvolution.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\HouseOperation.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\KeyboardInput.cpp"
 				>
 			</File>
@@ -525,11 +533,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\CityInfo.h"
+				RelativePath=".\src\CityInfo.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\CityInfo.h"
+				RelativePath=".\src\Data\CityInfo.h"
 				>
 			</File>
 			<File
@@ -549,11 +557,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Empire.h"
+				RelativePath=".\src\Data\Empire.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Empire.h"
+				RelativePath=".\src\Empire.h"
 				>
 			</File>
 			<File
@@ -573,11 +581,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Graphics.h"
+				RelativePath=".\src\Data\Graphics.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Graphics.h"
+				RelativePath=".\src\Graphics.h"
 				>
 			</File>
 			<File
@@ -590,6 +598,14 @@
 			</File>
 			<File
 				RelativePath=".\src\Data\Grid.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\HouseEvolution.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\HouseOperation.h"
 				>
 			</File>
 			<File
@@ -673,11 +689,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Sound.h"
+				RelativePath=".\src\Data\Sound.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Sound.h"
+				RelativePath=".\src\Sound.h"
 				>
 			</File>
 			<File

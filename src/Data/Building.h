@@ -13,6 +13,7 @@ enum {
 	Building_Aqueduct = 8,
 	Building_ClearLand = 9,
 	Building_HouseVacantLot = 10,
+	Building_HouseSmallTent = 10,
 	Building_HouseLargeTent = 11,
 	Building_HouseSmallShack = 12,
 	Building_HouseLargeShack = 13,
@@ -281,7 +282,7 @@ extern struct Data_Building {
 			char education;
 			char health; //70
 			char numGods;
-			char evolveStatus;
+			char devolveDelay;
 			char evolveTextId;
 		} house;
 	} data;

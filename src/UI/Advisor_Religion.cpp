@@ -176,12 +176,12 @@ void UI_Advisor_Religion_drawBackground()
 	int adviceId;
 	if (Data_CityInfo.godLeastHappy <= 0 || wrathOfGod(Data_CityInfo.godLeastHappy) <= 4) {
 		if (Data_CityInfo.religionDemand == 1) {
-			adviceId = Data_CityInfo.serviceReligionRequired ? 1 : 0;
+			adviceId = Data_CityInfo.housesRequiringReligion ? 1 : 0;
 		} else if (Data_CityInfo.religionDemand == 2) {
 			adviceId = 2;
 		} else if (Data_CityInfo.religionDemand == 3) {
 			adviceId = 3;
-		} else if (!Data_CityInfo.serviceReligionRequired) {
+		} else if (!Data_CityInfo.housesRequiringReligion) {
 			adviceId = 4;
 		} else if (Data_CityInfo.godLeastHappy) {
 			adviceId = 5 + Data_CityInfo.godLeastHappy;
