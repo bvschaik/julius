@@ -330,7 +330,7 @@ static int hasRequiredGoodsAndServices(int buildingId, int forUpgrade)
 	//education
 	int education = Data_Model_Houses[level].education;
 	if (b->data.house.education < education) {
-		if (b->data.house.entertainment) {
+		if (b->data.house.education) {
 			++Data_CityInfo.housesRequiringMoreEducationToEvolve;
 		} else {
 			++Data_CityInfo.housesRequiringEducationToEvolve;
@@ -589,5 +589,278 @@ void HouseEvolution_Tick_calculateCultureServiceAggregates()
 		if (b->data.house.hospital) {
 			++b->data.house.health;
 		}
+	}
+}
+
+void HouseEvolution_determineEvolveText(int buildingId, int hasBadDesirabilityBuilding)
+{
+	Data_Building *b = &Data_Buildings[buildingId];
+	int level = b->subtype.houseLevel;
+	
+	// this house will devolve soon because...
+
+	// desirability
+	if (b->desirability <= Data_Model_Houses[level].devolveDesirability) {
+		b->data.house.evolveTextId = 0;
+		return;
+	}
+	// water
+	int water = Data_Model_Houses[level].water;
+	if (water == 1 && !b->hasWaterAccess && !b->houseHasWellAccess) {
+		b->data.house.evolveTextId = 1;
+		return;
+	}
+	if (water == 2 && !b->hasWaterAccess) {
+		b->data.house.evolveTextId = 2;
+		return;
+	}
+	// entertainment
+	int entertainment = Data_Model_Houses[level].entertainment;
+	if (b->data.house.entertainment < entertainment) {
+		if (!b->data.house.entertainment) {
+			b->data.house.evolveTextId = 3;
+		} else if (entertainment < 10) {
+			b->data.house.evolveTextId = 4;
+		} else if (entertainment < 25) {
+			b->data.house.evolveTextId = 5;
+		} else if (entertainment < 50) {
+			b->data.house.evolveTextId = 6;
+		} else if (entertainment < 80) {
+			b->data.house.evolveTextId = 7;
+		} else {
+			b->data.house.evolveTextId = 8;
+		}
+		return;
+	}
+	// food types
+	int foodtypesRequired = Data_Model_Houses[level].food;
+	int foodtypesAvailable = 0;
+	for (int i = 0; i < 4; i++) {
+		if (b->data.house.inventory.all[i]) {
+			foodtypesAvailable++;
+		}
+	}
+	if (foodtypesAvailable < foodtypesRequired) {
+		if (foodtypesRequired == 1) {
+			b->data.house.evolveTextId = 9;
+		} else if (foodtypesRequired == 2) {
+			b->data.house.evolveTextId = 10;
+		} else if (foodtypesRequired == 3) {
+			b->data.house.evolveTextId = 11;
+		}
+		return;
+	}
+	// education
+	int education = Data_Model_Houses[level].education;
+	if (b->data.house.education < education) {
+		if (education == 1) {
+			b->data.house.evolveTextId = 14;
+		} else if (education == 2) {
+			if (b->data.house.school) {
+				b->data.house.evolveTextId = 15;
+			} else {
+				b->data.house.evolveTextId = 16;
+			}
+		} else if (education == 3) {
+			b->data.house.evolveTextId = 17;
+		}
+		return;
+	}
+	// bathhouse
+	if (b->data.house.bathhouse < Data_Model_Houses[level].bathhouse) {
+		b->data.house.evolveTextId = 18;
+		return;
+	}
+	// pottery
+	if (b->data.house.inventory.one.pottery < Data_Model_Houses[level].pottery) {
+		b->data.house.evolveTextId = 19;
+		return;
+	}
+	// religion
+	int religion = Data_Model_Houses[level].religion;
+	if (b->data.house.numGods < religion) {
+		if (religion == 1) {
+			b->data.house.evolveTextId = 20;
+		} else if (religion == 2) {
+			b->data.house.evolveTextId = 21;
+		} else if (religion == 3) {
+			b->data.house.evolveTextId = 22;
+		}
+		return;
+	}
+	// barber
+	if (b->data.house.barber < Data_Model_Houses[level].barber) {
+		b->data.house.evolveTextId = 23;
+		return;
+	}
+	// health
+	int health = Data_Model_Houses[level].health;
+	if (b->data.house.health < health) {
+		if (health == 1) {
+			b->data.house.evolveTextId = 24;
+		} else if (b->data.house.clinic) {
+			b->data.house.evolveTextId = 25;
+		} else {
+			b->data.house.evolveTextId = 26;
+		}
+		return;
+	}
+	// oil
+	if (b->data.house.inventory.one.oil < Data_Model_Houses[level].oil) {
+		b->data.house.evolveTextId = 27;
+		return;
+	}
+	// furniture
+	if (b->data.house.inventory.one.furniture < Data_Model_Houses[level].furniture) {
+		b->data.house.evolveTextId = 28;
+		return;
+	}
+	// wine
+	int wine = Data_Model_Houses[level].wine;
+	if (b->data.house.inventory.one.wine < wine) {
+		b->data.house.evolveTextId = 29;
+		return;
+	}
+	if (wine > 1 && Data_CityInfo.resourceWineTypesAvailable < 2) {
+		b->data.house.evolveTextId = 65;
+		return;
+	}
+	if (level >= 19) { // max level!
+		b->data.house.evolveTextId = 60;
+		return;
+	}
+
+	// this house will evolve if ...
+
+	++level;
+	// desirability
+	if (b->desirability < Data_Model_Houses[level-1].evolveDesirability) {
+		if (hasBadDesirabilityBuilding) {
+			b->data.house.evolveTextId = 62;
+		} else {
+			b->data.house.evolveTextId = 30;
+		}
+		return;
+	}
+	// water
+	water = Data_Model_Houses[level].water;
+	if (water == 1 && !b->hasWaterAccess && !b->houseHasWellAccess) {
+		b->data.house.evolveTextId = 31;
+		return;
+	}
+	if (water == 2 && !b->hasWaterAccess) {
+		b->data.house.evolveTextId = 32;
+		return;
+	}
+	// entertainment
+	entertainment = Data_Model_Houses[level].entertainment;
+	if (b->data.house.entertainment < entertainment) {
+		if (!b->data.house.entertainment) {
+			b->data.house.evolveTextId = 33;
+		} else if (entertainment < 10) {
+			b->data.house.evolveTextId = 34;
+		} else if (entertainment < 25) {
+			b->data.house.evolveTextId = 35;
+		} else if (entertainment < 50) {
+			b->data.house.evolveTextId = 36;
+		} else if (entertainment < 80) {
+			b->data.house.evolveTextId = 37;
+		} else {
+			b->data.house.evolveTextId = 38;
+		}
+		return;
+	}
+	// food types
+	foodtypesRequired = Data_Model_Houses[level].food;
+	if (foodtypesAvailable < foodtypesRequired) {
+		if (foodtypesRequired == 1) {
+			b->data.house.evolveTextId = 39;
+		} else if (foodtypesRequired == 2) {
+			b->data.house.evolveTextId = 40;
+		} else if (foodtypesRequired == 3) {
+			b->data.house.evolveTextId = 41;
+		}
+		return;
+	}
+	// education
+	education = Data_Model_Houses[level].education;
+	if (b->data.house.education < education) {
+		if (education == 1) {
+			b->data.house.evolveTextId = 44;
+		} else if (education == 2) {
+			if (b->data.house.school) {
+				b->data.house.evolveTextId = 45;
+			} else {
+				b->data.house.evolveTextId = 46;
+			}
+		} else if (education == 3) {
+			b->data.house.evolveTextId = 47;
+		}
+		return;
+	}
+	// bathhouse
+	if (b->data.house.bathhouse < Data_Model_Houses[level].bathhouse) {
+		b->data.house.evolveTextId = 48;
+		return;
+	}
+	// pottery
+	if (b->data.house.inventory.one.pottery < Data_Model_Houses[level].pottery) {
+		b->data.house.evolveTextId = 49;
+		return;
+	}
+	// religion
+	religion = Data_Model_Houses[level].religion;
+	if (b->data.house.numGods < religion) {
+		if (religion == 1) {
+			b->data.house.evolveTextId = 50;
+		} else if (religion == 2) {
+			b->data.house.evolveTextId = 51;
+		} else if (religion == 3) {
+			b->data.house.evolveTextId = 52;
+		}
+		return;
+	}
+	// barber
+	if (b->data.house.barber < Data_Model_Houses[level].barber) {
+		b->data.house.evolveTextId = 53;
+		return;
+	}
+	// health
+	health = Data_Model_Houses[level].health;
+	if (b->data.house.health < health) {
+		if (health == 1) {
+			b->data.house.evolveTextId = 54;
+		} else if (b->data.house.clinic) {
+			b->data.house.evolveTextId = 55;
+		} else {
+			b->data.house.evolveTextId = 56;
+		}
+		return;
+	}
+	// oil
+	if (b->data.house.inventory.one.oil < Data_Model_Houses[level].oil) {
+		b->data.house.evolveTextId = 57;
+		return;
+	}
+	// furniture
+	if (b->data.house.inventory.one.furniture < Data_Model_Houses[level].furniture) {
+		b->data.house.evolveTextId = 58;
+		return;
+	}
+	// wine
+	wine = Data_Model_Houses[level].wine;
+	if (b->data.house.inventory.one.wine < wine) {
+		b->data.house.evolveTextId = 59;
+		return;
+	}
+	if (wine > 1 && Data_CityInfo.resourceWineTypesAvailable < 2) {
+		b->data.house.evolveTextId = 66;
+		return;
+	}
+	// house is evolving
+	b->data.house.evolveTextId = 61;
+	if (b->data.house.noSpaceToExpand) {
+		// house would like to evolve but can't
+		b->data.house.evolveTextId = 64;
 	}
 }

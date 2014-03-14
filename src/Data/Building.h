@@ -276,7 +276,7 @@ extern struct Data_Building {
 			char templeMercury;
 			char templeMars;
 			char templeVenus;
-			char unknownExpand;
+			char noSpaceToExpand;
 			char numFoods;
 			char entertainment;
 			char education;
