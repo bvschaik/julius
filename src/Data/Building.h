@@ -143,18 +143,15 @@ extern struct Data_Building {
 	short housesCovered;
 	short percentageWorkers;
 	short housePopulation;
-	char __unknown_18;
-	char __unknown_19;
+	short housePopulationRoom;
 	char __unknown_1a;
 	char __unknown_1b;
-	char __unknown_1c;
-	char __unknown_1d;
+	short houseMaxPopulationSeen;
 	char __unknown_1e;
 	char __unknown_1f;
 	char __unknown_20;
 	char __unknown_21;
-	char __unknown_22;
-	char __unknown_23;
+	short walkerId;
 	char __unknown_24;
 	char __unknown_25;
 	short immigrantWalkerId;
@@ -168,9 +165,8 @@ extern struct Data_Building {
 	char __unknown_2f;
 	short prevPartBuildingId;
 	short nextPartBuildingId;
-	char __unknown_34;
-	char __unknown_35;
-	char __unknown_36;
+	short rawMaterialsStored;
+	char __unused_36;
 	char houseHasWellAccess;
 	short numWorkers;
 	char laborCategory;
@@ -232,6 +228,22 @@ extern struct Data_Building {
 			short boatWalkerId; // 72 + 73
 			//char __unknown_73;
 		} other;
+		struct {
+			short unknown;
+			short food[4];
+			short wine;
+			short oil;
+			short furniture;
+			short pottery;
+			short potteryDemand;
+			short furnitureDemand;
+			short oilDemand;
+			short wineDemand;
+		} market;
+		struct {
+			short unknown;
+			short spaceLeft;
+		} granary;
 		struct {
 			char progress;
 			char __padding[32];

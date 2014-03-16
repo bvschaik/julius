@@ -78,6 +78,10 @@ enum {
 	Walker_HippodromeMiniHorses = 72
 };
 
+enum {
+	WalkerActionState_20 = 20,
+};
+
 extern struct Data_Walker_NameSequence {
 	int citizenMale;
 	int patrician;
@@ -142,7 +146,7 @@ extern struct Data_Walker {
 	char __unknown_25;
 	char __unknown_26;
 	char __unknown_27;
-	char __unknown_28;
+	char actionState;
 	char __unknown_29;
 	char __unknown_2a;
 	char __unknown_2b;
@@ -226,13 +230,6 @@ extern struct Data_Walker {
 	char __unknown_7d;
 	char __unknown_7e;
 	char __unknown_7f;
-/*	char type;
-	char x;
-	char y;
-	int minMaxSeen;// TODO char
-	short buildingId;
-	char name;
-	char formationId;*/
 } Data_Walkers[MAX_WALKERS];
 
 #endif

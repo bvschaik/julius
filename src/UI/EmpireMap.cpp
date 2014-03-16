@@ -444,8 +444,8 @@ static void drawEmpireMap()
 		if (GraphicHasAnimationSprite(graphicId)) {
 			obj->animationIndex = Animation_getIndexForEmpireMap(graphicId, obj->animationIndex);
 			Graphics_drawImage(graphicId + obj->animationIndex,
-				xOffset + x + GraphicAnimationTopOffset(graphicId),
-				yOffset + y + GraphicAnimationLeftOffset(graphicId));
+				xOffset + x + GraphicAnimationOffsetX(graphicId),
+				yOffset + y + GraphicAnimationOffsetY(graphicId));
 		}
 	}
 

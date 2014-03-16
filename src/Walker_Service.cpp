@@ -132,6 +132,96 @@ static int provideHippodromeCoverage(int x, int y)
 	return serviced;
 }
 
+static int provideMarketGoods(int marketBuildingId, int x, int y)
+{
+	int serviced = 0;
+	Data_Building *market = &Data_Buildings[marketBuildingId];
+	FOR_XY_RADIUS(
+		if (Data_Buildings[buildingId].houseSize && Data_Buildings[buildingId].housePopulation > 0) {
+			serviced++;
+			Data_Building *house = &Data_Buildings[buildingId];
+			int level = house->subtype.houseLevel;
+			if (level < 19) {
+				level++;
+			}
+			int maxFoodStocks = 4 * house->houseMaxPopulationSeen;
+			int foodTypesStoredMax = 0;
+			for (int i = 0; i < 4; i++) {
+				if (house->data.house.inventory.all[i] >= maxFoodStocks) {
+					foodTypesStoredMax++;
+				}
+			}
+			if (Data_Model_Houses[level].food > foodTypesStoredMax) {
+				for (int i = 0; i < 4; i++) {
+					if (house->data.house.inventory.all[i] >= maxFoodStocks) {
+						continue;
+					}
+					if (market->data.market.food[i] >= maxFoodStocks) {
+						house->data.house.inventory.all[i] += maxFoodStocks;
+						market->data.market.food[i] -= maxFoodStocks;
+					} else if (market->data.market.food[i]) {
+						house->data.house.inventory.all[i] += market->data.market.food[i];
+						market->data.market.food[i] = 0;
+					}
+				}
+			}
+			if (Data_Model_Houses[level].pottery) {
+				market->data.market.potteryDemand = 10;
+				int potteryWanted = 8 * Data_Model_Houses[level].pottery - house->data.house.inventory.one.pottery;
+				if (market->data.market.pottery && potteryWanted > 0) {
+					if (potteryWanted <= market->data.market.pottery) {
+						house->data.house.inventory.one.pottery += potteryWanted;
+						market->data.market.pottery -= potteryWanted;
+					} else {
+						house->data.house.inventory.one.pottery += market->data.market.pottery;
+						market->data.market.pottery = 0;
+					}
+				}
+			}
+			if (Data_Model_Houses[level].furniture) {
+				market->data.market.furnitureDemand = 10;
+				int furnitureWanted = 4 * Data_Model_Houses[level].furniture - house->data.house.inventory.one.furniture;
+				if (market->data.market.furniture && furnitureWanted > 0) {
+					if (furnitureWanted <= market->data.market.furniture) {
+						house->data.house.inventory.one.furniture += furnitureWanted;
+						market->data.market.furniture -= furnitureWanted;
+					} else {
+						house->data.house.inventory.one.furniture += market->data.market.furniture;
+						market->data.market.furniture = 0;
+					}
+				}
+			}
+			if (Data_Model_Houses[level].oil) {
+				market->data.market.oilDemand = 10;
+				int oilWanted = 4 * Data_Model_Houses[level].oil - house->data.house.inventory.one.oil;
+				if (market->data.market.oil && oilWanted > 0) {
+					if (oilWanted <= market->data.market.oil) {
+						house->data.house.inventory.one.oil += oilWanted;
+						market->data.market.oil -= oilWanted;
+					} else {
+						house->data.house.inventory.one.oil += market->data.market.oil;
+						market->data.market.oil = 0;
+					}
+				}
+			}
+			if (Data_Model_Houses[level].wine) {
+				market->data.market.wineDemand = 10;
+				int wineWanted = 4 * Data_Model_Houses[level].wine - house->data.house.inventory.one.wine;
+				if (market->data.market.wine && wineWanted > 0) {
+					if (wineWanted <= market->data.market.wine) {
+						house->data.house.inventory.one.wine += wineWanted;
+						market->data.market.wine -= wineWanted;
+					} else {
+						house->data.house.inventory.one.wine += market->data.market.wine;
+						market->data.market.wine = 0;
+					}
+				}
+			}
+		}
+	);
+	return serviced;
+}
+
 static int provideBathhouseCoverage(int x, int y)
 {
 	int serviced = 0;

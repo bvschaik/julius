@@ -24,7 +24,7 @@ enum {
 	Overlay_TaxIncome = 24,
 	Overlay_FoodStocks = 25,
 	Overlay_Desirability = 26,
-	Overlay_Workers = 27,
+	Overlay_Workers_Unused = 27,
 	Overlay_Native = 28,
 	Overlay_Problems = 29
 };

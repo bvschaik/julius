@@ -7,6 +7,7 @@
 #include "../Data/Model.h"
 #include "../Data/Settings.h"
 #include "../Data/State.h"
+#include "../Data/Walker.h"
 #include "../Time.h"
 #include "../Calc.h"
 #include "../Graphics.h"
@@ -1286,6 +1287,103 @@ static void drawBuildingTopForTaxIncomeOverlay(int gridOffset, int buildingId, i
 		if (pct > 0) {
 			drawOverlayColumn(pct / 25, xOffset, yOffset, 0);
 		}
+	}
+}
+
+static void drawBuildingTopForProblemsOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
+{
+	if (Data_Buildings[buildingId].houseSize) {
+		return;
+	}
+	int type = Data_Buildings[buildingId].type;
+	if (type == Building_Fountain || type == Building_Bathhouse) {
+		if (!Data_Buildings[buildingId].hasWaterAccess) {
+			Data_Buildings[buildingId].showOnProblemOverlay = 1;
+		}
+	} else if (type >= Building_WheatFarm && type <= Building_ClayPit) {
+		int walkerId = Data_Buildings[buildingId].walkerId;
+		if (walkerId &&
+			Data_Walkers[walkerId].actionState == WalkerActionState_20 &&
+			Data_Walkers[walkerId].minMaxSeen) {
+			Data_Buildings[buildingId].showOnProblemOverlay = 1;
+		}
+	} else if (type >= Building_WineWorkshop && type <= Building_PotteryWorkshop) {
+		int walkerId = Data_Buildings[buildingId].walkerId;
+		if (walkerId &&
+			Data_Walkers[walkerId].actionState == WalkerActionState_20 &&
+			Data_Walkers[walkerId].minMaxSeen) {
+			Data_Buildings[buildingId].showOnProblemOverlay = 1;
+		} else if (Data_Buildings[buildingId].rawMaterialsStored <= 0) {
+			Data_Buildings[buildingId].showOnProblemOverlay = 1;
+		}
+	}
+
+	if (Data_Buildings[buildingId].showOnProblemOverlay <= 0) {
+		return;
+	}
+
+	if (type >= Building_WheatFarm && type <= Building_PigFarm) {
+		int isField = 0;
+		int edge = Data_Grid_edge[gridOffset];
+		if ((Data_Settings_Map.orientation == Direction_Top && edge != 0x48) ||
+			(Data_Settings_Map.orientation == Direction_Right && edge != 0x40) ||
+			(Data_Settings_Map.orientation == Direction_Bottom && edge != 0x41) ||
+			(Data_Settings_Map.orientation == Direction_Left && edge != 0x49)) {
+			isField = 1;
+		}
+		if (isField) {
+			if (edge & Edge_LeftmostTile) {
+				DRAWTOP_SIZE1(Data_Grid_graphicIds[gridOffset], xOffset, yOffset);
+			}
+		} else { // farmhouse
+			DRAWTOP_SIZE2(Data_Grid_graphicIds[gridOffset], xOffset, yOffset);
+		}
+		return;
+	}
+	if (type == Building_Granary) {
+		int graphicId = Data_Grid_graphicIds[gridOffset];
+		Graphics_drawImage(GraphicId(ID_Graphic_Granary) + 1,
+			xOffset + GraphicAnimationOffsetX(graphicId),
+			yOffset + GraphicAnimationOffsetY(graphicId) - 30 -
+			(GraphicHeight(graphicId) - 90));
+		if (Data_Buildings[buildingId].data.granary.spaceLeft < 2400) {
+			Graphics_drawImage(GraphicId(ID_Graphic_Granary) + 2,
+				xOffset + 32, yOffset - 61);
+			if (Data_Buildings[buildingId].data.granary.spaceLeft < 1800) {
+				Graphics_drawImage(GraphicId(ID_Graphic_Granary) + 3,
+					xOffset + 56, yOffset - 51);
+			}
+			if (Data_Buildings[buildingId].data.granary.spaceLeft < 1200) {
+				Graphics_drawImage(GraphicId(ID_Graphic_Granary) + 4,
+					xOffset + 91, yOffset - 51);
+			}
+			if (Data_Buildings[buildingId].data.granary.spaceLeft < 600) {
+				Graphics_drawImage(GraphicId(ID_Graphic_Granary) + 5,
+					xOffset + 118, yOffset - 61);
+			}
+		}
+	}
+	if (type == Building_Warehouse) {
+		Graphics_drawImage(GraphicId(ID_Graphic_Warehouse) + 17, xOffset - 4, yOffset - 42);
+	}
+
+	int graphicId = Data_Grid_graphicIds[gridOffset];
+	switch (Data_Grid_bitfields[gridOffset] & Bitfield_Sizes) {
+		case Bitfield_Size1:
+			DRAWTOP_SIZE1(graphicId, xOffset, yOffset);
+			break;
+		case Bitfield_Size2:
+			DRAWTOP_SIZE2(graphicId, xOffset, yOffset);
+			break;
+		case Bitfield_Size3:
+			DRAWTOP_SIZE3(graphicId, xOffset, yOffset);
+			break;
+		case Bitfield_Size4:
+			DRAWTOP_SIZE4(graphicId, xOffset, yOffset);
+			break;
+		case Bitfield_Size5:
+			DRAWTOP_SIZE5(graphicId, xOffset, yOffset);
+			break;
 	}
 }
 

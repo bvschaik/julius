@@ -65,6 +65,7 @@ int main(int argc, char **argv)
 	printf("Text string: %s\n", Language_getString(30, 1));
 	GameFile_loadSavedGame("1.sav");
 
+	printf("graphic id = %d\n", GraphicId(99));
 	for (int i = 0; i < 10000; i++) {
 		if (Data_Graphics_Main.index[i].animationSpeedId) {
 			printf("%d: %d %d\n", i,
