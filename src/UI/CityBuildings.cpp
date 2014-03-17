@@ -1303,14 +1303,14 @@ static void drawBuildingTopForProblemsOverlay(int gridOffset, int buildingId, in
 	} else if (type >= Building_WheatFarm && type <= Building_ClayPit) {
 		int walkerId = Data_Buildings[buildingId].walkerId;
 		if (walkerId &&
-			Data_Walkers[walkerId].actionState == WalkerActionState_20 &&
+			Data_Walkers[walkerId].actionState == WalkerActionState_20_CartPusher &&
 			Data_Walkers[walkerId].minMaxSeen) {
 			Data_Buildings[buildingId].showOnProblemOverlay = 1;
 		}
 	} else if (type >= Building_WineWorkshop && type <= Building_PotteryWorkshop) {
 		int walkerId = Data_Buildings[buildingId].walkerId;
 		if (walkerId &&
-			Data_Walkers[walkerId].actionState == WalkerActionState_20 &&
+			Data_Walkers[walkerId].actionState == WalkerActionState_20_CartPusher &&
 			Data_Walkers[walkerId].minMaxSeen) {
 			Data_Buildings[buildingId].showOnProblemOverlay = 1;
 		} else if (Data_Buildings[buildingId].rawMaterialsStored <= 0) {

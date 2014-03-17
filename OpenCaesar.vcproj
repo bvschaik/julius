@@ -223,6 +223,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\Building.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\UI\BuildingInfo.cpp"
 				>
 			</File>
@@ -459,6 +463,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\Walker.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Walker_Phrase.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Walker_Service.cpp"
 				>
 			</File>
@@ -521,6 +533,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\Building.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\UI\BuildingInfo.h"
 				>
 			</File>
@@ -533,19 +549,19 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\CityInfo.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\Data\CityInfo.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\CityView.h"
+				RelativePath=".\src\CityInfo.h"
 				>
 			</File>
 			<File
 				RelativePath=".\src\Data\CityView.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\CityView.h"
 				>
 			</File>
 			<File
@@ -581,11 +597,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Graphics.h"
+				RelativePath=".\src\Graphics.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Graphics.h"
+				RelativePath=".\src\Data\Graphics.h"
 				>
 			</File>
 			<File
@@ -689,11 +705,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Sound.h"
+				RelativePath=".\src\Sound.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Sound.h"
+				RelativePath=".\src\Data\Sound.h"
 				>
 			</File>
 			<File
@@ -734,6 +750,10 @@
 			</File>
 			<File
 				RelativePath=".\src\Util.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Walker.h"
 				>
 			</File>
 			<File

@@ -58,7 +58,7 @@ void UI_Advisor_Chief_drawBackground()
 		Widget_GameText_draw(61, 25, baseOffsetX + 240, baseOffsetY + 106, Font_NormalGreen);
 	} else {
 		int textId;
-		switch (Data_CityInfo.populationEmigrationCause) {
+		switch (Data_CityInfo.populationEmigrationCauseTextId) {
 			case 0: textId = 19; break;
 			case 1: textId = 20; break;
 			case 2: textId = 21; break;

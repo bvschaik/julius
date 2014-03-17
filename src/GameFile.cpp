@@ -218,7 +218,7 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{0, &tmp, 4}, //{0, &setting_isCustomScenario, 4},
 	{0, &Data_Sound_City, 8960},
 	{0, &tmp, 4}, //{0, &buildingId_highestInUse, 4},
-	{0, &tmp, 4800}, //{0, &dword_993F60, 0x12C0},
+	{0, &Data_Walker_Traders, 4800},
 	{0, &tmp, 4}, //{0, &dword_990CD8, 4},
 	{1, &tmp, 1000}, //{1, &word_98C080, 0x3E8},
 	{1, &tmp, 1000}, //{1, &word_949F00, 0x3E8},

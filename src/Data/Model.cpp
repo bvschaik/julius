@@ -66,6 +66,7 @@ struct Data_State Data_State;
 
 struct Data_Walker_NameSequence Data_Walker_NameSequence;
 struct Data_Walker Data_Walkers[MAX_WALKERS];
+struct Data_Walker_Trader Data_Walker_Traders[MAX_TRADERS];
 
 struct Data_Building Data_Buildings[MAX_BUILDINGS];
 

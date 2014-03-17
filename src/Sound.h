@@ -148,8 +148,6 @@ void Sound_City_play();
 void Sound_Music_reset();
 void Sound_Music_update();
 
-void Sound_Walker_playPhrase(int walkerType, int phraseId);
-
 void Sound_Effects_playChannel(int channel);
 
 void Sound_Speech_playFile(const char *filename);

@@ -2,6 +2,7 @@
 #define DATA_WALKER_H
 
 #define MAX_WALKERS 1000
+#define MAX_TRADERS 100
 
 enum {
 	Walker_Immigrant = 1,
@@ -25,7 +26,7 @@ enum {
 	Walker_TradeCaravan = 19,
 	Walker_TradeShip = 20,
 	Walker_TradeCaravanDonkey = 21,
-	Walker_Protestor = 22,
+	Walker_Protester = 22,
 	Walker_Criminal = 23,
 	Walker_Rioter = 24,
 	Walker_FishingBoat = 25,
@@ -78,9 +79,34 @@ enum {
 	Walker_HippodromeMiniHorses = 72
 };
 
+#define WalkerIsEnemyOrNative(t) ((t) >= Walker_IndigenousNative && (t) <= Walker_NativeTrader)
+
 enum {
-	WalkerActionState_20 = 20,
+	WalkerActionState_20_CartPusher = 20,
+	WalkerActionState_21_CartPusher = 21,
+	WalkerActionState_22_CartPusher = 22,
+	WalkerActionState_23_CartPusher = 23,
+	WalkerActionState_51_Warehouseman = 51,
+	WalkerActionState_74_Prefect = 74,
+	WalkerActionState_75_Prefect = 75,
+	WalkerActionState_102_TraderAtWarehouse = 102,
+	WalkerActionState_103_TraderLeaving = 103,
+	WalkerActionState_112_TradeShipMoored = 112,
+	WalkerActionState_115_TradeShipLeaving = 115,
+	WalkerActionState_126_MarketTrader = 126,
+	WalkerActionState_133_Dockman = 133,
+	WalkerActionState_134_Dockman = 134,
+	WalkerActionState_135_Dockman = 135,
+	WalkerActionState_136_Dockman = 136,
+	WalkerActionState_137_Dockman = 137,
+	WalkerActionState_138_Dockman = 138,
+	WalkerActionState_139_Dockman = 139,
+	WalkerActionState_140_Dockman = 140,
+	WalkerActionState_145_MarketBuyer = 145,
+	WalkerActionState_146_MarketBuyer = 146,
+	WalkerActionState_150 = 150,
 };
+
 
 extern struct Data_Walker_NameSequence {
 	int citizenMale;
@@ -116,7 +142,7 @@ extern struct Data_Walker {
 	short resourceGraphicId;
 	char __unknown_08;
 	char __unknown_09;
-	char type;
+	unsigned char type;
 	char resourceId;
 	char __unknown_0c;
 	char __unknown_0d;
@@ -134,12 +160,12 @@ extern struct Data_Walker {
 	char __unknown_19;
 	char __unknown_1a;
 	char __unknown_1b;
-	char __unknown_1c;
-	char __unknown_1d;
+	char destinationX;
+	char destinationY;
 	char __unknown_1e;
 	char __unknown_1f;
-	char __unknown_20;
-	char __unknown_21;
+	char sourceX;
+	char sourceY;
 	char __unknown_22;
 	char __unknown_23;
 	char __unknown_24;
@@ -197,9 +223,9 @@ extern struct Data_Walker {
 	char __unknown_5b;
 	char __unknown_5c;
 	char __unknown_5d;
-	char __unknown_5e;
+	char empireCityId;
 	char __unknown_5f;
-	short name;
+	short name; // 60
 	char __unknown_62;
 	char __unknown_63;
 	char __unknown_64;
@@ -208,12 +234,12 @@ extern struct Data_Walker {
 	char __unknown_67;
 	char __unknown_68;
 	char __unknown_69;
-	char __unknown_6a;
-	char __unknown_6b;
-	char __unknown_6c;
-	char __unknown_6d;
+	unsigned char phraseSequenceExact;
+	unsigned char phraseId;
+	unsigned char phraseSequenceCity;
+	unsigned char traderId;
 	char __unknown_6e;
-	char __unknown_6f;
+	char __unused_6f;
 	char __unknown_70;
 	char __unknown_71;
 	char __unknown_72;
@@ -231,5 +257,14 @@ extern struct Data_Walker {
 	char __unknown_7e;
 	char __unknown_7f;
 } Data_Walkers[MAX_WALKERS];
+
+extern struct Data_Walker_Trader {
+	int totalBought;
+	int totalSold;
+	char boughtResources[16];
+	char soldResources[16];
+	int moneyBoughtGoods;
+	int moneySoldGoods;
+} Data_Walker_Traders[MAX_TRADERS];
 
 #endif

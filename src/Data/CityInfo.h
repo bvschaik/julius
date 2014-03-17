@@ -726,7 +726,7 @@ extern struct Data_CityInfo {
 	char __unknown_42e2;
 	char __unknown_42e3;
 	int entertainmentNeedingShowsMost;
-	int housePercentageEntertainmentNeedsMet;
+	int citywideAverageEntertainment;
 	int housesRequiringEntertainmentToEvolve;
 	int monthsSinceFestival;
 	char __unknown_42f4;
@@ -779,7 +779,7 @@ extern struct Data_CityInfo {
 	char __unknown_4335;
 	char __unknown_4336;
 	char __unknown_4337;
-	int populationEmigrationCause;
+	int populationEmigrationCauseTextId;
 	int numProtestersThisMonth;
 	int numCriminalsThisMonth; // muggers+rioters
 	int healthDemand;
@@ -913,18 +913,9 @@ extern struct Data_CityInfo {
 	int festivalCostGrand;
 	int festivalWineGrand;
 	int festivalNotEnoughWine;
-	char __unknown_443c;
-	char __unknown_443d;
-	char __unknown_443e;
-	char __unknown_443f;
-	char __unknown_4440;
-	char __unknown_4441;
-	char __unknown_4442;
-	char __unknown_4443;
-	char __unknown_4444;
-	char __unknown_4445;
-	char __unknown_4446;
-	char __unknown_4447;
+	int citywideAverageReligion;
+	int citywideAverageEducation;
+	int citywideAverageHealth;
 	int cultureCoverageReligion;
 	char __unknown_444c;
 	char __unknown_444d;
@@ -950,10 +941,7 @@ extern struct Data_CityInfo {
 	char __unknown_4461;
 	char __unknown_4462;
 	char __unknown_4463;
-	char __unknown_4464;
-	char __unknown_4465;
-	char __unknown_4466;
-	char __unknown_4467;
+	int populationEmigrationCause;
 	char __unknown_4468;
 	char __unknown_4469;
 	char __unknown_446a;

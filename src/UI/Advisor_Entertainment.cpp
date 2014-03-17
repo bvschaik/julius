@@ -133,7 +133,7 @@ void UI_Advisor_Entertainment_drawBackground()
 	if (Data_CityInfo.housesRequiringEntertainmentToEvolve > Data_CityInfo.housesRequiringMoreEntertainmentToEvolve) {
 		adviceId = 3;
 	} else if (!Data_CityInfo.housesRequiringMoreEntertainmentToEvolve) {
-		adviceId = Data_CityInfo.housePercentageEntertainmentNeedsMet ? 1 : 0;
+		adviceId = Data_CityInfo.citywideAverageEntertainment ? 1 : 0;
 	} else if (Data_CityInfo.entertainmentNeedingShowsMost) {
 		adviceId = 3 + Data_CityInfo.entertainmentNeedingShowsMost;
 	} else {

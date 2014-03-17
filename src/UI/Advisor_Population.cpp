@@ -148,7 +148,7 @@ void UI_Advisor_Population_drawBackground()
 	} else if (Data_CityInfo.populationMigrationPercentage < 80) {
 		Widget_GameText_draw(55, 25, baseOffsetX + 75, baseOffsetY + 378, Font_NormalWhite);
 		int textId;
-		switch (Data_CityInfo.populationEmigrationCause) {
+		switch (Data_CityInfo.populationEmigrationCauseTextId) {
 			case 0: textId = 20; break;
 			case 1: textId = 21; break;
 			case 2: textId = 22; break;
