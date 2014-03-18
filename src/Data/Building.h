@@ -2,6 +2,7 @@
 #define DATA_BUILDING_H
 
 #define MAX_BUILDINGS 2000
+#define MAX_STORAGES 200
 
 enum {
 	Building_Menu_Farms = 2,
@@ -138,14 +139,12 @@ extern struct Data_Building {
 	} subtype;
 	char __unknown_0e;
 	char __unknown_0f;
-	char __unknown_10;
-	char __unknown_11;
+	short placedSequence;
 	short housesCovered;
 	short percentageWorkers;
 	short housePopulation;
 	short housePopulationRoom;
-	char __unknown_1a;
-	char __unknown_1b;
+	short __unknown_1a;
 	short houseMaxPopulationSeen;
 	char __unknown_1e;
 	char __unknown_1f;
@@ -181,8 +180,7 @@ extern struct Data_Building {
 	char __unknown_45;
 	char houseTaxCoverage;
 	char __unknown_47;
-	char __unknown_48;
-	char __unknown_49;
+	short formationId;
 	union {
 		struct {
 			char __unknown_4a;
@@ -304,12 +302,25 @@ extern struct Data_Building {
 	char desirability;
 	char isDeleted;
 	char isAdjacentToWater;
-	char storageId;
+	unsigned char storageId;
 	union {
 		char houseHappiness;
 		char nativeRisk;
 	} sentiment;
 	char showOnProblemOverlay;
 } Data_Buildings[MAX_BUILDINGS];
+
+extern struct Data_Building_Storage {
+	int startUnused;
+	short buildingId;
+	char inUse;
+	char emptyAll;
+	char resourceState[24];
+} Data_Building_Storages[MAX_STORAGES];
+
+extern struct Data_Buildings_Extra {
+	int highestBuildingIdSeen;
+	int placedSequence;
+} Data_Buildings_Extra;
 
 #endif

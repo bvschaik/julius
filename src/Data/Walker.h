@@ -172,7 +172,7 @@ extern struct Data_Walker {
 	char __unknown_25;
 	char __unknown_26;
 	char __unknown_27;
-	char actionState;
+	unsigned char actionState;
 	char __unknown_29;
 	char __unknown_2a;
 	char __unknown_2b;

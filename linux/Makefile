@@ -15,3 +15,5 @@ run: clean c3
 
 mixer: mixer2.c
 	gcc -g -o mixer2 mixer2.c $(LDFLAGS) $(CFLAGS)
+
+all: clean c3

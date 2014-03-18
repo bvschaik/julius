@@ -1,4 +1,4 @@
-#include "HouseOperation.h"
+#include "BuildingHouse.h"
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
@@ -33,10 +33,10 @@ enum {
 static void evolveSmallTent(int buildingId, int *hasExpanded)
 {
 	if (Data_Buildings[buildingId].housePopulation > 0) {
-		HouseOperation_checkMerge(buildingId);
+		BuildingHouse_checkMerge(buildingId);
 		CHECK_REQUIREMENTS();
 		if (status == Evolve) {
-			HouseOperation_changeTo(buildingId, Building_HouseLargeTent);
+			BuildingHouse_changeTo(buildingId, Building_HouseLargeTent);
 		}
 	}
 }
@@ -44,115 +44,115 @@ static void evolveSmallTent(int buildingId, int *hasExpanded)
 static void evolveLargeTent(int buildingId, int *hasExpanded)
 {
 	if (Data_Buildings[buildingId].housePopulation > 0) {
-		HouseOperation_checkMerge(buildingId);
+		BuildingHouse_checkMerge(buildingId);
 		CHECK_REQUIREMENTS();
 		CHECK_DEVOLVE_DELAY();
 		if (status == Evolve) {
-			HouseOperation_changeTo(buildingId, Building_HouseSmallShack);
+			BuildingHouse_changeTo(buildingId, Building_HouseSmallShack);
 		} else if (status == Devolve) {
-			HouseOperation_changeTo(buildingId, Building_HouseSmallTent);
+			BuildingHouse_changeTo(buildingId, Building_HouseSmallTent);
 		}
 	}
 }
 
 static void evolveSmallShack(int buildingId, int *hasExpanded)
 {
-	HouseOperation_checkMerge(buildingId);
+	BuildingHouse_checkMerge(buildingId);
 	CHECK_REQUIREMENTS();
 	CHECK_DEVOLVE_DELAY();
 	if (status == Evolve) {
-		HouseOperation_changeTo(buildingId, Building_HouseLargeShack);
+		BuildingHouse_changeTo(buildingId, Building_HouseLargeShack);
 	} else if (status == Devolve) {
-		HouseOperation_changeTo(buildingId, Building_HouseLargeTent);
+		BuildingHouse_changeTo(buildingId, Building_HouseLargeTent);
 	}
 }
 
 static void evolveLargeShack(int buildingId, int *hasExpanded)
 {
-	HouseOperation_checkMerge(buildingId);
+	BuildingHouse_checkMerge(buildingId);
 	CHECK_REQUIREMENTS();
 	CHECK_DEVOLVE_DELAY();
 	if (status == Evolve) {
-		HouseOperation_changeTo(buildingId, Building_HouseSmallHovel);
+		BuildingHouse_changeTo(buildingId, Building_HouseSmallHovel);
 	} else if (status == Devolve) {
-		HouseOperation_changeTo(buildingId, Building_HouseSmallShack);
+		BuildingHouse_changeTo(buildingId, Building_HouseSmallShack);
 	}
 }
 
 static void evolveSmallHovel(int buildingId, int *hasExpanded)
 {
-	HouseOperation_checkMerge(buildingId);
+	BuildingHouse_checkMerge(buildingId);
 	CHECK_REQUIREMENTS();
 	CHECK_DEVOLVE_DELAY();
 	if (status == Evolve) {
-		HouseOperation_changeTo(buildingId, Building_HouseLargeHovel);
+		BuildingHouse_changeTo(buildingId, Building_HouseLargeHovel);
 	} else if (status == Devolve) {
-		HouseOperation_changeTo(buildingId, Building_HouseLargeShack);
+		BuildingHouse_changeTo(buildingId, Building_HouseLargeShack);
 	}
 }
 
 static void evolveLargeHovel(int buildingId, int *hasExpanded)
 {
-	HouseOperation_checkMerge(buildingId);
+	BuildingHouse_checkMerge(buildingId);
 	CHECK_REQUIREMENTS();
 	CHECK_DEVOLVE_DELAY();
 	if (status == Evolve) {
-		HouseOperation_changeTo(buildingId, Building_HouseSmallCasa);
+		BuildingHouse_changeTo(buildingId, Building_HouseSmallCasa);
 	} else if (status == Devolve) {
-		HouseOperation_changeTo(buildingId, Building_HouseSmallHovel);
+		BuildingHouse_changeTo(buildingId, Building_HouseSmallHovel);
 	}
 }
 
 static void evolveSmallCasa(int buildingId, int *hasExpanded)
 {
-	HouseOperation_checkMerge(buildingId);
+	BuildingHouse_checkMerge(buildingId);
 	CHECK_REQUIREMENTS();
 	CHECK_DEVOLVE_DELAY();
 	if (status == Evolve) {
-		HouseOperation_changeTo(buildingId, Building_HouseLargeCasa);
+		BuildingHouse_changeTo(buildingId, Building_HouseLargeCasa);
 	} else if (status == Devolve) {
-		HouseOperation_changeTo(buildingId, Building_HouseLargeHovel);
+		BuildingHouse_changeTo(buildingId, Building_HouseLargeHovel);
 	}
 }
 
 static void evolveLargeCasa(int buildingId, int *hasExpanded)
 {
-	HouseOperation_checkMerge(buildingId);
+	BuildingHouse_checkMerge(buildingId);
 	CHECK_REQUIREMENTS();
 	CHECK_DEVOLVE_DELAY();
 	if (status == Evolve) {
-		HouseOperation_changeTo(buildingId, Building_HouseSmallInsula);
+		BuildingHouse_changeTo(buildingId, Building_HouseSmallInsula);
 	} else if (status == Devolve) {
-		HouseOperation_changeTo(buildingId, Building_HouseSmallCasa);
+		BuildingHouse_changeTo(buildingId, Building_HouseSmallCasa);
 	}
 }
 
 static void evolveSmallInsula(int buildingId, int *hasExpanded)
 {
-	HouseOperation_checkMerge(buildingId);
+	BuildingHouse_checkMerge(buildingId);
 	CHECK_REQUIREMENTS();
 	CHECK_DEVOLVE_DELAY();
 	if (status == Evolve) {
-		HouseOperation_changeTo(buildingId, Building_HouseMediumInsula);
+		BuildingHouse_changeTo(buildingId, Building_HouseMediumInsula);
 	} else if (status == Devolve) {
-		HouseOperation_changeTo(buildingId, Building_HouseLargeCasa);
+		BuildingHouse_changeTo(buildingId, Building_HouseLargeCasa);
 	}
 }
 
 static void evolveMediumInsula(int buildingId, int *hasExpanded)
 {
-	HouseOperation_checkMerge(buildingId);
+	BuildingHouse_checkMerge(buildingId);
 	CHECK_REQUIREMENTS();
 	CHECK_DEVOLVE_DELAY();
 	if (status == Evolve) {
-		if (HouseOperation_canExpand(buildingId, 4)) {
+		if (BuildingHouse_canExpand(buildingId, 4)) {
 			Data_Buildings[buildingId].houseIsMerged = 0;
-			HouseOperation_expandToLargeInsula(buildingId);
+			BuildingHouse_expandToLargeInsula(buildingId);
 			*hasExpanded = 1;
 			// TODO add recalculating garden graphics to evolveDevolve func
 		}
 	} else if (status == Devolve) {
-		HouseOperation_changeTo(buildingId, Building_HouseSmallInsula);
+		BuildingHouse_changeTo(buildingId, Building_HouseSmallInsula);
 	}
 }
 
@@ -161,9 +161,9 @@ static void evolveLargeInsula(int buildingId, int *hasExpanded)
 	CHECK_REQUIREMENTS();
 	CHECK_DEVOLVE_DELAY();
 	if (status == Evolve) {
-		HouseOperation_changeTo(buildingId, Building_HouseGrandInsula);
+		BuildingHouse_changeTo(buildingId, Building_HouseGrandInsula);
 	} else if (status == Devolve) {
-		HouseOperation_splitFromLargeInsula(buildingId);
+		BuildingHouse_splitFromLargeInsula(buildingId);
 	}
 }
 
@@ -172,9 +172,9 @@ static void evolveGrandInsula(int buildingId, int *hasExpanded)
 	CHECK_REQUIREMENTS();
 	CHECK_DEVOLVE_DELAY();
 	if (status == Evolve) {
-		HouseOperation_changeTo(buildingId, Building_HouseSmallVilla);
+		BuildingHouse_changeTo(buildingId, Building_HouseSmallVilla);
 	} else if (status == Devolve) {
-		HouseOperation_changeTo(buildingId, Building_HouseLargeInsula);
+		BuildingHouse_changeTo(buildingId, Building_HouseLargeInsula);
 	}
 }
 
@@ -183,9 +183,9 @@ static void evolveSmallVilla(int buildingId, int *hasExpanded)
 	CHECK_REQUIREMENTS();
 	CHECK_DEVOLVE_DELAY();
 	if (status == Evolve) {
-		HouseOperation_changeTo(buildingId, Building_HouseMediumVilla);
+		BuildingHouse_changeTo(buildingId, Building_HouseMediumVilla);
 	} else if (status == Devolve) {
-		HouseOperation_changeTo(buildingId, Building_HouseGrandInsula);
+		BuildingHouse_changeTo(buildingId, Building_HouseGrandInsula);
 	}
 }
 
@@ -194,12 +194,12 @@ static void evolveMediumVilla(int buildingId, int *hasExpanded)
 	CHECK_REQUIREMENTS();
 	CHECK_DEVOLVE_DELAY();
 	if (status == Evolve) {
-		if (HouseOperation_canExpand(buildingId, 9)) {
-			HouseOperation_expandToLargeVilla(buildingId);
+		if (BuildingHouse_canExpand(buildingId, 9)) {
+			BuildingHouse_expandToLargeVilla(buildingId);
 			*hasExpanded = 1;
 		}
 	} else if (status == Devolve) {
-		HouseOperation_changeTo(buildingId, Building_HouseSmallVilla);
+		BuildingHouse_changeTo(buildingId, Building_HouseSmallVilla);
 	}
 }
 
@@ -208,9 +208,9 @@ static void evolveLargeVilla(int buildingId, int *hasExpanded)
 	CHECK_REQUIREMENTS();
 	CHECK_DEVOLVE_DELAY();
 	if (status == Evolve) {
-		HouseOperation_changeTo(buildingId, Building_HouseGrandVilla);
+		BuildingHouse_changeTo(buildingId, Building_HouseGrandVilla);
 	} else if (status == Devolve) {
-		HouseOperation_splitFromLargeVilla(buildingId);
+		BuildingHouse_splitFromLargeVilla(buildingId);
 	}
 }
 
@@ -219,9 +219,9 @@ static void evolveGrandVilla(int buildingId, int *hasExpanded)
 	CHECK_REQUIREMENTS();
 	CHECK_DEVOLVE_DELAY();
 	if (status == Evolve) {
-		HouseOperation_changeTo(buildingId, Building_HouseSmallPalace);
+		BuildingHouse_changeTo(buildingId, Building_HouseSmallPalace);
 	} else if (status == Devolve) {
-		HouseOperation_changeTo(buildingId, Building_HouseLargeVilla);
+		BuildingHouse_changeTo(buildingId, Building_HouseLargeVilla);
 	}
 }
 
@@ -230,9 +230,9 @@ static void evolveSmallPalace(int buildingId, int *hasExpanded)
 	CHECK_REQUIREMENTS();
 	CHECK_DEVOLVE_DELAY();
 	if (status == Evolve) {
-		HouseOperation_changeTo(buildingId, Building_HouseMediumPalace);
+		BuildingHouse_changeTo(buildingId, Building_HouseMediumPalace);
 	} else if (status == Devolve) {
-		HouseOperation_changeTo(buildingId, Building_HouseGrandVilla);
+		BuildingHouse_changeTo(buildingId, Building_HouseGrandVilla);
 	}
 }
 
@@ -241,12 +241,12 @@ static void evolveMediumPalace(int buildingId, int *hasExpanded)
 	CHECK_REQUIREMENTS();
 	CHECK_DEVOLVE_DELAY();
 	if (status == Evolve) {
-		if (HouseOperation_canExpand(buildingId, 16)) {
-			HouseOperation_expandToLargePalace(buildingId);
+		if (BuildingHouse_canExpand(buildingId, 16)) {
+			BuildingHouse_expandToLargePalace(buildingId);
 			*hasExpanded = 1;
 		}
 	} else if (status == Devolve) {
-		HouseOperation_changeTo(buildingId, Building_HouseSmallPalace);
+		BuildingHouse_changeTo(buildingId, Building_HouseSmallPalace);
 	}
 }
 
@@ -255,9 +255,9 @@ static void evolveLargePalace(int buildingId, int *hasExpanded)
 	CHECK_REQUIREMENTS();
 	CHECK_DEVOLVE_DELAY();
 	if (status == Evolve) {
-		HouseOperation_changeTo(buildingId, Building_HouseLuxuryPalace);
+		BuildingHouse_changeTo(buildingId, Building_HouseLuxuryPalace);
 	} else if (status == Devolve) {
-		HouseOperation_splitFromLargePalace(buildingId);
+		BuildingHouse_splitFromLargePalace(buildingId);
 	}
 }
 
@@ -269,7 +269,7 @@ static void evolveLuxuryPalace(int buildingId, int *hasExpanded)
 	}
 	CHECK_DEVOLVE_DELAY();
 	if (status == Devolve) {
-		HouseOperation_changeTo(buildingId, Building_HouseLargePalace);
+		BuildingHouse_changeTo(buildingId, Building_HouseLargePalace);
 	}
 }
 
