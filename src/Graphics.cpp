@@ -12,6 +12,11 @@
 #include <stdlib.h> // remove later
 #include <string.h>
 
+enum ColorType {
+	ColorType_Set,
+	ColorType_And,
+	ColorType_None
+};
 
 static struct ClipRectangle {
 	int xStart;
@@ -22,8 +27,8 @@ static struct ClipRectangle {
 
 static GraphicsClipInfo clipInfo;
 
-static void drawImageUncompressed(Data_Graphics_Index *index, const Color *data, int xOffset, int yOffset, Color color);
-static void drawImageCompressed(Data_Graphics_Index *index, const unsigned char *data, int xOffset, int yOffset, int height, Color color);
+static void drawImageUncompressed(Data_Graphics_Index *index, const Color *data, int xOffset, int yOffset, Color color, ColorType type);
+static void drawImageCompressed(Data_Graphics_Index *index, const unsigned char *data, int xOffset, int yOffset, int height, Color color, ColorType type);
 static void setClipX(int xOffset, int width);
 static void setClipY(int yOffset, int height);
 
@@ -214,10 +219,28 @@ void Graphics_drawIsometricTop(int graphicId, int xOffset, int yOffset, Color co
 			height -= 76;
 			break;
 	}
-	drawImageCompressed(index, (unsigned char*)data, xOffset, yOffset, height, colorMask);
+	drawImageCompressed(index, (unsigned char*)data, xOffset, yOffset, height,
+		colorMask, colorMask ? ColorType_And : ColorType_None);
 }
 
 void Graphics_drawImage(int graphicId, int xOffset, int yOffset)
+{
+	Data_Graphics_Index *index = &Data_Graphics_Main.index[graphicId];
+	const char *data;
+	if (index->isExternal) {
+		data = Loader_Graphics_loadExternalImagePixelData(graphicId);
+	} else {
+		data = &Data_Graphics_PixelData.main[index->offset];
+	}
+
+	if (index->isFullyCompressed) {
+		drawImageCompressed(index, (unsigned char*)data, xOffset, yOffset, index->height, 0, ColorType_None);
+	} else {
+		drawImageUncompressed(index, (Color*)data, xOffset, yOffset, 0, ColorType_None);
+	}
+}
+
+void Graphics_drawImageMasked(int graphicId, int xOffset, int yOffset, Color colorMask)
 {
 	Data_Graphics_Index *index = &Data_Graphics_Main.index[graphicId];
 	const char *data;
@@ -239,9 +262,11 @@ void Graphics_drawImage(int graphicId, int xOffset, int yOffset)
 		graphicId);*/
 	
 	if (index->isFullyCompressed) {
-		drawImageCompressed(index, (unsigned char*)data, xOffset, yOffset, index->height, 0);
+		drawImageCompressed(index, (unsigned char*)data, xOffset, yOffset, index->height,
+			colorMask, colorMask ? ColorType_And : ColorType_None);
 	} else {
-		drawImageUncompressed(index, (Color*)data, xOffset, yOffset, 0);
+		drawImageUncompressed(index, (Color*)data, xOffset, yOffset,
+			colorMask, colorMask ? ColorType_And : ColorType_None);
 	}
 }
 
@@ -256,13 +281,15 @@ void Graphics_drawLetter(int graphicId, int xOffset, int yOffset, Color color)
 	}
 
 	if (index->isFullyCompressed) {
-		drawImageCompressed(index, (unsigned char*)data, xOffset, yOffset, index->height, color);
+		drawImageCompressed(index, (unsigned char*)data, xOffset, yOffset, index->height,
+			color, color ? ColorType_Set : ColorType_None);
 	} else {
-		drawImageUncompressed(index, (Color*)data, xOffset, yOffset, color);
+		drawImageUncompressed(index, (Color*)data, xOffset, yOffset,
+			color, color ? ColorType_Set : ColorType_None);
 	}
 }
 
-static void drawImageUncompressed(Data_Graphics_Index *index, const Color *data, int xOffset, int yOffset, Color color)
+static void drawImageUncompressed(Data_Graphics_Index *index, const Color *data, int xOffset, int yOffset, Color color, ColorType type)
 {
 	GraphicsClipInfo *clip = Graphics_getClipInfo(
 		xOffset, yOffset, index->width, index->height);
@@ -274,7 +301,8 @@ static void drawImageUncompressed(Data_Graphics_Index *index, const Color *data,
 		data += clip->clippedPixelsLeft;
 		for (int x = clip->clippedPixelsLeft; x < index->width - clip->clippedPixelsRight; x++) {
 			if (*data != Color_Transparent) {
-				ScreenPixel(xOffset + x, yOffset + y) = ColorLookup[color ? color : *data];
+				ScreenPixel(xOffset + x, yOffset + y) =
+					ColorLookup[type == ColorType_None ? *data : (type == ColorType_Set ? color : (color & *data))];
 			}
 			data++;
 		}
@@ -282,7 +310,7 @@ static void drawImageUncompressed(Data_Graphics_Index *index, const Color *data,
 	}
 }
 
-static void drawImageCompressed(Data_Graphics_Index *index, const unsigned char *data, int xOffset, int yOffset, int height, Color color)
+static void drawImageCompressed(Data_Graphics_Index *index, const unsigned char *data, int xOffset, int yOffset, int height, Color color, ColorType type)
 {
 	GraphicsClipInfo *clip = Graphics_getClipInfo(
 		xOffset, yOffset, index->width, height);
@@ -307,7 +335,8 @@ static void drawImageCompressed(Data_Graphics_Index *index, const unsigned char 
 				Color *pixels = (Color*) data;
 				while (b) {
 					if (x >= clip->clippedPixelsLeft && x < index->width - clip->clippedPixelsRight) {
-						ScreenPixel(xOffset + x, yOffset + y) = ColorLookup[color ? color : *pixels];
+						ScreenPixel(xOffset + x, yOffset + y) =
+							ColorLookup[type == ColorType_None ? *pixels : (type == ColorType_Set ? color : (color & *pixels))];
 					}
 					x++;
 					pixels++;

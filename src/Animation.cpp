@@ -29,10 +29,10 @@ void Animation_updateTimers()
 	}
 }
 
-int Animation_getIndexForCityMap(int graphicId, int gridOffset)
+int Animation_getIndexForCityBuilding(int graphicId, int gridOffset)
 {
 	// TODO
-	return 0;
+	return 1;
 }
 
 int Animation_getIndexForEmpireMap(int graphicId, int currentIndex)

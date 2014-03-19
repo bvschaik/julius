@@ -327,6 +327,19 @@ void Building_deleteData(int buildingId)
 	}
 }
 
+int Building_getMainBuildingId(int buildingId)
+{
+	int guard = 0;
+	while (guard < 9) {
+		if (Data_Buildings[buildingId].prevPartBuildingId <= 0) {
+			return buildingId;
+		}
+		buildingId = Data_Buildings[buildingId].prevPartBuildingId;
+		guard++;
+	}
+	return 0;
+}
+
 void BuildingStorage_clearList()
 {
 	memset(Data_Building_Storages, MAX_STORAGES * sizeof(struct Data_Building_Storage), 0);
@@ -400,4 +413,10 @@ int Building_Market_getMaxGoodsStock(int buildingId)
 		}
 	}
 	return maxStock;
+}
+
+int Building_Dock_getNumIdleDockers(int buildingId)
+{
+	// TODO
+	return 0;
 }

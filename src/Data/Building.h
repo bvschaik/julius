@@ -136,6 +136,7 @@ extern struct Data_Building {
 		short houseLevel;
 		short warehouseResourceId;
 		short orientation;
+		short fortWalkerType;
 	} subtype;
 	char __unknown_0e;
 	char __unknown_0f;
@@ -243,9 +244,13 @@ extern struct Data_Building {
 			short spaceLeft;
 		} granary;
 		struct {
-			char progress;
-			char __padding[32];
-			char curseWeeksLeft;
+			short progress; //4a+b
+			char __padding[27];
+			char blessingLeft; //67
+			char __pad68;
+			char hasFullResource; //69
+			char __pad6a;
+			char curseWeeksLeft; //6b
 		} industry;
 		struct {
 			char __padding[26];

@@ -43,7 +43,7 @@ EXTERN UInt8_Grid(Data_Grid_bitfields);
 EXTERN UInt8_Grid(Data_Grid_random);
 EXTERN UInt8_Grid(Data_Grid_elevation);
 EXTERN UInt8_Grid(Data_Grid_aqueducts);
-EXTERN UInt8_Grid(Data_Grid_animation);
+EXTERN UInt8_Grid(Data_Grid_spriteOffsets);
 EXTERN Int8_Grid(Data_Grid_desirability);
 EXTERN UInt8_Grid(Data_Grid_buildingDamage);
 
@@ -56,6 +56,7 @@ enum {
 	Bitfield_Sizes = 0x0f,
 	Bitfield_Overlay = 0x10,
 	Bitfield_Plaza = 0x80,
+	Edge_MaskXY = 0x3f,
 	Edge_LeftmostTile = 0x40,
 	Edge_NativeLand = 0x80,
 };

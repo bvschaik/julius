@@ -140,8 +140,7 @@ extern struct Data_Walker {
 	char __unknown_04;
 	char __unknown_05;
 	short resourceGraphicId;
-	char __unknown_08;
-	char __unknown_09;
+	short nextWalkerIdOnSameTile;
 	unsigned char type;
 	char resourceId;
 	char __unknown_0c;
@@ -214,7 +213,7 @@ extern struct Data_Walker {
 	char __unknown_52;
 	char __unknown_53;
 	char __unknown_54;
-	char __unknown_55;
+	char isGhost; // 55
 	char minMaxSeen;
 	char __unknown_57;
 	char __unknown_58;

@@ -6,6 +6,8 @@ int Building_create(int type, int x, int y);
 void Building_delete(int buildingId);
 void Building_deleteData(int buildingId);
 
+int Building_getMainBuildingId(int buildingId);
+
 void BuildingStorage_clearList();
 int BuildingStorage_create();
 void BuildingStorage_resetBuildingIds();
@@ -13,5 +15,7 @@ void BuildingStorage_resetBuildingIds();
 
 int Building_Market_getMaxFoodStock(int buildingId);
 int Building_Market_getMaxGoodsStock(int buildingId);
+
+int Building_Dock_getNumIdleDockers(int buildingId);
 
 #endif

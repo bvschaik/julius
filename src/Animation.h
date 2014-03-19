@@ -4,7 +4,7 @@
 void Animation_resetTimers();
 void Animation_updateTimers();
 
-int Animation_getIndexForCityMap(int graphicId, int gridOffset);
+int Animation_getIndexForCityBuilding(int graphicId, int gridOffset);
 int Animation_getIndexForEmpireMap(int graphicId, int currentIndex);
 
 #endif

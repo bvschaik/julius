@@ -1154,10 +1154,7 @@ extern struct Data_CityInfo {
 	char __unknown_4591;
 	char __unknown_4592;
 	char __unknown_4593;
-	char __unknown_4594;
-	char __unknown_4595;
-	char __unknown_4596;
-	char __unknown_4597;
+	int buildingTradeCenterBuildingId;
 	int numSoldiersInCity;
 	char __unknown_459c;
 	char __unknown_459d;
@@ -1283,10 +1280,7 @@ extern struct Data_CityInfo {
 	char __unknown_4621;
 	char __unknown_4622;
 	char __unknown_4623;
-	char __unknown_4624;
-	char __unknown_4625;
-	char __unknown_4626;
-	char __unknown_4627;
+	int entertainmentHippodromeHasShow;
 	char __unknown_4628;
 	char __unknown_4629;
 	char __unknown_462a;

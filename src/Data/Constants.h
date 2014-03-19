@@ -12,11 +12,17 @@ enum {
 	ID_Graphic_Font = 16,
 	ID_Graphic_TerrainOverlay = 20,
 	ID_Graphic_EmpireMap = 47,
+	ID_Graphic_WorkshopRawMaterial = 60,
+	ID_Graphic_Senate = 62,
+	ID_Graphic_Forum = 63,
+	ID_Graphic_Fort = 66,
+	ID_Graphic_Dock = 78,
 	ID_Graphic_Warehouse = 82,
 	ID_Graphic_LaborPriorityLock = 94,
 	ID_Graphic_PanelWindows = 95,
 	ID_Graphic_Granary = 99,
 	ID_Graphic_OverlayColumn = 103,
+	ID_Graphic_Homeless = 118,
 	ID_Graphic_AdvisorIcons = 128,
 	ID_Graphic_ResourceIcons = 129,
 	ID_Graphic_DialogBackground = 132,
@@ -37,17 +43,29 @@ enum {
 	ID_Graphic_PopulationGraphBar = 157,
 	ID_Graphic_Bullet = 158,
 	ID_Graphic_WinGame = 160,
+	ID_Graphic_Dock2 = 168,
+	ID_Graphic_Dock3 = 169,
+	ID_Graphic_Dock4 = 170,
+	ID_Graphic_Dockers = 171,
 	ID_Graphic_EmpirePanels = 172,
 	ID_Graphic_EmpireResource = 173,
 	ID_Graphic_EmpireCity = 174,
 	ID_Graphic_EmpireCityTrade = 175,
 	ID_Graphic_EmpireCityDistantRoman = 176,
 	ID_Graphic_RatingsColumn = 189,
+	ID_Graphic_TheaterShow = 191,
+	ID_Graphic_AmphitheaterShow = 192,
+	ID_Graphic_ColosseumShow = 193,
 	ID_Graphic_RatingsBackground = 195,
 	ID_Graphic_BorderedButton = 208,
+	ID_Graphic_Hippodrome1 = 213,
+	ID_Graphic_Hippodrome2 = 214,
 	ID_Graphic_EmpireForeignCity = 223,
 	ID_Graphic_GodBolt = 225,
+	ID_Graphic_PlagueSkull = 227,
+	ID_Graphic_TradeCenterFlag = 238,
 	ID_Graphic_TradeAmount = 243,
+	ID_Graphic_Gatehouse = 248,
 	ID_Graphic_LoadingScreen = 251,
 };
 
@@ -62,6 +80,9 @@ enum {
 #define Color_Minimap_Dark 0x4208
 #define Color_Minimap_Light 0xC618
 #define Color_NoMask 0xffff
+#define Color_MaskRed 0xf863
+#define Color_MaskGreen 0xffff
+//TODO colormask green
 
 enum {
 	EmpireObject_Ornament = 0,

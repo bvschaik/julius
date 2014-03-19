@@ -4,8 +4,9 @@
 #define GraphicId(index) (Data_Graphics_Main.graphicIds[index])
 #define GraphicHeight(id) (Data_Graphics_Main.index[id].height)
 #define GraphicHasAnimationSprite(id) (Data_Graphics_Main.index[id].animationSpeedId)
-#define GraphicAnimationOffsetX(id) (Data_Graphics_Main.index[id].spriteOffsetX)
-#define GraphicAnimationOffsetY(id) (Data_Graphics_Main.index[id].spriteOffsetY)
+#define GraphicNumAnimationSprites(id) (Data_Graphics_Main.index[id].numAnimationSprites)
+#define GraphicSpriteOffsetX(id) (Data_Graphics_Main.index[id].spriteOffsetX)
+#define GraphicSpriteOffsetY(id) (Data_Graphics_Main.index[id].spriteOffsetY)
 
 struct Data_Graphics_Index {
 	int offset;

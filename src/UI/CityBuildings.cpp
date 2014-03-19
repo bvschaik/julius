@@ -8,11 +8,13 @@
 #include "../Data/Settings.h"
 #include "../Data/State.h"
 #include "../Data/Walker.h"
-#include "../Time.h"
+#include "../Animation.h"
+#include "../Building.h"
 #include "../Calc.h"
-#include "../Graphics.h"
 #include "../CityView.h"
+#include "../Graphics.h"
 #include "../Sound.h"
+#include "../Time.h"
 
 #include <cstdio>
 
@@ -27,6 +29,12 @@
 #define DRAWTOP_SIZE3(g,x,y) Graphics_drawIsometricTop(g, x + 60, y - 30, 0)
 #define DRAWTOP_SIZE4(g,x,y) Graphics_drawIsometricTop(g, x + 90, y - 45, 0)
 #define DRAWTOP_SIZE5(g,x,y) Graphics_drawIsometricTop(g, x + 120, y - 60, 0)
+
+#define DRAWTOP_SIZE1_C(g,x,y,c) Graphics_drawIsometricTop(g, x, y, c)
+#define DRAWTOP_SIZE2_C(g,x,y,c) Graphics_drawIsometricTop(g, x + 30, y - 15, c)
+#define DRAWTOP_SIZE3_C(g,x,y,c) Graphics_drawIsometricTop(g, x + 60, y - 30, c)
+#define DRAWTOP_SIZE4_C(g,x,y,c) Graphics_drawIsometricTop(g, x + 90, y - 45, c)
+#define DRAWTOP_SIZE5_C(g,x,y,c) Graphics_drawIsometricTop(g, x + 120, y - 60, c)
 
 #define FOREACH_XY_VIEW(block)\
 	int odd = 0;\
@@ -54,8 +62,42 @@
 		yView++;\
 	}
 
+#define FOREACH_Y_VIEW(block)\
+	int odd = 0;\
+	int yView = Data_CityView.yInTiles - 8;\
+	int yGraphic = Data_CityView.yOffsetInPixels - 9*15;\
+	int xGraphic, xView;\
+	for (int y = 0; y < Data_CityView.heightInTiles + 14; y++) {\
+		if (yView >= 0 && yView < VIEW_Y_MAX) {\
+			block;\
+		}\
+		yGraphic += 15;\
+		yView++;\
+	}
+
+#define FOREACH_X_VIEW(block)\
+	xGraphic = -(4*58 + 8);\
+	if (odd) {\
+		xGraphic += Data_CityView.xOffsetInPixels - 30;\
+		odd = 0;\
+	} else {\
+		xGraphic += Data_CityView.xOffsetInPixels;\
+		odd = 1;\
+	}\
+	xView = Data_CityView.xInTiles - 4;\
+	for (int x = 0; x < Data_CityView.widthInTiles + 7; x++) {\
+		if (xView >= 0 && xView < VIEW_X_MAX) {\
+			int gridOffset = ViewToGridOffset(xView, yView);\
+			if (gridOffset >= 0) {\
+				block;\
+			}\
+		}\
+		xGraphic += 60;\
+		xView++;\
+	}
 
 static void drawBuildingFootprints();
+static void drawBuildingTopsWalkersAnimation(int selectedWalkerId);
 static void drawOverlayFootprints();
 static void drawFootprintForWaterOverlay(int gridOffset, int xOffset, int yOffset);
 static void drawTopForWaterOverlay(int gridOffset, int xOffset, int yOffset);
@@ -85,20 +127,23 @@ static void drawBuildingTopForHospitalOverlay(int gridOffset, int buildingId, in
 static void drawBuildingTopForTaxIncomeOverlay(int gridOffset, int buildingId, int xOffset, int yOffset);
 static void drawOverlayColumn(int height, int xOffset, int yOffset, int isRed);
 
+static void drawWalker(int walkerId, int xOffset, int yOffset, int selectedWalkerId);
+static void drawBridge(int gridOffset, int xOffset, int yOffset);
+
 static int lastAnimationTime = 0;
 static int advanceAnimation;
 
 void UI_CityBuildings_drawForeground(int x, int y)
 {
-	printf("Drawing city at %d %d\n", x, y);
+	//printf("Drawing city at %d %d\n", x, y);
 	Data_CityView.xInTiles = x;
 	Data_CityView.yInTiles = y;
 	Graphics_setClipRectangle(
 		Data_CityView.xOffsetInPixels, Data_CityView.yOffsetInPixels,
 		Data_CityView.widthInPixels, Data_CityView.heightInPixels);
-	printf("Cliprectangle set to %d, %d, %d, %d\n",
+	/*printf("Cliprectangle set to %d, %d, %d, %d\n",
 		Data_CityView.xOffsetInPixels, Data_CityView.yOffsetInPixels,
-		Data_CityView.widthInPixels, Data_CityView.heightInPixels);
+		Data_CityView.widthInPixels, Data_CityView.heightInPixels);*/
 
 	advanceAnimation = 0;
 	int now = Time_getMillis();
@@ -113,6 +158,7 @@ void UI_CityBuildings_drawForeground(int x, int y)
 		drawOverlayFootprints();
 	} else {
 		drawBuildingFootprints();
+		drawBuildingTopsWalkersAnimation(0);
 	}
 
 	Graphics_resetClipRectangle();
@@ -183,6 +229,316 @@ static void drawBuildingFootprints()
 			}
 		}
 	});
+}
+
+static void drawBuildingTopsWalkersAnimation(int selectedWalkerId)
+{
+	FOREACH_Y_VIEW(
+		FOREACH_X_VIEW(
+			if (Data_Grid_edge[gridOffset] & Edge_LeftmostTile) {
+				int buildingId = Data_Grid_buildingIds[gridOffset];
+				int graphicId = Data_Grid_graphicIds[gridOffset];
+				Color colorMask = 0;
+				if (buildingId && Data_Buildings[buildingId].isDeleted) {
+					colorMask = Color_MaskRed;
+				}
+				switch (Data_Grid_bitfields[gridOffset] & Bitfield_Sizes) {
+					case 0: DRAWTOP_SIZE1_C(graphicId, xGraphic, yGraphic, colorMask); break;
+					case 1: DRAWTOP_SIZE2_C(graphicId, xGraphic, yGraphic, colorMask); break;
+					case 2: DRAWTOP_SIZE3_C(graphicId, xGraphic, yGraphic, colorMask); break;
+					case 4: DRAWTOP_SIZE4_C(graphicId, xGraphic, yGraphic, colorMask); break;
+					case 8: DRAWTOP_SIZE5_C(graphicId, xGraphic, yGraphic, colorMask); break;
+				}
+				// specific buildings
+				struct Data_Building *b = &Data_Buildings[buildingId];
+				if (b->type == Building_SenateUpgraded) {
+					// rating flags
+					graphicId = GraphicId(ID_Graphic_Senate);
+					Graphics_drawImageMasked(graphicId + 1, xGraphic + 138,
+						yGraphic + 44 - Data_CityInfo.ratingCulture / 2, colorMask);
+					Graphics_drawImageMasked(graphicId + 2, xGraphic + 168,
+						yGraphic + 36 - Data_CityInfo.ratingProsperity / 2, colorMask);
+					Graphics_drawImageMasked(graphicId + 3, xGraphic + 198,
+						yGraphic + 27 - Data_CityInfo.ratingPeace / 2, colorMask);
+					Graphics_drawImageMasked(graphicId + 4, xGraphic + 228,
+						yGraphic + 19 - Data_CityInfo.ratingFavor / 2, colorMask);
+					// unemployed
+					graphicId = GraphicId(ID_Graphic_Homeless);
+					if (Data_CityInfo.unemploymentPercentageForSenate > 0) {
+						Graphics_drawImageMasked(graphicId + 108,
+							xGraphic + 80, yGraphic, colorMask);
+					}
+					if (Data_CityInfo.unemploymentPercentageForSenate > 5) {
+						Graphics_drawImageMasked(graphicId + 104,
+							xGraphic + 230, yGraphic - 30, colorMask);
+					}
+					if (Data_CityInfo.unemploymentPercentageForSenate > 10) {
+						Graphics_drawImageMasked(graphicId + 107,
+							xGraphic + 100, yGraphic + 20, colorMask);
+					}
+					if (Data_CityInfo.unemploymentPercentageForSenate > 15) {
+						Graphics_drawImageMasked(graphicId + 106,
+							xGraphic + 235, yGraphic - 10, colorMask);
+					}
+					if (Data_CityInfo.unemploymentPercentageForSenate > 20) {
+						Graphics_drawImageMasked(graphicId + 106,
+							xGraphic + 66, yGraphic + 20, colorMask);
+					}
+				}
+				if (b->type == Building_Amphitheater && b->numWorkers > 0) {
+					Graphics_drawImageMasked(GraphicId(ID_Graphic_AmphitheaterShow),
+						xGraphic + 36, yGraphic - 47, colorMask);
+				}
+				if (b->type == Building_Theater && b->numWorkers > 0) {
+					Graphics_drawImageMasked(GraphicId(ID_Graphic_TheaterShow),
+						xGraphic + 34, yGraphic - 22, colorMask);
+				}
+				if (b->type == Building_Hippodrome &&
+					Data_Buildings[Building_getMainBuildingId(buildingId)].numWorkers > 0 &&
+					Data_CityInfo.entertainmentHippodromeHasShow) {
+					int subtype = b->subtype.orientation;
+					if ((subtype == 0 || subtype == 3) && Data_CityInfo.population > 2000) {
+						switch (Data_Settings_Map.orientation) {
+							case Direction_Top:
+								Graphics_drawImageMasked(
+									GraphicId(ID_Graphic_Hippodrome2) + 6,
+									xGraphic + 147, yGraphic - 72, colorMask);
+								break;
+							case Direction_Right:
+								Graphics_drawImageMasked(
+									GraphicId(ID_Graphic_Hippodrome1) + 8,
+									xGraphic + 58, yGraphic - 79, colorMask);
+								break;
+							case Direction_Bottom:
+								Graphics_drawImageMasked(
+									GraphicId(ID_Graphic_Hippodrome2) + 8,
+									xGraphic + 119, yGraphic - 80, colorMask);
+								break;
+							case Direction_Left:
+								Graphics_drawImageMasked(
+									GraphicId(ID_Graphic_Hippodrome1) + 6,
+									xGraphic, yGraphic - 72, colorMask);
+						}
+					} else if ((subtype == 1 || subtype == 4) && Data_CityInfo.population > 100) {
+						switch (Data_Settings_Map.orientation) {
+							case Direction_Top:
+							case Direction_Bottom:
+								Graphics_drawImageMasked(
+									GraphicId(ID_Graphic_Hippodrome2) + 7,
+									xGraphic + 122, yGraphic - 79, colorMask);
+								break;
+							case Direction_Right:
+							case Direction_Left:
+								Graphics_drawImageMasked(
+									GraphicId(ID_Graphic_Hippodrome1) + 7,
+									xGraphic, yGraphic - 80, colorMask);
+						}
+					} else if ((subtype == 2 || subtype == 5) && Data_CityInfo.population > 1000) {
+						switch (Data_Settings_Map.orientation) {
+							case Direction_Top:
+								Graphics_drawImageMasked(
+									GraphicId(ID_Graphic_Hippodrome2) + 8,
+									xGraphic + 119, yGraphic - 80, colorMask);
+								break;
+							case Direction_Right:
+								Graphics_drawImageMasked(
+									GraphicId(ID_Graphic_Hippodrome1) + 6,
+									xGraphic, yGraphic - 72, colorMask);
+								break;
+							case Direction_Bottom:
+								Graphics_drawImageMasked(
+									GraphicId(ID_Graphic_Hippodrome2) + 6,
+									xGraphic + 147, yGraphic - 72, colorMask);
+								break;
+							case Direction_Left:
+								Graphics_drawImageMasked(
+									GraphicId(ID_Graphic_Hippodrome1) + 8,
+									xGraphic + 58, yGraphic - 79, colorMask);
+						}
+					}
+				}
+				if (b->type == Building_Colosseum && b->numWorkers > 0) {
+					Graphics_drawImageMasked(GraphicId(ID_Graphic_ColosseumShow),
+						xGraphic + 70, yGraphic - 90, colorMask);
+				}
+				// workshops
+				if (b->type == Building_WineWorkshop) {
+					if (b->rawMaterialsStored >= 2 || b->data.industry.hasFullResource) {
+						Graphics_drawImageMasked(GraphicId(ID_Graphic_WorkshopRawMaterial),
+							xGraphic + 45, yGraphic + 23, colorMask);
+					}
+				}
+				if (b->type == Building_OilWorkshop) {
+					if (b->rawMaterialsStored >= 2 || b->data.industry.hasFullResource) {
+						Graphics_drawImageMasked(GraphicId(ID_Graphic_WorkshopRawMaterial) + 1,
+							xGraphic + 35, yGraphic + 15, colorMask);
+					}
+				}
+				if (b->type == Building_WeaponsWorkshop) {
+					if (b->rawMaterialsStored >= 2 || b->data.industry.hasFullResource) {
+						Graphics_drawImageMasked(GraphicId(ID_Graphic_WorkshopRawMaterial) + 3,
+							xGraphic + 46, yGraphic + 24, colorMask);
+					}
+				}
+				if (b->type == Building_FurnitureWorkshop) {
+					if (b->rawMaterialsStored >= 2 || b->data.industry.hasFullResource) {
+						Graphics_drawImageMasked(GraphicId(ID_Graphic_WorkshopRawMaterial) + 2,
+							xGraphic + 48, yGraphic + 19, colorMask);
+					}
+				}
+				if (b->type == Building_PotteryWorkshop) {
+					if (b->rawMaterialsStored >= 2 || b->data.industry.hasFullResource) {
+						Graphics_drawImageMasked(GraphicId(ID_Graphic_WorkshopRawMaterial) + 4,
+							xGraphic + 47, yGraphic + 24, colorMask);
+					}
+				}
+			}
+		);
+		// draw walkers
+		FOREACH_X_VIEW(
+			int walkerId = Data_Grid_walkerIds[gridOffset];
+			while (walkerId) {
+				if (!Data_Walkers[walkerId].isGhost) {
+					drawWalker(walkerId, xGraphic, yGraphic, selectedWalkerId);
+				}
+				walkerId = Data_Walkers[walkerId].nextWalkerIdOnSameTile;
+			}
+		);
+		// draw animation
+		FOREACH_X_VIEW(
+			int graphicId = Data_Grid_graphicIds[gridOffset];
+			if (GraphicNumAnimationSprites(graphicId)) {
+				if (Data_Grid_edge[gridOffset] & Edge_LeftmostTile) {
+					int buildingId = Data_Grid_buildingIds[gridOffset];
+					struct Data_Building *b = &Data_Buildings[buildingId];
+					int colorMask = 0;
+					if (buildingId && b->isDeleted) {
+						colorMask = Color_MaskRed;
+					}
+					if (b->type == Building_Dock) {
+						int numDockers = Building_Dock_getNumIdleDockers(buildingId);
+						if (numDockers > 0) {
+							int graphicIdDock = Data_Grid_graphicIds[b->gridOffset];
+							int graphicIdDockers = GraphicId(ID_Graphic_Dockers);
+							if (graphicIdDock == GraphicId(ID_Graphic_Dock)) {
+								graphicIdDockers += 0;
+							} else if (graphicIdDock == GraphicId(ID_Graphic_Dock2)) {
+								graphicIdDockers += 3;
+							} else if (graphicIdDock == GraphicId(ID_Graphic_Dock3)) {
+								graphicIdDockers += 6;
+							} else {
+								graphicIdDockers += 9;
+							}
+							if (numDockers == 2) {
+								graphicIdDockers += 1;
+							} else if (numDockers == 3) {
+								graphicIdDockers += 2;
+							}
+							Graphics_drawImageMasked(graphicIdDockers,
+								xGraphic + GraphicSpriteOffsetX(graphicIdDockers),
+								yGraphic + GraphicSpriteOffsetX(graphicIdDockers),
+								colorMask);
+						}
+					}
+					if (b->type == Building_Warehouse) {
+						Graphics_drawImageMasked(GraphicId(ID_Graphic_Warehouse) + 17,
+							xGraphic - 4, yGraphic - 42, colorMask);
+						if (buildingId == Data_CityInfo.buildingTradeCenterBuildingId) {
+							Graphics_drawImageMasked(GraphicId(ID_Graphic_TradeCenterFlag),
+								xGraphic + 19, yGraphic - 56, colorMask);
+						}
+					}
+					if (b->type == Building_Granary) {
+						Graphics_drawImageMasked(GraphicId(ID_Graphic_Granary) + 1,
+							xGraphic + GraphicSpriteOffsetX(graphicId),
+							yGraphic + 60 + GraphicSpriteOffsetY(graphicId) - GraphicHeight(graphicId),
+							colorMask);
+						if (b->data.granary.spaceLeft < 2400) {
+							Graphics_drawImageMasked(GraphicId(ID_Graphic_Granary) + 2,
+								xGraphic + 33, yGraphic - 60, colorMask);
+						}
+						if (b->data.granary.spaceLeft < 1800) {
+							Graphics_drawImageMasked(GraphicId(ID_Graphic_Granary) + 3,
+								xGraphic + 56, yGraphic - 50, colorMask);
+						}
+						if (b->data.granary.spaceLeft < 1200) {
+							Graphics_drawImageMasked(GraphicId(ID_Graphic_Granary) + 4,
+								xGraphic + 91, yGraphic - 50, colorMask);
+						}
+						if (b->data.granary.spaceLeft < 600) {
+							Graphics_drawImageMasked(GraphicId(ID_Graphic_Granary) + 5,
+								xGraphic + 117, yGraphic - 62, colorMask);
+						}
+					}
+					if (b->type == Building_BurningRuin && b->ruinHasPlague) {
+						Graphics_drawImageMasked(GraphicId(ID_Graphic_PlagueSkull),
+							xGraphic + 18, yGraphic - 32, colorMask);
+					}
+					int animationOffset = Animation_getIndexForCityBuilding(graphicId, gridOffset);
+					if (b->type != Building_Hippodrome && animationOffset > 0) {
+						if (animationOffset > GraphicNumAnimationSprites(graphicId)) {
+							animationOffset = GraphicNumAnimationSprites(graphicId);
+						}
+						if (b->type == Building_Granary) {
+							Graphics_drawImageMasked(graphicId + animationOffset + 5,
+								xGraphic + 77, yGraphic - 49, colorMask);
+						} else {
+							int ydiff = 0;
+							switch (Data_Grid_bitfields[gridOffset] & Bitfield_Sizes) {
+								case 0: ydiff = 30; break;
+								case 1: ydiff = 45; break;
+								case 2: ydiff = 60; break;
+								case 4: ydiff = 75; break;
+								case 8: ydiff = 90; break;
+							}
+							Graphics_drawImageMasked(graphicId + animationOffset,
+								xGraphic + GraphicSpriteOffsetX(graphicId),
+								yGraphic + ydiff + GraphicSpriteOffsetY(graphicId) - GraphicHeight(graphicId),
+								colorMask);
+						}
+					}
+				}
+			} else if (Data_Grid_spriteOffsets[gridOffset]) {
+				drawBridge(gridOffset, xGraphic, yGraphic);
+			} else if (Data_Buildings[Data_Grid_buildingIds[gridOffset]].type == Building_FortGround__) {
+				if (Data_Grid_edge[gridOffset] & Edge_LeftmostTile) {
+					int buildingId = Data_Grid_buildingIds[gridOffset];
+					int offset = 0;
+					switch (Data_Buildings[buildingId].subtype.fortWalkerType) {
+						case Walker_FortLegionary: offset = 4; break;
+						case Walker_FortMounted: offset = 3; break;
+						case Walker_FortJavelin: offset = 2; break;
+					}
+					if (offset) {
+						Graphics_drawImage(GraphicId(ID_Graphic_Fort) + offset,
+							xGraphic + 81, yGraphic + 5);
+					}
+				}
+			} else if (Data_Buildings[Data_Grid_buildingIds[gridOffset]].type == Building_Gatehouse) {
+				int xy = Data_Grid_edge[gridOffset] & Edge_MaskXY;
+				if ((Data_Settings_Map.orientation == Direction_Top && xy == 9) ||
+					(Data_Settings_Map.orientation == Direction_Right && xy == 8) ||
+					(Data_Settings_Map.orientation == Direction_Bottom && xy == 0) ||
+					(Data_Settings_Map.orientation == Direction_Left && xy == 1)) {
+					int buildingId = Data_Grid_buildingIds[gridOffset];
+					int graphicId = GraphicId(ID_Graphic_Gatehouse);
+					if (Data_Buildings[buildingId].subtype.orientation == 1) {
+						if (Data_Settings_Map.orientation == Direction_Top || Data_Settings_Map.orientation == Direction_Bottom) {
+							Graphics_drawImage(graphicId, xGraphic - 22, yGraphic - 80);
+						} else {
+							Graphics_drawImage(graphicId + 1, xGraphic - 18, yGraphic - 81);
+						}
+					} else if (Data_Buildings[buildingId].subtype.orientation == 2) {
+						if (Data_Settings_Map.orientation == Direction_Top || Data_Settings_Map.orientation == Direction_Bottom) {
+							Graphics_drawImage(graphicId + 1, xGraphic - 18, yGraphic - 81);
+						} else {
+							Graphics_drawImage(graphicId, xGraphic - 22, yGraphic - 80);
+						}
+					}
+				}
+			}
+		);
+	);
 }
 
 static void drawOverlayFootprints()
@@ -1343,8 +1699,8 @@ static void drawBuildingTopForProblemsOverlay(int gridOffset, int buildingId, in
 	if (type == Building_Granary) {
 		int graphicId = Data_Grid_graphicIds[gridOffset];
 		Graphics_drawImage(GraphicId(ID_Graphic_Granary) + 1,
-			xOffset + GraphicAnimationOffsetX(graphicId),
-			yOffset + GraphicAnimationOffsetY(graphicId) - 30 -
+			xOffset + GraphicSpriteOffsetX(graphicId),
+			yOffset + GraphicSpriteOffsetY(graphicId) - 30 -
 			(GraphicHeight(graphicId) - 90));
 		if (Data_Buildings[buildingId].data.granary.spaceLeft < 2400) {
 			Graphics_drawImage(GraphicId(ID_Graphic_Granary) + 2,
@@ -1404,4 +1760,14 @@ static void drawOverlayColumn(int height, int xOffset, int yOffset, int isRed)
 	}
 	// top
 	Graphics_drawImage(graphicId, xOffset + 5, yOffset - 8 - capitalHeight + 13);
+}
+
+static void drawWalker(int walkerId, int xOffset, int yOffset, int selectedWalkerId)
+{
+	// TODO
+}
+
+static void drawBridge(int gridOffset, int xOffset, int yOffset)
+{
+	// TODO
 }

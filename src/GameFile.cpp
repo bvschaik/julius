@@ -79,7 +79,7 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{1, &Data_Grid_aqueducts, 26244},
 	{1, &Data_Grid_walkerIds, 52488},
 	{1, &Data_Grid_bitfields, 26244},
-	{1, &Data_Grid_animation, 26244},
+	{1, &Data_Grid_spriteOffsets, 26244},
 	{0, &Data_Grid_random, 26244},
 	{1, &Data_Grid_desirability, 26244},
 	{1, &Data_Grid_elevation, 26244},
