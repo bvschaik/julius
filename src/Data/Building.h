@@ -121,6 +121,9 @@ enum {
 	Building_PotteryWorkshop = 114
 };
 
+#define BuildingIsWorkshop(b) ((b) >= Building_WineWorkshop && (b) <= Building_PotteryWorkshop)
+#define BuildingIsEntertainment(b) ((b) >= Building_Theater && (b) <= Building_ChariotMaker)
+
 extern struct Data_Building {
 	char inUse;
 	char __unknown_01;
@@ -211,7 +214,7 @@ extern struct Data_Building {
 			char __unknown_62;
 			char __unknown_63;
 			char __unknown_64;
-			char __unknown_65; // dock number of ships
+			char dockNumShips; // 65 dock number of ships
 			char __unknown_66;
 			char __unknown_67;
 			char __unknown_68;

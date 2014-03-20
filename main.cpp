@@ -69,7 +69,7 @@ int main(int argc, char **argv)
 	for (int i = 0; i < 10000; i++) {
 		if (Data_Graphics_Main.index[i].animationSpeedId) {
 			printf("%d: %d %d\n", i,
-				Data_Graphics_Main.index[i].unused_26[5],
+				Data_Graphics_Main.index[i].animationCanReverse,
 				Data_Graphics_Main.index[i].animationSpeedId);
 		}
 	}

@@ -22,7 +22,9 @@ struct Data_Graphics_Index {
 	short unused_20;
 	short spriteOffsetX;
 	short spriteOffsetY;
-	short unused_26[6];
+	short unused_26[5];
+	char animationCanReverse;
+	char unused_31;
 	unsigned char type;
 	char isFullyCompressed;
 	char isExternal;
@@ -31,7 +33,7 @@ struct Data_Graphics_Index {
 	char buildingSize;
 	char bitmapId;
 	char unused_39;
-	char animationSpeedId;
+	unsigned char animationSpeedId;
 	char unused_3B;
 	char unknown_3C;
 	char unknown_3D;
