@@ -31,6 +31,10 @@ void UI_Advisor_Labor_drawBackground();
 void UI_Advisor_Labor_drawForeground();
 void UI_Advisor_Labor_handleMouse();
 
+void UI_Advisor_Military_drawBackground();
+void UI_Advisor_Military_drawForeground();
+void UI_Advisor_Military_handleMouse();
+
 void UI_Advisor_Imperial_drawBackground();
 void UI_Advisor_Imperial_drawForeground();
 void UI_Advisor_Imperial_handleMouse();

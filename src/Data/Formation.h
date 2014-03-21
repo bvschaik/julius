@@ -6,8 +6,8 @@
 struct Data_Formation {
 	char inUse;
 	char ciid;
-	char fortId;
-	char __unknown03;
+	char legionId;
+	char isAtFort;
 	short walkerType;
 	short buildingId;
 	short walkerIds[16];
@@ -17,7 +17,7 @@ struct Data_Formation {
 	short morale;
 	char xFort;
 	char yFort;
-	char xStandard;
+	char xStandard; //30
 	char yStandard;
 	char x;
 	char y;
@@ -25,11 +25,11 @@ struct Data_Formation {
 	char __unknown35;
 	short __unknown36;
 	short bannerWalkerId;
-	char isFort;
+	char isLegion;
 	char __padding;
 	short attackType;
 	short __unknown3e;
-	short hasMilitaryTraining;
+	short hasMilitaryTraining; //40
 	short __unknown42;
 	short __unknown44;
 	short __unknown46;
@@ -46,12 +46,13 @@ struct Data_Formation {
 	short cursedByMars;
 	char __unknown5e;
 	char empireService;
-	char inDistantBattle;
+	char inDistantBattle; //60
 	char __unknown61;
 	char enemyType;
 	char __unknown63;
 	char __unknown64;
-	short __unknown65;
+	char __unknown65;
+	char __unknown66;
 	char orientation;
 	char __unknown68;
 	char __unknown69;
@@ -63,5 +64,11 @@ struct Data_Formation {
 };
 
 extern struct Data_Formation Data_Formations[MAX_FORMATIONS];
+
+extern struct Data_Formation_Extra {
+	int idLastInUse;
+	int idLastLegion;
+	int numLegions;
+} Data_Formation_Extra;
 
 #endif

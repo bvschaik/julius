@@ -1146,10 +1146,10 @@ extern struct Data_CityInfo {
 	char __unknown_4589;
 	char distantBattleEnemyMonthsTraveled;
 	char distantBattleRomanMonthsTraveled;
-	char __unknown_458c;
-	char __unknown_458d;
+	char militaryTotalLegions;
+	char militaryTotalLegionsEmpireService;
 	char __unknown_458e;
-	char __unknown_458f;
+	char militaryTotalSoldiers;
 	char triumphalArchesPlaced;
 	char __unknown_4591;
 	char __unknown_4592;

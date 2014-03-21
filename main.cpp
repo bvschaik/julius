@@ -24,6 +24,7 @@
 #include "src/Data/CityInfo.h"
 #include "src/Data/Building.h"
 #include "src/Data/Sound.h"
+#include "src/Data/Formation.h"
 
 Color screen[960000];
 
@@ -56,6 +57,7 @@ int main(int argc, char **argv)
 	assert("City info", 2*18068, sizeof(Data_CityInfo));
 	assert("Building object", 128, sizeof(struct Data_Building));
 	assert("City sound", 128, sizeof(struct Data_Sound_City));
+	assert("Formation", 128, sizeof(struct Data_Formation));
 	printf("sizeof(Data_Scenario_settings) = %x\n", sizeof(Data_Settings));
 
 	Loader_Graphics_initGraphics();

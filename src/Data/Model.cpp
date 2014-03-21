@@ -81,5 +81,6 @@ struct Data_InvasionWarning Data_InvasionWarnings[101];
 struct Data_TradePrice Data_TradePrices[16];
 
 struct Data_Formation Data_Formations[MAX_FORMATIONS];
+struct Data_Formation_Extra Data_Formation_Extra;
 
 int Constant_SalaryForRank[11] = {0, 2, 5, 8, 12, 20, 30, 40, 60, 80, 100};

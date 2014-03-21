@@ -14,6 +14,7 @@
 #include "Data/Invasion.h"
 #include "Data/Trade.h"
 #include "Data/Walker.h"
+#include "Data/Formation.h"
 
 #include "Zip.h"
 
@@ -89,10 +90,10 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{1, &Data_Walkers, 128000},
 	{1, &tmp, 1200}, //{1, &destinationpath_index, 0x4B0},
 	{1, &tmp, 300000}, //{1, &destinationpath_data, 0x493E0},
-	{1, &tmp, 6400}, //{1, &formation_start_inUse, 0x1900},
-	{0, &tmp, 4}, //{0, &formationId_lastInUse, 4},
-	{0, &tmp, 4}, //{0, &formationId_lastFort, 4},
-	{0, &tmp, 4}, //{0, &numForts, 4},
+	{1, &Data_Formations, 6400},
+	{0, &Data_Formation_Extra.idLastInUse, 4},
+	{0, &Data_Formation_Extra.idLastLegion, 4},
+	{0, &Data_Formation_Extra.numLegions, 4},
 	{1, &Data_CityInfo, 36136},
 	{0, &tmp, 2}, //{0, &byte_658DCC, 2},
 	{0, &tmp, 64}, //{0, &save_player0name, 0x40},

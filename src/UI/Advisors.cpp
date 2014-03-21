@@ -50,7 +50,7 @@ void UI_Advisors_drawBackground()
 			UI_Advisor_Labor_drawBackground();
 			break;
 		case Advisor_Military:
-			// TODO UI_Advisor__drawBackground();
+			UI_Advisor_Military_drawBackground();
 			break;
 		case Advisor_Imperial:
 			UI_Advisor_Imperial_drawBackground();
@@ -99,7 +99,7 @@ void UI_Advisors_drawForeground()
 			UI_Advisor_Labor_drawForeground();
 			break;
 		case Advisor_Military:
-			// TODO j_fun_drawMilitaryAdvisorButtons();
+			UI_Advisor_Military_drawForeground();
 			break;
 		case Advisor_Imperial:
 			UI_Advisor_Imperial_drawForeground();
@@ -161,6 +161,8 @@ void UI_Advisors_handleMouse()
 		case Advisor_Labor:
 			UI_Advisor_Labor_handleMouse();
 			break;
+		case Advisor_Military:
+			UI_Advisor_Military_handleMouse();
 		case Advisor_Imperial:
 			UI_Advisor_Imperial_handleMouse();
 			break;
