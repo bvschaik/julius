@@ -3,6 +3,7 @@
 #include "Data/Constants.h"
 #include "Data/Graphics.h"
 #include "Data/KeyboardInput.h"
+#include "Data/Mouse.h"
 
 #include "Graphics.h"
 #include "Language.h"
@@ -389,4 +390,277 @@ int Widget_GameText_drawMultiline(int group, int number, int xOffset, int yOffse
 	const char *str = Language_getString(group, number);
 	return Widget_Text_drawMultiline(str, xOffset, yOffset, boxWidth, font);
 }
+
+
+// RICH TEXT
+
+#define MAX_LINKS 50
+
+static void drawRichTextLine(const unsigned char *str, int x, int y, int measureOnly);
+static int getRichTextWordWidth(const unsigned char *str, int *outNumChars);
+static int drawRichTextCharacter(Font font, unsigned int c, int x, int y, int measureOnly);
+
+static struct RichTextLink {
+	int messageId;
+	int xMin;
+	int yMin;
+	int xMax;
+	int yMax;
+} links[MAX_LINKS];
+
+static int numLinks;
+static Font richTextNormalFont = Font_NormalWhite;
+static Font richTextLinkFont = Font_NormalRed;
+
+void Widget_RichText_setFonts(Font normalFont, Font linkFont)
+{
+	richTextNormalFont = normalFont;
+	richTextLinkFont = linkFont;
+}
+
+int Widget_RichText_getClickedLink()
+{
+	if (Data_Mouse.left.wentDown) {
+		for (int i = 0; i < numLinks; i++) {
+			if (Data_Mouse.x >= links[i].xMin && Data_Mouse.x <= links[i].xMax &&
+				Data_Mouse.y >= links[i].yMin && Data_Mouse.y <= links[i].yMax) {
+				return links[i].messageId;
+			}
+		}
+	}
+	return -1;
+}
+
+static void addRichTextLink(int messageId, int xStart, int xEnd, int y)
+{
+	if (numLinks < MAX_LINKS) {
+		links[numLinks].messageId = messageId;
+		links[numLinks].xMin = xStart - 2;
+		links[numLinks].xMax = xEnd + 2;
+		links[numLinks].yMin = y - 1;
+		links[numLinks].yMax = y + 13;
+		numLinks++;
+	}
+}
+
+void Widget_RichText_clearLinks()
+{
+	for (int i = 0; i < MAX_LINKS; i++) {
+		links[i].messageId = 0;
+		links[i].xMin = 0;
+		links[i].xMax = 0;
+		links[i].yMin = 0;
+		links[i].yMax = 0;
+	}
+	numLinks = 0;
+}
+
+int Widget_RichText_draw(const unsigned char *str, int xOffset, int yOffset,
+						 int boxWidth, int heightLines, int scrollLine, int measureOnly)
+{
+	int graphicHeightLines = 0;
+	int graphicId = 0;
+	int linesBeforeGraphic = 0;
+	int paragraph = 0;
+	int hasMoreCharacters = 1;
+	int y = yOffset;
+	int guard = 0;
+	int line = 0;
+	int numLines = 0;
+	while (hasMoreCharacters || graphicHeightLines) {
+		if (++guard >= 1000) {
+			break;
+		}
+		// clear line
+		for (int i = 0; i < 200; i++) {
+			tmpLine[i] = 0;
+		}
+		int currentWidth;
+		int xLineOffset;
+		int lineIndex = 0;
+		if (paragraph) {
+			currentWidth = xLineOffset = 50;
+		} else {
+			currentWidth = xLineOffset = 0;
+		}
+		while ((hasMoreCharacters || graphicHeightLines) && currentWidth < boxWidth) {
+			if (graphicHeightLines) {
+				graphicHeightLines--;
+				break;
+			}
+			int wordNumChars;
+			int wordWidth = getRichTextWordWidth(str, &wordNumChars);
+			currentWidth += wordWidth;
+			if (currentWidth >= boxWidth) {
+				if (currentWidth == 0) {
+					hasMoreCharacters = 0;
+				}
+			} else {
+				for (int i = 0; i < wordNumChars; i++) {
+					unsigned char c = *(str++);
+					if (c == '@') {
+						if (*str == 'P') {
+							paragraph = 1;
+							str++;
+							currentWidth = boxWidth;
+							break;
+						} else if (*str == 'L') {
+							str++;
+							currentWidth = boxWidth;
+							break;
+						} else if (*str == 'G') {
+							if (lineIndex) {
+								numLines++;
+							}
+							str++;
+							currentWidth = boxWidth;
+							graphicId = String_toInt((const char*)str);
+							do {
+								str++;
+							} while (*str >= '0' && *str <= '9');
+							graphicId += GraphicId(ID_Graphic_MessageImages) - 1;
+							graphicHeightLines = GraphicHeight(graphicId) / 16 + 2;
+							if (lineIndex > 0) {
+								linesBeforeGraphic = 1;
+							}
+							break;
+						}
+					}
+					if (lineIndex || c != ' ') { // no space at start of line
+						tmpLine[lineIndex++] = c;
+					}
+				}
+				if (!*str) {
+					hasMoreCharacters = 0;
+				}
+			}
+		}
+
+		int outsideViewport = 0;
+		if (!measureOnly) {
+			if (line < scrollLine || line >= scrollLine + heightLines) {
+				outsideViewport = 1;
+			}
+		}
+		if (!outsideViewport) {
+			drawRichTextLine((unsigned char*)tmpLine, xLineOffset + xOffset, y, measureOnly);
+		}
+		if (!measureOnly) {
+			if (graphicId) {
+				if (linesBeforeGraphic) {
+					linesBeforeGraphic--;
+				} else {
+					graphicHeightLines = GraphicHeight(graphicId) / 16 + 2;
+					int xOffsetGraphic = xOffset + (boxWidth - Data_Graphics_Main.index[graphicId].width) / 2 - 4;
+					if (line < heightLines + scrollLine) {
+						Graphics_drawImage(graphicId, xOffsetGraphic, y + 8);
+					} else {
+						Graphics_drawImage(graphicId, xOffsetGraphic, y + 8 - 16 * (scrollLine - line));
+					}
+					graphicId = 0;
+				}
+			}
+		}
+		line++;
+		if (!outsideViewport) {
+			y += 16;
+		}
+	}
+	return line;
+}
+
+static void drawRichTextLine(const unsigned char *str, int x, int y, int measureOnly)
+{
+	int numLinkChars = 0;
+	for (unsigned char c = *str; c; c = *(++str)) {
+		if (c == '@') {
+			int messageId = String_toInt((char*)++str);
+			while (*str >= '0' && *str <= '9') {
+				str++;
+			}
+			int width = getRichTextWordWidth(str, &numLinkChars);
+			addRichTextLink(messageId, x, x + width, y);
+			c = *str;
+		}
+		if (c >= ' ') {
+			Font font = richTextNormalFont;
+			if (numLinkChars > 0) {
+				font = richTextLinkFont;
+				numLinkChars--;
+			}
+			if (map_charToFontGraphic[c] <= 0) {
+				x += 6;
+			} else {
+				x += drawRichTextCharacter(font, c, x, y, measureOnly);
+			}
+		}
+	}
+}
+
+static int getRichTextWordWidth(const unsigned char *str, int *outNumChars)
+{
+	int width = 0;
+	int guard = 0;
+	int wordCharSeen = 0;
+	int numChars = 0;
+	for (unsigned char c = *str; c; c = *(++str)) {
+		if (++guard >= 2000) {
+			break;
+		}
+		if (c == '@') {
+			c = *(++str);
+			if (!wordCharSeen) {
+				if (c == 'P' || c == 'L') {
+					numChars += 2;
+					return 0;
+				} else {
+					if (c == 'G') {
+						numChars++;
+						c = *(++str);
+					}
+					numChars++;
+					while (c >= '0' && c <= '9') {
+						c = *(++str);
+						numChars++;
+					}
+				}
+			}
+		}
+		if (c == ' ') {
+			if (wordCharSeen) {
+				break;
+			}
+			width += 4;
+		} else if (c > ' ') {
+			// normal char
+			width += getCharacterWidth(c, richTextNormalFont);
+			wordCharSeen = 1;
+		}
+		numChars++;
+	}
+	*outNumChars = numChars;
+	return width;
+}
+
+static int drawRichTextCharacter(Font font, unsigned int c, int x, int y, int measureOnly)
+{
+	int graphicOffset = map_charToFontGraphic[c];
+	if (!graphicOffset) {
+		return 0;
+	}
+
+	int graphicId = GraphicId(ID_Graphic_Font) + font + graphicOffset - 1;
+	int height = Data_Graphics_Main.index[graphicId].height - 11;
+	if (height < 0) {
+		height = 0;
+	}
+	if (c < 128 || c == 231) { // Some exceptions...
+		height = 0;
+	}
+	if (!measureOnly) {
+		Graphics_drawImage(graphicId, x, y - height);
+	}
+	return Data_Graphics_Main.index[graphicId].width;
+}
+
 

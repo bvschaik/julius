@@ -3,6 +3,7 @@
 
 enum {
 	ID_Graphic_TerrainBlack = 1,
+	ID_Graphic_TerrainUglyGrass = 3,
 	ID_Graphic_TerrainWater = 5,
 	ID_Graphic_TerrainGrass1 = 10,
 	ID_Graphic_TopMenuSidebar = 11,
@@ -43,6 +44,7 @@ enum {
 	ID_Graphic_MinimapBlack = 152,
 	ID_Graphic_PopulationGraphBar = 157,
 	ID_Graphic_Bullet = 158,
+	ID_Graphic_MessageImages = 159,
 	ID_Graphic_WinGame = 160,
 	ID_Graphic_Dock2 = 168,
 	ID_Graphic_Dock3 = 169,

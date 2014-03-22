@@ -38,6 +38,7 @@ void assert(const char *msg, int expected, int actual)
 int main(int argc, char **argv)
 {
 	Data_Screen.drawBuffer = screen;
+	Data_Screen.format = 565;
 	const char inputData[100] = "some fairly nice random input string to compress and then decompress";
 
 	char compressedBuf[100];
@@ -67,7 +68,7 @@ int main(int argc, char **argv)
 	printf("Text string: %s\n", Language_getString(30, 1));
 	GameFile_loadSavedGame("1.sav");
 
-	printf("graphic id = %d\n", GraphicId(99));
+	printf("graphic id = %d\n", GraphicId(3));
 	for (int i = 0; i < 10000; i++) {
 		if (Data_Graphics_Main.index[i].animationSpeedId) {
 			printf("%d: %d %d\n", i,
@@ -110,6 +111,10 @@ int main(int argc, char **argv)
 	Graphics_setClipRectangle(0, 0, 800, 600);
 	UI_MainMenu_drawBackground();
 	UI_MainMenu_drawForeground();
+
+	Widget_RichText_draw((const unsigned char *)
+		"small and large @67temples that your city ",
+		100, 100, 100, 10, 0, 0);
 
 	Graphics_saveScreenshot("test.bmp");
 	printf("GraphicID: %d\n", GraphicId(136));

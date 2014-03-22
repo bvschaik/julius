@@ -441,14 +441,14 @@ static void setClipY(int yOffset, int height)
 
 /////debug/////
 
-static void pixel(unsigned short input, unsigned char *r, unsigned char *g, unsigned char *b)
+static void pixel(ScreenColor input, unsigned char *r, unsigned char *g, unsigned char *b)
 {
-	int rr = ((input & 0x7c00) >> 7) | ((input & 0x7000) >> 12);
-	int gg = ((input & 0x3e0) >> 2) | ((input & 0x300) >> 8);
-	int bb = ((input & 0x1f) << 3) | ((input & 0x1c) >> 2);
-	*r = (char) rr;
-	*g = (char) gg;
-	*b = (char) bb;
+	int rr = (input & 0xff0000) >> 16;
+	int gg = (input & 0x00ff00) >> 8;
+	int bb = (input & 0x0000ff) >> 0;
+	*r = (unsigned char) rr;
+	*g = (unsigned char) gg;
+	*b = (unsigned char) bb;
 }
 
 void Graphics_saveScreenshot(const char *filename)
@@ -472,14 +472,11 @@ void Graphics_saveScreenshot(const char *filename)
 		12, 800, 600, 1, 24
 	};
 	unsigned char *pixels = (unsigned char*) malloc(800 * 3);
-	//Data_Screen.drawBuffer[0] = (short)(0x1f << 10);
-	//Data_Screen.drawBuffer[1] = (short)(0x1f << 5);
-	//Data_Screen.drawBuffer[2] = (short)(0x1f << 0);
 	FILE *fp = fopen(filename, "wb");
 	fwrite(&header.B, 1, 26, fp);
 	for (int y = 599; y >= 0; y--) {
 		for (int x = 0; x < 800; x++) {
-			pixel(((Color*)Data_Screen.drawBuffer)[y*800+x],
+			pixel(((ScreenColor*)Data_Screen.drawBuffer)[y*800+x],
 				&pixels[3*x+2], &pixels[3*x+1], &pixels[3*x]);
 		}
 		fwrite(pixels, 1, 3 * 800, fp);

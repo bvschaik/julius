@@ -244,8 +244,8 @@ extern struct Data_Building {
 		} market;
 		struct {
 			short unknown;
-			short spaceLeft;
-		} granary;
+			short resourceStored[16];
+		} storage;
 		struct {
 			short progress; //4a+b
 			char __padding[27];

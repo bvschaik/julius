@@ -273,7 +273,7 @@ int Building_create(int type, int x, int y)
 	}
 	
 	if (type == Building_Granary) {
-		b->data.granary.spaceLeft = 2400;
+		b->data.storage.resourceStored[Resource_None] = 2400;
 	}
 	
 	b->x = x;
