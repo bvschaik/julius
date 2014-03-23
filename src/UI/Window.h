@@ -5,7 +5,7 @@
 typedef enum {
 	Window_MainMenu = 0,
 	Window_City = 1, // 1?
-	Window_ConfirmDialog = 2, //63
+	Window_PopupDialog = 2, //63
 	Window_TopMenu = 3, // 3
 	Window_DifficultyOptions = 4,//69
 	Window_Advisors = 5, // 7
@@ -21,6 +21,7 @@ typedef enum {
 	Window_HoldFestivalDialog = 15,//43
 	Window_TradePricesDialog = 16,//41
 	Window_ResourceSettingsDialog = 17,//40
+	Window_MessageDialog = 18, // 5
 } WindowId;
 
 WindowId UI_Window_getId();

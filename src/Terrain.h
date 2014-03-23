@@ -1,6 +1,8 @@
 #ifndef TERRAIN_H
 #define TERRAIN_H
 
+int Terrain_hasRoadAccess(int x, int y, int size, int *roadX, int *roadY);
+
 int Terrain_getClosestRoadWithinRadius(int x, int y, int size, int radius, int *xTile, int *yTile);
 
 int Terrain_isAdjacentToWall(int x, int y, int size);

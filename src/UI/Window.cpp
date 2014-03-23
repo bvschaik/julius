@@ -2,6 +2,7 @@
 #include "AllWindows.h"
 #include "TopMenu.h"
 #include "PopupDialog.h"
+#include "MessageDialog.h"
 
 #include "../Data/Mouse.h"
 
@@ -37,6 +38,7 @@ static struct Window windows[] = {
 	{ noop, UI_HoldFestivalDialog_drawBackground, UI_HoldFestivalDialog_drawForeground, UI_HoldFestivalDialog_handleMouse },
 	{ noop, UI_TradePricesDialog_drawBackground, noop, UI_TradePricesDialog_handleMouse },
 	{ noop, UI_ResourceSettingsDialog_drawBackground, UI_ResourceSettingsDialog_drawForeground, UI_ResourceSettingsDialog_handleMouse },
+	{ noop, UI_MessageDialog_drawBackground, UI_MessageDialog_drawForeground, UI_MessageDialog_handleMouse },
 };
 
 static WindowId previousWindow;

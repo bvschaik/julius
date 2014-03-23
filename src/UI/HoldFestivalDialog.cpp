@@ -1,8 +1,10 @@
 #include "AllWindows.h"
 #include "Window.h"
+#include "MessageDialog.h"
 #include "../Widget.h"
 #include "../Graphics.h"
 #include "../CityInfo.h"
+#include "../Resource.h"
 #include "Advisors_private.h"
 #include "../Data/CityInfo.h"
 #include "../Data/Screen.h"
@@ -150,7 +152,7 @@ static void buttonSize(int size, int param2)
 
 static void buttonHelp(int param1, int param2)
 {
-	// TODO showHelpDialog(28, 1);
+	UI_MessageDialog_show(MessageDialog_EntertainmentAdvisor, 1);
 }
 
 static void buttonClose(int param1, int param2)
@@ -181,7 +183,7 @@ static void buttonHoldFestival(int param1, int param2)
 	Data_CityInfo.financeSundriesThisYear += cost;
 
 	if (Data_CityInfo.festivalSize == 3) {
-		// TODO removeGoodsFromStorage(Resource_Wine, Data_CityInfo.festivalGrandWine);
+		Resource_removeFromCityStorage(Resource_Wine, Data_CityInfo.festivalWineGrand);
 	}
 	UI_Window_goTo(Window_Advisors);
 }

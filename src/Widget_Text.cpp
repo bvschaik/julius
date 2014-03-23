@@ -455,7 +455,7 @@ void Widget_RichText_clearLinks()
 	numLinks = 0;
 }
 
-int Widget_RichText_draw(const unsigned char *str, int xOffset, int yOffset,
+int Widget_RichText_draw(const char *str, int xOffset, int yOffset,
 						 int boxWidth, int heightLines, int scrollLine, int measureOnly)
 {
 	int graphicHeightLines = 0;
@@ -483,13 +483,14 @@ int Widget_RichText_draw(const unsigned char *str, int xOffset, int yOffset,
 		} else {
 			currentWidth = xLineOffset = 0;
 		}
+		paragraph = 0;
 		while ((hasMoreCharacters || graphicHeightLines) && currentWidth < boxWidth) {
 			if (graphicHeightLines) {
 				graphicHeightLines--;
 				break;
 			}
 			int wordNumChars;
-			int wordWidth = getRichTextWordWidth(str, &wordNumChars);
+			int wordWidth = getRichTextWordWidth((const unsigned char*)str, &wordNumChars);
 			currentWidth += wordWidth;
 			if (currentWidth >= boxWidth) {
 				if (currentWidth == 0) {
@@ -497,7 +498,7 @@ int Widget_RichText_draw(const unsigned char *str, int xOffset, int yOffset,
 				}
 			} else {
 				for (int i = 0; i < wordNumChars; i++) {
-					unsigned char c = *(str++);
+					char c = *(str++);
 					if (c == '@') {
 						if (*str == 'P') {
 							paragraph = 1;
@@ -514,7 +515,7 @@ int Widget_RichText_draw(const unsigned char *str, int xOffset, int yOffset,
 							}
 							str++;
 							currentWidth = boxWidth;
-							graphicId = String_toInt((const char*)str);
+							graphicId = String_toInt(str);
 							do {
 								str++;
 							} while (*str >= '0' && *str <= '9');

@@ -9,8 +9,8 @@
 #define TEXT_INDEX_SIZE 8000
 #define TEXT_DATA_SIZE_MAX 200000
 
-#define HELP_INDEX_SIZE 32024
-#define HELP_DATA_SIZE_MAX 360000
+#define MESSAGE_INDEX_SIZE 32024
+#define MESSAGE_DATA_SIZE_MAX 360000
 
 static int fileLength(FILE *fp)
 {
@@ -20,7 +20,7 @@ static int fileLength(FILE *fp)
 	return length;
 }
 
-int Language_load(const char *textfile, const char *helpfile)
+int Language_load(const char *textfile, const char *msgfile)
 {
 	FILE *fp = fopen(textfile, "rb");
 	if (!fp) {
@@ -36,20 +36,19 @@ int Language_load(const char *textfile, const char *helpfile)
 	fread(Data_Language_Text.data, 1, textDataLength, fp);
 	fclose(fp);
 
-	/*
-	int fdHelp = _open(helpFile, O_BINARY);
-	if (fdHelp == -1) {
+	fp = fopen(msgfile, "rb");
+	if (!fp) {
 		return 0;
 	}
-	int helpDataLength = _filelength(fdHelp) - HELP_INDEX_SIZE;
-	if (helpDataLength > HELP_DATA_SIZE_MAX) {
-		_close(fdHelp);
+	int msgDataLength = fileLength(fp) - MESSAGE_INDEX_SIZE;
+	if (msgDataLength > MESSAGE_DATA_SIZE_MAX) {
+		fclose(fp);
 		return 0;
 	}
-	_read(fdHelp, helpIndex, HELP_INDEX_SIZE);
-	_read(fdHelp, helpData, helpDataLength);
-	_close(fdHelp);
-	*/
+	fread(&Data_Language_Message.header, 1, MESSAGE_INDEX_SIZE, fp);
+	fread(Data_Language_Message.data, 1, msgDataLength, fp);
+	fclose(fp);
+
 	return 1;
 }
 

@@ -243,31 +243,31 @@ static void drawBuildingTopsWalkersAnimation(int selectedWalkerId)
 				}
 				// workshops
 				if (b->type == Building_WineWorkshop) {
-					if (b->rawMaterialsStored >= 2 || b->data.industry.hasFullResource) {
+					if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
 						Graphics_drawImageMasked(GraphicId(ID_Graphic_WorkshopRawMaterial),
 							xGraphic + 45, yGraphic + 23, colorMask);
 					}
 				}
 				if (b->type == Building_OilWorkshop) {
-					if (b->rawMaterialsStored >= 2 || b->data.industry.hasFullResource) {
+					if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
 						Graphics_drawImageMasked(GraphicId(ID_Graphic_WorkshopRawMaterial) + 1,
 							xGraphic + 35, yGraphic + 15, colorMask);
 					}
 				}
 				if (b->type == Building_WeaponsWorkshop) {
-					if (b->rawMaterialsStored >= 2 || b->data.industry.hasFullResource) {
+					if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
 						Graphics_drawImageMasked(GraphicId(ID_Graphic_WorkshopRawMaterial) + 3,
 							xGraphic + 46, yGraphic + 24, colorMask);
 					}
 				}
 				if (b->type == Building_FurnitureWorkshop) {
-					if (b->rawMaterialsStored >= 2 || b->data.industry.hasFullResource) {
+					if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
 						Graphics_drawImageMasked(GraphicId(ID_Graphic_WorkshopRawMaterial) + 2,
 							xGraphic + 48, yGraphic + 19, colorMask);
 					}
 				}
 				if (b->type == Building_PotteryWorkshop) {
-					if (b->rawMaterialsStored >= 2 || b->data.industry.hasFullResource) {
+					if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
 						Graphics_drawImageMasked(GraphicId(ID_Graphic_WorkshopRawMaterial) + 4,
 							xGraphic + 47, yGraphic + 24, colorMask);
 					}

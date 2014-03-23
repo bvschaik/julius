@@ -1,6 +1,7 @@
 #include "Window.h"
 #include "AllWindows.h"
 #include "PopupDialog.h"
+#include "MessageDialog.h"
 #include "../Graphics.h"
 #include "../Widget.h"
 #include "../Empire.h"
@@ -533,8 +534,7 @@ void UI_Empire_handleMouse()
 
 static void buttonHelp(int param1, int param2)
 {
-	// TODO
-	// UI_HelpDialog_show(32, 1);
+	UI_MessageDialog_show(MessageDialog_EmpireMap, 1);
 }
 
 static void buttonReturnToCity(int param1, int param2)

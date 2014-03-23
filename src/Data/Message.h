@@ -2,7 +2,7 @@
 #define DATA_MESSAGE_H
 
 extern struct Data_Message {
-	struct {
+	struct Data_PlayerMessage {
 		int param1;
 		short year;
 		short param2;

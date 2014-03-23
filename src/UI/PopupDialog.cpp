@@ -42,7 +42,7 @@ void UI_PopupDialog_show(int msgId, void (*closeFunc)(int accepted), int hasOkCa
 	data.hasButtons = hasOkCancelButtons;
 	data.x = Data_Screen.offset640x480.x + 80;
 	data.y = Data_Screen.offset640x480.y + 80;
-	UI_Window_goTo(Window_ConfirmDialog);
+	UI_Window_goTo(Window_PopupDialog);
 }
 
 void UI_PopupDialog_drawBackground()

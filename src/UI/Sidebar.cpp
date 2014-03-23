@@ -1,6 +1,7 @@
 #include "Sidebar.h"
 #include "Minimap.h"
 #include "Window.h"
+#include "MessageDialog.h"
 #include "../Graphics.h"
 #include "../Widget.h"
 #include "../Data/CityInfo.h"
@@ -33,7 +34,7 @@ static void buttonRotate(int param1, int param2);
 
 ImageButton buttonOverlaysCollapseSidebar[] = {
 	{127, 5, 31, 20, 4, 90, 0, Widget_Button_doNothing, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0},
-	{4, 3, 117, 31, 4, 93, 0, Widget_Button_doNothing, Widget_Button_doNothing, 1, 0, 0, 0, 0, 18}
+	{4, 3, 117, 31, 4, 93, 0, Widget_Button_doNothing, buttonHelp, 1, 0, 0, 0, 0, 18}
 };
 
 ImageButton buttonExpandSidebar[] = {
@@ -206,10 +207,12 @@ static void buttonMessages(int param1, int param2)
 {
 	// TODO
 }
+
 static void buttonHelp(int param1, int param2)
 {
-	// TODO
+	UI_MessageDialog_show(param2, 0);
 }
+
 static void buttonGoToProblem(int param1, int param2)
 {
 	// TODO

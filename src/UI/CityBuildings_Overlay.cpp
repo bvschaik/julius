@@ -1341,7 +1341,7 @@ static void drawBuildingTopForProblemsOverlay(int gridOffset, int buildingId, in
 			Data_Walkers[walkerId].actionState == WalkerActionState_20_CartPusher &&
 			Data_Walkers[walkerId].minMaxSeen) {
 			Data_Buildings[buildingId].showOnProblemOverlay = 1;
-		} else if (Data_Buildings[buildingId].rawMaterialsStored <= 0) {
+		} else if (Data_Buildings[buildingId].loadsStored <= 0) {
 			Data_Buildings[buildingId].showOnProblemOverlay = 1;
 		}
 	}

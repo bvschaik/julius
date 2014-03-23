@@ -259,7 +259,7 @@ int main()
 	
 	printf("Load images: %d\n", Loader_Graphics_loadMainGraphics(2));
 	printf("Load model: %d\n", Loader_Model_loadC3ModelTxt());
-	printf("Load language: %d\n", Language_load("c3.eng", 0));
+	printf("Load language: %d\n", Language_load("c3.eng", "c3_mm.eng"));
 	UI_Window_goTo(Window_MainMenu);
 	
 	GameFile_loadSavedGame("1.sav");

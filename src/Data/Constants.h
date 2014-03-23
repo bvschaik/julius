@@ -56,6 +56,7 @@ enum {
 	ID_Graphic_EmpireCityTrade = 175,
 	ID_Graphic_EmpireCityDistantRoman = 176,
 	ID_Graphic_RatingsColumn = 189,
+	ID_Graphic_BigPeople = 190,
 	ID_Graphic_TheaterShow = 191,
 	ID_Graphic_AmphitheaterShow = 192,
 	ID_Graphic_ColosseumShow = 193,

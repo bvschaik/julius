@@ -193,7 +193,7 @@ extern struct Data_CityInfo {
 	int buildingSenateBuildingId;
 	char __unknown_2828;
 	char __unknown_2829;
-	short resourceTradeExported[16];
+	short resourceSpaceInWarehouses[16];
 	short resourceStored[16];
 	short resourceTradeStatus[16];
 	short resourceTradeExportOver[16];

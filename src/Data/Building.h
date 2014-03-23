@@ -168,13 +168,13 @@ extern struct Data_Building {
 	char __unknown_2f;
 	short prevPartBuildingId;
 	short nextPartBuildingId;
-	short rawMaterialsStored;
+	short loadsStored;
 	char __unused_36;
 	char houseHasWellAccess;
 	short numWorkers;
 	char laborCategory;
 	char outputResourceId;
-	char __unknown_3c;
+	char hasRoadAccess;
 	char __unknown_3d;
 	short damageRisk;
 	short fireRisk;

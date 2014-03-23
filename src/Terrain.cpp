@@ -45,6 +45,12 @@ static int tilesAroundBuildingGridOffsets[][20] = {
 #define STORE_XY_RADIUS(xTile,yTile) \
 	*(xTile) = xx; *(yTile) = yy;
 
+int Terrain_hasRoadAccess(int x, int y, int size, int *roadX, int *roadY)
+{
+	// TODO
+	return 0;
+}
+
 static int getRoadWithinRadius(int x, int y, int size, int radius, int *xTile, int *yTile);
 int Terrain_getClosestRoadWithinRadius(int x, int y, int size, int radius, int *xTile, int *yTile)
 {

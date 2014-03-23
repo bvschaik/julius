@@ -64,7 +64,7 @@ int main(int argc, char **argv)
 	Loader_Graphics_initGraphics();
 	printf("Load images: %d\n", Loader_Graphics_loadMainGraphics(0));
 	printf("Load model: %d\n", Loader_Model_loadC3ModelTxt());
-	printf("Load language: %d\n", Language_load("c3.eng", 0));
+	printf("Load language: %d\n", Language_load("c3.eng", "c3_mm.eng"));
 	printf("Text string: %s\n", Language_getString(30, 1));
 	GameFile_loadSavedGame("1.sav");
 
@@ -112,7 +112,7 @@ int main(int argc, char **argv)
 	UI_MainMenu_drawBackground();
 	UI_MainMenu_drawForeground();
 
-	Widget_RichText_draw((const unsigned char *)
+	Widget_RichText_draw(
 		"small and large @67temples that your city ",
 		100, 100, 100, 10, 0, 0);
 

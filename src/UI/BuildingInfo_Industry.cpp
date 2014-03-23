@@ -164,12 +164,12 @@ static void drawWorkshop(BuildingInfoContext *c, int helpId, const char *soundFi
 	Graphics_drawImage(GraphicId(ID_Graphic_ResourceIcons) + inputResourceId,
 		c->xOffset + 32, c->yOffset + 56);
 	width = Widget_GameText_draw(groupId, 12, c->xOffset + 60, c->yOffset + 60, Font_NormalBlack);
-	if (Data_Buildings[c->buildingId].rawMaterialsStored < 1) {
+	if (Data_Buildings[c->buildingId].loadsStored < 1) {
 		Widget_GameText_drawNumberWithDescription(8, 10, 0,
 			c->xOffset + 60 + width, c->yOffset + 60, Font_NormalBlack);
 	} else {
 		Widget_GameText_drawNumberWithDescription(8, 10,
-			Data_Buildings[c->buildingId].rawMaterialsStored,
+			Data_Buildings[c->buildingId].loadsStored,
 			c->xOffset + 60 + width, c->yOffset + 60, Font_NormalBlack);
 	}
 
@@ -179,7 +179,7 @@ static void drawWorkshop(BuildingInfoContext *c, int helpId, const char *soundFi
 		DRAW_DESC_AT(86, groupId, 4);
 	} else if (Data_Buildings[c->buildingId].numWorkers <= 0) {
 		DRAW_DESC_AT(86, groupId, 5);
-	} else if (Data_Buildings[c->buildingId].rawMaterialsStored <= 0) {
+	} else if (Data_Buildings[c->buildingId].loadsStored <= 0) {
 		DRAW_DESC_AT(86, groupId, 11);
 	} else if (c->workerPercentage >= 100) {
 		DRAW_DESC_AT(86, groupId, 6);

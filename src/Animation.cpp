@@ -46,7 +46,7 @@ int Animation_getIndexForCityBuilding(int graphicId, int gridOffset)
 		return 0;
 	}
 	if (BuildingIsWorkshop(b->type)) {
-		if (b->rawMaterialsStored <= 0 || b->numWorkers <= 0) {
+		if (b->loadsStored <= 0 || b->numWorkers <= 0) {
 			return 0;
 		}
 	}

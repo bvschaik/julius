@@ -589,11 +589,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\CityView.h"
+				RelativePath=".\src\CityView.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\CityView.h"
+				RelativePath=".\src\Data\CityView.h"
 				>
 			</File>
 			<File
@@ -605,11 +605,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Empire.h"
+				RelativePath=".\src\Empire.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Empire.h"
+				RelativePath=".\src\Data\Empire.h"
 				>
 			</File>
 			<File
@@ -621,11 +621,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Formation.h"
+				RelativePath=".\src\Formation.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Formation.h"
+				RelativePath=".\src\Data\Formation.h"
 				>
 			</File>
 			<File
@@ -633,11 +633,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Graphics.h"
+				RelativePath=".\src\Data\Graphics.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Graphics.h"
+				RelativePath=".\src\Graphics.h"
 				>
 			</File>
 			<File
@@ -661,11 +661,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\KeyboardInput.h"
+				RelativePath=".\src\Data\KeyboardInput.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\KeyboardInput.h"
+				RelativePath=".\src\KeyboardInput.h"
 				>
 			</File>
 			<File
@@ -682,6 +682,14 @@
 			</File>
 			<File
 				RelativePath=".\src\Data\Message.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\UI\MessageDialog.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\UI\MessageDialog.h"
 				>
 			</File>
 			<File
@@ -709,11 +717,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Random.h"
+				RelativePath=".\src\data\Random.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\data\Random.h"
+				RelativePath=".\src\Random.h"
 				>
 			</File>
 			<File
@@ -741,11 +749,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Sound.h"
+				RelativePath=".\src\Sound.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Sound.h"
+				RelativePath=".\src\Data\Sound.h"
 				>
 			</File>
 			<File
@@ -789,11 +797,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Walker.h"
+				RelativePath=".\src\Data\Walker.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Walker.h"
+				RelativePath=".\src\Walker.h"
 				>
 			</File>
 			<File

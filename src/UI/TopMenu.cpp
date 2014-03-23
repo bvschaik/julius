@@ -1,6 +1,7 @@
 #include "TopMenu.h"
 #include "Window.h"
 #include "AllWindows.h"
+#include "MessageDialog.h"
 #include "../Graphics.h"
 #include "../Widget.h"
 #include "../Data/CityInfo.h"
@@ -8,6 +9,7 @@
 #include "../Data/Graphics.h"
 #include "../Data/Mouse.h"
 #include "../Data/Screen.h"
+#include "../Data/Settings.h"
 
 static void drawBackground();
 
@@ -22,6 +24,11 @@ static void menuOptions_display(int param);
 static void menuOptions_sound(int param);
 static void menuOptions_speed(int param);
 static void menuOptions_difficulty(int param);
+
+static void menuHelp_help(int param);
+static void menuHelp_mouseHelp(int param);
+static void menuHelp_warnings(int param);
+static void menuHelp_about(int param);
 
 static void menuAdvisors_goTo(int param);
 
@@ -39,6 +46,13 @@ static MenuItem menuOptions[] = {
 	{20, 2, menuOptions_sound, 0},
 	{40, 3, menuOptions_speed, 0},
 	{60, 6, menuOptions_difficulty, 0},
+};
+
+static MenuItem menuHelp[] = {
+	{0, 1, menuHelp_help, 0},
+	{20, 2, menuHelp_mouseHelp, 0},
+	{40, 5, menuHelp_warnings, 0},
+	{60, 7, menuHelp_about, 0},
 };
 
 static MenuItem menuAdvisors[] = {
@@ -59,7 +73,7 @@ static MenuItem menuAdvisors[] = {
 static MenuBarItem menu[] = {
 	{10, 0, 6, 1, menuFile, 6},
 	{10, 0, 6, 2, menuOptions, 4},
-	{10, 0, 6, 3, menuFile, 0},
+	{10, 0, 6, 3, menuHelp, 4},
 	{10, 0, 6, 4, menuAdvisors, 12},
 };
 
@@ -227,6 +241,46 @@ static void menuOptions_difficulty(int param)
 	clearState();
 	UI_Window_goTo(Window_DifficultyOptions);
 }
+
+static void menuHelp_help(int param)
+{
+	clearState();
+	UI_Window_goBack();
+	UI_MessageDialog_show(MessageDialog_Help, 0);
+}
+
+static void menuHelp_mouseHelp(int param)
+{
+	if (Data_Settings.mouseTooltips == 2) {
+		Data_Settings.mouseTooltips = 0;
+		menuHelp[1].textNumber = 2;
+	} else if (Data_Settings.mouseTooltips == 1) {
+		Data_Settings.mouseTooltips = 2;
+		menuHelp[1].textNumber = 4;
+	} else {
+		Data_Settings.mouseTooltips = 1;
+		menuHelp[1].textNumber = 3;
+	}
+}
+
+static void menuHelp_warnings(int param)
+{
+	if (Data_Settings.warningsEnabled) {
+		Data_Settings.warningsEnabled = 0;
+		menuHelp[2].textNumber = 5;
+	} else {
+		Data_Settings.warningsEnabled = 1;
+		menuHelp[2].textNumber = 6;
+	}
+}
+
+static void menuHelp_about(int param)
+{
+	clearState();
+	UI_Window_goBack();
+	UI_MessageDialog_show(MessageDialog_About, 0);
+}
+
 
 static void menuAdvisors_goTo(int advisor)
 {

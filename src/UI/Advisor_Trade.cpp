@@ -1,5 +1,6 @@
 #include "Advisors_private.h"
 #include "Window.h"
+#include "MessageDialog.h"
 #include "../CityInfo.h"
 #include "../Empire.h"
 #include "../Resource.h"
@@ -322,8 +323,9 @@ void UI_ResourceSettingsDialog_handleMouse()
 
 static void resourceSettingsHelp(int param1, int param2)
 {
-	// TODO
+	UI_MessageDialog_show(MessageDialog_Industry, 1);
 }
+
 static void resourceSettingsOk(int param1, int param2)
 {
 	UI_Window_goTo(Window_Advisors);
