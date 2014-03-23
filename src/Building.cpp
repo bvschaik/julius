@@ -158,10 +158,23 @@ struct BuildingProperties {
 	{0, 0, 0, 0}
 };
 
+void Building_updateHighestIds()
+{
+	Data_Buildings_Extra.highestBuildingIdInUse = 0;
+	for (int i = 1; i < MAX_BUILDINGS; i++) {
+		if (Data_Buildings[i].inUse) {
+			Data_Buildings_Extra.highestBuildingIdInUse = i;
+		}
+	}
+	if (Data_Buildings_Extra.highestBuildingIdInUse > Data_Buildings_Extra.highestBuildingIdEver) {
+		Data_Buildings_Extra.highestBuildingIdEver = Data_Buildings_Extra.highestBuildingIdInUse;
+	}
+}
+
 void Building_clearList()
 {
 	memset(Data_Buildings, MAX_BUILDINGS * sizeof(struct Data_Building), 0);
-	Data_Buildings_Extra.highestBuildingIdSeen = 0;
+	Data_Buildings_Extra.highestBuildingIdEver = 0;
 	Data_Buildings_Extra.placedSequence = 0;
 }
 
@@ -249,23 +262,23 @@ int Building_create(int type, int x, int y)
 			break;
 		case Building_WineWorkshop:
 			b->outputResourceId = Resource_Wine;
-			b->subtype.warehouseResourceId = 2;
+			b->subtype.workshopResource = WorkshopResource_VinesToWine;
 			break;
 		case Building_OilWorkshop:
 			b->outputResourceId = Resource_Oil;
-			b->subtype.warehouseResourceId = 1;
+			b->subtype.workshopResource = WorkshopResource_OlivesToOil;
 			break;
 		case Building_WeaponsWorkshop:
 			b->outputResourceId = Resource_Weapons;
-			b->subtype.warehouseResourceId = 3;
+			b->subtype.workshopResource = WorkshopResource_IronToWeapons;
 			break;
 		case Building_FurnitureWorkshop:
 			b->outputResourceId = Resource_Furniture;
-			b->subtype.warehouseResourceId = 4;
+			b->subtype.workshopResource = WorkshopResource_TimberToFurniture;
 			break;
 		case Building_PotteryWorkshop:
 			b->outputResourceId = Resource_Pottery;
-			b->subtype.warehouseResourceId = 5;
+			b->subtype.workshopResource = WorkshopResource_ClayToPottery;
 			break;
 		default:
 			b->outputResourceId = Resource_None;

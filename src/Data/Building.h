@@ -121,8 +121,12 @@ enum {
 	Building_PotteryWorkshop = 114
 };
 
-#define BuildingIsWorkshop(b) ((b) >= Building_WineWorkshop && (b) <= Building_PotteryWorkshop)
-#define BuildingIsEntertainment(b) ((b) >= Building_Theater && (b) <= Building_ChariotMaker)
+enum {
+	BuildingStorageState_Getting = 2
+};
+
+#define BuildingIsWorkshop(type) ((type) >= Building_WineWorkshop && (type) <= Building_PotteryWorkshop)
+#define BuildingIsEntertainment(type) ((type) >= Building_Theater && (type) <= Building_ChariotMaker)
 
 extern struct Data_Building {
 	char inUse;
@@ -138,6 +142,7 @@ extern struct Data_Building {
 	union {
 		short houseLevel;
 		short warehouseResourceId;
+		short workshopResource;
 		short orientation;
 		short fortWalkerType;
 	} subtype;
@@ -327,7 +332,8 @@ extern struct Data_Building_Storage {
 } Data_Building_Storages[MAX_STORAGES];
 
 extern struct Data_Buildings_Extra {
-	int highestBuildingIdSeen;
+	int highestBuildingIdInUse;
+	int highestBuildingIdEver;
 	int placedSequence;
 } Data_Buildings_Extra;
 

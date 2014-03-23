@@ -183,7 +183,7 @@ static void buttonHoldFestival(int param1, int param2)
 	Data_CityInfo.financeSundriesThisYear += cost;
 
 	if (Data_CityInfo.festivalSize == 3) {
-		Resource_removeFromCityStorage(Resource_Wine, Data_CityInfo.festivalWineGrand);
+		Resource_removeFromCityWarehouses(Resource_Wine, Data_CityInfo.festivalWineGrand);
 	}
 	UI_Window_goTo(Window_Advisors);
 }

@@ -143,6 +143,14 @@ enum {
 };
 
 enum {
+	WorkshopResource_OlivesToOil = 1,
+	WorkshopResource_VinesToWine = 2,
+	WorkshopResource_IronToWeapons = 3,
+	WorkshopResource_TimberToFurniture = 4,
+	WorkshopResource_ClayToPottery = 5
+};
+
+enum {
 	Climate_Central = 0,
 	Climate_Northern = 1,
 	Climate_Desert = 2
