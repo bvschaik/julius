@@ -30,24 +30,6 @@ static void buttonScroll(int param1, int param2);
 static void buttonBack(int param1, int param2);
 static void buttonClose(int param1, int param2);
 
-enum {
-	Type_Manual = 0,
-	Type_About = 1,
-	Type_Message = 2,
-	Type_Mission = 3
-};
-
-enum {
-	MessageType_General = 0,
-	MessageType_Disaster = 1,
-	MessageType_Imperial = 2,
-	MessageType_Emigration = 3,
-	MessageType_Tutorial = 4,
-	MessageType_TradeChange = 5,
-	MessageType_PriceChange = 6,
-	MessageType_Invasion = 7
-};
-
 static ImageButton imageButtonBack = {
 	0, 0, 31, 20, 4, 90, 8, buttonBack, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0
 };
@@ -93,15 +75,19 @@ static struct {
 	int month;
 	int param1;
 	int param2;
+	int messageAdvisor;
 	int usePopup;
 } playerMessage;
 
-void UI_MessageDialog_setPlayerMessage(int year, int month, int param1, int param2, int usePopup)
+void UI_MessageDialog_setPlayerMessage(int year, int month,
+									   int param1, int param2,
+									   int messageAdvisor, int usePopup)
 {
 	playerMessage.year = year;
 	playerMessage.month = month;
 	playerMessage.param1 = param1;
 	playerMessage.param2 = param2;
+	playerMessage.messageAdvisor = messageAdvisor;
 	playerMessage.usePopup = usePopup;
 }
 

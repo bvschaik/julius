@@ -13,4 +13,6 @@ int Formation_getLegionFormationId(int legionId);
 
 void Formation_legionReturnHome(int formationId);
 
+void Formation_calculateLegionTotals();
+
 #endif

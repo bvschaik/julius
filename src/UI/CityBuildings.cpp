@@ -427,7 +427,63 @@ void drawWalker(int walkerId, int xOffset, int yOffset, int selectedWalkerId)
 	// TODO
 }
 
-void drawBridge(int gridOffset, int xOffset, int yOffset)
+void drawBridge(int gridOffset, int x, int y)
 {
-	// TODO
+	if (!(Data_Grid_terrain[gridOffset] & Terrain_Water)) {
+		Data_Grid_spriteOffsets[gridOffset] = 0;
+		return;
+	}
+	if (Data_Grid_terrain[gridOffset] & Terrain_Building) {
+		return;
+	}
+	Color colorMask = 0;
+	if (Data_Grid_bitfields[gridOffset] & Bitfield_Deleted) {
+		colorMask = Color_MaskRed;
+	}
+	int graphicId = GraphicId(ID_Graphic_Bridge);
+	switch (Data_Grid_spriteOffsets[gridOffset]) {
+		case 1:
+			Graphics_drawImageMasked(graphicId + 5, x, y - 20, colorMask);
+			break;
+		case 2:
+			Graphics_drawImageMasked(graphicId, x - 1, y - 8, colorMask);
+			break;
+		case 3:
+			Graphics_drawImageMasked(graphicId + 3, x, y - 8, colorMask);
+			break;
+		case 4:
+			Graphics_drawImageMasked(graphicId + 2, x + 7, y - 20, colorMask);
+			break;
+		case 5:
+			Graphics_drawImageMasked(graphicId + 4, x , y - 21, colorMask);
+			break;
+		case 6:
+			Graphics_drawImageMasked(graphicId + 1, x + 5, y - 21, colorMask);
+			break;
+		case 7:
+			Graphics_drawImageMasked(graphicId + 11, x - 3, y - 50, colorMask);
+			break;
+		case 8:
+			Graphics_drawImageMasked(graphicId + 6, x - 1, y - 12, colorMask);
+			break;
+		case 9:
+			Graphics_drawImageMasked(graphicId + 9, x - 30, y - 12, colorMask);
+			break;
+		case 10:
+			Graphics_drawImageMasked(graphicId + 8, x - 23, y - 53, colorMask);
+			break;
+		case 11:
+			Graphics_drawImageMasked(graphicId + 10, x, y - 37, colorMask);
+			break;
+		case 12:
+			Graphics_drawImageMasked(graphicId + 7, x + 7, y - 38, colorMask);
+			break;
+			// Note: no nr 13
+		case 14:
+			Graphics_drawImageMasked(graphicId + 13, x, y - 38, colorMask);
+			break;
+		case 15:
+			Graphics_drawImageMasked(graphicId + 12, x + 7, y - 38, colorMask);
+			break;
+	}
 }

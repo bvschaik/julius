@@ -8,6 +8,7 @@
 #include "../Data/Mouse.h"
 #include "../Data/Scenario.h"
 #include "../Data/Settings.h"
+#include "../Data/Walker.h"
 
 #define FOREACH_XY_VIEW(block)\
 	int odd = 0;\
@@ -107,10 +108,31 @@ static int drawWalker(int xView, int yView, int gridOffset)
 	int hasWalker = 0;
 
 	int walkerId = Data_Grid_walkerIds[gridOffset];
-	//while (walkerId > 0) {
-		// TODO walker on tile
-		//if (Data_Walkers[walkerId].type 
-	//}
+	while (walkerId > 0) {
+		int type = Data_Walkers[walkerId].type;
+		if (type >= Walker_FortJavelin && type <= Walker_FortLegionary) {
+			hasWalker = 1;
+			color = soldierColor;
+			break;
+		}
+		if (type >= Walker_Enemy43 && type <= Walker_Enemy57_Legionary) {
+			hasWalker = 1;
+			color = soldierColor;
+			break;
+		}
+		if (type == Walker_IndigenousNative &&
+			Data_Walkers[walkerId].actionState == WalkerActionState_159_AttackingNative) {
+			hasWalker = 1;
+			color = soldierColor;
+			break;
+		}
+		if (type == Walker_Wolf) {
+			hasWalker = 1;
+			color = Color_Black;
+			break;
+		}
+		walkerId = Data_Walkers[walkerId].nextWalkerIdOnSameTile;
+	}
 	if (hasWalker) {
 		Graphics_drawLine(xView, yView, xView+1, yView, color);
 		return 1;
@@ -220,5 +242,5 @@ static int getMouseGridOffset(int xOffset, int yOffset, int widthTiles, int heig
 
 void UI_Minimap_handleClick()
 {
-
+	// TODO
 }

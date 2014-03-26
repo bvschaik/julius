@@ -1,21 +1,26 @@
 #ifndef DATA_MESSAGE_H
 #define DATA_MESSAGE_H
 
-extern struct Data_Message {
-	struct Data_PlayerMessage {
-		int param1;
-		short year;
-		short param2;
-		short messageTypeId;
-		short id;
-		char readFlag;
-		char month;
-		char __filler[2];
-	} messages[1000];
+#define MAX_MESSAGES 1000
 
-	int nextMessageId;
+struct Data_PlayerMessage {
+	int param1;
+	short year;
+	short param2;
+	short messageType;
+	short sequence;
+	char readFlag;
+	char month;
+	char __filler[2];
+};
+
+extern struct Data_Message {
+	struct Data_PlayerMessage messages[MAX_MESSAGES];
+
+	int nextMessageSequence;
 	int totalMessages;
 	int currentMessageId;
+	int currentProblemAreaMessageId;
 	struct {
 		char pop0;
 		char pop500;
@@ -28,12 +33,31 @@ extern struct Data_Message {
 		char pop20000;
 		char pop25000;
 	} populationMessagesShown;
+
+	int messageCategoryCount[20];
+	int messageDelay[20];
+	int popupMessageQueue[20];
+	int consecutiveMessageDelay;
+
+	// sound related
+	int playSound;
+	struct {
+		int fire;
+		int collapse;
+		int rioterGenerated;
+		int rioterCollapse;
+	} lastSoundTime;
+
+	// UI related
+	int scrollPosition;
+	int maxScrollPosition;
+	int isDraggingScrollbar;
+	int scrollPositionDrag;
 } Data_Message;
 
 // TODO message delay ticks
 enum {
-	MessageType_WorkersNeeded
+	MessageDelayCategory_WorkersNeeded = 8
 };
-extern short Data_Message_Delay[50];
 
 #endif

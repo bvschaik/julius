@@ -53,8 +53,8 @@ void Graphics_clearScreen()
 
 static void drawDot(int x, int y, Color color)
 {
-	if (x >= 0 && x < Data_Screen.width) {
-		if (y >= 0 && y < Data_Screen.height) {
+	if (x >= clipRectangle.xStart && x < clipRectangle.xEnd) {
+		if (y >= clipRectangle.yStart && y < clipRectangle.yEnd) {
 			ScreenPixel(x, y) = ColorLookup[color];
 		}
 	}

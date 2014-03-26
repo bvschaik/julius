@@ -37,7 +37,6 @@ typedef struct {
 	//char field_10;
 	//char field_11;
 	//char field_12;
-	//char field_13;
 	int type;
 	int parameter1;
 	int parameter2;

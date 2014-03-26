@@ -205,7 +205,7 @@ static void buttonUndo(int param1, int param2)
 }
 static void buttonMessages(int param1, int param2)
 {
-	// TODO
+	UI_Window_goTo(Window_PlayerMessageList);
 }
 
 static void buttonHelp(int param1, int param2)

@@ -82,6 +82,10 @@ enum {
 #define WalkerIsEnemyOrNative(t) ((t) >= Walker_IndigenousNative && (t) <= Walker_NativeTrader)
 
 enum {
+	WalkerState_1 = 1
+};
+
+enum {
 	WalkerActionState_20_CartPusher = 20,
 	WalkerActionState_21_CartPusher = 21,
 	WalkerActionState_22_CartPusher = 22,
@@ -105,6 +109,7 @@ enum {
 	WalkerActionState_145_MarketBuyer = 145,
 	WalkerActionState_146_MarketBuyer = 146,
 	WalkerActionState_150 = 150,
+	WalkerActionState_159_AttackingNative = 159,
 };
 
 

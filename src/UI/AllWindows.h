@@ -65,4 +65,10 @@ void UI_TradeOpenedDialog_drawBackground();
 void UI_TradeOpenedDialog_drawForeground();
 void UI_TradeOpenedDialog_handleMouse();
 
+void UI_PlayerMessageList_init();
+void UI_PlayerMessageList_drawBackground();
+void UI_PlayerMessageList_drawForeground();
+void UI_PlayerMessageList_handleMouse();
+
+
 #endif

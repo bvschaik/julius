@@ -1137,10 +1137,7 @@ extern struct Data_CityInfo {
 	char __unknown_45b5;
 	char __unknown_45b6;
 	char __unknown_45b7;
-	char __unknown_45b8;
-	char __unknown_45b9;
-	char __unknown_45ba;
-	char __unknown_45bb;
+	int militaryLegionaryLegions;
 	char __unknown_45bc;
 	char __unknown_45bd;
 	char __unknown_45be;

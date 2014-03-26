@@ -415,6 +415,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\UI\PlayerMessageList.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\PlayerWarning.cpp"
 				>
 			</File>

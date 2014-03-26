@@ -1,6 +1,24 @@
 #ifndef DATA_LANGUAGE_H
 #define DATA_LANGUAGE_H
 
+enum {
+	Type_Manual = 0,
+	Type_About = 1,
+	Type_Message = 2,
+	Type_Mission = 3
+};
+
+enum {
+	MessageType_General = 0,
+	MessageType_Disaster = 1,
+	MessageType_Imperial = 2,
+	MessageType_Emigration = 3,
+	MessageType_Tutorial = 4,
+	MessageType_TradeChange = 5,
+	MessageType_PriceChange = 6,
+	MessageType_Invasion = 7
+};
+
 extern struct Data_Language_Text {
 	char header[28];
 	struct {
@@ -44,7 +62,7 @@ struct Data_Language_MessageEntry {
 extern struct Data_Language_Message {
 	char header[24];
 	struct Data_Language_MessageEntry index[400];
-	char data [360000];
+	char data[360000];
 } Data_Language_Message;
 
 #endif
