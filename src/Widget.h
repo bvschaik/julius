@@ -29,6 +29,7 @@ int Widget_Text_drawMultiline(const char *str, int xOffset, int yOffset, int box
 
 int Widget_GameText_drawMultiline(int group, int number, int xOffset, int yOffset, int boxWidth, Font font);
 
+int Widget_Text_getWidth(const char *str, Font font);
 int Widget_GameText_getWidth(int group, int number, Font font);
 
 void Widget_RichText_setFonts(Font normalFont, Font linkFont);
