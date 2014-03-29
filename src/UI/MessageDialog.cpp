@@ -37,10 +37,10 @@ static ImageButton imageButtonClose = {
 	0, 0, 24, 24, 4, 134, 4, buttonClose, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0
 };
 static ImageButton imageButtonScrollUp = {
-	0, 0, 39, 26, 6, 96, 8, buttonScroll, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0
+	0, 0, 39, 26, 6, 96, 8, buttonScroll, Widget_Button_doNothing, 1, 0, 0, 0, 0, 1
 };
 static ImageButton imageButtonScrollDown = {
-	0, 0, 39, 26, 6, 96, 12, buttonScroll, Widget_Button_doNothing, 1, 0, 0, 0, 1, 0
+	0, 0, 39, 26, 6, 96, 12, buttonScroll, Widget_Button_doNothing, 1, 0, 0, 0, 1, 1
 };
 
 static struct {
@@ -382,6 +382,11 @@ void UI_MessageDialog_drawForeground()
 
 void UI_MessageDialog_handleMouse()
 {
+	if (Data_Mouse.scrollDown) {
+		buttonScroll(1, 3);
+	} else if (Data_Mouse.scrollUp) {
+		buttonScroll(0, 3);
+	}
 	// TODO
 	struct Data_Language_MessageEntry *msg = &Data_Language_Message.index[data.messageId];
 
@@ -438,15 +443,17 @@ static void buttonBack(int param1, int param2)
 	}
 }
 
-static void buttonScroll(int isDown, int param2)
+static void buttonScroll(int isDown, int numLines)
 {
 	if (isDown) {
-		if (data.scrollPosition < data.maxScrollPosition) {
-			data.scrollPosition++;
+		data.scrollPosition += numLines;
+		if (data.scrollPosition > data.maxScrollPosition) {
+			data.scrollPosition = data.maxScrollPosition;
 		}
 	} else {
-		if (data.scrollPosition > 0) {
-			data.scrollPosition--;
+		data.scrollPosition -= numLines;
+		if (data.scrollPosition < 0) {
+			data.scrollPosition = 0;
 		}
 	}
 	Widget_RichText_clearLinks();

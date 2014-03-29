@@ -64,7 +64,7 @@ void UI_Window_goBack()
 	UI_Window_goTo(previousWindow);
 }
 
-static void handleMouse()
+static void updateMouseBefore()
 {
 	int prevLeftIsDown = Data_Mouse.left.isDown;
 	int prevRightIsDown = Data_Mouse.right.isDown;
@@ -94,14 +94,21 @@ static void handleMouse()
 	}
 }
 
+static void updateMouseAfter()
+{
+	Data_Mouse.scrollDown = 0;
+	Data_Mouse.scrollUp = 0;
+}
+
 void UI_Window_refresh(int force)
 {
-	handleMouse();
+	updateMouseBefore();
 	if (force) {
 		windows[currentWindow].drawBackground();
 	}
 	windows[currentWindow].drawForeground();
 	windows[currentWindow].handleMouse();
+	updateMouseAfter();
 }
 
 void UI_Window_requestRefresh()

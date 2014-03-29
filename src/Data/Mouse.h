@@ -13,6 +13,8 @@ extern struct Data_Mouse {
 	int y;
 	int leftDown;
 	int rightDown;
+	int scrollUp;
+	int scrollDown;
 	// filled by game
 	struct Data_Mouse_Button left;
 	struct Data_Mouse_Button right;

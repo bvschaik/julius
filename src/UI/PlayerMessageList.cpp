@@ -28,10 +28,10 @@ static ImageButton imageButtonClose = {
 	0, 0, 24, 24, 4, 134, 4, buttonClose, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0
 };
 static ImageButton imageButtonScrollUp = {
-	0, 0, 39, 26, 6, 96, 8, buttonScroll, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0
+	0, 0, 39, 26, 6, 96, 8, buttonScroll, Widget_Button_doNothing, 1, 0, 0, 0, 0, 1
 };
 static ImageButton imageButtonScrollDown = {
-	0, 0, 39, 26, 6, 96, 12, buttonScroll, Widget_Button_doNothing, 1, 0, 0, 0, 1, 0
+	0, 0, 39, 26, 6, 96, 12, buttonScroll, Widget_Button_doNothing, 1, 0, 0, 0, 1, 1
 };
 static CustomButton customButtonsMessages[] = {
 	{0, 0, 412, 18, buttonMessage, buttonDelete, 3, 0, 0},
@@ -146,7 +146,7 @@ void UI_PlayerMessageList_drawForeground()
 		if (Data_Message.scrollPosition <= 0) {
 			pctScrolled = 0;
 		} else if (Data_Message.scrollPosition >= Data_Message.maxScrollPosition) {
-			pctScrolled = 1;
+			pctScrolled = 100;
 		} else {
 			pctScrolled = Calc_getPercentage(Data_Message.scrollPosition, Data_Message.maxScrollPosition);
 		}
@@ -159,8 +159,15 @@ void UI_PlayerMessageList_drawForeground()
 	}
 }
 
+#include <cstdio>
+
 void UI_PlayerMessageList_handleMouse()
 {
+	if (Data_Mouse.scrollDown) {
+		buttonScroll(1, 3);
+	} else if (Data_Mouse.scrollUp) {
+		buttonScroll(0, 3);
+	}
 	if (Widget_Button_handleImageButtons(
 		data.x + 16, data.y + 16 * data.heightBlocks - 42,
 		&imageButtonHelp, 1)) {
@@ -218,15 +225,17 @@ static void handleMouseScrollbar()
 	}
 }
 
-static void buttonScroll(int isDown, int param2)
+static void buttonScroll(int isDown, int numLines)
 {
 	if (isDown) {
-		if (Data_Message.scrollPosition < Data_Message.maxScrollPosition) {
-			++Data_Message.scrollPosition;
+		Data_Message.scrollPosition += numLines;
+		if (Data_Message.scrollPosition > Data_Message.maxScrollPosition) {
+			Data_Message.scrollPosition = Data_Message.maxScrollPosition;
 		}
 	} else {
-		if (Data_Message.scrollPosition > 0) {
-			--Data_Message.scrollPosition;
+		Data_Message.scrollPosition -= numLines;
+		if (Data_Message.scrollPosition < 0) {
+			Data_Message.scrollPosition = 0;
 		}
 	}
 	Data_Message.isDraggingScrollbar = 0;

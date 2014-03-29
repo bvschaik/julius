@@ -99,9 +99,12 @@ void mainLoop(SDL_Surface *surface) {
 					Data_Mouse.y = event.button.y;
 					if (event.button.button == SDL_BUTTON_LEFT) {
 						Data_Mouse.leftDown = 1;
-					}
-					if (event.button.button == SDL_BUTTON_RIGHT) {
+					} else if (event.button.button == SDL_BUTTON_RIGHT) {
 						Data_Mouse.rightDown = 1;
+					} else if (event.button.button == SDL_BUTTON_WHEELUP) {
+						Data_Mouse.scrollUp = 1;
+					} else if (event.button.button == SDL_BUTTON_WHEELDOWN) {
+						Data_Mouse.scrollDown = 1;
 					}
 					break;
 				
@@ -110,8 +113,7 @@ void mainLoop(SDL_Surface *surface) {
 					Data_Mouse.y = event.button.y;
 					if (event.button.button == SDL_BUTTON_LEFT) {
 						Data_Mouse.leftDown = 0;
-					}
-					if (event.button.button == SDL_BUTTON_RIGHT) {
+					} else if (event.button.button == SDL_BUTTON_RIGHT) {
 						Data_Mouse.rightDown = 0;
 					}
 					break;
