@@ -4,6 +4,7 @@
 #include "Walker.h"
 #include "Data/Walker.h"
 #include "Data/CityInfo.h"
+#include "Data/Constants.h"
 
 #include <string.h>
 
@@ -378,10 +379,10 @@ int Walker_determinePhrase(int walkerId)
 			break;
 		case Walker_Emigrant:
 			switch (Data_CityInfo.populationEmigrationCause) {
-				case 1: phraseId = 8; break; // no food
-				case 2: phraseId = 7; break; // no jobs
-				case 3: phraseId = 9; break; // high taxes
-				case 4: phraseId = 10; break; // low wages
+				case EmigrationCause_NoFood: phraseId = 8; break;
+				case EmigrationCause_NoJobs: phraseId = 7; break;
+				case EmigrationCause_HighTaxes: phraseId = 9; break;
+				case EmigrationCause_LowWages: phraseId = 10; break;
 				default: phraseId = 11; break;
 			}
 			break;

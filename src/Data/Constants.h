@@ -178,6 +178,15 @@ enum {
 };
 
 enum {
+	EmigrationCause_None = 0,
+	EmigrationCause_NoFood = 1,
+	EmigrationCause_NoJobs = 2,
+	EmigrationCause_HighTaxes = 3,
+	EmigrationCause_LowWages = 4,
+	EmigrationCause_ManyTents = 5,
+};
+
+enum {
 	EnemyType_Barbarian = 0,
 	EnemyType_Numidian = 1,
 	EnemyType_French = 2,

@@ -122,14 +122,14 @@ void UI_Advisor_Military_drawBackground()
 		int width = Widget_Text_drawNumber(Data_Formations[formationId].numWalkers, '@', " ",
 			baseOffsetX + 100, baseOffsetY + 100 + 44 * i, Font_NormalGreen);
 		switch (Data_Formations[formationId].walkerType) {
-			case Walker_FortLegionary: // 13?
+			case Walker_FortLegionary:
 				Widget_GameText_draw(138, 33, baseOffsetX + 100 + width, baseOffsetY + 100 + 44 * i, Font_NormalGreen);
 				break;
-			case Walker_FortMounted: // 12?
-				Widget_GameText_draw(138, 35, baseOffsetX + 100 + width, baseOffsetY + 100 + 44 * i, Font_NormalGreen);
-				break;
-			case Walker_FortJavelin: // 11?
+			case Walker_FortMounted:
 				Widget_GameText_draw(138, 34, baseOffsetX + 100 + width, baseOffsetY + 100 + 44 * i, Font_NormalGreen);
+				break;
+			case Walker_FortJavelin:
+				Widget_GameText_draw(138, 35, baseOffsetX + 100 + width, baseOffsetY + 100 + 44 * i, Font_NormalGreen);
 				break;
 		}
 		Widget_GameText_drawCentered(138, 37 + Data_Formations[formationId].morale / 5,

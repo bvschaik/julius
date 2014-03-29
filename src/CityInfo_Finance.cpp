@@ -308,3 +308,9 @@ void CityInfo_Finance_updateSalary()
 {
 	Data_CityInfo.financeSalaryThisYear = Data_CityInfo.financeSalaryPaidThisYear;
 }
+
+void CityInfo_Finance_spendOnConstruction(int amount)
+{
+	Data_CityInfo.treasury -= amount;
+	Data_CityInfo.financeConstructionThisYear += amount;
+}
