@@ -19,7 +19,7 @@ void UI_Advisor_Entertainment_init()
 
 void UI_Advisor_Entertainment_drawBackground()
 {
-	CityInfo_Gods_calculate();
+	CityInfo_Gods_calculateMoods(0);
 	CityInfo_Entertainment_calculate();
 
 	int baseOffsetX = Data_Screen.offset640x480.x;

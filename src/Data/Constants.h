@@ -187,6 +187,14 @@ enum {
 };
 
 enum {
+	God_Ceres = 0,
+	God_Neptune = 1,
+	God_Mercury = 2,
+	God_Mars = 3,
+	God_Venus = 4
+};
+
+enum {
 	EnemyType_Barbarian = 0,
 	EnemyType_Numidian = 1,
 	EnemyType_French = 2,

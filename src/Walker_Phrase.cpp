@@ -471,20 +471,10 @@ int Walker_determinePhrase(int walkerId)
 	}
 
 	int leastGodHappiness = 100;
-	if (Data_CityInfo.godHappinessCeres < leastGodHappiness) {
-		leastGodHappiness = Data_CityInfo.godHappinessCeres;
-	}
-	if (Data_CityInfo.godHappinessNeptune < leastGodHappiness) {
-		leastGodHappiness = Data_CityInfo.godHappinessNeptune;
-	}
-	if (Data_CityInfo.godHappinessMercury < leastGodHappiness) {
-		leastGodHappiness = Data_CityInfo.godHappinessMercury;
-	}
-	if (Data_CityInfo.godHappinessMars < leastGodHappiness) {
-		leastGodHappiness = Data_CityInfo.godHappinessMars;
-	}
-	if (Data_CityInfo.godHappinessVenus < leastGodHappiness) {
-		leastGodHappiness = Data_CityInfo.godHappinessVenus;
+	for (int i = 0; i < 5; i++) {
+		if (Data_CityInfo.godHappiness[i] < leastGodHappiness) {
+			leastGodHappiness = Data_CityInfo.godHappiness[i];
+		}
 	}
 	int godPhraseId;
 	if (leastGodHappiness < 20) {

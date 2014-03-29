@@ -1,4 +1,6 @@
 #include "CityInfo.h"
+#include "Util.h"
+#include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Random.h"
 
@@ -9,6 +11,38 @@ void CityInfo_Population_recordMonthlyPopulation()
 		Data_CityInfo.monthlyPopulationNextIndex = 0;
 	}
 	++Data_CityInfo.monthsSinceStart;
+}
+
+void CityInfo_Population_increaseHappiness(int amount)
+{
+	for (int i = 1; i < MAX_BUILDINGS; i++) {
+		if (Data_Buildings[i].inUse && Data_Buildings[i].houseSize) {
+			Data_Buildings[i].sentiment.houseHappiness += amount;
+			BOUND(Data_Buildings[i].sentiment.houseHappiness, 0, 100);
+		}
+	}
+}
+
+void CityInfo_Population_setMaxHappiness(int max)
+{
+	for (int i = 1; i < MAX_BUILDINGS; i++) {
+		if (Data_Buildings[i].inUse && Data_Buildings[i].houseSize) {
+			if (Data_Buildings[i].sentiment.houseHappiness > max) {
+				Data_Buildings[i].sentiment.houseHappiness = max;
+			}
+			BOUND(Data_Buildings[i].sentiment.houseHappiness, 0, 100);
+		}
+	}
+}
+
+void CityInfo_Population_changeHealthRate(int amount)
+{
+	// TODO
+}
+
+void CityInfo_Population_calculateSentiment()
+{
+	// TODO
 }
 
 static void recalculatePopulation()

@@ -4,8 +4,8 @@
 void CityInfo_Imperial_calculateGiftCosts();
 
 void CityInfo_Gods_reset();
-void CityInfo_Gods_calculate();
-void CityInfo_Gods_calculateLeastHappy();
+void CityInfo_Gods_calculateMoods(int updateMood);
+int CityInfo_Gods_calculateLeastHappy();
 
 void CityInfo_Entertainment_calculate();
 
@@ -34,6 +34,10 @@ void CityInfo_Population_recordMonthlyPopulation();
 int CityInfo_Population_getPeopleOfWorkingAge();
 int CityInfo_Population_getNumberOfSchoolAgeChildren();
 int CityInfo_Population_getNumberOfAcademyChildren();
+void CityInfo_Population_increaseHappiness(int amount);
+void CityInfo_Population_setMaxHappiness(int amount);
+void CityInfo_Population_changeHealthRate(int amount);
+void CityInfo_Population_calculateSentiment();
 
 void CityInfo_Labor_calculateWorkersNeededPerCategory();
 void CityInfo_Labor_checkEmployment();
