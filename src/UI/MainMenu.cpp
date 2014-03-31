@@ -112,7 +112,7 @@ static void buttonClick(int param1, int param2)
 		//UI_Window_goTo(Window_SpeedOptions);
 	}
 	if (focusButtonId == 3) {
-		UI_Window_goTo(Window_DifficultyOptions);
+		UI_Window_goTo(Window_CCKSelection);
 	}
 	if (focusButtonId == 4) {
 		UI_Window_goTo(Window_Advisors);

@@ -47,7 +47,7 @@ struct Data_Formation {
 	char __unknown5e;
 	char empireService;
 	char inDistantBattle; //60
-	char __unknown61;
+	char isHerd;
 	char enemyType;
 	char __unknown63;
 	char __unknown64;
@@ -60,7 +60,7 @@ struct Data_Formation {
 	char __unknown6b;
 	char __unknown6c;
 	char __padding6d[17];
-	short invasionInternalId;
+	short invasionSeq;
 };
 
 extern struct Data_Formation Data_Formations[MAX_FORMATIONS];

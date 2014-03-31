@@ -183,7 +183,7 @@ extern struct Data_Scenario {
 		int meetingCenter;
 		int crops;
 	} nativeGraphics;
-	char climate;
+	unsigned char climate;
 	char flotsamEnabled;
 	short __unused5;
 	int empireHasExpanded;
@@ -193,5 +193,9 @@ extern struct Data_Scenario {
 	char openPlayScenarioId;
 	char _unused6;
 } Data_Scenario;
+
+extern struct Data_Scenario_Extra {
+	char name[100];
+} Data_Scenario_Extra;
 
 #endif

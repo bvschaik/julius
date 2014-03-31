@@ -1,7 +1,12 @@
 #include "FileSystem.h"
 
+#include "Data/FileList.h"
+
+#include <ctype.h>
 #include <stdio.h>
 #include <string.h>
+#include <dirent.h>
+#include <stdlib.h>
 
 int FileSystem_fileExists(const char *filename)
 {
@@ -145,4 +150,59 @@ void FileSystem_removeExtension(char *filename)
 		filename--;
 		*filename = 0;
 	}
+}
+
+static int compareLower(const void *va, const void *vb)
+{
+	const char *a = (const char*)va;
+	const char *b = (const char*)vb;
+	while (*a && *b) {
+		int aa = tolower(*a);
+		int bb = tolower(*b);
+		if (aa != bb) {
+			return aa - bb;
+		}
+		++a;
+		++b;
+	}
+	if (*a) {
+		return -1;
+	}
+	if (*b) {
+		return 1;
+	}
+	return 0;
+}
+
+static int FileSystem_hasExtension(const char *filename, const char *extension)
+{
+	char c;
+	do {
+		c = *filename;
+		filename++;
+	} while (c != '.' && c);
+	return compareLower(filename, extension) == 0;
+}
+
+void FileSystem_findFilesWithExtension(const char *extension)
+{
+	Data_FileList.numFiles = 0;
+	for (int i = 0; i < 100; i++) {
+		Data_FileList.files[i][0] = 0;
+	}
+
+	DIR *d = opendir(".");
+	if (!d) {
+		return;
+	}
+	struct dirent *entry;
+	while ((entry = readdir(d)) && Data_FileList.numFiles < 100) {
+		if (FileSystem_hasExtension(entry->d_name, extension)) {
+			strncpy(Data_FileList.files[Data_FileList.numFiles], entry->d_name, 99);
+			Data_FileList.files[Data_FileList.numFiles][99] = 0;
+			++Data_FileList.numFiles;
+		}
+	}
+	closedir(d);
+	qsort(Data_FileList.files, Data_FileList.numFiles, 100, compareLower);
 }

@@ -41,6 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -260,6 +261,10 @@
 			</File>
 			<File
 				RelativePath=".\src\Calc.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\UI\CCKSelection.cpp"
 				>
 			</File>
 			<File
@@ -553,6 +558,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\Data\AllData.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\UI\AllWindows.h"
 				>
 			</File>
@@ -561,11 +570,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Building.h"
+				RelativePath=".\src\Building.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Building.h"
+				RelativePath=".\src\Data\Building.h"
 				>
 			</File>
 			<File
@@ -589,11 +598,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\CityInfo.h"
+				RelativePath=".\src\Data\CityInfo.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\CityInfo.h"
+				RelativePath=".\src\CityInfo.h"
 				>
 			</File>
 			<File
@@ -613,7 +622,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Empire.h"
+				RelativePath=".\dirent.h"
 				>
 			</File>
 			<File
@@ -621,7 +630,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\Data\Empire.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Event.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Data\FileList.h"
 				>
 			</File>
 			<File
@@ -629,11 +646,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Formation.h"
+				RelativePath=".\src\Formation.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Formation.h"
+				RelativePath=".\src\Data\Formation.h"
 				>
 			</File>
 			<File
@@ -669,11 +686,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\KeyboardInput.h"
+				RelativePath=".\src\Data\KeyboardInput.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\KeyboardInput.h"
+				RelativePath=".\src\KeyboardInput.h"
 				>
 			</File>
 			<File
@@ -725,11 +742,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Random.h"
+				RelativePath=".\src\data\Random.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\data\Random.h"
+				RelativePath=".\src\Random.h"
 				>
 			</File>
 			<File

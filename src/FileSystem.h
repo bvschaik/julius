@@ -19,4 +19,6 @@ void FileSystem_appendExtension(char *filename, const char *extension);
 
 void FileSystem_removeExtension(char *filename);
 
+void FileSystem_findFilesWithExtension(const char *extension);
+
 #endif

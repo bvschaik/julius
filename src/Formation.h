@@ -15,4 +15,8 @@ void Formation_legionReturnHome(int formationId);
 
 void Formation_calculateLegionTotals();
 
+void Formation_updateAfterDeath(int formationId);
+
+int Formation_getInvasionGridOffset(int invasionSeq);
+
 #endif

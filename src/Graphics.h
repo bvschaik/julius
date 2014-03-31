@@ -2,6 +2,7 @@
 #define GRAPHICS_H
 
 #include "Data/Types.h"
+#include "Data/Graphics.h"
 
 void Graphics_initialize();
 

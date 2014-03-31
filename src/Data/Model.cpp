@@ -1,24 +1,4 @@
-#include "Model.h"
-#include "Scenario.h"
-#include "Settings.h"
-#include "Message.h"
-#include "Random.h"
-#include "Empire.h"
-#include "Graphics.h"
-#include "Screen.h"
-#include "Mouse.h"
-#include "Buttons.h"
-#include "Language.h"
-#include "CityInfo.h"
-#include "KeyboardInput.h"
-#include "State.h"
-#include "Walker.h"
-#include "Building.h"
-#include "Sound.h"
-#include "CityView.h"
-#include "Invasion.h"
-#include "Trade.h"
-#include "Formation.h"
+#include "AllData.h"
 
 struct Data_Model_House Data_Model_Houses[20];
 struct Data_Model_Building Data_Model_Buildings[130];
@@ -29,6 +9,7 @@ struct Data_Model_Difficulty Data_Model_Difficulty = {
 };
 
 struct Data_Scenario Data_Scenario;
+struct Data_Scenario_Extra Data_Scenario_Extra;
 
 struct Data_Settings Data_Settings;
 struct Data_Settings_Map Data_Settings_Map;
@@ -83,5 +64,7 @@ struct Data_TradePrice Data_TradePrices[16];
 
 struct Data_Formation Data_Formations[MAX_FORMATIONS];
 struct Data_Formation_Extra Data_Formation_Extra;
+
+struct Data_FileList Data_FileList;
 
 int Constant_SalaryForRank[11] = {0, 2, 5, 8, 12, 20, 30, 40, 60, 80, 100};

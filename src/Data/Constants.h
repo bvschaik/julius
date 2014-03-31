@@ -73,6 +73,8 @@ enum {
 	ID_Graphic_PlagueSkull = 227,
 	ID_Graphic_TradeCenterFlag = 238,
 	ID_Graphic_TradeAmount = 243,
+	ID_Graphic_CCKBackground = 246,
+	ID_Graphic_ScenarioImage = 247,
 	ID_Graphic_Gatehouse = 248,
 	ID_Graphic_LoadingScreen = 251,
 };
@@ -197,8 +199,8 @@ enum {
 enum {
 	EnemyType_Barbarian = 0,
 	EnemyType_Numidian = 1,
-	EnemyType_French = 2,
-	EnemyType_British = 3,
+	EnemyType_Gaul = 2,
+	EnemyType_Celt = 3,
 	EnemyType_Goth = 4,
 	EnemyType_Pergamum = 5,
 	EnemyType_Seleucid = 6,

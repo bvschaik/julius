@@ -388,3 +388,44 @@ void CityInfo_Gods_reset()
 	}
 	Data_CityInfo.godAngryMessageDelay = 0;
 }
+
+void CityInfo_Gods_checkFestival()
+{
+	if (Data_CityInfo.festivalEffectMonthsDelayFirst) {
+		--Data_CityInfo.festivalEffectMonthsDelayFirst;
+	}
+	if (Data_CityInfo.festivalEffectMonthsDelaySecond) {
+		--Data_CityInfo.festivalEffectMonthsDelaySecond;
+	}
+	if (Data_CityInfo.plannedFestivalSize <= 0) {
+		return;
+	}
+	if (--Data_CityInfo.plannedFestivalMonthsToGo > 0) {
+		return;
+	}
+	// throw a party!
+	if (Data_CityInfo.festivalEffectMonthsDelayFirst <= 0) {
+		Data_CityInfo.festivalEffectMonthsDelayFirst = 12;
+		switch (Data_CityInfo.plannedFestivalSize) {
+			case 1: CityInfo_Population_increaseHappiness(7); break;
+			case 2: CityInfo_Population_increaseHappiness(9); break;
+			case 3: CityInfo_Population_increaseHappiness(12); break;
+		}
+	} else if (Data_CityInfo.festivalEffectMonthsDelaySecond <= 0) {
+		Data_CityInfo.festivalEffectMonthsDelaySecond = 12;
+		switch (Data_CityInfo.plannedFestivalSize) {
+			case 1: CityInfo_Population_increaseHappiness(2); break;
+			case 2: CityInfo_Population_increaseHappiness(3); break;
+			case 3: CityInfo_Population_increaseHappiness(5); break;
+		}
+	}
+	Data_CityInfo.monthsSinceFestival = 1;
+	Data_CityInfo.godMonthsSinceFestival[Data_CityInfo.plannedFestivalGod] = 0;
+	switch (Data_CityInfo.plannedFestivalSize) {
+		case 1: PlayerMessage_post(1, 38, 0, 0); break;
+		case 2: PlayerMessage_post(1, 39, 0, 0); break;
+		case 3: PlayerMessage_post(1, 40, 0, 0); break;
+	}
+	Data_CityInfo.plannedFestivalSize = 0;
+	Data_CityInfo.plannedFestivalMonthsToGo = 0;
+}

@@ -806,14 +806,8 @@ extern struct Data_CityInfo {
 	int citywideAverageEducation;
 	int citywideAverageHealth;
 	int cultureCoverageReligion;
-	char __unknown_444c;
-	char __unknown_444d;
-	char __unknown_444e;
-	char __unknown_444f;
-	char __unknown_4450;
-	char __unknown_4451;
-	char __unknown_4452;
-	char __unknown_4453;
+	int festivalEffectMonthsDelayFirst;
+	int festivalEffectMonthsDelaySecond;
 	char __unknown_4454;
 	char __unknown_4455;
 	char __unknown_4456;

@@ -6,6 +6,7 @@ void CityInfo_Imperial_calculateGiftCosts();
 void CityInfo_Gods_reset();
 void CityInfo_Gods_calculateMoods(int updateMood);
 int CityInfo_Gods_calculateLeastHappy();
+void CityInfo_Gods_checkFestival();
 
 void CityInfo_Entertainment_calculate();
 

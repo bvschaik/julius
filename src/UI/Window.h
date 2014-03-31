@@ -23,6 +23,7 @@ typedef enum {
 	Window_ResourceSettingsDialog = 17,//40
 	Window_MessageDialog = 18, // 5
 	Window_PlayerMessageList = 19, //17
+	Window_CCKSelection = 20, //61
 } WindowId;
 
 WindowId UI_Window_getId();

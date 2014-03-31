@@ -166,7 +166,7 @@ static void buttonHoldFestival(int param1, int param2)
 		return;
 	}
 	Data_CityInfo.plannedFestivalGod = Data_CityInfo.festivalGod;
-	Data_CityInfo.plannedFestivalSize = Data_CityInfo.plannedFestivalSize;
+	Data_CityInfo.plannedFestivalSize = Data_CityInfo.festivalSize;
 	int cost;
 	if (Data_CityInfo.festivalSize == 1) {
 		Data_CityInfo.plannedFestivalMonthsToGo = 2;

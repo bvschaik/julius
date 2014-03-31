@@ -177,7 +177,7 @@ extern struct Data_Building {
 	char __unused_36;
 	char houseHasWellAccess;
 	short numWorkers;
-	char laborCategory;
+	unsigned char laborCategory;
 	char outputResourceId;
 	char hasRoadAccess;
 	char __unknown_3d;
