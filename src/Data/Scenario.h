@@ -194,8 +194,4 @@ extern struct Data_Scenario {
 	char _unused6;
 } Data_Scenario;
 
-extern struct Data_Scenario_Extra {
-	char name[100];
-} Data_Scenario_Extra;
-
 #endif

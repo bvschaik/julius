@@ -27,7 +27,8 @@ static void determineCursorPosition()
 
 static void removeCurrentCharacter()
 {
-	struct Data_KeyboardInputLine *current = Data_KeyboardInput.current;
+	struct Data_KeyboardInputLine *current =
+		&Data_KeyboardInput.lines[Data_KeyboardInput.current];
 	moveLeft(&current->text[current->cursorPosition], &current->text[current->length]);
 	determineCursorPosition();
 }
@@ -38,6 +39,28 @@ static void addCharacter(char value)
 	// TODO
 }
 
+void KeyboardInput_initTextField(int inputId, char *text, int maxLength,
+	int textboxWidth, int allowPunctuation)
+{
+	Data_KeyboardInput.lines[inputId].text = text;
+	Data_KeyboardInput.lines[inputId].length = 0;
+	Data_KeyboardInput.lines[inputId].maxLength = maxLength;
+	//Data_KeyboardInput.lines[inputId].font = font;
+	// TODO
+}
+
+void KeyboardInput_initInput(int inputId)
+{
+	Data_KeyboardInput.current = inputId;
+	
+	struct Data_KeyboardInputLine *current =
+		&Data_KeyboardInput.lines[Data_KeyboardInput.current];
+	current->length = 0;
+	while (current->length <= current->maxLength && current->text[current->length]) {
+		++current->length;
+	}
+}
+
 void KeyboardInput_return()
 {
 	Data_KeyboardInput.accepted = 1;
@@ -45,8 +68,10 @@ void KeyboardInput_return()
 
 void KeyboardInput_backspace()
 {
-	if (Data_KeyboardInput.current->cursorPosition > 0) {
-		Data_KeyboardInput.current->cursorPosition--;
+	struct Data_KeyboardInputLine *current =
+		&Data_KeyboardInput.lines[Data_KeyboardInput.current];
+	if (current->cursorPosition > 0) {
+		current->cursorPosition--;
 		removeCurrentCharacter();
 	}
 }
@@ -63,24 +88,30 @@ void KeyboardInput_insert()
 
 void KeyboardInput_left()
 {
-	if (Data_KeyboardInput.current->cursorPosition > 0) {
-		Data_KeyboardInput.current->cursorPosition--;
+	struct Data_KeyboardInputLine *current =
+		&Data_KeyboardInput.lines[Data_KeyboardInput.current];
+	if (current->cursorPosition > 0) {
+		current->cursorPosition--;
 	}
 }
 
 void KeyboardInput_right()
 {
-	if (Data_KeyboardInput.current->cursorPosition < Data_KeyboardInput.current->length) {
-		Data_KeyboardInput.current->cursorPosition++;
+	struct Data_KeyboardInputLine *current =
+		&Data_KeyboardInput.lines[Data_KeyboardInput.current];
+	if (current->cursorPosition < current->length) {
+		current->cursorPosition++;
 	}
 }
 
 void KeyboardInput_home()
 {
-	Data_KeyboardInput.current->cursorPosition = 0;
+	Data_KeyboardInput.lines[Data_KeyboardInput.current].cursorPosition = 0;
 }
 
 void KeyboardInput_end()
 {
-	Data_KeyboardInput.current->cursorPosition = Data_KeyboardInput.current->length;
+	struct Data_KeyboardInputLine *current =
+		&Data_KeyboardInput.lines[Data_KeyboardInput.current];
+	current->cursorPosition = current->length;
 }

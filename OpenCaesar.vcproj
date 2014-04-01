@@ -348,6 +348,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\UI\FileDialog.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\FileSystem.cpp"
 				>
 			</File>

@@ -1020,7 +1020,7 @@ extern struct Data_CityInfo {
 	char __unknown_4577;
 	int ratingPeaceNumDestroyedBuildingsThisYear;
 	int ratingPeaceYearsOfPeace;
-	char distantBattleCityId;
+	unsigned char distantBattleCityId;
 	char distantBattleEnemyStrength;
 	char distantBattleRomanStrength;
 	char distantBattleMonthsToBattle;

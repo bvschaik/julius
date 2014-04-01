@@ -9,7 +9,6 @@ struct Data_Model_Difficulty Data_Model_Difficulty = {
 };
 
 struct Data_Scenario Data_Scenario;
-struct Data_Scenario_Extra Data_Scenario_Extra;
 
 struct Data_Settings Data_Settings;
 struct Data_Settings_Map Data_Settings_Map;

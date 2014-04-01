@@ -193,6 +193,13 @@ static void buttonReturnToFort(int legionId, int param2)
 
 static void buttonEmpireService(int legionId, int param2)
 {
-	// TODO
+	int formationId = Formation_getLegionFormationId(legionId);
+	if (Data_Formations[formationId].empireService) {
+		Data_Formations[formationId].empireService = 0;
+	} else {
+		Data_Formations[formationId].empireService = 1;
+	}
+	Formation_calculateWalkers();
+	UI_Window_requestRefresh();
 }
 

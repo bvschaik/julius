@@ -551,7 +551,7 @@ static void buttonAdvisor(int advisor, int param2)
 
 static void buttonOpenTrade(int param1, int param2)
 {
-	UI_PopupDialog_show(2, confirmOpenTrade, 2);
+	UI_PopupDialog_show(PopupDialog_OpenTrade, confirmOpenTrade, 2);
 }
 
 static void buttonEmpireMap(int param1, int param2)

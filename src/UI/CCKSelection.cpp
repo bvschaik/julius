@@ -116,7 +116,7 @@ static void drawScenarioInfo()
 	Graphics_drawImage(GraphicId(ID_Graphic_ScenarioImage) + Data_Scenario.imageId,
 		Data_Screen.offset640x480.x + 78, Data_Screen.offset640x480.y + 36);
 
-	Widget_Text_drawCentered(Data_Scenario_Extra.name,
+	Widget_Text_drawCentered(Data_FileList.selectedScenario,
 		baseOffsetX + 15, baseOffsetY + 5, 260, Font_LargeBlack, 0);
 	Widget_Text_drawCentered(Data_Scenario.briefDescription,
 		baseOffsetX + 15, baseOffsetY + 40, 260, Font_NormalWhite, 0);
@@ -269,9 +269,9 @@ static void buttonSelectItem(int index, int param2)
 		return;
 	}
 	selectedItem = scrollPosition + index;
-	strcpy(Data_Scenario_Extra.name, Data_FileList.files[selectedItem]);
-	GameFile_loadScenario(Data_Scenario_Extra.name);
-	FileSystem_removeExtension(Data_Scenario_Extra.name);
+	strcpy(Data_FileList.selectedScenario, Data_FileList.files[selectedItem]);
+	GameFile_loadScenario(Data_FileList.selectedScenario);
+	FileSystem_removeExtension(Data_FileList.selectedScenario);
 	UI_Window_requestRefresh();
 }
 

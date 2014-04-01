@@ -1,6 +1,7 @@
 #include "AllWindows.h"
 #include "Window.h"
 #include "Advisors_private.h"
+#include "../CityInfo.h"
 #include "../Data/Mouse.h"
 #include "../Data/Constants.h"
 
@@ -85,12 +86,13 @@ static void buttonCancel(int param1, int param2)
 	UI_Window_goTo(Window_Advisors);
 }
 
-static void buttonSetSalary(int param1, int param2)
+static void buttonSetSalary(int rank, int param2)
 {
 	if (Data_CityInfo.victoryContinueMonths <= 0) {
-		Data_CityInfo.salaryRank = param1;
-		Data_CityInfo.salaryAmount = Constant_SalaryForRank[param1];
-		// TODO update finance salary + favor rating
+		Data_CityInfo.salaryRank = rank;
+		Data_CityInfo.salaryAmount = Constant_SalaryForRank[rank];
+		CityInfo_Finance_updateSalary();
+		CityInfo_Ratings_updateFavorExplanation();
 		UI_Window_goTo(Window_Advisors);
 	}
 }

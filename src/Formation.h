@@ -19,4 +19,6 @@ void Formation_updateAfterDeath(int formationId);
 
 int Formation_getInvasionGridOffset(int invasionSeq);
 
+void Formation_calculateWalkers();
+
 #endif

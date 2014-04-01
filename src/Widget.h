@@ -4,6 +4,9 @@
 #include "Data/Types.h"
 #include "Data/Buttons.h"
 
+void Widget_Text_captureCursor();
+void Widget_Text_drawCursor(int xOffset, int yOffset);
+
 int Widget_Text_draw(const char *str, int xOffset, int yOffset, Font font, Color color);
 
 void Widget_Text_drawCentered(const char *str, int xOffset, int yOffset, int boxWidth, Font font, Color color);

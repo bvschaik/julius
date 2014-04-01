@@ -8,6 +8,7 @@
 #include "Graphics.h"
 #include "Language.h"
 #include "String.h"
+#include "Time.h"
 
 #include <stdio.h>
 
@@ -32,7 +33,60 @@ static const int map_charToFontGraphic[] = {
 
 static char tmpLine[200];
 
+static struct {
+	int capture;
+	int seen;
+	int position;
+	int width;
+	int visible;
+	TimeMillis updated;
+	int xOffset;
+	int yOffset;
+} inputCursor;
+
 static int drawCharacter(Font font, unsigned int c, int x, int y, int lineHeight, Color color);
+
+void Widget_Text_captureCursor()
+{
+	inputCursor.capture = 1;
+	inputCursor.seen = 0;
+	inputCursor.position = 0;
+	inputCursor.width = 0;
+}
+
+void Widget_Text_drawCursor(int xOffset, int yOffset)
+{
+	inputCursor.capture = 0;
+	TimeMillis curr = Time_getMillis();
+	TimeMillis diff = curr - inputCursor.updated;
+	if (!inputCursor.visible && diff >= 200) {
+		inputCursor.visible = 1;
+		inputCursor.updated = curr;
+	} else if (inputCursor.visible && diff >= 400) {
+		inputCursor.visible = 0;
+		inputCursor.updated = curr;
+	}
+	if (inputCursor.visible) {
+		if (Data_KeyboardInput.isInsert) {
+			Graphics_drawLine(
+				xOffset + inputCursor.xOffset - 3, yOffset + inputCursor.yOffset - 3,
+				xOffset + inputCursor.xOffset + 1, yOffset + inputCursor.yOffset - 3,
+				Color_White);
+			Graphics_drawLine(
+				xOffset + inputCursor.xOffset - 1, yOffset + inputCursor.yOffset - 3,
+				xOffset + inputCursor.xOffset - 1, yOffset + inputCursor.yOffset + 13,
+				Color_White);
+			Graphics_drawLine(
+				xOffset + inputCursor.xOffset - 3, yOffset + inputCursor.yOffset + 14,
+				xOffset + inputCursor.xOffset + 1, yOffset + inputCursor.yOffset + 14,
+				Color_White);
+		} else {
+			Graphics_fillRect(
+				xOffset + inputCursor.xOffset, yOffset + inputCursor.yOffset + 14,
+				inputCursor.width, 2, Color_White);
+		}
+	}
+}
 
 int Widget_Text_getWidth(const char *str, Font font)
 {
@@ -187,11 +241,24 @@ int Widget_Text_draw(const char *str, int x, int y, Font font, Color color)
 			} else {
 				width = letterSpacing + drawCharacter(font, c, currentX, y, lineHeight, color);
 			}
+			if (inputCursor.capture &&
+				inputCursor.position == Data_KeyboardInput.lines[Data_KeyboardInput.current].cursorPosition) {
+				if (!inputCursor.seen) {
+					inputCursor.width = width;
+					inputCursor.xOffset = currentX - x;
+					inputCursor.seen = 1;
+				}
+			}
 			currentX += width;
 		}
 
 		str++;
-		// TODO: stuff related to cursor
+		inputCursor.position++;
+	}
+	if (inputCursor.capture && !inputCursor.seen) {
+		inputCursor.width = 4;
+		inputCursor.xOffset = currentX - x;
+		inputCursor.seen = 1;
 	}
 	currentX += spaceWidth;
 	return currentX - x;

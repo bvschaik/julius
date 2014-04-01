@@ -5,16 +5,14 @@ struct Data_KeyboardInputLine {
 	int cursorPosition;
 	int length;
 	int maxLength;
-	char text[65];
+	char *text;
 };
 
 extern struct Data_KeyboardInput {
-	struct Data_KeyboardInputLine lines;
-	struct Data_KeyboardInputLine *current;
+	struct Data_KeyboardInputLine lines[6];
+	int current;
 	int isInsert;
 	int accepted;
-	int cursorOffsetX;
-	int cursorOffsetY;
 } Data_KeyboardInput;
 
 #endif
