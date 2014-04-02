@@ -6,6 +6,7 @@
 #include "Data/Scenario.h"
 #include "Data/Settings.h"
 #include "Data/Tutorial.h"
+#include "UI/Sidebar.h"
 
 #define MAX_BUILDINGITEMS 30
 static int menuBuildingId[MAX_BUILDINGITEMS][MAX_BUILDINGITEMS] = {
@@ -57,6 +58,11 @@ static int menuEnabled[MAX_BUILDINGITEMS][MAX_BUILDINGITEMS];
 #define ENABLE(b) if (buildingId == b) menuEnabled[sub][item] = 1
 #define DISABLE_RAW(b,r) if (buildingId == b && !Empire_ourCityCanProduceResource(r)) menuEnabled[sub][item] = 0
 #define DISABLE_FINISHED(b,r) if (buildingId == b && !Empire_ourCityCanProduceResourcePotentially(r)) menuEnabled[sub][item] = 0
+
+void SidebarMenu_enableBuildingButtons()
+{
+	UI_Sidebar_enableBuildingButtons();
+}
 
 static void enableNormal(int sub, int item, int buildingId)
 {
@@ -287,4 +293,3 @@ int SidebarMenu_getBuildingId(int submenu, int item)
 {
 	return menuBuildingId[submenu][item];
 }
-

@@ -3,6 +3,8 @@
 #include "Window.h"
 
 #include "../CityInfo.h"
+#include "../Event.h"
+#include "../Formation.h"
 #include "../Resource.h"
 
 #include "../Data/Empire.h"
@@ -276,13 +278,14 @@ static void confirmNothing(int accepted)
 static void confirmSendTroops(int accepted)
 {
 	if (accepted) {
-		// TODO
+		Formation_dispatchLegionsToDistantBattle();
+		UI_Window_goTo(Window_Empire);
 	}
 }
 
 static void confirmSendGoods(int accepted)
 {
 	if (accepted) {
-		// TODO
+		Event_dispatchRequest(selectedRequestId);
 	}
 }

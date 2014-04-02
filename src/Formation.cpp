@@ -101,6 +101,11 @@ void Formation_calculateWalkers()
 	// TODO
 }
 
+void Formation_dispatchLegionsToDistantBattle()
+{
+	// TODO
+}
+
 void Formation_updateAfterDeath(int formationId)
 {
 	Formation_calculateWalkers();

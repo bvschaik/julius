@@ -58,6 +58,7 @@ void UI_FileDialog_show(int type)
 {
 	// TODO move to KeyboardInput_initTextbox oid
 	Data_KeyboardInput.lines[2].text = Data_FileList.selectedCity;
+	Data_KeyboardInput.lines[2].maxLength = 64;
 	// end TODO
 	dialogType = type;
 	messageNotExistTimeUntil = 0;

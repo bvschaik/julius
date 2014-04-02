@@ -3,6 +3,7 @@
 #include "Window.h"
 #include "MessageDialog.h"
 #include "../Graphics.h"
+#include "../SidebarMenu.h"
 #include "../Widget.h"
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
@@ -82,6 +83,21 @@ ImageButton buttonTopExpanded[] = {
 	{84, 184, 33, 22, 4, 89, 6, buttonRotate, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0},
 	{123, 184, 33, 22, 4, 89, 9, buttonRotate, Widget_Button_doNothing, 1, 0, 0, 0, 1, 0},
 };
+
+void UI_Sidebar_enableBuildingButtons()
+{
+	for (int i = 0; i < 12; i++) {
+		buttonBuildExpanded[i].enabled = 1;
+		if (SidebarMenu_countBuildingMenuItems(buttonBuildExpanded[i].parameter1)) {
+			buttonBuildExpanded[i].enabled = 0;
+		}
+
+		buttonBuildCollapsed[i].enabled = 1;
+		if (SidebarMenu_countBuildingMenuItems(buttonBuildCollapsed[i].parameter1)) {
+			buttonBuildCollapsed[i].enabled = 0;
+		}
+	}
+}
 
 void UI_Sidebar_drawBackground()
 {

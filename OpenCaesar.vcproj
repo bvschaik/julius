@@ -388,6 +388,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\HousePopulation.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\KeyboardInput.cpp"
 				>
 			</File>
@@ -602,19 +606,19 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\CityInfo.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\CityInfo.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\CityView.h"
+				RelativePath=".\src\Data\CityInfo.h"
 				>
 			</File>
 			<File
 				RelativePath=".\src\Data\CityView.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\CityView.h"
 				>
 			</File>
 			<File
@@ -630,11 +634,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Empire.h"
+				RelativePath=".\src\Data\Empire.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Empire.h"
+				RelativePath=".\src\Empire.h"
 				>
 			</File>
 			<File
@@ -650,11 +654,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Formation.h"
+				RelativePath=".\src\Data\Formation.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Formation.h"
+				RelativePath=".\src\Formation.h"
 				>
 			</File>
 			<File
@@ -686,15 +690,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\HousePopulation.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Data\Invasion.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\KeyboardInput.h"
+				RelativePath=".\src\KeyboardInput.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\KeyboardInput.h"
+				RelativePath=".\src\Data\KeyboardInput.h"
 				>
 			</File>
 			<File
@@ -826,11 +834,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Walker.h"
+				RelativePath=".\src\Data\Walker.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Walker.h"
+				RelativePath=".\src\Walker.h"
 				>
 			</File>
 			<File

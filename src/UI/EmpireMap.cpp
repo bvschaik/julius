@@ -2,12 +2,15 @@
 #include "AllWindows.h"
 #include "PopupDialog.h"
 #include "MessageDialog.h"
+
 #include "../Graphics.h"
 #include "../Widget.h"
 #include "../Empire.h"
 #include "../Resource.h"
 #include "../Animation.h"
 #include "../SidebarMenu.h"
+#include "../CityInfo.h"
+
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
 #include "../Data/Empire.h"
@@ -562,11 +565,10 @@ static void buttonEmpireMap(int param1, int param2)
 static void confirmOpenTrade(int accepted)
 {
 	if (accepted) {
-		// TODO
-		//j_fun_spendMoneyConstruction(ciid, trade_costToOpen[33 * trade_selectedCity]);
+		CityInfo_Finance_spendOnConstruction(Data_Empire_Cities[selectedCity].costToOpen);
 		Data_Empire_Cities[selectedCity].isOpen = 1;
 		SidebarMenu_enableBuildingMenuItems();
-		//j_fun_enableSidebarButtons();
+		SidebarMenu_enableBuildingButtons();
 		UI_Window_goTo(Window_TradeOpenedDialog);
 	}
 }

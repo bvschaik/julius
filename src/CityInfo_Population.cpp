@@ -1,5 +1,8 @@
 #include "CityInfo.h"
+
+#include "HousePopulation.h"
 #include "Util.h"
+
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Random.h"
@@ -157,15 +160,23 @@ void CityInfo_Population_removePeopleHomeRemoved(int numPeople)
 
 void CityInfo_Population_addPeopleHomeless(int numPeople)
 {
-	Data_CityInfo.populationMadeHomeless -= numPeople;
+	Data_CityInfo.populationLostHomeless -= numPeople;
 	addPeopleToCensus(numPeople);
 	recalculatePopulation();
 }
 
 void CityInfo_Population_removePeopleHomeless(int numPeople)
 {
-	Data_CityInfo.populationMadeHomeless += numPeople;
+	Data_CityInfo.populationLostHomeless += numPeople;
 	removePeopleFromCensus(numPeople);
+	recalculatePopulation();
+}
+
+void CityInfo_Population_removePeopleForTroopRequest(int amount)
+{
+	int removed = HousePopulation_removePeople(amount);
+	removePeopleFromCensus(removed);
+	Data_CityInfo.populationLostTroopRequest += amount;
 	recalculatePopulation();
 }
 

@@ -21,4 +21,6 @@ int Formation_getInvasionGridOffset(int invasionSeq);
 
 void Formation_calculateWalkers();
 
+void Formation_dispatchLegionsToDistantBattle();
+
 #endif

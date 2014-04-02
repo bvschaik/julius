@@ -163,7 +163,7 @@ static void updateGodMoods()
 		} else if (Data_CityInfo.godHappiness[i] < Data_CityInfo.godTargetHappiness[i]) {
 			Data_CityInfo.godHappiness[i]--;
 		}
-		if (Data_Settings.currentMissionId == 0 && !Data_Settings.isCustomScenario) {
+		if (IsTutorial1()) {
 			// tutorial mission 1
 			if (Data_CityInfo.godHappiness[i] < 50) {
 				Data_CityInfo.godHappiness[i] = 50;

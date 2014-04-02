@@ -30,6 +30,7 @@ void CityInfo_Finance_updateSalary();
 
 void CityInfo_Finance_handleMonthChange();
 void CityInfo_Finance_handleYearChange();
+void CityInfo_Finance_spendOnConstruction(int amount);
 
 void CityInfo_Population_recordMonthlyPopulation();
 int CityInfo_Population_getPeopleOfWorkingAge();
@@ -39,6 +40,7 @@ void CityInfo_Population_increaseHappiness(int amount);
 void CityInfo_Population_setMaxHappiness(int amount);
 void CityInfo_Population_changeHealthRate(int amount);
 void CityInfo_Population_calculateSentiment();
+void CityInfo_Population_removePeopleForTroopRequest(int amount);
 
 void CityInfo_Labor_calculateWorkersNeededPerCategory();
 void CityInfo_Labor_checkEmployment();

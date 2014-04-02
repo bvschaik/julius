@@ -68,14 +68,14 @@ void Resource_calculateWorkshopStocks()
 
 void Resource_addToCityWarehouses(int resource, int amount)
 {
-	int buildingId = Data_CityInfo.resourceNextTargetWarehouse;
+	int buildingId = Data_CityInfo.resourceLastTargetWarehouse;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		if (++buildingId >= MAX_BUILDINGS) {
 			buildingId = 1;
 		}
 		if (Data_Buildings[buildingId].inUse == 1 &&
 			Data_Buildings[buildingId].type == Building_Warehouse) {
-			Data_CityInfo.resourceNextTargetWarehouse = buildingId;
+			Data_CityInfo.resourceLastTargetWarehouse = buildingId;
 			while (amount && Resource_addToWarehouse(buildingId, resource)) {
 				amount--;
 			}
@@ -86,7 +86,7 @@ void Resource_addToCityWarehouses(int resource, int amount)
 int Resource_removeFromCityWarehouses(int resource, int amount)
 {
 	int amountLeft = amount;
-	int buildingId = Data_CityInfo.resourceNextTargetWarehouse;
+	int buildingId = Data_CityInfo.resourceLastTargetWarehouse;
 	// first go for non-getting warehouses
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		if (++buildingId >= MAX_BUILDINGS) {
@@ -96,7 +96,7 @@ int Resource_removeFromCityWarehouses(int resource, int amount)
 			Data_Buildings[buildingId].type == Building_Warehouse) {
 			int storageId = Data_Buildings[buildingId].storageId;
 			if (Data_Building_Storages[storageId].resourceState[resource] != BuildingStorageState_Getting) {
-				Data_CityInfo.resourceNextTargetWarehouse = buildingId;
+				Data_CityInfo.resourceLastTargetWarehouse = buildingId;
 				amountLeft = Resource_removeFromWarehouse(buildingId, resource, amountLeft);
 			}
 		}
@@ -108,7 +108,7 @@ int Resource_removeFromCityWarehouses(int resource, int amount)
 		}
 		if (Data_Buildings[buildingId].inUse == 1 &&
 			Data_Buildings[buildingId].type == Building_Warehouse) {
-			Data_CityInfo.resourceNextTargetWarehouse = buildingId;
+			Data_CityInfo.resourceLastTargetWarehouse = buildingId;
 			amountLeft = Resource_removeFromWarehouse(buildingId, resource, amountLeft);
 		}
 	}

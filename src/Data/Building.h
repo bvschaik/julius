@@ -125,6 +125,29 @@ enum {
 	BuildingStorageState_Getting = 2
 };
 
+enum {
+	HouseLevel_SmallTent = 0,
+	HouseLevel_LargeTent = 1,
+	HouseLevel_SmallShack = 2,
+	HouseLevel_LargeShack = 3,
+	HouseLevel_SmallHovel = 4,
+	HouseLevel_LargeHovel = 5,
+	HouseLevel_SmallCasa = 6,
+	HouseLevel_LargeCasa = 7,
+	HouseLevel_SmallInsula = 8,
+	HouseLevel_MediumInsula = 9,
+	HouseLevel_LargeInsula = 10,
+	HouseLevel_GrandInsula = 11,
+	HouseLevel_SmallVilla = 12,
+	HouseLevel_MediumVilla = 13,
+	HouseLevel_LargeVilla = 14,
+	HouseLevel_GrandVilla = 15,
+	HouseLevel_SmallPalace = 16,
+	HouseLevel_MediumPalace = 17,
+	HouseLevel_LargePalace = 18,
+	HouseLevel_LuxuryPalace = 19,
+};
+
 #define BuildingIsWorkshop(type) ((type) >= Building_WineWorkshop && (type) <= Building_PotteryWorkshop)
 #define BuildingIsEntertainment(type) ((type) >= Building_Theater && (type) <= Building_ChariotMaker)
 
@@ -153,7 +176,7 @@ extern struct Data_Building {
 	short percentageWorkers;
 	short housePopulation;
 	short housePopulationRoom;
-	short __unknown_1a;
+	short isReachableFromRome;
 	short houseMaxPopulationSeen;
 	char __unknown_1e;
 	char __unknown_1f;

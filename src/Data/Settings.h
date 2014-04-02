@@ -1,6 +1,9 @@
 #ifndef DATA_SETTINGS_H
 #define DATA_SETTINGS_H
 
+#define IsTutorial1() (Data_Settings.currentMissionId == 0 && !Data_Settings.isCustomScenario)
+#define IsTutorial2() (Data_Settings.currentMissionId == 1 && !Data_Settings.isCustomScenario)
+
 extern struct Data_Settings {
 	int bpp;
 	int fullscreen;
