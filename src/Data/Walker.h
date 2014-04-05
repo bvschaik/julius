@@ -82,7 +82,8 @@ enum {
 #define WalkerIsEnemyOrNative(t) ((t) >= Walker_IndigenousNative && (t) <= Walker_NativeTrader)
 
 enum {
-	WalkerState_1 = 1
+	WalkerState_Alive = 1,
+	WalkerState_Dead = 2
 };
 
 enum {
@@ -91,8 +92,8 @@ enum {
 	WalkerActionState_22_CartPusher = 22,
 	WalkerActionState_23_CartPusher = 23,
 	WalkerActionState_51_Warehouseman = 51,
-	WalkerActionState_74_Prefect = 74,
-	WalkerActionState_75_Prefect = 75,
+	WalkerActionState_74_PrefectFightingCrime = 74,
+	WalkerActionState_75_PrefectFightingFire = 75,
 	WalkerActionState_102_TraderAtWarehouse = 102,
 	WalkerActionState_103_TraderLeaving = 103,
 	WalkerActionState_112_TradeShipMoored = 112,
@@ -108,7 +109,8 @@ enum {
 	WalkerActionState_140_Dockman = 140,
 	WalkerActionState_145_MarketBuyer = 145,
 	WalkerActionState_146_MarketBuyer = 146,
-	WalkerActionState_150 = 150,
+	WalkerActionState_149_Corpse = 149,
+	WalkerActionState_150_Attacking = 150,
 	WalkerActionState_159_AttackingNative = 159,
 };
 

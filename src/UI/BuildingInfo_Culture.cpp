@@ -116,3 +116,18 @@ void UI_BuildingInfo_drawTempleVenus(BuildingInfoContext *c)
 {
 	drawTemple(c, "wavs/temple_love.wav", 96, 25);
 }
+
+void UI_BuildingInfo_drawOracle(BuildingInfoContext *c)
+{
+	c->helpId = 67;
+	PLAY_SOUND("wavs/oracle.wav");
+	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
+	Widget_GameText_drawCentered(110, 0, c->xOffset, c->yOffset + 12, 16 * c->widthBlocks, Font_LargeBlack);
+	Widget_GameText_drawCentered(13, 1,
+		c->xOffset, c->yOffset + 16 * c->heightBlocks - 24,
+		16 * c->widthBlocks, Font_NormalBlack);
+	Widget_GameText_drawMultiline(110, 1,
+		c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 143,
+		16 * (c->widthBlocks - 4), Font_NormalBlack);
+}
+

@@ -22,6 +22,10 @@ typedef struct {
 	int buildingId;
 	int hasRoadAccess;
 	int workerPercentage;
+	int hasReservoirPipes;
+	int aqueductHasWater;
+	int formationId;
+	int barracksSoldiersRequested;
 } BuildingInfoContext;
 
 void UI_BuildingInfo_drawEmploymentInfo(BuildingInfoContext *c, int yOffset);

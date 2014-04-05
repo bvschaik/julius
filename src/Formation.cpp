@@ -87,7 +87,7 @@ void Formation_calculateLegionTotals()
 			if (Data_Formations[i].__unknown56 <= 0 &&
 				Data_Formations[i].walkerIds[0]) {
 				int walkerId = Data_Formations[i].walkerIds[0];
-				if (Data_Walkers[walkerId].state == WalkerState_1) {
+				if (Data_Walkers[walkerId].state == WalkerState_Alive) {
 					Data_Formations[i].xFort = Data_Walkers[walkerId].x;
 					Data_Formations[i].yFort = Data_Walkers[walkerId].y;
 				}

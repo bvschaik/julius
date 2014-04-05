@@ -276,7 +276,7 @@ int Walker_determinePhrase(int walkerId)
 		case Walker_Librarian:
 			break;
 		case Walker_LionTamer:
-			if (w->actionState == WalkerActionState_150) {
+			if (w->actionState == WalkerActionState_150_Attacking) {
 				if (++w->phraseSequenceExact >= 3) {
 					w->phraseSequenceExact = 0;
 				}
@@ -284,7 +284,7 @@ int Walker_determinePhrase(int walkerId)
 			}
 			break;
 		case Walker_Gladiator:
-			if (w->actionState == WalkerActionState_150) {
+			if (w->actionState == WalkerActionState_150_Attacking) {
 				phraseId = 7;
 			}
 			break;
@@ -339,11 +339,11 @@ int Walker_determinePhrase(int walkerId)
 			if (++w->phraseSequenceExact >= 4) {
 				w->phraseSequenceExact = 0;
 			}
-			if (w->actionState == WalkerActionState_74_Prefect) {
+			if (w->actionState == WalkerActionState_74_PrefectFightingCrime) {
 				phraseId = 10;
-			} else if (w->actionState == WalkerActionState_75_Prefect) {
+			} else if (w->actionState == WalkerActionState_75_PrefectFightingFire) {
 				phraseId = 11 + (w->phraseSequenceExact % 2);
-			} else if (w->actionState == WalkerActionState_150) {
+			} else if (w->actionState == WalkerActionState_150_Attacking) {
 				phraseId = 13 + w->phraseSequenceExact;
 			} else if (w->minMaxSeen >= 50) {
 				phraseId = 7;
