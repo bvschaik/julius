@@ -11,6 +11,7 @@ enum {
 	ID_Graphic_MainMenuBackground = 14,
 	ID_Graphic_PanelButton = 15,
 	ID_Graphic_Font = 16,
+	ID_Graphic_Aqueduct = 19,
 	ID_Graphic_TerrainOverlay = 20,
 	ID_Graphic_EmpireMap = 47,
 	ID_Graphic_WorkshopRawMaterial = 60,

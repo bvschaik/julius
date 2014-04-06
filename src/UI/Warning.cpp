@@ -132,7 +132,7 @@ void UI_Warning_show(int warningId)
 		}
 		warnings[i].time = Time_getMillis();
 		warnings[i].textLength = strlen(text);
-		memset(warnings[i].text, 100, 0);
+		memset(warnings[i].text, 0, 100);
 		strncpy(warnings[i].text, text, warnings[i].textLength);
 		return;
 	}

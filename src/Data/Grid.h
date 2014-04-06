@@ -47,6 +47,11 @@ EXTERN UInt8_Grid(Data_Grid_spriteOffsets);
 EXTERN Int8_Grid(Data_Grid_desirability);
 EXTERN UInt8_Grid(Data_Grid_buildingDamage);
 
+EXTERN Int8_Grid(Data_Grid_pathingLandCitizen);
+EXTERN Int8_Grid(Data_Grid_pathingLandNonCitizen);
+EXTERN Int8_Grid(Data_Grid_pathingWater);
+EXTERN Int8_Grid(Data_Grid_pathingWalls);
+
 enum {
 	Bitfield_Size1 = 0x00,
 	Bitfield_Size2 = 0x01,
@@ -59,6 +64,15 @@ enum {
 	Bitfield_Deleted = 0x40,
 	Bitfield_Plaza = 0x80,
 	Edge_MaskXY = 0x3f,
+	Edge_X0Y0 = 0,
+	Edge_X1Y0 = 1,
+	Edge_X2Y0 = 2,
+	Edge_X0Y1 = 8,
+	Edge_X1Y1 = 9,
+	Edge_X2Y1 = 10,
+	Edge_X0Y2 = 16,
+	Edge_X1Y2 = 17,
+	Edge_X2Y2 = 18,
 	Edge_LeftmostTile = 0x40,
 	Edge_NativeLand = 0x80,
 };

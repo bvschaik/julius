@@ -19,7 +19,7 @@ static void changeMoraleOfAllEnemies(int amount);
 void Formation_clearList()
 {
 	for (int i = 0; i < MAX_FORMATIONS; i++) {
-		memset(&Data_Formations[i], sizeof(struct Data_Formation), 0);
+		memset(&Data_Formations[i], 0, sizeof(struct Data_Formation));
 	}
 	Data_Formation_Extra.idLastInUse = 0;
 	Data_Formation_Extra.idLastLegion = 0;

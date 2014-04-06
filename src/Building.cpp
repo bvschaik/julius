@@ -173,7 +173,7 @@ void Building_updateHighestIds()
 
 void Building_clearList()
 {
-	memset(Data_Buildings, MAX_BUILDINGS * sizeof(struct Data_Building), 0);
+	memset(Data_Buildings, 0, MAX_BUILDINGS * sizeof(struct Data_Building));
 	Data_Buildings_Extra.highestBuildingIdEver = 0;
 	Data_Buildings_Extra.placedSequence = 0;
 }
@@ -302,7 +302,7 @@ int Building_create(int type, int x, int y)
 void Building_delete(int buildingId)
 {
 	Building_deleteData(buildingId);
-	memset(&Data_Buildings[buildingId], sizeof(struct Data_Building), 0);
+	memset(&Data_Buildings[buildingId], 0, sizeof(struct Data_Building));
 }
 
 void Building_deleteData(int buildingId)
@@ -355,14 +355,14 @@ int Building_getMainBuildingId(int buildingId)
 
 void BuildingStorage_clearList()
 {
-	memset(Data_Building_Storages, MAX_STORAGES * sizeof(struct Data_Building_Storage), 0);
+	memset(Data_Building_Storages, 0, MAX_STORAGES * sizeof(struct Data_Building_Storage));
 }
 
 int BuildingStorage_create()
 {
 	for (int i = 1; i < MAX_STORAGES; i++) {
 		if (!Data_Building_Storages[i].inUse) {
-			memset(&Data_Building_Storages[i], sizeof(struct Data_Building_Storage), 0);
+			memset(&Data_Building_Storages[i], 0, sizeof(struct Data_Building_Storage));
 			Data_Building_Storages[i].inUse = 1;
 			return i;
 		}
