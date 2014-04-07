@@ -1495,6 +1495,9 @@ extern struct Data_CityInfo_Extra {
 	int gameTimeMonth; // 12 months in a year
 	int gameTimeYear;
 	int gameTimeTotalWeeks;
+	// TODO keep here or move?
+	int routingTotalRoutesCalculated;
+	int routingEnemyRoutesCalculated;
 } Data_CityInfo_Extra;
 
 extern struct Data_CityInfo_Resource {

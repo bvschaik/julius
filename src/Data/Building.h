@@ -10,7 +10,7 @@ enum {
 	Building_Menu_Workshops = 4,
 	Building_Road = 5,
 	Building_Wall = 6,
-	Building_ReservoirSimon = 7,
+	Building_DraggableReservoir = 7,
 	Building_Aqueduct = 8,
 	Building_ClearLand = 9,
 	Building_HouseVacantLot = 10,

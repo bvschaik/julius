@@ -33,7 +33,7 @@ void drawOverlayFootprints()
 {
 	FOREACH_XY_VIEW({
 		int gridOffset = ViewToGridOffset(xView, yView);
-		// TODO something related to elevation/reservoirSimon?
+		// TODO something related to elevation/draggable reservoir?
 		if (gridOffset < 0) {
 			// Outside map: draw black tile
 			DRAWFOOT_SIZE1(GraphicId(ID_Graphic_TerrainBlack),

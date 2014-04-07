@@ -47,10 +47,11 @@ EXTERN UInt8_Grid(Data_Grid_spriteOffsets);
 EXTERN Int8_Grid(Data_Grid_desirability);
 EXTERN UInt8_Grid(Data_Grid_buildingDamage);
 
-EXTERN Int8_Grid(Data_Grid_pathingLandCitizen);
-EXTERN Int8_Grid(Data_Grid_pathingLandNonCitizen);
-EXTERN Int8_Grid(Data_Grid_pathingWater);
-EXTERN Int8_Grid(Data_Grid_pathingWalls);
+EXTERN Int8_Grid(Data_Grid_routingLandCitizen);
+EXTERN Int8_Grid(Data_Grid_routingLandNonCitizen);
+EXTERN Int8_Grid(Data_Grid_routingWater);
+EXTERN Int8_Grid(Data_Grid_routingWalls);
+EXTERN Int16_Grid(Data_Grid_routingDistance);
 
 enum {
 	Bitfield_Size1 = 0x00,

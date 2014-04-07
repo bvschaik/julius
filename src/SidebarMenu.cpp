@@ -13,7 +13,7 @@ static int menuBuildingId[MAX_BUILDINGITEMS][MAX_BUILDINGITEMS] = {
 	{Building_HouseVacantLot, 0},
 	{Building_ClearLand, 0},
 	{Building_Road, 0},
-	{Building_ReservoirSimon, Building_Aqueduct, Building_Fountain, Building_Well, 0},
+	{Building_DraggableReservoir, Building_Aqueduct, Building_Fountain, Building_Well, 0},
 	{Building_Barber, Building_Bathhouse, Building_Doctor, Building_Hospital, 0},
 	{Building_Menu_SmallTemples, Building_Menu_LargeTemples, Building_Oracle, 0},
 	{Building_School, Building_Academy, Building_Library, Building_MissionPost, 0},
@@ -69,7 +69,7 @@ static void enableNormal(int sub, int item, int buildingId)
 	ENABLE_HOUSE();
 	ENABLE(Building_ClearLand);
 	ENABLE_IF(Building_Road, road);
-	ENABLE_IF(Building_ReservoirSimon, aqueduct);
+	ENABLE_IF(Building_DraggableReservoir, aqueduct);
 	ENABLE_IF(Building_Aqueduct, aqueduct);
 	ENABLE_IF(Building_Fountain, aqueduct);
 	ENABLE_IF(Building_Well, well);
@@ -169,7 +169,7 @@ void enableTutorial2Start(int sub, int item, int buildingId)
 static void enableTutorial2UpTo250(int sub, int item, int buildingId)
 {
 	enableTutorial2Start(sub, item, buildingId);
-	ENABLE_IF(Building_ReservoirSimon, aqueduct);
+	ENABLE_IF(Building_DraggableReservoir, aqueduct);
 	ENABLE_IF(Building_Aqueduct, aqueduct);
 	ENABLE_IF(Building_Fountain, aqueduct);
 }

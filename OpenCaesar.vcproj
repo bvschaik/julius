@@ -428,10 +428,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Pathing.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\PlayerMessage.cpp"
 				>
 			</File>
@@ -453,6 +449,10 @@
 			</File>
 			<File
 				RelativePath=".\src\Resource.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Routing.cpp"
 				>
 			</File>
 			<File

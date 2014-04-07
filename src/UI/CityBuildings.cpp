@@ -52,7 +52,7 @@ static void drawBuildingFootprints()
 
 	FOREACH_XY_VIEW({
 		int gridOffset = ViewToGridOffset(xView, yView);
-		// TODO something related to elevation/reservoirSimon?
+		// TODO something related to elevation/draggable reservoir?
 		if (gridOffset < 0) {
 			// Outside map: draw black tile
 			Graphics_drawIsometricFootprint(GraphicId(ID_Graphic_TerrainBlack),

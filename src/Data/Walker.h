@@ -151,7 +151,7 @@ extern struct Data_Walker {
 	unsigned char type;
 	char resourceId;
 	char __unknown_0c;
-	char __unknown_0d;
+	char isFriendly;
 	char state;
 	char __unknown_0f;
 	char __unknown_10;
