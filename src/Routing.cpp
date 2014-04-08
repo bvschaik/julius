@@ -1,10 +1,14 @@
 //#include "Routing.h"
 
+#include "Calc.h"
+
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 #include "Data/Graphics.h"
 #include "Data/Grid.h"
+#include "Data/Random.h"
+#include "Data/Routes.h"
 #include "Data/Settings.h"
 #include "Data/Walker.h"
 
@@ -17,6 +21,10 @@ static struct {
 	int head;
 	int tail;
 } queue;
+
+static int directionPath[500];
+
+static char tmpGrid[GRID_SIZE * GRID_SIZE];
 
 #define GRID_OFFSET(x,y) (Data_Settings_Map.gridStartOffset + (x) + (y) * GRID_SIZE)
 
@@ -51,6 +59,7 @@ static struct {
 		if (!Data_Grid_routingDistance[nextOffset]) {\
 			block;\
 		}\
+		if (++queue.head > MAX_QUEUE) queue.head = 0;\
 	}
 
 #define ROUTE_QUEUE_MAX(source, dest, max, block) \
@@ -81,6 +90,90 @@ static struct {
 		if (!Data_Grid_routingDistance[nextOffset]) {\
 			block;\
 		}\
+		if (++queue.head > MAX_QUEUE) queue.head = 0;\
+	}
+
+#define ROUTE_QUEUE_BOAT(source, block) \
+	memset(Data_Grid_routingDistance, 0, GRID_SIZE * GRID_SIZE * 2);\
+	memset(tmpGrid, 0, GRID_SIZE * GRID_SIZE);\
+	Data_Grid_routingDistance[source] = 1;\
+	queue.items[0] = source;\
+	queue.head = 0;\
+	queue.tail = 1;\
+	int tiles = 0;\
+	while (queue.head != queue.tail) {\
+		int offset = queue.items[queue.head];\
+		if (++tiles > 50000) break;\
+		int drag = Data_Grid_routingWater[offset] == -2 ? 4 : 0;\
+		if (drag && tmpGrid[offset]++ < drag) {\
+			queue.items[queue.tail++] = offset; \
+			if (queue.tail > MAX_QUEUE) queue.tail = 0;\
+		} else {\
+			int dist = 1 + Data_Grid_routingDistance[offset];\
+			int nextOffset = offset - 162;\
+			if (!Data_Grid_routingDistance[nextOffset]) {\
+				block;\
+			}\
+			nextOffset = offset + 1;\
+			if (!Data_Grid_routingDistance[nextOffset]) {\
+				block;\
+			}\
+			nextOffset = offset + 162;\
+			if (!Data_Grid_routingDistance[nextOffset]) {\
+				block;\
+			}\
+			nextOffset = offset - 1;\
+			if (!Data_Grid_routingDistance[nextOffset]) {\
+				block;\
+			}\
+		}\
+		if (++queue.head > MAX_QUEUE) queue.head = 0;\
+	}
+
+#define ROUTE_QUEUE_DIR8(source, block) \
+	memset(Data_Grid_routingDistance, 0, GRID_SIZE * GRID_SIZE * 2);\
+	Data_Grid_routingDistance[source] = 1;\
+	queue.items[0] = source;\
+	queue.head = 0;\
+	queue.tail = 1;\
+	int tiles = 0;\
+	while (queue.head != queue.tail) {\
+		if (++tiles > 50000) break;\
+		int offset = queue.items[queue.head];\
+		int dist = 1 + Data_Grid_routingDistance[offset];\
+		int nextOffset = offset - 162;\
+		if (!Data_Grid_routingDistance[nextOffset]) {\
+			block;\
+		}\
+		nextOffset = offset + 1;\
+		if (!Data_Grid_routingDistance[nextOffset]) {\
+			block;\
+		}\
+		nextOffset = offset + 162;\
+		if (!Data_Grid_routingDistance[nextOffset]) {\
+			block;\
+		}\
+		nextOffset = offset - 1;\
+		if (!Data_Grid_routingDistance[nextOffset]) {\
+			block;\
+		}\
+		nextOffset = offset - 161;\
+		if (!Data_Grid_routingDistance[nextOffset]) {\
+			block;\
+		}\
+		nextOffset = offset + 163;\
+		if (!Data_Grid_routingDistance[nextOffset]) {\
+			block;\
+		}\
+		nextOffset = offset + 161;\
+		if (!Data_Grid_routingDistance[nextOffset]) {\
+			block;\
+		}\
+		nextOffset = offset - 163;\
+		if (!Data_Grid_routingDistance[nextOffset]) {\
+			block;\
+		}\
+		if (++queue.head > MAX_QUEUE) queue.head = 0;\
 	}
 
 void Routing_determineLandCitizen()
@@ -94,7 +187,6 @@ void Routing_determineLandCitizen()
 			} else if (Data_Grid_terrain[gridOffset] & 0x1420) { // rubble, access ramp, garden
 				Data_Grid_routingLandCitizen[gridOffset] = 2;
 			} else if (Data_Grid_terrain[gridOffset] & (Terrain_Building | Terrain_Gatehouse)) {
-				// TODO
 				int buildingId = Data_Grid_buildingIds[gridOffset];
 				if (!buildingId) {
 					// shouldn't happen - correct
@@ -417,7 +509,7 @@ int Routing_canTravelOverLandCitizen(int xSrc, int ySrc, int xDst, int yDst)
 {
 	int sourceOffset = GRID_OFFSET(xSrc, ySrc);
 	int destOffset = GRID_OFFSET(xDst, yDst);
-	++Data_CityInfo_Extra.routingTotalRoutesCalculated;
+	++Data_Routes.totalRoutesCalculated;
 	ROUTE_QUEUE(sourceOffset, destOffset,
 	{
 		if (Data_Grid_routingLandCitizen[nextOffset] >= 0 && !hasFightingFriendly(nextOffset)) {
@@ -431,7 +523,7 @@ int Routing_canTravelOverRoadGardenCitizen(int xSrc, int ySrc, int xDst, int yDs
 {
 	int sourceOffset = GRID_OFFSET(xSrc, ySrc);
 	int destOffset = GRID_OFFSET(xDst, yDst);
-	++Data_CityInfo_Extra.routingTotalRoutesCalculated;
+	++Data_Routes.totalRoutesCalculated;
 	ROUTE_QUEUE(sourceOffset, destOffset,
 	{
 		if (Data_Grid_routingLandCitizen[nextOffset] >= 0 &&
@@ -446,7 +538,7 @@ int Routing_canTravelOverWalls(int xSrc, int ySrc, int xDst, int yDst)
 {
 	int sourceOffset = GRID_OFFSET(xSrc, ySrc);
 	int destOffset = GRID_OFFSET(xDst, yDst);
-	++Data_CityInfo_Extra.routingTotalRoutesCalculated;
+	++Data_Routes.totalRoutesCalculated;
 	ROUTE_QUEUE(sourceOffset, destOffset,
 	{
 		if (Data_Grid_routingWalls[nextOffset] >= 0 &&
@@ -461,8 +553,8 @@ int Routing_canTravelOverLandNonCitizen(int xSrc, int ySrc, int xDst, int yDst, 
 {
 	int sourceOffset = GRID_OFFSET(xSrc, ySrc);
 	int destOffset = GRID_OFFSET(xDst, yDst);
-	++Data_CityInfo_Extra.routingTotalRoutesCalculated;
-	++Data_CityInfo_Extra.routingEnemyRoutesCalculated;
+	++Data_Routes.totalRoutesCalculated;
+	++Data_Routes.enemyRoutesCalculated;
 	if (onlyThroughBuildingId) {
 		ROUTE_QUEUE(sourceOffset, destOffset,
 		{
@@ -492,7 +584,7 @@ int Routing_canTravelThroughEverythingNonCitizen(int xSrc, int ySrc, int xDst, i
 {
 	int sourceOffset = GRID_OFFSET(xSrc, ySrc);
 	int destOffset = GRID_OFFSET(xDst, yDst);
-	++Data_CityInfo_Extra.routingTotalRoutesCalculated;
+	++Data_Routes.totalRoutesCalculated;
 	ROUTE_QUEUE(sourceOffset, destOffset,
 	{
 		if (Data_Grid_routingLandNonCitizen[nextOffset] >= 0) {
@@ -500,4 +592,406 @@ int Routing_canTravelThroughEverythingNonCitizen(int xSrc, int ySrc, int xDst, i
 		}
 	});
 	return Data_Grid_routingDistance[destOffset] != 0;
+}
+
+int Routing_canPlaceRoadUnderAqueduct(int gridOffset)
+{
+	int graphic = Data_Grid_graphicIds[gridOffset] - GraphicId(ID_Graphic_Aqueduct);
+	int checkRoadY;
+	switch (graphic) {
+		case 0:
+		case 2:
+		case 8:
+		case 15:
+		case 17:
+		case 23:
+			checkRoadY = 1;
+			break;
+		case 1:
+		case 3:
+		case 9:
+		case 16:
+		case 18:
+		case 24:
+			checkRoadY = 0;
+			break;
+		default: // not a straight aqueduct
+			return 0;
+	}
+	if (Data_Settings_Map.orientation == Direction_Left || Data_Settings_Map.orientation == Direction_Right) {
+		checkRoadY = !checkRoadY;
+	}
+	if (checkRoadY) {
+		if ((Data_Grid_terrain[gridOffset - 162] & Terrain_Road) ||
+			Data_Grid_routingDistance[gridOffset - 162] > 0) {
+			return 0;
+		}
+		if ((Data_Grid_terrain[gridOffset + 162] & Terrain_Road) ||
+			Data_Grid_routingDistance[gridOffset + 162] > 0) {
+			return 0;
+		}
+	} else {
+		if ((Data_Grid_terrain[gridOffset - 1] & Terrain_Road) ||
+			Data_Grid_routingDistance[gridOffset - 1] > 0) {
+			return 0;
+		}
+		if ((Data_Grid_terrain[gridOffset + 1] & Terrain_Road) ||
+			Data_Grid_routingDistance[gridOffset + 1] > 0) {
+			return 0;
+		}
+	}
+	return 1;
+}
+
+int Routing_getAqueductGraphicIdWithRoad(int gridOffset)
+{
+	int graphic = Data_Grid_graphicIds[gridOffset] - GraphicId(ID_Graphic_Aqueduct);
+	switch (graphic) {
+		case 2:
+			return 8;
+		case 3:
+			return 9;
+		case 0:
+		case 1:
+		case 8:
+		case 9:
+		case 15:
+		case 16:
+		case 17:
+		case 18:
+		case 23:
+		case 24:
+			// unchanged
+			return graphic;
+		default:
+			// shouldn't happen
+			return 8;
+	}
+}
+
+static int canPlaceAqueductOnRoad(int gridOffset)
+{
+	int graphic = Data_Grid_graphicIds[gridOffset] - GraphicId(ID_Graphic_Road);
+	if (graphic != 0 && graphic != 1 && graphic != 49 && graphic != 50) {
+		return 0;
+	}
+	int checkRoadY = graphic == 0 || graphic == 49;
+	if (Data_Settings_Map.orientation == Direction_Left || Data_Settings_Map.orientation == Direction_Right) {
+		checkRoadY = !checkRoadY;
+	}
+	if (checkRoadY) {
+		if (Data_Grid_routingDistance[gridOffset - 162] > 0 ||
+			Data_Grid_routingDistance[gridOffset + 162] > 0) {
+			return 0;
+		}
+	} else {
+		if (Data_Grid_routingDistance[gridOffset - 1] > 0 ||
+			Data_Grid_routingDistance[gridOffset + 1] > 0) {
+			return 0;
+		}
+	}
+	return 1;
+}
+
+void Routing_getDistanceForBuildingWall(int x, int y)
+{
+	int sourceOffset = GRID_OFFSET(x, y);
+	ROUTE_QUEUE(sourceOffset, -1,
+	{
+		if (Data_Grid_routingLandCitizen[nextOffset] == 4) {
+			SET_DIST_AND_ENQUEUE();
+		}
+	});
+}
+
+int Routing_getGeneralDirection(int xSrc, int ySrc, int xDst, int yDst)
+{
+	if (xSrc < xDst) {
+		if (ySrc > yDst) {
+			return Direction_TopRight;
+		} else if (ySrc == yDst) {
+			return Direction_Right;
+		} else if (ySrc < yDst) {
+			return Direction_BottomRight;
+		}
+	} else if (xSrc == xDst) {
+		if (ySrc > yDst) {
+			return Direction_Top;
+		} else if (ySrc < yDst) {
+			return Direction_Bottom;
+		}
+	} else if (xSrc > xDst) {
+		if (ySrc > yDst) {
+			return Direction_TopLeft;
+		} else if (ySrc == yDst) {
+			return Direction_Left;
+		} else if (ySrc < yDst) {
+			return Direction_BottomLeft;
+		}
+	}
+	return Direction_None;
+}
+
+int Routing_getDirection(int xSrc, int ySrc, int xDst, int yDst)
+{
+	int dx = xSrc > xDst ? xSrc - xDst : xDst - xSrc;
+	int dy = ySrc > yDst ? ySrc - yDst : yDst - ySrc;
+	int percentage;
+	if (dx > dy) {
+		percentage = Calc_getPercentage(dx, dy);
+	} else if (dx == dy) {
+		percentage = 100;
+	} else {
+		percentage = -Calc_getPercentage(dy, dx);
+	}
+	if (xSrc == xDst) {
+		if (ySrc > yDst) {
+			return 0;
+		} else {
+			return 4;
+		}
+	} else if (xSrc > xDst) {
+		if (ySrc == yDst) {
+			return 6;
+		} else if (ySrc > yDst) {
+			if (percentage >= 400) {
+				return 6;
+			} else if (percentage > -400) {
+				return 7;
+			} else {
+				return 0;
+			}
+		} else {
+			if (percentage >= 400) {
+				return 6;
+			} else if (percentage > -400) {
+				return 5;
+			} else {
+				return 4;
+			}
+		}
+	} else { // xSrc < xDst
+		if (ySrc == yDst) {
+			return 2;
+		} else if (ySrc > yDst) {
+			if (percentage >= 400) {
+				return 2;
+			} else if (percentage > -400) {
+				return 1;
+			} else {
+				return 0;
+			}
+		} else {
+			if (percentage >= 400) {
+				return 2;
+			} else if (percentage > -400) {
+				return 3;
+			} else {
+				return 4;
+			}
+		}
+	}
+}
+
+int Routing_getDirectionForProjectile(int xSrc, int ySrc, int xDst, int yDst)
+{
+	int dx = xSrc > xDst ? xSrc - xDst : xDst - xSrc;
+	int dy = ySrc > yDst ? ySrc - yDst : yDst - ySrc;
+	int percentage;
+	if (dx > dy) {
+		percentage = Calc_getPercentage(dx, dy);
+	} else if (dx == dy) {
+		percentage = 100;
+	} else {
+		percentage = -Calc_getPercentage(dy, dx);
+	}
+	if (xSrc == xDst) {
+		if (ySrc < yDst) {
+			return 8;
+		} else {
+			return 0;
+		}
+	} else if (xSrc > xDst) {
+		if (ySrc == yDst) {
+			return 12;
+		} else if (ySrc > yDst) {
+			if (percentage >= 500) {
+				return 12;
+			} else if (percentage >= 200) {
+				return 13;
+			} else if (percentage > -200) {
+				return 14;
+			} else if (percentage > -500) {
+				return 15;
+			} else {
+				return 0;
+			}
+		} else {
+			if (percentage >= 500) {
+				return 12;
+			} else if (percentage >= 200) {
+				return 11;
+			} else if (percentage > -200) {
+				return 10;
+			} else if (percentage > -500) {
+				return 9;
+			} else {
+				return 8;
+			}
+        }
+	} else { // xSrc < xDst
+		if (ySrc == yDst) {
+			return 4;
+		} else if (ySrc > yDst) {
+			if (percentage >= 500) {
+				return 4;
+			} else if (percentage >= 200) {
+				return 3;
+			} else if (percentage > -200) {
+				return 2;
+			} else if (percentage > -500) {
+				return 1;
+			} else {
+				return 0;
+			}
+		} else {
+			if (percentage >= 500) {
+				return 4;
+			} else if (percentage >= 200) {
+				return 5;
+			} else if (percentage > -200) {
+				return 6;
+			} else if (percentage > -500) {
+				return 7;
+			} else {
+				return 8;
+			}
+		}
+	}
+}
+
+static void updateXYGridOffsetForDirection(int direction, int *x, int *y, int *gridOffset)
+{
+	switch (direction) {
+		case 0:
+			--(*y);
+			(*gridOffset) -= 162;
+			break;
+		case 1:
+			++(*x);
+			--(*y);
+			(*gridOffset) -= 161;
+			break;
+		case 2:
+			++(*x);
+			++(*gridOffset);
+		case 3:
+			++(*x);
+			++(*y);
+			(*gridOffset) += 163;
+			break;
+		case 4:
+			++(*y);
+			(*gridOffset) += 162;
+			break;
+		case 5:
+			--(*x);
+			++(*y);
+			(*gridOffset) += 161;
+			break;
+		case 6:
+			--(*x);
+			--(*gridOffset);
+			break;
+		case 7:
+			--(*x);
+			--(*y);
+			(*gridOffset) -= 163;
+			break;
+	}
+}
+
+void Routing_getDistanceWaterBoat(int x, int y)
+{
+	int sourceGridOffset = GRID_OFFSET(x, y);
+	if (Data_Grid_routingWater[sourceGridOffset] == -1) {
+		return;
+	}
+	ROUTE_QUEUE_BOAT(sourceGridOffset,
+	{
+		if (Data_Grid_routingWater[nextOffset] != -1 && Data_Grid_routingWater[nextOffset] != -3) {
+			SET_DIST_AND_ENQUEUE();
+			if (Data_Grid_routingWater[nextOffset] == -2) {
+				Data_Grid_routingDistance[nextOffset] += 4;
+			}
+		}
+	});
+}
+
+void Routing_getDistanceWater(int x, int y)
+{
+	int sourceGridOffset = GRID_OFFSET(x, y);
+	if (Data_Grid_routingWater[sourceGridOffset] == -1) {
+		return;
+	}
+	ROUTE_QUEUE_DIR8(sourceGridOffset,
+	{
+		if (Data_Grid_routingWater[nextOffset] >= 0) {
+			SET_DIST_AND_ENQUEUE();
+		}
+	});
+}
+
+int Routing_getPathOnWater(int routingPathId, int xSrc, int ySrc, int xDst, int yDst, int isFlotsam)
+{
+	int rand = Data_Random.random1_7bit & 3;
+	int dstGridOffset = GRID_OFFSET(xDst, yDst);
+	int distance = Data_Grid_routingDistance[dstGridOffset];
+	if (distance <= 0 || distance >= 998) {
+		return 0;
+	}
+
+	int numTiles = 0;
+	int lastDirection = -1;
+	int x = xDst;
+	int y = yDst;
+	int gridOffset = dstGridOffset;
+	while (distance > 1) {
+		int currentRand = rand;
+		distance = Data_Grid_routingDistance[gridOffset];
+		if (isFlotsam) {
+			currentRand = Data_Grid_random[gridOffset] & 3;
+		}
+		int direction = -1;
+		for (int d = 0; d < 8; d++) {
+			if (d != lastDirection) {
+				int nextOffset = gridOffset = Constant_DirectionGridOffsets[d];
+				int nextDistance = Data_Grid_routingDistance[nextOffset];
+				if (nextDistance) {
+					if (nextDistance < distance) {
+						distance = nextDistance;
+						direction = d;
+					} else if (nextDistance == distance && rand == currentRand) {
+						// allow flotsam to wander
+						distance = nextDistance;
+						direction = d;
+					}
+				}
+			}
+		}
+		if (direction == -1) {
+			return 0;
+		}
+		updateXYGridOffsetForDirection(direction, &x, &y, &gridOffset);
+		int forwardDirection = (direction + 4) % 8;
+		directionPath[numTiles++] = forwardDirection;
+		lastDirection = forwardDirection;
+		if (numTiles >= 500) {
+			return 0;
+		}
+	}
+	for (int i = 0; i < numTiles; i++) {
+		Data_Routes.directionPaths[routingPathId][i] = directionPath[numTiles - i - 1];
+	}
+	return numTiles;
 }

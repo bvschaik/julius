@@ -25,6 +25,7 @@ enum {
 	ID_Graphic_PanelWindows = 95,
 	ID_Graphic_Granary = 99,
 	ID_Graphic_OverlayColumn = 103,
+	ID_Graphic_Road = 112,
 	ID_Graphic_Homeless = 118,
 	ID_Graphic_FortStandards = 127,
 	ID_Graphic_AdvisorIcons = 128,
@@ -233,5 +234,6 @@ enum {
 0x13: Judaeans
 */
 extern int Constant_SalaryForRank[11];
+extern int Constant_DirectionGridOffsets[8];
 
 #endif
