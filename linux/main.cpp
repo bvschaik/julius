@@ -288,6 +288,7 @@ int main()
 	UI_Window_goTo(Window_MainMenu);
 	
 	GameFile_loadSavedGame("1.sav");
+	printf("map width = %d\n", Data_Settings_Map.width);
 	CityView_calculateLookup(); // TODO should be part of loading file
 	Empire_load(0, Data_Scenario.empireId);
 	//Data_CityInfo.godWrathMercury = 40;

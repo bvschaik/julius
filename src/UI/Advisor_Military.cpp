@@ -1,9 +1,13 @@
 #include "Advisors_private.h"
 #include "Window.h"
-#include "../Data/Formation.h"
-#include "../Data/Walker.h"
+
+#include "../CityView.h"
 #include "../Event.h"
 #include "../Formation.h"
+
+#include "../Data/Formation.h"
+#include "../Data/Settings.h"
+#include "../Data/Walker.h"
 
 static void buttonGoToLegion(int param1, int param2);
 static void buttonReturnToFort(int param1, int param2);
@@ -182,7 +186,8 @@ void UI_Advisor_Military_handleMouse()
 static void buttonGoToLegion(int legionId, int param2)
 {
 	int formationId = Formation_getLegionFormationId(legionId);
-	// TODO go to grid offset
+	CityView_goToGridOffset(
+		GridOffset(Data_Formations[formationId].x, Data_Formations[formationId].y));
 	UI_Window_goTo(Window_City);
 }
 

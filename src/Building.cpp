@@ -291,7 +291,7 @@ int Building_create(int type, int x, int y)
 	
 	b->x = x;
 	b->y = y;
-	b->gridOffset = 162 * y + x + Data_Settings_Map.gridStartOffset;
+	b->gridOffset = GridOffset(x, y);
 	b->__unknown_2c = b->__unknown_45 = Data_Grid_random[b->gridOffset] & 0x7f;
 	b->__unknown_44 = buildingProperties[type].unknown;
 	b->isAdjacentToWater = Terrain_isAdjacentToWater(x, y, b->size);
@@ -342,13 +342,11 @@ void Building_deleteData(int buildingId)
 
 int Building_getMainBuildingId(int buildingId)
 {
-	int guard = 0;
-	while (guard < 9) {
+	for (int guard = 0; guard < 9; guard++) {
 		if (Data_Buildings[buildingId].prevPartBuildingId <= 0) {
 			return buildingId;
 		}
 		buildingId = Data_Buildings[buildingId].prevPartBuildingId;
-		guard++;
 	}
 	return 0;
 }

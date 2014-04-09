@@ -295,8 +295,8 @@ extern struct Data_Building {
 				short all[8];
 				struct {
 					short wheat;
-					short fruit; // TODO order?
 					short vegetables;
+					short fruit;
 					short meat;
 					short wine;
 					short oil;

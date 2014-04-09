@@ -4,6 +4,7 @@
 #include "../CityView.h"
 #include "../Sound.h"
 #include "../Time.h"
+#include "../Data/Mouse.h"
 
 #include <cstdio>
 
@@ -486,4 +487,21 @@ void drawBridge(int gridOffset, int x, int y)
 			Graphics_drawImageMasked(graphicId + 12, x + 7, y - 38, colorMask);
 			break;
 	}
+}
+
+// MOUSE HANDLING
+
+static void updateCityViewCoords()
+{
+	Data_Settings_Map.x = Data_Settings_Map.y = 0;
+	int gridOffset = CityView_pixelCoordsToGridOffset(Data_Mouse.x, Data_Mouse.y);
+	if (gridOffset) {
+		Data_Settings_Map.x = (gridOffset - Data_Settings_Map.gridStartOffset) % 162;
+		Data_Settings_Map.y = (gridOffset - Data_Settings_Map.gridStartOffset) / 162;
+	}
+}
+
+void UI_CityBuildings_handleMouse()
+{
+	updateCityViewCoords();
 }

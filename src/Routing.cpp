@@ -26,8 +26,6 @@ static int directionPath[500];
 
 static char tmpGrid[GRID_SIZE * GRID_SIZE];
 
-#define GRID_OFFSET(x,y) (Data_Settings_Map.gridStartOffset + (x) + (y) * GRID_SIZE)
-
 #define SET_DIST_AND_ENQUEUE() \
 	Data_Grid_routingDistance[nextOffset] = dist;\
 	queue.items[queue.tail++] = nextOffset; \
@@ -452,7 +450,7 @@ void Routing_clearLandTypeCitizen()
 
 void Routing_getDistance(int x, int y)
 {
-	int sourceOffset = GRID_OFFSET(x, y);
+	int sourceOffset = GridOffset(x, y);
 	ROUTE_QUEUE(sourceOffset, -1,
 	{
 		if (Data_Grid_routingLandCitizen >= 0) {
@@ -463,7 +461,7 @@ void Routing_getDistance(int x, int y)
 
 void Routing_deleteClosestWallOrAqueduct(int x, int y)
 {
-	int sourceOffset = GRID_OFFSET(x, y);
+	int sourceOffset = GridOffset(x, y);
 	ROUTE_QUEUE(sourceOffset, -1,
 	{
 		if (Data_Grid_routingLandCitizen[nextOffset] < 0) {
@@ -507,8 +505,8 @@ static int hasFightingEnemy(int gridOffset)
 
 int Routing_canTravelOverLandCitizen(int xSrc, int ySrc, int xDst, int yDst)
 {
-	int sourceOffset = GRID_OFFSET(xSrc, ySrc);
-	int destOffset = GRID_OFFSET(xDst, yDst);
+	int sourceOffset = GridOffset(xSrc, ySrc);
+	int destOffset = GridOffset(xDst, yDst);
 	++Data_Routes.totalRoutesCalculated;
 	ROUTE_QUEUE(sourceOffset, destOffset,
 	{
@@ -521,8 +519,8 @@ int Routing_canTravelOverLandCitizen(int xSrc, int ySrc, int xDst, int yDst)
 
 int Routing_canTravelOverRoadGardenCitizen(int xSrc, int ySrc, int xDst, int yDst)
 {
-	int sourceOffset = GRID_OFFSET(xSrc, ySrc);
-	int destOffset = GRID_OFFSET(xDst, yDst);
+	int sourceOffset = GridOffset(xSrc, ySrc);
+	int destOffset = GridOffset(xDst, yDst);
 	++Data_Routes.totalRoutesCalculated;
 	ROUTE_QUEUE(sourceOffset, destOffset,
 	{
@@ -536,8 +534,8 @@ int Routing_canTravelOverRoadGardenCitizen(int xSrc, int ySrc, int xDst, int yDs
 
 int Routing_canTravelOverWalls(int xSrc, int ySrc, int xDst, int yDst)
 {
-	int sourceOffset = GRID_OFFSET(xSrc, ySrc);
-	int destOffset = GRID_OFFSET(xDst, yDst);
+	int sourceOffset = GridOffset(xSrc, ySrc);
+	int destOffset = GridOffset(xDst, yDst);
 	++Data_Routes.totalRoutesCalculated;
 	ROUTE_QUEUE(sourceOffset, destOffset,
 	{
@@ -551,8 +549,8 @@ int Routing_canTravelOverWalls(int xSrc, int ySrc, int xDst, int yDst)
 
 int Routing_canTravelOverLandNonCitizen(int xSrc, int ySrc, int xDst, int yDst, int onlyThroughBuildingId, int maxTiles)
 {
-	int sourceOffset = GRID_OFFSET(xSrc, ySrc);
-	int destOffset = GRID_OFFSET(xDst, yDst);
+	int sourceOffset = GridOffset(xSrc, ySrc);
+	int destOffset = GridOffset(xDst, yDst);
 	++Data_Routes.totalRoutesCalculated;
 	++Data_Routes.enemyRoutesCalculated;
 	if (onlyThroughBuildingId) {
@@ -582,8 +580,8 @@ int Routing_canTravelOverLandNonCitizen(int xSrc, int ySrc, int xDst, int yDst, 
 
 int Routing_canTravelThroughEverythingNonCitizen(int xSrc, int ySrc, int xDst, int yDst)
 {
-	int sourceOffset = GRID_OFFSET(xSrc, ySrc);
-	int destOffset = GRID_OFFSET(xDst, yDst);
+	int sourceOffset = GridOffset(xSrc, ySrc);
+	int destOffset = GridOffset(xDst, yDst);
 	++Data_Routes.totalRoutesCalculated;
 	ROUTE_QUEUE(sourceOffset, destOffset,
 	{
@@ -695,7 +693,7 @@ static int canPlaceAqueductOnRoad(int gridOffset)
 
 void Routing_getDistanceForBuildingWall(int x, int y)
 {
-	int sourceOffset = GRID_OFFSET(x, y);
+	int sourceOffset = GridOffset(x, y);
 	ROUTE_QUEUE(sourceOffset, -1,
 	{
 		if (Data_Grid_routingLandCitizen[nextOffset] == 4) {
@@ -913,7 +911,7 @@ static void updateXYGridOffsetForDirection(int direction, int *x, int *y, int *g
 
 void Routing_getDistanceWaterBoat(int x, int y)
 {
-	int sourceGridOffset = GRID_OFFSET(x, y);
+	int sourceGridOffset = GridOffset(x, y);
 	if (Data_Grid_routingWater[sourceGridOffset] == -1) {
 		return;
 	}
@@ -930,7 +928,7 @@ void Routing_getDistanceWaterBoat(int x, int y)
 
 void Routing_getDistanceWater(int x, int y)
 {
-	int sourceGridOffset = GRID_OFFSET(x, y);
+	int sourceGridOffset = GridOffset(x, y);
 	if (Data_Grid_routingWater[sourceGridOffset] == -1) {
 		return;
 	}
@@ -945,7 +943,7 @@ void Routing_getDistanceWater(int x, int y)
 int Routing_getPathOnWater(int routingPathId, int xSrc, int ySrc, int xDst, int yDst, int isFlotsam)
 {
 	int rand = Data_Random.random1_7bit & 3;
-	int dstGridOffset = GRID_OFFSET(xDst, yDst);
+	int dstGridOffset = GridOffset(xDst, yDst);
 	int distance = Data_Grid_routingDistance[dstGridOffset];
 	if (distance <= 0 || distance >= 998) {
 		return 0;

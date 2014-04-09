@@ -13,7 +13,7 @@ static int tilesAroundBuildingGridOffsets[][20] = {
 };
 
 #define FOR_XY_ADJACENT(block) \
-	int baseOffset = Data_Settings_Map.gridStartOffset + 162 * y + x;\
+	int baseOffset = GridOffset(x, y);\
 	for (int i = 0; i < 20; i++) {\
 		if (!tilesAroundBuildingGridOffsets[size][i]) break;\
 		int gridOffset = baseOffset + tilesAroundBuildingGridOffsets[size][i];\
@@ -33,7 +33,7 @@ static int tilesAroundBuildingGridOffsets[][20] = {
 	if (yMin < 0) yMin = 0;\
 	if (xMax >= Data_Settings_Map.width) xMax = Data_Settings_Map.width - 1;\
 	if (yMax >= Data_Settings_Map.height) yMax = Data_Settings_Map.height - 1;\
-	int gridOffset = Data_Settings_Map.gridStartOffset + 162 * yMin + xMin;\
+	int gridOffset = GridOffset(xMin, yMin);\
 	for (int yy = yMin; yy <= yMax; yy++) {\
 		for (int xx = xMin; xx <= xMax; xx++) {\
 			block;\

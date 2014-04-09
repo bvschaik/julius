@@ -1,4 +1,5 @@
 #include "AllWindows.h"
+#include "CityBuildings.h"
 #include "Window.h"
 #include "TopMenu.h"
 #include "Sidebar.h"
@@ -9,9 +10,6 @@
 #include "../Data/Screen.h"
 #include "../Data/State.h"
 #include "../Data/Settings.h"
-
-// TODO move to header
-void UI_CityBuildings_drawForeground(int x, int y);
 
 void UI_City_drawBackground()
 {
@@ -26,11 +24,11 @@ void UI_City_drawForeground()
 		Data_Settings_Map.camera.x, Data_Settings_Map.camera.y);
 }
 
-
 void UI_City_handleMouse()
 {
 	UI_TopMenu_handleMouse();
 	UI_Sidebar_handleMouse();
+	UI_CityBuildings_handleMouse();
 }
 /*
 void __cdecl fun_drawCityScreenForeground()

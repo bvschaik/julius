@@ -443,8 +443,11 @@ int GameFile_loadSavedGame(const char *filename)
 		}
 	}
 	fclose(fp);
-	Data_Settings_Map.gridStartOffset = Data_Scenario.gridFirstElement;
 	// TODO setup
+	Data_Settings_Map.width = Data_Scenario.mapSizeX;
+	Data_Settings_Map.height = Data_Scenario.mapSizeY;
+	Data_Settings_Map.gridStartOffset = Data_Scenario.gridFirstElement;
+	Data_Settings_Map.gridBorderSize = Data_Scenario.gridBorderSize;
 	return 0;
 }
 /*

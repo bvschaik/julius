@@ -34,6 +34,8 @@ extern struct Data_State {
 	int undoReady;
 	int undoAvailable;
 	int currentOverlay;
+	int previousOverlay;
+	int selectedBuildingType;
 } Data_State;
 
 #endif

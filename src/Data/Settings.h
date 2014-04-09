@@ -3,6 +3,7 @@
 
 #define IsTutorial1() (Data_Settings.currentMissionId == 0 && !Data_Settings.isCustomScenario)
 #define IsTutorial2() (Data_Settings.currentMissionId == 1 && !Data_Settings.isCustomScenario)
+#define GridOffset(x,y) (Data_Settings_Map.gridStartOffset + (x) + (y) * 162)
 
 extern struct Data_Settings {
 	int bpp;

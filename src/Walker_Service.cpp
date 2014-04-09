@@ -1,3 +1,5 @@
+
+#include "Building.h"
 #include "Data/Building.h"
 #include "Data/Settings.h"
 #include "Data/Grid.h"
@@ -13,7 +15,7 @@
 	if (yMin < 0) yMin = 0;\
 	if (xMax >= Data_Settings_Map.width) xMax = Data_Settings_Map.width - 1;\
 	if (yMax >= Data_Settings_Map.height) yMax = Data_Settings_Map.height - 1;\
-	int gridOffset = Data_Settings_Map.gridStartOffset + 162 * yMin + xMin;\
+	int gridOffset = GridOffset(xMin, yMin);\
 	for (int yy = yMin; yy <= yMax; yy++) {\
 		for (int xx = xMin; xx <= xMax; xx++) {\
 			int buildingId = Data_Grid_buildingIds[gridOffset];\
@@ -25,18 +27,12 @@
 		gridOffset += 162 - (xMax - xMin + 1);\
 	}
 
-// TODO move to some building utility file
-static int getMainBuildingId(int buildingId)
-{
-	return buildingId;
-}
-
 static int provideEngineerCoverage(int x, int y, int *maxDamageRiskSeen)
 {
 	int serviced = 0;
 	FOR_XY_RADIUS(
 		if (Data_Buildings[buildingId].type == Building_Hippodrome) {
-			buildingId = getMainBuildingId(buildingId);
+			buildingId = Building_getMainBuildingId(buildingId);
 		}
 		if (Data_Buildings[buildingId].damageRisk > *maxDamageRiskSeen) {
 			*maxDamageRiskSeen = Data_Buildings[buildingId].damageRisk;
@@ -54,7 +50,7 @@ static int providePrefectFireCoverage(int x, int y, int *maxFireRiskSeen)
 	int serviced = 0;
 	FOR_XY_RADIUS(
 		if (Data_Buildings[buildingId].type == Building_Hippodrome) {
-			buildingId = getMainBuildingId(buildingId);
+			buildingId = Building_getMainBuildingId(buildingId);
 		}
 		if (Data_Buildings[buildingId].fireRisk > *maxFireRiskSeen) {
 			*maxFireRiskSeen = Data_Buildings[buildingId].fireRisk;

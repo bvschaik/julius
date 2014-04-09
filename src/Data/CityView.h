@@ -16,6 +16,13 @@ extern struct Data_CityView {
 	int heightInTiles;
 
 	int viewToGridOffsetLookup[VIEW_X_MAX][VIEW_Y_MAX];
+
+	// frequently updated
+	struct {
+		int xOffsetInPixels;
+		int yOffsetInPixels;
+		int gridOffset;
+	} selectedTile;
 } Data_CityView;
 
 #define ViewToGridOffset(x,y) (Data_CityView.viewToGridOffsetLookup[x][y])

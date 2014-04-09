@@ -44,6 +44,7 @@ static CustomButton buttons[4] = {
 
 void UI_MainMenu_drawBackground()
 {
+	Graphics_clearScreen();
 	Graphics_drawImage(
 		GraphicId(ID_Graphic_MainMenuBackground),
 		Data_Screen.offset640x480.x,

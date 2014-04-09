@@ -10,6 +10,7 @@
 #include "../Data/Mouse.h"
 #include "../Data/Screen.h"
 #include "../Data/Settings.h"
+#include "../Data/State.h"
 
 static void drawBackground();
 
@@ -211,7 +212,16 @@ void UI_TopMenu_handleMouse()
 }
 
 
-static void menuFile_newGame(int param) {}
+static void menuFile_newGame(int param)
+{
+	clearState();
+	Data_State.selectedBuildingType = 0;
+	Data_State.undoAvailable = 0;
+	Data_State.currentOverlay = 0;
+	Data_State.previousOverlay = 0;
+	UI_Window_goTo(Window_MainMenu);
+}
+
 static void menuFile_replayMap(int param) {}
 static void menuFile_loadGame(int param) {}
 static void menuFile_saveGame(int param) {}
