@@ -22,5 +22,7 @@ int Formation_getInvasionGridOffset(int invasionSeq);
 void Formation_calculateWalkers();
 
 void Formation_dispatchLegionsToDistantBattle();
+void Formation_legionsReturnFromDistantBattle();
+void Formation_legionKillSoldiersInDistantBattle(int killPercentage);
 
 #endif

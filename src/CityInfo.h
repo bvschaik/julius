@@ -18,7 +18,7 @@ void CityInfo_Ratings_updatePeaceExplanation();
 void CityInfo_Ratings_reduceProsperityAfterBailout();
 
 void CityInfo_Ratings_sendGiftToCaesar();
-void CityInfo_Ratings_increaseFavor(int amount);
+void CityInfo_Ratings_changeFavor(int amount);
 void CityInfo_Ratings_setMaxFavor(int maxFavor);
 
 void CityInfo_Finance_calculateTotals();
@@ -36,7 +36,7 @@ void CityInfo_Population_recordMonthlyPopulation();
 int CityInfo_Population_getPeopleOfWorkingAge();
 int CityInfo_Population_getNumberOfSchoolAgeChildren();
 int CityInfo_Population_getNumberOfAcademyChildren();
-void CityInfo_Population_increaseHappiness(int amount);
+void CityInfo_Population_changeHappiness(int amount);
 void CityInfo_Population_setMaxHappiness(int amount);
 void CityInfo_Population_changeHealthRate(int amount);
 void CityInfo_Population_calculateSentiment();

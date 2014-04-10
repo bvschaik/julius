@@ -403,7 +403,7 @@ static void drawEmpireMap()
 	for (int i = 0; i < 200 && Data_Empire_Objects[i].inUse; i++) {
 		Data_Empire_Object *obj = &Data_Empire_Objects[i];
 		if (obj->type == EmpireObject_LandTradeRoute || obj->type == EmpireObject_SeaTradeRoute) {
-			if (!Empire_isTradeWithCityOpen(obj->tradeRouteId)) {
+			if (!Empire_isTradeRouteOpen(obj->tradeRouteId)) {
 				continue;
 			}
 		}

@@ -402,38 +402,38 @@ void CityInfo_Ratings_sendGiftToCaesar()
 	if (Data_CityInfo.giftOverdosePenalty <= 0) {
 		Data_CityInfo.giftOverdosePenalty = 1;
 		if (Data_CityInfo.giftSizeSelected == 0) {
-			CityInfo_Ratings_increaseFavor(3);
+			CityInfo_Ratings_changeFavor(3);
 		} else if (Data_CityInfo.giftSizeSelected == 1) {
-			CityInfo_Ratings_increaseFavor(5);
+			CityInfo_Ratings_changeFavor(5);
 		} else if (Data_CityInfo.giftSizeSelected == 2) {
-			CityInfo_Ratings_increaseFavor(10);
+			CityInfo_Ratings_changeFavor(10);
 		}
 	} else if (Data_CityInfo.giftOverdosePenalty == 1) {
 		Data_CityInfo.giftOverdosePenalty = 2;
 		if (Data_CityInfo.giftSizeSelected == 0) {
-			CityInfo_Ratings_increaseFavor(1);
+			CityInfo_Ratings_changeFavor(1);
 		} else if (Data_CityInfo.giftSizeSelected == 1) {
-			CityInfo_Ratings_increaseFavor(3);
+			CityInfo_Ratings_changeFavor(3);
 		} else if (Data_CityInfo.giftSizeSelected == 2) {
-			CityInfo_Ratings_increaseFavor(5);
+			CityInfo_Ratings_changeFavor(5);
 		}
 	} else if (Data_CityInfo.giftOverdosePenalty == 2) {
 		Data_CityInfo.giftOverdosePenalty = 3;
 		if (Data_CityInfo.giftSizeSelected == 0) {
-			CityInfo_Ratings_increaseFavor(0);
+			CityInfo_Ratings_changeFavor(0);
 		} else if (Data_CityInfo.giftSizeSelected == 1) {
-			CityInfo_Ratings_increaseFavor(1);
+			CityInfo_Ratings_changeFavor(1);
 		} else if (Data_CityInfo.giftSizeSelected == 2) {
-			CityInfo_Ratings_increaseFavor(3);
+			CityInfo_Ratings_changeFavor(3);
 		}
 	} else if (Data_CityInfo.giftOverdosePenalty == 3) {
 		Data_CityInfo.giftOverdosePenalty = 4;
 		if (Data_CityInfo.giftSizeSelected == 0) {
-			CityInfo_Ratings_increaseFavor(0);
+			CityInfo_Ratings_changeFavor(0);
 		} else if (Data_CityInfo.giftSizeSelected == 1) {
-			CityInfo_Ratings_increaseFavor(0);
+			CityInfo_Ratings_changeFavor(0);
 		} else if (Data_CityInfo.giftSizeSelected == 2) {
-			CityInfo_Ratings_increaseFavor(1);
+			CityInfo_Ratings_changeFavor(1);
 		}
 	}
 
@@ -459,7 +459,7 @@ void CityInfo_Ratings_sendGiftToCaesar()
 	Data_CityInfo.personalSavings -= cost;
 }
 
-void CityInfo_Ratings_increaseFavor(int amount)
+void CityInfo_Ratings_changeFavor(int amount)
 {
 	Data_CityInfo.ratingFavor += amount;
 	BOUND(Data_CityInfo.ratingFavor, 0, 100);

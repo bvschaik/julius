@@ -24,6 +24,6 @@ int Empire_ourCityCanProduceResourcePotentially(int resource);
 
 int Empire_getCityForObject(int empireObjectId);
 int Empire_getCityForTradeRoute(int routeId);
-int Empire_isTradeWithCityOpen(int routeId);
+int Empire_isTradeRouteOpen(int routeId);
 
 #endif

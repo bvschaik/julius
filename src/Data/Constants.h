@@ -211,6 +211,10 @@ enum {
 	EnemyType_Egyptian = 9,
 	EnemyType_Carthaginian = 10
 };
+
+enum {
+	InvasionType_DistantBattle = 4,
+};
 /*
 0x00: Barbarians
 0x01: Etruscans

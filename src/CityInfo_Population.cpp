@@ -16,7 +16,7 @@ void CityInfo_Population_recordMonthlyPopulation()
 	++Data_CityInfo.monthsSinceStart;
 }
 
-void CityInfo_Population_increaseHappiness(int amount)
+void CityInfo_Population_changeHappiness(int amount)
 {
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		if (Data_Buildings[i].inUse && Data_Buildings[i].houseSize) {

@@ -38,9 +38,13 @@ void UI_CityBuildings_drawForeground(int x, int y)
 	if (Data_State.currentOverlay) {
 		drawOverlayFootprints();
 		drawOverlayTopsWalkersAnimation(Data_State.currentOverlay);
+		//drawSelectedBuildingGhost();
+		//drawTops2(9999);
 	} else {
 		drawBuildingFootprints();
 		drawBuildingTopsWalkersAnimation(0);
+		//drawSelectedBuildingGhost();
+		//drawTops2(0);
 	}
 
 	Graphics_resetClipRectangle();

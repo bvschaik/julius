@@ -541,7 +541,7 @@ int Empire_getCityForTradeRoute(int routeId)
 	return 0;
 }
 
-int Empire_isTradeWithCityOpen(int routeId)
+int Empire_isTradeRouteOpen(int routeId)
 {
 	for (int i = 0; i < MAX_CITIES; i++) {
 		if (Data_Empire_Cities[i].inUse && Data_Empire_Cities[i].routeId == routeId) {

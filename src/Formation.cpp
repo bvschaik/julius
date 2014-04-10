@@ -193,3 +193,13 @@ int Formation_getInvasionGridOffset(int invasionSeq)
 	}
 	return 0;
 }
+
+void Formation_legionsReturnFromDistantBattle()
+{
+	// TODO
+}
+
+void Formation_legionKillSoldiersInDistantBattle(int killPercentage)
+{
+	// TODO
+}

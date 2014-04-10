@@ -72,7 +72,7 @@ static void performBlessing(int god)
 			break;
 		case God_Venus:
 			PlayerMessage_post(1, 100, 0, 0);
-			CityInfo_Population_increaseHappiness(25);
+			CityInfo_Population_changeHappiness(25);
 			break;
 	}
 }
@@ -103,7 +103,7 @@ static void performSmallCurse(int god)
 		case God_Venus:
 			PlayerMessage_post(1, 95, 0, 0);
 			CityInfo_Population_setMaxHappiness(50);
-			CityInfo_Population_increaseHappiness(-5);
+			CityInfo_Population_changeHappiness(-5);
 			CityInfo_Population_changeHealthRate(-10);
 			CityInfo_Population_calculateSentiment();
 	}
@@ -141,7 +141,7 @@ static void performLargeCurse(int god)
 		case God_Venus:
 			PlayerMessage_post(1, 45, 0, 0);
 			CityInfo_Population_setMaxHappiness(40);
-			CityInfo_Population_increaseHappiness(-10);
+			CityInfo_Population_changeHappiness(-10);
 			if (Data_CityInfo.healthRate >= 80) {
 				CityInfo_Population_changeHealthRate(-50);
 			} else if (Data_CityInfo.healthRate >= 60) {
@@ -407,16 +407,16 @@ void CityInfo_Gods_checkFestival()
 	if (Data_CityInfo.festivalEffectMonthsDelayFirst <= 0) {
 		Data_CityInfo.festivalEffectMonthsDelayFirst = 12;
 		switch (Data_CityInfo.plannedFestivalSize) {
-			case 1: CityInfo_Population_increaseHappiness(7); break;
-			case 2: CityInfo_Population_increaseHappiness(9); break;
-			case 3: CityInfo_Population_increaseHappiness(12); break;
+			case 1: CityInfo_Population_changeHappiness(7); break;
+			case 2: CityInfo_Population_changeHappiness(9); break;
+			case 3: CityInfo_Population_changeHappiness(12); break;
 		}
 	} else if (Data_CityInfo.festivalEffectMonthsDelaySecond <= 0) {
 		Data_CityInfo.festivalEffectMonthsDelaySecond = 12;
 		switch (Data_CityInfo.plannedFestivalSize) {
-			case 1: CityInfo_Population_increaseHappiness(2); break;
-			case 2: CityInfo_Population_increaseHappiness(3); break;
-			case 3: CityInfo_Population_increaseHappiness(5); break;
+			case 1: CityInfo_Population_changeHappiness(2); break;
+			case 2: CityInfo_Population_changeHappiness(3); break;
+			case 3: CityInfo_Population_changeHappiness(5); break;
 		}
 	}
 	Data_CityInfo.monthsSinceFestival = 1;
