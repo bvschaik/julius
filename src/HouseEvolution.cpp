@@ -1,4 +1,5 @@
 #include "BuildingHouse.h"
+#include "Routing.h"
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
@@ -7,7 +8,7 @@
 static int checkEvolveDesirability(int buildingId);
 static int hasRequiredGoodsAndServices(int buildingId, int forUpgrade);
 static void resetCityInfoServiceRequiredCounters();
-
+static void consumeResources(int buildingId);
 
 enum {
 	Evolve = 1,
@@ -149,7 +150,6 @@ static void evolveMediumInsula(int buildingId, int *hasExpanded)
 			Data_Buildings[buildingId].houseIsMerged = 0;
 			BuildingHouse_expandToLargeInsula(buildingId);
 			*hasExpanded = 1;
-			// TODO add recalculating garden graphics to evolveDevolve func
 		}
 	} else if (status == Devolve) {
 		BuildingHouse_changeTo(buildingId, Building_HouseSmallInsula);
@@ -163,7 +163,7 @@ static void evolveLargeInsula(int buildingId, int *hasExpanded)
 	if (status == Evolve) {
 		BuildingHouse_changeTo(buildingId, Building_HouseGrandInsula);
 	} else if (status == Devolve) {
-		BuildingHouse_splitFromLargeInsula(buildingId);
+		BuildingHouse_devolveFromLargeInsula(buildingId);
 	}
 }
 
@@ -210,7 +210,7 @@ static void evolveLargeVilla(int buildingId, int *hasExpanded)
 	if (status == Evolve) {
 		BuildingHouse_changeTo(buildingId, Building_HouseGrandVilla);
 	} else if (status == Devolve) {
-		BuildingHouse_splitFromLargeVilla(buildingId);
+		BuildingHouse_devolveFromLargeVilla(buildingId);
 	}
 }
 
@@ -257,7 +257,7 @@ static void evolveLargePalace(int buildingId, int *hasExpanded)
 	if (status == Evolve) {
 		BuildingHouse_changeTo(buildingId, Building_HouseLuxuryPalace);
 	} else if (status == Devolve) {
-		BuildingHouse_splitFromLargePalace(buildingId);
+		BuildingHouse_devolveFromLargePalace(buildingId);
 	}
 }
 
@@ -275,7 +275,30 @@ static void evolveLuxuryPalace(int buildingId, int *hasExpanded)
 
 void HouseEvolution_Tick_evolveAndConsumeResources()
 {
-	// TODO
+	static void (*callbacks[])(int, int*) = {
+		evolveSmallTent, evolveLargeTent, evolveSmallShack, evolveLargeShack,
+		evolveSmallHovel, evolveLargeHovel, evolveSmallCasa, evolveLargeCasa,
+		evolveSmallInsula, evolveMediumInsula, evolveLargeInsula, evolveGrandInsula,
+		evolveSmallVilla, evolveMediumVilla, evolveLargeVilla, evolveGrandVilla,
+		evolveSmallPalace, evolveMediumPalace, evolveLargePalace, evolveLuxuryPalace
+	};
+	resetCityInfoServiceRequiredCounters();
+	int hasExpanded = 0;
+	for (int i = 1; i < MAX_BUILDINGS; i++) {
+		if (Data_Buildings[i].inUse == 1 &&
+			Data_Buildings[i].type >= Building_HouseVacantLot &&
+			Data_Buildings[i].type <= Building_HouseLuxuryPalace) {
+			BuildingHouse_checkForCorruption(i);
+			(*callbacks[Data_Buildings[i].type - 10])(i, &hasExpanded);
+			if (Data_CityInfo_Extra.gameTimeWeek == 0 || Data_CityInfo_Extra.gameTimeWeek == 7) {
+				consumeResources(i);
+			}
+		}
+	}
+	if (hasExpanded) {
+		Routing_determineLandCitizen();
+		Routing_determineLandNonCitizen();
+	}
 }
 
 static int checkEvolveDesirability(int buildingId)

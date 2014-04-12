@@ -43,7 +43,7 @@ extern struct Data_Empire_Object {
 	char tradeRouteOpen;
 	short tradeRouteCostToOpen;
 	char citySells[10];
-	char ownerCityIndex;
+	unsigned char ownerCityIndex;
 	char unknown990d29;
 	char cityBuys[8];
 	char invasionPathId;

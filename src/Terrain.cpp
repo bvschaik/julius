@@ -45,6 +45,15 @@ static int tilesAroundBuildingGridOffsets[][20] = {
 #define STORE_XY_RADIUS(xTile,yTile) \
 	*(xTile) = xx; *(yTile) = yy;
 
+void Terrain_addBuildingToGrids(int buildingId, int x, int y, int width, int height, int graphicId, int terrain)
+{
+	// TODO
+}
+void Terrain_removeBuildingFromGrids(int buildingId, int x, int y)
+{
+	// TODO
+}
+
 int Terrain_hasRoadAccess(int x, int y, int size, int *roadX, int *roadY)
 {
 	// TODO

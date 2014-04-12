@@ -15,6 +15,7 @@
 #include "Data/Trade.h"
 #include "Data/Walker.h"
 #include "Data/Formation.h"
+#include "Data/Debug.h"
 
 #include "Zip.h"
 
@@ -292,8 +293,8 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{0, &tmp, 4}, //{0, &dword_607F9C, 4},
 	{0, &tmp, 4}, //{0, &dword_607FA0, 4},
 	{0, &tmp, 2}, //{0, &lastInvasionInternalId, 2},
-	{0, &tmp, 4}, //{0, &dword_98C064, 4},
-	{0, &tmp, 4}, //{0, &dword_94A30C, 4},
+	{0, &Data_Debug.incorrectHousePositions, 4},
+	{0, &Data_Debug.unfixableHousePositions, 4},
 	{0, &tmp, 65}, //{0, &currentScenarioFilename, 0x41},
 	{0, &tmp, 32}, //{0, &mapBookmarks_x, 0x20},
 	{0, &tmp, 4}, //{0, &tutorial2_disease, 4},

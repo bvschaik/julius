@@ -590,11 +590,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Building.h"
+				RelativePath=".\src\Building.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Building.h"
+				RelativePath=".\src\Data\Building.h"
 				>
 			</File>
 			<File
@@ -622,19 +622,19 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\CityInfo.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\Data\CityInfo.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\CityView.h"
+				RelativePath=".\src\CityInfo.h"
 				>
 			</File>
 			<File
 				RelativePath=".\src\CityView.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Data\CityView.h"
 				>
 			</File>
 			<File
@@ -643,6 +643,10 @@
 			</File>
 			<File
 				RelativePath=".\src\data\Data.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Data\Debug.h"
 				>
 			</File>
 			<File
@@ -670,11 +674,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Formation.h"
+				RelativePath=".\src\Data\Formation.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Formation.h"
+				RelativePath=".\src\Formation.h"
 				>
 			</File>
 			<File
@@ -682,11 +686,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Graphics.h"
+				RelativePath=".\src\Graphics.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Graphics.h"
+				RelativePath=".\src\Data\Graphics.h"
 				>
 			</File>
 			<File
@@ -714,11 +718,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\KeyboardInput.h"
+				RelativePath=".\src\KeyboardInput.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\KeyboardInput.h"
+				RelativePath=".\src\Data\KeyboardInput.h"
 				>
 			</File>
 			<File
@@ -770,11 +774,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Random.h"
+				RelativePath=".\src\data\Random.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\data\Random.h"
+				RelativePath=".\src\Random.h"
 				>
 			</File>
 			<File
@@ -783,6 +787,10 @@
 			</File>
 			<File
 				RelativePath=".\src\Data\Routes.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Routing.h"
 				>
 			</File>
 			<File

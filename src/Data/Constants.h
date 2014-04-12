@@ -13,6 +13,8 @@ enum {
 	ID_Graphic_Font = 16,
 	ID_Graphic_Aqueduct = 19,
 	ID_Graphic_TerrainOverlay = 20,
+	// 26-35: houses
+	ID_Graphic_HouseVacantLot = 36,
 	ID_Graphic_EmpireMap = 47,
 	ID_Graphic_WorkshopRawMaterial = 60,
 	ID_Graphic_Senate = 62,

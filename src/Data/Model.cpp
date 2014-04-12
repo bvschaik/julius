@@ -68,5 +68,7 @@ struct Data_FileList Data_FileList;
 
 struct Data_Routes Data_Routes;
 
+struct Data_Debug Data_Debug;
+
 int Constant_SalaryForRank[11] = {0, 2, 5, 8, 12, 20, 30, 40, 60, 80, 100};
 int Constant_DirectionGridOffsets[8] = {-162, -161, 1, 163, 162, 161, -1, -163};
