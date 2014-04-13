@@ -196,7 +196,7 @@ static void updateGodMoods()
 			Data_CityInfo.godWrathBolts[god] = 50;
 		}
 	}
-	if (Data_CityInfo_Extra.gameTimeWeek != 0) {
+	if (Data_CityInfo_Extra.gameTimeDay != 0) {
 		return;
 	}
 

@@ -29,7 +29,7 @@ static void drawFarm(BuildingInfoContext *c, int helpId, const char *soundFile, 
 		DRAW_DESC_AT(70, 69, 25);
 	} else if (Data_CityInfo.resourceIndustryMothballed[resourceId]) {
 		DRAW_DESC_AT(70, groupId, 4);
-	} else if (Data_Buildings[c->buildingId].data.industry.curseWeeksLeft > 4) {
+	} else if (Data_Buildings[c->buildingId].data.industry.curseDaysLeft > 4) {
 		DRAW_DESC_AT(70, groupId, 11);
 	} else if (Data_Buildings[c->buildingId].numWorkers <= 0) {
 		DRAW_DESC_AT(70, groupId, 5);

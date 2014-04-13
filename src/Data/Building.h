@@ -281,7 +281,7 @@ extern struct Data_Building {
 			char __pad68;
 			char hasFullResource; //69
 			char __pad6a;
-			char curseWeeksLeft; //6b
+			char curseDaysLeft; //6b
 		} industry;
 		struct {
 			char __padding[26];

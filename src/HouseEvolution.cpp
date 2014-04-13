@@ -290,7 +290,7 @@ void HouseEvolution_Tick_evolveAndConsumeResources()
 			Data_Buildings[i].type <= Building_HouseLuxuryPalace) {
 			BuildingHouse_checkForCorruption(i);
 			(*callbacks[Data_Buildings[i].type - 10])(i, &hasExpanded);
-			if (Data_CityInfo_Extra.gameTimeWeek == 0 || Data_CityInfo_Extra.gameTimeWeek == 7) {
+			if (Data_CityInfo_Extra.gameTimeDay == 0 || Data_CityInfo_Extra.gameTimeDay == 7) {
 				consumeResources(i);
 			}
 		}
