@@ -1,8 +1,15 @@
 #include "Advisors_private.h"
-#include "Window.h"
+
 #include "AllWindows.h"
+#include "Window.h"
+#include "MessageDialog.h"
 
 static void buttonChangeAdvisor(int param1, int param2);
+static void buttonHelp(int param1, int param2);
+
+static ImageButton helpButton = {
+	11, -7, 27, 27, 4, 134, 0, buttonHelp, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0
+};
 
 static CustomButton advisorButtons[13] = {
 	{12, 1, 52, 41, buttonChangeAdvisor, Widget_Button_doNothing, 1, 1, 0},
@@ -20,13 +27,14 @@ static CustomButton advisorButtons[13] = {
 	{588, 1, 624, 41, buttonChangeAdvisor, Widget_Button_doNothing, 1, 0, 0},
 };
 
-static const int dialogHeights[13] = {
-	0, 0, 0, 0, 0, 0, 0, 18, 16, 0, 0, 0, 0
+static const int advisorToMessageTextId[] = {
+	0, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30
 };
 
 static int currentAdvisor = Advisor_Education;
 
 static int focusButtonId;
+static int advisorHeight;
 
 void UI_Advisors_setAdvisor(int advisor)
 {
@@ -47,53 +55,50 @@ void UI_Advisors_drawBackground()
 	UI_Advisor_drawGeneralBackground();
 	switch (currentAdvisor) {
 		case Advisor_Labor:
-			UI_Advisor_Labor_drawBackground();
+			UI_Advisor_Labor_drawBackground(&advisorHeight);
 			break;
 		case Advisor_Military:
-			UI_Advisor_Military_drawBackground();
+			UI_Advisor_Military_drawBackground(&advisorHeight);
 			break;
 		case Advisor_Imperial:
-			UI_Advisor_Imperial_drawBackground();
+			UI_Advisor_Imperial_drawBackground(&advisorHeight);
 			break;
 		case Advisor_Ratings:
-			UI_Advisor_Ratings_drawBackground();
+			UI_Advisor_Ratings_drawBackground(&advisorHeight);
 			break;
 		case Advisor_Trade:
-			UI_Advisor_Trade_drawBackground();
+			UI_Advisor_Trade_drawBackground(&advisorHeight);
 			break;
 		case Advisor_Population:
-			UI_Advisor_Population_drawBackground();
+			UI_Advisor_Population_drawBackground(&advisorHeight);
 			break;
 		case Advisor_Health:
-			UI_Advisor_Health_drawBackground();
+			UI_Advisor_Health_drawBackground(&advisorHeight);
 			break;
 		case Advisor_Education:
-			UI_Advisor_Education_drawBackground();
+			UI_Advisor_Education_drawBackground(&advisorHeight);
 			break;
 		case Advisor_Entertainment:
-			UI_Advisor_Entertainment_drawBackground();
+			UI_Advisor_Entertainment_drawBackground(&advisorHeight);
 			break;
 		case Advisor_Religion:
-			UI_Advisor_Religion_drawBackground();
+			UI_Advisor_Religion_drawBackground(&advisorHeight);
 			break;
 		case Advisor_Financial:
-			UI_Advisor_Financial_drawBackground();
+			UI_Advisor_Financial_drawBackground(&advisorHeight);
 			break;
 		case Advisor_Chief:
-			UI_Advisor_Chief_drawBackground();
+			UI_Advisor_Chief_drawBackground(&advisorHeight);
 			break;
 	}
 }
 
 void UI_Advisors_drawForeground()
 {
-	/* HELP BUTTON
-        j_fun_drawImageButtonCollection(
-          dialog_x,
-          16 * (advisor_dialog_height - 2) + dialog_y,
-          &imagebuttons_advisors,
-          1);
-	*/
+	Widget_Button_drawImageButtons(Data_Screen.offset640x480.x,
+		Data_Screen.offset640x480.y + 16 * (advisorHeight - 2),
+		&helpButton, 1);
+
 	switch (currentAdvisor) {
 		case Advisor_Labor:
 			UI_Advisor_Labor_drawForeground();
@@ -155,7 +160,9 @@ void UI_Advisors_handleMouse()
 		return;
 	}
 
-	// TODO help button
+	if (Widget_Button_handleImageButtons(baseOffsetX, baseOffsetY + 16 * (advisorHeight - 2), &helpButton, 1)) {
+		return;
+	}
 
 	switch (currentAdvisor) {
 		case Advisor_Labor:
@@ -197,3 +204,9 @@ static void buttonChangeAdvisor(int param1, int param2)
 	}
 }
 
+static void buttonHelp(int param1, int param2)
+{
+	if (currentAdvisor > 0 && currentAdvisor < 13) {
+		UI_MessageDialog_show(advisorToMessageTextId[currentAdvisor], 1);
+	}
+}

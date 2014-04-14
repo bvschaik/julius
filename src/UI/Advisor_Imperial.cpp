@@ -36,14 +36,15 @@ static CustomButton imperialButtons[8] = {
 static int focusButtonId;
 static int selectedRequestId;
 
-void UI_Advisor_Imperial_drawBackground()
+void UI_Advisor_Imperial_drawBackground(int *advisorHeight)
 {
 	CityInfo_Imperial_calculateGiftCosts();
 
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
 
-	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, 27);
+	*advisorHeight = 27;
+	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
 	Graphics_drawImage(GraphicId(ID_Graphic_AdvisorIcons) + 2, baseOffsetX + 10, baseOffsetY + 10);
 
 	Widget_Text_draw(Data_Settings.playerName, baseOffsetX + 60, baseOffsetY + 12, Font_LargeBlack, 0);

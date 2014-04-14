@@ -3,13 +3,14 @@
 #include "../Event.h"
 #include "../Data/Scenario.h"
 
-void UI_Advisor_Chief_drawBackground()
+void UI_Advisor_Chief_drawBackground(int *advisorHeight)
 {
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
 	int width;
 
-	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, 23);
+	*advisorHeight = 23;
+	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
 	Graphics_drawImage(GraphicId(ID_Graphic_AdvisorIcons) + 11, baseOffsetX + 10, baseOffsetY + 10);
 
 	Widget_GameText_draw(61, 0, baseOffsetX + 60, baseOffsetY + 10, Font_LargeBlack);

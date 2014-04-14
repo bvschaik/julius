@@ -22,6 +22,7 @@
 #include "../src/Sound.h"
 #include "../src/CityView.h"
 #include "../src/Data/AllData.h"
+#include "../src/KeyboardInput.h"
 
 void assert(const char *msg, int expected, int actual)
 {
@@ -82,13 +83,50 @@ void refresh(SDL_Surface *surface) {
 	//printf("Refresh: %d ms\n", SDL_GetTicks() - Time_getMillis());
 }
 
-void mainLoop(SDL_Surface *surface) {
+void handleKey(SDL_KeyboardEvent *event)
+{
+	switch (event->keysym.sym) {
+		case SDLK_RETURN:
+			KeyboardInput_return();
+			break;
+		case SDLK_BACKSPACE:
+			KeyboardInput_backspace();
+			break;
+		case SDLK_DELETE:
+			KeyboardInput_delete();
+			break;
+		case SDLK_INSERT:
+			KeyboardInput_insert();
+			break;
+		case SDLK_LEFT:
+			KeyboardInput_left();
+			break;
+		case SDLK_RIGHT:
+			KeyboardInput_right();
+			break;
+		case SDLK_HOME:
+			KeyboardInput_home();
+			break;
+		case SDLK_END:
+			KeyboardInput_end();
+			break;
+		default:
+			if (event->keysym.unicode) {
+				KeyboardInput_character(event->keysym.unicode);
+			}
+			break;
+	}
+}
+
+void mainLoop(SDL_Surface *surface)
+{
 	SDL_Event event;
 	SDL_Event refreshEvent;
 	refreshEvent.user.type = SDL_USEREVENT;
 	
 	refresh(surface);
     /* While the program is running */
+	SDL_EnableUNICODE(1);
     while (1) {
 		int active = 1;
         /* Process event queue */
@@ -106,6 +144,8 @@ void mainLoop(SDL_Surface *surface) {
 					if (event.key.keysym.sym == SDLK_q || event.key.keysym.sym == SDLK_ESCAPE) {
 						return;
 					}
+					handleKey(&event.key);
+					printf("Key: %d (%c)\n", event.key.keysym.unicode, event.key.keysym.unicode);
 					break;
 				
 				case SDL_KEYUP:

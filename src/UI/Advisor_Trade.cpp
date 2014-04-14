@@ -63,14 +63,15 @@ static int focusButtonId;
 static int selectedResourceId;
 static int resourceFocusButtonId;
 
-void UI_Advisor_Trade_drawBackground()
+void UI_Advisor_Trade_drawBackground(int *advisorHeight)
 {
 	CityInfo_Resource_calculateAvailableResources();
 
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
 
-	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, 27);
+	*advisorHeight = 27;
+	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
 	Graphics_drawImage(GraphicId(ID_Graphic_AdvisorIcons) + 4,
 		baseOffsetX + 10, baseOffsetY + 10);
 
@@ -178,7 +179,8 @@ void UI_TradePricesDialog_handleMouse()
 
 void UI_ResourceSettingsDialog_drawBackground()
 {
-	UI_Advisor_Trade_drawBackground();
+	int dummy;
+	UI_Advisor_Trade_drawBackground(&dummy);
 	UI_Advisor_Trade_drawForeground();
 }
 

@@ -432,6 +432,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\UI\OverlayMenu.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\PlayerMessage.cpp"
 				>
 			</File>

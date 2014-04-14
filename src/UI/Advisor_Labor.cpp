@@ -45,12 +45,13 @@ static CustomButton priorityButtons[10] = {
 	{434, 221, 461, 248, buttonSetPriority, Widget_Button_doNothing, 1, 9, 0},
 };
 
-void UI_Advisor_Labor_drawBackground()
+void UI_Advisor_Labor_drawBackground(int *advisorHeight)
 {
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
-	
-	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, 26);
+
+	*advisorHeight = 26;
+	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
 	Graphics_drawImage(GraphicId(ID_Graphic_AdvisorIcons), baseOffsetX + 10, baseOffsetY + 10);
 	
 	Widget_GameText_draw(50, 0, baseOffsetX + 60, baseOffsetY + 12, Font_LargeBlack);
@@ -176,10 +177,11 @@ static void buttonPriority(int param1, int param2)
 
 void UI_LaborPriorityDialog_drawBackground()
 {
+	int dummy;
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
 
-	UI_Advisor_Labor_drawBackground();
+	UI_Advisor_Labor_drawBackground(&dummy);
 	UI_Advisor_Labor_drawForeground();
 
 	Widget_Panel_drawOuterPanel(baseOffsetX + 160, baseOffsetY + 176, 20, 9);

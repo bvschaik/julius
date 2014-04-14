@@ -14,13 +14,14 @@ static CustomButton ratingButtons[4] = {
 
 static int focusButtonId;
 
-void UI_Advisor_Ratings_drawBackground()
+void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
 {
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
 	int width, hasReached;
 
-	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, 27);
+	*advisorHeight = 27;
+	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
 	Graphics_drawImage(GraphicId(ID_Graphic_AdvisorIcons) + 3,
 		baseOffsetX + 10, baseOffsetY + 10);
 	width = Widget_GameText_draw(53, 0,

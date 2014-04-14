@@ -1,11 +1,12 @@
 #include "Advisors_private.h"
 
-void UI_Advisor_Health_drawBackground()
+void UI_Advisor_Health_drawBackground(int *advisorHeight)
 {
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
 
-	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, 18);
+	*advisorHeight = 18;
+	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
 	Graphics_drawImage(GraphicId(ID_Graphic_AdvisorIcons) + 6, baseOffsetX + 10, baseOffsetY + 10);
 
 	Widget_GameText_draw(56, 0, baseOffsetX + 60, baseOffsetY + 12, Font_LargeBlack);

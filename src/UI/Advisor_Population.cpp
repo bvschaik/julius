@@ -17,12 +17,13 @@ static CustomButton graphButtons[2] = {
 
 static int focusButtonId;
 
-void UI_Advisor_Population_drawBackground()
+void UI_Advisor_Population_drawBackground(int *advisorHeight)
 {
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
 
-	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, 27);
+	*advisorHeight = 27;
+	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
 	Graphics_drawImage(GraphicId(ID_Graphic_AdvisorIcons) + 5, baseOffsetX + 10, baseOffsetY + 10);
 
 	// Title: depends on big graph shown

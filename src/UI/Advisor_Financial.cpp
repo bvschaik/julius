@@ -16,12 +16,13 @@ static ArrowButton arrowButtonsTaxes[] = {
 	{204, 70, 15, 24, buttonChangeTaxes, 0, 0}
 };
 
-void UI_Advisor_Financial_drawBackground()
+void UI_Advisor_Financial_drawBackground(int *advisorHeight)
 {
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
 
-	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, 26);
+	*advisorHeight = 26;
+	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
 	Graphics_drawImage(GraphicId(ID_Graphic_AdvisorIcons) + 10, baseOffsetX + 10, baseOffsetY + 10);
 
 	Widget_GameText_draw(60, 0, baseOffsetX + 60, baseOffsetY + 12, Font_LargeBlack);

@@ -57,8 +57,7 @@ static int scrollPosition;
 void UI_FileDialog_show(int type)
 {
 	// TODO move to KeyboardInput_initTextbox oid
-	Data_KeyboardInput.lines[2].text = Data_FileList.selectedCity;
-	Data_KeyboardInput.lines[2].maxLength = 64;
+	KeyboardInput_initTextField(2, Data_FileList.selectedCity, 64, 200, 0, Font_NormalWhite);
 	// end TODO
 	dialogType = type;
 	messageNotExistTimeUntil = 0;

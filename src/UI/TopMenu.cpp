@@ -164,6 +164,7 @@ void UI_TopMenu_drawForeground()
 	if (!openSubMenu) {
 		return;
 	}
+	UI_City_drawCity();
 	Widget_Menu_drawSubMenu(&menu[openSubMenu-1], focusSubMenuId);
 }
 

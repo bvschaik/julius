@@ -65,6 +65,7 @@ void UI_HoldFestivalDialog_handleMouse();
 
 void UI_City_drawBackground();
 void UI_City_drawForeground();
+void UI_City_drawCity();
 void UI_City_handleMouse();
 
 void UI_Empire_drawBackground();
@@ -79,6 +80,11 @@ void UI_PlayerMessageList_init();
 void UI_PlayerMessageList_drawBackground();
 void UI_PlayerMessageList_drawForeground();
 void UI_PlayerMessageList_handleMouse();
+
+void UI_OverlayMenu_init();
+void UI_OverlayMenu_drawBackground();
+void UI_OverlayMenu_drawForeground();
+void UI_OverlayMenu_handleMouse();
 
 
 #endif

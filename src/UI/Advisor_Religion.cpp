@@ -2,15 +2,17 @@
 #include "../Data/Settings.h"
 #include "../CityInfo.h"
 
-void UI_Advisor_Religion_drawBackground()
+void UI_Advisor_Religion_drawBackground(int *advisorHeight)
 {
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
 	
 	if (Data_Settings.godsEnabled) {
-		Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, 17);
+		*advisorHeight = 17;
+		Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
 	} else {
-		Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, 20);
+		*advisorHeight = 20;
+		Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
 		Widget_GameText_drawMultiline(59, 43,
 			baseOffsetX + 60, baseOffsetY + 256, 520, Font_NormalBlack
 		);

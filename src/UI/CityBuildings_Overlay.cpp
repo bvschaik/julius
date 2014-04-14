@@ -1427,9 +1427,12 @@ static void drawOverlayColumn(int height, int xOffset, int yOffset, int isRed)
 	int capitalHeight = GraphicHeight(graphicId);
 	// draw base
 	Graphics_drawImage(graphicId + 2, xOffset + 9, yOffset - 8);
-	for (int i = 1; i < height; i++) {
-		Graphics_drawImage(graphicId + 1, xOffset + 17, yOffset - 8 - 10 * i + 13);
+	if (height) {
+		for (int i = 1; i < height; i++) {
+			Graphics_drawImage(graphicId + 1, xOffset + 17, yOffset - 8 - 10 * i + 13);
+		}
+		// top
+		Graphics_drawImage(graphicId,
+			xOffset + 5, yOffset - 8 - capitalHeight - 10 * (height - 1) + 13);
 	}
-	// top
-	Graphics_drawImage(graphicId, xOffset + 5, yOffset - 8 - capitalHeight + 13);
 }

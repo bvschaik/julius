@@ -20,6 +20,11 @@ void UI_City_drawBackground()
 
 void UI_City_drawForeground()
 {
+	UI_City_drawCity();
+}
+
+void UI_City_drawCity()
+{
 	UI_CityBuildings_drawForeground(
 		Data_Settings_Map.camera.x, Data_Settings_Map.camera.y);
 }

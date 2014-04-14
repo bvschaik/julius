@@ -21,7 +21,8 @@ static void drawButtons();
 static void drawOverlayText();
 static void drawMinimap(int force);
 
-static void buttonBuild(int param1, int param2);
+static void buttonOverlay(int param1, int param2);
+static void buttonCollapseExpand(int param1, int param2);
 static void buttonBuild(int param1, int param2);
 static void buttonUndo(int param1, int param2);
 static void buttonMessages(int param1, int param2);
@@ -34,12 +35,12 @@ static void buttonRotateNorth(int param1, int param2);
 static void buttonRotate(int param1, int param2);
 
 ImageButton buttonOverlaysCollapseSidebar[] = {
-	{127, 5, 31, 20, 4, 90, 0, Widget_Button_doNothing, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0},
-	{4, 3, 117, 31, 4, 93, 0, Widget_Button_doNothing, buttonHelp, 1, 0, 0, 0, 0, 18}
+	{127, 5, 31, 20, 4, 90, 0, buttonCollapseExpand, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0},
+	{4, 3, 117, 31, 4, 93, 0, buttonOverlay, buttonHelp, 1, 0, 0, 0, 0, 18}
 };
 
 ImageButton buttonExpandSidebar[] = {
-	{6, 4, 31, 20, 4, 90, 4, Widget_Button_doNothing, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0}
+	{6, 4, 31, 20, 4, 90, 4, buttonCollapseExpand, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0}
 };
 
 ImageButton buttonBuildCollapsed[] = {
@@ -209,6 +210,16 @@ void UI_Sidebar_handleMouse()
 			}
 		}
 	}
+}
+
+static void buttonOverlay(int param1, int param2)
+{
+	UI_Window_goTo(Window_OverlayMenu);
+}
+
+static void buttonCollapseExpand(int param1, int param2)
+{
+	// TODO
 }
 
 static void buttonBuild(int param1, int param2)

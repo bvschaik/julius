@@ -37,12 +37,13 @@ static CustomButton fortCustomButtons[] = {
 static int focusButtonId;
 static int numLegions;
 
-void UI_Advisor_Military_drawBackground()
+void UI_Advisor_Military_drawBackground(int *advisorHeight)
 {
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
 
-	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, 26);
+	*advisorHeight = 26;
+	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
 	Graphics_drawImage(GraphicId(ID_Graphic_AdvisorIcons) + 1, baseOffsetX + 10, baseOffsetY + 10);
 	Widget_GameText_draw(51, 0, baseOffsetX + 60, baseOffsetY + 12, Font_LargeBlack);
 
@@ -193,7 +194,11 @@ static void buttonGoToLegion(int legionId, int param2)
 
 static void buttonReturnToFort(int legionId, int param2)
 {
-	// TODO
+	int formationId = Formation_getLegionFormationId(legionId);
+	if (!Data_Formations[formationId].inDistantBattle) {
+		Formation_legionReturnHome(formationId);
+		UI_Window_requestRefresh();
+	}
 }
 
 static void buttonEmpireService(int legionId, int param2)

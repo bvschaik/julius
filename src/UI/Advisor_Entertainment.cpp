@@ -17,7 +17,7 @@ void UI_Advisor_Entertainment_init()
 	focusButtonId = 0;
 }
 
-void UI_Advisor_Entertainment_drawBackground()
+void UI_Advisor_Entertainment_drawBackground(int *advisorHeight)
 {
 	CityInfo_Gods_calculateMoods(0);
 	CityInfo_Entertainment_calculate();
@@ -25,7 +25,8 @@ void UI_Advisor_Entertainment_drawBackground()
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
 
-	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, 23);
+	*advisorHeight = 23;
+	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
 	Graphics_drawImage(GraphicId(ID_Graphic_AdvisorIcons) + Advisor_Entertainment - 1,
 		baseOffsetX + 10, baseOffsetY + 10);
 
