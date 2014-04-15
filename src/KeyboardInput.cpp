@@ -165,51 +165,15 @@ void KeyboardInput_end()
 	current->cursorPosition = current->length;
 }
 
-unsigned char unicodeToCp437(int c)
+unsigned char unicodeToCp1252(int c)
 {
-	if (c < 0x80) {
-		// ascii
+	if (c == 0x152) { // OE
+		return 140;
+	} else if (c == 0x153) { // oe
+		return 156;
+	} else if (c <= 0xff) {
+		// ascii + ISO-8859-1
 		return (unsigned char) c;
-	}
-	switch (c) {
-		case 0xc7: return 128; // C-cedilla
-		case 0xfc: return 129; // u-umlaut
-		case 0xe9: return 130; // e-acute
-		case 0xe2: return 131; // a-hat
-		case 0xe4: return 132; // a-umlaut
-		case 0xe0: return 133; // a-grave
-		case 0xe5: return 134; // a-ring
-		case 0xe7: return 135; // c-cedilla
-		case 0xea: return 136; // e-hat
-		case 0xeb: return 137; // e-umlaut
-		case 0xe8: return 138; // e-grave
-		case 0xef: return 139; // i-umlaut
-		case 0xee: return 140; // i-hat
-		case 0xec: return 141; // i-grave
-		case 0xc4: return 142; // A-umlaut
-		case 0xc5: return 143; // A-ring
-		case 0xc9: return 144; // E-acute
-		case 0xe6: return 145; // ae
-		case 0xc6: return 146; // AE
-		case 0xf4: return 147; // o-hat
-		case 0xf6: return 148; // o-umlaut
-		case 0xf2: return 149; // o-grave
-		case 0xfb: return 150; // u-hat
-		case 0xf9: return 151; // u-grave
-		case 0xff: return 152; // y-umlaut
-		case 0xd6: return 153; // O-umlaut
-		case 0xdc: return 154; // U-umlaut
-
-		case 0xe1: return 160; // a-acute
-		case 0xed: return 161; // i-acute
-		case 0xf3: return 162; // o-acute
-		case 0xfa: return 163; // u-acute
-		case 0xf1: return 164; // n-tilde
-		case 0xd1: return 165; // N-tilde
-		case 0xaa: return 166; // ^a
-		case 0xb0: return 167; // ^ring
-
-		case 0xdf: return 225; // ss
 	}
 	return 0;
 }
@@ -223,7 +187,8 @@ void KeyboardInput_character(int unicode)
 		&Data_KeyboardInput.lines[Data_KeyboardInput.current];
 
 	int add = 0;
-	unsigned char c = unicodeToCp437(unicode);
+	unsigned char c = unicodeToCp1252(unicode);
+	// TODO correct ranges (original ones are from CP437 / dos extended ascii)
 	if (c == ' ' || c == '-') {
 		add = 1;
 	} else if (c >= '0' && c <= '9') {
@@ -235,6 +200,8 @@ void KeyboardInput_character(int unicode)
 	} else if (c >= 128 && c <= 154) {
 		add = 1;
 	} else if (c >= 160 && c <= 167) {
+		add = 1;
+	} else if (c == 225) {
 		add = 1;
 	} else if (current->allowPunctuation) {
 		if (c == ',' || c == '.' || c == '?' || c == '!') {

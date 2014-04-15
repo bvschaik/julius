@@ -114,7 +114,7 @@ int Widget_Text_getWidth(const char *str, Font font)
 		if (*str == ' ') {
 			width += spaceWidth;
 		} else {
-			int graphicOffset = map_charToFontGraphic[(int) *str];
+			int graphicOffset = map_charToFontGraphic[(unsigned char) *str];
 			if (graphicOffset) {
 				int graphicId = graphicBase + font + graphicOffset - 1;
 				width += letterSpacing + Data_Graphics_Main.index[graphicId].width;
@@ -140,7 +140,7 @@ static int getCharacterWidth(unsigned char c, Font font)
 	if (c == ' ') {
 		return 4;
 	}
-	int graphicOffset = map_charToFontGraphic[(int)c];
+	int graphicOffset = map_charToFontGraphic[c];
 	if (!graphicOffset) {
 		return 0;
 	}
