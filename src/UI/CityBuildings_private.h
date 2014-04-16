@@ -100,4 +100,6 @@ void drawOverlayTopsWalkersAnimation(int overlay);
 void drawWalker(int walkerId, int xOffset, int yOffset, int selectedWalkerId);
 void drawBridge(int gridOffset, int xOffset, int yOffset);
 
+void drawSelectedBuildingGhost();
+
 #endif

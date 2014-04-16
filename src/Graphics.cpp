@@ -180,12 +180,17 @@ void Graphics_drawIsometricFootprint(int graphicId, int xOffset, int yOffset, Co
 				Graphics_Footprint_drawSize5(graphicId, xOffset, yOffset, colorMask);
 				break;
 		}
+	} else {
+		printf("ERROR: trying to draw a non-isometric tile using drawIsometricFootprint\n");
 	}
 }
 
 void Graphics_drawIsometricTop(int graphicId, int xOffset, int yOffset, Color colorMask)
 {
 	Data_Graphics_Index *index = &Data_Graphics_Main.index[graphicId];
+	if (index->type != 30) { // isometric
+		printf("ERROR: trying to draw a non-isometric tile using drawIsometricTop\n");
+	}
 	if (!index->hasCompressedPart) {
 		return;
 	}
@@ -255,12 +260,6 @@ void Graphics_drawImageMasked(int graphicId, int xOffset, int yOffset, Color col
 		return;
 	}
 
-	//TODO
-	/*printf("DrawImage at(%d,%d) size(%d,%d), %d)\n",
-		xOffset, yOffset,
-		index->width, index->height,
-		graphicId);*/
-	
 	if (index->isFullyCompressed) {
 		drawImageCompressed(index, (unsigned char*)data, xOffset, yOffset, index->height,
 			colorMask, colorMask ? ColorType_And : ColorType_None);

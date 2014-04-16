@@ -13,6 +13,7 @@ enum {
 	ID_Graphic_Font = 16,
 	ID_Graphic_Aqueduct = 19,
 	ID_Graphic_TerrainOverlay = 20,
+	ID_Graphic_FlatTile = 21,
 	// 26-35: houses
 	ID_Graphic_HouseVacantLot = 36,
 	ID_Graphic_EmpireMap = 47,
@@ -95,8 +96,7 @@ enum {
 #define Color_Minimap_Light 0xC618
 #define Color_NoMask 0xffff
 #define Color_MaskRed 0xf863
-#define Color_MaskGreen 0xffff
-//TODO colormask green
+#define Color_MaskGreen 0x1fe3
 
 enum {
 	EmpireObject_Ornament = 0,
@@ -239,7 +239,16 @@ enum {
 0x12: Numidians
 0x13: Judaeans
 */
-extern int Constant_SalaryForRank[11];
-extern int Constant_DirectionGridOffsets[8];
+extern const int Constant_SalaryForRank[11];
+extern const int Constant_DirectionGridOffsets[8];
+
+struct BuildingProperties {
+	int size;
+	int unknown;
+	int graphicCategory;
+	int graphicOffset;
+};
+
+extern const struct BuildingProperties Constant_BuildingProperties[140];
 
 #endif

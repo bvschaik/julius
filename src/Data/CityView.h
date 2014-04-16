@@ -23,6 +23,7 @@ extern struct Data_CityView {
 		int yOffsetInPixels;
 		int gridOffset;
 	} selectedTile;
+	int isScrolling;
 } Data_CityView;
 
 #define ViewToGridOffset(x,y) (Data_CityView.viewToGridOffsetLookup[x][y])

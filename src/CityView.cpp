@@ -169,7 +169,7 @@ int CityView_pixelCoordsToGridOffset(int xPixels, int yPixels)
 		Data_CityView.selectedTile.xOffsetInPixels -= 30;
 	}
 	Data_CityView.selectedTile.yOffsetInPixels =
-		Data_CityView.yOffsetInPixels + 15 * yViewOffset;
+		Data_CityView.yOffsetInPixels + 15 * yViewOffset - 15; // TODO why -1?
 	return Data_CityView.selectedTile.gridOffset =
 		ViewToGridOffset(Data_CityView.xInTiles + xViewOffset, Data_CityView.yInTiles + yViewOffset);
 }

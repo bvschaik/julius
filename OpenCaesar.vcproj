@@ -288,6 +288,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\UI\CityBuildings_Ghost.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\UI\CityBuildings_Overlay.cpp"
 				>
 			</File>
