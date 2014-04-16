@@ -26,6 +26,7 @@ typedef enum {
 	Window_CCKSelection = 20, //61
 	Window_FileDialog = 21, //13
 	Window_OverlayMenu = 22, //8
+	Window_BuildingMenu = 23, //6
 } WindowId;
 
 WindowId UI_Window_getId();

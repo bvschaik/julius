@@ -1,4 +1,5 @@
 #include "Sidebar.h"
+#include "AllWindows.h"
 #include "Minimap.h"
 #include "Window.h"
 #include "MessageDialog.h"
@@ -34,16 +35,16 @@ static void buttonMissionBriefing(int param1, int param2);
 static void buttonRotateNorth(int param1, int param2);
 static void buttonRotate(int param1, int param2);
 
-ImageButton buttonOverlaysCollapseSidebar[] = {
+static ImageButton buttonOverlaysCollapseSidebar[] = {
 	{127, 5, 31, 20, 4, 90, 0, buttonCollapseExpand, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0},
 	{4, 3, 117, 31, 4, 93, 0, buttonOverlay, buttonHelp, 1, 0, 0, 0, 0, 18}
 };
 
-ImageButton buttonExpandSidebar[] = {
+static ImageButton buttonExpandSidebar[] = {
 	{6, 4, 31, 20, 4, 90, 4, buttonCollapseExpand, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0}
 };
 
-ImageButton buttonBuildCollapsed[] = {
+static ImageButton buttonBuildCollapsed[] = {
 	{2, 32, 39, 26, 2, 92, 0, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 1, 0},
 	{2, 67, 39, 26, 2, 92, 8, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 2, 0},
 	{2, 102, 39, 26, 2, 92, 12, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 3, 0},
@@ -58,7 +59,7 @@ ImageButton buttonBuildCollapsed[] = {
 	{2, 417, 39, 26, 2, 92, 32, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 12, 0},
 };
 
-ImageButton buttonBuildExpanded[] = {
+static ImageButton buttonBuildExpanded[] = {
 	{13, 277, 39, 26, 2, 92, 0, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 1, 0},
 	{63, 277, 39, 26, 2, 92, 8, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 2, 0},
 	{113, 277, 39, 26, 2, 92, 12, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 3, 0},
@@ -76,7 +77,7 @@ ImageButton buttonBuildExpanded[] = {
 	{113, 421, 39, 26, 2, 90, 22, buttonGoToProblem, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0},
 };
 
-ImageButton buttonTopExpanded[] = {
+static ImageButton buttonTopExpanded[] = {
 	{7, 155, 71, 23, 4, 13, 0, buttonAdvisors, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0},
 	{84, 155, 71, 23, 4, 13, 3, buttonEmpire, buttonHelp, 1, 0, 0, 0, 0, 32},
 	{7, 184, 33, 22, 4, 89, 0, buttonMissionBriefing, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0},
@@ -105,6 +106,7 @@ void UI_Sidebar_drawBackground()
 	Data_State.sidebarCollapsed = 0;
 	drawSidebar();
 	drawFillerBorders();
+	drawButtons();
 }
 
 static void drawSidebar()
@@ -212,6 +214,17 @@ void UI_Sidebar_handleMouse()
 	}
 }
 
+void UI_Sidebar_handleMouseBuildButtons()
+{
+	if (Data_State.sidebarCollapsed) {
+		int xOffset = Data_Screen.width - SIDEBAR_BORDER - 42;
+		Widget_Button_handleImageButtonsClickOnly(xOffset, 24, buttonBuildCollapsed, 12);
+	} else {
+		int xOffset = XOFFSET_EXPANDED;
+		Widget_Button_handleImageButtonsClickOnly(xOffset, 24, buttonBuildExpanded, 15);
+	}
+}
+
 static void buttonOverlay(int param1, int param2)
 {
 	UI_Window_goTo(Window_OverlayMenu);
@@ -222,10 +235,11 @@ static void buttonCollapseExpand(int param1, int param2)
 	// TODO
 }
 
-static void buttonBuild(int param1, int param2)
+static void buttonBuild(int submenu, int param2)
 {
-	// TODO
+	UI_BuildingMenu_init(submenu - 1);
 }
+
 static void buttonUndo(int param1, int param2)
 {
 	// TODO

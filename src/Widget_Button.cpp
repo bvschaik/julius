@@ -226,10 +226,78 @@ int Widget_Button_handleImageButtons(int xOffset, int yOffset, ImageButton *butt
 	}
 	if (Data_Mouse.left.wentDown) {
 		Sound_Effects_playChannel(SoundChannel_Icon);
-		hitButton->hasClickEffect = 10;
+		hitButton->hasClickEffect = 20;
 		hitButton->leftClickHandler(hitButton->parameter1, hitButton->parameter2);
 	} else if (Data_Mouse.right.wentUp) {
-		hitButton->hasClickEffect = 10;
+		hitButton->hasClickEffect = 20;
+		hitButton->rightClickHandler(hitButton->parameter1, hitButton->parameter2);
+	}
+	return hitIndex;
+}
+
+int Widget_Button_handleImageButtonsClickOnly(int xOffset, int yOffset, ImageButton *buttons, int numButtons)
+{
+/*	// TODO field_19 manipulation
+	for (int i = 0; i < numButtons; i++) {
+		ImageButton *btn = &buttons[i];
+		if (btn->hasClickEffect) {
+			if (btn->field_8 == 4 || btn->field_8 == 6) {
+				btn->hasClickEffect--;
+				if (btn->hasClickEffect <= 0) {
+					btn->hasClickEffect = 0;
+				}
+			}
+		}
+	}*/
+	// end field_19 manipulation
+	int mouseX = Data_Mouse.x;
+	int mouseY = Data_Mouse.y;
+	int change = 0;
+	ImageButton *hitButton = 0;
+	int hitIndex = 0;
+	for (int i = 0; i < numButtons; i++) {
+		ImageButton *btn = &buttons[i];
+		/*if (btn->hasFocus) {
+			btn->hasFocus--;
+			if (!btn->hasFocus) {
+				change = 1;
+			}
+		}*/
+		if (btn->enabled) {
+			if (xOffset + btn->xOffset <= mouseX &&
+				xOffset + btn->xOffset + btn->width > mouseX &&
+				yOffset + btn->yOffset <= mouseY &&
+				yOffset + btn->yOffset + btn->height > mouseY) {
+				// TODO button_x = Data_Mouse.x; button_y = Data_Mouse.y
+				/*if (!btn->hasFocus) {
+					change = 1;
+				}
+				btn->hasFocus = 2;*/
+				hitButton = btn;
+				hitIndex = i + 1;
+			}
+		}
+	}
+	if (!hitButton) {
+		return 0;
+	}
+	// TODO field_19 manipulation
+	/*if (hitButton->field_8 == 2) {
+		for (int i = 0; i < numButtons; i++) {
+			ImageButton *btn = &buttons[i];
+			if (btn->hasClickEffect) {
+				if (btn->field_8 == 2) {
+					btn->hasClickEffect = 0;
+				}
+			}
+		}
+	}*/
+	if (Data_Mouse.left.wentDown) {
+		Sound_Effects_playChannel(SoundChannel_Icon);
+		hitButton->hasClickEffect = 20;
+		hitButton->leftClickHandler(hitButton->parameter1, hitButton->parameter2);
+	} else if (Data_Mouse.right.wentUp) {
+		hitButton->hasClickEffect = 20;
 		hitButton->rightClickHandler(hitButton->parameter1, hitButton->parameter2);
 	}
 	return hitIndex;

@@ -4,6 +4,7 @@
 void UI_Sidebar_drawBackground();
 
 void UI_Sidebar_handleMouse();
+void UI_Sidebar_handleMouseBuildButtons();
 
 void UI_Sidebar_enableBuildingButtons();
 

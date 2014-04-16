@@ -216,7 +216,7 @@ void UI_TopMenu_handleMouse()
 static void menuFile_newGame(int param)
 {
 	clearState();
-	Data_State.selectedBuildingType = 0;
+	Data_State.selectedBuilding.type = 0;
 	Data_State.undoAvailable = 0;
 	Data_State.currentOverlay = 0;
 	Data_State.previousOverlay = 0;

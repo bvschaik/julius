@@ -9,7 +9,7 @@
 #include "UI/Sidebar.h"
 
 #define MAX_BUILDINGITEMS 30
-static int menuBuildingId[MAX_BUILDINGITEMS][MAX_BUILDINGITEMS] = {
+static int menuBuildingType[MAX_BUILDINGITEMS][MAX_BUILDINGITEMS] = {
 	{Building_HouseVacantLot, 0},
 	{Building_ClearLand, 0},
 	{Building_Road, 0},
@@ -33,7 +33,7 @@ static int menuBuildingId[MAX_BUILDINGITEMS][MAX_BUILDINGITEMS] = {
 		Building_HouseSmallInsula, Building_HouseMediumInsula, Building_HouseLargeInsula, Building_HouseGrandInsula,
 		Building_HouseSmallVilla, Building_HouseMediumVilla, Building_HouseLargeVilla, Building_HouseGrandVilla,
 		Building_HouseSmallPalace, Building_HouseMediumPalace, Building_HouseLargePalace, Building_HouseLuxuryPalace, 0},
-	{1,2, 3, 4, 5, 0}, // 13 brush size?
+	{1, 2, 3, 4, 5, 0}, // 13 brush size?
 	{1, 2, 0}, // 14 people entry/exit?
 	{1, 2, 3, 0}, // 15 elevation raise/lower/access
 	{1, 2, 3, 4, 5, 6, 7, 8, 0}, // 16 invasion points
@@ -218,7 +218,7 @@ void SidebarMenu_enableBuildingMenuItems()
 {
 	for (int sub = 0; sub < MAX_BUILDINGITEMS; sub++) {
 		for (int item = 0; item < MAX_BUILDINGITEMS; item++) {
-			int buildingId = menuBuildingId[sub][item];
+			int buildingType = menuBuildingType[sub][item];
 			//first 12 items always disabled
 			if (sub < 12) {
 				menuEnabled[sub][item] = 0;
@@ -227,31 +227,31 @@ void SidebarMenu_enableBuildingMenuItems()
 			}
 			if (Data_Settings.currentMissionId == 0) { // tutorial 1
 				if (!Data_Tutorial_tutorial1.fire && !Data_Tutorial_tutorial1.crime) {
-					enableTutorial1Start(sub, item, buildingId);
+					enableTutorial1Start(sub, item, buildingType);
 				} else if (!Data_Tutorial_tutorial1.collapse) {
-					enableTutorial1AfterFire(sub, item, buildingId);
+					enableTutorial1AfterFire(sub, item, buildingType);
 				} else if (!Data_Tutorial_tutorial1.senateBuilt) {
-					enableTutorial1AfterCollapse(sub, item, buildingId);
+					enableTutorial1AfterCollapse(sub, item, buildingType);
 				} else {
-					enableNormal(sub, item, buildingId);
+					enableNormal(sub, item, buildingType);
 				}
 			} else if (Data_Settings.currentMissionId == 1) { // tutorial 2
 				if (!Data_Tutorial_tutorial2.granaryBuilt) {
-					enableTutorial2Start(sub, item, buildingId);
+					enableTutorial2Start(sub, item, buildingType);
 				} else if (!Data_Tutorial_tutorial2.population250Reached) {
-					enableTutorial2UpTo250(sub, item, buildingId);
+					enableTutorial2UpTo250(sub, item, buildingType);
 				} else if (!Data_Tutorial_tutorial2.population450Reached) {
-					enableTutorial2UpTo450(sub, item, buildingId);
+					enableTutorial2UpTo450(sub, item, buildingType);
 				} else if (!Data_Tutorial_tutorial2.potteryMade) {
-					enableTutorial2After450(sub, item, buildingId);
+					enableTutorial2After450(sub, item, buildingType);
 				} else {
-					enableNormal(sub, item, buildingId);
+					enableNormal(sub, item, buildingType);
 				}
 			} else {
-				enableNormal(sub, item, buildingId);
+				enableNormal(sub, item, buildingType);
 			}
 			
-			disableResources(sub, item, buildingId);
+			disableResources(sub, item, buildingType);
 		}
 	}
 }
@@ -269,7 +269,7 @@ int SidebarMenu_countBuildingMenuItems(int submenu)
 {
 	int count = 0;
 	for (int item = 0; item < MAX_BUILDINGITEMS; item++) {
-		if (menuEnabled[submenu][item]) {
+		if (menuEnabled[submenu][item] && menuBuildingType[submenu][item] > 0) {
 			count++;
 		}
 	}
@@ -279,17 +279,17 @@ int SidebarMenu_countBuildingMenuItems(int submenu)
 int SidebarMenu_getNextBuildingItemIndex(int submenu, int currentItem)
 {
 	for (int i = currentItem + 1; i < MAX_BUILDINGITEMS; i++) {
-		if (menuBuildingId[submenu][i] <= 0) {
+		if (menuBuildingType[submenu][i] <= 0) {
 			return 0;
 		}
 		if (menuEnabled[submenu][i]) {
-			return menuBuildingId[submenu][i];
+			return i;
 		}
 	}
 	return 0;
 }
 
-int SidebarMenu_getBuildingId(int submenu, int item)
+int SidebarMenu_getBuildingType(int submenu, int item)
 {
-	return menuBuildingId[submenu][item];
+	return menuBuildingType[submenu][item];
 }

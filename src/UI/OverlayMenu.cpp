@@ -53,10 +53,6 @@ static int submenuIdToOverlayId[6][8] = {
 	{24, 25, 26},
 };
 
-static int someVariable1;
-static int someVariable2;
-static int someVariable3;
-
 static int selectedMenu;
 static int selectedSubmenu;
 static int numSubmenuItems;
@@ -67,10 +63,6 @@ static int submenuFocusButtonId;
 
 void UI_OverlayMenu_init()
 {
-	someVariable1 = 40;
-	someVariable2 = 12;
-	someVariable3 = 0;
-
 	selectedSubmenu = 0;
 	numSubmenuItems = 0;
 }

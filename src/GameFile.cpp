@@ -17,6 +17,7 @@
 #include "Data/Formation.h"
 #include "Data/Debug.h"
 
+#include "SidebarMenu.h"
 #include "Zip.h"
 
 #include <stdio.h>
@@ -449,6 +450,8 @@ int GameFile_loadSavedGame(const char *filename)
 	Data_Settings_Map.height = Data_Scenario.mapSizeY;
 	Data_Settings_Map.gridStartOffset = Data_Scenario.gridFirstElement;
 	Data_Settings_Map.gridBorderSize = Data_Scenario.gridBorderSize;
+	SidebarMenu_enableBuildingButtons();
+	SidebarMenu_enableBuildingMenuItems();
 	return 0;
 }
 /*

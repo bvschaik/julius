@@ -1,6 +1,8 @@
 #ifndef DATA_STATE_H
 #define DATA_STATE_H
 
+#include "Types.h"
+
 enum {
 	Overlay_None = 0,
 	Overlay_Water = 2,
@@ -35,7 +37,22 @@ extern struct Data_State {
 	int undoAvailable;
 	int currentOverlay;
 	int previousOverlay;
-	int selectedBuildingType;
+	struct {
+		int type;
+		int x;
+		int y;
+		int xStart;
+		int yStart;
+		int isDragging;
+		int gridOffset;
+		int wallRequired;
+		int waterRequired;
+		int treesRequired;
+		int rockRequired;
+		int meadowRequired;
+		int roadRequired;
+		TimeMillis roadLastUpdate;
+	} selectedBuilding;
 } Data_State;
 
 #endif

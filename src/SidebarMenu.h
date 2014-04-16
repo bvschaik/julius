@@ -9,8 +9,8 @@ void SidebarMenu_enableAllBuildingMenuItems();
 
 int SidebarMenu_countBuildingMenuItems(int submenu);
 
-int SidebarMenu_getNextItemIndex(int submenu, int currentItem);
+int SidebarMenu_getNextBuildingItemIndex(int submenu, int currentItem);
 
-int SidebarMenu_getBuildingId(int submenu, int item);
+int SidebarMenu_getBuildingType(int submenu, int item);
 
 #endif
