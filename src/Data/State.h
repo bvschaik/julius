@@ -53,6 +53,7 @@ extern struct Data_State {
 		int roadRequired;
 		TimeMillis roadLastUpdate;
 	} selectedBuilding;
+	int winState;
 } Data_State;
 
 #endif

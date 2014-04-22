@@ -416,6 +416,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\Loader.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Loader_Graphics.cpp"
 				>
 			</File>

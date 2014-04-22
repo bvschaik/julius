@@ -11,4 +11,6 @@ const char *Loader_Graphics_loadExternalImagePixelData(int graphicId);
 
 int Loader_Model_loadC3ModelTxt();
 
+void Loader_GameState_init();
+
 #endif

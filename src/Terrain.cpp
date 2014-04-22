@@ -1,9 +1,10 @@
 #include "Terrain.h"
+#include "Util.h"
 #include "Data/Grid.h"
 #include "Data/Settings.h"
 #include "Data/Building.h"
 
-static int tilesAroundBuildingGridOffsets[][20] = {
+static const int tilesAroundBuildingGridOffsets[][20] = {
 	{0},
 	{-162, 1, 162, -1, 0},
 	{-162, -161, 2, 164, 325, 324, 161, -1, 0},
@@ -11,6 +12,17 @@ static int tilesAroundBuildingGridOffsets[][20] = {
 	{-162, -161, -160, -159, 4, 166, 328, 490, 651, 650, 649, 628, 485, 323, 161, -1, 0},
 	{-162, -161, -160, -159, -158, 5, 167, 329, 491, 653, 814, 813, 812, 811, 810, 647, 485, 323, 161, -1},
 };
+
+struct RingTile {
+	int x;
+	int y;
+	int gridOffset;
+} ringTiles[1080];
+
+// ringIndex[SIZE][DIST]
+int ringIndex[6][7];
+
+#define RING_SIZE(s,d) (4 * ((s) - 1) + 8 * (d))
 
 #define FOR_XY_ADJACENT(block) \
 	int baseOffset = GridOffset(x, y);\
@@ -140,6 +152,11 @@ void Terrain_clearWithRadius(int x, int y, int size, int radius, unsigned short 
 	);
 }
 
+int Terrain_existsTileWithinAreaWithType(int x, int y, int size, unsigned short type)
+{
+	return Terrain_existsTileWithinRadiusWithType(x, y, size, 0, type);
+}
+
 int Terrain_existsTileWithinRadiusWithType(int x, int y, int size, int radius, unsigned short type)
 {
 	FOR_XY_RADIUS(
@@ -194,3 +211,126 @@ int Terrain_hasBuildingOnNativeLand(int x, int y, int size, int radius)
 	return 0;
 }
 
+void Terrain_initDistanceRing()
+{
+	int index = 0;
+	int x, y;
+	for (int s = 1; s <= 5; s++) {
+		for (int d = 1; d <= 6; d++) {
+			ringIndex[s][d] = index;
+			// top row, from x=0
+			for (y = -d, x = 0; x < s + d; x++, index++) {
+				ringTiles[index].x = x;
+				ringTiles[index].y = y;
+			}
+			// right row down
+			for (x = s + d - 1, y = -d + 1; y < s + d; y++, index++) {
+				ringTiles[index].x = x;
+				ringTiles[index].y = y;
+			}
+			// bottom row to the left
+			for (y = s + d - 1, x = s + d - 2; x >= -d; x--, index++) {
+				ringTiles[index].x = x;
+				ringTiles[index].y = y;
+			}
+			// left row up
+			for (x = -d, y = s + d - 2; y >= -d; y--, index++) {
+				ringTiles[index].x = x;
+				ringTiles[index].y = y;
+			}
+			// top row up to x=0
+			for (y = -d, x = -d + 1; x < 0; x++, index++) {
+				ringTiles[index].x = x;
+				ringTiles[index].y = y;
+			}
+		}
+	}
+	for (int i = 0; i < index; i++) {
+		ringTiles[i].gridOffset = ringTiles[i].x + GRID_SIZE * ringTiles[i].y;
+	}
+}
+
+static int isInsideMap(int x, int y)
+{
+	return x >= 0 && x < Data_Settings_Map.width &&
+		y >= 0 && y < Data_Settings_Map.height;
+}
+
+int Terrain_isAllRockAndTreesAtDistanceRing(int x, int y, int distance)
+{
+	int start = ringIndex[1][distance];
+	int end = start + RING_SIZE(1,distance);
+	int baseOffset = GridOffset(x, y);
+	for (int i = start; i < end; i++) {
+		if (isInsideMap(x + ringTiles[i].x, y + ringTiles[i].y)) {
+			int terrain = Data_Grid_terrain[baseOffset + ringTiles[i].gridOffset];
+			if (!(terrain & Terrain_Rock) || !(terrain & Terrain_Tree)) {
+				return 0;
+			}
+		}
+	}
+	return 1;
+}
+
+int Terrain_isAllMeadowAtDistanceRing(int x, int y, int distance)
+{
+	int start = ringIndex[1][distance];
+	int end = start + RING_SIZE(1,distance);
+	int baseOffset = GridOffset(x, y);
+	for (int i = start; i < end; i++) {
+		if (isInsideMap(x + ringTiles[i].x, y + ringTiles[i].y)) {
+			int terrain = Data_Grid_terrain[baseOffset + ringTiles[i].gridOffset];
+			if (!(terrain & Terrain_Meadow)) {
+				return 0;
+			}
+		}
+	}
+	return 1;
+}
+
+static void Terrain_addDesirabilityDistanceRing(int x, int y, int size, int distance, int desirability)
+{
+	int isPartiallyOutsideMap = 0;
+	if (x - distance < -1 || x + distance + size - 1 > Data_Settings_Map.width) {
+		isPartiallyOutsideMap = 1;
+	}
+	if (y - distance < -1 || y + distance + size - 1 > Data_Settings_Map.height) {
+		isPartiallyOutsideMap = 1;
+	}
+	int start = ringIndex[size][distance];
+	int end = start + RING_SIZE(size,distance);
+	int baseOffset = GridOffset(x, y);
+
+	if (isPartiallyOutsideMap) {
+		for (int i = start; i < end; i++) {
+			if (isInsideMap(x + ringTiles[i].x, y + ringTiles[i].y)) {
+				Data_Grid_desirability[baseOffset + ringTiles[i].gridOffset] += desirability;
+				BOUND(Data_Grid_desirability[baseOffset], -100, 100); // BUGFIX: bounding on wrong tile
+			}
+		}
+	} else {
+		for (int i = start; i < end; i++) {
+			Data_Grid_desirability[baseOffset + ringTiles[i].gridOffset] += desirability;
+			BOUND(Data_Grid_desirability[baseOffset + ringTiles[i].gridOffset], -100, 100);
+		}
+	}
+}
+
+void Terrain_addDesirability(int x, int y, int size, int desBase, int desStep, int desStepSize, int desRange)
+{
+	if (size > 0) {
+		if (desRange > 6) desRange = 6;
+		int tilesWithinStep = 0;
+		int distance = 1;
+		while (desRange > 0) {
+			Terrain_addDesirabilityDistanceRing(x, y, size, distance, desBase);
+			distance++;
+			desRange--;
+			tilesWithinStep++;
+			if (tilesWithinStep >= desStep) {
+				desBase += desStepSize;
+				tilesWithinStep = 0;
+			}
+		}
+	}
+}

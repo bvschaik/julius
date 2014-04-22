@@ -17,11 +17,18 @@ int Terrain_getAdjacentRoadOrClearLand(int x, int y, int size, int *xTile, int *
 void Terrain_setWithRadius(int x, int y, int size, int radius, unsigned short typeToAdd);
 void Terrain_clearWithRadius(int x, int y, int size, int radius, unsigned short typeToKeep);
 
+int Terrain_existsTileWithinAreaWithType(int x, int y, int size, unsigned short type);
+
 int Terrain_existsTileWithinRadiusWithType(int x, int y, int size, int radius, unsigned short type);
 int Terrain_existsClearTileWithinRadius(int x, int y, int size, int radius, int exceptGridOffset);
 int Terrain_allTilesWithinRadiusHaveType(int x, int y, int size, int radius, unsigned short type);
 
 void Terrain_markNativeLand(int x, int y, int size, int radius);
 int Terrain_hasBuildingOnNativeLand();
+
+void Terrain_initDistanceRing();
+int Terrain_isAllRockAndTreesAtDistanceRing(int x, int y, int distance);
+int Terrain_isAllMeadowAtDistanceRing(int x, int y, int distance);
+void Terrain_addDesirability(int x, int y, int size, int desBase, int desStep, int desStepSize, int desRange);
 
 #endif

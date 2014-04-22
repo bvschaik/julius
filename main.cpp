@@ -12,6 +12,7 @@
 #include "src/FileSystem.h"
 #include "src/GameFile.h"
 #include "src/Empire.h"
+#include "src/Terrain.h"
 
 #include "src/UI/AllWindows.h"
 
@@ -118,7 +119,7 @@ int main(int argc, char **argv)
 
 	Graphics_saveScreenshot("test.bmp");
 	printf("GraphicID: %d\n", GraphicId(136));
-
+	Terrain_initDistanceRing();
 	return 0;
 }
 

@@ -318,9 +318,7 @@ int main()
 	
 	Loader_Graphics_initGraphics();
 	
-	CityView_setViewport(0, 24,
-		(Data_Screen.width - 160) / 60,
-		(Data_Screen.height - 24) / 15);
+	Loader_GameState_init();
 	
 	printf("Load images: %d\n", Loader_Graphics_loadMainGraphics(2));
 	printf("Load model: %d\n", Loader_Model_loadC3ModelTxt());
