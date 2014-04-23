@@ -438,6 +438,18 @@ static void setClipY(int yOffset, int height)
 	clipInfo.visiblePixelsY = height - clipInfo.clippedPixelsTop - clipInfo.clippedPixelsBottom;
 }
 
+void Graphics_drawEnemyImage(int graphicId, int xOffset, int yOffset)
+{
+	if (graphicId <= 0 || graphicId >= 801) {
+		return;
+	}
+	Data_Graphics_Index *index = &Data_Graphics_Enemy.index[graphicId];
+	if (index->offset > 0) {
+		drawImageCompressed(index, (unsigned char*)&Data_Graphics_PixelData.enemy[index->offset],
+			xOffset, yOffset, index->height, 0, ColorType_None);
+	}
+}
+
 /////debug/////
 
 static void pixel(ScreenColor input, unsigned char *r, unsigned char *g, unsigned char *b)

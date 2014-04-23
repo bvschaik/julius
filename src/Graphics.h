@@ -27,6 +27,8 @@ void Graphics_drawLetter(int graphicId, int xOffset, int yOffset, Color color);
 void Graphics_drawIsometricFootprint(int graphicId, int xOffset, int yOffset, Color colorMask);
 void Graphics_drawIsometricTop(int graphicId, int xOffset, int yOffset, Color colorMask);
 
+void Graphics_drawEnemyImage(int graphicId, int xOffset, int yOffset);
+
 void Graphics_saveScreenshot(const char *filename);
 
 #endif

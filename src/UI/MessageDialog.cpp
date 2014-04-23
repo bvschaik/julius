@@ -29,6 +29,7 @@ static void drawScrollbar();
 static void buttonScroll(int param1, int param2);
 static void buttonBack(int param1, int param2);
 static void buttonClose(int param1, int param2);
+static void buttonHelp(int param1, int param2);
 
 static ImageButton imageButtonBack = {
 	0, 0, 31, 20, 4, 90, 8, buttonBack, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0
@@ -468,4 +469,10 @@ static void buttonClose(int param1, int param2)
 	// TODO message_msgAdvisorId = 0
 	UI_Window_goBack();
 	UI_Window_requestRefresh();
+}
+
+static void buttonHelp(int param1, int param2)
+{
+	buttonClose(0, 0);
+	UI_MessageDialog_show(MessageDialog_Help, 0);
 }

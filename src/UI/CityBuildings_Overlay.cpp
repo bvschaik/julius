@@ -29,7 +29,7 @@ static void drawBuildingTopForTaxIncomeOverlay(int gridOffset, int buildingId, i
 static void drawBuildingTopForProblemsOverlay(int gridOffset, int buildingId, int xOffset, int yOffset);
 static void drawOverlayColumn(int height, int xOffset, int yOffset, int isRed);
 
-void drawOverlayFootprints()
+void UI_CityBuildings_drawOverlayFootprints()
 {
 	FOREACH_XY_VIEW({
 		int gridOffset = ViewToGridOffset(xView, yView);
@@ -87,7 +87,7 @@ void drawOverlayFootprints()
 	});
 }
 
-void drawOverlayTopsWalkersAnimation(int overlay)
+void UI_CityBuildings_drawOverlayTopsWalkersAnimation(int overlay)
 {
 	FOREACH_Y_VIEW(
 		// draw walkers
@@ -95,7 +95,7 @@ void drawOverlayTopsWalkersAnimation(int overlay)
 			int walkerId = Data_Grid_walkerIds[gridOffset];
 			while (walkerId) {
 				if (!Data_Walkers[walkerId].isGhost) {
-					drawWalker(walkerId, xGraphic, yGraphic, 9999);
+					UI_CityBuildings_drawWalker(walkerId, xGraphic, yGraphic, 9999, 0);
 				}
 				walkerId = Data_Walkers[walkerId].nextWalkerIdOnSameTile;
 			}
@@ -266,7 +266,7 @@ void drawOverlayTopsWalkersAnimation(int overlay)
 					}
 				}
 			} else if (Data_Grid_spriteOffsets[gridOffset] && (Data_Grid_terrain[gridOffset] & Terrain_Water)) {
-				drawBridge(gridOffset, xGraphic, yGraphic);
+				UI_CityBuildings_drawBridge(gridOffset, xGraphic, yGraphic);
 			}
 		);
 	);
@@ -1331,14 +1331,14 @@ static void drawBuildingTopForProblemsOverlay(int gridOffset, int buildingId, in
 	} else if (type >= Building_WheatFarm && type <= Building_ClayPit) {
 		int walkerId = Data_Buildings[buildingId].walkerId;
 		if (walkerId &&
-			Data_Walkers[walkerId].actionState == WalkerActionState_20_CartPusher &&
+			Data_Walkers[walkerId].actionState == WalkerActionState_20_CartPusherNoRoom &&
 			Data_Walkers[walkerId].minMaxSeen) {
 			Data_Buildings[buildingId].showOnProblemOverlay = 1;
 		}
 	} else if (BuildingIsWorkshop(type)) {
 		int walkerId = Data_Buildings[buildingId].walkerId;
 		if (walkerId &&
-			Data_Walkers[walkerId].actionState == WalkerActionState_20_CartPusher &&
+			Data_Walkers[walkerId].actionState == WalkerActionState_20_CartPusherNoRoom &&
 			Data_Walkers[walkerId].minMaxSeen) {
 			Data_Buildings[buildingId].showOnProblemOverlay = 1;
 		} else if (Data_Buildings[buildingId].loadsStored <= 0) {

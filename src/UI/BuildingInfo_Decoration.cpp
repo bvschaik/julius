@@ -18,7 +18,7 @@ void UI_BuildingInfo_drawPlaza(BuildingInfoContext *c)
 {
 	c->helpId = 80;
 	PLAY_SOUND("wavs/plaza.wav");
-	UI_BuildingInfo_drawWalkerListLocal(c);
+	UI_BuildingInfo_drawWalkerImagesLocal(c);
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(137, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, Font_LargeBlack);
 	UI_BuildingInfo_drawWalkerList(c);
@@ -31,7 +31,7 @@ void UI_BuildingInfo_drawStatue(BuildingInfoContext *c)
 {
 	c->helpId = 79;
 	PLAY_SOUND("wavs/statue.wav");
-	UI_BuildingInfo_drawWalkerListLocal(c);
+	UI_BuildingInfo_drawWalkerImagesLocal(c);
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(80, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, Font_LargeBlack);
 	Widget_GameText_drawMultiline(80, 1,
@@ -43,7 +43,7 @@ void UI_BuildingInfo_drawTriumphalArch(BuildingInfoContext *c)
 {
 	c->helpId = 79;
 	PLAY_SOUND("wavs/statue.wav");
-	UI_BuildingInfo_drawWalkerListLocal(c);
+	UI_BuildingInfo_drawWalkerImagesLocal(c);
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(80, 2, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, Font_LargeBlack);
 	Widget_GameText_drawMultiline(80, 3,

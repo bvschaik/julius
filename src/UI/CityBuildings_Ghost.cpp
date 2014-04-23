@@ -13,7 +13,7 @@ static void drawBuildingGhostRoad();
 static void drawBuildingGhostDefault();
 static void drawFlatTile(int xOffset, int yOffset, Color mask);
 
-void drawSelectedBuildingGhost()
+void UI_CityBuildings_drawSelectedBuildingGhost()
 {
 	if (!Data_CityView.selectedTile.gridOffset || Data_CityView.isScrolling) {
 		return;

@@ -94,12 +94,17 @@
 		xView++;\
 	}
 
-void drawOverlayFootprints();
-void drawOverlayTopsWalkersAnimation(int overlay);
+struct PixelCoordinate {
+	int x;
+	int y;
+};
 
-void drawWalker(int walkerId, int xOffset, int yOffset, int selectedWalkerId);
-void drawBridge(int gridOffset, int xOffset, int yOffset);
+void UI_CityBuildings_drawOverlayFootprints();
+void UI_CityBuildings_drawOverlayTopsWalkersAnimation(int overlay);
 
-void drawSelectedBuildingGhost();
+void UI_CityBuildings_drawWalker(int walkerId, int xOffset, int yOffset, int selectedWalkerId, struct PixelCoordinate *coord);
+void UI_CityBuildings_drawBridge(int gridOffset, int xOffset, int yOffset);
+
+void UI_CityBuildings_drawSelectedBuildingGhost();
 
 #endif

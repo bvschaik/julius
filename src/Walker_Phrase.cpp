@@ -312,7 +312,7 @@ int Walker_determinePhrase(int walkerId)
 			}
 			break;
 		case Walker_CartPusher:
-			if (w->actionState == WalkerActionState_20_CartPusher) {
+			if (w->actionState == WalkerActionState_20_CartPusherNoRoom) {
 				if (w->minMaxSeen == 2) {
 					phraseId = 7;
 				} else if (w->minMaxSeen == 1) {
@@ -425,12 +425,12 @@ int Walker_determinePhrase(int walkerId)
 				w->phraseSequenceExact = 0;
 			}
 			phraseId = 8 + w->phraseSequenceExact;
-			if (w->actionState == WalkerActionState_103_TraderLeaving) {
+			if (w->actionState == WalkerActionState_103_TradeCaravanLeaving) {
 				if (!Data_Walker_Traders[w->traderId].totalSold &&
 					!Data_Walker_Traders[w->traderId].totalBought) {
 					phraseId = 7; // no trade
 				}
-			} else if (w->actionState == WalkerActionState_102_TraderAtWarehouse) {
+			} else if (w->actionState == WalkerActionState_102_TradeCaravanTrading) {
 				if (Walker_TradeCaravan_isBuying(walkerId, w->destinationBuildingId, w->empireCityId)) {
 					phraseId = 11; // buying goods
 				} else if (Walker_TradeCaravan_isSelling(walkerId, w->destinationBuildingId, w->empireCityId)) {
@@ -529,10 +529,13 @@ static void playWalkerSoundFile(int walkerSoundId, int phraseId)
 	}
 }
 
-void Walker_playPhrase(int walkerId)
+int Walker_playPhrase(int walkerId)
 {
 	if (walkerId > 0) {
-		playWalkerSoundFile(walkerTypeToSoundType[Data_Walkers[walkerId].type],
-			Data_Walkers[walkerId].phraseId);
+		int walkerSoundId = walkerTypeToSoundType[Data_Walkers[walkerId].type];
+		playWalkerSoundFile(walkerSoundId, Data_Walkers[walkerId].phraseId);
+		return walkerSoundId;
+	} else {
+		return 0;
 	}
 }

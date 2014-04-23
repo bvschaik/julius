@@ -45,13 +45,3 @@ void UI_BuildingInfo_drawEmploymentInfo(BuildingInfoContext *c, int yOffset)
 		Widget_GameText_draw(69, 0, c->xOffset + 70 + width, yOffset + 16, Font_SmallBlack);
 	}
 }
-
-void UI_BuildingInfo_drawWalkerListLocal(BuildingInfoContext *c)
-{
-	// TODO
-}
-
-void UI_BuildingInfo_drawWalkerList(BuildingInfoContext *c)
-{
-	// TODO
-}

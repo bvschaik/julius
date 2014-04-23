@@ -264,6 +264,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\UI\BuildingInfo_Walkers.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\UI\BuildingInfo_Water.cpp"
 				>
 			</File>
@@ -638,6 +642,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\UI\CityBuildings_Walkers.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Data\CityInfo.h"
 				>
 			</File>
@@ -702,11 +710,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Graphics.h"
+				RelativePath=".\src\Data\Graphics.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Graphics.h"
+				RelativePath=".\src\Graphics.h"
 				>
 			</File>
 			<File
@@ -790,11 +798,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\data\Random.h"
+				RelativePath=".\src\Random.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Random.h"
+				RelativePath=".\src\data\Random.h"
 				>
 			</File>
 			<File
@@ -866,6 +874,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\Data\Trader.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\data\Tutorial.h"
 				>
 			</File>
@@ -878,11 +890,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Walker.h"
+				RelativePath=".\src\Walker.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Walker.h"
+				RelativePath=".\src\Data\Walker.h"
 				>
 			</File>
 			<File

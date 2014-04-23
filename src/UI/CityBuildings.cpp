@@ -8,8 +8,8 @@
 
 #include <cstdio>
 
-static void drawBuildingFootprints();
-static void drawBuildingTopsWalkersAnimation(int selectedWalkerId);
+static void UI_CityBuildings_drawBuildingFootprints();
+static void UI_CityBuildings_drawBuildingTopsWalkersAnimation(int selectedWalkerId, struct PixelCoordinate *coord);
 
 static int lastWaterAnimationTime = 0;
 static int advanceWaterAnimation;
@@ -36,21 +36,21 @@ void UI_CityBuildings_drawForeground(int x, int y)
 	// TODO overlay and stuff
 	//Data_State.currentOverlay = Overlay_Fire;
 	if (Data_State.currentOverlay) {
-		drawOverlayFootprints();
-		drawOverlayTopsWalkersAnimation(Data_State.currentOverlay);
-		drawSelectedBuildingGhost();
+		UI_CityBuildings_drawOverlayFootprints();
+		UI_CityBuildings_drawOverlayTopsWalkersAnimation(Data_State.currentOverlay);
+		UI_CityBuildings_drawSelectedBuildingGhost();
 		//drawTops2(9999);
 	} else {
-		drawBuildingFootprints();
-		drawBuildingTopsWalkersAnimation(0);
-		drawSelectedBuildingGhost();
+		UI_CityBuildings_drawBuildingFootprints();
+		UI_CityBuildings_drawBuildingTopsWalkersAnimation(0, 0);
+		UI_CityBuildings_drawSelectedBuildingGhost();
 		//drawTops2(0);
 	}
 
 	Graphics_resetClipRectangle();
 }
 
-static void drawBuildingFootprints()
+static void UI_CityBuildings_drawBuildingFootprints()
 {
 	int graphicIdWaterFirst = GraphicId(ID_Graphic_TerrainWater);
 	int graphicIdWaterLast = 5 + graphicIdWaterFirst;
@@ -116,7 +116,7 @@ static void drawBuildingFootprints()
 	});
 }
 
-static void drawBuildingTopsWalkersAnimation(int selectedWalkerId)
+static void UI_CityBuildings_drawBuildingTopsWalkersAnimation(int selectedWalkerId, struct PixelCoordinate *coord)
 {
 	FOREACH_Y_VIEW(
 		FOREACH_X_VIEW(
@@ -284,7 +284,7 @@ static void drawBuildingTopsWalkersAnimation(int selectedWalkerId)
 			int walkerId = Data_Grid_walkerIds[gridOffset];
 			while (walkerId) {
 				if (!Data_Walkers[walkerId].isGhost) {
-					drawWalker(walkerId, xGraphic, yGraphic, selectedWalkerId);
+					UI_CityBuildings_drawWalker(walkerId, xGraphic, yGraphic, selectedWalkerId, coord);
 				}
 				walkerId = Data_Walkers[walkerId].nextWalkerIdOnSameTile;
 			}
@@ -384,7 +384,7 @@ static void drawBuildingTopsWalkersAnimation(int selectedWalkerId)
 					}
 				}
 			} else if (Data_Grid_spriteOffsets[gridOffset]) {
-				drawBridge(gridOffset, xGraphic, yGraphic);
+				UI_CityBuildings_drawBridge(gridOffset, xGraphic, yGraphic);
 			} else if (Data_Buildings[Data_Grid_buildingIds[gridOffset]].type == Building_FortGround__) {
 				if (Data_Grid_edge[gridOffset] & Edge_LeftmostTile) {
 					int buildingId = Data_Grid_buildingIds[gridOffset];
@@ -426,13 +426,7 @@ static void drawBuildingTopsWalkersAnimation(int selectedWalkerId)
 	);
 }
 
-
-void drawWalker(int walkerId, int xOffset, int yOffset, int selectedWalkerId)
-{
-	// TODO
-}
-
-void drawBridge(int gridOffset, int x, int y)
+void UI_CityBuildings_drawBridge(int gridOffset, int x, int y)
 {
 	if (!(Data_Grid_terrain[gridOffset] & Terrain_Water)) {
 		Data_Grid_spriteOffsets[gridOffset] = 0;

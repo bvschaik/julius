@@ -7,6 +7,8 @@
 #define GraphicNumAnimationSprites(id) (Data_Graphics_Main.index[id].numAnimationSprites)
 #define GraphicSpriteOffsetX(id) (Data_Graphics_Main.index[id].spriteOffsetX)
 #define GraphicSpriteOffsetY(id) (Data_Graphics_Main.index[id].spriteOffsetY)
+#define GraphicEnemySpriteOffsetX(id) (Data_Graphics_Enemy.index[id].spriteOffsetX)
+#define GraphicEnemySpriteOffsetY(id) (Data_Graphics_Enemy.index[id].spriteOffsetY)
 
 struct Data_Graphics_Index {
 	int offset;

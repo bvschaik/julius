@@ -80,6 +80,7 @@ enum {
 };
 
 #define WalkerIsEnemyOrNative(t) ((t) >= Walker_IndigenousNative && (t) <= Walker_NativeTrader)
+#define WalkerIsEnemy(t) ((t) >= Walker_Enemy43 && (t) <= Walker_Enemy57_Legionary)
 
 enum {
 	WalkerState_Alive = 1,
@@ -87,24 +88,33 @@ enum {
 };
 
 enum {
-	WalkerActionState_20_CartPusher = 20,
+	WalkerActionState_20_CartPusherNoRoom = 20,
 	WalkerActionState_21_CartPusher = 21,
 	WalkerActionState_22_CartPusher = 22,
 	WalkerActionState_23_CartPusher = 23,
+	WalkerActionState_27_MarketBuyer = 27,
 	WalkerActionState_51_Warehouseman = 51,
+	WalkerActionState_53_MarketBuyer = 53,
+	WalkerActionState_56_MarketBuyer = 56,
+	WalkerActionState_59_MarketBuyer = 59,
 	WalkerActionState_74_PrefectFightingCrime = 74,
 	WalkerActionState_75_PrefectFightingFire = 75,
-	WalkerActionState_102_TraderAtWarehouse = 102,
-	WalkerActionState_103_TraderLeaving = 103,
+	WalkerActionState_94_EntertainerAtSchool = 94,
+	WalkerActionState_95_EntertainerGoingToVenue = 95,
+	WalkerActionState_101_TradeCaravanArriving = 101,
+	WalkerActionState_102_TradeCaravanTrading = 102,
+	WalkerActionState_103_TradeCaravanLeaving = 103,
 	WalkerActionState_112_TradeShipMoored = 112,
+	WalkerActionState_114_TradeShipAnchored = 114,
 	WalkerActionState_115_TradeShipLeaving = 115,
 	WalkerActionState_126_MarketTrader = 126,
+	WalkerActionState_132_ResourceCarrier = 132,
 	WalkerActionState_133_Dockman = 133,
-	WalkerActionState_134_Dockman = 134,
+	WalkerActionState_134_Dockman_MarketBuyer = 134,
 	WalkerActionState_135_Dockman = 135,
 	WalkerActionState_136_Dockman = 136,
-	WalkerActionState_137_Dockman = 137,
-	WalkerActionState_138_Dockman = 138,
+	WalkerActionState_137_Dockman_MarketBuyer = 137,
+	WalkerActionState_138_Dockman_MarketBuyer = 138,
 	WalkerActionState_139_Dockman = 139,
 	WalkerActionState_140_Dockman = 140,
 	WalkerActionState_145_MarketBuyer = 145,
@@ -142,11 +152,10 @@ extern struct Data_Walker_NameSequence {
 extern struct Data_Walker {
 	char inUse;
 	char __unknown_01;
-	char __unknown_02;
+	char isEnemyGraphic;
 	char __unknown_03;
-	char __unknown_04;
-	char __unknown_05;
-	short resourceGraphicId;
+	short graphicId;
+	short cartGraphicId;
 	short nextWalkerIdOnSameTile;
 	unsigned char type;
 	char resourceId;
@@ -155,7 +164,7 @@ extern struct Data_Walker {
 	char state;
 	char __unknown_0f;
 	char __unknown_10;
-	char __unknown_11;
+	char direction;
 	char __unknown_12;
 	char __unknown_13;
 	char x;
@@ -179,7 +188,7 @@ extern struct Data_Walker {
 	char __unknown_26;
 	char __unknown_27;
 	unsigned char actionState;
-	char __unknown_29;
+	char progressOnTile; // 29
 	char __unknown_2a;
 	char __unknown_2b;
 	char __unknown_2c;
@@ -196,10 +205,8 @@ extern struct Data_Walker {
 	char __unknown_37;
 	char __unknown_38;
 	char __unknown_39;
-	char __unknown_3a;
-	char __unknown_3b;
-	char __unknown_3c;
-	char __unknown_3d;
+	short tilePositionX; // 3a
+	short tilePositionY; // 3c
 	char __unknown_3e;
 	char __unknown_3f;
 	char __unknown_40;
@@ -223,12 +230,11 @@ extern struct Data_Walker {
 	char isGhost; // 55
 	char minMaxSeen;
 	char __unknown_57;
-	char __unknown_58;
-	char __unknown_59;
+	short inFrontWalkerId;
 	char __unknown_5a;
 	char __unknown_5b;
-	char __unknown_5c;
-	char __unknown_5d;
+	char xOffsetCart; // 5c
+	char yOffsetCart; // 5d
 	char empireCityId;
 	char __unknown_5f;
 	short name; // 60
@@ -238,7 +244,7 @@ extern struct Data_Walker {
 	char __unknown_65;
 	char __unknown_66;
 	char __unknown_67;
-	char __unknown_68;
+	unsigned char collectingItemId; // NOT a resource ID!
 	char __unknown_69;
 	unsigned char phraseSequenceExact;
 	unsigned char phraseId;
@@ -254,7 +260,7 @@ extern struct Data_Walker {
 	char __unknown_75;
 	char __unknown_76;
 	char __unknown_77;
-	char __unknown_78;
+	unsigned char numFollowingWalkersOnSameTile;
 	char __unknown_79;
 	char __unknown_7a;
 	char __unknown_7b;
