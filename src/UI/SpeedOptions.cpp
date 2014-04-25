@@ -104,8 +104,6 @@ void UI_SpeedOptions_drawForeground()
 		baseOffsetX + 128, baseOffsetY + 40,
 		arrowButtons, 4
 	);
-
-	// TODO: reset clip region() ?
 }
 
 void UI_SpeedOptions_handleMouse()

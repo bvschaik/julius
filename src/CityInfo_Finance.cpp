@@ -25,7 +25,7 @@ static void collectMonthlyTaxes()
 			continue;
 		}
 
-		int isPatrician = Data_Buildings[i].subtype.houseLevel >= 12; // TODO housing level constants
+		int isPatrician = Data_Buildings[i].subtype.houseLevel >= HouseLevel_SmallVilla;
 		int population = Data_Buildings[i].housePopulation;
 		int trm = Calc_adjustWithPercentage(
 			Data_Model_Houses[Data_Buildings[i].subtype.houseLevel].taxMultiplier,
@@ -275,7 +275,7 @@ void CityInfo_Finance_calculateEstimatedTaxes()
 	Data_CityInfo.monthlyCollectedTaxFromPatricians = 0;
 	for (int i = 0; i < MAX_BUILDINGS; i++) {
 		if (Data_Buildings[i].inUse && Data_Buildings[i].houseSize && Data_Buildings[i].houseTaxCoverage) {
-			int isPatrician = Data_Buildings[i].subtype.houseLevel >= 12; // TODO housing level constants
+			int isPatrician = Data_Buildings[i].subtype.houseLevel >= HouseLevel_SmallVilla;
 			int trm = Calc_adjustWithPercentage(
 				Data_Model_Houses[Data_Buildings[i].subtype.houseLevel].taxMultiplier,
 				Data_Model_Difficulty.moneyPercentage[Data_Settings.difficulty]);

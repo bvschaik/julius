@@ -65,7 +65,5 @@ void UI_DisplayOptions_drawForeground()
 		baseOffsetX + 128, baseOffsetY + 236,
 		224, Font_NormalGreen
 	);
-	
-	// TODO: reset clip region() ?
 }
 

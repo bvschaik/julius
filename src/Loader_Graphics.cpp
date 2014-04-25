@@ -20,11 +20,49 @@ static const char mainGraphics555[][32] = {
 	"C3_North.555",
 	"c3_South.555"
 };
-static const char enemyGraphics555[][32] = {
-	"TODO",
-};
 static const char enemyGraphicsSg2[][32] = {
-	"TODO",
+	"goths.sg2",
+	"Etruscan.sg2",
+	"Etruscan.sg2",
+	"carthage.sg2",
+	"Greek.sg2",
+	"Greek.sg2",
+	"egyptians.sg2",
+	"Persians.sg2",
+	"Phoenician.sg2",
+	"celts.sg2",
+	"celts.sg2",
+	"celts.sg2",
+	"Gaul.sg2",
+	"Gaul.sg2",
+	"goths.sg2",
+	"goths.sg2",
+	"goths.sg2",
+	"Phoenician.sg2",
+	"North African.sg2",
+	"Phoenician.sg2",
+};
+static const char enemyGraphics555[][32] = {
+	"goths.555",
+	"Etruscan.555",
+	"Etruscan.555",
+	"carthage.555",
+	"Greek.555",
+	"Greek.555",
+	"egyptians.555",
+	"Persians.555",
+	"Phoenician.555",
+	"celts.555",
+	"celts.555",
+	"celts.555",
+	"Gaul.555",
+	"Gaul.555",
+	"goths.555",
+	"goths.555",
+	"goths.555",
+	"Phoenician.555",
+	"North African.555",
+	"Phoenician.555",
 };
 
 static int currentClimate = -1;
@@ -155,7 +193,7 @@ static void prepareEnemyGraphics()
 {
 	int offset = 4;
 	for (int i = 1; i <= 800; i++) {
-		Data_Graphics_Index *index = &Data_Graphics_Main.index[i];
+		Data_Graphics_Index *index = &Data_Graphics_Enemy.index[i];
 		if (index->isExternal) {
 			if (!index->offset) {
 				index->offset = 1;
