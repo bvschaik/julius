@@ -234,7 +234,7 @@ static int tileProgressToPixelOffsetX(int direction, int progress)
 	} else if (direction == 5) {
 		offset = 56 - 4 * progress;
 	}
-	return offset < 0 ? 0 : offset;
+	return offset;
 }
 
 static int tileProgressToPixelOffsetY(int direction, int progress)
@@ -251,10 +251,9 @@ static int tileProgressToPixelOffsetY(int direction, int progress)
 	} else if (direction == 7) {
 		offset = 28 - 2 * progress;
 	}
-	return offset < 0 ? 0 : offset;
+	return offset;
 }
 
-#include <cstdio>
 void UI_CityBuildings_drawWalker(int walkerId, int xOffset, int yOffset, int selectedWalkerId, struct PixelCoordinate *coord)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
@@ -268,11 +267,9 @@ void UI_CityBuildings_drawWalker(int walkerId, int xOffset, int yOffset, int sel
 		yTileOffset -= w->__unknown_18;
 	} else {
 		int direction = (8 + w->direction - Data_Settings_Map.orientation) % 8;
-		if (w->type == Walker_IndigenousNative)
-		printf("Walker %d dir = %d progress = %d\n", walkerId, direction, w->progressOnTile);
 		xTileOffset = tileProgressToPixelOffsetX(direction, w->progressOnTile);
-		//yTileOffset = tileProgressToPixelOffsetY(direction, w->progressOnTile);
-		//yTileOffset -= w->__unknown_66;
+		yTileOffset = tileProgressToPixelOffsetY(direction, w->progressOnTile);
+		yTileOffset -= w->__unknown_66;
 		if (w->numFollowingWalkersOnSameTile && w->type != Walker_Ballista) {
 			static const int xOffsets[] = {
 				0, 8, 8, -8, -8, 0, 16, 0, -16, 8, -8, 16, -16, 16, -16, 8, -8, 0, 24, 0, -24, 0, 0, 0

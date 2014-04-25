@@ -321,6 +321,7 @@ int main()
 	Loader_GameState_init();
 	
 	printf("Load images: %d\n", Loader_Graphics_loadMainGraphics(2));
+	printf("Load enemies: %d\n", Loader_Graphics_loadEnemyGraphics(0));
 	printf("Load model: %d\n", Loader_Model_loadC3ModelTxt());
 	printf("Load language: %d\n", Language_load("c3.eng", "c3_mm.eng"));
 	UI_Window_goTo(Window_MainMenu);
