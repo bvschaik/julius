@@ -23,6 +23,8 @@ enum {
 	ID_Graphic_Fort = 66,
 	ID_Graphic_Dock = 78,
 	ID_Graphic_Warehouse = 82,
+	ID_Graphic_WarehouseStorageEmpty = 83,
+	ID_Graphic_WarehouseStorageFilled = 84,
 	ID_Graphic_MessageIcon = 90,
 	ID_Graphic_LaborPriorityLock = 94,
 	ID_Graphic_PanelWindows = 95,

@@ -1,10 +1,16 @@
 #include "Resource.h"
+
 #include "Building.h"
+#include "Calc.h"
 #include "Terrain.h"
+
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
+#include "Data/Graphics.h"
+#include "Data/Grid.h"
 #include "Data/Scenario.h"
+#include "Data/Trade.h"
 
 void Resource_calculateWarehouseStocks()
 {
@@ -180,4 +186,62 @@ int Resource_getGraphicIdOffset(int resource, int type)
 	} else {
 		return 0;
 	}
+}
+
+void Resource_addImportedResourceToWarehouseSpace(int spaceId, int resourceId)
+{
+	Data_CityInfo.resourceSpaceInWarehouses[resourceId]--;
+	Data_CityInfo.resourceStored[resourceId]++;
+	Data_Buildings[spaceId].loadsStored++;
+	Data_Buildings[spaceId].subtype.warehouseResourceId = resourceId;
+	
+	Data_CityInfo.treasury -= Data_TradePrices[resourceId].buy;
+	Data_CityInfo.financeImportsThisYear += Data_TradePrices[resourceId].buy;
+	
+	// update graphic id
+	Data_Grid_graphicIds[Data_Buildings[spaceId].gridOffset] =
+		GraphicId(ID_Graphic_WarehouseStorageFilled) +
+		4 * (resourceId - 1) + Resource_getGraphicIdOffset(resourceId, 0) +
+		Data_Buildings[spaceId].loadsStored - 1;
+}
+
+void Resource_removeExportedResourceFromWarehouseSpace(int spaceId, int resourceId)
+{
+	Data_CityInfo.resourceSpaceInWarehouses[resourceId]++;
+	Data_CityInfo.resourceStored[resourceId]--;
+	if (--Data_Buildings[spaceId].loadsStored <= 0) {
+		Data_Buildings[spaceId].subtype.warehouseResourceId = Resource_None;
+	}
+	
+	Data_CityInfo.treasury += Data_TradePrices[resourceId].sell;
+	Data_CityInfo.financeExportsThisYear += Data_TradePrices[resourceId].sell;
+	if (Data_CityInfo.godBlessingNeptuneDoubleTrade) {
+		Data_CityInfo.treasury += Data_TradePrices[resourceId].sell;
+		Data_CityInfo.financeExportsThisYear += Data_TradePrices[resourceId].sell;
+	}
+	
+	// update graphic id
+	int gridOffset = Data_Buildings[spaceId].gridOffset;
+	if (Data_Buildings[spaceId].loadsStored <= 0) {
+		Data_Grid_graphicIds[gridOffset] = GraphicId(ID_Graphic_WarehouseStorageEmpty);
+	} else {
+		Data_Grid_graphicIds[gridOffset] =
+			GraphicId(ID_Graphic_WarehouseStorageFilled) +
+			4 * (resourceId - 1) + Resource_getGraphicIdOffset(resourceId, 0) +
+			Data_Buildings[spaceId].loadsStored - 1;
+	}
+}
+
+int Resource_getDistance(int x1, int y1, int x2, int y2, int distToEntry1, int distToEntry2)
+{
+	int diff;
+	if (distToEntry1 > distToEntry2) {
+		diff = distToEntry1 - distToEntry2;
+	} else {
+		diff = distToEntry2 - distToEntry2;
+	}
+	if (distToEntry1 == -1) {
+		diff = 0;
+	}
+	return diff + Calc_distanceMaximum(x1, y1, x2, y2);
 }

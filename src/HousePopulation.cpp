@@ -14,7 +14,7 @@ int HousePopulation_addPeople(int amount)
 		}
 		if (Data_Buildings[buildingId].inUse == 1 &&
 			Data_Buildings[buildingId].houseSize &&
-			Data_Buildings[buildingId].isReachableFromRome > 0 &&
+			Data_Buildings[buildingId].distanceFromEntry > 0 &&
 			Data_Buildings[buildingId].housePopulation > 0) {
 			Data_CityInfo.populationLastTargetHouseAdd = buildingId;
 			int maxPeople = Data_Model_Houses[Data_Buildings[buildingId].subtype.houseLevel].maxPeople;

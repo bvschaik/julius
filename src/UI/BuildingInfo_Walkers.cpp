@@ -9,7 +9,6 @@
 #include "../Data/Empire.h"
 #include "../Data/Formation.h"
 #include "../Data/Scenario.h"
-#include "../Data/Trader.h"
 #include "../Data/Walker.h"
 
 static const int walkerTypeToBigPeopleGraphicId[] = {
@@ -82,7 +81,7 @@ static void drawWalkerInfoTrade(BuildingInfoContext *c, int walkerId)
 				textId = 10;
 				break;
 			case WalkerActionState_103_TradeCaravanLeaving:
-				if (Data_Traders[traderId].totalSold || Data_Traders[traderId].totalBought) {
+				if (Data_Walker_Traders[traderId].totalSold || Data_Walker_Traders[traderId].totalBought) {
 					textId = 11;
 				} else {
 					textId = 13;
@@ -94,12 +93,12 @@ static void drawWalkerInfoTrade(BuildingInfoContext *c, int walkerId)
 		}
 		Widget_GameText_draw(129, textId, c->xOffset + 40, c->yOffset + 150, Font_SmallBlack);
 	}
-	if (Data_Traders[traderId].totalSold || Data_Traders[traderId].totalBought) {
+	if (Data_Walker_Traders[traderId].totalSold || Data_Walker_Traders[traderId].totalBought) {
 		// bought
 		width = Widget_GameText_draw(129, 4, c->xOffset + 40, c->yOffset + 170, Font_SmallBlack);
 		for (int r = 1; r < 16; r++) {
-			if (Data_Traders[traderId].boughtResources[r]) {
-				width += Widget_Text_drawNumber(Data_Traders[traderId].boughtResources[r],
+			if (Data_Walker_Traders[traderId].boughtResources[r]) {
+				width += Widget_Text_drawNumber(Data_Walker_Traders[traderId].boughtResources[r],
 					'@', " ", c->xOffset + 40 + width, c->yOffset + 170, Font_SmallBlack);
 				int graphicId = GraphicId(ID_Graphic_ResourceIcons) + r + Resource_getGraphicIdOffset(r, 3);
 				Graphics_drawImage(graphicId, c->xOffset + 40 + width, c->yOffset + 167);
@@ -109,8 +108,8 @@ static void drawWalkerInfoTrade(BuildingInfoContext *c, int walkerId)
 		// sold
 		width = Widget_GameText_draw(129, 5, c->xOffset + 40, c->yOffset + 200, Font_SmallBlack);
 		for (int r = 1; r < 16; r++) {
-			if (Data_Traders[traderId].soldResources[r]) {
-				width += Widget_Text_drawNumber(Data_Traders[traderId].soldResources[r],
+			if (Data_Walker_Traders[traderId].soldResources[r]) {
+				width += Widget_Text_drawNumber(Data_Walker_Traders[traderId].soldResources[r],
 					'@', " ", c->xOffset + 40 + width, c->yOffset + 200, Font_SmallBlack);
 				int graphicId = GraphicId(ID_Graphic_ResourceIcons) + r + Resource_getGraphicIdOffset(r, 3);
 				Graphics_drawImage(graphicId, c->xOffset + 40 + width, c->yOffset + 197);

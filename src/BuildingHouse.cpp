@@ -18,7 +18,7 @@
 		for (int i = 0; i < 8; i++) {\
 			nb->data.house.inventory.all[i] = inventoryPerTile[i];\
 		}\
-		nb->isReachableFromRome = 0;\
+		nb->distanceFromEntry = 0;\
 		Terrain_addBuildingToGrids(newBuildingId, nb->x, nb->y, 1, 1,\
 				graphicId + (Data_Grid_random[nb->gridOffset] & 1), Terrain_Building);\
 	}
@@ -354,7 +354,7 @@ static void splitMerged(int buildingId)
 	for (int i = 0; i < 8; i++) {
 		b->data.house.inventory.all[i] = inventoryPerTile[i] + inventoryRest[i];
 	}
-	b->isReachableFromRome = 0;
+	b->distanceFromEntry = 0;
 
 	int graphicId = GraphicId(houseGraphicGroup[b->subtype.houseLevel]) + houseGraphicOffset[b->subtype.houseLevel];
 	Terrain_addBuildingToGrids(buildingId, b->x, b->y, 2, 2,
@@ -389,7 +389,7 @@ static void splitSize2(int buildingId)
 	for (int i = 0; i < 8; i++) {
 		b->data.house.inventory.all[i] = inventoryPerTile[i] + inventoryRest[i];
 	}
-	b->isReachableFromRome = 0;
+	b->distanceFromEntry = 0;
 
 	int graphicId = GraphicId(houseGraphicGroup[b->subtype.houseLevel]) + houseGraphicOffset[b->subtype.houseLevel];
 	Terrain_addBuildingToGrids(buildingId, b->x, b->y, 1, 1,
@@ -424,7 +424,7 @@ static void splitSize3(int buildingId)
 	for (int i = 0; i < 8; i++) {
 		b->data.house.inventory.all[i] = inventoryPerTile[i] + inventoryRest[i];
 	}
-	b->isReachableFromRome = 0;
+	b->distanceFromEntry = 0;
 
 	int graphicId = GraphicId(houseGraphicGroup[b->subtype.houseLevel]) + houseGraphicOffset[b->subtype.houseLevel];
 	Terrain_addBuildingToGrids(buildingId, b->x, b->y, 1, 1,
@@ -469,7 +469,7 @@ void BuildingHouse_devolveFromLargeVilla(int buildingId)
 	for (int i = 0; i < 8; i++) {
 		b->data.house.inventory.all[i] = inventoryPerTile[i] + inventoryRest[i];
 	}
-	b->isReachableFromRome = 0;
+	b->distanceFromEntry = 0;
 
 	int graphicId = GraphicId(houseGraphicGroup[b->subtype.houseLevel]) + houseGraphicOffset[b->subtype.houseLevel];
 	Terrain_addBuildingToGrids(buildingId, b->x, b->y, 1, 1,
@@ -509,7 +509,7 @@ void BuildingHouse_devolveFromLargePalace(int buildingId)
 	for (int i = 0; i < 8; i++) {
 		b->data.house.inventory.all[i] = inventoryPerTile[i] + inventoryRest[i];
 	}
-	b->isReachableFromRome = 0;
+	b->distanceFromEntry = 0;
 
 	int graphicId = GraphicId(houseGraphicGroup[b->subtype.houseLevel]) + houseGraphicOffset[b->subtype.houseLevel];
 	Terrain_addBuildingToGrids(buildingId, b->x, b->y, 1, 1,
@@ -557,17 +557,17 @@ void BuildingHouse_changeToVacantLot(int buildingId)
 
 		int b2 = Building_create(b->type, b->x + 1, b->y);
 		Data_Buildings[b2].housePopulation = 0;
-		Data_Buildings[b2].isReachableFromRome = 0;
+		Data_Buildings[b2].distanceFromEntry = 0;
 		Terrain_addBuildingToGrids(b2, b->x + 1, b->y, 1, 1, graphicId, Terrain_Building);
 
 		int b3 = Building_create(b->type, b->x, b->y + 1);
 		Data_Buildings[b3].housePopulation = 0;
-		Data_Buildings[b3].isReachableFromRome = 0;
+		Data_Buildings[b3].distanceFromEntry = 0;
 		Terrain_addBuildingToGrids(b3, b->x, b->y + 1, 1, 1, graphicId, Terrain_Building);
 
 		int b4 = Building_create(b->type, b->x + 1, b->y + 1);
 		Data_Buildings[b4].housePopulation = 0;
-		Data_Buildings[b4].isReachableFromRome = 0;
+		Data_Buildings[b4].distanceFromEntry = 0;
 		Terrain_addBuildingToGrids(b4, b->x + 1, b->y + 1, 1, 1, graphicId, Terrain_Building);
 	} else {
 		Data_Grid_graphicIds[b->gridOffset] = graphicId;

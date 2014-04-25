@@ -122,6 +122,7 @@ enum {
 };
 
 enum {
+	BuildingStorageState_Emptying = 1,
 	BuildingStorageState_Getting = 2
 };
 
@@ -169,14 +170,14 @@ extern struct Data_Building {
 		short orientation;
 		short fortWalkerType;
 	} subtype;
-	char __unknown_0e;
+	unsigned char roadNetworkId;
 	char __unknown_0f;
 	short placedSequence;
 	short housesCovered;
 	short percentageWorkers;
 	short housePopulation;
 	short housePopulationRoom;
-	short isReachableFromRome;
+	short distanceFromEntry;
 	short houseMaxPopulationSeen;
 	char __unknown_1e;
 	char __unknown_1f;

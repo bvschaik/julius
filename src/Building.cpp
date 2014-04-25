@@ -59,7 +59,7 @@ int Building_create(int type, int x, int y)
 	b->size = Constant_BuildingProperties[type].size;
 	b->placedSequence = Data_Buildings_Extra.placedSequence++;
 	b->sentiment.houseHappiness = 50;
-	b->isReachableFromRome = 0;
+	b->distanceFromEntry = 0;
 	
 	// house size
 	b->houseSize = 0;

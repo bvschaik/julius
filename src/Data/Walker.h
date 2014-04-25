@@ -236,10 +236,10 @@ extern struct Data_Walker {
 	char xOffsetCart; // 5c
 	char yOffsetCart; // 5d
 	char empireCityId;
-	char __unknown_5f;
+	char traderAmountBought;
 	short name; // 60
 	char __unknown_62;
-	char __unknown_63;
+	char traderAmountSold;
 	char __unknown_64;
 	char __unknown_65;
 	char __unknown_66;
@@ -275,8 +275,12 @@ extern struct Data_Walker_Trader {
 	int totalSold;
 	char boughtResources[16];
 	char soldResources[16];
-	int moneyBoughtGoods;
-	int moneySoldGoods;
+	int moneyBoughtResources;
+	int moneySoldResources;
 } Data_Walker_Traders[MAX_TRADERS];
+
+extern struct Data_Walker_Trader_Extra {
+	int nextTraderId;
+} Data_Walker_Trader_Extra;
 
 #endif
