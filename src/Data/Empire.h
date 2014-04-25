@@ -57,9 +57,9 @@ extern struct Data_Empire_Object {
 extern struct Data_Empire_City {
 	char inUse;
 	char __unused1;
-	char cityType;
-	char cityNameId;
-	char routeId;
+	unsigned char cityType;
+	unsigned char cityNameId;
+	unsigned char routeId;
 	char isOpen;
 	char buysResourceFlag[16];
 	char sellsResourceFlag[16];

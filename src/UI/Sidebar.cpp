@@ -72,7 +72,7 @@ static ImageButton buttonBuildExpanded[] = {
 	{13, 385, 39, 26, 2, 92, 44, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 10, 0},
 	{63, 385, 39, 26, 2, 92, 36, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 11, 0},
 	{113, 385, 39, 26, 2, 92, 32, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 12, 0},
-	{13, 421, 39, 26, 4, 92, 36, buttonUndo, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0},
+	{13, 421, 39, 26, 4, 92, 48, buttonUndo, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0},
 	{63, 421, 39, 26, 4, 90, 18, buttonMessages, buttonHelp, 1, 0, 0, 0, 0, 34},
 	{113, 421, 39, 26, 2, 90, 22, buttonGoToProblem, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0},
 };
