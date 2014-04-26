@@ -125,7 +125,7 @@ void WalkerName_set(int walkerId)
 			SET(cavalry, 264, 32);
 			break;
 		case Walker_FortLegionary:
-		case Walker_Enemy57_Legionary:
+		case Walker_EnemyCaesarLegionary:
 			SET(legionary, 297, 32);
 			break;
 		case Walker_IndigenousNative:

@@ -3,6 +3,7 @@
 
 void Walker_clearList();
 int Walker_create(int walkerType, int x, int y, char direction);
+void Walker_delete(int walkerId);
 
 void Walker_addToTileList(int walkerId);
 void Walker_updatePositionInTileList(int walkerId);
@@ -19,5 +20,10 @@ int Walker_TradeShip_isBuyingOrSelling(int walkerId);
 
 void WalkerName_set(int walkerId);
 void WalkerName_init();
+
+void WalkerRoute_clearList();
+void WalkerRoute_clean();
+int WalkerRoute_getNumAvailable();
+void WalkerRoute_remove(int walkerId);
 
 #endif

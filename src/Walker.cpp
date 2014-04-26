@@ -2,6 +2,9 @@
 
 #include "Trader.h"
 
+#include "Data/Building.h"
+#include "Data/CityInfo.h"
+#include "Data/Empire.h"
 #include "Data/Grid.h"
 #include "Data/Random.h"
 #include "Data/Settings.h"
@@ -53,6 +56,64 @@ int Walker_create(int walkerType, int x, int y, char direction)
 		Data_Walker_Extra.highestWalkerIdEver = id;
 	}
 	return id;
+}
+
+void Walker_delete(int walkerId)
+{
+	struct Data_Walker *w = &Data_Walkers[walkerId];
+	if (w->type == Walker_EnemyCaesarLegionary) {
+		Data_CityInfo.caesarInvasionSoldiersDied++;
+	}
+	switch (w->type) {
+		case Walker_LaborSeeker:
+		case Walker_MarketBuyer:
+			if (w->buildingId) {
+				Data_Buildings[w->buildingId].walkerId2 = 0;
+			}
+			break;
+		case Walker_Ballista:
+			Data_Buildings[w->buildingId].walkerId4 = 0;
+			break;
+		case Walker_Dockman:
+			for (int i = 0; i < 3; i++) {
+				if (Data_Buildings[w->buildingId].data.other.dockWalkerIds[i] == walkerId) {
+					Data_Buildings[w->buildingId].data.other.dockWalkerIds[i] = 0;
+				}
+			}
+			break;
+		case Walker_Explosion:
+		case Walker_FortStandard:
+		case Walker_Arrow:
+		case Walker_Javelin:
+		case Walker_Bolt:
+		case Walker_Spear:
+		case Walker_FishGulls:
+		case Walker_Sheep:
+		case Walker_Wolf:
+		case Walker_Zebra:
+		case Walker_DeliveryBoy:
+		case Walker_Patrician:
+			// nothing to do here
+			break;
+		default:
+			if (w->buildingId) {
+				Data_Buildings[w->buildingId].walkerId = 0;
+			}
+			break;
+	}
+	if (w->empireCityId) {
+		for (int i = 0; i < 3; i++) {
+			if (Data_Empire_Cities[w->empireCityId].traderWalkerIds[i] == walkerId) {
+				Data_Empire_Cities[w->empireCityId].traderWalkerIds[i] = 0;
+			}
+		}
+	}
+	if (w->immigrantBuildingId) {
+		Data_Buildings[w->buildingId].immigrantWalkerId = 0;
+	}
+	WalkerRoute_remove(walkerId);
+	Walker_removeFromTileList(walkerId);
+	memset(w, 0, 128);
 }
 
 void Walker_addToTileList(int walkerId)

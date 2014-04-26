@@ -926,7 +926,7 @@ void Routing_getDistanceWaterBoat(int x, int y)
 	});
 }
 
-void Routing_getDistanceWater(int x, int y)
+void Routing_getDistanceWaterFlotsam(int x, int y)
 {
 	int sourceGridOffset = GridOffset(x, y);
 	if (Data_Grid_routingWater[sourceGridOffset] == -1) {
@@ -934,7 +934,7 @@ void Routing_getDistanceWater(int x, int y)
 	}
 	ROUTE_QUEUE_DIR8(sourceGridOffset,
 	{
-		if (Data_Grid_routingWater[nextOffset] >= 0) {
+		if (Data_Grid_routingWater[nextOffset] != -1) {
 			SET_DIST_AND_ENQUEUE();
 		}
 	});

@@ -133,7 +133,7 @@ static void changeMorale(int formationId, int amount)
 	int maxMorale;
 	if (f->walkerType == Walker_FortLegionary) {
 		maxMorale = f->hasMilitaryTraining ? 100 : 80;
-	} else if (f->walkerType == Walker_Enemy57_Legionary) {
+	} else if (f->walkerType == Walker_EnemyCaesarLegionary) {
 		maxMorale = 100;
 	} else if (f->walkerType == Walker_FortJavelin || f->walkerType == Walker_FortMounted) {
 		maxMorale = f->hasMilitaryTraining ? 80 : 60;

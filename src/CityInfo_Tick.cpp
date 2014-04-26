@@ -262,7 +262,7 @@ void CityInfo_Tick_countBuildingTypes()
 		}
 		if (Data_Buildings[i].immigrantWalkerId) {
 			int immigrantId = Data_Buildings[i].immigrantWalkerId;
-			if (Data_Walkers[immigrantId].state != 1 || Data_Walkers[immigrantId].destinationBuildingId != i) {
+			if (Data_Walkers[immigrantId].state != WalkerState_Alive || Data_Walkers[immigrantId].destinationBuildingId != i) {
 				Data_Buildings[i].immigrantWalkerId = 0;
 			}
 		}

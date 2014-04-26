@@ -115,7 +115,7 @@ static int drawWalker(int xView, int yView, int gridOffset)
 			color = soldierColor;
 			break;
 		}
-		if (type >= Walker_Enemy43 && type <= Walker_Enemy57_Legionary) {
+		if (WalkerIsEnemy(type)) {
 			hasWalker = 1;
 			color = soldierColor;
 			break;

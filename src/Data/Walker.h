@@ -61,7 +61,7 @@ enum {
 	Walker_Enemy54 = 54,
 	Walker_Enemy55_Javelin = 55,
 	Walker_Enemy56_Mounted = 56,
-	Walker_Enemy57_Legionary = 57,
+	Walker_EnemyCaesarLegionary = 57,
 	Walker_NativeTrader = 58,
 	Walker_Arrow = 59,
 	Walker_Javelin = 60,
@@ -80,7 +80,7 @@ enum {
 };
 
 #define WalkerIsEnemyOrNative(t) ((t) >= Walker_IndigenousNative && (t) <= Walker_NativeTrader)
-#define WalkerIsEnemy(t) ((t) >= Walker_Enemy43 && (t) <= Walker_Enemy57_Legionary)
+#define WalkerIsEnemy(t) ((t) >= Walker_Enemy43 && (t) <= Walker_EnemyCaesarLegionary)
 
 enum {
 	WalkerState_Alive = 1,
@@ -126,6 +126,13 @@ enum {
 	WalkerActionState_159_AttackingNative = 159,
 };
 
+enum {
+	WalkerTerrainUsage_Roads = 1,
+	WalkerTerrainUsage_Enemy = 2,
+	WalkerTerrainUsage_AnyLand = 3,
+	WalkerTerrainUsage_Walls = 4,
+	WalkerTerrainUsage_Animal = 5,
+};
 
 extern struct Data_Walker_NameSequence {
 	int citizenMale;
@@ -189,12 +196,9 @@ extern struct Data_Walker {
 	short waitTicks;
 	unsigned char actionState;
 	char progressOnTile; // 29
-	char __unknown_2a;
-	char __unknown_2b;
-	char __unknown_2c;
-	char __unknown_2d;
-	char __unknown_2e;
-	char __unknown_2f;
+	short routingPathId;
+	short routingPathCurrentTile;
+	short routingPathLength;
 	char __unknown_30;
 	char __unknown_31;
 	char __unknown_32;
@@ -220,8 +224,7 @@ extern struct Data_Walker {
 	char __unknown_48;
 	char __unknown_49;
 	short buildingId;
-	char __unknown_4c;
-	char __unknown_4d;
+	short immigrantBuildingId;
 	short destinationBuildingId;
 	short formationId;
 	char __unknown_52;
@@ -235,12 +238,12 @@ extern struct Data_Walker {
 	char __unknown_5b;
 	char xOffsetCart; // 5c
 	char yOffsetCart; // 5d
-	char empireCityId;
+	unsigned char empireCityId;
 	char traderAmountBought;
 	short name; // 60
-	char __unknown_62;
+	char terrainUsage;
 	char traderAmountSold;
-	char __unknown_64;
+	char isBoat; // 64
 	char __unknown_65;
 	char __unknown_66;
 	char __unknown_67;

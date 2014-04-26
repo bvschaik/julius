@@ -184,11 +184,9 @@ extern struct Data_Building {
 	char __unknown_20;
 	char __unknown_21;
 	short walkerId;
-	char __unknown_24;
-	char __unknown_25;
+	short walkerId2; // labor seeker or market buyer
 	short immigrantWalkerId;
-	char __unknown_28;
-	char __unknown_29;
+	short walkerId4; // tower ballista or burning ruin prefect
 	char __unknown_2a;
 	char __unknown_2b;
 	char __unknown_2c;
@@ -250,12 +248,7 @@ extern struct Data_Building {
 			char __unknown_69;
 			char __unknown_6a;
 			char __unknown_6b; // farm cursed
-			char __unknown_6c;
-			char __unknown_6d;
-			char __unknown_6e;
-			char __unknown_6f;
-			char __unknown_70;
-			char __unknown_71;
+			short dockWalkerIds[3]; // 6c, 6e, 70
 			short boatWalkerId; // 72 + 73
 			//char __unknown_73;
 		} other;
