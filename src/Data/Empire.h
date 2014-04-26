@@ -1,6 +1,9 @@
 #ifndef DATA_EMPIRE_H
 #define DATA_EMPIRE_H
 
+#define MAX_EMPIRE_OBJECTS 200
+#define MAX_EMPIRE_CITIES 41
+
 extern struct Data_Empire {
 	int scrollX;
 	int scrollY;
@@ -52,7 +55,7 @@ extern struct Data_Empire_Object {
 	short trade25;
 	short trade15;
 	char __padding[6];
-} Data_Empire_Objects[200];
+} Data_Empire_Objects[MAX_EMPIRE_OBJECTS];
 
 extern struct Data_Empire_City {
 	char inUse;
@@ -70,11 +73,9 @@ extern struct Data_Empire_City {
 	short empireObjectId;
 	char isSeaTrade;
 	char __unused4;
-	short traderWalkerId1;
-	short traderWalkerId2;
-	short traderWalkerId3;
+	short traderWalkerIds[3];
 	char __padding[10];
-} Data_Empire_Cities[41];
+} Data_Empire_Cities[MAX_EMPIRE_CITIES];
 
 extern struct Data_Empire_Trade {
 	int maxPerYear[20][16];

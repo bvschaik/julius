@@ -101,9 +101,11 @@ enum {
 	WalkerActionState_75_PrefectFightingFire = 75,
 	WalkerActionState_94_EntertainerAtSchool = 94,
 	WalkerActionState_95_EntertainerGoingToVenue = 95,
+	WalkerActionState_100_TradeCaravanCreated = 100,
 	WalkerActionState_101_TradeCaravanArriving = 101,
 	WalkerActionState_102_TradeCaravanTrading = 102,
 	WalkerActionState_103_TradeCaravanLeaving = 103,
+	WalkerActionState_110_TradeShipCreated = 110,
 	WalkerActionState_112_TradeShipMoored = 112,
 	WalkerActionState_114_TradeShipAnchored = 114,
 	WalkerActionState_115_TradeShipLeaving = 115,
@@ -154,39 +156,37 @@ extern struct Data_Walker {
 	char __unknown_01;
 	char isEnemyGraphic;
 	char __unknown_03;
-	short graphicId;
+	short graphicId; // 04
 	short cartGraphicId;
-	short nextWalkerIdOnSameTile;
+	short nextWalkerIdOnSameTile; // 08
 	unsigned char type;
 	char resourceId;
 	char __unknown_0c;
 	char isFriendly;
 	char state;
-	char __unknown_0f;
+	char ciid; // 0f
 	char __unknown_10;
 	char direction;
 	char __unknown_12;
 	char __unknown_13;
 	char x;
 	char y;
-	char __unknown_16;
-	char __unknown_17;
+	char previousTileX;
+	char previousTileY;
 	char __unknown_18;
 	char __unknown_19;
-	char __unknown_1a;
-	char __unknown_1b;
-	char destinationX;
+	short gridOffset; // 1a
+	char destinationX; // 1c
 	char destinationY;
 	char __unknown_1e;
 	char __unknown_1f;
-	char sourceX;
+	char sourceX; // 20
 	char sourceY;
 	char __unknown_22;
 	char __unknown_23;
 	char __unknown_24;
 	char __unknown_25;
-	char __unknown_26;
-	char __unknown_27;
+	short waitTicks;
 	unsigned char actionState;
 	char progressOnTile; // 29
 	char __unknown_2a;
@@ -205,8 +205,8 @@ extern struct Data_Walker {
 	char __unknown_37;
 	char __unknown_38;
 	char __unknown_39;
-	short tilePositionX; // 3a
-	short tilePositionY; // 3c
+	short tilePositionX; // 3a - position = 15 * x + offset on tile
+	short tilePositionY; // 3c - position = 15 * y + offset on tile
 	char __unknown_3e;
 	char __unknown_3f;
 	char __unknown_40;
@@ -256,11 +256,10 @@ extern struct Data_Walker {
 	char __unknown_71;
 	char __unknown_72;
 	char __unknown_73;
-	char __unknown_74;
-	char __unknown_75;
+	unsigned short createdSequence;
 	char __unknown_76;
 	char __unknown_77;
-	unsigned char numFollowingWalkersOnSameTile;
+	unsigned char numPreviousWalkersOnSameTile;
 	char __unknown_79;
 	char __unknown_7a;
 	char __unknown_7b;
@@ -279,8 +278,10 @@ extern struct Data_Walker_Trader {
 	int moneySoldResources;
 } Data_Walker_Traders[MAX_TRADERS];
 
-extern struct Data_Walker_Trader_Extra {
+extern struct Data_Walker_Extra {
+	int highestWalkerIdEver;
+	int createdSequence;
 	int nextTraderId;
-} Data_Walker_Trader_Extra;
+} Data_Walker_Extra;
 
 #endif

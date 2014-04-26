@@ -20,8 +20,8 @@ struct Data_Random Data_Random;
 struct Data_Empire Data_Empire;
 struct Data_Empire_Sizes Data_Empire_Sizes = {2000, 1000, 16, 16, 120};
 struct Data_Empire_Index Data_Empire_Index[40];
-struct Data_Empire_Object Data_Empire_Objects[200];
-struct Data_Empire_City Data_Empire_Cities[41];
+struct Data_Empire_Object Data_Empire_Objects[MAX_EMPIRE_OBJECTS];
+struct Data_Empire_City Data_Empire_Cities[MAX_EMPIRE_CITIES];
 struct Data_Empire_Trade Data_Empire_Trade;
 
 struct Data_Graphics_Main Data_Graphics_Main;
@@ -47,8 +47,8 @@ struct Data_State Data_State;
 
 struct Data_Walker_NameSequence Data_Walker_NameSequence;
 struct Data_Walker Data_Walkers[MAX_WALKERS];
+struct Data_Walker_Extra Data_Walker_Extra;
 struct Data_Walker_Trader Data_Walker_Traders[MAX_TRADERS];
-struct Data_Walker_Trader_Extra Data_Walker_Trader_Extra;
 
 struct Data_Building Data_Buildings[MAX_BUILDINGS];
 struct Data_Building_Storage Data_Building_Storages[MAX_STORAGES];

@@ -172,7 +172,7 @@ extern struct Data_Building {
 	} subtype;
 	unsigned char roadNetworkId;
 	char __unknown_0f;
-	short placedSequence;
+	unsigned short createdSequence;
 	short housesCovered;
 	short percentageWorkers;
 	short housePopulation;
@@ -358,7 +358,7 @@ extern struct Data_Building_Storage {
 extern struct Data_Buildings_Extra {
 	int highestBuildingIdInUse;
 	int highestBuildingIdEver;
-	int placedSequence;
+	int createdSequence;
 } Data_Buildings_Extra;
 
 #endif

@@ -11,8 +11,6 @@
 
 #include <string.h>
 
-#define MAX_CITIES 41
-
 static void fixGraphicIds();
 static int isSeaTradeRoute(int routeId);
 static int getTradeAmountCode(int index, int resource);
@@ -291,7 +289,7 @@ int Empire_canImportResourceFromCity(int cityId, int resource)
 
 int Empire_canImportResource(int resource)
 {
-	for (int i = 0; i < MAX_CITIES; i++) {
+	for (int i = 0; i < MAX_EMPIRE_CITIES; i++) {
 		if (Data_Empire_Cities[i].inUse &&
 			Data_Empire_Cities[i].cityType == EmpireCity_Trade &&
 			Data_Empire_Cities[i].isOpen &&
@@ -304,7 +302,7 @@ int Empire_canImportResource(int resource)
 
 int Empire_canImportResourcePotentially(int resource)
 {
-	for (int i = 0; i < MAX_CITIES; i++) {
+	for (int i = 0; i < MAX_EMPIRE_CITIES; i++) {
 		if (Data_Empire_Cities[i].inUse &&
 			Data_Empire_Cities[i].cityType == EmpireCity_Trade &&
 			Data_Empire_Cities[i].sellsResourceFlag[resource] == 1) {
@@ -316,7 +314,7 @@ int Empire_canImportResourcePotentially(int resource)
 
 int Empire_canExportResource(int resource)
 {
-	for (int i = 0; i < MAX_CITIES; i++) {
+	for (int i = 0; i < MAX_EMPIRE_CITIES; i++) {
 		if (Data_Empire_Cities[i].inUse &&
 			Data_Empire_Cities[i].cityType == EmpireCity_Trade &&
 			Data_Empire_Cities[i].isOpen &&
@@ -358,7 +356,7 @@ int Empire_ourCityCanProduceResourcePotentially(int resource)
 			break;
 	}
 	// check if we can produce it
-	for (int i = 0; i < MAX_CITIES; i++) {
+	for (int i = 0; i < MAX_EMPIRE_CITIES; i++) {
 		if (Data_Empire_Cities[i].inUse &&
 			Data_Empire_Cities[i].cityType == EmpireCity_Ours &&
 			Data_Empire_Cities[i].sellsResourceFlag[resource] == 1) {
@@ -399,7 +397,7 @@ int Empire_ourCityCanProduceResource(int resource)
 			break;
 	}
 	// check if we can produce it
-	for (int i = 0; i < MAX_CITIES; i++) {
+	for (int i = 0; i < MAX_EMPIRE_CITIES; i++) {
 		if (Data_Empire_Cities[i].inUse &&
 			Data_Empire_Cities[i].cityType == EmpireCity_Ours &&
 			Data_Empire_Cities[i].sellsResourceFlag[resource] == 1) {
@@ -412,7 +410,7 @@ int Empire_ourCityCanProduceResource(int resource)
 void Empire_determineDistantBattleCity()
 {
 	Data_CityInfo.distantBattleCityId = 0;
-	for (int i = 0; i < MAX_CITIES; i++) {
+	for (int i = 0; i < MAX_EMPIRE_CITIES; i++) {
 		if (Data_Empire_Cities[i].inUse) {
 			if (Data_Empire_Cities[i].cityType == EmpireCity_VulnerableRoman) {
 				Data_CityInfo.distantBattleCityId = i;
@@ -423,7 +421,7 @@ void Empire_determineDistantBattleCity()
 
 void Empire_resetYearlyTradeAmounts()
 {
-	for (int i = 0; i < MAX_CITIES; i++) {
+	for (int i = 0; i < MAX_EMPIRE_CITIES; i++) {
 		if (Data_Empire_Cities[i].inUse && Data_Empire_Cities[i].isOpen) {
 			int routeId = Data_Empire_Cities[i].routeId;
 			for (int resource = 1; resource <= 15; resource++) {
@@ -523,7 +521,7 @@ static void setTradeAmountCode(int index, int resource, int amountCode)
 
 int Empire_getCityForObject(int empireObjectId)
 {
-	for (int i = 0; i < MAX_CITIES; i++) {
+	for (int i = 0; i < MAX_EMPIRE_CITIES; i++) {
 		if (Data_Empire_Cities[i].inUse && Data_Empire_Cities[i].empireObjectId == empireObjectId) {
 			return i;
 		}
@@ -533,7 +531,7 @@ int Empire_getCityForObject(int empireObjectId)
 
 int Empire_getCityForTradeRoute(int routeId)
 {
-	for (int i = 0; i < MAX_CITIES; i++) {
+	for (int i = 0; i < MAX_EMPIRE_CITIES; i++) {
 		if (Data_Empire_Cities[i].inUse && Data_Empire_Cities[i].routeId == routeId) {
 			return i;
 		}
@@ -543,7 +541,7 @@ int Empire_getCityForTradeRoute(int routeId)
 
 int Empire_isTradeRouteOpen(int routeId)
 {
-	for (int i = 0; i < MAX_CITIES; i++) {
+	for (int i = 0; i < MAX_EMPIRE_CITIES; i++) {
 		if (Data_Empire_Cities[i].inUse && Data_Empire_Cities[i].routeId == routeId) {
 			return Data_Empire_Cities[i].isOpen ? 1 : 0;
 		}
@@ -560,7 +558,7 @@ void Empire_handleExpandEvent()
 		return;
 	}
 
-	for (int i = 0; i < MAX_CITIES; i++) {
+	for (int i = 0; i < MAX_EMPIRE_CITIES; i++) {
 		if (!Data_Empire_Cities[i].inUse) {
 			continue;
 		}

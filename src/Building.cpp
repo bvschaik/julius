@@ -27,7 +27,7 @@ void Building_clearList()
 {
 	memset(Data_Buildings, 0, MAX_BUILDINGS * sizeof(struct Data_Building));
 	Data_Buildings_Extra.highestBuildingIdEver = 0;
-	Data_Buildings_Extra.placedSequence = 0;
+	Data_Buildings_Extra.createdSequence = 0;
 }
 
 static int isBuildingOnUndoList(int buildingId)
@@ -57,7 +57,7 @@ int Building_create(int type, int x, int y)
 	b->__unknown_02 = Data_CityInfo.__unknown_00a5; // TODO ??
 	b->type = type;
 	b->size = Constant_BuildingProperties[type].size;
-	b->placedSequence = Data_Buildings_Extra.placedSequence++;
+	b->createdSequence = Data_Buildings_Extra.createdSequence++;
 	b->sentiment.houseHappiness = 50;
 	b->distanceFromEntry = 0;
 	

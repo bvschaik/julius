@@ -270,15 +270,15 @@ void UI_CityBuildings_drawWalker(int walkerId, int xOffset, int yOffset, int sel
 		xTileOffset = tileProgressToPixelOffsetX(direction, w->progressOnTile);
 		yTileOffset = tileProgressToPixelOffsetY(direction, w->progressOnTile);
 		yTileOffset -= w->__unknown_66;
-		if (w->numFollowingWalkersOnSameTile && w->type != Walker_Ballista) {
+		if (w->numPreviousWalkersOnSameTile && w->type != Walker_Ballista) {
 			static const int xOffsets[] = {
 				0, 8, 8, -8, -8, 0, 16, 0, -16, 8, -8, 16, -16, 16, -16, 8, -8, 0, 24, 0, -24, 0, 0, 0
 			};
 			static const int yOffsets[] = {
 				0, 0, 8, 8, -8, -16, 0, 16, 0, -16, 16, 8, -8, -8, 8, 16, -16, -24, 0, 24, 0, 0, 0, 0
 			};
-			xTileOffset += xOffsets[w->numFollowingWalkersOnSameTile];
-			yTileOffset += yOffsets[w->numFollowingWalkersOnSameTile];
+			xTileOffset += xOffsets[w->numPreviousWalkersOnSameTile];
+			yTileOffset += yOffsets[w->numPreviousWalkersOnSameTile];
 		}
 	}
 

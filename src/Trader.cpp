@@ -1,13 +1,17 @@
 #include "Trader.h"
 
 #include "Empire.h"
+#include "PlayerMessage.h"
 #include "Resource.h"
 #include "Terrain.h"
+#include "Walker.h"
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 #include "Data/Empire.h"
+#include "Data/Message.h"
+#include "Data/Scenario.h"
 #include "Data/Trade.h"
 #include "Data/Walker.h"
 
@@ -16,15 +20,15 @@
 void Trader_clearList()
 {
 	memset(Data_Walker_Traders, 0, MAX_TRADERS * sizeof(struct Data_Walker_Trader));
-	Data_Walker_Trader_Extra.nextTraderId = 0;
+	Data_Walker_Extra.nextTraderId = 0;
 }
 
 void Trader_create(int walkerId)
 {
-	Data_Walkers[walkerId].traderId = Data_Walker_Trader_Extra.nextTraderId;
-	memset(&Data_Walker_Traders[Data_Walker_Trader_Extra.nextTraderId], 0, sizeof(struct Data_Walker_Trader));
-	if (++Data_Walker_Trader_Extra.nextTraderId >= 100) {
-		Data_Walker_Trader_Extra.nextTraderId = 0;
+	Data_Walkers[walkerId].traderId = Data_Walker_Extra.nextTraderId;
+	memset(&Data_Walker_Traders[Data_Walker_Extra.nextTraderId], 0, sizeof(struct Data_Walker_Trader));
+	if (++Data_Walker_Extra.nextTraderId >= 100) {
+		Data_Walker_Extra.nextTraderId = 0;
 	}
 }
 
@@ -42,6 +46,155 @@ void Trader_buyResource(int walkerId, int resourceId)
 	Data_Walker_Traders[traderId].totalBought++;
 	Data_Walker_Traders[traderId].boughtResources[resourceId]++;
 	Data_Walker_Traders[traderId].moneyBoughtResources += Data_TradePrices[resourceId].buy;
+}
+
+static int generateTrader(int cityId)
+{
+	struct Data_Empire_City *c = &Data_Empire_Cities[cityId];
+	int maxTradersOnMap = 0;
+	int numResources = 0;
+	for (int r = 1; r < 16; r++) {
+		if (c->buysResourceFlag[r] || c->sellsResourceFlag[r]) {
+			++numResources;
+			switch (Data_Empire_Trade.maxPerYear[c->routeId][r]) {
+				case 15: maxTradersOnMap += 1; break;
+				case 25: maxTradersOnMap += 2; break;
+				case 40: maxTradersOnMap += 3; break;
+			}
+		}
+	}
+	if (numResources > 1) {
+		if (maxTradersOnMap % numResources) {
+			maxTradersOnMap = maxTradersOnMap / numResources + 1;
+		} else {
+			maxTradersOnMap = maxTradersOnMap / numResources;
+		}
+	}
+	if (maxTradersOnMap <= 0) {
+		return 0;
+	}
+
+	int index;
+	if (maxTradersOnMap == 1) {
+		if (!c->traderWalkerIds[0]) {
+			index = 0;
+		} else {
+			return 0;
+		}
+	} else if (maxTradersOnMap == 2) {
+		if (!c->traderWalkerIds[0]) {
+			index = 0;
+		} else if (!c->traderWalkerIds[1]) {
+			index = 1;
+		} else {
+			return 0;
+		}
+	} else { // 3
+		if (!c->traderWalkerIds[0]) {
+			index = 0;
+		} else if (!c->traderWalkerIds[1]) {
+			index = 1;
+		} else if (!c->traderWalkerIds[2]) {
+			index = 2;
+		} else {
+			return 0;
+		}
+	}
+
+	if (c->traderEntryDelay > 0) {
+		c->traderEntryDelay--;
+		return 0;
+	}
+	c->traderEntryDelay = c->isSeaTrade ? 30 : 4;
+
+	if (c->isSeaTrade) {
+		// generate ship
+		if (!Data_CityInfo.tradeSeaProblemDuration) {
+			int shipId = Walker_create(Walker_TradeShip,
+				Data_Scenario.riverEntryPoint.x, Data_Scenario.riverEntryPoint.y, 0);
+			c->traderWalkerIds[index] = shipId;
+			Data_Walkers[shipId].empireCityId = cityId;
+			Data_Walkers[shipId].actionState = WalkerActionState_110_TradeShipCreated;
+			Data_Walkers[shipId].waitTicks = 10;
+			return 1;
+		}
+	} else {
+		// generate caravan and donkeys
+		if (!Data_CityInfo.tradeLandProblemDuration) {
+			// caravan head
+			int caravanId = Walker_create(Walker_TradeCaravan,
+				Data_CityInfo.entryPointX, Data_CityInfo.entryPointY, 0);
+			c->traderWalkerIds[index] = caravanId;
+			Data_Walkers[caravanId].empireCityId = cityId;
+			Data_Walkers[caravanId].actionState = WalkerActionState_100_TradeCaravanCreated;
+			Data_Walkers[caravanId].waitTicks = 10;
+			// donkey 1
+			int donkey1 = Walker_create(Walker_TradeCaravanDonkey,
+				Data_CityInfo.entryPointX, Data_CityInfo.entryPointY, 0);
+			Data_Walkers[donkey1].actionState = WalkerActionState_100_TradeCaravanCreated;
+			Data_Walkers[donkey1].inFrontWalkerId = caravanId;
+			// donkey 2
+			int donkey2 = Walker_create(Walker_TradeCaravanDonkey,
+				Data_CityInfo.entryPointX, Data_CityInfo.entryPointY, 0);
+			Data_Walkers[donkey2].actionState = WalkerActionState_100_TradeCaravanCreated;
+			Data_Walkers[donkey2].inFrontWalkerId = donkey1;
+			return 1;
+		}
+	}
+	return 0;
+}
+
+void Trader_tick()
+{
+	Data_CityInfo.tradeNumOpenSeaRoutes = 0;
+	Data_CityInfo.tradeNumOpenLandRoutes = 0;
+	// Wine types
+	Data_CityInfo.resourceWineTypesAvailable = Data_CityInfo_Buildings.industry.total[Resource_Wine] > 0 ? 1 : 0;
+	for (int i = 1; i < MAX_EMPIRE_CITIES; i++) {
+		if (Data_Empire_Cities[i].inUse &&
+			Data_Empire_Cities[i].isOpen &&
+			Data_Empire_Cities[i].sellsResourceFlag[Resource_Wine] &&
+			Data_CityInfo.resourceTradeStatus[Resource_Wine] == TradeStatus_Import) {
+			++Data_CityInfo.resourceWineTypesAvailable;
+		}
+	}
+	// Update trade problems
+	if (Data_CityInfo.tradeLandProblemDuration > 0) {
+		Data_CityInfo.tradeLandProblemDuration--;
+	} else {
+		Data_CityInfo.tradeLandProblemDuration = 0;
+	}
+	if (Data_CityInfo.tradeSeaProblemDuration > 0) {
+		Data_CityInfo.tradeSeaProblemDuration--;
+	} else {
+		Data_CityInfo.tradeSeaProblemDuration = 0;
+	}
+	// Generate traders
+	for (int i = 1; i < MAX_EMPIRE_CITIES; i++) {
+		if (!Data_Empire_Cities[i].inUse || !Data_Empire_Cities[i].isOpen) {
+			continue;
+		}
+		if (Data_Empire_Cities[i].isSeaTrade) {
+			if (Data_CityInfo.numWorkingDocks <= 0) {
+				if (Data_Message.messageCategoryCount[MessageCount_NoWorkingDock] > 0) {
+					Data_Message.messageCategoryCount[MessageCount_NoWorkingDock]--;
+				} else {
+					PlayerMessage_post(1, 117, 0, 0);
+					Data_Message.messageCategoryCount[MessageCount_NoWorkingDock] = 384; // 1 year
+				}
+				continue;
+			}
+			if (Data_Scenario.riverEntryPoint.x == -1 || Data_Scenario.riverEntryPoint.y == -1) {
+				continue;
+			}
+			Data_CityInfo.tradeNumOpenSeaRoutes++;
+		} else {
+			Data_CityInfo.tradeNumOpenLandRoutes++;
+		}
+		if (generateTrader(i)) {
+			return;
+		}
+	}
 }
 
 int Trader_getClosestWarehouseForTradeCaravan(int walkerId, int x, int y, int cityId, int distanceFromEntry, int roadNetworkId, int *warehouseX, int *warehouseY)

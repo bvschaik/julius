@@ -265,7 +265,7 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{1, &Data_Empire_Trade.maxPerYear, 1280},
 	{1, &Data_Empire_Trade.tradedThisYear, 1280},
 	{0, &tmp, 4}, //{0, &dword_7FA224, 4},
-	{0, &Data_Buildings_Extra.placedSequence, 4},
+	{0, &Data_Buildings_Extra.createdSequence, 4},
 	{0, &tmp, 4}, //{0, &unk_634474, 4},
 	{0, &tmp, 4}, //{0, &dword_614158, 4},
 	{0, &tmp, 4}, //{0, &dword_634468, 4},

@@ -57,6 +57,7 @@ extern struct Data_Message {
 
 // TODO message delay ticks
 enum {
+	MessageCount_NoWorkingDock = 5,
 	MessageDelayCategory_WorkersNeeded = 8
 };
 

@@ -5,7 +5,7 @@
 #include "Data/Formation.h"
 #include "Data/Random.h"
 
-void WalkerNames_init()
+void WalkerName_init()
 {
 	Random_generateNext();
 	Data_Walker_NameSequence.citizenMale = Data_Random.random1_7bit & 0xf;
@@ -56,7 +56,7 @@ void WalkerNames_init()
 	++Data_Walker_NameSequence.var; \
 	if (Data_Walker_NameSequence.var >= max) Data_Walker_NameSequence.var = 0;
 
-void WalkerNames_setName(int walkerId)
+void WalkerName_set(int walkerId)
 {
 	int type = Data_Walkers[walkerId].type;
 	if (type == Walker_Explosion || type == Walker_FortStandard || type == Walker_FishGulls ||
