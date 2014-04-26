@@ -144,7 +144,7 @@ int Building_create(int type, int x, int y)
 	b->x = x;
 	b->y = y;
 	b->gridOffset = GridOffset(x, y);
-	b->__unknown_2c = b->__unknown_45 = Data_Grid_random[b->gridOffset] & 0x7f;
+	b->__unknown_2c = b->houseGenerationDelay = Data_Grid_random[b->gridOffset] & 0x7f;
 	b->__unknown_44 = Constant_BuildingProperties[type].unknown;
 	b->isAdjacentToWater = Terrain_isAdjacentToWater(x, y, b->size);
 

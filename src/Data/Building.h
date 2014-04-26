@@ -3,6 +3,7 @@
 
 #define MAX_BUILDINGS 2000
 #define MAX_STORAGES 200
+#define MAX_BUILDINGLIST 1000
 
 enum {
 	Building_Menu_Farms = 2,
@@ -208,7 +209,7 @@ extern struct Data_Building {
 	char __unknown_42;
 	char __unknown_43;
 	char __unknown_44;
-	char __unknown_45;
+	char houseGenerationDelay;
 	char houseTaxCoverage;
 	char __unknown_47;
 	short formationId;
@@ -353,5 +354,10 @@ extern struct Data_Buildings_Extra {
 	int highestBuildingIdEver;
 	int createdSequence;
 } Data_Buildings_Extra;
+
+extern struct Data_BuildingList {
+	int size;
+	short buildingIds[MAX_BUILDINGLIST];
+} Data_BuildingList;
 
 #endif

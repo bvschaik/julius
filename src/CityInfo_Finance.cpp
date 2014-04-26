@@ -6,6 +6,15 @@
 #include "Data/Model.h"
 #include "Data/Settings.h"
 
+void CityInfo_Finance_decayTaxCollectorAccess()
+{
+	for (int i = 1; i < MAX_BUILDINGS; i++) {
+		if (Data_Buildings[i].inUse && Data_Buildings[i].houseTaxCoverage) {
+			Data_Buildings[i].houseTaxCoverage--;
+		}
+	}
+}
+
 static void collectMonthlyTaxes()
 {
 	Data_CityInfo.monthlyTaxedPlebs = 0;

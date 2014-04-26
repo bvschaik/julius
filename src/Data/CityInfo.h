@@ -85,14 +85,8 @@ extern struct Data_CityInfo {
 	char __unknown_27b7;
 	int populationLastTargetHouseAdd;
 	int populationLastTargetHouseRemove;
-	char __unknown_27c0;
-	char __unknown_27c1;
-	char __unknown_27c2;
-	char __unknown_27c3;
-	char __unknown_27c4;
-	char __unknown_27c5;
-	char __unknown_27c6;
-	char __unknown_27c7;
+	int populationImmigratedToday;
+	int populationEmigratedToday;
 	int populationRefusedImmigrantsNoRoom;
 	int populationMigrationPercentage;
 	char __unknown_27d0;
@@ -493,14 +487,8 @@ extern struct Data_CityInfo {
 	int resourceStockpiled[16];
 	int foodInfoFoodSupplyMonths;
 	int foodInfoNumOperatingGranaries;
-	char __unknown_2a7c;
-	char __unknown_2a7d;
-	char __unknown_2a7e;
-	char __unknown_2a7f;
-	char __unknown_2a80;
-	char __unknown_2a81;
-	char __unknown_2a82;
-	char __unknown_2a83;
+	int populationPercentagePlebs;
+	int populationWorkingAge;
 	int workersAvailable;
 	struct {
 		int workersNeeded;

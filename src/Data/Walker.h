@@ -88,6 +88,9 @@ enum {
 };
 
 enum {
+	WalkerActionState_1_ImmigrantCreated = 1,
+	WalkerActionState_4_EmigrantCreated = 4,
+	WalkerActionState_7_HomelessCreated = 7,
 	WalkerActionState_20_CartPusherNoRoom = 20,
 	WalkerActionState_21_CartPusher = 21,
 	WalkerActionState_22_CartPusher = 22,
@@ -229,7 +232,7 @@ extern struct Data_Walker {
 	short formationId;
 	char __unknown_52;
 	char __unknown_53;
-	char __unknown_54;
+	unsigned char migrantNumPeople;
 	char isGhost; // 55
 	char minMaxSeen;
 	char __unknown_57;
