@@ -12,6 +12,7 @@
 #include "../Data/Mouse.h"
 #include "../Data/Screen.h"
 #include "../Data/State.h"
+#include "../Data/Settings.h"
 
 #define SIDEBAR_BORDER ((Data_Screen.width + 20) % 60)
 #define XOFFSET_EXPANDED (Data_Screen.width - (Data_Screen.width + 20) % 60 - 162)
@@ -269,8 +270,10 @@ static void buttonEmpire(int param1, int param2)
 }
 static void buttonMissionBriefing(int param1, int param2)
 {
-	// TODO
-	UI_Intermezzo_show(0, Window_City, 1000);
+	if (!Data_Settings.isCustomScenario) {
+		// TODO
+		UI_Intermezzo_show(0, Window_City, 1000);
+	}
 }
 
 static void buttonRotateNorth(int param1, int param2)

@@ -247,7 +247,7 @@ extern struct Data_Walker {
 	char terrainUsage;
 	char traderAmountSold;
 	char isBoat; // 64
-	char __unknown_65;
+	char heightFromGround; // 65
 	char __unknown_66;
 	char __unknown_67;
 	unsigned char collectingItemId; // NOT a resource ID!

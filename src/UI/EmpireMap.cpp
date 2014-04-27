@@ -3,13 +3,16 @@
 #include "PopupDialog.h"
 #include "MessageDialog.h"
 
-#include "../Graphics.h"
-#include "../Widget.h"
-#include "../Empire.h"
-#include "../Resource.h"
 #include "../Animation.h"
-#include "../SidebarMenu.h"
+#include "../Calc.h"
 #include "../CityInfo.h"
+#include "../Empire.h"
+#include "../Graphics.h"
+#include "../Resource.h"
+#include "../Scroll.h"
+#include "../SidebarMenu.h"
+#include "../Util.h"
+#include "../Widget.h"
 
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
@@ -19,8 +22,6 @@
 #include "../Data/Mouse.h"
 #include "../Data/Scenario.h"
 #include "../Data/Screen.h"
-#include "../Util.h"
-#include "../Calc.h"
 
 #define MAX_WIDTH 2032
 #define MAX_HEIGHT 1136
@@ -504,8 +505,7 @@ static int getSelectedObject()
 
 void UI_Empire_handleMouse()
 {
-	// TODO scrolling
-	//j_fun_scrollEmpireMap(j_fun_getMapScrollDirection());
+	Empire_scrollMap(Scroll_getDirection());
 	if (Widget_Button_handleImageButtons(xMin + 20, yMax - 44, imageButtonHelp, 1)) {
 		return;
 	}

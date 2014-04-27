@@ -312,6 +312,7 @@ int main()
 	Data_Settings.soundMusicPercentage = 100;
 	Data_Settings.soundSpeechPercentage = 100;
 	Data_Settings.soundCityPercentage = 100;
+	Data_Settings.scrollSpeed = 50;
 	// end settings
 	
 	Graphics_setClipRectangle(0, 0, Data_Screen.width, Data_Screen.height);

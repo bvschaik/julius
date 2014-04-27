@@ -2,6 +2,7 @@
 
 #include "../Building.h"
 #include "../CityView.h"
+#include "../Scroll.h"
 #include "../Sound.h"
 #include "../Time.h"
 #include "../Data/Mouse.h"
@@ -10,41 +11,36 @@
 
 static void UI_CityBuildings_drawBuildingFootprints();
 static void UI_CityBuildings_drawBuildingTopsWalkersAnimation(int selectedWalkerId, struct PixelCoordinate *coord);
+static void UI_CityBuildings_drawHippodromeAndElevatedWalkers(int selectedWalkerId);
 
-static int lastWaterAnimationTime = 0;
+static TimeMillis lastWaterAnimationTime = 0;
 static int advanceWaterAnimation;
 
 void UI_CityBuildings_drawForeground(int x, int y)
 {
-	//printf("Drawing city at %d %d\n", x, y);
 	Data_CityView.xInTiles = x;
 	Data_CityView.yInTiles = y;
 	Graphics_setClipRectangle(
 		Data_CityView.xOffsetInPixels, Data_CityView.yOffsetInPixels,
 		Data_CityView.widthInPixels, Data_CityView.heightInPixels);
-	/*printf("Cliprectangle set to %d, %d, %d, %d\n",
-		Data_CityView.xOffsetInPixels, Data_CityView.yOffsetInPixels,
-		Data_CityView.widthInPixels, Data_CityView.heightInPixels);*/
 
 	advanceWaterAnimation = 0;
-	int now = Time_getMillis();
-	if (now - lastWaterAnimationTime > 60 || now - lastWaterAnimationTime < 0) {
+	TimeMillis now = Time_getMillis();
+	if (now - lastWaterAnimationTime > 60 || now < lastWaterAnimationTime) {
 		lastWaterAnimationTime = now;
 		advanceWaterAnimation = 1;
 	}
 
-	// TODO overlay and stuff
-	//Data_State.currentOverlay = Overlay_Fire;
 	if (Data_State.currentOverlay) {
 		UI_CityBuildings_drawOverlayFootprints();
 		UI_CityBuildings_drawOverlayTopsWalkersAnimation(Data_State.currentOverlay);
 		UI_CityBuildings_drawSelectedBuildingGhost();
-		//drawTops2(9999);
+		UI_CityBuildings_drawHippodromeAndElevatedWalkers(9999);
 	} else {
 		UI_CityBuildings_drawBuildingFootprints();
 		UI_CityBuildings_drawBuildingTopsWalkersAnimation(0, 0);
 		UI_CityBuildings_drawSelectedBuildingGhost();
-		//drawTops2(0);
+		UI_CityBuildings_drawHippodromeAndElevatedWalkers(0);
 	}
 
 	Graphics_resetClipRectangle();
@@ -128,11 +124,11 @@ static void UI_CityBuildings_drawBuildingTopsWalkersAnimation(int selectedWalker
 					colorMask = Color_MaskRed;
 				}
 				switch (Data_Grid_bitfields[gridOffset] & Bitfield_Sizes) {
-					case 0: DRAWTOP_SIZE1_C(graphicId, xGraphic, yGraphic, colorMask); break;
-					case 1: DRAWTOP_SIZE2_C(graphicId, xGraphic, yGraphic, colorMask); break;
-					case 2: DRAWTOP_SIZE3_C(graphicId, xGraphic, yGraphic, colorMask); break;
-					case 4: DRAWTOP_SIZE4_C(graphicId, xGraphic, yGraphic, colorMask); break;
-					case 8: DRAWTOP_SIZE5_C(graphicId, xGraphic, yGraphic, colorMask); break;
+					case Bitfield_Size1: DRAWTOP_SIZE1_C(graphicId, xGraphic, yGraphic, colorMask); break;
+					case Bitfield_Size2: DRAWTOP_SIZE2_C(graphicId, xGraphic, yGraphic, colorMask); break;
+					case Bitfield_Size3: DRAWTOP_SIZE3_C(graphicId, xGraphic, yGraphic, colorMask); break;
+					case Bitfield_Size4: DRAWTOP_SIZE4_C(graphicId, xGraphic, yGraphic, colorMask); break;
+					case Bitfield_Size5: DRAWTOP_SIZE5_C(graphicId, xGraphic, yGraphic, colorMask); break;
 				}
 				// specific buildings
 				struct Data_Building *b = &Data_Buildings[buildingId];
@@ -487,6 +483,58 @@ void UI_CityBuildings_drawBridge(int gridOffset, int x, int y)
 	}
 }
 
+static void UI_CityBuildings_drawHippodromeAndElevatedWalkers(int selectedWalkerId)
+{
+	FOREACH_Y_VIEW(
+		FOREACH_X_VIEW({
+			for (int walkerId = Data_Grid_walkerIds[gridOffset]; walkerId > 0; walkerId = Data_Walkers[walkerId].nextWalkerIdOnSameTile) {
+				if (Data_Walkers[walkerId].__unknown_0c && !Data_Walkers[walkerId].isGhost) {
+					UI_CityBuildings_drawWalker(walkerId, xGraphic, yGraphic, selectedWalkerId, 0);
+				}
+				if (Data_Walkers[walkerId].heightFromGround) {
+					UI_CityBuildings_drawWalker(walkerId, xGraphic, yGraphic, selectedWalkerId, 0);
+				}
+			}
+		});
+		FOREACH_X_VIEW({
+			if (!Data_State.currentOverlay) {
+				int graphicId = Data_Grid_graphicIds[gridOffset];
+				if (GraphicNumAnimationSprites(graphicId) &&
+					Data_Grid_edge[gridOffset] & Edge_LeftmostTile &&
+					Data_Buildings[Data_Grid_buildingIds[gridOffset]].type == Building_Hippodrome) {
+					switch (Data_Grid_bitfields[gridOffset] & Bitfield_Sizes) {
+						case Bitfield_Size1:
+							Graphics_drawImage(graphicId + 1,
+								xGraphic + GraphicSpriteOffsetX(graphicId),
+								yGraphic + GraphicSpriteOffsetY(graphicId) - GraphicHeight(graphicId) + 30);
+							break;
+						case Bitfield_Size2:
+							Graphics_drawImage(graphicId + 1,
+								xGraphic + GraphicSpriteOffsetX(graphicId),
+								yGraphic + GraphicSpriteOffsetY(graphicId) - GraphicHeight(graphicId) + 45);
+							break;
+						case Bitfield_Size3:
+							Graphics_drawImage(graphicId + 1,
+								xGraphic + GraphicSpriteOffsetX(graphicId),
+								yGraphic + GraphicSpriteOffsetY(graphicId) - GraphicHeight(graphicId) + 60);
+							break;
+						case Bitfield_Size4:
+							Graphics_drawImage(graphicId + 1,
+								xGraphic + GraphicSpriteOffsetX(graphicId),
+								yGraphic + GraphicSpriteOffsetY(graphicId) - GraphicHeight(graphicId) + 75);
+							break;
+						case Bitfield_Size5:
+							Graphics_drawImage(graphicId + 1,
+								xGraphic + GraphicSpriteOffsetX(graphicId),
+								yGraphic + GraphicSpriteOffsetY(graphicId) - GraphicHeight(graphicId) + 90);
+							break;
+					}
+				}
+			}
+		});
+	);
+}
+
 // MOUSE HANDLING
 
 static void updateCityViewCoords()
@@ -502,4 +550,5 @@ static void updateCityViewCoords()
 void UI_CityBuildings_handleMouse()
 {
 	updateCityViewCoords();
+	UI_CityBuildings_scrollMap(Scroll_getDirection());
 }

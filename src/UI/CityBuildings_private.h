@@ -1,6 +1,8 @@
 #ifndef UI_CITYBUILDINGS_PRIVATE_H
 #define UI_CITYBUILDINGS_PRIVATE_H
 
+#include "CityBuildings.h"
+
 #include "../Data/Building.h"
 #include "../Data/CityInfo.h"
 #include "../Data/CityView.h"

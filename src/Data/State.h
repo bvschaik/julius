@@ -53,6 +53,7 @@ extern struct Data_State {
 		int roadRequired;
 		TimeMillis roadLastUpdate;
 	} selectedBuilding;
+	int isScrollingMap;
 	int winState;
 	int forceWinCheat;
 } Data_State;

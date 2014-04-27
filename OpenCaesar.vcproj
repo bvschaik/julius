@@ -300,6 +300,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\UI\CityBuildings_Scroll.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\CityInfo.cpp"
 				>
 			</File>
@@ -492,6 +496,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\Scroll.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\UI\SendGiftToCaesarDialog.cpp"
 				>
 			</File>
@@ -670,19 +678,19 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\CityInfo.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\Data\CityInfo.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\CityView.h"
+				RelativePath=".\src\CityInfo.h"
 				>
 			</File>
 			<File
 				RelativePath=".\src\Data\CityView.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\CityView.h"
 				>
 			</File>
 			<File
@@ -722,11 +730,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Formation.h"
+				RelativePath=".\src\Data\Formation.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Formation.h"
+				RelativePath=".\src\Formation.h"
 				>
 			</File>
 			<File
@@ -734,11 +742,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Graphics.h"
+				RelativePath=".\src\Data\Graphics.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Graphics.h"
+				RelativePath=".\src\Graphics.h"
 				>
 			</File>
 			<File
@@ -774,11 +782,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Language.h"
+				RelativePath=".\src\Language.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Language.h"
+				RelativePath=".\src\Data\Language.h"
 				>
 			</File>
 			<File
@@ -822,11 +830,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Random.h"
+				RelativePath=".\src\data\Random.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\data\Random.h"
+				RelativePath=".\src\Random.h"
 				>
 			</File>
 			<File
@@ -847,6 +855,10 @@
 			</File>
 			<File
 				RelativePath=".\src\Data\Screen.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Scroll.h"
 				>
 			</File>
 			<File
@@ -918,11 +930,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Walker.h"
+				RelativePath=".\src\Walker.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Walker.h"
+				RelativePath=".\src\Data\Walker.h"
 				>
 			</File>
 			<File

@@ -6,4 +6,6 @@ void UI_CityBuildings_handleMouse();
 
 void UI_CityBuildings_checkCameraWithinBounds();
 
+void UI_CityBuildings_scrollMap(int direction);
+
 #endif
