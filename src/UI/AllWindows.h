@@ -1,6 +1,8 @@
 #ifndef UI_ALLWINDOWS_H
 #define UI_ALLWINDOWS_H
 
+#include "Window.h"
+
 void UI_MainMenu_drawBackground();
 void UI_MainMenu_drawForeground();
 void UI_MainMenu_handleMouse();
@@ -87,9 +89,13 @@ void UI_OverlayMenu_drawForeground();
 void UI_OverlayMenu_handleMouse();
 
 void UI_BuildingMenu_init(int submenu);
+void UI_BuildingMenu_drawSidebarImage(int xOffset);
 void UI_BuildingMenu_drawBackground();
 void UI_BuildingMenu_drawForeground();
 void UI_BuildingMenu_handleMouse();
 
+void UI_Intermezzo_show(int type, WindowId nextWindowId, int timeMillis);
+void UI_Intermezzo_drawBackground();
+void UI_Intermezzo_handleMouse();
 
 #endif

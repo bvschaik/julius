@@ -45,6 +45,7 @@ static struct Window windows[] = {
 	{ noop, UI_FileDialog_drawBackground, UI_FileDialog_drawForeground, UI_FileDialog_handleMouse },
 	{ UI_OverlayMenu_init, UI_OverlayMenu_drawBackground, UI_OverlayMenu_drawForeground, UI_OverlayMenu_handleMouse },
 	{ noop, UI_BuildingMenu_drawBackground, UI_BuildingMenu_drawForeground, UI_BuildingMenu_handleMouse },
+	{ noop, UI_Intermezzo_drawBackground, noop, UI_Intermezzo_handleMouse },
 };
 
 static WindowId previousWindow;

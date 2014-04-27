@@ -54,6 +54,7 @@ extern struct Data_State {
 		TimeMillis roadLastUpdate;
 	} selectedBuilding;
 	int winState;
+	int forceWinCheat;
 } Data_State;
 
 #endif

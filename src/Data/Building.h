@@ -3,7 +3,6 @@
 
 #define MAX_BUILDINGS 2000
 #define MAX_STORAGES 200
-#define MAX_BUILDINGLIST 1000
 
 enum {
 	Building_Menu_Farms = 2,
@@ -328,7 +327,7 @@ extern struct Data_Building {
 		} house;
 	} data;
 	int taxIncomeOrStorage;
-	char __unknown_78;
+	char houseDaysWithoutFood; // 78
 	char ruinHasPlague;
 	char desirability;
 	char isDeleted;
@@ -357,7 +356,7 @@ extern struct Data_Buildings_Extra {
 
 extern struct Data_BuildingList {
 	int size;
-	short buildingIds[MAX_BUILDINGLIST];
+	short buildingIds[MAX_BUILDINGS];
 } Data_BuildingList;
 
 #endif

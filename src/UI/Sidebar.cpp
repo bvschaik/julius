@@ -106,7 +106,6 @@ void UI_Sidebar_drawBackground()
 	Data_State.sidebarCollapsed = 0;
 	drawSidebar();
 	drawFillerBorders();
-	drawButtons();
 }
 
 static void drawSidebar()
@@ -122,7 +121,7 @@ static void drawSidebar()
 	}
 	drawButtons();
 	drawOverlayText();
-    //j_fun_drawCitySidepanelBuildingGraphic(0, cityscreen_width_withControlpanel + 6);
+	UI_BuildingMenu_drawSidebarImage(xOffsetPanel + 6);
     drawMinimap(1);
 	//j_fun_drawCitySidepanelNumMessages(1);
 
@@ -155,7 +154,7 @@ static void drawFillerBorders()
 	}
 
 	int borderBottomHeight = (Data_Screen.height - 24) % 15;
-	Graphics_fillRect(0, Data_Screen.height - borderBottomHeight, Data_Screen.width, borderBottomHeight, Color_Orange);
+	Graphics_fillRect(0, Data_Screen.height - borderBottomHeight, Data_Screen.width, borderBottomHeight, Color_Black);
 }
 
 static void drawButtons()
@@ -189,7 +188,7 @@ static void drawMinimap(int force)
 {
 	if (!Data_State.sidebarCollapsed) {
 		int xOffset = XOFFSET_EXPANDED;
-		// TODO force?
+		// TODO force? scrollMap?
 		UI_Minimap_draw(xOffset + 8, 59, 73, 111);
 		Graphics_drawLine(xOffset + 7, 58, xOffset + 153, 58, Color_Minimap_Dark);
 		Graphics_drawLine(xOffset + 7, 59, xOffset + 7, 170, Color_Minimap_Dark);
@@ -271,7 +270,9 @@ static void buttonEmpire(int param1, int param2)
 static void buttonMissionBriefing(int param1, int param2)
 {
 	// TODO
+	UI_Intermezzo_show(0, Window_City, 1000);
 }
+
 static void buttonRotateNorth(int param1, int param2)
 {
 	// TODO

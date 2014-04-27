@@ -59,4 +59,7 @@ void CityInfo_Resource_calculateAvailableResources();
 void CityInfo_Culture_updateCoveragePercentages();
 void CityInfo_Culture_calculateDemandsForAdvisors();
 
+void CityInfo_Victory_check();
+void CityInfo_Victory_updateMonthsToGovern();
+
 #endif

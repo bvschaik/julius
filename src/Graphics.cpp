@@ -159,6 +159,10 @@ void Graphics_drawIsometricFootprint(int graphicId, int xOffset, int yOffset, Co
 	const char *data;
 	if (index->isExternal) {
 		data = Loader_Graphics_loadExternalImagePixelData(graphicId);
+		if (!data) {
+			printf("ERR: unable to load external image %d\n", graphicId);
+			return;
+		}
 	} else {
 		data = &Data_Graphics_PixelData.main[index->offset];
 	}
@@ -234,6 +238,10 @@ void Graphics_drawImage(int graphicId, int xOffset, int yOffset)
 	const char *data;
 	if (index->isExternal) {
 		data = Loader_Graphics_loadExternalImagePixelData(graphicId);
+		if (!data) {
+			printf("ERR: unable to load external image %d\n", graphicId);
+			return;
+		}
 	} else {
 		data = &Data_Graphics_PixelData.main[index->offset];
 	}
@@ -251,6 +259,10 @@ void Graphics_drawImageMasked(int graphicId, int xOffset, int yOffset, Color col
 	const char *data;
 	if (index->isExternal) {
 		data = Loader_Graphics_loadExternalImagePixelData(graphicId);
+		if (!data) {
+			printf("ERR: unable to load external image %d\n", graphicId);
+			return;
+		}
 	} else {
 		data = &Data_Graphics_PixelData.main[index->offset];
 	}
@@ -275,6 +287,10 @@ void Graphics_drawLetter(int graphicId, int xOffset, int yOffset, Color color)
 	const char *data;
 	if (index->isExternal) {
 		data = Loader_Graphics_loadExternalImagePixelData(graphicId);
+		if (!data) {
+			printf("ERR: unable to load external image %d\n", graphicId);
+			return;
+		}
 	} else {
 		data = &Data_Graphics_PixelData.main[index->offset];
 	}

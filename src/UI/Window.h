@@ -27,6 +27,11 @@ typedef enum {
 	Window_FileDialog = 21, //13
 	Window_OverlayMenu = 22, //8
 	Window_BuildingMenu = 23, //6
+	Window_Intermezzo = 24, //4
+
+	Window_51 = -1, //51 TODO
+	Window_66 = -1, //66 TODO
+	Window_VictoryDialog = -1, //67 TODO
 } WindowId;
 
 WindowId UI_Window_getId();

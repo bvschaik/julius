@@ -12,6 +12,7 @@
 #include "../Data/Constants.h"
 #include "../Data/Model.h"
 #include "../Data/Mouse.h"
+#include "../Data/Scenario.h"
 #include "../Data/State.h"
 
 static void drawMenuButtons();
@@ -77,6 +78,75 @@ void UI_BuildingMenu_init(int submenu)
 	} else {
 		UI_Window_goTo(Window_BuildingMenu);
 	}
+}
+
+void UI_BuildingMenu_drawSidebarImage(int xOffset)
+{
+	if (Data_State.sidebarCollapsed) {
+		return;
+	}
+	if (!Data_State.selectedBuilding.type) {
+		Graphics_drawImage(GraphicId(ID_Graphic_PanelWindows) + 12, xOffset, 239);
+		return;
+	}
+	int graphicPanelWindows = GraphicId(ID_Graphic_PanelWindows);
+	int graphicId;
+	switch (menu.selectedSubmenu) {
+		default:
+		case 0:
+			graphicId = graphicPanelWindows;
+			break;
+		case 1:
+			if (Data_Scenario.climate == Climate_Desert) {
+				graphicId = GraphicId(ID_Graphic_PanelWindowsDesert);
+			} else {
+				graphicId = graphicPanelWindows + 11;
+			}
+			break;
+		case 2:
+			if (Data_Scenario.climate == Climate_Desert) {
+				graphicId = GraphicId(ID_Graphic_PanelWindowsDesert) + 1;
+			} else {
+				graphicId = graphicPanelWindows + 10;
+			}
+			break;
+		case 3:
+			if (Data_Scenario.climate == Climate_Desert) {
+				graphicId = GraphicId(ID_Graphic_PanelWindowsDesert) + 2;
+			} else {
+				graphicId = graphicPanelWindows + 3;
+			}
+			break;
+		case 4:
+			graphicId = graphicPanelWindows + 5;
+			break;
+		case 5:
+			graphicId = graphicPanelWindows + 1;
+			break;
+		case 6:
+			graphicId = graphicPanelWindows + 6;
+			break;
+		case 7:
+			graphicId = graphicPanelWindows + 4;
+			break;
+		case 8:
+			graphicId = graphicPanelWindows + 2;
+			break;
+		case 9:
+			graphicId = graphicPanelWindows + 7;
+			break;
+		case 10:
+			if (Data_Scenario.climate == Climate_Desert) {
+				graphicId = GraphicId(ID_Graphic_PanelWindowsDesert) + 3;
+			} else {
+				graphicId = graphicPanelWindows + 8;
+			}
+			break;
+		case 11:
+			graphicId = graphicPanelWindows + 9;
+			break;
+	}
+	Graphics_drawImage(graphicId, xOffset, 239);
 }
 
 void UI_BuildingMenu_drawBackground()

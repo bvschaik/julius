@@ -84,6 +84,8 @@ enum {
 	ID_Graphic_ScenarioImage = 247,
 	ID_Graphic_Gatehouse = 248,
 	ID_Graphic_LoadingScreen = 251,
+	ID_Graphic_IntermezzoBackground = 252,
+	ID_Graphic_PanelWindowsDesert = 253,
 };
 
 #define Color_Black 0

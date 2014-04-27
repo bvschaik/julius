@@ -16,6 +16,7 @@
 #include "Data/Walker.h"
 #include "Data/Formation.h"
 #include "Data/Debug.h"
+#include "Data/Event.h"
 
 #include "SidebarMenu.h"
 #include "Zip.h"
@@ -193,7 +194,7 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{0, &Data_CityInfo_CultureCoverage.academy, 4},
 	{0, &Data_CityInfo_CultureCoverage.hospital, 4},
 	{0, &Data_Scenario, 1720},
-	{0, &tmp, 4}, //{0, &timeLimit_maxGameYear, 4},
+	{0, &Data_Event.timeLimitMaxGameYear, 4},
 	{0, &tmp, 4}, //{0, &event_earthquake_gameYear, 4},
 	{0, &tmp, 4}, //{0, &event_earthquake_month, 4},
 	{0, &tmp, 4}, //{0, &event_earthquake_state, 4},
@@ -224,7 +225,7 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{0, &tmp, 4}, //{0, &dword_990CD8, 4},
 	{1, &tmp, 1000}, //{1, &word_98C080, 0x3E8},
 	{1, &tmp, 1000}, //{1, &word_949F00, 0x3E8},
-	{1, &tmp, 4000}, //{1, &gametick_tmpBuildingList, 0xFA0},
+	{1, &Data_BuildingList.buildingIds, 4000},
 	{0, &Data_Tutorial_tutorial1.fire, 4},
 	{0, &Data_Tutorial_tutorial1.crime, 4},
 	{0, &Data_Tutorial_tutorial1.collapse, 4},
@@ -298,7 +299,7 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{0, &Data_Debug.unfixableHousePositions, 4},
 	{0, &tmp, 65}, //{0, &currentScenarioFilename, 0x41},
 	{0, &tmp, 32}, //{0, &mapBookmarks_x, 0x20},
-	{0, &tmp, 4}, //{0, &tutorial2_disease, 4},
+	{0, &Data_Tutorial_tutorial2.disease, 4},
 	{0, &tmp, 4}, //{0, &dword_8E7B24, 4},
 	{0, &tmp, 4}, //{0, &dword_89AA64, 4},
 	{0, &endMarker, 4},
