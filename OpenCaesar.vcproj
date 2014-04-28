@@ -642,11 +642,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Building.h"
+				RelativePath=".\src\Data\Building.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Building.h"
+				RelativePath=".\src\Building.h"
 				>
 			</File>
 			<File
@@ -686,11 +686,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\CityView.h"
+				RelativePath=".\src\CityView.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\CityView.h"
+				RelativePath=".\src\Data\CityView.h"
 				>
 			</File>
 			<File
@@ -719,6 +719,10 @@
 			</File>
 			<File
 				RelativePath=".\src\Event.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\UI\FileDialog.h"
 				>
 			</File>
 			<File
@@ -874,11 +878,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Sound.h"
+				RelativePath=".\src\Sound.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Sound.h"
+				RelativePath=".\src\Data\Sound.h"
 				>
 			</File>
 			<File

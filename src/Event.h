@@ -11,6 +11,8 @@ enum {
 };
 
 void Event_initDistantBattleCity();
+void Event_calculateDistantBattleRomanTravelTime();
+void Event_calculateDistantBattleEnemyTravelTime();
 
 int Event_existsUpcomingInvasion();
 
@@ -22,5 +24,6 @@ void Event_initDemandChanges();
 
 void Event_initPriceChanges();
 void Event_handlePricesChanges();
+
 
 #endif

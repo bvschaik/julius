@@ -1,6 +1,7 @@
 #include "TopMenu.h"
 #include "Window.h"
 #include "AllWindows.h"
+#include "FileDialog.h"
 #include "MessageDialog.h"
 #include "../Graphics.h"
 #include "../Widget.h"
@@ -223,11 +224,40 @@ static void menuFile_newGame(int param)
 	UI_Window_goTo(Window_MainMenu);
 }
 
-static void menuFile_replayMap(int param) {}
-static void menuFile_loadGame(int param) {}
-static void menuFile_saveGame(int param) {}
-static void menuFile_deleteGame(int param) {}
-static void menuFile_exitGame(int param) {}
+static void menuFile_replayMap(int param)
+{
+	clearState();
+	Data_State.selectedBuilding.type = 0;
+	if (Data_Settings.isCustomScenario) {
+		// TODO
+	} else {
+		// TODO
+	}
+}
+
+static void menuFile_loadGame(int param)
+{
+	clearState();
+	Data_State.selectedBuilding.type = 0;
+	UI_FileDialog_show(FileDialogType_Load);
+}
+
+static void menuFile_saveGame(int param)
+{
+	clearState();
+	UI_FileDialog_show(FileDialogType_Save);
+}
+
+static void menuFile_deleteGame(int param)
+{
+	clearState();
+	UI_FileDialog_show(FileDialogType_Delete);
+}
+
+static void menuFile_exitGame(int param)
+{
+	// TODO
+}
 
 static void menuOptions_display(int param)
 {

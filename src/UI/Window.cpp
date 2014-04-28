@@ -1,6 +1,7 @@
 #include "Window.h"
 #include "AllWindows.h"
 #include "TopMenu.h"
+#include "FileDialog.h"
 #include "PopupDialog.h"
 #include "MessageDialog.h"
 

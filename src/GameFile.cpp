@@ -1,5 +1,17 @@
 #include "GameFile.h"
 
+#include "Building.h"
+#include "CityView.h"
+#include "Empire.h"
+#include "Event.h"
+#include "FileSystem.h"
+#include "Loader.h"
+#include "SidebarMenu.h"
+#include "Sound.h"
+#include "Routing.h"
+#include "Walker.h"
+#include "Zip.h"
+
 #include "Data/Grid.h"
 #include "Data/Random.h"
 #include "Data/Scenario.h"
@@ -17,11 +29,10 @@
 #include "Data/Formation.h"
 #include "Data/Debug.h"
 #include "Data/Event.h"
-
-#include "SidebarMenu.h"
-#include "Zip.h"
+#include "Data/State.h"
 
 #include <stdio.h>
+#include <string.h>
 
 #define SCENARIO_PARTS 12
 #define SAVEGAME_PARTS 300
@@ -34,8 +45,10 @@ struct GameFilePart {
 	int lengthInBytes;
 };
 
-static const int savegame_version = 0x66;
-static int savegame_file_version;
+static const int savegameVersion = 0x66;
+
+static int savegameFileVersion;
+static char playerNames[2][32];
 
 static char compressBuffer[COMPRESS_BUFFER_SIZE]; // TODO use global malloc'ed scratchpad buffer
 
@@ -43,7 +56,9 @@ static char tmp[COMPRESS_BUFFER_SIZE]; // TODO remove when all savegame fields a
 
 static int endMarker = 0;
 
-static char missionSavedGames[][32] = {
+static const char missionPackFile[] = "mission1.pak";
+
+static const char missionSavedGames[][32] = {
 	"Citizen.sav",
 	"Clerk.sav",
 	"Engineer.sav",
@@ -74,7 +89,7 @@ static GameFilePart scenarioParts[SCENARIO_PARTS] = {
 
 static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{0, &Data_Settings.saveGameMissionId, 4},
-	{0, &savegame_file_version, 4},
+	{0, &savegameFileVersion, 4},
 	{1, &Data_Grid_graphicIds, 52488},
 	{1, &Data_Grid_edge, 26244},
 	{1, &Data_Grid_buildingIds, 52488},
@@ -375,69 +390,17 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{0, &endMarker, 4},
 };
 
+static void setupFromSavedGame();
 static int writeCompressedChunk(FILE *fp, const void *buffer, int bytesToWrite);
 static int readCompressedChunk(FILE *fp, void *buffer, int bytesToRead);
-
-
-/*
-int GameFile_deleteSavedGame(const char *filename)
-{
-	int ok = remove(filename);
-	if (ok == -1) {
-		// Error
-		return 1;
-	}
-	// Refresh file list
-	FileSystem_findFiles("*.sav");
-	///
-    filelist_numFiles = findfiles_numFiles;
-    filelist_selectedIndex = 0;
-    if ( filelist_scrollPosition + 12 >= filelist_numFiles )
-      --filelist_scrollPosition;
-    if ( filelist_scrollPosition < 0 )
-      filelist_scrollPosition = 0;
-	return 0;
-}
-
-signed int __cdecl fun_writeSavedGame(const char *filename)
-{
-  signed int result; // eax@2
-  signed int i; // [sp+4Ch] [bp-Ch]@3
-  int length; // [sp+50h] [bp-8h]@7
-  int fd; // [sp+54h] [bp-4h]@1
-
-  savedgame_version = savedgame_fileversion;
-  strcpy(save_playername, setting_player_name);
-  j_fun_chdirHome();
-  fd = _open(filename, 0x8301u);
-  if ( fd == -1 )
-  {
-    result = 1;
-  }
-  else
-  {
-    for ( i = 0; i < 300 && savedgame_fields[i].length; ++i )
-    {
-      length = savedgame_fields[i].length;
-      if ( savedgame_fields[i].compressed )
-        j_fun_writeCompressedChunk(fd, savedgame_fields[i].offset, length);
-      else
-        _write(fd, savedgame_fields[i].offset, length);
-    }
-    _close(fd);
-    result = 0;
-  }
-  return result;
-}
-*/
 
 int GameFile_loadSavedGame(const char *filename)
 {
 	FILE *fp = fopen(filename, "rb");
 	if (!fp) {
-		return 1;
+		return 0;
 	}
-	// TODO sub_403116(0);
+	Sound_stopMusic();
 	for (int i = 0; i < 300 && saveGameParts[i].lengthInBytes; i++) {
 		if (saveGameParts[i].compressed) {
 			readCompressedChunk(fp, saveGameParts[i].data, saveGameParts[i].lengthInBytes);
@@ -446,167 +409,145 @@ int GameFile_loadSavedGame(const char *filename)
 		}
 	}
 	fclose(fp);
-	// TODO setup
+	
+	setupFromSavedGame();
+	BuildingStorage_resetBuildingIds();
+	strcpy(Data_Settings.playerName, playerNames[1]);
+	return 1;
+}
+
+int GameFile_loadSavedGameFromMissionPack(int missionId)
+{
+	int offset;
+	if (!FileSystem_readFilePartIntoBuffer(missionPackFile, &offset, 4, 4 * missionId)) {
+		return 0;
+	}
+	if (offset <= 0) {
+		return 0;
+	}
+	FILE *fp = fopen(missionPackFile, "rb");
+	if (!fp) {
+		return 0;
+	}
+	fseek(fp, offset, SEEK_SET);
+	for (int i = 0; i < 300 && saveGameParts[i].lengthInBytes; i++) {
+		if (saveGameParts[i].compressed) {
+			readCompressedChunk(fp, saveGameParts[i].data, saveGameParts[i].lengthInBytes);
+		} else {
+			fread(saveGameParts[i].data, 1, saveGameParts[i].lengthInBytes, fp);
+		}
+	}
+	fclose(fp);
+
+	setupFromSavedGame();
+	return 1;
+}
+
+static void setupFromSavedGame()
+{
+	Empire_load(Data_Settings.isCustomScenario, Data_Scenario.empireId);
+	Event_calculateDistantBattleRomanTravelTime();
+	Event_calculateDistantBattleEnemyTravelTime();
+
 	Data_Settings_Map.width = Data_Scenario.mapSizeX;
 	Data_Settings_Map.height = Data_Scenario.mapSizeY;
 	Data_Settings_Map.gridStartOffset = Data_Scenario.gridFirstElement;
 	Data_Settings_Map.gridBorderSize = Data_Scenario.gridBorderSize;
-	SidebarMenu_enableBuildingButtons();
-	SidebarMenu_enableBuildingMenuItems();
-	return 0;
-}
+
+	if (Data_Settings_Map.orientation >= 0 && Data_Settings_Map.orientation <= 6) {
+		// ensure even number
+		Data_Settings_Map.orientation = 2 * (Data_Settings_Map.orientation / 2);
+	} else {
+		Data_Settings_Map.orientation = 0;
+	}
+
+	CityView_calculateLookup();
+	CityView_checkCameraWithinBounds();
+
+	Routing_clearLandTypeCitizen();
+	Routing_determineLandCitizen();
+	Routing_determineLandNonCitizen();
+	Routing_determineWater();
+	Routing_determineWalls();
+
 /*
-//----- (004D6CC0) --------------------------------------------------------
-signed int __cdecl fun_loadSavedGame(const char *filename)
-{
-  signed int result; // eax@2
-  signed int i; // [sp+50h] [bp-Ch]@3
-  signed int j; // [sp+50h] [bp-Ch]@6
-  int length; // [sp+54h] [bp-8h]@10
-  int fd; // [sp+58h] [bp-4h]@1
-
-  j_fun_chdirHome();
-  byte_6A10F8 = 0;
-  fd = _open(filename, 0x8000u);
-  if ( fd == -1 )
-  {
-    result = 1;
-  }
-  else
-  {
-    sub_403116(0);
-    for ( i = 0; i < 2; ++i )
-      _read(fd, savedgame_fields[i].offset, savedgame_fields[i].length);
-    for ( j = 2; j < 300 && savedgame_fields[j].length; ++j )
-    {
-      length = savedgame_fields[j].length;
-      if ( savedgame_fields[j].compressed )
-        j_fun_readCompressedChunk(fd, savedgame_fields[j].offset, length);
-      else
-        _read(fd, savedgame_fields[j].offset, length);
-    }
-    _close(fd);
-    byte_6A10F8 = 1;
-    j_fun_setupFromSavedGame();
-    j_fun_setStorageBuildingIds();
-    strcpy(setting_player_name, save_playername);
-    result = 0;
-  }
-  return result;
-}
-// 53F440: using guessed type _DWORD __cdecl _close(_DWORD);
-// 6A10F8: using guessed type char byte_6A10F8;
-
-static void fun_setupFromSavedGame()
-{
-  dword_990608 = scn_empire;
-  sub_40323D();
-  if ( setting_isCustomScenario )
-    j_fun_readEmpireFile(1);
-  else
-    j_fun_readEmpireFile(0);
-  j_fun_calculateDistantBattleRomanTravelTime(1);
-  j_fun_calculateDistantBattleEnemyTravelTime(1);
-  setting_map_width = scn_sizeX;
-  setting_map_height = scn_sizeY;
-  setting_map_startGridOffset = scn_gridFirstElement;
-  setting_map_gridBorderSize = scn_gridBorderSize;
-  if ( mapOrientation >= 0 )
-  {
-    if ( mapOrientation > 6 )
-      mapOrientation = 0;
-  }
-  else
-  {
-    mapOrientation = 0;
-  }
-  mapCurrentOrientation = mapOrientation;
-  sub_4017CB(mapOrientation);
-  sub_40230B();
-  j_fun_clearGroundTypeGrid();
-  j_fun_determineGroundType();
-  sub_4019D8();
-  sub_401D84();
-  sub_402B26();
-  sub_402AC2();
-  j_fun_garbageCollectDestinationPaths();
+  j_fun_determineGraphicIdsForOrientatedBuildings();
+*/
+	WalkerRoute_clean();
+/*
   sub_401320();
-  sub_4033FA();
+  j_fun_tick_checkPathingAccessToRome();
   sub_403472();
-  j_fun_enableBuildingMenuItems();
-  j_fun_enableSidebarButtons();
-  sub_4017FD();
-  sub_401613();
-  j_fun_resetBackgroundMusic();
-  dword_8E1484 = 0;
-  currentOverlay = 0;
-  previousOverlay = 0;
-  dword_9DA7B0 = 1;
-  dword_654644[4517 * ciid] = 1;
-  dword_654640[4517 * ciid] = 1;
-  j_fun_loadClimateGraphics((unsigned __int8)scn_climate);
-  j_fun_loadEnemyGraphics(scn_enemy);
-  j_fun_determineDistantBattleCity();
-  sub_401E97();
-  dword_658DD0 = 0;
-  dword_659C18 = 0;
-  setting_game_paused = 0;
-}
-// 4017CB: using guessed type _DWORD __cdecl sub_4017CB(_DWORD);
-// 40227A: using guessed type _DWORD __cdecl j_fun_readEmpireFile(_DWORD);
-// 402AC2: using guessed type int sub_402AC2(void);
-// 608074: using guessed type int previousOverlay;
-// 654640: using guessed type int dword_654640[];
-// 654644: using guessed type int dword_654644[];
-// 65DEF8: using guessed type int mapOrientation;
-// 65E708: using guessed type char setting_game_paused;
-// 65E764: using guessed type int setting_isCustomScenario;
-// 8C79F8: using guessed type int setting_map_width;
-// 8C79FC: using guessed type int setting_map_height;
-// 8C7A00: using guessed type int setting_map_startGridOffset;
-// 8C7A04: using guessed type int setting_map_gridBorderSize;
-// 98E884: using guessed type __int16 scn_empire;
-// 98E9FC: using guessed type __int16 scn_enemy;
-// 98EA04: using guessed type int scn_sizeX;
-// 98EA08: using guessed type int scn_sizeY;
-// 98EA0C: using guessed type int scn_gridFirstElement;
-// 98EA10: using guessed type int scn_gridBorderSize;
-// 98EF28: using guessed type char scn_climate;
-// 990608: using guessed type int dword_990608;
-// 9DA7B0: using guessed type int dword_9DA7B0;
 */
+	SidebarMenu_enableBuildingMenuItems();
+	SidebarMenu_enableBuildingButtons();
 /*
-void GameFile fun_writeMissionSavedGame(int missionId)
-{
-  signed int v0; // [sp+4Ch] [bp-4h]@1
-
-  v0 = setting_currentMissionId;
-  if ( setting_currentMissionId > 11 )
-    v0 = 11;
-  if ( !dword_65463C[4517 * ciid] )
-  {
-    dword_65463C[4517 * ciid] = 1;
-    if ( !j_fun_fileExistsHome(&aCitizen_sav[40 * v0]) )
-      j_fun_writeSavedGame(&aCitizen_sav[40 * v0]);
-  }
-}
-// 65463C: using guessed type int dword_65463C[];
-// 65E760: using guessed type int setting_currentMissionId;
+  j_fun_initPlayerMessageProblemArea();
 */
-//----- (004D7150) --------------------------------------------------------
-int GameFile_saveScenario(const char *filename)
+	Sound_City_init();
+	Sound_Music_reset();
+
+	Data_State.undoAvailable = 0;
+	Data_State.currentOverlay = 0;
+	Data_State.previousOverlay = 0;
+/*
+  dword_9DA7B0 = 1;
+*/
+	Data_CityInfo.tutorial1FireMessageShown = 1;
+	Data_CityInfo.tutorial2DiseaseMessageShown = 1;
+
+	Loader_Graphics_loadMainGraphics(Data_Scenario.climate);
+	Loader_Graphics_loadEnemyGraphics(Data_Scenario.enemyId);
+	Empire_determineDistantBattleCity();
+/*
+  j_fun_determineTerrainGardenFromGraphicIds();
+*/
+	Data_Message.maxScrollPosition = 0;
+	Data_Message.scrollPosition = 0;
+
+	Data_Settings.gamePaused = 0;
+}
+
+void GameFile_writeMissionSavedGameIfNeeded(int missionId)
 {
-	//map_graphic_nativeHut = graphic_nativeBuilding;
-	//map_graphic_nativeMeeting = graphic_nativeBuilding + 2;
-	//map_graphic_nativeCrops = graphic_nativeCrops;
+	if (missionId < 0) {
+		missionId = 0;
+	} else if (missionId > 11) {
+		missionId = 11;
+	}
+	if (!Data_CityInfo.missionSavedGameWritten) {
+		Data_CityInfo.missionSavedGameWritten = 1;
+		if (!FileSystem_fileExists(missionSavedGames[missionId])) {
+			GameFile_writeSavedGame(missionSavedGames[missionId]);
+		}
+	}
+}
+
+int GameFile_writeSavedGame(const char *filename)
+{
+	savegameFileVersion = savegameVersion;
+	strcpy(playerNames[1], Data_Settings.playerName);
+
 	FILE *fp = fopen(filename, "wb");
 	if (!fp) {
-		return 1;
+		return 0;
 	}
-	for (int i = 0; i < SCENARIO_PARTS && scenarioParts[i].lengthInBytes > 0; i++) {
-		fwrite(scenarioParts[i].data, 1, scenarioParts[i].lengthInBytes, fp);
+	for (int i = 0; i < 300 && saveGameParts[i].lengthInBytes; i++) {
+		if (saveGameParts[i].compressed) {
+			writeCompressedChunk(fp, saveGameParts[i].data, saveGameParts[i].lengthInBytes);
+		} else {
+			fwrite(saveGameParts[i].data, 1, saveGameParts[i].lengthInBytes, fp);
+		}
 	}
 	fclose(fp);
+	return 1;
+}
+
+int GameFile_deleteSavedGame(const char *filename)
+{
+	if (remove(filename) == 0) {
+		return 1;
+	}
 	return 0;
 }
 
@@ -621,66 +562,12 @@ int GameFile_loadScenario(const char *filename)
 		fread(scenarioParts[i].data, 1, scenarioParts[i].lengthInBytes, fp);
 	}
     fclose(fp);
-    //dword_990608 = map_empire;
-    //j_fun_readEmpireFile(1);
-    //j_fun_calculateDistantBattleRomanTravelTime(1);
-    //j_fun_calculateDistantBattleEnemyTravelTime(1);
+
+	Empire_load(1, Data_Scenario.empireId);
+	Event_calculateDistantBattleRomanTravelTime();
+	Event_calculateDistantBattleEnemyTravelTime();
     return 0;
 }
-
-/*
-//----- (004D7350) --------------------------------------------------------
-signed int __cdecl fun_loadSavedGameFromMissionPack(int a1)
-{
-  signed int result; // eax@2
-  signed int i; // [sp+4Ch] [bp-10h]@7
-  signed int j; // [sp+4Ch] [bp-10h]@10
-  int v4; // [sp+50h] [bp-Ch]@14
-  int v5; // [sp+54h] [bp-8h]@5
-  LONG Buffer; // [sp+58h] [bp-4h]@1
-
-  j_fun_chdirHome();
-  if ( j_fun_readDataFromFilename(&aMission1_pak[20 * a1], &Buffer, 4u, 4 * savedgame_missionId) )
-  {
-    if ( Buffer > 0 )
-    {
-      v5 = _open(&aMission1_pak[20 * a1], 32768);
-      if ( v5 == -1 )
-      {
-        result = 0;
-      }
-      else
-      {
-        _lseek(v5, Buffer, 0);
-        for ( i = 0; i < 2; ++i )
-          _read(v5, savedgame_fields[i].offset, savedgame_fields[i].length);
-        for ( j = 2; j < 300 && savedgame_fields[j].length; ++j )
-        {
-          v4 = savedgame_fields[j].length;
-          if ( savedgame_fields[j].compressed )
-            j_fun_readCompressedChunk(v5, savedgame_fields[j].offset, v4);
-          else
-            _read(v5, savedgame_fields[j].offset, v4);
-        }
-        _close(v5);
-        j_fun_setupFromSavedGame();
-        result = 1;
-      }
-    }
-    else
-    {
-      result = 0;
-    }
-  }
-  else
-  {
-    result = 0;
-  }
-  return result;
-}
-// 53F440: using guessed type _DWORD __cdecl _close(_DWORD);
-// 65E750: using guessed type int savedgame_missionId;
-*/
 
 static int writeCompressedChunk(FILE *fp, const void *buffer, int bytesToWrite)
 {

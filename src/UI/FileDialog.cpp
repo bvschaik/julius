@@ -1,8 +1,9 @@
-#include "AllWindows.h"
+#include "FileDialog.h"
 #include "Window.h"
 
 #include "../Calc.h"
 #include "../FileSystem.h"
+#include "../GameFile.h"
 #include "../Graphics.h"
 #include "../KeyboardInput.h"
 #include "../Time.h"
@@ -21,12 +22,6 @@ static int handleScrollbarClick();
 static void buttonOkCancel(int isOk, int param2);
 static void buttonScroll(int isDown, int numLines);
 static void buttonSelectItem(int index, int numLines);
-
-enum {
-	Type_Save = 0,
-	Type_Load = 1,
-	Type_Delete = 2
-};
 
 static ImageButton imageButtons[] = {
 	{344, 335, 34, 34, 4, 96, 0, buttonOkCancel, Widget_Button_doNothing, 1, 0, 0, 0, 1, 0},
@@ -48,6 +43,8 @@ static CustomButton customButtons[] = {
 	{160, 288, 448, 304, buttonSelectItem, Widget_Button_doNothing, 1, 10, 0},
 	{160, 304, 448, 320, buttonSelectItem, Widget_Button_doNothing, 1, 11, 0},
 };
+
+#define NOT_EXIST_MESSAGE_TIMEOUT 200
 
 static TimeMillis messageNotExistTimeUntil;
 static int dialogType;
@@ -91,7 +88,7 @@ void UI_FileDialog_drawForeground()
 	if (messageNotExistTimeUntil && Time_getMillis() < messageNotExistTimeUntil) {
 		Widget_GameText_drawCentered(43, 2,
 			baseOffsetX + 160, baseOffsetY + 50, 304, Font_LargeBlack);
-	} else if (dialogType == Type_Delete) {
+	} else if (dialogType == FileDialogType_Delete) {
 		Widget_GameText_drawCentered(43, 6,
 			baseOffsetX + 160, baseOffsetY + 50, 304, Font_LargeBlack);
 	} else {
@@ -193,7 +190,41 @@ static void buttonOkCancel(int isOk, int param2)
 		UI_Window_goBack();
 		return;
 	}
+	if (!isOk) {
+		UI_Window_goBack();
+		return;
+	}
+
+	FileSystem_removeExtension(Data_FileList.selectedCity);
+	FileSystem_appendExtension(Data_FileList.selectedCity, "sav");
+
 	// TODO
+	if (dialogType == FileDialogType_Load) {
+		GameFile_loadSavedGame(Data_FileList.selectedCity);
+		UI_Window_goTo(Window_City);
+	} else if (dialogType == FileDialogType_Save) {
+		GameFile_writeSavedGame(Data_FileList.selectedCity);
+		UI_Window_goTo(Window_City);
+	} else if (dialogType == FileDialogType_Delete) {
+		if (GameFile_deleteSavedGame(Data_FileList.selectedCity)) {
+			FileSystem_findFilesWithExtension("sav");
+			// TODO selectedIndex = 0?
+			if (scrollPosition + 12 >= Data_FileList.numFiles) {
+				--scrollPosition;
+			}
+			if (scrollPosition < 0) {
+				scrollPosition = 0;
+			}
+		} else {
+			// delete failed
+			FileSystem_removeExtension(Data_FileList.selectedCity);
+			messageNotExistTimeUntil = Time_getMillis() + NOT_EXIST_MESSAGE_TIMEOUT;
+			return;
+		}
+	}
+	
+	FileSystem_removeExtension(Data_FileList.selectedCity);
+	strcpy(Data_FileList.lastLoadedCity, Data_FileList.selectedCity);
 }
 
 static void buttonScroll(int isDown, int numLines)

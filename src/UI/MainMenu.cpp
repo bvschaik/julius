@@ -1,6 +1,7 @@
 #include "AllWindows.h"
-#include "Window.h"
+#include "FileDialog.h"
 #include "PopupDialog.h"
+#include "Window.h"
 
 #include "../Widget.h"
 #include "../Graphics.h"

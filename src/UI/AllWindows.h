@@ -12,11 +12,6 @@ void UI_CCKSelection_drawBackground();
 void UI_CCKSelection_drawForeground();
 void UI_CCKSelection_handleMouse();
 
-void UI_FileDialog_show(int type);
-void UI_FileDialog_drawBackground();
-void UI_FileDialog_drawForeground();
-void UI_FileDialog_handleMouse();
-
 void UI_DifficultyOptions_drawForeground();
 void UI_DifficultyOptions_handleMouse();
 
