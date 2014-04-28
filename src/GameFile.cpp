@@ -479,8 +479,8 @@ static void setupFromSavedGame()
   j_fun_tick_checkPathingAccessToRome();
   sub_403472();
 */
-	SidebarMenu_enableBuildingMenuItems();
 	SidebarMenu_enableBuildingButtons();
+	SidebarMenu_enableBuildingMenuItems();
 /*
   j_fun_initPlayerMessageProblemArea();
 */
