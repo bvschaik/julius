@@ -1,6 +1,8 @@
 #ifndef FILESYSTEM_H
 #define FILESYSTEM_H
 
+#define FILESYSTEM_MAX_FILENAME 100
+
 int FileSystem_fileExists(const char *filename);
 
 int FileSystem_readFilePartIntoBuffer(const char *filename, void *buffer, int length, int offsetInFile);

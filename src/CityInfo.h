@@ -1,6 +1,9 @@
 #ifndef CityInfo_H
 #define CityInfo_H
 
+void CityInfo_init();
+void CityInfo_initGameTime();
+
 void CityInfo_Imperial_calculateGiftCosts();
 
 void CityInfo_Gods_reset();

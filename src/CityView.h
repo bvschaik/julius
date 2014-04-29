@@ -8,7 +8,7 @@ void CityView_calculateLookup();
 
 void CityView_goToGridOffset(int gridOffset);
 
-void CityView_checkCameraWithinBounds();
+void CityView_checkCameraBoundaries();
 
 void CityView_gridOffsetToXYCoords(int gridOffset, int *xInTiles, int *yInTiles);
 

@@ -40,6 +40,7 @@ enum {
 	ID_Graphic_ContextIcons = 134,
 	ID_Graphic_TerrainDesirability = 135,
 	ID_Graphic_AdvisorBackground = 136,
+	ID_Graphic_TerrainMeadow = 138,
 	ID_Graphic_MinimapEmptyLand = 141,
 	ID_Graphic_MinimapWater = 142,
 	ID_Graphic_MinimapTree = 143,

@@ -4,6 +4,8 @@
 #include "../FileSystem.h"
 #include "../GameFile.h"
 #include "../Graphics.h"
+#include "../Scenario.h"
+#include "../Sound.h"
 #include "../Widget.h"
 
 #include "../Data/Constants.h"
@@ -11,6 +13,7 @@
 #include "../Data/Mouse.h"
 #include "../Data/Scenario.h"
 #include "../Data/Screen.h"
+#include "../Data/Settings.h"
 
 #include <string.h>
 
@@ -52,6 +55,7 @@ static int selectedItem;
 
 void UI_CCKSelection_init()
 {
+	Data_Settings.isCustomScenario = 1;
 	FileSystem_findFilesWithExtension("map");
 	scrollPosition = 0;
 	focusButtonId = 0;
@@ -294,5 +298,7 @@ static void buttonScroll(int isDown, int numLines)
 
 static void buttonStartScenario(int param1, int param2)
 {
-	// TODO
+	Sound_stopSpeech();
+	Scenario_initialize(Data_FileList.selectedScenario);
+	UI_Window_goTo(Window_City);
 }

@@ -2,6 +2,7 @@
 #define FORMATION_H
 
 void Formation_clearList();
+void Formation_clearInvasionInfo();
 
 void Formation_deleteFortAndBanner(int formationId);
 

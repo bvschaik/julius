@@ -306,10 +306,10 @@ void Event_handleRequests()
 				// request is not visible
 				int year = Data_Scenario.startYear;
 				if (IsTutorial2()) {
-					if (!Data_Tutorial_tutorial2.potteryMade) {
+					if (!Data_Tutorial.tutorial2.potteryMade) {
 						return;
 					}
-					year = Data_Tutorial_tutorial2.potteryMadeYear;
+					year = Data_Tutorial.tutorial2.potteryMadeYear;
 				}
 				if (Data_CityInfo_Extra.gameTimeYear == year + Data_Scenario.requests.year[i] &&
 					Data_CityInfo_Extra.gameTimeMonth == Data_Scenario.requests_month[i]) {

@@ -44,5 +44,5 @@ void UI_CityBuildings_scrollMap(int direction)
 			break;
 	}
 	Sound_City_decayViews();
-	CityView_checkCameraWithinBounds();
+	CityView_checkCameraBoundaries();
 }

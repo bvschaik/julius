@@ -1076,7 +1076,7 @@ extern struct Data_CityInfo {
 	int messageShownVictory;
 	int missionSavedGameWritten;
 	int tutorial1FireMessageShown;
-	int tutorial2DiseaseMessageShown;
+	int tutorial3DiseaseMessageShown;
 	char __unknown_4648;
 	char __unknown_4649;
 	char __unknown_464a;
@@ -1400,6 +1400,12 @@ extern struct Data_CityInfo_Extra {
 	int gameTimeMonth; // 12 months in a year
 	int gameTimeYear;
 	int gameTimeTotalDays;
+	int startingFavor;
+	int personalSavingsLastMission;
+	struct {
+		int x;
+		int y;
+	} bookmarks[4];
 } Data_CityInfo_Extra;
 
 extern struct Data_CityInfo_Resource {

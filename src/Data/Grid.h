@@ -29,6 +29,7 @@ enum {
 	Terrain_Wall = 0x4000,
 	Terrain_Gatehouse = 0x8000,
 	// flagged items
+	Terrain_OutsideMap = 5,
 	Terrain_NotClear = 0xd77f,
 	Terrain_NaturalElements = 0x1677
 };
@@ -46,6 +47,7 @@ EXTERN UInt8_Grid(Data_Grid_aqueducts);
 EXTERN UInt8_Grid(Data_Grid_spriteOffsets);
 EXTERN Int8_Grid(Data_Grid_desirability);
 EXTERN UInt8_Grid(Data_Grid_buildingDamage);
+EXTERN UInt8_Grid(Data_Grid_rubbleBuildingType);
 
 EXTERN Int8_Grid(Data_Grid_routingLandCitizen);
 EXTERN Int8_Grid(Data_Grid_routingLandNonCitizen);
@@ -60,6 +62,7 @@ enum {
 	Bitfield_Size4 = 0x04,
 	Bitfield_Size5 = 0x08,
 	Bitfield_Sizes = 0x0f,
+	Bitfield_NoSizes = 0xf0,
 	Bitfield_Overlay = 0x10,
 	Bitfield_20 = 0x20,
 	Bitfield_Deleted = 0x40,

@@ -1,6 +1,16 @@
 #include "CityInfo.h"
 #include "Data/CityInfo.h"
 
+void CityInfo_init()
+{
+	// TODO
+}
+
+void CityInfo_initGameTime()
+{
+	// TODO
+}
+
 void CityInfo_Imperial_calculateGiftCosts()
 {
 	int savings = Data_CityInfo.personalSavings;

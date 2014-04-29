@@ -113,7 +113,7 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{0, &Data_Formation_Extra.numLegions, 4},
 	{1, &Data_CityInfo, 36136},
 	{0, &tmp, 2}, //{0, &byte_658DCC, 2},
-	{0, &tmp, 64}, //{0, &save_player0name, 0x40},
+	{0, &playerNames, 64},
 	{0, &tmp, 4}, //{0, &ciid, 4},
 	{1, &Data_Buildings, 256000},
 	{0, &Data_Settings_Map.orientation, 4},
@@ -241,14 +241,14 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{1, &tmp, 1000}, //{1, &word_98C080, 0x3E8},
 	{1, &tmp, 1000}, //{1, &word_949F00, 0x3E8},
 	{1, &Data_BuildingList.buildingIds, 4000},
-	{0, &Data_Tutorial_tutorial1.fire, 4},
-	{0, &Data_Tutorial_tutorial1.crime, 4},
-	{0, &Data_Tutorial_tutorial1.collapse, 4},
-	{0, &Data_Tutorial_tutorial2.granaryBuilt, 4},
-	{0, &Data_Tutorial_tutorial2.population250Reached, 4},
-	{0, &Data_Tutorial_tutorial1.senateBuilt, 4},
-	{0, &Data_Tutorial_tutorial2.population450Reached, 4},
-	{0, &Data_Tutorial_tutorial2.potteryMade, 4},
+	{0, &Data_Tutorial.tutorial1.fire, 4},
+	{0, &Data_Tutorial.tutorial1.crime, 4},
+	{0, &Data_Tutorial.tutorial1.collapse, 4},
+	{0, &Data_Tutorial.tutorial2.granaryBuilt, 4},
+	{0, &Data_Tutorial.tutorial2.population250Reached, 4},
+	{0, &Data_Tutorial.tutorial1.senateBuilt, 4},
+	{0, &Data_Tutorial.tutorial2.population450Reached, 4},
+	{0, &Data_Tutorial.tutorial2.potteryMade, 4},
 	{0, &Data_CityInfo_Buildings.militaryAcademy.total, 4},
 	{0, &Data_CityInfo_Buildings.militaryAcademy.working, 4},
 	{0, &Data_CityInfo_Buildings.barracks.total, 4},
@@ -273,7 +273,7 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{0, &Data_CityInfo_Buildings.reservoir.working, 4},
 	{0, &Data_CityInfo_Buildings.fountain.total, 4},
 	{0, &Data_CityInfo_Buildings.fountain.working, 4},
-	{0, &Data_Tutorial_tutorial2.potteryMadeYear, 4},
+	{0, &Data_Tutorial.tutorial2.potteryMadeYear, 4},
 	{0, &tmp, 4}, //{0, &event_gladiatorRevolt_gameYear, 4},
 	{0, &tmp, 4}, //{0, &event_gladiatorRevolt_month, 4},
 	{0, &tmp, 4}, //{0, &event_gladiatorRevold_endMonth, 4},
@@ -313,8 +313,8 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{0, &Data_Debug.incorrectHousePositions, 4},
 	{0, &Data_Debug.unfixableHousePositions, 4},
 	{0, &tmp, 65}, //{0, &currentScenarioFilename, 0x41},
-	{0, &tmp, 32}, //{0, &mapBookmarks_x, 0x20},
-	{0, &Data_Tutorial_tutorial2.disease, 4},
+	{0, &Data_CityInfo_Extra.bookmarks, 32},
+	{0, &Data_Tutorial.tutorial3.disease, 4},
 	{0, &tmp, 4}, //{0, &dword_8E7B24, 4},
 	{0, &tmp, 4}, //{0, &dword_89AA64, 4},
 	{0, &endMarker, 4},
@@ -462,7 +462,7 @@ static void setupFromSavedGame()
 	}
 
 	CityView_calculateLookup();
-	CityView_checkCameraWithinBounds();
+	CityView_checkCameraBoundaries();
 
 	Routing_clearLandTypeCitizen();
 	Routing_determineLandCitizen();
@@ -494,7 +494,7 @@ static void setupFromSavedGame()
   dword_9DA7B0 = 1;
 */
 	Data_CityInfo.tutorial1FireMessageShown = 1;
-	Data_CityInfo.tutorial2DiseaseMessageShown = 1;
+	Data_CityInfo.tutorial3DiseaseMessageShown = 1;
 
 	Loader_Graphics_loadMainGraphics(Data_Scenario.climate);
 	Loader_Graphics_loadEnemyGraphics(Data_Scenario.enemyId);

@@ -2,20 +2,23 @@
 #define DATA_TUTORIAL_H
 #include "Data.h"
 
-EXTERN struct Tutorial1 {
-	int fire;
-	int crime;
-	int collapse;
-	int senateBuilt;
-} Data_Tutorial_tutorial1;
-
-EXTERN struct Tutorial2 {
-	int granaryBuilt;
-	int population250Reached;
-	int population450Reached;
-	int potteryMade;
-	int potteryMadeYear;
-	int disease;
-} Data_Tutorial_tutorial2;
+extern struct Data_Tutorial {
+	struct {
+		int fire;
+		int crime;
+		int collapse;
+		int senateBuilt;
+	} tutorial1;
+	struct {
+		int granaryBuilt;
+		int population250Reached;
+		int population450Reached;
+		int potteryMade;
+		int potteryMadeYear;
+	} tutorial2;
+	struct {
+		int disease;
+	} tutorial3;
+} Data_Tutorial;
 
 #endif

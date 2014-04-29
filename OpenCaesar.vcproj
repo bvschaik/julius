@@ -496,6 +496,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\Scenario.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Scroll.cpp"
 				>
 			</File>
@@ -545,6 +549,10 @@
 			</File>
 			<File
 				RelativePath=".\src\Terrain.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TerrainGraphics.cpp"
 				>
 			</File>
 			<File
@@ -642,11 +650,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Building.h"
+				RelativePath=".\src\Building.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Building.h"
+				RelativePath=".\src\Data\Building.h"
 				>
 			</File>
 			<File
@@ -686,11 +694,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\CityView.h"
+				RelativePath=".\src\Data\CityView.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\CityView.h"
+				RelativePath=".\src\CityView.h"
 				>
 			</File>
 			<File
@@ -710,11 +718,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Empire.h"
+				RelativePath=".\src\Data\Empire.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Empire.h"
+				RelativePath=".\src\Empire.h"
 				>
 			</File>
 			<File
@@ -746,11 +754,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Graphics.h"
+				RelativePath=".\src\Graphics.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Graphics.h"
+				RelativePath=".\src\Data\Graphics.h"
 				>
 			</File>
 			<File
@@ -786,11 +794,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Language.h"
+				RelativePath=".\src\Data\Language.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Language.h"
+				RelativePath=".\src\Language.h"
 				>
 			</File>
 			<File
@@ -858,6 +866,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\Scenario.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Data\Screen.h"
 				>
 			</File>
@@ -878,11 +890,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Sound.h"
+				RelativePath=".\src\Data\Sound.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Sound.h"
+				RelativePath=".\src\Sound.h"
 				>
 			</File>
 			<File
@@ -899,6 +911,10 @@
 			</File>
 			<File
 				RelativePath=".\src\Terrain.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\TerrainGraphics.h"
 				>
 			</File>
 			<File

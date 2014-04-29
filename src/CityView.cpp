@@ -97,10 +97,10 @@ void CityView_goToGridOffset(int gridOffset)
 	Data_Settings_Map.camera.x = x - Data_CityView.widthInTiles / 2;
 	Data_Settings_Map.camera.y = y - Data_CityView.heightInTiles / 2;
 	Data_Settings_Map.camera.y &= ~1;
-	CityView_checkCameraWithinBounds();
+	CityView_checkCameraBoundaries();
 }
 
-void CityView_checkCameraWithinBounds()
+void CityView_checkCameraBoundaries()
 {
 	int xMin = (165 - Data_Settings_Map.width) / 2;
 	int yMin = (323 - 2 * Data_Settings_Map.height) / 2;

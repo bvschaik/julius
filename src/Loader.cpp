@@ -24,7 +24,7 @@ void Loader_GameState_init()
 		(Data_Screen.height - 24) / 15);
 	Data_Settings_Map.camera.x = 76;
 	Data_Settings_Map.camera.y = 152;
-	CityView_checkCameraWithinBounds();
+	CityView_checkCameraBoundaries();
 
 	Random_generatePool();
 

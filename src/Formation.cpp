@@ -26,6 +26,11 @@ void Formation_clearList()
 	Data_Formation_Extra.numLegions = 0;
 }
 
+void Formation_clearInvasionInfo()
+{
+	// TODO
+}
+
 void Formation_deleteFortAndBanner(int formationId)
 {
 	// TODO

@@ -16,6 +16,8 @@ struct Data_Event Data_Event;
 struct Data_Settings Data_Settings;
 struct Data_Settings_Map Data_Settings_Map;
 
+struct Data_Tutorial Data_Tutorial;
+
 struct Data_Message Data_Message;
 
 struct Data_Random Data_Random;

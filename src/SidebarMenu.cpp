@@ -226,23 +226,23 @@ void SidebarMenu_enableBuildingMenuItems()
 				menuEnabled[sub][item] = 1;
 			}
 			if (Data_Settings.currentMissionId == 0) { // tutorial 1
-				if (!Data_Tutorial_tutorial1.fire && !Data_Tutorial_tutorial1.crime) {
+				if (!Data_Tutorial.tutorial1.fire && !Data_Tutorial.tutorial1.crime) {
 					enableTutorial1Start(sub, item, buildingType);
-				} else if (!Data_Tutorial_tutorial1.collapse) {
+				} else if (!Data_Tutorial.tutorial1.collapse) {
 					enableTutorial1AfterFire(sub, item, buildingType);
-				} else if (!Data_Tutorial_tutorial1.senateBuilt) {
+				} else if (!Data_Tutorial.tutorial1.senateBuilt) {
 					enableTutorial1AfterCollapse(sub, item, buildingType);
 				} else {
 					enableNormal(sub, item, buildingType);
 				}
 			} else if (Data_Settings.currentMissionId == 1) { // tutorial 2
-				if (!Data_Tutorial_tutorial2.granaryBuilt) {
+				if (!Data_Tutorial.tutorial2.granaryBuilt) {
 					enableTutorial2Start(sub, item, buildingType);
-				} else if (!Data_Tutorial_tutorial2.population250Reached) {
+				} else if (!Data_Tutorial.tutorial2.population250Reached) {
 					enableTutorial2UpTo250(sub, item, buildingType);
-				} else if (!Data_Tutorial_tutorial2.population450Reached) {
+				} else if (!Data_Tutorial.tutorial2.population450Reached) {
 					enableTutorial2UpTo450(sub, item, buildingType);
-				} else if (!Data_Tutorial_tutorial2.potteryMade) {
+				} else if (!Data_Tutorial.tutorial2.potteryMade) {
 					enableTutorial2After450(sub, item, buildingType);
 				} else {
 					enableNormal(sub, item, buildingType);
