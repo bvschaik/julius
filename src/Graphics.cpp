@@ -185,7 +185,7 @@ void Graphics_drawIsometricFootprint(int graphicId, int xOffset, int yOffset, Co
 				break;
 		}
 	} else {
-		printf("ERROR: trying to draw a non-isometric tile using drawIsometricFootprint\n");
+		printf("ERROR: %d trying to draw a non-isometric tile using drawIsometricFootprint\n", graphicId);
 	}
 }
 
@@ -193,7 +193,8 @@ void Graphics_drawIsometricTop(int graphicId, int xOffset, int yOffset, Color co
 {
 	Data_Graphics_Index *index = &Data_Graphics_Main.index[graphicId];
 	if (index->type != 30) { // isometric
-		printf("ERROR: trying to draw a non-isometric tile using drawIsometricTop\n");
+		printf("ERROR: %d trying to draw a non-isometric tile using drawIsometricTop\n", graphicId);
+		return;
 	}
 	if (!index->hasCompressedPart) {
 		return;

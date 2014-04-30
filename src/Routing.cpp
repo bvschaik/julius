@@ -466,7 +466,7 @@ void Routing_deleteClosestWallOrAqueduct(int x, int y)
 	{
 		if (Data_Grid_routingLandCitizen[nextOffset] < 0) {
 			if (Data_Grid_terrain[nextOffset] & (Terrain_Aqueduct | Terrain_Wall)) {
-				Data_Grid_terrain[nextOffset] &= 0x2e80;
+				Data_Grid_terrain[nextOffset] &= Terrain_2e80;
 				return;
 			}
 		} else {

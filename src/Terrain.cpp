@@ -1,8 +1,10 @@
 #include "Terrain.h"
 #include "Util.h"
+
+#include "Data/Building.h"
+#include "Data/Constants.h"
 #include "Data/Grid.h"
 #include "Data/Settings.h"
-#include "Data/Building.h"
 
 static const int tilesAroundBuildingGridOffsets[][20] = {
 	{0},
@@ -11,6 +13,14 @@ static const int tilesAroundBuildingGridOffsets[][20] = {
 	{-162, -161, -160, 3, 165, 327, 488, 487, 486, 323, 161, -1, 0},
 	{-162, -161, -160, -159, 4, 166, 328, 490, 651, 650, 649, 628, 485, 323, 161, -1, 0},
 	{-162, -161, -160, -159, -158, 5, 167, 329, 491, 653, 814, 813, 812, 811, 810, 647, 485, 323, 161, -1},
+};
+
+static const int tileEdgeSizeOffsets[5][5] = {
+	{0, 1, 2, 3, 4},
+	{8, 9, 10, 11, 12},
+	{16, 17, 18, 19, 20},
+	{24, 25, 26, 27, 28},
+	{32, 33, 34, 35, 36},
 };
 
 struct RingTile {
@@ -57,9 +67,53 @@ int ringIndex[6][7];
 #define STORE_XY_RADIUS(xTile,yTile) \
 	*(xTile) = xx; *(yTile) = yy;
 
-void Terrain_addBuildingToGrids(int buildingId, int x, int y, int width, int height, int graphicId, int terrain)
+void Terrain_addBuildingToGrids(int buildingId, int x, int y, int size, int graphicId, int terrain)
 {
-	// TODO
+	if (x < 0 || x + size > Data_Settings_Map.width ||
+		y < 0 || y + size > Data_Settings_Map.height) {
+		return;
+	}
+	int xLeftmost, yLeftmost;
+	switch (Data_Settings_Map.orientation) {
+		case Direction_Top:
+			xLeftmost = 0;
+			yLeftmost = size - 1;
+			break;
+		case Direction_Right:
+			xLeftmost = yLeftmost = 0;
+			break;
+		case Direction_Bottom:
+			xLeftmost = size - 1;
+			yLeftmost = 0;
+			break;
+		case Direction_Left:
+			xLeftmost = yLeftmost = size - 1;
+			break;
+		default:
+			return;
+	}
+	for (int dy = 0; dy < size; dy++) {
+		for (int dx = 0; dx < size; dx++) {
+			int gridOffset = GridOffset(x + dx, y + dy);
+			Data_Grid_terrain[gridOffset] &= Terrain_2e80;
+			Data_Grid_terrain[gridOffset] |= terrain;
+			Data_Grid_buildingIds[gridOffset] = buildingId;
+			Data_Grid_bitfields[gridOffset] &= Bitfield_NoOverlay;
+			Data_Grid_bitfields[gridOffset] &= Bitfield_NoSizes;
+			switch (size) {
+				case 1: Data_Grid_bitfields[gridOffset] |= Bitfield_Size1; break;
+				case 2: Data_Grid_bitfields[gridOffset] |= Bitfield_Size2; break;
+				case 3: Data_Grid_bitfields[gridOffset] |= Bitfield_Size3; break;
+				case 4: Data_Grid_bitfields[gridOffset] |= Bitfield_Size4; break;
+				case 5: Data_Grid_bitfields[gridOffset] |= Bitfield_Size5; break;
+			}
+			Data_Grid_graphicIds[gridOffset] = graphicId;
+			Data_Grid_edge[gridOffset] = tileEdgeSizeOffsets[dy][dx];
+			if (dx == xLeftmost && dy == yLeftmost) {
+				Data_Grid_edge[gridOffset] |= Edge_LeftmostTile;
+			}
+		}
+	}
 }
 void Terrain_removeBuildingFromGrids(int buildingId, int x, int y)
 {
@@ -104,6 +158,27 @@ static int getRoadWithinRadius(int x, int y, int size, int radius, int *xTile, i
 		}
 	);
 	return 0;
+}
+
+int Terrain_isClear(int x, int y, int size, int disallowedTerrain, int graphicSet)
+{
+	if (x < 0 || x + size > Data_Settings_Map.width ||
+		y < 0 || y + size > Data_Settings_Map.height) {
+		return 0;
+	}
+	for (int dy = 0; dy < size; dy++) {
+		for (int dx = 0; dx < size; dx++) {
+			int gridOffset = GridOffset(x + dx, y + dy);
+			if (Data_Grid_terrain[gridOffset] & Terrain_NotClear & disallowedTerrain) {
+				return 0;
+			} else if (Data_Grid_walkerIds[gridOffset]) {
+				return 0;
+			} else if (graphicSet && Data_Grid_graphicIds[gridOffset] != 0) {
+				return 0;
+			}
+		}
+	}
+	return 1;
 }
 
 int Terrain_isAdjacentToWall(int x, int y, int size)

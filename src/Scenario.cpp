@@ -321,13 +321,12 @@ static void readScenarioAndInitGraphics()
   j_fun_determineGraphicIdsForElevation(0, 0, setting_map_width - 2, setting_map_height - 2);
   j_fun_determineGraphicIdsForWater(0, 0, setting_map_width - 1, setting_map_height - 1);
   j_fun_determineGraphicIdsForSingleTilePlazas(0, 0, setting_map_width - 1, setting_map_height - 1);
-  j_fun_determineGraphicIdsForRocks();
   */
 	TerrainGraphics_updateAllRocks();
   /*
   sub_402400(0);
-  j_fun_determineGraphicIdsForEmptyLand(0, 0, setting_map_width - 1, setting_map_height - 1);
   */
+	TerrainGraphics_updateRegionEmptyLand(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
 	TerrainGraphics_updateRegionMeadow(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
 /*
   j_fun_determineGraphicIdsForRoads();
@@ -419,7 +418,7 @@ static void initGridGraphicIds()
 		for (int x = 0; x < Data_Settings_Map.width; x++, gridOffset++) {
 			Data_Grid_graphicIds[gridOffset] = graphicId + (Data_Grid_random[gridOffset] & 7);
 			if (Data_Grid_random[gridOffset] & 1) {
-				Data_Grid_bitfields[gridOffset] |= Bitfield_20;
+				Data_Grid_bitfields[gridOffset] |= Bitfield_AlternateTerrain;
 			}
 		}
 	}

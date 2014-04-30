@@ -31,7 +31,9 @@ enum {
 	// flagged items
 	Terrain_OutsideMap = 5,
 	Terrain_NotClear = 0xd77f,
-	Terrain_NaturalElements = 0x1677
+	Terrain_NaturalElements = 0x1677,
+	Terrain_2e80 = 0x2e80,
+	Terrain_All = 0xffff
 };
 
 EXTERN UInt16_Grid(Data_Grid_graphicIds);
@@ -64,7 +66,8 @@ enum {
 	Bitfield_Sizes = 0x0f,
 	Bitfield_NoSizes = 0xf0,
 	Bitfield_Overlay = 0x10,
-	Bitfield_20 = 0x20,
+	Bitfield_NoOverlay = 0xef,
+	Bitfield_AlternateTerrain = 0x20,
 	Bitfield_Deleted = 0x40,
 	Bitfield_Plaza = 0x80,
 	Edge_MaskXY = 0x3f,

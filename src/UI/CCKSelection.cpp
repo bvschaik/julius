@@ -80,11 +80,11 @@ static void drawScenarioList()
 	Widget_Panel_drawInnerPanel(Data_Screen.offset640x480.x + 16,
 		Data_Screen.offset640x480.y + 210, 16, 16);
 	for (int i = 0; i < 15; i++) {
-		Font font = Font_NormalWhite;
+		Font font = Font_NormalGreen;
 		if (focusButtonId == i + 1) {
-			font = Font_NormalRed;
+			font = Font_NormalWhite;
 		} else if (!focusButtonId && selectedItem == i + scrollPosition) {
-			font = Font_NormalRed;
+			font = Font_NormalWhite;
 		}
 		char file[100];
 		strcpy(file, Data_FileList.files[i + scrollPosition]);
