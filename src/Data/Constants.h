@@ -33,6 +33,7 @@ enum {
 	ID_Graphic_Granary = 99,
 	ID_Graphic_OverlayColumn = 103,
 	ID_Graphic_Road = 112,
+	ID_Graphic_TerrainRubble = 114,
 	ID_Graphic_Homeless = 118,
 	ID_Graphic_FortStandards = 127,
 	ID_Graphic_AdvisorIcons = 128,

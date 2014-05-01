@@ -320,7 +320,7 @@ static void readScenarioAndInitGraphics()
 	/*
   j_fun_determineGraphicIdsForElevation(0, 0, setting_map_width - 2, setting_map_height - 2);
   j_fun_determineGraphicIdsForWater(0, 0, setting_map_width - 1, setting_map_height - 1);
-  j_fun_determineGraphicIdsForSingleTilePlazas(0, 0, setting_map_width - 1, setting_map_height - 1);
+  j_fun_determineGraphicIdsForEarthquakeLines(0, 0, setting_map_width - 1, setting_map_height - 1);
   */
 	TerrainGraphics_updateAllRocks();
   /*
@@ -328,9 +328,9 @@ static void readScenarioAndInitGraphics()
   */
 	TerrainGraphics_updateRegionEmptyLand(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
 	TerrainGraphics_updateRegionMeadow(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
+	TerrainGraphics_updateAllRoads();
+	TerrainGraphics_updateRegionPlazas(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
 /*
-  j_fun_determineGraphicIdsForRoads();
-  j_fun_determineGraphicIdsForPlazas(0, 0, setting_map_width - 1, setting_map_height - 1, 1);
   sub_402BA8();
   sub_4014F1(0, 0, setting_map_width - 1, setting_map_height - 1, 0);
   j_fun_scenarioLoad_setupNatives();

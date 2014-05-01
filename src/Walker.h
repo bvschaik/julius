@@ -5,6 +5,8 @@ void Walker_clearList();
 int Walker_create(int walkerType, int x, int y, char direction);
 void Walker_delete(int walkerId);
 
+int Walker_createDustCloud(int x, int y, int size);
+
 void Walker_addToTileList(int walkerId);
 void Walker_updatePositionInTileList(int walkerId);
 void Walker_removeFromTileList(int walkerId);

@@ -2,6 +2,7 @@
 
 #include "Terrain.h"
 
+#include "Data/Building.h"
 #include "Data/Constants.h"
 #include "Data/Graphics.h"
 #include "Data/Grid.h"
@@ -100,13 +101,27 @@ void TerrainGraphics_updateAllRocks()
 	}
 }
 
+void TerrainGraphics_updateAllGardens()
+{
+	// TODO
+}
+void TerrainGraphics_updateAllRoads()
+{
+	// TODO
+}
+
+void TerrainGraphics_updateRegionPlazas(int xMin, int yMin, int xMax, int yMax)
+{
+	// TODO
+}
+
 void TerrainGraphics_updateRegionWater(int xMin, int yMin, int xMax, int yMax)
 {
 	BOUND_REGION();
 	FOREACH_REGION({
 		int terrain = Data_Grid_terrain[gridOffset];
 		if ((terrain & Terrain_Water) && !(terrain & Terrain_Building)) {
-			TerrainGraphics_updateTileWater(xx, yy, 1);
+			TerrainGraphics_setTileWater(xx, yy);
 		}
 	});
 }
@@ -179,7 +194,47 @@ void TerrainGraphics_updateRegionMeadow(int xMin, int yMin, int xMax, int yMax)
 	});
 }
 
-void TerrainGraphics_updateTileWater(int x, int y, int isSet)
+void TerrainGraphics_setBuildingAreaRubble(int buildingId, int x, int y, int size)
+{
+	if (x < 0 || x + size > Data_Settings_Map.width ||
+		y < 0 || y + size > Data_Settings_Map.height) {
+		return;
+	}
+	for (int dy = 0; dy < size; dy++) {
+		for (int dx = 0; dx < size; dx++) {
+			int gridOffset = GridOffset(x + dx, y + dy);
+			if (Data_Grid_buildingIds[gridOffset] != buildingId) {
+				continue;
+			}
+			if (buildingId && Data_Buildings[Data_Grid_buildingIds[gridOffset]].type != Building_BurningRuin) {
+				Data_Grid_rubbleBuildingType[gridOffset] = (unsigned char) Data_Buildings[buildingId].type;
+			}
+			Data_Grid_bitfields[gridOffset] &= Bitfield_NoOverlay;
+			Data_Grid_bitfields[gridOffset] &= Bitfield_NoSizes;
+			Data_Grid_aqueducts[gridOffset] = 0;
+			Data_Grid_buildingIds[gridOffset] = 0;
+			Data_Grid_buildingDamage[gridOffset] = 0;
+			Data_Grid_spriteOffsets[gridOffset] = 0;
+			Data_Grid_edge[gridOffset] = Edge_LeftmostTile;
+			if (Data_Grid_terrain[gridOffset] & Terrain_Water) {
+				Data_Grid_terrain[gridOffset] &= Terrain_Water;
+				TerrainGraphics_setTileWater(x + dx, y + dy);
+			} else {
+				Data_Grid_terrain[gridOffset] &= Terrain_2e80;
+				Data_Grid_terrain[gridOffset] |= Terrain_Rubble;
+				Data_Grid_graphicIds[gridOffset] =
+					GraphicId(ID_Graphic_TerrainRubble) + (Data_Grid_random[gridOffset] & 7);
+			}
+		}
+	}
+}
+
+void TerrainGraphics_setTileWater(int x, int y)
+{
+	// TODO
+}
+
+void TerrainGraphics_setTileEarthquake(int x, int y)
 {
 	// TODO
 }

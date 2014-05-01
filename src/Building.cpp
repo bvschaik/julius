@@ -1,12 +1,18 @@
 #include "Building.h"
+
 #include "Formation.h"
 #include "PlayerWarning.h"
+#include "Routing.h"
+#include "Sound.h"
 #include "Terrain.h"
+#include "TerrainGraphics.h"
+
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 #include "Data/Grid.h"
 #include "Data/Settings.h"
+#include "Data/State.h"
 
 #include <string.h>
 
@@ -199,6 +205,35 @@ int Building_getMainBuildingId(int buildingId)
 			return buildingId;
 		}
 		buildingId = Data_Buildings[buildingId].prevPartBuildingId;
+	}
+	return 0;
+}
+
+void Building_collapse(int buildingId, int hasPlague)
+{
+	// TODO
+}
+
+void Building_collapseLinked(int buildingId, int callCollapse)
+{
+	// TODO
+}
+
+int Building_collapseFirstOfType(int buildingType)
+{
+	for (int i = 1; i < MAX_BUILDINGS; i++) {
+		if (Data_Buildings[i].inUse == 1 && Data_Buildings[i].type == buildingType) {
+			int gridOffset = Data_Buildings[i].gridOffset;
+			Data_State.undoAvailable = 0;
+			Data_Buildings[i].inUse = 4;
+			
+			TerrainGraphics_setBuildingAreaRubble(i, Data_Buildings[i].x, Data_Buildings[i].y,
+				Data_Buildings[i].size);
+			Sound_Effects_playChannel(SoundChannel_Explosion);
+			Routing_determineLandCitizen();
+			Routing_determineLandNonCitizen();
+			return gridOffset;
+		}
 	}
 	return 0;
 }

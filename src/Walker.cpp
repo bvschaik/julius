@@ -116,6 +116,12 @@ void Walker_delete(int walkerId)
 	memset(w, 0, 128);
 }
 
+int Walker_createDustCloud(int x, int y, int size)
+{
+	// TODO
+	return 0;
+}
+
 void Walker_addToTileList(int walkerId)
 {
 	if (Data_Walkers[walkerId].gridOffset < 0) {

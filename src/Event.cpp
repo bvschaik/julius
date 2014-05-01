@@ -1,5 +1,6 @@
 #include "Event.h"
 
+#include "Building.h"
 #include "Calc.h"
 #include "CityInfo.h"
 #include "Empire.h"
@@ -7,11 +8,19 @@
 #include "PlayerMessage.h"
 #include "Random.h"
 #include "Resource.h"
+#include "Routing.h"
 #include "SidebarMenu.h"
+#include "Sound.h"
+#include "TerrainGraphics.h"
+#include "Util.h"
+#include "Walker.h"
 
+#include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 #include "Data/Empire.h"
+#include "Data/Event.h"
+#include "Data/Grid.h"
 #include "Data/Invasion.h"
 #include "Data/Random.h"
 #include "Data/Scenario.h"
@@ -25,6 +34,20 @@ static void updateDistantBattleAftermath();
 static int playerWonDistantBattle();
 static void setDistantBattleCityVulnerable();
 static void setDistantBattleCityForeign();
+static void advanceEarthquakeToTile(int x, int y);
+static int canAdvanceEarthquakeToTile(int x, int y);
+
+static const int randomEventProbability[128] = {
+	0, 0, 1, 0, 0, 0, 4, 0, 0, 0, 0, 3, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 6,
+	0, 0, 2, 0, 0, 0, 7, 0, 5, 0, 0, 7, 0, 0, 0, 0,
+	0, 7, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,
+	6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 6, 0, 0,
+	0, 7, 0, 1, 6, 0, 0, 0, 0, 0, 2, 0, 0, 4, 0, 0,
+	0, 0, 3, 0, 7, 4, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0
+};
+
 
 void Event_handleDistantBattle()
 {
@@ -443,5 +466,212 @@ void Event_handlePricesChanges()
 			}
 			PlayerMessage_post(1, 79, amount, resource);
 		}
+	}
+}
+
+void Event_handleEarthquake()
+{
+	if (!Data_Scenario.earthquakeSeverity ||
+		Data_Scenario.earthquakePoint.x == -1 || Data_Scenario.earthquakePoint.y == -1) {
+		return;
+	}
+	if (Data_Event.earthquake.state == 0) { // not started
+		if (Data_CityInfo_Extra.gameTimeYear == Data_Event.earthquake.gameYear &&
+			Data_CityInfo_Extra.gameTimeMonth == Data_Event.earthquake.month) {
+			Data_Event.earthquake.state = 1;
+			Data_Event.earthquake.duration = 0;
+			Data_Event.earthquake.delay = 0;
+			advanceEarthquakeToTile(Data_Event.earthquake.expand[0].x, Data_Event.earthquake.expand[0].y);
+			PlayerMessage_post(1, 62, 0,
+				GridOffset(Data_Event.earthquake.expand[0].x, Data_Event.earthquake.expand[0].y));
+		}
+	} else if (Data_Event.earthquake.state == 1) { // in progress
+		Data_Event.earthquake.delay++;
+		if (Data_Event.earthquake.delay >= Data_Event.earthquake.maxDelay) {
+			Data_Event.earthquake.delay = 0;
+			Data_Event.earthquake.duration++;
+			if (Data_Event.earthquake.duration >= Data_Event.earthquake.maxDuration) {
+				Data_Event.earthquake.state = 2; // done
+			}
+			int dx, dy, index;
+			switch (Data_Random.random1_7bit & 0xf) {
+				case 0: index = 0; dx = 0; dy = -1; break;
+				case 1: index = 1; dx = 1; dy = 0; break;
+				case 2: index = 2; dx = 0; dy = 1; break;
+				case 3: index = 3; dx = -1; dy = 0; break;
+				case 4: index = 0; dx = 0; dy = -1; break;
+				case 5: index = 0; dx = -1; dy = 0; break;
+				case 6: index = 0; dx = 1; dy = 0; break;
+				case 7: index = 1; dx = 1; dy = 0; break;
+				case 8: index = 1; dx = 0; dy = -1; break;
+				case 9: index = 1; dx = 0; dy = 1; break;
+				case 10: index = 2; dx = 0; dy = 1; break;
+				case 11: index = 2; dx = -1; dy = 0; break;
+				case 12: index = 2; dx = 1; dy = 0; break;
+				case 13: index = 3; dx = -1; dy = 0; break;
+				case 14: index = 3; dx = 0; dy = -1; break;
+				case 15: index = 3; dx = 0; dy = 1; break;
+				default: return;
+			}
+			int x = Data_Event.earthquake.expand[index].x;
+			int y = Data_Event.earthquake.expand[index].y;
+			BOUND(x, 0, Data_Settings_Map.width - 1);
+			BOUND(y, 0, Data_Settings_Map.height - 1);
+			if (canAdvanceEarthquakeToTile(x, y)) {
+				Data_Event.earthquake.expand[index].x = x;
+				Data_Event.earthquake.expand[index].y = y;
+				advanceEarthquakeToTile(x, y);
+			}
+		}
+	}
+}
+
+static void advanceEarthquakeToTile(int x, int y)
+{
+	int gridOffset = GridOffset(x, y);
+	int buildingId = Data_Grid_buildingIds[gridOffset];
+	if (buildingId) {
+		Building_collapse(buildingId, 0);
+		Building_collapseLinked(buildingId, 1);
+		Sound_Effects_playChannel(SoundChannel_Explosion);
+		Data_Buildings[buildingId].inUse = 5;
+	}
+	Data_Grid_terrain[gridOffset] = 0;
+	TerrainGraphics_setTileEarthquake(x, y);
+	TerrainGraphics_updateAllGardens();
+	TerrainGraphics_updateAllRoads();
+	TerrainGraphics_updateRegionPlazas(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
+	
+	Routing_determineLandCitizen();
+	Routing_determineLandNonCitizen();
+	Routing_determineWalls();
+	
+	Walker_createDustCloud(x, y, 1);
+}
+
+static int canAdvanceEarthquakeToTile(int x, int y)
+{
+	int terrain = Data_Grid_terrain[GridOffset(x, y)];
+	if (terrain & (Terrain_Elevation | Terrain_Rock | Terrain_Water)) {
+		return 0;
+	}
+	return 1;
+}
+
+void Event_handleGladiatorRevolt()
+{
+	if (!Data_Scenario.gladiatorRevolt.enabled) {
+		return;
+	}
+	if (Data_Event.gladiatorRevolt.state == 0) { // not started
+		if (Data_CityInfo_Extra.gameTimeYear == Data_Event.gladiatorRevolt.gameYear &&
+			Data_CityInfo_Extra.gameTimeMonth == Data_Event.gladiatorRevolt.month) {
+			if (Data_CityInfo_Buildings.gladiatorSchool.working > 0) {
+				Data_Event.gladiatorRevolt.state = 1;
+				PlayerMessage_post(1, 63, 0, 0);
+			} else {
+				Data_Event.gladiatorRevolt.state = 2; // done
+			}
+		}
+	} else if (Data_Event.gladiatorRevolt.state == 1) { // in progress
+		if (Data_Event.gladiatorRevolt.endMonth == Data_CityInfo_Extra.gameTimeMonth) {
+			Data_Event.gladiatorRevolt.state = 2; // done
+			PlayerMessage_post(1, 73, 0, 0);
+		}
+	}
+}
+
+void Event_handleEmperorChange()
+{
+	if (!Data_Scenario.emperorChange.enabled) {
+		return;
+	}
+	if (Data_Event.emperorChange.state == 0) {
+		if (Data_CityInfo_Extra.gameTimeYear == Data_Event.emperorChange.gameYear &&
+			Data_CityInfo_Extra.gameTimeMonth == Data_Event.emperorChange.month) {
+			Data_Event.emperorChange.state = 1; // done
+			PlayerMessage_post(1, 64, 0, 0);
+		}
+	}
+}
+
+void Event_handleRandomEvents()
+{
+	int event = randomEventProbability[Data_Random.random1_7bit];
+	if (event <= 0) {
+		return;
+	}
+	switch (event) {
+		case 1: // Rome raises wages
+			if (Data_Scenario.raiseWagesEnabled) {
+				if (Data_CityInfo.wagesRome < 45) {
+					Data_CityInfo.wagesRome += 1 + (Data_Random.random2_7bit & 3);
+					if (Data_CityInfo.wagesRome > 45) {
+						Data_CityInfo.wagesRome = 45;
+					}
+					PlayerMessage_post(1, 68, 0, 0);
+				}
+			}
+			break;
+		case 2: // Rome lowers wages
+			if (Data_Scenario.lowerWagesEnabled) {
+				if (Data_CityInfo.wagesRome > 5) {
+					Data_CityInfo.wagesRome -= 1 + (Data_Random.random2_7bit & 3);
+					PlayerMessage_post(1, 69, 0, 0);
+				}
+			}
+			break;
+		case 3: // land trade disrupted
+			if (Data_Scenario.landTradeProblemEnabled) {
+				if (Data_CityInfo.tradeNumOpenLandRoutes > 0) {
+					Data_CityInfo.tradeLandProblemDuration = 48;
+					if (Data_Scenario.climate == Climate_Desert) {
+						PlayerMessage_post(1, 65, 0, 0);
+					} else {
+						PlayerMessage_post(1, 67, 0, 0);
+					}
+				}
+			}
+			break;
+		case 4: // sea trade disrupted
+			if (Data_Scenario.seaTradeProblemEnabled) {
+				if (Data_CityInfo.tradeNumOpenSeaRoutes > 0) {
+					Data_CityInfo.tradeSeaProblemDuration = 48;
+					PlayerMessage_post(1, 66, 0, 0);
+				}
+			}
+			break;
+		case 5: // contaminated water
+			if (Data_Scenario.contaminatedWaterEnabled) {
+				if (Data_CityInfo.population > 200) {
+					int change;
+					if (Data_CityInfo.healthRate > 80) {
+						change = -50;
+					} else if (Data_CityInfo.healthRate > 60) {
+						change = -40;
+					} else {
+						change = -25;
+					}
+					CityInfo_Population_changeHealthRate(change);
+					PlayerMessage_post(1, 70, 0, 0);
+				}
+			}
+			break;
+		case 6: // iron mine collapsed
+			if (Data_Scenario.ironMineCollapseEnabled) {
+				int gridOffset = Building_collapseFirstOfType(Building_IronMine);
+				if (gridOffset) {
+					PlayerMessage_post(1, 71, 0, gridOffset);
+				}
+			}
+			break;
+		case 7: // clay pit flooded
+			if (Data_Scenario.clayPitFloodEnabled) {
+				int gridOffset = Building_collapseFirstOfType(Building_ClayPit);
+				if (gridOffset) {
+					PlayerMessage_post(1, 72, 0, gridOffset);
+				}
+			}
+			break;
 	}
 }
