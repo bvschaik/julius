@@ -11,8 +11,11 @@ void Building_deleteData(int buildingId);
 int Building_getMainBuildingId(int buildingId);
 
 int Building_collapseFirstOfType(int buildingType);
+void Building_collapseLastPlaced();
 void Building_collapse(int buildingId, int hasPlague);
 void Building_collapseLinked(int buildingId, int callCollapse);
+
+void Building_setDesirability();
 
 void BuildingStorage_clearList();
 int BuildingStorage_create();

@@ -556,6 +556,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\TerrainGraphics_Context.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Time.cpp"
 				>
 			</File>

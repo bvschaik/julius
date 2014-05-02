@@ -44,6 +44,7 @@ void CityInfo_Population_changeHappiness(int amount);
 void CityInfo_Population_setMaxHappiness(int amount);
 void CityInfo_Population_changeHealthRate(int amount);
 void CityInfo_Population_calculateSentiment();
+void CityInfo_Population_yearlyUpdate();
 
 void CityInfo_Population_addPeople(int numPeople);
 void CityInfo_Population_addPeopleHomeless(int numPeople);

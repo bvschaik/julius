@@ -110,13 +110,8 @@ void HousePopulation_updateMigration()
   }
   cityinfo_happiness_immigrationAmount[4517 * ciid] = 0;
   cityinfo_happiness_emigrationValue[4517 * ciid] = 0;
-  if ( cityinfo_populationYearlyBirthsDeathsCalculationNeeded[4517 * ciid] )
-  {
-    j_fun_populationAdvanceAgesOneYear();
-    j_fun_populationBirths();
-    j_fun_updatePopulationAfterBirthsDeaths(ciid);
-  }
-*/
+  */
+	CityInfo_Population_yearlyUpdate();
 	calculateWorkers();
 	// population messages
 	if (Data_CityInfo.population >= 500 && !Data_Message.populationMessagesShown.pop500) {

@@ -30,6 +30,7 @@
 #include "Data/Debug.h"
 #include "Data/Event.h"
 #include "Data/State.h"
+#include "Data/Routes.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -105,8 +106,8 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{1, &tmp, 26244}, //{1, &undo_grid_aqueducts, 26244},
 	{1, &tmp, 26244}, //{1, &undo_grid_animation, 26244},
 	{1, &Data_Walkers, 128000},
-	{1, &tmp, 1200}, //{1, &destinationpath_index, 0x4B0},
-	{1, &tmp, 300000}, //{1, &destinationpath_data, 0x493E0},
+	{1, &Data_Routes.walkerIds, 1200},
+	{1, &Data_Routes.directionPaths, 300000},
 	{1, &Data_Formations, 6400},
 	{0, &Data_Formation_Extra.idLastInUse, 4},
 	{0, &Data_Formation_Extra.idLastLegion, 4},
@@ -123,7 +124,7 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{0, &Data_CityInfo_Extra.gameTimeYear, 4},
 	{0, &Data_CityInfo_Extra.gameTimeTotalDays, 4},
 	{0, &Data_Buildings_Extra.highestBuildingIdEver, 4},
-	{0, &tmp, 4}, //{0, &dword_98C480, 4},
+	{0, &tmp, 4}, //{0, &dword_98C480, 4}, read-only debug
 	{0, &Data_Random.iv1, 4},
 	{0, &Data_Random.iv2, 4},
 	{0, &Data_Settings_Map.camera.x, 4},
@@ -162,9 +163,9 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{0, &Data_CityInfo_Buildings.largeTempleVenus.total, 4},
 	{0, &Data_CityInfo_Buildings.oracle.total, 4},
 	{0, &Data_CityInfo_Extra.populationGraphOrder, 4},
-	{0, &tmp, 4}, //{0, &unk_650060, 4},
-	{0, &tmp, 4}, //{0, &event_emperorChange_gameYear, 4},
-	{0, &tmp, 4}, //{0, &event_emperorChange_month, 4},
+	{0, &tmp, 4}, //{0, &unk_650060, 4}, not referenced
+	{0, &Data_Event.emperorChange.gameYear, 4},
+	{0, &Data_Event.emperorChange.month, 4},
 	{0, &Data_Empire.scrollX, 4},
 	{0, &Data_Empire.scrollY, 4},
 	{0, &Data_Empire.selectedObject, 4},
@@ -210,15 +211,15 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{0, &Data_CityInfo_CultureCoverage.hospital, 4},
 	{0, &Data_Scenario, 1720},
 	{0, &Data_Event.timeLimitMaxGameYear, 4},
-	{0, &tmp, 4}, //{0, &event_earthquake_gameYear, 4},
-	{0, &tmp, 4}, //{0, &event_earthquake_month, 4},
-	{0, &tmp, 4}, //{0, &event_earthquake_state, 4},
-	{0, &tmp, 4}, //{0, &dword_89AA8C, 4},
-	{0, &tmp, 4}, //{0, &event_earthquake_maxDuration, 4},
-	{0, &tmp, 4}, //{0, &event_earthquake_maxDamage, 4},
-	{0, &tmp, 4}, //{0, &dword_89AB08, 4},
-	{0, &tmp, 32}, //{0, &dword_929660, 0x20},
-	{0, &tmp, 4}, //{0, &event_emperorChange_state, 4},
+	{0, &Data_Event.earthquake.gameYear, 4},
+	{0, &Data_Event.earthquake.month, 4},
+	{0, &Data_Event.earthquake.state, 4},
+	{0, &Data_Event.earthquake.duration, 4},
+	{0, &Data_Event.earthquake.maxDuration, 4},
+	{0, &Data_Event.earthquake.maxDelay, 4},
+	{0, &Data_Event.earthquake.delay, 4},
+	{0, &Data_Event.earthquake.expand, 32},
+	{0, &Data_Event.emperorChange.state, 4},
 	{1, &Data_Message.messages, 16000},
 	{0, &Data_Message.nextMessageSequence, 4},
 	{0, &Data_Message.totalMessages, 4},
@@ -253,11 +254,11 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{0, &Data_CityInfo_Buildings.militaryAcademy.working, 4},
 	{0, &Data_CityInfo_Buildings.barracks.total, 4},
 	{0, &Data_CityInfo_Buildings.barracks.working, 4},
-	{0, &tmp, 4}, //{0, &dword_819848, 4},
-	{0, &tmp, 4}, //{0, &dword_7FA234, 4},
-	{0, &tmp, 4}, //{0, &dword_7F87A8, 4},
-	{0, &tmp, 4}, //{0, &dword_7F87AC, 4},
-	{0, &tmp, 4}, //{0, &dword_863318, 4},
+	{0, &tmp, 4}, //{0, &dword_819848, 4}, formation related
+	{0, &tmp, 4}, //{0, &dword_7FA234, 4}, formation related
+	{0, &tmp, 4}, //{0, &dword_7F87A8, 4}, formation related
+	{0, &tmp, 4}, //{0, &dword_7F87AC, 4}, formation related
+	{0, &tmp, 4}, //{0, &dword_863318, 4}, formation related
 	{0, &Data_Building_Storages, 6400},
 	{0, &Data_CityInfo_Buildings.actorColony.total, 4},
 	{0, &Data_CityInfo_Buildings.actorColony.working, 4},
@@ -274,10 +275,10 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{0, &Data_CityInfo_Buildings.fountain.total, 4},
 	{0, &Data_CityInfo_Buildings.fountain.working, 4},
 	{0, &Data_Tutorial.tutorial2.potteryMadeYear, 4},
-	{0, &tmp, 4}, //{0, &event_gladiatorRevolt_gameYear, 4},
-	{0, &tmp, 4}, //{0, &event_gladiatorRevolt_month, 4},
-	{0, &tmp, 4}, //{0, &event_gladiatorRevold_endMonth, 4},
-	{0, &tmp, 4}, //{0, &event_gladiatorRevolt_state, 4},
+	{0, &Data_Event.gladiatorRevolt.gameYear, 4},
+	{0, &Data_Event.gladiatorRevolt.month, 4},
+	{0, &Data_Event.gladiatorRevolt.endMonth, 4},
+	{0, &Data_Event.gladiatorRevolt.state, 4},
 	{1, &Data_Empire_Trade.maxPerYear, 1280},
 	{1, &Data_Empire_Trade.tradedThisYear, 1280},
 	{0, &tmp, 4}, //{0, &dword_7FA224, 4},

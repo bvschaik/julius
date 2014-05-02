@@ -3,10 +3,14 @@
 
 enum {
 	ID_Graphic_TerrainBlack = 1,
+	ID_Graphic_TerrainShrub = 2,
 	ID_Graphic_TerrainUglyGrass = 3,
+	ID_Graphic_TerrainTree = 4,
 	ID_Graphic_TerrainWater = 5,
+	ID_Graphic_TerrainEarthquake = 6,
 	ID_Graphic_TerrainGrass2 = 7,
 	ID_Graphic_TerrainElevationRock = 8,
+	ID_Graphic_TerrainElevation = 9,
 	ID_Graphic_TerrainGrass1 = 10,
 	ID_Graphic_TopMenuSidebar = 11,
 	ID_Graphic_SidePanel = 12,
@@ -78,6 +82,7 @@ enum {
 	ID_Graphic_BorderedButton = 208,
 	ID_Graphic_Hippodrome1 = 213,
 	ID_Graphic_Hippodrome2 = 214,
+	ID_Graphic_AccessRamp = 216,
 	ID_Graphic_FortIcons = 222,
 	ID_Graphic_EmpireForeignCity = 223,
 	ID_Graphic_GodBolt = 225,

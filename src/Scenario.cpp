@@ -190,8 +190,6 @@ static void loadScenario(const char *scenarioName)
   hasWaterEntry = 0;
   ciid = 1;
   j_fun_memcpy(&map_settings_startYear, &scn_settings_startYear, 1720);
-  if ( !mode_editor )
-  {
     if ( map_riverEntry_x != -1 )
     {
       if ( map_riverEntry_y != -1 )
@@ -204,31 +202,29 @@ static void loadScenario(const char *scenarioName)
       }
     }
     j_fun_createFishHerdFlotsamWalkers(map_riverEntry_x, map_riverEntry_y, hasWaterEntry);
-  }
-  j_fun_calculateOpenGroundCitizen();
-  j_fun_calculateOpenGroundNonCitizen();
-  j_fun_calculateWaterDepth();
-  j_fun_calculateWallPaths();
-  if ( scn_entryPoint_x == -1 || scn_entryPoint_y == -1 )
-  {
-    scn_entryPoint_x = setting_map_width - 1;
-    scn_entryPoint_y = setting_map_height / 2;
-  }
-  cityinfo_entry_x[18068 * ciid] = scn_entryPoint_x;
-  cityinfo_entry_y[18068 * ciid] = scn_entryPoint_y;
-  cityinfo_entry_gridOffset[9034 * ciid] = 162 * (unsigned __int8)cityinfo_entry_y[18068 * ciid]
-                                         + (unsigned __int8)cityinfo_entry_x[18068 * ciid]
-                                         + (_WORD)setting_map_startGridOffset;
-  if ( scn_exitPoint_x == -1 || scn_exitPoint_y == -1 )
-  {
-    scn_exitPoint_x = scn_entryPoint_x;
-    scn_exitPoint_y = scn_entryPoint_y;
-  }
-  cityinfo_exit_x[18068 * ciid] = scn_exitPoint_x;
-  cityinfo_exit_y[18068 * ciid] = scn_exitPoint_y;
-  cityinfo_exit_gridOffset[9034 * ciid] = 162 * (unsigned __int8)cityinfo_exit_y[18068 * ciid]
-                                        + (unsigned __int8)cityinfo_exit_x[18068 * ciid]
-                                        + (_WORD)setting_map_startGridOffset;
+	*/
+	Routing_determineLandCitizen();
+	Routing_determineLandNonCitizen();
+	Routing_determineWater();
+	Routing_determineWalls();
+
+	if (Data_Scenario.entryPoint.x == -1 || Data_Scenario.entryPoint.y == -1) {
+		Data_Scenario.entryPoint.x = Data_Settings_Map.width - 1;
+		Data_Scenario.entryPoint.y = Data_Settings_Map.height / 2;
+	}
+	Data_CityInfo.entryPointX = (char) Data_Scenario.entryPoint.x;
+	Data_CityInfo.entryPointY = (char) Data_Scenario.entryPoint.y;
+	Data_CityInfo.entryPointGridOffset = GridOffset(Data_CityInfo.entryPointX, Data_CityInfo.entryPointY);
+
+	if (Data_Scenario.exitPoint.x == -1 || Data_Scenario.exitPoint.y == -1) {
+		Data_Scenario.exitPoint.x = Data_Scenario.entryPoint.x;
+		Data_Scenario.exitPoint.y = Data_Scenario.entryPoint.y;
+	}
+	Data_CityInfo.exitPointX = (char) Data_Scenario.exitPoint.x;
+	Data_CityInfo.exitPointY = (char) Data_Scenario.exitPoint.y;
+	Data_CityInfo.exitPointGridOffset = GridOffset(Data_CityInfo.exitPointX, Data_CityInfo.exitPointY);
+
+	/*
   cityinfo_treasury[4517 * ciid] = j_fun_adjustWithPercentage(scn_startFunds, difficulty_moneypct[setting_difficulty]);
   cityinfo_finance_balance_lastyear[4517 * ciid] = cityinfo_treasury[4517 * ciid];
   gametime_year = scn_settings_startYear;
@@ -317,8 +313,8 @@ static void readScenarioAndInitGraphics()
 	Data_Settings_Map.gridBorderSize = Data_Scenario.gridBorderSize;
 
 	CityView_calculateLookup();
+	TerrainGraphics_updateRegionElevation(0, 0, Data_Settings_Map.width - 2, Data_Settings_Map.height - 2);
 	/*
-  j_fun_determineGraphicIdsForElevation(0, 0, setting_map_width - 2, setting_map_height - 2);
   j_fun_determineGraphicIdsForWater(0, 0, setting_map_width - 1, setting_map_height - 1);
   j_fun_determineGraphicIdsForEarthquakeLines(0, 0, setting_map_width - 1, setting_map_height - 1);
   */
@@ -349,6 +345,7 @@ static void initGrids()
 {
 	int lenByte = GRID_SIZE * GRID_SIZE;
 	int lenShort = 2 * lenByte;
+
 	memset(Data_Grid_graphicIds, 0, lenShort);
 	memset(Data_Grid_edge, 0, lenByte);
 	memset(Data_Grid_buildingIds, 0, lenShort);
@@ -362,21 +359,10 @@ static void initGrids()
 	memset(Data_Grid_elevation, 0, lenByte);
 	memset(Data_Grid_buildingDamage, 0, lenByte);
 	memset(Data_Grid_rubbleBuildingType, 0, lenByte);
-	// TODO
-	//memset(Data_Grid_romanSoldierConcentration, 0, lenByte);
-	//memset(Data_Grid_byte_91C920, 0, lenByte);
-	//memset(Data_Grid_byte_8ADF60, 0, lenByte);
-	/* TODO
-	j_fun_setByte14Of16Zero(byte_5F2250, 48);
-	j_fun_setByte14Of16Zero(byte_5F2550, 48);
-	j_fun_setByte14Of16Zero(byte_5F2850, 10);
-	j_fun_setByte14Of16Zero(byte_5F28F0, 14);
-	j_fun_setByte14Of16Zero(byte_5F29D0, 17);
-	j_fun_setByte14Of16Zero(byte_5F2AE0, 17);
-	j_fun_setByte14Of16Zero(byte_5F2BF0, 17);
-	j_fun_setByte14Of16Zero(byte_5F2D00, 48);
-	j_fun_setByte14Of16Zero(byte_5F3000, 16);
-	*/
+	memset(Data_Grid_romanSoldierConcentration, 0, lenByte);
+	memset(Data_Grid_byte_91C920, 0, lenByte);
+	memset(Data_Grid_byte_8ADF60, 0, lenByte);
+	TerrainGraphicsContext_init();
 	initGridTerrain();
 	initGridRandom();
 	initGridGraphicIds();

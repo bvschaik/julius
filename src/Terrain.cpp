@@ -69,8 +69,7 @@ int ringIndex[6][7];
 
 void Terrain_addBuildingToGrids(int buildingId, int x, int y, int size, int graphicId, int terrain)
 {
-	if (x < 0 || x + size > Data_Settings_Map.width ||
-		y < 0 || y + size > Data_Settings_Map.height) {
+	if (IsOutsideMap(x, y, size)) {
 		return;
 	}
 	int xLeftmost, yLeftmost;
@@ -162,8 +161,7 @@ static int getRoadWithinRadius(int x, int y, int size, int radius, int *xTile, i
 
 int Terrain_isClear(int x, int y, int size, int disallowedTerrain, int graphicSet)
 {
-	if (x < 0 || x + size > Data_Settings_Map.width ||
-		y < 0 || y + size > Data_Settings_Map.height) {
+	if (IsOutsideMap(x, y, size)) {
 		return 0;
 	}
 	for (int dy = 0; dy < size; dy++) {

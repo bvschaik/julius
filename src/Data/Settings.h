@@ -6,6 +6,7 @@
 #define GridOffset(x,y) (Data_Settings_Map.gridStartOffset + (x) + (y) * 162)
 #define GridOffsetToX(g) (((g) - Data_Settings_Map.gridStartOffset) % 162)
 #define GridOffsetToY(g) (((g) - Data_Settings_Map.gridStartOffset) / 162)
+#define IsOutsideMap(x,y,s) (x) < 0 || (x) + (s) > Data_Settings_Map.width || (y) < 0 || (y) + (s) > Data_Settings_Map.height
 
 extern struct Data_Settings {
 	int bpp;

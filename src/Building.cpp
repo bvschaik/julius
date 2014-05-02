@@ -1,11 +1,13 @@
 #include "Building.h"
 
 #include "Formation.h"
+#include "PlayerMessage.h"
 #include "PlayerWarning.h"
 #include "Routing.h"
 #include "Sound.h"
 #include "Terrain.h"
 #include "TerrainGraphics.h"
+#include "Walker.h"
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
@@ -219,6 +221,33 @@ void Building_collapseLinked(int buildingId, int callCollapse)
 	// TODO
 }
 
+void Building_collapseLastPlaced()
+{
+	int highestSequence = 0;
+	int buildingId = 0;
+	for (int i = 1; i < MAX_BUILDINGS; i++) {
+		if (Data_Buildings[i].inUse == 1 || Data_Buildings[i].inUse == 3) {
+			if (Data_Buildings[i].createdSequence > highestSequence) {
+				highestSequence = Data_Buildings[i].createdSequence;
+				buildingId = i;
+			}
+		}
+	}
+	if (buildingId) {
+		PlayerMessage_post(1, 88, 0, Data_Buildings[buildingId].gridOffset);
+		Data_State.undoAvailable = 0;
+		Data_Buildings[buildingId].inUse = 4;
+		TerrainGraphics_setBuildingAreaRubble(buildingId,
+			Data_Buildings[buildingId].x, Data_Buildings[buildingId].y,
+			Data_Buildings[buildingId].size);
+		Walker_createDustCloud(Data_Buildings[buildingId].x, Data_Buildings[buildingId].y,
+			Data_Buildings[buildingId].size);
+		Building_collapseLinked(buildingId, 0);
+		Routing_determineLandCitizen();
+		Routing_determineLandNonCitizen();
+	}
+}
+
 int Building_collapseFirstOfType(int buildingType)
 {
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
@@ -236,6 +265,41 @@ int Building_collapseFirstOfType(int buildingType)
 		}
 	}
 	return 0;
+}
+
+void Building_setDesirability()
+{
+	for (int i = 1; i < MAX_BUILDINGS; i++) {
+		if (Data_Buildings[i].inUse != 1) {
+			continue;
+		}
+		struct Data_Building *b = &Data_Buildings[i];
+		if (b->size == 1) {
+			b->desirability = Data_Grid_desirability[b->gridOffset];
+		} else {
+			int maxDes = -9999;
+			for (int y = 0; y < b->size; y++) {
+				for (int x = 0; x < b->size; x++) {
+					int gridOffset = GridOffset(b->x + x, b->y + y);
+					if (Data_Grid_desirability[gridOffset] > maxDes) {
+						maxDes = Data_Grid_desirability[gridOffset];
+					}
+				}
+			}
+			b->desirability = maxDes;
+		}
+		if (b->isAdjacentToWater) {
+			b->desirability += 10;
+		}
+		switch (Data_Grid_elevation[b->gridOffset]) {
+			case 0: break;
+			case 1: b->desirability += 10; break;
+			case 2: b->desirability += 12; break;
+			case 3: b->desirability += 14; break;
+			case 4: b->desirability += 16; break;
+			default: b->desirability += 18; break;
+		}
+	}
 }
 
 void BuildingStorage_clearList()
