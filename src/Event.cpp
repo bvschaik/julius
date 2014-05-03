@@ -309,7 +309,7 @@ void Event_handleRequests()
 						Data_Scenario.requests_state[i] = RequestState_Overdue;
 						Data_Scenario.requests_monthsToComply[i] = 24;
 						CityInfo_Ratings_changeFavor(-3);
-						Data_CityInfo.favorIgnoredRequestPenalty = 3;
+						Data_CityInfo.ratingFavorIgnoredRequestPenalty = 3;
 					}
 				} else if (state == RequestState_Overdue) {
 					if (Data_Scenario.requests_monthsToComply[i] <= 0) {
@@ -317,7 +317,7 @@ void Event_handleRequests()
 						Data_Scenario.requests_state[i] = RequestState_Ignored;
 						Data_Scenario.requests_isVisible[i] = 0;
 						CityInfo_Ratings_changeFavor(-5);
-						Data_CityInfo.favorIgnoredRequestPenalty = 5;
+						Data_CityInfo.ratingFavorIgnoredRequestPenalty = 5;
 					}
 				}
 				if (!Data_Scenario.requests_canComplyDialogShown[i] &&

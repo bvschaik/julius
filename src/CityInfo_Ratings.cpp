@@ -1,10 +1,13 @@
 #include "CityInfo.h"
-#include "Data/CityInfo.h"
-#include "Data/Scenario.h"
-#include "Data/Building.h"
-#include "Data/Model.h"
-#include "Util.h"
+
 #include "Calc.h"
+#include "Util.h"
+
+#include "Data/Building.h"
+#include "Data/CityInfo.h"
+#include "Data/Model.h"
+#include "Data/Scenario.h"
+#include "Data/Settings.h"
 
 static void updateCultureRating();
 static void updateFavorRating(int isYearlyUpdate);
@@ -153,7 +156,91 @@ static void updateFavorRating(int isYearlyUpdate)
 		Data_CityInfo.giftOverdosePenalty = 0;
 	}
 	if (isYearlyUpdate) {
-		
+		Data_CityInfo.ratingFavorSalaryPenalty = 0;
+		Data_CityInfo.ratingFavorMilestonePenalty = 0;
+		Data_CityInfo.ratingFavorIgnoredRequestPenalty = 0;
+		if (!IsTutorial1() && !IsTutorial2()) {
+			Data_CityInfo.ratingFavor -= 2;
+		}
+		// tribute penalty
+		if (Data_CityInfo.tributeNotPaidLastYear) {
+			if (Data_CityInfo.tributeNotPaidTotalYears <= 1) {
+				Data_CityInfo.ratingFavor -= 3;
+			} else if (Data_CityInfo.tributeNotPaidTotalYears <= 2) {
+				Data_CityInfo.ratingFavor -= 5;
+			} else {
+				Data_CityInfo.ratingFavor -= 8;
+			}
+		}
+		// salary
+		int salaryDiff = Data_CityInfo.salaryRank - Data_CityInfo.playerRank;
+		if (Data_CityInfo.playerRank != 0) {
+			if (salaryDiff > 0) {
+				// salary too high
+				Data_CityInfo.ratingFavor -= salaryDiff;
+				Data_CityInfo.ratingFavorSalaryPenalty = salaryDiff + 1;
+			} else if (salaryDiff < 0) {
+				// salary lower than rank
+				Data_CityInfo.ratingFavor += 1;
+			}
+		} else if (salaryDiff > 0) {
+			Data_CityInfo.ratingFavor -= salaryDiff;
+			Data_CityInfo.ratingFavorSalaryPenalty = salaryDiff;
+		}
+		// milestone
+		int milestonePct;
+		if (Data_Scenario.startYear + Data_Scenario.milestone25 == Data_CityInfo_Extra.gameTimeYear) {
+			milestonePct = 25;
+		} else if (Data_Scenario.startYear + Data_Scenario.milestone50 == Data_CityInfo_Extra.gameTimeYear) {
+			milestonePct = 50;
+		} else if (Data_Scenario.startYear + Data_Scenario.milestone75 == Data_CityInfo_Extra.gameTimeYear) {
+			milestonePct = 75;
+		} else {
+			milestonePct = 0;
+		}
+		if (milestonePct) {
+			int bonus = 1;
+			if (Data_Scenario.winCriteria.cultureEnabled &&
+				Data_CityInfo.ratingCulture < Calc_adjustWithPercentage(
+					Data_Scenario.winCriteria.culture, milestonePct)) {
+				bonus = 0;
+			}
+			if (Data_Scenario.winCriteria.prosperityEnabled &&
+				Data_CityInfo.ratingProsperity < Calc_adjustWithPercentage(
+					Data_Scenario.winCriteria.prosperity, milestonePct)) {
+				bonus = 0;
+			}
+			if (Data_Scenario.winCriteria.peaceEnabled &&
+				Data_CityInfo.ratingPeace < Calc_adjustWithPercentage(
+					Data_Scenario.winCriteria.peace, milestonePct)) {
+				bonus = 0;
+			}
+			if (Data_Scenario.winCriteria.favorEnabled &&
+				Data_CityInfo.ratingFavor < Calc_adjustWithPercentage(
+					Data_Scenario.winCriteria.favor, milestonePct)) {
+				bonus = 0;
+			}
+			if (Data_Scenario.winCriteria_populationEnabled &&
+				Data_CityInfo.population < Calc_adjustWithPercentage(
+					Data_Scenario.winCriteria_population, milestonePct)) {
+				bonus = 0;
+			}
+			if (bonus) {
+				Data_CityInfo.ratingFavor += 5;
+			} else {
+				Data_CityInfo.ratingFavor -= 2;
+				Data_CityInfo.ratingFavorMilestonePenalty = 2;
+			}
+		}
+
+		if (Data_CityInfo.ratingFavor < Data_CityInfo.ratingFavorLastYear) {
+			Data_CityInfo.ratingFavorChange = 0;
+		} else if (Data_CityInfo.ratingFavor == Data_CityInfo.ratingFavorLastYear) {
+			Data_CityInfo.ratingFavorChange = 1;
+		} else {
+			Data_CityInfo.ratingFavorChange = 2;
+		}
+		Data_CityInfo.ratingFavorLastYear = Data_CityInfo.ratingFavor;
 	}
 	if (Data_CityInfo.ratingFavor < 0) {
 		Data_CityInfo.ratingFavor = 0;
@@ -166,20 +253,45 @@ static void updateFavorRating(int isYearlyUpdate)
 
 void CityInfo_Ratings_updateFavorExplanation()
 {
-	Data_CityInfo.salaryDifferenceFromRank = 0;
-	int salaryDifference = Data_CityInfo.salaryRank - Data_CityInfo.playerRank;
-	if (Data_CityInfo.playerRank) {
-		if (salaryDifference > 0) {
-			Data_CityInfo.salaryDifferenceFromRank = salaryDifference + 1;
+	Data_CityInfo.ratingFavorSalaryPenalty = 0;
+	int salaryDiff = Data_CityInfo.salaryRank - Data_CityInfo.playerRank;
+	if (Data_CityInfo.playerRank != 0) {
+		if (salaryDiff > 0) {
+			Data_CityInfo.ratingFavorSalaryPenalty = salaryDiff + 1;
 		}
-	} else if (salaryDifference > 0) {
-		Data_CityInfo.salaryDifferenceFromRank = salaryDifference;
+	} else if (salaryDiff > 0) {
+		Data_CityInfo.ratingFavorSalaryPenalty = salaryDiff;
 	}
 
-	if (Data_CityInfo.salaryDifferenceFromRank >= 8) {
+	if (Data_CityInfo.ratingFavorSalaryPenalty >= 8) {
 		Data_CityInfo.ratingAdvisorExplanationFavor = 1;
-	}// else if (
-	// TODO
+	} else if (Data_CityInfo.tributeNotPaidTotalYears >= 3) {
+		Data_CityInfo.ratingAdvisorExplanationFavor = 2;
+	} else if (Data_CityInfo.ratingFavorIgnoredRequestPenalty >= 5) {
+		Data_CityInfo.ratingAdvisorExplanationFavor = 3;
+	} else if (Data_CityInfo.ratingFavorSalaryPenalty >= 5) {
+		Data_CityInfo.ratingAdvisorExplanationFavor = 4;
+	} else if (Data_CityInfo.tributeNotPaidTotalYears >= 2) {
+		Data_CityInfo.ratingAdvisorExplanationFavor = 5;
+	} else if (Data_CityInfo.ratingFavorIgnoredRequestPenalty >= 3) {
+		Data_CityInfo.ratingAdvisorExplanationFavor = 6;
+	} else if (Data_CityInfo.ratingFavorSalaryPenalty >= 3) {
+		Data_CityInfo.ratingAdvisorExplanationFavor = 7;
+	} else if (Data_CityInfo.tributeNotPaidLastYear) {
+		Data_CityInfo.ratingAdvisorExplanationFavor = 8;
+	} else if (Data_CityInfo.ratingFavorSalaryPenalty >= 2) {
+		Data_CityInfo.ratingAdvisorExplanationFavor = 9;
+	} else if (Data_CityInfo.ratingFavorMilestonePenalty) {
+		Data_CityInfo.ratingAdvisorExplanationFavor = 10;
+	} else if (Data_CityInfo.ratingFavorSalaryPenalty) {
+		Data_CityInfo.ratingAdvisorExplanationFavor = 11;
+	} else if (Data_CityInfo.ratingFavorChange == 2) { // rising
+		Data_CityInfo.ratingAdvisorExplanationFavor = 12;
+	} else if (Data_CityInfo.ratingFavorChange == 1) { // the same
+		Data_CityInfo.ratingAdvisorExplanationFavor = 13;
+	} else {
+		Data_CityInfo.ratingAdvisorExplanationFavor = 0;
+	}
 }
 
 static void updateProsperityRating()

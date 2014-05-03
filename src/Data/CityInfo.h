@@ -787,20 +787,11 @@ extern struct Data_CityInfo {
 	int giftCost_modest;
 	int giftCost_generous;
 	int giftCost_lavish;
-	int salaryDifferenceFromRank;
-	char __unknown_44a8;
-	char __unknown_44a9;
-	char __unknown_44aa;
-	char __unknown_44ab;
-	int favorIgnoredRequestPenalty;
-	char __unknown_44b0;
-	char __unknown_44b1;
-	char __unknown_44b2;
-	char __unknown_44b3;
-	char __unknown_44b4;
-	char __unknown_44b5;
-	char __unknown_44b6;
-	char __unknown_44b7;
+	int ratingFavorSalaryPenalty;
+	int ratingFavorMilestonePenalty;
+	int ratingFavorIgnoredRequestPenalty;
+	int ratingFavorLastYear;
+	int ratingFavorChange; // 0 = dropping, 1 = stalling, 2 = rising
 	char __unknown_44b8;
 	char __unknown_44b9;
 	char __unknown_44ba;
