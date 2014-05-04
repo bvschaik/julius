@@ -15,6 +15,7 @@ int Formation_getLegionFormationId(int legionId);
 void Formation_legionReturnHome(int formationId);
 
 void Formation_calculateLegionTotals();
+int Formation_anyLegionNeedsSoldiers();
 
 void Formation_updateAfterDeath(int formationId);
 

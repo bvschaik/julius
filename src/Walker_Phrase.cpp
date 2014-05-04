@@ -539,3 +539,82 @@ int Walker_playPhrase(int walkerId)
 		return 0;
 	}
 }
+
+void Walker_playDieSound(int walkerType)
+{
+	int isSoldier = 0;
+	int isCitizen = 0;
+	switch (walkerType) {
+		case Walker_Wolf:
+			Sound_Effects_playChannel(SoundChannel_WolfDie);
+			break;
+		case Walker_Sheep:
+			Sound_Effects_playChannel(SoundChannel_SheepDie);
+			break;
+		case Walker_Zebra:
+			Sound_Effects_playChannel(SoundChannel_ZebraDie);
+			break;
+		case Walker_LionTamer:
+			Sound_Effects_playChannel(SoundChannel_LionDie);
+			break;
+		case Walker_Enemy48_Horse:
+		case Walker_Enemy52_Horse:
+			Sound_Effects_playChannel(SoundChannel_Horse2);
+			break;
+		case Walker_Enemy46_Camel:
+			Sound_Effects_playChannel(SoundChannel_Camel);
+			break;
+		case Walker_Enemy47_Elephant:
+			Sound_Effects_playChannel(SoundChannel_ElephantDie);
+			break;
+		case Walker_NativeTrader:
+		case Walker_TradeCaravan:
+		case Walker_TradeCaravanDonkey:
+			break;
+		case Walker_Prefect:
+		case Walker_FortJavelin:
+		case Walker_FortMounted:
+		case Walker_FortLegionary:
+		case Walker_Gladiator:
+		case Walker_IndigenousNative:
+		case Walker_TowerSentry:
+		case Walker_Enemy43:
+		case Walker_Enemy44:
+		case Walker_Enemy45:
+		case Walker_Enemy49:
+		case Walker_Enemy50:
+		case Walker_Enemy51:
+		case Walker_Enemy53:
+		case Walker_Enemy54:
+		case Walker_Enemy55_Javelin:
+		case Walker_Enemy56_Mounted:
+		case Walker_EnemyCaesarLegionary:
+			isSoldier = 1;
+			break;
+		default:
+			isCitizen = 1;
+			break;
+	}
+	if (isSoldier) {
+		Data_CityInfo.dieSoundSoldier++;
+		if (Data_CityInfo.dieSoundSoldier >= 4) {
+			Data_CityInfo.dieSoundSoldier = 0;
+		}
+		Sound_Effects_playChannel(SoundChannel_SoldierDie + Data_CityInfo.dieSoundSoldier);
+	} else if (isCitizen) {
+		Data_CityInfo.dieSoundCitizen++;
+		if (Data_CityInfo.dieSoundCitizen >= 4) {
+			Data_CityInfo.dieSoundCitizen = 0;
+		}
+		Sound_Effects_playChannel(SoundChannel_CitizenDie + Data_CityInfo.dieSoundCitizen);
+	}
+	if (WalkerIsEnemy(walkerType)) {
+		if (Data_CityInfo.numEnemiesInCity == 1) {
+			Sound_Speech_playFile("wavs/Army_war_cry.wav");
+		}
+	} else if (WalkerIsLegion(walkerType)) {
+		if (Data_CityInfo.numSoldiersInCity == 1) {
+			Sound_Speech_playFile("wavs/barbarian_war_cry.wav");
+		}
+	}
+}

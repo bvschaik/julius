@@ -81,6 +81,7 @@ enum {
 
 #define WalkerIsEnemyOrNative(t) ((t) >= Walker_IndigenousNative && (t) <= Walker_NativeTrader)
 #define WalkerIsEnemy(t) ((t) >= Walker_Enemy43 && (t) <= Walker_EnemyCaesarLegionary)
+#define WalkerIsLegion(t) ((t) >= Walker_FortJavelin && (t) <= Walker_FortLegionary)
 
 enum {
 	WalkerState_Alive = 1,

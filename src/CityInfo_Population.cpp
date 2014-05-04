@@ -10,6 +10,7 @@
 #include "Data/Model.h"
 #include "Data/Random.h"
 #include "Data/Settings.h"
+#include "Data/Tutorial.h"
 
 static void addPeopleToCensus(int numPeople);
 static void removePeopleFromCensus(int numPeople);
@@ -290,6 +291,72 @@ void CityInfo_Population_calculateSentiment()
 		Data_CityInfo.populationEmigrationCause = 5;
 	}
 	Data_CityInfo.citySentimentLastTime = Data_CityInfo.citySentiment;
+}
+
+void CityInfo_Population_calculateMigrationSentiment()
+{
+	if (Data_CityInfo.citySentiment > 70) {
+		Data_CityInfo.populationMigrationPercentage = 100;
+	} else if (Data_CityInfo.citySentiment > 60) {
+		Data_CityInfo.populationMigrationPercentage = 75;
+	} else if (Data_CityInfo.citySentiment >= 50) {
+		Data_CityInfo.populationMigrationPercentage = 50;
+	} else if (Data_CityInfo.citySentiment > 40) {
+		Data_CityInfo.populationMigrationPercentage = 0;
+	} else if (Data_CityInfo.citySentiment > 30) {
+		Data_CityInfo.populationMigrationPercentage = -10;
+	} else if (Data_CityInfo.citySentiment > 20) {
+		Data_CityInfo.populationMigrationPercentage = -25;
+	} else {
+		Data_CityInfo.populationMigrationPercentage = -50;
+	}
+
+	Data_CityInfo.populationImmigrationAmountPerBatch = 0;
+	Data_CityInfo.populationEmigrationAmountPerBatch = 0;
+
+	int populationCap = 200000;
+	if (IsTutorial1()) {
+		if (!Data_Tutorial.tutorial1.fire ||
+			!Data_Tutorial.tutorial1.collapse ||
+			!Data_Tutorial.tutorial1.senateBuilt) {
+			populationCap = 80;
+		}
+	} else if (IsTutorial2()) {
+		if (!Data_Tutorial.tutorial2.granaryBuilt) {
+			populationCap = 150;
+		} else if (!Data_Tutorial.tutorial2.potteryMade) {
+			populationCap = 520;
+		}
+	}
+	if (Data_CityInfo.population >= populationCap) {
+		Data_CityInfo.populationMigrationPercentage = 0;
+		return;
+	}
+	// war scares immigrants away
+	if (Data_CityInfo.numEnemiesInCity + Data_CityInfo.numImperialSoldiersInCity > 3 &&
+		Data_CityInfo.populationMigrationPercentage > 0) {
+		Data_CityInfo.populationMigrationPercentage = 0;
+		return;
+	}
+	if (Data_CityInfo.populationMigrationPercentage > 0) {
+		// immigration
+		if (Data_CityInfo.populationEmigrationDuration) {
+			Data_CityInfo.populationEmigrationDuration--;
+		} else {
+			Data_CityInfo.populationImmigrationAmountPerBatch =
+				Calc_adjustWithPercentage(12, Data_CityInfo.populationMigrationPercentage);
+			Data_CityInfo.populationImmigrationDuration = 2;
+		}
+	} else if (Data_CityInfo.populationMigrationPercentage < 0) {
+		// emigration
+		if (Data_CityInfo.populationImmigrationDuration) {
+			Data_CityInfo.populationImmigrationDuration--;
+		} else if (Data_CityInfo.population > 100) {
+			Data_CityInfo.populationEmigrationAmountPerBatch =
+				Calc_adjustWithPercentage(12, -Data_CityInfo.populationMigrationPercentage);
+			Data_CityInfo.populationEmigrationDuration = 2;
+		}
+	}
 }
 
 void CityInfo_Population_changeHealthRate(int amount)

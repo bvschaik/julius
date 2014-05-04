@@ -1,5 +1,8 @@
 #include "CityInfo.h"
+
 #include "PlayerMessage.h"
+#include "Walker.h"
+
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 #include "Data/Random.h"
@@ -25,11 +28,6 @@ static void performBlessingMercury()
 }
 
 static void performCurseCeres(int isLarge)
-{
-	// TODO
-}
-
-static void sinkAllShips()
 {
 	// TODO
 }
@@ -86,7 +84,7 @@ static void performSmallCurse(int god)
 			break;
 		case God_Neptune:
 			PlayerMessage_post(1, 92, 0, 0);
-			sinkAllShips();
+			Walker_sinkAllShips();
 			Data_CityInfo.godCurseNeptuneSankShips = 1;
 			break;
 		case God_Mercury:
@@ -121,7 +119,7 @@ static void performLargeCurse(int god)
 				PlayerMessage_post(1, 42, 0, 0);
 			} else {
 				PlayerMessage_post(1, 81, 0, 0);
-				sinkAllShips();
+				Walker_sinkAllShips();
 				Data_CityInfo.godCurseNeptuneSankShips = 1;
 				Data_CityInfo.tradeSeaProblemDuration = 80;
 			}

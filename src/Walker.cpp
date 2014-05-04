@@ -186,6 +186,62 @@ void Walker_removeFromTileList(int walkerId)
 	}
 }
 
+void Walker_sinkAllShips()
+{
+	for (int i = 1; i < MAX_WALKERS; i++) {
+		if (Data_Walkers[i].state != WalkerState_Alive) {
+			continue;
+		}
+		int buildingId;
+		if (Data_Walkers[i].type == Walker_TradeShip) {
+			buildingId = Data_Walkers[i].destinationBuildingId;
+		} else if (Data_Walkers[i].type == Walker_FishingBoat) {
+			buildingId = Data_Walkers[i].buildingId;
+		} else {
+			continue;
+		}
+		Data_Buildings[buildingId].data.other.boatWalkerId = 0;
+		Data_Walkers[i].buildingId = 0;
+		Data_Walkers[i].type = Walker_Shipwreck;
+		Data_Walkers[i].waitTicks = 0;
+	}
+}
+
+int Walker_getCitizenOnSameTile(int walkerId)
+{
+	for (int w = Data_Grid_walkerIds[Data_Walkers[walkerId].gridOffset];
+		w > 0; w = Data_Walkers[w].nextWalkerIdOnSameTile) {
+		if (Data_Walkers[w].actionState != WalkerActionState_149_Corpse) {
+			int type = Data_Walkers[w].type;
+			if (type && type != Walker_Explosion && type != Walker_FortStandard &&
+				type != Walker_MapFlag && type != Walker_Flotsam && type < Walker_IndigenousNative) {
+				return w;
+			}
+		}
+	}
+	return 0;
+}
+
+int Walker_getNonCitizenOnSameTile(int walkerId)
+{
+	for (int w = Data_Grid_walkerIds[Data_Walkers[walkerId].gridOffset];
+		w > 0; w = Data_Walkers[w].nextWalkerIdOnSameTile) {
+		if (Data_Walkers[w].actionState != WalkerActionState_149_Corpse) {
+			int type = Data_Walkers[w].type;
+			if (WalkerIsEnemy(type)) {
+				return w;
+			}
+			if (type == Walker_IndigenousNative && Data_Walkers[w].actionState == WalkerActionState_159_AttackingNative) {
+				return w;
+			}
+			if (type == Walker_Wolf || type == Walker_Sheep || type == Walker_Zebra) {
+				return w;
+			}
+		}
+	}
+	return 0;
+}
+
 int Walker_TradeCaravan_isBuying(int walkerId, int buildingId, int empireCityId)
 {
 	// TODO

@@ -11,9 +11,12 @@ void Walker_addToTileList(int walkerId);
 void Walker_updatePositionInTileList(int walkerId);
 void Walker_removeFromTileList(int walkerId);
 
+void Walker_sinkAllShips();
+int Walker_getCitizenOnSameTile(int walkerId);
+int Walker_getNonCitizenOnSameTile(int walkerId);
+
 int Walker_determinePhrase(int walkerId);
 int Walker_playPhrase(int walkerId);
-
 
 int Walker_TradeCaravan_isBuying(int walkerId, int buildingId, int empireCityId);
 int Walker_TradeCaravan_isSelling(int walkerId, int buildingId, int empireCityId);

@@ -57,60 +57,48 @@ void HousePopulation_updateRoom()
 
 void HousePopulation_updateMigration()
 {
-	// TODO j_fun_determineHappinessEmigrationImmigration(ciid);
+	CityInfo_Population_calculateMigrationSentiment();
 	Data_CityInfo.populationImmigratedToday = 0;
 	Data_CityInfo.populationEmigratedToday = 0;
 	Data_CityInfo.populationRefusedImmigrantsNoRoom = 0;
 
-	// TODO
-/*
-  if ( cityinfo_happiness_immigrationAmount[4517 * ciid] > 0 )
-  {
-    if ( cityinfo_happiness_immigrationAmount[4517 * ciid] < 4 )
-    {
-      if ( cityinfo_immigrationQueueSize[4517 * ciid] + cityinfo_happiness_immigrationAmount[4517 * ciid] < 4 )
-      {
-        cityinfo_immigrationQueueSize[4517 * ciid] += cityinfo_happiness_immigrationAmount[4517 * ciid];
-      }
-      else
-      {
-        j_fun_immigratePeople(cityinfo_immigrationQueueSize[4517 * ciid] + cityinfo_happiness_immigrationAmount[4517 * ciid]);
-        cityinfo_immigrationQueueSize[4517 * ciid] = 0;
-      }
-    }
-    else
-    {
-      j_fun_immigratePeople(cityinfo_happiness_immigrationAmount[4517 * ciid]);
-    }
-  }
-  if ( cityinfo_happiness_emigrationValue[4517 * ciid] > 0 )
-  {
-    if ( cityinfo_happiness_emigrationValue[4517 * ciid] < 4 )
-    {
-      if ( cityinfo_emigrationQueueSize[4517 * ciid] + cityinfo_happiness_emigrationValue[4517 * ciid] < 4 )
-      {
-        cityinfo_emigrationQueueSize[4517 * ciid] += cityinfo_happiness_emigrationValue[4517 * ciid];
-      }
-      else
-      {
-        j_fun_emigratePeople(cityinfo_emigrationQueueSize[4517 * ciid] + cityinfo_happiness_emigrationValue[4517 * ciid]);
-        cityinfo_emigrationQueueSize[4517 * ciid] = 0;
-        if ( !cityinfo_emigrationMessageShown[4517 * ciid] )
-        {
-          cityinfo_emigrationMessageShown[4517 * ciid] = 1;
-          message_usePopup = 1;
-          j_fun_postMessageToPlayer(111, 0, 0);
-        }
-      }
-    }
-    else
-    {
-      j_fun_emigratePeople(cityinfo_happiness_emigrationValue[4517 * ciid]);
-    }
-  }
-  cityinfo_happiness_immigrationAmount[4517 * ciid] = 0;
-  cityinfo_happiness_emigrationValue[4517 * ciid] = 0;
-  */
+	if (Data_CityInfo.populationImmigrationAmountPerBatch > 0) {
+		if (Data_CityInfo.populationImmigrationAmountPerBatch >= 4) {
+			createImmigrants(Data_CityInfo.populationImmigrationAmountPerBatch);
+		} else if (Data_CityInfo.populationImmigrationAmountPerBatch +
+				Data_CityInfo.populationImmigrationQueueSize >= 4) {
+			createImmigrants(
+				Data_CityInfo.populationImmigrationAmountPerBatch +
+				Data_CityInfo.populationImmigrationQueueSize);
+			Data_CityInfo.populationImmigrationQueueSize = 0;
+		} else {
+			// queue them for next round
+			Data_CityInfo.populationImmigrationQueueSize +=
+				Data_CityInfo.populationImmigrationAmountPerBatch;
+		}
+	}
+	if (Data_CityInfo.populationEmigrationAmountPerBatch > 0) {
+		if (Data_CityInfo.populationEmigrationAmountPerBatch >= 4) {
+			createEmigrants(Data_CityInfo.populationEmigrationAmountPerBatch);
+		} else if (Data_CityInfo.populationEmigrationAmountPerBatch +
+				Data_CityInfo.populationEmigrationQueueSize >= 4) {
+			createEmigrants(
+				Data_CityInfo.populationEmigrationAmountPerBatch +
+				Data_CityInfo.populationEmigrationQueueSize);
+			Data_CityInfo.populationEmigrationQueueSize = 0;
+			if (!Data_CityInfo.messageShownEmigration) {
+				Data_CityInfo.messageShownEmigration = 1;
+				PlayerMessage_post(1, 111, 0, 0);
+			}
+		} else {
+			// queue them for next round
+			Data_CityInfo.populationEmigrationQueueSize +=
+				Data_CityInfo.populationEmigrationAmountPerBatch;
+		}
+	}
+	Data_CityInfo.populationImmigrationAmountPerBatch = 0;
+	Data_CityInfo.populationEmigrationAmountPerBatch = 0;
+
 	CityInfo_Population_yearlyUpdate();
 	calculateWorkers();
 	// population messages

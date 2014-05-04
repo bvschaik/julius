@@ -101,6 +101,18 @@ void Formation_calculateLegionTotals()
 	}
 }
 
+int Formation_anyLegionNeedsSoldiers()
+{
+	for (int i = 1; i < MAX_FORMATIONS; i++) {
+		if (Data_Formations[i].inUse == 1 &&
+			Data_Formations[i].isLegion &&
+			Data_Formations[i].legionRoomForRecruits > 0) {
+			return 1;
+		}
+	}
+	return 0;
+}
+
 void Formation_calculateWalkers()
 {
 	// TODO
@@ -206,5 +218,36 @@ void Formation_legionsReturnFromDistantBattle()
 
 void Formation_legionKillSoldiersInDistantBattle(int killPercentage)
 {
-	// TODO
+	for (int i = 1; i < MAX_FORMATIONS; i++) {
+		if (Data_Formations[i].inUse != 1 || !Data_Formations[i].isLegion ||
+			!Data_Formations[i].inDistantBattle) {
+			continue;
+		}
+		struct Data_Formation *f = &Data_Formations[i];
+		changeMorale(i, -75);
+
+		int numSoldiersTotal = 0;
+		for (int w = 0; w < f->numWalkers; w++) {
+			int walkerId = f->walkerIds[w];
+			if (walkerId > 0 && Data_Walkers[walkerId].state == WalkerState_Alive &&
+				Data_Walkers[walkerId].actionState != WalkerActionState_149_Corpse) {
+				numSoldiersTotal++;
+			}
+		}
+		int numSoldiersToKill = Calc_adjustWithPercentage(numSoldiersTotal, killPercentage);
+		if (numSoldiersToKill >= numSoldiersTotal) {
+			f->isAtFort = 1;
+			f->inDistantBattle = 0;
+		}
+		for (int w = 0; w < f->numWalkers; w++) {
+			int walkerId = f->walkerIds[w];
+			if (walkerId > 0 && Data_Walkers[walkerId].state == WalkerState_Alive &&
+				Data_Walkers[walkerId].actionState != WalkerActionState_149_Corpse) {
+				if (numSoldiersToKill) {
+					numSoldiersToKill--;
+					Data_Walkers[walkerId].state = WalkerState_Dead;
+				}
+			}
+		}
+	}
 }

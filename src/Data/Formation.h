@@ -28,7 +28,7 @@ struct Data_Formation {
 	char isLegion;
 	char __padding;
 	short attackType;
-	short __unknown3e;
+	short legionRoomForRecruits;
 	short hasMilitaryTraining; //40
 	short __unknown42;
 	short __unknown44;
