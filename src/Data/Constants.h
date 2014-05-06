@@ -111,6 +111,7 @@ enum {
 #define Color_NoMask 0xffff
 #define Color_MaskRed 0xf863
 #define Color_MaskGreen 0x1fe3
+#define Color_Tooltip 0x4208
 
 enum {
 	EmpireObject_Ornament = 0,

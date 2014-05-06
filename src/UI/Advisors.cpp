@@ -4,6 +4,9 @@
 #include "Window.h"
 #include "MessageDialog.h"
 
+#include "../CityInfo.h"
+#include "../Formation.h"
+
 static void buttonChangeAdvisor(int param1, int param2);
 static void buttonHelp(int param1, int param2);
 
@@ -44,6 +47,26 @@ void UI_Advisors_setAdvisor(int advisor)
 
 void UI_Advisors_init()
 {
+	CityInfo_Labor_allocateWorkersToCategories();
+	CityInfo_Labor_allocateWorkersToBuildings();
+
+	CityInfo_Finance_calculateEstimatedTaxes();
+	CityInfo_Finance_calculateEstimatedWages();
+	CityInfo_Finance_updateInterest();
+	CityInfo_Finance_updateSalary();
+	CityInfo_Finance_calculateTotals();
+
+	CityInfo_Culture_calculateDemandsForAdvisors();
+	CityInfo_Culture_updateCoveragePercentages();
+
+	CityInfo_Resource_calculateFoodAndSupplyRomeWheat();
+	Formation_calculateWalkers();
+
+	CityInfo_Ratings_updateCultureExplanation();
+	CityInfo_Ratings_updateProsperityExplanation();
+	CityInfo_Ratings_updatePeaceExplanation();
+	CityInfo_Ratings_updateFavorExplanation();
+
 	switch (currentAdvisor) {
 		case Advisor_Entertainment:
 			UI_Advisor_Entertainment_init();

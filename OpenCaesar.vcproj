@@ -564,6 +564,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\UI\Tooltip.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\UI\TopMenu.cpp"
 				>
 			</File>
@@ -758,11 +762,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Graphics.h"
+				RelativePath=".\src\Data\Graphics.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Graphics.h"
+				RelativePath=".\src\Graphics.h"
 				>
 			</File>
 			<File
@@ -790,19 +794,19 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\KeyboardInput.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\KeyboardInput.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Language.h"
+				RelativePath=".\src\Data\KeyboardInput.h"
 				>
 			</File>
 			<File
 				RelativePath=".\src\Language.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Data\Language.h"
 				>
 			</File>
 			<File
@@ -866,11 +870,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Scenario.h"
+				RelativePath=".\src\Scenario.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Scenario.h"
+				RelativePath=".\src\Data\Scenario.h"
 				>
 			</File>
 			<File
@@ -926,6 +930,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\UI\Tooltip.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\UI\TopMenu.h"
 				>
 			</File>
@@ -954,11 +962,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Walker.h"
+				RelativePath=".\src\Data\Walker.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Walker.h"
+				RelativePath=".\src\Walker.h"
 				>
 			</File>
 			<File

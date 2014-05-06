@@ -463,9 +463,9 @@ int Widget_GameText_drawMultiline(int group, int number, int xOffset, int yOffse
 
 #define MAX_LINKS 50
 
-static void drawRichTextLine(const unsigned char *str, int x, int y, int measureOnly);
+static void drawRichTextLine(const unsigned char *str, int x, int y, Color color, int measureOnly);
 static int getRichTextWordWidth(const unsigned char *str, int *outNumChars);
-static int drawRichTextCharacter(Font font, unsigned int c, int x, int y, int measureOnly);
+static int drawRichTextCharacter(Font font, unsigned int c, int x, int y, Color color, int measureOnly);
 
 static struct RichTextLink {
 	int messageId;
@@ -522,8 +522,8 @@ void Widget_RichText_clearLinks()
 	numLinks = 0;
 }
 
-int Widget_RichText_draw(const char *str, int xOffset, int yOffset,
-						 int boxWidth, int heightLines, int scrollLine, int measureOnly)
+static int drawRichText(const char *str, int xOffset, int yOffset,
+						int boxWidth, int heightLines, int scrollLine, Color color, int measureOnly)
 {
 	int graphicHeightLines = 0;
 	int graphicId = 0;
@@ -611,7 +611,7 @@ int Widget_RichText_draw(const char *str, int xOffset, int yOffset,
 			}
 		}
 		if (!outsideViewport) {
-			drawRichTextLine((unsigned char*)tmpLine, xLineOffset + xOffset, y, measureOnly);
+			drawRichTextLine((unsigned char*)tmpLine, xLineOffset + xOffset, y, color, measureOnly);
 		}
 		if (!measureOnly) {
 			if (graphicId) {
@@ -637,7 +637,19 @@ int Widget_RichText_draw(const char *str, int xOffset, int yOffset,
 	return line;
 }
 
-static void drawRichTextLine(const unsigned char *str, int x, int y, int measureOnly)
+int Widget_RichText_draw(const char *str, int xOffset, int yOffset,
+						 int boxWidth, int heightLines, int scrollLine, int measureOnly)
+{
+	return drawRichText(str, xOffset, yOffset, boxWidth, heightLines, scrollLine, 0, measureOnly);
+}
+
+int Widget_RichText_drawColored(const char *str, int xOffset, int yOffset,
+								int boxWidth, int heightLines, int scrollLine, Color color)
+{
+	return drawRichText(str, xOffset, yOffset, boxWidth, heightLines, scrollLine, color, 0);
+}
+
+static void drawRichTextLine(const unsigned char *str, int x, int y, Color color, int measureOnly)
 {
 	int numLinkChars = 0;
 	for (unsigned char c = *str; c; c = *(++str)) {
@@ -659,7 +671,7 @@ static void drawRichTextLine(const unsigned char *str, int x, int y, int measure
 			if (map_charToFontGraphic[c] <= 0) {
 				x += 6;
 			} else {
-				x += drawRichTextCharacter(font, c, x, y, measureOnly);
+				x += drawRichTextCharacter(font, c, x, y, color, measureOnly);
 			}
 		}
 	}
@@ -710,7 +722,7 @@ static int getRichTextWordWidth(const unsigned char *str, int *outNumChars)
 	return width;
 }
 
-static int drawRichTextCharacter(Font font, unsigned int c, int x, int y, int measureOnly)
+static int drawRichTextCharacter(Font font, unsigned int c, int x, int y, Color color, int measureOnly)
 {
 	int graphicOffset = map_charToFontGraphic[c];
 	if (!graphicOffset) {
@@ -726,7 +738,7 @@ static int drawRichTextCharacter(Font font, unsigned int c, int x, int y, int me
 		height = 0;
 	}
 	if (!measureOnly) {
-		Graphics_drawImage(graphicId, x, y - height);
+		Graphics_drawLetter(graphicId, x, y - height, color);
 	}
 	return Data_Graphics_Main.index[graphicId].width;
 }

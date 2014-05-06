@@ -60,6 +60,8 @@ void CityInfo_Labor_allocateWorkersToCategories();
 void CityInfo_Labor_allocateWorkersToBuildings();
 
 void CityInfo_Resource_calculateAvailableResources();
+void CityInfo_Resource_calculateFoodAndSupplyRomeWheat();
+void CityInfo_Resource_calculateFood();
 
 void CityInfo_Culture_updateCoveragePercentages();
 void CityInfo_Culture_calculateDemandsForAdvisors();

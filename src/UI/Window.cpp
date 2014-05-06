@@ -1,9 +1,12 @@
 #include "Window.h"
+
 #include "AllWindows.h"
-#include "TopMenu.h"
+#include "CityBuildings.h"
 #include "FileDialog.h"
 #include "PopupDialog.h"
 #include "MessageDialog.h"
+#include "Tooltip.h"
+#include "TopMenu.h"
 
 #include "../Data/Mouse.h"
 
@@ -12,6 +15,7 @@ struct Window {
 	void (*drawBackground)(void);
 	void (*drawForeground)(void);
 	void (*handleMouse)(void);
+	void (*getTooltip)(struct TooltipContext *c);
 };
 
 static void noop()
@@ -21,7 +25,7 @@ static void noop()
 static struct Window windows[] = {
 	// 0
 	{ noop, UI_MainMenu_drawBackground, UI_MainMenu_drawForeground, UI_MainMenu_handleMouse },
-	{ noop, UI_City_drawBackground, UI_City_drawForeground, UI_City_handleMouse },
+	{ noop, UI_City_drawBackground, UI_City_drawForeground, UI_City_handleMouse, UI_CityBuildings_getTooltip },
 	{ noop, UI_PopupDialog_drawBackground, UI_PopupDialog_drawForeground, UI_PopupDialog_handleMouse },
 	{ noop, UI_City_drawBackground, UI_TopMenu_drawForeground, UI_TopMenu_handleMouse },
 	{ noop, noop, UI_DifficultyOptions_drawForeground, UI_DifficultyOptions_handleMouse },
@@ -114,6 +118,7 @@ void UI_Window_refresh(int force)
 	}
 	windows[currentWindow].drawForeground();
 	windows[currentWindow].handleMouse();
+	UI_Tooltip_handle(windows[currentWindow].getTooltip);
 	updateMouseAfter();
 }
 

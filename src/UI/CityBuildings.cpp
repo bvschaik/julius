@@ -1,5 +1,7 @@
 #include "CityBuildings_private.h"
 
+#include "Window.h"
+
 #include "../Building.h"
 #include "../CityView.h"
 #include "../Scroll.h"
@@ -551,4 +553,318 @@ void UI_CityBuildings_handleMouse()
 {
 	updateCityViewCoords();
 	UI_CityBuildings_scrollMap(Scroll_getDirection());
+}
+
+void UI_CityBuildings_getTooltip(struct TooltipContext *c)
+{
+	if (!Data_Settings.mouseTooltips || Data_Mouse.right.isDown) {
+		return;
+	}
+	if (UI_Window_getId() != Window_City) {
+		return;
+	}
+	if (Data_CityView.selectedTile.gridOffset == 0) {
+		return;
+	}
+	int gridOffset = Data_CityView.selectedTile.gridOffset;
+	int buildingId = Data_Grid_buildingIds[gridOffset];
+	int overlay = Data_State.currentOverlay;
+	if (overlay != Overlay_Water && overlay != Overlay_Desirability && !buildingId) {
+		return;
+	}
+	int overlayRequiresHouse =
+		overlay != Overlay_Water && overlay != Overlay_Fire &&
+		overlay != Overlay_Damage && overlay != Overlay_Native;
+	int overlayForbidsHouse = overlay == Overlay_Native;
+	struct Data_Building *b = &Data_Buildings[buildingId];
+	if (overlayRequiresHouse && !b->houseSize) {
+		return;
+	}
+	if (overlayForbidsHouse && b->houseSize) {
+		return;
+	}
+	c->textGroup = 66;
+	c->textId = 0;
+	c->hasNumericPrefix = 0;
+	switch (overlay) {
+		case Overlay_Water:
+			if (Data_Grid_terrain[gridOffset] & Terrain_ReservoirRange) {
+				if (Data_Grid_terrain[gridOffset] & Terrain_FountainRange) {
+					c->textId = 2;
+				} else {
+					c->textId = 1;
+				}
+			} else if (Data_Grid_terrain[gridOffset] & Terrain_FountainRange) {
+				c->textGroup = 66;
+				c->textId = 3;
+			} else {
+				return;
+			}
+			break;
+		case Overlay_Religion:
+			if (b->data.house.numGods <= 0) {
+				c->textId = 12;
+			} else if (b->data.house.numGods == 1) {
+				c->textId = 13;
+			} else if (b->data.house.numGods == 2) {
+				c->textId = 14;
+			} else if (b->data.house.numGods == 3) {
+				c->textId = 15;
+			} else if (b->data.house.numGods == 4) {
+				c->textId = 16;
+			} else if (b->data.house.numGods == 5) {
+				c->textId = 17;
+			} else {
+				c->textId = 18; // >5 gods, shouldn't happen...
+			}
+			break;
+		case Overlay_Fire:
+			if (b->fireRisk <= 0) {
+				c->textId = 46;
+			} else if (b->fireRisk <= 20) {
+				c->textId = 47;
+			} else if (b->fireRisk <= 40) {
+				c->textId = 48;
+			} else if (b->fireRisk <= 60) {
+				c->textId = 49;
+			} else if (b->fireRisk <= 80) {
+				c->textId = 50;
+			} else {
+				c->textId = 51;
+			}
+			break;
+		case Overlay_Damage:
+			if (b->damageRisk <= 0) {
+				c->textId = 52;
+			} else if (b->damageRisk <= 40) {
+				c->textId = 53;
+			} else if (b->damageRisk <= 80) {
+				c->textId = 54;
+			} else if (b->damageRisk <= 120) {
+				c->textId = 55;
+			} else if (b->damageRisk <= 160) {
+				c->textId = 56;
+			} else {
+				c->textId = 57;
+			}
+			break;
+		case Overlay_Crime:
+			if (b->sentiment.houseHappiness <= 0) {
+				c->textId = 63;
+			} else if (b->sentiment.houseHappiness <= 10) {
+				c->textId = 62;
+			} else if (b->sentiment.houseHappiness <= 20) {
+				c->textId = 61;
+			} else if (b->sentiment.houseHappiness <= 30) {
+				c->textId = 60;
+			} else if (b->sentiment.houseHappiness < 50) {
+				c->textId = 59;
+			} else {
+				c->textId = 58;
+			}
+			break;
+		case Overlay_Entertainment:
+			if (b->data.house.entertainment <= 0) {
+				c->textId = 64;
+			} else if (b->data.house.entertainment < 10) {
+				c->textId = 65;
+			} else if (b->data.house.entertainment < 20) {
+				c->textId = 66;
+			} else if (b->data.house.entertainment < 30) {
+				c->textId = 67;
+			} else if (b->data.house.entertainment < 40) {
+				c->textId = 68;
+			} else if (b->data.house.entertainment < 50) {
+				c->textId = 69;
+			} else if (b->data.house.entertainment < 60) {
+				c->textId = 70;
+			} else if (b->data.house.entertainment < 70) {
+				c->textId = 71;
+			} else if (b->data.house.entertainment < 80) {
+				c->textId = 72;
+			} else if (b->data.house.entertainment < 90) {
+				c->textId = 73;
+			} else {
+				c->textId = 74;
+			}
+			break;
+		case Overlay_Theater:
+			if (b->data.house.theater <= 0) {
+				c->textId = 75;
+			} else if (b->data.house.theater >= 80) {
+				c->textId = 76;
+			} else if (b->data.house.theater >= 20) {
+				c->textId = 77;
+			} else {
+				c->textId = 78;
+			}
+			break;
+		case Overlay_Amphitheater:
+			if (b->data.house.amphitheaterActor <= 0) {
+				c->textId = 79;
+			} else if (b->data.house.amphitheaterActor >= 80) {
+				c->textId = 80;
+			} else if (b->data.house.amphitheaterActor >= 20) {
+				c->textId = 81;
+			} else {
+				c->textId = 82;
+			}
+			break;
+		case Overlay_Colosseum:
+			if (b->data.house.colosseumGladiator <= 0) {
+				c->textId = 83;
+			} else if (b->data.house.colosseumGladiator >= 80) {
+				c->textId = 84;
+			} else if (b->data.house.colosseumGladiator >= 20) {
+				c->textId = 85;
+			} else {
+				c->textId = 86;
+			}
+			break;
+		case Overlay_Hippodrome:
+			if (b->data.house.hippodrome <= 0) {
+				c->textId = 87;
+			} else if (b->data.house.hippodrome >= 80) {
+				c->textId = 88;
+			} else if (b->data.house.hippodrome >= 20) {
+				c->textId = 89;
+			} else {
+				c->textId = 90;
+			}
+			break;
+		case Overlay_Education:
+			switch (b->data.house.education) {
+				case 0: c->textId = 100; break;
+				case 1: c->textId = 101; break;
+				case 2: c->textId = 102; break;
+				case 3: c->textId = 103; break;
+			}
+			break;
+		case Overlay_School:
+			if (b->data.house.school <= 0) {
+				c->textId = 19;
+			} else if (b->data.house.school >= 80) {
+				c->textId = 20;
+			} else if (b->data.house.school >= 20) {
+				c->textId = 21;
+			} else {
+				c->textId = 22;
+			}
+			break;
+		case Overlay_Library:
+			if (b->data.house.library <= 0) {
+				c->textId = 23;
+			} else if (b->data.house.library >= 80) {
+				c->textId = 24;
+			} else if (b->data.house.library >= 20) {
+				c->textId = 25;
+			} else {
+				c->textId = 26;
+			}
+			break;
+		case Overlay_Academy:
+			if (b->data.house.academy <= 0) {
+				c->textId = 27;
+			} else if (b->data.house.academy >= 80) {
+				c->textId = 28;
+			} else if (b->data.house.academy >= 20) {
+				c->textId = 29;
+			} else {
+				c->textId = 30;
+			}
+			break;
+		case Overlay_Barber:
+			if (b->data.house.barber <= 0) {
+				c->textId = 31;
+			} else if (b->data.house.barber >= 80) {
+				c->textId = 32;
+			} else if (b->data.house.barber < 20) {
+				c->textId = 33;
+			} else {
+				c->textId = 34;
+			}
+			break;
+		case Overlay_Bathhouse:
+			if (b->data.house.bathhouse <= 0) {
+				c->textId = 8;
+			} else if (b->data.house.bathhouse >= 80) {
+				c->textId = 9;
+			} else if (b->data.house.bathhouse >= 20) {
+				c->textId = 10;
+			} else {
+				c->textId = 11;
+			}
+			break;
+		case Overlay_Clinic:
+			if (b->data.house.clinic <= 0) {
+				c->textId = 35;
+			} else if (b->data.house.clinic >= 80) {
+				c->textId = 36;
+			} else if (b->data.house.clinic >= 20) {
+				c->textId = 37;
+			} else {
+				c->textId = 38;
+			}
+			break;
+		case Overlay_Hospital:
+			if (b->data.house.hospital <= 0) {
+				c->textId = 39;
+			} else if (b->data.house.hospital >= 80) {
+				c->textId = 40;
+			} else if (b->data.house.hospital >= 20) {
+				c->textId = 41;
+			} else {
+				c->textId = 42;
+			}
+			break;
+		case Overlay_TaxIncome: {
+			int denarii = Calc_adjustWithPercentage(
+				b->taxIncomeOrStorage / 2, Data_CityInfo.taxPercentage);
+			if (denarii > 0) {
+				c->hasNumericPrefix = 1;
+				c->numericPrefix = denarii;
+				c->textId = 45;
+			} else if (b->houseTaxCoverage > 0) {
+				c->textId = 44;
+			} else {
+				c->textId = 43;
+			}
+			break;
+		}
+		case Overlay_FoodStocks:
+			if (b->housePopulation <= 0) {
+				return;
+			}
+			if (!Data_Model_Houses[b->subtype.houseLevel].foodTypes) {
+				c->textId = 104;
+			} else {
+				int stocksPresent = 0;
+				for (int i = 0; i < 4; i++) {
+					stocksPresent += b->data.house.inventory.all[i];
+				}
+				int stocksPerPop = Calc_getPercentage(stocksPresent, b->housePopulation);
+				if (stocksPerPop <= 0) {
+					c->textId = 4;
+				} else if (stocksPerPop < 100) {
+					c->textId = 5;
+				} else if (stocksPerPop <= 200) {
+					c->textId = 6;
+				} else {
+					c->textId = 7;
+				}
+			}
+			break;
+		case Overlay_Desirability:
+			if (Data_Grid_desirability[gridOffset] < 0) {
+				c->textId = 91;
+			} else if (Data_Grid_desirability[gridOffset] == 0) {
+				c->textId = 92;
+			} else {
+				c->textId = 93;
+			}
+			break;
+		default:
+			return;
+	}
+	c->type = TooltipType_Overlay;
 }

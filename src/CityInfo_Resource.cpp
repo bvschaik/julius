@@ -1,5 +1,6 @@
 #include "CityInfo.h"
 #include "Empire.h"
+#include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 #include "Data/Scenario.h"
@@ -26,6 +27,23 @@ void CityInfo_Resource_calculateAvailableResources()
 		if (Empire_ourCityCanProduceResource(i) || Empire_canImportResource(i) ||
 			(i == Resource_Meat && Data_Scenario.allowedBuildings.wharf)) {
 			Data_CityInfo_Resource.availableFoods[Data_CityInfo_Resource.numAvailableFoods++] = i;
+		}
+	}
+}
+
+void CityInfo_Resource_calculateFood()
+{
+	// TODO
+}
+
+void CityInfo_Resource_calculateFoodAndSupplyRomeWheat()
+{
+	CityInfo_Resource_calculateFood();
+	if (Data_Scenario.romeSuppliesWheat) {
+		for (int i = 1; i < MAX_BUILDINGS; i++) {
+			if (Data_Buildings[i].inUse == 1 && Data_Buildings[i].type == Building_Market) {
+				Data_Buildings[i].data.market.food[0] = 200;
+			}
 		}
 	}
 }

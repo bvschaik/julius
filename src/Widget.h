@@ -39,6 +39,8 @@ void Widget_RichText_setFonts(Font normalFont, Font linkFont);
 // returns total number of lines
 int Widget_RichText_draw(const char *text, int xOffset, int yOffset,
 						 int boxWidthPixels, int boxHeightLines, int scrollLine, int measureOnly);
+int Widget_RichText_drawColored(const char *str, int xOffset, int yOffset,
+								int boxWidth, int heightLines, int scrollLine, Color color);
 int Widget_RichText_getClickedLink();
 void Widget_RichText_clearLinks();
 

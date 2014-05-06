@@ -285,7 +285,7 @@ extern struct Data_Building {
 			char show;
 		} entertainment;
 		struct {
-			union {
+			union { // 4a
 				short all[8];
 				struct {
 					short wheat;
