@@ -43,6 +43,7 @@ int CityInfo_Population_getNumberOfAcademyChildren();
 void CityInfo_Population_changeHappiness(int amount);
 void CityInfo_Population_setMaxHappiness(int amount);
 void CityInfo_Population_changeHealthRate(int amount);
+void CityInfo_Population_updateHealthRate();
 void CityInfo_Population_calculateSentiment();
 void CityInfo_Population_calculateMigrationSentiment();
 void CityInfo_Population_yearlyUpdate();

@@ -5,8 +5,38 @@
 
 #include "../Data/Building.h"
 #include "../Data/CityInfo.h"
+#include "../Data/CityView.h"
 #include "../Data/Constants.h"
+#include "../Data/Grid.h"
 #include "../Data/Model.h"
+
+static BuildingInfoContext context;
+
+void UI_BuildingInfo_init()
+{
+	int gridOffset = Data_CityView.selectedTile.gridOffset;
+	int terrain = Data_Grid_terrain[gridOffset];
+	context.canPlaySound = 1;
+	context.buildingId = Data_Grid_buildingIds[gridOffset];
+	context.hasReservoirPipes = terrain & Terrain_ReservoirRange;
+	context.aqueductHasWater = Data_Grid_aqueducts[gridOffset];
+	// TODO
+}
+
+void UI_BuildingInfo_drawBackground()
+{
+	// TODO
+}
+
+void UI_BuildingInfo_drawForeground()
+{
+	// TODO
+}
+
+void UI_BuildingInfo_handleMouse()
+{
+	// TODO
+}
 
 void UI_BuildingInfo_drawEmploymentInfo(BuildingInfoContext *c, int yOffset)
 {

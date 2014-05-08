@@ -11,6 +11,7 @@ void Walker_addToTileList(int walkerId);
 void Walker_updatePositionInTileList(int walkerId);
 void Walker_removeFromTileList(int walkerId);
 
+void Walker_killTowerSentriesAt(int x, int y);
 void Walker_sinkAllShips();
 int Walker_getCitizenOnSameTile(int walkerId);
 int Walker_getNonCitizenOnSameTile(int walkerId);

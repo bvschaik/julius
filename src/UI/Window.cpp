@@ -1,6 +1,7 @@
 #include "Window.h"
 
 #include "AllWindows.h"
+#include "BuildingInfo.h"
 #include "CityBuildings.h"
 #include "FileDialog.h"
 #include "PopupDialog.h"
@@ -51,6 +52,7 @@ static struct Window windows[] = {
 	{ UI_OverlayMenu_init, UI_OverlayMenu_drawBackground, UI_OverlayMenu_drawForeground, UI_OverlayMenu_handleMouse },
 	{ noop, UI_BuildingMenu_drawBackground, UI_BuildingMenu_drawForeground, UI_BuildingMenu_handleMouse },
 	{ noop, UI_Intermezzo_drawBackground, noop, UI_Intermezzo_handleMouse },
+	{ UI_BuildingInfo_init, UI_BuildingInfo_drawBackground, UI_BuildingInfo_drawForeground, UI_BuildingInfo_handleMouse },
 };
 
 static WindowId previousWindow;

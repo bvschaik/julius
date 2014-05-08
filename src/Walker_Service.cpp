@@ -335,7 +335,7 @@ static int provideMissionaryCoverage(int x, int y)
 	FOR_XY_RADIUS(
 		if (Data_Buildings[buildingId].type == Building_NativeHut ||
 			Data_Buildings[buildingId].type == Building_NativeMeeting) {
-			Data_Buildings[buildingId].sentiment.nativeRisk = 0;
+			Data_Buildings[buildingId].sentiment.nativeAnger = 0;
 		}
 	);
 	return 1;

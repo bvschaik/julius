@@ -26,7 +26,7 @@ int Terrain_existsClearTileWithinRadius(int x, int y, int size, int radius, int 
 int Terrain_allTilesWithinRadiusHaveType(int x, int y, int size, int radius, unsigned short type);
 
 void Terrain_markNativeLand(int x, int y, int size, int radius);
-int Terrain_hasBuildingOnNativeLand();
+int Terrain_hasBuildingOnNativeLand(int x, int y, int size, int radius);
 
 void Terrain_initDistanceRing();
 int Terrain_isAllRockAndTreesAtDistanceRing(int x, int y, int distance);

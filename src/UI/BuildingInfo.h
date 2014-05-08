@@ -36,6 +36,11 @@ typedef struct {
 	} walker;
 } BuildingInfoContext;
 
+void UI_BuildingInfo_init();
+void UI_BuildingInfo_drawBackground();
+void UI_BuildingInfo_drawForeground();
+void UI_BuildingInfo_handleMouse();
+
 void UI_BuildingInfo_drawEmploymentInfo(BuildingInfoContext *c, int yOffset);
 void UI_BuildingInfo_drawWalkerImagesLocal(BuildingInfoContext *c);
 void UI_BuildingInfo_drawWalkerList(BuildingInfoContext *c);

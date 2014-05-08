@@ -267,6 +267,32 @@ int Building_collapseFirstOfType(int buildingType)
 	return 0;
 }
 
+void Building_increaseDamageByEnemy(int gridOffset, int maxDamage)
+{
+	Data_Grid_buildingDamage[gridOffset]++;
+	if (Data_Grid_buildingDamage[gridOffset] > maxDamage) {
+		Building_destroyByEnemy(GridOffsetToX(gridOffset),
+			GridOffsetToY(gridOffset), gridOffset);
+	}
+}
+
+void Building_destroyByEnemy(int x, int y, int gridOffset)
+{
+	int buildingId = Data_Grid_buildingIds[gridOffset];
+	if (buildingId <= 0) {
+		if (Data_Grid_terrain[gridOffset] & Terrain_Wall) {
+			Walker_killTowerSentriesAt(x, y);
+		}
+		TerrainGraphics_setBuildingAreaRubble(0, x, y, 1);
+	} else {
+		// TODO
+	}
+	// TODO
+	Routing_determineLandCitizen();
+	Routing_determineLandNonCitizen();
+	Routing_determineWalls();
+}
+
 void Building_setDesirability()
 {
 	for (int i = 1; i < MAX_BUILDINGS; i++) {

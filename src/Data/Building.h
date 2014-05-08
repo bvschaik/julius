@@ -169,6 +169,7 @@ extern struct Data_Building {
 		short workshopResource;
 		short orientation;
 		short fortWalkerType;
+		short nativeMeetingCenterId;
 	} subtype;
 	unsigned char roadNetworkId;
 	char __unknown_0f;
@@ -187,7 +188,7 @@ extern struct Data_Building {
 	short walkerId2; // labor seeker or market buyer
 	short immigrantWalkerId;
 	short walkerId4; // tower ballista or burning ruin prefect
-	char __unknown_2a;
+	char walkerSpawnDelay; // 2a
 	char __unknown_2b;
 	char __unknown_2c;
 	char hasWaterAccess;
@@ -335,7 +336,7 @@ extern struct Data_Building {
 	unsigned char storageId;
 	union {
 		char houseHappiness;
-		char nativeRisk;
+		char nativeAnger;
 	} sentiment;
 	char showOnProblemOverlay;
 } Data_Buildings[MAX_BUILDINGS];
@@ -357,6 +358,10 @@ extern struct Data_Buildings_Extra {
 extern struct Data_BuildingList {
 	int size;
 	short buildingIds[MAX_BUILDINGS];
+	struct {
+		int numItems;
+		short items[500];
+	} small;
 } Data_BuildingList;
 
 #endif

@@ -1,5 +1,6 @@
 #include "Walker.h"
 
+#include "Calc.h"
 #include "Trader.h"
 
 #include "Data/Building.h"
@@ -182,6 +183,19 @@ void Walker_removeFromTileList(int walkerId)
 			}
 			Data_Walkers[cur].nextWalkerIdOnSameTile = w->nextWalkerIdOnSameTile;
 			w->nextWalkerIdOnSameTile = 0;
+		}
+	}
+}
+
+void Walker_killTowerSentriesAt(int x, int y)
+{
+	for (int i = 1; i < MAX_WALKERS; i++) {
+		if (Data_Walkers[i].state == WalkerState_Alive &&
+			Data_Walkers[i].type == Walker_TowerSentry&&
+			Data_Walkers[i].actionState != WalkerActionState_149_Corpse) {
+			if (Calc_distanceMaximum(Data_Walkers[i].x, Data_Walkers[i].y, x, y) <= 1) {
+				Data_Walkers[i].state = WalkerState_Dead;
+			}
 		}
 	}
 }

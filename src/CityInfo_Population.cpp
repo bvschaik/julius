@@ -1,5 +1,6 @@
 #include "CityInfo.h"
 
+#include "Building.h"
 #include "Calc.h"
 #include "HousePopulation.h"
 #include "PlayerMessage.h"
@@ -17,6 +18,7 @@ static void removePeopleFromCensus(int numPeople);
 static void removePeopleFromCensusInDecennium(int decennium, int numPeople);
 static int getPeopleInAgeDecennium(int decennium);
 static void recalculatePopulation();
+static void healthCauseDisease(int totalPeople);
 
 static const int yearlyBirthsPerDecennium[10] = {
 	0, 3, 16, 9, 2, 0, 0, 0, 0, 0
@@ -359,9 +361,128 @@ void CityInfo_Population_calculateMigrationSentiment()
 	}
 }
 
+void CityInfo_Population_updateHealthRate()
+{
+	if (Data_CityInfo.population < 200 || IsTutorial1() || IsTutorial2()) {
+		Data_CityInfo.healthRate = 50;
+		Data_CityInfo.healthRateTarget = 50;
+		return;
+	}
+	int totalPopulation = 0;
+	int healthyPopulation = 0;
+	for (int i = 1; i < MAX_BUILDINGS; i++) {
+		struct Data_Building *b = &Data_Buildings[i];
+		if (b->inUse != 1 || !b->houseSize || !b->housePopulation) {
+			continue;
+		}
+		totalPopulation += b->housePopulation;
+		if (b->subtype.houseLevel <= HouseLevel_LargeTent) {
+			if (b->data.house.clinic) {
+				healthyPopulation += b->housePopulation;
+			} else {
+				healthyPopulation += b->housePopulation / 4;
+			}
+		} else if (b->data.house.clinic) {
+			if (b->houseDaysWithoutFood <= 0) {
+				healthyPopulation += b->housePopulation;
+			} else {
+				healthyPopulation += b->housePopulation / 4;
+			}
+		} else if (b->houseDaysWithoutFood <= 0) {
+			healthyPopulation += b->housePopulation / 4;
+		}
+	}
+	Data_CityInfo.healthRateTarget = Calc_getPercentage(healthyPopulation, totalPopulation);
+	if (Data_CityInfo.healthRate < Data_CityInfo.healthRateTarget) {
+		Data_CityInfo.healthRate += 2;
+		if (Data_CityInfo.healthRate > Data_CityInfo.healthRateTarget) {
+			Data_CityInfo.healthRate = Data_CityInfo.healthRateTarget;
+		}
+	} else if (Data_CityInfo.healthRate > Data_CityInfo.healthRateTarget) {
+		Data_CityInfo.healthRate -= 2;
+		if (Data_CityInfo.healthRate > Data_CityInfo.healthRateTarget) {
+			Data_CityInfo.healthRate = Data_CityInfo.healthRateTarget;
+		}
+	}
+	BOUND(Data_CityInfo.healthRate, 0, 100);
+
+	healthCauseDisease(totalPopulation);
+}
+
+static void healthCauseDisease(int totalPeople)
+{
+	if (Data_CityInfo.healthRate >= 40) {
+		return;
+	}
+	int chanceValue = Data_Random.random1_7bit & 0x3f;
+	if (Data_CityInfo.godCurseVenusActive) {
+		// force plague
+		chanceValue = 0;
+		Data_CityInfo.godCurseVenusActive = 0;
+	}
+	if (chanceValue > 40 - Data_CityInfo.healthRate) {
+		return;
+	}
+
+	int sickPeople = Calc_adjustWithPercentage(totalPeople, 7 + (Data_Random.random1_7bit & 3));
+	if (sickPeople <= 0) {
+		return;
+	}
+	CityInfo_Population_changeHealthRate(10);
+	int peopleToKill = sickPeople - Data_CityInfo.numHospitalWorkers;
+	if (peopleToKill <= 0) {
+		PlayerMessage_post(1, 102, 0, 0);
+		return;
+	}
+	if (Data_CityInfo.numHospitalWorkers > 0) {
+		PlayerMessage_post(1, 103, 0, 0);
+	} else {
+		PlayerMessage_post(1, 104, 0, 0);
+	}
+	Data_Tutorial.tutorial3.disease = 1;
+	// kill people who don't have access to a doctor
+	for (int i = 1; i < MAX_BUILDINGS; i++) {
+		struct Data_Building *b = &Data_Buildings[i];
+		if (b->inUse == 1 && b->houseSize && b->housePopulation) {
+			if (!b->data.house.clinic) {
+				peopleToKill -= b->housePopulation;
+				Building_collapse(i, 1);
+				if (peopleToKill <= 0) {
+					return;
+				}
+			}
+		}
+	}
+	// kill people in tents
+	for (int i = 1; i < MAX_BUILDINGS; i++) {
+		struct Data_Building *b = &Data_Buildings[i];
+		if (b->inUse == 1 && b->houseSize && b->housePopulation) {
+			if (b->subtype.houseLevel <= HouseLevel_LargeTent) {
+				peopleToKill -= b->housePopulation;
+				Building_collapse(i, 1);
+				if (peopleToKill <= 0) {
+					return;
+				}
+			}
+		}
+	}
+	// kill anyone
+	for (int i = 1; i < MAX_BUILDINGS; i++) {
+		struct Data_Building *b = &Data_Buildings[i];
+		if (b->inUse == 1 && b->houseSize && b->housePopulation) {
+			peopleToKill -= b->housePopulation;
+			Building_collapse(i, 1);
+			if (peopleToKill <= 0) {
+				return;
+			}
+		}
+	}
+}
+
 void CityInfo_Population_changeHealthRate(int amount)
 {
-	// TODO
+	Data_CityInfo.healthRate += amount;
+	BOUND(Data_CityInfo.healthRate, 0, 100);
 }
 
 static void recalculatePopulation()

@@ -11,6 +11,7 @@
 #include "Formation.h"
 #include "GameFile.h"
 #include "Loader.h"
+#include "Natives.h"
 #include "PlayerMessage.h"
 #include "Random.h"
 #include "Routing.h"
@@ -329,8 +330,8 @@ static void readScenarioAndInitGraphics()
 /*
   sub_402BA8();
   sub_4014F1(0, 0, setting_map_width - 1, setting_map_height - 1, 0);
-  j_fun_scenarioLoad_setupNatives();
-	*/
+*/
+	Natives_init();
 
 	CityView_checkCameraBoundaries();
 

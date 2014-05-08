@@ -15,6 +15,9 @@ void Building_collapseLastPlaced();
 void Building_collapse(int buildingId, int hasPlague);
 void Building_collapseLinked(int buildingId, int callCollapse);
 
+void Building_increaseDamageByEnemy(int gridOffset, int maxDamage);
+void Building_destroyByEnemy(int x, int y, int gridOffset);
+
 void Building_setDesirability();
 
 void BuildingStorage_clearList();

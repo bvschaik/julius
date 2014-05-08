@@ -1,10 +1,13 @@
 #include "MessageDialog.h"
 #include "Window.h"
 #include "AllWindows.h"
-#include "../Widget.h"
-#include "../Graphics.h"
+
 #include "../Calc.h"
+#include "../CityView.h"
+#include "../Formation.h"
+#include "../Graphics.h"
 #include "../Resource.h"
+#include "../Widget.h"
 
 #include "../Data/Buttons.h"
 #include "../Data/CityInfo.h"
@@ -30,6 +33,7 @@ static void buttonScroll(int param1, int param2);
 static void buttonBack(int param1, int param2);
 static void buttonClose(int param1, int param2);
 static void buttonHelp(int param1, int param2);
+static void buttonGoToProblem(int param1, int param2);
 
 static ImageButton imageButtonBack = {
 	0, 0, 31, 20, 4, 90, 8, buttonBack, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0
@@ -42,6 +46,9 @@ static ImageButton imageButtonScrollUp = {
 };
 static ImageButton imageButtonScrollDown = {
 	0, 0, 39, 26, 6, 96, 12, buttonScroll, Widget_Button_doNothing, 1, 0, 0, 0, 1, 1
+};
+static ImageButton imageButtonGoToProblem = {
+	0, 0, 27, 27, 4, 92, 52, buttonGoToProblem, Widget_Button_doNothing, 1, 0, 0, 0, 1, 0
 };
 
 static struct {
@@ -365,6 +372,13 @@ void UI_MessageDialog_drawForeground()
 			data.x + 52, data.y + 16 * msg->heightBlocks - 31, Font_NormalBlack);
 	}
 
+	if (msg->type == Type_Message) {
+		// TODO based on advisor
+		if (msg->messageType == MessageType_Disaster || msg->messageType == MessageType_Invasion) {
+			Widget_Button_drawImageButtons(
+				data.x + 64, data.yText + 36, &imageButtonGoToProblem, 1);
+		}
+	}
 	Widget_Button_drawImageButtons(
 		data.x + 16 * msg->widthBlocks - 38,
 		data.y + 16 * msg->heightBlocks - 36,
@@ -395,6 +409,13 @@ void UI_MessageDialog_handleMouse()
 		data.x + 16, data.y + 16 * msg->heightBlocks - 36,
 		&imageButtonBack, 1)) {
 			return;
+	}
+	if (msg->type == Type_Message) {
+		if (msg->messageType == MessageType_Disaster || msg->messageType == MessageType_Invasion) {
+			Widget_Button_handleImageButtons(
+				data.x + 64, data.yText + 36,
+				&imageButtonGoToProblem, 1);
+		}
 	}
 
 	if (Widget_Button_handleImageButtons(
@@ -475,4 +496,20 @@ static void buttonHelp(int param1, int param2)
 {
 	buttonClose(0, 0);
 	UI_MessageDialog_show(MessageDialog_Help, 0);
+}
+
+static void buttonGoToProblem(int param1, int param2)
+{
+	struct Data_Language_MessageEntry *msg = &Data_Language_Message.index[data.messageId];
+	int gridOffset = playerMessage.param2;
+	if (msg->messageType == MessageType_Invasion) {
+		int invasionGridOffset = Formation_getInvasionGridOffset(playerMessage.param1);
+		if (invasionGridOffset > 0) {
+			gridOffset = invasionGridOffset;
+		}
+	}
+	if (gridOffset > 0 && gridOffset < 26244) {
+		CityView_goToGridOffset(gridOffset);
+	}
+	UI_Window_goTo(Window_City);
 }

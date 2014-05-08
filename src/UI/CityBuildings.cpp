@@ -1,5 +1,6 @@
 #include "CityBuildings_private.h"
 
+#include "Warning.h"
 #include "Window.h"
 
 #include "../Building.h"
@@ -549,10 +550,42 @@ static void updateCityViewCoords()
 	}
 }
 
+static int handleRightClickAllowBuildingInfo()
+{
+	int allow = 1;
+	if (UI_Window_getId() != Window_City) {
+		allow = 0;
+	}
+	if (Data_State.selectedBuilding.type) {
+		allow = 0;
+	}
+	Data_State.selectedBuilding.type = 0;
+	Data_State.selectedBuilding.isDragging = 0;
+	Data_State.selectedBuilding.xStart = 0;
+	Data_State.selectedBuilding.yStart = 0;
+	Data_State.selectedBuilding.x = 0;
+	Data_State.selectedBuilding.y = 0;
+	UI_Window_goTo(Window_City);
+
+	if (!Data_CityView.selectedTile.gridOffset) {
+		allow = 0;
+	}
+	if (UI_Warning_hasWarnings()) {
+		UI_Warning_clearAll();
+		allow = 0;
+	}
+	return allow;
+}
+
 void UI_CityBuildings_handleMouse()
 {
 	updateCityViewCoords();
 	UI_CityBuildings_scrollMap(Scroll_getDirection());
+	if (Data_Mouse.right.wentUp) {
+		if (handleRightClickAllowBuildingInfo()) {
+			UI_Window_goTo(Window_BuildingInfo);
+		}
+	}
 }
 
 void UI_CityBuildings_getTooltip(struct TooltipContext *c)
