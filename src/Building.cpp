@@ -1,6 +1,7 @@
 #include "Building.h"
 
 #include "Formation.h"
+#include "Graphics.h"
 #include "PlayerMessage.h"
 #include "PlayerWarning.h"
 #include "Routing.h"
@@ -13,6 +14,7 @@
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 #include "Data/Grid.h"
+#include "Data/Scenario.h"
 #include "Data/Settings.h"
 #include "Data/State.h"
 
@@ -370,6 +372,138 @@ void BuildingStorage_resetBuildingIds()
 	}
 }
 
+void Building_Industry_updateProduction()
+{
+	for (int i = 1; i < MAX_BUILDINGS; i++) {
+		struct Data_Building *b = &Data_Buildings[i];
+		if (b->inUse != 1 || !b->outputResourceId) {
+			continue;
+		}
+		b->data.industry.hasFullResource = 0;
+		if (b->housesCovered <= 0 || b->numWorkers <= 0) {
+			continue;
+		}
+		if (b->subtype.workshopResource && !b->loadsStored) {
+			continue;
+		}
+		if (b->data.industry.curseDaysLeft) {
+			b->data.industry.curseDaysLeft--;
+		} else {
+			if (b->data.industry.blessingDaysLeft) {
+				b->data.industry.blessingDaysLeft--;
+			}
+			if (b->type == Building_MarbleQuarry) {
+				b->data.industry.progress += b->numWorkers / 2;
+			} else {
+				b->data.industry.progress += b->numWorkers;
+			}
+			if (b->data.industry.blessingDaysLeft && BuildingIsFarm(b->type)) {
+				b->data.industry.progress += b->numWorkers;
+			}
+			int maxProgress = 200;
+			if (b->subtype.workshopResource) {
+				maxProgress = 400;
+			}
+			if (b->data.industry.progress > maxProgress) {
+				b->data.industry.progress = maxProgress;
+			}
+			if (BuildingIsFarm(b->type)) {
+				TerrainGraphics_setBuildingFarm(i, b->x, b->y,
+					GraphicId(ID_Graphic_FarmCrops) + 5 * (b->outputResourceId - 1),
+					b->data.industry.progress);
+			}
+		}
+	}
+}
+
+void Building_Industry_updateDoubleWheatProduction()
+{
+	if (Data_Scenario.climate == Climate_Northern) {
+		return;
+	}
+	for (int i = 1; i < MAX_BUILDINGS; i++) {
+		struct Data_Building *b = &Data_Buildings[i];
+		if (b->inUse != 1 || !b->outputResourceId) {
+			continue;
+		}
+		if (b->housesCovered <= 0 || b->numWorkers <= 0) {
+			continue;
+		}
+		if (b->type == Building_WheatFarm && !b->data.industry.curseDaysLeft) {
+			b->data.industry.progress += b->numWorkers;
+			if (b->data.industry.blessingDaysLeft) {
+				b->data.industry.progress += b->numWorkers;
+			}
+			if (b->data.industry.progress > 200) {
+				b->data.industry.progress = 200;
+			}
+			TerrainGraphics_setBuildingFarm(i, b->x, b->y,
+				GraphicId(ID_Graphic_FarmCrops) + 5 * (b->outputResourceId - 1),
+				b->data.industry.progress);
+		}
+	}
+}
+
+void Building_Industry_witherFarmCropsFromCeres(int bigCurse)
+{
+	int graphicId = GraphicId(ID_Graphic_FarmCrops);
+	for (int i = 1; i < MAX_BUILDINGS; i++) {
+		struct Data_Building *b = &Data_Buildings[i];
+		if (b->inUse == 1 && b->outputResourceId && BuildingIsFarm(b->type)) {
+			b->data.industry.progress = 0;
+			b->data.industry.blessingDaysLeft = 0;
+			b->data.industry.curseDaysLeft = bigCurse ? 48 : 4;
+			TerrainGraphics_setBuildingFarm(i, b->x, b->y,
+				graphicId + 5 * (b->outputResourceId - 1),
+				b->data.industry.progress);
+		}
+	}
+}
+
+void Building_Industry_blessFarmsFromCeres()
+{
+	int graphicId = GraphicId(ID_Graphic_FarmCrops);
+	for (int i = 1; i < MAX_BUILDINGS; i++) {
+		struct Data_Building *b = &Data_Buildings[i];
+		if (b->inUse == 1 && b->outputResourceId && BuildingIsFarm(b->type)) {
+			b->data.industry.progress = 200;
+			b->data.industry.curseDaysLeft = 0;
+			b->data.industry.blessingDaysLeft = 16;
+			TerrainGraphics_setBuildingFarm(i, b->x, b->y,
+				graphicId + 5 * (b->outputResourceId - 1),
+				b->data.industry.progress);
+		}
+	}
+}
+
+int Building_Industry_hasProducedResource(int buildingId)
+{
+	int target = 200;
+	if (Data_Buildings[buildingId].subtype.workshopResource) {
+		target = 400;
+	}
+	return Data_Buildings[buildingId].data.industry.progress >= target;
+}
+
+void Building_Industry_startNewProduction(int buildingId)
+{
+	struct Data_Building *b = &Data_Buildings[buildingId];
+	b->data.industry.progress = 0;
+	if (b->subtype.workshopResource) {
+		if (b->loadsStored) {
+			if (b->loadsStored > 1) {
+				b->data.industry.hasFullResource = 1;
+			}
+			b->loadsStored--;
+		}
+	}
+	if (BuildingIsFarm(b->type)) {
+		TerrainGraphics_setBuildingFarm(buildingId, b->x, b->y,
+			GraphicId(ID_Graphic_FarmCrops) + 5 * (b->outputResourceId - 1),
+			b->data.industry.progress);
+	}
+}
+
 int Building_Market_getMaxFoodStock(int buildingId)
 {
 	int maxStock = 0;
@@ -407,4 +541,31 @@ int Building_Dock_getNumIdleDockers(int buildingId)
 {
 	// TODO
 	return 0;
+}
+
+void Building_Dock_updateOpenWaterAccess()
+{
+	Routing_getDistanceWaterBoat(
+		Data_Scenario.riverEntryPoint.x, Data_Scenario.riverEntryPoint.y);
+	for (int i = 1; i < MAX_BUILDINGS; i++) {
+		struct Data_Building *b = &Data_Buildings[i];
+		if (b->inUse == 1 && !b->houseSize && b->type == Building_Dock) {
+			if (Terrain_isAdjacentToOpenWater(b->x, b->y, 3)) {
+				b->hasWaterAccess = 1;
+			} else {
+				b->hasWaterAccess = 0;
+			}
+		}
+	}
+}
+
+int Building_Dock_isConnectedToOpenWater(int x, int y)
+{
+	Routing_getDistanceWaterBoat(
+		Data_Scenario.riverEntryPoint.x, Data_Scenario.riverEntryPoint.y);
+	if (Terrain_isAdjacentToOpenWater(x, y, 3)) {
+		return 1;
+	} else {
+		return 0;
+	}
 }

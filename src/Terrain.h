@@ -14,6 +14,7 @@ int Terrain_isClear(int x, int y, int size, int disallowedTerrain, int graphicSe
 
 int Terrain_isAdjacentToWall(int x, int y, int size);
 int Terrain_isAdjacentToWater(int x, int y, int size);
+int Terrain_isAdjacentToOpenWater(int x, int y, int size);
 int Terrain_getAdjacentRoadOrClearLand(int x, int y, int size, int *xTile, int *yTile);
 
 void Terrain_setWithRadius(int x, int y, int size, int radius, unsigned short typeToAdd);

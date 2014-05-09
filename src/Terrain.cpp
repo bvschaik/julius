@@ -1,8 +1,12 @@
 #include "Terrain.h"
+
+#include "Routing.h"
+#include "TerrainGraphics.h"
 #include "Util.h"
 
 #include "Data/Building.h"
 #include "Data/Constants.h"
+#include "Data/Graphics.h"
 #include "Data/Grid.h"
 #include "Data/Settings.h"
 
@@ -114,9 +118,75 @@ void Terrain_addBuildingToGrids(int buildingId, int x, int y, int size, int grap
 		}
 	}
 }
+
+static int getNorthTileGridOffset(int x, int y, int *size)
+{
+	int gridOffset = GridOffset(x, y);
+	switch (Data_Grid_bitfields[gridOffset] & Bitfield_Sizes) {
+		default:
+		case Bitfield_Size1: *size = 1; break;
+		case Bitfield_Size2: *size = 2; break;
+		case Bitfield_Size3: *size = 3; break;
+		case Bitfield_Size4: *size = 4; break;
+		case Bitfield_Size5: *size = 5; break;
+	}
+	for (int i = 0; i < *size && (Data_Grid_edge[gridOffset] & Edge_MaskX); i++) {
+		gridOffset--;
+	}
+	for (int i = 0; i < *size && (Data_Grid_edge[gridOffset] & Edge_MaskY); i++) {
+		gridOffset -= GRID_SIZE;
+	}
+	return gridOffset;
+}
+
 void Terrain_removeBuildingFromGrids(int buildingId, int x, int y)
 {
-	// TODO
+	if (IsOutsideMap(x, y, 1)) {
+		return;
+	}
+	int size;
+	int baseGridOffset = getNorthTileGridOffset(x, y, &size);
+	x = GridOffsetToX(baseGridOffset);
+	y = GridOffsetToY(baseGridOffset);
+	if (Data_Grid_terrain[baseGridOffset] == Terrain_Rock) {
+		return;
+	}
+	if (buildingId) {
+		if (BuildingIsFarm(Data_Buildings[buildingId].type)) {
+			size = 3;
+		}
+	}
+	for (int dy = 0; dy < size; dy++) {
+		for (int dx = 0; dx < size; dx++) {
+			int gridOffset = GridOffset(x + dx, y + dy);
+			if (buildingId && Data_Grid_buildingIds[gridOffset] != buildingId) {
+				continue;
+			}
+			if (buildingId && Data_Buildings[buildingId].type != Building_BurningRuin) {
+				Data_Grid_rubbleBuildingType[gridOffset] = (unsigned char) Data_Buildings[buildingId].type;
+			}
+			Data_Grid_bitfields[gridOffset] &= Bitfield_NoOverlay;
+			Data_Grid_bitfields[gridOffset] &= Bitfield_NoSizes;
+			Data_Grid_edge[gridOffset] &= Edge_NativeLand;
+			Data_Grid_edge[gridOffset] |= Edge_LeftmostTile;
+			Data_Grid_aqueducts[gridOffset] = 0;
+			Data_Grid_buildingIds[gridOffset] = 0;
+			Data_Grid_buildingDamage[gridOffset] = 0;
+			Data_Grid_spriteOffsets[gridOffset] = 0;
+			if (Data_Grid_terrain[gridOffset] & Terrain_Water) {
+				Data_Grid_terrain[gridOffset] &= Terrain_Water;
+				TerrainGraphics_setTileWater(x + dx, y + dy);
+			} else {
+				Data_Grid_graphicIds[gridOffset] =
+					GraphicId(ID_Graphic_TerrainUglyGrass) +
+					(Data_Grid_random[gridOffset] & 7);
+				Data_Grid_terrain[gridOffset] &= Terrain_2e80;
+			}
+		}
+	}
+	TerrainGraphics_updateRegionEmptyLand(x, y, x + size, y + size);
+	TerrainGraphics_updateRegionMeadow(x, y, x + size, y + size);
+	TerrainGraphics_updateRegionRubble(x, y, x + size, y + size);
 }
 
 int Terrain_hasRoadAccess(int x, int y, int size, int *roadX, int *roadY)
@@ -193,6 +263,17 @@ int Terrain_isAdjacentToWater(int x, int y, int size)
 {
 	FOR_XY_ADJACENT(
 		if (Data_Grid_terrain[gridOffset] & Terrain_Water) {
+			return 1;
+		}
+	);
+	return 0;
+}
+
+int Terrain_isAdjacentToOpenWater(int x, int y, int size)
+{
+	FOR_XY_ADJACENT(
+		if ((Data_Grid_terrain[gridOffset] & Terrain_Water) &&
+			Routing_getCalculatedDistance(gridOffset)) {
 			return 1;
 		}
 	);

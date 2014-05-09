@@ -22,6 +22,7 @@ enum {
 	ID_Graphic_FlatTile = 21,
 	// 26-35: houses
 	ID_Graphic_HouseVacantLot = 36,
+	ID_Graphic_FarmHouse = 37,
 	ID_Graphic_EmpireMap = 47,
 	ID_Graphic_WorkshopRawMaterial = 60,
 	ID_Graphic_Senate = 62,

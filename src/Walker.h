@@ -15,6 +15,7 @@ void Walker_killTowerSentriesAt(int x, int y);
 void Walker_sinkAllShips();
 int Walker_getCitizenOnSameTile(int walkerId);
 int Walker_getNonCitizenOnSameTile(int walkerId);
+int Walker_hasNearbyEnemy(int x1, int y1, int x2, int y2);
 
 int Walker_determinePhrase(int walkerId);
 int Walker_playPhrase(int walkerId);

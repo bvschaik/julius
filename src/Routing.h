@@ -9,6 +9,7 @@ void Routing_determineWalls();
 void Routing_clearLandTypeCitizen();
 
 void Routing_getDistance(int x, int y);
+int Routing_getCalculatedDistance(int gridOffset);
 
 void Routing_deleteClosestWallOrAqueduct(int x, int y);
 

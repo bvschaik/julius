@@ -74,6 +74,8 @@ enum {
 	Bitfield_AlternateTerrain = 0x20,
 	Bitfield_Deleted = 0x40,
 	Bitfield_Plaza = 0x80,
+	Edge_MaskX = 0x7,
+	Edge_MaskY = 0x38,
 	Edge_MaskXY = 0x3f,
 	Edge_X0Y0 = 0,
 	Edge_X1Y0 = 1,
@@ -88,5 +90,7 @@ enum {
 	Edge_NativeLand = 0x80,
 	Edge_NoNativeLand = 0x7f,
 };
+
+#define EdgeXY(x,y) (8 * (y) + (x))
 
 #endif

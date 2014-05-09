@@ -26,6 +26,7 @@
 		gridOffset += 162 - (xMax - xMin + 1);\
 	}}
 
+static void TerrainGraphics_setTileRubble(int x, int y);
 static void TerrainGraphics_updateTileMeadow(int x, int y);
 static void TerrainGraphics_updateAreaEmptyLand(int x, int y, int size, int graphicId);
 
@@ -323,6 +324,20 @@ void TerrainGraphics_updateRegionEarthquake(int xMin, int yMin, int xMax, int yM
 	});
 }
 
+void TerrainGraphics_updateRegionRubble(int xMin, int yMin, int xMax, int yMax)
+{
+	// TODO
+	int forbiddenTerrain = Terrain_Aqueduct | Terrain_Elevation | Terrain_AccessRamp;
+	forbiddenTerrain |= Terrain_Road | Terrain_Building | Terrain_Garden;
+	BOUND_REGION();
+	FOREACH_REGION({
+		int terrain = Data_Grid_terrain[gridOffset];
+		if ((terrain & Terrain_Rubble) && !(terrain & forbiddenTerrain)) {
+			TerrainGraphics_setTileRubble(xx, yy);
+		}
+	});
+}
+
 void TerrainGraphics_setBuildingAreaRubble(int buildingId, int x, int y, int size)
 {
 	if (IsOutsideMap(x, y, size)) {
@@ -355,6 +370,97 @@ void TerrainGraphics_setBuildingAreaRubble(int buildingId, int x, int y, int siz
 			}
 		}
 	}
+}
+
+void TerrainGraphics_setBuildingFarm(int buildingId, int x, int y, int cropGraphicId, int progress)
+{
+	if (IsOutsideMap(x, y, 3)) {
+		return;
+	}
+	// farmhouse
+	int leftmostX, leftmostY;
+	switch (Data_Settings_Map.orientation) {
+		case Direction_Top: leftmostX = 0; leftmostY = 1; break;
+		case Direction_Right: leftmostX = 0; leftmostY = 0; break;
+		case Direction_Bottom: leftmostX = 1; leftmostY = 0; break;
+		case Direction_Left: leftmostX = 1; leftmostY = 1; break;
+	}
+	for (int dy = 0; dy < 2; dy++) {
+		for (int dx = 0; dx < 2; dx++) {
+			int gridOffset = GridOffset(x + dx, y + dy);
+			Data_Grid_terrain[gridOffset] &= Terrain_2e80;
+			Data_Grid_terrain[gridOffset] |= Terrain_Building;
+			Data_Grid_buildingIds[gridOffset] = buildingId;
+			Data_Grid_bitfields[gridOffset] &= Bitfield_NoOverlay;
+			Data_Grid_bitfields[gridOffset] |= Bitfield_Size2;
+			Data_Grid_graphicIds[gridOffset] = GraphicId(ID_Graphic_FarmHouse);
+			Data_Grid_edge[gridOffset] = EdgeXY(dx, dy);
+			if (dx == leftmostX && dy == leftmostY) {
+				Data_Grid_edge[gridOffset] |= Edge_LeftmostTile;
+			}
+		}
+	}
+	// crop tile 1
+	int growth = progress / 10;
+	int gridOffset = GridOffset(x, y+2);
+	Data_Grid_terrain[gridOffset] &= Terrain_2e80;
+	Data_Grid_terrain[gridOffset] |= Terrain_Building;
+	Data_Grid_buildingIds[gridOffset] = buildingId;
+	Data_Grid_bitfields[gridOffset] &= Bitfield_NoOverlay;
+	Data_Grid_edge[gridOffset] = EdgeXY(0, 2) | Edge_LeftmostTile;
+	Data_Grid_graphicIds[gridOffset] = cropGraphicId + (growth < 4 ? growth : 4);
+
+	// crop tile 2
+	growth -= 4;
+	if (growth < 0) {
+		growth = 0;
+	}
+	gridOffset = GridOffset(x+1, y+2);
+	Data_Grid_terrain[gridOffset] &= Terrain_2e80;
+	Data_Grid_terrain[gridOffset] |= Terrain_Building;
+	Data_Grid_buildingIds[gridOffset] = buildingId;
+	Data_Grid_bitfields[gridOffset] &= Bitfield_NoOverlay;
+	Data_Grid_edge[gridOffset] = EdgeXY(1, 2) | Edge_LeftmostTile;
+	Data_Grid_graphicIds[gridOffset] = cropGraphicId + (growth < 4 ? growth : 4);
+	
+	// crop tile 3
+	growth -= 4;
+	if (growth < 0) {
+		growth = 0;
+	}
+	gridOffset = GridOffset(x+2, y+2);
+	Data_Grid_terrain[gridOffset] &= Terrain_2e80;
+	Data_Grid_terrain[gridOffset] |= Terrain_Building;
+	Data_Grid_buildingIds[gridOffset] = buildingId;
+	Data_Grid_bitfields[gridOffset] &= Bitfield_NoOverlay;
+	Data_Grid_edge[gridOffset] = EdgeXY(2, 2) | Edge_LeftmostTile;
+	Data_Grid_graphicIds[gridOffset] = cropGraphicId + (growth < 4 ? growth : 4);
+
+	// crop tile 4
+	growth -= 4;
+	if (growth < 0) {
+		growth = 0;
+	}
+	gridOffset = GridOffset(x+2, y+1);
+	Data_Grid_terrain[gridOffset] &= Terrain_2e80;
+	Data_Grid_terrain[gridOffset] |= Terrain_Building;
+	Data_Grid_buildingIds[gridOffset] = buildingId;
+	Data_Grid_bitfields[gridOffset] &= Bitfield_NoOverlay;
+	Data_Grid_edge[gridOffset] = EdgeXY(2, 1) | Edge_LeftmostTile;
+	Data_Grid_graphicIds[gridOffset] = cropGraphicId + (growth < 4 ? growth : 4);
+
+	// crop tile 5
+	growth -= 4;
+	if (growth < 0) {
+		growth = 0;
+	}
+	gridOffset = GridOffset(x+2, y);
+	Data_Grid_terrain[gridOffset] &= Terrain_2e80;
+	Data_Grid_terrain[gridOffset] |= Terrain_Building;
+	Data_Grid_buildingIds[gridOffset] = buildingId;
+	Data_Grid_bitfields[gridOffset] &= Bitfield_NoOverlay;
+	Data_Grid_edge[gridOffset] = EdgeXY(2, 0) | Edge_LeftmostTile;
+	Data_Grid_graphicIds[gridOffset] = cropGraphicId + (growth < 4 ? growth : 4);
 }
 
 void TerrainGraphics_setTileWater(int x, int y)
@@ -399,6 +505,16 @@ void TerrainGraphics_setTileRoad(int x, int y)
 void TerrainGraphics_setTileAqueduct(int x, int y, int flag)
 {
 	// TODO
+}
+
+static void TerrainGraphics_setTileRubble(int x, int y)
+{
+	int gridOffset = GridOffset(x, y);
+	Data_Grid_graphicIds[gridOffset] =
+		GraphicId(ID_Graphic_TerrainRubble) + (Data_Grid_random[gridOffset] & 7);
+	Data_Grid_bitfields[gridOffset] &= Bitfield_NoSizes;
+	Data_Grid_edge[gridOffset] |= Edge_LeftmostTile;
+	Data_Grid_aqueducts[gridOffset] = 0;
 }
 
 static void TerrainGraphics_updateTileMeadow(int x, int y)

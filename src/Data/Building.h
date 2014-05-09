@@ -149,6 +149,7 @@ enum {
 	HouseLevel_LuxuryPalace = 19,
 };
 
+#define BuildingIsFarm(type) ((type) >= Building_WheatFarm && (type) <= Building_PigFarm)
 #define BuildingIsWorkshop(type) ((type) >= Building_WineWorkshop && (type) <= Building_PotteryWorkshop)
 #define BuildingIsEntertainment(type) ((type) >= Building_Theater && (type) <= Building_ChariotMaker)
 
@@ -201,7 +202,7 @@ extern struct Data_Building {
 	char houseHasWellAccess;
 	short numWorkers;
 	unsigned char laborCategory;
-	char outputResourceId;
+	char outputResourceId; //3b
 	char hasRoadAccess;
 	char __unknown_3d;
 	short damageRisk;
@@ -272,7 +273,7 @@ extern struct Data_Building {
 		struct {
 			short progress; //4a+b
 			char __padding[27];
-			char blessingLeft; //67
+			char blessingDaysLeft; //67
 			char __pad68;
 			char hasFullResource; //69
 			char __pad6a;
