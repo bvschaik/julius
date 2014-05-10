@@ -42,5 +42,6 @@ typedef struct TerrainGraphic {
 void TerrainGraphicsContext_init();
 const TerrainGraphic *TerrainGraphicsContext_getElevation(int gridOffset, int elevation);
 const TerrainGraphic *TerrainGraphicsContext_getEarthquake(int gridOffset);
+const TerrainGraphic *TerrainGraphicsContext_getShore(int gridOffset);
 
 #endif

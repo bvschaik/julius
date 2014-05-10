@@ -345,3 +345,12 @@ const TerrainGraphic *TerrainGraphicsContext_getEarthquake(int gridOffset)
 	}
 	return TerrainGraphicsContext_getGraphic(TerrainGraphicsContext_Elevation, tiles);
 }
+
+const TerrainGraphic *TerrainGraphicsContext_getShore(int gridOffset)
+{
+	int tiles[8];
+	for (int i = 0; i < 8; i++) {
+		tiles[i] = Data_Grid_terrain[gridOffset + contextTileOffsets[i]] & Terrain_Water ? 0 : 1;
+	}
+	return TerrainGraphicsContext_getGraphic(TerrainGraphicsContext_Water, tiles);
+}

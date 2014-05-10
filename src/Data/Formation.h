@@ -30,15 +30,15 @@ struct Data_Formation {
 	short attackType;
 	short legionRoomForRecruits;
 	short hasMilitaryTraining; //40
-	short __unknown42;
-	short __unknown44;
+	short totalDamage; //42
+	short maxTotalDamage; //44
 	short __unknown46;
 	short __unknown48;
 	short __unknown4a;
 	short __unknown4c;
 	short __unknown4e;
 	short __unknown50;
-	short __unknown52;
+	short isHalted;
 	short __unknown54;
 	short __unknown56;
 	short __unknown58;
@@ -69,6 +69,10 @@ extern struct Data_Formation_Extra {
 	int idLastInUse;
 	int idLastLegion;
 	int numLegions;
+	int numEnemyFormations;
+	int numEnemySoldierStrength;
+	int numLegionFormations;
+	int numLegionSoldierStrength;
 } Data_Formation_Extra;
 
 #endif

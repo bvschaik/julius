@@ -82,6 +82,7 @@ enum {
 	ID_Graphic_AmphitheaterShow = 192,
 	ID_Graphic_ColosseumShow = 193,
 	ID_Graphic_RatingsBackground = 195,
+	ID_Graphic_TerrainWaterShore = 207,
 	ID_Graphic_BorderedButton = 208,
 	ID_Graphic_Hippodrome1 = 213,
 	ID_Graphic_Hippodrome2 = 214,
@@ -268,5 +269,18 @@ struct BuildingProperties {
 };
 
 extern const struct BuildingProperties Constant_BuildingProperties[140];
+
+struct WalkerProperties {
+	int unknown0;
+	int maxDamage;
+	int attackValue;
+	int defenseValue;
+	int unknown4;
+	int unknown5;
+	int __unused6; // unreferenced
+	int unknown7;
+};
+
+extern const struct WalkerProperties Constant_WalkerProperties[80];
 
 #endif

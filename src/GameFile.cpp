@@ -254,10 +254,10 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{0, &Data_CityInfo_Buildings.militaryAcademy.working, 4},
 	{0, &Data_CityInfo_Buildings.barracks.total, 4},
 	{0, &Data_CityInfo_Buildings.barracks.working, 4},
-	{0, &tmp, 4}, //{0, &dword_819848, 4}, formation related
-	{0, &tmp, 4}, //{0, &dword_7FA234, 4}, formation related
-	{0, &tmp, 4}, //{0, &dword_7F87A8, 4}, formation related
-	{0, &tmp, 4}, //{0, &dword_7F87AC, 4}, formation related
+	{0, &Data_Formation_Extra.numEnemyFormations, 4},
+	{0, &Data_Formation_Extra.numEnemySoldierStrength, 4},
+	{0, &Data_Formation_Extra.numLegionFormations, 4},
+	{0, &Data_Formation_Extra.numLegionSoldierStrength, 4},
 	{0, &tmp, 4}, //{0, &dword_863318, 4}, formation related
 	{0, &Data_Building_Storages, 6400},
 	{0, &Data_CityInfo_Buildings.actorColony.total, 4},

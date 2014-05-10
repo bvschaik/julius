@@ -315,10 +315,8 @@ static void readScenarioAndInitGraphics()
 
 	CityView_calculateLookup();
 	TerrainGraphics_updateRegionElevation(0, 0, Data_Settings_Map.width - 2, Data_Settings_Map.height - 2);
-	/*
-  j_fun_determineGraphicIdsForWater(0, 0, setting_map_width - 1, setting_map_height - 1);
-  j_fun_determineGraphicIdsForEarthquakeLines(0, 0, setting_map_width - 1, setting_map_height - 1);
-  */
+	TerrainGraphics_updateRegionWater(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
+	TerrainGraphics_updateRegionEarthquake(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
 	TerrainGraphics_updateAllRocks();
   /*
   sub_402400(0);

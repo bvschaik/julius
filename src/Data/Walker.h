@@ -82,6 +82,7 @@ enum {
 #define WalkerIsEnemyOrNative(t) ((t) >= Walker_IndigenousNative && (t) <= Walker_NativeTrader)
 #define WalkerIsEnemy(t) ((t) >= Walker_Enemy43 && (t) <= Walker_EnemyCaesarLegionary)
 #define WalkerIsLegion(t) ((t) >= Walker_FortJavelin && (t) <= Walker_FortLegionary)
+#define WalkerIsHerd(t) ((t) >= Walker_Sheep && (t) <= Walker_Zebra)
 
 enum {
 	WalkerState_Alive = 1,
@@ -103,6 +104,8 @@ enum {
 	WalkerActionState_59_MarketBuyer = 59,
 	WalkerActionState_74_PrefectFightingCrime = 74,
 	WalkerActionState_75_PrefectFightingFire = 75,
+	WalkerActionState_87_ToDistantBattle = 87,
+	WalkerActionState_88_FromDistantBattle = 88,
 	WalkerActionState_94_EntertainerAtSchool = 94,
 	WalkerActionState_95_EntertainerGoingToVenue = 95,
 	WalkerActionState_100_TradeCaravanCreated = 100,
@@ -185,7 +188,7 @@ extern struct Data_Walker {
 	char previousTileX;
 	char previousTileY;
 	char __unknown_18;
-	char __unknown_19;
+	unsigned char damage; //19
 	short gridOffset; // 1a
 	char destinationX; // 1c
 	char destinationY;
@@ -230,9 +233,10 @@ extern struct Data_Walker {
 	short buildingId;
 	short immigrantBuildingId;
 	short destinationBuildingId;
-	short formationId;
+	unsigned char formationId; //50
+	unsigned char indexInFormation; //51
 	char __unknown_52;
-	char __unknown_53;
+	char __unused_53;
 	unsigned char migrantNumPeople;
 	char isGhost; // 55
 	char minMaxSeen;

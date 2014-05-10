@@ -465,7 +465,42 @@ void TerrainGraphics_setBuildingFarm(int buildingId, int x, int y, int cropGraph
 
 void TerrainGraphics_setTileWater(int x, int y)
 {
-	// TODO
+	Data_Grid_terrain[GridOffset(x, y)] |= Terrain_Water;
+	int xMin = x - 1;
+	int xMax = xMin + 3;
+	int yMin = y - 1;
+	int yMax = yMin + 3;
+	BOUND_REGION();
+	FOREACH_REGION({
+		if ((Data_Grid_terrain[gridOffset] & (Terrain_Water | Terrain_Building)) == Terrain_Water) {
+			const TerrainGraphic *g = TerrainGraphicsContext_getShore(gridOffset);
+			int graphicId = GraphicId(ID_Graphic_TerrainWater) + g->groupOffset + g->itemOffset;
+			if (Terrain_existsTileWithinRadiusWithType(xx, yy, 1, 2, Terrain_Building)) {
+				// fortified shore
+				graphicId = GraphicId(ID_Graphic_TerrainWaterShore);
+				switch (g->groupOffset) {
+					case 8: graphicId += 10; break;
+					case 12: graphicId += 11; break;
+					case 16: graphicId += 9; break;
+					case 20: graphicId += 8; break;
+					case 24: graphicId += 18; break;
+					case 28: graphicId += 16; break;
+					case 32: graphicId += 19; break;
+					case 36: graphicId += 17; break;
+					case 50: graphicId += 12; break;
+					case 51: graphicId += 14; break;
+					case 52: graphicId += 13; break;
+					case 53: graphicId += 15; break;
+					default:
+						graphicId = GraphicId(ID_Graphic_TerrainWater) + g->groupOffset + g->itemOffset;
+						break;
+				}
+			}
+			Data_Grid_graphicIds[gridOffset] = graphicId;
+			Data_Grid_bitfields[gridOffset] &= Bitfield_NoSizes;
+			Data_Grid_edge[gridOffset] |= Edge_LeftmostTile;
+		}
+	});
 }
 
 void TerrainGraphics_setTileEarthquake(int x, int y)
