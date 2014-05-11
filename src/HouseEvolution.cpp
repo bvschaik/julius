@@ -413,7 +413,7 @@ static int hasRequiredGoodsAndServices(int buildingId, int forUpgrade)
 		++Data_CityInfo.housesRequiringClinic;
 	}
 	// food types
-	int foodtypesRequired = Data_Model_Houses[level].food;
+	int foodtypesRequired = Data_Model_Houses[level].foodTypes;
 	int foodtypesAvailable = 0;
 	for (int i = 0; i < 4; i++) {
 		if (b->data.house.inventory.all[i]) {
@@ -794,7 +794,7 @@ void HouseEvolution_determineEvolveText(int buildingId, int hasBadDesirabilityBu
 		return;
 	}
 	// food types
-	foodtypesRequired = Data_Model_Houses[level].food;
+	foodtypesRequired = Data_Model_Houses[level].foodTypes;
 	if (foodtypesAvailable < foodtypesRequired) {
 		if (foodtypesRequired == 1) {
 			b->data.house.evolveTextId = 39;

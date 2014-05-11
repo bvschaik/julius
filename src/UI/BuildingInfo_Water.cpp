@@ -1,6 +1,7 @@
 #include "BuildingInfo.h"
 #include "../Graphics.h"
 #include "../Sound.h"
+#include "../Terrain.h"
 #include "../Widget.h"
 #include "../Data/Building.h"
 
@@ -13,11 +14,11 @@ void UI_BuildingInfo_drawAqueduct(BuildingInfoContext *c)
 	if (c->aqueductHasWater) {
 		Widget_GameText_drawMultiline(141, 1,
 			c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 128,
-			16 * (c->heightBlocks - 4), Font_NormalBlack);
+			16 * (c->widthBlocks - 4), Font_NormalBlack);
 	} else {
 		Widget_GameText_drawMultiline(141, 2,
 			c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 128,
-			16 * (c->heightBlocks - 4), Font_NormalBlack);
+			16 * (c->widthBlocks - 4), Font_NormalBlack);
 	}
 }
 
@@ -33,11 +34,11 @@ void UI_BuildingInfo_drawReservoir(BuildingInfoContext *c)
 	if (Data_Buildings[c->buildingId].hasWaterAccess) {
 		Widget_GameText_drawMultiline(107, 1,
 			c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 173,
-			16 * (c->heightBlocks - 4), Font_NormalBlack);
+			16 * (c->widthBlocks - 4), Font_NormalBlack);
 	} else {
 		Widget_GameText_drawMultiline(107, 3,
 			c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 173,
-			16 * (c->heightBlocks - 4), Font_NormalBlack);
+			16 * (c->widthBlocks - 4), Font_NormalBlack);
 	}
 }
 
@@ -47,23 +48,41 @@ void UI_BuildingInfo_drawFountain(BuildingInfoContext *c)
 	PLAY_SOUND("wavs/fountain.wav");
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(108, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, Font_LargeBlack);
+	int textId;
 	if (Data_Buildings[c->buildingId].hasWaterAccess) {
 		if (Data_Buildings[c->buildingId].numWorkers > 0) {
-			Widget_GameText_drawMultiline(108, 1,
-				c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 126,
-				16 * (c->heightBlocks - 4), Font_NormalBlack);
+			textId = 1;
 		} else {
-			Widget_GameText_drawMultiline(108, 2,
-				c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 126,
-				16 * (c->heightBlocks - 4), Font_NormalBlack);
+			textId = 2;
 		}
 	} else if (c->hasReservoirPipes) {
-		Widget_GameText_drawMultiline(108, 2,
-			c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 126,
-			16 * (c->heightBlocks - 4), Font_NormalBlack);
+		textId = 2;
 	} else {
-		Widget_GameText_drawMultiline(108, 3,
+		textId = 3;
+	}
+	Widget_GameText_drawMultiline(108, textId,
+		c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 126,
+		16 * (c->widthBlocks - 4), Font_NormalBlack);
+}
+
+void UI_BuildingInfo_drawWell(BuildingInfoContext *c)
+{
+	c->helpId = 62;
+	PLAY_SOUND("wavs/well.wav");
+	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
+	Widget_GameText_drawCentered(109, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, Font_LargeBlack);
+	int fountainAccess = Terrain_allHousesWithinWellRadiusHaveFountain(c->buildingId, 2);
+	int textId = 0;
+	if (fountainAccess == 0) { // well is OK
+		textId = 1;
+	} else if (fountainAccess == 1) { // all houses have fountain
+		textId = 2;
+	} else if (fountainAccess == 2) { // no houses around
+		textId = 3;
+	}
+	if (textId) {
+		Widget_GameText_drawMultiline(109, textId,
 			c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 126,
-			16 * (c->heightBlocks - 4), Font_NormalBlack);
+			16 * (c->widthBlocks - 4), Font_NormalBlack);
 	}
 }

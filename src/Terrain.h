@@ -25,6 +25,7 @@ int Terrain_existsTileWithinAreaWithType(int x, int y, int size, unsigned short 
 int Terrain_existsTileWithinRadiusWithType(int x, int y, int size, int radius, unsigned short type);
 int Terrain_existsClearTileWithinRadius(int x, int y, int size, int radius, int exceptGridOffset);
 int Terrain_allTilesWithinRadiusHaveType(int x, int y, int size, int radius, unsigned short type);
+int Terrain_allHousesWithinWellRadiusHaveFountain(int buildingId, int radius);
 
 void Terrain_markNativeLand(int x, int y, int size, int radius);
 int Terrain_hasBuildingOnNativeLand(int x, int y, int size, int radius);

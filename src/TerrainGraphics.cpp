@@ -318,7 +318,7 @@ void TerrainGraphics_updateRegionEarthquake(int xMin, int yMin, int xMax, int yM
 	BOUND_REGION();
 	FOREACH_REGION({
 		if ((Data_Grid_terrain[gridOffset] & Terrain_Rock) &&
-			(Data_Grid_bitfields[gridOffset] & Bitfield_Plaza)) {
+			(Data_Grid_bitfields[gridOffset] & Bitfield_PlazaOrEarthquake)) {
 			TerrainGraphics_setTileEarthquake(xx, yy);
 		}
 	});
@@ -508,7 +508,7 @@ void TerrainGraphics_setTileEarthquake(int x, int y)
 	// earthquake: terrain = rock && bitfields = plaza
 	int gridOffset = GridOffset(x, y);
 	Data_Grid_terrain[gridOffset] |= Terrain_Rock;
-	Data_Grid_bitfields[gridOffset] |= Bitfield_Plaza;
+	Data_Grid_bitfields[gridOffset] |= Bitfield_PlazaOrEarthquake;
 
 	int xMin = x - 1;
 	int yMin = y - 1;
@@ -517,7 +517,7 @@ void TerrainGraphics_setTileEarthquake(int x, int y)
 	BOUND_REGION();
 	FOREACH_REGION({
 		if ((Data_Grid_terrain[gridOffset] & Terrain_Rock) &&
-			(Data_Grid_bitfields[gridOffset] & Bitfield_Plaza)) {
+			(Data_Grid_bitfields[gridOffset] & Bitfield_PlazaOrEarthquake)) {
 			const TerrainGraphic *g = TerrainGraphicsContext_getEarthquake(gridOffset);
 			if (g->isValid) {
 				Data_Grid_graphicIds[gridOffset] =

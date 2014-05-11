@@ -26,6 +26,7 @@
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 #include "Data/Empire.h"
+#include "Data/Event.h"
 #include "Data/FileList.h"
 #include "Data/Graphics.h"
 #include "Data/Grid.h"
@@ -224,61 +225,55 @@ static void loadScenario(const char *scenarioName)
 	Data_CityInfo.exitPointX = (char) Data_Scenario.exitPoint.x;
 	Data_CityInfo.exitPointY = (char) Data_Scenario.exitPoint.y;
 	Data_CityInfo.exitPointGridOffset = GridOffset(Data_CityInfo.exitPointX, Data_CityInfo.exitPointY);
+	Data_CityInfo.treasury = Calc_adjustWithPercentage(Data_Scenario.startFunds,
+		Data_Model_Difficulty.moneyPercentage[Data_Settings.difficulty]);
+	Data_CityInfo.financeBalanceLastYear = Data_CityInfo.treasury;
+	Data_CityInfo_Extra.gameTimeYear = Data_Scenario.startYear;
 
-	/*
-  cityinfo_treasury[4517 * ciid] = j_fun_adjustWithPercentage(scn_startFunds, difficulty_moneypct[setting_difficulty]);
-  cityinfo_finance_balance_lastyear[4517 * ciid] = cityinfo_treasury[4517 * ciid];
-  gametime_year = scn_settings_startYear;
-  event_earthquake_gameYear = scn_event_earthquake_year + scn_settings_startYear;
-  event_earthquake_month = (random_7f_1 & 7) + 2;
-  if ( scn_event_earthquake_severity )
-  {
-    switch ( scn_event_earthquake_severity )
-    {
-      case 1:
-        event_earthquake_maxDuration = (random_7f_1 & 0x1F) + 25;
-        event_earthquake_maxDamage = 10;
-        break;
-      case 2:
-        event_earthquake_maxDuration = (random_7f_1 & 0x3F) + 100;
-        event_earthquake_maxDamage = 8;
-        break;
-      case 3:
-        event_earthquake_maxDuration = random_7f_1 + 250;
-        event_earthquake_maxDamage = 6;
-        break;
-    }
-  }
-  else
-  {
-    event_earthquake_maxDuration = 0;
-    event_earthquake_maxDamage = 0;
-  }
-  event_earthquake_state = 0;
-  for ( i = 0; i < 4; ++i )
-  {
-    dword_929660[2 * i] = scn_earthquake_x;
-    dword_929664[2 * i] = scn_earthquake_y;
-  }
-  event_gladiatorRevolt_gameYear = scn_event_gladiatorRevolt_year + scn_settings_startYear;
-  event_gladiatorRevolt_month = (random_7f_1 & 3) + 3;
-  event_gladiatorRevold_endMonth = event_gladiatorRevolt_month + 3;
-  event_gladiatorRevolt_state = 0;
-  event_emperorChange_gameYear = scn_event_emperorChange_year + scn_settings_startYear;
-  event_emperorChange_month = (random_7f_1 & 7) + 1;
-  event_emperorChange_state = 0;
-  if ( scn_win_timeLimit_on )
-  {
-    timeLimit_maxGameYear = scn_win_timeLimit + scn_settings_startYear;
-  }
-  else
-  {
-    if ( scn_win_survivalTime_on )
-      timeLimit_maxGameYear = scn_win_survivalTime + scn_settings_startYear;
-    else
-      timeLimit_maxGameYear = scn_settings_startYear + 1000000;
-  }
-*/
+	// set up events
+	// earthquake
+	Data_Event.earthquake.gameYear = Data_Scenario.startYear + Data_Scenario.earthquakeYear;
+	Data_Event.earthquake.month = 2 + (Data_Random.random1_7bit & 7);
+	switch (Data_Scenario.earthquakeSeverity) {
+		default:
+			Data_Event.earthquake.maxDuration = 0;
+			Data_Event.earthquake.maxDelay = 0;
+			break;
+		case 1:
+			Data_Event.earthquake.maxDuration = 25 + (Data_Random.random1_7bit & 0x1f);
+			Data_Event.earthquake.maxDelay = 10;
+			break;
+		case 2:
+			Data_Event.earthquake.maxDuration = 100 + (Data_Random.random1_7bit & 0x3f);
+			Data_Event.earthquake.maxDelay = 8;
+			break;
+		case 3:
+			Data_Event.earthquake.maxDuration = 250 + Data_Random.random1_7bit;
+			Data_Event.earthquake.maxDelay = 6;
+			break;
+	}
+	Data_Event.earthquake.state = 0;
+	for (int i = 0; i < 4; i++) {
+		Data_Event.earthquake.expand[i].x = Data_Scenario.earthquakePoint.x;
+		Data_Event.earthquake.expand[i].y = Data_Scenario.earthquakePoint.y;
+	}
+	// gladiator revolt
+	Data_Event.gladiatorRevolt.gameYear = Data_Scenario.startYear + Data_Scenario.gladiatorRevolt.year;
+	Data_Event.gladiatorRevolt.month = 3 + (Data_Random.random1_7bit & 3);
+	Data_Event.gladiatorRevolt.endMonth = 3 + Data_Event.gladiatorRevolt.month;
+	Data_Event.gladiatorRevolt.state = 0;
+	// emperor change
+	Data_Event.emperorChange.gameYear = Data_Scenario.startYear + Data_Scenario.emperorChange.year;
+	Data_Event.emperorChange.month = 1 + (Data_Random.random1_7bit & 7);
+	Data_Event.emperorChange.state = 0;
+	// time limit
+	if (Data_Scenario.winCriteria.timeLimitYearsEnabled) {
+		Data_Event.timeLimitMaxGameYear = Data_Scenario.startYear + Data_Scenario.winCriteria.timeLimitYears;
+	} else if (Data_Scenario.winCriteria.survivalYearsEnabled) {
+		Data_Event.timeLimitMaxGameYear = Data_Scenario.startYear + Data_Scenario.winCriteria.survivalYears;
+	} else {
+		Data_Event.timeLimitMaxGameYear = 1000000 + Data_Scenario.startYear;
+	}
 
 	Empire_load(1, Data_Scenario.empireId);
 	Empire_initCities();
@@ -305,7 +300,7 @@ static void readScenarioAndInitGraphics()
 	GameFile_loadScenario(Data_FileList.selectedScenario);
 	FileSystem_removeExtension(Data_FileList.selectedScenario);
 	// TODO remove
-	initGridGraphicIds();
+	//initGridGraphicIds();
 
 	Empire_initTradeAmountCodes();
 	Data_Settings_Map.width = Data_Scenario.mapSizeX;

@@ -191,6 +191,15 @@ void Terrain_removeBuildingFromGrids(int buildingId, int x, int y)
 
 int Terrain_hasRoadAccess(int x, int y, int size, int *roadX, int *roadY)
 {
+	FOR_XY_ADJACENT(
+		if (!(Data_Grid_terrain[gridOffset] & Terrain_Building) ||
+			Data_Buildings[Data_Grid_buildingIds[gridOffset]].type != Building_Gatehouse) {
+			if (Data_Grid_terrain[gridOffset] & Terrain_Road) {
+				// TODO
+				return 1;
+			}
+		}
+	);
 	// TODO
 	return 0;
 }
@@ -339,6 +348,24 @@ int Terrain_allTilesWithinRadiusHaveType(int x, int y, int size, int radius, uns
 		}
 	);
 	return 1;
+}
+
+int Terrain_allHousesWithinWellRadiusHaveFountain(int buildingId, int radius)
+{
+	int numHouses = 0;
+	int x = Data_Buildings[buildingId].x;
+	int y = Data_Buildings[buildingId].y;
+	int size = 1;
+	FOR_XY_RADIUS(
+		int buildingId = Data_Grid_buildingIds[gridOffset];
+		if (buildingId > 0 && Data_Buildings[buildingId].houseSize) {
+			numHouses++;
+			if (!(Data_Grid_terrain[gridOffset] & Terrain_FountainRange)) {
+				return 0;
+			}
+		}
+	);
+	return numHouses ? 1 : 2;
 }
 
 void Terrain_markNativeLand(int x, int y, int size, int radius)

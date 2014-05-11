@@ -73,7 +73,7 @@ enum {
 	Bitfield_NoOverlay = 0xef,
 	Bitfield_AlternateTerrain = 0x20,
 	Bitfield_Deleted = 0x40,
-	Bitfield_Plaza = 0x80,
+	Bitfield_PlazaOrEarthquake = 0x80,
 	Edge_MaskX = 0x7,
 	Edge_MaskY = 0x38,
 	Edge_MaskXY = 0x3f,

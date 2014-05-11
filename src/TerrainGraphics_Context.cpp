@@ -341,7 +341,7 @@ const TerrainGraphic *TerrainGraphicsContext_getEarthquake(int gridOffset)
 	for (int i = 0; i < 8; i++) {
 		int offset = gridOffset + contextTileOffsets[i];
 		tiles[i] = (Data_Grid_terrain[offset] & Terrain_Rock) &&
-			(Data_Grid_bitfields[offset] & Bitfield_Plaza) ? 1 : 0;
+			(Data_Grid_bitfields[offset] & Bitfield_PlazaOrEarthquake) ? 1 : 0;
 	}
 	return TerrainGraphicsContext_getGraphic(TerrainGraphicsContext_Elevation, tiles);
 }

@@ -86,9 +86,9 @@ static void drawTemple(BuildingInfoContext *c, const char *soundFile, int groupI
 		Graphics_drawImage(graphicOffset + GraphicId(ID_Graphic_PanelWindows),
 			c->xOffset + 190, c->yOffset + 16 * c->heightBlocks - 118);
 	} else {
-		Widget_GameText_draw(69, 25,
+		Widget_GameText_drawMultiline(69, 25,
 			c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 128,
-			Font_NormalBlack);
+			16 * (c->widthBlocks - 4), Font_NormalBlack);
 	}
 }
 

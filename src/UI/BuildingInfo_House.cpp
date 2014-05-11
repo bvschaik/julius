@@ -1,14 +1,18 @@
 #include "BuildingInfo.h"
+
 #include "../Calc.h"
 #include "../Graphics.h"
 #include "../Resource.h"
 #include "../Sound.h"
 #include "../Widget.h"
+
 #include "../Data/Building.h"
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
 #include "../Data/Graphics.h"
+#include "../Data/Grid.h"
 #include "../Data/Model.h"
+#include "../Data/Settings.h"
 
 static void drawVacantLot(BuildingInfoContext *c)
 {
@@ -40,7 +44,7 @@ static void drawTaxInfo(BuildingInfoContext *c, int yOffset)
 	if (b->houseTaxCoverage) {
 		int pct = Calc_adjustWithPercentage(b->taxIncomeOrStorage / 2, Data_CityInfo.taxPercentage);
 		int width = Widget_GameText_draw(127, 24, c->xOffset + 36, yOffset, Font_SmallBlack);
-		width = 2 * width + Widget_GameText_drawNumberWithDescription(8, 0, pct,
+		width += Widget_GameText_drawNumberWithDescription(8, 0, pct,
 			c->xOffset + 36 + width, yOffset, Font_SmallBlack);
 		Widget_GameText_draw(127, 25, c->xOffset + 36 + width, yOffset, Font_SmallBlack);
 	} else {
@@ -151,4 +155,53 @@ void UI_BuildingInfo_drawHouse(BuildingInfoContext *c)
 		Widget_GameText_drawMultiline(127, 40 + b->data.house.evolveTextId,
 			c->xOffset + 32, c->yOffset + 70, 16 * (c->widthBlocks - 4), Font_NormalBlack);
 	}
+}
+
+void UI_BuildingInfo_houseDetermineWorstDesirabilityBuilding(BuildingInfoContext *c)
+{
+	int lowestDesirability = 0;
+	int lowestBuildingId = 0;
+	int bx = Data_Buildings[c->buildingId].x;
+	int by = Data_Buildings[c->buildingId].y;
+	int xMin = bx - 6;
+	int yMin = by - 6;
+	int xMax = bx + 6;
+	int yMax = by + 6;
+	if (xMin < 0) xMin = 0;
+	if (yMin < 0) yMin = 0;
+	if (xMax >= Data_Settings_Map.width) xMax = Data_Settings_Map.width;
+	if (yMax >= Data_Settings_Map.height) yMax = Data_Settings_Map.height;
+
+	for (int y = yMin; y <= yMax; y++) {
+		for (int x = xMin; x <= xMax; x++) {
+			int buildingId = Data_Grid_buildingIds[GridOffset(x, y)];
+			if (buildingId <= 0) {
+				continue;
+			}
+			struct Data_Building *b = &Data_Buildings[buildingId];
+			if (b->inUse != 1 || buildingId == c->buildingId) {
+				continue;
+			}
+			if (!b->houseSize || b->type < Data_Buildings[c->buildingId].type) {
+				int des = Data_Model_Buildings[b->type].desirabilityValue;
+				if (des < 0) {
+					// simplified desirability calculation
+					int stepSize = Data_Model_Buildings[b->type].desirabilityStepSize;
+					int range = Data_Model_Buildings[b->type].desirabilityRange;
+					int dist = Calc_distanceMaximum(x, y,
+						Data_Buildings[c->buildingId].x, Data_Buildings[c->buildingId].y);
+					if (dist <= range) {
+						while (--dist > 1) {
+							des += stepSize;
+						}
+						if (des < lowestDesirability) {
+							lowestDesirability = des;
+							lowestBuildingId = buildingId;
+						}
+					}
+				}
+			}
+		}
+	}
+	c->worstDesirabilityBuildingId = lowestBuildingId;
 }

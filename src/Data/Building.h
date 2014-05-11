@@ -354,6 +354,7 @@ extern struct Data_Buildings_Extra {
 	int highestBuildingIdInUse;
 	int highestBuildingIdEver;
 	int createdSequence;
+	int barracksTowerSentryRequested;
 } Data_Buildings_Extra;
 
 extern struct Data_BuildingList {
