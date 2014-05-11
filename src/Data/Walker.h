@@ -174,7 +174,7 @@ extern struct Data_Walker {
 	short cartGraphicId;
 	short nextWalkerIdOnSameTile; // 08
 	unsigned char type;
-	char resourceId;
+	char resourceId; //0b
 	char __unknown_0c;
 	char isFriendly;
 	char state;

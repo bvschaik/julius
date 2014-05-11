@@ -256,6 +256,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\UI\BuildingInfo_Government.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\UI\BuildingInfo_House.cpp"
 				>
 			</File>

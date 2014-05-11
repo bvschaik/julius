@@ -30,6 +30,7 @@ typedef struct {
 	int warehouseSpaceText;
 	int type; // 1 = terrain; 2 = building
 	int terrainType;
+	int advisor;
 	struct {
 		int soundId;
 		int phraseId;
@@ -72,7 +73,8 @@ void UI_BuildingInfo_drawFurnitureWorkshop(BuildingInfoContext *c);
 void UI_BuildingInfo_drawPotteryWorkshop(BuildingInfoContext *c);
 
 void UI_BuildingInfo_drawMarket(BuildingInfoContext *c);
-
+void UI_BuildingInfo_drawGranary(BuildingInfoContext *c);
+void UI_BuildingInfo_drawWarehouse(BuildingInfoContext *c);
 
 void UI_BuildingInfo_drawAmphitheater(BuildingInfoContext *c);
 void UI_BuildingInfo_drawTheater(BuildingInfoContext *c);
@@ -98,6 +100,10 @@ void UI_BuildingInfo_drawTempleMercury(BuildingInfoContext *c);
 void UI_BuildingInfo_drawTempleMars(BuildingInfoContext *c);
 void UI_BuildingInfo_drawTempleVenus(BuildingInfoContext *c);
 void UI_BuildingInfo_drawOracle(BuildingInfoContext *c);
+
+void UI_BuildingInfo_drawForum(BuildingInfoContext *c);
+void UI_BuildingInfo_drawSenate(BuildingInfoContext *c);
+void UI_BuildingInfo_drawGovernorsHome(BuildingInfoContext *c);
 
 void UI_BuildingInfo_drawAqueduct(BuildingInfoContext *c);
 void UI_BuildingInfo_drawReservoir(BuildingInfoContext *c);

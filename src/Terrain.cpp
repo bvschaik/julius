@@ -213,7 +213,7 @@ int Terrain_hasRoadAccessHippodrome(int x, int y, int *roadX, int *roadY)
 int Terrain_hasRoadAccessGranary(int x, int y, int *roadX, int *roadY)
 {
 	// TODO
-	return 0;
+	return 1;
 }
 
 static int getRoadWithinRadius(int x, int y, int size, int radius, int *xTile, int *yTile);

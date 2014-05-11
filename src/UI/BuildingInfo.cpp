@@ -281,6 +281,18 @@ void UI_BuildingInfo_drawBackground()
 			UI_BuildingInfo_drawPotteryWorkshop(&context);
 		} else if (btype == Building_Market) {
 			UI_BuildingInfo_drawMarket(&context);
+		} else if (btype == Building_Granary) {
+			//if (c->storageSpecialOrders) {
+			//	UI_BuildingInfo_drawGranaryOrders(&context);
+			//} else {
+				UI_BuildingInfo_drawGranary(&context);
+			//}
+		} else if (btype == Building_Warehouse) {
+			//if (c->storageSpecialOrders) {
+			//	UI_BuildingInfo_drawWarehouseOrders(&context);
+			//} else {
+			UI_BuildingInfo_drawWarehouse(&context);
+			//}
 		} else if (btype == Building_Amphitheater) {
 			UI_BuildingInfo_drawAmphitheater(&context);
 		} else if (btype == Building_Theater) {
@@ -323,6 +335,12 @@ void UI_BuildingInfo_drawBackground()
 			UI_BuildingInfo_drawTempleVenus(&context);
 		} else if (btype == Building_Oracle) {
 			UI_BuildingInfo_drawOracle(&context);
+		} else if (btype == Building_GovernorsHouse || btype == Building_GovernorsVilla || btype == Building_GovernorsPalace) {
+			UI_BuildingInfo_drawGovernorsHome(&context);
+		} else if (btype == Building_Forum || btype == Building_ForumUpgraded) {
+			UI_BuildingInfo_drawForum(&context);
+		} else if (btype == Building_Senate || btype == Building_SenateUpgraded) {
+			UI_BuildingInfo_drawSenate(&context);
 		} else if (btype == Building_Reservoir) {
 			UI_BuildingInfo_drawReservoir(&context);
 		} else if (btype == Building_Fountain) {
