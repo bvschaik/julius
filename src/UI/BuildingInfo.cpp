@@ -117,6 +117,7 @@ void UI_BuildingInfo_init()
 	int terrain = Data_Grid_terrain[gridOffset];
 	context.canPlaySound = 1;
 	context.buildingId = Data_Grid_buildingIds[gridOffset];
+	context.rubbleBuildingType = Data_Grid_rubbleBuildingType[gridOffset];
 	context.hasReservoirPipes = terrain & Terrain_ReservoirRange;
 	context.aqueductHasWater = Data_Grid_aqueducts[gridOffset];
 
@@ -242,9 +243,9 @@ void UI_BuildingInfo_drawBackground()
 	UI_City_drawBackground();
 	UI_City_drawForeground();//?do we want this?
 	if (context.type == 0) {
-		// show info no people
+		UI_BuildingInfo_drawNoPeople(&context);
 	} else if (context.type == 1) {
-		// show terrain info
+		UI_BuildingInfo_drawTerrain(&context);
 	} else if (context.type == 2) {
 		int btype = Data_Buildings[context.buildingId].type;
 		if (btype >= Building_HouseVacantLot && btype <= Building_HouseLuxuryPalace) {
@@ -282,17 +283,17 @@ void UI_BuildingInfo_drawBackground()
 		} else if (btype == Building_Market) {
 			UI_BuildingInfo_drawMarket(&context);
 		} else if (btype == Building_Granary) {
-			//if (c->storageSpecialOrders) {
-			//	UI_BuildingInfo_drawGranaryOrders(&context);
-			//} else {
+			if (context.storageShowSpecialOrders) {
+				UI_BuildingInfo_drawGranaryOrders(&context);
+			} else {
 				UI_BuildingInfo_drawGranary(&context);
-			//}
+			}
 		} else if (btype == Building_Warehouse) {
-			//if (c->storageSpecialOrders) {
-			//	UI_BuildingInfo_drawWarehouseOrders(&context);
-			//} else {
-			UI_BuildingInfo_drawWarehouse(&context);
-			//}
+			if (context.storageShowSpecialOrders) {
+				UI_BuildingInfo_drawWarehouseOrders(&context);
+			} else {
+				UI_BuildingInfo_drawWarehouse(&context);
+			}
 		} else if (btype == Building_Amphitheater) {
 			UI_BuildingInfo_drawAmphitheater(&context);
 		} else if (btype == Building_Theater) {
@@ -341,6 +342,14 @@ void UI_BuildingInfo_drawBackground()
 			UI_BuildingInfo_drawForum(&context);
 		} else if (btype == Building_Senate || btype == Building_SenateUpgraded) {
 			UI_BuildingInfo_drawSenate(&context);
+		} else if (btype == Building_EngineersPost) {
+			UI_BuildingInfo_drawEngineersPost(&context);
+		} else if (btype == Building_Shipyard) {
+			UI_BuildingInfo_drawShipyard(&context);
+		} else if (btype == Building_Dock) {
+			UI_BuildingInfo_drawDock(&context);
+		} else if (btype == Building_Wharf) {
+			UI_BuildingInfo_drawWharf(&context);
 		} else if (btype == Building_Reservoir) {
 			UI_BuildingInfo_drawReservoir(&context);
 		} else if (btype == Building_Fountain) {
@@ -363,12 +372,8 @@ void UI_BuildingInfo_drawBackground()
 			UI_BuildingInfo_drawBarracks(&context);
 		} else if (btype == Building_FortGround__) {
 			UI_BuildingInfo_drawFort(&context);
-		/*} else if (btype == Building_) {
-			UI_BuildingInfo_draw(&context);
-		} else if (btype == Building_) {
-			UI_BuildingInfo_draw(&context);
-		} else if (btype == Building_) {
-			UI_BuildingInfo_draw(&context);*/
+		} else if (btype == Building_BurningRuin) {
+			UI_BuildingInfo_drawBurningRuin(&context);
 		} else if (btype == Building_NativeHut) {
 			UI_BuildingInfo_drawNativeHut(&context);
 		} else if (btype == Building_NativeMeeting) {
@@ -379,9 +384,8 @@ void UI_BuildingInfo_drawBackground()
 			UI_BuildingInfo_drawMissionPost(&context);
 		}
 	} else if (context.type == 4) {
-		// show fort info
+		UI_BuildingInfo_drawLegionInfo(&context);
 	}
-	// TODO
 }
 
 void UI_BuildingInfo_drawForeground()

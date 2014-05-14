@@ -136,6 +136,15 @@ void UI_BuildingInfo_drawGranary(BuildingInfoContext *c)
 	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 142);
 }
 
+void UI_BuildingInfo_drawGranaryOrders(BuildingInfoContext *c)
+{
+	c->helpId = 3;
+	Widget_Panel_drawOuterPanel(c->xOffset, 32, 29, 28);
+	Widget_GameText_drawCentered(98, 6,
+		c->xOffset, 42, 16 * c->widthBlocks, Font_LargeBlack);
+	Widget_Panel_drawInnerPanel(c->xOffset + 16, 74, c->widthBlocks - 2, 21);
+}
+
 void UI_BuildingInfo_drawWarehouse(BuildingInfoContext *c)
 {
 	c->helpId = 4;
@@ -197,4 +206,13 @@ void UI_BuildingInfo_drawWarehouse(BuildingInfoContext *c)
 			c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 93,
 			16 * (c->widthBlocks - 4), Font_NormalBlack);
 	}
+}
+
+void UI_BuildingInfo_drawWarehouseOrders(BuildingInfoContext *c)
+{
+	c->helpId = 4;
+	Widget_Panel_drawOuterPanel(c->xOffset, 32, 29, 28);
+	Widget_GameText_drawCentered(99, 3,
+		c->xOffset, 42, 16 * c->widthBlocks, Font_LargeBlack);
+	Widget_Panel_drawInnerPanel(c->xOffset + 16, 74, c->widthBlocks - 2, 21);
 }

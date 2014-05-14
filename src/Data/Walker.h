@@ -131,6 +131,11 @@ enum {
 	WalkerActionState_149_Corpse = 149,
 	WalkerActionState_150_Attacking = 150,
 	WalkerActionState_159_AttackingNative = 159,
+	WalkerActionState_191_FishingBoatGoingToFish = 191,
+	WalkerActionState_192_FishingBoatFishing = 192,
+	WalkerActionState_193_FishingBoatCreated = 193,
+	WalkerActionState_194_FishingBoatUnloading = 194,
+	WalkerActionState_195_FishingBoatReturningWithFish = 195,
 };
 
 enum {

@@ -252,6 +252,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\UI\BuildingInfo_Engineering.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\UI\BuildingInfo_Entertainment.cpp"
 				>
 			</File>
@@ -269,6 +273,10 @@
 			</File>
 			<File
 				RelativePath=".\src\UI\BuildingInfo_Military.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\UI\BuildingInfo_Terrain.cpp"
 				>
 			</File>
 			<File

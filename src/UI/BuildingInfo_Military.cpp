@@ -169,3 +169,7 @@ void UI_BuildingInfo_drawBarracks(BuildingInfoContext *c)
 	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 142);
 }
 
+void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)
+{
+	// TODO
+}

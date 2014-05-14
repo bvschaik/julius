@@ -31,6 +31,8 @@ typedef struct {
 	int type; // 1 = terrain; 2 = building
 	int terrainType;
 	int advisor;
+	int rubbleBuildingType;
+	int storageShowSpecialOrders;
 	struct {
 		int soundId;
 		int phraseId;
@@ -74,7 +76,9 @@ void UI_BuildingInfo_drawPotteryWorkshop(BuildingInfoContext *c);
 
 void UI_BuildingInfo_drawMarket(BuildingInfoContext *c);
 void UI_BuildingInfo_drawGranary(BuildingInfoContext *c);
+void UI_BuildingInfo_drawGranaryOrders(BuildingInfoContext *c);
 void UI_BuildingInfo_drawWarehouse(BuildingInfoContext *c);
+void UI_BuildingInfo_drawWarehouseOrders(BuildingInfoContext *c);
 
 void UI_BuildingInfo_drawAmphitheater(BuildingInfoContext *c);
 void UI_BuildingInfo_drawTheater(BuildingInfoContext *c);
@@ -105,6 +109,14 @@ void UI_BuildingInfo_drawForum(BuildingInfoContext *c);
 void UI_BuildingInfo_drawSenate(BuildingInfoContext *c);
 void UI_BuildingInfo_drawGovernorsHome(BuildingInfoContext *c);
 
+void UI_BuildingInfo_drawEngineersPost(BuildingInfoContext *c);
+void UI_BuildingInfo_drawShipyard(BuildingInfoContext *c);
+void UI_BuildingInfo_drawDock(BuildingInfoContext *c);
+void UI_BuildingInfo_drawWharf(BuildingInfoContext *c);
+
+void UI_BuildingInfo_drawBurningRuin(BuildingInfoContext *c);
+void UI_BuildingInfo_drawRubble(BuildingInfoContext *c);
+
 void UI_BuildingInfo_drawAqueduct(BuildingInfoContext *c);
 void UI_BuildingInfo_drawReservoir(BuildingInfoContext *c);
 void UI_BuildingInfo_drawFountain(BuildingInfoContext *c);
@@ -117,6 +129,7 @@ void UI_BuildingInfo_drawGatehouse(BuildingInfoContext *c);
 void UI_BuildingInfo_drawTower(BuildingInfoContext *c);
 void UI_BuildingInfo_drawMilitaryAcademy(BuildingInfoContext *c);
 void UI_BuildingInfo_drawBarracks(BuildingInfoContext *c);
+void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c);
 
 void UI_BuildingInfo_drawGarden(BuildingInfoContext *c);
 void UI_BuildingInfo_drawPlaza(BuildingInfoContext *c);
@@ -127,5 +140,8 @@ void UI_BuildingInfo_drawNativeHut(BuildingInfoContext *c);
 void UI_BuildingInfo_drawNativeMeeting(BuildingInfoContext *c);
 void UI_BuildingInfo_drawNativeCrops(BuildingInfoContext *c);
 void UI_BuildingInfo_drawMissionPost(BuildingInfoContext *c);
+
+void UI_BuildingInfo_drawTerrain(BuildingInfoContext *c);
+void UI_BuildingInfo_drawNoPeople(BuildingInfoContext *c);
 
 #endif
