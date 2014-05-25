@@ -116,6 +116,7 @@ void UI_BuildingInfo_init()
 	int gridOffset = Data_CityView.selectedTile.gridOffset;
 	int terrain = Data_Grid_terrain[gridOffset];
 	context.canPlaySound = 1;
+	context.storageShowSpecialOrders = 0;
 	context.buildingId = Data_Grid_buildingIds[gridOffset];
 	context.rubbleBuildingType = Data_Grid_rubbleBuildingType[gridOffset];
 	context.hasReservoirPipes = terrain & Terrain_ReservoirRange;
@@ -390,7 +391,24 @@ void UI_BuildingInfo_drawBackground()
 
 void UI_BuildingInfo_drawForeground()
 {
-	// TODO
+	if (context.type == 2) {
+		int btype = Data_Buildings[context.buildingId].type;
+		if (btype == Building_Granary) {
+			if (context.storageShowSpecialOrders) {
+				UI_BuildingInfo_drawGranaryOrdersForeground(&context);
+			} else {
+				UI_BuildingInfo_drawGranaryForeground(&context);
+			}
+		} else if (btype == Building_Warehouse) {
+			if (context.storageShowSpecialOrders) {
+				UI_BuildingInfo_drawWarehouseOrdersForeground(&context);
+			} else {
+				UI_BuildingInfo_drawWarehouseForeground(&context);
+			}
+		}
+	} else if (context.type == 4) {
+		// TODO fort legion info
+	}
 }
 
 void UI_BuildingInfo_handleMouse()
@@ -400,6 +418,28 @@ void UI_BuildingInfo_handleMouse()
 		UI_Window_goTo(Window_City);
 		return;
 	}
+	if (context.type == 2) {
+		int btype = Data_Buildings[context.buildingId].type;
+		if (btype == Building_Granary) {
+			if (context.storageShowSpecialOrders) {
+				UI_BuildingInfo_handleMouseGranaryOrders(&context);
+			} else {
+				UI_BuildingInfo_handleMouseGranary(&context);
+			}
+		} else if (btype == Building_Warehouse) {
+			if (context.storageShowSpecialOrders) {
+				UI_BuildingInfo_handleMouseWarehouseOrders(&context);
+			} else {
+				UI_BuildingInfo_handleMouseWarehouse(&context);
+			}
+		}
+	}
+}
+
+void UI_BuildingInfo_showStorageOrders(int param1, int param2)
+{
+	context.storageShowSpecialOrders = 1;
+	UI_Window_requestRefresh();
 }
 
 void UI_BuildingInfo_drawEmploymentInfo(BuildingInfoContext *c, int yOffset)

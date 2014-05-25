@@ -42,6 +42,7 @@ void sanityCheck()
 	assert("Building object", 128, sizeof(struct Data_Building));
 	assert("City sound", 128, sizeof(struct Data_Sound_City));
 	assert("Formation", 128, sizeof(struct Data_Formation));
+	assert("Storage", 32, sizeof(struct Data_Building_Storage));
 }
 
 

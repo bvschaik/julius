@@ -6,9 +6,22 @@
 #include "../Widget.h"
 
 #include "../Data/Building.h"
+#include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
 #include "../Data/Scenario.h"
 #include "../Data/Walker.h"
+
+static CustomButton granaryButtons[] = {
+	{0, 0, 304, 20, UI_BuildingInfo_showStorageOrders, Widget_Button_doNothing, 1, 0, 0}
+};
+
+static CustomButton warehouseButtons[] = {
+	{0, 0, 304, 20, UI_BuildingInfo_showStorageOrders, Widget_Button_doNothing, 1, 0, 0}
+};
+
+static int focusButtonId = 0;
+static int ordersFocusButtonId = 0;
+static int resourceFocusButtonId = 0;
 
 void UI_BuildingInfo_drawMarket(BuildingInfoContext *c)
 {
@@ -136,6 +149,23 @@ void UI_BuildingInfo_drawGranary(BuildingInfoContext *c)
 	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 142);
 }
 
+void UI_BuildingInfo_drawGranaryForeground(BuildingInfoContext *c)
+{
+	Widget_Panel_drawButtonBorder(
+		c->xOffset + 80, c->yOffset + 16 * c->heightBlocks - 34,
+		16 * (c->widthBlocks - 10), 20, focusButtonId == 1 ? 1 : 0);
+	Widget_GameText_drawCentered(98, 5,
+		c->xOffset + 80, c->yOffset + 16 * c->heightBlocks - 30,
+		16 * (c->widthBlocks - 10), Font_NormalBlack);
+}
+
+void UI_BuildingInfo_handleMouseGranary(BuildingInfoContext *c)
+{
+	Widget_Button_handleCustomButtons(
+		c->xOffset + 80, c->yOffset + 16 * c->heightBlocks - 34,
+		granaryButtons, 1, &focusButtonId);
+}
+
 void UI_BuildingInfo_drawGranaryOrders(BuildingInfoContext *c)
 {
 	c->helpId = 3;
@@ -143,6 +173,51 @@ void UI_BuildingInfo_drawGranaryOrders(BuildingInfoContext *c)
 	Widget_GameText_drawCentered(98, 6,
 		c->xOffset, 42, 16 * c->widthBlocks, Font_LargeBlack);
 	Widget_Panel_drawInnerPanel(c->xOffset + 16, 74, c->widthBlocks - 2, 21);
+}
+
+void UI_BuildingInfo_drawGranaryOrdersForeground(BuildingInfoContext *c)
+{
+	Widget_Panel_drawButtonBorder(
+		c->xOffset + 80, 436, 16 * (c->widthBlocks - 10), 20,
+		ordersFocusButtonId == 1 ? 1 : 0);
+	int storageId = Data_Buildings[c->buildingId].storageId;
+	if (Data_Building_Storages[storageId].emptyAll) {
+		Widget_GameText_drawCentered(98, 8, c->xOffset + 80, 440,
+			16 * (c->widthBlocks - 10), Font_NormalBlack);
+		Widget_GameText_drawCentered(98, 9, c->xOffset + 80, 416,
+			16 * (c->widthBlocks - 10), Font_NormalBlack);
+	} else {
+		Widget_GameText_drawCentered(98, 7, c->xOffset + 80, 440,
+			16 * (c->widthBlocks - 10), Font_NormalBlack);
+	}
+
+	for (int i = 0; i < Data_CityInfo_Resource.numAvailableFoods; i++) {
+		int resourceId = Data_CityInfo_Resource.availableFoods[i];
+		int graphicId = GraphicId(ID_Graphic_ResourceIcons) + resourceId +
+			Resource_getGraphicIdOffset(resourceId, 3);
+		Graphics_drawImage(graphicId, c->xOffset + 32, 78 + 22 * i);
+		Graphics_drawImage(graphicId, c->xOffset + 408, 78 + 22 * i);
+		Widget_GameText_draw(23, resourceId,
+			c->xOffset + 72, 82 + 22 * i, Font_NormalWhite);
+		Widget_Panel_drawButtonBorder(c->xOffset + 180, 78 + 22 * i, 210, 22,
+			resourceFocusButtonId == i + 1);
+		
+		int state = Data_Building_Storages[storageId].resourceState[resourceId];
+		if (state == BuildingStorageState_Accepting) {
+			Widget_GameText_draw(99, 7, c->xOffset + 230, 83 + 22 * i, Font_NormalWhite);
+		} else if (state == BuildingStorageState_NotAccepting) {
+			Widget_GameText_draw(99, 8, c->xOffset + 230, 83 + 22 * i, Font_NormalRed);
+		} else if (state == BuildingStorageState_Getting) {
+			Graphics_drawImage(GraphicId(ID_Graphic_ContextIcons) + 12,
+				c->xOffset + 186, 81 + 22 * i);
+			Widget_GameText_draw(99, 10, c->xOffset + 230, 83 + 22 * i, Font_NormalWhite);
+		}
+	}
+}
+
+void UI_BuildingInfo_handleMouseGranaryOrders(BuildingInfoContext *c)
+{
+	// TODO
 }
 
 void UI_BuildingInfo_drawWarehouse(BuildingInfoContext *c)
@@ -182,7 +257,6 @@ void UI_BuildingInfo_drawWarehouse(BuildingInfoContext *c)
 	// cartpusher state
 	int cartpusher = b->walkerId;
 	if (cartpusher && Data_Walkers[cartpusher].state == WalkerState_Alive) {
-		// TODO
 		int resource = Data_Walkers[cartpusher].resourceId;
 		Graphics_drawImage(GraphicId(ID_Graphic_ResourceIcons) + resource +
 			Resource_getGraphicIdOffset(resource, 3),
@@ -208,6 +282,23 @@ void UI_BuildingInfo_drawWarehouse(BuildingInfoContext *c)
 	}
 }
 
+void UI_BuildingInfo_drawWarehouseForeground(BuildingInfoContext *c)
+{
+	Widget_Panel_drawButtonBorder(
+		c->xOffset + 80, c->yOffset + 16 * c->heightBlocks - 34,
+		16 * (c->widthBlocks - 10), 20, focusButtonId == 1 ? 1 : 0);
+	Widget_GameText_drawCentered(99, 2,
+		c->xOffset + 80, c->yOffset + 16 * c->heightBlocks - 30,
+		16 * (c->widthBlocks - 10), Font_NormalBlack);
+}
+
+void UI_BuildingInfo_handleMouseWarehouse(BuildingInfoContext *c)
+{
+	Widget_Button_handleCustomButtons(
+		c->xOffset + 80, c->yOffset + 16 * c->heightBlocks - 34,
+		granaryButtons, 1, &focusButtonId);
+}
+
 void UI_BuildingInfo_drawWarehouseOrders(BuildingInfoContext *c)
 {
 	c->helpId = 4;
@@ -215,4 +306,57 @@ void UI_BuildingInfo_drawWarehouseOrders(BuildingInfoContext *c)
 	Widget_GameText_drawCentered(99, 3,
 		c->xOffset, 42, 16 * c->widthBlocks, Font_LargeBlack);
 	Widget_Panel_drawInnerPanel(c->xOffset + 16, 74, c->widthBlocks - 2, 21);
+}
+
+void UI_BuildingInfo_drawWarehouseOrdersForeground(BuildingInfoContext *c)
+{
+	Widget_Panel_drawButtonBorder(
+		c->xOffset + 80, 436, 16 * (c->widthBlocks - 10), 20,
+		ordersFocusButtonId == 1 ? 1 : 0);
+	int storageId = Data_Buildings[c->buildingId].storageId;
+	if (Data_Building_Storages[storageId].emptyAll) {
+		Widget_GameText_drawCentered(99, 5, c->xOffset + 80, 440,
+			16 * (c->widthBlocks - 10), Font_NormalBlack);
+		Widget_GameText_drawCentered(99, 6, c->xOffset + 80, 458,
+			16 * (c->widthBlocks - 10), Font_SmallPlain);
+	} else {
+		Widget_GameText_drawCentered(99, 4, c->xOffset + 80, 440,
+			16 * (c->widthBlocks - 10), Font_NormalBlack);
+	}
+
+	// trade center
+	Widget_Panel_drawButtonBorder(
+		c->xOffset + 80, 414, 16 * (c->widthBlocks - 10), 20,
+		ordersFocusButtonId == 2 ? 1 : 0);
+	int isTradeCenter = c->buildingId == Data_CityInfo.buildingTradeCenterBuildingId;
+	Widget_GameText_drawCentered(99, isTradeCenter ? 11 : 12,
+		c->xOffset + 80, 418, 16 * (c->widthBlocks - 10), Font_NormalBlack);
+
+	for (int i = 0; i < Data_CityInfo_Resource.numAvailableResources; i++) {
+		int resourceId = Data_CityInfo_Resource.availableResources[i];
+		int graphicId = GraphicId(ID_Graphic_ResourceIcons) + resourceId +
+			Resource_getGraphicIdOffset(resourceId, 3);
+		Graphics_drawImage(graphicId, c->xOffset + 32, 78 + 22 * i);
+		Graphics_drawImage(graphicId, c->xOffset + 408, 78 + 22 * i);
+		Widget_GameText_draw(23, resourceId,
+			c->xOffset + 72, 82 + 22 * i, Font_NormalWhite);
+		Widget_Panel_drawButtonBorder(c->xOffset + 180, 78 + 22 * i, 210, 22,
+			resourceFocusButtonId == i + 1);
+		
+		int state = Data_Building_Storages[storageId].resourceState[resourceId];
+		if (state == BuildingStorageState_Accepting) {
+			Widget_GameText_draw(99, 7, c->xOffset + 230, 83 + 22 * i, Font_NormalWhite);
+		} else if (state == BuildingStorageState_NotAccepting) {
+			Widget_GameText_draw(99, 8, c->xOffset + 230, 83 + 22 * i, Font_NormalRed);
+		} else if (state == BuildingStorageState_Getting) {
+			Graphics_drawImage(GraphicId(ID_Graphic_ContextIcons) + 12,
+				c->xOffset + 186, 81 + 22 * i);
+			Widget_GameText_draw(99, 9, c->xOffset + 230, 83 + 22 * i, Font_NormalWhite);
+		}
+	}
+}
+
+void UI_BuildingInfo_handleMouseWarehouseOrders(BuildingInfoContext *c)
+{
+	// TODO
 }

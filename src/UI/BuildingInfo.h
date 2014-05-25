@@ -51,6 +51,7 @@ void UI_BuildingInfo_drawEmploymentInfo(BuildingInfoContext *c, int yOffset);
 void UI_BuildingInfo_drawWalkerImagesLocal(BuildingInfoContext *c);
 void UI_BuildingInfo_drawWalkerList(BuildingInfoContext *c);
 
+void UI_BuildingInfo_showStorageOrders(int param1, int param2);
 
 void UI_BuildingInfo_houseDetermineWorstDesirabilityBuilding(BuildingInfoContext *c);
 
@@ -79,6 +80,16 @@ void UI_BuildingInfo_drawGranary(BuildingInfoContext *c);
 void UI_BuildingInfo_drawGranaryOrders(BuildingInfoContext *c);
 void UI_BuildingInfo_drawWarehouse(BuildingInfoContext *c);
 void UI_BuildingInfo_drawWarehouseOrders(BuildingInfoContext *c);
+
+void UI_BuildingInfo_drawGranaryForeground(BuildingInfoContext *c);
+void UI_BuildingInfo_drawGranaryOrdersForeground(BuildingInfoContext *c);
+void UI_BuildingInfo_drawWarehouseForeground(BuildingInfoContext *c);
+void UI_BuildingInfo_drawWarehouseOrdersForeground(BuildingInfoContext *c);
+
+void UI_BuildingInfo_handleMouseGranary(BuildingInfoContext *c);
+void UI_BuildingInfo_handleMouseGranaryOrders(BuildingInfoContext *c);
+void UI_BuildingInfo_handleMouseWarehouse(BuildingInfoContext *c);
+void UI_BuildingInfo_handleMouseWarehouseOrders(BuildingInfoContext *c);
 
 void UI_BuildingInfo_drawAmphitheater(BuildingInfoContext *c);
 void UI_BuildingInfo_drawTheater(BuildingInfoContext *c);

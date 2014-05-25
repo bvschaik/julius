@@ -233,7 +233,7 @@ int Trader_getClosestWarehouseForTradeCaravan(int walkerId, int x, int y, int ci
 		int storageId = Data_Buildings[i].storageId;
 		int numImportsForWarehouse = 0;
 		for (int r = 1; r < 16; r++) {
-			if (Data_Building_Storages[storageId].resourceState[r] != BuildingStorageState_Emptying &&
+			if (Data_Building_Storages[storageId].resourceState[r] != BuildingStorageState_NotAccepting &&
 				Empire_canImportResourceFromCity(cityId, r)) {
 				numImportsForWarehouse++;
 			}
@@ -250,11 +250,11 @@ int Trader_getClosestWarehouseForTradeCaravan(int walkerId, int x, int y, int ci
 					if (++Data_CityInfo.tradeNextImportResourceCaravan > 15) {
 						Data_CityInfo.tradeNextImportResourceCaravan = 1;
 					}
-					if (Data_Building_Storages[storageId].resourceState[Data_CityInfo.tradeNextImportResourceCaravan] != BuildingStorageState_Emptying) {
+					if (Data_Building_Storages[storageId].resourceState[Data_CityInfo.tradeNextImportResourceCaravan] != BuildingStorageState_NotAccepting) {
 						break;
 					}
 				}
-				if (Data_Building_Storages[storageId].resourceState[Data_CityInfo.tradeNextImportResourceCaravan] != BuildingStorageState_Emptying) {
+				if (Data_Building_Storages[storageId].resourceState[Data_CityInfo.tradeNextImportResourceCaravan] != BuildingStorageState_NotAccepting) {
 					if (Data_Buildings[i].subtype.warehouseResourceId == Resource_None) {
 						distancePenalty -= 16;
 					}
@@ -321,7 +321,7 @@ int Trader_getClosestWarehouseForImportDocker(int x, int y, int cityId, int dist
 			continue;
 		}
 		int storageId = Data_Buildings[i].storageId;
-		if (Data_Building_Storages[storageId].resourceState[resourceId] != BuildingStorageState_Emptying &&
+		if (Data_Building_Storages[storageId].resourceState[resourceId] != BuildingStorageState_NotAccepting &&
 			!Data_Building_Storages[storageId].emptyAll) {
 			int distancePenalty = 32;
 			int spaceId = i;

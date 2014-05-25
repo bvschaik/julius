@@ -122,7 +122,8 @@ enum {
 };
 
 enum {
-	BuildingStorageState_Emptying = 1,
+	BuildingStorageState_Accepting = 0,
+	BuildingStorageState_NotAccepting = 1,
 	BuildingStorageState_Getting = 2
 };
 
@@ -344,10 +345,10 @@ extern struct Data_Building {
 
 extern struct Data_Building_Storage {
 	int startUnused;
-	short buildingId;
+	int buildingId;
 	char inUse;
 	char emptyAll;
-	char resourceState[24];
+	char resourceState[22];
 } Data_Building_Storages[MAX_STORAGES];
 
 extern struct Data_Buildings_Extra {
