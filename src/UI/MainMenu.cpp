@@ -17,30 +17,10 @@ static void buttonClick(int param1, int param2);
 static int focusButtonId;
 
 static CustomButton buttons[4] = {
-	{
-		192, 100, 448, 125,
-		buttonClick,
-		Widget_Button_doNothing,
-		1, 1, 0
-	},
-	{
-		192, 140, 448, 165,
-		buttonClick,
-		Widget_Button_doNothing,
-		1, 2, 0
-	},
-	{
-		192, 180, 448, 205,
-		buttonClick,
-		Widget_Button_doNothing,
-		1, 3, 0
-	},
-	{
-		192, 220, 448, 245,
-		buttonClick,
-		Widget_Button_doNothing,
-		1, 4, 0
-	},
+	{192, 100, 448, 125, buttonClick, Widget_Button_doNothing, 1, 1, 0},
+	{192, 140, 448, 165, buttonClick, Widget_Button_doNothing, 1, 2, 0},
+	{192, 180, 448, 205, buttonClick, Widget_Button_doNothing, 1, 3, 0},
+	{192, 220, 448, 245, buttonClick, Widget_Button_doNothing, 1, 4, 0},
 };
 
 void UI_MainMenu_drawBackground()
@@ -101,18 +81,13 @@ void UI_MainMenu_handleMouse()
 
 static void buttonClick(int param1, int param2)
 {
-	// TODO old stuff
-	if (focusButtonId == 1) {
-		UI_Window_goTo(Window_City);
-	}
-	if (focusButtonId == 2) {
-		UI_FileDialog_show(1);
-	}
-	if (focusButtonId == 3) {
+	if (param1 == 1) {
+		UI_Window_goTo(Window_NewCareerDialog);
+	} else if (param1 == 2) {
+		UI_FileDialog_show(FileDialogType_Load);
+	} else if (param1 == 3) {
 		UI_Window_goTo(Window_CCKSelection);
+	} else if (param1 == 4) {
+		UI_Window_goTo(Window_City); // TODO exit
 	}
-	if (focusButtonId == 4) {
-		UI_Window_goTo(Window_Advisors);
-	}
-	printf("Clicked: %d\n", focusButtonId);
 }

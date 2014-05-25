@@ -53,12 +53,12 @@ static ImageButton imageButtonGoToProblem = {
 
 static struct {
 	struct {
-		int messageId;
+		int textId;
 		int scrollPosition;
 	} history[200];
 	int numHistory;
 
-	int messageId;
+	int textId;
 	int scrollPosition;
 	int maxScrollPosition;
 	int numberOfLines;
@@ -99,19 +99,19 @@ void UI_MessageDialog_setPlayerMessage(int year, int month,
 	playerMessage.usePopup = usePopup;
 }
 
-void UI_MessageDialog_show(int messageId, int backgroundIsProvided)
+void UI_MessageDialog_show(int textId, int backgroundIsProvided)
 {
 	for (int i = 0; i < MAX_HISTORY; i++) {
-		data.history[i].messageId = 0;
+		data.history[i].textId = 0;
 		data.history[i].scrollPosition = 0;
 	}
 	data.numHistory = 0;
 	data.scrollPosition = 0;
 	data.numberOfLines = 0;
 	data.dword_7e314c = 0;
-	data.messageId = messageId;
+	data.textId = textId;
 	data.backgroundIsProvided = backgroundIsProvided;
-	if (Data_Language_Message.index[messageId].videoLinkOffset) {
+	if (Data_Language_Message.index[textId].videoLinkOffset) {
 		data.showVideo = 1;
 	} else {
 		data.showVideo = 0;
@@ -135,7 +135,7 @@ void UI_MessageDialog_drawBackground()
 static void drawDialogNormal()
 {
 	Widget_RichText_setFonts(Font_NormalWhite, Font_NormalRed);
-	struct Data_Language_MessageEntry *msg = &Data_Language_Message.index[data.messageId];
+	struct Data_Language_MessageEntry *msg = &Data_Language_Message.index[data.textId];
 	data.x = Data_Screen.offset640x480.x + msg->x;
 	data.y = Data_Screen.offset640x480.y + msg->y;
 	if (!data.backgroundIsProvided) {
@@ -168,7 +168,7 @@ static void drawDialogNormal()
 	// pictures
 	if (msg->picture1_graphicId) {
 		int graphicId;
-		if (data.messageId) {
+		if (data.textId) {
 			graphicId = GraphicId(ID_Graphic_MessageImages) + msg->picture1_graphicId - 1;
 		} else { // message id = 0 ==> about
 			msg->picture1_x = 16;
@@ -244,7 +244,7 @@ static void drawPlayerMessageContent(struct Data_Language_MessageEntry *msg)
 		width += Widget_GameText_drawYear(playerMessage.year,
 			data.xText + 12 + width, data.yText + 6, Font_NormalWhite);
 		if (msg->messageType == MessageType_Disaster && playerMessage.param1) {
-			if (data.messageId == MessageDialog_Theft) {
+			if (data.textId == MessageDialog_Theft) {
 				// param1 = denarii
 				Widget_GameText_drawNumberWithDescription(8, 0, playerMessage.param1,
 					data.x + 240, data.yText + 6, Font_NormalWhite);
@@ -362,7 +362,7 @@ static void drawScrollbar()
 void UI_MessageDialog_drawForeground()
 {
 	// TODO
-	struct Data_Language_MessageEntry *msg = &Data_Language_Message.index[data.messageId];
+	struct Data_Language_MessageEntry *msg = &Data_Language_Message.index[data.textId];
 	
 	if (msg->type == Type_Manual && data.numHistory > 0) {
 		Widget_Button_drawImageButtons(
@@ -403,7 +403,7 @@ void UI_MessageDialog_handleMouse()
 		buttonScroll(0, 3);
 	}
 	// TODO
-	struct Data_Language_MessageEntry *msg = &Data_Language_Message.index[data.messageId];
+	struct Data_Language_MessageEntry *msg = &Data_Language_Message.index[data.textId];
 
 	if (Widget_Button_handleImageButtons(
 		data.x + 16, data.y + 16 * msg->heightBlocks - 36,
@@ -436,14 +436,14 @@ void UI_MessageDialog_handleMouse()
 		&imageButtonScrollDown, 1)) {
 			return;
 	}
-	int messageId = Widget_RichText_getClickedLink();
-	if (messageId >= 0) {
+	int textId = Widget_RichText_getClickedLink();
+	if (textId >= 0) {
 		if (data.numHistory < MAX_HISTORY - 1) {
-			data.history[data.numHistory].messageId = data.messageId;
+			data.history[data.numHistory].textId = data.textId;
 			data.history[data.numHistory].scrollPosition = data.scrollPosition;
 			data.numHistory++;
 		}
-		data.messageId = messageId;
+		data.textId = textId;
 		data.scrollPosition = 0;
 		data.numberOfLines = 0;
 		data.isDraggingScroll = 0;
@@ -456,7 +456,7 @@ static void buttonBack(int param1, int param2)
 {
 	if (data.numHistory > 0) {
 		data.numHistory--;
-		data.messageId = data.history[data.numHistory].messageId;
+		data.textId = data.history[data.numHistory].textId;
 		data.scrollPosition = data.history[data.numHistory].scrollPosition;
 		data.numberOfLines = 0;
 		data.isDraggingScroll = 0;
@@ -500,7 +500,7 @@ static void buttonHelp(int param1, int param2)
 
 static void buttonGoToProblem(int param1, int param2)
 {
-	struct Data_Language_MessageEntry *msg = &Data_Language_Message.index[data.messageId];
+	struct Data_Language_MessageEntry *msg = &Data_Language_Message.index[data.textId];
 	int gridOffset = playerMessage.param2;
 	if (msg->messageType == MessageType_Invasion) {
 		int invasionGridOffset = Formation_getInvasionGridOffset(playerMessage.param1);

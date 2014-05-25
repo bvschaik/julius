@@ -1,10 +1,32 @@
 #include "PlayerMessage.h"
-#include "Data/Message.h"
+
+#include "FileSystem.h"
+#include "Sound.h"
+#include "UI/MessageDialog.h"
+#include "UI/Tooltip.h"
+#include "UI/Window.h"
+
 #include "Data/CityInfo.h"
+#include "Data/Language.h"
+#include "Data/Message.h"
 
 #include <string.h>
 
 static int getNewMessageId();
+
+// TODO add setter for outside
+static int playSound = 1;
+static int consecutiveMessageDelay;
+
+static int hasVideo(int textId)
+{
+	int offset = Data_Language_Message.index[textId].videoLinkOffset;
+	if (!offset) {
+		return 0;
+	}
+	const char *videoFile = &Data_Language_Message.data[offset];
+	return FileSystem_fileExists(videoFile);
+}
 
 void PlayerMessage_post(int usePopup, int messageType, int param1, short param2)
 {
@@ -22,8 +44,94 @@ void PlayerMessage_post(int usePopup, int messageType, int param1, short param2)
 	m->param1 = param1;
 	m->param2 = param2;
 	m->sequence = Data_Message.nextMessageSequence++;
-	int messageId = PlayerMessage_getMessageTextId(messageType);
-	// TODO implement
+	int textId = PlayerMessage_getMessageTextId(messageType);
+	int langMessageType = Data_Language_Message.index[textId].messageType;
+	if (langMessageType == MessageType_Disaster || langMessageType == MessageType_Invasion) {
+		Data_Message.hotspotCount = 1;
+		UI_Window_requestRefresh();
+	}
+	if (usePopup && UI_Window_getId() == Window_City) {
+		consecutiveMessageDelay = 5;
+		m->readFlag = 1;
+		UI_Tooltip_resetTimer();
+		if (!hasVideo(textId)) {
+			if (Data_Language_Message.index[textId].isUrgent == 1) {
+				Sound_Effects_playChannel(SoundChannel_FanfareUrgent);
+			} else {
+				Sound_Effects_playChannel(SoundChannel_Fanfare);
+			}
+		}
+		UI_MessageDialog_setPlayerMessage(
+			m->year, m->month, m->param1, m->param2,
+			PlayerMessage_getAdvisorForMessageType(m->messageType), usePopup);
+		UI_MessageDialog_show(textId, 0);
+	} else if (usePopup) {
+		// add to queue to be processed when player returns to city
+		for (int i = 0; i < 20; i++) {
+			if (!Data_Message.popupMessageQueue[i]) {
+				Data_Message.popupMessageQueue[i] = m->sequence;
+				break;
+			}
+		}
+	} else if (playSound) {
+		if (Data_Language_Message.index[textId].isUrgent == 1) {
+			Sound_Effects_playChannel(SoundChannel_FanfareUrgent);
+		} else {
+			Sound_Effects_playChannel(SoundChannel_Fanfare);
+		}
+	}
+	playSound = 1;
+}
+
+void PlayerMessage_processQueue()
+{
+	if (UI_Window_getId() != Window_City) {
+		return;
+	}
+	if (consecutiveMessageDelay > 0) {
+		consecutiveMessageDelay--;
+		return;
+	}
+	int messageSeq = 0;
+	for (int i = 0; i < 20; i++) {
+		if (Data_Message.popupMessageQueue[i]) {
+			messageSeq = Data_Message.popupMessageQueue[i];
+			Data_Message.popupMessageQueue[i] = 0;
+			break;
+		}
+	}
+	if (messageSeq == 0) {
+		return;
+	}
+	int msgId = -1;
+	for (int i = 0; i < 999; i++) {
+		if (!Data_Message.messages[i].messageType) {
+			return;
+		}
+		if (Data_Message.messages[i].sequence == messageSeq) {
+			msgId = i;
+			break;
+		}
+	}
+	if (msgId < 0) {
+		return;
+	}
+	consecutiveMessageDelay = 5;
+	struct Data_PlayerMessage *m = &Data_Message.messages[msgId];
+	m->readFlag = 1;
+	int textId = PlayerMessage_getMessageTextId(m->messageType);
+	UI_Tooltip_resetTimer();
+	if (!hasVideo(textId)) {
+		if (Data_Language_Message.index[textId].isUrgent == 1) {
+			Sound_Effects_playChannel(SoundChannel_FanfareUrgent);
+		} else {
+			Sound_Effects_playChannel(SoundChannel_Fanfare);
+		}
+	}
+	UI_MessageDialog_setPlayerMessage(
+		m->year, m->month, m->param1, m->param2,
+		PlayerMessage_getAdvisorForMessageType(m->messageType), 1);
+	UI_MessageDialog_show(textId, 0);
 }
 
 static int getNewMessageId()

@@ -173,3 +173,33 @@ void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)
 {
 	// TODO
 }
+
+void UI_BuildingInfo_drawLegionInfoForeground(BuildingInfoContext *c)
+{
+	// TODO
+}
+
+void UI_BuildingInfo_handleMouseLegionInfo(BuildingInfoContext *c)
+{
+	// TODO
+		/*
+	  mouseover_button_id = j_fun_isCustomButtonClick(
+							  rightclickInfoDialog_x,
+							  rightclickInfoDialog_y,
+							  &buttons_fortInfo,
+							  5);
+	  if ( !j_fun_handleCustomButtonClick(rightclickInfoDialog_x, rightclickInfoDialog_y, &buttons_fortInfo, 5) )
+	  {
+		mouseover_button_id_main = j_fun_isCustomButtonClick(
+									 16 * (rightclickInfoDialog_widthBlocks - 18) / 2 + rightclickInfoDialog_x,
+									 rightclickInfoDialog_y + 16 * rightclickInfoDialog_heightBlocks - 48,
+									 &buttons_fortInfo_returnToFort,
+									 1);
+		j_fun_handleCustomButtonClick(
+		  16 * (rightclickInfoDialog_widthBlocks - 18) / 2 + rightclickInfoDialog_x,
+		  rightclickInfoDialog_y + 16 * rightclickInfoDialog_heightBlocks - 48,
+		  &buttons_fortInfo_returnToFort,
+		  1);
+	  }
+		*/
+}

@@ -128,16 +128,19 @@ void mainLoop(SDL_Surface *surface)
 	refresh(surface);
     /* While the program is running */
 	SDL_EnableUNICODE(1);
+	SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
     while (1) {
 		int active = 1;
         /* Process event queue */
         while (SDL_PollEvent(&event)) {
 			switch (event.type) {
 				case SDL_ACTIVEEVENT:
-					if (event.active.gain) {
-						active = 1;
-					} else {
-						active = 0;
+					if (event.active.state == SDL_APPACTIVE) {
+						if (event.active.gain) {
+							active = 1;
+						} else {
+							active = 0;
+						}
 					}
 					break;
 				
@@ -195,9 +198,9 @@ void mainLoop(SDL_Surface *surface)
 					break;
 			}
         }
-		// Push user refresh event
-		SDL_PushEvent(&refreshEvent);
 		if (active) {
+			// Push user refresh event
+			SDL_PushEvent(&refreshEvent);
 			refresh(surface);
 		} else {
 			SDL_WaitEvent(NULL);

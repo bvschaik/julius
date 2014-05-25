@@ -53,6 +53,7 @@ extern struct Data_Message {
 	int maxScrollPosition;
 	int isDraggingScrollbar;
 	int scrollPositionDrag;
+	int hotspotCount;
 } Data_Message;
 
 // TODO message delay ticks

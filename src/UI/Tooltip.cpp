@@ -5,6 +5,7 @@
 #include "../Graphics.h"
 #include "../Language.h"
 #include "../String.h"
+#include "../Time.h"
 #include "../Widget.h"
 
 #include "../Data/CityInfo.h"
@@ -20,6 +21,15 @@ static void drawTooltip(struct TooltipContext *c);
 static void drawButtonTooltip(struct TooltipContext *c);
 static void drawOverlayTooltip(struct TooltipContext *c);
 static void drawSenateTooltip(struct TooltipContext *c);
+
+static TimeMillis lastUpdate;
+static int infoId;
+
+void UI_Tooltip_resetTimer()
+{
+	lastUpdate = Time_getMillis();
+	infoId = 0;
+}
 
 void UI_Tooltip_handle(void (*func)(struct TooltipContext *))
 {

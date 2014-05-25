@@ -29,6 +29,7 @@ typedef enum {
 	Window_BuildingMenu = 23, //6
 	Window_Intermezzo = 24, //4
 	Window_BuildingInfo = 25, //9
+	Window_NewCareerDialog = 26, //54
 
 	Window_51 = -1, //51 TODO
 	Window_66 = -1, //66 TODO

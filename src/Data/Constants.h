@@ -171,6 +171,17 @@ enum {
 };
 
 enum {
+	Inventory_Wheat = 0,
+	Inventory_Vegetables = 1,
+	Inventory_Fruit = 2,
+	Inventory_Meat = 3,
+	Inventory_Wine = 4,
+	Inventory_Oil = 5,
+	Inventory_Furniture = 6,
+	Inventory_Pottery = 7
+};
+
+enum {
 	WorkshopResource_OlivesToOil = 1,
 	WorkshopResource_VinesToWine = 2,
 	WorkshopResource_IronToWeapons = 3,

@@ -336,7 +336,8 @@ static void drawWalkerInfo(BuildingInfoContext *c, int walkerId)
 
 void UI_BuildingInfo_drawWalkerList(BuildingInfoContext *c)
 {
-	Widget_Panel_drawInnerPanel(c->xOffset, c->yOffset, c->widthBlocks - 2, 12);
+	Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 40,
+		c->widthBlocks - 2, 12);
 	if (c->walker.count <= 0) {
 		Widget_GameText_drawCentered(70, 0, c->xOffset, c->yOffset + 120,
 			16 * c->widthBlocks, Font_SmallBlack);
@@ -357,3 +358,24 @@ void UI_BuildingInfo_drawWalkerImagesLocal(BuildingInfoContext *c)
 	// TODO
 }
 
+void UI_BuildingInfo_playWalkerPhrase(BuildingInfoContext *c)
+{
+	// TODO
+}
+
+void UI_BuildingInfo_handleMouseWalkerList(BuildingInfoContext *c)
+{
+	// TODO
+		/*
+		mouseover_button_id = j_fun_isCustomButtonClick(
+								rightclickInfoDialog_x,
+								rightclickInfoDialog_y,
+								&buttons_walkerInfo,
+								rightclickInfoDialog_numWalkers);
+		j_fun_handleCustomButtonClick(
+		  rightclickInfoDialog_x,
+		  rightclickInfoDialog_y,
+		  &buttons_walkerInfo,
+		  rightclickInfoDialog_numWalkers);
+		*/
+}

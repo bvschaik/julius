@@ -1,6 +1,7 @@
 #include "BuildingInfo.h"
 
 #include "AllWindows.h"
+#include "MessageDialog.h"
 #include "Window.h"
 
 #include "../Building.h"
@@ -20,6 +21,19 @@
 #include "../Data/Grid.h"
 #include "../Data/Model.h"
 #include "../Data/Mouse.h"
+
+static void buttonHelp(int param1, int param2);
+static void buttonExit(int param1, int param2);
+static void buttonAdvisor(int param1, int param2);
+
+static ImageButton imageButtonsHelpExit[] = {
+	{14, 0, 27, 27, 4, 134, 0, buttonHelp, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0},
+	{424, 3, 24, 24, 4, 134, 4, buttonExit, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0}
+};
+
+static ImageButton imageButtonsAdvisor[] = {
+	{350, -38, 28, 28, 4, 199, 9, buttonAdvisor, Widget_Button_doNothing, 1, 0, 0, 0, 4, 0}
+};
 
 static BuildingInfoContext context;
 
@@ -124,7 +138,7 @@ void UI_BuildingInfo_init()
 
 	CityInfo_Resource_calculateAvailableResources();
 	context.type = 1;
-	context.walker.count = 0;
+	context.walker.drawn = 0;
 	if (!Data_Grid_buildingIds[gridOffset] && Data_Grid_spriteOffsets[gridOffset] > 0) {
 		if (Data_Grid_terrain[gridOffset] & Terrain_Water) {
 			context.terrainType = 11;
@@ -391,6 +405,7 @@ void UI_BuildingInfo_drawBackground()
 
 void UI_BuildingInfo_drawForeground()
 {
+	// building-specific buttons
 	if (context.type == 2) {
 		int btype = Data_Buildings[context.buildingId].type;
 		if (btype == Building_Granary) {
@@ -407,18 +422,53 @@ void UI_BuildingInfo_drawForeground()
 			}
 		}
 	} else if (context.type == 4) {
-		// TODO fort legion info
+		UI_BuildingInfo_drawLegionInfoForeground(&context);
+	}
+	// general buttons
+	if (context.storageShowSpecialOrders) {
+		Widget_Button_drawImageButtons(context.xOffset, 432,
+			imageButtonsHelpExit, 2);
+	} else {
+		Widget_Button_drawImageButtons(
+			context.xOffset, context.yOffset + 16 * context.heightBlocks - 40,
+			imageButtonsHelpExit, 2);
+	}
+	if (context.advisor) {
+		Widget_Button_drawImageButtons(
+			context.xOffset, context.yOffset + 16 * context.heightBlocks - 40,
+			imageButtonsAdvisor, 1);
 	}
 }
 
 void UI_BuildingInfo_handleMouse()
 {
-	// TODO
 	if (Data_Mouse.right.wentUp) {
 		UI_Window_goTo(Window_City);
 		return;
 	}
-	if (context.type == 2) {
+	// general buttons
+	if (context.storageShowSpecialOrders) {
+		Widget_Button_handleImageButtons(context.xOffset, 432,
+			imageButtonsHelpExit, 2);
+	} else {
+		Widget_Button_handleImageButtons(
+			context.xOffset, context.yOffset + 16 * context.heightBlocks - 40,
+			imageButtonsHelpExit, 2);
+	}
+	if (context.advisor) {
+		Widget_Button_handleImageButtons(
+			context.xOffset, context.yOffset + 16 * context.heightBlocks - 40,
+			imageButtonsAdvisor, 1);
+	}
+	// building-specific buttons
+	if (context.type == 0) {
+		return;
+	}
+	if (context.type == 4) {
+		UI_BuildingInfo_handleMouseLegionInfo(&context);
+	} else if (context.walker.drawn) {
+		UI_BuildingInfo_handleMouseWalkerList(&context);
+	} else if (context.type == 2) {
 		int btype = Data_Buildings[context.buildingId].type;
 		if (btype == Building_Granary) {
 			if (context.storageShowSpecialOrders) {
@@ -478,4 +528,29 @@ void UI_BuildingInfo_drawEmploymentInfo(BuildingInfoContext *c, int yOffset)
 			c->xOffset + 70 + width, yOffset + 16, Font_SmallBlack);
 		Widget_GameText_draw(69, 0, c->xOffset + 70 + width, yOffset + 16, Font_SmallBlack);
 	}
+}
+
+static void buttonHelp(int param1, int param2)
+{
+	if (context.helpId > 0) {
+		UI_MessageDialog_show(context.helpId, 0);
+	} else {
+		UI_MessageDialog_show(10, 0);
+	}
+	UI_Window_requestRefresh();
+}
+
+static void buttonExit(int param1, int param2)
+{
+	if (context.storageShowSpecialOrders) {
+		context.storageShowSpecialOrders = 0;
+		UI_Window_requestRefresh();
+	} else {
+		UI_Window_goTo(Window_City);
+	}
+}
+
+static void buttonAdvisor(int param1, int param2)
+{
+	// TODO
 }

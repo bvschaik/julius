@@ -488,6 +488,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\UI\NewCareerDialog.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\UI\OverlayMenu.cpp"
 				>
 			</File>

@@ -38,6 +38,7 @@ typedef struct {
 		int phraseId;
 		int selectedIndex;
 		int count;
+		int drawn;
 		int walkerIds[7];
 	} walker;
 } BuildingInfoContext;
@@ -50,6 +51,8 @@ void UI_BuildingInfo_handleMouse();
 void UI_BuildingInfo_drawEmploymentInfo(BuildingInfoContext *c, int yOffset);
 void UI_BuildingInfo_drawWalkerImagesLocal(BuildingInfoContext *c);
 void UI_BuildingInfo_drawWalkerList(BuildingInfoContext *c);
+void UI_BuildingInfo_playWalkerPhrase(BuildingInfoContext *c);
+void UI_BuildingInfo_handleMouseWalkerList(BuildingInfoContext *c);
 
 void UI_BuildingInfo_showStorageOrders(int param1, int param2);
 
@@ -141,6 +144,8 @@ void UI_BuildingInfo_drawTower(BuildingInfoContext *c);
 void UI_BuildingInfo_drawMilitaryAcademy(BuildingInfoContext *c);
 void UI_BuildingInfo_drawBarracks(BuildingInfoContext *c);
 void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c);
+void UI_BuildingInfo_drawLegionInfoForeground(BuildingInfoContext *c);
+void UI_BuildingInfo_handleMouseLegionInfo(BuildingInfoContext *c);
 
 void UI_BuildingInfo_drawGarden(BuildingInfoContext *c);
 void UI_BuildingInfo_drawPlaza(BuildingInfoContext *c);

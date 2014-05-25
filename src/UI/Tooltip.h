@@ -22,6 +22,9 @@ struct TooltipContext {
 	int numericPrefix;
 };
 
+
+void UI_Tooltip_resetTimer();
+
 void UI_Tooltip_handle(void (*func)(struct TooltipContext *));
 
 #endif

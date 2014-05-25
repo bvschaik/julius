@@ -256,16 +256,18 @@ extern struct Data_Building {
 			//char __unknown_73;
 		} other;
 		struct {
-			short unknown;
-			short food[4];
-			short wine;
-			short oil;
-			short furniture;
-			short pottery;
-			short potteryDemand;
-			short furnitureDemand;
-			short oilDemand;
-			short wineDemand;
+			short unknown; //4a
+			short food[4]; //4c, 4e, 50, 52
+			short wine; // 54
+			short oil; // 56
+			short furniture; // 58
+			short pottery; // 5a
+			short potteryDemand; // 5c
+			short furnitureDemand; // 5e
+			short oilDemand; // 60
+			short wineDemand; // 62
+			char __padding[6]; // 64 - 69
+			short fetchInventoryId;
 		} market;
 		struct {
 			short unknown;

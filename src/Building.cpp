@@ -1,9 +1,11 @@
 #include "Building.h"
 
+#include "Calc.h"
 #include "Formation.h"
 #include "Graphics.h"
 #include "PlayerMessage.h"
 #include "PlayerWarning.h"
+#include "Resource.h"
 #include "Routing.h"
 #include "Sound.h"
 #include "Terrain.h"
@@ -502,6 +504,239 @@ void Building_Industry_startNewProduction(int buildingId)
 			GraphicId(ID_Graphic_FarmCrops) + 5 * (b->outputResourceId - 1),
 			b->data.industry.progress);
 	}
+}
+
+int Building_Market_getDestinationGranaryWarehouse(int marketId)
+{
+	struct {
+		int buildingId;
+		int distance;
+		int numBuildings;
+	} resources[8];
+	for (int i = 0; i < 8; i++) {
+		resources[i].buildingId = 0;
+		resources[i].numBuildings = 0;
+		resources[i].distance = 40;
+	}
+	struct Data_Building *market = &Data_Buildings[marketId];
+	for (int i = 1; i < MAX_BUILDINGS; i++) {
+		struct Data_Building *b = &Data_Buildings[i];
+		if (b->inUse != 1) {
+			continue;
+		}
+		if (b->type != Building_Granary && b->type != Building_Warehouse) {
+			continue;
+		}
+		if (!b->hasRoadAccess || b->distanceFromEntry <= 0 ||
+			b->roadNetworkId != market->roadNetworkId) {
+			continue;
+		}
+		int distance = Calc_distanceMaximum(b->x, b->y, market->x, market->y);
+		if (distance >= 40) {
+			continue;
+		}
+		if (b->type == Building_Granary) {
+			if (Data_Scenario.romeSuppliesWheat) {
+				continue;
+			}
+			// foods
+			if (b->data.storage.resourceStored[Resource_Wheat]) {
+				resources[Inventory_Wheat].numBuildings++;
+				if (distance < resources[Inventory_Wheat].distance) {
+					resources[Inventory_Wheat].distance = distance;
+					resources[Inventory_Wheat].buildingId = i;
+				}
+			}
+			if (b->data.storage.resourceStored[Resource_Vegetables]) {
+				resources[Inventory_Vegetables].numBuildings++;
+				if (distance < resources[Inventory_Vegetables].distance) {
+					resources[Inventory_Vegetables].distance = distance;
+					resources[Inventory_Vegetables].buildingId = i;
+				}
+			}
+			if (b->data.storage.resourceStored[Resource_Fruit]) {
+				resources[Inventory_Fruit].numBuildings++;
+				if (distance < resources[Inventory_Fruit].distance) {
+					resources[Inventory_Fruit].distance = distance;
+					resources[Inventory_Fruit].buildingId = i;
+				}
+			}
+			if (b->data.storage.resourceStored[Resource_Meat]) {
+				resources[Inventory_Meat].numBuildings++;
+				if (distance < resources[Inventory_Meat].distance) {
+					resources[Inventory_Meat].distance = distance;
+					resources[Inventory_Meat].buildingId = i;
+				}
+			}
+		} else if (b->type == Building_Warehouse) {
+			// goods
+			if (!Data_CityInfo.resourceStockpiled[Resource_Wine] &&
+				Resource_getAmountStoredInWarehouse(i, Resource_Wine) > 0) {
+				resources[Inventory_Wine].numBuildings++;
+				if (distance < resources[Inventory_Wine].distance) {
+					resources[Inventory_Wine].distance = distance;
+					resources[Inventory_Wine].buildingId = i;
+				}
+			}
+			if (!Data_CityInfo.resourceStockpiled[Resource_Oil] &&
+				Resource_getAmountStoredInWarehouse(i, Resource_Oil) > 0) {
+				resources[Inventory_Oil].numBuildings++;
+				if (distance < resources[Inventory_Oil].distance) {
+					resources[Inventory_Oil].distance = distance;
+					resources[Inventory_Oil].buildingId = i;
+				}
+			}
+			if (!Data_CityInfo.resourceStockpiled[Resource_Furniture] &&
+				Resource_getAmountStoredInWarehouse(i, Resource_Furniture) > 0) {
+				resources[Inventory_Furniture].numBuildings++;
+				if (distance < resources[Inventory_Furniture].distance) {
+					resources[Inventory_Furniture].distance = distance;
+					resources[Inventory_Furniture].buildingId = i;
+				}
+			}
+			if (!Data_CityInfo.resourceStockpiled[Resource_Pottery] &&
+				Resource_getAmountStoredInWarehouse(i, Resource_Pottery) > 0) {
+				resources[Inventory_Pottery].numBuildings++;
+				if (distance < resources[Inventory_Pottery].distance) {
+					resources[Inventory_Pottery].distance = distance;
+					resources[Inventory_Pottery].buildingId = i;
+				}
+			}
+		}
+	}
+
+	// update demands
+	if (market->data.market.potteryDemand) {
+		market->data.market.potteryDemand--;
+	} else {
+		resources[Inventory_Pottery].numBuildings = 0;
+	}
+	if (market->data.market.furnitureDemand) {
+		market->data.market.furnitureDemand--;
+	} else {
+		resources[Inventory_Furniture].numBuildings = 0;
+	}
+	if (market->data.market.oilDemand) {
+		market->data.market.oilDemand--;
+	} else {
+		resources[Inventory_Oil].numBuildings = 0;
+	}
+	if (market->data.market.wineDemand) {
+		market->data.market.wineDemand--;
+	} else {
+		resources[Inventory_Wine].numBuildings = 0;
+	}
+
+	int canGo = 0;
+	for (int i = 0; i < 8; i++) {
+		if (resources[i].numBuildings) {
+			canGo = 1;
+			break;
+		}
+	}
+	if (!canGo) {
+		return 0;
+	}
+	// prefer food if we don't have it
+	if (!market->data.market.food[Inventory_Wheat] &&
+		resources[Inventory_Wheat].numBuildings) {
+		market->data.market.fetchInventoryId = Inventory_Wheat;
+		return resources[Inventory_Wheat].buildingId;
+	} else if (!market->data.market.food[Inventory_Vegetables] &&
+		resources[Inventory_Vegetables].numBuildings) {
+		market->data.market.fetchInventoryId = Inventory_Vegetables;
+		return resources[Inventory_Vegetables].buildingId;
+	} else if (!market->data.market.food[Inventory_Fruit] &&
+		resources[Inventory_Fruit].numBuildings) {
+		market->data.market.fetchInventoryId = Inventory_Fruit;
+		return resources[Inventory_Fruit].buildingId;
+	} else if (!market->data.market.food[Inventory_Meat] &&
+		resources[Inventory_Meat].numBuildings) {
+		market->data.market.fetchInventoryId = Inventory_Meat;
+		return resources[Inventory_Meat].buildingId;
+	}
+	// then prefer resource if we don't have it
+	if (!market->data.market.pottery && resources[Inventory_Pottery].numBuildings) {
+		market->data.market.fetchInventoryId = Inventory_Pottery;
+		return resources[Inventory_Pottery].buildingId;
+	} else if (!market->data.market.furniture && resources[Inventory_Furniture].numBuildings) {
+		market->data.market.fetchInventoryId = Inventory_Furniture;
+		return resources[Inventory_Furniture].buildingId;
+	} else if (!market->data.market.oil && resources[Inventory_Oil].numBuildings) {
+		market->data.market.fetchInventoryId = Inventory_Oil;
+		return resources[Inventory_Oil].buildingId;
+	} else if (!market->data.market.wine && resources[Inventory_Wine].numBuildings) {
+		market->data.market.fetchInventoryId = Inventory_Wine;
+		return resources[Inventory_Wine].buildingId;
+	}
+	// then prefer smallest stock below 50
+	int minStock = 50;
+	int fetchInventoryId = -1;
+	if (resources[Inventory_Wheat].numBuildings &&
+		market->data.market.food[Inventory_Wheat] < minStock) {
+		minStock = market->data.market.food[Inventory_Wheat];
+		fetchInventoryId = Inventory_Wheat;
+	}
+	if (resources[Inventory_Vegetables].numBuildings &&
+		market->data.market.food[Inventory_Vegetables] < minStock) {
+		minStock = market->data.market.food[Inventory_Vegetables];
+		fetchInventoryId = Inventory_Vegetables;
+	}
+	if (resources[Inventory_Fruit].numBuildings &&
+		market->data.market.food[Inventory_Fruit] < minStock) {
+		minStock = market->data.market.food[Inventory_Fruit];
+		fetchInventoryId = Inventory_Fruit;
+	}
+	if (resources[Inventory_Meat].numBuildings &&
+		market->data.market.food[Inventory_Meat] < minStock) {
+		minStock = market->data.market.food[Inventory_Meat];
+		fetchInventoryId = Inventory_Meat;
+	}
+	if (resources[Inventory_Pottery].numBuildings &&
+		market->data.market.pottery < minStock) {
+		minStock = market->data.market.pottery;
+		fetchInventoryId = Inventory_Pottery;
+	}
+	if (resources[Inventory_Furniture].numBuildings &&
+		market->data.market.furniture < minStock) {
+		minStock = market->data.market.furniture;
+		fetchInventoryId = Inventory_Furniture;
+	}
+	if (resources[Inventory_Oil].numBuildings &&
+		market->data.market.oil < minStock) {
+		minStock = market->data.market.oil;
+		fetchInventoryId = Inventory_Oil;
+	}
+	if (resources[Inventory_Wine].numBuildings &&
+		market->data.market.wine < minStock) {
+		minStock = market->data.market.wine;
+		fetchInventoryId = Inventory_Wine;
+	}
+
+	if (fetchInventoryId == -1) {
+		// all items well stocked: pick food below threshold
+		if (resources[Inventory_Wheat].numBuildings &&
+			market->data.market.food[Inventory_Wheat] < 600) {
+			fetchInventoryId = Inventory_Wheat;
+		}
+		if (resources[Inventory_Vegetables].numBuildings &&
+			market->data.market.food[Inventory_Vegetables] < 400) {
+			fetchInventoryId = Inventory_Vegetables;
+		}
+		if (resources[Inventory_Fruit].numBuildings &&
+			market->data.market.food[Inventory_Fruit] < 400) {
+			fetchInventoryId = Inventory_Fruit;
+		}
+		if (resources[Inventory_Meat].numBuildings &&
+			market->data.market.food[Inventory_Meat] < 400) {
+			fetchInventoryId = Inventory_Meat;
+		}
+	}
+	if (fetchInventoryId < 0) {
+		return 0;
+	}
+	market->data.market.fetchInventoryId = fetchInventoryId;
+	return resources[fetchInventoryId].buildingId;
 }
 
 int Building_Market_getMaxFoodStock(int buildingId)

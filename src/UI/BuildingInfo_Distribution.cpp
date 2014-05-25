@@ -1,5 +1,7 @@
 #include "BuildingInfo.h"
 
+#include "Window.h"
+
 #include "../Graphics.h"
 #include "../Resource.h"
 #include "../Sound.h"
@@ -11,17 +13,45 @@
 #include "../Data/Scenario.h"
 #include "../Data/Walker.h"
 
-static CustomButton granaryButtons[] = {
+static void toggleResourceState(int param1, int param2);
+static void granaryOrders(int index, int param2);
+static void warehouseOrders(int index, int param2);
+
+static CustomButton gotoOrdersButtons[] = {
 	{0, 0, 304, 20, UI_BuildingInfo_showStorageOrders, Widget_Button_doNothing, 1, 0, 0}
 };
 
-static CustomButton warehouseButtons[] = {
-	{0, 0, 304, 20, UI_BuildingInfo_showStorageOrders, Widget_Button_doNothing, 1, 0, 0}
+static CustomButton ordersResourceButtons[] = {
+	{0, 0, 210, 22, toggleResourceState, Widget_Button_doNothing, 1, 1, 0},
+	{0, 22, 210, 44, toggleResourceState, Widget_Button_doNothing, 1, 2, 0},
+	{0, 44, 210, 66, toggleResourceState, Widget_Button_doNothing, 1, 3, 0},
+	{0, 66, 210, 88, toggleResourceState, Widget_Button_doNothing, 1, 4, 0},
+	{0, 88, 210, 110, toggleResourceState, Widget_Button_doNothing, 1, 5, 0},
+	{0, 110, 210, 132, toggleResourceState, Widget_Button_doNothing, 1, 6, 0},
+	{0, 132, 210, 154, toggleResourceState, Widget_Button_doNothing, 1, 7, 0},
+	{0, 154, 210, 176, toggleResourceState, Widget_Button_doNothing, 1, 8, 0},
+	{0, 176, 210, 198, toggleResourceState, Widget_Button_doNothing, 1, 9, 0},
+	{0, 198, 210, 220, toggleResourceState, Widget_Button_doNothing, 1, 10, 0},
+	{0, 220, 210, 242, toggleResourceState, Widget_Button_doNothing, 1, 11, 0},
+	{0, 242, 210, 264, toggleResourceState, Widget_Button_doNothing, 1, 12, 0},
+	{0, 264, 210, 286, toggleResourceState, Widget_Button_doNothing, 1, 13, 0},
+	{0, 286, 210, 308, toggleResourceState, Widget_Button_doNothing, 1, 14, 0},
+	{0, 308, 210, 330, toggleResourceState, Widget_Button_doNothing, 1, 15, 0},
+};
+
+static CustomButton granaryOrderButtons[] = {
+	{0, 0, 304, 20, granaryOrders, Widget_Button_doNothing, 1, 0, 0},
+};
+
+static CustomButton warehouseOrderButtons[] = {
+	{0, 0, 304, 20, warehouseOrders, Widget_Button_doNothing, 1, 0, 0},
+	{0, -22, 304, 20, warehouseOrders, Widget_Button_doNothing, 1, 1, 0},
 };
 
 static int focusButtonId = 0;
 static int ordersFocusButtonId = 0;
 static int resourceFocusButtonId = 0;
+static int buildingId;
 
 void UI_BuildingInfo_drawMarket(BuildingInfoContext *c)
 {
@@ -163,7 +193,7 @@ void UI_BuildingInfo_handleMouseGranary(BuildingInfoContext *c)
 {
 	Widget_Button_handleCustomButtons(
 		c->xOffset + 80, c->yOffset + 16 * c->heightBlocks - 34,
-		granaryButtons, 1, &focusButtonId);
+		gotoOrdersButtons, 1, &focusButtonId);
 }
 
 void UI_BuildingInfo_drawGranaryOrders(BuildingInfoContext *c)
@@ -217,7 +247,14 @@ void UI_BuildingInfo_drawGranaryOrdersForeground(BuildingInfoContext *c)
 
 void UI_BuildingInfo_handleMouseGranaryOrders(BuildingInfoContext *c)
 {
-	// TODO
+	buildingId = c->buildingId;
+	if (Widget_Button_handleCustomButtons(c->xOffset + 180, 78,
+		ordersResourceButtons, Data_CityInfo_Resource.numAvailableFoods,
+		&resourceFocusButtonId)) {
+		return;
+	}
+	Widget_Button_handleCustomButtons(c->xOffset + 80, 436,
+		granaryOrderButtons, 1, &ordersFocusButtonId);
 }
 
 void UI_BuildingInfo_drawWarehouse(BuildingInfoContext *c)
@@ -296,7 +333,7 @@ void UI_BuildingInfo_handleMouseWarehouse(BuildingInfoContext *c)
 {
 	Widget_Button_handleCustomButtons(
 		c->xOffset + 80, c->yOffset + 16 * c->heightBlocks - 34,
-		granaryButtons, 1, &focusButtonId);
+		gotoOrdersButtons, 1, &focusButtonId);
 }
 
 void UI_BuildingInfo_drawWarehouseOrders(BuildingInfoContext *c)
@@ -358,5 +395,59 @@ void UI_BuildingInfo_drawWarehouseOrdersForeground(BuildingInfoContext *c)
 
 void UI_BuildingInfo_handleMouseWarehouseOrders(BuildingInfoContext *c)
 {
-	// TODO
+	buildingId = c->buildingId;
+	if (Widget_Button_handleCustomButtons(c->xOffset + 180, 78,
+		ordersResourceButtons, Data_CityInfo_Resource.numAvailableResources,
+		&resourceFocusButtonId)) {
+		return;
+	}
+	Widget_Button_handleCustomButtons(c->xOffset + 80, 436,
+		warehouseOrderButtons, 2, &ordersFocusButtonId);
+}
+
+static void toggleResourceState(int index, int param2)
+{
+	int storageId = Data_Buildings[buildingId].storageId;
+	int resourceId;
+	if (Data_Buildings[buildingId].type == Building_Warehouse) {
+		resourceId = Data_CityInfo_Resource.availableResources[index-1];
+	} else {
+		resourceId = Data_CityInfo_Resource.availableFoods[index-1];
+	}
+	int state = Data_Building_Storages[storageId].resourceState[resourceId];
+	if (state == BuildingStorageState_Accepting) {
+		state = BuildingStorageState_NotAccepting;
+	} else if (state == BuildingStorageState_NotAccepting) {
+		state = BuildingStorageState_Getting;
+	} else if (state == BuildingStorageState_Getting) {
+		state = BuildingStorageState_Accepting;
+	}
+	Data_Building_Storages[storageId].resourceState[resourceId] = state;
+	UI_Window_requestRefresh();
+}
+
+static void granaryOrders(int index, int param2)
+{
+	int storageId = Data_Buildings[buildingId].storageId;
+	if (Data_Building_Storages[storageId].emptyAll) {
+		Data_Building_Storages[storageId].emptyAll = 0;
+	} else {
+		Data_Building_Storages[storageId].emptyAll = 1;
+	}
+	UI_Window_requestRefresh();
+}
+
+static void warehouseOrders(int index, int param2)
+{
+	if (index == 0) {
+		int storageId = Data_Buildings[buildingId].storageId;
+		if (Data_Building_Storages[storageId].emptyAll) {
+			Data_Building_Storages[storageId].emptyAll = 0;
+		} else {
+			Data_Building_Storages[storageId].emptyAll = 1;
+		}
+	} else if (index == 1) {
+		Data_CityInfo.buildingTradeCenterBuildingId = buildingId;
+	}
+	UI_Window_requestRefresh();
 }
