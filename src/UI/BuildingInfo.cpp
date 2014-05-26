@@ -12,15 +12,19 @@
 #include "../HouseEvolution.h"
 #include "../Resource.h"
 #include "../Terrain.h"
+#include "../Walker.h"
 #include "../Widget.h"
 
 #include "../Data/Building.h"
 #include "../Data/CityInfo.h"
 #include "../Data/CityView.h"
 #include "../Data/Constants.h"
+#include "../Data/Formation.h"
 #include "../Data/Grid.h"
 #include "../Data/Model.h"
 #include "../Data/Mouse.h"
+#include "../Data/Screen.h"
+#include "../Data/Walker.h"
 
 static void buttonHelp(int param1, int param2);
 static void buttonExit(int param1, int param2);
@@ -131,6 +135,7 @@ void UI_BuildingInfo_init()
 	int terrain = Data_Grid_terrain[gridOffset];
 	context.canPlaySound = 1;
 	context.storageShowSpecialOrders = 0;
+	context.advisor = 0;
 	context.buildingId = Data_Grid_buildingIds[gridOffset];
 	context.rubbleBuildingType = Data_Grid_rubbleBuildingType[gridOffset];
 	context.hasReservoirPipes = terrain & Terrain_ReservoirRange;
@@ -239,7 +244,62 @@ void UI_BuildingInfo_init()
 				break;
 		}
 	}
-	// TODO walkers
+	// walkers
+	context.walker.selectedIndex = 0;
+	context.walker.count = 0;
+	for (int i = 0; i < 7; i++) {
+		context.walker.walkerIds[i] = 0;
+	}
+	static const int walkerOffsets[] = {0, -162, 162, 1, -1, -163, -161, 161, 163};
+	for (int i = 0; i < 9 && context.walker.count < 7; i++) {
+		int walkerId = Data_Grid_walkerIds[gridOffset + walkerOffsets[i]];
+		while (walkerId > 0 && context.walker.count < 7) {
+			if (Data_Walkers[walkerId].state != WalkerState_Dead &&
+				Data_Walkers[walkerId].actionState != WalkerActionState_149_Corpse) {
+				switch (Data_Walkers[walkerId].type) {
+					case Walker_None:
+					case Walker_Explosion:
+					case Walker_MapFlag:
+					case Walker_Flotsam:
+					case Walker_Arrow:
+					case Walker_Javelin:
+					case Walker_Bolt:
+					case Walker_Ballista:
+					case Walker_Creature:
+					case Walker_FishGulls:
+					case Walker_Spear:
+					case Walker_HippodromeMiniHorses:
+						break;
+					default:
+						context.walker.walkerIds[context.walker.count++] = walkerId;
+						Walker_determinePhrase(walkerId);
+						break;
+				}
+			}
+			walkerId = Data_Walkers[walkerId].nextWalkerIdOnSameTile;
+		}
+	}
+	// check for legion walkers
+	for (int i = 0; i < 7; i++) {
+		int walkerId = context.walker.walkerIds[i];
+		if (walkerId <= 0) {
+			continue;
+		}
+		int type = Data_Walkers[walkerId].type;
+		if (type == Walker_FortStandard || WalkerIsLegion(type)) {
+			context.type = 4;
+			context.formationId = Data_Walkers[walkerId].formationId;
+			if (Data_Formations[context.formationId].walkerType != Walker_FortLegionary) {
+				context.formationTypes = 5;
+			} else if (Data_Formations[context.formationId].hasMilitaryTraining) {
+				context.formationTypes = 4;
+			} else {
+				context.formationTypes = 3;
+			}
+			break;
+		}
+	}
+	// dialog size
 	context.xOffset = 8;
 	context.yOffset = 32;
 	context.widthBlocks = 29;
@@ -250,7 +310,16 @@ void UI_BuildingInfo_init()
 		case 4: context.heightBlocks = 14; break;
 		default: context.heightBlocks = 22; break;
 	}
-	// TODO window placement
+	// dialog placement
+	if (Data_Screen.height >= 600) {
+		if (Data_Mouse.y <= (Data_Screen.height - 24) / 2 + 24) {
+			context.yOffset = Data_Screen.height - 16 * context.heightBlocks - 16;
+		} else {
+			context.yOffset = 32;
+		}
+	}
+	int border = (Data_CityView.widthInPixels - 16 * context.widthBlocks) / 2;
+	context.xOffset = Data_CityView.xOffsetInPixels + border;
 }
 
 void UI_BuildingInfo_drawBackground()
@@ -263,7 +332,7 @@ void UI_BuildingInfo_drawBackground()
 		UI_BuildingInfo_drawTerrain(&context);
 	} else if (context.type == 2) {
 		int btype = Data_Buildings[context.buildingId].type;
-		if (btype >= Building_HouseVacantLot && btype <= Building_HouseLuxuryPalace) {
+		if (BuildingIsHouse(btype)) {
 			UI_BuildingInfo_drawHouse(&context);
 		} else if (btype == Building_WheatFarm) {
 			UI_BuildingInfo_drawWheatFarm(&context);

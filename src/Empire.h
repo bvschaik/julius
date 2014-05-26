@@ -8,6 +8,7 @@ void Empire_load(int isCustomScenario, int empireId);
 void Empire_initCities();
 void Empire_initTradeAmountCodes();
 void Empire_determineDistantBattleCity();
+void Empire_handleExpandEvent();
 void Empire_resetYearlyTradeAmounts();
 
 int Empire_cityBuysResource(int objectId, int resource);

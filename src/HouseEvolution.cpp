@@ -1,4 +1,5 @@
 #include "BuildingHouse.h"
+
 #include "Routing.h"
 
 #include "Data/Building.h"
@@ -285,9 +286,7 @@ void HouseEvolution_Tick_evolveAndConsumeResources()
 	resetCityInfoServiceRequiredCounters();
 	int hasExpanded = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse == 1 &&
-			Data_Buildings[i].type >= Building_HouseVacantLot &&
-			Data_Buildings[i].type <= Building_HouseLuxuryPalace) {
+		if (Data_Buildings[i].inUse == 1 && BuildingIsHouse(Data_Buildings[i].type)) {
 			BuildingHouse_checkForCorruption(i);
 			(*callbacks[Data_Buildings[i].type - 10])(i, &hasExpanded);
 			if (Data_CityInfo_Extra.gameTimeDay == 0 || Data_CityInfo_Extra.gameTimeDay == 7) {

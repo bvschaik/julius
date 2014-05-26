@@ -8,6 +8,8 @@ int Building_create(int type, int x, int y);
 void Building_delete(int buildingId);
 void Building_deleteData(int buildingId);
 
+void Building_clearDeleted();
+
 int Building_getMainBuildingId(int buildingId);
 
 int Building_collapseFirstOfType(int buildingType);
@@ -24,10 +26,14 @@ void BuildingStorage_clearList();
 int BuildingStorage_create();
 void BuildingStorage_resetBuildingIds();
 
+void Building_Industry_updateProduction();
+void Building_Industry_updateDoubleWheatProduction();
+void Building_Industry_witherFarmCropsFromCeres(int bigCurse);
 
 int Building_Market_getMaxFoodStock(int buildingId);
 int Building_Market_getMaxGoodsStock(int buildingId);
 
 int Building_Dock_getNumIdleDockers(int buildingId);
+void Building_Dock_updateOpenWaterAccess();
 
 #endif

@@ -307,7 +307,7 @@ int Walker_determinePhrase(int walkerId)
 		case Walker_MarketBuyer:
 			if (w->actionState == WalkerActionState_145_MarketBuyer) {
 				phraseId = 7;
-			} else if (WalkerActionState_146_MarketBuyer) {
+			} else if (w->actionState == WalkerActionState_146_MarketBuyer) {
 				phraseId = 8;
 			}
 			break;
@@ -462,7 +462,8 @@ int Walker_determinePhrase(int walkerId)
 	}
 
 	if (phraseId) {
-		return w->phraseId = phraseId;
+		w->phraseId = phraseId;
+		return phraseId;
 	}
 
 	// phrase id based on city state

@@ -87,16 +87,23 @@ static ImageButton buttonTopExpanded[] = {
 	{123, 184, 33, 22, 4, 89, 9, buttonRotate, Widget_Button_doNothing, 1, 0, 0, 0, 1, 0},
 };
 
+static int minimapRedrawRequested = 0;
+
+void UI_Sidebar_requestMinimapRefresh()
+{
+	minimapRedrawRequested = 1;
+}
+
 void UI_Sidebar_enableBuildingButtons()
 {
 	for (int i = 0; i < 12; i++) {
 		buttonBuildExpanded[i].enabled = 1;
-		if (SidebarMenu_countBuildingMenuItems(buttonBuildExpanded[i].parameter1)) {
+		if (SidebarMenu_countBuildingMenuItems(buttonBuildExpanded[i].parameter1) <= 0) {
 			buttonBuildExpanded[i].enabled = 0;
 		}
 
 		buttonBuildCollapsed[i].enabled = 1;
-		if (SidebarMenu_countBuildingMenuItems(buttonBuildCollapsed[i].parameter1)) {
+		if (SidebarMenu_countBuildingMenuItems(buttonBuildCollapsed[i].parameter1) <= 0) {
 			buttonBuildCollapsed[i].enabled = 0;
 		}
 	}
@@ -188,12 +195,14 @@ static void drawOverlayText()
 static void drawMinimap(int force)
 {
 	if (!Data_State.sidebarCollapsed) {
-		int xOffset = XOFFSET_EXPANDED;
-		// TODO force? scrollMap?
-		UI_Minimap_draw(xOffset + 8, 59, 73, 111);
-		Graphics_drawLine(xOffset + 7, 58, xOffset + 153, 58, Color_Minimap_Dark);
-		Graphics_drawLine(xOffset + 7, 59, xOffset + 7, 170, Color_Minimap_Dark);
-		Graphics_drawLine(xOffset + 153, 59, xOffset + 153, 170, Color_Minimap_Light);
+		if (minimapRedrawRequested || Data_State.isScrollingMap || force) {
+			int xOffset = XOFFSET_EXPANDED;
+			// TODO force? scrollMap?
+			UI_Minimap_draw(xOffset + 8, 59, 73, 111);
+			Graphics_drawLine(xOffset + 7, 58, xOffset + 153, 58, Color_Minimap_Dark);
+			Graphics_drawLine(xOffset + 7, 59, xOffset + 7, 170, Color_Minimap_Dark);
+			Graphics_drawLine(xOffset + 153, 59, xOffset + 153, 170, Color_Minimap_Light);
+		}
 	}
 }
 

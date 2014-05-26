@@ -467,6 +467,20 @@ void Graphics_drawEnemyImage(int graphicId, int xOffset, int yOffset)
 	}
 }
 
+void Graphics_saveToBuffer(int x, int y, int width, int height, ScreenColor *buffer)
+{
+	for (int dy = 0; dy < height; dy++) {
+		memcpy(&buffer[dy * height], &ScreenPixel(x, y + dy), sizeof(ScreenColor) * width);
+	}
+}
+
+void Graphics_loadFromBuffer(int x, int y, int width, int height, const ScreenColor *buffer)
+{
+	for (int dy = 0; dy < height; dy++) {
+		memcpy(&ScreenPixel(x, y + dy), &buffer[dy * height], sizeof(ScreenColor) * width);
+	}
+}
+
 /////debug/////
 
 static void pixel(ScreenColor input, unsigned char *r, unsigned char *g, unsigned char *b)

@@ -1,4 +1,4 @@
-//TODO check whether shipwreck has a name!
+#include "Walker.h"
 
 #include "Random.h"
 #include "Data/Walker.h"

@@ -355,3 +355,10 @@ static void allocateWorkersToWater()
 		startBuildingId = 1;
 	}
 }
+
+void CityInfo_Labor_update()
+{
+	CityInfo_Labor_calculateWorkersNeededPerCategory();
+	CityInfo_Labor_checkEmployment();
+	CityInfo_Labor_allocateWorkersToBuildings();
+}

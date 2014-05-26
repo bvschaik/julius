@@ -4,6 +4,7 @@
 void TerrainGraphics_updateAllRocks();
 void TerrainGraphics_updateAllGardens();
 void TerrainGraphics_updateAllRoads();
+void TerrainGraphics_updateAllWalls();
 void TerrainGraphics_updateRegionElevation(int xMin, int yMin, int xMax, int yMax);
 void TerrainGraphics_updateRegionPlazas(int xMin, int yMin, int xMax, int yMax);
 void TerrainGraphics_updateRegionWater(int xMin, int yMin, int xMax, int yMax);

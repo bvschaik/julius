@@ -150,6 +150,7 @@ enum {
 	HouseLevel_LuxuryPalace = 19,
 };
 
+#define BuildingIsHouse(type) ((type) >= Building_HouseVacantLot && (type) <= Building_HouseLuxuryPalace)
 #define BuildingIsFarm(type) ((type) >= Building_WheatFarm && (type) <= Building_PigFarm)
 #define BuildingIsWorkshop(type) ((type) >= Building_WineWorkshop && (type) <= Building_PotteryWorkshop)
 #define BuildingIsEntertainment(type) ((type) >= Building_Theater && (type) <= Building_ChariotMaker)

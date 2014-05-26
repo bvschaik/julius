@@ -1,6 +1,7 @@
 #include "Building.h"
 
 #include "Calc.h"
+#include "CityInfo.h"
 #include "Formation.h"
 #include "Graphics.h"
 #include "PlayerMessage.h"
@@ -86,7 +87,7 @@ int Building_create(int type, int x, int y)
 	}
 	
 	// subtype
-	if (type >= Building_HouseSmallTent && type <= Building_HouseLuxuryPalace) {
+	if (BuildingIsHouse(type)) {
 		b->subtype.houseLevel = type - 10;
 	} else {
 		b->subtype.houseLevel = 0;
@@ -201,6 +202,42 @@ void Building_deleteData(int buildingId)
 	}
 	if (b->type == Building_Hippodrome) {
 		Data_CityInfo.buildingHippodromePlaced = 0;
+	}
+}
+
+void Building_clearDeleted()
+{
+	int landRecalc = 0;
+	int wallRecalc = 0;
+	for (int i = 1; i < MAX_BUILDINGS; i++) {
+		struct Data_Building *b = &Data_Buildings[i];
+		if (b->inUse == 3) {
+			b->inUse = 1;
+		}
+		if (b->inUse != 1 || !b->houseSize) {
+			if (b->inUse == 2 || b->inUse == 6) {
+				if (b->type == Building_Tower || b->type == Building_Gatehouse) {
+					wallRecalc = 1;
+				}
+				Terrain_removeBuildingFromGrids(i, b->x, b->y);
+				landRecalc = 1;
+				Building_delete(i);
+			} else if (b->inUse == 4) {
+				if (b->houseSize) {
+					CityInfo_Population_removePeopleHomeRemoved(b->housePopulation);
+				}
+				Building_delete(i);
+			} else if (b->inUse == 5) {
+				Building_delete(i);
+			}
+		}
+	}
+	if (wallRecalc) {
+		TerrainGraphics_updateAllWalls();
+	}
+	if (landRecalc) {
+		Routing_determineLandCitizen();
+		Routing_determineLandNonCitizen();
 	}
 }
 

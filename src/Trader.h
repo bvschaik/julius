@@ -4,6 +4,8 @@
 void Trader_clearList();
 void Trader_create(int walkerId);
 
+void Trader_tick();
+
 void Trader_sellResource(int walkerId, int resourceId);
 void Trader_buyResource(int walkerId, int resourceId);
 

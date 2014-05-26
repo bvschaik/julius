@@ -1,5 +1,6 @@
 #include "CityInfo.h"
 #include "Calc.h"
+#include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 
@@ -144,5 +145,114 @@ void CityInfo_Culture_calculateDemandsForAdvisors()
 	}
 	if (Data_CityInfo.housesRequiringEvenMoreReligionToEvolve > max) {
 		Data_CityInfo.religionDemand = 3;
+	}
+}
+
+void CityInfo_Culture_calculateEntertainment()
+{
+	Data_CityInfo.citywideAverageEntertainment = 0;
+	Data_CityInfo.entertainmentTheaterShows = 0;
+	Data_CityInfo.entertainmentTheaterNoShowsWeighted = 0;
+	Data_CityInfo.entertainmentAmphitheaterShows = 0;
+	Data_CityInfo.entertainmentAmphitheaterNoShowsWeighted = 0;
+	Data_CityInfo.entertainmentColosseumShows = 0;
+	Data_CityInfo.entertainmentColosseumNoShowsWeighted = 0;
+	Data_CityInfo.entertainmentHippodromeShows = 0;
+	Data_CityInfo.entertainmentHippodromeNoShowsWeighted = 0;
+
+	Data_CityInfo.citywideAverageReligion = 0;
+	Data_CityInfo.citywideAverageEducation = 0;
+	Data_CityInfo.citywideAverageHealth = 0;
+
+	int numHouses = 0;
+	for (int i = 1; i < MAX_BUILDINGS; i++) {
+		struct Data_Building *b = &Data_Buildings[i];
+		if (b->inUse == 1 && b->houseSize) {
+			numHouses++;
+			Data_CityInfo.citywideAverageEntertainment += b->data.house.entertainment;
+			Data_CityInfo.citywideAverageReligion += b->data.house.numGods;
+			Data_CityInfo.citywideAverageEducation += b->data.house.education;
+			Data_CityInfo.citywideAverageHealth += b->data.house.health;
+		}
+	}
+	if (numHouses) {
+		Data_CityInfo.citywideAverageEntertainment /= numHouses;
+		Data_CityInfo.citywideAverageReligion /= numHouses;
+		Data_CityInfo.citywideAverageEducation /= numHouses;
+		Data_CityInfo.citywideAverageHealth /= numHouses;
+	}
+	for (int i = 1; i < MAX_BUILDINGS; i++) {
+		struct Data_Building *b = &Data_Buildings[i];
+		if (b->inUse != 1) {
+			continue;
+		}
+		switch (b->type) {
+			case Building_Theater:
+				if (b->data.entertainment.days1) {
+					Data_CityInfo.entertainmentTheaterShows++;
+				} else {
+					Data_CityInfo.entertainmentTheaterNoShowsWeighted++;
+				}
+				break;
+			case Building_Amphitheater:
+				if (b->data.entertainment.days1) {
+					Data_CityInfo.entertainmentAmphitheaterShows++;
+				} else {
+					Data_CityInfo.entertainmentAmphitheaterNoShowsWeighted += 2;
+				}
+				if (b->data.entertainment.days2) {
+					Data_CityInfo.entertainmentAmphitheaterShows++;
+				} else {
+					Data_CityInfo.entertainmentAmphitheaterNoShowsWeighted += 2;
+				}
+				break;
+			case Building_Colosseum:
+				if (b->data.entertainment.days1) {
+					Data_CityInfo.entertainmentColosseumShows++;
+				} else {
+					Data_CityInfo.entertainmentColosseumNoShowsWeighted += 3;
+				}
+				if (b->data.entertainment.days2) {
+					Data_CityInfo.entertainmentColosseumShows++;
+				} else {
+					Data_CityInfo.entertainmentColosseumNoShowsWeighted += 3;
+				}
+				break;
+			case Building_Hippodrome:
+				if (b->data.entertainment.days1) {
+					Data_CityInfo.entertainmentHippodromeShows++;
+				} else {
+					Data_CityInfo.entertainmentHippodromeNoShowsWeighted++;
+				}
+				break;
+		}
+	}
+	int worstShows = 0;
+	if (Data_CityInfo.entertainmentTheaterNoShowsWeighted > worstShows) {
+		worstShows = Data_CityInfo.entertainmentTheaterNoShowsWeighted;
+		Data_CityInfo.entertainmentNeedingShowsMost = 1;
+	}
+	if (Data_CityInfo.entertainmentAmphitheaterNoShowsWeighted > worstShows) {
+		worstShows = Data_CityInfo.entertainmentAmphitheaterNoShowsWeighted;
+		Data_CityInfo.entertainmentNeedingShowsMost = 2;
+	}
+	if (Data_CityInfo.entertainmentColosseumNoShowsWeighted > worstShows) {
+		worstShows = Data_CityInfo.entertainmentColosseumNoShowsWeighted;
+		Data_CityInfo.entertainmentNeedingShowsMost = 3;
+	}
+	if (Data_CityInfo.entertainmentHippodromeNoShowsWeighted > worstShows) {
+		Data_CityInfo.entertainmentNeedingShowsMost = 4;
+	}
+
+	Data_CityInfo.festivalCostSmall = Data_CityInfo.population / 20 + 10;
+	Data_CityInfo.festivalCostLarge = Data_CityInfo.population / 10 + 20;
+	Data_CityInfo.festivalCostGrand = Data_CityInfo.population / 5 + 40;
+	Data_CityInfo.festivalWineGrand = Data_CityInfo.population / 500 + 1;
+	Data_CityInfo.festivalNotEnoughWine = 0;
+	if (Data_CityInfo.resourceStored[Resource_Wine] < Data_CityInfo.festivalWineGrand) {
+		Data_CityInfo.festivalNotEnoughWine = 1;
+		if (Data_CityInfo.festivalSize == 3) {
+			Data_CityInfo.festivalSize = 2;
+		}
 	}
 }

@@ -10,6 +10,14 @@
 
 #include <stdio.h>
 
+#define FOREACH_ALL(block) \
+	{int gridOffset = Data_Settings_Map.gridStartOffset;\
+	for (int y = 0; y < Data_Settings_Map.height; y++, gridOffset += Data_Settings_Map.gridBorderSize) {\
+		for (int x = 0; x < Data_Settings_Map.width; x++, gridOffset++) {\
+			block;\
+		}\
+	}}
+
 #define BOUND_REGION() \
 	if (xMin < 0) xMin = 0;\
 	if (yMin < 0) yMin = 0;\
@@ -51,54 +59,48 @@ static int isAllTerrainInArea(int x, int y, int size, int terrain)
 
 void TerrainGraphics_updateAllRocks()
 {
-	int gridOffset = Data_Settings_Map.gridStartOffset;
-	for (int y = 0; y < Data_Settings_Map.height; y++, gridOffset += Data_Settings_Map.gridBorderSize) {
-		for (int x = 0; x < Data_Settings_Map.width; x++, gridOffset++) {
-			int terrain = Data_Grid_terrain[gridOffset];
-			if ((terrain & Terrain_Rock) && !(terrain & (Terrain_ReservoirRange | Terrain_Elevation | Terrain_AccessRamp))) {
-				Data_Grid_graphicIds[gridOffset] = 0;
-				Data_Grid_bitfields[gridOffset] &= Bitfield_NoSizes;
-				Data_Grid_edge[gridOffset] |= Edge_LeftmostTile;
-			}
+	FOREACH_ALL({
+		int terrain = Data_Grid_terrain[gridOffset];
+		if ((terrain & Terrain_Rock) && !(terrain & (Terrain_ReservoirRange | Terrain_Elevation | Terrain_AccessRamp))) {
+			Data_Grid_graphicIds[gridOffset] = 0;
+			Data_Grid_bitfields[gridOffset] &= Bitfield_NoSizes;
+			Data_Grid_edge[gridOffset] |= Edge_LeftmostTile;
 		}
-	}
+	});
 	int graphicIdRock = GraphicId(ID_Graphic_TerrainRock);
 	int graphicIdElevation = GraphicId(ID_Graphic_TerrainElevationRock);
-	gridOffset = Data_Settings_Map.gridStartOffset;
-	for (int yy = 0; yy < Data_Settings_Map.height; yy++, gridOffset += Data_Settings_Map.gridBorderSize) {
-		for (int xx = 0; xx < Data_Settings_Map.width; xx++, gridOffset++) {
-			int terrain = Data_Grid_terrain[gridOffset];
-			if ((terrain & Terrain_Rock) && !(terrain & (Terrain_ReservoirRange | Terrain_Elevation | Terrain_AccessRamp))) {
-				if (!Data_Grid_graphicIds[gridOffset]) {
-					if (isAllTerrainInArea(xx, yy, 3, Terrain_Rock)) {
-						int graphicId = 12 + (Data_Grid_random[gridOffset] & 1);
-						if (Terrain_existsTileWithinRadiusWithType(xx, yy, 3, 4, Terrain_Elevation)) {
-							graphicId += graphicIdElevation;
-						} else {
-							graphicId += graphicIdRock;
-						}
-						Terrain_addBuildingToGrids(0, xx, yy, 3, graphicId, Terrain_Rock);
-					} else if (isAllTerrainInArea(xx, yy, 2, Terrain_Rock)) {
-						int graphicId = 8 + (Data_Grid_random[gridOffset] & 3);
-						if (Terrain_existsTileWithinRadiusWithType(xx, yy, 2, 4, Terrain_Elevation)) {
-							graphicId += graphicIdElevation;
-						} else {
-							graphicId += graphicIdRock;
-						}
-						Terrain_addBuildingToGrids(0, xx, yy, 2, graphicId, Terrain_Rock);
+	FOREACH_ALL({
+		int terrain = Data_Grid_terrain[gridOffset];
+		if ((terrain & Terrain_Rock) && !(terrain & (Terrain_ReservoirRange | Terrain_Elevation | Terrain_AccessRamp))) {
+			if (!Data_Grid_graphicIds[gridOffset]) {
+				if (isAllTerrainInArea(x, y, 3, Terrain_Rock)) {
+					int graphicId = 12 + (Data_Grid_random[gridOffset] & 1);
+					if (Terrain_existsTileWithinRadiusWithType(x, y, 3, 4, Terrain_Elevation)) {
+						graphicId += graphicIdElevation;
 					} else {
-						int graphicId = Data_Grid_random[gridOffset] & 7;
-						if (Terrain_existsTileWithinRadiusWithType(xx, yy, 1, 4, Terrain_Elevation)) {
-							graphicId += graphicIdElevation;
-						} else {
-							graphicId += graphicIdRock;
-						}
-						Data_Grid_graphicIds[gridOffset] = graphicId;
+						graphicId += graphicIdRock;
 					}
+					Terrain_addBuildingToGrids(0, x, y, 3, graphicId, Terrain_Rock);
+				} else if (isAllTerrainInArea(x, y, 2, Terrain_Rock)) {
+					int graphicId = 8 + (Data_Grid_random[gridOffset] & 3);
+					if (Terrain_existsTileWithinRadiusWithType(x, y, 2, 4, Terrain_Elevation)) {
+						graphicId += graphicIdElevation;
+					} else {
+						graphicId += graphicIdRock;
+					}
+					Terrain_addBuildingToGrids(0, x, y, 2, graphicId, Terrain_Rock);
+				} else {
+					int graphicId = Data_Grid_random[gridOffset] & 7;
+					if (Terrain_existsTileWithinRadiusWithType(x, y, 1, 4, Terrain_Elevation)) {
+						graphicId += graphicIdElevation;
+					} else {
+						graphicId += graphicIdRock;
+					}
+					Data_Grid_graphicIds[gridOffset] = graphicId;
 				}
 			}
 		}
-	}
+	});
 }
 
 void TerrainGraphics_updateAllGardens()
@@ -108,6 +110,39 @@ void TerrainGraphics_updateAllGardens()
 void TerrainGraphics_updateAllRoads()
 {
 	// TODO
+}
+
+void TerrainGraphics_updateAllWalls()
+{
+	FOREACH_ALL({
+		int terrain = Data_Grid_terrain[gridOffset];
+		if ((terrain & Terrain_Wall) && !(terrain & Terrain_Building)) {
+			/* TODO
+		  j_fun_storeTerrainMaskedAroundTile(T_Wall);
+          j_fun_setTrueIfStoredMaskedTerrainNoMatch();
+          j_fun_getGraphicOffsetForTerrainContext(&terrainContextGraphics_wall, 48);
+          grid_bitfields[walkerBaseGridOffset] &= 0xF0u;
+          grid_edge[walkerBaseGridOffset] |= 0x40u;
+          grid_graphicIds[walkerBaseGridOffset] = terrainContext_itemOffset
+                                                + terrainContext_groupOffset
+                                                + graphic_wall_top;
+          if ( j_fun_isAdjacentToGatehouse() )
+          {
+            sub_4029FA();
+            if ( j_fun_getGraphicOffsetForTerrainContext(&terrainContextGraphics_wallGatehouse, 10) )
+              grid_graphicIds[walkerBaseGridOffset] = terrainContext_itemOffset
+                                                    + terrainContext_groupOffset
+                                                    + graphic_wall_top;
+            else
+              sub_401B4F(1);
+          }
+          else
+          {
+            sub_401B4F(0);
+          }
+			*/
+		}
+	});
 }
 
 static int getAccessRampGraphicOffset(int x, int y)

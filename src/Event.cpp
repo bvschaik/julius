@@ -48,6 +48,15 @@ static const int randomEventProbability[128] = {
 	0, 0, 3, 0, 7, 4, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0
 };
 
+void Event_initInvasions()
+{
+	// TODO
+}
+
+void Event_handleInvasions()
+{
+	// TODO
+}
 
 void Event_handleDistantBattle()
 {

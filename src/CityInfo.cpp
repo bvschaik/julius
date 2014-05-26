@@ -29,8 +29,3 @@ void CityInfo_Imperial_calculateGiftCosts()
 	Data_CityInfo.giftCost_lavish = savings / 2 + 100;
 }
 
-void CityInfo_Entertainment_calculate()
-{
-	// TODO implement
-}
-

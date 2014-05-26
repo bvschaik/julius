@@ -25,10 +25,11 @@ typedef struct {
 	int hasReservoirPipes;
 	int aqueductHasWater;
 	int formationId;
+	int formationTypes;
 	int barracksSoldiersRequested;
 	int worstDesirabilityBuildingId;
 	int warehouseSpaceText;
-	int type; // 1 = terrain; 2 = building
+	int type; // 1 = terrain; 2 = building; 4 = legion
 	int terrainType;
 	int advisor;
 	int rubbleBuildingType;

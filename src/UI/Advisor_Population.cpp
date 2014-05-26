@@ -116,7 +116,7 @@ void UI_Advisor_Population_drawBackground(int *advisorHeight)
 		Widget_GameText_draw(55, 11, baseOffsetX + 75, baseOffsetY + 342, Font_NormalWhite);
 	} else {
 		width = Widget_GameText_drawNumberWithDescription(
-			8, 6, Data_CityInfo.foodInfoNumOperatingGranaries,
+			8, 6, Data_CityInfo.foodInfoGranariesOperating,
 			baseOffsetX + 75, baseOffsetY + 342, Font_NormalWhite);
 		if (Data_CityInfo.foodInfoFoodSupplyMonths > 0) {
 			width += Widget_GameText_draw(55, 12, baseOffsetX + 75 + width, baseOffsetY + 342, Font_NormalWhite);
@@ -134,7 +134,7 @@ void UI_Advisor_Population_drawBackground(int *advisorHeight)
 
 	// food types eaten
 	width = Widget_GameText_draw(55, 16, baseOffsetX + 75, baseOffsetY + 360, Font_NormalWhite);
-	Widget_Text_drawNumber(Data_CityInfo.foodInfoFoodTypesEaten, '@', " ",
+	Widget_Text_drawNumber(Data_CityInfo.foodInfoFoodTypesAvailable, '@', " ",
 		baseOffsetX + 75 + width, baseOffsetY + 360, Font_NormalWhite);
 
 	// immigration

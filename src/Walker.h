@@ -6,6 +6,9 @@ int Walker_create(int walkerType, int x, int y, char direction);
 void Walker_delete(int walkerId);
 
 int Walker_createDustCloud(int x, int y, int size);
+void Walker_createFishingPoints();
+void Walker_createHerds();
+void Walker_createFlotsam(int xEntry, int yEntry, int hasWater);
 
 void Walker_addToTileList(int walkerId);
 void Walker_updatePositionInTileList(int walkerId);

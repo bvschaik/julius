@@ -123,6 +123,21 @@ int Walker_createDustCloud(int x, int y, int size)
 	return 0;
 }
 
+void Walker_createFishingPoints()
+{
+	// TODO
+}
+
+void Walker_createHerds()
+{
+	// TODO
+}
+
+void Walker_createFlotsam(int xEntry, int yEntry, int hasWater)
+{
+	// TODO
+}
+
 void Walker_addToTileList(int walkerId)
 {
 	if (Data_Walkers[walkerId].gridOffset < 0) {

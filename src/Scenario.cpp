@@ -188,23 +188,17 @@ static void loadScenario(const char *scenarioName)
 	// TODO
 	strcpy(Data_FileList.selectedScenario, scenarioName);
 	readScenarioAndInitGraphics();
-/*
-  hasWaterEntry = 0;
-  ciid = 1;
-  j_fun_memcpy(&map_settings_startYear, &scn_settings_startYear, 1720);
-    if ( map_riverEntry_x != -1 )
-    {
-      if ( map_riverEntry_y != -1 )
-      {
-        if ( map_riverExit_x != -1 )
-        {
-          if ( map_riverExit_y != -1 )
-            hasWaterEntry = 1;
-        }
-      }
-    }
-    j_fun_createFishHerdFlotsamWalkers(map_riverEntry_x, map_riverEntry_y, hasWaterEntry);
-	*/
+	int hasWaterEntry = 0;
+	if (Data_Scenario.riverEntryPoint.x != -1 && 
+		Data_Scenario.riverEntryPoint.y != -1 &&
+		Data_Scenario.riverExitPoint.x != -1 &&
+		Data_Scenario.riverExitPoint.x != -1) {
+		hasWaterEntry = 1;
+	}
+	Walker_createFishingPoints();
+	Walker_createHerds();
+	Walker_createFlotsam(Data_Scenario.riverEntryPoint.x, Data_Scenario.riverEntryPoint.y, hasWaterEntry);
+
 	Routing_determineLandCitizen();
 	Routing_determineLandNonCitizen();
 	Routing_determineWater();
@@ -278,7 +272,7 @@ static void loadScenario(const char *scenarioName)
 	Empire_load(1, Data_Scenario.empireId);
 	Empire_initCities();
 	Trader_clearList();
-	//TODO Event_initInvasions();
+	Event_initInvasions();
 	Empire_determineDistantBattleCity();
 	Event_initRequests();
 	Event_initDemandChanges();

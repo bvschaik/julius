@@ -5,6 +5,7 @@
 #define MAX_TRADERS 100
 
 enum {
+	Walker_None = 0,
 	Walker_Immigrant = 1,
 	Walker_Emigrant = 2,
 	Walker_Homeless = 3,
@@ -106,8 +107,8 @@ enum {
 	WalkerActionState_75_PrefectFightingFire = 75,
 	WalkerActionState_87_ToDistantBattle = 87,
 	WalkerActionState_88_FromDistantBattle = 88,
-	WalkerActionState_94_EntertainerAtSchool = 94,
-	WalkerActionState_95_EntertainerGoingToVenue = 95,
+	WalkerActionState_94_Entertainer = 94, // at school?
+	WalkerActionState_95_Entertainer = 95, // going to venue?
 	WalkerActionState_100_TradeCaravanCreated = 100,
 	WalkerActionState_101_TradeCaravanArriving = 101,
 	WalkerActionState_102_TradeCaravanTrading = 102,

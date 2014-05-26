@@ -1,7 +1,9 @@
 #include "BuildingInfo.h"
 
+#include "Window.h"
 #include "../Graphics.h"
 #include "../Resource.h"
+#include "../Walker.h"
 #include "../Widget.h"
 
 #include "../Data/Building.h"
@@ -10,6 +12,8 @@
 #include "../Data/Formation.h"
 #include "../Data/Scenario.h"
 #include "../Data/Walker.h"
+
+static void selectWalker(int param1, int param2);
 
 static const int walkerTypeToBigPeopleGraphicId[] = {
 	8, 13, 13, 9, 4, 13, 8, 16, 7, 4,
@@ -28,6 +32,21 @@ static const int walkerTypeToBigPeopleGraphicId[] = {
 };
 
 #define BigPeopleGraphic(t) (GraphicId(ID_Graphic_BigPeople) + walkerTypeToBigPeopleGraphicId[t] - 1)
+
+static CustomButton walkerButtons[] = {
+	{26, 46, 76, 96, selectWalker, Widget_Button_doNothing, 1, 0, 0},
+	{86, 46, 136, 96, selectWalker, Widget_Button_doNothing, 1, 1, 0},
+	{146, 46, 196, 96, selectWalker, Widget_Button_doNothing, 1, 2, 0},
+	{206, 46, 256, 96, selectWalker, Widget_Button_doNothing, 1, 3, 0},
+	{266, 46, 316, 96, selectWalker, Widget_Button_doNothing, 1, 4, 0},
+	{326, 46, 376, 96, selectWalker, Widget_Button_doNothing, 1, 5, 0},
+	{386, 46, 436, 96, selectWalker, Widget_Button_doNothing, 1, 6, 0},
+};
+
+static ScreenColor walkerImages[7][48*48];
+
+static int focusButtonId;
+static BuildingInfoContext *contextForCallback;
 
 static int collectingItemIdToResourceId(int c)
 {
@@ -219,7 +238,7 @@ static void drawWalkerInfoCartpusher(BuildingInfoContext *c, int walkerId)
 			c->xOffset + 92 + width, c->yOffset + 135);
 	}
 	
-	Widget_GameText_drawMultiline(130, 21 * (c->walker.soundId - 1) + c->walker.phraseId + 1,
+	Widget_GameText_drawMultiline(130, 21 * c->walker.soundId + c->walker.phraseId + 1,
 		c->xOffset + 90, c->yOffset + 160, 16 * (c->widthBlocks - 9), Font_SmallBlack);
 	
 	if (!Data_Walkers[walkerId].buildingId) {
@@ -288,7 +307,7 @@ static void drawWalkerInfoMarketBuyer(BuildingInfoContext *c, int walkerId)
 			c->xOffset + 90 + width, c->yOffset + 135);
 	}
 	if (c->walker.phraseId >= 0) {
-		Widget_GameText_drawMultiline(130, 21 * (c->walker.soundId - 1) + c->walker.phraseId + 1,
+		Widget_GameText_drawMultiline(130, 21 * c->walker.soundId + c->walker.phraseId + 1,
 			c->xOffset + 90, c->yOffset + 160, 16 * (c->widthBlocks - 9), Font_SmallBlack);
 	}
 }
@@ -308,7 +327,7 @@ static void drawWalkerInfoNormal(BuildingInfoContext *c, int walkerId)
 		c->xOffset + 92, c->yOffset + 139, Font_SmallBlack);
 	
 	if (c->walker.phraseId >= 0) {
-		Widget_GameText_drawMultiline(130, 21 * (c->walker.soundId - 1) + c->walker.phraseId + 1,
+		Widget_GameText_drawMultiline(130, 21 * c->walker.soundId + c->walker.phraseId + 1,
 			c->xOffset + 90, c->yOffset + 160, 16 * (c->widthBlocks - 9), Font_SmallBlack);
 	}
 }
@@ -346,36 +365,44 @@ void UI_BuildingInfo_drawWalkerList(BuildingInfoContext *c)
 			Widget_Panel_drawButtonBorder(
 				c->xOffset + 60 * i + 25, c->yOffset + 45,
 				52, 52, i == c->walker.selectedIndex);
-			// TODO copy walker stuff
-			
+			Graphics_loadFromBuffer(
+				c->xOffset + 27 + 60 * i, c->yOffset + 47,
+				48, 48, walkerImages[i]);
 		}
 		drawWalkerInfo(c, c->walker.walkerIds[c->walker.selectedIndex]);
 	}
+	c->walker.drawn = 1;
 }
 
 void UI_BuildingInfo_drawWalkerImagesLocal(BuildingInfoContext *c)
 {
-	// TODO
+	if (c->walker.count > 0) {
+		for (int i = 0; i < c->walker.count; i++) {
+			// TODO draw walker and determine x/y
+			int x = 0, y = 0;
+			Graphics_saveToBuffer(x, y, 48, 48, walkerImages[i]);
+		}
+	}
 }
 
 void UI_BuildingInfo_playWalkerPhrase(BuildingInfoContext *c)
 {
-	// TODO
+	int walkerId = c->walker.walkerIds[c->walker.selectedIndex];
+	c->walker.soundId = Walker_playPhrase(walkerId);
+	c->walker.phraseId = Data_Walkers[walkerId].phraseId;
 }
 
 void UI_BuildingInfo_handleMouseWalkerList(BuildingInfoContext *c)
 {
-	// TODO
-		/*
-		mouseover_button_id = j_fun_isCustomButtonClick(
-								rightclickInfoDialog_x,
-								rightclickInfoDialog_y,
-								&buttons_walkerInfo,
-								rightclickInfoDialog_numWalkers);
-		j_fun_handleCustomButtonClick(
-		  rightclickInfoDialog_x,
-		  rightclickInfoDialog_y,
-		  &buttons_walkerInfo,
-		  rightclickInfoDialog_numWalkers);
-		*/
+	contextForCallback = c;
+	Widget_Button_handleCustomButtons(c->xOffset, c->yOffset,
+		walkerButtons, c->walker.count, &focusButtonId);
+	contextForCallback = 0;
+}
+
+static void selectWalker(int index, int param2)
+{
+	contextForCallback->walker.selectedIndex = index;
+	UI_BuildingInfo_playWalkerPhrase(contextForCallback);
+	UI_Window_requestRefresh();
 }

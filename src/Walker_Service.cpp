@@ -373,6 +373,7 @@ int Walker_provideServiceCoverage(int walkerId)
 	int numHousesServiced = 0;
 	int x = Data_Walkers[walkerId].x;
 	int y = Data_Walkers[walkerId].y;
+	int buildingId;
 	switch (Data_Walkers[walkerId].type) {
 		case Walker_Patrician:
 			return 0;
@@ -384,7 +385,7 @@ int Walker_provideServiceCoverage(int walkerId)
 			break;
 		case Walker_MarketTrader:
 		case Walker_MarketBuyer:
-			// TODO numHousesServiced = provideMarketGoods(Data_Walkers[walkerId].buildingId, x, y);
+			numHousesServiced = provideMarketGoods(Data_Walkers[walkerId].buildingId, x, y);
 			break;
 		case Walker_BathhouseWorker:
 			numHousesServiced = provideBathhouseCoverage(x, y);
@@ -436,7 +437,14 @@ int Walker_provideServiceCoverage(int walkerId)
 					break;
 			}
 			break;
-
+		case Walker_Actor:
+			if (Data_Walkers[walkerId].actionState == WalkerActionState_94_Entertainer ||
+				Data_Walkers[walkerId].actionState == WalkerActionState_95_Entertainer) {
+				buildingId = Data_Walkers[walkerId].buildingId;
+			} else { // going to venue
+				buildingId = Data_Walkers[walkerId].destinationBuildingId;
+			}
+			break;
 	}
 	return 0;
 /*

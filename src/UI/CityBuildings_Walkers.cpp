@@ -35,31 +35,31 @@ static int showOnOverlay(struct Data_Walker *w)
 				w->type == Walker_Teacher;
 		case Overlay_Theater:
 			if (w->type == Walker_Actor) {
-				if (w->actionState == WalkerActionState_94_EntertainerAtSchool ||
-					w->actionState == WalkerActionState_95_EntertainerGoingToVenue) {
-					return Data_Buildings[w->destinationBuildingId].type == Building_Theater;
-				} else {
+				if (w->actionState == WalkerActionState_94_Entertainer ||
+					w->actionState == WalkerActionState_95_Entertainer) {
 					return Data_Buildings[w->buildingId].type == Building_Theater;
+				} else {
+					return Data_Buildings[w->destinationBuildingId].type == Building_Theater;
 				}
 			}
 			return 0;
 		case Overlay_Amphitheater:
 			if (w->type == Walker_Actor || w->type == Walker_Gladiator) {
-				if (w->actionState == WalkerActionState_94_EntertainerAtSchool ||
-					w->actionState == WalkerActionState_95_EntertainerGoingToVenue) {
-					return Data_Buildings[w->destinationBuildingId].type == Building_Amphitheater;
-				} else {
+				if (w->actionState == WalkerActionState_94_Entertainer ||
+					w->actionState == WalkerActionState_95_Entertainer) {
 					return Data_Buildings[w->buildingId].type == Building_Amphitheater;
+				} else {
+					return Data_Buildings[w->destinationBuildingId].type == Building_Amphitheater;
 				}
 			}
 			return 0;
 		case Overlay_Colosseum:
 			if (w->type == Walker_Gladiator) {
-				if (w->actionState == WalkerActionState_94_EntertainerAtSchool ||
-					w->actionState == WalkerActionState_95_EntertainerGoingToVenue) {
-					return Data_Buildings[w->destinationBuildingId].type == Building_Colosseum;
-				} else {
+				if (w->actionState == WalkerActionState_94_Entertainer ||
+					w->actionState == WalkerActionState_95_Entertainer) {
 					return Data_Buildings[w->buildingId].type == Building_Colosseum;
+				} else {
+					return Data_Buildings[w->destinationBuildingId].type == Building_Colosseum;
 				}
 			} else if (w->type == Walker_LionTamer) {
 				return 1;

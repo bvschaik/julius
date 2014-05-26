@@ -53,18 +53,18 @@ static int menuBuildingType[MAX_BUILDINGITEMS][MAX_BUILDINGITEMS] = {
 };
 static int menuEnabled[MAX_BUILDINGITEMS][MAX_BUILDINGITEMS];
 
-#define ENABLE_HOUSE() if (buildingId >= Building_HouseVacantLot && buildingId <= Building_HouseLuxuryPalace) menuEnabled[sub][item] = 1
-#define ENABLE_IF(b,a) if (buildingId == b && Data_Scenario.allowedBuildings.a) menuEnabled[sub][item] = 1
-#define ENABLE(b) if (buildingId == b) menuEnabled[sub][item] = 1
-#define DISABLE_RAW(b,r) if (buildingId == b && !Empire_ourCityCanProduceResource(r)) menuEnabled[sub][item] = 0
-#define DISABLE_FINISHED(b,r) if (buildingId == b && !Empire_ourCityCanProduceResourcePotentially(r)) menuEnabled[sub][item] = 0
+#define ENABLE_HOUSE() if (buildingType >= Building_HouseVacantLot && buildingType <= Building_HouseLuxuryPalace) menuEnabled[sub][item] = 1
+#define ENABLE_IF(b,a) if (buildingType == b && Data_Scenario.allowedBuildings.a) menuEnabled[sub][item] = 1
+#define ENABLE(b) if (buildingType == b) menuEnabled[sub][item] = 1
+#define DISABLE_RAW(b,r) if (buildingType == b && !Empire_ourCityCanProduceResource(r)) menuEnabled[sub][item] = 0
+#define DISABLE_FINISHED(b,r) if (buildingType == b && !Empire_ourCityCanProduceResourcePotentially(r)) menuEnabled[sub][item] = 0
 
 void SidebarMenu_enableBuildingButtons()
 {
 	UI_Sidebar_enableBuildingButtons();
 }
 
-static void enableNormal(int sub, int item, int buildingId)
+static void enableNormal(int sub, int item, int buildingType)
 {
 	ENABLE_HOUSE();
 	ENABLE(Building_ClearLand);
@@ -122,14 +122,14 @@ static void enableNormal(int sub, int item, int buildingId)
 	ENABLE_IF(Building_Warehouse, warehouse);
 	ENABLE_IF(Building_LowBridge, bridge);
 	ENABLE_IF(Building_ShipBridge, bridge);
-	if (buildingId == Building_TriumphalArch) {
+	if (buildingType == Building_TriumphalArch) {
 		if (Data_CityInfo.triumphalArchesAvailable > Data_CityInfo.triumphalArchesPlaced) {
 			menuEnabled[sub][item] = 1;
 		}
 	}
 }
 
-void enableTutorial1Start(int sub, int item, int buildingId)
+void enableTutorial1Start(int sub, int item, int buildingType)
 {
 	ENABLE_HOUSE();
 	ENABLE(Building_ClearLand);
@@ -137,21 +137,21 @@ void enableTutorial1Start(int sub, int item, int buildingId)
 	ENABLE_IF(Building_Road, road);
 }
 
-void enableTutorial1AfterFire(int sub, int item, int buildingId)
+void enableTutorial1AfterFire(int sub, int item, int buildingType)
 {
-	enableTutorial1Start(sub, item, buildingId);
+	enableTutorial1Start(sub, item, buildingType);
 	ENABLE_IF(Building_Prefecture, prefecture);
 	ENABLE_IF(Building_Market, market);
 }
 
-void enableTutorial1AfterCollapse(int sub, int item, int buildingId)
+void enableTutorial1AfterCollapse(int sub, int item, int buildingType)
 {
-	enableTutorial1AfterFire(sub, item, buildingId);
+	enableTutorial1AfterFire(sub, item, buildingType);
 	ENABLE_IF(Building_EngineersPost, engineersPost);
 	ENABLE_IF(Building_SenateUpgraded, senate);
 }
 
-void enableTutorial2Start(int sub, int item, int buildingId)
+void enableTutorial2Start(int sub, int item, int buildingType)
 {
 	ENABLE_HOUSE();
 	ENABLE(Building_ClearLand);
@@ -166,17 +166,17 @@ void enableTutorial2Start(int sub, int item, int buildingId)
 	ENABLE_IF(Building_Menu_SmallTemples, smallTemples);
 }
 
-static void enableTutorial2UpTo250(int sub, int item, int buildingId)
+static void enableTutorial2UpTo250(int sub, int item, int buildingType)
 {
-	enableTutorial2Start(sub, item, buildingId);
+	enableTutorial2Start(sub, item, buildingType);
 	ENABLE_IF(Building_DraggableReservoir, aqueduct);
 	ENABLE_IF(Building_Aqueduct, aqueduct);
 	ENABLE_IF(Building_Fountain, aqueduct);
 }
 
-static void enableTutorial2UpTo450(int sub, int item, int buildingId)
+static void enableTutorial2UpTo450(int sub, int item, int buildingType)
 {
-	enableTutorial2UpTo250(sub, item, buildingId);
+	enableTutorial2UpTo250(sub, item, buildingType);
 	ENABLE_IF(Building_Gardens, gardens);
 	ENABLE_IF(Building_ActorColony, actorColony);
 	ENABLE_IF(Building_Theater, theater);
@@ -184,9 +184,9 @@ static void enableTutorial2UpTo450(int sub, int item, int buildingId)
 	ENABLE_IF(Building_School, school);
 }
 
-static void enableTutorial2After450(int sub, int item, int buildingId)
+static void enableTutorial2After450(int sub, int item, int buildingType)
 {
-	enableTutorial2UpTo450(sub, item, buildingId);
+	enableTutorial2UpTo450(sub, item, buildingType);
 	ENABLE_IF(Building_Menu_RawMaterials, rawMaterials);
 	ENABLE_IF(Building_Menu_Workshops, workshops);
 	ENABLE_IF(Building_Warehouse, warehouse);
@@ -195,7 +195,7 @@ static void enableTutorial2After450(int sub, int item, int buildingId)
 	ENABLE_IF(Building_GladiatorSchool, gladiatorSchool);
 }
 
-static void disableResources(int sub, int item, int buildingId)
+static void disableResources(int sub, int item, int buildingType)
 {
 	DISABLE_RAW(Building_WheatFarm, Resource_Wheat);
 	DISABLE_RAW(Building_VegetableFarm, Resource_Vegetables);
