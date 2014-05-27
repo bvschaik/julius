@@ -1,5 +1,6 @@
 #include "CityInfo.h"
 
+#include "Building.h"
 #include "PlayerMessage.h"
 #include "Walker.h"
 
@@ -17,17 +18,7 @@
 	if (Data_CityInfo.x < min) Data_CityInfo.x = min; \
 	else if (Data_CityInfo.x > max) Data_CityInfo.x = max;
 
-static void performBlessingCeres()
-{
-	// TODO
-}
-
 static void performBlessingMercury()
-{
-	// TODO
-}
-
-static void performCurseCeres(int isLarge)
 {
 	// TODO
 }
@@ -54,7 +45,7 @@ static void performBlessing(int god)
 	switch (god) {
 		case God_Ceres:
 			PlayerMessage_post(1, 96, 0, 0);
-			performBlessingCeres();
+			Building_Industry_blessFarmsFromCeres();
 			break;
 		case God_Neptune:
 			PlayerMessage_post(1, 97, 0, 0);
@@ -80,7 +71,7 @@ static void performSmallCurse(int god)
 	switch (god) {
 		case God_Ceres:
 			PlayerMessage_post(1, 91, 0, 0);
-			performCurseCeres(0);
+			Building_Industry_witherFarmCropsFromCeres(0);
 			break;
 		case God_Neptune:
 			PlayerMessage_post(1, 92, 0, 0);
@@ -112,7 +103,7 @@ static void performLargeCurse(int god)
 	switch (god) {
 		case God_Ceres:
 			PlayerMessage_post(1, 41, 0, 0);
-			performCurseCeres(1);
+			Building_Industry_witherFarmCropsFromCeres(1);
 			break;
 		case God_Neptune:
 			if (Data_CityInfo.tradeNumOpenSeaRoutes) {

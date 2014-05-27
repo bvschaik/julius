@@ -307,7 +307,7 @@ static void drawFootprintForWaterOverlay(int gridOffset, int xOffset, int yOffse
 		DRAWFOOT_SIZE1(graphicId, xOffset, yOffset);
 	} else if (terrain & Terrain_Building) {
 		int buildingId = Data_Grid_buildingIds[gridOffset];
-		if (buildingId && Data_Buildings[buildingId].houseHasWellAccess == 1) {
+		if (buildingId && Data_Buildings[buildingId].hasWellAccess == 1) {
 			terrain |= Terrain_FountainRange;
 		}
 		if (Data_Buildings[buildingId].type == Building_Well || Data_Buildings[buildingId].type == Building_Fountain) {

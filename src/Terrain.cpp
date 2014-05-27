@@ -350,6 +350,18 @@ int Terrain_allTilesWithinRadiusHaveType(int x, int y, int size, int radius, uns
 	return 1;
 }
 
+void Terrain_markBuildingsWithinWellRadius(int buildingId, int radius)
+{
+	int x = Data_Buildings[buildingId].x;
+	int y = Data_Buildings[buildingId].y;
+	int size = 1;
+	FOR_XY_RADIUS(
+		if (Data_Grid_buildingIds[gridOffset]) {
+			Data_Buildings[Data_Grid_buildingIds[gridOffset]].hasWellAccess = 1;
+		}
+	);
+}
+
 int Terrain_allHousesWithinWellRadiusHaveFountain(int buildingId, int radius)
 {
 	int numHouses = 0;

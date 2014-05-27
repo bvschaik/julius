@@ -369,6 +369,19 @@ void Building_setDesirability()
 	}
 }
 
+void Building_decayHousesCovered()
+{
+	for (int i = 0; i < MAX_BUILDINGS; i++) {
+		if (Data_Buildings[i].inUse && Data_Buildings[i].type != Building_Tower) {
+			if (Data_Buildings[i].housesCovered <= 1) {
+				Data_Buildings[i].housesCovered = 0;
+			} else {
+				Data_Buildings[i].housesCovered--;
+			}
+		}
+	}
+}
+
 void BuildingStorage_clearList()
 {
 	memset(Data_Building_Storages, 0, MAX_STORAGES * sizeof(struct Data_Building_Storage));

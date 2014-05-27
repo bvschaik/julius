@@ -43,7 +43,7 @@ void GameTick_advance()
 		case 7: break; // TODO unknown
 		case 8: break; // TODO unknown
 		case 10: Building_updateHighestIds(); break;
-		case 12: break; // TODO decay houses covered
+		case 12: Building_decayHousesCovered(); break;
 		case 16: Resource_calculateWarehouseStocks(); break;
 		case 17: CityInfo_Resource_calculateFoodAndSupplyRomeWheat(); break;
 		case 18: Resource_calculateWorkshopStocks(); break;

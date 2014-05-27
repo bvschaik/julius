@@ -1,5 +1,7 @@
 
 #include "Building.h"
+#include "WalkerAction.h"
+
 #include "Data/Building.h"
 #include "Data/Settings.h"
 #include "Data/Grid.h"
@@ -45,15 +47,12 @@ static int provideEngineerCoverage(int x, int y, int *maxDamageRiskSeen)
 	return serviced;
 }
 
-static int providePrefectFireCoverage(int x, int y, int *maxFireRiskSeen)
+static int providePrefectFireCoverage(int x, int y)
 {
 	int serviced = 0;
 	FOR_XY_RADIUS(
 		if (Data_Buildings[buildingId].type == Building_Hippodrome) {
 			buildingId = Building_getMainBuildingId(buildingId);
-		}
-		if (Data_Buildings[buildingId].fireRisk > *maxFireRiskSeen) {
-			*maxFireRiskSeen = Data_Buildings[buildingId].fireRisk;
 		}
 		Data_Buildings[buildingId].fireRisk = 0;
 		if (Data_Buildings[buildingId].houseSize && Data_Buildings[buildingId].housePopulation > 0) {
@@ -444,104 +443,68 @@ int Walker_provideServiceCoverage(int walkerId)
 			} else { // going to venue
 				buildingId = Data_Walkers[walkerId].destinationBuildingId;
 			}
+			if (Data_Buildings[buildingId].type == Building_Theater) {
+				numHousesServiced = provideTheaterCoverage(x, y);
+			} else if (Data_Buildings[buildingId].type == Building_Amphitheater) {
+				numHousesServiced = provideAmphitheaterCoverage(x, y,
+					Data_Buildings[buildingId].data.entertainment.days1 ? 2 : 1);
+			}
+			break;
+		case Walker_Gladiator:
+			if (Data_Walkers[walkerId].actionState == WalkerActionState_94_Entertainer ||
+				Data_Walkers[walkerId].actionState == WalkerActionState_95_Entertainer) {
+				buildingId = Data_Walkers[walkerId].buildingId;
+			} else { // going to venue
+				buildingId = Data_Walkers[walkerId].destinationBuildingId;
+			}
+			if (Data_Buildings[buildingId].type == Building_Amphitheater) {
+				numHousesServiced = provideAmphitheaterCoverage(x, y,
+					Data_Buildings[buildingId].data.entertainment.days2 ? 2 : 1);
+			} else if (Data_Buildings[buildingId].type == Building_Colosseum) {
+				numHousesServiced = provideColosseumCoverage(x, y,
+					Data_Buildings[buildingId].data.entertainment.days1 ? 2 : 1);
+			}
+			break;
+		case Walker_LionTamer:
+			if (Data_Walkers[walkerId].actionState == WalkerActionState_94_Entertainer ||
+				Data_Walkers[walkerId].actionState == WalkerActionState_95_Entertainer) {
+				buildingId = Data_Walkers[walkerId].buildingId;
+			} else { // going to venue
+				buildingId = Data_Walkers[walkerId].destinationBuildingId;
+			}
+			numHousesServiced = provideColosseumCoverage(x, y,
+				Data_Buildings[buildingId].data.entertainment.days2 ? 2 : 1);
+			break;
+		case Walker_Charioteer:
+			numHousesServiced = provideHippodromeCoverage(x, y);
+			break;
+		case Walker_Engineer:
+			int maxDamage;
+			numHousesServiced = provideEngineerCoverage(x, y, &maxDamage);
+			if (maxDamage > Data_Walkers[walkerId].minMaxSeen) {
+				Data_Walkers[walkerId].minMaxSeen = maxDamage;
+			} else if (Data_Walkers[walkerId].minMaxSeen <= 10) {
+				Data_Walkers[walkerId].minMaxSeen = 0;
+			} else {
+				Data_Walkers[walkerId].minMaxSeen -= 10;
+			}
+			break;
+		case Walker_Prefect:
+			numHousesServiced = providePrefectFireCoverage(x, y);
+			Data_Walkers[walkerId].minMaxSeen = getPrefectCrimeCoverage(x, y);
+			break;
+		case Walker_Rioter:
+			if (WalkerAction_rioterCollapseBuilding(walkerId) == 1) {
+				return 1;
+			}
 			break;
 	}
+	if (Data_Walkers[walkerId].buildingId) {
+		buildingId = Data_Walkers[walkerId].buildingId;
+		Data_Buildings[buildingId].housesCovered += numHousesServiced;
+		if (Data_Buildings[buildingId].housesCovered > 300) {
+			Data_Buildings[buildingId].housesCovered = 300;
+		}
+	}
 	return 0;
-/*
-TODO
-  v2 = 0;
-  switch ( walker_0a_type[128 * walkerId] )
-  {
-    case Walker_Engineer:
-      v2 = j_fun_walkerProvideEngineerCoverage(walker_14_x[128 * walkerId], walker_15_y[128 * walkerId]);
-      if ( *(_DWORD *)&engineerMaxDamageSeen <= (signed int)(unsigned __int8)walker_maxLevelOrMinHappinessSeen[128 * walkerId] )
-      {
-        if ( (signed int)(unsigned __int8)walker_maxLevelOrMinHappinessSeen[128 * walkerId] <= 10 )
-          walker_maxLevelOrMinHappinessSeen[128 * walkerId] = 0;
-        else
-          walker_maxLevelOrMinHappinessSeen[128 * walkerId] -= 10;
-      }
-      else
-      {
-        walker_maxLevelOrMinHappinessSeen[128 * walkerId] = engineerMaxDamageSeen;
-      }
-      break;
-    case Walker_Prefect:
-      v2 = j_fun_walkerProvidePrefectFireCoverage(walker_14_x[128 * walkerId], walker_15_y[128 * walkerId]);
-      j_fun_walkerProvidePrefectCrimeCoverage(walker_14_x[128 * walkerId], walker_15_y[128 * walkerId]);
-      walker_maxLevelOrMinHappinessSeen[128 * walkerId] = prefectMinHappinessSeen;
-      break;
-    case Walker_Rioter:
-      if ( sub_4026D5(walkerId) == 1 )
-        return 1;
-      break;
-    case Walker_Actor:
-      if ( (unsigned __int8)walker_actionState[128 * walkerId] != 94
-        && (unsigned __int8)walker_actionState[128 * walkerId] != 95 )
-        v4 = walker_destinationBuildingId[64 * walkerId];
-      else
-        v4 = walker_buildingId[64 * walkerId];
-      if ( building_0a_type[64 * v4] == B_Theater )
-      {
-        v2 = j_fun_walkerProvideTheaterAccess(walker_14_x[128 * walkerId], walker_15_y[128 * walkerId]);
-      }
-      else
-      {
-        if ( building_0a_type[64 * v4] == B_Amphitheater )
-        {
-          if ( building_65_house_bathhouse_dock_numships_entert_days[128 * v4] )
-            v2 = j_fun_walkerProvideAmphitheaterAccess(walker_14_x[128 * walkerId], walker_15_y[128 * walkerId], 2);
-          else
-            v2 = j_fun_walkerProvideAmphitheaterAccess(walker_14_x[128 * walkerId], walker_15_y[128 * walkerId], 1);
-        }
-      }
-      break;
-    case Walker_Gladiator:
-      if ( (unsigned __int8)walker_actionState[128 * walkerId] != 94
-        && (unsigned __int8)walker_actionState[128 * walkerId] != 95 )
-        v5 = walker_destinationBuildingId[64 * walkerId];
-      else
-        v5 = walker_buildingId[64 * walkerId];
-      if ( building_0a_type[64 * v5] == B_Amphitheater )
-      {
-        if ( building_66_house_hospital_entert_days2[128 * v5] )
-          v2 = j_fun_walkerProvideAmphitheaterAccess(walker_14_x[128 * walkerId], walker_15_y[128 * walkerId], 2);
-        else
-          v2 = j_fun_walkerProvideAmphitheaterAccess(walker_14_x[128 * walkerId], walker_15_y[128 * walkerId], 1);
-      }
-      else
-      {
-        if ( building_0a_type[64 * v5] == B_Colosseum )
-        {
-          if ( building_65_house_bathhouse_dock_numships_entert_days[128 * v5] )
-            v2 = j_fun_walkerProvideColosseumAccess(walker_14_x[128 * walkerId], walker_15_y[128 * walkerId], 2);
-          else
-            v2 = j_fun_walkerProvideColosseumAccess(walker_14_x[128 * walkerId], walker_15_y[128 * walkerId], 1);
-        }
-      }
-      break;
-    case Walker_LionTamer:
-      if ( (unsigned __int8)walker_actionState[128 * walkerId] != 94
-        && (unsigned __int8)walker_actionState[128 * walkerId] != 95 )
-        v6 = walker_destinationBuildingId[64 * walkerId];
-      else
-        v6 = walker_buildingId[64 * walkerId];
-      if ( building_66_house_hospital_entert_days2[128 * v6] )
-        v2 = j_fun_walkerProvideColosseumAccess(walker_14_x[128 * walkerId], walker_15_y[128 * walkerId], 2);
-      else
-        v2 = j_fun_walkerProvideColosseumAccess(walker_14_x[128 * walkerId], walker_15_y[128 * walkerId], 1);
-      break;
-    case Walker_Charioteer:
-      v2 = j_fun_walkerProvideHippodromeAccess(walker_14_x[128 * walkerId], walker_15_y[128 * walkerId]);
-      break;
-  }
-  v7 = walker_buildingId[64 * walkerId];
-  if ( walker_buildingId[64 * walkerId] )
-  {
-    building_12_walkerServiceAccess[64 * v7] += v2;
-    if ( building_12_walkerServiceAccess[64 * v7] > 300 )
-      building_12_walkerServiceAccess[64 * v7] = 300;
-  }
-  return 0;
-*/
 }

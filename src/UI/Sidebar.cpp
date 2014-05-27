@@ -197,7 +197,6 @@ static void drawMinimap(int force)
 	if (!Data_State.sidebarCollapsed) {
 		if (minimapRedrawRequested || Data_State.isScrollingMap || force) {
 			int xOffset = XOFFSET_EXPANDED;
-			// TODO force? scrollMap?
 			UI_Minimap_draw(xOffset + 8, 59, 73, 111);
 			Graphics_drawLine(xOffset + 7, 58, xOffset + 153, 58, Color_Minimap_Dark);
 			Graphics_drawLine(xOffset + 7, 59, xOffset + 7, 170, Color_Minimap_Dark);

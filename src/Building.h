@@ -21,6 +21,7 @@ void Building_increaseDamageByEnemy(int gridOffset, int maxDamage);
 void Building_destroyByEnemy(int x, int y, int gridOffset);
 
 void Building_setDesirability();
+void Building_decayHousesCovered();
 
 void BuildingStorage_clearList();
 int BuildingStorage_create();
@@ -28,6 +29,7 @@ void BuildingStorage_resetBuildingIds();
 
 void Building_Industry_updateProduction();
 void Building_Industry_updateDoubleWheatProduction();
+void Building_Industry_blessFarmsFromCeres();
 void Building_Industry_witherFarmCropsFromCeres(int bigCurse);
 
 int Building_Market_getMaxFoodStock(int buildingId);

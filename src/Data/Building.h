@@ -201,7 +201,7 @@ extern struct Data_Building {
 	short nextPartBuildingId;
 	short loadsStored;
 	char __unused_36;
-	char houseHasWellAccess;
+	char hasWellAccess;
 	short numWorkers;
 	unsigned char laborCategory;
 	char outputResourceId; //3b

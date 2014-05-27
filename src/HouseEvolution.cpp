@@ -334,7 +334,7 @@ static int hasRequiredGoodsAndServices(int buildingId, int forUpgrade)
 			++Data_CityInfo.housesRequiringFountainToEvolve;
 			return 0;
 		}
-		if (water == 1 && !b->houseHasWellAccess) {
+		if (water == 1 && !b->hasWellAccess) {
 			++Data_CityInfo.housesRequiringWaterToEvolve;
 			return 0;
 		}
@@ -628,7 +628,7 @@ void HouseEvolution_determineEvolveText(int buildingId, int hasBadDesirabilityBu
 	}
 	// water
 	int water = Data_Model_Houses[level].water;
-	if (water == 1 && !b->hasWaterAccess && !b->houseHasWellAccess) {
+	if (water == 1 && !b->hasWaterAccess && !b->hasWellAccess) {
 		b->data.house.evolveTextId = 1;
 		return;
 	}
@@ -766,7 +766,7 @@ void HouseEvolution_determineEvolveText(int buildingId, int hasBadDesirabilityBu
 	}
 	// water
 	water = Data_Model_Houses[level].water;
-	if (water == 1 && !b->hasWaterAccess && !b->houseHasWellAccess) {
+	if (water == 1 && !b->hasWaterAccess && !b->hasWellAccess) {
 		b->data.house.evolveTextId = 31;
 		return;
 	}
