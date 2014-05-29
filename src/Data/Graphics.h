@@ -3,6 +3,7 @@
 
 #define GraphicId(index) (Data_Graphics_Main.graphicIds[index])
 #define GraphicHeight(id) (Data_Graphics_Main.index[id].height)
+#define GraphicWidth(id) (Data_Graphics_Main.index[id].width)
 #define GraphicHasAnimationSprite(id) (Data_Graphics_Main.index[id].animationSpeedId)
 #define GraphicNumAnimationSprites(id) (Data_Graphics_Main.index[id].numAnimationSprites)
 #define GraphicSpriteOffsetX(id) (Data_Graphics_Main.index[id].spriteOffsetX)

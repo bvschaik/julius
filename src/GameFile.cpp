@@ -414,14 +414,6 @@ int GameFile_loadSavedGame(const char *filename)
 	setupFromSavedGame();
 	BuildingStorage_resetBuildingIds();
 	strcpy(Data_Settings.playerName, playerNames[1]);
-	for (int i = 0; i < 1000; i++) {
-		if (Data_Walkers[i].type == Walker_Actor) {
-			printf("Actor %d state %d b %d db %d\n", i,
-				Data_Walkers[i].actionState,
-				Data_Buildings[Data_Walkers[i].buildingId].type,
-				Data_Buildings[Data_Walkers[i].destinationBuildingId].type);
-		}
-	}
 	return 1;
 }
 

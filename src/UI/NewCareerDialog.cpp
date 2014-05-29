@@ -25,6 +25,7 @@ void UI_NewCareerDialog_drawForeground()
 	Widget_Text_captureCursor();
 	Widget_Text_draw(Data_Settings.playerName, xOffset + 176, yOffset + 216, Font_NormalWhite, 0);
 	Widget_Text_drawCursor(xOffset + 176, yOffset + 217);
+	// TODO 'go' button
 }
 
 void UI_NewCareerDialog_handleMouse()

@@ -231,7 +231,9 @@ static int getRoadWithinRadius(int x, int y, int size, int radius, int *xTile, i
 {
 	FOR_XY_RADIUS(
 		if (Data_Grid_terrain[gridOffset] & Terrain_Road) {
-			STORE_XY_RADIUS(xTile, yTile);
+			if (xTile && yTile) {
+				STORE_XY_RADIUS(xTile, yTile);
+			}
 			return 1;
 		}
 	);

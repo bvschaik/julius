@@ -330,7 +330,7 @@ void UI_CityBuildings_drawWalker(int walkerId, int xOffset, int yOffset, int sel
 					Graphics_drawImage(w->cartGraphicId,
 						xOffset, yOffset - GraphicHeight(w->cartGraphicId));
 					// top icon
-					int iconGraphicId = GraphicId(ID_Graphic_FortStandards) + w->formationId - 1;
+					int iconGraphicId = GraphicId(ID_Graphic_FortStandardIcons) + w->formationId - 1;
 					Graphics_drawImage(iconGraphicId,
 						xOffset, yOffset - GraphicHeight(iconGraphicId) - GraphicHeight(w->cartGraphicId));
 				}

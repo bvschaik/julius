@@ -4,6 +4,7 @@
 #include "../Graphics.h"
 #include "../Resource.h"
 #include "../Sound.h"
+#include "../Terrain.h"
 #include "../Widget.h"
 
 #include "../Data/Building.h"
@@ -16,7 +17,24 @@
 
 static void drawVacantLot(BuildingInfoContext *c)
 {
-	// TODO
+	UI_BuildingInfo_drawWalkerImagesLocal(c);
+	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset,
+		c->widthBlocks, c->heightBlocks);
+	Widget_GameText_drawCentered(128, 0, c->xOffset, c->yOffset + 8,
+		16 * c->widthBlocks, Font_LargeBlack);
+	Widget_GameText_drawCentered(13, 1, c->xOffset, c->yOffset + 17 * c->heightBlocks - 22,
+		16 * c->widthBlocks, Font_NormalBlack);
+	UI_BuildingInfo_drawWalkerList(c);
+
+	int textId = 2;
+	if (Terrain_getClosestRoadWithinRadius(
+		Data_Buildings[c->buildingId].x,
+		Data_Buildings[c->buildingId].y, 1, 2, 0, 0)) {
+		textId = 1;
+	}
+	Widget_GameText_drawMultiline(128, textId,
+		c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 113,
+		16 * (c->widthBlocks - 4), Font_NormalBlack);
 }
 
 static void drawPopulationInfo(BuildingInfoContext *c, int yOffset)

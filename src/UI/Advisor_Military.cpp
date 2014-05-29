@@ -120,7 +120,7 @@ void UI_Advisor_Military_drawBackground(int *advisorHeight)
 	for (int i = 0; i < numLegions; i++) {
 		int formationId = Formation_getLegionFormationId(i + 1);
 		Widget_Panel_drawButtonBorder(baseOffsetX + 38, baseOffsetY + 77 + 44 * i, 560, 40, 0);
-		Graphics_drawImage(GraphicId(ID_Graphic_FortStandards) + Data_Formations[formationId].legionId,
+		Graphics_drawImage(GraphicId(ID_Graphic_FortStandardIcons) + Data_Formations[formationId].legionId,
 			baseOffsetX + 48, baseOffsetY + 82 + 44 * i);
 		Widget_GameText_draw(138, Data_Formations[formationId].legionId,
 			baseOffsetX + 100, baseOffsetY + 83 + 44 * i, Font_NormalWhite);

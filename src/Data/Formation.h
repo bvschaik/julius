@@ -3,6 +3,16 @@
 
 #define MAX_FORMATIONS 50
 
+enum {
+	FormationLayout_Tortoise = 0,
+	FormationLayout_DoubleLine1 = 1,
+	FormationLayout_DoubleLine2 = 2,
+	FormationLayout_SingleLine1 = 3,
+	FormationLayout_SingleLine2 = 4,
+	FormationLayout_Column = 5,
+	FormationLayout_MopUp = 6,
+};
+
 struct Data_Formation {
 	char inUse;
 	char ciid;
@@ -42,7 +52,7 @@ struct Data_Formation {
 	short __unknown54;
 	short __unknown56;
 	short __unknown58;
-	short __unknown5a;
+	short layoutBeforeMopUp;
 	short cursedByMars;
 	char __unknown5e;
 	char empireService;
