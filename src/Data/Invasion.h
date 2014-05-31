@@ -15,7 +15,7 @@ struct Data_InvasionWarning {
 	short gameMonthNotified;
 	short gameYearNotified;
 	int monthsToGo;
-	char invasionId;
+	unsigned char invasionId;
 	char __filler[11];
 };
 
