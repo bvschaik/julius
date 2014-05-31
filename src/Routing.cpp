@@ -696,6 +696,89 @@ static int canPlaceAqueductOnRoad(int gridOffset)
 	return 1;
 }
 
+static int canPlaceInitialRoadOrAqueduct(int gridOffset, int isAqueduct)
+{
+	if (Data_Grid_routingLandCitizen[gridOffset] == -1) {
+		// not open land, can only if:
+		// - aqueduct should be placed, and:
+		// - land is a reservoir building OR an aqueduct
+		if (!isAqueduct) {
+			return 0;
+		}
+		if (Data_Grid_terrain[gridOffset] & Terrain_Aqueduct) {
+			return 1;
+		}
+		if (Data_Grid_terrain[gridOffset] & Terrain_Building) {
+			if (Data_Buildings[Data_Grid_buildingIds[gridOffset]].type == Building_Reservoir) {
+				return 1;
+			}
+		}
+		return 0;
+	}
+	if (Data_Grid_routingLandCitizen[gridOffset] == 2) {
+		// rubble, access ramp, garden
+		return 0;
+	}
+	if (Data_Grid_routingLandCitizen[gridOffset] == -3) {
+		// is aqueduct but ??
+		if (isAqueduct) {
+			return 0;
+		}
+		if (Routing_canPlaceRoadUnderAqueduct(gridOffset)) {
+			return 1;
+		}
+		return 0;
+	}
+	return 1;
+}
+
+int Routing_getDistanceForBuildingRoadOrAqueduct(int x, int y, int isAqueduct)
+{
+	int sourceOffset = GridOffset(x, y);
+	if (!canPlaceInitialRoadOrAqueduct(sourceOffset, isAqueduct)) {
+		return 0;
+	}
+	if (Data_Grid_terrain[sourceOffset] & Terrain_Road &&
+		isAqueduct && !canPlaceAqueductOnRoad(sourceOffset)) {
+		return 0;
+	}
+	ROUTE_QUEUE(sourceOffset, -1,
+	{
+		int blocked = 0;
+		switch (Data_Grid_routingLandCitizen[nextOffset]) {
+			case -3: // aqueduct with something
+				if (isAqueduct) {
+					blocked = 1;
+				} else if (!Routing_canPlaceRoadUnderAqueduct(nextOffset)) {
+					Data_Grid_routingDistance[nextOffset] = -1;
+					blocked = 1;
+				}
+				break;
+			case 2: // rubble, garden, access ramp
+			case -1: // non-empty land
+				blocked = 1;
+				break;
+			default:
+				if (Data_Grid_terrain[nextOffset] & Terrain_Building) {
+					if (Data_Grid_routingLandCitizen[nextOffset] != -4 || !isAqueduct) {
+						blocked = 1;
+					}
+				}
+				break;
+		}
+		if (Data_Grid_terrain[nextOffset] & Terrain_Road) {
+			if (isAqueduct && !canPlaceAqueductOnRoad(nextOffset)) {
+				Data_Grid_routingDistance[nextOffset] = -1;
+				blocked = 1;
+			}
+		}
+		if (!blocked) {
+			SET_DIST_AND_ENQUEUE();
+		}
+	});
+	return 1;
+}
+
 void Routing_getDistanceForBuildingWall(int x, int y)
 {
 	int sourceOffset = GridOffset(x, y);
