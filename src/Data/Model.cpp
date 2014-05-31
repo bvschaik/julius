@@ -11,7 +11,7 @@ struct Data_Model_Difficulty Data_Model_Difficulty = {
 
 struct Data_Scenario Data_Scenario;
 
-struct Data_Event Data_Event;
+struct Data_Event Data_Event = {0};
 
 struct Data_Settings Data_Settings;
 struct Data_Settings_Map Data_Settings_Map;
@@ -64,7 +64,7 @@ struct Data_Sound_City Data_Sound_City[70];
 
 struct Data_CityView Data_CityView;
 
-struct Data_InvasionWarning Data_InvasionWarnings[101];
+struct Data_InvasionWarning Data_InvasionWarnings[MAX_INVASION_WARNINGS];
 
 struct Data_TradePrice Data_TradePrices[16];
 

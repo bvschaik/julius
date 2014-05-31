@@ -1,6 +1,8 @@
 #ifndef DATA_INVASION_H
 #define DATA_INVASION_H
 
+#define MAX_INVASION_WARNINGS 101
+
 struct Data_InvasionWarning {
 	char inUse;
 	char handled;
@@ -17,6 +19,6 @@ struct Data_InvasionWarning {
 	char __filler[11];
 };
 
-extern struct Data_InvasionWarning Data_InvasionWarnings[101];
+extern struct Data_InvasionWarning Data_InvasionWarnings[MAX_INVASION_WARNINGS];
 
 #endif

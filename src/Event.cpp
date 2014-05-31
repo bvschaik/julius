@@ -21,12 +21,13 @@
 #include "Data/Empire.h"
 #include "Data/Event.h"
 #include "Data/Grid.h"
-#include "Data/Invasion.h"
 #include "Data/Random.h"
 #include "Data/Scenario.h"
 #include "Data/Settings.h"
 #include "Data/Trade.h"
 #include "Data/Tutorial.h"
+
+#include <string.h>
 
 static void updateTimeTraveledDistantBattle();
 static void fightDistantBattle();
@@ -47,16 +48,6 @@ static const int randomEventProbability[128] = {
 	0, 7, 0, 1, 6, 0, 0, 0, 0, 0, 2, 0, 0, 4, 0, 0,
 	0, 0, 3, 0, 7, 4, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0
 };
-
-void Event_initInvasions()
-{
-	// TODO
-}
-
-void Event_handleInvasions()
-{
-	// TODO
-}
 
 void Event_handleDistantBattle()
 {
@@ -262,16 +253,6 @@ void Event_initDistantBattleCity()
 			break;
 		}
 	}
-}
-
-int Event_existsUpcomingInvasion()
-{
-	for (int i = 0; i < 101; i++) {
-		if (Data_InvasionWarnings[i].inUse && Data_InvasionWarnings[i].handled) {
-			return 1;
-		}
-	}
-	return 0;
 }
 
 void Event_initRequests()

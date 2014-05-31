@@ -1,6 +1,7 @@
 #include "CityInfo.h"
 
 #include "Building.h"
+#include "Event.h"
 #include "PlayerMessage.h"
 #include "Walker.h"
 
@@ -26,12 +27,6 @@ static void performBlessingMercury()
 static void performCurseMercury(int isLarge)
 {
 	// TODO
-}
-
-static int startLocalUprising()
-{
-	// TODO
-	return 0;
 }
 
 static int performLargeCurseMars()
@@ -83,7 +78,7 @@ static void performSmallCurse(int god)
 			performCurseMercury(0);
 			break;
 		case God_Mars:
-			if (startLocalUprising()) {
+			if (Event_startInvasionLocalUprisingFromMars()) {
 				PlayerMessage_post(1, 94, 0, 0);
 			} else {
 				PlayerMessage_post(1, 44, 0, 0);
@@ -122,7 +117,7 @@ static void performLargeCurse(int god)
 		case God_Mars:
 			if (performLargeCurseMars()) {
 				PlayerMessage_post(1, 82, 0, 0);
-				startLocalUprising();
+				Event_startInvasionLocalUprisingFromMars();
 			} else {
 				PlayerMessage_post(1, 44, 0, 0);
 			}

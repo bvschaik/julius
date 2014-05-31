@@ -400,6 +400,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\Event_Invasion.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\UI\FileDialog.cpp"
 				>
 			</File>

@@ -2,6 +2,7 @@
 #define DATA_EVENT_H
 
 extern struct Data_Event {
+	int lastInternalInvasionId;
 	int timeLimitMaxGameYear;
 	struct {
 		int gameYear;

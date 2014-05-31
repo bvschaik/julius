@@ -4,6 +4,8 @@
 void Formation_clearList();
 void Formation_clearInvasionInfo();
 
+int Formation_create(int walkerType, int formationLayout, int orientation, int x, int y);
+
 void Formation_deleteFortAndBanner(int formationId);
 
 void Formation_setMaxSoldierPerLegion();

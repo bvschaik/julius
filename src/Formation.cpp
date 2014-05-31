@@ -36,6 +36,45 @@ void Formation_clearInvasionInfo()
 	// TODO
 }
 
+int Formation_createLegion()
+{
+	// TODO
+	return 0;
+}
+
+int Formation_create(int walkerType, int layout, int orientation, int x, int y)
+{
+	int formationId = 0;
+	for (int i = 10; i < MAX_FORMATIONS; i++) {
+		if (!Data_Formations[i].inUse) {
+			formationId = i;
+			break;
+		}
+	}
+	if (!formationId) {
+		return 0;
+	}
+	struct Data_Formation *f = &Data_Formations[formationId];
+	f->x = x;
+	f->y = y;
+	f->inUse = 1;
+	f->isLegion = 0;
+	f->ciid = 0;
+	f->walkerType = walkerType;
+	f->legionId = formationId - 10;
+	if (layout == 10) {
+		if (orientation == 0 || orientation == 4) {
+			f->layout = FormationLayout_DoubleLine1;
+		} else {
+			f->layout = FormationLayout_DoubleLine2;
+		}
+	} else {
+		f->layout = layout;
+	}
+	f->morale = 100;
+	return formationId;
+}
+
 void Formation_deleteFortAndBanner(int formationId)
 {
 	if (formationId > 0 && Data_Formations[formationId].inUse) {

@@ -131,6 +131,7 @@ enum {
 	WalkerActionState_146_MarketBuyer = 146,
 	WalkerActionState_149_Corpse = 149,
 	WalkerActionState_150_Attacking = 150,
+	WalkerActionState_151_EnemyInitial = 151,
 	WalkerActionState_159_AttackingNative = 159,
 	WalkerActionState_191_FishingBoatGoingToFish = 191,
 	WalkerActionState_192_FishingBoatFishing = 192,

@@ -244,10 +244,14 @@ enum {
 	EnemyType_Etruscan = 7,
 	EnemyType_Greek = 8,
 	EnemyType_Egyptian = 9,
-	EnemyType_Carthaginian = 10
+	EnemyType_Carthaginian = 10,
+	EnemyType_Caesar = 11
 };
 
 enum {
+	InvasionType_LocalUprising = 1,
+	InvasionType_EnemyArmy = 2,
+	InvasionType_Caesar = 3,
 	InvasionType_DistantBattle = 4,
 };
 /*
