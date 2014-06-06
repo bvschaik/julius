@@ -84,6 +84,7 @@ enum {
 	ID_Graphic_ColosseumShow = 193,
 	ID_Graphic_RatingsBackground = 195,
 	ID_Graphic_FortFormations = 197,
+	ID_Graphic_TriumphalArch = 205,
 	ID_Graphic_TerrainWaterShore = 207,
 	ID_Graphic_BorderedButton = 208,
 	ID_Graphic_Hippodrome1 = 213,

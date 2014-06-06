@@ -23,6 +23,7 @@ GraphicsClipInfo *Graphics_getClipInfo(int xOffset, int yOffset, int width, int 
 
 void Graphics_drawImage(int graphicId, int xOffset, int yOffset);
 void Graphics_drawImageMasked(int graphicId, int xOffset, int yOffset, Color colorMask);
+void Graphics_drawImageBlend(int graphicId, int xOffset, int yOffset, Color color);
 void Graphics_drawLetter(int graphicId, int xOffset, int yOffset, Color color);
 void Graphics_drawIsometricFootprint(int graphicId, int xOffset, int yOffset, Color colorMask);
 void Graphics_drawIsometricTop(int graphicId, int xOffset, int yOffset, Color colorMask);

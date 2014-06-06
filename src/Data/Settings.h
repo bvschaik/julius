@@ -55,9 +55,11 @@ extern struct Data_Settings_Map {
 		int x;
 		int y;
 	} camera;
-	int __unknown;
-	int x;
-	int y;
+	struct {
+		int gridOffset;
+		int x;
+		int y;
+	} current;
 	int width;
 	int height;
 	int gridStartOffset;

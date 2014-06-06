@@ -542,11 +542,12 @@ static void UI_CityBuildings_drawHippodromeAndElevatedWalkers(int selectedWalker
 
 static void updateCityViewCoords()
 {
-	Data_Settings_Map.x = Data_Settings_Map.y = 0;
-	int gridOffset = CityView_pixelCoordsToGridOffset(Data_Mouse.x, Data_Mouse.y);
+	Data_Settings_Map.current.x = Data_Settings_Map.current.y = 0;
+	int gridOffset = Data_Settings_Map.current.gridOffset =
+		CityView_pixelCoordsToGridOffset(Data_Mouse.x, Data_Mouse.y);
 	if (gridOffset) {
-		Data_Settings_Map.x = (gridOffset - Data_Settings_Map.gridStartOffset) % 162;
-		Data_Settings_Map.y = (gridOffset - Data_Settings_Map.gridStartOffset) / 162;
+		Data_Settings_Map.current.x = (gridOffset - Data_Settings_Map.gridStartOffset) % 162;
+		Data_Settings_Map.current.y = (gridOffset - Data_Settings_Map.gridStartOffset) / 162;
 	}
 }
 

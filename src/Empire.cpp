@@ -97,6 +97,9 @@ void Empire_initCities()
 		}
 		route->__unused2 = 10;
 		route->traderEntryDelay = 4;
+		route->traderWalkerIds[0] = 0;
+		route->traderWalkerIds[1] = 0;
+		route->traderWalkerIds[2] = 0;
 		route->empireObjectId = i;
 	}
 }
@@ -186,7 +189,7 @@ void Empire_checkScrollBoundaries()
 int Empire_cityBuysResource(int objectId, int resource)
 {
 	for (int i = 0; i < 10; i++) {
-		if (Data_Empire_Objects[objectId].citySells[i] == resource) {
+		if (Data_Empire_Objects[objectId].cityBuys[i] == resource) {
 			return 1;
 		}
 	}
@@ -196,7 +199,7 @@ int Empire_cityBuysResource(int objectId, int resource)
 int Empire_citySellsResource(int objectId, int resource)
 {
 	for (int i = 0; i < 10; i++) {
-		if (Data_Empire_Objects[objectId].cityBuys[i] == resource) {
+		if (Data_Empire_Objects[objectId].citySells[i] == resource) {
 			return 1;
 		}
 	}

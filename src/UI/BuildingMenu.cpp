@@ -168,47 +168,28 @@ static void drawMenuButtons()
 	for (int i = 0; i < menu.numItems; i++) {
 		itemIndex = SidebarMenu_getNextBuildingItemIndex(menu.selectedSubmenu, itemIndex);
 		int textOffset = 0;
-		int isSubmenu = 1;
-		switch (menu.selectedSubmenu) {
-			case 14: textOffset = -1; break;
-			case 15: textOffset = 4; break;
-			case 16: textOffset = 6; break;
-			case 17: textOffset = 9; break;
-			case 18: textOffset = 17; break;
-			case 19: textOffset = 19; break;
-			case 26: textOffset = 22; break;
-			default: isSubmenu = 0; break;
+		Widget_Panel_drawSmallLabelButton(6, xOffset - 266, menu.yOffset + 110 + 24 * i,
+			16, 1, buildMenuFocusButtonId == i + 1 ? 1 : 2);
+		int buildingType = SidebarMenu_getBuildingType(menu.selectedSubmenu, itemIndex);
+		Widget_GameText_drawCentered(28, buildingType,
+			xOffset - 266, menu.yOffset + 113 +  + 24 * i, 176, Font_NormalGreen);
+		if (buildingType == Building_DraggableReservoir) {
+			buildingType = Building_Reservoir;
 		}
-		if (isSubmenu) {
-			Widget_Panel_drawSmallLabelButton(6, xOffset - 170, menu.yOffset + 110 + 24 * i,
-				10, 1, buildMenuFocusButtonId == i + 1 ? 1 : 2);
-			Widget_GameText_drawCentered(48,
-				SidebarMenu_getBuildingType(menu.selectedSubmenu, itemIndex),
-				xOffset - 170, menu.yOffset + 113 +  + 24 * i, 160, Font_NormalGreen);
-		} else {
-			Widget_Panel_drawSmallLabelButton(6, xOffset - 266, menu.yOffset + 110 + 24 * i,
-				16, 1, buildMenuFocusButtonId == i + 1 ? 1 : 2);
-			int buildingType = SidebarMenu_getBuildingType(menu.selectedSubmenu, itemIndex);
-			Widget_GameText_drawCentered(28, buildingType,
-				xOffset - 266, menu.yOffset + 113 +  + 24 * i, 176, Font_NormalGreen);
-			if (buildingType == Building_DraggableReservoir) {
-				buildingType = Building_Reservoir;
-			}
-			int cost = Data_Model_Buildings[buildingType].cost;
-			if (buildingType == Building_FortGround__) {
-				cost = 0;
-			}
-			if (cost) {
-				Widget_Text_drawNumber(cost, '@', "Dn",
-					xOffset - 82, menu.yOffset + 114 + 24 * i, Font_NormalGreen);
-			}
+		int cost = Data_Model_Buildings[buildingType].cost;
+		if (buildingType == Building_FortGround__) {
+			cost = 0;
+		}
+		if (cost) {
+			Widget_Text_drawNumber(cost, '@', "Dn",
+				xOffset - 82, menu.yOffset + 114 + 24 * i, Font_NormalGreen);
 		}
 	}
 }
 
 void UI_BuildingMenu_handleMouse()
 {
-	if (Data_Mouse.right.wentDown) {
+	if (Data_Mouse.right.wentUp) {
 		UI_Window_goTo(Window_City);
 		return;
 	}

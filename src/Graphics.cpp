@@ -15,7 +15,8 @@
 enum ColorType {
 	ColorType_Set,
 	ColorType_And,
-	ColorType_None
+	ColorType_None,
+	ColorType_Blend
 };
 
 static struct ClipRectangle {
@@ -282,6 +283,34 @@ void Graphics_drawImageMasked(int graphicId, int xOffset, int yOffset, Color col
 	}
 }
 
+void Graphics_drawImageBlend(int graphicId, int xOffset, int yOffset, Color color)
+{
+	Data_Graphics_Index *index = &Data_Graphics_Main.index[graphicId];
+	const char *data;
+	if (index->isExternal) {
+		data = Loader_Graphics_loadExternalImagePixelData(graphicId);
+		if (!data) {
+			printf("ERR: unable to load external image %d\n", graphicId);
+			return;
+		}
+	} else {
+		data = &Data_Graphics_PixelData.main[index->offset];
+	}
+
+	if (index->type == 30) { // isometric
+		printf("ERROR: use Graphics_drawIsometricFootprint for isometric!\n");
+		return;
+	}
+
+	if (index->isFullyCompressed) {
+		drawImageCompressed(index, (unsigned char*)data, xOffset, yOffset, index->height,
+			color, ColorType_Blend);
+	} else {
+		drawImageUncompressed(index, (Color*)data, xOffset, yOffset,
+			color, ColorType_Blend);
+	}
+}
+
 void Graphics_drawLetter(int graphicId, int xOffset, int yOffset, Color color)
 {
 	Data_Graphics_Index *index = &Data_Graphics_Main.index[graphicId];
@@ -317,8 +346,13 @@ static void drawImageUncompressed(Data_Graphics_Index *index, const Color *data,
 		data += clip->clippedPixelsLeft;
 		for (int x = clip->clippedPixelsLeft; x < index->width - clip->clippedPixelsRight; x++) {
 			if (*data != Color_Transparent) {
-				ScreenPixel(xOffset + x, yOffset + y) =
-					ColorLookup[type == ColorType_None ? *data : (type == ColorType_Set ? color : (color & *data))];
+				ScreenColor *dst = &ScreenPixel(xOffset + x, yOffset + y);
+				switch (type) {
+					case ColorType_None: *dst = ColorLookup[*data]; break;
+					case ColorType_Set: *dst = ColorLookup[color]; break;
+					case ColorType_And: *dst = ColorLookup[*data & color]; break;
+					case ColorType_Blend: *dst &= ColorLookup[color];
+				}
 			}
 			data++;
 		}
@@ -351,8 +385,13 @@ static void drawImageCompressed(Data_Graphics_Index *index, const unsigned char 
 				Color *pixels = (Color*) data;
 				while (b) {
 					if (x >= clip->clippedPixelsLeft && x < index->width - clip->clippedPixelsRight) {
-						ScreenPixel(xOffset + x, yOffset + y) =
-							ColorLookup[type == ColorType_None ? *pixels : (type == ColorType_Set ? color : (color & *pixels))];
+						ScreenColor *dst = &ScreenPixel(xOffset + x, yOffset + y);
+						switch (type) {
+							case ColorType_None: *dst = ColorLookup[*pixels]; break;
+							case ColorType_Set: *dst = ColorLookup[color]; break;
+							case ColorType_And: *dst = ColorLookup[*pixels & color]; break;
+							case ColorType_Blend: *dst &= ColorLookup[color];
+						}
 					}
 					x++;
 					pixels++;

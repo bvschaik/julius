@@ -216,6 +216,18 @@ int Terrain_hasRoadAccessGranary(int x, int y, int *roadX, int *roadY)
 	return 1;
 }
 
+int Terrain_getOrientationGatehouse(int x, int y)
+{
+	// TODO
+	return 0;
+}
+
+int Terrain_getOrientationTriumphalArch(int x, int y)
+{
+	// TODO
+	return 0;
+}
+
 static int getRoadWithinRadius(int x, int y, int size, int radius, int *xTile, int *yTile);
 int Terrain_getClosestRoadWithinRadius(int x, int y, int size, int radius, int *xTile, int *yTile)
 {
