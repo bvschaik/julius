@@ -370,4 +370,16 @@ extern struct Data_BuildingList {
 	} small;
 } Data_BuildingList;
 
+#define DATA_BUILDINGLIST_SMALL_ENQUEUE(n) \
+	Data_BuildingList.small.items[Data_BuildingList.small.numItems++] = i;\
+	if (Data_BuildingList.small.numItems >= 500) {\
+		Data_BuildingList.small.numItems = 499;\
+	}
+
+#define DATA_BUILDINGLIST_SMALL_FOREACH(block) \
+	for (int i = 0; i < Data_BuildingList.small.numItems; i++) {\
+		int item = Data_BuildingList.small.items[i];\
+		block;\
+	}
+
 #endif

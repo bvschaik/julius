@@ -110,7 +110,7 @@ static void drawButtons()
 		baseOffsetX + 120 + width, baseOffsetY + 279);
 	
 	// greying out of buttons
-	if (Data_CityInfo.treasury <= -5000) {
+	if (Data_CityInfo.treasury <= MIN_TREASURY) {
 		Graphics_shadeRect(baseOffsetX + 104, baseOffsetY + 218, 426, 22, 0);
 		Graphics_shadeRect(baseOffsetX + 104, baseOffsetY + 248, 426, 22, 0);
 		Graphics_shadeRect(baseOffsetX + 104, baseOffsetY + 278, 426, 22, 0);
@@ -142,7 +142,7 @@ static void buttonGod(int god, int param2)
 
 static void buttonSize(int size, int param2)
 {
-	if (Data_CityInfo.treasury > -5000) {
+	if (Data_CityInfo.treasury > MIN_TREASURY) {
 		if (size != 3 || !Data_CityInfo.festivalNotEnoughWine) {
 			Data_CityInfo.festivalSize = size;
 			UI_Window_requestRefresh();
@@ -162,7 +162,7 @@ static void buttonClose(int param1, int param2)
 
 static void buttonHoldFestival(int param1, int param2)
 {
-	if (Data_CityInfo.treasury <= -5000) {
+	if (Data_CityInfo.treasury <= MIN_TREASURY) {
 		return;
 	}
 	Data_CityInfo.plannedFestivalGod = Data_CityInfo.festivalGod;

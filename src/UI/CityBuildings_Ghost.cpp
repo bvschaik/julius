@@ -1,8 +1,9 @@
 #include "CityBuildings_private.h"
-//#include "../Data/Constants.h"
 
 #include "../Terrain.h"
 #include "../Time.h"
+
+#include "../Data/Formation.h"
 
 static void drawBuildingGhostDraggableReservoir();
 static void drawBuildingGhostAqueduct();
@@ -10,6 +11,7 @@ static void drawBuildingGhostFountain();
 static void drawBuildingGhostBathhouse();
 static void drawBuildingGhostBridge();
 static void drawBuildingGhostFort();
+static void drawBuildingGhostHippodrome();
 static void drawBuildingGhostShipyardWharf();
 static void drawBuildingGhostDock();
 static void drawBuildingGhostRoad();
@@ -54,6 +56,14 @@ static const int tileGridOffsets[4][25] = {
 	3, -486, -159, -485, -321, -484, -483,
 	4, -648, -158, -647, -320, -646, -482, -645, -644},
 };
+
+static const int fortGroundGridOffsets[4] = {-159, -158, 4, 3};
+static const int fortGroundXViewOffsets[4] = {120, 90, -120, -90};
+static const int fortGroundYViewOffsets[4] = {30, -75, -60, 45};
+
+static const int hippodromeXViewOffsets[4] = {150, 150, -150, -150};
+static const int hippodromeYViewOffsets[4] = {75, -75, -75, 75};
+
 void UI_CityBuildings_drawSelectedBuildingGhost()
 {
 	if (!Data_CityView.selectedTile.gridOffset || Data_CityView.isScrolling) {
@@ -84,6 +94,9 @@ void UI_CityBuildings_drawSelectedBuildingGhost()
 		case Building_FortJavelin:
 		case Building_FortMounted:
 			drawBuildingGhostFort();
+			break;
+		case Building_Hippodrome:
+			drawBuildingGhostHippodrome();
 			break;
 		case Building_Shipyard:
 		case Building_Wharf:
@@ -209,7 +222,7 @@ static void drawBuildingGhostDefault()
 	}
 
 	int numTiles = buildingSize * buildingSize;
-	int orientationIndex = Data_Settings_Map.orientation;
+	int orientationIndex = Data_Settings_Map.orientation / 2;
 	for (int i = 0; i < numTiles; i++) {
 		int tileOffset = gridOffset + tileGridOffsets[orientationIndex][i];
 		int terrain = Data_Grid_terrain[tileOffset] & Terrain_NotClear;
@@ -226,7 +239,7 @@ static void drawBuildingGhostDefault()
 	if (type == Building_Plaza && !(Data_Grid_terrain[gridOffset] & Terrain_Road)) {
 		placementObstructed = 1;
 	}
-	if (Data_CityInfo.treasury <= -5000) {
+	if (Data_CityInfo.treasury <= MIN_TREASURY) {
 		fullyObstructed = 1;
 		placementObstructed = 1;
 	}
@@ -334,7 +347,7 @@ static void drawBuildingGhostFountain()
 	int yOffset = Data_CityView.selectedTile.yOffsetInPixels;
 
 	int graphicId = GraphicId(Constant_BuildingProperties[Building_Fountain].graphicCategory);
-	if (Data_CityInfo.treasury <= -5000) {
+	if (Data_CityInfo.treasury <= MIN_TREASURY) {
 		drawFlatTile(xOffset, yOffset, Color_MaskRed);
 	} else {
 		Graphics_drawIsometricFootprint(graphicId, xOffset, yOffset, Color_MaskGreen);
@@ -349,7 +362,60 @@ static void drawBuildingGhostFountain()
 
 static void drawBuildingGhostBathhouse()
 {
-	// TODO
+	int fullyObstructed = 0;
+	int placementObstructed = 0;
+	int gridOffset = Data_Settings_Map.current.gridOffset;
+	int numTiles = 4;
+	int orientationIndex = Data_Settings_Map.orientation / 2;
+	for (int i = 0; i < numTiles; i++) {
+		int tileOffset = gridOffset + tileGridOffsets[orientationIndex][i];
+		if (Data_Grid_terrain[tileOffset] & Terrain_NotClear) {
+			placementObstructed = 1;
+		}
+		if (Data_Grid_walkerIds[tileOffset]) {
+			placementObstructed = 1;
+		}
+	}
+	if (Data_CityInfo.treasury <= MIN_TREASURY) {
+		fullyObstructed = 1;
+		placementObstructed = 1;
+	}
+
+	int xOffsetBase = Data_CityView.selectedTile.xOffsetInPixels;
+	int yOffsetBase = Data_CityView.selectedTile.yOffsetInPixels;
+	if (placementObstructed) {
+		for (int i = 0; i < numTiles; i++) {
+			int tileOffset = gridOffset + tileGridOffsets[orientationIndex][i];
+			int tileObstructed = Data_Grid_terrain[tileOffset] & Terrain_NotClear;
+			if (Data_Grid_walkerIds[tileOffset]) {
+				tileObstructed = 1;
+			}
+			int xOffset = xOffsetBase + xViewOffsets[i];
+			int yOffset = yOffsetBase + yViewOffsets[i];
+			if (fullyObstructed || tileObstructed) {
+				drawFlatTile(xOffset, yOffset, Color_MaskRed);
+			} else {
+				drawFlatTile(xOffset, yOffset, Color_MaskGreen);
+			}
+		}
+	} else {
+		int graphicId = GraphicId(Constant_BuildingProperties[Building_Bathhouse].graphicCategory);
+		Graphics_drawIsometricFootprint(graphicId, xOffsetBase, yOffsetBase, Color_MaskGreen);
+		Graphics_drawIsometricTop(graphicId, xOffsetBase, yOffsetBase, Color_MaskGreen);
+		int hasWater = 0;
+		for (int i = 0; i < numTiles; i++) { // BUGFIXED: was not accurate on rotated maps
+			int tileOffset = gridOffset + tileGridOffsets[orientationIndex][i];
+			if (Data_Grid_terrain[tileOffset] & Terrain_ReservoirRange) {
+				hasWater = 1;
+			}
+		}
+		if (hasWater) {
+			Graphics_drawImageMasked(graphicId - 1,
+				xOffsetBase + GraphicSpriteOffsetX(graphicId),
+				yOffsetBase + GraphicSpriteOffsetY(graphicId),
+				Color_MaskGreen);
+		}
+	}
 }
 
 static void drawBuildingGhostBridge()
@@ -359,7 +425,242 @@ static void drawBuildingGhostBridge()
 
 static void drawBuildingGhostFort()
 {
-	// TODO
+	int fullyObstructed = 0;
+	int placementObstructed = 0;
+	if (Data_Formation_Extra.numLegions >= 6 || Data_CityInfo.treasury <= MIN_TREASURY) {
+		fullyObstructed = 1;
+		placementObstructed = 1;
+	}
+
+	int numTilesFort = Constant_BuildingProperties[Building_FortGround__].size;
+	numTilesFort *= numTilesFort;
+	int numTilesGround = Constant_BuildingProperties[Building_FortGround].size;
+	numTilesGround *= numTilesGround;
+
+	int orientationIndex = Data_Settings_Map.orientation / 2;
+	int gridOffsetFort = Data_Settings_Map.current.gridOffset;
+	int gridOffsetGround = gridOffsetFort + fortGroundGridOffsets[orientationIndex];
+
+	for (int i = 0; i < numTilesFort; i++) {
+		int tileOffset = gridOffsetFort + tileGridOffsets[orientationIndex][i];
+		if (Data_Grid_terrain[tileOffset] & Terrain_NotClear) {
+			placementObstructed = 1;
+		}
+	}
+	for (int i = 0; i < numTilesGround; i++) {
+		int tileOffset = gridOffsetGround + tileGridOffsets[orientationIndex][i];
+		if (Data_Grid_terrain[tileOffset] & Terrain_NotClear) {
+			placementObstructed = 1;
+		}
+	}
+
+	int xOffsetBase = Data_CityView.selectedTile.xOffsetInPixels;
+	int yOffsetBase = Data_CityView.selectedTile.yOffsetInPixels;
+	int xOffsetGround = xOffsetBase + fortGroundXViewOffsets[orientationIndex];
+	int yOffsetGround = yOffsetBase + fortGroundYViewOffsets[orientationIndex];
+
+	if (placementObstructed) {
+		for (int i = 0; i < numTilesFort; i++) {
+			int tileOffset = gridOffsetFort + tileGridOffsets[orientationIndex][i];
+			int tileObstructed = 0;
+			if (Data_Grid_terrain[tileOffset] & Terrain_NotClear) {
+				tileObstructed = 1;
+			}
+			int xOffset = xOffsetBase + xViewOffsets[i];
+			int yOffset = yOffsetBase + yViewOffsets[i];
+			if (fullyObstructed || tileObstructed) {
+				drawFlatTile(xOffset, yOffset, Color_MaskRed);
+			} else {
+				drawFlatTile(xOffset, yOffset, Color_MaskGreen);
+			}
+		}
+		for (int i = 0; i < numTilesGround; i++) {
+			int tileOffset = gridOffsetGround + tileGridOffsets[orientationIndex][i];
+			int tileObstructed = 0;
+			if (Data_Grid_terrain[tileOffset] & Terrain_NotClear) {
+				tileObstructed = 1;
+			}
+			int xOffset = xOffsetGround + xViewOffsets[i];
+			int yOffset = yOffsetGround + yViewOffsets[i];
+			if (fullyObstructed || tileObstructed) {
+				drawFlatTile(xOffset, yOffset, Color_MaskRed);
+			} else {
+				drawFlatTile(xOffset, yOffset, Color_MaskGreen);
+			}
+		}
+	} else {
+		int graphicId = GraphicId(ID_Graphic_Fort);
+		if (orientationIndex == 0 || orientationIndex == 3) {
+			// draw fort first
+			Graphics_drawIsometricFootprint(graphicId, xOffsetBase, yOffsetBase, Color_MaskGreen);
+			Graphics_drawIsometricTop(graphicId, xOffsetBase, yOffsetBase, Color_MaskGreen);
+			// then ground
+			Graphics_drawIsometricFootprint(graphicId + 1, xOffsetGround, yOffsetGround, Color_MaskGreen);
+			Graphics_drawIsometricTop(graphicId + 1, xOffsetGround, yOffsetGround, Color_MaskGreen);
+		} else {
+			// draw ground first
+			Graphics_drawIsometricFootprint(graphicId + 1, xOffsetGround, yOffsetGround, Color_MaskGreen);
+			Graphics_drawIsometricTop(graphicId + 1, xOffsetGround, yOffsetGround, Color_MaskGreen);
+			// then fort
+			Graphics_drawIsometricFootprint(graphicId, xOffsetBase, yOffsetBase, Color_MaskGreen);
+			Graphics_drawIsometricTop(graphicId, xOffsetBase, yOffsetBase, Color_MaskGreen);
+		}
+	}
+}
+
+static void drawBuildingGhostHippodrome()
+{
+	int fullyObstructed = 0;
+	int placementObstructed = 0;
+	if (Data_CityInfo.buildingHippodromePlaced || Data_CityInfo.treasury <= MIN_TREASURY) {
+		fullyObstructed = 1;
+		placementObstructed = 1;
+	}
+	int numTiles = 25;
+	int orientationIndex = Data_Settings_Map.orientation / 2;
+	int gridOffset1 = Data_Settings_Map.current.gridOffset;
+	int gridOffset2 = gridOffset1 + 5;
+	int gridOffset3 = gridOffset1 + 10;
+
+	for (int i = 0; i < numTiles; i++) {
+		int tileOffset = gridOffset1 + tileGridOffsets[orientationIndex][i];
+		if (Data_Grid_terrain[tileOffset] & Terrain_NotClear) {
+			placementObstructed = 1;
+		}
+	}
+	for (int i = 0; i < numTiles; i++) {
+		int tileOffset = gridOffset2 + tileGridOffsets[orientationIndex][i];
+		if (Data_Grid_terrain[tileOffset] & Terrain_NotClear) {
+			placementObstructed = 1;
+		}
+	}
+	for (int i = 0; i < numTiles; i++) {
+		int tileOffset = gridOffset3 + tileGridOffsets[orientationIndex][i];
+		if (Data_Grid_terrain[tileOffset] & Terrain_NotClear) {
+			placementObstructed = 1;
+		}
+	}
+
+	int xOffsetBase1 = Data_CityView.selectedTile.xOffsetInPixels;
+	int yOffsetBase1 = Data_CityView.selectedTile.yOffsetInPixels;
+	int xOffsetBase2 = xOffsetBase1 + hippodromeXViewOffsets[orientationIndex];
+	int yOffsetBase2 = yOffsetBase1 + hippodromeYViewOffsets[orientationIndex];
+	int xOffsetBase3 = xOffsetBase2 + hippodromeXViewOffsets[orientationIndex];
+	int yOffsetBase3 = yOffsetBase2 + hippodromeYViewOffsets[orientationIndex];
+	if (placementObstructed) {
+		for (int i = 0; i < numTiles; i++) {
+			int tileOffset = gridOffset1 + tileGridOffsets[orientationIndex][i];
+			int tileObstructed = 0;
+			if (Data_Grid_terrain[tileOffset] & Terrain_NotClear) {
+				tileObstructed = 1;
+			}
+			int xOffset = xOffsetBase1 + xViewOffsets[i];
+			int yOffset = yOffsetBase1 + yViewOffsets[i];
+			if (fullyObstructed || tileObstructed) {
+				drawFlatTile(xOffset, yOffset, Color_MaskRed);
+			} else {
+				drawFlatTile(xOffset, yOffset, Color_MaskGreen);
+			}
+		}
+		for (int i = 0; i < numTiles; i++) {
+			int tileOffset = gridOffset2 + tileGridOffsets[orientationIndex][i];
+			int tileObstructed = 0;
+			if (Data_Grid_terrain[tileOffset] & Terrain_NotClear) {
+				tileObstructed = 1;
+			}
+			int xOffset = xOffsetBase2 + xViewOffsets[i];
+			int yOffset = yOffsetBase2 + yViewOffsets[i];
+			if (fullyObstructed || tileObstructed) {
+				drawFlatTile(xOffset, yOffset, Color_MaskRed);
+			} else {
+				drawFlatTile(xOffset, yOffset, Color_MaskGreen);
+			}
+		}
+		for (int i = 0; i < numTiles; i++) {
+			int tileOffset = gridOffset3 + tileGridOffsets[orientationIndex][i];
+			int tileObstructed = 0;
+			if (Data_Grid_terrain[tileOffset] & Terrain_NotClear) {
+				tileObstructed = 1;
+			}
+			int xOffset = xOffsetBase3 + xViewOffsets[i];
+			int yOffset = yOffsetBase3 + yViewOffsets[i];
+			if (fullyObstructed || tileObstructed) {
+				drawFlatTile(xOffset, yOffset, Color_MaskRed);
+			} else {
+				drawFlatTile(xOffset, yOffset, Color_MaskGreen);
+			}
+		}
+	} else {
+		if (orientationIndex == 0) {
+			int graphicId = GraphicId(ID_Graphic_Hippodrome2);
+			// part 1
+			Graphics_drawIsometricFootprint(graphicId,
+				xOffsetBase1, yOffsetBase1, Color_MaskGreen);
+			Graphics_drawIsometricTop(graphicId,
+				xOffsetBase1, yOffsetBase1, Color_MaskGreen);
+			// part 2
+			Graphics_drawIsometricFootprint(graphicId + 2,
+				xOffsetBase2, yOffsetBase2, Color_MaskGreen);
+			Graphics_drawIsometricTop(graphicId + 2,
+				xOffsetBase2, yOffsetBase2, Color_MaskGreen);
+			// part 3
+			Graphics_drawIsometricFootprint(graphicId + 4,
+				xOffsetBase3, yOffsetBase3, Color_MaskGreen);
+			Graphics_drawIsometricTop(graphicId + 4,
+				xOffsetBase3, yOffsetBase3, Color_MaskGreen);
+		} else if (orientationIndex == 1) {
+			int graphicId = GraphicId(ID_Graphic_Hippodrome1);
+			// part 3
+			Graphics_drawIsometricFootprint(graphicId,
+				xOffsetBase3, yOffsetBase3, Color_MaskGreen);
+			Graphics_drawIsometricTop(graphicId,
+				xOffsetBase3, yOffsetBase3, Color_MaskGreen);
+			// part 2
+			Graphics_drawIsometricFootprint(graphicId + 2,
+				xOffsetBase2, yOffsetBase2, Color_MaskGreen);
+			Graphics_drawIsometricTop(graphicId + 2,
+				xOffsetBase2, yOffsetBase2, Color_MaskGreen);
+			// part 1
+			Graphics_drawIsometricFootprint(graphicId + 4,
+				xOffsetBase1, yOffsetBase1, Color_MaskGreen);
+			Graphics_drawIsometricTop(graphicId + 4,
+				xOffsetBase1, yOffsetBase1, Color_MaskGreen);
+		} else if (orientationIndex == 2) {
+			int graphicId = GraphicId(ID_Graphic_Hippodrome2);
+			// part 1
+			Graphics_drawIsometricFootprint(graphicId + 4,
+				xOffsetBase1, yOffsetBase1, Color_MaskGreen);
+			Graphics_drawIsometricTop(graphicId + 4,
+				xOffsetBase1, yOffsetBase1, Color_MaskGreen);
+			// part 2
+			Graphics_drawIsometricFootprint(graphicId + 2,
+				xOffsetBase2, yOffsetBase2, Color_MaskGreen);
+			Graphics_drawIsometricTop(graphicId + 2,
+				xOffsetBase2, yOffsetBase2, Color_MaskGreen);
+			// part 3
+			Graphics_drawIsometricFootprint(graphicId,
+				xOffsetBase3, yOffsetBase3, Color_MaskGreen);
+			Graphics_drawIsometricTop(graphicId,
+				xOffsetBase3, yOffsetBase3, Color_MaskGreen);
+		} else if (orientationIndex == 3) {
+			int graphicId = GraphicId(ID_Graphic_Hippodrome1);
+			// part 3
+			Graphics_drawIsometricFootprint(graphicId + 4,
+				xOffsetBase3, yOffsetBase3, Color_MaskGreen);
+			Graphics_drawIsometricTop(graphicId + 4,
+				xOffsetBase3, yOffsetBase3, Color_MaskGreen);
+			// part 2
+			Graphics_drawIsometricFootprint(graphicId + 2,
+				xOffsetBase2, yOffsetBase2, Color_MaskGreen);
+			Graphics_drawIsometricTop(graphicId + 2,
+				xOffsetBase2, yOffsetBase2, Color_MaskGreen);
+			// part 1
+			Graphics_drawIsometricFootprint(graphicId,
+				xOffsetBase1, yOffsetBase1, Color_MaskGreen);
+			Graphics_drawIsometricTop(graphicId,
+				xOffsetBase1, yOffsetBase1, Color_MaskGreen);
+		}
+	}
 }
 
 static void drawBuildingGhostShipyardWharf()

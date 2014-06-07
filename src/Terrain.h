@@ -33,6 +33,8 @@ int Terrain_allHousesWithinWellRadiusHaveFountain(int buildingId, int radius);
 void Terrain_markNativeLand(int x, int y, int size, int radius);
 int Terrain_hasBuildingOnNativeLand(int x, int y, int size, int radius);
 
+void Terrain_markBuildingsWithinWellRadius(int buildingId, int radius);
+
 void Terrain_initDistanceRing();
 int Terrain_isAllRockAndTreesAtDistanceRing(int x, int y, int distance);
 int Terrain_isAllMeadowAtDistanceRing(int x, int y, int distance);

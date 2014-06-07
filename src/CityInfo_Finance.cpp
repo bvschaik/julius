@@ -109,7 +109,7 @@ static void payMonthlyInterest()
 
 static void payMonthlySalary()
 {
-	if (Data_CityInfo.treasury > -5000) {
+	if (Data_CityInfo.treasury > MIN_TREASURY) {
 		Data_CityInfo.financeSalaryPaidThisYear += Data_CityInfo.salaryAmount;
 		Data_CityInfo.personalSavings += Data_CityInfo.salaryAmount;
 		Data_CityInfo.treasury -= Data_CityInfo.salaryAmount;

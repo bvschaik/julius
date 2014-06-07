@@ -86,10 +86,7 @@ static void determineMeetingCenter()
 	Data_BuildingList.small.numItems = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		if (Data_Buildings[i].inUse == 1 && Data_Buildings[i].type == Building_NativeMeeting) {
-			Data_BuildingList.small.items[Data_BuildingList.small.numItems++] = i;
-			if (Data_BuildingList.small.numItems >= 500) {
-				Data_BuildingList.small.numItems = 499;
-			}
+			DATA_BUILDINGLIST_SMALL_ENQUEUE(i);
 		}
 	}
 	if (Data_BuildingList.small.numItems <= 0) {

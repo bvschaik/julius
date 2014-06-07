@@ -15,6 +15,7 @@
 #include "Sound.h"
 #include "TerrainGraphics.h"
 #include "Trader.h"
+#include "WaterManagement.h"
 #include "UI/AllWindows.h"
 #include "UI/Sidebar.h"
 #include "UI/Window.h"
@@ -54,8 +55,8 @@ void GameTick_advance()
 		case 23: HousePopulation_updateMigration(); break;
 		case 24: HousePopulation_evictOvercrowded(); break;
 		case 25: CityInfo_Labor_update(); break;
-		case 27: break; // TODO reservoir/fountain access
-		case 28: break; // TODO house water access
+		case 27: WaterManagement_updateReservoirFountain(); break;
+		case 28: WaterManagement_updateHouseWaterAccess(); break;
 		case 29: break; // TODO formations 1
 		case 30: UI_Sidebar_requestMinimapRefresh(); break;
 		case 31: break; // TODO walker generation
@@ -204,7 +205,7 @@ static void advanceYear()
 	CityInfo_Population_requestYearlyUpdate();
 	CityInfo_Finance_handleYearChange();
 	Empire_resetYearlyTradeAmounts();
-	//TODO j_fun_tick_updateFireSpreadDirection();
+	WaterManagement_updateFireSpreadDirection();
 	CityInfo_Ratings_calculate(1);
 	Data_CityInfo.godBlessingNeptuneDoubleTrade = 0;
 }

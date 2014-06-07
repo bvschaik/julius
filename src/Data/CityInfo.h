@@ -1,6 +1,8 @@
 #ifndef DATA_CITYINFO_H
 #define DATA_CITYINFO_H
 
+#define MIN_TREASURY -5000
+
 extern struct Data_CityInfo {
 	char __otherPlayer[18068];
 	char __unknown_00a0;
