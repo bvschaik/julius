@@ -30,4 +30,6 @@ void Formation_dispatchLegionsToDistantBattle();
 void Formation_legionsReturnFromDistantBattle();
 void Formation_legionKillSoldiersInDistantBattle(int killPercentage);
 
+void Formation_Tick_updateRestMorale();
+
 #endif

@@ -446,3 +446,48 @@ void Formation_legionKillSoldiersInDistantBattle(int killPercentage)
 		}
 	}
 }
+
+static void decreaseDamage()
+{
+	for (int i = 1; i < MAX_WALKERS; i++) {
+		struct Data_Walker *w = &Data_Walkers[i];
+		if (w->state == WalkerState_Alive && WalkerIsLegion(w->type)) {
+			if (w->actionState == WalkerActionState_80_AtRest) {
+				if (w->damage) {
+					w->damage--;
+				}
+			}
+		}
+	}
+}
+
+void Formation_Tick_updateRestMorale()
+{
+	for (int i = 1; i < MAX_FORMATIONS; i++) {
+		struct Data_Formation *f = &Data_Formations[i];
+		if (f->inUse != 1 || f->isHerd) {
+			continue;
+		}
+		if (f->isLegion) {
+			if (f->isAtFort) {
+				f->monthsFromHome = 0;
+				f->__unknown69 = 0;
+				f->__unknown5e = 0;
+				changeMorale(i, 5);
+				if (f->layout == FormationLayout_MopUp) {
+					f->layout = f->layoutBeforeMopUp;
+				}
+			} else if (!f->recentFight) {
+				f->monthsFromHome++;
+				if (f->monthsFromHome > 3) {
+					if (f->monthsFromHome > 100) {
+						f->monthsFromHome = 100;
+					}
+					changeMorale(i, -5);
+				}
+			}
+		} else {
+			changeMorale(i, 0);
+		}
+	}
+}

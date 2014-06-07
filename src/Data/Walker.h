@@ -105,6 +105,7 @@ enum {
 	WalkerActionState_59_MarketBuyer = 59,
 	WalkerActionState_74_PrefectFightingCrime = 74,
 	WalkerActionState_75_PrefectFightingFire = 75,
+	WalkerActionState_80_AtRest = 80,
 	WalkerActionState_87_ToDistantBattle = 87,
 	WalkerActionState_88_FromDistantBattle = 88,
 	WalkerActionState_94_Entertainer = 94, // at school?

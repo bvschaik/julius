@@ -191,16 +191,24 @@ void Terrain_removeBuildingFromGrids(int buildingId, int x, int y)
 
 int Terrain_hasRoadAccess(int x, int y, int size, int *roadX, int *roadY)
 {
+	int minValue = 12;
+	int minGridOffset = GridOffset(x, y);
 	FOR_XY_ADJACENT(
 		if (!(Data_Grid_terrain[gridOffset] & Terrain_Building) ||
 			Data_Buildings[Data_Grid_buildingIds[gridOffset]].type != Building_Gatehouse) {
 			if (Data_Grid_terrain[gridOffset] & Terrain_Road) {
-				// TODO
+				// TODO something with determining minValue
 				return 1;
 			}
 		}
 	);
-	// TODO
+	if (minValue < 12) {
+		if (roadX && roadY) {
+			*roadX = GridOffsetToX(minGridOffset);
+			*roadY = GridOffsetToY(minGridOffset);
+		}
+		return 1;
+	}
 	return 0;
 }
 
@@ -216,15 +224,163 @@ int Terrain_hasRoadAccessGranary(int x, int y, int *roadX, int *roadY)
 	return 1;
 }
 
+#define Delta(x, y) ((y) * GRID_SIZE + (x))
 int Terrain_getOrientationGatehouse(int x, int y)
 {
-	// TODO
+	switch (Data_Settings_Map.orientation) {
+		case Direction_Right: x--; break;
+		case Direction_Bottom: x--; y--; break;
+		case Direction_Left: y--; break;
+	}
+	int gridOffset = GridOffset(x, y);
+	int numRoadTilesTop = 0;
+	int numRoadTilesRight = 0;
+	int numRoadTilesBottom = 0;
+	int numRoadTilesLeft = 0;
+	int numRoadTilesWithin = 0;
+	int roadTilesWithin = 0;
+	// tiles within gate, flags:
+	// 1  2
+	// 4  8
+	if (Data_Grid_terrain[GridOffset(x, y)] & Terrain_Road) {
+		roadTilesWithin |= 1;
+		numRoadTilesWithin++;
+	}
+	if (Data_Grid_terrain[gridOffset + Delta(1, 0)] & Terrain_Road) {
+		roadTilesWithin |= 2;
+		numRoadTilesWithin++;
+	}
+	if (Data_Grid_terrain[gridOffset + Delta(0, 1)] & Terrain_Road) {
+		roadTilesWithin |= 4;
+		numRoadTilesWithin++;
+	}
+	if (Data_Grid_terrain[gridOffset + Delta(1, 1)] & Terrain_Road) {
+		roadTilesWithin |= 8;
+		numRoadTilesWithin++;
+	}
+
+	if (numRoadTilesWithin != 2 && numRoadTilesWithin != 4) {
+		return 0;
+	}
+	if (numRoadTilesWithin == 2) {
+		if (roadTilesWithin == 6 || roadTilesWithin == 9) { // diagonals
+			return 0;
+		}
+		if (roadTilesWithin == 5 || roadTilesWithin == 10) { // top to bottom
+			return 1;
+		}
+		if (roadTilesWithin == 3 || roadTilesWithin == 12) { // left to right
+			return 2;
+		}
+		return 0;
+	}
+	// all 4 tiles are road: check adjacent roads
+	// top
+	if (Data_Grid_terrain[gridOffset + Delta(0, -1)] & Terrain_Road) {
+		numRoadTilesTop++;
+	}
+	if (Data_Grid_terrain[gridOffset + Delta(1, -1)] & Terrain_Road) {
+		numRoadTilesTop++;
+	}
+	// bottom
+	if (Data_Grid_terrain[gridOffset + Delta(0, 2)] & Terrain_Road) {
+		numRoadTilesBottom++;
+	}
+	if (Data_Grid_terrain[gridOffset + Delta(1, 2)] & Terrain_Road) {
+		numRoadTilesBottom++;
+	}
+	// left
+	if (Data_Grid_terrain[gridOffset + Delta(-1, 0)] & Terrain_Road) {
+		numRoadTilesLeft++;
+	}
+	if (Data_Grid_terrain[gridOffset + Delta(-1, 1)] & Terrain_Road) {
+		numRoadTilesLeft++;
+	}
+	// right
+	if (Data_Grid_terrain[gridOffset + Delta(2, 0)] & Terrain_Road) {
+		numRoadTilesRight++;
+	}
+	if (Data_Grid_terrain[gridOffset + Delta(2, 1)] & Terrain_Road) {
+		numRoadTilesRight++;
+	}
+	// determine direction
+	if (numRoadTilesTop || numRoadTilesBottom) {
+		if (numRoadTilesLeft || numRoadTilesRight) {
+			return 0;
+		}
+		return 1;
+	} else if (numRoadTilesLeft || numRoadTilesRight) {
+		return 2;
+	}
 	return 0;
 }
 
 int Terrain_getOrientationTriumphalArch(int x, int y)
 {
-	// TODO
+	switch (Data_Settings_Map.orientation) {
+		case Direction_Right: x -= 2; break;
+		case Direction_Bottom: x -= 2; y -= 2; break;
+		case Direction_Left: y -= 2; break;
+	}
+	int numRoadTilesTopBottom = 0;
+	int numRoadTilesLeftRight = 0;
+	int numBlockedTiles = 0;
+
+	int gridOffset = GridOffset(x, y);
+	// check corner tiles
+	if (Data_Grid_terrain[gridOffset] & Terrain_NotClear) {
+		numBlockedTiles++;
+	}
+	if (Data_Grid_terrain[gridOffset + Delta(2, 0)] & Terrain_NotClear) {
+		numBlockedTiles++;
+	}
+	if (Data_Grid_terrain[gridOffset + Delta(0, 2)] & Terrain_NotClear) {
+		numBlockedTiles++;
+	}
+	if (Data_Grid_terrain[gridOffset + Delta(2, 2)] & Terrain_NotClear) {
+		numBlockedTiles++;
+	}
+	// road tiles top to bottom
+	if ((Data_Grid_terrain[gridOffset + Delta(1, 0)] & Terrain_NotClear) == Terrain_Road) {
+		numRoadTilesTopBottom++;
+	} else if (Data_Grid_terrain[gridOffset + Delta(1, 0)] & Terrain_NotClear) {
+		numBlockedTiles++;
+	}
+	if ((Data_Grid_terrain[gridOffset + Delta(1, 2)] & Terrain_NotClear) == Terrain_Road) {
+		numRoadTilesTopBottom++;
+	} else if (Data_Grid_terrain[gridOffset + Delta(1, 2)] & Terrain_NotClear) {
+		numBlockedTiles++;
+	}
+	// road tiles left to right
+	if ((Data_Grid_terrain[gridOffset + Delta(0, 1)] & Terrain_NotClear) == Terrain_Road) {
+		numRoadTilesLeftRight++;
+	} else if (Data_Grid_terrain[gridOffset + Delta(0, 1)] & Terrain_NotClear) {
+		numBlockedTiles++;
+	}
+	if ((Data_Grid_terrain[gridOffset + Delta(2, 1)] & Terrain_NotClear) == Terrain_Road) {
+		numRoadTilesLeftRight++;
+	} else if (Data_Grid_terrain[gridOffset + Delta(2, 1)] & Terrain_NotClear) {
+		numBlockedTiles++;
+	}
+	// center tile
+	if ((Data_Grid_terrain[gridOffset + Delta(2, 1)] & Terrain_NotClear) == Terrain_Road) {
+		// do nothing
+	} else if (Data_Grid_terrain[gridOffset + Delta(2, 1)] & Terrain_NotClear) {
+		numBlockedTiles++;
+	}
+	// judgement time
+	if (numBlockedTiles) {
+		return 0;
+	}
+	if (!numRoadTilesLeftRight && !numRoadTilesTopBottom) {
+		return 0; // don't care about direction
+	}
+	if (numRoadTilesTopBottom == 2 && !numRoadTilesLeftRight) {
+		return 1;
+	}
+	if (numRoadTilesLeftRight == 2 && !numRoadTilesTopBottom) {
+		return 2;
+	}
 	return 0;
 }
 

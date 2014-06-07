@@ -635,3 +635,16 @@ static void TerrainGraphics_updateAreaEmptyLand(int x, int y, int size, int grap
 		}
 	}
 }
+
+void TerrainGraphics_setAllAqueductsToNoWater()
+{
+	int graphicId = GraphicId(ID_Graphic_Aqueduct) + 15;
+	FOREACH_ALL({
+		if (Data_Grid_terrain[gridOffset] & Terrain_Aqueduct) {
+			Data_Grid_aqueducts[gridOffset] = 0;
+			if (Data_Grid_graphicIds[gridOffset] < graphicId) {
+				Data_Grid_graphicIds[gridOffset] += 15;
+			}
+		}
+	});
+}

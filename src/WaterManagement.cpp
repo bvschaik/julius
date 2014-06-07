@@ -1,9 +1,12 @@
 #include "Grid.h"
 #include "Terrain.h"
+#include "TerrainGraphics.h"
 
 #include "Data/Building.h"
 #include "Data/Grid.h"
 #include "Data/Random.h"
+
+#include <string.h>
 
 static int spreadDirection;
 
@@ -33,8 +36,32 @@ void WaterManagement_updateHouseWaterAccess()
 
 void WaterManagement_updateReservoirFountain()
 {
-	int changed = 1;
 	Grid_andShortGrid(Data_Grid_terrain, ~(Terrain_FountainRange | Terrain_ReservoirRange));
+	TerrainGraphics_setAllAqueductsToNoWater();
+	memset(Data_BuildingList.buildingIds, 0, 4000);
+	Data_BuildingList.size = 0;
+	for (int i = 0; i < MAX_BUILDINGS; i++) {
+		if (Data_Buildings[i].inUse == 1 && Data_Buildings[i].type == Building_Reservoir) {
+			Data_BuildingList.buildingIds[Data_BuildingList.size++] = i;
+			if (Terrain_existsTileWithinAreaWithType(
+				Data_Buildings[i].x - 1, Data_Buildings[i].y - 1, 5, Terrain_Water)) {
+				Data_Buildings[i].hasWaterAccess = 2;
+			} else {
+				Data_Buildings[i].hasWaterAccess = 0;
+			}
+		}
+	}
+	int changed = 1;
+	while (changed == 1) {
+		for (int i = 0; i < Data_BuildingList.size; i++) {
+			int buildingId = Data_BuildingList.buildingIds[i];
+			if (Data_Buildings[buildingId].hasWaterAccess == 2) {
+				Data_Buildings[buildingId].hasWaterAccess = 1;
+				changed = 1;
+				// TODO
+			}
+		}
+	}
 	// TODO
 }
 

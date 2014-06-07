@@ -4,6 +4,7 @@
 #include "Desirability.h"
 #include "Empire.h"
 #include "Event.h"
+#include "Formation.h"
 #include "GameFile.h"
 #include "HouseEvolution.h"
 #include "HousePopulation.h"
@@ -21,6 +22,7 @@
 #include "UI/Window.h"
 
 #include "Data/CityInfo.h"
+#include "Data/Message.h"
 #include "Data/Scenario.h"
 #include "Data/Settings.h"
 #include "Data/State.h"
@@ -157,7 +159,7 @@ static void advanceMonth()
 	Event_handleDemandChanges();
 	Event_handlePricesChanges();
 	CityInfo_Victory_updateMonthsToGovern();
-	//TODO j_fun_tickMonth_updateLegionMorale();
+	Formation_Tick_updateRestMorale();
 	PlayerMessage_updateMessageDelays();
 
 	TerrainGraphics_updateAllRoads();
@@ -174,23 +176,14 @@ static void advanceMonth()
 
 	CityInfo_Population_recordMonthlyPopulation();
 	CityInfo_Gods_checkFestival();
-	/*
-    if ( setting_currentMissionId == 2 )
-    {
-      if ( gametime_month == 5 )
-      {
-        if ( !setting_isCustomScenario )
-        {
-          if ( messageDelay_9[0] <= 0 )
-          {
-            message_usePopup = 1;
-            messageDelay_9[0] = 1200;
-            j_fun_postMessageToPlayer(58, 0, 0);
-          }
-        }
-      }
-    }
-	*/
+	if (IsTutorial3()) {
+		if (Data_CityInfo_Extra.gameTimeMonth == 5) {
+			if (Data_Message.messageDelay[9] <= 0) {
+				Data_Message.messageDelay[9] = 1200;
+				PlayerMessage_post(1, 58, 0, 0);
+			}
+		}
+	}
 	if (Data_Settings.monthlyAutosaveEnabled) {
 		GameFile_writeSavedGame("last.sav");
 	}

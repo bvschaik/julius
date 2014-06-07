@@ -43,7 +43,7 @@ struct Data_Formation {
 	short totalDamage; //42
 	short maxTotalDamage; //44
 	short __unknown46;
-	short __unknown48;
+	short recentFight; //48
 	short __unknown4a;
 	short __unknown4c;
 	short __unknown4e;
@@ -54,7 +54,7 @@ struct Data_Formation {
 	short __unknown58;
 	short layoutBeforeMopUp;
 	short cursedByMars;
-	char __unknown5e;
+	char __unknown5e; //5e
 	char empireService;
 	char inDistantBattle; //60
 	char isHerd;
@@ -64,8 +64,8 @@ struct Data_Formation {
 	char __unknown65;
 	char __unknown66;
 	char orientation;
-	char __unknown68;
-	char __unknown69;
+	char monthsFromHome; //68
+	char __unknown69; //69
 	char invasionId;
 	char __unknown6b;
 	char __unknown6c;
