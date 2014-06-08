@@ -118,7 +118,8 @@ enum {
 	WalkerActionState_112_TradeShipMoored = 112,
 	WalkerActionState_114_TradeShipAnchored = 114,
 	WalkerActionState_115_TradeShipLeaving = 115,
-	WalkerActionState_126_MarketTrader = 126,
+	WalkerActionState_125_Roaming = 125,
+	WalkerActionState_126_RoamerReturning = 126,
 	WalkerActionState_132_ResourceCarrier = 132,
 	WalkerActionState_133_Dockman = 133,
 	WalkerActionState_134_Dockman_MarketBuyer = 134,
@@ -131,7 +132,7 @@ enum {
 	WalkerActionState_145_MarketBuyer = 145,
 	WalkerActionState_146_MarketBuyer = 146,
 	WalkerActionState_149_Corpse = 149,
-	WalkerActionState_150_Attacking = 150,
+	WalkerActionState_150_Attack = 150,
 	WalkerActionState_151_EnemyInitial = 151,
 	WalkerActionState_159_AttackingNative = 159,
 	WalkerActionState_191_FishingBoatGoingToFish = 191,
@@ -175,7 +176,7 @@ extern struct Data_Walker_NameSequence {
 
 extern struct Data_Walker {
 	char inUse;
-	char __unknown_01;
+	char graphicOffset;
 	char isEnemyGraphic;
 	char __unknown_03;
 	short graphicId; // 04
@@ -216,10 +217,8 @@ extern struct Data_Walker {
 	short routingPathLength;
 	char __unknown_30;
 	char __unknown_31;
-	char __unknown_32;
-	char __unknown_33;
-	char __unknown_34;
-	char __unknown_35;
+	short maxRoamLength;
+	short roamLength;
 	char __unknown_36;
 	char __unknown_37;
 	char __unknown_38;

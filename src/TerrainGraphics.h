@@ -21,8 +21,6 @@ void TerrainGraphics_setTileEarthquake(int x, int y);
 void TerrainGraphics_setTileRoad(int x, int y);
 void TerrainGraphics_setTileAqueduct(int x, int y, int flag);
 
-void TerrainGraphics_setAllAqueductsToNoWater();
-
 enum {
 	TerrainGraphicsContext_Water,
 	TerrainGraphicsContext_Wall,

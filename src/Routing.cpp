@@ -486,7 +486,7 @@ static int hasFightingFriendly(int gridOffset)
 	if (walkerId > 0) {
 		while (walkerId) {
 			if (Data_Walkers[walkerId].isFriendly &&
-				Data_Walkers[walkerId].actionState == WalkerActionState_150_Attacking) {
+				Data_Walkers[walkerId].actionState == WalkerActionState_150_Attack) {
 				return 1;
 			}
 		}
@@ -500,7 +500,7 @@ static int hasFightingEnemy(int gridOffset)
 	if (walkerId > 0) {
 		while (walkerId) {
 			if (Data_Walkers[walkerId].isFriendly &&
-				Data_Walkers[walkerId].actionState == WalkerActionState_150_Attacking) {
+				Data_Walkers[walkerId].actionState == WalkerActionState_150_Attack) {
 				return 1;
 			}
 		}

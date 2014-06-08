@@ -636,6 +636,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\WalkerAction_Culture.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\WalkerAction_Rioter.cpp"
 				>
 			</File>
@@ -1039,6 +1043,10 @@
 			</File>
 			<File
 				RelativePath=".\src\WalkerAction.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\WalkerAction_private.h"
 				>
 			</File>
 			<File

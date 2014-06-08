@@ -276,7 +276,7 @@ int Walker_determinePhrase(int walkerId)
 		case Walker_Librarian:
 			break;
 		case Walker_LionTamer:
-			if (w->actionState == WalkerActionState_150_Attacking) {
+			if (w->actionState == WalkerActionState_150_Attack) {
 				if (++w->phraseSequenceExact >= 3) {
 					w->phraseSequenceExact = 0;
 				}
@@ -284,7 +284,7 @@ int Walker_determinePhrase(int walkerId)
 			}
 			break;
 		case Walker_Gladiator:
-			if (w->actionState == WalkerActionState_150_Attacking) {
+			if (w->actionState == WalkerActionState_150_Attack) {
 				phraseId = 7;
 			}
 			break;
@@ -298,7 +298,7 @@ int Walker_determinePhrase(int walkerId)
 			}
 			break;
 		case Walker_MarketTrader:
-			if (w->actionState == WalkerActionState_126_MarketTrader) {
+			if (w->actionState == WalkerActionState_126_RoamerReturning) {
 				if (Building_Market_getMaxFoodStock(w->buildingId) <= 0) {
 					phraseId = 9; // run out of goods
 				}
@@ -343,7 +343,7 @@ int Walker_determinePhrase(int walkerId)
 				phraseId = 10;
 			} else if (w->actionState == WalkerActionState_75_PrefectFightingFire) {
 				phraseId = 11 + (w->phraseSequenceExact % 2);
-			} else if (w->actionState == WalkerActionState_150_Attacking) {
+			} else if (w->actionState == WalkerActionState_150_Attack) {
 				phraseId = 13 + w->phraseSequenceExact;
 			} else if (w->minMaxSeen >= 50) {
 				phraseId = 7;
