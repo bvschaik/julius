@@ -197,7 +197,7 @@ void Trader_tick()
 	}
 }
 
-int Trader_getClosestWarehouseForTradeCaravan(int walkerId, int x, int y, int cityId, int distanceFromEntry, int roadNetworkId, int *warehouseX, int *warehouseY)
+int Trader_getClosestWarehouseForTradeCaravan(int walkerId, int x, int y, int cityId, int distanceFromEntry, int *warehouseX, int *warehouseY)
 {
 	int exportable[16];
 	int importable[16];

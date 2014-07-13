@@ -315,7 +315,7 @@ static void drawWalkerInfoMarketBuyer(BuildingInfoContext *c, int walkerId)
 static void drawWalkerInfoNormal(BuildingInfoContext *c, int walkerId)
 {
 	int graphicId = BigPeopleGraphic(Data_Walkers[walkerId].type);
-	if (Data_Walkers[walkerId].actionState == WalkerActionState_74_PrefectFightingCrime ||
+	if (Data_Walkers[walkerId].actionState == WalkerActionState_74_PrefectGoingToFire ||
 		Data_Walkers[walkerId].actionState == WalkerActionState_75_PrefectFightingFire) {
 		graphicId = GraphicId(ID_Graphic_BigPeople) + 18;
 	}

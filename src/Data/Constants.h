@@ -54,6 +54,7 @@ enum {
 	ID_Graphic_FortStandardIcons = 127,
 	ID_Graphic_AdvisorIcons = 128,
 	ID_Graphic_ResourceIcons = 129,
+	ID_Graphic_Walker_TradeCaravan = 130,
 	ID_Graphic_DialogBackground = 132,
 	ID_Graphic_SunkenTextboxBackground = 133,
 	ID_Graphic_ContextIcons = 134,
@@ -308,7 +309,7 @@ struct WalkerProperties {
 	int unknown4;
 	int unknown5;
 	int __unused6; // unreferenced
-	int unknown7;
+	int missileFrequency;
 };
 
 extern const struct WalkerProperties Constant_WalkerProperties[80];

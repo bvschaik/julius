@@ -9,7 +9,7 @@ void Trader_tick();
 void Trader_sellResource(int walkerId, int resourceId);
 void Trader_buyResource(int walkerId, int resourceId);
 
-int Trader_getClosestWarehouseForTradeCaravan(int walkerId, int x, int y, int cityId, int building1a, int roadNetworkId, int *warehouseX, int *warehouseY);
+int Trader_getClosestWarehouseForTradeCaravan(int walkerId, int x, int y, int cityId, int building1a, int *warehouseX, int *warehouseY);
 int Trader_getClosestWarehouseForImportDocker(int x, int y, int cityId, int building1a, int roadNetworkId, int *warehouseX, int *warehouseY);
 int Trader_getClosestWarehouseForExportDocker(int x, int y, int cityId, int building1a, int roadNetworkId, int *warehouseX, int *warehouseY);
 

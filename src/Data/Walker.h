@@ -103,8 +103,9 @@ enum {
 	WalkerActionState_53_MarketBuyer = 53,
 	WalkerActionState_56_MarketBuyer = 56,
 	WalkerActionState_59_MarketBuyer = 59,
-	WalkerActionState_74_PrefectFightingCrime = 74,
+	WalkerActionState_74_PrefectGoingToFire = 74,
 	WalkerActionState_75_PrefectFightingFire = 75,
+	WalkerActionState_76_PrefectGoingToEnemy = 76,
 	WalkerActionState_80_AtRest = 80,
 	WalkerActionState_87_ToDistantBattle = 87,
 	WalkerActionState_88_FromDistantBattle = 88,
@@ -190,7 +191,7 @@ extern struct Data_Walker {
 	char ciid; // 0f
 	char __unknown_10;
 	char direction;
-	char __unknown_12;
+	char previousTileDirection;
 	char __unknown_13;
 	char x;
 	char y;

@@ -8,6 +8,7 @@
 extern const int walkerActionCorpseGraphicOffsets[128];
 
 #include "WalkerAction.h"
+#include "WalkerMovement.h"
 
 #include "Data/Building.h"
 #include "Data/Constants.h"

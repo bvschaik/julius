@@ -23,11 +23,6 @@ int Walker_hasNearbyEnemy(int x1, int y1, int x2, int y2);
 int Walker_determinePhrase(int walkerId);
 int Walker_playPhrase(int walkerId);
 
-int Walker_TradeCaravan_isBuying(int walkerId, int buildingId, int empireCityId);
-int Walker_TradeCaravan_isSelling(int walkerId, int buildingId, int empireCityId);
-
-int Walker_TradeShip_isBuyingOrSelling(int walkerId);
-
 void WalkerName_set(int walkerId);
 void WalkerName_init();
 

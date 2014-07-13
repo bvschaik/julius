@@ -3,16 +3,6 @@
 #include "Terrain.h"
 #include "Walker.h"
 
-static void WalkerMovement_roamTicks(int walkerId, int numTicks)
-{
-	// TODO
-}
-
-static void WalkerMovement_walkTicks(int walkerId, int numTicks)
-{
-	// TODO
-}
-
 static void WalkerAction_cultureCommon(int walkerId, int numTicks)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];

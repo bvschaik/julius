@@ -199,7 +199,7 @@ extern struct Data_Building {
 	char __unknown_2f;
 	short prevPartBuildingId;
 	short nextPartBuildingId;
-	short loadsStored;
+	short loadsStored; // 34
 	char __unused_36;
 	char hasWellAccess;
 	short numWorkers;

@@ -1,7 +1,7 @@
 #include "Building.h"
 #include "Calc.h"
 #include "Sound.h"
-#include "Walker.h"
+#include "WalkerAction.h"
 #include "Data/Walker.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
@@ -339,7 +339,7 @@ int Walker_determinePhrase(int walkerId)
 			if (++w->phraseSequenceExact >= 4) {
 				w->phraseSequenceExact = 0;
 			}
-			if (w->actionState == WalkerActionState_74_PrefectFightingCrime) {
+			if (w->actionState == WalkerActionState_74_PrefectGoingToFire) {
 				phraseId = 10;
 			} else if (w->actionState == WalkerActionState_75_PrefectFightingFire) {
 				phraseId = 11 + (w->phraseSequenceExact % 2);
@@ -431,9 +431,9 @@ int Walker_determinePhrase(int walkerId)
 					phraseId = 7; // no trade
 				}
 			} else if (w->actionState == WalkerActionState_102_TradeCaravanTrading) {
-				if (Walker_TradeCaravan_isBuying(walkerId, w->destinationBuildingId, w->empireCityId)) {
+				if (WalkerAction_TradeCaravan_canBuy(walkerId, w->destinationBuildingId, w->empireCityId)) {
 					phraseId = 11; // buying goods
-				} else if (Walker_TradeCaravan_isSelling(walkerId, w->destinationBuildingId, w->empireCityId)) {
+				} else if (WalkerAction_TradeCaravan_canSell(walkerId, w->destinationBuildingId, w->empireCityId)) {
 					phraseId = 10; // selling goods
 				}
 			}
@@ -447,7 +447,7 @@ int Walker_determinePhrase(int walkerId)
 					phraseId = 11; // good trade
 				}
 			} else if (w->actionState == WalkerActionState_112_TradeShipMoored) {
-				int ship = Walker_TradeShip_isBuyingOrSelling(walkerId);
+				int ship = WalkerAction_TradeShip_canBuyOrSell(walkerId);
 				if (ship == 1) {
 					phraseId = 8; // buying goods
 				} else if (ship == 2) {
