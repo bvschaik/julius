@@ -189,6 +189,61 @@ void Terrain_removeBuildingFromGrids(int buildingId, int x, int y)
 	TerrainGraphics_updateRegionRubble(x, y, x + size, y + size);
 }
 
+void Terrain_addWatersideBuildingToGrids(int buildingId, int x, int y, int size, int graphicId)
+{
+	if (IsOutsideMap(x, y, size)) {
+		return;
+	}
+	int xLeftmost;
+	int yLeftmost;
+	switch (Data_Settings_Map.orientation) {
+		case Direction_Top:
+			xLeftmost = 0;
+			yLeftmost = size - 1;
+			break;
+		case Direction_Right:
+			xLeftmost = yLeftmost = 0;
+			break;
+		case Direction_Bottom:
+			xLeftmost = size - 1;
+			yLeftmost = 0;
+			break;
+		case Direction_Left:
+			xLeftmost = yLeftmost = size - 1;
+			break;
+		default:
+			return;
+	}
+	for (int dy = 0; dy < size; dy++) {
+		for (int dx = 0; dx < size; dx++) {
+			int gridOffset = GridOffset(x + dx, y + dy);
+			Data_Grid_terrain[gridOffset] |= Terrain_Building;
+			if (!(Data_Grid_terrain[gridOffset] & Terrain_Water)) {
+				Data_Grid_terrain[gridOffset] &= Terrain_2e80;
+				Data_Grid_terrain[gridOffset] |= Terrain_Building;
+			}
+			Data_Grid_buildingIds[gridOffset] = buildingId;
+			Data_Grid_bitfields[gridOffset] &= Bitfield_NoOverlay;
+			Data_Grid_bitfields[gridOffset] |= Bitfield_Size2;
+			Data_Grid_graphicIds[gridOffset] = graphicId;
+			Data_Grid_edge[gridOffset] = EdgeXY(dx, dy);
+			if (dx == xLeftmost && dy == yLeftmost) {
+				Data_Grid_edge[gridOffset] |= Edge_LeftmostTile;
+			}
+		}
+	}
+}
+
+void Terrain_addRoadsForGatehouse(int x, int y, int orientation)
+{
+	// TODO
+}
+
+void Terrain_addRoadsForTriumphalArch(int x, int y, int orientation)
+{
+	// TODO
+}
+
 int Terrain_hasRoadAccess(int x, int y, int size, int *roadX, int *roadY)
 {
 	int minValue = 12;

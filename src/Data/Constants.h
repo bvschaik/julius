@@ -17,6 +17,8 @@ enum {
 	ID_Graphic_MainMenuBackground = 14,
 	ID_Graphic_PanelButton = 15,
 	ID_Graphic_Font = 16,
+	ID_Graphic_Tower = 17,
+	// 18 unused
 	ID_Graphic_Aqueduct = 19,
 	ID_Graphic_TerrainOverlay = 20,
 	ID_Graphic_FlatTile = 21,
@@ -32,7 +34,10 @@ enum {
 	ID_Graphic_Senate = 62,
 	ID_Graphic_Forum = 63,
 	ID_Graphic_Fort = 66,
-	ID_Graphic_Dock = 78,
+	ID_Graphic_Oracle = 76,
+	ID_Graphic_Shipyard = 77,
+	ID_Graphic_Dock1 = 78,
+	ID_Graphic_Wharf = 79,
 	ID_Graphic_Warehouse = 82,
 	ID_Graphic_WarehouseStorageEmpty = 83,
 	ID_Graphic_WarehouseStorageFilled = 84,
@@ -50,6 +55,8 @@ enum {
 	ID_Graphic_Walker_Criminal = 115,
 	ID_Graphic_Walker_Barber = 116,
 	ID_Graphic_Homeless = 118,
+	ID_Graphic_RubbleTent = 119,
+	ID_Graphic_RubbleGeneral = 120,
 	ID_Graphic_FortFlags = 126,
 	ID_Graphic_FortStandardIcons = 127,
 	ID_Graphic_AdvisorIcons = 128,
@@ -294,7 +301,7 @@ extern const int Constant_DirectionGridOffsets[8];
 
 struct BuildingProperties {
 	int size;
-	int unknown;
+	int fireProof;
 	int graphicCategory;
 	int graphicOffset;
 };

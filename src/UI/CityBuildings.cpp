@@ -304,7 +304,7 @@ static void UI_CityBuildings_drawBuildingTopsWalkersAnimation(int selectedWalker
 						if (numDockers > 0) {
 							int graphicIdDock = Data_Grid_graphicIds[b->gridOffset];
 							int graphicIdDockers = GraphicId(ID_Graphic_Dockers);
-							if (graphicIdDock == GraphicId(ID_Graphic_Dock)) {
+							if (graphicIdDock == GraphicId(ID_Graphic_Dock1)) {
 								graphicIdDockers += 0;
 							} else if (graphicIdDock == GraphicId(ID_Graphic_Dock2)) {
 								graphicIdDockers += 3;

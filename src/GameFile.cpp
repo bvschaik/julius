@@ -471,9 +471,7 @@ static void setupFromSavedGame()
 	Routing_determineWater();
 	Routing_determineWalls();
 
-/*
-  j_fun_determineGraphicIdsForOrientatedBuildings();
-*/
+	Building_determineGraphicIdsForOrientedBuildings();
 	WalkerRoute_clean();
 /*
   sub_401320();

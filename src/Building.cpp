@@ -158,7 +158,7 @@ int Building_create(int type, int x, int y)
 	b->y = y;
 	b->gridOffset = GridOffset(x, y);
 	b->__unknown_2c = b->houseGenerationDelay = Data_Grid_random[b->gridOffset] & 0x7f;
-	b->__unknown_44 = Constant_BuildingProperties[type].unknown;
+	b->fireProof = Constant_BuildingProperties[type].fireProof;
 	b->isAdjacentToWater = Terrain_isAdjacentToWater(x, y, b->size);
 
 	return buildingId;
@@ -254,7 +254,78 @@ int Building_getMainBuildingId(int buildingId)
 
 void Building_collapse(int buildingId, int hasPlague)
 {
-	// TODO
+	Data_State.undoAvailable = 0;
+	struct Data_Building *b = &Data_Buildings[buildingId];
+	b->fireRisk = 0;
+	b->damageRisk = 0;
+	if (b->houseSize && b->housePopulation) {
+		CityInfo_Population_removePeopleHomeRemoved(b->housePopulation);
+	}
+	b->housePopulation = 0;
+	b->houseSize = 0;
+	b->outputResourceId = 0;
+	b->distanceFromEntry = 0;
+	Building_deleteData(buildingId);
+
+	int watersideBuilding = 0;
+	if (b->type == Building_Dock || b->type == Building_Wharf || b->type == Building_Shipyard) {
+		watersideBuilding = 1;
+	}
+	int wasTent = b->houseSize && b->subtype.houseLevel <= HouseLevel_LargeTent;
+	int numTiles;
+	switch (b->size) {
+		case 2: numTiles = 4; break;
+		case 3: numTiles = 9; break;
+		case 4: numTiles = 16; break;
+		case 5: numTiles = 25; break;
+		default: numTiles = 0; break;
+	}
+	Terrain_removeBuildingFromGrids(buildingId, b->x, b->y);
+	if (Data_Grid_terrain[b->gridOffset] & Terrain_Water) {
+		b->inUse = 5;
+	} else {
+		b->type = Building_BurningRuin;
+		b->walkerId4 = 0;
+		b->taxIncomeOrStorage = 0;
+		b->fireDuration = (b->houseGenerationDelay & 7) + 1;
+		b->fireProof = 1;
+		b->size = 1;
+		b->ruinHasPlague = hasPlague;
+		int random = Data_Grid_random[b->gridOffset] & 3;
+		int graphicId;
+		if (wasTent) {
+			graphicId = GraphicId(ID_Graphic_RubbleTent);
+		} else {
+			graphicId = GraphicId(ID_Graphic_RubbleGeneral) + 9 * random;
+		}
+		Terrain_addBuildingToGrids(buildingId, b->x, b->y, 1, graphicId, Terrain_Building);
+	}
+	static const int xTiles[] = {0, 1, 1, 0, 2, 2, 2, 1, 0, 3, 3, 3, 3, 2, 1, 0, 4, 4, 4, 4, 4, 3, 2, 1, 0, 5, 5, 5, 5, 5, 5, 4, 3, 2, 1, 0};
+	static const int yTiles[] = {0, 0, 1, 1, 0, 1, 2, 2, 2, 0, 1, 2, 3, 3, 3, 3, 0, 1, 2, 3, 4, 4, 4, 4, 4, 0, 1, 2, 3, 4, 5, 5, 5, 5, 5, 5};
+	for (int tile = 1; tile < numTiles; tile++) {
+		int x = xTiles[tile] + b->x;
+		int y = yTiles[tile] + b->y;
+		if (Data_Grid_terrain[GridOffset(x, y)] & Terrain_Water) {
+			continue;
+		}
+		int bid = Building_create(Building_BurningRuin, x, y);
+		b = &Data_Buildings[bid];
+		int random = Data_Grid_random[b->gridOffset] & 3;
+		int graphicId;
+		if (wasTent) {
+			graphicId = GraphicId(ID_Graphic_RubbleTent);
+		} else {
+			graphicId = GraphicId(ID_Graphic_RubbleGeneral) + 9 * random;
+		}
+		Terrain_addBuildingToGrids(bid, b->x, b->y, 1, graphicId, Terrain_Building);
+		b->fireDuration = (b->houseGenerationDelay & 7) + 1;
+		b->walkerId4 = 0;
+		b->fireProof = 1;
+		b->ruinHasPlague = hasPlague;
+	}
+	if (watersideBuilding) {
+		Routing_determineWater();
+	}
 }
 
 void Building_collapseLinked(int buildingId, int callCollapse)
@@ -378,6 +449,111 @@ void Building_decayHousesCovered()
 			} else {
 				Data_Buildings[i].housesCovered--;
 			}
+		}
+	}
+}
+
+void Building_determineGraphicIdsForOrientedBuildings()
+{
+	int mapOrientation = Data_Settings_Map.orientation;
+	int graphicOffset;
+	for (int i = 1; i < MAX_BUILDINGS; i++) {
+		struct Data_Building *b = &Data_Buildings[i];
+		if (!b->inUse) {
+			continue;
+		}
+		int graphicId;
+		switch (b->type) {
+			case Building_Gatehouse:
+				if (b->subtype.orientation == 1) {
+					if (mapOrientation == 0 || mapOrientation == 4) {
+						graphicId = GraphicId(ID_Graphic_Tower) + 1;
+					} else {
+						graphicId = GraphicId(ID_Graphic_Tower) + 2;
+					}
+				} else {
+					if (mapOrientation == 0 || mapOrientation == 4) {
+						graphicId = GraphicId(ID_Graphic_Tower) + 2;
+					} else {
+						graphicId = GraphicId(ID_Graphic_Tower) + 1;
+					}
+				}
+				Terrain_addBuildingToGrids(i, b->x, b->y, b->size,
+					graphicId, Terrain_Gatehouse | Terrain_Building);
+				Terrain_addRoadsForGatehouse(b->x, b->y, b->subtype.orientation);
+				break;
+			case Building_TriumphalArch:
+				if (b->subtype.orientation == 1) {
+					if (mapOrientation == 0 || mapOrientation == 4) {
+						graphicId = GraphicId(ID_Graphic_TriumphalArch);
+					} else {
+						graphicId = GraphicId(ID_Graphic_TriumphalArch) + 2;
+					}
+				} else {
+					if (mapOrientation == 0 || mapOrientation == 4) {
+						graphicId = GraphicId(ID_Graphic_TriumphalArch) + 2;
+					} else {
+						graphicId = GraphicId(ID_Graphic_TriumphalArch);
+					}
+				}
+				Terrain_addBuildingToGrids(i, b->x, b->y, b->size,
+					graphicId, Terrain_Building);
+				Terrain_addRoadsForTriumphalArch(b->x, b->y, b->subtype.orientation);
+				break;
+			case Building_Hippodrome:
+				if (mapOrientation == Direction_Top) {
+					graphicId = GraphicId(ID_Graphic_Hippodrome2);
+					switch (b->subtype.orientation) {
+						case 0: case 3: graphicId += 0; break;
+						case 1: case 4: graphicId += 2; break;
+						case 2: case 5: graphicId += 4; break;
+					}
+				} else if (mapOrientation == Direction_Bottom) {
+					graphicId = GraphicId(ID_Graphic_Hippodrome2);
+					switch (b->subtype.orientation) {
+						case 0: case 3: graphicId += 4; break;
+						case 1: case 4: graphicId += 2; break;
+						case 2: case 5: graphicId += 0; break;
+					}
+				} else if (mapOrientation == Direction_Left) {
+					graphicId = GraphicId(ID_Graphic_Hippodrome1);
+					switch (b->subtype.orientation) {
+						case 0: case 3: graphicId += 0; break;
+						case 1: case 4: graphicId += 2; break;
+						case 2: case 5: graphicId += 4; break;
+					}
+				} else {
+					graphicId = GraphicId(ID_Graphic_Hippodrome1);
+					switch (b->subtype.orientation) {
+						case 0: case 3: graphicId += 4; break;
+						case 1: case 4: graphicId += 2; break;
+						case 2: case 5: graphicId += 0; break;
+					}
+				}
+				Terrain_addBuildingToGrids(i, b->x, b->y, b->size,
+					graphicId, Terrain_Building);
+				break;
+			case Building_Shipyard:
+				graphicOffset = (4 + b->data.other.dockOrientation - mapOrientation / 2) % 4;
+				graphicId = GraphicId(ID_Graphic_Shipyard) + graphicOffset;
+				Terrain_addWatersideBuildingToGrids(i, b->x, b->y, 2, graphicId);
+				break;
+			case Building_Wharf:
+				graphicOffset = (4 + b->data.other.dockOrientation - mapOrientation / 2) % 4;
+				graphicId = GraphicId(ID_Graphic_Wharf) + graphicOffset;
+				Terrain_addWatersideBuildingToGrids(i, b->x, b->y, 2, graphicId);
+				break;
+			case Building_Dock:
+				graphicOffset = (4 + b->data.other.dockOrientation - mapOrientation / 2) % 4;
+				switch (graphicOffset) {
+					case 0: graphicId = GraphicId(ID_Graphic_Dock1); break;
+					case 1: graphicId = GraphicId(ID_Graphic_Dock2); break;
+					case 2: graphicId = GraphicId(ID_Graphic_Dock3); break;
+					default: graphicId = GraphicId(ID_Graphic_Dock4); break;
+				}
+				graphicId += graphicOffset;
+				Terrain_addWatersideBuildingToGrids(i, b->x, b->y, 3, graphicId);
+				break;
 		}
 	}
 }

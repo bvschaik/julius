@@ -22,6 +22,7 @@ void Building_destroyByEnemy(int x, int y, int gridOffset);
 
 void Building_setDesirability();
 void Building_decayHousesCovered();
+void Building_determineGraphicIdsForOrientedBuildings();
 
 void BuildingStorage_clearList();
 int BuildingStorage_create();

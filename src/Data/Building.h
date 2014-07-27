@@ -190,7 +190,7 @@ extern struct Data_Building {
 	short walkerId;
 	short walkerId2; // labor seeker or market buyer
 	short immigrantWalkerId;
-	short walkerId4; // tower ballista or burning ruin prefect
+	short walkerId4; // 28; tower ballista or burning ruin prefect
 	char walkerSpawnDelay; // 2a
 	char __unknown_2b;
 	char __unknown_2c;
@@ -209,9 +209,8 @@ extern struct Data_Building {
 	char __unknown_3d;
 	short damageRisk;
 	short fireRisk;
-	char __unknown_42;
-	char __unknown_43;
-	char __unknown_44;
+	short fireDuration; //42
+	char fireProof; //44 cannot catch fire
 	char houseGenerationDelay;
 	char houseTaxCoverage;
 	char __unknown_47;
@@ -248,7 +247,7 @@ extern struct Data_Building {
 			char dockNumShips; // 65 dock number of ships
 			char __unknown_66;
 			char __unknown_67;
-			char __unknown_68;
+			char dockOrientation; // 68
 			char __unknown_69;
 			char __unknown_6a;
 			char __unknown_6b; // farm cursed
@@ -332,7 +331,7 @@ extern struct Data_Building {
 			char evolveTextId;
 		} house;
 	} data;
-	int taxIncomeOrStorage;
+	int taxIncomeOrStorage; // 74
 	char houseDaysWithoutFood; // 78
 	char ruinHasPlague;
 	char desirability;
