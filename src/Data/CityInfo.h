@@ -131,8 +131,8 @@ extern struct Data_CityInfo {
 	short resourceTradeStatus[16];
 	short resourceTradeExportOver[16];
 	short resourceIndustryMothballed[16];
-	char __unknown_28ca;
-	char __unknown_28cb;
+	char __unused_28ca;
+	char __unused_28cb;
 	int resourceGranaryFoodStored[7];
 	int resourceWorkshopRawMaterialStored[6];
 	int resourceWorkshopRawMaterialSpace[6];//2900

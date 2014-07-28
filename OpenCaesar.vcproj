@@ -532,6 +532,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\Resource_Granary.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Resource_Warehouse.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Routing.cpp"
 				>
 			</File>
@@ -613,6 +621,10 @@
 			</File>
 			<File
 				RelativePath=".\src\Trader.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Tutorial.cpp"
 				>
 			</File>
 			<File
@@ -950,11 +962,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Scenario.h"
+				RelativePath=".\src\Data\Scenario.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Scenario.h"
+				RelativePath=".\src\Scenario.h"
 				>
 			</File>
 			<File
@@ -1027,6 +1039,10 @@
 			</File>
 			<File
 				RelativePath=".\src\data\Tutorial.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Tutorial.h"
 				>
 			</File>
 			<File

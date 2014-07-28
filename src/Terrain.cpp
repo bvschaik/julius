@@ -234,14 +234,59 @@ void Terrain_addWatersideBuildingToGrids(int buildingId, int x, int y, int size,
 	}
 }
 
+#define ADD_ROAD(g) \
+	if (!(Data_Grid_terrain[g] & Terrain_NotClear)) \
+		Data_Grid_terrain[g] |= Terrain_Road;
+
 void Terrain_addRoadsForGatehouse(int x, int y, int orientation)
 {
-	// TODO
+	// roads under gatehouse
+	Data_Grid_terrain[GridOffset(x,y)] |= Terrain_Road;
+	Data_Grid_terrain[GridOffset(x+1,y)] |= Terrain_Road;
+	Data_Grid_terrain[GridOffset(x,y+1)] |= Terrain_Road;
+	Data_Grid_terrain[GridOffset(x+1,y+1)] |= Terrain_Road;
+
+	// free roads before/after gate
+	if (orientation == 1) {
+		ADD_ROAD(GridOffset(x, y-1));
+		ADD_ROAD(GridOffset(x+1, y-1));
+		ADD_ROAD(GridOffset(x, y+2));
+		ADD_ROAD(GridOffset(x+1, y+2));
+	} else if (orientation == 2) {
+		ADD_ROAD(GridOffset(x-1, y));
+		ADD_ROAD(GridOffset(x-1, y+1));
+		ADD_ROAD(GridOffset(x+2, y));
+		ADD_ROAD(GridOffset(x+2, y+1));
+	}
 }
 
 void Terrain_addRoadsForTriumphalArch(int x, int y, int orientation)
 {
-	// TODO
+	if (orientation == 1) {
+		// road in the middle
+		Data_Grid_terrain[GridOffset(x+1,y)] |= Terrain_Road;
+		Data_Grid_terrain[GridOffset(x+1,y+1)] |= Terrain_Road;
+		Data_Grid_terrain[GridOffset(x+1,y+2)] |= Terrain_Road;
+		// no roads on other tiles
+		Data_Grid_terrain[GridOffset(x,y)] &= ~Terrain_Road;
+		Data_Grid_terrain[GridOffset(x,y+1)] &= ~Terrain_Road;
+		Data_Grid_terrain[GridOffset(x,y+2)] &= ~Terrain_Road;
+		Data_Grid_terrain[GridOffset(x+2,y)] &= ~Terrain_Road;
+		Data_Grid_terrain[GridOffset(x+2,y+1)] &= ~Terrain_Road;
+		Data_Grid_terrain[GridOffset(x+2,y+2)] &= ~Terrain_Road;
+	} else if (orientation == 2) {
+		// road in the middle
+		Data_Grid_terrain[GridOffset(x,y+1)] |= Terrain_Road;
+		Data_Grid_terrain[GridOffset(x+1,y+1)] |= Terrain_Road;
+		Data_Grid_terrain[GridOffset(x+2,y+1)] |= Terrain_Road;
+		// no roads on other tiles
+		Data_Grid_terrain[GridOffset(x,y)] &= ~Terrain_Road;
+		Data_Grid_terrain[GridOffset(x+1,y)] &= ~Terrain_Road;
+		Data_Grid_terrain[GridOffset(x+2,y)] &= ~Terrain_Road;
+		Data_Grid_terrain[GridOffset(x,y+2)] &= ~Terrain_Road;
+		Data_Grid_terrain[GridOffset(x+1,y+2)] &= ~Terrain_Road;
+		Data_Grid_terrain[GridOffset(x+2,y+2)] &= ~Terrain_Road;
+	}
 }
 
 int Terrain_hasRoadAccess(int x, int y, int size, int *roadX, int *roadY)

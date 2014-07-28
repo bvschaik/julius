@@ -44,7 +44,7 @@ void GameTick_advance()
 		case 5: break; // TODO formations 0
 		case 6: Natives_checkLand(); break;
 		case 7: break; // TODO unknown
-		case 8: break; // TODO unknown
+		case 8: Resource_gatherGranaryGettingInfo(); break;
 		case 10: Building_updateHighestIds(); break;
 		case 12: Building_decayHousesCovered(); break;
 		case 16: Resource_calculateWarehouseStocks(); break;

@@ -2,18 +2,14 @@
 
 #include "Calc.h"
 #include "Empire.h"
-#include "PlayerMessage.h"
-#include "SidebarMenu.h"
 #include "Terrain.h"
-#include "UI/AllWindows.h"
-#include "UI/Window.h"
+#include "Tutorial.h"
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 #include "Data/Model.h"
 #include "Data/Scenario.h"
-#include "Data/Tutorial.h"
 
 void CityInfo_Resource_calculateAvailableResources()
 {
@@ -81,14 +77,8 @@ void CityInfo_Resource_calculateFood()
 					Data_CityInfo.resourceGranaryFoodStored[r] +=
 						b->data.storage.resourceStored[r];
 				}
-				if (amountStored > 400 && !Data_Tutorial.tutorial2.granaryBuilt) {
-					Data_Tutorial.tutorial2.granaryBuilt = 1;
-					SidebarMenu_enableBuildingMenuItems();
-					SidebarMenu_enableBuildingButtons();
-					if (UI_Window_getId() == Window_City) {
-						UI_City_drawBackground();
-					}
-					PlayerMessage_post(1, 56, 0, 0);
+				if (amountStored > 400) {
+					Tutorial_onFilledGranary();
 				}
 			}
 		}

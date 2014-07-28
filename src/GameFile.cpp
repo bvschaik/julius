@@ -6,9 +6,10 @@
 #include "Event.h"
 #include "FileSystem.h"
 #include "Loader.h"
+#include "Resource.h"
+#include "Routing.h"
 #include "SidebarMenu.h"
 #include "Sound.h"
-#include "Routing.h"
 #include "Walker.h"
 #include "Zip.h"
 
@@ -476,8 +477,8 @@ static void setupFromSavedGame()
 /*
   sub_401320();
   j_fun_tick_checkPathingAccessToRome();
-  sub_403472();
 */
+	Resource_gatherGranaryGettingInfo();
 	SidebarMenu_enableBuildingButtons();
 	SidebarMenu_enableBuildingMenuItems();
 /*

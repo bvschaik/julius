@@ -81,15 +81,7 @@ static int traderGetBuyResource(int traderId, int warehouseId, int cityId)
 				Data_CityInfo.financeExportsThisYear += Data_TradePrices[resource].sell;
 			}
 			// update graphics
-			int graphicId;
-			if (Data_Buildings[warehouseId].loadsStored == 0) {
-				graphicId = GraphicId(ID_Graphic_WarehouseStorageEmpty);
-			} else {
-				graphicId = GraphicId(ID_Graphic_WarehouseStorageFilled) +
-					Resource_getGraphicIdOffset(resource, 0) +
-					4 * (resource - 1) +
-					Data_Buildings[warehouseId].loadsStored - 1;
-			}
+			Resource_setWarehouseSpaceGraphic(warehouseId, resource);
 			return resource;
 		}
 	}

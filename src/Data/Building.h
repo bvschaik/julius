@@ -270,8 +270,8 @@ extern struct Data_Building {
 			short fetchInventoryId;
 		} market;
 		struct {
-			short unknown;
-			short resourceStored[16];
+			short unknown; //4a
+			short resourceStored[16]; //4c and further
 		} storage;
 		struct {
 			short progress; //4a+b

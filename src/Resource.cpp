@@ -3,12 +3,14 @@
 #include "Building.h"
 #include "Calc.h"
 #include "Terrain.h"
+#include "Tutorial.h"
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 #include "Data/Graphics.h"
 #include "Data/Grid.h"
+#include "Data/Model.h"
 #include "Data/Scenario.h"
 #include "Data/Trade.h"
 
@@ -72,107 +74,6 @@ void Resource_calculateWorkshopStocks()
 	}
 }
 
-void Resource_addToCityWarehouses(int resource, int amount)
-{
-	int buildingId = Data_CityInfo.resourceLastTargetWarehouse;
-	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (++buildingId >= MAX_BUILDINGS) {
-			buildingId = 1;
-		}
-		if (Data_Buildings[buildingId].inUse == 1 &&
-			Data_Buildings[buildingId].type == Building_Warehouse) {
-			Data_CityInfo.resourceLastTargetWarehouse = buildingId;
-			while (amount && Resource_addToWarehouse(buildingId, resource)) {
-				amount--;
-			}
-		}
-	}
-}
-
-int Resource_removeFromCityWarehouses(int resource, int amount)
-{
-	int amountLeft = amount;
-	int buildingId = Data_CityInfo.resourceLastTargetWarehouse;
-	// first go for non-getting warehouses
-	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (++buildingId >= MAX_BUILDINGS) {
-			buildingId = 1;
-		}
-		if (Data_Buildings[buildingId].inUse == 1 &&
-			Data_Buildings[buildingId].type == Building_Warehouse) {
-			int storageId = Data_Buildings[buildingId].storageId;
-			if (Data_Building_Storages[storageId].resourceState[resource] != BuildingStorageState_Getting) {
-				Data_CityInfo.resourceLastTargetWarehouse = buildingId;
-				amountLeft = Resource_removeFromWarehouse(buildingId, resource, amountLeft);
-			}
-		}
-	}
-	// if that doesn't work, take it anyway
-	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (++buildingId >= MAX_BUILDINGS) {
-			buildingId = 1;
-		}
-		if (Data_Buildings[buildingId].inUse == 1 &&
-			Data_Buildings[buildingId].type == Building_Warehouse) {
-			Data_CityInfo.resourceLastTargetWarehouse = buildingId;
-			amountLeft = Resource_removeFromWarehouse(buildingId, resource, amountLeft);
-		}
-	}
-	return amount - amountLeft;
-}
-
-int Resource_addToWarehouse(int buildingId, int resource)
-{
-	// TODO
-	return 0;
-}
-
-int Resource_removeFromWarehouse(int buildingId, int resource, int amount)
-{
-	// TODO
-	return 0;
-}
-
-
-int Resource_getAmountStoredInWarehouse(int buildingId, int resource)
-{
-	int loads = 0;
-	for (int i = 0; i < 8; i++) {
-		buildingId = Data_Buildings[buildingId].nextPartBuildingId;
-		if (buildingId <= 0) {
-			return 0;
-		}
-		if (resource && Data_Buildings[buildingId].subtype.warehouseResourceId == resource) {
-			loads += Data_Buildings[buildingId].loadsStored;
-		}
-	}
-	return loads;
-}
-
-int Resource_getWarehouseSpaceInfo(int buildingId)
-{
-	int totalLoads = 0;
-	int emptySpaces = 0;
-	for (int i = 0; i < 8; i++) {
-		buildingId = Data_Buildings[buildingId].nextPartBuildingId;
-		if (buildingId <= 0) {
-			return 0;
-		}
-		if (Data_Buildings[buildingId].subtype.warehouseResourceId) {
-			totalLoads += Data_Buildings[buildingId].loadsStored;
-		} else {
-			emptySpaces++;
-		}
-	}
-	if (emptySpaces > 0) {
-		return 0; // room available
-	} else if (totalLoads < 32) {
-		return 2; // some room available for existing goods
-	} else {
-		return 1; // full
-	}
-}
-
 int Resource_getGraphicIdOffset(int resource, int type)
 {
 	if (resource == Resource_Meat && Data_Scenario.allowedBuildings.wharf) {
@@ -188,47 +89,115 @@ int Resource_getGraphicIdOffset(int resource, int type)
 	}
 }
 
-void Resource_addImportedResourceToWarehouseSpace(int spaceId, int resourceId)
+int Resource_getWorkshopWithRoomForRawMaterial(
+	int x, int y, int resource, int distanceFromEntry, int roadNetworkId)
 {
-	Data_CityInfo.resourceSpaceInWarehouses[resourceId]--;
-	Data_CityInfo.resourceStored[resourceId]++;
-	Data_Buildings[spaceId].loadsStored++;
-	Data_Buildings[spaceId].subtype.warehouseResourceId = resourceId;
-	
-	Data_CityInfo.treasury -= Data_TradePrices[resourceId].buy;
-	Data_CityInfo.financeImportsThisYear += Data_TradePrices[resourceId].buy;
-	
-	// update graphic id
-	Data_Grid_graphicIds[Data_Buildings[spaceId].gridOffset] =
-		GraphicId(ID_Graphic_WarehouseStorageFilled) +
-		4 * (resourceId - 1) + Resource_getGraphicIdOffset(resourceId, 0) +
-		Data_Buildings[spaceId].loadsStored - 1;
+	if (Data_CityInfo.resourceStockpiled[resource]) {
+		return 0;
+	}
+	int outputType;
+	switch (resource) {
+		case Resource_Olives: outputType = WorkshopResource_OlivesToOil; break;
+		case Resource_Vines: outputType = WorkshopResource_VinesToWine; break;
+		case Resource_Iron: outputType = WorkshopResource_IronToWeapons; break;
+		case Resource_Timber: outputType = WorkshopResource_TimberToFurniture; break;
+		case Resource_Clay: outputType = WorkshopResource_ClayToPottery; break;
+		default: return 0;
+	}
+	int minDist = 10000;
+	int minBuildingId = 0;
+	for (int i = 1; i < MAX_BUILDINGS; i++) {
+		struct Data_Building *b = &Data_Buildings[i];
+		if (b->inUse != 1 || !BuildingIsWorkshop(i)) {
+			continue;
+		}
+		if (!b->hasRoadAccess || b->distanceFromEntry <= 0) {
+			continue;
+		}
+		if (b->subtype.workshopResource == outputType && b->roadNetworkId == roadNetworkId && b->loadsStored < 2) {
+			int dist = Resource_getDistance(b->x, b->y, x, y, distanceFromEntry, b->distanceFromEntry);
+			if (b->loadsStored > 0) {
+				dist += 20;
+			}
+			if (dist < minDist) {
+				minDist = dist;
+				minBuildingId = i;
+			}
+		}
+	}
+	// TODO store b->20x/21y somewhere?
+	return minBuildingId;
 }
 
-void Resource_removeExportedResourceFromWarehouseSpace(int spaceId, int resourceId)
+int Resource_getWorkshopForRawMaterial(
+	int x, int y, int resource, int distanceFromEntry, int roadNetworkId)
 {
-	Data_CityInfo.resourceSpaceInWarehouses[resourceId]++;
-	Data_CityInfo.resourceStored[resourceId]--;
-	if (--Data_Buildings[spaceId].loadsStored <= 0) {
-		Data_Buildings[spaceId].subtype.warehouseResourceId = Resource_None;
+	if (Data_CityInfo.resourceStockpiled[resource]) {
+		return 0;
 	}
-	
-	Data_CityInfo.treasury += Data_TradePrices[resourceId].sell;
-	Data_CityInfo.financeExportsThisYear += Data_TradePrices[resourceId].sell;
-	if (Data_CityInfo.godBlessingNeptuneDoubleTrade) {
-		Data_CityInfo.treasury += Data_TradePrices[resourceId].sell;
-		Data_CityInfo.financeExportsThisYear += Data_TradePrices[resourceId].sell;
+	int outputType;
+	switch (resource) {
+		case Resource_Olives: outputType = WorkshopResource_OlivesToOil; break;
+		case Resource_Vines: outputType = WorkshopResource_VinesToWine; break;
+		case Resource_Iron: outputType = WorkshopResource_IronToWeapons; break;
+		case Resource_Timber: outputType = WorkshopResource_TimberToFurniture; break;
+		case Resource_Clay: outputType = WorkshopResource_ClayToPottery; break;
+		default: return 0;
 	}
-	
-	// update graphic id
-	int gridOffset = Data_Buildings[spaceId].gridOffset;
-	if (Data_Buildings[spaceId].loadsStored <= 0) {
-		Data_Grid_graphicIds[gridOffset] = GraphicId(ID_Graphic_WarehouseStorageEmpty);
-	} else {
-		Data_Grid_graphicIds[gridOffset] =
-			GraphicId(ID_Graphic_WarehouseStorageFilled) +
-			4 * (resourceId - 1) + Resource_getGraphicIdOffset(resourceId, 0) +
-			Data_Buildings[spaceId].loadsStored - 1;
+	int minDist = 10000;
+	int minBuildingId = 0;
+	for (int i = 1; i < MAX_BUILDINGS; i++) {
+		struct Data_Building *b = &Data_Buildings[i];
+		if (b->inUse != 1 || !BuildingIsWorkshop(i)) {
+			continue;
+		}
+		if (!b->hasRoadAccess || b->distanceFromEntry <= 0) {
+			continue;
+		}
+		if (b->subtype.workshopResource == outputType && b->roadNetworkId == roadNetworkId) {
+			int dist = 10 * b->loadsStored +
+				Resource_getDistance(b->x, b->y, x, y, distanceFromEntry, b->distanceFromEntry);
+			if (dist < minDist) {
+				minDist = dist;
+				minBuildingId = i;
+			}
+		}
+	}
+	// TODO store b->20x/21y somewhere?
+	return minBuildingId;
+}
+
+int Resource_getBarracksForWeapon(int xUnused, int yUnused, int resource, int roadNetworkId)
+{
+	if (resource != Resource_Weapons) {
+		return 0;
+	}
+	if (Data_CityInfo.resourceStockpiled[Resource_Weapons]) {
+		return 0;
+	}
+	if (Data_CityInfo_Buildings.barracks.working <= 0) {
+		return 0;
+	}
+	struct Data_Building *b = &Data_Buildings[Data_CityInfo.buildingBarracksBuildingId];
+	if (b->loadsStored < 5 && Data_CityInfo.militaryLegionaryLegions > 0) {
+		if (Terrain_hasRoadAccess(b->x, b->y, b->size, 0, 0) && b->roadNetworkId == roadNetworkId) {
+			return Data_CityInfo.buildingBarracksBuildingId;
+		}
+	}
+	return 0;
+}
+
+void Resource_addRawMaterialToWorkshop(int buildingId)
+{
+	if (buildingId > 0 && BuildingIsWorkshop(buildingId)) {
+		Data_Buildings[buildingId].loadsStored++;
+	}
+}
+
+void Resource_addWeaponToBarracks(int buildingId)
+{
+	if (buildingId > 0) {
+		Data_Buildings[buildingId].loadsStored++;
 	}
 }
 
@@ -245,3 +214,4 @@ int Resource_getDistance(int x1, int y1, int x2, int y2, int distToEntry1, int d
 	}
 	return diff + Calc_distanceMaximum(x1, y1, x2, y2);
 }
+
