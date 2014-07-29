@@ -305,7 +305,7 @@ int Walker_determinePhrase(int walkerId)
 			}
 			break;
 		case Walker_MarketBuyer:
-			if (w->actionState == WalkerActionState_145_MarketBuyer) {
+			if (w->actionState == WalkerActionState_145_MarketBuyerCreated) {
 				phraseId = 7;
 			} else if (w->actionState == WalkerActionState_146_MarketBuyer) {
 				phraseId = 8;

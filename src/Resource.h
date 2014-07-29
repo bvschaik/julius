@@ -50,4 +50,12 @@ int Resource_getBarracksForWeapon(int xUnused, int yUnused, int resource, int ro
 void Resource_addRawMaterialToWorkshop(int buildingId);
 void Resource_addWeaponToBarracks(int buildingId);
 
+int Resource_determineWarehouseWorkerTask(int buildingId, int *resource);
+int Resource_determineGranaryWorkerTask(int buildingId);
+
+enum {
+	StorageWalkerTask_Getting = 0,
+	StorageWalkerTask_Delivering = 1,
+};
+
 #endif

@@ -291,7 +291,7 @@ static void drawWalkerInfoMarketBuyer(BuildingInfoContext *c, int walkerId)
 	int width = Widget_GameText_draw(64, Data_Walkers[walkerId].type,
 		c->xOffset + 92, c->yOffset + 139, Font_SmallBlack);
 	
-	if (Data_Walkers[walkerId].actionState == WalkerActionState_145_MarketBuyer) {
+	if (Data_Walkers[walkerId].actionState == WalkerActionState_145_MarketBuyerCreated) {
 		width += Widget_GameText_draw(129, 17,
 			c->xOffset + 90 + width, c->yOffset + 139, Font_SmallBlack);
 		int resourceId = collectingItemIdToResourceId(Data_Walkers[walkerId].collectingItemId);

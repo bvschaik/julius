@@ -138,6 +138,18 @@ void Walker_createFlotsam(int xEntry, int yEntry, int hasWater)
 	// TODO
 }
 
+int Walker_createSoldierFromBarracks(int buildingId, int x, int y)
+{
+	// TODO
+	return 0;
+}
+
+int Walker_createTowerSentryFromBarracks(int buildingId, int x, int y)
+{
+	// TODO
+	return 0;
+}
+
 void Walker_addToTileList(int walkerId)
 {
 	if (Data_Walkers[walkerId].gridOffset < 0) {

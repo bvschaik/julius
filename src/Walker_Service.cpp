@@ -437,7 +437,7 @@ int Walker_provideServiceCoverage(int walkerId)
 			}
 			break;
 		case Walker_Actor:
-			if (Data_Walkers[walkerId].actionState == WalkerActionState_94_Entertainer ||
+			if (Data_Walkers[walkerId].actionState == WalkerActionState_94_EntertainerAtVenueCreated||
 				Data_Walkers[walkerId].actionState == WalkerActionState_95_Entertainer) {
 				buildingId = Data_Walkers[walkerId].buildingId;
 			} else { // going to venue
@@ -451,7 +451,7 @@ int Walker_provideServiceCoverage(int walkerId)
 			}
 			break;
 		case Walker_Gladiator:
-			if (Data_Walkers[walkerId].actionState == WalkerActionState_94_Entertainer ||
+			if (Data_Walkers[walkerId].actionState == WalkerActionState_94_EntertainerAtVenueCreated ||
 				Data_Walkers[walkerId].actionState == WalkerActionState_95_Entertainer) {
 				buildingId = Data_Walkers[walkerId].buildingId;
 			} else { // going to venue
@@ -466,7 +466,7 @@ int Walker_provideServiceCoverage(int walkerId)
 			}
 			break;
 		case Walker_LionTamer:
-			if (Data_Walkers[walkerId].actionState == WalkerActionState_94_Entertainer ||
+			if (Data_Walkers[walkerId].actionState == WalkerActionState_94_EntertainerAtVenueCreated ||
 				Data_Walkers[walkerId].actionState == WalkerActionState_95_Entertainer) {
 				buildingId = Data_Walkers[walkerId].buildingId;
 			} else { // going to venue

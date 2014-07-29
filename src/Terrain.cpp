@@ -528,6 +528,21 @@ int Terrain_isClear(int x, int y, int size, int disallowedTerrain, int graphicSe
 	return 1;
 }
 
+int Terrain_canSpawnFishingBoatInWater(int x, int y, int size, int *xTile, int *yTile)
+{
+	FOR_XY_ADJACENT(
+		if (Data_Grid_terrain[gridOffset] & Terrain_Water) {
+			if (!(Data_Grid_terrain[gridOffset] & Terrain_Building)) {
+				if (TerrainGraphicsContext_getNumWaterTiles(gridOffset) >= 8) {
+					STORE_XY_ADJACENT(xTile, yTile);
+					return 1;
+				}
+			}
+		}
+	);
+	return 0;
+}
+
 int Terrain_isAdjacentToWall(int x, int y, int size)
 {
 	FOR_XY_ADJACENT(

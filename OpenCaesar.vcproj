@@ -660,6 +660,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\WalkerGeneration.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\WalkerMovement.cpp"
 				>
 			</File>

@@ -10,6 +10,9 @@ void Walker_createFishingPoints();
 void Walker_createHerds();
 void Walker_createFlotsam(int xEntry, int yEntry, int hasWater);
 
+int Walker_createSoldierFromBarracks(int buildingId, int x, int y);
+int Walker_createTowerSentryFromBarracks(int buildingId, int x, int y);
+
 void Walker_addToTileList(int walkerId);
 void Walker_updatePositionInTileList(int walkerId);
 void Walker_removeFromTileList(int walkerId);

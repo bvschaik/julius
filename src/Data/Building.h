@@ -267,7 +267,7 @@ extern struct Data_Building {
 			short oilDemand; // 60
 			short wineDemand; // 62
 			char __padding[6]; // 64 - 69
-			short fetchInventoryId;
+			char fetchInventoryId; // 6a
 		} market;
 		struct {
 			short unknown; //4a

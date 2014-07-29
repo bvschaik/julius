@@ -293,7 +293,7 @@ void TerrainGraphicsContext_init()
 	}
 }
 
-int contextMatchesTiles(struct TerrainGraphicsContext *context, int tiles[8])
+static int contextMatchesTiles(struct TerrainGraphicsContext *context, int tiles[8])
 {
 	for (int i = 0; i < 8; i++) {
 		if (context->tiles[i] != 2 && tiles[i] != context->tiles[i]) {
@@ -353,4 +353,15 @@ const TerrainGraphic *TerrainGraphicsContext_getShore(int gridOffset)
 		tiles[i] = Data_Grid_terrain[gridOffset + contextTileOffsets[i]] & Terrain_Water ? 0 : 1;
 	}
 	return TerrainGraphicsContext_getGraphic(TerrainGraphicsContext_Water, tiles);
+}
+
+int TerrainGraphicsContext_getNumWaterTiles(int gridOffset)
+{
+	int amount = 0;
+	for (int i = 0; i < 8; i++) {
+		if (Data_Grid_terrain[gridOffset + contextTileOffsets[i]] & Terrain_Water) {
+			amount++;
+		}
+	}
+	return amount;
 }

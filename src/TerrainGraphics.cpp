@@ -498,6 +498,17 @@ void TerrainGraphics_setBuildingFarm(int buildingId, int x, int y, int cropGraph
 	Data_Grid_graphicIds[gridOffset] = cropGraphicId + (growth < 4 ? growth : 4);
 }
 
+void TerrainGraphics_updateNativeCropProgress(int buildingId)
+{
+	struct Data_Building *b = &Data_Buildings[buildingId];
+	b->data.industry.progress++;
+	if (b->data.industry.progress >= 5) {
+		b->data.industry.progress = 0;
+	}
+	Data_Grid_graphicIds[b->gridOffset] =
+		GraphicId(ID_Graphic_FarmCrops) + b->data.industry.progress;
+}
+
 void TerrainGraphics_setTileWater(int x, int y)
 {
 	Data_Grid_terrain[GridOffset(x, y)] |= Terrain_Water;

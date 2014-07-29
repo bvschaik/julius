@@ -1,5 +1,10 @@
 #include "WalkerMovement.h"
 
+void WalkerMovement_initRoaming(int walkerId)
+{
+	// TODO
+}
+
 void WalkerMovement_roamTicks(int walkerId, int numTicks)
 {
 	// TODO

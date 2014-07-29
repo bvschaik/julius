@@ -19,6 +19,7 @@ void Formation_legionReturnHome(int formationId);
 void Formation_calculateLegionTotals();
 int Formation_anyLegionNeedsSoldiers();
 int Formation_getClosestMilitaryAcademy(int formationId);
+void Formation_setNewSoldierRequest(int buildingId);
 
 void Formation_updateAfterDeath(int formationId);
 

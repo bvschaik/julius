@@ -730,10 +730,7 @@ extern struct Data_CityInfo {
 	int ratingFavorChange; // 0 = dropping, 1 = stalling, 2 = rising
 	int nativeAttackDuration;
 	int __unused_nativeForceAttack;
-	char __unknown_44c0;
-	char __unknown_44c1;
-	char __unknown_44c2;
-	char __unknown_44c3;
+	int nativeMissionPostOperational;
 	int nativeMainMeetingCenterX;
 	int nativeMainMeetingCenterY;
 	int wageRatePaidLastYear;

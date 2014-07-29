@@ -20,6 +20,8 @@ int Terrain_getClosestRoadWithinRadius(int x, int y, int size, int radius, int *
 
 int Terrain_isClear(int x, int y, int size, int disallowedTerrain, int graphicSet);
 
+int Terrain_canSpawnFishingBoatInWater(int x, int y, int size, int *xTile, int *yTile);
+
 int Terrain_isAdjacentToWall(int x, int y, int size);
 int Terrain_isAdjacentToWater(int x, int y, int size);
 int Terrain_isAdjacentToOpenWater(int x, int y, int size);

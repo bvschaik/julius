@@ -15,6 +15,7 @@ void TerrainGraphics_updateRegionRubble(int xMin, int yMin, int xMax, int yMax);
 
 void TerrainGraphics_setBuildingAreaRubble(int buildingId, int x, int y, int size);
 void TerrainGraphics_setBuildingFarm(int buildingId, int x, int y, int cropGraphicId, int progress);
+void TerrainGraphics_updateNativeCropProgress(int buildingId);
 
 void TerrainGraphics_setTileWater(int x, int y);
 void TerrainGraphics_setTileEarthquake(int x, int y);
@@ -44,5 +45,6 @@ void TerrainGraphicsContext_init();
 const TerrainGraphic *TerrainGraphicsContext_getElevation(int gridOffset, int elevation);
 const TerrainGraphic *TerrainGraphicsContext_getEarthquake(int gridOffset);
 const TerrainGraphic *TerrainGraphicsContext_getShore(int gridOffset);
+int TerrainGraphicsContext_getNumWaterTiles(int gridOffset);
 
 #endif

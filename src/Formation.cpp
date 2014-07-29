@@ -185,6 +185,11 @@ int Formation_getClosestMilitaryAcademy(int formationId)
 	return minBuildingId;
 }
 
+void Formation_setNewSoldierRequest(int buildingId)
+{
+	// TODO
+}
+
 void Formation_calculateWalkers()
 {
 	for (int i = 1; i < MAX_FORMATIONS; i++) {
