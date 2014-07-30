@@ -13,7 +13,7 @@
 #include <cstdio>
 
 static void UI_CityBuildings_drawBuildingFootprints();
-static void UI_CityBuildings_drawBuildingTopsWalkersAnimation(int selectedWalkerId, struct PixelCoordinate *coord);
+static void UI_CityBuildings_drawBuildingTopsWalkersAnimation(int selectedWalkerId, struct UI_CityPixelCoordinate *coord);
 static void UI_CityBuildings_drawHippodromeAndElevatedWalkers(int selectedWalkerId);
 
 static TimeMillis lastWaterAnimationTime = 0;
@@ -45,6 +45,21 @@ void UI_CityBuildings_drawForeground(int x, int y)
 		UI_CityBuildings_drawSelectedBuildingGhost();
 		UI_CityBuildings_drawHippodromeAndElevatedWalkers(0);
 	}
+
+	Graphics_resetClipRectangle();
+}
+
+void UI_CityBuildings_drawForegroundForWalker(int x, int y, int walkerId, UI_CityPixelCoordinate *coord)
+{
+	Data_CityView.xInTiles = x;
+	Data_CityView.yInTiles = y;
+	Graphics_setClipRectangle(
+		Data_CityView.xOffsetInPixels, Data_CityView.yOffsetInPixels,
+		Data_CityView.widthInPixels, Data_CityView.heightInPixels);
+
+	UI_CityBuildings_drawBuildingFootprints();
+	UI_CityBuildings_drawBuildingTopsWalkersAnimation(walkerId, coord);
+	UI_CityBuildings_drawHippodromeAndElevatedWalkers(0);
 
 	Graphics_resetClipRectangle();
 }
@@ -115,7 +130,7 @@ static void UI_CityBuildings_drawBuildingFootprints()
 	});
 }
 
-static void UI_CityBuildings_drawBuildingTopsWalkersAnimation(int selectedWalkerId, struct PixelCoordinate *coord)
+static void UI_CityBuildings_drawBuildingTopsWalkersAnimation(int selectedWalkerId, struct UI_CityPixelCoordinate *coord)
 {
 	FOREACH_Y_VIEW(
 		FOREACH_X_VIEW(

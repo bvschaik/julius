@@ -214,15 +214,3 @@ int Resource_getDistance(int x1, int y1, int x2, int y2, int distToEntry1, int d
 	}
 	return diff + Calc_distanceMaximum(x1, y1, x2, y2);
 }
-
-int Resource_determineWarehouseWorkerTask(int buildingId, int *resource)
-{
-	// TODO
-	return 0;
-}
-
-int Resource_determineGranaryWorkerTask(int buildingId)
-{
-	// TODO
-	return 0;
-}

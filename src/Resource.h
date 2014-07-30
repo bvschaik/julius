@@ -31,6 +31,8 @@ int Resource_getAmountStoredInWarehouse(int buildingId, int resource);
 
 int Resource_getWarehouseSpaceInfo(int buildingId);
 
+int Resource_determineWarehouseWorkerTask(int buildingId, int *resource);
+
 // granary functions
 void Resource_gatherGranaryGettingInfo();
 
@@ -41,6 +43,11 @@ int Resource_getGettingGranaryForStoringFood(
 	int x, int y, int resource, int distanceFromEntry, int roadNetworkId,
 	int *xDst, int *yDst);
 int Resource_getGranaryForGettingFood(int srcBuildingId, int *xDst, int *yDst);
+int Resource_getAmountStoredInGranary(int buildingId, int resource);
+int Resource_addToGranary(int buildingId, int resource, int countAsProduced);
+int Resource_removeFromGranary(int buildingId, int resource, int amount);
+int Resource_determineGranaryWorkerTask(int buildingId);
+int Resource_takeFoodFromGranaryForGettingDeliveryman(int dstBuildingId, int srcBuildingId, int *resource);
 
 // other functions
 int Resource_getWorkshopWithRoomForRawMaterial(int x, int y, int resource, int distanceFromEntry, int roadNetworkId);
@@ -49,9 +56,6 @@ int Resource_getBarracksForWeapon(int xUnused, int yUnused, int resource, int ro
 
 void Resource_addRawMaterialToWorkshop(int buildingId);
 void Resource_addWeaponToBarracks(int buildingId);
-
-int Resource_determineWarehouseWorkerTask(int buildingId, int *resource);
-int Resource_determineGranaryWorkerTask(int buildingId);
 
 enum {
 	StorageWalkerTask_Getting = 0,

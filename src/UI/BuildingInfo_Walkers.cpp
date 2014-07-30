@@ -1,6 +1,8 @@
 #include "BuildingInfo.h"
 
+#include "CityBuildings.h"
 #include "Window.h"
+#include "../CityView.h"
 #include "../Graphics.h"
 #include "../Resource.h"
 #include "../Walker.h"
@@ -11,6 +13,7 @@
 #include "../Data/Empire.h"
 #include "../Data/Formation.h"
 #include "../Data/Scenario.h"
+#include "../Data/Settings.h"
 #include "../Data/Walker.h"
 
 static void selectWalker(int param1, int param2);
@@ -374,14 +377,37 @@ void UI_BuildingInfo_drawWalkerList(BuildingInfoContext *c)
 	c->walker.drawn = 1;
 }
 
+static void drawWalkerInCity(int walkerId, UI_CityPixelCoordinate *coord)
+{
+	int xCam = Data_Settings_Map.camera.x;
+	int yCam = Data_Settings_Map.camera.y;
+
+	int gridOffset = Data_Walkers[walkerId].gridOffset;
+	int x, y;
+	CityView_gridOffsetToXYCoords(gridOffset, &x, &y);
+	Data_Settings_Map.camera.x = x - 2;
+	Data_Settings_Map.camera.y = y - 6;
+	CityView_checkCameraBoundaries();
+	// TODO setIsometricViewportForWalker()
+	UI_CityBuildings_drawForegroundForWalker(
+		Data_Settings_Map.camera.x, Data_Settings_Map.camera.y,
+		walkerId, coord);
+
+
+	Data_Settings_Map.camera.x = xCam;
+	Data_Settings_Map.camera.y = yCam;
+	// TODO setCityViewport_(with|without)Panel?
+}
+
 void UI_BuildingInfo_drawWalkerImagesLocal(BuildingInfoContext *c)
 {
 	if (c->walker.count > 0) {
+		UI_CityPixelCoordinate coord;
 		for (int i = 0; i < c->walker.count; i++) {
-			// TODO draw walker and determine x/y
-			int x = 0, y = 0;
-			Graphics_saveToBuffer(x, y, 48, 48, walkerImages[i]);
+			drawWalkerInCity(c->walker.walkerIds[i], &coord);
+			Graphics_saveToBuffer(coord.x, coord.y, 48, 48, walkerImages[i]);
 		}
+		UI_CityBuildings_drawForeground(Data_Settings_Map.camera.x, Data_Settings_Map.camera.y);
 	}
 }
 

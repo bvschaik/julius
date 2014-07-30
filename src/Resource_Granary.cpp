@@ -303,3 +303,87 @@ int Resource_removeFromGranary(int buildingId, int resource, int amount)
 	}
 	return toRemove;
 }
+
+int Resource_determineGranaryWorkerTask(int buildingId)
+{
+	struct Data_Building *b = &Data_Buildings[buildingId];
+	int pctWorkers = Calc_getPercentage(b->numWorkers, Data_Model_Buildings[b->type].laborers);
+	if (pctWorkers < 50) {
+		return -1;
+	}
+	struct Data_Building_Storage *s = &Data_Building_Storages[b->storageId];
+	if (s->emptyAll) {
+		// bring food to another granary
+		for (int i = Resource_Wheat; i <= Resource_Meat; i++) {
+			if (b->data.storage.resourceStored[i]) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	if (b->data.storage.resourceStored[Resource_None] <= 0) {
+		return -1; // nothing to get
+	}
+	if (s->resourceState[Resource_Wheat] == BuildingStorageState_Getting && nonGettingGranaries.totalStorageFruit > 100) {
+		return 0;
+	}
+	if (s->resourceState[Resource_Vegetables] == BuildingStorageState_Getting && nonGettingGranaries.totalStorageWheat > 100) {
+		return 0;
+	}
+	if (s->resourceState[Resource_Fruit] == BuildingStorageState_Getting && nonGettingGranaries.totalStorageWheat > 100) {
+		return 0;
+	}
+	if (s->resourceState[Resource_Meat] == BuildingStorageState_Getting && nonGettingGranaries.totalStorageWheat > 100) {
+		return 0;
+	}
+	return -1;
+}
+
+int Resource_takeFoodFromGranaryForGettingDeliveryman(int dstBuildingId, int srcBuildingId, int *resource)
+{
+	struct Data_Building *bSrc = &Data_Buildings[srcBuildingId];
+	struct Data_Building_Storage *sSrc = &Data_Building_Storages[bSrc->storageId];
+	struct Data_Building *bDst = &Data_Buildings[dstBuildingId];
+	struct Data_Building_Storage *sDst = &Data_Building_Storages[bDst->storageId];
+	
+	int maxAmount = 0;
+	int maxResource = 0;
+	if (sDst->resourceState[Resource_Wheat] == BuildingStorageState_Getting &&
+		sSrc->resourceState[Resource_Wheat] != BuildingStorageState_Getting) {
+		if (bSrc->data.storage.resourceStored[Resource_Wheat] > maxAmount) {
+			maxAmount = bSrc->data.storage.resourceStored[Resource_Wheat];
+			maxResource = Resource_Wheat;
+		}
+	}
+	if (sDst->resourceState[Resource_Vegetables] == BuildingStorageState_Getting &&
+		sSrc->resourceState[Resource_Vegetables] != BuildingStorageState_Getting) {
+		if (bSrc->data.storage.resourceStored[Resource_Vegetables] > maxAmount) {
+			maxAmount = bSrc->data.storage.resourceStored[Resource_Vegetables];
+			maxResource = Resource_Vegetables;
+		}
+	}
+	if (sDst->resourceState[Resource_Fruit] == BuildingStorageState_Getting &&
+		sSrc->resourceState[Resource_Fruit] != BuildingStorageState_Getting) {
+		if (bSrc->data.storage.resourceStored[Resource_Fruit] > maxAmount) {
+			maxAmount = bSrc->data.storage.resourceStored[Resource_Fruit];
+			maxResource = Resource_Fruit;
+		}
+	}
+	if (sDst->resourceState[Resource_Meat] == BuildingStorageState_Getting &&
+		sSrc->resourceState[Resource_Meat] != BuildingStorageState_Getting) {
+		if (bSrc->data.storage.resourceStored[Resource_Meat] > maxAmount) {
+			maxAmount = bSrc->data.storage.resourceStored[Resource_Meat];
+			maxResource = Resource_Meat;
+		}
+	}
+	
+	if (maxAmount > 800) {
+		maxAmount = 800;
+	}
+	if (maxAmount > bDst->data.storage.resourceStored[Resource_None]) {
+		maxAmount = bDst->data.storage.resourceStored[Resource_None];
+	}
+	Resource_removeFromGranary(srcBuildingId, maxResource, maxAmount);
+	*resource = maxResource;
+	return maxAmount / 100;
+}

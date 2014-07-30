@@ -254,7 +254,7 @@ static int tileProgressToPixelOffsetY(int direction, int progress)
 	return offset;
 }
 
-void UI_CityBuildings_drawWalker(int walkerId, int xOffset, int yOffset, int selectedWalkerId, struct PixelCoordinate *coord)
+void UI_CityBuildings_drawWalker(int walkerId, int xOffset, int yOffset, int selectedWalkerId, struct UI_CityPixelCoordinate *coord)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 

@@ -11,7 +11,11 @@
 #include "Data/Graphics.h"
 #include "Data/Grid.h"
 #include "Data/Model.h"
+#include "Data/Scenario.h"
 #include "Data/Trade.h"
+
+static int granaryGettingResource[7];
+static int granaryAcceptingResource[7];
 
 void Resource_setWarehouseSpaceGraphic(int spaceId, int resource)
 {
@@ -356,3 +360,211 @@ void Resource_removeExportedResourceFromWarehouseSpace(int spaceId, int resource
 	Resource_setWarehouseSpaceGraphic(spaceId, resourceId);
 }
 
+int determineGranaryAcceptFoods()
+{
+	if (Data_Scenario.romeSuppliesWheat) {
+		return 0;
+	}
+	for (int i = 0; i <= Resource_Meat; i++) {
+		granaryAcceptingResource[i] = 0;
+	}
+	int canAccept = 0;
+	for (int i = 1; i < MAX_BUILDINGS; i++) {
+		struct Data_Building *b = &Data_Buildings[i];
+		if (b->inUse != 1 || b->type != Building_Granary || !b->hasRoadAccess) {
+			continue;
+		}
+		int pctWorkers = Calc_getPercentage(b->numWorkers, Data_Model_Buildings[b->type].laborers);
+		if (pctWorkers >= 100 && b->data.storage.resourceStored[Resource_None] >= 1200) {
+			struct Data_Building_Storage *s = &Data_Building_Storages[b->storageId];
+			if (!s->emptyAll) {
+				for (int r = 0; r <= Resource_Meat; r++) {
+					if (s->resourceState[r] != BuildingStorageState_NotAccepting) {
+						granaryAcceptingResource[r]++;
+						canAccept = 1;
+					}
+				}
+			}
+		}
+	}
+	return canAccept;
+}
+
+int determineGranaryGetFoods()
+{
+	if (Data_Scenario.romeSuppliesWheat) {
+		return 0;
+	}
+	for (int i = 0; i <= Resource_Meat; i++) {
+		granaryGettingResource[i] = 0;
+	}
+	int canGet = 0;
+	for (int i = 1; i < MAX_BUILDINGS; i++) {
+		struct Data_Building *b = &Data_Buildings[i];
+		if (b->inUse != 1 || b->type != Building_Granary || !b->hasRoadAccess) {
+			continue;
+		}
+		int pctWorkers = Calc_getPercentage(b->numWorkers, Data_Model_Buildings[b->type].laborers);
+		if (pctWorkers >= 100 && b->data.storage.resourceStored[Resource_None] > 100) {
+			struct Data_Building_Storage *s = &Data_Building_Storages[b->storageId];
+			if (!s->emptyAll) {
+				for (int r = 0; r <= Resource_Meat; r++) {
+					if (s->resourceState[r] == BuildingStorageState_Getting) {
+						granaryGettingResource[r]++;
+						canGet = 1;
+					}
+				}
+			}
+		}
+	}
+	return canGet;
+}
+
+int storesNonStockpiledFood(int spaceId, int *granaryResources)
+{
+	if (spaceId <= 0) {
+		return 0;
+	}
+	if (Data_Buildings[spaceId].loadsStored <= 0) {
+		return 0;
+	}
+	int resource = Data_Buildings[spaceId].subtype.warehouseResourceId;
+	if (Data_CityInfo.resourceStockpiled[resource]) {
+		return 0;
+	}
+	if (resource == Resource_Wheat || resource == Resource_Vegetables ||
+		resource == Resource_Fruit || resource == Resource_Meat) {
+		if (granaryResources[resource] > 0) {
+			return 1;
+		}
+	}
+	return 0;
+}
+
+// 0 = getting resource, >0 = resource to deliver
+int Resource_determineWarehouseWorkerTask(int buildingId, int *resource)
+{
+	struct Data_Building *b = &Data_Buildings[buildingId];
+	int pctWorkers = Calc_getPercentage(b->numWorkers, Data_Model_Buildings[b->type].laborers);
+	if (pctWorkers < 50) {
+		return -1;
+	}
+	struct Data_Building_Storage *s = &Data_Building_Storages[b->storageId];
+	int spaceId;
+	// get resources
+	for (int r = 1; r < 16; r++) {
+		if (s->resourceState[r] != BuildingStorageState_Getting || Data_CityInfo.resourceStockpiled[r]) {
+			continue;
+		}
+		int loadsStored = 0;
+		spaceId = buildingId;
+		for (int i = 0; i < 8; i++) {
+			spaceId = Data_Buildings[spaceId].nextPartBuildingId;
+			if (spaceId > 0 && Data_Buildings[spaceId].loadsStored > 0) {
+				if (Data_Buildings[spaceId].subtype.warehouseResourceId == r) {
+					loadsStored += Data_Buildings[spaceId].loadsStored;
+				}
+			}
+		}
+		int room = 0;
+		spaceId = buildingId;
+		for (int i = 0; i < 8; i++) {
+			spaceId = Data_Buildings[spaceId].nextPartBuildingId;
+			if (spaceId > 0) {
+				if (Data_Buildings[spaceId].loadsStored <= 0) {
+					room += 4;
+				}
+				if (Data_Buildings[spaceId].subtype.warehouseResourceId == r) {
+					room += 4 - Data_Buildings[spaceId].loadsStored;
+				}
+			}
+		}
+		if (room >= 8 && loadsStored <= 4 &&
+				Data_CityInfo.resourceStored[r] - loadsStored > 4) {
+			*resource = r;
+			return 0;
+		}
+	}
+	// deliver weapons to barracks
+	if (Data_CityInfo_Buildings.barracks.working > 0 && Data_CityInfo.militaryLegionaryLegions > 0 &&
+		!Data_CityInfo.resourceStockpiled[Resource_Weapons]) {
+		int barracksId = Data_CityInfo.buildingBarracksBuildingId;
+		if (Data_Buildings[barracksId].loadsStored < 4 &&
+			b->roadNetworkId == Data_Buildings[barracksId].roadNetworkId) {
+			spaceId = buildingId;
+			for (int i = 0; i < 8; i++) {
+				spaceId = Data_Buildings[spaceId].nextPartBuildingId;
+				if (spaceId > 0 && Data_Buildings[spaceId].loadsStored > 0 &&
+					Data_Buildings[spaceId].subtype.warehouseResourceId == Resource_Weapons) {
+					return Resource_Weapons;
+				}
+			}
+		}
+	}
+	// deliver raw materials to workshops
+	spaceId = buildingId;
+	for (int i = 0; i < 8; i++) {
+		spaceId = Data_Buildings[spaceId].nextPartBuildingId;
+		if (spaceId > 0 && Data_Buildings[spaceId].loadsStored > 0) {
+			int resource = Data_Buildings[spaceId].subtype.warehouseResourceId;
+			if (!Data_CityInfo.resourceStockpiled[resource]) {
+				int workshopType;
+				switch (resource) {
+					case Resource_Olives:
+						workshopType = WorkshopResource_OlivesToOil;
+						break;
+					case Resource_Vines:
+						workshopType = WorkshopResource_VinesToWine;
+						break;
+					case Resource_Iron:
+						workshopType = WorkshopResource_IronToWeapons;
+						break;
+					case Resource_Timber:
+						workshopType = WorkshopResource_TimberToFurniture;
+						break;
+					case Resource_Clay:
+						workshopType = WorkshopResource_ClayToPottery;
+						break;
+					default:
+						workshopType = 0;
+						break;
+				}
+				if (workshopType > 0 &&
+						Data_CityInfo.resourceWorkshopRawMaterialSpace[workshopType] > 0) {
+					return resource;
+				}
+			}
+		}
+	}
+	// deliver food to getting granary
+	if (determineGranaryGetFoods()) {
+		spaceId = buildingId;
+		for (int i = 0; i < 8; i++) {
+			spaceId = Data_Buildings[spaceId].nextPartBuildingId;
+			if (storesNonStockpiledFood(spaceId, granaryGettingResource)) {
+				return Data_Buildings[spaceId].subtype.warehouseResourceId;
+			}
+		}
+	}
+	// deliver food to accepting granary
+	if (determineGranaryAcceptFoods() && !Data_Scenario.romeSuppliesWheat) {
+		spaceId = buildingId;
+		for (int i = 0; i < 8; i++) {
+			spaceId = Data_Buildings[spaceId].nextPartBuildingId;
+			if (storesNonStockpiledFood(spaceId, granaryAcceptingResource)) {
+				return Data_Buildings[spaceId].subtype.warehouseResourceId;
+			}
+		}
+	}
+	// move goods to other warehouses
+	if (s->emptyAll) {
+		spaceId = buildingId;
+		for (int i = 0; i < 8; i++) {
+			spaceId = Data_Buildings[spaceId].nextPartBuildingId;
+			if (spaceId > 0 && Data_Buildings[spaceId].loadsStored > 0) {
+				return Data_Buildings[spaceId].subtype.warehouseResourceId;
+			}
+		}
+	}
+	return -1;
+}
