@@ -551,7 +551,6 @@ void Building_determineGraphicIdsForOrientedBuildings()
 					case 2: graphicId = GraphicId(ID_Graphic_Dock3); break;
 					default: graphicId = GraphicId(ID_Graphic_Dock4); break;
 				}
-				graphicId += graphicOffset;
 				Terrain_addWatersideBuildingToGrids(i, b->x, b->y, 3, graphicId);
 				break;
 		}

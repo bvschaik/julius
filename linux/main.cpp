@@ -124,6 +124,7 @@ void mainLoop(SDL_Surface *surface)
 	SDL_Event event;
 	SDL_Event refreshEvent;
 	refreshEvent.user.type = SDL_USEREVENT;
+	Data_Mouse.isInsideWindow = 1;
 	
 	refresh(surface);
     /* While the program is running */
@@ -142,6 +143,10 @@ void mainLoop(SDL_Surface *surface)
 							active = 0;
 						}
 					}
+					if (event.active.state == SDL_APPMOUSEFOCUS) {
+						Data_Mouse.isInsideWindow = event.active.gain;
+					}
+					printf("Active: %d %d\n", event.active.state, event.active.gain);
 					break;
 				
 				case SDL_KEYDOWN:

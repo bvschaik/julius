@@ -14,6 +14,9 @@ static TimeMillis lastScrollTime = 0;
 
 static int shouldScrollMap()
 {
+	if (!Data_Mouse.isInsideWindow) {
+		return 0;
+	}
 	TimeMillis currentTime = Time_getMillis();
 	int diff = currentTime - lastScrollTime;
 	if (currentTime < lastScrollTime) {

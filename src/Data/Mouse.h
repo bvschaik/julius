@@ -15,6 +15,7 @@ extern struct Data_Mouse {
 	int rightDown;
 	int scrollUp;
 	int scrollDown;
+	int isInsideWindow;
 	// filled by game
 	struct Data_Mouse_Button left;
 	struct Data_Mouse_Button right;
