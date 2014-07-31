@@ -19,16 +19,6 @@
 	if (Data_CityInfo.x < min) Data_CityInfo.x = min; \
 	else if (Data_CityInfo.x > max) Data_CityInfo.x = max;
 
-static void performBlessingMercury()
-{
-	// TODO
-}
-
-static void performCurseMercury(int isLarge)
-{
-	// TODO
-}
-
 static int performLargeCurseMars()
 {
 	// TODO
@@ -48,7 +38,7 @@ static void performBlessing(int god)
 			break;
 		case God_Mercury:
 			PlayerMessage_post(1, 98, 0, 0);
-			performBlessingMercury();
+			Building_Mercury_fillGranary();
 			break;
 		case God_Mars:
 			PlayerMessage_post(1, 99, 0, 0);
@@ -75,7 +65,7 @@ static void performSmallCurse(int god)
 			break;
 		case God_Mercury:
 			PlayerMessage_post(1, 93, 0, 0);
-			performCurseMercury(0);
+			Building_Mercury_removeResources(0);
 			break;
 		case God_Mars:
 			if (Event_startInvasionLocalUprisingFromMars()) {
@@ -112,7 +102,7 @@ static void performLargeCurse(int god)
 			break;
 		case God_Mercury:
 			PlayerMessage_post(1, 43, 0, 0);
-			performCurseMercury(1);
+			Building_Mercury_removeResources(1);
 			break;
 		case God_Mars:
 			if (performLargeCurseMars()) {

@@ -10,28 +10,30 @@
 #include "Routing.h"
 #include "SidebarMenu.h"
 #include "Sound.h"
+#include "TerrainGraphics.h"
 #include "Walker.h"
 #include "Zip.h"
 
+#include "Data/Building.h"
+#include "Data/CityInfo.h"
+#include "Data/Debug.h"
+#include "Data/Empire.h"
+#include "Data/Event.h"
+#include "Data/FileList.h"
+#include "Data/Formation.h"
 #include "Data/Grid.h"
+#include "Data/Invasion.h"
+#include "Data/Message.h"
 #include "Data/Random.h"
+#include "Data/Routes.h"
 #include "Data/Scenario.h"
 #include "Data/Settings.h"
-#include "Data/Message.h"
-#include "Data/Empire.h"
-#include "Data/CityInfo.h"
-#include "Data/Walker.h"
-#include "Data/Tutorial.h"
 #include "Data/Sound.h"
-#include "Data/Building.h"
-#include "Data/Invasion.h"
-#include "Data/Trade.h"
-#include "Data/Walker.h"
-#include "Data/Formation.h"
-#include "Data/Debug.h"
-#include "Data/Event.h"
 #include "Data/State.h"
-#include "Data/Routes.h"
+#include "Data/Trade.h"
+#include "Data/Tutorial.h"
+#include "Data/Walker.h"
+#include "Data/Walker.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -56,6 +58,7 @@ static char compressBuffer[COMPRESS_BUFFER_SIZE]; // TODO use global malloc'ed s
 
 static char tmp[COMPRESS_BUFFER_SIZE]; // TODO remove when all savegame fields are known
 
+static int ciid;
 static int endMarker = 0;
 
 static const char missionPackFile[] = "mission1.pak";
@@ -116,7 +119,7 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{1, &Data_CityInfo, 36136},
 	{0, &tmp, 2}, //{0, &byte_658DCC, 2},
 	{0, &playerNames, 64},
-	{0, &tmp, 4}, //{0, &ciid, 4},
+	{0, &ciid, 4},
 	{1, &Data_Buildings, 256000},
 	{0, &Data_Settings_Map.orientation, 4},
 	{0, &Data_CityInfo_Extra.gameTimeTick, 4},
@@ -231,8 +234,8 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{0, &tmp, 4}, //{0, &dword_98BF18, 4},
 	{0, &tmp, 4}, //{0, &dword_98C020, 4},
 	{0, &tmp, 4}, //{0, &dword_607FC8, 4},
-	{0, &tmp, 4}, //{0, &startingFavor, 4},
-	{0, &tmp, 4}, //{0, &personalSavings_lastMission, 4},
+	{0, &Data_Settings.startingFavor, 4},
+	{0, &Data_Settings.personalSavingsLastMission, 4},
 	{0, &Data_Settings.currentMissionId, 4},
 	{1, &Data_InvasionWarnings, 3232},
 	{0, &Data_Settings.isCustomScenario, 4},
@@ -311,10 +314,10 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{0, &tmp, 4}, //{0, &dword_607F98, 4},
 	{0, &tmp, 4}, //{0, &dword_607F9C, 4},
 	{0, &tmp, 4}, //{0, &dword_607FA0, 4},
-	{0, &tmp, 2}, //{0, &lastInvasionInternalId, 2},
+	{0, &Data_Event.lastInternalInvasionId, 2},
 	{0, &Data_Debug.incorrectHousePositions, 4},
 	{0, &Data_Debug.unfixableHousePositions, 4},
-	{0, &tmp, 65}, //{0, &currentScenarioFilename, 0x41},
+	{0, &Data_FileList.selectedScenario, 65},
 	{0, &Data_CityInfo_Extra.bookmarks, 32},
 	{0, &Data_Tutorial.tutorial3.disease, 4},
 	{0, &Data_CityInfo_Extra.gridOffsetEntryPoint, 4},
@@ -499,9 +502,8 @@ static void setupFromSavedGame()
 	Loader_Graphics_loadMainGraphics(Data_Scenario.climate);
 	Loader_Graphics_loadEnemyGraphics(Data_Scenario.enemyId);
 	Empire_determineDistantBattleCity();
-/*
-  j_fun_determineTerrainGardenFromGraphicIds();
-*/
+	TerrainGraphics_determineGardensFromGraphicIds();
+
 	Data_Message.maxScrollPosition = 0;
 	Data_Message.scrollPosition = 0;
 

@@ -47,4 +47,9 @@ int Terrain_isAllRockAndTreesAtDistanceRing(int x, int y, int distance);
 int Terrain_isAllMeadowAtDistanceRing(int x, int y, int distance);
 void Terrain_addDesirability(int x, int y, int size, int desBase, int desStep, int desStepSize, int desRange);
 
+int Terrain_countTerrainTypeDirectlyAdjacentTo(int gridOffset, int terrainMask);
+int Terrain_countTerrainTypeDiagonallyAdjacentTo(int gridOffset, int terrainMask);
+int Terrain_hasTerrainTypeSameYAdjacentTo(int gridOffset, int terrainMask);
+int Terrain_hasTerrainTypeSameXAdjacentTo(int gridOffset, int terrainMask);
+
 #endif

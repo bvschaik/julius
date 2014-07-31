@@ -14,7 +14,6 @@
 
 static int getNewMessageId();
 
-// TODO add setter for outside
 static int playSound = 1;
 static int consecutiveMessageDelay;
 
@@ -26,6 +25,11 @@ static int hasVideo(int textId)
 	}
 	const char *videoFile = &Data_Language_Message.data[offset];
 	return FileSystem_fileExists(videoFile);
+}
+
+void PlayerMessage_disableSoundForNextMessage()
+{
+	playSound = 0;
 }
 
 void PlayerMessage_post(int usePopup, int messageType, int param1, short param2)

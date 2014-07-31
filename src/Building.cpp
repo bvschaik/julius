@@ -1029,3 +1029,88 @@ int Building_Dock_isConnectedToOpenWater(int x, int y)
 		return 0;
 	}
 }
+
+void Building_Mercury_removeResources(int bigCurse)
+{
+	int maxStored = 0;
+	int maxBuildingId = 0;
+	for (int i = 1; i < MAX_BUILDINGS; i++) {
+		struct Data_Building *b = &Data_Buildings[i];
+		if (b->inUse != 1) {
+			continue;
+		}
+		int totalStored = 0;
+		if (b->type == Building_Warehouse) {
+			for (int r = 1; r <= 15; r++) {
+				totalStored += Resource_getAmountStoredInWarehouse(i, r);
+			}
+		} else if (b->type == Building_Granary) {
+			for (int r = 1; r <= 6; r++) {
+				totalStored += Resource_getAmountStoredInGranary(i, r);
+			}
+			totalStored /= 100;
+		} else {
+			continue;
+		}
+		if (totalStored > maxStored) {
+			maxStored = totalStored;
+			maxBuildingId = i;
+		}
+	}
+	if (!maxBuildingId) {
+		return;
+	}
+	struct Data_Building *b = &Data_Buildings[maxBuildingId];
+	if (bigCurse == 1) {
+		PlayerMessage_disableSoundForNextMessage();
+		PlayerMessage_post(0, 12, b->type, b->gridOffset);
+		Building_collapse(maxBuildingId, 0);
+		Building_collapseLinked(maxBuildingId, 1);
+		Sound_Effects_playChannel(SoundChannel_Explosion);
+		Routing_determineLandCitizen();
+		Routing_determineLandNonCitizen();
+	} else {
+		if (b->type == Building_Warehouse) {
+			Resource_removeFromWarehouseForMercury(maxBuildingId, 16);
+		} else if (b->type == Building_Granary) {
+			int amount = Resource_removeFromGranary(maxBuildingId, Resource_Wheat, 1600);
+			amount = Resource_removeFromGranary(maxBuildingId, Resource_Vegetables, amount);
+			amount = Resource_removeFromGranary(maxBuildingId, Resource_Fruit, amount);
+			Resource_removeFromGranary(maxBuildingId, Resource_Meat, amount);
+		}
+	}
+}
+
+void Building_Mercury_fillGranary()
+{
+	int minStored = 10000;
+	int minBuildingId = 0;
+	for (int i = 1; i < MAX_BUILDINGS; i++) {
+		struct Data_Building *b = &Data_Buildings[i];
+		if (b->inUse != 1 || b->type != Building_Granary) {
+			continue;
+		}
+		int totalStored = 0;
+		for (int r = 1; r <= 6; r++) {
+			totalStored += Resource_getAmountStoredInGranary(i, r);
+		}
+		if (totalStored < minStored) {
+			minStored = totalStored;
+			minBuildingId = i;
+		}
+	}
+	if (minBuildingId) {
+		for (int n = 0; n < 6; n++) {
+			Resource_addToGranary(minBuildingId, Resource_Wheat, 0);
+		}
+		for (int n = 0; n < 6; n++) {
+			Resource_addToGranary(minBuildingId, Resource_Vegetables, 0);
+		}
+		for (int n = 0; n < 6; n++) {
+			Resource_addToGranary(minBuildingId, Resource_Fruit, 0);
+		}
+		for (int n = 0; n < 6; n++) {
+			Resource_addToGranary(minBuildingId, Resource_Meat, 0);
+		}
+	}
+}

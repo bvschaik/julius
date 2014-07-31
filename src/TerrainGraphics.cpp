@@ -105,8 +105,55 @@ void TerrainGraphics_updateAllRocks()
 
 void TerrainGraphics_updateAllGardens()
 {
-	// TODO
+	FOREACH_ALL({
+		int terrain = Data_Grid_terrain[gridOffset];
+		if (terrain & Terrain_Garden && !(terrain & (Terrain_Elevation | Terrain_AccessRamp))) {
+			Data_Grid_graphicIds[gridOffset] = 0;
+			Data_Grid_bitfields[gridOffset] &= Bitfield_NoSizes;
+			Data_Grid_edge[gridOffset] |= Edge_LeftmostTile;
+		}
+	});
+	FOREACH_ALL({
+		int terrain = Data_Grid_terrain[gridOffset];
+		if (terrain & Terrain_Garden && !(terrain & (Terrain_Elevation | Terrain_AccessRamp))) {
+			int graphicId = GraphicId(ID_Graphic_Garden);
+			if (isAllTerrainInArea(x, y, 2, Terrain_Garden)) {
+				switch (Data_Grid_random[gridOffset] & 3) {
+					case 0: case 1: graphicId += 6; break;
+					case 2: graphicId += 5; break;
+					case 3: graphicId += 4; break;
+				}
+				Terrain_addBuildingToGrids(0, x, y, 2, graphicId, Terrain_Garden);
+			} else {
+				if (y & 1) {
+					switch (x & 3) {
+						case 0: case 2: graphicId += 2; break;
+						case 1: case 3: graphicId += 3; break;
+					}
+				} else {
+					switch (x & 3) {
+						case 1: case 3: graphicId += 1; break;
+					}
+				}
+				Data_Grid_graphicIds[gridOffset] = graphicId;
+			}
+		}
+	});
 }
+
+void TerrainGraphics_determineGardensFromGraphicIds()
+{
+	int baseGraphicId = GraphicId(ID_Graphic_Garden);
+	FOREACH_ALL({
+		int graphicId = Data_Grid_graphicIds[gridOffset];
+		if (graphicId >= baseGraphicId && graphicId <= baseGraphicId + 6) {
+			Data_Grid_terrain[gridOffset] |= Terrain_Garden;
+			Data_Grid_bitfields[gridOffset] &= Bitfield_NoOverlay;
+			Data_Grid_aqueducts[gridOffset] = 0;
+		}
+	});
+}
+
 void TerrainGraphics_updateAllRoads()
 {
 	// TODO

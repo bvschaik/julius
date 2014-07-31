@@ -512,6 +512,32 @@ static int getRoadWithinRadius(int x, int y, int size, int radius, int *xTile, i
 	return 0;
 }
 
+static int getReachableRoadWithinRadius(int x, int y, int size, int radius, int *xTile, int *yTile);
+int Terrain_getClosestReachableRoadWithinRadius(int x, int y, int size, int radius, int *xTile, int *yTile)
+{
+	for (int r = 1; r <= radius; r++) {
+		if (getReachableRoadWithinRadius(x, y, size, r, xTile, yTile)) {
+			return 1;
+		}
+	}
+	return 0;
+}
+
+static int getReachableRoadWithinRadius(int x, int y, int size, int radius, int *xTile, int *yTile)
+{
+	FOR_XY_RADIUS(
+		if (Data_Grid_terrain[gridOffset] & Terrain_Road) {
+			if (Data_Grid_routingDistance[gridOffset] > 0) {
+				if (xTile && yTile) {
+					STORE_XY_RADIUS(xTile, yTile);
+				}
+				return 1;
+			}
+		}
+	);
+	return 0;
+}
+
 int Terrain_isClear(int x, int y, int size, int disallowedTerrain, int graphicSet)
 {
 	if (IsOutsideMap(x, y, size)) {
@@ -815,4 +841,58 @@ void Terrain_addDesirability(int x, int y, int size, int desBase, int desStep, i
 			}
 		}
 	}
+}
+
+int Terrain_countTerrainTypeDirectlyAdjacentTo(int gridOffset, int terrainMask)
+{
+	int count = 0;
+	if (Data_Grid_terrain[gridOffset - 162] & terrainMask) {
+		count++;
+	}
+	if (Data_Grid_terrain[gridOffset - 1] & terrainMask) {
+		count++;
+	}
+	if (Data_Grid_terrain[gridOffset + 1] & terrainMask) {
+		count++;
+	}
+	if (Data_Grid_terrain[gridOffset + 162] & terrainMask) {
+		count++;
+	}
+	return count;
+}
+
+int Terrain_countTerrainTypeDiagonallyAdjacentTo(int gridOffset, int terrainMask)
+{
+	int count = 0;
+	if (Data_Grid_terrain[gridOffset - 163] & terrainMask) {
+		count++;
+	}
+	if (Data_Grid_terrain[gridOffset - 161] & terrainMask) {
+		count++;
+	}
+	if (Data_Grid_terrain[gridOffset + 161] & terrainMask) {
+		count++;
+	}
+	if (Data_Grid_terrain[gridOffset + 163] & terrainMask) {
+		count++;
+	}
+	return count;
+}
+
+int Terrain_hasTerrainTypeSameYAdjacentTo(int gridOffset, int terrainMask)
+{
+	if (Data_Grid_terrain[gridOffset - 1] & terrainMask ||
+		Data_Grid_terrain[gridOffset + 1] & terrainMask) {
+		return 1;
+	}
+	return 0;
+}
+
+int Terrain_hasTerrainTypeSameXAdjacentTo(int gridOffset, int terrainMask)
+{
+	if (Data_Grid_terrain[gridOffset - 162] & terrainMask ||
+		Data_Grid_terrain[gridOffset + 162] & terrainMask) {
+		return 1;
+	}
+	return 0;
 }

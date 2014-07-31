@@ -42,4 +42,7 @@ int Building_Market_getDestinationGranaryWarehouse(int marketId);
 int Building_Dock_getNumIdleDockers(int buildingId);
 void Building_Dock_updateOpenWaterAccess();
 
+void Building_Mercury_removeResources(int bigCurse);
+void Building_Mercury_fillGranary();
+
 #endif

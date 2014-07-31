@@ -3,6 +3,7 @@
 
 void TerrainGraphics_updateAllRocks();
 void TerrainGraphics_updateAllGardens();
+void TerrainGraphics_determineGardensFromGraphicIds();
 void TerrainGraphics_updateAllRoads();
 void TerrainGraphics_updateAllWalls();
 void TerrainGraphics_updateRegionElevation(int xMin, int yMin, int xMax, int yMax);
