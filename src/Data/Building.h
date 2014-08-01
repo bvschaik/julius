@@ -286,7 +286,7 @@ extern struct Data_Building {
 			char numShows; // 64
 			char days1; // also: dock number of ships
 			char days2;
-			char show;
+			char play;
 		} entertainment;
 		struct {
 			union { // 4a

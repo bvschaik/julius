@@ -37,7 +37,7 @@ void UI_BuildingInfo_drawAmphitheater(BuildingInfoContext *c)
 		int width = Widget_GameText_draw(71, 10, c->xOffset + 32, c->yOffset + 202, Font_SmallBlack);
 		Widget_GameText_drawNumberWithDescription(8, 44, 2 * b->data.entertainment.days2,
 			c->xOffset + width + 32, c->yOffset + 202, Font_SmallBlack);
-		Widget_GameText_draw(72, 7 + b->data.entertainment.show,
+		Widget_GameText_draw(72, 7 + b->data.entertainment.play,
 			c->xOffset + 32, c->yOffset + 222, Font_SmallBlack);
 	} else {
 		Widget_GameText_draw(71, 9, c->xOffset + 32, c->yOffset + 202, Font_SmallBlack);
@@ -67,7 +67,7 @@ void UI_BuildingInfo_drawTheater(BuildingInfoContext *c)
 		int width = Widget_GameText_draw(72, 6, c->xOffset + 32, c->yOffset + 182, Font_SmallBlack);
 		Widget_GameText_drawNumberWithDescription(8, 44, 2 * b->data.entertainment.days1,
 			c->xOffset + width + 32, c->yOffset + 182, Font_SmallBlack);
-		Widget_GameText_draw(72, 7 + b->data.entertainment.show,
+		Widget_GameText_draw(72, 7 + b->data.entertainment.play,
 			c->xOffset + 32, c->yOffset + 202, Font_SmallBlack);
 	} else {
 		Widget_GameText_draw(72, 5, c->xOffset + 32, c->yOffset + 182, Font_SmallBlack);

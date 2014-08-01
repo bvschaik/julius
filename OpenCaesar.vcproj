@@ -660,6 +660,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\WalkerAction_Entertainer.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\WalkerAction_Rioter.cpp"
 				>
 			</File>
