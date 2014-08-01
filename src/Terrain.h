@@ -37,6 +37,11 @@ int Terrain_existsClearTileWithinRadius(int x, int y, int size, int radius, int 
 int Terrain_allTilesWithinRadiusHaveType(int x, int y, int size, int radius, unsigned short type);
 int Terrain_allHousesWithinWellRadiusHaveFountain(int buildingId, int radius);
 
+int Terrain_getClosestRoadWithinRadius(int x, int y, int size, int radius, int *xTile, int *yTile);
+int Terrain_getClosestReachableRoadWithinRadius(int x, int y, int size, int radius, int *xTile, int *yTile);
+int Terrain_getRoadNetworkAccessTileForBuilding(int x, int y, int size, int *xTile, int *yTile);
+int Terrain_getRoadNetworkAccessTileForHippodrome(int x, int y, int size, int *xTile, int *yTile);
+
 void Terrain_markNativeLand(int x, int y, int size, int radius);
 int Terrain_hasBuildingOnNativeLand(int x, int y, int size, int radius);
 

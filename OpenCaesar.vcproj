@@ -540,6 +540,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\RoadNetwork.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Routing.cpp"
 				>
 			</File>
@@ -890,19 +894,19 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\KeyboardInput.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\Data\KeyboardInput.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Language.h"
+				RelativePath=".\src\KeyboardInput.h"
 				>
 			</File>
 			<File
 				RelativePath=".\src\Data\Language.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Language.h"
 				>
 			</File>
 			<File
@@ -962,6 +966,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\RoadNetwork.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Data\Routes.h"
 				>
 			</File>
@@ -970,11 +978,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Scenario.h"
+				RelativePath=".\src\Data\Scenario.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Scenario.h"
+				RelativePath=".\src\Scenario.h"
 				>
 			</File>
 			<File

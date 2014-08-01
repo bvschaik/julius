@@ -58,7 +58,7 @@ EXTERN Int8_Grid(Data_Grid_routingWalls);
 EXTERN Int16_Grid(Data_Grid_routingDistance);
 
 EXTERN Int8_Grid(Data_Grid_romanSoldierConcentration);
-EXTERN Int8_Grid(Data_Grid_byte_91C920);
+EXTERN Int8_Grid(Data_Grid_roadNetworks);
 EXTERN Int8_Grid(Data_Grid_byte_8ADF60);
 
 enum {

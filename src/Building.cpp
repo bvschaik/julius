@@ -2,8 +2,10 @@
 
 #include "Calc.h"
 #include "CityInfo.h"
+#include "CityView.h"
 #include "Formation.h"
 #include "Graphics.h"
+#include "HousePopulation.h"
 #include "PlayerMessage.h"
 #include "PlayerWarning.h"
 #include "Resource.h"
@@ -12,6 +14,7 @@
 #include "Terrain.h"
 #include "TerrainGraphics.h"
 #include "Walker.h"
+#include "UI/Warning.h"
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
@@ -596,6 +599,127 @@ void BuildingStorage_resetBuildingIds()
 				}
 			}
 		}
+	}
+}
+
+void Building_GameTick_checkAccessToRome()
+{
+	Routing_getDistance(Data_CityInfo.entryPointX, Data_CityInfo.entryPointY);
+	int problemGridOffset = 0;
+	for (int i = 1; i < MAX_BUILDINGS; i++) {
+		struct Data_Building *b = &Data_Buildings[i];
+		if (b->inUse != 1) {
+			continue;
+		}
+		int xRoad, yRoad;
+		if (b->houseSize) {
+			if (!Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
+				// no road: eject people
+				b->distanceFromEntry = 0;
+				b->houseUnreachableTicks++;
+				if (b->houseUnreachableTicks > 4) {
+					if (b->housePopulation) {
+						HousePopulation_createHomeless(b->x, b->y, b->housePopulation);
+						b->housePopulation = 0;
+						b->houseUnreachableTicks = 0;
+					}
+					b->inUse = 2;
+				}
+			} else if (Data_Grid_routingDistance[GridOffset(xRoad, yRoad)]) {
+				// reachable from rome
+				b->distanceFromEntry = Data_Grid_routingDistance[GridOffset(xRoad, yRoad)];
+				b->houseUnreachableTicks = 0;
+			} else if (Terrain_getClosestReachableRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
+				b->distanceFromEntry = Data_Grid_routingDistance[GridOffset(xRoad, yRoad)];
+				b->houseUnreachableTicks = 0;
+			} else {
+				// no reachable road in radius
+				if (!b->houseUnreachableTicks) {
+					problemGridOffset = b->gridOffset;
+				}
+				b->houseUnreachableTicks++;
+				if (b->houseUnreachableTicks > 8) {
+					b->distanceFromEntry = 0;
+					b->houseUnreachableTicks = 0;
+					b->inUse = 2;
+				}
+			}
+		} else if (b->type == Building_Warehouse) {
+			if (!Data_CityInfo.buildingTradeCenterBuildingId) {
+				Data_CityInfo.buildingTradeCenterBuildingId = i;
+			}
+			b->distanceFromEntry = 0;
+			int roadGridOffset = Terrain_getRoadNetworkAccessTileForBuilding(b->x, b->y, 3, &xRoad, &yRoad);
+			if (roadGridOffset >= 0) {
+				b->roadNetworkId = Data_Grid_roadNetworks[roadGridOffset];
+				b->distanceFromEntry = Data_Grid_routingDistance[roadGridOffset];
+				b->roadAccessX = xRoad;
+				b->roadAccessY = yRoad;
+			}
+		} else if (b->type == Building_WarehouseSpace) {
+			b->distanceFromEntry = 0;
+			struct Data_Building *main = &Data_Buildings[Building_getMainBuildingId(i)];
+			b->roadNetworkId = main->roadNetworkId;
+			b->distanceFromEntry = main->distanceFromEntry;
+			b->roadAccessX = main->roadAccessX;
+			b->roadAccessY = main->roadAccessY;
+		} else if (b->type == Building_Hippodrome) {
+			b->distanceFromEntry = 0;
+			int roadGridOffset = Terrain_getRoadNetworkAccessTileForHippodrome(b->x, b->y, 3, &xRoad, &yRoad);
+			if (roadGridOffset >= 0) {
+				b->roadNetworkId = Data_Grid_roadNetworks[roadGridOffset];
+				b->distanceFromEntry = Data_Grid_routingDistance[roadGridOffset];
+				b->roadAccessX = xRoad;
+				b->roadAccessY = yRoad;
+			}
+		} else { // other building
+			b->distanceFromEntry = 0;
+			int roadGridOffset = Terrain_getRoadNetworkAccessTileForBuilding(b->x, b->y, 3, &xRoad, &yRoad);
+			if (roadGridOffset >= 0) {
+				b->roadNetworkId = Data_Grid_roadNetworks[roadGridOffset];
+				b->distanceFromEntry = Data_Grid_routingDistance[roadGridOffset];
+				b->roadAccessX = xRoad;
+				b->roadAccessY = yRoad;
+			}
+		}
+	}
+	
+	if (!Data_Grid_routingDistance[Data_CityInfo.exitPointGridOffset]) {
+		// no route through city
+		if (Data_CityInfo.population <= 0) {
+			return;
+		}
+		for (int i = 0; i < 15; i++) {
+			Routing_deleteClosestWallOrAqueduct(
+				Data_CityInfo.entryPointX, Data_CityInfo.entryPointY);
+			Routing_deleteClosestWallOrAqueduct(
+				Data_CityInfo.exitPointX, Data_CityInfo.exitPointY);
+			Routing_getDistance(Data_CityInfo.entryPointX, Data_CityInfo.entryPointY);
+
+			TerrainGraphics_updateAllWalls();
+			TerrainGraphics_updateRegionAqueduct(0, 0,
+				Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
+			TerrainGraphics_updateRegionEmptyLand(0, 0,
+				Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
+			TerrainGraphics_updateRegionMeadow(0, 0,
+				Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
+			
+			Routing_determineLandCitizen();
+			Routing_determineLandNonCitizen();
+			Routing_determineWalls();
+			
+			if (Data_Grid_routingDistance[Data_CityInfo.exitPointGridOffset]) {
+				PlayerMessage_post(1, 116, 0, 0);
+				Data_State.undoAvailable = 0;
+				return;
+			}
+		}
+		Building_collapseLastPlaced();
+	} else if (problemGridOffset) {
+		// parts of city disconnected
+		UI_Warning_show(63);
+		UI_Warning_show(64);
+		CityView_goToGridOffset(problemGridOffset);
 	}
 }
 

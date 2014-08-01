@@ -52,7 +52,7 @@ void GameTick_advance()
 		case 18: Resource_calculateWorkshopStocks(); break;
 		case 19: Building_Dock_updateOpenWaterAccess(); break;
 		case 20: Building_Industry_updateProduction(); break;
-		case 21: break; // TODO rome pathing access
+		case 21: Building_GameTick_checkAccessToRome(); break;
 		case 22: HousePopulation_updateRoom(); break;
 		case 23: HousePopulation_updateMigration(); break;
 		case 24: HousePopulation_evictOvercrowded(); break;

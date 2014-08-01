@@ -333,6 +333,11 @@ void TerrainGraphics_updateRegionWater(int xMin, int yMin, int xMax, int yMax)
 	});
 }
 
+void TerrainGraphics_updateRegionAqueduct(int xMin, int yMin, int xMax, int yMax)
+{
+	// TODO
+}
+
 void TerrainGraphics_updateRegionEmptyLand(int xMin, int yMin, int xMax, int yMax)
 {
 	BOUND_REGION();

@@ -6,7 +6,9 @@
 #include "Event.h"
 #include "FileSystem.h"
 #include "Loader.h"
+#include "PlayerMessage.h"
 #include "Resource.h"
+#include "RoadNetwork.h"
 #include "Routing.h"
 #include "SidebarMenu.h"
 #include "Sound.h"
@@ -477,25 +479,21 @@ static void setupFromSavedGame()
 
 	Building_determineGraphicIdsForOrientedBuildings();
 	WalkerRoute_clean();
-/*
-  sub_401320();
-  j_fun_tick_checkPathingAccessToRome();
-*/
+	RoadNetwork_calculate();
+	Building_GameTick_checkAccessToRome();
 	Resource_gatherGranaryGettingInfo();
 	SidebarMenu_enableBuildingButtons();
 	SidebarMenu_enableBuildingMenuItems();
-/*
-  j_fun_initPlayerMessageProblemArea();
-*/
+	PlayerMessage_initProblemArea();
+
 	Sound_City_init();
 	Sound_Music_reset();
 
 	Data_State.undoAvailable = 0;
 	Data_State.currentOverlay = 0;
 	Data_State.previousOverlay = 0;
-/*
-  dword_9DA7B0 = 1;
-*/
+	Data_State.missionBriefingShown = 1;
+
 	Data_CityInfo.tutorial1FireMessageShown = 1;
 	Data_CityInfo.tutorial3DiseaseMessageShown = 1;
 

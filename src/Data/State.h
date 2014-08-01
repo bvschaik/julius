@@ -56,6 +56,7 @@ extern struct Data_State {
 	int isScrollingMap;
 	int winState;
 	int forceWinCheat;
+	int missionBriefingShown;
 } Data_State;
 
 #endif

@@ -348,7 +348,7 @@ static void initGrids()
 	memset(Data_Grid_buildingDamage, 0, lenByte);
 	memset(Data_Grid_rubbleBuildingType, 0, lenByte);
 	memset(Data_Grid_romanSoldierConcentration, 0, lenByte);
-	memset(Data_Grid_byte_91C920, 0, lenByte);
+	memset(Data_Grid_roadNetworks, 0, lenByte);
 	memset(Data_Grid_byte_8ADF60, 0, lenByte);
 	TerrainGraphicsContext_init();
 	initGridTerrain();

@@ -28,6 +28,8 @@ void BuildingStorage_clearList();
 int BuildingStorage_create();
 void BuildingStorage_resetBuildingIds();
 
+void Building_GameTick_checkAccessToRome();
+
 void Building_Industry_updateProduction();
 void Building_Industry_updateDoubleWheatProduction();
 void Building_Industry_blessFarmsFromCeres();

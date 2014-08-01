@@ -538,6 +538,17 @@ static int getReachableRoadWithinRadius(int x, int y, int size, int radius, int 
 	return 0;
 }
 
+int Terrain_getRoadNetworkAccessTileForBuilding(int x, int y, int size, int *xTile, int *yTile)
+{
+	// TODO
+	return -1;
+}
+
+int Terrain_getRoadNetworkAccessTileForHippodrome(int x, int y, int size, int *xTile, int *yTile)
+{
+	return -1;
+}
+
 int Terrain_isClear(int x, int y, int size, int disallowedTerrain, int graphicSet)
 {
 	if (IsOutsideMap(x, y, size)) {
