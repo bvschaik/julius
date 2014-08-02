@@ -334,7 +334,7 @@ extern struct Data_Building {
 	char houseDaysWithoutFood; // 78
 	char ruinHasPlague;
 	char desirability;
-	char isDeleted;
+	char isDeleted; // 7b
 	char isAdjacentToWater;
 	unsigned char storageId;
 	union {

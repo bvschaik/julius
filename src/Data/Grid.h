@@ -61,6 +61,14 @@ EXTERN Int8_Grid(Data_Grid_romanSoldierConcentration);
 EXTERN Int8_Grid(Data_Grid_roadNetworks);
 EXTERN Int8_Grid(Data_Grid_byte_8ADF60);
 
+// undo
+EXTERN UInt16_Grid(Data_Grid_Undo_graphicIds);
+EXTERN UInt16_Grid(Data_Grid_Undo_terrain);
+EXTERN UInt8_Grid(Data_Grid_Undo_aqueducts);
+EXTERN UInt8_Grid(Data_Grid_Undo_bitfields);
+EXTERN UInt8_Grid(Data_Grid_Undo_edge);
+EXTERN UInt8_Grid(Data_Grid_Undo_spriteOffsets);
+
 enum {
 	Bitfield_Size1 = 0x00,
 	Bitfield_Size2 = 0x01,

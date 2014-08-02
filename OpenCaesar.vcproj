@@ -636,6 +636,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\Undo.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Video.cpp"
 				>
 			</File>
@@ -1070,6 +1074,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\Undo.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Util.h"
 				>
 			</File>
@@ -1078,11 +1086,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Walker.h"
+				RelativePath=".\src\Data\Walker.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Walker.h"
+				RelativePath=".\src\Walker.h"
 				>
 			</File>
 			<File

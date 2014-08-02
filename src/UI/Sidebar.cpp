@@ -5,6 +5,7 @@
 #include "MessageDialog.h"
 #include "../Graphics.h"
 #include "../SidebarMenu.h"
+#include "../Undo.h"
 #include "../Widget.h"
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
@@ -250,8 +251,10 @@ static void buttonBuild(int submenu, int param2)
 
 static void buttonUndo(int param1, int param2)
 {
-	// TODO
+	Undo_perform();
+	UI_Window_requestRefresh();
 }
+
 static void buttonMessages(int param1, int param2)
 {
 	UI_Window_goTo(Window_PlayerMessageList);
