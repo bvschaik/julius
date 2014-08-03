@@ -1,3 +1,4 @@
+#include "TerrainBridge.h"
 
 #include "Routing.h"
 #include "Terrain.h"
@@ -51,23 +52,23 @@ static int getDirectionXBridgeTiles(int gridOffset)
 	return dirX;
 }
 
-void TerrainBridge_determineLengthAndDirection(int x, int y, int isShipBridge)
+int TerrainBridge_determineLengthAndDirection(int x, int y, int isShipBridge, int *length, int *direction)
 {
 	int gridOffset = GridOffset(x, y);
 	bridge.startGridOffset = gridOffset;
 	bridge.endGridOffset = 0;
-	bridge.length = 0;
+	bridge.length = *length = 0;
 	bridge.directionGridOffset = 0;
-	bridge.direction = 0;
+	bridge.direction = *direction = 0;
 	int terrain = Data_Grid_terrain[gridOffset];
 	if (!(terrain & Terrain_Water)) {
-		return;
+		return 0;
 	}
 	if (terrain & Terrain_Road || terrain & Terrain_Building) {
-		return;
+		return 0;
 	}
 	if (Terrain_countTerrainTypeDirectlyAdjacentTo(gridOffset, Terrain_Water) != 3) {
-		return;
+		return 0;
 	}
 	if (!(Data_Grid_terrain[GridOffset(x, y-1)] & Terrain_Water)) {
 		bridge.directionGridOffset = 162;
@@ -82,8 +83,9 @@ void TerrainBridge_determineLengthAndDirection(int x, int y, int isShipBridge)
 		bridge.directionGridOffset = 1;
 		bridge.direction = 2;
 	} else {
-		return;
+		return 0;
 	}
+	*direction = bridge.direction;
 	bridge.length = 1;
 	for (int i = 0; i < 40; i++) {
 		gridOffset += bridge.directionGridOffset;
@@ -97,15 +99,20 @@ void TerrainBridge_determineLengthAndDirection(int x, int y, int isShipBridge)
 			if (Terrain_countTerrainTypeDirectlyAdjacentTo(gridOffset, Terrain_Water) != 3) {
 				bridge.endGridOffset = 0;
 			}
-			return;
+			*length = bridge.length;
+			return bridge.endGridOffset;
 		}
 		if (nextTerrain & Terrain_Road || nextTerrain & Terrain_Building) {
-			return;
+			*length = bridge.length;
+			return 0;
 		}
 		if (Terrain_countTerrainTypeDirectlyAdjacentTo(gridOffset, Terrain_Water) != 4) {
-			return;
+			*length = bridge.length;
+			return 0;
 		}
 	}
+	*length = bridge.length;
+	return 0;
 }
 
 void TerrainBridge_addToSpriteGrid(int x, int y, int isShipBridge)
@@ -121,7 +128,7 @@ void TerrainBridge_addToSpriteGrid(int x, int y, int isShipBridge)
 	if (bridge.direction < 0) bridge.direction += 8;
 	if (isShipBridge == 1) {
 		switch (bridge.length) {
-			case 9: pillarDistance = 4; break;
+			case  9: pillarDistance = 4; break;
 			case 10: pillarDistance = 4; break;
 			case 11: pillarDistance = 5; break;
 			case 12: pillarDistance = 5; break;
