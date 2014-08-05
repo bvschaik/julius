@@ -124,6 +124,7 @@ enum {
 	WalkerActionState_112_TradeShipMoored = 112,
 	WalkerActionState_114_TradeShipAnchored = 114,
 	WalkerActionState_115_TradeShipLeaving = 115,
+	WalkerActionState_120_RioterCreated = 120,
 	WalkerActionState_125_Roaming = 125,
 	WalkerActionState_126_RoamerReturning = 126,
 	WalkerActionState_132_ResourceCarrier = 132,

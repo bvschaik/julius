@@ -16,7 +16,7 @@ static int spreadDirection;
 
 void WaterManagement_updateHouseWaterAccess()
 {
-	Data_BuildingList.small.numItems = 0;
+	Data_BuildingList.small.size = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		if (Data_Buildings[i].inUse != 1) {
 			continue;
@@ -65,11 +65,11 @@ void WaterManagement_updateReservoirFountain()
 	Grid_andShortGrid(Data_Grid_terrain, ~(Terrain_FountainRange | Terrain_ReservoirRange));
 	// reservoirs
 	setAllAqueductsToNoWater();
-	memset(Data_BuildingList.buildingIds, 0, 4000);
-	Data_BuildingList.size = 0;
+	memset(Data_BuildingList.large.items, 0, MAX_BUILDINGS * sizeof(short));
+	Data_BuildingList.large.size = 0;
 	for (int i = 0; i < MAX_BUILDINGS; i++) {
 		if (Data_Buildings[i].inUse == 1 && Data_Buildings[i].type == Building_Reservoir) {
-			Data_BuildingList.buildingIds[Data_BuildingList.size++] = i;
+			Data_BuildingList.large.items[Data_BuildingList.large.size++] = i;
 			if (Terrain_existsTileWithinAreaWithType(
 				Data_Buildings[i].x - 1, Data_Buildings[i].y - 1, 5, Terrain_Water)) {
 				Data_Buildings[i].hasWaterAccess = 2;
@@ -81,8 +81,8 @@ void WaterManagement_updateReservoirFountain()
 	int changed = 1;
 	static const int connectorOffsets[] = {-161, 165, 487, 161};
 	while (changed == 1) {
-		for (int i = 0; i < Data_BuildingList.size; i++) {
-			int buildingId = Data_BuildingList.buildingIds[i];
+		for (int i = 0; i < Data_BuildingList.large.size; i++) {
+			int buildingId = Data_BuildingList.large.items[i];
 			if (Data_Buildings[buildingId].hasWaterAccess == 2) {
 				Data_Buildings[buildingId].hasWaterAccess = 1;
 				changed = 1;
@@ -92,8 +92,8 @@ void WaterManagement_updateReservoirFountain()
 			}
 		}
 	}
-	for (int i = 0; i < Data_BuildingList.size; i++) {
-		int buildingId = Data_BuildingList.buildingIds[i];
+	for (int i = 0; i < Data_BuildingList.large.size; i++) {
+		int buildingId = Data_BuildingList.large.items[i];
 		if (Data_Buildings[buildingId].hasWaterAccess) {
 			Terrain_setWithRadius(
 				Data_Buildings[buildingId].x, Data_Buildings[buildingId].y,

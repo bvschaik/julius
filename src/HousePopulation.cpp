@@ -20,10 +20,10 @@ static void createEmigrantForBuilding(int buildingId, int numPeople);
 
 static void fillBuildingListHouses()
 {
-	Data_BuildingList.size = 0;
+	Data_BuildingList.large.size = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		if (Data_Buildings[i].inUse == 1 && Data_Buildings[i].houseSize) {
-			Data_BuildingList.buildingIds[Data_BuildingList.size++] = i;
+			Data_BuildingList.large.items[Data_BuildingList.large.size++] = i;
 		}
 	}
 }
@@ -34,8 +34,8 @@ void HousePopulation_updateRoom()
 	Data_CityInfo.populationRoomInHouses = 0;
 
 	fillBuildingListHouses();
-	for (int i = 0; i < Data_BuildingList.size; i++) {
-		struct Data_Building *b = &Data_Buildings[Data_BuildingList.buildingIds[i]];
+	for (int i = 0; i < Data_BuildingList.large.size; i++) {
+		struct Data_Building *b = &Data_Buildings[Data_BuildingList.large.items[i]];
 		b->housePopulationRoom = 0;
 		if (b->distanceFromEntry > 0) {
 			int maxPop = Data_Model_Houses[b->subtype.houseLevel].maxPeople;
@@ -144,8 +144,8 @@ static void calculateWorkers()
 {
 	int numPlebs = 0;
 	int numPatricians = 0;
-	for (int i = 0; i < Data_BuildingList.size; i++) {
-		int buildingId = Data_BuildingList.buildingIds[i];
+	for (int i = 0; i < Data_BuildingList.large.size; i++) {
+		int buildingId = Data_BuildingList.large.items[i];
 		if (Data_Buildings[buildingId].housePopulation > 0) {
 			if (Data_Buildings[buildingId].subtype.houseLevel >= HouseLevel_SmallVilla) {
 				numPatricians += Data_Buildings[buildingId].housePopulation;
@@ -165,16 +165,16 @@ static void createImmigrants(int numPeople)
 {
 	int toImmigrate = numPeople;
 	// clean up any dead immigrants
-	for (int i = 0; i < Data_BuildingList.size; i++) {
-		int buildingId = Data_BuildingList.buildingIds[i];
+	for (int i = 0; i < Data_BuildingList.large.size; i++) {
+		int buildingId = Data_BuildingList.large.items[i];
 		if (Data_Buildings[buildingId].immigrantWalkerId &&
 			Data_Walkers[Data_Buildings[buildingId].immigrantWalkerId].state != WalkerState_Alive) {
 			Data_Buildings[buildingId].immigrantWalkerId = 0;
 		}
 	}
 	// houses with plenty of room
-	for (int i = 0; i < Data_BuildingList.size && toImmigrate > 0; i++) {
-		int buildingId = Data_BuildingList.buildingIds[i];
+	for (int i = 0; i < Data_BuildingList.large.size && toImmigrate > 0; i++) {
+		int buildingId = Data_BuildingList.large.items[i];
 		struct Data_Building *b = &Data_Buildings[buildingId];
 		if (b->distanceFromEntry > 0 && b->housePopulationRoom >= 8 && !b->immigrantWalkerId) {
 			if (toImmigrate <= 4) {
@@ -187,8 +187,8 @@ static void createImmigrants(int numPeople)
 		}
 	}
 	// houses with less room
-	for (int i = 0; i < Data_BuildingList.size && toImmigrate > 0; i++) {
-		int buildingId = Data_BuildingList.buildingIds[i];
+	for (int i = 0; i < Data_BuildingList.large.size && toImmigrate > 0; i++) {
+		int buildingId = Data_BuildingList.large.items[i];
 		struct Data_Building *b = &Data_Buildings[buildingId];
 		if (b->distanceFromEntry > 0 && b->housePopulationRoom > 0 && !b->immigrantWalkerId) {
 			if (toImmigrate <= b->housePopulationRoom) {
@@ -211,8 +211,8 @@ static void createEmigrants(int numPeople)
 {
 	int toEmigrate = numPeople;
 	for (int level = 0; level < 10 && toEmigrate > 0; level++) {
-		for (int i = 0; i < Data_BuildingList.size && toEmigrate > 0; i++) {
-			int buildingId = Data_BuildingList.buildingIds[i];
+		for (int i = 0; i < Data_BuildingList.large.size && toEmigrate > 0; i++) {
+			int buildingId = Data_BuildingList.large.items[i];
 			if (Data_Buildings[buildingId].housePopulation > 0 &&
 				Data_Buildings[buildingId].subtype.houseLevel == level) {
 				int currentPeople;
@@ -373,8 +373,8 @@ void HousePopulation_createHomeless(int x, int y, int numPeople)
 
 void HousePopulation_evictOvercrowded()
 {
-	for (int i = 0; i < Data_BuildingList.size; i++) {
-		int buildingId = Data_BuildingList.buildingIds[i];
+	for (int i = 0; i < Data_BuildingList.large.size; i++) {
+		int buildingId = Data_BuildingList.large.items[i];
 		struct Data_Building *b = &Data_Buildings[buildingId];
 		if (b->housePopulationRoom < 0) {
 			int numPeople = -b->housePopulationRoom;

@@ -10,7 +10,7 @@ static int determineDestination(int x, int y, int btype1, int btype2)
 {
 	int roadNetwork = Data_Grid_roadNetworks[GridOffset(x,y)];
 
-	Data_BuildingList.small.numItems = 0;
+	Data_BuildingList.small.size = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
 		if (b->inUse != 1) {
@@ -23,18 +23,15 @@ static int determineDestination(int x, int y, int btype1, int btype2)
 			if (b->type == Building_Hippodrome && b->prevPartBuildingId) {
 				continue;
 			}
-			Data_BuildingList.small.items[Data_BuildingList.small.numItems++] = i;
-			if (Data_BuildingList.small.numItems >= 500) {
-				Data_BuildingList.small.numItems = 499;
-			}
+			DATA_BUILDINGLIST_SMALL_ENQUEUE(i);
 		}
 	}
-	if (Data_BuildingList.small.numItems <= 0) {
+	if (Data_BuildingList.small.size <= 0) {
 		return 0;
 	}
 	int minBuildingId = 0;
 	int minDistance = 10000;
-	for (int i = 0; i < Data_BuildingList.small.numItems; i++) {
+	for (int i = 0; i < Data_BuildingList.small.size; i++) {
 		struct Data_Building *b = &Data_Buildings[Data_BuildingList.small.items[i]];
 		int daysLeft;
 		if (b->type == btype1) {

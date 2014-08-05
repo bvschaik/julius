@@ -34,4 +34,6 @@ void WalkerRoute_clean();
 int WalkerRoute_getNumAvailable();
 void WalkerRoute_remove(int walkerId);
 
+void WalkerGeneration_generateWalkersForBuildings();
+
 #endif

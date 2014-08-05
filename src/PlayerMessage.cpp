@@ -87,6 +87,17 @@ void PlayerMessage_post(int usePopup, int messageType, int param1, short param2)
 	playSound = 1;
 }
 
+void PlayerMessage_postWithPopupDelay(int type, int messageType, int param1, short param2)
+{
+	int usePopup = 0;
+	if (Data_Message.messageDelay[type] <= 0) {
+		usePopup = 1;
+		Data_Message.messageDelay[type] = 12;
+	}
+	PlayerMessage_post(usePopup, messageType, param1, param2);
+	Data_Message.messageCategoryCount[type]++;
+}
+
 void PlayerMessage_processQueue()
 {
 	if (UI_Window_getId() != Window_City) {

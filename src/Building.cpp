@@ -255,7 +255,7 @@ int Building_getMainBuildingId(int buildingId)
 	return 0;
 }
 
-void Building_collapse(int buildingId, int hasPlague)
+void Building_collapseOnFire(int buildingId, int hasPlague)
 {
 	Data_State.undoAvailable = 0;
 	struct Data_Building *b = &Data_Buildings[buildingId];
@@ -331,9 +331,39 @@ void Building_collapse(int buildingId, int hasPlague)
 	}
 }
 
-void Building_collapseLinked(int buildingId, int callCollapse)
+void Building_collapseLinked(int buildingId, int onFire)
 {
-	// TODO
+	int spaceId = buildingId;
+	for (int i = 0; i < 9; i++) {
+		spaceId = Data_Buildings[spaceId].nextPartBuildingId;
+		if (spaceId <= 0) {
+			break;
+		}
+		if (onFire) {
+			Building_collapseOnFire(spaceId, 0);
+		} else {
+			TerrainGraphics_setBuildingAreaRubble(spaceId,
+				Data_Buildings[spaceId].x, Data_Buildings[spaceId].y,
+				Data_Buildings[spaceId].size);
+			Data_Buildings[spaceId].inUse = 4;
+		}
+	}
+
+	spaceId = buildingId;
+	for (int i = 0; i < 9; i++) {
+		spaceId = Data_Buildings[spaceId].prevPartBuildingId;
+		if (spaceId <= 0) {
+			break;
+		}
+		if (onFire) {
+			Building_collapseOnFire(spaceId, 0);
+		} else {
+			TerrainGraphics_setBuildingAreaRubble(spaceId,
+				Data_Buildings[spaceId].x, Data_Buildings[spaceId].y,
+				Data_Buildings[spaceId].size);
+			Data_Buildings[spaceId].inUse = 4;
+		}
+	}
 }
 
 void Building_collapseLastPlaced()
@@ -1188,7 +1218,7 @@ void Building_Mercury_removeResources(int bigCurse)
 	if (bigCurse == 1) {
 		PlayerMessage_disableSoundForNextMessage();
 		PlayerMessage_post(0, 12, b->type, b->gridOffset);
-		Building_collapse(maxBuildingId, 0);
+		Building_collapseOnFire(maxBuildingId, 0);
 		Building_collapseLinked(maxBuildingId, 1);
 		Sound_Effects_playChannel(SoundChannel_Explosion);
 		Routing_determineLandCitizen();

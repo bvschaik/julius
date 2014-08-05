@@ -12,10 +12,12 @@
 #include "PlayerMessage.h"
 #include "Resource.h"
 #include "Routing.h"
+#include "Security.h"
 #include "SidebarMenu.h"
 #include "Sound.h"
 #include "TerrainGraphics.h"
 #include "Trader.h"
+#include "Walker.h"
 #include "WaterManagement.h"
 #include "UI/AllWindows.h"
 #include "UI/Sidebar.h"
@@ -43,7 +45,7 @@ void GameTick_advance()
 		case 4: break; // TODO caesar invasion
 		case 5: break; // TODO formations 0
 		case 6: Natives_checkLand(); break;
-		case 7: break; // TODO unknown
+		case 7: break; // TODO road network ids
 		case 8: Resource_gatherGranaryGettingInfo(); break;
 		case 10: Building_updateHighestIds(); break;
 		case 12: Building_decayHousesCovered(); break;
@@ -61,7 +63,7 @@ void GameTick_advance()
 		case 28: WaterManagement_updateHouseWaterAccess(); break;
 		case 29: break; // TODO formations 1
 		case 30: UI_Sidebar_requestMinimapRefresh(); break;
-		case 31: break; // TODO walker generation
+		case 31: WalkerGeneration_generateWalkersForBuildings(); break;
 		case 32: Trader_tick(); break;
 		case 33: CityInfo_Tick_countBuildingTypes(); CityInfo_Culture_updateCoveragePercentages(); break;
 		case 34: CityInfo_Tick_distributeTreasuryOverForumsAndSenates(); break;
@@ -70,10 +72,10 @@ void GameTick_advance()
 		case 37: Desirability_update(); break;
 		case 38: Building_setDesirability(); break;
 		case 39: HouseEvolution_Tick_evolveAndConsumeResources(); break;
-		case 40: break; // TODO clear deleted buildings
-		case 43: break; // TODO burning ruin
+		case 40: Building_clearDeleted(); break;
+		case 43: Security_Tick_updateBurningRuins(); break;
 		case 44: break; // TODO crime fire damage
-		case 45: break; // TODO criminal
+		case 45: Security_Tick_generateCriminal(); break;
 		case 46: Building_Industry_updateDoubleWheatProduction(); break;
 		case 48: CityInfo_Finance_decayTaxCollectorAccess(); break;
 		case 49: CityInfo_Culture_calculateEntertainment(); break;

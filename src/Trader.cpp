@@ -176,11 +176,11 @@ void Trader_tick()
 		}
 		if (Data_Empire_Cities[i].isSeaTrade) {
 			if (Data_CityInfo.numWorkingDocks <= 0) {
-				if (Data_Message.messageCategoryCount[MessageCount_NoWorkingDock] > 0) {
-					Data_Message.messageCategoryCount[MessageCount_NoWorkingDock]--;
+				if (Data_Message.messageCategoryCount[MessageDelay_NoWorkingDock] > 0) {
+					Data_Message.messageCategoryCount[MessageDelay_NoWorkingDock]--;
 				} else {
 					PlayerMessage_post(1, 117, 0, 0);
-					Data_Message.messageCategoryCount[MessageCount_NoWorkingDock] = 384; // 1 year
+					Data_Message.messageCategoryCount[MessageDelay_NoWorkingDock] = 384; // 1 year
 				}
 				continue;
 			}

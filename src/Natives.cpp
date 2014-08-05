@@ -83,13 +83,13 @@ void Natives_init()
 static void determineMeetingCenter()
 {
 	// gather list of meeting centers
-	Data_BuildingList.small.numItems = 0;
+	Data_BuildingList.small.size = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		if (Data_Buildings[i].inUse == 1 && Data_Buildings[i].type == Building_NativeMeeting) {
 			DATA_BUILDINGLIST_SMALL_ENQUEUE(i);
 		}
 	}
-	if (Data_BuildingList.small.numItems <= 0) {
+	if (Data_BuildingList.small.size <= 0) {
 		return;
 	}
 	// determine closest meeting center for hut
@@ -97,7 +97,7 @@ static void determineMeetingCenter()
 		if (Data_Buildings[i].inUse == 1 && Data_Buildings[i].type == Building_NativeHut) {
 			int minDist = 1000;
 			int minMeetingId = 0;
-			for (int n = 0; n < Data_BuildingList.small.numItems; n++) {
+			for (int n = 0; n < Data_BuildingList.small.size; n++) {
 				int meetingId = Data_BuildingList.small.items[n];
 				int dist = Calc_distanceMaximum(Data_Buildings[i].x, Data_Buildings[i].y,
 					Data_Buildings[meetingId].x, Data_Buildings[meetingId].y);

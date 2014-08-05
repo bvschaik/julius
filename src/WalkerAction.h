@@ -1,7 +1,8 @@
 #ifndef WALKERACTION_H
 #define WALKERACTION_H
 
-int WalkerAction_rioterCollapseBuilding(int walkerId);
+int WalkerAction_Rioter_collapseBuilding(int walkerId);
+int WalkerAction_Rioter_getTargetBuilding(int *xTile, int *yTile);
 
 void WalkerAction_Common_handleCorpse(int walkerId);
 void WalkerAction_Common_handleAttack(int walkerId);

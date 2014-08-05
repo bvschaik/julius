@@ -1,3 +1,4 @@
+#include "Walker.h"
 
 #include "Building.h"
 #include "Calc.h"
@@ -6,7 +7,6 @@
 #include "Resource.h"
 #include "Terrain.h"
 #include "TerrainGraphics.h"
-#include "Walker.h"
 #include "WalkerMovement.h"
 
 #include "Data/Building.h"

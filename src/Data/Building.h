@@ -205,7 +205,7 @@ extern struct Data_Building {
 	unsigned char laborCategory;
 	char outputResourceId; //3b
 	char hasRoadAccess;
-	char __unknown_3d;
+	char houseCriminalActive;
 	short damageRisk;
 	short fireRisk;
 	short fireDuration; //42
@@ -360,22 +360,30 @@ extern struct Data_Buildings_Extra {
 } Data_Buildings_Extra;
 
 extern struct Data_BuildingList {
-	int size;
-	short buildingIds[MAX_BUILDINGS];
 	struct {
-		int numItems;
+		int size;
+		short items[MAX_BUILDINGS];
+	} large;
+	struct {
+		int size;
 		short items[500];
 	} small;
+	struct {
+		int size;
+		short items[500];
+		int index;
+		int totalBurning;
+	} burning;
 } Data_BuildingList;
 
 #define DATA_BUILDINGLIST_SMALL_ENQUEUE(n) \
-	Data_BuildingList.small.items[Data_BuildingList.small.numItems++] = i;\
-	if (Data_BuildingList.small.numItems >= 500) {\
-		Data_BuildingList.small.numItems = 499;\
+	Data_BuildingList.small.items[Data_BuildingList.small.size++] = i;\
+	if (Data_BuildingList.small.size >= 500) {\
+		Data_BuildingList.small.size = 499;\
 	}
 
 #define DATA_BUILDINGLIST_SMALL_FOREACH(block) \
-	for (int i = 0; i < Data_BuildingList.small.numItems; i++) {\
+	for (int i = 0; i < Data_BuildingList.small.size; i++) {\
 		int item = Data_BuildingList.small.items[i];\
 		block;\
 	}

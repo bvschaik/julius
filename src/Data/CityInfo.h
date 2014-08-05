@@ -758,10 +758,7 @@ extern struct Data_CityInfo {
 	int foodInfoFoodConsumedLastMonth;
 	int foodInfoFoodStoredLastMonth;
 	int foodInfoFoodStoredSoFarThisMonth;
-	char __unknown_450c;
-	char __unknown_450d;
-	char __unknown_450e;
-	char __unknown_450f;
+	int riotCause;
 	int estimatedTaxIncome;
 	int tutorial1SenateBuilt;
 	char buildingDistributionCenterX;

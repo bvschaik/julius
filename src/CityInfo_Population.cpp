@@ -446,7 +446,7 @@ static void healthCauseDisease(int totalPeople)
 		if (b->inUse == 1 && b->houseSize && b->housePopulation) {
 			if (!b->data.house.clinic) {
 				peopleToKill -= b->housePopulation;
-				Building_collapse(i, 1);
+				Building_collapseOnFire(i, 1);
 				if (peopleToKill <= 0) {
 					return;
 				}
@@ -459,7 +459,7 @@ static void healthCauseDisease(int totalPeople)
 		if (b->inUse == 1 && b->houseSize && b->housePopulation) {
 			if (b->subtype.houseLevel <= HouseLevel_LargeTent) {
 				peopleToKill -= b->housePopulation;
-				Building_collapse(i, 1);
+				Building_collapseOnFire(i, 1);
 				if (peopleToKill <= 0) {
 					return;
 				}
@@ -471,7 +471,7 @@ static void healthCauseDisease(int totalPeople)
 		struct Data_Building *b = &Data_Buildings[i];
 		if (b->inUse == 1 && b->houseSize && b->housePopulation) {
 			peopleToKill -= b->housePopulation;
-			Building_collapse(i, 1);
+			Building_collapseOnFire(i, 1);
 			if (peopleToKill <= 0) {
 				return;
 			}

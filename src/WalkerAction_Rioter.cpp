@@ -49,7 +49,13 @@ void WalkerAction_criminal(int walkerId)
 	}
 }
 
-int WalkerAction_rioterCollapseBuilding(int walkerId)
+int WalkerAction_Rioter_collapseBuilding(int walkerId)
+{
+	// TODO
+	return 0;
+}
+
+int WalkerAction_Rioter_getTargetBuilding(int *xTile, int *yTile)
 {
 	// TODO
 	return 0;

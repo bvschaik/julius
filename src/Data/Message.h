@@ -3,6 +3,8 @@
 
 #define MAX_MESSAGES 1000
 
+#include "Types.h"
+
 struct Data_PlayerMessage {
 	int param1;
 	short year;
@@ -42,10 +44,10 @@ extern struct Data_Message {
 	// sound related
 	int playSound;
 	struct {
-		int fire;
-		int collapse;
-		int rioterGenerated;
-		int rioterCollapse;
+		TimeMillis fire;
+		TimeMillis collapse;
+		TimeMillis rioterGenerated;
+		TimeMillis rioterCollapse;
 	} lastSoundTime;
 
 	// UI related
@@ -58,8 +60,11 @@ extern struct Data_Message {
 
 // TODO message delay ticks
 enum {
-	MessageCount_NoWorkingDock = 5,
-	MessageDelayCategory_WorkersNeeded = 8
+	MessageDelay_Riot = 0,
+	MessageDelay_Fire = 1,
+	MessageDelay_Collapse = 2,
+	MessageDelay_NoWorkingDock = 5,
+	MessageDelay_WorkersNeeded = 8
 };
 
 #endif

@@ -521,7 +521,7 @@ static void advanceEarthquakeToTile(int x, int y)
 	int gridOffset = GridOffset(x, y);
 	int buildingId = Data_Grid_buildingIds[gridOffset];
 	if (buildingId) {
-		Building_collapse(buildingId, 0);
+		Building_collapseOnFire(buildingId, 0);
 		Building_collapseLinked(buildingId, 1);
 		Sound_Effects_playChannel(SoundChannel_Explosion);
 		Data_Buildings[buildingId].inUse = 5;
