@@ -1,6 +1,7 @@
 #include "Formation.h"
 
 #include "Calc.h"
+#include "Routing.h"
 #include "Sound.h"
 #include "Util.h"
 #include "Walker.h"
@@ -36,7 +37,7 @@ void Formation_clearInvasionInfo()
 	// TODO
 }
 
-int Formation_createLegion()
+int Formation_createLegion(int buildingId)
 {
 	// TODO
 	return 0;
@@ -462,6 +463,20 @@ static void decreaseDamage()
 					w->damage--;
 				}
 			}
+		}
+	}
+}
+
+void Formation_moveHerdsAwayFrom(int x, int y)
+{
+	for (int i = 1; i < MAX_FORMATIONS; i++) {
+		struct Data_Formation *f = &Data_Formations[i];
+		if (f->inUse != 1 || f->isLegion || !f->isHerd || f->numWalkers <= 0) {
+			continue;
+		}
+		if (Calc_distanceMaximum(x, y, f->xFort, f->yFort) <= 6) {
+			f->__unknown46 = 50;
+			f->herdDirection = Routing_getGeneralDirection(x, y, f->xFort, f->yFort);
 		}
 	}
 }

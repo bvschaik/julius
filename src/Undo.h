@@ -3,6 +3,7 @@
 
 int Undo_recordBeforeBuild();
 
+void Undo_restoreTerrainGraphics();
 void Undo_restoreBuildings();
 
 void Undo_addBuildingToList(int buildingId);

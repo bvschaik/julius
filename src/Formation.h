@@ -5,6 +5,7 @@ void Formation_clearList();
 void Formation_clearInvasionInfo();
 
 int Formation_create(int walkerType, int formationLayout, int orientation, int x, int y);
+int Formation_createLegion(int buildingId);
 
 void Formation_deleteFortAndBanner(int formationId);
 
@@ -30,6 +31,8 @@ void Formation_calculateWalkers();
 void Formation_dispatchLegionsToDistantBattle();
 void Formation_legionsReturnFromDistantBattle();
 void Formation_legionKillSoldiersInDistantBattle(int killPercentage);
+
+void Formation_moveHerdsAwayFrom(int x, int y);
 
 void Formation_Tick_updateRestMorale();
 

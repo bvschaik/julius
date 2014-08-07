@@ -282,3 +282,24 @@ int Walker_getNonCitizenOnSameTile(int walkerId)
 	}
 	return 0;
 }
+
+int Walker_hasNearbyEnemy(int xStart, int yStart, int xEnd, int yEnd)
+{
+	for (int i = 1; i < MAX_WALKERS; i++) {
+		struct Data_Walker *w = &Data_Walkers[i];
+		if (w->state != WalkerState_Alive || !WalkerIsEnemy(w->type)) {
+			continue;
+		}
+		int dx = (w->x > xStart) ? (w->x - xStart) : (xStart - w->x);
+		int dy = (w->y > yStart) ? (w->y - yStart) : (yStart - w->y);
+		if (dx <= 12 && dy <= 12) {
+			return 1;
+		}
+		dx = (w->x > xEnd) ? (w->x - xEnd) : (xEnd - w->x);
+		dy = (w->y > yEnd) ? (w->y - yEnd) : (yEnd - w->y);
+		if (dx <= 12 && dy <= 12) {
+			return 1;
+		}
+	}
+	return 0;
+}

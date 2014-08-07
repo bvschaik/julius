@@ -3,12 +3,14 @@
 
 int TerrainBridge_determineLengthAndDirection(int x, int y, int isShipBridge, int *length, int *direction);
 
-void TerrainBridge_addToSpriteGrid(int x, int y, int isShipBridge);
+int TerrainBridge_addToSpriteGrid(int x, int y, int isShipBridge); // returns length
 
 void TerrainBridge_removeFromSpriteGrid(int gridOffset, int onlyMarkDeleted);
 
 int TerrainBridge_countWalkersOnBridge(int gridOffset);
 
 void TerrainBridge_updateSpriteIdsOnMapRotate(int ccw);
+
+void TerrainBridge_resetLength();
 
 #endif

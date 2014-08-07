@@ -15,6 +15,9 @@ void TerrainGraphics_updateRegionMeadow(int xMin, int yMin, int xMax, int yMax);
 void TerrainGraphics_updateRegionEarthquake(int xMin, int yMin, int xMax, int yMax);
 void TerrainGraphics_updateRegionRubble(int xMin, int yMin, int xMax, int yMax);
 
+void TerrainGraphics_updateAreaWalls(int x, int y, int size);
+void TerrainGraphics_updateAreaRoads(int x, int y, int size);
+
 void TerrainGraphics_setBuildingAreaRubble(int buildingId, int x, int y, int size);
 void TerrainGraphics_setBuildingFarm(int buildingId, int x, int y, int cropGraphicId, int progress);
 void TerrainGraphics_updateNativeCropProgress(int buildingId);

@@ -68,7 +68,7 @@ struct Data_Formation {
 	char __unknown69; //69
 	char invasionId;
 	char __unknown6b;
-	char __unknown6c;
+	char herdDirection;
 	char __padding6d[17];
 	short invasionSeq;
 };

@@ -698,3 +698,13 @@ static void TerrainGraphics_updateAreaEmptyLand(int x, int y, int size, int grap
 		}
 	}
 }
+
+void TerrainGraphics_updateAreaWalls(int x, int y, int size)
+{
+	// TODO
+}
+
+void TerrainGraphics_updateAreaRoads(int x, int y, int size)
+{
+	// TODO
+}

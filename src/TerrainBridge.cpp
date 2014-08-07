@@ -115,12 +115,12 @@ int TerrainBridge_determineLengthAndDirection(int x, int y, int isShipBridge, in
 	return 0;
 }
 
-void TerrainBridge_addToSpriteGrid(int x, int y, int isShipBridge)
+int TerrainBridge_addToSpriteGrid(int x, int y, int isShipBridge)
 {
 	if (bridge.endGridOffset <= 0 || bridge.length < 2 ||
 			(isShipBridge && bridge.length < 5)) {
 		bridge.length = 0;
-		return;
+		return bridge.length;
 	}
 	
 	int pillarDistance = 0;
@@ -214,6 +214,8 @@ void TerrainBridge_addToSpriteGrid(int x, int y, int isShipBridge)
 	Routing_determineLandCitizen();
 	Routing_determineLandNonCitizen();
 	Routing_determineWater();
+
+	return bridge.length;
 }
 
 void TerrainBridge_removeFromSpriteGrid(int gridOffset, int onlyMarkDeleted)
@@ -315,4 +317,9 @@ void TerrainBridge_updateSpriteIdsOnMapRotate(int ccw)
 			}
 		}
 	}
+}
+
+void TerrainBridge_resetLength()
+{
+	bridge.length = 0;
 }

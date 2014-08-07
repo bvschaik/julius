@@ -4,10 +4,16 @@
 enum {
 	Warning_Orientation = 1,
 	Warning_ClearLandNeeded = 2,
+	Warning_OneBuildingOfType = 4,
 	Warning_RoadAccessNeeded = 11,
 	Warning_WorkersNeeded = 17,
 	Warning_MoreFoodNeeded = 18,
 	Warning_BuildMarket = 19,
+	Warning_MeadowNeeded = 20,
+	Warning_WaterNeeded = 21,
+	Warning_RockNeeded = 22,
+	Warning_TreeNeeded = 23,
+	Warning_ShoreNeeded = 25,
 	Warning_IronNeeded = 26,
 	Warning_VinesNeeded = 27,
 	Warning_OlivesNeeded = 28,
@@ -30,6 +36,10 @@ enum {
 	Warning_BuildGladiatorSchool = 45,
 	Warning_BuildLionHouse = 46,
 	Warning_BuildChariotMaker = 47,
+	Warning_WallNeeded = 49,
+	Warning_MaxLegionsReached = 52,
+	Warning_DockOpenWaterNeeded = 56,
+	Warning_HouseTooFarFromRoad = 62
 };
 
 void UI_Warning_show(int warningId);

@@ -292,6 +292,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\BuildingPlacement.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Calc.cpp"
 				>
 			</File>

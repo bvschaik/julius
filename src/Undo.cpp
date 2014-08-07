@@ -130,7 +130,7 @@ void Undo_recordBuild(int cost)
 	UI_Window_requestRefresh();
 }
 
-static void restoreTerrainGraphics()
+void Undo_restoreTerrainGraphics()
 {
 	for (int y = 0; y < Data_Settings_Map.height; y++) {
 		for (int x = 0; x < Data_Settings_Map.width; x++) {
@@ -199,22 +199,22 @@ void Undo_perform()
 			data.buildingType == Building_Wall) {
 		Grid_copyShortGrid(Data_Grid_Undo_terrain, Data_Grid_terrain);
 		Grid_copyByteGrid(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
-		restoreTerrainGraphics();
+		Undo_restoreTerrainGraphics();
 	} else if (data.buildingType == Building_LowBridge || data.buildingType == Building_ShipBridge) {
 		Grid_copyShortGrid(Data_Grid_Undo_terrain, Data_Grid_terrain);
 		Grid_copyByteGrid(Data_Grid_Undo_spriteOffsets, Data_Grid_spriteOffsets);
-		restoreTerrainGraphics();
+		Undo_restoreTerrainGraphics();
 	} else if (data.buildingType == Building_Plaza || data.buildingType == Building_Gardens) {
 		Grid_copyShortGrid(Data_Grid_Undo_terrain, Data_Grid_terrain);
 		Grid_copyByteGrid(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
 		Grid_copyByteGrid(Data_Grid_Undo_bitfields, Data_Grid_bitfields);
 		Grid_copyByteGrid(Data_Grid_Undo_edge, Data_Grid_edge);
-		restoreTerrainGraphics();
+		Undo_restoreTerrainGraphics();
 	} else if (data.numBuildings) {
 		if (data.buildingType == Building_DraggableReservoir) {
 			Grid_copyShortGrid(Data_Grid_Undo_terrain, Data_Grid_terrain);
 			Grid_copyByteGrid(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
-			restoreTerrainGraphics();
+			Undo_restoreTerrainGraphics();
 		}
 		for (int i = 0; i < data.numBuildings; i++) {
 			if (data.buildingIndex[i]) {
