@@ -317,9 +317,67 @@ void TerrainGraphics_updateRegionElevation(int xMin, int yMin, int xMax, int yMa
 	});
 }
 
+static int isTilePlaza(int gridOffset)
+{
+	if (Data_Grid_terrain[gridOffset] & Terrain_Road &&
+		Data_Grid_bitfields[gridOffset] & Bitfield_PlazaOrEarthquake &&
+		!(Data_Grid_terrain[gridOffset] & (Terrain_Water | Terrain_Building)) &&
+		!Data_Grid_graphicIds[gridOffset]) {
+		return 1;
+	}
+	return 0;
+}
+static int isTwoTileSquarePlaza(int gridOffset)
+{
+	return
+		isTilePlaza(gridOffset + 1) &&
+		isTilePlaza(gridOffset + 162) &&
+		isTilePlaza(gridOffset + 163);
+}
+
 void TerrainGraphics_updateRegionPlazas(int xMin, int yMin, int xMax, int yMax)
 {
-	// TODO
+	BOUND_REGION();
+	// remove plazas below buildings
+	FOREACH_ALL({
+		if (Data_Grid_terrain[gridOffset] & Terrain_Road &&
+			Data_Grid_bitfields[gridOffset] & Bitfield_PlazaOrEarthquake) {
+			if (Data_Grid_terrain[gridOffset] & Terrain_Building) {
+				Data_Grid_bitfields[gridOffset] &= Bitfield_NoPlaza;
+			}
+		}
+	});
+	// convert plazas to single tile and remove graphic ids
+	FOREACH_ALL({
+		if (Data_Grid_terrain[gridOffset] & Terrain_Road &&
+			Data_Grid_bitfields[gridOffset] & Bitfield_PlazaOrEarthquake) {
+			Data_Grid_graphicIds[gridOffset] = 0;
+			Data_Grid_bitfields[gridOffset] &= Bitfield_NoSizes;
+			Data_Grid_edge[gridOffset] |= Edge_LeftmostTile;
+		}
+	});
+	FOREACH_REGION({
+		if (Data_Grid_terrain[gridOffset] & Terrain_Road &&
+			Data_Grid_bitfields[gridOffset] & Bitfield_PlazaOrEarthquake &&
+			!Data_Grid_graphicIds[gridOffset]) {
+			int graphicId = GraphicId(ID_Graphic_Plaza);
+			if (isTwoTileSquarePlaza(gridOffset)) {
+				if (Data_Grid_random[gridOffset] & 1) {
+					graphicId += 7;
+				} else {
+					graphicId += 6;
+				}
+				Terrain_addBuildingToGrids(0, xx, yy, 2, graphicId, Terrain_Road);
+			} else {
+				// single tile plaza
+				switch ((xx & 1) + (yy & 1)) {
+					case 2: graphicId += 1; break;
+					case 1: graphicId += 2; break;
+				}
+				Data_Grid_graphicIds[gridOffset] = graphicId;
+			}
+		}
+	});
 }
 
 void TerrainGraphics_updateRegionWater(int xMin, int yMin, int xMax, int yMax)
@@ -630,14 +688,46 @@ void TerrainGraphics_setTileEarthquake(int x, int y)
 	});
 }
 
-void TerrainGraphics_setTileRoad(int x, int y)
+int TerrainGraphics_setTileRoad(int x, int y)
 {
 	// TODO
+	return 0;
+}
+
+int TerrainGraphics_setTileWall(int x, int y)
+{
+	int gridOffset = GridOffset(x, y);
+	int tilesSet = 0;
+	if (!(Data_Grid_terrain[gridOffset] & Terrain_Wall)) {
+		tilesSet = 1;
+	}
+	Data_Grid_terrain[gridOffset] |= Terrain_Wall;
+	Data_Grid_bitfields[gridOffset] &= Bitfield_NoOverlay;
+
+	int xMin = x - 1;
+	int yMin = y - 1;
+	int xMax = x + 1;
+	int yMax = y + 1;
+	FOREACH_REGION({
+		if (Data_Grid_terrain[gridOffset] & Terrain_Wall &&
+			!(Data_Grid_terrain[gridOffset] & Terrain_Building)) {
+			// TODO
+		}
+	});
+	return 0;
 }
 
 void TerrainGraphics_setTileAqueduct(int x, int y, int flag)
 {
 	// TODO
+}
+
+int TerrainGraphics_setTileAqueductTerrain(int x, int y)
+{
+	int gridOffset = GridOffset(x,y);
+	Data_Grid_terrain[gridOffset] |= Terrain_Aqueduct;
+	Data_Grid_bitfields[gridOffset] &= Bitfield_NoOverlay;
+	return 1;
 }
 
 static void TerrainGraphics_setTileRubble(int x, int y)

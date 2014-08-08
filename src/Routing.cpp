@@ -1,6 +1,7 @@
 #include "Routing.h"
 
 #include "Calc.h"
+#include "TerrainGraphics.h"
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
@@ -779,7 +780,7 @@ int Routing_getDistanceForBuildingRoadOrAqueduct(int x, int y, int isAqueduct)
 	return 1;
 }
 
-void Routing_getDistanceForBuildingWall(int x, int y)
+int Routing_getDistanceForBuildingWall(int x, int y)
 {
 	int sourceOffset = GridOffset(x, y);
 	ROUTE_QUEUE(sourceOffset, -1,
@@ -788,6 +789,69 @@ void Routing_getDistanceForBuildingWall(int x, int y)
 			SET_DIST_AND_ENQUEUE();
 		}
 	});
+	return 1;
+}
+
+int Routing_placeRoutedBuilding(int xSrc, int ySrc, int xDst, int yDst, RoutedBuilding type, int *items)
+{
+	static const int directionIndices[8][4] = {
+		{0, 2, 6, 4},
+		{0, 2, 6, 4},
+		{2, 4, 0, 6},
+		{2, 4, 0, 6},
+		{4, 6, 2, 0},
+		{4, 6, 2, 0},
+		{6, 0, 4, 2},
+		{6, 0, 4, 2}
+	};
+	*items = 0;
+	int gridOffset = GridOffset(xDst, yDst);
+	int guard = 0;
+	// reverse routing
+	while (1) {
+		if (++guard >= 400) {
+			return 0;
+		}
+		int distance = Data_Grid_routingDistance[gridOffset];
+		if (distance <= 0) {
+			return 0;
+		}
+		switch (type) {
+			default:
+			case RoutedBuilding_Road:
+				TerrainGraphics_setTileRoad(xDst, yDst);
+				break;
+			case RoutedBuilding_Wall:
+				*items += TerrainGraphics_setTileWall(xDst, yDst);
+				break;
+			case RoutedBuilding_Aqueduct2:
+				*items += TerrainGraphics_setTileAqueductTerrain(xDst, yDst);
+				break;
+			case RoutedBuilding_Aqueduct4:
+				*items += 1;
+				break;
+		}
+		int direction = Routing_getGeneralDirection(xDst, yDst, xSrc, ySrc);
+		if (direction == Direction_None) {
+			return 1; // destination reached
+		}
+		int routed = 0;
+		for (int i = 0; i < 4; i++) {
+			int index = directionIndices[direction][i];
+			int newGridOffset = gridOffset + Constant_DirectionGridOffsets[index];
+			int newDist = Data_Grid_routingDistance[newGridOffset];
+			if (newDist > 0 && newDist < distance) {
+				gridOffset = newGridOffset;
+				xDst = GridOffsetToX(gridOffset);
+				yDst = GridOffsetToY(gridOffset);
+				routed = 1;
+				break;
+			}
+		}
+		if (!routed) {
+			return 0;
+		}
+	}
 }
 
 int Routing_getGeneralDirection(int xSrc, int ySrc, int xDst, int yDst)

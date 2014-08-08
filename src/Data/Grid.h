@@ -31,6 +31,7 @@ enum {
 	// flagged items
 	Terrain_OutsideMap = 5,
 	Terrain_NotClear = 0xd77f,
+	Terrain_1237 = 0x1237,
 	Terrain_127f = 0x127f,
 	Terrain_NaturalElements = 0x1677,
 	Terrain_2e80 = 0x2e80,
@@ -83,6 +84,7 @@ enum {
 	Bitfield_AlternateTerrain = 0x20,
 	Bitfield_Deleted = 0x40,
 	Bitfield_PlazaOrEarthquake = 0x80,
+	Bitfield_NoPlaza = 0x7f,
 	Edge_MaskX = 0x7,
 	Edge_MaskY = 0x38,
 	Edge_MaskXY = 0x3f,

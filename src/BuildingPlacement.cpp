@@ -509,9 +509,8 @@ static int placeBuilding(int type, int x, int y)
 	if (type == Building_Gatehouse || type == Building_TriumphalArch) {
 		terrainMask = ~Terrain_Road;
 	} else if (type == Building_Tower) {
-		terrainMask = ~Terrain_Wall; //=4000?
+		terrainMask = ~Terrain_Wall;
 	}
-	// TODO check toPlace_buildingSize references
 	int size = Constant_BuildingProperties[type].size;
 	if (type == Building_Warehouse) {
 		size = 3;
@@ -757,24 +756,112 @@ static void clearRegion(int measureOnly, int xStart, int yStart, int xEnd, int y
 	}
 }
 
-static void placeRoad(int xStart, int yStart, int xEnd, int yEnd)
+static void placeRoad(int measureOnly, int xStart, int yStart, int xEnd, int yEnd)
 {
-	// TODO fun_placeDraggedRoad
+	Grid_copyShortGrid(Data_Grid_Undo_terrain, Data_Grid_terrain);
+	Grid_copyByteGrid(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
+	Undo_restoreTerrainGraphics();
+
+	itemsPlaced = 0;
+	int startOffset = GridOffset(xStart, yStart);
+	int endOffset = GridOffset(xEnd, yEnd);
+	int forbiddenTerrainMask = Terrain_Building | Terrain_Wall | Terrain_1237;
+	if (Data_Grid_terrain[startOffset] & forbiddenTerrainMask) {
+		return;
+	}
+	if (Data_Grid_terrain[endOffset] & forbiddenTerrainMask) {
+		return;
+	}
+	
+	if (Routing_getDistanceForBuildingRoadOrAqueduct(xStart, yStart, 0) &&
+		Routing_placeRoutedBuilding(xStart, yStart, xEnd, yEnd, RoutedBuilding_Road, &itemsPlaced)) {
+		if (!measureOnly) {
+			Routing_determineLandCitizen();
+			Routing_determineLandNonCitizen();
+			UI_Window_requestRefresh();
+		}
+	}
 }
 
-static void placeWall(int xStart, int yStart, int xEnd, int yEnd)
+static void placeWall(int measureOnly, int xStart, int yStart, int xEnd, int yEnd)
 {
-	// TODO fun_buildConstructWall
+	Grid_copyShortGrid(Data_Grid_Undo_terrain, Data_Grid_terrain);
+	Grid_copyByteGrid(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
+	Undo_restoreTerrainGraphics();
+
+	itemsPlaced = 0;
+	int startOffset = GridOffset(xStart, yStart);
+	int endOffset = GridOffset(xEnd, yEnd);
+	int forbiddenTerrainMask = Terrain_127f | Terrain_Aqueduct | Terrain_AccessRamp;
+	if (Data_Grid_terrain[startOffset] & forbiddenTerrainMask) {
+		return;
+	}
+	if (Data_Grid_terrain[endOffset] & forbiddenTerrainMask) {
+		return;
+	}
+	
+	if (Routing_getDistanceForBuildingWall(xStart, yStart) &&
+		Routing_placeRoutedBuilding(xStart, yStart, xEnd, yEnd, RoutedBuilding_Wall, &itemsPlaced)) {
+		if (!measureOnly) {
+			Routing_determineLandCitizen();
+			Routing_determineLandNonCitizen();
+			UI_Window_requestRefresh();
+		}
+	}
 }
 
 static void placePlaza(int xStart, int yStart, int xEnd, int yEnd)
 {
-	// TODO fun_placeDraggedPlaza
+	int xMin, yMin, xMax, yMax;
+	BOUND_REGION();
+	Grid_copyShortGrid(Data_Grid_Undo_terrain, Data_Grid_terrain);
+	Grid_copyByteGrid(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
+	Grid_copyByteGrid(Data_Grid_Undo_bitfields, Data_Grid_bitfields);
+	Grid_copyByteGrid(Data_Grid_Undo_edge, Data_Grid_edge);
+	Undo_restoreTerrainGraphics();
+	
+	itemsPlaced = 0;
+	for (int y = yMin; y <= yMax; y++) {
+		for (int x = xMin; x <= xMax; x++) {
+			int gridOffset = GridOffset(x,y);
+			int terrain = Data_Grid_terrain[gridOffset];
+			if (terrain & Terrain_Road &&
+				!(terrain & (Terrain_Water | Terrain_Building | Terrain_Aqueduct))) {
+				if (!(Data_Grid_bitfields[gridOffset] & Bitfield_PlazaOrEarthquake)) {
+					itemsPlaced++;
+				}
+				Data_Grid_graphicIds[gridOffset] = 0;
+				Data_Grid_bitfields[gridOffset] |= Bitfield_PlazaOrEarthquake;
+				Data_Grid_bitfields[gridOffset] &= Bitfield_NoSizes;
+				Data_Grid_edge[gridOffset] |= Edge_LeftmostTile;
+			}
+		}
+	}
+	TerrainGraphics_updateRegionPlazas(0, 0,
+		Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
 }
 
 static void placeGarden(int xStart, int yStart, int xEnd, int yEnd)
 {
-	// TODO fun_placeDraggedGarden
+	int xMin, yMin, xMax, yMax;
+	BOUND_REGION();
+	
+	Grid_copyShortGrid(Data_Grid_Undo_terrain, Data_Grid_terrain);
+	Grid_copyByteGrid(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
+	Grid_copyByteGrid(Data_Grid_Undo_bitfields, Data_Grid_bitfields);
+	Grid_copyByteGrid(Data_Grid_Undo_edge, Data_Grid_edge);
+	Undo_restoreTerrainGraphics();
+	
+	for (int y = yMin; y <= yMax; y++) {
+		for (int x = xMin; x <= xMax; x++) {
+			int gridOffset = GridOffset(x,y);
+			if (!(Data_Grid_terrain[gridOffset] & Terrain_NotClear)) {
+				itemsPlaced++;
+				Data_Grid_terrain[gridOffset] |= Terrain_Garden;
+			}
+		}
+	}
+	TerrainGraphics_updateAllGardens();
 }
 
 static int placeAqueduct(int xStart, int yStart, int xEnd, int yEnd, int *cost)
@@ -835,16 +922,16 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
 		clearRegion(0, xStart, yStart, xEnd, yEnd);
 		placementCost *= itemsPlaced;
 	} else if (type == Building_Wall) {
-		placeWall(xStart, yStart, xEnd, yEnd);
+		placeWall(0, xStart, yStart, xEnd, yEnd);
 		placementCost *= itemsPlaced;
 	} else if (type == Building_Road) {
-		placeRoad(xStart, yStart, xEnd, yEnd);
+		placeRoad(0, xStart, yStart, xEnd, yEnd);
 		placementCost *= itemsPlaced;
 	} else if (type == Building_Plaza) {
 		placePlaza(xStart, yStart, xEnd, yEnd);
 		placementCost *= itemsPlaced;
 	} else if (type == Building_Gardens) {
-		placeWall(xStart, yStart, xEnd, yEnd);
+		placeGarden(xStart, yStart, xEnd, yEnd);
 		placementCost *= itemsPlaced;
 		Routing_determineLandCitizen();
 		Routing_determineLandNonCitizen();
@@ -893,7 +980,7 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
 				UI_Warning_checkReservoirWater(Building_Reservoir);
 			}
 		}
-		placementCost = info.cost; // TODO
+		placementCost = info.cost;
 		TerrainGraphics_updateRegionAqueduct(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
 		Routing_determineLandCitizen();
 		Routing_determineLandNonCitizen();

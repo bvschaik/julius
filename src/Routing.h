@@ -24,7 +24,17 @@ int Routing_getPath(int numDirections, int routingPathId, int xSrc, int ySrc, in
 int Routing_canPlaceRoadUnderAqueduct(int gridOffset);
 int Routing_getAqueductGraphicIdWithRoad(int gridOffset);
 
-void Routing_getDistanceForBuildingWall(int x, int y);
+int Routing_getDistanceForBuildingRoadOrAqueduct(int x, int y, int isAqueduct);
+int Routing_getDistanceForBuildingWall(int x, int y);
+
+typedef enum {
+	RoutedBuilding_Road = 0,
+	RoutedBuilding_Wall = 1,
+	RoutedBuilding_Aqueduct2 = 2,
+	RoutedBuilding_Aqueduct4 = 4,
+} RoutedBuilding;
+
+int Routing_placeRoutedBuilding(int xSrc, int ySrc, int xDst, int yDst, RoutedBuilding type, int *items);
 
 int Routing_getGeneralDirection(int xSrc, int ySrc, int xDst, int yDst);
 

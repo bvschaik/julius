@@ -57,6 +57,7 @@ enum {
 	ID_Graphic_Fountain1 = 54,
 	ID_Graphic_Fountain2 = 55,
 	ID_Graphic_Fountain3 = 56,
+	ID_Graphic_Plaza = 58,
 	ID_Graphic_Garden = 59,
 	ID_Graphic_WorkshopRawMaterial = 60,
 	ID_Graphic_Statue = 61,
