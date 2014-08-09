@@ -24,6 +24,7 @@ enum {
 	ID_Graphic_FlatTile = 21,
 	ID_Graphic_Market = 22,
 	ID_Graphic_Well = 23,
+	ID_Graphic_Wall = 24,
 	ID_Graphic_Reservoir = 25,
 	// 26-35: houses
 	ID_Graphic_HouseTent = 26,

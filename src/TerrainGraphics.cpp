@@ -37,6 +37,7 @@
 static void TerrainGraphics_setTileRubble(int x, int y);
 static void TerrainGraphics_updateTileMeadow(int x, int y);
 static void TerrainGraphics_updateAreaEmptyLand(int x, int y, int size, int graphicId);
+static void setWallGraphic(int gridOffset);
 
 static int isAllTerrainInArea(int x, int y, int size, int terrain)
 {
@@ -162,33 +163,7 @@ void TerrainGraphics_updateAllRoads()
 void TerrainGraphics_updateAllWalls()
 {
 	FOREACH_ALL({
-		int terrain = Data_Grid_terrain[gridOffset];
-		if ((terrain & Terrain_Wall) && !(terrain & Terrain_Building)) {
-			/* TODO
-		  j_fun_storeTerrainMaskedAroundTile(T_Wall);
-          j_fun_setTrueIfStoredMaskedTerrainNoMatch();
-          j_fun_getGraphicOffsetForTerrainContext(&terrainContextGraphics_wall, 48);
-          grid_bitfields[walkerBaseGridOffset] &= 0xF0u;
-          grid_edge[walkerBaseGridOffset] |= 0x40u;
-          grid_graphicIds[walkerBaseGridOffset] = terrainContext_itemOffset
-                                                + terrainContext_groupOffset
-                                                + graphic_wall_top;
-          if ( j_fun_isAdjacentToGatehouse() )
-          {
-            sub_4029FA();
-            if ( j_fun_getGraphicOffsetForTerrainContext(&terrainContextGraphics_wallGatehouse, 10) )
-              grid_graphicIds[walkerBaseGridOffset] = terrainContext_itemOffset
-                                                    + terrainContext_groupOffset
-                                                    + graphic_wall_top;
-            else
-              sub_401B4F(1);
-          }
-          else
-          {
-            sub_401B4F(0);
-          }
-			*/
-		}
+		setWallGraphic(gridOffset);
 	});
 }
 
@@ -694,6 +669,293 @@ int TerrainGraphics_setTileRoad(int x, int y)
 	return 0;
 }
 
+static int getGatehouseBuildingId(int gridOffset)
+{
+	if (Data_Grid_terrain[gridOffset] & Terrain_Gatehouse) {
+		return Data_Grid_buildingIds[gridOffset];
+	}
+	return 0;
+}
+
+static int getGatehousePosition(int gridOffset, int direction, int buildingId)
+{
+	int result = 0;
+	if (direction == -162) {
+		if (Data_Grid_terrain[gridOffset - 161] & Terrain_Gatehouse &&
+				Data_Grid_buildingIds[gridOffset - 161] == buildingId) {
+			result = 1;
+			if (!(Data_Grid_terrain[gridOffset + 1] & Terrain_Wall)) {
+				result = 0;
+			}
+			if (Data_Grid_terrain[gridOffset - 1] & Terrain_Wall &&
+				Data_Grid_terrain[gridOffset + 161] & Terrain_Wall) {
+				result = 2;
+			}
+			if (!(Data_Grid_terrain[gridOffset + 162] & Terrain_WallOrGatehouse)) {
+				result = 0;
+			}
+			if (!(Data_Grid_terrain[gridOffset + 163] & Terrain_WallOrGatehouse)) {
+				result = 0;
+			}
+		} else if (Data_Grid_terrain[gridOffset - 163] & Terrain_Gatehouse &&
+				Data_Grid_buildingIds[gridOffset - 163] == buildingId) {
+			result = 3;
+			if (!(Data_Grid_terrain[gridOffset - 1] & Terrain_Wall)) {
+				result = 0;
+			}
+			if (Data_Grid_terrain[gridOffset + 1] & Terrain_Wall &&
+				Data_Grid_terrain[gridOffset + 163] & Terrain_Wall) {
+				result = 4;
+			}
+			if (!(Data_Grid_terrain[gridOffset + 162] & Terrain_WallOrGatehouse)) {
+				result = 0;
+			}
+			if (!(Data_Grid_terrain[gridOffset + 161] & Terrain_WallOrGatehouse)) {
+				result = 0;
+			}
+		}
+	} else if (direction == -1) {
+		if (Data_Grid_terrain[gridOffset + 161] & Terrain_Gatehouse &&
+				Data_Grid_buildingIds[gridOffset + 161] == buildingId) {
+			result = 1;
+			if (!(Data_Grid_terrain[gridOffset + 162] & Terrain_Wall)) {
+				result = 0;
+			}
+			if (Data_Grid_terrain[gridOffset - 162] & Terrain_Wall &&
+				Data_Grid_terrain[gridOffset - 161] & Terrain_Wall) {
+				result = 2;
+			}
+			if (!(Data_Grid_terrain[gridOffset + 1] & Terrain_WallOrGatehouse)) {
+				result = 0;
+			}
+			if (!(Data_Grid_terrain[gridOffset + 163] & Terrain_WallOrGatehouse)) {
+				result = 0;
+			}
+		} else if (Data_Grid_terrain[gridOffset - 163] & Terrain_Gatehouse &&
+				Data_Grid_buildingIds[gridOffset - 163] == buildingId) {
+			result = 3;
+			if (!(Data_Grid_terrain[gridOffset - 162] & Terrain_Wall)) {
+				result = 0;
+			}
+			if (Data_Grid_terrain[gridOffset + 162] & Terrain_Wall &&
+				Data_Grid_terrain[gridOffset + 163] & Terrain_Wall) {
+				result = 4;
+			}
+			if (!(Data_Grid_terrain[gridOffset + 1] & Terrain_WallOrGatehouse)) {
+				result = 0;
+			}
+			if (!(Data_Grid_terrain[gridOffset - 161] & Terrain_WallOrGatehouse)) {
+				result = 0;
+			}
+		}
+	} else if (direction == 162) {
+		if (Data_Grid_terrain[gridOffset + 163] & Terrain_Gatehouse &&
+				Data_Grid_buildingIds[gridOffset + 163] == buildingId) {
+			result = 1;
+			if (!(Data_Grid_terrain[gridOffset + 1] & Terrain_Wall)) {
+				result = 0;
+			}
+			if (Data_Grid_terrain[gridOffset - 1] & Terrain_Wall &&
+				Data_Grid_terrain[gridOffset - 163] & Terrain_Wall) {
+				result = 2;
+			}
+			if (!(Data_Grid_terrain[gridOffset - 162] & Terrain_WallOrGatehouse)) {
+				result = 0;
+			}
+			if (!(Data_Grid_terrain[gridOffset - 161] & Terrain_WallOrGatehouse)) {
+				result = 0;
+			}
+		} else if (Data_Grid_terrain[gridOffset + 161] & Terrain_Gatehouse &&
+				Data_Grid_buildingIds[gridOffset + 161] == buildingId) {
+			result = 3;
+			if (!(Data_Grid_terrain[gridOffset - 1] & Terrain_Wall)) {
+				result = 0;
+			}
+			if (Data_Grid_terrain[gridOffset + 1] & Terrain_Wall &&
+				Data_Grid_terrain[gridOffset - 161] & Terrain_Wall) {
+				result = 4;
+			}
+			if (!(Data_Grid_terrain[gridOffset - 162] & Terrain_WallOrGatehouse)) {
+				result = 0;
+			}
+			if (!(Data_Grid_terrain[gridOffset - 163] & Terrain_WallOrGatehouse)) {
+				result = 0;
+			}
+		}
+	} else if (direction == 1) {
+		if (Data_Grid_terrain[gridOffset + 163] & Terrain_Gatehouse &&
+				Data_Grid_buildingIds[gridOffset + 163] == buildingId) {
+			result = 1;
+			if (!(Data_Grid_terrain[gridOffset + 162] & Terrain_Wall)) {
+				result = 0;
+			}
+			if (Data_Grid_terrain[gridOffset - 162] & Terrain_Wall &&
+				Data_Grid_terrain[gridOffset - 163] & Terrain_Wall) {
+				result = 2;
+			}
+			if (!(Data_Grid_terrain[gridOffset - 1] & Terrain_WallOrGatehouse)) {
+				result = 0;
+			}
+			if (!(Data_Grid_terrain[gridOffset + 161] & Terrain_WallOrGatehouse)) {
+				result = 0;
+			}
+		} else if (Data_Grid_terrain[gridOffset - 161] & Terrain_Gatehouse &&
+				Data_Grid_buildingIds[gridOffset - 161] == buildingId) {
+			result = 3;
+			if (!(Data_Grid_terrain[gridOffset - 162] & Terrain_Wall)) {
+				result = 0;
+			}
+			if (Data_Grid_terrain[gridOffset + 162] & Terrain_Wall &&
+				Data_Grid_terrain[gridOffset + 161] & Terrain_Wall) {
+                result = 4;
+			}
+			if (!(Data_Grid_terrain[gridOffset - 1] & Terrain_WallOrGatehouse)) {
+				result = 0;
+			}
+			if (!(Data_Grid_terrain[gridOffset - 163] & Terrain_WallOrGatehouse)) {
+				result = 0;
+			}
+		}
+	}
+	return result;
+}
+
+static void setWallGatehouseGraphicManually(int gridOffset)
+{
+	int buildingIdUp = getGatehouseBuildingId(gridOffset - 162);
+	int buildingIdLeft = getGatehouseBuildingId(gridOffset - 1);
+	int buildingIdDown = getGatehouseBuildingId(gridOffset + 162);
+	int buildingIdRight = getGatehouseBuildingId(gridOffset + 1);
+	int graphicOffset = 0;
+	if (Data_Settings_Map.orientation == 0) {
+		if (buildingIdUp && !buildingIdLeft) {
+			int pos = getGatehousePosition(gridOffset, -162, buildingIdUp);
+			if (pos > 0) {
+				if (pos <= 2) {
+					graphicOffset = 29;
+				} else if (pos == 3) {
+					graphicOffset = 31;
+				} else {
+					graphicOffset = 33;
+				}
+			}
+		} else if (buildingIdLeft && !buildingIdUp) {
+			int pos = getGatehousePosition(gridOffset, -1, buildingIdLeft);
+			if (pos > 0) {
+				if (pos <= 2) {
+					graphicOffset = 30;
+				} else if (pos == 3) {
+					graphicOffset = 32;
+				} else {
+					graphicOffset = 33;
+				}
+			}
+		}
+	} else if (Data_Settings_Map.orientation == 2) {
+		if (buildingIdUp && !buildingIdRight) {
+			int pos = getGatehousePosition(gridOffset, -162, buildingIdUp);
+			if (pos > 0) {
+				if (pos == 1) {
+					graphicOffset = 32;
+				} else if (pos == 2) {
+					graphicOffset = 33;
+				} else {
+					graphicOffset = 30;
+				}
+			}
+		} else if (buildingIdRight && !buildingIdUp) {
+			int pos = getGatehousePosition(gridOffset, 1, buildingIdRight);
+			if (pos > 0) {
+				if (pos <= 2) {
+					graphicOffset = 29;
+				} else if (pos == 3) {
+					graphicOffset = 31;
+				} else {
+					graphicOffset = 33;
+				}
+			}
+		}
+	} else if (Data_Settings_Map.orientation == 4) {
+		if (buildingIdDown && !buildingIdRight) {
+			int pos = getGatehousePosition(gridOffset, 162, buildingIdDown);
+			if (pos > 0) {
+				if (pos == 1) {
+					graphicOffset = 31;
+				} else if (pos == 2) {
+					graphicOffset = 33;
+				} else {
+					graphicOffset = 29;
+				}
+			}
+		} else if (buildingIdRight && !buildingIdDown) {
+			int pos = getGatehousePosition(gridOffset, 1, buildingIdRight);
+			if (pos > 0) {
+				if (pos == 1) {
+					graphicOffset = 32;
+				} else if (pos == 2) {
+					graphicOffset = 33;
+				} else {
+					graphicOffset = 30;
+				}
+			}
+		}
+	} else if (Data_Settings_Map.orientation == 6) {
+		if (buildingIdDown && !buildingIdLeft) {
+			int pos = getGatehousePosition(gridOffset, 162, buildingIdDown);
+			if (pos > 0) {
+				if (pos <= 2) {
+					graphicOffset = 30;
+				} else if (pos == 3) {
+					graphicOffset = 32;
+				} else {
+					graphicOffset = 33;
+				}
+			}
+		} else if (buildingIdLeft && !buildingIdDown) {
+			int pos = getGatehousePosition(gridOffset, -1, buildingIdLeft);
+			if (pos > 0) {
+				if (pos == 1) {
+					graphicOffset = 31;
+				} else if (pos == 2) {
+					graphicOffset = 33;
+				} else {
+					graphicOffset = 29;
+				}
+			}
+		}
+	}
+	if (graphicOffset) {
+		Data_Grid_graphicIds[gridOffset] = GraphicId(ID_Graphic_Wall) + graphicOffset;
+	}
+}
+
+static int isAdjacentToGatehouse(int gridOffset)
+{
+	return Terrain_countTerrainTypeDirectlyAdjacentTo(gridOffset, Terrain_Gatehouse) > 0;
+}
+
+static void setWallGraphic(int gridOffset)
+{
+	if (!(Data_Grid_terrain[gridOffset] & Terrain_Wall) ||
+		Data_Grid_terrain[gridOffset] & Terrain_Building) {
+		return;
+	}
+	const TerrainGraphic *graphic = TerrainGraphicsContext_getWall(gridOffset);
+	Data_Grid_graphicIds[gridOffset] = GraphicId(ID_Graphic_Wall) +
+		graphic->groupOffset + graphic->itemOffset;
+	Data_Grid_bitfields[gridOffset] &= Bitfield_NoSizes;
+	Data_Grid_edge[gridOffset] |= Edge_LeftmostTile;
+	if (isAdjacentToGatehouse(gridOffset)) {
+		graphic = TerrainGraphicsContext_getWallGatehouse(gridOffset);
+		if (graphic->isValid) {
+			Data_Grid_graphicIds[gridOffset] = GraphicId(ID_Graphic_Wall) +
+				graphic->groupOffset + graphic->itemOffset;
+		} else {
+			setWallGatehouseGraphicManually(gridOffset);
+		}
+	}
+}
+
 int TerrainGraphics_setTileWall(int x, int y)
 {
 	int gridOffset = GridOffset(x, y);
@@ -709,12 +971,9 @@ int TerrainGraphics_setTileWall(int x, int y)
 	int xMax = x + 1;
 	int yMax = y + 1;
 	FOREACH_REGION({
-		if (Data_Grid_terrain[gridOffset] & Terrain_Wall &&
-			!(Data_Grid_terrain[gridOffset] & Terrain_Building)) {
-			// TODO
-		}
+		setWallGraphic(gridOffset);
 	});
-	return 0;
+	return tilesSet;
 }
 
 void TerrainGraphics_setTileAqueduct(int x, int y, int flag)
@@ -791,7 +1050,14 @@ static void TerrainGraphics_updateAreaEmptyLand(int x, int y, int size, int grap
 
 void TerrainGraphics_updateAreaWalls(int x, int y, int size)
 {
-	// TODO
+	int xMin = x - 1;
+	int yMin = y - 1;
+	int xMax = xMin + size - 1;
+	int yMax = yMin + size - 1;
+	BOUND_REGION();
+	FOREACH_REGION({
+		setWallGraphic(gridOffset);
+	});
 }
 
 void TerrainGraphics_updateAreaRoads(int x, int y, int size)

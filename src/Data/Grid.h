@@ -30,6 +30,7 @@ enum {
 	Terrain_Gatehouse = 0x8000,
 	// flagged items
 	Terrain_OutsideMap = 5,
+	Terrain_WallOrGatehouse = 0xc0000,
 	Terrain_NotClear = 0xd77f,
 	Terrain_1237 = 0x1237,
 	Terrain_127f = 0x127f,

@@ -11,6 +11,10 @@ struct TerrainGraphicsContext {
 	unsigned char currentItemOffset;
 };
 
+// 0 = no match
+// 1 = match
+// 2 = don't care
+
 static struct TerrainGraphicsContext terrainGraphicsWater[48] = {
 	{{1, 2, 1, 2, 1, 2, 1, 2}, {79, 79, 79, 79}, 0, 1},
 	{{1, 2, 1, 2, 1, 2, 0, 2}, {47, 46, 45, 44}, 0, 1},
@@ -353,6 +357,24 @@ const TerrainGraphic *TerrainGraphicsContext_getShore(int gridOffset)
 		tiles[i] = Data_Grid_terrain[gridOffset + contextTileOffsets[i]] & Terrain_Water ? 0 : 1;
 	}
 	return TerrainGraphicsContext_getGraphic(TerrainGraphicsContext_Water, tiles);
+}
+
+const TerrainGraphic *TerrainGraphicsContext_getWall(int gridOffset)
+{
+	int tiles[8];
+	for (int i = 0; i < 8; i++) {
+		tiles[i] = Data_Grid_terrain[gridOffset + contextTileOffsets[i]] & Terrain_Wall ? 0 : 1;
+	}
+	return TerrainGraphicsContext_getGraphic(TerrainGraphicsContext_Wall, tiles);
+}
+
+const TerrainGraphic *TerrainGraphicsContext_getWallGatehouse(int gridOffset)
+{
+	int tiles[8] = {0,0,0,0,0,0,0,0};
+	for (int i = 0; i < 8; i += 2) {
+		tiles[i] = Data_Grid_terrain[gridOffset + contextTileOffsets[i]] & (Terrain_Wall | Terrain_Gatehouse) ? 1 : 0;
+	}
+	return TerrainGraphicsContext_getGraphic(TerrainGraphicsContext_WallGatehouse, tiles);
 }
 
 int TerrainGraphicsContext_getNumWaterTiles(int gridOffset)

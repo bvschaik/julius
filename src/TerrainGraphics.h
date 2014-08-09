@@ -52,6 +52,8 @@ void TerrainGraphicsContext_init();
 const TerrainGraphic *TerrainGraphicsContext_getElevation(int gridOffset, int elevation);
 const TerrainGraphic *TerrainGraphicsContext_getEarthquake(int gridOffset);
 const TerrainGraphic *TerrainGraphicsContext_getShore(int gridOffset);
+const TerrainGraphic *TerrainGraphicsContext_getWall(int gridOffset);
+const TerrainGraphic *TerrainGraphicsContext_getWallGatehouse(int gridOffset);
 int TerrainGraphicsContext_getNumWaterTiles(int gridOffset);
 
 #endif
