@@ -3,25 +3,30 @@
 #include "Minimap.h"
 #include "Window.h"
 #include "MessageDialog.h"
+#include "../CityView.h"
 #include "../Graphics.h"
 #include "../SidebarMenu.h"
+#include "../Sound.h"
+#include "../Time.h"
 #include "../Undo.h"
 #include "../Widget.h"
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
 #include "../Data/Graphics.h"
+#include "../Data/Message.h"
 #include "../Data/Mouse.h"
 #include "../Data/Screen.h"
 #include "../Data/State.h"
 #include "../Data/Settings.h"
 
 #define SIDEBAR_BORDER ((Data_Screen.width + 20) % 60)
+#define BOTTOM_BORDER ((Data_Screen.height - 24) % 15)
 #define XOFFSET_EXPANDED (Data_Screen.width - (Data_Screen.width + 20) % 60 - 162)
 
 static void drawFillerBorders();
 static void drawSidebar();
 static void drawButtons();
-static void drawOverlayText();
+static void drawOverlayText(int xOffset);
 static void drawMinimap(int force);
 
 static void buttonOverlay(int param1, int param2);
@@ -90,6 +95,18 @@ static ImageButton buttonTopExpanded[] = {
 
 static int minimapRedrawRequested = 0;
 
+// sliding sidebar stuff
+static const int progressToOffset[] = {
+	1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 14, 16, 18, 21, 24, 27,
+	30, 33, 37, 41, 45, 49, 54, 59, 64, 70, 76, 83, 91, 99, 106, 113,
+	119, 125, 130, 135, 139, 143, 146, 149, 152, 154, 156, 158, 160, 162, 165
+};
+
+static struct {
+	TimeMillis slideStart;
+	int progress;
+} data;
+
 void UI_Sidebar_requestMinimapRefresh()
 {
 	minimapRedrawRequested = 1;
@@ -112,9 +129,25 @@ void UI_Sidebar_enableBuildingButtons()
 
 void UI_Sidebar_drawBackground()
 {
-	Data_State.sidebarCollapsed = 0;
 	drawSidebar();
 	drawFillerBorders();
+}
+
+static void drawNumberOfMessages()
+{
+	if (UI_Window_getId() == Window_City && !Data_State.sidebarCollapsed) {
+		buttonBuildExpanded[12].enabled = Data_State.undoReady && Data_State.undoAvailable;
+		buttonBuildExpanded[13].enabled = Data_Message.totalMessages > 0;
+		buttonBuildExpanded[14].enabled = Data_Message.hotspotCount > 0;
+		if (Data_Message.totalMessages) {
+			Widget_Text_drawNumberCenteredColored(
+				Data_Message.totalMessages, '@', " ",
+				XOFFSET_EXPANDED + 74, 452, 32, Font_SmallPlain, Color_Black);
+			Widget_Text_drawNumberCenteredColored(
+				Data_Message.totalMessages, '@', " ",
+				XOFFSET_EXPANDED + 73, 453, 32, Font_SmallPlain, Color_White);
+		}
+	}
 }
 
 static void drawSidebar()
@@ -129,10 +162,10 @@ static void drawSidebar()
 		Graphics_drawImage(graphicBase + 1, xOffsetPanel, 24);
 	}
 	drawButtons();
-	drawOverlayText();
-	UI_BuildingMenu_drawSidebarImage(xOffsetPanel + 6);
+	drawOverlayText(xOffsetPanel + 4);
+	UI_BuildingMenu_drawSidebarImage(xOffsetPanel + 6, 0);
     drawMinimap(1);
-	//j_fun_drawCitySidepanelNumMessages(1);
+	drawNumberOfMessages();
 
 	// relief images below panel
 	int yOffset = 474;
@@ -162,7 +195,7 @@ static void drawFillerBorders()
 		}
 	}
 
-	int borderBottomHeight = (Data_Screen.height - 24) % 15;
+	int borderBottomHeight = BOTTOM_BORDER;
 	Graphics_fillRect(0, Data_Screen.height - borderBottomHeight, Data_Screen.width, borderBottomHeight, Color_Black);
 }
 
@@ -181,10 +214,9 @@ static void drawButtons()
 	}
 }
 
-static void drawOverlayText()
+static void drawOverlayText(int xOffset)
 {
 	if (!Data_State.sidebarCollapsed) {
-		int xOffset = XOFFSET_EXPANDED + 4;
 		if (Data_State.currentOverlay) {
 			Widget_GameText_drawCentered(14, Data_State.currentOverlay, xOffset, 32, 117, Font_NormalGreen);
 		} else {
@@ -241,7 +273,12 @@ static void buttonOverlay(int param1, int param2)
 
 static void buttonCollapseExpand(int param1, int param2)
 {
-	// TODO
+	data.progress = 0;
+	data.slideStart = Time_getMillis();
+	UI_Window_goTo(Window_SlidingSidebar);
+	CityView_setViewportWithoutSidebar();
+	CityView_checkCameraBoundaries();
+	Sound_Effects_playChannel(SoundChannel_Sidebar);
 }
 
 static void buttonBuild(int submenu, int param2)
@@ -295,3 +332,79 @@ static void buttonRotate(int param1, int param2)
 {
 	// TODO
 }
+
+
+static void updateProgress()
+{
+	TimeMillis now = Time_getMillis();
+	TimeMillis diff = now - data.slideStart;
+	data.progress = diff / 10;
+}
+
+void UI_SlidingSidebar_drawBackground()
+{
+	UI_City_drawCity();
+}
+
+void UI_SlidingSidebar_drawForeground()
+{
+	updateProgress();
+	if (data.progress >= 47) {
+		if (Data_State.sidebarCollapsed) {
+			Data_State.sidebarCollapsed = 0;
+			CityView_setViewportWithSidebar();
+		} else {
+			Data_State.sidebarCollapsed = 1;
+			CityView_setViewportWithoutSidebar();
+		}
+		CityView_checkCameraBoundaries();
+		UI_Window_goTo(Window_City);
+		UI_Window_refresh(1);
+		return;
+	}
+
+	Graphics_setClipRectangle(
+		Data_Screen.width - SIDEBAR_BORDER - 162, 24,
+		162, Data_Screen.height - 24 - BOTTOM_BORDER);
+
+	int graphicBase = GraphicId(ID_Graphic_SidePanel);
+	// draw collapsed sidebar
+	int xOffsetCollapsed = Data_Screen.width - SIDEBAR_BORDER - 42;
+	Graphics_drawImage(graphicBase, xOffsetCollapsed, 24);
+	Widget_Button_drawImageButtons(xOffsetCollapsed, 24, buttonExpandSidebar, 1);
+	Widget_Button_drawImageButtons(xOffsetCollapsed, 24, buttonBuildCollapsed, 12);
+
+	// draw expanded sidebar on top of it
+	int xOffsetExpanded = XOFFSET_EXPANDED;
+	if (Data_State.sidebarCollapsed) {
+		xOffsetExpanded += progressToOffset[47 - data.progress];
+	} else {
+		xOffsetExpanded += progressToOffset[data.progress];
+	}
+	Graphics_drawImage(graphicBase + 1, xOffsetExpanded, 24);
+	Widget_Button_drawImageButtons(xOffsetExpanded, 24, buttonOverlaysCollapseSidebar, 2);
+	Widget_Button_drawImageButtons(xOffsetExpanded, 24, buttonBuildExpanded, 15);
+	Widget_Button_drawImageButtons(xOffsetExpanded, 24, buttonTopExpanded, 6);
+
+	// black out minimap
+	Graphics_fillRect(xOffsetExpanded + 8, 59, 145, 111, Color_Black);
+
+	drawOverlayText(xOffsetExpanded + 4);
+	UI_BuildingMenu_drawSidebarImage(xOffsetExpanded + 6, 1);
+
+	// relief images below buttons
+	int yOffset = 474;
+	while (Data_Screen.width - yOffset > 0) {
+		if (Data_Screen.width - yOffset <= 120) {
+			Graphics_drawImage(graphicBase + 3, xOffsetCollapsed, yOffset);
+			Graphics_drawImage(graphicBase + 2, xOffsetExpanded, yOffset);
+			yOffset += 120;
+		} else {
+			Graphics_drawImage(graphicBase + 5, xOffsetCollapsed, yOffset);
+			Graphics_drawImage(graphicBase + 4, xOffsetExpanded, yOffset);
+			yOffset += 285;
+		}
+	}
+	Graphics_resetClipRectangle();
+}
+

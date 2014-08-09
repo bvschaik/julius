@@ -20,6 +20,7 @@ int Widget_Text_drawNumber(int value, char prefix, const char *postfix, int xOff
 int Widget_Text_drawNumberColored(int value, char prefix, const char *postfix, int xOffset, int yOffset, Font font, Color color);
 
 void Widget_Text_drawNumberCentered(int value, char prefix, const char *postfix, int xOffset, int yOffset, int boxWidth, Font font);
+void Widget_Text_drawNumberCenteredColored(int value, char prefix, const char *postfix, int xOffset, int yOffset, int boxWidth, Font font, Color color);
 
 int Widget_GameText_drawNumberWithDescription(int group, int number, int amount, int xOffset, int yOffset, Font font);
 

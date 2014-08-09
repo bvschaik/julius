@@ -19,9 +19,11 @@ void Loader_GameState_init()
 
 	Data_Settings_Map.orientation = 0;
 	CityView_calculateLookup();
-	CityView_setViewport(0, 24,
-		(Data_Screen.width - 160) / 60,
-		(Data_Screen.height - 24) / 15);
+	if (Data_State.sidebarCollapsed) {
+		CityView_setViewportWithoutSidebar();
+	} else {
+		CityView_setViewportWithSidebar();
+	}
 	Data_Settings_Map.camera.x = 76;
 	Data_Settings_Map.camera.y = 152;
 	CityView_checkCameraBoundaries();

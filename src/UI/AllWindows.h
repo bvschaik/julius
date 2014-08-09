@@ -88,7 +88,7 @@ void UI_OverlayMenu_drawForeground();
 void UI_OverlayMenu_handleMouse();
 
 void UI_BuildingMenu_init(int submenu);
-void UI_BuildingMenu_drawSidebarImage(int xOffset);
+void UI_BuildingMenu_drawSidebarImage(int xOffset, int forceDraw);
 void UI_BuildingMenu_drawBackground();
 void UI_BuildingMenu_drawForeground();
 void UI_BuildingMenu_handleMouse();

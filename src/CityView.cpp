@@ -2,8 +2,23 @@
 #include "Data/CityView.h"
 #include "Data/Constants.h"
 #include "Data/Grid.h"
+#include "Data/Screen.h"
 #include "Data/Settings.h"
 #include "UI/CityBuildings.h"
+
+void CityView_setViewportWithoutSidebar()
+{
+	CityView_setViewport(0, 24,
+		(Data_Screen.width - 40) / 60,
+		(Data_Screen.height - 24) / 15);
+}
+
+void CityView_setViewportWithSidebar()
+{
+	CityView_setViewport(0, 24,
+		(Data_Screen.width - 160) / 60,
+		(Data_Screen.height - 24) / 15);
+}
 
 void CityView_setViewport(
 	int xOffset, int yOffset, int widthInTiles, int heightInTiles)

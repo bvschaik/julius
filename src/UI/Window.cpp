@@ -6,6 +6,7 @@
 #include "FileDialog.h"
 #include "PopupDialog.h"
 #include "MessageDialog.h"
+#include "Sidebar.h"
 #include "Tooltip.h"
 #include "TopMenu.h"
 
@@ -54,6 +55,7 @@ static struct Window windows[] = {
 	{ noop, UI_Intermezzo_drawBackground, noop, UI_Intermezzo_handleMouse },
 	{ UI_BuildingInfo_init, UI_BuildingInfo_drawBackground, UI_BuildingInfo_drawForeground, UI_BuildingInfo_handleMouse },
 	{ noop, UI_NewCareerDialog_drawBackground, UI_NewCareerDialog_drawForeground, UI_NewCareerDialog_handleMouse },
+	{ noop, UI_SlidingSidebar_drawBackground, UI_SlidingSidebar_drawForeground, noop },
 };
 
 static WindowId previousWindow;

@@ -1,6 +1,9 @@
 #ifndef CITYVIEW_H
 #define CITYVIEW_H
 
+void CityView_setViewportWithSidebar();
+void CityView_setViewportWithoutSidebar();
+
 void CityView_setViewport(
 	int xOffset, int yOffset, int widthInTiles, int heightInTiles);
 

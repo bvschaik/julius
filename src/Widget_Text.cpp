@@ -318,6 +318,13 @@ void Widget_Text_drawNumberCentered(int value, char prefix, const char *postfix,
 	Widget_Text_drawCentered(str, xOffset, yOffset, boxWidth, font, 0);
 }
 
+void Widget_Text_drawNumberCenteredColored(int value, char prefix, const char *postfix, int xOffset, int yOffset, int boxWidth, Font font, Color color)
+{
+	char str[100];
+	numberToString(str, value, prefix, postfix);
+	Widget_Text_drawCentered(str, xOffset, yOffset, boxWidth, font, color);
+}
+
 
 int Widget_GameText_draw(int group, int number, int xOffset, int yOffset, Font font)
 {

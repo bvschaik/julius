@@ -9,4 +9,7 @@ void UI_Sidebar_handleMouseBuildButtons();
 void UI_Sidebar_requestMinimapRefresh();
 void UI_Sidebar_enableBuildingButtons();
 
+void UI_SlidingSidebar_drawBackground();
+void UI_SlidingSidebar_drawForeground();
+
 #endif

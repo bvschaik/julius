@@ -80,9 +80,9 @@ void UI_BuildingMenu_init(int submenu)
 	}
 }
 
-void UI_BuildingMenu_drawSidebarImage(int xOffset)
+void UI_BuildingMenu_drawSidebarImage(int xOffset, int forceDraw)
 {
-	if (Data_State.sidebarCollapsed) {
+	if (Data_State.sidebarCollapsed && !forceDraw) {
 		return;
 	}
 	if (!Data_State.selectedBuilding.type) {
