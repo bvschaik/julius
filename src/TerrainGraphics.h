@@ -54,6 +54,10 @@ const TerrainGraphic *TerrainGraphicsContext_getEarthquake(int gridOffset);
 const TerrainGraphic *TerrainGraphicsContext_getShore(int gridOffset);
 const TerrainGraphic *TerrainGraphicsContext_getWall(int gridOffset);
 const TerrainGraphic *TerrainGraphicsContext_getWallGatehouse(int gridOffset);
+const TerrainGraphic *TerrainGraphicsContext_getDirtRoad(int gridOffset);
+const TerrainGraphic *TerrainGraphicsContext_getPavedRoad(int gridOffset);
+const TerrainGraphic *TerrainGraphicsContext_getAqueduct(int gridOffset, int includeOverlay);
 int TerrainGraphicsContext_getNumWaterTiles(int gridOffset);
+
 
 #endif

@@ -38,8 +38,10 @@ enum {
 	Warning_BuildChariotMaker = 47,
 	Warning_WallNeeded = 49,
 	Warning_MaxLegionsReached = 52,
+	Warning_PeopleOnBridge = 55,
 	Warning_DockOpenWaterNeeded = 56,
-	Warning_HouseTooFarFromRoad = 62
+	Warning_HouseTooFarFromRoad = 62,
+	Warning_DataLimitReached = 65
 };
 
 void UI_Warning_show(int warningId);

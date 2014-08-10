@@ -7,7 +7,6 @@
 #include "Graphics.h"
 #include "HousePopulation.h"
 #include "PlayerMessage.h"
-#include "PlayerWarning.h"
 #include "Resource.h"
 #include "Routing.h"
 #include "Sound.h"
@@ -62,7 +61,7 @@ int Building_create(int type, int x, int y)
 		}
 	}
 	if (!buildingId) {
-		PlayerWarning_show(PlayerWarning_DataLimitReached);
+		UI_Warning_show(Warning_DataLimitReached);
 		return 0;
 	}
 	

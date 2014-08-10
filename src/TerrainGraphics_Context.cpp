@@ -1,5 +1,6 @@
 #include "TerrainGraphics.h"
 
+#include "Data/Building.h"
 #include "Data/Grid.h"
 #include "Data/Settings.h"
 
@@ -375,6 +376,95 @@ const TerrainGraphic *TerrainGraphicsContext_getWallGatehouse(int gridOffset)
 		tiles[i] = Data_Grid_terrain[gridOffset + contextTileOffsets[i]] & (Terrain_Wall | Terrain_Gatehouse) ? 1 : 0;
 	}
 	return TerrainGraphicsContext_getGraphic(TerrainGraphicsContext_WallGatehouse, tiles);
+}
+
+static void setTilesRoad(int gridOffset, int tiles[8])
+{
+	for (int i = 0; i < 8; i++) {
+		tiles[i] = Data_Grid_terrain[gridOffset + contextTileOffsets[i]] & Terrain_Road ? 0 : 1;
+	}
+	for (int i = 0; i < 8; i += 2) {
+		int offset = gridOffset + contextTileOffsets[i];
+		if (Data_Grid_terrain[offset] & Terrain_Gatehouse) {
+			int buildingId = Data_Grid_buildingIds[offset];
+			if (Data_Buildings[buildingId].type == Building_Gatehouse &&
+				Data_Buildings[buildingId].subtype.orientation == 1 + (i % 4) / 2) {
+				tiles[i] = 1;
+			}
+		}
+	}
+}
+
+const TerrainGraphic *TerrainGraphicsContext_getDirtRoad(int gridOffset)
+{
+	int tiles[8];
+	setTilesRoad(gridOffset, tiles);
+	return TerrainGraphicsContext_getGraphic(TerrainGraphicsContext_DirtRoad, tiles);
+}
+
+const TerrainGraphic *TerrainGraphicsContext_getPavedRoad(int gridOffset)
+{
+	int tiles[8];
+	setTilesRoad(gridOffset, tiles);
+	return TerrainGraphicsContext_getGraphic(TerrainGraphicsContext_PavedRoad, tiles);
+}
+
+const TerrainGraphic *TerrainGraphicsContext_getAqueduct(int gridOffset, int includeOverlay)
+{
+	int tiles[8] = {0,0,0,0,0,0,0,0};
+	int hasRoad = (Data_Grid_terrain[gridOffset] & Terrain_Road) ? 1 : 0;
+	for (int i = 0; i < 8; i += 2) {
+		int offset = gridOffset + contextTileOffsets[i];
+		if (Data_Grid_terrain[offset] & Terrain_Aqueduct) {
+			if (hasRoad) {
+				if (!(Data_Grid_terrain[offset] & Terrain_Road)) {
+					tiles[i] = 1;
+				}
+			} else {
+				tiles[i] = 1;
+			}
+		}
+	}
+	int offset = gridOffset + contextTileOffsets[0];
+	if (Data_Grid_terrain[offset] & Terrain_Building) {
+		int buildingId = Data_Grid_buildingIds[offset];
+		if (Data_Buildings[buildingId].type == Building_Reservoir &&
+			(Data_Grid_edge[offset] & Edge_MaskXY) == Edge_X1Y2) {
+			tiles[0] = 1;
+		}
+	}
+	offset = gridOffset + contextTileOffsets[2];
+	if (Data_Grid_terrain[offset] & Terrain_Building) {
+		int buildingId = Data_Grid_buildingIds[offset];
+		if (Data_Buildings[buildingId].type == Building_Reservoir &&
+			(Data_Grid_edge[offset] & Edge_MaskXY) == Edge_X0Y1) {
+			tiles[2] = 1;
+		}
+	}
+	offset = gridOffset + contextTileOffsets[4];
+	if (Data_Grid_terrain[offset] & Terrain_Building) {
+		int buildingId = Data_Grid_buildingIds[offset];
+		if (Data_Buildings[buildingId].type == Building_Reservoir &&
+			(Data_Grid_edge[offset] & Edge_MaskXY) == Edge_X1Y0) {
+			tiles[4] = 1;
+		}
+	}
+	offset = gridOffset + contextTileOffsets[6];
+	if (Data_Grid_terrain[offset] & Terrain_Building) {
+		int buildingId = Data_Grid_buildingIds[offset];
+		if (Data_Buildings[buildingId].type == Building_Reservoir &&
+			(Data_Grid_edge[offset] & Edge_MaskXY) == Edge_X2Y1) {
+			tiles[6] = 1;
+		}
+	}
+	if (includeOverlay) {
+		for (int i = 0; i < 8; i += 2) {
+			if (Data_Grid_bitfields[gridOffset + contextTileOffsets[i]] & Bitfield_Overlay) {
+				tiles[i] = 1;
+			}
+		}
+	}
+	return TerrainGraphicsContext_getGraphic(TerrainGraphicsContext_Aqueduct, tiles);
 }
 
 int TerrainGraphicsContext_getNumWaterTiles(int gridOffset)

@@ -38,6 +38,7 @@ static void TerrainGraphics_setTileRubble(int x, int y);
 static void TerrainGraphics_updateTileMeadow(int x, int y);
 static void TerrainGraphics_updateAreaEmptyLand(int x, int y, int size, int graphicId);
 static void setWallGraphic(int gridOffset);
+static void setRoadGraphic(int gridOffset);
 
 static int isAllTerrainInArea(int x, int y, int size, int terrain)
 {
@@ -157,7 +158,9 @@ void TerrainGraphics_determineGardensFromGraphicIds()
 
 void TerrainGraphics_updateAllRoads()
 {
-	// TODO
+	FOREACH_ALL({
+		setRoadGraphic(gridOffset);
+	});
 }
 
 void TerrainGraphics_updateAllWalls()
@@ -663,10 +666,93 @@ void TerrainGraphics_setTileEarthquake(int x, int y)
 	});
 }
 
+static int isPavedRoadTile(int gridOffset)
+{
+	if (Data_Grid_desirability[gridOffset] > 4) {
+		return 1;
+	}
+	if (Data_Grid_desirability[gridOffset] > 0 && Data_Grid_terrain[gridOffset] & Terrain_FountainRange) {
+		return 1;
+	}
+	return 0;
+}
+
+static void setRoadWithAqueductGraphic(int gridOffset)
+{
+	int graphicIdAqueduct = GraphicId(ID_Graphic_Aqueduct);
+	int waterOffset;
+	if (Data_Grid_graphicIds[gridOffset] < graphicIdAqueduct + 15) {
+		waterOffset = 0;
+	} else {
+		waterOffset = 15;
+	}
+	const struct TerrainGraphic *graphic = TerrainGraphicsContext_getAqueduct(gridOffset, 0);
+	int groupOffset = graphic->groupOffset;
+	if (!graphic->field12) {
+		if (Data_Grid_terrain[gridOffset - 162] & Terrain_Road) {
+			groupOffset = 3;
+		} else {
+			groupOffset = 2;
+		}
+	}
+	if (isPavedRoadTile(gridOffset)) {
+		Data_Grid_graphicIds[gridOffset] =
+			graphicIdAqueduct + waterOffset + groupOffset - 2;
+		Data_Grid_graphicIds[gridOffset] =
+			graphicIdAqueduct + waterOffset + groupOffset + 6;
+	}
+	Data_Grid_bitfields[gridOffset] &= Bitfield_NoSizes;
+	Data_Grid_edge[gridOffset] |= Edge_LeftmostTile;
+}
+
+static void setRoadGraphic(int gridOffset)
+{
+	if (Data_Grid_bitfields[gridOffset] & Bitfield_PlazaOrEarthquake) {
+		return;
+	}
+	if (Data_Grid_terrain[gridOffset] & Terrain_Aqueduct) {
+		setRoadWithAqueductGraphic(gridOffset);
+		return;
+	}
+	if (isPavedRoadTile(gridOffset)) {
+		const struct TerrainGraphic *graphic = TerrainGraphicsContext_getPavedRoad(gridOffset);
+		Data_Grid_graphicIds[gridOffset] = GraphicId(ID_Graphic_Road) +
+			graphic->groupOffset + graphic->itemOffset;
+	} else {
+		const struct TerrainGraphic *graphic = TerrainGraphicsContext_getDirtRoad(gridOffset);
+		Data_Grid_graphicIds[gridOffset] = GraphicId(ID_Graphic_Road) +
+			graphic->groupOffset + graphic->itemOffset + 49;
+	}
+	Data_Grid_bitfields[gridOffset] &= Bitfield_NoSizes;
+	Data_Grid_edge[gridOffset] |= Edge_LeftmostTile;
+}
+
 int TerrainGraphics_setTileRoad(int x, int y)
 {
-	// TODO
-	return 0;
+	int gridOffset = GridOffset(x, y);
+	int tilesSet = 0;
+	if (!(Data_Grid_terrain[gridOffset] & Terrain_Road)) {
+		tilesSet = 1;
+	}
+	Data_Grid_terrain[gridOffset] |= Terrain_Road;
+	Data_Grid_bitfields[gridOffset] &= Bitfield_NoOverlay;
+
+	int xMin = x - 1;
+	int yMin = y - 1;
+	int xMax = x + 1;
+	int yMax = y + 1;
+	BOUND_REGION();
+	FOREACH_REGION({
+		int terrain = Data_Grid_terrain[gridOffset];
+		if (terrain & Terrain_Road && !(terrain & (Terrain_Water | Terrain_Building))) {
+			if (terrain & Terrain_Aqueduct) {
+				setRoadWithAqueductGraphic(gridOffset);
+			} else {
+				setRoadGraphic(gridOffset);
+			}
+		}
+	});
+	return tilesSet;
 }
 
 static int getGatehouseBuildingId(int gridOffset)
@@ -970,6 +1056,7 @@ int TerrainGraphics_setTileWall(int x, int y)
 	int yMin = y - 1;
 	int xMax = x + 1;
 	int yMax = y + 1;
+	BOUND_REGION();
 	FOREACH_REGION({
 		setWallGraphic(gridOffset);
 	});
@@ -1062,5 +1149,44 @@ void TerrainGraphics_updateAreaWalls(int x, int y, int size)
 
 void TerrainGraphics_updateAreaRoads(int x, int y, int size)
 {
-	// TODO
+	int xMin = x - 1;
+	int yMin = y - 1;
+	int xMax = xMin + size - 1;
+	int yMax = yMin + size - 1;
+	BOUND_REGION();
+	FOREACH_REGION({
+		setRoadGraphic(gridOffset);
+	});
+}
+
+int TerrainGraphics_getFreeTileForHerd(int x, int y, int allowNegDes, int *xTile, int *yTile)
+{
+	int xMin = x - 4;
+	int xMax = x + 4;
+	int yMin = y - 4;
+	int yMax = y + 4;
+	unsigned short disallowedTerrain = ~(Terrain_AccessRamp | Terrain_Meadow);
+	int tileFound = 0;
+	int tileX = 0, tileY = 0;
+	BOUND_REGION();
+	FOREACH_REGION({
+		if (!(Data_Grid_terrain[gridOffset] & disallowedTerrain)) {
+			if (Data_Grid_romanSoldierConcentration[gridOffset]) {
+				return 0;
+			}
+			if (allowNegDes) {
+				if (Data_Grid_desirability[gridOffset] > 1) {
+					return 0;
+				}
+			} else if (Data_Grid_desirability[gridOffset]) {
+				return 0;
+			}
+			tileFound = 1;
+			tileX = xx;
+			tileY = yy;
+		}
+	});
+	*xTile = tileX;
+	*yTile = tileY;
+	return tileFound;
 }

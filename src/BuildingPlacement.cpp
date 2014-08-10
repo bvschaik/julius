@@ -3,6 +3,7 @@
 #include "CityInfo.h"
 #include "Formation.h"
 #include "Grid.h"
+#include "HousePopulation.h"
 #include "Resource.h"
 #include "Routing.h"
 #include "SidebarMenu.h"
@@ -693,7 +694,123 @@ static void placeHouses(int measureOnly, int xStart, int yStart, int xEnd, int y
 
 static void clearRegionConfirmed(int measureOnly, int xStart, int yStart, int xEnd, int yEnd)
 {
-	// TODO fun_deleteRegion
+	itemsPlaced = 0;
+	Undo_restoreBuildings();
+	Grid_copyShortGrid(Data_Grid_Undo_terrain, Data_Grid_terrain);
+	Grid_copyByteGrid(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
+	Undo_restoreTerrainGraphics();
+
+	int xMin, xMax, yMin, yMax;
+	BOUND_REGION();
+
+	for (int y = yMin; y <= yMax; y++) {
+		for (int x = xMin; x <= xMax; x++) {
+			int gridOffset = GridOffset(x,y);
+			if (Data_Grid_terrain[gridOffset] & (Terrain_Rock | Terrain_Elevation)) {
+				continue;
+			}
+			int terrain = Data_Grid_terrain[gridOffset] & Terrain_NotClear;
+			if (terrain & Terrain_Building) {
+				int buildingId = Data_Grid_buildingIds[gridOffset];
+				if (!buildingId) {
+					continue;
+				}
+				int type = Data_Buildings[buildingId].type;
+				if (type == Building_BurningRuin || type == Building_NativeCrops ||
+					type == Building_NativeHut || type == Building_NativeMeeting) {
+					continue;
+				}
+				if (Data_Buildings[buildingId].inUse == 6) {
+					continue;
+				}
+				if (type == Building_FortGround || type == Building_FortGround__) {
+					if (!measureOnly && confirm.fortConfirmed != 1) {
+						continue;
+					}
+					if (!measureOnly && confirm.fortConfirmed == 1) {
+						Data_State.undoAvailable = 0;
+					}
+				}
+				struct Data_Building *b = &Data_Buildings[buildingId];
+				if (b->houseSize && b->housePopulation && !measureOnly) {
+					HousePopulation_createHomeless(b->x, b->y, b->housePopulation);
+					b->housePopulation = 0;
+				}
+				if (b->inUse != 6) {
+					itemsPlaced++;
+					Undo_addBuildingToList(buildingId);
+				}
+				b->inUse = 6;
+				b->isDeleted = 1;
+				int spaceId = buildingId;
+				for (int i = 0; i < 9; i++) {
+					spaceId = Data_Buildings[spaceId].prevPartBuildingId;
+					if (spaceId <= 0) {
+						break;
+					}
+					Undo_addBuildingToList(spaceId);
+					Data_Buildings[spaceId].inUse = 6;
+				}
+				spaceId = buildingId;
+				for (int i = 0; i < 9; i++) {
+					spaceId = Data_Buildings[spaceId].nextPartBuildingId;
+					if (spaceId <= 0) {
+						break;
+					}
+					Undo_addBuildingToList(spaceId);
+					Data_Buildings[spaceId].inUse = 6;
+				}
+			} else if (terrain & Terrain_Aqueduct) {
+				Data_Grid_terrain[gridOffset] &= Terrain_2e80;
+				Data_Grid_aqueducts[gridOffset] = 0;
+				itemsPlaced++;
+				if (Data_Grid_aqueducts[gridOffset - 162] == 5) {
+					Data_Grid_aqueducts[gridOffset - 162] = 1;
+				}
+				if (Data_Grid_aqueducts[gridOffset + 1] == 6) {
+					Data_Grid_aqueducts[gridOffset + 1] = 2;
+				}
+				if (Data_Grid_aqueducts[gridOffset + 162] == 5) {
+					Data_Grid_aqueducts[gridOffset + 162] = 3;
+				}
+				if (Data_Grid_aqueducts[gridOffset - 1] == 6) {
+					Data_Grid_aqueducts[gridOffset - 1] = 4;
+				}
+			} else if (terrain & Terrain_Water) {
+				if (!measureOnly && TerrainBridge_countWalkersOnBridge(gridOffset) > 0) {
+					UI_Warning_show(Warning_PeopleOnBridge);
+				} else {
+					if (confirm.bridgeConfirmed == 1) {
+						TerrainBridge_removeFromSpriteGrid(gridOffset, measureOnly);
+						itemsPlaced++;
+					}
+				}
+			} else if (terrain) {
+				Data_Grid_terrain[gridOffset] &= Terrain_2e80;
+				itemsPlaced++;
+			}
+		}
+	}
+	int radius;
+	if (xMax - xMin <= yMax - yMin) {
+		radius = yMax - yMin + 3;
+	} else {
+		radius = xMax - xMin + 3;
+	}
+	TerrainGraphics_updateRegionEmptyLand(xMin, yMin, xMax, yMax);
+	TerrainGraphics_updateRegionMeadow(xMin, yMin, xMax, yMax);
+	TerrainGraphics_updateRegionRubble(xMin, yMin, xMax, yMax);
+	TerrainGraphics_updateAllGardens();
+	TerrainGraphics_updateAreaRoads(xMin, yMin, radius);
+	TerrainGraphics_updateRegionPlazas(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
+	TerrainGraphics_updateAreaWalls(xMin, yMin, radius);
+	if (!measureOnly) {
+		Routing_determineLandCitizen();
+		Routing_determineLandNonCitizen();
+		Routing_determineWalls();
+		Routing_determineWater();
+		UI_Window_requestRefresh();
+	}
 }
 
 static void confirmDeleteFort(int accepted)

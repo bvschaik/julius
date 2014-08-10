@@ -520,10 +520,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\PlayerWarning.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\UI\PopupDialog.cpp"
 				>
 			</File>
@@ -962,10 +958,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\PlayerWarning.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\UI\PopupDialog.h"
 				>
 			</File>
@@ -1078,11 +1070,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\data\Tutorial.h"
+				RelativePath=".\src\Tutorial.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Tutorial.h"
+				RelativePath=".\src\data\Tutorial.h"
 				>
 			</File>
 			<File
