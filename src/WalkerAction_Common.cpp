@@ -11,6 +11,9 @@ const int walkerActionCorpseGraphicOffsets[128] = {
 	7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7
 };
 
+static const int cartOffsetsX[] = {13, 18, 12, 0, -13, -18, -13, 0};
+static const int cartOffsetsY[] = {-7, -1, 7, 11, 6, -1, -7, -12};
+
 void WalkerAction_Common_handleCorpse(int walkerId)
 {
 	if (Data_Walkers[walkerId].waitTicks < 0) {
@@ -26,4 +29,10 @@ void WalkerAction_Common_handleCorpse(int walkerId)
 void WalkerAction_Common_handleAttack(int walkerId)
 {
 	// TODO
+}
+
+void WalkerAction_Common_setCartOffset(int walkerId, int direction)
+{
+	Data_Walkers[walkerId].xOffsetCart = cartOffsetsX[direction];
+	Data_Walkers[walkerId].yOffsetCart = cartOffsetsY[direction];
 }

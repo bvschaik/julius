@@ -261,9 +261,9 @@ void UI_CityBuildings_drawWalker(int walkerId, int xOffset, int yOffset, int sel
 	// determining x/y offset on tile
 	int xTileOffset = 0;
 	int yTileOffset = 0;
-	if (w->__unknown_0c) {
-		xTileOffset = tileOffsetToPixelOffsetX(w->tilePositionX % 15, w->tilePositionY % 15);
-		yTileOffset = tileOffsetToPixelOffsetY(w->tilePositionX % 15, w->tilePositionY % 15);
+	if (w->useCrossCountry) {
+		xTileOffset = tileOffsetToPixelOffsetX(w->crossCountryX % 15, w->crossCountryY % 15);
+		yTileOffset = tileOffsetToPixelOffsetY(w->crossCountryX % 15, w->crossCountryY % 15);
 		yTileOffset -= w->__unknown_18;
 	} else {
 		int direction = (8 + w->direction - Data_Settings_Map.orientation) % 8;

@@ -162,7 +162,7 @@ static void UI_CityBuildings_drawBuildingTopsWalkersAnimation(int selectedWalker
 					Graphics_drawImageMasked(graphicId + 4, xGraphic + 228,
 						yGraphic + 19 - Data_CityInfo.ratingFavor / 2, colorMask);
 					// unemployed
-					graphicId = GraphicId(ID_Graphic_Homeless);
+					graphicId = GraphicId(ID_Graphic_Walker_Homeless);
 					if (Data_CityInfo.unemploymentPercentageForSenate > 0) {
 						Graphics_drawImageMasked(graphicId + 108,
 							xGraphic + 80, yGraphic, colorMask);
@@ -506,7 +506,7 @@ static void UI_CityBuildings_drawHippodromeAndElevatedWalkers(int selectedWalker
 	FOREACH_Y_VIEW(
 		FOREACH_X_VIEW({
 			for (int walkerId = Data_Grid_walkerIds[gridOffset]; walkerId > 0; walkerId = Data_Walkers[walkerId].nextWalkerIdOnSameTile) {
-				if (Data_Walkers[walkerId].__unknown_0c && !Data_Walkers[walkerId].isGhost) {
+				if (Data_Walkers[walkerId].useCrossCountry && !Data_Walkers[walkerId].isGhost) {
 					UI_CityBuildings_drawWalker(walkerId, xGraphic, yGraphic, selectedWalkerId, 0);
 				}
 				if (Data_Walkers[walkerId].heightFromGround) {

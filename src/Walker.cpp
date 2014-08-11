@@ -37,15 +37,15 @@ int Walker_create(int walkerType, int x, int y, char direction)
 	w->state = 1;
 	w->ciid = 1;
 	w->type = walkerType;
-	w->__unknown_0c = 0;
+	w->useCrossCountry = 0;
 	w->isFriendly = 1;
 	w->createdSequence = Data_Walker_Extra.createdSequence++;
 	w->direction = direction;
 	w->sourceX = w->destinationX = w->previousTileX = w->x = x;
 	w->sourceY = w->destinationY = w->previousTileY = w->y = y;
 	w->gridOffset = GridOffset(x, y);
-	w->tilePositionX = 15 * x;
-	w->tilePositionY = 15 * y;
+	w->crossCountryX = 15 * x;
+	w->crossCountryY = 15 * y;
 	w->progressOnTile = 15;
 	w->phraseSequenceCity = w->phraseSequenceExact = Data_Random.random1_7bit & 3;
 	WalkerName_set(id);

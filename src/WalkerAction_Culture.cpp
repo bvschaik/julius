@@ -47,7 +47,7 @@ static void WalkerAction_culture(int walkerId, int graphicCategory)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	w->terrainUsage = 1;
-	w->__unknown_0c = 0;
+	w->useCrossCountry = 0;
 	w->maxRoamLength = 384;
 	int buildingId = w->buildingId;
 	if (Data_Buildings[buildingId].inUse != 1 || Data_Buildings[buildingId].walkerId != walkerId) {
@@ -73,7 +73,7 @@ void WalkerAction_schoolChild(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	w->terrainUsage = 1;
-	w->__unknown_0c = 0;
+	w->useCrossCountry = 0;
 	w->maxRoamLength = 96;
 	int buildingId = w->buildingId;
 	if (Data_Buildings[buildingId].inUse != 1 || Data_Buildings[buildingId].walkerId != walkerId) {

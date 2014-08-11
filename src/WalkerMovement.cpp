@@ -20,3 +20,14 @@ void WalkerMovement_followTicks(int walkerId, int leaderWalkerId, int numTicks)
 	// TODO
 }
 
+void WalkerMovement_crossCountrySetDirection(int walkerId, int xSrc, int ySrc, int xDst, int yDst, int isProjectile)
+{
+	// TODO
+}
+
+int WalkerMovement_crossCountryWalkTicks(int walkerId, int numTicks)
+{
+	// TODO
+	return 0;
+}
+

@@ -92,8 +92,15 @@ enum {
 
 enum {
 	WalkerActionState_1_ImmigrantCreated = 1,
+	WalkerActionState_2_ImmigrantArriving = 2,
+	WalkerActionState_3_ImmigrantEnteringHouse = 3,
 	WalkerActionState_4_EmigrantCreated = 4,
+	WalkerActionState_5_EmigrantExitingHouse = 5,
+	WalkerActionState_6_EmigrantLeaving = 6,
 	WalkerActionState_7_HomelessCreated = 7,
+	WalkerActionState_8_HomelessGoingToHouse = 8,
+	WalkerActionState_9_HomelessEnteringHouse = 9,
+	WalkerActionState_10_HomelessLeaving = 10,
 	WalkerActionState_20_CartPusherNoRoom = 20,
 	WalkerActionState_21_CartPusher = 21,
 	WalkerActionState_22_CartPusher = 22,
@@ -196,7 +203,7 @@ extern struct Data_Walker {
 	short nextWalkerIdOnSameTile; // 08
 	unsigned char type;
 	char resourceId; //0b
-	char __unknown_0c;
+	char useCrossCountry;
 	char isFriendly;
 	char state;
 	char ciid; // 0f
@@ -227,7 +234,7 @@ extern struct Data_Walker {
 	short routingPathId;
 	short routingPathCurrentTile;
 	short routingPathLength;
-	char __unknown_30;
+	char inBuildingWaitTicks; // 30
 	char __unknown_31;
 	short maxRoamLength;
 	short roamLength;
@@ -235,8 +242,8 @@ extern struct Data_Walker {
 	char __unknown_37;
 	char __unknown_38;
 	char __unknown_39;
-	short tilePositionX; // 3a - position = 15 * x + offset on tile
-	short tilePositionY; // 3c - position = 15 * y + offset on tile
+	short crossCountryX; // 3a - position = 15 * x + offset on tile
+	short crossCountryY; // 3c - position = 15 * y + offset on tile
 	char __unknown_3e;
 	char __unknown_3f;
 	char __unknown_40;
