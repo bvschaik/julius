@@ -140,7 +140,7 @@ void Formation_calculateLegionTotals()
 					Data_CityInfo.militaryLegionaryLegions++;
 				}
 			}
-			if (Data_Formations[i].__unknown56 <= 0 &&
+			if (Data_Formations[i].missileAttackTimeout <= 0 &&
 				Data_Formations[i].walkerIds[0]) {
 				int walkerId = Data_Formations[i].walkerIds[0];
 				if (Data_Walkers[walkerId].state == WalkerState_Alive) {

@@ -5,6 +5,13 @@
 #define WalkerActionDirection(w) ((8 + w->direction - Data_Settings_Map.orientation) % 8)
 #define WalkerActionCorpseGraphicOffset(w) walkerActionCorpseGraphicOffsets[w->waitTicks / 2]
 
+#define WalkerActionUpdateGraphic(w,g) \
+	if ((w)->actionState == WalkerActionState_149_Corpse) {\
+		(w)->graphicId = (g) + walkerActionCorpseGraphicOffsets[w->waitTicks / 2] + 96;\
+	} else {\
+		(w)->graphicId = (g) + WalkerActionDirection(w) + 8 * (w)->graphicOffset;\
+	}
+
 extern const int walkerActionCorpseGraphicOffsets[128];
 
 #include "WalkerAction.h"

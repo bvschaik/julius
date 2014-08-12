@@ -50,8 +50,8 @@ struct Data_Formation {
 	short __unknown50;
 	short isHalted;
 	short __unknown54;
-	short __unknown56;
-	short __unknown58;
+	short missileAttackTimeout; //56
+	short missileAttackFormationId; //58
 	short layoutBeforeMopUp;
 	short cursedByMars;
 	char __unknown5e; //5e

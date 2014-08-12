@@ -36,3 +36,12 @@ void WalkerAction_Common_setCartOffset(int walkerId, int direction)
 	Data_Walkers[walkerId].xOffsetCart = cartOffsetsX[direction];
 	Data_Walkers[walkerId].yOffsetCart = cartOffsetsY[direction];
 }
+
+void WalkerAction_Common_setCrossCountryDestination(int walkerId, struct Data_Walker *w, int xDst, int yDst)
+{
+	w->destinationX = xDst;
+	w->destinationY = yDst;
+	WalkerMovement_crossCountrySetDirection(
+		walkerId, w->crossCountryX, w->crossCountryY,
+		15 * xDst, 15 * yDst, 0);
+}

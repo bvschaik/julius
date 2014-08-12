@@ -676,7 +676,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\WalkerAction_Missile.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\WalkerAction_Rioter.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\WalkerAction_Service.cpp"
 				>
 			</File>
 			<File

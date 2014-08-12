@@ -472,14 +472,14 @@ static void spawnWalkerHippodrome(int buildingId, struct Data_Building *b)
 					w->actionState = WalkerActionState_200_HippodromeMiniHorsesCreated;
 					w->buildingId = buildingId;
 					w->resourceId = 0;
-					w->__unknown_49 = 3;
+					w->speedMultiplier = 3;
 				}
 				{
 					CREATE_WALKER(Walker_HippodromeMiniHorses, b->x + 2, b->y + 2, 2);
 					w->actionState = WalkerActionState_200_HippodromeMiniHorsesCreated;
 					w->buildingId = buildingId;
 					w->resourceId = 1;
-					w->__unknown_49 = 2;
+					w->speedMultiplier = 2;
 				}
 				if (b->data.entertainment.days1 > 0) {
 					if (!Data_CityInfo.messageShownHippodrome) {

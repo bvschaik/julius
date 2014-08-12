@@ -107,12 +107,18 @@ enum {
 	WalkerActionState_23_CartPusher = 23,
 	WalkerActionState_27_MarketBuyer = 27,
 	WalkerActionState_40_TaxCollectorCreated = 40,
+	WalkerActionState_41_TaxCollectorEnteringExiting = 41,
+	WalkerActionState_42_TaxCollectorRoaming = 42,
+	WalkerActionState_43_TaxCollectorReturning = 43,
 	WalkerActionState_50_WarehousemanCreated = 50,
 	WalkerActionState_51_Warehouseman = 51,
 	WalkerActionState_53_MarketBuyer = 53,
 	WalkerActionState_56_MarketBuyer = 56,
 	WalkerActionState_59_MarketBuyer = 59,
 	WalkerActionState_60_EngineerCreated = 60,
+	WalkerActionState_61_EngineerEnteringExiting = 61,
+	WalkerActionState_62_EngineerRoaming = 62,
+	WalkerActionState_63_EngineerReturning = 63,
 	WalkerActionState_70_PrefectCreated = 70,
 	WalkerActionState_74_PrefectGoingToFire = 74,
 	WalkerActionState_75_PrefectFightingFire = 75,
@@ -255,7 +261,7 @@ extern struct Data_Walker {
 	char __unknown_46;
 	char __unknown_47;
 	char __unknown_48;
-	char __unknown_49;
+	char speedMultiplier;
 	short buildingId;
 	short immigrantBuildingId;
 	short destinationBuildingId;

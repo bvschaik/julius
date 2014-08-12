@@ -94,9 +94,12 @@ enum {
 	ID_Graphic_PanelWindows = 95,
 	ID_Graphic_Granary = 99,
 	ID_Graphic_FarmCrops = 100,
+	ID_Graphic_Walker_Explosion = 102,
 	ID_Graphic_OverlayColumn = 103,
+	ID_Graphic_Walker_TaxCollector = 104,
 	ID_Graphic_Walker_SchoolChild = 105,
 	ID_Graphic_Walker_Migrant = 108,
+	ID_Graphic_Walker_Engineer = 110,
 	ID_Graphic_Road = 112,
 	ID_Graphic_TerrainRubble = 114,
 	ID_Graphic_Walker_Criminal = 115,
@@ -156,6 +159,7 @@ enum {
 	ID_Graphic_ColosseumShow = 193,
 	ID_Graphic_RatingsBackground = 195,
 	ID_Graphic_FortFormations = 197,
+	ID_Graphic_Walker_Missile = 198,
 	ID_Graphic_MilitaryAcademy = 201,
 	ID_Graphic_TriumphalArch = 205,
 	ID_Graphic_TerrainWaterShore = 207,
@@ -373,8 +377,8 @@ struct WalkerProperties {
 	int maxDamage;
 	int attackValue;
 	int defenseValue;
-	int unknown4;
-	int unknown5;
+	int missileDefenseValue;
+	int missileAttackValue;
 	int __unused6; // unreferenced
 	int missileFrequency;
 };
