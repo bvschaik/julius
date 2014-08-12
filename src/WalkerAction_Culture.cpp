@@ -134,3 +134,33 @@ void WalkerAction_surgeon(int walkerId)
 {
 	WalkerAction_culture(walkerId, ID_Graphic_Walker_DoctorSurgeon);
 }
+
+void WalkerAction_missionary(int walkerId)
+{
+	struct Data_Walker *w = &Data_Walkers[walkerId];
+	w->terrainUsage = 1;
+	w->useCrossCountry = 0;
+	w->maxRoamLength = 192;
+	int buildingId = w->buildingId;
+	if (Data_Buildings[buildingId].inUse != 1 || Data_Buildings[buildingId].walkerId != walkerId) {
+		w->state = WalkerState_Dead;
+	}
+	WalkerActionIncreaseGraphicOffset(w, 12);
+	WalkerAction_cultureCommon(walkerId, 1);
+	WalkerActionUpdateGraphic(w, GraphicId(ID_Graphic_Walker_Missionary));
+}
+
+void WalkerAction_patrician(int walkerId)
+{
+	struct Data_Walker *w = &Data_Walkers[walkerId];
+	w->terrainUsage = 1;
+	w->useCrossCountry = 0;
+	w->maxRoamLength = 128;
+	int buildingId = w->buildingId;
+	if (Data_Buildings[buildingId].inUse != 1) {
+		w->state = WalkerState_Dead;
+	}
+	WalkerActionIncreaseGraphicOffset(w, 12);
+	WalkerAction_cultureCommon(walkerId, 1);
+	WalkerActionUpdateGraphic(w, GraphicId(ID_Graphic_Walker_Patrician));
+}
