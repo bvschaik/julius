@@ -96,7 +96,7 @@ static int showOnOverlay(struct Data_Walker *w)
 			if (w->type == Walker_LaborSeeker) {
 				return Data_Buildings[w->buildingId].showOnProblemOverlay;
 			} else if (w->type == Walker_CartPusher) {
-				return w->actionState == WalkerActionState_20_CartPusherNoRoom || w->minMaxSeen;
+				return w->actionState == WalkerActionState_20_CartpusherInitial || w->minMaxSeen;
 			}
 			return 0;
 	}

@@ -101,20 +101,28 @@ enum {
 	WalkerActionState_8_HomelessGoingToHouse = 8,
 	WalkerActionState_9_HomelessEnteringHouse = 9,
 	WalkerActionState_10_HomelessLeaving = 10,
-	WalkerActionState_20_CartPusherNoRoom = 20,
-	WalkerActionState_21_CartPusher = 21,
-	WalkerActionState_22_CartPusher = 22,
-	WalkerActionState_23_CartPusher = 23,
-	WalkerActionState_27_MarketBuyer = 27,
+	WalkerActionState_20_CartpusherInitial = 20,
+	WalkerActionState_21_CartpusherDeliveringToWarehouse = 21,
+	WalkerActionState_22_CartpusherDeliveringToGranary = 22,
+	WalkerActionState_23_CartpusherDeliveringToWorkshop = 23,
+	WalkerActionState_24_CartpusherAtWarehouse = 24,
+	WalkerActionState_25_CartpusherAtGranary = 25,
+	WalkerActionState_26_CartpusherAtWorkshop = 26,
+	WalkerActionState_27_CartpusherReturning = 27,
 	WalkerActionState_40_TaxCollectorCreated = 40,
 	WalkerActionState_41_TaxCollectorEnteringExiting = 41,
 	WalkerActionState_42_TaxCollectorRoaming = 42,
 	WalkerActionState_43_TaxCollectorReturning = 43,
 	WalkerActionState_50_WarehousemanCreated = 50,
-	WalkerActionState_51_Warehouseman = 51,
-	WalkerActionState_53_MarketBuyer = 53,
-	WalkerActionState_56_MarketBuyer = 56,
-	WalkerActionState_59_MarketBuyer = 59,
+	WalkerActionState_51_WarehousemanDeliveringResource = 51,
+	WalkerActionState_52_WarehousemanAtDeliveryBuilding = 52,
+	WalkerActionState_53_WarehousemanReturningEmpty = 53,
+	WalkerActionState_54_WarehousemanGettingFood = 54,
+	WalkerActionState_55_WarehousemanAtGranaryGettingFood = 55,
+	WalkerActionState_56_WarehousemanReturningWithFood = 56,
+	WalkerActionState_57_WarehousemanGettingResource = 57,
+	WalkerActionState_58_WarehousemanAtWarehouseGettingResource = 58,
+	WalkerActionState_59_WarehousemanReturningWithResource = 59,
 	WalkerActionState_60_EngineerCreated = 60,
 	WalkerActionState_61_EngineerEnteringExiting = 61,
 	WalkerActionState_62_EngineerRoaming = 62,
@@ -208,14 +216,14 @@ extern struct Data_Walker {
 	short cartGraphicId;
 	short nextWalkerIdOnSameTile; // 08
 	unsigned char type;
-	char resourceId; //0b
+	unsigned char resourceId; //0b
 	char useCrossCountry;
 	char isFriendly;
 	char state;
 	char ciid; // 0f
 	char __unknown_10;
 	char direction;
-	char previousTileDirection;
+	char previousTileDirection; // 12
 	char __unknown_13;
 	char x;
 	char y;
@@ -282,12 +290,12 @@ extern struct Data_Walker {
 	char traderAmountBought;
 	short name; // 60
 	char terrainUsage;
-	char traderAmountSold;
+	char loadsSoldOrCarrying;
 	char isBoat; // 64
 	char heightFromGround; // 65
 	char __unknown_66;
 	char __unknown_67;
-	unsigned char collectingItemId; // NOT a resource ID!
+	unsigned char collectingItemId; // NOT a resource ID for cartpushers! IS a resource ID for warehousemen
 	char __unknown_69;
 	unsigned char phraseSequenceExact;
 	unsigned char phraseId;

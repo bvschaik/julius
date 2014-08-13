@@ -211,7 +211,7 @@ int Trader_getClosestWarehouseForTradeCaravan(int walkerId, int x, int y, int ci
 		} else {
 			importable[r] = 0;
 		}
-		if (Data_Walkers[walkerId].traderAmountSold >= 8) {
+		if (Data_Walkers[walkerId].loadsSoldOrCarrying >= 8) {
 			exportable[r] = 0;
 		}
 	}

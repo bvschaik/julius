@@ -312,26 +312,26 @@ int Walker_determinePhrase(int walkerId)
 			}
 			break;
 		case Walker_CartPusher:
-			if (w->actionState == WalkerActionState_20_CartPusherNoRoom) {
+			if (w->actionState == WalkerActionState_20_CartpusherInitial) {
 				if (w->minMaxSeen == 2) {
 					phraseId = 7;
 				} else if (w->minMaxSeen == 1) {
 					phraseId = 8;
 				}
-			} else if (w->actionState == WalkerActionState_21_CartPusher ||
-					w->actionState == WalkerActionState_22_CartPusher ||
-					w->actionState == WalkerActionState_23_CartPusher) {
+			} else if (w->actionState == WalkerActionState_21_CartpusherDeliveringToWarehouse ||
+					w->actionState == WalkerActionState_22_CartpusherDeliveringToGranary ||
+					w->actionState == WalkerActionState_23_CartpusherDeliveringToWorkshop) {
 				if (Calc_distanceMaximum(
 					w->destinationX, w->destinationY, w->sourceX, w->sourceY) >= 25) {
-					phraseId = 9; // too far?
+					phraseId = 9; // too far
 				}
 			}
 			break;
 		case Walker_Warehouseman:
-			if (w->actionState == WalkerActionState_51_Warehouseman) {
+			if (w->actionState == WalkerActionState_51_WarehousemanDeliveringResource) {
 				if (Calc_distanceMaximum(
 					w->destinationX, w->destinationY, w->sourceX, w->sourceY) >= 25) {
-					phraseId = 9; // too far?
+					phraseId = 9; // too far
 				}
 			}
 			break;

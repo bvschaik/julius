@@ -21,8 +21,8 @@ int Resource_getWarehouseForStoringResource(
 int Resource_getWarehouseForGettingResource(int srcBuildingId, int resource, int *xDst, int *yDst);
 
 int Resource_addToWarehouse(int buildingId, int resource);
-int Resource_removeFromWarehouse(int buildingId, int resource, int amount);
-void Resource_removeFromWarehouseForMercury(int buildingId, int amount);
+int Resource_removeFromWarehouse(int buildingId, int resource, int amountInLoads);
+void Resource_removeFromWarehouseForMercury(int buildingId, int amountInLoads);
 
 void Resource_addImportedResourceToWarehouseSpace(int spaceBuildingId, int resourceId);
 void Resource_removeExportedResourceFromWarehouseSpace(int spaceBuildingId, int resourceId);
@@ -45,14 +45,14 @@ int Resource_getGettingGranaryForStoringFood(
 int Resource_getGranaryForGettingFood(int srcBuildingId, int *xDst, int *yDst);
 int Resource_getAmountStoredInGranary(int buildingId, int resource);
 int Resource_addToGranary(int buildingId, int resource, int countAsProduced);
-int Resource_removeFromGranary(int buildingId, int resource, int amount);
+int Resource_removeFromGranary(int buildingId, int resource, int amountInUnits);
 int Resource_determineGranaryWorkerTask(int buildingId);
 int Resource_takeFoodFromGranaryForGettingDeliveryman(int dstBuildingId, int srcBuildingId, int *resource);
 
 // other functions
-int Resource_getWorkshopWithRoomForRawMaterial(int x, int y, int resource, int distanceFromEntry, int roadNetworkId);
-int Resource_getWorkshopForRawMaterial(int x, int y, int resource, int distanceFromEntry, int roadNetworkId);
-int Resource_getBarracksForWeapon(int xUnused, int yUnused, int resource, int roadNetworkId);
+int Resource_getWorkshopWithRoomForRawMaterial(int x, int y, int resource, int distanceFromEntry, int roadNetworkId, int *xDst, int *yDst);
+int Resource_getWorkshopForRawMaterial(int x, int y, int resource, int distanceFromEntry, int roadNetworkId, int *xDst, int *yDst);
+int Resource_getBarracksForWeapon(int xUnused, int yUnused, int resource, int roadNetworkId, int *xDst, int *yDst);
 
 void Resource_addRawMaterialToWorkshop(int buildingId);
 void Resource_addWeaponToBarracks(int buildingId);

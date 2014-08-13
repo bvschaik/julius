@@ -26,6 +26,7 @@
 #include "src/Data/Building.h"
 #include "src/Data/Sound.h"
 #include "src/Data/Formation.h"
+#include "src/Data/Constants.h"
 
 Color screen[960000];
 
@@ -69,7 +70,7 @@ int main(int argc, char **argv)
 	printf("Text string: %s\n", Language_getString(30, 1));
 	GameFile_loadSavedGame("1.sav");
 
-	printf("graphic id = %d\n", GraphicId(3));
+	printf("graphic id = %d\n", GraphicId(237));
 	for (int i = 0; i < 10000; i++) {
 		if (Data_Graphics_Main.index[i].animationSpeedId) {
 			printf("%d: %d %d\n", i,

@@ -90,7 +90,8 @@ int Resource_getGraphicIdOffset(int resource, int type)
 }
 
 int Resource_getWorkshopWithRoomForRawMaterial(
-	int x, int y, int resource, int distanceFromEntry, int roadNetworkId)
+	int x, int y, int resource, int distanceFromEntry, int roadNetworkId,
+	int *xDst, int *yDst)
 {
 	if (Data_CityInfo.resourceStockpiled[resource]) {
 		return 0;
@@ -125,12 +126,14 @@ int Resource_getWorkshopWithRoomForRawMaterial(
 			}
 		}
 	}
-	// TODO store b->20x/21y somewhere?
+	*xDst = Data_Buildings[minBuildingId].roadAccessX;
+	*yDst = Data_Buildings[minBuildingId].roadAccessY;
 	return minBuildingId;
 }
 
 int Resource_getWorkshopForRawMaterial(
-	int x, int y, int resource, int distanceFromEntry, int roadNetworkId)
+	int x, int y, int resource, int distanceFromEntry, int roadNetworkId,
+	int *xDst, int *yDst)
 {
 	if (Data_CityInfo.resourceStockpiled[resource]) {
 		return 0;
@@ -163,11 +166,12 @@ int Resource_getWorkshopForRawMaterial(
 			}
 		}
 	}
-	// TODO store b->20x/21y somewhere?
+	*xDst = Data_Buildings[minBuildingId].roadAccessX;
+	*yDst = Data_Buildings[minBuildingId].roadAccessY;
 	return minBuildingId;
 }
 
-int Resource_getBarracksForWeapon(int xUnused, int yUnused, int resource, int roadNetworkId)
+int Resource_getBarracksForWeapon(int xUnused, int yUnused, int resource, int roadNetworkId, int *xDst, int *yDst)
 {
 	if (resource != Resource_Weapons) {
 		return 0;
@@ -180,7 +184,7 @@ int Resource_getBarracksForWeapon(int xUnused, int yUnused, int resource, int ro
 	}
 	struct Data_Building *b = &Data_Buildings[Data_CityInfo.buildingBarracksBuildingId];
 	if (b->loadsStored < 5 && Data_CityInfo.militaryLegionaryLegions > 0) {
-		if (Terrain_hasRoadAccess(b->x, b->y, b->size, 0, 0) && b->roadNetworkId == roadNetworkId) {
+		if (Terrain_hasRoadAccess(b->x, b->y, b->size, xDst, yDst) && b->roadNetworkId == roadNetworkId) {
 			return Data_CityInfo.buildingBarracksBuildingId;
 		}
 	}

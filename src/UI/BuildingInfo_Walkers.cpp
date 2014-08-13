@@ -251,10 +251,10 @@ static void drawWalkerInfoCartpusher(BuildingInfoContext *c, int walkerId)
 	int targetBuildingId = Data_Walkers[walkerId].destinationBuildingId;
 	int isReturning = 0;
 	switch (Data_Walkers[walkerId].actionState) {
-		case WalkerActionState_27_MarketBuyer:
-		case WalkerActionState_53_MarketBuyer:
-		case WalkerActionState_56_MarketBuyer:
-		case WalkerActionState_59_MarketBuyer:
+		case WalkerActionState_27_CartpusherReturning:
+		case WalkerActionState_53_WarehousemanReturningEmpty:
+		case WalkerActionState_56_WarehousemanReturningWithFood:
+		case WalkerActionState_59_WarehousemanReturningWithResource:
 		case WalkerActionState_134_Dockman_MarketBuyer:
 		case WalkerActionState_137_Dockman_MarketBuyer:
 		case WalkerActionState_138_Dockman_MarketBuyer:

@@ -93,7 +93,7 @@ int WalkerAction_TradeCaravan_canSell(int traderId, int warehouseId, int cityId)
 	if (Data_Buildings[warehouseId].type != Building_Warehouse) {
 		return 0;
 	}
-	if (Data_Walkers[traderId].traderAmountSold >= 8) {
+	if (Data_Walkers[traderId].loadsSoldOrCarrying >= 8) {
 		return 0;
 	}
 	int storageId = Data_Buildings[warehouseId].storageId;

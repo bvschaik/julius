@@ -184,8 +184,8 @@ extern struct Data_Building {
 	short distanceFromEntry;
 	short houseMaxPopulationSeen;
 	short houseUnreachableTicks;
-	char roadAccessX;
-	char roadAccessY;
+	char roadAccessX; // 20
+	char roadAccessY; // 21
 	short walkerId;
 	short walkerId2; // labor seeker or market buyer
 	short immigrantWalkerId;
@@ -203,7 +203,7 @@ extern struct Data_Building {
 	char hasWellAccess;
 	short numWorkers;
 	unsigned char laborCategory;
-	char outputResourceId; //3b
+	unsigned char outputResourceId; //3b
 	char hasRoadAccess;
 	char houseCriminalActive;
 	short damageRisk;

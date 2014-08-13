@@ -58,6 +58,7 @@ enum {
 	ID_Graphic_Fountain1 = 54,
 	ID_Graphic_Fountain2 = 55,
 	ID_Graphic_Fountain3 = 56,
+	ID_Graphic_Walker_LaborSeeker = 57,
 	ID_Graphic_Plaza = 58,
 	ID_Graphic_Garden = 59,
 	ID_Graphic_WorkshopRawMaterial = 60,
@@ -92,12 +93,14 @@ enum {
 	ID_Graphic_Walker_Priest = 91,
 	ID_Graphic_LaborPriorityLock = 94,
 	ID_Graphic_PanelWindows = 95,
+	ID_Graphic_Walker_CartpusherCart = 97,
 	ID_Graphic_Granary = 99,
 	ID_Graphic_FarmCrops = 100,
 	ID_Graphic_Walker_Explosion = 102,
 	ID_Graphic_OverlayColumn = 103,
 	ID_Graphic_Walker_TaxCollector = 104,
 	ID_Graphic_Walker_SchoolChild = 105,
+	ID_Graphic_Walker_Cartpusher = 107,
 	ID_Graphic_Walker_Migrant = 108,
 	ID_Graphic_Walker_Engineer = 110,
 	ID_Graphic_Road = 112,
@@ -180,6 +183,7 @@ enum {
 	ID_Graphic_Walker_Patrician = 229,
 	ID_Graphic_Walker_Missionary = 230,
 	ID_Graphic_Walker_TeacherLibrarian = 231,
+	ID_Graphic_Walker_CartpusherCartMultipleLoads = 237,
 	ID_Graphic_TradeCenterFlag = 238,
 	ID_Graphic_TerrainRock = 239,
 	ID_Graphic_FortStandardPole = 241,
@@ -259,6 +263,8 @@ enum {
 	Resource_Denarii = 16,
 	Resource_Troops = 17
 };
+
+#define ResourceIsFood(r) ((r) == Resource_Wheat || (r) == Resource_Vegetables || (r) == Resource_Fruit || (r) == Resource_Meat)
 
 enum {
 	Inventory_Wheat = 0,

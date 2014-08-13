@@ -1331,14 +1331,14 @@ static void drawBuildingTopForProblemsOverlay(int gridOffset, int buildingId, in
 	} else if (type >= Building_WheatFarm && type <= Building_ClayPit) {
 		int walkerId = Data_Buildings[buildingId].walkerId;
 		if (walkerId &&
-			Data_Walkers[walkerId].actionState == WalkerActionState_20_CartPusherNoRoom &&
+			Data_Walkers[walkerId].actionState == WalkerActionState_20_CartpusherInitial &&
 			Data_Walkers[walkerId].minMaxSeen) {
 			Data_Buildings[buildingId].showOnProblemOverlay = 1;
 		}
 	} else if (BuildingIsWorkshop(type)) {
 		int walkerId = Data_Buildings[buildingId].walkerId;
 		if (walkerId &&
-			Data_Walkers[walkerId].actionState == WalkerActionState_20_CartPusherNoRoom &&
+			Data_Walkers[walkerId].actionState == WalkerActionState_20_CartpusherInitial &&
 			Data_Walkers[walkerId].minMaxSeen) {
 			Data_Buildings[buildingId].showOnProblemOverlay = 1;
 		} else if (Data_Buildings[buildingId].loadsStored <= 0) {

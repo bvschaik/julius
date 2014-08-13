@@ -1028,7 +1028,7 @@ static void spawnWalkerIndustry(int buildingId, struct Data_Building *b)
 		if (Building_Industry_hasProducedResource(buildingId)) {
 			Building_Industry_startNewProduction(buildingId);
 			CREATE_WALKER(Walker_CartPusher, xRoad, yRoad, 4);
-			w->actionState = WalkerActionState_20_CartPusherNoRoom;
+			w->actionState = WalkerActionState_20_CartpusherInitial;
 			w->resourceId = b->outputResourceId;
 			w->buildingId = buildingId;
 			b->walkerId = walkerId;
@@ -1055,7 +1055,7 @@ static void spawnWalkerWharf(int buildingId, struct Data_Building *b)
 			b->data.other.__unknown_58 = 0;
 			b->outputResourceId = Resource_Meat;
 			CREATE_WALKER(Walker_CartPusher, xRoad, yRoad, 4);
-			w->actionState = WalkerActionState_20_CartPusherNoRoom;
+			w->actionState = WalkerActionState_20_CartpusherInitial;
 			w->resourceId = Resource_Meat;
 			w->buildingId = buildingId;
 			b->walkerId = walkerId;
