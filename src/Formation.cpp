@@ -210,7 +210,7 @@ void Formation_calculateWalkers()
 		if (!WalkerIsLegion(wtype) && !WalkerIsEnemy(wtype) && !WalkerIsHerd(wtype)) {
 			continue;
 		}
-		if (wtype == Walker_Enemy54) {
+		if (wtype == Walker_Enemy54_Gladiator) {
 			continue;
 		}
 		int formationId = Data_Walkers[i].formationId;

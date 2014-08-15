@@ -35,8 +35,8 @@ static int showOnOverlay(struct Data_Walker *w)
 				w->type == Walker_Teacher;
 		case Overlay_Theater:
 			if (w->type == Walker_Actor) {
-				if (w->actionState == WalkerActionState_94_EntertainerAtVenueCreated ||
-					w->actionState == WalkerActionState_95_Entertainer) {
+				if (w->actionState == WalkerActionState_94_EntertainerRoaming ||
+					w->actionState == WalkerActionState_95_EntertainerReturning) {
 					return Data_Buildings[w->buildingId].type == Building_Theater;
 				} else {
 					return Data_Buildings[w->destinationBuildingId].type == Building_Theater;
@@ -45,8 +45,8 @@ static int showOnOverlay(struct Data_Walker *w)
 			return 0;
 		case Overlay_Amphitheater:
 			if (w->type == Walker_Actor || w->type == Walker_Gladiator) {
-				if (w->actionState == WalkerActionState_94_EntertainerAtVenueCreated ||
-					w->actionState == WalkerActionState_95_Entertainer) {
+				if (w->actionState == WalkerActionState_94_EntertainerRoaming ||
+					w->actionState == WalkerActionState_95_EntertainerReturning) {
 					return Data_Buildings[w->buildingId].type == Building_Amphitheater;
 				} else {
 					return Data_Buildings[w->destinationBuildingId].type == Building_Amphitheater;
@@ -55,8 +55,8 @@ static int showOnOverlay(struct Data_Walker *w)
 			return 0;
 		case Overlay_Colosseum:
 			if (w->type == Walker_Gladiator) {
-				if (w->actionState == WalkerActionState_94_EntertainerAtVenueCreated ||
-					w->actionState == WalkerActionState_95_Entertainer) {
+				if (w->actionState == WalkerActionState_94_EntertainerRoaming ||
+					w->actionState == WalkerActionState_95_EntertainerReturning) {
 					return Data_Buildings[w->buildingId].type == Building_Colosseum;
 				} else {
 					return Data_Buildings[w->destinationBuildingId].type == Building_Colosseum;

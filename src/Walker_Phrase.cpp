@@ -586,7 +586,7 @@ void Walker_playDieSound(int walkerType)
 		case Walker_Enemy50:
 		case Walker_Enemy51:
 		case Walker_Enemy53:
-		case Walker_Enemy54:
+		case Walker_Enemy54_Gladiator:
 		case Walker_Enemy55_Javelin:
 		case Walker_Enemy56_Mounted:
 		case Walker_EnemyCaesarLegionary:

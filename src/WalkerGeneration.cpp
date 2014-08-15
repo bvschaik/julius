@@ -377,7 +377,7 @@ static void spawnWalkerAmphitheater(int buildingId, struct Data_Building *b)
 				walkerId = Walker_create(Walker_Actor, xRoad, yRoad, 0);
 			}
 			struct Data_Walker *w = &Data_Walkers[walkerId];
-			w->actionState = WalkerActionState_94_EntertainerAtVenueCreated;
+			w->actionState = WalkerActionState_94_EntertainerRoaming;
 			w->buildingId = buildingId;
 			b->walkerId = walkerId;
 			WalkerMovement_initRoaming(walkerId);
@@ -413,7 +413,7 @@ static void spawnWalkerTheater(int buildingId, struct Data_Building *b)
 		if (b->walkerSpawnDelay > spawnDelay) {
 			b->walkerSpawnDelay = 0;
 			CREATE_WALKER(Walker_Actor, xRoad, yRoad, 0);
-			w->actionState = WalkerActionState_94_EntertainerAtVenueCreated;
+			w->actionState = WalkerActionState_94_EntertainerRoaming;
 			w->buildingId = buildingId;
 			b->walkerId = walkerId;
 			WalkerMovement_initRoaming(walkerId);
@@ -460,7 +460,7 @@ static void spawnWalkerHippodrome(int buildingId, struct Data_Building *b)
 			b->walkerSpawnDelay = 0;
 			{
 				CREATE_WALKER(Walker_Charioteer, xRoad, yRoad, 0);
-				w->actionState = WalkerActionState_94_EntertainerAtVenueCreated;
+				w->actionState = WalkerActionState_94_EntertainerRoaming;
 				w->buildingId = buildingId;
 				b->walkerId = walkerId;
 				WalkerMovement_initRoaming(walkerId);
@@ -527,7 +527,7 @@ static void spawnWalkerColosseum(int buildingId, struct Data_Building *b)
 				walkerId = Walker_create(Walker_Gladiator, xRoad, yRoad, 0);
 			}
 			struct Data_Walker *w = &Data_Walkers[walkerId];
-			w->actionState = WalkerActionState_94_EntertainerAtVenueCreated;
+			w->actionState = WalkerActionState_94_EntertainerRoaming;
 			w->buildingId = buildingId;
 			b->walkerId = walkerId;
 			WalkerMovement_initRoaming(walkerId);
