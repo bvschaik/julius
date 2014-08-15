@@ -128,9 +128,13 @@ enum {
 	WalkerActionState_62_EngineerRoaming = 62,
 	WalkerActionState_63_EngineerReturning = 63,
 	WalkerActionState_70_PrefectCreated = 70,
+	WalkerActionState_71_PrefectEnteringExiting = 71,
+	WalkerActionState_72_PrefectRoaming = 72,
+	WalkerActionState_73_PrefectReturning = 73,
 	WalkerActionState_74_PrefectGoingToFire = 74,
-	WalkerActionState_75_PrefectFightingFire = 75,
+	WalkerActionState_75_PrefectAtFire = 75,
 	WalkerActionState_76_PrefectGoingToEnemy = 76,
+	WalkerActionState_77_PrefectAtEnemy = 77,
 	WalkerActionState_80_AtRest = 80,
 	WalkerActionState_87_ToDistantBattle = 87,
 	WalkerActionState_88_FromDistantBattle = 88,
@@ -224,7 +228,7 @@ extern struct Data_Walker {
 	char __unknown_10;
 	char direction;
 	char previousTileDirection; // 12
-	char __unknown_13;
+	char attackDirection; // 13
 	char x;
 	char y;
 	char previousTileX;
@@ -282,8 +286,8 @@ extern struct Data_Walker {
 	char minMaxSeen;
 	char __unknown_57;
 	short inFrontWalkerId;
-	char __unknown_5a;
-	char __unknown_5b;
+	char attackGraphicOffset;
+	char waitTicksMissile;
 	char xOffsetCart; // 5c
 	char yOffsetCart; // 5d
 	unsigned char empireCityId;
@@ -301,15 +305,11 @@ extern struct Data_Walker {
 	unsigned char phraseId;
 	unsigned char phraseSequenceCity;
 	unsigned char traderId;
-	char __unknown_6e;
-	char __unused_6f;
-	char __unknown_70;
-	char __unknown_71;
-	char __unknown_72;
-	char __unknown_73;
+	short waitTicksNextTarget;
+	short targetWalkerId;
+	short targetedByWalkerId;
 	unsigned short createdSequence;
-	char __unknown_76;
-	char __unknown_77;
+	unsigned short targetWalkerCreatedSequence;
 	unsigned char numPreviousWalkersOnSameTile;
 	char __unknown_79;
 	char __unknown_7a;

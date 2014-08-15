@@ -341,7 +341,7 @@ int Walker_determinePhrase(int walkerId)
 			}
 			if (w->actionState == WalkerActionState_74_PrefectGoingToFire) {
 				phraseId = 10;
-			} else if (w->actionState == WalkerActionState_75_PrefectFightingFire) {
+			} else if (w->actionState == WalkerActionState_75_PrefectAtFire) {
 				phraseId = 11 + (w->phraseSequenceExact % 2);
 			} else if (w->actionState == WalkerActionState_150_Attack) {
 				phraseId = 13 + w->phraseSequenceExact;

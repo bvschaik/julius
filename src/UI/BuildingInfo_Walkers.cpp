@@ -319,7 +319,7 @@ static void drawWalkerInfoNormal(BuildingInfoContext *c, int walkerId)
 {
 	int graphicId = BigPeopleGraphic(Data_Walkers[walkerId].type);
 	if (Data_Walkers[walkerId].actionState == WalkerActionState_74_PrefectGoingToFire ||
-		Data_Walkers[walkerId].actionState == WalkerActionState_75_PrefectFightingFire) {
+		Data_Walkers[walkerId].actionState == WalkerActionState_75_PrefectAtFire) {
 		graphicId = GraphicId(ID_Graphic_BigPeople) + 18;
 	}
 	Graphics_drawImage(graphicId, c->xOffset + 28, c->yOffset + 112);

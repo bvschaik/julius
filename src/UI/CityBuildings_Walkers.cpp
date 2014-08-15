@@ -116,7 +116,7 @@ static void drawWalkerWithCart(struct Data_Walker *w, int xOffset, int yOffset)
 
 static void drawHippodromeHorses(struct Data_Walker *w, int xOffset, int yOffset)
 {
-	int val = w->__unknown_5b;
+	int val = w->waitTicksMissile;
 	switch (Data_Settings_Map.orientation) {
 		case Direction_Top:
 			xOffset += 10;

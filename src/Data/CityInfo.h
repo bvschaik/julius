@@ -690,10 +690,7 @@ extern struct Data_CityInfo {
 	int citySentimentLastTime;
 	int citySentimentChangeMessageDelay;
 	int populationEmigrationCause; // 4464
-	char __unknown_4468;
-	char __unknown_4469;
-	char __unknown_446a;
-	char __unknown_446b;
+	int riotersOrAttackingNativesInCity;
 	char __unknown_446c;
 	char __unknown_446d;
 	char __unknown_446e;
