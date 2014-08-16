@@ -37,4 +37,6 @@ void WalkerRoute_remove(int walkerId);
 
 void WalkerGeneration_generateWalkersForBuildings();
 
+int WalkerEnemy_wolfGetTargetWalker(int x, int y, int range);
+
 #endif

@@ -178,6 +178,9 @@ enum {
 	WalkerActionState_193_FishingBoatCreated = 193,
 	WalkerActionState_194_FishingBoatUnloading = 194,
 	WalkerActionState_195_FishingBoatReturningWithFish = 195,
+	WalkerActionState_196_HerdAnimalAtRest = 196,
+	WalkerActionState_197_HerdAnimalMoving = 197,
+	WalkerActionState_199_WolfAttacking = 199,
 	WalkerActionState_200_HippodromeMiniHorsesCreated = 200,
 };
 
@@ -227,7 +230,7 @@ extern struct Data_Walker {
 	char isFriendly;
 	char state;
 	char ciid; // 0f
-	char __unknown_10;
+	unsigned char actionStateBeforeAttack; // 10
 	char direction;
 	char previousTileDirection; // 12
 	char attackDirection; // 13
@@ -258,22 +261,17 @@ extern struct Data_Walker {
 	char __unknown_31;
 	short maxRoamLength;
 	short roamLength;
-	char __unknown_36;
+	char roamNoDestination;
 	char __unknown_37;
-	char __unknown_38;
-	char __unknown_39;
+	char roamTurnDirection;
+	char roamTicksUntilNextTurn;
 	short crossCountryX; // 3a - position = 15 * x + offset on tile
 	short crossCountryY; // 3c - position = 15 * y + offset on tile
-	char __unknown_3e;
-	char __unknown_3f;
-	char __unknown_40;
-	char __unknown_41;
-	char __unknown_42;
-	char __unknown_43;
-	char __unknown_44;
-	char __unknown_45;
-	char __unknown_46;
-	char __unknown_47;
+	short __unknown_3e;
+	short __unknown_40;
+	short __unknown_42;
+	short __unknown_44;
+	short __unknown_46;
 	char __unknown_48;
 	char speedMultiplier;
 	short buildingId;
@@ -308,18 +306,15 @@ extern struct Data_Walker {
 	unsigned char phraseSequenceCity;
 	unsigned char traderId;
 	short waitTicksNextTarget;
-	short targetWalkerId;
-	short targetedByWalkerId;
+	short targetWalkerId; // 70
+	short targetedByWalkerId; // 72
 	unsigned short createdSequence;
 	unsigned short targetWalkerCreatedSequence;
 	unsigned char numPreviousWalkersOnSameTile;
 	char __unknown_79;
-	char __unknown_7a;
-	char __unknown_7b;
-	char __unknown_7c;
-	char __unknown_7d;
-	char __unknown_7e;
-	char __unknown_7f;
+	short __unknown_7a;
+	short __unknown_7c;
+	short __unknown_7e;
 } Data_Walkers[MAX_WALKERS];
 
 extern struct Data_Walker_Trader {

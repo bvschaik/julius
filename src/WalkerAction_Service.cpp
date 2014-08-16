@@ -473,3 +473,14 @@ void WalkerAction_prefect(int walkerId)
 	}
 }
 
+void WalkerAction_worker(int walkerId)
+{
+	struct Data_Walker *w = &Data_Walkers[walkerId];
+	w->terrainUsage = 1;
+	w->useCrossCountry = 0;
+	w->maxRoamLength = 384;
+	if (Data_Buildings[w->buildingId].inUse != 1 ||
+		Data_Buildings[w->buildingId].walkerId != walkerId) {
+		w->state = WalkerState_Dead;
+	}
+}

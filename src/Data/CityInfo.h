@@ -599,8 +599,7 @@ extern struct Data_CityInfo {
 	char __unknown_439f;
 	char __unknown_43a0;
 	char __unknown_43a1;
-	char __unknown_43a2;
-	char __unknown_43a3;
+	short numAnimalsInCity;
 	short tradeNumOpenSeaRoutes;
 	short tradeNumOpenLandRoutes;
 	short tradeSeaProblemDuration;
@@ -968,10 +967,7 @@ extern struct Data_CityInfo {
 	int missionSavedGameWritten;
 	int tutorial1FireMessageShown;
 	int tutorial3DiseaseMessageShown;
-	char __unknown_4648;
-	char __unknown_4649;
-	char __unknown_464a;
-	char __unknown_464b;
+	int numAttackingNativesInCity;
 	char __unknown_464c;
 	char __unknown_464d;
 	char __unknown_464e;

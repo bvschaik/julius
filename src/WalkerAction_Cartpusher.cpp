@@ -159,7 +159,7 @@ static void updateGraphic(int walkerId, struct Data_Walker *w)
 	}
 }
 
-void WalkerAction_cartPusher(int walkerId)
+void WalkerAction_cartpusher(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	WalkerActionIncreaseGraphicOffset(w, 12);

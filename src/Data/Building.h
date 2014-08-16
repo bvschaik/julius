@@ -192,7 +192,7 @@ extern struct Data_Building {
 	short walkerId4; // 28; tower ballista or burning ruin prefect
 	char walkerSpawnDelay; // 2a
 	char __unknown_2b;
-	char __unknown_2c;
+	char walkerRoamDirection;
 	char hasWaterAccess;
 	char __unknown_2e;
 	char __unknown_2f;

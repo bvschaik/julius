@@ -303,3 +303,9 @@ int Walker_hasNearbyEnemy(int xStart, int yStart, int xEnd, int yEnd)
 	}
 	return 0;
 }
+
+// TODO move to separate file
+int WalkerEnemy_wolfGetTargetWalker(int x, int y, int range)
+{
+	return 0;
+}

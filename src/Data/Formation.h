@@ -31,8 +31,8 @@ struct Data_Formation {
 	char yStandard;
 	char x;
 	char y;
-	char __unknown34;
-	char __unknown35;
+	char destinationX;
+	char destinationY;
 	short __unknown36;
 	short bannerWalkerId;
 	char isLegion;
