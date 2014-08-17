@@ -71,7 +71,7 @@ static void (*walkerActionCallbacks[])(int walkerId) = {
 	WalkerAction_missionary,
 	WalkerAction_seagulls,
 	WalkerAction_nobody, //TODO WalkerAction_deliveryBoy,
-	WalkerAction_nobody, //TODO WalkerAction_shipwreck,
+	WalkerAction_shipwreck,
 	WalkerAction_sheep,
 	WalkerAction_wolf,
 	WalkerAction_zebra, //70

@@ -620,6 +620,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\TerrainWater.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Time.cpp"
 				>
 			</File>
@@ -681,6 +685,10 @@
 			</File>
 			<File
 				RelativePath=".\src\WalkerAction_Entertainer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\WalkerAction_Map.cpp"
 				>
 			</File>
 			<File
@@ -1063,6 +1071,10 @@
 			</File>
 			<File
 				RelativePath=".\src\Terrain.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Terrain_private.h"
 				>
 			</File>
 			<File

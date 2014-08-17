@@ -61,4 +61,7 @@ int Terrain_countTerrainTypeDiagonallyAdjacentTo(int gridOffset, int terrainMask
 int Terrain_hasTerrainTypeSameYAdjacentTo(int gridOffset, int terrainMask);
 int Terrain_hasTerrainTypeSameXAdjacentTo(int gridOffset, int terrainMask);
 
+int Terrain_Water_findOpenWaterForShipwreck(int walkerId, int *xTile, int *yTile);
+
+
 #endif

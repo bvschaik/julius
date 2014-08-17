@@ -53,9 +53,11 @@ void WalkerAction_arrow(int walkerId);
 void WalkerAction_spear(int walkerId);
 void WalkerAction_javelin(int walkerId);
 void WalkerAction_bolt(int walkerId);
-//rioter
+// rioter
 void WalkerAction_protestor(int walkerId);
 void WalkerAction_criminal(int walkerId);
+// map
+void WalkerAction_shipwreck(int walkerId);
 
 // animal
 void WalkerAction_seagulls(int walkerId);

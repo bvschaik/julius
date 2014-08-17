@@ -186,6 +186,7 @@ enum {
 	ID_Graphic_FortIcons = 222,
 	ID_Graphic_EmpireForeignCity = 223,
 	ID_Graphic_GodBolt = 225,
+	ID_Graphic_Walker_Shipwreck = 226,
 	ID_Graphic_PlagueSkull = 227,
 	ID_Graphic_Walker_DoctorSurgeon = 228,
 	ID_Graphic_Walker_Patrician = 229,
