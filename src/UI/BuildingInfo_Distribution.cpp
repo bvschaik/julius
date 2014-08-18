@@ -66,25 +66,25 @@ void UI_BuildingInfo_drawMarket(BuildingInfoContext *c)
 		DRAW_DESC(97, 2);
 	} else {
 		int graphicId = GraphicId(ID_Graphic_ResourceIcons);
-		if (b->data.market.food[0] || b->data.market.food[1] ||
-			b->data.market.food[2] || b->data.market.food[3]) {
+		if (b->data.market.inventory.one.wheat || b->data.market.inventory.one.vegetables ||
+			b->data.market.inventory.one.fruit || b->data.market.inventory.one.meat) {
 			// food stocks
 			Graphics_drawImage(graphicId + Resource_Wheat,
 				c->xOffset + 32, c->yOffset + 64);
-			Widget_Text_drawNumber(b->data.market.food[0], '@', " ",
+			Widget_Text_drawNumber(b->data.market.inventory.one.wheat, '@', " ",
 				c->xOffset + 64, c->yOffset + 70, Font_NormalBlack);
 			Graphics_drawImage(graphicId + Resource_Vegetables,
 				c->xOffset + 142, c->yOffset + 64);
-			Widget_Text_drawNumber(b->data.market.food[1], '@', " ",
+			Widget_Text_drawNumber(b->data.market.inventory.one.vegetables, '@', " ",
 				c->xOffset + 174, c->yOffset + 70, Font_NormalBlack);
 			Graphics_drawImage(graphicId + Resource_Fruit,
 				c->xOffset + 252, c->yOffset + 64);
-			Widget_Text_drawNumber(b->data.market.food[2], '@', " ",
+			Widget_Text_drawNumber(b->data.market.inventory.one.fruit, '@', " ",
 				c->xOffset + 284, c->yOffset + 70, Font_NormalBlack);
 			Graphics_drawImage(graphicId + Resource_Meat +
 				Resource_getGraphicIdOffset(Resource_Meat, 3),
 				c->xOffset + 362, c->yOffset + 64);
-			Widget_Text_drawNumber(b->data.market.food[3], '@', " ",
+			Widget_Text_drawNumber(b->data.market.inventory.one.meat, '@', " ",
 				c->xOffset + 394, c->yOffset + 70, Font_NormalBlack);
 		} else {
 			Widget_GameText_drawMultiline(97, 4,
@@ -94,19 +94,19 @@ void UI_BuildingInfo_drawMarket(BuildingInfoContext *c)
 		// good stocks
 		Graphics_drawImage(graphicId + Resource_Pottery,
 			c->xOffset + 32, c->yOffset + 104);
-		Widget_Text_drawNumber(b->data.market.pottery, '@', " ",
+		Widget_Text_drawNumber(b->data.market.inventory.one.pottery, '@', " ",
 			c->xOffset + 64, c->yOffset + 110, Font_NormalBlack);
 		Graphics_drawImage(graphicId + Resource_Furniture,
 			c->xOffset + 142, c->yOffset + 104);
-		Widget_Text_drawNumber(b->data.market.furniture, '@', " ",
+		Widget_Text_drawNumber(b->data.market.inventory.one.furniture, '@', " ",
 			c->xOffset + 174, c->yOffset + 110, Font_NormalBlack);
 		Graphics_drawImage(graphicId + Resource_Oil,
 			c->xOffset + 252, c->yOffset + 104);
-		Widget_Text_drawNumber(b->data.market.oil, '@', " ",
+		Widget_Text_drawNumber(b->data.market.inventory.one.oil, '@', " ",
 			c->xOffset + 284, c->yOffset + 110, Font_NormalBlack);
 		Graphics_drawImage(graphicId + Resource_Wine,
 			c->xOffset + 362, c->yOffset + 104);
-		Widget_Text_drawNumber(b->data.market.wine, '@', " ",
+		Widget_Text_drawNumber(b->data.market.inventory.one.wine, '@', " ",
 			c->xOffset + 394, c->yOffset + 110, Font_NormalBlack);
 	}
 	Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);

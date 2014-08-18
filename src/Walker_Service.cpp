@@ -151,64 +151,64 @@ static int provideMarketGoods(int marketBuildingId, int x, int y)
 					if (house->data.house.inventory.all[i] >= maxFoodStocks) {
 						continue;
 					}
-					if (market->data.market.food[i] >= maxFoodStocks) {
+					if (market->data.market.inventory.all[i] >= maxFoodStocks) {
 						house->data.house.inventory.all[i] += maxFoodStocks;
-						market->data.market.food[i] -= maxFoodStocks;
-					} else if (market->data.market.food[i]) {
-						house->data.house.inventory.all[i] += market->data.market.food[i];
-						market->data.market.food[i] = 0;
+						market->data.market.inventory.all[i] -= maxFoodStocks;
+					} else if (market->data.market.inventory.all[i]) {
+						house->data.house.inventory.all[i] += market->data.market.inventory.all[i];
+						market->data.market.inventory.all[i] = 0;
 					}
 				}
 			}
 			if (Data_Model_Houses[level].pottery) {
 				market->data.market.potteryDemand = 10;
 				int potteryWanted = 8 * Data_Model_Houses[level].pottery - house->data.house.inventory.one.pottery;
-				if (market->data.market.pottery && potteryWanted > 0) {
-					if (potteryWanted <= market->data.market.pottery) {
+				if (market->data.market.inventory.one.pottery && potteryWanted > 0) {
+					if (potteryWanted <= market->data.market.inventory.one.pottery) {
 						house->data.house.inventory.one.pottery += potteryWanted;
-						market->data.market.pottery -= potteryWanted;
+						market->data.market.inventory.one.pottery -= potteryWanted;
 					} else {
-						house->data.house.inventory.one.pottery += market->data.market.pottery;
-						market->data.market.pottery = 0;
+						house->data.house.inventory.one.pottery += market->data.market.inventory.one.pottery;
+						market->data.market.inventory.one.pottery = 0;
 					}
 				}
 			}
 			if (Data_Model_Houses[level].furniture) {
 				market->data.market.furnitureDemand = 10;
 				int furnitureWanted = 4 * Data_Model_Houses[level].furniture - house->data.house.inventory.one.furniture;
-				if (market->data.market.furniture && furnitureWanted > 0) {
-					if (furnitureWanted <= market->data.market.furniture) {
+				if (market->data.market.inventory.one.furniture && furnitureWanted > 0) {
+					if (furnitureWanted <= market->data.market.inventory.one.furniture) {
 						house->data.house.inventory.one.furniture += furnitureWanted;
-						market->data.market.furniture -= furnitureWanted;
+						market->data.market.inventory.one.furniture -= furnitureWanted;
 					} else {
-						house->data.house.inventory.one.furniture += market->data.market.furniture;
-						market->data.market.furniture = 0;
+						house->data.house.inventory.one.furniture += market->data.market.inventory.one.furniture;
+						market->data.market.inventory.one.furniture = 0;
 					}
 				}
 			}
 			if (Data_Model_Houses[level].oil) {
 				market->data.market.oilDemand = 10;
 				int oilWanted = 4 * Data_Model_Houses[level].oil - house->data.house.inventory.one.oil;
-				if (market->data.market.oil && oilWanted > 0) {
-					if (oilWanted <= market->data.market.oil) {
+				if (market->data.market.inventory.one.oil && oilWanted > 0) {
+					if (oilWanted <= market->data.market.inventory.one.oil) {
 						house->data.house.inventory.one.oil += oilWanted;
-						market->data.market.oil -= oilWanted;
+						market->data.market.inventory.one.oil -= oilWanted;
 					} else {
-						house->data.house.inventory.one.oil += market->data.market.oil;
-						market->data.market.oil = 0;
+						house->data.house.inventory.one.oil += market->data.market.inventory.one.oil;
+						market->data.market.inventory.one.oil = 0;
 					}
 				}
 			}
 			if (Data_Model_Houses[level].wine) {
 				market->data.market.wineDemand = 10;
 				int wineWanted = 4 * Data_Model_Houses[level].wine - house->data.house.inventory.one.wine;
-				if (market->data.market.wine && wineWanted > 0) {
-					if (wineWanted <= market->data.market.wine) {
+				if (market->data.market.inventory.one.wine && wineWanted > 0) {
+					if (wineWanted <= market->data.market.inventory.one.wine) {
 						house->data.house.inventory.one.wine += wineWanted;
-						market->data.market.wine -= wineWanted;
+						market->data.market.inventory.one.wine -= wineWanted;
 					} else {
-						house->data.house.inventory.one.wine += market->data.market.wine;
-						market->data.market.wine = 0;
+						house->data.house.inventory.one.wine += market->data.market.inventory.one.wine;
+						market->data.market.inventory.one.wine = 0;
 					}
 				}
 			}

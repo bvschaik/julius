@@ -692,6 +692,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\WalkerAction_Market.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\WalkerAction_Migrant.cpp"
 				>
 			</File>

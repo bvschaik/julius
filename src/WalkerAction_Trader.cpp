@@ -1,12 +1,16 @@
 #include "WalkerAction_private.h"
 
 #include "Empire.h"
+#include "PlayerMessage.h"
 #include "Resource.h"
+#include "Terrain.h"
 #include "Trader.h"
 #include "Walker.h"
 
 #include "Data/CityInfo.h"
 #include "Data/Empire.h"
+#include "Data/Message.h"
+#include "Data/Scenario.h"
 #include "Data/Trade.h"
 
 static void advanceTradeNextImportResourceCaravan()
@@ -342,6 +346,167 @@ void WalkerAction_tradeCaravanDonkey(int walkerId)
 	dir = (8 + dir - Data_Settings_Map.orientation) % 8;
 	w->graphicId = GraphicId(ID_Graphic_Walker_TradeCaravan) +
 		dir + 8 * w->graphicOffset;
+}
+
+static int tradeShipLostQueue(int walkerId)
+{
+	struct Data_Building *b = &Data_Buildings[Data_Walkers[walkerId].destinationBuildingId];
+	if (b->inUse == 1 && b->type == Building_Dock &&
+		b->numWorkers > 0 && b->data.other.boatWalkerId == walkerId) {
+		return 0;
+	}
+	return 1;
+}
+
+static int tradeShipDoneTrading(int walkerId)
+{
+	struct Data_Building *b = &Data_Buildings[Data_Walkers[walkerId].destinationBuildingId];
+	if (b->inUse == 1 && b->type == Building_Dock && b->numWorkers > 0) {
+		for (int i = 0; i < 3; i++) {
+			int dockerId = b->data.other.dockWalkerIds[i];
+			if (dockerId && Data_Walkers[dockerId].state == WalkerState_Alive &&
+				Data_Walkers[dockerId].actionState != WalkerActionState_132_ResourceCarrier) {
+				return 0;
+			}
+		}
+		Data_Walkers[walkerId].__unknown_69++;
+		if (Data_Walkers[walkerId].__unknown_69 >= 10) {
+			Data_Walkers[walkerId].__unknown_69 = 11;
+			return 1;
+		}
+		return 0;
+	}
+	return 1;
+}
+
+void WalkerAction_TradeShip(int walkerId)
+{
+	struct Data_Walker *w = &Data_Walkers[walkerId];
+	w->isGhost = 0;
+	w->isBoat = 1;
+	WalkerActionIncreaseGraphicOffset(w, 12);
+	w->cartGraphicId = 0;
+	switch (w->actionState) {
+		case WalkerActionState_150_Attack:
+			WalkerAction_Common_handleAttack(walkerId);
+			break;
+		case WalkerActionState_149_Corpse:
+			WalkerAction_Common_handleCorpse(walkerId);
+			break;
+		case WalkerActionState_110_TradeShipCreated:
+			w->loadsSoldOrCarrying = 12;
+			w->traderAmountBought = 0;
+			w->isGhost = 1;
+			w->waitTicks++;
+			if (w->waitTicks > 20) {
+				int xTile, yTile;
+				int dockId = Terrain_Water_getFreeDockDestination(walkerId, &xTile, &yTile);
+				if (dockId) {
+					w->destinationBuildingId = dockId;
+					w->actionState = WalkerActionState_111_TradeShipGoingToDock;
+					w->destinationX = xTile;
+					w->destinationY = yTile;
+				} else if (Terrain_Water_getQueueDockDestination(walkerId, &xTile, &yTile)) {
+					w->actionState = WalkerActionState_113_TradeShipGoingToDockQueue;
+					w->destinationX = xTile;
+					w->destinationY = yTile;
+				} else {
+					w->state = WalkerState_Dead;
+				}
+			}
+			w->graphicOffset = 0;
+			break;
+		case WalkerActionState_111_TradeShipGoingToDock:
+			WalkerMovement_walkTicks(walkerId, 1);
+			w->heightFromGround = 0;
+			if (w->direction == 8) {
+				w->actionState = WalkerActionState_112_TradeShipMoored;
+			} else if (w->direction == 9) {
+				WalkerRoute_remove(walkerId);
+			} else if (w->direction == 10) {
+				w->state = WalkerState_Dead;
+				if (!Data_Message.messageCategoryCount[MessageDelay_BlockedDock]) {
+					PlayerMessage_post(1, 15, 0, 0);
+					Data_Message.messageCategoryCount[MessageDelay_BlockedDock]++;
+				}
+			}
+			if (Data_Buildings[w->destinationBuildingId].inUse != 1) {
+				w->actionState = WalkerActionState_115_TradeShipLeaving;
+				w->waitTicks = 0;
+				w->destinationX = (char) Data_Scenario.riverExitPoint.x;
+				w->destinationY = (char) Data_Scenario.riverExitPoint.y;
+			}
+			break;
+		case WalkerActionState_112_TradeShipMoored:
+			if (tradeShipLostQueue(walkerId)) {
+				w->__unknown_69 = 0;
+				w->actionState = WalkerActionState_115_TradeShipLeaving;
+				w->waitTicks = 0;
+				w->destinationX = (char) Data_Scenario.riverEntryPoint.x;
+				w->destinationY = (char) Data_Scenario.riverEntryPoint.y;
+			} else if (tradeShipDoneTrading(walkerId)) {
+				w->__unknown_69 = 0;
+				w->actionState = WalkerActionState_115_TradeShipLeaving;
+				w->waitTicks = 0;
+				w->destinationX = (char) Data_Scenario.riverEntryPoint.x;
+				w->destinationY = (char) Data_Scenario.riverEntryPoint.y;
+				Data_Buildings[w->destinationBuildingId].data.other.dockQueuedBoatWalkerId = 0;
+				Data_Buildings[w->destinationBuildingId].data.other.dockNumShips = 0;
+			}
+			switch (Data_Buildings[w->destinationBuildingId].data.other.dockOrientation) {
+				case 0: w->direction = 2; break;
+				case 1: w->direction = 4; break;
+				case 2: w->direction = 6; break;
+				default:w->direction = 0; break;
+			}
+			w->graphicOffset = 0;
+			Data_Message.messageCategoryCount[MessageDelay_BlockedDock] = 0;
+			break;
+		case WalkerActionState_113_TradeShipGoingToDockQueue:
+			WalkerMovement_walkTicks(walkerId, 1);
+			w->heightFromGround = 0;
+			if (w->direction == 8) {
+				w->actionState = WalkerActionState_114_TradeShipAnchored;
+			} else if (w->direction == 9) {
+				WalkerRoute_remove(walkerId);
+			} else if (w->direction == 10) {
+				w->state = WalkerState_Dead;
+			}
+			break;
+		case WalkerActionState_114_TradeShipAnchored:
+			w->waitTicks++;
+			if (w->waitTicks > 40) {
+				int xTile, yTile;
+				int dockId = Terrain_Water_getFreeDockDestination(walkerId, &xTile, &yTile);
+				if (dockId) {
+					w->destinationBuildingId = dockId;
+					w->actionState = WalkerActionState_111_TradeShipGoingToDock;
+					w->destinationX = xTile;
+					w->destinationY = yTile;
+				} else if (Terrain_Water_getQueueDockDestination(walkerId, &xTile, &yTile)) {
+					w->actionState = WalkerActionState_113_TradeShipGoingToDockQueue;
+					w->destinationX = xTile;
+					w->destinationY = yTile;
+				}
+			}
+			w->graphicOffset = 0;
+			break;
+		case WalkerActionState_115_TradeShipLeaving:
+			WalkerMovement_walkTicks(walkerId, 1);
+			w->heightFromGround = 0;
+			if (w->direction == 8) {
+				w->actionState = WalkerActionState_110_TradeShipCreated;
+				w->state = WalkerState_Dead;
+			} else if (w->direction == 9) {
+				WalkerRoute_remove(walkerId);
+			} else {
+				w->state = WalkerState_Dead;
+			}
+			break;
+	}
+	int dir = w->direction < 8 ? w->direction : w->previousTileDirection;
+	dir = (8 + dir - Data_Settings_Map.orientation) % 8;
+	w->graphicId = GraphicId(ID_Graphic_Walker_Ship) + dir;
 }
 
 

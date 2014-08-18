@@ -111,7 +111,7 @@ void CityInfo_Resource_calculateFoodAndSupplyRomeWheat()
 	if (Data_Scenario.romeSuppliesWheat) {
 		for (int i = 1; i < MAX_BUILDINGS; i++) {
 			if (Data_Buildings[i].inUse == 1 && Data_Buildings[i].type == Building_Market) {
-				Data_Buildings[i].data.market.food[0] = 200;
+				Data_Buildings[i].data.market.inventory.one.wheat = 200;
 			}
 		}
 	}

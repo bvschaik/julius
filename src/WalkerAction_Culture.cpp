@@ -1,5 +1,6 @@
 #include "WalkerAction_private.h"
 
+#include "Building.h"
 #include "Terrain.h"
 #include "Walker.h"
 
@@ -179,3 +180,28 @@ void WalkerAction_laborSeeker(int walkerId)
 	WalkerAction_cultureCommon(walkerId, 1);
 	WalkerActionUpdateGraphic(w, GraphicId(ID_Graphic_Walker_LaborSeeker));
 }
+
+void WalkerAction_marketTrader(int walkerId)
+{
+	struct Data_Walker *w = &Data_Walkers[walkerId];
+	w->terrainUsage = 1;
+	w->useCrossCountry = 0;
+	w->maxRoamLength = 384;
+	
+	struct Data_Building *b = &Data_Buildings[w->buildingId];
+	if (b->inUse != 1 || b->walkerId != walkerId) {
+		w->state = WalkerState_Dead;
+	}
+	WalkerActionIncreaseGraphicOffset(w, 12);
+	if (w->actionState == WalkerActionState_125_Roaming) {
+		// force return on out of stock
+		int stock = Building_Market_getMaxFoodStock(w->buildingId) +
+			Building_Market_getMaxGoodsStock(w->buildingId);
+		if (w->roamLength >= 96 && stock <= 0) {
+			w->roamLength = w->maxRoamLength;
+		}
+	}
+	WalkerAction_cultureCommon(walkerId, 1);
+	WalkerActionUpdateGraphic(w, GraphicId(ID_Graphic_Walker_MarketLady));
+}
+

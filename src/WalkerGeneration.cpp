@@ -601,7 +601,7 @@ static void spawnWalkerMarket(int buildingId, struct Data_Building *b)
 			int dstBuildingId = Building_Market_getDestinationGranaryWarehouse(buildingId);
 			if (dstBuildingId > 0) {
 				CREATE_WALKER(Walker_MarketBuyer, xRoad, yRoad, 0);
-				w->actionState = WalkerActionState_145_MarketBuyerCreated;
+				w->actionState = WalkerActionState_145_MarketBuyerGoingToStorage;
 				w->buildingId = buildingId;
 				b->walkerId2 = walkerId;
 				w->destinationBuildingId = dstBuildingId;
@@ -612,7 +612,7 @@ static void spawnWalkerMarket(int buildingId, struct Data_Building *b)
 					w->destinationX = xRoad;
 					w->destinationY = yRoad;
 				} else {
-					w->actionState = WalkerActionState_146_MarketBuyer;
+					w->actionState = WalkerActionState_146_MarketBuyerReturning;
 					w->destinationX = w->x;
 					w->destinationY = w->y;
 				}

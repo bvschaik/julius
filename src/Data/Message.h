@@ -63,8 +63,9 @@ enum {
 	MessageDelay_Riot = 0,
 	MessageDelay_Fire = 1,
 	MessageDelay_Collapse = 2,
-	MessageDelay_NoWorkingDock = 5,
-	MessageDelay_WorkersNeeded = 8
+	MessageDelay_BlockedDock = 4,
+	MessageDelay_WorkersNeeded = 8,
+	MessageDelay_NoWorkingDock = 10
 };
 
 #endif

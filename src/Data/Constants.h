@@ -102,6 +102,7 @@ enum {
 	ID_Graphic_OverlayColumn = 103,
 	ID_Graphic_Walker_TaxCollector = 104,
 	ID_Graphic_Walker_SchoolChild = 105,
+	ID_Graphic_Walker_MarketLady = 106,
 	ID_Graphic_Walker_Cartpusher = 107,
 	ID_Graphic_Walker_Migrant = 108,
 	ID_Graphic_Walker_LionTamerWhip = 109,
@@ -149,6 +150,7 @@ enum {
 	ID_Graphic_WinGame = 160,
 	ID_Graphic_Walker_Lion = 163,
 	ID_Graphic_Bridge = 164,
+	ID_Graphic_Walker_Ship = 165,
 	ID_Graphic_Barracks = 166,
 	ID_Graphic_Dock2 = 168,
 	ID_Graphic_Dock3 = 169,
@@ -175,6 +177,7 @@ enum {
 	ID_Graphic_Walker_Seagulls = 206,
 	ID_Graphic_TerrainWaterShore = 207,
 	ID_Graphic_BorderedButton = 208,
+	ID_Graphic_Walker_DeliveryBoy = 209,
 	ID_Graphic_MarketFancy = 210,
 	ID_Graphic_BathhouseFancyWater = 211,
 	ID_Graphic_BathhouseFancyNoWater = 212,
@@ -279,14 +282,14 @@ enum {
 #define ResourceIsFood(r) ((r) == Resource_Wheat || (r) == Resource_Vegetables || (r) == Resource_Fruit || (r) == Resource_Meat)
 
 enum {
-	Inventory_Wheat = 0,
-	Inventory_Vegetables = 1,
-	Inventory_Fruit = 2,
-	Inventory_Meat = 3,
-	Inventory_Wine = 4,
-	Inventory_Oil = 5,
-	Inventory_Furniture = 6,
-	Inventory_Pottery = 7
+	MarketInventory_Wheat = 0,
+	MarketInventory_Vegetables = 1,
+	MarketInventory_Fruit = 2,
+	MarketInventory_Meat = 3,
+	MarketInventory_Wine = 4,
+	MarketInventory_Oil = 5,
+	MarketInventory_Furniture = 6,
+	MarketInventory_Pottery = 7
 };
 
 enum {

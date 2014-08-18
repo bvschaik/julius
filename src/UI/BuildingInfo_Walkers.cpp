@@ -294,14 +294,14 @@ static void drawWalkerInfoMarketBuyer(BuildingInfoContext *c, int walkerId)
 	int width = Widget_GameText_draw(64, Data_Walkers[walkerId].type,
 		c->xOffset + 92, c->yOffset + 139, Font_SmallBlack);
 	
-	if (Data_Walkers[walkerId].actionState == WalkerActionState_145_MarketBuyerCreated) {
+	if (Data_Walkers[walkerId].actionState == WalkerActionState_145_MarketBuyerGoingToStorage) {
 		width += Widget_GameText_draw(129, 17,
 			c->xOffset + 90 + width, c->yOffset + 139, Font_SmallBlack);
 		int resourceId = collectingItemIdToResourceId(Data_Walkers[walkerId].collectingItemId);
 		Graphics_drawImage(
 			GraphicId(ID_Graphic_ResourceIcons) + resourceId + Resource_getGraphicIdOffset(resourceId, 3),
 			c->xOffset + 90 + width, c->yOffset + 135);
-	} else if (Data_Walkers[walkerId].actionState == WalkerActionState_146_MarketBuyer) {
+	} else if (Data_Walkers[walkerId].actionState == WalkerActionState_146_MarketBuyerReturning) {
 		width += Widget_GameText_draw(129, 18,
 			c->xOffset + 90 + width, c->yOffset + 139, Font_SmallBlack);
 		int resourceId = collectingItemIdToResourceId(Data_Walkers[walkerId].collectingItemId);

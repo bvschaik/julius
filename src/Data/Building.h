@@ -216,8 +216,7 @@ extern struct Data_Building {
 	short formationId;
 	union {
 		struct {
-			char __unknown_4a;
-			char __unknown_4b;
+			short dockQueuedBoatWalkerId; // 4a
 			char __unknown_4c;
 			char __unknown_4d;
 			char __unknown_4e;
@@ -256,11 +255,19 @@ extern struct Data_Building {
 		} other;
 		struct {
 			short unknown; //4a
-			short food[4]; //4c, 4e, 50, 52
-			short wine; // 54
-			short oil; // 56
-			short furniture; // 58
-			short pottery; // 5a
+			union {
+				struct {
+					short wheat; // 4c
+					short vegetables; // 4e
+					short fruit; // 50
+					short meat; // 52
+					short wine; // 54
+					short oil; // 56
+					short furniture; // 58
+					short pottery; // 5a
+				} one;
+				short all[8]; //4c
+			} inventory;
 			short potteryDemand; // 5c
 			short furnitureDemand; // 5e
 			short oilDemand; // 60
