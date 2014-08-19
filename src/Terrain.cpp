@@ -5,6 +5,7 @@
 #include "Util.h"
 
 #include "Data/Building.h"
+#include "Data/CityInfo.h"
 #include "Data/Constants.h"
 #include "Data/Graphics.h"
 #include "Data/Grid.h"
@@ -437,8 +438,17 @@ int Terrain_hasRoadAccess(int x, int y, int size, int *roadX, int *roadY)
 		if (!(Data_Grid_terrain[gridOffset] & Terrain_Building) ||
 			Data_Buildings[Data_Grid_buildingIds[gridOffset]].type != Building_Gatehouse) {
 			if (Data_Grid_terrain[gridOffset] & Terrain_Road) {
-				// TODO something with determining minValue
-				return 1;
+				int roadIndex = 11;
+				for (int n = 0; n < 10; n++) {
+					if (Data_CityInfo.largestRoadNetworks[n].id == Data_Grid_roadNetworks[gridOffset]) {
+						roadIndex = n;
+						break;
+					}
+				}
+				if (roadIndex < minValue) {
+					minValue = roadIndex;
+					minGridOffset = gridOffset;
+				}
 			}
 		}
 	);
@@ -454,14 +464,97 @@ int Terrain_hasRoadAccess(int x, int y, int size, int *roadX, int *roadY)
 
 int Terrain_hasRoadAccessHippodrome(int x, int y, int *roadX, int *roadY)
 {
-	// TODO
+	int size = 5;
+	int minValue = 12;
+	int minGridOffset = GridOffset(x, y);
+	{FOR_XY_ADJACENT(
+		if (!(Data_Grid_terrain[gridOffset] & Terrain_Building) ||
+			Data_Buildings[Data_Grid_buildingIds[gridOffset]].type != Building_Gatehouse) {
+			if (Data_Grid_terrain[gridOffset] & Terrain_Road) {
+				int roadIndex = 11;
+				for (int n = 0; n < 10; n++) {
+					if (Data_CityInfo.largestRoadNetworks[n].id == Data_Grid_roadNetworks[gridOffset]) {
+						roadIndex = n;
+						break;
+					}
+				}
+				if (roadIndex < minValue) {
+					minValue = roadIndex;
+					minGridOffset = gridOffset;
+				}
+			}
+		}
+	);}
+	x += 5;
+	{FOR_XY_ADJACENT(
+		if (!(Data_Grid_terrain[gridOffset] & Terrain_Building) ||
+			Data_Buildings[Data_Grid_buildingIds[gridOffset]].type != Building_Gatehouse) {
+			if (Data_Grid_terrain[gridOffset] & Terrain_Road) {
+				int roadIndex = 11;
+				for (int n = 0; n < 10; n++) {
+					if (Data_CityInfo.largestRoadNetworks[n].id == Data_Grid_roadNetworks[gridOffset]) {
+						roadIndex = n;
+						break;
+					}
+				}
+				if (roadIndex < minValue) {
+					minValue = roadIndex;
+					minGridOffset = gridOffset;
+				}
+			}
+		}
+	);}
+	x += 5;
+	{FOR_XY_ADJACENT(
+		if (!(Data_Grid_terrain[gridOffset] & Terrain_Building) ||
+			Data_Buildings[Data_Grid_buildingIds[gridOffset]].type != Building_Gatehouse) {
+			if (Data_Grid_terrain[gridOffset] & Terrain_Road) {
+				int roadIndex = 11;
+				for (int n = 0; n < 10; n++) {
+					if (Data_CityInfo.largestRoadNetworks[n].id == Data_Grid_roadNetworks[gridOffset]) {
+						roadIndex = n;
+						break;
+					}
+				}
+				if (roadIndex < minValue) {
+					minValue = roadIndex;
+					minGridOffset = gridOffset;
+				}
+			}
+		}
+	);}
+	if (minValue < 12) {
+		if (roadX && roadY) {
+			*roadX = GridOffsetToX(minGridOffset);
+			*roadY = GridOffsetToY(minGridOffset);
+		}
+		return 1;
+	}
 	return 0;
 }
 
 int Terrain_hasRoadAccessGranary(int x, int y, int *roadX, int *roadY)
 {
-	// TODO
-	return 1;
+	int xx = -1, yy = -1;
+	if (Data_Grid_terrain[GridOffset(x + 1, y - 1)] & Terrain_Road) {
+		xx = x + 1;
+		yy = y - 1;
+	} else if (Data_Grid_terrain[GridOffset(x + 3, y + 1)] & Terrain_Road) {
+		xx = x + 3;
+		yy = y + 1;
+	} else if (Data_Grid_terrain[GridOffset(x + 1, y + 3)] & Terrain_Road) {
+		xx = x + 1;
+		yy = y + 3;
+	} else if (Data_Grid_terrain[GridOffset(x - 1, y + 1)] & Terrain_Road) {
+		xx = x - 1;
+		yy = y + 1;
+	}
+	if (xx > 0 && yy > 0 && roadX && roadY) {
+		*roadX = xx;
+		*roadY = yy;
+		return 1;
+	}
+	return 0;
 }
 
 #define Delta(x, y) ((y) * GRID_SIZE + (x))
