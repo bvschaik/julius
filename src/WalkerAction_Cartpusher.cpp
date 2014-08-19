@@ -145,7 +145,7 @@ static void updateGraphic(int walkerId, struct Data_Walker *w)
 	
 	if (w->actionState == WalkerActionState_149_Corpse) {
 		w->graphicId = GraphicId(ID_Graphic_Walker_Cartpusher) +
-			walkerActionCorpseGraphicOffsets[w->waitTicks / 2] + 96;
+			WalkerActionCorpseGraphicOffset(w) + 96;
 		w->cartGraphicId = 0;
 	} else {
 		w->graphicId = GraphicId(ID_Graphic_Walker_Cartpusher) + dir + 8 * w->graphicOffset;

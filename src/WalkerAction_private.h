@@ -4,6 +4,9 @@
 #define WalkerActionIncreaseGraphicOffset(w, max) (w)->graphicOffset++; if ((w)->graphicOffset >= (max)) (w)->graphicOffset = 0;
 #define WalkerActionDirection(w) ((8 + w->direction - Data_Settings_Map.orientation) % 8)
 #define WalkerActionCorpseGraphicOffset(w) walkerActionCorpseGraphicOffsets[w->waitTicks / 2]
+#define WalkerActionMissileLauncherGraphicOffset(w) walkerActionMissileLauncherGraphicOffsets[w->attackGraphicOffset / 2]
+#define WalkerActionFormationLayoutPositionX(layout, index) walkerActionFormationLayoutPositionX[layout][index]
+#define WalkerActionFormationLayoutPositionY(layout, index) walkerActionFormationLayoutPositionY[layout][index]
 
 #define WalkerActionUpdateGraphic(w,g) \
 	if ((w)->actionState == WalkerActionState_149_Corpse) {\
@@ -13,6 +16,9 @@
 	}
 
 extern const int walkerActionCorpseGraphicOffsets[128];
+extern const int walkerActionMissileLauncherGraphicOffsets[128];
+extern const int walkerActionFormationLayoutPositionX[9][16];
+extern const int walkerActionFormationLayoutPositionY[9][16];
 
 #include "WalkerAction.h"
 #include "WalkerMovement.h"

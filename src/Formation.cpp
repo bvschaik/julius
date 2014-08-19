@@ -218,7 +218,7 @@ void Formation_calculateWalkers()
 		Data_Formations[formationId].maxTotalDamage +=
 			Constant_WalkerProperties[wtype].maxDamage;
 		Data_Formations[formationId].totalDamage += Data_Walkers[i].damage;
-		if (Data_Walkers[i].__unknown_52 != 1) {
+		if (Data_Walkers[i].formationAtRest != 1) {
 			Data_Formations[formationId].isAtFort = 0;
 		}
 		for (int w = 0; w < 16; w++) {
@@ -388,7 +388,7 @@ void Formation_dispatchLegionsToDistantBattle()
 				if (walkerId > 0 &&
 					Data_Walkers[walkerId].state == WalkerState_Alive &&
 					Data_Walkers[walkerId].actionState != WalkerActionState_149_Corpse) {
-					Data_Walkers[walkerId].actionState = WalkerActionState_87_ToDistantBattle;
+					Data_Walkers[walkerId].actionState = WalkerActionState_87_SoldierGoingToDistantBattle;
 				}
 			}
 		}
@@ -409,8 +409,8 @@ void Formation_legionsReturnFromDistantBattle()
 				if (walkerId > 0 &&
 					Data_Walkers[walkerId].state == WalkerState_Alive &&
 					Data_Walkers[walkerId].actionState != WalkerActionState_149_Corpse) {
-					Data_Walkers[walkerId].actionState = WalkerActionState_88_FromDistantBattle;
-					Data_Walkers[walkerId].__unknown_52 = 1;
+					Data_Walkers[walkerId].actionState = WalkerActionState_88_SoldierReturningFromDistantBattle;
+					Data_Walkers[walkerId].formationAtRest = 1;
 				}
 			}
 		}
@@ -458,7 +458,7 @@ static void decreaseDamage()
 	for (int i = 1; i < MAX_WALKERS; i++) {
 		struct Data_Walker *w = &Data_Walkers[i];
 		if (w->state == WalkerState_Alive && WalkerIsLegion(w->type)) {
-			if (w->actionState == WalkerActionState_80_AtRest) {
+			if (w->actionState == WalkerActionState_80_SoldierAtRest) {
 				if (w->damage) {
 					w->damage--;
 				}

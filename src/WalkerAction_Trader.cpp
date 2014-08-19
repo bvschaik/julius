@@ -379,7 +379,7 @@ static int tradeShipDoneTrading(int walkerId)
 	return 1;
 }
 
-void WalkerAction_TradeShip(int walkerId)
+void WalkerAction_tradeShip(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	w->isGhost = 0;

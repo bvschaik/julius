@@ -139,7 +139,7 @@ void WalkerAction_wolf(int walkerId)
 		case WalkerActionState_199_WolfAttacking:
 			WalkerMovement_walkTicks(walkerId, 2);
 			if (w->direction == 8) {
-				int targetId = WalkerEnemy_wolfGetTargetWalker(w->x, w->y, 6);
+				int targetId = WalkerAction_CombatWolf_getTarget(w->x, w->y, 6);
 				if (targetId) {
 					w->destinationX = Data_Walkers[targetId].x;
 					w->destinationY = Data_Walkers[targetId].y;

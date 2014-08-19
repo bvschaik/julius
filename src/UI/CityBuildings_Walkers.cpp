@@ -264,7 +264,7 @@ void UI_CityBuildings_drawWalker(int walkerId, int xOffset, int yOffset, int sel
 	if (w->useCrossCountry) {
 		xTileOffset = tileOffsetToPixelOffsetX(w->crossCountryX % 15, w->crossCountryY % 15);
 		yTileOffset = tileOffsetToPixelOffsetY(w->crossCountryX % 15, w->crossCountryY % 15);
-		yTileOffset -= w->__unknown_18;
+		yTileOffset -= w->missileDamage;
 	} else {
 		int direction = (8 + w->direction - Data_Settings_Map.orientation) % 8;
 		xTileOffset = tileProgressToPixelOffsetX(direction, w->progressOnTile);

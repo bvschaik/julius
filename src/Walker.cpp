@@ -2,6 +2,7 @@
 
 #include "Calc.h"
 #include "Trader.h"
+#include "WalkerAction.h"
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
@@ -136,6 +137,18 @@ void Walker_createHerds()
 void Walker_createFlotsam(int xEntry, int yEntry, int hasWater)
 {
 	// TODO
+}
+
+int Walker_createMissile(int buildingId, int x, int y, int xDst, int yDst, int type)
+{
+	int walkerId = Walker_create(type, x, y, 0);
+	if (walkerId) {
+		Data_Walkers[walkerId].missileDamage = (type == Walker_Bolt) ? 60 : 10;
+		Data_Walkers[walkerId].buildingId = buildingId;
+		WalkerAction_Common_setCrossCountryDestination(walkerId,
+			&Data_Walkers[walkerId], xDst, yDst);
+	}
+	return walkerId;
 }
 
 int Walker_createSoldierFromBarracks(int buildingId, int x, int y)
@@ -301,11 +314,5 @@ int Walker_hasNearbyEnemy(int xStart, int yStart, int xEnd, int yEnd)
 			return 1;
 		}
 	}
-	return 0;
-}
-
-// TODO move to separate file
-int WalkerEnemy_wolfGetTargetWalker(int x, int y, int range)
-{
 	return 0;
 }

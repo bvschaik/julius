@@ -464,7 +464,7 @@ void WalkerAction_prefect(int walkerId)
 			break;
 		case WalkerActionState_149_Corpse:
 			w->graphicId = GraphicId(ID_Graphic_Walker_Prefect) +
-				96 + walkerActionCorpseGraphicOffsets[w->waitTicks / 2];
+				96 + WalkerActionCorpseGraphicOffset(w);
 			break;
 		default:
 			w->graphicId = GraphicId(ID_Graphic_Walker_Prefect) +

@@ -676,6 +676,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\WalkerAction_Combat.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\WalkerAction_Common.cpp"
 				>
 			</File>
@@ -709,6 +713,10 @@
 			</File>
 			<File
 				RelativePath=".\src\WalkerAction_Service.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\WalkerAction_Soldier.cpp"
 				>
 			</File>
 			<File

@@ -135,9 +135,16 @@ enum {
 	WalkerActionState_75_PrefectAtFire = 75,
 	WalkerActionState_76_PrefectGoingToEnemy = 76,
 	WalkerActionState_77_PrefectAtEnemy = 77,
-	WalkerActionState_80_AtRest = 80,
-	WalkerActionState_87_ToDistantBattle = 87,
-	WalkerActionState_88_FromDistantBattle = 88,
+	WalkerActionState_80_SoldierAtRest = 80,
+	WalkerActionState_81_SoldierGoingToFort = 81,
+	WalkerActionState_82_SoldierReturningToBarracks = 82,
+	WalkerActionState_83_SoldierGoingToStandard = 83,
+	WalkerActionState_84_SoldierAtStandard = 84,
+	WalkerActionState_85_SoldierGoingToMilitaryAcademy = 85,
+	WalkerActionState_86_SoldierMoppingUp = 86,
+	WalkerActionState_87_SoldierGoingToDistantBattle = 87,
+	WalkerActionState_88_SoldierReturningFromDistantBattle = 88,
+	WalkerActionState_89_SoldierAtDistantBattle = 89,
 	WalkerActionState_90_EntertainerAtSchoolCreated = 90,
 	WalkerActionState_91_EntertainerExitingSchool = 91,
 	WalkerActionState_92_EntertainerGoingToVenue = 92,
@@ -167,6 +174,7 @@ enum {
 	WalkerActionState_140_Dockman = 140,
 	WalkerActionState_145_MarketBuyerGoingToStorage = 145,
 	WalkerActionState_146_MarketBuyerReturning = 146,
+	WalkerActionState_148_Fleeing = 148,
 	WalkerActionState_149_Corpse = 149,
 	WalkerActionState_150_Attack = 150,
 	WalkerActionState_151_EnemyInitial = 151,
@@ -219,7 +227,7 @@ extern struct Data_Walker_NameSequence {
 } Data_Walker_NameSequence;
 
 extern struct Data_Walker {
-	char inUse;
+	unsigned char alternativeLocationIndex;
 	char graphicOffset;
 	char isEnemyGraphic;
 	char __unknown_03;
@@ -240,17 +248,17 @@ extern struct Data_Walker {
 	char y;
 	char previousTileX;
 	char previousTileY;
-	char __unknown_18;
+	char missileDamage;
 	unsigned char damage; //19
 	short gridOffset; // 1a
 	char destinationX; // 1c
 	char destinationY;
-	char __unknown_1e;
+	char destinationGridOffsetSoldier;
 	char __unknown_1f;
 	char sourceX; // 20
 	char sourceY;
-	char __unknown_22;
-	char __unknown_23;
+	char formationPositionX;
+	char formationPositionY;
 	char __unknown_24;
 	char __unknown_25;
 	short waitTicks;
@@ -281,7 +289,7 @@ extern struct Data_Walker {
 	short destinationBuildingId;
 	unsigned char formationId; //50
 	unsigned char indexInFormation; //51
-	char __unknown_52;
+	char formationAtRest; //52
 	char __unused_53;
 	unsigned char migrantNumPeople;
 	char isGhost; // 55

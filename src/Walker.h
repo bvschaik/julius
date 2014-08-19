@@ -9,6 +9,7 @@ int Walker_createDustCloud(int x, int y, int size);
 void Walker_createFishingPoints();
 void Walker_createHerds();
 void Walker_createFlotsam(int xEntry, int yEntry, int hasWater);
+int Walker_createMissile(int buildingId, int x, int y, int xDst, int yDst, int type);
 
 int Walker_createSoldierFromBarracks(int buildingId, int x, int y);
 int Walker_createTowerSentryFromBarracks(int buildingId, int x, int y);
@@ -36,7 +37,5 @@ int WalkerRoute_getNumAvailable();
 void WalkerRoute_remove(int walkerId);
 
 void WalkerGeneration_generateWalkersForBuildings();
-
-int WalkerEnemy_wolfGetTargetWalker(int x, int y, int range);
 
 #endif

@@ -11,6 +11,7 @@ enum {
 	FormationLayout_SingleLine2 = 4,
 	FormationLayout_Column = 5,
 	FormationLayout_MopUp = 6,
+	FormationLayout_AtRest = 7,
 };
 
 struct Data_Formation {
@@ -49,7 +50,7 @@ struct Data_Formation {
 	short __unknown4e;
 	short __unknown50;
 	short isHalted;
-	short __unknown54;
+	short missileFired; //54
 	short missileAttackTimeout; //56
 	short missileAttackFormationId; //58
 	short layoutBeforeMopUp;
@@ -59,7 +60,7 @@ struct Data_Formation {
 	char inDistantBattle; //60
 	char isHerd;
 	char enemyType;
-	char __unknown63;
+	char direction; // 63
 	char __unknown64;
 	char __unknown65;
 	char __unknown66;

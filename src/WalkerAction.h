@@ -14,6 +14,10 @@ void WalkerAction_Common_handleAttack(int walkerId);
 void WalkerAction_Common_setCartOffset(int walkerId, int direction);
 void WalkerAction_Common_setCrossCountryDestination(int walkerId, struct Data_Walker *w, int xDst, int yDst);
 
+int WalkerAction_CombatSoldier_getMissileTarget(int walkerId, int distance, int *xTile, int *yTile);
+int WalkerAction_CombatSoldier_getTarget(int x, int y, int distance);
+void WalkerAction_CombatSoldier_attackWalker(int walkerId, int targetWalkerId);
+int WalkerAction_CombatWolf_getTarget(int x, int y, int range);
 
 // walker action callbacks
 void WalkerAction_nobody(int walkerId);
@@ -43,10 +47,16 @@ void WalkerAction_surgeon(int walkerId);
 void WalkerAction_missionary(int walkerId);
 void WalkerAction_patrician(int walkerId);
 void WalkerAction_laborSeeker(int walkerId);
+void WalkerAction_marketTrader(int walkerId);
+// market
+void WalkerAction_marketBuyer(int walkerId);
+void WalkerAction_deliveryBoy(int walkerId);
 // trader
 void WalkerAction_tradeCaravan(int walkerId);
 void WalkerAction_tradeCaravanDonkey(int walkerId);
-
+void WalkerAction_tradeShip(int walkerId);
+// soldier
+void WalkerAction_soldier(int walkerId);
 // missile
 void WalkerAction_explosionCloud(int walkerId);
 void WalkerAction_arrow(int walkerId);
