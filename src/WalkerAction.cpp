@@ -40,7 +40,7 @@ static void (*walkerActionCallbacks[])(int walkerId) = {
 	WalkerAction_doctor,
 	WalkerAction_surgeon,
 	WalkerAction_worker,
-	WalkerAction_nobody, //TODO WalkerAction_mapFlag,
+	WalkerAction_nobody, // mapFlag: editor only
 	WalkerAction_nobody, //TODO WalkerAction_flotsam,
 	WalkerAction_nobody, //TODO WalkerAction_docker,
 	WalkerAction_marketBuyer,

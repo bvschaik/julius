@@ -37,6 +37,7 @@ enum {
 	Warning_BuildLionHouse = 46,
 	Warning_BuildChariotMaker = 47,
 	Warning_WallNeeded = 49,
+	Warning_LegionMoraleTooLow = 51,
 	Warning_MaxLegionsReached = 52,
 	Warning_PeopleOnBridge = 55,
 	Warning_DockOpenWaterNeeded = 56,

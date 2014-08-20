@@ -26,20 +26,20 @@ struct Data_Formation {
 	char maxWalkers;
 	short layout;
 	short morale;
-	char xFort;
-	char yFort;
-	char xStandard; //30
-	char yStandard;
-	char x;
-	char y;
-	char destinationX;
-	char destinationY;
+	char xHome; //2e
+	char yHome;
+	unsigned char xStandard; //30
+	unsigned char yStandard;
+	unsigned char x;
+	unsigned char y;
+	unsigned char destinationX;
+	unsigned char destinationY;
 	short __unknown36;
-	short bannerWalkerId;
+	short standardWalkerId;
 	char isLegion;
 	char __padding;
 	short attackType;
-	short legionRoomForRecruits;
+	short legionRecruitType;
 	short hasMilitaryTraining; //40
 	short totalDamage; //42
 	short maxTotalDamage; //44
@@ -55,18 +55,18 @@ struct Data_Formation {
 	short missileAttackFormationId; //58
 	short layoutBeforeMopUp;
 	short cursedByMars;
-	char __unknown5e; //5e
+	char monthsLowMorale; //5e
 	char empireService;
 	char inDistantBattle; //60
 	char isHerd;
 	char enemyType;
 	char direction; // 63
-	char __unknown64;
-	char __unknown65;
+	unsigned char prevXHome;
+	unsigned char prevYHome;
 	char __unknown66;
 	char orientation;
 	char monthsFromHome; //68
-	char __unknown69; //69
+	char monthsVeryLowMorale; //69
 	char invasionId;
 	char __unknown6b;
 	char herdDirection;

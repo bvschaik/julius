@@ -181,6 +181,7 @@ enum {
 	WalkerActionState_158_NativeCreated = 158,
 	WalkerActionState_159_AttackingNative = 159,
 	WalkerActionState_162_NativeTraderCreated = 162,
+	WalkerActionState_174_TowerSentry = 174,
 	WalkerActionState_180_BallistaCreated = 180,
 	WalkerActionState_190_FishingBoatCreated = 190,
 	WalkerActionState_191_FishingBoatGoingToFish = 191,

@@ -43,7 +43,7 @@ void GameTick_advance()
 		case 2: Sound_Music_update(); break;
 		case 3: UI_Sidebar_requestMinimapRefresh(); break;
 		case 4: break; // TODO caesar invasion
-		case 5: break; // TODO formations 0
+		case 5: Formation_Tick_updateAll(0); break;
 		case 6: Natives_checkLand(); break;
 		case 7: break; // TODO road network ids
 		case 8: Resource_gatherGranaryGettingInfo(); break;
@@ -61,7 +61,7 @@ void GameTick_advance()
 		case 25: CityInfo_Labor_update(); break;
 		case 27: WaterManagement_updateReservoirFountain(); break;
 		case 28: WaterManagement_updateHouseWaterAccess(); break;
-		case 29: break; // TODO formations 1
+		case 29: Formation_Tick_updateAll(1); break;
 		case 30: UI_Sidebar_requestMinimapRefresh(); break;
 		case 31: WalkerGeneration_generateWalkersForBuildings(); break;
 		case 32: Trader_tick(); break;

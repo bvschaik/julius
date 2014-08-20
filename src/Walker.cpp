@@ -1,12 +1,15 @@
 #include "Walker.h"
 
 #include "Calc.h"
+#include "Formation.h"
+#include "Terrain.h"
 #include "Trader.h"
 #include "WalkerAction.h"
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Empire.h"
+#include "Data/Formation.h"
 #include "Data/Grid.h"
 #include "Data/Random.h"
 #include "Data/Settings.h"
@@ -153,14 +156,93 @@ int Walker_createMissile(int buildingId, int x, int y, int xDst, int yDst, int t
 
 int Walker_createSoldierFromBarracks(int buildingId, int x, int y)
 {
-	// TODO
-	return 0;
+	int noWeapons = Data_Buildings[buildingId].loadsStored <= 0;
+	int recruitType = 0;
+	int formationId = 0;
+	int minDist = 0;
+	for (int i = 1; i < 50; i++) {
+		struct Data_Formation *f = &Data_Formations[i];
+		if (f->inUse != 1 || !f->isLegion || f->inDistantBattle || !f->legionRecruitType) {
+			continue;
+		}
+		if (f->legionRecruitType == 3 && noWeapons) {
+			continue;
+		}
+		int dist = Calc_distanceMaximum(
+			Data_Buildings[buildingId].x, Data_Buildings[buildingId].y,
+			Data_Buildings[f->buildingId].x, Data_Buildings[f->buildingId].y);
+		if (f->legionRecruitType > recruitType) {
+			recruitType = f->legionRecruitType;
+			formationId = i;
+			minDist = dist;
+		} else if (f->legionRecruitType == recruitType && dist < minDist) {
+			recruitType = f->legionRecruitType;
+			formationId = i;
+			minDist = dist;
+		}
+	}
+	if (formationId > 0) {
+		struct Data_Formation *f = &Data_Formations[formationId];
+		int walkerId = Walker_create(f->walkerType, x, y, 0);
+		struct Data_Walker *w = &Data_Walkers[walkerId];
+		w->formationId = formationId;
+		w->formationAtRest = 1;
+		if (f->walkerType == Walker_FortLegionary) {
+			if (Data_Buildings[buildingId].loadsStored > 0) {
+				Data_Buildings[buildingId].loadsStored--;
+			}
+		}
+		int academyId = Formation_getClosestMilitaryAcademy(formationId);
+		if (academyId) {
+			int xRoad, yRoad;
+			if (Terrain_hasRoadAccess(Data_Buildings[academyId].x,
+				Data_Buildings[academyId].y, Data_Buildings[academyId].size, &xRoad, &yRoad)) {
+				w->actionState = WalkerActionState_85_SoldierGoingToMilitaryAcademy;
+				w->destinationX = xRoad;
+				w->destinationY = yRoad;
+				w->destinationGridOffsetSoldier = GridOffset(w->destinationX, w->destinationY);
+			} else {
+				w->actionState = WalkerActionState_81_SoldierGoingToFort;
+			}
+		} else {
+			w->actionState = WalkerActionState_81_SoldierGoingToFort;
+		}
+	}
+	Formation_calculateWalkers();
+	return formationId ? 1 : 0;
 }
 
 int Walker_createTowerSentryFromBarracks(int buildingId, int x, int y)
 {
-	// TODO
-	return 0;
+	if (Data_Buildings_Extra.barracksTowerSentryRequested <= 0) {
+		return 0;
+	}
+	int towerId = 0;
+	for (int i = 1; i < MAX_BUILDINGS; i++) {
+		struct Data_Building *b = &Data_Buildings[i];
+		if (b->inUse == 1 && b->type == Building_Tower && b->numWorkers > 0 &&
+			!b->walkerId && b->roadNetworkId == Data_Buildings[buildingId].roadNetworkId) {
+			towerId = i;
+			break;
+		}
+	}
+	if (!towerId) {
+		return 0;
+	}
+	struct Data_Building *tower = &Data_Buildings[towerId];
+	int walkerId = Walker_create(Walker_TowerSentry, x, y, 0);
+	struct Data_Walker *w = &Data_Walkers[walkerId];
+	w->actionState = WalkerActionState_174_TowerSentry;
+	int xRoad, yRoad;
+	if (Terrain_hasRoadAccess(tower->x, tower->y, tower->size, &xRoad, &yRoad)) {
+		w->destinationX = xRoad;
+		w->destinationY = yRoad;
+		tower->walkerId = walkerId;
+		w->buildingId = towerId;
+	} else {
+		w->state = WalkerState_Dead;
+	}
+	return 1;
 }
 
 void Walker_addToTileList(int walkerId)
