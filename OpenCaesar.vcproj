@@ -648,6 +648,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\UtilityManagement.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Video.cpp"
 				>
 			</File>
@@ -741,10 +745,6 @@
 			</File>
 			<File
 				RelativePath=".\src\UI\Warning.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\WaterManagement.cpp"
 				>
 			</File>
 			<File
@@ -1138,6 +1138,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\UtilityManagement.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Video.h"
 				>
 			</File>
@@ -1163,10 +1167,6 @@
 			</File>
 			<File
 				RelativePath=".\src\UI\Warning.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\WaterManagement.h"
 				>
 			</File>
 			<File

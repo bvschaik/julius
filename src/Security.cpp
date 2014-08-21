@@ -28,6 +28,11 @@
 
 static int burningRuinSpreadDirection;
 
+void Security_Tick_updateFireSpreadDirection()
+{
+	burningRuinSpreadDirection = Data_Random.random1_7bit & 7;
+}
+
 void Security_Tick_updateBurningRuins()
 {
 	int needsTerrainUpdate = 0;

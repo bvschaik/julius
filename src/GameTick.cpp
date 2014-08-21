@@ -17,8 +17,8 @@
 #include "Sound.h"
 #include "TerrainGraphics.h"
 #include "Trader.h"
+#include "UtilityManagement.h"
 #include "Walker.h"
-#include "WaterManagement.h"
 #include "UI/AllWindows.h"
 #include "UI/Sidebar.h"
 #include "UI/Window.h"
@@ -45,7 +45,7 @@ void GameTick_advance()
 		case 4: break; // TODO caesar invasion
 		case 5: Formation_Tick_updateAll(0); break;
 		case 6: Natives_checkLand(); break;
-		case 7: break; // TODO road network ids
+		case 7: UtilityManagement_determineRoadNetworks(); break;
 		case 8: Resource_gatherGranaryGettingInfo(); break;
 		case 10: Building_updateHighestIds(); break;
 		case 12: Building_decayHousesCovered(); break;
@@ -59,8 +59,8 @@ void GameTick_advance()
 		case 23: HousePopulation_updateMigration(); break;
 		case 24: HousePopulation_evictOvercrowded(); break;
 		case 25: CityInfo_Labor_update(); break;
-		case 27: WaterManagement_updateReservoirFountain(); break;
-		case 28: WaterManagement_updateHouseWaterAccess(); break;
+		case 27: UtilityManagement_updateReservoirFountain(); break;
+		case 28: UtilityManagement_updateHouseWaterAccess(); break;
 		case 29: Formation_Tick_updateAll(1); break;
 		case 30: UI_Sidebar_requestMinimapRefresh(); break;
 		case 31: WalkerGeneration_generateWalkersForBuildings(); break;
@@ -200,7 +200,7 @@ static void advanceYear()
 	CityInfo_Population_requestYearlyUpdate();
 	CityInfo_Finance_handleYearChange();
 	Empire_resetYearlyTradeAmounts();
-	WaterManagement_updateFireSpreadDirection();
+	Security_Tick_updateFireSpreadDirection();
 	CityInfo_Ratings_calculate(1);
 	Data_CityInfo.godBlessingNeptuneDoubleTrade = 0;
 }
