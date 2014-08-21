@@ -13,6 +13,7 @@
 #include "Terrain.h"
 #include "TerrainGraphics.h"
 #include "Walker.h"
+#include "WalkerAction.h"
 #include "UI/Warning.h"
 
 #include "Data/Building.h"
@@ -424,15 +425,41 @@ void Building_increaseDamageByEnemy(int gridOffset, int maxDamage)
 void Building_destroyByEnemy(int x, int y, int gridOffset)
 {
 	int buildingId = Data_Grid_buildingIds[gridOffset];
-	if (buildingId <= 0) {
+	if (buildingId > 0) {
+		struct Data_Building *b = &Data_Buildings[buildingId];
+		TerrainGraphics_setBuildingAreaRubble(buildingId, b->x, b->y, b->size);
+		if (b->inUse == 1) {
+			switch (b->type) {
+				case Building_HouseSmallTent:
+				case Building_HouseLargeTent:
+				case Building_Prefecture:
+				case Building_EngineersPost:
+				case Building_Well:
+				case Building_FortGround__:
+				case Building_FortGround:
+				case Building_Gatehouse:
+				case Building_Tower:
+					break;
+				default:
+					Data_CityInfo.ratingPeaceNumDestroyedBuildingsThisYear++;
+					break;
+			}
+			if (Data_CityInfo.ratingPeaceNumDestroyedBuildingsThisYear > 12) {
+				Data_CityInfo.ratingPeaceNumDestroyedBuildingsThisYear = 12;
+			}
+			b->inUse = 4;
+			Walker_createDustCloud(b->x, b->y, b->size);
+			Building_collapseLinked(buildingId, 0);
+		}
+	} else {
 		if (Data_Grid_terrain[gridOffset] & Terrain_Wall) {
 			Walker_killTowerSentriesAt(x, y);
 		}
 		TerrainGraphics_setBuildingAreaRubble(0, x, y, 1);
-	} else {
-		// TODO
 	}
-	// TODO
+	WalkerAction_TowerSentry_reroute();
+	TerrainGraphics_updateAreaWalls(x, y, 3);
+	TerrainGraphics_updateRegionAqueduct(x - 2, y - 2, x + 2, y + 2);
 	Routing_determineLandCitizen();
 	Routing_determineLandNonCitizen();
 	Routing_determineWalls();

@@ -3,6 +3,7 @@
 #include "Calc.h"
 #include "CityInfo.h"
 #include "PlayerMessage.h"
+#include "Routing.h"
 #include "SidebarMenu.h"
 #include "Sound.h"
 #include "Terrain.h"
@@ -268,5 +269,135 @@ void Security_Tick_generateCriminal()
 				}
 			}
 		}
+	}
+}
+
+static void collapseBuilding(int buildingId, struct Data_Building *b)
+{
+	if (Time_getMillis() - Data_Message.lastSoundTime.collapse <= 15000) {
+		PlayerMessage_disableSoundForNextMessage();
+	} else {
+		Data_Message.lastSoundTime.collapse = Time_getMillis();
+	}
+	if (Data_Tutorial.tutorial1.collapse) {
+		// regular collapse
+		int usePopup = 0;
+		if (Data_Message.messageDelay[MessageDelay_Collapse] <= 0) {
+			usePopup = 1;
+			Data_Message.messageDelay[MessageDelay_Collapse] = 12;
+		}
+		PlayerMessage_post(usePopup, 13, b->type, b->gridOffset);
+		Data_Message.messageCategoryCount[MessageDelay_Collapse]++;
+	} else {
+		// first collapse in tutorial
+		Data_Tutorial.tutorial1.collapse = 1;
+		SidebarMenu_enableBuildingMenuItems();
+		SidebarMenu_enableBuildingButtons();
+		/*if (UI_Window_getId() == Window_City) {
+			UI_City_drawBackground(); // TODO do we need this??
+		}*/
+		PlayerMessage_post(1, 54, 0, 0);
+	}
+	
+	Data_State.undoAvailable = 0;
+	b->inUse = 4;
+	TerrainGraphics_setBuildingAreaRubble(buildingId, b->x, b->y, b->size);
+	Walker_createDustCloud(b->x, b->y, b->size);
+	Building_collapseLinked(buildingId, 0);
+}
+
+static void fireBuilding(int buildingId, struct Data_Building *b)
+{
+	if (Time_getMillis() - Data_Message.lastSoundTime.fire <= 15000) {
+		PlayerMessage_disableSoundForNextMessage();
+	} else {
+		Data_Message.lastSoundTime.fire = Time_getMillis();
+	}
+	if (Data_Tutorial.tutorial1.fire) {
+		// regular collapse
+		int usePopup = 0;
+		if (Data_Message.messageDelay[MessageDelay_Fire] <= 0) {
+			usePopup = 1;
+			Data_Message.messageDelay[MessageDelay_Fire] = 12;
+		}
+		PlayerMessage_post(usePopup, 12, b->type, b->gridOffset);
+		Data_Message.messageCategoryCount[MessageDelay_Fire]++;
+	} else {
+		// first collapse in tutorial
+		Data_Tutorial.tutorial1.fire = 1;
+		SidebarMenu_enableBuildingMenuItems();
+		SidebarMenu_enableBuildingButtons();
+		/*if (UI_Window_getId() == Window_City) {
+			UI_City_drawBackground(); // TODO do we need this??
+		}*/
+		PlayerMessage_post(1, 53, 0, 0);
+	}
+	
+	Building_collapseOnFire(buildingId, 0);
+	Building_collapseLinked(buildingId, 1);
+	Sound_Effects_playChannel(SoundChannel_Explosion);
+}
+
+void Security_Tick_checkFireCollapse()
+{
+	Data_CityInfo.numProtestersThisMonth = 0;
+	Data_CityInfo.numCriminalsThisMonth = 0; // last month or this month?
+	
+	int recalculateTerrain = 0;
+	int randomGlobal = Data_Random.random1_7bit;
+	for (int i = 1; i <= Data_Buildings_Extra.highestBuildingIdInUse; i++) {
+		struct Data_Building *b = &Data_Buildings[i];
+		if (b->inUse != 1 || b->fireProof) {
+			continue;
+		}
+		if (b->type == Building_Hippodrome && b->prevPartBuildingId) {
+			continue;
+		}
+		int randomBuilding = (i + Data_Grid_random[b->gridOffset]) & 7;
+		// damage
+		b->damageRisk += (randomBuilding == randomGlobal) ? 3 : 1;
+		if (Data_Tutorial.tutorial1.fire == 1 && !Data_Tutorial.tutorial1.collapse) {
+			b->damageRisk += 5;
+		}
+		if (b->houseSize && b->subtype.houseLevel <= HouseLevel_LargeTent) {
+			b->damageRisk = 0;
+		}
+		if (b->damageRisk > 200) {
+			collapseBuilding(i, b);
+			recalculateTerrain = 1;
+			continue;
+		}
+		// fire
+		if (randomBuilding == randomGlobal) {
+			if (!b->houseSize) {
+				b->fireRisk += 5;
+			} else if (b->housePopulation <= 0) {
+				b->fireRisk = 0;
+			} else if (b->subtype.houseLevel <= HouseLevel_LargeShack) {
+				b->fireRisk += 10;
+			} else if (b->subtype.houseLevel <= HouseLevel_GrandInsula) {
+				b->fireRisk += 5;
+			} else {
+				b->fireRisk += 2;
+			}
+			if (!Data_Tutorial.tutorial1.fire) {
+				b->fireRisk += 5;
+			}
+			if (Data_Scenario.climate == Climate_Northern) {
+				b->fireRisk = 0;
+			}
+			if (Data_Scenario.climate == Climate_Desert) {
+				b->fireRisk += 3;
+			}
+		}
+		if (b->fireRisk > 100) {
+			fireBuilding(i, b);
+			recalculateTerrain = 1;
+		}
+	}
+	
+	if (recalculateTerrain) {
+		Routing_determineLandCitizen();
+		Routing_determineLandNonCitizen();
 	}
 }

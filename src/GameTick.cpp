@@ -74,7 +74,7 @@ void GameTick_advance()
 		case 39: HouseEvolution_Tick_evolveAndConsumeResources(); break;
 		case 40: Building_clearDeleted(); break;
 		case 43: Security_Tick_updateBurningRuins(); break;
-		case 44: break; // TODO crime fire damage
+		case 44: Security_Tick_checkFireCollapse(); break;
 		case 45: Security_Tick_generateCriminal(); break;
 		case 46: Building_Industry_updateDoubleWheatProduction(); break;
 		case 48: CityInfo_Finance_decayTaxCollectorAccess(); break;

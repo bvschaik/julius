@@ -120,3 +120,9 @@ void WalkerAction_handle()
 void WalkerAction_nobody(int walkerId)
 {
 }
+
+// TODO move to own file
+void WalkerAction_TowerSentry_reroute()
+{
+	// TODO
+}

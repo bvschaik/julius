@@ -209,7 +209,7 @@ extern struct Data_Building {
 	short damageRisk;
 	short fireRisk;
 	short fireDuration; //42
-	char fireProof; //44 cannot catch fire
+	char fireProof; //44 cannot catch fire or collapse
 	char houseGenerationDelay;
 	char houseTaxCoverage;
 	char __unknown_47;

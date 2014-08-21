@@ -9,6 +9,8 @@ int WalkerAction_TradeCaravan_canSell(int walkerId, int buildingId, int empireCi
 
 int WalkerAction_TradeShip_canBuyOrSell(int walkerId);
 
+void WalkerAction_TowerSentry_reroute();
+
 void WalkerAction_Common_handleCorpse(int walkerId);
 void WalkerAction_Common_handleAttack(int walkerId);
 void WalkerAction_Common_setCartOffset(int walkerId, int direction);
