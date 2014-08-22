@@ -34,6 +34,93 @@ static int isAllTerrainInArea(int x, int y, int size, int terrain)
 	return 1;
 }
 
+static int isPavedRoadTile(int gridOffset)
+{
+	if (Data_Grid_desirability[gridOffset] > 4) {
+		return 1;
+	}
+	if (Data_Grid_desirability[gridOffset] > 0 && Data_Grid_terrain[gridOffset] & Terrain_FountainRange) {
+		return 1;
+	}
+	return 0;
+}
+
+static void setRoadWithAqueductGraphic(int gridOffset)
+{
+	int graphicIdAqueduct = GraphicId(ID_Graphic_Aqueduct);
+	int waterOffset;
+	if (Data_Grid_graphicIds[gridOffset] < graphicIdAqueduct + 15) {
+		waterOffset = 0;
+	} else {
+		waterOffset = 15;
+	}
+	const struct TerrainGraphic *graphic = TerrainGraphicsContext_getAqueduct(gridOffset, 0);
+	int groupOffset = graphic->groupOffset;
+	if (!graphic->field12) {
+		if (Data_Grid_terrain[gridOffset - 162] & Terrain_Road) {
+			groupOffset = 3;
+		} else {
+			groupOffset = 2;
+		}
+	}
+	if (isPavedRoadTile(gridOffset)) {
+		Data_Grid_graphicIds[gridOffset] =
+			graphicIdAqueduct + waterOffset + groupOffset - 2;
+		Data_Grid_graphicIds[gridOffset] =
+			graphicIdAqueduct + waterOffset + groupOffset + 6;
+	}
+	Data_Grid_bitfields[gridOffset] &= Bitfield_NoSizes;
+	Data_Grid_edge[gridOffset] |= Edge_LeftmostTile;
+}
+
+static void setRoadGraphic(int gridOffset)
+{
+	if (Data_Grid_bitfields[gridOffset] & Bitfield_PlazaOrEarthquake) {
+		return;
+	}
+	if (Data_Grid_terrain[gridOffset] & Terrain_Aqueduct) {
+		setRoadWithAqueductGraphic(gridOffset);
+		return;
+	}
+	if (isPavedRoadTile(gridOffset)) {
+		const struct TerrainGraphic *graphic = TerrainGraphicsContext_getPavedRoad(gridOffset);
+		Data_Grid_graphicIds[gridOffset] = GraphicId(ID_Graphic_Road) +
+			graphic->groupOffset + graphic->itemOffset;
+	} else {
+		const struct TerrainGraphic *graphic = TerrainGraphicsContext_getDirtRoad(gridOffset);
+		Data_Grid_graphicIds[gridOffset] = GraphicId(ID_Graphic_Road) +
+			graphic->groupOffset + graphic->itemOffset + 49;
+	}
+	Data_Grid_bitfields[gridOffset] &= Bitfield_NoSizes;
+	Data_Grid_edge[gridOffset] |= Edge_LeftmostTile;
+}
+
+static void setTileAqueduct(int gridOffset, int waterOffset)
+{
+	const struct TerrainGraphic *graphic = TerrainGraphicsContext_getAqueduct(gridOffset, 0);
+	int groupOffset = graphic->groupOffset;
+	if (Data_Grid_terrain[gridOffset] & Terrain_Road) {
+		Data_Grid_bitfields[gridOffset] &= Bitfield_NoPlaza;
+		if (!graphic->field12) {
+			if (Data_Grid_terrain[gridOffset - 162] & Terrain_Road) {
+				groupOffset = 3;
+			} else {
+				groupOffset = 2;
+			}
+		}
+		if (isPavedRoadTile(gridOffset)) {
+			groupOffset -= 2;
+		} else {
+			groupOffset += 6;
+		}
+	}
+	Data_Grid_graphicIds[gridOffset] = GraphicId(ID_Graphic_Aqueduct) +
+		waterOffset + groupOffset + graphic->itemOffset;
+	Data_Grid_bitfields[gridOffset] &= Bitfield_NoSizes;
+	Data_Grid_edge[gridOffset] |= Edge_LeftmostTile;
+	Data_Grid_aqueducts[gridOffset] = graphic->field12;
+}
+
 void TerrainGraphics_updateAllRocks()
 {
 	FOREACH_ALL({
@@ -346,7 +433,19 @@ void TerrainGraphics_updateRegionWater(int xMin, int yMin, int xMax, int yMax)
 
 void TerrainGraphics_updateRegionAqueduct(int xMin, int yMin, int xMax, int yMax)
 {
-	// TODO
+	BOUND_REGION();
+	FOREACH_REGION({
+		if (Data_Grid_terrain[gridOffset] & Terrain_Aqueduct &&
+			Data_Grid_aqueducts[gridOffset] <= 15) {
+			int waterOffset = Data_Grid_graphicIds[gridOffset] - GraphicId(ID_Graphic_Aqueduct);
+			if (waterOffset >= 0 && waterOffset < 15) {
+				waterOffset = 0;
+			} else {
+				waterOffset = 15;
+			}
+			setTileAqueduct(gridOffset, waterOffset);
+		}
+	});
 }
 
 void TerrainGraphics_updateRegionEmptyLand(int xMin, int yMin, int xMax, int yMax)
@@ -639,67 +738,6 @@ void TerrainGraphics_setTileEarthquake(int x, int y)
 			Data_Grid_edge[gridOffset] |= Edge_LeftmostTile;
 		}
 	});
-}
-
-static int isPavedRoadTile(int gridOffset)
-{
-	if (Data_Grid_desirability[gridOffset] > 4) {
-		return 1;
-	}
-	if (Data_Grid_desirability[gridOffset] > 0 && Data_Grid_terrain[gridOffset] & Terrain_FountainRange) {
-		return 1;
-	}
-	return 0;
-}
-
-static void setRoadWithAqueductGraphic(int gridOffset)
-{
-	int graphicIdAqueduct = GraphicId(ID_Graphic_Aqueduct);
-	int waterOffset;
-	if (Data_Grid_graphicIds[gridOffset] < graphicIdAqueduct + 15) {
-		waterOffset = 0;
-	} else {
-		waterOffset = 15;
-	}
-	const struct TerrainGraphic *graphic = TerrainGraphicsContext_getAqueduct(gridOffset, 0);
-	int groupOffset = graphic->groupOffset;
-	if (!graphic->field12) {
-		if (Data_Grid_terrain[gridOffset - 162] & Terrain_Road) {
-			groupOffset = 3;
-		} else {
-			groupOffset = 2;
-		}
-	}
-	if (isPavedRoadTile(gridOffset)) {
-		Data_Grid_graphicIds[gridOffset] =
-			graphicIdAqueduct + waterOffset + groupOffset - 2;
-		Data_Grid_graphicIds[gridOffset] =
-			graphicIdAqueduct + waterOffset + groupOffset + 6;
-	}
-	Data_Grid_bitfields[gridOffset] &= Bitfield_NoSizes;
-	Data_Grid_edge[gridOffset] |= Edge_LeftmostTile;
-}
-
-static void setRoadGraphic(int gridOffset)
-{
-	if (Data_Grid_bitfields[gridOffset] & Bitfield_PlazaOrEarthquake) {
-		return;
-	}
-	if (Data_Grid_terrain[gridOffset] & Terrain_Aqueduct) {
-		setRoadWithAqueductGraphic(gridOffset);
-		return;
-	}
-	if (isPavedRoadTile(gridOffset)) {
-		const struct TerrainGraphic *graphic = TerrainGraphicsContext_getPavedRoad(gridOffset);
-		Data_Grid_graphicIds[gridOffset] = GraphicId(ID_Graphic_Road) +
-			graphic->groupOffset + graphic->itemOffset;
-	} else {
-		const struct TerrainGraphic *graphic = TerrainGraphicsContext_getDirtRoad(gridOffset);
-		Data_Grid_graphicIds[gridOffset] = GraphicId(ID_Graphic_Road) +
-			graphic->groupOffset + graphic->itemOffset + 49;
-	}
-	Data_Grid_bitfields[gridOffset] &= Bitfield_NoSizes;
-	Data_Grid_edge[gridOffset] |= Edge_LeftmostTile;
 }
 
 int TerrainGraphics_setTileRoad(int x, int y)
@@ -1038,9 +1076,24 @@ int TerrainGraphics_setTileWall(int x, int y)
 	return tilesSet;
 }
 
-void TerrainGraphics_setTileAqueduct(int x, int y, int flag)
+int TerrainGraphics_setTileAqueduct(int x, int y, int forceNoWater)
 {
-	// TODO
+	int gridOffset = GridOffset(x, y);
+	int tilesSet = 0;
+	if (Data_Grid_aqueducts[gridOffset] <= 15 && !(Data_Grid_terrain[gridOffset] & Terrain_Building)) {
+		tilesSet = 1;
+		int waterOffset;
+		if (Data_Grid_graphicIds[gridOffset] - GraphicId(ID_Graphic_Aqueduct) >= 15) {
+			waterOffset = 15;
+		} else {
+			waterOffset = 0;
+		}
+		if (forceNoWater) {
+			waterOffset = 15;
+		}
+		setTileAqueduct(gridOffset, waterOffset);
+	}
+	return tilesSet;
 }
 
 int TerrainGraphics_setTileAqueductTerrain(int x, int y)

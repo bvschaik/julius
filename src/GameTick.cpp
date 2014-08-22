@@ -42,7 +42,7 @@ void GameTick_advance()
 		case 1: CityInfo_Gods_calculateMoods(1); break;
 		case 2: Sound_Music_update(); break;
 		case 3: UI_Sidebar_requestMinimapRefresh(); break;
-		case 4: break; // TODO caesar invasion
+		case 4: Event_Caesar_update(); break;
 		case 5: Formation_Tick_updateAll(0); break;
 		case 6: Natives_checkLand(); break;
 		case 7: UtilityManagement_determineRoadNetworks(); break;

@@ -2,6 +2,7 @@
 
 #include "Building.h"
 #include "Calc.h"
+#include "CityInfo.h"
 #include "Formation.h"
 #include "PlayerMessage.h"
 #include "Random.h"
@@ -407,4 +408,155 @@ static int startInvasion(int enemyType, int amount, int invasionPoint, int attac
 		}
 	}
 	return gridOffset;
+}
+
+static void caesarInvasionContinue()
+{
+	for (int i = 1; i < MAX_FORMATIONS; i++) {
+		if (Data_Formations[i].inUse == 1 && Data_Formations[i].walkerType == Walker_EnemyCaesarLegionary) {
+			Data_Formations[i].__unknown46 = 20;
+		}
+	}
+}
+
+static void caesarInvasionRetreat()
+{
+	for (int i = 1; i < MAX_FORMATIONS; i++) {
+		if (Data_Formations[i].inUse == 1 && Data_Formations[i].walkerType == Walker_EnemyCaesarLegionary) {
+			Data_Formations[i].monthsLowMorale = 1;
+		}
+	}
+	if (!Data_CityInfo.caesarInvasionRetreatMessageShown) {
+		Data_CityInfo.caesarInvasionRetreatMessageShown = 1;
+		PlayerMessage_post(1, 21, 0, 0);
+	}
+}
+
+static void updateDebtState()
+{
+	if (Data_CityInfo.treasury >= 0) {
+		Data_CityInfo.monthsInDebt = -1;
+		return;
+	}
+	if (Data_CityInfo.debtState == 0) {
+		// provide bailout
+		int rescueLoan = Calc_adjustWithPercentage(Data_Scenario.rescueLoan,
+			Data_Model_Difficulty.moneyPercentage[Data_Settings.difficulty]);
+		Data_CityInfo.treasury += rescueLoan;
+		Data_CityInfo.financeDonatedThisYear += rescueLoan;
+		
+		CityInfo_Finance_calculateTotals();
+		
+		Data_CityInfo.debtState = 1;
+		Data_CityInfo.monthsInDebt = 0;
+		PlayerMessage_post(1, 16, 0, 0);
+		CityInfo_Ratings_reduceProsperityAfterBailout();
+	} else if (Data_CityInfo.debtState == 1) {
+		Data_CityInfo.debtState = 2;
+		Data_CityInfo.monthsInDebt = 0;
+		PlayerMessage_post(1, 17, 0, 0);
+		CityInfo_Ratings_changeFavor(-5);
+	} else if (Data_CityInfo.debtState == 2) {
+		if (Data_CityInfo.monthsInDebt == -1) {
+			PlayerMessage_post(1, 17, 0, 0);
+			Data_CityInfo.monthsInDebt = 0;
+		}
+		if (Data_CityInfo_Extra.gameTimeDay) {
+			Data_CityInfo.monthsInDebt++;
+		}
+		if (Data_CityInfo.monthsInDebt >= 12) {
+			Data_CityInfo.debtState = 3;
+			Data_CityInfo.monthsInDebt = 0;
+			if (!Data_CityInfo.numImperialSoldiersInCity) {
+				PlayerMessage_post(1, 18, 0, 0);
+				CityInfo_Ratings_changeFavor(-10);
+			}
+		}
+	} else if (Data_CityInfo.debtState == 3) {
+		if (Data_CityInfo.monthsInDebt == -1) {
+			PlayerMessage_post(1, 18, 0, 0);
+			Data_CityInfo.monthsInDebt = 0;
+		}
+		if (Data_CityInfo_Extra.gameTimeDay) {
+			Data_CityInfo.monthsInDebt++;
+		}
+		if (Data_CityInfo.monthsInDebt >= 12) {
+			Data_CityInfo.debtState = 4;
+			Data_CityInfo.monthsInDebt = 0;
+			if (!Data_CityInfo.numImperialSoldiersInCity) {
+				CityInfo_Ratings_setMaxFavor(10);
+			}
+		}
+	}
+}
+
+static void updateCaesarInvasion()
+{
+	if (Data_CityInfo.numImperialSoldiersInCity) {
+		// caesar invasion in progress
+		Data_CityInfo.caesarInvasionDurationDayCountdown--;
+		if (Data_CityInfo.ratingFavor >= 35 && Data_CityInfo.caesarInvasionDurationDayCountdown < 176) {
+			caesarInvasionRetreat();
+		} else if (Data_CityInfo.ratingFavor >= 22) {
+			if (Data_CityInfo.caesarInvasionDurationDayCountdown > 0) {
+				caesarInvasionContinue();
+			} else if (Data_CityInfo.caesarInvasionDurationDayCountdown == 0) {
+				PlayerMessage_post(1, 20, 0, 0); // a year has passed (11 months), siege goes on
+			}
+		}
+	} else if (Data_CityInfo.caesarInvasionSoldiersDied && Data_CityInfo.caesarInvasionSoldiersDied >= Data_CityInfo.caesarInvasionSize) {
+		// player defeated caesar army
+		Data_CityInfo.caesarInvasionSize = 0;
+		Data_CityInfo.caesarInvasionSoldiersDied = 0;
+		if (Data_CityInfo.ratingFavor < 35) {
+			CityInfo_Ratings_changeFavor(10);
+			if (Data_CityInfo.caesarInvasionCount < 2) {
+				PlayerMessage_post(1, 106, 0, 0);
+			} else if (Data_CityInfo.caesarInvasionCount < 3) {
+				PlayerMessage_post(1, 107, 0, 0);
+			} else {
+				PlayerMessage_post(1, 108, 0, 0);
+			}
+		}
+	} else if (Data_CityInfo.caesarInvasionDaysUntilInvasion <= 0) {
+		if (Data_CityInfo.ratingFavor <= 10) {
+			// warn player that caesar is angry and will invade in a year
+			Data_CityInfo.caesarInvasionWarningsGiven++;
+			Data_CityInfo.caesarInvasionDaysUntilInvasion = 192;
+			if (Data_CityInfo.caesarInvasionWarningsGiven <= 1) {
+				PlayerMessage_post(1, 19, 0, 0);
+			}
+		}
+	} else {
+		Data_CityInfo.caesarInvasionDaysUntilInvasion--;
+		if (Data_CityInfo.caesarInvasionDaysUntilInvasion == 0) {
+			// invade!
+			int size;
+			if (Data_CityInfo.caesarInvasionCount == 0) {
+				size = 32;
+			} else if (Data_CityInfo.caesarInvasionCount == 1) {
+				size = 64;
+			} else if (Data_CityInfo.caesarInvasionCount == 2) {
+				size = 96;
+			} else {
+				size = 144;
+			}
+			int invasionId = startInvasion(
+				EnemyType_Caesar, size, 0, AttackType_2_Caesar, 24);
+			if (invasionId > 0) {
+				Data_CityInfo.caesarInvasionCount++;
+				Data_CityInfo.caesarInvasionDurationDayCountdown = 192;
+				Data_CityInfo.caesarInvasionRetreatMessageShown = 0;
+				PlayerMessage_post(1, 24, Data_Event.lastInternalInvasionId, invasionId);
+				Data_CityInfo.caesarInvasionSize = size;
+				Data_CityInfo.caesarInvasionSoldiersDied = 0;
+			}
+		}
+	}
+}
+
+void Event_Caesar_update()
+{
+	updateDebtState();
+	updateCaesarInvasion();
 }

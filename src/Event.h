@@ -16,6 +16,8 @@ int Event_startInvasionLocalUprisingFromMars();
 void Event_startInvasionFromCheat();
 int Event_existsUpcomingInvasion();
 
+void Event_Caesar_update();
+
 void Event_initDistantBattleCity();
 void Event_calculateDistantBattleRomanTravelTime();
 void Event_calculateDistantBattleEnemyTravelTime();

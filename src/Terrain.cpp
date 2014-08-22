@@ -40,12 +40,12 @@ int ringIndex[6][7];
 #define RING_SIZE(s,d) (4 * ((s) - 1) + 8 * (d))
 
 #define FOR_XY_ADJACENT(block) \
-	int baseOffset = GridOffset(x, y);\
+	{int baseOffset = GridOffset(x, y);\
 	for (int i = 0; i < 20; i++) {\
 		if (!tilesAroundBuildingGridOffsets[size][i]) break;\
 		int gridOffset = baseOffset + tilesAroundBuildingGridOffsets[size][i];\
 		block;\
-	}
+	}}
 
 #define STORE_XY_ADJACENT(xTile,yTile) \
 	*(xTile) = x + (tilesAroundBuildingGridOffsets[size][i] + 172) % 162 - 10;\
@@ -767,14 +767,94 @@ static int getReachableRoadWithinRadius(int x, int y, int size, int radius, int 
 	return 0;
 }
 
-int Terrain_getRoadNetworkAccessTileForBuilding(int x, int y, int size, int *xTile, int *yTile)
+// NOTE: return value not 0 = no tile / gridOffset + 1; but: -1 = no tile / gridOffset
+int Terrain_getRoadToLargestRoadNetwork(int x, int y, int size, int *xTile, int *yTile)
 {
-	// TODO
+	int minIndex = 12;
+	int minGridOffset = 0;
+	FOR_XY_ADJACENT({
+		if (Data_Grid_terrain[gridOffset] & Terrain_Road && Data_Grid_routingDistance[gridOffset] > 0) {
+			int index = 11;
+			for (int n = 0; n < 10; n++) {
+				if (Data_CityInfo.largestRoadNetworks[n].id == Data_Grid_roadNetworks[gridOffset]) {
+					index = n;
+					break;
+				}
+			}
+			if (index < minIndex) {
+				minIndex = index;
+				minGridOffset = gridOffset;
+			}
+		}
+	});
+	if (minIndex < 12) {
+		*xTile = GridOffsetToX(minGridOffset);
+		*yTile = GridOffsetToY(minGridOffset);
+		return minGridOffset;
+	}
+	int minDist = 100000;
+	minGridOffset = -1;
+	FOR_XY_ADJACENT({
+		int dist = Data_Grid_routingDistance[gridOffset];
+		if (dist > 0 && dist < minDist) {
+			minDist = dist;
+			minGridOffset = gridOffset;
+		}
+	});
+	if (minGridOffset >= 0) {
+		*xTile = GridOffsetToX(minGridOffset);
+		*yTile = GridOffsetToY(minGridOffset);
+		return minGridOffset;
+	}
 	return -1;
 }
 
-int Terrain_getRoadNetworkAccessTileForHippodrome(int x, int y, int size, int *xTile, int *yTile)
+// NOTE: return value not 0 = no tile / gridOffset + 1; but: -1 = no tile / gridOffset
+int Terrain_getRoadToLargestRoadNetworkHippodrome(int x, int y, int size, int *xTile, int *yTile)
 {
+	int xBase = x;
+	int minIndex = 12;
+	int minGridOffset = 0;
+	for (int xOffset = 0; xOffset <= 10; xOffset += 5) {
+		x = xBase + xOffset;
+		FOR_XY_ADJACENT({
+			if (Data_Grid_terrain[gridOffset] & Terrain_Road && Data_Grid_routingDistance[gridOffset] > 0) {
+				int index = 11;
+				for (int n = 0; n < 10; n++) {
+					if (Data_CityInfo.largestRoadNetworks[n].id == Data_Grid_roadNetworks[gridOffset]) {
+						index = n;
+						break;
+					}
+				}
+				if (index < minIndex) {
+					minIndex = index;
+					minGridOffset = gridOffset;
+				}
+			}
+		});
+	}
+	if (minIndex < 12) {
+		*xTile = GridOffsetToX(minGridOffset);
+		*yTile = GridOffsetToY(minGridOffset);
+		return minGridOffset;
+	}
+	int minDist = 100000;
+	minGridOffset = -1;
+	for (int xOffset = 0; xOffset <= 10; xOffset += 5) {
+		x = xBase + xOffset;
+		FOR_XY_ADJACENT({
+			int dist = Data_Grid_routingDistance[gridOffset];
+			if (dist > 0 && dist < minDist) {
+				minDist = dist;
+				minGridOffset = gridOffset;
+			}
+		});
+	}
+	if (minGridOffset >= 0) {
+		*xTile = GridOffsetToX(minGridOffset);
+		*yTile = GridOffsetToY(minGridOffset);
+		return minGridOffset;
+	}
 	return -1;
 }
 

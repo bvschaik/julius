@@ -26,7 +26,7 @@ void TerrainGraphics_setTileWater(int x, int y);
 void TerrainGraphics_setTileEarthquake(int x, int y);
 int TerrainGraphics_setTileRoad(int x, int y);
 int TerrainGraphics_setTileWall(int x, int y);
-void TerrainGraphics_setTileAqueduct(int x, int y, int flag);
+int TerrainGraphics_setTileAqueduct(int x, int y, int forceNoWater);
 int TerrainGraphics_setTileAqueductTerrain(int x, int y);
 
 enum {

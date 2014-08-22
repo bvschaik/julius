@@ -619,3 +619,64 @@ void Walker_playDieSound(int walkerType)
 		}
 	}
 }
+
+#define PLAY_HIT_SOUND(t, ch) \
+	Data_CityInfo.t--;\
+	if (Data_CityInfo.t <= 0) {\
+		Data_CityInfo.t = 8;\
+		Sound_Effects_playChannel(ch);\
+	}
+
+void Walker_playHitSound(int walkerType)
+{
+	switch (walkerType) {
+		case Walker_FortLegionary:
+		case Walker_EnemyCaesarLegionary:
+			PLAY_HIT_SOUND(soundHitSoldier, SoundChannel_Sword);
+			break;
+		case Walker_FortMounted:
+		case Walker_Enemy45:
+		case Walker_Enemy48_Horse:
+		case Walker_Enemy50:
+		case Walker_Enemy52_Horse:
+		case Walker_Enemy54_Gladiator:
+			PLAY_HIT_SOUND(soundHitSoldier, SoundChannel_SwordSwing);
+			break;
+		case Walker_FortJavelin:
+			PLAY_HIT_SOUND(soundHitSoldier, SoundChannel_SwordLight);
+			break;
+		case Walker_Enemy43:
+		case Walker_Enemy51:
+			PLAY_HIT_SOUND(soundHitSpear, SoundChannel_Spear);
+			break;
+		case Walker_Enemy44:
+		case Walker_Enemy49:
+			PLAY_HIT_SOUND(soundHitClub, SoundChannel_Club);
+			break;
+		case Walker_Enemy53:
+			PLAY_HIT_SOUND(soundHitAxe, SoundChannel_Axe);
+			break;
+		case Walker_Enemy46_Camel:
+			Sound_Effects_playChannel(SoundChannel_Camel);
+			break;
+		case Walker_Enemy47_Elephant:
+			if (Data_CityInfo.soundHitElephant == 1) {
+				Sound_Effects_playChannel(SoundChannel_ElephantHit);
+				Data_CityInfo.soundHitElephant = 0;
+			} else {
+				Sound_Effects_playChannel(SoundChannel_Elephant);
+				Data_CityInfo.soundHitElephant = 1;
+			}
+			break;
+		case Walker_LionTamer:
+			Sound_Effects_playChannel(SoundChannel_LionAttack);
+			break;
+		case Walker_Wolf:
+			Data_CityInfo.soundHitWolf--;
+			if (Data_CityInfo.soundHitWolf <= 0) {\
+				Data_CityInfo.soundHitWolf = 4;\
+				Sound_Effects_playChannel(SoundChannel_WolfAttack);\
+			}
+			break;
+	}
+}

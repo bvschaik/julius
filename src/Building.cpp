@@ -706,7 +706,7 @@ void Building_GameTick_checkAccessToRome()
 				Data_CityInfo.buildingTradeCenterBuildingId = i;
 			}
 			b->distanceFromEntry = 0;
-			int roadGridOffset = Terrain_getRoadNetworkAccessTileForBuilding(b->x, b->y, 3, &xRoad, &yRoad);
+			int roadGridOffset = Terrain_getRoadToLargestRoadNetwork(b->x, b->y, 3, &xRoad, &yRoad);
 			if (roadGridOffset >= 0) {
 				b->roadNetworkId = Data_Grid_roadNetworks[roadGridOffset];
 				b->distanceFromEntry = Data_Grid_routingDistance[roadGridOffset];
@@ -722,7 +722,7 @@ void Building_GameTick_checkAccessToRome()
 			b->roadAccessY = main->roadAccessY;
 		} else if (b->type == Building_Hippodrome) {
 			b->distanceFromEntry = 0;
-			int roadGridOffset = Terrain_getRoadNetworkAccessTileForHippodrome(b->x, b->y, 3, &xRoad, &yRoad);
+			int roadGridOffset = Terrain_getRoadToLargestRoadNetworkHippodrome(b->x, b->y, 3, &xRoad, &yRoad);
 			if (roadGridOffset >= 0) {
 				b->roadNetworkId = Data_Grid_roadNetworks[roadGridOffset];
 				b->distanceFromEntry = Data_Grid_routingDistance[roadGridOffset];
@@ -731,7 +731,7 @@ void Building_GameTick_checkAccessToRome()
 			}
 		} else { // other building
 			b->distanceFromEntry = 0;
-			int roadGridOffset = Terrain_getRoadNetworkAccessTileForBuilding(b->x, b->y, 3, &xRoad, &yRoad);
+			int roadGridOffset = Terrain_getRoadToLargestRoadNetwork(b->x, b->y, 3, &xRoad, &yRoad);
 			if (roadGridOffset >= 0) {
 				b->roadNetworkId = Data_Grid_roadNetworks[roadGridOffset];
 				b->distanceFromEntry = Data_Grid_routingDistance[roadGridOffset];

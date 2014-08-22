@@ -360,6 +360,10 @@ enum {
 };
 
 enum {
+	AttackType_2_Caesar
+};
+
+enum {
 	InvasionType_LocalUprising = 1,
 	InvasionType_EnemyArmy = 2,
 	InvasionType_Caesar = 3,
