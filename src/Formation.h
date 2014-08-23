@@ -9,6 +9,8 @@ int Formation_createLegion(int buildingId);
 
 void Formation_deleteFortAndBanner(int formationId);
 
+void Formation_changeMorale(int formationId, int amount);
+
 void Formation_setMaxSoldierPerLegion();
 
 int Formation_getNumLegions();

@@ -420,6 +420,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\FormationUpdate.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\GameFile.cpp"
 				>
 				<FileConfiguration
@@ -461,6 +465,10 @@
 			</File>
 			<File
 				RelativePath=".\src\UI\Intermezzo.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\KeyboardHotkey.cpp"
 				>
 			</File>
 			<File
@@ -906,11 +914,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Formation.h"
+				RelativePath=".\src\Data\Formation.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Formation.h"
+				RelativePath=".\src\Formation.h"
 				>
 			</File>
 			<File
@@ -954,6 +962,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\KeyboardHotkey.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\KeyboardInput.h"
 				>
 			</File>
@@ -962,11 +974,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Language.h"
+				RelativePath=".\src\Language.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Language.h"
+				RelativePath=".\src\Data\Language.h"
 				>
 			</File>
 			<File
@@ -1010,11 +1022,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Random.h"
+				RelativePath=".\src\data\Random.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\data\Random.h"
+				RelativePath=".\src\Random.h"
 				>
 			</File>
 			<File
@@ -1066,11 +1078,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Sound.h"
+				RelativePath=".\src\Data\Sound.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Sound.h"
+				RelativePath=".\src\Sound.h"
 				>
 			</File>
 			<File
@@ -1122,11 +1134,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\data\Tutorial.h"
+				RelativePath=".\src\Tutorial.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Tutorial.h"
+				RelativePath=".\src\data\Tutorial.h"
 				>
 			</File>
 			<File

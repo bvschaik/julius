@@ -28,6 +28,7 @@ void UI_SoundOptions_handleMouse();
 void UI_SpeedOptions_init();
 void UI_SpeedOptions_drawForeground();
 void UI_SpeedOptions_handleMouse();
+void UI_SpeedOptions_changeGameSpeed(int goDown);
 
 void UI_Advisors_setAdvisor(int advisor);
 void UI_Advisors_init();
@@ -67,6 +68,7 @@ void UI_HoldFestivalDialog_handleMouse();
 void UI_City_drawBackground();
 void UI_City_drawForeground();
 void UI_City_drawCity();
+void UI_City_drawPausedAndTimeLeft();
 void UI_City_handleMouse();
 
 void UI_Empire_drawBackground();

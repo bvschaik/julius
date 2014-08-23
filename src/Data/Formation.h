@@ -34,7 +34,7 @@ struct Data_Formation {
 	unsigned char y;
 	unsigned char destinationX;
 	unsigned char destinationY;
-	short __unknown36;
+	short destinationBuildingId;
 	short standardWalkerId;
 	char isLegion;
 	char __padding;
@@ -84,6 +84,8 @@ extern struct Data_Formation_Extra {
 	int numEnemySoldierStrength;
 	int numLegionFormations;
 	int numLegionSoldierStrength;
+
+	int daysSinceRomanSoldierConcentration
 } Data_Formation_Extra;
 
 #endif

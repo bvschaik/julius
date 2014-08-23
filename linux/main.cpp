@@ -23,6 +23,7 @@
 #include "../src/CityView.h"
 #include "../src/Data/AllData.h"
 #include "../src/KeyboardInput.h"
+#include "../src/KeyboardHotkey.h"
 
 void assert(const char *msg, int expected, int actual)
 {
@@ -114,6 +115,7 @@ void handleKey(SDL_KeyboardEvent *event)
 		default:
 			if (event->keysym.unicode) {
 				KeyboardInput_character(event->keysym.unicode);
+				KeyboardHotkey_character(event->keysym.unicode);
 			}
 			break;
 	}

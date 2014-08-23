@@ -1,5 +1,6 @@
 #include "CityBuildings_private.h"
 
+#include "../Routing.h"
 #include "../Terrain.h"
 #include "../TerrainBridge.h"
 #include "../Time.h"
@@ -954,7 +955,36 @@ static void drawBuildingGhostDock()
 
 static void drawBuildingGhostRoad()
 {
-	// TODO
+	int tileObstructed = 0;
+	int xOffset = Data_CityView.selectedTile.xOffsetInPixels;
+	int yOffset = Data_CityView.selectedTile.yOffsetInPixels;
+	int gridOffset = Data_CityView.selectedTile.gridOffset;
+	int graphicId;
+	if (Data_Grid_terrain[gridOffset] & Terrain_Aqueduct) {
+		graphicId = GraphicId(ID_Graphic_Aqueduct);
+		if (Routing_canPlaceRoadUnderAqueduct(gridOffset)) {
+			graphicId += Routing_getAqueductGraphicOffsetWithRoad(gridOffset);
+		} else {
+			tileObstructed = 1;
+		}
+	} else if (Data_Grid_terrain[gridOffset] & Terrain_NotClear) {
+		tileObstructed = 1;
+	} else {
+		graphicId = GraphicId(ID_Graphic_Road);
+		if (!Terrain_hasTerrainTypeSameXAdjacentTo(gridOffset, Terrain_Road) &&
+			Terrain_hasTerrainTypeSameYAdjacentTo(gridOffset, Terrain_Road)) {
+			graphicId++;
+		}
+	}
+	if (Data_CityInfo.treasury <= MIN_TREASURY) {
+		tileObstructed = 1;
+	}
+	if (tileObstructed) {
+		drawFlatTile(xOffset, yOffset, Color_MaskRed);
+	} else {
+		Graphics_drawIsometricFootprint(graphicId, xOffset, yOffset, Color_MaskGreen);
+		Graphics_drawIsometricTop(graphicId, xOffset, yOffset, Color_MaskGreen);
+	}
 }
 
 static void drawFlatTile(int xOffset, int yOffset, Color mask)

@@ -22,7 +22,7 @@ int Routing_canTravelThroughEverythingNonCitizen(int xSrc, int ySrc, int xDst, i
 int Routing_getPath(int numDirections, int routingPathId, int xSrc, int ySrc, int xDst, int yDst);
 
 int Routing_canPlaceRoadUnderAqueduct(int gridOffset);
-int Routing_getAqueductGraphicIdWithRoad(int gridOffset);
+int Routing_getAqueductGraphicOffsetWithRoad(int gridOffset);
 
 int Routing_getDistanceForBuildingRoadOrAqueduct(int x, int y, int isAqueduct);
 int Routing_getDistanceForBuildingWall(int x, int y);

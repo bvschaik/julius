@@ -19,10 +19,6 @@
 
 #include <string.h>
 
-static void changeMorale(int formationId, int amount);
-static void changeMoraleOfAllLegions(int amount);
-static void changeMoraleOfAllEnemies(int amount);
-
 void Formation_clearList()
 {
 	for (int i = 0; i < MAX_FORMATIONS; i++) {
@@ -207,7 +203,7 @@ void Formation_legionMoveTo(int formationId, int x, int y)
 			continue;
 		}
 		if (f->monthsLowMorale == 1) {
-			changeMorale(formationId, 10); // yay we can move?
+			Formation_changeMorale(formationId, 10); // yay we can move?
 		}
 		w->alternativeLocationIndex = 0;
 		w->actionState = WalkerActionState_83_SoldierGoingToStandard;
@@ -240,7 +236,7 @@ void Formation_legionReturnHome(int formationId)
 			continue;
 		}
 		if (f->monthsLowMorale == 1) {
-			changeMorale(formationId, 10); // yay we can move?
+			Formation_changeMorale(formationId, 10); // yay we can move?
 		}
 		w->actionState = WalkerActionState_81_SoldierGoingToFort;
 		WalkerRoute_remove(walkerId);
@@ -440,10 +436,10 @@ void Formation_updateAfterDeath(int formationId)
 	} else {
 		morale = -20;
 	}
-	changeMorale(formationId, morale);
+	Formation_changeMorale(formationId, morale);
 }
 
-static void changeMorale(int formationId, int amount)
+void Formation_changeMorale(int formationId, int amount)
 {
 	Data_Formation *f = &Data_Formations[formationId];
 	int maxMorale;
@@ -471,28 +467,6 @@ static void changeMorale(int formationId, int amount)
 		}
 	}
 	BOUND(f->morale, 0, maxMorale);
-}
-
-static void changeMoraleOfAllLegions(int amount)
-{
-	for (int i = 1; i < MAX_FORMATIONS; i++) {
-		if (Data_Formations[i].inUse == 1 && !Data_Formations[i].isHerd) {
-			if (Data_Formations[i].isLegion) {
-				changeMorale(i, amount);
-			}
-		}
-	}
-}
-
-static void changeMoraleOfAllEnemies(int amount)
-{
-	for (int i = 1; i < MAX_FORMATIONS; i++) {
-		if (Data_Formations[i].inUse == 1 && !Data_Formations[i].isHerd) {
-			if (!Data_Formations[i].isLegion) {
-				changeMorale(i, amount);
-			}
-		}
-	}
 }
 
 int Formation_getInvasionGridOffset(int invasionSeq)
@@ -568,7 +542,7 @@ void Formation_legionKillSoldiersInDistantBattle(int killPercentage)
 			continue;
 		}
 		struct Data_Formation *f = &Data_Formations[i];
-		changeMorale(i, -75);
+		Formation_changeMorale(i, -75);
 
 		int numSoldiersTotal = 0;
 		for (int w = 0; w < f->numWalkers; w++) {
@@ -622,7 +596,7 @@ void Formation_Tick_updateRestMorale()
 				f->monthsFromHome = 0;
 				f->monthsVeryLowMorale = 0;
 				f->monthsLowMorale = 0;
-				changeMorale(i, 5);
+				Formation_changeMorale(i, 5);
 				if (f->layout == FormationLayout_MopUp) {
 					f->layout = f->layoutBeforeMopUp;
 				}
@@ -632,133 +606,11 @@ void Formation_Tick_updateRestMorale()
 					if (f->monthsFromHome > 100) {
 						f->monthsFromHome = 100;
 					}
-					changeMorale(i, -5);
+					Formation_changeMorale(i, -5);
 				}
 			}
 		} else {
-			changeMorale(i, 0);
+			Formation_changeMorale(i, 0);
 		}
 	}
-}
-
-static void tickDecreaseLegionDamage()
-{
-	for (int i = 1; i < MAX_WALKERS; i++) {
-		struct Data_Walker *w = &Data_Walkers[i];
-		if (w->state == WalkerState_Alive && WalkerIsLegion(w->type)) {
-			if (w->actionState == WalkerActionState_80_SoldierAtRest) {
-				if (w->damage) {
-					w->damage--;
-				}
-			}
-		}
-	}
-}
-
-static void tickUpdateMorale()
-{
-	for (int i = 1; i < MAX_FORMATIONS; i++) {
-		struct Data_Formation *f = &Data_Formations[i];
-		if (f->inUse != 1 || f->isHerd) {
-			continue;
-		}
-		if (f->isLegion) {
-			if (!f->isAtFort && !f->inDistantBattle) {
-				if (f->morale <= 20 && !f->monthsLowMorale && !f->monthsVeryLowMorale) {
-					changeMoraleOfAllLegions(-10);
-					changeMoraleOfAllEnemies(10);
-				}
-				if (f->morale <= 10) {
-					f->monthsVeryLowMorale++;
-				} else if (f->morale <= 20) {
-					f->monthsLowMorale++;
-				}
-			}
-		} else { // enemy
-			if (f->morale <= 20 && !f->monthsLowMorale && !f->monthsVeryLowMorale) {
-				changeMoraleOfAllLegions(10);
-				changeMoraleOfAllEnemies(-10);
-			}
-			if (f->morale <= 10) {
-				f->monthsVeryLowMorale++;
-			} else if (f->morale <= 20) {
-				f->monthsLowMorale++;
-			}
-		}
-	}
-}
-
-static void tickUpdateDirection()
-{
-	for (int i = 1; i < MAX_FORMATIONS; i++) {
-		struct Data_Formation *f = &Data_Formations[i];
-		if (f->inUse != 1 || f->isHerd) {
-			continue;
-		}
-		if (f->__unknown66) {
-			f->__unknown66--;
-		} else if (f->missileFired) {
-			f->direction = Data_Walkers[f->walkerIds[0]].direction;
-		} else if (f->layout == FormationLayout_DoubleLine1 || f->layout == FormationLayout_SingleLine1) {
-			if (f->yHome < f->prevYHome) {
-				f->direction = 0;
-			} else if (f->yHome > f->prevYHome) {
-				f->direction = 4;
-			}
-		} else if (f->layout == FormationLayout_DoubleLine2 || f->layout == FormationLayout_SingleLine2) {
-			if (f->xHome < f->prevXHome) {
-				f->direction = 6;
-			} else if (f->xHome > f->prevXHome) {
-				f->direction = 2;
-			}
-		} else if (f->layout == FormationLayout_Tortoise || f->layout == FormationLayout_Column) {
-			int dx = (f->xHome < f->prevXHome) ? (f->prevXHome - f->xHome) : (f->xHome - f->prevXHome);
-			int dy = (f->yHome < f->prevYHome) ? (f->prevYHome - f->yHome) : (f->yHome - f->prevYHome);
-			if (dx > dy) {
-				if (f->xHome < f->prevXHome) {
-					f->direction = 6;
-				} else if (f->xHome > f->prevXHome) {
-					f->direction = 2;
-				}
-			} else {
-				if (f->yHome < f->prevYHome) {
-					f->direction = 0;
-				} else if (f->yHome > f->prevYHome) {
-					f->direction = 4;
-				}
-			}
-		}
-		f->prevXHome = f->xHome;
-		f->prevYHome = f->yHome;
-	}
-}
-
-static void tickUpdateLegions()
-{
-	// TODO
-}
-
-static void tickUpdateEnemies()
-{
-	// TODO
-}
-
-static void tickUpdateHerds()
-{
-	// TODO
-}
-
-void Formation_Tick_updateAll(int secondTime)
-{
-	Formation_calculateLegionTotals();
-	Formation_calculateWalkers();
-	tickUpdateDirection();
-	tickDecreaseLegionDamage();
-	if (!secondTime) {
-		tickUpdateMorale();
-	}
-	Formation_setMaxSoldierPerLegion();
-	tickUpdateLegions();
-	tickUpdateEnemies();
-	tickUpdateHerds();
 }

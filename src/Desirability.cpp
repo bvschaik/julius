@@ -1,5 +1,6 @@
 #include "Desirability.h"
 
+#include "Grid.h"
 #include "Terrain.h"
 
 #include "Data/Building.h"
@@ -7,14 +8,12 @@
 #include "Data/Model.h"
 #include "Data/Settings.h"
 
-#include <string.h>
-
 static void updateBuildings();
 static void updateTerrain();
 
 void Desirability_update()
 {
-	memset(Data_Grid_desirability, 0, GRID_SIZE * GRID_SIZE);
+	Grid_clearByteGrid(Data_Grid_desirability);
 	updateBuildings();
 	updateTerrain();
 }

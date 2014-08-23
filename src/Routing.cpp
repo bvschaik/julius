@@ -1,6 +1,7 @@
 #include "Routing.h"
 
 #include "Calc.h"
+#include "Grid.h"
 #include "TerrainGraphics.h"
 
 #include "Data/Building.h"
@@ -33,7 +34,7 @@ static char tmpGrid[GRID_SIZE * GRID_SIZE];
 	if (queue.tail > MAX_QUEUE) queue.tail = 0;
 
 #define ROUTE_QUEUE(source, dest, block) \
-	memset(Data_Grid_routingDistance, 0, GRID_SIZE * GRID_SIZE * 2);\
+	Grid_clearShortGrid(Data_Grid_routingDistance);\
 	Data_Grid_routingDistance[source] = 1;\
 	queue.items[0] = source;\
 	queue.head = 0;\
@@ -62,7 +63,7 @@ static char tmpGrid[GRID_SIZE * GRID_SIZE];
 	}
 
 #define ROUTE_QUEUE_MAX(source, dest, max, block) \
-	memset(Data_Grid_routingDistance, 0, GRID_SIZE * GRID_SIZE * 2);\
+	Grid_clearShortGrid(Data_Grid_routingDistance);\
 	Data_Grid_routingDistance[source] = 1;\
 	queue.items[0] = source;\
 	queue.head = 0;\
@@ -647,7 +648,7 @@ int Routing_canPlaceRoadUnderAqueduct(int gridOffset)
 	return 1;
 }
 
-int Routing_getAqueductGraphicIdWithRoad(int gridOffset)
+int Routing_getAqueductGraphicOffsetWithRoad(int gridOffset)
 {
 	int graphic = Data_Grid_graphicIds[gridOffset] - GraphicId(ID_Graphic_Aqueduct);
 	switch (graphic) {

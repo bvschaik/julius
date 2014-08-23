@@ -58,10 +58,10 @@ EXTERN Int8_Grid(Data_Grid_routingLandCitizen);
 EXTERN Int8_Grid(Data_Grid_routingLandNonCitizen);
 EXTERN Int8_Grid(Data_Grid_routingWater);
 EXTERN Int8_Grid(Data_Grid_routingWalls);
-EXTERN Int16_Grid(Data_Grid_routingDistance);
+EXTERN UInt16_Grid(Data_Grid_routingDistance);
 
-EXTERN Int8_Grid(Data_Grid_romanSoldierConcentration);
-EXTERN Int8_Grid(Data_Grid_roadNetworks);
+EXTERN UInt8_Grid(Data_Grid_romanSoldierConcentration);
+EXTERN UInt8_Grid(Data_Grid_roadNetworks);
 //EXTERN Int8_Grid(Data_Grid_byte_8ADF60);
 
 // undo

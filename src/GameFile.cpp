@@ -264,7 +264,7 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{0, &Data_Formation_Extra.numEnemySoldierStrength, 4},
 	{0, &Data_Formation_Extra.numLegionFormations, 4},
 	{0, &Data_Formation_Extra.numLegionSoldierStrength, 4},
-	{0, &tmp, 4}, //{0, &dword_863318, 4}, formation related
+	{0, &Data_Formation_Extra.daysSinceRomanSoldierConcentration, 4},
 	{0, &Data_Building_Storages, 6400},
 	{0, &Data_CityInfo_Buildings.actorColony.total, 4},
 	{0, &Data_CityInfo_Buildings.actorColony.working, 4},

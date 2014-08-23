@@ -10,6 +10,7 @@
 #include "FileSystem.h"
 #include "Formation.h"
 #include "GameFile.h"
+#include "Grid.h"
 #include "Loader.h"
 #include "Natives.h"
 #include "PlayerMessage.h"
@@ -39,7 +40,6 @@
 #include "Data/Tutorial.h"
 
 #include <string.h>
-#include <stdio.h> // debug
 
 static int mapFileExists(const char *scenarioName);
 static void clearBookmarks();
@@ -327,25 +327,23 @@ static void readScenarioAndInitGraphics()
 
 static void initGrids()
 {
-	int lenByte = GRID_SIZE * GRID_SIZE;
-	int lenShort = 2 * lenByte;
+	Grid_clearShortGrid(Data_Grid_graphicIds);
+	Grid_clearUByteGrid(Data_Grid_edge);
+	Grid_clearShortGrid(Data_Grid_buildingIds);
+	Grid_clearShortGrid(Data_Grid_terrain);
+	Grid_clearUByteGrid(Data_Grid_aqueducts);
+	Grid_clearShortGrid(Data_Grid_walkerIds);
+	Grid_clearUByteGrid(Data_Grid_bitfields);
+	Grid_clearUByteGrid(Data_Grid_spriteOffsets);
+	Grid_clearUByteGrid(Data_Grid_random);
+	Grid_clearByteGrid(Data_Grid_desirability);
+	Grid_clearUByteGrid(Data_Grid_elevation);
+	Grid_clearUByteGrid(Data_Grid_buildingDamage);
+	Grid_clearUByteGrid(Data_Grid_rubbleBuildingType);
+	Grid_clearUByteGrid(Data_Grid_romanSoldierConcentration);
+	Grid_clearUByteGrid(Data_Grid_roadNetworks);
+	//Grid_clearUByteGrid(Data_Grid_byte_8ADF60);
 
-	memset(Data_Grid_graphicIds, 0, lenShort);
-	memset(Data_Grid_edge, 0, lenByte);
-	memset(Data_Grid_buildingIds, 0, lenShort);
-	memset(Data_Grid_terrain, 0, lenShort);
-	memset(Data_Grid_aqueducts, 0, lenByte);
-	memset(Data_Grid_walkerIds, 0, lenShort);
-	memset(Data_Grid_bitfields, 0, lenByte);
-	memset(Data_Grid_spriteOffsets, 0, lenByte);
-	memset(Data_Grid_random, 0, lenByte);
-	memset(Data_Grid_desirability, 0, lenByte);
-	memset(Data_Grid_elevation, 0, lenByte);
-	memset(Data_Grid_buildingDamage, 0, lenByte);
-	memset(Data_Grid_rubbleBuildingType, 0, lenByte);
-	memset(Data_Grid_romanSoldierConcentration, 0, lenByte);
-	memset(Data_Grid_roadNetworks, 0, lenByte);
-	//memset(Data_Grid_byte_8ADF60, 0, lenByte);
 	TerrainGraphicsContext_init();
 	initGridTerrain();
 	initGridRandom();

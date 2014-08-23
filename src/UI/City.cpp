@@ -4,12 +4,17 @@
 #include "TopMenu.h"
 #include "Sidebar.h"
 #include "../Graphics.h"
+#include "../Widget.h"
+
 #include "../Data/CityInfo.h"
+#include "../Data/CityView.h"
 #include "../Data/Constants.h"
+#include "../Data/Event.h"
 #include "../Data/Graphics.h"
+#include "../Data/Scenario.h"
 #include "../Data/Screen.h"
-#include "../Data/State.h"
 #include "../Data/Settings.h"
+#include "../Data/State.h"
 
 void UI_City_drawBackground()
 {
@@ -21,6 +26,7 @@ void UI_City_drawBackground()
 void UI_City_drawForeground()
 {
 	UI_City_drawCity();
+	UI_City_drawPausedAndTimeLeft();
 	UI_CityBuildings_drawBuildingCost();
 }
 
@@ -28,6 +34,39 @@ void UI_City_drawCity()
 {
 	UI_CityBuildings_drawForeground(
 		Data_Settings_Map.camera.x, Data_Settings_Map.camera.y);
+}
+
+void UI_City_drawPausedAndTimeLeft()
+{
+	if (Data_Scenario.winCriteria.timeLimitYearsEnabled) {
+		int years;
+		if (Data_Event.timeLimitMaxGameYear <= Data_CityInfo_Extra.gameTimeYear + 1) {
+			years = 0;
+		} else {
+			years = Data_Event.timeLimitMaxGameYear - Data_CityInfo_Extra.gameTimeYear - 1;
+		}
+		int totalMonths = 12 - Data_CityInfo_Extra.gameTimeMonth + 12 * years;
+		Widget_Panel_drawSmallLabelButton(6, 1, 25, 15, 1, 1);
+		int width = Widget_GameText_draw(6, 2, 6, 29, Font_NormalBlack);
+		Widget_Text_drawNumber(totalMonths, '@', " ", 6 + width, 29, Font_NormalBlack);
+	} else if (Data_Scenario.winCriteria.survivalYearsEnabled) {
+		int years;
+		if (Data_Event.timeLimitMaxGameYear <= Data_CityInfo_Extra.gameTimeYear + 1) {
+			years = 0;
+		} else {
+			years = Data_Event.timeLimitMaxGameYear - Data_CityInfo_Extra.gameTimeYear - 1;
+		}
+		int totalMonths = 12 - Data_CityInfo_Extra.gameTimeMonth + 12 * years;
+		Widget_Panel_drawSmallLabelButton(6, 1, 25, 15, 1, 1);
+		int width = Widget_GameText_draw(6, 3, 6, 29, Font_NormalBlack);
+		Widget_Text_drawNumber(totalMonths, '@', " ", 6 + width, 29, Font_NormalBlack);
+	}
+	if (Data_Settings.gamePaused) {
+		int width = Data_CityView.widthInPixels;
+		Widget_Panel_drawOuterPanel((width - 448) / 2, 40, 28, 3);
+		Widget_GameText_drawCentered(13, 2,
+			(width - 448) / 2, 58, 448, Font_NormalBlack);
+	}
 }
 
 void UI_City_handleMouse()
