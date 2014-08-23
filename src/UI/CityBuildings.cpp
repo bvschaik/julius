@@ -4,10 +4,14 @@
 #include "Window.h"
 
 #include "../Building.h"
+#include "../BuildingPlacement.h"
 #include "../CityView.h"
+#include "../Routing.h"
 #include "../Scroll.h"
 #include "../Sound.h"
 #include "../Time.h"
+#include "../Undo.h"
+#include "../Widget.h"
 #include "../Data/Mouse.h"
 
 #include <cstdio>
@@ -46,6 +50,35 @@ void UI_CityBuildings_drawForeground(int x, int y)
 		UI_CityBuildings_drawHippodromeAndElevatedWalkers(0);
 	}
 
+	Graphics_resetClipRectangle();
+}
+
+void UI_CityBuildings_drawBuildingCost()
+{
+	if (!Data_Settings_Map.current.gridOffset) {
+		return;
+	}
+	if (Data_State.isScrollingMap) {
+		return;
+	}
+	if (!Data_State.selectedBuilding.cost) {
+		return;
+	}
+	Graphics_setClipRectangle(
+		Data_CityView.xOffsetInPixels, Data_CityView.yOffsetInPixels,
+		Data_CityView.widthInPixels, Data_CityView.heightInPixels);
+	Color color;
+	if (Data_State.selectedBuilding.cost <= Data_CityInfo.treasury) {
+		color = Color_Orange;
+	} else {
+		color = Color_Red;
+	}
+	Widget_Text_drawNumberColored(Data_State.selectedBuilding.cost, '@', " ",
+		Data_CityView.selectedTile.xOffsetInPixels + 58 + 1,
+		Data_CityView.selectedTile.yOffsetInPixels + 1, Font_NormalPlain, Color_Black);
+	Widget_Text_drawNumberColored(Data_State.selectedBuilding.cost, '@', " ",
+		Data_CityView.selectedTile.xOffsetInPixels + 58,
+		Data_CityView.selectedTile.yOffsetInPixels, Font_NormalPlain, color);
 	Graphics_resetClipRectangle();
 }
 
@@ -576,11 +609,11 @@ static int handleRightClickAllowBuildingInfo()
 		allow = 0;
 	}
 	Data_State.selectedBuilding.type = 0;
-	Data_State.selectedBuilding.isDragging = 0;
+	Data_State.selectedBuilding.placementInProgress = 0;
 	Data_State.selectedBuilding.xStart = 0;
 	Data_State.selectedBuilding.yStart = 0;
-	Data_State.selectedBuilding.x = 0;
-	Data_State.selectedBuilding.y = 0;
+	Data_State.selectedBuilding.xEnd = 0;
+	Data_State.selectedBuilding.yEnd = 0;
 	UI_Window_goTo(Window_City);
 
 	if (!Data_CityView.selectedTile.gridOffset) {
@@ -593,11 +626,87 @@ static int handleRightClickAllowBuildingInfo()
 	return allow;
 }
 
+static int isLegionClick()
+{
+	return 0; // TODO
+}
+
+static void buildStart()
+{
+	if (Data_Settings_Map.current.gridOffset /*&& !Data_Settings.gamePaused*/) { // FIXME
+		Data_State.selectedBuilding.xEnd = Data_State.selectedBuilding.xStart = Data_Settings_Map.current.x;
+		Data_State.selectedBuilding.yEnd = Data_State.selectedBuilding.yStart = Data_Settings_Map.current.y;
+		Data_State.selectedBuilding.gridOffsetStart = Data_Settings_Map.current.gridOffset;
+		if (Undo_recordBeforeBuild()) {
+			Data_State.selectedBuilding.placementInProgress = 1;
+			switch (Data_State.selectedBuilding.type) {
+				case Building_Road:
+					Routing_getDistanceForBuildingRoadOrAqueduct(
+						Data_State.selectedBuilding.xStart,
+						Data_State.selectedBuilding.yStart, 0);
+					break;
+				case Building_Aqueduct:
+				case Building_DraggableReservoir:
+					Routing_getDistanceForBuildingRoadOrAqueduct(
+						Data_State.selectedBuilding.xStart,
+						Data_State.selectedBuilding.yStart, 1);
+					break;
+				case Building_Wall:
+					Routing_getDistanceForBuildingWall(
+						Data_State.selectedBuilding.xStart,
+						Data_State.selectedBuilding.yStart);
+					break;
+			}
+		}
+	}
+}
+
+static void buildMove()
+{
+	if (!Data_State.selectedBuilding.placementInProgress ||
+		!Data_Settings_Map.current.gridOffset) {
+		return;
+	}
+	Data_State.selectedBuilding.gridOffsetEnd = Data_Settings_Map.current.gridOffset;
+	Data_State.selectedBuilding.xEnd = Data_Settings_Map.current.x;
+	Data_State.selectedBuilding.yEnd = Data_Settings_Map.current.y;
+	BuildingPlacement_update(
+		Data_State.selectedBuilding.xStart, Data_State.selectedBuilding.yStart,
+		Data_State.selectedBuilding.xEnd, Data_State.selectedBuilding.yEnd,
+		Data_State.selectedBuilding.type);
+}
+
+static void buildEnd()
+{
+	if (Data_State.selectedBuilding.placementInProgress) {
+		Data_State.selectedBuilding.placementInProgress = 0;
+		if (!Data_Settings_Map.current.gridOffset) {
+			Data_Settings_Map.current.gridOffset = Data_State.selectedBuilding.gridOffsetEnd;
+		}
+		if (Data_State.selectedBuilding.type > 0) {
+			Sound_Effects_playChannel(SoundChannel_Build);
+		}
+		BuildingPlacement_place(Data_Settings_Map.orientation,
+			Data_State.selectedBuilding.xStart, Data_State.selectedBuilding.yStart,
+			Data_State.selectedBuilding.xEnd, Data_State.selectedBuilding.yEnd,
+			Data_State.selectedBuilding.type);
+	}
+}
+
 void UI_CityBuildings_handleMouse()
 {
 	updateCityViewCoords();
 	UI_CityBuildings_scrollMap(Scroll_getDirection());
-	if (Data_Mouse.right.wentUp) {
+	Data_State.selectedBuilding.drawAsOverlay = 0;
+	if (Data_Mouse.left.wentDown) {
+		if (!isLegionClick()) {
+			buildStart();
+		}
+	} else if (Data_Mouse.left.isDown) {
+		buildMove();
+	} else if (Data_Mouse.left.wentUp) {
+		buildEnd();
+	} else if (Data_Mouse.right.wentUp) {
 		if (handleRightClickAllowBuildingInfo()) {
 			UI_Window_goTo(Window_BuildingInfo);
 		}

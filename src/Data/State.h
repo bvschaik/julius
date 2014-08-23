@@ -39,12 +39,13 @@ extern struct Data_State {
 	int previousOverlay;
 	struct {
 		int type;
-		int x;
-		int y;
+		int placementInProgress;
 		int xStart;
 		int yStart;
-		int isDragging;
-		int gridOffset;
+		int xEnd;
+		int yEnd;
+		int gridOffsetStart;
+		int gridOffsetEnd;
 		int wallRequired;
 		int waterRequired;
 		int treesRequired;
@@ -52,6 +53,8 @@ extern struct Data_State {
 		int meadowRequired;
 		int roadRequired;
 		TimeMillis roadLastUpdate;
+		int drawAsOverlay;
+		int cost;
 	} selectedBuilding;
 	int isScrollingMap;
 	int winState;

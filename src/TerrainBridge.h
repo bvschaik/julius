@@ -11,6 +11,7 @@ int TerrainBridge_countWalkersOnBridge(int gridOffset);
 
 void TerrainBridge_updateSpriteIdsOnMapRotate(int ccw);
 
+int TerrainBridge_getLength();
 void TerrainBridge_resetLength();
 
 #endif

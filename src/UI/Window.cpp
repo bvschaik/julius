@@ -9,6 +9,7 @@
 #include "Sidebar.h"
 #include "Tooltip.h"
 #include "TopMenu.h"
+#include "Warning.h"
 
 #include "../Data/Mouse.h"
 
@@ -124,6 +125,7 @@ void UI_Window_refresh(int force)
 	windows[currentWindow].drawForeground();
 	windows[currentWindow].handleMouse();
 	UI_Tooltip_handle(windows[currentWindow].getTooltip);
+	UI_Warning_draw();
 	updateMouseAfter();
 }
 

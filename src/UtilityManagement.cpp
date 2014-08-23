@@ -105,7 +105,7 @@ static void fillAqueductsFromOffset(int gridOffset)
 			}
 		}
 		if (nextOffset == -1) {
-			if (qHead = qTail) {
+			if (qHead == qTail) {
 				return;
 			}
 			nextOffset = queue[qHead++];
@@ -220,7 +220,7 @@ static int markRoadNetwork(int gridOffset, unsigned char roadNetworkId)
 			}
 		}
 		if (nextOffset == -1) {
-			if (qHead = qTail) {
+			if (qHead == qTail) {
 				return size;
 			}
 			nextOffset = queue[qHead++];

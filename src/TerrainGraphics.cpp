@@ -95,9 +95,9 @@ static void setRoadGraphic(int gridOffset)
 	Data_Grid_edge[gridOffset] |= Edge_LeftmostTile;
 }
 
-static void setTileAqueduct(int gridOffset, int waterOffset)
+static void setTileAqueduct(int gridOffset, int waterOffset, int includeOverlay)
 {
-	const struct TerrainGraphic *graphic = TerrainGraphicsContext_getAqueduct(gridOffset, 0);
+	const struct TerrainGraphic *graphic = TerrainGraphicsContext_getAqueduct(gridOffset, includeOverlay);
 	int groupOffset = graphic->groupOffset;
 	if (Data_Grid_terrain[gridOffset] & Terrain_Road) {
 		Data_Grid_bitfields[gridOffset] &= Bitfield_NoPlaza;
@@ -431,7 +431,7 @@ void TerrainGraphics_updateRegionWater(int xMin, int yMin, int xMax, int yMax)
 	});
 }
 
-void TerrainGraphics_updateRegionAqueduct(int xMin, int yMin, int xMax, int yMax)
+void TerrainGraphics_updateRegionAqueduct(int xMin, int yMin, int xMax, int yMax, int includeOverlay)
 {
 	BOUND_REGION();
 	FOREACH_REGION({
@@ -443,7 +443,7 @@ void TerrainGraphics_updateRegionAqueduct(int xMin, int yMin, int xMax, int yMax
 			} else {
 				waterOffset = 15;
 			}
-			setTileAqueduct(gridOffset, waterOffset);
+			setTileAqueduct(gridOffset, waterOffset, includeOverlay);
 		}
 	});
 }
@@ -1091,7 +1091,7 @@ int TerrainGraphics_setTileAqueduct(int x, int y, int forceNoWater)
 		if (forceNoWater) {
 			waterOffset = 15;
 		}
-		setTileAqueduct(gridOffset, waterOffset);
+		setTileAqueduct(gridOffset, waterOffset, 0);
 	}
 	return tilesSet;
 }

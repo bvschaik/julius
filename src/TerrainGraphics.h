@@ -9,7 +9,7 @@ void TerrainGraphics_updateAllWalls();
 void TerrainGraphics_updateRegionElevation(int xMin, int yMin, int xMax, int yMax);
 void TerrainGraphics_updateRegionPlazas(int xMin, int yMin, int xMax, int yMax);
 void TerrainGraphics_updateRegionWater(int xMin, int yMin, int xMax, int yMax);
-void TerrainGraphics_updateRegionAqueduct(int xMin, int yMin, int xMax, int yMax);
+void TerrainGraphics_updateRegionAqueduct(int xMin, int yMin, int xMax, int yMax, int includeOverlay);
 void TerrainGraphics_updateRegionEmptyLand(int xMin, int yMin, int xMax, int yMax);
 void TerrainGraphics_updateRegionMeadow(int xMin, int yMin, int xMax, int yMax);
 void TerrainGraphics_updateRegionEarthquake(int xMin, int yMin, int xMax, int yMax);

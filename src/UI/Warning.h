@@ -55,4 +55,6 @@ void UI_Warning_checkFoodStocks(int buildingType);
 void UI_Warning_checkReservoirWater(int buildingType);
 void UI_Warning_checkNewBuilding(int buildingType, int x, int y, int size);
 
+void UI_Warning_draw();
+
 #endif

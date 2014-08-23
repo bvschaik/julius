@@ -228,13 +228,13 @@ static void buttonMenuItem(int item)
 	Data_State.selectedBuilding.meadowRequired = 0;
 	Data_State.selectedBuilding.roadRequired = 0;
 	Data_State.selectedBuilding.roadLastUpdate = Time_getMillis();
-	Data_State.selectedBuilding.gridOffset = 0;
+	Data_State.selectedBuilding.gridOffsetStart = 0;
 	
-	Data_State.selectedBuilding.isDragging = 0;
-	Data_State.selectedBuilding.x = 0;
+	Data_State.selectedBuilding.placementInProgress = 0;
 	Data_State.selectedBuilding.xStart = 0;
-	Data_State.selectedBuilding.y = 0;
+	Data_State.selectedBuilding.xEnd = 0;
 	Data_State.selectedBuilding.yStart = 0;
+	Data_State.selectedBuilding.yEnd = 0;
 	
 	int type = Data_State.selectedBuilding.type = SidebarMenu_getBuildingType(menu.selectedSubmenu, item);
 	if (type == Building_Menu_Farms || type == Building_Menu_RawMaterials ||

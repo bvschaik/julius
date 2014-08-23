@@ -104,7 +104,7 @@ void UI_Warning_draw()
 
 void UI_Warning_show(int warningId)
 {
-	if (!Data_Settings.warningsEnabled || warningId == Warning_ClearLandNeeded) {
+	if (!Data_Settings.warningsEnabled) {
 		return;
 	}
 	for (int i = 0; i < 5; i++) {

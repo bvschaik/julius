@@ -9,7 +9,9 @@
 #include "Data/Constants.h"
 #include "Data/Graphics.h"
 #include "Data/Grid.h"
+#include "Data/Scenario.h"
 #include "Data/Settings.h"
+#include "Data/State.h"
 
 static const int tilesAroundBuildingGridOffsets[][20] = {
 	{0},
@@ -190,191 +192,6 @@ void Terrain_removeBuildingFromGrids(int buildingId, int x, int y)
 	TerrainGraphics_updateRegionRubble(x, y, x + size, y + size);
 }
 
-void Terrain_addWatersideBuildingToGrids(int buildingId, int x, int y, int size, int graphicId)
-{
-	if (IsOutsideMap(x, y, size)) {
-		return;
-	}
-	int xLeftmost;
-	int yLeftmost;
-	switch (Data_Settings_Map.orientation) {
-		case Direction_Top:
-			xLeftmost = 0;
-			yLeftmost = size - 1;
-			break;
-		case Direction_Right:
-			xLeftmost = yLeftmost = 0;
-			break;
-		case Direction_Bottom:
-			xLeftmost = size - 1;
-			yLeftmost = 0;
-			break;
-		case Direction_Left:
-			xLeftmost = yLeftmost = size - 1;
-			break;
-		default:
-			return;
-	}
-	int sizeMask = Bitfield_Size2;
-	if (size == 3) {
-		sizeMask = Bitfield_Size3;
-	}
-	for (int dy = 0; dy < size; dy++) {
-		for (int dx = 0; dx < size; dx++) {
-			int gridOffset = GridOffset(x + dx, y + dy);
-			Data_Grid_terrain[gridOffset] |= Terrain_Building;
-			if (!(Data_Grid_terrain[gridOffset] & Terrain_Water)) {
-				Data_Grid_terrain[gridOffset] &= Terrain_2e80;
-				Data_Grid_terrain[gridOffset] |= Terrain_Building;
-			}
-			Data_Grid_buildingIds[gridOffset] = buildingId;
-			Data_Grid_bitfields[gridOffset] &= Bitfield_NoOverlay;
-			Data_Grid_bitfields[gridOffset] |= sizeMask;
-			Data_Grid_graphicIds[gridOffset] = graphicId;
-			Data_Grid_edge[gridOffset] = EdgeXY(dx, dy);
-			if (dx == xLeftmost && dy == yLeftmost) {
-				Data_Grid_edge[gridOffset] |= Edge_LeftmostTile;
-			}
-		}
-	}
-}
-
-int Terrain_determineOrientationWatersideSize2(int x, int y, int adjustXY,
-	int *orientationAbsolute, int *orientationRelative)
-{
-	if (adjustXY == 1) {
-		switch (Data_Settings_Map.orientation) {
-			case Direction_Top: break;
-			case Direction_Right: x--; break;
-			case Direction_Left: y--; break;
-			case Direction_Bottom: x--; y--; break;
-		}
-	}
-	if (IsOutsideMap(x, y, 2)) {
-		return 999;
-	}
-
-	int baseOffset = GridOffset(x, y);
-	int tileOffsets[] = {0, 1, 162, 163};
-	int shouldBeWater[4][4] = {{1, 1, 0, 0}, {0, 1, 0, 1}, {0, 0, 1, 1}, {1, 0, 1, 0}};
-	for (int dir = 0; dir < 4; dir++) {
-		int okTiles = 0;
-		int blockedTiles = 0;
-		for (int i = 0; i < 4; i++) {
-			int gridOffset = baseOffset + tileOffsets[i];
-			if (shouldBeWater[dir][i]) {
-				if (!(Data_Grid_terrain[gridOffset] & Terrain_Water)) {
-					break;
-				}
-				okTiles++;
-				if (Data_Grid_terrain[gridOffset] & (Terrain_Rock | Terrain_Road)) {
-					// bridge or map edge
-					blockedTiles++;
-				}
-			} else {
-				if (Data_Grid_terrain[gridOffset] & Terrain_Water) {
-					break;
-				}
-				okTiles++;
-				if (Data_Grid_terrain[gridOffset] & Terrain_127f) {
-					blockedTiles++;
-				}
-			}
-		}
-		// check six water tiles in front
-		int tilesToCheck[4][6] = {
-			{-1, -163, -162, -161, -160, 2},
-			{-161, -160, 2, 164, 326, 325},
-			{164, 326, 325, 324, 323, 161},
-			{324, 323, 161, -1, -163, -162},
-		};
-		for (int i = 0; i < 6; i++) {
-			if (!(Data_Grid_terrain[baseOffset + tilesToCheck[dir][i]] & Terrain_Water)) {
-				okTiles = 0;
-			}
-		}
-		if (okTiles == 4) {
-			// water/land is OK in this orientation
-			if (orientationAbsolute) {
-				*orientationAbsolute = dir;
-			}
-			if (orientationRelative) {
-				*orientationRelative = (4 + dir - Data_Settings_Map.orientation / 2) % 4;
-			}
-			return blockedTiles;
-		}
-	}
-	return 999;
-}
-
-int Terrain_determineOrientationWatersideSize3(int x, int y, int adjustXY,
-	int *orientationAbsolute, int *orientationRelative)
-{
-	if (adjustXY == 1) {
-		switch (Data_Settings_Map.orientation) {
-			case Direction_Top: break;
-			case Direction_Right: x -= 2; break;
-			case Direction_Left: y -= 2; break;
-			case Direction_Bottom: x -= 2; y -= 2; break;
-		}
-	}
-	if (IsOutsideMap(x, y, 3)) {
-		return 999;
-	}
-
-	int baseOffset = GridOffset(x, y);
-	int tileOffsets[] = {0, 1, 2, 162, 163, 164, 324, 325, 326};
-	int shouldBeWater[4][9] = {
-		{1, 1, 1, 0, 0, 0, 0, 0, 0},
-		{0, 0, 1, 0, 0, 1, 0, 0, 1},
-		{0, 0, 0, 0, 0, 0, 1, 1, 1},
-		{1, 0, 0, 1, 0, 0, 1, 0, 0}
-	};
-	for (int dir = 0; dir < 4; dir++) {
-		int okTiles = 0;
-		int blockedTiles = 0;
-		for (int i = 0; i < 9; i++) {
-			int gridOffset = baseOffset + tileOffsets[i];
-			if (shouldBeWater[dir][i]) {
-				if (!(Data_Grid_terrain[gridOffset] & Terrain_Water)) {
-					break;
-				}
-				okTiles++;
-				if (Data_Grid_terrain[gridOffset] & (Terrain_Rock | Terrain_Road)) {
-					// bridge or map edge
-					blockedTiles++;
-				}
-			} else {
-				if (Data_Grid_terrain[gridOffset] & Terrain_Water) {
-					break;
-				}
-				okTiles++;
-				if (Data_Grid_terrain[gridOffset] & Terrain_127f) {
-					blockedTiles++;
-				}
-			}
-		}
-		// check two water tiles at the side
-		int tilesToCheck[4][2] = {{-1, 3}, {-160, 488}, {327, 323}, {-162, 486}};
-		for (int i = 0; i < 2; i++) {
-			if (!(Data_Grid_terrain[baseOffset + tilesToCheck[dir][i]] & Terrain_Water)) {
-				okTiles = 0;
-			}
-		}
-		if (okTiles == 9) {
-			// water/land is OK in this orientation
-			if (orientationAbsolute) {
-				*orientationAbsolute = dir;
-			}
-			if (orientationRelative) {
-				*orientationRelative = (4 + dir - Data_Settings_Map.orientation / 2) % 4;
-			}
-			return blockedTiles;
-		}
-	}
-	return 999;
-}
-
 #define ADD_ROAD(g) \
 	if (!(Data_Grid_terrain[g] & Terrain_NotClear)) \
 		Data_Grid_terrain[g] |= Terrain_Road;
@@ -467,7 +284,7 @@ int Terrain_hasRoadAccessHippodrome(int x, int y, int *roadX, int *roadY)
 	int size = 5;
 	int minValue = 12;
 	int minGridOffset = GridOffset(x, y);
-	{FOR_XY_ADJACENT(
+	FOR_XY_ADJACENT(
 		if (!(Data_Grid_terrain[gridOffset] & Terrain_Building) ||
 			Data_Buildings[Data_Grid_buildingIds[gridOffset]].type != Building_Gatehouse) {
 			if (Data_Grid_terrain[gridOffset] & Terrain_Road) {
@@ -484,9 +301,9 @@ int Terrain_hasRoadAccessHippodrome(int x, int y, int *roadX, int *roadY)
 				}
 			}
 		}
-	);}
+	);
 	x += 5;
-	{FOR_XY_ADJACENT(
+	FOR_XY_ADJACENT(
 		if (!(Data_Grid_terrain[gridOffset] & Terrain_Building) ||
 			Data_Buildings[Data_Grid_buildingIds[gridOffset]].type != Building_Gatehouse) {
 			if (Data_Grid_terrain[gridOffset] & Terrain_Road) {
@@ -503,9 +320,9 @@ int Terrain_hasRoadAccessHippodrome(int x, int y, int *roadX, int *roadY)
 				}
 			}
 		}
-	);}
+	);
 	x += 5;
-	{FOR_XY_ADJACENT(
+	FOR_XY_ADJACENT(
 		if (!(Data_Grid_terrain[gridOffset] & Terrain_Building) ||
 			Data_Buildings[Data_Grid_buildingIds[gridOffset]].type != Building_Gatehouse) {
 			if (Data_Grid_terrain[gridOffset] & Terrain_Road) {
@@ -522,7 +339,7 @@ int Terrain_hasRoadAccessHippodrome(int x, int y, int *roadX, int *roadY)
 				}
 			}
 		}
-	);}
+	);
 	if (minValue < 12) {
 		if (roadX && roadY) {
 			*roadX = GridOffsetToX(minGridOffset);
@@ -965,13 +782,16 @@ int Terrain_existsTileWithinRadiusWithType(int x, int y, int size, int radius, u
 	return 0;
 }
 
-int Terrain_existsClearTileWithinRadius(int x, int y, int size, int radius, int exceptGridOffset)
+int Terrain_existsClearTileWithinRadius(int x, int y, int size, int radius, int exceptGridOffset, int *xTile, int *yTile)
 {
 	FOR_XY_RADIUS(
 		if (gridOffset != exceptGridOffset && !Data_Grid_terrain[gridOffset]) {
+			STORE_XY_RADIUS(xTile, yTile);
 			return 1;
 		}
 	);
+	*xTile = xMax;
+	*yTile = yMax;
 	return 0;
 }
 
@@ -1215,4 +1035,126 @@ int Terrain_hasTerrainTypeSameXAdjacentTo(int gridOffset, int terrainMask)
 		return 1;
 	}
 	return 0;
+}
+
+void Terrain_updateEntryExitFlags(int remove)
+{
+	if (remove) {
+		int gridOffsetEntry = GridOffset(Data_CityInfo_Extra.entryPointFlag.x, Data_CityInfo_Extra.entryPointFlag.y);
+		Data_Grid_terrain[gridOffsetEntry] &= ~Terrain_Rock;
+		int gridOffsetExit = GridOffset(Data_CityInfo_Extra.exitPointFlag.x, Data_CityInfo_Extra.exitPointFlag.y);
+		Data_Grid_terrain[gridOffsetExit] &= ~Terrain_Rock;
+		return;
+	}
+	int entryOrientation;
+	if (Data_Scenario.entryPoint.x == 0) {
+		entryOrientation = 2;
+	} else if (Data_Scenario.entryPoint.x == Data_Settings_Map.width - 1) {
+		entryOrientation = 6;
+	} else if (Data_Scenario.entryPoint.y == 0) {
+		entryOrientation = 0;
+	} else if (Data_Scenario.entryPoint.y == Data_Settings_Map.height - 1) {
+		entryOrientation = 4;
+	} else {
+		entryOrientation = -1;
+	}
+	int exitOrientation;
+	if (Data_Scenario.exitPoint.x == 0) {
+		exitOrientation = 2;
+	} else if (Data_Scenario.exitPoint.x == Data_Settings_Map.width - 1) {
+		exitOrientation = 6;
+	} else if (Data_Scenario.exitPoint.y == 0) {
+		exitOrientation = 0;
+	} else if (Data_Scenario.exitPoint.y == Data_Settings_Map.height - 1) {
+		exitOrientation = 4;
+	} else {
+		exitOrientation = -1;
+	}
+	if (entryOrientation >= 0) {
+		int gridOffset = GridOffset(Data_Scenario.entryPoint.x, Data_Scenario.entryPoint.y);
+		int xTile, yTile;
+		for (int i = 1; i < 10; i++) {
+			if (Terrain_existsClearTileWithinRadius(
+					Data_Scenario.entryPoint.x, Data_Scenario.entryPoint.y,
+					1, i, gridOffset, &xTile, &yTile)) {
+				break;
+			}
+		}
+		int gridOffsetFlag = GridOffset(xTile, yTile);
+		Data_CityInfo_Extra.entryPointFlag.x = xTile;
+		Data_CityInfo_Extra.entryPointFlag.y = yTile;
+		Data_CityInfo_Extra.entryPointFlag.gridOffset = gridOffsetFlag;
+		Data_Grid_terrain[gridOffsetFlag] |= Terrain_Rock;
+		int orientation = (Data_Settings_Map.orientation + entryOrientation) % 8;
+		Data_Grid_graphicIds[gridOffsetFlag] = GraphicId(ID_Graphic_EntryExitFlag) + orientation / 2;
+	}
+	if (exitOrientation >= 0) {
+		int gridOffset = GridOffset(Data_Scenario.exitPoint.x, Data_Scenario.exitPoint.y);
+		int xTile, yTile;
+		for (int i = 1; i < 10; i++) {
+			if (Terrain_existsClearTileWithinRadius(
+					Data_Scenario.exitPoint.x, Data_Scenario.exitPoint.y,
+					1, i, gridOffset, &xTile, &yTile)) {
+				break;
+			}
+		}
+		int gridOffsetFlag = GridOffset(xTile, yTile);
+		Data_CityInfo_Extra.exitPointFlag.x = xTile;
+		Data_CityInfo_Extra.exitPointFlag.y = yTile;
+		Data_CityInfo_Extra.exitPointFlag.gridOffset = gridOffsetFlag;
+		Data_Grid_terrain[gridOffsetFlag] |= Terrain_Rock;
+		int orientation = (Data_Settings_Map.orientation + exitOrientation) % 8;
+		Data_Grid_graphicIds[gridOffsetFlag] = GraphicId(ID_Graphic_EntryExitFlag) + 4 + orientation / 2;
+	}
+}
+
+int Terrain_isClearToBuild(int size, int x, int y, int terrainMask)
+{
+	switch (Data_Settings_Map.orientation) {
+		case 2: x = x - size + 1; break;
+		case 4: x = x - size + 1; // fall-through
+		case 6: y = y - size + 1; break;
+	}
+	if (IsOutsideMap(x, y, size)) {
+		return 0;
+	}
+	for (int yy = 0; yy < size; yy++) {
+		for (int xx = 0; xx < size; xx++) {
+			int gridOffset = GridOffset(x + xx, y + yy);
+			if ((terrainMask & Data_Grid_terrain[gridOffset]) & Terrain_NotClear) {
+				return 0;
+			}
+		}
+	}
+	return 1;
+}
+
+void Terrain_updateToPlaceBuildingToOverlay(int size, int x, int y, int terrainMask, int isAbsoluteXY)
+{
+	if (!isAbsoluteXY) {
+		switch (Data_Settings_Map.orientation) {
+			case 2: x = x - size + 1; break;
+			case 4: x = x - size + 1; // fall-through
+			case 6: y = y - size + 1; break;
+		}
+	}
+	if (IsOutsideMap(x, y, size)) {
+		return;
+	}
+	for (int yy = 0; yy < size; yy++) {
+		for (int xx = 0; xx < size; xx++) {
+			int gridOffset = GridOffset(x + xx, y + yy);
+			if ((terrainMask & Data_Grid_terrain[gridOffset]) & Terrain_NotClear) {
+				return;
+			}
+		}
+	}
+	// mark as overlay
+	Data_State.selectedBuilding.drawAsOverlay = 1;
+	for (int yy = 0; yy < size; yy++) {
+		for (int xx = 0; xx < size; xx++) {
+			int gridOffset = GridOffset(x + xx, y + yy);
+			Data_Grid_bitfields[gridOffset] |= Bitfield_Overlay;
+		}
+	}
 }

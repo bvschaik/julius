@@ -17,6 +17,7 @@
 #include "Routing.h"
 #include "SidebarMenu.h"
 #include "Sound.h"
+#include "Terrain.h"
 #include "TerrainGraphics.h"
 #include "Trader.h"
 #include "Walker.h"
@@ -293,8 +294,6 @@ static void readScenarioAndInitGraphics()
 	FileSystem_appendExtension(Data_FileList.selectedScenario, "map");
 	GameFile_loadScenario(Data_FileList.selectedScenario);
 	FileSystem_removeExtension(Data_FileList.selectedScenario);
-	// TODO remove
-	//initGridGraphicIds();
 
 	Empire_initTradeAmountCodes();
 	Data_Settings_Map.width = Data_Scenario.mapSizeX;
@@ -307,17 +306,14 @@ static void readScenarioAndInitGraphics()
 	TerrainGraphics_updateRegionWater(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
 	TerrainGraphics_updateRegionEarthquake(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
 	TerrainGraphics_updateAllRocks();
-  /*
-  sub_402400(0);
-  */
+	Terrain_updateEntryExitFlags(0);
 	TerrainGraphics_updateRegionEmptyLand(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
 	TerrainGraphics_updateRegionMeadow(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
 	TerrainGraphics_updateAllRoads();
 	TerrainGraphics_updateRegionPlazas(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
-/*
-  sub_402BA8();
-  sub_4014F1(0, 0, setting_map_width - 1, setting_map_height - 1, 0);
-*/
+	TerrainGraphics_updateAllWalls();
+	TerrainGraphics_updateRegionAqueduct(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1, 0);
+
 	Natives_init();
 
 	CityView_checkCameraBoundaries();

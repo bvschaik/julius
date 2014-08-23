@@ -37,7 +37,7 @@ void Terrain_clearWithRadius(int x, int y, int size, int radius, unsigned short 
 int Terrain_existsTileWithinAreaWithType(int x, int y, int size, unsigned short type);
 
 int Terrain_existsTileWithinRadiusWithType(int x, int y, int size, int radius, unsigned short type);
-int Terrain_existsClearTileWithinRadius(int x, int y, int size, int radius, int exceptGridOffset);
+int Terrain_existsClearTileWithinRadius(int x, int y, int size, int radius, int exceptGridOffset, int *xTile, int *yTile);
 int Terrain_allTilesWithinRadiusHaveType(int x, int y, int size, int radius, unsigned short type);
 int Terrain_allHousesWithinWellRadiusHaveFountain(int buildingId, int radius);
 
@@ -60,6 +60,11 @@ int Terrain_countTerrainTypeDirectlyAdjacentTo(int gridOffset, int terrainMask);
 int Terrain_countTerrainTypeDiagonallyAdjacentTo(int gridOffset, int terrainMask);
 int Terrain_hasTerrainTypeSameYAdjacentTo(int gridOffset, int terrainMask);
 int Terrain_hasTerrainTypeSameXAdjacentTo(int gridOffset, int terrainMask);
+
+void Terrain_updateEntryExitFlags(int remove);
+
+int Terrain_isClearToBuild(int size, int x, int y, int terrainMask);
+void Terrain_updateToPlaceBuildingToOverlay(int size, int x, int y, int terrainMask, int isAbsoluteXY);
 
 int Terrain_Water_findOpenWaterForShipwreck(int walkerId, int *xTile, int *yTile);
 int Terrain_Water_getFreeDockDestination(int walkerId, int *xTile, int *yTile);

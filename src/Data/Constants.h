@@ -204,6 +204,7 @@ enum {
 	ID_Graphic_Walker_CartpusherCartMultipleLoads = 237,
 	ID_Graphic_TradeCenterFlag = 238,
 	ID_Graphic_TerrainRock = 239,
+	ID_Graphic_EntryExitFlag = 240,
 	ID_Graphic_FortStandardPole = 241,
 	ID_Graphic_TradeAmount = 243,
 	ID_Graphic_CCKBackground = 246,

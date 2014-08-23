@@ -822,6 +822,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\BuildingPlacement.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Data\Buttons.h"
 				>
 			</File>
@@ -850,11 +854,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\CityView.h"
+				RelativePath=".\src\CityView.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\CityView.h"
+				RelativePath=".\src\Data\CityView.h"
 				>
 			</File>
 			<File
@@ -878,11 +882,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Empire.h"
+				RelativePath=".\src\Data\Empire.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Empire.h"
+				RelativePath=".\src\Empire.h"
 				>
 			</File>
 			<File
@@ -930,11 +934,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Grid.h"
+				RelativePath=".\src\Grid.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Grid.h"
+				RelativePath=".\src\Data\Grid.h"
 				>
 			</File>
 			<File
@@ -1006,11 +1010,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\data\Random.h"
+				RelativePath=".\src\Random.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Random.h"
+				RelativePath=".\src\data\Random.h"
 				>
 			</File>
 			<File
@@ -1030,11 +1034,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Scenario.h"
+				RelativePath=".\src\Data\Scenario.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Scenario.h"
+				RelativePath=".\src\Scenario.h"
 				>
 			</File>
 			<File
@@ -1062,11 +1066,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Sound.h"
+				RelativePath=".\src\Sound.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Sound.h"
+				RelativePath=".\src\Data\Sound.h"
 				>
 			</File>
 			<File

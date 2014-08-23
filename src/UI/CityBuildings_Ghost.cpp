@@ -70,8 +70,7 @@ void UI_CityBuildings_drawSelectedBuildingGhost()
 	if (!Data_CityView.selectedTile.gridOffset || Data_CityView.isScrolling) {
 		return;
 	}
-	// TODO if (!dword_9DA7C8) return;
-	if (Data_State.selectedBuilding.type <= 0) {
+	if (Data_State.selectedBuilding.drawAsOverlay || Data_State.selectedBuilding.type <= 0) {
 		return;
 	}
 	switch (Data_State.selectedBuilding.type) {

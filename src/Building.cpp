@@ -459,7 +459,7 @@ void Building_destroyByEnemy(int x, int y, int gridOffset)
 	}
 	WalkerAction_TowerSentry_reroute();
 	TerrainGraphics_updateAreaWalls(x, y, 3);
-	TerrainGraphics_updateRegionAqueduct(x - 2, y - 2, x + 2, y + 2);
+	TerrainGraphics_updateRegionAqueduct(x - 2, y - 2, x + 2, y + 2, 0);
 	Routing_determineLandCitizen();
 	Routing_determineLandNonCitizen();
 	Routing_determineWalls();
@@ -755,7 +755,7 @@ void Building_GameTick_checkAccessToRome()
 
 			TerrainGraphics_updateAllWalls();
 			TerrainGraphics_updateRegionAqueduct(0, 0,
-				Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
+				Data_Settings_Map.width - 1, Data_Settings_Map.height - 1, 0);
 			TerrainGraphics_updateRegionEmptyLand(0, 0,
 				Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
 			TerrainGraphics_updateRegionMeadow(0, 0,

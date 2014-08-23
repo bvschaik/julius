@@ -160,9 +160,9 @@ void UI_BuildingInfo_init()
 	} else if (Data_Grid_terrain[gridOffset] & Terrain_Tree) {
 		context.terrainType = 1;
 	} else if (Data_Grid_terrain[gridOffset] & Terrain_Rock) {
-		if (gridOffset == Data_CityInfo_Extra.gridOffsetEntryPoint) {
+		if (gridOffset == Data_CityInfo_Extra.entryPointFlag.gridOffset) {
 			context.terrainType = 14;
-		} else if (gridOffset == Data_CityInfo_Extra.gridOffsetExitPoint) {
+		} else if (gridOffset == Data_CityInfo_Extra.exitPointFlag.gridOffset) {
 			context.terrainType = 15;
 		} else {
 			context.terrainType = 2;
@@ -325,7 +325,7 @@ void UI_BuildingInfo_init()
 void UI_BuildingInfo_drawBackground()
 {
 	UI_City_drawBackground();
-	UI_City_drawForeground();//?do we want this?
+	UI_City_drawCity();//?do we want this?
 	if (context.type == 0) {
 		UI_BuildingInfo_drawNoPeople(&context);
 	} else if (context.type == 1) {

@@ -319,6 +319,11 @@ void TerrainBridge_updateSpriteIdsOnMapRotate(int ccw)
 	}
 }
 
+int TerrainBridge_getLength()
+{
+	return bridge.length;
+}
+
 void TerrainBridge_resetLength()
 {
 	bridge.length = 0;

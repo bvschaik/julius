@@ -1196,8 +1196,16 @@ extern struct Data_CityInfo_Extra {
 		int x;
 		int y;
 	} bookmarks[4];
-	int gridOffsetEntryPoint;
-	int gridOffsetExitPoint;
+	struct {
+		int x;
+		int y;
+		int gridOffset;
+	} entryPointFlag;
+	struct {
+		int x;
+		int y;
+		int gridOffset;
+	} exitPointFlag;
 } Data_CityInfo_Extra;
 
 extern struct Data_CityInfo_Resource {
