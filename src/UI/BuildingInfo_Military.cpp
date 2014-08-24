@@ -1,15 +1,18 @@
 #include "BuildingInfo.h"
 
 #include "../Calc.h"
+#include "../Formation.h"
 #include "../Graphics.h"
 #include "../Sound.h"
 #include "../Widget.h"
+#include "../UI/Window.h"
 
 #include "../Data/Building.h"
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
 #include "../Data/Formation.h"
 #include "../Data/Settings.h"
+#include "../Data/State.h"
 #include "../Data/Walker.h"
 
 static void buttonReturnToFort(int param1, int param2);
@@ -349,7 +352,7 @@ void UI_BuildingInfo_drawLegionInfoForeground(BuildingInfoContext *c)
 		c->widthBlocks - 2, 4);
 	if (f->walkerType == Walker_FortLegionary) {
 		if (focusButtonId == 1 || (focusButtonId == 2 && c->formationTypes == 3)) {
-			//focusButtonId = 0;
+			focusButtonId = 0;
 		}
 	}
 	int titleId;
@@ -445,7 +448,12 @@ void UI_BuildingInfo_handleMouseLegionInfo(BuildingInfoContext *c)
 
 static void buttonReturnToFort(int param1, int param2)
 {
-	// TODO
+	int formationId = contextForCallback->formationId;
+	struct Data_Formation *f = &Data_Formations[formationId];
+	if (!f->inDistantBattle && f->isAtFort != 1) {
+		Formation_legionReturnHome(formationId);
+		UI_Window_goTo(Window_City);
+	}
 }
 
 static void buttonLayout(int index, int param2)
@@ -481,5 +489,13 @@ static void buttonLayout(int index, int param2)
 			case 4: f->layout = FormationLayout_MopUp; break;
 		}
 	}
-	// TODO play sound, select legion, go to combat mode
+	switch (index) {
+		case 0: Sound_Speech_playFile("wavs/cohort1.wav"); break;
+		case 1: Sound_Speech_playFile("wavs/cohort2.wav"); break;
+		case 2: Sound_Speech_playFile("wavs/cohort3.wav"); break;
+		case 3: Sound_Speech_playFile("wavs/cohort4.wav"); break;
+		case 4: Sound_Speech_playFile("wavs/cohort5.wav"); break;
+	}
+	Data_State.selectedLegionFormationId = contextForCallback->formationId;
+	UI_Window_goTo(Window_CityMilitary);
 }

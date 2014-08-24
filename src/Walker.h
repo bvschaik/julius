@@ -5,7 +5,7 @@ void Walker_clearList();
 int Walker_create(int walkerType, int x, int y, char direction);
 void Walker_delete(int walkerId);
 
-int Walker_createDustCloud(int x, int y, int size);
+void Walker_createDustCloud(int x, int y, int size);
 void Walker_createFishingPoints();
 void Walker_createHerds();
 void Walker_createFlotsam(int xEntry, int yEntry, int hasWater);
@@ -28,12 +28,15 @@ int Walker_determinePhrase(int walkerId);
 int Walker_playPhrase(int walkerId);
 void Walker_playDieSound(int walkerType);
 
+int Walker_provideServiceCoverage(int walkerId);
+
 void WalkerName_set(int walkerId);
 void WalkerName_init();
 
 void WalkerRoute_clearList();
 void WalkerRoute_clean();
 int WalkerRoute_getNumAvailable();
+void WalkerRoute_add(int walkerId);
 void WalkerRoute_remove(int walkerId);
 
 void WalkerGeneration_generateWalkersForBuildings();

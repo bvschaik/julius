@@ -2,9 +2,11 @@
 
 #include "Calc.h"
 #include "Formation.h"
+#include "Sound.h"
 #include "Terrain.h"
 #include "Trader.h"
 #include "WalkerAction.h"
+#include "WalkerMovement.h"
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
@@ -121,10 +123,38 @@ void Walker_delete(int walkerId)
 	memset(w, 0, 128);
 }
 
-int Walker_createDustCloud(int x, int y, int size)
+static const int dustCloudTileOffsets[] = {0, 0, 0, 1, 1, 2};
+static const int dustCloudCCOffsets[] = {0, 7, 14, 7, 14, 7};
+static const int dustCloudDirectionX[] = {
+	0, -2, -4, -5, -6, -5, -4, -2, 0, -2, -4, -5, -6, -5, -4, -2
+};
+static const int dustCloudDirectionY[] = {
+	-6, -5, -4, -2, 0, -2, -4, -5, -6, -5, -4, -2, 0, -2, -4, -5
+};
+static const int dustCloudSpeed[] = {
+	1, 2, 1, 3, 2, 1, 3, 2, 1, 1, 2, 1, 2, 1, 3, 1
+};
+void Walker_createDustCloud(int x, int y, int size)
 {
-	// TODO
-	return 0;
+	int tileOffset = dustCloudTileOffsets[size];
+	int ccOffset = dustCloudCCOffsets[size];
+	for (int i = 0; i < 16; i++) {
+		int walkerId = Walker_create(Walker_Explosion,
+			x + tileOffset, y + tileOffset, 0);
+		if (walkerId) {
+			struct Data_Walker *w = &Data_Walkers[walkerId];
+			w->crossCountryX += ccOffset;
+			w->crossCountryY += ccOffset;
+			w->destinationX += dustCloudDirectionX[i];
+			w->destinationY += dustCloudDirectionY[i];
+			WalkerMovement_crossCountrySetDirection(walkerId,
+				w->crossCountryX, w->crossCountryY,
+				15 * w->destinationX + ccOffset,
+				15 * w->destinationY + ccOffset, 0);
+			w->speedMultiplier = dustCloudSpeed[i];
+		}
+	}
+	Sound_Effects_playChannel(SoundChannel_Explosion);
 }
 
 void Walker_createFishingPoints()

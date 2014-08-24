@@ -1,8 +1,10 @@
 #include "Formation.h"
 
+#include "Calc.h"
 #include "Grid.h"
 #include "Walker.h"
 
+#include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Formation.h"
 #include "Data/Grid.h"

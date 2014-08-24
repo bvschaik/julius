@@ -1,27 +1,40 @@
 #include "CityView.h"
+
+#include "UI/CityBuildings.h"
+
 #include "Data/CityView.h"
 #include "Data/Constants.h"
 #include "Data/Grid.h"
 #include "Data/Screen.h"
 #include "Data/Settings.h"
-#include "UI/CityBuildings.h"
+#include "Data/State.h"
+
+static void setViewport(int xOffset, int yOffset, int widthInTiles, int heightInTiles);
+
+void CityView_setViewport()
+{
+	if (Data_State.sidebarCollapsed) {
+		CityView_setViewportWithoutSidebar();
+	} else {
+		CityView_setViewportWithSidebar();
+	}
+}
 
 void CityView_setViewportWithoutSidebar()
 {
-	CityView_setViewport(0, 24,
+	setViewport(0, 24,
 		(Data_Screen.width - 40) / 60,
 		(Data_Screen.height - 24) / 15);
 }
 
 void CityView_setViewportWithSidebar()
 {
-	CityView_setViewport(0, 24,
+	setViewport(0, 24,
 		(Data_Screen.width - 160) / 60,
 		(Data_Screen.height - 24) / 15);
 }
 
-void CityView_setViewport(
-	int xOffset, int yOffset, int widthInTiles, int heightInTiles)
+static void setViewport(int xOffset, int yOffset, int widthInTiles, int heightInTiles)
 {
 	Data_CityView.xOffsetInPixels = xOffset;
 	Data_CityView.yOffsetInPixels = yOffset;

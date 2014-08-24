@@ -269,7 +269,7 @@ void UI_CityBuildings_drawWalker(int walkerId, int xOffset, int yOffset, int sel
 		int direction = (8 + w->direction - Data_Settings_Map.orientation) % 8;
 		xTileOffset = tileProgressToPixelOffsetX(direction, w->progressOnTile);
 		yTileOffset = tileProgressToPixelOffsetY(direction, w->progressOnTile);
-		yTileOffset -= w->__unknown_66;
+		yTileOffset -= w->currentHeight;
 		if (w->numPreviousWalkersOnSameTile && w->type != Walker_Ballista) {
 			static const int xOffsets[] = {
 				0, 8, 8, -8, -8, 0, 16, 0, -16, 8, -8, 16, -16, 16, -16, 8, -8, 0, 24, 0, -24, 0, 0, 0

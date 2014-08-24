@@ -121,6 +121,54 @@ void handleKey(SDL_KeyboardEvent *event)
 	}
 }
 
+SDL_Surface* createSurface(int width, int height)
+{
+SDL_Surface *surface = SDL_SetVideoMode(
+	//	vidInfo->current_w, vidInfo->current_h, 16, /*SDL_FULLSCREEN*/0);
+		width, height, 32, SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_ANYFORMAT|SDL_RESIZABLE);
+		//1920, 1200, 32, SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_ANYFORMAT|SDL_FULLSCREEN);
+	//	1440, 900, 16, 0);
+	if (surface) {
+		printf("Surface created with scanline %d\n", surface->pitch);
+		printf("  flags: %d %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s\n",
+		surface->flags,
+		surface->flags & SDL_SWSURFACE ? "SDL_SWSURFACE" : "",
+		surface->flags & SDL_SWSURFACE ? "SDL_HWSURFACE" : "",
+		surface->flags & SDL_ASYNCBLIT ? "SDL_ASYNCBLIT" : "",
+		surface->flags & SDL_ANYFORMAT ? "SDL_ANYFORMAT" : "",
+		surface->flags & SDL_HWPALETTE ? "SDL_HWPALETTE" : "",
+		surface->flags & SDL_DOUBLEBUF ? "SDL_DOUBLEBUF" : "",
+		surface->flags & SDL_FULLSCREEN ? "SDL_FULLSCREEN" : "",
+		surface->flags & SDL_OPENGL ? "SDL_OPENGL" : "",
+		surface->flags & SDL_OPENGLBLIT ? "SDL_OPENGLBLIT" : "",
+		surface->flags & SDL_RESIZABLE ? "SDL_RESIZABLE" : "",
+		surface->flags & SDL_HWACCEL ? "SDL_HWACCEL" : "",
+		surface->flags & SDL_SRCCOLORKEY ? "SDL_SRCCOLORKEY" : "",
+		surface->flags & SDL_RLEACCEL ? "SDL_RLEACCEL" : "",
+		surface->flags & SDL_SRCALPHA ? "SDL_SRCALPHA" : "",
+		surface->flags & SDL_PREALLOC ? "SDL_PREALLOC" : "");
+		printf("  bpp: %d\n", surface->format->BitsPerPixel);
+		printf("  Rmask %x, Gmask %x, Bmask %x, Amask %x\n",
+			surface->format->Rmask,
+			surface->format->Gmask,
+			surface->format->Bmask,
+			surface->format->Amask);
+		printf("  Rshift %d, Gshift %d, Bshift %d, Ashift %d\n",
+			surface->format->Rshift,
+			surface->format->Gshift,
+			surface->format->Bshift,
+			surface->format->Ashift);
+
+		Data_Screen.format = 565; // TODO derive later
+		Data_Screen.width = width;
+		Data_Screen.height = height;
+		Data_Screen.offset640x480.x = (Data_Screen.width - 640) / 2;
+		Data_Screen.offset640x480.y = (Data_Screen.height - 480) / 2;
+		CityView_setViewport();
+	}
+	return surface;
+}
+
 void mainLoop(SDL_Surface *surface)
 {
 	SDL_Event event;
@@ -192,6 +240,8 @@ void mainLoop(SDL_Surface *surface)
 					break;
 				
 				case SDL_VIDEORESIZE:
+					printf("Resize to %d x %d\n", event.resize.w, event.resize.h);
+					surface = createSurface(event.resize.w, event.resize.h);
 					break;
 				
 				case SDL_QUIT:
@@ -245,42 +295,7 @@ int main()
 	}
 	
 	//SDL_Surface *surface = SDL_SetVideoMode(800, 600, 16, /*SDL_FULLSCREEN|*/SDL_HWSURFACE|SDL_DOUBLEBUF);
-	SDL_Surface *surface = SDL_SetVideoMode(
-	//	vidInfo->current_w, vidInfo->current_h, 16, /*SDL_FULLSCREEN*/0);
-		1680, 1050, 32, SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_ANYFORMAT);
-		//1920, 1200, 32, SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_ANYFORMAT|SDL_FULLSCREEN);
-	//	1440, 900, 16, 0);
-	if (surface) {
-		printf("Surface created with scanline %d\n", surface->pitch);
-		printf("  flags: %d %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s\n",
-		surface->flags,
-		surface->flags & SDL_SWSURFACE ? "SDL_SWSURFACE" : "",
-		surface->flags & SDL_SWSURFACE ? "SDL_HWSURFACE" : "",
-		surface->flags & SDL_ASYNCBLIT ? "SDL_ASYNCBLIT" : "",
-		surface->flags & SDL_ANYFORMAT ? "SDL_ANYFORMAT" : "",
-		surface->flags & SDL_HWPALETTE ? "SDL_HWPALETTE" : "",
-		surface->flags & SDL_DOUBLEBUF ? "SDL_DOUBLEBUF" : "",
-		surface->flags & SDL_FULLSCREEN ? "SDL_FULLSCREEN" : "",
-		surface->flags & SDL_OPENGL ? "SDL_OPENGL" : "",
-		surface->flags & SDL_OPENGLBLIT ? "SDL_OPENGLBLIT" : "",
-		surface->flags & SDL_RESIZABLE ? "SDL_RESIZABLE" : "",
-		surface->flags & SDL_HWACCEL ? "SDL_HWACCEL" : "",
-		surface->flags & SDL_SRCCOLORKEY ? "SDL_SRCCOLORKEY" : "",
-		surface->flags & SDL_RLEACCEL ? "SDL_RLEACCEL" : "",
-		surface->flags & SDL_SRCALPHA ? "SDL_SRCALPHA" : "",
-		surface->flags & SDL_PREALLOC ? "SDL_PREALLOC" : "");
-		printf("  bpp: %d\n", surface->format->BitsPerPixel);
-		printf("  Rmask %x, Gmask %x, Bmask %x, Amask %x\n",
-			surface->format->Rmask,
-			surface->format->Gmask,
-			surface->format->Bmask,
-			surface->format->Amask);
-		printf("  Rshift %d, Gshift %d, Bshift %d, Ashift %d\n",
-			surface->format->Rshift,
-			surface->format->Gshift,
-			surface->format->Bshift,
-			surface->format->Ashift);
-	}
+	SDL_Surface *surface = createSurface(1680, 1050);
 	
 	// Get available fullscreen/hardware modes
 	modes = SDL_ListModes(&format, SDL_HWSURFACE|SDL_DOUBLEBUF);
@@ -308,11 +323,6 @@ int main()
 	
 	chdir("../data");
 	Sound_init();
-	Data_Screen.format = 565; // TODO derive later
-	Data_Screen.width = vidInfo->current_w;
-	Data_Screen.height = vidInfo->current_h;
-	Data_Screen.offset640x480.x = (Data_Screen.width - 640) / 2;
-	Data_Screen.offset640x480.y = (Data_Screen.height - 480) / 2;
 	
 	//TODO real settings loading
 	Data_Settings.soundEffectsEnabled = 1;

@@ -242,7 +242,7 @@ extern struct Data_Walker {
 	char state;
 	char ciid; // 0f
 	unsigned char actionStateBeforeAttack; // 10
-	char direction;
+	unsigned char direction;
 	char previousTileDirection; // 12
 	char attackDirection; // 13
 	char x;
@@ -269,7 +269,7 @@ extern struct Data_Walker {
 	short routingPathCurrentTile;
 	short routingPathLength;
 	char inBuildingWaitTicks; // 30
-	char __unknown_31;
+	char isOnRoad;
 	short maxRoamLength;
 	short roamLength;
 	char roamNoDestination;
@@ -278,12 +278,12 @@ extern struct Data_Walker {
 	char roamTicksUntilNextTurn;
 	short crossCountryX; // 3a - position = 15 * x + offset on tile
 	short crossCountryY; // 3c - position = 15 * y + offset on tile
-	short __unknown_3e;
-	short __unknown_40;
-	short __unknown_42;
-	short __unknown_44;
-	short __unknown_46;
-	char __unknown_48;
+	short ccDestinationX; // 3e
+	short ccDestinationY; // 40
+	short ccDeltaX; // 42
+	short ccDeltaY; // 44
+	short ccDeltaXY; // 46
+	char ccDirection; // 48: 1 = x, 2 = y
 	char speedMultiplier;
 	short buildingId;
 	short immigrantBuildingId;
@@ -308,8 +308,8 @@ extern struct Data_Walker {
 	char loadsSoldOrCarrying;
 	char isBoat; // 64
 	char heightFromGround; // 65
-	char __unknown_66;
-	char __unknown_67;
+	char currentHeight;
+	char targetHeight;
 	unsigned char collectingItemId; // NOT a resource ID for cartpushers! IS a resource ID for warehousemen
 	char __unknown_69;
 	unsigned char phraseSequenceExact;

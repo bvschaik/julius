@@ -85,7 +85,7 @@ extern struct Data_Formation_Extra {
 	int numLegionFormations;
 	int numLegionSoldierStrength;
 
-	int daysSinceRomanSoldierConcentration
+	int daysSinceRomanSoldierConcentration;
 } Data_Formation_Extra;
 
 #endif

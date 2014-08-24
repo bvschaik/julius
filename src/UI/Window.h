@@ -4,7 +4,7 @@
 // TODO numbers
 typedef enum {
 	Window_MainMenu = 0,
-	Window_City = 1, // 1?
+	Window_City = 1, // 1
 	Window_PopupDialog = 2, //63
 	Window_TopMenu = 3, // 3
 	Window_DifficultyOptions = 4,//69
@@ -31,7 +31,7 @@ typedef enum {
 	Window_BuildingInfo = 25, //9
 	Window_NewCareerDialog = 26, //54
 	Window_SlidingSidebar = 27, //2
-	Window_CityMilitary = -1, // 30 TODO
+	Window_CityMilitary = 28, // 30 TODO
 
 	Window_51 = -1, //51 TODO
 	Window_66 = -1, //66 TODO

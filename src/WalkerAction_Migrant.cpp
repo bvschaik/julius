@@ -78,11 +78,7 @@ void WalkerAction_immigrant(int walkerId)
 					break;
 				case Direction_None:
 					w->actionState = WalkerActionState_3_ImmigrantEnteringHouse;
-					w->destinationX = b->x;
-					w->destinationY = b->y;
-					WalkerMovement_crossCountrySetDirection(walkerId,
-						w->crossCountryX, w->crossCountryY,
-						15 * w->destinationX, 15 * w->destinationY, 0);
+					WalkerAction_Common_setCrossCountryDestination(walkerId, w, b->x, b->y);
 					w->roamLength = 0;
 					break;
 			}
@@ -144,11 +140,7 @@ void WalkerAction_emigrant(int walkerId)
 					w->state = WalkerState_Dead;
 				}
 				w->actionState = WalkerActionState_5_EmigrantExitingHouse;
-				w->destinationX = xRoad;
-				w->destinationY = yRoad;
-				WalkerMovement_crossCountrySetDirection(walkerId,
-					w->crossCountryX, w->crossCountryY,
-					15 * w->destinationX, 15 * w->destinationY, 0);
+				WalkerAction_Common_setCrossCountryDestination(walkerId, w, xRoad, yRoad);
 				w->roamLength = 0;
 			}
 			break;
@@ -225,11 +217,9 @@ void WalkerAction_homeless(int walkerId)
 				w->state = WalkerState_Dead;
 			} else if (w->direction == Direction_None) {
 				w->actionState = WalkerActionState_9_HomelessEnteringHouse;
-				w->destinationX = Data_Buildings[w->immigrantBuildingId].x;
-				w->destinationY = Data_Buildings[w->immigrantBuildingId].y;
-				WalkerMovement_crossCountrySetDirection(walkerId,
-					w->crossCountryX, w->crossCountryY,
-					15 * w->destinationX, 15 * w->destinationY, 0);
+				WalkerAction_Common_setCrossCountryDestination(walkerId, w,
+					Data_Buildings[w->immigrantBuildingId].x,
+					Data_Buildings[w->immigrantBuildingId].y);
 				w->roamLength = 0;
 			}
 			break;

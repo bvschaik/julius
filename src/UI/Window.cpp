@@ -57,6 +57,7 @@ static struct Window windows[] = {
 	{ UI_BuildingInfo_init, UI_BuildingInfo_drawBackground, UI_BuildingInfo_drawForeground, UI_BuildingInfo_handleMouse },
 	{ noop, UI_NewCareerDialog_drawBackground, UI_NewCareerDialog_drawForeground, UI_NewCareerDialog_handleMouse },
 	{ noop, UI_SlidingSidebar_drawBackground, UI_SlidingSidebar_drawForeground, noop },
+	{ noop, UI_City_drawBackground, UI_City_drawForeground, UI_City_handleMouse, UI_CityBuildings_getTooltip }, // TODO military command
 };
 
 static WindowId previousWindow;

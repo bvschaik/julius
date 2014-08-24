@@ -381,7 +381,7 @@ const TerrainGraphic *TerrainGraphicsContext_getWallGatehouse(int gridOffset)
 static void setTilesRoad(int gridOffset, int tiles[8])
 {
 	for (int i = 0; i < 8; i++) {
-		tiles[i] = Data_Grid_terrain[gridOffset + contextTileOffsets[i]] & Terrain_Road ? 0 : 1;
+		tiles[i] = Data_Grid_terrain[gridOffset + contextTileOffsets[i]] & Terrain_Road ? 1 : 0;
 	}
 	for (int i = 0; i < 8; i += 2) {
 		int offset = gridOffset + contextTileOffsets[i];

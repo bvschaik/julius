@@ -56,6 +56,7 @@ extern struct Data_State {
 		int drawAsOverlay;
 		int cost;
 	} selectedBuilding;
+	int selectedLegionFormationId;
 	int isScrollingMap;
 	int winState;
 	int forceWinCheat;
