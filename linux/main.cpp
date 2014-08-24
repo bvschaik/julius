@@ -13,14 +13,11 @@
 #include "../src/Data/Scenario.h"
 #include "../src/Data/Settings.h"
 #include "../src/Loader.h"
-#include "../src/Empire.h"
 #include "../src/Language.h"
-#include "../src/Graphics.h"
-#include "../src/GameFile.h"
 #include "../src/Time.h"
 #include "../src/Animation.h"
 #include "../src/Sound.h"
-#include "../src/CityView.h"
+#include "../src/Screen.h"
 #include "../src/Data/AllData.h"
 #include "../src/KeyboardInput.h"
 #include "../src/KeyboardHotkey.h"
@@ -61,14 +58,6 @@ typedef struct{
 */
 
 void refresh(SDL_Surface *surface) {
-	if (SDL_MUSTLOCK(surface)) {
-		if (SDL_LockSurface(surface) < 0) {
-			printf("Error locking surface: %s\n", SDL_GetError());
-			abort();
-		}
-    }
-	
-	Data_Screen.drawBuffer = (Color*)surface->pixels;
 	
 	Time_setMillis(SDL_GetTicks());
 	Animation_updateTimers();
@@ -76,6 +65,16 @@ void refresh(SDL_Surface *surface) {
 	//UI_MainMenu_drawBackground();
 	//UI_MainMenu_drawForeground();
 	//UI_MainMenu_handleMouse();
+	
+	if (SDL_MUSTLOCK(surface)) {
+		if (SDL_LockSurface(surface) < 0) {
+			printf("Error locking surface: %s\n", SDL_GetError());
+			abort();
+		}
+    }
+	
+	// scanline??
+	memcpy(surface->pixels, Data_Screen.drawBuffer, Data_Screen.width * Data_Screen.height * 4);
 	
 	if (SDL_MUSTLOCK(surface)) {
 		SDL_UnlockSurface(surface);
@@ -123,7 +122,7 @@ void handleKey(SDL_KeyboardEvent *event)
 
 SDL_Surface* createSurface(int width, int height)
 {
-SDL_Surface *surface = SDL_SetVideoMode(
+	SDL_Surface *surface = SDL_SetVideoMode(
 	//	vidInfo->current_w, vidInfo->current_h, 16, /*SDL_FULLSCREEN*/0);
 		width, height, 32, SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_ANYFORMAT|SDL_RESIZABLE);
 		//1920, 1200, 32, SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_ANYFORMAT|SDL_FULLSCREEN);
@@ -159,12 +158,7 @@ SDL_Surface *surface = SDL_SetVideoMode(
 			surface->format->Bshift,
 			surface->format->Ashift);
 
-		Data_Screen.format = 565; // TODO derive later
-		Data_Screen.width = width;
-		Data_Screen.height = height;
-		Data_Screen.offset640x480.x = (Data_Screen.width - 640) / 2;
-		Data_Screen.offset640x480.y = (Data_Screen.height - 480) / 2;
-		CityView_setViewport();
+		Screen_setResolution(width, height);
 	}
 	return surface;
 }
@@ -336,8 +330,6 @@ int main()
 	Data_Settings.scrollSpeed = 50;
 	// end settings
 	
-	Graphics_setClipRectangle(0, 0, Data_Screen.width, Data_Screen.height);
-	
 	Loader_Graphics_initGraphics();
 	
 	Loader_GameState_init();
@@ -348,16 +340,9 @@ int main()
 	printf("Load language: %d\n", Language_load("c3.eng", "c3_mm.eng"));
 	UI_Window_goTo(Window_MainMenu);
 	
-	GameFile_loadSavedGame("1.sav");
-	printf("map width = %d\n", Data_Settings_Map.width);
-	CityView_calculateLookup(); // TODO should be part of loading file
-	Empire_load(0, Data_Scenario.empireId);
-	//Data_CityInfo.godWrathMercury = 40;
 	// end C3 setup
 	
 	mainLoop(surface);
-	
-	//SDL_Delay(5000);
 	
 	printf("Quiting SDL.\n");
 	
