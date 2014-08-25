@@ -46,6 +46,9 @@ int Terrain_getClosestReachableRoadWithinRadius(int x, int y, int size, int radi
 int Terrain_getRoadToLargestRoadNetwork(int x, int y, int size, int *xTile, int *yTile);
 int Terrain_getRoadToLargestRoadNetworkHippodrome(int x, int y, int size, int *xTile, int *yTile);
 
+int Terrain_getAdjacentRoadTilesForRoaming(int gridOffset, int *roadTiles);
+int Terrain_getSurroundingRoadTilesForRoaming(int gridOffset, int *roadTiles);
+
 void Terrain_markNativeLand(int x, int y, int size, int radius);
 int Terrain_hasBuildingOnNativeLand(int x, int y, int size, int radius);
 

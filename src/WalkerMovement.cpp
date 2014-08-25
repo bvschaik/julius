@@ -174,9 +174,156 @@ void WalkerMovement_initRoaming(int walkerId)
 	}
 }
 
+static void roamSetDirection(struct Data_Walker *w)
+{
+	int gridOffset = GridOffset(w->x, w->y);
+	int direction = Routing_getDirection(w->x, w->y, w->destinationX, w->destinationY);
+	if (direction >= 8) {
+		direction = 0;
+	}
+	int roadOffsetDir1 = 0;
+	int roadDir1;
+	for (int i = 0, dir = direction; i < 8; i++) {
+		if (dir % 2 == 0 && Data_Grid_terrain[gridOffset + Constant_DirectionGridOffsets[dir]] & Terrain_Road) {
+			roadDir1 = dir;
+			break;
+		}
+		dir++;
+		if (dir > 7) dir = 0;
+		roadOffsetDir1++;
+	}
+	int roadOffsetDir2 = 0;
+	int roadDir2;
+	for (int i = 0, dir = direction; i < 8; i++) {
+		if (dir % 2 == 0 && Data_Grid_terrain[gridOffset + Constant_DirectionGridOffsets[dir]] & Terrain_Road) {
+			roadDir2 = dir;
+			break;
+		}
+		dir--;
+		if (dir < 0) dir = 7;
+		roadOffsetDir2++;
+	}
+	if (roadOffsetDir1 <= roadOffsetDir2) {
+		w->direction = roadDir1;
+		w->roamTurnDirection = 2;
+	} else {
+		w->direction = roadDir2;
+		w->roamTurnDirection = -2;
+	}
+	w->roamTicksUntilNextTurn = 5;
+}
+
 void WalkerMovement_roamTicks(int walkerId, int numTicks)
 {
-	// TODO
+	struct Data_Walker *w = &Data_Walkers[walkerId];
+	if (w->roamNoDestination == 0) {
+		roamingEnabled = 1;
+		WalkerMovement_walkTicks(walkerId, numTicks);
+		if (w->direction == 8) {
+			w->roamNoDestination = 1;
+			w->roamLength = 0;
+		} else if (w->direction == 9 || w->direction == 10) {
+			w->roamNoDestination = 1;
+		}
+		if (w->roamNoDestination) {
+			w->roamTicksUntilNextTurn = 100;
+			w->direction = w->previousTileDirection;
+		} else {
+			return;
+		}
+	}
+	// no destination: walk to end of tile and pick a direction
+	while (numTicks > 0) {
+		numTicks--;
+		w->progressOnTile++;
+		if (w->progressOnTile < 15) {
+			walkerAdvanceTick(w);
+		} else {
+			w->progressOnTile = 15;
+			w->roamRandomCounter++;
+			int cameFromDirection = (w->previousTileDirection + 4) % 8;
+			if (Walker_provideServiceCoverage(walkerId)) {
+				return;
+			}
+			int roadTiles[8];
+			int adjacentRoadTiles = Terrain_getAdjacentRoadTilesForRoaming(w->gridOffset, roadTiles);
+			if (adjacentRoadTiles == 3 && Terrain_getSurroundingRoadTilesForRoaming(w->gridOffset, roadTiles) >= 5) {
+				// go in the straight direction of a double-wide road
+				adjacentRoadTiles = 2;
+				if (cameFromDirection == 0 || cameFromDirection == 4) {
+					if (roadTiles[0] && roadTiles[4]) {
+						roadTiles[2] = roadTiles[6] = 0;
+					} else {
+						roadTiles[0] = roadTiles[4] = 0;
+					}
+				} else {
+					if (roadTiles[2] && roadTiles[6]) {
+						roadTiles[0] = roadTiles[4] = 0;
+					} else {
+						roadTiles[2] = roadTiles[6] = 0;
+					}
+				}
+			}
+			if (adjacentRoadTiles == 4 && Terrain_getSurroundingRoadTilesForRoaming(w->gridOffset, roadTiles) >= 8) {
+				// go straight on when all surrounding tiles are road
+				adjacentRoadTiles = 2;
+				if (cameFromDirection == 0 || cameFromDirection == 4) {
+					roadTiles[2] = roadTiles[6] = 0;
+				} else {
+					roadTiles[0] = roadTiles[4] = 0;
+				}
+			}
+			if (adjacentRoadTiles == 0) {
+				w->roamLength = w->maxRoamLength; // end roaming walk
+				return;
+			}
+			if (adjacentRoadTiles == 1) {
+				int dir = 0;
+				do {
+					w->direction = 2 * dir;
+				} while (!roadTiles[w->direction] && dir++ < 4);
+			} else if (adjacentRoadTiles == 2) {
+				if (w->roamTicksUntilNextTurn == -1) {
+					roamSetDirection(w);
+					cameFromDirection = -1;
+				}
+				// 1. continue in the same direction
+				// 2. turn in the direction given by roamTurnDirection
+				int dir = 0;
+				do {
+					if (roadTiles[w->direction] && w->direction != cameFromDirection) {
+						break;
+					}
+					w->direction += w->roamTurnDirection;
+					if (w->direction > 6) w->direction = 0;
+					if (w->direction < 0) w->direction = 6;
+				} while (dir++ < 4);
+			} else { // > 2 road tiles
+				w->direction = (w->roamRandomCounter + Data_Grid_random[w->gridOffset]) % 6;
+				if (!roadTiles[w->direction] || w->direction == cameFromDirection) {
+					w->roamTicksUntilNextTurn--;
+					if (w->roamTicksUntilNextTurn <= 0) {
+						roamSetDirection(w);
+						cameFromDirection = -1;
+					}
+					int dir = 0;
+					do {
+						if (roadTiles[w->direction] && w->direction != cameFromDirection) {
+							break;
+						}
+						w->direction += w->roamTurnDirection;
+						if (w->direction > 6) w->direction = 0;
+						if (w->direction < 0) w->direction = 6;
+					} while (dir++ < 4);
+				}
+			}
+			w->routingPathCurrentTile++;
+			w->previousTileDirection = w->direction;
+			w->progressOnTile = 0;
+			walkerMoveToNextTile(walkerId, w);
+			walkerAdvanceTick(w);
+		}
+	}
 }
 
 static void walkerSetNextRouteTileDirection(int walkerId, struct Data_Walker *w)

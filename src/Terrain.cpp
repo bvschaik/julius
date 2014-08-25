@@ -675,6 +675,40 @@ int Terrain_getRoadToLargestRoadNetworkHippodrome(int x, int y, int size, int *x
 	return -1;
 }
 
+static int getAdjacentRoadTileForRoaming(int gridOffset)
+{
+	int isRoad = (Data_Grid_terrain[gridOffset] & 0x440) ? 1 : 0;
+	if (Data_Grid_terrain[gridOffset] & Terrain_Building) {
+		int type = Data_Buildings[Data_Grid_buildingIds[gridOffset]].type;
+		if (type == Building_Gatehouse) {
+			isRoad = 0;
+		} else if (type == Building_Granary) {
+			if (Data_Grid_routingLandCitizen[gridOffset] == 0) {
+				isRoad = 1;
+			}
+		}
+	}
+	return isRoad;
+}
+
+int Terrain_getAdjacentRoadTilesForRoaming(int gridOffset, int *roadTiles)
+{
+	roadTiles[1] = roadTiles[3] = roadTiles[5] = roadTiles[7] = 0;
+
+	roadTiles[0] = getAdjacentRoadTileForRoaming(gridOffset - 162);
+	roadTiles[2] = getAdjacentRoadTileForRoaming(gridOffset + 1);
+	roadTiles[4] = getAdjacentRoadTileForRoaming(gridOffset + 162);
+	roadTiles[6] = getAdjacentRoadTileForRoaming(gridOffset - 1);
+
+	return roadTiles[0] + roadTiles[2] + roadTiles[4] + roadTiles[6];
+}
+
+int Terrain_getSurroundingRoadTilesForRoaming(int gridOffset, int *roadTiles)
+{
+	// TODO
+	return 0;
+}
+
 int Terrain_isClear(int x, int y, int size, int disallowedTerrain, int graphicSet)
 {
 	if (IsOutsideMap(x, y, size)) {

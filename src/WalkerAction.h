@@ -71,6 +71,20 @@ void WalkerAction_criminal(int walkerId);
 // map
 void WalkerAction_shipwreck(int walkerId);
 
+// enemy
+void WalkerAction_enemy43_Spear(int walkerId);
+void WalkerAction_enemy44_Sword(int walkerId);
+void WalkerAction_enemy45_Sword(int walkerId);
+void WalkerAction_enemy46_Camel(int walkerId);
+void WalkerAction_enemy47_Elephant(int walkerId);
+void WalkerAction_enemy48_Chariot(int walkerId);
+void WalkerAction_enemy49_FastSword(int walkerId);
+void WalkerAction_enemy50_Sword(int walkerId);
+void WalkerAction_enemy51_Spear(int walkerId);
+void WalkerAction_enemy52_MountedArcher(int walkerId);
+void WalkerAction_enemy53_Axe(int walkerId);
+void WalkerAction_enemy54_Gladiator(int walkerId);
+void WalkerAction_enemyCaesarLegionary(int walkerId);
 // animal
 void WalkerAction_seagulls(int walkerId);
 void WalkerAction_sheep(int walkerId);

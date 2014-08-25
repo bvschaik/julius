@@ -272,10 +272,10 @@ extern struct Data_Walker {
 	char isOnRoad;
 	short maxRoamLength;
 	short roamLength;
-	char roamNoDestination;
-	char __unknown_37;
-	char roamTurnDirection;
-	char roamTicksUntilNextTurn;
+	unsigned char roamNoDestination;
+	unsigned char roamRandomCounter;
+	unsigned char roamTurnDirection;
+	unsigned char roamTicksUntilNextTurn;
 	short crossCountryX; // 3a - position = 15 * x + offset on tile
 	short crossCountryY; // 3c - position = 15 * y + offset on tile
 	short ccDestinationX; // 3e
