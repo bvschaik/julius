@@ -132,17 +132,17 @@ void WalkerName_set(int walkerId)
 		case Walker_NativeTrader:
 			SET(barbarian, 430, 32);
 			break;
-		case Walker_Enemy43:
-		case Walker_Enemy44:
-		case Walker_Enemy45:
+		case Walker_Enemy43_Spear:
+		case Walker_Enemy44_Sword:
+		case Walker_Enemy45_Sword:
 		case Walker_Enemy46_Camel:
 		case Walker_Enemy47_Elephant:
-		case Walker_Enemy48_Horse:
-		case Walker_Enemy49:
-		case Walker_Enemy50:
-		case Walker_Enemy51:
-		case Walker_Enemy52_Horse:
-		case Walker_Enemy53:
+		case Walker_Enemy48_Chariot:
+		case Walker_Enemy49_FastSword:
+		case Walker_Enemy50_Sword:
+		case Walker_Enemy51_Spear:
+		case Walker_Enemy52_MountedArcher:
+		case Walker_Enemy53_Axe:
 			switch (Data_Formations[(int)Data_Walkers[walkerId].formationId].enemyType) {
 				case 8:
 					SET(enemyGreek, 463, 32);

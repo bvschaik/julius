@@ -704,6 +704,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\WalkerAction_Enemy.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\WalkerAction_Entertainer.cpp"
 				>
 			</File>

@@ -558,8 +558,8 @@ void Walker_playDieSound(int walkerType)
 		case Walker_LionTamer:
 			Sound_Effects_playChannel(SoundChannel_LionDie);
 			break;
-		case Walker_Enemy48_Horse:
-		case Walker_Enemy52_Horse:
+		case Walker_Enemy48_Chariot:
+		case Walker_Enemy52_MountedArcher:
 			Sound_Effects_playChannel(SoundChannel_Horse2);
 			break;
 		case Walker_Enemy46_Camel:
@@ -579,13 +579,13 @@ void Walker_playDieSound(int walkerType)
 		case Walker_Gladiator:
 		case Walker_IndigenousNative:
 		case Walker_TowerSentry:
-		case Walker_Enemy43:
-		case Walker_Enemy44:
-		case Walker_Enemy45:
-		case Walker_Enemy49:
-		case Walker_Enemy50:
-		case Walker_Enemy51:
-		case Walker_Enemy53:
+		case Walker_Enemy43_Spear:
+		case Walker_Enemy44_Sword:
+		case Walker_Enemy45_Sword:
+		case Walker_Enemy49_FastSword:
+		case Walker_Enemy50_Sword:
+		case Walker_Enemy51_Spear:
+		case Walker_Enemy53_Axe:
 		case Walker_Enemy54_Gladiator:
 		case Walker_Enemy55_Javelin:
 		case Walker_Enemy56_Mounted:
@@ -635,25 +635,25 @@ void Walker_playHitSound(int walkerType)
 			PLAY_HIT_SOUND(soundHitSoldier, SoundChannel_Sword);
 			break;
 		case Walker_FortMounted:
-		case Walker_Enemy45:
-		case Walker_Enemy48_Horse:
-		case Walker_Enemy50:
-		case Walker_Enemy52_Horse:
+		case Walker_Enemy45_Sword:
+		case Walker_Enemy48_Chariot:
+		case Walker_Enemy50_Sword:
+		case Walker_Enemy52_MountedArcher:
 		case Walker_Enemy54_Gladiator:
 			PLAY_HIT_SOUND(soundHitSoldier, SoundChannel_SwordSwing);
 			break;
 		case Walker_FortJavelin:
 			PLAY_HIT_SOUND(soundHitSoldier, SoundChannel_SwordLight);
 			break;
-		case Walker_Enemy43:
-		case Walker_Enemy51:
+		case Walker_Enemy43_Spear:
+		case Walker_Enemy51_Spear:
 			PLAY_HIT_SOUND(soundHitSpear, SoundChannel_Spear);
 			break;
-		case Walker_Enemy44:
-		case Walker_Enemy49:
+		case Walker_Enemy44_Sword:
+		case Walker_Enemy49_FastSword:
 			PLAY_HIT_SOUND(soundHitClub, SoundChannel_Club);
 			break;
-		case Walker_Enemy53:
+		case Walker_Enemy53_Axe:
 			PLAY_HIT_SOUND(soundHitAxe, SoundChannel_Axe);
 			break;
 		case Walker_Enemy46_Camel:

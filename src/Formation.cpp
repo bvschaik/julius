@@ -451,14 +451,14 @@ void Formation_changeMorale(int formationId, int amount)
 		maxMorale = f->hasMilitaryTraining ? 80 : 60;
 	} else {
 		switch (f->enemyType) {
-			case EnemyType_Numidian:
-			case EnemyType_Gaul:
-			case EnemyType_Celt:
-			case EnemyType_Goth:
+			case EnemyType_1_Numidian:
+			case EnemyType_2_Gaul:
+			case EnemyType_3_Celt:
+			case EnemyType_4_Goth:
 				maxMorale = 80;
 				break;
-			case EnemyType_Greek:
-			case EnemyType_Carthaginian:
+			case EnemyType_8_Greek:
+			case EnemyType_10_Carthaginian:
 				maxMorale = 90;
 				break;
 			default:

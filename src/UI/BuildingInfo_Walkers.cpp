@@ -165,46 +165,46 @@ static void drawWalkerInfoEnemy(BuildingInfoContext *c, int walkerId)
 	int graphicId = 8;
 	int formationId = Data_Walkers[walkerId].formationId;
 	switch (Data_Walkers[walkerId].type) {
-		case Walker_Enemy43:
-		switch (Data_Formations[formationId].enemyType) {
-			case 5: graphicId = 44; break;
-			case 6: graphicId = 46; break;
-			case 7: graphicId = 32; break;
-			case 8: graphicId = 36; break;
-		}
-		break;
-		case Walker_Enemy44:
-		switch (Data_Formations[formationId].enemyType) {
-			case 5: graphicId = 45; break;
-			case 6: graphicId = 47; break;
-			case 9: graphicId = 29; break;
-		}
-		break;
-		case Walker_Enemy45:
-		switch (Data_Formations[formationId].enemyType) {
-			case 7: graphicId = 31; break;
-			case 8: graphicId = 37; break;
-			case 10:graphicId = 22; break;
-		}
-		break;
-		case Walker_Enemy49:
-		switch (Data_Formations[formationId].enemyType) {
-			case 0: graphicId = 21; break;
-			case 1: graphicId = 20; break;
-			case 4: graphicId = 35; break;
-		}
-		break;
-		case Walker_Enemy50:
-		switch (Data_Formations[formationId].enemyType) {
-			case 2: graphicId = 40; break;
-			case 3: graphicId = 24; break;
-		}
-		break;
-		case Walker_Enemy51:
-		switch (Data_Formations[formationId].enemyType) {
-			case 1: graphicId = 20; break;
-		}
-		break;
+		case Walker_Enemy43_Spear:
+			switch (Data_Formations[formationId].enemyType) {
+				case EnemyType_5_Pergamum: graphicId = 44; break;
+				case EnemyType_6_Seleucid: graphicId = 46; break;
+				case EnemyType_7_Etruscan: graphicId = 32; break;
+				case EnemyType_8_Greek: graphicId = 36; break;
+			}
+			break;
+		case Walker_Enemy44_Sword:
+			switch (Data_Formations[formationId].enemyType) {
+				case EnemyType_5_Pergamum: graphicId = 45; break;
+				case EnemyType_6_Seleucid: graphicId = 47; break;
+				case EnemyType_9_Egyptian: graphicId = 29; break;
+			}
+			break;
+		case Walker_Enemy45_Sword:
+			switch (Data_Formations[formationId].enemyType) {
+				case EnemyType_7_Etruscan: graphicId = 31; break;
+				case EnemyType_8_Greek: graphicId = 37; break;
+				case EnemyType_10_Carthaginian: graphicId = 22; break;
+			}
+			break;
+		case Walker_Enemy49_FastSword:
+			switch (Data_Formations[formationId].enemyType) {
+				case EnemyType_0_Barbarian: graphicId = 21; break;
+				case EnemyType_1_Numidian: graphicId = 20; break;
+				case EnemyType_4_Goth: graphicId = 35; break;
+			}
+			break;
+		case Walker_Enemy50_Sword:
+			switch (Data_Formations[formationId].enemyType) {
+				case EnemyType_2_Gaul: graphicId = 40; break;
+				case EnemyType_3_Celt: graphicId = 24; break;
+			}
+			break;
+		case Walker_Enemy51_Spear:
+			switch (Data_Formations[formationId].enemyType) {
+				case EnemyType_1_Numidian: graphicId = 20; break;
+			}
+			break;
 	}
 	Graphics_drawImage(GraphicId(ID_Graphic_BigPeople) + graphicId - 1,
 		c->xOffset + 28, c->yOffset + 112);

@@ -48,17 +48,17 @@ enum {
 	Walker_Patrician = 40,
 	Walker_IndigenousNative = 41,
 	Walker_TowerSentry = 42,
-	Walker_Enemy43 = 43,
-	Walker_Enemy44 = 44,
-	Walker_Enemy45 = 45,
+	Walker_Enemy43_Spear = 43,
+	Walker_Enemy44_Sword = 44,
+	Walker_Enemy45_Sword = 45,
 	Walker_Enemy46_Camel = 46,
 	Walker_Enemy47_Elephant = 47,
-	Walker_Enemy48_Horse = 48,
-	Walker_Enemy49 = 49,
-	Walker_Enemy50 = 50,
-	Walker_Enemy51 = 51,
-	Walker_Enemy52_Horse = 52,
-	Walker_Enemy53 = 53,
+	Walker_Enemy48_Chariot = 48,
+	Walker_Enemy49_FastSword = 49,
+	Walker_Enemy50_Sword = 50,
+	Walker_Enemy51_Spear = 51,
+	Walker_Enemy52_MountedArcher = 52,
+	Walker_Enemy53_Axe = 53,
 	Walker_Enemy54_Gladiator = 54,
 	Walker_Enemy55_Javelin = 55,
 	Walker_Enemy56_Mounted = 56,
@@ -81,7 +81,7 @@ enum {
 };
 
 #define WalkerIsEnemyOrNative(t) ((t) >= Walker_IndigenousNative && (t) <= Walker_NativeTrader)
-#define WalkerIsEnemy(t) ((t) >= Walker_Enemy43 && (t) <= Walker_EnemyCaesarLegionary)
+#define WalkerIsEnemy(t) ((t) >= Walker_Enemy43_Spear && (t) <= Walker_EnemyCaesarLegionary)
 #define WalkerIsLegion(t) ((t) >= Walker_FortJavelin && (t) <= Walker_FortLegionary)
 #define WalkerIsHerd(t) ((t) >= Walker_Sheep && (t) <= Walker_Zebra)
 

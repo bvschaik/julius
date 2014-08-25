@@ -201,6 +201,7 @@ enum {
 	ID_Graphic_Walker_Sheep = 233,
 	ID_Graphic_Walker_Wolf = 234,
 	ID_Graphic_Walker_Zebra = 235,
+	ID_Graphic_Walker_CaesarLegionary = 236,
 	ID_Graphic_Walker_CartpusherCartMultipleLoads = 237,
 	ID_Graphic_TradeCenterFlag = 238,
 	ID_Graphic_TerrainRock = 239,
@@ -346,18 +347,18 @@ enum {
 };
 
 enum {
-	EnemyType_Barbarian = 0,
-	EnemyType_Numidian = 1,
-	EnemyType_Gaul = 2,
-	EnemyType_Celt = 3,
-	EnemyType_Goth = 4,
-	EnemyType_Pergamum = 5,
-	EnemyType_Seleucid = 6,
-	EnemyType_Etruscan = 7,
-	EnemyType_Greek = 8,
-	EnemyType_Egyptian = 9,
-	EnemyType_Carthaginian = 10,
-	EnemyType_Caesar = 11
+	EnemyType_0_Barbarian = 0,
+	EnemyType_1_Numidian = 1,
+	EnemyType_2_Gaul = 2,
+	EnemyType_3_Celt = 3,
+	EnemyType_4_Goth = 4,
+	EnemyType_5_Pergamum = 5,
+	EnemyType_6_Seleucid = 6,
+	EnemyType_7_Etruscan = 7,
+	EnemyType_8_Greek = 8,
+	EnemyType_9_Egyptian = 9,
+	EnemyType_10_Carthaginian = 10,
+	EnemyType_11_Caesar = 11
 };
 
 enum {

@@ -169,7 +169,7 @@ void Event_handleInvasions()
 			}
 			if (Data_Scenario.invasions.type[warning->invasionId] == InvasionType_Caesar) {
 				int gridOffset = startInvasion(
-					EnemyType_Caesar,
+					EnemyType_11_Caesar,
 					Data_Scenario.invasions.amount[warning->invasionId],
 					Data_Scenario.invasions.from[warning->invasionId],
 					Data_Scenario.invasions.attackType[warning->invasionId],
@@ -186,7 +186,7 @@ void Event_handleInvasions()
 			if (Data_CityInfo_Extra.gameTimeYear == Data_Scenario.startYear + Data_Scenario.invasions.year[i] &&
 				Data_CityInfo_Extra.gameTimeMonth >= Data_Scenario.invasions_month[i]) {
 				int gridOffset = startInvasion(
-					EnemyType_Barbarian,
+					EnemyType_0_Barbarian,
 					Data_Scenario.invasions.amount[i],
 					Data_Scenario.invasions.from[i],
 					Data_Scenario.invasions.attackType[i],
@@ -208,7 +208,7 @@ int Event_startInvasionLocalUprisingFromMars()
 	if (amount <= 0) {
 		return 0;
 	}
-	int gridOffset = startInvasion(EnemyType_Barbarian, amount, 8, 0, 23);
+	int gridOffset = startInvasion(EnemyType_0_Barbarian, amount, 8, 0, 23);
 	if (gridOffset) {
 		PlayerMessage_post(1, 121, Data_Event.lastInternalInvasionId, gridOffset);
 	}
@@ -316,7 +316,7 @@ static int startInvasion(int enemyType, int amount, int invasionPoint, int attac
 		}
 	}
 	// determine invasion point
-	if (enemyType == EnemyType_Caesar) {
+	if (enemyType == EnemyType_11_Caesar) {
 		x = Data_Scenario.entryPoint.x;
 		y = Data_Scenario.entryPoint.y;
 	} else {
@@ -542,7 +542,7 @@ static void updateCaesarInvasion()
 				size = 144;
 			}
 			int invasionId = startInvasion(
-				EnemyType_Caesar, size, 0, AttackType_2_Caesar, 24);
+				EnemyType_11_Caesar, size, 0, AttackType_2_Caesar, 24);
 			if (invasionId > 0) {
 				Data_CityInfo.caesarInvasionCount++;
 				Data_CityInfo.caesarInvasionDurationDayCountdown = 192;
