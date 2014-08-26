@@ -584,6 +584,37 @@ void Formation_moveHerdsAwayFrom(int x, int y)
 	}
 }
 
+int Formation_marsCurseFort()
+{
+	int bestLegionId = 0;
+	int bestLegionWeight = 0;
+	for (int i = 1; i <= 6; i++) {
+		struct Data_Formation *f = &Data_Formations[i];
+		if (f->inUse == 1 && f->isLegion) {
+			int weight = f->numWalkers;
+			if (f->walkerType == Walker_FortLegionary) {
+				weight *= 2;
+			}
+			if (weight > bestLegionWeight) {
+				bestLegionWeight = weight;
+				bestLegionId = i;
+			}
+		}
+	}
+	if (bestLegionId <= 0) {
+		return 0;
+	}
+	struct Data_Formation *f = &Data_Formations[bestLegionId];
+	for (int i = 0; i < 15; i++) { // BUG: last walker not cursed
+		if (f->walkerIds[i] > 0) {
+			Data_Walkers[f->walkerIds[i]].actionState = WalkerActionState_82_SoldierReturningToBarracks;
+		}
+	}
+	f->cursedByMars = 96;
+	Formation_calculateWalkers();
+	return 1;
+}
+
 void Formation_Tick_updateRestMorale()
 {
 	for (int i = 1; i < MAX_FORMATIONS; i++) {
@@ -614,3 +645,4 @@ void Formation_Tick_updateRestMorale()
 		}
 	}
 }
+

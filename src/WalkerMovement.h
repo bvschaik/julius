@@ -12,4 +12,6 @@ void WalkerMovement_followTicks(int walkerId, int leaderWalkerId, int numTicks);
 void WalkerMovement_crossCountrySetDirection(int walkerId, int xSrc, int ySrc, int xDst, int yDst, int isProjectile);
 int WalkerMovement_crossCountryWalkTicks(int walkerId, int numTicks);
 
+int WalkerMovement_canLaunchCrossCountryMissile(int xSrc, int ySrc, int xDst, int yDst);
+
 #endif

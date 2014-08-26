@@ -2,6 +2,7 @@
 
 #include "Calc.h"
 #include "Grid.h"
+#include "PlayerMessage.h"
 #include "Walker.h"
 
 #include "Data/Building.h"
@@ -268,6 +269,44 @@ static void setNativeTargetBuilding(int formationId)
 		Data_Formations[formationId].destinationX = Data_Buildings[minBuildingId].x;
 		Data_Formations[formationId].destinationY = Data_Buildings[minBuildingId].y;
 		Data_Formations[formationId].destinationBuildingId = minBuildingId;
+	}
+}
+static void marsKillEnemies()
+{
+	if (Data_CityInfo.godBlessingMarsEnemiesToKill <= 0) {
+		return;
+	}
+	int toKill = Data_CityInfo.godBlessingMarsEnemiesToKill;
+	int gridOffset = 0;
+	for (int i = 1; i < MAX_WALKERS && toKill > 0; i++) {
+		struct Data_Walker *w = &Data_Walkers[i];
+		if (w->state != WalkerState_Alive) {
+			continue;
+		}
+		if (WalkerIsEnemy(w->type) && w->type != Walker_Enemy54_Gladiator) {
+			w->actionState = WalkerActionState_149_Corpse;
+			toKill--;
+			if (!gridOffset) {
+				gridOffset = w->gridOffset;
+			}
+		}
+	}
+	Data_CityInfo.godBlessingMarsEnemiesToKill = 0;
+	PlayerMessage_post(1, 105, 0, gridOffset);
+}
+
+static void setFormationWalkersToActionState151(int formationId)
+{
+	struct Data_Formation *f = &Data_Formations[formationId];
+	for (int i = 0; i < 16; i++) {
+		if (f->walkerIds[i] > 0) {
+			struct Data_Walker *w = &Data_Walkers[f->walkerIds[i]];
+			if (w->actionState != WalkerActionState_149_Corpse &&
+				w->actionState != WalkerActionState_150_Attack) {
+				w->actionState = WalkerActionState_151_EnemyInitial;
+				w->waitTicks = 0;
+			}
+		}
 	}
 }
 

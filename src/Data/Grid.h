@@ -99,6 +99,7 @@ enum {
 	Edge_X1Y2 = 17,
 	Edge_X2Y2 = 18,
 	Edge_LeftmostTile = 0x40,
+	Edge_NoLeftmostTile = 0xbf,
 	Edge_NativeLand = 0x80,
 	Edge_NoNativeLand = 0x7f,
 };

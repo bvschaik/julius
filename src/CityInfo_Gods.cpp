@@ -2,6 +2,7 @@
 
 #include "Building.h"
 #include "Event.h"
+#include "Formation.h"
 #include "PlayerMessage.h"
 #include "Walker.h"
 
@@ -18,12 +19,6 @@
 	Data_CityInfo.x += val;\
 	if (Data_CityInfo.x < min) Data_CityInfo.x = min; \
 	else if (Data_CityInfo.x > max) Data_CityInfo.x = max;
-
-static int performLargeCurseMars()
-{
-	// TODO
-	return 0;
-}
 
 static void performBlessing(int god)
 {
@@ -105,7 +100,7 @@ static void performLargeCurse(int god)
 			Building_Mercury_removeResources(1);
 			break;
 		case God_Mars:
-			if (performLargeCurseMars()) {
+			if (Formation_marsCurseFort()) {
 				PlayerMessage_post(1, 82, 0, 0);
 				Event_startInvasionLocalUprisingFromMars();
 			} else {

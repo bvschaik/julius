@@ -1,8 +1,11 @@
 #include "Terrain.h"
 
+#include "Building.h"
 #include "Routing.h"
+#include "TerrainBridge.h"
 #include "TerrainGraphics.h"
 #include "Util.h"
+#include "WalkerAction.h"
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
@@ -675,6 +678,38 @@ int Terrain_getRoadToLargestRoadNetworkHippodrome(int x, int y, int size, int *x
 	return -1;
 }
 
+static int getRoadTileForAqueduct(int gridOffset, int gateOrientation)
+{
+	int isRoad = (Data_Grid_terrain[gridOffset] & Terrain_Road) ? 1 : 0;
+	if (Data_Grid_terrain[gridOffset] & Terrain_Building) {
+		int type = Data_Buildings[Data_Grid_buildingIds[gridOffset]].type;
+		if (type == Building_Gatehouse) {
+			if (Data_Buildings[Data_Grid_buildingIds[gridOffset]].subtype.orientation == gateOrientation) {
+				isRoad = 1;
+			}
+		} else if (type == Building_Granary) {
+			if (Data_Grid_routingLandCitizen == 0) {
+				isRoad = 1;
+			}
+		}
+	}
+	return isRoad;
+}
+
+int Terrain_getAdjacentRoadTilesForAqueduct(int gridOffset)
+{
+	int roadTiles = 0;
+	roadTiles += getRoadTileForAqueduct(gridOffset - 162, 1);
+	roadTiles += getRoadTileForAqueduct(gridOffset + 1, 2);
+	roadTiles += getRoadTileForAqueduct(gridOffset + 162, 1);
+	roadTiles += getRoadTileForAqueduct(gridOffset - 1, 2);
+	if (roadTiles == 4) {
+		if (Data_Buildings[Data_Grid_buildingIds[gridOffset]].type == Building_Granary) {
+			roadTiles = 2;
+		}
+	}
+	return roadTiles;
+}
 static int getAdjacentRoadTileForRoaming(int gridOffset)
 {
 	int isRoad = (Data_Grid_terrain[gridOffset] & 0x440) ? 1 : 0;
@@ -705,8 +740,24 @@ int Terrain_getAdjacentRoadTilesForRoaming(int gridOffset, int *roadTiles)
 
 int Terrain_getSurroundingRoadTilesForRoaming(int gridOffset, int *roadTiles)
 {
-	// TODO
-	return 0;
+	roadTiles[1] = (Data_Grid_terrain[gridOffset - 161] & (Terrain_Road | Terrain_AccessRamp)) ? 1 : 0;
+	roadTiles[3] = (Data_Grid_terrain[gridOffset + 163] & (Terrain_Road | Terrain_AccessRamp)) ? 1 : 0;
+	roadTiles[5] = (Data_Grid_terrain[gridOffset + 161] & (Terrain_Road | Terrain_AccessRamp)) ? 1 : 0;
+	roadTiles[7] = (Data_Grid_terrain[gridOffset - 163] & (Terrain_Road | Terrain_AccessRamp)) ? 1 : 0;
+	
+	int maxStretch = 0;
+	int stretch = 0;
+	for (int i = 0; i < 16; i++) {
+		if (roadTiles[i % 8]) {
+			stretch++;
+			if (stretch > maxStretch) {
+				maxStretch = stretch;
+			}
+		} else {
+			stretch = 0;
+		}
+	}
+	return maxStretch;
 }
 
 int Terrain_isClear(int x, int y, int size, int disallowedTerrain, int graphicSet)
@@ -1191,4 +1242,70 @@ void Terrain_updateToPlaceBuildingToOverlay(int size, int x, int y, int terrainM
 			Data_Grid_bitfields[gridOffset] |= Bitfield_Overlay;
 		}
 	}
+}
+
+static void determineLeftmostTile()
+{
+	for (int y = 0; y < Data_Settings_Map.height; y++) {
+		for (int x = 0; x < Data_Settings_Map.width; x++) {
+			int gridOffset = GridOffset(x, y);
+			int sizeCode = Data_Grid_bitfields[gridOffset] & Bitfield_Sizes;
+			int xy = Data_Grid_edge[gridOffset] & Edge_MaskXY;
+			if (sizeCode == Bitfield_Size1) {
+				Data_Grid_edge[gridOffset] |= Edge_LeftmostTile;
+				continue;
+			}
+			Data_Grid_edge[gridOffset] &= Edge_NoLeftmostTile;
+			int max;
+			if (sizeCode == Bitfield_Size2) {
+				max = 1;
+			} else if (sizeCode == Bitfield_Size3) {
+				max = 2;
+			} else if (sizeCode == Bitfield_Size4) {
+				max = 3;
+			} else if (sizeCode == Bitfield_Size5) {
+				max = 4;
+			} else {
+				continue;
+			}
+			int leftmost[4] = {
+				EdgeXY(0, max), EdgeXY(0, 0),
+				EdgeXY(max, 0), EdgeXY(max, max)
+			};
+			int orientationIndex = Data_Settings_Map.orientation / 2;
+			if (xy == leftmost[orientationIndex]) {
+				Data_Grid_edge[gridOffset] |= Edge_LeftmostTile;
+			}
+		}
+	}
+}
+
+void Terrain_rotateMap(int ccw)
+{
+	Terrain_updateEntryExitFlags(1);
+	Data_State.undoAvailable = 0;
+	determineLeftmostTile();
+
+	TerrainGraphics_updateRegionElevation(0, 0, Data_Settings_Map.width - 2, Data_Settings_Map.height - 2);
+	TerrainGraphics_updateRegionWater(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
+	TerrainGraphics_updateRegionEarthquake(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
+	TerrainGraphics_updateAllRoads();
+	TerrainGraphics_updateAllGardens();
+
+	Terrain_updateEntryExitFlags(0);
+
+	TerrainGraphics_updateRegionEmptyLand(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
+	TerrainGraphics_updateRegionMeadow(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
+	TerrainGraphics_updateRegionRubble(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
+	TerrainGraphics_updateAllRoads();
+	TerrainGraphics_updateRegionPlazas(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
+	TerrainGraphics_updateAllWalls();
+	TerrainGraphics_updateRegionAqueduct(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1, 0);
+
+	Building_determineGraphicIdsForOrientedBuildings();
+	TerrainBridge_updateSpriteIdsOnMapRotate(ccw);
+	Routing_determineWalls();
+
+	WalkerAction_TowerSentry_reroute();
+	WalkerAction_HippodromeHorse_reroute();
 }

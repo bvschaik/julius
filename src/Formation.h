@@ -36,6 +36,8 @@ void Formation_legionKillSoldiersInDistantBattle(int killPercentage);
 
 void Formation_moveHerdsAwayFrom(int x, int y);
 
+int Formation_marsCurseFort();
+
 void Formation_Tick_updateRestMorale();
 void Formation_Tick_updateAll(int secondTime);
 

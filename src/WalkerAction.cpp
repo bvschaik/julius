@@ -126,3 +126,9 @@ void WalkerAction_TowerSentry_reroute()
 {
 	// TODO
 }
+
+// TODO move to own file
+void WalkerAction_HippodromeHorse_reroute()
+{
+	// TODO
+}

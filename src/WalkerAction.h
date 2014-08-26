@@ -10,16 +10,20 @@ int WalkerAction_TradeCaravan_canSell(int walkerId, int buildingId, int empireCi
 int WalkerAction_TradeShip_canBuyOrSell(int walkerId);
 
 void WalkerAction_TowerSentry_reroute();
+void WalkerAction_HippodromeHorse_reroute();
 
 void WalkerAction_Common_handleCorpse(int walkerId);
 void WalkerAction_Common_handleAttack(int walkerId);
 void WalkerAction_Common_setCartOffset(int walkerId, int direction);
 void WalkerAction_Common_setCrossCountryDestination(int walkerId, struct Data_Walker *w, int xDst, int yDst);
 
-int WalkerAction_CombatSoldier_getMissileTarget(int walkerId, int distance, int *xTile, int *yTile);
-int WalkerAction_CombatSoldier_getTarget(int x, int y, int distance);
+int WalkerAction_CombatSoldier_getMissileTarget(int walkerId, int maxDistance, int *xTile, int *yTile);
+int WalkerAction_CombatSoldier_getTarget(int x, int y, int maxDistance);
+int WalkerAction_CombatWolf_getTarget(int x, int y, int maxDistance);
+int WalkerAction_CombatEnemy_getTarget(int x, int y);
+int WalkerAction_CombatEnemy_getMissileTarget(int enemyId, int maxDistance, int attackCitizens, int *xTile, int *yTile);
+
 void WalkerAction_CombatSoldier_attackWalker(int walkerId, int targetWalkerId);
-int WalkerAction_CombatWolf_getTarget(int x, int y, int range);
 
 // walker action callbacks
 void WalkerAction_nobody(int walkerId);
