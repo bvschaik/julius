@@ -140,8 +140,8 @@ void UI_BuildingInfo_drawWharf(BuildingInfoContext *c)
 		switch (Data_Walkers[boatId].actionState) {
 			case WalkerActionState_191_FishingBoatGoingToFish: textId = 3; break;
 			case WalkerActionState_192_FishingBoatFishing: textId = 4; break;
-			case WalkerActionState_193_FishingBoatCreated: textId = 5; break;
-			case WalkerActionState_194_FishingBoatUnloading: textId = 6; break;
+			case WalkerActionState_193_FishingBoatSailingToWharf: textId = 5; break;
+			case WalkerActionState_194_FishingBoatAtWharf: textId = 6; break;
 			case WalkerActionState_195_FishingBoatReturningWithFish: textId = 7; break;
 			default: textId = 8; break;
 		}

@@ -72,5 +72,8 @@ void Terrain_updateToPlaceBuildingToOverlay(int size, int x, int y, int terrainM
 int Terrain_Water_findOpenWaterForShipwreck(int walkerId, int *xTile, int *yTile);
 int Terrain_Water_getFreeDockDestination(int walkerId, int *xTile, int *yTile);
 int Terrain_Water_getQueueDockDestination(int walkerId, int *xTile, int *yTile);
+int Terrain_Water_getWharfTileForNewFishingBoat(int walkerId, int *xTile, int *yTile);
+int Terrain_Water_findAlternativeTileForFishingBoat(int walkerId, int *xTile, int *yTile);
+int Terrain_Water_getNearestFishTile(int walkerId, int *xTile, int *yTile);
 
 #endif

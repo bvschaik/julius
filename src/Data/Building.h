@@ -229,7 +229,7 @@ extern struct Data_Building {
 			char __unknown_55;
 			char __unknown_56;
 			char __unknown_57;
-			char __unknown_58;
+			char fishingBoatHasFish;
 			char __unknown_59;
 			char __unknown_5a;
 			char __unknown_5b;

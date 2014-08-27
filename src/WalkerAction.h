@@ -63,6 +63,7 @@ void WalkerAction_tradeCaravanDonkey(int walkerId);
 void WalkerAction_tradeShip(int walkerId);
 // soldier
 void WalkerAction_soldier(int walkerId);
+void WalkerAction_militaryStandard(int walkerId);
 // missile
 void WalkerAction_explosionCloud(int walkerId);
 void WalkerAction_arrow(int walkerId);
@@ -72,7 +73,9 @@ void WalkerAction_bolt(int walkerId);
 // rioter
 void WalkerAction_protestor(int walkerId);
 void WalkerAction_criminal(int walkerId);
-// map
+// water
+void WalkerAction_fishingBoat(int walkerId);
+void WalkerAction_flotsam(int walkerId);
 void WalkerAction_shipwreck(int walkerId);
 
 // enemy

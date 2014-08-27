@@ -34,6 +34,47 @@ static const struct {
 	{-6, -4}, {-6, -5}, {-6, -6}, {-5, -6}, {-4, -6}, {-3, -6}, {-2, -6}, {-1, -6},
 };
 
+void WalkerAction_militaryStandard(int walkerId)
+{
+	struct Data_Walker *w = &Data_Walkers[walkerId];
+	struct Data_Formation *f = &Data_Formations[w->formationId];
+
+	WalkerActionIncreaseGraphicOffset(w, 16);
+	Walker_removeFromTileList(walkerId);
+	if (f->isAtFort) {
+		w->x = f->x;
+		w->y = f->y;
+	} else {
+		w->x = f->xStandard;
+		w->y = f->yStandard;
+	}
+	w->gridOffset = GridOffset(w->x, w->y);
+	w->crossCountryX = 15 * w->x + 7;
+	w->crossCountryY = 15 * w->y + 7;
+	Walker_addToTileList(walkerId);
+
+	w->graphicId = GraphicId(ID_Graphic_FortStandardPole) + 20 - f->morale / 5;
+	if (f->walkerType == Walker_FortLegionary) {
+		if (f->isHalted) {
+			w->cartGraphicId = GraphicId(ID_Graphic_FortFlags) + 8;
+		} else {
+			w->cartGraphicId = GraphicId(ID_Graphic_FortFlags) + w->graphicOffset / 2;
+		}
+	} else if (f->walkerType == Walker_FortMounted) {
+		if (f->isHalted) {
+			w->cartGraphicId = GraphicId(ID_Graphic_FortFlags) + 26;
+		} else {
+			w->cartGraphicId = GraphicId(ID_Graphic_FortFlags) + 18 + w->graphicOffset / 2;
+		}
+	} else {
+		if (f->isHalted) {
+			w->cartGraphicId = GraphicId(ID_Graphic_FortFlags) + 17;
+		} else {
+			w->cartGraphicId = GraphicId(ID_Graphic_FortFlags) + 9 + w->graphicOffset / 2;
+		}
+	}
+}
+
 static void javelinLaunchMissile(int walkerId, struct Data_Walker *w)
 {
 	int xTile, yTile;

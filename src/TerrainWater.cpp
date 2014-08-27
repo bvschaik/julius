@@ -201,7 +201,7 @@ int Terrain_Water_getWharfTileForNewFishingBoat(int walkerId, int *xTile, int *y
 		if (Data_Buildings[i].inUse == 1 && Data_Buildings[i].type == Building_Wharf) {
 			int wharfBoatId = Data_Buildings[i].data.other.boatWalkerId;
 			if (!wharfBoatId || wharfBoatId == walkerId) {
-				wharfId = 1;
+				wharfId = i;
 				break;
 			}
 		}
@@ -252,7 +252,7 @@ int Terrain_Water_getNearestFishTile(int walkerId, int *xTile, int *yTile)
 	return 0;
 }
 
-int Terrain_Water_findFreeTileForFishingBoat(int walkerId, int *xTile, int *yTile)
+int Terrain_Water_findAlternativeTileForFishingBoat(int walkerId, int *xTile, int *yTile)
 {
 	int gridOffset = Data_Walkers[walkerId].gridOffset;
 	if (Data_Grid_walkerIds[gridOffset] == walkerId) {
@@ -268,6 +268,8 @@ int Terrain_Water_findFreeTileForFishingBoat(int walkerId, int *xTile, int *yTil
 		BOUND_REGION();
 		FOREACH_REGION({
 			if (!Data_Grid_walkerIds[gridOffset] && Data_Grid_terrain[gridOffset] & Terrain_Water) {
+				*xTile = xx;
+				*yTile = yy;
 				return 1;
 			}
 		});

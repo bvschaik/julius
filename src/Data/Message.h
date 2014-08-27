@@ -65,7 +65,8 @@ enum {
 	MessageDelay_Collapse = 2,
 	MessageDelay_BlockedDock = 4,
 	MessageDelay_WorkersNeeded = 8,
-	MessageDelay_NoWorkingDock = 10
+	MessageDelay_NoWorkingDock = 10,
+	MessageDelay_FishingBlocked = 11,
 };
 
 #endif

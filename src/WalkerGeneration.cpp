@@ -1052,7 +1052,7 @@ static void spawnWalkerWharf(int buildingId, struct Data_Building *b)
 		EXIT_IF_WALKER(Walker_CartPusher);
 		if (b->walkerSpawnDelay) {
 			b->walkerSpawnDelay = 0;
-			b->data.other.__unknown_58 = 0;
+			b->data.other.fishingBoatHasFish = 0;
 			b->outputResourceId = Resource_Meat;
 			CREATE_WALKER(Walker_CartPusher, xRoad, yRoad, 4);
 			w->actionState = WalkerActionState_20_CartpusherInitial;

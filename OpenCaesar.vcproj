@@ -712,10 +712,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\WalkerAction_Map.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\WalkerAction_Market.cpp"
 				>
 			</File>
@@ -741,6 +737,10 @@
 			</File>
 			<File
 				RelativePath=".\src\WalkerAction_Trader.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\WalkerAction_Water.cpp"
 				>
 			</File>
 			<File
