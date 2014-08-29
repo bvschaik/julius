@@ -39,12 +39,18 @@ int Widget_GameText_getWidth(int group, int number, Font font);
 void Widget_RichText_setFonts(Font normalFont, Font linkFont);
 // returns total number of lines
 int Widget_RichText_draw(const char *text, int xOffset, int yOffset,
-						 int boxWidthPixels, int boxHeightLines, int scrollLine, int measureOnly);
+						 int boxWidthPixels, int boxHeightLines, int measureOnly);
 int Widget_RichText_drawColored(const char *str, int xOffset, int yOffset,
-								int boxWidth, int heightLines, int scrollLine, Color color);
+								int boxWidth, int heightLines, Color color);
 int Widget_RichText_getClickedLink();
 void Widget_RichText_clearLinks();
-
+void Widget_RichText_scroll(int isDown, int numLines);
+void Widget_RichText_reset(int scrollPosition);
+void Widget_RichText_drawScrollbar();
+void Widget_RichText_drawScrollbarDot();
+int Widget_RichText_getScrollPosition();
+int Widget_RichText_handleScrollbar();
+int Widget_RichText_init(const char *str, int xText, int yText, int widthBlocks, int heightBlocks, int adjustWidthOnNoScroll);
 
 void Widget_Panel_drawOuterPanel(int xOffset, int yOffset, int widthInBlocks, int heightInBlocks);
 

@@ -116,7 +116,7 @@ int main(int argc, char **argv)
 
 	Widget_RichText_draw(
 		"small and large @67temples that your city ",
-		100, 100, 100, 10, 0, 0);
+		100, 100, 100, 10, 0);
 
 	Graphics_saveScreenshot("test.bmp");
 	printf("GraphicID: %d\n", GraphicId(136));

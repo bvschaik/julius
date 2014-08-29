@@ -482,8 +482,8 @@ static void setupFromSavedGame()
 	RoadNetwork_calculate();
 	Building_GameTick_checkAccessToRome();
 	Resource_gatherGranaryGettingInfo();
-	SidebarMenu_enableBuildingButtons();
 	SidebarMenu_enableBuildingMenuItems();
+	SidebarMenu_enableBuildingButtons();
 	PlayerMessage_initProblemArea();
 
 	Sound_City_init();

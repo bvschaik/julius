@@ -99,4 +99,14 @@ void UI_Intermezzo_show(int type, WindowId nextWindowId, int timeMillis);
 void UI_Intermezzo_drawBackground();
 void UI_Intermezzo_handleMouse();
 
+void UI_MissionStart_show();
+
+void UI_MissionStart_Selection_drawBackground();
+
+void UI_MissionStart_Briefing_drawBackground();
+void UI_MissionStart_BriefingInitial_drawForeground();
+void UI_MissionStart_BriefingReview_drawForeground();
+void UI_MissionStart_BriefingInitial_handleMouse();
+void UI_MissionStart_BriefingReview_handleMouse();
+
 #endif

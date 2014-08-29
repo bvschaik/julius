@@ -5,10 +5,12 @@
 #include "Data/KeyboardInput.h"
 #include "Data/Mouse.h"
 
+#include "Calc.h"
 #include "Graphics.h"
 #include "Language.h"
 #include "String.h"
 #include "Time.h"
+#include "UI/Window.h"
 
 #include <stdio.h>
 
@@ -474,6 +476,13 @@ static void drawRichTextLine(const unsigned char *str, int x, int y, Color color
 static int getRichTextWordWidth(const unsigned char *str, int *outNumChars);
 static int drawRichTextCharacter(Font font, unsigned int c, int x, int y, Color color, int measureOnly);
 
+static ImageButton imageButtonScrollUp = {
+	0, 0, 39, 26, 6, 96, 8, Widget_RichText_scroll, Widget_Button_doNothing, 1, 0, 0, 0, 0, 1
+};
+static ImageButton imageButtonScrollDown = {
+	0, 0, 39, 26, 6, 96, 12, Widget_RichText_scroll, Widget_Button_doNothing, 1, 0, 0, 0, 1, 1
+};
+
 static struct RichTextLink {
 	int messageId;
 	int xMin;
@@ -485,6 +494,19 @@ static struct RichTextLink {
 static int numLinks;
 static Font richTextNormalFont = Font_NormalWhite;
 static Font richTextLinkFont = Font_NormalRed;
+
+static struct {
+	int xText;
+	int yText;
+	int textWidthBlocks;
+	int textHeightBlocks;
+	int textHeightLines;
+	int numberOfLines;
+	int scrollPosition;
+	int maxScrollPosition;
+	int isDraggingScroll;
+	int scrollPositionDrag;
+} data;
 
 void Widget_RichText_setFonts(Font normalFont, Font linkFont)
 {
@@ -529,8 +551,15 @@ void Widget_RichText_clearLinks()
 	numLinks = 0;
 }
 
+void Widget_RichText_reset(int scrollPosition)
+{
+	data.scrollPosition = 0;
+	data.numberOfLines = 0;
+	data.isDraggingScroll = 0;
+}
+
 static int drawRichText(const char *str, int xOffset, int yOffset,
-						int boxWidth, int heightLines, int scrollLine, Color color, int measureOnly)
+						int boxWidth, int heightLines, Color color, int measureOnly)
 {
 	int graphicHeightLines = 0;
 	int graphicId = 0;
@@ -613,7 +642,7 @@ static int drawRichText(const char *str, int xOffset, int yOffset,
 
 		int outsideViewport = 0;
 		if (!measureOnly) {
-			if (line < scrollLine || line >= scrollLine + heightLines) {
+			if (line < data.scrollPosition || line >= data.scrollPosition + heightLines) {
 				outsideViewport = 1;
 			}
 		}
@@ -627,10 +656,10 @@ static int drawRichText(const char *str, int xOffset, int yOffset,
 				} else {
 					graphicHeightLines = GraphicHeight(graphicId) / 16 + 2;
 					int xOffsetGraphic = xOffset + (boxWidth - Data_Graphics_Main.index[graphicId].width) / 2 - 4;
-					if (line < heightLines + scrollLine) {
+					if (line < heightLines + data.scrollPosition) {
 						Graphics_drawImage(graphicId, xOffsetGraphic, y + 8);
 					} else {
-						Graphics_drawImage(graphicId, xOffsetGraphic, y + 8 - 16 * (scrollLine - line));
+						Graphics_drawImage(graphicId, xOffsetGraphic, y + 8 - 16 * (data.scrollPosition - line));
 					}
 					graphicId = 0;
 				}
@@ -645,15 +674,15 @@ static int drawRichText(const char *str, int xOffset, int yOffset,
 }
 
 int Widget_RichText_draw(const char *str, int xOffset, int yOffset,
-						 int boxWidth, int heightLines, int scrollLine, int measureOnly)
+						 int boxWidth, int heightLines, int measureOnly)
 {
-	return drawRichText(str, xOffset, yOffset, boxWidth, heightLines, scrollLine, 0, measureOnly);
+	return drawRichText(str, xOffset, yOffset, boxWidth, heightLines, 0, measureOnly);
 }
 
 int Widget_RichText_drawColored(const char *str, int xOffset, int yOffset,
-								int boxWidth, int heightLines, int scrollLine, Color color)
+								int boxWidth, int heightLines, Color color)
 {
-	return drawRichText(str, xOffset, yOffset, boxWidth, heightLines, scrollLine, color, 0);
+	return drawRichText(str, xOffset, yOffset, boxWidth, heightLines, color, 0);
 }
 
 static void drawRichTextLine(const unsigned char *str, int x, int y, Color color, int measureOnly)
@@ -750,4 +779,136 @@ static int drawRichTextCharacter(Font font, unsigned int c, int x, int y, Color 
 	return Data_Graphics_Main.index[graphicId].width;
 }
 
+void Widget_RichText_drawScrollbar()
+{
+	if (data.maxScrollPosition) {
+		Widget_Button_drawImageButtons(
+			data.xText + 16 * data.textWidthBlocks - 1,
+			data.yText,
+			&imageButtonScrollUp, 1);
+		Widget_Button_drawImageButtons(
+			data.xText + 16 * data.textWidthBlocks - 1,
+			data.yText + 16 * data.textHeightBlocks - 26,
+			&imageButtonScrollDown, 1);
+		Widget_RichText_drawScrollbarDot();
+	}
+}
 
+void Widget_RichText_drawScrollbarDot()
+{
+	if (data.maxScrollPosition) {
+		int pct;
+		if (data.scrollPosition <= 0) {
+			pct = 0;
+		} else if (data.scrollPosition >= data.maxScrollPosition) {
+			pct = 100;
+		} else {
+			pct = Calc_getPercentage(data.scrollPosition, data.maxScrollPosition);
+		}
+		int offset = Calc_adjustWithPercentage(16 * data.textHeightBlocks - 77, pct);
+		if (data.isDraggingScroll) {
+			offset = data.scrollPositionDrag;
+		}
+		Graphics_drawImage(GraphicId(ID_Graphic_PanelButton) + 39,
+			data.xText + 16 * data.textWidthBlocks + 6, data.yText + offset + 26);
+	}
+}
+
+void Widget_RichText_scroll(int isDown, int numLines)
+{
+	if (isDown) {
+		data.scrollPosition += numLines;
+		if (data.scrollPosition > data.maxScrollPosition) {
+			data.scrollPosition = data.maxScrollPosition;
+		}
+	} else {
+		data.scrollPosition -= numLines;
+		if (data.scrollPosition < 0) {
+			data.scrollPosition = 0;
+		}
+	}
+	Widget_RichText_clearLinks();
+	data.isDraggingScroll = 0;
+	UI_Window_requestRefresh();
+}
+
+static int handleScrollbarDot()
+{
+	if (data.maxScrollPosition <= 0 || !Data_Mouse.left.isDown) {
+		return 0;
+	}
+	int totalHeight = 16 * data.textHeightBlocks - 52;
+	if (Data_Mouse.x < data.xText + 16 * data.textWidthBlocks + 1 ||
+		Data_Mouse.x > data.xText + 16 * data.textWidthBlocks + 41) {
+		return 0;
+	}
+	if (Data_Mouse.y < data.yText + 26 || Data_Mouse.y > data.yText + 26 + totalHeight) {
+		return 0;
+	}
+	int dotHeight = Data_Mouse.y - data.yText - 11;
+	if (dotHeight > totalHeight) {
+		dotHeight = totalHeight;
+	}
+	int pctScrolled = Calc_getPercentage(dotHeight, totalHeight);
+	data.scrollPosition = Calc_adjustWithPercentage(data.maxScrollPosition, pctScrolled);
+	data.isDraggingScroll = 1;
+	data.scrollPositionDrag = dotHeight - 25;
+	Widget_RichText_clearLinks();
+	if (data.scrollPositionDrag < 0) {
+		data.scrollPositionDrag = 0;
+	}
+	UI_Window_requestRefresh();
+	return 1;
+}
+
+int Widget_RichText_handleScrollbar()
+{
+	if (Widget_Button_handleImageButtons(
+		data.xText + 16 * data.textWidthBlocks - 1,
+		data.yText,
+		&imageButtonScrollUp, 1)) {
+			return 1;
+	}
+	if (Widget_Button_handleImageButtons(
+		data.xText + 16 * data.textWidthBlocks - 1,
+		data.yText + 16 * data.textHeightBlocks - 26,
+		&imageButtonScrollDown, 1)) {
+			return 1;
+	}
+	return handleScrollbarDot();
+}
+
+int Widget_RichText_getScrollPosition()
+{
+	return data.scrollPosition;
+}
+
+int Widget_RichText_init(const char *str, int xText, int yText, int widthBlocks, int heightBlocks, int adjustWidthOnNoScroll)
+{
+	data.xText = xText;
+	data.yText = yText;
+	if (!data.numberOfLines) {
+		data.textHeightBlocks = heightBlocks;
+		data.textHeightLines = heightBlocks - 1;
+		data.textWidthBlocks = widthBlocks;
+		
+		imageButtonScrollUp.enabled = 1;
+		imageButtonScrollDown.enabled = 1;
+
+		data.numberOfLines = Widget_RichText_draw(str,
+			data.xText + 8, data.yText + 6,
+			16 * data.textWidthBlocks - 16, data.textHeightLines, 1);
+		if (data.numberOfLines <= data.textHeightLines) {
+			if (adjustWidthOnNoScroll) {
+				data.textWidthBlocks += 2;
+			}
+			data.maxScrollPosition = 0;
+			imageButtonScrollUp.enabled = 0;
+			imageButtonScrollDown.enabled = 0;
+		} else {
+			data.maxScrollPosition = data.numberOfLines - data.textHeightLines;
+		}
+		UI_Window_requestRefresh();
+	}
+	return data.textWidthBlocks;
+}

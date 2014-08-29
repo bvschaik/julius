@@ -64,9 +64,7 @@ void UI_CCKSelection_init()
 
 void UI_CCKSelection_drawBackground()
 {
-	Graphics_clearScreen();
-	Graphics_drawImage(GraphicId(ID_Graphic_CCKBackground),
-		(Data_Screen.width - 1024) / 2, (Data_Screen.height - 768) / 2);
+	Graphics_drawFullScreenImage(GraphicId(ID_Graphic_CCKBackground));
 	Widget_Panel_drawInnerPanel(
 		Data_Screen.offset640x480.x + 280,
 		Data_Screen.offset640x480.y + 242, 2, 12);

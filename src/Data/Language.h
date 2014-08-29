@@ -65,4 +65,6 @@ extern struct Data_Language_Message {
 	char data[360000];
 } Data_Language_Message;
 
+#define MessageText(entryId, field) &Data_Language_Message.data[Data_Language_Message.index[entryId].field]
+
 #endif

@@ -29,7 +29,6 @@
 static void drawDialogNormal();
 static void drawDialogVideo();
 static void drawPlayerMessageContent(struct Data_Language_MessageEntry *msg);
-static void drawScrollbar();
 static void drawForegroundNoVideo();
 static void drawForegroundVideo();
 static void buttonScroll(int param1, int param2);
@@ -44,12 +43,6 @@ static ImageButton imageButtonBack = {
 static ImageButton imageButtonClose = {
 	0, 0, 24, 24, 4, 134, 4, buttonClose, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0
 };
-static ImageButton imageButtonScrollUp = {
-	0, 0, 39, 26, 6, 96, 8, buttonScroll, Widget_Button_doNothing, 1, 0, 0, 0, 0, 1
-};
-static ImageButton imageButtonScrollDown = {
-	0, 0, 39, 26, 6, 96, 12, buttonScroll, Widget_Button_doNothing, 1, 0, 0, 0, 1, 1
-};
 static ImageButton imageButtonGoToProblem = {
 	0, 0, 27, 27, 4, 92, 52, buttonGoToProblem, Widget_Button_doNothing, 1, 0, 0, 0, 1, 0
 };
@@ -62,9 +55,6 @@ static struct {
 	int numHistory;
 
 	int textId;
-	int scrollPosition;
-	int maxScrollPosition;
-	int numberOfLines;
 	int dword_7e314c;
 	int backgroundIsProvided;
 	int showVideo;
@@ -74,11 +64,7 @@ static struct {
 	int xText;
 	int yText;
 	int textHeightBlocks;
-	int textHeightLines;
 	int textWidthBlocks;
-
-	int isDraggingScroll;
-	int scrollPositionDrag;
 } data;
 
 static struct {
@@ -109,8 +95,7 @@ void UI_MessageDialog_show(int textId, int backgroundIsProvided)
 		data.history[i].scrollPosition = 0;
 	}
 	data.numHistory = 0;
-	data.scrollPosition = 0;
-	data.numberOfLines = 0;
+	Widget_RichText_reset(0);
 	data.dword_7e314c = 0;
 	data.textId = textId;
 	data.backgroundIsProvided = backgroundIsProvided;
@@ -194,28 +179,9 @@ static void drawDialogNormal()
 			data.yText = data.y + msg->subtitleY + height;
 		}
 	}
-	// determine number of lines
-	if (!data.numberOfLines) {
-		data.textHeightBlocks = msg->heightBlocks - 1 - (someOffset + data.yText - data.y) / 16;
-		data.textHeightLines = data.textHeightBlocks - 1;
-		data.textWidthBlocks = msg->widthBlocks - 4;
-		
-		imageButtonScrollUp.enabled = 1;
-		imageButtonScrollDown.enabled = 1;
-
-		data.numberOfLines = Widget_RichText_draw(TEXT(msg->contentOffset),
-			data.xText + 8, data.yText + 6,
-			16 * data.textWidthBlocks - 16, data.textHeightLines, 0, 1);
-		if (data.numberOfLines <= data.textHeightLines) {
-			data.textWidthBlocks = msg->widthBlocks - 2;
-			data.maxScrollPosition = 0;
-			imageButtonScrollUp.enabled = 0;
-			imageButtonScrollDown.enabled = 0;
-		} else {
-			data.maxScrollPosition = data.numberOfLines - data.textHeightLines;
-		}
-		UI_Window_requestRefresh();
-	}
+	data.textHeightBlocks = msg->heightBlocks - 1 - (someOffset + data.yText - data.y) / 16;
+	data.textWidthBlocks = Widget_RichText_init(TEXT(msg->contentOffset),
+		data.xText, data.yText, msg->widthBlocks - 4, data.textHeightBlocks, 1);
 
 	// content!
 	Widget_Panel_drawInnerPanel(data.xText, data.yText, data.textWidthBlocks, data.textHeightBlocks);
@@ -228,10 +194,10 @@ static void drawDialogNormal()
 	} else {
 		Widget_RichText_draw(TEXT(msg->contentOffset),
 			data.xText + 8, data.yText + 6, 16 * data.textWidthBlocks - 16,
-			data.textHeightLines, data.scrollPosition, 0);
+			data.textHeightBlocks - 1, 0);
 	}
 	Graphics_resetClipRectangle();
-	drawScrollbar();
+	Widget_RichText_drawScrollbarDot();
 }
 
 static void drawDialogVideo()
@@ -268,10 +234,9 @@ static void drawDialogVideo()
 		Widget_Text_draw(Data_Settings.playerName, data.x + 90 + width, data.y + 312, Font_NormalWhite, 0);
 	}
 	data.textHeightBlocks = msg->heightBlocks - 1 - (32 + data.yText - data.y) / 16;
-	data.textHeightLines = data.textHeightBlocks - 1;
 	data.textWidthBlocks = msg->widthBlocks - 4;
-	data.numberOfLines = Widget_RichText_draw(TEXT(msg->contentOffset),
-		data.x + 16, data.y + 332, 384, data.textHeightLines, 0, 0);
+	Widget_RichText_draw(TEXT(msg->contentOffset),
+		data.x + 16, data.y + 332, 384, data.textHeightBlocks - 1, 0);
 
 	if (msg->type == Type_Message && msg->messageType == MessageType_Imperial) {
 		Widget_Text_drawNumber(Data_Scenario.requests.amount[playerMessage.param1],
@@ -323,7 +288,7 @@ static void drawPlayerMessageContent(struct Data_Language_MessageEntry *msg)
 		case MessageType_Invasion:
 			Widget_GameText_draw(12, 1, data.x + 100, data.yText + 44, Font_NormalWhite);
 			Widget_RichText_draw(TEXT(msg->contentOffset), data.xText + 8, data.yText + 86,
-				16 * data.textWidthBlocks, data.textHeightLines, data.scrollPosition, 0);
+				16 * data.textWidthBlocks, data.textHeightBlocks - 1, 0);
 			break;
 
 		case MessageType_Emigration:
@@ -333,13 +298,13 @@ static void drawPlayerMessageContent(struct Data_Language_MessageEntry *msg)
 			}
 			Widget_RichText_draw(TEXT(msg->contentOffset),
 				data.xText + 8, data.yText + 86, 16 * data.textWidthBlocks - 16,
-				data.textHeightLines, data.scrollPosition, 0);
+				data.textHeightBlocks - 1, 0);
 			break;
 
 		case MessageType_Tutorial:
 			Widget_RichText_draw(TEXT(msg->contentOffset),
 				data.xText + 8, data.yText + 6, 16 * data.textWidthBlocks - 16,
-				data.textHeightLines, data.scrollPosition, 0);
+				data.textHeightBlocks - 1, 0);
 			break;
 
 		case MessageType_TradeChange:
@@ -350,7 +315,7 @@ static void drawPlayerMessageContent(struct Data_Language_MessageEntry *msg)
 				data.x + 100, data.yText + 44, Font_NormalWhite);
 			Widget_RichText_draw(TEXT(msg->contentOffset),
 				data.xText + 8, data.yText + 86, 16 * data.textWidthBlocks - 16,
-				data.textHeightLines, data.scrollPosition, 0);
+				data.textHeightBlocks - 1, 0);
 			break;
 
 		case MessageType_PriceChange:
@@ -361,13 +326,13 @@ static void drawPlayerMessageContent(struct Data_Language_MessageEntry *msg)
 				data.x + 100, data.yText + 44, Font_NormalWhite);
 			Widget_RichText_draw(TEXT(msg->contentOffset),
 				data.xText + 8, data.yText + 86, 16 * data.textWidthBlocks - 16,
-				data.textHeightLines, data.scrollPosition, 0);
+				data.textHeightBlocks - 1, 0);
 			break;
 
 		default:
 			lines = Widget_RichText_draw(TEXT(msg->contentOffset),
 				data.xText + 8, data.yText + 56, 16 * data.textWidthBlocks - 16,
-				data.textHeightLines, data.scrollPosition, 0);
+				data.textHeightBlocks - 1, 0);
 	}
 	if (msg->messageType == MessageType_Imperial) {
 		int yOffset = data.yText + 86 + lines * 16;
@@ -386,26 +351,6 @@ static void drawPlayerMessageContent(struct Data_Language_MessageEntry *msg)
 				data.xText + 200, yOffset, Font_NormalWhite);
 			Widget_GameText_draw(12, 2, data.xText + 200 + width, yOffset, Font_NormalWhite);
 		}
-	}
-}
-
-static void drawScrollbar()
-{
-	if (data.maxScrollPosition) {
-		int pct;
-		if (data.scrollPosition <= 0) {
-			pct = 0;
-		} else if (data.scrollPosition >= data.maxScrollPosition) {
-			pct = 100;
-		} else {
-			pct = Calc_getPercentage(data.scrollPosition, data.maxScrollPosition);
-		}
-		int offset = Calc_adjustWithPercentage(16 * data.textHeightBlocks - 77, pct);
-		if (data.isDraggingScroll) {
-			offset = data.scrollPositionDrag;
-		}
-		Graphics_drawImage(GraphicId(ID_Graphic_PanelButton) + 39,
-			data.xText + 16 * data.textWidthBlocks + 6, data.yText + offset + 26);
 	}
 }
 
@@ -441,16 +386,7 @@ static void drawForegroundNoVideo()
 		data.x + 16 * msg->widthBlocks - 38,
 		data.y + 16 * msg->heightBlocks - 36,
 		&imageButtonClose, 1);
-	if (data.maxScrollPosition) {
-		Widget_Button_drawImageButtons(
-			data.xText + 16 * data.textWidthBlocks - 1,
-			data.yText,
-			&imageButtonScrollUp, 1);
-		Widget_Button_drawImageButtons(
-			data.xText + 16 * data.textWidthBlocks - 1,
-			data.yText + 16 * data.textHeightBlocks - 26,
-			&imageButtonScrollDown, 1);
-	}
+	Widget_RichText_drawScrollbar();
 }
 
 void UI_MessageDialog_drawForeground()
@@ -498,29 +434,16 @@ void UI_MessageDialog_handleMouse()
 		&imageButtonClose, 1)) {
 			return;
 	}
-	if (Widget_Button_handleImageButtons(
-		data.xText + 16 * data.textWidthBlocks - 1,
-		data.yText,
-		&imageButtonScrollUp, 1)) {
-			return;
-	}
-	if (Widget_Button_handleImageButtons(
-		data.xText + 16 * data.textWidthBlocks - 1,
-		data.yText + 16 * data.textHeightBlocks - 26,
-		&imageButtonScrollDown, 1)) {
-			return;
-	}
+	Widget_RichText_handleScrollbar();
 	int textId = Widget_RichText_getClickedLink();
 	if (textId >= 0) {
 		if (data.numHistory < MAX_HISTORY - 1) {
 			data.history[data.numHistory].textId = data.textId;
-			data.history[data.numHistory].scrollPosition = data.scrollPosition;
+			data.history[data.numHistory].scrollPosition = Widget_RichText_getScrollPosition();
 			data.numHistory++;
 		}
 		data.textId = textId;
-		data.scrollPosition = 0;
-		data.numberOfLines = 0;
-		data.isDraggingScroll = 0;
+		Widget_RichText_reset(0);
 		Widget_RichText_clearLinks();
 		UI_Window_requestRefresh();
 	}
@@ -531,9 +454,7 @@ static void buttonBack(int param1, int param2)
 	if (data.numHistory > 0) {
 		data.numHistory--;
 		data.textId = data.history[data.numHistory].textId;
-		data.scrollPosition = data.history[data.numHistory].scrollPosition;
-		data.numberOfLines = 0;
-		data.isDraggingScroll = 0;
+		Widget_RichText_reset(data.history[data.numHistory].scrollPosition);
 		Widget_RichText_clearLinks();
 		UI_Window_requestRefresh();
 	}
@@ -541,20 +462,6 @@ static void buttonBack(int param1, int param2)
 
 static void buttonScroll(int isDown, int numLines)
 {
-	if (isDown) {
-		data.scrollPosition += numLines;
-		if (data.scrollPosition > data.maxScrollPosition) {
-			data.scrollPosition = data.maxScrollPosition;
-		}
-	} else {
-		data.scrollPosition -= numLines;
-		if (data.scrollPosition < 0) {
-			data.scrollPosition = 0;
-		}
-	}
-	Widget_RichText_clearLinks();
-	data.isDraggingScroll = 0;
-	UI_Window_requestRefresh();
 }
 
 static void buttonClose(int param1, int param2)

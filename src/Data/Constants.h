@@ -208,6 +208,8 @@ enum {
 	ID_Graphic_EntryExitFlag = 240,
 	ID_Graphic_FortStandardPole = 241,
 	ID_Graphic_TradeAmount = 243,
+	ID_Graphic_SelectMissionBackground = 244,
+	ID_Graphic_SelectMission = 245,
 	ID_Graphic_CCKBackground = 246,
 	ID_Graphic_ScenarioImage = 247,
 	ID_Graphic_Gatehouse = 248,

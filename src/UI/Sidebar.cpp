@@ -320,7 +320,7 @@ static void buttonMissionBriefing(int param1, int param2)
 {
 	if (!Data_Settings.isCustomScenario) {
 		// TODO
-		UI_Intermezzo_show(0, Window_City, 1000);
+		UI_Intermezzo_show(0, Window_MissionBriefingReview, 1000);
 	}
 }
 

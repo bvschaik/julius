@@ -4,9 +4,11 @@
 #include "FileDialog.h"
 #include "MessageDialog.h"
 #include "../Graphics.h"
+#include "../Scenario.h"
 #include "../Widget.h"
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
+#include "../Data/FileList.h"
 #include "../Data/Graphics.h"
 #include "../Data/Mouse.h"
 #include "../Data/Screen.h"
@@ -229,9 +231,11 @@ static void menuFile_replayMap(int param)
 	clearState();
 	Data_State.selectedBuilding.type = 0;
 	if (Data_Settings.isCustomScenario) {
-		// TODO
+		Scenario_initialize(Data_FileList.selectedScenario);
+		UI_Window_goTo(Window_City);
 	} else {
-		// TODO
+		UI_Window_goTo(Window_MissionBriefingInitial);
+		UI_MissionStart_show();
 	}
 }
 

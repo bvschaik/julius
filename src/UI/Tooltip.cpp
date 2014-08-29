@@ -69,11 +69,11 @@ static void drawButtonTooltip(struct TooltipContext *c)
 
 	c->width = 200;
 	int lines = Widget_RichText_draw(text, c->x + 5, c->y + 5,
-		c->width - 5, 30, 0, 1);
+		c->width - 5, 30, 1);
 	if (lines > 2) {
 		c->width = 300;
 		lines = Widget_RichText_draw(text, c->x + 5, c->y + 5,
-			c->width - 5, 30, 0, 1);
+			c->width - 5, 30, 1);
 	}
 	c->height = 16 * lines + 10;
 
@@ -91,7 +91,7 @@ static void drawButtonTooltip(struct TooltipContext *c)
 	Graphics_drawRect(c->x, c->y, c->width, c->height, Color_Black);
 	Graphics_fillRect(c->x + 1, c->y + 1, c->width - 2, c->height - 2, Color_White);
 	Widget_RichText_drawColored(text, c->x + 5, c->y + 7,
-		c->width - 5, lines, 0, Color_Tooltip);
+		c->width - 5, lines, Color_Tooltip);
 /*
       switch ( window_id )
       {
@@ -152,11 +152,11 @@ static void drawOverlayTooltip(struct TooltipContext *c)
 
 	c->width = 200;
 	int lines = Widget_RichText_draw(text, c->x + 5, c->y + 5,
-		c->width - 5, 30, 0, 1);
+		c->width - 5, 30, 1);
 	if (lines > 2) {
 		c->width = 300;
 		lines = Widget_RichText_draw(text, c->x + 5, c->y + 5,
-			c->width - 5, 30, 0, 1);
+			c->width - 5, 30, 1);
 	}
 	c->height = 16 * lines + 10;
 
@@ -174,7 +174,7 @@ static void drawOverlayTooltip(struct TooltipContext *c)
 	Graphics_drawRect(c->x, c->y, c->width, c->height, Color_Black);
 	Graphics_fillRect(c->x + 1, c->y + 1, c->width - 2, c->height - 2, Color_White);
 	Widget_RichText_drawColored(text, c->x + 5, c->y + 7,
-		c->width - 5, lines, 0, Color_Tooltip);
+		c->width - 5, lines, Color_Tooltip);
 }
 
 static void drawSenateTooltip(struct TooltipContext *c)

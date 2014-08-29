@@ -234,6 +234,14 @@ void Graphics_drawIsometricTop(int graphicId, int xOffset, int yOffset, Color co
 		colorMask, colorMask ? ColorType_And : ColorType_None);
 }
 
+void Graphics_drawFullScreenImage(int graphicId)
+{
+	if (Data_Screen.width > 1024 || Data_Screen.height > 768) {
+		Graphics_clearScreen();
+	}
+	Graphics_drawImage(graphicId, (Data_Screen.width - 1024) / 2, (Data_Screen.height - 768) / 2);
+}
+
 void Graphics_drawImage(int graphicId, int xOffset, int yOffset)
 {
 	Data_Graphics_Index *index = &Data_Graphics_Main.index[graphicId];

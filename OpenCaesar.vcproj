@@ -504,6 +504,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\UI\MissionStart.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Data\Model.cpp"
 				>
 			</File>

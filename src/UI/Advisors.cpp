@@ -152,12 +152,7 @@ void UI_Advisors_drawForeground()
 
 void UI_Advisor_drawGeneralBackground()
 {
-	if (Data_Screen.width > 1024 || Data_Screen.height > 768) {
-		Graphics_clearScreen();
-	}
-	Graphics_drawImage(GraphicId(ID_Graphic_AdvisorBackground),
-		(Data_Screen.width - 1024) / 2, (Data_Screen.height - 768) / 2);
-
+	Graphics_drawFullScreenImage(GraphicId(ID_Graphic_AdvisorBackground));
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
 	Graphics_drawImage(GraphicId(ID_Graphic_PanelWindows) + 13,
