@@ -58,7 +58,6 @@ void UI_MissionStart_show()
 		UI_Intermezzo_show(0, Window_MissionBriefingInitial, 1000);
 		Data_State.missionBriefingShown = 0;
 		Widget_RichText_reset(0);
-		//currentHelpId = savedgame_missionId + 200;
 	}
 }
 
@@ -80,6 +79,11 @@ void UI_MissionStart_Selection_drawBackground()
 		Widget_GameText_drawMultiline(144, 0,
 			xOffset + 20, yOffset + 440, 560, Font_NormalBlack);
 	}
+}
+
+void UI_MissionStart_Briefing_init()
+{
+	Widget_RichText_reset(0);
 }
 
 void UI_MissionStart_Briefing_drawBackground()

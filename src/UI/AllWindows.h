@@ -103,6 +103,7 @@ void UI_MissionStart_show();
 
 void UI_MissionStart_Selection_drawBackground();
 
+void UI_MissionStart_Briefing_init();
 void UI_MissionStart_Briefing_drawBackground();
 void UI_MissionStart_BriefingInitial_drawForeground();
 void UI_MissionStart_BriefingReview_drawForeground();

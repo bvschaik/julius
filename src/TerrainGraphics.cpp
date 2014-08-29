@@ -221,7 +221,11 @@ void TerrainGraphics_determineGardensFromGraphicIds()
 void TerrainGraphics_updateAllRoads()
 {
 	FOREACH_ALL({
-		setRoadGraphic(gridOffset);
+		if (Data_Grid_terrain[gridOffset] & Terrain_Road) {
+			if (!(Data_Grid_terrain[gridOffset] & (Terrain_Water | Terrain_Building))) {
+				setRoadGraphic(gridOffset);
+			}
+		}
 	});
 }
 
@@ -1183,7 +1187,11 @@ void TerrainGraphics_updateAreaRoads(int x, int y, int size)
 	int yMax = yMin + size - 1;
 	BOUND_REGION();
 	FOREACH_REGION({
-		setRoadGraphic(gridOffset);
+		if (Data_Grid_terrain[gridOffset] & Terrain_Road) {
+			if (!(Data_Grid_terrain[gridOffset] & (Terrain_Water | Terrain_Building))) {
+				setRoadGraphic(gridOffset);
+			}
+		}
 	});
 }
 
