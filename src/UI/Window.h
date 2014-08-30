@@ -32,13 +32,13 @@ typedef enum {
 	Window_NewCareerDialog = 26, //54
 	Window_SlidingSidebar = 27, //2
 	Window_CityMilitary = 28, // 30 TODO
-	Window_MissionSelection = 29,
-	Window_MissionBriefingInitial = 30,
-	Window_MissionBriefingReview = 31,
+	Window_MissionSelection = 29, // 52
+	Window_MissionBriefingInitial = 30, // 53
+	Window_MissionBriefingReview = 31, // 59
+	Window_VictoryDialog = 32, // 67
+	Window_MissionEnd = 33, // 51
 
-	Window_51 = -1, //51 TODO
 	Window_66 = -1, //66 TODO
-	Window_VictoryDialog = -1, //67 TODO
 } WindowId;
 
 WindowId UI_Window_getId();

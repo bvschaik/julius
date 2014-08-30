@@ -58,7 +58,7 @@ extern struct Data_State {
 	} selectedBuilding;
 	int selectedLegionFormationId;
 	int isScrollingMap;
-	int winState;
+	int winState; // 1 = win
 	int forceWinCheat;
 	int missionBriefingShown;
 } Data_State;

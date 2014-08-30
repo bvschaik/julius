@@ -171,7 +171,7 @@ static void drawMenuButtons()
 			16, 1, buildMenuFocusButtonId == i + 1 ? 1 : 2);
 		int buildingType = SidebarMenu_getBuildingType(menu.selectedSubmenu, itemIndex);
 		Widget_GameText_drawCentered(28, buildingType,
-			xOffset - 266, menu.yOffset + 113 +  + 24 * i, 176, Font_NormalGreen);
+			xOffset - 266, menu.yOffset + 113 + 24 * i, 176, Font_NormalGreen);
 		if (buildingType == Building_DraggableReservoir) {
 			buildingType = Building_Reservoir;
 		}

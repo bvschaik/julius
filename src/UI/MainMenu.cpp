@@ -88,6 +88,6 @@ static void buttonClick(int param1, int param2)
 	} else if (param1 == 3) {
 		UI_Window_goTo(Window_CCKSelection);
 	} else if (param1 == 4) {
-		UI_Window_goTo(Window_City); // TODO exit
+		UI_Window_goTo(Window_VictoryDialog); // TODO exit
 	}
 }

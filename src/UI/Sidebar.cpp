@@ -164,7 +164,7 @@ static void drawSidebar()
 	drawButtons();
 	drawOverlayText(xOffsetPanel + 4);
 	UI_BuildingMenu_drawSidebarImage(xOffsetPanel + 6, 0);
-    drawMinimap(1);
+	drawMinimap(1);
 	drawNumberOfMessages();
 
 	// relief images below panel

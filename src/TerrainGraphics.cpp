@@ -910,7 +910,7 @@ static int getGatehousePosition(int gridOffset, int direction, int buildingId)
 			}
 			if (Data_Grid_terrain[gridOffset + 162] & Terrain_Wall &&
 				Data_Grid_terrain[gridOffset + 161] & Terrain_Wall) {
-                result = 4;
+				result = 4;
 			}
 			if (!(Data_Grid_terrain[gridOffset - 1] & Terrain_WallOrGatehouse)) {
 				result = 0;

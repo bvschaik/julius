@@ -110,4 +110,12 @@ void UI_MissionStart_BriefingReview_drawForeground();
 void UI_MissionStart_BriefingInitial_handleMouse();
 void UI_MissionStart_BriefingReview_handleMouse();
 
+void UI_MissionEnd_drawBackground();
+void UI_MissionEnd_drawForeground();
+void UI_MissionEnd_handleMouse();
+
+void UI_VictoryDialog_drawBackground();
+void UI_VictoryDialog_drawForeground();
+void UI_VictoryDialog_handleMouse();
+
 #endif

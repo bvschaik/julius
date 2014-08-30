@@ -989,7 +989,7 @@ int Routing_getDirectionForProjectile(int xSrc, int ySrc, int xDst, int yDst)
 			} else {
 				return 8;
 			}
-        }
+		}
 	} else { // xSrc < xDst
 		if (ySrc == yDst) {
 			return 4;

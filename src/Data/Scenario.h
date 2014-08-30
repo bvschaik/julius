@@ -2,17 +2,17 @@
 #define DATA_SCENARIO_H
 
 extern struct Data_Scenario {
-    short startYear;
-    short __unused1;
-    short empireId;
-    short __unused2[4];
-    struct Data_Scenario_Requests {
+	short startYear;
+	short __unused1;
+	short empireId;
+	short __unused2[4];
+	struct Data_Scenario_Requests {
 		short year[20];
 		short resourceId[20];
 		short amount[20];
 		short deadlineYears[20];
 	} requests;
-    struct Data_Scenario_Invasions {
+	struct Data_Scenario_Invasions {
 		short year[20];
 		short type[20];
 		short amount[20];

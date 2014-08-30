@@ -187,7 +187,7 @@ int Zip_compress(const void *inputBuffer, int inputLength, void *outputBuffer, i
 	int pkError = pk_implode(zip_inputFunc, zip_outputFunc, buf, &token, 4096);
 	if (pkError || token.stop) {
 		debug_log("ERR:COMP Error occurred while compressing.", 0, 0);
-        ok = 0;
+		ok = 0;
 	} else {
 		*outputLength = token.outputPtr;
 	}

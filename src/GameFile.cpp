@@ -561,12 +561,12 @@ int GameFile_loadScenario(const char *filename)
 	for (int i = 0; i < SCENARIO_PARTS && scenarioParts[i].lengthInBytes > 0; i++) {
 		fread(scenarioParts[i].data, 1, scenarioParts[i].lengthInBytes, fp);
 	}
-    fclose(fp);
+	fclose(fp);
 
 	Empire_load(1, Data_Scenario.empireId);
 	Event_calculateDistantBattleRomanTravelTime();
 	Event_calculateDistantBattleEnemyTravelTime();
-    return 0;
+	return 0;
 }
 
 static int writeCompressedChunk(FILE *fp, const void *buffer, int bytesToWrite)
@@ -584,7 +584,7 @@ static int writeCompressedChunk(FILE *fp, const void *buffer, int bytesToWrite)
 		fwrite(&outputSize, 4, 1, fp);
 		fwrite(buffer, 1, bytesToWrite, fp);
 	}
-    return 1;
+	return 1;
 }
 
 static int readCompressedChunk(FILE *fp, void *buffer, int bytesToRead)

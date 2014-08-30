@@ -147,7 +147,7 @@ enum {
 	ID_Graphic_PopulationGraphBar = 157,
 	ID_Graphic_Bullet = 158,
 	ID_Graphic_MessageImages = 159,
-	ID_Graphic_WinGame = 160,
+	ID_Graphic_WinGameBackground = 160,
 	ID_Graphic_Walker_Lion = 163,
 	ID_Graphic_Bridge = 164,
 	ID_Graphic_Walker_Ship = 165,
