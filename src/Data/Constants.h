@@ -172,6 +172,7 @@ enum {
 	ID_Graphic_RatingsBackground = 195,
 	ID_Graphic_FortFormations = 197,
 	ID_Graphic_Walker_Missile = 198,
+	ID_Graphic_Walker_Ballista = 200,
 	ID_Graphic_MilitaryAcademy = 201,
 	ID_Graphic_Walker_FortJavelin = 202,
 	ID_Graphic_Walker_FortLegionary = 204,

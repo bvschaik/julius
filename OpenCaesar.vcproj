@@ -752,6 +752,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\WalkerAction_Wall.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\WalkerAction_Water.cpp"
 				>
 			</File>

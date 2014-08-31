@@ -3,7 +3,6 @@
 
 #include "Types.h"
 
-// TODO scanline?
 #define ScreenPixel(x,y) ((ScreenColor*)Data_Screen.drawBuffer)[(y) * Data_Screen.width + (x)]
 
 extern struct Data_Screen {

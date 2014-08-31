@@ -188,6 +188,7 @@ void UI_Advisors_handleMouse()
 			break;
 		case Advisor_Military:
 			UI_Advisor_Military_handleMouse();
+			break;
 		case Advisor_Imperial:
 			UI_Advisor_Imperial_handleMouse();
 			break;
@@ -206,8 +207,6 @@ void UI_Advisors_handleMouse()
 		case Advisor_Financial:
 			UI_Advisor_Financial_handleMouse();
 			break;
-
-		// TODO other advisors
 	}
 }
 
