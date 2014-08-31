@@ -1,4 +1,5 @@
 #include "Terrain.h"
+#include "Terrain_private.h"
 
 #include "Building.h"
 #include "Routing.h"
@@ -1278,6 +1279,33 @@ static void determineLeftmostTile()
 			}
 		}
 	}
+}
+
+static int getWallTileWithinRadius(int x, int y, int radius, int *xTile, int *yTile)
+{
+	int xMin = x - radius;
+	int yMin = y - radius;
+	int xMax = x + radius;
+	int yMax = y + radius;
+	BOUND_REGION();
+	FOREACH_REGION({
+		if (Data_Grid_routingWalls[gridOffset] == 0) {
+			*xTile = xx;
+			*yTile = yy;
+			return 1;
+		}
+	});
+	return 0;
+}
+
+int Terrain_getWallTileWithinRadius(int x, int y, int radius, int *xTile, int *yTile)
+{
+	for (int i = 1; i <= radius; i++) {
+		if (getWallTileWithinRadius(x, y, i, xTile, yTile)) {
+			return 1;
+		}
+	}
+	return 0;
 }
 
 void Terrain_rotateMap(int ccw)

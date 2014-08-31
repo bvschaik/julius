@@ -77,7 +77,9 @@ void WalkerAction_criminal(int walkerId);
 void WalkerAction_fishingBoat(int walkerId);
 void WalkerAction_flotsam(int walkerId);
 void WalkerAction_shipwreck(int walkerId);
-
+// wall
+void WalkerAction_ballista(int walkerId);
+void WalkerAction_towerSentry(int walkerId);
 // enemy
 void WalkerAction_enemy43_Spear(int walkerId);
 void WalkerAction_enemy44_Sword(int walkerId);

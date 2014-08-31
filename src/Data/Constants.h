@@ -169,6 +169,7 @@ enum {
 	ID_Graphic_TheaterShow = 191,
 	ID_Graphic_AmphitheaterShow = 192,
 	ID_Graphic_ColosseumShow = 193,
+	ID_Graphic_Walker_TowerSentry = 194,
 	ID_Graphic_RatingsBackground = 195,
 	ID_Graphic_FortFormations = 197,
 	ID_Graphic_Walker_Missile = 198,

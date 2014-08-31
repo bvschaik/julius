@@ -46,7 +46,7 @@ static void (*walkerActionCallbacks[])(int walkerId) = {
 	WalkerAction_marketBuyer,
 	WalkerAction_patrician, //40
 	WalkerAction_nobody, //TODO WalkerAction_indigenousNative,
-	WalkerAction_nobody, //TODO WalkerAction_towerSentry,
+	WalkerAction_towerSentry,
 	WalkerAction_enemy43_Spear,
 	WalkerAction_enemy44_Sword,
 	WalkerAction_enemy45_Sword,
@@ -66,7 +66,7 @@ static void (*walkerActionCallbacks[])(int walkerId) = {
 	WalkerAction_arrow,
 	WalkerAction_javelin, //60
 	WalkerAction_bolt,
-	WalkerAction_nobody, //TODO WalkerAction_ballista,
+	WalkerAction_ballista,
 	WalkerAction_nobody,
 	WalkerAction_missionary,
 	WalkerAction_seagulls,
@@ -119,12 +119,6 @@ void WalkerAction_handle()
 
 void WalkerAction_nobody(int walkerId)
 {
-}
-
-// TODO move to own file
-void WalkerAction_TowerSentry_reroute()
-{
-	// TODO
 }
 
 // TODO move to own file

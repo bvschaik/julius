@@ -262,7 +262,7 @@ int Walker_createTowerSentryFromBarracks(int buildingId, int x, int y)
 	struct Data_Building *tower = &Data_Buildings[towerId];
 	int walkerId = Walker_create(Walker_TowerSentry, x, y, 0);
 	struct Data_Walker *w = &Data_Walkers[walkerId];
-	w->actionState = WalkerActionState_174_TowerSentry;
+	w->actionState = WalkerActionState_174_TowerSentryGoingToTower;
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(tower->x, tower->y, tower->size, &xRoad, &yRoad)) {
 		w->destinationX = xRoad;

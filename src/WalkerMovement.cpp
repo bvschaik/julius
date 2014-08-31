@@ -454,7 +454,7 @@ void WalkerMovement_followTicks(int walkerId, int leaderWalkerId, int numTicks)
 	}
 }
 
-void WalkerMovment_walkTicksTowerSentry(int walkerId, int numTicks)
+void WalkerMovement_walkTicksTowerSentry(int walkerId, int numTicks)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	while (numTicks > 0) {
