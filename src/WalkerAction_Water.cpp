@@ -5,9 +5,20 @@
 #include "Terrain.h"
 #include "Walker.h"
 
+#include "Data/CityInfo.h"
 #include "Data/Message.h"
 #include "Data/Model.h"
+#include "Data/Random.h"
 #include "Data/Scenario.h"
+
+static const int flotsamType0[] = {0, 1, 2, 3, 4, 4, 4, 3, 2, 1, 0, 0};
+static const int flotsamType12[] = {
+	0, 1, 1, 2, 2, 3, 3, 4, 4, 4, 3, 2, 1, 0, 0, 1, 1, 2, 2, 1, 1, 0, 0, 0
+};
+static const int flotsamType3[] = {
+	0, 0, 1, 1, 2, 2, 3, 3, 4, 4, -1, -1,
+	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1
+};
 
 void WalkerAction_fishingBoat(int walkerId)
 {
@@ -163,7 +174,84 @@ void WalkerAction_flotsam(int walkerId)
 	w->isGhost = 0;
 	w->cartGraphicId = 0;
 	w->terrainUsage = 0;
-	// TODO
+	switch (w->actionState) {
+		case WalkerActionState_128_FlotsamCreated:
+			w->isGhost = 1;
+			w->waitTicks--;
+			if (w->waitTicks <= 0) {
+				w->actionState = WalkerActionState_129_FlotsamFloating;
+				w->waitTicks = 0;
+				if (Data_CityInfo.godCurseNeptuneSankShips && !w->resourceId) {
+					w->minMaxSeen = 1;
+					Data_CityInfo.godCurseNeptuneSankShips = 0;
+				}
+				w->destinationX = (char) Data_Scenario.riverExitPoint.x;
+				w->destinationY = (char) Data_Scenario.riverExitPoint.y;
+			}
+			break;
+		case WalkerActionState_129_FlotsamFloating:
+			if (w->flotsamVisible) {
+				w->flotsamVisible = 0;
+			} else {
+				w->flotsamVisible = 1;
+				w->waitTicks++;
+				WalkerMovement_walkTicks(walkerId, 1);
+				w->isGhost = 0;
+				w->heightFromGround = 0;
+				if (w->direction == 8 || w->direction == 9 || w->direction == 10) {
+					w->actionState = WalkerActionState_130_FlotsamLeftMap;
+				}
+			}
+			break;
+		case WalkerActionState_130_FlotsamLeftMap:
+			w->isGhost = 1;
+			w->minMaxSeen = 0;
+			w->actionState = WalkerActionState_128_FlotsamCreated;
+			if (w->waitTicks >= 400) {
+				w->waitTicks = Data_Random.random1_7bit & 7;
+			} else if (w->waitTicks >= 200) {
+				w->waitTicks = 50 + (Data_Random.random1_7bit & 0xf);
+			} else if (w->waitTicks >= 100) {
+				w->waitTicks = 100 + (Data_Random.random1_7bit & 0x1f);
+			} else if (w->waitTicks >= 50) {
+				w->waitTicks = 200 + (Data_Random.random1_7bit & 0x3f);
+			} else {
+				w->waitTicks = 300 + Data_Random.random1_7bit;
+			}
+			Walker_removeFromTileList(walkerId);
+			w->x = (char) Data_Scenario.riverEntryPoint.x;
+			w->y = (char) Data_Scenario.riverEntryPoint.y;
+			w->gridOffset = GridOffset(w->x, w->y);
+			w->crossCountryX = 15 * w->x;
+			w->crossCountryY = 15 * w->y;
+			break;
+	}
+	if (w->resourceId == 0) {
+		WalkerActionIncreaseGraphicOffset(w, 12);
+		if (w->minMaxSeen) {
+			w->graphicId = GraphicId(ID_Graphic_Walker_Flotsam0) +
+				flotsamType0[w->graphicOffset];
+		} else {
+			w->graphicId = GraphicId(ID_Graphic_Walker_FlotsamAlt0) +
+				flotsamType0[w->graphicOffset];
+		}
+	} else if (w->resourceId == 1) {
+		WalkerActionIncreaseGraphicOffset(w, 24);
+		w->graphicId = GraphicId(ID_Graphic_Walker_Flotsam1) +
+			flotsamType12[w->graphicOffset];
+	} else if (w->resourceId == 2) {
+		WalkerActionIncreaseGraphicOffset(w, 24);
+		w->graphicId = GraphicId(ID_Graphic_Walker_Flotsam2) +
+			flotsamType12[w->graphicOffset];
+	} else if (w->resourceId == 3) {
+		WalkerActionIncreaseGraphicOffset(w, 24);
+		if (flotsamType3[w->graphicOffset] == -1) {
+			w->graphicId = 0;
+		} else {
+			w->graphicId = GraphicId(ID_Graphic_Walker_Flotsam3) +
+				flotsamType3[w->graphicOffset];
+		}
+	}
 }
 
 void WalkerAction_shipwreck(int walkerId)

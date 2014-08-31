@@ -163,6 +163,9 @@ enum {
 	WalkerActionState_120_RioterCreated = 120,
 	WalkerActionState_125_Roaming = 125,
 	WalkerActionState_126_RoamerReturning = 126,
+	WalkerActionState_128_FlotsamCreated = 128,
+	WalkerActionState_129_FlotsamFloating = 129,
+	WalkerActionState_130_FlotsamLeftMap = 130,
 	WalkerActionState_132_ResourceCarrier = 132,
 	WalkerActionState_133_Dockman = 133,
 	WalkerActionState_134_Dockman_MarketBuyer = 134,
@@ -236,7 +239,7 @@ extern struct Data_Walker {
 	unsigned char alternativeLocationIndex;
 	char graphicOffset;
 	char isEnemyGraphic;
-	char __unknown_03;
+	char flotsamVisible;
 	short graphicId; // 04
 	short cartGraphicId;
 	short nextWalkerIdOnSameTile; // 08
@@ -259,14 +262,13 @@ extern struct Data_Walker {
 	short gridOffset; // 1a
 	char destinationX; // 1c
 	char destinationY;
-	char destinationGridOffsetSoldier;
-	char __unknown_1f;
+	short destinationGridOffsetSoldier;
 	char sourceX; // 20
 	char sourceY;
 	char formationPositionX;
 	char formationPositionY;
-	char __unknown_24;
-	char __unknown_25;
+	char __unused_24;
+	char __unused_25;
 	short waitTicks;
 	unsigned char actionState;
 	char progressOnTile; // 29
@@ -300,7 +302,7 @@ extern struct Data_Walker {
 	unsigned char migrantNumPeople;
 	char isGhost; // 55
 	char minMaxSeen;
-	char __unknown_57;
+	char __unused_57;
 	short inFrontWalkerId;
 	char attackGraphicOffset;
 	char waitTicksMissile;
