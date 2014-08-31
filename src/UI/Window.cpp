@@ -58,7 +58,7 @@ static struct Window windows[] = {
 	{ noop, UI_NewCareerDialog_drawBackground, UI_NewCareerDialog_drawForeground, UI_NewCareerDialog_handleMouse },
 	{ noop, UI_SlidingSidebar_drawBackground, UI_SlidingSidebar_drawForeground, noop },
 	{ noop, UI_City_drawBackground, UI_City_drawForeground, UI_City_handleMouse, UI_CityBuildings_getTooltip }, // TODO military command
-	{ noop, UI_MissionStart_Selection_drawBackground, noop, noop },
+	{ noop, UI_MissionStart_Selection_drawBackground, UI_MissionStart_Selection_drawForeground, UI_MissionStart_Selection_handleMouse },
 	// 30
 	{ UI_MissionStart_Briefing_init, UI_MissionStart_Briefing_drawBackground, UI_MissionStart_BriefingInitial_drawForeground, UI_MissionStart_BriefingInitial_handleMouse },
 	{ UI_MissionStart_Briefing_init, UI_MissionStart_Briefing_drawBackground, UI_MissionStart_BriefingReview_drawForeground, UI_MissionStart_BriefingReview_handleMouse },

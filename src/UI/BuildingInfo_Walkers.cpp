@@ -388,15 +388,12 @@ static void drawWalkerInCity(int walkerId, UI_CityPixelCoordinate *coord)
 	Data_Settings_Map.camera.x = x - 2;
 	Data_Settings_Map.camera.y = y - 6;
 	CityView_checkCameraBoundaries();
-	// TODO setIsometricViewportForWalker()
 	UI_CityBuildings_drawForegroundForWalker(
 		Data_Settings_Map.camera.x, Data_Settings_Map.camera.y,
 		walkerId, coord);
 
-
 	Data_Settings_Map.camera.x = xCam;
 	Data_Settings_Map.camera.y = yCam;
-	// TODO setCityViewport_(with|without)Panel?
 }
 
 void UI_BuildingInfo_drawWalkerImagesLocal(BuildingInfoContext *c)

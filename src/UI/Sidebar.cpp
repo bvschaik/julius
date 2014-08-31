@@ -1,15 +1,20 @@
 #include "Sidebar.h"
+
 #include "AllWindows.h"
-#include "Minimap.h"
-#include "Window.h"
 #include "MessageDialog.h"
+#include "Minimap.h"
+#include "Warning.h"
+#include "Window.h"
+
 #include "../CityView.h"
 #include "../Graphics.h"
 #include "../SidebarMenu.h"
 #include "../Sound.h"
+#include "../Terrain.h"
 #include "../Time.h"
 #include "../Undo.h"
 #include "../Widget.h"
+
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
 #include "../Data/Graphics.h"
@@ -325,11 +330,38 @@ static void buttonMissionBriefing(int param1, int param2)
 
 static void buttonRotateNorth(int param1, int param2)
 {
-	// TODO
+	switch (Data_Settings_Map.orientation) {
+		case 0: // already north
+			return;
+		case 2:
+			CityView_rotateRight();
+			Terrain_rotateMap(1);
+			break;
+		case 4:
+			CityView_rotateLeft();
+			Terrain_rotateMap(0);
+			// fallthrough
+		case 6:
+			CityView_rotateLeft();
+			Terrain_rotateMap(0);
+			break;
+	}
+	CityView_checkCameraBoundaries();
+	UI_Warning_show(Warning_Orientation);
+	UI_Window_requestRefresh();
 }
-static void buttonRotate(int param1, int param2)
+
+static void buttonRotate(int clockWise, int param2)
 {
-	// TODO
+	if (clockWise) {
+		CityView_rotateRight();
+	} else {
+		CityView_rotateLeft();
+	}
+	Terrain_rotateMap(clockWise);
+	CityView_checkCameraBoundaries();
+	UI_Warning_show(Warning_Orientation);
+	UI_Window_requestRefresh();
 }
 
 

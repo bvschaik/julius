@@ -588,6 +588,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\Settings.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\UI\Sidebar.cpp"
 				>
 			</File>
@@ -1038,11 +1042,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Random.h"
+				RelativePath=".\src\data\Random.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\data\Random.h"
+				RelativePath=".\src\Random.h"
 				>
 			</File>
 			<File
@@ -1062,11 +1066,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Scenario.h"
+				RelativePath=".\src\Scenario.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Scenario.h"
+				RelativePath=".\src\Data\Scenario.h"
 				>
 			</File>
 			<File
@@ -1087,6 +1091,10 @@
 			</File>
 			<File
 				RelativePath=".\src\Data\Settings.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Settings.h"
 				>
 			</File>
 			<File
@@ -1154,11 +1162,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\data\Tutorial.h"
+				RelativePath=".\src\Tutorial.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Tutorial.h"
+				RelativePath=".\src\data\Tutorial.h"
 				>
 			</File>
 			<File

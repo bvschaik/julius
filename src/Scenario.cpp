@@ -55,7 +55,8 @@ static void initGridGraphicIds();
 
 void Scenario_initialize(const char *scenarioName)
 {
-	int missionId = Data_Settings.saveGameMissionId;
+	int saveMissionId = Data_Settings.saveGameMissionId;
+	int curMissionId = Data_Settings.currentMissionId;
 	clearBookmarks();
 	if (Data_Settings.isCustomScenario) {
 		if (!mapFileExists(scenarioName)) {
@@ -64,22 +65,23 @@ void Scenario_initialize(const char *scenarioName)
 		}
 		initCustomScenario(scenarioName);
 	} else {
-		if (!GameFile_loadSavedGameFromMissionPack(missionId)) {
+		if (!GameFile_loadSavedGameFromMissionPack(saveMissionId)) {
 			UI_Window_goTo(Window_City);
 			return;
 		}
 		Data_CityInfo.treasury = Calc_adjustWithPercentage(Data_CityInfo.treasury,
 			Data_Model_Difficulty.moneyPercentage[Data_Settings.difficulty]);
 	}
-	Data_Settings.saveGameMissionId = missionId;
+	Data_Settings.saveGameMissionId = saveMissionId;
+	Data_Settings.currentMissionId = curMissionId;
 
 	Data_CityInfo_Extra.startingFavor = Data_Model_Difficulty.startingFavor[Data_Settings.difficulty];
-	Data_Settings.personalSavingsLastMission = Data_Settings.personalSavingsPerMission[missionId];
+	Data_Settings.personalSavingsLastMission = Data_Settings.personalSavingsPerMission[curMissionId];
 	
 	Data_CityInfo.ratingFavor = Data_CityInfo_Extra.startingFavor;
 	Data_CityInfo.personalSavings = Data_Settings.personalSavingsLastMission;
-	Data_CityInfo.playerRank = missionId;
-	Data_CityInfo.salaryRank = missionId;
+	Data_CityInfo.playerRank = curMissionId;
+	Data_CityInfo.salaryRank = curMissionId;
 	if (Data_Settings.isCustomScenario) {
 		Data_CityInfo.personalSavings = 0;
 		Data_CityInfo.playerRank = Data_Scenario.playerRank;
@@ -90,7 +92,7 @@ void Scenario_initialize(const char *scenarioName)
 	}
 	Data_CityInfo.salaryAmount = Constant_SalaryForRank[Data_CityInfo.salaryRank];
 
-	setTutorialFlags(missionId);
+	setTutorialFlags(curMissionId);
 
 	if (IsTutorial1()) {
 		Data_Settings.personalSavingsPerMission[0] = 0;

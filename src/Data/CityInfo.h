@@ -647,10 +647,7 @@ extern struct Data_CityInfo {
 	char __unknown_43f3;
 	int victoryHasWonScenario;
 	int victoryContinueMonths;
-	char __unknown_43fc;
-	char __unknown_43fd;
-	char __unknown_43fe;
-	char __unknown_43ff;
+	int victoryContinueMonthsChosen;
 	int wageRatePaidThisYear;
 	int financeTributeThisYear;
 	int financeTributeLastYear;

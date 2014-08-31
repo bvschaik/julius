@@ -69,6 +69,8 @@ void Terrain_updateEntryExitFlags(int remove);
 int Terrain_isClearToBuild(int size, int x, int y, int terrainMask);
 void Terrain_updateToPlaceBuildingToOverlay(int size, int x, int y, int terrainMask, int isAbsoluteXY);
 
+void Terrain_rotateMap(int direction);
+
 int Terrain_Water_findOpenWaterForShipwreck(int walkerId, int *xTile, int *yTile);
 int Terrain_Water_getFreeDockDestination(int walkerId, int *xTile, int *yTile);
 int Terrain_Water_getQueueDockDestination(int walkerId, int *xTile, int *yTile);

@@ -1,7 +1,10 @@
 #include "AllWindows.h"
 #include "Window.h"
 
+#include "../CityInfo.h"
 #include "../Graphics.h"
+#include "../Settings.h"
+#include "../Sound.h"
 #include "../Widget.h"
 
 #include "../Data/CityInfo.h"
@@ -11,6 +14,19 @@
 #include "../Data/Screen.h"
 #include "../Data/Settings.h"
 #include "../Data/State.h"
+
+static void victoryAccept(int param1, int param2);
+static void victoryContinueGoverning(int param1, int param2);
+static void firedAccept(int param1, int param2);
+
+static CustomButton victoryButtons[3] = {
+	{32, 112, 416, 132, victoryAccept, Widget_Button_doNothing, 3, 0, 0},
+	{32, 144, 416, 164, victoryContinueGoverning, Widget_Button_doNothing, 1, 1, 0},
+	{32, 176, 416, 196, victoryContinueGoverning, Widget_Button_doNothing, 1, 2, 0},
+};
+static CustomButton firedButtons[3] = {
+	{64, 208, 384, 228, firedAccept, Widget_Button_doNothing, 1, 0, 0},
+};
 
 static int focusButtonId = 0;
 
@@ -70,10 +86,46 @@ void UI_MissionEnd_drawForeground()
 	}
 }
 
+static void advanceToNextMission()
+{
+	Data_Settings.startingFavor = Data_CityInfo.ratingFavor;
+	Data_Settings.personalSavingsLastMission = Data_CityInfo.personalSavings;
+	Data_Settings.personalSavingsPerMission[Data_Settings.currentMissionId] = Data_CityInfo.personalSavings;
+	Data_Settings.currentMissionId++;
+
+	Data_CityInfo.victoryHasWonScenario = 0;
+	Data_CityInfo.victoryContinueMonths = 0;
+	Data_CityInfo.victoryContinueMonthsChosen = 0;
+
+	Data_State.undoAvailable = 0;
+	Data_State.currentOverlay = 0;
+
+	if (Data_Settings.currentMissionId >= 11 || Data_Settings.isCustomScenario) {
+		UI_Window_goTo(Window_MainMenu);
+		if (!Data_Settings.isCustomScenario) {
+			Settings_clearMissionSettings();
+			Data_Settings.currentMissionId = 2;
+		}
+	} else {
+		Data_Settings.saveGameMissionId = Constant_MissionIds[Data_Settings.currentMissionId].peaceful;
+		UI_MissionStart_show();
+	}
+}
+
 void UI_MissionEnd_handleMouse()
 {
-	if (Data_Mouse.right.wentUp || Data_Mouse.left.wentDown) {
-		UI_Window_goTo(Window_MainMenu);
+	if (Data_State.winState == 1) {
+		if (Data_Mouse.right.wentUp) {
+			Sound_stopMusic();
+			Sound_stopSpeech();
+			advanceToNextMission();
+		}
+	} else {
+		int xOffset = Data_Screen.offset640x480.x + 48;
+		int yOffset = Data_Screen.offset640x480.y + 128;
+
+		Widget_Button_handleCustomButtons(xOffset, yOffset - 112,
+			firedButtons, 1, &focusButtonId);
 	}
 }
 
@@ -124,5 +176,53 @@ void UI_VictoryDialog_drawForeground()
 
 void UI_VictoryDialog_handleMouse()
 {
-	// TODO
+	int xOffset = Data_Screen.offset640x480.x + 48;
+	int yOffset = Data_Screen.offset640x480.y + 128;
+
+	int numButtons;
+	if (Data_Settings.currentMissionId >= 2 || Data_Settings.isCustomScenario) {
+		numButtons = 3;
+	} else {
+		numButtons = 1;
+	}
+	Widget_Button_handleCustomButtons(xOffset, yOffset, victoryButtons, numButtons, &focusButtonId);
+}
+
+static void victoryAccept(int param1, int param2)
+{
+	UI_Window_goTo(Window_City);
+}
+
+static void victoryContinueGoverning(int duration, int param2)
+{
+	Data_CityInfo.victoryHasWonScenario = 1;
+	if (duration == 1) {
+		Data_CityInfo.victoryContinueMonths += 24;
+		Data_CityInfo.victoryContinueMonthsChosen = 24;
+		Data_CityInfo.salaryRank = 0;
+		Data_CityInfo.salaryAmount = 0;
+		CityInfo_Finance_updateSalary();
+	} else if (duration == 2) {
+		Data_CityInfo.victoryContinueMonths += 60;
+		Data_CityInfo.victoryContinueMonthsChosen = 60;
+		Data_CityInfo.salaryRank = 0;
+		Data_CityInfo.salaryAmount = 0;
+		CityInfo_Finance_updateSalary();
+	}
+	UI_Window_goTo(Window_City);
+	Data_State.winState = 0;
+	Data_State.forceWinCheat = 0;
+}
+
+static void firedAccept(int param1, int param2)
+{
+	Data_CityInfo.victoryHasWonScenario = 0;
+	Data_CityInfo.victoryContinueMonths = 0;
+	Data_CityInfo.victoryContinueMonthsChosen = 0;
+	Data_State.undoAvailable = 0;
+	if (Data_Settings.isCustomScenario) {
+		UI_Window_goTo(Window_MainMenu);
+	} else {
+		UI_MissionStart_show();
+	}
 }

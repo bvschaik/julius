@@ -230,7 +230,7 @@ void CityView_rotateRight()
 	int centerGridOffset = ViewToGridOffset(
 		Data_Settings_Map.camera.x + Data_CityView.widthInTiles / 2,
 		Data_Settings_Map.camera.y + Data_CityView.heightInTiles / 2);
-
+	
 	Data_Settings_Map.orientation -= 2;
 	if (Data_Settings_Map.orientation < 0) {
 		Data_Settings_Map.orientation = Direction_Left;

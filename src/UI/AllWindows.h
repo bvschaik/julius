@@ -102,6 +102,8 @@ void UI_Intermezzo_handleMouse();
 void UI_MissionStart_show();
 
 void UI_MissionStart_Selection_drawBackground();
+void UI_MissionStart_Selection_drawForeground();
+void UI_MissionStart_Selection_handleMouse();
 
 void UI_MissionStart_Briefing_init();
 void UI_MissionStart_Briefing_drawBackground();

@@ -234,7 +234,7 @@ static void menuFile_replayMap(int param)
 		Scenario_initialize(Data_FileList.selectedScenario);
 		UI_Window_goTo(Window_City);
 	} else {
-		UI_Window_goTo(Window_MissionBriefingInitial);
+		UI_Window_goTo(Window_MissionSelection);
 		UI_MissionStart_show();
 	}
 }

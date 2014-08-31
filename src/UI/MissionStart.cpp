@@ -27,12 +27,32 @@ static const int backgroundGraphicOffset[] = {
 static const int campaignHasChoice[] = {
 	0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
 };
+struct CampaignSelection {
+	int xPeaceful;
+	int yPeaceful;
+	int xMilitary;
+	int yMilitary;
+};
+static const struct CampaignSelection campaignSelection[12] = {
+	{0, 0, 0, 0},
+	{0, 0, 0, 0},
+	{292, 182, 353, 232},
+	{118, 202, 324, 286},
+	{549, 285, 224, 121},
+	{173, 109, 240, 292},
+	{576, 283, 19, 316},
+	{97, 240, 156, 59},
+	{127, 300, 579, 327},
+	{103, 35, 410, 109},
+	{191, 153, 86, 8},
+	{200, 300, 400, 300},
+};
 
 static const int goalOffsetsX[] = {32, 288, 32, 288, 288, 288};
 static const int goalOffsetsY[] = {95, 95, 117, 117, 73, 135};
 
 static ImageButton imageButtonStartMission = {
-	0, 0, 27, 27, 4, 92, 0, startMission, Widget_Button_doNothing, 1, 0, 0, 0, 1, 0
+	0, 0, 27, 27, 4, 92, 56, startMission, Widget_Button_doNothing, 1, 0, 0, 0, 1, 0
 };
 static ImageButton imageButtonBackToSelection = {
 	0, 0, 31, 20, 4, 90, 8, briefingBack, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0
@@ -41,6 +61,7 @@ static ImageButton imageButtonBackToSelection = {
 static struct {
 	int choice;
 } data;
+#include <cstdio>
 
 void UI_MissionStart_show()
 {
@@ -55,9 +76,9 @@ void UI_MissionStart_show()
 		data.choice = 0;
 		UI_Window_goTo(Window_MissionSelection);
 	} else {
+		printf("Going to MissionBriefingInitial with mission id %d\n", Data_Settings.currentMissionId);
 		UI_Intermezzo_show(0, Window_MissionBriefingInitial, 1000);
 		Data_State.missionBriefingShown = 0;
-		Widget_RichText_reset(0);
 	}
 }
 
@@ -81,8 +102,85 @@ void UI_MissionStart_Selection_drawBackground()
 	}
 }
 
+static int isMouseHit(int x, int y, int size)
+{
+	return
+		x <= Data_Mouse.x && Data_Mouse.x < x + size &&
+		y <= Data_Mouse.y && Data_Mouse.y < y + size;
+}
+
+void UI_MissionStart_Selection_drawForeground()
+{
+	int xOffset = Data_Screen.offset640x480.x;
+	int yOffset = Data_Screen.offset640x480.y;
+
+	if (data.choice > 0) {
+		Widget_Button_drawImageButtons(xOffset + 580, yOffset + 410, &imageButtonStartMission, 1);
+	}
+
+	int missionId = Data_Settings.currentMissionId;
+	int xPeaceful = xOffset + campaignSelection[missionId].xPeaceful - 4;
+	int yPeaceful = yOffset + campaignSelection[missionId].yPeaceful - 4;
+	int xMilitary = xOffset + campaignSelection[missionId].xMilitary - 4;
+	int yMilitary = yOffset + campaignSelection[missionId].yMilitary - 4;
+	int selected = 0;
+	if (isMouseHit(xPeaceful, yPeaceful, 44)) {
+		selected = 1;
+	}
+	if (isMouseHit(xMilitary, yMilitary, 44)) {
+		selected = 2;
+	}
+	int graphicId = GraphicId(ID_Graphic_SelectMissionButton);
+	if (data.choice == 0) {
+		Graphics_drawImage(selected == 1 ? graphicId + 1 : graphicId, xPeaceful, yPeaceful);
+		Graphics_drawImage(selected == 2 ? graphicId + 1 : graphicId, xMilitary, yMilitary);
+	} else if (data.choice == 1) {
+		Graphics_drawImage(selected == 1 ? graphicId + 1 : graphicId + 2, xPeaceful, yPeaceful);
+		Graphics_drawImage(selected == 2 ? graphicId + 1 : graphicId, xMilitary, yMilitary);
+	} else {
+		Graphics_drawImage(selected == 1 ? graphicId + 1 : graphicId, xPeaceful, yPeaceful);
+		Graphics_drawImage(selected == 2 ? graphicId + 1 : graphicId + 2, xMilitary, yMilitary);
+	}
+}
+
+void UI_MissionStart_Selection_handleMouse()
+{
+	int xOffset = Data_Screen.offset640x480.x;
+	int yOffset = Data_Screen.offset640x480.y;
+
+	if (Data_Mouse.right.wentUp) {
+		UI_MissionStart_show();
+	}
+	if (data.choice > 0) {
+		if (Widget_Button_handleImageButtons(xOffset + 580, yOffset + 410, &imageButtonStartMission, 1)) {
+			return;
+		}
+	}
+	if (Data_Mouse.left.wentUp) {
+		int missionId = Data_Settings.currentMissionId;
+		int xPeaceful = xOffset + campaignSelection[missionId].xPeaceful - 4;
+		int yPeaceful = yOffset + campaignSelection[missionId].yPeaceful - 4;
+		int xMilitary = xOffset + campaignSelection[missionId].xMilitary - 4;
+		int yMilitary = yOffset + campaignSelection[missionId].yMilitary - 4;
+
+		if (isMouseHit(xPeaceful, yPeaceful, 44)) {
+			Data_Settings.saveGameMissionId = Constant_MissionIds[missionId].peaceful;
+			data.choice = 1;
+			UI_Window_requestRefresh();
+			Sound_Speech_playFile("wavs/fanfare_nu1.wav");
+		}
+		if (isMouseHit(xMilitary, yMilitary, 44)) {
+			Data_Settings.saveGameMissionId = Constant_MissionIds[missionId].military;
+			data.choice = 2;
+			UI_Window_requestRefresh();
+			Sound_Speech_playFile("wavs/fanfare_nu5.wav");
+		}
+	}
+}
+
 void UI_MissionStart_Briefing_init()
 {
+	printf("Mission ID: %d\n", Data_Settings.currentMissionId);
 	Widget_RichText_reset(0);
 }
 
@@ -233,11 +331,17 @@ void UI_MissionStart_BriefingInitial_handleMouse()
 		return;
 	}
 	if (Data_Settings.currentMissionId >= 2) {
-		if (Widget_Button_handleImageButtons(xOffset + 10, xOffset + 396, &imageButtonBackToSelection, 1)) {
+		if (Widget_Button_handleImageButtons(xOffset + 10, yOffset + 396, &imageButtonBackToSelection, 1)) {
 			return;
 		}
 	}
 	Widget_RichText_handleScrollbar();
+
+	if (Data_Mouse.scrollDown) {
+		Widget_RichText_scroll(1, 3);
+	} else if (Data_Mouse.scrollUp) {
+		Widget_RichText_scroll(0, 3);
+	}
 }
 
 void UI_MissionStart_BriefingReview_handleMouse()

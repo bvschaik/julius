@@ -216,6 +216,7 @@ enum {
 	ID_Graphic_LoadingScreen = 251,
 	ID_Graphic_IntermezzoBackground = 252,
 	ID_Graphic_PanelWindowsDesert = 253,
+	ID_Graphic_SelectMissionButton = 254,
 };
 
 #define Color_Black 0
@@ -419,5 +420,12 @@ struct WalkerProperties {
 };
 
 extern const struct WalkerProperties Constant_WalkerProperties[80];
+
+struct MissionId {
+	int peaceful;
+	int military;
+};
+
+extern const struct MissionId Constant_MissionIds[12];
 
 #endif
