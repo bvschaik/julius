@@ -15,13 +15,8 @@
 
 static void determineMeetingCenter();
 
-#include <cstdio>
 void Natives_init()
 {
-	printf("Scenario values: %d %d %d\n",
-		Data_Scenario.nativeGraphics.hut,
-		Data_Scenario.nativeGraphics.meetingCenter,
-		Data_Scenario.nativeGraphics.crops);
 	int nativeGraphic = GraphicId(ID_Graphic_NativeBuilding);
 	int gridOffset = Data_Settings_Map.gridStartOffset;
 	for (int y = 0; y < Data_Settings_Map.height; y++, gridOffset += Data_Settings_Map.gridBorderSize) {
@@ -45,7 +40,6 @@ void Natives_init()
 				buildingType = Building_NativeCrops;
 				Data_Grid_graphicIds[gridOffset] = GraphicId(ID_Graphic_FarmCrops) + randomBit;
 			} else { //unknown building
-				printf("Removing graphic id %d\n", Data_Grid_graphicIds[gridOffset]);
 				Terrain_removeBuildingFromGrids(0, x, y);
 				continue;
 			}

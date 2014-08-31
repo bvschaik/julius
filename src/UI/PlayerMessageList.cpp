@@ -159,8 +159,6 @@ void UI_PlayerMessageList_drawForeground()
 	}
 }
 
-#include <cstdio>
-
 void UI_PlayerMessageList_handleMouse()
 {
 	if (Data_Mouse.scrollDown) {

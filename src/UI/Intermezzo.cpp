@@ -73,7 +73,6 @@ enum {
 	Type_Won = 2,
 };
 
-#include <cstdio>
 void UI_Intermezzo_show(int type, WindowId nextWindowId, int timeMillis)
 {
 	data.type = type;

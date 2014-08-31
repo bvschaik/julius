@@ -14,8 +14,6 @@
 #include "../Widget.h"
 #include "../Data/Mouse.h"
 
-#include <cstdio>
-
 static void UI_CityBuildings_drawBuildingFootprints();
 static void UI_CityBuildings_drawBuildingTopsWalkersAnimation(int selectedWalkerId, struct UI_CityPixelCoordinate *coord);
 static void UI_CityBuildings_drawHippodromeAndElevatedWalkers(int selectedWalkerId);

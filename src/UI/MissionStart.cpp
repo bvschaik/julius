@@ -61,7 +61,6 @@ static ImageButton imageButtonBackToSelection = {
 static struct {
 	int choice;
 } data;
-#include <cstdio>
 
 void UI_MissionStart_show()
 {
@@ -76,7 +75,6 @@ void UI_MissionStart_show()
 		data.choice = 0;
 		UI_Window_goTo(Window_MissionSelection);
 	} else {
-		printf("Going to MissionBriefingInitial with mission id %d\n", Data_Settings.currentMissionId);
 		UI_Intermezzo_show(0, Window_MissionBriefingInitial, 1000);
 		Data_State.missionBriefingShown = 0;
 	}
@@ -180,7 +178,6 @@ void UI_MissionStart_Selection_handleMouse()
 
 void UI_MissionStart_Briefing_init()
 {
-	printf("Mission ID: %d\n", Data_Settings.currentMissionId);
 	Widget_RichText_reset(0);
 }
 
