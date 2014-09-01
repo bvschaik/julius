@@ -28,7 +28,7 @@ static void (*walkerActionCallbacks[])(int walkerId) = {
 	WalkerAction_tradeCaravanDonkey,
 	WalkerAction_protestor,
 	WalkerAction_criminal,
-	WalkerAction_nobody, //TODO WalkerAction_rioter,
+	WalkerAction_rioter,
 	WalkerAction_fishingBoat,
 	WalkerAction_marketTrader,
 	WalkerAction_priest,

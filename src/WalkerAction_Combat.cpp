@@ -13,7 +13,7 @@ int WalkerAction_CombatSoldier_getTarget(int x, int y, int maxDistance)
 			continue;
 		}
 		if (WalkerIsEnemy(w->type) || w->type == Walker_Rioter ||
-			(w->type == Walker_IndigenousNative && w->actionState == WalkerActionState_159_AttackingNative)) {
+			(w->type == Walker_IndigenousNative && w->actionState == WalkerActionState_159_NativeAttacking)) {
 			int distance = Calc_distanceMaximum(x, y, w->x, w->y);
 			if (distance <= maxDistance) {
 				if (w->targetedByWalkerId) {
@@ -35,7 +35,7 @@ int WalkerAction_CombatSoldier_getTarget(int x, int y, int maxDistance)
 			continue;
 		}
 		if (WalkerIsEnemy(w->type) || w->type == Walker_Rioter ||
-			(w->type == Walker_IndigenousNative && w->actionState == WalkerActionState_159_AttackingNative)) {
+			(w->type == Walker_IndigenousNative && w->actionState == WalkerActionState_159_NativeAttacking)) {
 			return i;
 		}
 	}
@@ -55,7 +55,7 @@ int WalkerAction_CombatSoldier_getMissileTarget(int soldierId, int maxDistance, 
 			continue;
 		}
 		if (WalkerIsEnemy(w->type) || WalkerIsHerd(w->type) ||
-			(w->type == Walker_IndigenousNative && w->actionState == WalkerActionState_159_AttackingNative)) {
+			(w->type == Walker_IndigenousNative && w->actionState == WalkerActionState_159_NativeAttacking)) {
 			int distance = Calc_distanceMaximum(x, y, w->x, w->y);
 			if (distance < minDistance && WalkerMovement_canLaunchCrossCountryMissile(x, y, w->x, w->y)) {
 				minDistance = distance;

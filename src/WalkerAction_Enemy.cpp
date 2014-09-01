@@ -474,7 +474,7 @@ void WalkerAction_enemy54_Gladiator(int walkerId)
 			w->waitTicks++;
 			if (w->waitTicks > 10 + (walkerId & 3)) {
 				w->waitTicks = 0;
-				w->actionState = WalkerActionState_159_AttackingNative;
+				w->actionState = WalkerActionState_159_NativeAttacking;
 				int xTile, yTile;
 				int buildingId = WalkerAction_Rioter_getTargetBuilding(&xTile, &yTile);
 				if (buildingId) {
@@ -487,7 +487,7 @@ void WalkerAction_enemy54_Gladiator(int walkerId)
 				}
 			}
 			break;
-		case WalkerActionState_159_AttackingNative:
+		case WalkerActionState_159_NativeAttacking:
 			Data_CityInfo.numAttackingNativesInCity = 10;
 			w->terrainUsage = 2;
 			WalkerMovement_walkTicks(walkerId, 1);

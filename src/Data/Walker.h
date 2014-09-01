@@ -161,6 +161,7 @@ enum {
 	WalkerActionState_114_TradeShipAnchored = 114,
 	WalkerActionState_115_TradeShipLeaving = 115,
 	WalkerActionState_120_RioterCreated = 120,
+	WalkerActionState_121_RioterMoving = 121,
 	WalkerActionState_125_Roaming = 125,
 	WalkerActionState_126_RoamerReturning = 126,
 	WalkerActionState_128_FlotsamCreated = 128,
@@ -181,9 +182,14 @@ enum {
 	WalkerActionState_149_Corpse = 149,
 	WalkerActionState_150_Attack = 150,
 	WalkerActionState_151_EnemyInitial = 151,
+	WalkerActionState_156_NativeGoingToMeetingCenter = 156,
+	WalkerActionState_157_NativeReturningFromMeetingCenter = 157,
 	WalkerActionState_158_NativeCreated = 158,
-	WalkerActionState_159_AttackingNative = 159,
+	WalkerActionState_159_NativeAttacking = 159,
+	WalkerActionState_160_NativeTraderGoingToWarehouse = 160,
+	WalkerActionState_161_NativeTraderReturning = 161,
 	WalkerActionState_162_NativeTraderCreated = 162,
+	WalkerActionState_163_NativeTraderAtWarehouse = 163,
 	WalkerActionState_170_TowerSentryAtRest = 170,
 	WalkerActionState_171_TowerSentryPatrolling = 171,
 	WalkerActionState_172_TowerSentryFiring = 172,
@@ -237,7 +243,7 @@ extern struct Data_Walker_NameSequence {
 
 extern struct Data_Walker {
 	unsigned char alternativeLocationIndex;
-	char graphicOffset;
+	unsigned char graphicOffset;
 	char isEnemyGraphic;
 	char flotsamVisible;
 	short graphicId; // 04

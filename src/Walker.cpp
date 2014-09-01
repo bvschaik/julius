@@ -397,7 +397,7 @@ int Walker_getNonCitizenOnSameTile(int walkerId)
 			if (WalkerIsEnemy(type)) {
 				return w;
 			}
-			if (type == Walker_IndigenousNative && Data_Walkers[w].actionState == WalkerActionState_159_AttackingNative) {
+			if (type == Walker_IndigenousNative && Data_Walkers[w].actionState == WalkerActionState_159_NativeAttacking) {
 				return w;
 			}
 			if (type == Walker_Wolf || type == Walker_Sheep || type == Walker_Zebra) {

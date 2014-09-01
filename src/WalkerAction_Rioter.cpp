@@ -3,12 +3,16 @@
 #include "Building.h"
 #include "PlayerMessage.h"
 #include "Time.h"
+#include "Walker.h"
+#include "WalkerMovement.h"
 
+#include "Data/CityInfo.h"
 #include "Data/Grid.h"
 #include "Data/Message.h"
 
-static const int criminalOffsets[] =
-	{0, 0, 1, 2, 3, 4, 5, 6, 7, 7, 6, 5, 4, 3, 2, 1};
+static const int criminalOffsets[] = {
+	0, 0, 1, 2, 3, 4, 5, 6, 7, 7, 6, 5, 4, 3, 2, 1
+};
 
 void WalkerAction_protestor(int walkerId)
 {
@@ -53,6 +57,90 @@ void WalkerAction_criminal(int walkerId)
 	} else {
 		w->graphicId = GraphicId(ID_Graphic_Walker_Criminal) +
 			criminalOffsets[w->graphicOffset / 2] + 104;
+	}
+}
+
+void WalkerAction_rioter(int walkerId)
+{
+	struct Data_Walker *w = &Data_Walkers[walkerId];
+	Data_CityInfo.numRiotersInCity++;
+	if (!w->targetedByWalkerId) {
+		Data_CityInfo.riotersOrAttackingNativesInCity = 10;
+	}
+	w->terrainUsage = WalkerTerrainUsage_Enemy;
+	w->maxRoamLength = 480;
+	w->cartGraphicId = 0;
+	w->isGhost = 0;
+	switch (w->actionState) {
+		case WalkerActionState_150_Attack:
+			WalkerAction_Common_handleAttack(walkerId);
+			break;
+		case WalkerActionState_149_Corpse:
+			WalkerAction_Common_handleCorpse(walkerId);
+			break;
+		case WalkerActionState_120_RioterCreated:
+			WalkerActionIncreaseGraphicOffset(w, 32);
+			w->waitTicks++;
+			if (w->waitTicks >= 160) {
+				w->actionState = WalkerActionState_121_RioterMoving;
+				int xTile, yTile;
+				int buildingId = WalkerAction_Rioter_getTargetBuilding(&xTile, &yTile);
+				if (buildingId) {
+					w->destinationX = xTile;
+					w->destinationY = yTile;
+					w->destinationBuildingId = buildingId;
+					WalkerRoute_remove(walkerId);
+				} else {
+					w->state = WalkerState_Dead;
+				}
+			}
+			break;
+		case WalkerActionState_121_RioterMoving:
+			WalkerActionIncreaseGraphicOffset(w, 12);
+			WalkerMovement_walkTicks(walkerId, 1);
+			if (w->direction == 8) {
+				int xTile, yTile;
+				int buildingId = WalkerAction_Rioter_getTargetBuilding(&xTile, &yTile);
+				if (buildingId) {
+					w->destinationX = xTile;
+					w->destinationY = yTile;
+					w->destinationBuildingId = buildingId;
+					WalkerRoute_remove(walkerId);
+				} else {
+					w->state = WalkerState_Dead;
+				}
+			} else if (w->direction == 9 || w->direction == 10) {
+				w->actionState = WalkerActionState_120_RioterCreated;
+				WalkerRoute_remove(walkerId);
+			} else if (w->direction == 11) {
+				if (w->graphicOffset > 12) {
+					w->graphicOffset = 0;
+				}
+			}
+			break;
+	}
+	int dir;
+	if (w->direction == 11) {
+		dir = w->attackDirection;
+	} else if (w->direction < 8) {
+		dir = w->direction;
+	} else {
+		dir = w->previousTileDirection;
+	}
+	dir = (8 + dir - Data_Settings_Map.orientation) % 8;
+	
+	if (w->actionState == WalkerActionState_149_Corpse) {
+		w->graphicId = GraphicId(ID_Graphic_Walker_Criminal) +
+			96 + WalkerActionCorpseGraphicOffset(w);
+	} else if (w->direction == 11) {
+		w->graphicId = GraphicId(ID_Graphic_Walker_Criminal) +
+			104 + criminalOffsets[w->graphicOffset];
+	} else if (w->actionState == WalkerActionState_121_RioterMoving) {
+		w->graphicId = GraphicId(ID_Graphic_Walker_Criminal) +
+			dir + 8 * w->graphicOffset;
+	} else {
+		w->graphicId = GraphicId(ID_Graphic_Walker_Criminal) +
+			104 + criminalOffsets[w->graphicOffset / 2];
 	}
 }
 

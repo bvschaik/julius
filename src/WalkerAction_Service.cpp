@@ -181,7 +181,7 @@ static int prefectGetNearestEnemy(int x, int y, int *distance)
 			dist = Calc_distanceMaximum(x, y, w->x, w->y);
 		} else if (w->type == Walker_Enemy54_Gladiator) {
 			dist = Calc_distanceMaximum(x, y, w->x, w->y);
-		} else if (w->type == Walker_IndigenousNative && w->actionState == WalkerActionState_159_AttackingNative) {
+		} else if (w->type == Walker_IndigenousNative && w->actionState == WalkerActionState_159_NativeAttacking) {
 			dist = Calc_distanceMaximum(x, y, w->x, w->y);
 		} else if (WalkerIsEnemy(w->type)) {
 			dist = 3 * Calc_distanceMaximum(x, y, w->x, w->y);

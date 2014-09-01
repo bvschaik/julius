@@ -58,7 +58,7 @@ int WalkerAction_TradeCaravan_canBuy(int traderId, int warehouseId, int cityId)
 	return 0;
 }
 
-static int traderGetBuyResource(int traderId, int warehouseId, int cityId)
+static int traderGetBuyResource(/*int traderId, */int warehouseId, int cityId)
 {
 	if (Data_Buildings[warehouseId].type != Building_Warehouse) {
 		return Resource_None;
@@ -265,7 +265,7 @@ void WalkerAction_tradeCaravan(int walkerId)
 				w->waitTicks = 0;
 				int moveOn = 0;
 				if (WalkerAction_TradeCaravan_canBuy(walkerId, w->destinationBuildingId, w->empireCityId)) {
-					int resource = traderGetBuyResource(walkerId, w->destinationBuildingId, w->empireCityId);
+					int resource = traderGetBuyResource(w->destinationBuildingId, w->empireCityId);
 					if (resource) {
 						Data_Empire_Trade.tradedThisYear[Data_Empire_Cities[w->empireCityId].routeId][resource]++;
 						Trader_buyResource(walkerId, resource);
@@ -346,6 +346,106 @@ void WalkerAction_tradeCaravanDonkey(int walkerId)
 	dir = (8 + dir - Data_Settings_Map.orientation) % 8;
 	w->graphicId = GraphicId(ID_Graphic_Walker_TradeCaravan) +
 		dir + 8 * w->graphicOffset;
+}
+
+
+void WalkerAction_nativeTrader(int walkerId)
+{
+	struct Data_Walker *w = &Data_Walkers[walkerId];
+	w->isGhost = 0;
+	w->terrainUsage = 0;
+	WalkerActionIncreaseGraphicOffset(w, 12);
+	w->cartGraphicId = 0;
+	switch (w->actionState) {
+		case WalkerActionState_150_Attack:
+			WalkerAction_Common_handleAttack(walkerId);
+			break;
+		case WalkerActionState_149_Corpse:
+			WalkerAction_Common_handleCorpse(walkerId);
+			break;
+		case WalkerActionState_160_NativeTraderGoingToWarehouse:
+			WalkerMovement_walkTicks(walkerId, 1);
+			if (w->direction == 8) {
+				w->actionState = WalkerActionState_163_NativeTraderAtWarehouse;
+			} else if (w->direction == 9) {
+				WalkerRoute_remove(walkerId);
+			} else if (w->direction == 10) {
+				w->state = WalkerState_Dead;
+				w->isGhost = 1;
+			}
+			if (Data_Buildings[w->destinationBuildingId].inUse != 1) {
+				w->state = WalkerState_Dead;
+			}
+			break;
+		case WalkerActionState_161_NativeTraderReturning:
+			WalkerMovement_walkTicks(walkerId, 1);
+			if (w->direction == 8 || w->direction == 10) {
+				w->state = WalkerState_Dead;
+			} else if (w->direction == 9) {
+				WalkerRoute_remove(walkerId);
+			}
+			break;
+		case WalkerActionState_162_NativeTraderCreated:
+			w->isGhost = 1;
+			w->waitTicks++;
+			if (w->waitTicks > 10) {
+				w->waitTicks = 0;
+				int xTile, yTile;
+				int buildingId = Trader_getClosestWarehouseForTradeCaravan(walkerId, w->x, w->y, 0, -1, &xTile, &yTile);
+				if (buildingId) {
+					w->actionState = WalkerActionState_160_NativeTraderGoingToWarehouse;
+					w->destinationBuildingId = buildingId;
+					w->destinationX = xTile;
+					w->destinationY = yTile;
+				} else {
+					w->state = WalkerState_Dead;
+				}
+			}
+			w->graphicOffset = 0;
+			break;
+		case WalkerActionState_163_NativeTraderAtWarehouse:
+			w->waitTicks++;
+			if (w->waitTicks > 10) {
+				w->waitTicks = 0;
+				if (WalkerAction_TradeCaravan_canBuy(walkerId, w->destinationBuildingId, 0)) {
+					int resource = traderGetBuyResource(w->destinationBuildingId, 0);
+					Trader_buyResource(walkerId, resource);
+					w->traderAmountBought += 3;
+				} else {
+					int xTile, yTile;
+					int buildingId = Trader_getClosestWarehouseForTradeCaravan(walkerId, w->x, w->y, 0, -1, &xTile, &yTile);
+					if (buildingId) {
+						w->actionState = WalkerActionState_160_NativeTraderGoingToWarehouse;
+						w->destinationBuildingId = buildingId;
+						w->destinationX = xTile;
+						w->destinationY = yTile;
+					} else {
+						w->actionState = WalkerActionState_161_NativeTraderReturning;
+						w->destinationX = w->sourceX;
+						w->destinationY = w->sourceY;
+					}
+				}
+			}
+			w->graphicOffset = 0;
+			break;
+	}
+	int dir = (w->direction < 8) ? w->direction : w->previousTileDirection;
+	dir = (8 + dir - Data_Settings_Map.orientation) % 8;
+	
+	if (w->actionState == WalkerActionState_149_Corpse) {
+		w->graphicId = GraphicId(ID_Graphic_Walker_Cartpusher) +
+			96 + WalkerActionCorpseGraphicOffset(w);
+		w->cartGraphicId = 0;
+	} else {
+		w->graphicId = GraphicId(ID_Graphic_Walker_Cartpusher) +
+			dir + 8 * w->graphicOffset;
+		w->cartGraphicId = GraphicId(ID_Graphic_Walker_MigrantCart) +
+			8 + 8 * w->resourceId;
+	}
+	if (w->cartGraphicId) {
+		w->cartGraphicId += dir;
+		WalkerAction_Common_setCartOffset(walkerId, dir);
+	}
 }
 
 static int tradeShipLostQueue(int walkerId)

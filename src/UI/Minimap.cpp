@@ -121,7 +121,7 @@ static int drawWalker(int xView, int yView, int gridOffset)
 			break;
 		}
 		if (type == Walker_IndigenousNative &&
-			Data_Walkers[walkerId].actionState == WalkerActionState_159_AttackingNative) {
+			Data_Walkers[walkerId].actionState == WalkerActionState_159_NativeAttacking) {
 			hasWalker = 1;
 			color = soldierColor;
 			break;

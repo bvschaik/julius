@@ -73,6 +73,7 @@ void WalkerAction_bolt(int walkerId);
 // rioter
 void WalkerAction_protestor(int walkerId);
 void WalkerAction_criminal(int walkerId);
+void WalkerAction_rioter(int walkerId);
 // water
 void WalkerAction_fishingBoat(int walkerId);
 void WalkerAction_flotsam(int walkerId);
