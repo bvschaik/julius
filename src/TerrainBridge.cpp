@@ -277,7 +277,7 @@ int TerrainBridge_countWalkersOnBridge(int gridOffset)
 	if (Data_Grid_walkerIds[gridOffset]) {
 		walkers = 1;
 	}
-	while (Data_Grid_bitfields[gridOffset] & 0xbf) { // TODO constant
+	while (Data_Grid_bitfields[gridOffset] & Bitfield_NoDeleted) {
 		gridOffset += offsetUp;
 		if (!(Data_Grid_terrain[gridOffset] & Terrain_Water) || !Data_Grid_spriteOffsets[gridOffset]) {
 			break;

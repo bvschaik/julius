@@ -366,7 +366,7 @@ static void UI_CityBuildings_drawBuildingTopsWalkersAnimation(int selectedWalker
 							}
 							Graphics_drawImageMasked(graphicIdDockers,
 								xGraphic + GraphicSpriteOffsetX(graphicIdDockers),
-								yGraphic + GraphicSpriteOffsetX(graphicIdDockers),
+								yGraphic + GraphicSpriteOffsetY(graphicIdDockers),
 								colorMask);
 						}
 					}

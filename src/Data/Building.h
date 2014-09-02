@@ -216,7 +216,7 @@ extern struct Data_Building {
 	short formationId;
 	union {
 		struct {
-			short dockQueuedBoatWalkerId; // 4a
+			short dockQueuedDockerId; // 4a
 			char __unknown_4c;
 			char __unknown_4d;
 			char __unknown_4e;

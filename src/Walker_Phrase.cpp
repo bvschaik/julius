@@ -412,8 +412,8 @@ int Walker_determinePhrase(int walkerId)
 			}
 			break;
 		case Walker_Dockman:
-			if (w->actionState == WalkerActionState_135_Dockman ||
-				w->actionState == WalkerActionState_136_Dockman) {
+			if (w->actionState == WalkerActionState_135_DockerImportGoingToWarehouse ||
+				w->actionState == WalkerActionState_136_DockerExportGoingToWarehouse) {
 				if (Calc_distanceMaximum(
 					w->destinationX, w->destinationY, w->sourceX, w->sourceY) >= 25) {
 					phraseId = 9; // too far?
@@ -447,7 +447,7 @@ int Walker_determinePhrase(int walkerId)
 					phraseId = 11; // good trade
 				}
 			} else if (w->actionState == WalkerActionState_112_TradeShipMoored) {
-				int ship = WalkerAction_TradeShip_canBuyOrSell(walkerId);
+				int ship = WalkerAction_TradeShip_isBuyingOrSelling(walkerId);
 				if (ship == 1) {
 					phraseId = 8; // buying goods
 				} else if (ship == 2) {

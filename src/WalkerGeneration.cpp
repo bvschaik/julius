@@ -1134,7 +1134,7 @@ static void spawnWalkerDock(int buildingId, struct Data_Building *b)
 			}
 		} else if (existingDockers < maxDockers) {
 			CREATE_WALKER(Walker_Dockman, xRoad, yRoad, 4);
-			w->actionState = WalkerActionState_132_ResourceCarrier;
+			w->actionState = WalkerActionState_132_DockerIdling;
 			w->buildingId = buildingId;
 			for (int i = 0; i < 3; i++) {
 				if (!b->data.other.dockWalkerIds[i]) {

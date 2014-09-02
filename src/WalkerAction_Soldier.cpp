@@ -174,7 +174,7 @@ static void updateSoldierGraphicMounted(struct Data_Walker *w, int dir)
 
 static void updateSoldierGraphicLegionary(struct Data_Walker *w, struct Data_Formation *f, int dir)
 {
-	int graphicId = GraphicId(ID_Graphic_Walker_FortJavelin);
+	int graphicId = GraphicId(ID_Graphic_Walker_FortLegionary);
 	if (w->actionState == WalkerActionState_150_Attack) {
 		if (w->attackGraphicOffset < 12) {
 			w->graphicId = graphicId + 96 + dir;
@@ -211,7 +211,6 @@ static void updateSoldierGraphic(int walkerId, struct Data_Walker *w, struct Dat
 		dir = w->previousTileDirection;
 	}
 	dir = (8 + dir - Data_Settings_Map.orientation) % 8;
-	// TODO
 	if (w->type == Walker_FortJavelin) {
 		updateSoldierGraphicJavelin(w, dir);
 	} else if (w->type == Walker_FortMounted) {

@@ -16,12 +16,12 @@
 
 #include <string.h>
 
-#define MAX_QUEUE 26243
+#define MAX_QUEUE 26244
 
 static struct {
-	int items[MAX_QUEUE];
 	int head;
 	int tail;
+	int items[MAX_QUEUE];
 } queue;
 
 static int directionPath[500];
@@ -31,7 +31,7 @@ static char tmpGrid[GRID_SIZE * GRID_SIZE];
 #define SET_DIST_AND_ENQUEUE() \
 	Data_Grid_routingDistance[nextOffset] = dist;\
 	queue.items[queue.tail++] = nextOffset; \
-	if (queue.tail > MAX_QUEUE) queue.tail = 0;
+	if (queue.tail >= MAX_QUEUE) queue.tail = 0;
 
 #define ROUTE_QUEUE(source, dest, block) \
 	Grid_clearShortGrid(Data_Grid_routingDistance);\
@@ -44,22 +44,22 @@ static char tmpGrid[GRID_SIZE * GRID_SIZE];
 		if (offset == dest) break;\
 		int dist = 1 + Data_Grid_routingDistance[offset];\
 		int nextOffset = offset - 162;\
-		if (!Data_Grid_routingDistance[nextOffset]) {\
+		if (nextOffset >= 0 && !Data_Grid_routingDistance[nextOffset]) {\
 			block;\
 		}\
 		nextOffset = offset + 1;\
-		if (!Data_Grid_routingDistance[nextOffset]) {\
+		if (nextOffset < 162 * 162 && !Data_Grid_routingDistance[nextOffset]) {\
 			block;\
 		}\
 		nextOffset = offset + 162;\
-		if (!Data_Grid_routingDistance[nextOffset]) {\
+		if (nextOffset < 162 * 162 && !Data_Grid_routingDistance[nextOffset]) {\
 			block;\
 		}\
 		nextOffset = offset - 1;\
-		if (!Data_Grid_routingDistance[nextOffset]) {\
+		if (nextOffset >= 0 && !Data_Grid_routingDistance[nextOffset]) {\
 			block;\
 		}\
-		if (++queue.head > MAX_QUEUE) queue.head = 0;\
+		if (++queue.head >= MAX_QUEUE) queue.head = 0;\
 	}
 
 #define ROUTE_QUEUE_MAX(source, dest, max, block) \
@@ -75,22 +75,22 @@ static char tmpGrid[GRID_SIZE * GRID_SIZE];
 		if (++tiles > max) break;\
 		int dist = 1 + Data_Grid_routingDistance[offset];\
 		int nextOffset = offset - 162;\
-		if (!Data_Grid_routingDistance[nextOffset]) {\
+		if (nextOffset >= 0 && !Data_Grid_routingDistance[nextOffset]) {\
 			block;\
 		}\
 		nextOffset = offset + 1;\
-		if (!Data_Grid_routingDistance[nextOffset]) {\
+		if (nextOffset < 162 * 162 && !Data_Grid_routingDistance[nextOffset]) {\
 			block;\
 		}\
 		nextOffset = offset + 162;\
-		if (!Data_Grid_routingDistance[nextOffset]) {\
+		if (nextOffset < 162 * 162 && !Data_Grid_routingDistance[nextOffset]) {\
 			block;\
 		}\
 		nextOffset = offset - 1;\
-		if (!Data_Grid_routingDistance[nextOffset]) {\
+		if (nextOffset >= 0 && !Data_Grid_routingDistance[nextOffset]) {\
 			block;\
 		}\
-		if (++queue.head > MAX_QUEUE) queue.head = 0;\
+		if (++queue.head >= MAX_QUEUE) queue.head = 0;\
 	}
 
 #define ROUTE_QUEUE_BOAT(source, block) \
@@ -107,27 +107,27 @@ static char tmpGrid[GRID_SIZE * GRID_SIZE];
 		int drag = Data_Grid_routingWater[offset] == -2 ? 4 : 0;\
 		if (drag && tmpGrid[offset]++ < drag) {\
 			queue.items[queue.tail++] = offset; \
-			if (queue.tail > MAX_QUEUE) queue.tail = 0;\
+			if (queue.tail >= MAX_QUEUE) queue.tail = 0;\
 		} else {\
 			int dist = 1 + Data_Grid_routingDistance[offset];\
 			int nextOffset = offset - 162;\
-			if (!Data_Grid_routingDistance[nextOffset]) {\
+			if (nextOffset >= 0 && !Data_Grid_routingDistance[nextOffset]) {\
 				block;\
 			}\
 			nextOffset = offset + 1;\
-			if (!Data_Grid_routingDistance[nextOffset]) {\
+			if (nextOffset < 162 * 162 && !Data_Grid_routingDistance[nextOffset]) {\
 				block;\
 			}\
 			nextOffset = offset + 162;\
-			if (!Data_Grid_routingDistance[nextOffset]) {\
+			if (nextOffset < 162 * 162 && !Data_Grid_routingDistance[nextOffset]) {\
 				block;\
 			}\
 			nextOffset = offset - 1;\
-			if (!Data_Grid_routingDistance[nextOffset]) {\
+			if (nextOffset >= 0 && !Data_Grid_routingDistance[nextOffset]) {\
 				block;\
 			}\
 		}\
-		if (++queue.head > MAX_QUEUE) queue.head = 0;\
+		if (++queue.head >= MAX_QUEUE) queue.head = 0;\
 	}
 
 #define ROUTE_QUEUE_DIR8(source, block) \
@@ -142,38 +142,38 @@ static char tmpGrid[GRID_SIZE * GRID_SIZE];
 		int offset = queue.items[queue.head];\
 		int dist = 1 + Data_Grid_routingDistance[offset];\
 		int nextOffset = offset - 162;\
-		if (!Data_Grid_routingDistance[nextOffset]) {\
+		if (nextOffset >= 0 && !Data_Grid_routingDistance[nextOffset]) {\
 			block;\
 		}\
 		nextOffset = offset + 1;\
-		if (!Data_Grid_routingDistance[nextOffset]) {\
+		if (nextOffset < 162 * 162 && !Data_Grid_routingDistance[nextOffset]) {\
 			block;\
 		}\
 		nextOffset = offset + 162;\
-		if (!Data_Grid_routingDistance[nextOffset]) {\
+		if (nextOffset < 162 * 162 && !Data_Grid_routingDistance[nextOffset]) {\
 			block;\
 		}\
 		nextOffset = offset - 1;\
-		if (!Data_Grid_routingDistance[nextOffset]) {\
+		if (nextOffset >= 0 && !Data_Grid_routingDistance[nextOffset]) {\
 			block;\
 		}\
 		nextOffset = offset - 161;\
-		if (!Data_Grid_routingDistance[nextOffset]) {\
+		if (nextOffset >= 0 && !Data_Grid_routingDistance[nextOffset]) {\
 			block;\
 		}\
 		nextOffset = offset + 163;\
-		if (!Data_Grid_routingDistance[nextOffset]) {\
+		if (nextOffset < 162 * 162 && !Data_Grid_routingDistance[nextOffset]) {\
 			block;\
 		}\
 		nextOffset = offset + 161;\
-		if (!Data_Grid_routingDistance[nextOffset]) {\
+		if (nextOffset < 162 * 162 && !Data_Grid_routingDistance[nextOffset]) {\
 			block;\
 		}\
 		nextOffset = offset - 163;\
-		if (!Data_Grid_routingDistance[nextOffset]) {\
+		if (nextOffset >= 0 && !Data_Grid_routingDistance[nextOffset]) {\
 			block;\
 		}\
-		if (++queue.head > MAX_QUEUE) queue.head = 0;\
+		if (++queue.head >= MAX_QUEUE) queue.head = 0;\
 	}
 
 void Routing_determineLandCitizen()
@@ -491,6 +491,7 @@ static int hasFightingFriendly(int gridOffset)
 				Data_Walkers[walkerId].actionState == WalkerActionState_150_Attack) {
 				return 1;
 			}
+			walkerId = Data_Walkers[walkerId].nextWalkerIdOnSameTile;
 		}
 	}
 	return 0;
@@ -505,6 +506,7 @@ static int hasFightingEnemy(int gridOffset)
 				Data_Walkers[walkerId].actionState == WalkerActionState_150_Attack) {
 				return 1;
 			}
+			walkerId = Data_Walkers[walkerId].nextWalkerIdOnSameTile;
 		}
 	}
 	return 0;

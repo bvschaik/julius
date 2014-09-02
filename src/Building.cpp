@@ -23,6 +23,7 @@
 #include "Data/Scenario.h"
 #include "Data/Settings.h"
 #include "Data/State.h"
+#include "Data/Walker.h"
 
 #include <string.h>
 
@@ -740,7 +741,6 @@ void Building_GameTick_checkAccessToRome()
 			}
 		}
 	}
-	
 	if (!Data_Grid_routingDistance[Data_CityInfo.exitPointGridOffset]) {
 		// no route through city
 		if (Data_CityInfo.population <= 0) {
@@ -1180,8 +1180,18 @@ int Building_Market_getMaxGoodsStock(int buildingId)
 
 int Building_Dock_getNumIdleDockers(int buildingId)
 {
-	// TODO
-	return 0;
+	struct Data_Building *b = &Data_Buildings[buildingId];
+	int numIdle = 0;
+	for (int i = 0; i < 3; i++) {
+		if (b->data.other.dockWalkerIds[i]) {
+			struct Data_Walker *w = &Data_Walkers[b->data.other.dockWalkerIds[i]];
+			if (w->actionState == WalkerActionState_132_DockerIdling ||
+				w->actionState == WalkerActionState_133_DockerImportQueue) {
+				numIdle++;
+			}
+		}
+	}
+	return numIdle;
 }
 
 void Building_Dock_updateOpenWaterAccess()

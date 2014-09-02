@@ -167,15 +167,15 @@ enum {
 	WalkerActionState_128_FlotsamCreated = 128,
 	WalkerActionState_129_FlotsamFloating = 129,
 	WalkerActionState_130_FlotsamLeftMap = 130,
-	WalkerActionState_132_ResourceCarrier = 132,
-	WalkerActionState_133_Dockman = 133,
-	WalkerActionState_134_Dockman_MarketBuyer = 134,
-	WalkerActionState_135_Dockman = 135,
-	WalkerActionState_136_Dockman = 136,
-	WalkerActionState_137_Dockman_MarketBuyer = 137,
-	WalkerActionState_138_Dockman_MarketBuyer = 138,
-	WalkerActionState_139_Dockman = 139,
-	WalkerActionState_140_Dockman = 140,
+	WalkerActionState_132_DockerIdling = 132,
+	WalkerActionState_133_DockerImportQueue = 133,
+	WalkerActionState_134_DockerExportQueue = 134,
+	WalkerActionState_135_DockerImportGoingToWarehouse = 135,
+	WalkerActionState_136_DockerExportGoingToWarehouse = 136,
+	WalkerActionState_137_DockerExportReturning = 137,
+	WalkerActionState_138_DockerImportReturning = 138,
+	WalkerActionState_139_DockerImportAtWarehouse = 139,
+	WalkerActionState_140_DockerExportAtWarehouse = 140,
 	WalkerActionState_145_MarketBuyerGoingToStorage = 145,
 	WalkerActionState_146_MarketBuyerReturning = 146,
 	WalkerActionState_148_Fleeing = 148,
@@ -301,10 +301,9 @@ extern struct Data_Walker {
 	short buildingId;
 	short immigrantBuildingId;
 	short destinationBuildingId;
-	unsigned char formationId; //50
-	unsigned char indexInFormation; //51
-	char formationAtRest; //52
-	char __unused_53;
+	short formationId; //50
+	unsigned char indexInFormation; //52
+	unsigned char formationAtRest; //53
 	unsigned char migrantNumPeople;
 	char isGhost; // 55
 	char minMaxSeen;
@@ -314,7 +313,7 @@ extern struct Data_Walker {
 	char waitTicksMissile;
 	char xOffsetCart; // 5c
 	char yOffsetCart; // 5d
-	unsigned char empireCityId;
+	unsigned char empireCityId; // 5e
 	char traderAmountBought;
 	short name; // 60
 	char terrainUsage;

@@ -7,7 +7,7 @@ int GameFile_loadSavedGameFromMissionPack(int missionId);
 
 int GameFile_writeSavedGame(const char *filename);
 
-void GameFile_writeMissionSavedGameIfNeeded(int missionId);
+void GameFile_writeMissionSavedGameIfNeeded();
 
 int GameFile_deleteSavedGame(const char *filename);
 

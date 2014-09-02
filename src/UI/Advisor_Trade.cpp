@@ -143,7 +143,6 @@ static void buttonEmpire(int param1, int param2)
 
 static void buttonResource(int resourceIndex, int param2)
 {
-	// TODO
 	selectedResourceId = Data_CityInfo_Resource.availableResources[resourceIndex];
 	UI_Window_goTo(Window_ResourceSettingsDialog);
 }

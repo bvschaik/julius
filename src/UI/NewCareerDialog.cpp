@@ -1,4 +1,5 @@
 #include "Window.h"
+#include "AllWindows.h"
 #include "../Widget.h"
 #include "../Graphics.h"
 #include "../KeyboardInput.h"
@@ -6,6 +7,12 @@
 #include "../Data/Mouse.h"
 #include "../Data/Screen.h"
 #include "../Data/Settings.h"
+
+static void startMission(int param1, int param2);
+
+static ImageButton imageButtonStartMission = {
+	0, 0, 27, 27, 4, 92, 56, startMission, Widget_Button_doNothing, 1, 0, 0, 0, 1, 0
+};
 
 void UI_NewCareerDialog_drawBackground()
 {
@@ -25,7 +32,8 @@ void UI_NewCareerDialog_drawForeground()
 	Widget_Text_captureCursor();
 	Widget_Text_draw(Data_Settings.playerName, xOffset + 176, yOffset + 216, Font_NormalWhite, 0);
 	Widget_Text_drawCursor(xOffset + 176, yOffset + 217);
-	// TODO 'go' button
+	
+	Widget_Button_drawImageButtons(xOffset + 464, yOffset + 249, &imageButtonStartMission, 1);
 }
 
 void UI_NewCareerDialog_handleMouse()
@@ -33,6 +41,10 @@ void UI_NewCareerDialog_handleMouse()
 	if (Data_Mouse.right.wentUp) {
 		UI_Window_goTo(Window_MainMenu);
 	}
+
+	int xOffset = Data_Screen.offset640x480.x;
+	int yOffset = Data_Screen.offset640x480.y;
+	Widget_Button_handleImageButtons(xOffset + 464, yOffset + 249, &imageButtonStartMission, 1);
 	/*
         KeyboardInput_initInput(1);
 
@@ -50,4 +62,9 @@ void UI_NewCareerDialog_handleMouse()
           }
           break;
 	*/
+}
+
+static void startMission(int param1, int param2)
+{
+	UI_MissionStart_show();
 }

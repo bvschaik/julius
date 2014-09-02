@@ -1,3 +1,4 @@
+#include "GameTick.h"
 
 #include "Building.h"
 #include "CityInfo.h"
@@ -10,6 +11,7 @@
 #include "HousePopulation.h"
 #include "Natives.h"
 #include "PlayerMessage.h"
+#include "Random.h"
 #include "Resource.h"
 #include "Routing.h"
 #include "Security.h"
@@ -17,8 +19,10 @@
 #include "Sound.h"
 #include "TerrainGraphics.h"
 #include "Trader.h"
+#include "Undo.h"
 #include "UtilityManagement.h"
 #include "Walker.h"
+#include "WalkerAction.h"
 #include "UI/AllWindows.h"
 #include "UI/Sidebar.h"
 #include "UI/Window.h"
@@ -30,9 +34,53 @@
 #include "Data/State.h"
 #include "Data/Tutorial.h"
 
+#include <cstdio>
+#include "Data/Formation.h"
+#include "Data/Walker.h"
+
 static void advanceDay();
 static void advanceMonth();
 static void advanceYear();
+
+static void printFormation(int formationId)
+{
+	struct Data_Formation *f = &Data_Formations[formationId];
+	printf("Formation %d\n", formationId);
+	for (int i = 0; i < f->numWalkers; i++) {
+		struct Data_Walker *w = &Data_Walkers[f->walkerIds[i]];
+		printf("  Walker index %d = id %d = index in formation %d\n",
+			i, f->walkerIds[i], w->indexInFormation);
+	}
+}
+
+void GameTick_doTick()
+{
+	static int printed = 0;
+	if (!printed) {
+		printed = 1;
+		for (int i = 1; i <= 6; i++) {
+			if (Data_Formations[i].inUse) {
+				printFormation(i);
+			}
+		}
+	}
+	//printf("TICK %d\n", Data_CityInfo_Extra.gameTimeTick);
+	//printf("  Random\n");
+	Random_generateNext();
+	//printf("  Undo\n");
+	Undo_updateAvailable();
+	//printf("  Game tick\n");
+	GameTick_advance();
+	//printf("  Walkers\n");
+	WalkerAction_handle();
+	//printf("  Events\n");
+	Event_handleEarthquake();
+	Event_handleGladiatorRevolt();
+	Event_handleEmperorChange();
+	//printf("  Victory\n");
+	CityInfo_Victory_check();
+	//printf("DONE\n");
+}
 
 void GameTick_advance()
 {

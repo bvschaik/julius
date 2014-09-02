@@ -58,7 +58,6 @@ extern struct Data_Message {
 	int hotspotCount;
 } Data_Message;
 
-// TODO message delay ticks
 enum {
 	MessageDelay_Riot = 0,
 	MessageDelay_Fire = 1,

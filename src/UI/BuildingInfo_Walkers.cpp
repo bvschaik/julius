@@ -234,7 +234,7 @@ static void drawWalkerInfoCartpusher(BuildingInfoContext *c, int walkerId)
 	int width = Widget_GameText_draw(64, Data_Walkers[walkerId].type,
 		c->xOffset + 92, c->yOffset + 139, Font_SmallBlack);
 	
-	if (Data_Walkers[walkerId].actionState != WalkerActionState_132_ResourceCarrier &&
+	if (Data_Walkers[walkerId].actionState != WalkerActionState_132_DockerIdling &&
 		Data_Walkers[walkerId].resourceId) {
 		int resource = Data_Walkers[walkerId].resourceId;
 		Graphics_drawImage(GraphicId(ID_Graphic_ResourceIcons) + resource + Resource_getGraphicIdOffset(resource, 3),
@@ -255,13 +255,13 @@ static void drawWalkerInfoCartpusher(BuildingInfoContext *c, int walkerId)
 		case WalkerActionState_53_WarehousemanReturningEmpty:
 		case WalkerActionState_56_WarehousemanReturningWithFood:
 		case WalkerActionState_59_WarehousemanReturningWithResource:
-		case WalkerActionState_134_Dockman_MarketBuyer:
-		case WalkerActionState_137_Dockman_MarketBuyer:
-		case WalkerActionState_138_Dockman_MarketBuyer:
+		case WalkerActionState_134_DockerExportQueue:
+		case WalkerActionState_137_DockerExportReturning:
+		case WalkerActionState_138_DockerImportReturning:
 			isReturning = 1;
 			break;
 	}
-	if (Data_Walkers[walkerId].actionState != WalkerActionState_132_ResourceCarrier) {
+	if (Data_Walkers[walkerId].actionState != WalkerActionState_132_DockerIdling) {
 		if (isReturning) {
 			width = Widget_GameText_draw(129, 16,
 				c->xOffset + 40 + width, c->yOffset + 200, Font_SmallBlack);

@@ -1,13 +1,15 @@
 #ifndef WALKERACTION_H
 #define WALKERACTION_H
 
+void WalkerAction_handle();
+
 int WalkerAction_Rioter_collapseBuilding(int walkerId);
 int WalkerAction_Rioter_getTargetBuilding(int *xTile, int *yTile);
 
 int WalkerAction_TradeCaravan_canBuy(int walkerId, int buildingId, int empireCityId);
 int WalkerAction_TradeCaravan_canSell(int walkerId, int buildingId, int empireCityId);
 
-int WalkerAction_TradeShip_canBuyOrSell(int walkerId);
+int WalkerAction_TradeShip_isBuyingOrSelling(int walkerId);
 
 void WalkerAction_TowerSentry_reroute();
 void WalkerAction_HippodromeHorse_reroute();
@@ -34,12 +36,13 @@ void WalkerAction_homeless(int walkerId);
 // cartpusher
 void WalkerAction_cartpusher(int walkerId);
 void WalkerAction_warehouseman(int walkerId);
+// docker
+void WalkerAction_docker(int walkerId);
 // service
 void WalkerAction_taxCollector(int walkerId);
 void WalkerAction_engineer(int walkerId);
 void WalkerAction_prefect(int walkerId);
 void WalkerAction_worker(int walkerId);
-
 // culture/entertainer
 void WalkerAction_entertainer(int walkerId);
 void WalkerAction_priest(int walkerId);
@@ -61,6 +64,9 @@ void WalkerAction_deliveryBoy(int walkerId);
 void WalkerAction_tradeCaravan(int walkerId);
 void WalkerAction_tradeCaravanDonkey(int walkerId);
 void WalkerAction_tradeShip(int walkerId);
+void WalkerAction_nativeTrader(int walkerId);
+// native
+void WalkerAction_indigenousNative(int walkerId);
 // soldier
 void WalkerAction_soldier(int walkerId);
 void WalkerAction_militaryStandard(int walkerId);

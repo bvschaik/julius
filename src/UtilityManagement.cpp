@@ -138,6 +138,7 @@ void UtilityManagement_updateReservoirFountain()
 	int changed = 1;
 	static const int connectorOffsets[] = {-161, 165, 487, 161};
 	while (changed == 1) {
+		changed = 0;
 		for (int i = 0; i < Data_BuildingList.large.size; i++) {
 			int buildingId = Data_BuildingList.large.items[i];
 			if (Data_Buildings[buildingId].hasWaterAccess == 2) {

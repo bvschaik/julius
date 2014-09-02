@@ -15,12 +15,28 @@
 #include "../src/Loader.h"
 #include "../src/Language.h"
 #include "../src/Time.h"
-#include "../src/Animation.h"
+#include "../src/Runner.h"
 #include "../src/Sound.h"
 #include "../src/Screen.h"
 #include "../src/Data/AllData.h"
 #include "../src/KeyboardInput.h"
 #include "../src/KeyboardHotkey.h"
+
+#include <execinfo.h>
+#include <signal.h>
+
+void handler(int sig) {
+	void *array[100];
+	size_t size;
+	
+	// get void*'s for all entries on the stack
+	size = backtrace(array, 100);
+	
+	// print out all the frames to stderr
+	fprintf(stderr, "Error: signal %d:\n", sig);
+	backtrace_symbols_fd(array, size, STDERR_FILENO);
+	exit(1);
+}
 
 void assert(const char *msg, int expected, int actual)
 {
@@ -60,11 +76,7 @@ typedef struct{
 void refresh(SDL_Surface *surface) {
 	
 	Time_setMillis(SDL_GetTicks());
-	Animation_updateTimers();
-	UI_Window_refresh(1);
-	//UI_MainMenu_drawBackground();
-	//UI_MainMenu_drawForeground();
-	//UI_MainMenu_handleMouse();
+	Runner_run();
 	
 	if (SDL_MUSTLOCK(surface)) {
 		if (SDL_LockSurface(surface) < 0) {
@@ -74,14 +86,14 @@ void refresh(SDL_Surface *surface) {
     }
 	
 	// scanline??
+	Uint32 then = SDL_GetTicks();
 	memcpy(surface->pixels, Data_Screen.drawBuffer, Data_Screen.width * Data_Screen.height * 4);
 	
 	if (SDL_MUSTLOCK(surface)) {
 		SDL_UnlockSurface(surface);
 	}
-	//SDL_UpdateRect(surface, 0, 0, 0, 0);
 	SDL_Flip(surface);
-	//printf("Refresh: %d ms\n", SDL_GetTicks() - Time_getMillis());
+	//printf("Refresh: %d ms; game: %d ms\n", SDL_GetTicks() - then, then - Time_getMillis());
 }
 
 void handleKey(SDL_KeyboardEvent *event)
@@ -261,6 +273,8 @@ void mainLoop(SDL_Surface *surface)
 
 int main()
 {
+	signal(SIGSEGV, handler);
+	
 	sanityCheck();
 	printf("Initializing SDL.\n");
 	

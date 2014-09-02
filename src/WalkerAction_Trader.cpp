@@ -465,7 +465,7 @@ static int tradeShipDoneTrading(int walkerId)
 		for (int i = 0; i < 3; i++) {
 			int dockerId = b->data.other.dockWalkerIds[i];
 			if (dockerId && Data_Walkers[dockerId].state == WalkerState_Alive &&
-				Data_Walkers[dockerId].actionState != WalkerActionState_132_ResourceCarrier) {
+				Data_Walkers[dockerId].actionState != WalkerActionState_132_DockerIdling) {
 				return 0;
 			}
 		}
@@ -550,7 +550,7 @@ void WalkerAction_tradeShip(int walkerId)
 				w->waitTicks = 0;
 				w->destinationX = (char) Data_Scenario.riverEntryPoint.x;
 				w->destinationY = (char) Data_Scenario.riverEntryPoint.y;
-				Data_Buildings[w->destinationBuildingId].data.other.dockQueuedBoatWalkerId = 0;
+				Data_Buildings[w->destinationBuildingId].data.other.dockQueuedDockerId = 0;
 				Data_Buildings[w->destinationBuildingId].data.other.dockNumShips = 0;
 			}
 			switch (Data_Buildings[w->destinationBuildingId].data.other.dockOrientation) {
@@ -610,8 +610,29 @@ void WalkerAction_tradeShip(int walkerId)
 }
 
 
-int WalkerAction_TradeShip_canBuyOrSell(int walkerId)
+int WalkerAction_TradeShip_isBuyingOrSelling(int walkerId)
 {
-	// TODO
+	struct Data_Building *b = &Data_Buildings[Data_Walkers[walkerId].destinationBuildingId];
+	if (b->inUse != 1 || b->type != Building_Dock) {
+		return 1;
+	}
+	for (int i = 0; i < 3; i++) {
+		struct Data_Walker *w = &Data_Walkers[b->data.other.dockWalkerIds[i]];
+		if (!b->data.other.dockWalkerIds[i] || w->state != WalkerState_Alive) {
+			continue;
+		}
+		switch (w->actionState) {
+			case WalkerActionState_133_DockerImportQueue:
+			case WalkerActionState_135_DockerImportGoingToWarehouse:
+			case WalkerActionState_138_DockerImportReturning:
+			case WalkerActionState_139_DockerImportAtWarehouse:
+				return 1;
+			case WalkerActionState_134_DockerExportQueue:
+			case WalkerActionState_136_DockerExportGoingToWarehouse:
+			case WalkerActionState_137_DockerExportReturning:
+			case WalkerActionState_140_DockerExportAtWarehouse:
+				return 2;
+		}
+	}
 	return 0;
 }

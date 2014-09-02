@@ -42,10 +42,10 @@ static void (*walkerActionCallbacks[])(int walkerId) = {
 	WalkerAction_worker,
 	WalkerAction_nobody, // mapFlag: editor only
 	WalkerAction_flotsam,
-	WalkerAction_nobody, //TODO WalkerAction_docker,
+	WalkerAction_docker,
 	WalkerAction_marketBuyer,
 	WalkerAction_patrician, //40
-	WalkerAction_nobody, //TODO WalkerAction_indigenousNative,
+	WalkerAction_indigenousNative,
 	WalkerAction_towerSentry,
 	WalkerAction_enemy43_Spear,
 	WalkerAction_enemy44_Sword,
@@ -62,7 +62,7 @@ static void (*walkerActionCallbacks[])(int walkerId) = {
 	WalkerAction_nobody,
 	WalkerAction_nobody,
 	WalkerAction_enemyCaesarLegionary,
-	WalkerAction_nobody, //TODO WalkerAction_nativeTrader,
+	WalkerAction_nativeTrader,
 	WalkerAction_arrow,
 	WalkerAction_javelin, //60
 	WalkerAction_bolt,
@@ -86,6 +86,8 @@ static void (*walkerActionCallbacks[])(int walkerId) = {
 	WalkerAction_nobody
 }; //80
 
+#include <cstdio>
+
 void WalkerAction_handle()
 {
 	Data_CityInfo.numEnemiesInCity = 0;
@@ -101,6 +103,7 @@ void WalkerAction_handle()
 	for (int i = 1; i < MAX_WALKERS; i++) {
 		struct Data_Walker *w = &Data_Walkers[i];
 		if (w->state) {
+			printf("    walker %d type %d action state %d\n", i, w->type, w->actionState);
 			if (w->targetedByWalkerId) {
 				if (Data_Walkers[w->targetedByWalkerId].state != WalkerState_Alive) {
 					w->targetedByWalkerId = 0;
