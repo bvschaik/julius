@@ -100,8 +100,7 @@ void Scenario_initialize(const char *scenarioName)
 		Data_CityInfo.personalSavings = 0;
 	}
 
-	SidebarMenu_enableBuildingButtons();
-	SidebarMenu_enableBuildingMenuItems();
+	SidebarMenu_enableBuildingMenuItemsAndButtons();
 	PlayerMessage_initList();
 }
 
@@ -283,8 +282,7 @@ static void loadScenario(const char *scenarioName)
 	Data_Empire.scrollX = Data_Empire_Index[Data_Scenario.empireId].initialScrollX;
 	Data_Empire.scrollY = Data_Empire_Index[Data_Scenario.empireId].initialScrollY;
 	Empire_checkScrollBoundaries();
-	SidebarMenu_enableBuildingButtons();
-	SidebarMenu_enableBuildingMenuItems();
+	SidebarMenu_enableBuildingMenuItemsAndButtons();
 	Loader_Graphics_loadMainGraphics(Data_Scenario.climate);
 	Loader_Graphics_loadEnemyGraphics(Data_Scenario.enemyId);
 }

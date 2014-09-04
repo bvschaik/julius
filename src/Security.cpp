@@ -179,8 +179,7 @@ static void generateRioter(int buildingId)
 	CityInfo_Population_changeHappiness(20);
 	if (!Data_Tutorial.tutorial1.crime) {
 		Data_Tutorial.tutorial1.crime = 1;
-		SidebarMenu_enableBuildingMenuItems();
-		SidebarMenu_enableBuildingButtons();
+		SidebarMenu_enableBuildingMenuItemsAndButtons();
 	}
 	if (Time_getMillis() <= 15000 + Data_Message.lastSoundTime.rioterGenerated) {
 		PlayerMessage_disableSoundForNextMessage();
@@ -296,8 +295,7 @@ static void collapseBuilding(int buildingId, struct Data_Building *b)
 	} else {
 		// first collapse in tutorial
 		Data_Tutorial.tutorial1.collapse = 1;
-		SidebarMenu_enableBuildingMenuItems();
-		SidebarMenu_enableBuildingButtons();
+		SidebarMenu_enableBuildingMenuItemsAndButtons();
 		/*if (UI_Window_getId() == Window_City) {
 			UI_City_drawBackground(); // TODO do we need this??
 		}*/
@@ -330,8 +328,7 @@ static void fireBuilding(int buildingId, struct Data_Building *b)
 	} else {
 		// first collapse in tutorial
 		Data_Tutorial.tutorial1.fire = 1;
-		SidebarMenu_enableBuildingMenuItems();
-		SidebarMenu_enableBuildingButtons();
+		SidebarMenu_enableBuildingMenuItemsAndButtons();
 		/*if (UI_Window_getId() == Window_City) {
 			UI_City_drawBackground(); // TODO do we need this??
 		}*/
@@ -346,10 +343,10 @@ static void fireBuilding(int buildingId, struct Data_Building *b)
 void Security_Tick_checkFireCollapse()
 {
 	Data_CityInfo.numProtestersThisMonth = 0;
-	Data_CityInfo.numCriminalsThisMonth = 0; // last month or this month?
+	Data_CityInfo.numCriminalsThisMonth = 0;
 	
 	int recalculateTerrain = 0;
-	int randomGlobal = Data_Random.random1_7bit;
+	int randomGlobal = Data_Random.random1_7bit & 7;
 	for (int i = 1; i <= Data_Buildings_Extra.highestBuildingIdInUse; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
 		if (b->inUse != 1 || b->fireProof) {

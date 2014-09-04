@@ -22,7 +22,7 @@ static void drawVacantLot(BuildingInfoContext *c)
 		c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(128, 0, c->xOffset, c->yOffset + 8,
 		16 * c->widthBlocks, Font_LargeBlack);
-	Widget_GameText_drawCentered(13, 1, c->xOffset, c->yOffset + 17 * c->heightBlocks - 22,
+	Widget_GameText_drawCentered(13, 1, c->xOffset, c->yOffset + 16 * c->heightBlocks - 22,
 		16 * c->widthBlocks, Font_NormalBlack);
 	UI_BuildingInfo_drawWalkerList(c);
 

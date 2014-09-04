@@ -210,7 +210,7 @@ void Building_deleteData(int buildingId)
 	}
 }
 
-void Building_clearDeleted()
+void Building_GameTick_updateState()
 {
 	int landRecalc = 0;
 	int wallRecalc = 0;

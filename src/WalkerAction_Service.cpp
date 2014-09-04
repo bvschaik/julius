@@ -273,15 +273,15 @@ static int prefectGoFightFire(int walkerId, struct Data_Walker *w)
 
 static void prefectExtinguishFire(int walkerId, struct Data_Walker *w)
 {
-	struct Data_Building *b = &Data_Buildings[w->destinationBuildingId];
-	int distance = Calc_distanceMaximum(w->x, w->y, b->x, b->y);
-	if (b->inUse == 1 && b->type == Building_BurningRuin && distance < 2) {
-		b->fireDuration = 32;
+	struct Data_Building *burn = &Data_Buildings[w->destinationBuildingId];
+	int distance = Calc_distanceMaximum(w->x, w->y, burn->x, burn->y);
+	if (burn->inUse == 1 && burn->type == Building_BurningRuin && distance < 2) {
+		burn->fireDuration = 32;
 		Sound_Effects_playChannel(SoundChannel_FireSplash);
 	} else {
 		w->waitTicks = 1;
 	}
-	w->attackDirection = Routing_getGeneralDirection(w->x, w->y, b->x, b->y);
+	w->attackDirection = Routing_getGeneralDirection(w->x, w->y, burn->x, burn->y);
 	if (w->attackDirection >= 8) {
 		w->attackDirection = 0;
 	}
@@ -289,6 +289,7 @@ static void prefectExtinguishFire(int walkerId, struct Data_Walker *w)
 	if (w->waitTicks <= 0) {
 		w->waitTicksMissile = 20;
 		if (!prefectGoFightFire(walkerId, w)) {
+			struct Data_Building *b = &Data_Buildings[w->buildingId];
 			int xRoad, yRoad;
 			if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
 				w->actionState = WalkerActionState_73_PrefectReturning;
@@ -452,7 +453,7 @@ void WalkerAction_prefect(int walkerId)
 			break;
 		case WalkerActionState_75_PrefectAtFire:
 			w->graphicId = GraphicId(ID_Graphic_Walker_PrefectWithBucket) +
-				dir + 96 + 8 * (w->graphicOffset) / 2;
+				dir + 96 + 8 * (w->graphicOffset / 2);
 			break;
 		case WalkerActionState_150_Attack:
 			if (w->attackGraphicOffset >= 12) {

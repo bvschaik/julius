@@ -42,36 +42,16 @@ static void advanceDay();
 static void advanceMonth();
 static void advanceYear();
 
-static void printFormation(int formationId)
-{
-	struct Data_Formation *f = &Data_Formations[formationId];
-	printf("Formation %d\n", formationId);
-	for (int i = 0; i < f->numWalkers; i++) {
-		struct Data_Walker *w = &Data_Walkers[f->walkerIds[i]];
-		printf("  Walker index %d = id %d = index in formation %d\n",
-			i, f->walkerIds[i], w->indexInFormation);
-	}
-}
-
 void GameTick_doTick()
 {
-	static int printed = 0;
-	if (!printed) {
-		printed = 1;
-		for (int i = 1; i <= 6; i++) {
-			if (Data_Formations[i].inUse) {
-				printFormation(i);
-			}
-		}
-	}
-	//printf("TICK %d\n", Data_CityInfo_Extra.gameTimeTick);
+	printf("TICK %d\n", Data_CityInfo_Extra.gameTimeTick);
 	//printf("  Random\n");
 	Random_generateNext();
 	//printf("  Undo\n");
 	Undo_updateAvailable();
-	//printf("  Game tick\n");
+	printf("  Game tick\n");
 	GameTick_advance();
-	//printf("  Walkers\n");
+	printf("  Walkers\n");
 	WalkerAction_handle();
 	//printf("  Events\n");
 	Event_handleEarthquake();
@@ -79,7 +59,7 @@ void GameTick_doTick()
 	Event_handleEmperorChange();
 	//printf("  Victory\n");
 	CityInfo_Victory_check();
-	//printf("DONE\n");
+	printf("DONE\n");
 }
 
 void GameTick_advance()
@@ -120,7 +100,7 @@ void GameTick_advance()
 		case 37: Desirability_update(); break;
 		case 38: Building_setDesirability(); break;
 		case 39: HouseEvolution_Tick_evolveAndConsumeResources(); break;
-		case 40: Building_clearDeleted(); break;
+		case 40: Building_GameTick_updateState(); break;
 		case 43: Security_Tick_updateBurningRuins(); break;
 		case 44: Security_Tick_checkFireCollapse(); break;
 		case 45: Security_Tick_generateCriminal(); break;
@@ -155,8 +135,7 @@ static void advanceDay()
 	if (Data_Tutorial.tutorial2.granaryBuilt) {
 		if (!Data_Tutorial.tutorial2.population250Reached && Data_CityInfo.population >= 250) {
 			Data_Tutorial.tutorial2.population250Reached = 1;
-			SidebarMenu_enableBuildingMenuItems();
-			SidebarMenu_enableBuildingButtons();
+			SidebarMenu_enableBuildingMenuItemsAndButtons();
 			if (UI_Window_getId() == Window_City) {
 				UI_City_drawBackground();
 			}
@@ -166,8 +145,7 @@ static void advanceDay()
 	if (Data_Tutorial.tutorial2.population250Reached) {
 		if (!Data_Tutorial.tutorial2.population450Reached && Data_CityInfo.population >= 450) {
 			Data_Tutorial.tutorial2.population450Reached = 1;
-			SidebarMenu_enableBuildingMenuItems();
-			SidebarMenu_enableBuildingButtons();
+			SidebarMenu_enableBuildingMenuItemsAndButtons();
 			if (UI_Window_getId() == Window_City) {
 				UI_City_drawBackground();
 			}
@@ -182,8 +160,7 @@ static void advanceDay()
 			}
 			if (Data_CityInfo.tutorial1SenateBuilt > 0 || populationAlmost) {
 				Data_Tutorial.tutorial1.senateBuilt = 1;
-				SidebarMenu_enableBuildingMenuItems();
-				SidebarMenu_enableBuildingButtons();
+				SidebarMenu_enableBuildingMenuItemsAndButtons();
 				if (UI_Window_getId() == Window_City) {
 					UI_City_drawBackground();
 				}

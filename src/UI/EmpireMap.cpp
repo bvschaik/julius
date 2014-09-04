@@ -567,8 +567,7 @@ static void confirmOpenTrade(int accepted)
 	if (accepted) {
 		CityInfo_Finance_spendOnConstruction(Data_Empire_Cities[selectedCity].costToOpen);
 		Data_Empire_Cities[selectedCity].isOpen = 1;
-		SidebarMenu_enableBuildingMenuItems();
-		SidebarMenu_enableBuildingButtons();
+		SidebarMenu_enableBuildingMenuItemsAndButtons();
 		UI_Window_goTo(Window_TradeOpenedDialog);
 	}
 }

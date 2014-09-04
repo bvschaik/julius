@@ -531,7 +531,7 @@ static void crossCountryAdvanceX(struct Data_Walker *w)
 	if (w->crossCountryX < w->ccDestinationX) {
 		w->crossCountryX++;
 	} else if (w->crossCountryX > w->ccDestinationX) {
-		w->crossCountryX++;
+		w->crossCountryX--;
 	}
 }
 
@@ -540,7 +540,7 @@ static void crossCountryAdvanceY(struct Data_Walker *w)
 	if (w->crossCountryY < w->ccDestinationY) {
 		w->crossCountryY++;
 	} else if (w->crossCountryY > w->ccDestinationY) {
-		w->crossCountryY++;
+		w->crossCountryY--;
 	}
 }
 

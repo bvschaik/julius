@@ -256,6 +256,12 @@ void SidebarMenu_enableBuildingMenuItems()
 	}
 }
 
+void SidebarMenu_enableBuildingMenuItemsAndButtons()
+{
+	SidebarMenu_enableBuildingMenuItems();
+	SidebarMenu_enableBuildingButtons();
+}
+
 void SidebarMenu_enableAllBuildingMenuItems()
 {
 	for (int sub = 0; sub < MAX_BUILDINGITEMS; sub++) {

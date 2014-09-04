@@ -240,6 +240,7 @@ static void createImmigrantForBuilding(int buildingId, int numPeople)
 		Data_CityInfo.entryPointX, Data_CityInfo.entryPointY, 0);
 	Data_Walkers[walkerId].actionState = WalkerActionState_1_ImmigrantCreated;
 	Data_Walkers[walkerId].immigrantBuildingId = buildingId;
+	Data_Buildings[buildingId].immigrantWalkerId = walkerId;
 	Data_Walkers[walkerId].waitTicks =
 		10 + (Data_Buildings[buildingId].houseGenerationDelay & 0x7f);
 	Data_Walkers[walkerId].migrantNumPeople = numPeople;

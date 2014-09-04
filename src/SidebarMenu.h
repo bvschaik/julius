@@ -2,8 +2,8 @@
 #define SIDEBAR_H
 
 void SidebarMenu_enableBuildingButtons();
-
 void SidebarMenu_enableBuildingMenuItems();
+void SidebarMenu_enableBuildingMenuItemsAndButtons();
 
 void SidebarMenu_enableAllBuildingMenuItems();
 

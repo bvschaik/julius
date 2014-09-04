@@ -539,7 +539,7 @@ void HouseEvolution_Tick_decayCultureService()
 void HouseEvolution_Tick_calculateCultureServiceAggregates()
 {
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse != 1 || Data_Buildings[i].houseSize) {
+		if (Data_Buildings[i].inUse != 1 || !Data_Buildings[i].houseSize) {
 			continue;
 		}
 		Data_Building *b = &Data_Buildings[i];

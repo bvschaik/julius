@@ -78,6 +78,7 @@ void UI_CityBuildings_drawBuildingCost()
 		Data_CityView.selectedTile.xOffsetInPixels + 58,
 		Data_CityView.selectedTile.yOffsetInPixels, Font_NormalPlain, color);
 	Graphics_resetClipRectangle();
+	Data_State.selectedBuilding.cost = 0;
 }
 
 void UI_CityBuildings_drawForegroundForWalker(int x, int y, int walkerId, UI_CityPixelCoordinate *coord)

@@ -163,7 +163,7 @@ void UI_BuildingInfo_drawBurningRuin(BuildingInfoContext *c)
 		c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 173, Font_NormalBlack);
 	Widget_GameText_drawMultiline(111, 1,
 		c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 143,
-		16 * (c->heightBlocks - 4), Font_NormalBlack);
+		16 * (c->widthBlocks - 4), Font_NormalBlack);
 }
 
 void UI_BuildingInfo_drawRubble(BuildingInfoContext *c)
@@ -177,5 +177,5 @@ void UI_BuildingInfo_drawRubble(BuildingInfoContext *c)
 		c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 173, Font_NormalBlack);
 	Widget_GameText_drawMultiline(140, 1,
 		c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 143,
-		16 * (c->heightBlocks - 4), Font_NormalBlack);
+		16 * (c->widthBlocks - 4), Font_NormalBlack);
 }

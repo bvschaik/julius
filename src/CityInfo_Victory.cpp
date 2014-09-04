@@ -97,7 +97,7 @@ void CityInfo_Victory_check()
 				PlayerMessage_post(1, 112, 0, 0);
 			}
 			Data_State.forceWinCheat = 0;
-		} else if (Data_State.winState > 1) {
+		} else if (Data_State.winState > 0) {
 			Sound_stopMusic();
 			if (Data_CityInfo.messageShownVictory) {
 				// TODO show victory video

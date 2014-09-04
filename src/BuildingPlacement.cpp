@@ -843,8 +843,8 @@ static void clearRegion(int measureOnly, int xStart, int yStart, int xEnd, int y
 
 	int xMin, xMax, yMin, yMax;
 	BOUND_REGION();
-	int askConfirmBridge;
-	int askConfirmFort;
+	int askConfirmBridge = 0;
+	int askConfirmFort = 0;
 	for (int y = yMin; y <= yMax; y++) {
 		for (int x = xMin; x <= xMax; x++) {
 			int gridOffset = GridOffset(x,y);

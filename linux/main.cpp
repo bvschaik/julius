@@ -342,6 +342,9 @@ int main()
 	Data_Settings.soundSpeechPercentage = 100;
 	Data_Settings.soundCityPercentage = 100;
 	Data_Settings.scrollSpeed = 50;
+	Data_Settings.difficulty = 3;
+	Data_Settings.gameSpeed = 50;
+	Data_Settings.godsEnabled = 1;
 	// end settings
 	
 	Loader_Graphics_initGraphics();

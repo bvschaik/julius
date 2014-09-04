@@ -57,33 +57,33 @@ static ImageButton buttonExpandSidebar[] = {
 };
 
 static ImageButton buttonBuildCollapsed[] = {
-	{2, 32, 39, 26, 2, 92, 0, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 1, 0},
-	{2, 67, 39, 26, 2, 92, 8, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 2, 0},
-	{2, 102, 39, 26, 2, 92, 12, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 3, 0},
-	{2, 137, 39, 26, 2, 92, 4, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 4, 0},
-	{2, 172, 39, 26, 2, 92, 40, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 5, 0},
-	{2, 207, 39, 26, 2, 92, 28, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 6, 0},
-	{2, 242, 39, 26, 2, 92, 24, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 7, 0},
-	{2, 277, 39, 26, 2, 92, 20, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 8, 0},
-	{2, 312, 39, 26, 2, 92, 16, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 9, 0},
-	{2, 347, 39, 26, 2, 92, 44, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 10, 0},
-	{2, 382, 39, 26, 2, 92, 36, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 11, 0},
-	{2, 417, 39, 26, 2, 92, 32, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 12, 0},
+	{2, 32, 39, 26, 2, 92, 0, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0},
+	{2, 67, 39, 26, 2, 92, 8, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 1, 0},
+	{2, 102, 39, 26, 2, 92, 12, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 2, 0},
+	{2, 137, 39, 26, 2, 92, 4, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 3, 0},
+	{2, 172, 39, 26, 2, 92, 40, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 4, 0},
+	{2, 207, 39, 26, 2, 92, 28, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 5, 0},
+	{2, 242, 39, 26, 2, 92, 24, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 6, 0},
+	{2, 277, 39, 26, 2, 92, 20, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 7, 0},
+	{2, 312, 39, 26, 2, 92, 16, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 8, 0},
+	{2, 347, 39, 26, 2, 92, 44, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 9, 0},
+	{2, 382, 39, 26, 2, 92, 36, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 10, 0},
+	{2, 417, 39, 26, 2, 92, 32, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 11, 0},
 };
 
 static ImageButton buttonBuildExpanded[] = {
-	{13, 277, 39, 26, 2, 92, 0, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 1, 0},
-	{63, 277, 39, 26, 2, 92, 8, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 2, 0},
-	{113, 277, 39, 26, 2, 92, 12, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 3, 0},
-	{13, 313, 39, 26, 2, 92, 4, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 4, 0},
-	{63, 313, 39, 26, 2, 92, 40, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 5, 0},
-	{113, 313, 39, 26, 2, 92, 28, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 6, 0},
-	{13, 349, 39, 26, 2, 92, 24, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 7, 0},
-	{63, 349, 39, 26, 2, 92, 20, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 8, 0},
-	{113, 349, 39, 26, 2, 92, 16, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 9, 0},
-	{13, 385, 39, 26, 2, 92, 44, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 10, 0},
-	{63, 385, 39, 26, 2, 92, 36, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 11, 0},
-	{113, 385, 39, 26, 2, 92, 32, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 12, 0},
+	{13, 277, 39, 26, 2, 92, 0, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0},
+	{63, 277, 39, 26, 2, 92, 8, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 1, 0},
+	{113, 277, 39, 26, 2, 92, 12, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 2, 0},
+	{13, 313, 39, 26, 2, 92, 4, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 3, 0},
+	{63, 313, 39, 26, 2, 92, 40, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 4, 0},
+	{113, 313, 39, 26, 2, 92, 28, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 5, 0},
+	{13, 349, 39, 26, 2, 92, 24, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 6, 0},
+	{63, 349, 39, 26, 2, 92, 20, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 7, 0},
+	{113, 349, 39, 26, 2, 92, 16, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 8, 0},
+	{13, 385, 39, 26, 2, 92, 44, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 9, 0},
+	{63, 385, 39, 26, 2, 92, 36, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 10, 0},
+	{113, 385, 39, 26, 2, 92, 32, buttonBuild, Widget_Button_doNothing, 1, 0, 0, 0, 11, 0},
 	{13, 421, 39, 26, 4, 92, 48, buttonUndo, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0},
 	{63, 421, 39, 26, 4, 90, 18, buttonMessages, buttonHelp, 1, 0, 0, 0, 0, 34},
 	{113, 421, 39, 26, 2, 90, 22, buttonGoToProblem, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0},
@@ -117,6 +117,7 @@ void UI_Sidebar_requestMinimapRefresh()
 	minimapRedrawRequested = 1;
 }
 
+#include <cstdio>
 void UI_Sidebar_enableBuildingButtons()
 {
 	for (int i = 0; i < 12; i++) {
@@ -288,7 +289,7 @@ static void buttonCollapseExpand(int param1, int param2)
 
 static void buttonBuild(int submenu, int param2)
 {
-	UI_BuildingMenu_init(submenu - 1);
+	UI_BuildingMenu_init(submenu);
 }
 
 static void buttonUndo(int param1, int param2)
