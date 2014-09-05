@@ -657,9 +657,11 @@ static int drawRichText(const char *str, int xOffset, int yOffset,
 					graphicHeightLines = GraphicHeight(graphicId) / 16 + 2;
 					int xOffsetGraphic = xOffset + (boxWidth - Data_Graphics_Main.index[graphicId].width) / 2 - 4;
 					if (line < heightLines + data.scrollPosition) {
-						Graphics_drawImage(graphicId, xOffsetGraphic, y + 8);
-					} else {
-						Graphics_drawImage(graphicId, xOffsetGraphic, y + 8 - 16 * (data.scrollPosition - line));
+						if (line >= data.scrollPosition) {
+							Graphics_drawImage(graphicId, xOffsetGraphic, y + 8);
+						} else {
+							Graphics_drawImage(graphicId, xOffsetGraphic, y + 8 - 16 * (data.scrollPosition - line));
+						}
 					}
 					graphicId = 0;
 				}

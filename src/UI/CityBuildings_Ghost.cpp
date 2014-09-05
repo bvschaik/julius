@@ -322,7 +322,7 @@ static void drawBuildingGhostDefault()
 					yOffsetBase + GraphicSpriteOffsetY(graphicId + 1) - 56,
 					Color_MaskGreen);
 			}
-		} else {
+		} else if (type != Building_ClearLand) {
 			Graphics_drawIsometricFootprint(graphicId,
 				xOffsetBase, yOffsetBase, Color_MaskGreen);
 			Graphics_drawIsometricTop(graphicId,

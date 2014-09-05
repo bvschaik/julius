@@ -292,7 +292,7 @@ void UI_MissionStart_Briefing_drawBackground()
 	Widget_RichText_init(MessageText(textId, contentOffset),
 		xOffset + 48, yOffset + 152, 31, 15, 0);
 
-	Graphics_setClipRectangle(xOffset + 19, yOffset - 155, xOffset + 541, yOffset + 389);// width/height or xend/yend?
+	Graphics_setClipRectangle(xOffset + 19, yOffset + 155, 522, 234);
 	Widget_RichText_draw(MessageText(textId, contentOffset),
 		xOffset + 32, yOffset + 164, 496, 14, 0);
 	Graphics_resetClipRectangle();
