@@ -1231,7 +1231,7 @@ void WalkerGeneration_generateWalkersForBuildings()
 	if (Data_Buildings_Extra.barracksTowerSentryRequested > 0) {
 		Data_Buildings_Extra.barracksTowerSentryRequested--;
 	}
-	for (int i = 1; i < Data_Buildings_Extra.highestBuildingIdInUse; i++) {
+	for (int i = 1; i <= Data_Buildings_Extra.highestBuildingIdInUse; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
 		if (b->inUse != 1) {
 			continue;

@@ -266,7 +266,7 @@ int HousePopulation_getClosestHouseWithRoom(int x, int y)
 {
 	int minDist = 1000;
 	int minBuildingId = 0;
-	for (int i = 1; i < Data_Buildings_Extra.highestBuildingIdInUse; i++) {
+	for (int i = 1; i <= Data_Buildings_Extra.highestBuildingIdInUse; i++) {
 		if (Data_Buildings[i].inUse == 1 && Data_Buildings[i].houseSize &&
 			Data_Buildings[i].distanceFromEntry > 0 && Data_Buildings[i].housePopulationRoom > 0) {
 			if (!Data_Buildings[i].immigrantWalkerId) {

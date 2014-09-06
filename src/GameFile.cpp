@@ -450,20 +450,22 @@ int GameFile_loadSavedGameFromMissionPack(int missionId)
 	return 1;
 }
 
-static void printFormation(int formationId)
+static void debug()
 {
-	struct Data_Formation *f = &Data_Formations[formationId];
-	printf("Formation %d\n", formationId);
-	for (int i = 0; i < f->numWalkers; i++) {
-		struct Data_Walker *w = &Data_Walkers[f->walkerIds[i]];
-		printf("  Walker f %d index %d = id %d = index in formation %d at rest %d\n",
-			w->formationId, i, f->walkerIds[i], w->indexInFormation, w->formationAtRest);
+	/*
+	for (int i = 1; i < MAX_BUILDINGS; i++) {
+		struct Data_Building *b = &Data_Buildings[i];
+		if (b->inUse || b->type) {
+			printf("Building %d type %d inUse %d emp %d w %d ls %d hc %d\n",
+				i, b->type, b->inUse, b->numWorkers, b->walkerId, b->walkerId2, b->housesCovered);
+		}
 	}
+	*/
 }
 
 static void setupFromSavedGame()
 {
-	printFormation(2);
+	debug();
 	Empire_load(Data_Settings.isCustomScenario, Data_Scenario.empireId);
 	Event_calculateDistantBattleRomanTravelTime();
 	Event_calculateDistantBattleEnemyTravelTime();
