@@ -13,6 +13,7 @@
 #include "../Data/Model.h"
 #include "../Data/Mouse.h"
 #include "../Data/Scenario.h"
+#include "../Data/Settings.h"
 #include "../Data/State.h"
 
 static void drawMenuButtons();
@@ -229,6 +230,8 @@ static void buttonMenuItem(int item)
 	Data_State.selectedBuilding.roadRequired = 0;
 	Data_State.selectedBuilding.roadLastUpdate = Time_getMillis();
 	Data_State.selectedBuilding.gridOffsetStart = 0;
+
+	Data_Settings_Map.current.gridOffset = 0;
 	
 	Data_State.selectedBuilding.placementInProgress = 0;
 	Data_State.selectedBuilding.xStart = 0;

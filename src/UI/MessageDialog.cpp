@@ -186,7 +186,7 @@ static void drawDialogNormal()
 	// content!
 	Widget_Panel_drawInnerPanel(data.xText, data.yText, data.textWidthBlocks, data.textHeightBlocks);
 	Graphics_setClipRectangle(data.xText + 3, data.yText + 3,
-		16 * data.textWidthBlocks - 3, 16 * data.textHeightBlocks - 3);
+		16 * data.textWidthBlocks - 6, 16 * data.textHeightBlocks - 6);
 	Widget_RichText_clearLinks();
 
 	if (msg->type == Type_Message) {

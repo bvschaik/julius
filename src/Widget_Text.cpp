@@ -865,6 +865,12 @@ static int handleScrollbarDot()
 
 int Widget_RichText_handleScrollbar()
 {
+	if (Data_Mouse.scrollDown) {
+		Widget_RichText_scroll(1, 3);
+	} else if (Data_Mouse.scrollUp) {
+		Widget_RichText_scroll(0, 3);
+	}
+
 	if (Widget_Button_handleImageButtons(
 		data.xText + 16 * data.textWidthBlocks - 1,
 		data.yText,

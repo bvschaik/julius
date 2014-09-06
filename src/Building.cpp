@@ -732,7 +732,7 @@ void Building_GameTick_checkAccessToRome()
 			}
 		} else { // other building
 			b->distanceFromEntry = 0;
-			int roadGridOffset = Terrain_getRoadToLargestRoadNetwork(b->x, b->y, 3, &xRoad, &yRoad);
+			int roadGridOffset = Terrain_getRoadToLargestRoadNetwork(b->x, b->y, b->size, &xRoad, &yRoad);
 			if (roadGridOffset >= 0) {
 				b->roadNetworkId = Data_Grid_roadNetworks[roadGridOffset];
 				b->distanceFromEntry = Data_Grid_routingDistance[roadGridOffset];

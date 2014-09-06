@@ -3,7 +3,9 @@
 #include "../Widget.h"
 #include "../Graphics.h"
 #include "../KeyboardInput.h"
+
 #include "../Data/Constants.h"
+#include "../Data/KeyboardInput.h"
 #include "../Data/Mouse.h"
 #include "../Data/Screen.h"
 #include "../Data/Settings.h"
@@ -42,26 +44,16 @@ void UI_NewCareerDialog_handleMouse()
 		UI_Window_goTo(Window_MainMenu);
 	}
 
+    KeyboardInput_initInput(1);
+
 	int xOffset = Data_Screen.offset640x480.x;
 	int yOffset = Data_Screen.offset640x480.y;
-	Widget_Button_handleImageButtons(xOffset + 464, yOffset + 249, &imageButtonStartMission, 1);
-	/*
-        KeyboardInput_initInput(1);
-
-          if ( !j_fun_handleImageButtonClick(
-                  screen_640x480_x + 464,
-                  screen_640x480_y + 249,
-                  &imagebuttons_newCampaign,
-                  1) )
-          {
-            if ( input_accepted )
-            {
-              j_fun_showMissionBriefingOnScenarioStart();
-              window_redrawRequest = 1;
-            }
-          }
-          break;
-	*/
+	if (Widget_Button_handleImageButtons(xOffset + 464, yOffset + 249, &imageButtonStartMission, 1)) {
+		return;
+	}
+	if (Data_KeyboardInput.accepted) {
+		startMission(0, 0);
+	}
 }
 
 static void startMission(int param1, int param2)

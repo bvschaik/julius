@@ -229,10 +229,10 @@ void WalkerAction_flotsam(int walkerId)
 	if (w->resourceId == 0) {
 		WalkerActionIncreaseGraphicOffset(w, 12);
 		if (w->minMaxSeen) {
-			w->graphicId = GraphicId(ID_Graphic_Walker_Flotsam0) +
+			w->graphicId = GraphicId(ID_Graphic_Walker_FlotsamSheep) +
 				flotsamType0[w->graphicOffset];
 		} else {
-			w->graphicId = GraphicId(ID_Graphic_Walker_FlotsamAlt0) +
+			w->graphicId = GraphicId(ID_Graphic_Walker_Flotsam0) +
 				flotsamType0[w->graphicOffset];
 		}
 	} else if (w->resourceId == 1) {
