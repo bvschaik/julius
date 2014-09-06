@@ -77,7 +77,7 @@ void WalkerAction_ballista(int walkerId)
 			if (w->waitTicksMissile > Constant_WalkerProperties[w->type].missileFrequency) {
 				int xTile, yTile;
 				if (WalkerAction_CombatSoldier_getMissileTarget(walkerId, 15, &xTile, &yTile)) {
-					w->direction = Routing_getGeneralDirection(w->x, w->y, xTile, yTile);
+					w->direction = Routing_getDirectionForMissileShooter(w->x, w->y, xTile, yTile);
 					w->waitTicksMissile = 0;
 					Walker_createMissile(walkerId, w->x, w->y, xTile, yTile, Walker_Bolt);
 					Sound_Effects_playChannel(SoundChannel_BallistaShoot);
@@ -213,7 +213,7 @@ void WalkerAction_towerSentry(int walkerId)
 			if (w->waitTicksMissile > Constant_WalkerProperties[w->type].missileFrequency) {
 				int xTile, yTile;
 				if (WalkerAction_CombatSoldier_getMissileTarget(walkerId, 10, &xTile, &yTile)) {
-					w->direction = Routing_getGeneralDirection(w->x, w->y, xTile, yTile);
+					w->direction = Routing_getDirectionForMissileShooter(w->x, w->y, xTile, yTile);
 					w->waitTicksMissile = 0;
 					Walker_createMissile(walkerId, w->x, w->y, xTile, yTile, Walker_Javelin);
 				} else {

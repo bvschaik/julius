@@ -37,8 +37,7 @@ typedef enum {
 	Window_MissionBriefingReview = 31, // 59
 	Window_VictoryDialog = 32, // 67
 	Window_MissionEnd = 33, // 51
-
-	Window_66 = -1, //66 TODO
+	Window_VictoryIntermezzo = 34,
 } WindowId;
 
 WindowId UI_Window_getId();

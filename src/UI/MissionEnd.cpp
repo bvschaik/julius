@@ -30,6 +30,12 @@ static CustomButton firedButtons[3] = {
 
 static int focusButtonId = 0;
 
+void UI_VictoryIntermezzo_init()
+{
+	Sound_Music_reset();
+	UI_Intermezzo_show(2, Window_MissionEnd, 1000);
+}
+
 void UI_MissionEnd_drawBackground()
 {
 	int xOffset = Data_Screen.offset640x480.x + 48;

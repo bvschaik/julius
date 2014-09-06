@@ -91,7 +91,7 @@ static void updateGraphic(int walkerId, struct Data_Walker *w)
 	} else {
 		dir = w->previousTileDirection;
 	}
-	dir = (8 + dir - Data_Settings_Map.orientation) % 8;
+	WalkerActionNormalizeDirection(dir);
 
 	if (w->type == Walker_Charioteer) {
 		w->cartGraphicId = 0;

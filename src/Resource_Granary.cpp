@@ -119,8 +119,9 @@ int Resource_getGranaryForStoringFood(
 			}
 		}
 	}
-	*xDst = Data_Buildings[minBuildingId].x;
-	*yDst = Data_Buildings[minBuildingId].y;
+	// deliver to center of granary
+	*xDst = Data_Buildings[minBuildingId].x + 1;
+	*yDst = Data_Buildings[minBuildingId].y + 1;
 	return minBuildingId;
 }
 

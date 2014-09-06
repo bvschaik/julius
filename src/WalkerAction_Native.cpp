@@ -80,7 +80,7 @@ void WalkerAction_indigenousNative(int walkerId)
 	} else {
 		dir = w->previousTileDirection;
 	}
-	dir = (8 + dir - Data_Settings_Map.orientation) % 8;
+	WalkerActionNormalizeDirection(dir);
 	
 	w->isEnemyGraphic = 1;
 	if (w->actionState == WalkerActionState_150_Attack) {

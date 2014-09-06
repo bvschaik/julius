@@ -28,7 +28,7 @@ void WalkerAction_enemy43_Spear(int walkerId)
 	} else {
 		dir = w->previousTileDirection;
 	}
-	dir = (8 + dir - Data_Settings_Map.orientation) % 8;
+	WalkerActionNormalizeDirection(dir);
 	
 	w->isEnemyGraphic = 1;
 	
@@ -75,7 +75,7 @@ void WalkerAction_enemy44_Sword(int walkerId)
 	} else {
 		dir = w->previousTileDirection;
 	}
-	dir = (8 + dir - Data_Settings_Map.orientation) % 8;
+	WalkerActionNormalizeDirection(dir);
 	
 	w->isEnemyGraphic = 1;
 	
@@ -119,7 +119,7 @@ void WalkerAction_enemy45_Sword(int walkerId)
 	} else {
 		dir = w->previousTileDirection;
 	}
-	dir = (8 + dir - Data_Settings_Map.orientation) % 8;
+	WalkerActionNormalizeDirection(dir);
 	
 	w->isEnemyGraphic = 1;
 	
@@ -163,7 +163,7 @@ void WalkerAction_enemy46_Camel(int walkerId)
 	} else {
 		dir = w->previousTileDirection;
 	}
-	dir = (8 + dir - Data_Settings_Map.orientation) % 8;
+	WalkerActionNormalizeDirection(dir);
 	
 	w->isEnemyGraphic = 1;
 	
@@ -196,7 +196,7 @@ void WalkerAction_enemy47_Elephant(int walkerId)
 	} else {
 		dir = w->previousTileDirection;
 	}
-	dir = (8 + dir - Data_Settings_Map.orientation) % 8;
+	WalkerActionNormalizeDirection(dir);
 	
 	w->isEnemyGraphic = 1;
 	
@@ -227,7 +227,7 @@ void WalkerAction_enemy48_Chariot(int walkerId)
 	} else {
 		dir = w->previousTileDirection;
 	}
-	dir = (8 + dir - Data_Settings_Map.orientation) % 8;
+	WalkerActionNormalizeDirection(dir);
 	
 	w->isEnemyGraphic = 1;
 	
@@ -259,7 +259,7 @@ void WalkerAction_enemy49_FastSword(int walkerId)
 	} else {
 		dir = w->previousTileDirection;
 	}
-	dir = (8 + dir - Data_Settings_Map.orientation) % 8;
+	WalkerActionNormalizeDirection(dir);
 	
 	w->isEnemyGraphic = 1;
 	
@@ -311,7 +311,7 @@ void WalkerAction_enemy50_Sword(int walkerId)
 	} else {
 		dir = w->previousTileDirection;
 	}
-	dir = (8 + dir - Data_Settings_Map.orientation) % 8;
+	WalkerActionNormalizeDirection(dir);
 	
 	w->isEnemyGraphic = 1;
 	
@@ -350,7 +350,7 @@ void WalkerAction_enemy51_Spear(int walkerId)
 	} else {
 		dir = w->previousTileDirection;
 	}
-	dir = (8 + dir - Data_Settings_Map.orientation) % 8;
+	WalkerActionNormalizeDirection(dir);
 	
 	w->isEnemyGraphic = 1;
 	
@@ -391,7 +391,7 @@ void WalkerAction_enemy52_MountedArcher(int walkerId)
 	} else {
 		dir = w->previousTileDirection;
 	}
-	dir = (8 + dir - Data_Settings_Map.orientation) % 8;
+	WalkerActionNormalizeDirection(dir);
 	
 	w->isEnemyGraphic = 1;
 	
@@ -425,7 +425,7 @@ void WalkerAction_enemy53_Axe(int walkerId)
 	} else {
 		dir = w->previousTileDirection;
 	}
-	dir = (8 + dir - Data_Settings_Map.orientation) % 8;
+	WalkerActionNormalizeDirection(dir);
 	
 	w->isEnemyGraphic = 1;
 	
@@ -504,7 +504,7 @@ void WalkerAction_enemy54_Gladiator(int walkerId)
 	} else {
 		dir = w->previousTileDirection;
 	}
-	dir = (8 + dir - Data_Settings_Map.orientation) % 8;
+	WalkerActionNormalizeDirection(dir);
 
 	if (w->actionState == WalkerActionState_150_Attack || w->direction == 11) {
 		w->graphicId = GraphicId(ID_Graphic_Walker_Gladiator) + dir + 104 + 8 * (w->graphicOffset / 2);
@@ -533,7 +533,7 @@ void WalkerAction_enemyCaesarLegionary(int walkerId)
 	} else {
 		dir = w->previousTileDirection;
 	}
-	dir = (8 + dir - Data_Settings_Map.orientation) % 8;
+	WalkerActionNormalizeDirection(dir);
 	
 	if (w->direction == 11) {
 		w->graphicId = GraphicId(ID_Graphic_Walker_CaesarLegionary) + dir + 8 * ((w->attackGraphicOffset - 12) / 2);

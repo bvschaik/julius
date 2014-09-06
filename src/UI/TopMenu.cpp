@@ -243,18 +243,21 @@ static void menuFile_loadGame(int param)
 {
 	clearState();
 	Data_State.selectedBuilding.type = 0;
+	UI_Window_goTo(Window_City);
 	UI_FileDialog_show(FileDialogType_Load);
 }
 
 static void menuFile_saveGame(int param)
 {
 	clearState();
+	UI_Window_goTo(Window_City);
 	UI_FileDialog_show(FileDialogType_Save);
 }
 
 static void menuFile_deleteGame(int param)
 {
 	clearState();
+	UI_Window_goTo(Window_City);
 	UI_FileDialog_show(FileDialogType_Delete);
 }
 

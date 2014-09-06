@@ -111,22 +111,22 @@ void CityInfo_Victory_check()
 				
 				if (!Data_Settings.isCustomScenario && Data_Settings.currentMissionId <= 1) {
 					// tutorials: immediately go to next mission
-					UI_Window_goTo(Window_66);
+					UI_Window_goTo(Window_VictoryIntermezzo);
 				} else if (!Data_Settings.isCustomScenario && Data_Settings.currentMissionId >= 10) {
 					// Won game
 					Video_start("smk/win_game.smk",
 						(Data_Screen.width - 400) / 2, (Data_Screen.height - 292) / 2,
-						1, Window_66);
+						1, Window_VictoryIntermezzo);
 				} else {
 					if (Data_Settings.lastVictoryVideoPlayed) {
 						Video_start("smk/victory_senate.smk",
 							(Data_Screen.width - 400) / 2, (Data_Screen.height - 292) / 2,
-							1, Window_66);
+							1, Window_VictoryIntermezzo);
 						Data_Settings.lastVictoryVideoPlayed = 0;
 					} else {
 						Video_start("smk/victory_balcony.smk",
 							(Data_Screen.width - 400) / 2, (Data_Screen.height - 292) / 2,
-							1, Window_66);
+							1, Window_VictoryIntermezzo);
 						Data_Settings.lastVictoryVideoPlayed = 1;
 					}
 				}

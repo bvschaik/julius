@@ -174,7 +174,7 @@ static int compareLower(const void *va, const void *vb)
 	return 0;
 }
 
-static int FileSystem_hasExtension(const char *filename, const char *extension)
+int FileSystem_hasExtension(const char *filename, const char *extension)
 {
 	char c;
 	do {

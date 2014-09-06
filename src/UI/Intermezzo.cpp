@@ -62,6 +62,7 @@ static const char soundFilesWon[][32] = {
 
 static struct {
 	int type;
+	int drawBackground;
 	WindowId nextWindowId;
 	TimeMillis startTime;
 	TimeMillis endTime;
@@ -80,10 +81,15 @@ void UI_Intermezzo_show(int type, WindowId nextWindowId, int timeMillis)
 	data.startTime = Time_getMillis();
 	data.endTime = data.startTime + timeMillis;
 	UI_Window_goTo(Window_Intermezzo);
+	data.drawBackground = 1;
 }
 
 void UI_Intermezzo_drawBackground()
 {
+	if (!data.drawBackground) {
+		return;
+	}
+	data.drawBackground = 0;
 	Graphics_clearScreen();
 	int xOffset = (Data_Screen.width - 1024) / 2;
 	int yOffset = (Data_Screen.height - 768) / 2;

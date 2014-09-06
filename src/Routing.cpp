@@ -131,7 +131,7 @@ static char tmpGrid[GRID_SIZE * GRID_SIZE];
 	}
 
 #define ROUTE_QUEUE_DIR8(source, block) \
-	memset(Data_Grid_routingDistance, 0, GRID_SIZE * GRID_SIZE * 2);\
+	Grid_clearShortGrid(Data_Grid_routingDistance);\
 	Data_Grid_routingDistance[source] = 1;\
 	queue.items[0] = source;\
 	queue.head = 0;\
@@ -885,7 +885,7 @@ int Routing_getGeneralDirection(int xSrc, int ySrc, int xDst, int yDst)
 	return Direction_None;
 }
 
-int Routing_getDirection(int xSrc, int ySrc, int xDst, int yDst)
+int Routing_getDirectionForMissileShooter(int xSrc, int ySrc, int xDst, int yDst)
 {
 	int dx = xSrc > xDst ? xSrc - xDst : xDst - xSrc;
 	int dy = ySrc > yDst ? ySrc - yDst : yDst - ySrc;
@@ -946,7 +946,7 @@ int Routing_getDirection(int xSrc, int ySrc, int xDst, int yDst)
 	}
 }
 
-int Routing_getDirectionForProjectile(int xSrc, int ySrc, int xDst, int yDst)
+int Routing_getDirectionForMissile(int xSrc, int ySrc, int xDst, int yDst)
 {
 	int dx = xSrc > xDst ? xSrc - xDst : xDst - xSrc;
 	int dy = ySrc > yDst ? ySrc - yDst : yDst - ySrc;
@@ -1038,6 +1038,7 @@ static void updateXYGridOffsetForDirection(int direction, int *x, int *y, int *g
 		case 2:
 			++(*x);
 			++(*gridOffset);
+			break;
 		case 3:
 			++(*x);
 			++(*y);

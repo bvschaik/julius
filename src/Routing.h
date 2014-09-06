@@ -38,9 +38,8 @@ int Routing_placeRoutedBuilding(int xSrc, int ySrc, int xDst, int yDst, RoutedBu
 
 int Routing_getGeneralDirection(int xSrc, int ySrc, int xDst, int yDst);
 
-int Routing_getDirection(int xSrc, int ySrc, int xDst, int yDst);
-
-int Routing_getDirectionForProjectile(int xSrc, int ySrc, int xDst, int yDst);
+int Routing_getDirectionForMissileShooter(int xSrc, int ySrc, int xDst, int yDst);
+int Routing_getDirectionForMissile(int xSrc, int ySrc, int xDst, int yDst);
 
 void Routing_getDistanceWaterBoat(int x, int y);
 void Routing_getDistanceWaterFlotsam(int x, int y);

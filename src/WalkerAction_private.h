@@ -3,6 +3,7 @@
 
 #define WalkerActionIncreaseGraphicOffset(w, max) (w)->graphicOffset++; if ((w)->graphicOffset >= (max)) (w)->graphicOffset = 0;
 #define WalkerActionDirection(w) ((8 + w->direction - Data_Settings_Map.orientation) % 8)
+#define WalkerActionNormalizeDirection(d) ((d) = (8 + (d) - Data_Settings_Map.orientation) % 8)
 #define WalkerActionCorpseGraphicOffset(w) walkerActionCorpseGraphicOffsets[w->waitTicks / 2]
 #define WalkerActionMissileLauncherGraphicOffset(w) walkerActionMissileLauncherGraphicOffsets[w->attackGraphicOffset / 2]
 #define WalkerActionFormationLayoutPositionX(layout, index) walkerActionFormationLayoutPositionX[layout][index]

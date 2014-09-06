@@ -117,7 +117,6 @@ void UI_Sidebar_requestMinimapRefresh()
 	minimapRedrawRequested = 1;
 }
 
-#include <cstdio>
 void UI_Sidebar_enableBuildingButtons()
 {
 	for (int i = 0; i < 12; i++) {

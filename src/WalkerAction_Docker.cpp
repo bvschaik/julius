@@ -289,7 +289,7 @@ void WalkerAction_docker(int walkerId)
 	}
 
 	int dir = w->direction < 8 ? w->direction : w->previousTileDirection;
-	dir = (8 + dir - Data_Settings_Map.orientation) % 8;
+	WalkerActionNormalizeDirection(dir);
 
 	if (w->actionState == WalkerActionState_149_Corpse) {
 		w->graphicId = GraphicId(ID_Graphic_Walker_Cartpusher) +

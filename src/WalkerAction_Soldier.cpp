@@ -83,7 +83,7 @@ static void javelinLaunchMissile(int walkerId, struct Data_Walker *w)
 		w->waitTicksMissile = 0;
 		if (WalkerAction_CombatSoldier_getMissileTarget(walkerId, 10, &xTile, &yTile)) {
 			w->attackGraphicOffset = 1;
-			w->direction = Routing_getDirection(w->x, w->y, xTile, yTile);
+			w->direction = Routing_getDirectionForMissileShooter(w->x, w->y, xTile, yTile);
 		} else {
 			w->attackGraphicOffset = 0;
 		}
@@ -210,7 +210,7 @@ static void updateSoldierGraphic(int walkerId, struct Data_Walker *w, struct Dat
 	} else {
 		dir = w->previousTileDirection;
 	}
-	dir = (8 + dir - Data_Settings_Map.orientation) % 8;
+	WalkerActionNormalizeDirection(dir);
 	if (w->type == Walker_FortJavelin) {
 		updateSoldierGraphicJavelin(w, dir);
 	} else if (w->type == Walker_FortMounted) {

@@ -190,10 +190,6 @@ static void buttonOkCancel(int isOk, int param2)
 		UI_Window_goBack();
 		return;
 	}
-	if (!isOk) {
-		UI_Window_goBack();
-		return;
-	}
 
 	FileSystem_removeExtension(Data_FileList.selectedCity);
 	FileSystem_appendExtension(Data_FileList.selectedCity, "sav");
@@ -244,11 +240,13 @@ static void buttonScroll(int isDown, int numLines)
 		messageNotExistTimeUntil = 0;
 	}
 }
+
 static void buttonSelectItem(int index, int param2)
 {
-	// TODO
 	if (index < Data_FileList.numFiles) {
+		memset(Data_FileList.selectedCity, 0, FILENAME_LENGTH);
 		strcpy(Data_FileList.selectedCity, Data_FileList.files[scrollPosition + index]);
+		FileSystem_removeExtension(Data_FileList.selectedCity);
 		KeyboardInput_initInput(2);
 		KeyboardInput_home();
 		KeyboardInput_end();

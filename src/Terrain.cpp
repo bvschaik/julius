@@ -370,9 +370,11 @@ int Terrain_hasRoadAccessGranary(int x, int y, int *roadX, int *roadY)
 		xx = x - 1;
 		yy = y + 1;
 	}
-	if (xx > 0 && yy > 0 && roadX && roadY) {
-		*roadX = xx;
-		*roadY = yy;
+	if (xx > 0 && yy > 0) {
+		if (roadX && roadY) {
+			*roadX = xx;
+			*roadY = yy;
+		}
 		return 1;
 	}
 	return 0;

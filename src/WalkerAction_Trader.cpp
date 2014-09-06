@@ -311,7 +311,7 @@ void WalkerAction_tradeCaravan(int walkerId)
 			break;
 	}
 	int dir = w->direction < 8 ? w->direction : w->previousTileDirection;
-	dir = (8 + dir - Data_Settings_Map.orientation) % 8;
+	WalkerActionNormalizeDirection(dir);
 	w->graphicId = GraphicId(ID_Graphic_Walker_TradeCaravan) +
 		dir + 8 * w->graphicOffset;
 }
@@ -343,7 +343,7 @@ void WalkerAction_tradeCaravanDonkey(int walkerId)
 		w->isGhost = 1;
 	}
 	int dir = w->direction < 8 ? w->direction : w->previousTileDirection;
-	dir = (8 + dir - Data_Settings_Map.orientation) % 8;
+	WalkerActionNormalizeDirection(dir);
 	w->graphicId = GraphicId(ID_Graphic_Walker_TradeCaravan) +
 		dir + 8 * w->graphicOffset;
 }
@@ -430,7 +430,7 @@ void WalkerAction_nativeTrader(int walkerId)
 			break;
 	}
 	int dir = (w->direction < 8) ? w->direction : w->previousTileDirection;
-	dir = (8 + dir - Data_Settings_Map.orientation) % 8;
+	WalkerActionNormalizeDirection(dir);
 	
 	if (w->actionState == WalkerActionState_149_Corpse) {
 		w->graphicId = GraphicId(ID_Graphic_Walker_Cartpusher) +
@@ -605,7 +605,7 @@ void WalkerAction_tradeShip(int walkerId)
 			break;
 	}
 	int dir = w->direction < 8 ? w->direction : w->previousTileDirection;
-	dir = (8 + dir - Data_Settings_Map.orientation) % 8;
+	WalkerActionNormalizeDirection(dir);
 	w->graphicId = GraphicId(ID_Graphic_Walker_Ship) + dir;
 }
 

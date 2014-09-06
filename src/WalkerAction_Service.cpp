@@ -445,7 +445,7 @@ void WalkerAction_prefect(int walkerId)
 	} else {
 		dir = w->previousTileDirection;
 	}
-	dir = (8 + dir - Data_Settings_Map.orientation) % 8;
+	WalkerActionNormalizeDirection(dir);
 	switch (w->actionState) {
 		case WalkerActionState_74_PrefectGoingToFire:
 			w->graphicId = GraphicId(ID_Graphic_Walker_PrefectWithBucket) +

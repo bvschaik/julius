@@ -19,7 +19,7 @@ static void setCartGraphic(struct Data_Walker *w)
 static void determineCartpusherDestination(struct Data_Walker *w, struct Data_Building *b, int roadNetworkId)
 {
 	int xDst, yDst;
-	int understaffedStorages = 0; // TODO: add as out param for 2 functions in Resource
+	int understaffedStorages = 0;
 	
 	// priority 1: warehouse if resource is on stockpile
 	int dstBuildingId = Resource_getWarehouseForStoringResource(0, w->x, w->y,
@@ -135,14 +135,9 @@ static void determineCartpusherDestinationFood(struct Data_Walker *w, int roadNe
 
 static void updateGraphic(int walkerId, struct Data_Walker *w)
 {
-	int dir;
-	if (w->direction < 8) {
-		dir = w->direction - Data_Settings_Map.orientation;
-	} else {
-		dir = w->previousTileDirection - Data_Settings_Map.orientation;
-	}
-	if (dir < 0) dir += 8;
-	
+	int dir = w->direction < 8 ? w->direction : w->previousTileDirection;
+	WalkerActionNormalizeDirection(dir);
+
 	if (w->actionState == WalkerActionState_149_Corpse) {
 		w->graphicId = GraphicId(ID_Graphic_Walker_Cartpusher) +
 			WalkerActionCorpseGraphicOffset(w) + 96;
@@ -245,7 +240,6 @@ void WalkerAction_cartpusher(int walkerId)
 			} else if (w->direction == 10) {
 				w->state = WalkerState_Dead;
 			}
-			// BUG? worker keeps going if destination removed
 			break;
 		case WalkerActionState_24_CartpusherAtWarehouse:
 			w->waitTicks++;

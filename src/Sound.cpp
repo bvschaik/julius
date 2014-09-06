@@ -1,52 +1,69 @@
 #include "Sound.h"
 #include "SoundDevice.h"
+
+#include "FileSystem.h"
 #include "Data/Settings.h"
 
-static const char filenames[SoundChannel_TotalChannels][32] = {
+#include <ctype.h>
+#include <dirent.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include <stdio.h>
+
+struct FilesystemName {
+	char lower[32];
+	char cased[32];
+};
+
+static struct FilesystemName fsFilenames[500];
+static int numFsNames;
+
+static char channelFilenames[SoundChannel_TotalChannels][32] = {
 	"", // speech channel
-	"wavs/PANEL1.WAV",
-	"wavs/PANEL3.WAV",
-	"wavs/ICON1.WAV",
-	"wavs/BUILD1.WAV",
-	"wavs/EXPLOD1.WAV",
-	"wavs/FANFARE.WAV",
-	"wavs/FANFARE2.WAV",
-	"wavs/ARROW.WAV",
+	"wavs/panel1.wav",
+	"wavs/panel3.wav",
+	"wavs/icon1.wav",
+	"wavs/build1.wav",
+	"wavs/explod1.wav",
+	"wavs/fanfare.wav",
+	"wavs/fanfare2.wav",
+	"wavs/arrow.wav",
 	"wavs/arrow_hit.wav",
-	"wavs/AXE.WAV",
-	"wavs/BALLISTA.WAV",
+	"wavs/axe.wav",
+	"wavs/ballista.wav",
 	"wavs/ballista_hit_ground.wav",
 	"wavs/ballista_hit_person.wav",
-	"wavs/CLUB.WAV",
-	"wavs/CAMEL1.WAV",
-	"wavs/ELEPHANT.WAV",
+	"wavs/club.wav",
+	"wavs/camel1.wav",
+	"wavs/elephant.wav",
 	"wavs/elephant_hit.wav",
 	"wavs/elephant_die.wav",
-	"wavs/HORSE.WAV",
-	"wavs/HORSE2.WAV",
+	"wavs/horse.wav",
+	"wavs/horse2.wav",
 	"wavs/horse_mov.wav",
-	"wavs/JAVELIN.WAV",
+	"wavs/javelin.wav",
 	"wavs/lion_attack.wav",
-	"wavs/LION_DIE.WAV",
-	"wavs/MARCHING.WAV",
-	"wavs/SWORD.WAV",
+	"wavs/lion_die.wav",
+	"wavs/marching.wav",
+	"wavs/sword.wav",
 	"wavs/sword_swing.wav",
 	"wavs/sword_light.wav",
 	"wavs/spear_attack.wav",
 	"wavs/wolf_attack.wav",
-	"wavs/WOLF_DIE.WAV",
-	"wavs/DIE1.WAV",
-	"wavs/DIE2.WAV",
-	"wavs/DIE4.WAV",
-	"wavs/DIE10.WAV",
-	"wavs/DIE3.WAV",
-	"wavs/DIE5.WAV",
-	"wavs/DIE8.WAV",
-	"wavs/DIE9.WAV",
+	"wavs/wolf_die.wav",
+	"wavs/die1.wav",
+	"wavs/die2.wav",
+	"wavs/die4.wav",
+	"wavs/die10.wav",
+	"wavs/die3.wav",
+	"wavs/die5.wav",
+	"wavs/die8.wav",
+	"wavs/die9.wav",
 	"wavs/sheep_die.wav",
 	"wavs/zebra_die.wav",
 	"wavs/wolf_howl.wav",
-	"wavs/Fire_splash.wav",
+	"wavs/fire_splash.wav",
 	"wavs/formation_shield.wav",
 	// city sounds
 	"wavs/house_slum1.wav",
@@ -70,57 +87,57 @@ static const char filenames[SoundChannel_TotalChannels][32] = {
 	"",
 	"",
 	"wavs/ampitheatre.wav",
-	"wavs/THEATRE.WAV",
+	"wavs/theatre.wav",
 	"wavs/hippodrome.wav",
 	"wavs/colloseum.wav",
-	"wavs/GLAD_PIT.WAV",
-	"wavs/LION_PIT.WAV",
-	"wavs/ART_PIT.WAV",
-	"wavs/CHAR_PIT.WAV",
-	"wavs/GARDENS1.WAV",
+	"wavs/glad_pit.wav",
+	"wavs/lion_pit.wav",
+	"wavs/art_pit.wav",
+	"wavs/char_pit.wav",
+	"wavs/gardens1.wav",
 	"",
 	"",
 	"",
-	"wavs/CLINIC.WAV",
-	"wavs/HOSPITAL.WAV",
-	"wavs/BATHS.WAV",
-	"wavs/BARBER.WAV",
-	"wavs/SCHOOL.WAV",
-	"wavs/ACADEMY.WAV",
-	"wavs/LIBRARY.WAV",
+	"wavs/clinic.wav",
+	"wavs/hospital.wav",
+	"wavs/baths.wav",
+	"wavs/barber.wav",
+	"wavs/school.wav",
+	"wavs/academy.wav",
+	"wavs/library.wav",
 	"wavs/prefecture.wav",
-	"wavs/FORT1.WAV",
+	"wavs/fort1.wav",
 	"",
 	"",
 	"",
-	"wavs/TOWER1.WAV",
+	"wavs/tower1.wav",
 	"",
 	"",
 	"",
 	"wavs/temp_farm.wav",
 	"wavs/temp_ship.wav",
 	"wavs/temp_comm.wav",
-	"wavs/TEMP_WAR.WAV",
+	"wavs/temp_war.wav",
 	"wavs/temp_love.wav",
-	"wavs/MARKET1.WAV",
+	"wavs/market1.wav",
 	"",
 	"",
 	"",
-	"wavs/GRANARY1.WAV",
+	"wavs/granary1.wav",
 	"",
 	"wavs/warehouse1.wav",
 	"",
 	"wavs/shipyard1.wav",
 	"",
-	"wavs/DOCK1.WAV",
+	"wavs/dock1.wav",
 	"",
-	"wavs/WHARF1.WAV",
+	"wavs/wharf1.wav",
 	"",
-	"wavs/PALACE.WAV",
+	"wavs/palace.wav",
 	"wavs/eng_post.wav",
-	"wavs/SENATE.WAV",
-	"wavs/FORUM.WAV",
-	"wavs/RESEVOIR.WAV",
+	"wavs/senate.wav",
+	"wavs/forum.wav",
+	"wavs/resevoir.wav",
 	"wavs/fountain1.wav",
 	"",
 	"",
@@ -129,37 +146,113 @@ static const char filenames[SoundChannel_TotalChannels][32] = {
 	"",
 	"",
 	"",
-	"wavs/MIL_ACAD.WAV",
-	"wavs/ORACLE.WAV",
+	"wavs/mil_acad.wav",
+	"wavs/oracle.wav",
 	"wavs/burning_ruin.wav",
 	"wavs/wheat_farm.wav",
-	"wavs/VEG_FARM.WAV",
+	"wavs/veg_farm.wav",
 	"wavs/figs_farm.wav",
 	"wavs/olives_farm.wav",
 	"wavs/vines_farm.wav",
 	"wavs/meat_farm.wav",
-	"wavs/QUARRY.WAV",
-	"wavs/MINE.WAV",
+	"wavs/quarry.wav",
+	"wavs/mine.wav",
 	"wavs/lumber_mill.wav",
-	"wavs/CLAY_PIT.WAV",
+	"wavs/clay_pit.wav",
 	"wavs/wine_workshop.wav",
 	"wavs/oil_workshop.wav",
 	"wavs/weap_workshop.wav",
 	"wavs/furn_workshop.wav",
 	"wavs/pott_workshop.wav",
-	"wavs/Empty_land1.wav",
+	"wavs/empty_land1.wav",
 	"",
 	"",
 	"",
-	"wavs/RIVER.WAV",
+	"wavs/river.wav",
 	"wavs/mission.wav",
 };
 
+static int compareLower(const void *va, const void *vb)
+{
+	const struct FilesystemName *a = (const struct FilesystemName*)va;
+	const struct FilesystemName *b = (const struct FilesystemName*)vb;
+	return strcmp(a->lower, b->lower);
+}
+
+static void initFilesystemNames()
+{
+	char dirs[16][5] = {
+		"wavs", "WAVS", "Wavs", "WAVs",
+		"wavS", "waVs", "waVS", "wAvs",
+		"wAvS", "wAVs", "wAVS", "WavS",
+		"WaVs", "WaVS", "WAvs", "WAvS"
+	};
+	numFsNames = 0;
+	DIR *d;
+	int wavs;
+	for (wavs = 0; wavs < 16; wavs++) {
+		d = opendir(dirs[wavs]);
+		if (d) {
+			break;
+		}
+	}
+	if (!d) return;
+
+	struct dirent *entry;
+	int i = 0;
+	while ((entry = readdir(d)) && i < 500) {
+		if (FileSystem_hasExtension(entry->d_name, "wav")) {
+			strncpy(fsFilenames[i].cased, dirs[wavs], 4);
+			fsFilenames[i].cased[4] = '/';
+			strncpy(&fsFilenames[i].cased[5], entry->d_name, 26);
+			fsFilenames[i].cased[32] = 0;
+			for (int n = 0; n < 32; n++) {
+				fsFilenames[i].lower[n] = tolower(fsFilenames[i].cased[n]);
+			}
+			++i;
+		}
+	}
+	closedir(d);
+	numFsNames = i;
+	qsort(fsFilenames, numFsNames, sizeof(struct FilesystemName), compareLower);
+}
+
+static void initChannelFilenames()
+{
+	struct FilesystemName key, *entry;
+	for (int i = 0; i < SoundChannel_TotalChannels; i++) {
+		if (channelFilenames[i][0] == 0) continue;
+
+		strcpy(key.lower, channelFilenames[i]);
+		entry = (struct FilesystemName*) bsearch(&key, fsFilenames, numFsNames,
+			sizeof(struct FilesystemName), compareLower);
+		if (entry) {
+			strcpy(channelFilenames[i], entry->cased);
+		} else {
+			printf("Sound file not found: %s\n", key.lower);
+		}
+	}
+}
+
+static const char *getCasedFilename(const char *filename)
+{
+	struct FilesystemName key, *entry;
+	strcpy(key.lower, filename);
+	entry = (struct FilesystemName*) bsearch(&key, fsFilenames, numFsNames,
+		sizeof(struct FilesystemName), compareLower);
+	if (entry) {
+		return entry->cased;
+	}
+	return 0;
+}
 
 void Sound_init()
 {
+	initFilesystemNames();
+	initChannelFilenames();
+
 	SoundDevice_open();
-	SoundDevice_initChannels(SoundChannel_TotalChannels, filenames);
+	SoundDevice_initChannels(SoundChannel_TotalChannels, channelFilenames);
 }
 
 void Sound_shutdown()
@@ -255,6 +348,9 @@ void Sound_Speech_playFile(const char *filename)
 	if (SoundDevice_isChannelPlaying(SoundChannel_Speech)) {
 		SoundDevice_stopChannel(SoundChannel_Speech);
 	}
-	SoundDevice_playSoundOnChannel(filename, SoundChannel_Speech);
-	SoundDevice_setChannelVolume(SoundChannel_Speech, Data_Settings.soundSpeechPercentage);
+	const char *casedFilename = getCasedFilename(filename);
+	if (casedFilename) {
+		SoundDevice_playSoundOnChannel(casedFilename, SoundChannel_Speech);
+		SoundDevice_setChannelVolume(SoundChannel_Speech, Data_Settings.soundSpeechPercentage);
+	}
 }

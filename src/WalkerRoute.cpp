@@ -73,7 +73,8 @@ void WalkerRoute_add(int walkerId)
 	} else {
 		// land walker
 		int canTravel;
-		printf("   Determining travelability\n");
+		printf("   Determining travelability from %d %d to %d %d\n",
+			w->x, w->y, w->destinationX, w->destinationY);
 		switch (w->terrainUsage) {
 			case WalkerTerrainUsage_Enemy:
 				canTravel = Routing_canTravelOverLandNonCitizen(w->x, w->y,
@@ -112,7 +113,6 @@ void WalkerRoute_add(int walkerId)
 					w->destinationX, w->destinationY);
 				break;
 		}
-		printf("   Done - can travel ? %d\n", canTravel);
 		if (canTravel) {
 			if (w->terrainUsage == WalkerTerrainUsage_Walls) {
 				pathLength = Routing_getPath(4, pathId, w->x, w->y,
@@ -128,6 +128,7 @@ void WalkerRoute_add(int walkerId)
 		} else { // cannot travel
 			pathLength = 0;
 		}
+		printf("   Done - can travel ? %d path length %d\n", canTravel, pathLength);
 	}
 	if (pathLength) {
 		Data_Routes.walkerIds[pathId] = walkerId;

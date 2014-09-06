@@ -155,7 +155,7 @@ void WalkerAction_fishingBoat(int walkerId)
 			break;
 	}
 	int dir = (w->direction < 8) ? w->direction : w->previousTileDirection;
-	dir = (8 + dir - Data_Settings_Map.orientation) % 8;
+	WalkerActionNormalizeDirection(dir);
 	
 	if (w->actionState == WalkerActionState_192_FishingBoatFishing) {
 		w->graphicId = GraphicId(ID_Graphic_Walker_Ship) + dir + 16;

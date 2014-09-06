@@ -177,7 +177,7 @@ void WalkerMovement_initRoaming(int walkerId)
 static void roamSetDirection(struct Data_Walker *w)
 {
 	int gridOffset = GridOffset(w->x, w->y);
-	int direction = Routing_getDirection(w->x, w->y, w->destinationX, w->destinationY);
+	int direction = Routing_getGeneralDirection(w->x, w->y, w->destinationX, w->destinationY);
 	if (direction >= 8) {
 		direction = 0;
 	}
@@ -336,7 +336,7 @@ static void walkerSetNextRouteTileDirection(int walkerId, struct Data_Walker *w)
 			w->direction = 8;
 		}
 	} else { // should be at destination
-		w->direction = Routing_getDirection(w->x, w->y, w->destinationX, w->destinationY);
+		w->direction = Routing_getGeneralDirection(w->x, w->y, w->destinationX, w->destinationY);
 		if (w->direction != 8) {
 			w->direction = 10;
 		}
@@ -441,7 +441,7 @@ void WalkerMovement_followTicks(int walkerId, int leaderWalkerId, int numTicks)
 			walkerAdvanceTick(w);
 		} else {
 			w->progressOnTile = 15;
-			w->direction = Routing_getDirection(w->x, w->y,
+			w->direction = Routing_getGeneralDirection(w->x, w->y,
 				Data_Walkers[leaderWalkerId].previousTileX,
 				Data_Walkers[leaderWalkerId].previousTileY);
 			if (w->direction < 8) {
@@ -484,9 +484,9 @@ void WalkerMovement_crossCountrySetDirection(int walkerId, int xSrc, int ySrc, i
 		w->ccDeltaXY = 0;
 	}
 	if (isProjectile) {
-		w->direction = Routing_getDirectionForProjectile(xSrc, ySrc, xDst, yDst);
+		w->direction = Routing_getDirectionForMissile(xSrc, ySrc, xDst, yDst);
 	} else {
-		w->direction = Routing_getDirection(xSrc, ySrc, xDst, yDst);
+		w->direction = Routing_getGeneralDirection(xSrc, ySrc, xDst, yDst);
 		if (w->ccDeltaY > 2 * w->ccDeltaX) {
 			switch (w->direction) {
 				case 1: case 7: w->direction = 0; break;
