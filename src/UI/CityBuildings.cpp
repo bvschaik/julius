@@ -615,7 +615,7 @@ static int handleRightClickAllowBuildingInfo()
 	Data_State.selectedBuilding.yEnd = 0;
 	UI_Window_goTo(Window_City);
 
-	if (!Data_CityView.selectedTile.gridOffset) {
+	if (!Data_Settings_Map.current.gridOffset) {
 		allow = 0;
 	}
 	if (UI_Warning_hasWarnings()) {
@@ -720,10 +720,10 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 	if (UI_Window_getId() != Window_City) {
 		return;
 	}
-	if (Data_CityView.selectedTile.gridOffset == 0) {
+	if (Data_Settings_Map.current.gridOffset == 0) {
 		return;
 	}
-	int gridOffset = Data_CityView.selectedTile.gridOffset;
+	int gridOffset = Data_Settings_Map.current.gridOffset;
 	int buildingId = Data_Grid_buildingIds[gridOffset];
 	int overlay = Data_State.currentOverlay;
 	if (overlay != Overlay_Water && overlay != Overlay_Desirability && !buildingId) {

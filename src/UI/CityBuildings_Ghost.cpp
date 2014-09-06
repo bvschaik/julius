@@ -68,7 +68,7 @@ static const int hippodromeYViewOffsets[4] = {75, -75, -75, 75};
 
 void UI_CityBuildings_drawSelectedBuildingGhost()
 {
-	if (!Data_CityView.selectedTile.gridOffset || Data_CityView.isScrolling) {
+	if (!Data_Settings_Map.current.gridOffset || Data_CityView.isScrolling) {
 		return;
 	}
 	if (Data_State.selectedBuilding.drawAsOverlay || Data_State.selectedBuilding.type <= 0) {
@@ -343,7 +343,7 @@ static void drawBuildingGhostAqueduct()
 
 static void drawBuildingGhostFountain()
 {
-	int gridOffset = Data_CityView.selectedTile.gridOffset;
+	int gridOffset = Data_Settings_Map.current.gridOffset;
 	int xOffset = Data_CityView.selectedTile.xOffsetInPixels;
 	int yOffset = Data_CityView.selectedTile.yOffsetInPixels;
 
@@ -958,7 +958,7 @@ static void drawBuildingGhostRoad()
 	int tileObstructed = 0;
 	int xOffset = Data_CityView.selectedTile.xOffsetInPixels;
 	int yOffset = Data_CityView.selectedTile.yOffsetInPixels;
-	int gridOffset = Data_CityView.selectedTile.gridOffset;
+	int gridOffset = Data_Settings_Map.current.gridOffset;
 	int graphicId;
 	if (Data_Grid_terrain[gridOffset] & Terrain_Aqueduct) {
 		graphicId = GraphicId(ID_Graphic_Aqueduct);

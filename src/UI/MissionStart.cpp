@@ -319,6 +319,17 @@ void UI_MissionStart_BriefingReview_drawForeground()
 	Widget_Button_drawImageButtons(xOffset + 500, yOffset + 394, &imageButtonStartMission, 1);
 }
 
+static void handleBriefingScroll()
+{
+	Widget_RichText_handleScrollbar();
+
+	if (Data_Mouse.scrollDown) {
+		Widget_RichText_scroll(1, 3);
+	} else if (Data_Mouse.scrollUp) {
+		Widget_RichText_scroll(0, 3);
+	}
+}
+
 void UI_MissionStart_BriefingInitial_handleMouse()
 {
 	int xOffset = Data_Screen.offset640x480.x + 16;
@@ -332,13 +343,7 @@ void UI_MissionStart_BriefingInitial_handleMouse()
 			return;
 		}
 	}
-	Widget_RichText_handleScrollbar();
-
-	if (Data_Mouse.scrollDown) {
-		Widget_RichText_scroll(1, 3);
-	} else if (Data_Mouse.scrollUp) {
-		Widget_RichText_scroll(0, 3);
-	}
+	handleBriefingScroll();
 }
 
 void UI_MissionStart_BriefingReview_handleMouse()
@@ -349,7 +354,7 @@ void UI_MissionStart_BriefingReview_handleMouse()
 	if (Widget_Button_handleImageButtons(xOffset + 500, yOffset + 394, &imageButtonStartMission, 1)) {
 		return;
 	}
-	Widget_RichText_handleScrollbar();
+	handleBriefingScroll();
 }
 
 static void briefingBack(int param1, int param2)

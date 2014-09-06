@@ -21,7 +21,6 @@ extern struct Data_CityView {
 	struct {
 		int xOffsetInPixels;
 		int yOffsetInPixels;
-		int gridOffset;
 	} selectedTile;
 	int isScrolling;
 } Data_CityView;

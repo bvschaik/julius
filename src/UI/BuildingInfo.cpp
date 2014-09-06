@@ -24,6 +24,7 @@
 #include "../Data/Model.h"
 #include "../Data/Mouse.h"
 #include "../Data/Screen.h"
+#include "../Data/Settings.h"
 #include "../Data/Walker.h"
 
 static void buttonHelp(int param1, int param2);
@@ -131,7 +132,7 @@ static int getHeightId()
 
 void UI_BuildingInfo_init()
 {
-	int gridOffset = Data_CityView.selectedTile.gridOffset;
+	int gridOffset = Data_Settings_Map.current.gridOffset;
 	int terrain = Data_Grid_terrain[gridOffset];
 	context.canPlaySound = 1;
 	context.storageShowSpecialOrders = 0;
