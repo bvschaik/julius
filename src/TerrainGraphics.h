@@ -29,6 +29,8 @@ int TerrainGraphics_setTileWall(int x, int y);
 int TerrainGraphics_setTileAqueduct(int x, int y, int forceNoWater);
 int TerrainGraphics_setTileAqueductTerrain(int x, int y);
 
+int TerrainGraphics_isPavedRoadTile(int gridOffset);
+
 enum {
 	TerrainGraphicsContext_Water,
 	TerrainGraphicsContext_Wall,

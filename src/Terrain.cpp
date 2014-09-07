@@ -923,6 +923,23 @@ int Terrain_allHousesWithinWellRadiusHaveFountain(int buildingId, int radius)
 	return numHouses ? 1 : 2;
 }
 
+int Terrain_isReservoir(int gridOffset)
+{
+	int buildingId = Data_Grid_buildingIds[gridOffset];
+	if (!buildingId) {
+		return 0;
+	}
+	for (int y = 0; y < 3; y++) {
+		for (int x = 0; x < 3; x++) {
+			int tileOffset = gridOffset + GRID_SIZE * y + x;
+			if (Data_Grid_buildingIds[tileOffset] != buildingId) {
+				return 0;
+			}
+		}
+	}
+	return 1;
+}
+
 void Terrain_markNativeLand(int x, int y, int size, int radius)
 {
 	FOR_XY_RADIUS(

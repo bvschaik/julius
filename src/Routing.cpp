@@ -827,10 +827,10 @@ int Routing_placeRoutedBuilding(int xSrc, int ySrc, int xDst, int yDst, RoutedBu
 			case RoutedBuilding_Wall:
 				*items += TerrainGraphics_setTileWall(xDst, yDst);
 				break;
-			case RoutedBuilding_Aqueduct2:
+			case RoutedBuilding_Aqueduct:
 				*items += TerrainGraphics_setTileAqueductTerrain(xDst, yDst);
 				break;
-			case RoutedBuilding_Aqueduct4:
+			case RoutedBuilding_AqueductWithoutGraphic:
 				*items += 1;
 				break;
 		}
@@ -1252,4 +1252,16 @@ int Routing_getPathOnWater(int routingPathId, int xSrc, int ySrc, int xDst, int 
 		Data_Routes.directionPaths[routingPathId][i] = directionPath[numTiles - i - 1];
 	}
 	return numTiles;
+}
+
+void Routing_block(int x, int y, int size)
+{
+	if (IsOutsideMap(x, y, size)) {
+		return;
+	}
+	for (int dy = 0; dy < size; dy++) {
+		for (int dx = 0; dx < size; dx++) {
+			Data_Grid_routingDistance[GridOffset(x+dx, y+dy)] = 0;
+		}
+	}
 }

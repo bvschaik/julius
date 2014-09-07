@@ -34,7 +34,7 @@ static int isAllTerrainInArea(int x, int y, int size, int terrain)
 	return 1;
 }
 
-static int isPavedRoadTile(int gridOffset)
+int TerrainGraphics_isPavedRoadTile(int gridOffset)
 {
 	if (Data_Grid_desirability[gridOffset] > 4) {
 		return 1;
@@ -63,7 +63,7 @@ static void setRoadWithAqueductGraphic(int gridOffset)
 			groupOffset = 2;
 		}
 	}
-	if (isPavedRoadTile(gridOffset)) {
+	if (TerrainGraphics_isPavedRoadTile(gridOffset)) {
 		Data_Grid_graphicIds[gridOffset] =
 			graphicIdAqueduct + waterOffset + groupOffset - 2;
 		Data_Grid_graphicIds[gridOffset] =
@@ -82,7 +82,7 @@ static void setRoadGraphic(int gridOffset)
 		setRoadWithAqueductGraphic(gridOffset);
 		return;
 	}
-	if (isPavedRoadTile(gridOffset)) {
+	if (TerrainGraphics_isPavedRoadTile(gridOffset)) {
 		const struct TerrainGraphic *graphic = TerrainGraphicsContext_getPavedRoad(gridOffset);
 		Data_Grid_graphicIds[gridOffset] = GraphicId(ID_Graphic_Road) +
 			graphic->groupOffset + graphic->itemOffset;
@@ -108,7 +108,7 @@ static void setTileAqueduct(int gridOffset, int waterOffset, int includeOverlay)
 				groupOffset = 2;
 			}
 		}
-		if (isPavedRoadTile(gridOffset)) {
+		if (TerrainGraphics_isPavedRoadTile(gridOffset)) {
 			groupOffset -= 2;
 		} else {
 			groupOffset += 6;

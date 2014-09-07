@@ -49,10 +49,13 @@ int Terrain_getRoadToLargestRoadNetworkHippodrome(int x, int y, int size, int *x
 int Terrain_getAdjacentRoadTilesForRoaming(int gridOffset, int *roadTiles);
 int Terrain_getSurroundingRoadTilesForRoaming(int gridOffset, int *roadTiles);
 
+int Terrain_getAdjacentRoadTilesForAqueduct(int gridOffset);
+
 void Terrain_markNativeLand(int x, int y, int size, int radius);
 int Terrain_hasBuildingOnNativeLand(int x, int y, int size, int radius);
 
 void Terrain_markBuildingsWithinWellRadius(int buildingId, int radius);
+int Terrain_isReservoir(int gridOffset);
 
 void Terrain_initDistanceRing();
 int Terrain_isAllRockAndTreesAtDistanceRing(int x, int y, int distance);

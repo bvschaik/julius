@@ -30,8 +30,8 @@ int Routing_getDistanceForBuildingWall(int x, int y);
 typedef enum {
 	RoutedBuilding_Road = 0,
 	RoutedBuilding_Wall = 1,
-	RoutedBuilding_Aqueduct2 = 2,
-	RoutedBuilding_Aqueduct4 = 4,
+	RoutedBuilding_Aqueduct = 2,
+	RoutedBuilding_AqueductWithoutGraphic = 4,
 } RoutedBuilding;
 
 int Routing_placeRoutedBuilding(int xSrc, int ySrc, int xDst, int yDst, RoutedBuilding type, int *items);
@@ -44,5 +44,7 @@ int Routing_getDirectionForMissile(int xSrc, int ySrc, int xDst, int yDst);
 void Routing_getDistanceWaterBoat(int x, int y);
 void Routing_getDistanceWaterFlotsam(int x, int y);
 int Routing_getPathOnWater(int routingPathId, int xSrc, int ySrc, int xDst, int yDst, int isFlotsam);
+
+void Routing_block(int x, int y, int size);
 
 #endif

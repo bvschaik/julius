@@ -55,6 +55,8 @@ extern struct Data_State {
 		TimeMillis roadLastUpdate;
 		int drawAsOverlay;
 		int cost;
+		int reservoirOffsetX;
+		int reservoirOffsetY;
 	} selectedBuilding;
 	int selectedLegionFormationId;
 	int isScrollingMap;

@@ -149,7 +149,7 @@ int WalkerAction_CombatEnemy_getTarget(int x, int y)
 	return 0;
 }
 
-int WalkerAction_CombatEnemy_getTargetForMissile(int enemyId, int maxDistance, int attackCitizens, int *xTile, int *yTile)
+int WalkerAction_CombatEnemy_getMissileTarget(int enemyId, int maxDistance, int attackCitizens, int *xTile, int *yTile)
 {
 	int x = Data_Walkers[enemyId].x;
 	int y = Data_Walkers[enemyId].y;

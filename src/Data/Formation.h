@@ -12,6 +12,8 @@ enum {
 	FormationLayout_Column = 5,
 	FormationLayout_MopUp = 6,
 	FormationLayout_AtRest = 7,
+	FormationLayout_Enemy8 = 8,
+	FormationLayout_Enemy12 = 12,
 };
 
 struct Data_Formation {

@@ -106,5 +106,6 @@ void WalkerAction_seagulls(int walkerId);
 void WalkerAction_sheep(int walkerId);
 void WalkerAction_wolf(int walkerId);
 void WalkerAction_zebra(int walkerId);
+void WalkerAction_hippodromeHorse(int walkerId);
 
 #endif

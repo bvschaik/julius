@@ -1,15 +1,30 @@
 #include "WalkerAction_private.h"
 
+#include "Routing.h"
 #include "Walker.h"
 
 #include "Data/CityInfo.h"
 #include "Data/Formation.h"
+#include "Data/Random.h"
 
 static const int seagullOffsetsX[] = {0, 0, -2, 1, 2, -3, 4, -1};
 static const int seagullOffsetsY[] = {0, -2, 0, 2, 0, 1, -3, 4};
 
 static const int herdOffsetsX[] = {0, 2, -1, 1, 1, -1, 3, -2, 0, -4, -1, 0, 1, 4, 2, -5};
 static const int herdOffsetsY[] = {0, 1, -1, 1, 0, 1, 1, -1, 2, 0, 3, 5, 4, 0, 3, 2};
+
+static const int hippodromeHorseDestinationX1[] = {
+	2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2
+};
+static const int hippodromeHorseDestinationY1[] = {
+	1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2
+};
+static const int hippodromeHorseDestinationX2[] = {
+	12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12
+};
+static const int hippodromeHorseDestinationY2[] = {
+	3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2
+};
 
 static const int sheepGraphicOffsets[] = {
 	0, 0, 1, 1, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
@@ -220,5 +235,163 @@ void WalkerAction_zebra(int walkerId)
 		w->graphicId = GraphicId(ID_Graphic_Walker_Zebra) + dir;
 	} else {
 		w->graphicId = GraphicId(ID_Graphic_Walker_Zebra) + dir + 8 * w->graphicOffset;
+	}
+}
+
+static void setDestinationHippodromeHorse(int walkerId, struct Data_Walker *w, int state)
+{
+	struct Data_Building *b = &Data_Buildings[w->buildingId];
+	if (state == 0) {
+		Walker_removeFromTileList(walkerId);
+		if (Data_Settings_Map.orientation == 0 || Data_Settings_Map.orientation == 4) {
+			w->destinationX = b->x + hippodromeHorseDestinationX1[w->waitTicksMissile];
+			w->destinationY = b->y + hippodromeHorseDestinationY1[w->waitTicksMissile];
+		} else {
+			w->destinationX = b->x + hippodromeHorseDestinationX2[w->waitTicksMissile];
+			w->destinationY = b->y + hippodromeHorseDestinationY2[w->waitTicksMissile];
+		}
+		w->x = w->destinationX;
+		w->y = w->destinationY;
+		if (w->resourceId == 1) {
+			w->y++;
+			w->destinationY++;
+		}
+		w->crossCountryX = 15 * w->x;
+		w->crossCountryY = 15 * w->y;
+		w->gridOffset = GridOffset(w->x, w->y);
+		Walker_addToTileList(walkerId);
+	} else if (state == 1) {
+		if (Data_Settings_Map.orientation == 0 || Data_Settings_Map.orientation == 4) {
+			w->destinationX = b->x + hippodromeHorseDestinationX1[w->waitTicksMissile];
+			w->destinationY = b->y + hippodromeHorseDestinationY1[w->waitTicksMissile];
+		} else {
+			w->destinationX = b->x + hippodromeHorseDestinationX2[w->waitTicksMissile];
+			w->destinationY = b->y + hippodromeHorseDestinationY2[w->waitTicksMissile];
+		}
+	} else if (state == 2) {
+		if (Data_Settings_Map.orientation == 0 || Data_Settings_Map.orientation == 4) {
+			if (w->resourceId) {
+				w->destinationX = b->x + 1;
+				w->destinationY = b->y + 2;
+			} else {
+				w->destinationX = b->x + 1;
+				w->destinationY = b->y + 1;
+			}
+		} else {
+			if (w->resourceId) {
+				w->destinationX = b->x + 12;
+				w->destinationY = b->y + 3;
+			} else {
+				w->destinationX = b->x + 12;
+				w->destinationY = b->y + 2;
+			}
+		}
+	}
+}
+
+void WalkerAction_hippodromeHorse(int walkerId)
+{
+	struct Data_Walker *w = &Data_Walkers[walkerId];
+	Data_CityInfo.entertainmentHippodromeHasShow = 1;
+	w->useCrossCountry = 1;
+	w->isGhost = 0;
+	WalkerActionIncreaseGraphicOffset(w, 8);
+
+	switch (w->actionState) {
+		case WalkerActionState_200_HippodromeMiniHorseCreated:
+			w->graphicOffset = 0;
+			w->waitTicksMissile = 0;
+			setDestinationHippodromeHorse(walkerId, w, 0);
+			w->waitTicks++;
+			if (w->waitTicks > 60 && w->resourceId == 0) {
+				w->actionState = WalkerActionState_201_HippodromeMiniHorseRacing;
+				w->waitTicks = 0;
+			}
+			w->waitTicks++;
+			if (w->waitTicks > 20 && w->resourceId == 1) {
+				w->actionState = WalkerActionState_201_HippodromeMiniHorseRacing;
+				w->waitTicks = 0;
+			}
+			break;
+		case WalkerActionState_201_HippodromeMiniHorseRacing:
+			w->direction = Routing_getGeneralDirection(w->x, w->y, w->destinationX, w->destinationY);
+			if (w->direction == 8) {
+				w->waitTicksMissile++;
+				if (w->waitTicksMissile >= 22) {
+					w->waitTicksMissile = 0;
+					w->inFrontWalkerId++;
+					if (w->inFrontWalkerId >= 6) {
+						w->waitTicks = 0;
+						w->actionState = WalkerActionState_202_HippodromeMiniHorseDone;
+					}
+					if ((walkerId + Data_Random.random1_7bit) & 1) {
+						w->speedMultiplier = 3;
+					} else {
+						w->speedMultiplier = 4;
+					}
+				} else if (w->waitTicksMissile == 11) {
+					if ((walkerId + Data_Random.random1_7bit) & 1) {
+						w->speedMultiplier = 3;
+					} else {
+						w->speedMultiplier = 4;
+					}
+				}
+				setDestinationHippodromeHorse(walkerId, w, 1);
+				w->direction = Routing_getGeneralDirection(w->x, w->y, w->destinationX, w->destinationY);
+				WalkerMovement_crossCountrySetDirection(walkerId,
+					w->crossCountryX, w->crossCountryY, 15 * w->destinationX, 15 * w->destinationY, 0);
+			}
+			if (w->actionState != WalkerActionState_202_HippodromeMiniHorseDone) {
+				WalkerMovement_crossCountryWalkTicks(walkerId, w->speedMultiplier);
+			}
+			break;
+		case WalkerActionState_202_HippodromeMiniHorseDone:
+			if (!w->waitTicks) {
+				setDestinationHippodromeHorse(walkerId, w, 2);
+				w->direction = Routing_getGeneralDirection(w->x, w->y, w->destinationX, w->destinationY);
+				WalkerMovement_crossCountrySetDirection(walkerId,
+					w->crossCountryX, w->crossCountryY, 15 * w->destinationX, 15 * w->destinationY, 0);
+			}
+			if (w->direction != 8) {
+				WalkerMovement_crossCountryWalkTicks(walkerId, 1);
+			}
+			w->waitTicks++;
+			if (w->waitTicks > 30) {
+				w->graphicOffset = 0;
+			}
+			w->waitTicks++;
+			if (w->waitTicks > 150) {
+				w->state = WalkerState_Dead;
+			}
+			break;
+	}
+
+	int dir = WalkerActionDirection(w);
+	if (w->resourceId == 0) {
+		w->graphicId = GraphicId(ID_Graphic_Walker_HippodromeHorse1) +
+			dir + 8 * w->graphicOffset;
+		w->cartGraphicId = GraphicId(ID_Graphic_Walker_HippodromeCart1) + dir;
+		int cartDir = (dir + 4) % 8;
+		WalkerAction_Common_setCartOffset(walkerId, cartDir);
+	} else {
+		w->graphicId = GraphicId(ID_Graphic_Walker_HippodromeHorse2) +
+			dir + 8 * w->graphicOffset;
+		w->cartGraphicId = GraphicId(ID_Graphic_Walker_HippodromeCart2) + dir;
+		int cartDir = (dir + 4) % 8;
+		WalkerAction_Common_setCartOffset(walkerId, cartDir);
+	}
+}
+
+void WalkerAction_HippodromeHorse_reroute()
+{
+	if (!Data_CityInfo.entertainmentHippodromeHasShow) {
+		return;
+	}
+	for (int i = 1; i < MAX_WALKERS; i++) {
+		struct Data_Walker *w = &Data_Walkers[i];
+		if (w->state == 1 && w->type == Walker_HippodromeMiniHorses) {
+			w->waitTicksMissile = 0;
+			setDestinationHippodromeHorse(i, w, 0);
+		}
 	}
 }

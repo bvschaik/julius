@@ -76,7 +76,7 @@ static void (*walkerActionCallbacks[])(int walkerId) = {
 	WalkerAction_wolf,
 	WalkerAction_zebra, //70
 	WalkerAction_spear,
-	WalkerAction_nobody, //TODO WalkerAction_hippodromeHorse,
+	WalkerAction_hippodromeHorse,
 	WalkerAction_nobody,
 	WalkerAction_nobody,
 	WalkerAction_nobody,
@@ -122,10 +122,4 @@ void WalkerAction_handle()
 
 void WalkerAction_nobody(int walkerId)
 {
-}
-
-// TODO move to own file
-void WalkerAction_HippodromeHorse_reroute()
-{
-	// TODO
 }

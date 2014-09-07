@@ -469,14 +469,14 @@ static void spawnWalkerHippodrome(int buildingId, struct Data_Building *b)
 				// create mini-horses
 				{
 					CREATE_WALKER(Walker_HippodromeMiniHorses, b->x + 2, b->y + 1, 2);
-					w->actionState = WalkerActionState_200_HippodromeMiniHorsesCreated;
+					w->actionState = WalkerActionState_200_HippodromeMiniHorseCreated;
 					w->buildingId = buildingId;
 					w->resourceId = 0;
 					w->speedMultiplier = 3;
 				}
 				{
 					CREATE_WALKER(Walker_HippodromeMiniHorses, b->x + 2, b->y + 2, 2);
-					w->actionState = WalkerActionState_200_HippodromeMiniHorsesCreated;
+					w->actionState = WalkerActionState_200_HippodromeMiniHorseCreated;
 					w->buildingId = buildingId;
 					w->resourceId = 1;
 					w->speedMultiplier = 2;

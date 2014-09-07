@@ -33,7 +33,10 @@ void UI_CityBuildings_drawOverlayFootprints()
 {
 	FOREACH_XY_VIEW({
 		int gridOffset = ViewToGridOffset(xView, yView);
-		// TODO something related to elevation/draggable reservoir?
+		if (gridOffset == Data_State.selectedBuilding.gridOffsetStart) {
+			Data_State.selectedBuilding.reservoirOffsetX = xGraphic;
+			Data_State.selectedBuilding.reservoirOffsetY = yGraphic;
+		}
 		if (gridOffset < 0) {
 			// Outside map: draw black tile
 			DRAWFOOT_SIZE1(GraphicId(ID_Graphic_TerrainBlack),

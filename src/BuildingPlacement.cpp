@@ -1,5 +1,7 @@
+#include "BuildingPlacement.h"
 
 #include "Building.h"
+#include "Calc.h"
 #include "CityInfo.h"
 #include "Formation.h"
 #include "Grid.h"
@@ -983,14 +985,133 @@ static void placeGarden(int xStart, int yStart, int xEnd, int yEnd)
 
 static int placeAqueduct(int measureOnly, int xStart, int yStart, int xEnd, int yEnd, int *cost)
 {
-	// TODO fun_buildingAttemptToPlaceAqueduct
-	return 0;
+	Grid_copyShortGrid(Data_Grid_Undo_terrain, Data_Grid_terrain);
+	Grid_copyByteGrid(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
+	Undo_restoreTerrainGraphics();
+	int itemCost = Data_Model_Buildings[Building_Aqueduct].cost;
+	*cost = 0;
+	int blocked = 0;
+	int gridOffset = GridOffset(xStart, yStart);
+	if (Data_Grid_terrain[gridOffset]) {
+		if (Terrain_Road && Data_Grid_bitfields[gridOffset] & Bitfield_PlazaOrEarthquake) {
+			blocked = 1;
+		}
+	} else if (Data_Grid_terrain[gridOffset] & Terrain_NotClear) {
+		blocked = 1;
+	}
+	gridOffset = GridOffset(xEnd, yEnd);
+	if (Data_Grid_terrain[gridOffset]) {
+		if (Terrain_Road && Data_Grid_bitfields[gridOffset] & Bitfield_PlazaOrEarthquake) {
+			blocked = 1;
+		}
+	} else if (Data_Grid_terrain[gridOffset] & Terrain_NotClear) {
+		blocked = 1;
+	}
+	if (blocked) {
+		return 0;
+	}
+	if (!Routing_getDistanceForBuildingRoadOrAqueduct(xStart, yStart, 1)) {
+		return 0;
+	}
+	int numItems;
+	Routing_placeRoutedBuilding(xStart, yStart, xEnd, yEnd, RoutedBuilding_Aqueduct, &numItems);
+	*cost = itemCost * numItems;
+	return 1;
 }
 
 static int placeReservoirAndAqueducts(int measureOnly, int xStart, int yStart, int xEnd, int yEnd, struct ReservoirInfo *info)
 {
-	// TODO
-	return 0;
+	info->cost = 0;
+	info->placeReservoirAtStart = 0;
+	info->placeReservoirAtEnd = 0;
+
+	Grid_copyShortGrid(Data_Grid_Undo_terrain, Data_Grid_terrain);
+	Grid_copyByteGrid(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
+	Undo_restoreTerrainGraphics();
+
+	int distance = Calc_distanceMaximum(xStart, yStart, xEnd, yEnd);
+	if (measureOnly && !Data_State.selectedBuilding.placementInProgress) {
+		distance = 0;
+	}
+	if (distance > 0) {
+		if (Terrain_isReservoir(GridOffset(xStart-1, yStart-1))) {
+			info->placeReservoirAtStart = 2;
+		} else if (Terrain_isClear(xStart - 1, yStart - 1, 3, Terrain_All, 0)) {
+			info->placeReservoirAtStart = 1;
+		} else {
+			info->placeReservoirAtStart = -1;
+		}
+	}
+	if (Terrain_isReservoir(GridOffset(xEnd-1, yEnd-1))) {
+		info->placeReservoirAtEnd = 2;
+	} else if (Terrain_isClear(xEnd - 1, yEnd - 1, 3, Terrain_All, 0)) {
+		info->placeReservoirAtStart = 1;
+	} else {
+		info->placeReservoirAtStart = -1;
+	}
+	if (info->placeReservoirAtStart == -1 || info->placeReservoirAtEnd == -1) {
+		return 0;
+	}
+	if (info->placeReservoirAtStart == 1 && info->placeReservoirAtEnd && distance < 3) {
+		return 0;
+	}
+	if (!distance) {
+		info->cost = Data_Model_Buildings[Building_Reservoir].cost;
+		return 1;
+	}
+	if (!Routing_getDistanceForBuildingRoadOrAqueduct(xStart, yStart, 1)) {
+		return 0;
+	}
+	if (info->placeReservoirAtStart) {
+		Routing_block(xStart - 1, yStart - 1, 3);
+		Terrain_updateToPlaceBuildingToOverlay(3, xStart - 1, yStart - 1, Terrain_All, 1);
+	}
+	if (info->placeReservoirAtEnd) {
+		Routing_block(xEnd - 1, yEnd - 1, 3);
+		Terrain_updateToPlaceBuildingToOverlay(3, xEnd - 1, yEnd - 1, Terrain_All, 1);
+	}
+	int aqueductOffsetsX[] = {0, 2, 0, -2};
+	int aqueductOffsetsY[] = {-2, 0, 2, 0};
+	int minDist = 10000;
+	int minDirStart, minDirEnd;
+	for (int dir1 = 0; dir1 < 4; dir1++) {
+		int dx1 = aqueductOffsetsX[dir1];
+		int dy1 = aqueductOffsetsY[dir1];
+		for (int dir2 = 0; dir2 < 4; dir2++) {
+			int dx2 = aqueductOffsetsX[dir2];
+			int dy2 = aqueductOffsetsY[dir2];
+			int dist;
+			if (Routing_placeRoutedBuilding(
+					xStart + dx1, yStart + dy1, xEnd + dx2, yEnd + dy2,
+					RoutedBuilding_AqueductWithoutGraphic, &dist)) {
+				if (dist && dist < minDist) {
+					minDist = dist;
+					minDirStart = dir1;
+					minDirEnd = dir2;
+				}
+			}
+		}
+	}
+	if (minDist == 10000) {
+		return 0;
+	}
+	int xAqStart = aqueductOffsetsX[minDirStart];
+	int yAqStart = aqueductOffsetsY[minDirStart];
+	int xAqEnd = aqueductOffsetsX[minDirEnd];
+	int yAqEnd = aqueductOffsetsY[minDirEnd];
+	int aqItems;
+	Routing_placeRoutedBuilding(xStart + xAqStart, yStart + yAqStart,
+		xEnd + xAqEnd, yEnd + yAqEnd, RoutedBuilding_Aqueduct, &aqItems);
+	if (info->placeReservoirAtStart) {
+		info->cost += Data_Model_Buildings[Building_Reservoir].cost;
+	}
+	if (info->placeReservoirAtEnd) {
+		info->cost += Data_Model_Buildings[Building_Reservoir].cost;
+	}
+	if (minDist) {
+		info->cost += minDist * Data_Model_Buildings[Building_Aqueduct].cost;
+	}
+	return 1;
 }
 
 void BuildingPlacement_update(int xStart, int yStart, int xEnd, int yEnd, int type)

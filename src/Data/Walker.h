@@ -182,6 +182,9 @@ enum {
 	WalkerActionState_149_Corpse = 149,
 	WalkerActionState_150_Attack = 150,
 	WalkerActionState_151_EnemyInitial = 151,
+	WalkerActionState_152_EnemyWaiting = 152,
+	WalkerActionState_153_EnemyMarching = 153,
+	WalkerActionState_154_EnemyFighting = 154,
 	WalkerActionState_156_NativeGoingToMeetingCenter = 156,
 	WalkerActionState_157_NativeReturningFromMeetingCenter = 157,
 	WalkerActionState_158_NativeCreated = 158,
@@ -206,7 +209,9 @@ enum {
 	WalkerActionState_196_HerdAnimalAtRest = 196,
 	WalkerActionState_197_HerdAnimalMoving = 197,
 	WalkerActionState_199_WolfAttacking = 199,
-	WalkerActionState_200_HippodromeMiniHorsesCreated = 200,
+	WalkerActionState_200_HippodromeMiniHorseCreated = 200,
+	WalkerActionState_201_HippodromeMiniHorseRacing = 201,
+	WalkerActionState_202_HippodromeMiniHorseDone = 202,
 };
 
 enum {
@@ -310,7 +315,7 @@ extern struct Data_Walker {
 	char __unused_57;
 	short inFrontWalkerId;
 	char attackGraphicOffset;
-	char waitTicksMissile;
+	unsigned char waitTicksMissile;
 	char xOffsetCart; // 5c
 	char yOffsetCart; // 5d
 	unsigned char empireCityId; // 5e

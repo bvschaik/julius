@@ -1,8 +1,10 @@
 #include "CityBuildings_private.h"
 
+#include "../BuildingPlacement.h"
 #include "../Routing.h"
 #include "../Terrain.h"
 #include "../TerrainBridge.h"
+#include "../TerrainGraphics.h"
 #include "../Time.h"
 
 #include "../Data/Formation.h"
@@ -333,12 +335,108 @@ static void drawBuildingGhostDefault()
 
 static void drawBuildingGhostDraggableReservoir()
 {
-	// TODO
+	int placementObstructed = 0;
+	if (Data_State.selectedBuilding.placementInProgress) {
+		if (!Data_State.selectedBuilding.cost) {
+			placementObstructed = 1;
+		}
+	} else {
+		int gridOffset = GridOffset(Data_Settings_Map.current.x - 1, Data_Settings_Map.current.y - 1);
+		if (Terrain_isReservoir(gridOffset)) {
+			placementObstructed = 0;
+		} else if (!Terrain_isClear(
+				Data_Settings_Map.current.x - 1, Data_Settings_Map.current.y - 1,
+				3, Terrain_All, 0)) {
+			placementObstructed = 1;
+		}
+	}
+	if (Data_CityInfo.treasury <= MIN_TREASURY) {
+		placementObstructed = 1;
+	}
+	if (Data_State.selectedBuilding.placementInProgress) {
+		int xOffsetBase = Data_State.selectedBuilding.reservoirOffsetX;
+		int yOffsetBase = Data_State.selectedBuilding.reservoirOffsetY - 30;
+		if (placementObstructed) {
+			for (int i = 0; i < 9; i++) {
+				int xOffset = xOffsetBase + xViewOffsets[i];
+				int yOffset = yOffsetBase + yViewOffsets[i];
+				drawFlatTile(xOffset, yOffset, Color_MaskRed);
+			}
+		} else {
+			int graphicId = GraphicId(ID_Graphic_Reservoir);
+			Graphics_drawIsometricFootprint(graphicId, xOffsetBase, yOffsetBase, Color_MaskGreen);
+			Graphics_drawIsometricTop(graphicId, xOffsetBase, yOffsetBase, Color_MaskGreen);
+		}
+	}
+	int xOffsetBase = Data_CityView.selectedTile.xOffsetInPixels;
+	int yOffsetBase = Data_CityView.selectedTile.yOffsetInPixels - 30;
+	if (placementObstructed) {
+		for (int i = 0; i < 9; i++) {
+			int xOffset = xOffsetBase + xViewOffsets[i];
+			int yOffset = yOffsetBase + yViewOffsets[i];
+			drawFlatTile(xOffset, yOffset, Color_MaskRed);
+		}
+	} else {
+		int graphicId = GraphicId(ID_Graphic_Reservoir);
+		Graphics_drawIsometricFootprint(graphicId, xOffsetBase, yOffsetBase, Color_MaskGreen);
+		Graphics_drawIsometricTop(graphicId, xOffsetBase, yOffsetBase, Color_MaskGreen);
+		if (Terrain_existsTileWithinAreaWithType(
+			Data_Settings_Map.current.x - 2, Data_Settings_Map.current.y,
+			5, Terrain_Water)) {
+			Graphics_drawImageMasked(graphicId + 1,
+				xOffsetBase - 58 + GraphicSpriteOffsetX(graphicId) - 2,
+				yOffsetBase + GraphicSpriteOffsetY(graphicId) - (GraphicHeight(graphicId) - 90),
+				Color_MaskGreen);
+		}
+	}
 }
 
 static void drawBuildingGhostAqueduct()
 {
-	// TODO
+	int placementObstructed = 0;
+	if (Data_State.selectedBuilding.placementInProgress) {
+		if (!Data_State.selectedBuilding.cost) {
+			placementObstructed = 1;
+		}
+	} else {
+		int gridOffset = GridOffset(Data_Settings_Map.current.x, Data_Settings_Map.current.y);
+		if (Data_Grid_terrain[gridOffset] & Terrain_Road) {
+			placementObstructed = Terrain_getAdjacentRoadTilesForAqueduct(gridOffset) == 2 ? 0 : 1;
+		} else if (Data_Grid_terrain[gridOffset] & Terrain_NotClear) {
+			placementObstructed = 1;
+		}
+	}
+	if (Data_CityInfo.treasury <= MIN_TREASURY) {
+		placementObstructed = 1;
+	}
+	int xOffset = Data_CityView.selectedTile.xOffsetInPixels;
+	int yOffset = Data_CityView.selectedTile.yOffsetInPixels;
+	if (placementObstructed) {
+		drawFlatTile(xOffset, yOffset, Color_MaskRed);
+	} else {
+		int gridOffset = Data_Settings_Map.current.gridOffset;
+		int graphicId = GraphicId(ID_Graphic_Aqueduct);
+		const struct TerrainGraphic *graphic = TerrainGraphicsContext_getAqueduct(gridOffset, 0);
+		if (Data_Grid_terrain[gridOffset] & Terrain_Road) {
+			int groupOffset = graphic->groupOffset;
+			if (!graphic->field12) {
+				if (Data_Grid_terrain[gridOffset - 162] & Terrain_Road) {
+					groupOffset = 3;
+				} else {
+					groupOffset = 2;
+				}
+			}
+			if (TerrainGraphics_isPavedRoadTile(gridOffset)) {
+				graphicId += groupOffset + 13;
+			} else {
+				graphicId += groupOffset + 21;
+			}
+		} else {
+			graphicId += graphic->groupOffset + 15;
+		}
+		Graphics_drawIsometricFootprint(graphicId, xOffset, yOffset, Color_MaskGreen);
+		Graphics_drawIsometricTop(graphicId, xOffset, yOffset, Color_MaskGreen);
+	}
 }
 
 static void drawBuildingGhostFountain()
