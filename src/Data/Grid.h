@@ -34,6 +34,7 @@ enum {
 	Terrain_NotClear = 0xd77f,
 	Terrain_1237 = 0x1237,
 	Terrain_127f = 0x127f,
+	Terrain_d73f = 0xd73f,
 	Terrain_NaturalElements = 0x1677,
 	Terrain_2e80 = 0x2e80,
 	Terrain_All = 0xffff

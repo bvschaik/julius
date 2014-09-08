@@ -414,7 +414,7 @@ static void caesarInvasionContinue()
 {
 	for (int i = 1; i < MAX_FORMATIONS; i++) {
 		if (Data_Formations[i].inUse == 1 && Data_Formations[i].walkerType == Walker_EnemyCaesarLegionary) {
-			Data_Formations[i].__unknown46 = 20;
+			Data_Formations[i].waitTicks = 20;
 		}
 	}
 }

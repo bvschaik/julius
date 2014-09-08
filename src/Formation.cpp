@@ -1,10 +1,12 @@
 #include "Formation.h"
 
 #include "Calc.h"
+#include "Random.h"
 #include "Routing.h"
 #include "Sound.h"
 #include "Util.h"
 #include "Walker.h"
+#include "WalkerMovement.h"
 #include "UI/Warning.h"
 
 #include "Data/Building.h"
@@ -13,6 +15,7 @@
 #include "Data/Formation.h"
 #include "Data/Grid.h"
 #include "Data/Model.h"
+#include "Data/Random.h"
 #include "Data/Scenario.h"
 #include "Data/Settings.h"
 #include "Data/Walker.h"
@@ -578,7 +581,7 @@ void Formation_moveHerdsAwayFrom(int x, int y)
 			continue;
 		}
 		if (Calc_distanceMaximum(x, y, f->xHome, f->yHome) <= 6) {
-			f->__unknown46 = 50;
+			f->waitTicks = 50;
 			f->herdDirection = Routing_getGeneralDirection(x, y, f->xHome, f->yHome);
 		}
 	}
@@ -645,4 +648,3 @@ void Formation_Tick_updateRestMorale()
 		}
 	}
 }
-

@@ -13,6 +13,7 @@ enum {
 	FormationLayout_MopUp = 6,
 	FormationLayout_AtRest = 7,
 	FormationLayout_Enemy8 = 8,
+	FormationLayout_Herd = 9,
 	FormationLayout_Enemy12 = 12,
 };
 
@@ -34,7 +35,7 @@ struct Data_Formation {
 	unsigned char yStandard;
 	unsigned char x;
 	unsigned char y;
-	unsigned char destinationX;
+	unsigned char destinationX; // 34
 	unsigned char destinationY;
 	short destinationBuildingId;
 	short standardWalkerId;
@@ -45,7 +46,7 @@ struct Data_Formation {
 	short hasMilitaryTraining; //40
 	short totalDamage; //42
 	short maxTotalDamage; //44
-	short __unknown46;
+	short waitTicks; // 46
 	short recentFight; //48
 	short __unknown4a;
 	short __unknown4c;
@@ -70,7 +71,7 @@ struct Data_Formation {
 	char monthsFromHome; //68
 	char monthsVeryLowMorale; //69
 	char invasionId;
-	char __unknown6b;
+	char herdWolfSpawnDelay;
 	char herdDirection;
 	char __padding6d[17];
 	short invasionSeq;

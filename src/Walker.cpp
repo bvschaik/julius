@@ -2,6 +2,7 @@
 
 #include "Calc.h"
 #include "Formation.h"
+#include "Random.h"
 #include "Sound.h"
 #include "Terrain.h"
 #include "Trader.h"
@@ -10,10 +11,12 @@
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
+#include "Data/Constants.h"
 #include "Data/Empire.h"
 #include "Data/Formation.h"
 #include "Data/Grid.h"
 #include "Data/Random.h"
+#include "Data/Scenario.h"
 #include "Data/Settings.h"
 #include "Data/Walker.h"
 
@@ -159,17 +162,69 @@ void Walker_createDustCloud(int x, int y, int size)
 
 void Walker_createFishingPoints()
 {
-	// TODO
+	for (int i = 0; i < 8; i++) {
+		if (Data_Scenario.fishingPoints.x[i] > 0) {
+			Random_generateNext();
+			int fishId = Walker_create(Walker_FishGulls,
+				Data_Scenario.fishingPoints.x[i], Data_Scenario.fishingPoints.y[i], 0);
+			Data_Walkers[fishId].graphicOffset = Data_Random.random1_15bit & 0x1f;
+			Data_Walkers[fishId].progressOnTile = Data_Random.random1_15bit & 7;
+			WalkerMovement_crossCountrySetDirection(fishId,
+				Data_Walkers[fishId].x, Data_Walkers[fishId].y,
+				15 * Data_Walkers[fishId].destinationX, 15 * Data_Walkers[fishId].destinationY, 0);
+		}
+	}
 }
 
 void Walker_createHerds()
 {
-	// TODO
+	int herdType, numAnimals;
+	switch (Data_Scenario.climate) {
+		case Climate_Central: herdType = Walker_Sheep; numAnimals = 10; break;
+		case Climate_Northern: herdType = Walker_Wolf; numAnimals = 8; break;
+		case Climate_Desert: herdType = Walker_Zebra; numAnimals = 12; break;
+		default: herdType = 0; numAnimals = 0; break;
+	}
+	for (int i = 0; i < 4; i++) {
+		if (Data_Scenario.herdPoints.x[i] > 0) {
+			int formationId = Formation_create(herdType, FormationLayout_Herd, 0,
+				Data_Scenario.herdPoints.x[i], Data_Scenario.herdPoints.y[i]);
+			if (formationId > 0) {
+				Data_Formations[formationId].isHerd = 1;
+				Data_Formations[formationId].waitTicks = 24;
+				Data_Formations[formationId].maxWalkers = numAnimals;
+				for (int w = 0; w < numAnimals; w++) {
+					Random_generateNext();
+					int walkerId = Walker_create(herdType,
+						Data_Scenario.herdPoints.x[i], Data_Scenario.herdPoints.y[i], 0);
+					Data_Walkers[walkerId].actionState = WalkerActionState_196_HerdAnimalAtRest;
+					Data_Walkers[walkerId].formationId = formationId;
+					Data_Walkers[walkerId].waitTicks = walkerId & 0x1f;
+				}
+			}
+		}
+	}
 }
 
 void Walker_createFlotsam(int xEntry, int yEntry, int hasWater)
 {
-	// TODO
+	if (!hasWater || !Data_Scenario.flotsamEnabled) {
+		return;
+	}
+	for (int i = 1; i < MAX_WALKERS; i++) {
+		if (Data_Walkers[i].state && Data_Walkers[i].type == Walker_Flotsam) {
+			Walker_delete(i);
+		}
+	}
+	int resourceIds[] = {3, 1, 3, 2, 1, 3, 2, 3, 2, 1, 3, 3, 2, 3, 3, 3, 1, 2, 0, 1};
+	int waitTicks[] = {10, 50, 100, 130, 200, 250, 400, 430, 500, 600, 70, 750, 820, 830, 900, 980, 1010, 1030, 1200, 1300};
+	for (int i = 0; i < 20; i++) {
+		int walkerId = Walker_create(Walker_Flotsam, xEntry, yEntry, 0);
+		struct Data_Walker *w = &Data_Walkers[walkerId];
+		w->actionState = WalkerActionState_128_FlotsamCreated;
+		w->resourceId = resourceIds[i];
+		w->waitTicks = waitTicks[i];
+	}
 }
 
 int Walker_createMissile(int buildingId, int x, int y, int xDst, int yDst, int type)

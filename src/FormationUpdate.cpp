@@ -3,12 +3,16 @@
 #include "Calc.h"
 #include "Grid.h"
 #include "PlayerMessage.h"
+#include "Sound.h"
+#include "TerrainGraphics.h"
 #include "Walker.h"
+#include "WalkerAction.h"
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Formation.h"
 #include "Data/Grid.h"
+#include "Data/Random.h"
 #include "Data/Settings.h"
 #include "Data/Walker.h"
 
@@ -310,6 +314,12 @@ static void setFormationWalkersToActionState151(int formationId)
 	}
 }
 
+static int moveHerdEnemyFormationTo(int formationId, int *x, int *y)
+{
+	// TODO
+	return 0;
+}
+
 static void tickUpdateEnemies()
 {
 	if (Data_Formation_Extra.numEnemyFormations <= 0) {
@@ -329,9 +339,164 @@ static void tickUpdateEnemies()
 	setNativeTargetBuilding(0);
 }
 
+static int getHerdRoamingDestination(int formationId, int allowNegativeDesirability, int x, int y, int distance, int direction, int *xTile, int *yTile)
+{
+	int targetDirection = (formationId + Data_Random.random1_15bit) & 6;
+	if (direction) {
+		targetDirection = direction;
+		allowNegativeDesirability = 1;
+	}
+	for (int i = 0; i < 4; i++) {
+		int xTarget, yTarget;
+		switch (targetDirection) {
+			case 0: xTarget = x; yTarget = y - distance; break;
+			case 1: xTarget = x + distance; yTarget = y - distance; break;
+			case 2: xTarget = x + distance; yTarget = y; break;
+			case 3: xTarget = x + distance; yTarget = y + distance; break;
+			case 4: xTarget = x; yTarget = y + distance; break;
+			case 5: xTarget = x - distance; yTarget = y + distance; break;
+			case 6: xTarget = x - distance; yTarget = y; break;
+			case 7: xTarget = x - distance; yTarget = y - distance; break;
+		}
+		if (xTarget <= 0) {
+			xTarget = 1;
+		} else if (yTarget <= 0) {
+			yTarget = 1;
+		} else if (xTarget >= Data_Settings_Map.width - 1) {
+			xTarget = Data_Settings_Map.width - 2;
+		} else if (yTarget >= Data_Settings_Map.height - 1) {
+			yTarget = Data_Settings_Map.height - 2;
+		}
+		if (TerrainGraphics_getFreeTileForHerd(xTarget, yTarget, allowNegativeDesirability, xTile, yTile)) {
+			return 1;
+		}
+		targetDirection += 2;
+		if (targetDirection > 6) {
+			targetDirection = 0;
+		}
+	}
+	return 0;
+}
+
+static void moveAnimals(struct Data_Formation *f, int attackingAnimals)
+{
+	for (int i = 0; i < 16; i++) {
+		if (!f->walkerIds[i]) continue;
+		int walkerId = f->walkerIds[i];
+		struct Data_Walker *w = &Data_Walkers[walkerId];
+		if (w->actionState == WalkerActionState_149_Corpse ||
+			w->actionState == WalkerActionState_150_Attack) {
+			continue;
+		}
+		w->waitTicks = 401;
+		if (attackingAnimals) {
+			int targetId = WalkerAction_CombatWolf_getTarget(w->x, w->y, 6);
+			if (targetId) {
+				w->actionState = WalkerActionState_199_WolfAttacking;
+				w->destinationX = Data_Walkers[targetId].x;
+				w->destinationY = Data_Walkers[targetId].y;
+				w->targetWalkerId = targetId;
+				Data_Walkers[targetId].targetedByWalkerId = walkerId;
+				w->targetWalkerCreatedSequence = Data_Walkers[targetId].createdSequence;
+				WalkerRoute_remove(walkerId);
+			} else {
+				w->actionState = WalkerActionState_196_HerdAnimalAtRest;
+			}
+		} else {
+			w->actionState = WalkerActionState_196_HerdAnimalAtRest;
+		}
+	}
+}
+
 static void tickUpdateHerds()
 {
-	// TODO
+	if (Data_CityInfo.numAnimalsInCity <= 0) {
+		return;
+	}
+	for (int i = 1; i < 50; i++) {
+		struct Data_Formation *f = &Data_Formations[i];
+		if (f->inUse != 1 || f->isLegion || !f->isHerd || f->numWalkers <= 0) {
+			continue;
+		}
+		if (f->numWalkers < f->maxWalkers && f->walkerType == Walker_Wolf) {
+			// spawn new wolf
+			f->herdWolfSpawnDelay++;
+			if (f->herdWolfSpawnDelay > 32) {
+				f->herdWolfSpawnDelay = 0;
+				if (!(Data_Grid_terrain[GridOffset(f->x, f->y)] & Terrain_d73f)) {
+					int wolfId = Walker_create(f->walkerType, f->x, f->y, 0);
+					Data_Walkers[wolfId].actionState = WalkerActionState_196_HerdAnimalAtRest;
+					Data_Walkers[wolfId].formationId = i;
+					Data_Walkers[wolfId].waitTicks = wolfId & 0x1f;
+				}
+			}
+		}
+		int attackingAnimals = 0;
+		for (int w = 0; w < 16; w++) {
+			int walkerId = f->walkerIds[i];
+			if (walkerId > 0 && Data_Walkers[walkerId].actionState == WalkerActionState_150_Attack) {
+				attackingAnimals++;
+			}
+		}
+		if (f->missileAttackTimeout) {
+			attackingAnimals = 1;
+		}
+		if (f->walkerIds[0] && Data_Walkers[f->walkerIds[0]].state == WalkerState_Alive) {
+			f->xHome = Data_Walkers[f->walkerIds[0]].x;
+			f->yHome = Data_Walkers[f->walkerIds[0]].y;
+		}
+		int roamDistance;
+		int roamDelay;
+		int allowNegativeDesirability;
+		switch (f->walkerType) {
+			case Walker_Sheep:
+				roamDistance = 8;
+				roamDelay = 20;
+				allowNegativeDesirability = 0;
+				attackingAnimals = 0;
+				break;
+			case Walker_Zebra:
+				roamDistance = 20;
+				roamDelay = 4;
+				allowNegativeDesirability = 0;
+				attackingAnimals = 0;
+				break;
+			case Walker_Wolf:
+				roamDistance = 16;
+				roamDelay = 6;
+				allowNegativeDesirability = 1;
+				break;
+		}
+		if (attackingAnimals) {
+			f->waitTicks = roamDelay + 1;
+		}
+		f->waitTicks++;
+		if (f->waitTicks > roamDelay) {
+			f->waitTicks = 0;
+			if (attackingAnimals) {
+				f->destinationX = f->xHome;
+				f->destinationY = f->yHome;
+				moveAnimals(f, attackingAnimals);
+			} else {
+				int xTile, yTile;
+				if (getHerdRoamingDestination(i, allowNegativeDesirability, f->xHome, f->yHome, roamDistance, f->herdDirection, &xTile, &yTile)) {
+					f->herdDirection = 0;
+					if (moveHerdEnemyFormationTo(i, &xTile, &yTile)) {
+						f->destinationX = xTile;
+						f->destinationY = yTile;
+						if (f->walkerType == Walker_Wolf) {
+							Data_CityInfo.soundMarchWolf--;
+							if (Data_CityInfo.soundMarchWolf <= 0) {
+								Data_CityInfo.soundMarchWolf = 12;
+								Sound_Effects_playChannel(SoundChannel_WolfHowl);
+							}
+						}
+						moveAnimals(f, attackingAnimals);
+					}
+				}
+			}
+		}
+	}
 }
 
 void Formation_Tick_updateAll(int secondTime)
