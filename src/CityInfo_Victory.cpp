@@ -1,6 +1,5 @@
 #include "CityInfo.h"
 
-#include "Graphics.h"
 #include "PlayerMessage.h"
 #include "Sound.h"
 #include "Video.h"
@@ -107,7 +106,6 @@ void CityInfo_Victory_check()
 				  mouse_isLeftClickFinished = 0;
 				  message_useVideo = 2;
 				*/
-				Graphics_clearScreen();
 				
 				if (!Data_Settings.isCustomScenario && Data_Settings.currentMissionId <= 1) {
 					// tutorials: immediately go to next mission

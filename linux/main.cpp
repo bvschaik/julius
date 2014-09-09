@@ -86,18 +86,18 @@ void refresh(SDL_Surface *surface)
 	
 	// debug
 	Uint32 then = SDL_GetTicks();
-	Runner_draw();
-	Uint32 then2 = SDL_GetTicks();
-	Widget_Text_drawNumberColored(now - last, 's', "", Data_Screen.width - 100, 5, Font_NormalPlain, 0xf800);
-	Widget_Text_drawNumberColored(then - now, 'g', "", Data_Screen.width - 70, 5, Font_NormalPlain, 0xf800);
-	Widget_Text_drawNumberColored(then2 - then, 'd', "", Data_Screen.width - 40, 5, Font_NormalPlain, 0xf800);
-	
 	if (SDL_MUSTLOCK(surface)) {
 		if (SDL_LockSurface(surface) < 0) {
 			printf("Error locking surface: %s\n", SDL_GetError());
 			abort();
 		}
     }
+	
+	Runner_draw();
+	Uint32 then2 = SDL_GetTicks();
+	Widget_Text_drawNumberColored(now - last, 's', "", Data_Screen.width - 100, 5, Font_NormalPlain, 0xf800);
+	Widget_Text_drawNumberColored(then - now, 'g', "", Data_Screen.width - 70, 5, Font_NormalPlain, 0xf800);
+	Widget_Text_drawNumberColored(then2 - then, 'd', "", Data_Screen.width - 40, 5, Font_NormalPlain, 0xf800);
 	
 	memcpy(surface->pixels, Data_Screen.drawBuffer, Data_Screen.width * Data_Screen.height * 4);
 	
@@ -145,13 +145,15 @@ void handleKey(SDL_KeyboardEvent *event)
 	}
 }
 
-SDL_Surface* createSurface(int width, int height)
+SDL_Surface* createSurface(int width, int height, int fullscreen)
 {
-	SDL_Surface *surface = SDL_SetVideoMode(
-	//	vidInfo->current_w, vidInfo->current_h, 16, /*SDL_FULLSCREEN*/0);
-		width, height, 32, SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_ANYFORMAT|SDL_RESIZABLE);
-		//1920, 1200, 32, SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_ANYFORMAT|SDL_FULLSCREEN);
-	//	1440, 900, 16, 0);
+	Uint32 flags = SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_ANYFORMAT;
+	if (fullscreen) {
+		flags |= SDL_FULLSCREEN;
+	} else {
+		flags |= SDL_RESIZABLE;
+	}
+	SDL_Surface *surface = SDL_SetVideoMode(width, height, 32, flags);
 	if (surface) {
 		printf("Surface created with scanline %d\n", surface->pitch);
 		printf("  flags: %d %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s\n",
@@ -183,7 +185,7 @@ SDL_Surface* createSurface(int width, int height)
 			surface->format->Bshift,
 			surface->format->Ashift);
 
-		Screen_setResolution(width, height);
+		Screen_setResolution(width, height, surface->pixels);
 	}
 	return surface;
 }
@@ -260,7 +262,7 @@ void mainLoop(SDL_Surface *surface)
 				
 				case SDL_VIDEORESIZE:
 					printf("Resize to %d x %d\n", event.resize.w, event.resize.h);
-					surface = createSurface(event.resize.w, event.resize.h);
+					surface = createSurface(event.resize.w, event.resize.h, 0);
 					break;
 				
 				case SDL_QUIT:
@@ -316,7 +318,8 @@ int main()
 	}
 	
 	//SDL_Surface *surface = SDL_SetVideoMode(800, 600, 16, /*SDL_FULLSCREEN|*/SDL_HWSURFACE|SDL_DOUBLEBUF);
-	SDL_Surface *surface = createSurface(1680, 1050);
+	//SDL_Surface *surface = createSurface(1680, 1050, 0);
+	SDL_Surface *surface = createSurface(1920, 1200, 1);
 	
 	// Get available fullscreen/hardware modes
 	modes = SDL_ListModes(&format, SDL_HWSURFACE|SDL_DOUBLEBUF);

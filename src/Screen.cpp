@@ -7,12 +7,13 @@
 
 #include <stdlib.h>
 
-void Screen_setResolution(int width, int height)
+void Screen_setResolution(int width, int height, void *pixels)
 {
-	if (Data_Screen.drawBuffer) {
+	/*if (Data_Screen.drawBuffer) {
 		free(Data_Screen.drawBuffer);
 	}
-	Data_Screen.drawBuffer = malloc(width * height * sizeof(ScreenColor));
+	Data_Screen.drawBuffer = malloc(width * height * sizeof(ScreenColor));*/
+	Data_Screen.drawBuffer = (ScreenColor*) pixels;
 	Data_Screen.format = 565;
 	Data_Screen.width = width;
 	Data_Screen.height = height;
