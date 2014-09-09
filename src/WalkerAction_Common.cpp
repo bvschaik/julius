@@ -1,5 +1,12 @@
 #include "WalkerAction_private.h"
 
+#include "Formation.h"
+#include "Sound.h"
+#include "Walker.h"
+
+#include "Data/Constants.h"
+#include "Data/Formation.h"
+
 const int walkerActionCorpseGraphicOffsets[128] = {
 	0, 1, 2, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
 	5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
@@ -59,10 +66,136 @@ void WalkerAction_Common_handleCorpse(int walkerId)
 		Data_Walkers[walkerId].state = WalkerState_Dead;
 	}
 }
+#define IsDead(w) (Data_Walkers[w].state != WalkerState_Alive || Data_Walkers[w].actionState == WalkerActionState_149_Corpse)
+
+int attackIsSameDirection(int dir1, int dir2)
+{
+	if (dir1 == dir2) {
+		return 1;
+	}
+	int dir2Off = dir2 <= 0 ? 7 : dir2 - 1;
+	if (dir1 == dir2Off) {
+		return 1;
+	}
+	dir2Off = dir2 >= 7 ? 0 : dir2 + 1;
+	if (dir1 == dir2Off) {
+		return 1;
+	}
+	return 0;
+}
+
+void resumeActivityAfterAttack(int walkerId, struct Data_Walker *w)
+{
+	w->numAttackers = 0;
+	w->actionState = w->actionStateBeforeAttack;
+	w->opponentId = 0;
+	w->attackerId1 = 0;
+	w->attackerId2 = 0;
+	WalkerRoute_remove(walkerId);
+}
+
+void hitOpponent(int walkerId, struct Data_Walker *w)
+{
+	struct Data_Formation *f = &Data_Formations[w->formationId];
+	struct Data_Walker *opponent = &Data_Walkers[w->opponentId];
+	struct Data_Formation *opponentFormation = &Data_Formations[opponent->formationId];
+	
+	int cat = Constant_WalkerProperties[opponent->type].category;
+	if (cat == WalkerCategory_Citizen || cat == WalkerCategory_Criminal) {
+		w->attackGraphicOffset = 12;
+	} else {
+		w->attackGraphicOffset = 0;
+	}
+	int walkerAttack = Constant_WalkerProperties[w->type].attackValue;
+	int opponentDefense = Constant_WalkerProperties[opponent->type].defenseValue;
+	
+	// attack modifiers
+	if (w->type == Walker_Wolf) {
+		switch (Data_Settings.difficulty) {
+			case 0: walkerAttack = 2; break; // very easy
+			case 1: walkerAttack = 4; break; // easy
+			case 2: walkerAttack = 6; break; // normal
+		}
+	}
+	if (opponent->opponentId != walkerId && f->walkerType != Walker_FortLegionary &&
+			attackIsSameDirection(w->attackDirection, opponent->attackDirection)) {
+		walkerAttack += 4;
+		Sound_Effects_playChannel(SoundChannel_SwordSwing);
+	}
+	if (f->isHalted && f->walkerType == Walker_FortLegionary &&
+			attackIsSameDirection(w->attackDirection, opponent->attackDirection)) {
+		walkerAttack += 4;
+	}
+	// defense modifiers
+	if (opponentFormation->isHalted &&
+			(opponentFormation->walkerType == Walker_FortLegionary ||
+			opponentFormation->walkerType == Walker_EnemyCaesarLegionary)) {
+		if (!attackIsSameDirection(w->attackDirection, opponent->attackDirection)) {
+			opponentDefense -= 4;
+		} else if (opponentFormation->layout == FormationLayout_Tortoise) {
+			opponentDefense += 7;
+		} else if (opponentFormation->layout == FormationLayout_DoubleLine1 ||
+				opponentFormation->layout == FormationLayout_DoubleLine2) {
+			opponentDefense += 4;
+		}
+	}
+	
+	int maxDamage = Constant_WalkerProperties[opponent->type].maxDamage;
+	int netAttack = walkerAttack - opponentDefense;
+	if (netAttack < 0) {
+		netAttack = 0;
+	}
+	opponent->damage += netAttack;
+	if (opponent->damage <= maxDamage) {
+		Walker_playHitSound(w->type);
+	} else {
+		opponent->actionState = WalkerActionState_149_Corpse;
+		opponent->waitTicks = 0;
+		Walker_playDieSound(opponent->type);
+		Formation_updateAfterDeath(opponent->formationId);
+	}
+}
 
 void WalkerAction_Common_handleAttack(int walkerId)
 {
-	// TODO
+	struct Data_Walker *w = &Data_Walkers[walkerId];
+	
+	if (w->progressOnTile <= 5) {
+		w->progressOnTile++;
+		WalkerMovement_advanceTick(w);
+	}
+	if (w->numAttackers == 0) {
+		resumeActivityAfterAttack(walkerId, w);
+		return;
+	}
+	if (w->numAttackers == 1) {
+		int targetId = w->opponentId;
+		if (IsDead(targetId)) {
+			resumeActivityAfterAttack(walkerId, w);
+			return;
+		}
+	} else if (w->numAttackers == 2) {
+		int targetId = w->opponentId;
+		if (IsDead(targetId)) {
+			if (targetId == w->attackerId1) {
+				w->opponentId = w->attackerId2;
+			} else if (targetId == w->attackerId2) {
+				w->opponentId = w->attackerId1;
+			}
+			targetId = w->opponentId;
+			if (IsDead(targetId)) {
+				resumeActivityAfterAttack(walkerId, w);
+				return;
+			}
+			w->numAttackers = 1;
+			w->attackerId1 = targetId;
+			w->attackerId2 = 0;
+		}
+	}
+	w->attackGraphicOffset++;
+	if (w->attackGraphicOffset >= 24) {
+		hitOpponent(walkerId, w);
+	}
 }
 
 void WalkerAction_Common_setCartOffset(int walkerId, int direction)

@@ -339,10 +339,10 @@ extern struct Data_Walker {
 	unsigned short createdSequence;
 	unsigned short targetWalkerCreatedSequence;
 	unsigned char numPreviousWalkersOnSameTile;
-	char __unknown_79;
-	short __unknown_7a;
-	short __unknown_7c;
-	short __unknown_7e;
+	char numAttackers;
+	short attackerId1;
+	short attackerId2;
+	short opponentId;
 } Data_Walkers[MAX_WALKERS];
 
 extern struct Data_Walker_Trader {

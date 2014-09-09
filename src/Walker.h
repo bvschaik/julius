@@ -27,6 +27,7 @@ int Walker_hasNearbyEnemy(int xStart, int yStart, int xEnd, int yEnd);
 int Walker_determinePhrase(int walkerId);
 int Walker_playPhrase(int walkerId);
 void Walker_playDieSound(int walkerType);
+void Walker_playHitSound(int walkerType);
 
 int Walker_provideServiceCoverage(int walkerId);
 

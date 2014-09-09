@@ -25,7 +25,7 @@ int WalkerAction_CombatWolf_getTarget(int x, int y, int maxDistance);
 int WalkerAction_CombatEnemy_getTarget(int x, int y);
 int WalkerAction_CombatEnemy_getMissileTarget(int enemyId, int maxDistance, int attackCitizens, int *xTile, int *yTile);
 
-void WalkerAction_CombatSoldier_attackWalker(int walkerId, int targetWalkerId);
+void WalkerAction_Combat_attackWalker(int walkerId, int targetWalkerId);
 
 // walker action callbacks
 void WalkerAction_nobody(int walkerId);

@@ -104,7 +104,7 @@ static void legionaryAttackAdjacentEnemy(int walkerId, struct Data_Walker *w)
 {
 	int gridOffset = w->gridOffset;
 	for (int i = 0; i < 8 && w->actionState != WalkerActionState_150_Attack; i++) {
-		WalkerAction_CombatSoldier_attackWalker(walkerId,
+		WalkerAction_Combat_attackWalker(walkerId,
 			Data_Grid_walkerIds[gridOffset + Constant_DirectionGridOffsets[i]]);
 	}
 }

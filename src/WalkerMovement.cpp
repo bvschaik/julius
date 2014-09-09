@@ -16,7 +16,7 @@
 
 static int roamingEnabled = 0;
 
-static void walkerAdvanceTick(struct Data_Walker *w)
+void WalkerMovement_advanceTick(struct Data_Walker *w)
 {
 	switch (w->direction) {
 		case 0:
@@ -138,7 +138,7 @@ static void walkerMoveToNextTile(int walkerId, struct Data_Walker *w)
 	} else {
 		w->isOnRoad = 0;
 	}
-	WalkerAction_CombatSoldier_attackWalker(walkerId, Data_Grid_walkerIds[w->gridOffset]);
+	WalkerAction_Combat_attackWalker(walkerId, Data_Grid_walkerIds[w->gridOffset]);
 	w->previousTileX = oldX;
 	w->previousTileY = oldY;
 }
@@ -237,7 +237,7 @@ void WalkerMovement_roamTicks(int walkerId, int numTicks)
 		numTicks--;
 		w->progressOnTile++;
 		if (w->progressOnTile < 15) {
-			walkerAdvanceTick(w);
+			WalkerMovement_advanceTick(w);
 		} else {
 			w->progressOnTile = 15;
 			w->roamRandomCounter++;
@@ -321,7 +321,7 @@ void WalkerMovement_roamTicks(int walkerId, int numTicks)
 			w->previousTileDirection = w->direction;
 			w->progressOnTile = 0;
 			walkerMoveToNextTile(walkerId, w);
-			walkerAdvanceTick(w);
+			WalkerMovement_advanceTick(w);
 		}
 	}
 }
@@ -406,7 +406,7 @@ void WalkerMovement_walkTicks(int walkerId, int numTicks)
 		numTicks--;
 		w->progressOnTile++;
 		if (w->progressOnTile < 15) {
-			walkerAdvanceTick(w);
+			WalkerMovement_advanceTick(w);
 		} else {
 			Walker_provideServiceCoverage(walkerId);
 			w->progressOnTile = 15;
@@ -422,7 +422,7 @@ void WalkerMovement_walkTicks(int walkerId, int numTicks)
 			w->previousTileDirection = w->direction;
 			w->progressOnTile = 0;
 			walkerMoveToNextTile(walkerId, w);
-			walkerAdvanceTick(w);
+			WalkerMovement_advanceTick(w);
 		}
 	}
 	roamingEnabled = 0;
@@ -438,7 +438,7 @@ void WalkerMovement_followTicks(int walkerId, int leaderWalkerId, int numTicks)
 		numTicks--;
 		w->progressOnTile++;
 		if (w->progressOnTile < 15) {
-			walkerAdvanceTick(w);
+			WalkerMovement_advanceTick(w);
 		} else {
 			w->progressOnTile = 15;
 			w->direction = Routing_getGeneralDirection(w->x, w->y,
@@ -448,7 +448,7 @@ void WalkerMovement_followTicks(int walkerId, int leaderWalkerId, int numTicks)
 				w->previousTileDirection = w->direction;
 				w->progressOnTile = 0;
 				walkerMoveToNextTile(walkerId, w);
-				walkerAdvanceTick(w);
+				WalkerMovement_advanceTick(w);
 			}
 		}
 	}
@@ -461,7 +461,7 @@ void WalkerMovement_walkTicksTowerSentry(int walkerId, int numTicks)
 		numTicks--;
 		w->progressOnTile++;
 		if (w->progressOnTile < 15) {
-			walkerAdvanceTick(w);
+			WalkerMovement_advanceTick(w);
 		} else {
 			w->progressOnTile = 15;
 		}

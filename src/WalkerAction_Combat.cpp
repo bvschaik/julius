@@ -1,6 +1,7 @@
 #include "WalkerAction_private.h"
 
 #include "Calc.h"
+#include "Routing.h"
 #include "WalkerMovement.h"
 
 int WalkerAction_CombatSoldier_getTarget(int x, int y, int maxDistance)
@@ -198,7 +199,88 @@ int WalkerAction_CombatEnemy_getMissileTarget(int enemyId, int maxDistance, int 
 }
 
 
-void WalkerAction_CombatSoldier_attackWalker(int walkerId, int targetWalkerId)
+void WalkerAction_Combat_attackWalker(int walkerId, int opponentId)
 {
-	// TODO
+	struct Data_Walker *w = &Data_Walkers[walkerId];
+	int walkerCategory = Constant_WalkerProperties[w->type].category;
+	if (walkerCategory <= WalkerCategory_Inactive || walkerCategory >= WalkerCategory_Criminal ||
+			w->actionState == WalkerActionState_150_Attack) {
+		return;
+	}
+	int guard = 0;
+	while (1) {
+		if (++guard >= 1000 || opponentId <= 0) {
+			break;
+		}
+		if (opponentId == walkerId) {
+			opponentId = Data_Walkers[opponentId].nextWalkerIdOnSameTile;
+			continue;
+		}
+		struct Data_Walker *opponent = &Data_Walkers[opponentId];
+		int opponentCategory = Constant_WalkerProperties[opponent->type].category;
+		int attack = 0;
+		if (opponent->state != WalkerState_Alive) {
+			attack = 0;
+		} else if (opponent->actionState == WalkerActionState_149_Corpse) {
+			attack = 0;
+		} else if (walkerCategory == WalkerCategory_Armed && opponentCategory == WalkerCategory_Native) {
+			if (opponent->actionState == WalkerActionState_159_NativeAttacking) {
+				attack = 1;
+			}
+		} else if (walkerCategory == WalkerCategory_Armed && opponentCategory == WalkerCategory_Criminal) {
+			attack = 1;
+		} else if (walkerCategory == WalkerCategory_Armed && opponentCategory == WalkerCategory_Hostile) {
+			attack = 1;
+		} else if (walkerCategory == WalkerCategory_Hostile && opponentCategory == WalkerCategory_Citizen) {
+			attack = 1;
+		} else if (walkerCategory == WalkerCategory_Hostile && opponentCategory == WalkerCategory_Armed) {
+			attack = 1;
+		} else if (walkerCategory == WalkerCategory_Hostile && opponentCategory == WalkerCategory_Criminal) {
+			attack = 1;
+		} else if (walkerCategory == WalkerCategory_Armed && opponentCategory == WalkerCategory_Animal) {
+			attack = 1;
+		} else if (walkerCategory == WalkerCategory_Hostile && opponentCategory == WalkerCategory_Animal) {
+			attack = 1;
+		}
+		if (attack && opponent->actionState == WalkerActionState_150_Attack && opponent->numAttackers >= 2) {
+			attack = 0;
+		}
+		if (attack) {
+			w->actionStateBeforeAttack = w->actionState;
+			w->actionState = WalkerActionState_150_Attack;
+			w->opponentId = opponentId;
+			w->attackerId1 = opponentId;
+			w->numAttackers = 1;
+			w->attackGraphicOffset = 12;
+			if (opponent->x != opponent->destinationX || opponent->y != opponent->destinationY) {
+				w->attackDirection = Routing_getGeneralDirection(w->previousTileX, w->previousTileY,
+					opponent->previousTileX, opponent->previousTileY);
+			} else {
+				w->attackDirection = Routing_getGeneralDirection(w->previousTileX, w->previousTileY,
+					opponent->x, opponent->x);
+			}
+			if (w->attackDirection >= 8) {
+				w->attackDirection = 0;
+			}
+			if (opponent->actionState != WalkerActionState_150_Attack) {
+				opponent->actionStateBeforeAttack = opponent->actionState;
+				opponent->actionState = WalkerActionState_150_Attack;
+				opponent->attackGraphicOffset = 0;
+				opponent->attackDirection = w->attackDirection + 4;
+				if (opponent->attackDirection >= 8) {
+					opponent->attackDirection -= 8;
+				}
+			}
+			if (opponent->numAttackers == 0) {
+				opponent->attackerId1 = walkerId;
+				opponent->opponentId = walkerId;
+				opponent->numAttackers = 1;
+			} else if (opponent->numAttackers == 1) {
+				opponent->attackerId2 = walkerId;
+				opponent->numAttackers = 2;
+			}
+			return;
+		}
+		opponentId = opponent->nextWalkerIdOnSameTile;
+	}
 }

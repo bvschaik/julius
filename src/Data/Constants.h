@@ -420,7 +420,7 @@ struct BuildingProperties {
 extern const struct BuildingProperties Constant_BuildingProperties[140];
 
 struct WalkerProperties {
-	int unknown0;
+	int category;
 	int maxDamage;
 	int attackValue;
 	int defenseValue;
@@ -428,6 +428,16 @@ struct WalkerProperties {
 	int missileAttackValue;
 	int __unused6; // unreferenced
 	int missileFrequency;
+};
+
+enum {
+	WalkerCategory_Inactive = 0,
+	WalkerCategory_Citizen = 1,
+	WalkerCategory_Armed = 2,
+	WalkerCategory_Hostile = 3,
+	WalkerCategory_Criminal = 4,
+	WalkerCategory_Native = 5,
+	WalkerCategory_Animal = 6
 };
 
 extern const struct WalkerProperties Constant_WalkerProperties[80];
