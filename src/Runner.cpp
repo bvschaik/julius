@@ -66,7 +66,10 @@ void Runner_run()
 		GameTick_doTick();
 		GameFile_writeMissionSavedGameIfNeeded();
 	}
+}
 
+void Runner_draw()
+{
 	UI_Window_refresh(1);
 	Sound_City_play();
 	// TODO setCursor();

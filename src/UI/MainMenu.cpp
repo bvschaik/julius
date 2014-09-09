@@ -10,6 +10,8 @@
 #include "../Data/Mouse.h"
 #include "../Data/Screen.h"
 
+#include "../GameFile.h" // TODO debug
+
 #include <stdio.h> // TODO remove
 
 static void buttonClick(int param1, int param2);
@@ -88,6 +90,8 @@ static void buttonClick(int param1, int param2)
 	} else if (param1 == 3) {
 		UI_Window_goTo(Window_CCKSelection);
 	} else if (param1 == 4) {
-		UI_Window_goTo(Window_VictoryDialog); // TODO exit
+		GameFile_loadSavedGame("2.sav");
+		UI_Window_goTo(Window_City);
+		//UI_Window_goTo(Window_VictoryDialog); // TODO exit
 	}
 }

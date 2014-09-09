@@ -352,9 +352,9 @@ static void drawImageUncompressed(Data_Graphics_Index *index, const Color *data,
 	data += index->width * clip->clippedPixelsTop;
 	for (int y = clip->clippedPixelsTop; y < index->height - clip->clippedPixelsBottom; y++) {
 		data += clip->clippedPixelsLeft;
-		for (int x = clip->clippedPixelsLeft; x < index->width - clip->clippedPixelsRight; x++) {
+		ScreenColor *dst = &ScreenPixel(xOffset + clip->clippedPixelsLeft, yOffset + y);
+		for (int x = clip->clippedPixelsLeft; x < index->width - clip->clippedPixelsRight; x++, dst++) {
 			if (*data != Color_Transparent) {
-				ScreenColor *dst = &ScreenPixel(xOffset + x, yOffset + y);
 				switch (type) {
 					case ColorType_None: *dst = ColorLookup[*data]; break;
 					case ColorType_Set: *dst = ColorLookup[color]; break;
@@ -375,6 +375,7 @@ static void drawImageCompressed(Data_Graphics_Index *index, const unsigned char 
 	if (!clip->isVisible) {
 		return;
 	}
+	int unclipped = clip->clipX == ClipNone;
 
 	for (int y = 0; y < height - clip->clippedPixelsBottom; y++) {
 		int x = 0;
@@ -391,20 +392,36 @@ static void drawImageCompressed(Data_Graphics_Index *index, const unsigned char 
 			} else {
 				// number of concrete pixels
 				Color *pixels = (Color*) data;
-				while (b) {
-					if (x >= clip->clippedPixelsLeft && x < index->width - clip->clippedPixelsRight) {
-						ScreenColor *dst = &ScreenPixel(xOffset + x, yOffset + y);
+				data += 2 * b;
+				ScreenColor *dst = &ScreenPixel(xOffset + x, yOffset + y);
+				if (unclipped) {
+					x += b;
+					while (b) {
 						switch (type) {
 							case ColorType_None: *dst = ColorLookup[*pixels]; break;
 							case ColorType_Set: *dst = ColorLookup[color]; break;
 							case ColorType_And: *dst = ColorLookup[*pixels & color]; break;
 							case ColorType_Blend: *dst &= ColorLookup[color];
 						}
+						dst++;
+						pixels++;
+						b--;
 					}
-					x++;
-					pixels++;
-					data += 2;
-					b--;
+				} else {
+					while (b) {
+						if (x >= clip->clippedPixelsLeft && x < index->width - clip->clippedPixelsRight) {
+							switch (type) {
+								case ColorType_None: *dst = ColorLookup[*pixels]; break;
+								case ColorType_Set: *dst = ColorLookup[color]; break;
+								case ColorType_And: *dst = ColorLookup[*pixels & color]; break;
+								case ColorType_Blend: *dst &= ColorLookup[color];
+							}
+						}
+						dst++;
+						x++;
+						pixels++;
+						b--;
+					}
 				}
 			}
 		}

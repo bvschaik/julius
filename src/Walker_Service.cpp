@@ -479,7 +479,7 @@ int Walker_provideServiceCoverage(int walkerId)
 			numHousesServiced = provideHippodromeCoverage(x, y);
 			break;
 		case Walker_Engineer:
-			int maxDamage;
+			{int maxDamage = 0;
 			numHousesServiced = provideEngineerCoverage(x, y, &maxDamage);
 			if (maxDamage > Data_Walkers[walkerId].minMaxSeen) {
 				Data_Walkers[walkerId].minMaxSeen = maxDamage;
@@ -487,7 +487,7 @@ int Walker_provideServiceCoverage(int walkerId)
 				Data_Walkers[walkerId].minMaxSeen = 0;
 			} else {
 				Data_Walkers[walkerId].minMaxSeen -= 10;
-			}
+			}}
 			break;
 		case Walker_Prefect:
 			numHousesServiced = providePrefectFireCoverage(x, y);

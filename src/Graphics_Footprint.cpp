@@ -26,44 +26,56 @@ static void drawFootprintTile(Color *data, int xOffset, int yOffset, Color color
 	int clipLeft = clip->clipX == ClipLeft;
 	int clipRight = clip->clipX == ClipRight;
 	if (clip->clipY != ClipTop) {
-		int dataIndex = 0;
+		Color *src = data;
 		for (int y = 0; y < 15; y++) {
-			ScreenColor *buffer = &ScreenPixel(xOffset, yOffset + y);
 			int xMax = 4 * y + 2;
-			int xOffset = 29 - 1 - 2 * y;
+			int xStart = 29 - 1 - 2 * y;
 			if (clipLeft || clipRight) {
 				xMax = 2 * y;
 			}
 			if (clipLeft) {
-				xOffset = 30;
-				dataIndex += xMax + 2;
+				xStart = 30;
+				src += xMax + 2;
 			}
-			for (int x = 0; x < xMax; x++) {
-				buffer[xOffset + x] = ColorLookup[data[dataIndex++] & colorMask];
+			ScreenColor *buffer = &ScreenPixel(xOffset + xStart, yOffset + y);
+			if (colorMask == Color_NoMask) {
+				for (int x = 0; x < xMax; x++, buffer++, src++) {
+					*buffer = ColorLookup[*src];
+				}
+			} else {
+				for (int x = 0; x < xMax; x++, buffer++, src++) {
+					*buffer = ColorLookup[*src & colorMask];
+				}
 			}
 			if (clipRight) {
-				dataIndex += xMax + 2;
+				src += xMax + 2;
 			}
 		}
 	}
 	if (clip->clipY != ClipBottom) {
-		int dataIndex = 900 / 2;
+		Color *src = &data[900 / 2];
 		for (int y = 0; y < 15; y++) {
-			ScreenColor *buffer = &ScreenPixel(xOffset, 15 + y + yOffset);
 			int xMax = 4 * (15 - 1 - y) + 2;
-			int xOffset = 2 * y;
+			int xStart = 2 * y;
 			if (clipLeft || clipRight) {
 				xMax = xMax / 2 - 1;
 			}
 			if (clipLeft) {
-				xOffset = 30;
-				dataIndex += xMax + 2;
+				xStart = 30;
+				src += xMax + 2;
 			}
-			for (int x = 0; x < xMax; x++) {
-				buffer[xOffset + x] = ColorLookup[data[dataIndex++] & colorMask];
+			ScreenColor *buffer = &ScreenPixel(xOffset + xStart, 15 + yOffset + y);
+			if (colorMask == Color_NoMask) {
+				for (int x = 0; x < xMax; x++, buffer++, src++) {
+					*buffer = ColorLookup[*src];
+				}
+			} else {
+				for (int x = 0; x < xMax; x++, buffer++, src++) {
+					*buffer = ColorLookup[*src & colorMask];
+				}
 			}
 			if (clipRight) {
-				dataIndex += xMax + 2;
+				src += xMax + 2;
 			}
 		}
 	}

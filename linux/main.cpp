@@ -21,6 +21,7 @@
 #include "../src/Data/AllData.h"
 #include "../src/KeyboardInput.h"
 #include "../src/KeyboardHotkey.h"
+#include "../src/Widget.h" // debug
 
 #include <execinfo.h>
 #include <signal.h>
@@ -73,10 +74,23 @@ typedef struct{
 } SDL_PixelFormat;
 */
 
-void refresh(SDL_Surface *surface) {
+Uint32 last;
+
+void refresh(SDL_Surface *surface)
+{
+	static Uint32 last;
 	
-	Time_setMillis(SDL_GetTicks());
+	Uint32 now = SDL_GetTicks();
+	Time_setMillis(now);
 	Runner_run();
+	
+	// debug
+	Uint32 then = SDL_GetTicks();
+	Runner_draw();
+	Uint32 then2 = SDL_GetTicks();
+	Widget_Text_drawNumberColored(now - last, 's', "", Data_Screen.width - 100, 5, Font_NormalPlain, 0xf800);
+	Widget_Text_drawNumberColored(then - now, 'g', "", Data_Screen.width - 70, 5, Font_NormalPlain, 0xf800);
+	Widget_Text_drawNumberColored(then2 - then, 'd', "", Data_Screen.width - 40, 5, Font_NormalPlain, 0xf800);
 	
 	if (SDL_MUSTLOCK(surface)) {
 		if (SDL_LockSurface(surface) < 0) {
@@ -85,8 +99,6 @@ void refresh(SDL_Surface *surface) {
 		}
     }
 	
-	// scanline??
-	Uint32 then = SDL_GetTicks();
 	memcpy(surface->pixels, Data_Screen.drawBuffer, Data_Screen.width * Data_Screen.height * 4);
 	
 	if (SDL_MUSTLOCK(surface)) {
@@ -94,6 +106,7 @@ void refresh(SDL_Surface *surface) {
 	}
 	SDL_Flip(surface);
 	//printf("Refresh: %d ms; game: %d ms\n", SDL_GetTicks() - then, then - Time_getMillis());
+	last = then;
 }
 
 void handleKey(SDL_KeyboardEvent *event)
