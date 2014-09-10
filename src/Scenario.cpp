@@ -163,6 +163,7 @@ static void initCustomScenario(const char *scenarioName)
 	Data_State.forceWinCheat = 0;
 	Data_State.selectedBuilding.type = 0;
 	CityInfo_init();
+	Data_CityInfo_Extra.ciid = 1;
 	PlayerMessage_initList();
 	Loader_GameState_init();
 	Animation_resetTimers();
@@ -180,6 +181,7 @@ static void initCustomScenario(const char *scenarioName)
 
 	loadScenario(scenarioName);
 
+	Data_CityInfo_Extra.ciid = 1;
 	Data_CityInfo.__unknown_00a2 = 1;
 	Data_CityInfo.__unknown_00a3 = 1;
 	Empire_determineDistantBattleCity();
@@ -187,7 +189,7 @@ static void initCustomScenario(const char *scenarioName)
 
 static void loadScenario(const char *scenarioName)
 {
-	// TODO
+	Data_CityInfo_Extra.ciid = 1;
 	strcpy(Data_FileList.selectedScenario, scenarioName);
 	readScenarioAndInitGraphics();
 	int hasWaterEntry = 0;

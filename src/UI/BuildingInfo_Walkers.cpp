@@ -237,7 +237,8 @@ static void drawWalkerInfoCartpusher(BuildingInfoContext *c, int walkerId)
 	if (Data_Walkers[walkerId].actionState != WalkerActionState_132_DockerIdling &&
 		Data_Walkers[walkerId].resourceId) {
 		int resource = Data_Walkers[walkerId].resourceId;
-		Graphics_drawImage(GraphicId(ID_Graphic_ResourceIcons) + resource + Resource_getGraphicIdOffset(resource, 3),
+		Graphics_drawImage(GraphicId(ID_Graphic_ResourceIcons) +
+			resource + Resource_getGraphicIdOffset(resource, 3),
 			c->xOffset + 92 + width, c->yOffset + 135);
 	}
 	
@@ -264,7 +265,7 @@ static void drawWalkerInfoCartpusher(BuildingInfoContext *c, int walkerId)
 	if (Data_Walkers[walkerId].actionState != WalkerActionState_132_DockerIdling) {
 		if (isReturning) {
 			width = Widget_GameText_draw(129, 16,
-				c->xOffset + 40 + width, c->yOffset + 200, Font_SmallBlack);
+				c->xOffset + 40, c->yOffset + 200, Font_SmallBlack);
 			width += Widget_GameText_draw(41, Data_Buildings[sourceBuildingId].type,
 				c->xOffset + 40 + width, c->yOffset + 200, Font_SmallBlack);
 			width += Widget_GameText_draw(129, 14,
@@ -273,7 +274,7 @@ static void drawWalkerInfoCartpusher(BuildingInfoContext *c, int walkerId)
 				c->xOffset + 40 + width, c->yOffset + 200, Font_SmallBlack);
 		} else {
 			width = Widget_GameText_draw(129, 15,
-				c->xOffset + 40 + width, c->yOffset + 200, Font_SmallBlack);
+				c->xOffset + 40, c->yOffset + 200, Font_SmallBlack);
 			width += Widget_GameText_draw(41, Data_Buildings[targetBuildingId].type,
 				c->xOffset + 40 + width, c->yOffset + 200, Font_SmallBlack);
 			width += Widget_GameText_draw(129, 14,
@@ -347,7 +348,7 @@ static void drawWalkerInfo(BuildingInfoContext *c, int walkerId)
 	} else if (type == Walker_FishingBoat || type == Walker_Shipwreck ||
 			type == Walker_Sheep || type == Walker_Wolf || type == Walker_Zebra) {
 		drawWalkerInfoBoatAnimal(c, walkerId);
-	} else if (type == Walker_CartPusher && type == Walker_Warehouseman && type == Walker_Dockman) {
+	} else if (type == Walker_CartPusher || type == Walker_Warehouseman || type == Walker_Dockman) {
 		drawWalkerInfoCartpusher(c, walkerId);
 	} else if (type == Walker_MarketBuyer) {
 		drawWalkerInfoMarketBuyer(c, walkerId);

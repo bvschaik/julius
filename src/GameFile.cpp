@@ -60,7 +60,6 @@ static char compressBuffer[COMPRESS_BUFFER_SIZE]; // TODO use global malloc'ed s
 
 static char tmp[COMPRESS_BUFFER_SIZE]; // TODO remove when all savegame fields are known
 
-static int ciid;
 static int endMarker = 0;
 
 static const char missionPackFile[] = "mission1.pak";
@@ -121,7 +120,7 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{1, &Data_CityInfo, 36136},
 	{0, &tmp, 2}, //{0, &byte_658DCC, 2}, cityinfo related, unused
 	{0, &playerNames, 64},
-	{0, &ciid, 4},
+	{0, &Data_CityInfo_Extra.ciid, 4},
 	{1, &Data_Buildings, 256000},
 	{0, &Data_Settings_Map.orientation, 4},
 	{0, &Data_CityInfo_Extra.gameTimeTick, 4},

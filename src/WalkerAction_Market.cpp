@@ -9,6 +9,7 @@
 	Data_Walkers[boy].collectingItemId = w->collectingItemId;\
 	Data_Walkers[boy].buildingId = w->buildingId;
 
+#include <cstdio>
 static int marketBuyerTakeFoodFromGranary(int walkerId, int marketId, int granaryId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
@@ -49,7 +50,11 @@ static int marketBuyerTakeFoodFromGranary(int walkerId, int marketId, int granar
 	if (numLoads <= 0) {
 		return 0;
 	}
+	printf("Taking food type %d loads %d from granary store %d\n",
+		resource, numLoads, Data_Buildings[granaryId].data.storage.resourceStored[resource]);
 	Resource_removeFromGranary(granaryId, resource, 100 * numLoads);
+	printf("Took  food type %d loads %d from granary store %d\n",
+		resource, numLoads, Data_Buildings[granaryId].data.storage.resourceStored[resource]);
 	// create delivery boys
 	int previousBoy = walkerId;
 	for (int i = 0; i < numLoads; i++) {
@@ -99,8 +104,11 @@ void WalkerAction_marketBuyer(int walkerId)
 	
 	struct Data_Building *b = &Data_Buildings[w->buildingId];
 	if (b->inUse != 1 || b->walkerId2 != walkerId) {
+		printf("Market buyer: died because of building inUse %d walkerid2 %d\n",
+			b->inUse, b->walkerId2);
 		w->state = WalkerState_Dead;
 	}
+	WalkerActionIncreaseGraphicOffset(w, 12);
 	switch (w->actionState) {
 		case WalkerActionState_150_Attack:
 			WalkerAction_Common_handleAttack(walkerId);
@@ -111,6 +119,7 @@ void WalkerAction_marketBuyer(int walkerId)
 		case WalkerActionState_145_MarketBuyerGoingToStorage:
 			WalkerMovement_walkTicks(walkerId, 1);
 			if (w->direction == 8) {
+				printf("Market buyer at storage\n");
 				if (w->collectingItemId > 3) {
 					if (!marketBuyerTakeResourceFromWarehouse(walkerId, w->buildingId, w->destinationBuildingId)) {
 						w->state = WalkerState_Dead;
@@ -124,6 +133,7 @@ void WalkerAction_marketBuyer(int walkerId)
 				w->destinationX = w->sourceX;
 				w->destinationY = w->sourceY;
 			} else if (w->direction == 9 || w->direction == 10) {
+				printf("Market buyer going to storage direction %d -> returning\n", w->direction);
 				w->actionState = WalkerActionState_146_MarketBuyerReturning;
 				w->destinationX = w->sourceX;
 				w->destinationY = w->sourceY;
@@ -133,6 +143,7 @@ void WalkerAction_marketBuyer(int walkerId)
 		case WalkerActionState_146_MarketBuyerReturning:
 			WalkerMovement_walkTicks(walkerId, 1);
 			if (w->direction == 8 || w->direction == 10) {
+				printf("Market buyer returning dead dir %d\n", w->direction);
 				w->state = WalkerState_Dead;
 			} else if (w->direction == 9) {
 				WalkerRoute_remove(walkerId);

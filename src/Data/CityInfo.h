@@ -1128,6 +1128,7 @@ extern struct Data_CityInfo_Extra {
 		int y;
 		int gridOffset;
 	} exitPointFlag;
+	int ciid;
 } Data_CityInfo_Extra;
 
 extern struct Data_CityInfo_Resource {

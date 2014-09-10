@@ -293,13 +293,13 @@ int Resource_removeFromGranary(int buildingId, int resource, int amount)
 	if (b->data.storage.resourceStored[resource] >= amount) {
 		Data_CityInfo.resourceGranaryFoodStored[resource] -= amount;
 		b->data.storage.resourceStored[resource] -= amount;
-		b->data.storage.resourceStored[resource] += amount;
+		b->data.storage.resourceStored[Resource_None] += amount;
 		toRemove = 0;
 	} else {
 		int removed = b->data.storage.resourceStored[resource];
 		Data_CityInfo.resourceGranaryFoodStored[resource] -= removed;
 		b->data.storage.resourceStored[resource] -= removed;
-		b->data.storage.resourceStored[resource] += removed;
+		b->data.storage.resourceStored[Resource_None] += removed;
 		toRemove = amount - removed;
 	}
 	return toRemove;

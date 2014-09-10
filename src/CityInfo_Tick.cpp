@@ -69,7 +69,7 @@ void CityInfo_Tick_countBuildingTypes()
 		if (Data_Buildings[i].inUse != 1 || Data_Buildings[i].houseSize) {
 			continue;
 		}
-		int isEntertainmentVenue;
+		int isEntertainmentVenue = 0;
 		switch (Data_Buildings[i].type) {
 			// entertainment venues
 			case Building_Theater:

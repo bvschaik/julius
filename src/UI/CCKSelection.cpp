@@ -55,7 +55,7 @@ static int selectedItem;
 
 void UI_CCKSelection_init()
 {
-	Data_Settings.isCustomScenario = 1;
+	Data_Settings.isCustomScenario = 2;
 	FileSystem_findFilesWithExtension("map");
 	scrollPosition = 0;
 	focusButtonId = 0;
