@@ -1,7 +1,6 @@
 #include "SDL.h"   /* All SDL App's need this */
 #include <stdio.h>
 
-#include <SDL/SDL.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -95,18 +94,16 @@ void refresh(SDL_Surface *surface)
 	
 	Runner_draw();
 	Uint32 then2 = SDL_GetTicks();
-	Widget_Text_drawNumberColored(now - last, 's', "", Data_Screen.width - 100, 5, Font_NormalPlain, 0xf800);
+	Widget_Text_drawNumberColored(1000 / (now - last), 'f', "", Data_Screen.width - 120, 5, Font_NormalPlain, 0xf800);
 	Widget_Text_drawNumberColored(then - now, 'g', "", Data_Screen.width - 70, 5, Font_NormalPlain, 0xf800);
 	Widget_Text_drawNumberColored(then2 - then, 'd', "", Data_Screen.width - 40, 5, Font_NormalPlain, 0xf800);
-	
-	memcpy(surface->pixels, Data_Screen.drawBuffer, Data_Screen.width * Data_Screen.height * 4);
 	
 	if (SDL_MUSTLOCK(surface)) {
 		SDL_UnlockSurface(surface);
 	}
 	SDL_Flip(surface);
 	//printf("Refresh: %d ms; game: %d ms\n", SDL_GetTicks() - then, then - Time_getMillis());
-	last = then;
+	last = now;
 }
 
 void handleKey(SDL_KeyboardEvent *event)
@@ -318,8 +315,8 @@ int main()
 	}
 	
 	//SDL_Surface *surface = SDL_SetVideoMode(800, 600, 16, /*SDL_FULLSCREEN|*/SDL_HWSURFACE|SDL_DOUBLEBUF);
-	//SDL_Surface *surface = createSurface(1680, 1050, 0);
-	SDL_Surface *surface = createSurface(1920, 1200, 1);
+	SDL_Surface *surface = createSurface(1680, 1050, 0);
+	//SDL_Surface *surface = createSurface(1920, 1200, 1);
 	
 	// Get available fullscreen/hardware modes
 	modes = SDL_ListModes(&format, SDL_HWSURFACE|SDL_DOUBLEBUF);

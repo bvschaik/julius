@@ -52,7 +52,7 @@ void WalkerName_init()
 }
 
 #define SET(var, off, max) \
-	Data_Walkers[walkerId].name = Data_Walker_NameSequence.var; \
+	Data_Walkers[walkerId].name = off + Data_Walker_NameSequence.var; \
 	++Data_Walker_NameSequence.var; \
 	if (Data_Walker_NameSequence.var >= max) Data_Walker_NameSequence.var = 0;
 
