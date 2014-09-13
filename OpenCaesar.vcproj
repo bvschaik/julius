@@ -556,10 +556,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\RoadNetwork.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\Routing.cpp"
 				>
 			</File>
@@ -1071,10 +1067,6 @@
 			</File>
 			<File
 				RelativePath=".\src\Resource.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\RoadNetwork.h"
 				>
 			</File>
 			<File

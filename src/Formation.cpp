@@ -34,7 +34,21 @@ void Formation_clearList()
 
 void Formation_clearInvasionInfo()
 {
-	// TODO
+	for (int i = 0; i < 25; i++) {
+		Data_Formation_Invasion.formationId[i] = 0;
+		Data_Formation_Invasion.homeX[i] = 0;
+		Data_Formation_Invasion.homeY[i] = 0;
+		Data_Formation_Invasion.layout[i] = 0;
+		Data_Formation_Invasion.destinationX[i] = 0;
+		Data_Formation_Invasion.destinationY[i] = 0;
+		Data_Formation_Invasion.destinationBuildingId[i] = 0;
+		Data_Formation_Invasion.ignoreRomanSoldiers[i] = 0;
+	}
+	Data_Formation_Extra.numEnemyFormations = 0;
+	Data_Formation_Extra.numEnemySoldierStrength = 0;
+	Data_Formation_Extra.numLegionFormations = 0;
+	Data_Formation_Extra.numLegionSoldierStrength = 0;
+	Data_Formation_Extra.daysSinceRomanSoldierConcentration = 0;
 }
 
 int Formation_createLegion(int buildingId)
@@ -176,19 +190,24 @@ int Formation_getLegionFormationId(int legionIndex)
 	return 0;
 }
 
+#include <cstdio>
 void Formation_legionMoveTo(int formationId, int x, int y)
 {
 	struct Data_Formation *f = &Data_Formations[formationId];
 	Routing_getDistance(f->xHome, f->yHome);
 	if (Data_Grid_routingDistance[GridOffset(x, y)] <= 0) {
+		printf("Formation_legionMoveTo: Unable to route to %d %d\n", x, y);
 		return; // unable to route there
 	}
 	if (x == f->xHome && y == f->yHome) {
+		printf("Formation_legionMoveTo: Home is %d %d\n", x, y);
 		return; // use legionReturnHome
 	}
 	if (f->cursedByMars) {
+		printf("Formation_legionMoveTo: Cursed by Mars\n");
 		return;
 	}
+	printf("Formation_legionMoveTo %d %d\n", x, y);
 	f->xStandard = x;
 	f->yStandard = y;
 	f->isAtFort = 0;
@@ -208,6 +227,7 @@ void Formation_legionMoveTo(int formationId, int x, int y)
 		if (f->monthsLowMorale == 1) {
 			Formation_changeMorale(formationId, 10); // yay we can move?
 		}
+		//printf("  Updating %d: %d as %d\n", i, walkerId, w->actionState);
 		w->alternativeLocationIndex = 0;
 		w->actionState = WalkerActionState_83_SoldierGoingToStandard;
 		WalkerRoute_remove(walkerId);

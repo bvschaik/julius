@@ -120,3 +120,10 @@ void __cdecl fun_drawCityScreenForeground()
   j_fun_drawCitySidepanelNumMessages(1);
 }
 */
+
+void UI_City_handleMouseMilitary()
+{
+	// TODO if (UI_Sidebar_handleMouseMinimap()) { return; }
+	// = if ( sidepanel_collapsed || (j_fun_minimap_hasBeenClicked(), !j_fun_minimap_handleClick()) )
+	UI_CityBuildings_handleMouseMilitary();
+}

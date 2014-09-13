@@ -13,6 +13,11 @@
 	if ((y) < 0) (y) = 0;\
 	if ((x) >= Data_Settings_Map.width) (x) = Data_Settings_Map.width - 1;\
 	if ((y) >= Data_Settings_Map.height) (y) = Data_Settings_Map.height - 1;
+#define Bound2ToMap(xMin, yMin, xMax, yMax) \
+	if ((xMin) < 0) (xMin) = 0;\
+	if ((yMin) < 0) (yMin) = 0;\
+	if ((xMax) >= Data_Settings_Map.width) (xMax) = Data_Settings_Map.width - 1;\
+	if ((yMax) >= Data_Settings_Map.height) (yMax) = Data_Settings_Map.height - 1;
 
 extern struct Data_Settings {
 	int bpp;

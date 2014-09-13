@@ -3,6 +3,7 @@
 #include "Calc.h"
 #include "Grid.h"
 #include "PlayerMessage.h"
+#include "Routing.h"
 #include "Sound.h"
 #include "TerrainGraphics.h"
 #include "Walker.h"
@@ -15,6 +16,124 @@
 #include "Data/Random.h"
 #include "Data/Settings.h"
 #include "Data/Walker.h"
+
+static const int enemyAttackBuildingPriority[4][24] = {
+	{
+		Building_Granary, Building_Warehouse, Building_Market,
+		Building_WheatFarm, Building_VegetableFarm, Building_FruitFarm,
+		Building_OliveFarm, Building_VinesFarm, Building_PigFarm
+	},
+	{
+		Building_SenateUpgraded, Building_Senate,
+		Building_ForumUpgraded, Building_Forum
+	},
+	{
+		Building_GovernorsPalace, Building_GovernorsVilla, Building_GovernorsHouse,
+		Building_HouseLuxuryPalace, Building_HouseLargePalace,
+		Building_HouseMediumPalace, Building_HouseSmallPalace,
+		Building_HouseGrandVilla, Building_HouseLargeVilla,
+		Building_HouseMediumVilla, Building_HouseSmallVilla,
+		Building_HouseGrandInsula, Building_HouseLargeInsula,
+		Building_HouseMediumInsula, Building_HouseSmallInsula,
+		Building_HouseLargeCasa, Building_HouseSmallCasa,
+		Building_HouseLargeHovel, Building_HouseSmallHovel,
+		Building_HouseLargeShack, Building_HouseSmallShack,
+		Building_HouseLargeTent, Building_HouseSmallTent
+	},
+	{
+		Building_MilitaryAcademy, Building_Barracks
+	}
+};
+
+static const int rioterAttackBuildingPriority[100] = {
+	79, 78, 77, 29, 28, 27, 26, 25, 85, 84, 32, 33, 98, 65, 66, 67,
+	68, 69, 87, 86, 30, 31, 47, 52, 46, 48, 53, 51, 24, 23, 22, 21,
+	20, 46, 48, 114, 113, 112, 111, 110, 71, 72, 70, 74, 75, 76, 60, 61,
+	62, 63, 64, 34, 36, 37, 35, 94, 19, 18, 17, 16, 15, 49, 106, 107,
+	109, 108, 90, 100, 101, 102, 103, 104, 105, 55, 81, 91, 92, 14, 13, 12, 11, 10
+};
+
+static const int layoutOrientationLegionIndexOffsets[13][4][40] = {
+	{
+		{0, 0, -3, 0, 3, 0, -8, 0, 8, 0, -3, 8, 3, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, -3, 0, 3, 0, -8, 0, 8, 8, -3, 8, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, -3, 0, 3, 0, -8, 0, 8, 0, -3, -8, 3, -8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, -3, 0, 3, 0, -8, 0, 8, -8, -3, -8, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	},
+	{
+		{0, 0, -6, 0, 6, 0, -6, 2, 6, 2, -2, 4, 4, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, -6, 0, 6, 2, -6, 2, 6, 4, -2, 6, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, -6, 0, 6, 0, -6, -2, 6, -2, -4, -6, 4, -6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, -6, 0, 6, -2, -6, -2, 6, -6, -4, -6, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	},
+	{
+		{0, 0, -6, 0, 6, 0, -6, 2, 6, 2, -2, 4, 4, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, -6, 0, 6, 2, -6, 2, 6, 4, -2, 6, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, -6, 0, 6, 0, -6, -2, 6, -2, -4, -6, 4, -6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, -6, 0, 6, -2, -6, -2, 6, -6, -4, -6, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	},
+	{
+		{0, 0, -6, 0, 6, 0, -6, 2, 6, 2, -2, 4, 4, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, -6, 0, 6, 2, -6, 2, 6, 4, -2, 6, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, -6, 0, 6, 0, -6, -2, 6, -2, -4, -6, 4, -6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, -6, 0, 6, -2, -6, -2, 6, -6, -4, -6, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	},
+	{
+		{0, 0, -6, 0, 6, 0, -6, 2, 6, 2, -2, 4, 4, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, -6, 0, 6, 2, -6, 2, 6, 4, -2, 6, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, -6, 0, 6, 0, -6, -2, 6, -2, -4, -6, 4, -6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, -6, 0, 6, -2, -6, -2, 6, -6, -4, -6, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	},
+	{
+		{0, 0, -3, 0, 3, 0, -8, 0, 8, 0, -3, 8, 3, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, -3, 0, 3, 0, -8, 0, 8, 8, -3, 8, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, -3, 0, 3, 0, -8, 0, 8, 0, -3, -8, 3, -8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, -3, 0, 3, 0, -8, 0, 8, -8, -3, -8, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	},
+	{
+		{0, 0, -3, 0, 3, 0, -8, 0, 8, 0, -3, 8, 3, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, -3, 0, 3, 0, -8, 0, 8, 8, -3, 8, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, -3, 0, 3, 0, -8, 0, 8, 0, -3, -8, 3, -8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, -3, 0, 3, 0, -8, 0, 8, -8, -3, -8, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	},
+	{
+		{0, 0, -3, 0, 3, 0, -8, 0, 8, 0, -3, 8, 3, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, -3, 0, 3, 0, -8, 0, 8, 8, -3, 8, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, -3, 0, 3, 0, -8, 0, 8, 0, -3, -8, 3, -8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, -3, 0, 3, 0, -8, 0, 8, -8, -3, -8, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	},
+	{
+		{0, 0, -3, 0, 3, 0, -8, 0, 8, 0, -3, 8, 3, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, -3, 0, 3, 0, -8, 0, 8, 8, -3, 8, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, -3, 0, 3, 0, -8, 0, 8, 0, -3, -8, 3, -8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, -3, 0, 3, 0, -8, 0, 8, -8, -3, -8, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	},
+	{
+		{0, 0, -3, 0, 3, 0, -8, 0, 8, 0, -3, 8, 3, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, -3, 0, 3, 0, -8, 0, 8, 8, -3, 8, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, -3, 0, 3, 0, -8, 0, 8, 0, -3, -8, 3, -8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, -3, 0, 3, 0, -8, 0, 8, -8, -3, -8, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	},
+	{
+		{0, 0, -3, 0, 3, 0, -8, 0, 8, 0, -3, 8, 3, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, -3, 0, 3, 0, -8, 0, 8, 8, -3, 8, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, -3, 0, 3, 0, -8, 0, 8, 0, -3, -8, 3, -8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, -3, 0, 3, 0, -8, 0, 8, -8, -3, -8, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	},
+	{
+		{0, 0, -4, 0, 4, 0, -12, 0, 12, 0, -4, 12, 4, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, -4, 0, 4, 0, -12, 0, 12, 12, -4, 12, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, -4, 0, 4, 0, -12, 0, 12, 0, -4, -12, 4, -12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, -4, 0, 4, 0, -12, 0, 12, -12, -4, -12, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	},
+	{
+		{0, 0, -3, 0, 3, 0, -8, 0, 8, 0, -3, 8, 3, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, -3, 0, 3, 0, -8, 0, 8, 8, -3, 8, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, -3, 0, 3, 0, -8, 0, 8, 0, -3, -8, 3, -8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		{0, 0, 0, -3, 0, 3, 0, -8, 0, 8, -8, -3, -8, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	}
+};
+
 
 static void changeMoraleOfAllLegions(int amount)
 {
@@ -194,10 +313,7 @@ static void addRomanSoldierConcentration(int x, int y, int radius, int amount)
 	int yMin = y - radius;
 	int xMax = x + radius;
 	int yMax = y + radius;
-	if (xMin < 0) xMin = 0;
-	if (yMin < 0) yMin = 0;
-	if (xMax >= Data_Settings_Map.width) xMax = Data_Settings_Map.width - 1;
-	if (yMax >= Data_Settings_Map.height) yMax = Data_Settings_Map.height - 1;
+	Bound2ToMap(xMin, yMin, xMax, yMax);
 
 	for (int yy = yMin; yy <= yMax; yy++) {
 		for (int xx = xMin; xx <= xMax; xx++) {
@@ -242,6 +358,35 @@ static void calculateRomanSoldierConcentration()
 	}
 }
 
+static int getHighestRomanSoldierConcentration(int x, int y, int radius, int *xTile, int *yTile)
+{
+	int xMin = x - radius;
+	int yMin = y - radius;
+	int xMax = x + radius;
+	int yMax = y + radius;
+	Bound2ToMap(xMin, yMin, xMax, yMax);
+
+	int maxValue = 0;
+	int maxX, maxY;
+	for (int yy = yMin; yy <= yMax; yy++) {
+		for (int xx = xMin; xx <= xMax; xx++) {
+			int gridOffset = GridOffset(xx, yy);
+			if (Data_Grid_routingDistance[gridOffset] > 0 &&
+				Data_Grid_romanSoldierConcentration[gridOffset] > maxValue) {
+				maxValue = Data_Grid_romanSoldierConcentration[gridOffset];
+				maxX = xx;
+				maxY = yy;
+			}
+		}
+	}
+	if (maxValue > 0) {
+		*xTile = maxX;
+		*yTile = maxY;
+		return 1;
+	}
+	return 0;
+}
+
 static void setNativeTargetBuilding(int formationId)
 {
 	int minBuildingId = 0;
@@ -275,6 +420,88 @@ static void setNativeTargetBuilding(int formationId)
 		Data_Formations[formationId].destinationBuildingId = minBuildingId;
 	}
 }
+
+static void setEnemyTargetBuilding(struct Data_Formation *f)
+{
+	int attack = f->attackType;
+	if (attack == 4) { // random
+		attack = Data_Random.random1_7bit & 3;
+	}
+	int bestTypeIndex = 100;
+	int buildingId = 0;
+	int minDistance = 10000;
+	for (int i = 1; i < MAX_BUILDINGS; i++) {
+		struct Data_Building *b = &Data_Buildings[i];
+		if (b->inUse != 1 || Data_Grid_romanSoldierConcentration[b->gridOffset]) {
+			continue;
+		}
+		for (int n = 0; n < 24 && n <= bestTypeIndex && enemyAttackBuildingPriority[attack][n]; n++) {
+			if (b->type == enemyAttackBuildingPriority[attack][n]) {
+				int distance = Calc_distanceMaximum(f->xHome, f->yHome, b->x, b->y);
+				if (n < bestTypeIndex) {
+					bestTypeIndex = n;
+					buildingId = i;
+					minDistance = distance;
+				} else if (distance < minDistance) {
+					buildingId = i;
+					minDistance = distance;
+				}
+				break;
+			}
+		}
+	}
+	if (buildingId <= 0) {
+		for (int i = 1; i < MAX_BUILDINGS; i++) {
+			struct Data_Building *b = &Data_Buildings[i];
+			if (b->inUse != 1 || Data_Grid_romanSoldierConcentration[b->gridOffset]) {
+				continue;
+			}
+			for (int n = 0; n < 100 && n <= bestTypeIndex && rioterAttackBuildingPriority[n]; n++) {
+				if (b->type == rioterAttackBuildingPriority[n]) {
+					int distance = Calc_distanceMaximum(f->xHome, f->yHome, b->x, b->y);
+					if (n < bestTypeIndex) {
+						bestTypeIndex = n;
+						buildingId = i;
+						minDistance = distance;
+					} else if (distance < minDistance) {
+						buildingId = i;
+						minDistance = distance;
+					}
+					break;
+				}
+			}
+		}
+	}
+	if (buildingId <= 0) {
+		return;
+	}
+	struct Data_Building *b = &Data_Buildings[buildingId];
+	if (b->type == Building_Warehouse) {
+		f->destinationX = b->x + 1;
+		f->destinationY = b->y;
+		f->destinationBuildingId = buildingId + 1;
+	} else {
+		f->destinationX = b->x;
+		f->destinationY = b->y;
+		f->destinationBuildingId = buildingId;
+	}
+}
+
+static void enemyApproachTarget(struct Data_Formation *f)
+{
+	if (Routing_canTravelOverLandNonCitizen(f->xHome, f->yHome,
+			f->destinationX, f->destinationY, f->destinationBuildingId, 400) ||
+		Routing_canTravelThroughEverythingNonCitizen(f->xHome, f->yHome,
+			f->destinationX, f->destinationY)) {
+		int xTile, yTile;
+		if (Routing_getClosestXYWithinRange(8, f->xHome, f->yHome,
+				f->destinationX, f->destinationY, 20, &xTile, &yTile)) {
+			f->destinationX = xTile;
+			f->destinationY = yTile;
+		}
+	}
+}
+
 static void marsKillEnemies()
 {
 	if (Data_CityInfo.godBlessingMarsEnemiesToKill <= 0) {
@@ -299,7 +526,7 @@ static void marsKillEnemies()
 	PlayerMessage_post(1, 105, 0, gridOffset);
 }
 
-static void setFormationWalkersToActionState151(int formationId)
+static void setFormationWalkersToEnemyInitial(int formationId)
 {
 	struct Data_Formation *f = &Data_Formations[formationId];
 	for (int i = 0; i < 16; i++) {
@@ -314,18 +541,142 @@ static void setFormationWalkersToActionState151(int formationId)
 	}
 }
 
-static int moveHerdEnemyFormationTo(int formationId, int *x, int *y)
+static void updateEnemyMovement(int formationId, struct Data_Formation *f, int romanDistance)
 {
-	// TODO
-	return 0;
+	int regroup = 0;
+	int halt = 0;
+	int pursueTarget = 0;
+	int advance = 0;
+	int targetFormationId = 0;
+	if (f->missileFired) {
+		halt = 1;
+	} else if (f->missileAttackTimeout) {
+		pursueTarget = 1;
+		targetFormationId = f->missileAttackFormationId;
+	} else if (f->waitTicks < 32) {
+		regroup = 1;
+		f->durationAdvance = 4;
+	} else if (Data_Formation_Invasion.ignoreRomanSoldiers[f->invasionId]) {
+		halt = 0;
+		regroup = 0;
+		advance = 1;
+	} else {
+		int haltDuration, advanceDuration, regroupDuration;
+		if (Data_Formation_Invasion.layout[f->invasionId] == FormationLayout_Enemy8 ||
+			Data_Formation_Invasion.layout[f->invasionId] == FormationLayout_Enemy12) {
+			switch (f->enemyLegionIndex) {
+				case 0:
+				case 1:
+					regroupDuration = 2; advanceDuration = 4; haltDuration = 2;
+					break;
+				case 2:
+				case 3:
+					regroupDuration = 2; advanceDuration = 5; haltDuration = 3;
+					break;
+				default:
+					regroupDuration = 2; advanceDuration = 6; haltDuration = 4;
+					break;
+			}
+			if (!romanDistance) {
+				advanceDuration += 6;
+				haltDuration--;
+				regroupDuration--;
+			}
+		} else {
+			if (romanDistance) {
+				regroupDuration = 6;
+				advanceDuration = 4;
+				haltDuration = 2;
+			} else {
+				regroupDuration = 1;
+				advanceDuration = 12;
+				haltDuration = 1;
+			}
+		}
+		if (f->durationHalt) {
+			f->durationAdvance = 0;
+			f->durationRegroup = 0;
+			halt = 1;
+			f->durationHalt--;
+			if (f->durationHalt <= 0) {
+				f->durationRegroup = regroupDuration;
+				setFormationWalkersToEnemyInitial(formationId);
+				regroup = 0;
+				halt = 1;
+			}
+		} else if (f->durationRegroup) {
+			f->durationAdvance = 0;
+			f->durationHalt = 0;
+			regroup = 1;
+			f->durationRegroup--;
+			if (f->durationRegroup <= 0) {
+				f->durationAdvance = advanceDuration;
+				setFormationWalkersToEnemyInitial(formationId);
+				advance = 1;
+				regroup = 0;
+			}
+		} else {
+			f->durationRegroup = 0;
+			f->durationHalt = 0;
+			advance = 1;
+			f->durationAdvance--;
+			if (f->durationAdvance <= 0) {
+				f->durationHalt = haltDuration;
+				setFormationWalkersToEnemyInitial(formationId);
+				halt = 1;
+				advance = 0;
+			}
+		}
+	}
+
+	if (f->waitTicks > 32) {
+		marsKillEnemies();
+	}
+	if (halt) {
+		f->destinationX = f->xHome;
+		f->destinationY = f->yHome;
+	} else if (pursueTarget) {
+		if (targetFormationId > 0) {
+			if (Data_Formations[targetFormationId].numWalkers > 0) {
+				f->destinationX = Data_Formations[targetFormationId].xHome;
+				f->destinationY = Data_Formations[targetFormationId].yHome;
+			}
+		} else {
+			f->destinationX = Data_Formation_Invasion.destinationX[f->invasionId];
+			f->destinationY = Data_Formation_Invasion.destinationY[f->invasionId];
+		}
+	} else if (regroup) {
+		int xOffset = layoutOrientationLegionIndexOffsets
+			[Data_Formation_Invasion.layout[f->invasionId]][f->orientation / 2][2 * f->enemyLegionIndex] +
+			Data_Formation_Invasion.homeX[f->invasionId];
+		int yOffset = layoutOrientationLegionIndexOffsets
+			[Data_Formation_Invasion.layout[f->invasionId]][f->orientation / 2][2 * f->enemyLegionIndex + 1] +
+			Data_Formation_Invasion.homeY[f->invasionId];
+		int xTile, yTile;
+		if (WalkerAction_HerdEnemy_moveFormationTo(formationId, xOffset, yOffset, &xTile, &yTile)) {
+			f->destinationX = xTile;
+			f->destinationY = yTile;
+		}
+	} else if (advance) {
+		int xOffset = layoutOrientationLegionIndexOffsets
+			[Data_Formation_Invasion.layout[f->invasionId]][f->orientation / 2][2 * f->enemyLegionIndex] +
+			Data_Formation_Invasion.destinationX[f->invasionId];
+		int yOffset = layoutOrientationLegionIndexOffsets
+			[Data_Formation_Invasion.layout[f->invasionId]][f->orientation / 2][2 * f->enemyLegionIndex + 1] +
+			Data_Formation_Invasion.destinationY[f->invasionId];
+		int xTile, yTile;
+		if (WalkerAction_HerdEnemy_moveFormationTo(formationId, xOffset, yOffset, &xTile, &yTile)) {
+			f->destinationX = xTile;
+			f->destinationY = yTile;
+		}
+	}
 }
 
 static void tickUpdateEnemies()
 {
 	if (Data_Formation_Extra.numEnemyFormations <= 0) {
-		// TODO
 		for (int i = 0; i < 25; i++) {
-			// somevar = 0;
+			Data_Formation_Invasion.ignoreRomanSoldiers[i] = 0;
 		}
 		setNativeTargetBuilding(0);
 		return;
@@ -335,7 +686,96 @@ static void tickUpdateEnemies()
 		Data_Formation_Extra.daysSinceRomanSoldierConcentration = 0;
 		calculateRomanSoldierConcentration();
 	}
-	// TODO
+	for (int i = 0; i < 25; i++) {
+		Data_Formation_Invasion.formationId[i] = 0;
+		Data_Formation_Invasion.ignoreRomanSoldiers[i] = 0;
+	}
+	int romanDistance = 0;
+	for (int i = 1; i < MAX_FORMATIONS; i++) {
+		struct Data_Formation *f = &Data_Formations[i];
+		if (f->inUse != 1 || f->isLegion || f->isHerd) {
+			continue;
+		}
+		if (Data_Formation_Extra.numEnemySoldierStrength > 2 * Data_Formation_Extra.numLegionSoldierStrength) {
+			Data_Formation_Invasion.ignoreRomanSoldiers[f->invasionId] = 1;
+		}
+		if (f->missileFired) {
+			f->missileFired--;
+		}
+		if (f->missileAttackTimeout) {
+			f->missileAttackTimeout--;
+		}
+		if (f->recentFight) {
+			f->recentFight--;
+		}
+		if (Data_CityInfo.numSoldiersInCity <= 0) {
+			f->recentFight = 0;
+			f->missileAttackTimeout = 0;
+			f->missileFired = 0;
+		}
+		for (int n = 0; n < 16; n++) {
+			if (Data_Walkers[f->walkerIds[n]].actionState == WalkerActionState_150_Attack) {
+				int opponentId = Data_Walkers[f->walkerIds[n]].opponentId;
+				if (!WalkerIsDead(opponentId) && WalkerIsLegion(Data_Walkers[opponentId].type)) {
+					f->recentFight = 6;
+				}
+			}
+		}
+		if (f->monthsLowMorale || f->monthsVeryLowMorale) {
+			for (int n = 0; n < 16; n++) {
+				struct Data_Walker *w = &Data_Walkers[f->walkerIds[n]];
+				if (w->actionState != WalkerActionState_150_Attack &&
+					w->actionState != WalkerActionState_149_Corpse &&
+					w->actionState != WalkerActionState_148_Fleeing) {
+					w->actionState = WalkerActionState_148_Fleeing;
+					WalkerRoute_remove(f->walkerIds[n]);
+				}
+			}
+			continue;
+		}
+		if (f->walkerIds[0] && Data_Walkers[f->walkerIds[0]].state == WalkerState_Alive) {
+			f->xHome = Data_Walkers[f->walkerIds[0]].x;
+			f->yHome = Data_Walkers[f->walkerIds[0]].y;
+		}
+		if (!Data_Formation_Invasion.formationId[f->invasionId]) {
+			Data_Formation_Invasion.formationId[f->invasionId] = i;
+			Data_Formation_Invasion.homeX[f->invasionId] = f->xHome;
+			Data_Formation_Invasion.homeY[f->invasionId] = f->yHome;
+			Data_Formation_Invasion.layout[f->invasionId] = f->layout;
+			romanDistance = 0;
+			Routing_canTravelOverLandNonCitizen(f->xHome, f->yHome, -2, -2, 100000, 300);
+			int xTile, yTile;
+			if (getHighestRomanSoldierConcentration(f->xHome, f->yHome, 16, &xTile, &yTile)) {
+				romanDistance = 1;
+			} else if (getHighestRomanSoldierConcentration(f->xHome, f->yHome, 32, &xTile, &yTile)) {
+				romanDistance = 2;
+			}
+			if (Data_Formation_Invasion.ignoreRomanSoldiers[f->invasionId]) {
+				romanDistance = 0;
+			}
+			if (romanDistance == 1) {
+				// attack roman legion
+				Data_Formation_Invasion.destinationX[f->invasionId] = xTile;
+				Data_Formation_Invasion.destinationY[f->invasionId] = yTile;
+				Data_Formation_Invasion.destinationBuildingId[f->invasionId] = 0;
+			} else {
+				setEnemyTargetBuilding(f);
+				enemyApproachTarget(f);
+				Data_Formation_Invasion.destinationX[f->invasionId] = f->destinationX;
+				Data_Formation_Invasion.destinationY[f->invasionId] = f->destinationY;
+				Data_Formation_Invasion.destinationBuildingId[f->invasionId] = f->destinationBuildingId;
+			}
+		}
+		f->enemyLegionIndex = Data_Formation_Invasion.numLegions[f->invasionId];
+		Data_Formation_Invasion.numLegions[f->invasionId]++;
+		f->waitTicks++;
+		f->destinationX = Data_Formation_Invasion.destinationX[f->invasionId];
+		f->destinationY = Data_Formation_Invasion.destinationY[f->invasionId];
+		f->destinationBuildingId = Data_Formation_Invasion.destinationBuildingId[f->invasionId];
+
+		updateEnemyMovement(i, f, romanDistance);
+	}
+
 	setNativeTargetBuilding(0);
 }
 
@@ -481,7 +921,7 @@ static void tickUpdateHerds()
 				int xTile, yTile;
 				if (getHerdRoamingDestination(i, allowNegativeDesirability, f->xHome, f->yHome, roamDistance, f->herdDirection, &xTile, &yTile)) {
 					f->herdDirection = 0;
-					if (moveHerdEnemyFormationTo(i, &xTile, &yTile)) {
+					if (WalkerAction_HerdEnemy_moveFormationTo(i, xTile, yTile, &xTile, &yTile)) {
 						f->destinationX = xTile;
 						f->destinationY = yTile;
 						if (f->walkerType == Walker_Wolf) {
@@ -512,4 +952,39 @@ void Formation_Tick_updateAll(int secondTime)
 	tickUpdateLegions();
 	tickUpdateEnemies();
 	tickUpdateHerds();
+}
+
+
+int Formation_Rioter_getTargetBuilding(int *xTile, int *yTile)
+{
+	int bestTypeIndex = 100;
+	int buildingId = 0;
+	for (int i = 1; i < MAX_BUILDINGS; i++) {
+		if (Data_Buildings[i].inUse != 1) {
+			continue;
+		}
+		int type = Data_Buildings[i].type;
+		for (int b = 0; b < 100 && b <= bestTypeIndex && rioterAttackBuildingPriority[b]; b++) {
+			if (type == rioterAttackBuildingPriority[b]) {
+				if (b < bestTypeIndex) {
+					bestTypeIndex = b;
+					buildingId = i;
+				}
+				break;
+			}
+		}
+	}
+	if (buildingId <= 0) {
+		return 0;
+	}
+	struct Data_Building *b = &Data_Buildings[buildingId];
+	if (b->type == Building_Warehouse) {
+		*xTile = b->x + 1;
+		*yTile = b->y;
+		return buildingId + 1;
+	} else {
+		*xTile = b->x;
+		*yTile = b->y;
+		return buildingId;
+	}
 }

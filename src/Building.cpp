@@ -11,6 +11,7 @@
 #include "Sound.h"
 #include "Terrain.h"
 #include "TerrainGraphics.h"
+#include "Undo.h"
 #include "Walker.h"
 #include "WalkerAction.h"
 #include "UI/Warning.h"
@@ -47,17 +48,11 @@ void Building_clearList()
 	Data_Buildings_Extra.createdSequence = 0;
 }
 
-static int isBuildingOnUndoList(int buildingId)
-{
-	// TODO move to undo stuff?
-	return 0;
-}
-
 int Building_create(int type, int x, int y)
 {
 	int buildingId = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (!Data_Buildings[i].inUse && !isBuildingOnUndoList(i)) {
+		if (!Data_Buildings[i].inUse && !Undo_isBuildingInList(i)) {
 			buildingId = i;
 			break;
 		}

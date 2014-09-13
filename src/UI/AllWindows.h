@@ -70,6 +70,7 @@ void UI_City_drawForeground();
 void UI_City_drawCity();
 void UI_City_drawPausedAndTimeLeft();
 void UI_City_handleMouse();
+void UI_City_handleMouseMilitary();
 
 void UI_Empire_drawBackground();
 void UI_Empire_drawForeground();

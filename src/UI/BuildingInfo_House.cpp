@@ -185,10 +185,7 @@ void UI_BuildingInfo_houseDetermineWorstDesirabilityBuilding(BuildingInfoContext
 	int yMin = by - 6;
 	int xMax = bx + 6;
 	int yMax = by + 6;
-	if (xMin < 0) xMin = 0;
-	if (yMin < 0) yMin = 0;
-	if (xMax >= Data_Settings_Map.width) xMax = Data_Settings_Map.width;
-	if (yMax >= Data_Settings_Map.height) yMax = Data_Settings_Map.height;
+	Bound2ToMap(xMin, yMin, xMax, yMax);
 
 	for (int y = yMin; y <= yMax; y++) {
 		for (int x = xMin; x <= xMax; x++) {

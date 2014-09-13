@@ -13,6 +13,7 @@ void UI_CityBuildings_drawForegroundForWalker(int x, int y, int walkerId, UI_Cit
 void UI_CityBuildings_drawBuildingCost();
 
 void UI_CityBuildings_handleMouse();
+void UI_CityBuildings_handleMouseMilitary();
 void UI_CityBuildings_getTooltip(struct TooltipContext *c);
 
 void UI_CityBuildings_checkCameraWithinBounds();

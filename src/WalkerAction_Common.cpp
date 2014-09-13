@@ -66,7 +66,6 @@ void WalkerAction_Common_handleCorpse(int walkerId)
 		Data_Walkers[walkerId].state = WalkerState_Dead;
 	}
 }
-#define IsDead(w) (Data_Walkers[w].state != WalkerState_Alive || Data_Walkers[w].actionState == WalkerActionState_149_Corpse)
 
 int attackIsSameDirection(int dir1, int dir2)
 {
@@ -170,20 +169,20 @@ void WalkerAction_Common_handleAttack(int walkerId)
 	}
 	if (w->numAttackers == 1) {
 		int targetId = w->opponentId;
-		if (IsDead(targetId)) {
+		if (WalkerIsDead(targetId)) {
 			resumeActivityAfterAttack(walkerId, w);
 			return;
 		}
 	} else if (w->numAttackers == 2) {
 		int targetId = w->opponentId;
-		if (IsDead(targetId)) {
+		if (WalkerIsDead(targetId)) {
 			if (targetId == w->attackerId1) {
 				w->opponentId = w->attackerId2;
 			} else if (targetId == w->attackerId2) {
 				w->opponentId = w->attackerId1;
 			}
 			targetId = w->opponentId;
-			if (IsDead(targetId)) {
+			if (WalkerIsDead(targetId)) {
 				resumeActivityAfterAttack(walkerId, w);
 				return;
 			}

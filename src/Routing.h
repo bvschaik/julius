@@ -45,6 +45,8 @@ void Routing_getDistanceWaterBoat(int x, int y);
 void Routing_getDistanceWaterFlotsam(int x, int y);
 int Routing_getPathOnWater(int routingPathId, int xSrc, int ySrc, int xDst, int yDst, int isFlotsam);
 
+int Routing_getClosestXYWithinRange(int numDirections, int xSrc, int ySrc, int xDst, int yDst, int range, int *xOut, int *yOut);
+
 void Routing_block(int x, int y, int size);
 
 #endif

@@ -13,10 +13,7 @@
 	int yMin = y - 2;\
 	int xMax = x + 2;\
 	int yMax = y + 2;\
-	if (xMin < 0) xMin = 0;\
-	if (yMin < 0) yMin = 0;\
-	if (xMax >= Data_Settings_Map.width) xMax = Data_Settings_Map.width - 1;\
-	if (yMax >= Data_Settings_Map.height) yMax = Data_Settings_Map.height - 1;\
+	Bound2ToMap(xMin, yMin, xMax, yMax);\
 	int gridOffset = GridOffset(xMin, yMin);\
 	for (int yy = yMin; yy <= yMax; yy++) {\
 		for (int xx = xMin; xx <= xMax; xx++) {\

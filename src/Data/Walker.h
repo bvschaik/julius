@@ -85,6 +85,8 @@ enum {
 #define WalkerIsLegion(t) ((t) >= Walker_FortJavelin && (t) <= Walker_FortLegionary)
 #define WalkerIsHerd(t) ((t) >= Walker_Sheep && (t) <= Walker_Zebra)
 
+#define WalkerIsDead(w) (Data_Walkers[w].state != WalkerState_Alive || Data_Walkers[w].actionState == WalkerActionState_149_Corpse)
+
 enum {
 	WalkerState_Alive = 1,
 	WalkerState_Dead = 2
@@ -342,7 +344,7 @@ extern struct Data_Walker {
 	char numAttackers;
 	short attackerId1;
 	short attackerId2;
-	short opponentId;
+	short opponentId; // 7e
 } Data_Walkers[MAX_WALKERS];
 
 extern struct Data_Walker_Trader {

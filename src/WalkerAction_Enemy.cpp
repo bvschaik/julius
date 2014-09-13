@@ -1,5 +1,6 @@
 #include "WalkerAction_private.h"
 
+#include "Formation.h"
 #include "Routing.h"
 #include "Sound.h"
 #include "Walker.h"
@@ -7,6 +8,7 @@
 #include "Data/CityInfo.h"
 #include "Data/Event.h"
 #include "Data/Formation.h"
+#include "Data/Grid.h"
 
 static void enemyInitial(int walkerId, struct Data_Walker *w, struct Data_Formation *f)
 {
@@ -660,7 +662,7 @@ void WalkerAction_enemy54_Gladiator(int walkerId)
 				w->waitTicks = 0;
 				w->actionState = WalkerActionState_159_NativeAttacking;
 				int xTile, yTile;
-				int buildingId = WalkerAction_Rioter_getTargetBuilding(&xTile, &yTile);
+				int buildingId = Formation_Rioter_getTargetBuilding(&xTile, &yTile);
 				if (buildingId) {
 					w->destinationX = xTile;
 					w->destinationY = yTile;
@@ -744,4 +746,54 @@ void WalkerAction_enemyCaesarLegionary(int walkerId)
 			w->graphicId = GraphicId(ID_Graphic_Walker_CaesarLegionary) + 48 + dir + 8 * w->graphicOffset;
 			break;
 	}
+}
+
+int WalkerAction_HerdEnemy_moveFormationTo(int formationId, int x, int y, int *xTile, int *yTile)
+{
+	struct Data_Formation *f = &Data_Formations[formationId];
+	int baseOffset = GridOffset(
+		WalkerActionFormationLayoutPositionX(f->layout, 0),
+		WalkerActionFormationLayoutPositionY(f->layout, 0));
+	int walkerOffsets[50];
+	walkerOffsets[0] = 0;
+	for (int i = 1; i < f->numWalkers; i++) {
+		walkerOffsets[i] = GridOffset(
+			WalkerActionFormationLayoutPositionX(f->layout, 0),
+			WalkerActionFormationLayoutPositionY(f->layout, 0)) - baseOffset;
+	}
+	Routing_canTravelOverLandNonCitizen(x, y, -1, -1, 0, 600);
+	for (int r = 0; r <= 10; r++) {
+		int xMin = x - r;
+		int yMin = y - r;
+		int xMax = x + r;
+		int yMax = y + r;
+		Bound2ToMap(xMin, yMin, xMax, yMax);
+		for (int yy = yMin; yy <= yMax; yy++) {
+			for (int xx = xMin; xx <= xMax; xx++) {
+				int canMove = 1;
+				for (int w = 0; w < f->numWalkers; w++) {
+					int gridOffset = GridOffset(x, y) + walkerOffsets[w];
+					if (Data_Grid_terrain[gridOffset] & Terrain_1237) {
+						canMove = 0;
+						break;
+					}
+					if (Data_Grid_routingDistance[gridOffset] <= 0) {
+						canMove = 0;
+						break;
+					}
+					if (Data_Grid_walkerIds[gridOffset] &&
+						Data_Walkers[Data_Grid_walkerIds[gridOffset]].formationId != formationId) {
+						canMove = 0;
+						break;
+					}
+				}
+				if (canMove) {
+					*xTile = xx;
+					*yTile = yy;
+					return 1;
+				}
+			}
+		}
+	}
+	return 0;
 }

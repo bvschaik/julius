@@ -12,11 +12,7 @@
 		}\
 	}}
 
-#define BOUND_REGION() \
-	if (xMin < 0) xMin = 0;\
-	if (yMin < 0) yMin = 0;\
-	if (xMax >= Data_Settings_Map.width) xMax = Data_Settings_Map.width - 1;\
-	if (yMax >= Data_Settings_Map.height) yMax = Data_Settings_Map.height - 1;
+#define BOUND_REGION() Bound2ToMap(xMin, yMin, xMax, yMax);
 
 #define FOREACH_REGION(block) \
 	{int gridOffset = GridOffset(xMin, yMin);\

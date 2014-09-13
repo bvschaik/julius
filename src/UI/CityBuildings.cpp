@@ -6,12 +6,15 @@
 #include "../Building.h"
 #include "../BuildingPlacement.h"
 #include "../CityView.h"
+#include "../Formation.h"
 #include "../Routing.h"
 #include "../Scroll.h"
 #include "../Sound.h"
 #include "../Time.h"
 #include "../Undo.h"
 #include "../Widget.h"
+
+#include "../Data/Formation.h"
 #include "../Data/Mouse.h"
 
 static void UI_CityBuildings_drawBuildingFootprints();
@@ -630,12 +633,21 @@ static int handleRightClickAllowBuildingInfo()
 
 static int isLegionClick()
 {
-	return 0; // TODO
+	if (Data_Settings_Map.current.gridOffset) {
+		int formationId = Formation_getLegionFormationAtGridOffset(
+			GridOffset(Data_Settings_Map.current.x, Data_Settings_Map.current.y));
+		if (formationId > 0 && !Data_Formations[formationId].inDistantBattle) {
+			Data_State.selectedLegionFormationId = formationId;
+			UI_Window_goTo(Window_CityMilitary);
+			return 1;
+		}
+	}
+	return 0;
 }
 
 static void buildStart()
 {
-	if (Data_Settings_Map.current.gridOffset /*&& !Data_Settings.gamePaused*/) { // FIXME
+	if (Data_Settings_Map.current.gridOffset /*&& !Data_Settings.gamePaused*/) { // TODO FIXME
 		Data_State.selectedBuilding.xEnd = Data_State.selectedBuilding.xStart = Data_Settings_Map.current.x;
 		Data_State.selectedBuilding.yEnd = Data_State.selectedBuilding.yStart = Data_Settings_Map.current.y;
 		Data_State.selectedBuilding.gridOffsetStart = Data_Settings_Map.current.gridOffset;
@@ -1027,4 +1039,42 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 			return;
 	}
 	c->type = TooltipType_Overlay;
+}
+
+static void militaryMapClick()
+{
+	if (!Data_Settings_Map.current.gridOffset) {
+		UI_Window_goTo(Window_City);
+		return;
+	}
+	int formationId = Data_State.selectedLegionFormationId;
+	if (Data_Formations[formationId].inDistantBattle ||
+		Data_Formations[formationId].cursedByMars) {
+		return;
+	}
+	int otherFormationId = Formation_getFormationForBuilding(
+		GridOffset(Data_Settings_Map.current.x, Data_Settings_Map.current.y));
+	if (otherFormationId && otherFormationId == formationId) {
+		Formation_legionReturnHome(formationId);
+	} else {
+		Formation_legionMoveTo(formationId,
+			Data_Settings_Map.current.x, Data_Settings_Map.current.y);
+		Sound_Speech_playFile("wavs/cohort5.wav");
+	}
+	UI_Window_goTo(Window_City);
+}
+
+void UI_CityBuildings_handleMouseMilitary()
+{
+	updateCityViewCoords();
+	UI_CityBuildings_scrollMap(Scroll_getDirection());
+	if (Data_Mouse.right.wentUp) {
+		UI_Warning_clearAll();
+		UI_Window_goTo(Window_City);
+	} else {
+		updateCityViewCoords();
+		if (Data_Mouse.left.wentDown) {
+			militaryMapClick();
+		}
+	}
 }

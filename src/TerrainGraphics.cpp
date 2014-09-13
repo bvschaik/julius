@@ -241,7 +241,6 @@ static int getAccessRampGraphicOffset(int x, int y)
 	if (IsOutsideMap(x, y, 1)) {
 		return -1;
 	}
-	// TODO
 	static const int offsets[4][6] = {
 		{162, 163, 0, 1, 324, 325},
 		{0, 162, 1, 163, -1, 161},
@@ -527,7 +526,6 @@ void TerrainGraphics_updateRegionEarthquake(int xMin, int yMin, int xMax, int yM
 
 void TerrainGraphics_updateRegionRubble(int xMin, int yMin, int xMax, int yMax)
 {
-	// TODO
 	int forbiddenTerrain = Terrain_Aqueduct | Terrain_Elevation | Terrain_AccessRamp;
 	forbiddenTerrain |= Terrain_Road | Terrain_Building | Terrain_Garden;
 	BOUND_REGION();

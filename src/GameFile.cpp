@@ -8,11 +8,11 @@
 #include "Loader.h"
 #include "PlayerMessage.h"
 #include "Resource.h"
-#include "RoadNetwork.h"
 #include "Routing.h"
 #include "SidebarMenu.h"
 #include "Sound.h"
 #include "TerrainGraphics.h"
+#include "UtilityManagement.h"
 #include "Walker.h"
 #include "Zip.h"
 
@@ -302,15 +302,15 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{0, &Data_CityInfo_Buildings.largeTempleMercury.working, 4},
 	{0, &Data_CityInfo_Buildings.largeTempleMars.working, 4},
 	{0, &Data_CityInfo_Buildings.largeTempleVenus.working, 4},
-	{0, &tmp, 100}, //{0, &dword_7FA2C0, 0x64}, all invasion related
-	{0, &tmp, 100}, //{0, &dword_862DE0, 0x64},
-	{0, &tmp, 100}, //{0, &dword_862D60, 0x64},
-	{0, &tmp, 100}, //{0, &dword_819860, 0x64},
-	{0, &tmp, 100}, //{0, &dword_819760, 0x64},
-	{0, &tmp, 100}, //{0, &dword_8197E0, 0x64},
-	{0, &tmp, 100}, //{0, &dword_7FA1C0, 0x64},
-	{0, &tmp, 100}, //{0, &dword_8198E0, 0x64},
-	{0, &tmp, 100}, //{0, &dword_7FA240, 0x64},
+	{0, &Data_Formation_Invasion.formationId, 100},
+	{0, &Data_Formation_Invasion.homeX, 100},
+	{0, &Data_Formation_Invasion.homeY, 100},
+	{0, &Data_Formation_Invasion.layout, 100},
+	{0, &Data_Formation_Invasion.destinationX, 100},
+	{0, &Data_Formation_Invasion.destinationY, 100},
+	{0, &Data_Formation_Invasion.destinationBuildingId, 100},
+	{0, &Data_Formation_Invasion.numLegions, 100},
+	{0, &Data_Formation_Invasion.ignoreRomanSoldiers, 100},
 	{0, &Data_CityInfo_Extra.entryPointFlag.x, 4},
 	{0, &Data_CityInfo_Extra.entryPointFlag.y, 4},
 	{0, &Data_CityInfo_Extra.exitPointFlag.x, 4},
@@ -451,7 +451,6 @@ int GameFile_loadSavedGameFromMissionPack(int missionId)
 
 static void debug()
 {
-	/*
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
 		if (b->inUse || b->type) {
@@ -459,7 +458,6 @@ static void debug()
 				i, b->type, b->inUse, b->numWorkers, b->walkerId, b->walkerId2, b->housesCovered);
 		}
 	}
-	*/
 }
 
 static void setupFromSavedGame()
@@ -492,7 +490,7 @@ static void setupFromSavedGame()
 
 	Building_determineGraphicIdsForOrientedBuildings();
 	WalkerRoute_clean();
-	RoadNetwork_calculate();
+	UtilityManagement_determineRoadNetworks();
 	Building_GameTick_checkAccessToRome();
 	Resource_gatherGranaryGettingInfo();
 	SidebarMenu_enableBuildingMenuItemsAndButtons();

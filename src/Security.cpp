@@ -1,7 +1,9 @@
+#include "Security.h"
 
 #include "Building.h"
 #include "Calc.h"
 #include "CityInfo.h"
+#include "Formation.h"
 #include "PlayerMessage.h"
 #include "Routing.h"
 #include "SidebarMenu.h"
@@ -158,7 +160,7 @@ static void generateRioter(int buildingId)
 		peopleInMob = 6;
 	}
 	int targetX, targetY;
-	int targetBuildingId = WalkerAction_Rioter_getTargetBuilding(&targetX, &targetY);
+	int targetBuildingId = Formation_Rioter_getTargetBuilding(&targetX, &targetY);
 	for (int i = 0; i < peopleInMob; i++) {
 		int walkerId = Walker_create(Walker_Rioter, xRoad, yRoad, 4);
 		struct Data_Walker *w = &Data_Walkers[walkerId];

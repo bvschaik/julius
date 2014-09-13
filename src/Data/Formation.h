@@ -48,10 +48,10 @@ struct Data_Formation {
 	short maxTotalDamage; //44
 	short waitTicks; // 46
 	short recentFight; //48
-	short __unknown4a;
-	short __unknown4c;
-	short __unknown4e;
-	short __unknown50;
+	short durationAdvance;
+	short durationRegroup;
+	short durationHalt;
+	short enemyLegionIndex;
 	short isHalted;
 	short missileFired; //54
 	short missileAttackTimeout; //56
@@ -70,7 +70,7 @@ struct Data_Formation {
 	char orientation;
 	char monthsFromHome; //68
 	char monthsVeryLowMorale; //69
-	char invasionId;
+	unsigned char invasionId;
 	char herdWolfSpawnDelay;
 	char herdDirection;
 	char __padding6d[17];
@@ -90,5 +90,17 @@ extern struct Data_Formation_Extra {
 
 	int daysSinceRomanSoldierConcentration;
 } Data_Formation_Extra;
+
+extern struct Data_Formation_Invasion {
+	int formationId[25];
+	int homeX[25];
+	int homeY[25];
+	int layout[25];
+	int destinationX[25];
+	int destinationY[25];
+	int destinationBuildingId[25];
+	int numLegions[25];
+	int ignoreRomanSoldiers[25];
+} Data_Formation_Invasion;
 
 #endif

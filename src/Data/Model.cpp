@@ -70,6 +70,7 @@ struct Data_TradePrice Data_TradePrices[16];
 
 struct Data_Formation Data_Formations[MAX_FORMATIONS];
 struct Data_Formation_Extra Data_Formation_Extra;
+struct Data_Formation_Invasion Data_Formation_Invasion;
 
 struct Data_FileList Data_FileList;
 
@@ -113,7 +114,7 @@ const struct BuildingProperties Constant_BuildingProperties[140] = {
 	{4, 0, 0, 0},
 	{3, 0, 0x2D, 0},
 	{2, 0, 0x2E, 0},
-	{5, 0, 0x0D5, 0},
+	{5, 0, 0xD5, 0},
 	{5, 0, 0x30, 0},
 	{3, 0, 0x31, 0},
 	{3, 0, 0x32, 0},

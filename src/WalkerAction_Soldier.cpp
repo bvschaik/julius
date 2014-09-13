@@ -323,7 +323,7 @@ void WalkerAction_soldier(int walkerId)
 				w->destinationY += soldierAlternativePoints[w->alternativeLocationIndex].y;
 			}
 			if (w->x != w->destinationX || w->y != w->destinationY) {
-				if (f->missileFired <= 0 && f->recentFight <= 0 && f->missileAttackTimeout) {
+				if (f->missileFired <= 0 && f->recentFight <= 0 && f->missileAttackTimeout <= 0) {
 					w->actionState = WalkerActionState_83_SoldierGoingToStandard;
 					w->alternativeLocationIndex = 0;
 				}

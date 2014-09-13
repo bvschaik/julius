@@ -1,6 +1,7 @@
 #include "WalkerAction_private.h"
 
 #include "Building.h"
+#include "Formation.h"
 #include "PlayerMessage.h"
 #include "Time.h"
 #include "Walker.h"
@@ -84,7 +85,7 @@ void WalkerAction_rioter(int walkerId)
 			if (w->waitTicks >= 160) {
 				w->actionState = WalkerActionState_121_RioterMoving;
 				int xTile, yTile;
-				int buildingId = WalkerAction_Rioter_getTargetBuilding(&xTile, &yTile);
+				int buildingId = Formation_Rioter_getTargetBuilding(&xTile, &yTile);
 				if (buildingId) {
 					w->destinationX = xTile;
 					w->destinationY = yTile;
@@ -100,7 +101,7 @@ void WalkerAction_rioter(int walkerId)
 			WalkerMovement_walkTicks(walkerId, 1);
 			if (w->direction == 8) {
 				int xTile, yTile;
-				int buildingId = WalkerAction_Rioter_getTargetBuilding(&xTile, &yTile);
+				int buildingId = Formation_Rioter_getTargetBuilding(&xTile, &yTile);
 				if (buildingId) {
 					w->destinationX = xTile;
 					w->destinationY = yTile;
@@ -180,31 +181,4 @@ int WalkerAction_Rioter_collapseBuilding(int walkerId)
 		return 1;
 	}
 	return 0;
-}
-
-int WalkerAction_Rioter_getTargetBuilding(int *xTile, int *yTile)
-{
-	// TODO move to formation because of shared attack building priority constants
-	int bestBuildingType = 100;
-	int buildingId = 0;
-	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse != 1) {
-			continue;
-		}
-		int type = Data_Buildings[i].type;
-		// TODO
-	}
-	if (buildingId <= 0) {
-		return 0;
-	}
-	struct Data_Building *b = &Data_Buildings[buildingId];
-	if (b->type == Building_Warehouse) {
-		*xTile = b->x + 1;
-		*yTile = b->y;
-		return buildingId + 1;
-	} else {
-		*xTile = b->x;
-		*yTile = b->y;
-		return buildingId;
-	}
 }
