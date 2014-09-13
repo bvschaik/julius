@@ -313,20 +313,20 @@ void Building_collapseOnFire(int buildingId, int hasPlague)
 		if (Data_Grid_terrain[GridOffset(x, y)] & Terrain_Water) {
 			continue;
 		}
-		int bid = Building_create(Building_BurningRuin, x, y);
-		b = &Data_Buildings[bid];
-		int random = Data_Grid_random[b->gridOffset] & 3;
+		int ruinId = Building_create(Building_BurningRuin, x, y);
+		struct Data_Building *ruin = &Data_Buildings[ruinId];
+		int random = Data_Grid_random[ruin->gridOffset] & 3;
 		int graphicId;
 		if (wasTent) {
 			graphicId = GraphicId(ID_Graphic_RubbleTent);
 		} else {
 			graphicId = GraphicId(ID_Graphic_RubbleGeneral) + 9 * random;
 		}
-		Terrain_addBuildingToGrids(bid, b->x, b->y, 1, graphicId, Terrain_Building);
-		b->fireDuration = (b->houseGenerationDelay & 7) + 1;
-		b->walkerId4 = 0;
-		b->fireProof = 1;
-		b->ruinHasPlague = hasPlague;
+		Terrain_addBuildingToGrids(ruinId, ruin->x, ruin->y, 1, graphicId, Terrain_Building);
+		ruin->fireDuration = (ruin->houseGenerationDelay & 7) + 1;
+		ruin->walkerId4 = 0;
+		ruin->fireProof = 1;
+		ruin->ruinHasPlague = hasPlague;
 	}
 	if (watersideBuilding) {
 		Routing_determineWater();
