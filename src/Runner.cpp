@@ -70,7 +70,7 @@ void Runner_run()
 
 void Runner_draw()
 {
-	UI_Window_refresh(1);
+	UI_Window_refresh(0);
 	Sound_City_play();
 	// TODO setCursor();
 	/*

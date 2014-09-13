@@ -69,6 +69,7 @@ static struct Window windows[] = {
 
 static WindowId previousWindow;
 static WindowId currentWindow;
+static int refreshRequested;
 
 WindowId UI_Window_getId()
 {
@@ -127,8 +128,9 @@ static void updateMouseAfter()
 void UI_Window_refresh(int force)
 {
 	updateMouseBefore();
-	if (force) {
+	if (force || refreshRequested) {
 		windows[currentWindow].drawBackground();
+		refreshRequested = 0;
 	}
 	windows[currentWindow].drawForeground();
 	windows[currentWindow].handleMouse();
@@ -139,5 +141,5 @@ void UI_Window_refresh(int force)
 
 void UI_Window_requestRefresh()
 {
-	// TODO
+	refreshRequested = 1;
 }
