@@ -400,7 +400,7 @@ static void drawWalkerInCity(int walkerId, UI_CityPixelCoordinate *coord)
 void UI_BuildingInfo_drawWalkerImagesLocal(BuildingInfoContext *c)
 {
 	if (c->walker.count > 0) {
-		UI_CityPixelCoordinate coord;
+		UI_CityPixelCoordinate coord = {0, 0};
 		for (int i = 0; i < c->walker.count; i++) {
 			drawWalkerInCity(c->walker.walkerIds[i], &coord);
 			Graphics_saveToBuffer(coord.x, coord.y, 48, 48, walkerImages[i]);

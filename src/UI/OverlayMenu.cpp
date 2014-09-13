@@ -70,7 +70,6 @@ void UI_OverlayMenu_init()
 void UI_OverlayMenu_drawBackground()
 {
 	UI_City_drawBackground();
-	UI_City_drawCity();
 }
 
 void UI_OverlayMenu_drawForeground()
