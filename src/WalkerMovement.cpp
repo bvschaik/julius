@@ -148,7 +148,7 @@ void WalkerMovement_initRoaming(int walkerId)
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	struct Data_Building *b = &Data_Buildings[w->buildingId];
 	w->progressOnTile = 15;
-	w->roamNoDestination = 0;
+	w->roamChooseDestination = 0;
 	w->roamTicksUntilNextTurn = -1;
 	w->roamTurnDirection = 2;
 	int roamDir = b->walkerRoamDirection;
@@ -170,7 +170,7 @@ void WalkerMovement_initRoaming(int walkerId)
 		w->destinationX = xRoad;
 		w->destinationY = yRoad;
 	} else {
-		w->roamNoDestination = 1;
+		w->roamChooseDestination = 1;
 	}
 }
 
@@ -216,16 +216,16 @@ static void roamSetDirection(struct Data_Walker *w)
 void WalkerMovement_roamTicks(int walkerId, int numTicks)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
-	if (w->roamNoDestination == 0) {
+	if (w->roamChooseDestination == 0) {
 		roamingEnabled = 1;
 		WalkerMovement_walkTicks(walkerId, numTicks);
 		if (w->direction == 8) {
-			w->roamNoDestination = 1;
+			w->roamChooseDestination = 1;
 			w->roamLength = 0;
 		} else if (w->direction == 9 || w->direction == 10) {
-			w->roamNoDestination = 1;
+			w->roamChooseDestination = 1;
 		}
-		if (w->roamNoDestination) {
+		if (w->roamChooseDestination) {
 			w->roamTicksUntilNextTurn = 100;
 			w->direction = w->previousTileDirection;
 		} else {
@@ -273,7 +273,7 @@ void WalkerMovement_roamTicks(int walkerId, int numTicks)
 					roadTiles[0] = roadTiles[4] = 0;
 				}
 			}
-			if (adjacentRoadTiles == 0) {
+			if (adjacentRoadTiles <= 0) {
 				w->roamLength = w->maxRoamLength; // end roaming walk
 				return;
 			}
@@ -299,7 +299,7 @@ void WalkerMovement_roamTicks(int walkerId, int numTicks)
 					if (w->direction < 0) w->direction = 6;
 				} while (dir++ < 4);
 			} else { // > 2 road tiles
-				w->direction = (w->roamRandomCounter + Data_Grid_random[w->gridOffset]) % 6;
+				w->direction = (w->roamRandomCounter + Data_Grid_random[w->gridOffset]) & 6;
 				if (!roadTiles[w->direction] || w->direction == cameFromDirection) {
 					w->roamTicksUntilNextTurn--;
 					if (w->roamTicksUntilNextTurn <= 0) {

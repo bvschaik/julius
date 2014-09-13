@@ -290,7 +290,7 @@ extern struct Data_Walker {
 	char isOnRoad;
 	short maxRoamLength;
 	short roamLength;
-	unsigned char roamNoDestination;
+	unsigned char roamChooseDestination;
 	unsigned char roamRandomCounter;
 	unsigned char roamTurnDirection;
 	unsigned char roamTicksUntilNextTurn;
