@@ -21,6 +21,7 @@
 #include "../src/KeyboardInput.h"
 #include "../src/KeyboardHotkey.h"
 #include "../src/Widget.h" // debug
+#include "../src/Graphics.h" // debug
 
 #include <execinfo.h>
 #include <signal.h>
@@ -78,6 +79,9 @@ Uint32 last;
 void refresh(SDL_Surface *surface)
 {
 	static Uint32 last;
+	static Uint32 lastFpsTime = 0;
+	static int lastFps = 0;
+	static int numFrames = 0;
 	
 	Uint32 now = SDL_GetTicks();
 	Time_setMillis(now);
@@ -93,8 +97,15 @@ void refresh(SDL_Surface *surface)
     }
 	
 	Runner_draw();
+	numFrames++;
 	Uint32 then2 = SDL_GetTicks();
-	Widget_Text_drawNumberColored(1000 / (now - last), 'f', "", Data_Screen.width - 120, 5, Font_NormalPlain, 0xf800);
+	if (then2 - lastFpsTime > 1000) {
+		lastFps = numFrames;
+		lastFpsTime = then2;
+		numFrames = 0;
+	}
+	Graphics_fillRect(Data_Screen.width - 120, 0, Data_Screen.width, 20, Color_White);
+	Widget_Text_drawNumberColored(lastFps, 'f', "", Data_Screen.width - 120, 5, Font_NormalPlain, 0xf800);
 	Widget_Text_drawNumberColored(then - now, 'g', "", Data_Screen.width - 70, 5, Font_NormalPlain, 0xf800);
 	Widget_Text_drawNumberColored(then2 - then, 'd', "", Data_Screen.width - 40, 5, Font_NormalPlain, 0xf800);
 	
