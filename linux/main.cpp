@@ -1,4 +1,4 @@
-#include "SDL.h"   /* All SDL App's need this */
+#include "SDL.h"
 #include <stdio.h>
 
 #include <stdlib.h>
@@ -313,8 +313,6 @@ int main()
 	format.palette = 0;
 	format.BitsPerPixel = 32;
 	
-	SDL_Rect **modes;
-	
 	const SDL_VideoInfo *vidInfo = SDL_GetVideoInfo();
 	printf("Current resolution: %d x %d\n", vidInfo->current_w, vidInfo->current_h);
 	
@@ -325,30 +323,9 @@ int main()
 		printf("VIDEO NOT OK\n");
 	}
 	
-	//SDL_Surface *surface = SDL_SetVideoMode(800, 600, 16, /*SDL_FULLSCREEN|*/SDL_HWSURFACE|SDL_DOUBLEBUF);
 	SDL_Surface *surface = createSurface(1680, 1050, 0);
+	//SDL_Surface *surface = createSurface(800, 600, 0);
 	//SDL_Surface *surface = createSurface(1920, 1200, 1);
-	
-	// Get available fullscreen/hardware modes
-	modes = SDL_ListModes(&format, SDL_HWSURFACE|SDL_DOUBLEBUF);
-	
-	// Check is there are any modes available
-	if (modes == (SDL_Rect **) 0) {
-		printf("No modes available!\n");
-		exit(-1);
-	}
-	
-	// Check if or resolution is restricted
-	if (modes == (SDL_Rect **) -1) {
-		printf("All resolutions available.\n");
-	} else {
-		// Print valid modes
-		printf("Available Modes\n");
-		for (int i = 0; modes[i]; ++i) {
-			printf("  %d x %d\n", modes[i]->w, modes[i]->h);
-		}
-	}
-	
 	
 	
 	// C3 setup

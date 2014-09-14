@@ -49,7 +49,8 @@ void WalkerAction_seagulls(int walkerId)
 			w->progressOnTile = 0;
 		}
 		WalkerAction_Common_setCrossCountryDestination(walkerId, w,
-			seagullOffsetsX[(int)w->progressOnTile], seagullOffsetsY[(int)w->progressOnTile]);
+			w->sourceX + seagullOffsetsX[(int)w->progressOnTile],
+			w->sourceY + seagullOffsetsY[(int)w->progressOnTile]);
 	}
 	if (walkerId & 1) {
 		WalkerActionIncreaseGraphicOffset(w, 54);
