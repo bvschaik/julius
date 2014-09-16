@@ -688,7 +688,7 @@ static void tickUpdateEnemies()
 	}
 	for (int i = 0; i < 25; i++) {
 		Data_Formation_Invasion.formationId[i] = 0;
-		Data_Formation_Invasion.ignoreRomanSoldiers[i] = 0;
+		Data_Formation_Invasion.numLegions[i] = 0;
 	}
 	int romanDistance = 0;
 	for (int i = 1; i < MAX_FORMATIONS; i++) {
@@ -766,8 +766,7 @@ static void tickUpdateEnemies()
 				Data_Formation_Invasion.destinationBuildingId[f->invasionId] = f->destinationBuildingId;
 			}
 		}
-		f->enemyLegionIndex = Data_Formation_Invasion.numLegions[f->invasionId];
-		Data_Formation_Invasion.numLegions[f->invasionId]++;
+		f->enemyLegionIndex = Data_Formation_Invasion.numLegions[f->invasionId]++;
 		f->waitTicks++;
 		f->destinationX = Data_Formation_Invasion.destinationX[f->invasionId];
 		f->destinationY = Data_Formation_Invasion.destinationY[f->invasionId];

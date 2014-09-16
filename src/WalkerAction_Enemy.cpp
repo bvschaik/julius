@@ -23,7 +23,7 @@ static void enemyInitial(int walkerId, struct Data_Walker *w, struct Data_Format
 			} else if (f->layout == FormationLayout_Enemy12) {
 				Sound_Speech_playFile("wavs/horn2.wav");
 			} else {
-				Sound_Speech_playFile("wavs/horn2.wav");
+				Sound_Speech_playFile("wavs/horn1.wav");
 			}
 		}
 		w->isGhost = 0;
@@ -32,7 +32,7 @@ static void enemyInitial(int walkerId, struct Data_Walker *w, struct Data_Format
 		} else {
 			w->destinationX = f->destinationX + w->formationPositionX;
 			w->destinationY = f->destinationY + w->formationPositionY;
-			if (Routing_getGeneralDirection(w->x, w->y, w->destinationX, w->destinationY)) {
+			if (Routing_getGeneralDirection(w->x, w->y, w->destinationX, w->destinationY) < 8) {
 				w->actionState = WalkerActionState_153_EnemyMarching;
 			}
 		}
@@ -164,8 +164,8 @@ static void WalkerAction_enemyCommon(int walkerId, struct Data_Walker *w)
 	struct Data_Formation *f = &Data_Formations[w->formationId];
 	Data_CityInfo.numEnemiesInCity++;
 	w->terrainUsage = WalkerTerrainUsage_Enemy;
-	w->formationPositionX = f->x + WalkerActionFormationLayoutPositionX(f->layout, w->indexInFormation);
-	w->formationPositionY = f->y + WalkerActionFormationLayoutPositionY(f->layout, w->indexInFormation);
+	w->formationPositionX = WalkerActionFormationLayoutPositionX(f->layout, w->indexInFormation);
+	w->formationPositionY = WalkerActionFormationLayoutPositionY(f->layout, w->indexInFormation);
 
 	switch (w->actionState) {
 		case WalkerActionState_150_Attack:
@@ -758,8 +758,8 @@ int WalkerAction_HerdEnemy_moveFormationTo(int formationId, int x, int y, int *x
 	walkerOffsets[0] = 0;
 	for (int i = 1; i < f->numWalkers; i++) {
 		walkerOffsets[i] = GridOffset(
-			WalkerActionFormationLayoutPositionX(f->layout, 0),
-			WalkerActionFormationLayoutPositionY(f->layout, 0)) - baseOffset;
+			WalkerActionFormationLayoutPositionX(f->layout, i),
+			WalkerActionFormationLayoutPositionY(f->layout, i)) - baseOffset;
 	}
 	Routing_canTravelOverLandNonCitizen(x, y, -1, -1, 0, 600);
 	for (int r = 0; r <= 10; r++) {
@@ -772,7 +772,7 @@ int WalkerAction_HerdEnemy_moveFormationTo(int formationId, int x, int y, int *x
 			for (int xx = xMin; xx <= xMax; xx++) {
 				int canMove = 1;
 				for (int w = 0; w < f->numWalkers; w++) {
-					int gridOffset = GridOffset(x, y) + walkerOffsets[w];
+					int gridOffset = GridOffset(xx, yy) + walkerOffsets[w];
 					if (Data_Grid_terrain[gridOffset] & Terrain_1237) {
 						canMove = 0;
 						break;
