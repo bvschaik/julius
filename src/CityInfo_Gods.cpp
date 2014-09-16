@@ -183,7 +183,7 @@ static void updateGodMoods()
 	}
 	if (god <= 4) {
 		if (Data_CityInfo.godHappiness[god] >= 100 &&
-				!Data_CityInfo.godBlessingDone) {
+				!Data_CityInfo.godBlessingDone[god]) {
 			Data_CityInfo.godBlessingDone[god] = 1;
 			performBlessing(god);
 		} else if (Data_CityInfo.godWrathBolts[god] >= 20 &&

@@ -359,17 +359,26 @@ static void walkerAdvanceRouteTile(struct Data_Walker *w)
 		if (groundType < 0) {
 			w->direction = 9;
 		} else if (groundType > 0 && groundType != 5) {
-			w->attackDirection = w->direction;
-			w->direction = 11;
+			int causeDamage = 1;
 			int damage;
 			switch (groundType) {
 				case 1: damage = 10; break;
-				case 2: damage = 10; break;
+				case 2:
+					if (Data_Grid_terrain[targetGridOffset] & 0x1420) {
+						causeDamage = 0;
+					} else {
+						damage = 10;
+					}
+					break;
 				case 3: damage = 200; break;
 				default: damage = 150; break;
 			}
-			if (!(Data_CityInfo_Extra.gameTimeTick & 3)) {
-				Building_increaseDamageByEnemy(targetGridOffset, damage);
+			if (causeDamage) {
+				w->attackDirection = w->direction;
+				w->direction = 11;
+				if (!(Data_CityInfo_Extra.gameTimeTick & 3)) {
+					Building_increaseDamageByEnemy(targetGridOffset, damage);
+				}
 			}
 		}
 	} else if (w->terrainUsage == WalkerTerrainUsage_Walls) {
@@ -468,7 +477,7 @@ void WalkerMovement_walkTicksTowerSentry(int walkerId, int numTicks)
 	}
 }
 
-void WalkerMovement_crossCountrySetDirection(int walkerId, int xSrc, int ySrc, int xDst, int yDst, int isProjectile)
+void WalkerMovement_crossCountrySetDirection(int walkerId, int xSrc, int ySrc, int xDst, int yDst, int isMissile)
 {
 	// all x/y are in 1/15th of a tile
 	struct Data_Walker *w = &Data_Walkers[walkerId];
@@ -483,7 +492,7 @@ void WalkerMovement_crossCountrySetDirection(int walkerId, int xSrc, int ySrc, i
 	} else { // equal
 		w->ccDeltaXY = 0;
 	}
-	if (isProjectile) {
+	if (isMissile) {
 		w->direction = Routing_getDirectionForMissile(xSrc, ySrc, xDst, yDst);
 	} else {
 		w->direction = Routing_getGeneralDirection(xSrc, ySrc, xDst, yDst);

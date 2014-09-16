@@ -231,10 +231,14 @@ int Walker_createMissile(int buildingId, int x, int y, int xDst, int yDst, int t
 {
 	int walkerId = Walker_create(type, x, y, 0);
 	if (walkerId) {
-		Data_Walkers[walkerId].missileDamage = (type == Walker_Bolt) ? 60 : 10;
-		Data_Walkers[walkerId].buildingId = buildingId;
-		WalkerAction_Common_setCrossCountryDestination(walkerId,
-			&Data_Walkers[walkerId], xDst, yDst);
+		struct Data_Walker *w = &Data_Walkers[walkerId];
+		w->missileDamage = (type == Walker_Bolt) ? 60 : 10;
+		w->buildingId = buildingId;
+		w->destinationX = xDst;
+		w->destinationY = yDst;
+		WalkerMovement_crossCountrySetDirection(
+			walkerId, w->crossCountryX, w->crossCountryY,
+			15 * xDst, 15 * yDst, 1);
 	}
 	return walkerId;
 }

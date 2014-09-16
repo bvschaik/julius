@@ -88,18 +88,18 @@ void WalkerAction_spear(int walkerId)
 		int targetType = Data_Walkers[targetId].type;
 		int formationId = Data_Walkers[targetId].formationId;
 		int maxDamage = Constant_WalkerProperties[targetType].maxDamage;
-		int damageInflicted =
+		int netDamage =
 			Constant_WalkerProperties[w->type].missileAttackValue -
 			Constant_WalkerProperties[targetType].missileDefenseValue;
-		if (damageInflicted < 0) {
-			damageInflicted = 0;
+		if (netDamage < 0) {
+			netDamage = 0;
 		}
 		if (targetType == Walker_FortLegionary &&
 			Data_Formations[formationId].isHalted &&
 			Data_Formations[formationId].layout == FormationLayout_Tortoise) {
-			damageInflicted = 1;
+			netDamage = 1;
 		}
-		int targetDamage = damageInflicted + Data_Walkers[targetId].damage;
+		int targetDamage = netDamage + Data_Walkers[targetId].damage;
 		if (targetDamage <= maxDamage) {
 			Data_Walkers[targetId].damage = targetDamage;
 		} else { // kill target
