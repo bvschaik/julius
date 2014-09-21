@@ -182,12 +182,17 @@ int WalkerAction_CombatEnemy_getMissileTarget(int enemyId, int maxDistance, int 
 			case Walker_Spear:
 				continue;
 		}
-		if (WalkerIsLegion(w->type) || (attackCitizens && w->isFriendly)) {
-			int distance = Calc_distanceMaximum(x, y, w->x, w->y);
-			if (distance < minDistance && WalkerMovement_canLaunchCrossCountryMissile(x, y, w->x, w->y)) {
-				minDistance = distance;
-				minWalkerId = i;
-			}
+		int distance;
+		if (WalkerIsLegion(w->type)) {
+			distance = Calc_distanceMaximum(x, y, w->x, w->y);
+		} else if (attackCitizens && w->isFriendly) {
+			distance = Calc_distanceMaximum(x, y, w->x, w->y) + 5;
+		} else {
+			continue;
+		}
+		if (distance < minDistance && WalkerMovement_canLaunchCrossCountryMissile(x, y, w->x, w->y)) {
+			minDistance = distance;
+			minWalkerId = i;
 		}
 	}
 	if (minWalkerId) {

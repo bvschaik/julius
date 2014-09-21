@@ -110,20 +110,20 @@ static int drawWalker(int xView, int yView, int gridOffset)
 	int walkerId = Data_Grid_walkerIds[gridOffset];
 	while (walkerId > 0) {
 		int type = Data_Walkers[walkerId].type;
-		if (type >= Walker_FortJavelin && type <= Walker_FortLegionary) {
+		if (WalkerIsLegion(type)) {
 			hasWalker = 1;
 			color = soldierColor;
 			break;
 		}
 		if (WalkerIsEnemy(type)) {
 			hasWalker = 1;
-			color = soldierColor;
+			color = enemyColor;
 			break;
 		}
 		if (type == Walker_IndigenousNative &&
 			Data_Walkers[walkerId].actionState == WalkerActionState_159_NativeAttacking) {
 			hasWalker = 1;
-			color = soldierColor;
+			color = enemyColor;
 			break;
 		}
 		if (type == Walker_Wolf) {

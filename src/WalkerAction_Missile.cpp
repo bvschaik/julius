@@ -21,7 +21,7 @@ void WalkerAction_explosionCloud(int walkerId)
 	WalkerMovement_crossCountryWalkTicks(walkerId, w->speedMultiplier);
 	if (w->progressOnTile < 48) {
 		w->graphicId = GraphicId(ID_Graphic_Walker_Explosion) +
-			cloudGraphicOffsets[w->progressOnTile / 2]; // dword_5FA2A8
+			cloudGraphicOffsets[w->progressOnTile / 2];
 	} else {
 		w->graphicId = GraphicId(ID_Graphic_Walker_Explosion) + 7;
 	}

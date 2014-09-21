@@ -273,8 +273,8 @@ extern struct Data_Walker {
 	char missileDamage;
 	unsigned char damage; //19
 	short gridOffset; // 1a
-	char destinationX; // 1c
-	char destinationY;
+	unsigned char destinationX; // 1c
+	unsigned char destinationY;
 	short destinationGridOffsetSoldier;
 	char sourceX; // 20
 	char sourceY;
@@ -316,7 +316,7 @@ extern struct Data_Walker {
 	char minMaxSeen;
 	char __unused_57;
 	short inFrontWalkerId;
-	char attackGraphicOffset;
+	unsigned char attackGraphicOffset;
 	unsigned char waitTicksMissile;
 	char xOffsetCart; // 5c
 	char yOffsetCart; // 5d

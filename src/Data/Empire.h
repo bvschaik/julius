@@ -26,8 +26,8 @@ extern struct Data_Empire_Index {
 } Data_Empire_Index[40];
 
 extern struct Data_Empire_Object {
-	char type;
-	char inUse;
+	unsigned char type;
+	unsigned char inUse;
 	short animationIndex;
 	short x;
 	short y;
@@ -35,26 +35,26 @@ extern struct Data_Empire_Object {
 	short height;
 	short graphicId;
 	short graphicIdExpanded;
-	char __unused2;
-	char distantBattleTravelMonths;
-	char __unused3[2];
+	unsigned char __unused2;
+	unsigned char distantBattleTravelMonths;
+	unsigned char __unused3[2];
 	short xExpanded;
 	short yExpanded;
-	char cityType;
-	char cityNameId;
-	char tradeRouteId;
-	char tradeRouteOpen;
+	unsigned char cityType;
+	unsigned char cityNameId;
+	unsigned char tradeRouteId;
+	unsigned char tradeRouteOpen;
 	short tradeRouteCostToOpen;
-	char citySells[10];
+	unsigned char citySells[10];
 	unsigned char ownerCityIndex;
-	char unknown990d29;
-	char cityBuys[8];
-	char invasionPathId;
-	char invasionYears;
+	unsigned char unknown990d29;
+	unsigned char cityBuys[8];
+	unsigned char invasionPathId;
+	unsigned char invasionYears;
 	short trade40;
 	short trade25;
 	short trade15;
-	char __padding[6];
+	unsigned char __padding[6];
 } Data_Empire_Objects[MAX_EMPIRE_OBJECTS];
 
 extern struct Data_Empire_City {

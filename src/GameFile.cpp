@@ -451,11 +451,23 @@ int GameFile_loadSavedGameFromMissionPack(int missionId)
 
 static void debug()
 {
-	for (int i = 1; i < MAX_BUILDINGS; i++) {
+	printf("TIME: y %d m %d d %d t %d\n",
+		Data_CityInfo_Extra.gameTimeYear,
+		Data_CityInfo_Extra.gameTimeMonth,
+		Data_CityInfo_Extra.gameTimeDay,
+		Data_CityInfo_Extra.gameTimeTick);
+	/*for (int i = 1; i < MAX_BUILDINGS; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
 		if (b->inUse || b->type) {
 			printf("Building %d type %d inUse %d emp %d w %d ls %d hc %d\n",
 				i, b->type, b->inUse, b->numWorkers, b->walkerId, b->walkerId2, b->housesCovered);
+		}
+	}*/
+	for (int i = 1; i < MAX_WALKERS; i++) {
+		struct Data_Walker *w = &Data_Walkers[i];
+		if (!w->isFriendly && w->state == WalkerState_Alive) {
+			printf("Enemy %d type %d as %d wt %d mt %d\n",
+				i, w->type, w->actionState, w->waitTicks, w->waitTicksMissile);
 		}
 	}
 }

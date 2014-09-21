@@ -137,10 +137,10 @@ extern struct Data_Scenario {
 		int prosperity;
 		int peace;
 		int favor;
-		char cultureEnabled;
-		char prosperityEnabled;
-		char peaceEnabled;
-		char favorEnabled;
+		unsigned char cultureEnabled;
+		unsigned char prosperityEnabled;
+		unsigned char peaceEnabled;
+		unsigned char favorEnabled;
 		int timeLimitYearsEnabled;
 		int timeLimitYears;
 		int survivalYearsEnabled;
