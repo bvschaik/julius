@@ -198,7 +198,8 @@ int CityView_pixelCoordsToGridOffset(int xPixels, int yPixels)
 	}
 	Data_CityView.selectedTile.yOffsetInPixels =
 		Data_CityView.yOffsetInPixels + 15 * yViewOffset - 15; // TODO why -1?
-	return ViewToGridOffset(Data_CityView.xInTiles + xViewOffset, Data_CityView.yInTiles + yViewOffset);
+	int gridOffset = ViewToGridOffset(Data_CityView.xInTiles + xViewOffset, Data_CityView.yInTiles + yViewOffset);
+	return gridOffset < 0 ? 0 : gridOffset;
 }
 
 void CityView_rotateLeft()
