@@ -1,6 +1,7 @@
 #include "TopMenu.h"
 #include "Window.h"
 #include "AllWindows.h"
+#include "Advisors.h"
 #include "FileDialog.h"
 #include "MessageDialog.h"
 #include "../Graphics.h"
@@ -333,7 +334,6 @@ static void menuHelp_about(int param)
 static void menuAdvisors_goTo(int advisor)
 {
 	clearState();
-	UI_Advisors_setAdvisor(advisor);
-	UI_Window_goTo(Window_Advisors);
-	// TODO restrictions and extra functionality from fun_gotoAdvisorFromButton 
+	UI_Window_goBack();
+	UI_Advisors_goToFromMessage(advisor);
 }

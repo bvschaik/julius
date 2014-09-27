@@ -6,6 +6,8 @@ enum {
 	Warning_ClearLandNeeded = 2,
 	Warning_OneBuildingOfType = 4,
 	Warning_RoadAccessNeeded = 11,
+	Warning_NotAvailable = 13,
+	Warning_NotAvailableYet = 14,
 	Warning_WorkersNeeded = 17,
 	Warning_MoreFoodNeeded = 18,
 	Warning_BuildMarket = 19,

@@ -826,6 +826,10 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\src\UI\Advisors.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\UI\Advisors_private.h"
 				>
 			</File>
@@ -946,11 +950,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Formation.h"
+				RelativePath=".\src\Data\Formation.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Formation.h"
+				RelativePath=".\src\Formation.h"
 				>
 			</File>
 			<File
@@ -962,11 +966,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Graphics.h"
+				RelativePath=".\src\Graphics.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Graphics.h"
+				RelativePath=".\src\Data\Graphics.h"
 				>
 			</File>
 			<File
@@ -978,11 +982,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Grid.h"
+				RelativePath=".\src\Grid.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Grid.h"
+				RelativePath=".\src\Data\Grid.h"
 				>
 			</File>
 			<File
@@ -1002,19 +1006,19 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\KeyboardInput.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\Data\KeyboardInput.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Data\Language.h"
+				RelativePath=".\src\KeyboardInput.h"
 				>
 			</File>
 			<File
 				RelativePath=".\src\Language.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\Data\Language.h"
 				>
 			</File>
 			<File
@@ -1058,11 +1062,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\data\Random.h"
+				RelativePath=".\src\Random.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Random.h"
+				RelativePath=".\src\data\Random.h"
 				>
 			</File>
 			<File

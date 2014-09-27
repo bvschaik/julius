@@ -462,15 +462,21 @@ static void buttonBack(int param1, int param2)
 
 static void buttonScroll(int isDown, int numLines)
 {
+	// TODO
 }
 
-static void buttonClose(int param1, int param2)
+void UI_MessageDialog_close()
 {
 	// TODO cancel video
 	data.showVideo = 0;
 	// TODO message_msgAdvisorId = 0
 	UI_Window_goBack();
 	UI_Window_requestRefresh();
+}
+
+static void buttonClose(int param1, int param2)
+{
+	UI_MessageDialog_close();
 }
 
 static void buttonHelp(int param1, int param2)

@@ -38,7 +38,7 @@ static struct Window windows[] = {
 	{ UI_SendGiftToCaesarDialog_init, UI_SendGiftToCaesarDialog_drawBackground, UI_SendGiftToCaesarDialog_drawForeground, UI_SendGiftToCaesarDialog_handleMouse },
 	{ noop, UI_LaborPriorityDialog_drawBackground, UI_LaborPriorityDialog_drawForeground, UI_LaborPriorityDialog_handleMouse },
 	// 10
-	{ noop, noop, noop, noop },
+	{ noop, UI_DisplayOptions_drawForeground, noop, noop },
 	{ UI_SoundOptions_init, noop, UI_SoundOptions_drawForeground, UI_SoundOptions_handleMouse },
 	{ UI_SpeedOptions_init, noop, UI_SpeedOptions_drawForeground, UI_SpeedOptions_handleMouse },
 	{ noop, UI_Empire_drawBackground, UI_Empire_drawForeground, UI_Empire_handleMouse },

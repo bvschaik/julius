@@ -9,22 +9,6 @@
 #include "../Data/Constants.h"
 #include "../Data/Graphics.h"
 
-enum {
-	Advisor_None = 0,
-	Advisor_Labor = 1,
-	Advisor_Military = 2,
-	Advisor_Imperial = 3,
-	Advisor_Ratings = 4,
-	Advisor_Trade = 5,
-	Advisor_Population = 6,
-	Advisor_Health = 7,
-	Advisor_Education = 8,
-	Advisor_Entertainment = 9,
-	Advisor_Religion = 10,
-	Advisor_Financial = 11,
-	Advisor_Chief = 12
-};
-
 void UI_Advisor_drawGeneralBackground();
 
 void UI_Advisor_Labor_drawBackground(int *advisorHeight);

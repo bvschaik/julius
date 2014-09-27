@@ -67,3 +67,17 @@ void UI_DisplayOptions_drawForeground()
 	);
 }
 
+void UI_DisplayOptions_handleMouse()
+{
+	if (Data_Mouse.right.wentUp) {
+		// cancel dialog
+		UI_Window_goTo(Window_City);
+	} else {
+		/*
+		int baseOffsetX = Data_Screen.offset640x480.x;
+		int baseOffsetY = Data_Screen.offset640x480.y;
+		Widget_Button_handleArrowButtons(
+			baseOffsetX + 288, baseOffsetY + 80, arrowButtons, 4);
+		*/
+	}
+}

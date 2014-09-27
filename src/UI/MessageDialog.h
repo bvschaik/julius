@@ -21,4 +21,6 @@ void UI_MessageDialog_drawBackground();
 void UI_MessageDialog_drawForeground();
 void UI_MessageDialog_handleMouse();
 
+void UI_MessageDialog_close();
+
 #endif

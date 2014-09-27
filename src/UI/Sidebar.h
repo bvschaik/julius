@@ -1,6 +1,8 @@
 #ifndef UI_SIDEBAR_H
 #define UI_SIDEBAR_H
 
+void UI_Sidebar_setLastAdvisor(int advisor);
+
 void UI_Sidebar_drawBackground();
 
 void UI_Sidebar_handleMouse();

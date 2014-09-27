@@ -1,5 +1,6 @@
 #include "Window.h"
 #include "AllWindows.h"
+#include "Advisors.h"
 #include "PopupDialog.h"
 #include "MessageDialog.h"
 
@@ -547,9 +548,7 @@ static void buttonReturnToCity(int param1, int param2)
 
 static void buttonAdvisor(int advisor, int param2)
 {
-	// TODO consolidate all go-to-advisor actions into 1 function (just like original)
-	UI_Advisors_setAdvisor(advisor);
-	UI_Window_goTo(Window_Advisors);
+	UI_Advisors_goToFromMessage(Window_Advisors);
 }
 
 static void buttonOpenTrade(int param1, int param2)

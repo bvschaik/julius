@@ -3,9 +3,14 @@
 #include "AllWindows.h"
 #include "Window.h"
 #include "MessageDialog.h"
+#include "Sidebar.h"
+#include "Warning.h"
 
 #include "../CityInfo.h"
 #include "../Formation.h"
+
+#include "../Data/Settings.h"
+#include "../Data/Tutorial.h"
 
 static void buttonChangeAdvisor(int param1, int param2);
 static void buttonHelp(int param1, int param2);
@@ -34,7 +39,7 @@ static const int advisorToMessageTextId[] = {
 	0, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30
 };
 
-static int currentAdvisor = Advisor_Education;
+static int currentAdvisor = Advisor_None;
 
 static int focusButtonId;
 static int advisorHeight;
@@ -43,6 +48,48 @@ void UI_Advisors_setAdvisor(int advisor)
 {
 	currentAdvisor = advisor;
 	UI_Advisors_init();
+}
+
+int UI_Advisors_getId()
+{
+	return currentAdvisor;
+}
+
+void UI_Advisors_goToFromMessage(int advisor)
+{
+	if (IsTutorial1()) {
+		if (UI_Window_getId() == Window_MessageDialog) {
+			UI_MessageDialog_close();
+			UI_Window_goTo(Window_City);
+		}
+		UI_Warning_show(Warning_NotAvailable);
+		return;
+	}
+	if (IsTutorial2() && !Data_Tutorial.tutorial2.population250Reached) {
+		if (UI_Window_getId() == Window_MessageDialog) {
+			UI_MessageDialog_close();
+			UI_Window_goTo(Window_City);
+		}
+		UI_Warning_show(Warning_NotAvailableYet);
+		return;
+	}
+	currentAdvisor = advisor;
+    UI_Sidebar_setLastAdvisor(advisor);
+	UI_Window_goTo(Window_Advisors);
+}
+
+void UI_Advisors_goToFromSidepanel(int advisor)
+{
+	if (IsTutorial1()) {
+		UI_Warning_show(Warning_NotAvailable);
+		return;
+	}
+	if (IsTutorial2() && !Data_Tutorial.tutorial2.population250Reached) {
+		UI_Warning_show(Warning_NotAvailableYet);
+		return;
+	}
+	currentAdvisor = advisor;
+	UI_Window_goTo(Window_Advisors);
 }
 
 void UI_Advisors_init()
