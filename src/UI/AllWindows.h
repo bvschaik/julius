@@ -20,6 +20,7 @@ void UI_DifficultyOptions_drawForeground();
 void UI_DifficultyOptions_handleMouse();
 
 void UI_DisplayOptions_drawForeground();
+void UI_DisplayOptions_handleMouse();
 
 void UI_SoundOptions_init();
 void UI_SoundOptions_drawForeground();

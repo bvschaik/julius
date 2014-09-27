@@ -1,10 +1,25 @@
+#include "Window.h"
+
 #include "../Widget.h"
 #include "../Graphics.h"
+
 #include "../Data/Constants.h"
 #include "../Data/Graphics.h"
 #include "../Data/Mouse.h"
 #include "../Data/Screen.h"
 #include "../Data/Settings.h"
+
+static void buttonFullscreen(int param1, int param2);
+static void buttonSetResolution(int param1, int param2);
+static void buttonCancel(int param1, int param2);
+
+static CustomButton buttons[5] = {
+	{144, 136, 336, 156, buttonFullscreen, Widget_Button_doNothing, 1, 1, 0},
+	{144, 160, 336, 180, buttonSetResolution, Widget_Button_doNothing, 1, 1, 0},
+	{144, 184, 336, 204, buttonSetResolution, Widget_Button_doNothing, 1, 2, 0},
+	{144, 208, 336, 228, buttonSetResolution, Widget_Button_doNothing, 1, 3, 0},
+	{144, 232, 336, 252, buttonCancel, Widget_Button_doNothing, 1, 1, 0},
+};
 
 static int focusButtonId;
 
@@ -73,11 +88,24 @@ void UI_DisplayOptions_handleMouse()
 		// cancel dialog
 		UI_Window_goTo(Window_City);
 	} else {
-		/*
 		int baseOffsetX = Data_Screen.offset640x480.x;
 		int baseOffsetY = Data_Screen.offset640x480.y;
-		Widget_Button_handleArrowButtons(
-			baseOffsetX + 288, baseOffsetY + 80, arrowButtons, 4);
-		*/
+		Widget_Button_handleCustomButtons(
+			baseOffsetX, baseOffsetY, buttons, 5, &focusButtonId);
 	}
+}
+
+static void buttonFullscreen(int param1, int param2)
+{
+	// TODO
+}
+
+static void buttonSetResolution(int id, int param2)
+{
+	// TODO
+}
+
+static void buttonCancel(int param1, int param2)
+{
+	UI_Window_goTo(Window_City);
 }
