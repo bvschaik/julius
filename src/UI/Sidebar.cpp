@@ -24,6 +24,7 @@
 #include "../Data/Screen.h"
 #include "../Data/State.h"
 #include "../Data/Settings.h"
+#include "../Data/Tutorial.h"
 
 #define SIDEBAR_BORDER ((Data_Screen.width + 20) % 60)
 #define BOTTOM_BORDER ((Data_Screen.height - 24) % 15)
@@ -349,7 +350,14 @@ static void buttonAdvisors(int param1, int param2)
 
 static void buttonEmpire(int param1, int param2)
 {
-	// TODO
+	if (IsTutorial1()) {
+		UI_Warning_show(Warning_NotAvailable);
+		return;
+	}
+	if (IsTutorial2() && !Data_Tutorial.tutorial2.population250Reached) {
+		UI_Warning_show(Warning_NotAvailableYet);
+		return;
+	}
 	UI_Window_goTo(Window_Empire);
 }
 static void buttonMissionBriefing(int param1, int param2)
