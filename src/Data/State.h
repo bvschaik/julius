@@ -63,6 +63,12 @@ extern struct Data_State {
 	int winState; // 1 = win
 	int forceWinCheat;
 	int missionBriefingShown;
+	struct {
+		int left;
+		int right;
+		int up;
+		int down;
+	} arrowKey;
 } Data_State;
 
 #endif

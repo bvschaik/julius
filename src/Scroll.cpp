@@ -41,6 +41,7 @@ int Scroll_getDirection() {
 	int bottom = 0;
 	int left = 0;
 	int right = 0;
+	// mouse near map edge
 	if (Data_Mouse.x < SCROLL_BORDER) {
 		left = 1;
 		Data_State.isScrollingMap = 1;
@@ -57,7 +58,28 @@ int Scroll_getDirection() {
 		bottom = 1;
 		Data_State.isScrollingMap = 1;
 	}
-	// TODO keyboard arrow keys
+	// keyboard arrow keys
+	if (Data_State.arrowKey.left) {
+		left = 1;
+		Data_State.isScrollingMap = 1;
+	}
+	if (Data_State.arrowKey.right) {
+		right = 1;
+		Data_State.isScrollingMap = 1;
+	}
+	if (Data_State.arrowKey.up) {
+		top = 1;
+		Data_State.isScrollingMap = 1;
+	}
+	if (Data_State.arrowKey.down) {
+		bottom = 1;
+		Data_State.isScrollingMap = 1;
+	}
+	Data_State.arrowKey.left = 0;
+	Data_State.arrowKey.right = 0;
+	Data_State.arrowKey.up = 0;
+	Data_State.arrowKey.down = 0;
+
 	// two sides
 	if (left && top) {
 		return Direction_TopLeft;

@@ -140,7 +140,7 @@ void KeyboardHotkey_character(int c)
 			cycleLegion();
 			break;
 		case '1':
-			showAdvisor(Advisor_Chief);
+			showAdvisor(Advisor_Labor);
 			break;
 		case '2':
 			showAdvisor(Advisor_Military);
@@ -176,5 +176,25 @@ void KeyboardHotkey_character(int c)
 			showAdvisor(Advisor_Chief);
 			break;
 	}
+}
+
+void KeyboardHotkey_left()
+{
+	Data_State.arrowKey.left = 1;
+}
+
+void KeyboardHotkey_right()
+{
+	Data_State.arrowKey.right = 1;
+}
+
+void KeyboardHotkey_up()
+{
+	Data_State.arrowKey.up = 1;
+}
+
+void KeyboardHotkey_down()
+{
+	Data_State.arrowKey.down = 1;
 }
 

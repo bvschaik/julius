@@ -9,6 +9,7 @@
 #include "../CityInfo.h"
 #include "../Formation.h"
 
+#include "../Data/Mouse.h"
 #include "../Data/Settings.h"
 #include "../Data/Tutorial.h"
 
@@ -224,8 +225,11 @@ void UI_Advisors_handleMouse()
 	if (Widget_Button_handleCustomButtons(baseOffsetX, baseOffsetY + 440, advisorButtons, 13, &focusButtonId)) {
 		return;
 	}
-
 	if (Widget_Button_handleImageButtons(baseOffsetX, baseOffsetY + 16 * (advisorHeight - 2), &helpButton, 1)) {
+		return;
+	}
+	if (Data_Mouse.right.wentUp) {
+		UI_Window_goTo(Window_City);
 		return;
 	}
 

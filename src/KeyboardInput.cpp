@@ -101,12 +101,13 @@ void KeyboardInput_initTextField(int inputId, char *text, int maxLength,
 void KeyboardInput_initInput(int inputId)
 {
 	Data_KeyboardInput.current = inputId;
-	
-	struct Data_KeyboardInputLine *current =
-		&Data_KeyboardInput.lines[Data_KeyboardInput.current];
-	current->length = 0;
-	for (int i = 0; i <= current->maxLength && current->text[i]; i++) {
-		++current->length;
+	if (inputId) {
+		struct Data_KeyboardInputLine *current =
+			&Data_KeyboardInput.lines[Data_KeyboardInput.current];
+		current->length = 0;
+		for (int i = 0; i <= current->maxLength && current->text[i]; i++) {
+			++current->length;
+		}
 	}
 }
 

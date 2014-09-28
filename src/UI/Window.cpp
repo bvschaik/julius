@@ -11,6 +11,7 @@
 #include "TopMenu.h"
 #include "Warning.h"
 
+#include "../KeyboardInput.h"
 #include "../Data/Mouse.h"
 
 struct Window {
@@ -134,6 +135,7 @@ void UI_Window_refresh(int force)
 		refreshRequested = 0;
 	}
 	windows[currentWindow].drawForeground();
+	KeyboardInput_initInput(0);
 	windows[currentWindow].handleMouse();
 	UI_Tooltip_handle(windows[currentWindow].getTooltip);
 	UI_Warning_draw();

@@ -710,8 +710,8 @@ static void buildEnd()
 
 void UI_CityBuildings_handleMouse()
 {
-	updateCityViewCoords();
 	UI_CityBuildings_scrollMap(Scroll_getDirection());
+	updateCityViewCoords();
 	Data_State.selectedBuilding.drawAsOverlay = 0;
 	if (Data_Mouse.left.wentDown) {
 		if (!isLegionClick()) {

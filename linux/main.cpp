@@ -142,9 +142,17 @@ void handleKey(SDL_KeyboardEvent *event)
 			break;
 		case SDLK_LEFT:
 			KeyboardInput_left();
+			KeyboardHotkey_left();
 			break;
 		case SDLK_RIGHT:
 			KeyboardInput_right();
+			KeyboardHotkey_right();
+			break;
+		case SDLK_UP:
+			KeyboardHotkey_up();
+			break;
+		case SDLK_DOWN:
+			KeyboardHotkey_down();
 			break;
 		case SDLK_HOME:
 			KeyboardInput_home();

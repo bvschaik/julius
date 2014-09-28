@@ -548,7 +548,7 @@ static void buttonReturnToCity(int param1, int param2)
 
 static void buttonAdvisor(int advisor, int param2)
 {
-	UI_Advisors_goToFromMessage(Window_Advisors);
+	UI_Advisors_goToFromMessage(Advisor_Trade);
 }
 
 static void buttonOpenTrade(int param1, int param2)
