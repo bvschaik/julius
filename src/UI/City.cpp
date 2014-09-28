@@ -4,6 +4,7 @@
 #include "TopMenu.h"
 #include "Sidebar.h"
 #include "../Graphics.h"
+#include "../PlayerMessage.h"
 #include "../Widget.h"
 
 #include "../Data/CityInfo.h"
@@ -18,7 +19,7 @@
 
 void UI_City_drawBackground()
 {
-	Graphics_clearScreen();
+	//Graphics_clearScreen();
 	UI_Sidebar_drawBackground();
 	UI_TopMenu_drawBackground();
 }
@@ -26,8 +27,17 @@ void UI_City_drawBackground()
 void UI_City_drawForeground()
 {
 	UI_City_drawCity();
+	UI_Sidebar_drawForeground();
 	UI_City_drawPausedAndTimeLeft();
 	UI_CityBuildings_drawBuildingCost();
+	PlayerMessage_processQueue();
+}
+
+void UI_City_drawForegroundMilitary()
+{
+	UI_City_drawCity();
+	UI_Sidebar_drawMinimap(0);
+	UI_City_drawPausedAndTimeLeft();
 }
 
 void UI_City_drawCity()

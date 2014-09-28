@@ -68,6 +68,7 @@ void UI_HoldFestivalDialog_handleMouse();
 
 void UI_City_drawBackground();
 void UI_City_drawForeground();
+void UI_City_drawForegroundMilitary();
 void UI_City_drawCity();
 void UI_City_drawPausedAndTimeLeft();
 void UI_City_handleMouse();

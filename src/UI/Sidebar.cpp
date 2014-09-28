@@ -33,7 +33,6 @@ static void drawFillerBorders();
 static void drawSidebar();
 static void drawButtons();
 static void drawOverlayText(int xOffset);
-static void drawMinimap(int force);
 
 static void buttonOverlay(int param1, int param2);
 static void buttonCollapseExpand(int param1, int param2);
@@ -145,6 +144,19 @@ void UI_Sidebar_drawBackground()
 	drawFillerBorders();
 }
 
+void UI_Sidebar_drawForeground()
+{
+	int xOffsetPanel = Data_Screen.width - SIDEBAR_BORDER;
+	if (Data_State.sidebarCollapsed) {
+		xOffsetPanel -= 42;
+	} else {
+		xOffsetPanel -= 162;
+	}
+	drawButtons();
+	drawOverlayText(xOffsetPanel + 4);
+	UI_Sidebar_drawMinimap(0);
+}
+
 static void drawNumberOfMessages()
 {
 	if (UI_Window_getId() == Window_City && !Data_State.sidebarCollapsed) {
@@ -176,7 +188,7 @@ static void drawSidebar()
 	drawButtons();
 	drawOverlayText(xOffsetPanel + 4);
 	UI_BuildingMenu_drawSidebarImage(xOffsetPanel + 6, 0);
-	drawMinimap(1);
+	UI_Sidebar_drawMinimap(1);
 	drawNumberOfMessages();
 
 	// relief images below panel
@@ -237,7 +249,7 @@ static void drawOverlayText(int xOffset)
 	}
 }
 
-static void drawMinimap(int force)
+void UI_Sidebar_drawMinimap(int force)
 {
 	if (!Data_State.sidebarCollapsed) {
 		if (minimapRedrawRequested || Data_State.isScrollingMap || force) {
@@ -394,6 +406,7 @@ void UI_SlidingSidebar_drawBackground()
 
 void UI_SlidingSidebar_drawForeground()
 {
+	UI_Window_requestRefresh();
 	updateProgress();
 	if (data.progress >= 47) {
 		if (Data_State.sidebarCollapsed) {

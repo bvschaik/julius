@@ -4,10 +4,12 @@
 void UI_Sidebar_setLastAdvisor(int advisor);
 
 void UI_Sidebar_drawBackground();
+void UI_Sidebar_drawForeground();
 
 int UI_Sidebar_handleMouse();
 void UI_Sidebar_handleMouseBuildButtons();
 
+void UI_Sidebar_drawMinimap(int force);
 void UI_Sidebar_requestMinimapRefresh();
 void UI_Sidebar_enableBuildingButtons();
 

@@ -69,11 +69,11 @@ void UI_OverlayMenu_init()
 void UI_OverlayMenu_drawBackground()
 {
 	UI_City_drawBackground();
-	UI_City_drawCity();
 }
 
 void UI_OverlayMenu_drawForeground()
 {
+	UI_City_drawCity();
 	int xOffset = Data_CityView.widthInPixels;
 	for (int i = 0; i < 8; i++) {
 		Widget_Panel_drawSmallLabelButton(6, xOffset - 170, 74 + 24 * i,
@@ -128,12 +128,10 @@ static void handleSubmenu()
 			selectedMenu = menuFocusButtonId - 1;
 			selectedSubmenu = menuIdToSubmenuId[selectedMenu];
 			numSubmenuItems = countSubmenuItems(selectedSubmenu);
-			UI_Window_requestRefresh();
 		}
 	} else if (Time_getMillis() - submenuFocusTime > 500) {
 		selectedSubmenu = 0;
 		numSubmenuItems = 0;
-		UI_Window_requestRefresh();
 	}
 }
 

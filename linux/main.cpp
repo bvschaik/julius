@@ -26,6 +26,14 @@
 #include <execinfo.h>
 #include <signal.h>
 
+static struct {
+	int width;
+	int height;
+	int isFullscreen;
+	int lastWidth;
+	int lastHeight;
+} Desktop;
+
 void handler(int sig) {
 	void *array[100];
 	size_t size;
@@ -161,6 +169,12 @@ SDL_Surface* createSurface(int width, int height, int fullscreen)
 	} else {
 		flags |= SDL_RESIZABLE;
 	}
+	
+	Desktop.isFullscreen = fullscreen;
+	if (!fullscreen) {
+		Desktop.lastWidth = width;
+		Desktop.lastHeight = height;
+	}
 	SDL_Surface *surface = SDL_SetVideoMode(width, height, 32, flags);
 	if (surface) {
 		printf("Surface created with scanline %d\n", surface->pitch);
@@ -234,6 +248,14 @@ void mainLoop(SDL_Surface *surface)
 					}
 					handleKey(&event.key);
 					printf("Key: %d (%c)\n", event.key.keysym.unicode, event.key.keysym.unicode);
+					if (event.key.keysym.sym == SDLK_F5) {
+						if (Desktop.isFullscreen) {
+							surface = createSurface(Desktop.lastWidth, Desktop.lastHeight, 0);
+						} else {
+							surface = createSurface(Desktop.width, Desktop.height, 1);
+						}
+						UI_Window_requestRefresh();
+					}
 					break;
 				
 				case SDL_KEYUP:
@@ -271,6 +293,7 @@ void mainLoop(SDL_Surface *surface)
 				case SDL_VIDEORESIZE:
 					printf("Resize to %d x %d\n", event.resize.w, event.resize.h);
 					surface = createSurface(event.resize.w, event.resize.h, 0);
+					UI_Window_requestRefresh();
 					break;
 				
 				case SDL_QUIT:
@@ -315,6 +338,8 @@ int main()
 	
 	const SDL_VideoInfo *vidInfo = SDL_GetVideoInfo();
 	printf("Current resolution: %d x %d\n", vidInfo->current_w, vidInfo->current_h);
+	Desktop.width = vidInfo->current_w;
+	Desktop.height = vidInfo->current_h;
 	
 	int closestMode = SDL_VideoModeOK(800, 600, 16, 0);
 	if (closestMode) {
