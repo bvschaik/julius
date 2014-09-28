@@ -1,4 +1,6 @@
 #include "Minimap.h"
+#include "Sidebar.h"
+#include "../CityView.h"
 #include "../Graphics.h"
 #include "../Data/Building.h"
 #include "../Data/CityView.h"
@@ -240,7 +242,26 @@ static int getMouseGridOffset(int xOffset, int yOffset, int widthTiles, int heig
 	return 0;
 }
 
-void UI_Minimap_handleClick()
+static int isMinimapClick()
 {
-	// TODO
+	if (Data_Mouse.x >= minimapLeft && Data_Mouse.x < minimapRight &&
+		Data_Mouse.y >= minimapTop && Data_Mouse.y < minimapBottom) {
+		return 1;
+	}
+	return 0;
+}
+
+int UI_Minimap_handleClick()
+{
+	if (isMinimapClick()) {
+		if (Data_Mouse.left.wentDown || Data_Mouse.right.wentDown) {
+			int gridOffset = getMouseGridOffset(minimapLeft, minimapTop, 73, 111);
+			if (gridOffset > 0) {
+				CityView_goToGridOffset(gridOffset);
+				UI_Sidebar_requestMinimapRefresh();
+				return 1;
+			}
+		}
+	}
+	return 0;
 }

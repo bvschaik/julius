@@ -274,6 +274,9 @@ int UI_Sidebar_handleMouse()
 			return 1;
 		}
 	} else {
+		if (UI_Minimap_handleClick()) {
+			return 1;
+		}
 		int xOffset = XOFFSET_EXPANDED;
 		if (Widget_Button_handleImageButtons(xOffset, 24, buttonOverlaysCollapseSidebar, 2)) {
 			return 1;

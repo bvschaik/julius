@@ -1,5 +1,6 @@
 #include "CityBuildings_private.h"
 
+#include "Minimap.h"
 #include "Warning.h"
 #include "Window.h"
 
@@ -1067,6 +1068,9 @@ static void militaryMapClick()
 void UI_CityBuildings_handleMouseMilitary()
 {
 	updateCityViewCoords();
+	if (!Data_State.sidebarCollapsed && UI_Minimap_handleClick()) {
+		return;
+	}
 	UI_CityBuildings_scrollMap(Scroll_getDirection());
 	if (Data_Mouse.right.wentUp) {
 		UI_Warning_clearAll();

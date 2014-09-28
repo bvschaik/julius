@@ -1,8 +1,9 @@
 #include "AllWindows.h"
 #include "CityBuildings.h"
-#include "Window.h"
-#include "TopMenu.h"
 #include "Sidebar.h"
+#include "TopMenu.h"
+#include "Window.h"
+
 #include "../Graphics.h"
 #include "../PlayerMessage.h"
 #include "../Widget.h"
@@ -137,7 +138,5 @@ void __cdecl fun_drawCityScreenForeground()
 
 void UI_City_handleMouseMilitary()
 {
-	// TODO if (UI_Sidebar_handleMouseMinimap()) { return; }
-	// = if ( sidepanel_collapsed || (j_fun_minimap_hasBeenClicked(), !j_fun_minimap_handleClick()) )
 	UI_CityBuildings_handleMouseMilitary();
 }
