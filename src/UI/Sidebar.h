@@ -5,7 +5,7 @@ void UI_Sidebar_setLastAdvisor(int advisor);
 
 void UI_Sidebar_drawBackground();
 
-void UI_Sidebar_handleMouse();
+int UI_Sidebar_handleMouse();
 void UI_Sidebar_handleMouseBuildButtons();
 
 void UI_Sidebar_requestMinimapRefresh();

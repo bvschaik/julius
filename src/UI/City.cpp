@@ -74,7 +74,9 @@ void UI_City_handleMouse()
 	if (UI_TopMenu_handleMouseWidget()) {
 		return;
 	}
-	UI_Sidebar_handleMouse();
+	if (UI_Sidebar_handleMouse()) {
+		return;
+	}
 	UI_CityBuildings_handleMouse();
 }
 /*

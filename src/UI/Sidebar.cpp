@@ -250,21 +250,29 @@ static void drawMinimap(int force)
 	}
 }
 
-void UI_Sidebar_handleMouse()
+int UI_Sidebar_handleMouse()
 {
 	if (Data_State.sidebarCollapsed) {
 		int xOffset = Data_Screen.width - SIDEBAR_BORDER - 42;
-		if (!Widget_Button_handleImageButtons(xOffset, 24, buttonExpandSidebar, 1)) {
-			Widget_Button_handleImageButtons(xOffset, 24, buttonBuildCollapsed, 12);
+		if (Widget_Button_handleImageButtons(xOffset, 24, buttonExpandSidebar, 1)) {
+			return 1;
+		}
+		if (Widget_Button_handleImageButtons(xOffset, 24, buttonBuildCollapsed, 12)) {
+			return 1;
 		}
 	} else {
 		int xOffset = XOFFSET_EXPANDED;
-		if (!Widget_Button_handleImageButtons(xOffset, 24, buttonOverlaysCollapseSidebar, 2)) {
-			if (!Widget_Button_handleImageButtons(xOffset, 24, buttonBuildExpanded, 15)) {
-				Widget_Button_handleImageButtons(xOffset, 24, buttonTopExpanded, 6);
-			}
+		if (Widget_Button_handleImageButtons(xOffset, 24, buttonOverlaysCollapseSidebar, 2)) {
+			return 1;
+		}
+		if (Widget_Button_handleImageButtons(xOffset, 24, buttonBuildExpanded, 15)) {
+			return 1;
+		}
+		if (Widget_Button_handleImageButtons(xOffset, 24, buttonTopExpanded, 6)) {
+			return 1;
 		}
 	}
+	return 0;
 }
 
 void UI_Sidebar_handleMouseBuildButtons()
