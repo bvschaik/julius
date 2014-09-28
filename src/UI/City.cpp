@@ -71,7 +71,9 @@ void UI_City_drawPausedAndTimeLeft()
 
 void UI_City_handleMouse()
 {
-	UI_TopMenu_handleMouse();
+	if (UI_TopMenu_handleMouseWidget()) {
+		return;
+	}
 	UI_Sidebar_handleMouse();
 	UI_CityBuildings_handleMouse();
 }

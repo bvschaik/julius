@@ -179,12 +179,12 @@ static void clearState()
 	focusSubMenuId = 0;
 }
 
-static void handleMouseSubmenu()
+static int handleMouseSubmenu()
 {
 	if (Data_Mouse.right.wentUp) {
 		clearState();
 		UI_Window_goBack();
-		return;
+		return 1;
 	}
 	int menuId = Widget_Menu_handleMenuBar(menu, 4, &focusMenuId);
 	if (menuId && menuId != openSubMenu) {
@@ -194,28 +194,71 @@ static void handleMouseSubmenu()
 		if (Data_Mouse.left.wentDown) {
 			clearState();
 			UI_Window_goBack();
+			return 1;
 		}
 	}
+	return 0;
 }
 
-static void handleMouseMenu()
+static int getFundsPopDate()
+{
+	if (Data_Mouse.y < 4 || Data_Mouse.y >= 18) {
+		return 0;
+	}
+	if (Data_Mouse.x > offsetFunds && Data_Mouse.x < offsetFunds + 128) {
+		return 1;
+	}
+	if (Data_Mouse.x > offsetPopulation && Data_Mouse.x < offsetPopulation + 128) {
+		return 2;
+	}
+	if (Data_Mouse.x > offsetDate && Data_Mouse.x < offsetDate + 128) {
+		return 3;
+	}
+	return 0;
+}
+
+static int handleTopMenuRightClick(int type)
+{
+	if (!type) {
+		return 0;
+	}
+	if (type == 1) { // funds
+		UI_MessageDialog_show(15, 0);
+	} else if (type == 2) { // population
+		UI_MessageDialog_show(16, 0);
+	} else if (type == 3) { // date
+		UI_MessageDialog_show(17, 0);
+	}
+	return 1;
+}
+
+static int handleMouseMenu()
 {
 	int menuId = Widget_Menu_handleMenuBar(menu, 4, &focusMenuId);
 	if (menuId && Data_Mouse.left.wentDown) {
 		openSubMenu = menuId;
 		UI_Window_goTo(Window_TopMenu);
+		return 1;
+	}
+	if (Data_Mouse.right.wentUp) {
+		return handleTopMenuRightClick(getFundsPopDate());
+	}
+	return 0;
+}
+
+int UI_TopMenu_handleMouseWidget()
+{
+	if (openSubMenu) {
+		return handleMouseSubmenu();
+	} else {
+		return handleMouseMenu();
 	}
 }
 
 void UI_TopMenu_handleMouse()
 {
-	if (openSubMenu) {
-		handleMouseSubmenu();
-	} else {
-		handleMouseMenu();
-	}
+	UI_TopMenu_handleMouseWidget();
 }
-
 
 static void menuFile_newGame(int param)
 {

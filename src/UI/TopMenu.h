@@ -4,5 +4,6 @@
 void UI_TopMenu_drawBackground();
 void UI_TopMenu_drawForeground();
 void UI_TopMenu_handleMouse();
+int UI_TopMenu_handleMouseWidget();
 
 #endif
