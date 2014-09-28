@@ -194,7 +194,11 @@ static void buttonOkCancel(int isOk, int param2)
 	FileSystem_removeExtension(Data_FileList.selectedCity);
 	FileSystem_appendExtension(Data_FileList.selectedCity, "sav");
 
-	// TODO
+	if (dialogType != FileDialogType_Save && !FileSystem_fileExists(Data_FileList.selectedCity)) {
+		FileSystem_removeExtension(Data_FileList.selectedCity);
+		messageNotExistTimeUntil = Time_getMillis() + NOT_EXIST_MESSAGE_TIMEOUT;
+		return;
+	}
 	if (dialogType == FileDialogType_Load) {
 		GameFile_loadSavedGame(Data_FileList.selectedCity);
 		UI_Window_goTo(Window_City);
@@ -204,18 +208,12 @@ static void buttonOkCancel(int isOk, int param2)
 	} else if (dialogType == FileDialogType_Delete) {
 		if (GameFile_deleteSavedGame(Data_FileList.selectedCity)) {
 			FileSystem_findFilesWithExtension("sav");
-			// TODO selectedIndex = 0?
 			if (scrollPosition + 12 >= Data_FileList.numFiles) {
 				--scrollPosition;
 			}
 			if (scrollPosition < 0) {
 				scrollPosition = 0;
 			}
-		} else {
-			// delete failed
-			FileSystem_removeExtension(Data_FileList.selectedCity);
-			messageNotExistTimeUntil = Time_getMillis() + NOT_EXIST_MESSAGE_TIMEOUT;
-			return;
 		}
 	}
 	
