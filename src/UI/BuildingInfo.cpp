@@ -1,6 +1,7 @@
 #include "BuildingInfo.h"
 
 #include "AllWindows.h"
+#include "Advisors.h"
 #include "MessageDialog.h"
 #include "Window.h"
 
@@ -622,5 +623,5 @@ static void buttonExit(int param1, int param2)
 
 static void buttonAdvisor(int param1, int param2)
 {
-	// TODO
+	UI_Advisors_goToFromMessage(Advisor_Ratings);
 }

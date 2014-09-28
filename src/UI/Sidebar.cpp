@@ -29,6 +29,7 @@
 #define BOTTOM_BORDER ((Data_Screen.height - 24) % 15)
 #define XOFFSET_EXPANDED (Data_Screen.width - (Data_Screen.width + 20) % 60 - 162)
 
+static void drawNumberOfMessages();
 static void drawFillerBorders();
 static void drawSidebar();
 static void drawButtons();
@@ -155,6 +156,7 @@ void UI_Sidebar_drawForeground()
 	drawButtons();
 	drawOverlayText(xOffsetPanel + 4);
 	UI_Sidebar_drawMinimap(0);
+	drawNumberOfMessages();
 }
 
 static void drawNumberOfMessages()
@@ -189,7 +191,6 @@ static void drawSidebar()
 	drawOverlayText(xOffsetPanel + 4);
 	UI_BuildingMenu_drawSidebarImage(xOffsetPanel + 6, 0);
 	UI_Sidebar_drawMinimap(1);
-	drawNumberOfMessages();
 
 	// relief images below panel
 	int yOffset = 474;

@@ -12,8 +12,6 @@
 
 #include "../GameFile.h" // TODO debug
 
-#include <stdio.h> // TODO remove
-
 static void buttonClick(int param1, int param2);
 
 static int focusButtonId;
