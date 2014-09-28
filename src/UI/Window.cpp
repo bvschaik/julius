@@ -129,6 +129,7 @@ void UI_Window_refresh(int force)
 {
 	updateMouseBefore();
 	if (force || refreshRequested) {
+		// TODO tooltip: if (tooltip_enabled) window = tooltip_windowid; else window = currentWindow
 		windows[currentWindow].drawBackground();
 		refreshRequested = 0;
 	}

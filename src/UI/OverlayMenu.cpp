@@ -10,7 +10,6 @@
 #include "../Data/Mouse.h"
 #include "../Data/State.h"
 
-static void drawButtons();
 static void handleSubmenu();
 
 static void buttonMenuItem(int param1, int param2);
@@ -70,15 +69,10 @@ void UI_OverlayMenu_init()
 void UI_OverlayMenu_drawBackground()
 {
 	UI_City_drawBackground();
+	UI_City_drawCity();
 }
 
 void UI_OverlayMenu_drawForeground()
-{
-	UI_City_drawCity();
-	drawButtons();
-}
-
-static void drawButtons()
 {
 	int xOffset = Data_CityView.widthInPixels;
 	for (int i = 0; i < 8; i++) {
@@ -134,10 +128,12 @@ static void handleSubmenu()
 			selectedMenu = menuFocusButtonId - 1;
 			selectedSubmenu = menuIdToSubmenuId[selectedMenu];
 			numSubmenuItems = countSubmenuItems(selectedSubmenu);
+			UI_Window_requestRefresh();
 		}
 	} else if (Time_getMillis() - submenuFocusTime > 500) {
 		selectedSubmenu = 0;
 		numSubmenuItems = 0;
+		UI_Window_requestRefresh();
 	}
 }
 
