@@ -11,9 +11,9 @@ struct Data_PlayerMessage {
 	short param2;
 	short messageType;
 	short sequence;
-	char readFlag;
-	char month;
-	char __filler[2];
+	unsigned char readFlag;
+	unsigned char month;
+	unsigned char __filler[2];
 };
 
 extern struct Data_Message {
@@ -24,16 +24,16 @@ extern struct Data_Message {
 	int currentMessageId;
 	int currentProblemAreaMessageId;
 	struct {
-		char pop0;
-		char pop500;
-		char pop1000;
-		char pop2000;
-		char pop3000;
-		char pop5000;
-		char pop10000;
-		char pop15000;
-		char pop20000;
-		char pop25000;
+		unsigned char pop0;
+		unsigned char pop500;
+		unsigned char pop1000;
+		unsigned char pop2000;
+		unsigned char pop3000;
+		unsigned char pop5000;
+		unsigned char pop10000;
+		unsigned char pop15000;
+		unsigned char pop20000;
+		unsigned char pop25000;
 	} populationMessagesShown;
 
 	int messageCategoryCount[20];

@@ -18,19 +18,19 @@ enum {
 };
 
 struct Data_Formation {
-	char inUse;
-	char ciid;
-	char legionId;
-	char isAtFort;
+	unsigned char inUse;
+	unsigned char ciid;
+	unsigned char legionId;
+	unsigned char isAtFort;
 	short walkerType;
 	short buildingId;
 	short walkerIds[16];
-	char numWalkers;
-	char maxWalkers;
+	unsigned char numWalkers;
+	unsigned char maxWalkers;
 	short layout;
 	short morale;
-	char xHome; //2e
-	char yHome;
+	unsigned char xHome; //2e
+	unsigned char yHome;
 	unsigned char xStandard; //30
 	unsigned char yStandard;
 	unsigned char x;
@@ -39,8 +39,8 @@ struct Data_Formation {
 	unsigned char destinationY;
 	short destinationBuildingId;
 	short standardWalkerId;
-	char isLegion;
-	char __padding;
+	unsigned char isLegion;
+	unsigned char __padding;
 	short attackType;
 	short legionRecruitType;
 	short hasMilitaryTraining; //40
@@ -58,22 +58,22 @@ struct Data_Formation {
 	short missileAttackFormationId; //58
 	short layoutBeforeMopUp;
 	short cursedByMars;
-	char monthsLowMorale; //5e
-	char empireService;
-	char inDistantBattle; //60
-	char isHerd;
-	char enemyType;
-	char direction; // 63
+	unsigned char monthsLowMorale; //5e
+	unsigned char empireService;
+	unsigned char inDistantBattle; //60
+	unsigned char isHerd;
+	unsigned char enemyType;
+	unsigned char direction; // 63
 	unsigned char prevXHome;
 	unsigned char prevYHome;
-	char __unknown66;
-	char orientation;
-	char monthsFromHome; //68
-	char monthsVeryLowMorale; //69
+	unsigned char __unused66;
+	unsigned char orientation;
+	unsigned char monthsFromHome; //68
+	unsigned char monthsVeryLowMorale; //69
 	unsigned char invasionId;
-	char herdWolfSpawnDelay;
-	char herdDirection;
-	char __padding6d[17];
+	unsigned char herdWolfSpawnDelay;
+	unsigned char herdDirection;
+	unsigned char __padding6d[17];
 	short invasionSeq;
 };
 

@@ -4,10 +4,10 @@
 #define MAX_INVASION_WARNINGS 101
 
 struct Data_InvasionWarning {
-	char inUse;
-	char handled;
-	char empireInvasionPathId;
-	char warningYears;
+	unsigned char inUse;
+	unsigned char handled;
+	unsigned char empireInvasionPathId;
+	unsigned char warningYears;
 	short empireX;
 	short empireY;
 	short empireGraphicId;
@@ -16,7 +16,7 @@ struct Data_InvasionWarning {
 	short gameYearNotified;
 	int monthsToGo;
 	unsigned char invasionId;
-	char __filler[11];
+	unsigned char __filler[11];
 };
 
 extern struct Data_InvasionWarning Data_InvasionWarnings[MAX_INVASION_WARNINGS];

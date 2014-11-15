@@ -22,13 +22,13 @@
 extern struct Data_Settings {
 	int bpp;
 	int fullscreen;
-	char gamePaused;
-	char __unused1;
+	unsigned char gamePaused;
+	unsigned char __unused1;
 	char cddrive;
-	char soundEffectsEnabled;
-	char soundMusicEnabled;
-	char soundSpeechEnabled;
-	char __unused2[2];
+	unsigned char soundEffectsEnabled;
+	unsigned char soundMusicEnabled;
+	unsigned char soundSpeechEnabled;
+	short __unused2;
 	int resolutionId;
 	int gameSpeed;
 	int scrollSpeed;
@@ -41,10 +41,10 @@ extern struct Data_Settings {
 	int personalSavingsLastMission;
 	int currentMissionId;
 	int isCustomScenario;
-	char soundCityEnabled;
-	char warningsEnabled;
-	char monthlyAutosaveEnabled;
-	char autoclearEnabled;
+	unsigned char soundCityEnabled;
+	unsigned char warningsEnabled;
+	unsigned char monthlyAutosaveEnabled;
+	unsigned char autoclearEnabled;
 	int soundEffectsPercentage;
 	int soundMusicPercentage;
 	int soundSpeechPercentage;

@@ -156,14 +156,14 @@ enum {
 #define BuildingIsEntertainment(type) ((type) >= Building_Theater && (type) <= Building_ChariotMaker)
 
 extern struct Data_Building {
-	char inUse;
-	char __unknown_01;
-	char __unknown_02;
-	char size;
-	char houseIsMerged;
-	char houseSize;
-	char x;
-	char y;
+	unsigned char inUse;
+	unsigned char ciid;
+	unsigned char __unknown_02;
+	unsigned char size;
+	unsigned char houseIsMerged;
+	unsigned char houseSize;
+	unsigned char x;
+	unsigned char y;
 	short gridOffset;
 	short type;
 	union {
@@ -175,7 +175,7 @@ extern struct Data_Building {
 		short nativeMeetingCenterId;
 	} subtype;
 	unsigned char roadNetworkId;
-	char __unknown_0f;
+	unsigned char __unknown_0f;
 	unsigned short createdSequence;
 	short housesCovered;
 	short percentageWorkers;
@@ -184,35 +184,35 @@ extern struct Data_Building {
 	short distanceFromEntry;
 	short houseMaxPopulationSeen;
 	short houseUnreachableTicks;
-	char roadAccessX; // 20
-	char roadAccessY; // 21
+	unsigned char roadAccessX; // 20
+	unsigned char roadAccessY; // 21
 	short walkerId;
 	short walkerId2; // labor seeker or market buyer
 	short immigrantWalkerId;
 	short walkerId4; // 28; tower ballista or burning ruin prefect
-	char walkerSpawnDelay; // 2a
-	char __unknown_2b;
-	char walkerRoamDirection;
-	char hasWaterAccess;
-	char __unknown_2e;
-	char __unknown_2f;
+	unsigned char walkerSpawnDelay; // 2a
+	unsigned char __unused_2b;
+	unsigned char walkerRoamDirection;
+	unsigned char hasWaterAccess;
+	unsigned char __unused_2e;
+	unsigned char __unused_2f;
 	short prevPartBuildingId;
 	short nextPartBuildingId;
 	short loadsStored; // 34
-	char __unused_36;
-	char hasWellAccess;
+	unsigned char __unused_36;
+	unsigned char hasWellAccess;
 	short numWorkers;
 	unsigned char laborCategory;
 	unsigned char outputResourceId; //3b
-	char hasRoadAccess;
-	char houseCriminalActive;
+	unsigned char hasRoadAccess;
+	unsigned char houseCriminalActive;
 	short damageRisk;
 	short fireRisk;
 	short fireDuration; //42
-	char fireProof; //44 cannot catch fire or collapse
-	char houseGenerationDelay;
-	char houseTaxCoverage;
-	char __unknown_47;
+	unsigned char fireProof; //44 cannot catch fire or collapse
+	unsigned char houseGenerationDelay;
+	unsigned char houseTaxCoverage;
+	unsigned char __unused_47;
 	short formationId;
 	union {
 		struct {
@@ -229,7 +229,7 @@ extern struct Data_Building {
 			char __unknown_55;
 			char __unknown_56;
 			char __unknown_57;
-			char fishingBoatHasFish;
+			char fishingBoatHasFish; // 58
 			char __unknown_59;
 			char __unknown_5a;
 			char __unknown_5b;
@@ -242,7 +242,7 @@ extern struct Data_Building {
 			char __unknown_62;
 			char __unknown_63;
 			char __unknown_64;
-			char dockNumShips; // 65 dock number of ships
+			unsigned char dockNumShips; // 65 dock number of ships
 			char __unknown_66;
 			char __unknown_67;
 			char dockOrientation; // 68
@@ -250,8 +250,7 @@ extern struct Data_Building {
 			char __unknown_6a;
 			char __unknown_6b; // farm cursed
 			short dockWalkerIds[3]; // 6c, 6e, 70
-			short boatWalkerId; // 72 + 73
-			//char __unknown_73;
+			short boatWalkerId; // 72
 		} other;
 		struct {
 			short unknown; //4a
@@ -273,7 +272,7 @@ extern struct Data_Building {
 			short oilDemand; // 60
 			short wineDemand; // 62
 			char __padding[6]; // 64 - 69
-			char fetchInventoryId; // 6a
+			unsigned char fetchInventoryId; // 6a
 		} market;
 		struct {
 			short unknown; //4a
@@ -282,18 +281,18 @@ extern struct Data_Building {
 		struct {
 			short progress; //4a+b
 			char __padding[27];
-			char blessingDaysLeft; //67
+			unsigned char blessingDaysLeft; //67
 			char __pad68;
-			char hasFullResource; //69
+			unsigned char hasFullResource; //69
 			char __pad6a;
-			char curseDaysLeft; //6b
+			unsigned char curseDaysLeft; //6b
 		} industry;
 		struct {
 			char __padding[26];
-			char numShows; // 64
-			char days1; // also: dock number of ships
-			char days2;
-			char play;
+			unsigned char numShows; // 64
+			unsigned char days1;
+			unsigned char days2;
+			unsigned char play;
 		} entertainment;
 		struct {
 			union { // 4a
@@ -309,54 +308,54 @@ extern struct Data_Building {
 					short pottery;
 				} one;
 			} inventory;
-			char theater; //5a
-			char amphitheaterActor;
-			char amphitheaterGladiator;
-			char colosseumGladiator;
-			char colosseumLion;
-			char hippodrome;
-			char school; //60
-			char library;
-			char academy;
-			char barber;
-			char clinic;
-			char bathhouse;
-			char hospital;
-			char templeCeres;
-			char templeNeptune;//68
-			char templeMercury;
-			char templeMars;
-			char templeVenus;
-			char noSpaceToExpand;
-			char numFoods;
-			char entertainment;
-			char education;
-			char health; //70
-			char numGods;
-			char devolveDelay;
-			char evolveTextId;
+			unsigned char theater; //5a
+			unsigned char amphitheaterActor;
+			unsigned char amphitheaterGladiator;
+			unsigned char colosseumGladiator;
+			unsigned char colosseumLion;
+			unsigned char hippodrome;
+			unsigned char school; //60
+			unsigned char library;
+			unsigned char academy;
+			unsigned char barber;
+			unsigned char clinic;
+			unsigned char bathhouse;
+			unsigned char hospital;
+			unsigned char templeCeres;
+			unsigned char templeNeptune;//68
+			unsigned char templeMercury;
+			unsigned char templeMars;
+			unsigned char templeVenus;
+			unsigned char noSpaceToExpand;
+			unsigned char numFoods;
+			unsigned char entertainment;
+			unsigned char education;
+			unsigned char health; //70
+			unsigned char numGods;
+			unsigned char devolveDelay;
+			unsigned char evolveTextId;
 		} house;
 	} data;
 	int taxIncomeOrStorage; // 74
-	char houseDaysWithoutFood; // 78
-	char ruinHasPlague;
-	char desirability;
-	char isDeleted; // 7b
-	char isAdjacentToWater;
+	unsigned char houseDaysWithoutFood; // 78
+	unsigned char ruinHasPlague;
+	signed char desirability;
+	unsigned char isDeleted; // 7b
+	unsigned char isAdjacentToWater;
 	unsigned char storageId;
 	union {
 		char houseHappiness;
 		char nativeAnger;
 	} sentiment;
-	char showOnProblemOverlay;
+	unsigned char showOnProblemOverlay;
 } Data_Buildings[MAX_BUILDINGS];
 
 extern struct Data_Building_Storage {
 	int startUnused;
 	int buildingId;
-	char inUse;
-	char emptyAll;
-	char resourceState[22];
+	unsigned char inUse;
+	unsigned char emptyAll;
+	unsigned char resourceState[22];
 } Data_Building_Storages[MAX_STORAGES];
 
 extern struct Data_Buildings_Extra {

@@ -251,51 +251,50 @@ extern struct Data_Walker_NameSequence {
 extern struct Data_Walker {
 	unsigned char alternativeLocationIndex;
 	unsigned char graphicOffset;
-	char isEnemyGraphic;
-	char flotsamVisible;
+	unsigned char isEnemyGraphic;
+	unsigned char flotsamVisible;
 	short graphicId; // 04
 	short cartGraphicId;
 	short nextWalkerIdOnSameTile; // 08
 	unsigned char type;
 	unsigned char resourceId; //0b
-	char useCrossCountry;
-	char isFriendly;
-	char state;
-	char ciid; // 0f
+	unsigned char useCrossCountry;
+	unsigned char isFriendly;
+	unsigned char state;
+	unsigned char ciid; // 0f
 	unsigned char actionStateBeforeAttack; // 10
-	unsigned char direction;
-	char previousTileDirection; // 12
-	char attackDirection; // 13
-	char x;
-	char y;
-	char previousTileX;
-	char previousTileY;
-	char missileDamage;
+	signed char direction;
+	signed char previousTileDirection; // 12
+	signed char attackDirection; // 13
+	unsigned char x;
+	unsigned char y;
+	unsigned char previousTileX;
+	unsigned char previousTileY;
+	unsigned char missileDamage;
 	unsigned char damage; //19
 	short gridOffset; // 1a
 	unsigned char destinationX; // 1c
 	unsigned char destinationY;
 	short destinationGridOffsetSoldier;
-	char sourceX; // 20
-	char sourceY;
-	char formationPositionX;
-	char formationPositionY;
-	char __unused_24;
-	char __unused_25;
+	unsigned char sourceX; // 20
+	unsigned char sourceY;
+	signed char formationPositionX;
+	signed char formationPositionY;
+	short __unused_24;
 	short waitTicks;
 	unsigned char actionState;
-	char progressOnTile; // 29
+	unsigned char progressOnTile; // 29
 	short routingPathId;
 	short routingPathCurrentTile;
 	short routingPathLength;
-	char inBuildingWaitTicks; // 30
-	char isOnRoad;
+	unsigned char inBuildingWaitTicks; // 30
+	unsigned char isOnRoad;
 	short maxRoamLength;
 	short roamLength;
 	unsigned char roamChooseDestination;
 	unsigned char roamRandomCounter;
-	unsigned char roamTurnDirection;
-	unsigned char roamTicksUntilNextTurn;
+	signed char roamTurnDirection;
+	signed char roamTicksUntilNextTurn;
 	short crossCountryX; // 3a - position = 15 * x + offset on tile
 	short crossCountryY; // 3c - position = 15 * y + offset on tile
 	short ccDestinationX; // 3e
@@ -303,8 +302,8 @@ extern struct Data_Walker {
 	short ccDeltaX; // 42
 	short ccDeltaY; // 44
 	short ccDeltaXY; // 46
-	char ccDirection; // 48: 1 = x, 2 = y
-	char speedMultiplier;
+	unsigned char ccDirection; // 48: 1 = x, 2 = y
+	unsigned char speedMultiplier;
 	short buildingId;
 	short immigrantBuildingId;
 	short destinationBuildingId;
@@ -312,36 +311,37 @@ extern struct Data_Walker {
 	unsigned char indexInFormation; //52
 	unsigned char formationAtRest; //53
 	unsigned char migrantNumPeople;
-	char isGhost; // 55
-	char minMaxSeen;
-	char __unused_57;
+	unsigned char isGhost; // 55
+	unsigned char minMaxSeen;
+	unsigned char __unused_57;
 	short inFrontWalkerId;
 	unsigned char attackGraphicOffset;
 	unsigned char waitTicksMissile;
-	char xOffsetCart; // 5c
-	char yOffsetCart; // 5d
+	signed char xOffsetCart; // 5c
+	signed char yOffsetCart; // 5d
 	unsigned char empireCityId; // 5e
-	char traderAmountBought;
+	unsigned char traderAmountBought;
 	short name; // 60
-	char terrainUsage;
-	char loadsSoldOrCarrying;
-	char isBoat; // 64
-	char heightFromGround; // 65
-	char currentHeight;
-	char targetHeight;
+	unsigned char terrainUsage;
+	unsigned char loadsSoldOrCarrying;
+	unsigned char isBoat; // 64
+	unsigned char heightFromGround; // 65
+	unsigned char currentHeight;
+	unsigned char targetHeight;
 	unsigned char collectingItemId; // NOT a resource ID for cartpushers! IS a resource ID for warehousemen
-	char __unknown_69;
+	unsigned char tradeShipFailedDockAttempts;
 	unsigned char phraseSequenceExact;
-	unsigned char phraseId;
+	signed char phraseId;
 	unsigned char phraseSequenceCity;
 	unsigned char traderId;
-	short waitTicksNextTarget;
+	unsigned char waitTicksNextTarget;
+	unsigned char __unused_6f;
 	short targetWalkerId; // 70
 	short targetedByWalkerId; // 72
 	unsigned short createdSequence;
 	unsigned short targetWalkerCreatedSequence;
 	unsigned char numPreviousWalkersOnSameTile;
-	char numAttackers;
+	unsigned char numAttackers;
 	short attackerId1;
 	short attackerId2;
 	short opponentId; // 7e
@@ -350,8 +350,8 @@ extern struct Data_Walker {
 extern struct Data_Walker_Trader {
 	int totalBought;
 	int totalSold;
-	char boughtResources[16];
-	char soldResources[16];
+	unsigned char boughtResources[16];
+	unsigned char soldResources[16];
 	int moneyBoughtResources;
 	int moneySoldResources;
 } Data_Walker_Traders[MAX_TRADERS];

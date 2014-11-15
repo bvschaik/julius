@@ -469,9 +469,9 @@ static int tradeShipDoneTrading(int walkerId)
 				return 0;
 			}
 		}
-		Data_Walkers[walkerId].__unknown_69++;
-		if (Data_Walkers[walkerId].__unknown_69 >= 10) {
-			Data_Walkers[walkerId].__unknown_69 = 11;
+		Data_Walkers[walkerId].tradeShipFailedDockAttempts++;
+		if (Data_Walkers[walkerId].tradeShipFailedDockAttempts >= 10) {
+			Data_Walkers[walkerId].tradeShipFailedDockAttempts = 11;
 			return 1;
 		}
 		return 0;
@@ -539,13 +539,13 @@ void WalkerAction_tradeShip(int walkerId)
 			break;
 		case WalkerActionState_112_TradeShipMoored:
 			if (tradeShipLostQueue(walkerId)) {
-				w->__unknown_69 = 0;
+				w->tradeShipFailedDockAttempts = 0;
 				w->actionState = WalkerActionState_115_TradeShipLeaving;
 				w->waitTicks = 0;
 				w->destinationX = (char) Data_Scenario.riverEntryPoint.x;
 				w->destinationY = (char) Data_Scenario.riverEntryPoint.y;
 			} else if (tradeShipDoneTrading(walkerId)) {
-				w->__unknown_69 = 0;
+				w->tradeShipFailedDockAttempts = 0;
 				w->actionState = WalkerActionState_115_TradeShipLeaving;
 				w->waitTicks = 0;
 				w->destinationX = (char) Data_Scenario.riverEntryPoint.x;

@@ -28,7 +28,8 @@ extern struct Data_Empire_Index {
 extern struct Data_Empire_Object {
 	unsigned char type;
 	unsigned char inUse;
-	short animationIndex;
+	unsigned char animationIndex;
+	unsigned char __padding;
 	short x;
 	short y;
 	short width;
@@ -37,7 +38,7 @@ extern struct Data_Empire_Object {
 	short graphicIdExpanded;
 	unsigned char __unused2;
 	unsigned char distantBattleTravelMonths;
-	unsigned char __unused3[2];
+	short __unused3;
 	short xExpanded;
 	short yExpanded;
 	unsigned char cityType;
@@ -47,7 +48,7 @@ extern struct Data_Empire_Object {
 	short tradeRouteCostToOpen;
 	unsigned char citySells[10];
 	unsigned char ownerCityIndex;
-	unsigned char unknown990d29;
+	unsigned char __unused4;
 	unsigned char cityBuys[8];
 	unsigned char invasionPathId;
 	unsigned char invasionYears;
@@ -58,23 +59,23 @@ extern struct Data_Empire_Object {
 } Data_Empire_Objects[MAX_EMPIRE_OBJECTS];
 
 extern struct Data_Empire_City {
-	char inUse;
-	char __unused1;
+	unsigned char inUse;
+	unsigned char __unused1;
 	unsigned char cityType;
 	unsigned char cityNameId;
 	unsigned char routeId;
-	char isOpen;
-	char buysResourceFlag[16];
-	char sellsResourceFlag[16];
+	unsigned char isOpen;
+	unsigned char buysResourceFlag[16];
+	unsigned char sellsResourceFlag[16];
 	short costToOpen;
 	short __unused2;
 	short traderEntryDelay;
 	short __unused3;
 	short empireObjectId;
-	char isSeaTrade;
-	char __unused4;
+	unsigned char isSeaTrade;
+	unsigned char __unused4;
 	short traderWalkerIds[3];
-	char __padding[10];
+	unsigned char __padding[10];
 } Data_Empire_Cities[MAX_EMPIRE_CITIES];
 
 extern struct Data_Empire_Trade {

@@ -28,10 +28,8 @@ extern struct Data_Scenario {
 	int gridFirstElement;
 	int gridBorderSize;
 	char briefDescription[64];
-	char briefing[504];
-	char unknown_9909ec[8];
-	char unknown_9909f4[10];
-	char requests_canComplyDialogShown[20];
+	char briefing[522];
+	unsigned char requests_canComplyDialogShown[20];
 	short imageId;
 	short isOpenPlay;
 	short playerRank;
@@ -41,17 +39,17 @@ extern struct Data_Scenario {
 	} herdPoints;
 	struct {
 		short year[20];
-		char month[20];
-		char resourceId[20];
-		char routeId[20];
-		char isRise[20];
+		unsigned char month[20];
+		unsigned char resourceId[20];
+		unsigned char routeId[20];
+		unsigned char isRise[20];
 	} demandChanges;
 	struct {
 		short year[20];
-		char month[20];
-		char resourceId[20];
-		char amount[20];
-		char isRise[20];
+		unsigned char month[20];
+		unsigned char resourceId[20];
+		unsigned char amount[20];
+		unsigned char isRise[20];
 	} priceChanges;
 	struct {
 		int enabled;
@@ -72,12 +70,12 @@ extern struct Data_Scenario {
 		short x[8];
 		short y[8];
 	} fishingPoints;
-	char requests_favor[20];
-	char invasions_month[20];
-	char requests_month[20];
-	char requests_state[20];
-	char requests_isVisible[20];
-	char requests_monthsToComply[20];
+	unsigned char requests_favor[20];
+	unsigned char invasions_month[20];
+	unsigned char requests_month[20];
+	unsigned char requests_state[20];
+	unsigned char requests_isVisible[20];
+	unsigned char requests_monthsToComply[20];
 	int romeSuppliesWheat;
 	struct {
 		short __unused1;
@@ -184,14 +182,14 @@ extern struct Data_Scenario {
 		int crops;
 	} nativeGraphics;
 	unsigned char climate;
-	char flotsamEnabled;
+	unsigned char flotsamEnabled;
 	short __unused5;
 	int empireHasExpanded;
 	int empireExpansionYear;
-	char distantBattleTravelMonthsRoman;
-	char distantBattleTravelMonthsEnemy;
-	char openPlayScenarioId;
-	char _unused6;
+	unsigned char distantBattleTravelMonthsRoman;
+	unsigned char distantBattleTravelMonthsEnemy;
+	unsigned char openPlayScenarioId;
+	unsigned char _unused6;
 } Data_Scenario;
 
 #endif
