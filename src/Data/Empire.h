@@ -55,7 +55,7 @@ extern struct Data_Empire_Object {
 	short trade40;
 	short trade25;
 	short trade15;
-	unsigned char __padding[6];
+	unsigned char __padding2[6];
 } Data_Empire_Objects[MAX_EMPIRE_OBJECTS];
 
 extern struct Data_Empire_City {

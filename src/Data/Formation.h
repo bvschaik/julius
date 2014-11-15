@@ -66,7 +66,7 @@ struct Data_Formation {
 	unsigned char direction; // 63
 	unsigned char prevXHome;
 	unsigned char prevYHome;
-	unsigned char __unused66;
+	unsigned char __unknown66;
 	unsigned char orientation;
 	unsigned char monthsFromHome; //68
 	unsigned char monthsVeryLowMorale; //69

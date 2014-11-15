@@ -64,7 +64,7 @@ void WalkerAction_seagulls(int walkerId)
 void WalkerAction_sheep(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
-	struct Data_Formation *f = &Data_Formations[walkerId];
+	struct Data_Formation *f = &Data_Formations[w->formationId];
 	w->terrainUsage = WalkerTerrainUsage_Animal;
 	w->useCrossCountry = 0;
 	w->isGhost = 0;
@@ -118,7 +118,7 @@ void WalkerAction_sheep(int walkerId)
 void WalkerAction_wolf(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
-	struct Data_Formation *f = &Data_Formations[walkerId];
+	struct Data_Formation *f = &Data_Formations[w->formationId];
 	w->terrainUsage = WalkerTerrainUsage_Animal;
 	w->useCrossCountry = 0;
 	w->isGhost = 0;
@@ -193,7 +193,7 @@ void WalkerAction_wolf(int walkerId)
 void WalkerAction_zebra(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
-	struct Data_Formation *f = &Data_Formations[walkerId];
+	struct Data_Formation *f = &Data_Formations[w->formationId];
 	w->terrainUsage = WalkerTerrainUsage_Animal;
 	w->useCrossCountry = 0;
 	w->isGhost = 0;

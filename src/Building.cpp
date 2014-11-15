@@ -65,7 +65,7 @@ int Building_create(int type, int x, int y)
 	struct Data_Building *b = &Data_Buildings[buildingId];
 	
 	b->inUse = 3;
-	b->__unknown_01 = 1;
+	b->ciid = 1;
 	b->__unknown_02 = Data_CityInfo.__unknown_00a5; // TODO ??
 	b->type = type;
 	b->size = Constant_BuildingProperties[type].size;
