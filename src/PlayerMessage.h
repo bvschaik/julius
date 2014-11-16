@@ -21,6 +21,7 @@ void PlayerMessage_initProblemArea();
 void PlayerMessage_sortMessages();
 void PlayerMessage_updateMessageDelays();
 void PlayerMessage_processQueue();
+void PlayerMessage_goToProblem();
 
 int PlayerMessage_getAdvisorForMessageType(int messageType);
 int PlayerMessage_getMessageTextId(int messageType);

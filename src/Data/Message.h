@@ -56,6 +56,8 @@ extern struct Data_Message {
 	int isDraggingScrollbar;
 	int scrollPositionDrag;
 	int hotspotCount;
+	int hotspotIndex;
+	TimeMillis hotspotLastClick;
 } Data_Message;
 
 enum {

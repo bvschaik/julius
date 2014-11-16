@@ -10,7 +10,6 @@
 #include "../Data/Settings.h"
 #include "../Data/Buttons.h"
 
-static void buttonToggle(int param1, int param2);
 static void buttonOk(int param1, int param2);
 static void buttonCancel(int param1, int param2);
 

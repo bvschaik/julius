@@ -9,6 +9,7 @@
 
 #include "../CityView.h"
 #include "../Graphics.h"
+#include "../PlayerMessage.h"
 #include "../SidebarMenu.h"
 #include "../Sound.h"
 #include "../Terrain.h"
@@ -341,7 +342,7 @@ static void buttonHelp(int param1, int param2)
 
 static void buttonGoToProblem(int param1, int param2)
 {
-	// TODO
+	PlayerMessage_goToProblem();
 }
 static void buttonAdvisors(int param1, int param2)
 {

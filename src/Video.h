@@ -3,4 +3,6 @@
 
 int Video_start(const char *filename, int xOffset, int yOffset, int fullscreen, int nextWindowId);
 
+void Video_cancel();
+
 #endif

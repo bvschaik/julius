@@ -1,7 +1,10 @@
 #include "PlayerMessage.h"
 
+#include "CityView.h"
 #include "FileSystem.h"
+#include "Formation.h"
 #include "Sound.h"
+#include "Time.h"
 #include "UI/MessageDialog.h"
 #include "UI/Tooltip.h"
 #include "UI/Window.h"
@@ -244,7 +247,66 @@ void PlayerMessage_initList()
 
 void PlayerMessage_initProblemArea()
 {
-	// TODO
+	Data_Message.hotspotCount = 0;
+	Data_Message.hotspotIndex = 0;
+	Data_Message.hotspotLastClick = Time_getMillis();
+}
+
+void PlayerMessage_goToProblem()
+{
+	TimeMillis now = Time_getMillis();
+	if (now - Data_Message.hotspotLastClick > 3000) {
+		Data_Message.hotspotIndex = 0;
+	}
+	Data_Message.hotspotLastClick = now;
+
+	PlayerMessage_sortMessages();
+	Data_Message.hotspotCount = 0;
+	for (int i = 0; i < 999; i++) {
+		struct Data_PlayerMessage *m = &Data_Message.messages[i];
+		if (m->messageType && m->year >= Data_CityInfo_Extra.gameTimeYear - 1) {
+			int textId = PlayerMessage_getMessageTextId(m->messageType);
+			int langMessageType = Data_Language_Message.index[textId].messageType;
+			if (langMessageType == MessageType_Disaster || langMessageType == MessageType_Invasion) {
+				if (langMessageType != MessageType_Invasion || Formation_getInvasionGridOffset(m->param1) > 0) {
+					Data_Message.hotspotCount++;
+				}
+			}
+		}
+	}
+	if (Data_Message.hotspotCount <= 0) {
+		Data_Message.hotspotIndex = 0;
+		return;
+	}
+	if (Data_Message.hotspotIndex >= Data_Message.hotspotCount) {
+		Data_Message.hotspotIndex = 0;
+	}
+	int index = 0;
+	for (int i = 0; i < 999; i++) {
+		struct Data_PlayerMessage *m = &Data_Message.messages[i];
+		if (m->messageType && m->year >= Data_CityInfo_Extra.gameTimeYear - 1) {
+			int textId = PlayerMessage_getMessageTextId(m->messageType);
+			int langMessageType = Data_Language_Message.index[textId].messageType;
+			if (langMessageType == MessageType_Disaster || langMessageType == MessageType_Invasion) {
+				if (langMessageType != MessageType_Invasion || Formation_getInvasionGridOffset(m->param1) > 0) {
+					index++;
+					if (Data_Message.hotspotIndex < index) {
+						Data_Message.hotspotIndex++;
+						int gridOffset = m->param2;
+						if (langMessageType == MessageType_Invasion) {
+							gridOffset = Formation_getInvasionGridOffset(m->param1);
+						}
+						if (gridOffset > 0) {
+							CityView_goToGridOffset(gridOffset);
+							UI_Window_goTo(Window_City);
+						}
+						return;
+					}
+				}
+			}
+		}
+	}
+	UI_Window_requestRefresh();
 }
 
 void PlayerMessage_sortMessages()

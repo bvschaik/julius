@@ -1,11 +1,13 @@
 #include "MessageDialog.h"
 #include "Window.h"
 #include "AllWindows.h"
+#include "Advisors.h"
 
 #include "../Calc.h"
 #include "../CityView.h"
 #include "../Formation.h"
 #include "../Graphics.h"
+#include "../PlayerMessage.h"
 #include "../Resource.h"
 #include "../Video.h"
 #include "../Widget.h"
@@ -31,10 +33,10 @@ static void drawDialogVideo();
 static void drawPlayerMessageContent(struct Data_Language_MessageEntry *msg);
 static void drawForegroundNoVideo();
 static void drawForegroundVideo();
-static void buttonScroll(int param1, int param2);
 static void buttonBack(int param1, int param2);
 static void buttonClose(int param1, int param2);
 static void buttonHelp(int param1, int param2);
+static void buttonAdvisor(int param1, int param2);
 static void buttonGoToProblem(int param1, int param2);
 
 static ImageButton imageButtonBack = {
@@ -45,6 +47,30 @@ static ImageButton imageButtonClose = {
 };
 static ImageButton imageButtonGoToProblem = {
 	0, 0, 27, 27, 4, 92, 52, buttonGoToProblem, Widget_Button_doNothing, 1, 0, 0, 0, 1, 0
+};
+static ImageButton imageButtonHelp = {
+	0, 0, 18, 27, 4, 134, 0, buttonHelp, Widget_Button_doNothing, 1, 0, 0, 0, 1, 0
+};
+static ImageButton imageButtonLabor = {
+	0, 0, 27, 27, 4, 199, 0, buttonAdvisor, Widget_Button_doNothing, 1, 0, 0, 0, 1, 0
+};
+static ImageButton imageButtonTrade = {
+	0, 0, 27, 27, 4, 199, 12, buttonAdvisor, Widget_Button_doNothing, 1, 0, 0, 0, 5, 0
+};
+static ImageButton imageButtonPopulation = {
+	0, 0, 27, 27, 4, 199, 15, buttonAdvisor, Widget_Button_doNothing, 1, 0, 0, 0, 6, 0
+};
+static ImageButton imageButtonImperial = {
+	0, 0, 27, 27, 4, 199, 6, buttonAdvisor, Widget_Button_doNothing, 1, 0, 0, 0, 3, 0
+};
+static ImageButton imageButtonMilitary = {
+	0, 0, 27, 27, 4, 199, 3, buttonAdvisor, Widget_Button_doNothing, 1, 0, 0, 0, 2, 0
+};
+static ImageButton imageButtonHealth = {
+	0, 0, 27, 27, 4, 199, 18, buttonAdvisor, Widget_Button_doNothing, 1, 0, 0, 0, 7, 0
+};
+static ImageButton imageButtonReligion = {
+	0, 0, 27, 27, 4, 199, 27, buttonAdvisor, Widget_Button_doNothing, 1, 0, 0, 0, 10, 0
 };
 
 static struct {
@@ -354,12 +380,31 @@ static void drawPlayerMessageContent(struct Data_Language_MessageEntry *msg)
 	}
 }
 
+static ImageButton *getAdvisorButton()
+{
+	switch (playerMessage.messageAdvisor) {
+		case MessageAdvisor_Labor:
+			return &imageButtonLabor;
+		case MessageAdvisor_Trade:
+			return &imageButtonTrade;
+		case MessageAdvisor_Population:
+			return &imageButtonPopulation;
+		case MessageAdvisor_Imperial:
+			return &imageButtonImperial;
+		case MessageAdvisor_Military:
+			return &imageButtonMilitary;
+		case MessageAdvisor_Health:
+			return &imageButtonHealth;
+		case MessageAdvisor_Religion:
+			return &imageButtonReligion;
+		default:
+			return &imageButtonHelp;
+	}
+}
+
 static void drawForegroundVideo()
 {
-	struct Data_Language_MessageEntry *msg = &Data_Language_Message.index[data.textId];
-	
-	// TODO buttons for advisor
-
+	Widget_Button_drawImageButtons(data.x + 16, data.y + 408, getAdvisorButton(), 1);
 	Widget_Button_drawImageButtons(data.x + 372, data.y + 410, &imageButtonClose, 1);
 }
 
@@ -376,7 +421,8 @@ static void drawForegroundNoVideo()
 	}
 
 	if (msg->type == Type_Message) {
-		// TODO based on advisor
+		Widget_Button_drawImageButtons(data.x + 16, data.y + 16 * msg->heightBlocks - 40,
+			getAdvisorButton(), 1);
 		if (msg->messageType == MessageType_Disaster || msg->messageType == MessageType_Invasion) {
 			Widget_Button_drawImageButtons(
 				data.x + 64, data.yText + 36, &imageButtonGoToProblem, 1);
@@ -401,30 +447,35 @@ void UI_MessageDialog_drawForeground()
 void UI_MessageDialog_handleMouse()
 {
 	if (Data_Mouse.scrollDown) {
-		buttonScroll(1, 3);
+		Widget_RichText_scroll(1, 3);
 	} else if (Data_Mouse.scrollUp) {
-		buttonScroll(0, 3);
+		Widget_RichText_scroll(0, 3);
 	}
 	if (data.showVideo) {
-		// TODO advisors
+		if (Widget_Button_handleImageButtons(data.x + 16, data.y + 408, getAdvisorButton(), 1)) {
+			return;
+		}
 		if (Widget_Button_handleImageButtons(data.x + 372, data.y + 410, &imageButtonClose, 1)) {
 			return;
 		}
 		return;
 	}
-	// TODO
+	// no video
 	struct Data_Language_MessageEntry *msg = &Data_Language_Message.index[data.textId];
 
-	if (Widget_Button_handleImageButtons(
-		data.x + 16, data.y + 16 * msg->heightBlocks - 36,
-		&imageButtonBack, 1)) {
-			return;
+	if (msg->type == Type_Manual && Widget_Button_handleImageButtons(
+		data.x + 16, data.y + 16 * msg->heightBlocks - 36, &imageButtonBack, 1)) {
+		return;
 	}
 	if (msg->type == Type_Message) {
+		if (Widget_Button_handleImageButtons(data.x + 16, data.y + 16 * msg->heightBlocks - 40,
+			getAdvisorButton(), 1)) {
+			return;
+		}
 		if (msg->messageType == MessageType_Disaster || msg->messageType == MessageType_Invasion) {
-			Widget_Button_handleImageButtons(
-				data.x + 64, data.yText + 36,
-				&imageButtonGoToProblem, 1);
+			if (Widget_Button_handleImageButtons(data.x + 64, data.yText + 36, &imageButtonGoToProblem, 1)) {
+				return;
+			}
 		}
 	}
 
@@ -432,7 +483,7 @@ void UI_MessageDialog_handleMouse()
 		data.x + 16 * msg->widthBlocks - 38,
 		data.y + 16 * msg->heightBlocks - 36,
 		&imageButtonClose, 1)) {
-			return;
+		return;
 	}
 	Widget_RichText_handleScrollbar();
 	int textId = Widget_RichText_getClickedLink();
@@ -460,16 +511,13 @@ static void buttonBack(int param1, int param2)
 	}
 }
 
-static void buttonScroll(int isDown, int numLines)
-{
-	// TODO
-}
-
 void UI_MessageDialog_close()
 {
-	// TODO cancel video
+	if (data.showVideo) {
+		Video_cancel();
+	}
 	data.showVideo = 0;
-	// TODO message_msgAdvisorId = 0
+	playerMessage.messageAdvisor = 0;
 	UI_Window_goBack();
 	UI_Window_requestRefresh();
 }
@@ -483,6 +531,11 @@ static void buttonHelp(int param1, int param2)
 {
 	buttonClose(0, 0);
 	UI_MessageDialog_show(MessageDialog_Help, 0);
+}
+
+static void buttonAdvisor(int advisor, int param2)
+{
+	UI_Advisors_goToFromMessage(advisor);
 }
 
 static void buttonGoToProblem(int param1, int param2)
