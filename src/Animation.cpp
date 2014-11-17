@@ -72,7 +72,8 @@ int Animation_getIndexForCityBuilding(int graphicId, int gridOffset)
 	}
 	if (b->type == Building_GladiatorSchool) {
 		if (b->numWorkers <= 0) {
-			return 0;
+			Data_Grid_spriteOffsets[gridOffset] = 1;
+			return 1;
 		}
 	} else if (BuildingIsEntertainment(b->type) &&
 		b->type != Building_Hippodrome && b->numWorkers <= 0) {
@@ -115,7 +116,7 @@ int Animation_getIndexForCityBuilding(int graphicId, int gridOffset)
 			} else {
 				newSprite = Data_Grid_spriteOffsets[gridOffset] + 1;
 				if (newSprite > 12) {
-					newSprite = 9;
+					newSprite = 12;
 				}
 			}
 		}
@@ -161,10 +162,34 @@ int Animation_getIndexForEmpireMap(int graphicId, int currentIndex)
 	if (!shouldUpdate[animationSpeed]) {
 		return currentIndex;
 	}
-	// assumption: the 'unused26' field of graphics index isn't set
-	currentIndex++;
-	if (currentIndex > Data_Graphics_Main.index[graphicId].numAnimationSprites) {
-		currentIndex = 1;
+	if (Data_Graphics_Main.index[graphicId].animationCanReverse) {
+		int isReverse = 0;
+		if (currentIndex & 0x80) {
+			isReverse = 1;
+		}
+		int currentSprite = currentIndex & 0x7f;
+		if (isReverse) {
+			currentIndex = currentSprite - 1;
+			if (currentIndex < 1) {
+				currentIndex = 1;
+				isReverse = 0;
+			}
+		} else {
+			currentIndex = currentSprite + 1;
+			if (currentIndex > GraphicNumAnimationSprites(graphicId)) {
+				currentIndex = GraphicNumAnimationSprites(graphicId);
+				isReverse = 1;
+			}
+		}
+		if (isReverse) {
+			currentIndex = currentIndex | 0x80;
+		}
+	} else {
+		// Absolutely normal case
+		currentIndex++;
+		if (currentIndex > GraphicNumAnimationSprites(graphicId)) {
+			currentIndex = 1;
+		}
 	}
 	return currentIndex;
 }

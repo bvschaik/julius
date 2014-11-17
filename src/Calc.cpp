@@ -16,59 +16,59 @@ int Calc_getPercentage(int value, int total)
 
 int Calc_distanceTotal(int x1, int y1, int x2, int y2)
 {
-	int distance_x;
-	int distance_y;
+	int distanceX;
+	int distanceY;
 	if (x1 <= x2) {
-		distance_x = x2 - x1;
+		distanceX = x2 - x1;
 	} else {
-		distance_x = x1 - x2;
+		distanceX = x1 - x2;
 	}
 	if (y1 <= y2) {
-		distance_y = y2 - y1;
+		distanceY = y2 - y1;
 	} else {
-		distance_y = y1 - y2;
+		distanceY = y1 - y2;
 	}
-	return distance_x + distance_y;
+	return distanceX + distanceY;
 }
 
 int Calc_distanceMaximum(int x1, int y1, int x2, int y2)
 {
-	int distance_x;
-	int distance_y;
+	int distanceX;
+	int distanceY;
 	if (x1 <= x2) {
-		distance_x = x2 - x1;
+		distanceX = x2 - x1;
 	} else {
-		distance_x = x1 - x2;
+		distanceX = x1 - x2;
 	}
 	if (y1 <= y2) {
-		distance_y = y2 - y1;
+		distanceY = y2 - y1;
 	} else {
-		distance_y = y1 - y2;
+		distanceY = y1 - y2;
 	}
-	if (distance_x >= distance_y) {
-		return distance_x;
+	if (distanceX >= distanceY) {
+		return distanceX;
 	} else {
-		return distance_y;
+		return distanceY;
 	}
 }
 
 int Calc_distanceMinimum(int x1, int y1, int x2, int y2)
 {
-	int distance_x;
-	int distance_y;
+	int distanceX;
+	int distanceY;
 	if (x1 <= x2) {
-		distance_x = x2 - x1;
+		distanceX = x2 - x1;
 	} else {
-		distance_x = x1 - x2;
+		distanceX = x1 - x2;
 	}
 	if (y1 <= y2) {
-		distance_y = y2 - y1;
+		distanceY = y2 - y1;
 	} else {
-		distance_y = y1 - y2;
+		distanceY = y1 - y2;
 	}
-	if (distance_x <= distance_y) {
-		return distance_x;
+	if (distanceX <= distanceY) {
+		return distanceX;
 	} else {
-		return distance_y;
+		return distanceY;
 	}
 }

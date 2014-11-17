@@ -44,6 +44,8 @@ enum {
 	Warning_PeopleOnBridge = 55,
 	Warning_DockOpenWaterNeeded = 56,
 	Warning_HouseTooFarFromRoad = 62,
+	Warning_CityBoxedIn = 63,
+	Warning_CityBoxedInPeopleWillPerish = 64,
 	Warning_DataLimitReached = 65
 };
 

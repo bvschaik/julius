@@ -332,7 +332,7 @@ void Building_collapseLinked(int buildingId, int onFire)
 {
 	int spaceId = buildingId;
 	for (int i = 0; i < 9; i++) {
-		spaceId = Data_Buildings[spaceId].nextPartBuildingId;
+		spaceId = Data_Buildings[spaceId].prevPartBuildingId;
 		if (spaceId <= 0) {
 			break;
 		}
@@ -348,7 +348,7 @@ void Building_collapseLinked(int buildingId, int onFire)
 
 	spaceId = buildingId;
 	for (int i = 0; i < 9; i++) {
-		spaceId = Data_Buildings[spaceId].prevPartBuildingId;
+		spaceId = Data_Buildings[spaceId].nextPartBuildingId;
 		if (spaceId <= 0) {
 			break;
 		}
@@ -376,7 +376,7 @@ void Building_collapseLastPlaced()
 		}
 	}
 	if (buildingId) {
-		PlayerMessage_post(1, 88, 0, Data_Buildings[buildingId].gridOffset);
+		PlayerMessage_post(1, 80, 0, Data_Buildings[buildingId].gridOffset);
 		Data_State.undoAvailable = 0;
 		Data_Buildings[buildingId].inUse = 4;
 		TerrainGraphics_setBuildingAreaRubble(buildingId,
@@ -440,7 +440,7 @@ void Building_destroyByEnemy(int x, int y, int gridOffset)
 					Data_CityInfo.ratingPeaceNumDestroyedBuildingsThisYear++;
 					break;
 			}
-			if (Data_CityInfo.ratingPeaceNumDestroyedBuildingsThisYear > 12) {
+			if (Data_CityInfo.ratingPeaceNumDestroyedBuildingsThisYear >= 12) {
 				Data_CityInfo.ratingPeaceNumDestroyedBuildingsThisYear = 12;
 			}
 			b->inUse = 4;
@@ -718,7 +718,7 @@ void Building_GameTick_checkAccessToRome()
 			b->roadAccessY = main->roadAccessY;
 		} else if (b->type == Building_Hippodrome) {
 			b->distanceFromEntry = 0;
-			int roadGridOffset = Terrain_getRoadToLargestRoadNetworkHippodrome(b->x, b->y, 3, &xRoad, &yRoad);
+			int roadGridOffset = Terrain_getRoadToLargestRoadNetworkHippodrome(b->x, b->y, 5, &xRoad, &yRoad);
 			if (roadGridOffset >= 0) {
 				b->roadNetworkId = Data_Grid_roadNetworks[roadGridOffset];
 				b->distanceFromEntry = Data_Grid_routingDistance[roadGridOffset];
@@ -769,8 +769,8 @@ void Building_GameTick_checkAccessToRome()
 		Building_collapseLastPlaced();
 	} else if (problemGridOffset) {
 		// parts of city disconnected
-		UI_Warning_show(63);
-		UI_Warning_show(64);
+		UI_Warning_show(Warning_CityBoxedIn);
+		UI_Warning_show(Warning_CityBoxedInPeopleWillPerish);
 		CityView_goToGridOffset(problemGridOffset);
 	}
 }
@@ -803,10 +803,7 @@ void Building_Industry_updateProduction()
 			if (b->data.industry.blessingDaysLeft && BuildingIsFarm(b->type)) {
 				b->data.industry.progress += b->numWorkers;
 			}
-			int maxProgress = 200;
-			if (b->subtype.workshopResource) {
-				maxProgress = 400;
-			}
+			int maxProgress = b->subtype.workshopResource ? 400 : 200;
 			if (b->data.industry.progress > maxProgress) {
 				b->data.industry.progress = maxProgress;
 			}
@@ -932,7 +929,7 @@ int Building_Market_getDestinationGranaryWarehouse(int marketId)
 			b->roadNetworkId != market->roadNetworkId) {
 			continue;
 		}
-		int distance = Calc_distanceMaximum(b->x, b->y, market->x, market->y);
+		int distance = Calc_distanceMaximum(market->x, market->y, b->x, b->y);
 		if (distance >= 40) {
 			continue;
 		}
@@ -987,20 +984,20 @@ int Building_Market_getDestinationGranaryWarehouse(int marketId)
 					resources[MarketInventory_Oil].buildingId = i;
 				}
 			}
-			if (!Data_CityInfo.resourceStockpiled[Resource_Furniture] &&
-				Resource_getAmountStoredInWarehouse(i, Resource_Furniture) > 0) {
-				resources[MarketInventory_Furniture].numBuildings++;
-				if (distance < resources[MarketInventory_Furniture].distance) {
-					resources[MarketInventory_Furniture].distance = distance;
-					resources[MarketInventory_Furniture].buildingId = i;
-				}
-			}
 			if (!Data_CityInfo.resourceStockpiled[Resource_Pottery] &&
 				Resource_getAmountStoredInWarehouse(i, Resource_Pottery) > 0) {
 				resources[MarketInventory_Pottery].numBuildings++;
 				if (distance < resources[MarketInventory_Pottery].distance) {
 					resources[MarketInventory_Pottery].distance = distance;
 					resources[MarketInventory_Pottery].buildingId = i;
+				}
+			}
+			if (!Data_CityInfo.resourceStockpiled[Resource_Furniture] &&
+				Resource_getAmountStoredInWarehouse(i, Resource_Furniture) > 0) {
+				resources[MarketInventory_Furniture].numBuildings++;
+				if (distance < resources[MarketInventory_Furniture].distance) {
+					resources[MarketInventory_Furniture].distance = distance;
+					resources[MarketInventory_Furniture].buildingId = i;
 				}
 			}
 		}
@@ -1133,7 +1130,7 @@ int Building_Market_getDestinationGranaryWarehouse(int marketId)
 			fetchInventoryId = MarketInventory_Meat;
 		}
 	}
-	if (fetchInventoryId < 0) {
+	if (fetchInventoryId < 0 || fetchInventoryId > 7) {
 		return 0;
 	}
 	market->data.market.fetchInventoryId = fetchInventoryId;
@@ -1157,17 +1154,17 @@ int Building_Market_getMaxGoodsStock(int buildingId)
 {
 	int maxStock = 0;
 	if (buildingId > 0 && Data_Buildings[buildingId].type == Building_Market) {
-		if (Data_Buildings[buildingId].data.market.inventory.one.pottery > maxStock) {
-			maxStock = Data_Buildings[buildingId].data.market.inventory.one.pottery;
-		}
-		if (Data_Buildings[buildingId].data.market.inventory.one.furniture > maxStock) {
-			maxStock = Data_Buildings[buildingId].data.market.inventory.one.furniture;
+		if (Data_Buildings[buildingId].data.market.inventory.one.wine > maxStock) {
+			maxStock = Data_Buildings[buildingId].data.market.inventory.one.wine;
 		}
 		if (Data_Buildings[buildingId].data.market.inventory.one.oil > maxStock) {
 			maxStock = Data_Buildings[buildingId].data.market.inventory.one.oil;
 		}
-		if (Data_Buildings[buildingId].data.market.inventory.one.wine > maxStock) {
-			maxStock = Data_Buildings[buildingId].data.market.inventory.one.wine;
+		if (Data_Buildings[buildingId].data.market.inventory.one.furniture > maxStock) {
+			maxStock = Data_Buildings[buildingId].data.market.inventory.one.furniture;
+		}
+		if (Data_Buildings[buildingId].data.market.inventory.one.pottery > maxStock) {
+			maxStock = Data_Buildings[buildingId].data.market.inventory.one.pottery;
 		}
 	}
 	return maxStock;
