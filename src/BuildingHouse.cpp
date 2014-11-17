@@ -169,13 +169,12 @@ void BuildingHouse_checkMerge(int buildingId)
 	if (b->houseIsMerged) {
 		return;
 	}
-	int gridOffset = b->gridOffset;
-	if ((Data_Grid_random[gridOffset] & 7) >= 5) {
+	if ((Data_Grid_random[b->gridOffset] & 7) >= 5) {
 		return;
 	}
 	int numTiles = 0;
 	for (int i = 0; i < 4; i++) {
-		int otherGridOffset = gridOffset + tileGridOffsets[i];
+		int otherGridOffset = b->gridOffset + tileGridOffsets[i];
 		if (Data_Grid_terrain[otherGridOffset] & Terrain_Building) {
 			int otherBuildingId = Data_Grid_buildingIds[otherGridOffset];
 			if (otherBuildingId == buildingId) {
@@ -203,7 +202,7 @@ static void split(int buildingId, int numTiles)
 		if (Data_Grid_terrain[tileOffset] & Terrain_Building) {
 			int otherBuildingId = Data_Grid_buildingIds[tileOffset];
 			if (otherBuildingId != buildingId && Data_Buildings[otherBuildingId].houseSize) {
-				if (Data_Buildings[otherBuildingId].houseIsMerged) {
+				if (Data_Buildings[otherBuildingId].houseIsMerged == 1) {
 					splitMerged(otherBuildingId);
 				} else if (Data_Buildings[otherBuildingId].houseSize == 2) {
 					splitSize2(buildingId);
@@ -218,7 +217,7 @@ static void split(int buildingId, int numTiles)
 static void prepareForMerge(int buildingId, int numTiles)
 {
 	for (int i = 0; i < 8; i++) {
-		mergeData.inventory[0] = 0;
+		mergeData.inventory[i] = 0;
 	}
 	mergeData.population = 0;
 	int gridOffset = GridOffset(mergeData.x, mergeData.y);
@@ -231,7 +230,7 @@ static void prepareForMerge(int buildingId, int numTiles)
 				for (int i = 0; i < 8; i++) {
 					mergeData.inventory[i] += Data_Buildings[otherBuildingId].data.house.inventory.all[i];
 					Data_Buildings[otherBuildingId].housePopulation = 0;
-					Data_Buildings[otherBuildingId].inUse = 4;
+					Data_Buildings[otherBuildingId].inUse = 5;
 				}
 			}
 		}
@@ -277,8 +276,7 @@ void BuildingHouse_expandToLargeVilla(int buildingId)
 	}
 	int graphicId =
 		GraphicId(houseGraphicGroup[b->subtype.houseLevel]) +
-		houseGraphicOffset[b->subtype.houseLevel] +
-		(Data_Grid_random[b->gridOffset] & 1);
+		houseGraphicOffset[b->subtype.houseLevel];
 	Terrain_removeBuildingFromGrids(buildingId, b->x, b->y);
 	b->x = mergeData.x;
 	b->y = mergeData.y;
@@ -301,8 +299,7 @@ void BuildingHouse_expandToLargePalace(int buildingId)
 	}
 	int graphicId =
 		GraphicId(houseGraphicGroup[b->subtype.houseLevel]) +
-		houseGraphicOffset[b->subtype.houseLevel] +
-		(Data_Grid_random[b->gridOffset] & 1);
+		houseGraphicOffset[b->subtype.houseLevel];
 	Terrain_removeBuildingFromGrids(buildingId, b->x, b->y);
 	b->x = mergeData.x;
 	b->y = mergeData.y;
@@ -312,10 +309,10 @@ void BuildingHouse_expandToLargePalace(int buildingId)
 
 static void merge(int buildingId)
 {
-	struct Data_Building *b = &Data_Buildings[buildingId];
 	prepareForMerge(buildingId, 4);
-	b->size = 2;
-	b->houseSize = 2;
+
+	struct Data_Building *b = &Data_Buildings[buildingId];
+	b->size = b->houseSize = 2;
 	b->housePopulation += mergeData.population;
 	for (int i = 0; i < 8; i++) {
 		b->data.house.inventory.all[i] += mergeData.inventory[i];
@@ -357,7 +354,7 @@ static void splitMerged(int buildingId)
 	b->distanceFromEntry = 0;
 
 	int graphicId = GraphicId(houseGraphicGroup[b->subtype.houseLevel]) + houseGraphicOffset[b->subtype.houseLevel];
-	Terrain_addBuildingToGrids(buildingId, b->x, b->y, 2,
+	Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size,
 		graphicId + (Data_Grid_random[b->gridOffset] & 1), Terrain_Building);
 	
 	// the other tiles (new buildings, medium insula)
@@ -407,11 +404,11 @@ static void splitSize3(int buildingId)
 	int inventoryPerTile[8];
 	int inventoryRest[8];
 	for (int i = 0; i < 8; i++) {
-		inventoryPerTile[i] = b->data.house.inventory.all[i] / 4;
-		inventoryRest[i] = b->data.house.inventory.all[i] % 4;
+		inventoryPerTile[i] = b->data.house.inventory.all[i] / 9;
+		inventoryRest[i] = b->data.house.inventory.all[i] % 9;
 	}
-	int populationPerTile = b->housePopulation / 4;
-	int populationRest = b->housePopulation % 4;
+	int populationPerTile = b->housePopulation / 9;
+	int populationRest = b->housePopulation % 9;
 
 	Terrain_removeBuildingFromGrids(buildingId, b->x, b->y);
 
@@ -431,14 +428,14 @@ static void splitSize3(int buildingId)
 		graphicId + (Data_Grid_random[b->gridOffset] & 1), Terrain_Building);
 
 	// the other tiles (new buildings)
-	CREATE_HOUSE_TILE(b->type, b->x + 1, b->y);
-	CREATE_HOUSE_TILE(b->type, b->x + 2, b->y);
-	CREATE_HOUSE_TILE(b->type, b->x, b->y + 1);
-	CREATE_HOUSE_TILE(b->type, b->x + 1, b->y + 1);
-	CREATE_HOUSE_TILE(b->type, b->x + 2, b->y + 1);
-	CREATE_HOUSE_TILE(b->type, b->x, b->y + 2);
-	CREATE_HOUSE_TILE(b->type, b->x + 1, b->y + 2);
-	CREATE_HOUSE_TILE(b->type, b->x + 2, b->y + 2);
+	CREATE_HOUSE_TILE(Building_HouseMediumInsula, b->x + 1, b->y);
+	CREATE_HOUSE_TILE(Building_HouseMediumInsula, b->x + 2, b->y);
+	CREATE_HOUSE_TILE(Building_HouseMediumInsula, b->x, b->y + 1);
+	CREATE_HOUSE_TILE(Building_HouseMediumInsula, b->x + 1, b->y + 1);
+	CREATE_HOUSE_TILE(Building_HouseMediumInsula, b->x + 2, b->y + 1);
+	CREATE_HOUSE_TILE(Building_HouseMediumInsula, b->x, b->y + 2);
+	CREATE_HOUSE_TILE(Building_HouseMediumInsula, b->x + 1, b->y + 2);
+	CREATE_HOUSE_TILE(Building_HouseMediumInsula, b->x + 2, b->y + 2);
 }
 
 void BuildingHouse_devolveFromLargeInsula(int buildingId)
@@ -498,8 +495,6 @@ void BuildingHouse_devolveFromLargePalace(int buildingId)
 
 	Terrain_removeBuildingFromGrids(buildingId, b->x, b->y);
 
-	Terrain_removeBuildingFromGrids(buildingId, b->x, b->y);
-
 	// main tile
 	b->type = Building_HouseMediumPalace;
 	b->subtype.houseLevel = b->type - 10;
@@ -512,8 +507,7 @@ void BuildingHouse_devolveFromLargePalace(int buildingId)
 	b->distanceFromEntry = 0;
 
 	int graphicId = GraphicId(houseGraphicGroup[b->subtype.houseLevel]) + houseGraphicOffset[b->subtype.houseLevel];
-	Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size,
-		graphicId + (Data_Grid_random[b->gridOffset] & 1), Terrain_Building);
+	Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size, graphicId, Terrain_Building);
 
 	// the other tiles (new buildings)
 	graphicId = GraphicId(houseGraphicGroup[HouseLevel_MediumInsula]) + houseGraphicOffset[HouseLevel_MediumInsula];
