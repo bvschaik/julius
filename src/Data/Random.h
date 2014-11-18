@@ -2,8 +2,8 @@
 #define DATA_RANDOM_H
 
 extern struct Data_Random {
-	int iv1;
-	int iv2;
+	unsigned int iv1;
+	unsigned int iv2;
 	int random1_7bit;
 	int random1_15bit;
 	int random2_7bit;

@@ -31,7 +31,7 @@ void WalkerRoute_clean()
 int WalkerRoute_getNumAvailable()
 {
 	int available = 0;
-	for (int i = 0; i < MAX_ROUTES; i++) {
+	for (int i = 1; i < MAX_ROUTES; i++) {
 		if (!Data_Routes.walkerIds[i]) {
 			available++;
 		}
@@ -48,7 +48,7 @@ static int getFirstAvailable()
 	}
 	return 0;
 }
-#include <cstdio>
+
 void WalkerRoute_add(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
@@ -73,15 +73,15 @@ void WalkerRoute_add(int walkerId)
 	} else {
 		// land walker
 		int canTravel;
-		printf("   Determining travelability from %d %d to %d %d\n",
-			w->x, w->y, w->destinationX, w->destinationY);
+		//printf("   Determining travelability from %d %d to %d %d\n",
+		//	w->x, w->y, w->destinationX, w->destinationY);
 		switch (w->terrainUsage) {
 			case WalkerTerrainUsage_Enemy:
 				canTravel = Routing_canTravelOverLandNonCitizen(w->x, w->y,
 					w->destinationX, w->destinationY, w->destinationBuildingId, 5000);
 				if (!canTravel) {
 					canTravel = Routing_canTravelOverLandNonCitizen(w->x, w->y,
-						w->destinationX, w->destinationY, w->destinationBuildingId, 25000);
+						w->destinationX, w->destinationY, 0, 25000);
 					if (!canTravel) {
 						canTravel = Routing_canTravelThroughEverythingNonCitizen(
 							w->x, w->y, w->destinationX, w->destinationY);
@@ -128,7 +128,7 @@ void WalkerRoute_add(int walkerId)
 		} else { // cannot travel
 			pathLength = 0;
 		}
-		printf("   Done - can travel ? %d path length %d\n", canTravel, pathLength);
+		//printf("   Done - can travel ? %d path length %d\n", canTravel, pathLength);
 	}
 	if (pathLength) {
 		Data_Routes.walkerIds[pathId] = walkerId;

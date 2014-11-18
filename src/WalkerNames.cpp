@@ -1,9 +1,10 @@
 #include "Walker.h"
 
 #include "Random.h"
-#include "Data/Walker.h"
+#include "Data/Constants.h"
 #include "Data/Formation.h"
 #include "Data/Random.h"
+#include "Data/Walker.h"
 
 void WalkerName_init()
 {
@@ -144,18 +145,18 @@ void WalkerName_set(int walkerId)
 		case Walker_Enemy52_MountedArcher:
 		case Walker_Enemy53_Axe:
 			switch (Data_Formations[(int)Data_Walkers[walkerId].formationId].enemyType) {
-				case 8:
+				case EnemyType_8_Greek:
 					SET(enemyGreek, 463, 32);
 					break;
-				case 9: // 9
+				case EnemyType_9_Egyptian:
 					SET(enemyEgyptian, 496, 32);
 					break;
-				case 1:
-				case 5:
-				case 10:
+				case EnemyType_1_Numidian:
+				case EnemyType_5_Pergamum:
+				case EnemyType_10_Carthaginian:
 					SET(enemyArabian, 529, 32);
 					break;
-				case 7:
+				case EnemyType_7_Etruscan:
 					SET(prefect, 198, 32);
 					break;
 				default:

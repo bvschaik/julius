@@ -48,11 +48,11 @@ void CityInfo_Tick_countBuildingTypes()
 	}
 	Data_CityInfo.numWorkingWharfs = 0;
 	Data_CityInfo.shipyardBoatsRequested = 0;
-	Data_CityInfo.numWorkingDocks = 0;
-	Data_CityInfo.numHospitalWorkers = 0;
 	for (int i = 0; i < 8; i++) {
 		Data_CityInfo.workingDockBuildingIds[i] = 0;
 	}
+	Data_CityInfo.numWorkingDocks = 0;
+	Data_CityInfo.numHospitalWorkers = 0;
 	CLEAR(smallTempleCeres);
 	CLEAR(smallTempleNeptune);
 	CLEAR(smallTempleMercury);
@@ -147,6 +147,7 @@ void CityInfo_Tick_countBuildingTypes()
 				UPDATE(militaryAcademy);
 				break;
 			case Building_Barracks:
+				Data_CityInfo.buildingBarracksBuildingId = i;
 				UPDATE(barracks);
 				break;
 			// religion
