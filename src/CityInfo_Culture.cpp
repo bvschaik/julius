@@ -57,8 +57,20 @@ void CityInfo_Culture_updateCoveragePercentages()
 	TOP(religionMercury);
 	TOP(religionMars);
 	TOP(religionVenus);
+	TOP(oracle);
+
+	Data_CityInfo.cultureCoverageReligion =
+		Data_CityInfo_CultureCoverage.religionCeres +
+		Data_CityInfo_CultureCoverage.religionNeptune +
+		Data_CityInfo_CultureCoverage.religionMercury +
+		Data_CityInfo_CultureCoverage.religionMars +
+		Data_CityInfo_CultureCoverage.religionVenus;
+	Data_CityInfo.cultureCoverageReligion /= 5;
 
 	// education
+	Data_CityInfo.populationSchoolAge = CityInfo_Population_getNumberOfSchoolAgeChildren();
+	Data_CityInfo.populationAcademyAge = CityInfo_Population_getNumberOfAcademyChildren();
+
 	Data_CityInfo_CultureCoverage.school = Calc_getPercentage(
 		75 * Data_CityInfo_Buildings.school.working, Data_CityInfo.populationSchoolAge);
 	Data_CityInfo_CultureCoverage.library = Calc_getPercentage(
@@ -159,6 +171,7 @@ void CityInfo_Culture_calculateEntertainment()
 	Data_CityInfo.entertainmentColosseumNoShowsWeighted = 0;
 	Data_CityInfo.entertainmentHippodromeShows = 0;
 	Data_CityInfo.entertainmentHippodromeNoShowsWeighted = 0;
+	Data_CityInfo.entertainmentNeedingShowsMost = 0;
 
 	Data_CityInfo.citywideAverageReligion = 0;
 	Data_CityInfo.citywideAverageEducation = 0;
@@ -222,7 +235,7 @@ void CityInfo_Culture_calculateEntertainment()
 				if (b->data.entertainment.days1) {
 					Data_CityInfo.entertainmentHippodromeShows++;
 				} else {
-					Data_CityInfo.entertainmentHippodromeNoShowsWeighted++;
+					Data_CityInfo.entertainmentHippodromeNoShowsWeighted += 100;
 				}
 				break;
 		}

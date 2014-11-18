@@ -40,7 +40,7 @@ void Empire_load(int isCustomScenario, int empireId)
 void Empire_initCities()
 {
 	memset(Data_Empire_Cities, 0, 2706);
-	int routeIndex = 0;
+	int routeIndex = 1;
 	for (int i = 0; i < 200; i++) {
 		if (!Data_Empire_Objects[i].inUse
 			|| Data_Empire_Objects[i].type != EmpireObject_City) {
@@ -188,7 +188,7 @@ void Empire_checkScrollBoundaries()
 
 int Empire_cityBuysResource(int objectId, int resource)
 {
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 8; i++) {
 		if (Data_Empire_Objects[objectId].cityBuys[i] == resource) {
 			return 1;
 		}
@@ -240,7 +240,7 @@ int Empire_canImportResourceFromCity(int cityId, int resource)
 	}
 
 	int inStock = Data_CityInfo.resourceStored[resource];
-	int maxInStock;
+	int maxInStock = 0;
 	int finishedGood = Resource_None;
 	switch (resource) {
 		// food and finished materials
@@ -256,9 +256,9 @@ int Empire_canImportResourceFromCity(int cityId, int resource)
 				maxInStock = 10;
 			} else if (Data_CityInfo.population < 4000) {
 				maxInStock = 20;
-			} else if (Data_CityInfo.population < 4000) {
+			} else if (Data_CityInfo.population < 6000) {
 				maxInStock = 30;
-			} else if (Data_CityInfo.population < 4000) {
+			} else {
 				maxInStock = 40;
 			}
 			break;
@@ -285,7 +285,7 @@ int Empire_canImportResourceFromCity(int cityId, int resource)
 			break;
 	}
 	if (finishedGood) {
-		maxInStock = 2 * Data_CityInfo_Buildings.industry.working[resource];
+		maxInStock = 2 + 2 * Data_CityInfo_Buildings.industry.working[resource];
 	}
 	return inStock < maxInStock;
 }

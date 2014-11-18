@@ -86,7 +86,7 @@ static void performLargeCurse(int god)
 			Building_Industry_witherFarmCropsFromCeres(1);
 			break;
 		case God_Neptune:
-			if (Data_CityInfo.tradeNumOpenSeaRoutes) {
+			if (Data_CityInfo.tradeNumOpenSeaRoutes <= 0) {
 				PlayerMessage_post(1, 42, 0, 0);
 			} else {
 				PlayerMessage_post(1, 81, 0, 0);
@@ -129,11 +129,10 @@ static void updateGodMoods()
 	for (int i = 0; i < 5; i++) {
 		if (Data_CityInfo.godHappiness[i] < Data_CityInfo.godTargetHappiness[i]) {
 			Data_CityInfo.godHappiness[i]++;
-		} else if (Data_CityInfo.godHappiness[i] < Data_CityInfo.godTargetHappiness[i]) {
+		} else if (Data_CityInfo.godHappiness[i] > Data_CityInfo.godTargetHappiness[i]) {
 			Data_CityInfo.godHappiness[i]--;
 		}
 		if (IsTutorial1()) {
-			// tutorial mission 1
 			if (Data_CityInfo.godHappiness[i] < 50) {
 				Data_CityInfo.godHappiness[i] = 50;
 			}
@@ -233,15 +232,6 @@ void CityInfo_Gods_calculateMoods(int updateMoods)
 	Data_CityInfo.godTargetHappiness[God_Mars] = Data_CityInfo_CultureCoverage.religionMars;
 	Data_CityInfo.godTargetHappiness[God_Venus] = Data_CityInfo_CultureCoverage.religionVenus;
 
-	// happiness factor based on months since festival (max 40)
-	for (int i = 0; i < 5; i++) {
-		int festivalPenalty = Data_CityInfo.godMonthsSinceFestival[i];
-		if (festivalPenalty > 40) {
-			festivalPenalty = 40;
-		}
-		Data_CityInfo.godTargetHappiness[i] += 12 - festivalPenalty;
-	}
-
 	int maxTemples = 0;
 	int maxGod = TIE;
 	int minTemples = 100000;
@@ -278,6 +268,15 @@ void CityInfo_Gods_calculateMoods(int updateMoods)
 			minGod = i;
 		}
 	}
+	// happiness factor based on months since festival (max 40)
+	for (int i = 0; i < 5; i++) {
+		int festivalPenalty = Data_CityInfo.godMonthsSinceFestival[i];
+		if (festivalPenalty > 40) {
+			festivalPenalty = 40;
+		}
+		Data_CityInfo.godTargetHappiness[i] += 12 - festivalPenalty;
+	}
+
 	// BUGFIX poor Venus never gets points here!
 	if (maxGod < 4) {
 		if (Data_CityInfo.godTargetHappiness[maxGod] >= 50) {
@@ -369,7 +368,8 @@ void CityInfo_Gods_checkFestival()
 	if (Data_CityInfo.plannedFestivalSize <= 0) {
 		return;
 	}
-	if (--Data_CityInfo.plannedFestivalMonthsToGo > 0) {
+	Data_CityInfo.plannedFestivalMonthsToGo--;
+	if (Data_CityInfo.plannedFestivalMonthsToGo > 0) {
 		return;
 	}
 	// throw a party!
@@ -398,3 +398,4 @@ void CityInfo_Gods_checkFestival()
 	Data_CityInfo.plannedFestivalSize = 0;
 	Data_CityInfo.plannedFestivalMonthsToGo = 0;
 }
+

@@ -105,6 +105,7 @@ static void addToTerrainHippodrome(int type, int buildingId, int x, int y, int s
 	} else {
 		part1->subtype.orientation = 3;
 	}
+	part1->prevPartBuildingId = 0;
 	int graphicId;
 	switch (Data_Settings_Map.orientation) {
 		case 0: graphicId = graphicId2; break;
@@ -118,10 +119,13 @@ static void addToTerrainHippodrome(int type, int buildingId, int x, int y, int s
 	struct Data_Building *part2 = &Data_Buildings[part2Id];
 	Undo_addBuildingToList(part2Id);
 	if (Data_Settings_Map.orientation == 0 || Data_Settings_Map.orientation == 4) {
-		part2->subtype.orientation = 0;
+		part2->subtype.orientation = 1;
 	} else {
-		part2->subtype.orientation = 3;
+		part2->subtype.orientation = 4;
 	}
+	part2->prevPartBuildingId = buildingId;
+	part1->nextPartBuildingId = part2Id;
+	part2->nextPartBuildingId = 0;
 	switch (Data_Settings_Map.orientation) {
 		case 0: case 4: graphicId = graphicId2 + 2; break;
 		case 2: case 6: graphicId = graphicId1 + 2; break;
@@ -132,10 +136,13 @@ static void addToTerrainHippodrome(int type, int buildingId, int x, int y, int s
 	struct Data_Building *part3 = &Data_Buildings[part3Id];
 	Undo_addBuildingToList(part3Id);
 	if (Data_Settings_Map.orientation == 0 || Data_Settings_Map.orientation == 4) {
-		part3->subtype.orientation = 0;
+		part3->subtype.orientation = 2;
 	} else {
-		part3->subtype.orientation = 3;
+		part3->subtype.orientation = 5;
 	}
+	part3->prevPartBuildingId = part2Id;
+	part2->nextPartBuildingId = part3Id;
+	part3->nextPartBuildingId = 0;
 	switch (Data_Settings_Map.orientation) {
 		case 0: graphicId = graphicId2 + 4; break;
 		case 2: graphicId = graphicId1; break;
@@ -415,6 +422,7 @@ static void addToTerrain(int type, int buildingId, int x, int y, int size,
 		case Building_Oracle:
 			Terrain_addBuildingToGrids(buildingId, x, y, size, GraphicId(ID_Graphic_Oracle), Terrain_Building);
 			break;
+		// ships
 		case Building_Shipyard:
 			Data_Buildings[buildingId].data.other.dockOrientation = watersideOrientationAbs;
 			Terrain_addWatersideBuildingToGrids(buildingId, x, y, 2,
@@ -439,6 +447,7 @@ static void addToTerrain(int type, int buildingId, int x, int y, int size,
 				Terrain_addWatersideBuildingToGrids(buildingId, x, y, size, graphicId);
 			}
 			break;
+		// defense
 		case Building_Tower:
 			Terrain_clearWithRadius(x, y, 2, 0, ~Terrain_Wall);
 			Terrain_addBuildingToGrids(buildingId, x, y, size, GraphicId(ID_Graphic_Tower),
@@ -447,7 +456,7 @@ static void addToTerrain(int type, int buildingId, int x, int y, int size,
 			break;
 		case Building_Gatehouse:
 			Terrain_addBuildingToGrids(buildingId, x, y, size,
-				GraphicId(ID_Graphic_Gatehouse) + orientation, Terrain_Building | Terrain_Gatehouse);
+				GraphicId(ID_Graphic_Tower) + orientation, Terrain_Building | Terrain_Gatehouse);
 			Data_Buildings[buildingId].subtype.orientation = orientation;
 			Building_determineGraphicIdsForOrientedBuildings();
 			Terrain_addRoadsForGatehouse(x, y, orientation);
@@ -627,7 +636,7 @@ static int placeBuilding(int type, int x, int y)
 		UI_Warning_show(Warning_OneBuildingOfType);
 		return 0;
 	}
-	if (type == Building_Barracks && Data_CityInfo_Buildings.barracks.total) {
+	if (type == Building_Barracks && Data_CityInfo_Buildings.barracks.total > 0) {
 		UI_Warning_show(Warning_OneBuildingOfType);
 		return 0;
 	}
@@ -921,6 +930,7 @@ static void placeWall(int measureOnly, int xStart, int yStart, int xEnd, int yEn
 		if (!measureOnly) {
 			Routing_determineLandCitizen();
 			Routing_determineLandNonCitizen();
+			Routing_determineWalls();
 			UI_Window_requestRefresh();
 		}
 	}
@@ -989,16 +999,16 @@ static int placeAqueduct(int measureOnly, int xStart, int yStart, int xEnd, int 
 	*cost = 0;
 	int blocked = 0;
 	int gridOffset = GridOffset(xStart, yStart);
-	if (Data_Grid_terrain[gridOffset]) {
-		if (Terrain_Road && Data_Grid_bitfields[gridOffset] & Bitfield_PlazaOrEarthquake) {
+	if (Data_Grid_terrain[gridOffset] & Terrain_Road) {
+		if (Data_Grid_bitfields[gridOffset] & Bitfield_PlazaOrEarthquake) {
 			blocked = 1;
 		}
 	} else if (Data_Grid_terrain[gridOffset] & Terrain_NotClear) {
 		blocked = 1;
 	}
 	gridOffset = GridOffset(xEnd, yEnd);
-	if (Data_Grid_terrain[gridOffset]) {
-		if (Terrain_Road && Data_Grid_bitfields[gridOffset] & Bitfield_PlazaOrEarthquake) {
+	if (Data_Grid_terrain[gridOffset] & Terrain_Road) {
+		if (Data_Grid_bitfields[gridOffset] & Bitfield_PlazaOrEarthquake) {
 			blocked = 1;
 		}
 	} else if (Data_Grid_terrain[gridOffset] & Terrain_NotClear) {
@@ -1049,7 +1059,7 @@ static int placeReservoirAndAqueducts(int measureOnly, int xStart, int yStart, i
 	if (info->placeReservoirAtStart == -1 || info->placeReservoirAtEnd == -1) {
 		return 0;
 	}
-	if (info->placeReservoirAtStart == 1 && info->placeReservoirAtEnd && distance < 3) {
+	if (info->placeReservoirAtStart == 1 && info->placeReservoirAtEnd == 1 && distance < 3) {
 		return 0;
 	}
 	if (!distance) {
@@ -1099,10 +1109,10 @@ static int placeReservoirAndAqueducts(int measureOnly, int xStart, int yStart, i
 	int aqItems;
 	Routing_placeRoutedBuilding(xStart + xAqStart, yStart + yAqStart,
 		xEnd + xAqEnd, yEnd + yAqEnd, RoutedBuilding_Aqueduct, &aqItems);
-	if (info->placeReservoirAtStart) {
+	if (info->placeReservoirAtStart == 1) {
 		info->cost += Data_Model_Buildings[Building_Reservoir].cost;
 	}
-	if (info->placeReservoirAtEnd) {
+	if (info->placeReservoirAtEnd == 1) {
 		info->cost += Data_Model_Buildings[Building_Reservoir].cost;
 	}
 	if (minDist) {
@@ -1140,9 +1150,7 @@ void BuildingPlacement_update(int xStart, int yStart, int xEnd, int yEnd, int ty
 		int length = TerrainBridge_getLength();
 		if (length > 1) currentCost *= length;
 	} else if (type == Building_Aqueduct) {
-		int cost;
-		placeAqueduct(1, xStart, yStart, xEnd, yEnd, &cost);
-		currentCost = cost;
+		placeAqueduct(1, xStart, yStart, xEnd, yEnd, &currentCost);
 		TerrainGraphics_updateRegionAqueduct(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1, 0);
 	} else if (type == Building_DraggableReservoir) {
 		struct ReservoirInfo info;
@@ -1214,17 +1222,17 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
 	}
 	if (Data_CityInfo.treasury <= MIN_TREASURY) {
 		Grid_andByteGrid(Data_Grid_bitfields, 0xaf);
-		UI_Warning_show(3);
+		UI_Warning_show(Warning_OutOfMoney);
 		return;
 	}
 	if (type >= Building_LargeTempleCeres && type <= Building_LargeTempleVenus && Data_CityInfo.resourceStored[Resource_Marble] < 2) {
 		Grid_andByteGrid(Data_Grid_bitfields, 0xaf);
-		UI_Warning_show(15);
+		UI_Warning_show(Warning_MarbleNeededLargeTemple);
 		return;
 	}
 	if (type == Building_Oracle && Data_CityInfo.resourceStored[Resource_Marble] < 2) {
 		Grid_andByteGrid(Data_Grid_bitfields, 0xaf);
-		UI_Warning_show(16);
+		UI_Warning_show(Warning_MarbleNeededOracle);
 		return;
 	}
 	if (type != Building_ClearLand && Walker_hasNearbyEnemy(xStart, yStart, xEnd, yEnd)) {
@@ -1243,7 +1251,7 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
 		} else {
 			Grid_andByteGrid(Data_Grid_bitfields, 0xaf);
 		}
-		UI_Warning_show(50);
+		UI_Warning_show(Warning_EnemyNearby);
 		return;
 	}
 
@@ -1268,21 +1276,21 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
 	} else if (type == Building_LowBridge) {
 		int length = TerrainBridge_addToSpriteGrid(xEnd, yEnd, 0);
 		if (length <= 1) {
-			UI_Warning_show(25);
+			UI_Warning_show(Warning_ShoreNeeded);
 			return;
 		}
 		placementCost *= length;
 	} else if (type == Building_ShipBridge) {
 		int length = TerrainBridge_addToSpriteGrid(xEnd, yEnd, 1);
 		if (length <= 1) {
-			UI_Warning_show(25);
+			UI_Warning_show(Warning_ShoreNeeded);
 			return;
 		}
 		placementCost *= length;
 	} else if (type == Building_Aqueduct) {
 		int cost;
 		if (!placeAqueduct(0, xStart, yStart, xEnd, yEnd, &cost)) {
-			UI_Warning_show(2);
+			UI_Warning_show(Warning_ClearLandNeeded);
 			return;
 		}
 		placementCost = cost;
@@ -1292,7 +1300,7 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
 	} else if (type == Building_DraggableReservoir) {
 		struct ReservoirInfo info;
 		if (!placeReservoirAndAqueducts(0, xStart, yStart, xEnd, yEnd, &info)) {
-			UI_Warning_show(2);
+			UI_Warning_show(Warning_ClearLandNeeded);
 			return;
 		}
 		if (info.placeReservoirAtStart == 1) {

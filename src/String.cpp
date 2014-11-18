@@ -2,7 +2,7 @@
 
 int String_toInt(const char *str)
 {
-	static int multipliers[] = { 1, 10, 100, 1000, 10000, 100000, 1000000, 10000000 };
+	static const int multipliers[] = { 1, 10, 100, 1000, 10000, 100000, 1000000, 10000000 };
 	const char *ptr = str;
 	int negative = 0;
 	int numChars = 0;
