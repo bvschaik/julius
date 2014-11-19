@@ -66,7 +66,7 @@ void Event_handleDistantBattle()
 			Data_CityInfo.distantBattleEnemyMonthsTraveled = 1;
 			Data_CityInfo.distantBattleRomanMonthsTraveled = 1;
 			Data_CityInfo.distantBattleMonthsToBattle = 24;
-			Data_CityInfo.distantBattleEnemyStrength = (unsigned char) Data_Scenario.invasions.amount[i];
+			Data_CityInfo.distantBattleEnemyStrength = Data_Scenario.invasions.amount[i];
 			Data_CityInfo.distantBattleTotalCount++;
 			Data_CityInfo.distantBattleRomanMonthsToReturn = 0;
 			Data_CityInfo.distantBattleRomanMonthsToTravel = 0;
@@ -274,7 +274,8 @@ void Event_handleRequests()
 		}
 		int state = Data_Scenario.requests_state[i];
 		if (state == RequestState_Dispatched || state == RequestState_DispatchedLate) {
-			if (--Data_Scenario.requests_monthsToComply[i] <= 0) {
+			--Data_Scenario.requests_monthsToComply[i];
+			if (Data_Scenario.requests_monthsToComply[i] <= 0) {
 				if (state == RequestState_Dispatched) {
 					PlayerMessage_post(1, 32, i, 0);
 					CityInfo_Ratings_changeFavor(Data_Scenario.requests_favor[i]);
@@ -335,7 +336,7 @@ void Event_handleRequests()
 					} else if (Data_Scenario.requests.resourceId[i] == Resource_Troops) {
 						PlayerMessage_post(1, 30, i, 0);
 					} else {
-						PlayerMessage_post(1, 31, i, 0);
+						PlayerMessage_post(1, 28, i, 0);
 					}
 				}
 			}
@@ -368,7 +369,7 @@ void Event_initDemandChanges()
 {
 	for (int i = 0; i < 20; i++) {
 		Random_generateNext();
-		if (Data_Scenario.demandChanges.resourceId[i]) {
+		if (Data_Scenario.demandChanges.year[i]) {
 			Data_Scenario.demandChanges.month[i] = (Data_Random.random1_7bit & 7) + 2;
 		}
 	}
@@ -447,7 +448,7 @@ void Event_handlePricesChanges()
 			Data_TradePrices[resource].sell += amount;
 			PlayerMessage_post(1, 78, amount, resource);
 		} else if (Data_TradePrices[resource].sell > 0) {
-			if (Data_TradePrices[resource].buy <= amount) {
+			if (Data_TradePrices[resource].sell <= amount) {
 				Data_TradePrices[resource].buy = 2;
 				Data_TradePrices[resource].sell = 0;
 			} else {
@@ -503,8 +504,8 @@ void Event_handleEarthquake()
 				case 15: index = 3; dx = 0; dy = 1; break;
 				default: return;
 			}
-			int x = Data_Event.earthquake.expand[index].x;
-			int y = Data_Event.earthquake.expand[index].y;
+			int x = Data_Event.earthquake.expand[index].x + dx;
+			int y = Data_Event.earthquake.expand[index].y + dy;
 			BOUND(x, 0, Data_Settings_Map.width - 1);
 			BOUND(y, 0, Data_Settings_Map.height - 1);
 			if (canAdvanceEarthquakeToTile(x, y)) {

@@ -70,7 +70,7 @@ void Event_initInvasions()
 	if (pathMax == 0) {
 		return;
 	}
-	struct Data_InvasionWarning *warning = &Data_InvasionWarnings[0];
+	struct Data_InvasionWarning *warning = &Data_InvasionWarnings[1];
 	for (int i = 0; i < 20; i++) {
 		Random_generateNext();
 		if (!Data_Scenario.invasions.type[i]) {
@@ -184,7 +184,7 @@ void Event_handleInvasions()
 	for (int i = 0; i < 20; i++) {
 		if (Data_Scenario.invasions.type[i] == InvasionType_LocalUprising) {
 			if (Data_CityInfo_Extra.gameTimeYear == Data_Scenario.startYear + Data_Scenario.invasions.year[i] &&
-				Data_CityInfo_Extra.gameTimeMonth >= Data_Scenario.invasions_month[i]) {
+				Data_CityInfo_Extra.gameTimeMonth == Data_Scenario.invasions_month[i]) {
 				int gridOffset = startInvasion(
 					EnemyType_0_Barbarian,
 					Data_Scenario.invasions.amount[i],
@@ -229,7 +229,7 @@ void Event_startInvasionFromCheat()
 
 int Event_existsUpcomingInvasion()
 {
-	for (int i = 0; i < 101; i++) {
+	for (int i = 0; i < MAX_INVASION_WARNINGS; i++) {
 		if (Data_InvasionWarnings[i].inUse && Data_InvasionWarnings[i].handled) {
 			return 1;
 		}
@@ -260,7 +260,7 @@ static int startInvasion(int enemyType, int amount, int invasionPoint, int attac
 	int numType1 = Calc_adjustWithPercentage(amount, enemyProperties[enemyType].pctType1);
 	int numType2 = Calc_adjustWithPercentage(amount, enemyProperties[enemyType].pctType2);
 	int numType3 = Calc_adjustWithPercentage(amount, enemyProperties[enemyType].pctType3);
-	numType1 = amount - (numType1 + numType2 + numType3) + numType1; // assign leftovers to type1
+	numType1 = numType1 + (amount - (numType1 + numType2 + numType3)); // assign leftovers to type1
 
 	for (int t = 0; t < 3; t++) {
 		formationsPerType[t] = 0;
@@ -351,11 +351,11 @@ static int startInvasion(int enemyType, int amount, int invasionPoint, int attac
 		y = Data_Scenario.exitPoint.y;
 	}
 	// determine orientation
-	if (!y) {
+	if (y == 0) {
 		orientation = Direction_Bottom;
 	} else if (y >= Data_Scenario.mapSizeY - 1) {
 		orientation = Direction_Top;
-	} else if (!x) {
+	} else if (x == 0) {
 		orientation = Direction_Right;
 	} else if (x >= Data_Scenario.mapSizeX - 1) {
 		orientation = Direction_Left;
@@ -461,7 +461,7 @@ static void updateDebtState()
 			PlayerMessage_post(1, 17, 0, 0);
 			Data_CityInfo.monthsInDebt = 0;
 		}
-		if (Data_CityInfo_Extra.gameTimeDay) {
+		if (Data_CityInfo_Extra.gameTimeDay == 0) {
 			Data_CityInfo.monthsInDebt++;
 		}
 		if (Data_CityInfo.monthsInDebt >= 12) {
@@ -477,7 +477,7 @@ static void updateDebtState()
 			PlayerMessage_post(1, 18, 0, 0);
 			Data_CityInfo.monthsInDebt = 0;
 		}
-		if (Data_CityInfo_Extra.gameTimeDay) {
+		if (Data_CityInfo_Extra.gameTimeDay == 0) {
 			Data_CityInfo.monthsInDebt++;
 		}
 		if (Data_CityInfo.monthsInDebt >= 12) {
