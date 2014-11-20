@@ -1,6 +1,7 @@
 #include "BuildingHouse.h"
 
 #include "Routing.h"
+#include "TerrainGraphics.h"
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
@@ -151,6 +152,7 @@ static void evolveMediumInsula(int buildingId, int *hasExpanded)
 			Data_Buildings[buildingId].houseIsMerged = 0;
 			BuildingHouse_expandToLargeInsula(buildingId);
 			*hasExpanded = 1;
+			TerrainGraphics_updateAllGardens();
 		}
 	} else if (status == Devolve) {
 		BuildingHouse_changeTo(buildingId, Building_HouseSmallInsula);
@@ -198,6 +200,7 @@ static void evolveMediumVilla(int buildingId, int *hasExpanded)
 		if (BuildingHouse_canExpand(buildingId, 9)) {
 			BuildingHouse_expandToLargeVilla(buildingId);
 			*hasExpanded = 1;
+			TerrainGraphics_updateAllGardens();
 		}
 	} else if (status == Devolve) {
 		BuildingHouse_changeTo(buildingId, Building_HouseSmallVilla);
@@ -245,6 +248,7 @@ static void evolveMediumPalace(int buildingId, int *hasExpanded)
 		if (BuildingHouse_canExpand(buildingId, 16)) {
 			BuildingHouse_expandToLargePalace(buildingId);
 			*hasExpanded = 1;
+			TerrainGraphics_updateAllGardens();
 		}
 	} else if (status == Devolve) {
 		BuildingHouse_changeTo(buildingId, Building_HouseSmallPalace);
@@ -349,7 +353,7 @@ static int hasRequiredGoodsAndServices(int buildingId, int forUpgrade)
 		}
 		return 0;
 	}
-	//education
+	// education
 	int education = Data_Model_Houses[level].education;
 	if (b->data.house.education < education) {
 		if (b->data.house.education) {
@@ -386,7 +390,7 @@ static int hasRequiredGoodsAndServices(int buildingId, int forUpgrade)
 		++Data_CityInfo.housesRequiringBarberToEvolve;
 		return 0;
 	}
-	if (barber) {
+	if (barber == 1) {
 		++Data_CityInfo.housesRequiringBarber;
 	}
 	// bathhouse
@@ -395,7 +399,7 @@ static int hasRequiredGoodsAndServices(int buildingId, int forUpgrade)
 		++Data_CityInfo.housesRequiringBathhouseToEvolve;
 		return 0;
 	}
-	if (bathhouse) {
+	if (bathhouse == 1) {
 		++Data_CityInfo.housesRequiringBathhouse;
 	}
 	// health
@@ -408,7 +412,7 @@ static int hasRequiredGoodsAndServices(int buildingId, int forUpgrade)
 		}
 		return 0;
 	}
-	if (health) {
+	if (health >= 1) {
 		++Data_CityInfo.housesRequiringClinic;
 	}
 	// food types
@@ -427,10 +431,10 @@ static int hasRequiredGoodsAndServices(int buildingId, int forUpgrade)
 	if (b->data.house.inventory.one.pottery < Data_Model_Houses[level].pottery) {
 		return 0;
 	}
-	if (b->data.house.inventory.one.furniture < Data_Model_Houses[level].furniture) {
+	if (b->data.house.inventory.one.oil < Data_Model_Houses[level].oil) {
 		return 0;
 	}
-	if (b->data.house.inventory.one.oil < Data_Model_Houses[level].oil) {
+	if (b->data.house.inventory.one.furniture < Data_Model_Houses[level].furniture) {
 		return 0;
 	}
 	int wine = Data_Model_Houses[level].wine;
@@ -508,11 +512,15 @@ static void resetCityInfoServiceRequiredCounters()
 	Data_CityInfo.housesRequiringReligion = 0;
 }
 
-#define DECAY(svc) if (Data_Buildings[i].data.house.svc > 0) --Data_Buildings[i].data.house.svc
+#define DECAY(svc) \
+	if (Data_Buildings[i].data.house.svc > 0) \
+		--Data_Buildings[i].data.house.svc; \
+	else Data_Buildings[i].data.house.svc = 0
+
 void HouseEvolution_Tick_decayCultureService()
 {
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse != 1 || Data_Buildings[i].houseSize) {
+		if (Data_Buildings[i].inUse != 1 || !Data_Buildings[i].houseSize) {
 			continue;
 		}
 		DECAY(theater);
@@ -680,7 +688,7 @@ void HouseEvolution_determineEvolveText(int buildingId, int hasBadDesirabilityBu
 		} else if (education == 2) {
 			if (b->data.house.school) {
 				b->data.house.evolveTextId = 15;
-			} else {
+			} else if (b->data.house.library) {
 				b->data.house.evolveTextId = 16;
 			}
 		} else if (education == 3) {
@@ -812,7 +820,7 @@ void HouseEvolution_determineEvolveText(int buildingId, int hasBadDesirabilityBu
 		} else if (education == 2) {
 			if (b->data.house.school) {
 				b->data.house.evolveTextId = 45;
-			} else {
+			} else if (b->data.house.library) {
 				b->data.house.evolveTextId = 46;
 			}
 		} else if (education == 3) {
@@ -881,7 +889,7 @@ void HouseEvolution_determineEvolveText(int buildingId, int hasBadDesirabilityBu
 	}
 	// house is evolving
 	b->data.house.evolveTextId = 61;
-	if (b->data.house.noSpaceToExpand) {
+	if (b->data.house.noSpaceToExpand == 1) {
 		// house would like to evolve but can't
 		b->data.house.evolveTextId = 64;
 	}

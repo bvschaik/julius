@@ -8,6 +8,7 @@
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
+#include "Data/Constants.h"
 #include "Data/Model.h"
 #include "Data/Random.h"
 #include "Data/Settings.h"
@@ -56,7 +57,7 @@ void CityInfo_Population_recordMonthlyPopulation()
 void CityInfo_Population_changeHappiness(int amount)
 {
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse && Data_Buildings[i].houseSize) {
+		if (Data_Buildings[i].inUse == 1 && Data_Buildings[i].houseSize) {
 			Data_Buildings[i].sentiment.houseHappiness += amount;
 			BOUND(Data_Buildings[i].sentiment.houseHappiness, 0, 100);
 		}
@@ -66,7 +67,7 @@ void CityInfo_Population_changeHappiness(int amount)
 void CityInfo_Population_setMaxHappiness(int max)
 {
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse && Data_Buildings[i].houseSize) {
+		if (Data_Buildings[i].inUse == 1 && Data_Buildings[i].houseSize) {
 			if (Data_Buildings[i].sentiment.houseHappiness > max) {
 				Data_Buildings[i].sentiment.houseHappiness = max;
 			}
@@ -81,7 +82,7 @@ static int getSentimentPenaltyForTentDwellers()
 	int pctTents = Calc_getPercentage(
 		Data_CityInfo.populationPeopleInTents, Data_CityInfo.population);
 	if (Data_CityInfo.populationPeopleInVillasPalaces > 0) {
-		if (pctTents > 56) {
+		if (pctTents >= 57) {
 			penalty = 0;
 		} else if (pctTents >= 40) {
 			penalty = -3;
@@ -92,8 +93,8 @@ static int getSentimentPenaltyForTentDwellers()
 		} else {
 			penalty = -6;
 		}
-	} else if (Data_CityInfo.populationPeopleInLargeInsulaAndAbove) {
-		if (pctTents > 56) {
+	} else if (Data_CityInfo.populationPeopleInLargeInsulaAndAbove > 0) {
+		if (pctTents >= 57) {
 			penalty = 0;
 		} else if (pctTents >= 40) {
 			penalty = -2;
@@ -159,6 +160,7 @@ void CityInfo_Population_calculateSentiment()
 	} else {
 		sentimentContributionEmployment = 1;
 	}
+	Data_CityInfo.populationSentimentUnemployment = Data_CityInfo.unemploymentPercentage;
 	// tent contribution
 	if (Data_CityInfo.populationSentimentIncludeTents) {
 		sentimentPenaltyTents = getSentimentPenaltyForTentDwellers();
@@ -210,7 +212,7 @@ void CityInfo_Population_calculateSentiment()
 				sentimentContributionFood = 2;
 				totalSentimentContributionFood += 2;
 				b->houseDaysWithoutFood = 0;
-			} else if (b->data.house.numFoods > 0) {
+			} else if (b->data.house.numFoods >= 1) {
 				sentimentContributionFood = 1;
 				totalSentimentContributionFood += 1;
 				b->houseDaysWithoutFood = 0;
@@ -271,26 +273,26 @@ void CityInfo_Population_calculateSentiment()
 	}
 
 	int worstSentiment = 0;
-	Data_CityInfo.populationEmigrationCause = 0;
+	Data_CityInfo.populationEmigrationCause = EmigrationCause_None;
 	if (sentimentContributionFood < worstSentiment) {
 		worstSentiment = sentimentContributionFood;
-		Data_CityInfo.populationEmigrationCause = 1;
+		Data_CityInfo.populationEmigrationCause = EmigrationCause_NoFood;
 	}
 	if (sentimentContributionEmployment < worstSentiment) {
 		worstSentiment = sentimentContributionEmployment;
-		Data_CityInfo.populationEmigrationCause = 2;
+		Data_CityInfo.populationEmigrationCause = EmigrationCause_NoJobs;
 	}
 	if (sentimentContributionTaxes < worstSentiment) {
 		worstSentiment = sentimentContributionTaxes;
-		Data_CityInfo.populationEmigrationCause = 3;
+		Data_CityInfo.populationEmigrationCause = EmigrationCause_HighTaxes;
 	}
 	if (sentimentContributionWages < worstSentiment) {
 		worstSentiment = sentimentContributionWages;
-		Data_CityInfo.populationEmigrationCause = 4;
+		Data_CityInfo.populationEmigrationCause = EmigrationCause_LowWages;
 	}
 	if (sentimentContributionTents < worstSentiment) {
 		worstSentiment = sentimentContributionTents;
-		Data_CityInfo.populationEmigrationCause = 5;
+		Data_CityInfo.populationEmigrationCause = EmigrationCause_ManyTents;
 	}
 	Data_CityInfo.citySentimentLastTime = Data_CityInfo.citySentiment;
 }

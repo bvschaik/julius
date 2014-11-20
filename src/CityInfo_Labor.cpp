@@ -43,12 +43,9 @@ static void setWorkerPercentages();
 static void allocateWorkersToWater();
 static void allocateWorkersToBuildings();
 
-
 static int isIndustryDisabled(int buildingId) {
-	if (Data_Buildings[buildingId].type < Building_WheatFarm) {
-		return 0;
-	}
-	if (Data_Buildings[buildingId].type > Building_PotteryWorkshop) {
+	if (Data_Buildings[buildingId].type < Building_WheatFarm ||
+		Data_Buildings[buildingId].type > Building_PotteryWorkshop) {
 		return 0;
 	}
 	int resourceId = Data_Buildings[buildingId].outputResourceId;
@@ -58,9 +55,8 @@ static int isIndustryDisabled(int buildingId) {
 	return 0;
 }
 
-static int shouldHaveWorkers(int buildingId, int checkAccess)
+static int shouldHaveWorkers(int buildingId, int category, int checkAccess)
 {
-	int category = buildingTypeToLaborCategory[Data_Buildings[buildingId].type];
 	if (category < 0) {
 		return 0;
 	}
@@ -99,7 +95,7 @@ void CityInfo_Labor_calculateWorkersNeededPerCategory()
 		}
 		int category = buildingTypeToLaborCategory[Data_Buildings[i].type];
 		Data_Buildings[i].laborCategory = category;
-		if (!shouldHaveWorkers(i, 1)) {
+		if (!shouldHaveWorkers(i, category, 1)) {
 			continue;
 		}
 		Data_CityInfo.laborCategory[category].workersNeeded +=
@@ -117,7 +113,7 @@ void CityInfo_Labor_checkEmployment()
 	// senate unemployment display is delayed when unemployment is rising
 	if (Data_CityInfo.unemploymentPercentage < Data_CityInfo.unemploymentPercentageForSenate) {
 		Data_CityInfo.unemploymentPercentageForSenate = Data_CityInfo.unemploymentPercentage;
-	} else if (Data_CityInfo.unemploymentPercentage - 5 < Data_CityInfo.unemploymentPercentageForSenate) {
+	} else if (Data_CityInfo.unemploymentPercentage < Data_CityInfo.unemploymentPercentageForSenate + 5) {
 		Data_CityInfo.unemploymentPercentageForSenate = Data_CityInfo.unemploymentPercentage;
 	} else {
 		Data_CityInfo.unemploymentPercentageForSenate += 5;
@@ -154,7 +150,7 @@ void CityInfo_Labor_allocateWorkersToCategories()
 		// not enough workers
 		int available = Data_CityInfo.workersAvailable;
 		// distribute by user-defined priority
-		for (int p = 1; p <= 9 && available; p++) {
+		for (int p = 1; p <= 9 && available > 0; p++) {
 			for (int c = 0; c < 9; c++) {
 				if (p == Data_CityInfo.laborCategory[c].priority) {
 					int toAllocate = Data_CityInfo.laborCategory[c].workersNeeded;
@@ -168,7 +164,12 @@ void CityInfo_Labor_allocateWorkersToCategories()
 			}
 		}
 		// (sort of) round-robin distribution over unprioritized categories:
+		int guard = 0;
 		do {
+			guard++;
+			if (guard >= Data_CityInfo.workersAvailable) {
+				break;
+			}
 			for (int p = 0; p < 9; p++) {
 				int cat = builtInPriority[p].category;
 				if (!Data_CityInfo.laborCategory[cat].priority) {
@@ -244,15 +245,17 @@ static void allocateWorkersToBuildings()
 		if (Data_Buildings[i].inUse != 1) {
 			continue;
 		}
-		if (!shouldHaveWorkers(i, 0)) {
-			continue;
-		}
 		int cat = buildingTypeToLaborCategory[Data_Buildings[i].type];
 		if (cat == LaborCategory_Water) {
 			// water is handled by allocateWorkersToWater()
 			continue;
 		}
-		Data_Buildings[i].numWorkers = 0;
+		if (cat >= 0) {
+			Data_Buildings[i].numWorkers = 0;
+		}
+		if (!shouldHaveWorkers(i, cat, 0)) {
+			continue;
+		}
 		if (Data_Buildings[i].percentageWorkers > 0) {
 			if (categoryWorkersNeeded[cat]) {
 				int numWorkers = Calc_adjustWithPercentage(
@@ -283,11 +286,11 @@ static void allocateWorkersToBuildings()
 		if (Data_Buildings[i].inUse != 1) {
 			continue;
 		}
-		if (!shouldHaveWorkers(i, 0)) {
+		int cat = buildingTypeToLaborCategory[Data_Buildings[i].type];
+		if (cat < 0 || cat == LaborCategory_Water || cat == LaborCategory_Military) {
 			continue;
 		}
-		int cat = buildingTypeToLaborCategory[Data_Buildings[i].type];
-		if (cat == LaborCategory_Water || cat == LaborCategory_Military) {
+		if (!shouldHaveWorkers(i, cat, 0)) {
 			continue;
 		}
 		if (Data_Buildings[i].percentageWorkers > 0 && categoryWorkersNeeded[cat]) {

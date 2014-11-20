@@ -40,11 +40,11 @@ struct Data_Mouse Data_Mouse;
 struct Data_Language_Text Data_Language_Text;
 struct Data_Language_Message Data_Language_Message;
 
-struct Data_CityInfo Data_CityInfo;
-struct Data_CityInfo_Buildings Data_CityInfo_Buildings;
-struct Data_CityInfo_CultureCoverage Data_CityInfo_CultureCoverage;
-struct Data_CityInfo_Extra Data_CityInfo_Extra;
-struct Data_CityInfo_Resource Data_CityInfo_Resource;
+struct _Data_CityInfo Data_CityInfo;
+struct _Data_CityInfo_Buildings Data_CityInfo_Buildings;
+struct _Data_CityInfo_CultureCoverage Data_CityInfo_CultureCoverage;
+struct _Data_CityInfo_Extra Data_CityInfo_Extra;
+struct _Data_CityInfo_Resource Data_CityInfo_Resource;
 
 struct Data_KeyboardInput Data_KeyboardInput;
 

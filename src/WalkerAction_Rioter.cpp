@@ -18,7 +18,7 @@ static const int criminalOffsets[] = {
 void WalkerAction_protestor(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
-	w->terrainUsage = 1;
+	w->terrainUsage = WalkerTerrainUsage_Roads;
 	WalkerActionIncreaseGraphicOffset(w, 64);
 	w->cartGraphicId = 0;
 	if (w->actionState == WalkerActionState_149_Corpse) {
@@ -41,7 +41,7 @@ void WalkerAction_protestor(int walkerId)
 void WalkerAction_criminal(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
-	w->terrainUsage = 1;
+	w->terrainUsage = WalkerTerrainUsage_Roads;
 	WalkerActionIncreaseGraphicOffset(w, 32);
 	w->cartGraphicId = 0;
 	if (w->actionState == WalkerActionState_149_Corpse) {

@@ -9,7 +9,7 @@
 void CityInfo_Finance_decayTaxCollectorAccess()
 {
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse && Data_Buildings[i].houseTaxCoverage) {
+		if (Data_Buildings[i].inUse == 1 && Data_Buildings[i].houseTaxCoverage) {
 			Data_Buildings[i].houseTaxCoverage--;
 		}
 	}
@@ -30,7 +30,7 @@ static void collectMonthlyTaxes()
 		Data_CityInfo.populationPerLevel[i] = 0;
 	}
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (!Data_Buildings[i].inUse || !Data_Buildings[i].houseSize) {
+		if (Data_Buildings[i].inUse != 1 || !Data_Buildings[i].houseSize) {
 			continue;
 		}
 
@@ -73,10 +73,10 @@ static void collectMonthlyTaxes()
 	Data_CityInfo.yearlyCollectedTaxFromPatricians += collectedPatricians;
 	Data_CityInfo.yearlyCollectedTaxFromPlebs += collectedPlebs;
 	Data_CityInfo.yearlyUncollectedTaxFromPatricians += Calc_adjustWithPercentage(
-		Data_CityInfo.monthlyCollectedTaxFromPatricians / 2,
+		Data_CityInfo.monthlyUncollectedTaxFromPatricians / 2,
 		Data_CityInfo.taxPercentage);
 	Data_CityInfo.yearlyUncollectedTaxFromPlebs += Calc_adjustWithPercentage(
-		Data_CityInfo.monthlyCollectedTaxFromPlebs / 2,
+		Data_CityInfo.monthlyUncollectedTaxFromPlebs / 2,
 		Data_CityInfo.taxPercentage);
 
 	Data_CityInfo.treasury += collectedTotal;
@@ -196,7 +196,7 @@ void CityInfo_Finance_handleYearChange()
 	
 	// reset tax income in building list
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse && Data_Buildings[i].houseSize) {
+		if (Data_Buildings[i].inUse == 1 && Data_Buildings[i].houseSize) {
 			Data_Buildings[i].taxIncomeOrStorage = 0;
 		}
 	}
@@ -254,10 +254,10 @@ void CityInfo_Finance_calculateTotals()
 		Data_CityInfo.financeImportsThisYear;
 
 	Data_CityInfo.financeNetInOutLastYear =
-		Data_CityInfo.financeTotalIncomeLastYear +
+		Data_CityInfo.financeTotalIncomeLastYear -
 		Data_CityInfo.financeTotalExpensesLastYear;
 	Data_CityInfo.financeNetInOutThisYear =
-		Data_CityInfo.financeTotalIncomeThisYear +
+		Data_CityInfo.financeTotalIncomeThisYear -
 		Data_CityInfo.financeTotalExpensesThisYear;
 	Data_CityInfo.financeBalanceThisYear =
 		Data_CityInfo.financeNetInOutThisYear +
@@ -270,8 +270,7 @@ void CityInfo_Finance_calculateTotals()
 
 void CityInfo_Finance_calculateEstimatedWages()
 {
-	int monthlyWages = Data_CityInfo.wages *
-		Data_CityInfo.workersEmployed / 10 / 12;
+	int monthlyWages = Data_CityInfo.wages * Data_CityInfo.workersEmployed / 10 / 12;
 	Data_CityInfo.financeWagesThisYear = Data_CityInfo.financeWagesPaidThisYear;
 	Data_CityInfo.estimatedYearlyWages =
 		(11 - Data_CityInfo_Extra.gameTimeMonth + 1) * monthlyWages +
@@ -282,8 +281,8 @@ void CityInfo_Finance_calculateEstimatedTaxes()
 {
 	Data_CityInfo.monthlyCollectedTaxFromPlebs = 0;
 	Data_CityInfo.monthlyCollectedTaxFromPatricians = 0;
-	for (int i = 0; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse && Data_Buildings[i].houseSize && Data_Buildings[i].houseTaxCoverage) {
+	for (int i = 1; i < MAX_BUILDINGS; i++) {
+		if (Data_Buildings[i].inUse == 1 && Data_Buildings[i].houseSize && Data_Buildings[i].houseTaxCoverage) {
 			int isPatrician = Data_Buildings[i].subtype.houseLevel >= HouseLevel_SmallVilla;
 			int trm = Calc_adjustWithPercentage(
 				Data_Model_Houses[Data_Buildings[i].subtype.houseLevel].taxMultiplier,

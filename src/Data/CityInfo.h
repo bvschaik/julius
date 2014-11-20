@@ -3,7 +3,7 @@
 
 #define MIN_TREASURY -5000
 
-extern struct Data_CityInfo {
+extern struct _Data_CityInfo {
 	char __otherPlayer[18068];
 	char __unknown_00a0;
 	char __unknown_00a1;
@@ -1033,7 +1033,7 @@ struct Data_CityInfo_Building {
 };
 
 
-extern struct Data_CityInfo_Buildings {
+extern struct _Data_CityInfo_Buildings {
 	struct Data_CityInfo_Building
 		// health
 		clinic,
@@ -1088,7 +1088,7 @@ extern struct Data_CityInfo_Buildings {
 	} industry;
 } Data_CityInfo_Buildings;
 
-extern struct Data_CityInfo_CultureCoverage {
+extern struct _Data_CityInfo_CultureCoverage {
 	int theater;
 	int amphitheater;
 	int colosseum;
@@ -1105,7 +1105,7 @@ extern struct Data_CityInfo_CultureCoverage {
 	int oracle;
 } Data_CityInfo_CultureCoverage;
 
-extern struct Data_CityInfo_Extra {
+extern struct _Data_CityInfo_Extra {
 	int populationGraphOrder;
 	int gameTimeTick; // 50 ticks in a day
 	int gameTimeDay; // 16 days in a month
@@ -1131,7 +1131,7 @@ extern struct Data_CityInfo_Extra {
 	int ciid;
 } Data_CityInfo_Extra;
 
-extern struct Data_CityInfo_Resource {
+extern struct _Data_CityInfo_Resource {
 	int numAvailableResources;
 	int availableResources[16];
 	int numAvailableFoods;
