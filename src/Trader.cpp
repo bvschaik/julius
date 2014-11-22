@@ -109,7 +109,9 @@ static int generateTrader(int cityId)
 
 	if (c->isSeaTrade) {
 		// generate ship
-		if (!Data_CityInfo.tradeSeaProblemDuration) {
+		if (Data_CityInfo.numWorkingDocks > 0 &&
+			Data_Scenario.riverEntryPoint.x != -1 && Data_Scenario.riverEntryPoint.y != -1 &&
+			!Data_CityInfo.tradeSeaProblemDuration) {
 			int shipId = Walker_create(Walker_TradeShip,
 				Data_Scenario.riverEntryPoint.x, Data_Scenario.riverEntryPoint.y, 0);
 			c->traderWalkerIds[index] = shipId;
@@ -212,7 +214,7 @@ int Trader_getClosestWarehouseForTradeCaravan(int walkerId, int x, int y, int ci
 			importable[r] = 0;
 		}
 		if (Data_Walkers[walkerId].loadsSoldOrCarrying >= 8) {
-			exportable[r] = 0;
+			importable[r] = 0;
 		}
 	}
 	int numImportable = 0;
@@ -230,11 +232,10 @@ int Trader_getClosestWarehouseForTradeCaravan(int walkerId, int x, int y, int ci
 		if (!Data_Buildings[i].hasRoadAccess || Data_Buildings[i].distanceFromEntry <= 0) {
 			continue;
 		}
-		int storageId = Data_Buildings[i].storageId;
+		struct Data_Building_Storage *st = &Data_Building_Storages[Data_Buildings[i].storageId];
 		int numImportsForWarehouse = 0;
 		for (int r = 1; r < 16; r++) {
-			if (Data_Building_Storages[storageId].resourceState[r] != BuildingStorageState_NotAccepting &&
-				Empire_canImportResourceFromCity(cityId, r)) {
+			if (st->resourceState[r] != BuildingStorageState_NotAccepting && Empire_canImportResourceFromCity(cityId, r)) {
 				numImportsForWarehouse++;
 			}
 		}
@@ -245,21 +246,23 @@ int Trader_getClosestWarehouseForTradeCaravan(int walkerId, int x, int y, int ci
 			if (spaceId && exportable[Data_Buildings[spaceId].subtype.warehouseResourceId]) {
 				distancePenalty -= 4;
 			}
-			if (numImportable && numImportsForWarehouse && !Data_Building_Storages[storageId].emptyAll) {
+			if (numImportable && numImportsForWarehouse && !st->emptyAll) {
 				for (int r = 1; r < 16; r++) {
-					if (++Data_CityInfo.tradeNextImportResourceCaravan > 15) {
+					Data_CityInfo.tradeNextImportResourceCaravan++;
+					if (Data_CityInfo.tradeNextImportResourceCaravan > 15) {
 						Data_CityInfo.tradeNextImportResourceCaravan = 1;
 					}
-					if (Data_Building_Storages[storageId].resourceState[Data_CityInfo.tradeNextImportResourceCaravan] != BuildingStorageState_NotAccepting) {
+					if (st->resourceState[Data_CityInfo.tradeNextImportResourceCaravan] != BuildingStorageState_NotAccepting) {
 						break;
 					}
 				}
-				if (Data_Building_Storages[storageId].resourceState[Data_CityInfo.tradeNextImportResourceCaravan] != BuildingStorageState_NotAccepting) {
-					if (Data_Buildings[i].subtype.warehouseResourceId == Resource_None) {
+				if (st->resourceState[Data_CityInfo.tradeNextImportResourceCaravan] != BuildingStorageState_NotAccepting) {
+					if (Data_Buildings[spaceId].subtype.warehouseResourceId != Resource_None) {
 						distancePenalty -= 16;
 					}
-					if (spaceId && importable[Data_Buildings[i].subtype.warehouseResourceId] &&
-						Data_Buildings[i].loadsStored < 4 && Data_Buildings[i].subtype.warehouseResourceId == Data_CityInfo.tradeNextImportResourceCaravan) {
+					if (spaceId && importable[Data_Buildings[spaceId].subtype.warehouseResourceId] &&
+						Data_Buildings[spaceId].loadsStored < 4 &&
+						Data_Buildings[spaceId].subtype.warehouseResourceId == Data_CityInfo.tradeNextImportResourceCaravan) {
 						distancePenalty -= 8;
 					}
 				}
@@ -296,11 +299,13 @@ int Trader_getClosestWarehouseForImportDocker(int x, int y, int cityId, int dist
 	for (int r = 1; r < 16; r++) {
 		importable[r] = Empire_canImportResourceFromCity(cityId, r);
 	}
-	if (++Data_CityInfo.tradeNextImportResourceDocker > 15) {
+	Data_CityInfo.tradeNextImportResourceDocker++;
+	if (Data_CityInfo.tradeNextImportResourceDocker > 15) {
 		Data_CityInfo.tradeNextImportResourceDocker = 1;
 	}
 	for (int i = 1; i < 16 && !importable[Data_CityInfo.tradeNextImportResourceDocker]; i++) {
-		if (++Data_CityInfo.tradeNextImportResourceDocker) {
+		Data_CityInfo.tradeNextImportResourceDocker++;
+		if (Data_CityInfo.tradeNextImportResourceDocker > 15) {
 			Data_CityInfo.tradeNextImportResourceDocker = 1;
 		}
 	}
@@ -320,14 +325,13 @@ int Trader_getClosestWarehouseForImportDocker(int x, int y, int cityId, int dist
 		if (Data_Buildings[i].roadNetworkId != roadNetworkId) {
 			continue;
 		}
-		int storageId = Data_Buildings[i].storageId;
-		if (Data_Building_Storages[storageId].resourceState[resourceId] != BuildingStorageState_NotAccepting &&
-			!Data_Building_Storages[storageId].emptyAll) {
+		struct Data_Building_Storage *s = &Data_Building_Storages[Data_Buildings[i].storageId];
+		if (s->resourceState[resourceId] != BuildingStorageState_NotAccepting && !s->emptyAll) {
 			int distancePenalty = 32;
 			int spaceId = i;
 			for (int s = 0; s < 8; s++) {
 				spaceId = Data_Buildings[spaceId].nextPartBuildingId;
-				if (spaceId && Data_Buildings[spaceId].subtype.warehouseResourceId == Resource_None) {
+				if (spaceId && Data_Buildings[spaceId].subtype.warehouseResourceId != Resource_None) {
 					distancePenalty -= 8;
 				}
 				if (spaceId &&
@@ -369,11 +373,13 @@ int Trader_getClosestWarehouseForExportDocker(int x, int y, int cityId, int dist
 	for (int r = 1; r < 16; r++) {
 		exportable[r] = Empire_canExportResourceToCity(cityId, r);
 	}
-	if (++Data_CityInfo.tradeNextExportResourceDocker > 15) {
+	Data_CityInfo.tradeNextExportResourceDocker++;
+	if (Data_CityInfo.tradeNextExportResourceDocker > 15) {
 		Data_CityInfo.tradeNextExportResourceDocker = 1;
 	}
 	for (int i = 1; i < 16 && !exportable[Data_CityInfo.tradeNextExportResourceDocker]; i++) {
-		if (++Data_CityInfo.tradeNextExportResourceDocker) {
+		Data_CityInfo.tradeNextExportResourceDocker++;
+		if (Data_CityInfo.tradeNextExportResourceDocker > 15) {
 			Data_CityInfo.tradeNextExportResourceDocker = 1;
 		}
 	}
@@ -395,12 +401,12 @@ int Trader_getClosestWarehouseForExportDocker(int x, int y, int cityId, int dist
 			continue;
 		}
 		int distancePenalty = 32;
-		int storageId = i;
+		int spaceId = i;
 		for (int s = 0; s < 8; s++) {
-			storageId = Data_Buildings[storageId].nextPartBuildingId;
-			if (storageId &&
-				Data_Buildings[storageId].subtype.warehouseResourceId == resourceId &&
-				Data_Buildings[storageId].loadsStored > 0) {
+			spaceId = Data_Buildings[spaceId].nextPartBuildingId;
+			if (spaceId &&
+				Data_Buildings[spaceId].subtype.warehouseResourceId == resourceId &&
+				Data_Buildings[spaceId].loadsStored > 0) {
 				distancePenalty--;
 			}
 		}
@@ -438,25 +444,25 @@ int Trader_tryImportResource(int buildingId, int resourceId, int cityId)
 	
 	int routeId = Data_Empire_Cities[cityId].routeId;
 	// try existing storage bay with the same resource
-	int storageId = buildingId;
+	int spaceId = buildingId;
 	for (int i = 0; i < 8; i++) {
-		storageId = Data_Buildings[storageId].nextPartBuildingId;
-		if (storageId > 0 &&
-			Data_Buildings[storageId].loadsStored &&
-			Data_Buildings[storageId].loadsStored < 4 &&
-			Data_Buildings[storageId].subtype.warehouseResourceId == resourceId) {
+		spaceId = Data_Buildings[spaceId].nextPartBuildingId;
+		if (spaceId > 0 &&
+			Data_Buildings[spaceId].loadsStored &&
+			Data_Buildings[spaceId].loadsStored < 4 &&
+			Data_Buildings[spaceId].subtype.warehouseResourceId == resourceId) {
 			Data_Empire_Trade.tradedThisYear[routeId][resourceId]++;
-			Resource_addImportedResourceToWarehouseSpace(storageId, resourceId);
+			Resource_addImportedResourceToWarehouseSpace(spaceId, resourceId);
 			return 1;
 		}
 	}
 	// try unused storage bay
-	storageId = buildingId;
+	spaceId = buildingId;
 	for (int i = 0; i < 8; i++) {
-		storageId = Data_Buildings[storageId].nextPartBuildingId;
-		if (storageId > 0 && Data_Buildings[storageId].subtype.warehouseResourceId == Resource_None) {
+		spaceId = Data_Buildings[spaceId].nextPartBuildingId;
+		if (spaceId > 0 && Data_Buildings[spaceId].subtype.warehouseResourceId == Resource_None) {
 			Data_Empire_Trade.tradedThisYear[routeId][resourceId]++;
-			Resource_addImportedResourceToWarehouseSpace(storageId, resourceId);
+			Resource_addImportedResourceToWarehouseSpace(spaceId, resourceId);
 			return 1;
 		}
 	}
@@ -469,14 +475,14 @@ int Trader_tryExportResource(int buildingId, int resourceId, int cityId)
 		return 0;
 	}
 	
-	int storageId = buildingId;
+	int spaceId = buildingId;
 	for (int i = 0; i < 8; i++) {
-		storageId = Data_Buildings[storageId].nextPartBuildingId;
-		if (storageId > 0) {
-			if (Data_Buildings[storageId].loadsStored &&
-				Data_Buildings[storageId].subtype.warehouseResourceId == resourceId) {
+		spaceId = Data_Buildings[spaceId].nextPartBuildingId;
+		if (spaceId > 0) {
+			if (Data_Buildings[spaceId].loadsStored &&
+				Data_Buildings[spaceId].subtype.warehouseResourceId == resourceId) {
 				Data_Empire_Trade.tradedThisYear[Data_Empire_Cities[cityId].routeId][resourceId]++;
-				Resource_removeExportedResourceFromWarehouseSpace(storageId, resourceId);
+				Resource_removeExportedResourceFromWarehouseSpace(spaceId, resourceId);
 				return 1;
 			}
 		}

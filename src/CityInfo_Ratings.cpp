@@ -242,12 +242,7 @@ static void updateFavorRating(int isYearlyUpdate)
 		}
 		Data_CityInfo.ratingFavorLastYear = Data_CityInfo.ratingFavor;
 	}
-	if (Data_CityInfo.ratingFavor < 0) {
-		Data_CityInfo.ratingFavor = 0;
-	}
-	if (Data_CityInfo.ratingFavor > 100) {
-		Data_CityInfo.ratingFavor = 100;
-	}
+	BOUND(Data_CityInfo.ratingFavor, 0, 100);
 	CityInfo_Ratings_updateFavorExplanation();
 }
 
@@ -310,6 +305,7 @@ static void updateProsperityRating()
 	} else {
 		change += 5;
 	}
+	Data_CityInfo.ratingProsperityTreasuryLastYear = Data_CityInfo.treasury;
 	// food types: +1 for multiple foods
 	if (Data_CityInfo.foodInfoFoodTypesEaten >= 2) {
 		change += 1;
@@ -337,6 +333,9 @@ static void updateProsperityRating()
 		change += 1;
 	}
 	Data_CityInfo.ratingProsperity += change;
+	if (Data_CityInfo.ratingProsperity > Data_CityInfo.ratingProsperityMax) {
+		Data_CityInfo.ratingProsperity = Data_CityInfo.ratingProsperityMax;
+	}
 	BOUND(Data_CityInfo.ratingProsperity, 0, 100);
 
 	CityInfo_Ratings_updateProsperityExplanation();

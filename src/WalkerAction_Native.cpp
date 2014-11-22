@@ -9,7 +9,7 @@
 void WalkerAction_indigenousNative(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
-	struct Data_Building *b = &Data_Buildings[walkerId];
+	struct Data_Building *b = &Data_Buildings[w->buildingId];
 	w->terrainUsage = 0;
 	w->useCrossCountry = 0;
 	w->maxRoamLength = 800;

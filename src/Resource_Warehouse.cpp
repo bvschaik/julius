@@ -342,11 +342,13 @@ void Resource_addImportedResourceToWarehouseSpace(int spaceId, int resourceId)
 	Resource_setWarehouseSpaceGraphic(spaceId, resourceId);
 }
 
+//REVIEWED
 void Resource_removeExportedResourceFromWarehouseSpace(int spaceId, int resourceId)
 {
 	Data_CityInfo.resourceSpaceInWarehouses[resourceId]++;
 	Data_CityInfo.resourceStored[resourceId]--;
-	if (--Data_Buildings[spaceId].loadsStored <= 0) {
+	Data_Buildings[spaceId].loadsStored--;
+	if (Data_Buildings[spaceId].loadsStored <= 0) {
 		Data_Buildings[spaceId].subtype.warehouseResourceId = Resource_None;
 	}
 	

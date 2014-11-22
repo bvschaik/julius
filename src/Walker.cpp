@@ -71,9 +71,6 @@ int Walker_create(int walkerType, int x, int y, char direction)
 void Walker_delete(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
-	if (w->type == Walker_EnemyCaesarLegionary) {
-		Data_CityInfo.caesarInvasionSoldiersDied++;
-	}
 	switch (w->type) {
 		case Walker_LaborSeeker:
 		case Walker_MarketBuyer:
@@ -90,6 +87,9 @@ void Walker_delete(int walkerId)
 					Data_Buildings[w->buildingId].data.other.dockWalkerIds[i] = 0;
 				}
 			}
+			break;
+		case Walker_EnemyCaesarLegionary:
+			Data_CityInfo.caesarInvasionSoldiersDied++;
 			break;
 		case Walker_Explosion:
 		case Walker_FortStandard:
@@ -126,6 +126,69 @@ void Walker_delete(int walkerId)
 	memset(w, 0, 128);
 }
 
+void Walker_addToTileList(int walkerId)
+{
+	if (Data_Walkers[walkerId].gridOffset < 0) {
+		return;
+	}
+	struct Data_Walker *w = &Data_Walkers[walkerId];
+	w->numPreviousWalkersOnSameTile = 0;
+
+	int next = Data_Grid_walkerIds[w->gridOffset];
+	if (next) {
+		w->numPreviousWalkersOnSameTile++;
+		while (Data_Walkers[next].nextWalkerIdOnSameTile) {
+			next = Data_Walkers[next].nextWalkerIdOnSameTile;
+			w->numPreviousWalkersOnSameTile++;
+		}
+		if (w->numPreviousWalkersOnSameTile > 20) {
+			w->numPreviousWalkersOnSameTile = 20;
+		}
+		Data_Walkers[next].nextWalkerIdOnSameTile = walkerId;
+	} else {
+		Data_Grid_walkerIds[w->gridOffset] = walkerId;
+	}
+}
+
+void Walker_updatePositionInTileList(int walkerId)
+{
+	struct Data_Walker *w = &Data_Walkers[walkerId];
+	w->numPreviousWalkersOnSameTile = 0;
+	
+	int next = Data_Grid_walkerIds[w->gridOffset];
+	while (next) {
+		if (next == walkerId) {
+			return;
+		}
+		w->numPreviousWalkersOnSameTile++;
+		next = Data_Walkers[next].nextWalkerIdOnSameTile;
+	}
+	if (w->numPreviousWalkersOnSameTile > 20) {
+		w->numPreviousWalkersOnSameTile = 20;
+	}
+}
+
+void Walker_removeFromTileList(int walkerId)
+{
+	if (Data_Walkers[walkerId].gridOffset < 0) {
+		return;
+	}
+	struct Data_Walker *w = &Data_Walkers[walkerId];
+
+	int cur = Data_Grid_walkerIds[w->gridOffset];
+	if (cur) {
+		if (cur == walkerId) {
+			Data_Grid_walkerIds[w->gridOffset] = w->nextWalkerIdOnSameTile;
+		} else {
+			while (cur && Data_Walkers[cur].nextWalkerIdOnSameTile != walkerId) {
+				cur = Data_Walkers[cur].nextWalkerIdOnSameTile;
+			}
+			Data_Walkers[cur].nextWalkerIdOnSameTile = w->nextWalkerIdOnSameTile;
+		}
+		w->nextWalkerIdOnSameTile = 0;
+	}
+}
+
 static const int dustCloudTileOffsets[] = {0, 0, 0, 1, 1, 2};
 static const int dustCloudCCOffsets[] = {0, 7, 14, 7, 14, 7};
 static const int dustCloudDirectionX[] = {
@@ -160,6 +223,22 @@ void Walker_createDustCloud(int x, int y, int size)
 	Sound_Effects_playChannel(SoundChannel_Explosion);
 }
 
+int Walker_createMissile(int buildingId, int x, int y, int xDst, int yDst, int type)
+{
+	int walkerId = Walker_create(type, x, y, 0);
+	if (walkerId) {
+		struct Data_Walker *w = &Data_Walkers[walkerId];
+		w->missileDamage = (type == Walker_Bolt) ? 60 : 10;
+		w->buildingId = buildingId;
+		w->destinationX = xDst;
+		w->destinationY = yDst;
+		WalkerMovement_crossCountrySetDirection(
+			walkerId, w->crossCountryX, w->crossCountryY,
+			15 * xDst, 15 * yDst, 1);
+	}
+	return walkerId;
+}
+
 void Walker_createFishingPoints()
 {
 	for (int i = 0; i < 8; i++) {
@@ -167,10 +246,10 @@ void Walker_createFishingPoints()
 			Random_generateNext();
 			int fishId = Walker_create(Walker_FishGulls,
 				Data_Scenario.fishingPoints.x[i], Data_Scenario.fishingPoints.y[i], 0);
-			Data_Walkers[fishId].graphicOffset = Data_Random.random1_15bit & 0x1f;
-			Data_Walkers[fishId].progressOnTile = Data_Random.random1_15bit & 7;
+			Data_Walkers[fishId].graphicOffset = Data_Random.random1_7bit & 0x1f;
+			Data_Walkers[fishId].progressOnTile = Data_Random.random1_7bit & 7;
 			WalkerMovement_crossCountrySetDirection(fishId,
-				Data_Walkers[fishId].x, Data_Walkers[fishId].y,
+				Data_Walkers[fishId].crossCountryX, Data_Walkers[fishId].crossCountryY,
 				15 * Data_Walkers[fishId].destinationX, 15 * Data_Walkers[fishId].destinationY, 0);
 		}
 	}
@@ -183,7 +262,7 @@ void Walker_createHerds()
 		case Climate_Central: herdType = Walker_Sheep; numAnimals = 10; break;
 		case Climate_Northern: herdType = Walker_Wolf; numAnimals = 8; break;
 		case Climate_Desert: herdType = Walker_Zebra; numAnimals = 12; break;
-		default: herdType = 0; numAnimals = 0; break;
+		default: return;
 	}
 	for (int i = 0; i < 4; i++) {
 		if (Data_Scenario.herdPoints.x[i] > 0) {
@@ -216,8 +295,8 @@ void Walker_createFlotsam(int xEntry, int yEntry, int hasWater)
 			Walker_delete(i);
 		}
 	}
-	int resourceIds[] = {3, 1, 3, 2, 1, 3, 2, 3, 2, 1, 3, 3, 2, 3, 3, 3, 1, 2, 0, 1};
-	int waitTicks[] = {10, 50, 100, 130, 200, 250, 400, 430, 500, 600, 70, 750, 820, 830, 900, 980, 1010, 1030, 1200, 1300};
+	const int resourceIds[] = {3, 1, 3, 2, 1, 3, 2, 3, 2, 1, 3, 3, 2, 3, 3, 3, 1, 2, 0, 1};
+	const int waitTicks[] = {10, 50, 100, 130, 200, 250, 400, 430, 500, 600, 70, 750, 820, 830, 900, 980, 1010, 1030, 1200, 1300};
 	for (int i = 0; i < 20; i++) {
 		int walkerId = Walker_create(Walker_Flotsam, xEntry, yEntry, 0);
 		struct Data_Walker *w = &Data_Walkers[walkerId];
@@ -227,29 +306,13 @@ void Walker_createFlotsam(int xEntry, int yEntry, int hasWater)
 	}
 }
 
-int Walker_createMissile(int buildingId, int x, int y, int xDst, int yDst, int type)
-{
-	int walkerId = Walker_create(type, x, y, 0);
-	if (walkerId) {
-		struct Data_Walker *w = &Data_Walkers[walkerId];
-		w->missileDamage = (type == Walker_Bolt) ? 60 : 10;
-		w->buildingId = buildingId;
-		w->destinationX = xDst;
-		w->destinationY = yDst;
-		WalkerMovement_crossCountrySetDirection(
-			walkerId, w->crossCountryX, w->crossCountryY,
-			15 * xDst, 15 * yDst, 1);
-	}
-	return walkerId;
-}
-
 int Walker_createSoldierFromBarracks(int buildingId, int x, int y)
 {
 	int noWeapons = Data_Buildings[buildingId].loadsStored <= 0;
 	int recruitType = 0;
 	int formationId = 0;
-	int minDist = 0;
-	for (int i = 1; i < 50; i++) {
+	int minDist = 10000;
+	for (int i = 1; i < MAX_FORMATIONS; i++) {
 		struct Data_Formation *f = &Data_Formations[i];
 		if (f->inUse != 1 || !f->isLegion || f->inDistantBattle || !f->legionRecruitType) {
 			continue;
@@ -334,70 +397,6 @@ int Walker_createTowerSentryFromBarracks(int buildingId, int x, int y)
 	return 1;
 }
 
-void Walker_addToTileList(int walkerId)
-{
-	if (Data_Walkers[walkerId].gridOffset < 0) {
-		return;
-	}
-	struct Data_Walker *w = &Data_Walkers[walkerId];
-	w->numPreviousWalkersOnSameTile = 0;
-
-	int next = Data_Grid_walkerIds[w->gridOffset];
-	if (next) {
-		w->numPreviousWalkersOnSameTile++;
-		while (Data_Walkers[next].nextWalkerIdOnSameTile) {
-			next = Data_Walkers[next].nextWalkerIdOnSameTile;
-			w->numPreviousWalkersOnSameTile++;
-		}
-		if (w->numPreviousWalkersOnSameTile > 20) {
-			w->numPreviousWalkersOnSameTile = 20;
-		}
-		Data_Walkers[next].nextWalkerIdOnSameTile = walkerId;
-	} else {
-		Data_Grid_walkerIds[w->gridOffset] = walkerId;
-	}
-}
-
-void Walker_updatePositionInTileList(int walkerId)
-{
-	struct Data_Walker *w = &Data_Walkers[walkerId];
-	w->numPreviousWalkersOnSameTile = 0;
-	
-	int next = Data_Grid_walkerIds[w->gridOffset];
-	while (next) {
-		if (next == walkerId) {
-			return;
-		}
-		w->numPreviousWalkersOnSameTile++;
-		next = Data_Walkers[next].nextWalkerIdOnSameTile;
-	}
-	if (w->numPreviousWalkersOnSameTile > 20) {
-		w->numPreviousWalkersOnSameTile = 20;
-	}
-}
-
-void Walker_removeFromTileList(int walkerId)
-{
-	if (Data_Walkers[walkerId].gridOffset < 0) {
-		return;
-	}
-	struct Data_Walker *w = &Data_Walkers[walkerId];
-
-	int cur = Data_Grid_walkerIds[w->gridOffset];
-	if (cur) {
-		if (cur == walkerId) {
-			Data_Grid_walkerIds[w->gridOffset] = w->nextWalkerIdOnSameTile;
-			w->nextWalkerIdOnSameTile = 0;
-		} else {
-			while (cur && Data_Walkers[cur].nextWalkerIdOnSameTile != walkerId) {
-				cur = Data_Walkers[cur].nextWalkerIdOnSameTile;
-			}
-			Data_Walkers[cur].nextWalkerIdOnSameTile = w->nextWalkerIdOnSameTile;
-			w->nextWalkerIdOnSameTile = 0;
-		}
-	}
-}
-
 void Walker_killTowerSentriesAt(int x, int y)
 {
 	for (int i = 1; i < MAX_WALKERS; i++) {
@@ -414,21 +413,22 @@ void Walker_killTowerSentriesAt(int x, int y)
 void Walker_sinkAllShips()
 {
 	for (int i = 1; i < MAX_WALKERS; i++) {
-		if (Data_Walkers[i].state != WalkerState_Alive) {
+		struct Data_Walker *w = &Data_Walkers[i];
+		if (w->state != WalkerState_Alive) {
 			continue;
 		}
 		int buildingId;
-		if (Data_Walkers[i].type == Walker_TradeShip) {
-			buildingId = Data_Walkers[i].destinationBuildingId;
-		} else if (Data_Walkers[i].type == Walker_FishingBoat) {
-			buildingId = Data_Walkers[i].buildingId;
+		if (w->type == Walker_TradeShip) {
+			buildingId = w->destinationBuildingId;
+		} else if (w->type == Walker_FishingBoat) {
+			buildingId = w->buildingId;
 		} else {
 			continue;
 		}
 		Data_Buildings[buildingId].data.other.boatWalkerId = 0;
-		Data_Walkers[i].buildingId = 0;
-		Data_Walkers[i].type = Walker_Shipwreck;
-		Data_Walkers[i].waitTicks = 0;
+		w->buildingId = 0;
+		w->type = Walker_Shipwreck;
+		w->waitTicks = 0;
 	}
 }
 

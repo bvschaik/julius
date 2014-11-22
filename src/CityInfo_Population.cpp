@@ -402,7 +402,7 @@ void CityInfo_Population_updateHealthRate()
 		}
 	} else if (Data_CityInfo.healthRate > Data_CityInfo.healthRateTarget) {
 		Data_CityInfo.healthRate -= 2;
-		if (Data_CityInfo.healthRate > Data_CityInfo.healthRateTarget) {
+		if (Data_CityInfo.healthRate < Data_CityInfo.healthRateTarget) {
 			Data_CityInfo.healthRate = Data_CityInfo.healthRateTarget;
 		}
 	}
@@ -540,7 +540,8 @@ static void removePeopleFromCensus(int numPeople)
 			numPeople--;
 			emptyBuckets = 0;
 		}
-		if (++index >= 100) {
+		index++;
+		if (index >= 100) {
 			index = 0;
 		}
 	}
@@ -555,7 +556,8 @@ static void removePeopleFromCensus(int numPeople)
 			numPeople--;
 			emptyBuckets = 0;
 		}
-		if (++age >= 100) {
+		age++;
+		if (age >= 100) {
 			index = 0;
 		}
 	}
@@ -565,10 +567,7 @@ static void addPeopleToCensus(int numPeople)
 {
 	int odd = 0;
 	int index = Data_Random.poolIndex;
-	for (int i = 0; i < numPeople; i++, index++, odd = 1 - odd) {
-		if (index >= 100) {
-			index = 0;
-		}
+	for (int i = 0; i < numPeople; i++, odd = 1 - odd) {
 		int age = Data_Random.pool[index] & 0x3f; // 63
 		if (age > 50) {
 			age -= 30;
@@ -576,6 +575,10 @@ static void addPeopleToCensus(int numPeople)
 			age += 20;
 		}
 		Data_CityInfo.populationPerAge[age]++;
+		index++;
+		if (index >= 100) {
+			index = 0;
+		}
 	}
 }
 
@@ -585,7 +588,7 @@ void CityInfo_Population_addPeople(int numPeople)
 	if (numPeople > 0) {
 		addPeopleToCensus(numPeople);
 	} else if (numPeople < 0) {
-		removePeopleFromCensus(numPeople);
+		removePeopleFromCensus(-numPeople);
 	}
 	recalculatePopulation();
 }

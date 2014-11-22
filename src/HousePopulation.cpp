@@ -267,11 +267,10 @@ int HousePopulation_getClosestHouseWithRoom(int x, int y)
 	int minDist = 1000;
 	int minBuildingId = 0;
 	for (int i = 1; i <= Data_Buildings_Extra.highestBuildingIdInUse; i++) {
-		if (Data_Buildings[i].inUse == 1 && Data_Buildings[i].houseSize &&
-			Data_Buildings[i].distanceFromEntry > 0 && Data_Buildings[i].housePopulationRoom > 0) {
-			if (!Data_Buildings[i].immigrantWalkerId) {
-				int dist = Calc_distanceMaximum(x, y,
-					Data_Buildings[i].x, Data_Buildings[i].y);
+		struct Data_Building *b = &Data_Buildings[i];
+		if (b->inUse == 1 && b->houseSize && b->distanceFromEntry > 0 && b->housePopulationRoom > 0) {
+			if (!b->immigrantWalkerId) {
+				int dist = Calc_distanceMaximum(x, y, b->x, b->y);
 				if (dist < minDist) {
 					minDist = dist;
 					minBuildingId = i;
@@ -290,20 +289,17 @@ int HousePopulation_addPeople(int amount)
 		if (++buildingId >= MAX_BUILDINGS) {
 			buildingId = 1;
 		}
-		if (Data_Buildings[buildingId].inUse == 1 &&
-			Data_Buildings[buildingId].houseSize &&
-			Data_Buildings[buildingId].distanceFromEntry > 0 &&
-			Data_Buildings[buildingId].housePopulation > 0) {
+		struct Data_Building *b = &Data_Buildings[buildingId];
+		if (b->inUse == 1 && b->houseSize && b->distanceFromEntry > 0 && b->housePopulation > 0) {
 			Data_CityInfo.populationLastTargetHouseAdd = buildingId;
-			int maxPeople = Data_Model_Houses[Data_Buildings[buildingId].subtype.houseLevel].maxPeople;
-			if (Data_Buildings[buildingId].houseIsMerged) {
+			int maxPeople = Data_Model_Houses[b->subtype.houseLevel].maxPeople;
+			if (b->houseIsMerged) {
 				maxPeople *= 4;
 			}
-			if (Data_Buildings[buildingId].housePopulation < maxPeople) {
+			if (b->housePopulation < maxPeople) {
 				++added;
-				++Data_Buildings[buildingId].housePopulation;
-				Data_Buildings[buildingId].housePopulationRoom =
-					maxPeople - Data_Buildings[buildingId].housePopulation;
+				++b->housePopulation;
+				b->housePopulationRoom = maxPeople - b->housePopulation;
 			}
 		}
 	}
@@ -314,17 +310,16 @@ int HousePopulation_removePeople(int amount)
 {
 	int removed = 0;
 	int buildingId = Data_CityInfo.populationLastTargetHouseRemove;
-	for (int i = 1; i < MAX_BUILDINGS && removed < amount; i++) {
+	for (int i = 1; i < 4 * MAX_BUILDINGS && removed < amount; i++) {
 		if (++buildingId >= MAX_BUILDINGS) {
 			buildingId = 1;
 		}
-		if (Data_Buildings[buildingId].inUse == 1 &&
-			Data_Buildings[buildingId].houseSize) {
+		struct Data_Building *b = &Data_Buildings[buildingId];
+		if (b->inUse == 1 && b->houseSize) {
 			Data_CityInfo.populationLastTargetHouseRemove = buildingId;
-			if (Data_Buildings[buildingId].housePopulation > 0) {
+			if (b->housePopulation > 0) {
 				++removed;
 				--Data_Buildings[buildingId].housePopulation;
-				// BUGFIX ghost bug - need to update room for people!
 			}
 		}
 	}
@@ -339,23 +334,23 @@ int HousePopulation_calculatePeoplePerType()
 	Data_CityInfo.populationPeopleInLargeInsulaAndAbove = 0;
 	int total = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse == 0 || Data_Buildings[i].inUse == 2 ||
-			Data_Buildings[i].inUse == 5 || Data_Buildings[i].inUse == 6) {
+		struct Data_Building *b = &Data_Buildings[i];
+		if (b->inUse == 0 || b->inUse == 2 || b->inUse == 5 || b->inUse == 6) {
 			continue;
 		}
-		if (Data_Buildings[i].houseSize) {
-			int pop = Data_Buildings[i].housePopulation;
+		if (b->houseSize) {
+			int pop = b->housePopulation;
 			total += pop;
-			if (Data_Buildings[i].subtype.houseLevel <= HouseLevel_LargeTent) {
+			if (b->subtype.houseLevel <= HouseLevel_LargeTent) {
 				Data_CityInfo.populationPeopleInTents += pop;
 			}
-			if (Data_Buildings[i].subtype.houseLevel <= HouseLevel_LargeShack) {
+			if (b->subtype.houseLevel <= HouseLevel_LargeShack) {
 				Data_CityInfo.populationPeopleInTentsShacks += pop;
 			}
-			if (Data_Buildings[i].subtype.houseLevel >= HouseLevel_LargeInsula) {
+			if (b->subtype.houseLevel >= HouseLevel_LargeInsula) {
 				Data_CityInfo.populationPeopleInLargeInsulaAndAbove += pop;
 			}
-			if (Data_Buildings[i].subtype.houseLevel >= HouseLevel_SmallVilla) {
+			if (b->subtype.houseLevel >= HouseLevel_SmallVilla) {
 				Data_CityInfo.populationPeopleInVillasPalaces += pop;
 			}
 		}
@@ -378,10 +373,10 @@ void HousePopulation_evictOvercrowded()
 		int buildingId = Data_BuildingList.large.items[i];
 		struct Data_Building *b = &Data_Buildings[buildingId];
 		if (b->housePopulationRoom < 0) {
-			int numPeople = -b->housePopulationRoom;
-			HousePopulation_createHomeless(b->x, b->y, numPeople);
-			if (numPeople < b->housePopulation) {
-				b->housePopulation -= numPeople;
+			int numPeopleToEvict = -b->housePopulationRoom;
+			HousePopulation_createHomeless(b->x, b->y, numPeopleToEvict);
+			if (numPeopleToEvict < b->housePopulation) {
+				b->housePopulation -= numPeopleToEvict;
 			} else {
 				// house has been removed
 				b->inUse = 2;
