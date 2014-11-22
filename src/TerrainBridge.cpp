@@ -18,16 +18,16 @@ static int getDirectionYBridgeTiles(int gridOffset)
 {
 	int dirY = 0;
 	// Y direction
-	if (Data_Grid_terrain[gridOffset-162] & Terrain_Water && Data_Grid_spriteOffsets[gridOffset-162]) {
+	if ((Data_Grid_terrain[gridOffset-162] & Terrain_Water) && Data_Grid_spriteOffsets[gridOffset-162]) {
 		dirY++;
 	}
-	if (Data_Grid_terrain[gridOffset-324] & Terrain_Water && Data_Grid_spriteOffsets[gridOffset-324]) {
+	if ((Data_Grid_terrain[gridOffset-324] & Terrain_Water) && Data_Grid_spriteOffsets[gridOffset-324]) {
 		dirY++;
 	}
-	if (Data_Grid_terrain[gridOffset+162] & Terrain_Water && Data_Grid_spriteOffsets[gridOffset+162]) {
+	if ((Data_Grid_terrain[gridOffset+162] & Terrain_Water) && Data_Grid_spriteOffsets[gridOffset+162]) {
 		dirY++;
 	}
-	if (Data_Grid_terrain[gridOffset-324] & Terrain_Water && Data_Grid_spriteOffsets[gridOffset-324]) {
+	if ((Data_Grid_terrain[gridOffset+324] & Terrain_Water) && Data_Grid_spriteOffsets[gridOffset+324]) {
 		dirY++;
 	}
 	return dirY;
@@ -37,16 +37,16 @@ static int getDirectionXBridgeTiles(int gridOffset)
 {
 	int dirX = 0;
 	// X direction
-	if (Data_Grid_terrain[gridOffset-1] & Terrain_Water && Data_Grid_spriteOffsets[gridOffset-1]) {
+	if ((Data_Grid_terrain[gridOffset-1] & Terrain_Water) && Data_Grid_spriteOffsets[gridOffset-1]) {
 		dirX++;
 	}
-	if (Data_Grid_terrain[gridOffset-163] & Terrain_Water && Data_Grid_spriteOffsets[gridOffset-163]) {
+	if ((Data_Grid_terrain[gridOffset-2] & Terrain_Water) && Data_Grid_spriteOffsets[gridOffset-2]) {
 		dirX++;
 	}
-	if (Data_Grid_terrain[gridOffset+1] & Terrain_Water && Data_Grid_spriteOffsets[gridOffset+1]) {
+	if ((Data_Grid_terrain[gridOffset+1] & Terrain_Water) && Data_Grid_spriteOffsets[gridOffset+1]) {
 		dirX++;
 	}
-	if (Data_Grid_terrain[gridOffset-163] & Terrain_Water && Data_Grid_spriteOffsets[gridOffset-163]) {
+	if ((Data_Grid_terrain[gridOffset+2] & Terrain_Water) && Data_Grid_spriteOffsets[gridOffset+2]) {
 		dirX++;
 	}
 	return dirX;
@@ -103,14 +103,13 @@ int TerrainBridge_determineLengthAndDirection(int x, int y, int isShipBridge, in
 			return bridge.endGridOffset;
 		}
 		if (nextTerrain & Terrain_Road || nextTerrain & Terrain_Building) {
-			*length = bridge.length;
-			return 0;
+			break;
 		}
 		if (Terrain_countTerrainTypeDirectlyAdjacentTo(gridOffset, Terrain_Water) != 4) {
-			*length = bridge.length;
-			return 0;
+			break;
 		}
 	}
+	// invalid bridge
 	*length = bridge.length;
 	return 0;
 }
@@ -187,7 +186,7 @@ int TerrainBridge_addToSpriteGrid(int x, int y, int isShipBridge)
 					case 0: value = 1; break;
 					case 2: value = 2; break;
 					case 4: value = 3; break;
-					case 6: value = 6; break;
+					case 6: value = 4; break;
 				}
 			} else if (i == bridge.length - 1) {
 				// ramp at end
@@ -224,13 +223,13 @@ void TerrainBridge_removeFromSpriteGrid(int gridOffset, int onlyMarkDeleted)
 			Data_Grid_spriteOffsets[gridOffset] <= 0) {
 		return;
 	}
-	
-	int dirY = getDirectionYBridgeTiles(gridOffset);
+
 	int dirX = getDirectionXBridgeTiles(gridOffset);
-	
-	int offsetUp = dirY < dirX ? 1 : 162;
+	int dirY = getDirectionYBridgeTiles(gridOffset);
+
+	int offsetUp = dirX > dirY ? 1 : 162;
 	// find lower end of the bridge
-	while (!(Data_Grid_terrain[gridOffset - offsetUp] & Terrain_Water) &&
+	while ((Data_Grid_terrain[gridOffset - offsetUp] & Terrain_Water) &&
 			Data_Grid_spriteOffsets[gridOffset - offsetUp]) {
 		gridOffset -= offsetUp;
 	}
@@ -241,7 +240,7 @@ void TerrainBridge_removeFromSpriteGrid(int gridOffset, int onlyMarkDeleted)
 		Data_Grid_spriteOffsets[gridOffset] = 0;
 		Data_Grid_terrain[gridOffset] &= ~Terrain_Road;
 	}
-	while (!(Data_Grid_terrain[gridOffset + offsetUp] & Terrain_Water) &&
+	while ((Data_Grid_terrain[gridOffset + offsetUp] & Terrain_Water) &&
 			Data_Grid_spriteOffsets[gridOffset + offsetUp]) {
 		gridOffset += offsetUp;
 		if (onlyMarkDeleted) {
@@ -262,13 +261,13 @@ int TerrainBridge_countWalkersOnBridge(int gridOffset)
 	if (Data_Grid_spriteOffsets[gridOffset] <= 0) {
 		return 0;
 	}
-	int dirY = getDirectionYBridgeTiles(gridOffset);
 	int dirX = getDirectionXBridgeTiles(gridOffset);
+	int dirY = getDirectionYBridgeTiles(gridOffset);
 	
-	int offsetUp = dirY < dirX ? 1 : 162;
+	int offsetUp = dirX > dirY ? 1 : 162;
 	
 	// find lower end of the bridge
-	while (!(Data_Grid_terrain[gridOffset - offsetUp] & Terrain_Water) &&
+	while ((Data_Grid_terrain[gridOffset - offsetUp] & Terrain_Water) &&
 			Data_Grid_spriteOffsets[gridOffset - offsetUp]) {
 		gridOffset -= offsetUp;
 	}
@@ -277,11 +276,11 @@ int TerrainBridge_countWalkersOnBridge(int gridOffset)
 	if (Data_Grid_walkerIds[gridOffset]) {
 		walkers = 1;
 	}
-	while (Data_Grid_bitfields[gridOffset] & Bitfield_NoDeleted) {
+	Data_Grid_bitfields[gridOffset] &= Bitfield_NoDeleted;
+	while ((Data_Grid_terrain[gridOffset + offsetUp] & Terrain_Water) &&
+			Data_Grid_spriteOffsets[gridOffset + offsetUp]) {
 		gridOffset += offsetUp;
-		if (!(Data_Grid_terrain[gridOffset] & Terrain_Water) || !Data_Grid_spriteOffsets[gridOffset]) {
-			break;
-		}
+		Data_Grid_bitfields[gridOffset] &= Bitfield_NoDeleted;
 		if (Data_Grid_walkerIds[gridOffset]) {
 			walkers++;
 		}
@@ -294,7 +293,7 @@ void TerrainBridge_updateSpriteIdsOnMapRotate(int ccw)
 	for (int y = 0; y < Data_Settings_Map.height; y++) {
 		for (int x = 0; x < Data_Settings_Map.width; x++) {
 			int gridOffset = GridOffset(x, y);
-			if (Data_Grid_terrain[gridOffset] & Terrain_Water && Data_Grid_spriteOffsets[gridOffset]) {
+			if ((Data_Grid_terrain[gridOffset] & Terrain_Water) && Data_Grid_spriteOffsets[gridOffset]) {
 				int newValue;
 				switch (Data_Grid_spriteOffsets[gridOffset]) {
 					case 1: newValue = ccw ? 2 : 4; break;

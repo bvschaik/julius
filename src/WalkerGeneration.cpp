@@ -28,7 +28,6 @@
 	int walkerId = Walker_create(t, x, y, d);\
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 
-#include <cstdio>
 static void generateLaborSeeker(int buildingId, struct Data_Building *b, int x, int y)
 {
 	if (Data_CityInfo.population <= 0) {
@@ -37,8 +36,6 @@ static void generateLaborSeeker(int buildingId, struct Data_Building *b, int x, 
 	if (b->walkerId2) {
 		struct Data_Walker *w = &Data_Walkers[b->walkerId2];
 		if (!w->state || w->type != Walker_LaborSeeker || w->buildingId != buildingId) {
-			printf("Removing walker2 type %d state %d from building %d\n",
-				w->type, w->state, b->type);
 			b->walkerId2 = 0;
 		}
 	} else {
@@ -337,7 +334,7 @@ static void spawnWalkerChariotMaker(int buildingId, struct Data_Building *b)
 		b->walkerSpawnDelay++;
 		if (b->walkerSpawnDelay > spawnDelay) {
 			b->walkerSpawnDelay = 0;
-			CREATE_WALKER(Walker_Actor, xRoad, yRoad, 0);
+			CREATE_WALKER(Walker_Charioteer, xRoad, yRoad, 0);
 			w->actionState = WalkerActionState_90_EntertainerAtSchoolCreated;
 			w->buildingId = buildingId;
 			b->walkerId = walkerId;
@@ -558,7 +555,6 @@ static void setMarketGraphic(int buildingId, struct Data_Building *b)
 	}
 }
 
-#include <cstdio>
 static void spawnWalkerMarket(int buildingId, struct Data_Building *b)
 {
 	setMarketGraphic(buildingId, b);
@@ -613,11 +609,9 @@ static void spawnWalkerMarket(int buildingId, struct Data_Building *b)
 				struct Data_Building *bDst = &Data_Buildings[dstBuildingId];
 				if (Terrain_hasRoadAccess(bDst->x, bDst->y, bDst->size, &xRoad, &yRoad) ||
 					Terrain_hasRoadAccess(bDst->x, bDst->y, 3, &xRoad, &yRoad)) {
-					printf("Market buyer goes to destination %d at %d, %d\n", dstBuildingId, xRoad, yRoad);
 					w->destinationX = xRoad;
 					w->destinationY = yRoad;
 				} else {
-					printf("Market buyer destination %d has no road access\n", dstBuildingId);
 					w->actionState = WalkerActionState_146_MarketBuyerReturning;
 					w->destinationX = w->x;
 					w->destinationY = w->y;
@@ -1119,7 +1113,7 @@ static void spawnWalkerDock(int buildingId, struct Data_Building *b)
 		} else {
 			maxDockers = 0;
 		}
-		// count previous dockers
+		// count existing dockers
 		int existingDockers = 0;
 		for (int i = 0; i < 3; i++) {
 			if (b->data.other.dockWalkerIds[i]) {

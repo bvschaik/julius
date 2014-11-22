@@ -50,8 +50,8 @@ int WalkerAction_TradeCaravan_canBuy(int traderId, int warehouseId, int cityId)
 	}
 	for (int i = 0; i < 8; i++) {
 		warehouseId = Data_Buildings[warehouseId].nextPartBuildingId;
-		if (warehouseId > 0 && Data_Buildings[i].loadsStored > 0 &&
-			Empire_canExportResourceToCity(cityId, Data_Buildings[i].subtype.warehouseResourceId)) {
+		if (warehouseId > 0 && Data_Buildings[warehouseId].loadsStored > 0 &&
+			Empire_canExportResourceToCity(cityId, Data_Buildings[warehouseId].subtype.warehouseResourceId)) {
 			return 1;
 		}
 	}

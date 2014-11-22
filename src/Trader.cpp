@@ -203,6 +203,8 @@ int Trader_getClosestWarehouseForTradeCaravan(int walkerId, int x, int y, int ci
 {
 	int exportable[16];
 	int importable[16];
+	exportable[0] = 0;
+	importable[0] = 0;
 	for (int r = 1; r < 16; r++) {
 		exportable[r] = Empire_canExportResourceToCity(cityId, r);
 		if (Data_Walkers[walkerId].traderAmountBought >= 8) {
@@ -296,6 +298,7 @@ int Trader_getClosestWarehouseForTradeCaravan(int walkerId, int x, int y, int ci
 int Trader_getClosestWarehouseForImportDocker(int x, int y, int cityId, int distanceFromEntry, int roadNetworkId, int *warehouseX, int *warehouseY)
 {
 	int importable[16];
+	importable[0] = 0;
 	for (int r = 1; r < 16; r++) {
 		importable[r] = Empire_canImportResourceFromCity(cityId, r);
 	}
@@ -370,6 +373,7 @@ int Trader_getClosestWarehouseForImportDocker(int x, int y, int cityId, int dist
 int Trader_getClosestWarehouseForExportDocker(int x, int y, int cityId, int distanceFromEntry, int roadNetworkId, int *warehouseX, int *warehouseY)
 {
 	int exportable[16];
+	exportable[0] = 0;
 	for (int r = 1; r < 16; r++) {
 		exportable[r] = Empire_canExportResourceToCity(cityId, r);
 	}
