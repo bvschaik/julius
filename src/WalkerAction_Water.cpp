@@ -30,9 +30,9 @@ void WalkerAction_fishingBoat(int walkerId)
 	if (w->actionState != WalkerActionState_190_FishingBoatCreated && b->data.other.boatWalkerId != walkerId) {
 		int xTile, yTile;
 		int buildingId = Terrain_Water_getWharfTileForNewFishingBoat(walkerId, &xTile, &yTile);
+		b = &Data_Buildings[buildingId];
 		if (buildingId) {
 			w->buildingId = buildingId;
-			b = &Data_Buildings[buildingId];
 			b->data.other.boatWalkerId = walkerId;
 			w->actionState = WalkerActionState_193_FishingBoatSailingToWharf;
 			w->destinationX = xTile;
@@ -185,8 +185,8 @@ void WalkerAction_flotsam(int walkerId)
 					w->minMaxSeen = 1;
 					Data_CityInfo.godCurseNeptuneSankShips = 0;
 				}
-				w->destinationX = (char) Data_Scenario.riverExitPoint.x;
-				w->destinationY = (char) Data_Scenario.riverExitPoint.y;
+				w->destinationX = Data_Scenario.riverExitPoint.x;
+				w->destinationY = Data_Scenario.riverExitPoint.y;
 			}
 			break;
 		case WalkerActionState_129_FlotsamFloating:
@@ -219,8 +219,8 @@ void WalkerAction_flotsam(int walkerId)
 				w->waitTicks = 300 + Data_Random.random1_7bit;
 			}
 			Walker_removeFromTileList(walkerId);
-			w->x = (char) Data_Scenario.riverEntryPoint.x;
-			w->y = (char) Data_Scenario.riverEntryPoint.y;
+			w->x = Data_Scenario.riverEntryPoint.x;
+			w->y = Data_Scenario.riverEntryPoint.y;
 			w->gridOffset = GridOffset(w->x, w->y);
 			w->crossCountryX = 15 * w->x;
 			w->crossCountryY = 15 * w->y;

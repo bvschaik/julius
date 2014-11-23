@@ -14,6 +14,7 @@ enum {
 	FormationLayout_AtRest = 7,
 	FormationLayout_Enemy8 = 8,
 	FormationLayout_Herd = 9,
+	FormationLayout_10 = 10,
 	FormationLayout_Enemy12 = 12,
 };
 
@@ -79,7 +80,7 @@ struct Data_Formation {
 
 extern struct Data_Formation Data_Formations[MAX_FORMATIONS];
 
-extern struct Data_Formation_Extra {
+extern struct _Data_Formation_Extra {
 	int idLastInUse;
 	int idLastLegion;
 	int numLegions;
@@ -91,7 +92,7 @@ extern struct Data_Formation_Extra {
 	int daysSinceRomanSoldierConcentration;
 } Data_Formation_Extra;
 
-extern struct Data_Formation_Invasion {
+extern struct _Data_Formation_Invasion {
 	int formationId[25];
 	int homeX[25];
 	int homeY[25];

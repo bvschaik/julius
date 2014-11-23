@@ -49,8 +49,8 @@ void WalkerAction_seagulls(int walkerId)
 			w->progressOnTile = 0;
 		}
 		WalkerAction_Common_setCrossCountryDestination(walkerId, w,
-			w->sourceX + seagullOffsetsX[(int)w->progressOnTile],
-			w->sourceY + seagullOffsetsY[(int)w->progressOnTile]);
+			w->sourceX + seagullOffsetsX[w->progressOnTile],
+			w->sourceY + seagullOffsetsY[w->progressOnTile]);
 	}
 	if (walkerId & 1) {
 		WalkerActionIncreaseGraphicOffset(w, 54);
@@ -175,6 +175,7 @@ void WalkerAction_wolf(int walkerId)
 				w->actionState = WalkerActionState_196_HerdAnimalAtRest;
 				w->waitTicks = walkerId & 0x1f;
 			}
+			break;
 	}
 	int dir = WalkerActionDirection(w);
 	if (w->actionState == WalkerActionState_149_Corpse) {
@@ -244,7 +245,7 @@ static void setDestinationHippodromeHorse(int walkerId, struct Data_Walker *w, i
 	struct Data_Building *b = &Data_Buildings[w->buildingId];
 	if (state == 0) {
 		Walker_removeFromTileList(walkerId);
-		if (Data_Settings_Map.orientation == 0 || Data_Settings_Map.orientation == 4) {
+		if (Data_Settings_Map.orientation == 0 || Data_Settings_Map.orientation == 6) {
 			w->destinationX = b->x + hippodromeHorseDestinationX1[w->waitTicksMissile];
 			w->destinationY = b->y + hippodromeHorseDestinationY1[w->waitTicksMissile];
 		} else {
@@ -262,7 +263,7 @@ static void setDestinationHippodromeHorse(int walkerId, struct Data_Walker *w, i
 		w->gridOffset = GridOffset(w->x, w->y);
 		Walker_addToTileList(walkerId);
 	} else if (state == 1) {
-		if (Data_Settings_Map.orientation == 0 || Data_Settings_Map.orientation == 4) {
+		if (Data_Settings_Map.orientation == 0 || Data_Settings_Map.orientation == 6) {
 			w->destinationX = b->x + hippodromeHorseDestinationX1[w->waitTicksMissile];
 			w->destinationY = b->y + hippodromeHorseDestinationY1[w->waitTicksMissile];
 		} else {
@@ -270,7 +271,7 @@ static void setDestinationHippodromeHorse(int walkerId, struct Data_Walker *w, i
 			w->destinationY = b->y + hippodromeHorseDestinationY2[w->waitTicksMissile];
 		}
 	} else if (state == 2) {
-		if (Data_Settings_Map.orientation == 0 || Data_Settings_Map.orientation == 4) {
+		if (Data_Settings_Map.orientation == 0 || Data_Settings_Map.orientation == 6) {
 			if (w->resourceId) {
 				w->destinationX = b->x + 1;
 				w->destinationY = b->y + 2;
@@ -390,7 +391,7 @@ void WalkerAction_HippodromeHorse_reroute()
 	}
 	for (int i = 1; i < MAX_WALKERS; i++) {
 		struct Data_Walker *w = &Data_Walkers[i];
-		if (w->state == 1 && w->type == Walker_HippodromeMiniHorses) {
+		if (w->state == WalkerState_Alive && w->type == Walker_HippodromeMiniHorses) {
 			w->waitTicksMissile = 0;
 			setDestinationHippodromeHorse(i, w, 0);
 		}

@@ -21,11 +21,11 @@ static const int enemyAttackBuildingPriority[4][24] = {
 	{
 		Building_Granary, Building_Warehouse, Building_Market,
 		Building_WheatFarm, Building_VegetableFarm, Building_FruitFarm,
-		Building_OliveFarm, Building_VinesFarm, Building_PigFarm
+		Building_OliveFarm, Building_VinesFarm, Building_PigFarm, 0
 	},
 	{
 		Building_SenateUpgraded, Building_Senate,
-		Building_ForumUpgraded, Building_Forum
+		Building_ForumUpgraded, Building_Forum, 0
 	},
 	{
 		Building_GovernorsPalace, Building_GovernorsVilla, Building_GovernorsHouse,
@@ -38,10 +38,10 @@ static const int enemyAttackBuildingPriority[4][24] = {
 		Building_HouseLargeCasa, Building_HouseSmallCasa,
 		Building_HouseLargeHovel, Building_HouseSmallHovel,
 		Building_HouseLargeShack, Building_HouseSmallShack,
-		Building_HouseLargeTent, Building_HouseSmallTent
+		Building_HouseLargeTent, Building_HouseSmallTent, 0
 	},
 	{
-		Building_MilitaryAcademy, Building_Barracks
+		Building_MilitaryAcademy, Building_Barracks, 0
 	}
 };
 
@@ -50,7 +50,7 @@ static const int rioterAttackBuildingPriority[100] = {
 	68, 69, 87, 86, 30, 31, 47, 52, 46, 48, 53, 51, 24, 23, 22, 21,
 	20, 46, 48, 114, 113, 112, 111, 110, 71, 72, 70, 74, 75, 76, 60, 61,
 	62, 63, 64, 34, 36, 37, 35, 94, 19, 18, 17, 16, 15, 49, 106, 107,
-	109, 108, 90, 100, 101, 102, 103, 104, 105, 55, 81, 91, 92, 14, 13, 12, 11, 10
+	109, 108, 90, 100, 101, 102, 103, 104, 105, 55, 81, 91, 92, 14, 13, 12, 11, 10, 0
 };
 
 static const int layoutOrientationLegionIndexOffsets[13][4][40] = {
@@ -295,7 +295,8 @@ static void tickUpdateLegions()
 				Data_CityInfo.numAttackingNativesInCity > 0) {
 				for (int n = 0; n < 16; n++) {
 					struct Data_Walker *w = &Data_Walkers[f->walkerIds[n]];
-					if (w->actionState != WalkerActionState_150_Attack &&
+					if (f->walkerIds[n] != 0 &&
+						w->actionState != WalkerActionState_150_Attack &&
 						w->actionState != WalkerActionState_149_Corpse) {
 						w->actionState = WalkerActionState_86_SoldierMoppingUp;
 					}
@@ -391,7 +392,7 @@ static void setNativeTargetBuilding(int formationId)
 {
 	int minBuildingId = 0;
 	int minDistance = 10000;
-	for (int i = 0; i < MAX_BUILDINGS; i++) {
+	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		if (Data_Buildings[i].inUse != 1) {
 			continue;
 		}
@@ -442,7 +443,7 @@ static void setEnemyTargetBuilding(struct Data_Formation *f)
 					bestTypeIndex = n;
 					buildingId = i;
 					minDistance = distance;
-				} else if (distance < minDistance) {
+				} else if (n == bestTypeIndex && distance < minDistance) {
 					buildingId = i;
 					minDistance = distance;
 				}
@@ -463,7 +464,7 @@ static void setEnemyTargetBuilding(struct Data_Formation *f)
 						bestTypeIndex = n;
 						buildingId = i;
 						minDistance = distance;
-					} else if (distance < minDistance) {
+					} else if (n == bestTypeIndex && distance < minDistance) {
 						buildingId = i;
 						minDistance = distance;
 					}
@@ -780,7 +781,7 @@ static void tickUpdateEnemies()
 
 static int getHerdRoamingDestination(int formationId, int allowNegativeDesirability, int x, int y, int distance, int direction, int *xTile, int *yTile)
 {
-	int targetDirection = (formationId + Data_Random.random1_15bit) & 6;
+	int targetDirection = (formationId + Data_Random.random1_7bit) & 6;
 	if (direction) {
 		targetDirection = direction;
 		allowNegativeDesirability = 1;

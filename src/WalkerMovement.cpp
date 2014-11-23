@@ -74,12 +74,14 @@ static void setTargetHeightBridge(struct Data_Walker *w)
 {
 	w->heightFromGround = 18;
 	if (Data_Grid_spriteOffsets[w->gridOffset] <= 6) {
+		// low bridge
 		switch (Data_Grid_spriteOffsets[w->gridOffset]) {
 			case 1: case 4: w->targetHeight = 10; break;
 			case 2: case 3: w->targetHeight = 16; break;
 			default: w->targetHeight = 20; break;
 		}
 	} else {
+		// ship bridge
 		switch (Data_Grid_spriteOffsets[w->gridOffset]) {
 			case 7: case 8: case 9: case 10: w->targetHeight = 14; break;
 			case 13: w->targetHeight = 30;
@@ -182,7 +184,7 @@ static void roamSetDirection(struct Data_Walker *w)
 		direction = 0;
 	}
 	int roadOffsetDir1 = 0;
-	int roadDir1;
+	int roadDir1 = 0;
 	for (int i = 0, dir = direction; i < 8; i++) {
 		if (dir % 2 == 0 && Data_Grid_terrain[gridOffset + Constant_DirectionGridOffsets[dir]] & Terrain_Road) {
 			roadDir1 = dir;
@@ -193,7 +195,7 @@ static void roamSetDirection(struct Data_Walker *w)
 		roadOffsetDir1++;
 	}
 	int roadOffsetDir2 = 0;
-	int roadDir2;
+	int roadDir2 = 0;
 	for (int i = 0, dir = direction; i < 8; i++) {
 		if (dir % 2 == 0 && Data_Grid_terrain[gridOffset + Constant_DirectionGridOffsets[dir]] & Terrain_Road) {
 			roadDir2 = dir;
@@ -360,7 +362,7 @@ static void walkerAdvanceRouteTile(struct Data_Walker *w)
 			w->direction = 9;
 		} else if (groundType > 0 && groundType != 5) {
 			int causeDamage = 1;
-			int damage;
+			int damage = 0;
 			switch (groundType) {
 				case 1: damage = 10; break;
 				case 2:
@@ -453,12 +455,13 @@ void WalkerMovement_followTicks(int walkerId, int leaderWalkerId, int numTicks)
 			w->direction = Routing_getGeneralDirection(w->x, w->y,
 				Data_Walkers[leaderWalkerId].previousTileX,
 				Data_Walkers[leaderWalkerId].previousTileY);
-			if (w->direction < 8) {
-				w->previousTileDirection = w->direction;
-				w->progressOnTile = 0;
-				walkerMoveToNextTile(walkerId, w);
-				WalkerMovement_advanceTick(w);
+			if (w->direction >= 8) {
+				break;
 			}
+			w->previousTileDirection = w->direction;
+			w->progressOnTile = 0;
+			walkerMoveToNextTile(walkerId, w);
+			WalkerMovement_advanceTick(w);
 		}
 	}
 }
@@ -578,10 +581,10 @@ int WalkerMovement_crossCountryWalkTicks(int walkerId, int numTicks)
 	int isAtDestination = 0;
 	while (numTicks > 0) {
 		numTicks--;
-		if (w->missileDamage <= 0) {
-			w->missileDamage = 0;
-		} else {
+		if (w->missileDamage > 0) {
 			w->missileDamage--;
+		} else {
+			w->missileDamage = 0;
 		}
 		if (w->ccDeltaX + w->ccDeltaY <= 0) {
 			isAtDestination = 1;

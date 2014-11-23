@@ -107,7 +107,7 @@ void CityInfo_Victory_check()
 				  message_useVideo = 2;
 				*/
 				
-				if (!Data_Settings.isCustomScenario && Data_Settings.currentMissionId <= 1) {
+				if (IsTutorial1() || IsTutorial2()) {
 					// tutorials: immediately go to next mission
 					UI_Window_goTo(Window_VictoryIntermezzo);
 				} else if (!Data_Settings.isCustomScenario && Data_Settings.currentMissionId >= 10) {

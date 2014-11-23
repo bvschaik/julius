@@ -124,7 +124,7 @@ void UtilityManagement_updateReservoirFountain()
 	setAllAqueductsToNoWater();
 	memset(Data_BuildingList.large.items, 0, MAX_BUILDINGS * sizeof(short));
 	Data_BuildingList.large.size = 0;
-	for (int i = 0; i < MAX_BUILDINGS; i++) {
+	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		if (Data_Buildings[i].inUse == 1 && Data_Buildings[i].type == Building_Reservoir) {
 			Data_BuildingList.large.items[Data_BuildingList.large.size++] = i;
 			if (Terrain_existsTileWithinAreaWithType(
@@ -250,7 +250,7 @@ void UtilityManagement_determineRoadNetworks()
 				int size = markRoadNetwork(gridOffset, roadNetworkId);
 				for (int n = 0; n < 10; n++) {
 					if (size > Data_CityInfo.largestRoadNetworks[n].size) {
-						// move everyone
+						// move everyone down
 						for (int m = 9; m > n; m--) {
 							Data_CityInfo.largestRoadNetworks[m].id = Data_CityInfo.largestRoadNetworks[m-1].id;
 							Data_CityInfo.largestRoadNetworks[m].size = Data_CityInfo.largestRoadNetworks[m-1].size;

@@ -69,8 +69,8 @@ struct Data_InvasionWarning Data_InvasionWarnings[MAX_INVASION_WARNINGS];
 struct Data_TradePrice Data_TradePrices[16];
 
 struct Data_Formation Data_Formations[MAX_FORMATIONS];
-struct Data_Formation_Extra Data_Formation_Extra;
-struct Data_Formation_Invasion Data_Formation_Invasion;
+struct _Data_Formation_Extra Data_Formation_Extra;
+struct _Data_Formation_Invasion Data_Formation_Invasion;
 
 struct Data_FileList Data_FileList;
 
