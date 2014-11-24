@@ -9,10 +9,10 @@ int WalkerAction_CombatSoldier_getTarget(int x, int y, int maxDistance)
 	int minWalkerId = 0;
 	int minDistance = 10000;
 	for (int i = 1; i < MAX_WALKERS; i++) {
-		struct Data_Walker *w = &Data_Walkers[i];
-		if (w->state != WalkerState_Alive || w->actionState == WalkerActionState_149_Corpse) {
+		if (WalkerIsDead(i)) {
 			continue;
 		}
+		struct Data_Walker *w = &Data_Walkers[i];
 		if (WalkerIsEnemy(w->type) || w->type == Walker_Rioter ||
 			(w->type == Walker_IndigenousNative && w->actionState == WalkerActionState_159_NativeAttacking)) {
 			int distance = Calc_distanceMaximum(x, y, w->x, w->y);
@@ -31,10 +31,10 @@ int WalkerAction_CombatSoldier_getTarget(int x, int y, int maxDistance)
 		return minWalkerId;
 	}
 	for (int i = 1; i < MAX_WALKERS; i++) {
-		struct Data_Walker *w = &Data_Walkers[i];
-		if (w->state != WalkerState_Alive || w->actionState == WalkerActionState_149_Corpse) {
+		if (WalkerIsDead(i)) {
 			continue;
 		}
+		struct Data_Walker *w = &Data_Walkers[i];
 		if (WalkerIsEnemy(w->type) || w->type == Walker_Rioter ||
 			(w->type == Walker_IndigenousNative && w->actionState == WalkerActionState_159_NativeAttacking)) {
 			return i;
@@ -51,10 +51,10 @@ int WalkerAction_CombatSoldier_getMissileTarget(int soldierId, int maxDistance, 
 	int minWalkerId = 0;
 	int minDistance = maxDistance;
 	for (int i = 1; i < MAX_WALKERS; i++) {
-		struct Data_Walker *w = &Data_Walkers[i];
-		if (w->state != WalkerState_Alive || w->actionState == WalkerActionState_149_Corpse) {
+		if (WalkerIsDead(i)) {
 			continue;
 		}
+		struct Data_Walker *w = &Data_Walkers[i];
 		if (WalkerIsEnemy(w->type) || WalkerIsHerd(w->type) ||
 			(w->type == Walker_IndigenousNative && w->actionState == WalkerActionState_159_NativeAttacking)) {
 			int distance = Calc_distanceMaximum(x, y, w->x, w->y);
@@ -78,7 +78,7 @@ int WalkerAction_CombatWolf_getTarget(int x, int y, int maxDistance)
 	int minDistance = 10000;
 	for (int i = 1; i < MAX_WALKERS; i++) {
 		struct Data_Walker *w = &Data_Walkers[i];
-		if (w->state != WalkerState_Alive || w->actionState == WalkerActionState_149_Corpse || !w->type) {
+		if (WalkerIsDead(i) || !w->type) {
 			continue;
 		}
 		switch (w->type) {
@@ -88,6 +88,7 @@ int WalkerAction_CombatWolf_getTarget(int x, int y, int maxDistance)
 			case Walker_FishingBoat:
 			case Walker_MapFlag:
 			case Walker_Flotsam:
+				
 			case Walker_Shipwreck:
 			case Walker_IndigenousNative:
 			case Walker_TowerSentry:
@@ -100,6 +101,9 @@ int WalkerAction_CombatWolf_getTarget(int x, int y, int maxDistance)
 				continue;
 		}
 		if (WalkerIsEnemy(w->type) || WalkerIsHerd(w->type)) {
+			continue;
+		}
+		if (WalkerIsLegion(w->type) && w->actionState == WalkerActionState_80_SoldierAtRest) {
 			continue;
 		}
 		int distance = Calc_distanceMaximum(x, y, w->x, w->y);
@@ -122,10 +126,10 @@ int WalkerAction_CombatEnemy_getTarget(int x, int y)
 	int minWalkerId = 0;
 	int minDistance = 10000;
 	for (int i = 1; i < MAX_WALKERS; i++) {
-		struct Data_Walker *w = &Data_Walkers[i];
-		if (w->state != WalkerState_Alive || w->actionState == WalkerActionState_149_Corpse) {
+		if (WalkerIsDead(i)) {
 			continue;
 		}
+		struct Data_Walker *w = &Data_Walkers[i];
 		if (!w->targetedByWalkerId && WalkerIsLegion(w->type)) {
 			int distance = Calc_distanceMaximum(x, y, w->x, w->y);
 			if (distance < minDistance) {
@@ -139,11 +143,10 @@ int WalkerAction_CombatEnemy_getTarget(int x, int y)
 	}
 	// no 'free' soldier found, take first one
 	for (int i = 1; i < MAX_WALKERS; i++) {
-		struct Data_Walker *w = &Data_Walkers[i];
-		if (w->state != WalkerState_Alive || w->actionState == WalkerActionState_149_Corpse) {
+		if (WalkerIsDead(i)) {
 			continue;
 		}
-		if (WalkerIsLegion(w->type)) {
+		if (WalkerIsLegion(Data_Walkers[i].type)) {
 			return i;
 		}
 	}
@@ -159,7 +162,7 @@ int WalkerAction_CombatEnemy_getMissileTarget(int enemyId, int maxDistance, int 
 	int minDistance = maxDistance;
 	for (int i = 1; i < MAX_WALKERS; i++) {
 		struct Data_Walker *w = &Data_Walkers[i];
-		if (w->state != WalkerState_Alive || w->actionState == WalkerActionState_149_Corpse || !w->type) {
+		if (WalkerIsDead(i) || !w->type) {
 			continue;
 		}
 		switch (w->type) {
@@ -271,10 +274,7 @@ void WalkerAction_Combat_attackWalker(int walkerId, int opponentId)
 				opponent->actionStateBeforeAttack = opponent->actionState;
 				opponent->actionState = WalkerActionState_150_Attack;
 				opponent->attackGraphicOffset = 0;
-				opponent->attackDirection = w->attackDirection + 4;
-				if (opponent->attackDirection >= 8) {
-					opponent->attackDirection -= 8;
-				}
+				opponent->attackDirection = (w->attackDirection + 4) % 8;
 			}
 			if (opponent->numAttackers == 0) {
 				opponent->attackerId1 = walkerId;

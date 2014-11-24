@@ -853,7 +853,7 @@ static void tickUpdateHerds()
 	if (Data_CityInfo.numAnimalsInCity <= 0) {
 		return;
 	}
-	for (int i = 1; i < 50; i++) {
+	for (int i = 1; i < MAX_FORMATIONS; i++) {
 		struct Data_Formation *f = &Data_Formations[i];
 		if (f->inUse != 1 || f->isLegion || !f->isHerd || f->numWalkers <= 0) {
 			continue;

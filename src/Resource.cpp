@@ -14,6 +14,21 @@
 #include "Data/Scenario.h"
 #include "Data/Trade.h"
 
+int Resource_getGraphicIdOffset(int resource, int type)
+{
+	if (resource == Resource_Meat && Data_Scenario.allowedBuildings.wharf) {
+		switch (type) {
+			case 0: return 40;
+			case 1: return 648;
+			case 2: return 8;
+			case 3: return 11;
+			default: return 0;
+		}
+	} else {
+		return 0;
+	}
+}
+
 void Resource_calculateWarehouseStocks()
 {
 	for (int i = 0; i < 16; i++) {
@@ -21,26 +36,27 @@ void Resource_calculateWarehouseStocks()
 		Data_CityInfo.resourceStored[i] = 0;
 	}
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse == 1 && Data_Buildings[i].type == Building_Warehouse) {
-			Data_Buildings[i].hasRoadAccess = 0;
-			if (Terrain_hasRoadAccess(Data_Buildings[i].x, Data_Buildings[i].y,
-					Data_Buildings[i].size, 0, 0)) {
-				Data_Buildings[i].hasRoadAccess = 1;
-			} else if (Terrain_hasRoadAccess(Data_Buildings[i].x, Data_Buildings[i].y, 3, 0, 0)) {
-				Data_Buildings[i].hasRoadAccess = 2;
+		struct Data_Building *b = &Data_Buildings[i];
+		if (b->inUse == 1 && b->type == Building_Warehouse) {
+			b->hasRoadAccess = 0;
+			if (Terrain_hasRoadAccess(b->x, b->y, b->size, 0, 0)) {
+				b->hasRoadAccess = 1;
+			} else if (Terrain_hasRoadAccess(b->x, b->y, 3, 0, 0)) {
+				b->hasRoadAccess = 2;
 			}
 		}
 	}
-	for (int i = 0; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse != 1 || Data_Buildings[i].type != Building_WarehouseSpace) {
+	for (int i = 1; i < MAX_BUILDINGS; i++) {
+		struct Data_Building *b = &Data_Buildings[i];
+		if (b->inUse != 1 || b->type != Building_WarehouseSpace) {
 			continue;
 		}
 		int warehouseId = Building_getMainBuildingId(i);
 		if (Data_Buildings[warehouseId].hasRoadAccess) {
-			Data_Buildings[i].hasRoadAccess = Data_Buildings[warehouseId].hasRoadAccess;
-			if (Data_Buildings[i].subtype.warehouseResourceId) {
-				int loads = Data_Buildings[i].loadsStored;
-				int resource = Data_Buildings[i].subtype.warehouseResourceId;
+			b->hasRoadAccess = b->hasRoadAccess;
+			if (b->subtype.warehouseResourceId) {
+				int loads = b->loadsStored;
+				int resource = b->subtype.warehouseResourceId;
 				Data_CityInfo.resourceStored[resource] += loads;
 				Data_CityInfo.resourceSpaceInWarehouses[resource] += 4 - loads;
 			} else {
@@ -57,35 +73,21 @@ void Resource_calculateWorkshopStocks()
 		Data_CityInfo.resourceWorkshopRawMaterialSpace[i] = 0;
 	}
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse != 1 || !BuildingIsWorkshop(Data_Buildings[i].type)) {
+		struct Data_Building *b = &Data_Buildings[i];
+		if (b->inUse != 1 || !BuildingIsWorkshop(b->type)) {
 			continue;
 		}
-		Data_Buildings[i].hasRoadAccess = 0;
-		if (Terrain_hasRoadAccess(Data_Buildings[i].x, Data_Buildings[i].y, Data_Buildings[i].size, 0, 0)) {
-			Data_Buildings[i].hasRoadAccess = 1;
-			int room = 2 - Data_Buildings[i].loadsStored;
+		b->hasRoadAccess = 0;
+		if (Terrain_hasRoadAccess(b->x, b->y, b->size, 0, 0)) {
+			b->hasRoadAccess = 1;
+			int room = 2 - b->loadsStored;
 			if (room < 0) {
 				room = 0;
 			}
-			int workshopResource = Data_Buildings[i].subtype.workshopResource;
+			int workshopResource = b->subtype.workshopResource;
 			Data_CityInfo.resourceWorkshopRawMaterialSpace[workshopResource] += room;
-			Data_CityInfo.resourceWorkshopRawMaterialStored[workshopResource] += Data_Buildings[i].loadsStored;
+			Data_CityInfo.resourceWorkshopRawMaterialStored[workshopResource] += b->loadsStored;
 		}
-	}
-}
-
-int Resource_getGraphicIdOffset(int resource, int type)
-{
-	if (resource == Resource_Meat && Data_Scenario.allowedBuildings.wharf) {
-		switch (type) {
-			case 0: return 40;
-			case 1: return 648;
-			case 2: return 8;
-			case 3: return 11;
-			default: return 0;
-		}
-	} else {
-		return 0;
 	}
 }
 
@@ -194,7 +196,7 @@ int Resource_getBarracksForWeapon(int xUnused, int yUnused, int resource, int ro
 void Resource_addRawMaterialToWorkshop(int buildingId)
 {
 	if (buildingId > 0 && BuildingIsWorkshop(buildingId)) {
-		Data_Buildings[buildingId].loadsStored++;
+		Data_Buildings[buildingId].loadsStored++; // BUG: any raw material accepted
 	}
 }
 

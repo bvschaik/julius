@@ -87,10 +87,10 @@ void WalkerAction_ballista(int walkerId)
 			}
 			break;
 	}
-	int dir = (8 + w->direction - Data_Settings_Map.orientation) % 8;
+	int dir = WalkerActionDirection(w);
 	if (w->actionState == WalkerActionState_181_BallistaFiring) {
 		w->graphicId = GraphicId(ID_Graphic_Walker_Ballista) + dir +
-			8 * ballistaFiringOffsets[w->waitTicksMissile / 2];
+			8 * ballistaFiringOffsets[w->waitTicksMissile / 4];
 	} else {
 		w->graphicId = GraphicId(ID_Graphic_Walker_Ballista) + dir;
 	}
@@ -131,8 +131,7 @@ static int towerSentryInitPatrol(struct Data_Walker *w, struct Data_Building *b,
 		case 4: y += 8; break;
 		case 6: x -= 8; break;
 	}
-	BOUND(x, 0, Data_Settings_Map.width - 1);
-	BOUND(y, 0, Data_Settings_Map.height - 1);
+	BoundToMap(x, y);
 
 	if (Terrain_getWallTileWithinRadius(x, y, 6, xTile, yTile)) {
 		b->walkerRoamDirection += 2;
@@ -151,8 +150,7 @@ static int towerSentryInitPatrol(struct Data_Walker *w, struct Data_Building *b,
 			case 4: y += 3; break;
 			case 6: x -= 3; break;
 		}
-		BOUND(x, 0, Data_Settings_Map.width - 1);
-		BOUND(y, 0, Data_Settings_Map.height - 1);
+		BoundToMap(x, y);
 		if (Terrain_getWallTileWithinRadius(x, y, 6, xTile, yTile)) {
 			return 1;
 		}
@@ -261,7 +259,7 @@ void WalkerAction_towerSentry(int walkerId)
 		w->inBuildingWaitTicks--;
 		w->heightFromGround = 0;
 	}
-	int dir = (8 + w->direction - Data_Settings_Map.orientation) % 8;
+	int dir = WalkerActionDirection(w);
 	if (w->actionState == WalkerActionState_149_Corpse) {
 		w->graphicId = GraphicId(ID_Graphic_Walker_TowerSentry) +
 			136 + WalkerActionCorpseGraphicOffset(w);

@@ -9,6 +9,7 @@
 
 #include "Data/CityInfo.h"
 #include "Data/Empire.h"
+#include "Data/Grid.h"
 #include "Data/Message.h"
 #include "Data/Scenario.h"
 #include "Data/Trade.h"
@@ -18,25 +19,6 @@ static void advanceTradeNextImportResourceCaravan()
 	Data_CityInfo.tradeNextImportResourceCaravan++;
 	if (Data_CityInfo.tradeNextImportResourceCaravan > 15) {
 		Data_CityInfo.tradeNextImportResourceCaravan = 1;
-	}
-}
-
-static void goToNextWarehouse(int walkerId, struct Data_Walker *w, int xSrc, int ySrc, int foo)
-{
-	int xDst, yDst;
-	int warehouseId = Trader_getClosestWarehouseForTradeCaravan(
-		walkerId, xSrc, ySrc, w->empireCityId, foo, &xDst, &yDst);
-	if (warehouseId) {
-		w->destinationBuildingId = warehouseId;
-		w->actionState = WalkerActionState_101_TradeCaravanArriving;
-		w->waitTicks = 0;
-		w->destinationX = xDst;
-		w->destinationY = yDst;
-	} else {
-		w->actionState = WalkerActionState_103_TradeCaravanLeaving;
-		w->waitTicks = 0;
-		w->destinationX = Data_CityInfo.exitPointX;
-		w->destinationY = Data_CityInfo.exitPointY;
 	}
 }
 
@@ -58,7 +40,7 @@ int WalkerAction_TradeCaravan_canBuy(int traderId, int warehouseId, int cityId)
 	return 0;
 }
 
-static int traderGetBuyResource(/*int traderId, */int warehouseId, int cityId)
+static int traderGetBuyResource(int warehouseId, int cityId)
 {
 	if (Data_Buildings[warehouseId].type != Building_Warehouse) {
 		return Resource_None;
@@ -66,15 +48,15 @@ static int traderGetBuyResource(/*int traderId, */int warehouseId, int cityId)
 	for (int i = 0; i < 8; i++) {
 		warehouseId = Data_Buildings[warehouseId].nextPartBuildingId;
 		if (warehouseId <= 0) {
-			break;
+			continue;
 		}
 		int resource = Data_Buildings[warehouseId].subtype.warehouseResourceId;
-		if (Empire_canExportResourceToCity(cityId, resource)) {
+		if (Data_Buildings[warehouseId].loadsStored > 0 && Empire_canExportResourceToCity(cityId, resource)) {
 			// update stocks
 			Data_CityInfo.resourceSpaceInWarehouses[resource]++;
 			Data_CityInfo.resourceStored[resource]--;
 			Data_Buildings[warehouseId].loadsStored--;
-			if (Data_Buildings[warehouseId].loadsStored == 0) {
+			if (Data_Buildings[warehouseId].loadsStored <= 0) {
 				Data_Buildings[warehouseId].subtype.warehouseResourceId = Resource_None;
 			}
 			// update finances
@@ -100,13 +82,13 @@ int WalkerAction_TradeCaravan_canSell(int traderId, int warehouseId, int cityId)
 	if (Data_Walkers[traderId].loadsSoldOrCarrying >= 8) {
 		return 0;
 	}
-	int storageId = Data_Buildings[warehouseId].storageId;
-	if (Data_Building_Storages[storageId].emptyAll) {
+	struct Data_Building_Storage *st = &Data_Building_Storages[Data_Buildings[warehouseId].storageId];
+	if (st->emptyAll) {
 		return 0;
 	}
 	int numImportable = 0;
 	for (int r = 1; r < 16; r++) {
-		if (Data_Building_Storages[storageId].resourceState[r] != BuildingStorageState_NotAccepting) {
+		if (st->resourceState[r] != BuildingStorageState_NotAccepting) {
 			if (Empire_canImportResourceFromCity(cityId, r)) {
 				numImportable++;
 			}
@@ -116,16 +98,14 @@ int WalkerAction_TradeCaravan_canSell(int traderId, int warehouseId, int cityId)
 		return 0;
 	}
 	int canImport = 0;
-	if (Data_Building_Storages[storageId].resourceState[Data_CityInfo.tradeNextImportResourceCaravan]
-			!= BuildingStorageState_NotAccepting &&
+	if (st->resourceState[Data_CityInfo.tradeNextImportResourceCaravan] != BuildingStorageState_NotAccepting &&
 		Empire_canImportResourceFromCity(cityId, Data_CityInfo.tradeNextImportResourceCaravan)) {
 		canImport = 1;
 	}
 	if (!canImport) {
 		for (int i = 1; i < 16; i++) {
 			advanceTradeNextImportResourceCaravan();
-			if (Data_Building_Storages[storageId].resourceState[Data_CityInfo.tradeNextImportResourceCaravan]
-					!= BuildingStorageState_NotAccepting &&
+			if (st->resourceState[Data_CityInfo.tradeNextImportResourceCaravan] != BuildingStorageState_NotAccepting &&
 					Empire_canImportResourceFromCity(cityId, Data_CityInfo.tradeNextImportResourceCaravan)) {
 				canImport = 1;
 				break;
@@ -211,6 +191,23 @@ static int traderGetSellResource(int traderId, int warehouseId, int cityId)
 	return 0;
 }
 
+static void goToNextWarehouse(int walkerId, struct Data_Walker *w, int xSrc, int ySrc, int distToEntry)
+{
+	int xDst, yDst;
+	int warehouseId = Trader_getClosestWarehouseForTradeCaravan(
+		walkerId, xSrc, ySrc, w->empireCityId, distToEntry, &xDst, &yDst);
+	if (warehouseId) {
+		w->destinationBuildingId = warehouseId;
+		w->actionState = WalkerActionState_101_TradeCaravanArriving;
+		w->destinationX = xDst;
+		w->destinationY = yDst;
+	} else {
+		w->actionState = WalkerActionState_103_TradeCaravanLeaving;
+		w->destinationX = Data_CityInfo.exitPointX;
+		w->destinationY = Data_CityInfo.exitPointY;
+	}
+}
+
 void WalkerAction_tradeCaravan(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
@@ -229,6 +226,7 @@ void WalkerAction_tradeCaravan(int walkerId)
 			w->isGhost = 1;
 			w->waitTicks++;
 			if (w->waitTicks > 20) {
+				w->waitTicks = 0;
 				int xBase, yBase;
 				if (Data_CityInfo.buildingTradeCenterBuildingId) {
 					xBase = Data_Buildings[Data_CityInfo.buildingTradeCenterBuildingId].x;
@@ -281,7 +279,7 @@ void WalkerAction_tradeCaravan(int walkerId)
 					if (resource) {
 						Data_Empire_Trade.tradedThisYear[Data_Empire_Cities[w->empireCityId].routeId][resource]++;
 						Trader_sellResource(walkerId, resource);
-						w->traderAmountBought++;
+						w->loadsSoldOrCarrying++;
 					} else {
 						moveOn++;
 					}
@@ -347,7 +345,6 @@ void WalkerAction_tradeCaravanDonkey(int walkerId)
 	w->graphicId = GraphicId(ID_Graphic_Walker_TradeCaravan) +
 		dir + 8 * w->graphicOffset;
 }
-
 
 void WalkerAction_nativeTrader(int walkerId)
 {
@@ -439,9 +436,9 @@ void WalkerAction_nativeTrader(int walkerId)
 	} else {
 		w->graphicId = GraphicId(ID_Graphic_Walker_Cartpusher) +
 			dir + 8 * w->graphicOffset;
-		w->cartGraphicId = GraphicId(ID_Graphic_Walker_MigrantCart) +
-			8 + 8 * w->resourceId;
 	}
+	w->cartGraphicId = GraphicId(ID_Graphic_Walker_MigrantCart) +
+		8 + 8 * w->resourceId; // TODO should be within else statement?
 	if (w->cartGraphicId) {
 		w->cartGraphicId += dir;
 		WalkerAction_Common_setCartOffset(walkerId, dir);
@@ -499,6 +496,7 @@ void WalkerAction_tradeShip(int walkerId)
 			w->isGhost = 1;
 			w->waitTicks++;
 			if (w->waitTicks > 20) {
+				w->waitTicks = 0;
 				int xTile, yTile;
 				int dockId = Terrain_Water_getFreeDockDestination(walkerId, &xTile, &yTile);
 				if (dockId) {
@@ -533,8 +531,8 @@ void WalkerAction_tradeShip(int walkerId)
 			if (Data_Buildings[w->destinationBuildingId].inUse != 1) {
 				w->actionState = WalkerActionState_115_TradeShipLeaving;
 				w->waitTicks = 0;
-				w->destinationX = (char) Data_Scenario.riverExitPoint.x;
-				w->destinationY = (char) Data_Scenario.riverExitPoint.y;
+				w->destinationX = Data_Scenario.riverExitPoint.x;
+				w->destinationY = Data_Scenario.riverExitPoint.y;
 			}
 			break;
 		case WalkerActionState_112_TradeShipMoored:
@@ -542,14 +540,14 @@ void WalkerAction_tradeShip(int walkerId)
 				w->tradeShipFailedDockAttempts = 0;
 				w->actionState = WalkerActionState_115_TradeShipLeaving;
 				w->waitTicks = 0;
-				w->destinationX = (char) Data_Scenario.riverEntryPoint.x;
-				w->destinationY = (char) Data_Scenario.riverEntryPoint.y;
+				w->destinationX = Data_Scenario.riverEntryPoint.x;
+				w->destinationY = Data_Scenario.riverEntryPoint.y;
 			} else if (tradeShipDoneTrading(walkerId)) {
 				w->tradeShipFailedDockAttempts = 0;
 				w->actionState = WalkerActionState_115_TradeShipLeaving;
 				w->waitTicks = 0;
-				w->destinationX = (char) Data_Scenario.riverEntryPoint.x;
-				w->destinationY = (char) Data_Scenario.riverEntryPoint.y;
+				w->destinationX = Data_Scenario.riverEntryPoint.x;
+				w->destinationY = Data_Scenario.riverEntryPoint.y;
 				Data_Buildings[w->destinationBuildingId].data.other.dockQueuedDockerId = 0;
 				Data_Buildings[w->destinationBuildingId].data.other.dockNumShips = 0;
 			}
@@ -583,7 +581,8 @@ void WalkerAction_tradeShip(int walkerId)
 					w->actionState = WalkerActionState_111_TradeShipGoingToDock;
 					w->destinationX = xTile;
 					w->destinationY = yTile;
-				} else if (Terrain_Water_getQueueDockDestination(walkerId, &xTile, &yTile)) {
+				} else if (Data_Grid_walkerIds[w->gridOffset] != walkerId &&
+					Terrain_Water_getQueueDockDestination(walkerId, &xTile, &yTile)) {
 					w->actionState = WalkerActionState_113_TradeShipGoingToDockQueue;
 					w->destinationX = xTile;
 					w->destinationY = yTile;
@@ -608,7 +607,6 @@ void WalkerAction_tradeShip(int walkerId)
 	WalkerActionNormalizeDirection(dir);
 	w->graphicId = GraphicId(ID_Graphic_Walker_Ship) + dir;
 }
-
 
 int WalkerAction_TradeShip_isBuyingOrSelling(int walkerId)
 {
