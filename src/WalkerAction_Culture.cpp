@@ -77,7 +77,7 @@ void WalkerAction_schoolChild(int walkerId)
 	w->useCrossCountry = 0;
 	w->maxRoamLength = 96;
 	int buildingId = w->buildingId;
-	if (Data_Buildings[buildingId].inUse != 1 || Data_Buildings[buildingId].walkerId != walkerId) {
+	if (Data_Buildings[buildingId].inUse != 1 || Data_Buildings[buildingId].type != Building_School) {
 		w->state = WalkerState_Dead;
 	}
 	WalkerActionIncreaseGraphicOffset(w, 12);

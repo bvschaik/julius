@@ -90,7 +90,7 @@ int Resource_getGranaryForStoringFood(
 	}
 	int minDist = 10000;
 	int minBuildingId = 0;
-	for (int i = 0; i < MAX_BUILDINGS; i++) {
+	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
 		if (b->inUse != 1 || b->type != Building_Granary) {
 			continue;
@@ -112,7 +112,7 @@ int Resource_getGranaryForStoringFood(
 		}
 		if (b->data.storage.resourceStored[Resource_None] >= 100) {
 			// there is room
-			int dist = Resource_getDistance(b->x, b->y, x, y, distanceFromEntry, b->distanceFromEntry);
+			int dist = Resource_getDistance(b->x + 1, b->y + 1, x, y, distanceFromEntry, b->distanceFromEntry);
 			if (dist < minDist) {
 				minDist = dist;
 				minBuildingId = i;
@@ -140,7 +140,7 @@ int Resource_getGettingGranaryForStoringFood(
 	}
 	int minDist = 10000;
 	int minBuildingId = 0;
-	for (int i = 0; i < MAX_BUILDINGS; i++) {
+	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
 		if (b->inUse != 1 || b->type != Building_Granary) {
 			continue;
@@ -159,15 +159,15 @@ int Resource_getGettingGranaryForStoringFood(
 		}
 		if (b->data.storage.resourceStored[Resource_None] > 100) {
 			// there is room
-			int dist = Resource_getDistance(b->x, b->y, x, y, distanceFromEntry, b->distanceFromEntry);
+			int dist = Resource_getDistance(b->x + 1, b->y + 1, x, y, distanceFromEntry, b->distanceFromEntry);
 			if (dist < minDist) {
 				minDist = dist;
 				minBuildingId = i;
 			}
 		}
 	}
-	*xDst = Data_Buildings[minBuildingId].x;
-	*yDst = Data_Buildings[minBuildingId].y;
+	*xDst = Data_Buildings[minBuildingId].x + 1;
+	*yDst = Data_Buildings[minBuildingId].y + 1;
 	return minBuildingId;
 }
 
@@ -225,7 +225,10 @@ int Resource_getGranaryForGettingFood(int srcBuildingId, int *xDst, int *yDst)
 			amountGettable += b->data.storage.resourceStored[Resource_Meat];
 		}
 		if (amountGettable > 0) {
-			int dist = Resource_getDistance(b->x, b->y, src->x, src->y, src->distanceFromEntry, b->distanceFromEntry);
+			int dist = Resource_getDistance(
+				b->x + 1, b->y + 1,
+				src->x + 1, src->y + 1,
+				src->distanceFromEntry, b->distanceFromEntry);
 			if (amountGettable <= 400) {
 				dist *= 2; // penalty for less food
 			}
@@ -235,8 +238,8 @@ int Resource_getGranaryForGettingFood(int srcBuildingId, int *xDst, int *yDst)
 			}
 		}
 	}
-	*xDst = Data_Buildings[minBuildingId].x;
-	*yDst = Data_Buildings[minBuildingId].y;
+	*xDst = Data_Buildings[minBuildingId].x + 1;
+	*yDst = Data_Buildings[minBuildingId].y + 1;
 	return minBuildingId;
 }
 
@@ -298,7 +301,7 @@ int Resource_removeFromGranary(int buildingId, int resource, int amount)
 	} else {
 		int removed = b->data.storage.resourceStored[resource];
 		Data_CityInfo.resourceGranaryFoodStored[resource] -= removed;
-		b->data.storage.resourceStored[resource] -= removed;
+		b->data.storage.resourceStored[resource] = 0;
 		b->data.storage.resourceStored[Resource_None] += removed;
 		toRemove = amount - removed;
 	}
@@ -323,18 +326,18 @@ int Resource_determineGranaryWorkerTask(int buildingId)
 		return -1;
 	}
 	if (b->data.storage.resourceStored[Resource_None] <= 0) {
-		return -1; // nothing to get
+		return -1; // granary full, nothing to get
 	}
-	if (s->resourceState[Resource_Wheat] == BuildingStorageState_Getting && nonGettingGranaries.totalStorageFruit > 100) {
+	if (s->resourceState[Resource_Wheat] == BuildingStorageState_Getting && nonGettingGranaries.totalStorageWheat > 100) {
 		return 0;
 	}
-	if (s->resourceState[Resource_Vegetables] == BuildingStorageState_Getting && nonGettingGranaries.totalStorageWheat > 100) {
+	if (s->resourceState[Resource_Vegetables] == BuildingStorageState_Getting && nonGettingGranaries.totalStorageVegetables > 100) {
 		return 0;
 	}
-	if (s->resourceState[Resource_Fruit] == BuildingStorageState_Getting && nonGettingGranaries.totalStorageWheat > 100) {
+	if (s->resourceState[Resource_Fruit] == BuildingStorageState_Getting && nonGettingGranaries.totalStorageFruit > 100) {
 		return 0;
 	}
-	if (s->resourceState[Resource_Meat] == BuildingStorageState_Getting && nonGettingGranaries.totalStorageWheat > 100) {
+	if (s->resourceState[Resource_Meat] == BuildingStorageState_Getting && nonGettingGranaries.totalStorageMeat > 100) {
 		return 0;
 	}
 	return -1;

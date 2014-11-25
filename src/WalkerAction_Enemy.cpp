@@ -124,11 +124,7 @@ static void enemyFighting(int walkerId, struct Data_Walker *w, struct Data_Forma
 		}
 	}
 	int targetId = w->targetWalkerId;
-	if (Data_Walkers[targetId].state != WalkerState_Alive) {
-		w->targetWalkerId = 0;
-		targetId = 0;
-	}
-	if (Data_Walkers[targetId].actionState == WalkerActionState_149_Corpse) {
+	if (WalkerIsDead(targetId)) {
 		w->targetWalkerId = 0;
 		targetId = 0;
 	}
@@ -417,9 +413,7 @@ void WalkerAction_enemy48_Chariot(int walkerId)
 	
 	w->isEnemyGraphic = 1;
 	
-	if (w->direction == 11) {
-		w->graphicId = 697 + dir + 8 * (w->graphicOffset / 2);
-	} else if (w->actionState == WalkerActionState_150_Attack) {
+	if (w->direction == 11 || w->actionState == WalkerActionState_150_Attack) {
 		w->graphicId = 697 + dir + 8 * (w->graphicOffset / 2);
 	} else if (w->actionState == WalkerActionState_149_Corpse) {
 		w->graphicId = 745 + WalkerActionCorpseGraphicOffset(w);

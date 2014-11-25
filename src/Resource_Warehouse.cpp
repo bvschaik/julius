@@ -33,8 +33,9 @@ void Resource_setWarehouseSpaceGraphic(int spaceId, int resource)
 void Resource_addToCityWarehouses(int resource, int amount)
 {
 	int buildingId = Data_CityInfo.resourceLastTargetWarehouse;
-	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (++buildingId >= MAX_BUILDINGS) {
+	for (int i = 1; i < MAX_BUILDINGS && amount > 0; i++) {
+		buildingId++;
+		if (buildingId >= MAX_BUILDINGS) {
 			buildingId = 1;
 		}
 		if (Data_Buildings[buildingId].inUse == 1 &&
@@ -52,8 +53,9 @@ int Resource_removeFromCityWarehouses(int resource, int amount)
 	int amountLeft = amount;
 	int buildingId = Data_CityInfo.resourceLastTargetWarehouse;
 	// first go for non-getting warehouses
-	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (++buildingId >= MAX_BUILDINGS) {
+	for (int i = 1; i < MAX_BUILDINGS && amountLeft > 0; i++) {
+		buildingId++;
+		if (buildingId >= MAX_BUILDINGS) {
 			buildingId = 1;
 		}
 		if (Data_Buildings[buildingId].inUse == 1 &&
@@ -66,8 +68,9 @@ int Resource_removeFromCityWarehouses(int resource, int amount)
 		}
 	}
 	// if that doesn't work, take it anyway
-	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (++buildingId >= MAX_BUILDINGS) {
+	for (int i = 1; i < MAX_BUILDINGS && amountLeft > 0; i++) {
+		buildingId++;
+		if (buildingId >= MAX_BUILDINGS) {
 			buildingId = 1;
 		}
 		if (Data_Buildings[buildingId].inUse == 1 &&
@@ -97,8 +100,7 @@ int Resource_getWarehouseForStoringResource(
 		if (srcBuildingId == dstBuildingId) {
 			continue;
 		}
-		int storageId = Data_Buildings[dstBuildingId].storageId;
-		struct Data_Building_Storage *s = &Data_Building_Storages[storageId];
+		struct Data_Building_Storage *s = &Data_Building_Storages[Data_Buildings[dstBuildingId].storageId];
 		if (s->resourceState[resource] == BuildingStorageState_NotAccepting || s->emptyAll) {
 			continue;
 		}
@@ -112,14 +114,12 @@ int Resource_getWarehouseForStoringResource(
 			continue;
 		}
 		int dist;
-		if (b->subtype.warehouseResourceId) {
-			if (b->subtype.warehouseResourceId == resource && b->loadsStored < 4) {
-				dist = Resource_getDistance(b->x, b->y, x, y, distanceFromEntry, b->distanceFromEntry);
-			} else {
-				dist = 0;
-			}
-		} else { // empty warehouse space
+		if (b->subtype.warehouseResourceId == Resource_None) { // empty warehouse space
 			dist = Resource_getDistance(b->x, b->y, x, y, distanceFromEntry, b->distanceFromEntry);
+		} else if (b->subtype.warehouseResourceId == resource && b->loadsStored < 4) {
+			dist = Resource_getDistance(b->x, b->y, x, y, distanceFromEntry, b->distanceFromEntry);
+		} else {
+			dist = 0;
 		}
 		if (dist > 0 && dist < minDist) {
 			minDist = dist;
@@ -140,7 +140,7 @@ int Resource_getWarehouseForStoringResource(
 int Resource_getWarehouseForGettingResource(int srcBuildingId, int resource, int *xDst, int *yDst)
 {
 	struct Data_Building *src = &Data_Buildings[srcBuildingId];
-	int minDist = 0;
+	int minDist = 10000;
 	int minBuildingId = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
@@ -238,7 +238,7 @@ int Resource_removeFromWarehouse(int buildingId, int resource, int amount)
 		}
 		buildingId = b->nextPartBuildingId;
 		if (buildingId <= 0) {
-			return amount;
+			continue;
 		}
 		b = &Data_Buildings[buildingId];
 		if (b->subtype.warehouseResourceId != resource || b->loadsStored <= 0) {
@@ -267,10 +267,10 @@ void Resource_removeFromWarehouseForMercury(int buildingId, int amount)
 	if (b->type != Building_Warehouse) {
 		return;
 	}
-	for (int i = 0; i < 8; i++) {
+	for (int i = 0; i < 8 && amount > 0; i++) {
 		buildingId = b->nextPartBuildingId;
 		b = &Data_Buildings[buildingId];
-		if (buildingId <= 0) {
+		if (buildingId <= 0 || b->loadsStored <= 0) {
 			continue;
 		}
 		int resource = b->subtype.warehouseResourceId;
@@ -298,7 +298,8 @@ int Resource_getAmountStoredInWarehouse(int buildingId, int resource)
 		if (buildingId <= 0) {
 			return 0;
 		}
-		if (resource && Data_Buildings[buildingId].subtype.warehouseResourceId == resource) {
+		if (Data_Buildings[buildingId].subtype.warehouseResourceId &&
+			Data_Buildings[buildingId].subtype.warehouseResourceId == resource) {
 			loads += Data_Buildings[buildingId].loadsStored;
 		}
 	}
@@ -342,7 +343,6 @@ void Resource_addImportedResourceToWarehouseSpace(int spaceId, int resourceId)
 	Resource_setWarehouseSpaceGraphic(spaceId, resourceId);
 }
 
-//REVIEWED
 void Resource_removeExportedResourceFromWarehouseSpace(int spaceId, int resourceId)
 {
 	Data_CityInfo.resourceSpaceInWarehouses[resourceId]++;
