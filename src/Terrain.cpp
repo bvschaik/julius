@@ -155,10 +155,8 @@ void Terrain_removeBuildingFromGrids(int buildingId, int x, int y)
 	if (Data_Grid_terrain[baseGridOffset] == Terrain_Rock) {
 		return;
 	}
-	if (buildingId) {
-		if (BuildingIsFarm(Data_Buildings[buildingId].type)) {
-			size = 3;
-		}
+	if (buildingId && BuildingIsFarm(Data_Buildings[buildingId].type)) {
+		size = 3;
 	}
 	for (int dy = 0; dy < size; dy++) {
 		for (int dx = 0; dx < size; dx++) {
@@ -167,7 +165,7 @@ void Terrain_removeBuildingFromGrids(int buildingId, int x, int y)
 				continue;
 			}
 			if (buildingId && Data_Buildings[buildingId].type != Building_BurningRuin) {
-				Data_Grid_rubbleBuildingType[gridOffset] = (unsigned char) Data_Buildings[buildingId].type;
+				Data_Grid_rubbleBuildingType[gridOffset] = Data_Buildings[buildingId].type;
 			}
 			Data_Grid_bitfields[gridOffset] &= Bitfield_NoOverlay;
 			Data_Grid_bitfields[gridOffset] &= Bitfield_NoSizes;
@@ -248,6 +246,7 @@ void Terrain_addRoadsForTriumphalArch(int x, int y, int orientation)
 	}
 }
 
+//STOP REVIEW
 int Terrain_hasRoadAccess(int x, int y, int size, int *roadX, int *roadY)
 {
 	int minValue = 12;

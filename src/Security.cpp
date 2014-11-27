@@ -11,6 +11,7 @@
 #include "Terrain.h"
 #include "TerrainGraphics.h"
 #include "Time.h"
+#include "Tutorial.h"
 #include "Walker.h"
 #include "WalkerAction.h"
 
@@ -37,7 +38,7 @@ void Security_Tick_updateFireSpreadDirection()
 
 void Security_Tick_updateBurningRuins()
 {
-	int needsTerrainUpdate = 0;
+	int recalculateTerrain = 0;
 	Data_BuildingList.burning.index = 0;
 	Data_BuildingList.burning.size = 0;
 	Data_BuildingList.burning.totalBurning = 0;
@@ -54,7 +55,7 @@ void Security_Tick_updateBurningRuins()
 			Data_State.undoAvailable = 0;
 			b->inUse = 4;
 			TerrainGraphics_setBuildingAreaRubble(i, b->x, b->y, b->size);
-			needsTerrainUpdate = 1;
+			recalculateTerrain = 1;
 			continue;
 		}
 		if (b->ruinHasPlague) {
@@ -88,24 +89,28 @@ void Security_Tick_updateBurningRuins()
 			Building_collapseOnFire(nextBuildingId, 0);
 			Building_collapseLinked(nextBuildingId, 1);
 			Sound_Effects_playChannel(SoundChannel_Explosion);
-			needsTerrainUpdate = 1;
+			recalculateTerrain = 1;
 		} else {
 			nextBuildingId = Data_Grid_buildingIds[gridOffset + Constant_DirectionGridOffsets[dir1]];
 			if (nextBuildingId && !Data_Buildings[nextBuildingId].fireProof) {
 				Building_collapseOnFire(nextBuildingId, 0);
 				Building_collapseLinked(nextBuildingId, 1);
 				Sound_Effects_playChannel(SoundChannel_Explosion);
-				needsTerrainUpdate = 1;
+				recalculateTerrain = 1;
 			} else {
 				nextBuildingId = Data_Grid_buildingIds[gridOffset + Constant_DirectionGridOffsets[dir2]];
 				if (nextBuildingId && !Data_Buildings[nextBuildingId].fireProof) {
 					Building_collapseOnFire(nextBuildingId, 0);
 					Building_collapseLinked(nextBuildingId, 1);
 					Sound_Effects_playChannel(SoundChannel_Explosion);
-					needsTerrainUpdate = 1;
+					recalculateTerrain = 1;
 				}
 			}
 		}
+	}
+	if (recalculateTerrain) {
+		Routing_determineLandCitizen();
+		Routing_determineLandNonCitizen();
 	}
 }
 
@@ -132,7 +137,7 @@ int Security_Fire_getClosestBurningRuin(int x, int y, int *distance)
 	}
 	if (!minFreeBuildingId && minOccupiedDist <= 2) {
 		minFreeBuildingId = minOccupiedBuildingId;
-		*distance = minOccupiedDist;
+		*distance = 2;
 	}
 	return minFreeBuildingId;
 }
@@ -141,7 +146,7 @@ static void generateRioter(int buildingId)
 {
 	int xRoad, yRoad;
 	struct Data_Building *b = &Data_Buildings[buildingId];
-	if (!Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
+	if (!Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 4, &xRoad, &yRoad)) {
 		return;
 	}
 	Data_CityInfo.numCriminalsThisMonth++;
@@ -195,8 +200,8 @@ static void generateMugger(int buildingId)
 {
 	Data_CityInfo.numCriminalsThisMonth++;
 	struct Data_Building *b = &Data_Buildings[buildingId];
-	if (b->houseCriminalActive < 1) {
-		b->houseCriminalActive = 1;
+	if (b->houseCriminalActive < 2) {
+		b->houseCriminalActive = 2;
 		int xRoad, yRoad;
 		if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
 			int walkerId = Walker_create(Walker_Criminal, xRoad, yRoad, 4);
@@ -286,22 +291,9 @@ static void collapseBuilding(int buildingId, struct Data_Building *b)
 		Data_Message.lastSoundTime.collapse = Time_getMillis();
 	}
 	if (Data_Tutorial.tutorial1.collapse) {
-		// regular collapse
-		int usePopup = 0;
-		if (Data_Message.messageDelay[MessageDelay_Collapse] <= 0) {
-			usePopup = 1;
-			Data_Message.messageDelay[MessageDelay_Collapse] = 12;
-		}
-		PlayerMessage_post(usePopup, 13, b->type, b->gridOffset);
-		Data_Message.messageCategoryCount[MessageDelay_Collapse]++;
+		PlayerMessage_postWithPopupDelay(MessageDelay_Collapse, 13, b->type, b->gridOffset);
 	} else {
-		// first collapse in tutorial
-		Data_Tutorial.tutorial1.collapse = 1;
-		SidebarMenu_enableBuildingMenuItemsAndButtons();
-		/*if (UI_Window_getId() == Window_City) {
-			UI_City_drawBackground(); // TODO do we need this??
-		}*/
-		PlayerMessage_post(1, 54, 0, 0);
+		Tutorial_onCollapse();
 	}
 	
 	Data_State.undoAvailable = 0;
@@ -319,22 +311,9 @@ static void fireBuilding(int buildingId, struct Data_Building *b)
 		Data_Message.lastSoundTime.fire = Time_getMillis();
 	}
 	if (Data_Tutorial.tutorial1.fire) {
-		// regular collapse
-		int usePopup = 0;
-		if (Data_Message.messageDelay[MessageDelay_Fire] <= 0) {
-			usePopup = 1;
-			Data_Message.messageDelay[MessageDelay_Fire] = 12;
-		}
-		PlayerMessage_post(usePopup, 12, b->type, b->gridOffset);
-		Data_Message.messageCategoryCount[MessageDelay_Fire]++;
+		PlayerMessage_postWithPopupDelay(MessageDelay_Fire, 12, b->type, b->gridOffset);
 	} else {
-		// first collapse in tutorial
-		Data_Tutorial.tutorial1.fire = 1;
-		SidebarMenu_enableBuildingMenuItemsAndButtons();
-		/*if (UI_Window_getId() == Window_City) {
-			UI_City_drawBackground(); // TODO do we need this??
-		}*/
-		PlayerMessage_post(1, 53, 0, 0);
+		Tutorial_onFire();
 	}
 	
 	Building_collapseOnFire(buildingId, 0);

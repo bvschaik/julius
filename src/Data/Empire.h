@@ -4,13 +4,13 @@
 #define MAX_EMPIRE_OBJECTS 200
 #define MAX_EMPIRE_CITIES 41
 
-extern struct Data_Empire {
+extern struct _Data_Empire {
 	int scrollX;
 	int scrollY;
 	int selectedObject;
 } Data_Empire;
 
-extern struct Data_Empire_Sizes {
+extern struct _Data_Empire_Sizes {
 	int width;
 	int height;
 	int borderTop;
@@ -78,7 +78,7 @@ extern struct Data_Empire_City {
 	unsigned char __padding[10];
 } Data_Empire_Cities[MAX_EMPIRE_CITIES];
 
-extern struct Data_Empire_Trade {
+extern struct _Data_Empire_Trade {
 	int maxPerYear[20][16];
 	int tradedThisYear[20][16];
 } Data_Empire_Trade;

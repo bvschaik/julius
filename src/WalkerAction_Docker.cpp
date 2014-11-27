@@ -260,6 +260,7 @@ void WalkerAction_docker(int walkerId)
 					w->destinationX = w->sourceX;
 					w->destinationY = w->sourceY;
 				}
+				w->waitTicks = 0;
 			}
 			w->graphicOffset = 0;
 			break;
@@ -301,5 +302,7 @@ void WalkerAction_docker(int walkerId)
 	if (w->cartGraphicId) {
 		w->cartGraphicId += dir;
 		WalkerAction_Common_setCartOffset(walkerId, dir);
+	} else {
+		w->graphicId = 0;
 	}
 }
