@@ -7,8 +7,6 @@
 #include "Data/Constants.h"
 #include "Data/Graphics.h"
 
-#include <stdio.h>
-
 static void TerrainGraphics_setTileRubble(int x, int y);
 static void TerrainGraphics_updateTileMeadow(int x, int y);
 static void TerrainGraphics_updateAreaEmptyLand(int x, int y, int size, int graphicId);
@@ -20,9 +18,9 @@ static int isAllTerrainInArea(int x, int y, int size, int terrain)
 	if (IsOutsideMap(x, y, size)) {
 		return 0;
 	}
-	for (int ty = y; ty < y + size; ty++) {
-		for (int tx = x; tx < x + size; tx++) {
-			int gridOffset = GridOffset(tx, ty);
+	for (int dy = 0; dy < size; dy++) {
+		for (int dx = 0; dx < size; dx++) {
+			int gridOffset = GridOffset(x + dx, y + dy);
 			if ((Data_Grid_terrain[gridOffset] & Terrain_NotClear) != terrain) {
 				return 0;
 			}
@@ -66,6 +64,7 @@ static void setRoadWithAqueductGraphic(int gridOffset)
 	if (TerrainGraphics_isPavedRoadTile(gridOffset)) {
 		Data_Grid_graphicIds[gridOffset] =
 			graphicIdAqueduct + waterOffset + groupOffset - 2;
+	} else {
 		Data_Grid_graphicIds[gridOffset] =
 			graphicIdAqueduct + waterOffset + groupOffset + 6;
 	}
@@ -180,26 +179,28 @@ void TerrainGraphics_updateAllGardens()
 	FOREACH_ALL({
 		int terrain = Data_Grid_terrain[gridOffset];
 		if (terrain & Terrain_Garden && !(terrain & (Terrain_Elevation | Terrain_AccessRamp))) {
-			int graphicId = GraphicId(ID_Graphic_Garden);
-			if (isAllTerrainInArea(x, y, 2, Terrain_Garden)) {
-				switch (Data_Grid_random[gridOffset] & 3) {
-					case 0: case 1: graphicId += 6; break;
-					case 2: graphicId += 5; break;
-					case 3: graphicId += 4; break;
-				}
-				Terrain_addBuildingToGrids(0, x, y, 2, graphicId, Terrain_Garden);
-			} else {
-				if (y & 1) {
-					switch (x & 3) {
-						case 0: case 2: graphicId += 2; break;
-						case 1: case 3: graphicId += 3; break;
+			if (!Data_Grid_graphicIds[gridOffset]) {
+				int graphicId = GraphicId(ID_Graphic_Garden);
+				if (isAllTerrainInArea(x, y, 2, Terrain_Garden)) {
+					switch (Data_Grid_random[gridOffset] & 3) {
+						case 0: case 1: graphicId += 6; break;
+						case 2: graphicId += 5; break;
+						case 3: graphicId += 4; break;
 					}
+					Terrain_addBuildingToGrids(0, x, y, 2, graphicId, Terrain_Garden);
 				} else {
-					switch (x & 3) {
-						case 1: case 3: graphicId += 1; break;
+					if (y & 1) {
+						switch (x & 3) {
+							case 0: case 2: graphicId += 2; break;
+							case 1: case 3: graphicId += 3; break;
+						}
+					} else {
+						switch (x & 3) {
+							case 1: case 3: graphicId += 1; break;
+						}
 					}
+					Data_Grid_graphicIds[gridOffset] = graphicId;
 				}
-				Data_Grid_graphicIds[gridOffset] = graphicId;
 			}
 		}
 	});
@@ -436,6 +437,10 @@ void TerrainGraphics_updateRegionWater(int xMin, int yMin, int xMax, int yMax)
 
 void TerrainGraphics_updateRegionAqueduct(int xMin, int yMin, int xMax, int yMax, int includeOverlay)
 {
+	xMin--;
+	xMax++;
+	yMin--;
+	yMax++;
 	BOUND_REGION();
 	FOREACH_REGION({
 		if (Data_Grid_terrain[gridOffset] & Terrain_Aqueduct &&
@@ -608,7 +613,7 @@ void TerrainGraphics_setBuildingFarm(int buildingId, int x, int y, int cropGraph
 	Data_Grid_bitfields[gridOffset] &= Bitfield_NoOverlay;
 	Data_Grid_edge[gridOffset] = EdgeXY(0, 2) | Edge_LeftmostTile;
 	Data_Grid_graphicIds[gridOffset] = cropGraphicId + (growth < 4 ? growth : 4);
-
+	
 	// crop tile 2
 	growth -= 4;
 	if (growth < 0) {
@@ -634,7 +639,7 @@ void TerrainGraphics_setBuildingFarm(int buildingId, int x, int y, int cropGraph
 	Data_Grid_bitfields[gridOffset] &= Bitfield_NoOverlay;
 	Data_Grid_edge[gridOffset] = EdgeXY(2, 2) | Edge_LeftmostTile;
 	Data_Grid_graphicIds[gridOffset] = cropGraphicId + (growth < 4 ? growth : 4);
-
+	
 	// crop tile 4
 	growth -= 4;
 	if (growth < 0) {
@@ -647,7 +652,7 @@ void TerrainGraphics_setBuildingFarm(int buildingId, int x, int y, int cropGraph
 	Data_Grid_bitfields[gridOffset] &= Bitfield_NoOverlay;
 	Data_Grid_edge[gridOffset] = EdgeXY(2, 1) | Edge_LeftmostTile;
 	Data_Grid_graphicIds[gridOffset] = cropGraphicId + (growth < 4 ? growth : 4);
-
+	
 	// crop tile 5
 	growth -= 4;
 	if (growth < 0) {
@@ -677,9 +682,9 @@ void TerrainGraphics_setTileWater(int x, int y)
 {
 	Data_Grid_terrain[GridOffset(x, y)] |= Terrain_Water;
 	int xMin = x - 1;
-	int xMax = xMin + 3;
+	int xMax = x + 1;
 	int yMin = y - 1;
-	int yMax = yMin + 3;
+	int yMax = y + 1;
 	BOUND_REGION();
 	FOREACH_REGION({
 		if ((Data_Grid_terrain[gridOffset] & (Terrain_Water | Terrain_Building)) == Terrain_Water) {
@@ -719,11 +724,11 @@ void TerrainGraphics_setTileEarthquake(int x, int y)
 	int gridOffset = GridOffset(x, y);
 	Data_Grid_terrain[gridOffset] |= Terrain_Rock;
 	Data_Grid_bitfields[gridOffset] |= Bitfield_PlazaOrEarthquake;
-
+	
 	int xMin = x - 1;
 	int yMin = y - 1;
-	int xMax = xMin + 3;
-	int yMax = yMin + 3;
+	int xMax = x + 1;
+	int yMax = y + 1;
 	BOUND_REGION();
 	FOREACH_REGION({
 		if ((Data_Grid_terrain[gridOffset] & Terrain_Rock) &&
@@ -751,7 +756,7 @@ int TerrainGraphics_setTileRoad(int x, int y)
 	}
 	Data_Grid_terrain[gridOffset] |= Terrain_Road;
 	Data_Grid_bitfields[gridOffset] &= Bitfield_NoOverlay;
-
+	
 	int xMin = x - 1;
 	int yMin = y - 1;
 	int xMax = x + 1;
@@ -1064,7 +1069,7 @@ int TerrainGraphics_setTileWall(int x, int y)
 	if (!(Data_Grid_terrain[gridOffset] & Terrain_Wall)) {
 		tilesSet = 1;
 	}
-	Data_Grid_terrain[gridOffset] |= Terrain_Wall;
+	Data_Grid_terrain[gridOffset] = Terrain_Wall;
 	Data_Grid_bitfields[gridOffset] &= Bitfield_NoOverlay;
 
 	int xMin = x - 1;
@@ -1123,8 +1128,8 @@ static void TerrainGraphics_updateTileMeadow(int x, int y)
 
 	int xMin = x - 1;
 	int yMin = y - 1;
-	int xMax = xMin + 3;
-	int yMax = yMin + 3;
+	int xMax = x + 1;
+	int yMax = y + 1;
 	int graphicId = GraphicId(ID_Graphic_TerrainMeadow);
 	BOUND_REGION();
 	FOREACH_REGION({
