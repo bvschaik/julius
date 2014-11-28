@@ -2,9 +2,11 @@
 #include "Calc.h"
 #include "Sound.h"
 #include "WalkerAction.h"
-#include "Data/Walker.h"
+
+#include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
+#include "Data/Walker.h"
 
 #include <string.h>
 
@@ -289,11 +291,11 @@ int Walker_determinePhrase(int walkerId)
 			}
 			break;
 		case Walker_TaxCollector:
-			if (w->minMaxSeen >= 7) {
+			if (w->minMaxSeen >= HouseLevel_LargeCasa) {
 				phraseId = 7;
-			} else if (w->minMaxSeen >= 4) {
+			} else if (w->minMaxSeen >= HouseLevel_SmallHovel) {
 				phraseId = 8;
-			} else if (w->minMaxSeen >= 1) {
+			} else if (w->minMaxSeen >= HouseLevel_LargeTent) {
 				phraseId = 9;
 			}
 			break;
@@ -416,7 +418,7 @@ int Walker_determinePhrase(int walkerId)
 				w->actionState == WalkerActionState_136_DockerExportGoingToWarehouse) {
 				if (Calc_distanceMaximum(
 					w->destinationX, w->destinationY, w->sourceX, w->sourceY) >= 25) {
-					phraseId = 9; // too far?
+					phraseId = 9; // too far
 				}
 			}
 			break;
@@ -447,10 +449,10 @@ int Walker_determinePhrase(int walkerId)
 					phraseId = 11; // good trade
 				}
 			} else if (w->actionState == WalkerActionState_112_TradeShipMoored) {
-				int ship = WalkerAction_TradeShip_isBuyingOrSelling(walkerId);
-				if (ship == 1) {
+				int state = WalkerAction_TradeShip_isBuyingOrSelling(walkerId);
+				if (state == 1) {
 					phraseId = 8; // buying goods
-				} else if (ship == 2) {
+				} else if (state == 2) {
 					phraseId = 7; // selling goods
 				} else {
 					phraseId = 9; // no trade
@@ -611,7 +613,7 @@ void Walker_playDieSound(int walkerType)
 	}
 	if (WalkerIsEnemy(walkerType)) {
 		if (Data_CityInfo.numEnemiesInCity == 1) {
-			Sound_Speech_playFile("wavs/Army_war_cry.wav");
+			Sound_Speech_playFile("wavs/army_war_cry.wav");
 		}
 	} else if (WalkerIsLegion(walkerType)) {
 		if (Data_CityInfo.numSoldiersInCity == 1) {
@@ -673,9 +675,9 @@ void Walker_playHitSound(int walkerType)
 			break;
 		case Walker_Wolf:
 			Data_CityInfo.soundHitWolf--;
-			if (Data_CityInfo.soundHitWolf <= 0) {\
-				Data_CityInfo.soundHitWolf = 4;\
-				Sound_Effects_playChannel(SoundChannel_WolfAttack);\
+			if (Data_CityInfo.soundHitWolf <= 0) {
+				Data_CityInfo.soundHitWolf = 4;
+				Sound_Effects_playChannel(SoundChannel_WolfAttack);
 			}
 			break;
 	}

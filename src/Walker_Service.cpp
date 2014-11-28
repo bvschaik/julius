@@ -133,7 +133,7 @@ static int provideMarketGoods(int marketBuildingId, int x, int y)
 			serviced++;
 			Data_Building *house = &Data_Buildings[buildingId];
 			int level = house->subtype.houseLevel;
-			if (level < 19) {
+			if (level < HouseLevel_LuxuryPalace) {
 				level++;
 			}
 			int maxFoodStocks = 4 * house->houseMaxPopulationSeen;
@@ -151,16 +151,18 @@ static int provideMarketGoods(int marketBuildingId, int x, int y)
 					if (market->data.market.inventory.all[i] >= maxFoodStocks) {
 						house->data.house.inventory.all[i] += maxFoodStocks;
 						market->data.market.inventory.all[i] -= maxFoodStocks;
+						break;
 					} else if (market->data.market.inventory.all[i]) {
 						house->data.house.inventory.all[i] += market->data.market.inventory.all[i];
 						market->data.market.inventory.all[i] = 0;
+						break;
 					}
 				}
 			}
 			if (Data_Model_Houses[level].pottery) {
 				market->data.market.potteryDemand = 10;
 				int potteryWanted = 8 * Data_Model_Houses[level].pottery - house->data.house.inventory.one.pottery;
-				if (market->data.market.inventory.one.pottery && potteryWanted > 0) {
+				if (market->data.market.inventory.one.pottery > 0 && potteryWanted > 0) {
 					if (potteryWanted <= market->data.market.inventory.one.pottery) {
 						house->data.house.inventory.one.pottery += potteryWanted;
 						market->data.market.inventory.one.pottery -= potteryWanted;
@@ -173,7 +175,7 @@ static int provideMarketGoods(int marketBuildingId, int x, int y)
 			if (Data_Model_Houses[level].furniture) {
 				market->data.market.furnitureDemand = 10;
 				int furnitureWanted = 4 * Data_Model_Houses[level].furniture - house->data.house.inventory.one.furniture;
-				if (market->data.market.inventory.one.furniture && furnitureWanted > 0) {
+				if (market->data.market.inventory.one.furniture > 0 && furnitureWanted > 0) {
 					if (furnitureWanted <= market->data.market.inventory.one.furniture) {
 						house->data.house.inventory.one.furniture += furnitureWanted;
 						market->data.market.inventory.one.furniture -= furnitureWanted;
@@ -186,7 +188,7 @@ static int provideMarketGoods(int marketBuildingId, int x, int y)
 			if (Data_Model_Houses[level].oil) {
 				market->data.market.oilDemand = 10;
 				int oilWanted = 4 * Data_Model_Houses[level].oil - house->data.house.inventory.one.oil;
-				if (market->data.market.inventory.one.oil && oilWanted > 0) {
+				if (market->data.market.inventory.one.oil > 0 && oilWanted > 0) {
 					if (oilWanted <= market->data.market.inventory.one.oil) {
 						house->data.house.inventory.one.oil += oilWanted;
 						market->data.market.inventory.one.oil -= oilWanted;
@@ -199,7 +201,7 @@ static int provideMarketGoods(int marketBuildingId, int x, int y)
 			if (Data_Model_Houses[level].wine) {
 				market->data.market.wineDemand = 10;
 				int wineWanted = 4 * Data_Model_Houses[level].wine - house->data.house.inventory.one.wine;
-				if (market->data.market.inventory.one.wine && wineWanted > 0) {
+				if (market->data.market.inventory.one.wine > 0 && wineWanted > 0) {
 					if (wineWanted <= market->data.market.inventory.one.wine) {
 						house->data.house.inventory.one.wine += wineWanted;
 						market->data.market.inventory.one.wine -= wineWanted;
@@ -328,12 +330,25 @@ static int provideHospitalCoverage(int x, int y)
 
 static int provideMissionaryCoverage(int x, int y)
 {
-	FOR_XY_RADIUS(
-		if (Data_Buildings[buildingId].type == Building_NativeHut ||
-			Data_Buildings[buildingId].type == Building_NativeMeeting) {
-			Data_Buildings[buildingId].sentiment.nativeAnger = 0;
+	int xMin = x - 4;
+	int yMin = y - 4;
+	int xMax = x + 4;
+	int yMax = y + 4;
+	Bound2ToMap(xMin, yMin, xMax, yMax);
+	int gridOffset = GridOffset(xMin, yMin);
+	for (int yy = yMin; yy <= yMax; yy++) {
+		for (int xx = xMin; xx <= xMax; xx++) {
+			int buildingId = Data_Grid_buildingIds[gridOffset];
+			if (buildingId) {
+				if (Data_Buildings[buildingId].type == Building_NativeHut ||
+					Data_Buildings[buildingId].type == Building_NativeMeeting) {
+					Data_Buildings[buildingId].sentiment.nativeAnger = 0;
+				}
+			}
+			++gridOffset;
 		}
-	);
+		gridOffset += 162 - (xMax - xMin + 1);
+	}
 	return 1;
 }
 

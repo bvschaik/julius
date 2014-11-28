@@ -75,7 +75,7 @@ int Terrain_determineOrientationWatersideSize2(int x, int y, int adjustXY,
 
 	int baseOffset = GridOffset(x, y);
 	int tileOffsets[] = {0, 1, 162, 163};
-	int shouldBeWater[4][4] = {{1, 1, 0, 0}, {0, 1, 0, 1}, {0, 0, 1, 1}, {1, 0, 1, 0}};
+	const int shouldBeWater[4][4] = {{1, 1, 0, 0}, {0, 1, 0, 1}, {0, 0, 1, 1}, {1, 0, 1, 0}};
 	for (int dir = 0; dir < 4; dir++) {
 		int okTiles = 0;
 		int blockedTiles = 0;
@@ -101,7 +101,7 @@ int Terrain_determineOrientationWatersideSize2(int x, int y, int adjustXY,
 			}
 		}
 		// check six water tiles in front
-		int tilesToCheck[4][6] = {
+		const int tilesToCheck[4][6] = {
 			{-1, -163, -162, -161, -160, 2},
 			{-161, -160, 2, 164, 326, 325},
 			{164, 326, 325, 324, 323, 161},
@@ -292,7 +292,7 @@ int Terrain_Water_findOpenWaterForShipwreck(int walkerId, int *xTile, int *yTile
 		int yMax = wy + radius;
 		BOUND_REGION();
 		FOREACH_REGION({
-			if (!Data_Grid_walkerIds[gridOffset] || Data_Grid_walkerIds[gridOffset] != walkerId) {
+			if (!Data_Grid_walkerIds[gridOffset] || Data_Grid_walkerIds[gridOffset] == walkerId) {
 				if (Data_Grid_terrain[gridOffset] & Terrain_Water &&
 					Data_Grid_terrain[GridOffset(xx, yy - 2)] & Terrain_Water &&
 					Data_Grid_terrain[GridOffset(xx, yy + 2)] & Terrain_Water &&
@@ -341,9 +341,9 @@ int Terrain_Water_getQueueDockDestination(int walkerId, int *xTile, int *yTile)
 	if (Data_CityInfo.numWorkingDocks <= 0) {
 		return 0;
 	}
-	int dockId;
+	// first queue position
 	for (int i = 0; i < 10; i++) {
-		dockId = Data_CityInfo.workingDockBuildingIds[i];
+		int dockId = Data_CityInfo.workingDockBuildingIds[i];
 		if (!dockId) continue;
 		*xTile = Data_Buildings[dockId].x;
 		*yTile = Data_Buildings[dockId].y;
@@ -357,8 +357,9 @@ int Terrain_Water_getQueueDockDestination(int walkerId, int *xTile, int *yTile)
 			return dockId;
 		}
 	}
+	// second queue position
 	for (int i = 0; i < 10; i++) {
-		dockId = Data_CityInfo.workingDockBuildingIds[i];
+		int dockId = Data_CityInfo.workingDockBuildingIds[i];
 		if (!dockId) continue;
 		*xTile = Data_Buildings[dockId].x;
 		*yTile = Data_Buildings[dockId].y;

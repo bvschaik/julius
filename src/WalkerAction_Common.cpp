@@ -67,7 +67,7 @@ void WalkerAction_Common_handleCorpse(int walkerId)
 	}
 }
 
-int attackIsSameDirection(int dir1, int dir2)
+static int attackIsSameDirection(int dir1, int dir2)
 {
 	if (dir1 == dir2) {
 		return 1;
@@ -83,7 +83,7 @@ int attackIsSameDirection(int dir1, int dir2)
 	return 0;
 }
 
-void resumeActivityAfterAttack(int walkerId, struct Data_Walker *w)
+static void resumeActivityAfterAttack(int walkerId, struct Data_Walker *w)
 {
 	w->numAttackers = 0;
 	w->actionState = w->actionStateBeforeAttack;
@@ -93,7 +93,7 @@ void resumeActivityAfterAttack(int walkerId, struct Data_Walker *w)
 	WalkerRoute_remove(walkerId);
 }
 
-void hitOpponent(int walkerId, struct Data_Walker *w)
+static void hitOpponent(int walkerId, struct Data_Walker *w)
 {
 	struct Data_Formation *f = &Data_Formations[w->formationId];
 	struct Data_Walker *opponent = &Data_Walkers[w->opponentId];
@@ -122,14 +122,14 @@ void hitOpponent(int walkerId, struct Data_Walker *w)
 		Sound_Effects_playChannel(SoundChannel_SwordSwing);
 	}
 	if (f->isHalted && f->walkerType == Walker_FortLegionary &&
-			attackIsSameDirection(w->attackDirection, opponent->attackDirection)) {
+			attackIsSameDirection(w->attackDirection, f->direction)) {
 		walkerAttack += 4;
 	}
 	// defense modifiers
 	if (opponentFormation->isHalted &&
 			(opponentFormation->walkerType == Walker_FortLegionary ||
 			opponentFormation->walkerType == Walker_EnemyCaesarLegionary)) {
-		if (!attackIsSameDirection(w->attackDirection, opponent->attackDirection)) {
+		if (!attackIsSameDirection(opponent->attackDirection, opponentFormation->direction)) {
 			opponentDefense -= 4;
 		} else if (opponentFormation->layout == FormationLayout_Tortoise) {
 			opponentDefense += 7;
