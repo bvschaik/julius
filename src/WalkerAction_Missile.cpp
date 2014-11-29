@@ -63,7 +63,7 @@ void WalkerAction_arrow(int walkerId)
 			Formation_updateAfterDeath(formationId);
 		}
 		w->state = WalkerState_Dead;
-		int arrowFormation = Data_Buildings[w->buildingId].formationId;
+		int arrowFormation = Data_Walkers[w->buildingId].formationId;
 		Data_Formations[formationId].missileAttackTimeout = 6;
 		Data_Formations[formationId].missileAttackFormationId = arrowFormation;
 		Sound_Effects_playChannel(SoundChannel_ArrowHit);
@@ -88,18 +88,18 @@ void WalkerAction_spear(int walkerId)
 		int targetType = Data_Walkers[targetId].type;
 		int formationId = Data_Walkers[targetId].formationId;
 		int maxDamage = Constant_WalkerProperties[targetType].maxDamage;
-		int netDamage =
+		int damageInflicted =
 			Constant_WalkerProperties[w->type].missileAttackValue -
 			Constant_WalkerProperties[targetType].missileDefenseValue;
-		if (netDamage < 0) {
-			netDamage = 0;
+		if (damageInflicted < 0) {
+			damageInflicted = 0;
 		}
 		if (targetType == Walker_FortLegionary &&
 			Data_Formations[formationId].isHalted &&
 			Data_Formations[formationId].layout == FormationLayout_Tortoise) {
-			netDamage = 1;
+			damageInflicted = 1;
 		}
-		int targetDamage = netDamage + Data_Walkers[targetId].damage;
+		int targetDamage = damageInflicted + Data_Walkers[targetId].damage;
 		if (targetDamage <= maxDamage) {
 			Data_Walkers[targetId].damage = targetDamage;
 		} else { // kill target
@@ -109,7 +109,7 @@ void WalkerAction_spear(int walkerId)
 			Walker_playDieSound(targetType);
 			Formation_updateAfterDeath(formationId);
 		}
-		int arrowFormation = Data_Buildings[w->buildingId].formationId;
+		int arrowFormation = Data_Walkers[w->buildingId].formationId;
 		Data_Formations[formationId].missileAttackTimeout = 6;
 		Data_Formations[formationId].missileAttackFormationId = arrowFormation;
 		Sound_Effects_playChannel(SoundChannel_Javelin);
@@ -156,7 +156,7 @@ void WalkerAction_javelin(int walkerId)
 			Walker_playDieSound(targetType);
 			Formation_updateAfterDeath(formationId);
 		}
-		int javelinFormation = Data_Buildings[w->buildingId].formationId;
+		int javelinFormation = Data_Walkers[w->buildingId].formationId;
 		Data_Formations[formationId].missileAttackTimeout = 6;
 		Data_Formations[formationId].missileAttackFormationId = javelinFormation;
 		Sound_Effects_playChannel(SoundChannel_Javelin);

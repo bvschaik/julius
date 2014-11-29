@@ -189,7 +189,7 @@ void Routing_determineLandCitizen()
 			} else if (Data_Grid_terrain[gridOffset] & (Terrain_Building | Terrain_Gatehouse)) {
 				int buildingId = Data_Grid_buildingIds[gridOffset];
 				if (!buildingId) {
-					// shouldn't happen - correct
+					// shouldn't happen
 					Data_Grid_routingLandNonCitizen[gridOffset] = 4; // BUGFIX - should be citizen?
 					Data_Grid_terrain[gridOffset] &= 0xfff7; // remove 8 = building
 					Data_Grid_graphicIds[gridOffset] = (Data_Grid_random[gridOffset] & 7) + GraphicId(ID_Graphic_TerrainGrass1);
@@ -335,7 +335,7 @@ void Routing_determineLandNonCitizen()
 
 void Routing_determineWater()
 {
-	memset(Data_Grid_routingWalls, -1, GRID_SIZE * GRID_SIZE);
+	memset(Data_Grid_routingWater, -1, GRID_SIZE * GRID_SIZE);
 	int gridOffset = Data_Settings_Map.gridStartOffset;
 	for (int y = 0; y < Data_Settings_Map.height; y++, gridOffset += Data_Settings_Map.gridBorderSize) {
 		for (int x = 0; x < Data_Settings_Map.width; x++, gridOffset++) {
@@ -359,7 +359,7 @@ void Routing_determineWater()
 								break;
 						}
 					} else {
-						Data_Grid_routingWater[gridOffset] = -2;
+						Data_Grid_routingWater[gridOffset] = -2; // map edge
 					}
 				} else {
 					Data_Grid_routingWater[gridOffset] = -1;
@@ -371,7 +371,6 @@ void Routing_determineWater()
 	}
 }
 
-#define WALL_GATE 0xc000
 void Routing_determineWalls()
 {
 	memset(Data_Grid_routingWalls, -1, GRID_SIZE * GRID_SIZE);
@@ -382,46 +381,46 @@ void Routing_determineWalls()
 				int adjacent = 0;
 				switch (Data_Settings_Map.orientation) {
 					case Direction_Top:
-						if (Data_Grid_terrain[gridOffset + 162] & WALL_GATE) {
+						if (Data_Grid_terrain[gridOffset + 162] & Terrain_WallOrGatehouse) {
 							adjacent++;
 						}
-						if (Data_Grid_terrain[gridOffset + 163] & WALL_GATE) {
+						if (Data_Grid_terrain[gridOffset + 163] & Terrain_WallOrGatehouse) {
 							adjacent++;
 						}
-						if (Data_Grid_terrain[gridOffset + 1] & WALL_GATE) {
+						if (Data_Grid_terrain[gridOffset + 1] & Terrain_WallOrGatehouse) {
 							adjacent++;
 						}
 						break;
 					case Direction_Right:
-						if (Data_Grid_terrain[gridOffset + 162] & WALL_GATE) {
+						if (Data_Grid_terrain[gridOffset + 162] & Terrain_WallOrGatehouse) {
 							adjacent++;
 						}
-						if (Data_Grid_terrain[gridOffset + 161] & WALL_GATE) {
+						if (Data_Grid_terrain[gridOffset + 161] & Terrain_WallOrGatehouse) {
 							adjacent++;
 						}
-						if (Data_Grid_terrain[gridOffset - 1] & WALL_GATE) {
+						if (Data_Grid_terrain[gridOffset - 1] & Terrain_WallOrGatehouse) {
 							adjacent++;
 						}
 						break;
 					case Direction_Bottom:
-						if (Data_Grid_terrain[gridOffset - 162] & WALL_GATE) {
+						if (Data_Grid_terrain[gridOffset - 162] & Terrain_WallOrGatehouse) {
 							adjacent++;
 						}
-						if (Data_Grid_terrain[gridOffset - 163] & WALL_GATE) {
+						if (Data_Grid_terrain[gridOffset - 163] & Terrain_WallOrGatehouse) {
 							adjacent++;
 						}
-						if (Data_Grid_terrain[gridOffset - 1] & WALL_GATE) {
+						if (Data_Grid_terrain[gridOffset - 1] & Terrain_WallOrGatehouse) {
 							adjacent++;
 						}
 						break;
 					case Direction_Left:
-						if (Data_Grid_terrain[gridOffset - 162] & WALL_GATE) {
+						if (Data_Grid_terrain[gridOffset - 162] & Terrain_WallOrGatehouse) {
 							adjacent++;
 						}
-						if (Data_Grid_terrain[gridOffset - 161] & WALL_GATE) {
+						if (Data_Grid_terrain[gridOffset - 161] & Terrain_WallOrGatehouse) {
 							adjacent++;
 						}
-						if (Data_Grid_terrain[gridOffset + 1] & WALL_GATE) {
+						if (Data_Grid_terrain[gridOffset + 1] & Terrain_WallOrGatehouse) {
 							adjacent++;
 						}
 						break;
@@ -429,7 +428,7 @@ void Routing_determineWalls()
 				if (adjacent == 3) {
 					Data_Grid_routingWalls[gridOffset] = 0;
 				} else {
-					Data_Grid_routingWalls[gridOffset] = 0;
+					Data_Grid_routingWalls[gridOffset] = -1;
 				}
 			} else if (Data_Grid_terrain[gridOffset] & Terrain_Gatehouse) {
 				Data_Grid_routingWalls[gridOffset] = 0;
@@ -502,7 +501,7 @@ static int hasFightingEnemy(int gridOffset)
 	int walkerId = Data_Grid_walkerIds[gridOffset];
 	if (walkerId > 0) {
 		while (walkerId) {
-			if (Data_Walkers[walkerId].isFriendly &&
+			if (!Data_Walkers[walkerId].isFriendly &&
 				Data_Walkers[walkerId].actionState == WalkerActionState_150_Attack) {
 				return 1;
 			}
@@ -616,10 +615,10 @@ int Routing_canPlaceRoadUnderAqueduct(int gridOffset)
 			break;
 		case 1:
 		case 3:
-		case 9:
+		case 9: case 10: case 11: case 12: case 13: case 14:
 		case 16:
 		case 18:
-		case 24:
+		case 24: case 25: case 26: case 27: case 28: case 29:
 			checkRoadY = 0;
 			break;
 		default: // not a straight aqueduct
@@ -724,7 +723,6 @@ static int canPlaceInitialRoadOrAqueduct(int gridOffset, int isAqueduct)
 		return 0;
 	}
 	if (Data_Grid_routingLandCitizen[gridOffset] == -3) {
-		// is aqueduct but ??
 		if (isAqueduct) {
 			return 0;
 		}
@@ -835,7 +833,7 @@ int Routing_placeRoutedBuilding(int xSrc, int ySrc, int xDst, int yDst, RoutedBu
 				break;
 		}
 		int direction = Routing_getGeneralDirection(xDst, yDst, xSrc, ySrc);
-		if (direction == Direction_None) {
+		if (direction == 8) {
 			return 1; // destination reached
 		}
 		int routed = 0;
@@ -898,10 +896,10 @@ int Routing_getDirectionForMissileShooter(int xSrc, int ySrc, int xDst, int yDst
 		percentage = -Calc_getPercentage(dy, dx);
 	}
 	if (xSrc == xDst) {
-		if (ySrc > yDst) {
-			return 0;
-		} else {
+		if (ySrc < yDst) {
 			return 4;
+		} else {
+			return 0;
 		}
 	} else if (xSrc > xDst) {
 		if (ySrc == yDst) {

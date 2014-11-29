@@ -39,6 +39,7 @@ void WalkerAction_militaryStandard(int walkerId)
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	struct Data_Formation *f = &Data_Formations[w->formationId];
 
+	w->terrainUsage = 0;
 	WalkerActionIncreaseGraphicOffset(w, 16);
 	Walker_removeFromTileList(walkerId);
 	if (f->isAtFort) {
@@ -112,14 +113,13 @@ static void legionaryAttackAdjacentEnemy(int walkerId, struct Data_Walker *w)
 static int soldierFindMopUpTarget(int walkerId, struct Data_Walker *w)
 {
 	int targetId = w->targetWalkerId;
-	struct Data_Walker *t = &Data_Walkers[w->targetWalkerId];
-	if (w->state != WalkerState_Alive || w->actionState == WalkerActionState_149_Corpse) {
+	if (WalkerIsDead(targetId)) {
 		targetId = 0;
 	}
 	if (targetId <= 0) {
 		targetId = WalkerAction_CombatSoldier_getTarget(w->x, w->y, 20);
 		if (targetId) {
-			t = &Data_Walkers[w->targetWalkerId];
+			struct Data_Walker *t = &Data_Walkers[w->targetWalkerId];
 			w->destinationX = t->x;
 			w->destinationY = t->y;
 			w->targetWalkerId = targetId;
@@ -129,6 +129,7 @@ static int soldierFindMopUpTarget(int walkerId, struct Data_Walker *w)
 			w->actionState = WalkerActionState_84_SoldierAtStandard;
 			w->graphicOffset = 0;
 		}
+		WalkerRoute_remove(walkerId);
 	}
 	return targetId;
 }
@@ -183,7 +184,7 @@ static void updateSoldierGraphicLegionary(struct Data_Walker *w, struct Data_For
 				8 * ((w->attackGraphicOffset - 12) / 2);
 		}
 	} else if (w->actionState == WalkerActionState_149_Corpse) {
-		w->graphicId = graphicId + 144 +
+		w->graphicId = graphicId + 152 +
 			WalkerActionCorpseGraphicOffset(w);
 	} else if (w->actionState == WalkerActionState_84_SoldierAtStandard) {
 		if (f->isHalted && f->layout == FormationLayout_Tortoise && f->missileAttackTimeout) {

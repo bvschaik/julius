@@ -177,9 +177,7 @@ static int prefectGetNearestEnemy(int x, int y, int *distance)
 			continue;
 		}
 		int dist;
-		if (w->type == Walker_Rioter) {
-			dist = Calc_distanceMaximum(x, y, w->x, w->y);
-		} else if (w->type == Walker_Enemy54_Gladiator) {
+		if (w->type == Walker_Rioter || w->type == Walker_Enemy54_Gladiator) {
 			dist = Calc_distanceMaximum(x, y, w->x, w->y);
 		} else if (w->type == Walker_IndigenousNative && w->actionState == WalkerActionState_159_NativeAttacking) {
 			dist = Calc_distanceMaximum(x, y, w->x, w->y);
@@ -309,9 +307,7 @@ static int prefectTargetIsAlive(struct Data_Walker *w)
 		return 0;
 	}
 	struct Data_Walker *t = &Data_Walkers[w->targetWalkerId];
-	if (t->state == WalkerState_Alive &&
-		t->actionState != WalkerActionState_149_Corpse &&
-		t->createdSequence == w->targetWalkerCreatedSequence) {
+	if (!WalkerIsDead(w->targetWalkerId) && t->createdSequence == w->targetWalkerCreatedSequence) {
 		return 1;
 	}
 	return 0;

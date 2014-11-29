@@ -68,6 +68,11 @@ void WalkerAction_immigrant(int walkerId)
 			w->isGhost = 0;
 			WalkerMovement_walkTicks(walkerId, 1);
 			switch (w->direction) {
+				case 8:
+					w->actionState = WalkerActionState_3_ImmigrantEnteringHouse;
+					WalkerAction_Common_setCrossCountryDestination(walkerId, w, b->x, b->y);
+					w->roamLength = 0;
+					break;
 				case 9:
 					WalkerRoute_remove(walkerId);
 					break;
@@ -76,17 +81,12 @@ void WalkerAction_immigrant(int walkerId)
 					b->distanceFromEntry = 0;
 					w->state = WalkerState_Dead;
 					break;
-				case Direction_None:
-					w->actionState = WalkerActionState_3_ImmigrantEnteringHouse;
-					WalkerAction_Common_setCrossCountryDestination(walkerId, w, b->x, b->y);
-					w->roamLength = 0;
-					break;
 			}
 			break;
 		case WalkerActionState_3_ImmigrantEnteringHouse:
 			w->useCrossCountry = 1;
 			w->isGhost = 1;
-			if (WalkerMovement_crossCountryWalkTicks(walkerId, 1) == 1) { // WalkerMovement_moveTickDirectly?
+			if (WalkerMovement_crossCountryWalkTicks(walkerId, 1) == 1) {
 				w->state = WalkerState_Dead;
 				int maxPeople = Data_Model_Houses[b->subtype.houseLevel].maxPeople;
 				if (b->houseIsMerged) {
@@ -215,7 +215,7 @@ void WalkerAction_homeless(int walkerId)
 			if (w->direction == 9 || w->direction == 10) {
 				Data_Buildings[w->immigrantBuildingId].immigrantWalkerId = 0;
 				w->state = WalkerState_Dead;
-			} else if (w->direction == Direction_None) {
+			} else if (w->direction == 8) {
 				w->actionState = WalkerActionState_9_HomelessEnteringHouse;
 				WalkerAction_Common_setCrossCountryDestination(walkerId, w,
 					Data_Buildings[w->immigrantBuildingId].x,

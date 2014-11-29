@@ -54,10 +54,10 @@ static int determineDestination(int x, int y, int btype1, int btype2)
 	return 0;
 }
 
-static void updateShowsAtDestination(int walkerId)
+static void updateShowsAtDestination(struct Data_Walker *w)
 {
-	struct Data_Building *b = &Data_Buildings[Data_Walkers[walkerId].destinationBuildingId];
-	switch (Data_Walkers[walkerId].type) {
+	struct Data_Building *b = &Data_Buildings[w->destinationBuildingId];
+	switch (w->type) {
 		case Walker_Actor:
 			b->data.entertainment.play++;
 			if (b->data.entertainment.play >= 5) {
@@ -85,12 +85,7 @@ static void updateShowsAtDestination(int walkerId)
 
 static void updateGraphic(int walkerId, struct Data_Walker *w)
 {
-	int dir;
-	if (w->direction < 8) {
-		dir = w->direction;
-	} else {
-		dir = w->previousTileDirection;
-	}
+	int dir = w->direction < 8 ? w->direction : w->previousTileDirection;
 	WalkerActionNormalizeDirection(dir);
 
 	if (w->type == Walker_Charioteer) {
@@ -115,7 +110,15 @@ static void updateGraphic(int walkerId, struct Data_Walker *w)
 			graphicId = GraphicId(ID_Graphic_Walker_LionTamerWhip);
 		}
 		w->cartGraphicId = GraphicId(ID_Graphic_Walker_Lion);
-	} else {
+	} else if (w->type == Walker_Charioteer) {
+		graphicId = GraphicId(ID_Graphic_Walker_Charioteer);
+		w->cartGraphicId = 0;
+		if (w->actionState == WalkerActionState_150_Attack ||
+			w->actionState == WalkerActionState_149_Corpse) {
+			w->graphicId = graphicId + dir;
+		} else {
+			w->graphicId = graphicId + dir + 8 * w->graphicOffset;
+		}
 		return;
 	}
 	if (w->actionState == WalkerActionState_150_Attack) {
@@ -125,7 +128,7 @@ static void updateGraphic(int walkerId, struct Data_Walker *w)
 			w->graphicId = graphicId + dir;
 		}
 	} else if (w->actionState == WalkerActionState_149_Corpse) {
-		w->graphicId = graphicId = 96 + WalkerActionCorpseGraphicOffset(w);
+		w->graphicId = graphicId + 96 + WalkerActionCorpseGraphicOffset(w);
 		w->cartGraphicId = 0;
 	} else {
 		w->graphicId = graphicId + dir + 8 * w->graphicOffset;
@@ -154,6 +157,7 @@ void WalkerAction_entertainer(int walkerId)
 			w->actionState == WalkerActionState_94_EntertainerRoaming ||
 			w->actionState == WalkerActionState_95_EntertainerReturning) {
 			w->type = Walker_Enemy54_Gladiator;
+			WalkerRoute_remove(walkerId);
 			w->roamLength = 0;
 			w->actionState = WalkerActionState_158_NativeCreated;
 			return;
@@ -229,7 +233,7 @@ void WalkerAction_entertainer(int walkerId)
 			}
 			WalkerMovement_walkTicks(walkerId, speedFactor);
 			if (w->direction == 8) {
-				updateShowsAtDestination(walkerId);
+				updateShowsAtDestination(w);
 				w->state = WalkerState_Dead;
 			} else if (w->direction == 9) {
 				WalkerRoute_remove(walkerId);
