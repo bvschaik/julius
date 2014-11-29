@@ -152,32 +152,32 @@ static void addToTerrainHippodrome(int type, int buildingId, int x, int y, int s
 	Terrain_addBuildingToGrids(part3Id, x + 10, y, size, graphicId, Terrain_Building);
 }
 
-static int addToTerrainWarehouseSpace(int x, int y, int size, int prevId)
+static int addToTerrainWarehouseSpace(int x, int y, int prevId)
 {
 	int buildingId = Building_create(Building_WarehouseSpace, x, y);
 	Undo_addBuildingToList(buildingId);
 	Data_Buildings[buildingId].prevPartBuildingId = prevId;
 	Data_Buildings[prevId].nextPartBuildingId = buildingId;
-	Terrain_addBuildingToGrids(buildingId, x, y, size,
+	Terrain_addBuildingToGrids(buildingId, x, y, 1,
 		GraphicId(ID_Graphic_WarehouseStorageEmpty), Terrain_Building);
 	return buildingId;
 }
 
-static void addToTerrainWarehouse(int type, int buildingId, int x, int y, int size)
+static void addToTerrainWarehouse(int type, int buildingId, int x, int y)
 {
 	Data_Buildings[buildingId].storageId = BuildingStorage_create();
 	Data_Buildings[buildingId].prevPartBuildingId = 0;
-	Terrain_addBuildingToGrids(buildingId, x, y, size, GraphicId(ID_Graphic_Warehouse), Terrain_Building);
+	Terrain_addBuildingToGrids(buildingId, x, y, 1, GraphicId(ID_Graphic_Warehouse), Terrain_Building);
 
 	int prev = buildingId;
-	prev = addToTerrainWarehouseSpace(x + 1, y, size, prev);
-	prev = addToTerrainWarehouseSpace(x + 2, y, size, prev);
-	prev = addToTerrainWarehouseSpace(x, y + 1, size, prev);
-	prev = addToTerrainWarehouseSpace(x + 1, y + 1, size, prev);
-	prev = addToTerrainWarehouseSpace(x + 2, y + 1, size, prev);
-	prev = addToTerrainWarehouseSpace(x, y + 2, size, prev);
-	prev = addToTerrainWarehouseSpace(x + 1, y + 2, size, prev);
-	prev = addToTerrainWarehouseSpace(x + 2, y + 2, size, prev);
+	prev = addToTerrainWarehouseSpace(x + 1, y, prev);
+	prev = addToTerrainWarehouseSpace(x + 2, y, prev);
+	prev = addToTerrainWarehouseSpace(x, y + 1, prev);
+	prev = addToTerrainWarehouseSpace(x + 1, y + 1, prev);
+	prev = addToTerrainWarehouseSpace(x + 2, y + 1, prev);
+	prev = addToTerrainWarehouseSpace(x, y + 2, prev);
+	prev = addToTerrainWarehouseSpace(x + 1, y + 2, prev);
+	prev = addToTerrainWarehouseSpace(x + 2, y + 2, prev);
 	Data_Buildings[prev].nextPartBuildingId = 0;
 }
 
@@ -496,7 +496,7 @@ static void addToTerrain(int type, int buildingId, int x, int y, int size,
 			}
 			break;
 		case Building_Warehouse:
-			addToTerrainWarehouse(type, buildingId, x, y, size);
+			addToTerrainWarehouse(type, buildingId, x, y);
 			break;
 		case Building_Hippodrome:
 			addToTerrainHippodrome(type, buildingId, x, y, size);
