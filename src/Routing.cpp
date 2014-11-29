@@ -462,7 +462,7 @@ void Routing_getDistance(int x, int y)
 
 int Routing_getCalculatedDistance(int gridOffset)
 {
-	return tmpGrid[gridOffset];
+	return Data_Grid_routingDistance[gridOffset];
 }
 
 void Routing_deleteClosestWallOrAqueduct(int x, int y)

@@ -1,7 +1,8 @@
 #include "Window.h"
 
-#include "../Widget.h"
 #include "../Graphics.h"
+#include "../System.h"
+#include "../Widget.h"
 
 #include "../Data/Constants.h"
 #include "../Data/Graphics.h"
@@ -97,12 +98,18 @@ void UI_DisplayOptions_handleMouse()
 
 static void buttonFullscreen(int param1, int param2)
 {
-	// TODO
+	System_fullscreen();
+	UI_Window_goTo(Window_City);
 }
 
 static void buttonSetResolution(int id, int param2)
 {
-	// TODO
+	switch (id) {
+		case 1: System_resize(640, 480); break;
+		case 2: System_resize(800, 600); break;
+		case 3: System_resize(1024, 768); break;
+	}
+	UI_Window_goTo(Window_City);
 }
 
 static void buttonCancel(int param1, int param2)

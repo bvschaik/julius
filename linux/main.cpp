@@ -22,6 +22,7 @@
 #include "../src/KeyboardHotkey.h"
 #include "../src/Widget.h" // debug
 #include "../src/Graphics.h" // debug
+#include "../src/System.h"
 
 #include <execinfo.h>
 #include <signal.h>
@@ -33,6 +34,13 @@ static struct {
 	int lastWidth;
 	int lastHeight;
 } Desktop;
+
+enum {
+	UserEventRefresh = 0,
+	UserEventQuit = 1,
+	UserEventResize = 2,
+	UserEventFullscreen = 3
+};
 
 void handler(int sig) {
 	void *array[100];
@@ -68,6 +76,35 @@ void sanityCheck()
 	assert("Storage", 32, sizeof(struct Data_Building_Storage));
 }
 
+void System_exit()
+{
+	SDL_Event event;
+	event.user.type = SDL_USEREVENT;
+	event.user.code = UserEventQuit;
+	SDL_PushEvent(&event);
+}
+
+void System_resize(int width, int height)
+{
+	static int sWidth;
+	static int sHeight;
+	sWidth = width;
+	sHeight = height;
+	SDL_Event event;
+	event.user.type = SDL_USEREVENT;
+	event.user.code = UserEventResize;
+	event.user.data1 = &sWidth;
+	event.user.data2 = &sHeight;
+	SDL_PushEvent(&event);
+}
+
+void System_fullscreen()
+{
+	SDL_Event event;
+	event.user.type = SDL_USEREVENT;
+	event.user.code = UserEventFullscreen;
+	SDL_PushEvent(&event);
+}
 
 /*
 typedef struct{
@@ -86,7 +123,6 @@ Uint32 last;
 
 void refresh(SDL_Surface *surface)
 {
-	static Uint32 last;
 	static Uint32 lastFpsTime = 0;
 	static int lastFps = 0;
 	static int numFrames = 0;
@@ -225,6 +261,7 @@ void mainLoop(SDL_Surface *surface)
 	SDL_Event event;
 	SDL_Event refreshEvent;
 	refreshEvent.user.type = SDL_USEREVENT;
+	refreshEvent.user.code = UserEventRefresh;
 	Data_Mouse.isInsideWindow = 1;
 	
 	refresh(surface);
@@ -308,6 +345,16 @@ void mainLoop(SDL_Surface *surface)
 					return;
 				
 				case SDL_USEREVENT:
+					if (event.user.code == UserEventQuit) {
+						return;
+					} else if (event.user.code == UserEventResize) {
+						printf("User resize to %d x %d\n", *(int*)event.user.data1, *(int*)event.user.data2);
+						surface = createSurface(*(int*)event.user.data1, *(int*)event.user.data2, 0);
+						UI_Window_requestRefresh();
+					} else if (event.user.code == UserEventFullscreen) {
+						surface = createSurface(Desktop.width, Desktop.height, 1);
+						UI_Window_requestRefresh();
+					}
 					break;
 				
 				default:
@@ -340,10 +387,6 @@ int main()
 	
 	printf("SDL initialized.\n");
 	
-	SDL_PixelFormat format;
-	format.palette = 0;
-	format.BitsPerPixel = 32;
-	
 	const SDL_VideoInfo *vidInfo = SDL_GetVideoInfo();
 	printf("Current resolution: %d x %d\n", vidInfo->current_w, vidInfo->current_h);
 	Desktop.width = vidInfo->current_w;
@@ -362,7 +405,9 @@ int main()
 	
 	
 	// C3 setup
-	
+	char cwd[200];
+	getcwd(cwd, 200);
+	printf("current working directory: %s\n", cwd);
 	chdir("../data");
 	Sound_init();
 	
@@ -379,6 +424,7 @@ int main()
 	Data_Settings.difficulty = 3;
 	Data_Settings.gameSpeed = 50;
 	Data_Settings.godsEnabled = 1;
+	Data_Settings.warningsEnabled = 1;
 	// end settings
 	
 	Loader_Graphics_initGraphics();

@@ -13,8 +13,8 @@ struct Data_Scenario Data_Scenario;
 
 struct Data_Event Data_Event = {0};
 
-struct Data_Settings Data_Settings;
-struct Data_Settings_Map Data_Settings_Map;
+struct _Data_Settings Data_Settings;
+struct _Data_Settings_Map Data_Settings_Map;
 
 struct Data_Tutorial Data_Tutorial;
 

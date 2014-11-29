@@ -19,7 +19,7 @@
 	if ((xMax) >= Data_Settings_Map.width) (xMax) = Data_Settings_Map.width - 1;\
 	if ((yMax) >= Data_Settings_Map.height) (yMax) = Data_Settings_Map.height - 1;
 
-extern struct Data_Settings {
+extern struct _Data_Settings {
 	int bpp;
 	int fullscreen;
 	unsigned char gamePaused;
@@ -60,7 +60,7 @@ extern struct Data_Settings {
 	int godsEnabled;
 } Data_Settings;
 
-extern struct Data_Settings_Map {
+extern struct _Data_Settings_Map {
 	int mapsId;
 	struct {
 		int x;
