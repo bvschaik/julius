@@ -4,8 +4,10 @@
 #include "Advisors.h"
 #include "FileDialog.h"
 #include "MessageDialog.h"
+#include "PopupDialog.h"
 #include "../Graphics.h"
 #include "../Scenario.h"
+#include "../System.h"
 #include "../Widget.h"
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
@@ -89,6 +91,18 @@ static int offsetDate;
 static int openSubMenu = 0;
 static int focusMenuId;
 static int focusSubMenuId;
+
+void UI_TopMenu_initFromSettings()
+{
+	if (Data_Settings.mouseTooltips == 1) {
+		menuHelp[1].textNumber = 3;
+	} else if (Data_Settings.mouseTooltips == 2) {
+		menuHelp[1].textNumber = 4;
+	}
+	if (Data_Settings.warningsEnabled) {
+		menuHelp[2].textNumber = 6;
+	}
+}
 
 void UI_TopMenu_drawBackground()
 {
@@ -305,9 +319,18 @@ static void menuFile_deleteGame(int param)
 	UI_FileDialog_show(FileDialogType_Delete);
 }
 
+static void menuFile_confirmExit(int accepted)
+{
+	if (accepted) {
+		System_exit();
+	} else {
+		UI_Window_goTo(Window_City);
+	}
+}
+
 static void menuFile_exitGame(int param)
 {
-	// TODO
+	UI_PopupDialog_show(0, menuFile_confirmExit, 1);
 }
 
 static void menuOptions_display(int param)

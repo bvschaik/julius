@@ -438,7 +438,7 @@ void WalkerAction_nativeTrader(int walkerId)
 			dir + 8 * w->graphicOffset;
 	}
 	w->cartGraphicId = GraphicId(ID_Graphic_Walker_MigrantCart) +
-		8 + 8 * w->resourceId; // TODO should be within else statement?
+		8 + 8 * w->resourceId; // BUGFIX should be within else statement?
 	if (w->cartGraphicId) {
 		w->cartGraphicId += dir;
 		WalkerAction_Common_setCartOffset(walkerId, dir);
@@ -598,7 +598,7 @@ void WalkerAction_tradeShip(int walkerId)
 				w->state = WalkerState_Dead;
 			} else if (w->direction == 9) {
 				WalkerRoute_remove(walkerId);
-			} else {
+			} else if (w->direction == 10) {
 				w->state = WalkerState_Dead;
 			}
 			break;

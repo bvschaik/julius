@@ -78,6 +78,15 @@ void UI_MainMenu_handleMouse()
 		buttons, 4, &focusButtonId);
 }
 
+static void confirmExit(int accepted)
+{
+	if (accepted) {
+		System_exit();
+	} else {
+		UI_Window_goTo(Window_MainMenu);
+	}
+}
+
 static void buttonClick(int param1, int param2)
 {
 	if (param1 == 1) {
@@ -87,6 +96,6 @@ static void buttonClick(int param1, int param2)
 	} else if (param1 == 3) {
 		UI_Window_goTo(Window_CCKSelection);
 	} else if (param1 == 4) {
-		System_exit();
+		UI_PopupDialog_show(0, confirmExit, 1);
 	}
 }

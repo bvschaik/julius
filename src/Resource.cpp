@@ -53,7 +53,7 @@ void Resource_calculateWarehouseStocks()
 		}
 		int warehouseId = Building_getMainBuildingId(i);
 		if (Data_Buildings[warehouseId].hasRoadAccess) {
-			b->hasRoadAccess = b->hasRoadAccess;
+			b->hasRoadAccess = Data_Buildings[warehouseId].hasRoadAccess;
 			if (b->subtype.warehouseResourceId) {
 				int loads = b->loadsStored;
 				int resource = b->subtype.warehouseResourceId;
