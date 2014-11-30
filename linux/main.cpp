@@ -6,16 +6,8 @@
 #include <unistd.h>
 
 #include "../src/UI/Window.h"
-#include "../src/Data/Screen.h"
-#include "../src/Data/Mouse.h"
-#include "../src/Data/CityInfo.h"
-#include "../src/Data/Scenario.h"
-#include "../src/Data/Settings.h"
-#include "../src/Loader.h"
-#include "../src/Language.h"
 #include "../src/Time.h"
 #include "../src/Runner.h"
-#include "../src/Sound.h"
 #include "../src/Screen.h"
 #include "../src/Data/AllData.h"
 #include "../src/KeyboardInput.h"
@@ -23,6 +15,7 @@
 #include "../src/Widget.h" // debug
 #include "../src/Graphics.h" // debug
 #include "../src/System.h"
+#include "../src/Game.h"
 
 #include <execinfo.h>
 #include <signal.h>
@@ -30,16 +23,14 @@
 static struct {
 	int width;
 	int height;
-	int isFullscreen;
-	int lastWidth;
-	int lastHeight;
 } Desktop;
 
 enum {
 	UserEventRefresh = 0,
 	UserEventQuit = 1,
 	UserEventResize = 2,
-	UserEventFullscreen = 3
+	UserEventFullscreen = 3,
+	UserEventWindowed = 4,
 };
 
 void handler(int sig) {
@@ -98,12 +89,16 @@ void System_resize(int width, int height)
 	SDL_PushEvent(&event);
 }
 
-void System_fullscreen()
+void System_toggleFullscreen()
 {
-	SDL_Event event;
-	event.user.type = SDL_USEREVENT;
-	event.user.code = UserEventFullscreen;
-	SDL_PushEvent(&event);
+	if (Data_Settings.fullscreen) {
+		System_resize(Data_Settings.windowedWidth, Data_Settings.windowedHeight);
+	} else {
+		SDL_Event event;
+		event.user.type = SDL_USEREVENT;
+		event.user.code = UserEventFullscreen;
+		SDL_PushEvent(&event);
+	}
 }
 
 /*
@@ -214,10 +209,10 @@ SDL_Surface* createSurface(int width, int height, int fullscreen)
 		flags |= SDL_RESIZABLE;
 	}
 	
-	Desktop.isFullscreen = fullscreen;
+	Data_Settings.fullscreen = fullscreen;
 	if (!fullscreen) {
-		Desktop.lastWidth = width;
-		Desktop.lastHeight = height;
+		Data_Settings.windowedWidth = width;
+		Data_Settings.windowedHeight = height;
 	}
 	SDL_Surface *surface = SDL_SetVideoMode(width, height, 32, flags);
 	if (surface) {
@@ -294,8 +289,8 @@ void mainLoop(SDL_Surface *surface)
 					handleKey(&event.key);
 					printf("Key: %d (%c)\n", event.key.keysym.unicode, event.key.keysym.unicode);
 					if (event.key.keysym.sym == SDLK_F5) {
-						if (Desktop.isFullscreen) {
-							surface = createSurface(Desktop.lastWidth, Desktop.lastHeight, 0);
+						if (Data_Settings.fullscreen) {
+							surface = createSurface(Data_Settings.windowedWidth, Data_Settings.windowedHeight, 0);
 						} else {
 							surface = createSurface(Desktop.width, Desktop.height, 1);
 						}
@@ -399,52 +394,34 @@ int main()
 		printf("VIDEO NOT OK\n");
 	}
 	
-	SDL_Surface *surface = createSurface(1680, 1050, 0);
-	//SDL_Surface *surface = createSurface(800, 600, 0);
-	//SDL_Surface *surface = createSurface(1920, 1200, 1);
-	
-	
 	// C3 setup
 	char cwd[200];
 	getcwd(cwd, 200);
 	printf("current working directory: %s\n", cwd);
 	chdir("../data");
-	Sound_init();
+
+	if (!Game_preInit()) {
+		return 1;
+	}
 	
-	//TODO real settings loading
-	Data_Settings.soundEffectsEnabled = 1;
-	Data_Settings.soundMusicEnabled = 1;
-	Data_Settings.soundSpeechEnabled = 1;
-	Data_Settings.soundCityEnabled = 1;
-	Data_Settings.soundEffectsPercentage = 100;
-	Data_Settings.soundMusicPercentage = 100;
-	Data_Settings.soundSpeechPercentage = 100;
-	Data_Settings.soundCityPercentage = 100;
-	Data_Settings.scrollSpeed = 50;
-	Data_Settings.difficulty = 3;
-	Data_Settings.gameSpeed = 50;
-	Data_Settings.godsEnabled = 1;
-	Data_Settings.warningsEnabled = 1;
-	// end settings
+	SDL_Surface *surface;
+	if (Data_Settings.fullscreen) {
+		surface = createSurface(Desktop.width, Desktop.height, 1);
+	} else {
+		surface = createSurface(Data_Settings.windowedWidth, Data_Settings.windowedHeight, 0);
+	}
 	
-	Loader_Graphics_initGraphics();
-	
-	Loader_GameState_init();
-	
-	printf("Load images: %d\n", Loader_Graphics_loadMainGraphics(2));
-	printf("Load enemies: %d\n", Loader_Graphics_loadEnemyGraphics(0));
-	printf("Load model: %d\n", Loader_Model_loadC3ModelTxt());
-	printf("Load language: %d\n", Language_load("c3.eng", "c3_mm.eng"));
-	UI_Window_goTo(Window_MainMenu);
-	
-	// end C3 setup
-	
+	if (!Game_init()) {
+		return 2;
+	}
+
 	mainLoop(surface);
 	
 	printf("Quiting SDL.\n");
 	
+	Game_exit();
+
 	// Shutdown all subsystems
-	Sound_shutdown();
 	SDL_Quit();
 	
 	printf("Quiting....\n");

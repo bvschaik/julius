@@ -20,7 +20,7 @@ struct Data_Tutorial Data_Tutorial;
 
 struct Data_Message Data_Message;
 
-struct Data_Random Data_Random;
+struct _Data_Random Data_Random;
 
 struct _Data_Empire Data_Empire;
 struct _Data_Empire_Sizes Data_Empire_Sizes = {2000, 1000, 16, 16, 120};
@@ -72,7 +72,7 @@ struct Data_Formation Data_Formations[MAX_FORMATIONS];
 struct _Data_Formation_Extra Data_Formation_Extra;
 struct _Data_Formation_Invasion Data_Formation_Invasion;
 
-struct Data_FileList Data_FileList;
+struct _Data_FileList Data_FileList;
 
 struct Data_Routes Data_Routes;
 

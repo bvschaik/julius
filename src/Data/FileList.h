@@ -3,7 +3,7 @@
 
 #define FILENAME_LENGTH 100
 
-extern struct Data_FileList {
+extern struct _Data_FileList {
 	char files[100][FILENAME_LENGTH];
 	int numFiles;
 

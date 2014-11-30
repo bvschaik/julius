@@ -27,6 +27,8 @@ static void loadDefaults()
 	Data_Settings.soundSpeechPercentage = 100;
 	Data_Settings.soundCityPercentage = 100;
 	Data_Settings.resolutionId = 2;
+	Data_Settings.windowedWidth = 800;
+	Data_Settings.windowedHeight = 600;
 }
 
 void Settings_load()
@@ -35,6 +37,10 @@ void Settings_load()
 	FileSystem_readFileIntoBuffer("c3map.inf", &Data_Settings_Map);
 	FileSystem_readFileIntoBuffer("c3.inf", &Data_Settings);
 	Data_Settings.gamePaused = 0;
+	if (Data_Settings.windowedWidth + Data_Settings.windowedHeight < 500) {
+		Data_Settings.windowedWidth = 800;
+		Data_Settings.windowedHeight = 600;
+	}
 	UI_TopMenu_initFromSettings();
 }
 

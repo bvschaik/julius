@@ -1,8 +1,11 @@
 #include "Language.h"
 
+#include "Data/FileList.h"
 #include "Data/Language.h"
+#include "Data/Settings.h"
 
 #include <stdio.h>
+#include <string.h>
 
 #define TEXT_HEADER_SIZE 28
 #define TEXT_INDEX_ENTRIES 1000
@@ -50,6 +53,14 @@ int Language_load(const char *textfile, const char *msgfile)
 	fclose(fp);
 
 	return 1;
+}
+
+void Language_loadDefaultNames()
+{
+	strcpy(Data_Settings.playerName, Language_getString(9, 5));
+	strcpy(Data_FileList.selectedCity, Language_getString(9, 6));
+	strcpy(Data_FileList.lastLoadedCity, Language_getString(9, 6));
+	strcpy(Data_FileList.selectedScenario, Language_getString(9, 7));
 }
 
 const char *Language_getString(int group, int number)

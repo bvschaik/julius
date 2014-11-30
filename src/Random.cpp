@@ -1,6 +1,12 @@
 #include "Random.h"
 #include "Data/Random.h"
 
+void Random_init()
+{
+	Data_Random.iv1 = 1415935623;
+	Data_Random.iv2 = 1919161955;
+}
+
 void Random_generateNext()
 {
 	Data_Random.pool[Data_Random.poolIndex++] = Data_Random.random1_7bit;

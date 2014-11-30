@@ -98,7 +98,7 @@ void UI_DisplayOptions_handleMouse()
 
 static void buttonFullscreen(int param1, int param2)
 {
-	System_fullscreen();
+	System_toggleFullscreen();
 	UI_Window_goTo(Window_City);
 }
 

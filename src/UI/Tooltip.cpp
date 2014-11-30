@@ -14,7 +14,6 @@
 #include "../Data/Screen.h"
 
 #include <string.h>
-#include <stdio.h>
 
 static void resetTooltip(struct TooltipContext *c);
 static void drawTooltip(struct TooltipContext *c);

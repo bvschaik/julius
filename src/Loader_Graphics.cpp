@@ -8,8 +8,6 @@
 #include "Data/Screen.h"
 #include "Data/Constants.h"
 
-#include <stdio.h> // TODO remove
-
 static const char mainGraphicsSg2[][32] = {
 	"C3.sg2",
 	"C3_North.sg2",
@@ -87,14 +85,14 @@ int Loader_Graphics_initGraphics()
 int Loader_Graphics_loadMainGraphics(int climate)
 {
 	if (climate == currentClimate) {
-		return 0;
+		return 1;
 	}
 
 	const char *filename555 = mainGraphics555[climate];
 	const char *filenameSg2 = mainGraphicsSg2[climate];
 	if (!FileSystem_fileExists(filename555) ||
 		!FileSystem_fileExists(filenameSg2)) {
-		return 2;
+		return 0;
 	}
 	
 	FileSystem_readFileIntoBuffer(filenameSg2, &Data_Graphics_Main);
@@ -102,7 +100,7 @@ int Loader_Graphics_loadMainGraphics(int climate)
 
 	prepareMainGraphics();
 	currentClimate = climate;
-	return 0;
+	return 1;
 }
 
 int Loader_Graphics_loadEnemyGraphics(int enemyId)
@@ -111,14 +109,14 @@ int Loader_Graphics_loadEnemyGraphics(int enemyId)
 	const char *filenameSg2 = enemyGraphicsSg2[enemyId];
 	if (!FileSystem_fileExists(filename555) ||
 		!FileSystem_fileExists(filenameSg2)) {
-		return 2;
+		return 0;
 	}
 
 	FileSystem_readFilePartIntoBuffer(filenameSg2, &Data_Graphics_Enemy, 51264, 20680);
 	FileSystem_readFileIntoBuffer(filename555, Data_Graphics_PixelData.enemy);
 
 	prepareEnemyGraphics();
-	return 0;
+	return 1;
 }
 
 const char *Loader_Graphics_loadExternalImagePixelData(int graphicId)
@@ -242,7 +240,7 @@ static void convertCompressedGraphicToSurfaceFormat(void *data, int lengthInByte
 				bytesToGo -= 2;
 			} else {
 				if (length < 0) {
-					printf("Length negative: %d with %d bytes to go\n", length, bytesToGo);
+					//printf("Length negative: %d with %d bytes to go\n", length, bytesToGo);
 					return;
 				}
 				ptr++;

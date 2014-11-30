@@ -1,7 +1,7 @@
 #ifndef DATA_RANDOM_H
 #define DATA_RANDOM_H
 
-extern struct Data_Random {
+extern struct _Data_Random {
 	unsigned int iv1;
 	unsigned int iv2;
 	int random1_7bit;

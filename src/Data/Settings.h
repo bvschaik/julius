@@ -51,7 +51,8 @@ extern struct _Data_Settings {
 	int soundCityPercentage;
 	int __unused4;
 	int ram;
-	int __unused5[2];
+	int windowedWidth; // addition
+	int windowedHeight; // addition
 	int maxConfirmedResolution;
 	int __unused6;
 	int personalSavingsPerMission[100];
