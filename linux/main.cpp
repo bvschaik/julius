@@ -10,6 +10,7 @@
 #include "../src/Runner.h"
 #include "../src/Screen.h"
 #include "../src/Data/AllData.h"
+#include "../src/Cursor.h"
 #include "../src/KeyboardInput.h"
 #include "../src/KeyboardHotkey.h"
 #include "../src/Widget.h" // debug
@@ -24,6 +25,8 @@ static struct {
 	int width;
 	int height;
 } Desktop;
+
+static SDL_Cursor *Cursors[3];
 
 enum {
 	UserEventRefresh = 0,
@@ -101,6 +104,44 @@ void System_toggleFullscreen()
 	}
 }
 
+void System_setCursor(int cursorId)
+{
+	SDL_SetCursor(Cursors[cursorId]);
+}
+
+static SDL_Cursor *initCursor(const struct Cursor *cursor)
+{
+	Uint8 data[4*32];
+	Uint8 mask[4*32];
+	int b = -1;
+	for (int i = 0; i < 32 * 32; i++) {
+		if (i % 8 ) {
+			data[b] <<= 1;
+			mask[b] <<= 1;
+		} else {
+			b++;
+			data[b] = mask[b] = 0;
+		}
+		switch (cursor->data[i]) {
+			case 'X':
+				data[b] |= 0x01;
+				mask[b] |= 0x01;
+				break;
+			case '.':
+				mask[b] |= 0x01;
+				break;
+		}
+	}
+	return SDL_CreateCursor(data, mask, 32, 32, cursor->hotspotX, cursor->hotspotY);
+}
+
+void System_initCursors()
+{
+	for (int i = 0; i < 3; i++) {
+		Cursors[i] = initCursor(Cursor_getData(i));
+	}
+	System_setCursor(0);
+}
 /*
 typedef struct{
 	SDL_Palette *palette;

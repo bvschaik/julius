@@ -5,6 +5,7 @@
 #include "Random.h"
 #include "Settings.h"
 #include "Sound.h"
+#include "System.h"
 
 #include "UI/Window.h"
 
@@ -31,6 +32,7 @@ int Game_preInit()
 
 int Game_init()
 {
+	System_initCursors();
 	if (!Loader_Graphics_initGraphics()) {
 		log("ERR: unable to load graphics");
 		return 0;

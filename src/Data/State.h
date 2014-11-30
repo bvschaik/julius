@@ -31,7 +31,7 @@ enum {
 	Overlay_Problems = 29
 };
 
-extern struct Data_State {
+extern struct _Data_State {
 	int sidebarCollapsed;
 	int undoReady;
 	int undoAvailable;

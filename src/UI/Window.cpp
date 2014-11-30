@@ -11,6 +11,7 @@
 #include "TopMenu.h"
 #include "Warning.h"
 
+#include "../Cursor.h"
 #include "../KeyboardInput.h"
 #include "../Data/Mouse.h"
 
@@ -124,6 +125,7 @@ static void updateMouseAfter()
 {
 	Data_Mouse.scrollDown = 0;
 	Data_Mouse.scrollUp = 0;
+	Cursor_set();
 }
 
 void UI_Window_refresh(int force)
