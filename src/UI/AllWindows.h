@@ -7,6 +7,7 @@ void UI_MainMenu_drawBackground();
 void UI_MainMenu_drawForeground();
 void UI_MainMenu_handleMouse();
 
+void UI_NewCareerDialog_init();
 void UI_NewCareerDialog_drawBackground();
 void UI_NewCareerDialog_drawForeground();
 void UI_NewCareerDialog_handleMouse();

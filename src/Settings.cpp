@@ -27,14 +27,17 @@ static void loadDefaults()
 	Data_Settings.soundSpeechPercentage = 100;
 	Data_Settings.soundCityPercentage = 100;
 	Data_Settings.resolutionId = 2;
+	Data_Settings.lastAdvisor = 1;
+	// added
 	Data_Settings.windowedWidth = 800;
 	Data_Settings.windowedHeight = 600;
 }
 
 void Settings_load()
 {
-	loadDefaults();
 	FileSystem_readFileIntoBuffer("c3map.inf", &Data_Settings_Map);
+	loadDefaults();
+	Settings_clearMissionSettings();
 	FileSystem_readFileIntoBuffer("c3.inf", &Data_Settings);
 	Data_Settings.gamePaused = 0;
 	if (Data_Settings.windowedWidth + Data_Settings.windowedHeight < 500) {
@@ -58,5 +61,6 @@ void Settings_clearMissionSettings()
 	Data_Settings.startingFavor = Data_Model_Difficulty.startingFavor[Data_Settings.difficulty];
 	Data_Settings.personalSavingsLastMission = 0;
 	Data_Settings.currentMissionId = 0;
+	Data_Settings.isCustomScenario = 0;
 	Data_Settings.saveGameMissionId = 0;
 }

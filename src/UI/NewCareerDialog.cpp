@@ -3,6 +3,7 @@
 #include "../Widget.h"
 #include "../Graphics.h"
 #include "../KeyboardInput.h"
+#include "../Settings.h"
 
 #include "../Data/Constants.h"
 #include "../Data/KeyboardInput.h"
@@ -15,6 +16,11 @@ static void startMission(int param1, int param2);
 static ImageButton imageButtonStartMission = {
 	0, 0, 27, 27, 4, 92, 56, startMission, Widget_Button_doNothing, 1, 0, 0, 0, 1, 0
 };
+
+void UI_NewCareerDialog_init()
+{
+	Settings_clearMissionSettings();
+}
 
 void UI_NewCareerDialog_drawBackground()
 {
