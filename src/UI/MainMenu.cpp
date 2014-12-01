@@ -96,6 +96,6 @@ static void buttonClick(int param1, int param2)
 	} else if (param1 == 3) {
 		UI_Window_goTo(Window_CCKSelection);
 	} else if (param1 == 4) {
-		UI_PopupDialog_show(0, confirmExit, 1);
+		UI_PopupDialog_show(PopupDialog_Quit, confirmExit, 1);
 	}
 }

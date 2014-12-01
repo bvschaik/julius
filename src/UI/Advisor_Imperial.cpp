@@ -93,7 +93,7 @@ void UI_Advisor_Imperial_drawBackground(int *advisorHeight)
 			
 			width = Widget_GameText_drawNumberWithDescription(8, 4, Data_Scenario.requests_monthsToComply[i],
 				baseOffsetX + 310, baseOffsetY + 102 + 42 * numRequests, Font_NormalWhite);
-			Widget_GameText_draw(12, 3, baseOffsetX + 310 + width, baseOffsetY + 102 + 42 * numRequests, Font_NormalWhite);
+			Widget_GameText_draw(12, 2, baseOffsetX + 310 + width, baseOffsetY + 102 + 42 * numRequests, Font_NormalWhite);
 
 			if (Data_Scenario.requests.resourceId[i] == Resource_Denarii) {
 				// request for money
@@ -144,7 +144,7 @@ void UI_Advisor_Imperial_drawForeground()
 	int width = Widget_GameText_draw(52, 1,
 		baseOffsetX + 72, baseOffsetY + 372, Font_NormalWhite);
 	Widget_Text_drawNumber(Data_CityInfo.personalSavings, '@', " Dn",
-		baseOffsetX + 72 + width, baseOffsetY + 372, Font_NormalWhite);
+		baseOffsetX + 80 + width, baseOffsetY + 372, Font_NormalWhite);
 
 	Widget_Panel_drawButtonBorder(baseOffsetX + 320, baseOffsetY + 367,
 		250, 20, focusButtonId == 1);
@@ -258,14 +258,14 @@ static void buttonRequest(int index, int param2)
 				UI_PopupDialog_show(PopupDialog_NoLegionsSelected, confirmNothing, 0);
 				break;
 			case -2:
-				UI_PopupDialog_show(PopupDialog_RequestSendTroops, confirmSendTroops, 0);
+				UI_PopupDialog_show(PopupDialog_RequestSendTroops, confirmSendTroops, 2);
 				break;
 			case -1:
 				UI_PopupDialog_show(PopupDialog_RequestNotEnoughGoods, confirmNothing, 0);
 				break;
 			default:
-				selectedRequestId = status;
-				UI_PopupDialog_show(PopupDialog_RequestSendGoods, confirmSendGoods, 0);
+				selectedRequestId = status - 1;
+				UI_PopupDialog_show(PopupDialog_RequestSendGoods, confirmSendGoods, 2);
 				break;
 		}
 	}

@@ -873,9 +873,9 @@ static void clearRegion(int measureOnly, int xStart, int yStart, int xEnd, int y
 	confirm.xEnd = xEnd;
 	confirm.yEnd = yEnd;
 	if (askConfirmFort) {
-		UI_PopupDialog_show(14, confirmDeleteFort, 2);
+		UI_PopupDialog_show(PopupDialog_DeleteFort, confirmDeleteFort, 2);
 	} else if (askConfirmBridge) {
-		UI_PopupDialog_show(18, confirmDeleteBridge, 2);
+		UI_PopupDialog_show(PopupDialog_DeleteBridge, confirmDeleteBridge, 2);
 	} else {
 		clearRegionConfirmed(measureOnly, xStart, yStart, xEnd, yEnd);
 	}

@@ -330,7 +330,7 @@ static void menuFile_confirmExit(int accepted)
 
 static void menuFile_exitGame(int param)
 {
-	UI_PopupDialog_show(0, menuFile_confirmExit, 1);
+	UI_PopupDialog_show(PopupDialog_Quit, menuFile_confirmExit, 1);
 }
 
 static void menuOptions_display(int param)

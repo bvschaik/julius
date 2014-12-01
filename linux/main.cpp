@@ -324,7 +324,7 @@ void mainLoop(SDL_Surface *surface)
 					break;
 				
 				case SDL_KEYDOWN:
-					if (event.key.keysym.sym == SDLK_q || event.key.keysym.sym == SDLK_ESCAPE) {
+					if (event.key.keysym.sym == SDLK_ESCAPE) {
 						return;
 					}
 					handleKey(&event.key);
