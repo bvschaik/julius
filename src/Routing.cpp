@@ -454,7 +454,7 @@ void Routing_getDistance(int x, int y)
 	int sourceOffset = GridOffset(x, y);
 	ROUTE_QUEUE(sourceOffset, -1,
 	{
-		if (Data_Grid_routingLandCitizen >= 0) {
+		if (Data_Grid_routingLandCitizen[nextOffset] >= 0) {
 			SET_DIST_AND_ENQUEUE();
 		}
 	});

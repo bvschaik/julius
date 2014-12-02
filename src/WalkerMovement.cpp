@@ -84,8 +84,8 @@ static void setTargetHeightBridge(struct Data_Walker *w)
 		// ship bridge
 		switch (Data_Grid_spriteOffsets[w->gridOffset]) {
 			case 7: case 8: case 9: case 10: w->targetHeight = 14; break;
-			case 13: w->targetHeight = 30;
-			default: w->targetHeight = 36;
+			case 13: w->targetHeight = 30; break;
+			default: w->targetHeight = 36; break;
 		}
 	}
 }

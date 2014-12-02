@@ -198,7 +198,7 @@ static int markRoadNetwork(int gridOffset, unsigned char roadNetworkId)
 		if (++guard >= GRID_SIZE * GRID_SIZE) {
 			break;
 		}
-		Data_Grid_roadNetworks[roadNetworkId] = roadNetworkId;
+		Data_Grid_roadNetworks[gridOffset] = roadNetworkId;
 		nextOffset = -1;
 		for (int i = 0; i < 4; i++) {
 			int newOffset = gridOffset + adjacentOffsets[i];

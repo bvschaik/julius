@@ -2,8 +2,8 @@
 #define DATA_TRADE_H
 
 struct Data_TradePrice {
-	short buy;
-	short sell;
+	int buy;
+	int sell;
 };
 
 extern struct Data_TradePrice Data_TradePrices[16];
