@@ -125,7 +125,7 @@ void UI_Advisor_Education_drawBackground(int *advisorHeight)
 		} else if (!Data_CityInfo.housesRequiringLibrary) {
 			if (coverageSchool >= 100 && coverageAcademy >= 100) {
 				adviceId = 6; // education is perfect
-			} else if (coverageSchool < coverageAcademy) {
+			} else if (coverageSchool <= coverageAcademy) {
 				adviceId = 7; // build more schools
 			} else {
 				adviceId = 8; // build more academies
@@ -138,8 +138,10 @@ void UI_Advisor_Education_drawBackground(int *advisorHeight)
 				adviceId = 7; // build more schools
 			} else if (coverageAcademy <= coverageSchool && coverageAcademy <= coverageLibrary) {
 				adviceId = 8; // build more academies
-			} else {
+			} else if (coverageLibrary <= coverageSchool && coverageLibrary <= coverageAcademy) {
 				adviceId = 9; // build more libraries
+			} else {
+				adviceId = 6; // unlikely event that all coverages are equal
 			}
 		}
 	}

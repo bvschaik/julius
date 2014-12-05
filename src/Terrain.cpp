@@ -980,6 +980,11 @@ void Terrain_initDistanceRing()
 				ringTiles[index].x = x;
 				ringTiles[index].y = y;
 			}
+			// exception (bug in game): size 4 distance 2, left corner is off by x+1, y-1
+			if (s == 4 && d == 2) {
+				ringTiles[index-1].x += 1;
+				ringTiles[index-1].y -= 1;
+			}
 			// left row up
 			for (x = -d, y = s + d - 2; y >= -d; y--, index++) {
 				ringTiles[index].x = x;

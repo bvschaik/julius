@@ -18,8 +18,8 @@
 
 extern const int walkerActionCorpseGraphicOffsets[128];
 extern const int walkerActionMissileLauncherGraphicOffsets[128];
-extern const int walkerActionFormationLayoutPositionX[9][16];
-extern const int walkerActionFormationLayoutPositionY[9][16];
+extern const int walkerActionFormationLayoutPositionX[13][16];
+extern const int walkerActionFormationLayoutPositionY[13][16];
 
 #include "WalkerAction.h"
 #include "WalkerMovement.h"

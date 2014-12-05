@@ -116,7 +116,7 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{1, &Data_Formations, 6400},
 	{0, &Data_Formation_Extra.idLastInUse, 4},
 	{0, &Data_Formation_Extra.idLastLegion, 4},
-	{0, &Data_Formation_Extra.numLegions, 4},
+	{0, &Data_Formation_Extra.numForts, 4},
 	{1, &Data_CityInfo, 36136},
 	{0, &tmp, 2}, //{0, &byte_658DCC, 2}, cityinfo related, unused
 	{0, &playerNames, 64},
@@ -464,13 +464,13 @@ static void debug()
 		}
 	}
 	*/
-	/*for (int i = 1; i < MAX_WALKERS; i++) {
+	for (int i = 1; i < MAX_WALKERS; i++) {
 		struct Data_Walker *w = &Data_Walkers[i];
-		if (!w->isFriendly && w->state == WalkerState_Alive) {
-			printf("Enemy %d type %d as %d wt %d mt %d\n",
+		if (w->state == WalkerState_Alive) {
+			printf("Walker %d type %d as %d wt %d mt %d\n",
 				i, w->type, w->actionState, w->waitTicks, w->waitTicksMissile);
 		}
-	}*/
+	}
 }
 
 static void setupFromSavedGame()

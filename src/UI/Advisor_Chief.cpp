@@ -13,7 +13,7 @@ void UI_Advisor_Chief_drawBackground(int *advisorHeight)
 	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
 	Graphics_drawImage(GraphicId(ID_Graphic_AdvisorIcons) + 11, baseOffsetX + 10, baseOffsetY + 10);
 
-	Widget_GameText_draw(61, 0, baseOffsetX + 60, baseOffsetY + 10, Font_LargeBlack);
+	Widget_GameText_draw(61, 0, baseOffsetX + 60, baseOffsetY + 12, Font_LargeBlack);
 	Widget_Panel_drawInnerPanel(baseOffsetX + 32, baseOffsetY + 60, 36, 16);
 
 	// workers
@@ -39,7 +39,7 @@ void UI_Advisor_Chief_drawBackground(int *advisorHeight)
 		Widget_Text_drawNumber(Data_CityInfo.treasury - Data_CityInfo.financeBalanceLastYear, '@', "Dn",
 			baseOffsetX + 240 + width, baseOffsetY + 86, Font_NormalGreen);
 	} else if (Data_CityInfo.treasury < Data_CityInfo.financeBalanceLastYear) {
-		width = Widget_GameText_draw(61, 15, baseOffsetX + 240, baseOffsetY + 86, Font_NormalRed);
+		width = Widget_GameText_draw(61, 16, baseOffsetX + 240, baseOffsetY + 86, Font_NormalRed);
 		Widget_Text_drawNumber(Data_CityInfo.financeBalanceLastYear - Data_CityInfo.treasury, '@', "Dn",
 			baseOffsetX + 240 + width, baseOffsetY + 86, Font_NormalRed);
 	} else {
@@ -48,7 +48,7 @@ void UI_Advisor_Chief_drawBackground(int *advisorHeight)
 
 	// migration
 	Graphics_drawImage(GraphicId(ID_Graphic_Bullet), baseOffsetX + 40, baseOffsetY + 107);
-	Widget_GameText_draw(61, 3, baseOffsetX + 60, baseOffsetY + 106, Font_NormalWhite);
+	Widget_GameText_draw(61, 3, baseOffsetX + 60, baseOffsetY + 106, Font_NormalGreen);
 	if (Data_CityInfo.numEnemiesInCity + Data_CityInfo.numImperialSoldiersInCity > 3) {
 		Widget_GameText_draw(61, 79, baseOffsetX + 240, baseOffsetY + 106, Font_NormalGreen);
 	} else if (Data_CityInfo.populationNewcomersThisMonth >= 5) {
@@ -124,7 +124,7 @@ void UI_Advisor_Chief_drawBackground(int *advisorHeight)
 		Widget_GameText_draw(61, 78, baseOffsetX + 240, baseOffsetY + 166, Font_NormalGreen);
 	} else if (Data_CityInfo.distantBattleMonthsToBattle > 0) {
 		Widget_GameText_draw(61, 77, baseOffsetX + 240, baseOffsetY + 166, Font_NormalRed);
-	} else if (Data_CityInfo.numSoldiersInCity >= 0) { // BUGFIX? " > 0 s"? currently always true)
+	} else if (Data_CityInfo.numSoldiersInCity >= 0) { // BUGFIX? should be >0? >=0 is always true)
 		Widget_GameText_draw(61, 73, baseOffsetX + 240, baseOffsetY + 166, Font_NormalGreen);
 	} else {
 		Widget_GameText_draw(61, 72, baseOffsetX + 240, baseOffsetY + 166, Font_NormalGreen);

@@ -82,8 +82,6 @@ static void confirmExit(int accepted)
 {
 	if (accepted) {
 		System_exit();
-	} else {
-		UI_Window_goTo(Window_MainMenu);
 	}
 }
 

@@ -83,7 +83,7 @@ extern struct Data_Formation Data_Formations[MAX_FORMATIONS];
 extern struct _Data_Formation_Extra {
 	int idLastInUse;
 	int idLastLegion;
-	int numLegions;
+	int numForts;
 	int numEnemyFormations;
 	int numEnemySoldierStrength;
 	int numLegionFormations;

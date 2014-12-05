@@ -1,9 +1,11 @@
 #include "KeyboardHotkey.h"
 
 #include "CityView.h"
+#include "System.h"
 
 #include "UI/Advisors.h"
 #include "UI/AllWindows.h"
+#include "UI/PopupDialog.h"
 #include "UI/Warning.h"
 #include "UI/Window.h"
 
@@ -196,5 +198,17 @@ void KeyboardHotkey_up()
 void KeyboardHotkey_down()
 {
 	Data_State.arrowKey.down = 1;
+}
+
+static void confirmExit(int accepted)
+{
+	if (accepted) {
+		System_exit();
+	}
+}
+
+void KeyboardHotkey_esc()
+{
+	UI_PopupDialog_show(PopupDialog_Quit, confirmExit, 1);
 }
 

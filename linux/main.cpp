@@ -232,6 +232,9 @@ void handleKey(SDL_KeyboardEvent *event)
 		case SDLK_END:
 			KeyboardInput_end();
 			break;
+		case SDLK_ESCAPE:
+			KeyboardHotkey_esc();
+			break;
 		default:
 			if (event->keysym.unicode) {
 				KeyboardInput_character(event->keysym.unicode);
@@ -324,9 +327,6 @@ void mainLoop(SDL_Surface *surface)
 					break;
 				
 				case SDL_KEYDOWN:
-					if (event.key.keysym.sym == SDLK_ESCAPE) {
-						return;
-					}
 					handleKey(&event.key);
 					printf("Key: %d (%c)\n", event.key.keysym.unicode, event.key.keysym.unicode);
 					if (event.key.keysym.sym == SDLK_F5) {

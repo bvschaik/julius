@@ -29,7 +29,7 @@ void Formation_clearList()
 	}
 	Data_Formation_Extra.idLastInUse = 0;
 	Data_Formation_Extra.idLastLegion = 0;
-	Data_Formation_Extra.numLegions = 0;
+	Data_Formation_Extra.numForts = 0;
 }
 
 void Formation_clearInvasionInfo()
@@ -82,7 +82,7 @@ int Formation_createLegion(int buildingId)
 	Data_Walkers[standardId].formationId = formationId;
 	f->standardWalkerId = standardId;
 	
-	Data_Formation_Extra.numLegions++;
+	Data_Formation_Extra.numForts++;
 	if (formationId > Data_Formation_Extra.idLastInUse) {
 		Data_Formation_Extra.idLastInUse = formationId;
 	}
@@ -264,14 +264,14 @@ void Formation_legionReturnHome(int formationId)
 void Formation_calculateLegionTotals()
 {
 	Data_Formation_Extra.idLastLegion = 0;
-	Data_Formation_Extra.numLegions = 0;
+	Data_Formation_Extra.numForts = 0;
 	Data_CityInfo.militaryLegionaryLegions = 0;
 	for (int i = 1; i < MAX_FORMATIONS; i++) {
 		struct Data_Formation *f = &Data_Formations[i];
 		if (f->inUse == 1) {
 			if (f->isLegion) {
 				Data_Formation_Extra.idLastLegion = i;
-				Data_Formation_Extra.numLegions++;
+				Data_Formation_Extra.numForts++;
 				if (f->walkerType == Walker_FortLegionary) {
 					Data_CityInfo.militaryLegionaryLegions++;
 				}
@@ -388,7 +388,7 @@ void Formation_calculateWalkers()
 	}
 	Data_Formation_Extra.numEnemyFormations = 0;
 	Data_Formation_Extra.numEnemySoldierStrength = 0;
-	Data_Formation_Extra.numLegions = 0;
+	Data_Formation_Extra.numLegionFormations = 0;
 	Data_Formation_Extra.numLegionSoldierStrength = 0;
 	for (int i = 1; i < MAX_FORMATIONS; i++) {
 		struct Data_Formation *f = &Data_Formations[i];

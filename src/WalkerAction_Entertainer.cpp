@@ -249,7 +249,7 @@ void WalkerAction_entertainer(int walkerId)
 				if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
 					w->actionState = WalkerActionState_95_EntertainerReturning;
 					w->destinationX = xRoad;
-					w->destinationX = yRoad;
+					w->destinationY = yRoad;
 				} else {
 					w->state = WalkerState_Dead;
 				}

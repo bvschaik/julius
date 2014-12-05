@@ -7,5 +7,6 @@ void KeyboardHotkey_left();
 void KeyboardHotkey_right();
 void KeyboardHotkey_up();
 void KeyboardHotkey_down();
+void KeyboardHotkey_esc();
 
 #endif

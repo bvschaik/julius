@@ -330,6 +330,7 @@ static void menuFile_confirmExit(int accepted)
 
 static void menuFile_exitGame(int param)
 {
+	clearState();
 	UI_PopupDialog_show(PopupDialog_Quit, menuFile_confirmExit, 1);
 }
 

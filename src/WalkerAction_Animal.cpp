@@ -10,9 +10,6 @@
 static const int seagullOffsetsX[] = {0, 0, -2, 1, 2, -3, 4, -1};
 static const int seagullOffsetsY[] = {0, -2, 0, 2, 0, 1, -3, 4};
 
-static const int herdOffsetsX[] = {0, 2, -1, 1, 1, -1, 3, -2, 0, -4, -1, 0, 1, 4, 2, -5};
-static const int herdOffsetsY[] = {0, 1, -1, 1, 0, 1, 1, -1, 2, 0, 3, 5, 4, 0, 3, 2};
-
 static const int hippodromeHorseDestinationX1[] = {
 	2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2
 };
@@ -83,8 +80,8 @@ void WalkerAction_sheep(int walkerId)
 			if (w->waitTicks > 400) {
 				w->waitTicks = walkerId & 0x1f;
 				w->actionState = WalkerActionState_197_HerdAnimalMoving;
-				w->destinationX = f->destinationX + herdOffsetsX[w->indexInFormation];
-				w->destinationY = f->destinationY + herdOffsetsY[w->indexInFormation];
+				w->destinationX = f->destinationX + WalkerActionFormationLayoutPositionX(FormationLayout_Herd, w->indexInFormation);
+				w->destinationY = f->destinationY + WalkerActionFormationLayoutPositionY(FormationLayout_Herd, w->indexInFormation);
 				w->roamLength = 0;
 			}
 			break;
@@ -137,8 +134,8 @@ void WalkerAction_wolf(int walkerId)
 			if (w->waitTicks > 400) {
 				w->waitTicks = walkerId & 0x1f;
 				w->actionState = WalkerActionState_197_HerdAnimalMoving;
-				w->destinationX = f->destinationX + herdOffsetsX[w->indexInFormation];
-				w->destinationY = f->destinationY + herdOffsetsY[w->indexInFormation];
+				w->destinationX = f->destinationX + WalkerActionFormationLayoutPositionX(FormationLayout_Herd, w->indexInFormation);
+				w->destinationY = f->destinationY + WalkerActionFormationLayoutPositionY(FormationLayout_Herd, w->indexInFormation);
 				w->roamLength = 0;
 			}
 			break;
@@ -213,8 +210,8 @@ void WalkerAction_zebra(int walkerId)
 			if (w->waitTicks > 200) {
 				w->waitTicks = walkerId & 0x1f;
 				w->actionState = WalkerActionState_197_HerdAnimalMoving;
-				w->destinationX = f->destinationX + herdOffsetsX[w->indexInFormation];
-				w->destinationY = f->destinationY + herdOffsetsY[w->indexInFormation];
+				w->destinationX = f->destinationX + WalkerActionFormationLayoutPositionX(FormationLayout_Herd, w->indexInFormation);
+				w->destinationY = f->destinationY + WalkerActionFormationLayoutPositionY(FormationLayout_Herd, w->indexInFormation);
 				w->roamLength = 0;
 			}
 			break;

@@ -27,7 +27,7 @@ void UI_Advisor_Entertainment_drawBackground(int *advisorHeight)
 
 	*advisorHeight = 23;
 	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
-	Graphics_drawImage(GraphicId(ID_Graphic_AdvisorIcons) + Advisor_Entertainment - 1,
+	Graphics_drawImage(GraphicId(ID_Graphic_AdvisorIcons) + 8,
 		baseOffsetX + 10, baseOffsetY + 10);
 
 	Widget_GameText_draw(58, 0, baseOffsetX + 60, baseOffsetY + 12, Font_LargeBlack);
@@ -37,7 +37,6 @@ void UI_Advisor_Entertainment_drawBackground(int *advisorHeight)
 	Widget_GameText_draw(58, 3, baseOffsetX + 340, baseOffsetY + 46, Font_SmallPlain);
 	Widget_GameText_draw(58, 4, baseOffsetX + 480, baseOffsetY + 46, Font_SmallPlain);
 
-	int width;
 	Widget_Panel_drawInnerPanel(baseOffsetX + 32, baseOffsetY + 60, 36, 5);
 
 	// theaters
@@ -50,7 +49,7 @@ void UI_Advisor_Entertainment_drawBackground(int *advisorHeight)
 	Widget_Text_drawNumberCentered(Data_CityInfo.entertainmentTheaterShows, '@', " ",
 		baseOffsetX + 230, baseOffsetY + 64, 100, Font_NormalWhite
 	);
-	width = Widget_Text_drawNumber(500 * Data_CityInfo_Buildings.theater.working, '@', " ",
+	int width = Widget_Text_drawNumber(500 * Data_CityInfo_Buildings.theater.working, '@', " ",
 		baseOffsetX + 340, baseOffsetY + 64, Font_NormalWhite
 	);
 	Widget_GameText_draw(58, 5, baseOffsetX + 340 + width, baseOffsetY + 64, Font_NormalWhite);

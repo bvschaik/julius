@@ -8,7 +8,7 @@
 #include "Data/Settings.h"
 #include "Data/State.h"
 
-#define SCROLL_BORDER 10
+#define SCROLL_BORDER 5
 
 static TimeMillis lastScrollTime = 0;
 

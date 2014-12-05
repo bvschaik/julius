@@ -32,13 +32,13 @@ void UI_Advisor_Financial_drawBackground(int *advisorHeight)
 	int width;
 	if (Data_CityInfo.treasury < 0) {
 		width = Widget_GameText_draw(60, 3, baseOffsetX + 70, baseOffsetY + 53, Font_NormalRed);
-		Widget_GameText_drawNumberWithDescription(
-			8, 0, -Data_CityInfo.treasury, baseOffsetX + 72 + width, baseOffsetY + 53, Font_NormalRed
+		Widget_GameText_drawNumberWithDescription(8, 0,
+			-Data_CityInfo.treasury, baseOffsetX + 72 + width, baseOffsetY + 53, Font_NormalRed
 		);
 	} else {
 		width = Widget_GameText_draw(60, 2, baseOffsetX + 70, baseOffsetY + 53, Font_NormalWhite);
 		Widget_GameText_drawNumberWithDescription(8, 0,
-			Data_CityInfo.treasury, baseOffsetX + 70 + width, baseOffsetY + 53, Font_NormalWhite
+			Data_CityInfo.treasury, baseOffsetX + 72 + width, baseOffsetY + 53, Font_NormalWhite
 		);
 	}
 

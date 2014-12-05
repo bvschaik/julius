@@ -34,7 +34,7 @@ void UI_Advisor_Health_drawBackground(int *advisorHeight)
 		baseOffsetX + 40, baseOffsetY + 112, Font_NormalGreen
 	);
 	Widget_Text_drawNumberCentered(
-		Data_CityInfo_Buildings.bathhouse.total, '@', " ",
+		Data_CityInfo_Buildings.bathhouse.working, '@', " ",
 		baseOffsetX + 150, baseOffsetY + 112, 100, Font_NormalGreen
 	);
 	Widget_GameText_draw(56, 2, baseOffsetX + 300, baseOffsetY + 112, Font_NormalGreen);
@@ -96,7 +96,6 @@ void UI_Advisor_Health_drawBackground(int *advisorHeight)
 	}
 
 	int adviceId;
-
 	switch (Data_CityInfo.healthDemand) {
 		case 1:
 			adviceId = Data_CityInfo.housesRequiringBathhouse ? 1 : 0;

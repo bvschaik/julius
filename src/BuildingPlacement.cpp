@@ -616,7 +616,7 @@ static int placeBuilding(int type, int x, int y)
 			UI_Warning_show(Warning_ClearLandNeeded);
 			return 0;
 		}
-		if (Data_Formation_Extra.numLegions >= 6) {
+		if (Data_Formation_Extra.numForts >= 6) {
 			UI_Warning_show(Warning_MaxLegionsReached);
 			return 0;
 		}
@@ -1168,7 +1168,7 @@ void BuildingPlacement_update(int xStart, int yStart, int xEnd, int yEnd, int ty
 	} else if (type == Building_Warehouse) {
 		Terrain_updateToPlaceBuildingToOverlay(3, xEnd, yEnd, Terrain_All, 0);
 	} else if (type == Building_FortLegionaries || type == Building_FortJavelin || type == Building_FortMounted) {
-		if (Data_Formation_Extra.numLegions < 6) {
+		if (Data_Formation_Extra.numForts < 6) {
 			int offsetsX[] = {3, 4, 4, 3};
 			int offsetsY[] = {-1, -1, 0, 0};
 			int orientIndex = Data_Settings_Map.orientation / 2;
