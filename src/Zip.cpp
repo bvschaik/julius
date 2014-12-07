@@ -47,6 +47,7 @@ struct PKCompBuffer {
 
 	unsigned short analyzeOffsetTable[2304];
 	unsigned short analyzeIndex[8708];
+	signed short longMatcher[518];
 
 	unsigned short codewordValues[774];
 	unsigned char codewordBits[774];
@@ -397,47 +398,150 @@ static void pk_implodeData(struct PKCompBuffer *buf)
 
 static void pk_implodeDetermineCopy(struct PKCompBuffer *buf, int inputIndex, struct PKCopyLengthOffset *copy)
 {
-	int hashValue = 4 * buf->inputData[inputIndex] + 5 * buf->inputData[inputIndex + 1];
-	int minInputIndex = inputIndex - buf->dictionarySize + 1;
-	
-	int analyzeOffset = buf->analyzeOffsetTable[hashValue];
-	while (buf->analyzeIndex[analyzeOffset] < minInputIndex) {
-		analyzeOffset++;
+	unsigned char *inputPtr = &buf->inputData[inputIndex];
+	int hashValue = 4 * inputPtr[0] + 5 * inputPtr[1];
+	unsigned short *analyzeOffsetPtr = &buf->analyzeOffsetTable[hashValue];
+	int hashAnalyzeIndex = *analyzeOffsetPtr;
+	int minMatchIndex = inputIndex - buf->dictionarySize + 1;
+	unsigned short *analyzeIndexPtr = &buf->analyzeIndex[hashAnalyzeIndex];
+	if (*analyzeIndexPtr < minMatchIndex) {
+		do {
+			analyzeIndexPtr++;
+			hashAnalyzeIndex++;
+		} while (*analyzeIndexPtr < minMatchIndex);
+		*analyzeOffsetPtr = hashAnalyzeIndex;
 	}
-	buf->analyzeOffsetTable[hashValue] = analyzeOffset;
-
-	if (buf->analyzeIndex[analyzeOffset] >= inputIndex - 1) {
+	
+	int maxMatchedBytes = 1;
+	unsigned char *prevInputPtr = inputPtr - 1;
+	unsigned short *hashAnalyzeIndexPtr = &buf->analyzeIndex[hashAnalyzeIndex];
+	unsigned char *startMatch = &buf->inputData[*hashAnalyzeIndexPtr];
+	if (prevInputPtr <= startMatch) {
 		copy->length = 0;
 		return;
 	}
-
-
-	int maxMatchedBytes = 1;
-	unsigned char *inputPtr = &buf->inputData[inputIndex];
-	for (; buf->analyzeIndex[analyzeOffset] < inputIndex - 1; analyzeOffset++) {
-		int matchIndex = buf->analyzeIndex[analyzeOffset];
-		unsigned char *matchPtr = &buf->inputData[matchIndex];
-		// Check first character (one char is enough to verify byte 1 and 2 [hash])
-		// Then check character at last position from longest match to quickly disregard shorter matches
-		if (matchPtr[0] != inputPtr[0] || matchPtr[maxMatchedBytes - 1] != inputPtr[maxMatchedBytes - 1]) {
-			continue;
+	unsigned char *inputPtrCopy = inputPtr;
+	while (1) {
+		if (startMatch[maxMatchedBytes - 1] == inputPtrCopy[maxMatchedBytes - 1] && *startMatch == *inputPtrCopy) {
+			unsigned char *startMatchPlusOne = startMatch + 1;
+			unsigned char *inputPtrCopyPlusOne = inputPtrCopy + 1;
+			int matchedBytes = 2;
+			do {
+				startMatchPlusOne++;
+				inputPtrCopyPlusOne++;
+				if (*startMatchPlusOne != *inputPtrCopyPlusOne) {
+					break;
+				}
+				matchedBytes++;
+			} while (matchedBytes < 516);
+			inputPtrCopy = inputPtr;
+			if (matchedBytes >= maxMatchedBytes) {
+				copy->offset = inputPtr - startMatchPlusOne - 1 + matchedBytes;
+				maxMatchedBytes = matchedBytes;
+				if (matchedBytes > 10) {
+					break;
+				}
+			}
 		}
-
-		int matchedBytes = 2; // 2 bytes from hashcode
-		while (matchedBytes < 516 && matchPtr[matchedBytes] == inputPtr[matchedBytes]) {
+		hashAnalyzeIndexPtr++;
+		hashAnalyzeIndex++;
+		startMatch = &buf->inputData[*hashAnalyzeIndexPtr];
+		if (prevInputPtr <= startMatch) {
+			copy->length = maxMatchedBytes < 2 ? 0 : maxMatchedBytes;
+			return;
+		}
+	}
+	if (maxMatchedBytes == 516) {
+		copy->length = maxMatchedBytes;
+		copy->offset--;
+		return;
+	}
+	if (&buf->inputData[buf->analyzeIndex[hashAnalyzeIndex + 1]] >= prevInputPtr) {
+		copy->length = maxMatchedBytes;
+		return;
+	}
+	// Complex algorithm for finding longer match
+	int longOffset = 0;
+	int longIndex = 1;
+	buf->longMatcher[0] = -1;
+	buf->longMatcher[1] = 0;
+	do {
+		if (inputPtr[longIndex] != inputPtr[longOffset]) {
+			longOffset = buf->longMatcher[longOffset];
+			if (longOffset != -1) {
+				continue;
+			}
+		}
+		longIndex++;
+		longOffset++;
+		buf->longMatcher[longIndex] = longOffset;
+	} while (longIndex < maxMatchedBytes);
+	int matchedBytes = maxMatchedBytes;
+	unsigned char *matchPtr = &buf->inputData[maxMatchedBytes] + buf->analyzeIndex[hashAnalyzeIndex];
+	while (1) {
+		matchedBytes = buf->longMatcher[matchedBytes];
+		if (matchedBytes == -1) {
+			matchedBytes = 0;
+		}
+		hashAnalyzeIndexPtr = &buf->analyzeIndex[hashAnalyzeIndex];
+		unsigned char *betterMatchPtr;
+		do {
+			hashAnalyzeIndexPtr++;
+			hashAnalyzeIndex++;
+			betterMatchPtr = &buf->inputData[*hashAnalyzeIndexPtr];
+			if (betterMatchPtr >= prevInputPtr) {
+				copy->length = maxMatchedBytes;
+				return;
+			}
+		} while (&betterMatchPtr[matchedBytes] < matchPtr);
+		if (inputPtr[maxMatchedBytes - 2] != betterMatchPtr[maxMatchedBytes - 2]) {
+			while (1) {
+				hashAnalyzeIndex++;
+				betterMatchPtr = &buf->inputData[buf->analyzeIndex[hashAnalyzeIndex]];
+				if (betterMatchPtr >= prevInputPtr) {
+					copy->length = maxMatchedBytes;
+					return;
+				}
+				if (betterMatchPtr[maxMatchedBytes - 2] == inputPtr[maxMatchedBytes - 2] && *betterMatchPtr == *inputPtr) {
+					matchedBytes = 2;
+					matchPtr = betterMatchPtr + 2;
+					break;
+				}
+			}
+		} else if (&betterMatchPtr[matchedBytes] != matchPtr) {
+			matchedBytes = 0;
+			matchPtr = &buf->inputData[*hashAnalyzeIndexPtr];
+		}
+		while (inputPtr[matchedBytes] == *matchPtr) {
 			matchedBytes++;
+			if (matchedBytes >= 516) {
+				break;
+			}
+			matchPtr++;
 		}
 		if (matchedBytes >= maxMatchedBytes) {
-			copy->offset = inputIndex - matchIndex - 1;
-			maxMatchedBytes = matchedBytes;
-			if (matchedBytes == 516) {
-				break;
+			copy->offset = inputPtr - betterMatchPtr - 1;
+			if (matchedBytes > maxMatchedBytes) {
+				maxMatchedBytes = matchedBytes;
+				if (matchedBytes == 516) {
+					copy->length = 516;
+					return;
+				}
+				do {
+					if (inputPtr[longIndex] != inputPtr[longOffset]) {
+						longOffset = buf->longMatcher[longOffset];
+						if (longOffset != -1) {
+							continue;
+						}
+					}
+					longIndex++;
+					longOffset++;
+					buf->longMatcher[longIndex] = longOffset;
+				} while (longIndex < matchedBytes);
 			}
 		}
 	}
-
-	copy->length = maxMatchedBytes < 2 ? 0 : maxMatchedBytes;
-	return;
+	// never reached
 }
 
 static void pk_implodeWriteBits(struct PKCompBuffer *buf, unsigned char numBits, unsigned int value)
