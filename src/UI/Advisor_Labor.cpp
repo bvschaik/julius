@@ -146,11 +146,11 @@ void UI_Advisor_Labor_handleMouse()
 	}
 }
 
-static void arrowButtonWages(int param1, int param2)
+static void arrowButtonWages(int isDown, int param2)
 {
-	if (param1 == 1) {
+	if (isDown == 1) {
 		Data_CityInfo.wages--;
-	} else if (param1 == 0) {
+	} else if (isDown == 0) {
 		Data_CityInfo.wages++;
 	}
 	BOUND(Data_CityInfo.wages, 0, 100);
@@ -159,9 +159,9 @@ static void arrowButtonWages(int param1, int param2)
 	UI_Window_requestRefresh();
 }
 
-static void buttonPriority(int param1, int param2)
+static void buttonPriority(int category, int param2)
 {
-	prioritySelectedCategory = param1;
+	prioritySelectedCategory = category;
 	priorityMaxItems = 0;
 	for (int i = 0; i < 9; i++) {
 		if (Data_CityInfo.laborCategory[i].priority > 0) {

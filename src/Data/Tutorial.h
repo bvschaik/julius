@@ -2,7 +2,7 @@
 #define DATA_TUTORIAL_H
 #include "Data.h"
 
-extern struct Data_Tutorial {
+extern struct _Data_Tutorial {
 	struct {
 		int fire;
 		int crime;

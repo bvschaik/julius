@@ -58,8 +58,6 @@ static char playerNames[2][32];
 
 static char compressBuffer[COMPRESS_BUFFER_SIZE]; // TODO use global malloc'ed scratchpad buffer
 
-static char tmp[COMPRESS_BUFFER_SIZE]; // TODO remove when all savegame fields are known
-
 static int endMarker = 0;
 
 static const char missionPackFile[] = "mission1.pak";
@@ -118,7 +116,7 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{0, &Data_Formation_Extra.idLastLegion, 4},
 	{0, &Data_Formation_Extra.numForts, 4},
 	{1, &Data_CityInfo, 36136},
-	{0, &tmp, 2}, //{0, &byte_658DCC, 2}, cityinfo related, unused
+	{0, &Data_CityInfo_Extra.unknownBytes, 2},
 	{0, &playerNames, 64},
 	{0, &Data_CityInfo_Extra.ciid, 4},
 	{1, &Data_Buildings, 256000},
@@ -129,7 +127,7 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{0, &Data_CityInfo_Extra.gameTimeYear, 4},
 	{0, &Data_CityInfo_Extra.gameTimeTotalDays, 4},
 	{0, &Data_Buildings_Extra.highestBuildingIdEver, 4},
-	{0, &tmp, 4}, //{0, &dword_98C480, 4}, read-only debug
+	{0, &Data_Debug.maxConnectsEver, 4},
 	{0, &Data_Random.iv1, 4},
 	{0, &Data_Random.iv2, 4},
 	{0, &Data_Settings_Map.camera.x, 4},
@@ -168,7 +166,7 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{0, &Data_CityInfo_Buildings.largeTempleVenus.total, 4},
 	{0, &Data_CityInfo_Buildings.oracle.total, 4},
 	{0, &Data_CityInfo_Extra.populationGraphOrder, 4},
-	{0, &tmp, 4}, //{0, &unk_650060, 4}, not referenced
+	{0, &Data_CityInfo_Extra.unknownOrder, 4},
 	{0, &Data_Event.emperorChange.gameYear, 4},
 	{0, &Data_Event.emperorChange.month, 4},
 	{0, &Data_Empire.scrollX, 4},
@@ -288,10 +286,10 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{1, &Data_Empire_Trade.tradedThisYear, 1280},
 	{0, &Data_Buildings_Extra.barracksTowerSentryRequested, 4},
 	{0, &Data_Buildings_Extra.createdSequence, 4},
-	{0, &tmp, 4}, //{0, &unk_634474, 4}, not referenced
-	{0, &tmp, 4}, //{0, &dword_614158, 4}, routing, debug
-	{0, &tmp, 4}, //{0, &dword_634468, 4}, routing, debug
-	{0, &tmp, 4}, //{0, &unk_634470, 4}, not referenced
+	{0, &Data_Routes.unknown1RoutesCalculated, 4}, //{0, &unk_634474, 4}, not referenced
+	{0, &Data_Routes.totalRoutesCalculated, 4},
+	{0, &Data_Routes.enemyRoutesCalculated, 4},
+	{0, &Data_Routes.unknown2RoutesCalculated, 4}, //{0, &unk_634470, 4}, not referenced
 	{0, &Data_CityInfo_Buildings.smallTempleCeres.working, 4},
 	{0, &Data_CityInfo_Buildings.smallTempleNeptune.working, 4},
 	{0, &Data_CityInfo_Buildings.smallTempleMercury.working, 4},
@@ -451,7 +449,7 @@ int GameFile_loadSavedGameFromMissionPack(int missionId)
 
 static void debug()
 {
-	/*printf("TIME: y %d m %d d %d t %d\n",
+	printf("TIME: y %d m %d d %d t %d\n",
 		Data_CityInfo_Extra.gameTimeYear,
 		Data_CityInfo_Extra.gameTimeMonth,
 		Data_CityInfo_Extra.gameTimeDay,
@@ -463,7 +461,7 @@ static void debug()
 				i, b->type, b->inUse, b->x, b->y, b->numWorkers, b->walkerId, b->walkerId2, b->housesCovered);
 		}
 	}
-	*/
+	/**/
 	for (int i = 1; i < MAX_WALKERS; i++) {
 		struct Data_Walker *w = &Data_Walkers[i];
 		if (w->state == WalkerState_Alive) {

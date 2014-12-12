@@ -7,7 +7,7 @@
 #include "Data/Formation.h"
 #include "Data/Random.h"
 
-static const int seagullOffsetsX[] = {0, 0, -2, 1, 2, -3, 4, -1};
+static const int seagullOffsetsX[] = {0, 0, -2, 1, 2, -3, 4, -2};
 static const int seagullOffsetsY[] = {0, -2, 0, 2, 0, 1, -3, 4};
 
 static const int hippodromeHorseDestinationX1[] = {

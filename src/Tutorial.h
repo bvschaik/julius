@@ -9,4 +9,6 @@ void Tutorial_onFilledGranary();
 
 void Tutorial_onAddToWarehouse();
 
+void Tutorial_onDayTick();
+
 #endif

@@ -7,6 +7,7 @@
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
+#include "Data/Debug.h"
 #include "Data/Graphics.h"
 #include "Data/Grid.h"
 #include "Data/Random.h"

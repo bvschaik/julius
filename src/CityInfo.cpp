@@ -10,6 +10,9 @@ void CityInfo_init()
 {
 	memset(&Data_CityInfo, 0, sizeof(struct _Data_CityInfo));
 
+	Data_CityInfo_Extra.unknownBytes[0] = 0;
+	Data_CityInfo_Extra.unknownBytes[1] = 0;
+
 	Data_CityInfo.citySentiment = 60;
 	Data_CityInfo.healthRateTarget = 50;
 	Data_CityInfo.healthRate = 50;

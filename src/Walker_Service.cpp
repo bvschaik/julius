@@ -366,6 +366,7 @@ static int provideLaborSeekerCoverage(int x, int y)
 static int provideTaxCollectorCoverage(int x, int y, unsigned char *maxTaxMultiplier)
 {
 	int serviced = 0;
+	*maxTaxMultiplier = 0;
 	FOR_XY_RADIUS(
 		if (Data_Buildings[buildingId].houseSize && Data_Buildings[buildingId].housePopulation > 0) {
 			int taxMultiplier = Data_Model_Houses[Data_Buildings[buildingId].subtype.houseLevel].taxMultiplier;

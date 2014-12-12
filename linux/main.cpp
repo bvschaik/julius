@@ -201,6 +201,7 @@ void handleKey(SDL_KeyboardEvent *event)
 {
 	switch (event->keysym.sym) {
 		case SDLK_RETURN:
+		case SDLK_KP_ENTER:
 			KeyboardInput_return();
 			break;
 		case SDLK_BACKSPACE:

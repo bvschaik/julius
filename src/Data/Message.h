@@ -16,7 +16,7 @@ struct Data_PlayerMessage {
 	unsigned char __filler[2];
 };
 
-extern struct Data_Message {
+extern struct _Data_Message {
 	struct Data_PlayerMessage messages[MAX_MESSAGES];
 
 	int nextMessageSequence;
@@ -67,6 +67,7 @@ enum {
 	MessageDelay_RiotCollapse = 3,
 	MessageDelay_BlockedDock = 4,
 	MessageDelay_WorkersNeeded = 8,
+	MessageDelay_Tutorial3 = 9,
 	MessageDelay_NoWorkingDock = 10,
 	MessageDelay_FishingBlocked = 11,
 };

@@ -16,9 +16,9 @@ struct Data_Event Data_Event = {0};
 struct _Data_Settings Data_Settings;
 struct _Data_Settings_Map Data_Settings_Map;
 
-struct Data_Tutorial Data_Tutorial;
+struct _Data_Tutorial Data_Tutorial;
 
-struct Data_Message Data_Message;
+struct _Data_Message Data_Message;
 
 struct _Data_Random Data_Random;
 
@@ -74,9 +74,9 @@ struct _Data_Formation_Invasion Data_Formation_Invasion;
 
 struct _Data_FileList Data_FileList;
 
-struct Data_Routes Data_Routes;
+struct _Data_Routes Data_Routes;
 
-struct Data_Debug Data_Debug;
+struct _Data_Debug Data_Debug;
 
 const int Constant_SalaryForRank[11] = {0, 2, 5, 8, 12, 20, 30, 40, 60, 80, 100};
 const int Constant_DirectionGridOffsets[8] = {-162, -161, 1, 163, 162, 161, -1, -163};

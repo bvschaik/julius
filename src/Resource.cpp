@@ -111,7 +111,7 @@ int Resource_getWorkshopWithRoomForRawMaterial(
 	int minBuildingId = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
-		if (b->inUse != 1 || !BuildingIsWorkshop(i)) {
+		if (b->inUse != 1 || !BuildingIsWorkshop(b->type)) {
 			continue;
 		}
 		if (!b->hasRoadAccess || b->distanceFromEntry <= 0) {
@@ -153,7 +153,7 @@ int Resource_getWorkshopForRawMaterial(
 	int minBuildingId = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
-		if (b->inUse != 1 || !BuildingIsWorkshop(i)) {
+		if (b->inUse != 1 || !BuildingIsWorkshop(b->type)) {
 			continue;
 		}
 		if (!b->hasRoadAccess || b->distanceFromEntry <= 0) {
@@ -195,7 +195,7 @@ int Resource_getBarracksForWeapon(int xUnused, int yUnused, int resource, int ro
 
 void Resource_addRawMaterialToWorkshop(int buildingId)
 {
-	if (buildingId > 0 && BuildingIsWorkshop(buildingId)) {
+	if (buildingId > 0 && BuildingIsWorkshop(Data_Buildings[buildingId].type)) {
 		Data_Buildings[buildingId].loadsStored++; // BUG: any raw material accepted
 	}
 }
@@ -213,7 +213,7 @@ int Resource_getDistance(int x1, int y1, int x2, int y2, int distToEntry1, int d
 	if (distToEntry1 > distToEntry2) {
 		diff = distToEntry1 - distToEntry2;
 	} else {
-		diff = distToEntry2 - distToEntry2;
+		diff = distToEntry2 - distToEntry1;
 	}
 	if (distToEntry1 == -1) {
 		diff = 0;

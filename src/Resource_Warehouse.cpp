@@ -134,7 +134,7 @@ int Resource_getWarehouseForStoringResource(
 	} else if (!Terrain_hasRoadAccess(b->x, b->y, 3, xDst, yDst)) {
 		return 0;
 	}
-	return resultBuildingId;
+	return minBuildingId;
 }
 
 int Resource_getWarehouseForGettingResource(int srcBuildingId, int resource, int *xDst, int *yDst)

@@ -19,6 +19,7 @@
 #include "Sound.h"
 #include "TerrainGraphics.h"
 #include "Trader.h"
+#include "Tutorial.h"
 #include "Undo.h"
 #include "UtilityManagement.h"
 #include "Walker.h"
@@ -29,14 +30,10 @@
 
 #include "Data/CityInfo.h"
 #include "Data/Message.h"
-#include "Data/Scenario.h"
 #include "Data/Settings.h"
 #include "Data/State.h"
-#include "Data/Tutorial.h"
 
 #include <cstdio>
-#include "Data/Formation.h"
-#include "Data/Walker.h"
 
 static void advanceDay();
 static void advanceMonth();
@@ -45,19 +42,15 @@ static void advanceYear();
 void GameTick_doTick()
 {
 	printf("TICK %d\n", Data_CityInfo_Extra.gameTimeTick);
-	//printf("  Random\n");
 	Random_generateNext();
-	//printf("  Undo\n");
 	Undo_updateAvailable();
 	printf("  Game tick\n");
 	GameTick_advance();
 	printf("  Walkers\n");
 	WalkerAction_handle();
-	//printf("  Events\n");
 	Event_handleEarthquake();
 	Event_handleGladiatorRevolt();
 	Event_handleEmperorChange();
-	//printf("  Victory\n");
 	CityInfo_Victory_check();
 	printf("DONE\n");
 }
@@ -125,49 +118,7 @@ static void advanceDay()
 	if (Data_CityInfo_Extra.gameTimeDay == 0 || Data_CityInfo_Extra.gameTimeDay == 8) {
 		CityInfo_Population_calculateSentiment();
 	}
-	if (Data_Tutorial.tutorial1.fire && !Data_CityInfo.tutorial1FireMessageShown) {
-		Data_CityInfo.tutorial1FireMessageShown = 1;
-	}
-	if (Data_Tutorial.tutorial3.disease && !Data_CityInfo.tutorial3DiseaseMessageShown) {
-		Data_CityInfo.tutorial3DiseaseMessageShown = 1;
-		PlayerMessage_post(1, 119, 0, 0);
-	}
-	if (Data_Tutorial.tutorial2.granaryBuilt) {
-		if (!Data_Tutorial.tutorial2.population250Reached && Data_CityInfo.population >= 250) {
-			Data_Tutorial.tutorial2.population250Reached = 1;
-			SidebarMenu_enableBuildingMenuItemsAndButtons();
-			if (UI_Window_getId() == Window_City) {
-				UI_City_drawBackground();
-			}
-			PlayerMessage_post(1, 57, 0, 0);
-		}
-	}
-	if (Data_Tutorial.tutorial2.population250Reached) {
-		if (!Data_Tutorial.tutorial2.population450Reached && Data_CityInfo.population >= 450) {
-			Data_Tutorial.tutorial2.population450Reached = 1;
-			SidebarMenu_enableBuildingMenuItemsAndButtons();
-			if (UI_Window_getId() == Window_City) {
-				UI_City_drawBackground();
-			}
-			PlayerMessage_post(1, 60, 0, 0);
-		}
-	}
-	if (Data_Tutorial.tutorial1.fire && !Data_Tutorial.tutorial1.senateBuilt) {
-		int populationAlmost = Data_CityInfo.population >= Data_Scenario.winCriteria_population - 20;
-		if (!Data_CityInfo_Extra.gameTimeDay || populationAlmost) {
-			if (Data_CityInfo.buildingSenateGridOffset) {
-				Data_CityInfo.tutorial1SenateBuilt++;
-			}
-			if (Data_CityInfo.tutorial1SenateBuilt > 0 || populationAlmost) {
-				Data_Tutorial.tutorial1.senateBuilt = 1;
-				SidebarMenu_enableBuildingMenuItemsAndButtons();
-				if (UI_Window_getId() == Window_City) {
-					UI_City_drawBackground();
-				}
-				PlayerMessage_post(1, 59, 0, 0);
-			}
-		}
-	}
+	Tutorial_onDayTick();
 }
 
 static void advanceMonth()
@@ -205,8 +156,8 @@ static void advanceMonth()
 	CityInfo_Gods_checkFestival();
 	if (IsTutorial3()) {
 		if (Data_CityInfo_Extra.gameTimeMonth == 5) {
-			if (Data_Message.messageDelay[9] <= 0) {
-				Data_Message.messageDelay[9] = 1200;
+			if (Data_Message.messageDelay[MessageDelay_Tutorial3] <= 0) {
+				Data_Message.messageDelay[MessageDelay_Tutorial3] = 1200;
 				PlayerMessage_post(1, 58, 0, 0);
 			}
 		}

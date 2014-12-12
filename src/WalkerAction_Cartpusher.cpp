@@ -49,7 +49,7 @@ static void determineCartpusherDestination(struct Data_Walker *w, struct Data_Bu
 		return;
 	}
 	// priority 3: workshop for raw material
-	dstBuildingId = Resource_getWorkshopForRawMaterial(w->x, w->y,
+	dstBuildingId = Resource_getWorkshopWithRoomForRawMaterial(w->x, w->y,
 		b->outputResourceId, b->distanceFromEntry, roadNetworkId, &xDst, &yDst);
 	if (dstBuildingId) {
 		w->destinationBuildingId = dstBuildingId;

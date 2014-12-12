@@ -18,7 +18,7 @@
 #include "../Data/Settings.h"
 #include "../Data/State.h"
 
-static void drawBackground();
+static void refreshSidebarButtons();
 
 static void menuFile_newGame(int param);
 static void menuFile_replayMap(int param);
@@ -106,7 +106,7 @@ void UI_TopMenu_initFromSettings()
 
 void UI_TopMenu_drawBackground()
 {
-	drawBackground();
+	refreshSidebarButtons();
 	Widget_Menu_drawMenuBar(menu, 4);
 
 	int width;
@@ -156,7 +156,7 @@ void UI_TopMenu_drawBackground()
 	}
 }
 
-static void drawBackground()
+static void refreshSidebarButtons()
 {
 	int blockWidth = 24;
 	int graphicBase = GraphicId(ID_Graphic_TopMenuSidebar);
