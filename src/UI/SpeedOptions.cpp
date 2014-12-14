@@ -156,6 +156,6 @@ static void arrowButtonScroll(int param1, int param2)
 	} else if (param1 == 0) {
 		Data_Settings.scrollSpeed += 10;
 	}
-	BOUND(Data_Settings.scrollSpeed, 10, 100);
+	BOUND(Data_Settings.scrollSpeed, 0, 100);
 	UI_Window_requestRefresh();
 }

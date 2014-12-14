@@ -41,18 +41,15 @@ static void advanceYear();
 
 void GameTick_doTick()
 {
-	printf("TICK %d\n", Data_CityInfo_Extra.gameTimeTick);
+	printf("TICK %d.%d.%d\n", Data_CityInfo_Extra.gameTimeMonth, Data_CityInfo_Extra.gameTimeDay, Data_CityInfo_Extra.gameTimeTick);
 	Random_generateNext();
 	Undo_updateAvailable();
-	printf("  Game tick\n");
 	GameTick_advance();
-	printf("  Walkers\n");
 	WalkerAction_handle();
 	Event_handleEarthquake();
 	Event_handleGladiatorRevolt();
 	Event_handleEmperorChange();
 	CityInfo_Victory_check();
-	printf("DONE\n");
 }
 
 void GameTick_advance()

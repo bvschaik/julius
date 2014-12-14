@@ -587,6 +587,7 @@ void WalkerAction_tradeShip(int walkerId)
 					w->destinationX = xTile;
 					w->destinationY = yTile;
 				}
+				w->waitTicks = 0;
 			}
 			w->graphicOffset = 0;
 			break;
