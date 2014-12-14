@@ -453,6 +453,7 @@ void Routing_clearLandTypeCitizen()
 void Routing_getDistance(int x, int y)
 {
 	int sourceOffset = GridOffset(x, y);
+	++Data_Routes.totalRoutesCalculated;
 	ROUTE_QUEUE(sourceOffset, -1,
 	{
 		if (Data_Grid_routingLandCitizen[nextOffset] >= 0) {
@@ -469,6 +470,7 @@ int Routing_getCalculatedDistance(int gridOffset)
 void Routing_deleteClosestWallOrAqueduct(int x, int y)
 {
 	int sourceOffset = GridOffset(x, y);
+	++Data_Routes.totalRoutesCalculated;
 	ROUTE_QUEUE(sourceOffset, -1,
 	{
 		if (Data_Grid_routingLandCitizen[nextOffset] < 0) {
@@ -745,6 +747,7 @@ int Routing_getDistanceForBuildingRoadOrAqueduct(int x, int y, int isAqueduct)
 		isAqueduct && !canPlaceAqueductOnRoad(sourceOffset)) {
 		return 0;
 	}
+	++Data_Routes.totalRoutesCalculated;
 	ROUTE_QUEUE(sourceOffset, -1,
 	{
 		int blocked = 0;

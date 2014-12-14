@@ -234,8 +234,9 @@ int Empire_canImportResourceFromCity(int cityId, int resource)
 	if (Data_CityInfo.resourceTradeStatus[resource] != TradeStatus_Import) {
 		return 0;
 	}
-	if (Data_Empire_Trade.tradedThisYear[cityId][resource] >=
-		Data_Empire_Trade.maxPerYear[cityId][resource]) {
+	int routeId = Data_Empire_Cities[cityId].routeId;
+	if (Data_Empire_Trade.tradedThisYear[routeId][resource] >=
+		Data_Empire_Trade.maxPerYear[routeId][resource]) {
 		return 0;
 	}
 
@@ -285,7 +286,7 @@ int Empire_canImportResourceFromCity(int cityId, int resource)
 			break;
 	}
 	if (finishedGood) {
-		maxInStock = 2 + 2 * Data_CityInfo_Buildings.industry.working[resource];
+		maxInStock = 2 + 2 * Data_CityInfo_Buildings.industry.working[finishedGood];
 	}
 	return inStock < maxInStock;
 }

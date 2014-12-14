@@ -29,7 +29,7 @@ extern struct _Data_CityInfo {
 	int monthlyPopulation[2400];
 	int monthlyPopulationNextIndex;
 	int monthsSinceStart;
-	short populationPerAge[100];
+	short populationPerAge[100];//2664
 	int populationPerLevel[20];//272c
 	int populationYearlyBirths;
 	int populationYearlyDeaths;

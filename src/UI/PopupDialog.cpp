@@ -36,6 +36,10 @@ static struct {
 
 void UI_PopupDialog_show(int msgId, void (*closeFunc)(int accepted), int hasOkCancelButtons)
 {
+	if (UI_Window_getId() == Window_PopupDialog) {
+		// don't show popup over popup
+		return;
+	}
 	data.msgId = msgId;
 	data.okClicked = 0;
 	data.closeFunc = closeFunc;

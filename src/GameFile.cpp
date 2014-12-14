@@ -287,8 +287,8 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{0, &Data_Buildings_Extra.barracksTowerSentryRequested, 4},
 	{0, &Data_Buildings_Extra.createdSequence, 4},
 	{0, &Data_Routes.unknown1RoutesCalculated, 4}, //{0, &unk_634474, 4}, not referenced
-	{0, &Data_Routes.totalRoutesCalculated, 4},
 	{0, &Data_Routes.enemyRoutesCalculated, 4},
+	{0, &Data_Routes.totalRoutesCalculated, 4},
 	{0, &Data_Routes.unknown2RoutesCalculated, 4}, //{0, &unk_634470, 4}, not referenced
 	{0, &Data_CityInfo_Buildings.smallTempleCeres.working, 4},
 	{0, &Data_CityInfo_Buildings.smallTempleNeptune.working, 4},

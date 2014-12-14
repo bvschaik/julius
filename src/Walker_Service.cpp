@@ -143,7 +143,7 @@ static int provideMarketGoods(int marketBuildingId, int x, int y)
 					foodTypesStoredMax++;
 				}
 			}
-			if (Data_Model_Houses[level].food > foodTypesStoredMax) {
+			if (Data_Model_Houses[level].foodTypes > foodTypesStoredMax) {
 				for (int i = 0; i < 4; i++) {
 					if (house->data.house.inventory.all[i] >= maxFoodStocks) {
 						continue;
