@@ -166,7 +166,7 @@ void KeyboardInput_end()
 	current->cursorPosition = current->length;
 }
 
-unsigned char unicodeToCp1252(int c)
+static unsigned char unicodeToCp1252(int c)
 {
 	if (c == 0x152) { // OE
 		return 140;

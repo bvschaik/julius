@@ -129,7 +129,7 @@ static void enableNormal(int sub, int item, int buildingType)
 	}
 }
 
-void enableTutorial1Start(int sub, int item, int buildingType)
+static void enableTutorial1Start(int sub, int item, int buildingType)
 {
 	ENABLE_HOUSE();
 	ENABLE(Building_ClearLand);
@@ -137,21 +137,21 @@ void enableTutorial1Start(int sub, int item, int buildingType)
 	ENABLE_IF(Building_Road, road);
 }
 
-void enableTutorial1AfterFire(int sub, int item, int buildingType)
+static void enableTutorial1AfterFire(int sub, int item, int buildingType)
 {
 	enableTutorial1Start(sub, item, buildingType);
 	ENABLE_IF(Building_Prefecture, prefecture);
 	ENABLE_IF(Building_Market, market);
 }
 
-void enableTutorial1AfterCollapse(int sub, int item, int buildingType)
+static void enableTutorial1AfterCollapse(int sub, int item, int buildingType)
 {
 	enableTutorial1AfterFire(sub, item, buildingType);
 	ENABLE_IF(Building_EngineersPost, engineersPost);
 	ENABLE_IF(Building_SenateUpgraded, senate);
 }
 
-void enableTutorial2Start(int sub, int item, int buildingType)
+static void enableTutorial2Start(int sub, int item, int buildingType)
 {
 	ENABLE_HOUSE();
 	ENABLE(Building_ClearLand);

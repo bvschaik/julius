@@ -26,6 +26,8 @@ static struct {
 	int height;
 } Desktop;
 
+static int autopilot = 0;
+
 static SDL_Cursor *Cursors[3];
 
 enum {
@@ -106,6 +108,7 @@ void System_toggleFullscreen()
 
 void System_setCursor(int cursorId)
 {
+	if (autopilot) return;
 	SDL_SetCursor(Cursors[cursorId]);
 }
 
@@ -137,6 +140,7 @@ static SDL_Cursor *initCursor(const struct Cursor *cursor)
 
 void System_initCursors()
 {
+	if (autopilot) return;
 	for (int i = 0; i < 3; i++) {
 		Cursors[i] = initCursor(Cursor_getData(i));
 	}
@@ -154,6 +158,49 @@ typedef struct{
 	Uint8  alpha;
 } SDL_PixelFormat;
 */
+
+#include "../src/GameFile.h"
+
+void runTicks(int ticks)
+{
+	int originalSpeed = Data_Settings.gameSpeed;
+	Data_Settings.gameSpeed = 100;
+	Time_setMillis(0);
+	for (int i = 1; i <= ticks; i++) {
+		UI_Window_goTo(Window_City);
+		Time_setMillis(2 * i);
+		Runner_run();
+	}
+	Data_Settings.gameSpeed = originalSpeed;
+}
+
+int runAutopilot(const char *savedGameToLoad, const char *savedGameToWrite, int ticksToRun)
+{
+	autopilot = 1;
+	printf("Running autopilot: %s --> %s in %d ticks\n", savedGameToLoad, savedGameToWrite, ticksToRun);
+	signal(SIGSEGV, handler);
+	
+	// C3 setup
+	chdir("../data");
+	
+	if (!Game_preInit()) {
+		return 1;
+	}
+	
+	if (!Game_init()) {
+		return 2;
+	}
+	
+	GameFile_loadSavedGame(savedGameToLoad);
+	runTicks(ticksToRun);
+	printf("Saving game to %s\n", savedGameToWrite);
+	GameFile_writeSavedGame(savedGameToWrite);
+	printf("Done\n");
+	
+	Game_exit();
+
+	return 0;
+}
 
 Uint32 last;
 
@@ -409,11 +456,8 @@ void mainLoop(SDL_Surface *surface)
     }
 }
 
-int main()
+void initSdl()
 {
-	signal(SIGSEGV, handler);
-	
-	sanityCheck();
 	printf("Initializing SDL.\n");
 	
 	// Initialize defaults, Video and Audio
@@ -435,6 +479,18 @@ int main()
 	} else {
 		printf("VIDEO NOT OK\n");
 	}
+}
+
+int main(int argc, const char **argv)
+{
+	if (argc == 4) {
+		return runAutopilot(argv[1], argv[2], atoi(argv[3]));
+	}
+	signal(SIGSEGV, handler);
+	
+	sanityCheck();
+	
+	initSdl();
 	
 	// C3 setup
 	char cwd[200];

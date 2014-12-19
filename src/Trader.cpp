@@ -210,9 +210,9 @@ int Trader_getClosestWarehouseForTradeCaravan(int walkerId, int x, int y, int ci
 		if (Data_Walkers[walkerId].traderAmountBought >= 8) {
 			exportable[r] = 0;
 		}
-		if (cityId) { // exclude own city, shouldn't happen, but still..
+		if (cityId) {
 			importable[r] = Empire_canImportResourceFromCity(cityId, r);
-		} else {
+		} else { // exclude own city (id=0), shouldn't happen, but still..
 			importable[r] = 0;
 		}
 		if (Data_Walkers[walkerId].loadsSoldOrCarrying >= 8) {
@@ -259,7 +259,7 @@ int Trader_getClosestWarehouseForTradeCaravan(int walkerId, int x, int y, int ci
 					}
 				}
 				if (st->resourceState[Data_CityInfo.tradeNextImportResourceCaravan] != BuildingStorageState_NotAccepting) {
-					if (Data_Buildings[spaceId].subtype.warehouseResourceId != Resource_None) {
+					if (Data_Buildings[spaceId].subtype.warehouseResourceId == Resource_None) {
 						distancePenalty -= 16;
 					}
 					if (spaceId && importable[Data_Buildings[spaceId].subtype.warehouseResourceId] &&

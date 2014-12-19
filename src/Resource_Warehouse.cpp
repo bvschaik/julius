@@ -172,8 +172,8 @@ int Resource_getWarehouseForGettingResource(int srcBuildingId, int resource, int
 		}
 	}
 	if (minBuildingId > 0) {
-		*xDst = Data_Buildings[minBuildingId].x;
-		*yDst = Data_Buildings[minBuildingId].y;
+		*xDst = Data_Buildings[minBuildingId].roadAccessX;
+		*yDst = Data_Buildings[minBuildingId].roadAccessY;
 		return minBuildingId;
 	} else {
 		return 0;
@@ -362,7 +362,7 @@ void Resource_removeExportedResourceFromWarehouseSpace(int spaceId, int resource
 	Resource_setWarehouseSpaceGraphic(spaceId, resourceId);
 }
 
-int determineGranaryAcceptFoods()
+static int determineGranaryAcceptFoods()
 {
 	if (Data_Scenario.romeSuppliesWheat) {
 		return 0;
@@ -392,7 +392,7 @@ int determineGranaryAcceptFoods()
 	return canAccept;
 }
 
-int determineGranaryGetFoods()
+static int determineGranaryGetFoods()
 {
 	if (Data_Scenario.romeSuppliesWheat) {
 		return 0;
@@ -422,7 +422,7 @@ int determineGranaryGetFoods()
 	return canGet;
 }
 
-int storesNonStockpiledFood(int spaceId, int *granaryResources)
+static int storesNonStockpiledFood(int spaceId, int *granaryResources)
 {
 	if (spaceId <= 0) {
 		return 0;
