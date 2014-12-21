@@ -43,7 +43,7 @@ struct Data_Graphics_Index {
 	short unused_3E;
 };
 
-extern struct Data_Graphics_Main {
+extern struct _Data_Graphics_Main {
 	struct {
 		int hdrFields[20];
 	} header;
@@ -52,11 +52,11 @@ extern struct Data_Graphics_Main {
 	struct Data_Graphics_Index index[10000];
 } Data_Graphics_Main;
 
-extern struct Data_Graphics_Enemy {
+extern struct _Data_Graphics_Enemy {
 	struct Data_Graphics_Index index[801];
 } Data_Graphics_Enemy;
 
-extern struct Data_Graphics_PixelData {
+extern struct _Data_Graphics_PixelData {
 	char *main;
 	char *enemy;
 	//void *empire;

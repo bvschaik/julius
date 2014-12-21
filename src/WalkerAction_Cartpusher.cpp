@@ -471,12 +471,6 @@ static void determineWarehousemanDestination(int walkerId, struct Data_Walker *w
 	w->state = WalkerState_Dead;
 }
 
-static void setCartGraphicMultiple(struct Data_Walker *w)
-{
-	w->cartGraphicId = GraphicId(ID_Graphic_Walker_CartpusherCartMultipleLoads) +
-		8 * w->resourceId - 8 + Resource_getGraphicIdOffset(w->resourceId, 2);
-}
-
 void WalkerAction_warehouseman(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
@@ -509,7 +503,8 @@ void WalkerAction_warehouseman(int walkerId)
 			break;
 		case WalkerActionState_51_WarehousemanDeliveringResource:
 			if (w->loadsSoldOrCarrying == 1) {
-				setCartGraphicMultiple(w);
+				w->cartGraphicId = GraphicId(ID_Graphic_Walker_CartpusherCartMultipleFood) +
+					8 * w->resourceId - 8 + Resource_getGraphicIdOffset(w->resourceId, 2);
 			} else {
 				setCartGraphic(w);
 			}
@@ -592,10 +587,10 @@ void WalkerAction_warehouseman(int walkerId)
 				setCartGraphic(w);
 			} else {
 				if (w->loadsSoldOrCarrying >= 8) {
-					w->cartGraphicId = GraphicId(ID_Graphic_Walker_CartpusherCartMultipleLoads) +
+					w->cartGraphicId = GraphicId(ID_Graphic_Walker_CartpusherCartMultipleFood) +
 						cartResourceOffset8PlusLoadsFood[w->resourceId];
 				} else {
-					w->cartGraphicId = GraphicId(ID_Graphic_Walker_CartpusherCartMultipleLoads) +
+					w->cartGraphicId = GraphicId(ID_Graphic_Walker_CartpusherCartMultipleFood) +
 						cartResourceOffsetMultipleLoadsFood[w->resourceId];
 				}
 				w->cartGraphicId += Resource_getGraphicIdOffset(w->resourceId, 2);
@@ -650,10 +645,10 @@ void WalkerAction_warehouseman(int walkerId)
 				setCartGraphic(w);
 			} else {
 				if (ResourceIsFood(w->resourceId)) {
-					w->cartGraphicId = GraphicId(ID_Graphic_Walker_CartpusherCartMultipleLoads) +
+					w->cartGraphicId = GraphicId(ID_Graphic_Walker_CartpusherCartMultipleFood) +
 						cartResourceOffsetMultipleLoadsFood[w->resourceId];
 				} else {
-					w->cartGraphicId = GraphicId(ID_Graphic_Walker_CartpusherCartMultipleLoads) +
+					w->cartGraphicId = GraphicId(ID_Graphic_Walker_CartpusherCartMultipleResource) +
 						cartResourceOffsetMultipleLoadsNonFood[w->resourceId];
 				}
 				w->cartGraphicId += Resource_getGraphicIdOffset(w->resourceId, 2);

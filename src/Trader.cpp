@@ -334,7 +334,7 @@ int Trader_getClosestWarehouseForImportDocker(int x, int y, int cityId, int dist
 			int spaceId = i;
 			for (int s = 0; s < 8; s++) {
 				spaceId = Data_Buildings[spaceId].nextPartBuildingId;
-				if (spaceId && Data_Buildings[spaceId].subtype.warehouseResourceId != Resource_None) {
+				if (spaceId && Data_Buildings[spaceId].subtype.warehouseResourceId == Resource_None) {
 					distancePenalty -= 8;
 				}
 				if (spaceId &&

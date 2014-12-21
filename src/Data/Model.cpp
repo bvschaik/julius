@@ -29,9 +29,9 @@ struct Data_Empire_Object Data_Empire_Objects[MAX_EMPIRE_OBJECTS];
 struct Data_Empire_City Data_Empire_Cities[MAX_EMPIRE_CITIES];
 struct _Data_Empire_Trade Data_Empire_Trade;
 
-struct Data_Graphics_Main Data_Graphics_Main;
-struct Data_Graphics_Enemy Data_Graphics_Enemy;
-struct Data_Graphics_PixelData Data_Graphics_PixelData;
+struct _Data_Graphics_Main Data_Graphics_Main;
+struct _Data_Graphics_Enemy Data_Graphics_Enemy;
+struct _Data_Graphics_PixelData Data_Graphics_PixelData;
 
 struct Data_Screen Data_Screen;// = { 800, 600, {80, 60} };
 

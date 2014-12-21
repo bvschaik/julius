@@ -121,7 +121,7 @@ static void updateCultureRating()
 void CityInfo_Ratings_updateCultureExplanation()
 {
 	int minPercentage = 100;
-	int reason = 0;
+	int reason = 1;
 	if (Data_CityInfo.cultureCoverageReligion < minPercentage) {
 		minPercentage = Data_CityInfo.cultureCoverageReligion;
 		reason = 4;
