@@ -102,7 +102,6 @@ static ImageButton buttonTopExpanded[] = {
 };
 
 static int minimapRedrawRequested = 0;
-static int lastAdvisor = 0;
 
 // sliding sidebar stuff
 static const int progressToOffset[] = {
@@ -115,11 +114,6 @@ static struct {
 	TimeMillis slideStart;
 	int progress;
 } data;
-
-void UI_Sidebar_setLastAdvisor(int advisor)
-{
-	lastAdvisor = advisor;
-}
 
 void UI_Sidebar_requestMinimapRefresh()
 {
@@ -346,7 +340,7 @@ static void buttonGoToProblem(int param1, int param2)
 }
 static void buttonAdvisors(int param1, int param2)
 {
-	UI_Advisors_goToFromSidepanel(lastAdvisor);
+	UI_Advisors_goToFromSidepanel();
 }
 
 static void buttonEmpire(int param1, int param2)

@@ -3,7 +3,6 @@
 #include "AllWindows.h"
 #include "Window.h"
 #include "MessageDialog.h"
-#include "Sidebar.h"
 #include "Warning.h"
 
 #include "../CityInfo.h"
@@ -45,12 +44,6 @@ static int currentAdvisor = Advisor_None;
 static int focusButtonId;
 static int advisorHeight;
 
-void UI_Advisors_setAdvisor(int advisor)
-{
-	currentAdvisor = advisor;
-	UI_Advisors_init();
-}
-
 int UI_Advisors_getId()
 {
 	return currentAdvisor;
@@ -75,11 +68,12 @@ void UI_Advisors_goToFromMessage(int advisor)
 		return;
 	}
 	currentAdvisor = advisor;
-    UI_Sidebar_setLastAdvisor(advisor);
+	Data_Settings.lastAdvisor = advisor;
+	UI_Advisors_init();
 	UI_Window_goTo(Window_Advisors);
 }
 
-void UI_Advisors_goToFromSidepanel(int advisor)
+void UI_Advisors_goToFromSidepanel()
 {
 	if (IsTutorial1()) {
 		UI_Warning_show(Warning_NotAvailable);
@@ -89,7 +83,8 @@ void UI_Advisors_goToFromSidepanel(int advisor)
 		UI_Warning_show(Warning_NotAvailableYet);
 		return;
 	}
-	currentAdvisor = advisor;
+	currentAdvisor = Data_Settings.lastAdvisor;
+	UI_Advisors_init();
 	UI_Window_goTo(Window_Advisors);
 }
 
@@ -265,7 +260,8 @@ void UI_Advisors_handleMouse()
 static void buttonChangeAdvisor(int param1, int param2)
 {
 	if (param1) {
-		UI_Advisors_setAdvisor(param1);
+		currentAdvisor = param1;
+		Data_Settings.lastAdvisor = param1;
 		UI_Window_requestRefresh();
 	} else {
 		UI_Window_goTo(Window_City);

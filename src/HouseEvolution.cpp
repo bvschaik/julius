@@ -374,14 +374,15 @@ static int hasRequiredGoodsAndServices(int buildingId, int forUpgrade)
 	if (b->data.house.numGods < religion) {
 		if (religion == 1) {
 			++Data_CityInfo.housesRequiringReligionToEvolve;
+			return 0;
 		} else if (religion == 2) {
 			++Data_CityInfo.housesRequiringMoreReligionToEvolve;
+			return 0;
 		} else if (religion == 3) {
 			++Data_CityInfo.housesRequiringEvenMoreReligionToEvolve;
+			return 0;
 		}
-		return 0;
-	}
-	if (religion > 0) {
+	} else if (religion > 0) {
 		++Data_CityInfo.housesRequiringReligion;
 	}
 	// barber
@@ -711,12 +712,14 @@ void HouseEvolution_determineEvolveText(int buildingId, int hasBadDesirabilityBu
 	if (b->data.house.numGods < religion) {
 		if (religion == 1) {
 			b->data.house.evolveTextId = 20;
+			return;
 		} else if (religion == 2) {
 			b->data.house.evolveTextId = 21;
+			return;
 		} else if (religion == 3) {
 			b->data.house.evolveTextId = 22;
+			return;
 		}
-		return;
 	}
 	// barber
 	if (b->data.house.barber < Data_Model_Houses[level].barber) {
@@ -843,12 +846,14 @@ void HouseEvolution_determineEvolveText(int buildingId, int hasBadDesirabilityBu
 	if (b->data.house.numGods < religion) {
 		if (religion == 1) {
 			b->data.house.evolveTextId = 50;
+			return;
 		} else if (religion == 2) {
 			b->data.house.evolveTextId = 51;
+			return;
 		} else if (religion == 3) {
 			b->data.house.evolveTextId = 52;
+			return;
 		}
-		return;
 	}
 	// barber
 	if (b->data.house.barber < Data_Model_Houses[level].barber) {

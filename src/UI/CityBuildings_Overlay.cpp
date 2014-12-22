@@ -31,7 +31,7 @@ static void drawOverlayColumn(int height, int xOffset, int yOffset, int isRed);
 
 void UI_CityBuildings_drawOverlayFootprints()
 {
-	FOREACH_XY_VIEW({
+	FOREACH_XY_VIEW {
 		int gridOffset = ViewToGridOffset(xView, yView);
 		if (gridOffset == Data_State.selectedBuilding.gridOffsetStart) {
 			Data_State.selectedBuilding.reservoirOffsetX = xGraphic;
@@ -87,14 +87,14 @@ void UI_CityBuildings_drawOverlayFootprints()
 				}
 			}
 		}
-	});
+	} END_FOREACH_XY_VIEW;
 }
 
 void UI_CityBuildings_drawOverlayTopsWalkersAnimation(int overlay)
 {
-	FOREACH_Y_VIEW(
+	FOREACH_Y_VIEW {
 		// draw walkers
-		FOREACH_X_VIEW(
+		FOREACH_X_VIEW {
 			int walkerId = Data_Grid_walkerIds[gridOffset];
 			while (walkerId) {
 				if (!Data_Walkers[walkerId].isGhost) {
@@ -102,9 +102,9 @@ void UI_CityBuildings_drawOverlayTopsWalkersAnimation(int overlay)
 				}
 				walkerId = Data_Walkers[walkerId].nextWalkerIdOnSameTile;
 			}
-		);
+		} END_FOREACH_X_VIEW;
 		// draw animation
-		FOREACH_X_VIEW(
+		FOREACH_X_VIEW {
 			if (overlay == Overlay_Desirability) {
 				drawBuildingTopForDesirabilityOverlay(gridOffset, xGraphic, yGraphic);
 			} else if (Data_Grid_edge[gridOffset] & Edge_LeftmostTile) {
@@ -190,8 +190,8 @@ void UI_CityBuildings_drawOverlayTopsWalkersAnimation(int overlay)
 					}
 				}
 			}
-		);
-		FOREACH_X_VIEW(
+		} END_FOREACH_X_VIEW;
+		FOREACH_X_VIEW {
 			int draw = 0;
 			if (Data_Grid_buildingIds[gridOffset]) {
 				int btype = Data_Buildings[Data_Grid_buildingIds[gridOffset]].type;
@@ -271,8 +271,8 @@ void UI_CityBuildings_drawOverlayTopsWalkersAnimation(int overlay)
 			} else if (Data_Grid_spriteOffsets[gridOffset] && (Data_Grid_terrain[gridOffset] & Terrain_Water)) {
 				UI_CityBuildings_drawBridge(gridOffset, xGraphic, yGraphic);
 			}
-		);
-	);
+		} END_FOREACH_X_VIEW;
+	} END_FOREACH_Y_VIEW;
 }
 
 #define WATER_TERRAIN 0x1777

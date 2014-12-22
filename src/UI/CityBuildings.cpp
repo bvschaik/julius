@@ -105,7 +105,7 @@ static void UI_CityBuildings_drawBuildingFootprints()
 	int graphicIdWaterFirst = GraphicId(ID_Graphic_TerrainWater);
 	int graphicIdWaterLast = 5 + graphicIdWaterFirst;
 
-	FOREACH_XY_VIEW({
+	FOREACH_XY_VIEW {
 		int gridOffset = ViewToGridOffset(xView, yView);
 		if (gridOffset == Data_State.selectedBuilding.gridOffsetStart) {
 			Data_State.selectedBuilding.reservoirOffsetX = xGraphic;
@@ -166,13 +166,13 @@ static void UI_CityBuildings_drawBuildingFootprints()
 					break;
 			}
 		}
-	});
+	} END_FOREACH_XY_VIEW;
 }
 
 static void UI_CityBuildings_drawBuildingTopsWalkersAnimation(int selectedWalkerId, struct UI_CityPixelCoordinate *coord)
 {
-	FOREACH_Y_VIEW(
-		FOREACH_X_VIEW(
+	FOREACH_Y_VIEW {
+		FOREACH_X_VIEW {
 			if (Data_Grid_edge[gridOffset] & Edge_LeftmostTile) {
 				int buildingId = Data_Grid_buildingIds[gridOffset];
 				int graphicId = Data_Grid_graphicIds[gridOffset];
@@ -331,9 +331,9 @@ static void UI_CityBuildings_drawBuildingTopsWalkersAnimation(int selectedWalker
 					}
 				}
 			}
-		);
+		} END_FOREACH_X_VIEW;
 		// draw walkers
-		FOREACH_X_VIEW(
+		FOREACH_X_VIEW {
 			int walkerId = Data_Grid_walkerIds[gridOffset];
 			while (walkerId) {
 				if (!Data_Walkers[walkerId].isGhost) {
@@ -341,9 +341,9 @@ static void UI_CityBuildings_drawBuildingTopsWalkersAnimation(int selectedWalker
 				}
 				walkerId = Data_Walkers[walkerId].nextWalkerIdOnSameTile;
 			}
-		);
+		} END_FOREACH_X_VIEW;
 		// draw animation
-		FOREACH_X_VIEW(
+		FOREACH_X_VIEW {
 			int graphicId = Data_Grid_graphicIds[gridOffset];
 			if (GraphicNumAnimationSprites(graphicId)) {
 				if (Data_Grid_edge[gridOffset] & Edge_LeftmostTile) {
@@ -475,8 +475,8 @@ static void UI_CityBuildings_drawBuildingTopsWalkersAnimation(int selectedWalker
 					}
 				}
 			}
-		);
-	);
+		} END_FOREACH_X_VIEW;
+	} END_FOREACH_Y_VIEW;
 }
 
 void UI_CityBuildings_drawBridge(int gridOffset, int x, int y)
@@ -542,8 +542,8 @@ void UI_CityBuildings_drawBridge(int gridOffset, int x, int y)
 
 static void UI_CityBuildings_drawHippodromeAndElevatedWalkers(int selectedWalkerId)
 {
-	FOREACH_Y_VIEW(
-		FOREACH_X_VIEW({
+	FOREACH_Y_VIEW {
+		FOREACH_X_VIEW {
 			for (int walkerId = Data_Grid_walkerIds[gridOffset]; walkerId > 0; walkerId = Data_Walkers[walkerId].nextWalkerIdOnSameTile) {
 				if (Data_Walkers[walkerId].useCrossCountry && !Data_Walkers[walkerId].isGhost) {
 					UI_CityBuildings_drawWalker(walkerId, xGraphic, yGraphic, selectedWalkerId, 0);
@@ -552,8 +552,8 @@ static void UI_CityBuildings_drawHippodromeAndElevatedWalkers(int selectedWalker
 					UI_CityBuildings_drawWalker(walkerId, xGraphic, yGraphic, selectedWalkerId, 0);
 				}
 			}
-		});
-		FOREACH_X_VIEW({
+		} END_FOREACH_X_VIEW;
+		FOREACH_X_VIEW {
 			if (!Data_State.currentOverlay) {
 				int graphicId = Data_Grid_graphicIds[gridOffset];
 				if (GraphicNumAnimationSprites(graphicId) &&
@@ -588,8 +588,8 @@ static void UI_CityBuildings_drawHippodromeAndElevatedWalkers(int selectedWalker
 					}
 				}
 			}
-		});
-	);
+		} END_FOREACH_X_VIEW;
+	} END_FOREACH_Y_VIEW;
 }
 
 // MOUSE HANDLING

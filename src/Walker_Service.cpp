@@ -8,7 +8,7 @@
 #include "Data/Model.h"
 #include "Data/Walker.h"
 
-#define FOR_XY_RADIUS(block) \
+#define FOR_XY_RADIUS \
 	int xMin = x - 2;\
 	int yMin = y - 2;\
 	int xMax = x + 2;\
@@ -18,8 +18,9 @@
 	for (int yy = yMin; yy <= yMax; yy++) {\
 		for (int xx = xMin; xx <= xMax; xx++) {\
 			int buildingId = Data_Grid_buildingIds[gridOffset];\
-			if (buildingId) {\
-				block;\
+			if (buildingId) {
+
+#define END_FOR_XY_RADIUS \
 			}\
 			++gridOffset;\
 		}\
@@ -29,7 +30,7 @@
 static int provideEngineerCoverage(int x, int y, int *maxDamageRiskSeen)
 {
 	int serviced = 0;
-	FOR_XY_RADIUS(
+	FOR_XY_RADIUS {
 		if (Data_Buildings[buildingId].type == Building_Hippodrome) {
 			buildingId = Building_getMainBuildingId(buildingId);
 		}
@@ -40,14 +41,14 @@ static int provideEngineerCoverage(int x, int y, int *maxDamageRiskSeen)
 		if (Data_Buildings[buildingId].houseSize && Data_Buildings[buildingId].housePopulation > 0) {
 			serviced++;
 		}
-	);
+	} END_FOR_XY_RADIUS;
 	return serviced;
 }
 
 static int providePrefectFireCoverage(int x, int y)
 {
 	int serviced = 0;
-	FOR_XY_RADIUS(
+	FOR_XY_RADIUS {
 		if (Data_Buildings[buildingId].type == Building_Hippodrome) {
 			buildingId = Building_getMainBuildingId(buildingId);
 		}
@@ -55,37 +56,37 @@ static int providePrefectFireCoverage(int x, int y)
 		if (Data_Buildings[buildingId].houseSize && Data_Buildings[buildingId].housePopulation > 0) {
 			serviced++;
 		}
-	);
+	} END_FOR_XY_RADIUS;
 	return serviced;
 }
 
 static int getPrefectCrimeCoverage(int x, int y)
 {
 	int minHappinessSeen = 100;
-	FOR_XY_RADIUS(
+	FOR_XY_RADIUS {
 		if (Data_Buildings[buildingId].sentiment.houseHappiness < minHappinessSeen) {
 			minHappinessSeen = Data_Buildings[buildingId].sentiment.houseHappiness;
 		}
-	);
+	} END_FOR_XY_RADIUS;
 	return minHappinessSeen;
 }
 
 static int provideTheaterCoverage(int x, int y)
 {
 	int serviced = 0;
-	FOR_XY_RADIUS(
+	FOR_XY_RADIUS {
 		if (Data_Buildings[buildingId].houseSize && Data_Buildings[buildingId].housePopulation > 0) {
 			Data_Buildings[buildingId].data.house.theater = 96;
 			serviced++;
 		}
-	);
+	} END_FOR_XY_RADIUS;
 	return serviced;
 }
 
 static int provideAmphitheaterCoverage(int x, int y, int numShows)
 {
 	int serviced = 0;
-	FOR_XY_RADIUS(
+	FOR_XY_RADIUS {
 		if (Data_Buildings[buildingId].houseSize && Data_Buildings[buildingId].housePopulation > 0) {
 			Data_Buildings[buildingId].data.house.amphitheaterActor = 96;
 			if (numShows == 2) {
@@ -93,14 +94,14 @@ static int provideAmphitheaterCoverage(int x, int y, int numShows)
 			}
 			serviced++;
 		}
-	);
+	} END_FOR_XY_RADIUS;
 	return serviced;
 }
 
 static int provideColosseumCoverage(int x, int y, int numShows)
 {
 	int serviced = 0;
-	FOR_XY_RADIUS(
+	FOR_XY_RADIUS {
 		if (Data_Buildings[buildingId].houseSize && Data_Buildings[buildingId].housePopulation > 0) {
 			Data_Buildings[buildingId].data.house.colosseumGladiator = 96;
 			if (numShows == 2) {
@@ -108,19 +109,19 @@ static int provideColosseumCoverage(int x, int y, int numShows)
 			}
 			serviced++;
 		}
-	);
+	} END_FOR_XY_RADIUS;
 	return serviced;
 }
 
 static int provideHippodromeCoverage(int x, int y)
 {
 	int serviced = 0;
-	FOR_XY_RADIUS(
+	FOR_XY_RADIUS {
 		if (Data_Buildings[buildingId].houseSize && Data_Buildings[buildingId].housePopulation > 0) {
 			Data_Buildings[buildingId].data.house.hippodrome = 96;
 			serviced++;
 		}
-	);
+	} END_FOR_XY_RADIUS;
 	return serviced;
 }
 
@@ -128,7 +129,7 @@ static int provideMarketGoods(int marketBuildingId, int x, int y)
 {
 	int serviced = 0;
 	Data_Building *market = &Data_Buildings[marketBuildingId];
-	FOR_XY_RADIUS(
+	FOR_XY_RADIUS {
 		if (Data_Buildings[buildingId].houseSize && Data_Buildings[buildingId].housePopulation > 0) {
 			serviced++;
 			Data_Building *house = &Data_Buildings[buildingId];
@@ -212,26 +213,26 @@ static int provideMarketGoods(int marketBuildingId, int x, int y)
 				}
 			}
 		}
-	);
+	} END_FOR_XY_RADIUS;
 	return serviced;
 }
 
 static int provideBathhouseCoverage(int x, int y)
 {
 	int serviced = 0;
-	FOR_XY_RADIUS(
+	FOR_XY_RADIUS {
 		if (Data_Buildings[buildingId].houseSize && Data_Buildings[buildingId].housePopulation > 0) {
 			Data_Buildings[buildingId].data.house.bathhouse = 96;
 			serviced++;
 		}
-	);
+	} END_FOR_XY_RADIUS;
 	return serviced;
 }
 
 static int provideReligionCoverage(int x, int y, int god)
 {
 	int serviced = 0;
-	FOR_XY_RADIUS(
+	FOR_XY_RADIUS {
 		if (Data_Buildings[buildingId].houseSize && Data_Buildings[buildingId].housePopulation > 0) {
 			switch (god) {
 				case 0:
@@ -252,79 +253,79 @@ static int provideReligionCoverage(int x, int y, int god)
 			}
 			serviced++;
 		}
-	);
+	} END_FOR_XY_RADIUS;
 	return serviced;
 }
 
 static int provideSchoolCoverage(int x, int y)
 {
 	int serviced = 0;
-	FOR_XY_RADIUS(
+	FOR_XY_RADIUS {
 		if (Data_Buildings[buildingId].houseSize && Data_Buildings[buildingId].housePopulation > 0) {
 			Data_Buildings[buildingId].data.house.school = 96;
 			serviced++;
 		}
-	);
+	} END_FOR_XY_RADIUS;
 	return serviced;
 }
 
 static int provideAcademyCoverage(int x, int y)
 {
 	int serviced = 0;
-	FOR_XY_RADIUS(
+	FOR_XY_RADIUS {
 		if (Data_Buildings[buildingId].houseSize && Data_Buildings[buildingId].housePopulation > 0) {
 			Data_Buildings[buildingId].data.house.academy = 96;
 			serviced++;
 		}
-	);
+	} END_FOR_XY_RADIUS;
 	return serviced;
 }
 
 static int provideLibraryCoverage(int x, int y)
 {
 	int serviced = 0;
-	FOR_XY_RADIUS(
+	FOR_XY_RADIUS {
 		if (Data_Buildings[buildingId].houseSize && Data_Buildings[buildingId].housePopulation > 0) {
 			Data_Buildings[buildingId].data.house.library = 96;
 			serviced++;
 		}
-	);
+	} END_FOR_XY_RADIUS;
 	return serviced;
 }
 
 static int provideBarberCoverage(int x, int y)
 {
 	int serviced = 0;
-	FOR_XY_RADIUS(
+	FOR_XY_RADIUS {
 		if (Data_Buildings[buildingId].houseSize && Data_Buildings[buildingId].housePopulation > 0) {
 			Data_Buildings[buildingId].data.house.barber = 96;
 			serviced++;
 		}
-	);
+	} END_FOR_XY_RADIUS;
 	return serviced;
 }
 
 static int provideClinicCoverage(int x, int y)
 {
 	int serviced = 0;
-	FOR_XY_RADIUS(
+	FOR_XY_RADIUS {
 		if (Data_Buildings[buildingId].houseSize && Data_Buildings[buildingId].housePopulation > 0) {
 			Data_Buildings[buildingId].data.house.clinic = 96;
 			serviced++;
 		}
-	);
+	} END_FOR_XY_RADIUS;
 	return serviced;
 }
 
 static int provideHospitalCoverage(int x, int y)
 {
 	int serviced = 0;
-	FOR_XY_RADIUS(
+	FOR_XY_RADIUS {
 		if (Data_Buildings[buildingId].houseSize && Data_Buildings[buildingId].housePopulation > 0) {
 			Data_Buildings[buildingId].data.house.hospital = 96;
 			serviced++;
 		}
-	);
+	} END_FOR_XY_RADIUS;
 	return serviced;
 }
 
@@ -355,11 +356,11 @@ static int provideMissionaryCoverage(int x, int y)
 static int provideLaborSeekerCoverage(int x, int y)
 {
 	int serviced = 0;
-	FOR_XY_RADIUS(
+	FOR_XY_RADIUS {
 		if (Data_Buildings[buildingId].houseSize && Data_Buildings[buildingId].housePopulation > 0) {
 			serviced++;
 		}
-	);
+	} END_FOR_XY_RADIUS;
 	return serviced;
 }
 
@@ -367,7 +368,7 @@ static int provideTaxCollectorCoverage(int x, int y, unsigned char *maxTaxMultip
 {
 	int serviced = 0;
 	*maxTaxMultiplier = 0;
-	FOR_XY_RADIUS(
+	FOR_XY_RADIUS {
 		if (Data_Buildings[buildingId].houseSize && Data_Buildings[buildingId].housePopulation > 0) {
 			int taxMultiplier = Data_Model_Houses[Data_Buildings[buildingId].subtype.houseLevel].taxMultiplier;
 			if (taxMultiplier > *maxTaxMultiplier) {
@@ -376,7 +377,7 @@ static int provideTaxCollectorCoverage(int x, int y, unsigned char *maxTaxMultip
 			Data_Buildings[buildingId].houseTaxCoverage = 50;
 			serviced++;
 		}
-	);
+	} END_FOR_XY_RADIUS;
 	return serviced;
 }
 

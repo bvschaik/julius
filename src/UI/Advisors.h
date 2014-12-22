@@ -3,7 +3,7 @@
 
 int UI_Advisors_getId();
 
-void UI_Advisors_goToFromSidepanel(int advisor);
+void UI_Advisors_goToFromSidepanel();
 void UI_Advisors_goToFromMessage(int advisor);
 
 #endif

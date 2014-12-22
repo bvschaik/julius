@@ -25,157 +25,202 @@ static struct {
 	int items[MAX_QUEUE];
 } queue;
 
+static struct {
+	int throughBuildingId;
+	int isAqueduct;
+} state;
+
 static int directionPath[500];
 
 static char tmpGrid[GRID_SIZE * GRID_SIZE];
 
-#define SET_DIST_AND_ENQUEUE() \
-	Data_Grid_routingDistance[nextOffset] = dist;\
-	queue.items[queue.tail++] = nextOffset; \
+static void setDistAndEnqueue(int nextOffset, int dist)
+{
+	Data_Grid_routingDistance[nextOffset] = dist;
+	queue.items[queue.tail++] = nextOffset;
 	if (queue.tail >= MAX_QUEUE) queue.tail = 0;
+}
 
-#define ROUTE_QUEUE(source, dest, block) \
-	Grid_clearShortGrid(Data_Grid_routingDistance);\
-	Data_Grid_routingDistance[source] = 1;\
-	queue.items[0] = source;\
-	queue.head = 0;\
-	queue.tail = 1;\
-	while (queue.head != queue.tail) {\
-		int offset = queue.items[queue.head];\
-		if (offset == dest) break;\
-		int dist = 1 + Data_Grid_routingDistance[offset];\
-		int nextOffset = offset - 162;\
-		if (nextOffset >= 0 && !Data_Grid_routingDistance[nextOffset]) {\
-			block;\
-		}\
-		nextOffset = offset + 1;\
-		if (nextOffset < 162 * 162 && !Data_Grid_routingDistance[nextOffset]) {\
-			block;\
-		}\
-		nextOffset = offset + 162;\
-		if (nextOffset < 162 * 162 && !Data_Grid_routingDistance[nextOffset]) {\
-			block;\
-		}\
-		nextOffset = offset - 1;\
-		if (nextOffset >= 0 && !Data_Grid_routingDistance[nextOffset]) {\
-			block;\
-		}\
-		if (++queue.head >= MAX_QUEUE) queue.head = 0;\
+static void routeQueue(int source, int dest, void (*callback)(int nextOffset, int dist))
+{
+	Grid_clearShortGrid(Data_Grid_routingDistance);
+	Data_Grid_routingDistance[source] = 1;
+	queue.items[0] = source;
+	queue.head = 0;
+	queue.tail = 1;
+	while (queue.head != queue.tail) {
+		int offset = queue.items[queue.head];
+		if (offset == dest) break;
+		int dist = 1 + Data_Grid_routingDistance[offset];
+		int nextOffset = offset - 162;
+		if (nextOffset >= 0 && !Data_Grid_routingDistance[nextOffset]) {
+			callback(nextOffset, dist);
+		}
+		nextOffset = offset + 1;
+		if (nextOffset < 162 * 162 && !Data_Grid_routingDistance[nextOffset]) {
+			callback(nextOffset, dist);
+		}
+		nextOffset = offset + 162;
+		if (nextOffset < 162 * 162 && !Data_Grid_routingDistance[nextOffset]) {
+			callback(nextOffset, dist);
+		}
+		nextOffset = offset - 1;
+		if (nextOffset >= 0 && !Data_Grid_routingDistance[nextOffset]) {
+			callback(nextOffset, dist);
+		}
+		if (++queue.head >= MAX_QUEUE) queue.head = 0;
 	}
+}
 
-#define ROUTE_QUEUE_MAX(source, dest, max, block) \
-	Grid_clearShortGrid(Data_Grid_routingDistance);\
-	Data_Grid_routingDistance[source] = 1;\
-	queue.items[0] = source;\
-	queue.head = 0;\
-	queue.tail = 1;\
-	int tiles = 0;\
-	while (queue.head != queue.tail) {\
-		int offset = queue.items[queue.head];\
-		if (offset == dest) break;\
-		if (++tiles > max) break;\
-		int dist = 1 + Data_Grid_routingDistance[offset];\
-		int nextOffset = offset - 162;\
-		if (nextOffset >= 0 && !Data_Grid_routingDistance[nextOffset]) {\
-			block;\
-		}\
-		nextOffset = offset + 1;\
-		if (nextOffset < 162 * 162 && !Data_Grid_routingDistance[nextOffset]) {\
-			block;\
-		}\
-		nextOffset = offset + 162;\
-		if (nextOffset < 162 * 162 && !Data_Grid_routingDistance[nextOffset]) {\
-			block;\
-		}\
-		nextOffset = offset - 1;\
-		if (nextOffset >= 0 && !Data_Grid_routingDistance[nextOffset]) {\
-			block;\
-		}\
-		if (++queue.head >= MAX_QUEUE) queue.head = 0;\
+static void routeQueueWhileTrue(int source, int (*callback)(int nextOffset, int dist))
+{
+	Grid_clearShortGrid(Data_Grid_routingDistance);
+	Data_Grid_routingDistance[source] = 1;
+	queue.items[0] = source;
+	queue.head = 0;
+	queue.tail = 1;
+	while (queue.head != queue.tail) {
+		int offset = queue.items[queue.head];
+		int dist = 1 + Data_Grid_routingDistance[offset];
+		int nextOffset = offset - 162;
+		if (nextOffset >= 0 && !Data_Grid_routingDistance[nextOffset]) {
+			if (!callback(nextOffset, dist)) break;
+		}
+		nextOffset = offset + 1;
+		if (nextOffset < 162 * 162 && !Data_Grid_routingDistance[nextOffset]) {
+			if (!callback(nextOffset, dist)) break;
+		}
+		nextOffset = offset + 162;
+		if (nextOffset < 162 * 162 && !Data_Grid_routingDistance[nextOffset]) {
+			if (!callback(nextOffset, dist)) break;
+		}
+		nextOffset = offset - 1;
+		if (nextOffset >= 0 && !Data_Grid_routingDistance[nextOffset]) {
+			if (!callback(nextOffset, dist)) break;
+		}
+		if (++queue.head >= MAX_QUEUE) queue.head = 0;
 	}
+}
 
-#define ROUTE_QUEUE_BOAT(source, block) \
-	memset(Data_Grid_routingDistance, 0, GRID_SIZE * GRID_SIZE * 2);\
-	memset(tmpGrid, 0, GRID_SIZE * GRID_SIZE);\
-	Data_Grid_routingDistance[source] = 1;\
-	queue.items[0] = source;\
-	queue.head = 0;\
-	queue.tail = 1;\
-	int tiles = 0;\
-	while (queue.head != queue.tail) {\
-		int offset = queue.items[queue.head];\
-		if (++tiles > 50000) break;\
-		int drag = Data_Grid_routingWater[offset] == -2 ? 4 : 0;\
-		if (drag && tmpGrid[offset]++ < drag) {\
-			queue.items[queue.tail++] = offset; \
-			if (queue.tail >= MAX_QUEUE) queue.tail = 0;\
-		} else {\
-			int dist = 1 + Data_Grid_routingDistance[offset];\
-			int nextOffset = offset - 162;\
-			if (nextOffset >= 0 && !Data_Grid_routingDistance[nextOffset]) {\
-				block;\
-			}\
-			nextOffset = offset + 1;\
-			if (nextOffset < 162 * 162 && !Data_Grid_routingDistance[nextOffset]) {\
-				block;\
-			}\
-			nextOffset = offset + 162;\
-			if (nextOffset < 162 * 162 && !Data_Grid_routingDistance[nextOffset]) {\
-				block;\
-			}\
-			nextOffset = offset - 1;\
-			if (nextOffset >= 0 && !Data_Grid_routingDistance[nextOffset]) {\
-				block;\
-			}\
-		}\
-		if (++queue.head >= MAX_QUEUE) queue.head = 0;\
+static void routeQueueMax(int source, int dest, int maxTiles, void (*callback)(int, int))
+{
+	Grid_clearShortGrid(Data_Grid_routingDistance);
+	Data_Grid_routingDistance[source] = 1;
+	queue.items[0] = source;
+	queue.head = 0;
+	queue.tail = 1;
+	int tiles = 0;
+	while (queue.head != queue.tail) {
+		int offset = queue.items[queue.head];
+		if (offset == dest) break;
+		if (++tiles > maxTiles) break;
+		int dist = 1 + Data_Grid_routingDistance[offset];
+		int nextOffset = offset - 162;
+		if (nextOffset >= 0 && !Data_Grid_routingDistance[nextOffset]) {
+			callback(nextOffset, dist);
+		}
+		nextOffset = offset + 1;
+		if (nextOffset < 162 * 162 && !Data_Grid_routingDistance[nextOffset]) {
+			callback(nextOffset, dist);
+		}
+		nextOffset = offset + 162;
+		if (nextOffset < 162 * 162 && !Data_Grid_routingDistance[nextOffset]) {
+			callback(nextOffset, dist);
+		}
+		nextOffset = offset - 1;
+		if (nextOffset >= 0 && !Data_Grid_routingDistance[nextOffset]) {
+			callback(nextOffset, dist);
+		}
+		if (++queue.head >= MAX_QUEUE) queue.head = 0;
 	}
+}
 
-#define ROUTE_QUEUE_DIR8(source, block) \
-	Grid_clearShortGrid(Data_Grid_routingDistance);\
-	Data_Grid_routingDistance[source] = 1;\
-	queue.items[0] = source;\
-	queue.head = 0;\
-	queue.tail = 1;\
-	int tiles = 0;\
-	while (queue.head != queue.tail) {\
-		if (++tiles > 50000) break;\
-		int offset = queue.items[queue.head];\
-		int dist = 1 + Data_Grid_routingDistance[offset];\
-		int nextOffset = offset - 162;\
-		if (nextOffset >= 0 && !Data_Grid_routingDistance[nextOffset]) {\
-			block;\
-		}\
-		nextOffset = offset + 1;\
-		if (nextOffset < 162 * 162 && !Data_Grid_routingDistance[nextOffset]) {\
-			block;\
-		}\
-		nextOffset = offset + 162;\
-		if (nextOffset < 162 * 162 && !Data_Grid_routingDistance[nextOffset]) {\
-			block;\
-		}\
-		nextOffset = offset - 1;\
-		if (nextOffset >= 0 && !Data_Grid_routingDistance[nextOffset]) {\
-			block;\
-		}\
-		nextOffset = offset - 161;\
-		if (nextOffset >= 0 && !Data_Grid_routingDistance[nextOffset]) {\
-			block;\
-		}\
-		nextOffset = offset + 163;\
-		if (nextOffset < 162 * 162 && !Data_Grid_routingDistance[nextOffset]) {\
-			block;\
-		}\
-		nextOffset = offset + 161;\
-		if (nextOffset < 162 * 162 && !Data_Grid_routingDistance[nextOffset]) {\
-			block;\
-		}\
-		nextOffset = offset - 163;\
-		if (nextOffset >= 0 && !Data_Grid_routingDistance[nextOffset]) {\
-			block;\
-		}\
-		if (++queue.head >= MAX_QUEUE) queue.head = 0;\
+static void routeQueueBoat(int source, void (*callback)(int, int))
+{
+	memset(Data_Grid_routingDistance, 0, GRID_SIZE * GRID_SIZE * 2);
+	memset(tmpGrid, 0, GRID_SIZE * GRID_SIZE);
+	Data_Grid_routingDistance[source] = 1;
+	queue.items[0] = source;
+	queue.head = 0;
+	queue.tail = 1;
+	int tiles = 0;
+	while (queue.head != queue.tail) {
+		int offset = queue.items[queue.head];
+		if (++tiles > 50000) break;
+		int drag = Data_Grid_routingWater[offset] == -2 ? 4 : 0;
+		if (drag && tmpGrid[offset]++ < drag) {
+			queue.items[queue.tail++] = offset;
+			if (queue.tail >= MAX_QUEUE) queue.tail = 0;
+		} else {
+			int dist = 1 + Data_Grid_routingDistance[offset];
+			int nextOffset = offset - 162;
+			if (nextOffset >= 0 && !Data_Grid_routingDistance[nextOffset]) {
+				callback(nextOffset, dist);
+			}
+			nextOffset = offset + 1;
+			if (nextOffset < 162 * 162 && !Data_Grid_routingDistance[nextOffset]) {
+				callback(nextOffset, dist);
+			}
+			nextOffset = offset + 162;
+			if (nextOffset < 162 * 162 && !Data_Grid_routingDistance[nextOffset]) {
+				callback(nextOffset, dist);
+			}
+			nextOffset = offset - 1;
+			if (nextOffset >= 0 && !Data_Grid_routingDistance[nextOffset]) {
+				callback(nextOffset, dist);
+			}
+		}
+		if (++queue.head >= MAX_QUEUE) queue.head = 0;
 	}
+}
+
+static void routeQueueDir8(int source, void (*callback)(int, int))
+{
+	Grid_clearShortGrid(Data_Grid_routingDistance);
+	Data_Grid_routingDistance[source] = 1;
+	queue.items[0] = source;
+	queue.head = 0;
+	queue.tail = 1;
+	int tiles = 0;
+	while (queue.head != queue.tail) {
+		if (++tiles > 50000) break;
+		int offset = queue.items[queue.head];
+		int dist = 1 + Data_Grid_routingDistance[offset];
+		int nextOffset = offset - 162;
+		if (nextOffset >= 0 && !Data_Grid_routingDistance[nextOffset]) {
+			callback(nextOffset, dist);
+		}
+		nextOffset = offset + 1;
+		if (nextOffset < 162 * 162 && !Data_Grid_routingDistance[nextOffset]) {
+			callback(nextOffset, dist);
+		}
+		nextOffset = offset + 162;
+		if (nextOffset < 162 * 162 && !Data_Grid_routingDistance[nextOffset]) {
+			callback(nextOffset, dist);
+		}
+		nextOffset = offset - 1;
+		if (nextOffset >= 0 && !Data_Grid_routingDistance[nextOffset]) {
+			callback(nextOffset, dist);
+		}
+		nextOffset = offset - 161;
+		if (nextOffset >= 0 && !Data_Grid_routingDistance[nextOffset]) {
+			callback(nextOffset, dist);
+		}
+		nextOffset = offset + 163;
+		if (nextOffset < 162 * 162 && !Data_Grid_routingDistance[nextOffset]) {
+			callback(nextOffset, dist);
+		}
+		nextOffset = offset + 161;
+		if (nextOffset < 162 * 162 && !Data_Grid_routingDistance[nextOffset]) {
+			callback(nextOffset, dist);
+		}
+		nextOffset = offset - 163;
+		if (nextOffset >= 0 && !Data_Grid_routingDistance[nextOffset]) {
+			callback(nextOffset, dist);
+		}
+		if (++queue.head >= MAX_QUEUE) queue.head = 0;
+	}
+}
 
 void Routing_determineLandCitizen()
 {
@@ -450,16 +495,18 @@ void Routing_clearLandTypeCitizen()
 	}
 }
 
+static void callbackGetDistance(int nextOffset, int dist)
+{
+	if (Data_Grid_routingLandCitizen[nextOffset] >= 0) {
+		setDistAndEnqueue(nextOffset, dist);
+	}
+}
+
 void Routing_getDistance(int x, int y)
 {
 	int sourceOffset = GridOffset(x, y);
 	++Data_Routes.totalRoutesCalculated;
-	ROUTE_QUEUE(sourceOffset, -1,
-	{
-		if (Data_Grid_routingLandCitizen[nextOffset] >= 0) {
-			SET_DIST_AND_ENQUEUE();
-		}
-	});
+	routeQueue(sourceOffset, -1, callbackGetDistance);
 }
 
 int Routing_getCalculatedDistance(int gridOffset)
@@ -467,21 +514,24 @@ int Routing_getCalculatedDistance(int gridOffset)
 	return Data_Grid_routingDistance[gridOffset];
 }
 
+static int callbackDeleteClosestWallOrAqueduct(int nextOffset, int dist)
+{
+	if (Data_Grid_routingLandCitizen[nextOffset] < 0) {
+		if (Data_Grid_terrain[nextOffset] & (Terrain_Aqueduct | Terrain_Wall)) {
+			Data_Grid_terrain[nextOffset] &= Terrain_2e80;
+			return 0;
+		}
+	} else {
+		setDistAndEnqueue(nextOffset, dist);
+	}
+	return 1;
+}
+
 void Routing_deleteClosestWallOrAqueduct(int x, int y)
 {
 	int sourceOffset = GridOffset(x, y);
 	++Data_Routes.totalRoutesCalculated;
-	ROUTE_QUEUE(sourceOffset, -1,
-	{
-		if (Data_Grid_routingLandCitizen[nextOffset] < 0) {
-			if (Data_Grid_terrain[nextOffset] & (Terrain_Aqueduct | Terrain_Wall)) {
-				Data_Grid_terrain[nextOffset] &= Terrain_2e80;
-				return;
-			}
-		} else {
-			SET_DIST_AND_ENQUEUE();
-		}
-	});
+	routeQueueWhileTrue(sourceOffset, callbackDeleteClosestWallOrAqueduct);
 }
 
 static int hasFightingFriendly(int gridOffset)
@@ -514,18 +564,27 @@ static int hasFightingEnemy(int gridOffset)
 	return 0;
 }
 
+static void callbackCanTravelOverLandCitizen(int nextOffset, int dist)
+{
+	if (Data_Grid_routingLandCitizen[nextOffset] >= 0 && !hasFightingFriendly(nextOffset)) {
+		setDistAndEnqueue(nextOffset, dist);
+	}
+}
 int Routing_canTravelOverLandCitizen(int xSrc, int ySrc, int xDst, int yDst)
 {
 	int sourceOffset = GridOffset(xSrc, ySrc);
 	int destOffset = GridOffset(xDst, yDst);
 	++Data_Routes.totalRoutesCalculated;
-	ROUTE_QUEUE(sourceOffset, destOffset,
-	{
-		if (Data_Grid_routingLandCitizen[nextOffset] >= 0 && !hasFightingFriendly(nextOffset)) {
-			SET_DIST_AND_ENQUEUE();
-		}
-	});
+	routeQueue(sourceOffset, destOffset, callbackCanTravelOverLandCitizen);
 	return Data_Grid_routingDistance[destOffset] != 0;
+}
+
+static void callbackCanTravelOverRoadGardenCitizen(int nextOffset, int dist)
+{
+	if (Data_Grid_routingLandCitizen[nextOffset] >= 0 &&
+		Data_Grid_routingLandCitizen[nextOffset] <= 2) {
+		setDistAndEnqueue(nextOffset, dist);
+	}
 }
 
 int Routing_canTravelOverRoadGardenCitizen(int xSrc, int ySrc, int xDst, int yDst)
@@ -533,14 +592,16 @@ int Routing_canTravelOverRoadGardenCitizen(int xSrc, int ySrc, int xDst, int yDs
 	int sourceOffset = GridOffset(xSrc, ySrc);
 	int destOffset = GridOffset(xDst, yDst);
 	++Data_Routes.totalRoutesCalculated;
-	ROUTE_QUEUE(sourceOffset, destOffset,
-	{
-		if (Data_Grid_routingLandCitizen[nextOffset] >= 0 &&
-			Data_Grid_routingLandCitizen[nextOffset] <= 2) {
-			SET_DIST_AND_ENQUEUE();
-		}
-	});
+	routeQueue(sourceOffset, destOffset, callbackCanTravelOverRoadGardenCitizen);
 	return Data_Grid_routingDistance[destOffset] != 0;
+}
+
+static void callbackCanTravelOverWalls(int nextOffset, int dist)
+{
+	if (Data_Grid_routingWalls[nextOffset] >= 0 &&
+		Data_Grid_routingWalls[nextOffset] <= 2) {
+		setDistAndEnqueue(nextOffset, dist);
+	}
 }
 
 int Routing_canTravelOverWalls(int xSrc, int ySrc, int xDst, int yDst)
@@ -548,14 +609,29 @@ int Routing_canTravelOverWalls(int xSrc, int ySrc, int xDst, int yDst)
 	int sourceOffset = GridOffset(xSrc, ySrc);
 	int destOffset = GridOffset(xDst, yDst);
 	++Data_Routes.totalRoutesCalculated;
-	ROUTE_QUEUE(sourceOffset, destOffset,
-	{
-		if (Data_Grid_routingWalls[nextOffset] >= 0 &&
-			Data_Grid_routingWalls[nextOffset] <= 2) {
-			SET_DIST_AND_ENQUEUE();
-		}
-	});
+	routeQueue(sourceOffset, destOffset, callbackCanTravelOverWalls);
 	return Data_Grid_routingDistance[destOffset] != 0;
+}
+
+static void callbackCanTravelOverLandNonCitizenThroughBuilding(int nextOffset, int dist)
+{
+	if (!hasFightingEnemy(nextOffset)) {
+		if (Data_Grid_routingLandNonCitizen[nextOffset] == 0 ||
+			Data_Grid_routingLandNonCitizen[nextOffset] == 2 ||
+			(Data_Grid_routingLandNonCitizen[nextOffset] == 1 && Data_Grid_buildingIds[nextOffset] == state.throughBuildingId)) {
+			setDistAndEnqueue(nextOffset, dist);
+		}
+	}
+}
+
+static void callbackCanTravelOverLandNonCitizen(int nextOffset, int dist)
+{
+	if (!hasFightingEnemy(nextOffset)) {
+		if (Data_Grid_routingLandNonCitizen[nextOffset] >= 0 &&
+			Data_Grid_routingLandNonCitizen[nextOffset] < 5) {
+			setDistAndEnqueue(nextOffset, dist);
+		}
+	}
 }
 
 int Routing_canTravelOverLandNonCitizen(int xSrc, int ySrc, int xDst, int yDst, int onlyThroughBuildingId, int maxTiles)
@@ -565,28 +641,19 @@ int Routing_canTravelOverLandNonCitizen(int xSrc, int ySrc, int xDst, int yDst, 
 	++Data_Routes.totalRoutesCalculated;
 	++Data_Routes.enemyRoutesCalculated;
 	if (onlyThroughBuildingId) {
-		ROUTE_QUEUE(sourceOffset, destOffset,
-		{
-			if (!hasFightingEnemy(nextOffset)) {
-				if (Data_Grid_routingLandNonCitizen[nextOffset] == 0 ||
-					Data_Grid_routingLandNonCitizen[nextOffset] == 2 ||
-					(Data_Grid_routingLandNonCitizen[nextOffset] == 1 && Data_Grid_buildingIds[nextOffset] == onlyThroughBuildingId)) {
-					SET_DIST_AND_ENQUEUE();
-				}
-			}
-		});
+		state.throughBuildingId = onlyThroughBuildingId;
+		routeQueue(sourceOffset, destOffset, callbackCanTravelOverLandNonCitizenThroughBuilding);
 	} else {
-		ROUTE_QUEUE_MAX(sourceOffset, destOffset, maxTiles,
-		{
-			if (!hasFightingEnemy(nextOffset)) {
-				if (Data_Grid_routingLandNonCitizen[nextOffset] >= 0 &&
-					Data_Grid_routingLandNonCitizen[nextOffset] < 5) {
-					SET_DIST_AND_ENQUEUE();
-				}
-			}
-		});
+		routeQueueMax(sourceOffset, destOffset, maxTiles, callbackCanTravelOverLandNonCitizen);
 	}
 	return Data_Grid_routingDistance[destOffset] != 0;
+}
+
+static void callbackCanTravelThroughEverythingNonCitizen(int nextOffset, int dist)
+{
+	if (Data_Grid_routingLandNonCitizen[nextOffset] >= 0) {
+		setDistAndEnqueue(nextOffset, dist);
+	}
 }
 
 int Routing_canTravelThroughEverythingNonCitizen(int xSrc, int ySrc, int xDst, int yDst)
@@ -594,12 +661,7 @@ int Routing_canTravelThroughEverythingNonCitizen(int xSrc, int ySrc, int xDst, i
 	int sourceOffset = GridOffset(xSrc, ySrc);
 	int destOffset = GridOffset(xDst, yDst);
 	++Data_Routes.totalRoutesCalculated;
-	ROUTE_QUEUE(sourceOffset, destOffset,
-	{
-		if (Data_Grid_routingLandNonCitizen[nextOffset] >= 0) {
-			SET_DIST_AND_ENQUEUE();
-		}
-	});
+	routeQueue(sourceOffset, destOffset, callbackCanTravelThroughEverythingNonCitizen);
 	return Data_Grid_routingDistance[destOffset] != 0;
 }
 
@@ -737,6 +799,41 @@ static int canPlaceInitialRoadOrAqueduct(int gridOffset, int isAqueduct)
 	return 1;
 }
 
+static void callbackGetDistanceForBuildingRoadOrAqueduct(int nextOffset, int dist)
+{
+	int blocked = 0;
+	switch (Data_Grid_routingLandCitizen[nextOffset]) {
+		case -3: // aqueduct with something
+			if (state.isAqueduct) {
+				blocked = 1;
+			} else if (!Routing_canPlaceRoadUnderAqueduct(nextOffset)) {
+				Data_Grid_routingDistance[nextOffset] = -1;
+				blocked = 1;
+			}
+			break;
+		case 2: // rubble, garden, access ramp
+		case -1: // non-empty land
+			blocked = 1;
+			break;
+		default:
+			if (Data_Grid_terrain[nextOffset] & Terrain_Building) {
+				if (Data_Grid_routingLandCitizen[nextOffset] != -4 || !state.isAqueduct) {
+					blocked = 1;
+				}
+			}
+			break;
+	}
+	if (Data_Grid_terrain[nextOffset] & Terrain_Road) {
+		if (state.isAqueduct && !canPlaceAqueductOnRoad(nextOffset)) {
+			Data_Grid_routingDistance[nextOffset] = -1;
+			blocked = 1;
+		}
+	}
+	if (!blocked) {
+		setDistAndEnqueue(nextOffset, dist);
+	}
+}
+
 int Routing_getDistanceForBuildingRoadOrAqueduct(int x, int y, int isAqueduct)
 {
 	int sourceOffset = GridOffset(x, y);
@@ -748,52 +845,22 @@ int Routing_getDistanceForBuildingRoadOrAqueduct(int x, int y, int isAqueduct)
 		return 0;
 	}
 	++Data_Routes.totalRoutesCalculated;
-	ROUTE_QUEUE(sourceOffset, -1,
-	{
-		int blocked = 0;
-		switch (Data_Grid_routingLandCitizen[nextOffset]) {
-			case -3: // aqueduct with something
-				if (isAqueduct) {
-					blocked = 1;
-				} else if (!Routing_canPlaceRoadUnderAqueduct(nextOffset)) {
-					Data_Grid_routingDistance[nextOffset] = -1;
-					blocked = 1;
-				}
-				break;
-			case 2: // rubble, garden, access ramp
-			case -1: // non-empty land
-				blocked = 1;
-				break;
-			default:
-				if (Data_Grid_terrain[nextOffset] & Terrain_Building) {
-					if (Data_Grid_routingLandCitizen[nextOffset] != -4 || !isAqueduct) {
-						blocked = 1;
-					}
-				}
-				break;
-		}
-		if (Data_Grid_terrain[nextOffset] & Terrain_Road) {
-			if (isAqueduct && !canPlaceAqueductOnRoad(nextOffset)) {
-				Data_Grid_routingDistance[nextOffset] = -1;
-				blocked = 1;
-			}
-		}
-		if (!blocked) {
-			SET_DIST_AND_ENQUEUE();
-		}
-	});
+	state.isAqueduct = isAqueduct;
+	routeQueue(sourceOffset, -1, callbackGetDistanceForBuildingRoadOrAqueduct);
 	return 1;
+}
+
+static void callbackGetDistanceForBuildingWall(int nextOffset, int dist)
+{
+	if (Data_Grid_routingLandCitizen[nextOffset] == 4) {
+		setDistAndEnqueue(nextOffset, dist);
+	}
 }
 
 int Routing_getDistanceForBuildingWall(int x, int y)
 {
 	int sourceOffset = GridOffset(x, y);
-	ROUTE_QUEUE(sourceOffset, -1,
-	{
-		if (Data_Grid_routingLandCitizen[nextOffset] == 4) {
-			SET_DIST_AND_ENQUEUE();
-		}
-	});
+	routeQueue(sourceOffset, -1, callbackGetDistanceForBuildingWall);
 	return 1;
 }
 
@@ -1067,21 +1134,30 @@ static void updateXYGridOffsetForDirection(int direction, int *x, int *y, int *g
 	}
 }
 
+static void callbackGetDistanceWaterBoat(int nextOffset, int dist)
+{
+	if (Data_Grid_routingWater[nextOffset] != -1 && Data_Grid_routingWater[nextOffset] != -3) {
+		setDistAndEnqueue(nextOffset, dist);
+		if (Data_Grid_routingWater[nextOffset] == -2) {
+			Data_Grid_routingDistance[nextOffset] += 4;
+		}
+	}
+}
+
 void Routing_getDistanceWaterBoat(int x, int y)
 {
 	int sourceGridOffset = GridOffset(x, y);
 	if (Data_Grid_routingWater[sourceGridOffset] == -1) {
 		return;
 	}
-	ROUTE_QUEUE_BOAT(sourceGridOffset,
-	{
-		if (Data_Grid_routingWater[nextOffset] != -1 && Data_Grid_routingWater[nextOffset] != -3) {
-			SET_DIST_AND_ENQUEUE();
-			if (Data_Grid_routingWater[nextOffset] == -2) {
-				Data_Grid_routingDistance[nextOffset] += 4;
-			}
-		}
-	});
+	routeQueueBoat(sourceGridOffset, callbackGetDistanceWaterBoat);
+}
+
+static void callbackGetDistanceWaterFlotsam(int nextOffset, int dist)
+{
+	if (Data_Grid_routingWater[nextOffset] != -1) {
+		setDistAndEnqueue(nextOffset, dist);
+	}
 }
 
 void Routing_getDistanceWaterFlotsam(int x, int y)
@@ -1090,12 +1166,7 @@ void Routing_getDistanceWaterFlotsam(int x, int y)
 	if (Data_Grid_routingWater[sourceGridOffset] == -1) {
 		return;
 	}
-	ROUTE_QUEUE_DIR8(sourceGridOffset,
-	{
-		if (Data_Grid_routingWater[nextOffset] != -1) {
-			SET_DIST_AND_ENQUEUE();
-		}
-	});
+	routeQueueDir8(sourceGridOffset, callbackGetDistanceWaterFlotsam);
 }
 
 int Routing_getPath(int numDirections, int routingPathId, int xSrc, int ySrc, int xDst, int yDst)

@@ -1002,10 +1002,10 @@ void Terrain_initDistanceRing()
 	}
 }
 
-static int isInsideMap(int x, int y)
+static int isInsideMapForRing(int x, int y)
 {
-	return x >= 0 && x < Data_Settings_Map.width &&
-		y >= 0 && y < Data_Settings_Map.height;
+	return x >= -1 && x <= Data_Settings_Map.width &&
+		y >= -1 && y <= Data_Settings_Map.height;
 }
 
 int Terrain_isAllRockAndTreesAtDistanceRing(int x, int y, int distance)
@@ -1014,7 +1014,7 @@ int Terrain_isAllRockAndTreesAtDistanceRing(int x, int y, int distance)
 	int end = start + RING_SIZE(1,distance);
 	int baseOffset = GridOffset(x, y);
 	for (int i = start; i < end; i++) {
-		if (isInsideMap(x + ringTiles[i].x, y + ringTiles[i].y)) {
+		if (isInsideMapForRing(x + ringTiles[i].x, y + ringTiles[i].y)) {
 			int terrain = Data_Grid_terrain[baseOffset + ringTiles[i].gridOffset];
 			if (!(terrain & Terrain_Rock) || !(terrain & Terrain_Tree)) {
 				return 0;
@@ -1030,7 +1030,7 @@ int Terrain_isAllMeadowAtDistanceRing(int x, int y, int distance)
 	int end = start + RING_SIZE(1,distance);
 	int baseOffset = GridOffset(x, y);
 	for (int i = start; i < end; i++) {
-		if (isInsideMap(x + ringTiles[i].x, y + ringTiles[i].y)) {
+		if (isInsideMapForRing(x + ringTiles[i].x, y + ringTiles[i].y)) {
 			int terrain = Data_Grid_terrain[baseOffset + ringTiles[i].gridOffset];
 			if (!(terrain & Terrain_Meadow)) {
 				return 0;
@@ -1055,7 +1055,7 @@ static void Terrain_addDesirabilityDistanceRing(int x, int y, int size, int dist
 
 	if (isPartiallyOutsideMap) {
 		for (int i = start; i < end; i++) {
-			if (isInsideMap(x + ringTiles[i].x, y + ringTiles[i].y)) {
+			if (isInsideMapForRing(x + ringTiles[i].x, y + ringTiles[i].y)) {
 				Data_Grid_desirability[baseOffset + ringTiles[i].gridOffset] += desirability;
 				BOUND(Data_Grid_desirability[baseOffset], -100, 100); // BUGFIX: bounding on wrong tile
 			}

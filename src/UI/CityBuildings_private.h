@@ -37,7 +37,7 @@
 #define DRAWTOP_SIZE4_C(g,x,y,c) Graphics_drawIsometricTop(g, x + 90, y - 45, c)
 #define DRAWTOP_SIZE5_C(g,x,y,c) Graphics_drawIsometricTop(g, x + 120, y - 60, c)
 
-#define FOREACH_XY_VIEW(block)\
+#define FOREACH_XY_VIEW \
 	int odd = 0;\
 	int yView = Data_CityView.yInTiles - 8;\
 	int yGraphic = Data_CityView.yOffsetInPixels - 9*15;\
@@ -53,8 +53,9 @@
 		int xView = Data_CityView.xInTiles - 4;\
 		for (int x = 0; x < Data_CityView.widthInTiles + 7; x++) {\
 			if (xView >= 0 && xView < VIEW_X_MAX &&\
-				yView >= 0 && yView < VIEW_Y_MAX) {\
-				block;\
+				yView >= 0 && yView < VIEW_Y_MAX) {
+
+#define END_FOREACH_XY_VIEW \
 			}\
 			xGraphic += 60;\
 			xView++;\
@@ -63,21 +64,22 @@
 		yView++;\
 	}
 
-#define FOREACH_Y_VIEW(block)\
+#define FOREACH_Y_VIEW \
 	int odd = 0;\
 	int yView = Data_CityView.yInTiles - 8;\
 	int yGraphic = Data_CityView.yOffsetInPixels - 9*15;\
 	int xGraphic, xView;\
 	for (int y = 0; y < Data_CityView.heightInTiles + 14; y++) {\
-		if (yView >= 0 && yView < VIEW_Y_MAX) {\
-			block;\
+		if (yView >= 0 && yView < VIEW_Y_MAX) {
+
+#define END_FOREACH_Y_VIEW \
 		}\
 		odd = 1 - odd;\
 		yGraphic += 15;\
 		yView++;\
 	}
 
-#define FOREACH_X_VIEW(block)\
+#define FOREACH_X_VIEW \
 	xGraphic = -(4*58 + 8);\
 	if (odd) {\
 		xGraphic += Data_CityView.xOffsetInPixels - 30;\
@@ -88,8 +90,9 @@
 	for (int x = 0; x < Data_CityView.widthInTiles + 7; x++) {\
 		if (xView >= 0 && xView < VIEW_X_MAX) {\
 			int gridOffset = ViewToGridOffset(xView, yView);\
-			if (gridOffset >= 0) {\
-				block;\
+			if (gridOffset >= 0) {
+
+#define END_FOREACH_X_VIEW \
 			}\
 		}\
 		xGraphic += 60;\

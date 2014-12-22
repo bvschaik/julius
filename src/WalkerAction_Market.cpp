@@ -3,11 +3,14 @@
 #include "Resource.h"
 #include "Walker.h"
 
-#define CREATE_DELIVERY_BOY(boy, leader) \
-	int boy = Walker_create(Walker_DeliveryBoy, w->x, w->y, 0);\
-	Data_Walkers[boy].inFrontWalkerId = leader;\
-	Data_Walkers[boy].collectingItemId = w->collectingItemId;\
+static int createDeliveryBoy(int leader, struct Data_Walker *w)
+{
+	int boy = Walker_create(Walker_DeliveryBoy, w->x, w->y, 0);
+	Data_Walkers[boy].inFrontWalkerId = leader;
+	Data_Walkers[boy].collectingItemId = w->collectingItemId;
 	Data_Walkers[boy].buildingId = w->buildingId;
+	return boy;
+}
 
 static int marketBuyerTakeFoodFromGranary(int walkerId, int marketId, int granaryId)
 {
@@ -53,8 +56,7 @@ static int marketBuyerTakeFoodFromGranary(int walkerId, int marketId, int granar
 	// create delivery boys
 	int previousBoy = walkerId;
 	for (int i = 0; i < numLoads; i++) {
-		CREATE_DELIVERY_BOY(nextBoy, previousBoy);
-		previousBoy = nextBoy;
+		previousBoy = createDeliveryBoy(previousBoy, w);
 	}
 	return 1;
 }
@@ -83,9 +85,9 @@ static int marketBuyerTakeResourceFromWarehouse(int walkerId, int marketId, int 
 	Resource_removeFromWarehouse(warehouseId, resource, numLoads);
 	
 	// create delivery boys
-	CREATE_DELIVERY_BOY(boy1, walkerId);
+	int boy1 = createDeliveryBoy(walkerId, w);
 	if (numLoads > 1) {
-		CREATE_DELIVERY_BOY(boy2, boy1);
+		createDeliveryBoy(boy1, w);
 	}
 	return 1;
 }
