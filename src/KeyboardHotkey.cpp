@@ -9,6 +9,7 @@
 #include "UI/Warning.h"
 #include "UI/Window.h"
 
+#include "Data/CityInfo.h"
 #include "Data/Constants.h"
 #include "Data/Formation.h"
 #include "Data/Settings.h"
@@ -18,6 +19,12 @@
 	if (UI_Window_getId() == Window_CityMilitary) {\
 		UI_Window_goTo(Window_City);\
 	}
+
+static struct {
+	int ctrlDown;
+	int altDown;
+	int shiftDown;
+} data;
 
 static void changeGameSpeed(int isDown)
 {
@@ -210,5 +217,78 @@ static void confirmExit(int accepted)
 void KeyboardHotkey_esc()
 {
 	UI_PopupDialog_show(PopupDialog_Quit, confirmExit, 1);
+}
+
+static void setBookmark(int number)
+{
+	if (number >= 0 && number < 4) {
+		Data_CityInfo_Extra.bookmarks[number].x = Data_Settings_Map.camera.x;
+		Data_CityInfo_Extra.bookmarks[number].y = Data_Settings_Map.camera.y;
+	}
+}
+
+static void goToBookmark(int number)
+{
+	if (number >= 0 && number < 4) {
+		int x = Data_CityInfo_Extra.bookmarks[number].x;
+		int y = Data_CityInfo_Extra.bookmarks[number].y;
+		if (x > -1 && GridOffset(x, y) > -1) {
+			Data_Settings_Map.camera.x = x;
+			Data_Settings_Map.camera.y = y;
+			CityView_checkCameraBoundaries();
+			UI_Window_requestRefresh();
+		}
+	}
+}
+
+static void handleBookmark(int number)
+{
+	ExitMilitaryCommand();
+	if (UI_Window_getId() == Window_City) {
+		if (data.ctrlDown || data.shiftDown) {
+			setBookmark(number);
+		} else {
+			goToBookmark(number);
+		}
+	}
+}
+
+void KeyboardHotkey_func(int fNumber)
+{
+	switch (fNumber) {
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+			handleBookmark(fNumber - 1);
+			break;
+		case 5: /* center window not implemented */; break;
+		case 6: System_toggleFullscreen(); break;
+		case 7: System_resize(640, 480); break;
+		case 8: System_resize(800, 600); break;
+		case 9: System_resize(1024, 768); break;
+	}
+}
+
+void KeyboardHotkey_ctrl(int isDown)
+{
+	data.ctrlDown = isDown;
+}
+
+void KeyboardHotkey_alt(int isDown)
+{
+	data.altDown = isDown;
+}
+
+void KeyboardHotkey_shift(int isDown)
+{
+	data.shiftDown = isDown;
+}
+
+void KeyboardHotkey_resetState()
+{
+	data.ctrlDown = 0;
+	data.altDown = 0;
+	data.shiftDown = 0;
 }
 

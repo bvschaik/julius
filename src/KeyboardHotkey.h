@@ -9,4 +9,12 @@ void KeyboardHotkey_up();
 void KeyboardHotkey_down();
 void KeyboardHotkey_esc();
 
+void KeyboardHotkey_func(int fNumber);
+
+void KeyboardHotkey_ctrl(int isDown);
+void KeyboardHotkey_alt(int isDown);
+void KeyboardHotkey_shift(int isDown);
+
+void KeyboardHotkey_resetState();
+
 #endif

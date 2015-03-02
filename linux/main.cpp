@@ -283,11 +283,55 @@ void handleKey(SDL_KeyboardEvent *event)
 		case SDLK_ESCAPE:
 			KeyboardHotkey_esc();
 			break;
+		case SDLK_F1: KeyboardHotkey_func(1); break;
+		case SDLK_F2: KeyboardHotkey_func(2); break;
+		case SDLK_F3: KeyboardHotkey_func(3); break;
+		case SDLK_F4: KeyboardHotkey_func(4); break;
+		case SDLK_F5: KeyboardHotkey_func(5); break;
+		case SDLK_F6: KeyboardHotkey_func(6); break;
+		case SDLK_F7: KeyboardHotkey_func(7); break;
+		case SDLK_F8: KeyboardHotkey_func(8); break;
+		case SDLK_F9: KeyboardHotkey_func(9); break;
+		case SDLK_F10: KeyboardHotkey_func(10); break;
+		case SDLK_F11: KeyboardHotkey_func(11); break;
+		case SDLK_F12: KeyboardHotkey_func(12); break;
+		case SDLK_LCTRL:
+		case SDLK_RCTRL:
+			KeyboardHotkey_ctrl(1);
+			break;
+		case SDLK_LALT:
+		case SDLK_RALT:
+			KeyboardHotkey_alt(1);
+			break;
+		case SDLK_LSHIFT:
+		case SDLK_RSHIFT:
+			KeyboardHotkey_shift(1);
+			break;
 		default:
 			if (event->keysym.unicode) {
 				KeyboardInput_character(event->keysym.unicode);
 				KeyboardHotkey_character(event->keysym.unicode);
 			}
+			break;
+	}
+}
+
+static void handleKeyUp(SDL_KeyboardEvent *event)
+{
+	switch (event->keysym.sym) {
+		case SDLK_LCTRL:
+		case SDLK_RCTRL:
+			KeyboardHotkey_ctrl(0);
+			break;
+		case SDLK_LALT:
+		case SDLK_RALT:
+			KeyboardHotkey_alt(0);
+			break;
+		case SDLK_LSHIFT:
+		case SDLK_RSHIFT:
+			KeyboardHotkey_shift(0);
+			break;
+		default:
 			break;
 	}
 }
@@ -366,6 +410,7 @@ void mainLoop(SDL_Surface *surface)
 							active = 1;
 						} else {
 							active = 0;
+							KeyboardHotkey_resetState();
 						}
 					}
 					if (event.active.state == SDL_APPMOUSEFOCUS) {
@@ -375,19 +420,12 @@ void mainLoop(SDL_Surface *surface)
 					break;
 				
 				case SDL_KEYDOWN:
+					printf("Key: sym %d - %d\n", event.key.keysym.sym, event.key.keysym.unicode);
 					handleKey(&event.key);
-					printf("Key: %d (%c)\n", event.key.keysym.unicode, event.key.keysym.unicode);
-					if (event.key.keysym.sym == SDLK_F5) {
-						if (Data_Settings.fullscreen) {
-							surface = createSurface(Data_Settings.windowedWidth, Data_Settings.windowedHeight, 0);
-						} else {
-							surface = createSurface(Desktop.width, Desktop.height, 1);
-						}
-						UI_Window_requestRefresh();
-					}
 					break;
 				
 				case SDL_KEYUP:
+					handleKeyUp(&event.key);
 					break;
 				
 				case SDL_MOUSEMOTION:
