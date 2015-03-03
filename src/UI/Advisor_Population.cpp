@@ -494,3 +494,11 @@ static void buttonGraph(int param1, int param2)
 	UI_Window_requestRefresh();
 }
 
+int UI_Advisor_Population_getTooltip()
+{
+	if (focusButtonId) {
+		return 111;
+	} else {
+		return 0;
+	}
+}

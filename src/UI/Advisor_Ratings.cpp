@@ -217,3 +217,14 @@ static void buttonRating(int param1, int param2)
 	Data_CityInfo.ratingAdvisorSelection = param1;
 	UI_Window_requestRefresh();
 }
+
+int UI_Advisor_Ratings_getTooltip()
+{
+	switch (focusButtonId) {
+		case 1: return 102;
+		case 2: return 103;
+		case 3: return 104;
+		case 4: return 105;
+		default: return 0;
+	}
+}

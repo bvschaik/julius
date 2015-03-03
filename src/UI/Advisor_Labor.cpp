@@ -28,6 +28,7 @@ static ArrowButton wageButtons[2] = {
 };
 
 static int focusButtonId;
+static int arrowButtonFocus;
 
 // labor priority stuff
 static int prioritySelectedCategory;
@@ -144,7 +145,7 @@ void UI_Advisor_Labor_handleMouse()
 	int offsetX = Data_Screen.offset640x480.x;
 	int offsetY = Data_Screen.offset640x480.y;
 	if (!Widget_Button_handleCustomButtons(offsetX, offsetY, categoryButtons, 9, &focusButtonId)) {
-		Widget_Button_handleArrowButtons(offsetX, offsetY, wageButtons, 2);
+		arrowButtonFocus = Widget_Button_handleArrowButtons(offsetX, offsetY, wageButtons, 2);
 	}
 }
 
@@ -175,6 +176,17 @@ static void buttonPriority(int category, int param2)
 		++priorityMaxItems;
 	}
 	UI_Window_goTo(Window_LaborPriorityDialog);
+}
+
+int UI_Advisor_Labor_getTooltip()
+{
+	if (focusButtonId) {
+		return 90;
+	} else if (arrowButtonFocus) {
+		return 91;
+	} else {
+		return 0;
+	}
 }
 
 void UI_LaborPriorityDialog_drawBackground()
@@ -228,7 +240,7 @@ void UI_LaborPriorityDialog_handleMouse()
 	} else {
 		int offsetX = Data_Screen.offset640x480.x;
 		int offsetY = Data_Screen.offset640x480.y;
-		Widget_Button_handleCustomButtons(offsetX, offsetY, priorityButtons, 10, &priorityFocusButtonId);
+		Widget_Button_handleCustomButtons(offsetX, offsetY, priorityButtons, 1 + priorityMaxItems, &priorityFocusButtonId);
 	}
 }
 

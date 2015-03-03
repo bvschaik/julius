@@ -290,3 +290,14 @@ static void confirmSendGoods(int accepted)
 		Event_dispatchRequest(selectedRequestId);
 	}
 }
+
+int UI_Advisor_Imperial_getTooltip()
+{
+	if (focusButtonId && focusButtonId <= 2) {
+		return 93 + focusButtonId;
+	} else if (focusButtonId == 3) {
+		return 131;
+	} else {
+		return 0;
+	}
+}

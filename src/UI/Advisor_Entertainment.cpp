@@ -213,3 +213,12 @@ void buttonHoldFestival(int param1, int param2)
 		UI_Window_goTo(Window_HoldFestivalDialog);
 	}
 }
+
+int UI_Advisor_Entertainment_getTooltip()
+{
+	if (focusButtonId) {
+		return 112;
+	} else {
+		return 0;
+	}
+}

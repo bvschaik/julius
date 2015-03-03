@@ -190,9 +190,13 @@ void UI_PlayerMessageList_handleMouse()
 			focusButtonId = 13;
 			return;
 	}
+	int oldFocusButtonId = focusButtonId;
 	if (Widget_Button_handleCustomButtons(
 		data.xText, data.yText + 4, customButtonsMessages, 10, &focusButtonId)) {
-			return;
+		if (oldFocusButtonId != focusButtonId) {
+			UI_Window_requestRefresh();
+		}
+		return;
 	}
 	handleMouseScrollbar();
 }
@@ -281,4 +285,16 @@ static void buttonDelete(int param1, int param2)
 		}
 		UI_Window_requestRefresh();
 	}
+}
+
+void UI_PlayerMessageList_getTooltip(struct TooltipContext *c)
+{
+	if (focusButtonId == 11) {
+		c->textId = 1;
+	} else if (focusButtonId == 12) {
+		c->textId = 2;
+	} else {
+		return;
+	}
+	c->type = TooltipType_Button;
 }

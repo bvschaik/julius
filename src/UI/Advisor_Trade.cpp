@@ -148,6 +148,20 @@ static void buttonResource(int resourceIndex, int param2)
 	UI_Window_goTo(Window_ResourceSettingsDialog);
 }
 
+int UI_Advisor_Trade_getTooltip()
+{
+	if (focusButtonId == 1) {
+		return 106;
+	} else if (focusButtonId == 2) {
+		return 41; // FIXED used to say 'select this resource'
+	} else if (focusButtonId) {
+		return 107;
+	} else {
+		return 0;
+	}
+}
+
+
 void UI_TradePricesDialog_drawBackground()
 {
 	int baseOffsetX = Data_Screen.offset640x480.x;

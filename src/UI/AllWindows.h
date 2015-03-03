@@ -37,6 +37,7 @@ void UI_Advisors_init();
 void UI_Advisors_drawBackground();
 void UI_Advisors_drawForeground();
 void UI_Advisors_handleMouse();
+void UI_Advisors_getTooltip(struct TooltipContext *c);
 
 void UI_LaborPriorityDialog_drawBackground();
 void UI_LaborPriorityDialog_drawForeground();
@@ -91,6 +92,7 @@ void UI_PlayerMessageList_init();
 void UI_PlayerMessageList_drawBackground();
 void UI_PlayerMessageList_drawForeground();
 void UI_PlayerMessageList_handleMouse();
+void UI_PlayerMessageList_getTooltip(struct TooltipContext *c);
 
 void UI_OverlayMenu_init();
 void UI_OverlayMenu_drawBackground();

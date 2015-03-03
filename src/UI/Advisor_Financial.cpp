@@ -16,6 +16,8 @@ static ArrowButton arrowButtonsTaxes[] = {
 	{204, 70, 15, 24, buttonChangeTaxes, 0, 0}
 };
 
+static int arrowButtonFocus;
+
 void UI_Advisor_Financial_drawBackground(int *advisorHeight)
 {
 	int baseOffsetX = Data_Screen.offset640x480.x;
@@ -106,7 +108,7 @@ void UI_Advisor_Financial_handleMouse()
 {
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
-	Widget_Button_handleArrowButtons(baseOffsetX, baseOffsetY, arrowButtonsTaxes, 2);
+	arrowButtonFocus = Widget_Button_handleArrowButtons(baseOffsetX, baseOffsetY, arrowButtonsTaxes, 2);
 }
 
 static void buttonChangeTaxes(int isDown, int param2)
@@ -121,4 +123,13 @@ static void buttonChangeTaxes(int isDown, int param2)
 	CityInfo_Finance_calculateEstimatedTaxes();
 	CityInfo_Finance_calculateTotals();
 	UI_Window_requestRefresh();
+}
+
+int UI_Advisor_Financial_getTooltip()
+{
+	if (arrowButtonFocus) {
+		return 120;
+	} else {
+		return 0;
+	}
 }

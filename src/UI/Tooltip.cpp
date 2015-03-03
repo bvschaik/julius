@@ -1,5 +1,6 @@
 #include "Tooltip.h"
 
+#include "Advisors.h"
 #include "Window.h"
 
 #include "../Graphics.h"
@@ -79,65 +80,56 @@ static void drawButtonTooltip(struct TooltipContext *c)
 	c->height = 16 * lines + 10;
 
 	if (Data_Mouse.x < Data_Screen.offset640x480.x + c->width + 100) {
-		c->x = Data_Mouse.x + 20 + c->xOffset;
+		if (UI_Window_getId() == Window_Advisors) {
+			c->x = Data_Mouse.x + 50;
+		} else {
+			c->x = Data_Mouse.x + 20;
+		}
 	} else {
 		c->x = Data_Mouse.x - c->width - 20;
 	}
-	if (Data_Mouse.y < Data_Screen.offset640x480.y + 200) {
-		c->y = Data_Mouse.y + 50;
-	} else {
-		c->y = Data_Mouse.y - 72;
+	
+	switch (UI_Window_getId()) {
+		case Window_Advisors:
+			if (Data_Mouse.y < Data_Screen.offset640x480.y + 432) {
+				c->y = Data_Mouse.y;
+				switch (UI_Advisors_getId()) {
+					case Advisor_Labor: c->y -= 74; break;
+					case Advisor_Trade: c->y -= 54; break;
+					case Advisor_Population: c->y -= 58; break;
+					default: c->y -= 64; break;
+				}
+			} else {
+				c->y = Data_Screen.offset640x480.y + 432;
+			}
+			break;
+		case Window_TradePricesDialog: // FIXED used to cause ghosting
+			c->y = Data_Mouse.y - 42;
+			break;
+		case Window_DonateToCityDialog:
+			c->y = Data_Mouse.y - 52;
+			break;
+		case Window_LaborPriorityDialog:
+			c->x = Data_Mouse.x - c->width / 2 - 10;
+			if (Data_Mouse.y < Data_Screen.offset640x480.y + 200) {
+				c->y = Data_Mouse.y + 40;
+			} else {
+				c->y = Data_Mouse.y - 72;
+			}
+			break;
+		default:
+			if (Data_Mouse.y < Data_Screen.offset640x480.y + 200) {
+				c->y = Data_Mouse.y + 40;
+			} else {
+				c->y = Data_Mouse.y - 62;
+			}
+			break;
 	}
 
 	Graphics_drawRect(c->x, c->y, c->width, c->height, Color_Black);
 	Graphics_fillRect(c->x + 1, c->y + 1, c->width - 2, c->height - 2, Color_White);
 	Widget_RichText_drawColored(text, c->x + 5, c->y + 7,
 		c->width - 5, lines, Color_Tooltip);
-/*
-      switch ( window_id )
-      {
-        case 7u:
-          if ( button_y < screen_640x480_y + 432 )
-          {
-            switch ( currentAdvisor )
-            {
-              case 1:
-                tooltip_y = button_y - 74;
-                break;
-              case 5:
-                tooltip_y = button_y - 54;
-                break;
-              case 6:
-                tooltip_y = button_y - 58;
-                break;
-              default:
-                tooltip_y = button_y - 64;
-                break;
-            }
-          }
-          else
-          {
-            tooltip_y = screen_640x480_y + 432;
-          }
-          break;
-        case 45u:
-          tooltip_y = button_y - 52;
-          break;
-        case 42u:
-          if ( v1 )
-            tooltip_y = button_y + 40;
-          else
-            tooltip_y = button_y - 72;
-          tooltip_x = button_x - tooltip_width / 2 - 10;
-          break;
-        default:
-          if ( v1 )
-            tooltip_y = button_y + 40;
-          else
-            tooltip_y = button_y - 62;
-          break;
-      }
-*/
 }
 
 static char tmpString[1000];

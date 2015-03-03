@@ -14,8 +14,6 @@ struct TooltipContext {
 	int y;
 	int width;
 	int height;
-	int xOffset;
-	int yOffset;
 	int textGroup;
 	int textId;
 	int hasNumericPrefix;

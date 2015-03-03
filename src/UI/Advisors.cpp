@@ -221,6 +221,7 @@ void UI_Advisors_handleMouse()
 		return;
 	}
 	if (Widget_Button_handleImageButtons(baseOffsetX, baseOffsetY + 16 * (advisorHeight - 2), &helpButton, 1)) {
+		focusButtonId = -1;
 		return;
 	}
 	if (Data_Mouse.right.wentUp) {
@@ -256,7 +257,6 @@ void UI_Advisors_handleMouse()
 	}
 }
 
-
 static void buttonChangeAdvisor(int param1, int param2)
 {
 	if (param1) {
@@ -272,5 +272,46 @@ static void buttonHelp(int param1, int param2)
 {
 	if (currentAdvisor > 0 && currentAdvisor < 13) {
 		UI_MessageDialog_show(advisorToMessageTextId[currentAdvisor], 1);
+	}
+}
+
+void UI_Advisors_getTooltip(struct TooltipContext *c)
+{
+	if (focusButtonId) {
+		c->type = TooltipType_Button;
+		if (focusButtonId == -1) {
+			c->textId = 1; // help button
+		} else {
+			c->textId = 69 + focusButtonId;
+		}
+		return;
+	}
+	int textId = 0;
+	switch (currentAdvisor) {
+		case Advisor_Labor:
+			textId = UI_Advisor_Labor_getTooltip();
+			break;
+		case Advisor_Imperial:
+			textId = UI_Advisor_Imperial_getTooltip();
+			break;
+		case Advisor_Ratings:
+			textId = UI_Advisor_Ratings_getTooltip();
+			break;
+		case Advisor_Trade:
+			textId = UI_Advisor_Trade_getTooltip();
+			break;
+		case Advisor_Population:
+			textId = UI_Advisor_Population_getTooltip();
+			break;
+		case Advisor_Entertainment:
+			textId = UI_Advisor_Entertainment_getTooltip();
+			break;
+		case Advisor_Financial:
+			textId = UI_Advisor_Financial_getTooltip();
+			break;
+	}
+	if (textId) {
+		c->textId = textId;
+		c->type = TooltipType_Button;
 	}
 }
