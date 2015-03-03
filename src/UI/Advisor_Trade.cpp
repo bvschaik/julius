@@ -1,4 +1,5 @@
 #include "Advisors_private.h"
+#include "Tooltip.h"
 #include "Window.h"
 #include "MessageDialog.h"
 #include "../CityInfo.h"
@@ -174,6 +175,32 @@ void UI_TradePricesDialog_handleMouse()
 	if (Data_Mouse.right.wentUp) {
 		UI_Window_goTo(Window_Advisors);
 	}
+}
+
+static int getTradePriceTooltipResource()
+{
+	int xBase = Data_Screen.offset640x480.x + 124;
+	int y = Data_Screen.offset640x480.y + 192;
+	int xMouse = Data_Mouse.x;
+	int yMouse = Data_Mouse.y;
+	
+	for (int i = 1; i < 16; i++) {
+		int x = xBase + 30 * i;
+		if (x <= xMouse && x + 24 > xMouse && y <= yMouse && y + 24 > yMouse) {
+			return i;
+		}
+	}
+	return 0;
+}
+
+void UI_TradePricesDialog_getTooltip(struct TooltipContext *c)
+{
+	int resource = getTradePriceTooltipResource();
+	if (!resource) {
+		return;
+	}
+	c->type = TooltipType_Button;
+	c->textId = 131 + resource;
 }
 
 void UI_ResourceSettingsDialog_drawBackground()

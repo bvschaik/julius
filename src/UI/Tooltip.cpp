@@ -12,6 +12,7 @@
 #include "../Data/Constants.h"
 #include "../Data/Mouse.h"
 #include "../Data/Screen.h"
+#include "../Data/Settings.h"
 
 #include <string.h>
 
@@ -33,7 +34,8 @@ void UI_Tooltip_resetTimer()
 void UI_Tooltip_handle(void (*func)(struct TooltipContext *))
 {
 	struct TooltipContext tooltipContext = {0, 0, 0, 0, 0, 0, 0, 0, 0};
-	if (func) {
+	tooltipContext.textGroup = 68; // default group
+	if (Data_Settings.mouseTooltips && func) {
 		func(&tooltipContext);
 	}
 	if (tooltipContext.type != TooltipType_None) {

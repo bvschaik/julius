@@ -81,13 +81,9 @@ int Widget_Button_handleArrowButtons(int xOffset, int yOffset, ArrowButton *butt
 				btn->field_E = 47;
 			}
 			btn->leftClickHandler(btn->parameter1, btn->parameter2);
-			return buttonId;
-		} else {
-			return 0;
 		}
-	} else {
-		return 0;
 	}
+	return buttonId;
 }
 
 static int getArrowButton(int xOffset, int yOffset, ArrowButton *buttons, int numButtons)

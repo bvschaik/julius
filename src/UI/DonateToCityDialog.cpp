@@ -30,6 +30,7 @@ static ArrowButton arrowButtons[2] = {
 };
 
 static int focusButtonId;
+static int arrowButtonFocus;
 
 void UI_DonateToCityDialog_init()
 {
@@ -102,13 +103,14 @@ void UI_DonateToCityDialog_drawForeground()
 
 void UI_DonateToCityDialog_handleMouse()
 {
+	arrowButtonFocus = 0;
 	if (Data_Mouse.right.wentUp) {
 		UI_Window_goTo(Window_Advisors);
 	} else {
 		int offsetX = Data_Screen.offset640x480.x;
 		int offsetY = Data_Screen.offset640x480.y;
 		if (!Widget_Button_handleCustomButtons(offsetX, offsetY, buttons, 7, &focusButtonId)) {
-			Widget_Button_handleArrowButtons(offsetX, offsetY, arrowButtons, 2);
+			arrowButtonFocus = Widget_Button_handleArrowButtons(offsetX, offsetY, arrowButtons, 2);
 		}
 	}
 }
@@ -151,4 +153,21 @@ static void arrowButtonAmount(int param1, int param2)
 	}
 	BOUND(Data_CityInfo.donateAmount, 0, Data_CityInfo.personalSavings);
 	UI_Window_requestRefresh();
+}
+
+void UI_DonateToCityDialog_getTooltip(struct TooltipContext *c)
+{
+	if (!focusButtonId && !arrowButtonFocus) {
+		return;
+	}
+	c->type = TooltipType_Button;
+	if (focusButtonId == 1) {
+		c->textId = 98;
+	} else if (focusButtonId == 2) {
+		c->textId = 99;
+	} else if (focusButtonId) {
+		c->textId = 100;
+	} else if (arrowButtonFocus) {
+		c->textId = 101;
+	}
 }

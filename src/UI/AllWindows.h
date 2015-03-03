@@ -1,6 +1,7 @@
 #ifndef UI_ALLWINDOWS_H
 #define UI_ALLWINDOWS_H
 
+#include "Tooltip.h"
 #include "Window.h"
 
 void UI_MainMenu_drawBackground();
@@ -40,6 +41,7 @@ void UI_Advisors_handleMouse();
 void UI_LaborPriorityDialog_drawBackground();
 void UI_LaborPriorityDialog_drawForeground();
 void UI_LaborPriorityDialog_handleMouse();
+void UI_LaborPriorityDialog_getTooltip(struct TooltipContext *c);
 
 void UI_SetSalaryDialog_drawBackground();
 void UI_SetSalaryDialog_drawForeground();
@@ -49,6 +51,7 @@ void UI_DonateToCityDialog_init();
 void UI_DonateToCityDialog_drawBackground();
 void UI_DonateToCityDialog_drawForeground();
 void UI_DonateToCityDialog_handleMouse();
+void UI_DonateToCityDialog_getTooltip(struct TooltipContext *c);
 
 void UI_SendGiftToCaesarDialog_init();
 void UI_SendGiftToCaesarDialog_drawBackground();
@@ -57,6 +60,7 @@ void UI_SendGiftToCaesarDialog_handleMouse();
 
 void UI_TradePricesDialog_drawBackground();
 void UI_TradePricesDialog_handleMouse();
+void UI_TradePricesDialog_getTooltip(struct TooltipContext *c);
 
 void UI_ResourceSettingsDialog_drawBackground();
 void UI_ResourceSettingsDialog_drawForeground();
@@ -65,6 +69,7 @@ void UI_ResourceSettingsDialog_handleMouse();
 void UI_HoldFestivalDialog_drawBackground();
 void UI_HoldFestivalDialog_drawForeground();
 void UI_HoldFestivalDialog_handleMouse();
+void UI_HoldFestivalDialog_getTooltip(struct TooltipContext *c);
 
 void UI_City_drawBackground();
 void UI_City_drawForeground();

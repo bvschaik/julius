@@ -1,5 +1,7 @@
 #include "Advisors_private.h"
-#include "../UI/Window.h"
+
+#include "Tooltip.h"
+#include "Window.h"
 #include "../CityInfo.h"
 #include "../Data/Mouse.h"
 #include "../Util.h"
@@ -272,4 +274,17 @@ static void buttonSetPriority(int newPriority, int param2)
 		CityInfo_Labor_allocateWorkersToBuildings();
 	}
 	UI_Window_goTo(Window_Advisors);
+}
+
+void UI_LaborPriorityDialog_getTooltip(struct TooltipContext *c)
+{
+	if (!priorityFocusButtonId) {
+		return;
+	}
+	c->type = TooltipType_Button;
+	if (priorityFocusButtonId == 1) {
+		c->textId = 92;
+	} else {
+		c->textId = 93;
+	}
 }

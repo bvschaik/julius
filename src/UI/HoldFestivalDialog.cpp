@@ -36,6 +36,7 @@ static CustomButton buttonsGodsSize[] = {
 };
 
 static int focusButtonId;
+static int focusImageButtonId;
 
 void UI_HoldFestivalDialog_drawBackground()
 {
@@ -129,8 +130,11 @@ void UI_HoldFestivalDialog_handleMouse()
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
 
-	if (!Widget_Button_handleImageButtons(baseOffsetX, baseOffsetY, imageButtonsBottom, 4)) {
+	focusImageButtonId = Widget_Button_handleImageButtons(baseOffsetX, baseOffsetY, imageButtonsBottom, 4);
+	if (!focusImageButtonId) {
 		Widget_Button_handleCustomButtons(baseOffsetX, baseOffsetY, buttonsGodsSize, 8, &focusButtonId);
+	} else {
+		focusButtonId = 0;
 	}
 }
 
@@ -186,5 +190,28 @@ static void buttonHoldFestival(int param1, int param2)
 		Resource_removeFromCityWarehouses(Resource_Wine, Data_CityInfo.festivalWineGrand);
 	}
 	UI_Window_goTo(Window_Advisors);
+}
+
+void UI_HoldFestivalDialog_getTooltip(struct TooltipContext *c)
+{
+	if (!focusImageButtonId && (!focusButtonId || focusButtonId > 5)) {
+		return;
+	}
+	c->type = TooltipType_Button;
+	// image buttons
+	switch (focusImageButtonId) {
+		case 1: c->textId = 1; break;
+		case 2: c->textId = 2; break;
+		case 3: c->textId = 113; break;
+		case 4: c->textId = 114; break;
+	}
+	// gods
+	switch (focusButtonId) {
+		case 1: c->textId = 115; break;
+		case 2: c->textId = 116; break;
+		case 3: c->textId = 117; break;
+		case 4: c->textId = 118; break;
+		case 5: c->textId = 119; break;
+	}
 }
 
