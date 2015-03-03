@@ -102,29 +102,29 @@ void UI_SoundOptions_drawForeground()
 		24, 18
 	);
 	
-	Widget_Panel_drawSmallLabelButton(3,
+	Widget_Panel_drawSmallLabelButton(
 		baseOffsetX + 64, baseOffsetY + 162,
-		14, 0, focusButtonId == 1 ? 1 : 2
+		14, focusButtonId == 1 ? 1 : 2
 	);
-	Widget_Panel_drawSmallLabelButton(3,
+	Widget_Panel_drawSmallLabelButton(
 		baseOffsetX + 64, baseOffsetY + 192,
-		14, 0, focusButtonId == 2 ? 1 : 2
+		14, focusButtonId == 2 ? 1 : 2
 	);
-	Widget_Panel_drawSmallLabelButton(3,
+	Widget_Panel_drawSmallLabelButton(
 		baseOffsetX + 64, baseOffsetY + 222,
-		14, 0, focusButtonId == 3 ? 1 : 2
+		14, focusButtonId == 3 ? 1 : 2
 	);
-	Widget_Panel_drawSmallLabelButton(3,
+	Widget_Panel_drawSmallLabelButton(
 		baseOffsetX + 64, baseOffsetY + 252,
-		14, 0, focusButtonId == 4 ? 1 : 2
+		14, focusButtonId == 4 ? 1 : 2
 	);
-	Widget_Panel_drawSmallLabelButton(3,
+	Widget_Panel_drawSmallLabelButton(
 		baseOffsetX + 144, baseOffsetY + 296,
-		12, 0, focusButtonId == 5 ? 1 : 2
+		12, focusButtonId == 5 ? 1 : 2
 	);
-	Widget_Panel_drawSmallLabelButton(3,
+	Widget_Panel_drawSmallLabelButton(
 		baseOffsetX + 144, baseOffsetY + 326,
-		12, 0, focusButtonId == 6 ? 1 : 2
+		12, focusButtonId == 6 ? 1 : 2
 	);
 	
 	Widget_GameText_drawCentered(46, 0,

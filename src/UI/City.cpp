@@ -57,7 +57,7 @@ void UI_City_drawPausedAndTimeLeft()
 			years = Data_Event.timeLimitMaxGameYear - Data_CityInfo_Extra.gameTimeYear - 1;
 		}
 		int totalMonths = 12 - Data_CityInfo_Extra.gameTimeMonth + 12 * years;
-		Widget_Panel_drawSmallLabelButton(6, 1, 25, 15, 1, 1);
+		Widget_Panel_drawSmallLabelButton(1, 25, 15, 1);
 		int width = Widget_GameText_draw(6, 2, 6, 29, Font_NormalBlack);
 		Widget_Text_drawNumber(totalMonths, '@', " ", 6 + width, 29, Font_NormalBlack);
 	} else if (Data_Scenario.winCriteria.survivalYearsEnabled) {
@@ -68,7 +68,7 @@ void UI_City_drawPausedAndTimeLeft()
 			years = Data_Event.timeLimitMaxGameYear - Data_CityInfo_Extra.gameTimeYear - 1;
 		}
 		int totalMonths = 12 - Data_CityInfo_Extra.gameTimeMonth + 12 * years;
-		Widget_Panel_drawSmallLabelButton(6, 1, 25, 15, 1, 1);
+		Widget_Panel_drawSmallLabelButton(1, 25, 15, 1);
 		int width = Widget_GameText_draw(6, 3, 6, 29, Font_NormalBlack);
 		Widget_Text_drawNumber(totalMonths, '@', " ", 6 + width, 29, Font_NormalBlack);
 	}

@@ -81,9 +81,9 @@ void UI_Warning_draw()
 			topOffset += 70;
 		}
 		int center = warnings[i].center;
-		Widget_Panel_drawSmallLabelButton(9 + i,
+		Widget_Panel_drawSmallLabelButton(
 			center - warnings[i].boxWidth / 2 + 1, topOffset,
-			warnings[i].boxWidth / 16 + 1, 0, 1);
+			warnings[i].boxWidth / 16 + 1, 1);
 		if (warnings[i].boxWidth < 460) {
 			// ornaments at the side
 			Graphics_drawImage(GraphicId(ID_Graphic_ContextIcons) + 15,

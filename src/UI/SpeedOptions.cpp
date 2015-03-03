@@ -59,13 +59,13 @@ void UI_SpeedOptions_drawForeground()
 		18, 14
 	);
 	
-	Widget_Panel_drawSmallLabelButton(4,
+	Widget_Panel_drawSmallLabelButton(
 		baseOffsetX + 144, baseOffsetY + 232,
-		12, 0, focusButtonId == 1 ? 1 : 2
+		12, focusButtonId == 1 ? 1 : 2
 	);
-	Widget_Panel_drawSmallLabelButton(4,
+	Widget_Panel_drawSmallLabelButton(
 		baseOffsetX + 144, baseOffsetY + 262,
-		12, 0, focusButtonId == 2 ? 1 : 2
+		12, focusButtonId == 2 ? 1 : 2
 	);
 	
 	Widget_GameText_drawCentered(45, 0,

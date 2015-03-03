@@ -62,9 +62,9 @@ void Widget_Panel_drawInnerPanelBottom(int xOffset, int yOffset, int widthInBloc
 
 void Widget_Panel_drawButtonBorder(int xOffset, int yOffset, int widthInPixels, int heightInPixels, int hasFocus);
 
-void Widget_Panel_drawSmallLabelButton(int dummy, int xOffset, int yOffset, int width, int widthIsBlocks, int type);
+void Widget_Panel_drawSmallLabelButton(int xOffset, int yOffset, int widthInBlocks, int type);
 
-void Widget_Panel_drawLargeLabelButton(int dummy, int xOffset, int yOffset, int widthInBlocks, int type);
+void Widget_Panel_drawLargeLabelButton(int xOffset, int yOffset, int widthInBlocks, int type);
 
 
 

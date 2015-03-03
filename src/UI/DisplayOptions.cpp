@@ -33,25 +33,25 @@ void UI_DisplayOptions_drawForeground()
 		18, 12
 	);
 	
-	Widget_Panel_drawSmallLabelButton(2,
+	Widget_Panel_drawSmallLabelButton(
 		baseOffsetX + 128, baseOffsetY + 136,
-		14, 0, focusButtonId == 1 ? 1 : 2
+		14, focusButtonId == 1 ? 1 : 2
 	);
-	Widget_Panel_drawSmallLabelButton(2,
+	Widget_Panel_drawSmallLabelButton(
 		baseOffsetX + 128, baseOffsetY + 160,
-		14, 0, focusButtonId == 2 ? 1 : 2
+		14, focusButtonId == 2 ? 1 : 2
 	);
-	Widget_Panel_drawSmallLabelButton(2,
+	Widget_Panel_drawSmallLabelButton(
 		baseOffsetX + 128, baseOffsetY + 184,
-		14, 0, focusButtonId == 3 ? 1 : 2
+		14, focusButtonId == 3 ? 1 : 2
 	);
-	Widget_Panel_drawSmallLabelButton(2,
+	Widget_Panel_drawSmallLabelButton(
 		baseOffsetX + 128, baseOffsetY + 208,
-		14, 0, focusButtonId == 4 ? 1 : 2
+		14, focusButtonId == 4 ? 1 : 2
 	);
-	Widget_Panel_drawSmallLabelButton(2,
+	Widget_Panel_drawSmallLabelButton(
 		baseOffsetX + 128, baseOffsetY + 232,
-		14, 0, focusButtonId == 5 ? 1 : 2
+		14, focusButtonId == 5 ? 1 : 2
 	);
 	
 	Widget_GameText_drawCentered(42, 0,

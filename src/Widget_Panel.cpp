@@ -205,7 +205,7 @@ void Widget_Panel_drawButtonBorder(int xOffset, int yOffset, int widthInPixels, 
 	}
 }
 
-void Widget_Panel_drawLargeLabelButton(int dummy, int xOffset, int yOffset, int widthInBlocks, int type)
+void Widget_Panel_drawLargeLabelButton(int xOffset, int yOffset, int widthInBlocks, int type)
 {
 	int graphicBase = GraphicId(ID_Graphic_PanelButton);
 	for (int i = 0; i < widthInBlocks; i++) {
@@ -221,7 +221,7 @@ void Widget_Panel_drawLargeLabelButton(int dummy, int xOffset, int yOffset, int 
 	}
 }
 
-void Widget_Panel_drawSmallLabelButton(int dummy, int xOffset, int yOffset, int widthInBlocks, int widthIsFixed, int type)
+void Widget_Panel_drawSmallLabelButton(int xOffset, int yOffset, int widthInBlocks, int type)
 {
 	int graphicBase = GraphicId(ID_Graphic_PanelButton);
 	for (int i = 0; i < widthInBlocks; i++) {

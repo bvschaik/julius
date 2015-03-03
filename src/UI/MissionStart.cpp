@@ -209,7 +209,7 @@ void UI_MissionStart_Briefing_drawBackground()
 		int x = goalOffsetsX[goalIndex];
 		int y = goalOffsetsY[goalIndex];
 		goalIndex++;
-		Widget_Panel_drawSmallLabelButton(6, xOffset + x, yOffset + y, 15, 0, 1);
+		Widget_Panel_drawSmallLabelButton(xOffset + x, yOffset + y, 15, 1);
 		int width = Widget_GameText_draw(62, 11, xOffset + x + 8, yOffset + y + 3, Font_NormalRed);
 		Widget_Text_drawNumber(Data_Scenario.winCriteria_population, '@', " ",
 			xOffset + x + 8 + width, yOffset + y + 3, Font_NormalRed);
@@ -218,7 +218,7 @@ void UI_MissionStart_Briefing_drawBackground()
 		int x = goalOffsetsX[goalIndex];
 		int y = goalOffsetsY[goalIndex];
 		goalIndex++;
-		Widget_Panel_drawSmallLabelButton(6, xOffset + x, yOffset + y, 15, 0, 1);
+		Widget_Panel_drawSmallLabelButton(xOffset + x, yOffset + y, 15, 1);
 		int width = Widget_GameText_draw(62, 12, xOffset + x + 8, yOffset + y + 3, Font_NormalRed);
 		Widget_Text_drawNumber(Data_Scenario.winCriteria.culture, '@', " ",
 			xOffset + x + 8 + width, yOffset + y + 3, Font_NormalRed);
@@ -227,7 +227,7 @@ void UI_MissionStart_Briefing_drawBackground()
 		int x = goalOffsetsX[goalIndex];
 		int y = goalOffsetsY[goalIndex];
 		goalIndex++;
-		Widget_Panel_drawSmallLabelButton(6, xOffset + x, yOffset + y, 15, 0, 1);
+		Widget_Panel_drawSmallLabelButton(xOffset + x, yOffset + y, 15, 1);
 		int width = Widget_GameText_draw(62, 13, xOffset + x + 8, yOffset + y + 3, Font_NormalRed);
 		Widget_Text_drawNumber(Data_Scenario.winCriteria.prosperity, '@', " ",
 			xOffset + x + 8 + width, yOffset + y + 3, Font_NormalRed);
@@ -236,7 +236,7 @@ void UI_MissionStart_Briefing_drawBackground()
 		int x = goalOffsetsX[goalIndex];
 		int y = goalOffsetsY[goalIndex];
 		goalIndex++;
-		Widget_Panel_drawSmallLabelButton(6, xOffset + x, yOffset + y, 15, 0, 1);
+		Widget_Panel_drawSmallLabelButton(xOffset + x, yOffset + y, 15, 1);
 		int width = Widget_GameText_draw(62, 14, xOffset + x + 8, yOffset + y + 3, Font_NormalRed);
 		Widget_Text_drawNumber(Data_Scenario.winCriteria.peace, '@', " ",
 			xOffset + x + 8 + width, yOffset + y + 3, Font_NormalRed);
@@ -245,7 +245,7 @@ void UI_MissionStart_Briefing_drawBackground()
 		int x = goalOffsetsX[goalIndex];
 		int y = goalOffsetsY[goalIndex];
 		goalIndex++;
-		Widget_Panel_drawSmallLabelButton(6, xOffset + x, yOffset + y, 15, 0, 1);
+		Widget_Panel_drawSmallLabelButton(xOffset + x, yOffset + y, 15, 1);
 		int width = Widget_GameText_draw(62, 15, xOffset + x + 8, yOffset + y + 3, Font_NormalRed);
 		Widget_Text_drawNumber(Data_Scenario.winCriteria.favor, '@', " ",
 			xOffset + x + 8 + width, yOffset + y + 3, Font_NormalRed);
@@ -254,7 +254,7 @@ void UI_MissionStart_Briefing_drawBackground()
 		int x = goalOffsetsX[2];
 		int y = goalOffsetsY[2];
 		goalIndex++;
-		Widget_Panel_drawSmallLabelButton(6, xOffset + x, yOffset + y, 31, 0, 1);
+		Widget_Panel_drawSmallLabelButton(xOffset + x, yOffset + y, 31, 1);
 		int text;
 		if (!Data_Tutorial.tutorial1.fire && !Data_Tutorial.tutorial1.crime) {
 			text = 17;
@@ -270,7 +270,7 @@ void UI_MissionStart_Briefing_drawBackground()
 		int x = goalOffsetsX[2];
 		int y = goalOffsetsY[2];
 		goalIndex++;
-		Widget_Panel_drawSmallLabelButton(6, xOffset + x, yOffset + y, 31, 0, 1);
+		Widget_Panel_drawSmallLabelButton(xOffset + x, yOffset + y, 31, 1);
 		int text;
 		if (!Data_Tutorial.tutorial2.granaryBuilt) {
 			text = 21;

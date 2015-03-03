@@ -76,8 +76,8 @@ void UI_OverlayMenu_drawForeground()
 	UI_City_drawCity();
 	int xOffset = Data_CityView.widthInPixels;
 	for (int i = 0; i < 8; i++) {
-		Widget_Panel_drawSmallLabelButton(6, xOffset - 170, 74 + 24 * i,
-			10, 1, menuFocusButtonId == i + 1 ? 1 : 2);
+		Widget_Panel_drawSmallLabelButton(xOffset - 170, 74 + 24 * i,
+			10, menuFocusButtonId == i + 1 ? 1 : 2);
 		Widget_GameText_drawCentered(14, menuIdToOverlayId[i],
 			xOffset - 170, 77 + 24 * i, 160, Font_NormalGreen);
 	}
@@ -85,9 +85,9 @@ void UI_OverlayMenu_drawForeground()
 		Graphics_drawImage(GraphicId(ID_Graphic_Bullet),
 			xOffset - 185, 80 + 24 * selectedMenu);
 		for (int i = 0; i < numSubmenuItems; i++) {
-			Widget_Panel_drawSmallLabelButton(6,
+			Widget_Panel_drawSmallLabelButton(
 				xOffset - 348, 74 + 24 * (i + selectedMenu),
-				10, 1, submenuFocusButtonId == i + 1 ? 1 : 2);
+				10, submenuFocusButtonId == i + 1 ? 1 : 2);
 			Widget_GameText_drawCentered(14, submenuIdToOverlayId[selectedSubmenu][i],
 				xOffset - 348, 77 + 24 * (i + selectedMenu), 160, Font_NormalGreen);
 		}
