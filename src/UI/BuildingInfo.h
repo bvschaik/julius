@@ -1,6 +1,8 @@
 #ifndef UI_BUILDINGINFO_H
 #define UI_BUILDINGINFO_H
 
+#include "Tooltip.h"
+
 #define PLAY_SOUND(f) \
 	if (c->canPlaySound) {\
 		Sound_Speech_playFile(f);\
@@ -11,6 +13,13 @@
 			16 * (c->widthBlocks - 4), Font_NormalBlack);
 #define DRAW_DESC_AT(y,g,n) Widget_GameText_drawMultiline(g, n, c->xOffset + 32, c->yOffset + y,\
 			16 * (c->widthBlocks - 4), Font_NormalBlack);
+
+enum {
+	BuildingInfoType_None = 0,
+	BuildingInfoType_Terrain = 1,
+	BuildingInfoType_Building = 2,
+	BuildingInfoType_Legion = 4,
+};
 
 typedef struct {
 	int xOffset;
@@ -29,7 +38,7 @@ typedef struct {
 	int barracksSoldiersRequested;
 	int worstDesirabilityBuildingId;
 	int warehouseSpaceText;
-	int type; // 1 = terrain; 2 = building; 4 = legion
+	int type; // see enum above for values
 	int terrainType;
 	int advisor;
 	int rubbleBuildingType;
@@ -48,6 +57,7 @@ void UI_BuildingInfo_init();
 void UI_BuildingInfo_drawBackground();
 void UI_BuildingInfo_drawForeground();
 void UI_BuildingInfo_handleMouse();
+void UI_BuildingInfo_getTooltip(struct TooltipContext *c);
 
 void UI_BuildingInfo_drawEmploymentInfo(BuildingInfoContext *c, int yOffset);
 void UI_BuildingInfo_drawWalkerImagesLocal(BuildingInfoContext *c);
@@ -147,6 +157,7 @@ void UI_BuildingInfo_drawBarracks(BuildingInfoContext *c);
 void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c);
 void UI_BuildingInfo_drawLegionInfoForeground(BuildingInfoContext *c);
 void UI_BuildingInfo_handleMouseLegionInfo(BuildingInfoContext *c);
+int UI_BuildingInfo_getTooltipLegionInfo(BuildingInfoContext *c);
 
 void UI_BuildingInfo_drawGarden(BuildingInfoContext *c);
 void UI_BuildingInfo_drawPlaza(BuildingInfoContext *c);

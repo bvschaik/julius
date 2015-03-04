@@ -42,10 +42,11 @@ static ImageButton imageButtonsAdvisor[] = {
 };
 
 static BuildingInfoContext context;
+static int focusImageButtonId;
 
 static int getHeightId()
 {
-	if (context.type == 1) {
+	if (context.type == BuildingInfoType_Terrain) {
 		switch (context.terrainType) {
 			case 7:
 				return 4; // aqueduct
@@ -56,7 +57,7 @@ static int getHeightId()
 			default:
 				return 0;
 		}
-	} else if (context.type == 2) {
+	} else if (context.type == BuildingInfoType_Building) {
 		switch (Data_Buildings[context.buildingId].type) {
 			case Building_SmallTempleCeres:
 			case Building_SmallTempleNeptune:
@@ -144,7 +145,7 @@ void UI_BuildingInfo_init()
 	context.aqueductHasWater = Data_Grid_aqueducts[gridOffset];
 
 	CityInfo_Resource_calculateAvailableResources();
-	context.type = 1;
+	context.type = BuildingInfoType_Terrain;
 	context.walker.drawn = 0;
 	if (!Data_Grid_buildingIds[gridOffset] && Data_Grid_spriteOffsets[gridOffset] > 0) {
 		if (Data_Grid_terrain[gridOffset] & Terrain_Water) {
@@ -186,7 +187,7 @@ void UI_BuildingInfo_init()
 	} else if (!context.buildingId) {
 		context.terrainType = 10;
 	} else {
-		context.type = 2;
+		context.type = BuildingInfoType_Building;
 		context.workerPercentage = Calc_getPercentage(
 			Data_Buildings[context.buildingId].numWorkers,
 			Data_Model_Buildings[Data_Buildings[context.buildingId].type].laborers);
@@ -289,7 +290,7 @@ void UI_BuildingInfo_init()
 		}
 		int type = Data_Walkers[walkerId].type;
 		if (type == Walker_FortStandard || WalkerIsLegion(type)) {
-			context.type = 4;
+			context.type = BuildingInfoType_Legion;
 			context.formationId = Data_Walkers[walkerId].formationId;
 			if (Data_Formations[context.formationId].walkerType != Walker_FortLegionary) {
 				context.formationTypes = 5;
@@ -328,11 +329,11 @@ void UI_BuildingInfo_drawBackground()
 {
 	UI_City_drawBackground();
 	UI_City_drawCity();//?do we want this?
-	if (context.type == 0) {
+	if (context.type == BuildingInfoType_None) {
 		UI_BuildingInfo_drawNoPeople(&context);
-	} else if (context.type == 1) {
+	} else if (context.type == BuildingInfoType_Terrain) {
 		UI_BuildingInfo_drawTerrain(&context);
-	} else if (context.type == 2) {
+	} else if (context.type == BuildingInfoType_Building) {
 		int btype = Data_Buildings[context.buildingId].type;
 		if (BuildingIsHouse(btype)) {
 			UI_BuildingInfo_drawHouse(&context);
@@ -469,7 +470,7 @@ void UI_BuildingInfo_drawBackground()
 		} else if (btype == Building_MissionPost) {
 			UI_BuildingInfo_drawMissionPost(&context);
 		}
-	} else if (context.type == 4) {
+	} else if (context.type == BuildingInfoType_Legion) {
 		UI_BuildingInfo_drawLegionInfo(&context);
 	}
 }
@@ -477,7 +478,7 @@ void UI_BuildingInfo_drawBackground()
 void UI_BuildingInfo_drawForeground()
 {
 	// building-specific buttons
-	if (context.type == 2) {
+	if (context.type == BuildingInfoType_Building) {
 		int btype = Data_Buildings[context.buildingId].type;
 		if (btype == Building_Granary) {
 			if (context.storageShowSpecialOrders) {
@@ -492,7 +493,7 @@ void UI_BuildingInfo_drawForeground()
 				UI_BuildingInfo_drawWarehouseForeground(&context);
 			}
 		}
-	} else if (context.type == 4) {
+	} else if (context.type == BuildingInfoType_Legion) {
 		UI_BuildingInfo_drawLegionInfoForeground(&context);
 	}
 	// general buttons
@@ -519,10 +520,10 @@ void UI_BuildingInfo_handleMouse()
 	}
 	// general buttons
 	if (context.storageShowSpecialOrders) {
-		Widget_Button_handleImageButtons(context.xOffset, 432,
+		focusImageButtonId = Widget_Button_handleImageButtons(context.xOffset, 432,
 			imageButtonsHelpExit, 2);
 	} else {
-		Widget_Button_handleImageButtons(
+		focusImageButtonId = Widget_Button_handleImageButtons(
 			context.xOffset, context.yOffset + 16 * context.heightBlocks - 40,
 			imageButtonsHelpExit, 2);
 	}
@@ -532,14 +533,14 @@ void UI_BuildingInfo_handleMouse()
 			imageButtonsAdvisor, 1);
 	}
 	// building-specific buttons
-	if (context.type == 0) {
+	if (context.type == BuildingInfoType_None) {
 		return;
 	}
-	if (context.type == 4) {
+	if (context.type == BuildingInfoType_Legion) {
 		UI_BuildingInfo_handleMouseLegionInfo(&context);
 	} else if (context.walker.drawn) {
 		UI_BuildingInfo_handleMouseWalkerList(&context);
-	} else if (context.type == 2) {
+	} else if (context.type == BuildingInfoType_Building) {
 		int btype = Data_Buildings[context.buildingId].type;
 		if (btype == Building_Granary) {
 			if (context.storageShowSpecialOrders) {
@@ -554,6 +555,20 @@ void UI_BuildingInfo_handleMouse()
 				UI_BuildingInfo_handleMouseWarehouse(&context);
 			}
 		}
+	}
+}
+
+void UI_BuildingInfo_getTooltip(struct TooltipContext *c)
+{
+	int textId = 0;
+	if (focusImageButtonId) {
+		textId = focusImageButtonId;
+	} else if (context.type == BuildingInfoType_Legion) {
+		textId = UI_BuildingInfo_getTooltipLegionInfo(&context);
+	}
+	if (textId) {
+		c->type = TooltipType_Button;
+		c->textId = textId;
 	}
 }
 

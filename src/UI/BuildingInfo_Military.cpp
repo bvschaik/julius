@@ -350,11 +350,7 @@ void UI_BuildingInfo_drawLegionInfoForeground(BuildingInfoContext *c)
 	}
 	Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 230,
 		c->widthBlocks - 2, 4);
-	if (f->walkerType == Walker_FortLegionary) {
-		if (focusButtonId == 1 || (focusButtonId == 2 && c->formationTypes == 3)) {
-			focusButtonId = 0;
-		}
-	}
+
 	int titleId;
 	int textId;
 	switch (focusButtonId) {
@@ -436,14 +432,26 @@ void UI_BuildingInfo_drawLegionInfoForeground(BuildingInfoContext *c)
 void UI_BuildingInfo_handleMouseLegionInfo(BuildingInfoContext *c)
 {
 	contextForCallback = c;
-	if (!Widget_Button_handleCustomButtons(
+	if (Widget_Button_handleCustomButtons(
 			c->xOffset, c->yOffset, layoutButtons, 5, &focusButtonId)) {
+		struct Data_Formation *f = &Data_Formations[c->formationId];
+		if (f->walkerType == Walker_FortLegionary) {
+			if (focusButtonId == 1 || (focusButtonId == 2 && c->formationTypes == 3)) {
+				focusButtonId = 0;
+			}
+		}
+	} else {
 		Widget_Button_handleCustomButtons(
 			c->xOffset + 16 * (c->widthBlocks - 18) / 2,
 			c->yOffset + 16 * c->heightBlocks - 48,
 			returnButtons, 1, &returnButtonId);
 	}
 	contextForCallback = 0;
+}
+
+int UI_BuildingInfo_getTooltipLegionInfo(BuildingInfoContext *c)
+{
+	return focusButtonId ? 147 : 0;
 }
 
 static void buttonReturnToFort(int param1, int param2)

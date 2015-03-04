@@ -17,32 +17,48 @@
 
 #include <string.h>
 
+static int shouldDrawTooltip(struct TooltipContext *c);
 static void resetTooltip(struct TooltipContext *c);
 static void drawTooltip(struct TooltipContext *c);
 static void drawButtonTooltip(struct TooltipContext *c);
 static void drawOverlayTooltip(struct TooltipContext *c);
 static void drawSenateTooltip(struct TooltipContext *c);
 
-static TimeMillis lastUpdate;
-static int infoId;
+static TimeMillis lastUpdate = 0;
 
 void UI_Tooltip_resetTimer()
 {
 	lastUpdate = Time_getMillis();
-	infoId = 0;
 }
 
 void UI_Tooltip_handle(void (*func)(struct TooltipContext *))
 {
-	struct TooltipContext tooltipContext = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+	struct TooltipContext tooltipContext = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 	tooltipContext.textGroup = 68; // default group
+	tooltipContext.priority = TooltipPriority_Low;
 	if (Data_Settings.mouseTooltips && func) {
 		func(&tooltipContext);
 	}
-	if (tooltipContext.type != TooltipType_None) {
+	if (shouldDrawTooltip(&tooltipContext)) {
 		drawTooltip(&tooltipContext);
 		resetTooltip(&tooltipContext);
 	}
+}
+
+static int shouldDrawTooltip(TooltipContext* c)
+{
+	if (c->type == TooltipType_None) {
+		UI_Tooltip_resetTimer();
+		return 0;
+	}
+	if (c->priority == TooltipPriority_Low && Data_Settings.mouseTooltips < 2) {
+		UI_Tooltip_resetTimer();
+		return 0;
+	}
+	if (Time_getMillis() - lastUpdate < 150) { // delay drawing by 150 ms
+		return 0;
+	}
+	return 1;
 }
 
 static void resetTooltip(struct TooltipContext *c)
