@@ -63,11 +63,11 @@ static ImageButton imageButtonsTradeOpened[] = {
 	{522, 252, 24, 24, 4, 134, 4, buttonEmpireMap, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0},
 };
 
-//MAKE THIS DATA OBJECT
 static struct {
 	int selectedButton;
 	int selectedCity;
 	int xMin, xMax, yMin, yMax;
+	int focusButtonId;
 } data = {0, 1};
 
 void UI_Empire_drawBackground()
@@ -507,13 +507,17 @@ static int getSelectedObject()
 void UI_Empire_handleMouse()
 {
 	Empire_scrollMap(Scroll_getDirection());
+	data.focusButtonId = 0;
 	if (Widget_Button_handleImageButtons(data.xMin + 20, data.yMax - 44, imageButtonHelp, 1)) {
+		data.focusButtonId = 1;
 		return;
 	}
 	if (Widget_Button_handleImageButtons(data.xMax - 44, data.yMax - 44, imageButtonReturnToCity, 1)) {
+		data.focusButtonId = 2;
 		return;
 	}
 	if (Widget_Button_handleImageButtons(data.xMax - 44, data.yMax - 100, imageButtonAdvisor, 1)) {
+		data.focusButtonId = 3;
 		return;
 	}
 	int objectId = getSelectedObject();
@@ -532,6 +536,78 @@ void UI_Empire_handleMouse()
 			if (Data_Empire_Cities[data.selectedCity].cityType == EmpireCity_Trade && !Data_Empire_Cities[data.selectedCity].isOpen) {
 				Widget_Button_handleCustomButtons((data.xMin + data.xMax - 500) / 2, data.yMax - 105, customButtonOpenTrade, 1, &data.selectedButton);
 			}
+		}
+	}
+}
+
+static int isMouseHit(int x, int y, int size)
+{
+        int mx = Data_Mouse.x;
+        int my = Data_Mouse.y;
+        return x <= mx && mx < x + size && y <= my && my < y + size;
+}
+
+static int getTooltipResource()
+{
+	if (Data_Empire_Cities[data.selectedCity].cityType != EmpireCity_Trade) {
+		return 0;
+	}
+	int objectId = Data_Empire.selectedObject - 1;
+	int xOffset = (data.xMin + data.xMax - 500) / 2;
+	int yOffset = data.yMax - 108;
+
+	if (Data_Empire_Cities[data.selectedCity].isOpen) {
+		for (int r = 1, index = 0; r <= 15; r++) {
+			if (Empire_citySellsResource(objectId, r)) {
+				if (isMouseHit(xOffset + 120 + 100 * index, yOffset + 21, 26)) {
+					return r;
+				}
+				index++;
+			}
+		}
+		for (int r = 1, index = 0; r <= 15; r++) {
+			if (Empire_cityBuysResource(objectId, r)) {
+				if (isMouseHit(xOffset + 120 + 100 * index, yOffset + 51, 26)) {
+					return r;
+				}
+				index++;
+			}
+		}
+	} else {
+		int itemOffset = Widget_GameText_getWidth(47, 5, Font_NormalGreen);
+		for (int r = 1; r <= 15; r++) {
+			if (Empire_citySellsResource(objectId, r)) {
+				if (isMouseHit(xOffset + 60 + itemOffset, yOffset + 35, 26)) {
+					return r;
+				}
+				itemOffset += 32;
+			}
+		}
+		itemOffset += Widget_GameText_getWidth(47, 4, Font_NormalGreen);
+		for (int r = 1; r <= 15; r++) {
+			if (Empire_cityBuysResource(objectId, r)) {
+				if (isMouseHit(xOffset + 110 + itemOffset, yOffset + 35, 26)) {
+					return r;
+				}
+				itemOffset += 32;
+			}
+		}
+	}
+	return 0;
+}
+
+void UI_EmpireMap_getTooltip(struct TooltipContext *c)
+{
+	int resource = getTooltipResource();
+	if (resource) {
+		c->type = TooltipType_Button;
+		c->textId = 131 + resource;
+	} else if (data.focusButtonId) {
+		c->type = TooltipType_Button;
+		switch (data.focusButtonId) {
+			case 1: c->textId = 1; break;
+			case 2: c->textId = 2; break;
+			case 3: c->textId = 69; break;
 		}
 	}
 }

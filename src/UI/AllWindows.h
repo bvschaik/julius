@@ -83,6 +83,7 @@ void UI_City_handleMouseMilitary();
 void UI_Empire_drawBackground();
 void UI_Empire_drawForeground();
 void UI_Empire_handleMouse();
+void UI_EmpireMap_getTooltip(struct TooltipContext *c);
 
 void UI_TradeOpenedDialog_drawBackground();
 void UI_TradeOpenedDialog_drawForeground();
