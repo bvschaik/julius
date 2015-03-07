@@ -46,6 +46,8 @@ int Widget_RichText_getClickedLink();
 void Widget_RichText_clearLinks();
 void Widget_RichText_scroll(int isDown, int numLines);
 void Widget_RichText_reset(int scrollPosition);
+void Widget_RichText_save();
+void Widget_RichText_restore();
 void Widget_RichText_drawScrollbar();
 void Widget_RichText_drawScrollbarDot();
 int Widget_RichText_getScrollPosition();

@@ -504,6 +504,11 @@ static struct {
 	int maxScrollPosition;
 	int isDraggingScroll;
 	int scrollPositionDrag;
+	struct {
+		int scrollPosition;
+		int numberOfLines;
+		int textHeightLines;
+	} backup;
 } data;
 
 void Widget_RichText_setFonts(Font normalFont, Font linkFont)
@@ -551,9 +556,25 @@ void Widget_RichText_clearLinks()
 
 void Widget_RichText_reset(int scrollPosition)
 {
-	data.scrollPosition = 0;
+	data.scrollPosition = scrollPosition;
 	data.numberOfLines = 0;
 	data.isDraggingScroll = 0;
+}
+
+void Widget_RichText_save()
+{
+	data.backup.numberOfLines = data.numberOfLines;
+	data.backup.scrollPosition = data.scrollPosition;
+	data.backup.textHeightLines = data.textHeightLines;
+	data.scrollPosition = 0;
+	data.textHeightLines = 30;
+}
+
+void Widget_RichText_restore()
+{
+	data.numberOfLines = data.backup.numberOfLines;
+	data.scrollPosition = data.backup.scrollPosition;
+	data.textHeightLines = data.backup.textHeightLines;
 }
 
 static int drawRichText(const char *str, int xOffset, int yOffset,
@@ -591,8 +612,7 @@ static int drawRichText(const char *str, int xOffset, int yOffset,
 				break;
 			}
 			int wordNumChars;
-			int wordWidth = getRichTextWordWidth((const unsigned char*)str, &wordNumChars);
-			currentWidth += wordWidth;
+			currentWidth += getRichTextWordWidth((const unsigned char*)str, &wordNumChars);
 			if (currentWidth >= boxWidth) {
 				if (currentWidth == 0) {
 					hasMoreCharacters = 0;
@@ -614,15 +634,16 @@ static int drawRichText(const char *str, int xOffset, int yOffset,
 							if (lineIndex) {
 								numLines++;
 							}
-							str++;
+							str++; // skip 'G'
 							currentWidth = boxWidth;
 							graphicId = String_toInt(str);
-							do {
-								str++;
-							} while (*str >= '0' && *str <= '9');
+							c = *(str++);
+							while (c >= '0' && c <= '9') {
+								c = *(str++);
+							}
 							graphicId += GraphicId(ID_Graphic_MessageImages) - 1;
 							graphicHeightLines = GraphicHeight(graphicId) / 16 + 2;
-							if (lineIndex > 0) {
+							if (line > 0) {
 								linesBeforeGraphic = 1;
 							}
 							break;
@@ -666,11 +687,12 @@ static int drawRichText(const char *str, int xOffset, int yOffset,
 			}
 		}
 		line++;
+		numLines++;
 		if (!outsideViewport) {
 			y += 16;
 		}
 	}
-	return line;
+	return numLines;
 }
 
 int Widget_RichText_draw(const char *str, int xOffset, int yOffset,

@@ -40,8 +40,10 @@ void UI_Tooltip_handle(void (*func)(struct TooltipContext *))
 		func(&tooltipContext);
 	}
 	if (shouldDrawTooltip(&tooltipContext)) {
+		Widget_RichText_save();
 		drawTooltip(&tooltipContext);
 		resetTooltip(&tooltipContext);
+		Widget_RichText_restore();
 	}
 }
 

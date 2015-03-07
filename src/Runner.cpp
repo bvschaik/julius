@@ -43,7 +43,6 @@ static int getElapsedTicks()
 		case Window_OverlayMenu:
 			break;
 	}
-	// TODO tooltip
 	if (Data_State.selectedBuilding.placementInProgress) {
 		return 0;
 	}
