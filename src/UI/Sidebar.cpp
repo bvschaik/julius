@@ -190,8 +190,9 @@ static void drawSidebar()
 
 	// relief images below panel
 	int yOffset = 474;
-	while (Data_Screen.width - yOffset > 0) {
-		if (Data_Screen.width - yOffset <= 120) {
+	int yMax = Data_Screen.height - BOTTOM_BORDER;
+	while (yOffset < yMax) {
+		if (yMax - yOffset <= 120) {
 			Graphics_drawImage(graphicBase + 2 + Data_State.sidebarCollapsed, xOffsetPanel, yOffset);
 			yOffset += 120;
 		} else {

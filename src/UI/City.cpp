@@ -27,6 +27,7 @@ void UI_City_drawBackground()
 
 void UI_City_drawForeground()
 {
+	UI_TopMenu_drawBackgroundIfNecessary();
 	UI_City_drawCity();
 	UI_Sidebar_drawForeground();
 	UI_City_drawPausedAndTimeLeft();
@@ -36,6 +37,7 @@ void UI_City_drawForeground()
 
 void UI_City_drawForegroundMilitary()
 {
+	UI_TopMenu_drawBackgroundIfNecessary();
 	UI_City_drawCity();
 	UI_Sidebar_drawMinimap(0);
 	UI_City_drawPausedAndTimeLeft();

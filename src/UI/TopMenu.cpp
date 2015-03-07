@@ -92,6 +92,12 @@ static int openSubMenu = 0;
 static int focusMenuId;
 static int focusSubMenuId;
 
+static struct {
+	int population;
+	int treasury;
+	int month;
+} drawn;
+
 void UI_TopMenu_initFromSettings()
 {
 	if (Data_Settings.mouseTooltips == 1) {
@@ -153,6 +159,18 @@ void UI_TopMenu_drawBackground()
 
 		width = Widget_GameText_drawColored(25, Data_CityInfo_Extra.gameTimeMonth, 850, 5, Font_NormalPlain, Color_Yellow);
 		Widget_GameText_drawYearColored(Data_CityInfo_Extra.gameTimeYear, 850 + width, 5, Font_NormalPlain, Color_Yellow);
+	}
+	drawn.treasury = Data_CityInfo.treasury;
+	drawn.population = Data_CityInfo.population;
+	drawn.month = Data_CityInfo_Extra.gameTimeMonth;
+}
+
+void UI_TopMenu_drawBackgroundIfNecessary()
+{
+	if (drawn.treasury != Data_CityInfo.treasury ||
+		drawn.population != Data_CityInfo.population ||
+		drawn.month != Data_CityInfo_Extra.gameTimeMonth) {
+		UI_TopMenu_drawBackground();
 	}
 }
 
