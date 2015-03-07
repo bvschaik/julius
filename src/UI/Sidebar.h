@@ -6,6 +6,7 @@ void UI_Sidebar_drawForeground();
 
 int UI_Sidebar_handleMouse();
 void UI_Sidebar_handleMouseBuildButtons();
+int UI_Sidebar_getTooltipText();
 
 void UI_Sidebar_drawMinimap(int force);
 void UI_Sidebar_requestMinimapRefresh();

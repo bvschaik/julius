@@ -742,6 +742,13 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 	int gridOffset = Data_Settings_Map.current.gridOffset;
 	int buildingId = Data_Grid_buildingIds[gridOffset];
 	int overlay = Data_State.currentOverlay;
+	// regular tooltips
+	if (overlay == Overlay_None && buildingId && Data_Buildings[buildingId].type == Building_SenateUpgraded) {
+		c->type = TooltipType_Senate;
+		c->priority = TooltipPriority_High;
+		return;
+	}
+	// overlay tooltips
 	if (overlay != Overlay_Water && overlay != Overlay_Desirability && !buildingId) {
 		return;
 	}
@@ -1040,6 +1047,7 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 			return;
 	}
 	c->type = TooltipType_Overlay;
+	c->priority = TooltipPriority_High;
 }
 
 static void militaryMapClick()

@@ -113,6 +113,7 @@ static const int progressToOffset[] = {
 static struct {
 	TimeMillis slideStart;
 	int progress;
+	int focusButtonForTooltip;
 } data;
 
 void UI_Sidebar_requestMinimapRefresh()
@@ -262,12 +263,16 @@ void UI_Sidebar_drawMinimap(int force)
 
 int UI_Sidebar_handleMouse()
 {
+	int buttonId;
+	data.focusButtonForTooltip = 0;
 	if (Data_State.sidebarCollapsed) {
 		int xOffset = Data_Screen.width - SIDEBAR_BORDER - 42;
-		if (Widget_Button_handleImageButtons(xOffset, 24, buttonExpandSidebar, 1)) {
+		if ((buttonId = Widget_Button_handleImageButtons(xOffset, 24, buttonExpandSidebar, 1))) {
+			data.focusButtonForTooltip = 12;
 			return 1;
 		}
-		if (Widget_Button_handleImageButtons(xOffset, 24, buttonBuildCollapsed, 12)) {
+		if ((buttonId = Widget_Button_handleImageButtons(xOffset, 24, buttonBuildCollapsed, 12))) {
+			data.focusButtonForTooltip = buttonId + 19;
 			return 1;
 		}
 	} else {
@@ -275,13 +280,16 @@ int UI_Sidebar_handleMouse()
 			return 1;
 		}
 		int xOffset = XOFFSET_EXPANDED;
-		if (Widget_Button_handleImageButtons(xOffset, 24, buttonOverlaysCollapseSidebar, 2)) {
+		if ((buttonId = Widget_Button_handleImageButtons(xOffset, 24, buttonOverlaysCollapseSidebar, 2))) {
+			data.focusButtonForTooltip = buttonId + 9;
 			return 1;
 		}
-		if (Widget_Button_handleImageButtons(xOffset, 24, buttonBuildExpanded, 15)) {
+		if ((buttonId = Widget_Button_handleImageButtons(xOffset, 24, buttonBuildExpanded, 15))) {
+			data.focusButtonForTooltip = buttonId + 19;
 			return 1;
 		}
-		if (Widget_Button_handleImageButtons(xOffset, 24, buttonTopExpanded, 6)) {
+		if ((buttonId = Widget_Button_handleImageButtons(xOffset, 24, buttonTopExpanded, 6))) {
+			data.focusButtonForTooltip = buttonId + 39;
 			return 1;
 		}
 	}
@@ -297,6 +305,14 @@ void UI_Sidebar_handleMouseBuildButtons()
 		int xOffset = XOFFSET_EXPANDED;
 		Widget_Button_handleImageButtonsClickOnly(xOffset, 24, buttonBuildExpanded, 15);
 	}
+}
+
+int UI_Sidebar_getTooltipText()
+{
+	if (Data_State.sidebarCollapsed && Data_State.sidebarCollapsed != 1) {
+		return 0;
+	}
+	return data.focusButtonForTooltip;
 }
 
 static void buttonOverlay(int param1, int param2)

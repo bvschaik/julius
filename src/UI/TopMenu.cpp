@@ -287,6 +287,18 @@ int UI_TopMenu_handleMouseWidget()
 	}
 }
 
+int UI_TopMenu_getTooltipText()
+{
+	if (focusMenuId) {
+		return 49 + focusMenuId;
+	}
+	int buttonId = getFundsPopDate();
+	if (buttonId) {
+		return 59 + buttonId;
+	}
+	return 0;
+}
+
 void UI_TopMenu_handleMouse()
 {
 	UI_TopMenu_handleMouseWidget();

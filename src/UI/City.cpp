@@ -92,51 +92,20 @@ void UI_City_handleMouse()
 	}
 	UI_CityBuildings_handleMouse();
 }
-/*
-void __cdecl fun_drawCityScreenForeground()
+
+void UI_City_getTooltip(struct TooltipContext *c)
 {
-  imagebuttons_redraw = 1;
-  {
-    if ( sidepanel_collapsed )                  // sidepanel background image
-      j_fun_drawGraphic(graphic_sidepanel, cityscreen_width_withoutControlpanel, 24);
-    else
-      j_fun_drawGraphic(graphic_sidepanel + 1, cityscreen_width_withControlpanel, 24);
-    j_fun_drawCitySidepanelButtons();
-    j_fun_drawCitySidepanelOverlayButtonText(1, cityscreen_width_withControlpanel + 4);
-    j_fun_drawCitySidepanelBuildingGraphic(0, cityscreen_width_withControlpanel + 6);
-    j_fun_drawCitySidepanelMinimap(1);
-    if ( screen_width == 1024 )                 // relief image below panel buttons
-    {
-      if ( sidepanel_collapsed )
-      {
-        if ( sidepanel_collapsed == 1 )
-          j_fun_drawGraphic(graphic_sidepanel + 5, cityscreen_width_withoutControlpanel, 474);
-      }
-      else
-      {
-        j_fun_drawGraphic(graphic_sidepanel + 4, cityscreen_width_withControlpanel, 474);
-      }
-    }
-    else
-    {
-      if ( screen_width == 800 )                // relief image below panel buttons
-      {
-        if ( sidepanel_collapsed )
-        {
-          if ( sidepanel_collapsed == 1 )
-            j_fun_drawGraphic(graphic_sidepanel + 3, cityscreen_width_withoutControlpanel, 474);
-        }
-        else
-        {
-          j_fun_drawGraphic(graphic_sidepanel + 2, cityscreen_width_withControlpanel, 474);
-        }
-      }
-    }
-  }
-  j_fun_drawTopMenu(1);
-  j_fun_drawCitySidepanelNumMessages(1);
+	int textId = UI_TopMenu_getTooltipText();
+	if (!textId) {
+		textId = UI_Sidebar_getTooltipText();
+	}
+	if (textId) {
+		c->type = TooltipType_Button;
+		c->textId = textId;
+		return;
+	}
+	UI_CityBuildings_getTooltip(c);
 }
-*/
 
 void UI_City_handleMouseMilitary()
 {

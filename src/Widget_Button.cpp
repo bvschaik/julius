@@ -191,19 +191,19 @@ int Widget_Button_handleImageButtons(int xOffset, int yOffset, ImageButton *butt
 				change = 1;
 			}
 		}
-		if (btn->enabled) {
-			if (xOffset + btn->xOffset <= mouseX &&
-				xOffset + btn->xOffset + btn->width > mouseX &&
-				yOffset + btn->yOffset <= mouseY &&
-				yOffset + btn->yOffset + btn->height > mouseY) {
-				// TODO button_x = Data_Mouse.x; button_y = Data_Mouse.y
+		if (xOffset + btn->xOffset <= mouseX &&
+			xOffset + btn->xOffset + btn->width > mouseX &&
+			yOffset + btn->yOffset <= mouseY &&
+			yOffset + btn->yOffset + btn->height > mouseY) {
+			// TODO button_x = Data_Mouse.x; button_y = Data_Mouse.y
+			if (btn->enabled) {
 				if (!btn->hasFocus) {
 					change = 1;
 				}
 				btn->hasFocus = 2;
-				hitButton = btn;
-				hitIndex = i + 1;
 			}
+			hitButton = btn;
+			hitIndex = i + 1;
 		}
 	}
 	if (!hitButton) {

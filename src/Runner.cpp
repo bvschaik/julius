@@ -72,18 +72,4 @@ void Runner_draw()
 {
 	UI_Window_refresh(0);
 	Sound_City_play();
-	// TODO setCursor();
-	/*
-  if ( window_id == 30 )
-  {
-    j_fun_setCursor(1);
-  }
-  else
-  {
-    if ( window_id != 1 || toPlace_buildingType != B_ClearLand )
-      j_fun_setCursor(0);
-    else
-      j_fun_setCursor(2);
-  }
-*/
 }

@@ -30,7 +30,7 @@ static void noop()
 static struct Window windows[] = {
 	// 0
 	{ noop, UI_MainMenu_drawBackground, UI_MainMenu_drawForeground, UI_MainMenu_handleMouse },
-	{ noop, UI_City_drawBackground, UI_City_drawForeground, UI_City_handleMouse, UI_CityBuildings_getTooltip },
+	{ noop, UI_City_drawBackground, UI_City_drawForeground, UI_City_handleMouse, UI_City_getTooltip },
 	{ noop, UI_PopupDialog_drawBackground, UI_PopupDialog_drawForeground, UI_PopupDialog_handleMouse },
 	{ noop, UI_City_drawBackground, UI_TopMenu_drawForeground, UI_TopMenu_handleMouse },
 	{ noop, noop, UI_DifficultyOptions_drawForeground, UI_DifficultyOptions_handleMouse },
@@ -59,7 +59,7 @@ static struct Window windows[] = {
 	{ UI_BuildingInfo_init, UI_BuildingInfo_drawBackground, UI_BuildingInfo_drawForeground, UI_BuildingInfo_handleMouse, UI_BuildingInfo_getTooltip },
 	{ UI_NewCareerDialog_init, UI_NewCareerDialog_drawBackground, UI_NewCareerDialog_drawForeground, UI_NewCareerDialog_handleMouse },
 	{ noop, UI_SlidingSidebar_drawBackground, UI_SlidingSidebar_drawForeground, noop },
-	{ noop, UI_City_drawBackground, UI_City_drawForegroundMilitary, UI_City_handleMouseMilitary, UI_CityBuildings_getTooltip }, // TODO military command
+	{ noop, UI_City_drawBackground, UI_City_drawForegroundMilitary, UI_City_handleMouseMilitary, UI_City_getTooltip }, // TODO military command
 	{ noop, UI_MissionStart_Selection_drawBackground, UI_MissionStart_Selection_drawForeground, UI_MissionStart_Selection_handleMouse },
 	// 30
 	{ UI_MissionStart_Briefing_init, UI_MissionStart_Briefing_drawBackground, UI_MissionStart_BriefingInitial_drawForeground, UI_MissionStart_BriefingInitial_handleMouse },
@@ -132,7 +132,6 @@ void UI_Window_refresh(int force)
 {
 	updateMouseBefore();
 	if (force || refreshRequested) {
-		// TODO tooltip: if (tooltip_enabled) window = tooltip_windowid; else window = currentWindow
 		windows[currentWindow].drawBackground();
 		refreshRequested = 0;
 	}
