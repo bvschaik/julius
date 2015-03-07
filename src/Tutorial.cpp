@@ -2,8 +2,6 @@
 
 #include "PlayerMessage.h"
 #include "SidebarMenu.h"
-#include "UI/AllWindows.h"
-#include "UI/Window.h"
 
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
@@ -13,10 +11,6 @@
 static void refreshSidebarButtons()
 {
 	SidebarMenu_enableBuildingMenuItemsAndButtons();
-	// TODO: why???
-	if (UI_Window_getId() == Window_City) {
-		UI_City_drawBackground();
-	}
 }
 
 void Tutorial_onFire()
