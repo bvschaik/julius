@@ -230,8 +230,8 @@ static void drawDialogVideo()
 {
 	Widget_RichText_setFonts(Font_NormalWhite, Font_NormalRed);
 	struct Data_Language_MessageEntry *msg = &Data_Language_Message.index[data.textId];
-	data.x = Data_Screen.offset640x480.x + msg->x;
-	data.y = Data_Screen.offset640x480.y + msg->y;
+	data.x = Data_Screen.offset640x480.x + 32;
+	data.y = Data_Screen.offset640x480.y + 28;
 	if (!data.backgroundIsProvided) {
 		UI_City_drawBackground();
 		UI_City_drawForeground();
