@@ -5,6 +5,7 @@
 #define MAX_STORAGES 200
 
 enum {
+	Building_None = 0,
 	Building_Menu_Farms = 2,
 	Building_Menu_RawMaterials = 3,
 	Building_Menu_Workshops = 4,

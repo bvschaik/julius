@@ -415,6 +415,10 @@ static void buttonRotate(int clockWise, int param2)
 	UI_Window_requestRefresh();
 }
 
+void UI_Sidebar_rotateMap(int clockWise)
+{
+	buttonRotate(clockWise, 0);
+}
 
 static void updateProgress()
 {

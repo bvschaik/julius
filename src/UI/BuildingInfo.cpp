@@ -325,6 +325,14 @@ void UI_BuildingInfo_init()
 	context.xOffset = Data_CityView.xOffsetInPixels + border;
 }
 
+int UI_BuildingInfo_getBuildingType()
+{
+	if (context.type == BuildingInfoType_Building) {
+		return Data_Buildings[context.buildingId].type;
+	}
+	return Building_Well;
+}
+
 void UI_BuildingInfo_drawBackground()
 {
 	UI_City_drawBackground();

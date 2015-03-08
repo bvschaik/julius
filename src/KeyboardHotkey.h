@@ -7,6 +7,8 @@ void KeyboardHotkey_left();
 void KeyboardHotkey_right();
 void KeyboardHotkey_up();
 void KeyboardHotkey_down();
+void KeyboardHotkey_home();
+void KeyboardHotkey_end();
 void KeyboardHotkey_esc();
 
 void KeyboardHotkey_func(int fNumber);

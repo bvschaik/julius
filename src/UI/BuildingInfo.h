@@ -59,6 +59,8 @@ void UI_BuildingInfo_drawForeground();
 void UI_BuildingInfo_handleMouse();
 void UI_BuildingInfo_getTooltip(struct TooltipContext *c);
 
+int UI_BuildingInfo_getBuildingType();
+
 void UI_BuildingInfo_drawEmploymentInfo(BuildingInfoContext *c, int yOffset);
 void UI_BuildingInfo_drawWalkerImagesLocal(BuildingInfoContext *c);
 void UI_BuildingInfo_drawWalkerList(BuildingInfoContext *c);

@@ -1,14 +1,19 @@
 #include "KeyboardHotkey.h"
 
 #include "CityView.h"
+#include "Event.h"
 #include "System.h"
+#include "Video.h"
 
 #include "UI/Advisors.h"
 #include "UI/AllWindows.h"
+#include "UI/BuildingInfo.h"
 #include "UI/PopupDialog.h"
+#include "UI/Sidebar.h"
 #include "UI/Warning.h"
 #include "UI/Window.h"
 
+#include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 #include "Data/Formation.h"
@@ -24,7 +29,8 @@ static struct {
 	int ctrlDown;
 	int altDown;
 	int shiftDown;
-} data;
+	int isCheating;
+} data = {0, 0, 0, 0};
 
 static void changeGameSpeed(int isDown)
 {
@@ -48,7 +54,6 @@ static void showOverlay(int overlay)
 {
 	ExitMilitaryCommand();
 	WindowId window = UI_Window_getId();
-	// TODO tooltip windowid??
 	if (window == Window_City) {
 		if (Data_State.currentOverlay == overlay) {
 			Data_State.previousOverlay = overlay;
@@ -115,8 +120,52 @@ static void cycleLegion()
 	}
 }
 
+static void cheatInitOrInvasion()
+{
+	if (UI_Window_getId() == Window_BuildingInfo) {
+		data.isCheating = UI_BuildingInfo_getBuildingType() == Building_Well;
+	} else if (data.isCheating && UI_Window_getId() == Window_MessageDialog) {
+		data.isCheating = 2;
+		Event_startInvasionFromCheat();
+	} else {
+		data.isCheating = 0;
+	}
+}
+
+static void cheatVictory()
+{
+	if (data.isCheating) {
+		Data_State.forceWinCheat = 1;
+	}
+}
+
+static void cheatMoney()
+{
+	if (data.isCheating && Data_CityInfo.treasury < 5000) {
+		Data_CityInfo.treasury += 1000;
+		Data_CityInfo.cheatedMoney += 1000;
+		UI_Window_requestRefresh();
+	}
+}
+
 void KeyboardHotkey_character(int c)
 {
+	if (data.altDown) {
+		switch (c) {
+			case 'X': case 'x':
+				KeyboardHotkey_esc();
+				break;
+			case 'K': case 'k':
+				cheatInitOrInvasion();
+			case 'C': case 'c':
+				cheatMoney();
+				break;
+			case 'V': case 'v':
+				cheatVictory();
+				break;
+		}
+		return;
+	}
 	switch (c) {
 		case '[':
 			changeGameSpeed(1);
@@ -207,6 +256,20 @@ void KeyboardHotkey_down()
 	Data_State.arrowKey.down = 1;
 }
 
+void KeyboardHotkey_home()
+{
+	if (UI_Window_getId() == Window_City) {
+		UI_Sidebar_rotateMap(0);
+	}
+}
+
+void KeyboardHotkey_end()
+{
+	if (UI_Window_getId() == Window_City) {
+		UI_Sidebar_rotateMap(1);
+	}
+}
+
 static void confirmExit(int accepted)
 {
 	if (accepted) {
@@ -216,6 +279,7 @@ static void confirmExit(int accepted)
 
 void KeyboardHotkey_esc()
 {
+	Video_cancel();
 	UI_PopupDialog_show(PopupDialog_Quit, confirmExit, 1);
 }
 
