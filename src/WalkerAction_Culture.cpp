@@ -51,7 +51,7 @@ static void WalkerAction_culture(int walkerId, int graphicCategory)
 	w->useCrossCountry = 0;
 	w->maxRoamLength = 384;
 	int buildingId = w->buildingId;
-	if (Data_Buildings[buildingId].inUse != 1 || Data_Buildings[buildingId].walkerId != walkerId) {
+	if (!BuildingIsInUse(buildingId) || Data_Buildings[buildingId].walkerId != walkerId) {
 		w->state = WalkerState_Dead;
 	}
 	WalkerActionIncreaseGraphicOffset(w, 12);
@@ -77,7 +77,7 @@ void WalkerAction_schoolChild(int walkerId)
 	w->useCrossCountry = 0;
 	w->maxRoamLength = 96;
 	int buildingId = w->buildingId;
-	if (Data_Buildings[buildingId].inUse != 1 || Data_Buildings[buildingId].type != Building_School) {
+	if (!BuildingIsInUse(buildingId) || Data_Buildings[buildingId].type != Building_School) {
 		w->state = WalkerState_Dead;
 	}
 	WalkerActionIncreaseGraphicOffset(w, 12);
@@ -143,7 +143,7 @@ void WalkerAction_missionary(int walkerId)
 	w->useCrossCountry = 0;
 	w->maxRoamLength = 192;
 	int buildingId = w->buildingId;
-	if (Data_Buildings[buildingId].inUse != 1 || Data_Buildings[buildingId].walkerId != walkerId) {
+	if (!BuildingIsInUse(buildingId) || Data_Buildings[buildingId].walkerId != walkerId) {
 		w->state = WalkerState_Dead;
 	}
 	WalkerActionIncreaseGraphicOffset(w, 12);
@@ -157,8 +157,7 @@ void WalkerAction_patrician(int walkerId)
 	w->terrainUsage = 1;
 	w->useCrossCountry = 0;
 	w->maxRoamLength = 128;
-	int buildingId = w->buildingId;
-	if (Data_Buildings[buildingId].inUse != 1) {
+	if (!BuildingIsInUse(w->buildingId)) {
 		w->state = WalkerState_Dead;
 	}
 	WalkerActionIncreaseGraphicOffset(w, 12);
@@ -173,7 +172,7 @@ void WalkerAction_laborSeeker(int walkerId)
 	w->useCrossCountry = 0;
 	w->maxRoamLength = 384;
 	int buildingId = w->buildingId;
-	if (Data_Buildings[buildingId].inUse != 1 || Data_Buildings[buildingId].walkerId2 != walkerId) {
+	if (!BuildingIsInUse(buildingId) || Data_Buildings[buildingId].walkerId2 != walkerId) {
 		w->state = WalkerState_Dead;
 	}
 	WalkerActionIncreaseGraphicOffset(w, 12);
@@ -188,8 +187,7 @@ void WalkerAction_marketTrader(int walkerId)
 	w->useCrossCountry = 0;
 	w->maxRoamLength = 384;
 	
-	struct Data_Building *b = &Data_Buildings[w->buildingId];
-	if (b->inUse != 1 || b->walkerId != walkerId) {
+	if (!BuildingIsInUse(w->buildingId) || Data_Buildings[w->buildingId].walkerId != walkerId) {
 		w->state = WalkerState_Dead;
 	}
 	WalkerActionIncreaseGraphicOffset(w, 12);

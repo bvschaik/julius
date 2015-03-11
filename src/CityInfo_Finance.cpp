@@ -9,7 +9,7 @@
 void CityInfo_Finance_decayTaxCollectorAccess()
 {
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse == 1 && Data_Buildings[i].houseTaxCoverage) {
+		if (BuildingIsInUse(i) && Data_Buildings[i].houseTaxCoverage) {
 			Data_Buildings[i].houseTaxCoverage--;
 		}
 	}
@@ -30,7 +30,7 @@ static void collectMonthlyTaxes()
 		Data_CityInfo.populationPerLevel[i] = 0;
 	}
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse != 1 || !Data_Buildings[i].houseSize) {
+		if (!BuildingIsInUse(i) || !Data_Buildings[i].houseSize) {
 			continue;
 		}
 
@@ -196,7 +196,7 @@ void CityInfo_Finance_handleYearChange()
 	
 	// reset tax income in building list
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse == 1 && Data_Buildings[i].houseSize) {
+		if (BuildingIsInUse(i) && Data_Buildings[i].houseSize) {
 			Data_Buildings[i].taxIncomeOrStorage = 0;
 		}
 	}
@@ -282,7 +282,7 @@ void CityInfo_Finance_calculateEstimatedTaxes()
 	Data_CityInfo.monthlyCollectedTaxFromPlebs = 0;
 	Data_CityInfo.monthlyCollectedTaxFromPatricians = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse == 1 && Data_Buildings[i].houseSize && Data_Buildings[i].houseTaxCoverage) {
+		if (BuildingIsInUse(i) && Data_Buildings[i].houseSize && Data_Buildings[i].houseTaxCoverage) {
 			int isPatrician = Data_Buildings[i].subtype.houseLevel >= HouseLevel_SmallVilla;
 			int trm = Calc_adjustWithPercentage(
 				Data_Model_Houses[Data_Buildings[i].subtype.houseLevel].taxMultiplier,

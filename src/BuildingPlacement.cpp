@@ -728,7 +728,7 @@ static void clearRegionConfirmed(int measureOnly, int xStart, int yStart, int xE
 					type == Building_NativeHut || type == Building_NativeMeeting) {
 					continue;
 				}
-				if (Data_Buildings[buildingId].inUse == 6) {
+				if (Data_Buildings[buildingId].state == BuildingState_DeletedByPlayer) {
 					continue;
 				}
 				if (type == Building_FortGround || type == Building_FortGround__) {
@@ -744,11 +744,11 @@ static void clearRegionConfirmed(int measureOnly, int xStart, int yStart, int xE
 					HousePopulation_createHomeless(b->x, b->y, b->housePopulation);
 					b->housePopulation = 0;
 				}
-				if (b->inUse != 6) {
+				if (b->state != BuildingState_DeletedByPlayer) {
 					itemsPlaced++;
 					Undo_addBuildingToList(buildingId);
 				}
-				b->inUse = 6;
+				b->state = BuildingState_DeletedByPlayer;
 				b->isDeleted = 1;
 				int spaceId = buildingId;
 				for (int i = 0; i < 9; i++) {
@@ -757,7 +757,7 @@ static void clearRegionConfirmed(int measureOnly, int xStart, int yStart, int xE
 						break;
 					}
 					Undo_addBuildingToList(spaceId);
-					Data_Buildings[spaceId].inUse = 6;
+					Data_Buildings[spaceId].state = BuildingState_DeletedByPlayer;
 				}
 				spaceId = buildingId;
 				for (int i = 0; i < 9; i++) {
@@ -766,7 +766,7 @@ static void clearRegionConfirmed(int measureOnly, int xStart, int yStart, int xE
 						break;
 					}
 					Undo_addBuildingToList(spaceId);
-					Data_Buildings[spaceId].inUse = 6;
+					Data_Buildings[spaceId].state = BuildingState_DeletedByPlayer;
 				}
 			} else if (terrain & Terrain_Aqueduct) {
 				Data_Grid_terrain[gridOffset] &= Terrain_2e80;

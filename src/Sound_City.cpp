@@ -106,7 +106,7 @@ void Sound_City_init()
 
 void Sound_City_markBuildingView(int buildingId, int direction)
 {
-	if (!Data_Buildings[buildingId].inUse) {
+	if (Data_Buildings[buildingId].state == BuildingState_Unused) {
 		return;
 	}
 	int type = Data_Buildings[buildingId].type;

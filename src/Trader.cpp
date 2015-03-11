@@ -228,7 +228,7 @@ int Trader_getClosestWarehouseForTradeCaravan(int walkerId, int x, int y, int ci
 	int minDistance = 10000;
 	int minBuildingId = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse != 1 || Data_Buildings[i].type != Building_Warehouse) {
+		if (!BuildingIsInUse(i) || Data_Buildings[i].type != Building_Warehouse) {
 			continue;
 		}
 		if (!Data_Buildings[i].hasRoadAccess || Data_Buildings[i].distanceFromEntry <= 0) {
@@ -319,7 +319,7 @@ int Trader_getClosestWarehouseForImportDocker(int x, int y, int cityId, int dist
 	int minBuildingId = 0;
 	int resourceId = Data_CityInfo.tradeNextImportResourceDocker;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse != 1 || Data_Buildings[i].type != Building_Warehouse) {
+		if (!BuildingIsInUse(i) || Data_Buildings[i].type != Building_Warehouse) {
 			continue;
 		}
 		if (!Data_Buildings[i].hasRoadAccess || Data_Buildings[i].distanceFromEntry <= 0) {
@@ -395,7 +395,7 @@ int Trader_getClosestWarehouseForExportDocker(int x, int y, int cityId, int dist
 	int resourceId = Data_CityInfo.tradeNextExportResourceDocker;
 	
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse != 1 || Data_Buildings[i].type != Building_Warehouse) {
+		if (!BuildingIsInUse(i) || Data_Buildings[i].type != Building_Warehouse) {
 			continue;
 		}
 		if (!Data_Buildings[i].hasRoadAccess || Data_Buildings[i].distanceFromEntry <= 0) {

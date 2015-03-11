@@ -45,11 +45,11 @@ int Undo_recordBeforeBuild()
 	data.buildingType = Data_State.selectedBuilding.type;
 	clearBuildingList();
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse == 2) {
+		if (Data_Buildings[i].state == BuildingState_Undo) {
 			Data_State.undoAvailable = 0;
 			return 0;
 		}
-		if (Data_Buildings[i].inUse == 6) {
+		if (Data_Buildings[i].state == BuildingState_DeletedByPlayer) {
 			Data_State.undoAvailable = 0;
 		}
 	}
@@ -69,8 +69,8 @@ void Undo_restoreBuildings()
 	for (int i = 0; i < data.numBuildings; i++) {
 		if (data.buildingIndex[i]) {
 			struct Data_Building *b = &Data_Buildings[data.buildingIndex[i]];
-			if (b->inUse == 6) {
-				b->inUse = 1;
+			if (b->state == BuildingState_DeletedByPlayer) {
+				b->state = BuildingState_InUse;
 			}
 			b->isDeleted = 0;
 		}
@@ -168,7 +168,7 @@ static void placeBuildingOnTerrain(int buildingId)
 			b->data.other.boatWalkerId = 0;
 		}
 	}
-	b->inUse = 1;
+	b->state = BuildingState_InUse;
 }
 
 void Undo_perform()
@@ -222,7 +222,7 @@ void Undo_perform()
 				if (b->type == Building_Oracle || (b->type >= Building_LargeTempleCeres && b->type <= Building_LargeTempleVenus)) {
 					Resource_addToCityWarehouses(Resource_Marble, 2);
 				}
-				b->inUse = 2;
+				b->state = BuildingState_Undo;
 			}
 		}
 	}
@@ -273,7 +273,9 @@ void Undo_updateAvailable()
 	for (int i = 0; i < data.numBuildings; i++) {
 		if (data.buildingIndex[i]) {
 			struct Data_Building *b = &Data_Buildings[data.buildingIndex[i]];
-			if (b->inUse == 2 || b->inUse == 4 || b->inUse == 5) {
+			if (b->state == BuildingState_Undo ||
+				b->state == BuildingState_Rubble ||
+				b->state == BuildingState_DeletedByGame) {
 				Data_State.undoAvailable = 0;
 				UI_Window_requestRefresh();
 				return;

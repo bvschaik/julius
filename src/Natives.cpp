@@ -46,7 +46,7 @@ void Natives_init()
 			int buildingId = Building_create(buildingType, x, y);
 			Data_Grid_buildingIds[gridOffset] = buildingId;
 			struct Data_Building *b = &Data_Buildings[buildingId];
-			b->inUse = 1;
+			b->state = BuildingState_InUse;
 			switch (buildingType) {
 				case Building_NativeCrops:
 					b->data.industry.progress = randomBit;
@@ -79,7 +79,7 @@ static void determineMeetingCenter()
 	// gather list of meeting centers
 	Data_BuildingList.small.size = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse == 1 && Data_Buildings[i].type == Building_NativeMeeting) {
+		if (BuildingIsInUse(i) && Data_Buildings[i].type == Building_NativeMeeting) {
 			DATA_BUILDINGLIST_SMALL_ENQUEUE(i);
 		}
 	}
@@ -88,7 +88,7 @@ static void determineMeetingCenter()
 	}
 	// determine closest meeting center for hut
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse == 1 && Data_Buildings[i].type == Building_NativeHut) {
+		if (BuildingIsInUse(i) && Data_Buildings[i].type == Building_NativeHut) {
 			int minDist = 1000;
 			int minMeetingId = 0;
 			for (int n = 0; n < Data_BuildingList.small.size; n++) {
@@ -112,7 +112,7 @@ void Natives_checkLand()
 		Data_CityInfo.nativeAttackDuration--;
 	}
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse != 1) {
+		if (!BuildingIsInUse(i)) {
 			continue;
 		}
 		struct Data_Building *b = &Data_Buildings[i];

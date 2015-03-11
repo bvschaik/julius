@@ -66,7 +66,7 @@ void CityInfo_Tick_countBuildingTypes()
 	CLEAR(oracle);
 
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse != 1 || Data_Buildings[i].houseSize) {
+		if (!BuildingIsInUse(i) || Data_Buildings[i].houseSize) {
 			continue;
 		}
 		int isEntertainmentVenue = 0;
@@ -307,7 +307,7 @@ void CityInfo_Tick_distributeTreasuryOverForumsAndSenates()
 	}
 
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse != 1 || Data_Buildings[i].houseSize) {
+		if (!BuildingIsInUse(i) || Data_Buildings[i].houseSize) {
 			continue;
 		}
 		Data_Buildings[i].taxIncomeOrStorage = 0;

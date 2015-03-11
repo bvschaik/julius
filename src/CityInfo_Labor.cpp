@@ -90,7 +90,7 @@ void CityInfo_Labor_calculateWorkersNeededPerCategory()
 		Data_CityInfo.laborCategory[cat].workersNeeded = 0;
 	}
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse != 1) {
+		if (!BuildingIsInUse(i)) {
 			continue;
 		}
 		int category = buildingTypeToLaborCategory[Data_Buildings[i].type];
@@ -214,7 +214,7 @@ static void setWorkerPercentages()
 {
 	int waterPer10kPerBuilding = Calc_getPercentage(100, Data_CityInfo.laborCategory[LaborCategory_Water].buildings);
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse != 1) {
+		if (!BuildingIsInUse(i)) {
 			continue;
 		}
 		int cat = buildingTypeToLaborCategory[Data_Buildings[i].type];
@@ -242,7 +242,7 @@ static void allocateWorkersToBuildings()
 			? 1 : 0;
 	}
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse != 1) {
+		if (!BuildingIsInUse(i)) {
 			continue;
 		}
 		int cat = buildingTypeToLaborCategory[Data_Buildings[i].type];
@@ -283,7 +283,7 @@ static void allocateWorkersToBuildings()
 		}
 	}
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse != 1) {
+		if (!BuildingIsInUse(i)) {
 			continue;
 		}
 		int cat = buildingTypeToLaborCategory[Data_Buildings[i].type];
@@ -332,7 +332,7 @@ static void allocateWorkersToWater()
 		if (buildingId >= 2000) {
 			buildingId = 1;
 		}
-		if (Data_Buildings[buildingId].inUse != 1 ||
+		if (!BuildingIsInUse(buildingId) ||
 			buildingTypeToLaborCategory[Data_Buildings[buildingId].type] != LaborCategory_Water) {
 			continue;
 		}

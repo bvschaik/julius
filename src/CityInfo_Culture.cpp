@@ -180,7 +180,7 @@ void CityInfo_Culture_calculateEntertainment()
 	int numHouses = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
-		if (b->inUse == 1 && b->houseSize) {
+		if (BuildingIsInUse(i) && b->houseSize) {
 			numHouses++;
 			Data_CityInfo.citywideAverageEntertainment += b->data.house.entertainment;
 			Data_CityInfo.citywideAverageReligion += b->data.house.numGods;
@@ -196,7 +196,7 @@ void CityInfo_Culture_calculateEntertainment()
 	}
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
-		if (b->inUse != 1) {
+		if (!BuildingIsInUse(i)) {
 			continue;
 		}
 		switch (b->type) {

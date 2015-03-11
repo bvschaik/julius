@@ -393,7 +393,7 @@ static void setNativeTargetBuilding(int formationId)
 	int minBuildingId = 0;
 	int minDistance = 10000;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse != 1) {
+		if (!BuildingIsInUse(i)) {
 			continue;
 		}
 		switch (Data_Buildings[i].type) {
@@ -433,7 +433,7 @@ static void setEnemyTargetBuilding(struct Data_Formation *f)
 	int minDistance = 10000;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
-		if (b->inUse != 1 || Data_Grid_romanSoldierConcentration[b->gridOffset]) {
+		if (!BuildingIsInUse(i) || Data_Grid_romanSoldierConcentration[b->gridOffset]) {
 			continue;
 		}
 		for (int n = 0; n < 24 && n <= bestTypeIndex && enemyAttackBuildingPriority[attack][n]; n++) {
@@ -454,7 +454,7 @@ static void setEnemyTargetBuilding(struct Data_Formation *f)
 	if (buildingId <= 0) {
 		for (int i = 1; i < MAX_BUILDINGS; i++) {
 			struct Data_Building *b = &Data_Buildings[i];
-			if (b->inUse != 1 || Data_Grid_romanSoldierConcentration[b->gridOffset]) {
+			if (!BuildingIsInUse(i) || Data_Grid_romanSoldierConcentration[b->gridOffset]) {
 				continue;
 			}
 			for (int n = 0; n < 100 && n <= bestTypeIndex && rioterAttackBuildingPriority[n]; n++) {
@@ -960,7 +960,7 @@ int Formation_Rioter_getTargetBuilding(int *xTile, int *yTile)
 	int bestTypeIndex = 100;
 	int buildingId = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse != 1) {
+		if (!BuildingIsInUse(i)) {
 			continue;
 		}
 		int type = Data_Buildings[i].type;

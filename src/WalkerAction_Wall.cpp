@@ -41,7 +41,7 @@ void WalkerAction_ballista(int walkerId)
 	w->heightFromGround = 10;
 	w->currentHeight = 45;
 	
-	if (b->inUse != 1 || b->walkerId4 != walkerId) {
+	if (!BuildingIsInUse(w->buildingId) || b->walkerId4 != walkerId) {
 		w->state = WalkerState_Dead;
 	}
 	if (b->numWorkers <= 0 || b->walkerId <= 0) {
@@ -167,7 +167,7 @@ void WalkerAction_towerSentry(int walkerId)
 	w->isGhost = 1;
 	w->heightFromGround = 10;
 	w->maxRoamLength = 800;
-	if (b->inUse != 1 || b->walkerId != walkerId) {
+	if (!BuildingIsInUse(w->buildingId) || b->walkerId != walkerId) {
 		w->state = WalkerState_Dead;
 	}
 	WalkerActionIncreaseGraphicOffset(w, 12);

@@ -290,7 +290,7 @@ void HouseEvolution_Tick_evolveAndConsumeResources()
 	resetCityInfoServiceRequiredCounters();
 	int hasExpanded = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse == 1 && BuildingIsHouse(Data_Buildings[i].type)) {
+		if (BuildingIsInUse(i) && BuildingIsHouse(Data_Buildings[i].type)) {
 			BuildingHouse_checkForCorruption(i);
 			(*callbacks[Data_Buildings[i].type - 10])(i, &hasExpanded);
 			if (Data_CityInfo_Extra.gameTimeDay == 0 || Data_CityInfo_Extra.gameTimeDay == 7) {
@@ -521,7 +521,7 @@ static void resetCityInfoServiceRequiredCounters()
 void HouseEvolution_Tick_decayCultureService()
 {
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse != 1 || !Data_Buildings[i].houseSize) {
+		if (!BuildingIsInUse(i) || !Data_Buildings[i].houseSize) {
 			continue;
 		}
 		DECAY(theater);
@@ -548,7 +548,7 @@ void HouseEvolution_Tick_decayCultureService()
 void HouseEvolution_Tick_calculateCultureServiceAggregates()
 {
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse != 1 || !Data_Buildings[i].houseSize) {
+		if (!BuildingIsInUse(i) || !Data_Buildings[i].houseSize) {
 			continue;
 		}
 		Data_Building *b = &Data_Buildings[i];

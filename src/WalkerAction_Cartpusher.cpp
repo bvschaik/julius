@@ -177,7 +177,7 @@ void WalkerAction_cartpusher(int walkerId)
 				Data_Grid_routingLandCitizen[w->gridOffset] > 2) {
 				w->state = WalkerState_Dead;
 			}
-			if (b->inUse != 1 || b->walkerId != walkerId) {
+			if (!BuildingIsInUse(buildingId) || b->walkerId != walkerId) {
 				w->state = WalkerState_Dead;
 			}
 			w->waitTicks++;
@@ -201,7 +201,7 @@ void WalkerAction_cartpusher(int walkerId)
 			} else if (w->direction == 10) {
 				w->state = WalkerState_Dead;
 			}
-			if (Data_Buildings[w->destinationBuildingId].inUse != 1) {
+			if (!BuildingIsInUse(w->destinationBuildingId)) {
 				w->state = WalkerState_Dead;
 			}
 			break;
@@ -221,7 +221,7 @@ void WalkerAction_cartpusher(int walkerId)
 				w->actionState = WalkerActionState_20_CartpusherInitial;
 				w->waitTicks = 0;
 			}
-			if (Data_Buildings[w->destinationBuildingId].inUse != 1) {
+			if (!BuildingIsInUse(w->destinationBuildingId)) {
 				w->state = WalkerState_Dead;
 			}
 			break;
@@ -487,7 +487,7 @@ void WalkerAction_warehouseman(int walkerId)
 			WalkerAction_Common_handleCorpse(walkerId);
 			break;
 		case WalkerActionState_50_WarehousemanCreated:
-			if (Data_Buildings[w->buildingId].inUse != 1 ||
+			if (!BuildingIsInUse(w->buildingId) ||
 				Data_Buildings[w->buildingId].walkerId != walkerId) {
 				w->state = WalkerState_Dead;
 			}

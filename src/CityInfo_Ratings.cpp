@@ -425,7 +425,7 @@ static void calculateMaxProsperity()
 	int points = 0;
 	int houses = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse && Data_Buildings[i].houseSize) {
+		if (Data_Buildings[i].state && Data_Buildings[i].houseSize) {
 			points += Data_Model_Houses[Data_Buildings[i].subtype.houseLevel].prosperity;
 			houses++;
 		}

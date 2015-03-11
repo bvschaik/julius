@@ -170,7 +170,7 @@ int Formation_getFormationForBuilding(int gridOffset)
 	int buildingId = Data_Grid_buildingIds[gridOffset];
 	if (buildingId > 0) {
 		struct Data_Building *b = &Data_Buildings[buildingId];
-		if (b->inUse == 1 && (b->type == Building_FortGround__ || b->type == Building_FortGround)) {
+		if (BuildingIsInUse(buildingId) && (b->type == Building_FortGround__ || b->type == Building_FortGround)) {
 			return b->formationId;
 		}
 	}
@@ -307,7 +307,7 @@ int Formation_getClosestMilitaryAcademy(int formationId)
 	int minBuildingId = 0;
 	int minDistance = 10000;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse == 1 &&
+		if (BuildingIsInUse(i) &&
 			Data_Buildings[i].type == Building_MilitaryAcademy &&
 			Data_Buildings[i].numWorkers >= Data_Model_Buildings[Building_MilitaryAcademy].laborers) {
 			int dist = Calc_distanceMaximum(fortX, fortY,

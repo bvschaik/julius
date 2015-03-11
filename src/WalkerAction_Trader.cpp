@@ -253,7 +253,7 @@ void WalkerAction_tradeCaravan(int walkerId)
 					w->isGhost = 1;
 					break;
 			}
-			if (Data_Buildings[w->destinationBuildingId].inUse != 1) {
+			if (!BuildingIsInUse(w->destinationBuildingId)) {
 				w->state = WalkerState_Dead;
 			}
 			break;
@@ -370,7 +370,7 @@ void WalkerAction_nativeTrader(int walkerId)
 				w->state = WalkerState_Dead;
 				w->isGhost = 1;
 			}
-			if (Data_Buildings[w->destinationBuildingId].inUse != 1) {
+			if (!BuildingIsInUse(w->destinationBuildingId)) {
 				w->state = WalkerState_Dead;
 			}
 			break;
@@ -447,8 +447,9 @@ void WalkerAction_nativeTrader(int walkerId)
 
 static int tradeShipLostQueue(int walkerId)
 {
-	struct Data_Building *b = &Data_Buildings[Data_Walkers[walkerId].destinationBuildingId];
-	if (b->inUse == 1 && b->type == Building_Dock &&
+	int buildingId = Data_Walkers[walkerId].destinationBuildingId;
+	struct Data_Building *b = &Data_Buildings[buildingId];
+	if (BuildingIsInUse(buildingId) && b->type == Building_Dock &&
 		b->numWorkers > 0 && b->data.other.boatWalkerId == walkerId) {
 		return 0;
 	}
@@ -457,8 +458,9 @@ static int tradeShipLostQueue(int walkerId)
 
 static int tradeShipDoneTrading(int walkerId)
 {
-	struct Data_Building *b = &Data_Buildings[Data_Walkers[walkerId].destinationBuildingId];
-	if (b->inUse == 1 && b->type == Building_Dock && b->numWorkers > 0) {
+	int buildingId = Data_Walkers[walkerId].destinationBuildingId;
+	struct Data_Building *b = &Data_Buildings[buildingId];
+	if (BuildingIsInUse(buildingId) && b->type == Building_Dock && b->numWorkers > 0) {
 		for (int i = 0; i < 3; i++) {
 			int dockerId = b->data.other.dockWalkerIds[i];
 			if (dockerId && Data_Walkers[dockerId].state == WalkerState_Alive &&
@@ -528,7 +530,7 @@ void WalkerAction_tradeShip(int walkerId)
 					Data_Message.messageCategoryCount[MessageDelay_BlockedDock]++;
 				}
 			}
-			if (Data_Buildings[w->destinationBuildingId].inUse != 1) {
+			if (!BuildingIsInUse(w->destinationBuildingId)) {
 				w->actionState = WalkerActionState_115_TradeShipLeaving;
 				w->waitTicks = 0;
 				w->destinationX = Data_Scenario.riverExitPoint.x;
@@ -611,8 +613,9 @@ void WalkerAction_tradeShip(int walkerId)
 
 int WalkerAction_TradeShip_isBuyingOrSelling(int walkerId)
 {
-	struct Data_Building *b = &Data_Buildings[Data_Walkers[walkerId].destinationBuildingId];
-	if (b->inUse != 1 || b->type != Building_Dock) {
+	int buildingId = Data_Walkers[walkerId].destinationBuildingId;
+	struct Data_Building *b = &Data_Buildings[buildingId];
+	if (!BuildingIsInUse(buildingId) || b->type != Building_Dock) {
 		return 1;
 	}
 	for (int i = 0; i < 3; i++) {

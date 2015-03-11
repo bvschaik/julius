@@ -24,7 +24,7 @@ void WalkerAction_fishingBoat(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	struct Data_Building *b = &Data_Buildings[w->buildingId];
-	if (b->inUse != 1) {
+	if (!BuildingIsInUse(w->buildingId)) {
 		w->state = WalkerState_Dead;
 	}
 	if (w->actionState != WalkerActionState_190_FishingBoatCreated && b->data.other.boatWalkerId != walkerId) {

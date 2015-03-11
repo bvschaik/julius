@@ -543,7 +543,7 @@ static void spawnWalkerColosseum(int buildingId, struct Data_Building *b)
 
 static void setMarketGraphic(int buildingId, struct Data_Building *b)
 {
-	if (b->inUse != 1) {
+	if (!BuildingIsInUse(buildingId)) {
 		return;
 	}
 	if (Data_Grid_desirability[b->gridOffset] <= 30) {
@@ -623,7 +623,7 @@ static void spawnWalkerMarket(int buildingId, struct Data_Building *b)
 
 static void setBathhouseGraphic(int buildingId, struct Data_Building *b)
 {
-	if (b->inUse != 1) {
+	if (!BuildingIsInUse(buildingId)) {
 		return;
 	}
 	if (Terrain_existsTileWithinAreaWithType(b->x, b->y, b->size, Terrain_ReservoirRange)) {
@@ -950,7 +950,7 @@ static void spawnWalkerTemple(int buildingId, struct Data_Building *b)
 
 static void setSenateGraphic(int buildingId, struct Data_Building *b)
 {
-	if (b->inUse != 1) {
+	if (!BuildingIsInUse(buildingId)) {
 		return;
 	}
 	if (Data_Grid_desirability[b->gridOffset] <= 30) {
@@ -1233,7 +1233,7 @@ void WalkerGeneration_generateWalkersForBuildings()
 	}
 	for (int i = 1; i <= Data_Buildings_Extra.highestBuildingIdInUse; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
-		if (b->inUse != 1) {
+		if (!BuildingIsInUse(i)) {
 			continue;
 		}
 		if (b->type == Building_WarehouseSpace || (b->type == Building_Hippodrome && b->prevPartBuildingId)) {

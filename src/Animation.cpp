@@ -8,12 +8,14 @@
 #include "Calc.h"
 #include "Time.h"
 
-static unsigned int lastUpdate[51];
-static int shouldUpdate[51];
+#define MAX_ANIM_TIMERS 51
+
+static unsigned int lastUpdate[MAX_ANIM_TIMERS];
+static int shouldUpdate[MAX_ANIM_TIMERS];
 
 void Animation_resetTimers()
 {
-	for (int i = 0; i < 51; i++) {
+	for (int i = 0; i < MAX_ANIM_TIMERS; i++) {
 		lastUpdate[i] = 0;
 		shouldUpdate[i] = 0;
 	}
@@ -22,11 +24,11 @@ void Animation_resetTimers()
 void Animation_updateTimers()
 {
 	TimeMillis currentTimeMillis = Time_getMillis();
-	for (int i = 0; i < 51; i++) {
+	for (int i = 0; i < MAX_ANIM_TIMERS; i++) {
 		shouldUpdate[i] = 0;
 	}
 	int delayMillis = 0;
-	for (int i = 0; i < 51; i++) {
+	for (int i = 0; i < MAX_ANIM_TIMERS; i++) {
 		if (currentTimeMillis >= delayMillis + lastUpdate[i]) {
 			shouldUpdate[i] = 1;
 			lastUpdate[i] = currentTimeMillis;

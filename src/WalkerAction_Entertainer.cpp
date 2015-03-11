@@ -14,7 +14,7 @@ static int determineDestination(int x, int y, int btype1, int btype2)
 	Data_BuildingList.small.size = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
-		if (b->inUse != 1) {
+		if (!BuildingIsInUse(i)) {
 			continue;
 		}
 		if (b->type != btype1 && b->type != btype2) {

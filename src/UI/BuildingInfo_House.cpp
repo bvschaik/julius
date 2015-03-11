@@ -194,7 +194,7 @@ void UI_BuildingInfo_houseDetermineWorstDesirabilityBuilding(BuildingInfoContext
 				continue;
 			}
 			struct Data_Building *b = &Data_Buildings[buildingId];
-			if (b->inUse != 1 || buildingId == c->buildingId) {
+			if (!BuildingIsInUse(buildingId) || buildingId == c->buildingId) {
 				continue;
 			}
 			if (!b->houseSize || b->type < Data_Buildings[c->buildingId].type) {

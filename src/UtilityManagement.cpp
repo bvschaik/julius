@@ -24,7 +24,7 @@ void UtilityManagement_updateHouseWaterAccess()
 {
 	Data_BuildingList.small.size = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse != 1) {
+		if (!BuildingIsInUse(i)) {
 			continue;
 		}
 		if (Data_Buildings[i].type == Building_Well) {
@@ -125,7 +125,7 @@ void UtilityManagement_updateReservoirFountain()
 	memset(Data_BuildingList.large.items, 0, MAX_BUILDINGS * sizeof(short));
 	Data_BuildingList.large.size = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse == 1 && Data_Buildings[i].type == Building_Reservoir) {
+		if (BuildingIsInUse(i) && Data_Buildings[i].type == Building_Reservoir) {
 			Data_BuildingList.large.items[Data_BuildingList.large.size++] = i;
 			if (Terrain_existsTileWithinAreaWithType(
 				Data_Buildings[i].x - 1, Data_Buildings[i].y - 1, 5, Terrain_Water)) {
@@ -161,7 +161,7 @@ void UtilityManagement_updateReservoirFountain()
 	// fountains
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
-		if (b->inUse != 1 || b->type != Building_Fountain) {
+		if (!BuildingIsInUse(i) || b->type != Building_Fountain) {
 			continue;
 		}
 		int des = Data_Grid_desirability[b->gridOffset];

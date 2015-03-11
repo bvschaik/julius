@@ -525,7 +525,7 @@ static void advanceEarthquakeToTile(int x, int y)
 		Building_collapseOnFire(buildingId, 0);
 		Building_collapseLinked(buildingId, 1);
 		Sound_Effects_playChannel(SoundChannel_Explosion);
-		Data_Buildings[buildingId].inUse = 5;
+		Data_Buildings[buildingId].state = BuildingState_DeletedByGame;
 	}
 	Data_Grid_terrain[gridOffset] = 0;
 	TerrainGraphics_setTileEarthquake(x, y);

@@ -7,44 +7,34 @@ int Calc_adjustWithPercentage(int value, int percentage)
 
 int Calc_getPercentage(int value, int total)
 {
-	int valueTimes100 = 100 * value;
 	if (total) {
+		int valueTimes100 = 100 * value;
 		return valueTimes100 / total;
+	} else {
+		return 0;
 	}
-	return 0;
+}
+
+static int getDelta(int value1, int value2)
+{
+	if (value1 <= value2) {
+		return value2 - value1;
+	} else {
+		return value1 - value2;
+	}
 }
 
 int Calc_distanceTotal(int x1, int y1, int x2, int y2)
 {
-	int distanceX;
-	int distanceY;
-	if (x1 <= x2) {
-		distanceX = x2 - x1;
-	} else {
-		distanceX = x1 - x2;
-	}
-	if (y1 <= y2) {
-		distanceY = y2 - y1;
-	} else {
-		distanceY = y1 - y2;
-	}
+	int distanceX = getDelta(x1, x2);
+	int distanceY = getDelta(y1, y2);
 	return distanceX + distanceY;
 }
 
 int Calc_distanceMaximum(int x1, int y1, int x2, int y2)
 {
-	int distanceX;
-	int distanceY;
-	if (x1 <= x2) {
-		distanceX = x2 - x1;
-	} else {
-		distanceX = x1 - x2;
-	}
-	if (y1 <= y2) {
-		distanceY = y2 - y1;
-	} else {
-		distanceY = y1 - y2;
-	}
+	int distanceX = getDelta(x1, x2);
+	int distanceY = getDelta(y1, y2);
 	if (distanceX >= distanceY) {
 		return distanceX;
 	} else {
@@ -54,18 +44,8 @@ int Calc_distanceMaximum(int x1, int y1, int x2, int y2)
 
 int Calc_distanceMinimum(int x1, int y1, int x2, int y2)
 {
-	int distanceX;
-	int distanceY;
-	if (x1 <= x2) {
-		distanceX = x2 - x1;
-	} else {
-		distanceX = x1 - x2;
-	}
-	if (y1 <= y2) {
-		distanceY = y2 - y1;
-	} else {
-		distanceY = y1 - y2;
-	}
+	int distanceX = getDelta(x1, x2);
+	int distanceY = getDelta(y1, y2);
 	if (distanceX <= distanceY) {
 		return distanceX;
 	} else {

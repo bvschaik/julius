@@ -42,7 +42,7 @@ void Resource_gatherGranaryGettingInfo()
 
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
-		if (b->inUse != 1 || b->type != Building_Granary) {
+		if (!BuildingIsInUse(i) || b->type != Building_Granary) {
 			continue;
 		}
 		if (!b->hasRoadAccess || b->distanceFromEntry <= 0) {
@@ -92,7 +92,7 @@ int Resource_getGranaryForStoringFood(
 	int minBuildingId = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
-		if (b->inUse != 1 || b->type != Building_Granary) {
+		if (!BuildingIsInUse(i) || b->type != Building_Granary) {
 			continue;
 		}
 		if (!b->hasRoadAccess || b->distanceFromEntry <= 0 || b->roadNetworkId != roadNetworkId) {
@@ -142,7 +142,7 @@ int Resource_getGettingGranaryForStoringFood(
 	int minBuildingId = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
-		if (b->inUse != 1 || b->type != Building_Granary) {
+		if (!BuildingIsInUse(i) || b->type != Building_Granary) {
 			continue;
 		}
 		if (!b->hasRoadAccess || b->distanceFromEntry <= 0 || b->roadNetworkId != roadNetworkId) {

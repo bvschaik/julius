@@ -99,8 +99,7 @@ void WalkerAction_marketBuyer(int walkerId)
 	w->useCrossCountry = 0;
 	w->maxRoamLength = 800;
 	
-	struct Data_Building *b = &Data_Buildings[w->buildingId];
-	if (b->inUse != 1 || b->walkerId2 != walkerId) {
+	if (!BuildingIsInUse(w->buildingId) || Data_Buildings[w->buildingId].walkerId2 != walkerId) {
 		w->state = WalkerState_Dead;
 	}
 	WalkerActionIncreaseGraphicOffset(w, 12);

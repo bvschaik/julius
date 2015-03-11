@@ -44,7 +44,7 @@ void Security_Tick_updateBurningRuins()
 	Data_BuildingList.burning.totalBurning = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
-		if (b->inUse != 1 || b->type != Building_BurningRuin) {
+		if (!BuildingIsInUse(i) || b->type != Building_BurningRuin) {
 			continue;
 		}
 		if (b->fireDuration < 0) {
@@ -53,7 +53,7 @@ void Security_Tick_updateBurningRuins()
 		b->fireDuration++;
 		if (b->fireDuration > 32) {
 			Data_State.undoAvailable = 0;
-			b->inUse = 4;
+			b->state = BuildingState_Rubble;
 			TerrainGraphics_setBuildingAreaRubble(i, b->x, b->y, b->size);
 			recalculateTerrain = 1;
 			continue;
@@ -122,7 +122,7 @@ int Security_Fire_getClosestBurningRuin(int x, int y, int *distance)
 	for (EACH_BURNING_RUIN) {
 		int buildingId = Data_BuildingList.burning.items[Data_BuildingList.burning.index];
 		struct Data_Building *b = &Data_Buildings[buildingId];
-		if (b->inUse == 1 && b->type == Building_BurningRuin && !b->ruinHasPlague && b->distanceFromEntry) {
+		if (BuildingIsInUse(buildingId) && b->type == Building_BurningRuin && !b->ruinHasPlague && b->distanceFromEntry) {
 			int dist = Calc_distanceMaximum(x, y, b->x, b->y);
 			if (b->walkerId4) {
 				if (dist < minOccupiedDist) {
@@ -242,7 +242,7 @@ void Security_Tick_generateCriminal()
 	int minHappiness = 50;
 	for (int i = 1; i <= Data_Buildings_Extra.highestBuildingIdInUse; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
-		if (b->inUse == 1 && b->houseSize) {
+		if (BuildingIsInUse(i) && b->houseSize) {
 			if (b->sentiment.houseHappiness >= 50) {
 				b->houseCriminalActive = 0;
 			} else if (b->sentiment.houseHappiness < minHappiness) {
@@ -297,7 +297,7 @@ static void collapseBuilding(int buildingId, struct Data_Building *b)
 	}
 	
 	Data_State.undoAvailable = 0;
-	b->inUse = 4;
+	b->state = BuildingState_Rubble;
 	TerrainGraphics_setBuildingAreaRubble(buildingId, b->x, b->y, b->size);
 	Walker_createDustCloud(b->x, b->y, b->size);
 	Building_collapseLinked(buildingId, 0);
@@ -330,7 +330,7 @@ void Security_Tick_checkFireCollapse()
 	int randomGlobal = Data_Random.random1_7bit & 7;
 	for (int i = 1; i <= Data_Buildings_Extra.highestBuildingIdInUse; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
-		if (b->inUse != 1 || b->fireProof) {
+		if (!BuildingIsInUse(i) || b->fireProof) {
 			continue;
 		}
 		if (b->type == Building_Hippodrome && b->prevPartBuildingId) {

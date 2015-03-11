@@ -22,7 +22,7 @@ static void fillBuildingListHouses()
 {
 	Data_BuildingList.large.size = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse == 1 && Data_Buildings[i].houseSize) {
+		if (BuildingIsInUse(i) && Data_Buildings[i].houseSize) {
 			Data_BuildingList.large.items[Data_BuildingList.large.size++] = i;
 		}
 	}
@@ -268,7 +268,7 @@ int HousePopulation_getClosestHouseWithRoom(int x, int y)
 	int minBuildingId = 0;
 	for (int i = 1; i <= Data_Buildings_Extra.highestBuildingIdInUse; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
-		if (b->inUse == 1 && b->houseSize && b->distanceFromEntry > 0 && b->housePopulationRoom > 0) {
+		if (BuildingIsInUse(i) && b->houseSize && b->distanceFromEntry > 0 && b->housePopulationRoom > 0) {
 			if (!b->immigrantWalkerId) {
 				int dist = Calc_distanceMaximum(x, y, b->x, b->y);
 				if (dist < minDist) {
@@ -290,7 +290,7 @@ int HousePopulation_addPeople(int amount)
 			buildingId = 1;
 		}
 		struct Data_Building *b = &Data_Buildings[buildingId];
-		if (b->inUse == 1 && b->houseSize && b->distanceFromEntry > 0 && b->housePopulation > 0) {
+		if (BuildingIsInUse(buildingId) && b->houseSize && b->distanceFromEntry > 0 && b->housePopulation > 0) {
 			Data_CityInfo.populationLastTargetHouseAdd = buildingId;
 			int maxPeople = Data_Model_Houses[b->subtype.houseLevel].maxPeople;
 			if (b->houseIsMerged) {
@@ -315,7 +315,7 @@ int HousePopulation_removePeople(int amount)
 			buildingId = 1;
 		}
 		struct Data_Building *b = &Data_Buildings[buildingId];
-		if (b->inUse == 1 && b->houseSize) {
+		if (BuildingIsInUse(buildingId) && b->houseSize) {
 			Data_CityInfo.populationLastTargetHouseRemove = buildingId;
 			if (b->housePopulation > 0) {
 				++removed;
@@ -335,7 +335,10 @@ int HousePopulation_calculatePeoplePerType()
 	int total = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
-		if (b->inUse == 0 || b->inUse == 2 || b->inUse == 5 || b->inUse == 6) {
+		if (b->state == BuildingState_Unused ||
+			b->state == BuildingState_Undo ||
+			b->state == BuildingState_DeletedByGame ||
+			b->state == BuildingState_DeletedByPlayer) {
 			continue;
 		}
 		if (b->houseSize) {
@@ -379,7 +382,7 @@ void HousePopulation_evictOvercrowded()
 				b->housePopulation -= numPeopleToEvict;
 			} else {
 				// house has been removed
-				b->inUse = 2;
+				b->state = BuildingState_Undo;
 			}
 		}
 	}

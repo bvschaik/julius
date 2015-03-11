@@ -13,7 +13,7 @@ void WalkerAction_indigenousNative(int walkerId)
 	w->terrainUsage = 0;
 	w->useCrossCountry = 0;
 	w->maxRoamLength = 800;
-	if (b->inUse != 1 || b->walkerId != walkerId) {
+	if (!BuildingIsInUse(w->buildingId) || b->walkerId != walkerId) {
 		w->state = WalkerState_Dead;
 	}
 	WalkerActionIncreaseGraphicOffset(w, 12);

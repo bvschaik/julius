@@ -372,7 +372,7 @@ int Walker_createTowerSentryFromBarracks(int buildingId, int x, int y)
 	int towerId = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
-		if (b->inUse == 1 && b->type == Building_Tower && b->numWorkers > 0 &&
+		if (BuildingIsInUse(i) && b->type == Building_Tower && b->numWorkers > 0 &&
 			!b->walkerId && b->roadNetworkId == Data_Buildings[buildingId].roadNetworkId) {
 			towerId = i;
 			break;

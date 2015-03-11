@@ -123,6 +123,16 @@ enum {
 };
 
 enum {
+	BuildingState_Unused = 0,
+	BuildingState_InUse = 1,
+	BuildingState_Undo = 2,
+	BuildingState_Created = 3,
+	BuildingState_Rubble = 4,
+	BuildingState_DeletedByGame = 5, // used for earthquakes, fires, house mergers
+	BuildingState_DeletedByPlayer = 6
+};
+
+enum {
 	BuildingStorageState_Accepting = 0,
 	BuildingStorageState_NotAccepting = 1,
 	BuildingStorageState_Getting = 2
@@ -156,8 +166,10 @@ enum {
 #define BuildingIsWorkshop(type) ((type) >= Building_WineWorkshop && (type) <= Building_PotteryWorkshop)
 #define BuildingIsEntertainment(type) ((type) >= Building_Theater && (type) <= Building_ChariotMaker)
 
+#define BuildingIsInUse(buildingId) (Data_Buildings[buildingId].state == BuildingState_InUse)
+
 extern struct Data_Building {
-	unsigned char inUse;
+	unsigned char state;
 	unsigned char ciid;
 	unsigned char __unknown_02;
 	unsigned char size;

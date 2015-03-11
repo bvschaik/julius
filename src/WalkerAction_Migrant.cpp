@@ -34,7 +34,7 @@ void WalkerAction_immigrant(int walkerId)
 	
 	w->terrainUsage = 0;
 	w->cartGraphicId = 0;
-	if (b->inUse != 1 || b->immigrantWalkerId != walkerId || !b->houseSize) {
+	if (!BuildingIsInUse(buildingId) || b->immigrantWalkerId != walkerId || !b->houseSize) {
 		w->state = WalkerState_Dead;
 		return;
 	}

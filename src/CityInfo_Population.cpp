@@ -57,7 +57,7 @@ void CityInfo_Population_recordMonthlyPopulation()
 void CityInfo_Population_changeHappiness(int amount)
 {
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse == 1 && Data_Buildings[i].houseSize) {
+		if (BuildingIsInUse(i) && Data_Buildings[i].houseSize) {
 			Data_Buildings[i].sentiment.houseHappiness += amount;
 			BOUND(Data_Buildings[i].sentiment.houseHappiness, 0, 100);
 		}
@@ -67,7 +67,7 @@ void CityInfo_Population_changeHappiness(int amount)
 void CityInfo_Population_setMaxHappiness(int max)
 {
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse == 1 && Data_Buildings[i].houseSize) {
+		if (BuildingIsInUse(i) && Data_Buildings[i].houseSize) {
 			if (Data_Buildings[i].sentiment.houseHappiness > max) {
 				Data_Buildings[i].sentiment.houseHappiness = max;
 			}
@@ -176,7 +176,7 @@ void CityInfo_Population_calculateSentiment()
 	int totalSentimentPenaltyTents = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
-		if (b->inUse != 1 || !b->houseSize) {
+		if (!BuildingIsInUse(i) || !b->houseSize) {
 			continue;
 		}
 		if (!b->housePopulation) {
@@ -245,7 +245,7 @@ void CityInfo_Population_calculateSentiment()
 	int totalSentiment = 0;
 	int totalHouses = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].inUse == 1 && Data_Buildings[i].houseSize &&
+		if (BuildingIsInUse(i) && Data_Buildings[i].houseSize &&
 			Data_Buildings[i].housePopulation) {
 			totalHouses++;
 			totalSentiment += Data_Buildings[i].sentiment.houseHappiness;
@@ -374,7 +374,7 @@ void CityInfo_Population_updateHealthRate()
 	int healthyPopulation = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
-		if (b->inUse != 1 || !b->houseSize || !b->housePopulation) {
+		if (!BuildingIsInUse(i) || !b->houseSize || !b->housePopulation) {
 			continue;
 		}
 		totalPopulation += b->housePopulation;
@@ -445,7 +445,7 @@ static void healthCauseDisease(int totalPeople)
 	// kill people who don't have access to a doctor
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
-		if (b->inUse == 1 && b->houseSize && b->housePopulation) {
+		if (BuildingIsInUse(i) && b->houseSize && b->housePopulation) {
 			if (!b->data.house.clinic) {
 				peopleToKill -= b->housePopulation;
 				Building_collapseOnFire(i, 1);
@@ -458,7 +458,7 @@ static void healthCauseDisease(int totalPeople)
 	// kill people in tents
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
-		if (b->inUse == 1 && b->houseSize && b->housePopulation) {
+		if (BuildingIsInUse(i) && b->houseSize && b->housePopulation) {
 			if (b->subtype.houseLevel <= HouseLevel_LargeTent) {
 				peopleToKill -= b->housePopulation;
 				Building_collapseOnFire(i, 1);
@@ -471,7 +471,7 @@ static void healthCauseDisease(int totalPeople)
 	// kill anyone
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
-		if (b->inUse == 1 && b->houseSize && b->housePopulation) {
+		if (BuildingIsInUse(i) && b->houseSize && b->housePopulation) {
 			peopleToKill -= b->housePopulation;
 			Building_collapseOnFire(i, 1);
 			if (peopleToKill <= 0) {

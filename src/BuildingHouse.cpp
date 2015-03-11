@@ -70,7 +70,7 @@ int BuildingHouse_canExpand(int buildingId, int numTiles)
 				int b = Data_Grid_buildingIds[tileOffset];
 				if (b == buildingId) {
 					okTiles++;
-				} else if (Data_Buildings[b].inUse == 1 && Data_Buildings[b].houseSize) {
+				} else if (BuildingIsInUse(b) && Data_Buildings[b].houseSize) {
 					if (Data_Buildings[b].subtype.houseLevel <= Data_Buildings[buildingId].subtype.houseLevel) {
 						okTiles++;
 					}
@@ -95,7 +95,7 @@ int BuildingHouse_canExpand(int buildingId, int numTiles)
 				int b = Data_Grid_buildingIds[tileOffset];
 				if (b == buildingId) {
 					okTiles++;
-				} else if (Data_Buildings[b].inUse == 1 && Data_Buildings[b].houseSize) {
+				} else if (BuildingIsInUse(b) && Data_Buildings[b].houseSize) {
 					if (Data_Buildings[b].subtype.houseLevel <= Data_Buildings[buildingId].subtype.houseLevel) {
 						okTiles++;
 					}
@@ -120,7 +120,7 @@ int BuildingHouse_canExpand(int buildingId, int numTiles)
 				int b = Data_Grid_buildingIds[tileOffset];
 				if (b == buildingId) {
 					okTiles++;
-				} else if (Data_Buildings[b].inUse == 1 && Data_Buildings[b].houseSize) {
+				} else if (BuildingIsInUse(b) && Data_Buildings[b].houseSize) {
 					if (Data_Buildings[b].subtype.houseLevel <= Data_Buildings[buildingId].subtype.houseLevel) {
 						okTiles++;
 					}
@@ -159,7 +159,7 @@ void BuildingHouse_checkForCorruption(int buildingId)
 			}
 		}
 		++Data_Debug.unfixableHousePositions;
-		b->inUse = 4;
+		b->state = BuildingState_Rubble;
 	}
 }
 
@@ -179,7 +179,7 @@ void BuildingHouse_checkMerge(int buildingId)
 			int otherBuildingId = Data_Grid_buildingIds[otherGridOffset];
 			if (otherBuildingId == buildingId) {
 				numTiles++;
-			} else if (Data_Buildings[otherBuildingId].inUse == 1 &&
+			} else if (BuildingIsInUse(otherBuildingId) &&
 					Data_Buildings[otherBuildingId].houseSize &&
 					Data_Buildings[otherBuildingId].subtype.houseLevel == b->subtype.houseLevel &&
 					!Data_Buildings[otherBuildingId].houseIsMerged) {
@@ -230,7 +230,7 @@ static void prepareForMerge(int buildingId, int numTiles)
 				for (int i = 0; i < 8; i++) {
 					mergeData.inventory[i] += Data_Buildings[otherBuildingId].data.house.inventory.all[i];
 					Data_Buildings[otherBuildingId].housePopulation = 0;
-					Data_Buildings[otherBuildingId].inUse = 5;
+					Data_Buildings[otherBuildingId].state = BuildingState_DeletedByGame;
 				}
 			}
 		}

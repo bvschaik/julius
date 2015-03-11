@@ -19,7 +19,7 @@ void WalkerAction_taxCollector(int walkerId)
 	w->terrainUsage = 1;
 	w->useCrossCountry = 0;
 	w->maxRoamLength = 512;
-	if (b->inUse != 1 || b->walkerId != walkerId) {
+	if (!BuildingIsInUse(w->buildingId) || b->walkerId != walkerId) {
 		w->state = WalkerState_Dead;
 	}
 	WalkerActionIncreaseGraphicOffset(w, 12);
@@ -97,7 +97,7 @@ void WalkerAction_engineer(int walkerId)
 	w->terrainUsage = 1;
 	w->useCrossCountry = 0;
 	w->maxRoamLength = 640;
-	if (b->inUse != 1 || b->walkerId != walkerId) {
+	if (!BuildingIsInUse(w->buildingId) || b->walkerId != walkerId) {
 		w->state = WalkerState_Dead;
 	}
 	WalkerActionIncreaseGraphicOffset(w, 12);
@@ -273,7 +273,7 @@ static void prefectExtinguishFire(int walkerId, struct Data_Walker *w)
 {
 	struct Data_Building *burn = &Data_Buildings[w->destinationBuildingId];
 	int distance = Calc_distanceMaximum(w->x, w->y, burn->x, burn->y);
-	if (burn->inUse == 1 && burn->type == Building_BurningRuin && distance < 2) {
+	if (BuildingIsInUse(w->destinationBuildingId) && burn->type == Building_BurningRuin && distance < 2) {
 		burn->fireDuration = 32;
 		Sound_Effects_playChannel(SoundChannel_FireSplash);
 	} else {
@@ -321,7 +321,7 @@ void WalkerAction_prefect(int walkerId)
 	w->terrainUsage = 1;
 	w->useCrossCountry = 0;
 	w->maxRoamLength = 640;
-	if (b->inUse != 1 || b->walkerId != walkerId) {
+	if (!BuildingIsInUse(w->buildingId) || b->walkerId != walkerId) {
 		w->state = WalkerState_Dead;
 	}
 	WalkerActionIncreaseGraphicOffset(w, 12);
@@ -476,7 +476,7 @@ void WalkerAction_worker(int walkerId)
 	w->terrainUsage = 1;
 	w->useCrossCountry = 0;
 	w->maxRoamLength = 384;
-	if (Data_Buildings[w->buildingId].inUse != 1 ||
+	if (!BuildingIsInUse(w->buildingId) ||
 		Data_Buildings[w->buildingId].walkerId != walkerId) {
 		w->state = WalkerState_Dead;
 	}

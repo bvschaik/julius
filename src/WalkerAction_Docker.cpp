@@ -90,7 +90,7 @@ void WalkerAction_docker(int walkerId)
 	struct Data_Building *b = &Data_Buildings[w->buildingId];
 	WalkerActionIncreaseGraphicOffset(w, 12);
 	w->cartGraphicId = 0;
-	if (b->inUse != 1) {
+	if (!BuildingIsInUse(w->buildingId)) {
 		w->state = WalkerState_Dead;
 	}
 	if (b->type != Building_Dock && b->type != Building_Wharf) {
@@ -193,7 +193,7 @@ void WalkerAction_docker(int walkerId)
 			} else if (w->direction == 10) {
 				w->state = WalkerState_Dead;
 			}
-			if (Data_Buildings[w->destinationBuildingId].inUse != 1) {
+			if (!BuildingIsInUse(w->destinationBuildingId)) {
 				w->state = WalkerState_Dead;
 			}
 			break;
@@ -207,7 +207,7 @@ void WalkerAction_docker(int walkerId)
 			} else if (w->direction == 10) {
 				w->state = WalkerState_Dead;
 			}
-			if (Data_Buildings[w->destinationBuildingId].inUse != 1) {
+			if (!BuildingIsInUse(w->destinationBuildingId)) {
 				w->state = WalkerState_Dead;
 			}
 			break;
@@ -222,7 +222,7 @@ void WalkerAction_docker(int walkerId)
 			} else if (w->direction == 10) {
 				w->state = WalkerState_Dead;
 			}
-			if (Data_Buildings[w->destinationBuildingId].inUse != 1) {
+			if (!BuildingIsInUse(w->destinationBuildingId)) {
 				w->state = WalkerState_Dead;
 			}
 			break;

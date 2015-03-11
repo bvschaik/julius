@@ -21,7 +21,7 @@ void Desirability_update()
 static void updateBuildings()
 {
 	for (int i = 1; i <= Data_Buildings_Extra.highestBuildingIdInUse; i++) {
-		if (Data_Buildings[i].inUse == 1) {
+		if (BuildingIsInUse(i)) {
 			int type = Data_Buildings[i].type;
 			Terrain_addDesirability(
 				Data_Buildings[i].x, Data_Buildings[i].y,

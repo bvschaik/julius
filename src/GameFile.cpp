@@ -456,9 +456,9 @@ static void debug()
 		Data_CityInfo_Extra.gameTimeTick);
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
-		if (b->inUse || b->type) {
+		if (b->state != BuildingState_Unused || b->type) {
 			printf("Building %d type %d inUse %d x %d y %d emp %d w %d ls %d hc %d\n",
-				i, b->type, b->inUse, b->x, b->y, b->numWorkers, b->walkerId, b->walkerId2, b->housesCovered);
+				i, b->type, b->state, b->x, b->y, b->numWorkers, b->walkerId, b->walkerId2, b->housesCovered);
 		}
 	}
 	/**/
