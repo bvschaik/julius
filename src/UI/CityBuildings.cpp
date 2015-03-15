@@ -237,58 +237,58 @@ static void UI_CityBuildings_drawBuildingTopsWalkersAnimation(int selectedWalker
 					int subtype = b->subtype.orientation;
 					if ((subtype == 0 || subtype == 3) && Data_CityInfo.population > 2000) {
 						switch (Data_Settings_Map.orientation) {
-							case Direction_Top:
+							case Dir_0_Top:
 								Graphics_drawImageMasked(
 									GraphicId(ID_Graphic_Hippodrome2) + 6,
 									xGraphic + 147, yGraphic - 72, colorMask);
 								break;
-							case Direction_Right:
+							case Dir_2_Right:
 								Graphics_drawImageMasked(
 									GraphicId(ID_Graphic_Hippodrome1) + 8,
 									xGraphic + 58, yGraphic - 79, colorMask);
 								break;
-							case Direction_Bottom:
+							case Dir_4_Bottom:
 								Graphics_drawImageMasked(
 									GraphicId(ID_Graphic_Hippodrome2) + 8,
 									xGraphic + 119, yGraphic - 80, colorMask);
 								break;
-							case Direction_Left:
+							case Dir_6_Left:
 								Graphics_drawImageMasked(
 									GraphicId(ID_Graphic_Hippodrome1) + 6,
 									xGraphic, yGraphic - 72, colorMask);
 						}
 					} else if ((subtype == 1 || subtype == 4) && Data_CityInfo.population > 100) {
 						switch (Data_Settings_Map.orientation) {
-							case Direction_Top:
-							case Direction_Bottom:
+							case Dir_0_Top:
+							case Dir_4_Bottom:
 								Graphics_drawImageMasked(
 									GraphicId(ID_Graphic_Hippodrome2) + 7,
 									xGraphic + 122, yGraphic - 79, colorMask);
 								break;
-							case Direction_Right:
-							case Direction_Left:
+							case Dir_2_Right:
+							case Dir_6_Left:
 								Graphics_drawImageMasked(
 									GraphicId(ID_Graphic_Hippodrome1) + 7,
 									xGraphic, yGraphic - 80, colorMask);
 						}
 					} else if ((subtype == 2 || subtype == 5) && Data_CityInfo.population > 1000) {
 						switch (Data_Settings_Map.orientation) {
-							case Direction_Top:
+							case Dir_0_Top:
 								Graphics_drawImageMasked(
 									GraphicId(ID_Graphic_Hippodrome2) + 8,
 									xGraphic + 119, yGraphic - 80, colorMask);
 								break;
-							case Direction_Right:
+							case Dir_2_Right:
 								Graphics_drawImageMasked(
 									GraphicId(ID_Graphic_Hippodrome1) + 6,
 									xGraphic, yGraphic - 72, colorMask);
 								break;
-							case Direction_Bottom:
+							case Dir_4_Bottom:
 								Graphics_drawImageMasked(
 									GraphicId(ID_Graphic_Hippodrome2) + 6,
 									xGraphic + 147, yGraphic - 72, colorMask);
 								break;
-							case Direction_Left:
+							case Dir_6_Left:
 								Graphics_drawImageMasked(
 									GraphicId(ID_Graphic_Hippodrome1) + 8,
 									xGraphic + 58, yGraphic - 79, colorMask);
@@ -454,20 +454,20 @@ static void UI_CityBuildings_drawBuildingTopsWalkersAnimation(int selectedWalker
 				}
 			} else if (Data_Buildings[Data_Grid_buildingIds[gridOffset]].type == Building_Gatehouse) {
 				int xy = Data_Grid_edge[gridOffset] & Edge_MaskXY;
-				if ((Data_Settings_Map.orientation == Direction_Top && xy == 9) ||
-					(Data_Settings_Map.orientation == Direction_Right && xy == 8) ||
-					(Data_Settings_Map.orientation == Direction_Bottom && xy == 0) ||
-					(Data_Settings_Map.orientation == Direction_Left && xy == 1)) {
+				if ((Data_Settings_Map.orientation == Dir_0_Top && xy == 9) ||
+					(Data_Settings_Map.orientation == Dir_2_Right && xy == 8) ||
+					(Data_Settings_Map.orientation == Dir_4_Bottom && xy == 0) ||
+					(Data_Settings_Map.orientation == Dir_6_Left && xy == 1)) {
 					int buildingId = Data_Grid_buildingIds[gridOffset];
 					int graphicId = GraphicId(ID_Graphic_Gatehouse);
 					if (Data_Buildings[buildingId].subtype.orientation == 1) {
-						if (Data_Settings_Map.orientation == Direction_Top || Data_Settings_Map.orientation == Direction_Bottom) {
+						if (Data_Settings_Map.orientation == Dir_0_Top || Data_Settings_Map.orientation == Dir_4_Bottom) {
 							Graphics_drawImage(graphicId, xGraphic - 22, yGraphic - 80);
 						} else {
 							Graphics_drawImage(graphicId + 1, xGraphic - 18, yGraphic - 81);
 						}
 					} else if (Data_Buildings[buildingId].subtype.orientation == 2) {
-						if (Data_Settings_Map.orientation == Direction_Top || Data_Settings_Map.orientation == Direction_Bottom) {
+						if (Data_Settings_Map.orientation == Dir_0_Top || Data_Settings_Map.orientation == Dir_4_Bottom) {
 							Graphics_drawImage(graphicId + 1, xGraphic - 18, yGraphic - 81);
 						} else {
 							Graphics_drawImage(graphicId, xGraphic - 22, yGraphic - 80);

@@ -279,8 +279,8 @@ void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)
 		};
 		const int *offsets;
 		int index = 0;
-		if (Data_Settings_Map.orientation == Direction_Left ||
-			Data_Settings_Map.orientation == Direction_Right) {
+		if (Data_Settings_Map.orientation == Dir_6_Left ||
+			Data_Settings_Map.orientation == Dir_2_Right) {
 			index = 1;
 		}
 		if (f->walkerType == Walker_FortLegionary) {

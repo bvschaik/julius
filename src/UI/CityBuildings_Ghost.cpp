@@ -139,19 +139,19 @@ static void drawBuildingGhostDefault()
 	int xStart = 0, yStart = 0;
 	// determine x and y offset
 	switch (Data_Settings_Map.orientation) {
-		case Direction_Top:
+		case Dir_0_Top:
 			xStart = Data_Settings_Map.current.x;
 			yStart = Data_Settings_Map.current.y;
 			break;
-		case Direction_Right:
+		case Dir_2_Right:
 			xStart = Data_Settings_Map.current.x - buildingSize + 1;
 			yStart = Data_Settings_Map.current.y;
 			break;
-		case Direction_Bottom:
+		case Dir_4_Bottom:
 			xStart = Data_Settings_Map.current.x - buildingSize + 1;
 			yStart = Data_Settings_Map.current.y - buildingSize + 1;
 			break;
-		case Direction_Left:
+		case Dir_6_Left:
 			xStart = Data_Settings_Map.current.x;
 			yStart = Data_Settings_Map.current.y - buildingSize + 1;
 			break;
@@ -193,8 +193,8 @@ static void drawBuildingGhostDefault()
 		} else {
 			graphicOffset = Data_State.selectedBuilding.roadRequired == 2 ? 1 : 0;
 		}
-		if (Data_Settings_Map.orientation == Direction_Left ||
-			Data_Settings_Map.orientation == Direction_Right) {
+		if (Data_Settings_Map.orientation == Dir_6_Left ||
+			Data_Settings_Map.orientation == Dir_2_Right) {
 			graphicOffset = 1 - graphicOffset;
 		}
 		graphicId += graphicOffset;
@@ -209,8 +209,8 @@ static void drawBuildingGhostDefault()
 		} else {
 			graphicOffset = Data_State.selectedBuilding.roadRequired == 2 ? 2 : 0;
 		}
-		if (Data_Settings_Map.orientation == Direction_Left ||
-			Data_Settings_Map.orientation == Direction_Right) {
+		if (Data_Settings_Map.orientation == Dir_6_Left ||
+			Data_Settings_Map.orientation == Dir_2_Right) {
 			graphicOffset = 2 - graphicOffset;
 		}
 		graphicId += graphicOffset;

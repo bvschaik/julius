@@ -118,7 +118,7 @@ static void drawHippodromeHorses(struct Data_Walker *w, int xOffset, int yOffset
 {
 	int val = w->waitTicksMissile;
 	switch (Data_Settings_Map.orientation) {
-		case Direction_Top:
+		case Dir_0_Top:
 			xOffset += 10;
 			if (val <= 10) {
 				yOffset -= 2;
@@ -136,7 +136,7 @@ static void drawHippodromeHorses(struct Data_Walker *w, int xOffset, int yOffset
 				yOffset -= 2;
 			}
 			break;
-		case Direction_Right:
+		case Dir_2_Right:
 			xOffset -= 10;
 			if (val <= 9) {
 				yOffset -= 12;
@@ -154,7 +154,7 @@ static void drawHippodromeHorses(struct Data_Walker *w, int xOffset, int yOffset
 			} else {
 				yOffset -= 12;
 			}
-		case Direction_Bottom:
+		case Dir_4_Bottom:
 			xOffset += 20;
 			if (val <= 9) {
 				yOffset += 4;
@@ -174,7 +174,7 @@ static void drawHippodromeHorses(struct Data_Walker *w, int xOffset, int yOffset
 				yOffset -= 2;
 			}
 			break;
-		case Direction_Left:
+		case Dir_6_Left:
 			xOffset -= 10;
 			if (val <= 9) {
 				yOffset -= 12;
@@ -199,24 +199,24 @@ static void drawHippodromeHorses(struct Data_Walker *w, int xOffset, int yOffset
 static int tileOffsetToPixelOffsetX(int x, int y)
 {
 	int dir = Data_Settings_Map.orientation;
-	if (dir == Direction_Top || dir == Direction_Bottom) {
+	if (dir == Dir_0_Top || dir == Dir_4_Bottom) {
 		int base = 2 * x - 2 * y;
-		return dir == Direction_Top ? base : -base;
+		return dir == Dir_0_Top ? base : -base;
 	} else {
 		int base = 2 * x + 2 * y;
-		return dir == Direction_Right ? base : -base;
+		return dir == Dir_2_Right ? base : -base;
 	}
 }
 
 static int tileOffsetToPixelOffsetY(int x, int y)
 {
 	int dir = Data_Settings_Map.orientation;
-	if (dir == Direction_Top || dir == Direction_Bottom) {
+	if (dir == Dir_0_Top || dir == Dir_4_Bottom) {
 		int base = x + y;
-		return dir == Direction_Top ? base : -base;
+		return dir == Dir_0_Top ? base : -base;
 	} else {
 		int base = x - y;
-		return dir == Direction_Left ? base : -base;
+		return dir == Dir_6_Left ? base : -base;
 	}
 }
 

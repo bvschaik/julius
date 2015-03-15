@@ -283,15 +283,15 @@ enum {
 };
 
 enum {
-	Direction_Top = 0,
-	Direction_TopRight = 1,
-	Direction_Right = 2,
-	Direction_BottomRight = 3,
-	Direction_Bottom = 4,
-	Direction_BottomLeft = 5,
-	Direction_Left = 6,
-	Direction_TopLeft = 7,
-	Direction_None = 8,
+	Dir_0_Top = 0,
+	Dir_1_TopRight = 1,
+	Dir_2_Right = 2,
+	Dir_3_BottomRight = 3,
+	Dir_4_Bottom = 4,
+	Dir_5_BottomLeft = 5,
+	Dir_6_Left = 6,
+	Dir_7_TopLeft = 7,
+	Dir_8_None = 8,
 };
 
 enum {

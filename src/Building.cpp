@@ -254,13 +254,15 @@ int Building_getMainBuildingId(int buildingId)
 
 void Building_collapseOnFire(int buildingId, int hasPlague)
 {
-	Data_State.undoAvailable = 0;
 	struct Data_Building *b = &Data_Buildings[buildingId];
+	Data_State.undoAvailable = 0;
 	b->fireRisk = 0;
 	b->damageRisk = 0;
 	if (b->houseSize && b->housePopulation) {
 		CityInfo_Population_removePeopleHomeRemoved(b->housePopulation);
 	}
+	// FIXED wasTent was always false because houseSize was reset above it
+	int wasTent = b->houseSize && b->subtype.houseLevel <= HouseLevel_LargeTent;
 	b->housePopulation = 0;
 	b->houseSize = 0;
 	b->outputResourceId = 0;
@@ -271,14 +273,11 @@ void Building_collapseOnFire(int buildingId, int hasPlague)
 	if (b->type == Building_Dock || b->type == Building_Wharf || b->type == Building_Shipyard) {
 		watersideBuilding = 1;
 	}
-	int wasTent = b->houseSize && b->subtype.houseLevel <= HouseLevel_LargeTent;
 	int numTiles;
-	switch (b->size) {
-		case 2: numTiles = 4; break;
-		case 3: numTiles = 9; break;
-		case 4: numTiles = 16; break;
-		case 5: numTiles = 25; break;
-		default: numTiles = 0; break;
+	if (b->size >= 2 && b->size <= 5) {
+		numTiles = b->size * b->size;
+	} else {
+		numTiles = 0;
 	}
 	Terrain_removeBuildingFromGrids(buildingId, b->x, b->y);
 	if (Data_Grid_terrain[b->gridOffset] & Terrain_Water) {
@@ -291,11 +290,11 @@ void Building_collapseOnFire(int buildingId, int hasPlague)
 		b->fireProof = 1;
 		b->size = 1;
 		b->ruinHasPlague = hasPlague;
-		int random = Data_Grid_random[b->gridOffset] & 3;
 		int graphicId;
 		if (wasTent) {
 			graphicId = GraphicId(ID_Graphic_RubbleTent);
 		} else {
+			int random = Data_Grid_random[b->gridOffset] & 3;
 			graphicId = GraphicId(ID_Graphic_RubbleGeneral) + 9 * random;
 		}
 		Terrain_addBuildingToGrids(buildingId, b->x, b->y, 1, graphicId, Terrain_Building);
@@ -310,11 +309,11 @@ void Building_collapseOnFire(int buildingId, int hasPlague)
 		}
 		int ruinId = Building_create(Building_BurningRuin, x, y);
 		struct Data_Building *ruin = &Data_Buildings[ruinId];
-		int random = Data_Grid_random[ruin->gridOffset] & 3;
 		int graphicId;
 		if (wasTent) {
 			graphicId = GraphicId(ID_Graphic_RubbleTent);
 		} else {
+			int random = Data_Grid_random[ruin->gridOffset] & 3;
 			graphicId = GraphicId(ID_Graphic_RubbleGeneral) + 9 * random;
 		}
 		Terrain_addBuildingToGrids(ruinId, ruin->x, ruin->y, 1, graphicId, Terrain_Building);
@@ -376,7 +375,7 @@ void Building_collapseLastPlaced()
 		}
 	}
 	if (buildingId) {
-		PlayerMessage_post(1, 80, 0, Data_Buildings[buildingId].gridOffset);
+		PlayerMessage_post(1, Message_80_RoadToRomeBlocked, 0, Data_Buildings[buildingId].gridOffset);
 		Data_State.undoAvailable = 0;
 		Data_Buildings[buildingId].state = BuildingState_Rubble;
 		TerrainGraphics_setBuildingAreaRubble(buildingId,
@@ -498,7 +497,7 @@ void Building_setDesirability()
 
 void Building_decayHousesCovered()
 {
-	for (int i = 0; i < MAX_BUILDINGS; i++) {
+	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		if (Data_Buildings[i].state != BuildingState_Unused &&
 			Data_Buildings[i].type != Building_Tower) {
 			if (Data_Buildings[i].housesCovered <= 1) {
@@ -558,21 +557,21 @@ void Building_determineGraphicIdsForOrientedBuildings()
 				Terrain_addRoadsForTriumphalArch(b->x, b->y, b->subtype.orientation);
 				break;
 			case Building_Hippodrome:
-				if (mapOrientation == Direction_Top) {
+				if (mapOrientation == Dir_0_Top) {
 					graphicId = GraphicId(ID_Graphic_Hippodrome2);
 					switch (b->subtype.orientation) {
 						case 0: case 3: graphicId += 0; break;
 						case 1: case 4: graphicId += 2; break;
 						case 2: case 5: graphicId += 4; break;
 					}
-				} else if (mapOrientation == Direction_Bottom) {
+				} else if (mapOrientation == Dir_4_Bottom) {
 					graphicId = GraphicId(ID_Graphic_Hippodrome2);
 					switch (b->subtype.orientation) {
 						case 0: case 3: graphicId += 4; break;
 						case 1: case 4: graphicId += 2; break;
 						case 2: case 5: graphicId += 0; break;
 					}
-				} else if (mapOrientation == Direction_Left) {
+				} else if (mapOrientation == Dir_6_Left) {
 					graphicId = GraphicId(ID_Graphic_Hippodrome1);
 					switch (b->subtype.orientation) {
 						case 0: case 3: graphicId += 0; break;

@@ -362,24 +362,24 @@ static void walkerAdvanceRouteTile(struct Data_Walker *w)
 			w->direction = 9;
 		} else if (groundType > 0 && groundType != 5) {
 			int causeDamage = 1;
-			int damage = 0;
+			int maxDamage = 0;
 			switch (groundType) {
-				case 1: damage = 10; break;
+				case 1: maxDamage = 10; break;
 				case 2:
 					if (Data_Grid_terrain[targetGridOffset] & 0x1420) {
 						causeDamage = 0;
 					} else {
-						damage = 10;
+						maxDamage = 10;
 					}
 					break;
-				case 3: damage = 200; break;
-				default: damage = 150; break;
+				case 3: maxDamage = 200; break;
+				default: maxDamage = 150; break;
 			}
 			if (causeDamage) {
 				w->attackDirection = w->direction;
 				w->direction = 11;
 				if (!(Data_CityInfo_Extra.gameTimeTick & 3)) {
-					Building_increaseDamageByEnemy(targetGridOffset, damage);
+					Building_increaseDamageByEnemy(targetGridOffset, maxDamage);
 				}
 			}
 		}

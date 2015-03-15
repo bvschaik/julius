@@ -17,18 +17,18 @@ void Terrain_addWatersideBuildingToGrids(int buildingId, int x, int y, int size,
 	int xLeftmost;
 	int yLeftmost;
 	switch (Data_Settings_Map.orientation) {
-		case Direction_Top:
+		case Dir_0_Top:
 			xLeftmost = 0;
 			yLeftmost = size - 1;
 			break;
-		case Direction_Right:
+		case Dir_2_Right:
 			xLeftmost = yLeftmost = 0;
 			break;
-		case Direction_Bottom:
+		case Dir_4_Bottom:
 			xLeftmost = size - 1;
 			yLeftmost = 0;
 			break;
-		case Direction_Left:
+		case Dir_6_Left:
 			xLeftmost = yLeftmost = size - 1;
 			break;
 		default:
@@ -63,10 +63,10 @@ int Terrain_determineOrientationWatersideSize2(int x, int y, int adjustXY,
 {
 	if (adjustXY == 1) {
 		switch (Data_Settings_Map.orientation) {
-			case Direction_Top: break;
-			case Direction_Right: x--; break;
-			case Direction_Left: y--; break;
-			case Direction_Bottom: x--; y--; break;
+			case Dir_0_Top: break;
+			case Dir_2_Right: x--; break;
+			case Dir_6_Left: y--; break;
+			case Dir_4_Bottom: x--; y--; break;
 		}
 	}
 	if (IsOutsideMap(x, y, 2)) {
@@ -131,10 +131,10 @@ int Terrain_determineOrientationWatersideSize3(int x, int y, int adjustXY,
 {
 	if (adjustXY == 1) {
 		switch (Data_Settings_Map.orientation) {
-			case Direction_Top: break;
-			case Direction_Right: x -= 2; break;
-			case Direction_Left: y -= 2; break;
-			case Direction_Bottom: x -= 2; y -= 2; break;
+			case Dir_0_Top: break;
+			case Dir_2_Right: x -= 2; break;
+			case Dir_6_Left: y -= 2; break;
+			case Dir_4_Bottom: x -= 2; y -= 2; break;
 		}
 	}
 	if (IsOutsideMap(x, y, 3)) {

@@ -284,10 +284,10 @@ static int getAccessRampGraphicOffset(int x, int y)
 		return -1;
 	}
 	switch (Data_Settings_Map.orientation) {
-		case Direction_Top: break;
-		case Direction_Left: graphicOffset += 1; break;
-		case Direction_Bottom: graphicOffset += 2; break;
-		case Direction_Right: graphicOffset += 3; break;
+		case Dir_0_Top: break;
+		case Dir_6_Left: graphicOffset += 1; break;
+		case Dir_4_Bottom: graphicOffset += 2; break;
+		case Dir_2_Right: graphicOffset += 3; break;
 	}
 	if (graphicOffset >= 4) {
 		graphicOffset -= 4;
@@ -584,10 +584,10 @@ void TerrainGraphics_setBuildingFarm(int buildingId, int x, int y, int cropGraph
 	// farmhouse
 	int leftmostX, leftmostY;
 	switch (Data_Settings_Map.orientation) {
-		case Direction_Top: leftmostX = 0; leftmostY = 1; break;
-		case Direction_Right: leftmostX = 0; leftmostY = 0; break;
-		case Direction_Bottom: leftmostX = 1; leftmostY = 0; break;
-		case Direction_Left: leftmostX = 1; leftmostY = 1; break;
+		case Dir_0_Top: leftmostX = 0; leftmostY = 1; break;
+		case Dir_2_Right: leftmostX = 0; leftmostY = 0; break;
+		case Dir_4_Bottom: leftmostX = 1; leftmostY = 0; break;
+		case Dir_6_Left: leftmostX = 1; leftmostY = 1; break;
 	}
 	for (int dy = 0; dy < 2; dy++) {
 		for (int dx = 0; dx < 2; dx++) {

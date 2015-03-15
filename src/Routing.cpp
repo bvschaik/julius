@@ -426,7 +426,7 @@ void Routing_determineWalls()
 			if (Data_Grid_terrain[gridOffset] & Terrain_Wall) {
 				int adjacent = 0;
 				switch (Data_Settings_Map.orientation) {
-					case Direction_Top:
+					case Dir_0_Top:
 						if (Data_Grid_terrain[gridOffset + 162] & Terrain_WallOrGatehouse) {
 							adjacent++;
 						}
@@ -437,7 +437,7 @@ void Routing_determineWalls()
 							adjacent++;
 						}
 						break;
-					case Direction_Right:
+					case Dir_2_Right:
 						if (Data_Grid_terrain[gridOffset + 162] & Terrain_WallOrGatehouse) {
 							adjacent++;
 						}
@@ -448,7 +448,7 @@ void Routing_determineWalls()
 							adjacent++;
 						}
 						break;
-					case Direction_Bottom:
+					case Dir_4_Bottom:
 						if (Data_Grid_terrain[gridOffset - 162] & Terrain_WallOrGatehouse) {
 							adjacent++;
 						}
@@ -459,7 +459,7 @@ void Routing_determineWalls()
 							adjacent++;
 						}
 						break;
-					case Direction_Left:
+					case Dir_6_Left:
 						if (Data_Grid_terrain[gridOffset - 162] & Terrain_WallOrGatehouse) {
 							adjacent++;
 						}
@@ -689,7 +689,7 @@ int Routing_canPlaceRoadUnderAqueduct(int gridOffset)
 		default: // not a straight aqueduct
 			return 0;
 	}
-	if (Data_Settings_Map.orientation == Direction_Left || Data_Settings_Map.orientation == Direction_Right) {
+	if (Data_Settings_Map.orientation == Dir_6_Left || Data_Settings_Map.orientation == Dir_2_Right) {
 		checkRoadY = !checkRoadY;
 	}
 	if (checkRoadY) {
@@ -747,7 +747,7 @@ static int canPlaceAqueductOnRoad(int gridOffset)
 		return 0;
 	}
 	int checkRoadY = graphic == 0 || graphic == 49;
-	if (Data_Settings_Map.orientation == Direction_Left || Data_Settings_Map.orientation == Direction_Right) {
+	if (Data_Settings_Map.orientation == Dir_6_Left || Data_Settings_Map.orientation == Dir_2_Right) {
 		checkRoadY = !checkRoadY;
 	}
 	if (checkRoadY) {
@@ -930,28 +930,28 @@ int Routing_getGeneralDirection(int xSrc, int ySrc, int xDst, int yDst)
 {
 	if (xSrc < xDst) {
 		if (ySrc > yDst) {
-			return Direction_TopRight;
+			return Dir_1_TopRight;
 		} else if (ySrc == yDst) {
-			return Direction_Right;
+			return Dir_2_Right;
 		} else if (ySrc < yDst) {
-			return Direction_BottomRight;
+			return Dir_3_BottomRight;
 		}
 	} else if (xSrc == xDst) {
 		if (ySrc > yDst) {
-			return Direction_Top;
+			return Dir_0_Top;
 		} else if (ySrc < yDst) {
-			return Direction_Bottom;
+			return Dir_4_Bottom;
 		}
 	} else if (xSrc > xDst) {
 		if (ySrc > yDst) {
-			return Direction_TopLeft;
+			return Dir_7_TopLeft;
 		} else if (ySrc == yDst) {
-			return Direction_Left;
+			return Dir_6_Left;
 		} else if (ySrc < yDst) {
-			return Direction_BottomLeft;
+			return Dir_5_BottomLeft;
 		}
 	}
-	return Direction_None;
+	return Dir_8_None;
 }
 
 int Routing_getDirectionForMissileShooter(int xSrc, int ySrc, int xDst, int yDst)

@@ -401,7 +401,7 @@ void Formation_calculateWalkers()
 				f->isHalted = 1;
 				for (int w = 0; w < f->numWalkers; w++) {
 					int walkerId = f->walkerIds[w];
-					if (walkerId && Data_Walkers[walkerId].direction != Direction_None) {
+					if (walkerId && Data_Walkers[walkerId].direction != Dir_8_None) {
 						f->isHalted = 0;
 					}
 				}

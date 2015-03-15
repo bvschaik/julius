@@ -66,7 +66,7 @@ void CityView_calculateLookup()
 	int xViewStep;
 	switch (Data_Settings_Map.orientation) {
 		default:
-		case Direction_Top:
+		case Dir_0_Top:
 			xViewStart = VIEW_X_MAX - 1;
 			xViewSkip = -1;
 			xViewStep = 1;
@@ -74,7 +74,7 @@ void CityView_calculateLookup()
 			yViewSkip = 1;
 			yViewStep = 1;
 			break;
-		case Direction_Right:
+		case Dir_2_Right:
 			xViewStart = 1;
 			xViewSkip = 1;
 			xViewStep = 1;
@@ -82,7 +82,7 @@ void CityView_calculateLookup()
 			yViewSkip = 1;
 			yViewStep = -1;
 			break;
-		case Direction_Bottom:
+		case Dir_4_Bottom:
 			xViewStart = VIEW_X_MAX - 1;
 			xViewSkip = 1;
 			xViewStep = -1;
@@ -90,7 +90,7 @@ void CityView_calculateLookup()
 			yViewSkip = -1;
 			yViewStep = -1;
 			break;
-		case Direction_Left:
+		case Dir_6_Left:
 			xViewStart = VIEW_Y_MAX - 2;
 			xViewSkip = -1;
 			xViewStep = -1;
@@ -210,7 +210,7 @@ void CityView_rotateLeft()
 
 	Data_Settings_Map.orientation += 2;
 	if (Data_Settings_Map.orientation > 6) {
-		Data_Settings_Map.orientation = Direction_Top;
+		Data_Settings_Map.orientation = Dir_0_Top;
 	}
 	CityView_calculateLookup();
 	if (centerGridOffset >= 0) {
@@ -218,8 +218,8 @@ void CityView_rotateLeft()
 		CityView_gridOffsetToXYCoords(centerGridOffset, &x, &y);
 		Data_Settings_Map.camera.x = x - Data_CityView.widthInTiles / 2;
 		Data_Settings_Map.camera.y = y - Data_CityView.heightInTiles / 2;
-		if (Data_Settings_Map.orientation == Direction_Top ||
-			Data_Settings_Map.orientation == Direction_Bottom) {
+		if (Data_Settings_Map.orientation == Dir_0_Top ||
+			Data_Settings_Map.orientation == Dir_4_Bottom) {
 			Data_Settings_Map.camera.x++;
 		}
 	}
@@ -233,7 +233,7 @@ void CityView_rotateRight()
 	
 	Data_Settings_Map.orientation -= 2;
 	if (Data_Settings_Map.orientation < 0) {
-		Data_Settings_Map.orientation = Direction_Left;
+		Data_Settings_Map.orientation = Dir_6_Left;
 	}
 	CityView_calculateLookup();
 	if (centerGridOffset >= 0) {
@@ -241,8 +241,8 @@ void CityView_rotateRight()
 		CityView_gridOffsetToXYCoords(centerGridOffset, &x, &y);
 		Data_Settings_Map.camera.x = x - Data_CityView.widthInTiles / 2;
 		Data_Settings_Map.camera.y = y - Data_CityView.heightInTiles / 2;
-		if (Data_Settings_Map.orientation == Direction_Top ||
-			Data_Settings_Map.orientation == Direction_Bottom) {
+		if (Data_Settings_Map.orientation == Dir_0_Top ||
+			Data_Settings_Map.orientation == Dir_4_Bottom) {
 			Data_Settings_Map.camera.y += 2;
 		}
 	}

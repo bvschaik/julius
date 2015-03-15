@@ -34,7 +34,7 @@ static int shouldScrollMap()
 
 int Scroll_getDirection() {
 	if (!shouldScrollMap()) {
-		return Direction_None;
+		return Dir_8_None;
 	}
 	Data_State.isScrollingMap = 0;
 	int top = 0;
@@ -82,24 +82,24 @@ int Scroll_getDirection() {
 
 	// two sides
 	if (left && top) {
-		return Direction_TopLeft;
+		return Dir_7_TopLeft;
 	} else if (left && bottom) {
-		return Direction_BottomLeft;
+		return Dir_5_BottomLeft;
 	} else if (right && top) {
-		return Direction_TopRight;
+		return Dir_1_TopRight;
 	} else if (right && bottom) {
-		return Direction_BottomRight;
+		return Dir_3_BottomRight;
 	}
 	// one side
 	if (left) {
-		return Direction_Left;
+		return Dir_6_Left;
 	} else if (right) {
-		return Direction_Right;
+		return Dir_2_Right;
 	} else if (top) {
-		return Direction_Top;
+		return Dir_0_Top;
 	} else if (bottom) {
-		return Direction_Bottom;
+		return Dir_4_Bottom;
 	}
 	// none of them
-	return Direction_None;
+	return Dir_8_None;
 }

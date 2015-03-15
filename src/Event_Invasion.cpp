@@ -352,15 +352,15 @@ static int startInvasion(int enemyType, int amount, int invasionPoint, int attac
 	}
 	// determine orientation
 	if (y == 0) {
-		orientation = Direction_Bottom;
+		orientation = Dir_4_Bottom;
 	} else if (y >= Data_Scenario.mapSizeY - 1) {
-		orientation = Direction_Top;
+		orientation = Dir_0_Top;
 	} else if (x == 0) {
-		orientation = Direction_Right;
+		orientation = Dir_2_Right;
 	} else if (x >= Data_Scenario.mapSizeX - 1) {
-		orientation = Direction_Left;
+		orientation = Dir_6_Left;
 	} else {
-		orientation = Direction_Bottom;
+		orientation = Dir_4_Bottom;
 	}
 	// check terrain
 	int gridOffset = GridOffset(x, y);

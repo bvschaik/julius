@@ -82,18 +82,18 @@ void Terrain_addBuildingToGrids(int buildingId, int x, int y, int size, int grap
 	}
 	int xLeftmost, yLeftmost;
 	switch (Data_Settings_Map.orientation) {
-		case Direction_Top:
+		case Dir_0_Top:
 			xLeftmost = 0;
 			yLeftmost = size - 1;
 			break;
-		case Direction_Right:
+		case Dir_2_Right:
 			xLeftmost = yLeftmost = 0;
 			break;
-		case Direction_Bottom:
+		case Dir_4_Bottom:
 			xLeftmost = size - 1;
 			yLeftmost = 0;
 			break;
-		case Direction_Left:
+		case Dir_6_Left:
 			xLeftmost = yLeftmost = size - 1;
 			break;
 		default:
@@ -379,9 +379,9 @@ int Terrain_hasRoadAccessGranary(int x, int y, int *roadX, int *roadY)
 int Terrain_getOrientationGatehouse(int x, int y)
 {
 	switch (Data_Settings_Map.orientation) {
-		case Direction_Right: x--; break;
-		case Direction_Bottom: x--; y--; break;
-		case Direction_Left: y--; break;
+		case Dir_2_Right: x--; break;
+		case Dir_4_Bottom: x--; y--; break;
+		case Dir_6_Left: y--; break;
 	}
 	int gridOffset = GridOffset(x, y);
 	int numRoadTilesWithin = 0;
@@ -469,9 +469,9 @@ int Terrain_getOrientationGatehouse(int x, int y)
 int Terrain_getOrientationTriumphalArch(int x, int y)
 {
 	switch (Data_Settings_Map.orientation) {
-		case Direction_Right: x -= 2; break;
-		case Direction_Bottom: x -= 2; y -= 2; break;
-		case Direction_Left: y -= 2; break;
+		case Dir_2_Right: x -= 2; break;
+		case Dir_4_Bottom: x -= 2; y -= 2; break;
+		case Dir_6_Left: y -= 2; break;
 	}
 	int numRoadTilesTopBottom = 0;
 	int numRoadTilesLeftRight = 0;
