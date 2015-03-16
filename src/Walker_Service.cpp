@@ -3,6 +3,7 @@
 #include "WalkerAction.h"
 
 #include "Data/Building.h"
+#include "Data/Constants.h"
 #include "Data/Settings.h"
 #include "Data/Grid.h"
 #include "Data/Model.h"
@@ -139,76 +140,76 @@ static int provideMarketGoods(int marketBuildingId, int x, int y)
 			}
 			int maxFoodStocks = 4 * house->houseMaxPopulationSeen;
 			int foodTypesStoredMax = 0;
-			for (int i = 0; i < 4; i++) {
-				if (house->data.house.inventory.all[i] >= maxFoodStocks) {
+			for (int i = Inventory_MinFood; i <= Inventory_MaxFood; i++) {
+				if (house->data.house.inventory[i] >= maxFoodStocks) {
 					foodTypesStoredMax++;
 				}
 			}
 			if (Data_Model_Houses[level].foodTypes > foodTypesStoredMax) {
-				for (int i = 0; i < 4; i++) {
-					if (house->data.house.inventory.all[i] >= maxFoodStocks) {
+				for (int i = Inventory_MinFood; i <= Inventory_MaxFood; i++) {
+					if (house->data.house.inventory[i] >= maxFoodStocks) {
 						continue;
 					}
-					if (market->data.market.inventory.all[i] >= maxFoodStocks) {
-						house->data.house.inventory.all[i] += maxFoodStocks;
-						market->data.market.inventory.all[i] -= maxFoodStocks;
+					if (market->data.market.inventory[i] >= maxFoodStocks) {
+						house->data.house.inventory[i] += maxFoodStocks;
+						market->data.market.inventory[i] -= maxFoodStocks;
 						break;
-					} else if (market->data.market.inventory.all[i]) {
-						house->data.house.inventory.all[i] += market->data.market.inventory.all[i];
-						market->data.market.inventory.all[i] = 0;
+					} else if (market->data.market.inventory[i]) {
+						house->data.house.inventory[i] += market->data.market.inventory[i];
+						market->data.market.inventory[i] = 0;
 						break;
 					}
 				}
 			}
 			if (Data_Model_Houses[level].pottery) {
 				market->data.market.potteryDemand = 10;
-				int potteryWanted = 8 * Data_Model_Houses[level].pottery - house->data.house.inventory.one.pottery;
-				if (market->data.market.inventory.one.pottery > 0 && potteryWanted > 0) {
-					if (potteryWanted <= market->data.market.inventory.one.pottery) {
-						house->data.house.inventory.one.pottery += potteryWanted;
-						market->data.market.inventory.one.pottery -= potteryWanted;
+				int potteryWanted = 8 * Data_Model_Houses[level].pottery - house->data.house.inventory[Inventory_Pottery];
+				if (market->data.market.inventory[Inventory_Pottery] > 0 && potteryWanted > 0) {
+					if (potteryWanted <= market->data.market.inventory[Inventory_Pottery]) {
+						house->data.house.inventory[Inventory_Pottery] += potteryWanted;
+						market->data.market.inventory[Inventory_Pottery] -= potteryWanted;
 					} else {
-						house->data.house.inventory.one.pottery += market->data.market.inventory.one.pottery;
-						market->data.market.inventory.one.pottery = 0;
+						house->data.house.inventory[Inventory_Pottery] += market->data.market.inventory[Inventory_Pottery];
+						market->data.market.inventory[Inventory_Pottery] = 0;
 					}
 				}
 			}
 			if (Data_Model_Houses[level].furniture) {
 				market->data.market.furnitureDemand = 10;
-				int furnitureWanted = 4 * Data_Model_Houses[level].furniture - house->data.house.inventory.one.furniture;
-				if (market->data.market.inventory.one.furniture > 0 && furnitureWanted > 0) {
-					if (furnitureWanted <= market->data.market.inventory.one.furniture) {
-						house->data.house.inventory.one.furniture += furnitureWanted;
-						market->data.market.inventory.one.furniture -= furnitureWanted;
+				int furnitureWanted = 4 * Data_Model_Houses[level].furniture - house->data.house.inventory[Inventory_Furniture];
+				if (market->data.market.inventory[Inventory_Furniture] > 0 && furnitureWanted > 0) {
+					if (furnitureWanted <= market->data.market.inventory[Inventory_Furniture]) {
+						house->data.house.inventory[Inventory_Furniture] += furnitureWanted;
+						market->data.market.inventory[Inventory_Furniture] -= furnitureWanted;
 					} else {
-						house->data.house.inventory.one.furniture += market->data.market.inventory.one.furniture;
-						market->data.market.inventory.one.furniture = 0;
+						house->data.house.inventory[Inventory_Furniture] += market->data.market.inventory[Inventory_Furniture];
+						market->data.market.inventory[Inventory_Furniture] = 0;
 					}
 				}
 			}
 			if (Data_Model_Houses[level].oil) {
 				market->data.market.oilDemand = 10;
-				int oilWanted = 4 * Data_Model_Houses[level].oil - house->data.house.inventory.one.oil;
-				if (market->data.market.inventory.one.oil > 0 && oilWanted > 0) {
-					if (oilWanted <= market->data.market.inventory.one.oil) {
-						house->data.house.inventory.one.oil += oilWanted;
-						market->data.market.inventory.one.oil -= oilWanted;
+				int oilWanted = 4 * Data_Model_Houses[level].oil - house->data.house.inventory[Inventory_Oil];
+				if (market->data.market.inventory[Inventory_Oil] > 0 && oilWanted > 0) {
+					if (oilWanted <= market->data.market.inventory[Inventory_Oil]) {
+						house->data.house.inventory[Inventory_Oil] += oilWanted;
+						market->data.market.inventory[Inventory_Wine] -= oilWanted;
 					} else {
-						house->data.house.inventory.one.oil += market->data.market.inventory.one.oil;
-						market->data.market.inventory.one.oil = 0;
+						house->data.house.inventory[Inventory_Oil] += market->data.market.inventory[Inventory_Oil];
+						market->data.market.inventory[Inventory_Oil] = 0;
 					}
 				}
 			}
 			if (Data_Model_Houses[level].wine) {
 				market->data.market.wineDemand = 10;
-				int wineWanted = 4 * Data_Model_Houses[level].wine - house->data.house.inventory.one.wine;
-				if (market->data.market.inventory.one.wine > 0 && wineWanted > 0) {
-					if (wineWanted <= market->data.market.inventory.one.wine) {
-						house->data.house.inventory.one.wine += wineWanted;
-						market->data.market.inventory.one.wine -= wineWanted;
+				int wineWanted = 4 * Data_Model_Houses[level].wine - house->data.house.inventory[Inventory_Wine];
+				if (market->data.market.inventory[Inventory_Wine] > 0 && wineWanted > 0) {
+					if (wineWanted <= market->data.market.inventory[Inventory_Wine]) {
+						house->data.house.inventory[Inventory_Wine] += wineWanted;
+						market->data.market.inventory[Inventory_Wine] -= wineWanted;
 					} else {
-						house->data.house.inventory.one.wine += market->data.market.inventory.one.wine;
-						market->data.market.inventory.one.wine = 0;
+						house->data.house.inventory[Inventory_Wine] += market->data.market.inventory[Inventory_Wine];
+						market->data.market.inventory[Inventory_Wine] = 0;
 					}
 				}
 			}

@@ -111,7 +111,7 @@ void CityInfo_Resource_calculateFoodAndSupplyRomeWheat()
 	if (Data_Scenario.romeSuppliesWheat) {
 		for (int i = 1; i < MAX_BUILDINGS; i++) {
 			if (BuildingIsInUse(i) && Data_Buildings[i].type == Building_Market) {
-				Data_Buildings[i].data.market.inventory.one.wheat = 200;
+				Data_Buildings[i].data.market.inventory[Inventory_Wheat] = 200;
 			}
 		}
 	}
@@ -135,17 +135,17 @@ void CityInfo_Resource_housesConsumeFood()
 			if (Data_Scenario.romeSuppliesWheat) {
 				Data_CityInfo.foodInfoFoodTypesEaten = 1;
 				Data_CityInfo.foodInfoFoodTypesAvailable = 1;
-				b->data.house.inventory.one.wheat = amountPerType;
+				b->data.house.inventory[Inventory_Wheat] = amountPerType;
 				b->data.house.numFoods = 1;
 			} else if (numTypes > 0) {
-				for (int t = 0; t < 4 && b->data.house.numFoods < numTypes; t++) {
-					if (b->data.house.inventory.all[t] >= amountPerType) {
-						b->data.house.inventory.all[t] -= amountPerType;
+				for (int t = Inventory_MinFood; t <= Inventory_MaxFood && b->data.house.numFoods < numTypes; t++) {
+					if (b->data.house.inventory[t] >= amountPerType) {
+						b->data.house.inventory[t] -= amountPerType;
 						b->data.house.numFoods++;
 						totalConsumed += amountPerType;
-					} else if (b->data.house.inventory.all[t]) {
+					} else if (b->data.house.inventory[t]) {
 						// has food but not enough
-						b->data.house.inventory.all[t] = 0;
+						b->data.house.inventory[t] = 0;
 						b->data.house.numFoods++;
 						totalConsumed += amountPerType; // BUG?
 					}

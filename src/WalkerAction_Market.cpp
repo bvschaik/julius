@@ -17,14 +17,14 @@ static int marketBuyerTakeFoodFromGranary(int walkerId, int marketId, int granar
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	int resource;
 	switch (w->collectingItemId) {
-		case MarketInventory_Wheat: resource = Resource_Wheat; break;
-		case MarketInventory_Vegetables: resource = Resource_Vegetables; break;
-		case MarketInventory_Fruit: resource = Resource_Fruit; break;
-		case MarketInventory_Meat: resource = Resource_Meat; break;
+		case Inventory_Wheat: resource = Resource_Wheat; break;
+		case Inventory_Vegetables: resource = Resource_Vegetables; break;
+		case Inventory_Fruit: resource = Resource_Fruit; break;
+		case Inventory_Meat: resource = Resource_Meat; break;
 		default: return 0;
 	}
-	int marketUnits = Data_Buildings[marketId].data.market.inventory.all[w->collectingItemId];
-	int maxUnits = (w->collectingItemId == MarketInventory_Wheat) ? 800 - marketUnits : 600 - marketUnits;
+	int marketUnits = Data_Buildings[marketId].data.market.inventory[w->collectingItemId];
+	int maxUnits = (w->collectingItemId == Inventory_Wheat) ? 800 - marketUnits : 600 - marketUnits;
 	int granaryUnits = Data_Buildings[granaryId].data.storage.resourceStored[resource];
 	int numLoads;
 	if (granaryUnits >= 800) {
@@ -66,10 +66,10 @@ static int marketBuyerTakeResourceFromWarehouse(int walkerId, int marketId, int 
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	int resource;
 	switch (w->collectingItemId) {
-		case MarketInventory_Pottery: resource = Resource_Pottery; break;
-		case MarketInventory_Furniture: resource = Resource_Furniture; break;
-		case MarketInventory_Oil: resource = Resource_Oil; break;
-		case MarketInventory_Wine: resource = Resource_Wine; break;
+		case Inventory_Pottery: resource = Resource_Pottery; break;
+		case Inventory_Furniture: resource = Resource_Furniture; break;
+		case Inventory_Oil: resource = Resource_Oil; break;
+		case Inventory_Wine: resource = Resource_Wine; break;
 		default: return 0;
 	}
 	int numLoads;
@@ -163,7 +163,7 @@ void WalkerAction_deliveryBoy(int walkerId)
 				w->state = WalkerState_Dead;
 			}
 		} else { // leader arrived at market, drop resource at market
-			Data_Buildings[w->buildingId].data.market.inventory.all[w->collectingItemId] += 100;
+			Data_Buildings[w->buildingId].data.market.inventory[w->collectingItemId] += 100;
 			w->state = WalkerState_Dead;
 		}
 	}

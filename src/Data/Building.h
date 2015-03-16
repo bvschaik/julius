@@ -267,19 +267,7 @@ extern struct Data_Building {
 		} other;
 		struct {
 			short unknown; //4a
-			union {
-				struct {
-					short wheat; // 4c
-					short vegetables; // 4e
-					short fruit; // 50
-					short meat; // 52
-					short wine; // 54
-					short oil; // 56
-					short furniture; // 58
-					short pottery; // 5a
-				} one;
-				short all[8]; //4c
-			} inventory;
+			short inventory[8];
 			short potteryDemand; // 5c
 			short furnitureDemand; // 5e
 			short oilDemand; // 60
@@ -308,19 +296,7 @@ extern struct Data_Building {
 			unsigned char play;
 		} entertainment;
 		struct {
-			union { // 4a
-				short all[8];
-				struct {
-					short wheat;
-					short vegetables;
-					short fruit;
-					short meat;
-					short wine;
-					short oil;
-					short furniture;
-					short pottery;
-				} one;
-			} inventory;
+			short inventory[8]; //4a
 			unsigned char theater; //5a
 			unsigned char amphitheaterActor;
 			unsigned char amphitheaterGladiator;

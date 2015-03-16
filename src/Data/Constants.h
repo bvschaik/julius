@@ -318,14 +318,20 @@ enum {
 #define ResourceIsFood(r) ((r) == Resource_Wheat || (r) == Resource_Vegetables || (r) == Resource_Fruit || (r) == Resource_Meat)
 
 enum {
-	MarketInventory_Wheat = 0,
-	MarketInventory_Vegetables = 1,
-	MarketInventory_Fruit = 2,
-	MarketInventory_Meat = 3,
-	MarketInventory_Wine = 4,
-	MarketInventory_Oil = 5,
-	MarketInventory_Furniture = 6,
-	MarketInventory_Pottery = 7
+	Inventory_Wheat = 0,
+	Inventory_Vegetables = 1,
+	Inventory_Fruit = 2,
+	Inventory_Meat = 3,
+	Inventory_Wine = 4,
+	Inventory_Oil = 5,
+	Inventory_Furniture = 6,
+	Inventory_Pottery = 7,
+	// helper constants
+	Inventory_MinFood = 0,
+	Inventory_MaxFood = 3,
+	Inventory_MinGood = 4,
+	Inventory_MaxGood = 7,
+	Inventory_Amount = 8
 };
 
 enum {

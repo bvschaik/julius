@@ -14,6 +14,7 @@ enum {
 
 enum {
 	Message_80_RoadToRomeBlocked = 80,
+	Message_116_RoadToRomeObstructed = 116,
 };
 
 void PlayerMessage_disableSoundForNextMessage();

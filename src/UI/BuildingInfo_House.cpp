@@ -116,23 +116,23 @@ void UI_BuildingInfo_drawHouse(BuildingInfoContext *c)
 		// wheat
 		Graphics_drawImage(resourceGraphic + Resource_Wheat,
 			c->xOffset + 32, c->yOffset + 234);
-		Widget_Text_drawNumber(b->data.house.inventory.one.wheat, '@', " ",
+		Widget_Text_drawNumber(b->data.house.inventory[Inventory_Wheat], '@', " ",
 			c->xOffset + 64, c->yOffset + 238, Font_SmallBlack);
 		// vegetables
 		Graphics_drawImage(resourceGraphic + Resource_Vegetables,
 			c->xOffset + 142, c->yOffset + 234);
-		Widget_Text_drawNumber(b->data.house.inventory.one.fruit, '@', " ",
+		Widget_Text_drawNumber(b->data.house.inventory[Inventory_Vegetables], '@', " ",
 			c->xOffset + 174, c->yOffset + 238, Font_SmallBlack);
 		// fruit
 		Graphics_drawImage(resourceGraphic + Resource_Fruit,
 			c->xOffset + 252, c->yOffset + 234);
-		Widget_Text_drawNumber(b->data.house.inventory.one.fruit, '@', " ",
+		Widget_Text_drawNumber(b->data.house.inventory[Inventory_Fruit], '@', " ",
 			c->xOffset + 284, c->yOffset + 238, Font_SmallBlack);
 		// meat/fish
 		Graphics_drawImage(resourceGraphic + Resource_Meat +
 			Resource_getGraphicIdOffset(Resource_Meat, 3),
 			c->xOffset + 362, c->yOffset + 234);
-		Widget_Text_drawNumber(b->data.house.inventory.one.meat, '@', " ",
+		Widget_Text_drawNumber(b->data.house.inventory[Inventory_Meat], '@', " ",
 			c->xOffset + 394, c->yOffset + 238, Font_SmallBlack);
 	} else {
 		// no food necessary
@@ -143,22 +143,22 @@ void UI_BuildingInfo_drawHouse(BuildingInfoContext *c)
 	// pottery
 	Graphics_drawImage(resourceGraphic + Resource_Pottery,
 		c->xOffset + 32, c->yOffset + 274);
-	Widget_Text_drawNumber(b->data.house.inventory.one.pottery, '@', " ",
+	Widget_Text_drawNumber(b->data.house.inventory[Inventory_Pottery], '@', " ",
 		c->xOffset + 64, c->yOffset + 278, Font_SmallBlack);
 	// furniture
 	Graphics_drawImage(resourceGraphic + Resource_Furniture,
 		c->xOffset + 142, c->yOffset + 274);
-	Widget_Text_drawNumber(b->data.house.inventory.one.furniture, '@', " ",
+	Widget_Text_drawNumber(b->data.house.inventory[Inventory_Furniture], '@', " ",
 		c->xOffset + 174, c->yOffset + 278, Font_SmallBlack);
 	// oil
 	Graphics_drawImage(resourceGraphic + Resource_Oil,
 		c->xOffset + 252, c->yOffset + 274);
-	Widget_Text_drawNumber(b->data.house.inventory.one.oil, '@', " ",
+	Widget_Text_drawNumber(b->data.house.inventory[Inventory_Oil], '@', " ",
 		c->xOffset + 284, c->yOffset + 278, Font_SmallBlack);
 	// wine
 	Graphics_drawImage(resourceGraphic + Resource_Wine,
 		c->xOffset + 362, c->yOffset + 274);
-	Widget_Text_drawNumber(b->data.house.inventory.one.wine, '@', " ",
+	Widget_Text_drawNumber(b->data.house.inventory[Inventory_Wine], '@', " ",
 		c->xOffset + 394, c->yOffset + 278, Font_SmallBlack);
 	
 	if (b->data.house.evolveTextId == 62) {
