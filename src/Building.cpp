@@ -1134,7 +1134,7 @@ int Building_Market_getMaxFoodStock(int buildingId)
 {
 	int maxStock = 0;
 	if (buildingId > 0 && Data_Buildings[buildingId].type == Building_Market) {
-		for (int i = Inventory_MinFood; i <= Inventory_MaxFood; i++) {
+		for (int i = Inventory_MinFood; i < Inventory_MaxFood; i++) {
 			int stock = Data_Buildings[buildingId].data.market.inventory[i];
 			if (stock > maxStock) {
 				maxStock = stock;
@@ -1148,7 +1148,7 @@ int Building_Market_getMaxGoodsStock(int buildingId)
 {
 	int maxStock = 0;
 	if (buildingId > 0 && Data_Buildings[buildingId].type == Building_Market) {
-		for (int i = Inventory_MinGood; i <= Inventory_MaxGood; i++) {
+		for (int i = Inventory_MinGood; i < Inventory_MaxGood; i++) {
 			int stock = Data_Buildings[buildingId].data.market.inventory[i];
 			if (stock > maxStock) {
 				maxStock = stock;
@@ -1212,11 +1212,11 @@ void Building_Mercury_removeResources(int bigCurse)
 		}
 		int totalStored = 0;
 		if (b->type == Building_Warehouse) {
-			for (int r = 1; r <= 15; r++) {
+			for (int r = Resource_Min; r < Resource_Max; r++) {
 				totalStored += Resource_getAmountStoredInWarehouse(i, r);
 			}
 		} else if (b->type == Building_Granary) {
-			for (int r = 1; r <= 6; r++) {
+			for (int r = Resource_MinFood; r < Resource_MaxFood; r++) {
 				totalStored += Resource_getAmountStoredInGranary(i, r);
 			}
 			totalStored /= 100;
@@ -1234,7 +1234,7 @@ void Building_Mercury_removeResources(int bigCurse)
 	struct Data_Building *b = &Data_Buildings[maxBuildingId];
 	if (bigCurse == 1) {
 		PlayerMessage_disableSoundForNextMessage();
-		PlayerMessage_post(0, 12, b->type, b->gridOffset);
+		PlayerMessage_post(0, Message_12_FireInTheCity, b->type, b->gridOffset);
 		Building_collapseOnFire(maxBuildingId, 0);
 		Building_collapseLinked(maxBuildingId, 1);
 		Sound_Effects_playChannel(SoundChannel_Explosion);
@@ -1262,7 +1262,7 @@ void Building_Mercury_fillGranary()
 			continue;
 		}
 		int totalStored = 0;
-		for (int r = 1; r <= 6; r++) {
+		for (int r = Resource_MinFood; r < Resource_MaxFood; r++) {
 			totalStored += Resource_getAmountStoredInGranary(i, r);
 		}
 		if (totalStored < minStored) {

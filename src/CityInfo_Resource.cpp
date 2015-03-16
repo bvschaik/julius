@@ -138,7 +138,7 @@ void CityInfo_Resource_housesConsumeFood()
 				b->data.house.inventory[Inventory_Wheat] = amountPerType;
 				b->data.house.numFoods = 1;
 			} else if (numTypes > 0) {
-				for (int t = Inventory_MinFood; t <= Inventory_MaxFood && b->data.house.numFoods < numTypes; t++) {
+				for (int t = Inventory_MinFood; t < Inventory_MaxFood && b->data.house.numFoods < numTypes; t++) {
 					if (b->data.house.inventory[t] >= amountPerType) {
 						b->data.house.inventory[t] -= amountPerType;
 						b->data.house.numFoods++;

@@ -140,13 +140,13 @@ static int provideMarketGoods(int marketBuildingId, int x, int y)
 			}
 			int maxFoodStocks = 4 * house->houseMaxPopulationSeen;
 			int foodTypesStoredMax = 0;
-			for (int i = Inventory_MinFood; i <= Inventory_MaxFood; i++) {
+			for (int i = Inventory_MinFood; i < Inventory_MaxFood; i++) {
 				if (house->data.house.inventory[i] >= maxFoodStocks) {
 					foodTypesStoredMax++;
 				}
 			}
 			if (Data_Model_Houses[level].foodTypes > foodTypesStoredMax) {
-				for (int i = Inventory_MinFood; i <= Inventory_MaxFood; i++) {
+				for (int i = Inventory_MinFood; i < Inventory_MaxFood; i++) {
 					if (house->data.house.inventory[i] >= maxFoodStocks) {
 						continue;
 					}

@@ -13,6 +13,7 @@ enum {
 };
 
 enum {
+	Message_12_FireInTheCity = 12,
 	Message_80_RoadToRomeBlocked = 80,
 	Message_116_RoadToRomeObstructed = 116,
 };

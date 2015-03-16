@@ -15,7 +15,7 @@
 		int newBuildingId = Building_create((tt), (xx), (yy));\
 		struct Data_Building *nb = &Data_Buildings[newBuildingId];\
 		nb->housePopulation = populationPerTile;\
-		for (int i = 0; i < Inventory_Amount; i++) {\
+		for (int i = 0; i < Inventory_Max; i++) {\
 			nb->data.house.inventory[i] = inventoryPerTile[i];\
 		}\
 		nb->distanceFromEntry = 0;\
@@ -54,7 +54,7 @@ static int houseGraphicNumTypes[20] = {
 static struct {
 	int x;
 	int y;
-	int inventory[Inventory_Amount];
+	int inventory[Inventory_Max];
 	int population;
 } mergeData;
 
@@ -216,7 +216,7 @@ static void split(int buildingId, int numTiles)
 
 static void prepareForMerge(int buildingId, int numTiles)
 {
-	for (int i = 0; i < Inventory_Amount; i++) {
+	for (int i = 0; i < Inventory_Max; i++) {
 		mergeData.inventory[i] = 0;
 	}
 	mergeData.population = 0;
@@ -227,7 +227,7 @@ static void prepareForMerge(int buildingId, int numTiles)
 			int otherBuildingId = Data_Grid_buildingIds[tileOffset];
 			if (otherBuildingId != buildingId && Data_Buildings[otherBuildingId].houseSize) {
 				mergeData.population += Data_Buildings[otherBuildingId].housePopulation;
-				for (int i = 0; i < Inventory_Amount; i++) {
+				for (int i = 0; i < Inventory_Max; i++) {
 					mergeData.inventory[i] += Data_Buildings[otherBuildingId].data.house.inventory[i];
 					Data_Buildings[otherBuildingId].housePopulation = 0;
 					Data_Buildings[otherBuildingId].state = BuildingState_DeletedByGame;
@@ -247,7 +247,7 @@ void BuildingHouse_expandToLargeInsula(int buildingId)
 	b->subtype.houseLevel = HouseLevel_LargeInsula;
 	b->size = b->houseSize = 2;
 	b->housePopulation += mergeData.population;
-	for (int i = 0; i < Inventory_Amount; i++) {
+	for (int i = 0; i < Inventory_Max; i++) {
 		b->data.house.inventory[i] += mergeData.inventory[i];
 	}
 	int graphicId =
@@ -271,7 +271,7 @@ void BuildingHouse_expandToLargeVilla(int buildingId)
 	b->subtype.houseLevel = HouseLevel_LargeVilla;
 	b->size = b->houseSize = 3;
 	b->housePopulation += mergeData.population;
-	for (int i = 0; i < Inventory_Amount; i++) {
+	for (int i = 0; i < Inventory_Max; i++) {
 		b->data.house.inventory[i] += mergeData.inventory[i];
 	}
 	int graphicId =
@@ -294,7 +294,7 @@ void BuildingHouse_expandToLargePalace(int buildingId)
 	b->subtype.houseLevel = HouseLevel_LargePalace;
 	b->size = b->houseSize = 4;
 	b->housePopulation += mergeData.population;
-	for (int i = 0; i < Inventory_Amount; i++) {
+	for (int i = 0; i < Inventory_Max; i++) {
 		b->data.house.inventory[i] += mergeData.inventory[i];
 	}
 	int graphicId =
@@ -314,7 +314,7 @@ static void merge(int buildingId)
 	struct Data_Building *b = &Data_Buildings[buildingId];
 	b->size = b->houseSize = 2;
 	b->housePopulation += mergeData.population;
-	for (int i = 0; i < Inventory_Amount; i++) {
+	for (int i = 0; i < Inventory_Max; i++) {
 		b->data.house.inventory[i] += mergeData.inventory[i];
 	}
 	int graphicId = GraphicId(houseGraphicGroup[b->subtype.houseLevel]) + 4;
@@ -333,9 +333,9 @@ static void merge(int buildingId)
 static void splitMerged(int buildingId)
 {
 	struct Data_Building *b = &Data_Buildings[buildingId];
-	int inventoryPerTile[Inventory_Amount];
-	int inventoryRest[Inventory_Amount];
-	for (int i = 0; i < Inventory_Amount; i++) {
+	int inventoryPerTile[Inventory_Max];
+	int inventoryRest[Inventory_Max];
+	for (int i = 0; i < Inventory_Max; i++) {
 		inventoryPerTile[i] = b->data.house.inventory[i] / 4;
 		inventoryRest[i] = b->data.house.inventory[i] % 4;
 	}
@@ -348,7 +348,7 @@ static void splitMerged(int buildingId)
 	b->size = b->houseSize = 1;
 	b->houseIsMerged = 0;
 	b->housePopulation = populationPerTile + populationRest;
-	for (int i = 0; i < Inventory_Amount; i++) {
+	for (int i = 0; i < Inventory_Max; i++) {
 		b->data.house.inventory[i] = inventoryPerTile[i] + inventoryRest[i];
 	}
 	b->distanceFromEntry = 0;
@@ -366,9 +366,9 @@ static void splitMerged(int buildingId)
 static void splitSize2(int buildingId)
 {
 	struct Data_Building *b = &Data_Buildings[buildingId];
-	int inventoryPerTile[Inventory_Amount];
-	int inventoryRest[Inventory_Amount];
-	for (int i = 0; i < Inventory_Amount; i++) {
+	int inventoryPerTile[Inventory_Max];
+	int inventoryRest[Inventory_Max];
+	for (int i = 0; i < Inventory_Max; i++) {
 		inventoryPerTile[i] = b->data.house.inventory[i] / 4;
 		inventoryRest[i] = b->data.house.inventory[i] % 4;
 	}
@@ -383,7 +383,7 @@ static void splitSize2(int buildingId)
 	b->size = b->houseSize = 1;
 	b->houseIsMerged = 0;
 	b->housePopulation = populationPerTile + populationRest;
-	for (int i = 0; i < Inventory_Amount; i++) {
+	for (int i = 0; i < Inventory_Max; i++) {
 		b->data.house.inventory[i] = inventoryPerTile[i] + inventoryRest[i];
 	}
 	b->distanceFromEntry = 0;
@@ -401,9 +401,9 @@ static void splitSize2(int buildingId)
 static void splitSize3(int buildingId)
 {
 	struct Data_Building *b = &Data_Buildings[buildingId];
-	int inventoryPerTile[Inventory_Amount];
-	int inventoryRest[Inventory_Amount];
-	for (int i = 0; i < Inventory_Amount; i++) {
+	int inventoryPerTile[Inventory_Max];
+	int inventoryRest[Inventory_Max];
+	for (int i = 0; i < Inventory_Max; i++) {
 		inventoryPerTile[i] = b->data.house.inventory[i] / 9;
 		inventoryRest[i] = b->data.house.inventory[i] % 9;
 	}
@@ -418,7 +418,7 @@ static void splitSize3(int buildingId)
 	b->size = b->houseSize = 1;
 	b->houseIsMerged = 0;
 	b->housePopulation = populationPerTile + populationRest;
-	for (int i = 0; i < Inventory_Amount; i++) {
+	for (int i = 0; i < Inventory_Max; i++) {
 		b->data.house.inventory[i] = inventoryPerTile[i] + inventoryRest[i];
 	}
 	b->distanceFromEntry = 0;
@@ -446,9 +446,9 @@ void BuildingHouse_devolveFromLargeInsula(int buildingId)
 void BuildingHouse_devolveFromLargeVilla(int buildingId)
 {
 	struct Data_Building *b = &Data_Buildings[buildingId];
-	int inventoryPerTile[Inventory_Amount];
-	int inventoryRest[Inventory_Amount];
-	for (int i = 0; i < Inventory_Amount; i++) {
+	int inventoryPerTile[Inventory_Max];
+	int inventoryRest[Inventory_Max];
+	for (int i = 0; i < Inventory_Max; i++) {
 		inventoryPerTile[i] = b->data.house.inventory[i] / 6;
 		inventoryRest[i] = b->data.house.inventory[i] % 6;
 	}
@@ -463,7 +463,7 @@ void BuildingHouse_devolveFromLargeVilla(int buildingId)
 	b->size = b->houseSize = 2;
 	b->houseIsMerged = 0;
 	b->housePopulation = populationPerTile + populationRest;
-	for (int i = 0; i < Inventory_Amount; i++) {
+	for (int i = 0; i < Inventory_Max; i++) {
 		b->data.house.inventory[i] = inventoryPerTile[i] + inventoryRest[i];
 	}
 	b->distanceFromEntry = 0;
@@ -484,9 +484,9 @@ void BuildingHouse_devolveFromLargeVilla(int buildingId)
 void BuildingHouse_devolveFromLargePalace(int buildingId)
 {
 	struct Data_Building *b = &Data_Buildings[buildingId];
-	int inventoryPerTile[Inventory_Amount];
-	int inventoryRest[Inventory_Amount];
-	for (int i = 0; i < Inventory_Amount; i++) {
+	int inventoryPerTile[Inventory_Max];
+	int inventoryRest[Inventory_Max];
+	for (int i = 0; i < Inventory_Max; i++) {
 		inventoryPerTile[i] = b->data.house.inventory[i] / 8;
 		inventoryRest[i] = b->data.house.inventory[i] % 8;
 	}
@@ -501,7 +501,7 @@ void BuildingHouse_devolveFromLargePalace(int buildingId)
 	b->size = b->houseSize = 3;
 	b->houseIsMerged = 0;
 	b->housePopulation = populationPerTile + populationRest;
-	for (int i = 0; i < Inventory_Amount; i++) {
+	for (int i = 0; i < Inventory_Max; i++) {
 		b->data.house.inventory[i] = inventoryPerTile[i] + inventoryRest[i];
 	}
 	b->distanceFromEntry = 0;

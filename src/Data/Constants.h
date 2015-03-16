@@ -312,7 +312,12 @@ enum {
 	Resource_Furniture = 14,
 	Resource_Pottery = 15,
 	Resource_Denarii = 16,
-	Resource_Troops = 17
+	Resource_Troops = 17,
+	// helper constants
+	Resource_Min = 1,
+	Resource_Max = 16,
+	Resource_MinFood = 1,
+	Resource_MaxFood = 7,
 };
 
 #define ResourceIsFood(r) ((r) == Resource_Wheat || (r) == Resource_Vegetables || (r) == Resource_Fruit || (r) == Resource_Meat)
@@ -328,10 +333,10 @@ enum {
 	Inventory_Pottery = 7,
 	// helper constants
 	Inventory_MinFood = 0,
-	Inventory_MaxFood = 3,
+	Inventory_MaxFood = 4,
 	Inventory_MinGood = 4,
-	Inventory_MaxGood = 7,
-	Inventory_Amount = 8
+	Inventory_MaxGood = 8,
+	Inventory_Max = 8
 };
 
 enum {

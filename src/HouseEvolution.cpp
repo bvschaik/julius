@@ -420,7 +420,7 @@ static int hasRequiredGoodsAndServices(int buildingId, int forUpgrade)
 	// food types
 	int foodtypesRequired = Data_Model_Houses[level].foodTypes;
 	int foodtypesAvailable = 0;
-	for (int i = Inventory_MinFood; i <= Inventory_MaxFood; i++) {
+	for (int i = Inventory_MinFood; i < Inventory_MaxFood; i++) {
 		if (b->data.house.inventory[i]) {
 			foodtypesAvailable++;
 		}
@@ -667,7 +667,7 @@ void HouseEvolution_determineEvolveText(int buildingId, int hasBadDesirabilityBu
 	// food types
 	int foodtypesRequired = Data_Model_Houses[level].food;
 	int foodtypesAvailable = 0;
-	for (int i = Inventory_MinFood; i <= Inventory_MaxFood; i++) {
+	for (int i = Inventory_MinFood; i < Inventory_MaxFood; i++) {
 		if (b->data.house.inventory[i]) {
 			foodtypesAvailable++;
 		}
