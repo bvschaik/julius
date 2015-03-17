@@ -28,8 +28,6 @@
 
 #include <string.h>
 
-#define MAX_MARKET_RESOURCES 8
-
 void Building_updateHighestIds()
 {
 	Data_Buildings_Extra.highestBuildingIdInUse = 0;
@@ -907,8 +905,8 @@ int Building_Market_getDestinationGranaryWarehouse(int marketId)
 		int buildingId;
 		int distance;
 		int numBuildings;
-	} resources[MAX_MARKET_RESOURCES];
-	for (int i = 0; i < MAX_MARKET_RESOURCES; i++) {
+	} resources[Inventory_Max];
+	for (int i = 0; i < Inventory_Max; i++) {
 		resources[i].buildingId = 0;
 		resources[i].numBuildings = 0;
 		resources[i].distance = 40;
@@ -1023,7 +1021,7 @@ int Building_Market_getDestinationGranaryWarehouse(int marketId)
 	}
 
 	int canGo = 0;
-	for (int i = 0; i < MAX_MARKET_RESOURCES; i++) {
+	for (int i = 0; i < Inventory_Max; i++) {
 		if (resources[i].numBuildings) {
 			canGo = 1;
 			break;
@@ -1123,7 +1121,7 @@ int Building_Market_getDestinationGranaryWarehouse(int marketId)
 			fetchInventoryId = Inventory_Meat;
 		}
 	}
-	if (fetchInventoryId < 0 || fetchInventoryId >= MAX_MARKET_RESOURCES) {
+	if (fetchInventoryId < 0 || fetchInventoryId >= Inventory_Max) {
 		return 0;
 	}
 	market->data.market.fetchInventoryId = fetchInventoryId;
