@@ -157,6 +157,7 @@ void UI_Warning_clearHasWarningFlag()
 	hasWarningAlready = 0;
 }
 
+//reviewed
 void UI_Warning_checkNewBuilding(int buildingType, int x, int y, int size)
 {
 	UI_Warning_checkFoodStocks(buildingType);

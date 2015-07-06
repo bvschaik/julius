@@ -3,6 +3,7 @@
 
 #define MAX_BUILDINGS 2000
 #define MAX_STORAGES 200
+#define MAX_HOUSE_LEVELS 20
 
 enum {
 	Building_None = 0,

@@ -26,7 +26,7 @@ static void collectMonthlyTaxes()
 	Data_CityInfo.monthlyUncollectedTaxFromPatricians = 0;
 	Data_CityInfo.monthlyCollectedTaxFromPatricians = 0;
 
-	for (int i = 0; i < 20; i++) {
+	for (int i = 0; i < MAX_HOUSE_LEVELS; i++) {
 		Data_CityInfo.populationPerLevel[i] = 0;
 	}
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
@@ -155,7 +155,7 @@ static void payTribute()
 			Data_CityInfo.financeTributeLastYear = 0;
 		}
 	} else {
-		// city made a profit
+		// city made a profit: tribute is max of: 25% of profit, fixed tribute based on population
 		Data_CityInfo.tributeNotPaidTotalYears = 0;
 		if (Data_CityInfo.population > 5000) {
 			Data_CityInfo.financeTributeLastYear = 500;
@@ -273,7 +273,7 @@ void CityInfo_Finance_calculateEstimatedWages()
 	int monthlyWages = Data_CityInfo.wages * Data_CityInfo.workersEmployed / 10 / 12;
 	Data_CityInfo.financeWagesThisYear = Data_CityInfo.financeWagesPaidThisYear;
 	Data_CityInfo.estimatedYearlyWages =
-		(11 - Data_CityInfo_Extra.gameTimeMonth + 1) * monthlyWages +
+		(12 - Data_CityInfo_Extra.gameTimeMonth) * monthlyWages +
 		Data_CityInfo.financeWagesPaidThisYear;
 }
 
