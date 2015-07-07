@@ -343,6 +343,7 @@ void Resource_addImportedResourceToWarehouseSpace(int spaceId, int resourceId)
 	Resource_setWarehouseSpaceGraphic(spaceId, resourceId);
 }
 
+//reviewed
 void Resource_removeExportedResourceFromWarehouseSpace(int spaceId, int resourceId)
 {
 	Data_CityInfo.resourceSpaceInWarehouses[resourceId]++;

@@ -288,7 +288,7 @@ int Empire_canImportResourceFromCity(int cityId, int resource)
 	if (finishedGood) {
 		maxInStock = 2 + 2 * Data_CityInfo_Buildings.industry.working[finishedGood];
 	}
-	return inStock < maxInStock;
+	return inStock < maxInStock ? 1 : 0;
 }
 
 int Empire_canImportResource(int resource)
