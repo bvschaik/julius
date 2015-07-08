@@ -70,7 +70,7 @@ void WalkerAction_fishingBoat(int walkerId)
 			break;
 		case WalkerActionState_191_FishingBoatGoingToFish:
 			WalkerMovement_walkTicks(walkerId, 1);
-			w->heightFromGround = 0;
+			w->heightAdjustedTicks = 0;
 			if (w->direction == 8) {
 				int xTile, yTile;
 				if (Terrain_Water_findAlternativeTileForFishingBoat(walkerId, &xTile, &yTile)) {
@@ -100,7 +100,7 @@ void WalkerAction_fishingBoat(int walkerId)
 			break;
 		case WalkerActionState_193_FishingBoatSailingToWharf:
 			WalkerMovement_walkTicks(walkerId, 1);
-			w->heightFromGround = 0;
+			w->heightAdjustedTicks = 0;
 			if (w->direction == 8) {
 				w->actionState = WalkerActionState_194_FishingBoatAtWharf;
 				w->waitTicks = 0;
@@ -141,7 +141,7 @@ void WalkerAction_fishingBoat(int walkerId)
 			break;
 		case WalkerActionState_195_FishingBoatReturningWithFish:
 			WalkerMovement_walkTicks(walkerId, 1);
-			w->heightFromGround = 0;
+			w->heightAdjustedTicks = 0;
 			if (w->direction == 8) {
 				w->actionState = WalkerActionState_194_FishingBoatAtWharf;
 				w->waitTicks = 0;
@@ -197,7 +197,7 @@ void WalkerAction_flotsam(int walkerId)
 				w->waitTicks++;
 				WalkerMovement_walkTicks(walkerId, 1);
 				w->isGhost = 0;
-				w->heightFromGround = 0;
+				w->heightAdjustedTicks = 0;
 				if (w->direction == 8 || w->direction == 9 || w->direction == 10) {
 					w->actionState = WalkerActionState_130_FlotsamLeftMap;
 				}
@@ -258,7 +258,7 @@ void WalkerAction_shipwreck(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	w->isGhost = 0;
-	w->heightFromGround = 0;
+	w->heightAdjustedTicks = 0;
 	w->isBoat = 1;
 	WalkerActionIncreaseGraphicOffset(w, 128);
 	if (w->waitTicks < 1000) {

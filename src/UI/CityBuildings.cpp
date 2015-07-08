@@ -548,7 +548,7 @@ static void UI_CityBuildings_drawHippodromeAndElevatedWalkers(int selectedWalker
 				if (Data_Walkers[walkerId].useCrossCountry && !Data_Walkers[walkerId].isGhost) {
 					UI_CityBuildings_drawWalker(walkerId, xGraphic, yGraphic, selectedWalkerId, 0);
 				}
-				if (Data_Walkers[walkerId].heightFromGround) {
+				if (Data_Walkers[walkerId].heightAdjustedTicks) {
 					UI_CityBuildings_drawWalker(walkerId, xGraphic, yGraphic, selectedWalkerId, 0);
 				}
 			}

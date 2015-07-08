@@ -518,7 +518,7 @@ void WalkerAction_tradeShip(int walkerId)
 			break;
 		case WalkerActionState_111_TradeShipGoingToDock:
 			WalkerMovement_walkTicks(walkerId, 1);
-			w->heightFromGround = 0;
+			w->heightAdjustedTicks = 0;
 			if (w->direction == 8) {
 				w->actionState = WalkerActionState_112_TradeShipMoored;
 			} else if (w->direction == 9) {
@@ -564,7 +564,7 @@ void WalkerAction_tradeShip(int walkerId)
 			break;
 		case WalkerActionState_113_TradeShipGoingToDockQueue:
 			WalkerMovement_walkTicks(walkerId, 1);
-			w->heightFromGround = 0;
+			w->heightAdjustedTicks = 0;
 			if (w->direction == 8) {
 				w->actionState = WalkerActionState_114_TradeShipAnchored;
 			} else if (w->direction == 9) {
@@ -595,7 +595,7 @@ void WalkerAction_tradeShip(int walkerId)
 			break;
 		case WalkerActionState_115_TradeShipLeaving:
 			WalkerMovement_walkTicks(walkerId, 1);
-			w->heightFromGround = 0;
+			w->heightAdjustedTicks = 0;
 			if (w->direction == 8) {
 				w->actionState = WalkerActionState_110_TradeShipCreated;
 				w->state = WalkerState_Dead;

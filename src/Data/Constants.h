@@ -292,6 +292,10 @@ enum {
 	Dir_6_Left = 6,
 	Dir_7_TopLeft = 7,
 	Dir_8_None = 8,
+	DirWalker_8_AtDestination = 8,
+	DirWalker_9_Reroute = 9,
+	DirWalker_10_Lost = 10,
+	DirWalker_11_Attack = 11,
 };
 
 enum {

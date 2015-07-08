@@ -109,7 +109,7 @@ int Formation_create(int walkerType, int layout, int orientation, int x, int y)
 	f->ciid = 0;
 	f->walkerType = walkerType;
 	f->legionId = formationId - 10;
-	if (layout == FormationLayout_10) {
+	if (layout == FormationLayout_Enemy10) {
 		if (orientation == 0 || orientation == 4) {
 			f->layout = FormationLayout_DoubleLine1;
 		} else {

@@ -24,23 +24,23 @@ static void performBlessing(int god)
 {
 	switch (god) {
 		case God_Ceres:
-			PlayerMessage_post(1, 96, 0, 0);
+			PlayerMessage_post(1, Message_96_BlessingFromCeres, 0, 0);
 			Building_Industry_blessFarmsFromCeres();
 			break;
 		case God_Neptune:
-			PlayerMessage_post(1, 97, 0, 0);
+			PlayerMessage_post(1, Message_97_BlessingFromNeptune, 0, 0);
 			Data_CityInfo.godBlessingNeptuneDoubleTrade = 1;
 			break;
 		case God_Mercury:
-			PlayerMessage_post(1, 98, 0, 0);
+			PlayerMessage_post(1, Message_98_BlessingFromMercury, 0, 0);
 			Building_Mercury_fillGranary();
 			break;
 		case God_Mars:
-			PlayerMessage_post(1, 99, 0, 0);
+			PlayerMessage_post(1, Message_99_BlessingFromMars, 0, 0);
 			Data_CityInfo.godBlessingMarsEnemiesToKill = 10;
 			break;
 		case God_Venus:
-			PlayerMessage_post(1, 100, 0, 0);
+			PlayerMessage_post(1, Message_100_BlessingFromVenus, 0, 0);
 			CityInfo_Population_changeHappiness(25);
 			break;
 	}
@@ -50,27 +50,27 @@ static void performSmallCurse(int god)
 {
 	switch (god) {
 		case God_Ceres:
-			PlayerMessage_post(1, 91, 0, 0);
+			PlayerMessage_post(1, Message_91_CeresIsUpset, 0, 0);
 			Building_Industry_witherFarmCropsFromCeres(0);
 			break;
 		case God_Neptune:
-			PlayerMessage_post(1, 92, 0, 0);
+			PlayerMessage_post(1, Message_92_NeptuneIsUpset, 0, 0);
 			Walker_sinkAllShips();
 			Data_CityInfo.godCurseNeptuneSankShips = 1;
 			break;
 		case God_Mercury:
-			PlayerMessage_post(1, 93, 0, 0);
+			PlayerMessage_post(1, Message_93_MercuryIsUpset, 0, 0);
 			Building_Mercury_removeResources(0);
 			break;
 		case God_Mars:
 			if (Event_startInvasionLocalUprisingFromMars()) {
-				PlayerMessage_post(1, 94, 0, 0);
+				PlayerMessage_post(1, Message_94_MarsIsUpset, 0, 0);
 			} else {
 				PlayerMessage_post(1, 44, 0, 0);
 			}
 			break;
 		case God_Venus:
-			PlayerMessage_post(1, 95, 0, 0);
+			PlayerMessage_post(1, Message_95_VenusIsUpset, 0, 0);
 			CityInfo_Population_setMaxHappiness(50);
 			CityInfo_Population_changeHappiness(-5);
 			CityInfo_Population_changeHealthRate(-10);

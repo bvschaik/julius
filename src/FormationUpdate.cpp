@@ -524,7 +524,7 @@ static void marsKillEnemies()
 		}
 	}
 	Data_CityInfo.godBlessingMarsEnemiesToKill = 0;
-	PlayerMessage_post(1, 105, 0, gridOffset);
+	PlayerMessage_post(1, Message_105_SpiritOfMars, 0, gridOffset);
 }
 
 static void setFormationWalkersToEnemyInitial(int formationId)

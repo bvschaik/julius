@@ -87,11 +87,11 @@ void WalkerAction_sheep(int walkerId)
 			break;
 		case WalkerActionState_197_HerdAnimalMoving:
 			WalkerMovement_walkTicks(walkerId, 1);
-			if (w->direction == 8 || w->direction == 10) {
+			if (w->direction == DirWalker_8_AtDestination || w->direction == DirWalker_10_Lost) {
 				w->direction = w->previousTileDirection;
 				w->actionState = WalkerActionState_196_HerdAnimalAtRest;
 				w->waitTicks = walkerId & 0x1f;
-			} else if (w->direction == 9) {
+			} else if (w->direction == DirWalker_9_Reroute) {
 				WalkerRoute_remove(walkerId);
 			}
 			break;
@@ -141,17 +141,17 @@ void WalkerAction_wolf(int walkerId)
 			break;
 		case WalkerActionState_197_HerdAnimalMoving:
 			WalkerMovement_walkTicks(walkerId, 2);
-			if (w->direction == 8 || w->direction == 10) {
+			if (w->direction == DirWalker_8_AtDestination || w->direction == DirWalker_10_Lost) {
 				w->direction = w->previousTileDirection;
 				w->actionState = WalkerActionState_196_HerdAnimalAtRest;
 				w->waitTicks = walkerId & 0x1f;
-			} else if (w->direction == 9) {
+			} else if (w->direction == DirWalker_9_Reroute) {
 				WalkerRoute_remove(walkerId);
 			}
 			break;
 		case WalkerActionState_199_WolfAttacking:
 			WalkerMovement_walkTicks(walkerId, 2);
-			if (w->direction == 8) {
+			if (w->direction == DirWalker_8_AtDestination) {
 				int targetId = WalkerAction_CombatWolf_getTarget(w->x, w->y, 6);
 				if (targetId) {
 					w->destinationX = Data_Walkers[targetId].x;
@@ -165,9 +165,9 @@ void WalkerAction_wolf(int walkerId)
 					w->actionState = WalkerActionState_196_HerdAnimalAtRest;
 					w->waitTicks = walkerId & 0x1f;
 				}
-			} else if (w->direction == 9) {
+			} else if (w->direction == DirWalker_9_Reroute) {
 				WalkerRoute_remove(walkerId);
-			} else if (w->direction == 10) {
+			} else if (w->direction == DirWalker_10_Lost) {
 				w->direction = w->previousTileDirection;
 				w->actionState = WalkerActionState_196_HerdAnimalAtRest;
 				w->waitTicks = walkerId & 0x1f;

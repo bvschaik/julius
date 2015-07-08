@@ -14,7 +14,7 @@ enum {
 	FormationLayout_AtRest = 7,
 	FormationLayout_Enemy8 = 8,
 	FormationLayout_Herd = 9,
-	FormationLayout_10 = 10,
+	FormationLayout_Enemy10 = 10,
 	FormationLayout_Enemy12 = 12,
 };
 

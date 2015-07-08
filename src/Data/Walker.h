@@ -325,7 +325,7 @@ extern struct Data_Walker {
 	unsigned char terrainUsage;
 	unsigned char loadsSoldOrCarrying;
 	unsigned char isBoat; // 64
-	unsigned char heightFromGround; // 65
+	unsigned char heightAdjustedTicks; // 65
 	unsigned char currentHeight;
 	unsigned char targetHeight;
 	unsigned char collectingItemId; // NOT a resource ID for cartpushers! IS a resource ID for warehousemen

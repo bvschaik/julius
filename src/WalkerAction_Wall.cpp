@@ -38,7 +38,7 @@ void WalkerAction_ballista(int walkerId)
 	w->terrainUsage = WalkerTerrainUsage_Walls;
 	w->useCrossCountry = 0;
 	w->isGhost = 1;
-	w->heightFromGround = 10;
+	w->heightAdjustedTicks = 10;
 	w->currentHeight = 45;
 	
 	if (!BuildingIsInUse(w->buildingId) || b->walkerId4 != walkerId) {
@@ -165,7 +165,7 @@ void WalkerAction_towerSentry(int walkerId)
 	w->terrainUsage = WalkerTerrainUsage_Walls;
 	w->useCrossCountry = 0;
 	w->isGhost = 1;
-	w->heightFromGround = 10;
+	w->heightAdjustedTicks = 10;
 	w->maxRoamLength = 800;
 	if (!BuildingIsInUse(w->buildingId) || b->walkerId != walkerId) {
 		w->state = WalkerState_Dead;
@@ -233,7 +233,7 @@ void WalkerAction_towerSentry(int walkerId)
 		case WalkerActionState_174_TowerSentryGoingToTower:
 			w->terrainUsage = WalkerTerrainUsage_Roads;
 			w->isGhost = 0;
-			w->heightFromGround = 0;
+			w->heightAdjustedTicks = 0;
 			WalkerMovement_walkTicks(walkerId, 1);
 			if (w->direction == 8) {
 				Walker_removeFromTileList(walkerId);
@@ -257,7 +257,7 @@ void WalkerAction_towerSentry(int walkerId)
 	}
 	if (w->inBuildingWaitTicks) {
 		w->inBuildingWaitTicks--;
-		w->heightFromGround = 0;
+		w->heightAdjustedTicks = 0;
 	}
 	int dir = WalkerActionDirection(w);
 	if (w->actionState == WalkerActionState_149_Corpse) {

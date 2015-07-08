@@ -19,40 +19,40 @@ static int roamingEnabled = 0;
 void WalkerMovement_advanceTick(struct Data_Walker *w)
 {
 	switch (w->direction) {
-		case 0:
+		case Dir_0_Top:
 			w->crossCountryY--;
 			break;
-		case 1:
+		case Dir_1_TopRight:
 			w->crossCountryX++;
 			w->crossCountryY--;
 			break;
-		case 2:
+		case Dir_2_Right:
 			w->crossCountryX++;
 			break;
-		case 3:
+		case Dir_3_BottomRight:
 			w->crossCountryX++;
 			w->crossCountryY++;
 			break;
-		case 4:
+		case Dir_4_Bottom:
 			w->crossCountryY++;
 			break;
-		case 5:
+		case Dir_5_BottomLeft:
 			w->crossCountryX--;
 			w->crossCountryY++;
 			break;
-		case 6:
+		case Dir_6_Left:
 			w->crossCountryX--;
 			break;
-		case 7:
+		case Dir_7_TopLeft:
 			w->crossCountryX--;
 			w->crossCountryY--;
 			break;
 		default:
 			break;
 	}
-	if (w->heightFromGround) {
-		w->heightFromGround--;
-		if (w->heightFromGround > 0) {
+	if (w->heightAdjustedTicks) {
+		w->heightAdjustedTicks--;
+		if (w->heightAdjustedTicks > 0) {
 			w->isGhost = 1;
 			if (w->currentHeight < w->targetHeight) {
 				w->currentHeight++;
@@ -72,7 +72,7 @@ void WalkerMovement_advanceTick(struct Data_Walker *w)
 
 static void setTargetHeightBridge(struct Data_Walker *w)
 {
-	w->heightFromGround = 18;
+	w->heightAdjustedTicks = 18;
 	if (Data_Grid_spriteOffsets[w->gridOffset] <= 6) {
 		// low bridge
 		switch (Data_Grid_spriteOffsets[w->gridOffset]) {
@@ -335,12 +335,12 @@ static void walkerSetNextRouteTileDirection(int walkerId, struct Data_Walker *w)
 			w->direction = Data_Routes.directionPaths[w->routingPathId][w->routingPathCurrentTile];
 		} else {
 			WalkerRoute_remove(walkerId);
-			w->direction = 8;
+			w->direction = DirWalker_8_AtDestination;
 		}
 	} else { // should be at destination
 		w->direction = Routing_getGeneralDirection(w->x, w->y, w->destinationX, w->destinationY);
-		if (w->direction != 8) {
-			w->direction = 10;
+		if (w->direction != DirWalker_8_AtDestination) {
+			w->direction = DirWalker_10_Lost;
 		}
 	}
 }
@@ -377,7 +377,7 @@ static void walkerAdvanceRouteTile(struct Data_Walker *w)
 			}
 			if (causeDamage) {
 				w->attackDirection = w->direction;
-				w->direction = 11;
+				w->direction = DirWalker_11_Attack;
 				if (!(Data_CityInfo_Extra.gameTimeTick & 3)) {
 					Building_increaseDamageByEnemy(targetGridOffset, maxDamage);
 				}

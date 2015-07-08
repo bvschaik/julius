@@ -433,13 +433,13 @@ static void healthCauseDisease(int totalPeople)
 	CityInfo_Population_changeHealthRate(10);
 	int peopleToKill = sickPeople - Data_CityInfo.numHospitalWorkers;
 	if (peopleToKill <= 0) {
-		PlayerMessage_post(1, 102, 0, 0);
+		PlayerMessage_post(1, Message_102_HealthIllness, 0, 0);
 		return;
 	}
 	if (Data_CityInfo.numHospitalWorkers > 0) {
-		PlayerMessage_post(1, 103, 0, 0);
+		PlayerMessage_post(1, Message_103_HealthDisease, 0, 0);
 	} else {
-		PlayerMessage_post(1, 104, 0, 0);
+		PlayerMessage_post(1, Message_104_HealthPestilence, 0, 0);
 	}
 	Data_Tutorial.tutorial3.disease = 1;
 	// kill people who don't have access to a doctor
