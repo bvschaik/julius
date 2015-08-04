@@ -34,6 +34,12 @@ static const int sheepGraphicOffsets[] = {
 	3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 5, 5
 };
 
+enum {
+	HippodromeHorse_Created = 0,
+	HippodromeHorse_Racing = 1,
+	HippodromeHorse_Finished = 2
+};
+
 void WalkerAction_seagulls(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
@@ -217,11 +223,11 @@ void WalkerAction_zebra(int walkerId)
 			break;
 		case WalkerActionState_197_HerdAnimalMoving:
 			WalkerMovement_walkTicks(walkerId, 2);
-			if (w->direction == 8 || w->direction == 10) {
+			if (w->direction == DirWalker_8_AtDestination || w->direction == DirWalker_10_Lost) {
 				w->direction = w->previousTileDirection;
 				w->actionState = WalkerActionState_196_HerdAnimalAtRest;
 				w->waitTicks = walkerId & 0x1f;
-			} else if (w->direction == 9) {
+			} else if (w->direction == DirWalker_9_Reroute) {
 				WalkerRoute_remove(walkerId);
 			}
 			break;
@@ -240,35 +246,34 @@ void WalkerAction_zebra(int walkerId)
 static void setDestinationHippodromeHorse(int walkerId, struct Data_Walker *w, int state)
 {
 	struct Data_Building *b = &Data_Buildings[w->buildingId];
-	if (state == 0) {
+	if (state == HippodromeHorse_Created) {
 		Walker_removeFromTileList(walkerId);
-		if (Data_Settings_Map.orientation == 0 || Data_Settings_Map.orientation == 6) {
+		if (Data_Settings_Map.orientation == Dir_0_Top || Data_Settings_Map.orientation == Dir_6_Left) {
 			w->destinationX = b->x + hippodromeHorseDestinationX1[w->waitTicksMissile];
 			w->destinationY = b->y + hippodromeHorseDestinationY1[w->waitTicksMissile];
 		} else {
 			w->destinationX = b->x + hippodromeHorseDestinationX2[w->waitTicksMissile];
 			w->destinationY = b->y + hippodromeHorseDestinationY2[w->waitTicksMissile];
 		}
-		w->x = w->destinationX;
-		w->y = w->destinationY;
 		if (w->resourceId == 1) {
-			w->y++;
 			w->destinationY++;
 		}
+		w->x = w->destinationX;
+		w->y = w->destinationY;
 		w->crossCountryX = 15 * w->x;
 		w->crossCountryY = 15 * w->y;
 		w->gridOffset = GridOffset(w->x, w->y);
 		Walker_addToTileList(walkerId);
-	} else if (state == 1) {
-		if (Data_Settings_Map.orientation == 0 || Data_Settings_Map.orientation == 6) {
+	} else if (state == HippodromeHorse_Racing) {
+		if (Data_Settings_Map.orientation == Dir_0_Top || Data_Settings_Map.orientation == Dir_6_Left) {
 			w->destinationX = b->x + hippodromeHorseDestinationX1[w->waitTicksMissile];
 			w->destinationY = b->y + hippodromeHorseDestinationY1[w->waitTicksMissile];
 		} else {
 			w->destinationX = b->x + hippodromeHorseDestinationX2[w->waitTicksMissile];
 			w->destinationY = b->y + hippodromeHorseDestinationY2[w->waitTicksMissile];
 		}
-	} else if (state == 2) {
-		if (Data_Settings_Map.orientation == 0 || Data_Settings_Map.orientation == 6) {
+	} else if (state == HippodromeHorse_Finished) {
+		if (Data_Settings_Map.orientation == Dir_0_Top || Data_Settings_Map.orientation == Dir_6_Left) {
 			if (w->resourceId) {
 				w->destinationX = b->x + 1;
 				w->destinationY = b->y + 2;
@@ -300,7 +305,7 @@ void WalkerAction_hippodromeHorse(int walkerId)
 		case WalkerActionState_200_HippodromeMiniHorseCreated:
 			w->graphicOffset = 0;
 			w->waitTicksMissile = 0;
-			setDestinationHippodromeHorse(walkerId, w, 0);
+			setDestinationHippodromeHorse(walkerId, w, HippodromeHorse_Created);
 			w->waitTicks++;
 			if (w->waitTicks > 60 && w->resourceId == 0) {
 				w->actionState = WalkerActionState_201_HippodromeMiniHorseRacing;
@@ -314,7 +319,7 @@ void WalkerAction_hippodromeHorse(int walkerId)
 			break;
 		case WalkerActionState_201_HippodromeMiniHorseRacing:
 			w->direction = Routing_getGeneralDirection(w->x, w->y, w->destinationX, w->destinationY);
-			if (w->direction == 8) {
+			if (w->direction == DirWalker_8_AtDestination) {
 				w->waitTicksMissile++;
 				if (w->waitTicksMissile >= 22) {
 					w->waitTicksMissile = 0;
@@ -335,7 +340,7 @@ void WalkerAction_hippodromeHorse(int walkerId)
 						w->speedMultiplier = 4;
 					}
 				}
-				setDestinationHippodromeHorse(walkerId, w, 1);
+				setDestinationHippodromeHorse(walkerId, w, HippodromeHorse_Racing);
 				w->direction = Routing_getGeneralDirection(w->x, w->y, w->destinationX, w->destinationY);
 				WalkerMovement_crossCountrySetDirection(walkerId,
 					w->crossCountryX, w->crossCountryY, 15 * w->destinationX, 15 * w->destinationY, 0);
@@ -346,12 +351,12 @@ void WalkerAction_hippodromeHorse(int walkerId)
 			break;
 		case WalkerActionState_202_HippodromeMiniHorseDone:
 			if (!w->waitTicks) {
-				setDestinationHippodromeHorse(walkerId, w, 2);
+				setDestinationHippodromeHorse(walkerId, w, HippodromeHorse_Finished);
 				w->direction = Routing_getGeneralDirection(w->x, w->y, w->destinationX, w->destinationY);
 				WalkerMovement_crossCountrySetDirection(walkerId,
 					w->crossCountryX, w->crossCountryY, 15 * w->destinationX, 15 * w->destinationY, 0);
 			}
-			if (w->direction != 8) {
+			if (w->direction != DirWalker_8_AtDestination) {
 				WalkerMovement_crossCountryWalkTicks(walkerId, 1);
 			}
 			w->waitTicks++;
@@ -370,15 +375,13 @@ void WalkerAction_hippodromeHorse(int walkerId)
 		w->graphicId = GraphicId(ID_Graphic_Walker_HippodromeHorse1) +
 			dir + 8 * w->graphicOffset;
 		w->cartGraphicId = GraphicId(ID_Graphic_Walker_HippodromeCart1) + dir;
-		int cartDir = (dir + 4) % 8;
-		WalkerAction_Common_setCartOffset(walkerId, cartDir);
 	} else {
 		w->graphicId = GraphicId(ID_Graphic_Walker_HippodromeHorse2) +
 			dir + 8 * w->graphicOffset;
 		w->cartGraphicId = GraphicId(ID_Graphic_Walker_HippodromeCart2) + dir;
-		int cartDir = (dir + 4) % 8;
-		WalkerAction_Common_setCartOffset(walkerId, cartDir);
 	}
+	int cartDir = (dir + 4) % 8;
+	WalkerAction_Common_setCartOffset(walkerId, cartDir);
 }
 
 void WalkerAction_HippodromeHorse_reroute()
@@ -390,7 +393,7 @@ void WalkerAction_HippodromeHorse_reroute()
 		struct Data_Walker *w = &Data_Walkers[i];
 		if (w->state == WalkerState_Alive && w->type == Walker_HippodromeMiniHorses) {
 			w->waitTicksMissile = 0;
-			setDestinationHippodromeHorse(i, w, 0);
+			setDestinationHippodromeHorse(i, w, HippodromeHorse_Created);
 		}
 	}
 }
