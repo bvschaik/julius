@@ -1,3 +1,4 @@
+#include "Walker.h"
 
 #include "Building.h"
 #include "WalkerAction.h"
@@ -193,7 +194,7 @@ static int provideMarketGoods(int marketBuildingId, int x, int y)
 				if (market->data.market.inventory[Inventory_Oil] > 0 && oilWanted > 0) {
 					if (oilWanted <= market->data.market.inventory[Inventory_Oil]) {
 						house->data.house.inventory[Inventory_Oil] += oilWanted;
-						market->data.market.inventory[Inventory_Wine] -= oilWanted;
+						market->data.market.inventory[Inventory_Oil] -= oilWanted;
 					} else {
 						house->data.house.inventory[Inventory_Oil] += market->data.market.inventory[Inventory_Oil];
 						market->data.market.inventory[Inventory_Oil] = 0;
@@ -236,19 +237,19 @@ static int provideReligionCoverage(int x, int y, int god)
 	FOR_XY_RADIUS {
 		if (Data_Buildings[buildingId].houseSize && Data_Buildings[buildingId].housePopulation > 0) {
 			switch (god) {
-				case 0:
+				case God_Ceres:
 					Data_Buildings[buildingId].data.house.templeCeres = 96;
 					break;
-				case 1:
+				case God_Neptune:
 					Data_Buildings[buildingId].data.house.templeNeptune = 96;
 					break;
-				case 2:
+				case God_Mercury:
 					Data_Buildings[buildingId].data.house.templeMercury = 96;
 					break;
-				case 3:
+				case God_Mars:
 					Data_Buildings[buildingId].data.house.templeMars = 96;
 					break;
-				case 4:
+				case God_Venus:
 					Data_Buildings[buildingId].data.house.templeVenus = 96;
 					break;
 			}
@@ -429,23 +430,23 @@ int Walker_provideServiceCoverage(int walkerId)
 			switch (Data_Buildings[Data_Walkers[walkerId].buildingId].type) {
 				case Building_SmallTempleCeres:
 				case Building_LargeTempleCeres:
-					numHousesServiced = provideReligionCoverage(x, y, 0);
+					numHousesServiced = provideReligionCoverage(x, y, God_Ceres);
 					break;
 				case Building_SmallTempleNeptune:
 				case Building_LargeTempleNeptune:
-					numHousesServiced = provideReligionCoverage(x, y, 1);
+					numHousesServiced = provideReligionCoverage(x, y, God_Neptune);
 					break;
 				case Building_SmallTempleMercury:
 				case Building_LargeTempleMercury:
-					numHousesServiced = provideReligionCoverage(x, y, 2);
+					numHousesServiced = provideReligionCoverage(x, y, God_Mercury);
 					break;
 				case Building_SmallTempleMars:
 				case Building_LargeTempleMars:
-					numHousesServiced = provideReligionCoverage(x, y, 3);
+					numHousesServiced = provideReligionCoverage(x, y, God_Mars);
 					break;
 				case Building_SmallTempleVenus:
 				case Building_LargeTempleVenus:
-					numHousesServiced = provideReligionCoverage(x, y, 4);
+					numHousesServiced = provideReligionCoverage(x, y, God_Venus);
 					break;
 				default:
 					break;

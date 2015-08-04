@@ -10,7 +10,7 @@ void Random_init()
 void Random_generateNext()
 {
 	Data_Random.pool[Data_Random.poolIndex++] = Data_Random.random1_7bit;
-	if (Data_Random.poolIndex >= 100) {
+	if (Data_Random.poolIndex >= MAX_RANDOM) {
 		Data_Random.poolIndex = 0;
 	}
 	for (int i = 0; i < 31; i++) {
@@ -34,7 +34,7 @@ void Random_generateNext()
 void Random_generatePool()
 {
 	Data_Random.poolIndex = 0;
-	for (int i = 0; i < 100; i++) {
+	for (int i = 0; i < MAX_RANDOM; i++) {
 		Random_generateNext();
 	}
 }
