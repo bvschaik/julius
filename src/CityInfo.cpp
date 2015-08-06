@@ -2,6 +2,7 @@
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
+#include "Data/Constants.h"
 #include "Data/Debug.h"
 
 #include <string.h>
@@ -25,7 +26,7 @@ void CityInfo_init()
 	Data_CityInfo.monthlyPopulationNextIndex = 0;
 	Data_CityInfo.monthsSinceStart = 0;
 	Data_CityInfo.monthsSinceFestival = 1;
-	Data_CityInfo.festivalSize = 1;
+	Data_CityInfo.festivalSize = Festival_Small;
 	Data_CityInfo.giftCost_modest = 0;
 	Data_CityInfo.giftCost_generous = 0;
 	Data_CityInfo.giftCost_lavish = 0;

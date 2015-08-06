@@ -147,7 +147,7 @@ static void buttonGod(int god, int param2)
 static void buttonSize(int size, int param2)
 {
 	if (Data_CityInfo.treasury > MIN_TREASURY) {
-		if (size != 3 || !Data_CityInfo.festivalNotEnoughWine) {
+		if (size != Festival_Grand || !Data_CityInfo.festivalNotEnoughWine) {
 			Data_CityInfo.festivalSize = size;
 			UI_Window_requestRefresh();
 		}
@@ -172,10 +172,10 @@ static void buttonHoldFestival(int param1, int param2)
 	Data_CityInfo.plannedFestivalGod = Data_CityInfo.festivalGod;
 	Data_CityInfo.plannedFestivalSize = Data_CityInfo.festivalSize;
 	int cost;
-	if (Data_CityInfo.festivalSize == 1) {
+	if (Data_CityInfo.festivalSize == Festival_Small) {
 		Data_CityInfo.plannedFestivalMonthsToGo = 2;
 		cost = Data_CityInfo.festivalCostSmall;
-	} else if (Data_CityInfo.festivalSize == 2) {
+	} else if (Data_CityInfo.festivalSize == Festival_Large) {
 		Data_CityInfo.plannedFestivalMonthsToGo = 3;
 		cost = Data_CityInfo.festivalCostLarge;
 	} else {
@@ -186,7 +186,7 @@ static void buttonHoldFestival(int param1, int param2)
 	Data_CityInfo.treasury -= cost;
 	Data_CityInfo.financeSundriesThisYear += cost;
 
-	if (Data_CityInfo.festivalSize == 3) {
+	if (Data_CityInfo.festivalSize == Festival_Grand) {
 		Resource_removeFromCityWarehouses(Resource_Wine, Data_CityInfo.festivalWineGrand);
 	}
 	UI_Window_goTo(Window_Advisors);

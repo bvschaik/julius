@@ -264,8 +264,8 @@ void CityInfo_Culture_calculateEntertainment()
 	Data_CityInfo.festivalNotEnoughWine = 0;
 	if (Data_CityInfo.resourceStored[Resource_Wine] < Data_CityInfo.festivalWineGrand) {
 		Data_CityInfo.festivalNotEnoughWine = 1;
-		if (Data_CityInfo.festivalSize == 3) {
-			Data_CityInfo.festivalSize = 2;
+		if (Data_CityInfo.festivalSize == Festival_Grand) {
+			Data_CityInfo.festivalSize = Festival_Large;
 		}
 	}
 }

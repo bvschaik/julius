@@ -393,6 +393,13 @@ enum {
 };
 
 enum {
+	Festival_None = 0,
+	Festival_Small = 1,
+	Festival_Large = 2,
+	Festival_Grand = 3
+};
+
+enum {
 	EnemyType_0_Barbarian = 0,
 	EnemyType_1_Numidian = 1,
 	EnemyType_2_Gaul = 2,

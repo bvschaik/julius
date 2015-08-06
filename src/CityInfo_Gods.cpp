@@ -4,12 +4,15 @@
 #include "Event.h"
 #include "Formation.h"
 #include "PlayerMessage.h"
+#include "Util.h"
 #include "Walker.h"
 
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 #include "Data/Random.h"
 #include "Data/Settings.h"
+
+#define MAX_GODS 5
 
 #define MIN(x,y) ((x) < (y) ? (x) : (y))
 #define MAX(x,y) ((x) > (y) ? (x) : (y))
@@ -66,7 +69,7 @@ static void performSmallCurse(int god)
 			if (Event_startInvasionLocalUprisingFromMars()) {
 				PlayerMessage_post(1, Message_94_MarsIsUpset, 0, 0);
 			} else {
-				PlayerMessage_post(1, 44, 0, 0);
+				PlayerMessage_post(1, Message_44_WrathOfMarsNoMilitary, 0, 0);
 			}
 			break;
 		case God_Venus:
@@ -75,40 +78,42 @@ static void performSmallCurse(int god)
 			CityInfo_Population_changeHappiness(-5);
 			CityInfo_Population_changeHealthRate(-10);
 			CityInfo_Population_calculateSentiment();
+			break;
 	}
 }
 
-static void performLargeCurse(int god)
+static int performLargeCurse(int god)
 {
 	switch (god) {
 		case God_Ceres:
-			PlayerMessage_post(1, 41, 0, 0);
+			PlayerMessage_post(1, Message_41_WrathOfCeres, 0, 0);
 			Building_Industry_witherFarmCropsFromCeres(1);
 			break;
 		case God_Neptune:
 			if (Data_CityInfo.tradeNumOpenSeaRoutes <= 0) {
-				PlayerMessage_post(1, 42, 0, 0);
+				PlayerMessage_post(1, Message_42_WrathOfNeptuneNoSeaTrade, 0, 0);
+				return 0;
 			} else {
-				PlayerMessage_post(1, 81, 0, 0);
+				PlayerMessage_post(1, Message_81_WrathOfNeptune, 0, 0);
 				Walker_sinkAllShips();
 				Data_CityInfo.godCurseNeptuneSankShips = 1;
 				Data_CityInfo.tradeSeaProblemDuration = 80;
 			}
 			break;
 		case God_Mercury:
-			PlayerMessage_post(1, 43, 0, 0);
+			PlayerMessage_post(1, Message_43_WrathOfMercury, 0, 0);
 			Building_Mercury_removeResources(1);
 			break;
 		case God_Mars:
 			if (Formation_marsCurseFort()) {
-				PlayerMessage_post(1, 82, 0, 0);
+				PlayerMessage_post(1, Message_82_WrathOfMars, 0, 0);
 				Event_startInvasionLocalUprisingFromMars();
 			} else {
-				PlayerMessage_post(1, 44, 0, 0);
+				PlayerMessage_post(1, Message_44_WrathOfMarsNoMilitary, 0, 0);
 			}
 			break;
 		case God_Venus:
-			PlayerMessage_post(1, 45, 0, 0);
+			PlayerMessage_post(1, Message_45_WrathOfVenus, 0, 0);
 			CityInfo_Population_setMaxHappiness(40);
 			CityInfo_Population_changeHappiness(-10);
 			if (Data_CityInfo.healthRate >= 80) {
@@ -122,11 +127,12 @@ static void performLargeCurse(int god)
 			CityInfo_Population_calculateSentiment();
 			break;
 	}
+	return 1;
 }
 
 static void updateGodMoods()
 {
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < MAX_GODS; i++) {
 		if (Data_CityInfo.godHappiness[i] < Data_CityInfo.godTargetHappiness[i]) {
 			Data_CityInfo.godHappiness[i]++;
 		} else if (Data_CityInfo.godHappiness[i] > Data_CityInfo.godTargetHappiness[i]) {
@@ -138,7 +144,7 @@ static void updateGodMoods()
 			}
 		}
 	}
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < MAX_GODS; i++) {
 		if (Data_CityInfo.godHappiness[i] > 50) {
 			Data_CityInfo.godSmallCurseDone[i] = 0;
 		}
@@ -148,7 +154,7 @@ static void updateGodMoods()
 	}
 
 	int god = Data_Random.random1_7bit & 7;
-	if (god <= 4) {
+	if (god < MAX_GODS) {
 		if (Data_CityInfo.godHappiness[god] >= 50) {
 			Data_CityInfo.godWrathBolts[god] = 0;
 		} else if (Data_CityInfo.godHappiness[god] < 40) {
@@ -169,10 +175,10 @@ static void updateGodMoods()
 	}
 
 	// handle blessings, curses, etc every month
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < MAX_GODS; i++) {
 		Data_CityInfo.godMonthsSinceFestival[i]++;
 	}
-	if (god > 4) {
+	if (god >= MAX_GODS) {
 		if (CityInfo_Gods_calculateLeastHappy()) {
 			god = Data_CityInfo.godLeastHappy - 1;
 		}
@@ -180,7 +186,7 @@ static void updateGodMoods()
 	if (!Data_Settings.godsEnabled) {
 		return;
 	}
-	if (god <= 4) {
+	if (god < MAX_GODS) {
 		if (Data_CityInfo.godHappiness[god] >= 100 &&
 				!Data_CityInfo.godBlessingDone[god]) {
 			Data_CityInfo.godBlessingDone[god] = 1;
@@ -201,12 +207,14 @@ static void updateGodMoods()
 			}
 			Data_CityInfo.godWrathBolts[god] = 0;
 			Data_CityInfo.godHappiness[god] += 30;
-			performLargeCurse(god);
+			if (!performLargeCurse(god)) {
+				return;
+			}
 		}
 	}
 
 	int minHappiness = 100;
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < MAX_GODS; i++) {
 		if (Data_CityInfo.godHappiness[i] < minHappiness) {
 			minHappiness = Data_CityInfo.godHappiness[i];
 		}
@@ -216,9 +224,9 @@ static void updateGodMoods()
 	} else if (minHappiness < 30) {
 		Data_CityInfo.godAngryMessageDelay = 20;
 		if (minHappiness < 10) {
-			PlayerMessage_post(0, 101, 0, 0);
+			PlayerMessage_post(0, Message_101_GodsWrathful, 0, 0);
 		} else {
-			PlayerMessage_post(0, 55, 0, 0);
+			PlayerMessage_post(0, Message_55_GodsUnhappy, 0, 0);
 		}
 	}
 }
@@ -236,7 +244,7 @@ void CityInfo_Gods_calculateMoods(int updateMoods)
 	int maxGod = TIE;
 	int minTemples = 100000;
 	int minGod = TIE;
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < MAX_GODS; i++) {
 		int numTemples = 0;
 		switch (i) {
 			case God_Ceres:
@@ -269,7 +277,7 @@ void CityInfo_Gods_calculateMoods(int updateMoods)
 		}
 	}
 	// happiness factor based on months since festival (max 40)
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < MAX_GODS; i++) {
 		int festivalPenalty = Data_CityInfo.godMonthsSinceFestival[i];
 		if (festivalPenalty > 40) {
 			festivalPenalty = 40;
@@ -302,13 +310,8 @@ void CityInfo_Gods_calculateMoods(int updateMoods)
 	} else {
 		minHappiness = 0;
 	}
-	for (int i = 0; i < 5; i++) {
-		if (Data_CityInfo.godTargetHappiness[i] > 100) {
-			Data_CityInfo.godTargetHappiness[i] = 100;
-		}
-		if (Data_CityInfo.godTargetHappiness[i] < minHappiness) {
-			Data_CityInfo.godTargetHappiness[i] = minHappiness;
-		}
+	for (int i = 0; i < MAX_GODS; i++) {
+		BOUND(Data_CityInfo.godTargetHappiness[i], minHappiness, 100);
 	}
 	if (updateMoods) {
 		updateGodMoods();
@@ -319,31 +322,30 @@ int CityInfo_Gods_calculateLeastHappy()
 {
 	int maxGod = 0;
 	int maxWrath = 0;
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < MAX_GODS; i++) {
 		if (Data_CityInfo.godWrathBolts[i] > maxWrath) {
 			maxGod = i + 1;
 			maxWrath = Data_CityInfo.godWrathBolts[i];
 		}
 	}
-	if (maxGod <= 0) {
-		int minHappiness = 40;
-		for (int i = 0; i < 5; i++) {
-			if (Data_CityInfo.godHappiness[i] < minHappiness) {
-				maxGod = i + 1;
-				minHappiness = Data_CityInfo.godHappiness[i];
-			}
-		}
-		Data_CityInfo.godLeastHappy = maxGod;
-		return maxGod > 0;
-	} else {
+	if (maxGod > 0) {
 		Data_CityInfo.godLeastHappy = maxGod;
 		return 1;
 	}
+	int minHappiness = 40;
+	for (int i = 0; i < MAX_GODS; i++) {
+		if (Data_CityInfo.godHappiness[i] < minHappiness) {
+			maxGod = i + 1;
+			minHappiness = Data_CityInfo.godHappiness[i];
+		}
+	}
+	Data_CityInfo.godLeastHappy = maxGod;
+	return maxGod > 0;
 }
 
 void CityInfo_Gods_reset()
 {
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < MAX_GODS; i++) {
 		Data_CityInfo.godTargetHappiness[i] = 50;
 		Data_CityInfo.godHappiness[i] = 50;
 		Data_CityInfo.godWrathBolts[i] = 0;
@@ -365,7 +367,7 @@ void CityInfo_Gods_checkFestival()
 	if (Data_CityInfo.festivalEffectMonthsDelaySecond) {
 		--Data_CityInfo.festivalEffectMonthsDelaySecond;
 	}
-	if (Data_CityInfo.plannedFestivalSize <= 0) {
+	if (Data_CityInfo.plannedFestivalSize <= Festival_None) {
 		return;
 	}
 	Data_CityInfo.plannedFestivalMonthsToGo--;
@@ -376,26 +378,26 @@ void CityInfo_Gods_checkFestival()
 	if (Data_CityInfo.festivalEffectMonthsDelayFirst <= 0) {
 		Data_CityInfo.festivalEffectMonthsDelayFirst = 12;
 		switch (Data_CityInfo.plannedFestivalSize) {
-			case 1: CityInfo_Population_changeHappiness(7); break;
-			case 2: CityInfo_Population_changeHappiness(9); break;
-			case 3: CityInfo_Population_changeHappiness(12); break;
+			case Festival_Small: CityInfo_Population_changeHappiness(7); break;
+			case Festival_Large: CityInfo_Population_changeHappiness(9); break;
+			case Festival_Grand: CityInfo_Population_changeHappiness(12); break;
 		}
 	} else if (Data_CityInfo.festivalEffectMonthsDelaySecond <= 0) {
 		Data_CityInfo.festivalEffectMonthsDelaySecond = 12;
 		switch (Data_CityInfo.plannedFestivalSize) {
-			case 1: CityInfo_Population_changeHappiness(2); break;
-			case 2: CityInfo_Population_changeHappiness(3); break;
-			case 3: CityInfo_Population_changeHappiness(5); break;
+			case Festival_Small: CityInfo_Population_changeHappiness(2); break;
+			case Festival_Large: CityInfo_Population_changeHappiness(3); break;
+			case Festival_Grand: CityInfo_Population_changeHappiness(5); break;
 		}
 	}
 	Data_CityInfo.monthsSinceFestival = 1;
 	Data_CityInfo.godMonthsSinceFestival[Data_CityInfo.plannedFestivalGod] = 0;
 	switch (Data_CityInfo.plannedFestivalSize) {
-		case 1: PlayerMessage_post(1, 38, 0, 0); break;
-		case 2: PlayerMessage_post(1, 39, 0, 0); break;
-		case 3: PlayerMessage_post(1, 40, 0, 0); break;
+		case Festival_Small: PlayerMessage_post(1, Message_38_SmallFestival, 0, 0); break;
+		case Festival_Large: PlayerMessage_post(1, Message_39_LargeFestival, 0, 0); break;
+		case Festival_Grand: PlayerMessage_post(1, Message_40_GrandFestival, 0, 0); break;
 	}
-	Data_CityInfo.plannedFestivalSize = 0;
+	Data_CityInfo.plannedFestivalSize = Festival_None;
 	Data_CityInfo.plannedFestivalMonthsToGo = 0;
 }
 
