@@ -16,6 +16,15 @@ static void setCartGraphic(struct Data_Walker *w)
 		8 * w->resourceId + Resource_getGraphicIdOffset(w->resourceId, 1);
 }
 
+static void setDestination(struct Data_Walker *w, int actionState, int buildingId, int xDst, int yDst)
+{
+	w->destinationBuildingId = buildingId;
+	w->actionState = actionState;
+	w->waitTicks = 0;
+	w->destinationX = xDst;
+	w->destinationY = yDst;
+}
+
 static void determineCartpusherDestination(struct Data_Walker *w, struct Data_Building *b, int roadNetworkId)
 {
 	int xDst, yDst;
@@ -29,11 +38,7 @@ static void determineCartpusherDestination(struct Data_Walker *w, struct Data_Bu
 		dstBuildingId = 0;
 	}
 	if (dstBuildingId) {
-		w->destinationBuildingId = dstBuildingId;
-		w->actionState = WalkerActionState_21_CartpusherDeliveringToWarehouse;
-		w->waitTicks = 0;
-		w->destinationX = xDst;
-		w->destinationY = yDst;
+		setDestination(w, WalkerActionState_21_CartpusherDeliveringToWarehouse, dstBuildingId, xDst, yDst);
 		return;
 	}
 	// priority 2: accepting granary for food
@@ -41,22 +46,14 @@ static void determineCartpusherDestination(struct Data_Walker *w, struct Data_Bu
 		b->outputResourceId, b->distanceFromEntry, roadNetworkId,
 		&understaffedStorages, &xDst, &yDst);
 	if (dstBuildingId) {
-		w->destinationBuildingId = dstBuildingId;
-		w->actionState = WalkerActionState_22_CartpusherDeliveringToGranary;
-		w->waitTicks = 0;
-		w->destinationX = xDst;
-		w->destinationY = yDst;
+		setDestination(w, WalkerActionState_22_CartpusherDeliveringToGranary, dstBuildingId, xDst, yDst);
 		return;
 	}
 	// priority 3: workshop for raw material
 	dstBuildingId = Resource_getWorkshopWithRoomForRawMaterial(w->x, w->y,
 		b->outputResourceId, b->distanceFromEntry, roadNetworkId, &xDst, &yDst);
 	if (dstBuildingId) {
-		w->destinationBuildingId = dstBuildingId;
-		w->actionState = WalkerActionState_23_CartpusherDeliveringToWorkshop;
-		w->waitTicks = 0;
-		w->destinationX = xDst;
-		w->destinationY = yDst;
+		setDestination(w, WalkerActionState_23_CartpusherDeliveringToWorkshop, dstBuildingId, xDst, yDst);
 		return;
 	}
 	// priority 4: warehouse
@@ -64,11 +61,7 @@ static void determineCartpusherDestination(struct Data_Walker *w, struct Data_Bu
 		b->outputResourceId, b->distanceFromEntry, roadNetworkId,
 		&understaffedStorages, &xDst, &yDst);
 	if (dstBuildingId) {
-		w->destinationBuildingId = dstBuildingId;
-		w->actionState = WalkerActionState_21_CartpusherDeliveringToWarehouse;
-		w->waitTicks = 0;
-		w->destinationX = xDst;
-		w->destinationY = yDst;
+		setDestination(w, WalkerActionState_21_CartpusherDeliveringToWarehouse, dstBuildingId, xDst, yDst);
 		return;
 	}
 	// priority 5: granary forced when on stockpile
@@ -76,11 +69,7 @@ static void determineCartpusherDestination(struct Data_Walker *w, struct Data_Bu
 		b->outputResourceId, b->distanceFromEntry, roadNetworkId,
 		&understaffedStorages, &xDst, &yDst);
 	if (dstBuildingId) {
-		w->destinationBuildingId = dstBuildingId;
-		w->actionState = WalkerActionState_22_CartpusherDeliveringToGranary;
-		w->waitTicks = 0;
-		w->destinationX = xDst;
-		w->destinationY = yDst;
+		setDestination(w, WalkerActionState_22_CartpusherDeliveringToGranary, dstBuildingId, xDst, yDst);
 		return;
 	}
 	// no one will accept
@@ -98,11 +87,7 @@ static void determineCartpusherDestinationFood(struct Data_Walker *w, int roadNe
 		b->outputResourceId, b->distanceFromEntry, roadNetworkId,
 		0, &xDst, &yDst);
 	if (dstBuildingId) {
-		w->destinationBuildingId = dstBuildingId;
-		w->actionState = WalkerActionState_22_CartpusherDeliveringToGranary;
-		w->waitTicks = 0;
-		w->destinationX = xDst;
-		w->destinationY = yDst;
+		setDestination(w, WalkerActionState_22_CartpusherDeliveringToGranary, dstBuildingId, xDst, yDst);
 		return;
 	}
 	// priority 2: warehouse
@@ -110,11 +95,7 @@ static void determineCartpusherDestinationFood(struct Data_Walker *w, int roadNe
 		b->outputResourceId, b->distanceFromEntry, roadNetworkId,
 		0, &xDst, &yDst);
 	if (dstBuildingId) {
-		w->destinationBuildingId = dstBuildingId;
-		w->actionState = WalkerActionState_21_CartpusherDeliveringToWarehouse;
-		w->waitTicks = 0;
-		w->destinationX = xDst;
-		w->destinationY = yDst;
+		setDestination(w, WalkerActionState_21_CartpusherDeliveringToWarehouse, dstBuildingId, xDst, yDst);
 		return;
 	}
 	// priority 3: granary
@@ -122,11 +103,7 @@ static void determineCartpusherDestinationFood(struct Data_Walker *w, int roadNe
 		b->outputResourceId, b->distanceFromEntry, roadNetworkId,
 		0, &xDst, &yDst);
 	if (dstBuildingId) {
-		w->destinationBuildingId = dstBuildingId;
-		w->actionState = WalkerActionState_22_CartpusherDeliveringToGranary;
-		w->waitTicks = 0;
-		w->destinationX = xDst;
-		w->destinationY = yDst;
+		setDestination(w, WalkerActionState_22_CartpusherDeliveringToGranary, dstBuildingId, xDst, yDst);
 		return;
 	}
 	// no one will accept, stand idle
@@ -160,7 +137,7 @@ void WalkerAction_cartpusher(int walkerId)
 	WalkerActionIncreaseGraphicOffset(w, 12);
 	w->cartGraphicId = 0;
 	int roadNetworkId = Data_Grid_roadNetworks[w->gridOffset];
-	w->terrainUsage = 1;
+	w->terrainUsage = WalkerTerrainUsage_Roads;
 	int buildingId = w->buildingId;
 	struct Data_Building *b = &Data_Buildings[buildingId];
 	
@@ -189,16 +166,15 @@ void WalkerAction_cartpusher(int walkerId)
 		case WalkerActionState_21_CartpusherDeliveringToWarehouse:
 			setCartGraphic(w);
 			WalkerMovement_walkTicks(walkerId, 1);
-			if (w->direction == 8) {
+			if (w->direction == DirWalker_8_AtDestination) {
 				w->actionState = WalkerActionState_24_CartpusherAtWarehouse;
-			} else if (w->direction == 9) {
-				// path blocked: re-route if possible
+			} else if (w->direction == DirWalker_9_Reroute) {
 				WalkerRoute_remove(walkerId);
 				if (Data_Grid_routingLandCitizen[w->gridOffset] != 2) {
 					w->actionState = WalkerActionState_20_CartpusherInitial;
 				}
 				w->waitTicks = 0;
-			} else if (w->direction == 10) {
+			} else if (w->direction == DirWalker_10_Lost) {
 				w->state = WalkerState_Dead;
 			}
 			if (!BuildingIsInUse(w->destinationBuildingId)) {
@@ -208,16 +184,15 @@ void WalkerAction_cartpusher(int walkerId)
 		case WalkerActionState_22_CartpusherDeliveringToGranary:
 			setCartGraphic(w);
 			WalkerMovement_walkTicks(walkerId, 1);
-			if (w->direction == 8) {
+			if (w->direction == DirWalker_8_AtDestination) {
 				w->actionState = WalkerActionState_25_CartpusherAtGranary;
-			} else if (w->direction == 9) {
-				// path blocked: re-route if possible
+			} else if (w->direction == DirWalker_9_Reroute) {
 				WalkerRoute_remove(walkerId);
 				if (Data_Grid_routingLandCitizen[w->gridOffset] != 2) {
 					w->actionState = WalkerActionState_20_CartpusherInitial;
 				}
 				w->waitTicks = 0;
-			} else if (w->direction == 10) {
+			} else if (w->direction == DirWalker_10_Lost) {
 				w->actionState = WalkerActionState_20_CartpusherInitial;
 				w->waitTicks = 0;
 			}
@@ -228,16 +203,15 @@ void WalkerAction_cartpusher(int walkerId)
 		case WalkerActionState_23_CartpusherDeliveringToWorkshop:
 			setCartGraphic(w);
 			WalkerMovement_walkTicks(walkerId, 1);
-			if (w->direction == 8) {
+			if (w->direction == DirWalker_8_AtDestination) {
 				w->actionState = WalkerActionState_26_CartpusherAtWorkshop;
-			} else if (w->direction == 9) {
-				// path blocked: re-route if possible
+			} else if (w->direction == DirWalker_9_Reroute) {
 				WalkerRoute_remove(walkerId);
 				if (Data_Grid_routingLandCitizen[w->gridOffset] != 2) {
 					w->actionState = WalkerActionState_20_CartpusherInitial;
 				}
 				w->waitTicks = 0;
-			} else if (w->direction == 10) {
+			} else if (w->direction == DirWalker_10_Lost) {
 				w->state = WalkerState_Dead;
 			}
 			break;
@@ -285,12 +259,12 @@ void WalkerAction_cartpusher(int walkerId)
 		case WalkerActionState_27_CartpusherReturning:
 			w->cartGraphicId = GraphicId(ID_Graphic_Walker_CartpusherCart);
 			WalkerMovement_walkTicks(walkerId, 1);
-			if (w->direction == 8) {
+			if (w->direction == DirWalker_8_AtDestination) {
 				w->actionState = WalkerActionState_20_CartpusherInitial;
 				w->state = WalkerState_Dead;
-			} else if (w->direction == 9) {
+			} else if (w->direction == DirWalker_9_Reroute) {
 				WalkerRoute_remove(walkerId);
-			} else if (w->direction == 10) {
+			} else if (w->direction == DirWalker_10_Lost) {
 				w->state = WalkerState_Dead;
 			}
 			break;
@@ -306,11 +280,7 @@ static void determineGranarymanDestination(int walkerId, struct Data_Walker *w, 
 		dstBuildingId = Resource_getGranaryForGettingFood(w->buildingId, &xDst, &yDst);
 		if (dstBuildingId) {
 			w->loadsSoldOrCarrying = 0;
-			w->destinationBuildingId = dstBuildingId;
-			w->actionState = WalkerActionState_54_WarehousemanGettingFood;
-			w->waitTicks = 0;
-			w->destinationX = xDst;
-			w->destinationY = yDst;
+			setDestination(w, WalkerActionState_54_WarehousemanGettingFood, dstBuildingId, xDst, yDst);
 		} else {
 			w->state = WalkerState_Dead;
 		}
@@ -322,11 +292,7 @@ static void determineGranarymanDestination(int walkerId, struct Data_Walker *w, 
 		w->resourceId, Data_Buildings[w->buildingId].distanceFromEntry,
 		roadNetworkId, 0, &xDst, &yDst);
 	if (dstBuildingId) {
-		w->destinationBuildingId = dstBuildingId;
-		w->actionState = WalkerActionState_51_WarehousemanDeliveringResource;
-		w->waitTicks = 0;
-		w->destinationX = xDst;
-		w->destinationY = yDst;
+		setDestination(w, WalkerActionState_51_WarehousemanDeliveringResource, dstBuildingId, xDst, yDst);
 		Resource_removeFromGranary(w->buildingId, w->resourceId, 100);
 		return;
 	}
@@ -335,11 +301,7 @@ static void determineGranarymanDestination(int walkerId, struct Data_Walker *w, 
 		w->resourceId, Data_Buildings[w->buildingId].distanceFromEntry,
 		roadNetworkId, 0, &xDst, &yDst);
 	if (dstBuildingId) {
-		w->destinationBuildingId = dstBuildingId;
-		w->actionState = WalkerActionState_51_WarehousemanDeliveringResource;
-		w->waitTicks = 0;
-		w->destinationX = xDst;
-		w->destinationY = yDst;
+		setDestination(w, WalkerActionState_51_WarehousemanDeliveringResource, dstBuildingId, xDst, yDst);
 		Resource_removeFromGranary(w->buildingId, w->resourceId, 100);
 		return;
 	}
@@ -348,11 +310,7 @@ static void determineGranarymanDestination(int walkerId, struct Data_Walker *w, 
 		w->resourceId, Data_Buildings[w->buildingId].distanceFromEntry,
 		roadNetworkId, 0, &xDst, &yDst);
 	if (dstBuildingId) {
-		w->destinationBuildingId = dstBuildingId;
-		w->actionState = WalkerActionState_51_WarehousemanDeliveringResource;
-		w->waitTicks = 0;
-		w->destinationX = xDst;
-		w->destinationY = yDst;
+		setDestination(w, WalkerActionState_51_WarehousemanDeliveringResource, dstBuildingId, xDst, yDst);
 		Resource_removeFromGranary(w->buildingId, w->resourceId, 100);
 		return;
 	}
@@ -379,12 +337,8 @@ static void determineWarehousemanDestination(int walkerId, struct Data_Walker *w
 			w->buildingId, w->collectingItemId, &xDst, &yDst);
 		if (dstBuildingId) {
 			w->loadsSoldOrCarrying = 0;
-			w->destinationBuildingId = dstBuildingId;
-			w->actionState = WalkerActionState_57_WarehousemanGettingResource;
-			w->waitTicks = 0;
-			w->destinationX = xDst;
-			w->destinationY = yDst;
-			w->terrainUsage = 3; // can go off-road
+			setDestination(w, WalkerActionState_57_WarehousemanGettingResource, dstBuildingId, xDst, yDst);
+			w->terrainUsage = WalkerTerrainUsage_AnyLand;
 		} else {
 			w->state = WalkerState_Dead;
 		}
@@ -395,11 +349,7 @@ static void determineWarehousemanDestination(int walkerId, struct Data_Walker *w
 	dstBuildingId = Resource_getBarracksForWeapon(w->x, w->y, w->resourceId,
 		roadNetworkId, &xDst, &yDst);
 	if (dstBuildingId) {
-		w->destinationBuildingId = dstBuildingId;
-		w->actionState = WalkerActionState_51_WarehousemanDeliveringResource;
-		w->waitTicks = 0;
-		w->destinationX = xDst;
-		w->destinationY = yDst;
+		setDestination(w, WalkerActionState_51_WarehousemanDeliveringResource, dstBuildingId, xDst, yDst);
 		removeResourceFromWarehouse(w);
 		return;
 	}
@@ -407,11 +357,7 @@ static void determineWarehousemanDestination(int walkerId, struct Data_Walker *w
 	dstBuildingId = Resource_getWorkshopWithRoomForRawMaterial(w->x, w->y, w->resourceId,
 		Data_Buildings[w->buildingId].distanceFromEntry, roadNetworkId, &xDst, &yDst);
 	if (dstBuildingId) {
-		w->destinationBuildingId = dstBuildingId;
-		w->actionState = WalkerActionState_51_WarehousemanDeliveringResource;
-		w->waitTicks = 0;
-		w->destinationX = xDst;
-		w->destinationY = yDst;
+		setDestination(w, WalkerActionState_51_WarehousemanDeliveringResource, dstBuildingId, xDst, yDst);
 		removeResourceFromWarehouse(w);
 		return;
 	}
@@ -419,11 +365,7 @@ static void determineWarehousemanDestination(int walkerId, struct Data_Walker *w
 	dstBuildingId = Resource_getGranaryForStoringFood(0, w->x, w->y, w->resourceId,
 		Data_Buildings[w->buildingId].distanceFromEntry, roadNetworkId, 0, &xDst, &yDst);
 	if (dstBuildingId) {
-		w->destinationBuildingId = dstBuildingId;
-		w->actionState = WalkerActionState_51_WarehousemanDeliveringResource;
-		w->waitTicks = 0;
-		w->destinationX = xDst;
-		w->destinationY = yDst;
+		setDestination(w, WalkerActionState_51_WarehousemanDeliveringResource, dstBuildingId, xDst, yDst);
 		removeResourceFromWarehouse(w);
 		return;
 	}
@@ -431,11 +373,7 @@ static void determineWarehousemanDestination(int walkerId, struct Data_Walker *w
 	dstBuildingId = Resource_getGettingGranaryForStoringFood(w->x, w->y, w->resourceId,
 		Data_Buildings[w->buildingId].distanceFromEntry, roadNetworkId, &xDst, &yDst);
 	if (dstBuildingId) {
-		w->destinationBuildingId = dstBuildingId;
-		w->actionState = WalkerActionState_51_WarehousemanDeliveringResource;
-		w->waitTicks = 0;
-		w->destinationX = xDst;
-		w->destinationY = yDst;
+		setDestination(w, WalkerActionState_51_WarehousemanDeliveringResource, dstBuildingId, xDst, yDst);
 		removeResourceFromWarehouse(w);
 		return;
 	}
@@ -446,11 +384,7 @@ static void determineWarehousemanDestination(int walkerId, struct Data_Walker *w
 		if (dstBuildingId == w->buildingId) {
 			w->state = WalkerState_Dead;
 		} else {
-			w->destinationBuildingId = dstBuildingId;
-			w->actionState = WalkerActionState_51_WarehousemanDeliveringResource;
-			w->waitTicks = 0;
-			w->destinationX = xDst;
-			w->destinationY = yDst;
+			setDestination(w, WalkerActionState_51_WarehousemanDeliveringResource, dstBuildingId, xDst, yDst);
 			removeResourceFromWarehouse(w);
 		}
 		return;
@@ -459,11 +393,7 @@ static void determineWarehousemanDestination(int walkerId, struct Data_Walker *w
 	dstBuildingId = Resource_getWorkshopForRawMaterial(w->x, w->y, w->resourceId,
 		Data_Buildings[w->buildingId].distanceFromEntry, roadNetworkId, &xDst, &yDst);
 	if (dstBuildingId) {
-		w->destinationBuildingId = dstBuildingId;
-		w->actionState = WalkerActionState_51_WarehousemanDeliveringResource;
-		w->waitTicks = 0;
-		w->destinationX = xDst;
-		w->destinationY = yDst;
+		setDestination(w, WalkerActionState_51_WarehousemanDeliveringResource, dstBuildingId, xDst, yDst);
 		removeResourceFromWarehouse(w);
 		return;
 	}
@@ -474,7 +404,7 @@ static void determineWarehousemanDestination(int walkerId, struct Data_Walker *w
 void WalkerAction_warehouseman(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
-	w->terrainUsage = 1;
+	w->terrainUsage = WalkerTerrainUsage_Roads;
 	WalkerActionIncreaseGraphicOffset(w, 12);
 	w->cartGraphicId = 0;
 	int roadNetworkId = Data_Grid_roadNetworks[w->gridOffset];
@@ -509,11 +439,11 @@ void WalkerAction_warehouseman(int walkerId)
 				setCartGraphic(w);
 			}
 			WalkerMovement_walkTicks(walkerId, 1);
-			if (w->direction == 8) {
+			if (w->direction == DirWalker_8_AtDestination) {
 				w->actionState = WalkerActionState_52_WarehousemanAtDeliveryBuilding;
-			} else if (w->direction == 9) {
+			} else if (w->direction == DirWalker_9_Reroute) {
 				WalkerRoute_remove(walkerId);
-			} else if (w->direction == 10) {
+			} else if (w->direction == DirWalker_10_Lost) {
 				w->state = WalkerState_Dead;
 			}
 			break;
@@ -547,20 +477,20 @@ void WalkerAction_warehouseman(int walkerId)
 		case WalkerActionState_53_WarehousemanReturningEmpty:
 			w->cartGraphicId = GraphicId(ID_Graphic_Walker_CartpusherCart); // empty
 			WalkerMovement_walkTicks(walkerId, 1);
-			if (w->direction == 8 || w->direction == 10) {
+			if (w->direction == DirWalker_8_AtDestination || w->direction == DirWalker_10_Lost) {
 				w->state = WalkerState_Dead;
-			} else if (w->direction == 9) {
+			} else if (w->direction == DirWalker_9_Reroute) {
 				WalkerRoute_remove(walkerId);
 			}
 			break;
 		case WalkerActionState_54_WarehousemanGettingFood:
 			w->cartGraphicId = GraphicId(ID_Graphic_Walker_CartpusherCart); // empty
 			WalkerMovement_walkTicks(walkerId, 1);
-			if (w->direction == 8) {
+			if (w->direction == DirWalker_8_AtDestination) {
 				w->actionState = WalkerActionState_55_WarehousemanAtGranaryGettingFood;
-			} else if (w->direction == 9) {
+			} else if (w->direction == DirWalker_9_Reroute) {
 				WalkerRoute_remove(walkerId);
-			} else if (w->direction == 10) {
+			} else if (w->direction == DirWalker_10_Lost) {
 				w->state = WalkerState_Dead;
 			}
 			break;
@@ -596,14 +526,14 @@ void WalkerAction_warehouseman(int walkerId)
 				w->cartGraphicId += Resource_getGraphicIdOffset(w->resourceId, 2);
 			}
 			WalkerMovement_walkTicks(walkerId, 1);
-			if (w->direction == 8) {
+			if (w->direction == DirWalker_8_AtDestination) {
 				for (int i = 0; i < w->loadsSoldOrCarrying; i++) {
 					Resource_addToGranary(w->buildingId, w->resourceId, 0);
 				}
 				w->state = WalkerState_Dead;
-			} else if (w->direction == 9) {
+			} else if (w->direction == DirWalker_9_Reroute) {
 				WalkerRoute_remove(walkerId);
-			} else if (w->direction == 10) {
+			} else if (w->direction == DirWalker_10_Lost) {
 				w->state = WalkerState_Dead;
 			}
 			break;
@@ -611,11 +541,11 @@ void WalkerAction_warehouseman(int walkerId)
 			w->terrainUsage = WalkerTerrainUsage_AnyLand;
 			w->cartGraphicId = GraphicId(ID_Graphic_Walker_CartpusherCart); // empty
 			WalkerMovement_walkTicks(walkerId, 1);
-			if (w->direction == 8) {
+			if (w->direction == DirWalker_8_AtDestination) {
 				w->actionState = WalkerActionState_58_WarehousemanAtWarehouseGettingResource;
-			} else if (w->direction == 9) {
+			} else if (w->direction == DirWalker_9_Reroute) {
 				WalkerRoute_remove(walkerId);
-			} else if (w->direction == 10) {
+			} else if (w->direction == DirWalker_10_Lost) {
 				w->state = WalkerState_Dead;
 			}
 			break;
@@ -654,14 +584,14 @@ void WalkerAction_warehouseman(int walkerId)
 				w->cartGraphicId += Resource_getGraphicIdOffset(w->resourceId, 2);
 			}
 			WalkerMovement_walkTicks(walkerId, 1);
-			if (w->direction == 8) {
+			if (w->direction == DirWalker_8_AtDestination) {
 				for (int i = 0; i < w->loadsSoldOrCarrying; i++) {
 					Resource_addToWarehouse(w->buildingId, w->resourceId);
 				}
 				w->state = WalkerState_Dead;
-			} else if (w->direction == 9) {
+			} else if (w->direction == DirWalker_9_Reroute) {
 				WalkerRoute_remove(walkerId);
-			} else if (w->direction == 10) {
+			} else if (w->direction == DirWalker_10_Lost) {
 				w->state = WalkerState_Dead;
 			}
 			break;

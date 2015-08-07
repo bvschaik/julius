@@ -144,7 +144,7 @@ void WalkerAction_entertainer(int walkerId)
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	struct Data_Building *b = &Data_Buildings[w->buildingId];
 	w->cartGraphicId = GraphicId(ID_Graphic_Walker_CartpusherCart);
-	w->terrainUsage = 1;
+	w->terrainUsage = WalkerTerrainUsage_Roads;
 	w->useCrossCountry = 0;
 	w->maxRoamLength = 512;
 	WalkerActionIncreaseGraphicOffset(w, 12);
