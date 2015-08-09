@@ -23,6 +23,7 @@ enum {
 	Message_44_WrathOfMarsNoMilitary = 44,
 	Message_45_WrathOfVenus = 45,
 	Message_55_GodsUnhappy = 55,
+	Message_77_EmpireHasExpanded = 77,
 	Message_80_RoadToRomeBlocked = 80,
 	Message_81_WrathOfNeptune = 81,
 	Message_82_WrathOfMars = 82,

@@ -217,7 +217,7 @@ void WalkerAction_Combat_attackWalker(int walkerId, int opponentId)
 	}
 	int guard = 0;
 	while (1) {
-		if (++guard >= 1000 || opponentId <= 0) {
+		if (++guard >= MAX_WALKERS || opponentId <= 0) {
 			break;
 		}
 		if (opponentId == walkerId) {
@@ -265,7 +265,7 @@ void WalkerAction_Combat_attackWalker(int walkerId, int opponentId)
 					opponent->previousTileX, opponent->previousTileY);
 			} else {
 				w->attackDirection = Routing_getGeneralDirection(w->previousTileX, w->previousTileY,
-					opponent->x, opponent->x);
+					opponent->x, opponent->y);
 			}
 			if (w->attackDirection >= 8) {
 				w->attackDirection = 0;
