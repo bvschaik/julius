@@ -259,7 +259,7 @@ static void loadScenario(const char *scenarioName)
 	Data_Event.gladiatorRevolt.gameYear = Data_Scenario.startYear + Data_Scenario.gladiatorRevolt.year;
 	Data_Event.gladiatorRevolt.month = 3 + (Data_Random.random1_7bit & 3);
 	Data_Event.gladiatorRevolt.endMonth = 3 + Data_Event.gladiatorRevolt.month;
-	Data_Event.gladiatorRevolt.state = 0;
+	Data_Event.gladiatorRevolt.state = GladiatorRevolt_NotStarted;
 	// emperor change
 	Data_Event.emperorChange.gameYear = Data_Scenario.startYear + Data_Scenario.emperorChange.year;
 	Data_Event.emperorChange.month = 1 + (Data_Random.random1_7bit & 7);

@@ -194,7 +194,7 @@ void Undo_perform()
 		Grid_copyShortGrid(Data_Grid_Undo_graphicIds, Data_Grid_graphicIds);
 		Grid_copyByteGrid(Data_Grid_Undo_bitfields, Data_Grid_bitfields);
 		Grid_copyByteGrid(Data_Grid_Undo_edge, Data_Grid_edge);
-		Grid_andByteGrid(Data_Grid_bitfields, 0xaf);
+		Grid_andByteGrid(Data_Grid_bitfields, Bitfield_NoOverlayAndDeleted);
 	} else if (data.buildingType == Building_Aqueduct || data.buildingType == Building_Road ||
 			data.buildingType == Building_Wall) {
 		Grid_copyShortGrid(Data_Grid_Undo_terrain, Data_Grid_terrain);

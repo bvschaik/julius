@@ -554,19 +554,19 @@ void Event_handleGladiatorRevolt()
 	if (!Data_Scenario.gladiatorRevolt.enabled) {
 		return;
 	}
-	if (Data_Event.gladiatorRevolt.state == 0) { // not started
+	if (Data_Event.gladiatorRevolt.state == GladiatorRevolt_NotStarted) {
 		if (Data_CityInfo_Extra.gameTimeYear == Data_Event.gladiatorRevolt.gameYear &&
 			Data_CityInfo_Extra.gameTimeMonth == Data_Event.gladiatorRevolt.month) {
 			if (Data_CityInfo_Buildings.gladiatorSchool.working > 0) {
-				Data_Event.gladiatorRevolt.state = 1;
+				Data_Event.gladiatorRevolt.state = GladiatorRevolt_InProgress;
 				PlayerMessage_post(1, 63, 0, 0);
 			} else {
-				Data_Event.gladiatorRevolt.state = 2; // done
+				Data_Event.gladiatorRevolt.state = GladiatorRevolt_Finished;
 			}
 		}
-	} else if (Data_Event.gladiatorRevolt.state == 1) { // in progress
+	} else if (Data_Event.gladiatorRevolt.state == GladiatorRevolt_InProgress) {
 		if (Data_Event.gladiatorRevolt.endMonth == Data_CityInfo_Extra.gameTimeMonth) {
-			Data_Event.gladiatorRevolt.state = 2; // done
+			Data_Event.gladiatorRevolt.state = GladiatorRevolt_Finished;
 			PlayerMessage_post(1, 73, 0, 0);
 		}
 	}

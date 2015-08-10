@@ -1155,7 +1155,7 @@ void BuildingPlacement_update(int xStart, int yStart, int xEnd, int yEnd, int ty
 		return;
 	}
 	int currentCost = 0;
-	Grid_andByteGrid(Data_Grid_bitfields, 0xaf);
+	Grid_andByteGrid(Data_Grid_bitfields, Bitfield_NoOverlayAndDeleted);
 	currentCost = Data_Model_Buildings[type].cost;
 
 	if (type == Building_ClearLand) {

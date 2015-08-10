@@ -217,6 +217,7 @@ enum {
 };
 
 enum {
+	WalkerTerrainUsage_None = 0,
 	WalkerTerrainUsage_Roads = 1,
 	WalkerTerrainUsage_Enemy = 2,
 	WalkerTerrainUsage_AnyLand = 3,

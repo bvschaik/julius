@@ -90,7 +90,7 @@ static void enemyMarching(int walkerId, struct Data_Walker *w, struct Data_Forma
 		w->waitTicks = 50;
 		w->destinationX = f->destinationX + w->formationPositionX;
 		w->destinationY = f->destinationY + w->formationPositionY;
-		if (Routing_getGeneralDirection(w->x, w->y, w->destinationX, w->destinationY) == 8) {
+		if (Routing_getGeneralDirection(w->x, w->y, w->destinationX, w->destinationY) == DirWalker_8_AtDestination) {
 			w->actionState = WalkerActionState_151_EnemyInitial;
 			return;
 		}
@@ -98,7 +98,9 @@ static void enemyMarching(int walkerId, struct Data_Walker *w, struct Data_Forma
 		WalkerRoute_remove(walkerId);
 	}
 	WalkerMovement_walkTicks(walkerId, w->speedMultiplier);
-	if (w->direction == 8 || w->direction == 9 || w->direction == 10) {
+	if (w->direction == DirWalker_8_AtDestination ||
+		w->direction == DirWalker_9_Reroute ||
+		w->direction == DirWalker_10_Lost) {
 		w->actionState = WalkerActionState_151_EnemyInitial;
 	}
 }
@@ -141,11 +143,11 @@ static void enemyFighting(int walkerId, struct Data_Walker *w, struct Data_Forma
 	}
 	if (targetId > 0) {
 		WalkerMovement_walkTicks(walkerId, w->speedMultiplier);
-		if (w->direction == 8) {
+		if (w->direction == DirWalker_8_AtDestination) {
 			w->destinationX = Data_Walkers[w->targetWalkerId].x;
 			w->destinationY = Data_Walkers[w->targetWalkerId].y;
 			WalkerRoute_remove(walkerId);
-		} else if (w->direction == 9 || w->direction == 10) {
+		} else if (w->direction == DirWalker_9_Reroute || w->direction == DirWalker_10_Lost) {
 			w->actionState = WalkerActionState_151_EnemyInitial;
 			w->targetWalkerId = 0;
 		}
@@ -174,7 +176,9 @@ static void WalkerAction_enemyCommon(int walkerId, struct Data_Walker *w)
 			w->destinationX = w->sourceX;
 			w->destinationY = w->sourceY;
 			WalkerMovement_walkTicks(walkerId, w->speedMultiplier);
-			if (w->direction == 8 || w->direction == 9 || w->direction == 10) {
+			if (w->direction == DirWalker_8_AtDestination ||
+				w->direction == DirWalker_9_Reroute ||
+				w->direction == DirWalker_10_Lost) {
 				w->state = WalkerState_Dead;
 			}
 			break;
@@ -193,15 +197,22 @@ static void WalkerAction_enemyCommon(int walkerId, struct Data_Walker *w)
 	}
 }
 
-void WalkerAction_enemy43_Spear(int walkerId)
+static int getDirection(struct Data_Walker *w)
 {
-	struct Data_Walker *w = &Data_Walkers[walkerId];
-	struct Data_Formation *f = &Data_Formations[w->formationId];
-	WalkerActionIncreaseGraphicOffset(w, 12);
-	w->cartGraphicId = 0;
-	w->speedMultiplier = 1;
-	WalkerAction_enemyCommon(walkerId, w);
-	
+	int dir;
+	if (w->actionState == WalkerActionState_150_Attack) {
+		dir = w->attackDirection;
+	} else if (w->direction < 8) {
+		dir = w->direction;
+	} else {
+		dir = w->previousTileDirection;
+	}
+	WalkerActionNormalizeDirection(dir);
+	return dir;
+}
+
+static int getDirectionMissile(struct Data_Walker *w, struct Data_Formation *f)
+{
 	int dir;
 	if (w->actionState == WalkerActionState_150_Attack) {
 		dir = w->attackDirection;
@@ -211,6 +222,19 @@ void WalkerAction_enemy43_Spear(int walkerId)
 		dir = w->previousTileDirection;
 	}
 	WalkerActionNormalizeDirection(dir);
+	return dir;
+}
+
+void WalkerAction_enemy43_Spear(int walkerId)
+{
+	struct Data_Walker *w = &Data_Walkers[walkerId];
+	struct Data_Formation *f = &Data_Formations[w->formationId];
+	WalkerActionIncreaseGraphicOffset(w, 12);
+	w->cartGraphicId = 0;
+	w->speedMultiplier = 1;
+	WalkerAction_enemyCommon(walkerId, w);
+	
+	int dir = getDirectionMissile(w, f);
 	
 	w->isEnemyGraphic = 1;
 	
@@ -233,7 +257,7 @@ void WalkerAction_enemy43_Spear(int walkerId)
 		w->graphicId = 697 + dir + 8 * WalkerActionMissileLauncherGraphicOffset(w);
 	} else if (w->actionState == WalkerActionState_149_Corpse) {
 		w->graphicId = 793 + WalkerActionCorpseGraphicOffset(w);
-	} else if (w->direction == 11) {
+	} else if (w->direction == DirWalker_11_Attack) {
 		w->graphicId = 745 + dir + 8 * (w->graphicOffset / 2);
 	} else {
 		w->graphicId = 601 + dir + 8 * w->graphicOffset;
@@ -249,15 +273,7 @@ void WalkerAction_enemy44_Sword(int walkerId)
 	w->speedMultiplier = 1;
 	WalkerAction_enemyCommon(walkerId, w);
 	
-	int dir;
-	if (w->actionState == WalkerActionState_150_Attack) {
-		dir = w->attackDirection;
-	} else if (w->direction < 8) {
-		dir = w->direction;
-	} else {
-		dir = w->previousTileDirection;
-	}
-	WalkerActionNormalizeDirection(dir);
+	int dir = getDirection(w);
 	
 	w->isEnemyGraphic = 1;
 	
@@ -277,7 +293,7 @@ void WalkerAction_enemy44_Sword(int walkerId)
 		}
 	} else if (w->actionState == WalkerActionState_149_Corpse) {
 		w->graphicId = 593 + WalkerActionCorpseGraphicOffset(w);
-	} else if (w->direction == 11) {
+	} else if (w->direction == DirWalker_11_Attack) {
 		w->graphicId = 545 + dir + 8 * (w->graphicOffset / 2);
 	} else {
 		w->graphicId = 449 + dir + 8 * w->graphicOffset;
@@ -293,15 +309,7 @@ void WalkerAction_enemy45_Sword(int walkerId)
 	w->speedMultiplier = 1;
 	WalkerAction_enemyCommon(walkerId, w);
 	
-	int dir;
-	if (w->actionState == WalkerActionState_150_Attack) {
-		dir = w->attackDirection;
-	} else if (w->direction < 8) {
-		dir = w->direction;
-	} else {
-		dir = w->previousTileDirection;
-	}
-	WalkerActionNormalizeDirection(dir);
+	int dir = getDirection(w);
 	
 	w->isEnemyGraphic = 1;
 	
@@ -321,7 +329,7 @@ void WalkerAction_enemy45_Sword(int walkerId)
 		}
 	} else if (w->actionState == WalkerActionState_149_Corpse) {
 		w->graphicId = 593 + WalkerActionCorpseGraphicOffset(w);
-	} else if (w->direction == 11) {
+	} else if (w->direction == DirWalker_11_Attack) {
 		w->graphicId = 545 + dir + 8 * (w->graphicOffset / 2);
 	} else {
 		w->graphicId = 449 + dir + 8 * w->graphicOffset;
@@ -337,19 +345,11 @@ void WalkerAction_enemy46_Camel(int walkerId)
 	w->speedMultiplier = 1;
 	WalkerAction_enemyCommon(walkerId, w);
 	
-	int dir;
-	if (w->actionState == WalkerActionState_150_Attack) {
-		dir = w->attackDirection;
-	} else if (f->missileFired || w->direction < 8) {
-		dir = w->direction;
-	} else {
-		dir = w->previousTileDirection;
-	}
-	WalkerActionNormalizeDirection(dir);
+	int dir = getDirectionMissile(w, f);
 	
 	w->isEnemyGraphic = 1;
 	
-	if (w->direction == 11) {
+	if (w->direction == DirWalker_11_Attack) {
 		w->graphicId = 601 + dir + 8 * w->graphicOffset;
 	} else if (w->actionState == WalkerActionState_150_Attack) {
 		w->graphicId = 601 + dir;
@@ -370,21 +370,11 @@ void WalkerAction_enemy47_Elephant(int walkerId)
 	w->speedMultiplier = 1;
 	WalkerAction_enemyCommon(walkerId, w);
 	
-	int dir;
-	if (w->actionState == WalkerActionState_150_Attack) {
-		dir = w->attackDirection;
-	} else if (w->direction < 8) {
-		dir = w->direction;
-	} else {
-		dir = w->previousTileDirection;
-	}
-	WalkerActionNormalizeDirection(dir);
+	int dir = getDirection(w);
 	
 	w->isEnemyGraphic = 1;
 	
-	if (w->direction == 11) {
-		w->graphicId = 601 + dir + 8 * w->graphicOffset;
-	} else if (w->actionState == WalkerActionState_150_Attack) {
+	if (w->direction == DirWalker_11_Attack || w->actionState == WalkerActionState_150_Attack) {
 		w->graphicId = 601 + dir + 8 * w->graphicOffset;
 	} else if (w->actionState == WalkerActionState_149_Corpse) {
 		w->graphicId = 705 + WalkerActionCorpseGraphicOffset(w);
@@ -401,19 +391,11 @@ void WalkerAction_enemy48_Chariot(int walkerId)
 	w->speedMultiplier = 3;
 	WalkerAction_enemyCommon(walkerId, w);
 	
-	int dir;
-	if (w->actionState == WalkerActionState_150_Attack) {
-		dir = w->attackDirection;
-	} else if (w->direction < 8) {
-		dir = w->direction;
-	} else {
-		dir = w->previousTileDirection;
-	}
-	WalkerActionNormalizeDirection(dir);
+	int dir = getDirection(w);
 	
 	w->isEnemyGraphic = 1;
 	
-	if (w->direction == 11 || w->actionState == WalkerActionState_150_Attack) {
+	if (w->direction == DirWalker_11_Attack || w->actionState == WalkerActionState_150_Attack) {
 		w->graphicId = 697 + dir + 8 * (w->graphicOffset / 2);
 	} else if (w->actionState == WalkerActionState_149_Corpse) {
 		w->graphicId = 745 + WalkerActionCorpseGraphicOffset(w);
@@ -431,15 +413,7 @@ void WalkerAction_enemy49_FastSword(int walkerId)
 	w->speedMultiplier = 2;
 	WalkerAction_enemyCommon(walkerId, w);
 	
-	int dir;
-	if (w->actionState == WalkerActionState_150_Attack) {
-		dir = w->attackDirection;
-	} else if (w->direction < 8) {
-		dir = w->direction;
-	} else {
-		dir = w->previousTileDirection;
-	}
-	WalkerActionNormalizeDirection(dir);
+	int dir = getDirection(w);
 	
 	w->isEnemyGraphic = 1;
 	
@@ -467,7 +441,7 @@ void WalkerAction_enemy49_FastSword(int walkerId)
 		}
 	} else if (w->actionState == WalkerActionState_149_Corpse) {
 		w->graphicId = corpseId + WalkerActionCorpseGraphicOffset(w);
-	} else if (w->direction == 11) {
+	} else if (w->direction == DirWalker_11_Attack) {
 		w->graphicId = attackId + dir + 8 * (w->graphicOffset / 2);
 	} else {
 		w->graphicId = normalId + dir + 8 * w->graphicOffset;
@@ -483,15 +457,7 @@ void WalkerAction_enemy50_Sword(int walkerId)
 	w->speedMultiplier = 1;
 	WalkerAction_enemyCommon(walkerId, w);
 	
-	int dir;
-	if (w->actionState == WalkerActionState_150_Attack) {
-		dir = w->attackDirection;
-	} else if (w->direction < 8) {
-		dir = w->direction;
-	} else {
-		dir = w->previousTileDirection;
-	}
-	WalkerActionNormalizeDirection(dir);
+	int dir = getDirection(w);
 	
 	w->isEnemyGraphic = 1;
 	
@@ -506,7 +472,7 @@ void WalkerAction_enemy50_Sword(int walkerId)
 		}
 	} else if (w->actionState == WalkerActionState_149_Corpse) {
 		w->graphicId = 593 + WalkerActionCorpseGraphicOffset(w);
-	} else if (w->direction == 11) {
+	} else if (w->direction == DirWalker_11_Attack) {
 		w->graphicId = 545 + dir + 8 * (w->graphicOffset / 2);
 	} else {
 		w->graphicId = 449 + dir + 8 * w->graphicOffset;
@@ -522,15 +488,7 @@ void WalkerAction_enemy51_Spear(int walkerId)
 	w->speedMultiplier = 2;
 	WalkerAction_enemyCommon(walkerId, w);
 	
-	int dir;
-	if (w->actionState == WalkerActionState_150_Attack) {
-		dir = w->attackDirection;
-	} else if (f->missileFired || w->direction < 8) {
-		dir = w->direction;
-	} else {
-		dir = w->previousTileDirection;
-	}
-	WalkerActionNormalizeDirection(dir);
+	int dir = getDirectionMissile(w, f);
 	
 	w->isEnemyGraphic = 1;
 	
@@ -547,7 +505,7 @@ void WalkerAction_enemy51_Spear(int walkerId)
 		w->graphicId = 545 + dir + 8 * WalkerActionMissileLauncherGraphicOffset(w);
 	} else if (w->actionState == WalkerActionState_149_Corpse) {
 		w->graphicId = 641 + WalkerActionCorpseGraphicOffset(w);
-	} else if (w->direction == 11) {
+	} else if (w->direction == DirWalker_11_Attack) {
 		w->graphicId = 593 + dir + 8 * (w->graphicOffset / 2);
 	} else {
 		w->graphicId = 449 + dir + 8 * w->graphicOffset;
@@ -563,19 +521,11 @@ void WalkerAction_enemy52_MountedArcher(int walkerId)
 	w->speedMultiplier = 3;
 	WalkerAction_enemyCommon(walkerId, w);
 	
-	int dir;
-	if (w->actionState == WalkerActionState_150_Attack) {
-		dir = w->attackDirection;
-	} else if (f->missileFired || w->direction < 8) {
-		dir = w->direction;
-	} else {
-		dir = w->previousTileDirection;
-	}
-	WalkerActionNormalizeDirection(dir);
+	int dir = getDirectionMissile(w, f);
 	
 	w->isEnemyGraphic = 1;
 	
-	if (w->direction == 11) {
+	if (w->direction == DirWalker_11_Attack) {
 		w->graphicId = 601 + dir + 8 * w->graphicOffset;
 	} else if (w->actionState == WalkerActionState_150_Attack) {
 		w->graphicId = 601 + dir;
@@ -597,15 +547,7 @@ void WalkerAction_enemy53_Axe(int walkerId)
 	w->speedMultiplier = 1;
 	WalkerAction_enemyCommon(walkerId, w);
 	
-	int dir;
-	if (w->actionState == WalkerActionState_150_Attack) {
-		dir = w->attackDirection;
-	} else if (w->direction < 8) {
-		dir = w->direction;
-	} else {
-		dir = w->previousTileDirection;
-	}
-	WalkerActionNormalizeDirection(dir);
+	int dir = getDirection(w);
 	
 	w->isEnemyGraphic = 1;
 	
@@ -620,7 +562,7 @@ void WalkerAction_enemy53_Axe(int walkerId)
 		}
 	} else if (w->actionState == WalkerActionState_149_Corpse) {
 		w->graphicId = 745 + WalkerActionCorpseGraphicOffset(w);
-	} else if (w->direction == 11) {
+	} else if (w->direction == DirWalker_11_Attack) {
 		w->graphicId = 697 + dir + 8 * (w->graphicOffset / 2);
 	} else {
 		w->graphicId = 601 + dir + 8 * w->graphicOffset;
@@ -630,10 +572,10 @@ void WalkerAction_enemy53_Axe(int walkerId)
 void WalkerAction_enemy54_Gladiator(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
-	w->terrainUsage = 0;
+	w->terrainUsage = WalkerTerrainUsage_None;
 	w->useCrossCountry = 0;
 	WalkerActionIncreaseGraphicOffset(w, 12);
-	if (Data_Event.gladiatorRevolt.state == 2) {
+	if (Data_Event.gladiatorRevolt.state == GladiatorRevolt_Finished) {
 		// end of gladiator revolt: kill gladiators
 		if (w->actionState != WalkerActionState_149_Corpse) {
 			w->actionState = WalkerActionState_149_Corpse;
@@ -669,15 +611,17 @@ void WalkerAction_enemy54_Gladiator(int walkerId)
 			break;
 		case WalkerActionState_159_NativeAttacking:
 			Data_CityInfo.numAttackingNativesInCity = 10;
-			w->terrainUsage = 2;
+			w->terrainUsage = WalkerTerrainUsage_Enemy;
 			WalkerMovement_walkTicks(walkerId, 1);
-			if (w->direction == 8 || w->direction == 9 || w->direction == 10) {
+			if (w->direction == DirWalker_8_AtDestination ||
+				w->direction == DirWalker_9_Reroute ||
+				w->direction == DirWalker_10_Lost) {
 				w->actionState = WalkerActionState_158_NativeCreated;
 			}
 			break;
 	}
 	int dir;
-	if (w->actionState == WalkerActionState_150_Attack || w->direction == 11) {
+	if (w->actionState == WalkerActionState_150_Attack || w->direction == DirWalker_11_Attack) {
 		dir = w->attackDirection;
 	} else if (w->direction < 8) {
 		dir = w->direction;
@@ -686,7 +630,7 @@ void WalkerAction_enemy54_Gladiator(int walkerId)
 	}
 	WalkerActionNormalizeDirection(dir);
 
-	if (w->actionState == WalkerActionState_150_Attack || w->direction == 11) {
+	if (w->actionState == WalkerActionState_150_Attack || w->direction == DirWalker_11_Attack) {
 		w->graphicId = GraphicId(ID_Graphic_Walker_Gladiator) + dir + 104 + 8 * (w->graphicOffset / 2);
 	} else if (w->actionState == WalkerActionState_149_Corpse) {
 		w->graphicId = GraphicId(ID_Graphic_Walker_Gladiator) + 96 + WalkerActionCorpseGraphicOffset(w);
@@ -705,29 +649,24 @@ void WalkerAction_enemyCaesarLegionary(int walkerId)
 	w->speedMultiplier = 1;
 	WalkerAction_enemyCommon(walkerId, w);
 	
-	int dir;
-	if (w->actionState == WalkerActionState_150_Attack) {
-		dir = w->attackDirection;
-	} else if (w->direction < 8) {
-		dir = w->direction;
-	} else {
-		dir = w->previousTileDirection;
-	}
-	WalkerActionNormalizeDirection(dir);
+	int dir = getDirection(w);
 	
-	if (w->direction == 11) {
-		w->graphicId = GraphicId(ID_Graphic_Walker_CaesarLegionary) + dir + 8 * ((w->attackGraphicOffset - 12) / 2);
+	if (w->direction == DirWalker_11_Attack) {
+		w->graphicId = GraphicId(ID_Graphic_Walker_CaesarLegionary) + dir +
+			8 * ((w->attackGraphicOffset - 12) / 2);
 	}
 	switch (w->actionState) {
 		case WalkerActionState_150_Attack:
 			if (w->attackGraphicOffset >= 12) {
-				w->graphicId = GraphicId(ID_Graphic_Walker_CaesarLegionary) + dir + 8 * ((w->attackGraphicOffset - 12) / 2);
+				w->graphicId = GraphicId(ID_Graphic_Walker_CaesarLegionary) + dir +
+					8 * ((w->attackGraphicOffset - 12) / 2);
 			} else {
 				w->graphicId = GraphicId(ID_Graphic_Walker_CaesarLegionary) + dir;
 			}
 			break;
 		case WalkerActionState_149_Corpse:
-			w->graphicId = GraphicId(ID_Graphic_Walker_CaesarLegionary) + WalkerActionCorpseGraphicOffset(w) + 152;
+			w->graphicId = GraphicId(ID_Graphic_Walker_CaesarLegionary) +
+				WalkerActionCorpseGraphicOffset(w) + 152;
 			break;
 		case WalkerActionState_84_SoldierAtStandard:
 			if (f->isHalted && f->layout == FormationLayout_Tortoise && f->missileAttackTimeout) {
