@@ -119,26 +119,26 @@ static void hitOpponent(int walkerId, struct Data_Walker *w)
 	// attack modifiers
 	if (w->type == Walker_Wolf) {
 		switch (Data_Settings.difficulty) {
-			case 0: walkerAttack = 2; break; // very easy
-			case 1: walkerAttack = 4; break; // easy
-			case 2: walkerAttack = 6; break; // normal
+			case Difficulty_VeryEasy: walkerAttack = 2; break;
+			case Difficulty_Easy: walkerAttack = 4; break;
+			case Difficulty_Normal: walkerAttack = 6; break;
 		}
 	}
 	if (opponent->opponentId != walkerId && f->walkerType != Walker_FortLegionary &&
 			attackIsSameDirection(w->attackDirection, opponent->attackDirection)) {
-		walkerAttack += 4;
+		walkerAttack += 4; // attack opponent on the (exposed) back
 		Sound_Effects_playChannel(SoundChannel_SwordSwing);
 	}
 	if (f->isHalted && f->walkerType == Walker_FortLegionary &&
 			attackIsSameDirection(w->attackDirection, f->direction)) {
-		walkerAttack += 4;
+		walkerAttack += 4; // coordinated formation attack bonus
 	}
 	// defense modifiers
 	if (opponentFormation->isHalted &&
 			(opponentFormation->walkerType == Walker_FortLegionary ||
 			opponentFormation->walkerType == Walker_EnemyCaesarLegionary)) {
 		if (!attackIsSameDirection(opponent->attackDirection, opponentFormation->direction)) {
-			opponentDefense -= 4;
+			opponentDefense -= 4; // opponent not attacking in coordinated formation
 		} else if (opponentFormation->layout == FormationLayout_Tortoise) {
 			opponentDefense += 7;
 		} else if (opponentFormation->layout == FormationLayout_DoubleLine1 ||

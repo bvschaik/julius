@@ -20,7 +20,7 @@ static void loadDefaults()
 	Data_Settings.mouseTooltips = 2;
 	Data_Settings.gameSpeed = 90;
 	Data_Settings.scrollSpeed = 70;
-	Data_Settings.difficulty = 3; // hard
+	Data_Settings.difficulty = Difficulty_Hard;
 	Data_Settings.godsEnabled = 1;
 	Data_Settings.soundEffectsPercentage = 100;
 	Data_Settings.soundMusicPercentage = 80;

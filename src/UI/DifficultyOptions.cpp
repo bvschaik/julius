@@ -71,11 +71,11 @@ static void arrowButtonDifficulty(int param1, int param2)
 	} else {
 		Data_Settings.difficulty++;
 	}
-	if (Data_Settings.difficulty < 0) {
-		Data_Settings.difficulty = 0;
+	if (Data_Settings.difficulty < Difficulty_VeryEasy) {
+		Data_Settings.difficulty = Difficulty_VeryEasy;
 	}
-	if (Data_Settings.difficulty > 4) {
-		Data_Settings.difficulty = 4;
+	if (Data_Settings.difficulty > Difficulty_VeryHard) {
+		Data_Settings.difficulty = Difficulty_VeryHard;
 	}
 	UI_Window_requestRefresh();
 }
