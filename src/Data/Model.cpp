@@ -9,7 +9,7 @@ struct Data_Model_Difficulty Data_Model_Difficulty = {
 	{80, 70, 60, 50, 40}, // sentiment
 };
 
-struct Data_Scenario Data_Scenario;
+struct _Data_Scenario Data_Scenario;
 
 struct Data_Event Data_Event = {0};
 

@@ -1,7 +1,7 @@
 #ifndef DATA_SCENARIO_H
 #define DATA_SCENARIO_H
 
-extern struct Data_Scenario {
+extern struct _Data_Scenario {
 	short startYear;
 	short __unused1;
 	short empireId;

@@ -7,6 +7,7 @@
 #define GridOffset(x,y) (Data_Settings_Map.gridStartOffset + (x) + (y) * 162)
 #define GridOffsetToX(g) (((g) - Data_Settings_Map.gridStartOffset) % 162)
 #define GridOffsetToY(g) (((g) - Data_Settings_Map.gridStartOffset) / 162)
+#define IsInsideMap(x,y) ((x) >= 0 && (x) < Data_Settings_Map.width && (y) >= 0 && (y) < Data_Settings_Map.height)
 #define IsOutsideMap(x,y,s) (x) < 0 || (x) + (s) > Data_Settings_Map.width || (y) < 0 || (y) + (s) > Data_Settings_Map.height
 #define BoundToMap(x,y) \
 	if ((x) < 0) (x) = 0;\
