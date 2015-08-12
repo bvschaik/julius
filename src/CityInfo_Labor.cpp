@@ -8,6 +8,8 @@
 #include "Data/Model.h"
 #include "Data/Scenario.h"
 
+#define MAX_CATS 10
+
 static int buildingTypeToLaborCategory[] = {
 	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1,//0
 	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1,//10
@@ -27,7 +29,7 @@ static int buildingTypeToLaborCategory[] = {
 static struct {
 	int category;
 	int workers;
-} builtInPriority[10] = {
+} builtInPriority[MAX_CATS] = {
 	{LaborCategory_Engineering, 3},
 	{LaborCategory_Water, 1},
 	{LaborCategory_Prefectures, 3},
@@ -83,7 +85,7 @@ static int shouldHaveWorkers(int buildingId, int category, int checkAccess)
 
 void CityInfo_Labor_calculateWorkersNeededPerCategory()
 {
-	for (int cat = 0; cat < 10; cat++) {
+	for (int cat = 0; cat < MAX_CATS; cat++) {
 		Data_CityInfo.laborCategory[cat].buildings = 0;
 		Data_CityInfo.laborCategory[cat].totalHousesCovered = 0;
 		Data_CityInfo.laborCategory[cat].workersAllocated = 0;
@@ -127,7 +129,7 @@ void CityInfo_Labor_checkEmployment()
 		if (Data_CityInfo_Extra.gameTimeYear >= Data_Scenario.startYear) {
 			if (Data_Message.messageDelay[MessageDelay_WorkersNeeded] <= 0) {
 				Data_Message.messageDelay[MessageDelay_WorkersNeeded] = 6;
-				PlayerMessage_post(0, 37, 0, 0);
+				PlayerMessage_post(0, Message_37_WorkersNeeded, 0, 0);
 			}
 		}
 	}

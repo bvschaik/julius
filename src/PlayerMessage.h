@@ -14,6 +14,7 @@ enum {
 
 enum {
 	Message_12_FireInTheCity = 12,
+	Message_37_WorkersNeeded = 37,
 	Message_38_SmallFestival = 38,
 	Message_39_LargeFestival = 39,
 	Message_40_GrandFestival = 40,
