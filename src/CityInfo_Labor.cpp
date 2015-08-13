@@ -138,13 +138,13 @@ void CityInfo_Labor_checkEmployment()
 void CityInfo_Labor_allocateWorkersToCategories()
 {
 	int workersNeeded = 0;
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < MAX_CATS; i++) {
 		Data_CityInfo.laborCategory[i].workersAllocated = 0;
 		workersNeeded += Data_CityInfo.laborCategory[i].workersNeeded;
 	}
 	Data_CityInfo.workersNeeded = 0;
 	if (workersNeeded <= Data_CityInfo.workersAvailable) {
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < MAX_CATS; i++) {
 			Data_CityInfo.laborCategory[i].workersAllocated = Data_CityInfo.laborCategory[i].workersNeeded;
 		}
 		Data_CityInfo.workersEmployed = workersNeeded;
@@ -235,9 +235,9 @@ static void setWorkerPercentages()
 
 static void allocateWorkersToBuildings()
 {
-	int categoryWorkersNeeded[10];
-	int categoryWorkersAllocated[10];
-	for (int i = 0; i < 10; i++) {
+	int categoryWorkersNeeded[MAX_CATS];
+	int categoryWorkersAllocated[MAX_CATS];
+	for (int i = 0; i < MAX_CATS; i++) {
 		categoryWorkersAllocated[i] = 0;
 		categoryWorkersNeeded[i] =
 			Data_CityInfo.laborCategory[i].workersAllocated < Data_CityInfo.laborCategory[i].workersNeeded
@@ -248,13 +248,11 @@ static void allocateWorkersToBuildings()
 			continue;
 		}
 		int cat = buildingTypeToLaborCategory[Data_Buildings[i].type];
-		if (cat == LaborCategory_Water) {
+		if (cat == LaborCategory_Water || cat < 0) {
 			// water is handled by allocateWorkersToWater()
 			continue;
 		}
-		if (cat >= 0) {
-			Data_Buildings[i].numWorkers = 0;
-		}
+		Data_Buildings[i].numWorkers = 0;
 		if (!shouldHaveWorkers(i, cat, 0)) {
 			continue;
 		}
@@ -273,7 +271,7 @@ static void allocateWorkersToBuildings()
 			}
 		}
 	}
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < MAX_CATS; i++) {
 		if (categoryWorkersNeeded[i]) {
 			// watch out: categoryWorkersNeeded is now reset to 'unallocated workers available'
 			if (categoryWorkersAllocated[i] >= Data_CityInfo.laborCategory[i].workersAllocated) {

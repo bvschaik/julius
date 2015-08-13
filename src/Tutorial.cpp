@@ -18,7 +18,7 @@ void Tutorial_onFire()
 	if (!Data_Tutorial.tutorial1.fire) {
 		Data_Tutorial.tutorial1.fire = 1;
 		refreshSidebarButtons();
-		PlayerMessage_post(1, 53, 0, 0);
+		PlayerMessage_post(1, Message_53_TutorialFirstFire, 0, 0);
 	}
 }
 
@@ -27,7 +27,7 @@ void Tutorial_onCollapse()
 	if (!Data_Tutorial.tutorial1.collapse) {
 		Data_Tutorial.tutorial1.collapse = 1;
 		refreshSidebarButtons();
-		PlayerMessage_post(1, 54, 0, 0);
+		PlayerMessage_post(1, Message_54_TutorialFirstCollapse, 0, 0);
 	}
 }
 
@@ -36,7 +36,7 @@ void Tutorial_onFilledGranary()
 	if (!Data_Tutorial.tutorial2.granaryBuilt) {
 		Data_Tutorial.tutorial2.granaryBuilt = 1;
 		refreshSidebarButtons();
-		PlayerMessage_post(1, 56, 0, 0);
+		PlayerMessage_post(1, Message_56_TutorialProvidingWater, 0, 0);
 	}
 }
 
@@ -47,7 +47,7 @@ void Tutorial_onAddToWarehouse()
 		Data_Tutorial.tutorial2.potteryMade = 1;
 		Data_Tutorial.tutorial2.potteryMadeYear = Data_CityInfo_Extra.gameTimeYear;
 		refreshSidebarButtons();
-		PlayerMessage_post(1, 61, 0, 0); // trade
+		PlayerMessage_post(1, Message_61_TutorialTrade, 0, 0); // trade
 	}
 }
 

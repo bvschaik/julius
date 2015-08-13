@@ -13,20 +13,20 @@
 
 void CityInfo_Resource_calculateAvailableResources()
 {
-	for (int i = 0; i < 16; i++) {
+	for (int i = 0; i < Resource_Max; i++) {
 		Data_CityInfo_Resource.availableResources[i] = 0;
 		Data_CityInfo_Resource.availableFoods[i] = 0;
 	}
 	Data_CityInfo_Resource.numAvailableResources = 0;
 	Data_CityInfo_Resource.numAvailableFoods = 0;
 
-	for (int i = 1; i < 16; i++) {
+	for (int i = Resource_Min; i < Resource_Max; i++) {
 		if (Empire_ourCityCanProduceResource(i) || Empire_canImportResource(i) ||
 			(i == Resource_Meat && Data_Scenario.allowedBuildings.wharf)) {
 			Data_CityInfo_Resource.availableResources[Data_CityInfo_Resource.numAvailableResources++] = i;
 		}
 	}
-	for (int i = 1; i <= Resource_Meat; i++) {
+	for (int i = Resource_MinFood; i < Resource_MaxFood; i++) {
 		if (i == Resource_Olives || i == Resource_Vines) {
 			continue;
 		}
@@ -39,7 +39,7 @@ void CityInfo_Resource_calculateAvailableResources()
 
 void CityInfo_Resource_calculateFood()
 {
-	for (int i = 0; i < 7; i++) {
+	for (int i = 0; i < Resource_MaxFood; i++) {
 		Data_CityInfo.resourceGranaryFoodStored[i] = 0;
 	}
 	Data_CityInfo.foodInfoFoodStoredInGranaries = 0;
@@ -63,7 +63,7 @@ void CityInfo_Resource_calculateFood()
 				Data_CityInfo.foodInfoGranariesUnderstaffed++;
 			}
 			int amountStored = 0;
-			for (int r = 1; r < 7; r++) {
+			for (int r = Resource_MinFood; r < Resource_MaxFood; r++) {
 				amountStored += b->data.storage.resourceStored[r];
 			}
 			if (pctWorkers < 50) {
@@ -73,9 +73,8 @@ void CityInfo_Resource_calculateFood()
 				}
 			} else {
 				Data_CityInfo.foodInfoGranariesOperating++;
-				for (int r = 0; r < 7; r++) {
-					Data_CityInfo.resourceGranaryFoodStored[r] +=
-						b->data.storage.resourceStored[r];
+				for (int r = 0; r < Resource_MaxFood; r++) {
+					Data_CityInfo.resourceGranaryFoodStored[r] += b->data.storage.resourceStored[r];
 				}
 				if (amountStored > 400) {
 					Tutorial_onFilledGranary();
@@ -83,10 +82,9 @@ void CityInfo_Resource_calculateFood()
 			}
 		}
 	}
-	for (int i = 1; i < 7; i++) {
+	for (int i = Resource_MinFood; i < Resource_MaxFood; i++) {
 		if (Data_CityInfo.resourceGranaryFoodStored[i]) {
-			Data_CityInfo.foodInfoFoodStoredInGranaries +=
-				Data_CityInfo.resourceGranaryFoodStored[i];
+			Data_CityInfo.foodInfoFoodStoredInGranaries += Data_CityInfo.resourceGranaryFoodStored[i];
 			Data_CityInfo.foodInfoFoodTypesAvailable++;
 		}
 	}
