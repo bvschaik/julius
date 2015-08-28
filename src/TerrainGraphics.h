@@ -48,7 +48,7 @@ typedef struct TerrainGraphic {
 	int isValid;
 	int groupOffset;
 	int itemOffset;
-	int field12;
+	int aqueductOffset;
 } TerrainGraphic;
 
 void TerrainGraphicsContext_init();

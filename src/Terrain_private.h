@@ -4,6 +4,8 @@
 #include "Data/Grid.h"
 #include "Data/Settings.h"
 
+#define DELTA(x, y) ((y) * GRID_SIZE + (x))
+
 #define FOREACH_ALL(block) \
 	{int gridOffset = Data_Settings_Map.gridStartOffset;\
 	for (int y = 0; y < Data_Settings_Map.height; y++, gridOffset += Data_Settings_Map.gridBorderSize) {\

@@ -7,7 +7,7 @@
 struct TerrainGraphicsContext {
 	unsigned char tiles[8];
 	unsigned char offsetForOrientation[4];
-	unsigned char field12;
+	unsigned char aqueductOffset;
 	unsigned char maxItemOffset;
 	unsigned char currentItemOffset;
 };
@@ -324,7 +324,7 @@ const TerrainGraphic *TerrainGraphicsContext_getGraphic(int group, int tiles[8])
 			result.isValid = 1;
 			result.groupOffset = context[i].offsetForOrientation[Data_Settings_Map.orientation / 2];
 			result.itemOffset = context[i].currentItemOffset;
-			result.field12 = context[i].field12;
+			result.aqueductOffset = context[i].aqueductOffset;
 			break;
 		}
 	}
@@ -348,7 +348,7 @@ const TerrainGraphic *TerrainGraphicsContext_getEarthquake(int gridOffset)
 		tiles[i] = ((Data_Grid_terrain[offset] & Terrain_Rock) &&
 			(Data_Grid_bitfields[offset] & Bitfield_PlazaOrEarthquake)) ? 1 : 0;
 	}
-	return TerrainGraphicsContext_getGraphic(TerrainGraphicsContext_Elevation, tiles);
+	return TerrainGraphicsContext_getGraphic(TerrainGraphicsContext_Earthquake, tiles);
 }
 
 const TerrainGraphic *TerrainGraphicsContext_getShore(int gridOffset)

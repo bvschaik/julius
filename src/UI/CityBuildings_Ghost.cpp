@@ -419,7 +419,7 @@ static void drawBuildingGhostAqueduct()
 		const struct TerrainGraphic *graphic = TerrainGraphicsContext_getAqueduct(gridOffset, 0);
 		if (Data_Grid_terrain[gridOffset] & Terrain_Road) {
 			int groupOffset = graphic->groupOffset;
-			if (!graphic->field12) {
+			if (!graphic->aqueductOffset) {
 				if (Data_Grid_terrain[gridOffset - 162] & Terrain_Road) {
 					groupOffset = 3;
 				} else {

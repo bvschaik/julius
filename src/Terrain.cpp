@@ -76,8 +76,6 @@ int ringIndex[6][7];
 #define STORE_XY_RADIUS(xTile,yTile) \
 	*(xTile) = xx; *(yTile) = yy;
 
-#define DELTA(x, y) ((y) * GRID_SIZE + (x))
-
 void Terrain_addBuildingToGrids(int buildingId, int x, int y, int size, int graphicId, int terrain)
 {
 	if (IsOutsideMap(x, y, size)) {
