@@ -1,6 +1,7 @@
 #include "UtilityManagement.h"
 
 #include "Grid.h"
+#include "Routing.h"
 #include "Terrain.h"
 #include "TerrainGraphics.h"
 
@@ -202,10 +203,10 @@ static int markRoadNetwork(int gridOffset, unsigned char roadNetworkId)
 		nextOffset = -1;
 		for (int i = 0; i < 4; i++) {
 			int newOffset = gridOffset + adjacentOffsets[i];
-			if (Data_Grid_routingLandCitizen[newOffset] >= 0 &&
-				Data_Grid_routingLandCitizen[newOffset] <= 2 &&
+			if (Data_Grid_routingLandCitizen[newOffset] >= Routing_Citizen_0_Road &&
+				Data_Grid_routingLandCitizen[newOffset] <= Routing_Citizen_2_PassableTerrain &&
 				!Data_Grid_roadNetworks[newOffset]) {
-				if (Data_Grid_routingLandCitizen[newOffset] != 2 ||
+				if (Data_Grid_routingLandCitizen[newOffset] != Routing_Citizen_2_PassableTerrain ||
 					Data_Grid_terrain[newOffset] & Terrain_AccessRamp) {
 					Data_Grid_roadNetworks[newOffset] = roadNetworkId;
 					size++;

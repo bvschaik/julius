@@ -173,7 +173,7 @@ void WalkerAction_flotsam(int walkerId)
 	}
 	w->isGhost = 0;
 	w->cartGraphicId = 0;
-	w->terrainUsage = 0;
+	w->terrainUsage = WalkerTerrainUsage_None;
 	switch (w->actionState) {
 		case WalkerActionState_128_FlotsamCreated:
 			w->isGhost = 1;

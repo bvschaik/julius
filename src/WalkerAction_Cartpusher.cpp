@@ -1,6 +1,7 @@
 #include "WalkerAction_private.h"
 
 #include "Resource.h"
+#include "Routing.h"
 #include "Walker.h"
 
 #include "Data/CityInfo.h"
@@ -150,8 +151,8 @@ void WalkerAction_cartpusher(int walkerId)
 			break;
 		case WalkerActionState_20_CartpusherInitial:
 			setCartGraphic(w);
-			if (Data_Grid_routingLandCitizen[w->gridOffset] < 0 ||
-				Data_Grid_routingLandCitizen[w->gridOffset] > 2) {
+			if (Data_Grid_routingLandCitizen[w->gridOffset] < Routing_Citizen_0_Road ||
+				Data_Grid_routingLandCitizen[w->gridOffset] > Routing_Citizen_2_PassableTerrain) {
 				w->state = WalkerState_Dead;
 			}
 			if (!BuildingIsInUse(buildingId) || b->walkerId != walkerId) {
@@ -170,7 +171,7 @@ void WalkerAction_cartpusher(int walkerId)
 				w->actionState = WalkerActionState_24_CartpusherAtWarehouse;
 			} else if (w->direction == DirWalker_9_Reroute) {
 				WalkerRoute_remove(walkerId);
-				if (Data_Grid_routingLandCitizen[w->gridOffset] != 2) {
+				if (Data_Grid_routingLandCitizen[w->gridOffset] != Routing_Citizen_2_PassableTerrain) {
 					w->actionState = WalkerActionState_20_CartpusherInitial;
 				}
 				w->waitTicks = 0;
@@ -188,7 +189,7 @@ void WalkerAction_cartpusher(int walkerId)
 				w->actionState = WalkerActionState_25_CartpusherAtGranary;
 			} else if (w->direction == DirWalker_9_Reroute) {
 				WalkerRoute_remove(walkerId);
-				if (Data_Grid_routingLandCitizen[w->gridOffset] != 2) {
+				if (Data_Grid_routingLandCitizen[w->gridOffset] != Routing_Citizen_2_PassableTerrain) {
 					w->actionState = WalkerActionState_20_CartpusherInitial;
 				}
 				w->waitTicks = 0;
@@ -207,7 +208,7 @@ void WalkerAction_cartpusher(int walkerId)
 				w->actionState = WalkerActionState_26_CartpusherAtWorkshop;
 			} else if (w->direction == DirWalker_9_Reroute) {
 				WalkerRoute_remove(walkerId);
-				if (Data_Grid_routingLandCitizen[w->gridOffset] != 2) {
+				if (Data_Grid_routingLandCitizen[w->gridOffset] != Routing_Citizen_2_PassableTerrain) {
 					w->actionState = WalkerActionState_20_CartpusherInitial;
 				}
 				w->waitTicks = 0;

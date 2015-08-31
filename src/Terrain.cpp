@@ -684,7 +684,7 @@ static int getRoadTileForAqueduct(int gridOffset, int gateOrientation)
 				isRoad = 1;
 			}
 		} else if (type == Building_Granary) {
-			if (Data_Grid_routingLandCitizen == 0) {
+			if (Data_Grid_routingLandCitizen[gridOffset] == Routing_Citizen_0_Road) {
 				isRoad = 1;
 			}
 		}
@@ -715,7 +715,7 @@ static int getAdjacentRoadTileForRoaming(int gridOffset)
 		if (type == Building_Gatehouse) {
 			isRoad = 0;
 		} else if (type == Building_Granary) {
-			if (Data_Grid_routingLandCitizen[gridOffset] == 0) {
+			if (Data_Grid_routingLandCitizen[gridOffset] == Routing_Citizen_0_Road) {
 				isRoad = 1;
 			}
 		}
@@ -1311,7 +1311,7 @@ static int getWallTileWithinRadius(int x, int y, int radius, int *xTile, int *yT
 {
 	int size = 1;
 	FOR_XY_RADIUS {
-		if (Data_Grid_routingWalls[gridOffset] == 0) {
+		if (Data_Grid_routingWalls[gridOffset] == Routing_Wall_0_Passable) {
 			*xTile = xx;
 			*yTile = yy;
 			return 1;

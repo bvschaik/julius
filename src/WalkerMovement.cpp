@@ -354,25 +354,29 @@ static void walkerAdvanceRouteTile(struct Data_Walker *w)
 	int targetTerrain = Data_Grid_terrain[targetGridOffset] & 0xc75f;
 	if (w->isBoat) {
 		if (!(targetTerrain & Terrain_Water)) {
-			w->direction = 9;
+			w->direction = DirWalker_9_Reroute;
 		}
 	} else if (w->terrainUsage == WalkerTerrainUsage_Enemy) {
 		int groundType = Data_Grid_routingLandNonCitizen[targetGridOffset];
-		if (groundType < 0) {
-			w->direction = 9;
-		} else if (groundType > 0 && groundType != 5) {
+		if (groundType < Routing_NonCitizen_0_Passable) {
+			w->direction = DirWalker_9_Reroute;
+		} else if (groundType > Routing_NonCitizen_0_Passable && groundType != Routing_NonCitizen_5_Fort) {
 			int causeDamage = 1;
 			int maxDamage = 0;
 			switch (groundType) {
-				case 1: maxDamage = 10; break;
-				case 2:
+				case Routing_NonCitizen_1_Building:
+					maxDamage = 10;
+					break;
+				case Routing_NonCitizen_2_Clearable:
 					if (Data_Grid_terrain[targetGridOffset] & 0x1420) {
 						causeDamage = 0;
 					} else {
 						maxDamage = 10;
 					}
 					break;
-				case 3: maxDamage = 200; break;
+				case Routing_NonCitizen_3_Wall:
+					maxDamage = 200;
+					break;
 				default: maxDamage = 150; break;
 			}
 			if (causeDamage) {
@@ -384,14 +388,14 @@ static void walkerAdvanceRouteTile(struct Data_Walker *w)
 			}
 		}
 	} else if (w->terrainUsage == WalkerTerrainUsage_Walls) {
-		if (Data_Grid_routingWalls[targetGridOffset] < 0) {
-			w->direction = 9;
+		if (Data_Grid_routingWalls[targetGridOffset] < Routing_Wall_0_Passable) {
+			w->direction = DirWalker_9_Reroute;
 		}
 	} else if (targetTerrain & (Terrain_Road | Terrain_AccessRamp)) {
 		if (roamingEnabled && targetTerrain & Terrain_Building) {
 			if (Data_Buildings[Data_Grid_buildingIds[targetGridOffset]].type == Building_Gatehouse) {
 				// do not allow roaming through gatehouse
-				w->direction = 9;
+				w->direction = DirWalker_9_Reroute;
 			}
 		}
 	} else if (targetTerrain & Terrain_Building) {
@@ -403,10 +407,10 @@ static void walkerAdvanceRouteTile(struct Data_Walker *w)
 			case Building_FortGround:
 				break; // OK to walk
 			default:
-				w->direction = 9;
+				w->direction = DirWalker_9_Reroute;
 		}
 	} else if (targetTerrain) {
-		w->direction = 9;
+		w->direction = DirWalker_9_Reroute;
 	}
 }
 
