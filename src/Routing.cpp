@@ -666,7 +666,7 @@ int Routing_canTravelThroughEverythingNonCitizen(int xSrc, int ySrc, int xDst, i
 	routeQueue(sourceOffset, destOffset, callbackCanTravelThroughEverythingNonCitizen);
 	return Data_Grid_routingDistance[destOffset] != 0;
 }
-//REVIEW
+
 int Routing_canPlaceRoadUnderAqueduct(int gridOffset)
 {
 	int graphic = Data_Grid_graphicIds[gridOffset] - GraphicId(ID_Graphic_Aqueduct);
@@ -715,7 +715,7 @@ int Routing_canPlaceRoadUnderAqueduct(int gridOffset)
 	}
 	return 1;
 }
-//REVIEW
+
 int Routing_getAqueductGraphicOffsetWithRoad(int gridOffset)
 {
 	int graphic = Data_Grid_graphicIds[gridOffset] - GraphicId(ID_Graphic_Aqueduct);
@@ -741,7 +741,7 @@ int Routing_getAqueductGraphicOffsetWithRoad(int gridOffset)
 			return 8;
 	}
 }
-//REVIEW
+
 static int canPlaceAqueductOnRoad(int gridOffset)
 {
 	int graphic = Data_Grid_graphicIds[gridOffset] - GraphicId(ID_Graphic_Road);
@@ -765,10 +765,10 @@ static int canPlaceAqueductOnRoad(int gridOffset)
 	}
 	return 1;
 }
-//REVIEW
+
 static int canPlaceInitialRoadOrAqueduct(int gridOffset, int isAqueduct)
 {
-	if (Data_Grid_routingLandCitizen[gridOffset] == -1) {
+	if (Data_Grid_routingLandCitizen[gridOffset] == Routing_Citizen_m1_Blocked) {
 		// not open land, can only if:
 		// - aqueduct should be placed, and:
 		// - land is a reservoir building OR an aqueduct
@@ -784,12 +784,10 @@ static int canPlaceInitialRoadOrAqueduct(int gridOffset, int isAqueduct)
 			}
 		}
 		return 0;
-	}
-	if (Data_Grid_routingLandCitizen[gridOffset] == 2) {
+	} else if (Data_Grid_routingLandCitizen[gridOffset] == Routing_Citizen_2_PassableTerrain) {
 		// rubble, access ramp, garden
 		return 0;
-	}
-	if (Data_Grid_routingLandCitizen[gridOffset] == -3) {
+	} else if (Data_Grid_routingLandCitizen[gridOffset] == Routing_Citizen_m3_Aqueduct) {
 		if (isAqueduct) {
 			return 0;
 		}
@@ -797,15 +795,16 @@ static int canPlaceInitialRoadOrAqueduct(int gridOffset, int isAqueduct)
 			return 1;
 		}
 		return 0;
+	} else {
+		return 1;
 	}
-	return 1;
 }
-//REVIEW
+
 static void callbackGetDistanceForBuildingRoadOrAqueduct(int nextOffset, int dist)
 {
 	int blocked = 0;
 	switch (Data_Grid_routingLandCitizen[nextOffset]) {
-		case -3: // aqueduct with something
+		case Routing_Citizen_m3_Aqueduct:
 			if (state.isAqueduct) {
 				blocked = 1;
 			} else if (!Routing_canPlaceRoadUnderAqueduct(nextOffset)) {
@@ -813,13 +812,14 @@ static void callbackGetDistanceForBuildingRoadOrAqueduct(int nextOffset, int dis
 				blocked = 1;
 			}
 			break;
-		case 2: // rubble, garden, access ramp
-		case -1: // non-empty land
+		case Routing_Citizen_2_PassableTerrain: // rubble, garden, access ramp
+		case Routing_Citizen_m1_Blocked: // non-empty land
 			blocked = 1;
 			break;
 		default:
 			if (Data_Grid_terrain[nextOffset] & Terrain_Building) {
-				if (Data_Grid_routingLandCitizen[nextOffset] != -4 || !state.isAqueduct) {
+				if (Data_Grid_routingLandCitizen[nextOffset] != Routing_Citizen_m4_ReservoirConnector ||
+					!state.isAqueduct) {
 					blocked = 1;
 				}
 			}
@@ -835,7 +835,7 @@ static void callbackGetDistanceForBuildingRoadOrAqueduct(int nextOffset, int dis
 		setDistAndEnqueue(nextOffset, dist);
 	}
 }
-//REVIEW
+
 int Routing_getDistanceForBuildingRoadOrAqueduct(int x, int y, int isAqueduct)
 {
 	int sourceOffset = GridOffset(x, y);
@@ -851,21 +851,21 @@ int Routing_getDistanceForBuildingRoadOrAqueduct(int x, int y, int isAqueduct)
 	routeQueue(sourceOffset, -1, callbackGetDistanceForBuildingRoadOrAqueduct);
 	return 1;
 }
-//REVIEW
+
 static void callbackGetDistanceForBuildingWall(int nextOffset, int dist)
 {
-	if (Data_Grid_routingLandCitizen[nextOffset] == 4) {
+	if (Data_Grid_routingLandCitizen[nextOffset] == Routing_Citizen_4_ClearTerrain) {
 		setDistAndEnqueue(nextOffset, dist);
 	}
 }
-//REVIEW
+
 int Routing_getDistanceForBuildingWall(int x, int y)
 {
 	int sourceOffset = GridOffset(x, y);
 	routeQueue(sourceOffset, -1, callbackGetDistanceForBuildingWall);
 	return 1;
 }
-//REVIEW
+
 int Routing_placeRoutedBuilding(int xSrc, int ySrc, int xDst, int yDst, RoutedBuilding type, int *items)
 {
 	static const int directionIndices[8][4] = {
@@ -893,7 +893,7 @@ int Routing_placeRoutedBuilding(int xSrc, int ySrc, int xDst, int yDst, RoutedBu
 		switch (type) {
 			default:
 			case RoutedBuilding_Road:
-				TerrainGraphics_setTileRoad(xDst, yDst);
+				*items += TerrainGraphics_setTileRoad(xDst, yDst);
 				break;
 			case RoutedBuilding_Wall:
 				*items += TerrainGraphics_setTileWall(xDst, yDst);
@@ -906,7 +906,7 @@ int Routing_placeRoutedBuilding(int xSrc, int ySrc, int xDst, int yDst, RoutedBu
 				break;
 		}
 		int direction = Routing_getGeneralDirection(xDst, yDst, xSrc, ySrc);
-		if (direction == 8) {
+		if (direction == Dir_8_None) {
 			return 1; // destination reached
 		}
 		int routed = 0;
@@ -927,7 +927,7 @@ int Routing_placeRoutedBuilding(int xSrc, int ySrc, int xDst, int yDst, RoutedBu
 		}
 	}
 }
-//REVIEW
+
 int Routing_getGeneralDirection(int xSrc, int ySrc, int xDst, int yDst)
 {
 	if (xSrc < xDst) {
@@ -955,7 +955,7 @@ int Routing_getGeneralDirection(int xSrc, int ySrc, int xDst, int yDst)
 	}
 	return Dir_8_None;
 }
-//REVIEW
+
 int Routing_getDirectionForMissileShooter(int xSrc, int ySrc, int xDst, int yDst)
 {
 	int dx = xSrc > xDst ? xSrc - xDst : xDst - xSrc;
@@ -1016,7 +1016,7 @@ int Routing_getDirectionForMissileShooter(int xSrc, int ySrc, int xDst, int yDst
 		}
 	}
 }
-//REVIEW
+
 int Routing_getDirectionForMissile(int xSrc, int ySrc, int xDst, int yDst)
 {
 	int dx = xSrc > xDst ? xSrc - xDst : xDst - xSrc;
@@ -1222,7 +1222,7 @@ int Routing_getPath(int numDirections, int routingPathId, int xSrc, int ySrc, in
 	}
 	return numTiles;
 }
-//REVIEW
+
 int Routing_getClosestXYWithinRange(int numDirections, int xSrc, int ySrc, int xDst, int yDst, int range, int *xOut, int *yOut)
 {
 	int dstGridOffset = GridOffset(xDst, yDst);
