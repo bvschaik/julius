@@ -279,15 +279,15 @@ static void evolveLuxuryPalace(int buildingId, int *hasExpanded)
 	}
 }
 
+static void (*const callbacks[])(int, int*) = {
+	evolveSmallTent, evolveLargeTent, evolveSmallShack, evolveLargeShack,
+	evolveSmallHovel, evolveLargeHovel, evolveSmallCasa, evolveLargeCasa,
+	evolveSmallInsula, evolveMediumInsula, evolveLargeInsula, evolveGrandInsula,
+	evolveSmallVilla, evolveMediumVilla, evolveLargeVilla, evolveGrandVilla,
+	evolveSmallPalace, evolveMediumPalace, evolveLargePalace, evolveLuxuryPalace
+};
 void HouseEvolution_Tick_evolveAndConsumeResources()
 {
-	static void (*callbacks[])(int, int*) = {
-		evolveSmallTent, evolveLargeTent, evolveSmallShack, evolveLargeShack,
-		evolveSmallHovel, evolveLargeHovel, evolveSmallCasa, evolveLargeCasa,
-		evolveSmallInsula, evolveMediumInsula, evolveLargeInsula, evolveGrandInsula,
-		evolveSmallVilla, evolveMediumVilla, evolveLargeVilla, evolveGrandVilla,
-		evolveSmallPalace, evolveMediumPalace, evolveLargePalace, evolveLuxuryPalace
-	};
 	resetCityInfoServiceRequiredCounters();
 	int hasExpanded = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
@@ -321,7 +321,7 @@ static int checkEvolveDesirability(int buildingId)
 	} else {
 		status = None;
 	}
-	Data_Buildings[buildingId].data.house.evolveTextId = status;
+	Data_Buildings[buildingId].data.house.evolveTextId = status; // BUG? -1 in an unsigned char?
 	return status;
 }
 
@@ -340,7 +340,7 @@ static int hasRequiredGoodsAndServices(int buildingId, int forUpgrade)
 			return 0;
 		}
 		if (water == 1 && !b->hasWellAccess) {
-			++Data_CityInfo.housesRequiringWaterToEvolve;
+			++Data_CityInfo.housesRequiringWellToEvolve;
 			return 0;
 		}
 	}
@@ -440,7 +440,7 @@ static int hasRequiredGoodsAndServices(int buildingId, int forUpgrade)
 		return 0;
 	}
 	int wine = Data_Model_Houses[level].wine;
-	if (wine && !b->data.house.inventory[Inventory_Wine]) {
+	if (wine && b->data.house.inventory[Inventory_Wine] <= 0) {
 		return 0;
 	}
 	if (wine >= 2 && Data_CityInfo.resourceWineTypesAvailable < 2) {
@@ -459,28 +459,28 @@ static void consumeResources(int buildingId)
 	int oil = Data_Model_Houses[level].oil;
 	int wine = Data_Model_Houses[level].wine;
 
-	if (pottery) {
+	if (pottery > 0) {
 		if (pottery > b->data.house.inventory[Inventory_Pottery]) {
 			b->data.house.inventory[Inventory_Pottery] = 0;
 		} else {
 			b->data.house.inventory[Inventory_Pottery] -= pottery;
 		}
 	}
-	if (furniture) {
+	if (furniture > 0) {
 		if (furniture > b->data.house.inventory[Inventory_Furniture]) {
 			b->data.house.inventory[Inventory_Furniture] = 0;
 		} else {
 			b->data.house.inventory[Inventory_Furniture] -= furniture;
 		}
 	}
-	if (oil) {
+	if (oil > 0) {
 		if (oil > b->data.house.inventory[Inventory_Oil]) {
 			b->data.house.inventory[Inventory_Oil] = 0;
 		} else {
 			b->data.house.inventory[Inventory_Oil] -= oil;
 		}
 	}
-	if (wine) {
+	if (wine > 0) {
 		if (wine > b->data.house.inventory[Inventory_Wine]) {
 			b->data.house.inventory[Inventory_Wine] = 0;
 		} else {
@@ -492,7 +492,7 @@ static void consumeResources(int buildingId)
 static void resetCityInfoServiceRequiredCounters()
 {
 	Data_CityInfo.housesRequiringFountainToEvolve = 0;
-	Data_CityInfo.housesRequiringWaterToEvolve = 0;
+	Data_CityInfo.housesRequiringWellToEvolve = 0;
 	Data_CityInfo.housesRequiringEntertainmentToEvolve = 0;
 	Data_CityInfo.housesRequiringMoreEntertainmentToEvolve = 0;
 	Data_CityInfo.housesRequiringEducationToEvolve = 0;
@@ -675,28 +675,33 @@ void HouseEvolution_determineEvolveText(int buildingId, int hasBadDesirabilityBu
 	if (foodtypesAvailable < foodtypesRequired) {
 		if (foodtypesRequired == 1) {
 			b->data.house.evolveTextId = 9;
+			return;
 		} else if (foodtypesRequired == 2) {
 			b->data.house.evolveTextId = 10;
+			return;
 		} else if (foodtypesRequired == 3) {
 			b->data.house.evolveTextId = 11;
+			return;
 		}
-		return;
 	}
 	// education
 	int education = Data_Model_Houses[level].education;
 	if (b->data.house.education < education) {
 		if (education == 1) {
 			b->data.house.evolveTextId = 14;
+			return;
 		} else if (education == 2) {
 			if (b->data.house.school) {
 				b->data.house.evolveTextId = 15;
+				return;
 			} else if (b->data.house.library) {
 				b->data.house.evolveTextId = 16;
+				return;
 			}
 		} else if (education == 3) {
 			b->data.house.evolveTextId = 17;
+			return;
 		}
-		return;
 	}
 	// bathhouse
 	if (b->data.house.bathhouse < Data_Model_Houses[level].bathhouse) {
@@ -766,9 +771,8 @@ void HouseEvolution_determineEvolveText(int buildingId, int hasBadDesirabilityBu
 
 	// this house will evolve if ...
 
-	++level;
 	// desirability
-	if (b->desirability < Data_Model_Houses[level-1].evolveDesirability) {
+	if (b->desirability < Data_Model_Houses[level].evolveDesirability) {
 		if (hasBadDesirabilityBuilding) {
 			b->data.house.evolveTextId = 62;
 		} else {
@@ -776,6 +780,7 @@ void HouseEvolution_determineEvolveText(int buildingId, int hasBadDesirabilityBu
 		}
 		return;
 	}
+	++level;
 	// water
 	water = Data_Model_Houses[level].water;
 	if (water == 1 && !b->hasWaterAccess && !b->hasWellAccess) {
@@ -809,28 +814,33 @@ void HouseEvolution_determineEvolveText(int buildingId, int hasBadDesirabilityBu
 	if (foodtypesAvailable < foodtypesRequired) {
 		if (foodtypesRequired == 1) {
 			b->data.house.evolveTextId = 39;
+			return;
 		} else if (foodtypesRequired == 2) {
 			b->data.house.evolveTextId = 40;
+			return;
 		} else if (foodtypesRequired == 3) {
 			b->data.house.evolveTextId = 41;
+			return;
 		}
-		return;
 	}
 	// education
 	education = Data_Model_Houses[level].education;
 	if (b->data.house.education < education) {
 		if (education == 1) {
 			b->data.house.evolveTextId = 44;
+			return;
 		} else if (education == 2) {
 			if (b->data.house.school) {
 				b->data.house.evolveTextId = 45;
+				return;
 			} else if (b->data.house.library) {
 				b->data.house.evolveTextId = 46;
+				return;
 			}
 		} else if (education == 3) {
 			b->data.house.evolveTextId = 47;
+			return;
 		}
-		return;
 	}
 	// bathhouse
 	if (b->data.house.bathhouse < Data_Model_Houses[level].bathhouse) {

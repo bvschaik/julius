@@ -339,7 +339,7 @@ static void determineWarehousemanDestination(int walkerId, struct Data_Walker *w
 		if (dstBuildingId) {
 			w->loadsSoldOrCarrying = 0;
 			setDestination(w, WalkerActionState_57_WarehousemanGettingResource, dstBuildingId, xDst, yDst);
-			w->terrainUsage = WalkerTerrainUsage_AnyLand;
+			w->terrainUsage = WalkerTerrainUsage_PreferRoads;
 		} else {
 			w->state = WalkerState_Dead;
 		}
@@ -539,7 +539,7 @@ void WalkerAction_warehouseman(int walkerId)
 			}
 			break;
 		case WalkerActionState_57_WarehousemanGettingResource:
-			w->terrainUsage = WalkerTerrainUsage_AnyLand;
+			w->terrainUsage = WalkerTerrainUsage_PreferRoads;
 			w->cartGraphicId = GraphicId(ID_Graphic_Walker_CartpusherCart); // empty
 			WalkerMovement_walkTicks(walkerId, 1);
 			if (w->direction == DirWalker_8_AtDestination) {
@@ -551,7 +551,7 @@ void WalkerAction_warehouseman(int walkerId)
 			}
 			break;
 		case WalkerActionState_58_WarehousemanAtWarehouseGettingResource:
-			w->terrainUsage = WalkerTerrainUsage_AnyLand;
+			w->terrainUsage = WalkerTerrainUsage_PreferRoads;
 			w->waitTicks++;
 			if (w->waitTicks > 4) {
 				w->loadsSoldOrCarrying = 0;
@@ -568,7 +568,7 @@ void WalkerAction_warehouseman(int walkerId)
 			w->graphicOffset = 0;
 			break;
 		case WalkerActionState_59_WarehousemanReturningWithResource:
-			w->terrainUsage = WalkerTerrainUsage_AnyLand;
+			w->terrainUsage = WalkerTerrainUsage_PreferRoads;
 			// update graphic
 			if (w->loadsSoldOrCarrying <= 0) {
 				w->cartGraphicId = GraphicId(ID_Graphic_Walker_CartpusherCart); // empty

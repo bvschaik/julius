@@ -43,7 +43,7 @@ enum {
 void WalkerAction_seagulls(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
-	w->terrainUsage = WalkerTerrainUsage_None;
+	w->terrainUsage = WalkerTerrainUsage_Any;
 	w->isGhost = 0;
 	w->useCrossCountry = 1;
 	if (!(w->graphicOffset & 3) && WalkerMovement_crossCountryWalkTicks(walkerId, 1)) {

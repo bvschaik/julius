@@ -39,7 +39,7 @@ void WalkerAction_militaryStandard(int walkerId)
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	struct Data_Formation *f = &Data_Formations[w->formationId];
 
-	w->terrainUsage = WalkerTerrainUsage_None;
+	w->terrainUsage = WalkerTerrainUsage_Any;
 	WalkerActionIncreaseGraphicOffset(w, 16);
 	Walker_removeFromTileList(walkerId);
 	if (f->isAtFort) {
@@ -221,7 +221,7 @@ void WalkerAction_soldier(int walkerId)
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	struct Data_Formation *f = &Data_Formations[w->formationId];
 	Data_CityInfo.numSoldiersInCity++;
-	w->terrainUsage = WalkerTerrainUsage_None;
+	w->terrainUsage = WalkerTerrainUsage_Any;
 	WalkerActionIncreaseGraphicOffset(w, 12);
 	w->cartGraphicId = 0;
 	if (f->inUse != 1) {

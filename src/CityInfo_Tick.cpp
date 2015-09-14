@@ -42,7 +42,7 @@ void CityInfo_Tick_countBuildingTypes()
 	CLEAR(fountain);
 	CLEAR(militaryAcademy);
 	CLEAR(barracks);
-	for (int i = 0; i < 16; i++) {
+	for (int i = 0; i < Resource_Max; i++) {
 		Data_CityInfo_Buildings.industry.working[i] = 0;
 		Data_CityInfo_Buildings.industry.total[i] = 0;
 	}

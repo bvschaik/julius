@@ -502,7 +502,7 @@ static void drawBuildingGhostBathhouse()
 		Graphics_drawIsometricFootprint(graphicId, xOffsetBase, yOffsetBase, Color_MaskGreen);
 		Graphics_drawIsometricTop(graphicId, xOffsetBase, yOffsetBase, Color_MaskGreen);
 		int hasWater = 0;
-		for (int i = 0; i < numTiles; i++) { // BUGFIXED: was not accurate on rotated maps
+		for (int i = 0; i < numTiles; i++) { // FIXED: was not accurate on rotated maps
 			int tileOffset = gridOffset + tileGridOffsets[orientationIndex][i];
 			if (Data_Grid_terrain[tileOffset] & Terrain_ReservoirRange) {
 				hasWater = 1;

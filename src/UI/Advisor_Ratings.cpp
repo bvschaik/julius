@@ -56,7 +56,7 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
 	Widget_GameText_draw(53, 5, baseOffsetX + 85 + width, baseOffsetY + 334, Font_NormalBlack);
 	hasReached = !Data_Scenario.winCriteria.cultureEnabled ||
 		Data_CityInfo.ratingCulture > Data_Scenario.winCriteria.culture ||
-		Data_CityInfo.ratingCulture == 100; // FIXME: bug fixed
+		Data_CityInfo.ratingCulture == 100; // FIXED: capital bug fixed
 	drawRatingColumn(baseOffsetX + 110, baseOffsetY + 274, Data_CityInfo.ratingCulture, hasReached);
 
 	// prosperity
@@ -76,7 +76,7 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
 	Widget_GameText_draw(53, 5, baseOffsetX + 205 + width, baseOffsetY + 334, Font_NormalBlack);
 	hasReached = !Data_Scenario.winCriteria.prosperityEnabled ||
 		Data_CityInfo.ratingProsperity > Data_Scenario.winCriteria.prosperity ||
-		Data_CityInfo.ratingProsperity == 100; // FIXME: bug fixed
+		Data_CityInfo.ratingProsperity == 100; // FIXED: capital bug fixed
 	drawRatingColumn(baseOffsetX + 230, baseOffsetY + 274, Data_CityInfo.ratingProsperity, hasReached);
 
 	// peace
@@ -96,7 +96,7 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
 	Widget_GameText_draw(53, 5, baseOffsetX + 325 + width, baseOffsetY + 334, Font_NormalBlack);
 	hasReached = !Data_Scenario.winCriteria.peaceEnabled ||
 		Data_CityInfo.ratingPeace > Data_Scenario.winCriteria.peace ||
-		Data_CityInfo.ratingPeace == 100; // FIXME: bug fixed: no capital
+		Data_CityInfo.ratingPeace == 100; // FIXED: capital bug fixed
 	drawRatingColumn(baseOffsetX + 350, baseOffsetY + 274, Data_CityInfo.ratingPeace, hasReached);
 
 	// favor
@@ -116,7 +116,7 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
 	Widget_GameText_draw(53, 5, baseOffsetX + 445 + width, baseOffsetY + 334, Font_NormalBlack);
 	hasReached = !Data_Scenario.winCriteria.favorEnabled ||
 		Data_CityInfo.ratingFavor > Data_Scenario.winCriteria.favor ||
-		Data_CityInfo.ratingFavor == 100; // FIXME: bug fixed
+		Data_CityInfo.ratingFavor == 100; // FIXED: capital bug fixed
 	drawRatingColumn(baseOffsetX + 470, baseOffsetY + 274, Data_CityInfo.ratingPeace, hasReached);
 
 	// bottom info box

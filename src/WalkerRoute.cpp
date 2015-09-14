@@ -41,7 +41,7 @@ int WalkerRoute_getNumAvailable()
 
 static int getFirstAvailable()
 {
-	for (int i = 1; i < 600; i++) {
+	for (int i = 1; i < MAX_ROUTES; i++) {
 		if (Data_Routes.walkerIds[i] == 0) {
 			return i;
 		}
@@ -73,8 +73,6 @@ void WalkerRoute_add(int walkerId)
 	} else {
 		// land walker
 		int canTravel;
-		//printf("   Determining travelability from %d %d to %d %d\n",
-		//	w->x, w->y, w->destinationX, w->destinationY);
 		switch (w->terrainUsage) {
 			case WalkerTerrainUsage_Enemy:
 				canTravel = Routing_canTravelOverLandNonCitizen(w->x, w->y,
@@ -96,7 +94,7 @@ void WalkerRoute_add(int walkerId)
 				canTravel = Routing_canTravelOverLandNonCitizen(w->x, w->y,
 					w->destinationX, w->destinationY, MAX_BUILDINGS, 5000);
 				break;
-			case WalkerTerrainUsage_AnyLand:
+			case WalkerTerrainUsage_PreferRoads:
 				canTravel = Routing_canTravelOverRoadGardenCitizen(w->x, w->y,
 					w->destinationX, w->destinationY);
 				if (!canTravel) {
@@ -128,7 +126,6 @@ void WalkerRoute_add(int walkerId)
 		} else { // cannot travel
 			pathLength = 0;
 		}
-		//printf("   Done - can travel ? %d path length %d\n", canTravel, pathLength);
 	}
 	if (pathLength) {
 		Data_Routes.walkerIds[pathId] = walkerId;

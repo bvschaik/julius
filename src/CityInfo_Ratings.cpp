@@ -472,7 +472,7 @@ void CityInfo_Ratings_updatePeaceExplanation()
 {
 	int reason;
 	if (Data_CityInfo.numImperialSoldiersInCity) {
-		reason = 8; // BUGFIX: 7+8 interchanged
+		reason = 8; // FIXED: 7+8 interchanged
 	} else if (Data_CityInfo.numEnemiesInCity) {
 		reason = 7;
 	} else if (Data_CityInfo.numRiotersInCity) {

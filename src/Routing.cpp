@@ -236,7 +236,7 @@ void Routing_determineLandCitizen()
 				int buildingId = Data_Grid_buildingIds[gridOffset];
 				if (!buildingId) {
 					// shouldn't happen
-					Data_Grid_routingLandNonCitizen[gridOffset] = 4; // BUGFIX - should be citizen?
+					Data_Grid_routingLandNonCitizen[gridOffset] = 4; // BUG: should be citizen?
 					Data_Grid_terrain[gridOffset] &= ~Terrain_Building; // remove 8 = building
 					Data_Grid_graphicIds[gridOffset] = (Data_Grid_random[gridOffset] & 7) + GraphicId(ID_Graphic_TerrainGrass1);
 					Data_Grid_edge[gridOffset] = Edge_LeftmostTile;

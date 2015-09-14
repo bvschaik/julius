@@ -31,7 +31,7 @@ int Resource_getGraphicIdOffset(int resource, int type)
 
 void Resource_calculateWarehouseStocks()
 {
-	for (int i = 0; i < 16; i++) {
+	for (int i = 0; i < Resource_Max; i++) {
 		Data_CityInfo.resourceSpaceInWarehouses[i] = 0;
 		Data_CityInfo.resourceStored[i] = 0;
 	}

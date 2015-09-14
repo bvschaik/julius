@@ -285,7 +285,7 @@ void CityInfo_Gods_calculateMoods(int updateMoods)
 		Data_CityInfo.godTargetHappiness[i] += 12 - festivalPenalty;
 	}
 
-	// BUGFIX poor Venus never gets points here!
+	// BUG poor Venus never gets points here!
 	if (maxGod < 4) {
 		if (Data_CityInfo.godTargetHappiness[maxGod] >= 50) {
 			Data_CityInfo.godTargetHappiness[maxGod] = 100;

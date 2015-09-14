@@ -572,7 +572,7 @@ void WalkerAction_enemy53_Axe(int walkerId)
 void WalkerAction_enemy54_Gladiator(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
-	w->terrainUsage = WalkerTerrainUsage_None;
+	w->terrainUsage = WalkerTerrainUsage_Any;
 	w->useCrossCountry = 0;
 	WalkerActionIncreaseGraphicOffset(w, 12);
 	if (Data_Event.gladiatorRevolt.state == GladiatorRevolt_Finished) {

@@ -10,7 +10,7 @@ void WalkerAction_indigenousNative(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	struct Data_Building *b = &Data_Buildings[w->buildingId];
-	w->terrainUsage = 0;
+	w->terrainUsage = WalkerTerrainUsage_Any;
 	w->useCrossCountry = 0;
 	w->maxRoamLength = 800;
 	if (!BuildingIsInUse(w->buildingId) || b->walkerId != walkerId) {
@@ -26,17 +26,19 @@ void WalkerAction_indigenousNative(int walkerId)
 			break;
 		case WalkerActionState_156_NativeGoingToMeetingCenter:
 			WalkerMovement_walkTicks(walkerId, 1);
-			if (w->direction == 8) {
+			if (w->direction == DirWalker_8_AtDestination) {
 				w->actionState = WalkerActionState_157_NativeReturningFromMeetingCenter;
 				w->destinationX = w->sourceX;
 				w->destinationY = w->sourceY;
-			} else if (w->direction == 9 || w->direction == 10) {
+			} else if (w->direction == DirWalker_9_Reroute || w->direction == DirWalker_10_Lost) {
 				w->state = WalkerState_Dead;
 			}
 			break;
 		case WalkerActionState_157_NativeReturningFromMeetingCenter:
 			WalkerMovement_walkTicks(walkerId, 1);
-			if (w->direction == 8 || w->direction == 9 || w->direction == 10) {
+			if (w->direction == DirWalker_8_AtDestination ||
+				w->direction == DirWalker_9_Reroute ||
+				w->direction == DirWalker_10_Lost) {
 				w->state = WalkerState_Dead;
 			}
 			break;
@@ -65,15 +67,17 @@ void WalkerAction_indigenousNative(int walkerId)
 		case WalkerActionState_159_NativeAttacking:
 			Data_CityInfo.riotersOrAttackingNativesInCity = 10;
 			Data_CityInfo.numAttackingNativesInCity++;
-			w->terrainUsage = 2;
+			w->terrainUsage = WalkerTerrainUsage_Enemy;
 			WalkerMovement_walkTicks(walkerId, 1);
-			if (w->direction == 8 || w->direction == 9 || w->direction == 10) {
+			if (w->direction == DirWalker_8_AtDestination ||
+				w->direction == DirWalker_9_Reroute ||
+				w->direction == DirWalker_10_Lost) {
 				w->actionState = WalkerActionState_158_NativeCreated;
 			}
 			break;
 	}
 	int dir;
-	if (w->actionState == WalkerActionState_150_Attack || w->direction == 11) {
+	if (w->actionState == WalkerActionState_150_Attack || w->direction == DirWalker_11_Attack) {
 		dir = w->attackDirection;
 	} else if (w->direction < 8) {
 		dir = w->direction;
@@ -91,7 +95,7 @@ void WalkerAction_indigenousNative(int walkerId)
 		}
 	} else if (w->actionState == WalkerActionState_149_Corpse) {
 		w->graphicId = 441 + WalkerActionCorpseGraphicOffset(w);
-	} else if (w->direction == 11) {
+	} else if (w->direction == DirWalker_11_Attack) {
 		w->graphicId = 393 + dir + 8 * (w->graphicOffset / 2);
 	} else if (w->actionState == WalkerActionState_159_NativeAttacking) {
 		w->graphicId = 297 + dir + 8 * w->graphicOffset;
