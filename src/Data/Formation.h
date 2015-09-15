@@ -2,6 +2,8 @@
 #define DATA_FORMATION_H
 
 #define MAX_FORMATIONS 50
+#define MAX_FORMATION_WALKERS 16
+#define MAX_INVASION_FORMATIONS 25
 
 enum {
 	FormationLayout_Tortoise = 0,
@@ -18,6 +20,14 @@ enum {
 	FormationLayout_Enemy12 = 12,
 };
 
+enum {
+	FormationAttackType_FoodChain = 0,
+	FormationAttackType_GoldStores = 1,
+	FormationAttackType_BestBuildings = 2,
+	FormationAttackType_Troops = 3,
+	FormationAttackType_Random = 4
+};
+
 struct Data_Formation {
 	unsigned char inUse;
 	unsigned char ciid;
@@ -25,7 +35,7 @@ struct Data_Formation {
 	unsigned char isAtFort;
 	short walkerType;
 	short buildingId;
-	short walkerIds[16];
+	short walkerIds[MAX_FORMATION_WALKERS];
 	unsigned char numWalkers;
 	unsigned char maxWalkers;
 	short layout;
@@ -93,15 +103,15 @@ extern struct _Data_Formation_Extra {
 } Data_Formation_Extra;
 
 extern struct _Data_Formation_Invasion {
-	int formationId[25];
-	int homeX[25];
-	int homeY[25];
-	int layout[25];
-	int destinationX[25];
-	int destinationY[25];
-	int destinationBuildingId[25];
-	int numLegions[25];
-	int ignoreRomanSoldiers[25];
+	int formationId[MAX_INVASION_FORMATIONS];
+	int homeX[MAX_INVASION_FORMATIONS];
+	int homeY[MAX_INVASION_FORMATIONS];
+	int layout[MAX_INVASION_FORMATIONS];
+	int destinationX[MAX_INVASION_FORMATIONS];
+	int destinationY[MAX_INVASION_FORMATIONS];
+	int destinationBuildingId[MAX_INVASION_FORMATIONS];
+	int numLegions[MAX_INVASION_FORMATIONS];
+	int ignoreRomanSoldiers[MAX_INVASION_FORMATIONS];
 } Data_Formation_Invasion;
 
 #endif

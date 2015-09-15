@@ -11,6 +11,7 @@
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
+#include "Data/Constants.h"
 #include "Data/Formation.h"
 #include "Data/Grid.h"
 #include "Data/Random.h"
@@ -217,30 +218,30 @@ static void tickUpdateDirection()
 			f->direction = Data_Walkers[f->walkerIds[0]].direction;
 		} else if (f->layout == FormationLayout_DoubleLine1 || f->layout == FormationLayout_SingleLine1) {
 			if (f->yHome < f->prevYHome) {
-				f->direction = 0;
+				f->direction = Dir_0_Top;
 			} else if (f->yHome > f->prevYHome) {
-				f->direction = 4;
+				f->direction = Dir_4_Bottom;
 			}
 		} else if (f->layout == FormationLayout_DoubleLine2 || f->layout == FormationLayout_SingleLine2) {
 			if (f->xHome < f->prevXHome) {
-				f->direction = 6;
+				f->direction = Dir_6_Left;
 			} else if (f->xHome > f->prevXHome) {
-				f->direction = 2;
+				f->direction = Dir_2_Right;
 			}
 		} else if (f->layout == FormationLayout_Tortoise || f->layout == FormationLayout_Column) {
 			int dx = (f->xHome < f->prevXHome) ? (f->prevXHome - f->xHome) : (f->xHome - f->prevXHome);
 			int dy = (f->yHome < f->prevYHome) ? (f->prevYHome - f->yHome) : (f->yHome - f->prevYHome);
 			if (dx > dy) {
 				if (f->xHome < f->prevXHome) {
-					f->direction = 6;
+					f->direction = Dir_6_Left;
 				} else if (f->xHome > f->prevXHome) {
-					f->direction = 2;
+					f->direction = Dir_2_Right;
 				}
 			} else {
 				if (f->yHome < f->prevYHome) {
-					f->direction = 0;
+					f->direction = Dir_0_Top;
 				} else if (f->yHome > f->prevYHome) {
-					f->direction = 4;
+					f->direction = Dir_4_Bottom;
 				}
 			}
 		}
@@ -273,14 +274,14 @@ static void tickUpdateLegions()
 			f->missileAttackTimeout = 0;
 			f->missileFired = 0;
 		}
-		for (int n = 0; n < 16; n++) {
+		for (int n = 0; n < MAX_FORMATION_WALKERS; n++) {
 			if (Data_Walkers[f->walkerIds[n]].actionState == WalkerActionState_150_Attack) {
 				f->recentFight = 6;
 			}
 		}
 		if (f->monthsLowMorale || f->monthsVeryLowMorale) {
 			// flee back to fort
-			for (int n = 0; n < 16; n++) {
+			for (int n = 0; n < MAX_FORMATION_WALKERS; n++) {
 				struct Data_Walker *w = &Data_Walkers[f->walkerIds[n]];
 				if (w->actionState != WalkerActionState_150_Attack &&
 					w->actionState != WalkerActionState_149_Corpse &&
@@ -293,7 +294,7 @@ static void tickUpdateLegions()
 			if (Data_Formation_Extra.numEnemyFormations +
 				Data_CityInfo.numRiotersInCity +
 				Data_CityInfo.numAttackingNativesInCity > 0) {
-				for (int n = 0; n < 16; n++) {
+				for (int n = 0; n < MAX_FORMATION_WALKERS; n++) {
 					struct Data_Walker *w = &Data_Walkers[f->walkerIds[n]];
 					if (f->walkerIds[n] != 0 &&
 						w->actionState != WalkerActionState_150_Attack &&
@@ -425,7 +426,7 @@ static void setNativeTargetBuilding(int formationId)
 static void setEnemyTargetBuilding(struct Data_Formation *f)
 {
 	int attack = f->attackType;
-	if (attack == 4) { // random
+	if (attack == FormationAttackType_Random) {
 		attack = Data_Random.random1_7bit & 3;
 	}
 	int bestTypeIndex = 100;
@@ -443,7 +444,7 @@ static void setEnemyTargetBuilding(struct Data_Formation *f)
 					bestTypeIndex = n;
 					buildingId = i;
 					minDistance = distance;
-				} else if (n == bestTypeIndex && distance < minDistance) {
+				} else if (distance < minDistance) {
 					buildingId = i;
 					minDistance = distance;
 				}
@@ -452,6 +453,7 @@ static void setEnemyTargetBuilding(struct Data_Formation *f)
 		}
 	}
 	if (buildingId <= 0) {
+		// no target buildings left: take rioter attack priority
 		for (int i = 1; i < MAX_BUILDINGS; i++) {
 			struct Data_Building *b = &Data_Buildings[i];
 			if (!BuildingIsInUse(i) || Data_Grid_romanSoldierConcentration[b->gridOffset]) {
@@ -464,7 +466,7 @@ static void setEnemyTargetBuilding(struct Data_Formation *f)
 						bestTypeIndex = n;
 						buildingId = i;
 						minDistance = distance;
-					} else if (n == bestTypeIndex && distance < minDistance) {
+					} else if (distance < minDistance) {
 						buildingId = i;
 						minDistance = distance;
 					}
@@ -530,7 +532,7 @@ static void marsKillEnemies()
 static void setFormationWalkersToEnemyInitial(int formationId)
 {
 	struct Data_Formation *f = &Data_Formations[formationId];
-	for (int i = 0; i < 16; i++) {
+	for (int i = 0; i < MAX_FORMATION_WALKERS; i++) {
 		if (f->walkerIds[i] > 0) {
 			struct Data_Walker *w = &Data_Walkers[f->walkerIds[i]];
 			if (w->actionState != WalkerActionState_149_Corpse &&
@@ -647,11 +649,10 @@ static void updateEnemyMovement(int formationId, struct Data_Formation *f, int r
 			f->destinationY = Data_Formation_Invasion.destinationY[f->invasionId];
 		}
 	} else if (regroup) {
-		int xOffset = layoutOrientationLegionIndexOffsets
-			[Data_Formation_Invasion.layout[f->invasionId]][f->orientation / 2][2 * f->enemyLegionIndex] +
+		int layout = Data_Formation_Invasion.layout[f->invasionId];
+		int xOffset = layoutOrientationLegionIndexOffsets[layout][f->orientation / 2][2 * f->enemyLegionIndex] +
 			Data_Formation_Invasion.homeX[f->invasionId];
-		int yOffset = layoutOrientationLegionIndexOffsets
-			[Data_Formation_Invasion.layout[f->invasionId]][f->orientation / 2][2 * f->enemyLegionIndex + 1] +
+		int yOffset = layoutOrientationLegionIndexOffsets[layout][f->orientation / 2][2 * f->enemyLegionIndex + 1] +
 			Data_Formation_Invasion.homeY[f->invasionId];
 		int xTile, yTile;
 		if (WalkerAction_HerdEnemy_moveFormationTo(formationId, xOffset, yOffset, &xTile, &yTile)) {
@@ -659,11 +660,10 @@ static void updateEnemyMovement(int formationId, struct Data_Formation *f, int r
 			f->destinationY = yTile;
 		}
 	} else if (advance) {
-		int xOffset = layoutOrientationLegionIndexOffsets
-			[Data_Formation_Invasion.layout[f->invasionId]][f->orientation / 2][2 * f->enemyLegionIndex] +
+		int layout = Data_Formation_Invasion.layout[f->invasionId];
+		int xOffset = layoutOrientationLegionIndexOffsets[layout][f->orientation / 2][2 * f->enemyLegionIndex] +
 			Data_Formation_Invasion.destinationX[f->invasionId];
-		int yOffset = layoutOrientationLegionIndexOffsets
-			[Data_Formation_Invasion.layout[f->invasionId]][f->orientation / 2][2 * f->enemyLegionIndex + 1] +
+		int yOffset = layoutOrientationLegionIndexOffsets[layout][f->orientation / 2][2 * f->enemyLegionIndex + 1] +
 			Data_Formation_Invasion.destinationY[f->invasionId];
 		int xTile, yTile;
 		if (WalkerAction_HerdEnemy_moveFormationTo(formationId, xOffset, yOffset, &xTile, &yTile)) {
@@ -676,7 +676,7 @@ static void updateEnemyMovement(int formationId, struct Data_Formation *f, int r
 static void tickUpdateEnemies()
 {
 	if (Data_Formation_Extra.numEnemyFormations <= 0) {
-		for (int i = 0; i < 25; i++) {
+		for (int i = 0; i < MAX_INVASION_FORMATIONS; i++) {
 			Data_Formation_Invasion.ignoreRomanSoldiers[i] = 0;
 		}
 		setNativeTargetBuilding(0);
@@ -687,7 +687,7 @@ static void tickUpdateEnemies()
 		Data_Formation_Extra.daysSinceRomanSoldierConcentration = 0;
 		calculateRomanSoldierConcentration();
 	}
-	for (int i = 0; i < 25; i++) {
+	for (int i = 0; i < MAX_INVASION_FORMATIONS; i++) {
 		Data_Formation_Invasion.formationId[i] = 0;
 		Data_Formation_Invasion.numLegions[i] = 0;
 	}
@@ -698,7 +698,9 @@ static void tickUpdateEnemies()
 			continue;
 		}
 		if (Data_Formation_Extra.numEnemySoldierStrength > 2 * Data_Formation_Extra.numLegionSoldierStrength) {
-			Data_Formation_Invasion.ignoreRomanSoldiers[f->invasionId] = 1;
+			if (f->walkerType != Walker_FortJavelin) {
+				Data_Formation_Invasion.ignoreRomanSoldiers[f->invasionId] = 1;
+			}
 		}
 		if (f->missileFired) {
 			f->missileFired--;
@@ -714,16 +716,17 @@ static void tickUpdateEnemies()
 			f->missileAttackTimeout = 0;
 			f->missileFired = 0;
 		}
-		for (int n = 0; n < 16; n++) {
-			if (Data_Walkers[f->walkerIds[n]].actionState == WalkerActionState_150_Attack) {
-				int opponentId = Data_Walkers[f->walkerIds[n]].opponentId;
+		for (int n = 0; n < MAX_FORMATION_WALKERS; n++) {
+			int walkerId = f->walkerIds[n];
+			if (Data_Walkers[walkerId].actionState == WalkerActionState_150_Attack) {
+				int opponentId = Data_Walkers[walkerId].opponentId;
 				if (!WalkerIsDead(opponentId) && WalkerIsLegion(Data_Walkers[opponentId].type)) {
 					f->recentFight = 6;
 				}
 			}
 		}
 		if (f->monthsLowMorale || f->monthsVeryLowMorale) {
-			for (int n = 0; n < 16; n++) {
+			for (int n = 0; n < MAX_FORMATION_WALKERS; n++) {
 				struct Data_Walker *w = &Data_Walkers[f->walkerIds[n]];
 				if (w->actionState != WalkerActionState_150_Attack &&
 					w->actionState != WalkerActionState_149_Corpse &&
@@ -779,7 +782,8 @@ static void tickUpdateEnemies()
 	setNativeTargetBuilding(0);
 }
 
-static int getHerdRoamingDestination(int formationId, int allowNegativeDesirability, int x, int y, int distance, int direction, int *xTile, int *yTile)
+static int getHerdRoamingDestination(int formationId, int allowNegativeDesirability,
+	int x, int y, int distance, int direction, int *xTile, int *yTile)
 {
 	int targetDirection = (formationId + Data_Random.random1_7bit) & 6;
 	if (direction) {
@@ -789,14 +793,14 @@ static int getHerdRoamingDestination(int formationId, int allowNegativeDesirabil
 	for (int i = 0; i < 4; i++) {
 		int xTarget, yTarget;
 		switch (targetDirection) {
-			case 0: xTarget = x; yTarget = y - distance; break;
-			case 1: xTarget = x + distance; yTarget = y - distance; break;
-			case 2: xTarget = x + distance; yTarget = y; break;
-			case 3: xTarget = x + distance; yTarget = y + distance; break;
-			case 4: xTarget = x; yTarget = y + distance; break;
-			case 5: xTarget = x - distance; yTarget = y + distance; break;
-			case 6: xTarget = x - distance; yTarget = y; break;
-			case 7: xTarget = x - distance; yTarget = y - distance; break;
+			case Dir_0_Top:         xTarget = x; yTarget = y - distance; break;
+			case Dir_1_TopRight:    xTarget = x + distance; yTarget = y - distance; break;
+			case Dir_2_Right:       xTarget = x + distance; yTarget = y; break;
+			case Dir_3_BottomRight: xTarget = x + distance; yTarget = y + distance; break;
+			case Dir_4_Bottom:      xTarget = x; yTarget = y + distance; break;
+			case Dir_5_BottomLeft:  xTarget = x - distance; yTarget = y + distance; break;
+			case Dir_6_Left:        xTarget = x - distance; yTarget = y; break;
+			case Dir_7_TopLeft:     xTarget = x - distance; yTarget = y - distance; break;
 		}
 		if (xTarget <= 0) {
 			xTarget = 1;
@@ -820,8 +824,8 @@ static int getHerdRoamingDestination(int formationId, int allowNegativeDesirabil
 
 static void moveAnimals(struct Data_Formation *f, int attackingAnimals)
 {
-	for (int i = 0; i < 16; i++) {
-		if (!f->walkerIds[i]) continue;
+	for (int i = 0; i < MAX_FORMATION_WALKERS; i++) {
+		if (f->walkerIds[i] <= 0) continue;
 		int walkerId = f->walkerIds[i];
 		struct Data_Walker *w = &Data_Walkers[walkerId];
 		if (w->actionState == WalkerActionState_149_Corpse ||
@@ -864,7 +868,7 @@ static void tickUpdateHerds()
 			if (f->herdWolfSpawnDelay > 32) {
 				f->herdWolfSpawnDelay = 0;
 				if (!(Data_Grid_terrain[GridOffset(f->x, f->y)] & Terrain_d73f)) {
-					int wolfId = Walker_create(f->walkerType, f->x, f->y, 0);
+					int wolfId = Walker_create(f->walkerType, f->x, f->y, Dir_0_Top);
 					Data_Walkers[wolfId].actionState = WalkerActionState_196_HerdAnimalAtRest;
 					Data_Walkers[wolfId].formationId = i;
 					Data_Walkers[wolfId].waitTicks = wolfId & 0x1f;
@@ -872,7 +876,7 @@ static void tickUpdateHerds()
 			}
 		}
 		int attackingAnimals = 0;
-		for (int w = 0; w < 16; w++) {
+		for (int w = 0; w < MAX_FORMATION_WALKERS; w++) {
 			int walkerId = f->walkerIds[i];
 			if (walkerId > 0 && Data_Walkers[walkerId].actionState == WalkerActionState_150_Attack) {
 				attackingAnimals++;
@@ -953,7 +957,6 @@ void Formation_Tick_updateAll(int secondTime)
 	tickUpdateEnemies();
 	tickUpdateHerds();
 }
-
 
 int Formation_Rioter_getTargetBuilding(int *xTile, int *yTile)
 {
