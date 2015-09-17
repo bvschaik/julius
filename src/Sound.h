@@ -46,7 +46,7 @@ enum {
 	SoundChannel_Spear = 29, // 143
 	SoundChannel_WolfAttack = 30, // 144
 	SoundChannel_WolfDie = 31, // 145
-	SoundChannel_SoldierDie = 32, // 33,34,35 (was:146-149) die1, die2, die4, die10
+	SoundChannel_SoldierDie = 32, // 33,34,35 (was: 146-149) die1, die2, die4, die10
 	SoundChannel_CitizenDie = 36, // 37,38,39 (was: 150-153) die3, die5, die8, die9
 	SoundChannel_SheepDie = 40, // 154
 	SoundChannel_ZebraDie = 41, // 155

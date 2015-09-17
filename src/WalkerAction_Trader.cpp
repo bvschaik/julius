@@ -616,7 +616,7 @@ int WalkerAction_TradeShip_isBuyingOrSelling(int walkerId)
 	int buildingId = Data_Walkers[walkerId].destinationBuildingId;
 	struct Data_Building *b = &Data_Buildings[buildingId];
 	if (!BuildingIsInUse(buildingId) || b->type != Building_Dock) {
-		return 1;
+		return TradeShipState_Buying;
 	}
 	for (int i = 0; i < 3; i++) {
 		struct Data_Walker *w = &Data_Walkers[b->data.other.dockWalkerIds[i]];
@@ -628,13 +628,13 @@ int WalkerAction_TradeShip_isBuyingOrSelling(int walkerId)
 			case WalkerActionState_135_DockerImportGoingToWarehouse:
 			case WalkerActionState_138_DockerImportReturning:
 			case WalkerActionState_139_DockerImportAtWarehouse:
-				return 1;
+				return TradeShipState_Buying;
 			case WalkerActionState_134_DockerExportQueue:
 			case WalkerActionState_136_DockerExportGoingToWarehouse:
 			case WalkerActionState_137_DockerExportReturning:
 			case WalkerActionState_140_DockerExportAtWarehouse:
-				return 2;
+				return TradeShipState_Selling;
 		}
 	}
-	return 0;
+	return TradeShipState_None;
 }

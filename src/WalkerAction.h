@@ -1,6 +1,12 @@
 #ifndef WALKERACTION_H
 #define WALKERACTION_H
 
+enum {
+	TradeShipState_None = 0,
+	TradeShipState_Buying = 1,
+	TradeShipState_Selling = 2,
+};
+
 void WalkerAction_handle();
 
 int WalkerAction_Rioter_collapseBuilding(int walkerId);

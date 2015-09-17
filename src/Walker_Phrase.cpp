@@ -450,9 +450,9 @@ int Walker_determinePhrase(int walkerId)
 				}
 			} else if (w->actionState == WalkerActionState_112_TradeShipMoored) {
 				int state = WalkerAction_TradeShip_isBuyingOrSelling(walkerId);
-				if (state == 1) {
+				if (state == TradeShipState_Buying) {
 					phraseId = 8; // buying goods
-				} else if (state == 2) {
+				} else if (state == TradeShipState_Selling) {
 					phraseId = 7; // selling goods
 				} else {
 					phraseId = 9; // no trade
@@ -488,7 +488,6 @@ int Walker_determinePhrase(int walkerId)
 		godPhraseId = 0;
 	}
 
-	phraseId = -1;
 	if (Data_CityInfo.foodInfoFoodSupplyMonths <= 0) {
 		phraseId = w->phraseSequenceCity;
 	} else if (Data_CityInfo.unemploymentPercentage >= 17) {
