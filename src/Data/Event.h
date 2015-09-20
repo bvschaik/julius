@@ -1,6 +1,8 @@
 #ifndef DATA_EVENT_H
 #define DATA_EVENT_H
 
+#define MAX_EVENTS 20
+
 enum {
 	GladiatorRevolt_NotStarted = 0,
 	GladiatorRevolt_InProgress = 1,

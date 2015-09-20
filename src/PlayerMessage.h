@@ -14,6 +14,18 @@ enum {
 
 enum {
 	Message_12_FireInTheCity = 12,
+	Message_16_CityInDebt = 16,
+	Message_17_CityInDebtAgain = 17,
+	Message_18_CityStillInDebt = 18,
+	Message_19_CaesarWrath = 19,
+	Message_20_CaesarArmyContinue = 20,
+	Message_21_CaesarArmyRetreat = 21,
+	Message_22_LocalUprising = 22,
+	Message_23_BarbarianAttack = 23,
+	Message_24_CaesarArmyAttack = 24,
+	Message_25_DistantBattle = 25,
+	Message_26_EnemiesClosing = 26,
+	Message_27_EnemiesAtTheDoor = 27,
 	Message_37_WorkersNeeded = 37,
 	Message_38_SmallFestival = 38,
 	Message_39_LargeFestival = 39,
@@ -47,10 +59,15 @@ enum {
 	Message_103_HealthDisease = 103,
 	Message_104_HealthPestilence = 104,
 	Message_105_SpiritOfMars = 105,
+	Message_106_CaesarRespect1 = 106,
+	Message_107_CaesarRespect2 = 107,
+	Message_108_CaesarRespect3 = 108,
 	Message_109_WorkingHippodrome = 109,
 	Message_110_WorkingColosseum = 110,
+	Message_114_EnemyArmyAttack = 114,
 	Message_116_RoadToRomeObstructed = 116,
 	Message_117_NoWorkingDock = 117,
+	Message_121_LocalUprisingMars = 121,
 };
 
 void PlayerMessage_disableSoundForNextMessage();
