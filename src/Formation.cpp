@@ -34,7 +34,7 @@ void Formation_clearList()
 
 void Formation_clearInvasionInfo()
 {
-	for (int i = 0; i < 25; i++) {
+	for (int i = 0; i < MAX_INVASION_FORMATIONS; i++) {
 		Data_Formation_Invasion.formationId[i] = 0;
 		Data_Formation_Invasion.homeX[i] = 0;
 		Data_Formation_Invasion.homeY[i] = 0;
@@ -110,7 +110,7 @@ int Formation_create(int walkerType, int layout, int orientation, int x, int y)
 	f->walkerType = walkerType;
 	f->legionId = formationId - 10;
 	if (layout == FormationLayout_Enemy10) {
-		if (orientation == 0 || orientation == 4) {
+		if (orientation == Dir_0_Top || orientation == Dir_4_Bottom) {
 			f->layout = FormationLayout_DoubleLine1;
 		} else {
 			f->layout = FormationLayout_DoubleLine2;
@@ -128,7 +128,7 @@ void Formation_deleteFortAndBanner(int formationId)
 		if (Data_Formations[formationId].standardWalkerId) {
 			Walker_delete(Data_Formations[formationId].standardWalkerId);
 		}
-		memset(&Data_Formations[formationId], 0, 128);
+		memset(&Data_Formations[formationId], 0, sizeof(struct Data_Formation));
 		Formation_calculateLegionTotals();
 	}
 }
@@ -170,7 +170,7 @@ int Formation_getFormationForBuilding(int gridOffset)
 	int buildingId = Data_Grid_buildingIds[gridOffset];
 	if (buildingId > 0) {
 		struct Data_Building *b = &Data_Buildings[buildingId];
-		if (BuildingIsInUse(buildingId) && (b->type == Building_FortGround__ || b->type == Building_FortGround)) {
+		if (BuildingIsInUse(buildingId) && (b->type == Building_Fort || b->type == Building_FortGround)) {
 			return b->formationId;
 		}
 	}
@@ -210,7 +210,7 @@ void Formation_legionMoveTo(int formationId, int x, int y)
 	if (f->morale <= 20) {
 		UI_Warning_show(Warning_LegionMoraleTooLow);
 	}
-	for (int i = 0; i < 16 && f->walkerIds[i]; i++) {
+	for (int i = 0; i < MAX_FORMATION_WALKERS && f->walkerIds[i]; i++) {
 		int walkerId = f->walkerIds[i];
 		struct Data_Walker *w = &Data_Walkers[walkerId];
 		if (w->actionState == WalkerActionState_149_Corpse ||
@@ -243,7 +243,7 @@ void Formation_legionReturnHome(int formationId)
 	if (f->layout == FormationLayout_MopUp) {
 		f->layout = f->layoutBeforeMopUp;
 	}
-	for (int i = 0; i < 16 && f->walkerIds[i]; i++) {
+	for (int i = 0; i < MAX_FORMATION_WALKERS && f->walkerIds[i]; i++) {
 		int walkerId = f->walkerIds[i];
 		struct Data_Walker *w = &Data_Walkers[walkerId];
 		if (w->actionState == WalkerActionState_149_Corpse ||
@@ -310,8 +310,7 @@ int Formation_getClosestMilitaryAcademy(int formationId)
 		if (BuildingIsInUse(i) &&
 			Data_Buildings[i].type == Building_MilitaryAcademy &&
 			Data_Buildings[i].numWorkers >= Data_Model_Buildings[Building_MilitaryAcademy].laborers) {
-			int dist = Calc_distanceMaximum(fortX, fortY,
-				Data_Buildings[i].x, Data_Buildings[i].y);
+			int dist = Calc_distanceMaximum(fortX, fortY, Data_Buildings[i].x, Data_Buildings[i].y);
 			if (dist < minDistance) {
 				minDistance = dist;
 				minBuildingId = i;
@@ -352,7 +351,7 @@ void Formation_setNewSoldierRequest(int buildingId)
 void Formation_calculateWalkers()
 {
 	for (int i = 1; i < MAX_FORMATIONS; i++) {
-		for (int w = 0; w < 16; w++) {
+		for (int w = 0; w < MAX_FORMATION_WALKERS; w++) {
 			Data_Formations[i].walkerIds[w] = 0;
 		}
 		Data_Formations[i].numWalkers = 0;
@@ -378,7 +377,7 @@ void Formation_calculateWalkers()
 		if (Data_Walkers[i].formationAtRest != 1) {
 			Data_Formations[formationId].isAtFort = 0;
 		}
-		for (int w = 0; w < 16; w++) {
+		for (int w = 0; w < MAX_FORMATION_WALKERS; w++) {
 			if (!Data_Formations[formationId].walkerIds[w]) {
 				Data_Formations[formationId].walkerIds[w] = i;
 				Data_Walkers[i].indexInFormation = w;

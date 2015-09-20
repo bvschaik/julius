@@ -159,7 +159,7 @@ int WalkerAction_Rioter_collapseBuilding(int walkerId)
 			case Building_WarehouseSpace:
 			case Building_Warehouse:
 			case Building_FortGround:
-			case Building_FortGround__:
+			case Building_Fort:
 			case Building_BurningRuin:
 				continue;
 		}

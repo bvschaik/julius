@@ -24,7 +24,7 @@ static int menuBuildingType[MAX_BUILDINGITEMS][MAX_BUILDINGITEMS] = {
 	{Building_Gardens, Building_Plaza, Building_EngineersPost, Building_LowBridge, Building_ShipBridge,
 		Building_Shipyard, Building_Dock, Building_Wharf, 0},
 	{Building_Wall, Building_Tower, Building_Gatehouse, Building_Prefecture,
-		Building_FortGround__, Building_MilitaryAcademy, Building_Barracks, 0},
+		Building_Fort, Building_MilitaryAcademy, Building_Barracks, 0},
 	{Building_Menu_Farms, Building_Menu_RawMaterials, Building_Menu_Workshops,
 		Building_Market, Building_Granary, Building_Warehouse, 0},
 	// 12 = housing for debug (TODO: remove editor menus)
@@ -110,7 +110,7 @@ static void enableNormal(int sub, int item, int buildingType)
 	ENABLE_IF(Building_Tower, tower);
 	ENABLE_IF(Building_Gatehouse, gatehouse);
 	ENABLE_IF(Building_Prefecture, prefecture);
-	ENABLE_IF(Building_FortGround__, fort);
+	ENABLE_IF(Building_Fort, fort);
 	ENABLE_IF(Building_MilitaryAcademy, militaryAcademy);
 	ENABLE_IF(Building_Barracks, barracks);
 	ENABLE_IF(Building_DistributionCenter_Unused, distributionCenter);

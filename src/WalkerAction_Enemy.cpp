@@ -575,7 +575,7 @@ void WalkerAction_enemy54_Gladiator(int walkerId)
 	w->terrainUsage = WalkerTerrainUsage_Any;
 	w->useCrossCountry = 0;
 	WalkerActionIncreaseGraphicOffset(w, 12);
-	if (Data_Event.gladiatorRevolt.state == GladiatorRevolt_Finished) {
+	if (Data_Event.gladiatorRevolt.state == SpecialEvent_Finished) {
 		// end of gladiator revolt: kill gladiators
 		if (w->actionState != WalkerActionState_149_Corpse) {
 			w->actionState = WalkerActionState_149_Corpse;

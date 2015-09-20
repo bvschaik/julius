@@ -197,7 +197,7 @@ void Building_deleteData(int buildingId)
 		Data_CityInfo.buildingDistributionCenterY = 0;
 		Data_CityInfo.buildingDistributionCenterPlaced = 0;
 	}
-	if (b->type == Building_FortGround__) {
+	if (b->type == Building_Fort) {
 		Formation_deleteFortAndBanner(b->formationId);
 	}
 	if (b->type == Building_Hippodrome) {
@@ -430,7 +430,7 @@ void Building_destroyByEnemy(int x, int y, int gridOffset)
 				case Building_Prefecture:
 				case Building_EngineersPost:
 				case Building_Well:
-				case Building_FortGround__:
+				case Building_Fort:
 				case Building_FortGround:
 				case Building_Gatehouse:
 				case Building_Tower:

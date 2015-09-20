@@ -29,6 +29,16 @@
 
 #include <string.h>
 
+enum {
+	RandomEvent_RomeRaisesWages = 1,
+	RandomEvent_RomeLowersWages = 2,
+	RandomEvent_LandTradeDisrupted = 3,
+	RandomEvent_SeaTradeDisrupted = 4,
+	RandomEvent_ContaminatedWater = 5,
+	RandomEvent_IronMineCollapsed = 6,
+	RandomEvent_ClayPitFlooded = 7
+};
+
 static void updateTimeTraveledDistantBattle();
 static void fightDistantBattle();
 static void updateDistantBattleAftermath();
@@ -51,7 +61,7 @@ static const int randomEventProbability[128] = {
 
 void Event_handleDistantBattle()
 {
-	for (int i = 0; i < 20; i++) {
+	for (int i = 0; i < MAX_EVENTS; i++) {
 		if (Data_Scenario.invasions.type[i] == InvasionType_DistantBattle &&
 			Data_CityInfo_Extra.gameTimeYear == Data_Scenario.invasions.year[i] + Data_Scenario.startYear &&
 			Data_CityInfo_Extra.gameTimeMonth == Data_Scenario.invasions_month[i] &&
@@ -62,7 +72,7 @@ void Event_handleDistantBattle()
 			Data_CityInfo.distantBattleRomanMonthsToTravel <= 0 &&
 			Data_CityInfo.distantBattleCityMonthsUntilRoman <= 0) {
 			
-			PlayerMessage_post(1, 30, 0, 0);
+			PlayerMessage_post(1, Message_30_CaesarRequestsArmy, 0, 0);
 			Data_CityInfo.distantBattleEnemyMonthsTraveled = 1;
 			Data_CityInfo.distantBattleRomanMonthsTraveled = 1;
 			Data_CityInfo.distantBattleMonthsToBattle = 24;
@@ -118,25 +128,25 @@ static void updateTimeTraveledDistantBattle()
 static void fightDistantBattle()
 {
 	if (Data_CityInfo.distantBattleRomanMonthsToTravel <= 0) {
-		PlayerMessage_post(1, 84, 0, 0); // no troops sent
+		PlayerMessage_post(1, Message_84_DistantBattleLostNoTroops, 0, 0);
 		CityInfo_Ratings_changeFavor(-50);
 		setDistantBattleCityForeign();
 		Data_CityInfo.distantBattleCityMonthsUntilRoman = 24;
 	} else if (Data_CityInfo.distantBattleRomanMonthsToTravel > 2) {
-		PlayerMessage_post(1, 85, 0, 0); // too late
+		PlayerMessage_post(1, Message_85_DistantBattleLostTooLate, 0, 0);
 		CityInfo_Ratings_changeFavor(-25);
 		setDistantBattleCityForeign();
 		Data_CityInfo.distantBattleCityMonthsUntilRoman = 24;
 		Data_CityInfo.distantBattleRomanMonthsToReturn = Data_CityInfo.distantBattleRomanMonthsTraveled;
 	} else if (!playerWonDistantBattle()) {
-		PlayerMessage_post(1, 86, 0, 0);
+		PlayerMessage_post(1, Message_86_DistantBattleLostTooWeak, 0, 0);
 		CityInfo_Ratings_changeFavor(-10);
 		setDistantBattleCityForeign();
 		Data_CityInfo.distantBattleCityMonthsUntilRoman = 24;
 		Data_CityInfo.distantBattleRomanMonthsTraveled = 0;
 		// no return: all soldiers killed
 	} else {
-		PlayerMessage_post(1, 87, 0, 0);
+		PlayerMessage_post(1, Message_87_DistantBattleWon, 0, 0);
 		CityInfo_Ratings_changeFavor(25);
 		Data_CityInfo.triumphalArchesAvailable++;
 		SidebarMenu_enableBuildingMenuItems();
@@ -157,10 +167,10 @@ static void updateDistantBattleAftermath()
 		if (Data_CityInfo.distantBattleRomanMonthsToReturn <= 0) {
 			if (Data_CityInfo.distantBattleCityMonthsUntilRoman) {
 				// soldiers return - not in time
-				PlayerMessage_post(1, 88, 0, Data_CityInfo.exitPointGridOffset);
+				PlayerMessage_post(1, Message_88_TroopsReturnFailed, 0, Data_CityInfo.exitPointGridOffset);
 			} else {
 				// victorious
-				PlayerMessage_post(1, 89, 0, Data_CityInfo.exitPointGridOffset);
+				PlayerMessage_post(1, Message_89_TroopsReturnVictorious, 0, Data_CityInfo.exitPointGridOffset);
 			}
 			Data_CityInfo.distantBattleRomanMonthsTraveled = 0;
 			Formation_legionsReturnFromDistantBattle();
@@ -168,7 +178,7 @@ static void updateDistantBattleAftermath()
 	} else if (Data_CityInfo.distantBattleCityMonthsUntilRoman > 0) {
 		Data_CityInfo.distantBattleCityMonthsUntilRoman--;
 		if (Data_CityInfo.distantBattleCityMonthsUntilRoman <= 0) {
-			PlayerMessage_post(1, 90, 0, 0);
+			PlayerMessage_post(1, Message_90_DistantBattleCityRetaken, 0, 0);
 			setDistantBattleCityVulnerable();
 		}
 	}
@@ -209,7 +219,7 @@ static int playerWonDistantBattle()
 void Event_calculateDistantBattleRomanTravelTime()
 {
 	Data_Scenario.distantBattleTravelMonthsRoman = 0;
-	for (int i = 0; i < 200; i++) {
+	for (int i = 0; i < MAX_EMPIRE_OBJECTS; i++) {
 		if (Data_Empire_Objects[i].inUse && Data_Empire_Objects[i].type == EmpireObject_RomanArmy) {
 			Data_Scenario.distantBattleTravelMonthsRoman++;
 			Data_Empire_Objects[i].distantBattleTravelMonths = Data_Scenario.distantBattleTravelMonthsRoman;
@@ -220,7 +230,7 @@ void Event_calculateDistantBattleRomanTravelTime()
 void Event_calculateDistantBattleEnemyTravelTime()
 {
 	Data_Scenario.distantBattleTravelMonthsEnemy = 0;
-	for (int i = 0; i < 200; i++) {
+	for (int i = 0; i < MAX_EMPIRE_OBJECTS; i++) {
 		if (Data_Empire_Objects[i].inUse && Data_Empire_Objects[i].type == EmpireObject_EnemyArmy) {
 			Data_Scenario.distantBattleTravelMonthsEnemy++;
 			Data_Empire_Objects[i].distantBattleTravelMonths = Data_Scenario.distantBattleTravelMonthsEnemy;
@@ -245,7 +255,7 @@ static void setDistantBattleCityForeign()
 void Event_initDistantBattleCity()
 {
 	Data_CityInfo.distantBattleCityId = 0;
-	for (int i = 0; i < 200; i++) {
+	for (int i = 0; i < MAX_EMPIRE_OBJECTS; i++) {
 		if (Data_Empire_Objects[i].inUse &&
 			Data_Empire_Objects[i].type == EmpireObject_City &&
 			Data_Empire_Objects[i].cityType == EmpireCity_VulnerableRoman) {
@@ -257,7 +267,7 @@ void Event_initDistantBattleCity()
 
 void Event_initRequests()
 {
-	for (int i = 0; i < 20; i++) {
+	for (int i = 0; i < MAX_EVENTS; i++) {
 		Random_generateNext();
 		if (Data_Scenario.requests.resourceId[i]) {
 			Data_Scenario.requests_month[i] = (Data_Random.random1_7bit & 7) + 2;
@@ -268,7 +278,7 @@ void Event_initRequests()
 
 void Event_handleRequests()
 {
-	for (int i = 0; i < 20; i++) {
+	for (int i = 0; i < MAX_EVENTS; i++) {
 		if (!Data_Scenario.requests.resourceId[i] || Data_Scenario.requests_state[i] > RequestState_DispatchedLate) {
 			continue;
 		}
@@ -277,10 +287,10 @@ void Event_handleRequests()
 			--Data_Scenario.requests_monthsToComply[i];
 			if (Data_Scenario.requests_monthsToComply[i] <= 0) {
 				if (state == RequestState_Dispatched) {
-					PlayerMessage_post(1, 32, i, 0);
+					PlayerMessage_post(1, Message_32_RequestReceived, i, 0);
 					CityInfo_Ratings_changeFavor(Data_Scenario.requests_favor[i]);
 				} else {
-					PlayerMessage_post(1, 35, i, 0);
+					PlayerMessage_post(1, Message_35_RequestReceivedLate, i, 0);
 					CityInfo_Ratings_changeFavor(Data_Scenario.requests_favor[i] / 2);
 				}
 				Data_Scenario.requests_state[i] = RequestState_Received;
@@ -293,10 +303,10 @@ void Event_handleRequests()
 				if (state == RequestState_Normal) {
 					if (Data_Scenario.requests_monthsToComply[i] == 12) {
 						// reminder
-						PlayerMessage_post(1, 31, i, 0);
+						PlayerMessage_post(1, Message_31_RequestReminder, i, 0);
 					}
 					if (Data_Scenario.requests_monthsToComply[i] <= 0) {
-						PlayerMessage_post(1, 33, i, 0);
+						PlayerMessage_post(1, Message_33_RequestRefused, i, 0);
 						Data_Scenario.requests_state[i] = RequestState_Overdue;
 						Data_Scenario.requests_monthsToComply[i] = 24;
 						CityInfo_Ratings_changeFavor(-3);
@@ -304,7 +314,7 @@ void Event_handleRequests()
 					}
 				} else if (state == RequestState_Overdue) {
 					if (Data_Scenario.requests_monthsToComply[i] <= 0) {
-						PlayerMessage_post(1, 34, i, 0);
+						PlayerMessage_post(1, Message_34_RequestRefusedOverdue, i, 0);
 						Data_Scenario.requests_state[i] = RequestState_Ignored;
 						Data_Scenario.requests_isVisible[i] = 0;
 						CityInfo_Ratings_changeFavor(-5);
@@ -314,7 +324,7 @@ void Event_handleRequests()
 				if (!Data_Scenario.requests_canComplyDialogShown[i] &&
 					Data_CityInfo.resourceStored[Data_Scenario.requests.resourceId[i]] >= Data_Scenario.requests.amount[i]) {
 					Data_Scenario.requests_canComplyDialogShown[i] = 1;
-					PlayerMessage_post(1, 115, i, 0);
+					PlayerMessage_post(1, Message_115_RequestCanComply, i, 0);
 				}
 			} else {
 				// request is not visible
@@ -332,11 +342,11 @@ void Event_handleRequests()
 						Data_Scenario.requests_canComplyDialogShown[i] = 1;
 					}
 					if (Data_Scenario.requests.resourceId[i] == Resource_Denarii) {
-						PlayerMessage_post(1, 29, i, 0);
+						PlayerMessage_post(1, Message_29_CaesarRequestsMoney, i, 0);
 					} else if (Data_Scenario.requests.resourceId[i] == Resource_Troops) {
-						PlayerMessage_post(1, 30, i, 0);
+						PlayerMessage_post(1, Message_30_CaesarRequestsArmy, i, 0);
 					} else {
-						PlayerMessage_post(1, 28, i, 0);
+						PlayerMessage_post(1, Message_28_CaesarRequestsGoods, i, 0);
 					}
 				}
 			}
@@ -367,7 +377,7 @@ void Event_dispatchRequest(int id)
 
 void Event_initDemandChanges()
 {
-	for (int i = 0; i < 20; i++) {
+	for (int i = 0; i < MAX_EVENTS; i++) {
 		Random_generateNext();
 		if (Data_Scenario.demandChanges.year[i]) {
 			Data_Scenario.demandChanges.month[i] = (Data_Random.random1_7bit & 7) + 2;
@@ -377,7 +387,7 @@ void Event_initDemandChanges()
 
 void Event_handleDemandChanges()
 {
-	for (int i = 0; i < 20; i++) {
+	for (int i = 0; i < MAX_EVENTS; i++) {
 		if (!Data_Scenario.demandChanges.year[i]) {
 			continue;
 		}
@@ -398,7 +408,7 @@ void Event_handleDemandChanges()
 			}
 			Data_Empire_Trade.maxPerYear[route][resource] = max;
 			if (Empire_isTradeRouteOpen(route)) {
-				PlayerMessage_post(1, 74, cityId, resource);
+				PlayerMessage_post(1, Message_74_IncreasedTrading, cityId, resource);
 			}
 		} else {
 			int max;
@@ -411,9 +421,9 @@ void Event_handleDemandChanges()
 			Data_Empire_Trade.maxPerYear[route][resource] = max;
 			if (Empire_isTradeRouteOpen(route)) {
 				if (max > 0) {
-					PlayerMessage_post(1, 75, cityId, resource);
+					PlayerMessage_post(1, Message_75_DecreasedTrading, cityId, resource);
 				} else {
-					PlayerMessage_post(1, 76, cityId, resource);
+					PlayerMessage_post(1, Message_76_TradeStopped, cityId, resource);
 				}
 			}
 		}
@@ -422,7 +432,7 @@ void Event_handleDemandChanges()
 
 void Event_initPriceChanges()
 {
-	for (int i = 0; i < 20; i++) {
+	for (int i = 0; i < MAX_EVENTS; i++) {
 		Random_generateNext();
 		if (Data_Scenario.priceChanges.year[i]) {
 			Data_Scenario.priceChanges.month[i] = (Data_Random.random1_7bit & 7) + 2;
@@ -432,12 +442,11 @@ void Event_initPriceChanges()
 
 void Event_handlePricesChanges()
 {
-	for (int i = 0; i < 20; i++) {
+	for (int i = 0; i < MAX_EVENTS; i++) {
 		if (!Data_Scenario.priceChanges.year[i]) {
 			continue;
 		}
-		if (Data_CityInfo_Extra.gameTimeYear != 
-			Data_Scenario.priceChanges.year[i] + Data_Scenario.startYear ||
+		if (Data_CityInfo_Extra.gameTimeYear != Data_Scenario.priceChanges.year[i] + Data_Scenario.startYear ||
 			Data_CityInfo_Extra.gameTimeMonth != Data_Scenario.priceChanges.month[i]) {
 			continue;
 		}
@@ -446,7 +455,7 @@ void Event_handlePricesChanges()
 		if (Data_Scenario.priceChanges.isRise[i]) {
 			Data_TradePrices[resource].buy += amount;
 			Data_TradePrices[resource].sell += amount;
-			PlayerMessage_post(1, 78, amount, resource);
+			PlayerMessage_post(1, Message_78_PriceIncreased, amount, resource);
 		} else if (Data_TradePrices[resource].sell > 0) {
 			if (Data_TradePrices[resource].sell <= amount) {
 				Data_TradePrices[resource].buy = 2;
@@ -455,7 +464,7 @@ void Event_handlePricesChanges()
 				Data_TradePrices[resource].buy -= amount;
 				Data_TradePrices[resource].sell -= amount;
 			}
-			PlayerMessage_post(1, 79, amount, resource);
+			PlayerMessage_post(1, Message_79_PriceDecreased, amount, resource);
 		}
 	}
 }
@@ -466,23 +475,23 @@ void Event_handleEarthquake()
 		Data_Scenario.earthquakePoint.x == -1 || Data_Scenario.earthquakePoint.y == -1) {
 		return;
 	}
-	if (Data_Event.earthquake.state == 0) { // not started
+	if (Data_Event.earthquake.state == SpecialEvent_NotStarted) {
 		if (Data_CityInfo_Extra.gameTimeYear == Data_Event.earthquake.gameYear &&
 			Data_CityInfo_Extra.gameTimeMonth == Data_Event.earthquake.month) {
-			Data_Event.earthquake.state = 1;
+			Data_Event.earthquake.state = SpecialEvent_InProgress;
 			Data_Event.earthquake.duration = 0;
 			Data_Event.earthquake.delay = 0;
 			advanceEarthquakeToTile(Data_Event.earthquake.expand[0].x, Data_Event.earthquake.expand[0].y);
-			PlayerMessage_post(1, 62, 0,
+			PlayerMessage_post(1, Message_62_Earthquake, 0,
 				GridOffset(Data_Event.earthquake.expand[0].x, Data_Event.earthquake.expand[0].y));
 		}
-	} else if (Data_Event.earthquake.state == 1) { // in progress
+	} else if (Data_Event.earthquake.state == SpecialEvent_InProgress) {
 		Data_Event.earthquake.delay++;
 		if (Data_Event.earthquake.delay >= Data_Event.earthquake.maxDelay) {
 			Data_Event.earthquake.delay = 0;
 			Data_Event.earthquake.duration++;
 			if (Data_Event.earthquake.duration >= Data_Event.earthquake.maxDuration) {
-				Data_Event.earthquake.state = 2; // done
+				Data_Event.earthquake.state = SpecialEvent_Finished;
 			}
 			int dx, dy, index;
 			switch (Data_Random.random1_7bit & 0xf) {
@@ -545,8 +554,9 @@ static int canAdvanceEarthquakeToTile(int x, int y)
 	int terrain = Data_Grid_terrain[GridOffset(x, y)];
 	if (terrain & (Terrain_Elevation | Terrain_Rock | Terrain_Water)) {
 		return 0;
+	} else {
+		return 1;
 	}
-	return 1;
 }
 
 void Event_handleGladiatorRevolt()
@@ -554,20 +564,20 @@ void Event_handleGladiatorRevolt()
 	if (!Data_Scenario.gladiatorRevolt.enabled) {
 		return;
 	}
-	if (Data_Event.gladiatorRevolt.state == GladiatorRevolt_NotStarted) {
+	if (Data_Event.gladiatorRevolt.state == SpecialEvent_NotStarted) {
 		if (Data_CityInfo_Extra.gameTimeYear == Data_Event.gladiatorRevolt.gameYear &&
 			Data_CityInfo_Extra.gameTimeMonth == Data_Event.gladiatorRevolt.month) {
 			if (Data_CityInfo_Buildings.gladiatorSchool.working > 0) {
-				Data_Event.gladiatorRevolt.state = GladiatorRevolt_InProgress;
-				PlayerMessage_post(1, 63, 0, 0);
+				Data_Event.gladiatorRevolt.state = SpecialEvent_InProgress;
+				PlayerMessage_post(1, Message_63_GladiatorRevolt, 0, 0);
 			} else {
-				Data_Event.gladiatorRevolt.state = GladiatorRevolt_Finished;
+				Data_Event.gladiatorRevolt.state = SpecialEvent_Finished;
 			}
 		}
-	} else if (Data_Event.gladiatorRevolt.state == GladiatorRevolt_InProgress) {
+	} else if (Data_Event.gladiatorRevolt.state == SpecialEvent_InProgress) {
 		if (Data_Event.gladiatorRevolt.endMonth == Data_CityInfo_Extra.gameTimeMonth) {
-			Data_Event.gladiatorRevolt.state = GladiatorRevolt_Finished;
-			PlayerMessage_post(1, 73, 0, 0);
+			Data_Event.gladiatorRevolt.state = SpecialEvent_Finished;
+			PlayerMessage_post(1, Message_73_GladiatorRevoltFinished, 0, 0);
 		}
 	}
 }
@@ -581,7 +591,7 @@ void Event_handleEmperorChange()
 		if (Data_CityInfo_Extra.gameTimeYear == Data_Event.emperorChange.gameYear &&
 			Data_CityInfo_Extra.gameTimeMonth == Data_Event.emperorChange.month) {
 			Data_Event.emperorChange.state = 1; // done
-			PlayerMessage_post(1, 64, 0, 0);
+			PlayerMessage_post(1, Message_64_EmperorChange, 0, 0);
 		}
 	}
 }
@@ -593,46 +603,46 @@ void Event_handleRandomEvents()
 		return;
 	}
 	switch (event) {
-		case 1: // Rome raises wages
+		case RandomEvent_RomeRaisesWages:
 			if (Data_Scenario.raiseWagesEnabled) {
 				if (Data_CityInfo.wagesRome < 45) {
 					Data_CityInfo.wagesRome += 1 + (Data_Random.random2_7bit & 3);
 					if (Data_CityInfo.wagesRome > 45) {
 						Data_CityInfo.wagesRome = 45;
 					}
-					PlayerMessage_post(1, 68, 0, 0);
+					PlayerMessage_post(1, Message_68_RomeRaisesWages, 0, 0);
 				}
 			}
 			break;
-		case 2: // Rome lowers wages
+		case RandomEvent_RomeLowersWages:
 			if (Data_Scenario.lowerWagesEnabled) {
 				if (Data_CityInfo.wagesRome > 5) {
 					Data_CityInfo.wagesRome -= 1 + (Data_Random.random2_7bit & 3);
-					PlayerMessage_post(1, 69, 0, 0);
+					PlayerMessage_post(1, Message_69_RomeLowersWages, 0, 0);
 				}
 			}
 			break;
-		case 3: // land trade disrupted
+		case RandomEvent_LandTradeDisrupted:
 			if (Data_Scenario.landTradeProblemEnabled) {
 				if (Data_CityInfo.tradeNumOpenLandRoutes > 0) {
 					Data_CityInfo.tradeLandProblemDuration = 48;
 					if (Data_Scenario.climate == Climate_Desert) {
-						PlayerMessage_post(1, 65, 0, 0);
+						PlayerMessage_post(1, Message_65_LandTradeDisruptedSandstorms, 0, 0);
 					} else {
-						PlayerMessage_post(1, 67, 0, 0);
+						PlayerMessage_post(1, Message_67_LandTradeDisruptedLandslides, 0, 0);
 					}
 				}
 			}
 			break;
-		case 4: // sea trade disrupted
+		case RandomEvent_SeaTradeDisrupted:
 			if (Data_Scenario.seaTradeProblemEnabled) {
 				if (Data_CityInfo.tradeNumOpenSeaRoutes > 0) {
 					Data_CityInfo.tradeSeaProblemDuration = 48;
-					PlayerMessage_post(1, 66, 0, 0);
+					PlayerMessage_post(1, Message_66_SeaTradeDisrupted, 0, 0);
 				}
 			}
 			break;
-		case 5: // contaminated water
+		case RandomEvent_ContaminatedWater:
 			if (Data_Scenario.contaminatedWaterEnabled) {
 				if (Data_CityInfo.population > 200) {
 					int change;
@@ -644,23 +654,23 @@ void Event_handleRandomEvents()
 						change = -25;
 					}
 					CityInfo_Population_changeHealthRate(change);
-					PlayerMessage_post(1, 70, 0, 0);
+					PlayerMessage_post(1, Message_70_ContaminatedWater, 0, 0);
 				}
 			}
 			break;
-		case 6: // iron mine collapsed
+		case RandomEvent_IronMineCollapsed:
 			if (Data_Scenario.ironMineCollapseEnabled) {
 				int gridOffset = Building_collapseFirstOfType(Building_IronMine);
 				if (gridOffset) {
-					PlayerMessage_post(1, 71, 0, gridOffset);
+					PlayerMessage_post(1, Message_71_IronMineCollaped, 0, gridOffset);
 				}
 			}
 			break;
-		case 7: // clay pit flooded
+		case RandomEvent_ClayPitFlooded:
 			if (Data_Scenario.clayPitFloodEnabled) {
 				int gridOffset = Building_collapseFirstOfType(Building_ClayPit);
 				if (gridOffset) {
-					PlayerMessage_post(1, 72, 0, gridOffset);
+					PlayerMessage_post(1, Message_72_ClayPitFlooded, 0, gridOffset);
 				}
 			}
 			break;

@@ -218,7 +218,7 @@ static void checkRoadAccess(int buildingType, int x, int y, int size)
 		case Building_Gatehouse:
 		case Building_TriumphalArch:
 		case Building_HouseVacantLot:
-		case Building_FortGround__:
+		case Building_Fort:
 		case Building_FortLegionaries:
 		case Building_FortJavelin:
 		case Building_FortMounted:

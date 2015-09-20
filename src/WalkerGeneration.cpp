@@ -1336,7 +1336,7 @@ void WalkerGeneration_generateWalkersForBuildings()
 				case Building_NativeCrops:
 					TerrainGraphics_updateNativeCropProgress(i);
 					break;
-				case Building_FortGround__:
+				case Building_Fort:
 					Formation_setNewSoldierRequest(i);
 					break;
 				case Building_Barracks:

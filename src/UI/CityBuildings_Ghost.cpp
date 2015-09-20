@@ -764,7 +764,7 @@ static void drawBuildingGhostFort()
 		placementObstructed = 1;
 	}
 
-	int numTilesFort = Constant_BuildingProperties[Building_FortGround__].size;
+	int numTilesFort = Constant_BuildingProperties[Building_Fort].size;
 	numTilesFort *= numTilesFort;
 	int numTilesGround = Constant_BuildingProperties[Building_FortGround].size;
 	numTilesGround *= numTilesGround;

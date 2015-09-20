@@ -403,7 +403,7 @@ static void setNativeTargetBuilding(int formationId)
 			case Building_NativeCrops:
 			case Building_NativeMeeting:
 			case Building_Warehouse:
-			case Building_FortGround__:
+			case Building_Fort:
 				break;
 			default:
 				int distance = Calc_distanceMaximum(

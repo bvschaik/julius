@@ -63,7 +63,7 @@ enum {
 	Building_FortGround = 54,
 	Building_Prefecture = 55,
 	Building_TriumphalArch = 56,
-	Building_FortGround__ = 57,
+	Building_Fort = 57,
 	Building_Gatehouse = 58,
 	Building_Tower = 59,
 	Building_SmallTempleCeres = 60,

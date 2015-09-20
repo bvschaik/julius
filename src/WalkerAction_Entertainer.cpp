@@ -152,7 +152,7 @@ void WalkerAction_entertainer(int walkerId)
 	if (w->waitTicksMissile >= 120) {
 		w->waitTicksMissile = 0;
 	}
-	if (Data_Event.gladiatorRevolt.state == GladiatorRevolt_InProgress && w->type == Walker_Gladiator) {
+	if (Data_Event.gladiatorRevolt.state == SpecialEvent_InProgress && w->type == Walker_Gladiator) {
 		if (w->actionState == WalkerActionState_92_EntertainerGoingToVenue ||
 			w->actionState == WalkerActionState_94_EntertainerRoaming ||
 			w->actionState == WalkerActionState_95_EntertainerReturning) {

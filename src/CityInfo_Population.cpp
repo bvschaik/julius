@@ -263,11 +263,11 @@ void CityInfo_Population_calculateSentiment()
 		if (Data_CityInfo.citySentimentChangeMessageDelay <= 0) {
 			Data_CityInfo.citySentimentChangeMessageDelay = 3;
 			if (Data_CityInfo.citySentiment < 35) {
-				PlayerMessage_post(0, 48, 0, 0);
+				PlayerMessage_post(0, Message_48_PeopleAngry, 0, 0);
 			} else if (Data_CityInfo.citySentiment < 40) {
-				PlayerMessage_post(0, 47, 0, 0);
+				PlayerMessage_post(0, Message_47_PeopleUnhappy, 0, 0);
 			} else {
-				PlayerMessage_post(0, 46, 0, 0);
+				PlayerMessage_post(0, Message_46_PeopleDisgruntled, 0, 0);
 			}
 		}
 	}

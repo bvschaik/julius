@@ -438,7 +438,7 @@ static void UI_CityBuildings_drawBuildingTopsWalkersAnimation(int selectedWalker
 				}
 			} else if (Data_Grid_spriteOffsets[gridOffset]) {
 				UI_CityBuildings_drawBridge(gridOffset, xGraphic, yGraphic);
-			} else if (Data_Buildings[Data_Grid_buildingIds[gridOffset]].type == Building_FortGround__) {
+			} else if (Data_Buildings[Data_Grid_buildingIds[gridOffset]].type == Building_Fort) {
 				if (Data_Grid_edge[gridOffset] & Edge_LeftmostTile) {
 					int buildingId = Data_Grid_buildingIds[gridOffset];
 					int offset = 0;

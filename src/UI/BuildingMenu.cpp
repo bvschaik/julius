@@ -177,7 +177,7 @@ static void drawMenuButtons()
 			buildingType = Building_Reservoir;
 		}
 		int cost = Data_Model_Buildings[buildingType].cost;
-		if (buildingType == Building_FortGround__) {
+		if (buildingType == Building_Fort) {
 			cost = 0;
 		}
 		if (cost) {
@@ -241,7 +241,7 @@ static void buttonMenuItem(int item)
 	
 	int type = Data_State.selectedBuilding.type = SidebarMenu_getBuildingType(menu.selectedSubmenu, item);
 	if (type == Building_Menu_Farms || type == Building_Menu_RawMaterials ||
-		type == Building_Menu_Workshops || type == Building_FortGround__ ||
+		type == Building_Menu_Workshops || type == Building_Fort ||
 		type == Building_Menu_SmallTemples || type == Building_Menu_LargeTemples) {
 		switch (type) {
 			case Building_Menu_Farms:
@@ -259,7 +259,7 @@ static void buttonMenuItem(int item)
 			case Building_Menu_LargeTemples:
 				menu.selectedSubmenu = 23;
 				break;
-			case Building_FortGround__:
+			case Building_Fort:
 				menu.selectedSubmenu = 24;
 				break;
 		}

@@ -4,9 +4,9 @@
 #define MAX_EVENTS 20
 
 enum {
-	GladiatorRevolt_NotStarted = 0,
-	GladiatorRevolt_InProgress = 1,
-	GladiatorRevolt_Finished = 2
+	SpecialEvent_NotStarted = 0,
+	SpecialEvent_InProgress = 1,
+	SpecialEvent_Finished = 2
 };
 
 extern struct Data_Event {

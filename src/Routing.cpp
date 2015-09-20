@@ -350,7 +350,7 @@ void Routing_determineLandNonCitizen()
 					case Building_NativeCrops:
 						land = Routing_NonCitizen_m1_Blocked;
 						break;
-					case Building_FortGround__:
+					case Building_Fort:
 						land = Routing_NonCitizen_5_Fort;
 						break;
 					case Building_Granary:

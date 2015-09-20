@@ -94,7 +94,7 @@ static int getHeightId()
 			case Building_Library:
 			case Building_Gatehouse:
 			case Building_Tower:
-			case Building_FortGround__:
+			case Building_Fort:
 			case Building_MilitaryAcademy:
 			case Building_Barracks:
 			case Building_Market:
@@ -195,7 +195,7 @@ void UI_BuildingInfo_init()
 			case Building_FortGround:
 				context.buildingId = Data_Buildings[context.buildingId].prevPartBuildingId;
 				// fallthrough
-			case Building_FortGround__:
+			case Building_Fort:
 				context.formationId = Data_Buildings[context.buildingId].formationId;
 				break;
 			case Building_WarehouseSpace:
@@ -465,7 +465,7 @@ void UI_BuildingInfo_drawBackground()
 			UI_BuildingInfo_drawMilitaryAcademy(&context);
 		} else if (btype == Building_Barracks) {
 			UI_BuildingInfo_drawBarracks(&context);
-		} else if (btype == Building_FortGround__) {
+		} else if (btype == Building_Fort) {
 			UI_BuildingInfo_drawFort(&context);
 		} else if (btype == Building_BurningRuin) {
 			UI_BuildingInfo_drawBurningRuin(&context);

@@ -674,7 +674,7 @@ static int placeBuilding(int type, int x, int y)
 	// phew, checks done!
 	int buildingId;
 	if (type == Building_FortLegionaries || type == Building_FortJavelin || type == Building_FortMounted) {
-		buildingId = Building_create(Building_FortGround__, x, y);
+		buildingId = Building_create(Building_Fort, x, y);
 	} else {
 		buildingId = Building_create(type, x, y);
 	}
@@ -760,7 +760,7 @@ static void clearRegionConfirmed(int measureOnly, int xStart, int yStart, int xE
 				if (Data_Buildings[buildingId].state == BuildingState_DeletedByPlayer) {
 					continue;
 				}
-				if (type == Building_FortGround || type == Building_FortGround__) {
+				if (type == Building_FortGround || type == Building_Fort) {
 					if (!measureOnly && confirm.fortConfirmed != 1) {
 						continue;
 					}
@@ -885,7 +885,7 @@ static void clearRegion(int measureOnly, int xStart, int yStart, int xEnd, int y
 			int gridOffset = GridOffset(x,y);
 			int buildingId = Data_Grid_buildingIds[gridOffset];
 			if (buildingId) {
-				if (Data_Buildings[buildingId].type == Building_FortGround__ ||
+				if (Data_Buildings[buildingId].type == Building_Fort ||
 					Data_Buildings[buildingId].type == Building_FortGround) {
 					askConfirmFort = 1;
 				}
