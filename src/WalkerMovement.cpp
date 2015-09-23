@@ -14,7 +14,7 @@
 #include "Data/Settings.h"
 #include "Data/Walker.h"
 
-static int roamingEnabled = 0;
+static void WalkerMovement_walkTicksInternal(int walkerId, int numTicks, int roamingEnabled);
 
 void WalkerMovement_advanceTick(struct Data_Walker *w)
 {
@@ -98,35 +98,35 @@ static void walkerMoveToNextTile(int walkerId, struct Data_Walker *w)
 	switch (w->direction) {
 		default:
 			return;
-		case 0:
+		case Dir_0_Top:
 			w->y--;
 			w->gridOffset -= 162;
 			break;
-		case 1:
+		case Dir_1_TopRight:
 			w->x++; w->y--;
 			w->gridOffset -= 161;
 			break;
-		case 2:
+		case Dir_2_Right:
 			w->x++;
 			w->gridOffset += 1;
 			break;
-		case 3:
+		case Dir_3_BottomRight:
 			w->x++; w->y++;
 			w->gridOffset += 163;
 			break;
-		case 4:
+		case Dir_4_Bottom:
 			w->y++;
 			w->gridOffset += 162;
 			break;
-		case 5:
+		case Dir_5_BottomLeft:
 			w->x--; w->y++;
 			w->gridOffset += 161;
 			break;
-		case 6:
+		case Dir_6_Left:
 			w->x--;
 			w->gridOffset -= 1;
 			break;
-		case 7:
+		case Dir_7_TopLeft:
 			w->x--; w->y--;
 			w->gridOffset -= 163;
 			break;
@@ -161,10 +161,10 @@ void WalkerMovement_initRoaming(int walkerId)
 	int x = b->x;
 	int y = b->y;
 	switch (roamDir) {
-		case 0: y -= 8; break;
-		case 2: x += 8; break;
-		case 4: y += 8; break;
-		case 6: x -= 8; break;
+		case Dir_0_Top: y -= 8; break;
+		case Dir_2_Right: x += 8; break;
+		case Dir_4_Bottom: y += 8; break;
+		case Dir_6_Left: x -= 8; break;
 	}
 	BoundToMap(x, y);
 	int xRoad, yRoad;
@@ -219,12 +219,11 @@ void WalkerMovement_roamTicks(int walkerId, int numTicks)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	if (w->roamChooseDestination == 0) {
-		roamingEnabled = 1;
-		WalkerMovement_walkTicks(walkerId, numTicks);
-		if (w->direction == 8) {
+		WalkerMovement_walkTicksInternal(walkerId, numTicks, 1);
+		if (w->direction == DirWalker_8_AtDestination) {
 			w->roamChooseDestination = 1;
 			w->roamLength = 0;
-		} else if (w->direction == 9 || w->direction == 10) {
+		} else if (w->direction == DirWalker_9_Reroute || w->direction == DirWalker_10_Lost) {
 			w->roamChooseDestination = 1;
 		}
 		if (w->roamChooseDestination) {
@@ -252,7 +251,7 @@ void WalkerMovement_roamTicks(int walkerId, int numTicks)
 			if (adjacentRoadTiles == 3 && Terrain_getSurroundingRoadTilesForRoaming(w->gridOffset, roadTiles) >= 5) {
 				// go in the straight direction of a double-wide road
 				adjacentRoadTiles = 2;
-				if (cameFromDirection == 0 || cameFromDirection == 4) {
+				if (cameFromDirection == Dir_0_Top || cameFromDirection == Dir_4_Bottom) {
 					if (roadTiles[0] && roadTiles[4]) {
 						roadTiles[2] = roadTiles[6] = 0;
 					} else {
@@ -269,7 +268,7 @@ void WalkerMovement_roamTicks(int walkerId, int numTicks)
 			if (adjacentRoadTiles == 4 && Terrain_getSurroundingRoadTilesForRoaming(w->gridOffset, roadTiles) >= 8) {
 				// go straight on when all surrounding tiles are road
 				adjacentRoadTiles = 2;
-				if (cameFromDirection == 0 || cameFromDirection == 4) {
+				if (cameFromDirection == Dir_0_Top || cameFromDirection == Dir_4_Bottom) {
 					roadTiles[2] = roadTiles[6] = 0;
 				} else {
 					roadTiles[0] = roadTiles[4] = 0;
@@ -345,13 +344,13 @@ static void walkerSetNextRouteTileDirection(int walkerId, struct Data_Walker *w)
 	}
 }
 
-static void walkerAdvanceRouteTile(struct Data_Walker *w)
+static void walkerAdvanceRouteTile(struct Data_Walker *w, int roamingEnabled)
 {
 	if (w->direction >= 8) {
 		return;
 	}
 	int targetGridOffset = w->gridOffset + Constant_DirectionGridOffsets[w->direction];
-	int targetTerrain = Data_Grid_terrain[targetGridOffset] & 0xc75f;
+	int targetTerrain = Data_Grid_terrain[targetGridOffset] & Terrain_c75f;
 	if (w->isBoat) {
 		if (!(targetTerrain & Terrain_Water)) {
 			w->direction = DirWalker_9_Reroute;
@@ -368,7 +367,7 @@ static void walkerAdvanceRouteTile(struct Data_Walker *w)
 					maxDamage = 10;
 					break;
 				case Routing_NonCitizen_2_Clearable:
-					if (Data_Grid_terrain[targetGridOffset] & 0x1420) {
+					if (Data_Grid_terrain[targetGridOffset] & Terrain_GardenAccessRampRubble) {
 						causeDamage = 0;
 					} else {
 						maxDamage = 10;
@@ -414,7 +413,7 @@ static void walkerAdvanceRouteTile(struct Data_Walker *w)
 	}
 }
 
-void WalkerMovement_walkTicks(int walkerId, int numTicks)
+static void WalkerMovement_walkTicksInternal(int walkerId, int numTicks, int roamingEnabled)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	while (numTicks > 0) {
@@ -429,7 +428,7 @@ void WalkerMovement_walkTicks(int walkerId, int numTicks)
 				WalkerRoute_add(walkerId);
 			}
 			walkerSetNextRouteTileDirection(walkerId, w);
-			walkerAdvanceRouteTile(w);
+			walkerAdvanceRouteTile(w, roamingEnabled);
 			if (w->direction >= 8) {
 				break;
 			}
@@ -440,7 +439,11 @@ void WalkerMovement_walkTicks(int walkerId, int numTicks)
 			WalkerMovement_advanceTick(w);
 		}
 	}
-	roamingEnabled = 0;
+}
+
+void WalkerMovement_walkTicks(int walkerId, int numTicks)
+{
+	WalkerMovement_walkTicksInternal(walkerId, numTicks, 0);
 }
 
 void WalkerMovement_followTicks(int walkerId, int leaderWalkerId, int numTicks)
@@ -505,14 +508,14 @@ void WalkerMovement_crossCountrySetDirection(int walkerId, int xSrc, int ySrc, i
 		w->direction = Routing_getGeneralDirection(xSrc, ySrc, xDst, yDst);
 		if (w->ccDeltaY > 2 * w->ccDeltaX) {
 			switch (w->direction) {
-				case 1: case 7: w->direction = 0; break;
-				case 3: case 5: w->direction = 4; break;
+				case Dir_1_TopRight: case Dir_7_TopLeft: w->direction = Dir_0_Top; break;
+				case Dir_3_BottomRight: case Dir_5_BottomLeft: w->direction = Dir_4_Bottom; break;
 			}
 		}
 		if (w->ccDeltaX > 2 * w->ccDeltaY) {
 			switch (w->direction) {
-				case 1: case 3: w->direction = 2; break;
-				case 5: case 7: w->direction = 6; break;
+				case Dir_1_TopRight: case Dir_3_BottomRight: w->direction = Dir_2_Right; break;
+				case Dir_5_BottomLeft: case Dir_7_TopLeft: w->direction = Dir_6_Left; break;
 			}
 		}
 	}
@@ -614,7 +617,7 @@ int WalkerMovement_canLaunchCrossCountryMissile(int xSrc, int ySrc, int xDst, in
 	struct Data_Walker *w = &Data_Walkers[0];
 	w->crossCountryX = 15 * xSrc;
 	w->crossCountryY = 15 * ySrc;
-	if (Data_Grid_terrain[GridOffset(xSrc, ySrc)] & (Terrain_Wall | Terrain_Gatehouse)) {
+	if (Data_Grid_terrain[GridOffset(xSrc, ySrc)] & Terrain_WallOrGatehouse) {
 		height = 6;
 	}
 	WalkerMovement_crossCountrySetDirection(0, 15 * xSrc, 15 * ySrc, 15 * xDst, 15 * yDst, 0);
@@ -632,10 +635,10 @@ int WalkerMovement_canLaunchCrossCountryMissile(int xSrc, int ySrc, int xDst, in
 			height--;
 		} else {
 			int gridOffset = GridOffset(w->x, w->y);
-			if (Data_Grid_terrain[gridOffset] & (Terrain_Wall | Terrain_Gatehouse | Terrain_Tree | Terrain_Building)) {
+			if (Data_Grid_terrain[gridOffset] & (Terrain_Wall | Terrain_Gatehouse | Terrain_Tree)) {
 				break;
 			}
-			if (Data_Grid_bitfields[gridOffset] & Bitfield_Sizes) {
+			if (Data_Grid_terrain[gridOffset] & Terrain_Building && Data_Grid_bitfields[gridOffset] & Bitfield_Sizes) {
 				break;
 			}
 		}

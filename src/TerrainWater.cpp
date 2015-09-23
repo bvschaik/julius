@@ -34,10 +34,7 @@ void Terrain_addWatersideBuildingToGrids(int buildingId, int x, int y, int size,
 		default:
 			return;
 	}
-	int sizeMask = Bitfield_Size2;
-	if (size == 3) {
-		sizeMask = Bitfield_Size3;
-	}
+	int sizeMask = (size == 3) ? Bitfield_Size3 : Bitfield_Size2;
 	for (int dy = 0; dy < size; dy++) {
 		for (int dx = 0; dx < size; dx++) {
 			int gridOffset = GridOffset(x + dx, y + dy);
@@ -298,6 +295,8 @@ int Terrain_Water_findOpenWaterForShipwreck(int walkerId, int *xTile, int *yTile
 					Data_Grid_terrain[GridOffset(xx, yy + 2)] & Terrain_Water &&
 					Data_Grid_terrain[GridOffset(xx - 2, yy)] & Terrain_Water &&
 					Data_Grid_terrain[GridOffset(xx + 2, yy)] & Terrain_Water) {
+					*xTile = xx;
+					*yTile = yy;
 					return 1;
 				}
 			}
@@ -320,7 +319,7 @@ int Terrain_Water_getFreeDockDestination(int walkerId, int *xTile, int *yTile)
 			break;
 		}
 	}
-	// BUG: when 10 docks in city, always takes last one...
+	// BUG: when 10 docks in city, always takes last one... regardless of whether it is free
 	if (dockId <= 0) {
 		return 0;
 	}

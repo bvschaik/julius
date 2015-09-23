@@ -87,7 +87,7 @@ int WalkerAction_TradeCaravan_canSell(int traderId, int warehouseId, int cityId)
 		return 0;
 	}
 	int numImportable = 0;
-	for (int r = 1; r < 16; r++) {
+	for (int r = Resource_Min; r < Resource_Max; r++) {
 		if (st->resourceState[r] != BuildingStorageState_NotAccepting) {
 			if (Empire_canImportResourceFromCity(cityId, r)) {
 				numImportable++;
@@ -101,9 +101,8 @@ int WalkerAction_TradeCaravan_canSell(int traderId, int warehouseId, int cityId)
 	if (st->resourceState[Data_CityInfo.tradeNextImportResourceCaravan] != BuildingStorageState_NotAccepting &&
 		Empire_canImportResourceFromCity(cityId, Data_CityInfo.tradeNextImportResourceCaravan)) {
 		canImport = 1;
-	}
-	if (!canImport) {
-		for (int i = 1; i < 16; i++) {
+	} else {
+		for (int i = Resource_Min; i < Resource_Max; i++) {
 			advanceTradeNextImportResourceCaravan();
 			if (st->resourceState[Data_CityInfo.tradeNextImportResourceCaravan] != BuildingStorageState_NotAccepting &&
 					Empire_canImportResourceFromCity(cityId, Data_CityInfo.tradeNextImportResourceCaravan)) {
@@ -170,7 +169,7 @@ static int traderGetSellResource(int traderId, int warehouseId, int cityId)
 		}
 	}
 	// find another importable resource that can be added to this warehouse
-	for (int r = 1; r < 16; r++) {
+	for (int r = Resource_Min; r < Resource_Max; r++) {
 		Data_CityInfo.tradeNextImportResourceCaravanBackup++;
 		if (Data_CityInfo.tradeNextImportResourceCaravanBackup > 15) {
 			Data_CityInfo.tradeNextImportResourceCaravanBackup = 1;
@@ -212,7 +211,7 @@ void WalkerAction_tradeCaravan(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	w->isGhost = 0;
-	w->terrainUsage = 3;
+	w->terrainUsage = WalkerTerrainUsage_PreferRoads;
 	WalkerActionIncreaseGraphicOffset(w, 12);
 	w->cartGraphicId = 0;
 	switch (w->actionState) {
@@ -242,13 +241,13 @@ void WalkerAction_tradeCaravan(int walkerId)
 		case WalkerActionState_101_TradeCaravanArriving:
 			WalkerMovement_walkTicks(walkerId, 1);
 			switch (w->direction) {
-				case 8:
+				case DirWalker_8_AtDestination:
 					w->actionState = WalkerActionState_102_TradeCaravanTrading;
 					break;
-				case 9:
+				case DirWalker_9_Reroute:
 					WalkerRoute_remove(walkerId);
 					break;
-				case 10:
+				case DirWalker_10_Lost:
 					w->state = WalkerState_Dead;
 					w->isGhost = 1;
 					break;
@@ -295,14 +294,14 @@ void WalkerAction_tradeCaravan(int walkerId)
 		case WalkerActionState_103_TradeCaravanLeaving:
 			WalkerMovement_walkTicks(walkerId, 1);
 			switch (w->direction) {
-				case 8:
+				case DirWalker_8_AtDestination:
 					w->actionState = WalkerActionState_100_TradeCaravanCreated;
 					w->state = WalkerState_Dead;
 					break;
-				case 9:
+				case DirWalker_9_Reroute:
 					WalkerRoute_remove(walkerId);
 					break;
-				case 10:
+				case DirWalker_10_Lost:
 					w->state = WalkerState_Dead;
 					break;
 			}
@@ -310,15 +309,14 @@ void WalkerAction_tradeCaravan(int walkerId)
 	}
 	int dir = w->direction < 8 ? w->direction : w->previousTileDirection;
 	WalkerActionNormalizeDirection(dir);
-	w->graphicId = GraphicId(ID_Graphic_Walker_TradeCaravan) +
-		dir + 8 * w->graphicOffset;
+	w->graphicId = GraphicId(ID_Graphic_Walker_TradeCaravan) + dir + 8 * w->graphicOffset;
 }
 
 void WalkerAction_tradeCaravanDonkey(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	w->isGhost = 0;
-	w->terrainUsage = 3;
+	w->terrainUsage = WalkerTerrainUsage_PreferRoads;
 	WalkerActionIncreaseGraphicOffset(w, 12);
 	w->cartGraphicId = 0;
 
@@ -342,15 +340,14 @@ void WalkerAction_tradeCaravanDonkey(int walkerId)
 	}
 	int dir = w->direction < 8 ? w->direction : w->previousTileDirection;
 	WalkerActionNormalizeDirection(dir);
-	w->graphicId = GraphicId(ID_Graphic_Walker_TradeCaravan) +
-		dir + 8 * w->graphicOffset;
+	w->graphicId = GraphicId(ID_Graphic_Walker_TradeCaravan) + dir + 8 * w->graphicOffset;
 }
 
 void WalkerAction_nativeTrader(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	w->isGhost = 0;
-	w->terrainUsage = 0;
+	w->terrainUsage = WalkerTerrainUsage_Any;
 	WalkerActionIncreaseGraphicOffset(w, 12);
 	w->cartGraphicId = 0;
 	switch (w->actionState) {
@@ -362,11 +359,11 @@ void WalkerAction_nativeTrader(int walkerId)
 			break;
 		case WalkerActionState_160_NativeTraderGoingToWarehouse:
 			WalkerMovement_walkTicks(walkerId, 1);
-			if (w->direction == 8) {
+			if (w->direction == DirWalker_8_AtDestination) {
 				w->actionState = WalkerActionState_163_NativeTraderAtWarehouse;
-			} else if (w->direction == 9) {
+			} else if (w->direction == DirWalker_9_Reroute) {
 				WalkerRoute_remove(walkerId);
-			} else if (w->direction == 10) {
+			} else if (w->direction == DirWalker_10_Lost) {
 				w->state = WalkerState_Dead;
 				w->isGhost = 1;
 			}
@@ -376,9 +373,9 @@ void WalkerAction_nativeTrader(int walkerId)
 			break;
 		case WalkerActionState_161_NativeTraderReturning:
 			WalkerMovement_walkTicks(walkerId, 1);
-			if (w->direction == 8 || w->direction == 10) {
+			if (w->direction == DirWalker_8_AtDestination || w->direction == DirWalker_10_Lost) {
 				w->state = WalkerState_Dead;
-			} else if (w->direction == 9) {
+			} else if (w->direction == DirWalker_9_Reroute) {
 				WalkerRoute_remove(walkerId);
 			}
 			break;
@@ -519,14 +516,14 @@ void WalkerAction_tradeShip(int walkerId)
 		case WalkerActionState_111_TradeShipGoingToDock:
 			WalkerMovement_walkTicks(walkerId, 1);
 			w->heightAdjustedTicks = 0;
-			if (w->direction == 8) {
+			if (w->direction == DirWalker_8_AtDestination) {
 				w->actionState = WalkerActionState_112_TradeShipMoored;
-			} else if (w->direction == 9) {
+			} else if (w->direction == DirWalker_9_Reroute) {
 				WalkerRoute_remove(walkerId);
-			} else if (w->direction == 10) {
+			} else if (w->direction == DirWalker_10_Lost) {
 				w->state = WalkerState_Dead;
 				if (!Data_Message.messageCategoryCount[MessageDelay_BlockedDock]) {
-					PlayerMessage_post(1, 15, 0, 0);
+					PlayerMessage_post(1, Message_15_NavigationImpossible, 0, 0);
 					Data_Message.messageCategoryCount[MessageDelay_BlockedDock]++;
 				}
 			}
@@ -554,10 +551,10 @@ void WalkerAction_tradeShip(int walkerId)
 				Data_Buildings[w->destinationBuildingId].data.other.dockNumShips = 0;
 			}
 			switch (Data_Buildings[w->destinationBuildingId].data.other.dockOrientation) {
-				case 0: w->direction = 2; break;
-				case 1: w->direction = 4; break;
-				case 2: w->direction = 6; break;
-				default:w->direction = 0; break;
+				case 0: w->direction = Dir_2_Right; break;
+				case 1: w->direction = Dir_4_Bottom; break;
+				case 2: w->direction = Dir_6_Left; break;
+				default:w->direction = Dir_0_Top; break;
 			}
 			w->graphicOffset = 0;
 			Data_Message.messageCategoryCount[MessageDelay_BlockedDock] = 0;
@@ -565,11 +562,11 @@ void WalkerAction_tradeShip(int walkerId)
 		case WalkerActionState_113_TradeShipGoingToDockQueue:
 			WalkerMovement_walkTicks(walkerId, 1);
 			w->heightAdjustedTicks = 0;
-			if (w->direction == 8) {
+			if (w->direction == DirWalker_8_AtDestination) {
 				w->actionState = WalkerActionState_114_TradeShipAnchored;
-			} else if (w->direction == 9) {
+			} else if (w->direction == DirWalker_9_Reroute) {
 				WalkerRoute_remove(walkerId);
-			} else if (w->direction == 10) {
+			} else if (w->direction == DirWalker_10_Lost) {
 				w->state = WalkerState_Dead;
 			}
 			break;
@@ -596,12 +593,12 @@ void WalkerAction_tradeShip(int walkerId)
 		case WalkerActionState_115_TradeShipLeaving:
 			WalkerMovement_walkTicks(walkerId, 1);
 			w->heightAdjustedTicks = 0;
-			if (w->direction == 8) {
+			if (w->direction == DirWalker_8_AtDestination) {
 				w->actionState = WalkerActionState_110_TradeShipCreated;
 				w->state = WalkerState_Dead;
-			} else if (w->direction == 9) {
+			} else if (w->direction == DirWalker_9_Reroute) {
 				WalkerRoute_remove(walkerId);
-			} else if (w->direction == 10) {
+			} else if (w->direction == DirWalker_10_Lost) {
 				w->state = WalkerState_Dead;
 			}
 			break;

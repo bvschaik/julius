@@ -14,6 +14,7 @@ enum {
 
 enum {
 	Message_12_FireInTheCity = 12,
+	Message_15_NavigationImpossible = 15,
 	Message_16_CityInDebt = 16,
 	Message_17_CityInDebtAgain = 17,
 	Message_18_CityStillInDebt = 18,
