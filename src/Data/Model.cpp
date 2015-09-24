@@ -11,7 +11,7 @@ struct Data_Model_Difficulty Data_Model_Difficulty = {
 
 struct _Data_Scenario Data_Scenario;
 
-struct Data_Event Data_Event = {0};
+struct _Data_Event Data_Event = {0};
 
 struct _Data_Settings Data_Settings;
 struct _Data_Settings_Map Data_Settings_Map;
@@ -35,7 +35,7 @@ struct _Data_Graphics_PixelData Data_Graphics_PixelData;
 
 struct Data_Screen Data_Screen;// = { 800, 600, {80, 60} };
 
-struct Data_Mouse Data_Mouse;
+struct _Data_Mouse Data_Mouse;
 
 struct Data_Language_Text Data_Language_Text;
 struct Data_Language_Message Data_Language_Message;

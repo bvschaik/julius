@@ -388,7 +388,7 @@ void CityInfo_Ratings_updateProsperityExplanation()
 	}
 
 	int reason;
-	if (Data_CityInfo.ratingProsperity <= 0 || Data_CityInfo_Extra.gameTimeYear == Data_Scenario.startYear) {
+	if (Data_CityInfo.ratingProsperity <= 0 && Data_CityInfo_Extra.gameTimeYear == Data_Scenario.startYear) {
 		reason = 0;
 	} else if (Data_CityInfo.ratingProsperity >= Data_CityInfo.ratingProsperityMax) {
 		reason = 1;
@@ -452,7 +452,7 @@ static void updatePeaceRating()
 		change -= 5;
 	}
 	if (Data_CityInfo.ratingPeaceNumDestroyedBuildingsThisYear) {
-		change -= 1;
+		change -= Data_CityInfo.ratingPeaceNumDestroyedBuildingsThisYear;
 	}
 	if (Data_CityInfo.ratingPeaceNumRiotersThisYear || Data_CityInfo.ratingPeaceNumDestroyedBuildingsThisYear) {
 		Data_CityInfo.ratingPeaceYearsOfPeace = 0;
@@ -494,7 +494,7 @@ void CityInfo_Ratings_updatePeaceExplanation()
 	}
 	Data_CityInfo.ratingAdvisorExplanationPeace = reason;
 }
-
+//REVIEW
 void CityInfo_Ratings_sendGiftToCaesar()
 {
 	int cost;

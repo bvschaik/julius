@@ -100,6 +100,7 @@ enum {
 	Message_108_CaesarRespect3 = 108,
 	Message_109_WorkingHippodrome = 109,
 	Message_110_WorkingColosseum = 110,
+	Message_112_Fired = 112,
 	Message_114_EnemyArmyAttack = 114,
 	Message_115_RequestCanComply = 115,
 	Message_116_RoadToRomeObstructed = 116,

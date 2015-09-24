@@ -250,7 +250,7 @@ static void loadScenario(const char *scenarioName)
 			Data_Event.earthquake.maxDelay = 6;
 			break;
 	}
-	Data_Event.earthquake.state = 0;
+	Data_Event.earthquake.state = SpecialEvent_NotStarted;
 	for (int i = 0; i < 4; i++) {
 		Data_Event.earthquake.expand[i].x = Data_Scenario.earthquakePoint.x;
 		Data_Event.earthquake.expand[i].y = Data_Scenario.earthquakePoint.y;

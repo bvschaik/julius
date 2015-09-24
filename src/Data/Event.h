@@ -9,7 +9,7 @@ enum {
 	SpecialEvent_Finished = 2
 };
 
-extern struct Data_Event {
+extern struct _Data_Event {
 	short lastInternalInvasionId;
 	int timeLimitMaxGameYear;
 	struct {

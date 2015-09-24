@@ -7,7 +7,7 @@ struct Data_Mouse_Button {
 	int wentUp;
 };
 
-extern struct Data_Mouse {
+extern struct _Data_Mouse {
 	// filled from outside game
 	int x;
 	int y;

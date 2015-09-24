@@ -8,6 +8,7 @@
 
 #include "Data/CityInfo.h"
 #include "Data/Event.h"
+#include "Data/Mouse.h"
 #include "Data/Scenario.h"
 #include "Data/Screen.h"
 #include "Data/Settings.h"
@@ -93,19 +94,14 @@ void CityInfo_Victory_check()
 				UI_Intermezzo_show(1, Window_MissionEnd, 1000);
 			} else {
 				Data_CityInfo.messageShownFired = 1;
-				PlayerMessage_post(1, 112, 0, 0);
+				PlayerMessage_post(1, Message_112_Fired, 0, 0);
 			}
 			Data_State.forceWinCheat = 0;
 		} else if (Data_State.winState > 0) {
 			Sound_stopMusic();
 			if (Data_CityInfo.messageShownVictory) {
-				// TODO show victory video
-				/*
-				  mouseInfo_type = 0;
-				  mouse_isRightClickFinished = 0;
-				  mouse_isLeftClickFinished = 0;
-				  message_useVideo = 2;
-				*/
+				Data_Mouse.right.wentUp = 0;
+				Data_Mouse.left.wentUp = 0;
 				
 				if (IsTutorial1() || IsTutorial2()) {
 					// tutorials: immediately go to next mission
