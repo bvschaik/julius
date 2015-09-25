@@ -35,10 +35,10 @@ static void loadDefaults()
 
 void Settings_load()
 {
-	FileSystem_readFileIntoBuffer("c3map.inf", &Data_Settings_Map);
+	FileSystem_readFileIntoBuffer("c3map.inf", &Data_Settings_Map, 48);
 	loadDefaults();
 	Settings_clearMissionSettings();
-	FileSystem_readFileIntoBuffer("c3.inf", &Data_Settings);
+	FileSystem_readFileIntoBuffer("c3.inf", &Data_Settings, 560);
 	Data_Settings.gamePaused = 0;
 	if (Data_Settings.windowedWidth + Data_Settings.windowedHeight < 500) {
 		Data_Settings.windowedWidth = 800;

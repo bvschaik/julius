@@ -95,8 +95,8 @@ int Loader_Graphics_loadMainGraphics(int climate)
 		return 0;
 	}
 	
-	FileSystem_readFileIntoBuffer(filenameSg2, &Data_Graphics_Main);
-	FileSystem_readFileIntoBuffer(filename555, Data_Graphics_PixelData.main);
+	FileSystem_readFileIntoBuffer(filenameSg2, &Data_Graphics_Main, sizeof(Data_Graphics_Main));
+	FileSystem_readFileIntoBuffer(filename555, Data_Graphics_PixelData.main, 17000000);
 
 	prepareMainGraphics();
 	currentClimate = climate;
@@ -113,7 +113,7 @@ int Loader_Graphics_loadEnemyGraphics(int enemyId)
 	}
 
 	FileSystem_readFilePartIntoBuffer(filenameSg2, &Data_Graphics_Enemy, 51264, 20680);
-	FileSystem_readFileIntoBuffer(filename555, Data_Graphics_PixelData.enemy);
+	FileSystem_readFileIntoBuffer(filename555, Data_Graphics_PixelData.enemy, 12100000);
 
 	prepareEnemyGraphics();
 	return 1;

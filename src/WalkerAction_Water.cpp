@@ -56,7 +56,7 @@ void WalkerAction_fishingBoat(int walkerId)
 				int xTile, yTile;
 				int buildingId = Terrain_Water_getWharfTileForNewFishingBoat(walkerId, &xTile, &yTile);
 				if (buildingId) {
-					b->walkerId = 0;
+					b->walkerId = 0; // remove from original building
 					w->buildingId = buildingId;
 					Data_Buildings[buildingId].data.other.boatWalkerId = walkerId;
 					w->actionState = WalkerActionState_193_FishingBoatSailingToWharf;
@@ -71,7 +71,7 @@ void WalkerAction_fishingBoat(int walkerId)
 		case WalkerActionState_191_FishingBoatGoingToFish:
 			WalkerMovement_walkTicks(walkerId, 1);
 			w->heightAdjustedTicks = 0;
-			if (w->direction == 8) {
+			if (w->direction == DirWalker_8_AtDestination) {
 				int xTile, yTile;
 				if (Terrain_Water_findAlternativeTileForFishingBoat(walkerId, &xTile, &yTile)) {
 					WalkerRoute_remove(walkerId);
@@ -82,7 +82,7 @@ void WalkerAction_fishingBoat(int walkerId)
 					w->actionState = WalkerActionState_192_FishingBoatFishing;
 					w->waitTicks = 0;
 				}
-			} else if (w->direction == 9 || w->direction == 10) {
+			} else if (w->direction == DirWalker_9_Reroute || w->direction == DirWalker_10_Lost) {
 				w->actionState = WalkerActionState_194_FishingBoatAtWharf;
 				w->destinationX = w->sourceX;
 				w->destinationY = w->sourceY;
@@ -101,17 +101,17 @@ void WalkerAction_fishingBoat(int walkerId)
 		case WalkerActionState_193_FishingBoatSailingToWharf:
 			WalkerMovement_walkTicks(walkerId, 1);
 			w->heightAdjustedTicks = 0;
-			if (w->direction == 8) {
+			if (w->direction == DirWalker_8_AtDestination) {
 				w->actionState = WalkerActionState_194_FishingBoatAtWharf;
 				w->waitTicks = 0;
-			} else if (w->direction == 9) {
+			} else if (w->direction == DirWalker_9_Reroute) {
 				WalkerRoute_remove(walkerId);
-			} else if (w->direction == 10) {
+			} else if (w->direction == DirWalker_10_Lost) {
 				// cannot reach grounds
 				if (Data_Message.messageCategoryCount[MessageDelay_FishingBlocked] > 0) {
 					Data_Message.messageCategoryCount[MessageDelay_FishingBlocked]--;
 				} else {
-					PlayerMessage_post(1, 118, 0, 0);
+					PlayerMessage_post(1, Message_118_FishingBoatBlocked, 0, 0);
 					Data_Message.messageCategoryCount[MessageDelay_FishingBlocked] = 12;
 				}
 				w->state = WalkerState_Dead;
@@ -142,14 +142,14 @@ void WalkerAction_fishingBoat(int walkerId)
 		case WalkerActionState_195_FishingBoatReturningWithFish:
 			WalkerMovement_walkTicks(walkerId, 1);
 			w->heightAdjustedTicks = 0;
-			if (w->direction == 8) {
+			if (w->direction == DirWalker_8_AtDestination) {
 				w->actionState = WalkerActionState_194_FishingBoatAtWharf;
 				w->waitTicks = 0;
 				b->walkerSpawnDelay = 1;
 				b->data.other.fishingBoatHasFish++;
-			} else if (w->direction == 9) {
+			} else if (w->direction == DirWalker_9_Reroute) {
 				WalkerRoute_remove(walkerId);
-			} else if (w->direction == 10) {
+			} else if (w->direction == DirWalker_10_Lost) {
 				w->state = WalkerState_Dead;
 			}
 			break;
@@ -198,7 +198,8 @@ void WalkerAction_flotsam(int walkerId)
 				WalkerMovement_walkTicks(walkerId, 1);
 				w->isGhost = 0;
 				w->heightAdjustedTicks = 0;
-				if (w->direction == 8 || w->direction == 9 || w->direction == 10) {
+				if (w->direction == DirWalker_8_AtDestination ||
+					w->direction == DirWalker_9_Reroute || w->direction == DirWalker_10_Lost) {
 					w->actionState = WalkerActionState_130_FlotsamLeftMap;
 				}
 			}

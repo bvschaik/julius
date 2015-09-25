@@ -105,6 +105,7 @@ enum {
 	Message_115_RequestCanComply = 115,
 	Message_116_RoadToRomeObstructed = 116,
 	Message_117_NoWorkingDock = 117,
+	Message_118_FishingBoatBlocked = 118,
 	Message_121_LocalUprisingMars = 121,
 };
 

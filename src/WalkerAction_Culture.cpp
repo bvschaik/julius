@@ -37,7 +37,8 @@ static void WalkerAction_cultureCommon(int walkerId, int numTicks)
 			break;
 		case WalkerActionState_126_RoamerReturning:
 			WalkerMovement_walkTicks(walkerId, numTicks);
-			if (w->direction == 8 || w->direction == 9 || w->direction == 10) {
+			if (w->direction == DirWalker_8_AtDestination ||
+				w->direction == DirWalker_9_Reroute || w->direction == DirWalker_10_Lost) {
 				w->state = WalkerState_Dead;
 			}
 			break;
@@ -47,7 +48,7 @@ static void WalkerAction_cultureCommon(int walkerId, int numTicks)
 static void WalkerAction_culture(int walkerId, int graphicCategory)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
-	w->terrainUsage = 1;
+	w->terrainUsage = WalkerTerrainUsage_Roads;
 	w->useCrossCountry = 0;
 	w->maxRoamLength = 384;
 	int buildingId = w->buildingId;
@@ -73,7 +74,7 @@ void WalkerAction_priest(int walkerId)
 void WalkerAction_schoolChild(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
-	w->terrainUsage = 1;
+	w->terrainUsage = WalkerTerrainUsage_Roads;
 	w->useCrossCountry = 0;
 	w->maxRoamLength = 96;
 	int buildingId = w->buildingId;
@@ -139,7 +140,7 @@ void WalkerAction_surgeon(int walkerId)
 void WalkerAction_missionary(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
-	w->terrainUsage = 1;
+	w->terrainUsage = WalkerTerrainUsage_Roads;
 	w->useCrossCountry = 0;
 	w->maxRoamLength = 192;
 	int buildingId = w->buildingId;
@@ -154,7 +155,7 @@ void WalkerAction_missionary(int walkerId)
 void WalkerAction_patrician(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
-	w->terrainUsage = 1;
+	w->terrainUsage = WalkerTerrainUsage_Roads;
 	w->useCrossCountry = 0;
 	w->maxRoamLength = 128;
 	if (!BuildingIsInUse(w->buildingId)) {
@@ -168,7 +169,7 @@ void WalkerAction_patrician(int walkerId)
 void WalkerAction_laborSeeker(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
-	w->terrainUsage = 1;
+	w->terrainUsage = WalkerTerrainUsage_Roads;
 	w->useCrossCountry = 0;
 	w->maxRoamLength = 384;
 	int buildingId = w->buildingId;
@@ -183,7 +184,7 @@ void WalkerAction_laborSeeker(int walkerId)
 void WalkerAction_marketTrader(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
-	w->terrainUsage = 1;
+	w->terrainUsage = WalkerTerrainUsage_Roads;
 	w->useCrossCountry = 0;
 	w->maxRoamLength = 384;
 	

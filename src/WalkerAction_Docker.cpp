@@ -110,7 +110,7 @@ void WalkerAction_docker(int walkerId)
 			b->data.other.boatWalkerId = 0;
 		}
 	}
-	w->terrainUsage = 1;
+	w->terrainUsage = WalkerTerrainUsage_Roads;
 	switch (w->actionState) {
 		case WalkerActionState_150_Attack:
 			WalkerAction_Common_handleAttack(walkerId);
@@ -186,11 +186,11 @@ void WalkerAction_docker(int walkerId)
 		case WalkerActionState_135_DockerImportGoingToWarehouse:
 			setCartGraphic(w);
 			WalkerMovement_walkTicks(walkerId, 1);
-			if (w->direction == 8) {
+			if (w->direction == DirWalker_8_AtDestination) {
 				w->actionState = WalkerActionState_139_DockerImportAtWarehouse;
-			} else if (w->direction == 9) {
+			} else if (w->direction == DirWalker_9_Reroute) {
 				WalkerRoute_remove(walkerId);
-			} else if (w->direction == 10) {
+			} else if (w->direction == DirWalker_10_Lost) {
 				w->state = WalkerState_Dead;
 			}
 			if (!BuildingIsInUse(w->destinationBuildingId)) {
@@ -200,11 +200,11 @@ void WalkerAction_docker(int walkerId)
 		case WalkerActionState_136_DockerExportGoingToWarehouse:
 			w->cartGraphicId = GraphicId(ID_Graphic_Walker_CartpusherCart); // empty
 			WalkerMovement_walkTicks(walkerId, 1);
-			if (w->direction == 8) {
+			if (w->direction == DirWalker_8_AtDestination) {
 				w->actionState = WalkerActionState_140_DockerExportAtWarehouse;
-			} else if (w->direction == 9) {
+			} else if (w->direction == DirWalker_9_Reroute) {
 				WalkerRoute_remove(walkerId);
-			} else if (w->direction == 10) {
+			} else if (w->direction == DirWalker_10_Lost) {
 				w->state = WalkerState_Dead;
 			}
 			if (!BuildingIsInUse(w->destinationBuildingId)) {
@@ -214,12 +214,12 @@ void WalkerAction_docker(int walkerId)
 		case WalkerActionState_137_DockerExportReturning:
 			setCartGraphic(w);
 			WalkerMovement_walkTicks(walkerId, 1);
-			if (w->direction == 8) {
+			if (w->direction == DirWalker_8_AtDestination) {
 				w->actionState = WalkerActionState_134_DockerExportQueue;
 				w->waitTicks = 0;
-			} else if (w->direction == 9) {
+			} else if (w->direction == DirWalker_9_Reroute) {
 				WalkerRoute_remove(walkerId);
-			} else if (w->direction == 10) {
+			} else if (w->direction == DirWalker_10_Lost) {
 				w->state = WalkerState_Dead;
 			}
 			if (!BuildingIsInUse(w->destinationBuildingId)) {
@@ -229,11 +229,11 @@ void WalkerAction_docker(int walkerId)
 		case WalkerActionState_138_DockerImportReturning:
 			setCartGraphic(w);
 			WalkerMovement_walkTicks(walkerId, 1);
-			if (w->direction == 8) {
+			if (w->direction == DirWalker_8_AtDestination) {
 				w->actionState = WalkerActionState_132_DockerIdling;
-			} else if (w->direction == 9) {
+			} else if (w->direction == DirWalker_9_Reroute) {
 				WalkerRoute_remove(walkerId);
-			} else if (w->direction == 10) {
+			} else if (w->direction == DirWalker_10_Lost) {
 				w->state = WalkerState_Dead;
 			}
 			break;

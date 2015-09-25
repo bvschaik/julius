@@ -31,7 +31,7 @@ int String_toInt(const char *str)
 	return result;
 }
 
-int String_intToString(char *targetString, int value, int forcePlusSign)
+int String_fromInt(char *targetString, int value, int forcePlusSign)
 {
 	int totalChars = 0;
 	if (value >= 0) {

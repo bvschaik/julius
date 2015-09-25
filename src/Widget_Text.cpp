@@ -289,7 +289,7 @@ static void numberToString(char *str, int value, char prefix, const char *postfi
 	if (prefix) {
 		str[offset++] = prefix;
 	}
-	offset += String_intToString(&str[offset], value, 0);
+	offset += String_fromInt(&str[offset], value, 0);
 	while (*postfix) {
 		str[offset++] = *postfix;
 		postfix++;

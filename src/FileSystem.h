@@ -9,7 +9,7 @@ int FileSystem_readFilePartIntoBuffer(const char *filename, void *buffer, int le
 
 int FileSystem_readPartialRecordDataIntoBuffer(const char *filename, void *buffer, int recordReadSize, int recordSkipSize, int numRecords, int startOffset);
 
-int FileSystem_readFileIntoBuffer(const char *filename, void *buffer);
+int FileSystem_readFileIntoBuffer(const char *filename, void *buffer, int maxSize);
 
 int FileSystem_getFileSize(const char *filename);
 

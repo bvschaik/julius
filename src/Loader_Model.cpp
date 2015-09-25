@@ -72,7 +72,7 @@ int Loader_Model_loadC3ModelTxt()
 		// too large
 		return 0;
 	}
-	if (!FileSystem_readFileIntoBuffer("c3_model.txt", buffer)) {
+	if (!FileSystem_readFileIntoBuffer("c3_model.txt", buffer, 100000)) {
 		// file doesn't exist
 		return 0;
 	}

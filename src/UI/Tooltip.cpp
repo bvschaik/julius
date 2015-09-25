@@ -155,7 +155,7 @@ static void drawOverlayTooltip(struct TooltipContext *c)
 {
 	const char *text = Language_getString(c->textGroup, c->textId);
 	if (c->hasNumericPrefix) {
-		int offset = String_intToString(tmpString, c->numericPrefix, 0);
+		int offset = String_fromInt(tmpString, c->numericPrefix, 0);
 		strcpy(&tmpString[offset], text);
 		text = tmpString;
 	}

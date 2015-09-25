@@ -72,7 +72,7 @@ int FileSystem_readPartialRecordDataIntoBuffer(const char *filename, void *buffe
 }
 
 
-int FileSystem_readFileIntoBuffer(const char *filename, void *buffer)
+int FileSystem_readFileIntoBuffer(const char *filename, void *buffer, int maxSize)
 {
 	FILE *fp = fopen(filename, "rb");
 	if (!fp) {
@@ -80,6 +80,9 @@ int FileSystem_readFileIntoBuffer(const char *filename, void *buffer)
 	}
 	fseek(fp, 0, SEEK_END);
 	int size = ftell(fp);
+	if (size > maxSize) {
+		size = maxSize;
+	}
 	fseek(fp, 0, SEEK_SET);
 	fread(buffer, 1, size, fp);
 	fclose(fp);
