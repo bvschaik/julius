@@ -348,14 +348,14 @@ extern struct Data_Building_Storage {
 	unsigned char resourceState[22];
 } Data_Building_Storages[MAX_STORAGES];
 
-extern struct Data_Buildings_Extra {
+extern struct _Data_Buildings_Extra {
 	int highestBuildingIdInUse;
 	int highestBuildingIdEver;
 	int createdSequence;
 	int barracksTowerSentryRequested;
 } Data_Buildings_Extra;
 
-extern struct Data_BuildingList {
+extern struct _Data_BuildingList {
 	struct {
 		int size;
 		short items[MAX_BUILDINGS];

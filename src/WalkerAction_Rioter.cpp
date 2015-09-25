@@ -99,7 +99,7 @@ void WalkerAction_rioter(int walkerId)
 		case WalkerActionState_121_RioterMoving:
 			WalkerActionIncreaseGraphicOffset(w, 12);
 			WalkerMovement_walkTicks(walkerId, 1);
-			if (w->direction == 8) {
+			if (w->direction == DirWalker_8_AtDestination) {
 				int xTile, yTile;
 				int buildingId = Formation_Rioter_getTargetBuilding(&xTile, &yTile);
 				if (buildingId) {
@@ -110,10 +110,10 @@ void WalkerAction_rioter(int walkerId)
 				} else {
 					w->state = WalkerState_Dead;
 				}
-			} else if (w->direction == 9 || w->direction == 10) {
+			} else if (w->direction == DirWalker_9_Reroute || w->direction == DirWalker_10_Lost) {
 				w->actionState = WalkerActionState_120_RioterCreated;
 				WalkerRoute_remove(walkerId);
-			} else if (w->direction == 11) {
+			} else if (w->direction == DirWalker_11_Attack) {
 				if (w->graphicOffset > 12) {
 					w->graphicOffset = 0;
 				}
@@ -121,7 +121,7 @@ void WalkerAction_rioter(int walkerId)
 			break;
 	}
 	int dir;
-	if (w->direction == 11) {
+	if (w->direction == DirWalker_11_Attack) {
 		dir = w->attackDirection;
 	} else if (w->direction < 8) {
 		dir = w->direction;
@@ -133,7 +133,7 @@ void WalkerAction_rioter(int walkerId)
 	if (w->actionState == WalkerActionState_149_Corpse) {
 		w->graphicId = GraphicId(ID_Graphic_Walker_Criminal) +
 			96 + WalkerActionCorpseGraphicOffset(w);
-	} else if (w->direction == 11) {
+	} else if (w->direction == DirWalker_11_Attack) {
 		w->graphicId = GraphicId(ID_Graphic_Walker_Criminal) +
 			104 + criminalOffsets[w->graphicOffset];
 	} else if (w->actionState == WalkerActionState_121_RioterMoving) {
@@ -172,7 +172,7 @@ int WalkerAction_Rioter_collapseBuilding(int walkerId)
 		} else {
 			Data_Message.lastSoundTime.rioterCollapse = now;
 		}
-		PlayerMessage_post(0, 14, b->type, w->gridOffset);
+		PlayerMessage_post(0, Message_14_DestroyedBuilding, b->type, w->gridOffset);
 		Data_Message.messageCategoryCount[MessageDelay_RiotCollapse]++;
 		Building_collapseOnFire(buildingId, 0);
 		w->actionState = WalkerActionState_120_RioterCreated;

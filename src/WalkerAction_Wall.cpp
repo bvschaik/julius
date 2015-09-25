@@ -49,10 +49,10 @@ void WalkerAction_ballista(int walkerId)
 	}
 	Walker_removeFromTileList(walkerId);
 	switch (Data_Settings_Map.orientation) {
-		case 0: w->x = b->x; w->y = b->y; break;
-		case 2: w->x = b->x + 1; w->y = b->y; break;
-		case 4: w->x = b->x + 1; w->y = b->y + 1; break;
-		case 6: w->x = b->x; w->y = b->y + 1; break;
+		case Dir_0_Top: w->x = b->x; w->y = b->y; break;
+		case Dir_2_Right: w->x = b->x + 1; w->y = b->y; break;
+		case Dir_4_Bottom: w->x = b->x + 1; w->y = b->y + 1; break;
+		case Dir_6_Left: w->x = b->x; w->y = b->y + 1; break;
 	}
 	w->gridOffset = GridOffset(w->x, w->y);
 	Walker_addToTileList(walkerId);
@@ -126,10 +126,10 @@ static int towerSentryInitPatrol(struct Data_Walker *w, struct Data_Building *b,
 	int x = b->x;
 	int y = b->y;
 	switch (dir) {
-		case 0: y -= 8; break;
-		case 2: x += 8; break;
-		case 4: y += 8; break;
-		case 6: x -= 8; break;
+		case Dir_0_Top: y -= 8; break;
+		case Dir_2_Right: x += 8; break;
+		case Dir_4_Bottom: y += 8; break;
+		case Dir_6_Left: x -= 8; break;
 	}
 	BoundToMap(x, y);
 
@@ -145,10 +145,10 @@ static int towerSentryInitPatrol(struct Data_Walker *w, struct Data_Building *b,
 		x = b->x;
 		y = b->y;
 		switch (dir) {
-			case 0: y -= 3; break;
-			case 2: x += 3; break;
-			case 4: y += 3; break;
-			case 6: x -= 3; break;
+			case Dir_0_Top: y -= 3; break;
+			case Dir_2_Right: x += 3; break;
+			case Dir_4_Bottom: y += 3; break;
+			case Dir_6_Left: x -= 3; break;
 		}
 		BoundToMap(x, y);
 		if (Terrain_getWallTileWithinRadius(x, y, 6, xTile, yTile)) {
@@ -196,12 +196,12 @@ void WalkerAction_towerSentry(int walkerId)
 			break;
 		case WalkerActionState_171_TowerSentryPatrolling:
 			WalkerMovement_walkTicks(walkerId, 1);
-			if (w->direction == 8) {
+			if (w->direction == DirWalker_8_AtDestination) {
 				w->actionState = WalkerActionState_173_TowerSentryReturning;
 				w->destinationX = w->sourceX;
 				w->destinationY = w->sourceY;
 				WalkerRoute_remove(walkerId);
-			} else if (w->direction == 9 || w->direction == 10) {
+			} else if (w->direction == DirWalker_9_Reroute || w->direction == DirWalker_10_Lost) {
 				w->actionState = WalkerActionState_170_TowerSentryAtRest;
 			}
 			break;
@@ -224,9 +224,9 @@ void WalkerAction_towerSentry(int walkerId)
 			break;
 		case WalkerActionState_173_TowerSentryReturning:
 			WalkerMovement_walkTicks(walkerId, 1);
-			if (w->direction == 8) {
+			if (w->direction == DirWalker_8_AtDestination) {
 				w->actionState = WalkerActionState_170_TowerSentryAtRest;
-			} else if (w->direction == 9 || w->direction == 10) {
+			} else if (w->direction == DirWalker_9_Reroute || w->direction == DirWalker_10_Lost) {
 				w->state = WalkerState_Dead;
 			}
 			break;
@@ -235,7 +235,7 @@ void WalkerAction_towerSentry(int walkerId)
 			w->isGhost = 0;
 			w->heightAdjustedTicks = 0;
 			WalkerMovement_walkTicks(walkerId, 1);
-			if (w->direction == 8) {
+			if (w->direction == DirWalker_8_AtDestination) {
 				Walker_removeFromTileList(walkerId);
 				w->sourceX = w->x = b->x;
 				w->sourceY = w->y = b->y;
@@ -243,7 +243,7 @@ void WalkerAction_towerSentry(int walkerId)
 				Walker_addToTileList(walkerId);
 				w->actionState = WalkerActionState_170_TowerSentryAtRest;
 				WalkerRoute_remove(walkerId);
-			} else if (w->direction == 9 || w->direction == 10) {
+			} else if (w->direction == DirWalker_9_Reroute || w->direction == DirWalker_10_Lost) {
 				w->state = WalkerState_Dead;
 			}
 			break;

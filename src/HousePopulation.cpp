@@ -103,39 +103,39 @@ void HousePopulation_updateMigration()
 	calculateWorkers();
 	// population messages
 	if (Data_CityInfo.population >= 500 && !Data_Message.populationMessagesShown.pop500) {
-		PlayerMessage_post(1, 2, 0, 0);
+		PlayerMessage_post(1, Message_2_Population500, 0, 0);
 		Data_Message.populationMessagesShown.pop500 = 1;
 	}
 	if (Data_CityInfo.population >= 1000 && !Data_Message.populationMessagesShown.pop1000) {
-		PlayerMessage_post(1, 3, 0, 0);
+		PlayerMessage_post(1, Message_3_Population1000, 0, 0);
 		Data_Message.populationMessagesShown.pop1000 = 1;
 	}
 	if (Data_CityInfo.population >= 2000 && !Data_Message.populationMessagesShown.pop2000) {
-		PlayerMessage_post(1, 4, 0, 0);
+		PlayerMessage_post(1, Message_4_Population2000, 0, 0);
 		Data_Message.populationMessagesShown.pop2000 = 1;
 	}
 	if (Data_CityInfo.population >= 3000 && !Data_Message.populationMessagesShown.pop3000) {
-		PlayerMessage_post(1, 5, 0, 0);
+		PlayerMessage_post(1, Message_5_Population3000, 0, 0);
 		Data_Message.populationMessagesShown.pop3000 = 1;
 	}
 	if (Data_CityInfo.population >= 5000 && !Data_Message.populationMessagesShown.pop5000) {
-		PlayerMessage_post(1, 6, 0, 0);
+		PlayerMessage_post(1, Message_6_Population5000, 0, 0);
 		Data_Message.populationMessagesShown.pop5000 = 1;
 	}
 	if (Data_CityInfo.population >= 10000 && !Data_Message.populationMessagesShown.pop10000) {
-		PlayerMessage_post(1, 7, 0, 0);
+		PlayerMessage_post(1, Message_7_Population10000, 0, 0);
 		Data_Message.populationMessagesShown.pop10000 = 1;
 	}
 	if (Data_CityInfo.population >= 15000 && !Data_Message.populationMessagesShown.pop15000) {
-		PlayerMessage_post(1, 8, 0, 0);
+		PlayerMessage_post(1, Message_8_Population15000, 0, 0);
 		Data_Message.populationMessagesShown.pop15000 = 1;
 	}
 	if (Data_CityInfo.population >= 20000 && !Data_Message.populationMessagesShown.pop20000) {
-		PlayerMessage_post(1, 9, 0, 0);
+		PlayerMessage_post(1, Message_9_Population20000, 0, 0);
 		Data_Message.populationMessagesShown.pop20000 = 1;
 	}
 	if (Data_CityInfo.population >= 25000 && !Data_Message.populationMessagesShown.pop25000) {
-		PlayerMessage_post(1, 10, 0, 0);
+		PlayerMessage_post(1, Message_10_Population25000, 0, 0);
 		Data_Message.populationMessagesShown.pop25000 = 1;
 	}
 }
@@ -210,7 +210,7 @@ static void createImmigrants(int numPeople)
 static void createEmigrants(int numPeople)
 {
 	int toEmigrate = numPeople;
-	for (int level = 0; level < 10 && toEmigrate > 0; level++) {
+	for (int level = HouseLevel_SmallTent; level < HouseLevel_LargeInsula && toEmigrate > 0; level++) {
 		for (int i = 0; i < Data_BuildingList.large.size && toEmigrate > 0; i++) {
 			int buildingId = Data_BuildingList.large.items[i];
 			if (Data_Buildings[buildingId].housePopulation > 0 &&

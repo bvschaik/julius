@@ -57,8 +57,8 @@ struct Data_Walker_Trader Data_Walker_Traders[MAX_TRADERS];
 
 struct Data_Building Data_Buildings[MAX_BUILDINGS];
 struct Data_Building_Storage Data_Building_Storages[MAX_STORAGES];
-struct Data_Buildings_Extra Data_Buildings_Extra;
-struct Data_BuildingList Data_BuildingList;
+struct _Data_Buildings_Extra Data_Buildings_Extra;
+struct _Data_BuildingList Data_BuildingList;
 
 struct Data_Sound_City Data_Sound_City[70];
 

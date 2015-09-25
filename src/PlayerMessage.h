@@ -13,7 +13,17 @@ enum {
 };
 
 enum {
+	Message_2_Population500 = 2,
+	Message_3_Population1000 = 3,
+	Message_4_Population2000 = 4,
+	Message_5_Population3000 = 5,
+	Message_6_Population5000 = 6,
+	Message_7_Population10000 = 7,
+	Message_8_Population15000 = 8,
+	Message_9_Population20000 = 9,
+	Message_10_Population25000 = 10,
 	Message_12_FireInTheCity = 12,
+	Message_14_DestroyedBuilding = 14,
 	Message_15_NavigationImpossible = 15,
 	Message_16_CityInDebt = 16,
 	Message_17_CityInDebtAgain = 17,
@@ -100,6 +110,7 @@ enum {
 	Message_108_CaesarRespect3 = 108,
 	Message_109_WorkingHippodrome = 109,
 	Message_110_WorkingColosseum = 110,
+	Message_111_Emigration = 111,
 	Message_112_Fired = 112,
 	Message_114_EnemyArmyAttack = 114,
 	Message_115_RequestCanComply = 115,
