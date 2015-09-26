@@ -88,7 +88,7 @@ void HousePopulation_updateMigration()
 			Data_CityInfo.populationEmigrationQueueSize = 0;
 			if (!Data_CityInfo.messageShownEmigration) {
 				Data_CityInfo.messageShownEmigration = 1;
-				PlayerMessage_post(1, 111, 0, 0);
+				PlayerMessage_post(1, Message_111_Emigration, 0, 0);
 			}
 		} else {
 			// queue them for next round

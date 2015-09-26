@@ -174,32 +174,37 @@ int PlayerMessage_getMessageTextId(int messageType)
 int PlayerMessage_getAdvisorForMessageType(int messageType)
 {
 	switch (messageType) {
-		case 22:
-		case 23:
-		case 24:
-		case 25:
-		case 26:
-		case 27:
+		case Message_22_LocalUprising:
+		case Message_23_BarbarianAttack:
+		case Message_24_CaesarArmyAttack:
+		case Message_25_DistantBattle:
+		case Message_26_EnemiesClosing:
+		case Message_27_EnemiesAtTheDoor:
 			return MessageAdvisor_Military;
-		case 28:
-		case 29:
-		case 30:
-		case 31:
-		case 32:
-		case 33:
-		case 34:
-		case 35:
+
+		case Message_28_CaesarRequestsGoods:
+		case Message_29_CaesarRequestsMoney:
+		case Message_30_CaesarRequestsArmy:
+		case Message_31_RequestReminder:
+		case Message_32_RequestReceived:
+		case Message_33_RequestRefused:
+		case Message_34_RequestRefusedOverdue:
+		case Message_35_RequestReceivedLate:
 			return MessageAdvisor_Imperial;
+
 		case 36:
-		case 37:
+		case Message_37_WorkersNeeded:
 			return MessageAdvisor_Labor;
+
 		case 49:
 		case 50:
 			return MessageAdvisor_Population;
-		case 102:
-		case 103:
-		case 104:
+
+		case Message_102_HealthIllness:
+		case Message_103_HealthDisease:
+		case Message_104_HealthPestilence:
 			return MessageAdvisor_Health;
+
 		default:
 			return MessageAdvisor_None;
 	}

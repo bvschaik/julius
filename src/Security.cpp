@@ -193,7 +193,7 @@ static void generateRioter(int buildingId)
 	} else {
 		Data_Message.lastSoundTime.rioterGenerated = Time_getMillis();
 	}
-	PlayerMessage_postWithPopupDelay(MessageDelay_Riot, 11, b->type, GridOffset(xRoad, yRoad));
+	PlayerMessage_postWithPopupDelay(MessageDelay_Riot, Message_11_RiotInTheCity, b->type, GridOffset(xRoad, yRoad));
 }
 
 static void generateMugger(int buildingId)
@@ -212,7 +212,7 @@ static void generateMugger(int buildingId)
 				if (moneyStolen > 400) {
 					moneyStolen = 400 - Data_Random.random1_7bit / 2;
 				}
-				PlayerMessage_post(1, 52, moneyStolen, Data_Walkers[walkerId].gridOffset);
+				PlayerMessage_post(1, Message_52_Theft, moneyStolen, Data_Walkers[walkerId].gridOffset);
 				Data_CityInfo.financeStolenThisYear += moneyStolen;
 				Data_CityInfo.treasury -= moneyStolen;
 				Data_CityInfo.financeSundriesThisYear += moneyStolen;
@@ -291,7 +291,7 @@ static void collapseBuilding(int buildingId, struct Data_Building *b)
 		Data_Message.lastSoundTime.collapse = Time_getMillis();
 	}
 	if (Data_Tutorial.tutorial1.collapse) {
-		PlayerMessage_postWithPopupDelay(MessageDelay_Collapse, 13, b->type, b->gridOffset);
+		PlayerMessage_postWithPopupDelay(MessageDelay_Collapse, Message_13_CollapsedBuilding, b->type, b->gridOffset);
 	} else {
 		Tutorial_onCollapse();
 	}
@@ -311,7 +311,7 @@ static void fireBuilding(int buildingId, struct Data_Building *b)
 		Data_Message.lastSoundTime.fire = Time_getMillis();
 	}
 	if (Data_Tutorial.tutorial1.fire) {
-		PlayerMessage_postWithPopupDelay(MessageDelay_Fire, 12, b->type, b->gridOffset);
+		PlayerMessage_postWithPopupDelay(MessageDelay_Fire, Message_12_FireInTheCity, b->type, b->gridOffset);
 	} else {
 		Tutorial_onFire();
 	}

@@ -25,7 +25,7 @@
 void Walker_clearList()
 {
 	for (int i = 0; i < MAX_WALKERS; i++) {
-		memset(&Data_Walkers[i], 0, 128);
+		memset(&Data_Walkers[i], 0, sizeof(struct Data_Walker));
 	}
 	Data_Walker_Extra.highestWalkerIdEver = 0;
 }
@@ -43,7 +43,7 @@ int Walker_create(int walkerType, int x, int y, char direction)
 		return 0;
 	}
 	struct Data_Walker *w = &Data_Walkers[id];
-	w->state = 1;
+	w->state = WalkerState_Alive;
 	w->ciid = 1;
 	w->type = walkerType;
 	w->useCrossCountry = 0;
@@ -123,7 +123,7 @@ void Walker_delete(int walkerId)
 	}
 	WalkerRoute_remove(walkerId);
 	Walker_removeFromTileList(walkerId);
-	memset(w, 0, 128);
+	memset(w, 0, sizeof(struct Data_Walker));
 }
 
 void Walker_addToTileList(int walkerId)
@@ -389,20 +389,18 @@ int Walker_createTowerSentryFromBarracks(int buildingId, int x, int y)
 	if (Terrain_hasRoadAccess(tower->x, tower->y, tower->size, &xRoad, &yRoad)) {
 		w->destinationX = xRoad;
 		w->destinationY = yRoad;
-		tower->walkerId = walkerId;
-		w->buildingId = towerId;
 	} else {
 		w->state = WalkerState_Dead;
 	}
+	tower->walkerId = walkerId;
+	w->buildingId = towerId;
 	return 1;
 }
 
 void Walker_killTowerSentriesAt(int x, int y)
 {
-	for (int i = 1; i < MAX_WALKERS; i++) {
-		if (Data_Walkers[i].state == WalkerState_Alive &&
-			Data_Walkers[i].type == Walker_TowerSentry&&
-			Data_Walkers[i].actionState != WalkerActionState_149_Corpse) {
+	for (int i = 0; i < MAX_WALKERS; i++) {
+		if (!WalkerIsDead(i) && Data_Walkers[i].type == Walker_TowerSentry) {
 			if (Calc_distanceMaximum(Data_Walkers[i].x, Data_Walkers[i].y, x, y) <= 1) {
 				Data_Walkers[i].state = WalkerState_Dead;
 			}

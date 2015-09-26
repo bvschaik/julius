@@ -53,14 +53,13 @@ static int getElapsedTicks()
 		return 0;
 	}
 	lastUpdate = now;
-	return 1;//diff / (millisPerTickPerSpeed[gameSpeedIndex] + 2);
+	return 1;
 }
 
 void Runner_run()
 {
 	Animation_updateTimers();
 	int numTicks = getElapsedTicks();
-	//if (numTicks) printf("Running for %d ticks\n", numTicks);
 	for (int i = 0; i < numTicks; i++) {
 		GameTick_doTick();
 		GameFile_writeMissionSavedGameIfNeeded();

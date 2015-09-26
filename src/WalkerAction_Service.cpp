@@ -16,7 +16,7 @@ void WalkerAction_taxCollector(int walkerId)
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	struct Data_Building *b = &Data_Buildings[w->buildingId];
 	
-	w->terrainUsage = 1;
+	w->terrainUsage = WalkerTerrainUsage_Roads;
 	w->useCrossCountry = 0;
 	w->maxRoamLength = 512;
 	if (!BuildingIsInUse(w->buildingId) || b->walkerId != walkerId) {
@@ -77,11 +77,11 @@ void WalkerAction_taxCollector(int walkerId)
 			break;
 		case WalkerActionState_43_TaxCollectorReturning:
 			WalkerMovement_walkTicks(walkerId, 1);
-			if (w->direction == 8) {
+			if (w->direction == DirWalker_8_AtDestination) {
 				w->actionState = WalkerActionState_41_TaxCollectorEnteringExiting;
 				WalkerAction_Common_setCrossCountryDestination(walkerId, w, b->x, b->y);
 				w->roamLength = 0;
-			} else if (w->direction == 9 || w->direction == 10) {
+			} else if (w->direction == DirWalker_9_Reroute || w->direction == DirWalker_10_Lost) {
 				w->state = WalkerState_Dead;
 			}
 			break;
@@ -94,7 +94,7 @@ void WalkerAction_engineer(int walkerId)
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	struct Data_Building *b = &Data_Buildings[w->buildingId];
 	
-	w->terrainUsage = 1;
+	w->terrainUsage = WalkerTerrainUsage_Roads;
 	w->useCrossCountry = 0;
 	w->maxRoamLength = 640;
 	if (!BuildingIsInUse(w->buildingId) || b->walkerId != walkerId) {
@@ -155,11 +155,11 @@ void WalkerAction_engineer(int walkerId)
 			break;
 		case WalkerActionState_63_EngineerReturning:
 			WalkerMovement_walkTicks(walkerId, 1);
-			if (w->direction == 8) {
+			if (w->direction == DirWalker_8_AtDestination) {
 				w->actionState = WalkerActionState_61_EngineerEnteringExiting;
 				WalkerAction_Common_setCrossCountryDestination(walkerId, w, b->x, b->y);
 				w->roamLength = 0;
-			} else if (w->direction == 9 || w->direction == 10) {
+			} else if (w->direction == DirWalker_9_Reroute || w->direction == DirWalker_10_Lost) {
 				w->state = WalkerState_Dead;
 			}
 			break;
@@ -318,7 +318,7 @@ void WalkerAction_prefect(int walkerId)
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	struct Data_Building *b = &Data_Buildings[w->buildingId];
 	
-	w->terrainUsage = 1;
+	w->terrainUsage = WalkerTerrainUsage_Roads;
 	w->useCrossCountry = 0;
 	w->maxRoamLength = 640;
 	if (!BuildingIsInUse(w->buildingId) || b->walkerId != walkerId) {
@@ -384,23 +384,23 @@ void WalkerAction_prefect(int walkerId)
 			break;
 		case WalkerActionState_73_PrefectReturning:
 			WalkerMovement_walkTicks(walkerId, 1);
-			if (w->direction == 8) {
+			if (w->direction == DirWalker_8_AtDestination) {
 				w->actionState = WalkerActionState_71_PrefectEnteringExiting;
 				WalkerAction_Common_setCrossCountryDestination(walkerId, w, b->x, b->y);
 				w->roamLength = 0;
-			} else if (w->direction == 9 || w->direction == 10) {
+			} else if (w->direction == DirWalker_9_Reroute || w->direction == DirWalker_10_Lost) {
 				w->state = WalkerState_Dead;
 			}
 			break;
 		case WalkerActionState_74_PrefectGoingToFire:
-			w->terrainUsage = 0;
+			w->terrainUsage = WalkerTerrainUsage_Any;
 			WalkerMovement_walkTicks(walkerId, 1);
-			if (w->direction == 8) {
+			if (w->direction == DirWalker_8_AtDestination) {
 				w->actionState = WalkerActionState_75_PrefectAtFire;
 				WalkerRoute_remove(walkerId);
 				w->roamLength = 0;
 				w->waitTicks = 50;
-			} else if (w->direction == 9 || w->direction == 10) {
+			} else if (w->direction == DirWalker_9_Reroute || w->direction == DirWalker_10_Lost) {
 				w->state = WalkerState_Dead;
 			}
 			break;
@@ -408,7 +408,7 @@ void WalkerAction_prefect(int walkerId)
 			prefectExtinguishFire(walkerId, w);
 			break;
 		case WalkerActionState_76_PrefectGoingToEnemy:
-			w->terrainUsage = 0;
+			w->terrainUsage = WalkerTerrainUsage_Any;
 			if (!prefectTargetIsAlive(w)) {
 				int xRoad, yRoad;
 				if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
@@ -422,11 +422,11 @@ void WalkerAction_prefect(int walkerId)
 				}
 			}
 			WalkerMovement_walkTicks(walkerId, 1);
-			if (w->direction == 8) {
+			if (w->direction == DirWalker_8_AtDestination) {
 				w->destinationX = Data_Walkers[w->targetWalkerId].x;
 				w->destinationY = Data_Walkers[w->targetWalkerId].y;
 				WalkerRoute_remove(walkerId);
-			} else if (w->direction == 9 || w->direction == 10) {
+			} else if (w->direction == DirWalker_9_Reroute || w->direction == DirWalker_10_Lost) {
 				w->state = WalkerState_Dead;
 			}
 			break;
@@ -473,7 +473,7 @@ void WalkerAction_prefect(int walkerId)
 void WalkerAction_worker(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
-	w->terrainUsage = 1;
+	w->terrainUsage = WalkerTerrainUsage_Roads;
 	w->useCrossCountry = 0;
 	w->maxRoamLength = 384;
 	if (!BuildingIsInUse(w->buildingId) ||
