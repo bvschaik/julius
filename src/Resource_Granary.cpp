@@ -98,8 +98,7 @@ int Resource_getGranaryForStoringFood(
 		if (!b->hasRoadAccess || b->distanceFromEntry <= 0 || b->roadNetworkId != roadNetworkId) {
 			continue;
 		}
-		int pctWorkers = Calc_getPercentage(b->numWorkers,
-			Data_Model_Buildings[b->type].laborers);
+		int pctWorkers = Calc_getPercentage(b->numWorkers, Data_Model_Buildings[b->type].laborers);
 		if (pctWorkers < 100) {
 			if (understaffed) {
 				*understaffed += 1;
@@ -148,8 +147,7 @@ int Resource_getGettingGranaryForStoringFood(
 		if (!b->hasRoadAccess || b->distanceFromEntry <= 0 || b->roadNetworkId != roadNetworkId) {
 			continue;
 		}
-		int pctWorkers = Calc_getPercentage(b->numWorkers,
-			Data_Model_Buildings[b->type].laborers);
+		int pctWorkers = Calc_getPercentage(b->numWorkers, Data_Model_Buildings[b->type].laborers);
 		if (pctWorkers < 100) {
 			continue;
 		}
@@ -271,7 +269,7 @@ int Resource_addToGranary(int buildingId, int resource, int countAsProduced)
 		return 0;
 	}
 	if (b->data.storage.resourceStored[Resource_None] <= 0) {
-		return 0;
+		return 0; // no space
 	}
 	if (countAsProduced) {
 		Data_CityInfo.foodInfoFoodStoredSoFarThisMonth += 100;
@@ -318,7 +316,7 @@ int Resource_determineGranaryWorkerTask(int buildingId)
 	struct Data_Building_Storage *s = &Data_Building_Storages[b->storageId];
 	if (s->emptyAll) {
 		// bring food to another granary
-		for (int i = Resource_Wheat; i <= Resource_Meat; i++) {
+		for (int i = Resource_MinFood; i < Resource_MaxFood; i++) {
 			if (b->data.storage.resourceStored[i]) {
 				return i;
 			}

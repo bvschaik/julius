@@ -11,4 +11,6 @@ void Tutorial_onAddToWarehouse();
 
 void Tutorial_onDayTick();
 
+void Tutorial_onMonthTick();
+
 #endif

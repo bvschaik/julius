@@ -64,6 +64,10 @@ enum {
 	Message_54_TutorialFirstCollapse = 54,
 	Message_55_GodsUnhappy = 55,
 	Message_56_TutorialProvidingWater = 56,
+	Message_57_TutorialGrowingYourCity = 57,
+	Message_58_TutorialHungerHaltsImmigrants = 58,
+	Message_59_TutorialReligion = 59,
+	Message_60_TutorialTaxesIndustry = 60,
 	Message_61_TutorialTrade = 61,
 	Message_62_Earthquake = 62,
 	Message_63_GladiatorRevolt = 63,
@@ -120,6 +124,7 @@ enum {
 	Message_116_RoadToRomeObstructed = 116,
 	Message_117_NoWorkingDock = 117,
 	Message_118_FishingBoatBlocked = 118,
+	Message_119_TutorialHealth = 119,
 	Message_121_LocalUprisingMars = 121,
 };
 

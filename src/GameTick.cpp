@@ -29,7 +29,7 @@
 #include "UI/Window.h"
 
 #include "Data/CityInfo.h"
-#include "Data/Message.h"
+//#include "Data/Message.h"
 #include "Data/Settings.h"
 #include "Data/State.h"
 
@@ -110,6 +110,7 @@ static void advanceDay()
 	Data_CityInfo_Extra.gameTimeDay++;
 	Data_CityInfo_Extra.gameTimeTotalDays++;
 	if (Data_CityInfo_Extra.gameTimeDay > 15) {
+		Data_CityInfo_Extra.gameTimeDay = 0;
 		advanceMonth();
 	}
 	if (Data_CityInfo_Extra.gameTimeDay == 0 || Data_CityInfo_Extra.gameTimeDay == 8) {
@@ -120,7 +121,6 @@ static void advanceDay()
 
 static void advanceMonth()
 {
-	Data_CityInfo_Extra.gameTimeDay = 0;
 	Data_CityInfo.populationNewcomersThisMonth = 0;
 	Data_CityInfo.monthsSinceFestival++;
 
@@ -144,6 +144,7 @@ static void advanceMonth()
 
 	Data_CityInfo_Extra.gameTimeMonth++;
 	if (Data_CityInfo_Extra.gameTimeMonth > 11) {
+		Data_CityInfo_Extra.gameTimeMonth = 0;
 		advanceYear();
 	} else {
 		CityInfo_Ratings_calculate(0);
@@ -151,14 +152,7 @@ static void advanceMonth()
 
 	CityInfo_Population_recordMonthlyPopulation();
 	CityInfo_Gods_checkFestival();
-	if (IsTutorial3()) {
-		if (Data_CityInfo_Extra.gameTimeMonth == 5) {
-			if (Data_Message.messageDelay[MessageDelay_Tutorial3] <= 0) {
-				Data_Message.messageDelay[MessageDelay_Tutorial3] = 1200;
-				PlayerMessage_post(1, 58, 0, 0);
-			}
-		}
-	}
+	Tutorial_onMonthTick();
 	if (Data_Settings.monthlyAutosaveEnabled) {
 		GameFile_writeSavedGame("last.sav");
 	}
@@ -166,7 +160,6 @@ static void advanceMonth()
 
 static void advanceYear()
 {
-	Data_CityInfo_Extra.gameTimeMonth = 0;
 	Empire_handleExpandEvent();
 	Data_State.undoAvailable = 0;
 	Data_CityInfo_Extra.gameTimeYear++;

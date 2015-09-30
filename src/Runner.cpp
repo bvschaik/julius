@@ -9,8 +9,6 @@
 #include "Data/Settings.h"
 #include "Data/State.h"
 
-#include <cstdio>
-
 static const TimeMillis millisPerTickPerSpeed[] = {
 	0, 20, 35, 55, 80, 110, 160, 240, 350, 500, 700
 };

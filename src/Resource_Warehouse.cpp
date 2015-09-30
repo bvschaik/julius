@@ -343,7 +343,6 @@ void Resource_addImportedResourceToWarehouseSpace(int spaceId, int resourceId)
 	Resource_setWarehouseSpaceGraphic(spaceId, resourceId);
 }
 
-//reviewed
 void Resource_removeExportedResourceFromWarehouseSpace(int spaceId, int resourceId)
 {
 	Data_CityInfo.resourceSpaceInWarehouses[resourceId]++;
@@ -368,7 +367,7 @@ static int determineGranaryAcceptFoods()
 	if (Data_Scenario.romeSuppliesWheat) {
 		return 0;
 	}
-	for (int i = 0; i <= Resource_Meat; i++) {
+	for (int i = 0; i < Resource_MaxFood; i++) {
 		granaryAcceptingResource[i] = 0;
 	}
 	int canAccept = 0;
@@ -381,7 +380,7 @@ static int determineGranaryAcceptFoods()
 		if (pctWorkers >= 100 && b->data.storage.resourceStored[Resource_None] >= 1200) {
 			struct Data_Building_Storage *s = &Data_Building_Storages[b->storageId];
 			if (!s->emptyAll) {
-				for (int r = 0; r <= Resource_Meat; r++) {
+				for (int r = 0; r < Resource_MaxFood; r++) {
 					if (s->resourceState[r] != BuildingStorageState_NotAccepting) {
 						granaryAcceptingResource[r]++;
 						canAccept = 1;
@@ -398,7 +397,7 @@ static int determineGranaryGetFoods()
 	if (Data_Scenario.romeSuppliesWheat) {
 		return 0;
 	}
-	for (int i = 0; i <= Resource_Meat; i++) {
+	for (int i = 0; i < Resource_MaxFood; i++) {
 		granaryGettingResource[i] = 0;
 	}
 	int canGet = 0;
@@ -411,7 +410,7 @@ static int determineGranaryGetFoods()
 		if (pctWorkers >= 100 && b->data.storage.resourceStored[Resource_None] > 100) {
 			struct Data_Building_Storage *s = &Data_Building_Storages[b->storageId];
 			if (!s->emptyAll) {
-				for (int r = 0; r <= Resource_Meat; r++) {
+				for (int r = 0; r < Resource_MaxFood; r++) {
 					if (s->resourceState[r] == BuildingStorageState_Getting) {
 						granaryGettingResource[r]++;
 						canGet = 1;
@@ -455,7 +454,7 @@ int Resource_determineWarehouseWorkerTask(int buildingId, int *resource)
 	struct Data_Building_Storage *s = &Data_Building_Storages[b->storageId];
 	int spaceId;
 	// get resources
-	for (int r = 1; r < 16; r++) {
+	for (int r = Resource_Min; r < Resource_Max; r++) {
 		if (s->resourceState[r] != BuildingStorageState_Getting || Data_CityInfo.resourceStockpiled[r]) {
 			continue;
 		}
@@ -482,8 +481,7 @@ int Resource_determineWarehouseWorkerTask(int buildingId, int *resource)
 				}
 			}
 		}
-		if (room >= 8 && loadsStored <= 4 &&
-				Data_CityInfo.resourceStored[r] - loadsStored > 4) {
+		if (room >= 8 && loadsStored <= 4 && Data_CityInfo.resourceStored[r] - loadsStored > 4) {
 			*resource = r;
 			return 0;
 		}
