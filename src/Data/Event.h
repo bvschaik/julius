@@ -9,6 +9,13 @@ enum {
 	SpecialEvent_Finished = 2
 };
 
+enum {
+	Earthquake_None = 0,
+	Earthquake_Small = 1,
+	Earthquake_Medium = 2,
+	Earthquake_Large = 3
+};
+
 extern struct _Data_Event {
 	short lastInternalInvasionId;
 	int timeLimitMaxGameYear;

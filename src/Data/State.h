@@ -31,6 +31,12 @@ enum {
 	Overlay_Problems = 29
 };
 
+enum {
+	WinState_Lose = -1,
+	WinState_None = 0,
+	WinState_Win = 1
+};
+
 extern struct _Data_State {
 	int sidebarCollapsed;
 	int undoReady;
@@ -60,7 +66,7 @@ extern struct _Data_State {
 	} selectedBuilding;
 	int selectedLegionFormationId;
 	int isScrollingMap;
-	int winState; // 1 = win
+	int winState;
 	int forceWinCheat;
 	int missionBriefingShown;
 	struct {

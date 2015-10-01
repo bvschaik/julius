@@ -40,7 +40,7 @@ void UI_MissionEnd_drawBackground()
 {
 	int xOffset = Data_Screen.offset640x480.x + 48;
 	int yOffset = Data_Screen.offset640x480.y + 128;
-	if (Data_State.winState != 1) {
+	if (Data_State.winState != WinState_Win) {
 		// lost mission
 		Widget_Panel_drawOuterPanel(xOffset, yOffset - 112, 34, 16);
 		Widget_GameText_drawCentered(62, 1, xOffset, yOffset - 96, 544, Font_LargeBlack);
@@ -87,7 +87,7 @@ void UI_MissionEnd_drawBackground()
 
 void UI_MissionEnd_drawForeground()
 {
-	if (Data_State.winState != 1) {
+	if (Data_State.winState != WinState_Win) {
 		UI_VictoryDialog_drawForeground();
 	}
 }
@@ -120,7 +120,7 @@ static void advanceToNextMission()
 
 void UI_MissionEnd_handleMouse()
 {
-	if (Data_State.winState == 1) {
+	if (Data_State.winState == WinState_Win) {
 		if (Data_Mouse.right.wentUp) {
 			Sound_stopMusic();
 			Sound_stopSpeech();
@@ -156,7 +156,7 @@ void UI_VictoryDialog_drawForeground()
 	int xOffset = Data_Screen.offset640x480.x + 48;
 	int yOffset = Data_Screen.offset640x480.y + 128;
 
-	if (Data_State.winState == 1) {
+	if (Data_State.winState == WinState_Win) {
 		Widget_Panel_drawLargeLabelButton(xOffset + 32, yOffset + 112, 30, focusButtonId == 1);
 		if (Data_Settings.currentMissionId < 10 || Data_Settings.isCustomScenario) {
 			Widget_GameText_drawCentered(62, 3,
@@ -216,7 +216,7 @@ static void victoryContinueGoverning(int duration, int param2)
 		CityInfo_Finance_updateSalary();
 	}
 	UI_Window_goTo(Window_City);
-	Data_State.winState = 0;
+	Data_State.winState = WinState_None;
 	Data_State.forceWinCheat = 0;
 }
 

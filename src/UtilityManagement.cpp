@@ -242,7 +242,6 @@ void UtilityManagement_determineRoadNetworks()
 		Data_CityInfo.largestRoadNetworks[i].size = 0;
 	}
 	Grid_clearUByteGrid(Data_Grid_roadNetworks);
-	//Grid_clearUByteGrid(Data_Grid_byte_8ADF60);
 	int roadNetworkId = 1;
 	int gridOffset = Data_Settings_Map.gridStartOffset;
 	for (int y = 0; y < Data_Settings_Map.height; y++, gridOffset += Data_Settings_Map.gridBorderSize) {

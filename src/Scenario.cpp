@@ -124,7 +124,7 @@ static void setTutorialFlags(int missionId)
 		tut1 = 1;
 		tut2 = 0;
 		tut3 = 1;
-	} else if (missionId == 3) {
+	} else if (missionId == 2) {
 		tut1 = 1;
 		tut2 = 1;
 		tut3 = 0;
@@ -159,7 +159,7 @@ static int mapFileExists(const char *scenarioName)
 
 static void initCustomScenario(const char *scenarioName)
 {
-	Data_State.winState = 0;
+	Data_State.winState = WinState_None;
 	Data_State.forceWinCheat = 0;
 	Data_State.selectedBuilding.type = 0;
 	CityInfo_init();
@@ -176,7 +176,7 @@ static void initCustomScenario(const char *scenarioName)
 	Formation_clearInvasionInfo();
 	WalkerName_init();
 	Formation_clearList();
-	WalkerName_init();
+	WalkerRoute_clearList();
 	CityInfo_initGameTime();
 
 	loadScenario(scenarioName);
@@ -212,16 +212,16 @@ static void loadScenario(const char *scenarioName)
 		Data_Scenario.entryPoint.x = Data_Settings_Map.width - 1;
 		Data_Scenario.entryPoint.y = Data_Settings_Map.height / 2;
 	}
-	Data_CityInfo.entryPointX = (char) Data_Scenario.entryPoint.x;
-	Data_CityInfo.entryPointY = (char) Data_Scenario.entryPoint.y;
+	Data_CityInfo.entryPointX = Data_Scenario.entryPoint.x;
+	Data_CityInfo.entryPointY = Data_Scenario.entryPoint.y;
 	Data_CityInfo.entryPointGridOffset = GridOffset(Data_CityInfo.entryPointX, Data_CityInfo.entryPointY);
 
 	if (Data_Scenario.exitPoint.x == -1 || Data_Scenario.exitPoint.y == -1) {
 		Data_Scenario.exitPoint.x = Data_Scenario.entryPoint.x;
 		Data_Scenario.exitPoint.y = Data_Scenario.entryPoint.y;
 	}
-	Data_CityInfo.exitPointX = (char) Data_Scenario.exitPoint.x;
-	Data_CityInfo.exitPointY = (char) Data_Scenario.exitPoint.y;
+	Data_CityInfo.exitPointX = Data_Scenario.exitPoint.x;
+	Data_CityInfo.exitPointY = Data_Scenario.exitPoint.y;
 	Data_CityInfo.exitPointGridOffset = GridOffset(Data_CityInfo.exitPointX, Data_CityInfo.exitPointY);
 	Data_CityInfo.treasury = Calc_adjustWithPercentage(Data_Scenario.startFunds,
 		Data_Model_Difficulty.moneyPercentage[Data_Settings.difficulty]);
@@ -237,15 +237,15 @@ static void loadScenario(const char *scenarioName)
 			Data_Event.earthquake.maxDuration = 0;
 			Data_Event.earthquake.maxDelay = 0;
 			break;
-		case 1:
+		case Earthquake_Small:
 			Data_Event.earthquake.maxDuration = 25 + (Data_Random.random1_7bit & 0x1f);
 			Data_Event.earthquake.maxDelay = 10;
 			break;
-		case 2:
+		case Earthquake_Medium:
 			Data_Event.earthquake.maxDuration = 100 + (Data_Random.random1_7bit & 0x3f);
 			Data_Event.earthquake.maxDelay = 8;
 			break;
-		case 3:
+		case Earthquake_Large:
 			Data_Event.earthquake.maxDuration = 250 + Data_Random.random1_7bit;
 			Data_Event.earthquake.maxDelay = 6;
 			break;
@@ -344,7 +344,6 @@ static void initGrids()
 	Grid_clearUByteGrid(Data_Grid_rubbleBuildingType);
 	Grid_clearUByteGrid(Data_Grid_romanSoldierConcentration);
 	Grid_clearUByteGrid(Data_Grid_roadNetworks);
-	//Grid_clearUByteGrid(Data_Grid_byte_8ADF60);
 
 	TerrainGraphicsContext_init();
 	initGridTerrain();

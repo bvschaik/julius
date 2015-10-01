@@ -14,7 +14,7 @@
 
 void Loader_GameState_init()
 {
-	Data_State.winState = 0;
+	Data_State.winState = WinState_None;
 	Terrain_initDistanceRing();
 
 	Data_Settings_Map.orientation = 0;

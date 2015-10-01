@@ -471,7 +471,7 @@ void Event_handlePricesChanges()
 
 void Event_handleEarthquake()
 {
-	if (!Data_Scenario.earthquakeSeverity ||
+	if (Data_Scenario.earthquakeSeverity == Earthquake_None ||
 		Data_Scenario.earthquakePoint.x == -1 || Data_Scenario.earthquakePoint.y == -1) {
 		return;
 	}
