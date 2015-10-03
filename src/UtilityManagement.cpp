@@ -125,6 +125,7 @@ void UtilityManagement_updateReservoirFountain()
 	setAllAqueductsToNoWater();
 	memset(Data_BuildingList.large.items, 0, MAX_BUILDINGS * sizeof(short));
 	Data_BuildingList.large.size = 0;
+	// mark reservoirs next to water
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		if (BuildingIsInUse(i) && Data_Buildings[i].type == Building_Reservoir) {
 			Data_BuildingList.large.items[Data_BuildingList.large.size++] = i;
@@ -136,6 +137,7 @@ void UtilityManagement_updateReservoirFountain()
 			}
 		}
 	}
+	// fill reservoirs from full ones
 	int changed = 1;
 	static const int connectorOffsets[] = {-161, 165, 487, 161};
 	while (changed == 1) {
@@ -151,6 +153,7 @@ void UtilityManagement_updateReservoirFountain()
 			}
 		}
 	}
+	// mark reservoir ranges
 	for (int i = 0; i < Data_BuildingList.large.size; i++) {
 		int buildingId = Data_BuildingList.large.items[i];
 		if (Data_Buildings[buildingId].hasWaterAccess) {

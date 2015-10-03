@@ -311,6 +311,7 @@ void TerrainBridge_updateSpriteIdsOnMapRotate(int ccw)
 					case 13: newValue = 13; break;
 					case 14: newValue = 15; break;
 					case 15: newValue = 14; break;
+					default: newValue = Data_Grid_spriteOffsets[gridOffset];
 				}
 				Data_Grid_spriteOffsets[gridOffset] = newValue;
 			}

@@ -24,7 +24,7 @@ static int marketBuyerTakeFoodFromGranary(int walkerId, int marketId, int granar
 		default: return 0;
 	}
 	int marketUnits = Data_Buildings[marketId].data.market.inventory[w->collectingItemId];
-	int maxUnits = (w->collectingItemId == Inventory_Wheat) ? 800 - marketUnits : 600 - marketUnits;
+	int maxUnits = (w->collectingItemId == Inventory_Wheat ? 800 : 600) - marketUnits;
 	int granaryUnits = Data_Buildings[granaryId].data.storage.resourceStored[resource];
 	int numLoads;
 	if (granaryUnits >= 800) {
@@ -95,7 +95,7 @@ static int marketBuyerTakeResourceFromWarehouse(int walkerId, int marketId, int 
 void WalkerAction_marketBuyer(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
-	w->terrainUsage = 1;
+	w->terrainUsage = WalkerTerrainUsage_Roads;
 	w->useCrossCountry = 0;
 	w->maxRoamLength = 800;
 	
@@ -112,7 +112,7 @@ void WalkerAction_marketBuyer(int walkerId)
 			break;
 		case WalkerActionState_145_MarketBuyerGoingToStorage:
 			WalkerMovement_walkTicks(walkerId, 1);
-			if (w->direction == 8) {
+			if (w->direction == DirWalker_8_AtDestination) {
 				if (w->collectingItemId > 3) {
 					if (!marketBuyerTakeResourceFromWarehouse(walkerId, w->buildingId, w->destinationBuildingId)) {
 						w->state = WalkerState_Dead;
@@ -125,7 +125,7 @@ void WalkerAction_marketBuyer(int walkerId)
 				w->actionState = WalkerActionState_146_MarketBuyerReturning;
 				w->destinationX = w->sourceX;
 				w->destinationY = w->sourceY;
-			} else if (w->direction == 9 || w->direction == 10) {
+			} else if (w->direction == DirWalker_9_Reroute || w->direction == DirWalker_10_Lost) {
 				w->actionState = WalkerActionState_146_MarketBuyerReturning;
 				w->destinationX = w->sourceX;
 				w->destinationY = w->sourceY;
@@ -134,9 +134,9 @@ void WalkerAction_marketBuyer(int walkerId)
 			break;
 		case WalkerActionState_146_MarketBuyerReturning:
 			WalkerMovement_walkTicks(walkerId, 1);
-			if (w->direction == 8 || w->direction == 10) {
+			if (w->direction == DirWalker_8_AtDestination || w->direction == DirWalker_10_Lost) {
 				w->state = WalkerState_Dead;
-			} else if (w->direction == 9) {
+			} else if (w->direction == DirWalker_9_Reroute) {
 				WalkerRoute_remove(walkerId);
 			}
 			break;
@@ -148,7 +148,7 @@ void WalkerAction_deliveryBoy(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	w->isGhost = 0;
-	w->terrainUsage = 1;
+	w->terrainUsage = WalkerTerrainUsage_Roads;
 	WalkerActionIncreaseGraphicOffset(w, 12);
 	w->cartGraphicId = 0;
 	

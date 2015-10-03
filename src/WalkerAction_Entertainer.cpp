@@ -110,16 +110,6 @@ static void updateGraphic(int walkerId, struct Data_Walker *w)
 			graphicId = GraphicId(ID_Graphic_Walker_LionTamerWhip);
 		}
 		w->cartGraphicId = GraphicId(ID_Graphic_Walker_Lion);
-	} else if (w->type == Walker_Charioteer) {
-		graphicId = GraphicId(ID_Graphic_Walker_Charioteer);
-		w->cartGraphicId = 0;
-		if (w->actionState == WalkerActionState_150_Attack ||
-			w->actionState == WalkerActionState_149_Corpse) {
-			w->graphicId = graphicId + dir;
-		} else {
-			w->graphicId = graphicId + dir + 8 * w->graphicOffset;
-		}
-		return;
 	}
 	if (w->actionState == WalkerActionState_150_Attack) {
 		if (w->type == Walker_Gladiator) {
@@ -232,12 +222,12 @@ void WalkerAction_entertainer(int walkerId)
 				w->state = WalkerState_Dead;
 			}
 			WalkerMovement_walkTicks(walkerId, speedFactor);
-			if (w->direction == 8) {
+			if (w->direction == DirWalker_8_AtDestination) {
 				updateShowsAtDestination(w);
 				w->state = WalkerState_Dead;
-			} else if (w->direction == 9) {
+			} else if (w->direction == DirWalker_9_Reroute) {
 				WalkerRoute_remove(walkerId);
-			} else if (w->direction == 10) {
+			} else if (w->direction == DirWalker_10_Lost) {
 				w->state = WalkerState_Dead;
 			}
 			break;
@@ -258,7 +248,8 @@ void WalkerAction_entertainer(int walkerId)
 			break;
 		case WalkerActionState_95_EntertainerReturning:
 			WalkerMovement_walkTicks(walkerId, speedFactor);
-			if (w->direction == 8 || w->direction == 9 || w->direction == 10) {
+			if (w->direction == DirWalker_8_AtDestination ||
+				w->direction == DirWalker_9_Reroute || w->direction == DirWalker_10_Lost) {
 				w->state = WalkerState_Dead;
 			}
 			break;
