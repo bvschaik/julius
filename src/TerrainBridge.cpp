@@ -3,6 +3,7 @@
 #include "Routing.h"
 #include "Terrain.h"
 
+#include "Data/Constants.h"
 #include "Data/Grid.h"
 #include "Data/Settings.h"
 
@@ -14,20 +15,22 @@ struct TerrainBridge {
 	int direction;
 } bridge;
 
+#define IS_BRIDGE(g) ((Data_Grid_terrain[(g)] & Terrain_Water) && Data_Grid_spriteOffsets[(g)])
+
 static int getDirectionYBridgeTiles(int gridOffset)
 {
 	int dirY = 0;
 	// Y direction
-	if ((Data_Grid_terrain[gridOffset-162] & Terrain_Water) && Data_Grid_spriteOffsets[gridOffset-162]) {
+	if (IS_BRIDGE(gridOffset-162)) {
 		dirY++;
 	}
-	if ((Data_Grid_terrain[gridOffset-324] & Terrain_Water) && Data_Grid_spriteOffsets[gridOffset-324]) {
+	if (IS_BRIDGE(gridOffset-324)) {
 		dirY++;
 	}
-	if ((Data_Grid_terrain[gridOffset+162] & Terrain_Water) && Data_Grid_spriteOffsets[gridOffset+162]) {
+	if (IS_BRIDGE(gridOffset+162)) {
 		dirY++;
 	}
-	if ((Data_Grid_terrain[gridOffset+324] & Terrain_Water) && Data_Grid_spriteOffsets[gridOffset+324]) {
+	if (IS_BRIDGE(gridOffset+324)) {
 		dirY++;
 	}
 	return dirY;
@@ -37,16 +40,16 @@ static int getDirectionXBridgeTiles(int gridOffset)
 {
 	int dirX = 0;
 	// X direction
-	if ((Data_Grid_terrain[gridOffset-1] & Terrain_Water) && Data_Grid_spriteOffsets[gridOffset-1]) {
+	if (IS_BRIDGE(gridOffset-1)) {
 		dirX++;
 	}
-	if ((Data_Grid_terrain[gridOffset-2] & Terrain_Water) && Data_Grid_spriteOffsets[gridOffset-2]) {
+	if (IS_BRIDGE(gridOffset-2)) {
 		dirX++;
 	}
-	if ((Data_Grid_terrain[gridOffset+1] & Terrain_Water) && Data_Grid_spriteOffsets[gridOffset+1]) {
+	if (IS_BRIDGE(gridOffset+1)) {
 		dirX++;
 	}
-	if ((Data_Grid_terrain[gridOffset+2] & Terrain_Water) && Data_Grid_spriteOffsets[gridOffset+2]) {
+	if (IS_BRIDGE(gridOffset+2)) {
 		dirX++;
 	}
 	return dirX;
@@ -72,16 +75,16 @@ int TerrainBridge_determineLengthAndDirection(int x, int y, int isShipBridge, in
 	}
 	if (!(Data_Grid_terrain[GridOffset(x, y-1)] & Terrain_Water)) {
 		bridge.directionGridOffset = 162;
-		bridge.direction = 4;
+		bridge.direction = Dir_4_Bottom;
 	} else if (!(Data_Grid_terrain[GridOffset(x+1, y)] & Terrain_Water)) {
 		bridge.directionGridOffset = -1;
-		bridge.direction = 6;
+		bridge.direction = Dir_6_Left;
 	} else if (!(Data_Grid_terrain[GridOffset(x, y+1)] & Terrain_Water)) {
 		bridge.directionGridOffset = -162;
-		bridge.direction = 0;
+		bridge.direction = Dir_0_Top;
 	} else if (!(Data_Grid_terrain[GridOffset(x-1, y)] & Terrain_Water)) {
 		bridge.directionGridOffset = 1;
-		bridge.direction = 2;
+		bridge.direction = Dir_2_Right;
 	} else {
 		return 0;
 	}
@@ -254,18 +257,14 @@ void TerrainBridge_removeFromSpriteGrid(int gridOffset, int onlyMarkDeleted)
 
 int TerrainBridge_countWalkersOnBridge(int gridOffset)
 {
-	int terrain = Data_Grid_terrain[gridOffset];
-	if (!(terrain & Terrain_Water)) {
-		return 0;
-	}
-	if (Data_Grid_spriteOffsets[gridOffset] <= 0) {
+	if (!(Data_Grid_terrain[gridOffset] & Terrain_Water) ||
+		Data_Grid_spriteOffsets[gridOffset] <= 0) {
 		return 0;
 	}
 	int dirX = getDirectionXBridgeTiles(gridOffset);
 	int dirY = getDirectionYBridgeTiles(gridOffset);
 	
 	int offsetUp = dirX > dirY ? 1 : 162;
-	
 	// find lower end of the bridge
 	while ((Data_Grid_terrain[gridOffset - offsetUp] & Terrain_Water) &&
 			Data_Grid_spriteOffsets[gridOffset - offsetUp]) {

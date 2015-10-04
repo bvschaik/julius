@@ -46,6 +46,7 @@ void PlayerMessage_post(int usePopup, int messageType, int param1, short param2)
 
 	struct Data_PlayerMessage *m = &Data_Message.messages[id];
 	m->messageType = messageType;
+	m->readFlag = 0;
 	m->year = Data_CityInfo_Extra.gameTimeYear;
 	m->month = Data_CityInfo_Extra.gameTimeMonth;
 	m->param1 = param1;
@@ -59,6 +60,7 @@ void PlayerMessage_post(int usePopup, int messageType, int param1, short param2)
 	}
 	if (usePopup && UI_Window_getId() == Window_City) {
 		consecutiveMessageDelay = 5;
+		Data_Message.currentProblemAreaMessageId = Data_Message.currentMessageId;
 		m->readFlag = 1;
 		UI_Tooltip_resetTimer();
 		if (!hasVideo(textId)) {
@@ -137,6 +139,7 @@ void PlayerMessage_processQueue()
 	consecutiveMessageDelay = 5;
 	struct Data_PlayerMessage *m = &Data_Message.messages[msgId];
 	m->readFlag = 1;
+	Data_Message.currentProblemAreaMessageId = msgId;
 	int textId = PlayerMessage_getMessageTextId(m->messageType);
 	UI_Tooltip_resetTimer();
 	if (!hasVideo(textId)) {
@@ -192,12 +195,12 @@ int PlayerMessage_getAdvisorForMessageType(int messageType)
 		case Message_35_RequestReceivedLate:
 			return MessageAdvisor_Imperial;
 
-		case 36:
+		case Message_36_Unemployment:
 		case Message_37_WorkersNeeded:
 			return MessageAdvisor_Labor;
 
-		case 49:
-		case 50:
+		case Message_49_NotEnoughFood:
+		case Message_50_FoodNotDelivered:
 			return MessageAdvisor_Population;
 
 		case Message_102_HealthIllness:
