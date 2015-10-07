@@ -10,7 +10,7 @@ void WalkerRoute_clearList()
 {
 	for (int i = 0; i < MAX_ROUTES; i++) {
 		Data_Routes.walkerIds[i] = 0;
-		for (int j = 0; j < MAX_ROUTEPATH_LENGTH; i++) {
+		for (int j = 0; j < MAX_ROUTEPATH_LENGTH; j++) {
 			Data_Routes.directionPaths[i][j] = 0;
 		}
 	}

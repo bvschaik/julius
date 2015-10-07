@@ -124,7 +124,7 @@ void UI_Advisor_Chief_drawBackground(int *advisorHeight)
 		Widget_GameText_draw(61, 78, baseOffsetX + 240, baseOffsetY + 166, Font_NormalGreen);
 	} else if (Data_CityInfo.distantBattleMonthsToBattle > 0) {
 		Widget_GameText_draw(61, 77, baseOffsetX + 240, baseOffsetY + 166, Font_NormalRed);
-	} else if (Data_CityInfo.numSoldiersInCity >= 0) { // BUG? should be >0? >=0 is always true)
+	} else if (Data_CityInfo.numSoldiersInCity > 0) { // FIXED was ">=0" (always true)
 		Widget_GameText_draw(61, 73, baseOffsetX + 240, baseOffsetY + 166, Font_NormalGreen);
 	} else {
 		Widget_GameText_draw(61, 72, baseOffsetX + 240, baseOffsetY + 166, Font_NormalGreen);

@@ -1004,7 +1004,8 @@ static void placeGarden(int xStart, int yStart, int xEnd, int yEnd)
 	Grid_copyByteGrid(Data_Grid_Undo_bitfields, Data_Grid_bitfields);
 	Grid_copyByteGrid(Data_Grid_Undo_edge, Data_Grid_edge);
 	Undo_restoreTerrainGraphics();
-	
+
+	itemsPlaced = 0;
 	for (int y = yMin; y <= yMax; y++) {
 		for (int x = xMin; x <= xMax; x++) {
 			int gridOffset = GridOffset(x,y);
