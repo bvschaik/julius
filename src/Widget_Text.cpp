@@ -750,12 +750,18 @@ static int getRichTextWordWidth(const unsigned char *str, int *outNumChars)
 			if (!wordCharSeen) {
 				if (c == 'P' || c == 'L') {
 					numChars += 2;
-					return 0;
-				} else {
-					if (c == 'G') {
-						numChars++;
+					width = 0;
+					break;
+				} else if (c == 'G') {
+					// skip graphic
+					numChars += 2;
+					while (c >= '0' && c <= '9') {
 						c = *(++str);
+						numChars++;
 					}
+					width = 0;
+					break;
+				} else {
 					numChars++;
 					while (c >= '0' && c <= '9') {
 						c = *(++str);
