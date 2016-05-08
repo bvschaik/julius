@@ -72,6 +72,7 @@ static void addCharacter(char value)
 				current->text[current->cursorPosition++] = value;
 				if (Data_KeyboardInput.positionType == CursorPosition_AtEnd) {
 					current->length++;
+					current->text[current->cursorPosition] = 0;
 				}
 			} else if (current->length < current->maxLength) {
 				moveRight(
