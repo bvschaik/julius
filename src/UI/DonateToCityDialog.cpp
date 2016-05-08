@@ -12,7 +12,7 @@
 static void buttonSetAmount(int param1, int param2);
 static void buttonDonate(int param1, int param2);
 static void buttonCancel(int param1, int param2);
-static void arrowButtonAmount(int param1, int param2);
+static void arrowButtonAmount(int isDown, int param2);
 
 static CustomButton buttons[7] = {
 	{336, 283, 496, 303, buttonCancel, Widget_Button_doNothing, 1, 0, 0},
@@ -47,7 +47,7 @@ void UI_DonateToCityDialog_drawBackground()
 	int baseOffsetY = Data_Screen.offset640x480.y;
 
 	Widget_Panel_drawOuterPanel(baseOffsetX + 64, baseOffsetY + 160, 32, 10);
-	Graphics_drawImage(GraphicId(ID_Graphic_ResourceIcons) + 16,
+	Graphics_drawImage(GraphicId(ID_Graphic_ResourceIcons) + Resource_Denarii,
 		baseOffsetX + 96, baseOffsetY + 176);
 	Widget_GameText_drawCentered(52, 16,
 		baseOffsetX + 80, baseOffsetY + 176, 496, Font_LargeBlack);
@@ -75,28 +75,14 @@ void UI_DonateToCityDialog_drawForeground()
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
 
-	Widget_Panel_drawButtonBorder(
-		baseOffsetX + 128, baseOffsetY + 216,
-		64, 20, focusButtonId == 3);
-	Widget_Panel_drawButtonBorder(
-		baseOffsetX + 208, baseOffsetY + 216,
-		64, 20, focusButtonId == 4);
-	Widget_Panel_drawButtonBorder(
-		baseOffsetX + 288, baseOffsetY + 216,
-		64, 20, focusButtonId == 5);
-	Widget_Panel_drawButtonBorder(
-		baseOffsetX + 368, baseOffsetY + 216,
-		64, 20, focusButtonId == 6);
-	Widget_Panel_drawButtonBorder(
-		baseOffsetX + 448, baseOffsetY + 216,
-		64, 20, focusButtonId == 7);
+	Widget_Panel_drawButtonBorder(baseOffsetX + 128, baseOffsetY + 216, 64, 20, focusButtonId == 3);
+	Widget_Panel_drawButtonBorder(baseOffsetX + 208, baseOffsetY + 216, 64, 20, focusButtonId == 4);
+	Widget_Panel_drawButtonBorder(baseOffsetX + 288, baseOffsetY + 216, 64, 20, focusButtonId == 5);
+	Widget_Panel_drawButtonBorder(baseOffsetX + 368, baseOffsetY + 216, 64, 20, focusButtonId == 6);
+	Widget_Panel_drawButtonBorder(baseOffsetX + 448, baseOffsetY + 216, 64, 20, focusButtonId == 7);
 
-	Widget_Panel_drawButtonBorder(
-		baseOffsetX + 336, baseOffsetY + 283,
-		160, 20, focusButtonId == 1);
-	Widget_Panel_drawButtonBorder(
-		baseOffsetX + 144, baseOffsetY + 283,
-		160, 20, focusButtonId == 2);
+	Widget_Panel_drawButtonBorder(baseOffsetX + 336, baseOffsetY + 283, 160, 20, focusButtonId == 1);
+	Widget_Panel_drawButtonBorder(baseOffsetX + 144, baseOffsetY + 283, 160, 20, focusButtonId == 2);
 
 	Widget_Button_drawArrowButtons(baseOffsetX, baseOffsetY, arrowButtons, 2);
 }
@@ -144,11 +130,11 @@ static void buttonCancel(int param1, int param2)
 	UI_Window_goTo(Window_Advisors);
 }
 
-static void arrowButtonAmount(int param1, int param2)
+static void arrowButtonAmount(int isDown, int param2)
 {
-	if (param1 == 0) {
+	if (isDown == 0) {
 		Data_CityInfo.donateAmount += 10;
-	} else if (param1 == 1) {
+	} else if (isDown == 1) {
 		Data_CityInfo.donateAmount -= 10;
 	}
 	BOUND(Data_CityInfo.donateAmount, 0, Data_CityInfo.personalSavings);

@@ -91,7 +91,7 @@ void CityInfo_Victory_check()
 		Data_State.selectedBuilding.type = 0;
 		if (Data_State.winState == WinState_Lose) {
 			if (Data_CityInfo.messageShownFired) {
-				UI_Intermezzo_show(1, Window_MissionEnd, 1000);
+				UI_Intermezzo_show(Intermezzo_Fired, Window_MissionEnd, 1000);
 			} else {
 				Data_CityInfo.messageShownFired = 1;
 				PlayerMessage_post(1, Message_112_Fired, 0, 0);

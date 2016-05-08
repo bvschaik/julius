@@ -75,7 +75,7 @@ void UI_MissionStart_show()
 		data.choice = 0;
 		UI_Window_goTo(Window_MissionSelection);
 	} else {
-		UI_Intermezzo_show(0, Window_MissionBriefingInitial, 1000);
+		UI_Intermezzo_show(Intermezzo_MissionBriefing, Window_MissionBriefingInitial, 1000);
 		Data_State.missionBriefingShown = 0;
 	}
 }

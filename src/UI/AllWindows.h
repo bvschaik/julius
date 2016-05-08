@@ -107,6 +107,11 @@ void UI_BuildingMenu_drawBackground();
 void UI_BuildingMenu_drawForeground();
 void UI_BuildingMenu_handleMouse();
 
+enum {
+	Intermezzo_MissionBriefing = 0,
+	Intermezzo_Fired = 1,
+	Intermezzo_Won = 2,
+};
 void UI_Intermezzo_show(int type, WindowId nextWindowId, int timeMillis);
 void UI_Intermezzo_drawBackground();
 void UI_Intermezzo_handleMouse();

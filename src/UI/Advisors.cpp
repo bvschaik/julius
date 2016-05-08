@@ -203,11 +203,11 @@ void UI_Advisor_drawGeneralBackground()
 	);
 
 	for (int i = 0; i < 13; i++) {
-		int selected = 0;
+		int selectedOffset = 0;
 		if (currentAdvisor && i == currentAdvisor - 1) {
-			selected = 13;
+			selectedOffset = 13;
 		}
-		Graphics_drawImage(GraphicId(ID_Graphic_AdvisorIcons) + i + selected,
+		Graphics_drawImage(GraphicId(ID_Graphic_AdvisorIcons) + i + selectedOffset,
 			baseOffsetX + 48 * i + 12, baseOffsetY + 441
 		);
 	}

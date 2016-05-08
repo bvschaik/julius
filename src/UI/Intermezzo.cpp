@@ -62,17 +62,10 @@ static const char soundFilesWon[][32] = {
 
 static struct {
 	int type;
-	int drawBackground;
 	WindowId nextWindowId;
 	TimeMillis startTime;
 	TimeMillis endTime;
 } data;
-
-enum {
-	Type_MissionBriefing = 0,
-	Type_Fired = 1,
-	Type_Won = 2,
-};
 
 void UI_Intermezzo_show(int type, WindowId nextWindowId, int timeMillis)
 {
@@ -81,21 +74,16 @@ void UI_Intermezzo_show(int type, WindowId nextWindowId, int timeMillis)
 	data.startTime = Time_getMillis();
 	data.endTime = data.startTime + timeMillis;
 	UI_Window_goTo(Window_Intermezzo);
-	data.drawBackground = 1;
 }
 
 void UI_Intermezzo_drawBackground()
 {
-	if (!data.drawBackground) {
-		return;
-	}
-	data.drawBackground = 0;
 	Graphics_clearScreen();
 	int xOffset = (Data_Screen.width - 1024) / 2;
 	int yOffset = (Data_Screen.height - 768) / 2;
 
 	int graphicBase = GraphicId(ID_Graphic_IntermezzoBackground);
-	if (data.type == Type_MissionBriefing) {
+	if (data.type == Intermezzo_MissionBriefing) {
 		Sound_stopMusic();
 		Sound_stopSpeech();
 		if (Data_Settings.isCustomScenario) {
@@ -105,9 +93,9 @@ void UI_Intermezzo_drawBackground()
 			Sound_Speech_playFile(soundFilesBriefing[Data_Settings.saveGameMissionId]);
 		}
 		UI_Window_requestRefresh();
-	} else if (data.type == Type_Fired) {
+	} else if (data.type == Intermezzo_Fired) {
 		Graphics_drawImage(graphicBase, xOffset, yOffset);
-	} else if (data.type == Type_Won) {
+	} else if (data.type == Intermezzo_Won) {
 		Sound_stopMusic();
 		Sound_stopSpeech();
 		if (Data_Settings.isCustomScenario) {

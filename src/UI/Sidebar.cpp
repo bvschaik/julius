@@ -375,7 +375,7 @@ static void buttonEmpire(int param1, int param2)
 static void buttonMissionBriefing(int param1, int param2)
 {
 	if (!Data_Settings.isCustomScenario) {
-		UI_Intermezzo_show(0, Window_MissionBriefingReview, 1000);
+		UI_Intermezzo_show(Intermezzo_MissionBriefing, Window_MissionBriefingReview, 1000);
 	}
 }
 
