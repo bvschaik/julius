@@ -15,11 +15,11 @@ static void buttonClick(int param1, int param2);
 
 static int focusButtonId;
 
-static CustomButton buttons[4] = {
-	{192, 100, 448, 125, buttonClick, Widget_Button_doNothing, 1, 1, 0},
-	{192, 140, 448, 165, buttonClick, Widget_Button_doNothing, 1, 2, 0},
-	{192, 180, 448, 205, buttonClick, Widget_Button_doNothing, 1, 3, 0},
-	{192, 220, 448, 245, buttonClick, Widget_Button_doNothing, 1, 4, 0},
+static CustomButton buttons[] = {
+	{192, 100, 448, 125, CustomButton_Immediate, buttonClick, Widget_Button_doNothing, 1, 0},
+	{192, 140, 448, 165, CustomButton_Immediate, buttonClick, Widget_Button_doNothing, 2, 0},
+	{192, 180, 448, 205, CustomButton_Immediate, buttonClick, Widget_Button_doNothing, 3, 0},
+	{192, 220, 448, 245, CustomButton_Immediate, buttonClick, Widget_Button_doNothing, 4, 0},
 };
 
 void UI_MainMenu_drawBackground()

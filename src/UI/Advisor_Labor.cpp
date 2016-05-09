@@ -10,19 +10,19 @@ static void arrowButtonWages(int param1, int param2);
 static void buttonPriority(int param1, int param2);
 static void buttonSetPriority(int param1, int param2);
 
-static CustomButton categoryButtons[9] = {
-	{40, 77, 600, 99, buttonPriority, Widget_Button_doNothing, 1, 0, 0},
-	{40, 102, 600, 124, buttonPriority, Widget_Button_doNothing, 1, 1, 0},
-	{40, 127, 600, 149, buttonPriority, Widget_Button_doNothing, 1, 2, 0},
-	{40, 152, 600, 174, buttonPriority, Widget_Button_doNothing, 1, 3, 0},
-	{40, 177, 600, 199, buttonPriority, Widget_Button_doNothing, 1, 4, 0},
-	{40, 202, 600, 224, buttonPriority, Widget_Button_doNothing, 1, 5, 0},
-	{40, 227, 600, 249, buttonPriority, Widget_Button_doNothing, 1, 6, 0},
-	{40, 252, 600, 274, buttonPriority, Widget_Button_doNothing, 1, 7, 0},
-	{40, 277, 600, 299, buttonPriority, Widget_Button_doNothing, 1, 8, 0},
+static CustomButton categoryButtons[] = {
+	{40, 77, 600, 99, CustomButton_Immediate, buttonPriority, Widget_Button_doNothing, 0, 0},
+	{40, 102, 600, 124, CustomButton_Immediate, buttonPriority, Widget_Button_doNothing, 1, 0},
+	{40, 127, 600, 149, CustomButton_Immediate, buttonPriority, Widget_Button_doNothing, 2, 0},
+	{40, 152, 600, 174, CustomButton_Immediate, buttonPriority, Widget_Button_doNothing, 3, 0},
+	{40, 177, 600, 199, CustomButton_Immediate, buttonPriority, Widget_Button_doNothing, 4, 0},
+	{40, 202, 600, 224, CustomButton_Immediate, buttonPriority, Widget_Button_doNothing, 5, 0},
+	{40, 227, 600, 249, CustomButton_Immediate, buttonPriority, Widget_Button_doNothing, 6, 0},
+	{40, 252, 600, 274, CustomButton_Immediate, buttonPriority, Widget_Button_doNothing, 7, 0},
+	{40, 277, 600, 299, CustomButton_Immediate, buttonPriority, Widget_Button_doNothing, 8, 0},
 };
 
-static ArrowButton wageButtons[2] = {
+static ArrowButton wageButtons[] = {
 	{158, 354, 17, 24, arrowButtonWages, 1, 0},
 	{182, 354, 15, 24, arrowButtonWages, 0, 0}
 };
@@ -35,17 +35,17 @@ static int prioritySelectedCategory;
 static int priorityMaxItems;
 static int priorityFocusButtonId;
 
-static CustomButton priorityButtons[10] = {
-	{180, 256, 460, 281, buttonSetPriority, Widget_Button_doNothing, 1, 0, 0}, // no prio
-	{178, 221, 205, 248, buttonSetPriority, Widget_Button_doNothing, 1, 1, 0},
-	{210, 221, 237, 248, buttonSetPriority, Widget_Button_doNothing, 1, 2, 0},
-	{242, 221, 269, 248, buttonSetPriority, Widget_Button_doNothing, 1, 3, 0},
-	{274, 221, 301, 248, buttonSetPriority, Widget_Button_doNothing, 1, 4, 0},
-	{306, 221, 333, 248, buttonSetPriority, Widget_Button_doNothing, 1, 5, 0},
-	{338, 221, 365, 248, buttonSetPriority, Widget_Button_doNothing, 1, 6, 0},
-	{370, 221, 397, 248, buttonSetPriority, Widget_Button_doNothing, 1, 7, 0},
-	{402, 221, 429, 248, buttonSetPriority, Widget_Button_doNothing, 1, 8, 0},
-	{434, 221, 461, 248, buttonSetPriority, Widget_Button_doNothing, 1, 9, 0},
+static CustomButton priorityButtons[] = {
+	{180, 256, 460, 281, CustomButton_Immediate, buttonSetPriority, Widget_Button_doNothing, 0, 0}, // no prio
+	{178, 221, 205, 248, CustomButton_Immediate, buttonSetPriority, Widget_Button_doNothing, 1, 0},
+	{210, 221, 237, 248, CustomButton_Immediate, buttonSetPriority, Widget_Button_doNothing, 2, 0},
+	{242, 221, 269, 248, CustomButton_Immediate, buttonSetPriority, Widget_Button_doNothing, 3, 0},
+	{274, 221, 301, 248, CustomButton_Immediate, buttonSetPriority, Widget_Button_doNothing, 4, 0},
+	{306, 221, 333, 248, CustomButton_Immediate, buttonSetPriority, Widget_Button_doNothing, 5, 0},
+	{338, 221, 365, 248, CustomButton_Immediate, buttonSetPriority, Widget_Button_doNothing, 6, 0},
+	{370, 221, 397, 248, CustomButton_Immediate, buttonSetPriority, Widget_Button_doNothing, 7, 0},
+	{402, 221, 429, 248, CustomButton_Immediate, buttonSetPriority, Widget_Button_doNothing, 8, 0},
+	{434, 221, 461, 248, CustomButton_Immediate, buttonSetPriority, Widget_Button_doNothing, 9, 0},
 };
 
 void UI_Advisor_Labor_drawBackground(int *advisorHeight)

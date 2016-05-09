@@ -19,46 +19,16 @@ static void arrowButtonSpeech(int param1, int param2);
 static void arrowButtonEffects(int param1, int param2);
 static void arrowButtonCity(int param1, int param2);
 
-static CustomButton buttons[6] = {
-	{
-		64, 162, 288, 182,
-		buttonToggle,
-		Widget_Button_doNothing,
-		1, 1, 0
-	},
-	{
-		64, 192, 288, 212,
-		buttonToggle,
-		Widget_Button_doNothing,
-		1, 2, 0
-	},
-	{
-		64, 222, 288, 242,
-		buttonToggle,
-		Widget_Button_doNothing,
-		1, 3, 0
-	},
-	{
-		64, 252, 288, 272,
-		buttonToggle,
-		Widget_Button_doNothing,
-		1, 4, 0
-	},
-	{
-		144, 296, 336, 316,
-		buttonOk,
-		Widget_Button_doNothing,
-		1, 1, 0
-	},
-	{
-		144, 296, 336, 346,
-		buttonCancel,
-		Widget_Button_doNothing,
-		1, 1, 0
-	},
+static CustomButton buttons[] = {
+	{64, 162, 288, 182, CustomButton_Immediate, buttonToggle, Widget_Button_doNothing, 1, 0},
+	{64, 192, 288, 212, CustomButton_Immediate, buttonToggle, Widget_Button_doNothing, 2, 0},
+	{64, 222, 288, 242, CustomButton_Immediate, buttonToggle, Widget_Button_doNothing, 3, 0},
+	{64, 252, 288, 272, CustomButton_Immediate, buttonToggle, Widget_Button_doNothing, 4, 0},
+	{144, 296, 336, 316, CustomButton_Immediate, buttonOk, Widget_Button_doNothing, 1, 0},
+	{144, 296, 336, 346, CustomButton_Immediate, buttonCancel, Widget_Button_doNothing, 1, 0},
 };
 
-static ArrowButton arrowButtons[8] = {
+static ArrowButton arrowButtons[] = {
 	{112, 100, 17, 24, arrowButtonMusic, 1, 0},
 	{136, 100, 15, 24, arrowButtonMusic, 0, 0},
 	{112, 130, 17, 24, arrowButtonSpeech, 1, 0},

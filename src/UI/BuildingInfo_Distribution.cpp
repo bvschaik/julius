@@ -18,34 +18,34 @@ static void granaryOrders(int index, int param2);
 static void warehouseOrders(int index, int param2);
 
 static CustomButton gotoOrdersButtons[] = {
-	{0, 0, 304, 20, UI_BuildingInfo_showStorageOrders, Widget_Button_doNothing, 1, 0, 0}
+	{0, 0, 304, 20, CustomButton_Immediate, UI_BuildingInfo_showStorageOrders, Widget_Button_doNothing, 0, 0}
 };
 
 static CustomButton ordersResourceButtons[] = {
-	{0, 0, 210, 22, toggleResourceState, Widget_Button_doNothing, 1, 1, 0},
-	{0, 22, 210, 44, toggleResourceState, Widget_Button_doNothing, 1, 2, 0},
-	{0, 44, 210, 66, toggleResourceState, Widget_Button_doNothing, 1, 3, 0},
-	{0, 66, 210, 88, toggleResourceState, Widget_Button_doNothing, 1, 4, 0},
-	{0, 88, 210, 110, toggleResourceState, Widget_Button_doNothing, 1, 5, 0},
-	{0, 110, 210, 132, toggleResourceState, Widget_Button_doNothing, 1, 6, 0},
-	{0, 132, 210, 154, toggleResourceState, Widget_Button_doNothing, 1, 7, 0},
-	{0, 154, 210, 176, toggleResourceState, Widget_Button_doNothing, 1, 8, 0},
-	{0, 176, 210, 198, toggleResourceState, Widget_Button_doNothing, 1, 9, 0},
-	{0, 198, 210, 220, toggleResourceState, Widget_Button_doNothing, 1, 10, 0},
-	{0, 220, 210, 242, toggleResourceState, Widget_Button_doNothing, 1, 11, 0},
-	{0, 242, 210, 264, toggleResourceState, Widget_Button_doNothing, 1, 12, 0},
-	{0, 264, 210, 286, toggleResourceState, Widget_Button_doNothing, 1, 13, 0},
-	{0, 286, 210, 308, toggleResourceState, Widget_Button_doNothing, 1, 14, 0},
-	{0, 308, 210, 330, toggleResourceState, Widget_Button_doNothing, 1, 15, 0},
+	{0, 0, 210, 22, CustomButton_Immediate, toggleResourceState, Widget_Button_doNothing, 1, 0},
+	{0, 22, 210, 44, CustomButton_Immediate, toggleResourceState, Widget_Button_doNothing, 2, 0},
+	{0, 44, 210, 66, CustomButton_Immediate, toggleResourceState, Widget_Button_doNothing, 3, 0},
+	{0, 66, 210, 88, CustomButton_Immediate, toggleResourceState, Widget_Button_doNothing, 4, 0},
+	{0, 88, 210, 110, CustomButton_Immediate, toggleResourceState, Widget_Button_doNothing, 5, 0},
+	{0, 110, 210, 132, CustomButton_Immediate, toggleResourceState, Widget_Button_doNothing, 6, 0},
+	{0, 132, 210, 154, CustomButton_Immediate, toggleResourceState, Widget_Button_doNothing, 7, 0},
+	{0, 154, 210, 176, CustomButton_Immediate, toggleResourceState, Widget_Button_doNothing, 8, 0},
+	{0, 176, 210, 198, CustomButton_Immediate, toggleResourceState, Widget_Button_doNothing, 9, 0},
+	{0, 198, 210, 220, CustomButton_Immediate, toggleResourceState, Widget_Button_doNothing, 10, 0},
+	{0, 220, 210, 242, CustomButton_Immediate, toggleResourceState, Widget_Button_doNothing, 11, 0},
+	{0, 242, 210, 264, CustomButton_Immediate, toggleResourceState, Widget_Button_doNothing, 12, 0},                                                   
+	{0, 264, 210, 286, CustomButton_Immediate, toggleResourceState, Widget_Button_doNothing, 13, 0},
+	{0, 286, 210, 308, CustomButton_Immediate, toggleResourceState, Widget_Button_doNothing, 14, 0},
+	{0, 308, 210, 330, CustomButton_Immediate, toggleResourceState, Widget_Button_doNothing, 15, 0},
 };
 
 static CustomButton granaryOrderButtons[] = {
-	{0, 0, 304, 20, granaryOrders, Widget_Button_doNothing, 1, 0, 0},
+	{0, 0, 304, 20, CustomButton_Immediate, granaryOrders, Widget_Button_doNothing, 0, 0},
 };
 
 static CustomButton warehouseOrderButtons[] = {
-	{0, 0, 304, 20, warehouseOrders, Widget_Button_doNothing, 1, 0, 0},
-	{0, -22, 304, 20, warehouseOrders, Widget_Button_doNothing, 1, 1, 0},
+	{0, 0, 304, 20, CustomButton_Immediate, warehouseOrders, Widget_Button_doNothing, 0, 0},
+	{0, -22, 304, 20, CustomButton_Immediate, warehouseOrders, Widget_Button_doNothing, 1, 0},
 };
 
 static int focusButtonId = 0;

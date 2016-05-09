@@ -6,8 +6,8 @@ static void drawFestivalBackground();
 
 static void buttonHoldFestival(int param1, int param2);
 
-static CustomButton holdFestivalButtons[1] = {
-	{102, 280, 402, 300, buttonHoldFestival, Widget_Button_doNothing, 1, 0, 0},
+static CustomButton holdFestivalButtons[] = {
+	{102, 280, 402, 300, CustomButton_Immediate, buttonHoldFestival, Widget_Button_doNothing, 0, 0},
 };
 
 static int focusButtonId;

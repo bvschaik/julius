@@ -28,17 +28,19 @@ typedef struct {
 	TimeMillis pressedSince;
 } ImageButton;
 
+enum {
+	CustomButton_Immediate = 1,
+	CustomButton_OnMouseUp = 3,
+};
+
 typedef struct {
 	short xStart;
 	short yStart;
 	short xEnd;
 	short yEnd;
+	int type;
 	void (*leftClickHandler)(int param1, int param2);
 	void (*rightClickHandler)(int param1, int param2);
-	//char field_10;
-	//char field_11;
-	//char field_12;
-	int type;
 	int parameter1;
 	int parameter2;
 } CustomButton;

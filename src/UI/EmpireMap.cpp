@@ -55,7 +55,7 @@ static ImageButton imageButtonAdvisor[] = {
 	{-4, 0, 24, 24, ImageButton_Normal, 199, 12, buttonAdvisor, Widget_Button_doNothing, 5, 0, 1}
 };
 static CustomButton customButtonOpenTrade[] = {
-	{50, 68, 450, 91, buttonOpenTrade, Widget_Button_doNothing, 1, 0, 0}
+	{50, 68, 450, 91, CustomButton_Immediate, buttonOpenTrade, Widget_Button_doNothing, 0, 0}
 };
 
 static ImageButton imageButtonsTradeOpened[] = {

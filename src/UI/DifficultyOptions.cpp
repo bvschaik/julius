@@ -11,7 +11,7 @@
 static void arrowButtonDifficulty(int param1, int param2);
 static void arrowButtonGods(int param1, int param2);
 
-static ArrowButton arrowButtons[3] = {
+static ArrowButton arrowButtons[] = {
 	{0, 54, 15, 24, arrowButtonDifficulty, 0, 0},
 	{24, 54, 17, 24, arrowButtonDifficulty, 1, 0},
 	{0, 102, 21, 24, arrowButtonGods, 2, 0}

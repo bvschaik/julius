@@ -37,13 +37,13 @@ static const int walkerTypeToBigPeopleGraphicId[] = {
 #define BigPeopleGraphic(t) (GraphicId(ID_Graphic_BigPeople) + walkerTypeToBigPeopleGraphicId[t] - 1)
 
 static CustomButton walkerButtons[] = {
-	{26, 46, 76, 96, selectWalker, Widget_Button_doNothing, 1, 0, 0},
-	{86, 46, 136, 96, selectWalker, Widget_Button_doNothing, 1, 1, 0},
-	{146, 46, 196, 96, selectWalker, Widget_Button_doNothing, 1, 2, 0},
-	{206, 46, 256, 96, selectWalker, Widget_Button_doNothing, 1, 3, 0},
-	{266, 46, 316, 96, selectWalker, Widget_Button_doNothing, 1, 4, 0},
-	{326, 46, 376, 96, selectWalker, Widget_Button_doNothing, 1, 5, 0},
-	{386, 46, 436, 96, selectWalker, Widget_Button_doNothing, 1, 6, 0},
+	{26, 46, 76, 96, CustomButton_Immediate, selectWalker, Widget_Button_doNothing, 0, 0},
+	{86, 46, 136, 96, CustomButton_Immediate, selectWalker, Widget_Button_doNothing, 1, 0},
+	{146, 46, 196, 96, CustomButton_Immediate, selectWalker, Widget_Button_doNothing, 2, 0},
+	{206, 46, 256, 96, CustomButton_Immediate, selectWalker, Widget_Button_doNothing, 3, 0},
+	{266, 46, 316, 96, CustomButton_Immediate, selectWalker, Widget_Button_doNothing, 4, 0},
+	{326, 46, 376, 96, CustomButton_Immediate, selectWalker, Widget_Button_doNothing, 5, 0},
+	{386, 46, 436, 96, CustomButton_Immediate, selectWalker, Widget_Button_doNothing, 6, 0},
 };
 
 static ScreenColor walkerImages[7][48*48];

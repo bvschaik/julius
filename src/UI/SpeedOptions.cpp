@@ -16,22 +16,12 @@ static void buttonCancel(int param1, int param2);
 static void arrowButtonGame(int param1, int param2);
 static void arrowButtonScroll(int param1, int param2);
 
-static CustomButton buttons[2] = {
-	{
-		144, 232, 336, 252,
-		buttonOk,
-		Widget_Button_doNothing,
-		1, 1, 0
-	},
-	{
-		144, 262, 336, 282,
-		buttonCancel,
-		Widget_Button_doNothing,
-		1, 1, 0
-	},
+static CustomButton buttons[] = {
+	{144, 232, 336, 252, CustomButton_Immediate, buttonOk, Widget_Button_doNothing, 1, 0},
+	{144, 262, 336, 282, CustomButton_Immediate, buttonCancel, Widget_Button_doNothing, 1, 0},
 };
 
-static ArrowButton arrowButtons[4] = {
+static ArrowButton arrowButtons[] = {
 	{112, 100, 17, 24, arrowButtonGame, 1, 0},
 	{136, 100, 15, 24, arrowButtonGame, 0, 0},
 	{112, 136, 17, 24, arrowButtonScroll, 1, 0},

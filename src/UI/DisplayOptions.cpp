@@ -14,12 +14,12 @@ static void buttonFullscreen(int param1, int param2);
 static void buttonSetResolution(int param1, int param2);
 static void buttonCancel(int param1, int param2);
 
-static CustomButton buttons[5] = {
-	{144, 136, 336, 156, buttonFullscreen, Widget_Button_doNothing, 1, 1, 0},
-	{144, 160, 336, 180, buttonSetResolution, Widget_Button_doNothing, 1, 1, 0},
-	{144, 184, 336, 204, buttonSetResolution, Widget_Button_doNothing, 1, 2, 0},
-	{144, 208, 336, 228, buttonSetResolution, Widget_Button_doNothing, 1, 3, 0},
-	{144, 232, 336, 252, buttonCancel, Widget_Button_doNothing, 1, 1, 0},
+static CustomButton buttons[] = {
+	{144, 136, 336, 156, CustomButton_Immediate, buttonFullscreen, Widget_Button_doNothing, 1, 0},
+	{144, 160, 336, 180, CustomButton_Immediate, buttonSetResolution, Widget_Button_doNothing, 1, 0},
+	{144, 184, 336, 204, CustomButton_Immediate, buttonSetResolution, Widget_Button_doNothing, 2, 0},
+	{144, 208, 336, 228, CustomButton_Immediate, buttonSetResolution, Widget_Button_doNothing, 3, 0},
+	{144, 232, 336, 252, CustomButton_Immediate, buttonCancel, Widget_Button_doNothing, 1, 0},
 };
 
 static int focusButtonId;

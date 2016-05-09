@@ -19,13 +19,13 @@ static void victoryAccept(int param1, int param2);
 static void victoryContinueGoverning(int param1, int param2);
 static void firedAccept(int param1, int param2);
 
-static CustomButton victoryButtons[3] = {
-	{32, 112, 416, 132, victoryAccept, Widget_Button_doNothing, 3, 0, 0},
-	{32, 144, 416, 164, victoryContinueGoverning, Widget_Button_doNothing, 1, 1, 0},
-	{32, 176, 416, 196, victoryContinueGoverning, Widget_Button_doNothing, 1, 2, 0},
+static CustomButton victoryButtons[] = {
+	{32, 112, 416, 132, CustomButton_OnMouseUp, victoryAccept, Widget_Button_doNothing, 0, 0},
+	{32, 144, 416, 164, CustomButton_Immediate, victoryContinueGoverning, Widget_Button_doNothing, 1, 0},
+	{32, 176, 416, 196, CustomButton_Immediate, victoryContinueGoverning, Widget_Button_doNothing, 2, 0},
 };
-static CustomButton firedButtons[3] = {
-	{64, 208, 384, 228, firedAccept, Widget_Button_doNothing, 1, 0, 0},
+static CustomButton firedButtons[] = {
+	{64, 208, 384, 228, CustomButton_Immediate, firedAccept, Widget_Button_doNothing, 0, 0},
 };
 
 static int focusButtonId = 0;

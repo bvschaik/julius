@@ -10,9 +10,9 @@ static int getPopulationAtMonth(int max, int month);
 static void getMinMaxMonthYear(int maxMonths, int *startMonth, int *startYear, int *endMonth, int *endYear);
 static void buttonGraph(int param1, int param2);
 
-static CustomButton graphButtons[2] = {
-	{503,  61, 607, 116, buttonGraph, Widget_Button_doNothing, 1, 0, 0},
-	{503, 161, 607, 216, buttonGraph, Widget_Button_doNothing, 1, 1, 0},
+static CustomButton graphButtons[] = {
+	{503,  61, 607, 116, CustomButton_Immediate, buttonGraph, Widget_Button_doNothing, 0, 0},
+	{503, 161, 607, 216, CustomButton_Immediate, buttonGraph, Widget_Button_doNothing, 1, 0},
 };
 
 static int focusButtonId;

@@ -34,16 +34,16 @@ static ImageButton imageButtonScrollDown = {
 	0, 0, 39, 26, ImageButton_Scroll, 96, 12, buttonScroll, Widget_Button_doNothing, 1, 1, 1
 };
 static CustomButton customButtonsMessages[] = {
-	{0, 0, 412, 18, buttonMessage, buttonDelete, 3, 0, 0},
-	{0, 20, 412, 38, buttonMessage, buttonDelete, 3, 1, 0},
-	{0, 40, 412, 58, buttonMessage, buttonDelete, 3, 2, 0},
-	{0, 60, 412, 78, buttonMessage, buttonDelete, 3, 3, 0},
-	{0, 80, 412, 98, buttonMessage, buttonDelete, 3, 4, 0},
-	{0, 100, 412, 118, buttonMessage, buttonDelete, 3, 5, 0},
-	{0, 120, 412, 138, buttonMessage, buttonDelete, 3, 6, 0},
-	{0, 140, 412, 158, buttonMessage, buttonDelete, 3, 7, 0},
-	{0, 160, 412, 178, buttonMessage, buttonDelete, 3, 8, 0},
-	{0, 180, 412, 198, buttonMessage, buttonDelete, 3, 9, 0},
+	{0, 0, 412, 18, CustomButton_OnMouseUp, buttonMessage, buttonDelete, 0, 0},
+	{0, 20, 412, 38, CustomButton_OnMouseUp, buttonMessage, buttonDelete, 1, 0},
+	{0, 40, 412, 58, CustomButton_OnMouseUp, buttonMessage, buttonDelete, 2, 0},
+	{0, 60, 412, 78, CustomButton_OnMouseUp, buttonMessage, buttonDelete, 3, 0},
+	{0, 80, 412, 98, CustomButton_OnMouseUp, buttonMessage, buttonDelete, 4, 0},
+	{0, 100, 412, 118, CustomButton_OnMouseUp, buttonMessage, buttonDelete, 5, 0},
+	{0, 120, 412, 138, CustomButton_OnMouseUp, buttonMessage, buttonDelete, 6, 0},
+	{0, 140, 412, 158, CustomButton_OnMouseUp, buttonMessage, buttonDelete, 7, 0},
+	{0, 160, 412, 178, CustomButton_OnMouseUp, buttonMessage, buttonDelete, 8, 0},
+	{0, 180, 412, 198, CustomButton_OnMouseUp, buttonMessage, buttonDelete, 9, 0},
 };
 
 static struct {

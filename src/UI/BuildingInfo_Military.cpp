@@ -19,15 +19,15 @@ static void buttonReturnToFort(int param1, int param2);
 static void buttonLayout(int param1, int param2);
 
 static CustomButton layoutButtons[] = {
-	{19, 139, 103, 223, buttonLayout, Widget_Button_doNothing, 1, 0, 0},
-	{104, 139, 188, 223, buttonLayout, Widget_Button_doNothing, 1, 1, 0},
-	{189, 139, 273, 223, buttonLayout, Widget_Button_doNothing, 1, 2, 0},
-	{274, 139, 358, 223, buttonLayout, Widget_Button_doNothing, 1, 3, 0},
-	{359, 139, 443, 223, buttonLayout, Widget_Button_doNothing, 1, 4, 0}
+	{19, 139, 103, 223, CustomButton_Immediate, buttonLayout, Widget_Button_doNothing, 0, 0},
+	{104, 139, 188, 223, CustomButton_Immediate, buttonLayout, Widget_Button_doNothing, 1, 0},
+	{189, 139, 273, 223, CustomButton_Immediate, buttonLayout, Widget_Button_doNothing, 2, 0},
+	{274, 139, 358, 223, CustomButton_Immediate, buttonLayout, Widget_Button_doNothing, 3, 0},
+	{359, 139, 443, 223, CustomButton_Immediate, buttonLayout, Widget_Button_doNothing, 4, 0}
 };
 
 static CustomButton returnButtons[] = {
-	{0, 0, 288, 32, buttonReturnToFort, Widget_Button_doNothing, 1, 0, 0},
+	{0, 0, 288, 32, CustomButton_Immediate, buttonReturnToFort, Widget_Button_doNothing, 0, 0},
 };
 
 static int focusButtonId;

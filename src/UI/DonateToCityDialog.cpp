@@ -14,17 +14,17 @@ static void buttonDonate(int param1, int param2);
 static void buttonCancel(int param1, int param2);
 static void arrowButtonAmount(int isDown, int param2);
 
-static CustomButton buttons[7] = {
-	{336, 283, 496, 303, buttonCancel, Widget_Button_doNothing, 1, 0, 0},
-	{144, 283, 304, 303, buttonDonate, Widget_Button_doNothing, 1, 0, 0},
-	{128, 216, 192, 236, buttonSetAmount, Widget_Button_doNothing, 1, 0, 0},
-	{208, 216, 272, 236, buttonSetAmount, Widget_Button_doNothing, 1, 1, 0},
-	{288, 216, 352, 236, buttonSetAmount, Widget_Button_doNothing, 1, 2, 0},
-	{368, 216, 432, 236, buttonSetAmount, Widget_Button_doNothing, 1, 3, 0},
-	{448, 216, 512, 236, buttonSetAmount, Widget_Button_doNothing, 1, 4, 0},
+static CustomButton buttons[] = {
+	{336, 283, 496, 303, CustomButton_Immediate, buttonCancel, Widget_Button_doNothing, 0, 0},
+	{144, 283, 304, 303, CustomButton_Immediate, buttonDonate, Widget_Button_doNothing, 0, 0},
+	{128, 216, 192, 236, CustomButton_Immediate, buttonSetAmount, Widget_Button_doNothing, 0, 0},
+	{208, 216, 272, 236, CustomButton_Immediate, buttonSetAmount, Widget_Button_doNothing, 1, 0},
+	{288, 216, 352, 236, CustomButton_Immediate, buttonSetAmount, Widget_Button_doNothing, 2, 0},
+	{368, 216, 432, 236, CustomButton_Immediate, buttonSetAmount, Widget_Button_doNothing, 3, 0},
+	{448, 216, 512, 236, CustomButton_Immediate, buttonSetAmount, Widget_Button_doNothing, 4, 0},
 };
 
-static ArrowButton arrowButtons[2] = {
+static ArrowButton arrowButtons[] = {
 	{240, 242, 17, 24, arrowButtonAmount, 1, 0},
 	{264, 242, 15, 24, arrowButtonAmount, 0, 0},
 };

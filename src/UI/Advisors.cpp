@@ -19,20 +19,20 @@ static ImageButton helpButton = {
 	11, -7, 27, 27, ImageButton_Normal, 134, 0, buttonHelp, Widget_Button_doNothing, 0, 0, 1
 };
 
-static CustomButton advisorButtons[13] = {
-	{12, 1, 52, 41, buttonChangeAdvisor, Widget_Button_doNothing, 1, 1, 0},
-	{60, 1, 100, 41, buttonChangeAdvisor, Widget_Button_doNothing, 1, 2, 0},
-	{108, 1, 148, 41, buttonChangeAdvisor, Widget_Button_doNothing, 1, 3, 0},
-	{156, 1, 196, 41, buttonChangeAdvisor, Widget_Button_doNothing, 1, 4, 0},
-	{204, 1, 244, 41, buttonChangeAdvisor, Widget_Button_doNothing, 1, 5, 0},
-	{252, 1, 292, 41, buttonChangeAdvisor, Widget_Button_doNothing, 1, 6, 0},
-	{300, 1, 340, 41, buttonChangeAdvisor, Widget_Button_doNothing, 1, 7, 0},
-	{348, 1, 388, 41, buttonChangeAdvisor, Widget_Button_doNothing, 1, 8, 0},
-	{396, 1, 436, 41, buttonChangeAdvisor, Widget_Button_doNothing, 1, 9, 0},
-	{444, 1, 484, 41, buttonChangeAdvisor, Widget_Button_doNothing, 1, 10, 0},
-	{492, 1, 532, 41, buttonChangeAdvisor, Widget_Button_doNothing, 1, 11, 0},
-	{540, 1, 580, 41, buttonChangeAdvisor, Widget_Button_doNothing, 1, 12, 0},
-	{588, 1, 624, 41, buttonChangeAdvisor, Widget_Button_doNothing, 1, 0, 0},
+static CustomButton advisorButtons[] = {
+	{12, 1, 52, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, 1, 0},
+	{60, 1, 100, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, 2, 0},
+	{108, 1, 148, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, 3, 0},
+	{156, 1, 196, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, 4, 0},
+	{204, 1, 244, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, 5, 0},
+	{252, 1, 292, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, 6, 0},
+	{300, 1, 340, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, 7, 0},
+	{348, 1, 388, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, 8, 0},
+	{396, 1, 436, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, 9, 0},
+	{444, 1, 484, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, 10, 0},
+	{492, 1, 532, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, 11, 0},
+	{540, 1, 580, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, 12, 0},
+	{588, 1, 624, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, 0, 0},
 };
 
 static const int advisorToMessageTextId[] = {

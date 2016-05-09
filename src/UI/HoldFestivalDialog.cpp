@@ -25,14 +25,14 @@ static ImageButton imageButtonsBottom[] = {
 };
 
 static CustomButton buttonsGodsSize[] = {
-	{70, 96, 150, 186, buttonGod, Widget_Button_doNothing, 1, 0, 0},
-	{170, 96, 250, 186, buttonGod, Widget_Button_doNothing, 1, 1, 0},
-	{270, 96, 350, 186, buttonGod, Widget_Button_doNothing, 1, 2, 0},
-	{370, 96, 450, 186, buttonGod, Widget_Button_doNothing, 1, 3, 0},
-	{470, 96, 550, 186, buttonGod, Widget_Button_doNothing, 1, 4, 0},
-	{102, 216, 532, 242, buttonSize, Widget_Button_doNothing, 1, 1, 0},
-	{102, 246, 532, 272, buttonSize, Widget_Button_doNothing, 1, 2, 0},
-	{102, 276, 532, 302, buttonSize, Widget_Button_doNothing, 1, 3, 0},
+	{70, 96, 150, 186, CustomButton_Immediate, buttonGod, Widget_Button_doNothing, 0, 0},
+	{170, 96, 250, 186, CustomButton_Immediate, buttonGod, Widget_Button_doNothing, 1, 0},
+	{270, 96, 350, 186, CustomButton_Immediate, buttonGod, Widget_Button_doNothing, 2, 0},
+	{370, 96, 450, 186, CustomButton_Immediate, buttonGod, Widget_Button_doNothing, 3, 0},
+	{470, 96, 550, 186, CustomButton_Immediate, buttonGod, Widget_Button_doNothing, 4, 0},
+	{102, 216, 532, 242, CustomButton_Immediate, buttonSize, Widget_Button_doNothing, 1, 0},
+	{102, 246, 532, 272, CustomButton_Immediate, buttonSize, Widget_Button_doNothing, 2, 0},
+	{102, 276, 532, 302, CustomButton_Immediate, buttonSize, Widget_Button_doNothing, 3, 0},
 };
 
 static int focusButtonId;

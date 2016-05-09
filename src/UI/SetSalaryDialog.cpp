@@ -8,19 +8,19 @@
 static void buttonCancel(int param1, int param2);
 static void buttonSetSalary(int param1, int param2);
 
-static CustomButton buttons[12] = {
-	{240, 395, 400, 415, buttonCancel, Widget_Button_doNothing, 1, 0, 0},
-	{144, 85, 432, 105, buttonSetSalary, Widget_Button_doNothing, 1, 0, 0},
-	{144, 105, 432, 125, buttonSetSalary, Widget_Button_doNothing, 1, 1, 0},
-	{144, 125, 432, 145, buttonSetSalary, Widget_Button_doNothing, 1, 2, 0},
-	{144, 145, 432, 165, buttonSetSalary, Widget_Button_doNothing, 1, 3, 0},
-	{144, 165, 432, 185, buttonSetSalary, Widget_Button_doNothing, 1, 4, 0},
-	{144, 185, 432, 205, buttonSetSalary, Widget_Button_doNothing, 1, 5, 0},
-	{144, 205, 432, 225, buttonSetSalary, Widget_Button_doNothing, 1, 6, 0},
-	{144, 225, 432, 245, buttonSetSalary, Widget_Button_doNothing, 1, 7, 0},
-	{144, 245, 432, 265, buttonSetSalary, Widget_Button_doNothing, 1, 8, 0},
-	{144, 265, 432, 285, buttonSetSalary, Widget_Button_doNothing, 1, 9, 0},
-	{144, 285, 432, 305, buttonSetSalary, Widget_Button_doNothing, 1, 10, 0},
+static CustomButton buttons[] = {
+	{240, 395, 400, 415, CustomButton_Immediate, buttonCancel, Widget_Button_doNothing, 0, 0},
+	{144, 85, 432, 105, CustomButton_Immediate, buttonSetSalary, Widget_Button_doNothing, 0, 0},
+	{144, 105, 432, 125, CustomButton_Immediate, buttonSetSalary, Widget_Button_doNothing, 1, 0},
+	{144, 125, 432, 145, CustomButton_Immediate, buttonSetSalary, Widget_Button_doNothing, 2, 0},
+	{144, 145, 432, 165, CustomButton_Immediate, buttonSetSalary, Widget_Button_doNothing, 3, 0},
+	{144, 165, 432, 185, CustomButton_Immediate, buttonSetSalary, Widget_Button_doNothing, 4, 0},
+	{144, 185, 432, 205, CustomButton_Immediate, buttonSetSalary, Widget_Button_doNothing, 5, 0},
+	{144, 205, 432, 225, CustomButton_Immediate, buttonSetSalary, Widget_Button_doNothing, 6, 0},
+	{144, 225, 432, 245, CustomButton_Immediate, buttonSetSalary, Widget_Button_doNothing, 7, 0},
+	{144, 245, 432, 265, CustomButton_Immediate, buttonSetSalary, Widget_Button_doNothing, 8, 0},
+	{144, 265, 432, 285, CustomButton_Immediate, buttonSetSalary, Widget_Button_doNothing, 9, 0},
+	{144, 285, 432, 305, CustomButton_Immediate, buttonSetSalary, Widget_Button_doNothing, 10, 0},
 };
 
 static int focusButtonId;

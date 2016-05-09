@@ -193,7 +193,7 @@ static void loadScenario(const char *scenarioName)
 	strcpy(Data_FileList.selectedScenario, scenarioName);
 	readScenarioAndInitGraphics();
 	int hasWaterEntry = 0;
-	if (Data_Scenario.riverEntryPoint.x != -1 && 
+	if (Data_Scenario.riverEntryPoint.x != -1 &&
 		Data_Scenario.riverEntryPoint.y != -1 &&
 		Data_Scenario.riverExitPoint.x != -1 &&
 		Data_Scenario.riverExitPoint.x != -1) {

@@ -7,7 +7,9 @@
 
 #include <string.h>
 
-static char buffer[100000]; // TODO tmp buffer
+#define TMP_BUFFER_SIZE 100000
+
+static char buffer[TMP_BUFFER_SIZE];
 
 static int stringsEqual(const char *a, const char *b, int len)
 {
@@ -68,11 +70,11 @@ int Loader_Model_loadC3ModelTxt()
 {
 	memset(buffer, 0, sizeof(buffer));
 	int filesize = FileSystem_getFileSize("c3_model.txt");
-	if (filesize >= 100000) {
+	if (filesize >= TMP_BUFFER_SIZE) {
 		// too large
 		return 0;
 	}
-	if (!FileSystem_readFileIntoBuffer("c3_model.txt", buffer, 100000)) {
+	if (!FileSystem_readFileIntoBuffer("c3_model.txt", buffer, TMP_BUFFER_SIZE)) {
 		// file doesn't exist
 		return 0;
 	}

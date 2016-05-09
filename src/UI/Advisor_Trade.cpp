@@ -23,40 +23,40 @@ static void resourceSettingsToggleIndustry(int param1, int param2);
 static void resourceSettingsToggleTrade(int param1, int param2);
 static void resourceSettingsToggleStockpile(int param1, int param2);
 
-static CustomButton resourceButtons[18] = {
-	{400, 398, 600, 421, buttonPrices, Widget_Button_doNothing, 1, 1, 0},
-	{100, 398, 300, 421, buttonEmpire, Widget_Button_doNothing, 1, 1, 0},
-	{80, 56, 560, 76, buttonResource, Widget_Button_doNothing, 1, 0, 0},
-	{80, 78, 560, 98, buttonResource, Widget_Button_doNothing, 1, 1, 0},
-	{80, 100, 560, 120, buttonResource, Widget_Button_doNothing, 1, 2, 0},
-	{80, 122, 560, 142, buttonResource, Widget_Button_doNothing, 1, 3, 0},
-	{80, 144, 560, 164, buttonResource, Widget_Button_doNothing, 1, 4, 0},
-	{80, 166, 560, 186, buttonResource, Widget_Button_doNothing, 1, 5, 0},
-	{80, 188, 560, 208, buttonResource, Widget_Button_doNothing, 1, 6, 0},
-	{80, 210, 560, 230, buttonResource, Widget_Button_doNothing, 1, 7, 0},
-	{80, 232, 560, 252, buttonResource, Widget_Button_doNothing, 1, 8, 0},
-	{80, 254, 560, 274, buttonResource, Widget_Button_doNothing, 1, 9, 0},
-	{80, 276, 560, 296, buttonResource, Widget_Button_doNothing, 1, 10, 0},
-	{80, 298, 560, 318, buttonResource, Widget_Button_doNothing, 1, 11, 0},
-	{80, 320, 560, 340, buttonResource, Widget_Button_doNothing, 1, 12, 0},
-	{80, 342, 560, 362, buttonResource, Widget_Button_doNothing, 1, 13, 0},
-	{80, 364, 560, 384, buttonResource, Widget_Button_doNothing, 1, 14, 0}
+static CustomButton resourceButtons[] = {
+	{400, 398, 600, 421, CustomButton_Immediate, buttonPrices, Widget_Button_doNothing, 1, 0},
+	{100, 398, 300, 421, CustomButton_Immediate, buttonEmpire, Widget_Button_doNothing, 1, 0},
+	{80, 56, 560, 76, CustomButton_Immediate, buttonResource, Widget_Button_doNothing, 0, 0},
+	{80, 78, 560, 98, CustomButton_Immediate, buttonResource, Widget_Button_doNothing, 1, 0},
+	{80, 100, 560, 120, CustomButton_Immediate, buttonResource, Widget_Button_doNothing, 2, 0},
+	{80, 122, 560, 142, CustomButton_Immediate, buttonResource, Widget_Button_doNothing, 3, 0},
+	{80, 144, 560, 164, CustomButton_Immediate, buttonResource, Widget_Button_doNothing, 4, 0},
+	{80, 166, 560, 186, CustomButton_Immediate, buttonResource, Widget_Button_doNothing, 5, 0},
+	{80, 188, 560, 208, CustomButton_Immediate, buttonResource, Widget_Button_doNothing, 6, 0},
+	{80, 210, 560, 230, CustomButton_Immediate, buttonResource, Widget_Button_doNothing, 7, 0},
+	{80, 232, 560, 252, CustomButton_Immediate, buttonResource, Widget_Button_doNothing, 8, 0},
+	{80, 254, 560, 274, CustomButton_Immediate, buttonResource, Widget_Button_doNothing, 9, 0},
+	{80, 276, 560, 296, CustomButton_Immediate, buttonResource, Widget_Button_doNothing, 10, 0},
+	{80, 298, 560, 318, CustomButton_Immediate, buttonResource, Widget_Button_doNothing, 11, 0},
+	{80, 320, 560, 340, CustomButton_Immediate, buttonResource, Widget_Button_doNothing, 12, 0},
+	{80, 342, 560, 362, CustomButton_Immediate, buttonResource, Widget_Button_doNothing, 13, 0},
+	{80, 364, 560, 384, CustomButton_Immediate, buttonResource, Widget_Button_doNothing, 14, 0}
 };
 
-static ImageButton resourceImageButtons[2] = {
+static ImageButton resourceImageButtons[] = {
 	{58, 332, 27, 27, ImageButton_Normal, 134, 0, resourceSettingsHelp, Widget_Button_doNothing, 0, 0, 1},
 	{558, 335, 24, 24, ImageButton_Normal, 134, 4, resourceSettingsOk, Widget_Button_doNothing, 0, 0, 1}
 };
 
-static ArrowButton resourceArrowButtons[2] = {
+static ArrowButton resourceArrowButtons[] = {
 	{314, 215, 17, 24, resourceSettingsExportUpDown, 1, 0},
 	{338, 215, 15, 24, resourceSettingsExportUpDown, 0, 0}
 };
 
-static CustomButton resourceCustomButtons[3] = {
-	{98, 250, 530, 280, resourceSettingsToggleIndustry, Widget_Button_doNothing, 1, 0, 0},
-	{98, 212, 530, 242, resourceSettingsToggleTrade, Widget_Button_doNothing, 1, 0, 0},
-	{98, 288, 530, 338, resourceSettingsToggleStockpile, Widget_Button_doNothing, 1, 0, 0},
+static CustomButton resourceCustomButtons[] = {
+	{98, 250, 530, 280, CustomButton_Immediate, resourceSettingsToggleIndustry, Widget_Button_doNothing, 0, 0},
+	{98, 212, 530, 242, CustomButton_Immediate, resourceSettingsToggleTrade, Widget_Button_doNothing, 0, 0},
+	{98, 288, 530, 338, CustomButton_Immediate, resourceSettingsToggleStockpile, Widget_Button_doNothing, 0, 0},
 };
 
 static int focusButtonId;

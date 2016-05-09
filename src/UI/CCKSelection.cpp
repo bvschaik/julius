@@ -32,21 +32,21 @@ static ImageButton imageButtons[] = {
 };
 
 static CustomButton customButtons[] = {
-	{28, 220, 280, 236, buttonSelectItem, Widget_Button_doNothing, 1, 0, 0},
-	{28, 236, 280, 252, buttonSelectItem, Widget_Button_doNothing, 1, 1, 0},
-	{28, 252, 280, 268, buttonSelectItem, Widget_Button_doNothing, 1, 2, 0},
-	{28, 268, 280, 284, buttonSelectItem, Widget_Button_doNothing, 1, 3, 0},
-	{28, 284, 280, 300, buttonSelectItem, Widget_Button_doNothing, 1, 4, 0},
-	{28, 300, 280, 316, buttonSelectItem, Widget_Button_doNothing, 1, 5, 0},
-	{28, 316, 280, 332, buttonSelectItem, Widget_Button_doNothing, 1, 6, 0},
-	{28, 332, 280, 348, buttonSelectItem, Widget_Button_doNothing, 1, 7, 0},
-	{28, 348, 280, 364, buttonSelectItem, Widget_Button_doNothing, 1, 8, 0},
-	{28, 364, 280, 380, buttonSelectItem, Widget_Button_doNothing, 1, 9, 0},
-	{28, 380, 280, 396, buttonSelectItem, Widget_Button_doNothing, 1, 10, 0},
-	{28, 396, 280, 412, buttonSelectItem, Widget_Button_doNothing, 1, 11, 0},
-	{28, 412, 280, 428, buttonSelectItem, Widget_Button_doNothing, 1, 12, 0},
-	{28, 428, 280, 444, buttonSelectItem, Widget_Button_doNothing, 1, 13, 0},
-	{28, 444, 280, 460, buttonSelectItem, Widget_Button_doNothing, 1, 14, 0},
+	{28, 220, 280, 236, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 0, 0},
+	{28, 236, 280, 252, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 1, 0},
+	{28, 252, 280, 268, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 2, 0},
+	{28, 268, 280, 284, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 3, 0},
+	{28, 284, 280, 300, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 4, 0},
+	{28, 300, 280, 316, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 5, 0},
+	{28, 316, 280, 332, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 6, 0},
+	{28, 332, 280, 348, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 7, 0},
+	{28, 348, 280, 364, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 8, 0},
+	{28, 364, 280, 380, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 9, 0},
+	{28, 380, 280, 396, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 10, 0},
+	{28, 396, 280, 412, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 11, 0},
+	{28, 412, 280, 428, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 12, 0},
+	{28, 428, 280, 444, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 13, 0},
+	{28, 444, 280, 460, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 14, 0},
 };
 
 static int scrollPosition;

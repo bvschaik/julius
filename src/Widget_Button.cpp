@@ -115,23 +115,22 @@ int Widget_Button_handleCustomButtons(int xOffset, int yOffset, CustomButton *bu
 		return 0;
 	}
 	CustomButton *button = &buttons[buttonId-1];
-	if (button->type == 1) {
-		// TODO
-	} else if (button->type == 2) {
-		// TODO
-	} else if (button->type == 3) {
-		// TODO
-	} else if (button->type == 4) {
-		// TODO
-	}
-
-	// TODO simple implementation
-	if (Data_Mouse.left.wentDown) {
-		button->leftClickHandler(button->parameter1, button->parameter2);
-	} else if (Data_Mouse.right.wentUp) {
-		button->rightClickHandler(button->parameter1, button->parameter2);
-	} else {
-		return 0;
+	if (button->type == CustomButton_Immediate) {
+		if (Data_Mouse.left.wentDown || Data_Mouse.left.isDown) {
+			button->leftClickHandler(button->parameter1, button->parameter2);
+		} else if (Data_Mouse.right.wentDown) {
+			button->rightClickHandler(button->parameter1, button->parameter2);
+		} else {
+			return 0;
+		}
+	} else if (button->type == CustomButton_OnMouseUp) {
+		if (Data_Mouse.left.wentUp) {
+			button->leftClickHandler(button->parameter1, button->parameter2);
+		} else if (Data_Mouse.right.wentUp) {
+			button->rightClickHandler(button->parameter1, button->parameter2);
+		} else {
+			return 0;
+		}
 	}
 	return buttonId;
 }
