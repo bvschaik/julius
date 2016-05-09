@@ -267,43 +267,43 @@ int UI_Sidebar_handleMouse()
 	data.focusButtonForTooltip = 0;
 	if (Data_State.sidebarCollapsed) {
 		int xOffset = Data_Screen.width - SIDEBAR_BORDER - 42;
-		if ((buttonId = Widget_Button_handleImageButtons(xOffset, 24, buttonExpandSidebar, 1))) {
+		Widget_Button_handleImageButtons(xOffset, 24, buttonExpandSidebar, 1, &buttonId);
+		if (buttonId) {
 			data.focusButtonForTooltip = 12;
-			return 1;
 		}
-		if ((buttonId = Widget_Button_handleImageButtons(xOffset, 24, buttonBuildCollapsed, 12))) {
+		Widget_Button_handleImageButtons(xOffset, 24, buttonBuildCollapsed, 12, &buttonId);
+		if (buttonId) {
 			data.focusButtonForTooltip = buttonId + 19;
-			return 1;
 		}
 	} else {
 		if (UI_Minimap_handleClick()) {
 			return 1;
 		}
 		int xOffset = XOFFSET_EXPANDED;
-		if ((buttonId = Widget_Button_handleImageButtons(xOffset, 24, buttonOverlaysCollapseSidebar, 2))) {
+		Widget_Button_handleImageButtons(xOffset, 24, buttonOverlaysCollapseSidebar, 2, &buttonId);
+		if (buttonId) {
 			data.focusButtonForTooltip = buttonId + 9;
-			return 1;
 		}
-		if ((buttonId = Widget_Button_handleImageButtons(xOffset, 24, buttonBuildExpanded, 15))) {
+		Widget_Button_handleImageButtons(xOffset, 24, buttonBuildExpanded, 15, &buttonId);
+		if (buttonId) {
 			data.focusButtonForTooltip = buttonId + 19;
-			return 1;
 		}
-		if ((buttonId = Widget_Button_handleImageButtons(xOffset, 24, buttonTopExpanded, 6))) {
+		Widget_Button_handleImageButtons(xOffset, 24, buttonTopExpanded, 6, &buttonId);
+		if (buttonId) {
 			data.focusButtonForTooltip = buttonId + 39;
-			return 1;
 		}
 	}
-	return 0;
+	return buttonId != 0;
 }
 
 void UI_Sidebar_handleMouseBuildButtons()
 {
 	if (Data_State.sidebarCollapsed) {
 		int xOffset = Data_Screen.width - SIDEBAR_BORDER - 42;
-		Widget_Button_handleImageButtons(xOffset, 24, buttonBuildCollapsed, 12);
+		Widget_Button_handleImageButtons(xOffset, 24, buttonBuildCollapsed, 12, 0);
 	} else {
 		int xOffset = XOFFSET_EXPANDED;
-		Widget_Button_handleImageButtons(xOffset, 24, buttonBuildExpanded, 15);
+		Widget_Button_handleImageButtons(xOffset, 24, buttonBuildExpanded, 15, 0);
 	}
 }
 

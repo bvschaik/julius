@@ -199,27 +199,31 @@ void Widget_Button_drawImageButtons(int xOffset, int yOffset, ImageButton *butto
 	}
 }
 
-int Widget_Button_handleImageButtons(int xOffset, int yOffset, ImageButton *buttons, int numButtons)
+int Widget_Button_handleImageButtons(int xOffset, int yOffset, ImageButton *buttons, int numButtons, int *focusButtonId)
 {
 	imageButtonFadePressedEffect(buttons, numButtons);
 	imageButtonRemovePressedEffectBuild(buttons, numButtons);
 	int mouseX = Data_Mouse.x;
 	int mouseY = Data_Mouse.y;
 	ImageButton *hitButton = 0;
-	int hitIndex = 0;
+	if (focusButtonId) {
+		*focusButtonId = 0;
+	}
 	for (int i = 0; i < numButtons; i++) {
 		ImageButton *btn = &buttons[i];
 		if (btn->focused) {
 			btn->focused--;
 		}
-		if (btn->enabled) {
-			if (xOffset + btn->xOffset <= mouseX &&
-				xOffset + btn->xOffset + btn->width > mouseX &&
-				yOffset + btn->yOffset <= mouseY &&
-				yOffset + btn->yOffset + btn->height > mouseY) {
+		if (xOffset + btn->xOffset <= mouseX &&
+			xOffset + btn->xOffset + btn->width > mouseX &&
+			yOffset + btn->yOffset <= mouseY &&
+			yOffset + btn->yOffset + btn->height > mouseY) {
+			if (focusButtonId) {
+				*focusButtonId = i + 1;
+			}
+			if (btn->enabled) {
 				btn->focused = 2;
 				hitButton = btn;
-				hitIndex = i + 1;
 			}
 		}
 	}
@@ -252,5 +256,5 @@ int Widget_Button_handleImageButtons(int xOffset, int yOffset, ImageButton *butt
 			hitButton->leftClickHandler(hitButton->parameter1, hitButton->parameter2);
  		}
 	}
-	return hitIndex;
+	return 1;
 }

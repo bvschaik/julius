@@ -54,7 +54,7 @@ void UI_NewCareerDialog_handleMouse()
 
 	int xOffset = Data_Screen.offset640x480.x;
 	int yOffset = Data_Screen.offset640x480.y;
-	if (Widget_Button_handleImageButtons(xOffset + 464, yOffset + 249, &imageButtonStartMission, 1)) {
+	if (Widget_Button_handleImageButtons(xOffset + 464, yOffset + 249, &imageButtonStartMission, 1, 0)) {
 		return;
 	}
 	if (Data_KeyboardInput.accepted) {

@@ -220,7 +220,9 @@ void UI_Advisors_handleMouse()
 	if (Widget_Button_handleCustomButtons(baseOffsetX, baseOffsetY + 440, advisorButtons, 13, &focusButtonId)) {
 		return;
 	}
-	if (Widget_Button_handleImageButtons(baseOffsetX, baseOffsetY + 16 * (advisorHeight - 2), &helpButton, 1)) {
+	int buttonId;
+	Widget_Button_handleImageButtons(baseOffsetX, baseOffsetY + 16 * (advisorHeight - 2), &helpButton, 1, &buttonId);
+	if (buttonId) {
 		focusButtonId = -1;
 		return;
 	}

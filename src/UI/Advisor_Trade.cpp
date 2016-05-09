@@ -352,7 +352,7 @@ void UI_ResourceSettingsDialog_handleMouse()
 
 	if (Data_Mouse.right.wentUp) {
 		UI_Window_goTo(Window_Advisors);
-	} else if (Widget_Button_handleImageButtons(baseOffsetX, baseOffsetY, resourceImageButtons, 2)) {
+	} else if (Widget_Button_handleImageButtons(baseOffsetX, baseOffsetY, resourceImageButtons, 2, 0)) {
 		return;
 	} else if (Data_CityInfo.resourceTradeStatus[selectedResourceId] == TradeStatus_Export &&
 			Widget_Button_handleArrowButtons(baseOffsetX, baseOffsetY, resourceArrowButtons, 2)) {

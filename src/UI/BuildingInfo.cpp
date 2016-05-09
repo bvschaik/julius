@@ -528,17 +528,17 @@ void UI_BuildingInfo_handleMouse()
 	}
 	// general buttons
 	if (context.storageShowSpecialOrders) {
-		focusImageButtonId = Widget_Button_handleImageButtons(context.xOffset, 432,
-			imageButtonsHelpExit, 2);
+		Widget_Button_handleImageButtons(context.xOffset, 432,
+			imageButtonsHelpExit, 2, &focusImageButtonId);
 	} else {
-		focusImageButtonId = Widget_Button_handleImageButtons(
+		Widget_Button_handleImageButtons(
 			context.xOffset, context.yOffset + 16 * context.heightBlocks - 40,
-			imageButtonsHelpExit, 2);
+			imageButtonsHelpExit, 2, &focusImageButtonId);
 	}
 	if (context.advisor) {
 		Widget_Button_handleImageButtons(
 			context.xOffset, context.yOffset + 16 * context.heightBlocks - 40,
-			imageButtonsAdvisor, 1);
+			imageButtonsAdvisor, 1, 0);
 	}
 	// building-specific buttons
 	if (context.type == BuildingInfoType_None) {

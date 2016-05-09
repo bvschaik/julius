@@ -56,7 +56,7 @@ static const int savegameVersion = 0x66;
 static int savegameFileVersion;
 static char playerNames[2][32];
 
-static char compressBuffer[COMPRESS_BUFFER_SIZE]; // TODO use global malloc'ed scratchpad buffer
+static char compressBuffer[COMPRESS_BUFFER_SIZE];
 
 static int endMarker = 0;
 

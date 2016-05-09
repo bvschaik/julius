@@ -900,13 +900,13 @@ int Widget_RichText_handleScrollbar()
 	if (Widget_Button_handleImageButtons(
 		data.xText + 16 * data.textWidthBlocks - 1,
 		data.yText,
-		&imageButtonScrollUp, 1)) {
+		&imageButtonScrollUp, 1, 0)) {
 			return 1;
 	}
 	if (Widget_Button_handleImageButtons(
 		data.xText + 16 * data.textWidthBlocks - 1,
 		data.yText + 16 * data.textHeightBlocks - 26,
-		&imageButtonScrollDown, 1)) {
+		&imageButtonScrollDown, 1, 0)) {
 			return 1;
 	}
 	return handleScrollbarDot();

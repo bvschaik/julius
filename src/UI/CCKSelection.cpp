@@ -233,7 +233,7 @@ void UI_CCKSelection_handleMouse()
 		return;
 	}
 	if (Widget_Button_handleImageButtons(
-		Data_Screen.offset640x480.x, Data_Screen.offset640x480.y, imageButtons, 3)) {
+		Data_Screen.offset640x480.x, Data_Screen.offset640x480.y, imageButtons, 3, 0)) {
 		return;
 	}
 	Widget_Button_handleCustomButtons(

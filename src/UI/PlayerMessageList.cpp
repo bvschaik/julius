@@ -166,29 +166,28 @@ void UI_PlayerMessageList_handleMouse()
 	} else if (Data_Mouse.scrollUp) {
 		buttonScroll(0, 3);
 	}
-	if (Widget_Button_handleImageButtons(
-		data.x + 16, data.y + 16 * data.heightBlocks - 42,
-		&imageButtonHelp, 1)) {
-			focusButtonId = 11;
-			return;
+	int buttonId;
+	Widget_Button_handleImageButtons(data.x + 16, data.y + 16 * data.heightBlocks - 42, &imageButtonHelp, 1, &buttonId);
+	if (buttonId) {
+		focusButtonId = 11;
+		return;
 	}
-	if (Widget_Button_handleImageButtons(
-		data.x + 16 * data.widthBlocks - 38, data.y + 16 * data.heightBlocks - 36,
-		&imageButtonClose, 1)) {
-			focusButtonId = 12;
-			return;
+	Widget_Button_handleImageButtons(data.x + 16 * data.widthBlocks - 38,
+		data.y + 16 * data.heightBlocks - 36, &imageButtonClose, 1, &buttonId);
+	if (buttonId) {
+		focusButtonId = 12;
+		return;
 	}
-	if (Widget_Button_handleImageButtons(
-		data.xText + 16 * data.textWidthBlocks, data.yText,
-		&imageButtonScrollUp, 1)) {
-			focusButtonId = 13;
-			return;
+	Widget_Button_handleImageButtons(data.xText + 16 * data.textWidthBlocks, data.yText, &imageButtonScrollUp, 1, &buttonId);
+	if (buttonId) {
+		focusButtonId = 13;
+		return;
 	}
-	if (Widget_Button_handleImageButtons(
-		data.xText + 16 * data.textWidthBlocks, data.yText + 16 * data.textHeightBlocks - 26,
-		&imageButtonScrollDown, 1)) {
-			focusButtonId = 13;
-			return;
+	Widget_Button_handleImageButtons(data.xText + 16 * data.textWidthBlocks,
+		data.yText + 16 * data.textHeightBlocks - 26, &imageButtonScrollDown, 1, &buttonId);
+	if (buttonId) {
+		focusButtonId = 13;
+		return;
 	}
 	int oldFocusButtonId = focusButtonId;
 	if (Widget_Button_handleCustomButtons(

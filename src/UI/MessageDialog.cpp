@@ -452,10 +452,10 @@ void UI_MessageDialog_handleMouse()
 		Widget_RichText_scroll(0, 3);
 	}
 	if (data.showVideo) {
-		if (Widget_Button_handleImageButtons(data.x + 16, data.y + 408, getAdvisorButton(), 1)) {
+		if (Widget_Button_handleImageButtons(data.x + 16, data.y + 408, getAdvisorButton(), 1, 0)) {
 			return;
 		}
-		if (Widget_Button_handleImageButtons(data.x + 372, data.y + 410, &imageButtonClose, 1)) {
+		if (Widget_Button_handleImageButtons(data.x + 372, data.y + 410, &imageButtonClose, 1, 0)) {
 			return;
 		}
 		return;
@@ -464,16 +464,16 @@ void UI_MessageDialog_handleMouse()
 	struct Data_Language_MessageEntry *msg = &Data_Language_Message.index[data.textId];
 
 	if (msg->type == Type_Manual && Widget_Button_handleImageButtons(
-		data.x + 16, data.y + 16 * msg->heightBlocks - 36, &imageButtonBack, 1)) {
+		data.x + 16, data.y + 16 * msg->heightBlocks - 36, &imageButtonBack, 1, 0)) {
 		return;
 	}
 	if (msg->type == Type_Message) {
 		if (Widget_Button_handleImageButtons(data.x + 16, data.y + 16 * msg->heightBlocks - 40,
-			getAdvisorButton(), 1)) {
+			getAdvisorButton(), 1, 0)) {
 			return;
 		}
 		if (msg->messageType == MessageType_Disaster || msg->messageType == MessageType_Invasion) {
-			if (Widget_Button_handleImageButtons(data.x + 64, data.yText + 36, &imageButtonGoToProblem, 1)) {
+			if (Widget_Button_handleImageButtons(data.x + 64, data.yText + 36, &imageButtonGoToProblem, 1, 0)) {
 				return;
 			}
 		}
@@ -482,7 +482,7 @@ void UI_MessageDialog_handleMouse()
 	if (Widget_Button_handleImageButtons(
 		data.x + 16 * msg->widthBlocks - 38,
 		data.y + 16 * msg->heightBlocks - 36,
-		&imageButtonClose, 1)) {
+		&imageButtonClose, 1, 0)) {
 		return;
 	}
 	Widget_RichText_handleScrollbar();

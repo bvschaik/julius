@@ -508,16 +508,20 @@ void UI_Empire_handleMouse()
 {
 	Empire_scrollMap(Scroll_getDirection());
 	data.focusButtonId = 0;
-	if (Widget_Button_handleImageButtons(data.xMin + 20, data.yMax - 44, imageButtonHelp, 1)) {
+	int buttonId;
+	Widget_Button_handleImageButtons(data.xMin + 20, data.yMax - 44, imageButtonHelp, 1, &buttonId);
+	if (buttonId) {
 		data.focusButtonId = 1;
-		return;
 	}
-	if (Widget_Button_handleImageButtons(data.xMax - 44, data.yMax - 44, imageButtonReturnToCity, 1)) {
+	Widget_Button_handleImageButtons(data.xMax - 44, data.yMax - 44, imageButtonReturnToCity, 1, &buttonId);
+	if (buttonId) {
 		data.focusButtonId = 2;
-		return;
 	}
-	if (Widget_Button_handleImageButtons(data.xMax - 44, data.yMax - 100, imageButtonAdvisor, 1)) {
+	Widget_Button_handleImageButtons(data.xMax - 44, data.yMax - 100, imageButtonAdvisor, 1, &buttonId);
+	if (buttonId) {
 		data.focusButtonId = 3;
+	}
+	if (data.focusButtonId) {
 		return;
 	}
 	int objectId = getSelectedObject();
@@ -673,5 +677,5 @@ void UI_TradeOpenedDialog_handleMouse()
 {
 	Widget_Button_handleImageButtons(
 		Data_Screen.offset640x480.x, Data_Screen.offset640x480.y,
-		imageButtonsTradeOpened, 2);
+		imageButtonsTradeOpened, 2, 0);
 }

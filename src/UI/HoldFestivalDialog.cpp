@@ -130,10 +130,9 @@ void UI_HoldFestivalDialog_handleMouse()
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
 
-	focusImageButtonId = Widget_Button_handleImageButtons(baseOffsetX, baseOffsetY, imageButtonsBottom, 4);
-	if (!focusImageButtonId) {
-		Widget_Button_handleCustomButtons(baseOffsetX, baseOffsetY, buttonsGodsSize, 8, &focusButtonId);
-	} else {
+	Widget_Button_handleImageButtons(baseOffsetX, baseOffsetY, imageButtonsBottom, 4, &focusImageButtonId);
+	Widget_Button_handleCustomButtons(baseOffsetX, baseOffsetY, buttonsGodsSize, 8, &focusButtonId);
+	if (focusImageButtonId) {
 		focusButtonId = 0;
 	}
 }

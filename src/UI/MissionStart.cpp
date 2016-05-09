@@ -150,7 +150,7 @@ void UI_MissionStart_Selection_handleMouse()
 		UI_MissionStart_show();
 	}
 	if (data.choice > 0) {
-		if (Widget_Button_handleImageButtons(xOffset + 580, yOffset + 410, &imageButtonStartMission, 1)) {
+		if (Widget_Button_handleImageButtons(xOffset + 580, yOffset + 410, &imageButtonStartMission, 1, 0)) {
 			return;
 		}
 	}
@@ -324,11 +324,11 @@ void UI_MissionStart_BriefingInitial_handleMouse()
 	int xOffset = Data_Screen.offset640x480.x + 16;
 	int yOffset = Data_Screen.offset640x480.y + 32;
 
-	if (Widget_Button_handleImageButtons(xOffset + 500, yOffset + 394, &imageButtonStartMission, 1)) {
+	if (Widget_Button_handleImageButtons(xOffset + 500, yOffset + 394, &imageButtonStartMission, 1, 0)) {
 		return;
 	}
 	if (Data_Settings.currentMissionId >= 2) {
-		if (Widget_Button_handleImageButtons(xOffset + 10, yOffset + 396, &imageButtonBackToSelection, 1)) {
+		if (Widget_Button_handleImageButtons(xOffset + 10, yOffset + 396, &imageButtonBackToSelection, 1, 0)) {
 			return;
 		}
 	}
@@ -340,7 +340,7 @@ void UI_MissionStart_BriefingReview_handleMouse()
 	int xOffset = Data_Screen.offset640x480.x + 16;
 	int yOffset = Data_Screen.offset640x480.y + 32;
 
-	if (Widget_Button_handleImageButtons(xOffset + 500, yOffset + 394, &imageButtonStartMission, 1)) {
+	if (Widget_Button_handleImageButtons(xOffset + 500, yOffset + 394, &imageButtonStartMission, 1, 0)) {
 		return;
 	}
 	Widget_RichText_handleScrollbar();
@@ -356,8 +356,6 @@ static void briefingBack(int param1, int param2)
 
 static void startMission(int param1, int param2)
 {
-	// TODO mouse over buttons??
-	// TODO dword_9D7B90??
 	Data_State.previousOverlay = 0;
 	switch (UI_Window_getId()) {
 		case Window_NewCareerDialog:
