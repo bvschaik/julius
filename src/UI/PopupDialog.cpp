@@ -13,16 +13,8 @@ static void buttonOk(int param1, int param2);
 static void buttonCancel(int param1, int param2);
 
 static ImageButton buttons[] = {
-	{
-		192, 100, 34, 34, 4, 96, 0,
-		buttonOk, Widget_Button_doNothing,
-		1, 0, 0, 0, 1, 0
-	},
-	{
-		256, 100, 34, 34, 4, 96, 4,
-		buttonCancel, Widget_Button_doNothing,
-		1, 0, 0, 0, 0, 0
-	},
+	{192, 100, 34, 34, ImageButton_Normal, 96, 0, buttonOk, Widget_Button_doNothing, 1, 0, 1},
+	{256, 100, 34, 34, ImageButton_Normal, 96, 4, buttonCancel, Widget_Button_doNothing, 0, 0, 1},
 };
 
 static struct {

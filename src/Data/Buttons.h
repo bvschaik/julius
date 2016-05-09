@@ -1,30 +1,31 @@
 #ifndef DATA_BUTTONS_H
 #define DATA_BUTTONS_H
 
-/*
-struct Data_Buttons_ArrowButton {
-	int foo;
+#include "Types.h"
+
+enum {
+	ImageButton_Normal = 4,
+	ImageButton_Scroll = 6,
+	ImageButton_Build = 2
 };
-extern struct Data_Buttons_Arrow {
-	struct Data_Buttons_ArrowButton difficultyOptions[3];
-} Data_Buttons_Arrow;
-*/
+
 typedef struct {
 	short xOffset;
 	short yOffset;
 	short width;
 	short height;
-	short field_8;
+	short buttonType;
 	short graphicCollection;
 	short graphicIdOffset;
 	void (*leftClickHandler)(int param1, int param2);
 	void (*rightClickHandler)(int param1, int param2);
-	char enabled;
-	char hasClickEffect;
-	char hasFocus;
-	char field_1B;
 	int parameter1;
 	int parameter2;
+	char enabled;
+	// state
+	char pressed;
+	char focused;
+	TimeMillis pressedSince;
 } ImageButton;
 
 typedef struct {

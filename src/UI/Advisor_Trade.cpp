@@ -44,8 +44,8 @@ static CustomButton resourceButtons[18] = {
 };
 
 static ImageButton resourceImageButtons[2] = {
-	{58, 332, 27, 27, 4, 134, 0, resourceSettingsHelp, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0},
-	{558, 335, 24, 24, 4, 134, 4, resourceSettingsOk, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0}
+	{58, 332, 27, 27, ImageButton_Normal, 134, 0, resourceSettingsHelp, Widget_Button_doNothing, 0, 0, 1},
+	{558, 335, 24, 24, ImageButton_Normal, 134, 4, resourceSettingsOk, Widget_Button_doNothing, 0, 0, 1}
 };
 
 static ArrowButton resourceArrowButtons[2] = {

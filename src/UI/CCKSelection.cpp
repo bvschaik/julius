@@ -26,9 +26,9 @@ static void buttonScroll(int param1, int param2);
 static void buttonStartScenario(int param1, int param2);
 
 static ImageButton imageButtons[] = {
-	{276, 210, 34, 34, 4, 96, 8, buttonScroll, Widget_Button_doNothing, 1, 0, 0, 0, 0, 1},
-	{276, 440, 34, 34, 4, 96, 12, buttonScroll, Widget_Button_doNothing, 1, 0, 0, 0, 1, 1},
-	{600, 440, 27, 27, 4, 92, 56, buttonStartScenario, Widget_Button_doNothing, 1, 0, 0, 0, 1, 0},
+	{276, 210, 34, 34, ImageButton_Normal, 96, 8, buttonScroll, Widget_Button_doNothing, 0, 1, 1},
+	{276, 440, 34, 34, ImageButton_Normal, 96, 12, buttonScroll, Widget_Button_doNothing, 1, 1, 1},
+	{600, 440, 27, 27, ImageButton_Normal, 92, 56, buttonStartScenario, Widget_Button_doNothing, 1, 0, 1},
 };
 
 static CustomButton customButtons[] = {

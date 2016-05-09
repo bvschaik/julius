@@ -18,10 +18,10 @@ static void buttonClose(int param1, int param2);
 static void buttonHoldFestival(int param1, int param2);
 
 static ImageButton imageButtonsBottom[] = {
-	{58, 316, 27, 27, 4, 134, 0, buttonHelp, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0},
-	{558, 319, 24, 24, 4, 134, 4, buttonClose, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0},
-	{358, 317, 34, 34, 4, 96, 0, buttonHoldFestival, Widget_Button_doNothing, 1, 0, 0, 0, 1, 0},
-	{400, 317, 34, 34, 4, 96, 4, buttonClose, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0},
+	{58, 316, 27, 27, ImageButton_Normal, 134, 0, buttonHelp, Widget_Button_doNothing, 0, 0, 1},
+	{558, 319, 24, 24, ImageButton_Normal, 134, 4, buttonClose, Widget_Button_doNothing, 0, 0, 1},
+	{358, 317, 34, 34, ImageButton_Normal, 96, 0, buttonHoldFestival, Widget_Button_doNothing, 1, 0, 1},
+	{400, 317, 34, 34, ImageButton_Normal, 96, 4, buttonClose, Widget_Button_doNothing, 0, 0, 1},
 };
 
 static CustomButton buttonsGodsSize[] = {

@@ -6,6 +6,10 @@
 #include "Data/Mouse.h"
 #include "Data/Graphics.h"
 
+#define PRESSED_EFFECT_MILLIS 100
+#define PRESSED_REPEAT_INITIAL_MILLIS 300
+#define PRESSED_REPEAT_MILLIS 50
+
 static int getArrowButton(int xOffset, int yOffset, ArrowButton *buttons, int numButtons);
 static int getCustomButton(int xOffset, int yOffset, CustomButton *buttons, int numButtons);
 
@@ -126,6 +130,8 @@ int Widget_Button_handleCustomButtons(int xOffset, int yOffset, CustomButton *bu
 		button->leftClickHandler(button->parameter1, button->parameter2);
 	} else if (Data_Mouse.right.wentUp) {
 		button->rightClickHandler(button->parameter1, button->parameter2);
+	} else {
+		return 0;
 	}
 	return buttonId;
 }
@@ -145,15 +151,45 @@ static int getCustomButton(int xOffset, int yOffset, CustomButton *buttons, int 
 	return 0;
 }
 
+static void imageButtonFadePressedEffect(ImageButton *buttons, int numButtons)
+{
+	TimeMillis currentTime = Time_getMillis();
+	for (int i = 0; i < numButtons; i++) {
+		ImageButton *btn = &buttons[i];
+		if (btn->pressed) {
+			if (btn->buttonType == ImageButton_Normal) {
+				if (btn->pressedSince + PRESSED_EFFECT_MILLIS < currentTime) {
+					btn->pressed = 0;
+				}
+			} else if (btn->buttonType == ImageButton_Scroll) {
+				if (btn->pressedSince + PRESSED_EFFECT_MILLIS < currentTime && !Data_Mouse.left.isDown) {
+					btn->pressed = 0;
+				}
+			}
+		}
+	}
+}
+
+static void imageButtonRemovePressedEffectBuild(ImageButton *buttons, int numButtons)
+{
+	for (int i = 0; i < numButtons; i++) {
+		ImageButton *btn = &buttons[i];
+		if (btn->pressed && btn->buttonType == ImageButton_Build) {
+			btn->pressed = 0;
+		}
+	}
+}
+
 void Widget_Button_drawImageButtons(int xOffset, int yOffset, ImageButton *buttons, int numButtons)
 {
+	imageButtonFadePressedEffect(buttons, numButtons);
 	for (int i = 0; i < numButtons; i++) {
 		ImageButton *btn = &buttons[i];
 		int graphicId = GraphicId(btn->graphicCollection) + btn->graphicIdOffset;
 		if (btn->enabled) {
-			if (btn->hasClickEffect) {
+			if (btn->pressed) {
 				graphicId += 2;
-			} else if (btn->hasFocus) {
+			} else if (btn->focused) {
 				graphicId += 1;
 			}
 		} else {
@@ -165,110 +201,23 @@ void Widget_Button_drawImageButtons(int xOffset, int yOffset, ImageButton *butto
 
 int Widget_Button_handleImageButtons(int xOffset, int yOffset, ImageButton *buttons, int numButtons)
 {
-	// TODO field_19 manipulation
-	for (int i = 0; i < numButtons; i++) {
-		ImageButton *btn = &buttons[i];
-		if (btn->hasClickEffect) {
-			if (btn->field_8 == 4 || btn->field_8 == 6) {
-				btn->hasClickEffect--;
-				if (btn->hasClickEffect <= 0) {
-					btn->hasClickEffect = 0;
-				}
-			}
-		}
-	}
-	// end field_19 manipulation
+	imageButtonFadePressedEffect(buttons, numButtons);
+	imageButtonRemovePressedEffectBuild(buttons, numButtons);
 	int mouseX = Data_Mouse.x;
 	int mouseY = Data_Mouse.y;
-	int change = 0;
 	ImageButton *hitButton = 0;
 	int hitIndex = 0;
 	for (int i = 0; i < numButtons; i++) {
 		ImageButton *btn = &buttons[i];
-		if (btn->hasFocus) {
-			btn->hasFocus--;
-			if (!btn->hasFocus) {
-				change = 1;
-			}
+		if (btn->focused) {
+			btn->focused--;
 		}
-		if (xOffset + btn->xOffset <= mouseX &&
-			xOffset + btn->xOffset + btn->width > mouseX &&
-			yOffset + btn->yOffset <= mouseY &&
-			yOffset + btn->yOffset + btn->height > mouseY) {
-			// TODO button_x = Data_Mouse.x; button_y = Data_Mouse.y
-			if (btn->enabled) {
-				if (!btn->hasFocus) {
-					change = 1;
-				}
-				btn->hasFocus = 2;
-			}
-			hitButton = btn;
-			hitIndex = i + 1;
-		}
-	}
-	if (!hitButton) {
-		return 0;
-	}
-	// TODO field_19 manipulation
-	if (hitButton->field_8 == 2) {
-		for (int i = 0; i < numButtons; i++) {
-			ImageButton *btn = &buttons[i];
-			if (btn->hasClickEffect) {
-				if (btn->field_8 == 2) {
-					btn->hasClickEffect = 0;
-				}
-			}
-		}
-	}
-	if (Data_Mouse.left.wentDown) {
-		Sound_Effects_playChannel(SoundChannel_Icon);
-		hitButton->hasClickEffect = 20;
-		hitButton->leftClickHandler(hitButton->parameter1, hitButton->parameter2);
-	} else if (Data_Mouse.right.wentUp) {
-		hitButton->hasClickEffect = 20;
-		hitButton->rightClickHandler(hitButton->parameter1, hitButton->parameter2);
-	}
-	return hitIndex;
-}
-
-int Widget_Button_handleImageButtonsClickOnly(int xOffset, int yOffset, ImageButton *buttons, int numButtons)
-{
-/*	// TODO field_19 manipulation
-	for (int i = 0; i < numButtons; i++) {
-		ImageButton *btn = &buttons[i];
-		if (btn->hasClickEffect) {
-			if (btn->field_8 == 4 || btn->field_8 == 6) {
-				btn->hasClickEffect--;
-				if (btn->hasClickEffect <= 0) {
-					btn->hasClickEffect = 0;
-				}
-			}
-		}
-	}*/
-	// end field_19 manipulation
-	int mouseX = Data_Mouse.x;
-	int mouseY = Data_Mouse.y;
-	int change = 0;
-	ImageButton *hitButton = 0;
-	int hitIndex = 0;
-	for (int i = 0; i < numButtons; i++) {
-		ImageButton *btn = &buttons[i];
-		/*if (btn->hasFocus) {
-			btn->hasFocus--;
-			if (!btn->hasFocus) {
-				change = 1;
-			}
-		}*/
 		if (btn->enabled) {
 			if (xOffset + btn->xOffset <= mouseX &&
 				xOffset + btn->xOffset + btn->width > mouseX &&
 				yOffset + btn->yOffset <= mouseY &&
 				yOffset + btn->yOffset + btn->height > mouseY) {
-				// TODO button_x = Data_Mouse.x; button_y = Data_Mouse.y
-				/*if (!btn->hasFocus) {
-					change = 1;
-				}
-				btn->hasFocus = 2;*/
+				btn->focused = 2;
 				hitButton = btn;
 				hitIndex = i + 1;
 			}
@@ -277,24 +226,31 @@ int Widget_Button_handleImageButtonsClickOnly(int xOffset, int yOffset, ImageBut
 	if (!hitButton) {
 		return 0;
 	}
-	// TODO field_19 manipulation
-	/*if (hitButton->field_8 == 2) {
-		for (int i = 0; i < numButtons; i++) {
-			ImageButton *btn = &buttons[i];
-			if (btn->hasClickEffect) {
-				if (btn->field_8 == 2) {
-					btn->hasClickEffect = 0;
-				}
-			}
+	if (hitButton->buttonType == ImageButton_Scroll) {
+		if (!Data_Mouse.left.wentDown && !Data_Mouse.left.isDown) {
+			return 0;
 		}
-	}*/
+	} else if (hitButton->buttonType == ImageButton_Build || hitButton->buttonType == ImageButton_Normal) {
+		if (!Data_Mouse.left.wentDown && !Data_Mouse.right.wentDown) {
+			return 0;
+		}
+	}
 	if (Data_Mouse.left.wentDown) {
 		Sound_Effects_playChannel(SoundChannel_Icon);
-		hitButton->hasClickEffect = 20;
+		hitButton->pressed = 1;
+		hitButton->pressedSince = Time_getMillis();
 		hitButton->leftClickHandler(hitButton->parameter1, hitButton->parameter2);
 	} else if (Data_Mouse.right.wentUp) {
-		hitButton->hasClickEffect = 20;
+		hitButton->pressed = 1;
+		hitButton->pressedSince = Time_getMillis();
 		hitButton->rightClickHandler(hitButton->parameter1, hitButton->parameter2);
+	} else if (hitButton->buttonType == ImageButton_Scroll && Data_Mouse.left.isDown) {
+		TimeMillis delay = hitButton->pressed == 2 ? PRESSED_REPEAT_MILLIS : PRESSED_REPEAT_INITIAL_MILLIS;
+		if (hitButton->pressedSince + delay <= Time_getMillis()) {
+			hitButton->pressed = 2;
+			hitButton->pressedSince = Time_getMillis();
+			hitButton->leftClickHandler(hitButton->parameter1, hitButton->parameter2);
+ 		}
 	}
 	return hitIndex;
 }

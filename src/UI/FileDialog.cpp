@@ -24,10 +24,10 @@ static void buttonScroll(int isDown, int numLines);
 static void buttonSelectItem(int index, int numLines);
 
 static ImageButton imageButtons[] = {
-	{344, 335, 34, 34, 4, 96, 0, buttonOkCancel, Widget_Button_doNothing, 1, 0, 0, 0, 1, 0},
-	{392, 335, 34, 34, 4, 96, 4, buttonOkCancel, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0},
-	{464, 120, 34, 34, 4, 96, 8, buttonScroll, Widget_Button_doNothing, 1, 0, 0, 0, 0, 1},
-	{464, 300, 34, 34, 4, 96, 12, buttonScroll, Widget_Button_doNothing, 1, 0, 0, 0, 1, 1},
+	{344, 335, 34, 34, ImageButton_Normal, 96, 0, buttonOkCancel, Widget_Button_doNothing, 1, 0, 1},
+	{392, 335, 34, 34, ImageButton_Normal, 96, 4, buttonOkCancel, Widget_Button_doNothing, 0, 0, 1},
+	{464, 120, 34, 34, ImageButton_Scroll, 96, 8, buttonScroll, Widget_Button_doNothing, 0, 1, 1},
+	{464, 300, 34, 34, ImageButton_Scroll, 96, 12, buttonScroll, Widget_Button_doNothing, 1, 1, 1},
 };
 static CustomButton customButtons[] = {
 	{160, 128, 448, 144, buttonSelectItem, Widget_Button_doNothing, 1, 0, 0},

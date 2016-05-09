@@ -16,7 +16,7 @@ static void buttonChangeAdvisor(int param1, int param2);
 static void buttonHelp(int param1, int param2);
 
 static ImageButton helpButton = {
-	11, -7, 27, 27, 4, 134, 0, buttonHelp, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0
+	11, -7, 27, 27, ImageButton_Normal, 134, 0, buttonHelp, Widget_Button_doNothing, 0, 0, 1
 };
 
 static CustomButton advisorButtons[13] = {

@@ -475,10 +475,10 @@ static int getRichTextWordWidth(const unsigned char *str, int *outNumChars);
 static int drawRichTextCharacter(Font font, unsigned int c, int x, int y, Color color, int measureOnly);
 
 static ImageButton imageButtonScrollUp = {
-	0, 0, 39, 26, 6, 96, 8, Widget_RichText_scroll, Widget_Button_doNothing, 1, 0, 0, 0, 0, 1
+	0, 0, 39, 26, ImageButton_Scroll, 96, 8, Widget_RichText_scroll, Widget_Button_doNothing, 0, 1, 1
 };
 static ImageButton imageButtonScrollDown = {
-	0, 0, 39, 26, 6, 96, 12, Widget_RichText_scroll, Widget_Button_doNothing, 1, 0, 0, 0, 1, 1
+	0, 0, 39, 26, ImageButton_Scroll, 96, 12, Widget_RichText_scroll, Widget_Button_doNothing, 1, 1, 1
 };
 
 static struct RichTextLink {

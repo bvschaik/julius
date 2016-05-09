@@ -52,10 +52,10 @@ static const int goalOffsetsX[] = {32, 288, 32, 288, 288, 288};
 static const int goalOffsetsY[] = {95, 95, 117, 117, 73, 135};
 
 static ImageButton imageButtonStartMission = {
-	0, 0, 27, 27, 4, 92, 56, startMission, Widget_Button_doNothing, 1, 0, 0, 0, 1, 0
+	0, 0, 27, 27, ImageButton_Normal, 92, 56, startMission, Widget_Button_doNothing, 1, 0, 1
 };
 static ImageButton imageButtonBackToSelection = {
-	0, 0, 31, 20, 4, 90, 8, briefingBack, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0
+	0, 0, 31, 20, ImageButton_Normal, 90, 8, briefingBack, Widget_Button_doNothing, 0, 0, 1
 };
 
 static struct {

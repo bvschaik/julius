@@ -40,37 +40,37 @@ static void buttonAdvisor(int param1, int param2);
 static void buttonGoToProblem(int param1, int param2);
 
 static ImageButton imageButtonBack = {
-	0, 0, 31, 20, 4, 90, 8, buttonBack, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0
+	0, 0, 31, 20, ImageButton_Normal, 90, 8, buttonBack, Widget_Button_doNothing, 0, 0, 1
 };
 static ImageButton imageButtonClose = {
-	0, 0, 24, 24, 4, 134, 4, buttonClose, Widget_Button_doNothing, 1, 0, 0, 0, 0, 0
+	0, 0, 24, 24, ImageButton_Normal, 134, 4, buttonClose, Widget_Button_doNothing, 0, 0, 1
 };
 static ImageButton imageButtonGoToProblem = {
-	0, 0, 27, 27, 4, 92, 52, buttonGoToProblem, Widget_Button_doNothing, 1, 0, 0, 0, 1, 0
+	0, 0, 27, 27, ImageButton_Normal, 92, 52, buttonGoToProblem, Widget_Button_doNothing, 1, 0, 1
 };
 static ImageButton imageButtonHelp = {
-	0, 0, 18, 27, 4, 134, 0, buttonHelp, Widget_Button_doNothing, 1, 0, 0, 0, 1, 0
+	0, 0, 18, 27, ImageButton_Normal, 134, 0, buttonHelp, Widget_Button_doNothing, 1, 0, 1
 };
 static ImageButton imageButtonLabor = {
-	0, 0, 27, 27, 4, 199, 0, buttonAdvisor, Widget_Button_doNothing, 1, 0, 0, 0, 1, 0
+	0, 0, 27, 27, ImageButton_Normal, 199, 0, buttonAdvisor, Widget_Button_doNothing, Advisor_Labor, 0, 1
 };
 static ImageButton imageButtonTrade = {
-	0, 0, 27, 27, 4, 199, 12, buttonAdvisor, Widget_Button_doNothing, 1, 0, 0, 0, 5, 0
+	0, 0, 27, 27, ImageButton_Normal, 199, 12, buttonAdvisor, Widget_Button_doNothing, Advisor_Trade, 0, 1
 };
 static ImageButton imageButtonPopulation = {
-	0, 0, 27, 27, 4, 199, 15, buttonAdvisor, Widget_Button_doNothing, 1, 0, 0, 0, 6, 0
+	0, 0, 27, 27, ImageButton_Normal, 199, 15, buttonAdvisor, Widget_Button_doNothing, Advisor_Population, 0, 1
 };
 static ImageButton imageButtonImperial = {
-	0, 0, 27, 27, 4, 199, 6, buttonAdvisor, Widget_Button_doNothing, 1, 0, 0, 0, 3, 0
+	0, 0, 27, 27, ImageButton_Normal, 199, 6, buttonAdvisor, Widget_Button_doNothing, Advisor_Imperial, 0, 1
 };
 static ImageButton imageButtonMilitary = {
-	0, 0, 27, 27, 4, 199, 3, buttonAdvisor, Widget_Button_doNothing, 1, 0, 0, 0, 2, 0
+	0, 0, 27, 27, ImageButton_Normal, 199, 3, buttonAdvisor, Widget_Button_doNothing, Advisor_Military, 0, 1
 };
 static ImageButton imageButtonHealth = {
-	0, 0, 27, 27, 4, 199, 18, buttonAdvisor, Widget_Button_doNothing, 1, 0, 0, 0, 7, 0
+	0, 0, 27, 27, ImageButton_Normal, 199, 18, buttonAdvisor, Widget_Button_doNothing, Advisor_Health, 0, 1
 };
 static ImageButton imageButtonReligion = {
-	0, 0, 27, 27, 4, 199, 27, buttonAdvisor, Widget_Button_doNothing, 1, 0, 0, 0, 10, 0
+	0, 0, 27, 27, ImageButton_Normal, 199, 27, buttonAdvisor, Widget_Button_doNothing, Advisor_Religion, 0, 1
 };
 
 static struct {
