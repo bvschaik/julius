@@ -38,7 +38,7 @@ typedef struct {
 	short yStart;
 	short xEnd;
 	short yEnd;
-	int type;
+	int buttonType;
 	void (*leftClickHandler)(int param1, int param2);
 	void (*rightClickHandler)(int param1, int param2);
 	int parameter1;
@@ -53,10 +53,9 @@ typedef struct {
 	void (*leftClickHandler)(int param1, int param2);
 	int parameter1;
 	int parameter2;
-	char field_C;
-	char field_D;
-	char field_E;
-	char field_F;//always 4 in game
+	// state
+	char pressed;
+	char repeats;
 } ArrowButton;
 
 typedef struct {

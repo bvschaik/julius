@@ -22,7 +22,7 @@ void Widget_Button_drawArrowButtons(int xOffset, int yOffset, ArrowButton *butto
 {
 	for (int i = 0; i < numButtons; i++) {
 		int graphicId = buttons[i].graphicId;
-		if (buttons[i].field_D) {
+		if (buttons[i].pressed) {
 			graphicId += 1;
 		}
 
@@ -43,14 +43,13 @@ int Widget_Button_handleArrowButtons(int xOffset, int yOffset, ArrowButton *butt
 	}
 	for (int i = 0; i < numButtons; i++) {
 		ArrowButton *btn = &buttons[i];
-		if (btn->field_D) {
-			btn->field_D--;
-			if (!btn->field_D) {
-				btn->field_C = 1;
-				btn->field_E = 0;
+		if (btn->pressed) {
+			btn->pressed--;
+			if (!btn->pressed) {
+				btn->repeats = 0;
 			}
 		} else {
-			btn->field_E = 0;
+			btn->repeats = 0;
 		}
 	}
 	int buttonId = getArrowButton(xOffset, yOffset, buttons, numButtons);
@@ -59,30 +58,26 @@ int Widget_Button_handleArrowButtons(int xOffset, int yOffset, ArrowButton *butt
 	}
 	ArrowButton *btn = &buttons[buttonId-1];
 	if (Data_Mouse.left.wentDown) {
-		btn->field_D = 3;
-		btn->field_E = 0;
-		btn->field_C = 1;
+		btn->pressed = 3;
+		btn->repeats = 0;
 		btn->leftClickHandler(btn->parameter1, btn->parameter2);
 		return buttonId;
 	}
 	if (Data_Mouse.left.isDown) {
-		btn->field_D = 3;
+		btn->pressed = 3;
 		if (shouldRepeat) {
-			btn->field_E++;
-			if (btn->field_E < 48) {
-				if (btn->field_E < 8) {
-					return 0;
-				}
-				int foo[] = {
+			btn->repeats++;
+			if (btn->repeats < 48) {
+				int clickOnRepeat[] = {
 					0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0,
 					0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0,
 					1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0
 				};
-				if (!foo[(int)btn->field_E]) {
+				if (!clickOnRepeat[(int)btn->repeats]) {
 					return 0;
 				}
 			} else {
-				btn->field_E = 47;
+				btn->repeats = 47;
 			}
 			btn->leftClickHandler(btn->parameter1, btn->parameter2);
 		}
@@ -115,7 +110,7 @@ int Widget_Button_handleCustomButtons(int xOffset, int yOffset, CustomButton *bu
 		return 0;
 	}
 	CustomButton *button = &buttons[buttonId-1];
-	if (button->type == CustomButton_Immediate) {
+	if (button->buttonType == CustomButton_Immediate) {
 		if (Data_Mouse.left.wentDown || Data_Mouse.left.isDown) {
 			button->leftClickHandler(button->parameter1, button->parameter2);
 		} else if (Data_Mouse.right.wentDown) {
@@ -123,7 +118,7 @@ int Widget_Button_handleCustomButtons(int xOffset, int yOffset, CustomButton *bu
 		} else {
 			return 0;
 		}
-	} else if (button->type == CustomButton_OnMouseUp) {
+	} else if (button->buttonType == CustomButton_OnMouseUp) {
 		if (Data_Mouse.left.wentUp) {
 			button->leftClickHandler(button->parameter1, button->parameter2);
 		} else if (Data_Mouse.right.wentUp) {
