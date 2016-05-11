@@ -97,7 +97,7 @@ static void addToTerrainFort(int type, int buildingId, int x, int y, int size)
 	Data_Buildings[groundId].prevPartBuildingId = buildingId;
 	Data_Buildings[buildingId].nextPartBuildingId = groundId;
 	Data_Buildings[groundId].nextPartBuildingId = 0;
-	Terrain_addBuildingToGrids(buildingId, x + 3, y - 1, 4,
+	Terrain_addBuildingToGrids(groundId, x + 3, y - 1, 4,
 		GraphicId(ID_Graphic_Fort) + 1, Terrain_Building);
 }
 
