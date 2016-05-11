@@ -162,7 +162,7 @@ static void placeBuildingOnTerrain(int buildingId)
 		TerrainGraphics_setBuildingFarm(buildingId, b->x, b->y,
 			GraphicId(ID_Graphic_FarmCrops) + graphicOffset, 0);
 	} else {
-		int size = Constant_BuildingProperties[buildingId].size;
+		int size = Constant_BuildingProperties[b->type].size;
 		Terrain_addBuildingToGrids(buildingId, b->x, b->y, size, 0, 0);
 		if (b->type == Building_Wharf) {
 			b->data.other.boatWalkerId = 0;
