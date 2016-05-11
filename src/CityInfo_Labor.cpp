@@ -41,7 +41,7 @@ static struct {
 	{LaborCategory_GovernanceReligion, 1},
 };
 
-static void setWorkerPercentages();
+static void setBuildingWorkerWeight();
 static void allocateWorkersToWater();
 static void allocateWorkersToBuildings();
 
@@ -207,12 +207,12 @@ void CityInfo_Labor_allocateWorkersToCategories()
 
 void CityInfo_Labor_allocateWorkersToBuildings()
 {
-	setWorkerPercentages();
+	setBuildingWorkerWeight();
 	allocateWorkersToWater();
 	allocateWorkersToBuildings();
 }
 
-static void setWorkerPercentages()
+static void setBuildingWorkerWeight()
 {
 	int waterPer10kPerBuilding = Calc_getPercentage(100, Data_CityInfo.laborCategory[LaborCategory_Water].buildings);
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
@@ -221,11 +221,11 @@ static void setWorkerPercentages()
 		}
 		int cat = buildingTypeToLaborCategory[Data_Buildings[i].type];
 		if (cat == LaborCategory_Water) {
-			Data_Buildings[i].percentageWorkers = waterPer10kPerBuilding;
+			Data_Buildings[i].percentageHousesCovered = waterPer10kPerBuilding;
 		} else if (cat >= 0) {
-			Data_Buildings[i].percentageWorkers = 0;
+			Data_Buildings[i].percentageHousesCovered = 0;
 			if (Data_Buildings[i].housesCovered) {
-				Data_Buildings[i].percentageWorkers =
+				Data_Buildings[i].percentageHousesCovered =
 					Calc_getPercentage(100 * Data_Buildings[i].housesCovered,
 						Data_CityInfo.laborCategory[cat].totalHousesCovered);
 			}
@@ -247,27 +247,28 @@ static void allocateWorkersToBuildings()
 		if (!BuildingIsInUse(i)) {
 			continue;
 		}
-		int cat = buildingTypeToLaborCategory[Data_Buildings[i].type];
+		struct Data_Building *b = &Data_Buildings[i];
+		int cat = buildingTypeToLaborCategory[b->type];
 		if (cat == LaborCategory_Water || cat < 0) {
 			// water is handled by allocateWorkersToWater()
 			continue;
 		}
-		Data_Buildings[i].numWorkers = 0;
+		b->numWorkers = 0;
 		if (!shouldHaveWorkers(i, cat, 0)) {
 			continue;
 		}
-		if (Data_Buildings[i].percentageWorkers > 0) {
+		if (b->percentageHousesCovered > 0) {
 			if (categoryWorkersNeeded[cat]) {
 				int numWorkers = Calc_adjustWithPercentage(
-					Data_CityInfo.laborCategory[i].workersAllocated,
-					Data_Buildings[i].percentageWorkers) / 100;
-				if (numWorkers > Data_Model_Buildings[Data_Buildings[i].type].laborers) {
-					numWorkers = Data_Model_Buildings[Data_Buildings[i].type].laborers;
+					Data_CityInfo.laborCategory[cat].workersAllocated,
+					b->percentageHousesCovered) / 100;
+				if (numWorkers > Data_Model_Buildings[b->type].laborers) {
+					numWorkers = Data_Model_Buildings[b->type].laborers;
 				}
-				Data_Buildings[i].numWorkers = numWorkers;
+				b->numWorkers = numWorkers;
 				categoryWorkersAllocated[cat] += numWorkers;
 			} else {
-				Data_Buildings[i].numWorkers = Data_Model_Buildings[Data_Buildings[i].type].laborers;
+				b->numWorkers = Data_Model_Buildings[b->type].laborers;
 			}
 		}
 	}
@@ -286,21 +287,22 @@ static void allocateWorkersToBuildings()
 		if (!BuildingIsInUse(i)) {
 			continue;
 		}
-		int cat = buildingTypeToLaborCategory[Data_Buildings[i].type];
+		struct Data_Building *b = &Data_Buildings[i];
+		int cat = buildingTypeToLaborCategory[b->type];
 		if (cat < 0 || cat == LaborCategory_Water || cat == LaborCategory_Military) {
 			continue;
 		}
 		if (!shouldHaveWorkers(i, cat, 0)) {
 			continue;
 		}
-		if (Data_Buildings[i].percentageWorkers > 0 && categoryWorkersNeeded[cat]) {
-			if (Data_Buildings[i].numWorkers < Data_Model_Buildings[Data_Buildings[i].type].laborers) {
-				int needed = Data_Model_Buildings[Data_Buildings[i].type].laborers - Data_Buildings[i].numWorkers;
+		if (b->percentageHousesCovered > 0 && categoryWorkersNeeded[cat]) {
+			if (b->numWorkers < Data_Model_Buildings[b->type].laborers) {
+				int needed = Data_Model_Buildings[b->type].laborers - b->numWorkers;
 				if (needed > categoryWorkersNeeded[cat]) {
-					Data_Buildings[i].numWorkers += categoryWorkersNeeded[cat];
+					b->numWorkers += categoryWorkersNeeded[cat];
 					categoryWorkersNeeded[cat] = 0;
 				} else {
-					Data_Buildings[i].numWorkers += needed;
+					b->numWorkers += needed;
 					categoryWorkersNeeded[cat] -= needed;
 				}
 			}
@@ -337,7 +339,7 @@ static void allocateWorkersToWater()
 			continue;
 		}
 		Data_Buildings[buildingId].numWorkers = 0;
-		if (Data_Buildings[buildingId].percentageWorkers > 0) {
+		if (Data_Buildings[buildingId].percentageHousesCovered > 0) {
 			if (percentageNotFilled > 0) {
 				if (buildingsToSkip) {
 					--buildingsToSkip;

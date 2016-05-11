@@ -111,7 +111,7 @@ int Widget_Button_handleCustomButtons(int xOffset, int yOffset, CustomButton *bu
 	}
 	CustomButton *button = &buttons[buttonId-1];
 	if (button->buttonType == CustomButton_Immediate) {
-		if (Data_Mouse.left.wentDown || Data_Mouse.left.isDown) {
+		if (Data_Mouse.left.wentDown) {
 			button->leftClickHandler(button->parameter1, button->parameter2);
 		} else if (Data_Mouse.right.wentDown) {
 			button->rightClickHandler(button->parameter1, button->parameter2);

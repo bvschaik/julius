@@ -192,7 +192,7 @@ extern struct Data_Building {
 	unsigned char __unknown_0f;
 	unsigned short createdSequence;
 	short housesCovered;
-	short percentageWorkers;
+	short percentageHousesCovered;
 	short housePopulation;
 	short housePopulationRoom;
 	short distanceFromEntry;
