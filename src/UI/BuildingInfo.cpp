@@ -598,7 +598,7 @@ void UI_BuildingInfo_drawEmploymentInfo(BuildingInfoContext *c, int yOffset)
 		textId = 17; // no employees nearby
 	} else if (b->housesCovered < 40) {
 		textId = 20; // poor access to employees
-	} else if (Data_CityInfo.laborCategory[b->laborCategory].workersAllocated > 0) {
+	} else if (Data_CityInfo.laborCategory[b->laborCategory].workersAllocated <= 0) {
 		textId = 18; // no people allocated
 	} else {
 		textId = 19; // too few people allocated
