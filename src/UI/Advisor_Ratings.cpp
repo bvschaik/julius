@@ -106,7 +106,7 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
 		110, Font_NormalBlack);
 	Widget_Text_drawNumberCentered(Data_CityInfo.ratingFavor, '@', " ",
 		baseOffsetX + 440, baseOffsetY + 309, 100, Font_LargeBlack);
-	if (Data_Scenario.winCriteria.peaceEnabled) {
+	if (Data_Scenario.winCriteria.favorEnabled) {
 		width = Widget_Text_drawNumber(Data_Scenario.winCriteria.favor, '@', " ",
 			baseOffsetX + 445, baseOffsetY + 334, Font_NormalBlack);
 	} else {
@@ -117,7 +117,7 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
 	hasReached = !Data_Scenario.winCriteria.favorEnabled ||
 		Data_CityInfo.ratingFavor > Data_Scenario.winCriteria.favor ||
 		Data_CityInfo.ratingFavor == 100; // FIXED: capital bug fixed
-	drawRatingColumn(baseOffsetX + 470, baseOffsetY + 274, Data_CityInfo.ratingPeace, hasReached);
+	drawRatingColumn(baseOffsetX + 470, baseOffsetY + 274, Data_CityInfo.ratingFavor, hasReached);
 
 	// bottom info box
 	Widget_Panel_drawInnerPanel(baseOffsetX + 64, baseOffsetY + 356, 32, 4);
