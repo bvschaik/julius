@@ -190,7 +190,7 @@ int FileSystem_hasExtension(const char *filename, const char *extension)
 void FileSystem_findFilesWithExtension(const char *extension)
 {
 	Data_FileList.numFiles = 0;
-	for (int i = 0; i < 100; i++) {
+	for (int i = 0; i < FILE_MAX; i++) {
 		Data_FileList.files[i][0] = 0;
 	}
 
@@ -199,13 +199,13 @@ void FileSystem_findFilesWithExtension(const char *extension)
 		return;
 	}
 	struct dirent *entry;
-	while ((entry = readdir(d)) && Data_FileList.numFiles < 100) {
+	while ((entry = readdir(d)) && Data_FileList.numFiles < FILE_MAX) {
 		if (FileSystem_hasExtension(entry->d_name, extension)) {
-			strncpy(Data_FileList.files[Data_FileList.numFiles], entry->d_name, 99);
-			Data_FileList.files[Data_FileList.numFiles][99] = 0;
+			strncpy(Data_FileList.files[Data_FileList.numFiles], entry->d_name, FILENAME_LENGTH - 1);
+			Data_FileList.files[Data_FileList.numFiles][FILENAME_LENGTH - 1] = 0;
 			++Data_FileList.numFiles;
 		}
 	}
 	closedir(d);
-	qsort(Data_FileList.files, Data_FileList.numFiles, 100, compareLower);
+	qsort(Data_FileList.files, Data_FileList.numFiles, FILENAME_LENGTH, compareLower);
 }

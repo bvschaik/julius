@@ -1,10 +1,11 @@
 #ifndef DATA_FILELIST_H
 #define DATA_FILELIST_H
 
+#define FILE_MAX 500
 #define FILENAME_LENGTH 100
 
 extern struct _Data_FileList {
-	char files[100][FILENAME_LENGTH];
+	char files[FILE_MAX][FILENAME_LENGTH];
 	int numFiles;
 
 	char selectedScenario[FILENAME_LENGTH];

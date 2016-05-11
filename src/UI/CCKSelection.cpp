@@ -84,7 +84,7 @@ static void drawScenarioList()
 		} else if (!focusButtonId && selectedItem == i + scrollPosition) {
 			font = Font_NormalWhite;
 		}
-		char file[100];
+		char file[FILENAME_LENGTH];
 		strcpy(file, Data_FileList.files[i + scrollPosition]);
 		FileSystem_removeExtension(file);
 		Widget_Text_draw(file, Data_Screen.offset640x480.x + 24,
