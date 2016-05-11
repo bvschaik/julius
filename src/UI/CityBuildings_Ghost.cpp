@@ -381,7 +381,7 @@ static void drawBuildingGhostDraggableReservoir()
 		Graphics_drawIsometricFootprint(graphicId, xOffsetBase, yOffsetBase, Color_MaskGreen);
 		Graphics_drawIsometricTop(graphicId, xOffsetBase, yOffsetBase, Color_MaskGreen);
 		if (Terrain_existsTileWithinAreaWithType(
-			Data_Settings_Map.current.x - 2, Data_Settings_Map.current.y,
+			Data_Settings_Map.current.x - 2, Data_Settings_Map.current.y - 2,
 			5, Terrain_Water)) {
 			Graphics_drawImageMasked(graphicId + 1,
 				xOffsetBase - 58 + GraphicSpriteOffsetX(graphicId) - 2,
