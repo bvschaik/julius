@@ -82,6 +82,7 @@ int Loader_Graphics_initGraphics()
 	return 1;
 }
 
+#include <cstdio>
 int Loader_Graphics_loadMainGraphics(int climate)
 {
 	if (climate == currentClimate) {
@@ -95,10 +96,16 @@ int Loader_Graphics_loadMainGraphics(int climate)
 		return 0;
 	}
 	
-	FileSystem_readFileIntoBuffer(filenameSg2, &Data_Graphics_Main, sizeof(Data_Graphics_Main));
-	FileSystem_readFileIntoBuffer(filename555, Data_Graphics_PixelData.main, 17000000);
+	if (!FileSystem_readFileIntoBuffer(filenameSg2, &Data_Graphics_Main, sizeof(Data_Graphics_Main))) {
+		return 0;
+	}
+	if (!FileSystem_readFileIntoBuffer(filename555, Data_Graphics_PixelData.main, 17000000)) {
+		return 0;
+	}
 
+	printf("Preparing main graphics..\n");
 	prepareMainGraphics();
+	printf("Prepared main graphics\n");
 	currentClimate = climate;
 	return 1;
 }
@@ -160,6 +167,7 @@ static void prepareMainGraphics()
 		if (index->dataLength <= 0) {
 			continue;
 		}
+		printf("Preparing %d - %d %d\n", i, index->type, index->isFullyCompressed);
 		if (index->type == 30) { // isometric
 			if (index->hasCompressedPart) {
 				convertGraphicToSurfaceFormat(
@@ -217,7 +225,7 @@ static void prepareEnemyGraphics()
 
 static void convertGraphicToSurfaceFormat(void *data, int lengthInBytes)
 {
-	if (Data_Screen.format == 565) {
+	if (Data_Screen.format == 5650) {
 		Color *color = (Color*) data;
 		for (int i = 0; i < lengthInBytes; i += 2) {
 			if (*color != Color_Transparent) {
@@ -230,7 +238,7 @@ static void convertGraphicToSurfaceFormat(void *data, int lengthInBytes)
 
 static void convertCompressedGraphicToSurfaceFormat(void *data, int lengthInBytes)
 {
-	if (Data_Screen.format == 565) {
+	if (Data_Screen.format == 5650) {
 		char *ptr = (char *) data;
 		int bytesToGo = lengthInBytes;
 		while (bytesToGo > 0) {
@@ -240,7 +248,6 @@ static void convertCompressedGraphicToSurfaceFormat(void *data, int lengthInByte
 				bytesToGo -= 2;
 			} else {
 				if (length < 0) {
-					//printf("Length negative: %d with %d bytes to go\n", length, bytesToGo);
 					return;
 				}
 				ptr++;

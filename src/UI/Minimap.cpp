@@ -53,13 +53,13 @@ void UI_Minimap_draw(int xOffset, int yOffset, int widthTiles, int heightTiles)
 {
 	Graphics_setClipRectangle(xOffset, yOffset, 2 * widthTiles, heightTiles);
 	
-	soldierColor = 0xf000;
+	soldierColor = Color_Soldier;
 	if (Data_Scenario.climate == Climate_Central) {
-		enemyColor = 0x7800;
+		enemyColor = Color_EnemyCentral;
 	} else if (Data_Scenario.climate == Climate_Northern) {
-		enemyColor = 0x181F;
+		enemyColor = Color_EnemyNorthern;
 	} else {
-		enemyColor = 0x080F;
+		enemyColor = Color_EnemyDesert;
 	}
 
 	setBounds(xOffset, yOffset, widthTiles, heightTiles);
@@ -106,7 +106,7 @@ static void drawMinimap(int xOffset, int yOffset, int widthTiles, int heightTile
 
 static int drawWalker(int xView, int yView, int gridOffset)
 {
-	Color color = 0;
+	Color color = Color_Black;
 	int hasWalker = 0;
 
 	int walkerId = Data_Grid_walkerIds[gridOffset];

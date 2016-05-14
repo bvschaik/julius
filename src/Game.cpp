@@ -38,6 +38,7 @@ int Game_init()
 		return 0;
 	}
 	
+	printf("Loading graphics\n");
 	printf("Load images: %d\n", Loader_Graphics_loadMainGraphics(Climate_Central));
 	printf("Load enemies: %d\n", Loader_Graphics_loadEnemyGraphics(EnemyType_0_Barbarian));
 

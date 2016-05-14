@@ -231,21 +231,6 @@ enum {
 	ID_Graphic_SelectMissionButton = 254,
 };
 
-#define Color_Black 0
-#define Color_Red 0xf800
-#define Color_Orange 0xfac1
-#define Color_Yellow 0xe70b
-#define Color_White 0xffff
-#define Color_Transparent 0xf81f
-#define Color_InsetLight 0xffff
-#define Color_InsetDark 0x8410
-#define Color_Minimap_Dark 0x4208
-#define Color_Minimap_Light 0xC618
-#define Color_NoMask 0xffff
-#define Color_MaskRed 0xf863
-#define Color_MaskGreen 0x1fe3
-#define Color_Tooltip 0x4208
-
 enum {
 	Advisor_None = 0,
 	Advisor_Labor = 1,

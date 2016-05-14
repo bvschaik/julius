@@ -20,13 +20,25 @@ static int getNewMessageId();
 static int playSound = 1;
 static int consecutiveMessageDelay;
 
+static char *correctPath(char *path)
+{
+	char *c = path;
+	while (*c) {
+		if (*c == '\\') {
+			*c = '/';
+		}
+		c++;
+	}
+	return path;
+}
+
 static int hasVideo(int textId)
 {
 	int offset = Data_Language_Message.index[textId].videoLinkOffset;
 	if (!offset) {
 		return 0;
 	}
-	const char *videoFile = &Data_Language_Message.data[offset];
+	const char *videoFile = correctPath(&Data_Language_Message.data[offset]);
 	return FileSystem_fileExists(videoFile);
 }
 
