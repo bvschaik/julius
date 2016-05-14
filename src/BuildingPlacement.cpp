@@ -120,6 +120,7 @@ static void addToTerrainHippodrome(int type, int buildingId, int x, int y, int s
 		case Dir_2_Right:  graphicId = graphicId1 + 4; break;
 		case Dir_4_Bottom: graphicId = graphicId2 + 4; break;
 		case Dir_6_Left:   graphicId = graphicId1; break;
+		default: return;
 	}
 	Terrain_addBuildingToGrids(buildingId, x, y, size, graphicId, Terrain_Building);
 

@@ -801,6 +801,7 @@ static int getHerdRoamingDestination(int formationId, int allowNegativeDesirabil
 			case Dir_5_BottomLeft:  xTarget = x - distance; yTarget = y + distance; break;
 			case Dir_6_Left:        xTarget = x - distance; yTarget = y; break;
 			case Dir_7_TopLeft:     xTarget = x - distance; yTarget = y - distance; break;
+			default: continue;
 		}
 		if (xTarget <= 0) {
 			xTarget = 1;
@@ -910,6 +911,7 @@ static void tickUpdateHerds()
 				roamDelay = 6;
 				allowNegativeDesirability = 1;
 				break;
+			default: continue;
 		}
 		if (attackingAnimals) {
 			f->waitTicks = roamDelay + 1;

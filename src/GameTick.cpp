@@ -29,7 +29,6 @@
 #include "UI/Window.h"
 
 #include "Data/CityInfo.h"
-//#include "Data/Message.h"
 #include "Data/Settings.h"
 #include "Data/State.h"
 

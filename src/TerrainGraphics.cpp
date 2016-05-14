@@ -597,6 +597,7 @@ void TerrainGraphics_setBuildingFarm(int buildingId, int x, int y, int cropGraph
 		case Dir_2_Right: leftmostX = 0; leftmostY = 0; break;
 		case Dir_4_Bottom: leftmostX = 1; leftmostY = 0; break;
 		case Dir_6_Left: leftmostX = 1; leftmostY = 1; break;
+		default: return;
 	}
 	for (int dy = 0; dy < 2; dy++) {
 		for (int dx = 0; dx < 2; dx++) {

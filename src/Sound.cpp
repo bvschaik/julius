@@ -205,7 +205,7 @@ static void initFilesystemNames()
 			strncpy(fsFilenames[i].cased, dirs[wavs], 4);
 			fsFilenames[i].cased[4] = '/';
 			strncpy(&fsFilenames[i].cased[5], entry->d_name, 26);
-			fsFilenames[i].cased[32] = 0;
+			fsFilenames[i].cased[31] = 0;
 			for (int n = 0; n < 32; n++) {
 				fsFilenames[i].lower[n] = tolower(fsFilenames[i].cased[n]);
 			}

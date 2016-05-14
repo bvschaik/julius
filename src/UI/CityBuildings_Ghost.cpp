@@ -544,22 +544,23 @@ static void drawBuildingGhostBridge()
 		drawFlatTile(xOffset, yOffset, length > 0 ? Color_MaskGreen : Color_MaskRed);
 		if (length > 1) {
 			switch (dir) {
-				case 0:
+				case Dir_0_Top:
 					xOffset += 29 * (length - 1);
 					yOffset -= 15 * (length - 1);
 					break;
-				case 2:
+				case Dir_2_Right:
 					xOffset += 29 * (length - 1);
 					yOffset += 15 * (length - 1);
 					break;
-				case 4:
+				case Dir_4_Bottom:
 					xOffset -= 29 * (length - 1);
 					yOffset += 15 * (length - 1);
 					break;
-				case 6:
+				case Dir_6_Left:
 					xOffset -= 29 * (length - 1);
 					yOffset -= 15 * (length - 1);
 					break;
+				default: return;
 			}
 			drawFlatTile(xOffset, yOffset, Color_MaskRed);
 		}
@@ -579,29 +580,30 @@ static void drawBuildingGhostBridge()
 	int graphicId, xOffset, yOffset;
 	int xAdd, yAdd;
 	switch (dir) {
-		case 0: xAdd = 29; yAdd = -15; break;
-		case 2: xAdd = 29; yAdd = 15; break;
-		case 4: xAdd = -29; yAdd = 15; break;
-		case 6: xAdd = -29; yAdd = -15; break;
+		case Dir_0_Top: xAdd = 29; yAdd = -15; break;
+		case Dir_2_Right: xAdd = 29; yAdd = 15; break;
+		case Dir_4_Bottom: xAdd = -29; yAdd = 15; break;
+		case Dir_6_Left: xAdd = -29; yAdd = -15; break;
+		default: return;
 	}
 	if (Data_State.selectedBuilding.type == Building_LowBridge) {
 		switch (dir) {
-			case 0:
+			case Dir_0_Top:
 				graphicId = graphicBase + 5;
 				xOffset = xOffsetBase;
 				yOffset = yOffsetBase - 20;
 				break;
-			case 2:
+			case Dir_2_Right:
 				graphicId = graphicBase;
 				xOffset = xOffsetBase - 1;
 				yOffset = yOffsetBase - 8;
 				break;
-			case 4:
+			case Dir_4_Bottom:
 				graphicId = graphicBase + 3;
 				xOffset = xOffsetBase;
 				yOffset = yOffsetBase - 8;
 				break;
-			case 6:
+			case Dir_6_Left:
 				graphicId = graphicBase + 2;
 				xOffset = xOffsetBase + 7;
 				yOffset = yOffsetBase - 20;
@@ -616,22 +618,22 @@ static void drawBuildingGhostBridge()
 			yOffsetBase += yAdd;
 			if (i == length - 1) {
 				switch (dir) {
-					case 0:
+					case Dir_0_Top:
 						graphicId = graphicBase + 3;
 						xOffset = xOffsetBase;
 						yOffset = yOffsetBase - 8;
 						break;
-					case 2:
+					case Dir_2_Right:
 						graphicId = graphicBase + 2;
 						xOffset = xOffsetBase + 7;
 						yOffset = yOffsetBase - 20;
 						break;
-					case 4:
+					case Dir_4_Bottom:
 						graphicId = graphicBase + 5;
 						xOffset = xOffsetBase;
 						yOffset = yOffsetBase - 20;
 						break;
-					case 6:
+					case Dir_6_Left:
 						graphicId = graphicBase;
 						xOffset = xOffsetBase - 1;
 						yOffset = yOffsetBase - 8;

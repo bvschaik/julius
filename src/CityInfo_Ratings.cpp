@@ -504,6 +504,8 @@ void CityInfo_Ratings_sendGiftToCaesar()
 		cost = Data_CityInfo.giftCost_generous;
 	} else if (Data_CityInfo.giftSizeSelected == 2) {
 		cost = Data_CityInfo.giftCost_lavish;
+	} else {
+		return;
 	}
 
 	if (cost > Data_CityInfo.personalSavings) {

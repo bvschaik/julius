@@ -110,6 +110,7 @@ static void buttonSetAmount(int param1, int param2)
 		case 2: amount = 2000; break;
 		case 3: amount = 5000; break;
 		case 4: amount = 1000000; break;
+		default: return;
 	}
 	Data_CityInfo.donateAmount = amount;
 	BOUND(Data_CityInfo.donateAmount, 0, Data_CityInfo.personalSavings);
