@@ -70,6 +70,17 @@ static struct {
 	int focusButtonId;
 } data = {0, 1};
 
+void UI_Empire_init()
+{
+	data.selectedButton = 0;
+	if (Data_Empire.selectedObject) {
+		data.selectedCity = Empire_getCityForObject(Data_Empire.selectedObject-1);
+	} else {
+		data.selectedCity = 0;
+	}
+	data.focusButtonId = 0;
+}
+
 void UI_Empire_drawBackground()
 {
 	data.xMin = Data_Screen.width <= MAX_WIDTH ? 0 : (Data_Screen.width - MAX_WIDTH) / 2;
