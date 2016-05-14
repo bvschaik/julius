@@ -38,6 +38,7 @@ typedef enum {
 	Window_VictoryDialog = 32, // 67
 	Window_MissionEnd = 33, // 51
 	Window_VictoryIntermezzo = 34,
+	Window_Video = 35,
 } WindowId;
 
 WindowId UI_Window_getId();
