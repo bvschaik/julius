@@ -382,17 +382,17 @@ static void buttonMissionBriefing(int param1, int param2)
 static void buttonRotateNorth(int param1, int param2)
 {
 	switch (Data_Settings_Map.orientation) {
-		case 0: // already north
+		case Dir_0_Top: // already north
 			return;
-		case 2:
+		case Dir_2_Right:
 			CityView_rotateRight();
 			Terrain_rotateMap(1);
 			break;
-		case 4:
+		case Dir_4_Bottom:
 			CityView_rotateLeft();
 			Terrain_rotateMap(0);
 			// fallthrough
-		case 6:
+		case Dir_6_Left:
 			CityView_rotateLeft();
 			Terrain_rotateMap(0);
 			break;

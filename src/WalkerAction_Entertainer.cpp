@@ -110,6 +110,8 @@ static void updateGraphic(int walkerId, struct Data_Walker *w)
 			graphicId = GraphicId(ID_Graphic_Walker_LionTamerWhip);
 		}
 		w->cartGraphicId = GraphicId(ID_Graphic_Walker_Lion);
+	} else {
+		return;
 	}
 	if (w->actionState == WalkerActionState_150_Attack) {
 		if (w->type == Walker_Gladiator) {
