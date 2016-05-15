@@ -279,7 +279,7 @@ static void confirmExit(int accepted)
 
 void KeyboardHotkey_esc()
 {
-	Video_cancel();
+	Video_stop();
 	UI_PopupDialog_show(PopupDialog_Quit, confirmExit, 1);
 }
 

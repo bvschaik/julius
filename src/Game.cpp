@@ -6,6 +6,7 @@
 #include "Settings.h"
 #include "Sound.h"
 #include "System.h"
+#include "Video.h"
 
 #include "UI/Window.h"
 
@@ -56,6 +57,7 @@ int Game_init()
 
 void Game_exit()
 {
+	Video_shutdown();
 	Settings_save();
 	Sound_shutdown();
 }

@@ -5,6 +5,8 @@
 
 int Video_start(const char* filename, int xOffset, int yOffset, int fullscreen, WindowId nextWindowId);
 
-void Video_cancel();
+void Video_stop();
+
+void Video_shutdown();
 
 #endif

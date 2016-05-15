@@ -514,7 +514,7 @@ static void buttonBack(int param1, int param2)
 void UI_MessageDialog_close()
 {
 	if (data.showVideo) {
-		Video_cancel();
+		Video_stop();
 	}
 	data.showVideo = 0;
 	playerMessage.messageAdvisor = 0;
