@@ -1,4 +1,5 @@
 #include "../src/SoundDevice.h"
+#include "SDL.h"
 #include "SDL_mixer.h"
 
 #include <stdio.h>
@@ -13,6 +14,14 @@
 static int initialized = 0;
 static Mix_Music *music = 0;
 static Mix_Chunk *channels[MAX_CHANNELS];
+static struct {
+	SDL_AudioCVT cvt;
+	const unsigned char *(*callback)(int *);
+	unsigned char *data;
+	int cur;
+	int len;
+} customMusic;
+
 
 static int percentageToVolume(int percentage)
 {
@@ -143,4 +152,87 @@ void SoundDevice_stopChannel(int channel)
 			channels[channel] = 0;
 		}
 	}
+}
+
+
+static int nextAudioFrame()
+{
+	if (customMusic.data) {
+		free(customMusic.data);
+		customMusic.data = 0;
+	}
+	
+	int audioLen;
+	const unsigned char *data = customMusic.callback(&audioLen);
+	if (!data || audioLen <= 0) {
+		return 0;
+	}
+	
+	if (audioLen > 0) {
+		// convert audio to SDL format
+		customMusic.cvt.buf = (Uint8*) malloc(audioLen * customMusic.cvt.len_mult);
+		customMusic.cvt.len = audioLen;
+		memcpy(customMusic.cvt.buf, data, audioLen);
+		SDL_ConvertAudio(&customMusic.cvt);
+		customMusic.cur = 0;
+		customMusic.len = customMusic.cvt.len_cvt;
+		customMusic.data = customMusic.cvt.buf;
+		customMusic.cvt.buf = 0;
+		customMusic.cvt.len = 0;
+	}
+	return audioLen;
+}
+
+static int copyAudioFromBuffer(Uint8 *stream, int len)
+{
+	if (!customMusic.data || customMusic.cur >= customMusic.len) {
+		return 0;
+	}
+	// push existing bytes
+	int toWrite = customMusic.len - customMusic.cur;
+	if (toWrite > len) {
+		toWrite = len;
+	}
+	memcpy(stream, &customMusic.data[customMusic.cur], toWrite);
+	customMusic.cur += toWrite;
+	return toWrite;
+}
+
+static void customMusicCallback(void *, Uint8 *stream, int len)
+{
+	int canContinue = 1;
+	do {
+		int copied = copyAudioFromBuffer(stream, len);
+		if (copied) {
+			len -= copied;
+			stream += copied;
+		}
+		if (len == 0) {
+			canContinue = 0;
+		} else {
+			canContinue = nextAudioFrame();
+		}
+	} while (canContinue);
+	if (len) {
+		// end of stream, write silence
+		memset(stream, 0, len);
+	}
+}
+
+void SoundDevice_useCustomMusicPlayer(int bitdepth, int channels, int rate, const unsigned char *(*callback)(int *outLen))
+{
+	SDL_BuildAudioCVT(&customMusic.cvt, bitdepth, channels, rate, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_RATE);
+	customMusic.callback = callback;
+	Mix_HookMusic(customMusicCallback, 0);
+}
+
+void SoundDevice_useDefaultMusicPlayer()
+{
+	if (customMusic.data) {
+		free(customMusic.data);
+		customMusic.data = 0;
+		customMusic.len = 0;
+		customMusic.cur = 0;
+	}
+	Mix_HookMusic(0, 0);
 }

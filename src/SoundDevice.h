@@ -18,4 +18,7 @@ void SoundDevice_playChannel(int channel);
 void SoundDevice_stopMusic();
 void SoundDevice_stopChannel(int channel);
 
+void SoundDevice_useCustomMusicPlayer(int bitdepth, int channels, int rate, const unsigned char *(*callback)(int *outLen));
+void SoundDevice_useDefaultMusicPlayer();
+
 #endif

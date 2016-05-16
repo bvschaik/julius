@@ -3,17 +3,12 @@
 extern "C" {
   #include "Video/smacker.h"
 }
-#include "SDL_mixer.h"
-
-#include <cstdio> // debug
-#include <stdint.h>
 
 #include "FileSystem.h"
-#include "Graphics.h"
 #include "Sound.h"
+#include "SoundDevice.h"
 #include "Time.h"
 #include "Data/Screen.h"
-//#include "AllWindows.h"
 
 static struct {
 	int isPlaying;
@@ -30,9 +25,10 @@ static struct {
 	} video;
 	struct {
 		smk s;
-		int cur;
-		int len;
-		unsigned char *data;
+		int bitdepth;
+		int channels;
+		int rate;
+		int firstFrame;
 	} audio;
 } data;
 
@@ -49,108 +45,49 @@ static void closeAll()
 	}
 	if (data.audio.s) {
 		closeSmk(&data.audio.s);
-		data.audio.cur = data.audio.len = 0;
-		if (data.audio.data) {
-			free(data.audio.data);
-			data.audio.data = 0;
-		}
 	}
 }
 
-static int nextAudioFrame()
+static const unsigned char *nextAudioFrame(int *outLen)
 {
-	if (data.audio.data) {
-		free(data.audio.data);
-		data.audio.data = 0;
-	}
-	
 	if (!data.audio.s) {
+		return 0;
+	}
+	if (data.audio.firstFrame) {
+		data.audio.firstFrame = 0;
+		if (smk_first(data.audio.s) < 0) {
+			closeSmk(&data.audio.s);
+			return 0;
+		}
+	} else if (!smk_next(data.audio.s)) {
+		closeSmk(&data.audio.s);
 		return 0;
 	}
 	int audioLen = smk_get_audio_size(data.audio.s, 0);
 	if (audioLen > 0) {
-		/*
-		data.audio.cur = 0;
-		data.audio.len = audioLen;
-		data.audio.data = (char*) malloc(audioLen);
-		memcpy(data.audio.data, smk_get_audio(data.audio.s, 0), audioLen);
-		*/
-		SDL_AudioCVT cvt;
-		printf("Audio convert: %d\n", SDL_BuildAudioCVT(&cvt, AUDIO_U8, 2, 22010, AUDIO_S16MSB, 2, 22010));
-		
-		cvt.buf = (Uint8*) malloc(audioLen * cvt.len_mult);
-		cvt.len = audioLen;
-		memcpy(cvt.buf, smk_get_audio(data.audio.s, 0), audioLen);
-		// convert audio
-		printf("Convert: %d\n", SDL_ConvertAudio(&cvt));
-		data.audio.cur = 0;
-		data.audio.len = cvt.len_cvt;
-		data.audio.data = cvt.buf;
+		*outLen = audioLen;
+		return smk_get_audio(data.audio.s, 0);
 	}
-	if (!smk_next(data.audio.s)) {
-		closeSmk(&data.audio.s);
-	}
-	return audioLen;
-}
-
-static int copyAudioFromBuffer(Uint8 *stream, int len)
-{
-	if (!data.audio.data || data.audio.cur >= data.audio.len) {
-		return 0;
-	}
-	// push existing bytes
-	int toWrite = data.audio.len - data.audio.cur;
-	if (toWrite > len) {
-		toWrite = len;
-	}
-	memcpy(stream, &data.audio.data[data.audio.cur], toWrite);
-	data.audio.cur += toWrite;
-	return toWrite;
-}
-
-static void playAudio(void *userdata, Uint8 *stream, int len)
-{
-	int canContinue = 1;
-	do {
-		int copied = copyAudioFromBuffer(stream, len);
-		if (copied) {
-			len -= copied;
-			stream += copied;
-		}
-		if (len == 0) {
-			canContinue = 0;
-		} else {
-			canContinue = nextAudioFrame();
-		}
-	} while (canContinue);
-	if (len) {
-		// end of stream, write silence
-		printf("Audio buffer underrun by %d bytes\n", len);
-		memset(stream, 0, len);
-	}
+	return 0;
 }
 
 static int loadSmkVideo(const char *filename)
 {
-	printf("Opening video file %s\n", filename);
 	data.video.s = smk_open_file(filename, SMK_MODE_DISK);
 	if (!data.video.s) {
-		printf("Unable to open video file %s\n", filename);
 		return 0;
 	}
 	
 	unsigned long width, height, frames;
 	double microsPerFrame;
-	smk_info_all(data.video.s, NULL, &frames, &microsPerFrame);
-	smk_info_video(data.video.s, &width, &height, NULL);
+	smk_info_all(data.video.s, 0, &frames, &microsPerFrame);
+	smk_info_video(data.video.s, &width, &height, 0);
 	
 	data.video.width = width;
 	data.video.height = height;
 	data.video.currentFrame = 0;
 	data.video.totalFrames = frames;
 	data.video.microsPerFrame = (int) (microsPerFrame);
-	printf("width: %d, height: %d, usec/frame: %d, frames: %d\n",
-		   data.video.width, data.video.height, data.video.microsPerFrame, data.video.totalFrames);
 
 	smk_enable_all(data.video.s,SMK_VIDEO_TRACK);
 	if (smk_first(data.video.s) < 0) {
@@ -162,10 +99,8 @@ static int loadSmkVideo(const char *filename)
 
 static int loadSmkAudio(const char *filename)
 {
-	printf("Opening video file %s for audio\n", filename);
 	data.audio.s = smk_open_file(filename, SMK_MODE_DISK);
 	if (!data.audio.s) {
-		printf("Unable to open video file %s\n", filename);
 		return 0;
 	}
 	
@@ -174,7 +109,7 @@ static int loadSmkAudio(const char *filename)
 	smk_info_audio(data.audio.s, &tracks, channels, bitdepths, bitrates);
 	
 	if (tracks != 1) {
-		printf("Video has alternate audio tracks, not supported: %x\n", tracks);
+		// Video has alternate audio tracks, not supported
 		closeSmk(&data.audio.s);
 		return 0;
 	}
@@ -183,22 +118,10 @@ static int loadSmkAudio(const char *filename)
 		closeSmk(&data.audio.s);
 		return 0;
 	}
-	/*
-	// set up audio	audio;
-	SDL_AudioSpec audioSpec;
-	audioSpec.freq = a_r[0];
-	audioSpec.format = AUDIO_U8;
-	audioSpec.channels = channels[0];
-	audioSpec.samples = 4096;
-	audioSpec.callback = PlayAudio;
-	
-	int device = SDL_OpenAudio(&audioSpec, 0);
-	if (device < 0) {
-		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Couldn't open audio device: %s\n", SDL_GetError());
-		CloseVideo(&audio.s);
-		return;
-	}
-	*/
+	data.audio.bitdepth = bitdepths[0];
+	data.audio.channels = channels[0];
+	data.audio.rate = bitrates[0];
+	data.audio.firstFrame = 1;
 	return 1;
 }
 
@@ -218,8 +141,7 @@ int loadSmk(const char *filename)
 
 static void endVideo()
 {
-	// TODO close audio
-	Mix_HookMusic(0, 0);
+	SoundDevice_useDefaultMusicPlayer();
 	Sound_Music_reset();
 	Sound_Music_update();
 }
@@ -270,8 +192,7 @@ int Video_isFinished()
 void Video_init()
 {
 	data.video.startRenderMillis = Time_getMillis();
-	// TODO start audio
-	Mix_HookMusic(playAudio, 0);
+	SoundDevice_useCustomMusicPlayer(data.audio.bitdepth, data.audio.channels, data.audio.rate, nextAudioFrame);
 }
 
 void Video_draw(int xOffset, int yOffset)
@@ -298,7 +219,7 @@ void Video_draw(int xOffset, int yOffset)
 	if (frame && pal) {
 		for (int y = 0; y < data.video.height; y++) {
 			for (int x = 0; x < data.video.width; x++) {
-				uint32_t color = 0xFF000000 |
+				ScreenColor color = 0xFF000000 |
 					(pal[frame[(y * data.video.width) + x] * 3] << 16) |
 					(pal[frame[(y * data.video.width) + x] * 3 + 1] << 8) |
 					(pal[frame[(y * data.video.width) + x] * 3 + 2]);
