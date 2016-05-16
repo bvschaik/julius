@@ -127,7 +127,7 @@ static int loadSmkAudio(const char *filename)
 
 int loadSmk(const char *filename)
 {
-	const char *path = FileSystem_getCaseInsensitiveFile(filename);
+	const char *path = FileSystem_getCaseSensitiveFile(filename);
 	if (!path) {
 		return 0;
 	}

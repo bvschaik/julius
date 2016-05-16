@@ -12,14 +12,14 @@
 #define ENEMY_SIZE 4900000
 
 static const char mainGraphicsSg2[][32] = {
-	"C3.sg2",
-	"C3_North.sg2",
-	"C3_south.sg2"
+	"c3.sg2",
+	"c3_north.sg2",
+	"c3_south.sg2"
 };
 static const char mainGraphics555[][32] = {
-	"C3.555",
-	"C3_North.555",
-	"c3_South.555"
+	"c3.555",
+	"c3_north.555",
+	"c3_south.555"
 };
 static const char enemyGraphicsSg2[][32] = {
 	"goths.sg2",
@@ -94,10 +94,6 @@ int Loader_Graphics_loadMainGraphics(int climate)
 
 	const char *filename555 = mainGraphics555[climate];
 	const char *filenameSg2 = mainGraphicsSg2[climate];
-	if (!FileSystem_fileExists(filename555) ||
-		!FileSystem_fileExists(filenameSg2)) {
-		return 0;
-	}
 	
 	if (!FileSystem_readFileIntoBuffer(filenameSg2, &Data_Graphics_Main, sizeof(Data_Graphics_Main))) {
 		return 0;
@@ -117,10 +113,6 @@ int Loader_Graphics_loadEnemyGraphics(int enemyId)
 {
 	const char *filename555 = enemyGraphics555[enemyId];
 	const char *filenameSg2 = enemyGraphicsSg2[enemyId];
-	if (!FileSystem_fileExists(filename555) ||
-		!FileSystem_fileExists(filenameSg2)) {
-		return 0;
-	}
 
 	FileSystem_readFilePartIntoBuffer(filenameSg2, &Data_Graphics_Enemy, 51264, 20680);
 	FileSystem_readFileIntoBuffer(filename555, Data_Graphics_PixelData.enemy, ENEMY_SIZE);

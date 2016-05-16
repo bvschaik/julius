@@ -20,28 +20,25 @@ int FileSystem_fileExists(const char *filename)
 
 int FileSystem_readFilePartIntoBuffer(const char *filename, void *buffer, int length, int offsetInFile)
 {
+	const char *casedFile = FileSystem_getCaseSensitiveFile(filename);
+	if (!casedFile) {
+		// Try again in 555 directory
+		char path[64] = "555/";
+		strncpy(&path[4], filename, 60);
+		path[63] = 0;
+		casedFile = FileSystem_getCaseSensitiveFile(filename);
+	}
+	if (!casedFile) {
+		return 0;
+	}
 	int bytesRead = 0;
-	FILE *fp = fopen(filename, "rb");
+	FILE *fp = fopen(casedFile, "rb");
 	if (fp) {
 		int seekResult = fseek(fp, offsetInFile, SEEK_SET);
 		if (seekResult == 0) {
 			bytesRead = fread(buffer, 1, length, fp);
 		}
 		fclose(fp);
-	}
-	if (bytesRead <= 0) {
-		// Try again in 555 folder
-		char path[64] = "555/";
-		strncpy(&path[4], filename, 60);
-		path[63] = 0;
-		fp = fopen(path, "rb");
-		if (fp) {
-			int seekResult = fseek(fp, offsetInFile, SEEK_SET);
-			if (seekResult == 0) {
-				bytesRead = fread(buffer, 1, length, fp);
-			}
-			fclose(fp);
-		}
 	}
 	return bytesRead;
 }
@@ -74,7 +71,11 @@ int FileSystem_readPartialRecordDataIntoBuffer(const char *filename, void *buffe
 
 int FileSystem_readFileIntoBuffer(const char *filename, void *buffer, int maxSize)
 {
-	FILE *fp = fopen(filename, "rb");
+	const char *casedFile = FileSystem_getCaseSensitiveFile(filename);
+	if (!casedFile) {
+		return 0;
+	}
+	FILE *fp = fopen(casedFile, "rb");
 	if (!fp) {
 		return 0;
 	}
@@ -85,14 +86,17 @@ int FileSystem_readFileIntoBuffer(const char *filename, void *buffer, int maxSiz
 	}
 	fseek(fp, 0, SEEK_SET);
 	int read = fread(buffer, 1, size, fp);
-	printf("Read %d bytes from %s\n", read, filename);
 	fclose(fp);
 	return read > 0 ? 1 : 0;
 }
 
 int FileSystem_getFileSize(const char *filename)
 {
-	FILE *fp = fopen(filename, "rb");
+	const char *casedFile = FileSystem_getCaseSensitiveFile(filename);
+	if (!casedFile) {
+		return 0;
+	}
+	FILE *fp = fopen(casedFile, "rb");
 	if (!fp) {
 		return 0;
 	}
@@ -229,7 +233,7 @@ static int makeCaseInsensitive(const char *dir, char *filename)
 	return 0;
 }
 
-const char* FileSystem_getCaseInsensitiveFile(const char* filename)
+const char* FileSystem_getCaseSensitiveFile(const char* filename)
 {
 	static char insensitiveFilename[200];
 	

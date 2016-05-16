@@ -27,7 +27,7 @@ static int hasVideo(int textId)
 		return 0;
 	}
 	const char *videoFile = &Data_Language_Message.data[offset];
-	return FileSystem_getCaseInsensitiveFile(videoFile) != 0;
+	return FileSystem_getCaseSensitiveFile(videoFile) != 0;
 }
 
 void PlayerMessage_disableSoundForNextMessage()

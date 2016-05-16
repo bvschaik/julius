@@ -3,7 +3,13 @@
 
 #define FILESYSTEM_MAX_FILENAME 100
 
-const char *FileSystem_getCaseInsensitiveFile(const char *filename);
+/**
+ * For case sensitive filesystem: gets the filename of the file with the same name but different casing
+ * Function doubles as file_exists()
+ * \param filename Filename
+ * \return char pointer to case-corrected file, or NULL on not found
+ */
+const char *FileSystem_getCaseSensitiveFile(const char *filename);
 
 int FileSystem_fileExists(const char *filename);
 
