@@ -3,6 +3,7 @@
 extern "C" {
   #include "Video/smacker.h"
 }
+#include "SDL_mixer.h"
 
 #include <cstdio> // debug
 #include <stdint.h>
@@ -48,9 +49,85 @@ static void closeAll()
 	}
 	if (data.audio.s) {
 		closeSmk(&data.audio.s);
-		data.audio.cur = data.audio.len; // force flush of buffer
+		data.audio.cur = data.audio.len = 0;
+		if (data.audio.data) {
+			free(data.audio.data);
+			data.audio.data = 0;
+		}
 	}
-	data.isEnded = 1;
+}
+
+static int nextAudioFrame()
+{
+	if (data.audio.data) {
+		free(data.audio.data);
+		data.audio.data = 0;
+	}
+	
+	if (!data.audio.s) {
+		return 0;
+	}
+	int audioLen = smk_get_audio_size(data.audio.s, 0);
+	if (audioLen > 0) {
+		data.audio.cur = 0;
+		data.audio.len = audioLen;
+		data.audio.data = (char*) malloc(audioLen);
+		memcpy(data.audio.data, smk_get_audio(data.audio.s, 0), audioLen);
+		/*
+		SDL_AudioCVT cvt;
+		printf("Audio convert: %d\n", SDL_BuildAudioCVT(&cvt, AUDIO_U8, 2, 22010, AUDIO_S16, 2, 22010));
+		
+		cvt.buf = (Uint8*) malloc(audioLen * cvt.len_mult);
+		cvt.len = audioLen;
+		memcpy(cvt.buf, smk_get_audio(data.audio.s, 0), audioLen);
+		// convert audio
+		printf("Convert: %d\n", SDL_ConvertAudio(&cvt));
+		audio.cur = 0;
+		audio.len = cvt.len_cvt;
+		audio.data = cvt.buf;
+		*/
+	}
+	if (!smk_next(data.audio.s)) {
+		closeSmk(&data.audio.s);
+	}
+	return audioLen;
+}
+
+static int copyAudioFromBuffer(Uint8 *stream, int len)
+{
+	if (!data.audio.data || data.audio.cur >= data.audio.len) {
+		return 0;
+	}
+	// push existing bytes
+	int toWrite = data.audio.len - data.audio.cur;
+	if (toWrite > len) {
+		toWrite = len;
+	}
+	memcpy(stream, &data.audio.data[data.audio.cur], toWrite);
+	data.audio.cur += toWrite;
+	return toWrite;
+}
+
+static void playAudio(void *userdata, Uint8 *stream, int len)
+{
+	int canContinue = 1;
+	do {
+		int copied = copyAudioFromBuffer(stream, len);
+		if (copied) {
+			len -= copied;
+			stream += copied;
+		}
+		if (len == 0) {
+			canContinue = 0;
+		} else {
+			canContinue = nextAudioFrame();
+		}
+	} while (canContinue);
+	if (len) {
+		// end of stream, write silence
+		printf("Audio buffer underrun by %d bytes\n", len);
+		memset(stream, 0, len);
+	}
 }
 
 static int loadSmkVideo(const char *filename)
@@ -141,6 +218,8 @@ int loadSmk(const char *filename)
 
 static void endVideo()
 {
+	// TODO close audio
+	Mix_HookMusic(0, 0);
 	Sound_Music_reset();
 	Sound_Music_update();
 }
@@ -153,7 +232,6 @@ int Video_start(const char *filename)
 	if (loadSmk(filename)) {
 		Sound_stopMusic();
 		Sound_stopSpeech();
-		// refresh video buffer?
 		data.isPlaying = 1;
 		return 1;
 	} else {
@@ -193,6 +271,7 @@ void Video_init()
 {
 	data.video.startRenderMillis = Time_getMillis();
 	// TODO start audio
+	Mix_HookMusic(playAudio, 0);
 }
 
 void Video_draw(int xOffset, int yOffset)
