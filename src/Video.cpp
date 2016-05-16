@@ -32,7 +32,7 @@ static struct {
 		smk s;
 		int cur;
 		int len;
-		char *data;
+		unsigned char *data;
 	} audio;
 } data;
 
@@ -69,23 +69,23 @@ static int nextAudioFrame()
 	}
 	int audioLen = smk_get_audio_size(data.audio.s, 0);
 	if (audioLen > 0) {
+		/*
 		data.audio.cur = 0;
 		data.audio.len = audioLen;
 		data.audio.data = (char*) malloc(audioLen);
 		memcpy(data.audio.data, smk_get_audio(data.audio.s, 0), audioLen);
-		/*
+		*/
 		SDL_AudioCVT cvt;
-		printf("Audio convert: %d\n", SDL_BuildAudioCVT(&cvt, AUDIO_U8, 2, 22010, AUDIO_S16, 2, 22010));
+		printf("Audio convert: %d\n", SDL_BuildAudioCVT(&cvt, AUDIO_U8, 2, 22010, AUDIO_S16MSB, 2, 22010));
 		
 		cvt.buf = (Uint8*) malloc(audioLen * cvt.len_mult);
 		cvt.len = audioLen;
 		memcpy(cvt.buf, smk_get_audio(data.audio.s, 0), audioLen);
 		// convert audio
 		printf("Convert: %d\n", SDL_ConvertAudio(&cvt));
-		audio.cur = 0;
-		audio.len = cvt.len_cvt;
-		audio.data = cvt.buf;
-		*/
+		data.audio.cur = 0;
+		data.audio.len = cvt.len_cvt;
+		data.audio.data = cvt.buf;
 	}
 	if (!smk_next(data.audio.s)) {
 		closeSmk(&data.audio.s);
