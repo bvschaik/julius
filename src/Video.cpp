@@ -9,6 +9,7 @@ extern "C" {
 #include "SoundDevice.h"
 #include "Time.h"
 #include "Data/Screen.h"
+#include "Data/Settings.h"
 
 static struct {
 	int isPlaying;
@@ -99,6 +100,10 @@ static int loadSmkVideo(const char *filename)
 
 static int loadSmkAudio(const char *filename)
 {
+	if (!Data_Settings.soundEffectsEnabled) {
+		// no sound when sound effects are disabled
+		return 1;
+	}
 	data.audio.s = smk_open_file(filename, SMK_MODE_DISK);
 	if (!data.audio.s) {
 		return 0;

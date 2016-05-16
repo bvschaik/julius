@@ -8,7 +8,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 set(SMK_FILES src/Video/smacker.c src/Video/smk_bitstream.c src/Video/smk_hufftree.c)
 add_executable(opencaesar
 	linux/main2.cpp
-	linux/SoundDeviceDummy.cpp
+	linux/SDLSoundDevice.cpp
 	src/Animation.cpp
 	src/Building.cpp
 	src/BuildingHouse.cpp
