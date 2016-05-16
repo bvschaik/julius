@@ -2,8 +2,8 @@
 
 #include "PlayerMessage.h"
 #include "Sound.h"
-#include "Video.h"
 #include "UI/AllWindows.h"
+#include "UI/VideoIntermezzo.h"
 #include "UI/Window.h"
 
 #include "Data/CityInfo.h"
@@ -108,19 +108,13 @@ void CityInfo_Victory_check()
 					UI_Window_goTo(Window_VictoryIntermezzo);
 				} else if (!Data_Settings.isCustomScenario && Data_Settings.currentMissionId >= 10) {
 					// Won game
-					Video_start("smk/win_game.smk",
-						(Data_Screen.width - 400) / 2, (Data_Screen.height - 292) / 2,
-						1, Window_VictoryIntermezzo);
+					VideoIntermezzo_show("smk/win_game.smk", 400, 292, Window_VictoryIntermezzo);
 				} else {
 					if (Data_Settings.lastVictoryVideoPlayed) {
-						Video_start("smk/victory_senate.smk",
-							(Data_Screen.width - 400) / 2, (Data_Screen.height - 292) / 2,
-							1, Window_VictoryIntermezzo);
+						VideoIntermezzo_show("smk/victory_senate.smk", 400, 292, Window_VictoryIntermezzo);
 						Data_Settings.lastVictoryVideoPlayed = 0;
 					} else {
-						Video_start("smk/victory_balcony.smk",
-							(Data_Screen.width - 400) / 2, (Data_Screen.height - 292) / 2,
-							1, Window_VictoryIntermezzo);
+						VideoIntermezzo_show("smk/victory_balcony.smk", 400, 292, Window_VictoryIntermezzo);
 						Data_Settings.lastVictoryVideoPlayed = 1;
 					}
 				}

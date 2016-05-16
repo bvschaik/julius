@@ -125,7 +125,8 @@ void UI_MessageDialog_show(int textId, int backgroundIsProvided)
 	data.dword_7e314c = 0;
 	data.textId = textId;
 	data.backgroundIsProvided = backgroundIsProvided;
-	if (Data_Language_Message.index[textId].videoLinkOffset) {
+	if (Data_Language_Message.index[textId].videoLinkOffset &&
+		Video_start(TEXT(Data_Language_Message.index[textId].videoLinkOffset))) {
 		data.showVideo = 1;
 	} else {
 		data.showVideo = 0;
@@ -135,6 +136,13 @@ void UI_MessageDialog_show(int textId, int backgroundIsProvided)
 	}
 	Widget_RichText_clearLinks();
 	UI_Window_goTo(Window_MessageDialog);
+}
+
+void UI_MessageDialog_init()
+{
+	if (data.showVideo) {
+		Video_init();
+	}
 }
 
 void UI_MessageDialog_drawBackground()
@@ -239,8 +247,6 @@ static void drawDialogVideo()
 	Widget_Panel_drawOuterPanel(data.x, data.y, 26, 28);
 	Graphics_drawRect(data.x + 7, data.y + 7, 402, 294, Color_Black);
 	Widget_RichText_clearLinks();
-	
-	Video_start(TEXT(msg->videoLinkOffset), data.x + 8, data.y + 8, 0, UI_Window_getId());
 	
 	Widget_Panel_drawInnerPanel(data.x + 8, data.y + 308, 25, 6);
 	Widget_Text_drawCentered(TEXT(msg->titleOffset),
@@ -404,6 +410,7 @@ static ImageButton *getAdvisorButton()
 
 static void drawForegroundVideo()
 {
+	Video_draw(data.x + 8, data.y + 8);
 	Widget_Button_drawImageButtons(data.x + 16, data.y + 408, getAdvisorButton(), 1);
 	Widget_Button_drawImageButtons(data.x + 372, data.y + 410, &imageButtonClose, 1);
 }

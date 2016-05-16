@@ -17,6 +17,7 @@ void UI_MessageDialog_setPlayerMessage(int year, int month,
 									   int param1, int param2,
 									   int messageAdvisor, int usePopup);
 
+void UI_MessageDialog_init();
 void UI_MessageDialog_drawBackground();
 void UI_MessageDialog_drawForeground();
 void UI_MessageDialog_handleMouse();

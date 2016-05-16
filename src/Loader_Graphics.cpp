@@ -8,6 +8,9 @@
 #include "Data/Screen.h"
 #include "Data/Constants.h"
 
+#define MAIN_SIZE 12100000
+#define ENEMY_SIZE 4900000
+
 static const char mainGraphicsSg2[][32] = {
 	"C3.sg2",
 	"C3_North.sg2",
@@ -67,17 +70,17 @@ static int currentClimate = -1;
 
 static void prepareMainGraphics();
 static void prepareEnemyGraphics();
-static void convertGraphicToSurfaceFormat(void *data, int length);
-static void convertCompressedGraphicToSurfaceFormat(void *data, int length);
 
 static char *imagesScratchSpace;
 
 int Loader_Graphics_initGraphics()
 {
-	char *ptr = (char *) malloc(17000000);
-	Data_Graphics_PixelData.main = ptr;
-	Data_Graphics_PixelData.enemy = &ptr[12100000];
+	Data_Graphics_PixelData.enemy = (char*) malloc(ENEMY_SIZE);
+	Data_Graphics_PixelData.main = (char*) malloc(MAIN_SIZE);
 	imagesScratchSpace = (char*) malloc(2000 * 1000 * 2);
+	if (!Data_Graphics_PixelData.main || !Data_Graphics_PixelData.enemy || !imagesScratchSpace) {
+		return 0;
+	}
 	Graphics_initialize();
 	return 1;
 }
@@ -99,7 +102,7 @@ int Loader_Graphics_loadMainGraphics(int climate)
 	if (!FileSystem_readFileIntoBuffer(filenameSg2, &Data_Graphics_Main, sizeof(Data_Graphics_Main))) {
 		return 0;
 	}
-	if (!FileSystem_readFileIntoBuffer(filename555, Data_Graphics_PixelData.main, 17000000)) {
+	if (!FileSystem_readFileIntoBuffer(filename555, Data_Graphics_PixelData.main, MAIN_SIZE)) {
 		return 0;
 	}
 
@@ -120,7 +123,7 @@ int Loader_Graphics_loadEnemyGraphics(int enemyId)
 	}
 
 	FileSystem_readFilePartIntoBuffer(filenameSg2, &Data_Graphics_Enemy, 51264, 20680);
-	FileSystem_readFileIntoBuffer(filename555, Data_Graphics_PixelData.enemy, 12100000);
+	FileSystem_readFileIntoBuffer(filename555, Data_Graphics_PixelData.enemy, ENEMY_SIZE);
 
 	prepareEnemyGraphics();
 	return 1;
@@ -142,11 +145,6 @@ const char *Loader_Graphics_loadExternalImagePixelData(int graphicId)
 			return 0;
 		}
 	}
-	if (index->isFullyCompressed) {
-		convertCompressedGraphicToSurfaceFormat(imagesScratchSpace, index->dataLength);
-	} else {
-		convertGraphicToSurfaceFormat(imagesScratchSpace, index->dataLength);
-	}
 	return imagesScratchSpace;
 }
 
@@ -164,34 +162,6 @@ static void prepareMainGraphics()
 		// internal graphic
 		index->offset = offset;
 		offset += index->dataLength;
-		if (index->dataLength <= 0) {
-			continue;
-		}
-		printf("Preparing %d - %d %d\n", i, index->type, index->isFullyCompressed);
-		if (index->type == 30) { // isometric
-			if (index->hasCompressedPart) {
-				convertGraphicToSurfaceFormat(
-					&Data_Graphics_PixelData.main[index->offset],
-					index->uncompressedLength);
-				convertCompressedGraphicToSurfaceFormat(
-					&Data_Graphics_PixelData.main[index->offset + index->uncompressedLength],
-					index->dataLength - index->uncompressedLength);
-			} else {
-				convertGraphicToSurfaceFormat(
-					&Data_Graphics_PixelData.main[index->offset],
-					index->dataLength);
-			}
-		} else {
-			if (index->isFullyCompressed) {
-				convertCompressedGraphicToSurfaceFormat(
-					&Data_Graphics_PixelData.main[index->offset],
-					index->dataLength);
-			} else {
-				convertGraphicToSurfaceFormat(
-					&Data_Graphics_PixelData.main[index->offset],
-					index->dataLength);
-			}
-		}
 	}
 }
 
@@ -209,57 +179,5 @@ static void prepareEnemyGraphics()
 		// internal graphic
 		index->offset = offset;
 		offset += index->dataLength;
-		if (index->dataLength > 0) {
-			if (index->isFullyCompressed) {
-				convertCompressedGraphicToSurfaceFormat(
-					&Data_Graphics_PixelData.enemy[index->offset],
-					index->dataLength);
-			} else {
-				convertGraphicToSurfaceFormat(
-					&Data_Graphics_PixelData.enemy[index->offset],
-					index->dataLength);
-			}
-		}
-	}
-}
-
-static void convertGraphicToSurfaceFormat(void *data, int lengthInBytes)
-{
-	if (Data_Screen.format == 5650) {
-		Color *color = (Color*) data;
-		for (int i = 0; i < lengthInBytes; i += 2) {
-			if (*color != Color_Transparent) {
-				*color = (*color & 0x1f) | ((*color & 0xffe0) << 1);
-			}
-			++color;
-		}
-	}
-}
-
-static void convertCompressedGraphicToSurfaceFormat(void *data, int lengthInBytes)
-{
-	if (Data_Screen.format == 5650) {
-		char *ptr = (char *) data;
-		int bytesToGo = lengthInBytes;
-		while (bytesToGo > 0) {
-			signed char length = *ptr;
-			if (length == -1) {
-				ptr += 2;
-				bytesToGo -= 2;
-			} else {
-				if (length < 0) {
-					return;
-				}
-				ptr++;
-				bytesToGo--;
-				Color *color = (Color*) ptr;
-				for (int i = 0; i < length; i++) {
-					*color = (*color & 0x1f) | ((*color & 0xffe0) << 1);
-					++color;
-				}
-				ptr += length * 2;
-				bytesToGo -= length * 2;
-			}
-		}
 	}
 }

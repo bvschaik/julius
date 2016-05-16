@@ -84,9 +84,10 @@ int FileSystem_readFileIntoBuffer(const char *filename, void *buffer, int maxSiz
 		size = maxSize;
 	}
 	fseek(fp, 0, SEEK_SET);
-	fread(buffer, 1, size, fp);
+	int read = fread(buffer, 1, size, fp);
+	printf("Read %d bytes from %s\n", read, filename);
 	fclose(fp);
-	return 1;
+	return read > 0 ? 1 : 0;
 }
 
 int FileSystem_getFileSize(const char *filename)

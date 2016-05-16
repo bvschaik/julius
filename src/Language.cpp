@@ -34,10 +34,14 @@ int Language_load(const char *textfile, const char *msgfile)
 		fclose(fp);
 		return 0;
 	}
-	fread(&Data_Language_Text.header, 1, TEXT_HEADER_SIZE, fp);
-	fread(&Data_Language_Text.index, 1, TEXT_INDEX_SIZE, fp);
-	fread(Data_Language_Text.data, 1, textDataLength, fp);
+	int bytesRead = 0;
+	bytesRead += fread(&Data_Language_Text.header, 1, TEXT_HEADER_SIZE, fp);
+	bytesRead += fread(&Data_Language_Text.index, 1, TEXT_INDEX_SIZE, fp);
+	bytesRead += fread(Data_Language_Text.data, 1, textDataLength, fp);
 	fclose(fp);
+	if (bytesRead == 0) {
+		return 0;
+	}
 
 	fp = fopen(msgfile, "rb");
 	if (!fp) {
@@ -48,9 +52,13 @@ int Language_load(const char *textfile, const char *msgfile)
 		fclose(fp);
 		return 0;
 	}
-	fread(&Data_Language_Message.header, 1, MESSAGE_INDEX_SIZE, fp);
-	fread(Data_Language_Message.data, 1, msgDataLength, fp);
+	bytesRead = 0;
+	bytesRead += fread(&Data_Language_Message.header, 1, MESSAGE_INDEX_SIZE, fp);
+	bytesRead += fread(Data_Language_Message.data, 1, msgDataLength, fp);
 	fclose(fp);
+	if (bytesRead == 0) {
+		return 0;
+	}
 
 	return 1;
 }

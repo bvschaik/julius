@@ -9,6 +9,7 @@
 #include "Sidebar.h"
 #include "Tooltip.h"
 #include "TopMenu.h"
+#include "VideoIntermezzo.h"
 #include "Warning.h"
 
 #include "../Cursor.h"
@@ -48,7 +49,7 @@ static struct Window windows[] = {
 	{ noop, UI_HoldFestivalDialog_drawBackground, UI_HoldFestivalDialog_drawForeground, UI_HoldFestivalDialog_handleMouse, UI_HoldFestivalDialog_getTooltip },
 	{ noop, UI_TradePricesDialog_drawBackground, noop, UI_TradePricesDialog_handleMouse, UI_TradePricesDialog_getTooltip },
 	{ noop, UI_ResourceSettingsDialog_drawBackground, UI_ResourceSettingsDialog_drawForeground, UI_ResourceSettingsDialog_handleMouse },
-	{ noop, UI_MessageDialog_drawBackground, UI_MessageDialog_drawForeground, UI_MessageDialog_handleMouse },
+	{ UI_MessageDialog_init, UI_MessageDialog_drawBackground, UI_MessageDialog_drawForeground, UI_MessageDialog_handleMouse },
 	{ UI_PlayerMessageList_init, UI_PlayerMessageList_drawBackground, UI_PlayerMessageList_drawForeground, UI_PlayerMessageList_handleMouse, UI_PlayerMessageList_getTooltip },
 	// 20
 	{ UI_CCKSelection_init, UI_CCKSelection_drawBackground, UI_CCKSelection_drawForeground, UI_CCKSelection_handleMouse},
@@ -67,7 +68,7 @@ static struct Window windows[] = {
 	{ noop, UI_VictoryDialog_drawBackground, UI_VictoryDialog_drawForeground, UI_VictoryDialog_handleMouse },
 	{ noop, UI_MissionEnd_drawBackground, UI_MissionEnd_drawForeground, UI_MissionEnd_handleMouse },
 	{ UI_VictoryIntermezzo_init, noop, noop, noop },
-	{ noop, noop, noop, noop },
+	{ VideoIntermezzo_init, VideoIntermezzo_drawBackground, VideoIntermezzo_drawForeground, VideoIntermezzo_handleMouse },
 };
 
 static WindowId previousWindow;
