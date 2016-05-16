@@ -7,6 +7,7 @@ extern "C" {
 #include <cstdio> // debug
 #include <stdint.h>
 
+#include "FileSystem.h"
 #include "Graphics.h"
 #include "Sound.h"
 #include "Time.h"
@@ -126,7 +127,11 @@ static int loadSmkAudio(const char *filename)
 
 int loadSmk(const char *filename)
 {
-	if (loadSmkVideo(filename) && loadSmkAudio(filename)) {
+	const char *path = FileSystem_getCaseInsensitiveFile(filename);
+	if (!path) {
+		return 0;
+	}
+	if (loadSmkVideo(path) && loadSmkAudio(path)) {
 		return 1;
 	} else {
 		closeAll();
@@ -143,6 +148,7 @@ static void endVideo()
 int Video_start(const char *filename)
 {
 	data.isPlaying = 0;
+	data.isEnded = 0;
 	
 	if (loadSmk(filename)) {
 		Sound_stopMusic();

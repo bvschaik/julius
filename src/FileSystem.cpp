@@ -210,3 +210,52 @@ void FileSystem_findFilesWithExtension(const char *extension)
 	closedir(d);
 	qsort(Data_FileList.files, Data_FileList.numFiles, FILENAME_LENGTH, compareLower);
 }
+
+static int makeCaseInsensitive(const char *dir, char *filename)
+{
+	DIR *d = opendir(dir);
+	if (!d) {
+		return 0;
+	}
+	struct dirent *entry;
+	while ((entry = readdir(d))) {
+		if (strcasecmp(entry->d_name, filename) == 0) {
+			strcpy(filename, entry->d_name);
+			closedir(d);
+			return 1;
+		}
+	}
+	closedir(d);
+	return 0;
+}
+
+const char* FileSystem_getCaseInsensitiveFile(const char* filename)
+{
+	static char insensitiveFilename[200];
+	
+	strncpy(insensitiveFilename, filename, 200);
+	if (FileSystem_fileExists(filename)) {
+		return insensitiveFilename;
+	}
+
+	char *slash = strchr(insensitiveFilename, '/');
+	if (!slash) {
+		slash = strchr(insensitiveFilename, '\\');
+	}
+	if (slash) {
+		*slash = 0;
+		if (makeCaseInsensitive(".", insensitiveFilename)) {
+			char *path = slash + 1;
+			if (makeCaseInsensitive(insensitiveFilename, path)) {
+				*slash = '/';
+				return insensitiveFilename;
+			}
+		}
+	} else {
+		if (makeCaseInsensitive(".", insensitiveFilename)) {
+			return insensitiveFilename;
+		}
+	}
+	return 0;
+}
+

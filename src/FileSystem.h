@@ -3,6 +3,8 @@
 
 #define FILESYSTEM_MAX_FILENAME 100
 
+const char *FileSystem_getCaseInsensitiveFile(const char *filename);
+
 int FileSystem_fileExists(const char *filename);
 
 int FileSystem_readFilePartIntoBuffer(const char *filename, void *buffer, int length, int offsetInFile);

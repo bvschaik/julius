@@ -44,7 +44,7 @@ static CustomButton customButtons[] = {
 	{160, 304, 448, 320, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 11, 0},
 };
 
-#define NOT_EXIST_MESSAGE_TIMEOUT 200
+#define NOT_EXIST_MESSAGE_TIMEOUT 500
 
 static TimeMillis messageNotExistTimeUntil;
 static int dialogType;

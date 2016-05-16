@@ -14,13 +14,13 @@ static struct {
 
 void VideoIntermezzo_show(const char* filename, int width, int height, WindowId nextWindowId)
 {
-	if (!Video_start(filename)) {
+	if (Video_start(filename)) {
 		data.width = width;
 		data.height = height;
-		UI_Window_goTo(nextWindowId);
-	} else {
 		data.nextWindowId = nextWindowId;
 		UI_Window_goTo(Window_VideoIntermezzo);
+	} else {
+		UI_Window_goTo(nextWindowId);
 	}
 }
 
