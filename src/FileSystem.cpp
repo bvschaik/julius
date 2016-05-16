@@ -108,7 +108,11 @@ int FileSystem_getFileSize(const char *filename)
 
 int FileSystem_writeBufferToFile(const char *filename, const void *buffer, int size)
 {
-	FILE *fp = fopen(filename, "wb");
+	const char *casedFile = FileSystem_getCaseSensitiveFile(filename);
+	if (!casedFile) {
+		casedFile = filename;
+	}
+	FILE *fp = fopen(casedFile, "wb");
 	if (!fp) {
 		return 0;
 	}
