@@ -145,6 +145,7 @@ void Sound_City_markBuildingView(int buildingId, int direction);
 void Sound_City_decayViews();
 void Sound_City_play();
 
+void Sound_Music_playIntro();
 void Sound_Music_reset();
 void Sound_Music_update();
 

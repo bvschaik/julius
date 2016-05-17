@@ -15,6 +15,7 @@ int Widget_GameText_draw(int group, int number, int xOffset, int yOffset, Font f
 int Widget_GameText_drawColored(int group, int number, int xOffset, int yOffset, Font font, Color color);
 
 void Widget_GameText_drawCentered(int group, int number, int xOffset, int yOffset, int boxWidth, Font font);
+void Widget_GameText_drawCenteredColored(int group, int number, int xOffset, int yOffset, int boxWidth, Font font, Color color);
 
 int Widget_Text_drawNumber(int value, char prefix, const char *postfix, int xOffset, int yOffset, Font font);
 int Widget_Text_drawNumberColored(int value, char prefix, const char *postfix, int xOffset, int yOffset, Font font, Color color);

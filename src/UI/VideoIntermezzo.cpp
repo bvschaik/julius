@@ -12,7 +12,7 @@ static struct {
 	int height;
 } data;
 
-void VideoIntermezzo_show(const char* filename, int width, int height, WindowId nextWindowId)
+void UI_VideoIntermezzo_show(const char* filename, int width, int height, WindowId nextWindowId)
 {
 	if (Video_start(filename)) {
 		data.width = width;
@@ -24,22 +24,22 @@ void VideoIntermezzo_show(const char* filename, int width, int height, WindowId 
 	}
 }
 
-void VideoIntermezzo_init()
+void UI_VideoIntermezzo_init()
 {
 	Video_init();
 }
 
-void VideoIntermezzo_drawBackground()
+void UI_VideoIntermezzo_drawBackground()
 {
 	Graphics_clearScreen();
 }
 
-void VideoIntermezzo_drawForeground()
+void UI_VideoIntermezzo_drawForeground()
 {
 	Video_draw((Data_Screen.width - data.width) / 2, (Data_Screen.height - data.height) / 2);
 }
 
-void VideoIntermezzo_handleMouse()
+void UI_VideoIntermezzo_handleMouse()
 {
 	if (Data_Mouse.left.wentUp || Data_Mouse.right.wentUp || Video_isFinished()) {
 		Video_stop();

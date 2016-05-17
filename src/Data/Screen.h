@@ -5,7 +5,7 @@
 
 #define ScreenPixel(x,y) ((ScreenColor*)Data_Screen.drawBuffer)[(y) * Data_Screen.width + (x)]
 
-extern struct Data_Screen {
+extern struct _Data_Screen {
 	int width;
 	int height;
 	struct {

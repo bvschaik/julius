@@ -50,8 +50,7 @@ int Game_init()
 
 	Sound_init();
 	Loader_GameState_init();
-	//TODO? fun_setCityScreenWidths();
-	UI_Window_goTo(Window_MainMenu);
+	UI_Window_goTo(Window_Logo);
 	return 1;
 }
 

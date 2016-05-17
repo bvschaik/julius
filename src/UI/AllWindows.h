@@ -4,6 +4,10 @@
 #include "Tooltip.h"
 #include "Window.h"
 
+void UI_Logo_init();
+void UI_Logo_drawBackground();
+void UI_Logo_handleMouse();
+
 void UI_MainMenu_drawBackground();
 void UI_MainMenu_drawForeground();
 void UI_MainMenu_handleMouse();

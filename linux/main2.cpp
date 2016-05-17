@@ -153,18 +153,6 @@ void System_initCursors()
 	}
 	System_setCursor(0);
 }
-/*
-typedef struct{
-	SDL_Palette *palette;
-	Uint8  BitsPerPixel;
-	Uint8  BytesPerPixel;
-	Uint32 Rmask, Gmask, Bmask, Amask;
-	Uint8  Rshift, Gshift, Bshift, Ashift;
-	Uint8  Rloss, Gloss, Bloss, Aloss;
-	Uint32 colorkey;
-	Uint8  alpha;
-} SDL_PixelFormat;
-*/
 
 #include "../src/GameFile.h"
 
@@ -376,12 +364,6 @@ void createWindowAndRenderer(int fullscreen)
 
 void createSurface(int width, int height, int fullscreen)
 {
-	/*Uint32 flags = SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_ANYFORMAT;
-	if (fullscreen) {
-		flags |= SDL_FULLSCREEN;
-	} else {
-		flags |= SDL_RESIZABLE;
-	}*/
 	if (SDL.texture) {
 		SDL_DestroyTexture(SDL.texture);
 		SDL.texture = 0;
@@ -510,13 +492,6 @@ void mainLoop()
 					}
 					break;
 
-				
-				/*case SDL_VIDEORESIZE:
-					printf("Resize to %d x %d\n", event.resize.w, event.resize.h);
-					surface = createSurface(event.resize.w, event.resize.h, 0);
-					UI_Window_requestRefresh();
-					break;*/
-				
 				case SDL_QUIT:
 					return;
 				
@@ -578,13 +553,6 @@ void initSdl()
 	printf("Current resolution: %d x %d\n", mode.w, mode.h);
 	Desktop.width = mode.w;
 	Desktop.height = mode.h;
-	
-	/*int closestMode = SDL_VideoModeOK(800, 600, 16, 0);
-	if (closestMode) {
-		printf("VIDEO OK with bpp: %d\n", closestMode);
-	} else {
-		printf("VIDEO NOT OK\n");
-	}*/
 }
 
 int main(int argc, char **argv)

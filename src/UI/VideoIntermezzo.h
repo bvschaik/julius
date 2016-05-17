@@ -3,11 +3,11 @@
 
 #include "Window.h"
 
-void VideoIntermezzo_show(const char* filename, int width, int height, WindowId nextWindowId);
+void UI_VideoIntermezzo_show(const char* filename, int width, int height, WindowId nextWindowId);
 
-void VideoIntermezzo_init();
-void VideoIntermezzo_drawBackground();
-void VideoIntermezzo_drawForeground();
-void VideoIntermezzo_handleMouse();
+void UI_VideoIntermezzo_init();
+void UI_VideoIntermezzo_drawBackground();
+void UI_VideoIntermezzo_drawForeground();
+void UI_VideoIntermezzo_handleMouse();
 
 #endif

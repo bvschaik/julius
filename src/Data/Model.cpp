@@ -33,7 +33,7 @@ struct _Data_Graphics_Main Data_Graphics_Main;
 struct _Data_Graphics_Enemy Data_Graphics_Enemy;
 struct _Data_Graphics_PixelData Data_Graphics_PixelData;
 
-struct Data_Screen Data_Screen;// = { 800, 600, {80, 60} };
+struct _Data_Screen Data_Screen;// = { 800, 600, {80, 60} };
 
 struct _Data_Mouse Data_Mouse;
 

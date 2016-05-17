@@ -68,7 +68,8 @@ static struct Window windows[] = {
 	{ noop, UI_VictoryDialog_drawBackground, UI_VictoryDialog_drawForeground, UI_VictoryDialog_handleMouse },
 	{ noop, UI_MissionEnd_drawBackground, UI_MissionEnd_drawForeground, UI_MissionEnd_handleMouse },
 	{ UI_VictoryIntermezzo_init, noop, noop, noop },
-	{ VideoIntermezzo_init, VideoIntermezzo_drawBackground, VideoIntermezzo_drawForeground, VideoIntermezzo_handleMouse },
+	{ UI_VideoIntermezzo_init, UI_VideoIntermezzo_drawBackground, UI_VideoIntermezzo_drawForeground, UI_VideoIntermezzo_handleMouse },
+	{ UI_Logo_init, UI_Logo_drawBackground, noop, UI_Logo_handleMouse },
 };
 
 static WindowId previousWindow;

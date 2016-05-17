@@ -344,6 +344,12 @@ void Widget_GameText_drawCentered(int group, int number, int xOffset, int yOffse
 	Widget_Text_drawCentered(str, xOffset, yOffset, boxWidth, font, 0);
 }
 
+void Widget_GameText_drawCenteredColored(int group, int number, int xOffset, int yOffset, int boxWidth, Font font, Color color)
+{
+	const char *str = Language_getString(group, number);
+	Widget_Text_drawCentered(str, xOffset, yOffset, boxWidth, font, color);
+}
+
 int Widget_GameText_drawNumberWithDescription(int group, int number, int amount, int xOffset, int yOffset, Font font)
 {
 	int amountOffset = 1;

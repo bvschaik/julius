@@ -153,6 +153,7 @@ add_executable(opencaesar
 	src/UI/FileDialog.cpp
 	src/UI/HoldFestivalDialog.cpp
 	src/UI/Intermezzo.cpp
+	src/UI/Logo.cpp
 	src/UI/MainMenu.cpp
 	src/UI/MessageDialog.cpp
 	src/UI/Minimap.cpp
