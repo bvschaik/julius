@@ -348,6 +348,7 @@ void handleText(SDL_TextInputEvent *event)
 
 void createWindowAndRenderer(int fullscreen)
 {
+	printf("Fullscreen? %d\n", fullscreen);
 	if (SDL.window) {
 		SDL_DestroyWindow(SDL.window);
 		SDL.window = 0;
@@ -361,7 +362,7 @@ void createWindowAndRenderer(int fullscreen)
 	if (fullscreen) {
 		SDL.window = SDL_CreateWindow(title,
 			SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-			0, 0,
+			Desktop.width, Desktop.height,
 			SDL_WINDOW_FULLSCREEN_DESKTOP);
 	} else {
 		SDL.window = SDL_CreateWindow(title,
@@ -545,7 +546,7 @@ void mainLoop()
 					break;
 				
 				default:
-					printf("Unknown event: %d\n", event.type);
+					//printf("Unknown event: %d\n", event.type);
 					break;
 			}
 		}

@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.6)
 project(opencaesar)
 
+set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/cmake/")
+
 message("${CMAKE_CXX_FLAGS}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
@@ -172,15 +174,18 @@ add_executable(opencaesar
 	src/UI/Window.cpp
 	${SMK_FILES})
 
-include(FindPkgConfig)
-pkg_search_module(SDL2 REQUIRED sdl2)
-pkg_search_module(SDL2_MIXER REQUIRED SDL2_mixer)
+#include(FindPkgConfig)
+#pkg_search_module(SDL2 REQUIRED sdl2)
+#pkg_search_module(SDL2_MIXER REQUIRED SDL2_mixer)
 
-include_directories(${SDL2_INCLUDE_DIRS})
-include_directories(${SDL2_MIXER_INCLUDE_DIRS})
+find_package(SDL2 REQUIRED)
+find_package(SDL2_mixer REQUIRED)
+
+include_directories(${SDL2_INCLUDE_DIR})
+include_directories(${SDL2_MIXER_INCLUDE_DIR})
 
 #set(LIBS ${LIBS} ${SDL_LIBRARY})
 #link_libraries(${LIBS})
-target_link_libraries (opencaesar ${SDL2_LIBRARIES} ${SDL2_MIXER_LIBRARIES})
+target_link_libraries (opencaesar ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY})
 
 install(TARGETS opencaesar RUNTIME DESTINATION bin)
