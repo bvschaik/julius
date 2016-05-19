@@ -85,7 +85,6 @@ int Loader_Graphics_initGraphics()
 	return 1;
 }
 
-#include <cstdio>
 int Loader_Graphics_loadMainGraphics(int climate)
 {
 	if (climate == currentClimate) {
@@ -102,9 +101,7 @@ int Loader_Graphics_loadMainGraphics(int climate)
 		return 0;
 	}
 
-	printf("Preparing main graphics..\n");
 	prepareMainGraphics();
-	printf("Prepared main graphics\n");
 	currentClimate = climate;
 	return 1;
 }
@@ -114,8 +111,12 @@ int Loader_Graphics_loadEnemyGraphics(int enemyId)
 	const char *filename555 = enemyGraphics555[enemyId];
 	const char *filenameSg2 = enemyGraphicsSg2[enemyId];
 
-	FileSystem_readFilePartIntoBuffer(filenameSg2, &Data_Graphics_Enemy, 51264, 20680);
-	FileSystem_readFileIntoBuffer(filename555, Data_Graphics_PixelData.enemy, ENEMY_SIZE);
+	if (!FileSystem_readFilePartIntoBuffer(filenameSg2, &Data_Graphics_Enemy, 51264, 20680)) {
+		return 0;
+	}
+	if (!FileSystem_readFileIntoBuffer(filename555, Data_Graphics_PixelData.enemy, ENEMY_SIZE)) {
+		return 0;
+	}
 
 	prepareEnemyGraphics();
 	return 1;

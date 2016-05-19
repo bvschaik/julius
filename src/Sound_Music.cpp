@@ -38,6 +38,7 @@ static void playTrack(int track)
 	SoundDevice_stopMusic();
 	SoundDevice_playMusic(FileSystem_getCaseSensitiveFile(tracks[track]));
 	SoundDevice_setMusicVolume(Data_Settings.soundMusicPercentage);
+	currentTrack = track;
 }
 
 void Sound_Music_playIntro()
@@ -82,6 +83,5 @@ void Sound_Music_update()
 	}
 
 	playTrack(track);
-	currentTrack = track;
 	nextCheck = 10;
 }

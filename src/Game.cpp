@@ -35,13 +35,18 @@ int Game_init()
 {
 	System_initCursors();
 	if (!Loader_Graphics_initGraphics()) {
-		log("ERR: unable to load graphics");
+		log("ERR: unable to init graphics");
 		return 0;
 	}
 	
-	printf("Loading graphics\n");
-	printf("Load images: %d\n", Loader_Graphics_loadMainGraphics(Climate_Central));
-	printf("Load enemies: %d\n", Loader_Graphics_loadEnemyGraphics(EnemyType_0_Barbarian));
+	if (!Loader_Graphics_loadMainGraphics(Climate_Central)) {
+		log("ERR: unable to load main graphics");
+		return 0;
+	}
+	if (!Loader_Graphics_loadEnemyGraphics(EnemyType_0_Barbarian)) {
+		log("ERR: unable to load enemy graphics");
+		return 0;
+	}
 
 	if (!Loader_Model_loadC3ModelTxt()) {
 		log("ERR: unable to load c3_model.txt");
@@ -60,4 +65,3 @@ void Game_exit()
 	Settings_save();
 	Sound_shutdown();
 }
-
