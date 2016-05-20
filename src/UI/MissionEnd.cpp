@@ -218,6 +218,8 @@ static void victoryContinueGoverning(int duration, int param2)
 	UI_Window_goTo(Window_City);
 	Data_State.winState = WinState_None;
 	Data_State.forceWinCheat = 0;
+	Sound_Music_reset();
+	Sound_Music_update();
 }
 
 static void firedAccept(int param1, int param2)
