@@ -22,8 +22,6 @@ static struct {
 	int okClicked;
 	void (*closeFunc)(int accepted);
 	int hasButtons;
-	int x;
-	int y;
 } data;
 
 void UI_PopupDialog_show(int msgId, void (*closeFunc)(int accepted), int hasOkCancelButtons)
@@ -36,35 +34,39 @@ void UI_PopupDialog_show(int msgId, void (*closeFunc)(int accepted), int hasOkCa
 	data.okClicked = 0;
 	data.closeFunc = closeFunc;
 	data.hasButtons = hasOkCancelButtons;
-	data.x = Data_Screen.offset640x480.x + 80;
-	data.y = Data_Screen.offset640x480.y + 80;
 	UI_Window_goTo(Window_PopupDialog);
 }
 
 void UI_PopupDialog_drawBackground()
 {
-	Widget_Panel_drawOuterPanel(data.x, data.y, 30, 10);
-	Widget_GameText_drawCentered(GROUP, data.msgId, data.x, data.y + 20, 480, Font_LargeBlack);
+	int xOffset = Data_Screen.offset640x480.x + 80;
+	int yOffset = Data_Screen.offset640x480.y + 80;
+	Widget_Panel_drawOuterPanel(xOffset, yOffset, 30, 10);
+	Widget_GameText_drawCentered(GROUP, data.msgId, xOffset, yOffset + 20, 480, Font_LargeBlack);
 	if (Widget_GameText_getWidth(GROUP, data.msgId + 1, Font_NormalBlack) >= 420) {
-		Widget_GameText_drawMultiline(GROUP, data.msgId + 1, data.x + 30, data.y + 60, 420, Font_NormalBlack);
+		Widget_GameText_drawMultiline(GROUP, data.msgId + 1, xOffset + 30, yOffset + 60, 420, Font_NormalBlack);
 	} else {
-		Widget_GameText_drawCentered(GROUP, data.msgId + 1, data.x, data.y + 60, 480, Font_NormalBlack);
+		Widget_GameText_drawCentered(GROUP, data.msgId + 1, xOffset, yOffset + 60, 480, Font_NormalBlack);
 	}
 }
 
 void UI_PopupDialog_drawForeground()
 {
+	int xOffset = Data_Screen.offset640x480.x + 80;
+	int yOffset = Data_Screen.offset640x480.y + 80;
 	if (data.hasButtons) {
-		Widget_Button_drawImageButtons(data.x, data.y, buttons, 2);
+		Widget_Button_drawImageButtons(xOffset, yOffset, buttons, 2);
 	} else {
-		Widget_GameText_drawCentered(13, 1, data.x, data.y + 128, 480, Font_NormalBlack);
+		Widget_GameText_drawCentered(13, 1, xOffset, yOffset + 128, 480, Font_NormalBlack);
 	}
 }
 
 void UI_PopupDialog_handleMouse()
 {
+	int xOffset = Data_Screen.offset640x480.x + 80;
+	int yOffset = Data_Screen.offset640x480.y + 80;
 	if (data.hasButtons) {
-		Widget_Button_handleImageButtons(data.x, data.y, buttons, 2, 0);
+		Widget_Button_handleImageButtons(xOffset, yOffset, buttons, 2, 0);
 	} else if (Data_Mouse.right.wentUp) {
 		data.closeFunc(0);
 		UI_Window_goBack();
