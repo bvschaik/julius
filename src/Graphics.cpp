@@ -42,15 +42,10 @@ ScreenColor ColorLookup[65536];
 void Graphics_initialize()
 {
 	for (int c = 0; c < 65536; c++) {
-		/*ColorLookup[c] =
-			((c & 0xf800) << 8) | ((c & 0xe000) << 3) |
-			((c & 0x7e0) << 5)  | ((c & 0x600) >> 1) |
-			((c & 0x1f) << 3)   | ((c & 0x1c) >> 2);//*/
 		ColorLookup[c] =
 			((c & 0x7c00) << 9) | ((c & 0x7000) << 4) |
 			((c & 0x3e0) << 6)  | ((c & 0x380) << 1) |
 			((c & 0x1f) << 3)   | ((c & 0x1c) >> 2);
-			//(*color & 0x1f) | ((*color & 0xffe0) << 1)*/
 	}
 }
 
@@ -750,7 +745,7 @@ void Graphics_saveScreenshot(const char *filename)
 		short bpp;
 	} header = {
 		0, 0, 'B', 'M', 26 + Data_Screen.width * Data_Screen.height * 3, 0, 26,
-		12, Data_Screen.width, Data_Screen.height, 1, 24
+		12, (short) Data_Screen.width, (short) Data_Screen.height, 1, 24
 	};
 	unsigned char *pixels = (unsigned char*) malloc(Data_Screen.width * 3);
 	FILE *fp = fopen(filename, "wb");
