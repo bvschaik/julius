@@ -56,7 +56,6 @@ void Graphics_initialize()
 
 void Graphics_clearScreen()
 {
-	// TODO scanline?
 	memset(Data_Screen.drawBuffer, 0, sizeof(ScreenColor) * Data_Screen.width * Data_Screen.height);
 }
 
@@ -156,7 +155,7 @@ void Graphics_shadeRect(int x, int y, int width, int height, int darkness)
 			int g = (pixel & 0xfc00) >> 11;
 			int b = (pixel & 0xf8) >> 3;
 			int grey = (r + g + b) / 3 >> darkness;
-			Color newPixel = (Color) (grey << 11 | grey << 6 | grey);
+			Color newPixel = (Color) (grey << 10 | grey << 5 | grey);
 			ScreenPixel(xx, yy) = ColorLookup[newPixel];
 		}
 	}
@@ -750,18 +749,18 @@ void Graphics_saveScreenshot(const char *filename)
 		short planes;
 		short bpp;
 	} header = {
-		0, 0, 'B', 'M', 26 + 800 * 600 * 3, 0, 26,
-		12, 800, 600, 1, 24
+		0, 0, 'B', 'M', 26 + Data_Screen.width * Data_Screen.height * 3, 0, 26,
+		12, Data_Screen.width, Data_Screen.height, 1, 24
 	};
-	unsigned char *pixels = (unsigned char*) malloc(800 * 3);
+	unsigned char *pixels = (unsigned char*) malloc(Data_Screen.width * 3);
 	FILE *fp = fopen(filename, "wb");
 	fwrite(&header.B, 1, 26, fp);
-	for (int y = 599; y >= 0; y--) {
-		for (int x = 0; x < 800; x++) {
-			pixel(((ScreenColor*)Data_Screen.drawBuffer)[y*800+x],
+	for (int y = Data_Screen.height - 1; y >= 0; y--) {
+		for (int x = 0; x < Data_Screen.width; x++) {
+			pixel(((ScreenColor*)Data_Screen.drawBuffer)[y*Data_Screen.width+x],
 				&pixels[3*x+2], &pixels[3*x+1], &pixels[3*x]);
 		}
-		fwrite(pixels, 1, 3 * 800, fp);
+		fwrite(pixels, 1, Data_Screen.width * 3, fp);
 	}
 	fclose(fp);
 	free(pixels);
