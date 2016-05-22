@@ -237,6 +237,15 @@ static int makeCaseInsensitive(const char *dir, char *filename)
 	return 0;
 }
 
+static void moveLeft(char *str)
+{
+	while (*str) {
+		str[0] = str[1];
+		str++;
+	}
+	*str = 0;
+}
+
 const char* FileSystem_getCaseSensitiveFile(const char* filename)
 {
 	static char insensitiveFilename[200];
@@ -254,6 +263,10 @@ const char* FileSystem_getCaseSensitiveFile(const char* filename)
 		*slash = 0;
 		if (makeCaseInsensitive(".", insensitiveFilename)) {
 			char *path = slash + 1;
+			if (*path == '\\') {
+				// double backslash: move everything to the left
+				moveLeft(path);
+			}
 			if (makeCaseInsensitive(insensitiveFilename, path)) {
 				*slash = '/';
 				return insensitiveFilename;
