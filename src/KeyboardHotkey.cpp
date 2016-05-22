@@ -2,6 +2,7 @@
 
 #include "CityView.h"
 #include "Event.h"
+#include "Graphics.h"
 #include "System.h"
 #include "Video.h"
 
@@ -317,6 +318,11 @@ static void handleBookmark(int number)
 	}
 }
 
+static void takeScreenshot()
+{
+	Graphics_saveScreenshot("city.bmp");
+}
+
 void KeyboardHotkey_func(int fNumber)
 {
 	switch (fNumber) {
@@ -331,6 +337,7 @@ void KeyboardHotkey_func(int fNumber)
 		case 7: System_resize(640, 480); break;
 		case 8: System_resize(800, 600); break;
 		case 9: System_resize(1024, 768); break;
+		case 12: takeScreenshot(); break;
 	}
 }
 
