@@ -108,7 +108,7 @@ int BuildingHouse_canExpand(int buildingId, int numTiles)
 		}
 		if (okTiles == numTiles) {
 			mergeData.x = Data_Buildings[buildingId].x + directionOffsetX[dir];
-			mergeData.x = Data_Buildings[buildingId].y + directionOffsetY[dir];
+			mergeData.y = Data_Buildings[buildingId].y + directionOffsetY[dir];
 			return 1;
 		}
 	}
