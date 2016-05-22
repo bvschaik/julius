@@ -125,13 +125,12 @@ void UI_MessageDialog_show(int textId, int backgroundIsProvided)
 	data.dword_7e314c = 0;
 	data.textId = textId;
 	data.backgroundIsProvided = backgroundIsProvided;
-	if (Data_Language_Message.index[textId].videoLinkOffset &&
+	if (playerMessage.usePopup != 1) {
+		data.showVideo = 0;
+	} else if (Data_Language_Message.index[textId].videoLinkOffset &&
 		Video_start(TEXT(Data_Language_Message.index[textId].videoLinkOffset))) {
 		data.showVideo = 1;
 	} else {
-		data.showVideo = 0;
-	}
-	if (playerMessage.usePopup != 1) {
 		data.showVideo = 0;
 	}
 	Widget_RichText_clearLinks();
@@ -518,13 +517,18 @@ static void buttonBack(int param1, int param2)
 	}
 }
 
-void UI_MessageDialog_close()
+static void cleanup()
 {
 	if (data.showVideo) {
 		Video_stop();
 	}
 	data.showVideo = 0;
 	playerMessage.messageAdvisor = 0;
+}
+
+void UI_MessageDialog_close()
+{
+	cleanup();
 	UI_Window_goBack();
 	UI_Window_requestRefresh();
 }
@@ -542,11 +546,13 @@ static void buttonHelp(int param1, int param2)
 
 static void buttonAdvisor(int advisor, int param2)
 {
+	cleanup();
 	UI_Advisors_goToFromMessage(advisor);
 }
 
 static void buttonGoToProblem(int param1, int param2)
 {
+	cleanup();
 	struct Data_Language_MessageEntry *msg = &Data_Language_Message.index[data.textId];
 	int gridOffset = playerMessage.param2;
 	if (msg->messageType == MessageType_Invasion) {
