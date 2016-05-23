@@ -75,7 +75,7 @@ void UI_Advisor_Financial_drawBackground(int *advisorHeight)
 	ROW(60, 10, 203, Data_CityInfo.financeTotalIncomeLastYear, Data_CityInfo.financeTotalIncomeThisYear);
 
 	// expenses
-	ROW(60, 11, 227, Data_CityInfo.financeExportsLastYear, Data_CityInfo.financeExportsThisYear);
+	ROW(60, 11, 227, Data_CityInfo.financeImportsLastYear, Data_CityInfo.financeImportsThisYear);
 	ROW(60, 12, 242, Data_CityInfo.financeWagesLastYear, Data_CityInfo.financeWagesThisYear);
 	ROW(60, 13, 257, Data_CityInfo.financeConstructionLastYear, Data_CityInfo.financeConstructionThisYear);
 
