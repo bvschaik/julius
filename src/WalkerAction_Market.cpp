@@ -157,7 +157,7 @@ void WalkerAction_deliveryBoy(int walkerId)
 		w->state = WalkerState_Dead;
 	} else {
 		if (leader->state == WalkerState_Alive) {
-			if (leader->type == Walker_MarketBuyer || w->type == Walker_DeliveryBoy) {
+			if (leader->type == Walker_MarketBuyer || leader->type == Walker_DeliveryBoy) {
 				WalkerMovement_followTicks(walkerId, w->inFrontWalkerId, 1);
 			} else {
 				w->state = WalkerState_Dead;
