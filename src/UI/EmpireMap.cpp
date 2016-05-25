@@ -589,7 +589,7 @@ static int getTooltipResource()
 			}
 		}
 	} else {
-		int itemOffset = Widget_GameText_getWidth(47, 5, Font_NormalGreen);
+		int itemOffset = Widget_GameText_getWidthLikeDraw(47, 5, Font_NormalGreen);
 		for (int r = 1; r <= 15; r++) {
 			if (Empire_citySellsResource(objectId, r)) {
 				if (isMouseHit(xOffset + 60 + itemOffset, yOffset + 35, 26)) {
@@ -598,7 +598,7 @@ static int getTooltipResource()
 				itemOffset += 32;
 			}
 		}
-		itemOffset += Widget_GameText_getWidth(47, 4, Font_NormalGreen);
+		itemOffset += Widget_GameText_getWidthLikeDraw(47, 4, Font_NormalGreen);
 		for (int r = 1; r <= 15; r++) {
 			if (Empire_cityBuysResource(objectId, r)) {
 				if (isMouseHit(xOffset + 110 + itemOffset, yOffset + 35, 26)) {

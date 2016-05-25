@@ -132,6 +132,23 @@ int Widget_GameText_getWidth(int group, int number, Font font)
 	return Widget_Text_getWidth(str, font);
 }
 
+static int getSpaceWidth(Font font)
+{
+	if (font == Font_LargePlain || font == Font_LargeBlack || font == Font_LargeBrown) {
+		return 10;
+	} else if (font == Font_SmallPlain) {
+		return 4;
+	} else {
+		return 6;
+	}
+}
+
+int Widget_GameText_getWidthLikeDraw(int group, int number, Font font)
+{
+	const char *str = Language_getString(group, number);
+	return Widget_Text_getWidth(str, font) + getSpaceWidth(font);
+}
+
 static int getCharacterWidth(unsigned char c, Font font)
 {
 	if (!c) {
