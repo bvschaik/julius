@@ -158,7 +158,8 @@ int Formation_getLegionFormationAtGridOffset(int gridOffset)
 	for (int walkerId = Data_Grid_walkerIds[gridOffset];
 		walkerId && walkerId != Data_Walkers[walkerId].nextWalkerIdOnSameTile;
 		walkerId = Data_Walkers[walkerId].nextWalkerIdOnSameTile) {
-		if (WalkerIsLegion(Data_Walkers[walkerId].type)) {
+		if (WalkerIsLegion(Data_Walkers[walkerId].type) ||
+			Data_Walkers[walkerId].type == Walker_FortStandard) {
 			return Data_Walkers[walkerId].formationId;
 		}
 	}
