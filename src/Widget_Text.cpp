@@ -143,7 +143,7 @@ static int getSpaceWidth(Font font)
 	}
 }
 
-int Widget_GameText_getWidthLikeDraw(int group, int number, Font font)
+int Widget_GameText_getDrawWidth(int group, int number, Font font)
 {
 	const char *str = Language_getString(group, number);
 	return Widget_Text_getWidth(str, font) + getSpaceWidth(font);

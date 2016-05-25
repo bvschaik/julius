@@ -36,7 +36,7 @@ int Widget_GameText_drawMultiline(int group, int number, int xOffset, int yOffse
 
 int Widget_Text_getWidth(const char *str, Font font);
 int Widget_GameText_getWidth(int group, int number, Font font);
-int Widget_GameText_getWidthLikeDraw(int group, int number, Font font);
+int Widget_GameText_getDrawWidth(int group, int number, Font font);
 
 void Widget_RichText_setFonts(Font normalFont, Font linkFont);
 // returns total number of lines
