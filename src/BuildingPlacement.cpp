@@ -554,13 +554,13 @@ static int placeBuilding(int type, int x, int y)
 	if (type == Building_Warehouse) {
 		size = 3;
 	}
-	int orientation = 0;
+	int buildingOrientation = 0;
 	if (type == Building_Gatehouse) {
-		orientation = Terrain_getOrientationGatehouse(x, y);
+		buildingOrientation = Terrain_getOrientationGatehouse(x, y);
 	} else if (type == Building_TriumphalArch) {
-		orientation = Terrain_getOrientationTriumphalArch(x, y);
+		buildingOrientation = Terrain_getOrientationTriumphalArch(x, y);
 	}
-	switch (orientation) {
+	switch (Data_Settings_Map.orientation) {
 		case Dir_2_Right: x = x - size + 1; break;
 		case Dir_4_Bottom: x = x - size + 1; y = y - size + 1; break;
 		case Dir_6_Left: y = y - size + 1; break;
@@ -571,11 +571,11 @@ static int placeBuilding(int type, int x, int y)
 			UI_Warning_show(Warning_ClearLandNeeded);
 			return 0;
 		}
-		if (!orientation) {
+		if (!buildingOrientation) {
 			if (Data_State.selectedBuilding.roadRequired == 1) {
-				orientation = 1;
+				buildingOrientation = 1;
 			} else {
-				orientation = 2;
+				buildingOrientation = 2;
 			}
 		}
 	}
@@ -584,11 +584,11 @@ static int placeBuilding(int type, int x, int y)
 			UI_Warning_show(Warning_ClearLandNeeded);
 			return 0;
 		}
-		if (!orientation) {
+		if (!buildingOrientation) {
 			if (Data_State.selectedBuilding.roadRequired == 1) {
-				orientation = 1;
+				buildingOrientation = 1;
 			} else {
-				orientation = 3;
+				buildingOrientation = 3;
 			}
 		}
 	}
@@ -683,7 +683,7 @@ static int placeBuilding(int type, int x, int y)
 	if (buildingId <= 0) {
 		return 0;
 	}
-	addToTerrain(type, buildingId, x, y, size, orientation,
+	addToTerrain(type, buildingId, x, y, size, buildingOrientation,
 		watersideOrientationAbs, watersideOrientationRel);
 	return 1;
 }
