@@ -8,7 +8,7 @@
 #include "Data/Settings.h"
 #include "Data/Grid.h"
 #include "Data/Model.h"
-#include "Data/Walker.h"
+#include "Data/Figure.h"
 
 #define FOR_XY_RADIUS \
 	int xMin = x - 2;\
@@ -383,50 +383,50 @@ static int provideTaxCollectorCoverage(int x, int y, unsigned char *maxTaxMultip
 	return serviced;
 }
 
-int Walker_provideServiceCoverage(int walkerId)
+int Figure_provideServiceCoverage(int walkerId)
 {
 	int numHousesServiced = 0;
 	int x = Data_Walkers[walkerId].x;
 	int y = Data_Walkers[walkerId].y;
 	int buildingId;
 	switch (Data_Walkers[walkerId].type) {
-		case Walker_Patrician:
+		case Figure_Patrician:
 			return 0;
-		case Walker_LaborSeeker:
+		case Figure_LaborSeeker:
 			numHousesServiced = provideLaborSeekerCoverage(x, y);
 			break;
-		case Walker_TaxCollector:
+		case Figure_TaxCollector:
 			numHousesServiced = provideTaxCollectorCoverage(x, y, &Data_Walkers[walkerId].minMaxSeen);
 			break;
-		case Walker_MarketTrader:
-		case Walker_MarketBuyer:
+		case Figure_MarketTrader:
+		case Figure_MarketBuyer:
 			numHousesServiced = provideMarketGoods(Data_Walkers[walkerId].buildingId, x, y);
 			break;
-		case Walker_BathhouseWorker:
+		case Figure_BathhouseWorker:
 			numHousesServiced = provideBathhouseCoverage(x, y);
 			break;
-		case Walker_SchoolChild:
+		case Figure_SchoolChild:
 			numHousesServiced = provideSchoolCoverage(x, y);
 			break;
-		case Walker_Teacher:
+		case Figure_Teacher:
 			numHousesServiced = provideAcademyCoverage(x, y);
 			break;
-		case Walker_Librarian:
+		case Figure_Librarian:
 			numHousesServiced = provideLibraryCoverage(x, y);
 			break;
-		case Walker_Barber:
+		case Figure_Barber:
 			numHousesServiced = provideBarberCoverage(x, y);
 			break;
-		case Walker_Doctor:
+		case Figure_Doctor:
 			numHousesServiced = provideClinicCoverage(x, y);
 			break;
-		case Walker_Surgeon:
+		case Figure_Surgeon:
 			numHousesServiced = provideHospitalCoverage(x, y);
 			break;
-		case Walker_Missionary:
+		case Figure_Missionary:
 			numHousesServiced = provideMissionaryCoverage(x, y);
 			break;
-		case Walker_Priest:
+		case Figure_Priest:
 			switch (Data_Buildings[Data_Walkers[walkerId].buildingId].type) {
 				case Building_SmallTempleCeres:
 				case Building_LargeTempleCeres:
@@ -452,9 +452,9 @@ int Walker_provideServiceCoverage(int walkerId)
 					break;
 			}
 			break;
-		case Walker_Actor:
-			if (Data_Walkers[walkerId].actionState == WalkerActionState_94_EntertainerRoaming ||
-				Data_Walkers[walkerId].actionState == WalkerActionState_95_EntertainerReturning) {
+		case Figure_Actor:
+			if (Data_Walkers[walkerId].actionState == FigureActionState_94_EntertainerRoaming ||
+				Data_Walkers[walkerId].actionState == FigureActionState_95_EntertainerReturning) {
 				buildingId = Data_Walkers[walkerId].buildingId;
 			} else { // going to venue
 				buildingId = Data_Walkers[walkerId].destinationBuildingId;
@@ -466,9 +466,9 @@ int Walker_provideServiceCoverage(int walkerId)
 					Data_Buildings[buildingId].data.entertainment.days1 ? 2 : 1);
 			}
 			break;
-		case Walker_Gladiator:
-			if (Data_Walkers[walkerId].actionState == WalkerActionState_94_EntertainerRoaming ||
-				Data_Walkers[walkerId].actionState == WalkerActionState_95_EntertainerReturning) {
+		case Figure_Gladiator:
+			if (Data_Walkers[walkerId].actionState == FigureActionState_94_EntertainerRoaming ||
+				Data_Walkers[walkerId].actionState == FigureActionState_95_EntertainerReturning) {
 				buildingId = Data_Walkers[walkerId].buildingId;
 			} else { // going to venue
 				buildingId = Data_Walkers[walkerId].destinationBuildingId;
@@ -481,9 +481,9 @@ int Walker_provideServiceCoverage(int walkerId)
 					Data_Buildings[buildingId].data.entertainment.days1 ? 2 : 1);
 			}
 			break;
-		case Walker_LionTamer:
-			if (Data_Walkers[walkerId].actionState == WalkerActionState_94_EntertainerRoaming ||
-				Data_Walkers[walkerId].actionState == WalkerActionState_95_EntertainerReturning) {
+		case Figure_LionTamer:
+			if (Data_Walkers[walkerId].actionState == FigureActionState_94_EntertainerRoaming ||
+				Data_Walkers[walkerId].actionState == FigureActionState_95_EntertainerReturning) {
 				buildingId = Data_Walkers[walkerId].buildingId;
 			} else { // going to venue
 				buildingId = Data_Walkers[walkerId].destinationBuildingId;
@@ -491,10 +491,10 @@ int Walker_provideServiceCoverage(int walkerId)
 			numHousesServiced = provideColosseumCoverage(x, y,
 				Data_Buildings[buildingId].data.entertainment.days2 ? 2 : 1);
 			break;
-		case Walker_Charioteer:
+		case Figure_Charioteer:
 			numHousesServiced = provideHippodromeCoverage(x, y);
 			break;
-		case Walker_Engineer:
+		case Figure_Engineer:
 			{int maxDamage = 0;
 			numHousesServiced = provideEngineerCoverage(x, y, &maxDamage);
 			if (maxDamage > Data_Walkers[walkerId].minMaxSeen) {
@@ -505,11 +505,11 @@ int Walker_provideServiceCoverage(int walkerId)
 				Data_Walkers[walkerId].minMaxSeen -= 10;
 			}}
 			break;
-		case Walker_Prefect:
+		case Figure_Prefect:
 			numHousesServiced = providePrefectFireCoverage(x, y);
 			Data_Walkers[walkerId].minMaxSeen = getPrefectCrimeCoverage(x, y);
 			break;
-		case Walker_Rioter:
+		case Figure_Rioter:
 			if (WalkerAction_Rioter_collapseBuilding(walkerId) == 1) {
 				return 1;
 			}

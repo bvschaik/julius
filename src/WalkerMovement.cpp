@@ -12,7 +12,7 @@
 #include "Data/Grid.h"
 #include "Data/Routes.h"
 #include "Data/Settings.h"
-#include "Data/Walker.h"
+#include "Data/Figure.h"
 
 static void WalkerMovement_walkTicksInternal(int walkerId, int numTicks, int roamingEnabled);
 
@@ -94,7 +94,7 @@ static void walkerMoveToNextTile(int walkerId, struct Data_Walker *w)
 {
 	int oldX = w->x;
 	int oldY = w->y;
-	Walker_removeFromTileList(walkerId);
+	Figure_removeFromTileList(walkerId);
 	switch (w->direction) {
 		default:
 			return;
@@ -131,7 +131,7 @@ static void walkerMoveToNextTile(int walkerId, struct Data_Walker *w)
 			w->gridOffset -= 163;
 			break;
 	}
-	Walker_addToTileList(walkerId);
+	Figure_addToTileList(walkerId);
 	if (Data_Grid_terrain[w->gridOffset] & Terrain_Road) {
 		w->isOnRoad = 1;
 		if (Data_Grid_terrain[w->gridOffset] & Terrain_Water) { // bridge
@@ -140,7 +140,7 @@ static void walkerMoveToNextTile(int walkerId, struct Data_Walker *w)
 	} else {
 		w->isOnRoad = 0;
 	}
-	WalkerAction_Combat_attackWalker(walkerId, Data_Grid_walkerIds[w->gridOffset]);
+	WalkerAction_Combat_attackWalker(walkerId, Data_Grid_figureIds[w->gridOffset]);
 	w->previousTileX = oldX;
 	w->previousTileY = oldY;
 }
@@ -220,10 +220,10 @@ void WalkerMovement_roamTicks(int walkerId, int numTicks)
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	if (w->roamChooseDestination == 0) {
 		WalkerMovement_walkTicksInternal(walkerId, numTicks, 1);
-		if (w->direction == DirWalker_8_AtDestination) {
+		if (w->direction == DirFigure_8_AtDestination) {
 			w->roamChooseDestination = 1;
 			w->roamLength = 0;
-		} else if (w->direction == DirWalker_9_Reroute || w->direction == DirWalker_10_Lost) {
+		} else if (w->direction == DirFigure_9_Reroute || w->direction == DirFigure_10_Lost) {
 			w->roamChooseDestination = 1;
 		}
 		if (w->roamChooseDestination) {
@@ -243,7 +243,7 @@ void WalkerMovement_roamTicks(int walkerId, int numTicks)
 			w->progressOnTile = 15;
 			w->roamRandomCounter++;
 			int cameFromDirection = (w->previousTileDirection + 4) % 8;
-			if (Walker_provideServiceCoverage(walkerId)) {
+			if (Figure_provideServiceCoverage(walkerId)) {
 				return;
 			}
 			int roadTiles[8];
@@ -333,13 +333,13 @@ static void walkerSetNextRouteTileDirection(int walkerId, struct Data_Walker *w)
 		if (w->routingPathCurrentTile < w->routingPathLength) {
 			w->direction = Data_Routes.directionPaths[w->routingPathId][w->routingPathCurrentTile];
 		} else {
-			WalkerRoute_remove(walkerId);
-			w->direction = DirWalker_8_AtDestination;
+			FigureRoute_remove(walkerId);
+			w->direction = DirFigure_8_AtDestination;
 		}
 	} else { // should be at destination
 		w->direction = Routing_getGeneralDirection(w->x, w->y, w->destinationX, w->destinationY);
-		if (w->direction != DirWalker_8_AtDestination) {
-			w->direction = DirWalker_10_Lost;
+		if (w->direction != DirFigure_8_AtDestination) {
+			w->direction = DirFigure_10_Lost;
 		}
 	}
 }
@@ -353,12 +353,12 @@ static void walkerAdvanceRouteTile(struct Data_Walker *w, int roamingEnabled)
 	int targetTerrain = Data_Grid_terrain[targetGridOffset] & Terrain_c75f;
 	if (w->isBoat) {
 		if (!(targetTerrain & Terrain_Water)) {
-			w->direction = DirWalker_9_Reroute;
+			w->direction = DirFigure_9_Reroute;
 		}
-	} else if (w->terrainUsage == WalkerTerrainUsage_Enemy) {
+	} else if (w->terrainUsage == FigureTerrainUsage_Enemy) {
 		int groundType = Data_Grid_routingLandNonCitizen[targetGridOffset];
 		if (groundType < Routing_NonCitizen_0_Passable) {
-			w->direction = DirWalker_9_Reroute;
+			w->direction = DirFigure_9_Reroute;
 		} else if (groundType > Routing_NonCitizen_0_Passable && groundType != Routing_NonCitizen_5_Fort) {
 			int causeDamage = 1;
 			int maxDamage = 0;
@@ -380,21 +380,21 @@ static void walkerAdvanceRouteTile(struct Data_Walker *w, int roamingEnabled)
 			}
 			if (causeDamage) {
 				w->attackDirection = w->direction;
-				w->direction = DirWalker_11_Attack;
+				w->direction = DirFigure_11_Attack;
 				if (!(Data_CityInfo_Extra.gameTimeTick & 3)) {
 					Building_increaseDamageByEnemy(targetGridOffset, maxDamage);
 				}
 			}
 		}
-	} else if (w->terrainUsage == WalkerTerrainUsage_Walls) {
+	} else if (w->terrainUsage == FigureTerrainUsage_Walls) {
 		if (Data_Grid_routingWalls[targetGridOffset] < Routing_Wall_0_Passable) {
-			w->direction = DirWalker_9_Reroute;
+			w->direction = DirFigure_9_Reroute;
 		}
 	} else if (targetTerrain & (Terrain_Road | Terrain_AccessRamp)) {
 		if (roamingEnabled && targetTerrain & Terrain_Building) {
 			if (Data_Buildings[Data_Grid_buildingIds[targetGridOffset]].type == Building_Gatehouse) {
 				// do not allow roaming through gatehouse
-				w->direction = DirWalker_9_Reroute;
+				w->direction = DirFigure_9_Reroute;
 			}
 		}
 	} else if (targetTerrain & Terrain_Building) {
@@ -406,10 +406,10 @@ static void walkerAdvanceRouteTile(struct Data_Walker *w, int roamingEnabled)
 			case Building_FortGround:
 				break; // OK to walk
 			default:
-				w->direction = DirWalker_9_Reroute;
+				w->direction = DirFigure_9_Reroute;
 		}
 	} else if (targetTerrain) {
-		w->direction = DirWalker_9_Reroute;
+		w->direction = DirFigure_9_Reroute;
 	}
 }
 
@@ -422,10 +422,10 @@ static void WalkerMovement_walkTicksInternal(int walkerId, int numTicks, int roa
 		if (w->progressOnTile < 15) {
 			WalkerMovement_advanceTick(w);
 		} else {
-			Walker_provideServiceCoverage(walkerId);
+			Figure_provideServiceCoverage(walkerId);
 			w->progressOnTile = 15;
 			if (w->routingPathId <= 0) {
-				WalkerRoute_add(walkerId);
+				FigureRoute_add(walkerId);
 			}
 			walkerSetNextRouteTileDirection(walkerId, w);
 			walkerAdvanceRouteTile(w, roamingEnabled);
@@ -584,7 +584,7 @@ static void crossCountryAdvance(struct Data_Walker *w)
 int WalkerMovement_crossCountryWalkTicks(int walkerId, int numTicks)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
-	Walker_removeFromTileList(walkerId);
+	Figure_removeFromTileList(walkerId);
 	int isAtDestination = 0;
 	while (numTicks > 0) {
 		numTicks--;
@@ -607,7 +607,7 @@ int WalkerMovement_crossCountryWalkTicks(int walkerId, int numTicks)
 	} else if (w->inBuildingWaitTicks) {
 		w->inBuildingWaitTicks--;
 	}
-	Walker_addToTileList(walkerId);
+	Figure_addToTileList(walkerId);
 	return isAtDestination;
 }
 

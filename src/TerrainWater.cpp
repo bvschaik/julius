@@ -7,7 +7,7 @@
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 #include "Data/Scenario.h"
-#include "Data/Walker.h"
+#include "Data/Figure.h"
 
 void Terrain_addWatersideBuildingToGrids(int buildingId, int x, int y, int size, int graphicId)
 {
@@ -252,7 +252,7 @@ int Terrain_Water_getNearestFishTile(int walkerId, int *xTile, int *yTile)
 int Terrain_Water_findAlternativeTileForFishingBoat(int walkerId, int *xTile, int *yTile)
 {
 	int gridOffset = Data_Walkers[walkerId].gridOffset;
-	if (Data_Grid_walkerIds[gridOffset] == walkerId) {
+	if (Data_Grid_figureIds[gridOffset] == walkerId) {
 		return 0;
 	}
 	for (int radius = 1; radius <= 5; radius++) {
@@ -264,7 +264,7 @@ int Terrain_Water_findAlternativeTileForFishingBoat(int walkerId, int *xTile, in
 		int yMax = wy + radius;
 		BOUND_REGION();
 		FOREACH_REGION({
-			if (!Data_Grid_walkerIds[gridOffset] && Data_Grid_terrain[gridOffset] & Terrain_Water) {
+			if (!Data_Grid_figureIds[gridOffset] && Data_Grid_terrain[gridOffset] & Terrain_Water) {
 				*xTile = xx;
 				*yTile = yy;
 				return 1;
@@ -277,7 +277,7 @@ int Terrain_Water_findAlternativeTileForFishingBoat(int walkerId, int *xTile, in
 int Terrain_Water_findOpenWaterForShipwreck(int walkerId, int *xTile, int *yTile)
 {
 	int gridOffset = Data_Walkers[walkerId].gridOffset;
-	if (Data_Grid_terrain[gridOffset] & Terrain_Water && Data_Grid_walkerIds[gridOffset] == walkerId) {
+	if (Data_Grid_terrain[gridOffset] & Terrain_Water && Data_Grid_figureIds[gridOffset] == walkerId) {
 		return 0;
 	}
 	for (int radius = 1; radius <= 5; radius++) {
@@ -289,7 +289,7 @@ int Terrain_Water_findOpenWaterForShipwreck(int walkerId, int *xTile, int *yTile
 		int yMax = wy + radius;
 		BOUND_REGION();
 		FOREACH_REGION({
-			if (!Data_Grid_walkerIds[gridOffset] || Data_Grid_walkerIds[gridOffset] == walkerId) {
+			if (!Data_Grid_figureIds[gridOffset] || Data_Grid_figureIds[gridOffset] == walkerId) {
 				if (Data_Grid_terrain[gridOffset] & Terrain_Water &&
 					Data_Grid_terrain[GridOffset(xx, yy - 2)] & Terrain_Water &&
 					Data_Grid_terrain[GridOffset(xx, yy + 2)] & Terrain_Water &&
@@ -352,7 +352,7 @@ int Terrain_Water_getQueueDockDestination(int walkerId, int *xTile, int *yTile)
 			case 2: *xTile += 2; *yTile += 4; break;
 			default: *xTile -= 2; *yTile += 2; break;
 		}
-		if (!Data_Grid_walkerIds[GridOffset(*xTile, *yTile)]) {
+		if (!Data_Grid_figureIds[GridOffset(*xTile, *yTile)]) {
 			return dockId;
 		}
 	}
@@ -368,7 +368,7 @@ int Terrain_Water_getQueueDockDestination(int walkerId, int *xTile, int *yTile)
 			case 2: *xTile += 2; *yTile += 5; break;
 			default: *xTile -= 3; *yTile += 2; break;
 		}
-		if (!Data_Grid_walkerIds[GridOffset(*xTile, *yTile)]) {
+		if (!Data_Grid_figureIds[GridOffset(*xTile, *yTile)]) {
 			return dockId;
 		}
 	}

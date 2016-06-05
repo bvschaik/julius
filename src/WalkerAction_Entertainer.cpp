@@ -58,7 +58,7 @@ static void updateShowsAtDestination(struct Data_Walker *w)
 {
 	struct Data_Building *b = &Data_Buildings[w->destinationBuildingId];
 	switch (w->type) {
-		case Walker_Actor:
+		case Figure_Actor:
 			b->data.entertainment.play++;
 			if (b->data.entertainment.play >= 5) {
 				b->data.entertainment.play = 0;
@@ -69,15 +69,15 @@ static void updateShowsAtDestination(struct Data_Walker *w)
 				b->data.entertainment.days2 = 32;
 			}
 			break;
-		case Walker_Gladiator:
+		case Figure_Gladiator:
 			if (b->type == Building_Amphitheater) {
 				b->data.entertainment.days1 = 32;
 			} else {
 				b->data.entertainment.days2 = 32;
 			}
 			break;
-		case Walker_LionTamer:
-		case Walker_Charioteer:
+		case Figure_LionTamer:
+		case Figure_Charioteer:
 			b->data.entertainment.days1 = 32;
 			break;
 	}
@@ -88,38 +88,38 @@ static void updateGraphic(int walkerId, struct Data_Walker *w)
 	int dir = w->direction < 8 ? w->direction : w->previousTileDirection;
 	WalkerActionNormalizeDirection(dir);
 
-	if (w->type == Walker_Charioteer) {
+	if (w->type == Figure_Charioteer) {
 		w->cartGraphicId = 0;
-		if (w->actionState == WalkerActionState_150_Attack ||
-			w->actionState == WalkerActionState_149_Corpse) {
-			w->graphicId = GraphicId(ID_Graphic_Walker_Charioteer) + dir;
+		if (w->actionState == FigureActionState_150_Attack ||
+			w->actionState == FigureActionState_149_Corpse) {
+			w->graphicId = GraphicId(ID_Graphic_Figure_Charioteer) + dir;
 		} else {
-			w->graphicId = GraphicId(ID_Graphic_Walker_Charioteer) +
+			w->graphicId = GraphicId(ID_Graphic_Figure_Charioteer) +
 				dir + 8 * w->graphicOffset;
 		}
 		return;
 	}
 	int graphicId;
-	if (w->type == Walker_Actor) {
-		graphicId = GraphicId(ID_Graphic_Walker_Actor);
-	} else if (w->type == Walker_Gladiator) {
-		graphicId = GraphicId(ID_Graphic_Walker_Gladiator);
-	} else if (w->type == Walker_LionTamer) {
-		graphicId = GraphicId(ID_Graphic_Walker_LionTamer);
+	if (w->type == Figure_Actor) {
+		graphicId = GraphicId(ID_Graphic_Figure_Actor);
+	} else if (w->type == Figure_Gladiator) {
+		graphicId = GraphicId(ID_Graphic_Figure_Gladiator);
+	} else if (w->type == Figure_LionTamer) {
+		graphicId = GraphicId(ID_Graphic_Figure_LionTamer);
 		if (w->waitTicksMissile >= 96) {
-			graphicId = GraphicId(ID_Graphic_Walker_LionTamerWhip);
+			graphicId = GraphicId(ID_Graphic_Figure_LionTamerWhip);
 		}
-		w->cartGraphicId = GraphicId(ID_Graphic_Walker_Lion);
+		w->cartGraphicId = GraphicId(ID_Graphic_Figure_Lion);
 	} else {
 		return;
 	}
-	if (w->actionState == WalkerActionState_150_Attack) {
-		if (w->type == Walker_Gladiator) {
+	if (w->actionState == FigureActionState_150_Attack) {
+		if (w->type == Figure_Gladiator) {
 			w->graphicId = graphicId + 104 + dir + 8 * (w->graphicOffset / 2);
 		} else {
 			w->graphicId = graphicId + dir;
 		}
-	} else if (w->actionState == WalkerActionState_149_Corpse) {
+	} else if (w->actionState == FigureActionState_149_Corpse) {
 		w->graphicId = graphicId + 96 + WalkerActionCorpseGraphicOffset(w);
 		w->cartGraphicId = 0;
 	} else {
@@ -135,8 +135,8 @@ void WalkerAction_entertainer(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	struct Data_Building *b = &Data_Buildings[w->buildingId];
-	w->cartGraphicId = GraphicId(ID_Graphic_Walker_CartpusherCart);
-	w->terrainUsage = WalkerTerrainUsage_Roads;
+	w->cartGraphicId = GraphicId(ID_Graphic_Figure_CartpusherCart);
+	w->terrainUsage = FigureTerrainUsage_Roads;
 	w->useCrossCountry = 0;
 	w->maxRoamLength = 512;
 	WalkerActionIncreaseGraphicOffset(w, 12);
@@ -144,27 +144,27 @@ void WalkerAction_entertainer(int walkerId)
 	if (w->waitTicksMissile >= 120) {
 		w->waitTicksMissile = 0;
 	}
-	if (Data_Event.gladiatorRevolt.state == SpecialEvent_InProgress && w->type == Walker_Gladiator) {
-		if (w->actionState == WalkerActionState_92_EntertainerGoingToVenue ||
-			w->actionState == WalkerActionState_94_EntertainerRoaming ||
-			w->actionState == WalkerActionState_95_EntertainerReturning) {
-			w->type = Walker_Enemy54_Gladiator;
-			WalkerRoute_remove(walkerId);
+	if (Data_Event.gladiatorRevolt.state == SpecialEvent_InProgress && w->type == Figure_Gladiator) {
+		if (w->actionState == FigureActionState_92_EntertainerGoingToVenue ||
+			w->actionState == FigureActionState_94_EntertainerRoaming ||
+			w->actionState == FigureActionState_95_EntertainerReturning) {
+			w->type = Figure_Enemy54_Gladiator;
+			FigureRoute_remove(walkerId);
 			w->roamLength = 0;
-			w->actionState = WalkerActionState_158_NativeCreated;
+			w->actionState = FigureActionState_158_NativeCreated;
 			return;
 		}
 	}
-	int speedFactor = w->type == Walker_Charioteer ? 2 : 1;
+	int speedFactor = w->type == Figure_Charioteer ? 2 : 1;
 	switch (w->actionState) {
-		case WalkerActionState_150_Attack:
+		case FigureActionState_150_Attack:
 			WalkerAction_Common_handleAttack(walkerId);
 			WalkerActionIncreaseGraphicOffset(w, 32);
 			break;
-		case WalkerActionState_149_Corpse:
+		case FigureActionState_149_Corpse:
 			WalkerAction_Common_handleCorpse(walkerId);
 			break;
-		case WalkerActionState_90_EntertainerAtSchoolCreated:
+		case FigureActionState_90_EntertainerAtSchoolCreated:
 			w->isGhost = 1;
 			w->graphicOffset = 0;
 			w->waitTicksMissile = 0;
@@ -172,30 +172,30 @@ void WalkerAction_entertainer(int walkerId)
 			if (w->waitTicks <= 0) {
 				int xRoad, yRoad;
 				if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
-					w->actionState = WalkerActionState_91_EntertainerExitingSchool;
+					w->actionState = FigureActionState_91_EntertainerExitingSchool;
 					WalkerAction_Common_setCrossCountryDestination(walkerId, w, xRoad, yRoad);
 					w->roamLength = 0;
 				} else {
-					w->state = WalkerState_Dead;
+					w->state = FigureState_Dead;
 				}
 			}
 			break;
-		case WalkerActionState_91_EntertainerExitingSchool:
+		case FigureActionState_91_EntertainerExitingSchool:
 			w->useCrossCountry = 1;
 			w->isGhost = 1;
 			if (WalkerMovement_crossCountryWalkTicks(walkerId, 1) == 1) {
 				int dstBuildingId = 0;
 				switch (w->type) {
-					case Walker_Actor:
+					case Figure_Actor:
 						dstBuildingId = determineDestination(w->x, w->y, Building_Theater, Building_Amphitheater);
 						break;
-					case Walker_Gladiator:
+					case Figure_Gladiator:
 						dstBuildingId = determineDestination(w->x, w->y, Building_Amphitheater, Building_Colosseum);
 						break;
-					case Walker_LionTamer:
+					case Figure_LionTamer:
 						dstBuildingId = determineDestination(w->x, w->y, Building_Colosseum, 0);
 						break;
-					case Walker_Charioteer:
+					case Figure_Charioteer:
 						dstBuildingId = determineDestination(w->x, w->y, Building_Hippodrome, 0);
 						break;
 				}
@@ -204,55 +204,55 @@ void WalkerAction_entertainer(int walkerId)
 					int xRoad, yRoad;
 					if (Terrain_getClosestRoadWithinRadius(db->x, db->y, db->size, 2, &xRoad, &yRoad)) {
 						w->destinationBuildingId = dstBuildingId;
-						w->actionState = WalkerActionState_92_EntertainerGoingToVenue;
+						w->actionState = FigureActionState_92_EntertainerGoingToVenue;
 						w->destinationX = xRoad;
 						w->destinationY = yRoad;
 						w->roamLength = 0;
 					} else {
-						w->state = WalkerState_Dead;
+						w->state = FigureState_Dead;
 					}
 				} else {
-					w->state = WalkerState_Dead;
+					w->state = FigureState_Dead;
 				}
 			}
 			w->isGhost = 1;
 			break;
-		case WalkerActionState_92_EntertainerGoingToVenue:
+		case FigureActionState_92_EntertainerGoingToVenue:
 			w->isGhost = 0;
 			w->roamLength++;
 			if (w->roamLength >= 3200) {
-				w->state = WalkerState_Dead;
+				w->state = FigureState_Dead;
 			}
 			WalkerMovement_walkTicks(walkerId, speedFactor);
-			if (w->direction == DirWalker_8_AtDestination) {
+			if (w->direction == DirFigure_8_AtDestination) {
 				updateShowsAtDestination(w);
-				w->state = WalkerState_Dead;
-			} else if (w->direction == DirWalker_9_Reroute) {
-				WalkerRoute_remove(walkerId);
-			} else if (w->direction == DirWalker_10_Lost) {
-				w->state = WalkerState_Dead;
+				w->state = FigureState_Dead;
+			} else if (w->direction == DirFigure_9_Reroute) {
+				FigureRoute_remove(walkerId);
+			} else if (w->direction == DirFigure_10_Lost) {
+				w->state = FigureState_Dead;
 			}
 			break;
-		case WalkerActionState_94_EntertainerRoaming:
+		case FigureActionState_94_EntertainerRoaming:
 			w->isGhost = 0;
 			w->roamLength++;
 			if (w->roamLength >= w->maxRoamLength) {
 				int xRoad, yRoad;
 				if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
-					w->actionState = WalkerActionState_95_EntertainerReturning;
+					w->actionState = FigureActionState_95_EntertainerReturning;
 					w->destinationX = xRoad;
 					w->destinationY = yRoad;
 				} else {
-					w->state = WalkerState_Dead;
+					w->state = FigureState_Dead;
 				}
 			}
 			WalkerMovement_roamTicks(walkerId, speedFactor);
 			break;
-		case WalkerActionState_95_EntertainerReturning:
+		case FigureActionState_95_EntertainerReturning:
 			WalkerMovement_walkTicks(walkerId, speedFactor);
-			if (w->direction == DirWalker_8_AtDestination ||
-				w->direction == DirWalker_9_Reroute || w->direction == DirWalker_10_Lost) {
-				w->state = WalkerState_Dead;
+			if (w->direction == DirFigure_8_AtDestination ||
+				w->direction == DirFigure_9_Reroute || w->direction == DirFigure_10_Lost) {
+				w->state = FigureState_Dead;
 			}
 			break;
 	}

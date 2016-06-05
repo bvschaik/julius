@@ -7,12 +7,12 @@
 #include "../Data/CityInfo.h"
 #include "../Data/CityView.h"
 #include "../Data/Constants.h"
+#include "../Data/Figure.h"
 #include "../Data/Graphics.h"
 #include "../Data/Grid.h"
 #include "../Data/Model.h"
 #include "../Data/Settings.h"
 #include "../Data/State.h"
-#include "../Data/Walker.h"
 
 #include "../Animation.h"
 #include "../Calc.h"

@@ -235,7 +235,7 @@ static void drawBuildingGhostDefault()
 		if (type == Building_Tower) {
 			terrain &= ~Terrain_Wall;
 		}
-		if (terrain || Data_Grid_walkerIds[tileOffset]) {
+		if (terrain || Data_Grid_figureIds[tileOffset]) {
 			placementObstructed = 1;
 		}
 	}
@@ -255,7 +255,7 @@ static void drawBuildingGhostDefault()
 			if (type == Building_Gatehouse) {
 				tileObstructed &= ~Terrain_Road;
 			}
-			if (Data_Grid_walkerIds[tileOffset]) {
+			if (Data_Grid_figureIds[tileOffset]) {
 				tileObstructed = 1;
 			}
 			int xOffset = xOffsetBase + xViewOffsets[i];
@@ -471,7 +471,7 @@ static void drawBuildingGhostBathhouse()
 		if (Data_Grid_terrain[tileOffset] & Terrain_NotClear) {
 			placementObstructed = 1;
 		}
-		if (Data_Grid_walkerIds[tileOffset]) {
+		if (Data_Grid_figureIds[tileOffset]) {
 			placementObstructed = 1;
 		}
 	}
@@ -486,7 +486,7 @@ static void drawBuildingGhostBathhouse()
 		for (int i = 0; i < numTiles; i++) {
 			int tileOffset = gridOffset + tileGridOffsets[orientationIndex][i];
 			int tileObstructed = Data_Grid_terrain[tileOffset] & Terrain_NotClear;
-			if (Data_Grid_walkerIds[tileOffset]) {
+			if (Data_Grid_figureIds[tileOffset]) {
 				tileObstructed = 1;
 			}
 			int xOffset = xOffsetBase + xViewOffsets[i];

@@ -71,7 +71,7 @@ void WalkerAction_Common_handleCorpse(int walkerId)
 	Data_Walkers[walkerId].waitTicks++;
 	if (Data_Walkers[walkerId].waitTicks >= 128) {
 		Data_Walkers[walkerId].waitTicks = 127;
-		Data_Walkers[walkerId].state = WalkerState_Dead;
+		Data_Walkers[walkerId].state = FigureState_Dead;
 	}
 }
 
@@ -98,7 +98,7 @@ static void resumeActivityAfterAttack(int walkerId, struct Data_Walker *w)
 	w->opponentId = 0;
 	w->attackerId1 = 0;
 	w->attackerId2 = 0;
-	WalkerRoute_remove(walkerId);
+	FigureRoute_remove(walkerId);
 }
 
 static void hitOpponent(int walkerId, struct Data_Walker *w)
@@ -117,26 +117,26 @@ static void hitOpponent(int walkerId, struct Data_Walker *w)
 	int opponentDefense = Constant_WalkerProperties[opponent->type].defenseValue;
 	
 	// attack modifiers
-	if (w->type == Walker_Wolf) {
+	if (w->type == Figure_Wolf) {
 		switch (Data_Settings.difficulty) {
 			case Difficulty_VeryEasy: walkerAttack = 2; break;
 			case Difficulty_Easy: walkerAttack = 4; break;
 			case Difficulty_Normal: walkerAttack = 6; break;
 		}
 	}
-	if (opponent->opponentId != walkerId && f->walkerType != Walker_FortLegionary &&
+	if (opponent->opponentId != walkerId && f->figureType != Figure_FortLegionary &&
 			attackIsSameDirection(w->attackDirection, opponent->attackDirection)) {
 		walkerAttack += 4; // attack opponent on the (exposed) back
 		Sound_Effects_playChannel(SoundChannel_SwordSwing);
 	}
-	if (f->isHalted && f->walkerType == Walker_FortLegionary &&
+	if (f->isHalted && f->figureType == Figure_FortLegionary &&
 			attackIsSameDirection(w->attackDirection, f->direction)) {
 		walkerAttack += 4; // coordinated formation attack bonus
 	}
 	// defense modifiers
 	if (opponentFormation->isHalted &&
-			(opponentFormation->walkerType == Walker_FortLegionary ||
-			opponentFormation->walkerType == Walker_EnemyCaesarLegionary)) {
+			(opponentFormation->figureType == Figure_FortLegionary ||
+			opponentFormation->figureType == Figure_EnemyCaesarLegionary)) {
 		if (!attackIsSameDirection(opponent->attackDirection, opponentFormation->direction)) {
 			opponentDefense -= 4; // opponent not attacking in coordinated formation
 		} else if (opponentFormation->layout == FormationLayout_Tortoise) {
@@ -154,11 +154,11 @@ static void hitOpponent(int walkerId, struct Data_Walker *w)
 	}
 	opponent->damage += netAttack;
 	if (opponent->damage <= maxDamage) {
-		Walker_playHitSound(w->type);
+		Figure_playHitSound(w->type);
 	} else {
-		opponent->actionState = WalkerActionState_149_Corpse;
+		opponent->actionState = FigureActionState_149_Corpse;
 		opponent->waitTicks = 0;
-		Walker_playDieSound(opponent->type);
+		Figure_playDieSound(opponent->type);
 		Formation_updateAfterDeath(opponent->formationId);
 	}
 }
@@ -177,20 +177,20 @@ void WalkerAction_Common_handleAttack(int walkerId)
 	}
 	if (w->numAttackers == 1) {
 		int targetId = w->opponentId;
-		if (WalkerIsDead(targetId)) {
+		if (FigureIsDead(targetId)) {
 			resumeActivityAfterAttack(walkerId, w);
 			return;
 		}
 	} else if (w->numAttackers == 2) {
 		int targetId = w->opponentId;
-		if (WalkerIsDead(targetId)) {
+		if (FigureIsDead(targetId)) {
 			if (targetId == w->attackerId1) {
 				w->opponentId = w->attackerId2;
 			} else if (targetId == w->attackerId2) {
 				w->opponentId = w->attackerId1;
 			}
 			targetId = w->opponentId;
-			if (WalkerIsDead(targetId)) {
+			if (FigureIsDead(targetId)) {
 				resumeActivityAfterAttack(walkerId, w);
 				return;
 			}

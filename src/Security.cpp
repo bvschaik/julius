@@ -25,7 +25,7 @@
 #include "Data/Settings.h"
 #include "Data/State.h"
 #include "Data/Tutorial.h"
-#include "Data/Walker.h"
+#include "Data/Figure.h"
 
 #define EACH_BURNING_RUIN Data_BuildingList.burning.index = 0; Data_BuildingList.burning.index < Data_BuildingList.burning.size; Data_BuildingList.burning.index++
 
@@ -167,9 +167,9 @@ static void generateRioter(int buildingId)
 	int targetX, targetY;
 	int targetBuildingId = Formation_Rioter_getTargetBuilding(&targetX, &targetY);
 	for (int i = 0; i < peopleInMob; i++) {
-		int walkerId = Walker_create(Walker_Rioter, xRoad, yRoad, 4);
+		int walkerId = Figure_create(Figure_Rioter, xRoad, yRoad, 4);
 		struct Data_Walker *w = &Data_Walkers[walkerId];
-		w->actionState = WalkerActionState_120_RioterCreated;
+		w->actionState = FigureActionState_120_RioterCreated;
 		w->roamLength = 0;
 		w->waitTicks = 10 + 4 * i;
 		if (targetBuildingId) {
@@ -177,7 +177,7 @@ static void generateRioter(int buildingId)
 			w->destinationY = targetY;
 			w->destinationBuildingId = targetBuildingId;
 		} else {
-			w->state = WalkerState_Dead;
+			w->state = FigureState_Dead;
 		}
 	}
 	Building_collapseOnFire(buildingId, 0);
@@ -204,7 +204,7 @@ static void generateMugger(int buildingId)
 		b->houseCriminalActive = 2;
 		int xRoad, yRoad;
 		if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
-			int walkerId = Walker_create(Walker_Criminal, xRoad, yRoad, 4);
+			int walkerId = Figure_create(Figure_Criminal, xRoad, yRoad, 4);
 			Data_Walkers[walkerId].waitTicks = 10 + (b->houseGenerationDelay & 0xf);
 			Data_CityInfo.ratingPeaceNumCriminalsThisYear++;
 			if (Data_CityInfo.financeTaxesThisYear > 20) {
@@ -229,7 +229,7 @@ static void generateProtester(int buildingId)
 		b->houseCriminalActive = 1;
 		int xRoad, yRoad;
 		if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
-			int walkerId = Walker_create(Walker_Protester, xRoad, yRoad, 4);
+			int walkerId = Figure_create(Figure_Protester, xRoad, yRoad, 4);
 			Data_Walkers[walkerId].waitTicks = 10 + (b->houseGenerationDelay & 0xf);
 			Data_CityInfo.ratingPeaceNumCriminalsThisYear++;
 		}
@@ -299,7 +299,7 @@ static void collapseBuilding(int buildingId, struct Data_Building *b)
 	Data_State.undoAvailable = 0;
 	b->state = BuildingState_Rubble;
 	TerrainGraphics_setBuildingAreaRubble(buildingId, b->x, b->y, b->size);
-	Walker_createDustCloud(b->x, b->y, b->size);
+	Figure_createDustCloud(b->x, b->y, b->size);
 	Building_collapseLinked(buildingId, 0);
 }
 

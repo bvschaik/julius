@@ -10,8 +10,8 @@
 #include "../Data/Building.h"
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
+#include "../Data/Figure.h"
 #include "../Data/Scenario.h"
-#include "../Data/Walker.h"
 
 static void toggleResourceState(int param1, int param2);
 static void granaryOrders(int index, int param2);
@@ -293,7 +293,7 @@ void UI_BuildingInfo_drawWarehouse(BuildingInfoContext *c)
 	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 173);
 	// cartpusher state
 	int cartpusher = b->walkerId;
-	if (cartpusher && Data_Walkers[cartpusher].state == WalkerState_Alive) {
+	if (cartpusher && Data_Walkers[cartpusher].state == FigureState_Alive) {
 		int resource = Data_Walkers[cartpusher].resourceId;
 		Graphics_drawImage(GraphicId(ID_Graphic_ResourceIcons) + resource +
 			Resource_getGraphicIdOffset(resource, 3),

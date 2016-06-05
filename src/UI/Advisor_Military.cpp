@@ -5,9 +5,9 @@
 #include "../Event.h"
 #include "../Formation.h"
 
+#include "../Data/Figure.h"
 #include "../Data/Formation.h"
 #include "../Data/Settings.h"
-#include "../Data/Walker.h"
 
 static void buttonGoToLegion(int param1, int param2);
 static void buttonReturnToFort(int param1, int param2);
@@ -131,16 +131,16 @@ void UI_Advisor_Military_drawBackground(int *advisorHeight)
 			baseOffsetX + 48, baseOffsetY + 82 + 44 * i);
 		Widget_GameText_draw(138, f->legionId,
 			baseOffsetX + 100, baseOffsetY + 83 + 44 * i, Font_NormalWhite);
-		int width = Widget_Text_drawNumber(f->numWalkers, '@', " ",
+		int width = Widget_Text_drawNumber(f->numFigures, '@', " ",
 			baseOffsetX + 100, baseOffsetY + 100 + 44 * i, Font_NormalGreen);
-		switch (f->walkerType) {
-			case Walker_FortLegionary:
+		switch (f->figureType) {
+			case Figure_FortLegionary:
 				Widget_GameText_draw(138, 33, baseOffsetX + 100 + width, baseOffsetY + 100 + 44 * i, Font_NormalGreen);
 				break;
-			case Walker_FortMounted:
+			case Figure_FortMounted:
 				Widget_GameText_draw(138, 34, baseOffsetX + 100 + width, baseOffsetY + 100 + 44 * i, Font_NormalGreen);
 				break;
-			case Walker_FortJavelin:
+			case Figure_FortJavelin:
 				Widget_GameText_draw(138, 35, baseOffsetX + 100 + width, baseOffsetY + 100 + 44 * i, Font_NormalGreen);
 				break;
 		}

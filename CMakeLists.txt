@@ -98,10 +98,10 @@ add_executable(opencaesar
 	src/WalkerAction_Trader.cpp
 	src/WalkerAction_Wall.cpp
 	src/WalkerAction_Water.cpp
-	src/WalkerGeneration.cpp
+	src/FigureGeneration.cpp
 	src/WalkerMovement.cpp
-	src/WalkerNames.cpp
-	src/WalkerRoute.cpp
+	src/FigureNames.cpp
+	src/FigureRoute.cpp
 	src/Walker_Phrase.cpp
 	src/Walker_Service.cpp
 	src/Widget_Button.cpp
@@ -109,7 +109,6 @@ add_executable(opencaesar
 	src/Widget_Panel.cpp
 	src/Widget_Text.cpp
 	src/Zip.cpp
-	src/Data/Data.cpp
 	src/Data/Model.cpp
 	src/UI/Advisor_Chief.cpp
 	src/UI/Advisor_Education.cpp

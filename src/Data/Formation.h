@@ -2,7 +2,7 @@
 #define DATA_FORMATION_H
 
 #define MAX_FORMATIONS 50
-#define MAX_FORMATION_WALKERS 16
+#define MAX_FORMATION_FIGURES 16
 #define MAX_INVASION_FORMATIONS 25
 
 enum {
@@ -33,11 +33,11 @@ struct Data_Formation {
 	unsigned char ciid;
 	unsigned char legionId;
 	unsigned char isAtFort;
-	short walkerType;
+	short figureType;
 	short buildingId;
-	short walkerIds[MAX_FORMATION_WALKERS];
-	unsigned char numWalkers;
-	unsigned char maxWalkers;
+	short figureIds[MAX_FORMATION_FIGURES];
+	unsigned char numFigures;
+	unsigned char maxFigures;
 	short layout;
 	short morale;
 	unsigned char xHome; //2e
@@ -49,7 +49,7 @@ struct Data_Formation {
 	unsigned char destinationX; // 34
 	unsigned char destinationY;
 	short destinationBuildingId;
-	short standardWalkerId;
+	short standardFigureId;
 	unsigned char isLegion;
 	unsigned char __padding;
 	short attackType;

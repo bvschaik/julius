@@ -13,7 +13,7 @@
 #include "Data/Random.h"
 #include "Data/Routes.h"
 #include "Data/Settings.h"
-#include "Data/Walker.h"
+#include "Data/Figure.h"
 
 #include <string.h>
 
@@ -536,11 +536,11 @@ void Routing_deleteClosestWallOrAqueduct(int x, int y)
 
 static int hasFightingFriendly(int gridOffset)
 {
-	int walkerId = Data_Grid_walkerIds[gridOffset];
+	int walkerId = Data_Grid_figureIds[gridOffset];
 	if (walkerId > 0) {
 		while (walkerId) {
 			if (Data_Walkers[walkerId].isFriendly &&
-				Data_Walkers[walkerId].actionState == WalkerActionState_150_Attack) {
+				Data_Walkers[walkerId].actionState == FigureActionState_150_Attack) {
 				return 1;
 			}
 			walkerId = Data_Walkers[walkerId].nextWalkerIdOnSameTile;
@@ -551,11 +551,11 @@ static int hasFightingFriendly(int gridOffset)
 
 static int hasFightingEnemy(int gridOffset)
 {
-	int walkerId = Data_Grid_walkerIds[gridOffset];
+	int walkerId = Data_Grid_figureIds[gridOffset];
 	if (walkerId > 0) {
 		while (walkerId) {
 			if (!Data_Walkers[walkerId].isFriendly &&
-				Data_Walkers[walkerId].actionState == WalkerActionState_150_Attack) {
+				Data_Walkers[walkerId].actionState == FigureActionState_150_Attack) {
 				return 1;
 			}
 			walkerId = Data_Walkers[walkerId].nextWalkerIdOnSameTile;

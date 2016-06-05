@@ -546,7 +546,7 @@ static void advanceEarthquakeToTile(int x, int y)
 	Routing_determineLandNonCitizen();
 	Routing_determineWalls();
 	
-	Walker_createDustCloud(x, y, 1);
+	Figure_createDustCloud(x, y, 1);
 }
 
 static int canAdvanceEarthquakeToTile(int x, int y)

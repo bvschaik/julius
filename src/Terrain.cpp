@@ -767,7 +767,7 @@ int Terrain_isClear(int x, int y, int size, int disallowedTerrain, int graphicSe
 			int gridOffset = GridOffset(x + dx, y + dy);
 			if (Data_Grid_terrain[gridOffset] & Terrain_NotClear & disallowedTerrain) {
 				return 0;
-			} else if (Data_Grid_walkerIds[gridOffset]) {
+			} else if (Data_Grid_figureIds[gridOffset]) {
 				return 0;
 			} else if (graphicSet && Data_Grid_graphicIds[gridOffset] != 0) {
 				return 0;
@@ -1256,7 +1256,7 @@ void Terrain_updateToPlaceBuildingToOverlay(int size, int x, int y, int terrainM
 		for (int dx = 0; dx < size; dx++) {
 			int gridOffset = GridOffset(x + dx, y + dy);
 			if ((terrainMask & Data_Grid_terrain[gridOffset] & Terrain_NotClear) ||
-				Data_Grid_walkerIds[gridOffset]) {
+				Data_Grid_figureIds[gridOffset]) {
 				return;
 			}
 		}

@@ -10,7 +10,7 @@
 #define WalkerActionFormationLayoutPositionY(layout, index) walkerActionFormationLayoutPositionY[layout][index]
 
 #define WalkerActionUpdateGraphic(w,g) \
-	if ((w)->actionState == WalkerActionState_149_Corpse) {\
+	if ((w)->actionState == FigureActionState_149_Corpse) {\
 		(w)->graphicId = (g) + walkerActionCorpseGraphicOffsets[w->waitTicks / 2] + 96;\
 	} else {\
 		(w)->graphicId = (g) + WalkerActionDirection(w) + 8 * (w)->graphicOffset;\
@@ -28,6 +28,6 @@ extern const int walkerActionFormationLayoutPositionY[13][16];
 #include "Data/Constants.h"
 #include "Data/Graphics.h"
 #include "Data/Settings.h"
-#include "Data/Walker.h"
+#include "Data/Figure.h"
 
 #endif

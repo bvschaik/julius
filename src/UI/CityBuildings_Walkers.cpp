@@ -5,10 +5,10 @@
 
 #include "../Data/Building.h"
 #include "../Data/Constants.h"
+#include "../Data/Figure.h"
 #include "../Data/Formation.h"
 #include "../Data/Settings.h"
 #include "../Data/State.h"
-#include "../Data/Walker.h"
 
 static int showOnOverlay(struct Data_Walker *w)
 {
@@ -17,26 +17,26 @@ static int showOnOverlay(struct Data_Walker *w)
 		case Overlay_Desirability:
 			return 0;
 		case Overlay_Native:
-			return w->type == Walker_IndigenousNative || w->type == Walker_Missionary;
+			return w->type == Figure_IndigenousNative || w->type == Figure_Missionary;
 		case Overlay_Fire:
-			return w->type == Walker_Prefect;
+			return w->type == Figure_Prefect;
 		case Overlay_Damage:
-			return w->type == Walker_Engineer;
+			return w->type == Figure_Engineer;
 		case Overlay_TaxIncome:
-			return w->type == Walker_TaxCollector;
+			return w->type == Figure_TaxCollector;
 		case Overlay_Crime:
-			return w->type == Walker_Prefect || w->type == Walker_Protester ||
-				w->type == Walker_Criminal || w->type == Walker_Rioter;
+			return w->type == Figure_Prefect || w->type == Figure_Protester ||
+				w->type == Figure_Criminal || w->type == Figure_Rioter;
 		case Overlay_Entertainment:
-			return w->type == Walker_Actor || w->type == Walker_Gladiator ||
-				w->type == Walker_LionTamer || w->type == Walker_Charioteer;
+			return w->type == Figure_Actor || w->type == Figure_Gladiator ||
+				w->type == Figure_LionTamer || w->type == Figure_Charioteer;
 		case Overlay_Education:
-			return w->type == Walker_SchoolChild || w->type == Walker_Librarian ||
-				w->type == Walker_Teacher;
+			return w->type == Figure_SchoolChild || w->type == Figure_Librarian ||
+				w->type == Figure_Teacher;
 		case Overlay_Theater:
-			if (w->type == Walker_Actor) {
-				if (w->actionState == WalkerActionState_94_EntertainerRoaming ||
-					w->actionState == WalkerActionState_95_EntertainerReturning) {
+			if (w->type == Figure_Actor) {
+				if (w->actionState == FigureActionState_94_EntertainerRoaming ||
+					w->actionState == FigureActionState_95_EntertainerReturning) {
 					return Data_Buildings[w->buildingId].type == Building_Theater;
 				} else {
 					return Data_Buildings[w->destinationBuildingId].type == Building_Theater;
@@ -44,9 +44,9 @@ static int showOnOverlay(struct Data_Walker *w)
 			}
 			return 0;
 		case Overlay_Amphitheater:
-			if (w->type == Walker_Actor || w->type == Walker_Gladiator) {
-				if (w->actionState == WalkerActionState_94_EntertainerRoaming ||
-					w->actionState == WalkerActionState_95_EntertainerReturning) {
+			if (w->type == Figure_Actor || w->type == Figure_Gladiator) {
+				if (w->actionState == FigureActionState_94_EntertainerRoaming ||
+					w->actionState == FigureActionState_95_EntertainerReturning) {
 					return Data_Buildings[w->buildingId].type == Building_Amphitheater;
 				} else {
 					return Data_Buildings[w->destinationBuildingId].type == Building_Amphitheater;
@@ -54,49 +54,49 @@ static int showOnOverlay(struct Data_Walker *w)
 			}
 			return 0;
 		case Overlay_Colosseum:
-			if (w->type == Walker_Gladiator) {
-				if (w->actionState == WalkerActionState_94_EntertainerRoaming ||
-					w->actionState == WalkerActionState_95_EntertainerReturning) {
+			if (w->type == Figure_Gladiator) {
+				if (w->actionState == FigureActionState_94_EntertainerRoaming ||
+					w->actionState == FigureActionState_95_EntertainerReturning) {
 					return Data_Buildings[w->buildingId].type == Building_Colosseum;
 				} else {
 					return Data_Buildings[w->destinationBuildingId].type == Building_Colosseum;
 				}
-			} else if (w->type == Walker_LionTamer) {
+			} else if (w->type == Figure_LionTamer) {
 				return 1;
 			}
 			return 0;
 		case Overlay_Hippodrome:
-			return w->type == Walker_Charioteer;
+			return w->type == Figure_Charioteer;
 		case Overlay_Religion:
-			return w->type == Walker_Priest;
+			return w->type == Figure_Priest;
 		case Overlay_School:
-			return w->type == Walker_SchoolChild;
+			return w->type == Figure_SchoolChild;
 		case Overlay_Library:
-			return w->type == Walker_Librarian;
+			return w->type == Figure_Librarian;
 		case Overlay_Academy:
-			return w->type == Walker_Teacher;
+			return w->type == Figure_Teacher;
 		case Overlay_Barber:
-			return w->type == Walker_Barber;
+			return w->type == Figure_Barber;
 		case Overlay_Bathhouse:
-			return w->type == Walker_BathhouseWorker;
+			return w->type == Figure_BathhouseWorker;
 		case Overlay_Clinic:
-			return w->type == Walker_Doctor;
+			return w->type == Figure_Doctor;
 		case Overlay_Hospital:
-			return w->type == Walker_Surgeon;
+			return w->type == Figure_Surgeon;
 		case Overlay_FoodStocks:
-			if (w->type == Walker_MarketBuyer || w->type == Walker_MarketTrader ||
-				w->type == Walker_DeliveryBoy || w->type == Walker_FishingBoat) {
+			if (w->type == Figure_MarketBuyer || w->type == Figure_MarketTrader ||
+				w->type == Figure_DeliveryBoy || w->type == Figure_FishingBoat) {
 				return 1;
-			} else if (w->type == Walker_CartPusher) {
+			} else if (w->type == Figure_CartPusher) {
 				return w->resourceId == Resource_Wheat || w->resourceId == Resource_Vegetables ||
 					w->resourceId == Resource_Fruit || w->resourceId == Resource_Meat;
 			}
 			return 0;
 		case Overlay_Problems:
-			if (w->type == Walker_LaborSeeker) {
+			if (w->type == Figure_LaborSeeker) {
 				return Data_Buildings[w->buildingId].showOnProblemOverlay;
-			} else if (w->type == Walker_CartPusher) {
-				return w->actionState == WalkerActionState_20_CartpusherInitial || w->minMaxSeen;
+			} else if (w->type == Figure_CartPusher) {
+				return w->actionState == FigureActionState_20_CartpusherInitial || w->minMaxSeen;
 			}
 			return 0;
 	}
@@ -270,7 +270,7 @@ void UI_CityBuildings_drawWalker(int walkerId, int xOffset, int yOffset, int sel
 		xTileOffset = tileProgressToPixelOffsetX(direction, w->progressOnTile);
 		yTileOffset = tileProgressToPixelOffsetY(direction, w->progressOnTile);
 		yTileOffset -= w->currentHeight;
-		if (w->numPreviousWalkersOnSameTile && w->type != Walker_Ballista) {
+		if (w->numPreviousWalkersOnSameTile && w->type != Figure_Ballista) {
 			static const int xOffsets[] = {
 				0, 8, 8, -8, -8, 0, 16, 0, -16, 8, -8, 16, -16, 16, -16, 8, -8, 0, 24, 0, -24, 0, 0, 0
 			};
@@ -310,19 +310,19 @@ void UI_CityBuildings_drawWalker(int walkerId, int xOffset, int yOffset, int sel
 	// actual drawing
 	if (w->cartGraphicId) {
 		switch (w->type) {
-			case Walker_CartPusher:
-			case Walker_Warehouseman:
-			case Walker_LionTamer:
-			case Walker_Dockman:
-			case Walker_NativeTrader:
-			case Walker_Immigrant:
-			case Walker_Emigrant:
+			case Figure_CartPusher:
+			case Figure_Warehouseman:
+			case Figure_LionTamer:
+			case Figure_Dockman:
+			case Figure_NativeTrader:
+			case Figure_Immigrant:
+			case Figure_Emigrant:
 				drawWalkerWithCart(w, xOffset, yOffset);
 				break;
-			case Walker_HippodromeMiniHorses:
+			case Figure_HippodromeMiniHorses:
 				drawHippodromeHorses(w, xOffset, yOffset);
 				break;
-			case Walker_FortStandard:
+			case Figure_FortStandard:
 				if (!Data_Formations[w->formationId].inDistantBattle) {
 					// base
 					Graphics_drawImage(w->graphicId, xOffset, yOffset);

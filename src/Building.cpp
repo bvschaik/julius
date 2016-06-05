@@ -24,7 +24,7 @@
 #include "Data/Scenario.h"
 #include "Data/Settings.h"
 #include "Data/State.h"
-#include "Data/Walker.h"
+#include "Data/Figure.h"
 
 #include <string.h>
 
@@ -381,7 +381,7 @@ void Building_collapseLastPlaced()
 		TerrainGraphics_setBuildingAreaRubble(buildingId,
 			Data_Buildings[buildingId].x, Data_Buildings[buildingId].y,
 			Data_Buildings[buildingId].size);
-		Walker_createDustCloud(Data_Buildings[buildingId].x, Data_Buildings[buildingId].y,
+		Figure_createDustCloud(Data_Buildings[buildingId].x, Data_Buildings[buildingId].y,
 			Data_Buildings[buildingId].size);
 		Building_collapseLinked(buildingId, 0);
 		Routing_determineLandCitizen();
@@ -443,12 +443,12 @@ void Building_destroyByEnemy(int x, int y, int gridOffset)
 				Data_CityInfo.ratingPeaceNumDestroyedBuildingsThisYear = 12;
 			}
 			b->state = BuildingState_Rubble;
-			Walker_createDustCloud(b->x, b->y, b->size);
+			Figure_createDustCloud(b->x, b->y, b->size);
 			Building_collapseLinked(buildingId, 0);
 		}
 	} else {
 		if (Data_Grid_terrain[gridOffset] & Terrain_Wall) {
-			Walker_killTowerSentriesAt(x, y);
+			Figure_killTowerSentriesAt(x, y);
 		}
 		TerrainGraphics_setBuildingAreaRubble(0, x, y, 1);
 	}
@@ -1163,8 +1163,8 @@ int Building_Dock_getNumIdleDockers(int buildingId)
 	for (int i = 0; i < 3; i++) {
 		if (b->data.other.dockWalkerIds[i]) {
 			struct Data_Walker *w = &Data_Walkers[b->data.other.dockWalkerIds[i]];
-			if (w->actionState == WalkerActionState_132_DockerIdling ||
-				w->actionState == WalkerActionState_133_DockerImportQueue) {
+			if (w->actionState == FigureActionState_132_DockerIdling ||
+				w->actionState == FigureActionState_133_DockerImportQueue) {
 				numIdle++;
 			}
 		}

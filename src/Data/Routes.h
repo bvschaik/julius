@@ -5,7 +5,7 @@
 #define MAX_ROUTES 600
 
 extern struct _Data_Routes {
-	short walkerIds[MAX_ROUTES];
+	short figureIds[MAX_ROUTES];
 	unsigned char directionPaths[MAX_ROUTES][MAX_ROUTEPATH_LENGTH];
 	
 	// debug

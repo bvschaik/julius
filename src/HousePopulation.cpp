@@ -10,7 +10,7 @@
 #include "Data/CityInfo.h"
 #include "Data/Message.h"
 #include "Data/Model.h"
-#include "Data/Walker.h"
+#include "Data/Figure.h"
 
 static void calculateWorkers();
 static void createImmigrants(int numPeople);
@@ -168,7 +168,7 @@ static void createImmigrants(int numPeople)
 	for (int i = 0; i < Data_BuildingList.large.size; i++) {
 		int buildingId = Data_BuildingList.large.items[i];
 		if (Data_Buildings[buildingId].immigrantWalkerId &&
-			Data_Walkers[Data_Buildings[buildingId].immigrantWalkerId].state != WalkerState_Alive) {
+			Data_Walkers[Data_Buildings[buildingId].immigrantWalkerId].state != FigureState_Alive) {
 			Data_Buildings[buildingId].immigrantWalkerId = 0;
 		}
 	}
@@ -236,9 +236,9 @@ static void createEmigrants(int numPeople)
 
 static void createImmigrantForBuilding(int buildingId, int numPeople)
 {
-	int walkerId = Walker_create(Walker_Immigrant,
+	int walkerId = Figure_create(Figure_Immigrant,
 		Data_CityInfo.entryPointX, Data_CityInfo.entryPointY, 0);
-	Data_Walkers[walkerId].actionState = WalkerActionState_1_ImmigrantCreated;
+	Data_Walkers[walkerId].actionState = FigureActionState_1_ImmigrantCreated;
 	Data_Walkers[walkerId].immigrantBuildingId = buildingId;
 	Data_Buildings[buildingId].immigrantWalkerId = walkerId;
 	Data_Walkers[walkerId].waitTicks =
@@ -255,9 +255,9 @@ static void createEmigrantForBuilding(int buildingId, int numPeople)
 		Data_Buildings[buildingId].housePopulation = 0;
 		BuildingHouse_changeToVacantLot(buildingId);
 	}
-	int walkerId = Walker_create(Walker_Emigrant,
+	int walkerId = Figure_create(Figure_Emigrant,
 		Data_Buildings[buildingId].x, Data_Buildings[buildingId].y, 0);
-	Data_Walkers[walkerId].actionState = WalkerActionState_4_EmigrantCreated;
+	Data_Walkers[walkerId].actionState = FigureActionState_4_EmigrantCreated;
 	Data_Walkers[walkerId].waitTicks = 0;
 	Data_Walkers[walkerId].migrantNumPeople = numPeople;
 }
@@ -363,8 +363,8 @@ int HousePopulation_calculatePeoplePerType()
 
 void HousePopulation_createHomeless(int x, int y, int numPeople)
 {
-	int walkerId = Walker_create(Walker_Homeless, x, y, 0);
-	Data_Walkers[walkerId].actionState = WalkerActionState_7_HomelessCreated;
+	int walkerId = Figure_create(Figure_Homeless, x, y, 0);
+	Data_Walkers[walkerId].actionState = FigureActionState_7_HomelessCreated;
 	Data_Walkers[walkerId].waitTicks = 0;
 	Data_Walkers[walkerId].migrantNumPeople = numPeople;
 	CityInfo_Population_removePeopleHomeless(numPeople);

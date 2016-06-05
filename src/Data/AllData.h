@@ -12,7 +12,7 @@
 #include "CityInfo.h"
 #include "KeyboardInput.h"
 #include "State.h"
-#include "Walker.h"
+#include "Figure.h"
 #include "Building.h"
 #include "Sound.h"
 #include "CityView.h"

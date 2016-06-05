@@ -58,7 +58,7 @@ static void performSmallCurse(int god)
 			break;
 		case God_Neptune:
 			PlayerMessage_post(1, Message_92_NeptuneIsUpset, 0, 0);
-			Walker_sinkAllShips();
+			Figure_sinkAllShips();
 			Data_CityInfo.godCurseNeptuneSankShips = 1;
 			break;
 		case God_Mercury:
@@ -95,7 +95,7 @@ static int performLargeCurse(int god)
 				return 0;
 			} else {
 				PlayerMessage_post(1, Message_81_WrathOfNeptune, 0, 0);
-				Walker_sinkAllShips();
+				Figure_sinkAllShips();
 				Data_CityInfo.godCurseNeptuneSankShips = 1;
 				Data_CityInfo.tradeSeaProblemDuration = 80;
 			}

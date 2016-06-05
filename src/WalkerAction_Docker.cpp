@@ -13,7 +13,7 @@ static int dockerDeliverImportResource(int walkerId, int buildingId)
 		return 0;
 	}
 	struct Data_Walker *ship = &Data_Walkers[shipId];
-	if (ship->actionState != WalkerActionState_112_TradeShipMoored || ship->loadsSoldOrCarrying <= 0) {
+	if (ship->actionState != FigureActionState_112_TradeShipMoored || ship->loadsSoldOrCarrying <= 0) {
 		return 0;
 	}
 	struct Data_Walker *w = &Data_Walkers[walkerId];
@@ -35,7 +35,7 @@ static int dockerDeliverImportResource(int walkerId, int buildingId)
 	ship->loadsSoldOrCarrying--;
 	w->destinationBuildingId = warehouseId;
 	w->waitTicks = 0;
-	w->actionState = WalkerActionState_133_DockerImportQueue;
+	w->actionState = FigureActionState_133_DockerImportQueue;
 	w->destinationX = xTile;
 	w->destinationY = yTile;
 	w->resourceId = Data_CityInfo.tradeNextImportResourceDocker;
@@ -49,7 +49,7 @@ static int dockerGetExportResource(int walkerId, int buildingId)
 		return 0;
 	}
 	struct Data_Walker *ship = &Data_Walkers[shipId];
-	if (ship->actionState != WalkerActionState_112_TradeShipMoored || ship->traderAmountBought >= 12) {
+	if (ship->actionState != FigureActionState_112_TradeShipMoored || ship->traderAmountBought >= 12) {
 		return 0;
 	}
 	struct Data_Walker *w = &Data_Walkers[walkerId];
@@ -70,7 +70,7 @@ static int dockerGetExportResource(int walkerId, int buildingId)
 	}
 	ship->traderAmountBought++;
 	w->destinationBuildingId = warehouseId;
-	w->actionState = WalkerActionState_136_DockerExportGoingToWarehouse;
+	w->actionState = FigureActionState_136_DockerExportGoingToWarehouse;
 	w->waitTicks = 0;
 	w->destinationX = xTile;
 	w->destinationY = yTile;
@@ -80,7 +80,7 @@ static int dockerGetExportResource(int walkerId, int buildingId)
 
 static void setCartGraphic(struct Data_Walker *w)
 {
-	w->cartGraphicId = GraphicId(ID_Graphic_Walker_CartpusherCart) + 8 * w->resourceId;
+	w->cartGraphicId = GraphicId(ID_Graphic_Figure_CartpusherCart) + 8 * w->resourceId;
 	w->cartGraphicId += Resource_getGraphicIdOffset(w->resourceId, 1);
 }
 
@@ -91,34 +91,34 @@ void WalkerAction_docker(int walkerId)
 	WalkerActionIncreaseGraphicOffset(w, 12);
 	w->cartGraphicId = 0;
 	if (!BuildingIsInUse(w->buildingId)) {
-		w->state = WalkerState_Dead;
+		w->state = FigureState_Dead;
 	}
 	if (b->type != Building_Dock && b->type != Building_Wharf) {
-		w->state = WalkerState_Dead;
+		w->state = FigureState_Dead;
 	}
 	if (b->data.other.dockNumShips) {
 		b->data.other.dockNumShips--;
 	}
 	if (b->data.other.boatWalkerId) {
 		struct Data_Walker *ship = &Data_Walkers[b->data.other.boatWalkerId];
-		if (ship->state != WalkerState_Alive || ship->type != Walker_TradeShip) {
+		if (ship->state != FigureState_Alive || ship->type != Figure_TradeShip) {
 			b->data.other.boatWalkerId = 0;
-		} else if (Data_Walker_Traders[ship->traderId].totalBought >= 12 ||
-				Data_Walker_Traders[ship->traderId].totalSold >= 12) {
+		} else if (Data_Figure_Traders[ship->traderId].totalBought >= 12 ||
+				Data_Figure_Traders[ship->traderId].totalSold >= 12) {
 			b->data.other.boatWalkerId = 0;
-		} else if (ship->actionState == WalkerActionState_115_TradeShipLeaving) {
+		} else if (ship->actionState == FigureActionState_115_TradeShipLeaving) {
 			b->data.other.boatWalkerId = 0;
 		}
 	}
-	w->terrainUsage = WalkerTerrainUsage_Roads;
+	w->terrainUsage = FigureTerrainUsage_Roads;
 	switch (w->actionState) {
-		case WalkerActionState_150_Attack:
+		case FigureActionState_150_Attack:
 			WalkerAction_Common_handleAttack(walkerId);
 			break;
-		case WalkerActionState_149_Corpse:
+		case FigureActionState_149_Corpse:
 			WalkerAction_Common_handleCorpse(walkerId);
 			break;
-		case WalkerActionState_132_DockerIdling:
+		case FigureActionState_132_DockerIdling:
 			w->resourceId = 0;
 			w->cartGraphicId = 0;
 			if (!dockerDeliverImportResource(walkerId, w->buildingId)) {
@@ -126,7 +126,7 @@ void WalkerAction_docker(int walkerId)
 			}
 			w->graphicOffset = 0;
 			break;
-		case WalkerActionState_133_DockerImportQueue:
+		case FigureActionState_133_DockerImportQueue:
 			w->cartGraphicId = 0;
 			w->graphicOffset = 0;
 			if (b->data.other.dockQueuedDockerId <= 0) {
@@ -137,7 +137,7 @@ void WalkerAction_docker(int walkerId)
 				b->data.other.dockNumShips = 120;
 				w->waitTicks++;
 				if (w->waitTicks >= 80) {
-					w->actionState = WalkerActionState_135_DockerImportGoingToWarehouse;
+					w->actionState = FigureActionState_135_DockerImportGoingToWarehouse;
 					w->waitTicks = 0;
 					setCartGraphic(w);
 					b->data.other.dockQueuedDockerId = 0;
@@ -147,9 +147,9 @@ void WalkerAction_docker(int walkerId)
 				for (int i = 0; i < 3; i++) {
 					int dockerId = b->data.other.dockWalkerIds[i];
 					if (dockerId && b->data.other.dockQueuedDockerId == dockerId &&
-							Data_Walkers[dockerId].state == WalkerState_Alive) {
-						if (Data_Walkers[dockerId].actionState == WalkerActionState_133_DockerImportQueue ||
-							Data_Walkers[dockerId].actionState == WalkerActionState_134_DockerExportQueue) {
+							Data_Walkers[dockerId].state == FigureState_Alive) {
+						if (Data_Walkers[dockerId].actionState == FigureActionState_133_DockerImportQueue ||
+							Data_Walkers[dockerId].actionState == FigureActionState_134_DockerExportQueue) {
 							hasQueuedDocker = 1;
 						}
 					}
@@ -159,7 +159,7 @@ void WalkerAction_docker(int walkerId)
 				}
 			}
 			break;
-		case WalkerActionState_134_DockerExportQueue:
+		case FigureActionState_134_DockerExportQueue:
 			setCartGraphic(w);
 			if (b->data.other.dockQueuedDockerId <= 0) {
 				b->data.other.dockQueuedDockerId = walkerId;
@@ -169,7 +169,7 @@ void WalkerAction_docker(int walkerId)
 				b->data.other.dockNumShips = 120;
 				w->waitTicks++;
 				if (w->waitTicks >= 80) {
-					w->actionState = WalkerActionState_132_DockerIdling;
+					w->actionState = FigureActionState_132_DockerIdling;
 					w->waitTicks = 0;
 					w->graphicId = 0;
 					w->cartGraphicId = 0;
@@ -178,66 +178,66 @@ void WalkerAction_docker(int walkerId)
 			}
 			w->waitTicks++;
 			if (w->waitTicks >= 20) {
-				w->actionState = WalkerActionState_132_DockerIdling;
+				w->actionState = FigureActionState_132_DockerIdling;
 				w->waitTicks = 0;
 			}
 			w->graphicOffset = 0;
 			break;
-		case WalkerActionState_135_DockerImportGoingToWarehouse:
+		case FigureActionState_135_DockerImportGoingToWarehouse:
 			setCartGraphic(w);
 			WalkerMovement_walkTicks(walkerId, 1);
-			if (w->direction == DirWalker_8_AtDestination) {
-				w->actionState = WalkerActionState_139_DockerImportAtWarehouse;
-			} else if (w->direction == DirWalker_9_Reroute) {
-				WalkerRoute_remove(walkerId);
-			} else if (w->direction == DirWalker_10_Lost) {
-				w->state = WalkerState_Dead;
+			if (w->direction == DirFigure_8_AtDestination) {
+				w->actionState = FigureActionState_139_DockerImportAtWarehouse;
+			} else if (w->direction == DirFigure_9_Reroute) {
+				FigureRoute_remove(walkerId);
+			} else if (w->direction == DirFigure_10_Lost) {
+				w->state = FigureState_Dead;
 			}
 			if (!BuildingIsInUse(w->destinationBuildingId)) {
-				w->state = WalkerState_Dead;
+				w->state = FigureState_Dead;
 			}
 			break;
-		case WalkerActionState_136_DockerExportGoingToWarehouse:
-			w->cartGraphicId = GraphicId(ID_Graphic_Walker_CartpusherCart); // empty
+		case FigureActionState_136_DockerExportGoingToWarehouse:
+			w->cartGraphicId = GraphicId(ID_Graphic_Figure_CartpusherCart); // empty
 			WalkerMovement_walkTicks(walkerId, 1);
-			if (w->direction == DirWalker_8_AtDestination) {
-				w->actionState = WalkerActionState_140_DockerExportAtWarehouse;
-			} else if (w->direction == DirWalker_9_Reroute) {
-				WalkerRoute_remove(walkerId);
-			} else if (w->direction == DirWalker_10_Lost) {
-				w->state = WalkerState_Dead;
+			if (w->direction == DirFigure_8_AtDestination) {
+				w->actionState = FigureActionState_140_DockerExportAtWarehouse;
+			} else if (w->direction == DirFigure_9_Reroute) {
+				FigureRoute_remove(walkerId);
+			} else if (w->direction == DirFigure_10_Lost) {
+				w->state = FigureState_Dead;
 			}
 			if (!BuildingIsInUse(w->destinationBuildingId)) {
-				w->state = WalkerState_Dead;
+				w->state = FigureState_Dead;
 			}
 			break;
-		case WalkerActionState_137_DockerExportReturning:
+		case FigureActionState_137_DockerExportReturning:
 			setCartGraphic(w);
 			WalkerMovement_walkTicks(walkerId, 1);
-			if (w->direction == DirWalker_8_AtDestination) {
-				w->actionState = WalkerActionState_134_DockerExportQueue;
+			if (w->direction == DirFigure_8_AtDestination) {
+				w->actionState = FigureActionState_134_DockerExportQueue;
 				w->waitTicks = 0;
-			} else if (w->direction == DirWalker_9_Reroute) {
-				WalkerRoute_remove(walkerId);
-			} else if (w->direction == DirWalker_10_Lost) {
-				w->state = WalkerState_Dead;
+			} else if (w->direction == DirFigure_9_Reroute) {
+				FigureRoute_remove(walkerId);
+			} else if (w->direction == DirFigure_10_Lost) {
+				w->state = FigureState_Dead;
 			}
 			if (!BuildingIsInUse(w->destinationBuildingId)) {
-				w->state = WalkerState_Dead;
+				w->state = FigureState_Dead;
 			}
 			break;
-		case WalkerActionState_138_DockerImportReturning:
+		case FigureActionState_138_DockerImportReturning:
 			setCartGraphic(w);
 			WalkerMovement_walkTicks(walkerId, 1);
-			if (w->direction == DirWalker_8_AtDestination) {
-				w->actionState = WalkerActionState_132_DockerIdling;
-			} else if (w->direction == DirWalker_9_Reroute) {
-				WalkerRoute_remove(walkerId);
-			} else if (w->direction == DirWalker_10_Lost) {
-				w->state = WalkerState_Dead;
+			if (w->direction == DirFigure_8_AtDestination) {
+				w->actionState = FigureActionState_132_DockerIdling;
+			} else if (w->direction == DirFigure_9_Reroute) {
+				FigureRoute_remove(walkerId);
+			} else if (w->direction == DirFigure_10_Lost) {
+				w->state = FigureState_Dead;
 			}
 			break;
-		case WalkerActionState_139_DockerImportAtWarehouse:
+		case FigureActionState_139_DockerImportAtWarehouse:
 			setCartGraphic(w);
 			w->waitTicks++;
 			if (w->waitTicks > 10) {
@@ -249,14 +249,14 @@ void WalkerAction_docker(int walkerId)
 				}
 				if (Trader_tryImportResource(w->destinationBuildingId, w->resourceId, tradeCityId)) {
 					Trader_sellResource(b->data.other.boatWalkerId, w->resourceId);
-					w->actionState = WalkerActionState_138_DockerImportReturning;
+					w->actionState = FigureActionState_138_DockerImportReturning;
 					w->waitTicks = 0;
 					w->destinationX = w->sourceX;
 					w->destinationY = w->sourceY;
 					w->resourceId = 0;
 					dockerGetExportResource(walkerId, w->buildingId);
 				} else {
-					w->actionState = WalkerActionState_138_DockerImportReturning;
+					w->actionState = FigureActionState_138_DockerImportReturning;
 					w->destinationX = w->sourceX;
 					w->destinationY = w->sourceY;
 				}
@@ -264,8 +264,8 @@ void WalkerAction_docker(int walkerId)
 			}
 			w->graphicOffset = 0;
 			break;
-		case WalkerActionState_140_DockerExportAtWarehouse:
-			w->cartGraphicId = GraphicId(ID_Graphic_Walker_CartpusherCart); // empty
+		case FigureActionState_140_DockerExportAtWarehouse:
+			w->cartGraphicId = GraphicId(ID_Graphic_Figure_CartpusherCart); // empty
 			w->waitTicks++;
 			if (w->waitTicks > 10) {
 				int tradeCityId;
@@ -274,13 +274,13 @@ void WalkerAction_docker(int walkerId)
 				} else {
 					tradeCityId = 0;
 				}
-				w->actionState = WalkerActionState_138_DockerImportReturning;
+				w->actionState = FigureActionState_138_DockerImportReturning;
 				w->destinationX = w->sourceX;
 				w->destinationY = w->sourceY;
 				w->waitTicks = 0;
 				if (Trader_tryExportResource(w->destinationBuildingId, w->resourceId, tradeCityId)) {
 					Trader_buyResource(b->data.other.boatWalkerId, w->resourceId);
-					w->actionState = WalkerActionState_137_DockerExportReturning;
+					w->actionState = FigureActionState_137_DockerExportReturning;
 				} else {
 					dockerGetExportResource(walkerId, w->buildingId);
 				}
@@ -292,12 +292,12 @@ void WalkerAction_docker(int walkerId)
 	int dir = w->direction < 8 ? w->direction : w->previousTileDirection;
 	WalkerActionNormalizeDirection(dir);
 
-	if (w->actionState == WalkerActionState_149_Corpse) {
-		w->graphicId = GraphicId(ID_Graphic_Walker_Cartpusher) +
+	if (w->actionState == FigureActionState_149_Corpse) {
+		w->graphicId = GraphicId(ID_Graphic_Figure_Cartpusher) +
 			WalkerActionCorpseGraphicOffset(w) + 96;
 		w->cartGraphicId = 0;
 	} else {
-		w->graphicId = GraphicId(ID_Graphic_Walker_Cartpusher) + dir + 8 * w->graphicOffset;
+		w->graphicId = GraphicId(ID_Graphic_Figure_Cartpusher) + dir + 8 * w->graphicOffset;
 	}
 	if (w->cartGraphicId) {
 		w->cartGraphicId += dir;

@@ -80,7 +80,7 @@ void GameTick_advance()
 		case 28: UtilityManagement_updateHouseWaterAccess(); break;
 		case 29: Formation_Tick_updateAll(1); break;
 		case 30: UI_Sidebar_requestMinimapRefresh(); break;
-		case 31: WalkerGeneration_generateWalkersForBuildings(); break;
+		case 31: FigureGeneration_generateFiguresForBuildings(); break;
 		case 32: Trader_tick(); break;
 		case 33: CityInfo_Tick_countBuildingTypes(); CityInfo_Culture_updateCoveragePercentages(); break;
 		case 34: CityInfo_Tick_distributeTreasuryOverForumsAndSenates(); break;

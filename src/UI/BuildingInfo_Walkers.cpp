@@ -11,10 +11,10 @@
 #include "../Data/Building.h"
 #include "../Data/Constants.h"
 #include "../Data/Empire.h"
+#include "../Data/Figure.h"
 #include "../Data/Formation.h"
 #include "../Data/Scenario.h"
 #include "../Data/Settings.h"
-#include "../Data/Walker.h"
 
 static void selectWalker(int param1, int param2);
 
@@ -68,7 +68,7 @@ static int collectingItemIdToResourceId(int c)
 
 static void drawWalkerInfoTrade(BuildingInfoContext *c, int walkerId)
 {
-	while (Data_Walkers[walkerId].type == Walker_TradeCaravanDonkey) {
+	while (Data_Walkers[walkerId].type == Figure_TradeCaravanDonkey) {
 		walkerId = Data_Walkers[walkerId].inFrontWalkerId;
 	}
 	int cityId = Data_Walkers[walkerId].empireCityId;
@@ -80,30 +80,30 @@ static void drawWalkerInfoTrade(BuildingInfoContext *c, int walkerId)
 	width = Widget_GameText_draw(129, 1,
 		c->xOffset + 40, c->yOffset + 130, Font_SmallBlack);
 	Widget_GameText_drawNumberWithDescription(8, 10,
-		Data_Walkers[walkerId].type == Walker_TradeShip ? 12 : 8,
+		Data_Walkers[walkerId].type == Figure_TradeShip ? 12 : 8,
 		c->xOffset + 40 + width, c->yOffset + 130, Font_SmallBlack);
 	
 	int traderId = Data_Walkers[walkerId].traderId;
-	if (Data_Walkers[walkerId].type == Walker_TradeShip) {
+	if (Data_Walkers[walkerId].type == Figure_TradeShip) {
 		int textId;
 		switch (Data_Walkers[walkerId].actionState) {
-			case WalkerActionState_114_TradeShipAnchored: textId = 6; break;
-			case WalkerActionState_112_TradeShipMoored: textId = 7; break;
-			case WalkerActionState_115_TradeShipLeaving: textId = 8; break;
+			case FigureActionState_114_TradeShipAnchored: textId = 6; break;
+			case FigureActionState_112_TradeShipMoored: textId = 7; break;
+			case FigureActionState_115_TradeShipLeaving: textId = 8; break;
 			default: textId = 9; break;
 		}
 		Widget_GameText_draw(129, textId, c->xOffset + 40, c->yOffset + 150, Font_SmallBlack);
 	} else {
 		int textId;
 		switch (Data_Walkers[walkerId].actionState) {
-			case WalkerActionState_101_TradeCaravanArriving:
+			case FigureActionState_101_TradeCaravanArriving:
 				textId = 12;
 				break;
-			case WalkerActionState_102_TradeCaravanTrading:
+			case FigureActionState_102_TradeCaravanTrading:
 				textId = 10;
 				break;
-			case WalkerActionState_103_TradeCaravanLeaving:
-				if (Data_Walker_Traders[traderId].totalSold || Data_Walker_Traders[traderId].totalBought) {
+			case FigureActionState_103_TradeCaravanLeaving:
+				if (Data_Figure_Traders[traderId].totalSold || Data_Figure_Traders[traderId].totalBought) {
 					textId = 11;
 				} else {
 					textId = 13;
@@ -115,12 +115,12 @@ static void drawWalkerInfoTrade(BuildingInfoContext *c, int walkerId)
 		}
 		Widget_GameText_draw(129, textId, c->xOffset + 40, c->yOffset + 150, Font_SmallBlack);
 	}
-	if (Data_Walker_Traders[traderId].totalSold || Data_Walker_Traders[traderId].totalBought) {
+	if (Data_Figure_Traders[traderId].totalSold || Data_Figure_Traders[traderId].totalBought) {
 		// bought
 		width = Widget_GameText_draw(129, 4, c->xOffset + 40, c->yOffset + 170, Font_SmallBlack);
 		for (int r = 1; r < 16; r++) {
-			if (Data_Walker_Traders[traderId].boughtResources[r]) {
-				width += Widget_Text_drawNumber(Data_Walker_Traders[traderId].boughtResources[r],
+			if (Data_Figure_Traders[traderId].boughtResources[r]) {
+				width += Widget_Text_drawNumber(Data_Figure_Traders[traderId].boughtResources[r],
 					'@', " ", c->xOffset + 40 + width, c->yOffset + 170, Font_SmallBlack);
 				int graphicId = GraphicId(ID_Graphic_ResourceIcons) + r + Resource_getGraphicIdOffset(r, 3);
 				Graphics_drawImage(graphicId, c->xOffset + 40 + width, c->yOffset + 167);
@@ -130,8 +130,8 @@ static void drawWalkerInfoTrade(BuildingInfoContext *c, int walkerId)
 		// sold
 		width = Widget_GameText_draw(129, 5, c->xOffset + 40, c->yOffset + 200, Font_SmallBlack);
 		for (int r = 1; r < 16; r++) {
-			if (Data_Walker_Traders[traderId].soldResources[r]) {
-				width += Widget_Text_drawNumber(Data_Walker_Traders[traderId].soldResources[r],
+			if (Data_Figure_Traders[traderId].soldResources[r]) {
+				width += Widget_Text_drawNumber(Data_Figure_Traders[traderId].soldResources[r],
 					'@', " ", c->xOffset + 40 + width, c->yOffset + 200, Font_SmallBlack);
 				int graphicId = GraphicId(ID_Graphic_ResourceIcons) + r + Resource_getGraphicIdOffset(r, 3);
 				Graphics_drawImage(graphicId, c->xOffset + 40 + width, c->yOffset + 197);
@@ -165,7 +165,7 @@ static void drawWalkerInfoEnemy(BuildingInfoContext *c, int walkerId)
 	int graphicId = 8;
 	int formationId = Data_Walkers[walkerId].formationId;
 	switch (Data_Walkers[walkerId].type) {
-		case Walker_Enemy43_Spear:
+		case Figure_Enemy43_Spear:
 			switch (Data_Formations[formationId].enemyType) {
 				case EnemyType_5_Pergamum: graphicId = 44; break;
 				case EnemyType_6_Seleucid: graphicId = 46; break;
@@ -173,34 +173,34 @@ static void drawWalkerInfoEnemy(BuildingInfoContext *c, int walkerId)
 				case EnemyType_8_Greek: graphicId = 36; break;
 			}
 			break;
-		case Walker_Enemy44_Sword:
+		case Figure_Enemy44_Sword:
 			switch (Data_Formations[formationId].enemyType) {
 				case EnemyType_5_Pergamum: graphicId = 45; break;
 				case EnemyType_6_Seleucid: graphicId = 47; break;
 				case EnemyType_9_Egyptian: graphicId = 29; break;
 			}
 			break;
-		case Walker_Enemy45_Sword:
+		case Figure_Enemy45_Sword:
 			switch (Data_Formations[formationId].enemyType) {
 				case EnemyType_7_Etruscan: graphicId = 31; break;
 				case EnemyType_8_Greek: graphicId = 37; break;
 				case EnemyType_10_Carthaginian: graphicId = 22; break;
 			}
 			break;
-		case Walker_Enemy49_FastSword:
+		case Figure_Enemy49_FastSword:
 			switch (Data_Formations[formationId].enemyType) {
 				case EnemyType_0_Barbarian: graphicId = 21; break;
 				case EnemyType_1_Numidian: graphicId = 20; break;
 				case EnemyType_4_Goth: graphicId = 35; break;
 			}
 			break;
-		case Walker_Enemy50_Sword:
+		case Figure_Enemy50_Sword:
 			switch (Data_Formations[formationId].enemyType) {
 				case EnemyType_2_Gaul: graphicId = 40; break;
 				case EnemyType_3_Celt: graphicId = 24; break;
 			}
 			break;
-		case Walker_Enemy51_Spear:
+		case Figure_Enemy51_Spear:
 			switch (Data_Formations[formationId].enemyType) {
 				case EnemyType_1_Numidian: graphicId = 20; break;
 			}
@@ -234,7 +234,7 @@ static void drawWalkerInfoCartpusher(BuildingInfoContext *c, int walkerId)
 	int width = Widget_GameText_draw(64, Data_Walkers[walkerId].type,
 		c->xOffset + 92, c->yOffset + 139, Font_SmallBlack);
 	
-	if (Data_Walkers[walkerId].actionState != WalkerActionState_132_DockerIdling &&
+	if (Data_Walkers[walkerId].actionState != FigureActionState_132_DockerIdling &&
 		Data_Walkers[walkerId].resourceId) {
 		int resource = Data_Walkers[walkerId].resourceId;
 		Graphics_drawImage(GraphicId(ID_Graphic_ResourceIcons) +
@@ -252,17 +252,17 @@ static void drawWalkerInfoCartpusher(BuildingInfoContext *c, int walkerId)
 	int targetBuildingId = Data_Walkers[walkerId].destinationBuildingId;
 	int isReturning = 0;
 	switch (Data_Walkers[walkerId].actionState) {
-		case WalkerActionState_27_CartpusherReturning:
-		case WalkerActionState_53_WarehousemanReturningEmpty:
-		case WalkerActionState_56_WarehousemanReturningWithFood:
-		case WalkerActionState_59_WarehousemanReturningWithResource:
-		case WalkerActionState_134_DockerExportQueue:
-		case WalkerActionState_137_DockerExportReturning:
-		case WalkerActionState_138_DockerImportReturning:
+		case FigureActionState_27_CartpusherReturning:
+		case FigureActionState_53_WarehousemanReturningEmpty:
+		case FigureActionState_56_WarehousemanReturningWithFood:
+		case FigureActionState_59_WarehousemanReturningWithResource:
+		case FigureActionState_134_DockerExportQueue:
+		case FigureActionState_137_DockerExportReturning:
+		case FigureActionState_138_DockerImportReturning:
 			isReturning = 1;
 			break;
 	}
-	if (Data_Walkers[walkerId].actionState != WalkerActionState_132_DockerIdling) {
+	if (Data_Walkers[walkerId].actionState != FigureActionState_132_DockerIdling) {
 		if (isReturning) {
 			width = Widget_GameText_draw(129, 16,
 				c->xOffset + 40, c->yOffset + 200, Font_SmallBlack);
@@ -295,14 +295,14 @@ static void drawWalkerInfoMarketBuyer(BuildingInfoContext *c, int walkerId)
 	int width = Widget_GameText_draw(64, Data_Walkers[walkerId].type,
 		c->xOffset + 92, c->yOffset + 139, Font_SmallBlack);
 	
-	if (Data_Walkers[walkerId].actionState == WalkerActionState_145_MarketBuyerGoingToStorage) {
+	if (Data_Walkers[walkerId].actionState == FigureActionState_145_MarketBuyerGoingToStorage) {
 		width += Widget_GameText_draw(129, 17,
 			c->xOffset + 90 + width, c->yOffset + 139, Font_SmallBlack);
 		int resourceId = collectingItemIdToResourceId(Data_Walkers[walkerId].collectingItemId);
 		Graphics_drawImage(
 			GraphicId(ID_Graphic_ResourceIcons) + resourceId + Resource_getGraphicIdOffset(resourceId, 3),
 			c->xOffset + 90 + width, c->yOffset + 135);
-	} else if (Data_Walkers[walkerId].actionState == WalkerActionState_146_MarketBuyerReturning) {
+	} else if (Data_Walkers[walkerId].actionState == FigureActionState_146_MarketBuyerReturning) {
 		width += Widget_GameText_draw(129, 18,
 			c->xOffset + 90 + width, c->yOffset + 139, Font_SmallBlack);
 		int resourceId = collectingItemIdToResourceId(Data_Walkers[walkerId].collectingItemId);
@@ -319,8 +319,8 @@ static void drawWalkerInfoMarketBuyer(BuildingInfoContext *c, int walkerId)
 static void drawWalkerInfoNormal(BuildingInfoContext *c, int walkerId)
 {
 	int graphicId = BigPeopleGraphic(Data_Walkers[walkerId].type);
-	if (Data_Walkers[walkerId].actionState == WalkerActionState_74_PrefectGoingToFire ||
-		Data_Walkers[walkerId].actionState == WalkerActionState_75_PrefectAtFire) {
+	if (Data_Walkers[walkerId].actionState == FigureActionState_74_PrefectGoingToFire ||
+		Data_Walkers[walkerId].actionState == FigureActionState_75_PrefectAtFire) {
 		graphicId = GraphicId(ID_Graphic_BigPeople) + 18;
 	}
 	Graphics_drawImage(graphicId, c->xOffset + 28, c->yOffset + 112);
@@ -341,16 +341,16 @@ static void drawWalkerInfo(BuildingInfoContext *c, int walkerId)
 	Widget_Panel_drawButtonBorder(c->xOffset + 24, c->yOffset + 102, 16 * (c->widthBlocks - 3), 122, 0);
 	
 	int type = Data_Walkers[walkerId].type;
-	if (type == Walker_TradeCaravan || type == Walker_TradeCaravanDonkey || type == Walker_TradeShip) {
+	if (type == Figure_TradeCaravan || type == Figure_TradeCaravanDonkey || type == Figure_TradeShip) {
 		drawWalkerInfoTrade(c, walkerId);
 	} else if (WalkerIsEnemy(type)) {
 		drawWalkerInfoEnemy(c, walkerId);
-	} else if (type == Walker_FishingBoat || type == Walker_Shipwreck ||
-			type == Walker_Sheep || type == Walker_Wolf || type == Walker_Zebra) {
+	} else if (type == Figure_FishingBoat || type == Figure_Shipwreck ||
+			type == Figure_Sheep || type == Figure_Wolf || type == Figure_Zebra) {
 		drawWalkerInfoBoatAnimal(c, walkerId);
-	} else if (type == Walker_CartPusher || type == Walker_Warehouseman || type == Walker_Dockman) {
+	} else if (type == Figure_CartPusher || type == Figure_Warehouseman || type == Figure_Dockman) {
 		drawWalkerInfoCartpusher(c, walkerId);
-	} else if (type == Walker_MarketBuyer) {
+	} else if (type == Figure_MarketBuyer) {
 		drawWalkerInfoMarketBuyer(c, walkerId);
 	} else {
 		drawWalkerInfoNormal(c, walkerId);
@@ -412,7 +412,7 @@ void UI_BuildingInfo_drawWalkerImagesLocal(BuildingInfoContext *c)
 void UI_BuildingInfo_playWalkerPhrase(BuildingInfoContext *c)
 {
 	int walkerId = c->walker.walkerIds[c->walker.selectedIndex];
-	c->walker.soundId = Walker_playPhrase(walkerId);
+	c->walker.soundId = Figure_playPhrase(walkerId);
 	c->walker.phraseId = Data_Walkers[walkerId].phraseId;
 }
 

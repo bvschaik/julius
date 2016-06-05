@@ -25,23 +25,23 @@ void WalkerAction_fishingBoat(int walkerId)
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	struct Data_Building *b = &Data_Buildings[w->buildingId];
 	if (!BuildingIsInUse(w->buildingId)) {
-		w->state = WalkerState_Dead;
+		w->state = FigureState_Dead;
 	}
-	if (w->actionState != WalkerActionState_190_FishingBoatCreated && b->data.other.boatWalkerId != walkerId) {
+	if (w->actionState != FigureActionState_190_FishingBoatCreated && b->data.other.boatWalkerId != walkerId) {
 		int xTile, yTile;
 		int buildingId = Terrain_Water_getWharfTileForNewFishingBoat(walkerId, &xTile, &yTile);
 		b = &Data_Buildings[buildingId];
 		if (buildingId) {
 			w->buildingId = buildingId;
 			b->data.other.boatWalkerId = walkerId;
-			w->actionState = WalkerActionState_193_FishingBoatSailingToWharf;
+			w->actionState = FigureActionState_193_FishingBoatSailingToWharf;
 			w->destinationX = xTile;
 			w->destinationY = yTile;
 			w->sourceX = xTile;
 			w->sourceY = yTile;
-			WalkerRoute_remove(walkerId);
+			FigureRoute_remove(walkerId);
 		} else {
-			w->state = WalkerState_Dead;
+			w->state = FigureState_Dead;
 		}
 	}
 	w->isGhost = 0;
@@ -49,7 +49,7 @@ void WalkerAction_fishingBoat(int walkerId)
 	WalkerActionIncreaseGraphicOffset(w, 12);
 	w->cartGraphicId = 0;
 	switch (w->actionState) {
-		case WalkerActionState_190_FishingBoatCreated:
+		case FigureActionState_190_FishingBoatCreated:
 			w->waitTicks++;
 			if (w->waitTicks >= 50) {
 				w->waitTicks = 0;
@@ -59,54 +59,54 @@ void WalkerAction_fishingBoat(int walkerId)
 					b->walkerId = 0; // remove from original building
 					w->buildingId = buildingId;
 					Data_Buildings[buildingId].data.other.boatWalkerId = walkerId;
-					w->actionState = WalkerActionState_193_FishingBoatSailingToWharf;
+					w->actionState = FigureActionState_193_FishingBoatSailingToWharf;
 					w->destinationX = xTile;
 					w->destinationY = yTile;
 					w->sourceX = xTile;
 					w->sourceY = yTile;
-					WalkerRoute_remove(walkerId);
+					FigureRoute_remove(walkerId);
 				}
 			}
 			break;
-		case WalkerActionState_191_FishingBoatGoingToFish:
+		case FigureActionState_191_FishingBoatGoingToFish:
 			WalkerMovement_walkTicks(walkerId, 1);
 			w->heightAdjustedTicks = 0;
-			if (w->direction == DirWalker_8_AtDestination) {
+			if (w->direction == DirFigure_8_AtDestination) {
 				int xTile, yTile;
 				if (Terrain_Water_findAlternativeTileForFishingBoat(walkerId, &xTile, &yTile)) {
-					WalkerRoute_remove(walkerId);
+					FigureRoute_remove(walkerId);
 					w->destinationX = xTile;
 					w->destinationY = yTile;
 					w->direction = w->previousTileDirection;
 				} else {
-					w->actionState = WalkerActionState_192_FishingBoatFishing;
+					w->actionState = FigureActionState_192_FishingBoatFishing;
 					w->waitTicks = 0;
 				}
-			} else if (w->direction == DirWalker_9_Reroute || w->direction == DirWalker_10_Lost) {
-				w->actionState = WalkerActionState_194_FishingBoatAtWharf;
+			} else if (w->direction == DirFigure_9_Reroute || w->direction == DirFigure_10_Lost) {
+				w->actionState = FigureActionState_194_FishingBoatAtWharf;
 				w->destinationX = w->sourceX;
 				w->destinationY = w->sourceY;
 			}
 			break;
-		case WalkerActionState_192_FishingBoatFishing:
+		case FigureActionState_192_FishingBoatFishing:
 			w->waitTicks++;
 			if (w->waitTicks >= 200) {
 				w->waitTicks = 0;
-				w->actionState = WalkerActionState_195_FishingBoatReturningWithFish;
+				w->actionState = FigureActionState_195_FishingBoatReturningWithFish;
 				w->destinationX = w->sourceX;
 				w->destinationY = w->sourceY;
-				WalkerRoute_remove(walkerId);
+				FigureRoute_remove(walkerId);
 			}
 			break;
-		case WalkerActionState_193_FishingBoatSailingToWharf:
+		case FigureActionState_193_FishingBoatSailingToWharf:
 			WalkerMovement_walkTicks(walkerId, 1);
 			w->heightAdjustedTicks = 0;
-			if (w->direction == DirWalker_8_AtDestination) {
-				w->actionState = WalkerActionState_194_FishingBoatAtWharf;
+			if (w->direction == DirFigure_8_AtDestination) {
+				w->actionState = FigureActionState_194_FishingBoatAtWharf;
 				w->waitTicks = 0;
-			} else if (w->direction == DirWalker_9_Reroute) {
-				WalkerRoute_remove(walkerId);
-			} else if (w->direction == DirWalker_10_Lost) {
+			} else if (w->direction == DirFigure_9_Reroute) {
+				FigureRoute_remove(walkerId);
+			} else if (w->direction == DirFigure_10_Lost) {
 				// cannot reach grounds
 				if (Data_Message.messageCategoryCount[MessageDelay_FishingBlocked] > 0) {
 					Data_Message.messageCategoryCount[MessageDelay_FishingBlocked]--;
@@ -114,10 +114,10 @@ void WalkerAction_fishingBoat(int walkerId)
 					PlayerMessage_post(1, Message_118_FishingBoatBlocked, 0, 0);
 					Data_Message.messageCategoryCount[MessageDelay_FishingBlocked] = 12;
 				}
-				w->state = WalkerState_Dead;
+				w->state = FigureState_Dead;
 			}
 			break;
-		case WalkerActionState_194_FishingBoatAtWharf:
+		case FigureActionState_194_FishingBoatAtWharf:
 			{
 			int pctWorkers = Calc_getPercentage(b->numWorkers, Data_Model_Buildings[b->type].laborers);
 			int maxWaitTicks = 5 * (102 - pctWorkers);
@@ -130,37 +130,37 @@ void WalkerAction_fishingBoat(int walkerId)
 					w->waitTicks = 0;
 					int xTile, yTile;
 					if (Terrain_Water_getNearestFishTile(walkerId, &xTile, &yTile)) {
-						w->actionState = WalkerActionState_191_FishingBoatGoingToFish;
+						w->actionState = FigureActionState_191_FishingBoatGoingToFish;
 						w->destinationX = xTile;
 						w->destinationY = yTile;
-						WalkerRoute_remove(walkerId);
+						FigureRoute_remove(walkerId);
 					}
 				}
 			}
 			}
 			break;
-		case WalkerActionState_195_FishingBoatReturningWithFish:
+		case FigureActionState_195_FishingBoatReturningWithFish:
 			WalkerMovement_walkTicks(walkerId, 1);
 			w->heightAdjustedTicks = 0;
-			if (w->direction == DirWalker_8_AtDestination) {
-				w->actionState = WalkerActionState_194_FishingBoatAtWharf;
+			if (w->direction == DirFigure_8_AtDestination) {
+				w->actionState = FigureActionState_194_FishingBoatAtWharf;
 				w->waitTicks = 0;
 				b->walkerSpawnDelay = 1;
 				b->data.other.fishingBoatHasFish++;
-			} else if (w->direction == DirWalker_9_Reroute) {
-				WalkerRoute_remove(walkerId);
-			} else if (w->direction == DirWalker_10_Lost) {
-				w->state = WalkerState_Dead;
+			} else if (w->direction == DirFigure_9_Reroute) {
+				FigureRoute_remove(walkerId);
+			} else if (w->direction == DirFigure_10_Lost) {
+				w->state = FigureState_Dead;
 			}
 			break;
 	}
 	int dir = (w->direction < 8) ? w->direction : w->previousTileDirection;
 	WalkerActionNormalizeDirection(dir);
 	
-	if (w->actionState == WalkerActionState_192_FishingBoatFishing) {
-		w->graphicId = GraphicId(ID_Graphic_Walker_Ship) + dir + 16;
+	if (w->actionState == FigureActionState_192_FishingBoatFishing) {
+		w->graphicId = GraphicId(ID_Graphic_Figure_Ship) + dir + 16;
 	} else {
-		w->graphicId = GraphicId(ID_Graphic_Walker_Ship) + dir + 8;
+		w->graphicId = GraphicId(ID_Graphic_Figure_Ship) + dir + 8;
 	}
 }
 
@@ -173,13 +173,13 @@ void WalkerAction_flotsam(int walkerId)
 	}
 	w->isGhost = 0;
 	w->cartGraphicId = 0;
-	w->terrainUsage = WalkerTerrainUsage_Any;
+	w->terrainUsage = FigureTerrainUsage_Any;
 	switch (w->actionState) {
-		case WalkerActionState_128_FlotsamCreated:
+		case FigureActionState_128_FlotsamCreated:
 			w->isGhost = 1;
 			w->waitTicks--;
 			if (w->waitTicks <= 0) {
-				w->actionState = WalkerActionState_129_FlotsamFloating;
+				w->actionState = FigureActionState_129_FlotsamFloating;
 				w->waitTicks = 0;
 				if (Data_CityInfo.godCurseNeptuneSankShips && !w->resourceId) {
 					w->minMaxSeen = 1;
@@ -189,7 +189,7 @@ void WalkerAction_flotsam(int walkerId)
 				w->destinationY = Data_Scenario.riverExitPoint.y;
 			}
 			break;
-		case WalkerActionState_129_FlotsamFloating:
+		case FigureActionState_129_FlotsamFloating:
 			if (w->flotsamVisible) {
 				w->flotsamVisible = 0;
 			} else {
@@ -198,16 +198,16 @@ void WalkerAction_flotsam(int walkerId)
 				WalkerMovement_walkTicks(walkerId, 1);
 				w->isGhost = 0;
 				w->heightAdjustedTicks = 0;
-				if (w->direction == DirWalker_8_AtDestination ||
-					w->direction == DirWalker_9_Reroute || w->direction == DirWalker_10_Lost) {
-					w->actionState = WalkerActionState_130_FlotsamLeftMap;
+				if (w->direction == DirFigure_8_AtDestination ||
+					w->direction == DirFigure_9_Reroute || w->direction == DirFigure_10_Lost) {
+					w->actionState = FigureActionState_130_FlotsamLeftMap;
 				}
 			}
 			break;
-		case WalkerActionState_130_FlotsamLeftMap:
+		case FigureActionState_130_FlotsamLeftMap:
 			w->isGhost = 1;
 			w->minMaxSeen = 0;
-			w->actionState = WalkerActionState_128_FlotsamCreated;
+			w->actionState = FigureActionState_128_FlotsamCreated;
 			if (w->waitTicks >= 400) {
 				w->waitTicks = Data_Random.random1_7bit & 7;
 			} else if (w->waitTicks >= 200) {
@@ -219,7 +219,7 @@ void WalkerAction_flotsam(int walkerId)
 			} else {
 				w->waitTicks = 300 + Data_Random.random1_7bit;
 			}
-			Walker_removeFromTileList(walkerId);
+			Figure_removeFromTileList(walkerId);
 			w->x = Data_Scenario.riverEntryPoint.x;
 			w->y = Data_Scenario.riverEntryPoint.y;
 			w->gridOffset = GridOffset(w->x, w->y);
@@ -230,26 +230,26 @@ void WalkerAction_flotsam(int walkerId)
 	if (w->resourceId == 0) {
 		WalkerActionIncreaseGraphicOffset(w, 12);
 		if (w->minMaxSeen) {
-			w->graphicId = GraphicId(ID_Graphic_Walker_FlotsamSheep) +
+			w->graphicId = GraphicId(ID_Graphic_Figure_FlotsamSheep) +
 				flotsamType0[w->graphicOffset];
 		} else {
-			w->graphicId = GraphicId(ID_Graphic_Walker_Flotsam0) +
+			w->graphicId = GraphicId(ID_Graphic_Figure_Flotsam0) +
 				flotsamType0[w->graphicOffset];
 		}
 	} else if (w->resourceId == 1) {
 		WalkerActionIncreaseGraphicOffset(w, 24);
-		w->graphicId = GraphicId(ID_Graphic_Walker_Flotsam1) +
+		w->graphicId = GraphicId(ID_Graphic_Figure_Flotsam1) +
 			flotsamType12[w->graphicOffset];
 	} else if (w->resourceId == 2) {
 		WalkerActionIncreaseGraphicOffset(w, 24);
-		w->graphicId = GraphicId(ID_Graphic_Walker_Flotsam2) +
+		w->graphicId = GraphicId(ID_Graphic_Figure_Flotsam2) +
 			flotsamType12[w->graphicOffset];
 	} else if (w->resourceId == 3) {
 		WalkerActionIncreaseGraphicOffset(w, 24);
 		if (flotsamType3[w->graphicOffset] == -1) {
 			w->graphicId = 0;
 		} else {
-			w->graphicId = GraphicId(ID_Graphic_Walker_Flotsam3) +
+			w->graphicId = GraphicId(ID_Graphic_Figure_Flotsam3) +
 				flotsamType3[w->graphicOffset];
 		}
 	}
@@ -263,7 +263,7 @@ void WalkerAction_shipwreck(int walkerId)
 	w->isBoat = 1;
 	WalkerActionIncreaseGraphicOffset(w, 128);
 	if (w->waitTicks < 1000) {
-		Walker_removeFromTileList(walkerId);
+		Figure_removeFromTileList(walkerId);
 		int xTile, yTile;
 		if (Terrain_Water_findOpenWaterForShipwreck(walkerId, &xTile, &yTile)) {
 			w->x = xTile;
@@ -272,12 +272,12 @@ void WalkerAction_shipwreck(int walkerId)
 			w->crossCountryX = 15 * w->x + 7;
 			w->crossCountryY = 15 * w->y + 7;
 		}
-		Walker_addToTileList(walkerId);
+		Figure_addToTileList(walkerId);
 		w->waitTicks = 1000;
 	}
 	w->waitTicks++;
 	if (w->waitTicks > 2000) {
-		w->state = WalkerState_Dead;
+		w->state = FigureState_Dead;
 	}
-	w->graphicId = GraphicId(ID_Graphic_Walker_Shipwreck) + w->graphicOffset / 16;
+	w->graphicId = GraphicId(ID_Graphic_Figure_Shipwreck) + w->graphicOffset / 16;
 }

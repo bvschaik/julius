@@ -9,7 +9,7 @@
 #include "../Data/Building.h"
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
-#include "../Data/Walker.h"
+#include "../Data/Figure.h"
 
 void UI_BuildingInfo_drawEngineersPost(BuildingInfoContext *c)
 {
@@ -138,11 +138,11 @@ void UI_BuildingInfo_drawWharf(BuildingInfoContext *c)
 		int boatId = b->data.other.boatWalkerId;
 		int textId;
 		switch (Data_Walkers[boatId].actionState) {
-			case WalkerActionState_191_FishingBoatGoingToFish: textId = 3; break;
-			case WalkerActionState_192_FishingBoatFishing: textId = 4; break;
-			case WalkerActionState_193_FishingBoatSailingToWharf: textId = 5; break;
-			case WalkerActionState_194_FishingBoatAtWharf: textId = 6; break;
-			case WalkerActionState_195_FishingBoatReturningWithFish: textId = 7; break;
+			case FigureActionState_191_FishingBoatGoingToFish: textId = 3; break;
+			case FigureActionState_192_FishingBoatFishing: textId = 4; break;
+			case FigureActionState_193_FishingBoatSailingToWharf: textId = 5; break;
+			case FigureActionState_194_FishingBoatAtWharf: textId = 6; break;
+			case FigureActionState_195_FishingBoatReturningWithFish: textId = 7; break;
 			default: textId = 8; break;
 		}
 		DRAW_DESC(102, textId);

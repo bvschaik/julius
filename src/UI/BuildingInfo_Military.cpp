@@ -10,10 +10,10 @@
 #include "../Data/Building.h"
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
+#include "../Data/Figure.h"
 #include "../Data/Formation.h"
 #include "../Data/Settings.h"
 #include "../Data/State.h"
-#include "../Data/Walker.h"
 
 static void buttonReturnToFort(int param1, int param2);
 static void buttonLayout(int param1, int param2);
@@ -216,9 +216,9 @@ void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)
 		c->yOffset + 16);
 	// standard flag
 	graphicId = GraphicId(ID_Graphic_FortFlags);
-	if (f->walkerType == Walker_FortJavelin) {
+	if (f->figureType == Figure_FortJavelin) {
 		graphicId += 9;
-	} else if (f->walkerType == Walker_FortMounted) {
+	} else if (f->figureType == Figure_FortMounted) {
 		graphicId += 18;
 	}
 	if (f->isHalted) {
@@ -236,7 +236,7 @@ void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)
 
 	// number of soldiers
 	Widget_GameText_draw(138, 23, c->xOffset + 100, c->yOffset + 60, Font_NormalBlack);
-	Widget_Text_drawNumber(f->numWalkers, '@', " ",
+	Widget_Text_drawNumber(f->numFigures, '@', " ",
 		c->xOffset + 294, c->yOffset + 60, Font_NormalBlack);
 	// health
 	Widget_GameText_draw(138, 24, c->xOffset + 100, c->yOffset + 80, Font_NormalBlack);
@@ -269,7 +269,7 @@ void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)
 		Widget_GameText_draw(138, 37 + f->morale / 5,
 			c->xOffset + 300, c->yOffset + 120, Font_NormalBlack);
 	}
-	if (f->numWalkers) {
+	if (f->numFigures) {
 		// layout
 		static const int offsetsLegionary[2][5] = {
 			{0, 0, 2, 3, 4}, {0, 0, 3, 2, 4},
@@ -283,7 +283,7 @@ void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)
 			Data_Settings_Map.orientation == Dir_2_Right) {
 			index = 1;
 		}
-		if (f->walkerType == Walker_FortLegionary) {
+		if (f->figureType == Figure_FortLegionary) {
 			offsets = offsetsLegionary[index];
 		} else {
 			offsets = offsetsOther[index];
@@ -311,7 +311,7 @@ void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)
 void UI_BuildingInfo_drawLegionInfoForeground(BuildingInfoContext *c)
 {
 	struct Data_Formation *f = &Data_Formations[c->formationId];
-	if (!f->numWalkers) {
+	if (!f->numFigures) {
 		return;
 	}
 	for (int i = 5 - c->formationTypes; i < 5; i++) {
@@ -320,7 +320,7 @@ void UI_BuildingInfo_drawLegionInfoForeground(BuildingInfoContext *c)
 			if (focusButtonId - 1 == i) {
 				hasFocus = 1;
 			}
-		} else if (f->walkerType == Walker_FortLegionary) {
+		} else if (f->figureType == Figure_FortLegionary) {
 			if (i == 0 && f->layout == 5) {
 				hasFocus = 1;
 			} else if (i == 1 && f->layout == 0) {
@@ -356,7 +356,7 @@ void UI_BuildingInfo_drawLegionInfoForeground(BuildingInfoContext *c)
 	switch (focusButtonId) {
 		// single line or testudo
 		case 1:
-			if (f->walkerType == Walker_FortLegionary) {
+			if (f->figureType == Figure_FortLegionary) {
 				titleId = 12;
 				textId = f->hasMilitaryTraining ? 18 : 17;
 			} else {
@@ -365,7 +365,7 @@ void UI_BuildingInfo_drawLegionInfoForeground(BuildingInfoContext *c)
 			}
 			break;
 		case 2:
-			if (f->walkerType == Walker_FortLegionary) {
+			if (f->figureType == Figure_FortLegionary) {
 				titleId = 13;
 				textId = f->hasMilitaryTraining ? 19 : 17;
 			} else {
@@ -435,7 +435,7 @@ void UI_BuildingInfo_handleMouseLegionInfo(BuildingInfoContext *c)
 	if (Widget_Button_handleCustomButtons(
 			c->xOffset, c->yOffset, layoutButtons, 5, &focusButtonId)) {
 		struct Data_Formation *f = &Data_Formations[c->formationId];
-		if (f->walkerType == Walker_FortLegionary) {
+		if (f->figureType == Figure_FortLegionary) {
 			if (focusButtonId == 1 || (focusButtonId == 2 && c->formationTypes == 3)) {
 				focusButtonId = 0;
 			}
@@ -480,7 +480,7 @@ static void buttonLayout(int index, int param2)
 	if (index == 4 && f->layout != FormationLayout_MopUp) {
 		f->layoutBeforeMopUp = f->layout;
 	}
-	if (f->walkerType == Walker_FortLegionary) {
+	if (f->figureType == Figure_FortLegionary) {
 		switch (index) {
 			case 0: f->layout = FormationLayout_Tortoise; break;
 			case 1: f->layout = FormationLayout_Column; break;

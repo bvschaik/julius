@@ -1,45 +1,45 @@
-#ifndef WALKER_H
-#define WALKER_H
+#ifndef FIGURE_H
+#define FIGURE_H
 
-void Walker_clearList();
-int Walker_create(int walkerType, int x, int y, char direction);
-void Walker_delete(int walkerId);
+void Figure_clearList();
+int Figure_create(int figureType, int x, int y, char direction);
+void Figure_delete(int figureId);
 
-void Walker_createDustCloud(int x, int y, int size);
-void Walker_createFishingPoints();
-void Walker_createHerds();
-void Walker_createFlotsam(int xEntry, int yEntry, int hasWater);
-int Walker_createMissile(int buildingId, int x, int y, int xDst, int yDst, int type);
+void Figure_createDustCloud(int x, int y, int size);
+void Figure_createFishingPoints();
+void Figure_createHerds();
+void Figure_createFlotsam(int xEntry, int yEntry, int hasWater);
+int Figure_createMissile(int buildingId, int x, int y, int xDst, int yDst, int type);
 
-int Walker_createSoldierFromBarracks(int buildingId, int x, int y);
-int Walker_createTowerSentryFromBarracks(int buildingId, int x, int y);
+int Figure_createSoldierFromBarracks(int buildingId, int x, int y);
+int Figure_createTowerSentryFromBarracks(int buildingId, int x, int y);
 
-void Walker_addToTileList(int walkerId);
-void Walker_updatePositionInTileList(int walkerId);
-void Walker_removeFromTileList(int walkerId);
+void Figure_addToTileList(int figureId);
+void Figure_updatePositionInTileList(int figureId);
+void Figure_removeFromTileList(int figureId);
 
-void Walker_killTowerSentriesAt(int x, int y);
-void Walker_sinkAllShips();
-int Walker_getCitizenOnSameTile(int walkerId);
-int Walker_getNonCitizenOnSameTile(int walkerId);
-int Walker_hasNearbyEnemy(int xStart, int yStart, int xEnd, int yEnd);
+void Figure_killTowerSentriesAt(int x, int y);
+void Figure_sinkAllShips();
+int Figure_getCitizenOnSameTile(int figureId);
+int Figure_getNonCitizenOnSameTile(int figureId);
+int Figure_hasNearbyEnemy(int xStart, int yStart, int xEnd, int yEnd);
 
-int Walker_determinePhrase(int walkerId);
-int Walker_playPhrase(int walkerId);
-void Walker_playDieSound(int walkerType);
-void Walker_playHitSound(int walkerType);
+int Figure_determinePhrase(int figureId);
+int Figure_playPhrase(int figureId);
+void Figure_playDieSound(int figureType);
+void Figure_playHitSound(int figureType);
 
-int Walker_provideServiceCoverage(int walkerId);
+int Figure_provideServiceCoverage(int figureId);
 
-void WalkerName_set(int walkerId);
-void WalkerName_init();
+void FigureName_set(int figureId);
+void FigureName_init();
 
-void WalkerRoute_clearList();
-void WalkerRoute_clean();
-int WalkerRoute_getNumAvailable();
-void WalkerRoute_add(int walkerId);
-void WalkerRoute_remove(int walkerId);
+void FigureRoute_clearList();
+void FigureRoute_clean();
+int FigureRoute_getNumAvailable();
+void FigureRoute_add(int figureId);
+void FigureRoute_remove(int figureId);
 
-void WalkerGeneration_generateWalkersForBuildings();
+void FigureGeneration_generateFiguresForBuildings();
 
 #endif

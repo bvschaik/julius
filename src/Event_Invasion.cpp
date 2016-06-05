@@ -19,7 +19,7 @@
 #include "Data/Random.h"
 #include "Data/Scenario.h"
 #include "Data/Settings.h"
-#include "Data/Walker.h"
+#include "Data/Figure.h"
 
 #include <string.h>
 
@@ -374,12 +374,12 @@ static int startInvasion(int enemyType, int amount, int invasionPoint, int attac
 			f->invasionId = invasionId;
 			f->invasionSeq = Data_Event.lastInternalInvasionId;
 			for (int w = 0; w < soldiersPerFormation[type][i]; w++) {
-				int walkerId = Walker_create(walkerType, x, y, orientation);
+				int walkerId = Figure_create(walkerType, x, y, orientation);
 				Data_Walkers[walkerId].isFriendly = 0;
-				Data_Walkers[walkerId].actionState = WalkerActionState_151_EnemyInitial;
+				Data_Walkers[walkerId].actionState = FigureActionState_151_EnemyInitial;
 				Data_Walkers[walkerId].waitTicks = 200 * seq + 10 * w + 10;
 				Data_Walkers[walkerId].formationId = formationId;
-				WalkerName_set(walkerId);
+				FigureName_set(walkerId);
 				Data_Walkers[walkerId].isGhost = 1;
 			}
 			seq++;
@@ -391,7 +391,7 @@ static int startInvasion(int enemyType, int amount, int invasionPoint, int attac
 static void caesarInvasionPause()
 {
 	for (int i = 1; i < MAX_FORMATIONS; i++) {
-		if (Data_Formations[i].inUse == 1 && Data_Formations[i].walkerType == Walker_EnemyCaesarLegionary) {
+		if (Data_Formations[i].inUse == 1 && Data_Formations[i].figureType == Figure_EnemyCaesarLegionary) {
 			Data_Formations[i].waitTicks = 20;
 		}
 	}
@@ -400,7 +400,7 @@ static void caesarInvasionPause()
 static void caesarInvasionRetreat()
 {
 	for (int i = 1; i < MAX_FORMATIONS; i++) {
-		if (Data_Formations[i].inUse == 1 && Data_Formations[i].walkerType == Walker_EnemyCaesarLegionary) {
+		if (Data_Formations[i].inUse == 1 && Data_Formations[i].figureType == Figure_EnemyCaesarLegionary) {
 			Data_Formations[i].monthsLowMorale = 1;
 		}
 	}

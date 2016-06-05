@@ -6,7 +6,7 @@
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
-#include "Data/Walker.h"
+#include "Data/Figure.h"
 
 #include <string.h>
 
@@ -248,7 +248,7 @@ static int walkerTypeToSoundType[] = {
 	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1 // 70-79
 };
 
-int Walker_determinePhrase(int walkerId)
+int Figure_determinePhrase(int walkerId)
 {
 	if (walkerId <= 0) {
 		return 0;
@@ -263,34 +263,34 @@ int Walker_determinePhrase(int walkerId)
 
 	// phrase id based on walker state
 	switch (w->type) {
-		case Walker_LaborSeeker:
-		case Walker_35:
-		case Walker_Actor:
-		case Walker_Charioteer:
-		case Walker_SchoolChild:
-		case Walker_BathhouseWorker:
-		case Walker_Barber:
-		case Walker_Doctor:
-		case Walker_Surgeon:
-		case Walker_Priest:
-		case Walker_Patrician:
-		case Walker_Teacher:
-		case Walker_Librarian:
+		case Figure_LaborSeeker:
+		case Figure_35:
+		case Figure_Actor:
+		case Figure_Charioteer:
+		case Figure_SchoolChild:
+		case Figure_BathhouseWorker:
+		case Figure_Barber:
+		case Figure_Doctor:
+		case Figure_Surgeon:
+		case Figure_Priest:
+		case Figure_Patrician:
+		case Figure_Teacher:
+		case Figure_Librarian:
 			break;
-		case Walker_LionTamer:
-			if (w->actionState == WalkerActionState_150_Attack) {
+		case Figure_LionTamer:
+			if (w->actionState == FigureActionState_150_Attack) {
 				if (++w->phraseSequenceExact >= 3) {
 					w->phraseSequenceExact = 0;
 				}
 				phraseId = 7 + w->phraseSequenceExact;
 			}
 			break;
-		case Walker_Gladiator:
-			if (w->actionState == WalkerActionState_150_Attack) {
+		case Figure_Gladiator:
+			if (w->actionState == FigureActionState_150_Attack) {
 				phraseId = 7;
 			}
 			break;
-		case Walker_TaxCollector:
+		case Figure_TaxCollector:
 			if (w->minMaxSeen >= HouseLevel_LargeCasa) {
 				phraseId = 7;
 			} else if (w->minMaxSeen >= HouseLevel_SmallHovel) {
@@ -299,53 +299,53 @@ int Walker_determinePhrase(int walkerId)
 				phraseId = 9;
 			}
 			break;
-		case Walker_MarketTrader:
-			if (w->actionState == WalkerActionState_126_RoamerReturning) {
+		case Figure_MarketTrader:
+			if (w->actionState == FigureActionState_126_RoamerReturning) {
 				if (Building_Market_getMaxFoodStock(w->buildingId) <= 0) {
 					phraseId = 9; // run out of goods
 				}
 			}
 			break;
-		case Walker_MarketBuyer:
-			if (w->actionState == WalkerActionState_145_MarketBuyerGoingToStorage) {
+		case Figure_MarketBuyer:
+			if (w->actionState == FigureActionState_145_MarketBuyerGoingToStorage) {
 				phraseId = 7;
-			} else if (w->actionState == WalkerActionState_146_MarketBuyerReturning) {
+			} else if (w->actionState == FigureActionState_146_MarketBuyerReturning) {
 				phraseId = 8;
 			}
 			break;
-		case Walker_CartPusher:
-			if (w->actionState == WalkerActionState_20_CartpusherInitial) {
+		case Figure_CartPusher:
+			if (w->actionState == FigureActionState_20_CartpusherInitial) {
 				if (w->minMaxSeen == 2) {
 					phraseId = 7;
 				} else if (w->minMaxSeen == 1) {
 					phraseId = 8;
 				}
-			} else if (w->actionState == WalkerActionState_21_CartpusherDeliveringToWarehouse ||
-					w->actionState == WalkerActionState_22_CartpusherDeliveringToGranary ||
-					w->actionState == WalkerActionState_23_CartpusherDeliveringToWorkshop) {
+			} else if (w->actionState == FigureActionState_21_CartpusherDeliveringToWarehouse ||
+					w->actionState == FigureActionState_22_CartpusherDeliveringToGranary ||
+					w->actionState == FigureActionState_23_CartpusherDeliveringToWorkshop) {
 				if (Calc_distanceMaximum(
 					w->destinationX, w->destinationY, w->sourceX, w->sourceY) >= 25) {
 					phraseId = 9; // too far
 				}
 			}
 			break;
-		case Walker_Warehouseman:
-			if (w->actionState == WalkerActionState_51_WarehousemanDeliveringResource) {
+		case Figure_Warehouseman:
+			if (w->actionState == FigureActionState_51_WarehousemanDeliveringResource) {
 				if (Calc_distanceMaximum(
 					w->destinationX, w->destinationY, w->sourceX, w->sourceY) >= 25) {
 					phraseId = 9; // too far
 				}
 			}
 			break;
-		case Walker_Prefect:
+		case Figure_Prefect:
 			if (++w->phraseSequenceExact >= 4) {
 				w->phraseSequenceExact = 0;
 			}
-			if (w->actionState == WalkerActionState_74_PrefectGoingToFire) {
+			if (w->actionState == FigureActionState_74_PrefectGoingToFire) {
 				phraseId = 10;
-			} else if (w->actionState == WalkerActionState_75_PrefectAtFire) {
+			} else if (w->actionState == FigureActionState_75_PrefectAtFire) {
 				phraseId = 11 + (w->phraseSequenceExact % 2);
-			} else if (w->actionState == WalkerActionState_150_Attack) {
+			} else if (w->actionState == FigureActionState_150_Attack) {
 				phraseId = 13 + w->phraseSequenceExact;
 			} else if (w->minMaxSeen >= 50) {
 				phraseId = 7;
@@ -355,31 +355,31 @@ int Walker_determinePhrase(int walkerId)
 				phraseId = 9;
 			}
 			break;
-		case Walker_Engineer:
+		case Figure_Engineer:
 			if (w->minMaxSeen >= 60) {
 				phraseId = 7;
 			} else if (w->minMaxSeen >= 10) {
 				phraseId = 8;
 			}
 			break;
-		case Walker_Protester:
-		case Walker_Criminal:
-		case Walker_Rioter:
-		case Walker_DeliveryBoy:
-		case Walker_Missionary:
+		case Figure_Protester:
+		case Figure_Criminal:
+		case Figure_Rioter:
+		case Figure_DeliveryBoy:
+		case Figure_Missionary:
 			if (++w->phraseSequenceExact >= 3) {
 				w->phraseSequenceExact = 0;
 			}
 			phraseId = 7 + w->phraseSequenceExact;
 			break;
-		case Walker_Homeless:
-		case Walker_Immigrant:
+		case Figure_Homeless:
+		case Figure_Immigrant:
 			if (++w->phraseSequenceExact >= 2) {
 				w->phraseSequenceExact = 0;
 			}
 			phraseId = 7 + w->phraseSequenceExact;
 			break;
-		case Walker_Emigrant:
+		case Figure_Emigrant:
 			switch (Data_CityInfo.populationEmigrationCause) {
 				case EmigrationCause_NoFood: phraseId = 8; break;
 				case EmigrationCause_NoJobs: phraseId = 7; break;
@@ -388,7 +388,7 @@ int Walker_determinePhrase(int walkerId)
 				default: phraseId = 11; break;
 			}
 			break;
-		case Walker_TowerSentry:
+		case Figure_TowerSentry:
 			if (++w->phraseSequenceExact >= 2) {
 				w->phraseSequenceExact = 0;
 			}
@@ -402,9 +402,9 @@ int Walker_determinePhrase(int walkerId)
 				phraseId = 11;
 			}
 			break;
-		case Walker_FortJavelin:
-		case Walker_FortMounted:
-		case Walker_FortLegionary:
+		case Figure_FortJavelin:
+		case Figure_FortMounted:
+		case Figure_FortLegionary:
 			if (Data_CityInfo.numEnemiesInCity >= 40) {
 				phraseId = 11;
 			} else if (Data_CityInfo.numEnemiesInCity > 20) {
@@ -413,26 +413,26 @@ int Walker_determinePhrase(int walkerId)
 				phraseId = 9;
 			}
 			break;
-		case Walker_Dockman:
-			if (w->actionState == WalkerActionState_135_DockerImportGoingToWarehouse ||
-				w->actionState == WalkerActionState_136_DockerExportGoingToWarehouse) {
+		case Figure_Dockman:
+			if (w->actionState == FigureActionState_135_DockerImportGoingToWarehouse ||
+				w->actionState == FigureActionState_136_DockerExportGoingToWarehouse) {
 				if (Calc_distanceMaximum(
 					w->destinationX, w->destinationY, w->sourceX, w->sourceY) >= 25) {
 					phraseId = 9; // too far
 				}
 			}
 			break;
-		case Walker_TradeCaravan:
+		case Figure_TradeCaravan:
 			if (++w->phraseSequenceExact >= 2) {
 				w->phraseSequenceExact = 0;
 			}
 			phraseId = 8 + w->phraseSequenceExact;
-			if (w->actionState == WalkerActionState_103_TradeCaravanLeaving) {
-				if (!Data_Walker_Traders[w->traderId].totalSold &&
-					!Data_Walker_Traders[w->traderId].totalBought) {
+			if (w->actionState == FigureActionState_103_TradeCaravanLeaving) {
+				if (!Data_Figure_Traders[w->traderId].totalSold &&
+					!Data_Figure_Traders[w->traderId].totalBought) {
 					phraseId = 7; // no trade
 				}
-			} else if (w->actionState == WalkerActionState_102_TradeCaravanTrading) {
+			} else if (w->actionState == FigureActionState_102_TradeCaravanTrading) {
 				if (WalkerAction_TradeCaravan_canBuy(walkerId, w->destinationBuildingId, w->empireCityId)) {
 					phraseId = 11; // buying goods
 				} else if (WalkerAction_TradeCaravan_canSell(walkerId, w->destinationBuildingId, w->empireCityId)) {
@@ -440,15 +440,15 @@ int Walker_determinePhrase(int walkerId)
 				}
 			}
 			break;
-		case Walker_TradeShip:
-			if (w->actionState == WalkerActionState_115_TradeShipLeaving) {
-				if (!Data_Walker_Traders[w->traderId].totalSold &&
-					!Data_Walker_Traders[w->traderId].totalBought) {
+		case Figure_TradeShip:
+			if (w->actionState == FigureActionState_115_TradeShipLeaving) {
+				if (!Data_Figure_Traders[w->traderId].totalSold &&
+					!Data_Figure_Traders[w->traderId].totalBought) {
 					phraseId = 9; // no trade
 				} else {
 					phraseId = 11; // good trade
 				}
-			} else if (w->actionState == WalkerActionState_112_TradeShipMoored) {
+			} else if (w->actionState == FigureActionState_112_TradeShipMoored) {
 				int state = WalkerAction_TradeShip_isBuyingOrSelling(walkerId);
 				if (state == TradeShipState_Buying) {
 					phraseId = 8; // buying goods
@@ -531,7 +531,7 @@ static void playWalkerSoundFile(int walkerSoundId, int phraseId)
 	}
 }
 
-int Walker_playPhrase(int walkerId)
+int Figure_playPhrase(int walkerId)
 {
 	if (walkerId > 0) {
 		int walkerSoundId = walkerTypeToSoundType[Data_Walkers[walkerId].type];
@@ -542,55 +542,55 @@ int Walker_playPhrase(int walkerId)
 	}
 }
 
-void Walker_playDieSound(int walkerType)
+void Figure_playDieSound(int walkerType)
 {
 	int isSoldier = 0;
 	int isCitizen = 0;
 	switch (walkerType) {
-		case Walker_Wolf:
+		case Figure_Wolf:
 			Sound_Effects_playChannel(SoundChannel_WolfDie);
 			break;
-		case Walker_Sheep:
+		case Figure_Sheep:
 			Sound_Effects_playChannel(SoundChannel_SheepDie);
 			break;
-		case Walker_Zebra:
+		case Figure_Zebra:
 			Sound_Effects_playChannel(SoundChannel_ZebraDie);
 			break;
-		case Walker_LionTamer:
+		case Figure_LionTamer:
 			Sound_Effects_playChannel(SoundChannel_LionDie);
 			break;
-		case Walker_Enemy48_Chariot:
-		case Walker_Enemy52_MountedArcher:
+		case Figure_Enemy48_Chariot:
+		case Figure_Enemy52_MountedArcher:
 			Sound_Effects_playChannel(SoundChannel_Horse2);
 			break;
-		case Walker_Enemy46_Camel:
+		case Figure_Enemy46_Camel:
 			Sound_Effects_playChannel(SoundChannel_Camel);
 			break;
-		case Walker_Enemy47_Elephant:
+		case Figure_Enemy47_Elephant:
 			Sound_Effects_playChannel(SoundChannel_ElephantDie);
 			break;
-		case Walker_NativeTrader:
-		case Walker_TradeCaravan:
-		case Walker_TradeCaravanDonkey:
+		case Figure_NativeTrader:
+		case Figure_TradeCaravan:
+		case Figure_TradeCaravanDonkey:
 			break;
-		case Walker_Prefect:
-		case Walker_FortJavelin:
-		case Walker_FortMounted:
-		case Walker_FortLegionary:
-		case Walker_Gladiator:
-		case Walker_IndigenousNative:
-		case Walker_TowerSentry:
-		case Walker_Enemy43_Spear:
-		case Walker_Enemy44_Sword:
-		case Walker_Enemy45_Sword:
-		case Walker_Enemy49_FastSword:
-		case Walker_Enemy50_Sword:
-		case Walker_Enemy51_Spear:
-		case Walker_Enemy53_Axe:
-		case Walker_Enemy54_Gladiator:
-		case Walker_Enemy55_Javelin:
-		case Walker_Enemy56_Mounted:
-		case Walker_EnemyCaesarLegionary:
+		case Figure_Prefect:
+		case Figure_FortJavelin:
+		case Figure_FortMounted:
+		case Figure_FortLegionary:
+		case Figure_Gladiator:
+		case Figure_IndigenousNative:
+		case Figure_TowerSentry:
+		case Figure_Enemy43_Spear:
+		case Figure_Enemy44_Sword:
+		case Figure_Enemy45_Sword:
+		case Figure_Enemy49_FastSword:
+		case Figure_Enemy50_Sword:
+		case Figure_Enemy51_Spear:
+		case Figure_Enemy53_Axe:
+		case Figure_Enemy54_Gladiator:
+		case Figure_Enemy55_Javelin:
+		case Figure_Enemy56_Mounted:
+		case Figure_EnemyCaesarLegionary:
 			isSoldier = 1;
 			break;
 		default:
@@ -628,39 +628,39 @@ void Walker_playDieSound(int walkerType)
 		Sound_Effects_playChannel(ch);\
 	}
 
-void Walker_playHitSound(int walkerType)
+void Figure_playHitSound(int walkerType)
 {
 	switch (walkerType) {
-		case Walker_FortLegionary:
-		case Walker_EnemyCaesarLegionary:
+		case Figure_FortLegionary:
+		case Figure_EnemyCaesarLegionary:
 			PLAY_HIT_SOUND(soundHitSoldier, SoundChannel_Sword);
 			break;
-		case Walker_FortMounted:
-		case Walker_Enemy45_Sword:
-		case Walker_Enemy48_Chariot:
-		case Walker_Enemy50_Sword:
-		case Walker_Enemy52_MountedArcher:
-		case Walker_Enemy54_Gladiator:
+		case Figure_FortMounted:
+		case Figure_Enemy45_Sword:
+		case Figure_Enemy48_Chariot:
+		case Figure_Enemy50_Sword:
+		case Figure_Enemy52_MountedArcher:
+		case Figure_Enemy54_Gladiator:
 			PLAY_HIT_SOUND(soundHitSoldier, SoundChannel_SwordSwing);
 			break;
-		case Walker_FortJavelin:
+		case Figure_FortJavelin:
 			PLAY_HIT_SOUND(soundHitSoldier, SoundChannel_SwordLight);
 			break;
-		case Walker_Enemy43_Spear:
-		case Walker_Enemy51_Spear:
+		case Figure_Enemy43_Spear:
+		case Figure_Enemy51_Spear:
 			PLAY_HIT_SOUND(soundHitSpear, SoundChannel_Spear);
 			break;
-		case Walker_Enemy44_Sword:
-		case Walker_Enemy49_FastSword:
+		case Figure_Enemy44_Sword:
+		case Figure_Enemy49_FastSword:
 			PLAY_HIT_SOUND(soundHitClub, SoundChannel_Club);
 			break;
-		case Walker_Enemy53_Axe:
+		case Figure_Enemy53_Axe:
 			PLAY_HIT_SOUND(soundHitAxe, SoundChannel_Axe);
 			break;
-		case Walker_Enemy46_Camel:
+		case Figure_Enemy46_Camel:
 			Sound_Effects_playChannel(SoundChannel_Camel);
 			break;
-		case Walker_Enemy47_Elephant:
+		case Figure_Enemy47_Elephant:
 			if (Data_CityInfo.soundHitElephant == 1) {
 				Sound_Effects_playChannel(SoundChannel_ElephantHit);
 				Data_CityInfo.soundHitElephant = 0;
@@ -669,10 +669,10 @@ void Walker_playHitSound(int walkerType)
 				Data_CityInfo.soundHitElephant = 1;
 			}
 			break;
-		case Walker_LionTamer:
+		case Figure_LionTamer:
 			Sound_Effects_playChannel(SoundChannel_LionAttack);
 			break;
-		case Walker_Wolf:
+		case Figure_Wolf:
 			Data_CityInfo.soundHitWolf--;
 			if (Data_CityInfo.soundHitWolf <= 0) {
 				Data_CityInfo.soundHitWolf = 4;

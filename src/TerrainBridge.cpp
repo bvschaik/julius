@@ -272,7 +272,7 @@ int TerrainBridge_countWalkersOnBridge(int gridOffset)
 	}
 	
 	int walkers = 0;
-	if (Data_Grid_walkerIds[gridOffset]) {
+	if (Data_Grid_figureIds[gridOffset]) {
 		walkers = 1;
 	}
 	Data_Grid_bitfields[gridOffset] &= Bitfield_NoDeleted;
@@ -280,7 +280,7 @@ int TerrainBridge_countWalkersOnBridge(int gridOffset)
 			Data_Grid_spriteOffsets[gridOffset + offsetUp]) {
 		gridOffset += offsetUp;
 		Data_Grid_bitfields[gridOffset] &= Bitfield_NoDeleted;
-		if (Data_Grid_walkerIds[gridOffset]) {
+		if (Data_Grid_figureIds[gridOffset]) {
 			walkers++;
 		}
 	}

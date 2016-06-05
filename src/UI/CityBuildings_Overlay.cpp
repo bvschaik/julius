@@ -95,7 +95,7 @@ void UI_CityBuildings_drawOverlayTopsWalkersAnimation(int overlay)
 	FOREACH_Y_VIEW {
 		// draw walkers
 		FOREACH_X_VIEW {
-			int walkerId = Data_Grid_walkerIds[gridOffset];
+			int walkerId = Data_Grid_figureIds[gridOffset];
 			while (walkerId) {
 				if (!Data_Walkers[walkerId].isGhost) {
 					UI_CityBuildings_drawWalker(walkerId, xGraphic, yGraphic, 9999, 0);
@@ -1334,14 +1334,14 @@ static void drawBuildingTopForProblemsOverlay(int gridOffset, int buildingId, in
 	} else if (type >= Building_WheatFarm && type <= Building_ClayPit) {
 		int walkerId = Data_Buildings[buildingId].walkerId;
 		if (walkerId &&
-			Data_Walkers[walkerId].actionState == WalkerActionState_20_CartpusherInitial &&
+			Data_Walkers[walkerId].actionState == FigureActionState_20_CartpusherInitial &&
 			Data_Walkers[walkerId].minMaxSeen) {
 			Data_Buildings[buildingId].showOnProblemOverlay = 1;
 		}
 	} else if (BuildingIsWorkshop(type)) {
 		int walkerId = Data_Buildings[buildingId].walkerId;
 		if (walkerId &&
-			Data_Walkers[walkerId].actionState == WalkerActionState_20_CartpusherInitial &&
+			Data_Walkers[walkerId].actionState == FigureActionState_20_CartpusherInitial &&
 			Data_Walkers[walkerId].minMaxSeen) {
 			Data_Buildings[buildingId].showOnProblemOverlay = 1;
 		} else if (Data_Buildings[buildingId].loadsStored <= 0) {

@@ -29,7 +29,7 @@
 #include "Data/Random.h"
 #include "Data/Settings.h"
 #include "Data/State.h"
-#include "Data/Walker.h"
+#include "Data/Figure.h"
 
 #define BOUND_REGION() \
 	if (xStart < xEnd) {\
@@ -79,16 +79,16 @@ static void addToTerrainFort(int type, int buildingId, int x, int y, int size)
 	int formationId = Formation_createLegion(buildingId);
 	Data_Buildings[buildingId].formationId = formationId;
 	if (type == Building_FortLegionaries) {
-		Data_Buildings[buildingId].subtype.fortWalkerType = Walker_FortLegionary;
-		Data_Formations[formationId].walkerType = Walker_FortLegionary;
+		Data_Buildings[buildingId].subtype.fortWalkerType = Figure_FortLegionary;
+		Data_Formations[formationId].figureType = Figure_FortLegionary;
 	}
 	if (type == Building_FortJavelin) {
-		Data_Buildings[buildingId].subtype.fortWalkerType = Walker_FortJavelin;
-		Data_Formations[formationId].walkerType = Walker_FortJavelin;
+		Data_Buildings[buildingId].subtype.fortWalkerType = Figure_FortJavelin;
+		Data_Formations[formationId].figureType = Figure_FortJavelin;
 	}
 	if (type == Building_FortMounted) {
-		Data_Buildings[buildingId].subtype.fortWalkerType = Walker_FortMounted;
-		Data_Formations[formationId].walkerType = Walker_FortMounted;
+		Data_Buildings[buildingId].subtype.fortWalkerType = Figure_FortMounted;
+		Data_Formations[formationId].figureType = Figure_FortMounted;
 	}
 	// create parade ground
 	int groundId = Building_create(Building_FortGround, x + 3, y - 1);
@@ -1264,7 +1264,7 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
 		UI_Warning_show(Warning_MarbleNeededOracle);
 		return;
 	}
-	if (type != Building_ClearLand && Walker_hasNearbyEnemy(xStart, yStart, xEnd, yEnd)) {
+	if (type != Building_ClearLand && Figure_hasNearbyEnemy(xStart, yStart, xEnd, yEnd)) {
 		if (type == Building_Wall || type == Building_Road || type == Building_Aqueduct) {
 			Grid_copyShortGrid(Data_Grid_Undo_terrain, Data_Grid_terrain);
 			Grid_copyByteGrid(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);

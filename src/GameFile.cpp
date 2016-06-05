@@ -34,8 +34,8 @@
 #include "Data/State.h"
 #include "Data/Trade.h"
 #include "Data/Tutorial.h"
-#include "Data/Walker.h"
-#include "Data/Walker.h"
+#include "Data/Figure.h"
+#include "Data/Figure.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -99,7 +99,7 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{1, &Data_Grid_buildingIds, 52488},
 	{1, &Data_Grid_terrain, 52488},
 	{1, &Data_Grid_aqueducts, 26244},
-	{1, &Data_Grid_walkerIds, 52488},
+	{1, &Data_Grid_figureIds, 52488},
 	{1, &Data_Grid_bitfields, 26244},
 	{1, &Data_Grid_spriteOffsets, 26244},
 	{0, &Data_Grid_random, 26244},
@@ -109,7 +109,7 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{1, &Data_Grid_Undo_aqueducts, 26244},
 	{1, &Data_Grid_Undo_spriteOffsets, 26244},
 	{1, &Data_Walkers, 128000},
-	{1, &Data_Routes.walkerIds, 1200},
+	{1, &Data_Routes.figureIds, 1200},
 	{1, &Data_Routes.directionPaths, 300000},
 	{1, &Data_Formations, 6400},
 	{0, &Data_Formation_Extra.idLastInUse, 4},
@@ -176,27 +176,27 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{0, &Data_CityInfo_Buildings.industry.total, 64},
 	{0, &Data_CityInfo_Buildings.industry.working, 64},
 	{0, &Data_TradePrices, 128},
-	{0, &Data_Walker_NameSequence.citizenMale, 4},
-	{0, &Data_Walker_NameSequence.patrician, 4},
-	{0, &Data_Walker_NameSequence.citizenFemale, 4},
-	{0, &Data_Walker_NameSequence.taxCollector, 4},
-	{0, &Data_Walker_NameSequence.engineer, 4},
-	{0, &Data_Walker_NameSequence.prefect, 4},
-	{0, &Data_Walker_NameSequence.javelinThrower, 4},
-	{0, &Data_Walker_NameSequence.cavalry, 4},
-	{0, &Data_Walker_NameSequence.legionary, 4},
-	{0, &Data_Walker_NameSequence.actor, 4},
-	{0, &Data_Walker_NameSequence.gladiator, 4},
-	{0, &Data_Walker_NameSequence.lionTamer, 4},
-	{0, &Data_Walker_NameSequence.charioteer, 4},
-	{0, &Data_Walker_NameSequence.barbarian, 4},
-	{0, &Data_Walker_NameSequence.enemyGreek, 4},
-	{0, &Data_Walker_NameSequence.enemyEgyptian, 4},
-	{0, &Data_Walker_NameSequence.enemyArabian, 4},
-	{0, &Data_Walker_NameSequence.trader, 4},
-	{0, &Data_Walker_NameSequence.tradeShip, 4},
-	{0, &Data_Walker_NameSequence.warShip, 4},
-	{0, &Data_Walker_NameSequence.enemyShip, 4},
+	{0, &Data_Figure_NameSequence.citizenMale, 4},
+	{0, &Data_Figure_NameSequence.patrician, 4},
+	{0, &Data_Figure_NameSequence.citizenFemale, 4},
+	{0, &Data_Figure_NameSequence.taxCollector, 4},
+	{0, &Data_Figure_NameSequence.engineer, 4},
+	{0, &Data_Figure_NameSequence.prefect, 4},
+	{0, &Data_Figure_NameSequence.javelinThrower, 4},
+	{0, &Data_Figure_NameSequence.cavalry, 4},
+	{0, &Data_Figure_NameSequence.legionary, 4},
+	{0, &Data_Figure_NameSequence.actor, 4},
+	{0, &Data_Figure_NameSequence.gladiator, 4},
+	{0, &Data_Figure_NameSequence.lionTamer, 4},
+	{0, &Data_Figure_NameSequence.charioteer, 4},
+	{0, &Data_Figure_NameSequence.barbarian, 4},
+	{0, &Data_Figure_NameSequence.enemyGreek, 4},
+	{0, &Data_Figure_NameSequence.enemyEgyptian, 4},
+	{0, &Data_Figure_NameSequence.enemyArabian, 4},
+	{0, &Data_Figure_NameSequence.trader, 4},
+	{0, &Data_Figure_NameSequence.tradeShip, 4},
+	{0, &Data_Figure_NameSequence.warShip, 4},
+	{0, &Data_Figure_NameSequence.enemyShip, 4},
 	{0, &Data_CityInfo_CultureCoverage.theater, 4},
 	{0, &Data_CityInfo_CultureCoverage.amphitheater, 4},
 	{0, &Data_CityInfo_CultureCoverage.colosseum, 4},
@@ -232,7 +232,7 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{0, &Data_Message.messageDelay, 80},
 	{0, &Data_BuildingList.burning.totalBurning, 4},
 	{0, &Data_BuildingList.burning.index, 4},
-	{0, &Data_Walker_Extra.createdSequence, 4},
+	{0, &Data_Figure_Extra.createdSequence, 4},
 	{0, &Data_Settings.startingFavor, 4},
 	{0, &Data_Settings.personalSavingsLastMission, 4},
 	{0, &Data_Settings.currentMissionId, 4},
@@ -240,8 +240,8 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{0, &Data_Settings.isCustomScenario, 4},
 	{0, &Data_Sound_City, 8960},
 	{0, &Data_Buildings_Extra.highestBuildingIdInUse, 4},
-	{0, &Data_Walker_Traders, 4800},
-	{0, &Data_Walker_Extra.nextTraderId, 4},
+	{0, &Data_Figure_Traders, 4800},
+	{0, &Data_Figure_Extra.nextTraderId, 4},
 	{1, &Data_BuildingList.burning.items, 1000},
 	{1, &Data_BuildingList.small.items, 1000},
 	{1, &Data_BuildingList.large.items, 4000},
@@ -462,9 +462,9 @@ static void debug()
 		}
 	}
 	/**/
-	for (int i = 1; i < MAX_WALKERS; i++) {
+	for (int i = 1; i < MAX_FIGURES; i++) {
 		struct Data_Walker *w = &Data_Walkers[i];
-		if (w->state == WalkerState_Alive) {
+		if (w->state == FigureState_Alive) {
 			printf("Walker %d type %d as %d wt %d mt %d\n",
 				i, w->type, w->actionState, w->waitTicks, w->waitTicksMissile);
 		}
@@ -500,7 +500,7 @@ static void setupFromSavedGame()
 	Routing_determineWalls();
 
 	Building_determineGraphicIdsForOrientedBuildings();
-	WalkerRoute_clean();
+	FigureRoute_clean();
 	UtilityManagement_determineRoadNetworks();
 	Building_GameTick_checkAccessToRome();
 	Resource_gatherGranaryGettingInfo();

@@ -201,7 +201,7 @@ static void UI_CityBuildings_drawBuildingTopsWalkersAnimation(int selectedWalker
 					Graphics_drawImageMasked(graphicId + 4, xGraphic + 228,
 						yGraphic + 19 - Data_CityInfo.ratingFavor / 2, colorMask);
 					// unemployed
-					graphicId = GraphicId(ID_Graphic_Walker_Homeless);
+					graphicId = GraphicId(ID_Graphic_Figure_Homeless);
 					if (Data_CityInfo.unemploymentPercentageForSenate > 0) {
 						Graphics_drawImageMasked(graphicId + 108,
 							xGraphic + 80, yGraphic, colorMask);
@@ -334,7 +334,7 @@ static void UI_CityBuildings_drawBuildingTopsWalkersAnimation(int selectedWalker
 		} END_FOREACH_X_VIEW;
 		// draw walkers
 		FOREACH_X_VIEW {
-			int walkerId = Data_Grid_walkerIds[gridOffset];
+			int walkerId = Data_Grid_figureIds[gridOffset];
 			while (walkerId) {
 				if (!Data_Walkers[walkerId].isGhost) {
 					UI_CityBuildings_drawWalker(walkerId, xGraphic, yGraphic, selectedWalkerId, coord);
@@ -443,9 +443,9 @@ static void UI_CityBuildings_drawBuildingTopsWalkersAnimation(int selectedWalker
 					int buildingId = Data_Grid_buildingIds[gridOffset];
 					int offset = 0;
 					switch (Data_Buildings[buildingId].subtype.fortWalkerType) {
-						case Walker_FortLegionary: offset = 4; break;
-						case Walker_FortMounted: offset = 3; break;
-						case Walker_FortJavelin: offset = 2; break;
+						case Figure_FortLegionary: offset = 4; break;
+						case Figure_FortMounted: offset = 3; break;
+						case Figure_FortJavelin: offset = 2; break;
 					}
 					if (offset) {
 						Graphics_drawImage(GraphicId(ID_Graphic_Fort) + offset,
@@ -544,7 +544,7 @@ static void UI_CityBuildings_drawHippodromeAndElevatedWalkers(int selectedWalker
 {
 	FOREACH_Y_VIEW {
 		FOREACH_X_VIEW {
-			for (int walkerId = Data_Grid_walkerIds[gridOffset]; walkerId > 0; walkerId = Data_Walkers[walkerId].nextWalkerIdOnSameTile) {
+			for (int walkerId = Data_Grid_figureIds[gridOffset]; walkerId > 0; walkerId = Data_Walkers[walkerId].nextWalkerIdOnSameTile) {
 				if (Data_Walkers[walkerId].useCrossCountry && !Data_Walkers[walkerId].isGhost) {
 					UI_CityBuildings_drawWalker(walkerId, xGraphic, yGraphic, selectedWalkerId, 0);
 				}

@@ -5,12 +5,12 @@
 #include "../Data/Building.h"
 #include "../Data/CityView.h"
 #include "../Data/Constants.h"
+#include "../Data/Figure.h"
 #include "../Data/Graphics.h"
 #include "../Data/Grid.h"
 #include "../Data/Mouse.h"
 #include "../Data/Scenario.h"
 #include "../Data/Settings.h"
-#include "../Data/Walker.h"
 
 #define FOREACH_XY_VIEW(block)\
 	int odd = 0;\
@@ -109,7 +109,7 @@ static int drawWalker(int xView, int yView, int gridOffset)
 	Color color = Color_Black;
 	int hasWalker = 0;
 
-	int walkerId = Data_Grid_walkerIds[gridOffset];
+	int walkerId = Data_Grid_figureIds[gridOffset];
 	while (walkerId > 0) {
 		int type = Data_Walkers[walkerId].type;
 		if (WalkerIsLegion(type)) {
@@ -122,13 +122,13 @@ static int drawWalker(int xView, int yView, int gridOffset)
 			color = enemyColor;
 			break;
 		}
-		if (type == Walker_IndigenousNative &&
-			Data_Walkers[walkerId].actionState == WalkerActionState_159_NativeAttacking) {
+		if (type == Figure_IndigenousNative &&
+			Data_Walkers[walkerId].actionState == FigureActionState_159_NativeAttacking) {
 			hasWalker = 1;
 			color = enemyColor;
 			break;
 		}
-		if (type == Walker_Wolf) {
+		if (type == Figure_Wolf) {
 			hasWalker = 1;
 			color = Color_Black;
 			break;

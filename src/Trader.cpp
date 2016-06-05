@@ -13,39 +13,39 @@
 #include "Data/Message.h"
 #include "Data/Scenario.h"
 #include "Data/Trade.h"
-#include "Data/Walker.h"
+#include "Data/Figure.h"
 
 #include <string.h>
 
 void Trader_clearList()
 {
-	memset(Data_Walker_Traders, 0, MAX_TRADERS * sizeof(struct Data_Walker_Trader));
-	Data_Walker_Extra.nextTraderId = 0;
+	memset(Data_Figure_Traders, 0, MAX_TRADERS * sizeof(struct Data_Figure_Trader));
+	Data_Figure_Extra.nextTraderId = 0;
 }
 
 void Trader_create(int walkerId)
 {
-	Data_Walkers[walkerId].traderId = Data_Walker_Extra.nextTraderId;
-	memset(&Data_Walker_Traders[Data_Walker_Extra.nextTraderId], 0, sizeof(struct Data_Walker_Trader));
-	if (++Data_Walker_Extra.nextTraderId >= 100) {
-		Data_Walker_Extra.nextTraderId = 0;
+	Data_Walkers[walkerId].traderId = Data_Figure_Extra.nextTraderId;
+	memset(&Data_Figure_Traders[Data_Figure_Extra.nextTraderId], 0, sizeof(struct Data_Figure_Trader));
+	if (++Data_Figure_Extra.nextTraderId >= 100) {
+		Data_Figure_Extra.nextTraderId = 0;
 	}
 }
 
 void Trader_sellResource(int walkerId, int resourceId)
 {
 	int traderId = Data_Walkers[walkerId].traderId;
-	Data_Walker_Traders[traderId].totalSold++;
-	Data_Walker_Traders[traderId].soldResources[resourceId]++;
-	Data_Walker_Traders[traderId].moneySoldResources += Data_TradePrices[resourceId].sell;
+	Data_Figure_Traders[traderId].totalSold++;
+	Data_Figure_Traders[traderId].soldResources[resourceId]++;
+	Data_Figure_Traders[traderId].moneySoldResources += Data_TradePrices[resourceId].sell;
 }
 
 void Trader_buyResource(int walkerId, int resourceId)
 {
 	int traderId = Data_Walkers[walkerId].traderId;
-	Data_Walker_Traders[traderId].totalBought++;
-	Data_Walker_Traders[traderId].boughtResources[resourceId]++;
-	Data_Walker_Traders[traderId].moneyBoughtResources += Data_TradePrices[resourceId].buy;
+	Data_Figure_Traders[traderId].totalBought++;
+	Data_Figure_Traders[traderId].boughtResources[resourceId]++;
+	Data_Figure_Traders[traderId].moneyBoughtResources += Data_TradePrices[resourceId].buy;
 }
 
 static int generateTrader(int cityId)
@@ -112,11 +112,11 @@ static int generateTrader(int cityId)
 		if (Data_CityInfo.numWorkingDocks > 0 &&
 			(Data_Scenario.riverEntryPoint.x != -1 || Data_Scenario.riverEntryPoint.y != -1) &&
 			!Data_CityInfo.tradeSeaProblemDuration) {
-			int shipId = Walker_create(Walker_TradeShip,
+			int shipId = Figure_create(Figure_TradeShip,
 				Data_Scenario.riverEntryPoint.x, Data_Scenario.riverEntryPoint.y, 0);
 			c->traderWalkerIds[index] = shipId;
 			Data_Walkers[shipId].empireCityId = cityId;
-			Data_Walkers[shipId].actionState = WalkerActionState_110_TradeShipCreated;
+			Data_Walkers[shipId].actionState = FigureActionState_110_TradeShipCreated;
 			Data_Walkers[shipId].waitTicks = 10;
 			return 1;
 		}
@@ -124,21 +124,21 @@ static int generateTrader(int cityId)
 		// generate caravan and donkeys
 		if (!Data_CityInfo.tradeLandProblemDuration) {
 			// caravan head
-			int caravanId = Walker_create(Walker_TradeCaravan,
+			int caravanId = Figure_create(Figure_TradeCaravan,
 				Data_CityInfo.entryPointX, Data_CityInfo.entryPointY, 0);
 			c->traderWalkerIds[index] = caravanId;
 			Data_Walkers[caravanId].empireCityId = cityId;
-			Data_Walkers[caravanId].actionState = WalkerActionState_100_TradeCaravanCreated;
+			Data_Walkers[caravanId].actionState = FigureActionState_100_TradeCaravanCreated;
 			Data_Walkers[caravanId].waitTicks = 10;
 			// donkey 1
-			int donkey1 = Walker_create(Walker_TradeCaravanDonkey,
+			int donkey1 = Figure_create(Figure_TradeCaravanDonkey,
 				Data_CityInfo.entryPointX, Data_CityInfo.entryPointY, 0);
-			Data_Walkers[donkey1].actionState = WalkerActionState_100_TradeCaravanCreated;
+			Data_Walkers[donkey1].actionState = FigureActionState_100_TradeCaravanCreated;
 			Data_Walkers[donkey1].inFrontWalkerId = caravanId;
 			// donkey 2
-			int donkey2 = Walker_create(Walker_TradeCaravanDonkey,
+			int donkey2 = Figure_create(Figure_TradeCaravanDonkey,
 				Data_CityInfo.entryPointX, Data_CityInfo.entryPointY, 0);
-			Data_Walkers[donkey2].actionState = WalkerActionState_100_TradeCaravanCreated;
+			Data_Walkers[donkey2].actionState = FigureActionState_100_TradeCaravanCreated;
 			Data_Walkers[donkey2].inFrontWalkerId = donkey1;
 			return 1;
 		}

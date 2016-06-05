@@ -98,11 +98,11 @@ void WalkerAction_handle()
 	if (Data_CityInfo.riotersOrAttackingNativesInCity > 0) {
 		Data_CityInfo.riotersOrAttackingNativesInCity--;
 	}
-	for (int i = 1; i < MAX_WALKERS; i++) {
+	for (int i = 1; i < MAX_FIGURES; i++) {
 		struct Data_Walker *w = &Data_Walkers[i];
 		if (w->state) {
 			if (w->targetedByWalkerId) {
-				if (Data_Walkers[w->targetedByWalkerId].state != WalkerState_Alive) {
+				if (Data_Walkers[w->targetedByWalkerId].state != FigureState_Alive) {
 					w->targetedByWalkerId = 0;
 				}
 				if (Data_Walkers[w->targetedByWalkerId].targetWalkerId != i) {
@@ -110,8 +110,8 @@ void WalkerAction_handle()
 				}
 			}
 			walkerActionCallbacks[w->type](i);
-			if (w->state == WalkerState_Dead) {
-				Walker_delete(i);
+			if (w->state == FigureState_Dead) {
+				Figure_delete(i);
 			}
 		}
 	}

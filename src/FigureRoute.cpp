@@ -4,35 +4,35 @@
 
 #include "Data/Building.h"
 #include "Data/Routes.h"
-#include "Data/Walker.h"
+#include "Data/Figure.h"
 
-void WalkerRoute_clearList()
+void FigureRoute_clearList()
 {
 	for (int i = 0; i < MAX_ROUTES; i++) {
-		Data_Routes.walkerIds[i] = 0;
+		Data_Routes.figureIds[i] = 0;
 		for (int j = 0; j < MAX_ROUTEPATH_LENGTH; j++) {
 			Data_Routes.directionPaths[i][j] = 0;
 		}
 	}
 }
 
-void WalkerRoute_clean()
+void FigureRoute_clean()
 {
 	for (int i = 0; i < MAX_ROUTES; i++) {
-		int walkerId = Data_Routes.walkerIds[i];
-		if (walkerId > 0 && walkerId < MAX_WALKERS) {
-			if (Data_Walkers[walkerId].state != WalkerState_Alive || Data_Walkers[walkerId].routingPathId != i) {
-				Data_Routes.walkerIds[i] = 0;
+		int walkerId = Data_Routes.figureIds[i];
+		if (walkerId > 0 && walkerId < MAX_FIGURES) {
+			if (Data_Walkers[walkerId].state != FigureState_Alive || Data_Walkers[walkerId].routingPathId != i) {
+				Data_Routes.figureIds[i] = 0;
 			}
 		}
 	}
 }
 
-int WalkerRoute_getNumAvailable()
+int FigureRoute_getNumAvailable()
 {
 	int available = 0;
 	for (int i = 1; i < MAX_ROUTES; i++) {
-		if (!Data_Routes.walkerIds[i]) {
+		if (!Data_Routes.figureIds[i]) {
 			available++;
 		}
 	}
@@ -42,14 +42,14 @@ int WalkerRoute_getNumAvailable()
 static int getFirstAvailable()
 {
 	for (int i = 1; i < MAX_ROUTES; i++) {
-		if (Data_Routes.walkerIds[i] == 0) {
+		if (Data_Routes.figureIds[i] == 0) {
 			return i;
 		}
 	}
 	return 0;
 }
 
-void WalkerRoute_add(int walkerId)
+void FigureRoute_add(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	w->routingPathId = 0;
@@ -74,7 +74,7 @@ void WalkerRoute_add(int walkerId)
 		// land walker
 		int canTravel;
 		switch (w->terrainUsage) {
-			case WalkerTerrainUsage_Enemy:
+			case FigureTerrainUsage_Enemy:
 				canTravel = Routing_canTravelOverLandNonCitizen(w->x, w->y,
 					w->destinationX, w->destinationY, w->destinationBuildingId, 5000);
 				if (!canTravel) {
@@ -86,15 +86,15 @@ void WalkerRoute_add(int walkerId)
 					}
 				}
 				break;
-			case WalkerTerrainUsage_Walls:
+			case FigureTerrainUsage_Walls:
 				canTravel = Routing_canTravelOverWalls(w->x, w->y,
 					w->destinationX, w->destinationY);
 				break;
-			case WalkerTerrainUsage_Animal:
+			case FigureTerrainUsage_Animal:
 				canTravel = Routing_canTravelOverLandNonCitizen(w->x, w->y,
 					w->destinationX, w->destinationY, MAX_BUILDINGS, 5000);
 				break;
-			case WalkerTerrainUsage_PreferRoads:
+			case FigureTerrainUsage_PreferRoads:
 				canTravel = Routing_canTravelOverRoadGardenCitizen(w->x, w->y,
 					w->destinationX, w->destinationY);
 				if (!canTravel) {
@@ -102,7 +102,7 @@ void WalkerRoute_add(int walkerId)
 						w->destinationX, w->destinationY);
 				}
 				break;
-			case WalkerTerrainUsage_Roads:
+			case FigureTerrainUsage_Roads:
 				canTravel = Routing_canTravelOverRoadGardenCitizen(w->x, w->y,
 					w->destinationX, w->destinationY);
 				break;
@@ -112,7 +112,7 @@ void WalkerRoute_add(int walkerId)
 				break;
 		}
 		if (canTravel) {
-			if (w->terrainUsage == WalkerTerrainUsage_Walls) {
+			if (w->terrainUsage == FigureTerrainUsage_Walls) {
 				pathLength = Routing_getPath(4, pathId, w->x, w->y,
 					w->destinationX, w->destinationY);
 				if (pathLength <= 0) {
@@ -128,18 +128,18 @@ void WalkerRoute_add(int walkerId)
 		}
 	}
 	if (pathLength) {
-		Data_Routes.walkerIds[pathId] = walkerId;
+		Data_Routes.figureIds[pathId] = walkerId;
 		w->routingPathId = pathId;
 		w->routingPathLength = pathLength;
 	}
 }
 
-void WalkerRoute_remove(int walkerId)
+void FigureRoute_remove(int walkerId)
 {
 	int path = Data_Walkers[walkerId].routingPathId;
 	if (path > 0) {
-		if (Data_Routes.walkerIds[path] == walkerId) {
-			Data_Routes.walkerIds[path] = 0;
+		if (Data_Routes.figureIds[path] == walkerId) {
+			Data_Routes.figureIds[path] = 0;
 		}
 		Data_Walkers[walkerId].routingPathId = 0;
 	}

@@ -172,11 +172,11 @@ static void initCustomScenario(const char *scenarioName)
 	SidebarMenu_enableAllBuildingMenuItems();
 	Building_clearList();
 	BuildingStorage_clearList();
-	Walker_clearList();
+	Figure_clearList();
 	Formation_clearInvasionInfo();
-	WalkerName_init();
+	FigureName_init();
 	Formation_clearList();
-	WalkerRoute_clearList();
+	FigureRoute_clearList();
 	CityInfo_initGameTime();
 
 	loadScenario(scenarioName);
@@ -199,9 +199,9 @@ static void loadScenario(const char *scenarioName)
 		Data_Scenario.riverExitPoint.x != -1) {
 		hasWaterEntry = 1;
 	}
-	Walker_createFishingPoints();
-	Walker_createHerds();
-	Walker_createFlotsam(Data_Scenario.riverEntryPoint.x, Data_Scenario.riverEntryPoint.y, hasWaterEntry);
+	Figure_createFishingPoints();
+	Figure_createHerds();
+	Figure_createFlotsam(Data_Scenario.riverEntryPoint.x, Data_Scenario.riverEntryPoint.y, hasWaterEntry);
 
 	Routing_determineLandCitizen();
 	Routing_determineLandNonCitizen();
@@ -334,7 +334,7 @@ static void initGrids()
 	Grid_clearShortGrid(Data_Grid_buildingIds);
 	Grid_clearShortGrid(Data_Grid_terrain);
 	Grid_clearUByteGrid(Data_Grid_aqueducts);
-	Grid_clearShortGrid(Data_Grid_walkerIds);
+	Grid_clearShortGrid(Data_Grid_figureIds);
 	Grid_clearUByteGrid(Data_Grid_bitfields);
 	Grid_clearUByteGrid(Data_Grid_spriteOffsets);
 	Grid_clearUByteGrid(Data_Grid_random);

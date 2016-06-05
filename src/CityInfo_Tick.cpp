@@ -2,7 +2,7 @@
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 #include "Data/Building.h"
-#include "Data/Walker.h"
+#include "Data/Figure.h"
 
 #define CLEAR(t) Data_CityInfo_Buildings.t.working = Data_CityInfo_Buildings.t.total = 0
 #define UPDATE(t) \
@@ -263,7 +263,7 @@ void CityInfo_Tick_countBuildingTypes()
 		}
 		if (Data_Buildings[i].immigrantWalkerId) {
 			int immigrantId = Data_Buildings[i].immigrantWalkerId;
-			if (Data_Walkers[immigrantId].state != WalkerState_Alive || Data_Walkers[immigrantId].destinationBuildingId != i) {
+			if (Data_Walkers[immigrantId].state != FigureState_Alive || Data_Walkers[immigrantId].destinationBuildingId != i) {
 				Data_Buildings[i].immigrantWalkerId = 0;
 			}
 		}

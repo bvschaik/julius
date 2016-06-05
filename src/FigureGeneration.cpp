@@ -15,7 +15,7 @@
 #include "Data/Graphics.h"
 #include "Data/Grid.h"
 #include "Data/Model.h"
-#include "Data/Walker.h"
+#include "Data/Figure.h"
 
 #define SET_LABOR_PROBLEM(b) if (b->housesCovered <= 0) b->showOnProblemOverlay = 2
 #define SPAWN_LABOR_SEEKER(t) if (b->housesCovered <= t) generateLaborSeeker(buildingId, b, xRoad, yRoad);
@@ -25,7 +25,7 @@
 #define WORKER_PERCENTAGE(b) Calc_getPercentage(b->numWorkers, Data_Model_Buildings[b->type].laborers)
 
 #define CREATE_WALKER(t,x,y,d) \
-	int walkerId = Walker_create(t, x, y, d);\
+	int walkerId = Figure_create(t, x, y, d);\
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 
 static void generateLaborSeeker(int buildingId, struct Data_Building *b, int x, int y)
@@ -35,12 +35,12 @@ static void generateLaborSeeker(int buildingId, struct Data_Building *b, int x, 
 	}
 	if (b->walkerId2) {
 		struct Data_Walker *w = &Data_Walkers[b->walkerId2];
-		if (!w->state || w->type != Walker_LaborSeeker || w->buildingId != buildingId) {
+		if (!w->state || w->type != Figure_LaborSeeker || w->buildingId != buildingId) {
 			b->walkerId2 = 0;
 		}
 	} else {
-		CREATE_WALKER(Walker_LaborSeeker, x, y, Dir_0_Top);
-		w->actionState = WalkerActionState_125_Roaming;
+		CREATE_WALKER(Figure_LaborSeeker, x, y, Dir_0_Top);
+		w->actionState = FigureActionState_125_Roaming;
 		w->buildingId = buildingId;
 		b->walkerId2 = walkerId;
 		WalkerMovement_initRoaming(walkerId);
@@ -70,8 +70,8 @@ static void spawnWalkerPatrician(int buildingId, struct Data_Building *b, int *p
 		if (b->walkerSpawnDelay > 40 && !*patricianSpawned) {
 			*patricianSpawned = 1;
 			b->walkerSpawnDelay = 0;
-			CREATE_WALKER(Walker_Patrician, xRoad, yRoad, Dir_4_Bottom);
-			w->actionState = WalkerActionState_125_Roaming;
+			CREATE_WALKER(Figure_Patrician, xRoad, yRoad, Dir_4_Bottom);
+			w->actionState = FigureActionState_125_Roaming;
 			w->buildingId = buildingId;
 			WalkerMovement_initRoaming(walkerId);
 		}
@@ -92,12 +92,12 @@ static void spawnWalkerWarehouse(int buildingId, struct Data_Building *b)
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad) ||
 		Terrain_hasRoadAccess(b->x, b->y, 3, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(100);
-		EXIT_IF_WALKER(Walker_Warehouseman);
+		EXIT_IF_WALKER(Figure_Warehouseman);
 		int resource;
 		int task = Resource_determineWarehouseWorkerTask(buildingId, &resource);
 		if (task >= 0) {
-			CREATE_WALKER(Walker_Warehouseman, xRoad, yRoad, Dir_4_Bottom);
-			w->actionState = WalkerActionState_50_WarehousemanCreated;
+			CREATE_WALKER(Figure_Warehouseman, xRoad, yRoad, Dir_4_Bottom);
+			w->actionState = FigureActionState_50_WarehousemanCreated;
 			w->resourceId = task;
 			if (task == StorageWalkerTask_Getting) {
 				w->collectingItemId = resource;
@@ -114,11 +114,11 @@ static void spawnWalkerGranary(int buildingId, struct Data_Building *b)
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccessGranary(b->x, b->y, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(100);
-		EXIT_IF_WALKER(Walker_Warehouseman);
+		EXIT_IF_WALKER(Figure_Warehouseman);
 		int task = Resource_determineGranaryWorkerTask(buildingId);
 		if (task >= 0) {
-			CREATE_WALKER(Walker_Warehouseman, xRoad, yRoad, Dir_4_Bottom);
-			w->actionState = WalkerActionState_50_WarehousemanCreated;
+			CREATE_WALKER(Figure_Warehouseman, xRoad, yRoad, Dir_4_Bottom);
+			w->actionState = FigureActionState_50_WarehousemanCreated;
 			w->resourceId = task;
 			b->walkerId = walkerId;
 			w->buildingId = buildingId;
@@ -136,12 +136,12 @@ static void spawnWalkerTower(int buildingId, struct Data_Building *b)
 			return;
 		}
 		if (!b->walkerId4 && b->walkerId) { // has sentry but no ballista -> create
-			CREATE_WALKER(Walker_Ballista, b->x, b->y, Dir_0_Top);
+			CREATE_WALKER(Figure_Ballista, b->x, b->y, Dir_0_Top);
 			b->walkerId4 = walkerId;
 			w->buildingId = buildingId;
-			w->actionState = WalkerActionState_180_BallistaCreated;
+			w->actionState = FigureActionState_180_BallistaCreated;
 		}
-		buildingHasWalkerOfType(buildingId, Walker_TowerSentry, 0);
+		buildingHasWalkerOfType(buildingId, Figure_TowerSentry, 0);
 		if (b->walkerId <= 0) {
 			Data_Buildings_Extra.barracksTowerSentryRequested = 2;
 		}
@@ -151,7 +151,7 @@ static void spawnWalkerTower(int buildingId, struct Data_Building *b)
 static void spawnWalkerEngineersPost(int buildingId, struct Data_Building *b)
 {
 	SET_LABOR_PROBLEM(b);
-	EXIT_IF_WALKER(Walker_Engineer);
+	EXIT_IF_WALKER(Figure_Engineer);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(100);
@@ -173,8 +173,8 @@ static void spawnWalkerEngineersPost(int buildingId, struct Data_Building *b)
 		b->walkerSpawnDelay++;
 		if (b->walkerSpawnDelay > spawnDelay) {
 			b->walkerSpawnDelay = 0;
-			CREATE_WALKER(Walker_Engineer, xRoad, yRoad, Dir_0_Top);
-			w->actionState = WalkerActionState_60_EngineerCreated;
+			CREATE_WALKER(Figure_Engineer, xRoad, yRoad, Dir_0_Top);
+			w->actionState = FigureActionState_60_EngineerCreated;
 			w->buildingId = buildingId;
 			b->walkerId = walkerId;
 		}
@@ -184,7 +184,7 @@ static void spawnWalkerEngineersPost(int buildingId, struct Data_Building *b)
 static void spawnWalkerPrefecture(int buildingId, struct Data_Building *b)
 {
 	SET_LABOR_PROBLEM(b);
-	EXIT_IF_WALKER(Walker_Prefect);
+	EXIT_IF_WALKER(Figure_Prefect);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(100);
@@ -206,8 +206,8 @@ static void spawnWalkerPrefecture(int buildingId, struct Data_Building *b)
 		b->walkerSpawnDelay++;
 		if (b->walkerSpawnDelay > spawnDelay) {
 			b->walkerSpawnDelay = 0;
-			CREATE_WALKER(Walker_Prefect, xRoad, yRoad, Dir_0_Top);
-			w->actionState = WalkerActionState_70_PrefectCreated;
+			CREATE_WALKER(Figure_Prefect, xRoad, yRoad, Dir_0_Top);
+			w->actionState = FigureActionState_70_PrefectCreated;
 			w->buildingId = buildingId;
 			b->walkerId = walkerId;
 		}
@@ -238,8 +238,8 @@ static void spawnWalkerActorColony(int buildingId, struct Data_Building *b)
 		b->walkerSpawnDelay++;
 		if (b->walkerSpawnDelay > spawnDelay) {
 			b->walkerSpawnDelay = 0;
-			CREATE_WALKER(Walker_Actor, xRoad, yRoad, Dir_0_Top);
-			w->actionState = WalkerActionState_90_EntertainerAtSchoolCreated;
+			CREATE_WALKER(Figure_Actor, xRoad, yRoad, Dir_0_Top);
+			w->actionState = FigureActionState_90_EntertainerAtSchoolCreated;
 			w->buildingId = buildingId;
 			b->walkerId = walkerId;
 		}
@@ -270,8 +270,8 @@ static void spawnWalkerGladiatorSchool(int buildingId, struct Data_Building *b)
 		b->walkerSpawnDelay++;
 		if (b->walkerSpawnDelay > spawnDelay) {
 			b->walkerSpawnDelay = 0;
-			CREATE_WALKER(Walker_Gladiator, xRoad, yRoad, Dir_0_Top);
-			w->actionState = WalkerActionState_90_EntertainerAtSchoolCreated;
+			CREATE_WALKER(Figure_Gladiator, xRoad, yRoad, Dir_0_Top);
+			w->actionState = FigureActionState_90_EntertainerAtSchoolCreated;
 			w->buildingId = buildingId;
 			b->walkerId = walkerId;
 		}
@@ -302,8 +302,8 @@ static void spawnWalkerLionHouse(int buildingId, struct Data_Building *b)
 		b->walkerSpawnDelay++;
 		if (b->walkerSpawnDelay > spawnDelay) {
 			b->walkerSpawnDelay = 0;
-			CREATE_WALKER(Walker_LionTamer, xRoad, yRoad, Dir_0_Top);
-			w->actionState = WalkerActionState_90_EntertainerAtSchoolCreated;
+			CREATE_WALKER(Figure_LionTamer, xRoad, yRoad, Dir_0_Top);
+			w->actionState = FigureActionState_90_EntertainerAtSchoolCreated;
 			w->buildingId = buildingId;
 			b->walkerId = walkerId;
 		}
@@ -334,8 +334,8 @@ static void spawnWalkerChariotMaker(int buildingId, struct Data_Building *b)
 		b->walkerSpawnDelay++;
 		if (b->walkerSpawnDelay > spawnDelay) {
 			b->walkerSpawnDelay = 0;
-			CREATE_WALKER(Walker_Charioteer, xRoad, yRoad, Dir_0_Top);
-			w->actionState = WalkerActionState_90_EntertainerAtSchoolCreated;
+			CREATE_WALKER(Figure_Charioteer, xRoad, yRoad, Dir_0_Top);
+			w->actionState = FigureActionState_90_EntertainerAtSchoolCreated;
 			w->buildingId = buildingId;
 			b->walkerId = walkerId;
 		}
@@ -345,7 +345,7 @@ static void spawnWalkerChariotMaker(int buildingId, struct Data_Building *b)
 static void spawnWalkerAmphitheater(int buildingId, struct Data_Building *b)
 {
 	SET_LABOR_PROBLEM(b);
-	EXIT_IF_WALKERS(Walker_Actor, Walker_Gladiator);
+	EXIT_IF_WALKERS(Figure_Actor, Figure_Gladiator);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		if (b->housesCovered <= 50 ||
@@ -372,12 +372,12 @@ static void spawnWalkerAmphitheater(int buildingId, struct Data_Building *b)
 			b->walkerSpawnDelay = 0;
 			int walkerId;
 			if (b->data.entertainment.days1 > 0) {
-				walkerId = Walker_create(Walker_Gladiator, xRoad, yRoad, Dir_0_Top);
+				walkerId = Figure_create(Figure_Gladiator, xRoad, yRoad, Dir_0_Top);
 			} else {
-				walkerId = Walker_create(Walker_Actor, xRoad, yRoad, Dir_0_Top);
+				walkerId = Figure_create(Figure_Actor, xRoad, yRoad, Dir_0_Top);
 			}
 			struct Data_Walker *w = &Data_Walkers[walkerId];
-			w->actionState = WalkerActionState_94_EntertainerRoaming;
+			w->actionState = FigureActionState_94_EntertainerRoaming;
 			w->buildingId = buildingId;
 			b->walkerId = walkerId;
 			WalkerMovement_initRoaming(walkerId);
@@ -388,7 +388,7 @@ static void spawnWalkerAmphitheater(int buildingId, struct Data_Building *b)
 static void spawnWalkerTheater(int buildingId, struct Data_Building *b)
 {
 	SET_LABOR_PROBLEM(b);
-	EXIT_IF_WALKER(Walker_Actor);
+	EXIT_IF_WALKER(Figure_Actor);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		if (b->housesCovered <= 50 || b->data.entertainment.days1 <= 0) {
@@ -412,8 +412,8 @@ static void spawnWalkerTheater(int buildingId, struct Data_Building *b)
 		b->walkerSpawnDelay++;
 		if (b->walkerSpawnDelay > spawnDelay) {
 			b->walkerSpawnDelay = 0;
-			CREATE_WALKER(Walker_Actor, xRoad, yRoad, Dir_0_Top);
-			w->actionState = WalkerActionState_94_EntertainerRoaming;
+			CREATE_WALKER(Figure_Actor, xRoad, yRoad, Dir_0_Top);
+			w->actionState = FigureActionState_94_EntertainerRoaming;
 			w->buildingId = buildingId;
 			b->walkerId = walkerId;
 			WalkerMovement_initRoaming(walkerId);
@@ -434,7 +434,7 @@ static void spawnWalkerHippodrome(int buildingId, struct Data_Building *b)
 			Data_Buildings[partId].showOnProblemOverlay = b->showOnProblemOverlay;
 		}
 	}
-	EXIT_IF_WALKER(Walker_Charioteer);
+	EXIT_IF_WALKER(Figure_Charioteer);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccessHippodrome(b->x, b->y, &xRoad, &yRoad)) {
 		if (b->housesCovered <= 50 || b->data.entertainment.days1 <= 0) {
@@ -459,8 +459,8 @@ static void spawnWalkerHippodrome(int buildingId, struct Data_Building *b)
 		if (b->walkerSpawnDelay > spawnDelay) {
 			b->walkerSpawnDelay = 0;
 			{
-				CREATE_WALKER(Walker_Charioteer, xRoad, yRoad, Dir_0_Top);
-				w->actionState = WalkerActionState_94_EntertainerRoaming;
+				CREATE_WALKER(Figure_Charioteer, xRoad, yRoad, Dir_0_Top);
+				w->actionState = FigureActionState_94_EntertainerRoaming;
 				w->buildingId = buildingId;
 				b->walkerId = walkerId;
 				WalkerMovement_initRoaming(walkerId);
@@ -468,15 +468,15 @@ static void spawnWalkerHippodrome(int buildingId, struct Data_Building *b)
 			if (!Data_CityInfo.entertainmentHippodromeHasShow) {
 				// create mini-horses
 				{
-					CREATE_WALKER(Walker_HippodromeMiniHorses, b->x + 2, b->y + 1, Dir_2_Right);
-					w->actionState = WalkerActionState_200_HippodromeMiniHorseCreated;
+					CREATE_WALKER(Figure_HippodromeMiniHorses, b->x + 2, b->y + 1, Dir_2_Right);
+					w->actionState = FigureActionState_200_HippodromeMiniHorseCreated;
 					w->buildingId = buildingId;
 					w->resourceId = 0;
 					w->speedMultiplier = 3;
 				}
 				{
-					CREATE_WALKER(Walker_HippodromeMiniHorses, b->x + 2, b->y + 2, Dir_2_Right);
-					w->actionState = WalkerActionState_200_HippodromeMiniHorseCreated;
+					CREATE_WALKER(Figure_HippodromeMiniHorses, b->x + 2, b->y + 2, Dir_2_Right);
+					w->actionState = FigureActionState_200_HippodromeMiniHorseCreated;
 					w->buildingId = buildingId;
 					w->resourceId = 1;
 					w->speedMultiplier = 2;
@@ -495,7 +495,7 @@ static void spawnWalkerHippodrome(int buildingId, struct Data_Building *b)
 static void spawnWalkerColosseum(int buildingId, struct Data_Building *b)
 {
 	SET_LABOR_PROBLEM(b);
-	EXIT_IF_WALKERS(Walker_Gladiator, Walker_LionTamer);
+	EXIT_IF_WALKERS(Figure_Gladiator, Figure_LionTamer);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		if (b->housesCovered <= 50 ||
@@ -522,12 +522,12 @@ static void spawnWalkerColosseum(int buildingId, struct Data_Building *b)
 			b->walkerSpawnDelay = 0;
 			int walkerId;
 			if (b->data.entertainment.days1 > 0) {
-				walkerId = Walker_create(Walker_LionTamer, xRoad, yRoad, Dir_0_Top);
+				walkerId = Figure_create(Figure_LionTamer, xRoad, yRoad, Dir_0_Top);
 			} else {
-				walkerId = Walker_create(Walker_Gladiator, xRoad, yRoad, Dir_0_Top);
+				walkerId = Figure_create(Figure_Gladiator, xRoad, yRoad, Dir_0_Top);
 			}
 			struct Data_Walker *w = &Data_Walkers[walkerId];
-			w->actionState = WalkerActionState_94_EntertainerRoaming;
+			w->actionState = FigureActionState_94_EntertainerRoaming;
 			w->buildingId = buildingId;
 			b->walkerId = walkerId;
 			WalkerMovement_initRoaming(walkerId);
@@ -578,14 +578,14 @@ static void spawnWalkerMarket(int buildingId, struct Data_Building *b)
 			return;
 		}
 		// market trader
-		if (!buildingHasWalkerOfType(buildingId, Walker_MarketTrader, 0)) {
+		if (!buildingHasWalkerOfType(buildingId, Figure_MarketTrader, 0)) {
 			b->walkerSpawnDelay++;
 			if (b->walkerSpawnDelay <= spawnDelay) {
 				return;
 			}
 			b->walkerSpawnDelay = 0;
-			CREATE_WALKER(Walker_MarketTrader, xRoad, yRoad, Dir_0_Top);
-			w->actionState = WalkerActionState_125_Roaming;
+			CREATE_WALKER(Figure_MarketTrader, xRoad, yRoad, Dir_0_Top);
+			w->actionState = FigureActionState_125_Roaming;
 			w->buildingId = buildingId;
 			b->walkerId = walkerId;
 			WalkerMovement_initRoaming(walkerId);
@@ -593,15 +593,15 @@ static void spawnWalkerMarket(int buildingId, struct Data_Building *b)
 		// market buyer or labor seeker
 		if (b->walkerId2) {
 			struct Data_Walker *w = &Data_Walkers[b->walkerId2];
-			if (w->state != WalkerState_Alive || (w->type != Walker_MarketBuyer && w->type != Walker_LaborSeeker)) {
+			if (w->state != FigureState_Alive || (w->type != Figure_MarketBuyer && w->type != Figure_LaborSeeker)) {
 				b->walkerId2 = 0;
 			}
 		} else {
 			Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad);
 			int dstBuildingId = Building_Market_getDestinationGranaryWarehouse(buildingId);
 			if (dstBuildingId > 0) {
-				CREATE_WALKER(Walker_MarketBuyer, xRoad, yRoad, Dir_0_Top);
-				w->actionState = WalkerActionState_145_MarketBuyerGoingToStorage;
+				CREATE_WALKER(Figure_MarketBuyer, xRoad, yRoad, Dir_0_Top);
+				w->actionState = FigureActionState_145_MarketBuyerGoingToStorage;
 				w->buildingId = buildingId;
 				b->walkerId2 = walkerId;
 				w->destinationBuildingId = dstBuildingId;
@@ -612,7 +612,7 @@ static void spawnWalkerMarket(int buildingId, struct Data_Building *b)
 					w->destinationX = xRoad;
 					w->destinationY = yRoad;
 				} else {
-					w->actionState = WalkerActionState_146_MarketBuyerReturning;
+					w->actionState = FigureActionState_146_MarketBuyerReturning;
 					w->destinationX = w->x;
 					w->destinationY = w->y;
 				}
@@ -657,7 +657,7 @@ static void spawnWalkerBathhouse(int buildingId, struct Data_Building *b)
 	if (!b->hasWaterAccess) {
 		b->showOnProblemOverlay = 2;
 	}
-	EXIT_IF_WALKER(Walker_BathhouseWorker);
+	EXIT_IF_WALKER(Figure_BathhouseWorker);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad) && b->hasWaterAccess) {
 		SPAWN_LABOR_SEEKER(50);
@@ -679,8 +679,8 @@ static void spawnWalkerBathhouse(int buildingId, struct Data_Building *b)
 		b->walkerSpawnDelay++;
 		if (b->walkerSpawnDelay > spawnDelay) {
 			b->walkerSpawnDelay = 0;
-			CREATE_WALKER(Walker_BathhouseWorker, xRoad, yRoad, Dir_0_Top);
-			w->actionState = WalkerActionState_125_Roaming;
+			CREATE_WALKER(Figure_BathhouseWorker, xRoad, yRoad, Dir_0_Top);
+			w->actionState = FigureActionState_125_Roaming;
 			w->buildingId = buildingId;
 			b->walkerId = walkerId;
 			WalkerMovement_initRoaming(walkerId);
@@ -691,7 +691,7 @@ static void spawnWalkerBathhouse(int buildingId, struct Data_Building *b)
 static void spawnWalkerSchool(int buildingId, struct Data_Building *b)
 {
 	SET_LABOR_PROBLEM(b);
-	EXIT_IF_WALKER(Walker_SchoolChild);
+	EXIT_IF_WALKER(Figure_SchoolChild);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(50);
@@ -714,27 +714,27 @@ static void spawnWalkerSchool(int buildingId, struct Data_Building *b)
 		if (b->walkerSpawnDelay > spawnDelay) {
 			b->walkerSpawnDelay = 0;
 			{
-				CREATE_WALKER(Walker_SchoolChild, xRoad, yRoad, Dir_0_Top);
-				w->actionState = WalkerActionState_125_Roaming;
+				CREATE_WALKER(Figure_SchoolChild, xRoad, yRoad, Dir_0_Top);
+				w->actionState = FigureActionState_125_Roaming;
 				w->buildingId = buildingId;
 				b->walkerId = walkerId;
 				WalkerMovement_initRoaming(walkerId);
 			}
 			{
-				CREATE_WALKER(Walker_SchoolChild, xRoad, yRoad, Dir_0_Top);
-				w->actionState = WalkerActionState_125_Roaming;
+				CREATE_WALKER(Figure_SchoolChild, xRoad, yRoad, Dir_0_Top);
+				w->actionState = FigureActionState_125_Roaming;
 				w->buildingId = buildingId;
 				WalkerMovement_initRoaming(walkerId);
 			}
 			{
-				CREATE_WALKER(Walker_SchoolChild, xRoad, yRoad, Dir_0_Top);
-				w->actionState = WalkerActionState_125_Roaming;
+				CREATE_WALKER(Figure_SchoolChild, xRoad, yRoad, Dir_0_Top);
+				w->actionState = FigureActionState_125_Roaming;
 				w->buildingId = buildingId;
 				WalkerMovement_initRoaming(walkerId);
 			}
 			{
-				CREATE_WALKER(Walker_SchoolChild, xRoad, yRoad, Dir_0_Top);
-				w->actionState = WalkerActionState_125_Roaming;
+				CREATE_WALKER(Figure_SchoolChild, xRoad, yRoad, Dir_0_Top);
+				w->actionState = FigureActionState_125_Roaming;
 				w->buildingId = buildingId;
 				WalkerMovement_initRoaming(walkerId);
 			}
@@ -745,7 +745,7 @@ static void spawnWalkerSchool(int buildingId, struct Data_Building *b)
 static void spawnWalkerLibrary(int buildingId, struct Data_Building *b)
 {
 	SET_LABOR_PROBLEM(b);
-	EXIT_IF_WALKER(Walker_Librarian);
+	EXIT_IF_WALKER(Figure_Librarian);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(50);
@@ -767,8 +767,8 @@ static void spawnWalkerLibrary(int buildingId, struct Data_Building *b)
 		b->walkerSpawnDelay++;
 		if (b->walkerSpawnDelay > spawnDelay) {
 			b->walkerSpawnDelay = 0;
-			CREATE_WALKER(Walker_Librarian, xRoad, yRoad, Dir_0_Top);
-			w->actionState = WalkerActionState_125_Roaming;
+			CREATE_WALKER(Figure_Librarian, xRoad, yRoad, Dir_0_Top);
+			w->actionState = FigureActionState_125_Roaming;
 			w->buildingId = buildingId;
 			b->walkerId = walkerId;
 			WalkerMovement_initRoaming(walkerId);
@@ -779,7 +779,7 @@ static void spawnWalkerLibrary(int buildingId, struct Data_Building *b)
 static void spawnWalkerAcademy(int buildingId, struct Data_Building *b)
 {
 	SET_LABOR_PROBLEM(b);
-	EXIT_IF_WALKER(Walker_Teacher);
+	EXIT_IF_WALKER(Figure_Teacher);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(50);
@@ -801,8 +801,8 @@ static void spawnWalkerAcademy(int buildingId, struct Data_Building *b)
 		b->walkerSpawnDelay++;
 		if (b->walkerSpawnDelay > spawnDelay) {
 			b->walkerSpawnDelay = 0;
-			CREATE_WALKER(Walker_Teacher, xRoad, yRoad, Dir_0_Top);
-			w->actionState = WalkerActionState_125_Roaming;
+			CREATE_WALKER(Figure_Teacher, xRoad, yRoad, Dir_0_Top);
+			w->actionState = FigureActionState_125_Roaming;
 			w->buildingId = buildingId;
 			b->walkerId = walkerId;
 			WalkerMovement_initRoaming(walkerId);
@@ -813,7 +813,7 @@ static void spawnWalkerAcademy(int buildingId, struct Data_Building *b)
 static void spawnWalkerBarber(int buildingId, struct Data_Building *b)
 {
 	SET_LABOR_PROBLEM(b);
-	EXIT_IF_WALKER(Walker_Barber);
+	EXIT_IF_WALKER(Figure_Barber);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(50);
@@ -835,8 +835,8 @@ static void spawnWalkerBarber(int buildingId, struct Data_Building *b)
 		b->walkerSpawnDelay++;
 		if (b->walkerSpawnDelay > spawnDelay) {
 			b->walkerSpawnDelay = 0;
-			CREATE_WALKER(Walker_Barber, xRoad, yRoad, Dir_0_Top);
-			w->actionState = WalkerActionState_125_Roaming;
+			CREATE_WALKER(Figure_Barber, xRoad, yRoad, Dir_0_Top);
+			w->actionState = FigureActionState_125_Roaming;
 			w->buildingId = buildingId;
 			b->walkerId = walkerId;
 			WalkerMovement_initRoaming(walkerId);
@@ -847,7 +847,7 @@ static void spawnWalkerBarber(int buildingId, struct Data_Building *b)
 static void spawnWalkerDoctor(int buildingId, struct Data_Building *b)
 {
 	SET_LABOR_PROBLEM(b);
-	EXIT_IF_WALKER(Walker_Doctor);
+	EXIT_IF_WALKER(Figure_Doctor);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(50);
@@ -869,8 +869,8 @@ static void spawnWalkerDoctor(int buildingId, struct Data_Building *b)
 		b->walkerSpawnDelay++;
 		if (b->walkerSpawnDelay > spawnDelay) {
 			b->walkerSpawnDelay = 0;
-			CREATE_WALKER(Walker_Doctor, xRoad, yRoad, Dir_0_Top);
-			w->actionState = WalkerActionState_125_Roaming;
+			CREATE_WALKER(Figure_Doctor, xRoad, yRoad, Dir_0_Top);
+			w->actionState = FigureActionState_125_Roaming;
 			w->buildingId = buildingId;
 			b->walkerId = walkerId;
 			WalkerMovement_initRoaming(walkerId);
@@ -881,7 +881,7 @@ static void spawnWalkerDoctor(int buildingId, struct Data_Building *b)
 static void spawnWalkerHospital(int buildingId, struct Data_Building *b)
 {
 	SET_LABOR_PROBLEM(b);
-	EXIT_IF_WALKER(Walker_Surgeon);
+	EXIT_IF_WALKER(Figure_Surgeon);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(50);
@@ -903,8 +903,8 @@ static void spawnWalkerHospital(int buildingId, struct Data_Building *b)
 		b->walkerSpawnDelay++;
 		if (b->walkerSpawnDelay > spawnDelay) {
 			b->walkerSpawnDelay = 0;
-			CREATE_WALKER(Walker_Surgeon, xRoad, yRoad, Dir_0_Top);
-			w->actionState = WalkerActionState_125_Roaming;
+			CREATE_WALKER(Figure_Surgeon, xRoad, yRoad, Dir_0_Top);
+			w->actionState = FigureActionState_125_Roaming;
 			w->buildingId = buildingId;
 			b->walkerId = walkerId;
 			WalkerMovement_initRoaming(walkerId);
@@ -915,7 +915,7 @@ static void spawnWalkerHospital(int buildingId, struct Data_Building *b)
 static void spawnWalkerTemple(int buildingId, struct Data_Building *b)
 {
 	SET_LABOR_PROBLEM(b);
-	EXIT_IF_WALKER(Walker_Priest);
+	EXIT_IF_WALKER(Figure_Priest);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(50);
@@ -939,8 +939,8 @@ static void spawnWalkerTemple(int buildingId, struct Data_Building *b)
 		b->walkerSpawnDelay++;
 		if (b->walkerSpawnDelay > spawnDelay) {
 			b->walkerSpawnDelay = 0;
-			CREATE_WALKER(Walker_Priest, xRoad, yRoad, Dir_0_Top);
-			w->actionState = WalkerActionState_125_Roaming;
+			CREATE_WALKER(Figure_Priest, xRoad, yRoad, Dir_0_Top);
+			w->actionState = FigureActionState_125_Roaming;
 			w->buildingId = buildingId;
 			b->walkerId = walkerId;
 			WalkerMovement_initRoaming(walkerId);
@@ -968,7 +968,7 @@ static void spawnWalkerSenateForum(int buildingId, struct Data_Building *b)
 		setSenateGraphic(buildingId, b);
 	}
 	SET_LABOR_PROBLEM(b);
-	EXIT_IF_WALKER(Walker_TaxCollector);
+	EXIT_IF_WALKER(Figure_TaxCollector);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(50);
@@ -990,8 +990,8 @@ static void spawnWalkerSenateForum(int buildingId, struct Data_Building *b)
 		b->walkerSpawnDelay++;
 		if (b->walkerSpawnDelay > spawnDelay) {
 			b->walkerSpawnDelay = 0;
-			CREATE_WALKER(Walker_TaxCollector, xRoad, yRoad, Dir_0_Top);
-			w->actionState = WalkerActionState_40_TaxCollectorCreated;
+			CREATE_WALKER(Figure_TaxCollector, xRoad, yRoad, Dir_0_Top);
+			w->actionState = FigureActionState_40_TaxCollectorCreated;
 			w->buildingId = buildingId;
 			b->walkerId = walkerId;
 		}
@@ -1000,7 +1000,7 @@ static void spawnWalkerSenateForum(int buildingId, struct Data_Building *b)
 
 static void spawnWalkerMissionPost(int buildingId, struct Data_Building *b)
 {
-	EXIT_IF_WALKER(Walker_Missionary);
+	EXIT_IF_WALKER(Figure_Missionary);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		if (Data_CityInfo.population > 0) {
@@ -1008,8 +1008,8 @@ static void spawnWalkerMissionPost(int buildingId, struct Data_Building *b)
 			b->walkerSpawnDelay++;
 			if (b->walkerSpawnDelay > 1) {
 				b->walkerSpawnDelay = 0;
-				CREATE_WALKER(Walker_Missionary, xRoad, yRoad, Dir_0_Top);
-				w->actionState = WalkerActionState_125_Roaming;
+				CREATE_WALKER(Figure_Missionary, xRoad, yRoad, Dir_0_Top);
+				w->actionState = FigureActionState_125_Roaming;
 				w->buildingId = buildingId;
 				b->walkerId = walkerId;
 				WalkerMovement_initRoaming(walkerId);
@@ -1024,11 +1024,11 @@ static void spawnWalkerIndustry(int buildingId, struct Data_Building *b)
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(50);
-		EXIT_IF_WALKER(Walker_CartPusher);
+		EXIT_IF_WALKER(Figure_CartPusher);
 		if (Building_Industry_hasProducedResource(buildingId)) {
 			Building_Industry_startNewProduction(buildingId);
-			CREATE_WALKER(Walker_CartPusher, xRoad, yRoad, Dir_4_Bottom);
-			w->actionState = WalkerActionState_20_CartpusherInitial;
+			CREATE_WALKER(Figure_CartPusher, xRoad, yRoad, Dir_4_Bottom);
+			w->actionState = FigureActionState_20_CartpusherInitial;
 			w->resourceId = b->outputResourceId;
 			w->buildingId = buildingId;
 			b->walkerId = walkerId;
@@ -1042,20 +1042,20 @@ static void spawnWalkerWharf(int buildingId, struct Data_Building *b)
 	SET_LABOR_PROBLEM(b);
 	if (b->data.other.boatWalkerId) {
 		struct Data_Walker *w = &Data_Walkers[b->data.other.boatWalkerId];
-		if (w->state != WalkerState_Alive || w->type != Walker_FishingBoat) {
+		if (w->state != FigureState_Alive || w->type != Figure_FishingBoat) {
 			b->data.other.boatWalkerId = 0;
 		}
 	}
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(50);
-		EXIT_IF_WALKER(Walker_CartPusher);
+		EXIT_IF_WALKER(Figure_CartPusher);
 		if (b->walkerSpawnDelay) {
 			b->walkerSpawnDelay = 0;
 			b->data.other.fishingBoatHasFish = 0;
 			b->outputResourceId = Resource_Meat;
-			CREATE_WALKER(Walker_CartPusher, xRoad, yRoad, Dir_4_Bottom);
-			w->actionState = WalkerActionState_20_CartpusherInitial;
+			CREATE_WALKER(Figure_CartPusher, xRoad, yRoad, Dir_4_Bottom);
+			w->actionState = FigureActionState_20_CartpusherInitial;
 			w->resourceId = Resource_Meat;
 			w->buildingId = buildingId;
 			b->walkerId = walkerId;
@@ -1070,7 +1070,7 @@ static void spawnWalkerShipyard(int buildingId, struct Data_Building *b)
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(50);
-		EXIT_IF_WALKER(Walker_FishingBoat);
+		EXIT_IF_WALKER(Figure_FishingBoat);
 		int pctWorkers = WORKER_PERCENTAGE(b);
 		if (pctWorkers >= 100) {
 			b->data.industry.progress += 10;
@@ -1087,8 +1087,8 @@ static void spawnWalkerShipyard(int buildingId, struct Data_Building *b)
 			b->data.industry.progress = 0;
 			int xBoat, yBoat;
 			if (Terrain_canSpawnFishingBoatInWater(b->x, b->y, b->size, &xBoat, &yBoat)) {
-				CREATE_WALKER(Walker_FishingBoat, xBoat, yBoat, Dir_0_Top);
-				w->actionState = WalkerActionState_190_FishingBoatCreated;
+				CREATE_WALKER(Figure_FishingBoat, xBoat, yBoat, Dir_0_Top);
+				w->actionState = FigureActionState_190_FishingBoatCreated;
 				w->buildingId = buildingId;
 				b->walkerId = walkerId;
 			}
@@ -1117,7 +1117,7 @@ static void spawnWalkerDock(int buildingId, struct Data_Building *b)
 		int existingDockers = 0;
 		for (int i = 0; i < 3; i++) {
 			if (b->data.other.dockWalkerIds[i]) {
-				if (Data_Walkers[b->data.other.dockWalkerIds[i]].type == Walker_Dockman) {
+				if (Data_Walkers[b->data.other.dockWalkerIds[i]].type == Figure_Dockman) {
 					existingDockers++;
 				} else {
 					b->data.other.dockWalkerIds[i] = 0;
@@ -1128,13 +1128,13 @@ static void spawnWalkerDock(int buildingId, struct Data_Building *b)
 			// too many dockers, kill one of them
 			for (int i = 2; i >= 0; i--) {
 				if (b->data.other.dockWalkerIds[i]) {
-					Data_Walkers[b->data.other.dockWalkerIds[i]].state = WalkerState_Dead;
+					Data_Walkers[b->data.other.dockWalkerIds[i]].state = FigureState_Dead;
 					break;
 				}
 			}
 		} else if (existingDockers < maxDockers) {
-			CREATE_WALKER(Walker_Dockman, xRoad, yRoad, Dir_4_Bottom);
-			w->actionState = WalkerActionState_132_DockerIdling;
+			CREATE_WALKER(Figure_Dockman, xRoad, yRoad, Dir_4_Bottom);
+			w->actionState = FigureActionState_132_DockerIdling;
 			w->buildingId = buildingId;
 			for (int i = 0; i < 3; i++) {
 				if (!b->data.other.dockWalkerIds[i]) {
@@ -1150,14 +1150,14 @@ static void spawnWalkerNativeHut(int buildingId, struct Data_Building *b)
 {
 	Data_Grid_graphicIds[b->gridOffset] =
 		GraphicId(ID_Graphic_NativeBuilding) + (Data_Grid_random[b->gridOffset] & 1);
-	EXIT_IF_WALKER(Walker_IndigenousNative);
+	EXIT_IF_WALKER(Figure_IndigenousNative);
 	int xOut, yOut;
 	if (b->subtype.nativeMeetingCenterId > 0 && Terrain_getAdjacentRoadOrClearLand(b->x, b->y, b->size, &xOut, &yOut)) {
 		b->walkerSpawnDelay++;
 		if (b->walkerSpawnDelay > 4) {
 			b->walkerSpawnDelay = 0;
-			CREATE_WALKER(Walker_IndigenousNative, xOut, yOut, Dir_0_Top);
-			w->actionState = WalkerActionState_158_NativeCreated;
+			CREATE_WALKER(Figure_IndigenousNative, xOut, yOut, Dir_0_Top);
+			w->actionState = FigureActionState_158_NativeCreated;
 			w->buildingId = buildingId;
 			b->walkerId = walkerId;
 		}
@@ -1169,14 +1169,14 @@ static void spawnWalkerNativeMeeting(int buildingId, struct Data_Building *b)
 	Terrain_addBuildingToGrids(buildingId, b->x, b->y, 2,
 		GraphicId(ID_Graphic_NativeBuilding) + 2, Terrain_Building);
 	if (Data_CityInfo.nativeMissionPostOperational > 0 &&
-		!buildingHasWalkerOfType(buildingId, Walker_NativeTrader, 0)) {
+		!buildingHasWalkerOfType(buildingId, Figure_NativeTrader, 0)) {
 		int xOut, yOut;
 		if (Terrain_getAdjacentRoadOrClearLand(b->x, b->y, b->size, &xOut, &yOut)) {
 			b->walkerSpawnDelay++;
 			if (b->walkerSpawnDelay > 8) {
 				b->walkerSpawnDelay = 0;
-				CREATE_WALKER(Walker_NativeTrader, xOut, yOut, Dir_0_Top);
-				w->actionState = WalkerActionState_162_NativeTraderCreated;
+				CREATE_WALKER(Figure_NativeTrader, xOut, yOut, Dir_0_Top);
+				w->actionState = FigureActionState_162_NativeTraderCreated;
 				w->buildingId = buildingId;
 				b->walkerId = walkerId;
 			}
@@ -1209,8 +1209,8 @@ static void spawnWalkerBarracks(int buildingId, struct Data_Building *b)
 		if (b->walkerSpawnDelay > spawnDelay) {
 			b->walkerSpawnDelay = 0;
 			Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad);
-			if (!Walker_createTowerSentryFromBarracks(buildingId, xRoad, yRoad)) {
-				Walker_createSoldierFromBarracks(buildingId, xRoad, yRoad);
+			if (!Figure_createTowerSentryFromBarracks(buildingId, xRoad, yRoad)) {
+				Figure_createSoldierFromBarracks(buildingId, xRoad, yRoad);
 			}
 		}
 	}
@@ -1225,7 +1225,7 @@ static void spawnWalkerMilitaryAcademy(int buildingId, struct Data_Building *b)
 	}
 }
 
-void WalkerGeneration_generateWalkersForBuildings()
+void FigureGeneration_generateFiguresForBuildings()
 {
 	int patricianGenerated = 0;
 	if (Data_Buildings_Extra.barracksTowerSentryRequested > 0) {

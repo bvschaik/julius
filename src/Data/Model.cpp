@@ -1,5 +1,9 @@
 #include "AllData.h"
 
+#define DATA_INTERN 1
+#include "Grid.h"
+#include "Random.h"
+
 struct Data_Model_House Data_Model_Houses[20];
 struct Data_Model_Building Data_Model_Buildings[130];
 struct Data_Model_Difficulty Data_Model_Difficulty = {
@@ -50,10 +54,10 @@ struct Data_KeyboardInput Data_KeyboardInput;
 
 struct _Data_State Data_State;
 
-struct Data_Walker_NameSequence Data_Walker_NameSequence;
-struct Data_Walker Data_Walkers[MAX_WALKERS];
-struct Data_Walker_Extra Data_Walker_Extra;
-struct Data_Walker_Trader Data_Walker_Traders[MAX_TRADERS];
+struct _Data_Figure_NameSequence Data_Figure_NameSequence;
+struct Data_Walker Data_Walkers[MAX_FIGURES];
+struct _Data_Figure_Extra Data_Figure_Extra;
+struct Data_Figure_Trader Data_Figure_Traders[MAX_TRADERS];
 
 struct Data_Building Data_Buildings[MAX_BUILDINGS];
 struct Data_Building_Storage Data_Building_Storages[MAX_STORAGES];

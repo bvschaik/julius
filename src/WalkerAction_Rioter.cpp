@@ -18,22 +18,22 @@ static const int criminalOffsets[] = {
 void WalkerAction_protestor(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
-	w->terrainUsage = WalkerTerrainUsage_Roads;
+	w->terrainUsage = FigureTerrainUsage_Roads;
 	WalkerActionIncreaseGraphicOffset(w, 64);
 	w->cartGraphicId = 0;
-	if (w->actionState == WalkerActionState_149_Corpse) {
-		w->state = WalkerState_Dead;
+	if (w->actionState == FigureActionState_149_Corpse) {
+		w->state = FigureState_Dead;
 	}
 	w->waitTicks++;
 	if (w->waitTicks > 200) {
-		w->state = WalkerState_Dead;
+		w->state = FigureState_Dead;
 		w->graphicOffset = 0;
 	}
-	if (w->actionState == WalkerActionState_149_Corpse) {
-		w->graphicId = GraphicId(ID_Graphic_Walker_Criminal) +
+	if (w->actionState == FigureActionState_149_Corpse) {
+		w->graphicId = GraphicId(ID_Graphic_Figure_Criminal) +
 			WalkerActionCorpseGraphicOffset(w) + 96;
 	} else {
-		w->graphicId = GraphicId(ID_Graphic_Walker_Criminal) +
+		w->graphicId = GraphicId(ID_Graphic_Figure_Criminal) +
 			criminalOffsets[w->graphicOffset / 4] + 104;
 	}
 }
@@ -41,22 +41,22 @@ void WalkerAction_protestor(int walkerId)
 void WalkerAction_criminal(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
-	w->terrainUsage = WalkerTerrainUsage_Roads;
+	w->terrainUsage = FigureTerrainUsage_Roads;
 	WalkerActionIncreaseGraphicOffset(w, 32);
 	w->cartGraphicId = 0;
-	if (w->actionState == WalkerActionState_149_Corpse) {
-		w->state = WalkerState_Dead;
+	if (w->actionState == FigureActionState_149_Corpse) {
+		w->state = FigureState_Dead;
 	}
 	w->waitTicks++;
 	if (w->waitTicks > 200) {
-		w->state = WalkerState_Dead;
+		w->state = FigureState_Dead;
 		w->graphicOffset = 0;
 	}
-	if (w->actionState == WalkerActionState_149_Corpse) {
-		w->graphicId = GraphicId(ID_Graphic_Walker_Criminal) +
+	if (w->actionState == FigureActionState_149_Corpse) {
+		w->graphicId = GraphicId(ID_Graphic_Figure_Criminal) +
 			WalkerActionCorpseGraphicOffset(w) + 96;
 	} else {
-		w->graphicId = GraphicId(ID_Graphic_Walker_Criminal) +
+		w->graphicId = GraphicId(ID_Graphic_Figure_Criminal) +
 			criminalOffsets[w->graphicOffset / 2] + 104;
 	}
 }
@@ -68,52 +68,52 @@ void WalkerAction_rioter(int walkerId)
 	if (!w->targetedByWalkerId) {
 		Data_CityInfo.riotersOrAttackingNativesInCity = 10;
 	}
-	w->terrainUsage = WalkerTerrainUsage_Enemy;
+	w->terrainUsage = FigureTerrainUsage_Enemy;
 	w->maxRoamLength = 480;
 	w->cartGraphicId = 0;
 	w->isGhost = 0;
 	switch (w->actionState) {
-		case WalkerActionState_150_Attack:
+		case FigureActionState_150_Attack:
 			WalkerAction_Common_handleAttack(walkerId);
 			break;
-		case WalkerActionState_149_Corpse:
+		case FigureActionState_149_Corpse:
 			WalkerAction_Common_handleCorpse(walkerId);
 			break;
-		case WalkerActionState_120_RioterCreated:
+		case FigureActionState_120_RioterCreated:
 			WalkerActionIncreaseGraphicOffset(w, 32);
 			w->waitTicks++;
 			if (w->waitTicks >= 160) {
-				w->actionState = WalkerActionState_121_RioterMoving;
+				w->actionState = FigureActionState_121_RioterMoving;
 				int xTile, yTile;
 				int buildingId = Formation_Rioter_getTargetBuilding(&xTile, &yTile);
 				if (buildingId) {
 					w->destinationX = xTile;
 					w->destinationY = yTile;
 					w->destinationBuildingId = buildingId;
-					WalkerRoute_remove(walkerId);
+					FigureRoute_remove(walkerId);
 				} else {
-					w->state = WalkerState_Dead;
+					w->state = FigureState_Dead;
 				}
 			}
 			break;
-		case WalkerActionState_121_RioterMoving:
+		case FigureActionState_121_RioterMoving:
 			WalkerActionIncreaseGraphicOffset(w, 12);
 			WalkerMovement_walkTicks(walkerId, 1);
-			if (w->direction == DirWalker_8_AtDestination) {
+			if (w->direction == DirFigure_8_AtDestination) {
 				int xTile, yTile;
 				int buildingId = Formation_Rioter_getTargetBuilding(&xTile, &yTile);
 				if (buildingId) {
 					w->destinationX = xTile;
 					w->destinationY = yTile;
 					w->destinationBuildingId = buildingId;
-					WalkerRoute_remove(walkerId);
+					FigureRoute_remove(walkerId);
 				} else {
-					w->state = WalkerState_Dead;
+					w->state = FigureState_Dead;
 				}
-			} else if (w->direction == DirWalker_9_Reroute || w->direction == DirWalker_10_Lost) {
-				w->actionState = WalkerActionState_120_RioterCreated;
-				WalkerRoute_remove(walkerId);
-			} else if (w->direction == DirWalker_11_Attack) {
+			} else if (w->direction == DirFigure_9_Reroute || w->direction == DirFigure_10_Lost) {
+				w->actionState = FigureActionState_120_RioterCreated;
+				FigureRoute_remove(walkerId);
+			} else if (w->direction == DirFigure_11_Attack) {
 				if (w->graphicOffset > 12) {
 					w->graphicOffset = 0;
 				}
@@ -121,7 +121,7 @@ void WalkerAction_rioter(int walkerId)
 			break;
 	}
 	int dir;
-	if (w->direction == DirWalker_11_Attack) {
+	if (w->direction == DirFigure_11_Attack) {
 		dir = w->attackDirection;
 	} else if (w->direction < 8) {
 		dir = w->direction;
@@ -130,17 +130,17 @@ void WalkerAction_rioter(int walkerId)
 	}
 	WalkerActionNormalizeDirection(dir);
 	
-	if (w->actionState == WalkerActionState_149_Corpse) {
-		w->graphicId = GraphicId(ID_Graphic_Walker_Criminal) +
+	if (w->actionState == FigureActionState_149_Corpse) {
+		w->graphicId = GraphicId(ID_Graphic_Figure_Criminal) +
 			96 + WalkerActionCorpseGraphicOffset(w);
-	} else if (w->direction == DirWalker_11_Attack) {
-		w->graphicId = GraphicId(ID_Graphic_Walker_Criminal) +
+	} else if (w->direction == DirFigure_11_Attack) {
+		w->graphicId = GraphicId(ID_Graphic_Figure_Criminal) +
 			104 + criminalOffsets[w->graphicOffset];
-	} else if (w->actionState == WalkerActionState_121_RioterMoving) {
-		w->graphicId = GraphicId(ID_Graphic_Walker_Criminal) +
+	} else if (w->actionState == FigureActionState_121_RioterMoving) {
+		w->graphicId = GraphicId(ID_Graphic_Figure_Criminal) +
 			dir + 8 * w->graphicOffset;
 	} else {
-		w->graphicId = GraphicId(ID_Graphic_Walker_Criminal) +
+		w->graphicId = GraphicId(ID_Graphic_Figure_Criminal) +
 			104 + criminalOffsets[w->graphicOffset / 2];
 	}
 }
@@ -175,7 +175,7 @@ int WalkerAction_Rioter_collapseBuilding(int walkerId)
 		PlayerMessage_post(0, Message_14_DestroyedBuilding, b->type, w->gridOffset);
 		Data_Message.messageCategoryCount[MessageDelay_RiotCollapse]++;
 		Building_collapseOnFire(buildingId, 0);
-		w->actionState = WalkerActionState_120_RioterCreated;
+		w->actionState = FigureActionState_120_RioterCreated;
 		w->waitTicks = 0;
 		w->direction = dir;
 		return 1;

@@ -20,13 +20,13 @@
 #include "../Data/CityInfo.h"
 #include "../Data/CityView.h"
 #include "../Data/Constants.h"
+#include "../Data/Figure.h"
 #include "../Data/Formation.h"
 #include "../Data/Grid.h"
 #include "../Data/Model.h"
 #include "../Data/Mouse.h"
 #include "../Data/Screen.h"
 #include "../Data/Settings.h"
-#include "../Data/Walker.h"
 
 static void buttonHelp(int param1, int param2);
 static void buttonExit(int param1, int param2);
@@ -255,27 +255,27 @@ void UI_BuildingInfo_init()
 	}
 	static const int walkerOffsets[] = {0, -162, 162, 1, -1, -163, -161, 161, 163};
 	for (int i = 0; i < 9 && context.walker.count < 7; i++) {
-		int walkerId = Data_Grid_walkerIds[gridOffset + walkerOffsets[i]];
+		int walkerId = Data_Grid_figureIds[gridOffset + walkerOffsets[i]];
 		while (walkerId > 0 && context.walker.count < 7) {
-			if (Data_Walkers[walkerId].state != WalkerState_Dead &&
-				Data_Walkers[walkerId].actionState != WalkerActionState_149_Corpse) {
+			if (Data_Walkers[walkerId].state != FigureState_Dead &&
+				Data_Walkers[walkerId].actionState != FigureActionState_149_Corpse) {
 				switch (Data_Walkers[walkerId].type) {
-					case Walker_None:
-					case Walker_Explosion:
-					case Walker_MapFlag:
-					case Walker_Flotsam:
-					case Walker_Arrow:
-					case Walker_Javelin:
-					case Walker_Bolt:
-					case Walker_Ballista:
-					case Walker_Creature:
-					case Walker_FishGulls:
-					case Walker_Spear:
-					case Walker_HippodromeMiniHorses:
+					case Figure_None:
+					case Figure_Explosion:
+					case Figure_MapFlag:
+					case Figure_Flotsam:
+					case Figure_Arrow:
+					case Figure_Javelin:
+					case Figure_Bolt:
+					case Figure_Ballista:
+					case Figure_Creature:
+					case Figure_FishGulls:
+					case Figure_Spear:
+					case Figure_HippodromeMiniHorses:
 						break;
 					default:
 						context.walker.walkerIds[context.walker.count++] = walkerId;
-						Walker_determinePhrase(walkerId);
+						Figure_determinePhrase(walkerId);
 						break;
 				}
 			}
@@ -289,10 +289,10 @@ void UI_BuildingInfo_init()
 			continue;
 		}
 		int type = Data_Walkers[walkerId].type;
-		if (type == Walker_FortStandard || WalkerIsLegion(type)) {
+		if (type == Figure_FortStandard || WalkerIsLegion(type)) {
 			context.type = BuildingInfoType_Legion;
 			context.formationId = Data_Walkers[walkerId].formationId;
-			if (Data_Formations[context.formationId].walkerType != Walker_FortLegionary) {
+			if (Data_Formations[context.formationId].figureType != Figure_FortLegionary) {
 				context.formationTypes = 5;
 			} else if (Data_Formations[context.formationId].hasMilitaryTraining) {
 				context.formationTypes = 4;

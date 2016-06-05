@@ -3,7 +3,7 @@
 #include "../Sound.h"
 #include "../Widget.h"
 
-#include "../Data/Walker.h"
+#include "../Data/Figure.h"
 
 void UI_BuildingInfo_drawNoPeople(BuildingInfoContext *c)
 {
@@ -44,7 +44,7 @@ void UI_BuildingInfo_drawTerrain(BuildingInfoContext *c)
 			}
 		}
 		if (c->walker.count > 0 && c->walker.walkerIds[c->walker.selectedIndex]) {
-			if (Data_Walkers[c->walker.walkerIds[c->walker.selectedIndex]].type < Walker_Shipwreck) {
+			if (Data_Walkers[c->walker.walkerIds[c->walker.selectedIndex]].type < Figure_Shipwreck) {
 				c->helpId = 42;
 			} else {
 				c->helpId = 330;
