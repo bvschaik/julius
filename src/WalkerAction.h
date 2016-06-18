@@ -1,5 +1,5 @@
-#ifndef WALKERACTION_H
-#define WALKERACTION_H
+#ifndef FIGUREACTION_H
+#define FIGUREACTION_H
 
 enum {
 	TradeShipState_None = 0,
@@ -7,112 +7,112 @@ enum {
 	TradeShipState_Selling = 2,
 };
 
-void WalkerAction_handle();
+void FigureAction_handle();
 
-int WalkerAction_Rioter_collapseBuilding(int walkerId);
+int FigureAction_Rioter_collapseBuilding(int figureId);
 
-int WalkerAction_TradeCaravan_canBuy(int walkerId, int buildingId, int empireCityId);
-int WalkerAction_TradeCaravan_canSell(int walkerId, int buildingId, int empireCityId);
+int FigureAction_TradeCaravan_canBuy(int figureId, int buildingId, int empireCityId);
+int FigureAction_TradeCaravan_canSell(int figureId, int buildingId, int empireCityId);
 
-int WalkerAction_TradeShip_isBuyingOrSelling(int walkerId);
+int FigureAction_TradeShip_isBuyingOrSelling(int figureId);
 
-void WalkerAction_TowerSentry_reroute();
-void WalkerAction_HippodromeHorse_reroute();
+void FigureAction_TowerSentry_reroute();
+void FigureAction_HippodromeHorse_reroute();
 
-int WalkerAction_HerdEnemy_moveFormationTo(int formationId, int x, int y, int *xTile, int *yTile);
+int FigureAction_HerdEnemy_moveFormationTo(int formationId, int x, int y, int *xTile, int *yTile);
 
-void WalkerAction_Common_handleCorpse(int walkerId);
-void WalkerAction_Common_handleAttack(int walkerId);
-void WalkerAction_Common_setCartOffset(int walkerId, int direction);
-void WalkerAction_Common_setCrossCountryDestination(int walkerId, struct Data_Walker *w, int xDst, int yDst);
+void FigureAction_Common_handleCorpse(int figureId);
+void FigureAction_Common_handleAttack(int figureId);
+void FigureAction_Common_setCartOffset(int figureId, int direction);
+void FigureAction_Common_setCrossCountryDestination(int figureId, struct Data_Walker *w, int xDst, int yDst);
 
-int WalkerAction_CombatSoldier_getMissileTarget(int walkerId, int maxDistance, int *xTile, int *yTile);
-int WalkerAction_CombatSoldier_getTarget(int x, int y, int maxDistance);
-int WalkerAction_CombatWolf_getTarget(int x, int y, int maxDistance);
-int WalkerAction_CombatEnemy_getTarget(int x, int y);
-int WalkerAction_CombatEnemy_getMissileTarget(int enemyId, int maxDistance, int attackCitizens, int *xTile, int *yTile);
+int FigureAction_CombatSoldier_getMissileTarget(int figureId, int maxDistance, int *xTile, int *yTile);
+int FigureAction_CombatSoldier_getTarget(int x, int y, int maxDistance);
+int FigureAction_CombatWolf_getTarget(int x, int y, int maxDistance);
+int FigureAction_CombatEnemy_getTarget(int x, int y);
+int FigureAction_CombatEnemy_getMissileTarget(int enemyId, int maxDistance, int attackCitizens, int *xTile, int *yTile);
 
-void WalkerAction_Combat_attackWalker(int walkerId, int targetWalkerId);
+void FigureAction_Combat_attackWalker(int figureId, int targetfigureId);
 
 // walker action callbacks
-void WalkerAction_nobody(int walkerId);
+void FigureAction_nobody(int figureId);
 // migrant
-void WalkerAction_immigrant(int walkerId);
-void WalkerAction_emigrant(int walkerId);
-void WalkerAction_homeless(int walkerId);
+void FigureAction_immigrant(int figureId);
+void FigureAction_emigrant(int figureId);
+void FigureAction_homeless(int figureId);
 // cartpusher
-void WalkerAction_cartpusher(int walkerId);
-void WalkerAction_warehouseman(int walkerId);
+void FigureAction_cartpusher(int figureId);
+void FigureAction_warehouseman(int figureId);
 // docker
-void WalkerAction_docker(int walkerId);
+void FigureAction_docker(int figureId);
 // service
-void WalkerAction_taxCollector(int walkerId);
-void WalkerAction_engineer(int walkerId);
-void WalkerAction_prefect(int walkerId);
-void WalkerAction_worker(int walkerId);
+void FigureAction_taxCollector(int figureId);
+void FigureAction_engineer(int figureId);
+void FigureAction_prefect(int figureId);
+void FigureAction_worker(int figureId);
 // culture/entertainer
-void WalkerAction_entertainer(int walkerId);
-void WalkerAction_priest(int walkerId);
-void WalkerAction_schoolChild(int walkerId);
-void WalkerAction_teacher(int walkerId);
-void WalkerAction_librarian(int walkerId);
-void WalkerAction_barber(int walkerId);
-void WalkerAction_bathhouseWorker(int walkerId);
-void WalkerAction_doctor(int walkerId);
-void WalkerAction_surgeon(int walkerId);
-void WalkerAction_missionary(int walkerId);
-void WalkerAction_patrician(int walkerId);
-void WalkerAction_laborSeeker(int walkerId);
-void WalkerAction_marketTrader(int walkerId);
+void FigureAction_entertainer(int figureId);
+void FigureAction_priest(int figureId);
+void FigureAction_schoolChild(int figureId);
+void FigureAction_teacher(int figureId);
+void FigureAction_librarian(int figureId);
+void FigureAction_barber(int figureId);
+void FigureAction_bathhouseWorker(int figureId);
+void FigureAction_doctor(int figureId);
+void FigureAction_surgeon(int figureId);
+void FigureAction_missionary(int figureId);
+void FigureAction_patrician(int figureId);
+void FigureAction_laborSeeker(int figureId);
+void FigureAction_marketTrader(int figureId);
 // market
-void WalkerAction_marketBuyer(int walkerId);
-void WalkerAction_deliveryBoy(int walkerId);
+void FigureAction_marketBuyer(int figureId);
+void FigureAction_deliveryBoy(int figureId);
 // trader
-void WalkerAction_tradeCaravan(int walkerId);
-void WalkerAction_tradeCaravanDonkey(int walkerId);
-void WalkerAction_tradeShip(int walkerId);
-void WalkerAction_nativeTrader(int walkerId);
+void FigureAction_tradeCaravan(int figureId);
+void FigureAction_tradeCaravanDonkey(int figureId);
+void FigureAction_tradeShip(int figureId);
+void FigureAction_nativeTrader(int figureId);
 // native
-void WalkerAction_indigenousNative(int walkerId);
+void FigureAction_indigenousNative(int figureId);
 // soldier
-void WalkerAction_soldier(int walkerId);
-void WalkerAction_militaryStandard(int walkerId);
+void FigureAction_soldier(int figureId);
+void FigureAction_militaryStandard(int figureId);
 // missile
-void WalkerAction_explosionCloud(int walkerId);
-void WalkerAction_arrow(int walkerId);
-void WalkerAction_spear(int walkerId);
-void WalkerAction_javelin(int walkerId);
-void WalkerAction_bolt(int walkerId);
+void FigureAction_explosionCloud(int figureId);
+void FigureAction_arrow(int figureId);
+void FigureAction_spear(int figureId);
+void FigureAction_javelin(int figureId);
+void FigureAction_bolt(int figureId);
 // rioter
-void WalkerAction_protestor(int walkerId);
-void WalkerAction_criminal(int walkerId);
-void WalkerAction_rioter(int walkerId);
+void FigureAction_protestor(int figureId);
+void FigureAction_criminal(int figureId);
+void FigureAction_rioter(int figureId);
 // water
-void WalkerAction_fishingBoat(int walkerId);
-void WalkerAction_flotsam(int walkerId);
-void WalkerAction_shipwreck(int walkerId);
+void FigureAction_fishingBoat(int figureId);
+void FigureAction_flotsam(int figureId);
+void FigureAction_shipwreck(int figureId);
 // wall
-void WalkerAction_ballista(int walkerId);
-void WalkerAction_towerSentry(int walkerId);
+void FigureAction_ballista(int figureId);
+void FigureAction_towerSentry(int figureId);
 // enemy
-void WalkerAction_enemy43_Spear(int walkerId);
-void WalkerAction_enemy44_Sword(int walkerId);
-void WalkerAction_enemy45_Sword(int walkerId);
-void WalkerAction_enemy46_Camel(int walkerId);
-void WalkerAction_enemy47_Elephant(int walkerId);
-void WalkerAction_enemy48_Chariot(int walkerId);
-void WalkerAction_enemy49_FastSword(int walkerId);
-void WalkerAction_enemy50_Sword(int walkerId);
-void WalkerAction_enemy51_Spear(int walkerId);
-void WalkerAction_enemy52_MountedArcher(int walkerId);
-void WalkerAction_enemy53_Axe(int walkerId);
-void WalkerAction_enemy54_Gladiator(int walkerId);
-void WalkerAction_enemyCaesarLegionary(int walkerId);
+void FigureAction_enemy43_Spear(int figureId);
+void FigureAction_enemy44_Sword(int figureId);
+void FigureAction_enemy45_Sword(int figureId);
+void FigureAction_enemy46_Camel(int figureId);
+void FigureAction_enemy47_Elephant(int figureId);
+void FigureAction_enemy48_Chariot(int figureId);
+void FigureAction_enemy49_FastSword(int figureId);
+void FigureAction_enemy50_Sword(int figureId);
+void FigureAction_enemy51_Spear(int figureId);
+void FigureAction_enemy52_MountedArcher(int figureId);
+void FigureAction_enemy53_Axe(int figureId);
+void FigureAction_enemy54_Gladiator(int figureId);
+void FigureAction_enemyCaesarLegionary(int figureId);
 // animal
-void WalkerAction_seagulls(int walkerId);
-void WalkerAction_sheep(int walkerId);
-void WalkerAction_wolf(int walkerId);
-void WalkerAction_zebra(int walkerId);
-void WalkerAction_hippodromeHorse(int walkerId);
+void FigureAction_seagulls(int figureId);
+void FigureAction_sheep(int figureId);
+void FigureAction_wolf(int figureId);
+void FigureAction_zebra(int figureId);
+void FigureAction_hippodromeHorse(int figureId);
 
 #endif

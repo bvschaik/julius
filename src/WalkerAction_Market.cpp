@@ -1,4 +1,4 @@
-#include "WalkerAction_private.h"
+#include "FigureAction_private.h"
 
 #include "Resource.h"
 #include "Walker.h"
@@ -92,7 +92,7 @@ static int marketBuyerTakeResourceFromWarehouse(int walkerId, int marketId, int 
 	return 1;
 }
 
-void WalkerAction_marketBuyer(int walkerId)
+void FigureAction_marketBuyer(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	w->terrainUsage = FigureTerrainUsage_Roads;
@@ -102,16 +102,16 @@ void WalkerAction_marketBuyer(int walkerId)
 	if (!BuildingIsInUse(w->buildingId) || Data_Buildings[w->buildingId].walkerId2 != walkerId) {
 		w->state = FigureState_Dead;
 	}
-	WalkerActionIncreaseGraphicOffset(w, 12);
+	FigureActionIncreaseGraphicOffset(w, 12);
 	switch (w->actionState) {
 		case FigureActionState_150_Attack:
-			WalkerAction_Common_handleAttack(walkerId);
+			FigureAction_Common_handleAttack(walkerId);
 			break;
 		case FigureActionState_149_Corpse:
-			WalkerAction_Common_handleCorpse(walkerId);
+			FigureAction_Common_handleCorpse(walkerId);
 			break;
 		case FigureActionState_145_MarketBuyerGoingToStorage:
-			WalkerMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(walkerId, 1);
 			if (w->direction == DirFigure_8_AtDestination) {
 				if (w->collectingItemId > 3) {
 					if (!marketBuyerTakeResourceFromWarehouse(walkerId, w->buildingId, w->destinationBuildingId)) {
@@ -133,7 +133,7 @@ void WalkerAction_marketBuyer(int walkerId)
 			}
 			break;
 		case FigureActionState_146_MarketBuyerReturning:
-			WalkerMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(walkerId, 1);
 			if (w->direction == DirFigure_8_AtDestination || w->direction == DirFigure_10_Lost) {
 				w->state = FigureState_Dead;
 			} else if (w->direction == DirFigure_9_Reroute) {
@@ -144,12 +144,12 @@ void WalkerAction_marketBuyer(int walkerId)
 	WalkerActionUpdateGraphic(w, GraphicId(ID_Graphic_Figure_MarketLady));
 }
 
-void WalkerAction_deliveryBoy(int walkerId)
+void FigureAction_deliveryBoy(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	w->isGhost = 0;
 	w->terrainUsage = FigureTerrainUsage_Roads;
-	WalkerActionIncreaseGraphicOffset(w, 12);
+	FigureActionIncreaseGraphicOffset(w, 12);
 	w->cartGraphicId = 0;
 	
 	struct Data_Walker *leader = &Data_Walkers[w->inFrontWalkerId];
@@ -158,7 +158,7 @@ void WalkerAction_deliveryBoy(int walkerId)
 	} else {
 		if (leader->state == FigureState_Alive) {
 			if (leader->type == Figure_MarketBuyer || leader->type == Figure_DeliveryBoy) {
-				WalkerMovement_followTicks(walkerId, w->inFrontWalkerId, 1);
+				FigureMovement_followTicks(walkerId, w->inFrontWalkerId, 1);
 			} else {
 				w->state = FigureState_Dead;
 			}

@@ -1,11 +1,11 @@
-#include "WalkerAction_private.h"
+#include "FigureAction_private.h"
 
 #include "Building.h"
+#include "FigureMovement.h"
 #include "Formation.h"
 #include "PlayerMessage.h"
 #include "Time.h"
 #include "Walker.h"
-#include "WalkerMovement.h"
 
 #include "Data/CityInfo.h"
 #include "Data/Grid.h"
@@ -15,11 +15,11 @@ static const int criminalOffsets[] = {
 	0, 0, 1, 2, 3, 4, 5, 6, 7, 7, 6, 5, 4, 3, 2, 1
 };
 
-void WalkerAction_protestor(int walkerId)
+void FigureAction_protestor(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	w->terrainUsage = FigureTerrainUsage_Roads;
-	WalkerActionIncreaseGraphicOffset(w, 64);
+	FigureActionIncreaseGraphicOffset(w, 64);
 	w->cartGraphicId = 0;
 	if (w->actionState == FigureActionState_149_Corpse) {
 		w->state = FigureState_Dead;
@@ -38,11 +38,11 @@ void WalkerAction_protestor(int walkerId)
 	}
 }
 
-void WalkerAction_criminal(int walkerId)
+void FigureAction_criminal(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	w->terrainUsage = FigureTerrainUsage_Roads;
-	WalkerActionIncreaseGraphicOffset(w, 32);
+	FigureActionIncreaseGraphicOffset(w, 32);
 	w->cartGraphicId = 0;
 	if (w->actionState == FigureActionState_149_Corpse) {
 		w->state = FigureState_Dead;
@@ -61,7 +61,7 @@ void WalkerAction_criminal(int walkerId)
 	}
 }
 
-void WalkerAction_rioter(int walkerId)
+void FigureAction_rioter(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	Data_CityInfo.numRiotersInCity++;
@@ -74,13 +74,13 @@ void WalkerAction_rioter(int walkerId)
 	w->isGhost = 0;
 	switch (w->actionState) {
 		case FigureActionState_150_Attack:
-			WalkerAction_Common_handleAttack(walkerId);
+			FigureAction_Common_handleAttack(walkerId);
 			break;
 		case FigureActionState_149_Corpse:
-			WalkerAction_Common_handleCorpse(walkerId);
+			FigureAction_Common_handleCorpse(walkerId);
 			break;
 		case FigureActionState_120_RioterCreated:
-			WalkerActionIncreaseGraphicOffset(w, 32);
+			FigureActionIncreaseGraphicOffset(w, 32);
 			w->waitTicks++;
 			if (w->waitTicks >= 160) {
 				w->actionState = FigureActionState_121_RioterMoving;
@@ -97,8 +97,8 @@ void WalkerAction_rioter(int walkerId)
 			}
 			break;
 		case FigureActionState_121_RioterMoving:
-			WalkerActionIncreaseGraphicOffset(w, 12);
-			WalkerMovement_walkTicks(walkerId, 1);
+			FigureActionIncreaseGraphicOffset(w, 12);
+			FigureMovement_walkTicks(walkerId, 1);
 			if (w->direction == DirFigure_8_AtDestination) {
 				int xTile, yTile;
 				int buildingId = Formation_Rioter_getTargetBuilding(&xTile, &yTile);
@@ -145,7 +145,7 @@ void WalkerAction_rioter(int walkerId)
 	}
 }
 
-int WalkerAction_Rioter_collapseBuilding(int walkerId)
+int FigureAction_Rioter_collapseBuilding(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	for (int dir = 0; dir < 8; dir += 2) {

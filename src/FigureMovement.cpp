@@ -1,4 +1,4 @@
-#include "WalkerMovement.h"
+#include "FigureMovement.h"
 
 #include "Building.h"
 #include "Routing.h"
@@ -14,9 +14,9 @@
 #include "Data/Settings.h"
 #include "Data/Figure.h"
 
-static void WalkerMovement_walkTicksInternal(int walkerId, int numTicks, int roamingEnabled);
+static void FigureMovement_walkTicksInternal(int walkerId, int numTicks, int roamingEnabled);
 
-void WalkerMovement_advanceTick(struct Data_Walker *w)
+void FigureMovement_advanceTick(struct Data_Walker *w)
 {
 	switch (w->direction) {
 		case Dir_0_Top:
@@ -140,12 +140,12 @@ static void walkerMoveToNextTile(int walkerId, struct Data_Walker *w)
 	} else {
 		w->isOnRoad = 0;
 	}
-	WalkerAction_Combat_attackWalker(walkerId, Data_Grid_figureIds[w->gridOffset]);
+	FigureAction_Combat_attackWalker(walkerId, Data_Grid_figureIds[w->gridOffset]);
 	w->previousTileX = oldX;
 	w->previousTileY = oldY;
 }
 
-void WalkerMovement_initRoaming(int walkerId)
+void FigureMovement_initRoaming(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	struct Data_Building *b = &Data_Buildings[w->buildingId];
@@ -215,11 +215,11 @@ static void roamSetDirection(struct Data_Walker *w)
 	w->roamTicksUntilNextTurn = 5;
 }
 
-void WalkerMovement_roamTicks(int walkerId, int numTicks)
+void FigureMovement_roamTicks(int walkerId, int numTicks)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	if (w->roamChooseDestination == 0) {
-		WalkerMovement_walkTicksInternal(walkerId, numTicks, 1);
+		FigureMovement_walkTicksInternal(walkerId, numTicks, 1);
 		if (w->direction == DirFigure_8_AtDestination) {
 			w->roamChooseDestination = 1;
 			w->roamLength = 0;
@@ -238,7 +238,7 @@ void WalkerMovement_roamTicks(int walkerId, int numTicks)
 		numTicks--;
 		w->progressOnTile++;
 		if (w->progressOnTile < 15) {
-			WalkerMovement_advanceTick(w);
+			FigureMovement_advanceTick(w);
 		} else {
 			w->progressOnTile = 15;
 			w->roamRandomCounter++;
@@ -322,7 +322,7 @@ void WalkerMovement_roamTicks(int walkerId, int numTicks)
 			w->previousTileDirection = w->direction;
 			w->progressOnTile = 0;
 			walkerMoveToNextTile(walkerId, w);
-			WalkerMovement_advanceTick(w);
+			FigureMovement_advanceTick(w);
 		}
 	}
 }
@@ -413,14 +413,14 @@ static void walkerAdvanceRouteTile(struct Data_Walker *w, int roamingEnabled)
 	}
 }
 
-static void WalkerMovement_walkTicksInternal(int walkerId, int numTicks, int roamingEnabled)
+static void FigureMovement_walkTicksInternal(int walkerId, int numTicks, int roamingEnabled)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	while (numTicks > 0) {
 		numTicks--;
 		w->progressOnTile++;
 		if (w->progressOnTile < 15) {
-			WalkerMovement_advanceTick(w);
+			FigureMovement_advanceTick(w);
 		} else {
 			Figure_provideServiceCoverage(walkerId);
 			w->progressOnTile = 15;
@@ -436,17 +436,17 @@ static void WalkerMovement_walkTicksInternal(int walkerId, int numTicks, int roa
 			w->previousTileDirection = w->direction;
 			w->progressOnTile = 0;
 			walkerMoveToNextTile(walkerId, w);
-			WalkerMovement_advanceTick(w);
+			FigureMovement_advanceTick(w);
 		}
 	}
 }
 
-void WalkerMovement_walkTicks(int walkerId, int numTicks)
+void FigureMovement_walkTicks(int walkerId, int numTicks)
 {
-	WalkerMovement_walkTicksInternal(walkerId, numTicks, 0);
+	FigureMovement_walkTicksInternal(walkerId, numTicks, 0);
 }
 
-void WalkerMovement_followTicks(int walkerId, int leaderWalkerId, int numTicks)
+void FigureMovement_followTicks(int walkerId, int leaderWalkerId, int numTicks)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	if (w->x == w->sourceX && w->y == w->sourceY) {
@@ -456,7 +456,7 @@ void WalkerMovement_followTicks(int walkerId, int leaderWalkerId, int numTicks)
 		numTicks--;
 		w->progressOnTile++;
 		if (w->progressOnTile < 15) {
-			WalkerMovement_advanceTick(w);
+			FigureMovement_advanceTick(w);
 		} else {
 			w->progressOnTile = 15;
 			w->direction = Routing_getGeneralDirection(w->x, w->y,
@@ -468,26 +468,26 @@ void WalkerMovement_followTicks(int walkerId, int leaderWalkerId, int numTicks)
 			w->previousTileDirection = w->direction;
 			w->progressOnTile = 0;
 			walkerMoveToNextTile(walkerId, w);
-			WalkerMovement_advanceTick(w);
+			FigureMovement_advanceTick(w);
 		}
 	}
 }
 
-void WalkerMovement_walkTicksTowerSentry(int walkerId, int numTicks)
+void FigureMovement_walkTicksTowerSentry(int walkerId, int numTicks)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	while (numTicks > 0) {
 		numTicks--;
 		w->progressOnTile++;
 		if (w->progressOnTile < 15) {
-			WalkerMovement_advanceTick(w);
+			FigureMovement_advanceTick(w);
 		} else {
 			w->progressOnTile = 15;
 		}
 	}
 }
 
-void WalkerMovement_crossCountrySetDirection(int walkerId, int xSrc, int ySrc, int xDst, int yDst, int isMissile)
+void FigureMovement_crossCountrySetDirection(int walkerId, int xSrc, int ySrc, int xDst, int yDst, int isMissile)
 {
 	// all x/y are in 1/15th of a tile
 	struct Data_Walker *w = &Data_Walkers[walkerId];
@@ -581,7 +581,7 @@ static void crossCountryAdvance(struct Data_Walker *w)
 	}
 }
 
-int WalkerMovement_crossCountryWalkTicks(int walkerId, int numTicks)
+int FigureMovement_crossCountryWalkTicks(int walkerId, int numTicks)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	Figure_removeFromTileList(walkerId);
@@ -611,7 +611,7 @@ int WalkerMovement_crossCountryWalkTicks(int walkerId, int numTicks)
 	return isAtDestination;
 }
 
-int WalkerMovement_canLaunchCrossCountryMissile(int xSrc, int ySrc, int xDst, int yDst)
+int FigureMovement_canLaunchCrossCountryMissile(int xSrc, int ySrc, int xDst, int yDst)
 {
 	int height = 0;
 	struct Data_Walker *w = &Data_Walkers[0];
@@ -620,7 +620,7 @@ int WalkerMovement_canLaunchCrossCountryMissile(int xSrc, int ySrc, int xDst, in
 	if (Data_Grid_terrain[GridOffset(xSrc, ySrc)] & Terrain_WallOrGatehouse) {
 		height = 6;
 	}
-	WalkerMovement_crossCountrySetDirection(0, 15 * xSrc, 15 * ySrc, 15 * xDst, 15 * yDst, 0);
+	FigureMovement_crossCountrySetDirection(0, 15 * xSrc, 15 * ySrc, 15 * xDst, 15 * yDst, 0);
 
 	for (int guard = 0; guard < 1000; guard++) {
 		for (int i = 0; i < 8; i++) {

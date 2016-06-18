@@ -1,4 +1,4 @@
-#include "WalkerAction_private.h"
+#include "FigureAction_private.h"
 
 #include "Routing.h"
 #include "Walker.h"
@@ -40,31 +40,31 @@ enum {
 	HippodromeHorse_Finished = 2
 };
 
-void WalkerAction_seagulls(int walkerId)
+void FigureAction_seagulls(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	w->terrainUsage = FigureTerrainUsage_Any;
 	w->isGhost = 0;
 	w->useCrossCountry = 1;
-	if (!(w->graphicOffset & 3) && WalkerMovement_crossCountryWalkTicks(walkerId, 1)) {
+	if (!(w->graphicOffset & 3) && FigureMovement_crossCountryWalkTicks(walkerId, 1)) {
 		w->progressOnTile++;
 		if (w->progressOnTile > 8) {
 			w->progressOnTile = 0;
 		}
-		WalkerAction_Common_setCrossCountryDestination(walkerId, w,
+		FigureAction_Common_setCrossCountryDestination(walkerId, w,
 			w->sourceX + seagullOffsetsX[w->progressOnTile],
 			w->sourceY + seagullOffsetsY[w->progressOnTile]);
 	}
 	if (walkerId & 1) {
-		WalkerActionIncreaseGraphicOffset(w, 54);
+		FigureActionIncreaseGraphicOffset(w, 54);
 		w->graphicId = GraphicId(ID_Graphic_Figure_Seagulls) + w->graphicOffset / 3;
 	} else {
-		WalkerActionIncreaseGraphicOffset(w, 72);
+		FigureActionIncreaseGraphicOffset(w, 72);
 		w->graphicId = GraphicId(ID_Graphic_Figure_Seagulls) + 18 + w->graphicOffset / 3;
 	}
 }
 
-void WalkerAction_sheep(int walkerId)
+void FigureAction_sheep(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	struct Data_Formation *f = &Data_Formations[w->formationId];
@@ -72,14 +72,14 @@ void WalkerAction_sheep(int walkerId)
 	w->useCrossCountry = 0;
 	w->isGhost = 0;
 	Data_CityInfo.numAnimalsInCity++;
-	WalkerActionIncreaseGraphicOffset(w, 6);
+	FigureActionIncreaseGraphicOffset(w, 6);
 
 	switch (w->actionState) {
 		case FigureActionState_150_Attack:
-			WalkerAction_Common_handleAttack(walkerId);
+			FigureAction_Common_handleAttack(walkerId);
 			break;
 		case FigureActionState_149_Corpse:
-			WalkerAction_Common_handleCorpse(walkerId);
+			FigureAction_Common_handleCorpse(walkerId);
 			break;
 		case FigureActionState_196_HerdAnimalAtRest:
 			w->waitTicks++;
@@ -92,7 +92,7 @@ void WalkerAction_sheep(int walkerId)
 			}
 			break;
 		case FigureActionState_197_HerdAnimalMoving:
-			WalkerMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(walkerId, 1);
 			if (w->direction == DirFigure_8_AtDestination || w->direction == DirFigure_10_Lost) {
 				w->direction = w->previousTileDirection;
 				w->actionState = FigureActionState_196_HerdAnimalAtRest;
@@ -118,7 +118,7 @@ void WalkerAction_sheep(int walkerId)
 	}
 }
 
-void WalkerAction_wolf(int walkerId)
+void FigureAction_wolf(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	struct Data_Formation *f = &Data_Formations[w->formationId];
@@ -126,14 +126,14 @@ void WalkerAction_wolf(int walkerId)
 	w->useCrossCountry = 0;
 	w->isGhost = 0;
 	Data_CityInfo.numAnimalsInCity++;
-	WalkerActionIncreaseGraphicOffset(w, 12);
+	FigureActionIncreaseGraphicOffset(w, 12);
 
 	switch (w->actionState) {
 		case FigureActionState_150_Attack:
-			WalkerAction_Common_handleAttack(walkerId);
+			FigureAction_Common_handleAttack(walkerId);
 			break;
 		case FigureActionState_149_Corpse:
-			WalkerAction_Common_handleCorpse(walkerId);
+			FigureAction_Common_handleCorpse(walkerId);
 			break;
 		case FigureActionState_196_HerdAnimalAtRest:
 			w->waitTicks++;
@@ -146,7 +146,7 @@ void WalkerAction_wolf(int walkerId)
 			}
 			break;
 		case FigureActionState_197_HerdAnimalMoving:
-			WalkerMovement_walkTicks(walkerId, 2);
+			FigureMovement_walkTicks(walkerId, 2);
 			if (w->direction == DirFigure_8_AtDestination || w->direction == DirFigure_10_Lost) {
 				w->direction = w->previousTileDirection;
 				w->actionState = FigureActionState_196_HerdAnimalAtRest;
@@ -156,9 +156,9 @@ void WalkerAction_wolf(int walkerId)
 			}
 			break;
 		case FigureActionState_199_WolfAttacking:
-			WalkerMovement_walkTicks(walkerId, 2);
+			FigureMovement_walkTicks(walkerId, 2);
 			if (w->direction == DirFigure_8_AtDestination) {
-				int targetId = WalkerAction_CombatWolf_getTarget(w->x, w->y, 6);
+				int targetId = FigureAction_CombatWolf_getTarget(w->x, w->y, 6);
 				if (targetId) {
 					w->destinationX = Data_Walkers[targetId].x;
 					w->destinationY = Data_Walkers[targetId].y;
@@ -194,7 +194,7 @@ void WalkerAction_wolf(int walkerId)
 	}
 }
 
-void WalkerAction_zebra(int walkerId)
+void FigureAction_zebra(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	struct Data_Formation *f = &Data_Formations[w->formationId];
@@ -202,14 +202,14 @@ void WalkerAction_zebra(int walkerId)
 	w->useCrossCountry = 0;
 	w->isGhost = 0;
 	Data_CityInfo.numAnimalsInCity++;
-	WalkerActionIncreaseGraphicOffset(w, 12);
+	FigureActionIncreaseGraphicOffset(w, 12);
 
 	switch (w->actionState) {
 		case FigureActionState_150_Attack:
-			WalkerAction_Common_handleAttack(walkerId);
+			FigureAction_Common_handleAttack(walkerId);
 			break;
 		case FigureActionState_149_Corpse:
-			WalkerAction_Common_handleCorpse(walkerId);
+			FigureAction_Common_handleCorpse(walkerId);
 			break;
 		case FigureActionState_196_HerdAnimalAtRest:
 			w->waitTicks++;
@@ -222,7 +222,7 @@ void WalkerAction_zebra(int walkerId)
 			}
 			break;
 		case FigureActionState_197_HerdAnimalMoving:
-			WalkerMovement_walkTicks(walkerId, 2);
+			FigureMovement_walkTicks(walkerId, 2);
 			if (w->direction == DirFigure_8_AtDestination || w->direction == DirFigure_10_Lost) {
 				w->direction = w->previousTileDirection;
 				w->actionState = FigureActionState_196_HerdAnimalAtRest;
@@ -293,13 +293,13 @@ static void setDestinationHippodromeHorse(int walkerId, struct Data_Walker *w, i
 	}
 }
 
-void WalkerAction_hippodromeHorse(int walkerId)
+void FigureAction_hippodromeHorse(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	Data_CityInfo.entertainmentHippodromeHasShow = 1;
 	w->useCrossCountry = 1;
 	w->isGhost = 0;
-	WalkerActionIncreaseGraphicOffset(w, 8);
+	FigureActionIncreaseGraphicOffset(w, 8);
 
 	switch (w->actionState) {
 		case FigureActionState_200_HippodromeMiniHorseCreated:
@@ -342,22 +342,22 @@ void WalkerAction_hippodromeHorse(int walkerId)
 				}
 				setDestinationHippodromeHorse(walkerId, w, HippodromeHorse_Racing);
 				w->direction = Routing_getGeneralDirection(w->x, w->y, w->destinationX, w->destinationY);
-				WalkerMovement_crossCountrySetDirection(walkerId,
+				FigureMovement_crossCountrySetDirection(walkerId,
 					w->crossCountryX, w->crossCountryY, 15 * w->destinationX, 15 * w->destinationY, 0);
 			}
 			if (w->actionState != FigureActionState_202_HippodromeMiniHorseDone) {
-				WalkerMovement_crossCountryWalkTicks(walkerId, w->speedMultiplier);
+				FigureMovement_crossCountryWalkTicks(walkerId, w->speedMultiplier);
 			}
 			break;
 		case FigureActionState_202_HippodromeMiniHorseDone:
 			if (!w->waitTicks) {
 				setDestinationHippodromeHorse(walkerId, w, HippodromeHorse_Finished);
 				w->direction = Routing_getGeneralDirection(w->x, w->y, w->destinationX, w->destinationY);
-				WalkerMovement_crossCountrySetDirection(walkerId,
+				FigureMovement_crossCountrySetDirection(walkerId,
 					w->crossCountryX, w->crossCountryY, 15 * w->destinationX, 15 * w->destinationY, 0);
 			}
 			if (w->direction != DirFigure_8_AtDestination) {
-				WalkerMovement_crossCountryWalkTicks(walkerId, 1);
+				FigureMovement_crossCountryWalkTicks(walkerId, 1);
 			}
 			w->waitTicks++;
 			if (w->waitTicks > 30) {
@@ -381,10 +381,10 @@ void WalkerAction_hippodromeHorse(int walkerId)
 		w->cartGraphicId = GraphicId(ID_Graphic_Figure_HippodromeCart2) + dir;
 	}
 	int cartDir = (dir + 4) % 8;
-	WalkerAction_Common_setCartOffset(walkerId, cartDir);
+	FigureAction_Common_setCartOffset(walkerId, cartDir);
 }
 
-void WalkerAction_HippodromeHorse_reroute()
+void FigureAction_HippodromeHorse_reroute()
 {
 	if (!Data_CityInfo.entertainmentHippodromeHasShow) {
 		return;

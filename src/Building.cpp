@@ -452,7 +452,7 @@ void Building_destroyByEnemy(int x, int y, int gridOffset)
 		}
 		TerrainGraphics_setBuildingAreaRubble(0, x, y, 1);
 	}
-	WalkerAction_TowerSentry_reroute();
+	FigureAction_TowerSentry_reroute();
 	TerrainGraphics_updateAreaWalls(x, y, 3);
 	TerrainGraphics_updateRegionAqueduct(x - 2, y - 2, x + 2, y + 2, 0);
 	Routing_determineLandCitizen();

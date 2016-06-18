@@ -1,12 +1,12 @@
 #include "Formation.h"
 
 #include "Calc.h"
+#include "FigureMovement.h"
 #include "Random.h"
 #include "Routing.h"
 #include "Sound.h"
 #include "Util.h"
 #include "Walker.h"
-#include "WalkerMovement.h"
 #include "UI/Warning.h"
 
 #include "Data/Building.h"
@@ -364,16 +364,16 @@ void Formation_calculateWalkers()
 		if (Data_Walkers[i].state != FigureState_Alive) {
 			continue;
 		}
-		int wtype = Data_Walkers[i].type;
-		if (!WalkerIsLegion(wtype) && !WalkerIsEnemy(wtype) && !WalkerIsHerd(wtype)) {
+		int figtype = Data_Walkers[i].type;
+		if (!WalkerIsLegion(figtype) && !WalkerIsEnemy(figtype) && !WalkerIsHerd(figtype)) {
 			continue;
 		}
-		if (wtype == Figure_Enemy54_Gladiator) {
+		if (figtype == Figure_Enemy54_Gladiator) {
 			continue;
 		}
 		int formationId = Data_Walkers[i].formationId;
 		Data_Formations[formationId].numFigures++;
-		Data_Formations[formationId].maxTotalDamage += Constant_WalkerProperties[wtype].maxDamage;
+		Data_Formations[formationId].maxTotalDamage += Constant_FigureProperties[figtype].maxDamage;
 		Data_Formations[formationId].totalDamage += Data_Walkers[i].damage;
 		if (Data_Walkers[i].formationAtRest != 1) {
 			Data_Formations[formationId].isAtFort = 0;

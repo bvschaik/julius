@@ -10,7 +10,7 @@
 
 #include <string.h>
 
-static char walkerSounds[32][20][32] = {
+static char figureSounds[32][20][32] = {
 { // 0
 	"vigils_starv1.wav", "vigils_nojob1.wav", "vigils_needjob1.wav", "vigils_nofun1.wav",
 	"vigils_relig1.wav", "vigils_great1.wav", "vigils_great2.wav", "vigils_exact1.wav",
@@ -433,9 +433,9 @@ int Figure_determinePhrase(int walkerId)
 					phraseId = 7; // no trade
 				}
 			} else if (w->actionState == FigureActionState_102_TradeCaravanTrading) {
-				if (WalkerAction_TradeCaravan_canBuy(walkerId, w->destinationBuildingId, w->empireCityId)) {
+				if (FigureAction_TradeCaravan_canBuy(walkerId, w->destinationBuildingId, w->empireCityId)) {
 					phraseId = 11; // buying goods
-				} else if (WalkerAction_TradeCaravan_canSell(walkerId, w->destinationBuildingId, w->empireCityId)) {
+				} else if (FigureAction_TradeCaravan_canSell(walkerId, w->destinationBuildingId, w->empireCityId)) {
 					phraseId = 10; // selling goods
 				}
 			}
@@ -449,7 +449,7 @@ int Figure_determinePhrase(int walkerId)
 					phraseId = 11; // good trade
 				}
 			} else if (w->actionState == FigureActionState_112_TradeShipMoored) {
-				int state = WalkerAction_TradeShip_isBuyingOrSelling(walkerId);
+				int state = FigureAction_TradeShip_isBuyingOrSelling(walkerId);
 				if (state == TradeShipState_Buying) {
 					phraseId = 8; // buying goods
 				} else if (state == TradeShipState_Selling) {
@@ -526,7 +526,7 @@ static void playWalkerSoundFile(int walkerSoundId, int phraseId)
 	char path[32];
 	if (walkerSoundId >= 0 && phraseId >= 0) {
 		strcpy(path, "wavs/");
-		strcat(path, walkerSounds[walkerSoundId][phraseId]);
+		strcat(path, figureSounds[walkerSoundId][phraseId]);
 		Sound_Speech_playFile(path);
 	}
 }

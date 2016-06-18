@@ -44,7 +44,7 @@ void GameTick_doTick()
 	Random_generateNext();
 	Undo_updateAvailable();
 	GameTick_advance();
-	WalkerAction_handle();
+	FigureAction_handle();
 	Event_handleEarthquake();
 	Event_handleGladiatorRevolt();
 	Event_handleEmperorChange();

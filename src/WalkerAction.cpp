@@ -1,92 +1,92 @@
-#include "WalkerAction_private.h"
+#include "FigureAction_private.h"
 
 #include "Walker.h"
 #include "Data/CityInfo.h"
 
 static void (*walkerActionCallbacks[])(int walkerId) = {
-	WalkerAction_nobody, //0
-	WalkerAction_immigrant,
-	WalkerAction_emigrant,
-	WalkerAction_homeless,
-	WalkerAction_cartpusher,
-	WalkerAction_laborSeeker,
-	WalkerAction_explosionCloud,
-	WalkerAction_taxCollector,
-	WalkerAction_engineer,
-	WalkerAction_warehouseman,
-	WalkerAction_prefect, //10
-	WalkerAction_soldier,
-	WalkerAction_soldier,
-	WalkerAction_soldier,
-	WalkerAction_militaryStandard,
-	WalkerAction_entertainer,
-	WalkerAction_entertainer,
-	WalkerAction_entertainer,
-	WalkerAction_entertainer,
-	WalkerAction_tradeCaravan,
-	WalkerAction_tradeShip, //20
-	WalkerAction_tradeCaravanDonkey,
-	WalkerAction_protestor,
-	WalkerAction_criminal,
-	WalkerAction_rioter,
-	WalkerAction_fishingBoat,
-	WalkerAction_marketTrader,
-	WalkerAction_priest,
-	WalkerAction_schoolChild,
-	WalkerAction_teacher,
-	WalkerAction_librarian, //30
-	WalkerAction_barber,
-	WalkerAction_bathhouseWorker,
-	WalkerAction_doctor,
-	WalkerAction_surgeon,
-	WalkerAction_worker,
-	WalkerAction_nobody, // mapFlag: editor only
-	WalkerAction_flotsam,
-	WalkerAction_docker,
-	WalkerAction_marketBuyer,
-	WalkerAction_patrician, //40
-	WalkerAction_indigenousNative,
-	WalkerAction_towerSentry,
-	WalkerAction_enemy43_Spear,
-	WalkerAction_enemy44_Sword,
-	WalkerAction_enemy45_Sword,
-	WalkerAction_enemy46_Camel,
-	WalkerAction_enemy47_Elephant,
-	WalkerAction_enemy48_Chariot,
-	WalkerAction_enemy49_FastSword,
-	WalkerAction_enemy50_Sword, //50
-	WalkerAction_enemy51_Spear,
-	WalkerAction_enemy52_MountedArcher,
-	WalkerAction_enemy53_Axe,
-	WalkerAction_enemy54_Gladiator,
-	WalkerAction_nobody,
-	WalkerAction_nobody,
-	WalkerAction_enemyCaesarLegionary,
-	WalkerAction_nativeTrader,
-	WalkerAction_arrow,
-	WalkerAction_javelin, //60
-	WalkerAction_bolt,
-	WalkerAction_ballista,
-	WalkerAction_nobody,
-	WalkerAction_missionary,
-	WalkerAction_seagulls,
-	WalkerAction_deliveryBoy,
-	WalkerAction_shipwreck,
-	WalkerAction_sheep,
-	WalkerAction_wolf,
-	WalkerAction_zebra, //70
-	WalkerAction_spear,
-	WalkerAction_hippodromeHorse,
-	WalkerAction_nobody,
-	WalkerAction_nobody,
-	WalkerAction_nobody,
-	WalkerAction_nobody,
-	WalkerAction_nobody,
-	WalkerAction_nobody,
-	WalkerAction_nobody
+	FigureAction_nobody, //0
+	FigureAction_immigrant,
+	FigureAction_emigrant,
+	FigureAction_homeless,
+	FigureAction_cartpusher,
+	FigureAction_laborSeeker,
+	FigureAction_explosionCloud,
+	FigureAction_taxCollector,
+	FigureAction_engineer,
+	FigureAction_warehouseman,
+	FigureAction_prefect, //10
+	FigureAction_soldier,
+	FigureAction_soldier,
+	FigureAction_soldier,
+	FigureAction_militaryStandard,
+	FigureAction_entertainer,
+	FigureAction_entertainer,
+	FigureAction_entertainer,
+	FigureAction_entertainer,
+	FigureAction_tradeCaravan,
+	FigureAction_tradeShip, //20
+	FigureAction_tradeCaravanDonkey,
+	FigureAction_protestor,
+	FigureAction_criminal,
+	FigureAction_rioter,
+	FigureAction_fishingBoat,
+	FigureAction_marketTrader,
+	FigureAction_priest,
+	FigureAction_schoolChild,
+	FigureAction_teacher,
+	FigureAction_librarian, //30
+	FigureAction_barber,
+	FigureAction_bathhouseWorker,
+	FigureAction_doctor,
+	FigureAction_surgeon,
+	FigureAction_worker,
+	FigureAction_nobody, // mapFlag: editor only
+	FigureAction_flotsam,
+	FigureAction_docker,
+	FigureAction_marketBuyer,
+	FigureAction_patrician, //40
+	FigureAction_indigenousNative,
+	FigureAction_towerSentry,
+	FigureAction_enemy43_Spear,
+	FigureAction_enemy44_Sword,
+	FigureAction_enemy45_Sword,
+	FigureAction_enemy46_Camel,
+	FigureAction_enemy47_Elephant,
+	FigureAction_enemy48_Chariot,
+	FigureAction_enemy49_FastSword,
+	FigureAction_enemy50_Sword, //50
+	FigureAction_enemy51_Spear,
+	FigureAction_enemy52_MountedArcher,
+	FigureAction_enemy53_Axe,
+	FigureAction_enemy54_Gladiator,
+	FigureAction_nobody,
+	FigureAction_nobody,
+	FigureAction_enemyCaesarLegionary,
+	FigureAction_nativeTrader,
+	FigureAction_arrow,
+	FigureAction_javelin, //60
+	FigureAction_bolt,
+	FigureAction_ballista,
+	FigureAction_nobody,
+	FigureAction_missionary,
+	FigureAction_seagulls,
+	FigureAction_deliveryBoy,
+	FigureAction_shipwreck,
+	FigureAction_sheep,
+	FigureAction_wolf,
+	FigureAction_zebra, //70
+	FigureAction_spear,
+	FigureAction_hippodromeHorse,
+	FigureAction_nobody,
+	FigureAction_nobody,
+	FigureAction_nobody,
+	FigureAction_nobody,
+	FigureAction_nobody,
+	FigureAction_nobody,
+	FigureAction_nobody
 }; //80
 
-void WalkerAction_handle()
+void FigureAction_handle()
 {
 	Data_CityInfo.numEnemiesInCity = 0;
 	Data_CityInfo.numRiotersInCity = 0;
@@ -117,6 +117,6 @@ void WalkerAction_handle()
 	}
 }
 
-void WalkerAction_nobody(int walkerId)
+void FigureAction_nobody(int walkerId)
 {
 }

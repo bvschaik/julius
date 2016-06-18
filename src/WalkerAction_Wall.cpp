@@ -1,4 +1,4 @@
-#include "WalkerAction_private.h"
+#include "FigureAction_private.h"
 
 #include "Routing.h"
 #include "Sound.h"
@@ -31,7 +31,7 @@ static int towerSentryFiringOffsets[] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
 
-void WalkerAction_ballista(int walkerId)
+void FigureAction_ballista(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	struct Data_Building *b = &Data_Buildings[w->buildingId];
@@ -66,17 +66,17 @@ void WalkerAction_ballista(int walkerId)
 			if (w->waitTicks > 20) {
 				w->waitTicks = 0;
 				int xTile, yTile;
-				if (WalkerAction_CombatSoldier_getMissileTarget(walkerId, 15, &xTile, &yTile)) {
+				if (FigureAction_CombatSoldier_getMissileTarget(walkerId, 15, &xTile, &yTile)) {
 					w->actionState = FigureActionState_181_BallistaFiring;
-					w->waitTicksMissile = Constant_WalkerProperties[w->type].missileFrequency;
+					w->waitTicksMissile = Constant_FigureProperties[w->type].missileFrequency;
 				}
 			}
 			break;
 		case FigureActionState_181_BallistaFiring:
 			w->waitTicksMissile++;
-			if (w->waitTicksMissile > Constant_WalkerProperties[w->type].missileFrequency) {
+			if (w->waitTicksMissile > Constant_FigureProperties[w->type].missileFrequency) {
 				int xTile, yTile;
-				if (WalkerAction_CombatSoldier_getMissileTarget(walkerId, 15, &xTile, &yTile)) {
+				if (FigureAction_CombatSoldier_getMissileTarget(walkerId, 15, &xTile, &yTile)) {
 					w->direction = Routing_getDirectionForMissileShooter(w->x, w->y, xTile, yTile);
 					w->waitTicksMissile = 0;
 					Figure_createMissile(walkerId, w->x, w->y, xTile, yTile, Figure_Bolt);
@@ -112,7 +112,7 @@ static void towerSentryPickTarget(int walkerId, struct Data_Walker *w)
 	if (w->waitTicksNextTarget >= 40) {
 		w->waitTicksNextTarget = 0;
 		int xTile, yTile;
-		if (WalkerAction_CombatSoldier_getMissileTarget(walkerId, 10, &xTile, &yTile)) {
+		if (FigureAction_CombatSoldier_getMissileTarget(walkerId, 10, &xTile, &yTile)) {
 			w->actionState = FigureActionState_172_TowerSentryFiring;
 			w->destinationX = w->x;
 			w->destinationY = w->y;
@@ -158,7 +158,7 @@ static int towerSentryInitPatrol(struct Data_Walker *w, struct Data_Building *b,
 	return 0;
 }
 
-void WalkerAction_towerSentry(int walkerId)
+void FigureAction_towerSentry(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	struct Data_Building *b = &Data_Buildings[w->buildingId];
@@ -170,15 +170,15 @@ void WalkerAction_towerSentry(int walkerId)
 	if (!BuildingIsInUse(w->buildingId) || b->walkerId != walkerId) {
 		w->state = FigureState_Dead;
 	}
-	WalkerActionIncreaseGraphicOffset(w, 12);
+	FigureActionIncreaseGraphicOffset(w, 12);
 	
 	towerSentryPickTarget(walkerId, w);
 	switch (w->actionState) {
 		case FigureActionState_150_Attack:
-			WalkerAction_Common_handleAttack(walkerId);
+			FigureAction_Common_handleAttack(walkerId);
 			break;
 		case FigureActionState_149_Corpse:
-			WalkerAction_Common_handleCorpse(walkerId);
+			FigureAction_Common_handleCorpse(walkerId);
 			break;
 		case FigureActionState_170_TowerSentryAtRest:
 			w->graphicOffset = 0;
@@ -195,7 +195,7 @@ void WalkerAction_towerSentry(int walkerId)
 			}
 			break;
 		case FigureActionState_171_TowerSentryPatrolling:
-			WalkerMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(walkerId, 1);
 			if (w->direction == DirFigure_8_AtDestination) {
 				w->actionState = FigureActionState_173_TowerSentryReturning;
 				w->destinationX = w->sourceX;
@@ -206,11 +206,11 @@ void WalkerAction_towerSentry(int walkerId)
 			}
 			break;
 		case FigureActionState_172_TowerSentryFiring:
-			WalkerMovement_walkTicksTowerSentry(walkerId, 1);
+			FigureMovement_walkTicksTowerSentry(walkerId, 1);
 			w->waitTicksMissile++;
-			if (w->waitTicksMissile > Constant_WalkerProperties[w->type].missileFrequency) {
+			if (w->waitTicksMissile > Constant_FigureProperties[w->type].missileFrequency) {
 				int xTile, yTile;
-				if (WalkerAction_CombatSoldier_getMissileTarget(walkerId, 10, &xTile, &yTile)) {
+				if (FigureAction_CombatSoldier_getMissileTarget(walkerId, 10, &xTile, &yTile)) {
 					w->direction = Routing_getDirectionForMissileShooter(w->x, w->y, xTile, yTile);
 					w->waitTicksMissile = 0;
 					Figure_createMissile(walkerId, w->x, w->y, xTile, yTile, Figure_Javelin);
@@ -223,7 +223,7 @@ void WalkerAction_towerSentry(int walkerId)
 			}
 			break;
 		case FigureActionState_173_TowerSentryReturning:
-			WalkerMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(walkerId, 1);
 			if (w->direction == DirFigure_8_AtDestination) {
 				w->actionState = FigureActionState_170_TowerSentryAtRest;
 			} else if (w->direction == DirFigure_9_Reroute || w->direction == DirFigure_10_Lost) {
@@ -234,7 +234,7 @@ void WalkerAction_towerSentry(int walkerId)
 			w->terrainUsage = FigureTerrainUsage_Roads;
 			w->isGhost = 0;
 			w->heightAdjustedTicks = 0;
-			WalkerMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(walkerId, 1);
 			if (w->direction == DirFigure_8_AtDestination) {
 				Figure_removeFromTileList(walkerId);
 				w->sourceX = w->x = b->x;
@@ -272,7 +272,7 @@ void WalkerAction_towerSentry(int walkerId)
 	}
 }
 
-void WalkerAction_TowerSentry_reroute()
+void FigureAction_TowerSentry_reroute()
 {
 	for (int i = 1; i < MAX_FIGURES; i++) {
 		struct Data_Walker *w = &Data_Walkers[i];

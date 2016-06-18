@@ -1,10 +1,10 @@
-#include "WalkerAction_private.h"
+#include "FigureAction_private.h"
 
 #include "Calc.h"
+#include "FigureMovement.h"
 #include "Routing.h"
-#include "WalkerMovement.h"
 
-int WalkerAction_CombatSoldier_getTarget(int x, int y, int maxDistance)
+int FigureAction_CombatSoldier_getTarget(int x, int y, int maxDistance)
 {
 	int minWalkerId = 0;
 	int minDistance = 10000;
@@ -43,7 +43,7 @@ int WalkerAction_CombatSoldier_getTarget(int x, int y, int maxDistance)
 	return 0;
 }
 
-int WalkerAction_CombatSoldier_getMissileTarget(int soldierId, int maxDistance, int *xTile, int *yTile)
+int FigureAction_CombatSoldier_getMissileTarget(int soldierId, int maxDistance, int *xTile, int *yTile)
 {
 	int x = Data_Walkers[soldierId].x;
 	int y = Data_Walkers[soldierId].y;
@@ -58,7 +58,7 @@ int WalkerAction_CombatSoldier_getMissileTarget(int soldierId, int maxDistance, 
 		if (WalkerIsEnemy(w->type) || WalkerIsHerd(w->type) ||
 			(w->type == Figure_IndigenousNative && w->actionState == FigureActionState_159_NativeAttacking)) {
 			int distance = Calc_distanceMaximum(x, y, w->x, w->y);
-			if (distance < minDistance && WalkerMovement_canLaunchCrossCountryMissile(x, y, w->x, w->y)) {
+			if (distance < minDistance && FigureMovement_canLaunchCrossCountryMissile(x, y, w->x, w->y)) {
 				minDistance = distance;
 				minWalkerId = i;
 			}
@@ -72,7 +72,7 @@ int WalkerAction_CombatSoldier_getMissileTarget(int soldierId, int maxDistance, 
 	return 0;
 }
 
-int WalkerAction_CombatWolf_getTarget(int x, int y, int maxDistance)
+int FigureAction_CombatWolf_getTarget(int x, int y, int maxDistance)
 {
 	int minWalkerId = 0;
 	int minDistance = 10000;
@@ -121,7 +121,7 @@ int WalkerAction_CombatWolf_getTarget(int x, int y, int maxDistance)
 	return 0;
 }
 
-int WalkerAction_CombatEnemy_getTarget(int x, int y)
+int FigureAction_CombatEnemy_getTarget(int x, int y)
 {
 	int minWalkerId = 0;
 	int minDistance = 10000;
@@ -153,7 +153,7 @@ int WalkerAction_CombatEnemy_getTarget(int x, int y)
 	return 0;
 }
 
-int WalkerAction_CombatEnemy_getMissileTarget(int enemyId, int maxDistance, int attackCitizens, int *xTile, int *yTile)
+int FigureAction_CombatEnemy_getMissileTarget(int enemyId, int maxDistance, int attackCitizens, int *xTile, int *yTile)
 {
 	int x = Data_Walkers[enemyId].x;
 	int y = Data_Walkers[enemyId].y;
@@ -193,7 +193,7 @@ int WalkerAction_CombatEnemy_getMissileTarget(int enemyId, int maxDistance, int 
 		} else {
 			continue;
 		}
-		if (distance < minDistance && WalkerMovement_canLaunchCrossCountryMissile(x, y, w->x, w->y)) {
+		if (distance < minDistance && FigureMovement_canLaunchCrossCountryMissile(x, y, w->x, w->y)) {
 			minDistance = distance;
 			minWalkerId = i;
 		}
@@ -207,11 +207,11 @@ int WalkerAction_CombatEnemy_getMissileTarget(int enemyId, int maxDistance, int 
 }
 
 
-void WalkerAction_Combat_attackWalker(int walkerId, int opponentId)
+void FigureAction_Combat_attackWalker(int walkerId, int opponentId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
-	int walkerCategory = Constant_WalkerProperties[w->type].category;
-	if (walkerCategory <= WalkerCategory_Inactive || walkerCategory >= WalkerCategory_Criminal ||
+	int figureCategory = Constant_FigureProperties[w->type].category;
+	if (figureCategory <= FigureCategory_Inactive || figureCategory >= FigureCategory_Criminal ||
 			w->actionState == FigureActionState_150_Attack) {
 		return;
 	}
@@ -225,29 +225,29 @@ void WalkerAction_Combat_attackWalker(int walkerId, int opponentId)
 			continue;
 		}
 		struct Data_Walker *opponent = &Data_Walkers[opponentId];
-		int opponentCategory = Constant_WalkerProperties[opponent->type].category;
+		int opponentCategory = Constant_FigureProperties[opponent->type].category;
 		int attack = 0;
 		if (opponent->state != FigureState_Alive) {
 			attack = 0;
 		} else if (opponent->actionState == FigureActionState_149_Corpse) {
 			attack = 0;
-		} else if (walkerCategory == WalkerCategory_Armed && opponentCategory == WalkerCategory_Native) {
+		} else if (figureCategory == FigureCategory_Armed && opponentCategory == FigureCategory_Native) {
 			if (opponent->actionState == FigureActionState_159_NativeAttacking) {
 				attack = 1;
 			}
-		} else if (walkerCategory == WalkerCategory_Armed && opponentCategory == WalkerCategory_Criminal) {
+		} else if (figureCategory == FigureCategory_Armed && opponentCategory == FigureCategory_Criminal) {
 			attack = 1;
-		} else if (walkerCategory == WalkerCategory_Armed && opponentCategory == WalkerCategory_Hostile) {
+		} else if (figureCategory == FigureCategory_Armed && opponentCategory == FigureCategory_Hostile) {
 			attack = 1;
-		} else if (walkerCategory == WalkerCategory_Hostile && opponentCategory == WalkerCategory_Citizen) {
+		} else if (figureCategory == FigureCategory_Hostile && opponentCategory == FigureCategory_Citizen) {
 			attack = 1;
-		} else if (walkerCategory == WalkerCategory_Hostile && opponentCategory == WalkerCategory_Armed) {
+		} else if (figureCategory == FigureCategory_Hostile && opponentCategory == FigureCategory_Armed) {
 			attack = 1;
-		} else if (walkerCategory == WalkerCategory_Hostile && opponentCategory == WalkerCategory_Criminal) {
+		} else if (figureCategory == FigureCategory_Hostile && opponentCategory == FigureCategory_Criminal) {
 			attack = 1;
-		} else if (walkerCategory == WalkerCategory_Armed && opponentCategory == WalkerCategory_Animal) {
+		} else if (figureCategory == FigureCategory_Armed && opponentCategory == FigureCategory_Animal) {
 			attack = 1;
-		} else if (walkerCategory == WalkerCategory_Hostile && opponentCategory == WalkerCategory_Animal) {
+		} else if (figureCategory == FigureCategory_Hostile && opponentCategory == FigureCategory_Animal) {
 			attack = 1;
 		}
 		if (attack && opponent->actionState == FigureActionState_150_Attack && opponent->numAttackers >= 2) {

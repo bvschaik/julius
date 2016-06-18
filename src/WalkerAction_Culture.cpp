@@ -1,18 +1,18 @@
-#include "WalkerAction_private.h"
+#include "FigureAction_private.h"
 
 #include "Building.h"
 #include "Terrain.h"
 #include "Walker.h"
 
-static void WalkerAction_cultureCommon(int walkerId, int numTicks)
+static void FigureAction_cultureCommon(int walkerId, int numTicks)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	switch (w->actionState) {
 		case FigureActionState_150_Attack:
-			WalkerAction_Common_handleAttack(walkerId);
+			FigureAction_Common_handleAttack(walkerId);
 			break;
 		case FigureActionState_149_Corpse:
-			WalkerAction_Common_handleCorpse(walkerId);
+			FigureAction_Common_handleCorpse(walkerId);
 			break;
 		case FigureActionState_125_Roaming:
 			w->isGhost = 0;
@@ -33,10 +33,10 @@ static void WalkerAction_cultureCommon(int walkerId, int numTicks)
 					w->state = FigureState_Dead;
 				}
 			}
-			WalkerMovement_roamTicks(walkerId, numTicks);
+			FigureMovement_roamTicks(walkerId, numTicks);
 			break;
 		case FigureActionState_126_RoamerReturning:
-			WalkerMovement_walkTicks(walkerId, numTicks);
+			FigureMovement_walkTicks(walkerId, numTicks);
 			if (w->direction == DirFigure_8_AtDestination ||
 				w->direction == DirFigure_9_Reroute || w->direction == DirFigure_10_Lost) {
 				w->state = FigureState_Dead;
@@ -45,7 +45,7 @@ static void WalkerAction_cultureCommon(int walkerId, int numTicks)
 	}
 }
 
-static void WalkerAction_culture(int walkerId, int graphicCategory)
+static void FigureAction_culture(int walkerId, int graphicCategory)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	w->terrainUsage = FigureTerrainUsage_Roads;
@@ -55,8 +55,8 @@ static void WalkerAction_culture(int walkerId, int graphicCategory)
 	if (!BuildingIsInUse(buildingId) || Data_Buildings[buildingId].walkerId != walkerId) {
 		w->state = FigureState_Dead;
 	}
-	WalkerActionIncreaseGraphicOffset(w, 12);
-	WalkerAction_cultureCommon(walkerId, 1);
+	FigureActionIncreaseGraphicOffset(w, 12);
+	FigureAction_cultureCommon(walkerId, 1);
 	if (w->actionState == FigureActionState_149_Corpse) {
 		w->graphicId = GraphicId(graphicCategory) +
 			WalkerActionCorpseGraphicOffset(w) + 96;
@@ -66,12 +66,12 @@ static void WalkerAction_culture(int walkerId, int graphicCategory)
 	}
 }
 
-void WalkerAction_priest(int walkerId)
+void FigureAction_priest(int walkerId)
 {
-	WalkerAction_culture(walkerId, ID_Graphic_Figure_Priest);
+	FigureAction_culture(walkerId, ID_Graphic_Figure_Priest);
 }
 
-void WalkerAction_schoolChild(int walkerId)
+void FigureAction_schoolChild(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	w->terrainUsage = FigureTerrainUsage_Roads;
@@ -81,13 +81,13 @@ void WalkerAction_schoolChild(int walkerId)
 	if (!BuildingIsInUse(buildingId) || Data_Buildings[buildingId].type != Building_School) {
 		w->state = FigureState_Dead;
 	}
-	WalkerActionIncreaseGraphicOffset(w, 12);
+	FigureActionIncreaseGraphicOffset(w, 12);
 	switch (w->actionState) {
 		case FigureActionState_150_Attack:
-			WalkerAction_Common_handleAttack(walkerId);
+			FigureAction_Common_handleAttack(walkerId);
 			break;
 		case FigureActionState_149_Corpse:
-			WalkerAction_Common_handleCorpse(walkerId);
+			FigureAction_Common_handleCorpse(walkerId);
 			break;
 		case FigureActionState_125_Roaming:
 			w->isGhost = 0;
@@ -95,7 +95,7 @@ void WalkerAction_schoolChild(int walkerId)
 			if (w->roamLength >= w->maxRoamLength) {
 				w->state = FigureState_Dead;
 			}
-			WalkerMovement_roamTicks(walkerId, 2);
+			FigureMovement_roamTicks(walkerId, 2);
 			break;
 	}
 	if (w->actionState == FigureActionState_149_Corpse) {
@@ -107,37 +107,37 @@ void WalkerAction_schoolChild(int walkerId)
 	}
 }
 
-void WalkerAction_teacher(int walkerId)
+void FigureAction_teacher(int walkerId)
 {
-	WalkerAction_culture(walkerId, ID_Graphic_Figure_TeacherLibrarian);
+	FigureAction_culture(walkerId, ID_Graphic_Figure_TeacherLibrarian);
 }
 
-void WalkerAction_librarian(int walkerId)
+void FigureAction_librarian(int walkerId)
 {
-	WalkerAction_culture(walkerId, ID_Graphic_Figure_TeacherLibrarian);
+	FigureAction_culture(walkerId, ID_Graphic_Figure_TeacherLibrarian);
 }
 
-void WalkerAction_barber(int walkerId)
+void FigureAction_barber(int walkerId)
 {
-	WalkerAction_culture(walkerId, ID_Graphic_Figure_Barber);
+	FigureAction_culture(walkerId, ID_Graphic_Figure_Barber);
 }
 
-void WalkerAction_bathhouseWorker(int walkerId)
+void FigureAction_bathhouseWorker(int walkerId)
 {
-	WalkerAction_culture(walkerId, ID_Graphic_Figure_BathhouseWorker);
+	FigureAction_culture(walkerId, ID_Graphic_Figure_BathhouseWorker);
 }
 
-void WalkerAction_doctor(int walkerId)
+void FigureAction_doctor(int walkerId)
 {
-	WalkerAction_culture(walkerId, ID_Graphic_Figure_DoctorSurgeon);
+	FigureAction_culture(walkerId, ID_Graphic_Figure_DoctorSurgeon);
 }
 
-void WalkerAction_surgeon(int walkerId)
+void FigureAction_surgeon(int walkerId)
 {
-	WalkerAction_culture(walkerId, ID_Graphic_Figure_DoctorSurgeon);
+	FigureAction_culture(walkerId, ID_Graphic_Figure_DoctorSurgeon);
 }
 
-void WalkerAction_missionary(int walkerId)
+void FigureAction_missionary(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	w->terrainUsage = FigureTerrainUsage_Roads;
@@ -147,12 +147,12 @@ void WalkerAction_missionary(int walkerId)
 	if (!BuildingIsInUse(buildingId) || Data_Buildings[buildingId].walkerId != walkerId) {
 		w->state = FigureState_Dead;
 	}
-	WalkerActionIncreaseGraphicOffset(w, 12);
-	WalkerAction_cultureCommon(walkerId, 1);
+	FigureActionIncreaseGraphicOffset(w, 12);
+	FigureAction_cultureCommon(walkerId, 1);
 	WalkerActionUpdateGraphic(w, GraphicId(ID_Graphic_Figure_Missionary));
 }
 
-void WalkerAction_patrician(int walkerId)
+void FigureAction_patrician(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	w->terrainUsage = FigureTerrainUsage_Roads;
@@ -161,12 +161,12 @@ void WalkerAction_patrician(int walkerId)
 	if (!BuildingIsInUse(w->buildingId)) {
 		w->state = FigureState_Dead;
 	}
-	WalkerActionIncreaseGraphicOffset(w, 12);
-	WalkerAction_cultureCommon(walkerId, 1);
+	FigureActionIncreaseGraphicOffset(w, 12);
+	FigureAction_cultureCommon(walkerId, 1);
 	WalkerActionUpdateGraphic(w, GraphicId(ID_Graphic_Figure_Patrician));
 }
 
-void WalkerAction_laborSeeker(int walkerId)
+void FigureAction_laborSeeker(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	w->terrainUsage = FigureTerrainUsage_Roads;
@@ -176,12 +176,12 @@ void WalkerAction_laborSeeker(int walkerId)
 	if (!BuildingIsInUse(buildingId) || Data_Buildings[buildingId].walkerId2 != walkerId) {
 		w->state = FigureState_Dead;
 	}
-	WalkerActionIncreaseGraphicOffset(w, 12);
-	WalkerAction_cultureCommon(walkerId, 1);
+	FigureActionIncreaseGraphicOffset(w, 12);
+	FigureAction_cultureCommon(walkerId, 1);
 	WalkerActionUpdateGraphic(w, GraphicId(ID_Graphic_Figure_LaborSeeker));
 }
 
-void WalkerAction_marketTrader(int walkerId)
+void FigureAction_marketTrader(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	w->terrainUsage = FigureTerrainUsage_Roads;
@@ -191,7 +191,7 @@ void WalkerAction_marketTrader(int walkerId)
 	if (!BuildingIsInUse(w->buildingId) || Data_Buildings[w->buildingId].walkerId != walkerId) {
 		w->state = FigureState_Dead;
 	}
-	WalkerActionIncreaseGraphicOffset(w, 12);
+	FigureActionIncreaseGraphicOffset(w, 12);
 	if (w->actionState == FigureActionState_125_Roaming) {
 		// force return on out of stock
 		int stock = Building_Market_getMaxFoodStock(w->buildingId) +
@@ -200,7 +200,7 @@ void WalkerAction_marketTrader(int walkerId)
 			w->roamLength = w->maxRoamLength;
 		}
 	}
-	WalkerAction_cultureCommon(walkerId, 1);
+	FigureAction_cultureCommon(walkerId, 1);
 	WalkerActionUpdateGraphic(w, GraphicId(ID_Graphic_Figure_MarketLady));
 }
 

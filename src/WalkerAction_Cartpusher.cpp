@@ -1,4 +1,4 @@
-#include "WalkerAction_private.h"
+#include "FigureAction_private.h"
 
 #include "Resource.h"
 #include "Routing.h"
@@ -125,17 +125,17 @@ static void updateGraphic(int walkerId, struct Data_Walker *w)
 	}
 	if (w->cartGraphicId) {
 		w->cartGraphicId += dir;
-		WalkerAction_Common_setCartOffset(walkerId, dir);
+		FigureAction_Common_setCartOffset(walkerId, dir);
 		if (w->loadsSoldOrCarrying >= 8) {
 			w->yOffsetCart -= 40;
 		}
 	}
 }
 
-void WalkerAction_cartpusher(int walkerId)
+void FigureAction_cartpusher(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
-	WalkerActionIncreaseGraphicOffset(w, 12);
+	FigureActionIncreaseGraphicOffset(w, 12);
 	w->cartGraphicId = 0;
 	int roadNetworkId = Data_Grid_roadNetworks[w->gridOffset];
 	w->terrainUsage = FigureTerrainUsage_Roads;
@@ -144,10 +144,10 @@ void WalkerAction_cartpusher(int walkerId)
 	
 	switch (w->actionState) {
 		case FigureActionState_150_Attack:
-			WalkerAction_Common_handleAttack(walkerId);
+			FigureAction_Common_handleAttack(walkerId);
 			break;
 		case FigureActionState_149_Corpse:
-			WalkerAction_Common_handleCorpse(walkerId);
+			FigureAction_Common_handleCorpse(walkerId);
 			break;
 		case FigureActionState_20_CartpusherInitial:
 			setCartGraphic(w);
@@ -166,7 +166,7 @@ void WalkerAction_cartpusher(int walkerId)
 			break;
 		case FigureActionState_21_CartpusherDeliveringToWarehouse:
 			setCartGraphic(w);
-			WalkerMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(walkerId, 1);
 			if (w->direction == DirFigure_8_AtDestination) {
 				w->actionState = FigureActionState_24_CartpusherAtWarehouse;
 			} else if (w->direction == DirFigure_9_Reroute) {
@@ -184,7 +184,7 @@ void WalkerAction_cartpusher(int walkerId)
 			break;
 		case FigureActionState_22_CartpusherDeliveringToGranary:
 			setCartGraphic(w);
-			WalkerMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(walkerId, 1);
 			if (w->direction == DirFigure_8_AtDestination) {
 				w->actionState = FigureActionState_25_CartpusherAtGranary;
 			} else if (w->direction == DirFigure_9_Reroute) {
@@ -203,7 +203,7 @@ void WalkerAction_cartpusher(int walkerId)
 			break;
 		case FigureActionState_23_CartpusherDeliveringToWorkshop:
 			setCartGraphic(w);
-			WalkerMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(walkerId, 1);
 			if (w->direction == DirFigure_8_AtDestination) {
 				w->actionState = FigureActionState_26_CartpusherAtWorkshop;
 			} else if (w->direction == DirFigure_9_Reroute) {
@@ -259,7 +259,7 @@ void WalkerAction_cartpusher(int walkerId)
 			break;
 		case FigureActionState_27_CartpusherReturning:
 			w->cartGraphicId = GraphicId(ID_Graphic_Figure_CartpusherCart);
-			WalkerMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(walkerId, 1);
 			if (w->direction == DirFigure_8_AtDestination) {
 				w->actionState = FigureActionState_20_CartpusherInitial;
 				w->state = FigureState_Dead;
@@ -402,20 +402,20 @@ static void determineWarehousemanDestination(int walkerId, struct Data_Walker *w
 	w->state = FigureState_Dead;
 }
 
-void WalkerAction_warehouseman(int walkerId)
+void FigureAction_warehouseman(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	w->terrainUsage = FigureTerrainUsage_Roads;
-	WalkerActionIncreaseGraphicOffset(w, 12);
+	FigureActionIncreaseGraphicOffset(w, 12);
 	w->cartGraphicId = 0;
 	int roadNetworkId = Data_Grid_roadNetworks[w->gridOffset];
 	
 	switch (w->actionState) {
 		case FigureActionState_150_Attack:
-			WalkerAction_Common_handleAttack(walkerId);
+			FigureAction_Common_handleAttack(walkerId);
 			break;
 		case FigureActionState_149_Corpse:
-			WalkerAction_Common_handleCorpse(walkerId);
+			FigureAction_Common_handleCorpse(walkerId);
 			break;
 		case FigureActionState_50_WarehousemanCreated:
 			if (!BuildingIsInUse(w->buildingId) ||
@@ -439,7 +439,7 @@ void WalkerAction_warehouseman(int walkerId)
 			} else {
 				setCartGraphic(w);
 			}
-			WalkerMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(walkerId, 1);
 			if (w->direction == DirFigure_8_AtDestination) {
 				w->actionState = FigureActionState_52_WarehousemanAtDeliveryBuilding;
 			} else if (w->direction == DirFigure_9_Reroute) {
@@ -477,7 +477,7 @@ void WalkerAction_warehouseman(int walkerId)
 			break;
 		case FigureActionState_53_WarehousemanReturningEmpty:
 			w->cartGraphicId = GraphicId(ID_Graphic_Figure_CartpusherCart); // empty
-			WalkerMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(walkerId, 1);
 			if (w->direction == DirFigure_8_AtDestination || w->direction == DirFigure_10_Lost) {
 				w->state = FigureState_Dead;
 			} else if (w->direction == DirFigure_9_Reroute) {
@@ -486,7 +486,7 @@ void WalkerAction_warehouseman(int walkerId)
 			break;
 		case FigureActionState_54_WarehousemanGettingFood:
 			w->cartGraphicId = GraphicId(ID_Graphic_Figure_CartpusherCart); // empty
-			WalkerMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(walkerId, 1);
 			if (w->direction == DirFigure_8_AtDestination) {
 				w->actionState = FigureActionState_55_WarehousemanAtGranaryGettingFood;
 			} else if (w->direction == DirFigure_9_Reroute) {
@@ -526,7 +526,7 @@ void WalkerAction_warehouseman(int walkerId)
 				}
 				w->cartGraphicId += Resource_getGraphicIdOffset(w->resourceId, 2);
 			}
-			WalkerMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(walkerId, 1);
 			if (w->direction == DirFigure_8_AtDestination) {
 				for (int i = 0; i < w->loadsSoldOrCarrying; i++) {
 					Resource_addToGranary(w->buildingId, w->resourceId, 0);
@@ -541,7 +541,7 @@ void WalkerAction_warehouseman(int walkerId)
 		case FigureActionState_57_WarehousemanGettingResource:
 			w->terrainUsage = FigureTerrainUsage_PreferRoads;
 			w->cartGraphicId = GraphicId(ID_Graphic_Figure_CartpusherCart); // empty
-			WalkerMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(walkerId, 1);
 			if (w->direction == DirFigure_8_AtDestination) {
 				w->actionState = FigureActionState_58_WarehousemanAtWarehouseGettingResource;
 			} else if (w->direction == DirFigure_9_Reroute) {
@@ -584,7 +584,7 @@ void WalkerAction_warehouseman(int walkerId)
 				}
 				w->cartGraphicId += Resource_getGraphicIdOffset(w->resourceId, 2);
 			}
-			WalkerMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(walkerId, 1);
 			if (w->direction == DirFigure_8_AtDestination) {
 				for (int i = 0; i < w->loadsSoldOrCarrying; i++) {
 					Resource_addToWarehouse(w->buildingId, w->resourceId);

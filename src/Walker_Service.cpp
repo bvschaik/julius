@@ -510,7 +510,7 @@ int Figure_provideServiceCoverage(int walkerId)
 			Data_Walkers[walkerId].minMaxSeen = getPrefectCrimeCoverage(x, y);
 			break;
 		case Figure_Rioter:
-			if (WalkerAction_Rioter_collapseBuilding(walkerId) == 1) {
+			if (FigureAction_Rioter_collapseBuilding(walkerId) == 1) {
 				return 1;
 			}
 			break;

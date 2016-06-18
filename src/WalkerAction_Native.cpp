@@ -1,4 +1,4 @@
-#include "WalkerAction_private.h"
+#include "FigureAction_private.h"
 
 #include "Terrain.h"
 #include "Walker.h"
@@ -6,7 +6,7 @@
 #include "Data/CityInfo.h"
 #include "Data/Formation.h"
 
-void WalkerAction_indigenousNative(int walkerId)
+void FigureAction_indigenousNative(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	struct Data_Building *b = &Data_Buildings[w->buildingId];
@@ -16,16 +16,16 @@ void WalkerAction_indigenousNative(int walkerId)
 	if (!BuildingIsInUse(w->buildingId) || b->walkerId != walkerId) {
 		w->state = FigureState_Dead;
 	}
-	WalkerActionIncreaseGraphicOffset(w, 12);
+	FigureActionIncreaseGraphicOffset(w, 12);
 	switch (w->actionState) {
 		case FigureActionState_150_Attack:
-			WalkerAction_Common_handleAttack(walkerId);
+			FigureAction_Common_handleAttack(walkerId);
 			break;
 		case FigureActionState_149_Corpse:
-			WalkerAction_Common_handleCorpse(walkerId);
+			FigureAction_Common_handleCorpse(walkerId);
 			break;
 		case FigureActionState_156_NativeGoingToMeetingCenter:
-			WalkerMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(walkerId, 1);
 			if (w->direction == DirFigure_8_AtDestination) {
 				w->actionState = FigureActionState_157_NativeReturningFromMeetingCenter;
 				w->destinationX = w->sourceX;
@@ -35,7 +35,7 @@ void WalkerAction_indigenousNative(int walkerId)
 			}
 			break;
 		case FigureActionState_157_NativeReturningFromMeetingCenter:
-			WalkerMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(walkerId, 1);
 			if (w->direction == DirFigure_8_AtDestination ||
 				w->direction == DirFigure_9_Reroute ||
 				w->direction == DirFigure_10_Lost) {
@@ -68,7 +68,7 @@ void WalkerAction_indigenousNative(int walkerId)
 			Data_CityInfo.riotersOrAttackingNativesInCity = 10;
 			Data_CityInfo.numAttackingNativesInCity++;
 			w->terrainUsage = FigureTerrainUsage_Enemy;
-			WalkerMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(walkerId, 1);
 			if (w->direction == DirFigure_8_AtDestination ||
 				w->direction == DirFigure_9_Reroute ||
 				w->direction == DirFigure_10_Lost) {

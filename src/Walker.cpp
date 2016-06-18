@@ -1,13 +1,13 @@
 #include "Walker.h"
 
 #include "Calc.h"
+#include "FigureMovement.h"
 #include "Formation.h"
 #include "Random.h"
 #include "Sound.h"
 #include "Terrain.h"
 #include "Trader.h"
 #include "WalkerAction.h"
-#include "WalkerMovement.h"
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
@@ -213,7 +213,7 @@ void Figure_createDustCloud(int x, int y, int size)
 			w->crossCountryY += ccOffset;
 			w->destinationX += dustCloudDirectionX[i];
 			w->destinationY += dustCloudDirectionY[i];
-			WalkerMovement_crossCountrySetDirection(walkerId,
+			FigureMovement_crossCountrySetDirection(walkerId,
 				w->crossCountryX, w->crossCountryY,
 				15 * w->destinationX + ccOffset,
 				15 * w->destinationY + ccOffset, 0);
@@ -232,7 +232,7 @@ int Figure_createMissile(int buildingId, int x, int y, int xDst, int yDst, int t
 		w->buildingId = buildingId;
 		w->destinationX = xDst;
 		w->destinationY = yDst;
-		WalkerMovement_crossCountrySetDirection(
+		FigureMovement_crossCountrySetDirection(
 			walkerId, w->crossCountryX, w->crossCountryY,
 			15 * xDst, 15 * yDst, 1);
 	}
@@ -248,7 +248,7 @@ void Figure_createFishingPoints()
 				Data_Scenario.fishingPoints.x[i], Data_Scenario.fishingPoints.y[i], 0);
 			Data_Walkers[fishId].graphicOffset = Data_Random.random1_7bit & 0x1f;
 			Data_Walkers[fishId].progressOnTile = Data_Random.random1_7bit & 7;
-			WalkerMovement_crossCountrySetDirection(fishId,
+			FigureMovement_crossCountrySetDirection(fishId,
 				Data_Walkers[fishId].crossCountryX, Data_Walkers[fishId].crossCountryY,
 				15 * Data_Walkers[fishId].destinationX, 15 * Data_Walkers[fishId].destinationY, 0);
 		}

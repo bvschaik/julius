@@ -1,4 +1,4 @@
-#include "WalkerAction_private.h"
+#include "FigureAction_private.h"
 
 #include "Routing.h"
 #include "Walker.h"
@@ -34,13 +34,13 @@ static const struct {
 	{-6, -4}, {-6, -5}, {-6, -6}, {-5, -6}, {-4, -6}, {-3, -6}, {-2, -6}, {-1, -6},
 };
 
-void WalkerAction_militaryStandard(int walkerId)
+void FigureAction_militaryStandard(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	struct Data_Formation *f = &Data_Formations[w->formationId];
 
 	w->terrainUsage = FigureTerrainUsage_Any;
-	WalkerActionIncreaseGraphicOffset(w, 16);
+	FigureActionIncreaseGraphicOffset(w, 16);
 	Figure_removeFromTileList(walkerId);
 	if (f->isAtFort) {
 		w->x = f->x;
@@ -80,9 +80,9 @@ static void javelinLaunchMissile(int walkerId, struct Data_Walker *w)
 {
 	int xTile, yTile;
 	w->waitTicksMissile++;
-	if (w->waitTicksMissile > Constant_WalkerProperties[w->type].missileFrequency) {
+	if (w->waitTicksMissile > Constant_FigureProperties[w->type].missileFrequency) {
 		w->waitTicksMissile = 0;
-		if (WalkerAction_CombatSoldier_getMissileTarget(walkerId, 10, &xTile, &yTile)) {
+		if (FigureAction_CombatSoldier_getMissileTarget(walkerId, 10, &xTile, &yTile)) {
 			w->attackGraphicOffset = 1;
 			w->direction = Routing_getDirectionForMissileShooter(w->x, w->y, xTile, yTile);
 		} else {
@@ -105,7 +105,7 @@ static void legionaryAttackAdjacentEnemy(int walkerId, struct Data_Walker *w)
 {
 	int gridOffset = w->gridOffset;
 	for (int i = 0; i < 8 && w->actionState != FigureActionState_150_Attack; i++) {
-		WalkerAction_Combat_attackWalker(walkerId,
+		FigureAction_Combat_attackWalker(walkerId,
 			Data_Grid_figureIds[gridOffset + Constant_DirectionGridOffsets[i]]);
 	}
 }
@@ -118,7 +118,7 @@ static int soldierFindMopUpTarget(int walkerId, struct Data_Walker *w)
 		targetId = 0;
 	}
 	if (targetId <= 0) {
-		targetId = WalkerAction_CombatSoldier_getTarget(w->x, w->y, 20);
+		targetId = FigureAction_CombatSoldier_getTarget(w->x, w->y, 20);
 		if (targetId) {
 			struct Data_Walker *t = &Data_Walkers[targetId];
 			w->destinationX = t->x;
@@ -216,13 +216,13 @@ static void updateSoldierGraphic(int walkerId, struct Data_Walker *w, struct Dat
 	}
 }
 
-void WalkerAction_soldier(int walkerId)
+void FigureAction_soldier(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	struct Data_Formation *f = &Data_Formations[w->formationId];
 	Data_CityInfo.numSoldiersInCity++;
 	w->terrainUsage = FigureTerrainUsage_Any;
-	WalkerActionIncreaseGraphicOffset(w, 12);
+	FigureActionIncreaseGraphicOffset(w, 12);
 	w->cartGraphicId = 0;
 	if (f->inUse != 1) {
 		w->actionState = FigureActionState_149_Corpse;
@@ -244,10 +244,10 @@ void WalkerAction_soldier(int walkerId)
 	
 	switch (w->actionState) {
 		case FigureActionState_150_Attack:
-			WalkerAction_Common_handleAttack(walkerId);
+			FigureAction_Common_handleAttack(walkerId);
 			break;
 		case FigureActionState_149_Corpse:
-			WalkerAction_Common_handleCorpse(walkerId);
+			FigureAction_Common_handleCorpse(walkerId);
 			break;
 		case FigureActionState_80_SoldierAtRest:
 			Figure_updatePositionInTileList(walkerId);
@@ -265,7 +265,7 @@ void WalkerAction_soldier(int walkerId)
 			w->destinationX = w->formationPositionX;
 			w->destinationY = w->formationPositionY;
 			w->destinationGridOffsetSoldier = GridOffset(w->destinationX, w->destinationY);
-			WalkerMovement_walkTicks(walkerId, speedFactor);
+			FigureMovement_walkTicks(walkerId, speedFactor);
 			if (w->direction == DirFigure_8_AtDestination) {
 				w->actionState = FigureActionState_80_SoldierAtRest;
 			} else if (w->direction == DirFigure_9_Reroute) {
@@ -278,7 +278,7 @@ void WalkerAction_soldier(int walkerId)
 			w->formationAtRest = 1;
 			w->destinationX = w->sourceX;
 			w->destinationY = w->sourceY;
-			WalkerMovement_walkTicks(walkerId, speedFactor);
+			FigureMovement_walkTicks(walkerId, speedFactor);
 			if (w->direction == DirFigure_8_AtDestination || w->direction == DirFigure_10_Lost) {
 				w->state = FigureState_Dead;
 			} else if (w->direction == DirFigure_9_Reroute) {
@@ -294,7 +294,7 @@ void WalkerAction_soldier(int walkerId)
 				w->destinationY += soldierAlternativePoints[w->alternativeLocationIndex].y;
 			}
 			w->destinationGridOffsetSoldier = GridOffset(w->destinationX, w->destinationY);
-			WalkerMovement_walkTicks(walkerId, speedFactor);
+			FigureMovement_walkTicks(walkerId, speedFactor);
 			if (w->direction == DirFigure_8_AtDestination) {
 				w->actionState = FigureActionState_84_SoldierAtStandard;
 				w->graphicOffset = 0;
@@ -335,7 +335,7 @@ void WalkerAction_soldier(int walkerId)
 		case FigureActionState_85_SoldierGoingToMilitaryAcademy:
 			f->hasMilitaryTraining = 1;
 			w->formationAtRest = 1;
-			WalkerMovement_walkTicks(walkerId, speedFactor);
+			FigureMovement_walkTicks(walkerId, speedFactor);
 			if (w->direction == DirFigure_8_AtDestination) {
 				w->actionState = FigureActionState_81_SoldierGoingToFort;
 			} else if (w->direction == DirFigure_9_Reroute) {
@@ -347,7 +347,7 @@ void WalkerAction_soldier(int walkerId)
 		case FigureActionState_86_SoldierMoppingUp:
 			w->formationAtRest = 0;
 			if (soldierFindMopUpTarget(walkerId, w)) {
-				WalkerMovement_walkTicks(walkerId, speedFactor);
+				FigureMovement_walkTicks(walkerId, speedFactor);
 				if (w->direction == DirFigure_8_AtDestination) {
 					w->destinationX = Data_Walkers[w->targetWalkerId].x;
 					w->destinationY = Data_Walkers[w->targetWalkerId].y;
@@ -363,7 +363,7 @@ void WalkerAction_soldier(int walkerId)
 			w->formationAtRest = 0;
 			w->destinationX = Data_CityInfo.exitPointX;
 			w->destinationY = Data_CityInfo.exitPointY;
-			WalkerMovement_walkTicks(walkerId, speedFactor);
+			FigureMovement_walkTicks(walkerId, speedFactor);
 			if (w->direction == DirFigure_8_AtDestination) {
 				w->actionState = FigureActionState_89_SoldierAtDistantBattle;
 				FigureRoute_remove(walkerId);
@@ -380,7 +380,7 @@ void WalkerAction_soldier(int walkerId)
 			w->destinationX = w->formationPositionX;
 			w->destinationY = w->formationPositionY;
 			w->destinationGridOffsetSoldier = GridOffset(w->destinationX, w->destinationY);
-			WalkerMovement_walkTicks(walkerId, speedFactor);
+			FigureMovement_walkTicks(walkerId, speedFactor);
 			if (w->direction == DirFigure_8_AtDestination) {
 				w->actionState = FigureActionState_80_SoldierAtRest;
 			} else if (w->direction == DirFigure_9_Reroute) {

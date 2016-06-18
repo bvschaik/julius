@@ -1,4 +1,4 @@
-#include "WalkerAction_private.h"
+#include "FigureAction_private.h"
 
 #include "Calc.h"
 #include "PlayerMessage.h"
@@ -20,7 +20,7 @@ static const int flotsamType3[] = {
 	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1
 };
 
-void WalkerAction_fishingBoat(int walkerId)
+void FigureAction_fishingBoat(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	struct Data_Building *b = &Data_Buildings[w->buildingId];
@@ -46,7 +46,7 @@ void WalkerAction_fishingBoat(int walkerId)
 	}
 	w->isGhost = 0;
 	w->isBoat = 1;
-	WalkerActionIncreaseGraphicOffset(w, 12);
+	FigureActionIncreaseGraphicOffset(w, 12);
 	w->cartGraphicId = 0;
 	switch (w->actionState) {
 		case FigureActionState_190_FishingBoatCreated:
@@ -69,7 +69,7 @@ void WalkerAction_fishingBoat(int walkerId)
 			}
 			break;
 		case FigureActionState_191_FishingBoatGoingToFish:
-			WalkerMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(walkerId, 1);
 			w->heightAdjustedTicks = 0;
 			if (w->direction == DirFigure_8_AtDestination) {
 				int xTile, yTile;
@@ -99,7 +99,7 @@ void WalkerAction_fishingBoat(int walkerId)
 			}
 			break;
 		case FigureActionState_193_FishingBoatSailingToWharf:
-			WalkerMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(walkerId, 1);
 			w->heightAdjustedTicks = 0;
 			if (w->direction == DirFigure_8_AtDestination) {
 				w->actionState = FigureActionState_194_FishingBoatAtWharf;
@@ -140,7 +140,7 @@ void WalkerAction_fishingBoat(int walkerId)
 			}
 			break;
 		case FigureActionState_195_FishingBoatReturningWithFish:
-			WalkerMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(walkerId, 1);
 			w->heightAdjustedTicks = 0;
 			if (w->direction == DirFigure_8_AtDestination) {
 				w->actionState = FigureActionState_194_FishingBoatAtWharf;
@@ -164,7 +164,7 @@ void WalkerAction_fishingBoat(int walkerId)
 	}
 }
 
-void WalkerAction_flotsam(int walkerId)
+void FigureAction_flotsam(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	w->isBoat = 2;
@@ -195,7 +195,7 @@ void WalkerAction_flotsam(int walkerId)
 			} else {
 				w->flotsamVisible = 1;
 				w->waitTicks++;
-				WalkerMovement_walkTicks(walkerId, 1);
+				FigureMovement_walkTicks(walkerId, 1);
 				w->isGhost = 0;
 				w->heightAdjustedTicks = 0;
 				if (w->direction == DirFigure_8_AtDestination ||
@@ -228,7 +228,7 @@ void WalkerAction_flotsam(int walkerId)
 			break;
 	}
 	if (w->resourceId == 0) {
-		WalkerActionIncreaseGraphicOffset(w, 12);
+		FigureActionIncreaseGraphicOffset(w, 12);
 		if (w->minMaxSeen) {
 			w->graphicId = GraphicId(ID_Graphic_Figure_FlotsamSheep) +
 				flotsamType0[w->graphicOffset];
@@ -237,15 +237,15 @@ void WalkerAction_flotsam(int walkerId)
 				flotsamType0[w->graphicOffset];
 		}
 	} else if (w->resourceId == 1) {
-		WalkerActionIncreaseGraphicOffset(w, 24);
+		FigureActionIncreaseGraphicOffset(w, 24);
 		w->graphicId = GraphicId(ID_Graphic_Figure_Flotsam1) +
 			flotsamType12[w->graphicOffset];
 	} else if (w->resourceId == 2) {
-		WalkerActionIncreaseGraphicOffset(w, 24);
+		FigureActionIncreaseGraphicOffset(w, 24);
 		w->graphicId = GraphicId(ID_Graphic_Figure_Flotsam2) +
 			flotsamType12[w->graphicOffset];
 	} else if (w->resourceId == 3) {
-		WalkerActionIncreaseGraphicOffset(w, 24);
+		FigureActionIncreaseGraphicOffset(w, 24);
 		if (flotsamType3[w->graphicOffset] == -1) {
 			w->graphicId = 0;
 		} else {
@@ -255,13 +255,13 @@ void WalkerAction_flotsam(int walkerId)
 	}
 }
 
-void WalkerAction_shipwreck(int walkerId)
+void FigureAction_shipwreck(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	w->isGhost = 0;
 	w->heightAdjustedTicks = 0;
 	w->isBoat = 1;
-	WalkerActionIncreaseGraphicOffset(w, 128);
+	FigureActionIncreaseGraphicOffset(w, 128);
 	if (w->waitTicks < 1000) {
 		Figure_removeFromTileList(walkerId);
 		int xTile, yTile;

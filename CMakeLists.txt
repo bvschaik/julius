@@ -99,7 +99,7 @@ add_executable(opencaesar
 	src/WalkerAction_Wall.cpp
 	src/WalkerAction_Water.cpp
 	src/FigureGeneration.cpp
-	src/WalkerMovement.cpp
+	src/FigureMovement.cpp
 	src/FigureNames.cpp
 	src/FigureRoute.cpp
 	src/Walker_Phrase.cpp

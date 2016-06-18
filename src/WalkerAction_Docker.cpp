@@ -1,4 +1,4 @@
-#include "WalkerAction_private.h"
+#include "FigureAction_private.h"
 
 #include "Resource.h"
 #include "Trader.h"
@@ -84,11 +84,11 @@ static void setCartGraphic(struct Data_Walker *w)
 	w->cartGraphicId += Resource_getGraphicIdOffset(w->resourceId, 1);
 }
 
-void WalkerAction_docker(int walkerId)
+void FigureAction_docker(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	struct Data_Building *b = &Data_Buildings[w->buildingId];
-	WalkerActionIncreaseGraphicOffset(w, 12);
+	FigureActionIncreaseGraphicOffset(w, 12);
 	w->cartGraphicId = 0;
 	if (!BuildingIsInUse(w->buildingId)) {
 		w->state = FigureState_Dead;
@@ -113,10 +113,10 @@ void WalkerAction_docker(int walkerId)
 	w->terrainUsage = FigureTerrainUsage_Roads;
 	switch (w->actionState) {
 		case FigureActionState_150_Attack:
-			WalkerAction_Common_handleAttack(walkerId);
+			FigureAction_Common_handleAttack(walkerId);
 			break;
 		case FigureActionState_149_Corpse:
-			WalkerAction_Common_handleCorpse(walkerId);
+			FigureAction_Common_handleCorpse(walkerId);
 			break;
 		case FigureActionState_132_DockerIdling:
 			w->resourceId = 0;
@@ -185,7 +185,7 @@ void WalkerAction_docker(int walkerId)
 			break;
 		case FigureActionState_135_DockerImportGoingToWarehouse:
 			setCartGraphic(w);
-			WalkerMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(walkerId, 1);
 			if (w->direction == DirFigure_8_AtDestination) {
 				w->actionState = FigureActionState_139_DockerImportAtWarehouse;
 			} else if (w->direction == DirFigure_9_Reroute) {
@@ -199,7 +199,7 @@ void WalkerAction_docker(int walkerId)
 			break;
 		case FigureActionState_136_DockerExportGoingToWarehouse:
 			w->cartGraphicId = GraphicId(ID_Graphic_Figure_CartpusherCart); // empty
-			WalkerMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(walkerId, 1);
 			if (w->direction == DirFigure_8_AtDestination) {
 				w->actionState = FigureActionState_140_DockerExportAtWarehouse;
 			} else if (w->direction == DirFigure_9_Reroute) {
@@ -213,7 +213,7 @@ void WalkerAction_docker(int walkerId)
 			break;
 		case FigureActionState_137_DockerExportReturning:
 			setCartGraphic(w);
-			WalkerMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(walkerId, 1);
 			if (w->direction == DirFigure_8_AtDestination) {
 				w->actionState = FigureActionState_134_DockerExportQueue;
 				w->waitTicks = 0;
@@ -228,7 +228,7 @@ void WalkerAction_docker(int walkerId)
 			break;
 		case FigureActionState_138_DockerImportReturning:
 			setCartGraphic(w);
-			WalkerMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(walkerId, 1);
 			if (w->direction == DirFigure_8_AtDestination) {
 				w->actionState = FigureActionState_132_DockerIdling;
 			} else if (w->direction == DirFigure_9_Reroute) {
@@ -301,7 +301,7 @@ void WalkerAction_docker(int walkerId)
 	}
 	if (w->cartGraphicId) {
 		w->cartGraphicId += dir;
-		WalkerAction_Common_setCartOffset(walkerId, dir);
+		FigureAction_Common_setCartOffset(walkerId, dir);
 	} else {
 		w->graphicId = 0;
 	}

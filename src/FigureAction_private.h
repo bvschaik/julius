@@ -1,7 +1,7 @@
-#ifndef WALKERACTION_PRIVATE_H
-#define WALKERACTION_PRIVATE_H
+#ifndef FIGUREACTION_PRIVATE_H
+#define FIGUREACTION_PRIVATE_H
 
-#define WalkerActionIncreaseGraphicOffset(w, max) (w)->graphicOffset++; if ((w)->graphicOffset >= (max)) (w)->graphicOffset = 0;
+#define FigureActionIncreaseGraphicOffset(w, max) (w)->graphicOffset++; if ((w)->graphicOffset >= (max)) (w)->graphicOffset = 0;
 #define WalkerActionDirection(w) ((8 + w->direction - Data_Settings_Map.orientation) % 8)
 #define WalkerActionNormalizeDirection(d) ((d) = (8 + (d) - Data_Settings_Map.orientation) % 8)
 #define WalkerActionCorpseGraphicOffset(w) walkerActionCorpseGraphicOffsets[w->waitTicks / 2]
@@ -21,8 +21,8 @@ extern const int walkerActionMissileLauncherGraphicOffsets[128];
 extern const int walkerActionFormationLayoutPositionX[13][16];
 extern const int walkerActionFormationLayoutPositionY[13][16];
 
+#include "FigureMovement.h"
 #include "WalkerAction.h"
-#include "WalkerMovement.h"
 
 #include "Data/Building.h"
 #include "Data/Constants.h"

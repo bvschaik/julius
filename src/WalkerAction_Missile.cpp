@@ -1,4 +1,4 @@
-#include "WalkerAction_private.h"
+#include "FigureAction_private.h"
 
 #include "Formation.h"
 #include "Sound.h"
@@ -10,7 +10,7 @@ static const int cloudGraphicOffsets[] = {
 	2, 2, 2, 2, 3, 3, 3, 4, 4, 5, 6, 7
 };
 
-void WalkerAction_explosionCloud(int walkerId)
+void FigureAction_explosionCloud(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	w->useCrossCountry = 1;
@@ -18,7 +18,7 @@ void WalkerAction_explosionCloud(int walkerId)
 	if (w->progressOnTile > 44) {
 		w->state = FigureState_Dead;
 	}
-	WalkerMovement_crossCountryWalkTicks(walkerId, w->speedMultiplier);
+	FigureMovement_crossCountryWalkTicks(walkerId, w->speedMultiplier);
 	if (w->progressOnTile < 48) {
 		w->graphicId = GraphicId(ID_Graphic_Figure_Explosion) +
 			cloudGraphicOffsets[w->progressOnTile / 2];
@@ -27,7 +27,7 @@ void WalkerAction_explosionCloud(int walkerId)
 	}
 }
 
-void WalkerAction_arrow(int walkerId)
+void FigureAction_arrow(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	w->useCrossCountry = 1;
@@ -35,15 +35,15 @@ void WalkerAction_arrow(int walkerId)
 	if (w->progressOnTile > 120) {
 		w->state = FigureState_Dead;
 	}
-	int shouldDie = WalkerMovement_crossCountryWalkTicks(walkerId, 4);
+	int shouldDie = FigureMovement_crossCountryWalkTicks(walkerId, 4);
 	int targetId = Figure_getCitizenOnSameTile(walkerId);
 	if (targetId) {
 		int targetType = Data_Walkers[targetId].type;
 		int formationId = Data_Walkers[targetId].formationId;
-		int maxDamage = Constant_WalkerProperties[targetType].maxDamage;
+		int maxDamage = Constant_FigureProperties[targetType].maxDamage;
 		int damageInflicted =
-			Constant_WalkerProperties[w->type].missileAttackValue -
-			Constant_WalkerProperties[targetType].missileDefenseValue;
+			Constant_FigureProperties[w->type].missileAttackValue -
+			Constant_FigureProperties[targetType].missileDefenseValue;
 		if (damageInflicted < 0) {
 			damageInflicted = 0;
 		}
@@ -74,7 +74,7 @@ void WalkerAction_arrow(int walkerId)
 	w->graphicId = GraphicId(ID_Graphic_Figure_Missile) + 16 + dir;
 }
 
-void WalkerAction_spear(int walkerId)
+void FigureAction_spear(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	w->useCrossCountry = 1;
@@ -82,15 +82,15 @@ void WalkerAction_spear(int walkerId)
 	if (w->progressOnTile > 120) {
 		w->state = FigureState_Dead;
 	}
-	int shouldDie = WalkerMovement_crossCountryWalkTicks(walkerId, 4);
+	int shouldDie = FigureMovement_crossCountryWalkTicks(walkerId, 4);
 	int targetId = Figure_getCitizenOnSameTile(walkerId);
 	if (targetId) {
 		int targetType = Data_Walkers[targetId].type;
 		int formationId = Data_Walkers[targetId].formationId;
-		int maxDamage = Constant_WalkerProperties[targetType].maxDamage;
+		int maxDamage = Constant_FigureProperties[targetType].maxDamage;
 		int damageInflicted =
-			Constant_WalkerProperties[w->type].missileAttackValue -
-			Constant_WalkerProperties[targetType].missileDefenseValue;
+			Constant_FigureProperties[w->type].missileAttackValue -
+			Constant_FigureProperties[targetType].missileDefenseValue;
 		if (damageInflicted < 0) {
 			damageInflicted = 0;
 		}
@@ -121,7 +121,7 @@ void WalkerAction_spear(int walkerId)
 	w->graphicId = GraphicId(ID_Graphic_Figure_Missile) + dir;
 }
 
-void WalkerAction_javelin(int walkerId)
+void FigureAction_javelin(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	w->useCrossCountry = 1;
@@ -129,15 +129,15 @@ void WalkerAction_javelin(int walkerId)
 	if (w->progressOnTile > 120) {
 		w->state = FigureState_Dead;
 	}
-	int shouldDie = WalkerMovement_crossCountryWalkTicks(walkerId, 4);
+	int shouldDie = FigureMovement_crossCountryWalkTicks(walkerId, 4);
 	int targetId = Figure_getNonCitizenOnSameTile(walkerId);
 	if (targetId) {
 		int targetType = Data_Walkers[targetId].type;
 		int formationId = Data_Walkers[targetId].formationId;
-		int maxDamage = Constant_WalkerProperties[targetType].maxDamage;
+		int maxDamage = Constant_FigureProperties[targetType].maxDamage;
 		int damageInflicted =
-			Constant_WalkerProperties[w->type].missileAttackValue -
-			Constant_WalkerProperties[targetType].missileDefenseValue;
+			Constant_FigureProperties[w->type].missileAttackValue -
+			Constant_FigureProperties[targetType].missileDefenseValue;
 		if (damageInflicted < 0) {
 			damageInflicted = 0;
 		}
@@ -168,7 +168,7 @@ void WalkerAction_javelin(int walkerId)
 	w->graphicId = GraphicId(ID_Graphic_Figure_Missile) + dir;
 }
 
-void WalkerAction_bolt(int walkerId)
+void FigureAction_bolt(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	w->useCrossCountry = 1;
@@ -176,15 +176,15 @@ void WalkerAction_bolt(int walkerId)
 	if (w->progressOnTile > 120) {
 		w->state = FigureState_Dead;
 	}
-	int shouldDie = WalkerMovement_crossCountryWalkTicks(walkerId, 4);
+	int shouldDie = FigureMovement_crossCountryWalkTicks(walkerId, 4);
 	int targetId = Figure_getNonCitizenOnSameTile(walkerId);
 	if (targetId) {
 		int targetType = Data_Walkers[targetId].type;
 		int formationId = Data_Walkers[targetId].formationId;
-		int maxDamage = Constant_WalkerProperties[targetType].maxDamage;
+		int maxDamage = Constant_FigureProperties[targetType].maxDamage;
 		int damageInflicted =
-			Constant_WalkerProperties[w->type].missileAttackValue -
-			Constant_WalkerProperties[targetType].missileDefenseValue;
+			Constant_FigureProperties[w->type].missileAttackValue -
+			Constant_FigureProperties[targetType].missileDefenseValue;
 		if (damageInflicted < 0) {
 			damageInflicted = 0;
 		}

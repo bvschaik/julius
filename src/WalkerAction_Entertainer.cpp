@@ -1,4 +1,4 @@
-#include "WalkerAction_private.h"
+#include "FigureAction_private.h"
 
 #include "Calc.h"
 #include "Terrain.h"
@@ -127,11 +127,11 @@ static void updateGraphic(int walkerId, struct Data_Walker *w)
 	}
 	if (w->cartGraphicId) {
 		w->cartGraphicId += dir + 8 * w->graphicOffset;
-		WalkerAction_Common_setCartOffset(walkerId, dir);
+		FigureAction_Common_setCartOffset(walkerId, dir);
 	}
 }
 
-void WalkerAction_entertainer(int walkerId)
+void FigureAction_entertainer(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	struct Data_Building *b = &Data_Buildings[w->buildingId];
@@ -139,7 +139,7 @@ void WalkerAction_entertainer(int walkerId)
 	w->terrainUsage = FigureTerrainUsage_Roads;
 	w->useCrossCountry = 0;
 	w->maxRoamLength = 512;
-	WalkerActionIncreaseGraphicOffset(w, 12);
+	FigureActionIncreaseGraphicOffset(w, 12);
 	w->waitTicksMissile++;
 	if (w->waitTicksMissile >= 120) {
 		w->waitTicksMissile = 0;
@@ -158,11 +158,11 @@ void WalkerAction_entertainer(int walkerId)
 	int speedFactor = w->type == Figure_Charioteer ? 2 : 1;
 	switch (w->actionState) {
 		case FigureActionState_150_Attack:
-			WalkerAction_Common_handleAttack(walkerId);
-			WalkerActionIncreaseGraphicOffset(w, 32);
+			FigureAction_Common_handleAttack(walkerId);
+			FigureActionIncreaseGraphicOffset(w, 32);
 			break;
 		case FigureActionState_149_Corpse:
-			WalkerAction_Common_handleCorpse(walkerId);
+			FigureAction_Common_handleCorpse(walkerId);
 			break;
 		case FigureActionState_90_EntertainerAtSchoolCreated:
 			w->isGhost = 1;
@@ -173,7 +173,7 @@ void WalkerAction_entertainer(int walkerId)
 				int xRoad, yRoad;
 				if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
 					w->actionState = FigureActionState_91_EntertainerExitingSchool;
-					WalkerAction_Common_setCrossCountryDestination(walkerId, w, xRoad, yRoad);
+					FigureAction_Common_setCrossCountryDestination(walkerId, w, xRoad, yRoad);
 					w->roamLength = 0;
 				} else {
 					w->state = FigureState_Dead;
@@ -183,7 +183,7 @@ void WalkerAction_entertainer(int walkerId)
 		case FigureActionState_91_EntertainerExitingSchool:
 			w->useCrossCountry = 1;
 			w->isGhost = 1;
-			if (WalkerMovement_crossCountryWalkTicks(walkerId, 1) == 1) {
+			if (FigureMovement_crossCountryWalkTicks(walkerId, 1) == 1) {
 				int dstBuildingId = 0;
 				switch (w->type) {
 					case Figure_Actor:
@@ -223,7 +223,7 @@ void WalkerAction_entertainer(int walkerId)
 			if (w->roamLength >= 3200) {
 				w->state = FigureState_Dead;
 			}
-			WalkerMovement_walkTicks(walkerId, speedFactor);
+			FigureMovement_walkTicks(walkerId, speedFactor);
 			if (w->direction == DirFigure_8_AtDestination) {
 				updateShowsAtDestination(w);
 				w->state = FigureState_Dead;
@@ -246,10 +246,10 @@ void WalkerAction_entertainer(int walkerId)
 					w->state = FigureState_Dead;
 				}
 			}
-			WalkerMovement_roamTicks(walkerId, speedFactor);
+			FigureMovement_roamTicks(walkerId, speedFactor);
 			break;
 		case FigureActionState_95_EntertainerReturning:
-			WalkerMovement_walkTicks(walkerId, speedFactor);
+			FigureMovement_walkTicks(walkerId, speedFactor);
 			if (w->direction == DirFigure_8_AtDestination ||
 				w->direction == DirFigure_9_Reroute || w->direction == DirFigure_10_Lost) {
 				w->state = FigureState_Dead;

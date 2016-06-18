@@ -2,12 +2,12 @@
 
 #include "Building.h"
 #include "Calc.h"
+#include "FigureMovement.h"
 #include "Formation.h"
 #include "PlayerMessage.h"
 #include "Resource.h"
 #include "Terrain.h"
 #include "TerrainGraphics.h"
-#include "WalkerMovement.h"
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
@@ -43,7 +43,7 @@ static void generateLaborSeeker(int buildingId, struct Data_Building *b, int x, 
 		w->actionState = FigureActionState_125_Roaming;
 		w->buildingId = buildingId;
 		b->walkerId2 = walkerId;
-		WalkerMovement_initRoaming(walkerId);
+		FigureMovement_initRoaming(walkerId);
 	}
 }
 
@@ -73,7 +73,7 @@ static void spawnWalkerPatrician(int buildingId, struct Data_Building *b, int *p
 			CREATE_WALKER(Figure_Patrician, xRoad, yRoad, Dir_4_Bottom);
 			w->actionState = FigureActionState_125_Roaming;
 			w->buildingId = buildingId;
-			WalkerMovement_initRoaming(walkerId);
+			FigureMovement_initRoaming(walkerId);
 		}
 	}
 }
@@ -380,7 +380,7 @@ static void spawnWalkerAmphitheater(int buildingId, struct Data_Building *b)
 			w->actionState = FigureActionState_94_EntertainerRoaming;
 			w->buildingId = buildingId;
 			b->walkerId = walkerId;
-			WalkerMovement_initRoaming(walkerId);
+			FigureMovement_initRoaming(walkerId);
 		}
 	}
 }
@@ -416,7 +416,7 @@ static void spawnWalkerTheater(int buildingId, struct Data_Building *b)
 			w->actionState = FigureActionState_94_EntertainerRoaming;
 			w->buildingId = buildingId;
 			b->walkerId = walkerId;
-			WalkerMovement_initRoaming(walkerId);
+			FigureMovement_initRoaming(walkerId);
 		}
 	}
 }
@@ -463,7 +463,7 @@ static void spawnWalkerHippodrome(int buildingId, struct Data_Building *b)
 				w->actionState = FigureActionState_94_EntertainerRoaming;
 				w->buildingId = buildingId;
 				b->walkerId = walkerId;
-				WalkerMovement_initRoaming(walkerId);
+				FigureMovement_initRoaming(walkerId);
 			}
 			if (!Data_CityInfo.entertainmentHippodromeHasShow) {
 				// create mini-horses
@@ -530,7 +530,7 @@ static void spawnWalkerColosseum(int buildingId, struct Data_Building *b)
 			w->actionState = FigureActionState_94_EntertainerRoaming;
 			w->buildingId = buildingId;
 			b->walkerId = walkerId;
-			WalkerMovement_initRoaming(walkerId);
+			FigureMovement_initRoaming(walkerId);
 			if (b->data.entertainment.days1 > 0 || b->data.entertainment.days2 > 0) {
 				if (!Data_CityInfo.messageShownColosseum) {
 					Data_CityInfo.messageShownColosseum = 1;
@@ -588,7 +588,7 @@ static void spawnWalkerMarket(int buildingId, struct Data_Building *b)
 			w->actionState = FigureActionState_125_Roaming;
 			w->buildingId = buildingId;
 			b->walkerId = walkerId;
-			WalkerMovement_initRoaming(walkerId);
+			FigureMovement_initRoaming(walkerId);
 		}
 		// market buyer or labor seeker
 		if (b->walkerId2) {
@@ -683,7 +683,7 @@ static void spawnWalkerBathhouse(int buildingId, struct Data_Building *b)
 			w->actionState = FigureActionState_125_Roaming;
 			w->buildingId = buildingId;
 			b->walkerId = walkerId;
-			WalkerMovement_initRoaming(walkerId);
+			FigureMovement_initRoaming(walkerId);
 		}
 	}
 }
@@ -718,25 +718,25 @@ static void spawnWalkerSchool(int buildingId, struct Data_Building *b)
 				w->actionState = FigureActionState_125_Roaming;
 				w->buildingId = buildingId;
 				b->walkerId = walkerId;
-				WalkerMovement_initRoaming(walkerId);
+				FigureMovement_initRoaming(walkerId);
 			}
 			{
 				CREATE_WALKER(Figure_SchoolChild, xRoad, yRoad, Dir_0_Top);
 				w->actionState = FigureActionState_125_Roaming;
 				w->buildingId = buildingId;
-				WalkerMovement_initRoaming(walkerId);
+				FigureMovement_initRoaming(walkerId);
 			}
 			{
 				CREATE_WALKER(Figure_SchoolChild, xRoad, yRoad, Dir_0_Top);
 				w->actionState = FigureActionState_125_Roaming;
 				w->buildingId = buildingId;
-				WalkerMovement_initRoaming(walkerId);
+				FigureMovement_initRoaming(walkerId);
 			}
 			{
 				CREATE_WALKER(Figure_SchoolChild, xRoad, yRoad, Dir_0_Top);
 				w->actionState = FigureActionState_125_Roaming;
 				w->buildingId = buildingId;
-				WalkerMovement_initRoaming(walkerId);
+				FigureMovement_initRoaming(walkerId);
 			}
 		}
 	}
@@ -771,7 +771,7 @@ static void spawnWalkerLibrary(int buildingId, struct Data_Building *b)
 			w->actionState = FigureActionState_125_Roaming;
 			w->buildingId = buildingId;
 			b->walkerId = walkerId;
-			WalkerMovement_initRoaming(walkerId);
+			FigureMovement_initRoaming(walkerId);
 		}
 	}
 }
@@ -805,7 +805,7 @@ static void spawnWalkerAcademy(int buildingId, struct Data_Building *b)
 			w->actionState = FigureActionState_125_Roaming;
 			w->buildingId = buildingId;
 			b->walkerId = walkerId;
-			WalkerMovement_initRoaming(walkerId);
+			FigureMovement_initRoaming(walkerId);
 		}
 	}
 }
@@ -839,7 +839,7 @@ static void spawnWalkerBarber(int buildingId, struct Data_Building *b)
 			w->actionState = FigureActionState_125_Roaming;
 			w->buildingId = buildingId;
 			b->walkerId = walkerId;
-			WalkerMovement_initRoaming(walkerId);
+			FigureMovement_initRoaming(walkerId);
 		}
 	}
 }
@@ -873,7 +873,7 @@ static void spawnWalkerDoctor(int buildingId, struct Data_Building *b)
 			w->actionState = FigureActionState_125_Roaming;
 			w->buildingId = buildingId;
 			b->walkerId = walkerId;
-			WalkerMovement_initRoaming(walkerId);
+			FigureMovement_initRoaming(walkerId);
 		}
 	}
 }
@@ -907,7 +907,7 @@ static void spawnWalkerHospital(int buildingId, struct Data_Building *b)
 			w->actionState = FigureActionState_125_Roaming;
 			w->buildingId = buildingId;
 			b->walkerId = walkerId;
-			WalkerMovement_initRoaming(walkerId);
+			FigureMovement_initRoaming(walkerId);
 		}
 	}
 }
@@ -943,7 +943,7 @@ static void spawnWalkerTemple(int buildingId, struct Data_Building *b)
 			w->actionState = FigureActionState_125_Roaming;
 			w->buildingId = buildingId;
 			b->walkerId = walkerId;
-			WalkerMovement_initRoaming(walkerId);
+			FigureMovement_initRoaming(walkerId);
 		}
 	}
 }
@@ -1012,7 +1012,7 @@ static void spawnWalkerMissionPost(int buildingId, struct Data_Building *b)
 				w->actionState = FigureActionState_125_Roaming;
 				w->buildingId = buildingId;
 				b->walkerId = walkerId;
-				WalkerMovement_initRoaming(walkerId);
+				FigureMovement_initRoaming(walkerId);
 			}
 		}
 	}

@@ -1,4 +1,4 @@
-#include "WalkerAction_private.h"
+#include "FigureAction_private.h"
 
 #include "Calc.h"
 #include "Routing.h"
@@ -11,7 +11,7 @@
 #include "Data/Formation.h"
 #include "Data/Grid.h"
 
-void WalkerAction_taxCollector(int walkerId)
+void FigureAction_taxCollector(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	struct Data_Building *b = &Data_Buildings[w->buildingId];
@@ -22,14 +22,14 @@ void WalkerAction_taxCollector(int walkerId)
 	if (!BuildingIsInUse(w->buildingId) || b->walkerId != walkerId) {
 		w->state = FigureState_Dead;
 	}
-	WalkerActionIncreaseGraphicOffset(w, 12);
+	FigureActionIncreaseGraphicOffset(w, 12);
 	
 	switch (w->actionState) {
 		case FigureActionState_150_Attack:
-			WalkerAction_Common_handleAttack(walkerId);
+			FigureAction_Common_handleAttack(walkerId);
 			break;
 		case FigureActionState_149_Corpse:
-			WalkerAction_Common_handleCorpse(walkerId);
+			FigureAction_Common_handleCorpse(walkerId);
 			break;
 		case FigureActionState_40_TaxCollectorCreated:
 			w->isGhost = 1;
@@ -39,7 +39,7 @@ void WalkerAction_taxCollector(int walkerId)
 				int xRoad, yRoad;
 				if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
 					w->actionState = FigureActionState_41_TaxCollectorEnteringExiting;
-					WalkerAction_Common_setCrossCountryDestination(walkerId, w, xRoad, yRoad);
+					FigureAction_Common_setCrossCountryDestination(walkerId, w, xRoad, yRoad);
 					w->roamLength = 0;
 				} else {
 					w->state = FigureState_Dead;
@@ -49,13 +49,13 @@ void WalkerAction_taxCollector(int walkerId)
 		case FigureActionState_41_TaxCollectorEnteringExiting:
 			w->useCrossCountry = 1;
 			w->isGhost = 1;
-			if (WalkerMovement_crossCountryWalkTicks(walkerId, 1) == 1) {
+			if (FigureMovement_crossCountryWalkTicks(walkerId, 1) == 1) {
 				if (Data_Grid_buildingIds[w->gridOffset] == w->buildingId) {
 					// returned to own building
 					w->state = FigureState_Dead;
 				} else {
 					w->actionState = FigureActionState_42_TaxCollectorRoaming;
-					WalkerMovement_initRoaming(walkerId);
+					FigureMovement_initRoaming(walkerId);
 					w->roamLength = 0;
 				}
 			}
@@ -73,13 +73,13 @@ void WalkerAction_taxCollector(int walkerId)
 					w->state = FigureState_Dead;
 				}
 			}
-			WalkerMovement_roamTicks(walkerId, 1);
+			FigureMovement_roamTicks(walkerId, 1);
 			break;
 		case FigureActionState_43_TaxCollectorReturning:
-			WalkerMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(walkerId, 1);
 			if (w->direction == DirFigure_8_AtDestination) {
 				w->actionState = FigureActionState_41_TaxCollectorEnteringExiting;
-				WalkerAction_Common_setCrossCountryDestination(walkerId, w, b->x, b->y);
+				FigureAction_Common_setCrossCountryDestination(walkerId, w, b->x, b->y);
 				w->roamLength = 0;
 			} else if (w->direction == DirFigure_9_Reroute || w->direction == DirFigure_10_Lost) {
 				w->state = FigureState_Dead;
@@ -89,7 +89,7 @@ void WalkerAction_taxCollector(int walkerId)
 	WalkerActionUpdateGraphic(w, GraphicId(ID_Graphic_Figure_TaxCollector));
 }
 
-void WalkerAction_engineer(int walkerId)
+void FigureAction_engineer(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	struct Data_Building *b = &Data_Buildings[w->buildingId];
@@ -100,14 +100,14 @@ void WalkerAction_engineer(int walkerId)
 	if (!BuildingIsInUse(w->buildingId) || b->walkerId != walkerId) {
 		w->state = FigureState_Dead;
 	}
-	WalkerActionIncreaseGraphicOffset(w, 12);
+	FigureActionIncreaseGraphicOffset(w, 12);
 	
 	switch (w->actionState) {
 		case FigureActionState_150_Attack:
-			WalkerAction_Common_handleAttack(walkerId);
+			FigureAction_Common_handleAttack(walkerId);
 			break;
 		case FigureActionState_149_Corpse:
-			WalkerAction_Common_handleCorpse(walkerId);
+			FigureAction_Common_handleCorpse(walkerId);
 			break;
 		case FigureActionState_60_EngineerCreated:
 			w->isGhost = 1;
@@ -117,7 +117,7 @@ void WalkerAction_engineer(int walkerId)
 				int xRoad, yRoad;
 				if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
 					w->actionState = FigureActionState_61_EngineerEnteringExiting;
-					WalkerAction_Common_setCrossCountryDestination(walkerId, w, xRoad, yRoad);
+					FigureAction_Common_setCrossCountryDestination(walkerId, w, xRoad, yRoad);
 					w->roamLength = 0;
 				} else {
 					w->state = FigureState_Dead;
@@ -127,13 +127,13 @@ void WalkerAction_engineer(int walkerId)
 		case FigureActionState_61_EngineerEnteringExiting:
 			w->useCrossCountry = 1;
 			w->isGhost = 1;
-			if (WalkerMovement_crossCountryWalkTicks(walkerId, 1) == 1) {
+			if (FigureMovement_crossCountryWalkTicks(walkerId, 1) == 1) {
 				if (Data_Grid_buildingIds[w->gridOffset] == w->buildingId) {
 					// returned to own building
 					w->state = FigureState_Dead;
 				} else {
 					w->actionState = FigureActionState_62_EngineerRoaming;
-					WalkerMovement_initRoaming(walkerId);
+					FigureMovement_initRoaming(walkerId);
 					w->roamLength = 0;
 				}
 			}
@@ -151,13 +151,13 @@ void WalkerAction_engineer(int walkerId)
 					w->state = FigureState_Dead;
 				}
 			}
-			WalkerMovement_roamTicks(walkerId, 1);
+			FigureMovement_roamTicks(walkerId, 1);
 			break;
 		case FigureActionState_63_EngineerReturning:
-			WalkerMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(walkerId, 1);
 			if (w->direction == DirFigure_8_AtDestination) {
 				w->actionState = FigureActionState_61_EngineerEnteringExiting;
-				WalkerAction_Common_setCrossCountryDestination(walkerId, w, b->x, b->y);
+				FigureAction_Common_setCrossCountryDestination(walkerId, w, b->x, b->y);
 				w->roamLength = 0;
 			} else if (w->direction == DirFigure_9_Reroute || w->direction == DirFigure_10_Lost) {
 				w->state = FigureState_Dead;
@@ -313,7 +313,7 @@ static int prefectTargetIsAlive(struct Data_Walker *w)
 	return 0;
 }
 
-void WalkerAction_prefect(int walkerId)
+void FigureAction_prefect(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	struct Data_Building *b = &Data_Buildings[w->buildingId];
@@ -324,7 +324,7 @@ void WalkerAction_prefect(int walkerId)
 	if (!BuildingIsInUse(w->buildingId) || b->walkerId != walkerId) {
 		w->state = FigureState_Dead;
 	}
-	WalkerActionIncreaseGraphicOffset(w, 12);
+	FigureActionIncreaseGraphicOffset(w, 12);
 	
 	// special actions
 	if (!prefectGoFightEnemy(walkerId, w)) {
@@ -332,10 +332,10 @@ void WalkerAction_prefect(int walkerId)
 	}
 	switch (w->actionState) {
 		case FigureActionState_150_Attack:
-			WalkerAction_Common_handleAttack(walkerId);
+			FigureAction_Common_handleAttack(walkerId);
 			break;
 		case FigureActionState_149_Corpse:
-			WalkerAction_Common_handleCorpse(walkerId);
+			FigureAction_Common_handleCorpse(walkerId);
 			break;
 		case FigureActionState_70_PrefectCreated:
 			w->isGhost = 1;
@@ -345,7 +345,7 @@ void WalkerAction_prefect(int walkerId)
 				int xRoad, yRoad;
 				if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
 					w->actionState = FigureActionState_71_PrefectEnteringExiting;
-					WalkerAction_Common_setCrossCountryDestination(walkerId, w, xRoad, yRoad);
+					FigureAction_Common_setCrossCountryDestination(walkerId, w, xRoad, yRoad);
 					w->roamLength = 0;
 				} else {
 					w->state = FigureState_Dead;
@@ -355,13 +355,13 @@ void WalkerAction_prefect(int walkerId)
 		case FigureActionState_71_PrefectEnteringExiting:
 			w->useCrossCountry = 1;
 			w->isGhost = 1;
-			if (WalkerMovement_crossCountryWalkTicks(walkerId, 1) == 1) {
+			if (FigureMovement_crossCountryWalkTicks(walkerId, 1) == 1) {
 				if (Data_Grid_buildingIds[w->gridOffset] == w->buildingId) {
 					// returned to own building
 					w->state = FigureState_Dead;
 				} else {
 					w->actionState = FigureActionState_72_PrefectRoaming;
-					WalkerMovement_initRoaming(walkerId);
+					FigureMovement_initRoaming(walkerId);
 					w->roamLength = 0;
 				}
 			}
@@ -380,13 +380,13 @@ void WalkerAction_prefect(int walkerId)
 					w->state = FigureState_Dead;
 				}
 			}
-			WalkerMovement_roamTicks(walkerId, 1);
+			FigureMovement_roamTicks(walkerId, 1);
 			break;
 		case FigureActionState_73_PrefectReturning:
-			WalkerMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(walkerId, 1);
 			if (w->direction == DirFigure_8_AtDestination) {
 				w->actionState = FigureActionState_71_PrefectEnteringExiting;
-				WalkerAction_Common_setCrossCountryDestination(walkerId, w, b->x, b->y);
+				FigureAction_Common_setCrossCountryDestination(walkerId, w, b->x, b->y);
 				w->roamLength = 0;
 			} else if (w->direction == DirFigure_9_Reroute || w->direction == DirFigure_10_Lost) {
 				w->state = FigureState_Dead;
@@ -394,7 +394,7 @@ void WalkerAction_prefect(int walkerId)
 			break;
 		case FigureActionState_74_PrefectGoingToFire:
 			w->terrainUsage = FigureTerrainUsage_Any;
-			WalkerMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(walkerId, 1);
 			if (w->direction == DirFigure_8_AtDestination) {
 				w->actionState = FigureActionState_75_PrefectAtFire;
 				FigureRoute_remove(walkerId);
@@ -421,7 +421,7 @@ void WalkerAction_prefect(int walkerId)
 					w->state = FigureState_Dead;
 				}
 			}
-			WalkerMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(walkerId, 1);
 			if (w->direction == DirFigure_8_AtDestination) {
 				w->destinationX = Data_Walkers[w->targetWalkerId].x;
 				w->destinationY = Data_Walkers[w->targetWalkerId].y;
@@ -470,7 +470,7 @@ void WalkerAction_prefect(int walkerId)
 	}
 }
 
-void WalkerAction_worker(int walkerId)
+void FigureAction_worker(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	w->terrainUsage = FigureTerrainUsage_Roads;

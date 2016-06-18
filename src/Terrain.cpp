@@ -1356,6 +1356,6 @@ void Terrain_rotateMap(int ccw)
 	TerrainBridge_updateSpriteIdsOnMapRotate(ccw);
 	Routing_determineWalls();
 
-	WalkerAction_TowerSentry_reroute();
-	WalkerAction_HippodromeHorse_reroute();
+	FigureAction_TowerSentry_reroute();
+	FigureAction_HippodromeHorse_reroute();
 }

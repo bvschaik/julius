@@ -1,4 +1,4 @@
-#include "WalkerAction_private.h"
+#include "FigureAction_private.h"
 
 #include "BuildingHouse.h"
 #include "CityInfo.h"
@@ -22,11 +22,11 @@ static void updateDirectionAndGraphic(int walkerId, struct Data_Walker *w)
 	if (w->actionState == FigureActionState_2_ImmigrantArriving) {
 		w->cartGraphicId = GraphicId(ID_Graphic_Figure_MigrantCart) + dir;
 		int cartDir = (dir + 4) % 8;
-		WalkerAction_Common_setCartOffset(walkerId, cartDir);
+		FigureAction_Common_setCartOffset(walkerId, cartDir);
 	}
 }
 
-void WalkerAction_immigrant(int walkerId)
+void FigureAction_immigrant(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	int buildingId = w->immigrantBuildingId;
@@ -39,14 +39,14 @@ void WalkerAction_immigrant(int walkerId)
 		return;
 	}
 	
-	WalkerActionIncreaseGraphicOffset(w, 12);
+	FigureActionIncreaseGraphicOffset(w, 12);
 	
 	switch (w->actionState) {
 		case FigureActionState_150_Attack:
-			WalkerAction_Common_handleAttack(walkerId);
+			FigureAction_Common_handleAttack(walkerId);
 			break;
 		case FigureActionState_149_Corpse:
-			WalkerAction_Common_handleCorpse(walkerId);
+			FigureAction_Common_handleCorpse(walkerId);
 			break;
 		case FigureActionState_1_ImmigrantCreated:
 			w->isGhost = 1;
@@ -66,11 +66,11 @@ void WalkerAction_immigrant(int walkerId)
 			break;
 		case FigureActionState_2_ImmigrantArriving:
 			w->isGhost = 0;
-			WalkerMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(walkerId, 1);
 			switch (w->direction) {
 				case DirFigure_8_AtDestination:
 					w->actionState = FigureActionState_3_ImmigrantEnteringHouse;
-					WalkerAction_Common_setCrossCountryDestination(walkerId, w, b->x, b->y);
+					FigureAction_Common_setCrossCountryDestination(walkerId, w, b->x, b->y);
 					w->roamLength = 0;
 					break;
 				case DirFigure_9_Reroute:
@@ -86,7 +86,7 @@ void WalkerAction_immigrant(int walkerId)
 		case FigureActionState_3_ImmigrantEnteringHouse:
 			w->useCrossCountry = 1;
 			w->isGhost = 1;
-			if (WalkerMovement_crossCountryWalkTicks(walkerId, 1) == 1) {
+			if (FigureMovement_crossCountryWalkTicks(walkerId, 1) == 1) {
 				w->state = FigureState_Dead;
 				int maxPeople = Data_Model_Houses[b->subtype.houseLevel].maxPeople;
 				if (b->houseIsMerged) {
@@ -114,21 +114,21 @@ void WalkerAction_immigrant(int walkerId)
 	updateDirectionAndGraphic(walkerId, w);
 }
 
-void WalkerAction_emigrant(int walkerId)
+void FigureAction_emigrant(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	
 	w->terrainUsage = FigureTerrainUsage_Any;
 	w->cartGraphicId = 0;
 	
-	WalkerActionIncreaseGraphicOffset(w, 12);
+	FigureActionIncreaseGraphicOffset(w, 12);
 	
 	switch (w->actionState) {
 		case FigureActionState_150_Attack:
-			WalkerAction_Common_handleAttack(walkerId);
+			FigureAction_Common_handleAttack(walkerId);
 			break;
 		case FigureActionState_149_Corpse:
-			WalkerAction_Common_handleCorpse(walkerId);
+			FigureAction_Common_handleCorpse(walkerId);
 			break;
 		case FigureActionState_4_EmigrantCreated:
 			w->isGhost = 1;
@@ -140,14 +140,14 @@ void WalkerAction_emigrant(int walkerId)
 					w->state = FigureState_Dead;
 				}
 				w->actionState = FigureActionState_5_EmigrantExitingHouse;
-				WalkerAction_Common_setCrossCountryDestination(walkerId, w, xRoad, yRoad);
+				FigureAction_Common_setCrossCountryDestination(walkerId, w, xRoad, yRoad);
 				w->roamLength = 0;
 			}
 			break;
 		case FigureActionState_5_EmigrantExitingHouse:
 			w->useCrossCountry = 1;
 			w->isGhost = 1;
-			if (WalkerMovement_crossCountryWalkTicks(walkerId, 1) == 1) {
+			if (FigureMovement_crossCountryWalkTicks(walkerId, 1) == 1) {
 				w->actionState = FigureActionState_6_EmigrantLeaving;
 				w->destinationX = Data_CityInfo.entryPointX;
 				w->destinationY = Data_CityInfo.entryPointY;
@@ -159,7 +159,7 @@ void WalkerAction_emigrant(int walkerId)
 		case FigureActionState_6_EmigrantLeaving:
 			w->useCrossCountry = 0;
 			w->isGhost = 0;
-			WalkerMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(walkerId, 1);
 			if (w->direction == DirFigure_8_AtDestination ||
 				w->direction == DirFigure_9_Reroute ||
 				w->direction == DirFigure_10_Lost) {
@@ -170,19 +170,19 @@ void WalkerAction_emigrant(int walkerId)
 	updateDirectionAndGraphic(walkerId, w);
 }
 
-void WalkerAction_homeless(int walkerId)
+void FigureAction_homeless(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	
-	WalkerActionIncreaseGraphicOffset(w, 12);
+	FigureActionIncreaseGraphicOffset(w, 12);
 	w->terrainUsage = FigureTerrainUsage_PreferRoads;
 	
 	switch (w->actionState) {
 		case FigureActionState_150_Attack:
-			WalkerAction_Common_handleAttack(walkerId);
+			FigureAction_Common_handleAttack(walkerId);
 			break;
 		case FigureActionState_149_Corpse:
-			WalkerAction_Common_handleCorpse(walkerId);
+			FigureAction_Common_handleCorpse(walkerId);
 			break;
 		case FigureActionState_7_HomelessCreated:
 			w->graphicOffset = 0;
@@ -213,13 +213,13 @@ void WalkerAction_homeless(int walkerId)
 			break;
 		case FigureActionState_8_HomelessGoingToHouse:
 			w->isGhost = 0;
-			WalkerMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(walkerId, 1);
 			if (w->direction == DirFigure_9_Reroute || w->direction == DirFigure_10_Lost) {
 				Data_Buildings[w->immigrantBuildingId].immigrantWalkerId = 0;
 				w->state = FigureState_Dead;
 			} else if (w->direction == DirFigure_8_AtDestination) {
 				w->actionState = FigureActionState_9_HomelessEnteringHouse;
-				WalkerAction_Common_setCrossCountryDestination(walkerId, w,
+				FigureAction_Common_setCrossCountryDestination(walkerId, w,
 					Data_Buildings[w->immigrantBuildingId].x,
 					Data_Buildings[w->immigrantBuildingId].y);
 				w->roamLength = 0;
@@ -228,7 +228,7 @@ void WalkerAction_homeless(int walkerId)
 		case FigureActionState_9_HomelessEnteringHouse:
 			w->useCrossCountry = 1;
 			w->isGhost = 1;
-			if (WalkerMovement_crossCountryWalkTicks(walkerId, 1) == 1) {
+			if (FigureMovement_crossCountryWalkTicks(walkerId, 1) == 1) {
 				w->state = FigureState_Dead;
 				struct Data_Building *b = &Data_Buildings[w->immigrantBuildingId];
 				if (w->immigrantBuildingId && BuildingIsHouse(b->type)) {
@@ -254,7 +254,7 @@ void WalkerAction_homeless(int walkerId)
 			}
 			break;
 		case FigureActionState_10_HomelessLeaving:
-			WalkerMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(walkerId, 1);
 			if (w->direction == DirFigure_8_AtDestination || w->direction == DirFigure_10_Lost) {
 				w->state = FigureState_Dead;
 			} else if (w->direction == DirFigure_9_Reroute) {

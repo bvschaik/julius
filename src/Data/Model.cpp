@@ -228,7 +228,7 @@ const struct BuildingProperties Constant_BuildingProperties[140] = {
 	{0, 0, 0, 0}
 };
 
-const struct WalkerProperties Constant_WalkerProperties[80] = {
+const struct FigureProperties Constant_FigureProperties[80] = {
 	{0,   0,   0,   0,   0,   0,   0,   0},
 	{1,  20,   0,   0,   0,   0,   0,   0},
 	{1,  20,   0,   0,   0,   0,   0,   0},

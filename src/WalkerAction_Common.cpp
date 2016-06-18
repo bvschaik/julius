@@ -1,4 +1,4 @@
-#include "WalkerAction_private.h"
+#include "FigureAction_private.h"
 
 #include "Formation.h"
 #include "Sound.h"
@@ -63,7 +63,7 @@ const int walkerActionFormationLayoutPositionY[13][16] = {
 static const int cartOffsetsX[] = {13, 18, 12, 0, -13, -18, -13, 0};
 static const int cartOffsetsY[] = {-7, -1, 7, 11, 6, -1, -7, -12};
 
-void WalkerAction_Common_handleCorpse(int walkerId)
+void FigureAction_Common_handleCorpse(int walkerId)
 {
 	if (Data_Walkers[walkerId].waitTicks < 0) {
 		Data_Walkers[walkerId].waitTicks = 0;
@@ -107,31 +107,31 @@ static void hitOpponent(int walkerId, struct Data_Walker *w)
 	struct Data_Walker *opponent = &Data_Walkers[w->opponentId];
 	struct Data_Formation *opponentFormation = &Data_Formations[opponent->formationId];
 	
-	int cat = Constant_WalkerProperties[opponent->type].category;
-	if (cat == WalkerCategory_Citizen || cat == WalkerCategory_Criminal) {
+	int cat = Constant_FigureProperties[opponent->type].category;
+	if (cat == FigureCategory_Citizen || cat == FigureCategory_Criminal) {
 		w->attackGraphicOffset = 12;
 	} else {
 		w->attackGraphicOffset = 0;
 	}
-	int walkerAttack = Constant_WalkerProperties[w->type].attackValue;
-	int opponentDefense = Constant_WalkerProperties[opponent->type].defenseValue;
+	int figureAttack = Constant_FigureProperties[w->type].attackValue;
+	int opponentDefense = Constant_FigureProperties[opponent->type].defenseValue;
 	
 	// attack modifiers
 	if (w->type == Figure_Wolf) {
 		switch (Data_Settings.difficulty) {
-			case Difficulty_VeryEasy: walkerAttack = 2; break;
-			case Difficulty_Easy: walkerAttack = 4; break;
-			case Difficulty_Normal: walkerAttack = 6; break;
+			case Difficulty_VeryEasy: figureAttack = 2; break;
+			case Difficulty_Easy: figureAttack = 4; break;
+			case Difficulty_Normal: figureAttack = 6; break;
 		}
 	}
 	if (opponent->opponentId != walkerId && f->figureType != Figure_FortLegionary &&
 			attackIsSameDirection(w->attackDirection, opponent->attackDirection)) {
-		walkerAttack += 4; // attack opponent on the (exposed) back
+		figureAttack += 4; // attack opponent on the (exposed) back
 		Sound_Effects_playChannel(SoundChannel_SwordSwing);
 	}
 	if (f->isHalted && f->figureType == Figure_FortLegionary &&
 			attackIsSameDirection(w->attackDirection, f->direction)) {
-		walkerAttack += 4; // coordinated formation attack bonus
+		figureAttack += 4; // coordinated formation attack bonus
 	}
 	// defense modifiers
 	if (opponentFormation->isHalted &&
@@ -147,8 +147,8 @@ static void hitOpponent(int walkerId, struct Data_Walker *w)
 		}
 	}
 	
-	int maxDamage = Constant_WalkerProperties[opponent->type].maxDamage;
-	int netAttack = walkerAttack - opponentDefense;
+	int maxDamage = Constant_FigureProperties[opponent->type].maxDamage;
+	int netAttack = figureAttack - opponentDefense;
 	if (netAttack < 0) {
 		netAttack = 0;
 	}
@@ -163,13 +163,13 @@ static void hitOpponent(int walkerId, struct Data_Walker *w)
 	}
 }
 
-void WalkerAction_Common_handleAttack(int walkerId)
+void FigureAction_Common_handleAttack(int walkerId)
 {
 	struct Data_Walker *w = &Data_Walkers[walkerId];
 	
 	if (w->progressOnTile <= 5) {
 		w->progressOnTile++;
-		WalkerMovement_advanceTick(w);
+		FigureMovement_advanceTick(w);
 	}
 	if (w->numAttackers == 0) {
 		resumeActivityAfterAttack(walkerId, w);
@@ -205,17 +205,17 @@ void WalkerAction_Common_handleAttack(int walkerId)
 	}
 }
 
-void WalkerAction_Common_setCartOffset(int walkerId, int direction)
+void FigureAction_Common_setCartOffset(int walkerId, int direction)
 {
 	Data_Walkers[walkerId].xOffsetCart = cartOffsetsX[direction];
 	Data_Walkers[walkerId].yOffsetCart = cartOffsetsY[direction];
 }
 
-void WalkerAction_Common_setCrossCountryDestination(int walkerId, struct Data_Walker *w, int xDst, int yDst)
+void FigureAction_Common_setCrossCountryDestination(int walkerId, struct Data_Walker *w, int xDst, int yDst)
 {
 	w->destinationX = xDst;
 	w->destinationY = yDst;
-	WalkerMovement_crossCountrySetDirection(
+	FigureMovement_crossCountrySetDirection(
 		walkerId, w->crossCountryX, w->crossCountryY,
 		15 * xDst, 15 * yDst, 0);
 }

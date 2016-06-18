@@ -655,7 +655,7 @@ static void updateEnemyMovement(int formationId, struct Data_Formation *f, int r
 		int yOffset = layoutOrientationLegionIndexOffsets[layout][f->orientation / 2][2 * f->enemyLegionIndex + 1] +
 			Data_Formation_Invasion.homeY[f->invasionId];
 		int xTile, yTile;
-		if (WalkerAction_HerdEnemy_moveFormationTo(formationId, xOffset, yOffset, &xTile, &yTile)) {
+		if (FigureAction_HerdEnemy_moveFormationTo(formationId, xOffset, yOffset, &xTile, &yTile)) {
 			f->destinationX = xTile;
 			f->destinationY = yTile;
 		}
@@ -666,7 +666,7 @@ static void updateEnemyMovement(int formationId, struct Data_Formation *f, int r
 		int yOffset = layoutOrientationLegionIndexOffsets[layout][f->orientation / 2][2 * f->enemyLegionIndex + 1] +
 			Data_Formation_Invasion.destinationY[f->invasionId];
 		int xTile, yTile;
-		if (WalkerAction_HerdEnemy_moveFormationTo(formationId, xOffset, yOffset, &xTile, &yTile)) {
+		if (FigureAction_HerdEnemy_moveFormationTo(formationId, xOffset, yOffset, &xTile, &yTile)) {
 			f->destinationX = xTile;
 			f->destinationY = yTile;
 		}
@@ -835,7 +835,7 @@ static void moveAnimals(struct Data_Formation *f, int attackingAnimals)
 		}
 		w->waitTicks = 401;
 		if (attackingAnimals) {
-			int targetId = WalkerAction_CombatWolf_getTarget(w->x, w->y, 6);
+			int targetId = FigureAction_CombatWolf_getTarget(w->x, w->y, 6);
 			if (targetId) {
 				w->actionState = FigureActionState_199_WolfAttacking;
 				w->destinationX = Data_Walkers[targetId].x;
@@ -927,7 +927,7 @@ static void tickUpdateHerds()
 				int xTile, yTile;
 				if (getHerdRoamingDestination(i, allowNegativeDesirability, f->xHome, f->yHome, roamDistance, f->herdDirection, &xTile, &yTile)) {
 					f->herdDirection = 0;
-					if (WalkerAction_HerdEnemy_moveFormationTo(i, xTile, yTile, &xTile, &yTile)) {
+					if (FigureAction_HerdEnemy_moveFormationTo(i, xTile, yTile, &xTile, &yTile)) {
 						f->destinationX = xTile;
 						f->destinationY = yTile;
 						if (f->figureType == Figure_Wolf) {
