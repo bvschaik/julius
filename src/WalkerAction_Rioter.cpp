@@ -17,62 +17,62 @@ static const int criminalOffsets[] = {
 
 void FigureAction_protestor(int walkerId)
 {
-	struct Data_Walker *w = &Data_Walkers[walkerId];
-	w->terrainUsage = FigureTerrainUsage_Roads;
-	FigureActionIncreaseGraphicOffset(w, 64);
-	w->cartGraphicId = 0;
-	if (w->actionState == FigureActionState_149_Corpse) {
-		w->state = FigureState_Dead;
+	struct Data_Walker *f = &Data_Walkers[walkerId];
+	f->terrainUsage = FigureTerrainUsage_Roads;
+	FigureActionIncreaseGraphicOffset(f, 64);
+	f->cartGraphicId = 0;
+	if (f->actionState == FigureActionState_149_Corpse) {
+		f->state = FigureState_Dead;
 	}
-	w->waitTicks++;
-	if (w->waitTicks > 200) {
-		w->state = FigureState_Dead;
-		w->graphicOffset = 0;
+	f->waitTicks++;
+	if (f->waitTicks > 200) {
+		f->state = FigureState_Dead;
+		f->graphicOffset = 0;
 	}
-	if (w->actionState == FigureActionState_149_Corpse) {
-		w->graphicId = GraphicId(ID_Graphic_Figure_Criminal) +
-			WalkerActionCorpseGraphicOffset(w) + 96;
+	if (f->actionState == FigureActionState_149_Corpse) {
+		f->graphicId = GraphicId(ID_Graphic_Figure_Criminal) +
+			WalkerActionCorpseGraphicOffset(f) + 96;
 	} else {
-		w->graphicId = GraphicId(ID_Graphic_Figure_Criminal) +
-			criminalOffsets[w->graphicOffset / 4] + 104;
+		f->graphicId = GraphicId(ID_Graphic_Figure_Criminal) +
+			criminalOffsets[f->graphicOffset / 4] + 104;
 	}
 }
 
 void FigureAction_criminal(int walkerId)
 {
-	struct Data_Walker *w = &Data_Walkers[walkerId];
-	w->terrainUsage = FigureTerrainUsage_Roads;
-	FigureActionIncreaseGraphicOffset(w, 32);
-	w->cartGraphicId = 0;
-	if (w->actionState == FigureActionState_149_Corpse) {
-		w->state = FigureState_Dead;
+	struct Data_Walker *f = &Data_Walkers[walkerId];
+	f->terrainUsage = FigureTerrainUsage_Roads;
+	FigureActionIncreaseGraphicOffset(f, 32);
+	f->cartGraphicId = 0;
+	if (f->actionState == FigureActionState_149_Corpse) {
+		f->state = FigureState_Dead;
 	}
-	w->waitTicks++;
-	if (w->waitTicks > 200) {
-		w->state = FigureState_Dead;
-		w->graphicOffset = 0;
+	f->waitTicks++;
+	if (f->waitTicks > 200) {
+		f->state = FigureState_Dead;
+		f->graphicOffset = 0;
 	}
-	if (w->actionState == FigureActionState_149_Corpse) {
-		w->graphicId = GraphicId(ID_Graphic_Figure_Criminal) +
-			WalkerActionCorpseGraphicOffset(w) + 96;
+	if (f->actionState == FigureActionState_149_Corpse) {
+		f->graphicId = GraphicId(ID_Graphic_Figure_Criminal) +
+			WalkerActionCorpseGraphicOffset(f) + 96;
 	} else {
-		w->graphicId = GraphicId(ID_Graphic_Figure_Criminal) +
-			criminalOffsets[w->graphicOffset / 2] + 104;
+		f->graphicId = GraphicId(ID_Graphic_Figure_Criminal) +
+			criminalOffsets[f->graphicOffset / 2] + 104;
 	}
 }
 
 void FigureAction_rioter(int walkerId)
 {
-	struct Data_Walker *w = &Data_Walkers[walkerId];
+	struct Data_Walker *f = &Data_Walkers[walkerId];
 	Data_CityInfo.numRiotersInCity++;
-	if (!w->targetedByWalkerId) {
+	if (!f->targetedByWalkerId) {
 		Data_CityInfo.riotersOrAttackingNativesInCity = 10;
 	}
-	w->terrainUsage = FigureTerrainUsage_Enemy;
-	w->maxRoamLength = 480;
-	w->cartGraphicId = 0;
-	w->isGhost = 0;
-	switch (w->actionState) {
+	f->terrainUsage = FigureTerrainUsage_Enemy;
+	f->maxRoamLength = 480;
+	f->cartGraphicId = 0;
+	f->isGhost = 0;
+	switch (f->actionState) {
 		case FigureActionState_150_Attack:
 			FigureAction_Common_handleAttack(walkerId);
 			break;
@@ -80,76 +80,76 @@ void FigureAction_rioter(int walkerId)
 			FigureAction_Common_handleCorpse(walkerId);
 			break;
 		case FigureActionState_120_RioterCreated:
-			FigureActionIncreaseGraphicOffset(w, 32);
-			w->waitTicks++;
-			if (w->waitTicks >= 160) {
-				w->actionState = FigureActionState_121_RioterMoving;
+			FigureActionIncreaseGraphicOffset(f, 32);
+			f->waitTicks++;
+			if (f->waitTicks >= 160) {
+				f->actionState = FigureActionState_121_RioterMoving;
 				int xTile, yTile;
 				int buildingId = Formation_Rioter_getTargetBuilding(&xTile, &yTile);
 				if (buildingId) {
-					w->destinationX = xTile;
-					w->destinationY = yTile;
-					w->destinationBuildingId = buildingId;
+					f->destinationX = xTile;
+					f->destinationY = yTile;
+					f->destinationBuildingId = buildingId;
 					FigureRoute_remove(walkerId);
 				} else {
-					w->state = FigureState_Dead;
+					f->state = FigureState_Dead;
 				}
 			}
 			break;
 		case FigureActionState_121_RioterMoving:
-			FigureActionIncreaseGraphicOffset(w, 12);
+			FigureActionIncreaseGraphicOffset(f, 12);
 			FigureMovement_walkTicks(walkerId, 1);
-			if (w->direction == DirFigure_8_AtDestination) {
+			if (f->direction == DirFigure_8_AtDestination) {
 				int xTile, yTile;
 				int buildingId = Formation_Rioter_getTargetBuilding(&xTile, &yTile);
 				if (buildingId) {
-					w->destinationX = xTile;
-					w->destinationY = yTile;
-					w->destinationBuildingId = buildingId;
+					f->destinationX = xTile;
+					f->destinationY = yTile;
+					f->destinationBuildingId = buildingId;
 					FigureRoute_remove(walkerId);
 				} else {
-					w->state = FigureState_Dead;
+					f->state = FigureState_Dead;
 				}
-			} else if (w->direction == DirFigure_9_Reroute || w->direction == DirFigure_10_Lost) {
-				w->actionState = FigureActionState_120_RioterCreated;
+			} else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
+				f->actionState = FigureActionState_120_RioterCreated;
 				FigureRoute_remove(walkerId);
-			} else if (w->direction == DirFigure_11_Attack) {
-				if (w->graphicOffset > 12) {
-					w->graphicOffset = 0;
+			} else if (f->direction == DirFigure_11_Attack) {
+				if (f->graphicOffset > 12) {
+					f->graphicOffset = 0;
 				}
 			}
 			break;
 	}
 	int dir;
-	if (w->direction == DirFigure_11_Attack) {
-		dir = w->attackDirection;
-	} else if (w->direction < 8) {
-		dir = w->direction;
+	if (f->direction == DirFigure_11_Attack) {
+		dir = f->attackDirection;
+	} else if (f->direction < 8) {
+		dir = f->direction;
 	} else {
-		dir = w->previousTileDirection;
+		dir = f->previousTileDirection;
 	}
 	WalkerActionNormalizeDirection(dir);
 	
-	if (w->actionState == FigureActionState_149_Corpse) {
-		w->graphicId = GraphicId(ID_Graphic_Figure_Criminal) +
-			96 + WalkerActionCorpseGraphicOffset(w);
-	} else if (w->direction == DirFigure_11_Attack) {
-		w->graphicId = GraphicId(ID_Graphic_Figure_Criminal) +
-			104 + criminalOffsets[w->graphicOffset];
-	} else if (w->actionState == FigureActionState_121_RioterMoving) {
-		w->graphicId = GraphicId(ID_Graphic_Figure_Criminal) +
-			dir + 8 * w->graphicOffset;
+	if (f->actionState == FigureActionState_149_Corpse) {
+		f->graphicId = GraphicId(ID_Graphic_Figure_Criminal) +
+			96 + WalkerActionCorpseGraphicOffset(f);
+	} else if (f->direction == DirFigure_11_Attack) {
+		f->graphicId = GraphicId(ID_Graphic_Figure_Criminal) +
+			104 + criminalOffsets[f->graphicOffset];
+	} else if (f->actionState == FigureActionState_121_RioterMoving) {
+		f->graphicId = GraphicId(ID_Graphic_Figure_Criminal) +
+			dir + 8 * f->graphicOffset;
 	} else {
-		w->graphicId = GraphicId(ID_Graphic_Figure_Criminal) +
-			104 + criminalOffsets[w->graphicOffset / 2];
+		f->graphicId = GraphicId(ID_Graphic_Figure_Criminal) +
+			104 + criminalOffsets[f->graphicOffset / 2];
 	}
 }
 
 int FigureAction_Rioter_collapseBuilding(int walkerId)
 {
-	struct Data_Walker *w = &Data_Walkers[walkerId];
+	struct Data_Walker *f = &Data_Walkers[walkerId];
 	for (int dir = 0; dir < 8; dir += 2) {
-		int gridOffset = w->gridOffset + Constant_DirectionGridOffsets[dir];
+		int gridOffset = f->gridOffset + Constant_DirectionGridOffsets[dir];
 		if (!Data_Grid_buildingIds[gridOffset]) {
 			continue;
 		}
@@ -172,12 +172,12 @@ int FigureAction_Rioter_collapseBuilding(int walkerId)
 		} else {
 			Data_Message.lastSoundTime.rioterCollapse = now;
 		}
-		PlayerMessage_post(0, Message_14_DestroyedBuilding, b->type, w->gridOffset);
+		PlayerMessage_post(0, Message_14_DestroyedBuilding, b->type, f->gridOffset);
 		Data_Message.messageCategoryCount[MessageDelay_RiotCollapse]++;
 		Building_collapseOnFire(buildingId, 0);
-		w->actionState = FigureActionState_120_RioterCreated;
-		w->waitTicks = 0;
-		w->direction = dir;
+		f->actionState = FigureActionState_120_RioterCreated;
+		f->waitTicks = 0;
+		f->direction = dir;
 		return 1;
 	}
 	return 0;

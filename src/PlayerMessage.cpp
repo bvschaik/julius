@@ -44,14 +44,14 @@ void PlayerMessage_post(int usePopup, int messageType, int param1, short param2)
 	Data_Message.totalMessages++;
 	Data_Message.currentMessageId = id;
 
-	struct Data_PlayerMessage *m = &Data_Message.messages[id];
-	m->messageType = messageType;
-	m->readFlag = 0;
-	m->year = Data_CityInfo_Extra.gameTimeYear;
-	m->month = Data_CityInfo_Extra.gameTimeMonth;
-	m->param1 = param1;
-	m->param2 = param2;
-	m->sequence = Data_Message.nextMessageSequence++;
+	struct Data_PlayerMessage *msg = &Data_Message.messages[id];
+	msg->messageType = messageType;
+	msg->readFlag = 0;
+	msg->year = Data_CityInfo_Extra.gameTimeYear;
+	msg->month = Data_CityInfo_Extra.gameTimeMonth;
+	msg->param1 = param1;
+	msg->param2 = param2;
+	msg->sequence = Data_Message.nextMessageSequence++;
 	int textId = PlayerMessage_getMessageTextId(messageType);
 	int langMessageType = Data_Language_Message.index[textId].messageType;
 	if (langMessageType == MessageType_Disaster || langMessageType == MessageType_Invasion) {
@@ -61,7 +61,7 @@ void PlayerMessage_post(int usePopup, int messageType, int param1, short param2)
 	if (usePopup && UI_Window_getId() == Window_City) {
 		consecutiveMessageDelay = 5;
 		Data_Message.currentProblemAreaMessageId = Data_Message.currentMessageId;
-		m->readFlag = 1;
+		msg->readFlag = 1;
 		UI_Tooltip_resetTimer();
 		if (!hasVideo(textId)) {
 			if (Data_Language_Message.index[textId].isUrgent == 1) {
@@ -71,14 +71,14 @@ void PlayerMessage_post(int usePopup, int messageType, int param1, short param2)
 			}
 		}
 		UI_MessageDialog_setPlayerMessage(
-			m->year, m->month, m->param1, m->param2,
-			PlayerMessage_getAdvisorForMessageType(m->messageType), usePopup);
+			msg->year, msg->month, msg->param1, msg->param2,
+			PlayerMessage_getAdvisorForMessageType(msg->messageType), usePopup);
 		UI_MessageDialog_show(textId, 0);
 	} else if (usePopup) {
 		// add to queue to be processed when player returns to city
 		for (int i = 0; i < 20; i++) {
 			if (!Data_Message.popupMessageQueue[i]) {
-				Data_Message.popupMessageQueue[i] = m->sequence;
+				Data_Message.popupMessageQueue[i] = msg->sequence;
 				break;
 			}
 		}
@@ -137,10 +137,10 @@ void PlayerMessage_processQueue()
 		return;
 	}
 	consecutiveMessageDelay = 5;
-	struct Data_PlayerMessage *m = &Data_Message.messages[msgId];
-	m->readFlag = 1;
+	struct Data_PlayerMessage *msg = &Data_Message.messages[msgId];
+	msg->readFlag = 1;
 	Data_Message.currentProblemAreaMessageId = msgId;
-	int textId = PlayerMessage_getMessageTextId(m->messageType);
+	int textId = PlayerMessage_getMessageTextId(msg->messageType);
 	UI_Tooltip_resetTimer();
 	if (!hasVideo(textId)) {
 		if (Data_Language_Message.index[textId].isUrgent == 1) {
@@ -150,8 +150,8 @@ void PlayerMessage_processQueue()
 		}
 	}
 	UI_MessageDialog_setPlayerMessage(
-		m->year, m->month, m->param1, m->param2,
-		PlayerMessage_getAdvisorForMessageType(m->messageType), 1);
+		msg->year, msg->month, msg->param1, msg->param2,
+		PlayerMessage_getAdvisorForMessageType(msg->messageType), 1);
 	UI_MessageDialog_show(textId, 0);
 }
 
@@ -271,12 +271,12 @@ void PlayerMessage_goToProblem()
 	PlayerMessage_sortMessages();
 	Data_Message.hotspotCount = 0;
 	for (int i = 0; i < 999; i++) {
-		struct Data_PlayerMessage *m = &Data_Message.messages[i];
-		if (m->messageType && m->year >= Data_CityInfo_Extra.gameTimeYear - 1) {
-			int textId = PlayerMessage_getMessageTextId(m->messageType);
+		struct Data_PlayerMessage *msg = &Data_Message.messages[i];
+		if (msg->messageType && msg->year >= Data_CityInfo_Extra.gameTimeYear - 1) {
+			int textId = PlayerMessage_getMessageTextId(msg->messageType);
 			int langMessageType = Data_Language_Message.index[textId].messageType;
 			if (langMessageType == MessageType_Disaster || langMessageType == MessageType_Invasion) {
-				if (langMessageType != MessageType_Invasion || Formation_getInvasionGridOffset(m->param1) > 0) {
+				if (langMessageType != MessageType_Invasion || Formation_getInvasionGridOffset(msg->param1) > 0) {
 					Data_Message.hotspotCount++;
 				}
 			}
@@ -291,18 +291,18 @@ void PlayerMessage_goToProblem()
 	}
 	int index = 0;
 	for (int i = 0; i < 999; i++) {
-		struct Data_PlayerMessage *m = &Data_Message.messages[i];
-		if (m->messageType && m->year >= Data_CityInfo_Extra.gameTimeYear - 1) {
-			int textId = PlayerMessage_getMessageTextId(m->messageType);
+		struct Data_PlayerMessage *msg = &Data_Message.messages[i];
+		if (msg->messageType && msg->year >= Data_CityInfo_Extra.gameTimeYear - 1) {
+			int textId = PlayerMessage_getMessageTextId(msg->messageType);
 			int langMessageType = Data_Language_Message.index[textId].messageType;
 			if (langMessageType == MessageType_Disaster || langMessageType == MessageType_Invasion) {
-				if (langMessageType != MessageType_Invasion || Formation_getInvasionGridOffset(m->param1) > 0) {
+				if (langMessageType != MessageType_Invasion || Formation_getInvasionGridOffset(msg->param1) > 0) {
 					index++;
 					if (Data_Message.hotspotIndex < index) {
 						Data_Message.hotspotIndex++;
-						int gridOffset = m->param2;
+						int gridOffset = msg->param2;
 						if (langMessageType == MessageType_Invasion) {
-							gridOffset = Formation_getInvasionGridOffset(m->param1);
+							gridOffset = Formation_getInvasionGridOffset(msg->param1);
 						}
 						if (gridOffset > 0) {
 							CityView_goToGridOffset(gridOffset);

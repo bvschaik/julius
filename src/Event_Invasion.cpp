@@ -373,11 +373,11 @@ static int startInvasion(int enemyType, int amount, int invasionPoint, int attac
 			f->enemyType = enemyType;
 			f->invasionId = invasionId;
 			f->invasionSeq = Data_Event.lastInternalInvasionId;
-			for (int w = 0; w < soldiersPerFormation[type][i]; w++) {
+			for (int fig = 0; fig < soldiersPerFormation[type][i]; fig++) {
 				int walkerId = Figure_create(walkerType, x, y, orientation);
 				Data_Walkers[walkerId].isFriendly = 0;
 				Data_Walkers[walkerId].actionState = FigureActionState_151_EnemyInitial;
-				Data_Walkers[walkerId].waitTicks = 200 * seq + 10 * w + 10;
+				Data_Walkers[walkerId].waitTicks = 200 * seq + 10 * fig + 10;
 				Data_Walkers[walkerId].formationId = formationId;
 				FigureName_set(walkerId);
 				Data_Walkers[walkerId].isGhost = 1;

@@ -171,25 +171,25 @@ int Resource_getGettingGranaryForStoringFood(
 
 int Resource_getGranaryForGettingFood(int srcBuildingId, int *xDst, int *yDst)
 {
-	struct Data_Building *src = &Data_Buildings[srcBuildingId];
-	struct Data_Building_Storage *srcStorage = &Data_Building_Storages[src->storageId];
-	if (srcStorage->emptyAll) {
+	struct Data_Building *bSrc = &Data_Buildings[srcBuildingId];
+	struct Data_Building_Storage *sSrc = &Data_Building_Storages[bSrc->storageId];
+	if (sSrc->emptyAll) {
 		return 0;
 	}
 	if (Data_Scenario.romeSuppliesWheat) {
 		return 0;
 	}
 	int numGetting = 0;
-	if (srcStorage->resourceState[Resource_Wheat] == BuildingStorageState_Getting) {
+	if (sSrc->resourceState[Resource_Wheat] == BuildingStorageState_Getting) {
 		numGetting++;
 	}
-	if (srcStorage->resourceState[Resource_Vegetables] == BuildingStorageState_Getting) {
+	if (sSrc->resourceState[Resource_Vegetables] == BuildingStorageState_Getting) {
 		numGetting++;
 	}
-	if (srcStorage->resourceState[Resource_Fruit] == BuildingStorageState_Getting) {
+	if (sSrc->resourceState[Resource_Fruit] == BuildingStorageState_Getting) {
 		numGetting++;
 	}
-	if (srcStorage->resourceState[Resource_Meat] == BuildingStorageState_Getting) {
+	if (sSrc->resourceState[Resource_Meat] == BuildingStorageState_Getting) {
 		numGetting++;
 	}
 	if (numGetting <= 0) {
@@ -201,32 +201,32 @@ int Resource_getGranaryForGettingFood(int srcBuildingId, int *xDst, int *yDst)
 	for (int i = 0; i < nonGettingGranaries.numItems; i++) {
 		int buildingId = nonGettingGranaries.buildingIds[i];
 		struct Data_Building *b = &Data_Buildings[buildingId];
-		if (b->roadNetworkId != src->roadNetworkId) {
+		if (b->roadNetworkId != bSrc->roadNetworkId) {
 			continue;
 		}
 		struct Data_Building_Storage *s = &Data_Building_Storages[b->storageId];
 		int amountGettable = 0;
-		if (srcStorage->resourceState[Resource_Wheat] == BuildingStorageState_Getting &&
+		if (sSrc->resourceState[Resource_Wheat] == BuildingStorageState_Getting &&
 			s->resourceState[Resource_Wheat] != BuildingStorageState_Getting) {
 			amountGettable += b->data.storage.resourceStored[Resource_Wheat];
 		}
-		if (srcStorage->resourceState[Resource_Vegetables] == BuildingStorageState_Getting &&
+		if (sSrc->resourceState[Resource_Vegetables] == BuildingStorageState_Getting &&
 			s->resourceState[Resource_Vegetables] != BuildingStorageState_Getting) {
 			amountGettable += b->data.storage.resourceStored[Resource_Vegetables];
 		}
-		if (srcStorage->resourceState[Resource_Fruit] == BuildingStorageState_Getting &&
+		if (sSrc->resourceState[Resource_Fruit] == BuildingStorageState_Getting &&
 			s->resourceState[Resource_Fruit] != BuildingStorageState_Getting) {
 			amountGettable += b->data.storage.resourceStored[Resource_Fruit];
 		}
-		if (srcStorage->resourceState[Resource_Meat] == BuildingStorageState_Getting &&
+		if (sSrc->resourceState[Resource_Meat] == BuildingStorageState_Getting &&
 			s->resourceState[Resource_Meat] != BuildingStorageState_Getting) {
 			amountGettable += b->data.storage.resourceStored[Resource_Meat];
 		}
 		if (amountGettable > 0) {
 			int dist = Resource_getDistance(
 				b->x + 1, b->y + 1,
-				src->x + 1, src->y + 1,
-				src->distanceFromEntry, b->distanceFromEntry);
+				bSrc->x + 1, bSrc->y + 1,
+				bSrc->distanceFromEntry, b->distanceFromEntry);
 			if (amountGettable <= 400) {
 				dist *= 2; // penalty for less food
 			}

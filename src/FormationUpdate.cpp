@@ -161,11 +161,11 @@ static void changeMoraleOfAllEnemies(int amount)
 static void tickDecreaseLegionDamage()
 {
 	for (int i = 1; i < MAX_FIGURES; i++) {
-		struct Data_Walker *w = &Data_Walkers[i];
-		if (w->state == FigureState_Alive && WalkerIsLegion(w->type)) {
-			if (w->actionState == FigureActionState_80_SoldierAtRest) {
-				if (w->damage) {
-					w->damage--;
+		struct Data_Walker *f = &Data_Walkers[i];
+		if (f->state == FigureState_Alive && WalkerIsLegion(f->type)) {
+			if (f->actionState == FigureActionState_80_SoldierAtRest) {
+				if (f->damage) {
+					f->damage--;
 				}
 			}
 		}
@@ -175,31 +175,31 @@ static void tickDecreaseLegionDamage()
 static void tickUpdateMorale()
 {
 	for (int i = 1; i < MAX_FORMATIONS; i++) {
-		struct Data_Formation *f = &Data_Formations[i];
-		if (f->inUse != 1 || f->isHerd) {
+		struct Data_Formation *m = &Data_Formations[i];
+		if (m->inUse != 1 || m->isHerd) {
 			continue;
 		}
-		if (f->isLegion) {
-			if (!f->isAtFort && !f->inDistantBattle) {
-				if (f->morale <= 20 && !f->monthsLowMorale && !f->monthsVeryLowMorale) {
+		if (m->isLegion) {
+			if (!m->isAtFort && !m->inDistantBattle) {
+				if (m->morale <= 20 && !m->monthsLowMorale && !m->monthsVeryLowMorale) {
 					changeMoraleOfAllLegions(-10);
 					changeMoraleOfAllEnemies(10);
 				}
-				if (f->morale <= 10) {
-					f->monthsVeryLowMorale++;
-				} else if (f->morale <= 20) {
-					f->monthsLowMorale++;
+				if (m->morale <= 10) {
+					m->monthsVeryLowMorale++;
+				} else if (m->morale <= 20) {
+					m->monthsLowMorale++;
 				}
 			}
 		} else { // enemy
-			if (f->morale <= 20 && !f->monthsLowMorale && !f->monthsVeryLowMorale) {
+			if (m->morale <= 20 && !m->monthsLowMorale && !m->monthsVeryLowMorale) {
 				changeMoraleOfAllLegions(10);
 				changeMoraleOfAllEnemies(-10);
 			}
-			if (f->morale <= 10) {
-				f->monthsVeryLowMorale++;
-			} else if (f->morale <= 20) {
-				f->monthsLowMorale++;
+			if (m->morale <= 10) {
+				m->monthsVeryLowMorale++;
+			} else if (m->morale <= 20) {
+				m->monthsLowMorale++;
 			}
 		}
 	}
@@ -208,102 +208,102 @@ static void tickUpdateMorale()
 static void tickUpdateDirection()
 {
 	for (int i = 1; i < MAX_FORMATIONS; i++) {
-		struct Data_Formation *f = &Data_Formations[i];
-		if (f->inUse != 1 || f->isHerd) {
+		struct Data_Formation *m = &Data_Formations[i];
+		if (m->inUse != 1 || m->isHerd) {
 			continue;
 		}
-		if (f->__unknown66) {
-			f->__unknown66--;
-		} else if (f->missileFired) {
-			f->direction = Data_Walkers[f->figureIds[0]].direction;
-		} else if (f->layout == FormationLayout_DoubleLine1 || f->layout == FormationLayout_SingleLine1) {
-			if (f->yHome < f->prevYHome) {
-				f->direction = Dir_0_Top;
-			} else if (f->yHome > f->prevYHome) {
-				f->direction = Dir_4_Bottom;
+		if (m->__unknown66) {
+			m->__unknown66--;
+		} else if (m->missileFired) {
+			m->direction = Data_Walkers[m->figureIds[0]].direction;
+		} else if (m->layout == FormationLayout_DoubleLine1 || m->layout == FormationLayout_SingleLine1) {
+			if (m->yHome < m->prevYHome) {
+				m->direction = Dir_0_Top;
+			} else if (m->yHome > m->prevYHome) {
+				m->direction = Dir_4_Bottom;
 			}
-		} else if (f->layout == FormationLayout_DoubleLine2 || f->layout == FormationLayout_SingleLine2) {
-			if (f->xHome < f->prevXHome) {
-				f->direction = Dir_6_Left;
-			} else if (f->xHome > f->prevXHome) {
-				f->direction = Dir_2_Right;
+		} else if (m->layout == FormationLayout_DoubleLine2 || m->layout == FormationLayout_SingleLine2) {
+			if (m->xHome < m->prevXHome) {
+				m->direction = Dir_6_Left;
+			} else if (m->xHome > m->prevXHome) {
+				m->direction = Dir_2_Right;
 			}
-		} else if (f->layout == FormationLayout_Tortoise || f->layout == FormationLayout_Column) {
-			int dx = (f->xHome < f->prevXHome) ? (f->prevXHome - f->xHome) : (f->xHome - f->prevXHome);
-			int dy = (f->yHome < f->prevYHome) ? (f->prevYHome - f->yHome) : (f->yHome - f->prevYHome);
+		} else if (m->layout == FormationLayout_Tortoise || m->layout == FormationLayout_Column) {
+			int dx = (m->xHome < m->prevXHome) ? (m->prevXHome - m->xHome) : (m->xHome - m->prevXHome);
+			int dy = (m->yHome < m->prevYHome) ? (m->prevYHome - m->yHome) : (m->yHome - m->prevYHome);
 			if (dx > dy) {
-				if (f->xHome < f->prevXHome) {
-					f->direction = Dir_6_Left;
-				} else if (f->xHome > f->prevXHome) {
-					f->direction = Dir_2_Right;
+				if (m->xHome < m->prevXHome) {
+					m->direction = Dir_6_Left;
+				} else if (m->xHome > m->prevXHome) {
+					m->direction = Dir_2_Right;
 				}
 			} else {
-				if (f->yHome < f->prevYHome) {
-					f->direction = Dir_0_Top;
-				} else if (f->yHome > f->prevYHome) {
-					f->direction = Dir_4_Bottom;
+				if (m->yHome < m->prevYHome) {
+					m->direction = Dir_0_Top;
+				} else if (m->yHome > m->prevYHome) {
+					m->direction = Dir_4_Bottom;
 				}
 			}
 		}
-		f->prevXHome = f->xHome;
-		f->prevYHome = f->yHome;
+		m->prevXHome = m->xHome;
+		m->prevYHome = m->yHome;
 	}
 }
 
 static void tickUpdateLegions()
 {
 	for (int i = 1; i <= 6; i++) {
-		struct Data_Formation *f = &Data_Formations[i];
-		if (f->inUse != 1 || !f->isLegion) {
+		struct Data_Formation *m = &Data_Formations[i];
+		if (m->inUse != 1 || !m->isLegion) {
 			continue;
 		}
-		if (f->cursedByMars) {
-			f->cursedByMars--;
+		if (m->cursedByMars) {
+			m->cursedByMars--;
 		}
-		if (f->missileFired) {
-			f->missileFired--;
+		if (m->missileFired) {
+			m->missileFired--;
 		}
-		if (f->missileAttackTimeout) {
-			f->missileAttackTimeout--;
+		if (m->missileAttackTimeout) {
+			m->missileAttackTimeout--;
 		}
-		if (f->recentFight) {
-			f->recentFight--;
+		if (m->recentFight) {
+			m->recentFight--;
 		}
 		if (Data_CityInfo.numEnemiesInCity <= 0) {
-			f->recentFight = 0;
-			f->missileAttackTimeout = 0;
-			f->missileFired = 0;
+			m->recentFight = 0;
+			m->missileAttackTimeout = 0;
+			m->missileFired = 0;
 		}
 		for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {
-			if (Data_Walkers[f->figureIds[n]].actionState == FigureActionState_150_Attack) {
-				f->recentFight = 6;
+			if (Data_Walkers[m->figureIds[n]].actionState == FigureActionState_150_Attack) {
+				m->recentFight = 6;
 			}
 		}
-		if (f->monthsLowMorale || f->monthsVeryLowMorale) {
+		if (m->monthsLowMorale || m->monthsVeryLowMorale) {
 			// flee back to fort
 			for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {
-				struct Data_Walker *w = &Data_Walkers[f->figureIds[n]];
-				if (w->actionState != FigureActionState_150_Attack &&
-					w->actionState != FigureActionState_149_Corpse &&
-					w->actionState != FigureActionState_148_Fleeing) {
-					w->actionState = FigureActionState_148_Fleeing;
-					FigureRoute_remove(f->figureIds[n]);
+				struct Data_Walker *f = &Data_Walkers[m->figureIds[n]];
+				if (f->actionState != FigureActionState_150_Attack &&
+					f->actionState != FigureActionState_149_Corpse &&
+					f->actionState != FigureActionState_148_Fleeing) {
+					f->actionState = FigureActionState_148_Fleeing;
+					FigureRoute_remove(m->figureIds[n]);
 				}
 			}
-		} else if (f->layout == FormationLayout_MopUp) {
+		} else if (m->layout == FormationLayout_MopUp) {
 			if (Data_Formation_Extra.numEnemyFormations +
 				Data_CityInfo.numRiotersInCity +
 				Data_CityInfo.numAttackingNativesInCity > 0) {
 				for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {
-					struct Data_Walker *w = &Data_Walkers[f->figureIds[n]];
-					if (f->figureIds[n] != 0 &&
-						w->actionState != FigureActionState_150_Attack &&
-						w->actionState != FigureActionState_149_Corpse) {
-						w->actionState = FigureActionState_86_SoldierMoppingUp;
+					struct Data_Walker *f = &Data_Walkers[m->figureIds[n]];
+					if (m->figureIds[n] != 0 &&
+						f->actionState != FigureActionState_150_Attack &&
+						f->actionState != FigureActionState_149_Corpse) {
+						f->actionState = FigureActionState_86_SoldierMoppingUp;
 					}
 				}
 			} else {
-				f->layout = f->layoutBeforeMopUp;
+				m->layout = m->layoutBeforeMopUp;
 			}
 		}
 	}
@@ -335,27 +335,27 @@ static void calculateRomanSoldierConcentration()
 {
 	Grid_clearUByteGrid(Data_Grid_romanSoldierConcentration);
 	for (int i = 1; i <= 6; i++) {
-		struct Data_Formation *f = &Data_Formations[i];
-		if (f->inUse != 1 || !f->isLegion) {
+		struct Data_Formation *m = &Data_Formations[i];
+		if (m->inUse != 1 || !m->isLegion) {
 			continue;
 		}
-		if (f->numFigures > 0) {
-			addRomanSoldierConcentration(f->xHome, f->yHome, 7, 1);
+		if (m->numFigures > 0) {
+			addRomanSoldierConcentration(m->xHome, m->yHome, 7, 1);
 		}
-		if (f->numFigures > 3) {
-			addRomanSoldierConcentration(f->xHome, f->yHome, 6, 1);
+		if (m->numFigures > 3) {
+			addRomanSoldierConcentration(m->xHome, m->yHome, 6, 1);
 		}
-		if (f->numFigures > 6) {
-			addRomanSoldierConcentration(f->xHome, f->yHome, 5, 1);
+		if (m->numFigures > 6) {
+			addRomanSoldierConcentration(m->xHome, m->yHome, 5, 1);
 		}
-		if (f->numFigures > 9) {
-			addRomanSoldierConcentration(f->xHome, f->yHome, 4, 1);
+		if (m->numFigures > 9) {
+			addRomanSoldierConcentration(m->xHome, m->yHome, 4, 1);
 		}
-		if (f->numFigures > 12) {
-			addRomanSoldierConcentration(f->xHome, f->yHome, 3, 1);
+		if (m->numFigures > 12) {
+			addRomanSoldierConcentration(m->xHome, m->yHome, 3, 1);
 		}
-		if (f->numFigures > 15) {
-			addRomanSoldierConcentration(f->xHome, f->yHome, 2, 1);
+		if (m->numFigures > 15) {
+			addRomanSoldierConcentration(m->xHome, m->yHome, 2, 1);
 		}
 	}
 }
@@ -423,9 +423,9 @@ static void setNativeTargetBuilding(int formationId)
 	}
 }
 
-static void setEnemyTargetBuilding(struct Data_Formation *f)
+static void setEnemyTargetBuilding(struct Data_Formation *m)
 {
-	int attack = f->attackType;
+	int attack = m->attackType;
 	if (attack == FormationAttackType_Random) {
 		attack = Data_Random.random1_7bit & 3;
 	}
@@ -439,7 +439,7 @@ static void setEnemyTargetBuilding(struct Data_Formation *f)
 		}
 		for (int n = 0; n < 24 && n <= bestTypeIndex && enemyAttackBuildingPriority[attack][n]; n++) {
 			if (b->type == enemyAttackBuildingPriority[attack][n]) {
-				int distance = Calc_distanceMaximum(f->xHome, f->yHome, b->x, b->y);
+				int distance = Calc_distanceMaximum(m->xHome, m->yHome, b->x, b->y);
 				if (n < bestTypeIndex) {
 					bestTypeIndex = n;
 					buildingId = i;
@@ -461,7 +461,7 @@ static void setEnemyTargetBuilding(struct Data_Formation *f)
 			}
 			for (int n = 0; n < 100 && n <= bestTypeIndex && rioterAttackBuildingPriority[n]; n++) {
 				if (b->type == rioterAttackBuildingPriority[n]) {
-					int distance = Calc_distanceMaximum(f->xHome, f->yHome, b->x, b->y);
+					int distance = Calc_distanceMaximum(m->xHome, m->yHome, b->x, b->y);
 					if (n < bestTypeIndex) {
 						bestTypeIndex = n;
 						buildingId = i;
@@ -480,27 +480,27 @@ static void setEnemyTargetBuilding(struct Data_Formation *f)
 	}
 	struct Data_Building *b = &Data_Buildings[buildingId];
 	if (b->type == Building_Warehouse) {
-		f->destinationX = b->x + 1;
-		f->destinationY = b->y;
-		f->destinationBuildingId = buildingId + 1;
+		m->destinationX = b->x + 1;
+		m->destinationY = b->y;
+		m->destinationBuildingId = buildingId + 1;
 	} else {
-		f->destinationX = b->x;
-		f->destinationY = b->y;
-		f->destinationBuildingId = buildingId;
+		m->destinationX = b->x;
+		m->destinationY = b->y;
+		m->destinationBuildingId = buildingId;
 	}
 }
 
-static void enemyApproachTarget(struct Data_Formation *f)
+static void enemyApproachTarget(struct Data_Formation *m)
 {
-	if (Routing_canTravelOverLandNonCitizen(f->xHome, f->yHome,
-			f->destinationX, f->destinationY, f->destinationBuildingId, 400) ||
-		Routing_canTravelThroughEverythingNonCitizen(f->xHome, f->yHome,
-			f->destinationX, f->destinationY)) {
+	if (Routing_canTravelOverLandNonCitizen(m->xHome, m->yHome,
+			m->destinationX, m->destinationY, m->destinationBuildingId, 400) ||
+		Routing_canTravelThroughEverythingNonCitizen(m->xHome, m->yHome,
+			m->destinationX, m->destinationY)) {
 		int xTile, yTile;
-		if (Routing_getClosestXYWithinRange(8, f->xHome, f->yHome,
-				f->destinationX, f->destinationY, 20, &xTile, &yTile)) {
-			f->destinationX = xTile;
-			f->destinationY = yTile;
+		if (Routing_getClosestXYWithinRange(8, m->xHome, m->yHome,
+				m->destinationX, m->destinationY, 20, &xTile, &yTile)) {
+			m->destinationX = xTile;
+			m->destinationY = yTile;
 		}
 	}
 }
@@ -513,15 +513,15 @@ static void marsKillEnemies()
 	int toKill = Data_CityInfo.godBlessingMarsEnemiesToKill;
 	int gridOffset = 0;
 	for (int i = 1; i < MAX_FIGURES && toKill > 0; i++) {
-		struct Data_Walker *w = &Data_Walkers[i];
-		if (w->state != FigureState_Alive) {
+		struct Data_Walker *f = &Data_Walkers[i];
+		if (f->state != FigureState_Alive) {
 			continue;
 		}
-		if (WalkerIsEnemy(w->type) && w->type != Figure_Enemy54_Gladiator) {
-			w->actionState = FigureActionState_149_Corpse;
+		if (WalkerIsEnemy(f->type) && f->type != Figure_Enemy54_Gladiator) {
+			f->actionState = FigureActionState_149_Corpse;
 			toKill--;
 			if (!gridOffset) {
-				gridOffset = w->gridOffset;
+				gridOffset = f->gridOffset;
 			}
 		}
 	}
@@ -531,43 +531,43 @@ static void marsKillEnemies()
 
 static void setFormationWalkersToEnemyInitial(int formationId)
 {
-	struct Data_Formation *f = &Data_Formations[formationId];
+	struct Data_Formation *m = &Data_Formations[formationId];
 	for (int i = 0; i < MAX_FORMATION_FIGURES; i++) {
-		if (f->figureIds[i] > 0) {
-			struct Data_Walker *w = &Data_Walkers[f->figureIds[i]];
-			if (w->actionState != FigureActionState_149_Corpse &&
-				w->actionState != FigureActionState_150_Attack) {
-				w->actionState = FigureActionState_151_EnemyInitial;
-				w->waitTicks = 0;
+		if (m->figureIds[i] > 0) {
+			struct Data_Walker *f = &Data_Walkers[m->figureIds[i]];
+			if (f->actionState != FigureActionState_149_Corpse &&
+				f->actionState != FigureActionState_150_Attack) {
+				f->actionState = FigureActionState_151_EnemyInitial;
+				f->waitTicks = 0;
 			}
 		}
 	}
 }
 
-static void updateEnemyMovement(int formationId, struct Data_Formation *f, int romanDistance)
+static void updateEnemyMovement(int formationId, struct Data_Formation *m, int romanDistance)
 {
 	int regroup = 0;
 	int halt = 0;
 	int pursueTarget = 0;
 	int advance = 0;
 	int targetFormationId = 0;
-	if (f->missileFired) {
+	if (m->missileFired) {
 		halt = 1;
-	} else if (f->missileAttackTimeout) {
+	} else if (m->missileAttackTimeout) {
 		pursueTarget = 1;
-		targetFormationId = f->missileAttackFormationId;
-	} else if (f->waitTicks < 32) {
+		targetFormationId = m->missileAttackFormationId;
+	} else if (m->waitTicks < 32) {
 		regroup = 1;
-		f->durationAdvance = 4;
-	} else if (Data_Formation_Invasion.ignoreRomanSoldiers[f->invasionId]) {
+		m->durationAdvance = 4;
+	} else if (Data_Formation_Invasion.ignoreRomanSoldiers[m->invasionId]) {
 		halt = 0;
 		regroup = 0;
 		advance = 1;
 	} else {
 		int haltDuration, advanceDuration, regroupDuration;
-		if (Data_Formation_Invasion.layout[f->invasionId] == FormationLayout_Enemy8 ||
-			Data_Formation_Invasion.layout[f->invasionId] == FormationLayout_Enemy12) {
-			switch (f->enemyLegionIndex) {
+		if (Data_Formation_Invasion.layout[m->invasionId] == FormationLayout_Enemy8 ||
+			Data_Formation_Invasion.layout[m->invasionId] == FormationLayout_Enemy12) {
+			switch (m->enemyLegionIndex) {
 				case 0:
 				case 1:
 					regroupDuration = 2; advanceDuration = 4; haltDuration = 2;
@@ -596,35 +596,35 @@ static void updateEnemyMovement(int formationId, struct Data_Formation *f, int r
 				haltDuration = 1;
 			}
 		}
-		if (f->durationHalt) {
-			f->durationAdvance = 0;
-			f->durationRegroup = 0;
+		if (m->durationHalt) {
+			m->durationAdvance = 0;
+			m->durationRegroup = 0;
 			halt = 1;
-			f->durationHalt--;
-			if (f->durationHalt <= 0) {
-				f->durationRegroup = regroupDuration;
+			m->durationHalt--;
+			if (m->durationHalt <= 0) {
+				m->durationRegroup = regroupDuration;
 				setFormationWalkersToEnemyInitial(formationId);
 				regroup = 0;
 				halt = 1;
 			}
-		} else if (f->durationRegroup) {
-			f->durationAdvance = 0;
-			f->durationHalt = 0;
+		} else if (m->durationRegroup) {
+			m->durationAdvance = 0;
+			m->durationHalt = 0;
 			regroup = 1;
-			f->durationRegroup--;
-			if (f->durationRegroup <= 0) {
-				f->durationAdvance = advanceDuration;
+			m->durationRegroup--;
+			if (m->durationRegroup <= 0) {
+				m->durationAdvance = advanceDuration;
 				setFormationWalkersToEnemyInitial(formationId);
 				advance = 1;
 				regroup = 0;
 			}
 		} else {
-			f->durationRegroup = 0;
-			f->durationHalt = 0;
+			m->durationRegroup = 0;
+			m->durationHalt = 0;
 			advance = 1;
-			f->durationAdvance--;
-			if (f->durationAdvance <= 0) {
-				f->durationHalt = haltDuration;
+			m->durationAdvance--;
+			if (m->durationAdvance <= 0) {
+				m->durationHalt = haltDuration;
 				setFormationWalkersToEnemyInitial(formationId);
 				halt = 1;
 				advance = 0;
@@ -632,43 +632,43 @@ static void updateEnemyMovement(int formationId, struct Data_Formation *f, int r
 		}
 	}
 
-	if (f->waitTicks > 32) {
+	if (m->waitTicks > 32) {
 		marsKillEnemies();
 	}
 	if (halt) {
-		f->destinationX = f->xHome;
-		f->destinationY = f->yHome;
+		m->destinationX = m->xHome;
+		m->destinationY = m->yHome;
 	} else if (pursueTarget) {
 		if (targetFormationId > 0) {
 			if (Data_Formations[targetFormationId].numFigures > 0) {
-				f->destinationX = Data_Formations[targetFormationId].xHome;
-				f->destinationY = Data_Formations[targetFormationId].yHome;
+				m->destinationX = Data_Formations[targetFormationId].xHome;
+				m->destinationY = Data_Formations[targetFormationId].yHome;
 			}
 		} else {
-			f->destinationX = Data_Formation_Invasion.destinationX[f->invasionId];
-			f->destinationY = Data_Formation_Invasion.destinationY[f->invasionId];
+			m->destinationX = Data_Formation_Invasion.destinationX[m->invasionId];
+			m->destinationY = Data_Formation_Invasion.destinationY[m->invasionId];
 		}
 	} else if (regroup) {
-		int layout = Data_Formation_Invasion.layout[f->invasionId];
-		int xOffset = layoutOrientationLegionIndexOffsets[layout][f->orientation / 2][2 * f->enemyLegionIndex] +
-			Data_Formation_Invasion.homeX[f->invasionId];
-		int yOffset = layoutOrientationLegionIndexOffsets[layout][f->orientation / 2][2 * f->enemyLegionIndex + 1] +
-			Data_Formation_Invasion.homeY[f->invasionId];
+		int layout = Data_Formation_Invasion.layout[m->invasionId];
+		int xOffset = layoutOrientationLegionIndexOffsets[layout][m->orientation / 2][2 * m->enemyLegionIndex] +
+			Data_Formation_Invasion.homeX[m->invasionId];
+		int yOffset = layoutOrientationLegionIndexOffsets[layout][m->orientation / 2][2 * m->enemyLegionIndex + 1] +
+			Data_Formation_Invasion.homeY[m->invasionId];
 		int xTile, yTile;
 		if (FigureAction_HerdEnemy_moveFormationTo(formationId, xOffset, yOffset, &xTile, &yTile)) {
-			f->destinationX = xTile;
-			f->destinationY = yTile;
+			m->destinationX = xTile;
+			m->destinationY = yTile;
 		}
 	} else if (advance) {
-		int layout = Data_Formation_Invasion.layout[f->invasionId];
-		int xOffset = layoutOrientationLegionIndexOffsets[layout][f->orientation / 2][2 * f->enemyLegionIndex] +
-			Data_Formation_Invasion.destinationX[f->invasionId];
-		int yOffset = layoutOrientationLegionIndexOffsets[layout][f->orientation / 2][2 * f->enemyLegionIndex + 1] +
-			Data_Formation_Invasion.destinationY[f->invasionId];
+		int layout = Data_Formation_Invasion.layout[m->invasionId];
+		int xOffset = layoutOrientationLegionIndexOffsets[layout][m->orientation / 2][2 * m->enemyLegionIndex] +
+			Data_Formation_Invasion.destinationX[m->invasionId];
+		int yOffset = layoutOrientationLegionIndexOffsets[layout][m->orientation / 2][2 * m->enemyLegionIndex + 1] +
+			Data_Formation_Invasion.destinationY[m->invasionId];
 		int xTile, yTile;
 		if (FigureAction_HerdEnemy_moveFormationTo(formationId, xOffset, yOffset, &xTile, &yTile)) {
-			f->destinationX = xTile;
-			f->destinationY = yTile;
+			m->destinationX = xTile;
+			m->destinationY = yTile;
 		}
 	}
 }
@@ -693,90 +693,90 @@ static void tickUpdateEnemies()
 	}
 	int romanDistance = 0;
 	for (int i = 1; i < MAX_FORMATIONS; i++) {
-		struct Data_Formation *f = &Data_Formations[i];
-		if (f->inUse != 1 || f->isLegion || f->isHerd) {
+		struct Data_Formation *m = &Data_Formations[i];
+		if (m->inUse != 1 || m->isLegion || m->isHerd) {
 			continue;
 		}
 		if (Data_Formation_Extra.numEnemySoldierStrength > 2 * Data_Formation_Extra.numLegionSoldierStrength) {
-			if (f->figureType != Figure_FortJavelin) {
-				Data_Formation_Invasion.ignoreRomanSoldiers[f->invasionId] = 1;
+			if (m->figureType != Figure_FortJavelin) {
+				Data_Formation_Invasion.ignoreRomanSoldiers[m->invasionId] = 1;
 			}
 		}
-		if (f->missileFired) {
-			f->missileFired--;
+		if (m->missileFired) {
+			m->missileFired--;
 		}
-		if (f->missileAttackTimeout) {
-			f->missileAttackTimeout--;
+		if (m->missileAttackTimeout) {
+			m->missileAttackTimeout--;
 		}
-		if (f->recentFight) {
-			f->recentFight--;
+		if (m->recentFight) {
+			m->recentFight--;
 		}
 		if (Data_CityInfo.numSoldiersInCity <= 0) {
-			f->recentFight = 0;
-			f->missileAttackTimeout = 0;
-			f->missileFired = 0;
+			m->recentFight = 0;
+			m->missileAttackTimeout = 0;
+			m->missileFired = 0;
 		}
 		for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {
-			int walkerId = f->figureIds[n];
+			int walkerId = m->figureIds[n];
 			if (Data_Walkers[walkerId].actionState == FigureActionState_150_Attack) {
 				int opponentId = Data_Walkers[walkerId].opponentId;
 				if (!FigureIsDead(opponentId) && WalkerIsLegion(Data_Walkers[opponentId].type)) {
-					f->recentFight = 6;
+					m->recentFight = 6;
 				}
 			}
 		}
-		if (f->monthsLowMorale || f->monthsVeryLowMorale) {
+		if (m->monthsLowMorale || m->monthsVeryLowMorale) {
 			for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {
-				struct Data_Walker *w = &Data_Walkers[f->figureIds[n]];
-				if (w->actionState != FigureActionState_150_Attack &&
-					w->actionState != FigureActionState_149_Corpse &&
-					w->actionState != FigureActionState_148_Fleeing) {
-					w->actionState = FigureActionState_148_Fleeing;
-					FigureRoute_remove(f->figureIds[n]);
+				struct Data_Walker *f = &Data_Walkers[m->figureIds[n]];
+				if (f->actionState != FigureActionState_150_Attack &&
+					f->actionState != FigureActionState_149_Corpse &&
+					f->actionState != FigureActionState_148_Fleeing) {
+					f->actionState = FigureActionState_148_Fleeing;
+					FigureRoute_remove(m->figureIds[n]);
 				}
 			}
 			continue;
 		}
-		if (f->figureIds[0] && Data_Walkers[f->figureIds[0]].state == FigureState_Alive) {
-			f->xHome = Data_Walkers[f->figureIds[0]].x;
-			f->yHome = Data_Walkers[f->figureIds[0]].y;
+		if (m->figureIds[0] && Data_Walkers[m->figureIds[0]].state == FigureState_Alive) {
+			m->xHome = Data_Walkers[m->figureIds[0]].x;
+			m->yHome = Data_Walkers[m->figureIds[0]].y;
 		}
-		if (!Data_Formation_Invasion.formationId[f->invasionId]) {
-			Data_Formation_Invasion.formationId[f->invasionId] = i;
-			Data_Formation_Invasion.homeX[f->invasionId] = f->xHome;
-			Data_Formation_Invasion.homeY[f->invasionId] = f->yHome;
-			Data_Formation_Invasion.layout[f->invasionId] = f->layout;
+		if (!Data_Formation_Invasion.formationId[m->invasionId]) {
+			Data_Formation_Invasion.formationId[m->invasionId] = i;
+			Data_Formation_Invasion.homeX[m->invasionId] = m->xHome;
+			Data_Formation_Invasion.homeY[m->invasionId] = m->yHome;
+			Data_Formation_Invasion.layout[m->invasionId] = m->layout;
 			romanDistance = 0;
-			Routing_canTravelOverLandNonCitizen(f->xHome, f->yHome, -2, -2, 100000, 300);
+			Routing_canTravelOverLandNonCitizen(m->xHome, m->yHome, -2, -2, 100000, 300);
 			int xTile, yTile;
-			if (getHighestRomanSoldierConcentration(f->xHome, f->yHome, 16, &xTile, &yTile)) {
+			if (getHighestRomanSoldierConcentration(m->xHome, m->yHome, 16, &xTile, &yTile)) {
 				romanDistance = 1;
-			} else if (getHighestRomanSoldierConcentration(f->xHome, f->yHome, 32, &xTile, &yTile)) {
+			} else if (getHighestRomanSoldierConcentration(m->xHome, m->yHome, 32, &xTile, &yTile)) {
 				romanDistance = 2;
 			}
-			if (Data_Formation_Invasion.ignoreRomanSoldiers[f->invasionId]) {
+			if (Data_Formation_Invasion.ignoreRomanSoldiers[m->invasionId]) {
 				romanDistance = 0;
 			}
 			if (romanDistance == 1) {
 				// attack roman legion
-				Data_Formation_Invasion.destinationX[f->invasionId] = xTile;
-				Data_Formation_Invasion.destinationY[f->invasionId] = yTile;
-				Data_Formation_Invasion.destinationBuildingId[f->invasionId] = 0;
+				Data_Formation_Invasion.destinationX[m->invasionId] = xTile;
+				Data_Formation_Invasion.destinationY[m->invasionId] = yTile;
+				Data_Formation_Invasion.destinationBuildingId[m->invasionId] = 0;
 			} else {
-				setEnemyTargetBuilding(f);
-				enemyApproachTarget(f);
-				Data_Formation_Invasion.destinationX[f->invasionId] = f->destinationX;
-				Data_Formation_Invasion.destinationY[f->invasionId] = f->destinationY;
-				Data_Formation_Invasion.destinationBuildingId[f->invasionId] = f->destinationBuildingId;
+				setEnemyTargetBuilding(m);
+				enemyApproachTarget(m);
+				Data_Formation_Invasion.destinationX[m->invasionId] = m->destinationX;
+				Data_Formation_Invasion.destinationY[m->invasionId] = m->destinationY;
+				Data_Formation_Invasion.destinationBuildingId[m->invasionId] = m->destinationBuildingId;
 			}
 		}
-		f->enemyLegionIndex = Data_Formation_Invasion.numLegions[f->invasionId]++;
-		f->waitTicks++;
-		f->destinationX = Data_Formation_Invasion.destinationX[f->invasionId];
-		f->destinationY = Data_Formation_Invasion.destinationY[f->invasionId];
-		f->destinationBuildingId = Data_Formation_Invasion.destinationBuildingId[f->invasionId];
+		m->enemyLegionIndex = Data_Formation_Invasion.numLegions[m->invasionId]++;
+		m->waitTicks++;
+		m->destinationX = Data_Formation_Invasion.destinationX[m->invasionId];
+		m->destinationY = Data_Formation_Invasion.destinationY[m->invasionId];
+		m->destinationBuildingId = Data_Formation_Invasion.destinationBuildingId[m->invasionId];
 
-		updateEnemyMovement(i, f, romanDistance);
+		updateEnemyMovement(i, m, romanDistance);
 	}
 
 	setNativeTargetBuilding(0);
@@ -823,32 +823,32 @@ static int getHerdRoamingDestination(int formationId, int allowNegativeDesirabil
 	return 0;
 }
 
-static void moveAnimals(struct Data_Formation *f, int attackingAnimals)
+static void moveAnimals(struct Data_Formation *m, int attackingAnimals)
 {
 	for (int i = 0; i < MAX_FORMATION_FIGURES; i++) {
-		if (f->figureIds[i] <= 0) continue;
-		int walkerId = f->figureIds[i];
-		struct Data_Walker *w = &Data_Walkers[walkerId];
-		if (w->actionState == FigureActionState_149_Corpse ||
-			w->actionState == FigureActionState_150_Attack) {
+		if (m->figureIds[i] <= 0) continue;
+		int walkerId = m->figureIds[i];
+		struct Data_Walker *f = &Data_Walkers[walkerId];
+		if (f->actionState == FigureActionState_149_Corpse ||
+			f->actionState == FigureActionState_150_Attack) {
 			continue;
 		}
-		w->waitTicks = 401;
+		f->waitTicks = 401;
 		if (attackingAnimals) {
-			int targetId = FigureAction_CombatWolf_getTarget(w->x, w->y, 6);
+			int targetId = FigureAction_CombatWolf_getTarget(f->x, f->y, 6);
 			if (targetId) {
-				w->actionState = FigureActionState_199_WolfAttacking;
-				w->destinationX = Data_Walkers[targetId].x;
-				w->destinationY = Data_Walkers[targetId].y;
-				w->targetWalkerId = targetId;
+				f->actionState = FigureActionState_199_WolfAttacking;
+				f->destinationX = Data_Walkers[targetId].x;
+				f->destinationY = Data_Walkers[targetId].y;
+				f->targetWalkerId = targetId;
 				Data_Walkers[targetId].targetedByWalkerId = walkerId;
-				w->targetWalkerCreatedSequence = Data_Walkers[targetId].createdSequence;
+				f->targetWalkerCreatedSequence = Data_Walkers[targetId].createdSequence;
 				FigureRoute_remove(walkerId);
 			} else {
-				w->actionState = FigureActionState_196_HerdAnimalAtRest;
+				f->actionState = FigureActionState_196_HerdAnimalAtRest;
 			}
 		} else {
-			w->actionState = FigureActionState_196_HerdAnimalAtRest;
+			f->actionState = FigureActionState_196_HerdAnimalAtRest;
 		}
 	}
 }
@@ -859,17 +859,17 @@ static void tickUpdateHerds()
 		return;
 	}
 	for (int i = 1; i < MAX_FORMATIONS; i++) {
-		struct Data_Formation *f = &Data_Formations[i];
-		if (f->inUse != 1 || f->isLegion || !f->isHerd || f->numFigures <= 0) {
+		struct Data_Formation *m = &Data_Formations[i];
+		if (m->inUse != 1 || m->isLegion || !m->isHerd || m->numFigures <= 0) {
 			continue;
 		}
-		if (f->numFigures < f->maxFigures && f->figureType == Figure_Wolf) {
+		if (m->numFigures < m->maxFigures && m->figureType == Figure_Wolf) {
 			// spawn new wolf
-			f->herdWolfSpawnDelay++;
-			if (f->herdWolfSpawnDelay > 32) {
-				f->herdWolfSpawnDelay = 0;
-				if (!(Data_Grid_terrain[GridOffset(f->x, f->y)] & Terrain_d73f)) {
-					int wolfId = Figure_create(f->figureType, f->x, f->y, Dir_0_Top);
+			m->herdWolfSpawnDelay++;
+			if (m->herdWolfSpawnDelay > 32) {
+				m->herdWolfSpawnDelay = 0;
+				if (!(Data_Grid_terrain[GridOffset(m->x, m->y)] & Terrain_d73f)) {
+					int wolfId = Figure_create(m->figureType, m->x, m->y, Dir_0_Top);
 					Data_Walkers[wolfId].actionState = FigureActionState_196_HerdAnimalAtRest;
 					Data_Walkers[wolfId].formationId = i;
 					Data_Walkers[wolfId].waitTicks = wolfId & 0x1f;
@@ -877,23 +877,23 @@ static void tickUpdateHerds()
 			}
 		}
 		int attackingAnimals = 0;
-		for (int w = 0; w < MAX_FORMATION_FIGURES; w++) {
-			int walkerId = f->figureIds[i];
+		for (int fig = 0; fig < MAX_FORMATION_FIGURES; fig++) {
+			int walkerId = m->figureIds[fig];
 			if (walkerId > 0 && Data_Walkers[walkerId].actionState == FigureActionState_150_Attack) {
 				attackingAnimals++;
 			}
 		}
-		if (f->missileAttackTimeout) {
+		if (m->missileAttackTimeout) {
 			attackingAnimals = 1;
 		}
-		if (f->figureIds[0] && Data_Walkers[f->figureIds[0]].state == FigureState_Alive) {
-			f->xHome = Data_Walkers[f->figureIds[0]].x;
-			f->yHome = Data_Walkers[f->figureIds[0]].y;
+		if (m->figureIds[0] && Data_Walkers[m->figureIds[0]].state == FigureState_Alive) {
+			m->xHome = Data_Walkers[m->figureIds[0]].x;
+			m->yHome = Data_Walkers[m->figureIds[0]].y;
 		}
 		int roamDistance;
 		int roamDelay;
 		int allowNegativeDesirability;
-		switch (f->figureType) {
+		switch (m->figureType) {
 			case Figure_Sheep:
 				roamDistance = 8;
 				roamDelay = 20;
@@ -914,30 +914,30 @@ static void tickUpdateHerds()
 			default: continue;
 		}
 		if (attackingAnimals) {
-			f->waitTicks = roamDelay + 1;
+			m->waitTicks = roamDelay + 1;
 		}
-		f->waitTicks++;
-		if (f->waitTicks > roamDelay) {
-			f->waitTicks = 0;
+		m->waitTicks++;
+		if (m->waitTicks > roamDelay) {
+			m->waitTicks = 0;
 			if (attackingAnimals) {
-				f->destinationX = f->xHome;
-				f->destinationY = f->yHome;
-				moveAnimals(f, attackingAnimals);
+				m->destinationX = m->xHome;
+				m->destinationY = m->yHome;
+				moveAnimals(m, attackingAnimals);
 			} else {
 				int xTile, yTile;
-				if (getHerdRoamingDestination(i, allowNegativeDesirability, f->xHome, f->yHome, roamDistance, f->herdDirection, &xTile, &yTile)) {
-					f->herdDirection = 0;
+				if (getHerdRoamingDestination(i, allowNegativeDesirability, m->xHome, m->yHome, roamDistance, m->herdDirection, &xTile, &yTile)) {
+					m->herdDirection = 0;
 					if (FigureAction_HerdEnemy_moveFormationTo(i, xTile, yTile, &xTile, &yTile)) {
-						f->destinationX = xTile;
-						f->destinationY = yTile;
-						if (f->figureType == Figure_Wolf) {
+						m->destinationX = xTile;
+						m->destinationY = yTile;
+						if (m->figureType == Figure_Wolf) {
 							Data_CityInfo.soundMarchWolf--;
 							if (Data_CityInfo.soundMarchWolf <= 0) {
 								Data_CityInfo.soundMarchWolf = 12;
 								Sound_Effects_playChannel(SoundChannel_WolfHowl);
 							}
 						}
-						moveAnimals(f, attackingAnimals);
+						moveAnimals(m, attackingAnimals);
 					}
 				}
 			}

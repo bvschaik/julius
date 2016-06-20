@@ -65,22 +65,22 @@ int Formation_createLegion(int buildingId)
 		return 0;
 	}
 	struct Data_Building *b = &Data_Buildings[buildingId];
-	struct Data_Formation *f = &Data_Formations[formationId];
-	f->inUse = 1;
-	f->isLegion = 1;
-	f->ciid = 1;
-	f->figureType = b->subtype.fortWalkerType;
-	f->buildingId = buildingId;
-	f->layout = FormationLayout_DoubleLine1;
-	f->morale = 50;
-	f->isAtFort = 1;
-	f->legionId = formationId - 1;
-	f->xHome = f->xStandard = f->x = b->x + 3;
-	f->yHome = f->yStandard = f->y = b->y - 1;
+	struct Data_Formation *m = &Data_Formations[formationId];
+	m->inUse = 1;
+	m->isLegion = 1;
+	m->ciid = 1;
+	m->figureType = b->subtype.fortWalkerType;
+	m->buildingId = buildingId;
+	m->layout = FormationLayout_DoubleLine1;
+	m->morale = 50;
+	m->isAtFort = 1;
+	m->legionId = formationId - 1;
+	m->xHome = m->xStandard = m->x = b->x + 3;
+	m->yHome = m->yStandard = m->y = b->y - 1;
 	int standardId = Figure_create(Figure_FortStandard, 0, 0, 0);
 	Data_Walkers[standardId].buildingId = buildingId;
 	Data_Walkers[standardId].formationId = formationId;
-	f->standardFigureId = standardId;
+	m->standardFigureId = standardId;
 	
 	Data_Formation_Extra.numForts++;
 	if (formationId > Data_Formation_Extra.idLastInUse) {
@@ -101,24 +101,24 @@ int Formation_create(int walkerType, int layout, int orientation, int x, int y)
 	if (!formationId) {
 		return 0;
 	}
-	struct Data_Formation *f = &Data_Formations[formationId];
-	f->x = x;
-	f->y = y;
-	f->inUse = 1;
-	f->isLegion = 0;
-	f->ciid = 0;
-	f->figureType = walkerType;
-	f->legionId = formationId - 10;
+	struct Data_Formation *m = &Data_Formations[formationId];
+	m->x = x;
+	m->y = y;
+	m->inUse = 1;
+	m->isLegion = 0;
+	m->ciid = 0;
+	m->figureType = walkerType;
+	m->legionId = formationId - 10;
 	if (layout == FormationLayout_Enemy10) {
 		if (orientation == Dir_0_Top || orientation == Dir_4_Bottom) {
-			f->layout = FormationLayout_DoubleLine1;
+			m->layout = FormationLayout_DoubleLine1;
 		} else {
-			f->layout = FormationLayout_DoubleLine2;
+			m->layout = FormationLayout_DoubleLine2;
 		}
 	} else {
-		f->layout = layout;
+		m->layout = layout;
 	}
-	f->morale = 100;
+	m->morale = 100;
 	return formationId;
 }
 
@@ -194,70 +194,70 @@ int Formation_getLegionFormationId(int legionIndex)
 
 void Formation_legionMoveTo(int formationId, int x, int y)
 {
-	struct Data_Formation *f = &Data_Formations[formationId];
-	Routing_getDistance(f->xHome, f->yHome);
+	struct Data_Formation *m = &Data_Formations[formationId];
+	Routing_getDistance(m->xHome, m->yHome);
 	if (Data_Grid_routingDistance[GridOffset(x, y)] <= 0) {
 		return; // unable to route there
 	}
-	if (x == f->xHome && y == f->yHome) {
+	if (x == m->xHome && y == m->yHome) {
 		return; // use legionReturnHome
 	}
-	if (f->cursedByMars) {
+	if (m->cursedByMars) {
 		return;
 	}
-	f->xStandard = x;
-	f->yStandard = y;
-	f->isAtFort = 0;
-	if (f->morale <= 20) {
+	m->xStandard = x;
+	m->yStandard = y;
+	m->isAtFort = 0;
+	if (m->morale <= 20) {
 		UI_Warning_show(Warning_LegionMoraleTooLow);
 	}
-	for (int i = 0; i < MAX_FORMATION_FIGURES && f->figureIds[i]; i++) {
-		int walkerId = f->figureIds[i];
-		struct Data_Walker *w = &Data_Walkers[walkerId];
-		if (w->actionState == FigureActionState_149_Corpse ||
-			w->actionState == FigureActionState_150_Attack) {
+	for (int i = 0; i < MAX_FORMATION_FIGURES && m->figureIds[i]; i++) {
+		int walkerId = m->figureIds[i];
+		struct Data_Walker *f = &Data_Walkers[walkerId];
+		if (f->actionState == FigureActionState_149_Corpse ||
+			f->actionState == FigureActionState_150_Attack) {
 			continue;
 		}
-		if (f->monthsVeryLowMorale || f->monthsLowMorale > 1) {
+		if (m->monthsVeryLowMorale || m->monthsLowMorale > 1) {
 			continue;
 		}
-		if (f->monthsLowMorale == 1) {
+		if (m->monthsLowMorale == 1) {
 			Formation_changeMorale(formationId, 10); // yay we can move?
 		}
-		w->alternativeLocationIndex = 0;
-		w->actionState = FigureActionState_83_SoldierGoingToStandard;
+		f->alternativeLocationIndex = 0;
+		f->actionState = FigureActionState_83_SoldierGoingToStandard;
 		FigureRoute_remove(walkerId);
 	}
 }
 
 void Formation_legionReturnHome(int formationId)
 {
-	struct Data_Formation *f = &Data_Formations[formationId];
-	Routing_getDistance(f->xHome, f->yHome);
-	if (Data_Grid_routingDistance[GridOffset(f->x, f->y)] <= 0) {
+	struct Data_Formation *m = &Data_Formations[formationId];
+	Routing_getDistance(m->xHome, m->yHome);
+	if (Data_Grid_routingDistance[GridOffset(m->x, m->y)] <= 0) {
 		return; // unable to route home
 	}
-	if (f->cursedByMars) {
+	if (m->cursedByMars) {
 		return;
 	}
-	f->isAtFort = 1;
-	if (f->layout == FormationLayout_MopUp) {
-		f->layout = f->layoutBeforeMopUp;
+	m->isAtFort = 1;
+	if (m->layout == FormationLayout_MopUp) {
+		m->layout = m->layoutBeforeMopUp;
 	}
-	for (int i = 0; i < MAX_FORMATION_FIGURES && f->figureIds[i]; i++) {
-		int walkerId = f->figureIds[i];
-		struct Data_Walker *w = &Data_Walkers[walkerId];
-		if (w->actionState == FigureActionState_149_Corpse ||
-			w->actionState == FigureActionState_150_Attack) {
+	for (int i = 0; i < MAX_FORMATION_FIGURES && m->figureIds[i]; i++) {
+		int walkerId = m->figureIds[i];
+		struct Data_Walker *f = &Data_Walkers[walkerId];
+		if (f->actionState == FigureActionState_149_Corpse ||
+			f->actionState == FigureActionState_150_Attack) {
 			continue;
 		}
-		if (f->monthsVeryLowMorale || f->monthsLowMorale > 1) {
+		if (m->monthsVeryLowMorale || m->monthsLowMorale > 1) {
 			continue;
 		}
-		if (f->monthsLowMorale == 1) {
+		if (m->monthsLowMorale == 1) {
 			Formation_changeMorale(formationId, 10); // yay we can go home?
 		}
-		w->actionState = FigureActionState_81_SoldierGoingToFort;
+		f->actionState = FigureActionState_81_SoldierGoingToFort;
 		FigureRoute_remove(walkerId);
 	}
 }
@@ -268,20 +268,20 @@ void Formation_calculateLegionTotals()
 	Data_Formation_Extra.numForts = 0;
 	Data_CityInfo.militaryLegionaryLegions = 0;
 	for (int i = 1; i < MAX_FORMATIONS; i++) {
-		struct Data_Formation *f = &Data_Formations[i];
-		if (f->inUse == 1) {
-			if (f->isLegion) {
+		struct Data_Formation *m = &Data_Formations[i];
+		if (m->inUse == 1) {
+			if (m->isLegion) {
 				Data_Formation_Extra.idLastLegion = i;
 				Data_Formation_Extra.numForts++;
-				if (f->figureType == Figure_FortLegionary) {
+				if (m->figureType == Figure_FortLegionary) {
 					Data_CityInfo.militaryLegionaryLegions++;
 				}
 			}
-			if (f->missileAttackTimeout <= 0 && f->figureIds[0]) {
-				int walkerId = f->figureIds[0];
+			if (m->missileAttackTimeout <= 0 && m->figureIds[0]) {
+				int walkerId = m->figureIds[0];
 				if (Data_Walkers[walkerId].state == FigureState_Alive) {
-					f->xHome = Data_Walkers[walkerId].x;
-					f->yHome = Data_Walkers[walkerId].y;
+					m->xHome = Data_Walkers[walkerId].x;
+					m->yHome = Data_Walkers[walkerId].y;
 				}
 			}
 		}
@@ -323,25 +323,25 @@ int Formation_getClosestMilitaryAcademy(int formationId)
 
 void Formation_setNewSoldierRequest(int buildingId)
 {
-	struct Data_Formation *f = &Data_Formations[Data_Buildings[buildingId].formationId];
-	f->legionRecruitType = 0;
-	if (!f->isAtFort || f->cursedByMars || f->numFigures == f->maxFigures) {
+	struct Data_Formation *m = &Data_Formations[Data_Buildings[buildingId].formationId];
+	m->legionRecruitType = 0;
+	if (!m->isAtFort || m->cursedByMars || m->numFigures == m->maxFigures) {
 		return;
 	}
-	if (f->numFigures < f->maxFigures) {
+	if (m->numFigures < m->maxFigures) {
 		int type = Data_Buildings[buildingId].subtype.fortWalkerType;
 		if (type == Figure_FortLegionary) {
-			f->legionRecruitType = 3;
+			m->legionRecruitType = 3;
 		} else if (type == Figure_FortJavelin) {
-			f->legionRecruitType = 2;
+			m->legionRecruitType = 2;
 		} else if (type == Figure_FortMounted) {
-			f->legionRecruitType = 1;
+			m->legionRecruitType = 1;
 		}
 	} else { // too many walkers
-		int tooMany = f->numFigures - f->maxFigures;
+		int tooMany = m->numFigures - m->maxFigures;
 		for (int i = 15; i >= 0 && tooMany > 0; i--) {
-			if (f->figureIds[i]) {
-				Data_Walkers[f->figureIds[i]].actionState = FigureActionState_82_SoldierReturningToBarracks;
+			if (m->figureIds[i]) {
+				Data_Walkers[m->figureIds[i]].actionState = FigureActionState_82_SoldierReturningToBarracks;
 				tooMany--;
 			}
 		}
@@ -352,8 +352,8 @@ void Formation_setNewSoldierRequest(int buildingId)
 void Formation_calculateWalkers()
 {
 	for (int i = 1; i < MAX_FORMATIONS; i++) {
-		for (int w = 0; w < MAX_FORMATION_FIGURES; w++) {
-			Data_Formations[i].figureIds[w] = 0;
+		for (int fig = 0; fig < MAX_FORMATION_FIGURES; fig++) {
+			Data_Formations[i].figureIds[fig] = 0;
 		}
 		Data_Formations[i].numFigures = 0;
 		Data_Formations[i].isAtFort = 1;
@@ -378,10 +378,10 @@ void Formation_calculateWalkers()
 		if (Data_Walkers[i].formationAtRest != 1) {
 			Data_Formations[formationId].isAtFort = 0;
 		}
-		for (int w = 0; w < MAX_FORMATION_FIGURES; w++) {
-			if (!Data_Formations[formationId].figureIds[w]) {
-				Data_Formations[formationId].figureIds[w] = i;
-				Data_Walkers[i].indexInFormation = w;
+		for (int fig = 0; fig < MAX_FORMATION_FIGURES; fig++) {
+			if (!Data_Formations[formationId].figureIds[fig]) {
+				Data_Formations[formationId].figureIds[fig] = i;
+				Data_Walkers[i].indexInFormation = fig;
 				break;
 			}
 		}
@@ -391,36 +391,36 @@ void Formation_calculateWalkers()
 	Data_Formation_Extra.numLegionFormations = 0;
 	Data_Formation_Extra.numLegionSoldierStrength = 0;
 	for (int i = 1; i < MAX_FORMATIONS; i++) {
-		struct Data_Formation *f = &Data_Formations[i];
-		if (f->inUse != 1 || f->isHerd) {
+		struct Data_Formation *m = &Data_Formations[i];
+		if (m->inUse != 1 || m->isHerd) {
 			continue;
 		}
-		if (f->isLegion) {
-			if (f->numFigures > 0) {
-				int wasHalted = f->isHalted;
-				f->isHalted = 1;
-				for (int w = 0; w < f->numFigures; w++) {
-					int walkerId = f->figureIds[w];
+		if (m->isLegion) {
+			if (m->numFigures > 0) {
+				int wasHalted = m->isHalted;
+				m->isHalted = 1;
+				for (int fig = 0; fig < m->numFigures; fig++) {
+					int walkerId = m->figureIds[fig];
 					if (walkerId && Data_Walkers[walkerId].direction != Dir_8_None) {
-						f->isHalted = 0;
+						m->isHalted = 0;
 					}
 				}
 				Data_Formation_Extra.numLegionFormations++;
-				Data_Formation_Extra.numLegionSoldierStrength += f->numFigures;
-				if (f->figureType == Figure_FortLegionary) {
-					if (!wasHalted && f->isHalted) {
+				Data_Formation_Extra.numLegionSoldierStrength += m->numFigures;
+				if (m->figureType == Figure_FortLegionary) {
+					if (!wasHalted && m->isHalted) {
 						Sound_Effects_playChannel(SoundChannel_FormationShield);
 					}
-					Data_Formation_Extra.numLegionSoldierStrength += f->numFigures / 2;
+					Data_Formation_Extra.numLegionSoldierStrength += m->numFigures / 2;
 				}
 			}
 		} else {
 			// enemy
-			if (f->numFigures <= 0) {
+			if (m->numFigures <= 0) {
 				memset(&Data_Formations[i], 0, 128);
 			} else {
 				Data_Formation_Extra.numEnemyFormations++;
-				Data_Formation_Extra.numEnemySoldierStrength += f->numFigures;
+				Data_Formation_Extra.numEnemySoldierStrength += m->numFigures;
 			}
 		}
 	}
@@ -461,16 +461,16 @@ void Formation_updateAfterDeath(int formationId)
 
 void Formation_changeMorale(int formationId, int amount)
 {
-	Data_Formation *f = &Data_Formations[formationId];
+	struct Data_Formation *m = &Data_Formations[formationId];
 	int maxMorale;
-	if (f->figureType == Figure_FortLegionary) {
-		maxMorale = f->hasMilitaryTraining ? 100 : 80;
-	} else if (f->figureType == Figure_EnemyCaesarLegionary) {
+	if (m->figureType == Figure_FortLegionary) {
+		maxMorale = m->hasMilitaryTraining ? 100 : 80;
+	} else if (m->figureType == Figure_EnemyCaesarLegionary) {
 		maxMorale = 100;
-	} else if (f->figureType == Figure_FortJavelin || f->figureType == Figure_FortMounted) {
-		maxMorale = f->hasMilitaryTraining ? 80 : 60;
+	} else if (m->figureType == Figure_FortJavelin || m->figureType == Figure_FortMounted) {
+		maxMorale = m->hasMilitaryTraining ? 80 : 60;
 	} else {
-		switch (f->enemyType) {
+		switch (m->enemyType) {
 			case 0:
 			case EnemyType_1_Numidian:
 			case EnemyType_2_Gaul:
@@ -487,17 +487,17 @@ void Formation_changeMorale(int formationId, int amount)
 				break;
 		}
 	}
-	f->morale += amount;
-	BOUND(f->morale, 0, maxMorale);
+	m->morale += amount;
+	BOUND(m->morale, 0, maxMorale);
 }
 
 int Formation_getInvasionGridOffset(int invasionSeq)
 {
 	for (int i = 1; i < MAX_FORMATIONS; i++) {
-		struct Data_Formation *f = &Data_Formations[i];
-		if (f->inUse == 1 && !f->isLegion && !f->isHerd && f->invasionSeq == invasionSeq) {
-			if (f->xHome > 0 || f->yHome > 0) {
-				return GridOffset(f->xHome, f->yHome);
+		struct Data_Formation *m = &Data_Formations[i];
+		if (m->inUse == 1 && !m->isLegion && !m->isHerd && m->invasionSeq == invasionSeq) {
+			if (m->xHome > 0 || m->yHome > 0) {
+				return GridOffset(m->xHome, m->yHome);
 			}
 			return 0;
 		}
@@ -510,20 +510,20 @@ void Formation_dispatchLegionsToDistantBattle()
 	Data_CityInfo.distantBattleRomanStrength = 0;
 	int numLegions = 0;
 	for (int i = 1; i < MAX_FORMATIONS; i++) {
-		struct Data_Formation *f = &Data_Formations[i];
-		if (f->inUse == 1 && f->isLegion && f->empireService && f->numFigures > 0) {
-			f->inDistantBattle = 1;
-			f->isAtFort = 0;
+		struct Data_Formation *m = &Data_Formations[i];
+		if (m->inUse == 1 && m->isLegion && m->empireService && m->numFigures > 0) {
+			m->inDistantBattle = 1;
+			m->isAtFort = 0;
 			numLegions++;
 			int strengthFactor;
-			if (f->hasMilitaryTraining) {
-				strengthFactor = f->figureType == Figure_FortLegionary ? 3 : 2;
+			if (m->hasMilitaryTraining) {
+				strengthFactor = m->figureType == Figure_FortLegionary ? 3 : 2;
 			} else {
-				strengthFactor = f->figureType == Figure_FortLegionary ? 2 : 1;
+				strengthFactor = m->figureType == Figure_FortLegionary ? 2 : 1;
 			}
-			Data_CityInfo.distantBattleRomanStrength += strengthFactor * f->numFigures;
-			for (int w = 0; w < f->numFigures; w++) {
-				int walkerId = f->figureIds[w];
+			Data_CityInfo.distantBattleRomanStrength += strengthFactor * m->numFigures;
+			for (int fig = 0; fig < m->numFigures; fig++) {
+				int walkerId = m->figureIds[fig];
 				if (walkerId > 0 &&
 					Data_Walkers[walkerId].state == FigureState_Alive &&
 					Data_Walkers[walkerId].actionState != FigureActionState_149_Corpse) {
@@ -540,11 +540,11 @@ void Formation_dispatchLegionsToDistantBattle()
 void Formation_legionsReturnFromDistantBattle()
 {
 	for (int i = 1; i < MAX_FORMATIONS; i++) {
-		struct Data_Formation *f = &Data_Formations[i];
-		if (f->inUse == 1 && f->isLegion && f->inDistantBattle) {
-			f->inDistantBattle = 0;
-			for (int w = 0; w < f->numFigures; w++) {
-				int walkerId = f->figureIds[w];
+		struct Data_Formation *m = &Data_Formations[i];
+		if (m->inUse == 1 && m->isLegion && m->inDistantBattle) {
+			m->inDistantBattle = 0;
+			for (int fig = 0; fig < m->numFigures; fig++) {
+				int walkerId = m->figureIds[fig];
 				if (walkerId > 0 &&
 					Data_Walkers[walkerId].state == FigureState_Alive &&
 					Data_Walkers[walkerId].actionState != FigureActionState_149_Corpse) {
@@ -559,15 +559,15 @@ void Formation_legionsReturnFromDistantBattle()
 void Formation_legionKillSoldiersInDistantBattle(int killPercentage)
 {
 	for (int i = 1; i < MAX_FORMATIONS; i++) {
-		struct Data_Formation *f = &Data_Formations[i];
-		if (f->inUse != 1 || !f->isLegion || !f->inDistantBattle) {
+		struct Data_Formation *m = &Data_Formations[i];
+		if (m->inUse != 1 || !m->isLegion || !m->inDistantBattle) {
 			continue;
 		}
 		Formation_changeMorale(i, -75);
 
 		int numSoldiersTotal = 0;
-		for (int w = 0; w < f->numFigures; w++) {
-			int walkerId = f->figureIds[w];
+		for (int fig = 0; fig < m->numFigures; fig++) {
+			int walkerId = m->figureIds[fig];
 			if (walkerId > 0 && Data_Walkers[walkerId].state == FigureState_Alive &&
 				Data_Walkers[walkerId].actionState != FigureActionState_149_Corpse) {
 				numSoldiersTotal++;
@@ -575,11 +575,11 @@ void Formation_legionKillSoldiersInDistantBattle(int killPercentage)
 		}
 		int numSoldiersToKill = Calc_adjustWithPercentage(numSoldiersTotal, killPercentage);
 		if (numSoldiersToKill >= numSoldiersTotal) {
-			f->isAtFort = 1;
-			f->inDistantBattle = 0;
+			m->isAtFort = 1;
+			m->inDistantBattle = 0;
 		}
-		for (int w = 0; w < f->numFigures; w++) {
-			int walkerId = f->figureIds[w];
+		for (int fig = 0; fig < m->numFigures; fig++) {
+			int walkerId = m->figureIds[fig];
 			if (walkerId > 0 && Data_Walkers[walkerId].state == FigureState_Alive &&
 				Data_Walkers[walkerId].actionState != FigureActionState_149_Corpse) {
 				if (numSoldiersToKill) {
@@ -594,13 +594,13 @@ void Formation_legionKillSoldiersInDistantBattle(int killPercentage)
 void Formation_moveHerdsAwayFrom(int x, int y)
 {
 	for (int i = 1; i < MAX_FORMATIONS; i++) {
-		struct Data_Formation *f = &Data_Formations[i];
-		if (f->inUse != 1 || f->isLegion || !f->isHerd || f->numFigures <= 0) {
+		struct Data_Formation *m = &Data_Formations[i];
+		if (m->inUse != 1 || m->isLegion || !m->isHerd || m->numFigures <= 0) {
 			continue;
 		}
-		if (Calc_distanceMaximum(x, y, f->xHome, f->yHome) <= 6) {
-			f->waitTicks = 50;
-			f->herdDirection = Routing_getGeneralDirection(x, y, f->xHome, f->yHome);
+		if (Calc_distanceMaximum(x, y, m->xHome, m->yHome) <= 6) {
+			m->waitTicks = 50;
+			m->herdDirection = Routing_getGeneralDirection(x, y, m->xHome, m->yHome);
 		}
 	}
 }
@@ -610,10 +610,10 @@ int Formation_marsCurseFort()
 	int bestLegionId = 0;
 	int bestLegionWeight = 0;
 	for (int i = 1; i <= 6; i++) {
-		struct Data_Formation *f = &Data_Formations[i];
-		if (f->inUse == 1 && f->isLegion) {
-			int weight = f->numFigures;
-			if (f->figureType == Figure_FortLegionary) {
+		struct Data_Formation *m = &Data_Formations[i];
+		if (m->inUse == 1 && m->isLegion) {
+			int weight = m->numFigures;
+			if (m->figureType == Figure_FortLegionary) {
 				weight *= 2;
 			}
 			if (weight > bestLegionWeight) {
@@ -625,13 +625,13 @@ int Formation_marsCurseFort()
 	if (bestLegionId <= 0) {
 		return 0;
 	}
-	struct Data_Formation *f = &Data_Formations[bestLegionId];
+	struct Data_Formation *m = &Data_Formations[bestLegionId];
 	for (int i = 0; i < 15; i++) { // BUG: last walker not cursed
-		if (f->figureIds[i] > 0) {
-			Data_Walkers[f->figureIds[i]].actionState = FigureActionState_82_SoldierReturningToBarracks;
+		if (m->figureIds[i] > 0) {
+			Data_Walkers[m->figureIds[i]].actionState = FigureActionState_82_SoldierReturningToBarracks;
 		}
 	}
-	f->cursedByMars = 96;
+	m->cursedByMars = 96;
 	Formation_calculateWalkers();
 	return 1;
 }
@@ -639,24 +639,24 @@ int Formation_marsCurseFort()
 void Formation_Tick_updateRestMorale()
 {
 	for (int i = 1; i < MAX_FORMATIONS; i++) {
-		struct Data_Formation *f = &Data_Formations[i];
-		if (f->inUse != 1 || f->isHerd) {
+		struct Data_Formation *m = &Data_Formations[i];
+		if (m->inUse != 1 || m->isHerd) {
 			continue;
 		}
-		if (f->isLegion) {
-			if (f->isAtFort) {
-				f->monthsFromHome = 0;
-				f->monthsVeryLowMorale = 0;
-				f->monthsLowMorale = 0;
+		if (m->isLegion) {
+			if (m->isAtFort) {
+				m->monthsFromHome = 0;
+				m->monthsVeryLowMorale = 0;
+				m->monthsLowMorale = 0;
 				Formation_changeMorale(i, 5);
-				if (f->layout == FormationLayout_MopUp) {
-					f->layout = f->layoutBeforeMopUp;
+				if (m->layout == FormationLayout_MopUp) {
+					m->layout = m->layoutBeforeMopUp;
 				}
-			} else if (!f->recentFight) {
-				f->monthsFromHome++;
-				if (f->monthsFromHome > 3) {
-					if (f->monthsFromHome > 100) {
-						f->monthsFromHome = 100;
+			} else if (!m->recentFight) {
+				m->monthsFromHome++;
+				if (m->monthsFromHome > 3) {
+					if (m->monthsFromHome > 100) {
+						m->monthsFromHome = 100;
 					}
 					Formation_changeMorale(i, -5);
 				}

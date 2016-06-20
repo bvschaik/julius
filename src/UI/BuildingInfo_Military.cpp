@@ -201,27 +201,27 @@ void UI_BuildingInfo_drawBarracks(BuildingInfoContext *c)
 void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)
 {
 	int textId, groupId;
-	struct Data_Formation *f = &Data_Formations[c->formationId];
+	struct Data_Formation *m = &Data_Formations[c->formationId];
 	c->helpId = 87;
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset,
 		c->widthBlocks, c->heightBlocks);
-	Widget_GameText_drawCentered(138, f->legionId,
+	Widget_GameText_drawCentered(138, m->legionId,
 		c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, Font_LargeBlack);
 
 	// standard icon at the top
-	int graphicId = GraphicId(ID_Graphic_FortStandardIcons) + f->legionId;
+	int graphicId = GraphicId(ID_Graphic_FortStandardIcons) + m->legionId;
 	int iconHeight = GraphicHeight(graphicId);
 	Graphics_drawImage(graphicId,
 		c->xOffset + 16 + (40 - GraphicWidth(graphicId)) / 2,
 		c->yOffset + 16);
 	// standard flag
 	graphicId = GraphicId(ID_Graphic_FortFlags);
-	if (f->figureType == Figure_FortJavelin) {
+	if (m->figureType == Figure_FortJavelin) {
 		graphicId += 9;
-	} else if (f->figureType == Figure_FortMounted) {
+	} else if (m->figureType == Figure_FortMounted) {
 		graphicId += 18;
 	}
-	if (f->isHalted) {
+	if (m->isHalted) {
 		graphicId += 8;
 	}
 	int flagHeight = GraphicHeight(graphicId);
@@ -229,18 +229,18 @@ void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)
 		c->xOffset + 16 + (40 - GraphicWidth(graphicId)) / 2,
 		c->yOffset + 16 + iconHeight);
 	// standard pole and morale ball
-	graphicId = GraphicId(ID_Graphic_FortStandardPole) + 20 - f->morale / 5;
+	graphicId = GraphicId(ID_Graphic_FortStandardPole) + 20 - m->morale / 5;
 	Graphics_drawImage(graphicId,
 		c->xOffset + 16 + (40 - GraphicWidth(graphicId)) / 2,
 		c->yOffset + 16 + iconHeight + flagHeight);
 
 	// number of soldiers
 	Widget_GameText_draw(138, 23, c->xOffset + 100, c->yOffset + 60, Font_NormalBlack);
-	Widget_Text_drawNumber(f->numFigures, '@', " ",
+	Widget_Text_drawNumber(m->numFigures, '@', " ",
 		c->xOffset + 294, c->yOffset + 60, Font_NormalBlack);
 	// health
 	Widget_GameText_draw(138, 24, c->xOffset + 100, c->yOffset + 80, Font_NormalBlack);
-	int health = Calc_getPercentage(f->totalDamage, f->maxTotalDamage);
+	int health = Calc_getPercentage(m->totalDamage, m->maxTotalDamage);
 	if (health <= 0) {
 		textId = 26;
 	} else if (health <= 20) {
@@ -259,17 +259,17 @@ void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)
 	Widget_GameText_draw(138, textId, c->xOffset + 300, c->yOffset + 80, Font_NormalBlack);
 	// military training
 	Widget_GameText_draw(138, 25, c->xOffset + 100, c->yOffset + 100, Font_NormalBlack);
-	Widget_GameText_draw(18, f->hasMilitaryTraining,
+	Widget_GameText_draw(18, m->hasMilitaryTraining,
 		c->xOffset + 300, c->yOffset + 100, Font_NormalBlack);
 	// morale
-	if (f->cursedByMars) {
+	if (m->cursedByMars) {
 		Widget_GameText_draw(138, 59, c->xOffset + 100, c->yOffset + 120, Font_NormalBlack);
 	} else {
 		Widget_GameText_draw(138, 36, c->xOffset + 100, c->yOffset + 120, Font_NormalBlack);
-		Widget_GameText_draw(138, 37 + f->morale / 5,
+		Widget_GameText_draw(138, 37 + m->morale / 5,
 			c->xOffset + 300, c->yOffset + 120, Font_NormalBlack);
 	}
-	if (f->numFigures) {
+	if (m->numFigures) {
 		// layout
 		static const int offsetsLegionary[2][5] = {
 			{0, 0, 2, 3, 4}, {0, 0, 3, 2, 4},
@@ -283,7 +283,7 @@ void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)
 			Data_Settings_Map.orientation == Dir_2_Right) {
 			index = 1;
 		}
-		if (f->figureType == Figure_FortLegionary) {
+		if (m->figureType == Figure_FortLegionary) {
 			offsets = offsetsLegionary[index];
 		} else {
 			offsets = offsetsOther[index];
@@ -295,7 +295,7 @@ void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)
 		UI_BuildingInfo_drawLegionInfoForeground(c);
 	} else {
 		// no soldiers
-		if (f->cursedByMars) {
+		if (m->cursedByMars) {
 			groupId = 89; textId = 1;
 		} else if (Data_CityInfo_Buildings.barracks.working) {
 			groupId = 138; textId = 10;
@@ -310,8 +310,8 @@ void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)
 
 void UI_BuildingInfo_drawLegionInfoForeground(BuildingInfoContext *c)
 {
-	struct Data_Formation *f = &Data_Formations[c->formationId];
-	if (!f->numFigures) {
+	struct Data_Formation *m = &Data_Formations[c->formationId];
+	if (!m->numFigures) {
 		return;
 	}
 	for (int i = 5 - c->formationTypes; i < 5; i++) {
@@ -320,28 +320,28 @@ void UI_BuildingInfo_drawLegionInfoForeground(BuildingInfoContext *c)
 			if (focusButtonId - 1 == i) {
 				hasFocus = 1;
 			}
-		} else if (f->figureType == Figure_FortLegionary) {
-			if (i == 0 && f->layout == 5) {
+		} else if (m->figureType == Figure_FortLegionary) {
+			if (i == 0 && m->layout == 5) {
 				hasFocus = 1;
-			} else if (i == 1 && f->layout == 0) {
+			} else if (i == 1 && m->layout == 0) {
 				hasFocus = 1;
-			} else if (i == 2 && f->layout == 1) {
+			} else if (i == 2 && m->layout == 1) {
 				hasFocus = 1;
-			} else if (i == 3 && f->layout == 2) {
+			} else if (i == 3 && m->layout == 2) {
 				hasFocus = 1;
-			} else if (i == 4 && f->layout == 6) {
+			} else if (i == 4 && m->layout == 6) {
 				hasFocus = 1;
 			}
 		} else { // mounted/javelin
-			if (i == 0 && f->layout == 3) {
+			if (i == 0 && m->layout == 3) {
 				hasFocus = 1;
-			} else if (i == 1 && f->layout == 4) {
+			} else if (i == 1 && m->layout == 4) {
 				hasFocus = 1;
-			} else if (i == 2 && f->layout == 1) {
+			} else if (i == 2 && m->layout == 1) {
 				hasFocus = 1;
-			} else if (i == 3 && f->layout == 2) {
+			} else if (i == 3 && m->layout == 2) {
 				hasFocus = 1;
-			} else if (i == 4 && f->layout == 6) {
+			} else if (i == 4 && m->layout == 6) {
 				hasFocus = 0;
 			}
 		}
@@ -356,18 +356,18 @@ void UI_BuildingInfo_drawLegionInfoForeground(BuildingInfoContext *c)
 	switch (focusButtonId) {
 		// single line or testudo
 		case 1:
-			if (f->figureType == Figure_FortLegionary) {
+			if (m->figureType == Figure_FortLegionary) {
 				titleId = 12;
-				textId = f->hasMilitaryTraining ? 18 : 17;
+				textId = m->hasMilitaryTraining ? 18 : 17;
 			} else {
 				titleId = 16;
 				textId = 22;
 			}
 			break;
 		case 2:
-			if (f->figureType == Figure_FortLegionary) {
+			if (m->figureType == Figure_FortLegionary) {
 				titleId = 13;
-				textId = f->hasMilitaryTraining ? 19 : 17;
+				textId = m->hasMilitaryTraining ? 19 : 17;
 			} else {
 				titleId = 16;
 				textId = 22;
@@ -385,7 +385,7 @@ void UI_BuildingInfo_drawLegionInfoForeground(BuildingInfoContext *c)
 			break;
 		default:
 			// no button selected: go for formation layout
-			switch (f->layout) {
+			switch (m->layout) {
 				case FormationLayout_SingleLine1:
 				case FormationLayout_SingleLine2:
 					titleId = 16;
@@ -417,7 +417,7 @@ void UI_BuildingInfo_drawLegionInfoForeground(BuildingInfoContext *c)
 		c->xOffset + 24, c->yOffset + 252,
 		16 * (c->widthBlocks - 4), Font_NormalGreen);
 
-	if (!f->isAtFort) {
+	if (!m->isAtFort) {
 		Widget_Panel_drawButtonBorder(
 			c->xOffset + 16 * (c->widthBlocks - 18) / 2,
 			c->yOffset + 16 * c->heightBlocks - 48,
@@ -434,8 +434,8 @@ void UI_BuildingInfo_handleMouseLegionInfo(BuildingInfoContext *c)
 	contextForCallback = c;
 	if (Widget_Button_handleCustomButtons(
 			c->xOffset, c->yOffset, layoutButtons, 5, &focusButtonId)) {
-		struct Data_Formation *f = &Data_Formations[c->formationId];
-		if (f->figureType == Figure_FortLegionary) {
+		struct Data_Formation *m = &Data_Formations[c->formationId];
+		if (m->figureType == Figure_FortLegionary) {
 			if (focusButtonId == 1 || (focusButtonId == 2 && c->formationTypes == 3)) {
 				focusButtonId = 0;
 			}
@@ -457,8 +457,8 @@ int UI_BuildingInfo_getTooltipLegionInfo(BuildingInfoContext *c)
 static void buttonReturnToFort(int param1, int param2)
 {
 	int formationId = contextForCallback->formationId;
-	struct Data_Formation *f = &Data_Formations[formationId];
-	if (!f->inDistantBattle && f->isAtFort != 1) {
+	struct Data_Formation *m = &Data_Formations[formationId];
+	if (!m->inDistantBattle && m->isAtFort != 1) {
 		Formation_legionReturnHome(formationId);
 		UI_Window_goTo(Window_City);
 	}
@@ -466,8 +466,8 @@ static void buttonReturnToFort(int param1, int param2)
 
 static void buttonLayout(int index, int param2)
 {
-	struct Data_Formation *f = &Data_Formations[contextForCallback->formationId];
-	if (f->inDistantBattle) {
+	struct Data_Formation *m = &Data_Formations[contextForCallback->formationId];
+	if (m->inDistantBattle) {
 		return;
 	}
 	if (index == 0 && contextForCallback->formationTypes < 5) {
@@ -477,24 +477,24 @@ static void buttonLayout(int index, int param2)
 		return;
 	}
 	// store layout in case of mop up
-	if (index == 4 && f->layout != FormationLayout_MopUp) {
-		f->layoutBeforeMopUp = f->layout;
+	if (index == 4 && m->layout != FormationLayout_MopUp) {
+		m->layoutBeforeMopUp = m->layout;
 	}
-	if (f->figureType == Figure_FortLegionary) {
+	if (m->figureType == Figure_FortLegionary) {
 		switch (index) {
-			case 0: f->layout = FormationLayout_Tortoise; break;
-			case 1: f->layout = FormationLayout_Column; break;
-			case 2: f->layout = FormationLayout_DoubleLine1; break;
-			case 3: f->layout = FormationLayout_DoubleLine2; break;
-			case 4: f->layout = FormationLayout_MopUp; break;
+			case 0: m->layout = FormationLayout_Tortoise; break;
+			case 1: m->layout = FormationLayout_Column; break;
+			case 2: m->layout = FormationLayout_DoubleLine1; break;
+			case 3: m->layout = FormationLayout_DoubleLine2; break;
+			case 4: m->layout = FormationLayout_MopUp; break;
 		}
 	} else {
 		switch (index) {
-			case 0: f->layout = FormationLayout_SingleLine1; break;
-			case 1: f->layout = FormationLayout_SingleLine2; break;
-			case 2: f->layout = FormationLayout_DoubleLine1; break;
-			case 3: f->layout = FormationLayout_DoubleLine2; break;
-			case 4: f->layout = FormationLayout_MopUp; break;
+			case 0: m->layout = FormationLayout_SingleLine1; break;
+			case 1: m->layout = FormationLayout_SingleLine2; break;
+			case 2: m->layout = FormationLayout_DoubleLine1; break;
+			case 3: m->layout = FormationLayout_DoubleLine2; break;
+			case 4: m->layout = FormationLayout_MopUp; break;
 		}
 	}
 	switch (index) {

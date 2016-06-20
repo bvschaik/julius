@@ -16,6 +16,6 @@ int FigureMovement_crossCountryWalkTicks(int walkerId, int numTicks);
 
 int FigureMovement_canLaunchCrossCountryMissile(int xSrc, int ySrc, int xDst, int yDst);
 
-void FigureMovement_advanceTick(struct Data_Walker *w);
+void FigureMovement_advanceTick(struct Data_Walker *f);
 
 #endif

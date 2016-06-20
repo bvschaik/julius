@@ -10,113 +10,113 @@
 #include "../Data/Settings.h"
 #include "../Data/State.h"
 
-static int showOnOverlay(struct Data_Walker *w)
+static int showOnOverlay(struct Data_Walker *f)
 {
 	switch (Data_State.currentOverlay) {
 		case Overlay_Water:
 		case Overlay_Desirability:
 			return 0;
 		case Overlay_Native:
-			return w->type == Figure_IndigenousNative || w->type == Figure_Missionary;
+			return f->type == Figure_IndigenousNative || f->type == Figure_Missionary;
 		case Overlay_Fire:
-			return w->type == Figure_Prefect;
+			return f->type == Figure_Prefect;
 		case Overlay_Damage:
-			return w->type == Figure_Engineer;
+			return f->type == Figure_Engineer;
 		case Overlay_TaxIncome:
-			return w->type == Figure_TaxCollector;
+			return f->type == Figure_TaxCollector;
 		case Overlay_Crime:
-			return w->type == Figure_Prefect || w->type == Figure_Protester ||
-				w->type == Figure_Criminal || w->type == Figure_Rioter;
+			return f->type == Figure_Prefect || f->type == Figure_Protester ||
+				f->type == Figure_Criminal || f->type == Figure_Rioter;
 		case Overlay_Entertainment:
-			return w->type == Figure_Actor || w->type == Figure_Gladiator ||
-				w->type == Figure_LionTamer || w->type == Figure_Charioteer;
+			return f->type == Figure_Actor || f->type == Figure_Gladiator ||
+				f->type == Figure_LionTamer || f->type == Figure_Charioteer;
 		case Overlay_Education:
-			return w->type == Figure_SchoolChild || w->type == Figure_Librarian ||
-				w->type == Figure_Teacher;
+			return f->type == Figure_SchoolChild || f->type == Figure_Librarian ||
+				f->type == Figure_Teacher;
 		case Overlay_Theater:
-			if (w->type == Figure_Actor) {
-				if (w->actionState == FigureActionState_94_EntertainerRoaming ||
-					w->actionState == FigureActionState_95_EntertainerReturning) {
-					return Data_Buildings[w->buildingId].type == Building_Theater;
+			if (f->type == Figure_Actor) {
+				if (f->actionState == FigureActionState_94_EntertainerRoaming ||
+					f->actionState == FigureActionState_95_EntertainerReturning) {
+					return Data_Buildings[f->buildingId].type == Building_Theater;
 				} else {
-					return Data_Buildings[w->destinationBuildingId].type == Building_Theater;
+					return Data_Buildings[f->destinationBuildingId].type == Building_Theater;
 				}
 			}
 			return 0;
 		case Overlay_Amphitheater:
-			if (w->type == Figure_Actor || w->type == Figure_Gladiator) {
-				if (w->actionState == FigureActionState_94_EntertainerRoaming ||
-					w->actionState == FigureActionState_95_EntertainerReturning) {
-					return Data_Buildings[w->buildingId].type == Building_Amphitheater;
+			if (f->type == Figure_Actor || f->type == Figure_Gladiator) {
+				if (f->actionState == FigureActionState_94_EntertainerRoaming ||
+					f->actionState == FigureActionState_95_EntertainerReturning) {
+					return Data_Buildings[f->buildingId].type == Building_Amphitheater;
 				} else {
-					return Data_Buildings[w->destinationBuildingId].type == Building_Amphitheater;
+					return Data_Buildings[f->destinationBuildingId].type == Building_Amphitheater;
 				}
 			}
 			return 0;
 		case Overlay_Colosseum:
-			if (w->type == Figure_Gladiator) {
-				if (w->actionState == FigureActionState_94_EntertainerRoaming ||
-					w->actionState == FigureActionState_95_EntertainerReturning) {
-					return Data_Buildings[w->buildingId].type == Building_Colosseum;
+			if (f->type == Figure_Gladiator) {
+				if (f->actionState == FigureActionState_94_EntertainerRoaming ||
+					f->actionState == FigureActionState_95_EntertainerReturning) {
+					return Data_Buildings[f->buildingId].type == Building_Colosseum;
 				} else {
-					return Data_Buildings[w->destinationBuildingId].type == Building_Colosseum;
+					return Data_Buildings[f->destinationBuildingId].type == Building_Colosseum;
 				}
-			} else if (w->type == Figure_LionTamer) {
+			} else if (f->type == Figure_LionTamer) {
 				return 1;
 			}
 			return 0;
 		case Overlay_Hippodrome:
-			return w->type == Figure_Charioteer;
+			return f->type == Figure_Charioteer;
 		case Overlay_Religion:
-			return w->type == Figure_Priest;
+			return f->type == Figure_Priest;
 		case Overlay_School:
-			return w->type == Figure_SchoolChild;
+			return f->type == Figure_SchoolChild;
 		case Overlay_Library:
-			return w->type == Figure_Librarian;
+			return f->type == Figure_Librarian;
 		case Overlay_Academy:
-			return w->type == Figure_Teacher;
+			return f->type == Figure_Teacher;
 		case Overlay_Barber:
-			return w->type == Figure_Barber;
+			return f->type == Figure_Barber;
 		case Overlay_Bathhouse:
-			return w->type == Figure_BathhouseWorker;
+			return f->type == Figure_BathhouseWorker;
 		case Overlay_Clinic:
-			return w->type == Figure_Doctor;
+			return f->type == Figure_Doctor;
 		case Overlay_Hospital:
-			return w->type == Figure_Surgeon;
+			return f->type == Figure_Surgeon;
 		case Overlay_FoodStocks:
-			if (w->type == Figure_MarketBuyer || w->type == Figure_MarketTrader ||
-				w->type == Figure_DeliveryBoy || w->type == Figure_FishingBoat) {
+			if (f->type == Figure_MarketBuyer || f->type == Figure_MarketTrader ||
+				f->type == Figure_DeliveryBoy || f->type == Figure_FishingBoat) {
 				return 1;
-			} else if (w->type == Figure_CartPusher) {
-				return w->resourceId == Resource_Wheat || w->resourceId == Resource_Vegetables ||
-					w->resourceId == Resource_Fruit || w->resourceId == Resource_Meat;
+			} else if (f->type == Figure_CartPusher) {
+				return f->resourceId == Resource_Wheat || f->resourceId == Resource_Vegetables ||
+					f->resourceId == Resource_Fruit || f->resourceId == Resource_Meat;
 			}
 			return 0;
 		case Overlay_Problems:
-			if (w->type == Figure_LaborSeeker) {
-				return Data_Buildings[w->buildingId].showOnProblemOverlay;
-			} else if (w->type == Figure_CartPusher) {
-				return w->actionState == FigureActionState_20_CartpusherInitial || w->minMaxSeen;
+			if (f->type == Figure_LaborSeeker) {
+				return Data_Buildings[f->buildingId].showOnProblemOverlay;
+			} else if (f->type == Figure_CartPusher) {
+				return f->actionState == FigureActionState_20_CartpusherInitial || f->minMaxSeen;
 			}
 			return 0;
 	}
 	return 1;
 }
 
-static void drawWalkerWithCart(struct Data_Walker *w, int xOffset, int yOffset)
+static void drawWalkerWithCart(struct Data_Walker *f, int xOffset, int yOffset)
 {
-	if (w->yOffsetCart >= 0) {
-		Graphics_drawImage(w->graphicId, xOffset, yOffset);
-		Graphics_drawImage(w->cartGraphicId, xOffset + w->xOffsetCart, yOffset + w->yOffsetCart);
+	if (f->yOffsetCart >= 0) {
+		Graphics_drawImage(f->graphicId, xOffset, yOffset);
+		Graphics_drawImage(f->cartGraphicId, xOffset + f->xOffsetCart, yOffset + f->yOffsetCart);
 	} else {
-		Graphics_drawImage(w->cartGraphicId, xOffset + w->xOffsetCart, yOffset + w->yOffsetCart);
-		Graphics_drawImage(w->graphicId, xOffset, yOffset);
+		Graphics_drawImage(f->cartGraphicId, xOffset + f->xOffsetCart, yOffset + f->yOffsetCart);
+		Graphics_drawImage(f->graphicId, xOffset, yOffset);
 	}
 }
 
-static void drawHippodromeHorses(struct Data_Walker *w, int xOffset, int yOffset)
+static void drawHippodromeHorses(struct Data_Walker *f, int xOffset, int yOffset)
 {
-	int val = w->waitTicksMissile;
+	int val = f->waitTicksMissile;
 	switch (Data_Settings_Map.orientation) {
 		case Dir_0_Top:
 			xOffset += 10;
@@ -193,7 +193,7 @@ static void drawHippodromeHorses(struct Data_Walker *w, int xOffset, int yOffset
 			}
 			break;
 	}
-	drawWalkerWithCart(w, xOffset, yOffset);
+	drawWalkerWithCart(f, xOffset, yOffset);
 }
 
 static int tileOffsetToPixelOffsetX(int x, int y)
@@ -256,45 +256,45 @@ static int tileProgressToPixelOffsetY(int direction, int progress)
 
 void UI_CityBuildings_drawWalker(int walkerId, int xOffset, int yOffset, int selectedWalkerId, struct UI_CityPixelCoordinate *coord)
 {
-	struct Data_Walker *w = &Data_Walkers[walkerId];
+	struct Data_Walker *f = &Data_Walkers[walkerId];
 
 	// determining x/y offset on tile
 	int xTileOffset = 0;
 	int yTileOffset = 0;
-	if (w->useCrossCountry) {
-		xTileOffset = tileOffsetToPixelOffsetX(w->crossCountryX % 15, w->crossCountryY % 15);
-		yTileOffset = tileOffsetToPixelOffsetY(w->crossCountryX % 15, w->crossCountryY % 15);
-		yTileOffset -= w->missileDamage;
+	if (f->useCrossCountry) {
+		xTileOffset = tileOffsetToPixelOffsetX(f->crossCountryX % 15, f->crossCountryY % 15);
+		yTileOffset = tileOffsetToPixelOffsetY(f->crossCountryX % 15, f->crossCountryY % 15);
+		yTileOffset -= f->missileDamage;
 	} else {
-		int direction = (8 + w->direction - Data_Settings_Map.orientation) % 8;
-		xTileOffset = tileProgressToPixelOffsetX(direction, w->progressOnTile);
-		yTileOffset = tileProgressToPixelOffsetY(direction, w->progressOnTile);
-		yTileOffset -= w->currentHeight;
-		if (w->numPreviousWalkersOnSameTile && w->type != Figure_Ballista) {
+		int direction = (8 + f->direction - Data_Settings_Map.orientation) % 8;
+		xTileOffset = tileProgressToPixelOffsetX(direction, f->progressOnTile);
+		yTileOffset = tileProgressToPixelOffsetY(direction, f->progressOnTile);
+		yTileOffset -= f->currentHeight;
+		if (f->numPreviousWalkersOnSameTile && f->type != Figure_Ballista) {
 			static const int xOffsets[] = {
 				0, 8, 8, -8, -8, 0, 16, 0, -16, 8, -8, 16, -16, 16, -16, 8, -8, 0, 24, 0, -24, 0, 0, 0
 			};
 			static const int yOffsets[] = {
 				0, 0, 8, 8, -8, -16, 0, 16, 0, -16, 16, 8, -8, -8, 8, 16, -16, -24, 0, 24, 0, 0, 0, 0
 			};
-			xTileOffset += xOffsets[w->numPreviousWalkersOnSameTile];
-			yTileOffset += yOffsets[w->numPreviousWalkersOnSameTile];
+			xTileOffset += xOffsets[f->numPreviousWalkersOnSameTile];
+			yTileOffset += yOffsets[f->numPreviousWalkersOnSameTile];
 		}
 	}
 
 	xTileOffset += 29;
 	yTileOffset += 15;
-	if (w->isEnemyGraphic) {
-		xOffset += xTileOffset - GraphicEnemySpriteOffsetX(w->graphicId);
-		yOffset += yTileOffset - GraphicEnemySpriteOffsetY(w->graphicId);
+	if (f->isEnemyGraphic) {
+		xOffset += xTileOffset - GraphicEnemySpriteOffsetX(f->graphicId);
+		yOffset += yTileOffset - GraphicEnemySpriteOffsetY(f->graphicId);
 	} else {
-		xOffset += xTileOffset - GraphicSpriteOffsetX(w->graphicId);
-		yOffset += yTileOffset - GraphicSpriteOffsetY(w->graphicId);
+		xOffset += xTileOffset - GraphicSpriteOffsetX(f->graphicId);
+		yOffset += yTileOffset - GraphicSpriteOffsetY(f->graphicId);
 	}
 
 	// excluding walkers
 	if (selectedWalkerId == 9999) {
-		if (!showOnOverlay(w)) {
+		if (!showOnOverlay(f)) {
 			return;
 		}
 	} else if (selectedWalkerId) {
@@ -308,8 +308,8 @@ void UI_CityBuildings_drawWalker(int walkerId, int xOffset, int yOffset, int sel
 	}
 
 	// actual drawing
-	if (w->cartGraphicId) {
-		switch (w->type) {
+	if (f->cartGraphicId) {
+		switch (f->type) {
 			case Figure_CartPusher:
 			case Figure_Warehouseman:
 			case Figure_LionTamer:
@@ -317,33 +317,33 @@ void UI_CityBuildings_drawWalker(int walkerId, int xOffset, int yOffset, int sel
 			case Figure_NativeTrader:
 			case Figure_Immigrant:
 			case Figure_Emigrant:
-				drawWalkerWithCart(w, xOffset, yOffset);
+				drawWalkerWithCart(f, xOffset, yOffset);
 				break;
 			case Figure_HippodromeMiniHorses:
-				drawHippodromeHorses(w, xOffset, yOffset);
+				drawHippodromeHorses(f, xOffset, yOffset);
 				break;
 			case Figure_FortStandard:
-				if (!Data_Formations[w->formationId].inDistantBattle) {
+				if (!Data_Formations[f->formationId].inDistantBattle) {
 					// base
-					Graphics_drawImage(w->graphicId, xOffset, yOffset);
+					Graphics_drawImage(f->graphicId, xOffset, yOffset);
 					// flag
-					Graphics_drawImage(w->cartGraphicId,
-						xOffset, yOffset - GraphicHeight(w->cartGraphicId));
+					Graphics_drawImage(f->cartGraphicId,
+						xOffset, yOffset - GraphicHeight(f->cartGraphicId));
 					// top icon
-					int iconGraphicId = GraphicId(ID_Graphic_FortStandardIcons) + w->formationId - 1;
+					int iconGraphicId = GraphicId(ID_Graphic_FortStandardIcons) + f->formationId - 1;
 					Graphics_drawImage(iconGraphicId,
-						xOffset, yOffset - GraphicHeight(iconGraphicId) - GraphicHeight(w->cartGraphicId));
+						xOffset, yOffset - GraphicHeight(iconGraphicId) - GraphicHeight(f->cartGraphicId));
 				}
 				break;
 			default:
-				Graphics_drawImage(w->graphicId, xOffset, yOffset);
+				Graphics_drawImage(f->graphicId, xOffset, yOffset);
 				break;
 		}
 	} else {
-		if (w->isEnemyGraphic) {
-			Graphics_drawEnemyImage(w->graphicId, xOffset, yOffset);
+		if (f->isEnemyGraphic) {
+			Graphics_drawEnemyImage(f->graphicId, xOffset, yOffset);
 		} else {
-			Graphics_drawImage(w->graphicId, xOffset, yOffset);
+			Graphics_drawImage(f->graphicId, xOffset, yOffset);
 		}
 	}
 }

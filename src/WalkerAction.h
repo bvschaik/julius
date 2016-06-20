@@ -24,7 +24,7 @@ int FigureAction_HerdEnemy_moveFormationTo(int formationId, int x, int y, int *x
 void FigureAction_Common_handleCorpse(int figureId);
 void FigureAction_Common_handleAttack(int figureId);
 void FigureAction_Common_setCartOffset(int figureId, int direction);
-void FigureAction_Common_setCrossCountryDestination(int figureId, struct Data_Walker *w, int xDst, int yDst);
+void FigureAction_Common_setCrossCountryDestination(int figureId, struct Data_Walker* f, int xDst, int yDst);
 
 int FigureAction_CombatSoldier_getMissileTarget(int figureId, int maxDistance, int *xTile, int *yTile);
 int FigureAction_CombatSoldier_getTarget(int x, int y, int maxDistance);

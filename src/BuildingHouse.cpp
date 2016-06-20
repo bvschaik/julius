@@ -13,14 +13,14 @@
 #define CREATE_HOUSE_TILE(tt, xx,yy)\
 	{\
 		int newBuildingId = Building_create((tt), (xx), (yy));\
-		struct Data_Building *nb = &Data_Buildings[newBuildingId];\
-		nb->housePopulation = populationPerTile;\
+		struct Data_Building *bNew = &Data_Buildings[newBuildingId];\
+		bNew->housePopulation = populationPerTile;\
 		for (int i = 0; i < Inventory_Max; i++) {\
-			nb->data.house.inventory[i] = inventoryPerTile[i];\
+			bNew->data.house.inventory[i] = inventoryPerTile[i];\
 		}\
-		nb->distanceFromEntry = 0;\
-		Terrain_addBuildingToGrids(newBuildingId, nb->x, nb->y, 1,\
-				graphicId + (Data_Grid_random[nb->gridOffset] & 1), Terrain_Building);\
+		bNew->distanceFromEntry = 0;\
+		Terrain_addBuildingToGrids(newBuildingId, bNew->x, bNew->y, 1,\
+				graphicId + (Data_Grid_random[bNew->gridOffset] & 1), Terrain_Building);\
 	}
 
 

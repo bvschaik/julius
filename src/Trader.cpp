@@ -50,13 +50,13 @@ void Trader_buyResource(int walkerId, int resourceId)
 
 static int generateTrader(int cityId)
 {
-	struct Data_Empire_City *c = &Data_Empire_Cities[cityId];
+	struct Data_Empire_City *city = &Data_Empire_Cities[cityId];
 	int maxTradersOnMap = 0;
 	int numResources = 0;
 	for (int r = Resource_Min; r < Resource_Max; r++) {
-		if (c->buysResourceFlag[r] || c->sellsResourceFlag[r]) {
+		if (city->buysResourceFlag[r] || city->sellsResourceFlag[r]) {
 			++numResources;
-			switch (Data_Empire_Trade.maxPerYear[c->routeId][r]) {
+			switch (Data_Empire_Trade.maxPerYear[city->routeId][r]) {
 				case 15: maxTradersOnMap += 1; break;
 				case 25: maxTradersOnMap += 2; break;
 				case 40: maxTradersOnMap += 3; break;
@@ -76,45 +76,45 @@ static int generateTrader(int cityId)
 
 	int index;
 	if (maxTradersOnMap == 1) {
-		if (!c->traderWalkerIds[0]) {
+		if (!city->traderWalkerIds[0]) {
 			index = 0;
 		} else {
 			return 0;
 		}
 	} else if (maxTradersOnMap == 2) {
-		if (!c->traderWalkerIds[0]) {
+		if (!city->traderWalkerIds[0]) {
 			index = 0;
-		} else if (!c->traderWalkerIds[1]) {
+		} else if (!city->traderWalkerIds[1]) {
 			index = 1;
 		} else {
 			return 0;
 		}
 	} else { // 3
-		if (!c->traderWalkerIds[0]) {
+		if (!city->traderWalkerIds[0]) {
 			index = 0;
-		} else if (!c->traderWalkerIds[1]) {
+		} else if (!city->traderWalkerIds[1]) {
 			index = 1;
-		} else if (!c->traderWalkerIds[2]) {
+		} else if (!city->traderWalkerIds[2]) {
 			index = 2;
 		} else {
 			return 0;
 		}
 	}
 
-	if (c->traderEntryDelay > 0) {
-		c->traderEntryDelay--;
+	if (city->traderEntryDelay > 0) {
+		city->traderEntryDelay--;
 		return 0;
 	}
-	c->traderEntryDelay = c->isSeaTrade ? 30 : 4;
+	city->traderEntryDelay = city->isSeaTrade ? 30 : 4;
 
-	if (c->isSeaTrade) {
+	if (city->isSeaTrade) {
 		// generate ship
 		if (Data_CityInfo.numWorkingDocks > 0 &&
 			(Data_Scenario.riverEntryPoint.x != -1 || Data_Scenario.riverEntryPoint.y != -1) &&
 			!Data_CityInfo.tradeSeaProblemDuration) {
 			int shipId = Figure_create(Figure_TradeShip,
 				Data_Scenario.riverEntryPoint.x, Data_Scenario.riverEntryPoint.y, 0);
-			c->traderWalkerIds[index] = shipId;
+			city->traderWalkerIds[index] = shipId;
 			Data_Walkers[shipId].empireCityId = cityId;
 			Data_Walkers[shipId].actionState = FigureActionState_110_TradeShipCreated;
 			Data_Walkers[shipId].waitTicks = 10;
@@ -126,7 +126,7 @@ static int generateTrader(int cityId)
 			// caravan head
 			int caravanId = Figure_create(Figure_TradeCaravan,
 				Data_CityInfo.entryPointX, Data_CityInfo.entryPointY, 0);
-			c->traderWalkerIds[index] = caravanId;
+			city->traderWalkerIds[index] = caravanId;
 			Data_Walkers[caravanId].empireCityId = cityId;
 			Data_Walkers[caravanId].actionState = FigureActionState_100_TradeCaravanCreated;
 			Data_Walkers[caravanId].waitTicks = 10;
@@ -234,31 +234,31 @@ int Trader_getClosestWarehouseForTradeCaravan(int walkerId, int x, int y, int ci
 		if (!Data_Buildings[i].hasRoadAccess || Data_Buildings[i].distanceFromEntry <= 0) {
 			continue;
 		}
-		struct Data_Building_Storage *st = &Data_Building_Storages[Data_Buildings[i].storageId];
+		struct Data_Building_Storage *s = &Data_Building_Storages[Data_Buildings[i].storageId];
 		int numImportsForWarehouse = 0;
 		for (int r = Resource_Min; r < Resource_Max; r++) {
-			if (st->resourceState[r] != BuildingStorageState_NotAccepting && Empire_canImportResourceFromCity(cityId, r)) {
+			if (s->resourceState[r] != BuildingStorageState_NotAccepting && Empire_canImportResourceFromCity(cityId, r)) {
 				numImportsForWarehouse++;
 			}
 		}
 		int distancePenalty = 32;
 		int spaceId = i;
-		for (int s = 0; s < 8; s++) {
+		for (int spaceCounter = 0; spaceCounter < 8; spaceCounter++) {
 			spaceId = Data_Buildings[spaceId].nextPartBuildingId;
 			if (spaceId && exportable[Data_Buildings[spaceId].subtype.warehouseResourceId]) {
 				distancePenalty -= 4;
 			}
-			if (numImportable && numImportsForWarehouse && !st->emptyAll) {
+			if (numImportable && numImportsForWarehouse && !s->emptyAll) {
 				for (int r = Resource_Min; r < Resource_Max; r++) {
 					Data_CityInfo.tradeNextImportResourceCaravan++;
 					if (Data_CityInfo.tradeNextImportResourceCaravan > 15) {
 						Data_CityInfo.tradeNextImportResourceCaravan = 1;
 					}
-					if (st->resourceState[Data_CityInfo.tradeNextImportResourceCaravan] != BuildingStorageState_NotAccepting) {
+					if (s->resourceState[Data_CityInfo.tradeNextImportResourceCaravan] != BuildingStorageState_NotAccepting) {
 						break;
 					}
 				}
-				if (st->resourceState[Data_CityInfo.tradeNextImportResourceCaravan] != BuildingStorageState_NotAccepting) {
+				if (s->resourceState[Data_CityInfo.tradeNextImportResourceCaravan] != BuildingStorageState_NotAccepting) {
 					if (Data_Buildings[spaceId].subtype.warehouseResourceId == Resource_None) {
 						distancePenalty -= 16;
 					}
@@ -328,11 +328,11 @@ int Trader_getClosestWarehouseForImportDocker(int x, int y, int cityId, int dist
 		if (Data_Buildings[i].roadNetworkId != roadNetworkId) {
 			continue;
 		}
-		struct Data_Building_Storage *st = &Data_Building_Storages[Data_Buildings[i].storageId];
-		if (st->resourceState[resourceId] != BuildingStorageState_NotAccepting && !st->emptyAll) {
+		struct Data_Building_Storage *s = &Data_Building_Storages[Data_Buildings[i].storageId];
+		if (s->resourceState[resourceId] != BuildingStorageState_NotAccepting && !s->emptyAll) {
 			int distancePenalty = 32;
 			int spaceId = i;
-			for (int s = 0; s < 8; s++) {
+			for (int spaceCounter = 0; spaceCounter < 8; spaceCounter++) {
 				spaceId = Data_Buildings[spaceId].nextPartBuildingId;
 				if (spaceId && Data_Buildings[spaceId].subtype.warehouseResourceId == Resource_None) {
 					distancePenalty -= 8;

@@ -91,46 +91,46 @@ static int attackIsSameDirection(int dir1, int dir2)
 	return 0;
 }
 
-static void resumeActivityAfterAttack(int walkerId, struct Data_Walker *w)
+static void resumeActivityAfterAttack(int walkerId, struct Data_Walker *f)
 {
-	w->numAttackers = 0;
-	w->actionState = w->actionStateBeforeAttack;
-	w->opponentId = 0;
-	w->attackerId1 = 0;
-	w->attackerId2 = 0;
+	f->numAttackers = 0;
+	f->actionState = f->actionStateBeforeAttack;
+	f->opponentId = 0;
+	f->attackerId1 = 0;
+	f->attackerId2 = 0;
 	FigureRoute_remove(walkerId);
 }
 
-static void hitOpponent(int walkerId, struct Data_Walker *w)
+static void hitOpponent(int walkerId, struct Data_Walker *f)
 {
-	struct Data_Formation *f = &Data_Formations[w->formationId];
-	struct Data_Walker *opponent = &Data_Walkers[w->opponentId];
+	struct Data_Formation *m = &Data_Formations[f->formationId];
+	struct Data_Walker *opponent = &Data_Walkers[f->opponentId];
 	struct Data_Formation *opponentFormation = &Data_Formations[opponent->formationId];
 	
 	int cat = Constant_FigureProperties[opponent->type].category;
 	if (cat == FigureCategory_Citizen || cat == FigureCategory_Criminal) {
-		w->attackGraphicOffset = 12;
+		f->attackGraphicOffset = 12;
 	} else {
-		w->attackGraphicOffset = 0;
+		f->attackGraphicOffset = 0;
 	}
-	int figureAttack = Constant_FigureProperties[w->type].attackValue;
+	int figureAttack = Constant_FigureProperties[f->type].attackValue;
 	int opponentDefense = Constant_FigureProperties[opponent->type].defenseValue;
 	
 	// attack modifiers
-	if (w->type == Figure_Wolf) {
+	if (f->type == Figure_Wolf) {
 		switch (Data_Settings.difficulty) {
 			case Difficulty_VeryEasy: figureAttack = 2; break;
 			case Difficulty_Easy: figureAttack = 4; break;
 			case Difficulty_Normal: figureAttack = 6; break;
 		}
 	}
-	if (opponent->opponentId != walkerId && f->figureType != Figure_FortLegionary &&
-			attackIsSameDirection(w->attackDirection, opponent->attackDirection)) {
+	if (opponent->opponentId != walkerId && m->figureType != Figure_FortLegionary &&
+			attackIsSameDirection(f->attackDirection, opponent->attackDirection)) {
 		figureAttack += 4; // attack opponent on the (exposed) back
 		Sound_Effects_playChannel(SoundChannel_SwordSwing);
 	}
-	if (f->isHalted && f->figureType == Figure_FortLegionary &&
-			attackIsSameDirection(w->attackDirection, f->direction)) {
+	if (m->isHalted && m->figureType == Figure_FortLegionary &&
+			attackIsSameDirection(f->attackDirection, m->direction)) {
 		figureAttack += 4; // coordinated formation attack bonus
 	}
 	// defense modifiers
@@ -154,7 +154,7 @@ static void hitOpponent(int walkerId, struct Data_Walker *w)
 	}
 	opponent->damage += netAttack;
 	if (opponent->damage <= maxDamage) {
-		Figure_playHitSound(w->type);
+		Figure_playHitSound(f->type);
 	} else {
 		opponent->actionState = FigureActionState_149_Corpse;
 		opponent->waitTicks = 0;
@@ -165,43 +165,43 @@ static void hitOpponent(int walkerId, struct Data_Walker *w)
 
 void FigureAction_Common_handleAttack(int walkerId)
 {
-	struct Data_Walker *w = &Data_Walkers[walkerId];
+	struct Data_Walker *f = &Data_Walkers[walkerId];
 	
-	if (w->progressOnTile <= 5) {
-		w->progressOnTile++;
-		FigureMovement_advanceTick(w);
+	if (f->progressOnTile <= 5) {
+		f->progressOnTile++;
+		FigureMovement_advanceTick(f);
 	}
-	if (w->numAttackers == 0) {
-		resumeActivityAfterAttack(walkerId, w);
+	if (f->numAttackers == 0) {
+		resumeActivityAfterAttack(walkerId, f);
 		return;
 	}
-	if (w->numAttackers == 1) {
-		int targetId = w->opponentId;
+	if (f->numAttackers == 1) {
+		int targetId = f->opponentId;
 		if (FigureIsDead(targetId)) {
-			resumeActivityAfterAttack(walkerId, w);
+			resumeActivityAfterAttack(walkerId, f);
 			return;
 		}
-	} else if (w->numAttackers == 2) {
-		int targetId = w->opponentId;
+	} else if (f->numAttackers == 2) {
+		int targetId = f->opponentId;
 		if (FigureIsDead(targetId)) {
-			if (targetId == w->attackerId1) {
-				w->opponentId = w->attackerId2;
-			} else if (targetId == w->attackerId2) {
-				w->opponentId = w->attackerId1;
+			if (targetId == f->attackerId1) {
+				f->opponentId = f->attackerId2;
+			} else if (targetId == f->attackerId2) {
+				f->opponentId = f->attackerId1;
 			}
-			targetId = w->opponentId;
+			targetId = f->opponentId;
 			if (FigureIsDead(targetId)) {
-				resumeActivityAfterAttack(walkerId, w);
+				resumeActivityAfterAttack(walkerId, f);
 				return;
 			}
-			w->numAttackers = 1;
-			w->attackerId1 = targetId;
-			w->attackerId2 = 0;
+			f->numAttackers = 1;
+			f->attackerId1 = targetId;
+			f->attackerId2 = 0;
 		}
 	}
-	w->attackGraphicOffset++;
-	if (w->attackGraphicOffset >= 24) {
-		hitOpponent(walkerId, w);
+	f->attackGraphicOffset++;
+	if (f->attackGraphicOffset >= 24) {
+		hitOpponent(walkerId, f);
 	}
 }
 
@@ -211,11 +211,11 @@ void FigureAction_Common_setCartOffset(int walkerId, int direction)
 	Data_Walkers[walkerId].yOffsetCart = cartOffsetsY[direction];
 }
 
-void FigureAction_Common_setCrossCountryDestination(int walkerId, struct Data_Walker *w, int xDst, int yDst)
+void FigureAction_Common_setCrossCountryDestination(int figureId, struct Data_Walker *f, int xDst, int yDst)
 {
-	w->destinationX = xDst;
-	w->destinationY = yDst;
+	f->destinationX = xDst;
+	f->destinationY = yDst;
 	FigureMovement_crossCountrySetDirection(
-		walkerId, w->crossCountryX, w->crossCountryY,
+		figureId, f->crossCountryX, f->crossCountryY,
 		15 * xDst, 15 * yDst, 0);
 }

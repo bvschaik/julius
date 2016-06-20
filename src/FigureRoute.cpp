@@ -51,77 +51,77 @@ static int getFirstAvailable()
 
 void FigureRoute_add(int walkerId)
 {
-	struct Data_Walker *w = &Data_Walkers[walkerId];
-	w->routingPathId = 0;
-	w->routingPathCurrentTile = 0;
-	w->routingPathLength = 0;
+	struct Data_Walker *f = &Data_Walkers[walkerId];
+	f->routingPathId = 0;
+	f->routingPathCurrentTile = 0;
+	f->routingPathLength = 0;
 	int pathId = getFirstAvailable();
 	if (!pathId) {
 		return;
 	}
 	int pathLength;
-	if (w->isBoat) {
-		if (w->isBoat == 2) { // flotsam
-			Routing_getDistanceWaterFlotsam(w->x, w->y);
-			pathLength = Routing_getPathOnWater(pathId, w->x, w->y,
-				w->destinationX, w->destinationY, 1);
+	if (f->isBoat) {
+		if (f->isBoat == 2) { // flotsam
+			Routing_getDistanceWaterFlotsam(f->x, f->y);
+			pathLength = Routing_getPathOnWater(pathId, f->x, f->y,
+				f->destinationX, f->destinationY, 1);
 		} else {
-			Routing_getDistanceWaterBoat(w->x, w->y);
-			pathLength = Routing_getPathOnWater(pathId, w->x, w->y,
-				w->destinationX, w->destinationY, 0);
+			Routing_getDistanceWaterBoat(f->x, f->y);
+			pathLength = Routing_getPathOnWater(pathId, f->x, f->y,
+				f->destinationX, f->destinationY, 0);
 		}
 	} else {
 		// land walker
 		int canTravel;
-		switch (w->terrainUsage) {
+		switch (f->terrainUsage) {
 			case FigureTerrainUsage_Enemy:
-				canTravel = Routing_canTravelOverLandNonCitizen(w->x, w->y,
-					w->destinationX, w->destinationY, w->destinationBuildingId, 5000);
+				canTravel = Routing_canTravelOverLandNonCitizen(f->x, f->y,
+					f->destinationX, f->destinationY, f->destinationBuildingId, 5000);
 				if (!canTravel) {
-					canTravel = Routing_canTravelOverLandNonCitizen(w->x, w->y,
-						w->destinationX, w->destinationY, 0, 25000);
+					canTravel = Routing_canTravelOverLandNonCitizen(f->x, f->y,
+						f->destinationX, f->destinationY, 0, 25000);
 					if (!canTravel) {
 						canTravel = Routing_canTravelThroughEverythingNonCitizen(
-							w->x, w->y, w->destinationX, w->destinationY);
+							f->x, f->y, f->destinationX, f->destinationY);
 					}
 				}
 				break;
 			case FigureTerrainUsage_Walls:
-				canTravel = Routing_canTravelOverWalls(w->x, w->y,
-					w->destinationX, w->destinationY);
+				canTravel = Routing_canTravelOverWalls(f->x, f->y,
+					f->destinationX, f->destinationY);
 				break;
 			case FigureTerrainUsage_Animal:
-				canTravel = Routing_canTravelOverLandNonCitizen(w->x, w->y,
-					w->destinationX, w->destinationY, MAX_BUILDINGS, 5000);
+				canTravel = Routing_canTravelOverLandNonCitizen(f->x, f->y,
+					f->destinationX, f->destinationY, MAX_BUILDINGS, 5000);
 				break;
 			case FigureTerrainUsage_PreferRoads:
-				canTravel = Routing_canTravelOverRoadGardenCitizen(w->x, w->y,
-					w->destinationX, w->destinationY);
+				canTravel = Routing_canTravelOverRoadGardenCitizen(f->x, f->y,
+					f->destinationX, f->destinationY);
 				if (!canTravel) {
-					canTravel = Routing_canTravelOverLandCitizen(w->x, w->y,
-						w->destinationX, w->destinationY);
+					canTravel = Routing_canTravelOverLandCitizen(f->x, f->y,
+						f->destinationX, f->destinationY);
 				}
 				break;
 			case FigureTerrainUsage_Roads:
-				canTravel = Routing_canTravelOverRoadGardenCitizen(w->x, w->y,
-					w->destinationX, w->destinationY);
+				canTravel = Routing_canTravelOverRoadGardenCitizen(f->x, f->y,
+					f->destinationX, f->destinationY);
 				break;
 			default:
-				canTravel = Routing_canTravelOverLandCitizen(w->x, w->y,
-					w->destinationX, w->destinationY);
+				canTravel = Routing_canTravelOverLandCitizen(f->x, f->y,
+					f->destinationX, f->destinationY);
 				break;
 		}
 		if (canTravel) {
-			if (w->terrainUsage == FigureTerrainUsage_Walls) {
-				pathLength = Routing_getPath(4, pathId, w->x, w->y,
-					w->destinationX, w->destinationY);
+			if (f->terrainUsage == FigureTerrainUsage_Walls) {
+				pathLength = Routing_getPath(4, pathId, f->x, f->y,
+					f->destinationX, f->destinationY);
 				if (pathLength <= 0) {
-					pathLength = Routing_getPath(8, pathId, w->x, w->y,
-						w->destinationX, w->destinationY);
+					pathLength = Routing_getPath(8, pathId, f->x, f->y,
+						f->destinationX, f->destinationY);
 				}
 			} else {
-				pathLength = Routing_getPath(8, pathId, w->x, w->y,
-					w->destinationX, w->destinationY);
+				pathLength = Routing_getPath(8, pathId, f->x, f->y,
+					f->destinationX, f->destinationY);
 			}
 		} else { // cannot travel
 			pathLength = 0;
@@ -129,8 +129,8 @@ void FigureRoute_add(int walkerId)
 	}
 	if (pathLength) {
 		Data_Routes.figureIds[pathId] = walkerId;
-		w->routingPathId = pathId;
-		w->routingPathLength = pathLength;
+		f->routingPathId = pathId;
+		f->routingPathLength = pathLength;
 	}
 }
 

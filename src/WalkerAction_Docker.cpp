@@ -16,15 +16,15 @@ static int dockerDeliverImportResource(int walkerId, int buildingId)
 	if (ship->actionState != FigureActionState_112_TradeShipMoored || ship->loadsSoldOrCarrying <= 0) {
 		return 0;
 	}
-	struct Data_Walker *w = &Data_Walkers[walkerId];
+	struct Data_Walker *f = &Data_Walkers[walkerId];
 	int x, y;
 	if (Data_CityInfo.buildingTradeCenterBuildingId) {
 		int tcId = Data_CityInfo.buildingTradeCenterBuildingId;
 		x = Data_Buildings[tcId].x;
 		y = Data_Buildings[tcId].y;
 	} else {
-		x = w->x;
-		y = w->y;
+		x = f->x;
+		y = f->y;
 	}
 	int xTile, yTile;
 	int warehouseId = Trader_getClosestWarehouseForImportDocker(x, y, ship->empireCityId,
@@ -33,12 +33,12 @@ static int dockerDeliverImportResource(int walkerId, int buildingId)
 		return 0;
 	}
 	ship->loadsSoldOrCarrying--;
-	w->destinationBuildingId = warehouseId;
-	w->waitTicks = 0;
-	w->actionState = FigureActionState_133_DockerImportQueue;
-	w->destinationX = xTile;
-	w->destinationY = yTile;
-	w->resourceId = Data_CityInfo.tradeNextImportResourceDocker;
+	f->destinationBuildingId = warehouseId;
+	f->waitTicks = 0;
+	f->actionState = FigureActionState_133_DockerImportQueue;
+	f->destinationX = xTile;
+	f->destinationY = yTile;
+	f->resourceId = Data_CityInfo.tradeNextImportResourceDocker;
 	return 1;
 }
 
@@ -52,15 +52,15 @@ static int dockerGetExportResource(int walkerId, int buildingId)
 	if (ship->actionState != FigureActionState_112_TradeShipMoored || ship->traderAmountBought >= 12) {
 		return 0;
 	}
-	struct Data_Walker *w = &Data_Walkers[walkerId];
+	struct Data_Walker *f = &Data_Walkers[walkerId];
 	int x, y;
 	if (Data_CityInfo.buildingTradeCenterBuildingId) {
 		int tcId = Data_CityInfo.buildingTradeCenterBuildingId;
 		x = Data_Buildings[tcId].x;
 		y = Data_Buildings[tcId].y;
 	} else {
-		x = w->x;
-		y = w->y;
+		x = f->x;
+		y = f->y;
 	}
 	int xTile, yTile;
 	int warehouseId = Trader_getClosestWarehouseForExportDocker(x, y, ship->empireCityId,
@@ -69,32 +69,32 @@ static int dockerGetExportResource(int walkerId, int buildingId)
 		return 0;
 	}
 	ship->traderAmountBought++;
-	w->destinationBuildingId = warehouseId;
-	w->actionState = FigureActionState_136_DockerExportGoingToWarehouse;
-	w->waitTicks = 0;
-	w->destinationX = xTile;
-	w->destinationY = yTile;
-	w->resourceId = Data_CityInfo.tradeNextExportResourceDocker;
+	f->destinationBuildingId = warehouseId;
+	f->actionState = FigureActionState_136_DockerExportGoingToWarehouse;
+	f->waitTicks = 0;
+	f->destinationX = xTile;
+	f->destinationY = yTile;
+	f->resourceId = Data_CityInfo.tradeNextExportResourceDocker;
 	return 1;
 }
 
-static void setCartGraphic(struct Data_Walker *w)
+static void setCartGraphic(struct Data_Walker *f)
 {
-	w->cartGraphicId = GraphicId(ID_Graphic_Figure_CartpusherCart) + 8 * w->resourceId;
-	w->cartGraphicId += Resource_getGraphicIdOffset(w->resourceId, 1);
+	f->cartGraphicId = GraphicId(ID_Graphic_Figure_CartpusherCart) + 8 * f->resourceId;
+	f->cartGraphicId += Resource_getGraphicIdOffset(f->resourceId, 1);
 }
 
 void FigureAction_docker(int walkerId)
 {
-	struct Data_Walker *w = &Data_Walkers[walkerId];
-	struct Data_Building *b = &Data_Buildings[w->buildingId];
-	FigureActionIncreaseGraphicOffset(w, 12);
-	w->cartGraphicId = 0;
-	if (!BuildingIsInUse(w->buildingId)) {
-		w->state = FigureState_Dead;
+	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Building *b = &Data_Buildings[f->buildingId];
+	FigureActionIncreaseGraphicOffset(f, 12);
+	f->cartGraphicId = 0;
+	if (!BuildingIsInUse(f->buildingId)) {
+		f->state = FigureState_Dead;
 	}
 	if (b->type != Building_Dock && b->type != Building_Wharf) {
-		w->state = FigureState_Dead;
+		f->state = FigureState_Dead;
 	}
 	if (b->data.other.dockNumShips) {
 		b->data.other.dockNumShips--;
@@ -110,8 +110,8 @@ void FigureAction_docker(int walkerId)
 			b->data.other.boatWalkerId = 0;
 		}
 	}
-	w->terrainUsage = FigureTerrainUsage_Roads;
-	switch (w->actionState) {
+	f->terrainUsage = FigureTerrainUsage_Roads;
+	switch (f->actionState) {
 		case FigureActionState_150_Attack:
 			FigureAction_Common_handleAttack(walkerId);
 			break;
@@ -119,27 +119,27 @@ void FigureAction_docker(int walkerId)
 			FigureAction_Common_handleCorpse(walkerId);
 			break;
 		case FigureActionState_132_DockerIdling:
-			w->resourceId = 0;
-			w->cartGraphicId = 0;
-			if (!dockerDeliverImportResource(walkerId, w->buildingId)) {
-				dockerGetExportResource(walkerId, w->buildingId);
+			f->resourceId = 0;
+			f->cartGraphicId = 0;
+			if (!dockerDeliverImportResource(walkerId, f->buildingId)) {
+				dockerGetExportResource(walkerId, f->buildingId);
 			}
-			w->graphicOffset = 0;
+			f->graphicOffset = 0;
 			break;
 		case FigureActionState_133_DockerImportQueue:
-			w->cartGraphicId = 0;
-			w->graphicOffset = 0;
+			f->cartGraphicId = 0;
+			f->graphicOffset = 0;
 			if (b->data.other.dockQueuedDockerId <= 0) {
 				b->data.other.dockQueuedDockerId = walkerId;
-				w->waitTicks = 0;
+				f->waitTicks = 0;
 			}
 			if (b->data.other.dockQueuedDockerId == walkerId) {
 				b->data.other.dockNumShips = 120;
-				w->waitTicks++;
-				if (w->waitTicks >= 80) {
-					w->actionState = FigureActionState_135_DockerImportGoingToWarehouse;
-					w->waitTicks = 0;
-					setCartGraphic(w);
+				f->waitTicks++;
+				if (f->waitTicks >= 80) {
+					f->actionState = FigureActionState_135_DockerImportGoingToWarehouse;
+					f->waitTicks = 0;
+					setCartGraphic(f);
 					b->data.other.dockQueuedDockerId = 0;
 				}
 			} else {
@@ -160,149 +160,149 @@ void FigureAction_docker(int walkerId)
 			}
 			break;
 		case FigureActionState_134_DockerExportQueue:
-			setCartGraphic(w);
+			setCartGraphic(f);
 			if (b->data.other.dockQueuedDockerId <= 0) {
 				b->data.other.dockQueuedDockerId = walkerId;
-				w->waitTicks = 0;
+				f->waitTicks = 0;
 			}
 			if (b->data.other.dockQueuedDockerId == walkerId) {
 				b->data.other.dockNumShips = 120;
-				w->waitTicks++;
-				if (w->waitTicks >= 80) {
-					w->actionState = FigureActionState_132_DockerIdling;
-					w->waitTicks = 0;
-					w->graphicId = 0;
-					w->cartGraphicId = 0;
+				f->waitTicks++;
+				if (f->waitTicks >= 80) {
+					f->actionState = FigureActionState_132_DockerIdling;
+					f->waitTicks = 0;
+					f->graphicId = 0;
+					f->cartGraphicId = 0;
 					b->data.other.dockQueuedDockerId = 0;
 				}
 			}
-			w->waitTicks++;
-			if (w->waitTicks >= 20) {
-				w->actionState = FigureActionState_132_DockerIdling;
-				w->waitTicks = 0;
+			f->waitTicks++;
+			if (f->waitTicks >= 20) {
+				f->actionState = FigureActionState_132_DockerIdling;
+				f->waitTicks = 0;
 			}
-			w->graphicOffset = 0;
+			f->graphicOffset = 0;
 			break;
 		case FigureActionState_135_DockerImportGoingToWarehouse:
-			setCartGraphic(w);
+			setCartGraphic(f);
 			FigureMovement_walkTicks(walkerId, 1);
-			if (w->direction == DirFigure_8_AtDestination) {
-				w->actionState = FigureActionState_139_DockerImportAtWarehouse;
-			} else if (w->direction == DirFigure_9_Reroute) {
+			if (f->direction == DirFigure_8_AtDestination) {
+				f->actionState = FigureActionState_139_DockerImportAtWarehouse;
+			} else if (f->direction == DirFigure_9_Reroute) {
 				FigureRoute_remove(walkerId);
-			} else if (w->direction == DirFigure_10_Lost) {
-				w->state = FigureState_Dead;
+			} else if (f->direction == DirFigure_10_Lost) {
+				f->state = FigureState_Dead;
 			}
-			if (!BuildingIsInUse(w->destinationBuildingId)) {
-				w->state = FigureState_Dead;
+			if (!BuildingIsInUse(f->destinationBuildingId)) {
+				f->state = FigureState_Dead;
 			}
 			break;
 		case FigureActionState_136_DockerExportGoingToWarehouse:
-			w->cartGraphicId = GraphicId(ID_Graphic_Figure_CartpusherCart); // empty
+			f->cartGraphicId = GraphicId(ID_Graphic_Figure_CartpusherCart); // empty
 			FigureMovement_walkTicks(walkerId, 1);
-			if (w->direction == DirFigure_8_AtDestination) {
-				w->actionState = FigureActionState_140_DockerExportAtWarehouse;
-			} else if (w->direction == DirFigure_9_Reroute) {
+			if (f->direction == DirFigure_8_AtDestination) {
+				f->actionState = FigureActionState_140_DockerExportAtWarehouse;
+			} else if (f->direction == DirFigure_9_Reroute) {
 				FigureRoute_remove(walkerId);
-			} else if (w->direction == DirFigure_10_Lost) {
-				w->state = FigureState_Dead;
+			} else if (f->direction == DirFigure_10_Lost) {
+				f->state = FigureState_Dead;
 			}
-			if (!BuildingIsInUse(w->destinationBuildingId)) {
-				w->state = FigureState_Dead;
+			if (!BuildingIsInUse(f->destinationBuildingId)) {
+				f->state = FigureState_Dead;
 			}
 			break;
 		case FigureActionState_137_DockerExportReturning:
-			setCartGraphic(w);
+			setCartGraphic(f);
 			FigureMovement_walkTicks(walkerId, 1);
-			if (w->direction == DirFigure_8_AtDestination) {
-				w->actionState = FigureActionState_134_DockerExportQueue;
-				w->waitTicks = 0;
-			} else if (w->direction == DirFigure_9_Reroute) {
+			if (f->direction == DirFigure_8_AtDestination) {
+				f->actionState = FigureActionState_134_DockerExportQueue;
+				f->waitTicks = 0;
+			} else if (f->direction == DirFigure_9_Reroute) {
 				FigureRoute_remove(walkerId);
-			} else if (w->direction == DirFigure_10_Lost) {
-				w->state = FigureState_Dead;
+			} else if (f->direction == DirFigure_10_Lost) {
+				f->state = FigureState_Dead;
 			}
-			if (!BuildingIsInUse(w->destinationBuildingId)) {
-				w->state = FigureState_Dead;
+			if (!BuildingIsInUse(f->destinationBuildingId)) {
+				f->state = FigureState_Dead;
 			}
 			break;
 		case FigureActionState_138_DockerImportReturning:
-			setCartGraphic(w);
+			setCartGraphic(f);
 			FigureMovement_walkTicks(walkerId, 1);
-			if (w->direction == DirFigure_8_AtDestination) {
-				w->actionState = FigureActionState_132_DockerIdling;
-			} else if (w->direction == DirFigure_9_Reroute) {
+			if (f->direction == DirFigure_8_AtDestination) {
+				f->actionState = FigureActionState_132_DockerIdling;
+			} else if (f->direction == DirFigure_9_Reroute) {
 				FigureRoute_remove(walkerId);
-			} else if (w->direction == DirFigure_10_Lost) {
-				w->state = FigureState_Dead;
+			} else if (f->direction == DirFigure_10_Lost) {
+				f->state = FigureState_Dead;
 			}
 			break;
 		case FigureActionState_139_DockerImportAtWarehouse:
-			setCartGraphic(w);
-			w->waitTicks++;
-			if (w->waitTicks > 10) {
+			setCartGraphic(f);
+			f->waitTicks++;
+			if (f->waitTicks > 10) {
 				int tradeCityId;
 				if (b->data.other.boatWalkerId) {
 					tradeCityId = Data_Walkers[b->data.other.boatWalkerId].empireCityId;
 				} else {
 					tradeCityId = 0;
 				}
-				if (Trader_tryImportResource(w->destinationBuildingId, w->resourceId, tradeCityId)) {
-					Trader_sellResource(b->data.other.boatWalkerId, w->resourceId);
-					w->actionState = FigureActionState_138_DockerImportReturning;
-					w->waitTicks = 0;
-					w->destinationX = w->sourceX;
-					w->destinationY = w->sourceY;
-					w->resourceId = 0;
-					dockerGetExportResource(walkerId, w->buildingId);
+				if (Trader_tryImportResource(f->destinationBuildingId, f->resourceId, tradeCityId)) {
+					Trader_sellResource(b->data.other.boatWalkerId, f->resourceId);
+					f->actionState = FigureActionState_138_DockerImportReturning;
+					f->waitTicks = 0;
+					f->destinationX = f->sourceX;
+					f->destinationY = f->sourceY;
+					f->resourceId = 0;
+					dockerGetExportResource(walkerId, f->buildingId);
 				} else {
-					w->actionState = FigureActionState_138_DockerImportReturning;
-					w->destinationX = w->sourceX;
-					w->destinationY = w->sourceY;
+					f->actionState = FigureActionState_138_DockerImportReturning;
+					f->destinationX = f->sourceX;
+					f->destinationY = f->sourceY;
 				}
-				w->waitTicks = 0;
+				f->waitTicks = 0;
 			}
-			w->graphicOffset = 0;
+			f->graphicOffset = 0;
 			break;
 		case FigureActionState_140_DockerExportAtWarehouse:
-			w->cartGraphicId = GraphicId(ID_Graphic_Figure_CartpusherCart); // empty
-			w->waitTicks++;
-			if (w->waitTicks > 10) {
+			f->cartGraphicId = GraphicId(ID_Graphic_Figure_CartpusherCart); // empty
+			f->waitTicks++;
+			if (f->waitTicks > 10) {
 				int tradeCityId;
 				if (b->data.other.boatWalkerId) {
 					tradeCityId = Data_Walkers[b->data.other.boatWalkerId].empireCityId;
 				} else {
 					tradeCityId = 0;
 				}
-				w->actionState = FigureActionState_138_DockerImportReturning;
-				w->destinationX = w->sourceX;
-				w->destinationY = w->sourceY;
-				w->waitTicks = 0;
-				if (Trader_tryExportResource(w->destinationBuildingId, w->resourceId, tradeCityId)) {
-					Trader_buyResource(b->data.other.boatWalkerId, w->resourceId);
-					w->actionState = FigureActionState_137_DockerExportReturning;
+				f->actionState = FigureActionState_138_DockerImportReturning;
+				f->destinationX = f->sourceX;
+				f->destinationY = f->sourceY;
+				f->waitTicks = 0;
+				if (Trader_tryExportResource(f->destinationBuildingId, f->resourceId, tradeCityId)) {
+					Trader_buyResource(b->data.other.boatWalkerId, f->resourceId);
+					f->actionState = FigureActionState_137_DockerExportReturning;
 				} else {
-					dockerGetExportResource(walkerId, w->buildingId);
+					dockerGetExportResource(walkerId, f->buildingId);
 				}
 			}
-			w->graphicOffset = 0;
+			f->graphicOffset = 0;
 			break;
 	}
 
-	int dir = w->direction < 8 ? w->direction : w->previousTileDirection;
+	int dir = f->direction < 8 ? f->direction : f->previousTileDirection;
 	WalkerActionNormalizeDirection(dir);
 
-	if (w->actionState == FigureActionState_149_Corpse) {
-		w->graphicId = GraphicId(ID_Graphic_Figure_Cartpusher) +
-			WalkerActionCorpseGraphicOffset(w) + 96;
-		w->cartGraphicId = 0;
+	if (f->actionState == FigureActionState_149_Corpse) {
+		f->graphicId = GraphicId(ID_Graphic_Figure_Cartpusher) +
+			WalkerActionCorpseGraphicOffset(f) + 96;
+		f->cartGraphicId = 0;
 	} else {
-		w->graphicId = GraphicId(ID_Graphic_Figure_Cartpusher) + dir + 8 * w->graphicOffset;
+		f->graphicId = GraphicId(ID_Graphic_Figure_Cartpusher) + dir + 8 * f->graphicOffset;
 	}
-	if (w->cartGraphicId) {
-		w->cartGraphicId += dir;
+	if (f->cartGraphicId) {
+		f->cartGraphicId += dir;
 		FigureAction_Common_setCartOffset(walkerId, dir);
 	} else {
-		w->graphicId = 0;
+		f->graphicId = 0;
 	}
 }

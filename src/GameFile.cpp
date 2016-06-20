@@ -463,10 +463,10 @@ static void debug()
 	}
 	/**/
 	for (int i = 1; i < MAX_FIGURES; i++) {
-		struct Data_Walker *w = &Data_Walkers[i];
-		if (w->state == FigureState_Alive) {
+		struct Data_Walker *f = &Data_Walkers[i];
+		if (f->state == FigureState_Alive) {
 			printf("Walker %d type %d as %d wt %d mt %d\n",
-				i, w->type, w->actionState, w->waitTicks, w->waitTicksMissile);
+				i, f->type, f->actionState, f->waitTicks, f->waitTicksMissile);
 		}
 	}
 }

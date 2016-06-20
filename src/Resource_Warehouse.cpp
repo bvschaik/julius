@@ -139,7 +139,7 @@ int Resource_getWarehouseForStoringResource(
 
 int Resource_getWarehouseForGettingResource(int srcBuildingId, int resource, int *xDst, int *yDst)
 {
-	struct Data_Building *src = &Data_Buildings[srcBuildingId];
+	struct Data_Building *bSrc = &Data_Buildings[srcBuildingId];
 	int minDist = 10000;
 	int minBuildingId = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
@@ -162,8 +162,8 @@ int Resource_getWarehouseForGettingResource(int srcBuildingId, int resource, int
 			}
 		}
 		if (loadsStored > 0 && s->resourceState[resource] != BuildingStorageState_Getting) {
-			int dist = Resource_getDistance(b->x, b->y, src->x, src->y,
-				src->distanceFromEntry, b->distanceFromEntry);
+			int dist = Resource_getDistance(b->x, b->y, bSrc->x, bSrc->y,
+				bSrc->distanceFromEntry, b->distanceFromEntry);
 			dist -= 4 * loadsStored;
 			if (dist < minDist) {
 				minDist = dist;

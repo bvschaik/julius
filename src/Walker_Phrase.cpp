@@ -254,15 +254,15 @@ int Figure_determinePhrase(int walkerId)
 		return 0;
 	}
 
-	Data_Walker *w = &Data_Walkers[walkerId];
-	int phraseId = w->phraseId = 0;
+	struct Data_Walker *f = &Data_Walkers[walkerId];
+	int phraseId = f->phraseId = 0;
 
-	if (WalkerIsEnemyOrNative(w->type)) {
-		return w->phraseId = -1;
+	if (WalkerIsEnemyOrNative(f->type)) {
+		return f->phraseId = -1;
 	}
 
 	// phrase id based on walker state
-	switch (w->type) {
+	switch (f->type) {
 		case Figure_LaborSeeker:
 		case Figure_35:
 		case Figure_Actor:
@@ -278,87 +278,87 @@ int Figure_determinePhrase(int walkerId)
 		case Figure_Librarian:
 			break;
 		case Figure_LionTamer:
-			if (w->actionState == FigureActionState_150_Attack) {
-				if (++w->phraseSequenceExact >= 3) {
-					w->phraseSequenceExact = 0;
+			if (f->actionState == FigureActionState_150_Attack) {
+				if (++f->phraseSequenceExact >= 3) {
+					f->phraseSequenceExact = 0;
 				}
-				phraseId = 7 + w->phraseSequenceExact;
+				phraseId = 7 + f->phraseSequenceExact;
 			}
 			break;
 		case Figure_Gladiator:
-			if (w->actionState == FigureActionState_150_Attack) {
+			if (f->actionState == FigureActionState_150_Attack) {
 				phraseId = 7;
 			}
 			break;
 		case Figure_TaxCollector:
-			if (w->minMaxSeen >= HouseLevel_LargeCasa) {
+			if (f->minMaxSeen >= HouseLevel_LargeCasa) {
 				phraseId = 7;
-			} else if (w->minMaxSeen >= HouseLevel_SmallHovel) {
+			} else if (f->minMaxSeen >= HouseLevel_SmallHovel) {
 				phraseId = 8;
-			} else if (w->minMaxSeen >= HouseLevel_LargeTent) {
+			} else if (f->minMaxSeen >= HouseLevel_LargeTent) {
 				phraseId = 9;
 			}
 			break;
 		case Figure_MarketTrader:
-			if (w->actionState == FigureActionState_126_RoamerReturning) {
-				if (Building_Market_getMaxFoodStock(w->buildingId) <= 0) {
+			if (f->actionState == FigureActionState_126_RoamerReturning) {
+				if (Building_Market_getMaxFoodStock(f->buildingId) <= 0) {
 					phraseId = 9; // run out of goods
 				}
 			}
 			break;
 		case Figure_MarketBuyer:
-			if (w->actionState == FigureActionState_145_MarketBuyerGoingToStorage) {
+			if (f->actionState == FigureActionState_145_MarketBuyerGoingToStorage) {
 				phraseId = 7;
-			} else if (w->actionState == FigureActionState_146_MarketBuyerReturning) {
+			} else if (f->actionState == FigureActionState_146_MarketBuyerReturning) {
 				phraseId = 8;
 			}
 			break;
 		case Figure_CartPusher:
-			if (w->actionState == FigureActionState_20_CartpusherInitial) {
-				if (w->minMaxSeen == 2) {
+			if (f->actionState == FigureActionState_20_CartpusherInitial) {
+				if (f->minMaxSeen == 2) {
 					phraseId = 7;
-				} else if (w->minMaxSeen == 1) {
+				} else if (f->minMaxSeen == 1) {
 					phraseId = 8;
 				}
-			} else if (w->actionState == FigureActionState_21_CartpusherDeliveringToWarehouse ||
-					w->actionState == FigureActionState_22_CartpusherDeliveringToGranary ||
-					w->actionState == FigureActionState_23_CartpusherDeliveringToWorkshop) {
+			} else if (f->actionState == FigureActionState_21_CartpusherDeliveringToWarehouse ||
+					f->actionState == FigureActionState_22_CartpusherDeliveringToGranary ||
+					f->actionState == FigureActionState_23_CartpusherDeliveringToWorkshop) {
 				if (Calc_distanceMaximum(
-					w->destinationX, w->destinationY, w->sourceX, w->sourceY) >= 25) {
+					f->destinationX, f->destinationY, f->sourceX, f->sourceY) >= 25) {
 					phraseId = 9; // too far
 				}
 			}
 			break;
 		case Figure_Warehouseman:
-			if (w->actionState == FigureActionState_51_WarehousemanDeliveringResource) {
+			if (f->actionState == FigureActionState_51_WarehousemanDeliveringResource) {
 				if (Calc_distanceMaximum(
-					w->destinationX, w->destinationY, w->sourceX, w->sourceY) >= 25) {
+					f->destinationX, f->destinationY, f->sourceX, f->sourceY) >= 25) {
 					phraseId = 9; // too far
 				}
 			}
 			break;
 		case Figure_Prefect:
-			if (++w->phraseSequenceExact >= 4) {
-				w->phraseSequenceExact = 0;
+			if (++f->phraseSequenceExact >= 4) {
+				f->phraseSequenceExact = 0;
 			}
-			if (w->actionState == FigureActionState_74_PrefectGoingToFire) {
+			if (f->actionState == FigureActionState_74_PrefectGoingToFire) {
 				phraseId = 10;
-			} else if (w->actionState == FigureActionState_75_PrefectAtFire) {
-				phraseId = 11 + (w->phraseSequenceExact % 2);
-			} else if (w->actionState == FigureActionState_150_Attack) {
-				phraseId = 13 + w->phraseSequenceExact;
-			} else if (w->minMaxSeen >= 50) {
+			} else if (f->actionState == FigureActionState_75_PrefectAtFire) {
+				phraseId = 11 + (f->phraseSequenceExact % 2);
+			} else if (f->actionState == FigureActionState_150_Attack) {
+				phraseId = 13 + f->phraseSequenceExact;
+			} else if (f->minMaxSeen >= 50) {
 				phraseId = 7;
-			} else if (w->minMaxSeen >= 10) {
+			} else if (f->minMaxSeen >= 10) {
 				phraseId = 8;
 			} else {
 				phraseId = 9;
 			}
 			break;
 		case Figure_Engineer:
-			if (w->minMaxSeen >= 60) {
+			if (f->minMaxSeen >= 60) {
 				phraseId = 7;
-			} else if (w->minMaxSeen >= 10) {
+			} else if (f->minMaxSeen >= 10) {
 				phraseId = 8;
 			}
 			break;
@@ -367,17 +367,17 @@ int Figure_determinePhrase(int walkerId)
 		case Figure_Rioter:
 		case Figure_DeliveryBoy:
 		case Figure_Missionary:
-			if (++w->phraseSequenceExact >= 3) {
-				w->phraseSequenceExact = 0;
+			if (++f->phraseSequenceExact >= 3) {
+				f->phraseSequenceExact = 0;
 			}
-			phraseId = 7 + w->phraseSequenceExact;
+			phraseId = 7 + f->phraseSequenceExact;
 			break;
 		case Figure_Homeless:
 		case Figure_Immigrant:
-			if (++w->phraseSequenceExact >= 2) {
-				w->phraseSequenceExact = 0;
+			if (++f->phraseSequenceExact >= 2) {
+				f->phraseSequenceExact = 0;
 			}
-			phraseId = 7 + w->phraseSequenceExact;
+			phraseId = 7 + f->phraseSequenceExact;
 			break;
 		case Figure_Emigrant:
 			switch (Data_CityInfo.populationEmigrationCause) {
@@ -389,11 +389,11 @@ int Figure_determinePhrase(int walkerId)
 			}
 			break;
 		case Figure_TowerSentry:
-			if (++w->phraseSequenceExact >= 2) {
-				w->phraseSequenceExact = 0;
+			if (++f->phraseSequenceExact >= 2) {
+				f->phraseSequenceExact = 0;
 			}
 			if (!Data_CityInfo.numEnemiesInCity) {
-				phraseId = 7 + w->phraseSequenceExact;
+				phraseId = 7 + f->phraseSequenceExact;
 			} else if (Data_CityInfo.numEnemiesInCity <= 10) {
 				phraseId = 9;
 			} else if (Data_CityInfo.numEnemiesInCity <= 30) {
@@ -414,41 +414,41 @@ int Figure_determinePhrase(int walkerId)
 			}
 			break;
 		case Figure_Dockman:
-			if (w->actionState == FigureActionState_135_DockerImportGoingToWarehouse ||
-				w->actionState == FigureActionState_136_DockerExportGoingToWarehouse) {
+			if (f->actionState == FigureActionState_135_DockerImportGoingToWarehouse ||
+				f->actionState == FigureActionState_136_DockerExportGoingToWarehouse) {
 				if (Calc_distanceMaximum(
-					w->destinationX, w->destinationY, w->sourceX, w->sourceY) >= 25) {
+					f->destinationX, f->destinationY, f->sourceX, f->sourceY) >= 25) {
 					phraseId = 9; // too far
 				}
 			}
 			break;
 		case Figure_TradeCaravan:
-			if (++w->phraseSequenceExact >= 2) {
-				w->phraseSequenceExact = 0;
+			if (++f->phraseSequenceExact >= 2) {
+				f->phraseSequenceExact = 0;
 			}
-			phraseId = 8 + w->phraseSequenceExact;
-			if (w->actionState == FigureActionState_103_TradeCaravanLeaving) {
-				if (!Data_Figure_Traders[w->traderId].totalSold &&
-					!Data_Figure_Traders[w->traderId].totalBought) {
+			phraseId = 8 + f->phraseSequenceExact;
+			if (f->actionState == FigureActionState_103_TradeCaravanLeaving) {
+				if (!Data_Figure_Traders[f->traderId].totalSold &&
+					!Data_Figure_Traders[f->traderId].totalBought) {
 					phraseId = 7; // no trade
 				}
-			} else if (w->actionState == FigureActionState_102_TradeCaravanTrading) {
-				if (FigureAction_TradeCaravan_canBuy(walkerId, w->destinationBuildingId, w->empireCityId)) {
+			} else if (f->actionState == FigureActionState_102_TradeCaravanTrading) {
+				if (FigureAction_TradeCaravan_canBuy(walkerId, f->destinationBuildingId, f->empireCityId)) {
 					phraseId = 11; // buying goods
-				} else if (FigureAction_TradeCaravan_canSell(walkerId, w->destinationBuildingId, w->empireCityId)) {
+				} else if (FigureAction_TradeCaravan_canSell(walkerId, f->destinationBuildingId, f->empireCityId)) {
 					phraseId = 10; // selling goods
 				}
 			}
 			break;
 		case Figure_TradeShip:
-			if (w->actionState == FigureActionState_115_TradeShipLeaving) {
-				if (!Data_Figure_Traders[w->traderId].totalSold &&
-					!Data_Figure_Traders[w->traderId].totalBought) {
+			if (f->actionState == FigureActionState_115_TradeShipLeaving) {
+				if (!Data_Figure_Traders[f->traderId].totalSold &&
+					!Data_Figure_Traders[f->traderId].totalBought) {
 					phraseId = 9; // no trade
 				} else {
 					phraseId = 11; // good trade
 				}
-			} else if (w->actionState == FigureActionState_112_TradeShipMoored) {
+			} else if (f->actionState == FigureActionState_112_TradeShipMoored) {
 				int state = FigureAction_TradeShip_isBuyingOrSelling(walkerId);
 				if (state == TradeShipState_Buying) {
 					phraseId = 8; // buying goods
@@ -464,13 +464,13 @@ int Figure_determinePhrase(int walkerId)
 	}
 
 	if (phraseId) {
-		w->phraseId = phraseId;
+		f->phraseId = phraseId;
 		return phraseId;
 	}
 
 	// phrase id based on city state
-	if (++w->phraseSequenceCity >= 1) {
-		w->phraseSequenceCity = 0;
+	if (++f->phraseSequenceCity >= 1) {
+		f->phraseSequenceCity = 0;
 	}
 
 	int leastGodHappiness = 100;
@@ -489,36 +489,36 @@ int Figure_determinePhrase(int walkerId)
 	}
 
 	if (Data_CityInfo.foodInfoFoodSupplyMonths <= 0) {
-		phraseId = w->phraseSequenceCity;
+		phraseId = f->phraseSequenceCity;
 	} else if (Data_CityInfo.unemploymentPercentage >= 17) {
-		phraseId = 1 + w->phraseSequenceCity;
+		phraseId = 1 + f->phraseSequenceCity;
 	} else if (Data_CityInfo.workersNeeded >= 10) {
-		phraseId = 2 + w->phraseSequenceCity;
+		phraseId = 2 + f->phraseSequenceCity;
 	} else if (Data_CityInfo.citywideAverageEntertainment == 0) {
-		phraseId = 3 + w->phraseSequenceCity;
+		phraseId = 3 + f->phraseSequenceCity;
 	} else if (godPhraseId == 1) {
-		phraseId = 4 + w->phraseSequenceCity;
+		phraseId = 4 + f->phraseSequenceCity;
 	} else if (Data_CityInfo.citywideAverageEntertainment <= 10) {
-		phraseId = 3 + w->phraseSequenceCity;
+		phraseId = 3 + f->phraseSequenceCity;
 	} else if (godPhraseId == 2) {
-		phraseId = 4 + w->phraseSequenceCity;
+		phraseId = 4 + f->phraseSequenceCity;
 	} else if (Data_CityInfo.citywideAverageEntertainment <= 20) {
-		phraseId = 3 + w->phraseSequenceCity;
+		phraseId = 3 + f->phraseSequenceCity;
 	} else if (Data_CityInfo.foodInfoFoodSupplyMonths >= 4 &&
 			Data_CityInfo.unemploymentPercentage <= 5 &&
 			Data_CityInfo.citywideAverageHealth > 0 &&
 			Data_CityInfo.citywideAverageEducation > 0) {
 		if (Data_CityInfo.population < 500) {
-			phraseId = 5 + w->phraseSequenceCity;
+			phraseId = 5 + f->phraseSequenceCity;
 		} else {
-			phraseId = 6 + w->phraseSequenceCity;
+			phraseId = 6 + f->phraseSequenceCity;
 		}
 	} else if (Data_CityInfo.unemploymentPercentage >= 10) {
-		phraseId = 1 + w->phraseSequenceCity;
+		phraseId = 1 + f->phraseSequenceCity;
 	} else {
-		phraseId = 5 + w->phraseSequenceCity;
+		phraseId = 5 + f->phraseSequenceCity;
 	}
-	return w->phraseId = phraseId;
+	return f->phraseId = phraseId;
 }
 
 static void playWalkerSoundFile(int walkerSoundId, int phraseId)

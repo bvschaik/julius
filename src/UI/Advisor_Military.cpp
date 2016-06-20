@@ -125,15 +125,15 @@ void UI_Advisor_Military_drawBackground(int *advisorHeight)
 
 	for (int i = 0; i < numLegions; i++) {
 		int formationId = Formation_getLegionFormationId(i + 1);
-		struct Data_Formation *f = &Data_Formations[formationId];
+		struct Data_Formation *m = &Data_Formations[formationId];
 		Widget_Panel_drawButtonBorder(baseOffsetX + 38, baseOffsetY + 77 + 44 * i, 560, 40, 0);
-		Graphics_drawImage(GraphicId(ID_Graphic_FortStandardIcons) + f->legionId,
+		Graphics_drawImage(GraphicId(ID_Graphic_FortStandardIcons) + m->legionId,
 			baseOffsetX + 48, baseOffsetY + 82 + 44 * i);
-		Widget_GameText_draw(138, f->legionId,
+		Widget_GameText_draw(138, m->legionId,
 			baseOffsetX + 100, baseOffsetY + 83 + 44 * i, Font_NormalWhite);
-		int width = Widget_Text_drawNumber(f->numFigures, '@', " ",
+		int width = Widget_Text_drawNumber(m->numFigures, '@', " ",
 			baseOffsetX + 100, baseOffsetY + 100 + 44 * i, Font_NormalGreen);
-		switch (f->figureType) {
+		switch (m->figureType) {
 			case Figure_FortLegionary:
 				Widget_GameText_draw(138, 33, baseOffsetX + 100 + width, baseOffsetY + 100 + 44 * i, Font_NormalGreen);
 				break;
@@ -144,7 +144,7 @@ void UI_Advisor_Military_drawBackground(int *advisorHeight)
 				Widget_GameText_draw(138, 35, baseOffsetX + 100 + width, baseOffsetY + 100 + 44 * i, Font_NormalGreen);
 				break;
 		}
-		Widget_GameText_drawCentered(138, 37 + f->morale / 5,
+		Widget_GameText_drawCentered(138, 37 + m->morale / 5,
 			baseOffsetX + 240, baseOffsetY + 91 + 44 * i, 150, Font_NormalGreen);
 
 		int graphicId = GraphicId(ID_Graphic_FortIcons);
@@ -152,14 +152,14 @@ void UI_Advisor_Military_drawBackground(int *advisorHeight)
 		Graphics_drawImage(graphicId, baseOffsetX + 403, baseOffsetY + 86 + 44 * i);
 
 		Widget_Panel_drawButtonBorder(baseOffsetX + 480, baseOffsetY + 83 + 44 * i, 30, 30, 0);
-		if (f->isAtFort) {
+		if (m->isAtFort) {
 			Graphics_drawImage(graphicId + 2, baseOffsetX + 483, baseOffsetY + 86 + 44 * i);
 		} else {
 			Graphics_drawImage(graphicId + 1, baseOffsetX + 483, baseOffsetY + 86 + 44 * i);
 		}
 
 		Widget_Panel_drawButtonBorder(baseOffsetX + 560, baseOffsetY + 83 + 44 * i, 30, 30, 0);
-		if (f->empireService) {
+		if (m->empireService) {
 			Graphics_drawImage(graphicId + 3, baseOffsetX + 563, baseOffsetY + 86 + 44 * i);
 		} else {
 			Graphics_drawImage(graphicId + 4, baseOffsetX + 563, baseOffsetY + 86 + 44 * i);

@@ -168,16 +168,16 @@ static void generateRioter(int buildingId)
 	int targetBuildingId = Formation_Rioter_getTargetBuilding(&targetX, &targetY);
 	for (int i = 0; i < peopleInMob; i++) {
 		int walkerId = Figure_create(Figure_Rioter, xRoad, yRoad, 4);
-		struct Data_Walker *w = &Data_Walkers[walkerId];
-		w->actionState = FigureActionState_120_RioterCreated;
-		w->roamLength = 0;
-		w->waitTicks = 10 + 4 * i;
+		struct Data_Walker *f = &Data_Walkers[walkerId];
+		f->actionState = FigureActionState_120_RioterCreated;
+		f->roamLength = 0;
+		f->waitTicks = 10 + 4 * i;
 		if (targetBuildingId) {
-			w->destinationX = targetX;
-			w->destinationY = targetY;
-			w->destinationBuildingId = targetBuildingId;
+			f->destinationX = targetX;
+			f->destinationY = targetY;
+			f->destinationBuildingId = targetBuildingId;
 		} else {
-			w->state = FigureState_Dead;
+			f->state = FigureState_Dead;
 		}
 	}
 	Building_collapseOnFire(buildingId, 0);

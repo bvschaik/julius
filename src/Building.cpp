@@ -1162,9 +1162,9 @@ int Building_Dock_getNumIdleDockers(int buildingId)
 	int numIdle = 0;
 	for (int i = 0; i < 3; i++) {
 		if (b->data.other.dockWalkerIds[i]) {
-			struct Data_Walker *w = &Data_Walkers[b->data.other.dockWalkerIds[i]];
-			if (w->actionState == FigureActionState_132_DockerIdling ||
-				w->actionState == FigureActionState_133_DockerImportQueue) {
+			struct Data_Walker *f = &Data_Walkers[b->data.other.dockWalkerIds[i]];
+			if (f->actionState == FigureActionState_132_DockerIdling ||
+				f->actionState == FigureActionState_133_DockerImportQueue) {
 				numIdle++;
 			}
 		}

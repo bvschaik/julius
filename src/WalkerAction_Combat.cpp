@@ -12,12 +12,12 @@ int FigureAction_CombatSoldier_getTarget(int x, int y, int maxDistance)
 		if (FigureIsDead(i)) {
 			continue;
 		}
-		struct Data_Walker *w = &Data_Walkers[i];
-		if (WalkerIsEnemy(w->type) || w->type == Figure_Rioter ||
-			(w->type == Figure_IndigenousNative && w->actionState == FigureActionState_159_NativeAttacking)) {
-			int distance = Calc_distanceMaximum(x, y, w->x, w->y);
+		struct Data_Walker *f = &Data_Walkers[i];
+		if (WalkerIsEnemy(f->type) || f->type == Figure_Rioter ||
+			(f->type == Figure_IndigenousNative && f->actionState == FigureActionState_159_NativeAttacking)) {
+			int distance = Calc_distanceMaximum(x, y, f->x, f->y);
 			if (distance <= maxDistance) {
-				if (w->targetedByWalkerId) {
+				if (f->targetedByWalkerId) {
 					distance *= 2; // penalty
 				}
 				if (distance < minDistance) {
@@ -34,9 +34,9 @@ int FigureAction_CombatSoldier_getTarget(int x, int y, int maxDistance)
 		if (FigureIsDead(i)) {
 			continue;
 		}
-		struct Data_Walker *w = &Data_Walkers[i];
-		if (WalkerIsEnemy(w->type) || w->type == Figure_Rioter ||
-			(w->type == Figure_IndigenousNative && w->actionState == FigureActionState_159_NativeAttacking)) {
+		struct Data_Walker *f = &Data_Walkers[i];
+		if (WalkerIsEnemy(f->type) || f->type == Figure_Rioter ||
+			(f->type == Figure_IndigenousNative && f->actionState == FigureActionState_159_NativeAttacking)) {
 			return i;
 		}
 	}
@@ -54,11 +54,11 @@ int FigureAction_CombatSoldier_getMissileTarget(int soldierId, int maxDistance, 
 		if (FigureIsDead(i)) {
 			continue;
 		}
-		struct Data_Walker *w = &Data_Walkers[i];
-		if (WalkerIsEnemy(w->type) || WalkerIsHerd(w->type) ||
-			(w->type == Figure_IndigenousNative && w->actionState == FigureActionState_159_NativeAttacking)) {
-			int distance = Calc_distanceMaximum(x, y, w->x, w->y);
-			if (distance < minDistance && FigureMovement_canLaunchCrossCountryMissile(x, y, w->x, w->y)) {
+		struct Data_Walker *f = &Data_Walkers[i];
+		if (WalkerIsEnemy(f->type) || WalkerIsHerd(f->type) ||
+			(f->type == Figure_IndigenousNative && f->actionState == FigureActionState_159_NativeAttacking)) {
+			int distance = Calc_distanceMaximum(x, y, f->x, f->y);
+			if (distance < minDistance && FigureMovement_canLaunchCrossCountryMissile(x, y, f->x, f->y)) {
 				minDistance = distance;
 				minWalkerId = i;
 			}
@@ -77,11 +77,11 @@ int FigureAction_CombatWolf_getTarget(int x, int y, int maxDistance)
 	int minWalkerId = 0;
 	int minDistance = 10000;
 	for (int i = 1; i < MAX_FIGURES; i++) {
-		struct Data_Walker *w = &Data_Walkers[i];
-		if (FigureIsDead(i) || !w->type) {
+		struct Data_Walker *f = &Data_Walkers[i];
+		if (FigureIsDead(i) || !f->type) {
 			continue;
 		}
-		switch (w->type) {
+		switch (f->type) {
 			case Figure_Explosion:
 			case Figure_FortStandard:
 			case Figure_TradeShip:
@@ -100,14 +100,14 @@ int FigureAction_CombatWolf_getTarget(int x, int y, int maxDistance)
 			case Figure_Creature:
 				continue;
 		}
-		if (WalkerIsEnemy(w->type) || WalkerIsHerd(w->type)) {
+		if (WalkerIsEnemy(f->type) || WalkerIsHerd(f->type)) {
 			continue;
 		}
-		if (WalkerIsLegion(w->type) && w->actionState == FigureActionState_80_SoldierAtRest) {
+		if (WalkerIsLegion(f->type) && f->actionState == FigureActionState_80_SoldierAtRest) {
 			continue;
 		}
-		int distance = Calc_distanceMaximum(x, y, w->x, w->y);
-		if (w->targetedByWalkerId) {
+		int distance = Calc_distanceMaximum(x, y, f->x, f->y);
+		if (f->targetedByWalkerId) {
 			distance *= 2;
 		}
 		if (distance < minDistance) {
@@ -129,9 +129,9 @@ int FigureAction_CombatEnemy_getTarget(int x, int y)
 		if (FigureIsDead(i)) {
 			continue;
 		}
-		struct Data_Walker *w = &Data_Walkers[i];
-		if (!w->targetedByWalkerId && WalkerIsLegion(w->type)) {
-			int distance = Calc_distanceMaximum(x, y, w->x, w->y);
+		struct Data_Walker *f = &Data_Walkers[i];
+		if (!f->targetedByWalkerId && WalkerIsLegion(f->type)) {
+			int distance = Calc_distanceMaximum(x, y, f->x, f->y);
 			if (distance < minDistance) {
 				minDistance = distance;
 				minWalkerId = i;
@@ -161,11 +161,11 @@ int FigureAction_CombatEnemy_getMissileTarget(int enemyId, int maxDistance, int 
 	int minWalkerId = 0;
 	int minDistance = maxDistance;
 	for (int i = 1; i < MAX_FIGURES; i++) {
-		struct Data_Walker *w = &Data_Walkers[i];
-		if (FigureIsDead(i) || !w->type) {
+		struct Data_Walker *f = &Data_Walkers[i];
+		if (FigureIsDead(i) || !f->type) {
 			continue;
 		}
-		switch (w->type) {
+		switch (f->type) {
 			case Figure_Explosion:
 			case Figure_FortStandard:
 			case Figure_MapFlag:
@@ -186,14 +186,14 @@ int FigureAction_CombatEnemy_getMissileTarget(int enemyId, int maxDistance, int 
 				continue;
 		}
 		int distance;
-		if (WalkerIsLegion(w->type)) {
-			distance = Calc_distanceMaximum(x, y, w->x, w->y);
-		} else if (attackCitizens && w->isFriendly) {
-			distance = Calc_distanceMaximum(x, y, w->x, w->y) + 5;
+		if (WalkerIsLegion(f->type)) {
+			distance = Calc_distanceMaximum(x, y, f->x, f->y);
+		} else if (attackCitizens && f->isFriendly) {
+			distance = Calc_distanceMaximum(x, y, f->x, f->y) + 5;
 		} else {
 			continue;
 		}
-		if (distance < minDistance && FigureMovement_canLaunchCrossCountryMissile(x, y, w->x, w->y)) {
+		if (distance < minDistance && FigureMovement_canLaunchCrossCountryMissile(x, y, f->x, f->y)) {
 			minDistance = distance;
 			minWalkerId = i;
 		}
@@ -209,10 +209,10 @@ int FigureAction_CombatEnemy_getMissileTarget(int enemyId, int maxDistance, int 
 
 void FigureAction_Combat_attackWalker(int walkerId, int opponentId)
 {
-	struct Data_Walker *w = &Data_Walkers[walkerId];
-	int figureCategory = Constant_FigureProperties[w->type].category;
+	struct Data_Walker *f = &Data_Walkers[walkerId];
+	int figureCategory = Constant_FigureProperties[f->type].category;
 	if (figureCategory <= FigureCategory_Inactive || figureCategory >= FigureCategory_Criminal ||
-			w->actionState == FigureActionState_150_Attack) {
+			f->actionState == FigureActionState_150_Attack) {
 		return;
 	}
 	int guard = 0;
@@ -254,27 +254,27 @@ void FigureAction_Combat_attackWalker(int walkerId, int opponentId)
 			attack = 0;
 		}
 		if (attack) {
-			w->actionStateBeforeAttack = w->actionState;
-			w->actionState = FigureActionState_150_Attack;
-			w->opponentId = opponentId;
-			w->attackerId1 = opponentId;
-			w->numAttackers = 1;
-			w->attackGraphicOffset = 12;
+			f->actionStateBeforeAttack = f->actionState;
+			f->actionState = FigureActionState_150_Attack;
+			f->opponentId = opponentId;
+			f->attackerId1 = opponentId;
+			f->numAttackers = 1;
+			f->attackGraphicOffset = 12;
 			if (opponent->x != opponent->destinationX || opponent->y != opponent->destinationY) {
-				w->attackDirection = Routing_getGeneralDirection(w->previousTileX, w->previousTileY,
+				f->attackDirection = Routing_getGeneralDirection(f->previousTileX, f->previousTileY,
 					opponent->previousTileX, opponent->previousTileY);
 			} else {
-				w->attackDirection = Routing_getGeneralDirection(w->previousTileX, w->previousTileY,
+				f->attackDirection = Routing_getGeneralDirection(f->previousTileX, f->previousTileY,
 					opponent->x, opponent->y);
 			}
-			if (w->attackDirection >= 8) {
-				w->attackDirection = 0;
+			if (f->attackDirection >= 8) {
+				f->attackDirection = 0;
 			}
 			if (opponent->actionState != FigureActionState_150_Attack) {
 				opponent->actionStateBeforeAttack = opponent->actionState;
 				opponent->actionState = FigureActionState_150_Attack;
 				opponent->attackGraphicOffset = 0;
-				opponent->attackDirection = (w->attackDirection + 4) % 8;
+				opponent->attackDirection = (f->attackDirection + 4) % 8;
 			}
 			if (opponent->numAttackers == 0) {
 				opponent->attackerId1 = walkerId;

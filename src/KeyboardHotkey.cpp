@@ -105,8 +105,8 @@ static void cycleLegion()
 			if (legionId > 6) {
 				legionId = 1;
 			}
-			struct Data_Formation *f = &Data_Formations[legionId];
-			if (f->inUse == 1 && !f->isHerd && f->isLegion) {
+			struct Data_Formation *m = &Data_Formations[legionId];
+			if (m->inUse == 1 && !m->isHerd && m->isLegion) {
 				if (currentLegionId == 0) {
 					currentLegionId = legionId;
 					break;
@@ -114,8 +114,8 @@ static void cycleLegion()
 			}
 		}
 		if (currentLegionId > 0) {
-			struct Data_Formation *f = &Data_Formations[currentLegionId];
-			CityView_goToGridOffset(GridOffset(f->xHome, f->yHome));
+			struct Data_Formation *m = &Data_Formations[currentLegionId];
+			CityView_goToGridOffset(GridOffset(m->xHome, m->yHome));
 			UI_Window_requestRefresh();
 		}
 	}
