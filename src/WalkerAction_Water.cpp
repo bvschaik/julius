@@ -1,9 +1,9 @@
 #include "FigureAction_private.h"
 
 #include "Calc.h"
+#include "Figure.h"
 #include "PlayerMessage.h"
 #include "Terrain.h"
-#include "Walker.h"
 
 #include "Data/CityInfo.h"
 #include "Data/Message.h"

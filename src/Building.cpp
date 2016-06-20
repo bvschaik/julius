@@ -3,6 +3,7 @@
 #include "Calc.h"
 #include "CityInfo.h"
 #include "CityView.h"
+#include "Figure.h"
 #include "Formation.h"
 #include "HousePopulation.h"
 #include "PlayerMessage.h"
@@ -12,7 +13,6 @@
 #include "Terrain.h"
 #include "TerrainGraphics.h"
 #include "Undo.h"
-#include "Walker.h"
 #include "WalkerAction.h"
 #include "UI/Warning.h"
 

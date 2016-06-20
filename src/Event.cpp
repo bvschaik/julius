@@ -4,6 +4,7 @@
 #include "Calc.h"
 #include "CityInfo.h"
 #include "Empire.h"
+#include "Figure.h"
 #include "Formation.h"
 #include "PlayerMessage.h"
 #include "Random.h"
@@ -13,7 +14,6 @@
 #include "Sound.h"
 #include "TerrainGraphics.h"
 #include "Util.h"
-#include "Walker.h"
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"

@@ -7,6 +7,7 @@
 #include "CityView.h"
 #include "Empire.h"
 #include "Event.h"
+#include "Figure.h"
 #include "FileSystem.h"
 #include "Formation.h"
 #include "GameFile.h"
@@ -21,7 +22,6 @@
 #include "Terrain.h"
 #include "TerrainGraphics.h"
 #include "Trader.h"
-#include "Walker.h"
 
 #include "UI/Window.h"
 

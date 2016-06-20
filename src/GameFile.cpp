@@ -4,6 +4,7 @@
 #include "CityView.h"
 #include "Empire.h"
 #include "Event.h"
+#include "Figure.h"
 #include "FileSystem.h"
 #include "Loader.h"
 #include "PlayerMessage.h"
@@ -13,7 +14,6 @@
 #include "Sound.h"
 #include "TerrainGraphics.h"
 #include "UtilityManagement.h"
-#include "Walker.h"
 #include "Zip.h"
 
 #include "Data/Building.h"

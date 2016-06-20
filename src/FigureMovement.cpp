@@ -1,9 +1,9 @@
 #include "FigureMovement.h"
 
 #include "Building.h"
+#include "Figure.h"
 #include "Routing.h"
 #include "Terrain.h"
-#include "Walker.h"
 #include "WalkerAction.h"
 
 #include "Data/Building.h"

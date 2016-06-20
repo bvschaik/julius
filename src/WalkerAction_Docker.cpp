@@ -1,8 +1,8 @@
 #include "FigureAction_private.h"
 
+#include "Figure.h"
 #include "Resource.h"
 #include "Trader.h"
-#include "Walker.h"
 
 #include "Data/CityInfo.h"
 

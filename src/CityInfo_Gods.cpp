@@ -2,10 +2,10 @@
 
 #include "Building.h"
 #include "Event.h"
+#include "Figure.h"
 #include "Formation.h"
 #include "PlayerMessage.h"
 #include "Util.h"
-#include "Walker.h"
 
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"

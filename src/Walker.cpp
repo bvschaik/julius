@@ -1,4 +1,4 @@
-#include "Walker.h"
+#include "Figure.h"
 
 #include "Calc.h"
 #include "FigureMovement.h"

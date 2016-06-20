@@ -1,4 +1,4 @@
-#include "Walker.h"
+#include "Figure.h"
 
 #include "Random.h"
 #include "Data/Constants.h"

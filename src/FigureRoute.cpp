@@ -1,4 +1,4 @@
-#include "Walker.h"
+#include "Figure.h"
 
 #include "Routing.h"
 

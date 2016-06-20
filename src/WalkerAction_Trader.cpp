@@ -1,11 +1,11 @@
 #include "FigureAction_private.h"
 
+#include "Figure.h"
 #include "Empire.h"
 #include "PlayerMessage.h"
 #include "Resource.h"
 #include "Terrain.h"
 #include "Trader.h"
-#include "Walker.h"
 
 #include "Data/CityInfo.h"
 #include "Data/Empire.h"
@@ -503,7 +503,7 @@ void FigureAction_tradeShip(int walkerId)
 					w->actionState = FigureActionState_111_TradeShipGoingToDock;
 					w->destinationX = xTile;
 					w->destinationY = yTile;
-				} else if (Terrain_Water_getQueueDockDestination(walkerId, &xTile, &yTile)) {
+				} else if (Terrain_Water_getQueueDockDestination(&xTile, &yTile)) {
 					w->actionState = FigureActionState_113_TradeShipGoingToDockQueue;
 					w->destinationX = xTile;
 					w->destinationY = yTile;
@@ -581,7 +581,7 @@ void FigureAction_tradeShip(int walkerId)
 					w->destinationX = xTile;
 					w->destinationY = yTile;
 				} else if (Data_Grid_figureIds[w->gridOffset] != walkerId &&
-					Terrain_Water_getQueueDockDestination(walkerId, &xTile, &yTile)) {
+					Terrain_Water_getQueueDockDestination(&xTile, &yTile)) {
 					w->actionState = FigureActionState_113_TradeShipGoingToDockQueue;
 					w->destinationX = xTile;
 					w->destinationY = yTile;

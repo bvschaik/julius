@@ -1,11 +1,11 @@
 #include "FigureAction_private.h"
 
 #include "Building.h"
+#include "Figure.h"
 #include "FigureMovement.h"
 #include "Formation.h"
 #include "PlayerMessage.h"
 #include "Time.h"
-#include "Walker.h"
 
 #include "Data/CityInfo.h"
 #include "Data/Grid.h"

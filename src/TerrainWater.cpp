@@ -274,22 +274,22 @@ int Terrain_Water_findAlternativeTileForFishingBoat(int walkerId, int *xTile, in
 	return 0;
 }
 
-int Terrain_Water_findOpenWaterForShipwreck(int walkerId, int *xTile, int *yTile)
+int Terrain_Water_findOpenWaterForShipwreck(int figureId, int *xTile, int *yTile)
 {
-	int gridOffset = Data_Walkers[walkerId].gridOffset;
-	if (Data_Grid_terrain[gridOffset] & Terrain_Water && Data_Grid_figureIds[gridOffset] == walkerId) {
+	int gridOffset = Data_Walkers[figureId].gridOffset;
+	if (Data_Grid_terrain[gridOffset] & Terrain_Water && Data_Grid_figureIds[gridOffset] == figureId) {
 		return 0;
 	}
 	for (int radius = 1; radius <= 5; radius++) {
-		int wx = Data_Walkers[walkerId].x;
-		int wy = Data_Walkers[walkerId].y;
+		int wx = Data_Walkers[figureId].x;
+		int wy = Data_Walkers[figureId].y;
 		int xMin = wx - radius;
 		int yMin = wy - radius;
 		int xMax = wx + radius;
 		int yMax = wy + radius;
 		BOUND_REGION();
 		FOREACH_REGION({
-			if (!Data_Grid_figureIds[gridOffset] || Data_Grid_figureIds[gridOffset] == walkerId) {
+			if (!Data_Grid_figureIds[gridOffset] || Data_Grid_figureIds[gridOffset] == figureId) {
 				if (Data_Grid_terrain[gridOffset] & Terrain_Water &&
 					Data_Grid_terrain[GridOffset(xx, yy - 2)] & Terrain_Water &&
 					Data_Grid_terrain[GridOffset(xx, yy + 2)] & Terrain_Water &&
@@ -305,7 +305,7 @@ int Terrain_Water_findOpenWaterForShipwreck(int walkerId, int *xTile, int *yTile
 	return 0;
 }
 
-int Terrain_Water_getFreeDockDestination(int walkerId, int *xTile, int *yTile)
+int Terrain_Water_getFreeDockDestination(int figureId, int *xTile, int *yTile)
 {
 	if (Data_CityInfo.numWorkingDocks <= 0) {
 		return 0;
@@ -315,7 +315,7 @@ int Terrain_Water_getFreeDockDestination(int walkerId, int *xTile, int *yTile)
 		dockId = Data_CityInfo.workingDockBuildingIds[i];
 		if (!dockId) continue;
 		if (!Data_Buildings[dockId].data.other.boatWalkerId ||
-			Data_Buildings[dockId].data.other.boatWalkerId == walkerId) {
+			Data_Buildings[dockId].data.other.boatWalkerId == figureId) {
 			break;
 		}
 	}
@@ -331,11 +331,11 @@ int Terrain_Water_getFreeDockDestination(int walkerId, int *xTile, int *yTile)
 		case 2: *xTile += 1; *yTile += 3; break;
 		default: *xTile -= 1; *yTile += 1; break;
 	}
-	Data_Buildings[dockId].data.other.boatWalkerId = walkerId;
+	Data_Buildings[dockId].data.other.boatWalkerId = figureId;
 	return dockId;
 }
 
-int Terrain_Water_getQueueDockDestination(int walkerId, int *xTile, int *yTile)
+int Terrain_Water_getQueueDockDestination(int* xTile, int* yTile)
 {
 	if (Data_CityInfo.numWorkingDocks <= 0) {
 		return 0;

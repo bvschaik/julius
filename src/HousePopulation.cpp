@@ -3,8 +3,8 @@
 #include "BuildingHouse.h"
 #include "Calc.h"
 #include "CityInfo.h"
+#include "Figure.h"
 #include "PlayerMessage.h"
-#include "Walker.h"
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"

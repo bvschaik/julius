@@ -3,6 +3,7 @@
 #include "Building.h"
 #include "Calc.h"
 #include "CityInfo.h"
+#include "Figure.h"
 #include "Formation.h"
 #include "Grid.h"
 #include "HousePopulation.h"
@@ -13,7 +14,6 @@
 #include "TerrainBridge.h"
 #include "TerrainGraphics.h"
 #include "Undo.h"
-#include "Walker.h"
 
 #include "UI/PopupDialog.h"
 #include "UI/Warning.h"

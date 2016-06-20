@@ -1,8 +1,8 @@
 #include "FigureAction_private.h"
 
 #include "Calc.h"
+#include "Figure.h"
 #include "Terrain.h"
-#include "Walker.h"
 
 #include "Data/Event.h"
 #include "Data/Grid.h"

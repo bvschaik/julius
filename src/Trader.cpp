@@ -1,10 +1,10 @@
 #include "Trader.h"
 
 #include "Empire.h"
+#include "Figure.h"
 #include "PlayerMessage.h"
 #include "Resource.h"
 #include "Terrain.h"
-#include "Walker.h"
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"

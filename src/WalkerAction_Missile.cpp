@@ -1,8 +1,8 @@
 #include "FigureAction_private.h"
 
+#include "Figure.h"
 #include "Formation.h"
 #include "Sound.h"
-#include "Walker.h"
 #include "Data/Formation.h"
 
 static const int cloudGraphicOffsets[] = {

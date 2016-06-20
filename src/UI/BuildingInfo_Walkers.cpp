@@ -3,9 +3,9 @@
 #include "CityBuildings.h"
 #include "Window.h"
 #include "../CityView.h"
+#include "../Figure.h"
 #include "../Graphics.h"
 #include "../Resource.h"
-#include "../Walker.h"
 #include "../Widget.h"
 
 #include "../Data/Building.h"

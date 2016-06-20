@@ -1,12 +1,12 @@
 #include "Formation.h"
 
 #include "Calc.h"
+#include "Figure.h"
 #include "FigureMovement.h"
 #include "Random.h"
 #include "Routing.h"
 #include "Sound.h"
 #include "Util.h"
-#include "Walker.h"
 #include "UI/Warning.h"
 
 #include "Data/Building.h"

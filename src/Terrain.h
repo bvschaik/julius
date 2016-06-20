@@ -75,11 +75,11 @@ void Terrain_updateToPlaceBuildingToOverlay(int size, int x, int y, int terrainM
 int Terrain_getWallTileWithinRadius(int x, int y, int radius, int *xTile, int *yTile);
 void Terrain_rotateMap(int direction);
 
-int Terrain_Water_findOpenWaterForShipwreck(int walkerId, int *xTile, int *yTile);
-int Terrain_Water_getFreeDockDestination(int walkerId, int *xTile, int *yTile);
-int Terrain_Water_getQueueDockDestination(int walkerId, int *xTile, int *yTile);
-int Terrain_Water_getWharfTileForNewFishingBoat(int walkerId, int *xTile, int *yTile);
-int Terrain_Water_findAlternativeTileForFishingBoat(int walkerId, int *xTile, int *yTile);
-int Terrain_Water_getNearestFishTile(int walkerId, int *xTile, int *yTile);
+int Terrain_Water_findOpenWaterForShipwreck(int figureId, int* xTile, int* yTile);
+int Terrain_Water_getFreeDockDestination(int figureId, int *xTile, int *yTile);
+int Terrain_Water_getQueueDockDestination(int* xTile, int* yTile);
+int Terrain_Water_getWharfTileForNewFishingBoat(int figureId, int *xTile, int *yTile);
+int Terrain_Water_findAlternativeTileForFishingBoat(int figureId, int *xTile, int *yTile);
+int Terrain_Water_getNearestFishTile(int figureId, int *xTile, int *yTile);
 
 #endif

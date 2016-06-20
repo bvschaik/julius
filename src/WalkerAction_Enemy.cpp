@@ -1,9 +1,9 @@
 #include "FigureAction_private.h"
 
+#include "Figure.h"
 #include "Formation.h"
 #include "Routing.h"
 #include "Sound.h"
-#include "Walker.h"
 
 #include "Data/CityInfo.h"
 #include "Data/Event.h"

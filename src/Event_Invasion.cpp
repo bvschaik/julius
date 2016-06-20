@@ -3,10 +3,10 @@
 #include "Building.h"
 #include "Calc.h"
 #include "CityInfo.h"
+#include "Figure.h"
 #include "Formation.h"
 #include "PlayerMessage.h"
 #include "Random.h"
-#include "Walker.h"
 
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"

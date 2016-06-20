@@ -1,11 +1,11 @@
 #include "FigureAction_private.h"
 
 #include "Calc.h"
+#include "Figure.h"
 #include "Routing.h"
 #include "Security.h"
 #include "Sound.h"
 #include "Terrain.h"
-#include "Walker.h"
 
 #include "Data/CityInfo.h"
 #include "Data/Formation.h"

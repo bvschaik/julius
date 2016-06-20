@@ -1,8 +1,8 @@
 #include "FigureAction_private.h"
 
+#include "Figure.h"
 #include "Resource.h"
 #include "Routing.h"
-#include "Walker.h"
 
 #include "Data/CityInfo.h"
 #include "Data/Grid.h"

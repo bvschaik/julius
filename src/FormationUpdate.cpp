@@ -1,12 +1,12 @@
 #include "Formation.h"
 
 #include "Calc.h"
+#include "Figure.h"
 #include "Grid.h"
 #include "PlayerMessage.h"
 #include "Routing.h"
 #include "Sound.h"
 #include "TerrainGraphics.h"
-#include "Walker.h"
 #include "WalkerAction.h"
 
 #include "Data/Building.h"

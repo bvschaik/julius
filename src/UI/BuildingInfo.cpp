@@ -8,12 +8,12 @@
 #include "../Building.h"
 #include "../Calc.h"
 #include "../CityInfo.h"
+#include "../Figure.h"
 #include "../Formation.h"
 #include "../Graphics.h"
 #include "../HouseEvolution.h"
 #include "../Resource.h"
 #include "../Terrain.h"
-#include "../Walker.h"
 #include "../Widget.h"
 
 #include "../Data/Building.h"

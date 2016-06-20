@@ -1,8 +1,8 @@
 #include "FigureAction_private.h"
 
 #include "Building.h"
+#include "Figure.h"
 #include "Terrain.h"
-#include "Walker.h"
 
 static void FigureAction_cultureCommon(int walkerId, int numTicks)
 {

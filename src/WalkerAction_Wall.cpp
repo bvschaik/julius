@@ -1,10 +1,10 @@
 #include "FigureAction_private.h"
 
+#include "Figure.h"
 #include "Routing.h"
 #include "Sound.h"
 #include "Terrain.h"
 #include "Util.h"
-#include "Walker.h"
 
 #include "Data/Formation.h"
 #include "Data/Grid.h"

@@ -1,6 +1,6 @@
 #include "FigureAction_private.h"
 
-#include "Walker.h"
+#include "Figure.h"
 #include "Data/CityInfo.h"
 
 static void (*walkerActionCallbacks[])(int walkerId) = {

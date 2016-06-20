@@ -1,7 +1,7 @@
 #include "FigureAction_private.h"
 
+#include "Figure.h"
 #include "Resource.h"
-#include "Walker.h"
 
 static int createDeliveryBoy(int leader, struct Data_Walker *w)
 {
