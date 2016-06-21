@@ -101,12 +101,12 @@ void FigureAction_handle()
 	for (int i = 1; i < MAX_FIGURES; i++) {
 		struct Data_Walker *f = &Data_Walkers[i];
 		if (f->state) {
-			if (f->targetedByWalkerId) {
-				if (Data_Walkers[f->targetedByWalkerId].state != FigureState_Alive) {
-					f->targetedByWalkerId = 0;
+			if (f->targetedByFigureId) {
+				if (Data_Walkers[f->targetedByFigureId].state != FigureState_Alive) {
+					f->targetedByFigureId = 0;
 				}
-				if (Data_Walkers[f->targetedByWalkerId].targetWalkerId != i) {
-					f->targetedByWalkerId = 0;
+				if (Data_Walkers[f->targetedByFigureId].targetFigureId != i) {
+					f->targetedByFigureId = 0;
 				}
 			}
 			walkerActionCallbacks[f->type](i);

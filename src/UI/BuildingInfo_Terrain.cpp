@@ -32,19 +32,19 @@ void UI_BuildingInfo_drawTerrain(BuildingInfoContext *c)
 		UI_BuildingInfo_drawWall(c);
 	} else if (c->terrainType == 12) {
 		UI_BuildingInfo_drawGarden(c);
-	} else if (c->terrainType == 13 && c->walker.count <= 0) {
+	} else if (c->terrainType == 13 && c->figure.count <= 0) {
 		UI_BuildingInfo_drawPlaza(c);
 	} else {
 		if (c->canPlaySound) {
 			c->canPlaySound = 0;
-			if (c->walker.count > 0) {
+			if (c->figure.count > 0) {
 				UI_BuildingInfo_playWalkerPhrase(c);
 			} else {
 				Sound_Speech_playFile("wavs/empty_land.wav");
 			}
 		}
-		if (c->walker.count > 0 && c->walker.walkerIds[c->walker.selectedIndex]) {
-			if (Data_Walkers[c->walker.walkerIds[c->walker.selectedIndex]].type < Figure_Shipwreck) {
+		if (c->figure.count > 0 && c->figure.walkerIds[c->figure.selectedIndex]) {
+			if (Data_Walkers[c->figure.walkerIds[c->figure.selectedIndex]].type < Figure_Shipwreck) {
 				c->helpId = 42;
 			} else {
 				c->helpId = 330;
@@ -54,7 +54,7 @@ void UI_BuildingInfo_drawTerrain(BuildingInfoContext *c)
 		UI_BuildingInfo_drawWalkerImagesLocal(c);
 		Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset,
 			c->widthBlocks, c->heightBlocks);
-		if (!c->walker.count) {
+		if (!c->figure.count) {
 			Widget_GameText_drawCentered(70, c->terrainType + 10,
 				c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, Font_LargeBlack);
 		}

@@ -52,7 +52,7 @@ static void FigureAction_culture(int walkerId, int graphicCategory)
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 384;
 	int buildingId = f->buildingId;
-	if (!BuildingIsInUse(buildingId) || Data_Buildings[buildingId].walkerId != walkerId) {
+	if (!BuildingIsInUse(buildingId) || Data_Buildings[buildingId].figureId != walkerId) {
 		f->state = FigureState_Dead;
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);
@@ -144,7 +144,7 @@ void FigureAction_missionary(int walkerId)
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 192;
 	int buildingId = f->buildingId;
-	if (!BuildingIsInUse(buildingId) || Data_Buildings[buildingId].walkerId != walkerId) {
+	if (!BuildingIsInUse(buildingId) || Data_Buildings[buildingId].figureId != walkerId) {
 		f->state = FigureState_Dead;
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);
@@ -173,7 +173,7 @@ void FigureAction_laborSeeker(int walkerId)
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 384;
 	int buildingId = f->buildingId;
-	if (!BuildingIsInUse(buildingId) || Data_Buildings[buildingId].walkerId2 != walkerId) {
+	if (!BuildingIsInUse(buildingId) || Data_Buildings[buildingId].figureId2 != walkerId) {
 		f->state = FigureState_Dead;
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);
@@ -188,7 +188,7 @@ void FigureAction_marketTrader(int walkerId)
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 384;
 	
-	if (!BuildingIsInUse(f->buildingId) || Data_Buildings[f->buildingId].walkerId != walkerId) {
+	if (!BuildingIsInUse(f->buildingId) || Data_Buildings[f->buildingId].figureId != walkerId) {
 		f->state = FigureState_Dead;
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);

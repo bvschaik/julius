@@ -9,7 +9,7 @@ struct UI_CityPixelCoordinate {
 };
 
 void UI_CityBuildings_drawForeground(int x, int y);
-void UI_CityBuildings_drawForegroundForWalker(int x, int y, int walkerId, UI_CityPixelCoordinate *coord);
+void UI_CityBuildings_drawForegroundForFigure(int x, int y, int figureId, UI_CityPixelCoordinate *coord);
 void UI_CityBuildings_drawBuildingCost();
 
 void UI_CityBuildings_handleMouse();

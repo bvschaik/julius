@@ -90,7 +90,7 @@ void UI_CityBuildings_drawOverlayFootprints()
 	} END_FOREACH_XY_VIEW;
 }
 
-void UI_CityBuildings_drawOverlayTopsWalkersAnimation(int overlay)
+void UI_CityBuildings_drawOverlayTopsFiguresAnimation(int overlay)
 {
 	FOREACH_Y_VIEW {
 		// draw walkers
@@ -98,9 +98,9 @@ void UI_CityBuildings_drawOverlayTopsWalkersAnimation(int overlay)
 			int walkerId = Data_Grid_figureIds[gridOffset];
 			while (walkerId) {
 				if (!Data_Walkers[walkerId].isGhost) {
-					UI_CityBuildings_drawWalker(walkerId, xGraphic, yGraphic, 9999, 0);
+					UI_CityBuildings_drawFigure(walkerId, xGraphic, yGraphic, 9999, 0);
 				}
-				walkerId = Data_Walkers[walkerId].nextWalkerIdOnSameTile;
+				walkerId = Data_Walkers[walkerId].nextFigureIdOnSameTile;
 			}
 		} END_FOREACH_X_VIEW;
 		// draw animation
@@ -1332,14 +1332,14 @@ static void drawBuildingTopForProblemsOverlay(int gridOffset, int buildingId, in
 			Data_Buildings[buildingId].showOnProblemOverlay = 1;
 		}
 	} else if (type >= Building_WheatFarm && type <= Building_ClayPit) {
-		int walkerId = Data_Buildings[buildingId].walkerId;
+		int walkerId = Data_Buildings[buildingId].figureId;
 		if (walkerId &&
 			Data_Walkers[walkerId].actionState == FigureActionState_20_CartpusherInitial &&
 			Data_Walkers[walkerId].minMaxSeen) {
 			Data_Buildings[buildingId].showOnProblemOverlay = 1;
 		}
 	} else if (BuildingIsWorkshop(type)) {
-		int walkerId = Data_Buildings[buildingId].walkerId;
+		int walkerId = Data_Buildings[buildingId].figureId;
 		if (walkerId &&
 			Data_Walkers[walkerId].actionState == FigureActionState_20_CartpusherInitial &&
 			Data_Walkers[walkerId].minMaxSeen) {

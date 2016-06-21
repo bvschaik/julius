@@ -292,7 +292,7 @@ void UI_BuildingInfo_drawWarehouse(BuildingInfoContext *c)
 	Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 168, c->widthBlocks - 2, 5);
 	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 173);
 	// cartpusher state
-	int cartpusher = b->walkerId;
+	int cartpusher = b->figureId;
 	if (cartpusher && Data_Walkers[cartpusher].state == FigureState_Alive) {
 		int resource = Data_Walkers[cartpusher].resourceId;
 		Graphics_drawImage(GraphicId(ID_Graphic_ResourceIcons) + resource +

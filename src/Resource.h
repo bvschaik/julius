@@ -58,8 +58,8 @@ void Resource_addRawMaterialToWorkshop(int buildingId);
 void Resource_addWeaponToBarracks(int buildingId);
 
 enum {
-	StorageWalkerTask_Getting = 0,
-	StorageWalkerTask_Delivering = 1,
+	StorageFigureTask_Getting = 0,
+	StorageFigureTask_Delivering = 1,
 };
 
 #endif

@@ -320,8 +320,8 @@ void FigureAction_tradeCaravanDonkey(int walkerId)
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 
-	struct Data_Walker *leader = &Data_Walkers[f->inFrontWalkerId];
-	if (f->inFrontWalkerId <= 0) {
+	struct Data_Walker *leader = &Data_Walkers[f->inFrontFigureId];
+	if (f->inFrontFigureId <= 0) {
 		f->state = FigureState_Dead;
 	} else {
 		if (leader->actionState == FigureActionState_149_Corpse) {
@@ -331,7 +331,7 @@ void FigureAction_tradeCaravanDonkey(int walkerId)
 		} else if (leader->type != Figure_TradeCaravan && leader->type != Figure_TradeCaravanDonkey) {
 			f->state = FigureState_Dead;
 		} else {
-			FigureMovement_followTicks(walkerId, f->inFrontWalkerId, 1);
+			FigureMovement_followTicks(walkerId, f->inFrontFigureId, 1);
 		}
 	}
 
@@ -447,7 +447,7 @@ static int tradeShipLostQueue(int walkerId)
 	int buildingId = Data_Walkers[walkerId].destinationBuildingId;
 	struct Data_Building *b = &Data_Buildings[buildingId];
 	if (BuildingIsInUse(buildingId) && b->type == Building_Dock &&
-		b->numWorkers > 0 && b->data.other.boatWalkerId == walkerId) {
+		b->numWorkers > 0 && b->data.other.boatFigureId == walkerId) {
 		return 0;
 	}
 	return 1;
@@ -459,7 +459,7 @@ static int tradeShipDoneTrading(int walkerId)
 	struct Data_Building *b = &Data_Buildings[buildingId];
 	if (BuildingIsInUse(buildingId) && b->type == Building_Dock && b->numWorkers > 0) {
 		for (int i = 0; i < 3; i++) {
-			int dockerId = b->data.other.dockWalkerIds[i];
+			int dockerId = b->data.other.dockFigureIds[i];
 			if (dockerId && Data_Walkers[dockerId].state == FigureState_Alive &&
 				Data_Walkers[dockerId].actionState != FigureActionState_132_DockerIdling) {
 				return 0;
@@ -616,8 +616,8 @@ int FigureAction_TradeShip_isBuyingOrSelling(int walkerId)
 		return TradeShipState_Buying;
 	}
 	for (int i = 0; i < 3; i++) {
-		struct Data_Walker *f = &Data_Walkers[b->data.other.dockWalkerIds[i]];
-		if (!b->data.other.dockWalkerIds[i] || f->state != FigureState_Alive) {
+		struct Data_Walker *f = &Data_Walkers[b->data.other.dockFigureIds[i]];
+		if (!b->data.other.dockFigureIds[i] || f->state != FigureState_Alive) {
 			continue;
 		}
 		switch (f->actionState) {

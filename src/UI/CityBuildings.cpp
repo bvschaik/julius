@@ -18,9 +18,9 @@
 #include "../Data/Formation.h"
 #include "../Data/Mouse.h"
 
-static void UI_CityBuildings_drawBuildingFootprints();
-static void UI_CityBuildings_drawBuildingTopsWalkersAnimation(int selectedWalkerId, struct UI_CityPixelCoordinate *coord);
-static void UI_CityBuildings_drawHippodromeAndElevatedWalkers(int selectedWalkerId);
+static void drawBuildingFootprints();
+static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_CityPixelCoordinate *coord);
+static void drawHippodromeAndElevatedFigures(int selectedFigureId);
 
 static TimeMillis lastWaterAnimationTime = 0;
 static int advanceWaterAnimation;
@@ -42,14 +42,14 @@ void UI_CityBuildings_drawForeground(int x, int y)
 
 	if (Data_State.currentOverlay) {
 		UI_CityBuildings_drawOverlayFootprints();
-		UI_CityBuildings_drawOverlayTopsWalkersAnimation(Data_State.currentOverlay);
+		UI_CityBuildings_drawOverlayTopsFiguresAnimation(Data_State.currentOverlay);
 		UI_CityBuildings_drawSelectedBuildingGhost();
-		UI_CityBuildings_drawHippodromeAndElevatedWalkers(9999);
+		drawHippodromeAndElevatedFigures(9999);
 	} else {
-		UI_CityBuildings_drawBuildingFootprints();
-		UI_CityBuildings_drawBuildingTopsWalkersAnimation(0, 0);
+		drawBuildingFootprints();
+		drawBuildingTopsFiguresAnimation(0, 0);
 		UI_CityBuildings_drawSelectedBuildingGhost();
-		UI_CityBuildings_drawHippodromeAndElevatedWalkers(0);
+		drawHippodromeAndElevatedFigures(0);
 	}
 
 	Graphics_resetClipRectangle();
@@ -85,7 +85,7 @@ void UI_CityBuildings_drawBuildingCost()
 	Data_State.selectedBuilding.cost = 0;
 }
 
-void UI_CityBuildings_drawForegroundForWalker(int x, int y, int walkerId, UI_CityPixelCoordinate *coord)
+void UI_CityBuildings_drawForegroundForFigure(int x, int y, int figureId, UI_CityPixelCoordinate *coord)
 {
 	Data_CityView.xInTiles = x;
 	Data_CityView.yInTiles = y;
@@ -93,14 +93,14 @@ void UI_CityBuildings_drawForegroundForWalker(int x, int y, int walkerId, UI_Cit
 		Data_CityView.xOffsetInPixels, Data_CityView.yOffsetInPixels,
 		Data_CityView.widthInPixels, Data_CityView.heightInPixels);
 
-	UI_CityBuildings_drawBuildingFootprints();
-	UI_CityBuildings_drawBuildingTopsWalkersAnimation(walkerId, coord);
-	UI_CityBuildings_drawHippodromeAndElevatedWalkers(0);
+	drawBuildingFootprints();
+	drawBuildingTopsFiguresAnimation(figureId, coord);
+	drawHippodromeAndElevatedFigures(0);
 
 	Graphics_resetClipRectangle();
 }
 
-static void UI_CityBuildings_drawBuildingFootprints()
+static void drawBuildingFootprints()
 {
 	int graphicIdWaterFirst = GraphicId(ID_Graphic_TerrainWater);
 	int graphicIdWaterLast = 5 + graphicIdWaterFirst;
@@ -169,7 +169,7 @@ static void UI_CityBuildings_drawBuildingFootprints()
 	} END_FOREACH_XY_VIEW;
 }
 
-static void UI_CityBuildings_drawBuildingTopsWalkersAnimation(int selectedWalkerId, struct UI_CityPixelCoordinate *coord)
+static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_CityPixelCoordinate *coord)
 {
 	FOREACH_Y_VIEW {
 		FOREACH_X_VIEW {
@@ -337,9 +337,9 @@ static void UI_CityBuildings_drawBuildingTopsWalkersAnimation(int selectedWalker
 			int walkerId = Data_Grid_figureIds[gridOffset];
 			while (walkerId) {
 				if (!Data_Walkers[walkerId].isGhost) {
-					UI_CityBuildings_drawWalker(walkerId, xGraphic, yGraphic, selectedWalkerId, coord);
+					UI_CityBuildings_drawFigure(walkerId, xGraphic, yGraphic, selectedFigureId, coord);
 				}
-				walkerId = Data_Walkers[walkerId].nextWalkerIdOnSameTile;
+				walkerId = Data_Walkers[walkerId].nextFigureIdOnSameTile;
 			}
 		} END_FOREACH_X_VIEW;
 		// draw animation
@@ -442,7 +442,7 @@ static void UI_CityBuildings_drawBuildingTopsWalkersAnimation(int selectedWalker
 				if (Data_Grid_edge[gridOffset] & Edge_LeftmostTile) {
 					int buildingId = Data_Grid_buildingIds[gridOffset];
 					int offset = 0;
-					switch (Data_Buildings[buildingId].subtype.fortWalkerType) {
+					switch (Data_Buildings[buildingId].subtype.fortFigureType) {
 						case Figure_FortLegionary: offset = 4; break;
 						case Figure_FortMounted: offset = 3; break;
 						case Figure_FortJavelin: offset = 2; break;
@@ -540,16 +540,16 @@ void UI_CityBuildings_drawBridge(int gridOffset, int x, int y)
 	}
 }
 
-static void UI_CityBuildings_drawHippodromeAndElevatedWalkers(int selectedWalkerId)
+static void drawHippodromeAndElevatedFigures(int selectedWalkerId)
 {
 	FOREACH_Y_VIEW {
 		FOREACH_X_VIEW {
-			for (int walkerId = Data_Grid_figureIds[gridOffset]; walkerId > 0; walkerId = Data_Walkers[walkerId].nextWalkerIdOnSameTile) {
+			for (int walkerId = Data_Grid_figureIds[gridOffset]; walkerId > 0; walkerId = Data_Walkers[walkerId].nextFigureIdOnSameTile) {
 				if (Data_Walkers[walkerId].useCrossCountry && !Data_Walkers[walkerId].isGhost) {
-					UI_CityBuildings_drawWalker(walkerId, xGraphic, yGraphic, selectedWalkerId, 0);
+					UI_CityBuildings_drawFigure(walkerId, xGraphic, yGraphic, selectedWalkerId, 0);
 				}
 				if (Data_Walkers[walkerId].heightAdjustedTicks) {
-					UI_CityBuildings_drawWalker(walkerId, xGraphic, yGraphic, selectedWalkerId, 0);
+					UI_CityBuildings_drawFigure(walkerId, xGraphic, yGraphic, selectedWalkerId, 0);
 				}
 			}
 		} END_FOREACH_X_VIEW;

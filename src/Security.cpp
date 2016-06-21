@@ -124,7 +124,7 @@ int Security_Fire_getClosestBurningRuin(int x, int y, int *distance)
 		struct Data_Building *b = &Data_Buildings[buildingId];
 		if (BuildingIsInUse(buildingId) && b->type == Building_BurningRuin && !b->ruinHasPlague && b->distanceFromEntry) {
 			int dist = Calc_distanceMaximum(x, y, b->x, b->y);
-			if (b->walkerId4) {
+			if (b->figureId4) {
 				if (dist < minOccupiedDist) {
 					minOccupiedDist = dist;
 					minOccupiedBuildingId = buildingId;

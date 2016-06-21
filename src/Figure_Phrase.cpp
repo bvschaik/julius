@@ -237,7 +237,7 @@ static char figureSounds[32][20][32] = {
 }
 };
 
-static int walkerTypeToSoundType[] = {
+static int figureTypeToSoundType[] = {
 	-1, 24, 23, 21, 5, 19, -1, 3, 2, 5, // 0-9
 	0, 1, 1, 1, -1, 14, 15, 16, 17, 6, // 10-19
 	7, -1, 20, 20, 20, -1, 4, 8, 10, 9, // 20-29
@@ -248,20 +248,20 @@ static int walkerTypeToSoundType[] = {
 	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1 // 70-79
 };
 
-int Figure_determinePhrase(int walkerId)
+int Figure_determinePhrase(int figureId)
 {
-	if (walkerId <= 0) {
+	if (figureId <= 0) {
 		return 0;
 	}
 
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Walker *f = &Data_Walkers[figureId];
 	int phraseId = f->phraseId = 0;
 
-	if (WalkerIsEnemyOrNative(f->type)) {
+	if (FigureIsEnemyOrNative(f->type)) {
 		return f->phraseId = -1;
 	}
 
-	// phrase id based on walker state
+	// phrase id based on figure state
 	switch (f->type) {
 		case Figure_LaborSeeker:
 		case Figure_35:
@@ -433,9 +433,9 @@ int Figure_determinePhrase(int walkerId)
 					phraseId = 7; // no trade
 				}
 			} else if (f->actionState == FigureActionState_102_TradeCaravanTrading) {
-				if (FigureAction_TradeCaravan_canBuy(walkerId, f->destinationBuildingId, f->empireCityId)) {
+				if (FigureAction_TradeCaravan_canBuy(figureId, f->destinationBuildingId, f->empireCityId)) {
 					phraseId = 11; // buying goods
-				} else if (FigureAction_TradeCaravan_canSell(walkerId, f->destinationBuildingId, f->empireCityId)) {
+				} else if (FigureAction_TradeCaravan_canSell(figureId, f->destinationBuildingId, f->empireCityId)) {
 					phraseId = 10; // selling goods
 				}
 			}
@@ -449,7 +449,7 @@ int Figure_determinePhrase(int walkerId)
 					phraseId = 11; // good trade
 				}
 			} else if (f->actionState == FigureActionState_112_TradeShipMoored) {
-				int state = FigureAction_TradeShip_isBuyingOrSelling(walkerId);
+				int state = FigureAction_TradeShip_isBuyingOrSelling(figureId);
 				if (state == TradeShipState_Buying) {
 					phraseId = 8; // buying goods
 				} else if (state == TradeShipState_Selling) {
@@ -521,32 +521,32 @@ int Figure_determinePhrase(int walkerId)
 	return f->phraseId = phraseId;
 }
 
-static void playWalkerSoundFile(int walkerSoundId, int phraseId)
+static void playFigureSoundFile(int figureSoundId, int phraseId)
 {
 	char path[32];
-	if (walkerSoundId >= 0 && phraseId >= 0) {
+	if (figureSoundId >= 0 && phraseId >= 0) {
 		strcpy(path, "wavs/");
-		strcat(path, figureSounds[walkerSoundId][phraseId]);
+		strcat(path, figureSounds[figureSoundId][phraseId]);
 		Sound_Speech_playFile(path);
 	}
 }
 
-int Figure_playPhrase(int walkerId)
+int Figure_playPhrase(int figureId)
 {
-	if (walkerId > 0) {
-		int walkerSoundId = walkerTypeToSoundType[Data_Walkers[walkerId].type];
-		playWalkerSoundFile(walkerSoundId, Data_Walkers[walkerId].phraseId);
-		return walkerSoundId;
+	if (figureId > 0) {
+		int figureSoundId = figureTypeToSoundType[Data_Walkers[figureId].type];
+		playFigureSoundFile(figureSoundId, Data_Walkers[figureId].phraseId);
+		return figureSoundId;
 	} else {
 		return 0;
 	}
 }
 
-void Figure_playDieSound(int walkerType)
+void Figure_playDieSound(int figureType)
 {
 	int isSoldier = 0;
 	int isCitizen = 0;
-	switch (walkerType) {
+	switch (figureType) {
 		case Figure_Wolf:
 			Sound_Effects_playChannel(SoundChannel_WolfDie);
 			break;
@@ -610,11 +610,11 @@ void Figure_playDieSound(int walkerType)
 		}
 		Sound_Effects_playChannel(SoundChannel_CitizenDie + Data_CityInfo.dieSoundCitizen);
 	}
-	if (WalkerIsEnemy(walkerType)) {
+	if (FigureIsEnemy(figureType)) {
 		if (Data_CityInfo.numEnemiesInCity == 1) {
 			Sound_Speech_playFile("wavs/army_war_cry.wav");
 		}
-	} else if (WalkerIsLegion(walkerType)) {
+	} else if (FigureIsLegion(figureType)) {
 		if (Data_CityInfo.numSoldiersInCity == 1) {
 			Sound_Speech_playFile("wavs/barbarian_war_cry.wav");
 		}
@@ -628,9 +628,9 @@ void Figure_playDieSound(int walkerType)
 		Sound_Effects_playChannel(ch);\
 	}
 
-void Figure_playHitSound(int walkerType)
+void Figure_playHitSound(int figureType)
 {
-	switch (walkerType) {
+	switch (figureType) {
 		case Figure_FortLegionary:
 		case Figure_EnemyCaesarLegionary:
 			PLAY_HIT_SOUND(soundHitSoldier, SoundChannel_Sword);

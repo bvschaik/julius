@@ -25,7 +25,7 @@ void UI_BuildingInfo_drawEngineersPost(BuildingInfoContext *c)
 	} else if (!b->numWorkers) {
 		DRAW_DESC(104, 9);
 	} else {
-		if (b->walkerId) {
+		if (b->figureId) {
 			DRAW_DESC(104, 2);
 		} else {
 			DRAW_DESC(104, 3);
@@ -92,7 +92,7 @@ void UI_BuildingInfo_drawDock(BuildingInfoContext *c)
 
 	if (!c->hasRoadAccess) {
 		DRAW_DESC(69, 25);
-	} else if (b->data.other.boatWalkerId) {
+	} else if (b->data.other.boatFigureId) {
 		if (c->workerPercentage <= 0) {
 			DRAW_DESC(101, 2);
 		} else if (c->workerPercentage < 50) {
@@ -132,10 +132,10 @@ void UI_BuildingInfo_drawWharf(BuildingInfoContext *c)
 
 	if (!c->hasRoadAccess) {
 		DRAW_DESC(69, 25);
-	} else if (!b->data.other.boatWalkerId) {
+	} else if (!b->data.other.boatFigureId) {
 		DRAW_DESC(102, 2);
 	} else {
-		int boatId = b->data.other.boatWalkerId;
+		int boatId = b->data.other.boatFigureId;
 		int textId;
 		switch (Data_Walkers[boatId].actionState) {
 			case FigureActionState_191_FishingBoatGoingToFish: textId = 3; break;

@@ -41,10 +41,10 @@ void FigureAction_ballista(int walkerId)
 	f->heightAdjustedTicks = 10;
 	f->currentHeight = 45;
 	
-	if (!BuildingIsInUse(f->buildingId) || b->walkerId4 != walkerId) {
+	if (!BuildingIsInUse(f->buildingId) || b->figureId4 != walkerId) {
 		f->state = FigureState_Dead;
 	}
-	if (b->numWorkers <= 0 || b->walkerId <= 0) {
+	if (b->numWorkers <= 0 || b->figureId <= 0) {
 		f->state = FigureState_Dead;
 	}
 	Figure_removeFromTileList(walkerId);
@@ -122,7 +122,7 @@ static void towerSentryPickTarget(int walkerId, struct Data_Walker *f)
 
 static int towerSentryInitPatrol(struct Data_Building *b, int *xTile, int *yTile)
 {
-	int dir = b->walkerRoamDirection;
+	int dir = b->figureRoamDirection;
 	int x = b->x;
 	int y = b->y;
 	switch (dir) {
@@ -134,14 +134,14 @@ static int towerSentryInitPatrol(struct Data_Building *b, int *xTile, int *yTile
 	BoundToMap(x, y);
 
 	if (Terrain_getWallTileWithinRadius(x, y, 6, xTile, yTile)) {
-		b->walkerRoamDirection += 2;
-		if (b->walkerRoamDirection > 6) b->walkerRoamDirection = 0;
+		b->figureRoamDirection += 2;
+		if (b->figureRoamDirection > 6) b->figureRoamDirection = 0;
 		return 1;
 	}
 	for (int i = 0; i < 4; i++) {
-		dir = b->walkerRoamDirection;
-		b->walkerRoamDirection += 2;
-		if (b->walkerRoamDirection > 6) b->walkerRoamDirection = 0;
+		dir = b->figureRoamDirection;
+		b->figureRoamDirection += 2;
+		if (b->figureRoamDirection > 6) b->figureRoamDirection = 0;
 		x = b->x;
 		y = b->y;
 		switch (dir) {
@@ -167,7 +167,7 @@ void FigureAction_towerSentry(int walkerId)
 	f->isGhost = 1;
 	f->heightAdjustedTicks = 10;
 	f->maxRoamLength = 800;
-	if (!BuildingIsInUse(f->buildingId) || b->walkerId != walkerId) {
+	if (!BuildingIsInUse(f->buildingId) || b->figureId != walkerId) {
 		f->state = FigureState_Dead;
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);

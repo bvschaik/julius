@@ -162,9 +162,9 @@ void FigureAction_wolf(int walkerId)
 				if (targetId) {
 					f->destinationX = Data_Walkers[targetId].x;
 					f->destinationY = Data_Walkers[targetId].y;
-					f->targetWalkerId = targetId;
-					Data_Walkers[targetId].targetedByWalkerId = walkerId;
-					f->targetWalkerCreatedSequence = Data_Walkers[targetId].createdSequence;
+					f->targetFigureId = targetId;
+					Data_Walkers[targetId].targetedByFigureId = walkerId;
+					f->targetFigureCreatedSequence = Data_Walkers[targetId].createdSequence;
 					FigureRoute_remove(walkerId);
 				} else {
 					f->direction = f->previousTileDirection;
@@ -323,8 +323,8 @@ void FigureAction_hippodromeHorse(int walkerId)
 				f->waitTicksMissile++;
 				if (f->waitTicksMissile >= 22) {
 					f->waitTicksMissile = 0;
-					f->inFrontWalkerId++;
-					if (f->inFrontWalkerId >= 6) {
+					f->inFrontFigureId++;
+					if (f->inFrontFigureId >= 6) {
 						f->waitTicks = 0;
 						f->actionState = FigureActionState_202_HippodromeMiniHorseDone;
 					}

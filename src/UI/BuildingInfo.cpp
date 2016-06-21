@@ -146,7 +146,7 @@ void UI_BuildingInfo_init()
 
 	CityInfo_Resource_calculateAvailableResources();
 	context.type = BuildingInfoType_Terrain;
-	context.walker.drawn = 0;
+	context.figure.drawn = 0;
 	if (!Data_Grid_buildingIds[gridOffset] && Data_Grid_spriteOffsets[gridOffset] > 0) {
 		if (Data_Grid_terrain[gridOffset] & Terrain_Water) {
 			context.terrainType = 11;
@@ -248,15 +248,15 @@ void UI_BuildingInfo_init()
 		}
 	}
 	// walkers
-	context.walker.selectedIndex = 0;
-	context.walker.count = 0;
+	context.figure.selectedIndex = 0;
+	context.figure.count = 0;
 	for (int i = 0; i < 7; i++) {
-		context.walker.walkerIds[i] = 0;
+		context.figure.walkerIds[i] = 0;
 	}
 	static const int walkerOffsets[] = {0, -162, 162, 1, -1, -163, -161, 161, 163};
-	for (int i = 0; i < 9 && context.walker.count < 7; i++) {
+	for (int i = 0; i < 9 && context.figure.count < 7; i++) {
 		int walkerId = Data_Grid_figureIds[gridOffset + walkerOffsets[i]];
-		while (walkerId > 0 && context.walker.count < 7) {
+		while (walkerId > 0 && context.figure.count < 7) {
 			if (Data_Walkers[walkerId].state != FigureState_Dead &&
 				Data_Walkers[walkerId].actionState != FigureActionState_149_Corpse) {
 				switch (Data_Walkers[walkerId].type) {
@@ -274,22 +274,22 @@ void UI_BuildingInfo_init()
 					case Figure_HippodromeMiniHorses:
 						break;
 					default:
-						context.walker.walkerIds[context.walker.count++] = walkerId;
+						context.figure.walkerIds[context.figure.count++] = walkerId;
 						Figure_determinePhrase(walkerId);
 						break;
 				}
 			}
-			walkerId = Data_Walkers[walkerId].nextWalkerIdOnSameTile;
+			walkerId = Data_Walkers[walkerId].nextFigureIdOnSameTile;
 		}
 	}
 	// check for legion walkers
 	for (int i = 0; i < 7; i++) {
-		int walkerId = context.walker.walkerIds[i];
+		int walkerId = context.figure.walkerIds[i];
 		if (walkerId <= 0) {
 			continue;
 		}
 		int type = Data_Walkers[walkerId].type;
-		if (type == Figure_FortStandard || WalkerIsLegion(type)) {
+		if (type == Figure_FortStandard || FigureIsLegion(type)) {
 			context.type = BuildingInfoType_Legion;
 			context.formationId = Data_Walkers[walkerId].formationId;
 			if (Data_Formations[context.formationId].figureType != Figure_FortLegionary) {
@@ -546,7 +546,7 @@ void UI_BuildingInfo_handleMouse()
 	}
 	if (context.type == BuildingInfoType_Legion) {
 		UI_BuildingInfo_handleMouseLegionInfo(&context);
-	} else if (context.walker.drawn) {
+	} else if (context.figure.drawn) {
 		UI_BuildingInfo_handleMouseWalkerList(&context);
 	} else if (context.type == BuildingInfoType_Building) {
 		int btype = Data_Buildings[context.buildingId].type;

@@ -79,15 +79,15 @@ static void addToTerrainFort(int type, int buildingId, int x, int y, int size)
 	int formationId = Formation_createLegion(buildingId);
 	Data_Buildings[buildingId].formationId = formationId;
 	if (type == Building_FortLegionaries) {
-		Data_Buildings[buildingId].subtype.fortWalkerType = Figure_FortLegionary;
+		Data_Buildings[buildingId].subtype.fortFigureType = Figure_FortLegionary;
 		Data_Formations[formationId].figureType = Figure_FortLegionary;
 	}
 	if (type == Building_FortJavelin) {
-		Data_Buildings[buildingId].subtype.fortWalkerType = Figure_FortJavelin;
+		Data_Buildings[buildingId].subtype.fortFigureType = Figure_FortJavelin;
 		Data_Formations[formationId].figureType = Figure_FortJavelin;
 	}
 	if (type == Building_FortMounted) {
-		Data_Buildings[buildingId].subtype.fortWalkerType = Figure_FortMounted;
+		Data_Buildings[buildingId].subtype.fortFigureType = Figure_FortMounted;
 		Data_Formations[formationId].figureType = Figure_FortMounted;
 	}
 	// create parade ground
@@ -815,7 +815,7 @@ static void clearRegionConfirmed(int measureOnly, int xStart, int yStart, int xE
 					Data_Grid_aqueducts[gridOffset - 1] = 4;
 				}
 			} else if (terrain & Terrain_Water) {
-				if (!measureOnly && TerrainBridge_countWalkersOnBridge(gridOffset) > 0) {
+				if (!measureOnly && TerrainBridge_countFiguresOnBridge(gridOffset) > 0) {
 					UI_Warning_show(Warning_PeopleOnBridge);
 				} else if (confirm.bridgeConfirmed == 1) {
 					TerrainBridge_removeFromSpriteGrid(gridOffset, measureOnly);

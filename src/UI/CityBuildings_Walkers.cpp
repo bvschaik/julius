@@ -254,7 +254,7 @@ static int tileProgressToPixelOffsetY(int direction, int progress)
 	return offset;
 }
 
-void UI_CityBuildings_drawWalker(int walkerId, int xOffset, int yOffset, int selectedWalkerId, struct UI_CityPixelCoordinate *coord)
+void UI_CityBuildings_drawFigure(int walkerId, int xOffset, int yOffset, int selectedWalkerId, struct UI_CityPixelCoordinate *coord)
 {
 	struct Data_Walker *f = &Data_Walkers[walkerId];
 
@@ -270,15 +270,15 @@ void UI_CityBuildings_drawWalker(int walkerId, int xOffset, int yOffset, int sel
 		xTileOffset = tileProgressToPixelOffsetX(direction, f->progressOnTile);
 		yTileOffset = tileProgressToPixelOffsetY(direction, f->progressOnTile);
 		yTileOffset -= f->currentHeight;
-		if (f->numPreviousWalkersOnSameTile && f->type != Figure_Ballista) {
+		if (f->numPreviousFiguresOnSameTile && f->type != Figure_Ballista) {
 			static const int xOffsets[] = {
 				0, 8, 8, -8, -8, 0, 16, 0, -16, 8, -8, 16, -16, 16, -16, 8, -8, 0, 24, 0, -24, 0, 0, 0
 			};
 			static const int yOffsets[] = {
 				0, 0, 8, 8, -8, -16, 0, 16, 0, -16, 16, 8, -8, -8, 8, 16, -16, -24, 0, 24, 0, 0, 0, 0
 			};
-			xTileOffset += xOffsets[f->numPreviousWalkersOnSameTile];
-			yTileOffset += yOffsets[f->numPreviousWalkersOnSameTile];
+			xTileOffset += xOffsets[f->numPreviousFiguresOnSameTile];
+			yTileOffset += yOffsets[f->numPreviousFiguresOnSameTile];
 		}
 	}
 

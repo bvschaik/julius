@@ -69,7 +69,7 @@ static int collectingItemIdToResourceId(int c)
 static void drawWalkerInfoTrade(BuildingInfoContext *c, int walkerId)
 {
 	while (Data_Walkers[walkerId].type == Figure_TradeCaravanDonkey) {
-		walkerId = Data_Walkers[walkerId].inFrontWalkerId;
+		walkerId = Data_Walkers[walkerId].inFrontFigureId;
 	}
 	int cityId = Data_Walkers[walkerId].empireCityId;
 	int width = Widget_GameText_draw(64, Data_Walkers[walkerId].type,
@@ -242,7 +242,7 @@ static void drawWalkerInfoCartpusher(BuildingInfoContext *c, int walkerId)
 			c->xOffset + 92 + width, c->yOffset + 135);
 	}
 	
-	Widget_GameText_drawMultiline(130, 21 * c->walker.soundId + c->walker.phraseId + 1,
+	Widget_GameText_drawMultiline(130, 21 * c->figure.soundId + c->figure.phraseId + 1,
 		c->xOffset + 90, c->yOffset + 160, 16 * (c->widthBlocks - 9), Font_SmallBlack);
 	
 	if (!Data_Walkers[walkerId].buildingId) {
@@ -310,8 +310,8 @@ static void drawWalkerInfoMarketBuyer(BuildingInfoContext *c, int walkerId)
 			GraphicId(ID_Graphic_ResourceIcons) + resourceId + Resource_getGraphicIdOffset(resourceId, 3),
 			c->xOffset + 90 + width, c->yOffset + 135);
 	}
-	if (c->walker.phraseId >= 0) {
-		Widget_GameText_drawMultiline(130, 21 * c->walker.soundId + c->walker.phraseId + 1,
+	if (c->figure.phraseId >= 0) {
+		Widget_GameText_drawMultiline(130, 21 * c->figure.soundId + c->figure.phraseId + 1,
 			c->xOffset + 90, c->yOffset + 160, 16 * (c->widthBlocks - 9), Font_SmallBlack);
 	}
 }
@@ -330,8 +330,8 @@ static void drawWalkerInfoNormal(BuildingInfoContext *c, int walkerId)
 	Widget_GameText_draw(64, Data_Walkers[walkerId].type,
 		c->xOffset + 92, c->yOffset + 139, Font_SmallBlack);
 	
-	if (c->walker.phraseId >= 0) {
-		Widget_GameText_drawMultiline(130, 21 * c->walker.soundId + c->walker.phraseId + 1,
+	if (c->figure.phraseId >= 0) {
+		Widget_GameText_drawMultiline(130, 21 * c->figure.soundId + c->figure.phraseId + 1,
 			c->xOffset + 90, c->yOffset + 160, 16 * (c->widthBlocks - 9), Font_SmallBlack);
 	}
 }
@@ -343,7 +343,7 @@ static void drawWalkerInfo(BuildingInfoContext *c, int walkerId)
 	int type = Data_Walkers[walkerId].type;
 	if (type == Figure_TradeCaravan || type == Figure_TradeCaravanDonkey || type == Figure_TradeShip) {
 		drawWalkerInfoTrade(c, walkerId);
-	} else if (WalkerIsEnemy(type)) {
+	} else if (FigureIsEnemy(type)) {
 		drawWalkerInfoEnemy(c, walkerId);
 	} else if (type == Figure_FishingBoat || type == Figure_Shipwreck ||
 			type == Figure_Sheep || type == Figure_Wolf || type == Figure_Zebra) {
@@ -361,37 +361,37 @@ void UI_BuildingInfo_drawWalkerList(BuildingInfoContext *c)
 {
 	Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 40,
 		c->widthBlocks - 2, 12);
-	if (c->walker.count <= 0) {
+	if (c->figure.count <= 0) {
 		Widget_GameText_drawCentered(70, 0, c->xOffset, c->yOffset + 120,
 			16 * c->widthBlocks, Font_SmallBlack);
 	} else {
-		for (int i = 0; i < c->walker.count; i++) {
+		for (int i = 0; i < c->figure.count; i++) {
 			Widget_Panel_drawButtonBorder(
 				c->xOffset + 60 * i + 25, c->yOffset + 45,
-				52, 52, i == c->walker.selectedIndex);
+				52, 52, i == c->figure.selectedIndex);
 			Graphics_loadFromBuffer(
 				c->xOffset + 27 + 60 * i, c->yOffset + 47,
 				48, 48, walkerImages[i]);
 		}
-		drawWalkerInfo(c, c->walker.walkerIds[c->walker.selectedIndex]);
+		drawWalkerInfo(c, c->figure.walkerIds[c->figure.selectedIndex]);
 	}
-	c->walker.drawn = 1;
+	c->figure.drawn = 1;
 }
 
-static void drawWalkerInCity(int walkerId, UI_CityPixelCoordinate *coord)
+static void drawFigureInCity(int figureId, UI_CityPixelCoordinate *coord)
 {
 	int xCam = Data_Settings_Map.camera.x;
 	int yCam = Data_Settings_Map.camera.y;
 
-	int gridOffset = Data_Walkers[walkerId].gridOffset;
+	int gridOffset = Data_Walkers[figureId].gridOffset;
 	int x, y;
 	CityView_gridOffsetToXYCoords(gridOffset, &x, &y);
 	Data_Settings_Map.camera.x = x - 2;
 	Data_Settings_Map.camera.y = y - 6;
 	CityView_checkCameraBoundaries();
-	UI_CityBuildings_drawForegroundForWalker(
+	UI_CityBuildings_drawForegroundForFigure(
 		Data_Settings_Map.camera.x, Data_Settings_Map.camera.y,
-		walkerId, coord);
+		figureId, coord);
 
 	Data_Settings_Map.camera.x = xCam;
 	Data_Settings_Map.camera.y = yCam;
@@ -399,10 +399,10 @@ static void drawWalkerInCity(int walkerId, UI_CityPixelCoordinate *coord)
 
 void UI_BuildingInfo_drawWalkerImagesLocal(BuildingInfoContext *c)
 {
-	if (c->walker.count > 0) {
+	if (c->figure.count > 0) {
 		UI_CityPixelCoordinate coord = {0, 0};
-		for (int i = 0; i < c->walker.count; i++) {
-			drawWalkerInCity(c->walker.walkerIds[i], &coord);
+		for (int i = 0; i < c->figure.count; i++) {
+			drawFigureInCity(c->figure.walkerIds[i], &coord);
 			Graphics_saveToBuffer(coord.x, coord.y, 48, 48, walkerImages[i]);
 		}
 		UI_CityBuildings_drawForeground(Data_Settings_Map.camera.x, Data_Settings_Map.camera.y);
@@ -411,22 +411,22 @@ void UI_BuildingInfo_drawWalkerImagesLocal(BuildingInfoContext *c)
 
 void UI_BuildingInfo_playWalkerPhrase(BuildingInfoContext *c)
 {
-	int walkerId = c->walker.walkerIds[c->walker.selectedIndex];
-	c->walker.soundId = Figure_playPhrase(walkerId);
-	c->walker.phraseId = Data_Walkers[walkerId].phraseId;
+	int walkerId = c->figure.walkerIds[c->figure.selectedIndex];
+	c->figure.soundId = Figure_playPhrase(walkerId);
+	c->figure.phraseId = Data_Walkers[walkerId].phraseId;
 }
 
 void UI_BuildingInfo_handleMouseWalkerList(BuildingInfoContext *c)
 {
 	contextForCallback = c;
 	Widget_Button_handleCustomButtons(c->xOffset, c->yOffset,
-		walkerButtons, c->walker.count, &focusButtonId);
+		walkerButtons, c->figure.count, &focusButtonId);
 	contextForCallback = 0;
 }
 
 static void selectWalker(int index, int param2)
 {
-	contextForCallback->walker.selectedIndex = index;
+	contextForCallback->figure.selectedIndex = index;
 	UI_BuildingInfo_playWalkerPhrase(contextForCallback);
 	UI_Window_requestRefresh();
 }

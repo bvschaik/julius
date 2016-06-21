@@ -255,7 +255,7 @@ void TerrainBridge_removeFromSpriteGrid(int gridOffset, int onlyMarkDeleted)
 	}
 }
 
-int TerrainBridge_countWalkersOnBridge(int gridOffset)
+int TerrainBridge_countFiguresOnBridge(int gridOffset)
 {
 	if (!(Data_Grid_terrain[gridOffset] & Terrain_Water) ||
 		Data_Grid_spriteOffsets[gridOffset] <= 0) {

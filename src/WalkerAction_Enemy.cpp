@@ -125,9 +125,9 @@ static void enemyFighting(int walkerId, struct Data_Walker *f, struct Data_Forma
 			}
 		}
 	}
-	int targetId = f->targetWalkerId;
+	int targetId = f->targetFigureId;
 	if (FigureIsDead(targetId)) {
-		f->targetWalkerId = 0;
+		f->targetFigureId = 0;
 		targetId = 0;
 	}
 	if (targetId <= 0) {
@@ -135,21 +135,21 @@ static void enemyFighting(int walkerId, struct Data_Walker *f, struct Data_Forma
 		if (targetId) {
 			f->destinationX = Data_Walkers[targetId].x;
 			f->destinationY = Data_Walkers[targetId].y;
-			f->targetWalkerId = targetId;
-			f->targetWalkerCreatedSequence = Data_Walkers[targetId].createdSequence;
-			Data_Walkers[targetId].targetedByWalkerId = walkerId;
+			f->targetFigureId = targetId;
+			f->targetFigureCreatedSequence = Data_Walkers[targetId].createdSequence;
+			Data_Walkers[targetId].targetedByFigureId = walkerId;
 			FigureRoute_remove(walkerId);
 		}
 	}
 	if (targetId > 0) {
 		FigureMovement_walkTicks(walkerId, f->speedMultiplier);
 		if (f->direction == DirFigure_8_AtDestination) {
-			f->destinationX = Data_Walkers[f->targetWalkerId].x;
-			f->destinationY = Data_Walkers[f->targetWalkerId].y;
+			f->destinationX = Data_Walkers[f->targetFigureId].x;
+			f->destinationY = Data_Walkers[f->targetFigureId].y;
 			FigureRoute_remove(walkerId);
 		} else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
 			f->actionState = FigureActionState_151_EnemyInitial;
-			f->targetWalkerId = 0;
+			f->targetFigureId = 0;
 		}
 	} else {
 		f->actionState = FigureActionState_151_EnemyInitial;

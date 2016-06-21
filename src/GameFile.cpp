@@ -458,7 +458,7 @@ static void debug()
 		struct Data_Building *b = &Data_Buildings[i];
 		if (b->state != BuildingState_Unused || b->type) {
 			printf("Building %d type %d inUse %d x %d y %d emp %d w %d ls %d hc %d\n",
-				i, b->type, b->state, b->x, b->y, b->numWorkers, b->walkerId, b->walkerId2, b->housesCovered);
+				i, b->type, b->state, b->x, b->y, b->numWorkers, b->figureId, b->figureId2, b->housesCovered);
 		}
 	}
 	/**/

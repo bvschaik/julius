@@ -50,7 +50,7 @@ typedef struct {
 		int count;
 		int drawn;
 		int walkerIds[7];
-	} walker;
+	} figure;
 } BuildingInfoContext;
 
 void UI_BuildingInfo_init();

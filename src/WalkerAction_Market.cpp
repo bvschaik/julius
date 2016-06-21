@@ -6,7 +6,7 @@
 static int createDeliveryBoy(int leaderId, struct Data_Walker *f)
 {
 	int boy = Figure_create(Figure_DeliveryBoy, f->x, f->y, 0);
-	Data_Walkers[boy].inFrontWalkerId = leaderId;
+	Data_Walkers[boy].inFrontFigureId = leaderId;
 	Data_Walkers[boy].collectingItemId = f->collectingItemId;
 	Data_Walkers[boy].buildingId = f->buildingId;
 	return boy;
@@ -99,7 +99,7 @@ void FigureAction_marketBuyer(int walkerId)
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 800;
 	
-	if (!BuildingIsInUse(f->buildingId) || Data_Buildings[f->buildingId].walkerId2 != walkerId) {
+	if (!BuildingIsInUse(f->buildingId) || Data_Buildings[f->buildingId].figureId2 != walkerId) {
 		f->state = FigureState_Dead;
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);
@@ -152,13 +152,13 @@ void FigureAction_deliveryBoy(int walkerId)
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	
-	struct Data_Walker *leader = &Data_Walkers[f->inFrontWalkerId];
-	if (f->inFrontWalkerId <= 0 || leader->actionState == FigureActionState_149_Corpse) {
+	struct Data_Walker *leader = &Data_Walkers[f->inFrontFigureId];
+	if (f->inFrontFigureId <= 0 || leader->actionState == FigureActionState_149_Corpse) {
 		f->state = FigureState_Dead;
 	} else {
 		if (leader->state == FigureState_Alive) {
 			if (leader->type == Figure_MarketBuyer || leader->type == Figure_DeliveryBoy) {
-				FigureMovement_followTicks(walkerId, f->inFrontWalkerId, 1);
+				FigureMovement_followTicks(walkerId, f->inFrontFigureId, 1);
 			} else {
 				f->state = FigureState_Dead;
 			}

@@ -32,9 +32,9 @@ int FigureAction_CombatWolf_getTarget(int x, int y, int maxDistance);
 int FigureAction_CombatEnemy_getTarget(int x, int y);
 int FigureAction_CombatEnemy_getMissileTarget(int enemyId, int maxDistance, int attackCitizens, int *xTile, int *yTile);
 
-void FigureAction_Combat_attackWalker(int figureId, int targetfigureId);
+void FigureAction_Combat_attackFigure(int figureId, int targetfigureId);
 
-// walker action callbacks
+// figure action callbacks
 void FigureAction_nobody(int figureId);
 // migrant
 void FigureAction_immigrant(int figureId);

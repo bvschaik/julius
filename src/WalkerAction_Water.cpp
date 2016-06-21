@@ -27,13 +27,13 @@ void FigureAction_fishingBoat(int walkerId)
 	if (!BuildingIsInUse(f->buildingId)) {
 		f->state = FigureState_Dead;
 	}
-	if (f->actionState != FigureActionState_190_FishingBoatCreated && b->data.other.boatWalkerId != walkerId) {
+	if (f->actionState != FigureActionState_190_FishingBoatCreated && b->data.other.boatFigureId != walkerId) {
 		int xTile, yTile;
 		int buildingId = Terrain_Water_getWharfTileForNewFishingBoat(walkerId, &xTile, &yTile);
 		b = &Data_Buildings[buildingId];
 		if (buildingId) {
 			f->buildingId = buildingId;
-			b->data.other.boatWalkerId = walkerId;
+			b->data.other.boatFigureId = walkerId;
 			f->actionState = FigureActionState_193_FishingBoatSailingToWharf;
 			f->destinationX = xTile;
 			f->destinationY = yTile;
@@ -56,9 +56,9 @@ void FigureAction_fishingBoat(int walkerId)
 				int xTile, yTile;
 				int buildingId = Terrain_Water_getWharfTileForNewFishingBoat(walkerId, &xTile, &yTile);
 				if (buildingId) {
-					b->walkerId = 0; // remove from original building
+					b->figureId = 0; // remove from original building
 					f->buildingId = buildingId;
-					Data_Buildings[buildingId].data.other.boatWalkerId = walkerId;
+					Data_Buildings[buildingId].data.other.boatFigureId = walkerId;
 					f->actionState = FigureActionState_193_FishingBoatSailingToWharf;
 					f->destinationX = xTile;
 					f->destinationY = yTile;
@@ -145,7 +145,7 @@ void FigureAction_fishingBoat(int walkerId)
 			if (f->direction == DirFigure_8_AtDestination) {
 				f->actionState = FigureActionState_194_FishingBoatAtWharf;
 				f->waitTicks = 0;
-				b->walkerSpawnDelay = 1;
+				b->figureSpawnDelay = 1;
 				b->data.other.fishingBoatHasFish++;
 			} else if (f->direction == DirFigure_9_Reroute) {
 				FigureRoute_remove(walkerId);

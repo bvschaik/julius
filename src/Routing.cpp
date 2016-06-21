@@ -543,7 +543,7 @@ static int hasFightingFriendly(int gridOffset)
 				Data_Walkers[walkerId].actionState == FigureActionState_150_Attack) {
 				return 1;
 			}
-			walkerId = Data_Walkers[walkerId].nextWalkerIdOnSameTile;
+			walkerId = Data_Walkers[walkerId].nextFigureIdOnSameTile;
 		}
 	}
 	return 0;
@@ -558,7 +558,7 @@ static int hasFightingEnemy(int gridOffset)
 				Data_Walkers[walkerId].actionState == FigureActionState_150_Attack) {
 				return 1;
 			}
-			walkerId = Data_Walkers[walkerId].nextWalkerIdOnSameTile;
+			walkerId = Data_Walkers[walkerId].nextFigureIdOnSameTile;
 		}
 	}
 	return 0;

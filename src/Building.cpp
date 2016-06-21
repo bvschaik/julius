@@ -157,7 +157,7 @@ int Building_create(int type, int x, int y)
 	b->y = y;
 	b->gridOffset = GridOffset(x, y);
 	b->houseGenerationDelay = Data_Grid_random[b->gridOffset] & 0x7f;
-	b->walkerRoamDirection = b->houseGenerationDelay & 6;
+	b->figureRoamDirection = b->houseGenerationDelay & 6;
 	b->fireProof = Constant_BuildingProperties[type].fireProof;
 	b->isAdjacentToWater = Terrain_isAdjacentToWater(x, y, b->size);
 
@@ -284,7 +284,7 @@ void Building_collapseOnFire(int buildingId, int hasPlague)
 		b->state = BuildingState_DeletedByGame;
 	} else {
 		b->type = Building_BurningRuin;
-		b->walkerId4 = 0;
+		b->figureId4 = 0;
 		b->taxIncomeOrStorage = 0;
 		b->fireDuration = (b->houseGenerationDelay & 7) + 1;
 		b->fireProof = 1;
@@ -318,7 +318,7 @@ void Building_collapseOnFire(int buildingId, int hasPlague)
 		}
 		Terrain_addBuildingToGrids(ruinId, ruin->x, ruin->y, 1, graphicId, Terrain_Building);
 		ruin->fireDuration = (ruin->houseGenerationDelay & 7) + 1;
-		ruin->walkerId4 = 0;
+		ruin->figureId4 = 0;
 		ruin->fireProof = 1;
 		ruin->ruinHasPlague = hasPlague;
 	}
@@ -1161,8 +1161,8 @@ int Building_Dock_getNumIdleDockers(int buildingId)
 	struct Data_Building *b = &Data_Buildings[buildingId];
 	int numIdle = 0;
 	for (int i = 0; i < 3; i++) {
-		if (b->data.other.dockWalkerIds[i]) {
-			struct Data_Walker *f = &Data_Walkers[b->data.other.dockWalkerIds[i]];
+		if (b->data.other.dockFigureIds[i]) {
+			struct Data_Walker *f = &Data_Walkers[b->data.other.dockFigureIds[i]];
 			if (f->actionState == FigureActionState_132_DockerIdling ||
 				f->actionState == FigureActionState_133_DockerImportQueue) {
 				numIdle++;

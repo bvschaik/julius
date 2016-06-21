@@ -140,7 +140,7 @@ static void walkerMoveToNextTile(int walkerId, struct Data_Walker *f)
 	} else {
 		f->isOnRoad = 0;
 	}
-	FigureAction_Combat_attackWalker(walkerId, Data_Grid_figureIds[f->gridOffset]);
+	FigureAction_Combat_attackFigure(walkerId, Data_Grid_figureIds[f->gridOffset]);
 	f->previousTileX = oldX;
 	f->previousTileY = oldY;
 }
@@ -153,10 +153,10 @@ void FigureMovement_initRoaming(int walkerId)
 	f->roamChooseDestination = 0;
 	f->roamTicksUntilNextTurn = -1;
 	f->roamTurnDirection = 2;
-	int roamDir = b->walkerRoamDirection;
-	b->walkerRoamDirection += 2;
-	if (b->walkerRoamDirection > 6) {
-		b->walkerRoamDirection = 0;
+	int roamDir = b->figureRoamDirection;
+	b->figureRoamDirection += 2;
+	if (b->figureRoamDirection > 6) {
+		b->figureRoamDirection = 0;
 	}
 	int x = b->x;
 	int y = b->y;

@@ -8,7 +8,7 @@
 
 static int dockerDeliverImportResource(int walkerId, int buildingId)
 {
-	int shipId = Data_Buildings[buildingId].data.other.boatWalkerId;
+	int shipId = Data_Buildings[buildingId].data.other.boatFigureId;
 	if (!shipId) {
 		return 0;
 	}
@@ -44,7 +44,7 @@ static int dockerDeliverImportResource(int walkerId, int buildingId)
 
 static int dockerGetExportResource(int walkerId, int buildingId)
 {
-	int shipId = Data_Buildings[buildingId].data.other.boatWalkerId;
+	int shipId = Data_Buildings[buildingId].data.other.boatFigureId;
 	if (!shipId) {
 		return 0;
 	}
@@ -99,15 +99,15 @@ void FigureAction_docker(int walkerId)
 	if (b->data.other.dockNumShips) {
 		b->data.other.dockNumShips--;
 	}
-	if (b->data.other.boatWalkerId) {
-		struct Data_Walker *ship = &Data_Walkers[b->data.other.boatWalkerId];
+	if (b->data.other.boatFigureId) {
+		struct Data_Walker *ship = &Data_Walkers[b->data.other.boatFigureId];
 		if (ship->state != FigureState_Alive || ship->type != Figure_TradeShip) {
-			b->data.other.boatWalkerId = 0;
+			b->data.other.boatFigureId = 0;
 		} else if (Data_Figure_Traders[ship->traderId].totalBought >= 12 ||
 				Data_Figure_Traders[ship->traderId].totalSold >= 12) {
-			b->data.other.boatWalkerId = 0;
+			b->data.other.boatFigureId = 0;
 		} else if (ship->actionState == FigureActionState_115_TradeShipLeaving) {
-			b->data.other.boatWalkerId = 0;
+			b->data.other.boatFigureId = 0;
 		}
 	}
 	f->terrainUsage = FigureTerrainUsage_Roads;
@@ -145,7 +145,7 @@ void FigureAction_docker(int walkerId)
 			} else {
 				int hasQueuedDocker = 0;
 				for (int i = 0; i < 3; i++) {
-					int dockerId = b->data.other.dockWalkerIds[i];
+					int dockerId = b->data.other.dockFigureIds[i];
 					if (dockerId && b->data.other.dockQueuedDockerId == dockerId &&
 							Data_Walkers[dockerId].state == FigureState_Alive) {
 						if (Data_Walkers[dockerId].actionState == FigureActionState_133_DockerImportQueue ||
@@ -242,13 +242,13 @@ void FigureAction_docker(int walkerId)
 			f->waitTicks++;
 			if (f->waitTicks > 10) {
 				int tradeCityId;
-				if (b->data.other.boatWalkerId) {
-					tradeCityId = Data_Walkers[b->data.other.boatWalkerId].empireCityId;
+				if (b->data.other.boatFigureId) {
+					tradeCityId = Data_Walkers[b->data.other.boatFigureId].empireCityId;
 				} else {
 					tradeCityId = 0;
 				}
 				if (Trader_tryImportResource(f->destinationBuildingId, f->resourceId, tradeCityId)) {
-					Trader_sellResource(b->data.other.boatWalkerId, f->resourceId);
+					Trader_sellResource(b->data.other.boatFigureId, f->resourceId);
 					f->actionState = FigureActionState_138_DockerImportReturning;
 					f->waitTicks = 0;
 					f->destinationX = f->sourceX;
@@ -269,8 +269,8 @@ void FigureAction_docker(int walkerId)
 			f->waitTicks++;
 			if (f->waitTicks > 10) {
 				int tradeCityId;
-				if (b->data.other.boatWalkerId) {
-					tradeCityId = Data_Walkers[b->data.other.boatWalkerId].empireCityId;
+				if (b->data.other.boatFigureId) {
+					tradeCityId = Data_Walkers[b->data.other.boatFigureId].empireCityId;
 				} else {
 					tradeCityId = 0;
 				}
@@ -279,7 +279,7 @@ void FigureAction_docker(int walkerId)
 				f->destinationY = f->sourceY;
 				f->waitTicks = 0;
 				if (Trader_tryExportResource(f->destinationBuildingId, f->resourceId, tradeCityId)) {
-					Trader_buyResource(b->data.other.boatWalkerId, f->resourceId);
+					Trader_buyResource(b->data.other.boatFigureId, f->resourceId);
 					f->actionState = FigureActionState_137_DockerExportReturning;
 				} else {
 					dockerGetExportResource(walkerId, f->buildingId);

@@ -80,10 +80,10 @@ enum {
 	Figure_HippodromeMiniHorses = 72
 };
 
-#define WalkerIsEnemyOrNative(t) ((t) >= Figure_IndigenousNative && (t) <= Figure_NativeTrader)
-#define WalkerIsEnemy(t) ((t) >= Figure_Enemy43_Spear && (t) <= Figure_EnemyCaesarLegionary)
-#define WalkerIsLegion(t) ((t) >= Figure_FortJavelin && (t) <= Figure_FortLegionary)
-#define WalkerIsHerd(t) ((t) >= Figure_Sheep && (t) <= Figure_Zebra)
+#define FigureIsEnemyOrNative(t) ((t) >= Figure_IndigenousNative && (t) <= Figure_NativeTrader)
+#define FigureIsEnemy(t) ((t) >= Figure_Enemy43_Spear && (t) <= Figure_EnemyCaesarLegionary)
+#define FigureIsLegion(t) ((t) >= Figure_FortJavelin && (t) <= Figure_FortLegionary)
+#define FigureIsHerd(t) ((t) >= Figure_Sheep && (t) <= Figure_Zebra)
 
 #define FigureIsDead(f) (Data_Walkers[f].state != FigureState_Alive || Data_Walkers[f].actionState == FigureActionState_149_Corpse)
 
@@ -256,7 +256,7 @@ extern struct Data_Walker {
 	unsigned char flotsamVisible;
 	short graphicId; // 04
 	short cartGraphicId;
-	short nextWalkerIdOnSameTile; // 08
+	short nextFigureIdOnSameTile; // 08
 	unsigned char type;
 	unsigned char resourceId; //0b
 	unsigned char useCrossCountry;
@@ -315,7 +315,7 @@ extern struct Data_Walker {
 	unsigned char isGhost; // 55
 	unsigned char minMaxSeen;
 	unsigned char __unused_57;
-	short inFrontWalkerId;
+	short inFrontFigureId;
 	unsigned char attackGraphicOffset;
 	unsigned char waitTicksMissile;
 	signed char xOffsetCart; // 5c
@@ -337,11 +337,11 @@ extern struct Data_Walker {
 	unsigned char traderId;
 	unsigned char waitTicksNextTarget;
 	unsigned char __unused_6f;
-	short targetWalkerId; // 70
-	short targetedByWalkerId; // 72
+	short targetFigureId; // 70
+	short targetedByFigureId; // 72
 	unsigned short createdSequence;
-	unsigned short targetWalkerCreatedSequence;
-	unsigned char numPreviousWalkersOnSameTile;
+	unsigned short targetFigureCreatedSequence;
+	unsigned char numPreviousFiguresOnSameTile;
 	unsigned char numAttackers;
 	short attackerId1;
 	short attackerId2;

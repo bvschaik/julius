@@ -19,7 +19,7 @@ void FigureAction_taxCollector(int walkerId)
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 512;
-	if (!BuildingIsInUse(f->buildingId) || b->walkerId != walkerId) {
+	if (!BuildingIsInUse(f->buildingId) || b->figureId != walkerId) {
 		f->state = FigureState_Dead;
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);
@@ -97,7 +97,7 @@ void FigureAction_engineer(int walkerId)
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 640;
-	if (!BuildingIsInUse(f->buildingId) || b->walkerId != walkerId) {
+	if (!BuildingIsInUse(f->buildingId) || b->figureId != walkerId) {
 		f->state = FigureState_Dead;
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);
@@ -173,7 +173,7 @@ static int prefectGetNearestEnemy(int x, int y, int *distance)
 	int minDist = 10000;
 	for (int i = 1; i < MAX_FIGURES; i++) {
 		struct Data_Walker *f = &Data_Walkers[i];
-		if (f->state != FigureState_Alive || f->targetedByWalkerId) {
+		if (f->state != FigureState_Alive || f->targetedByFigureId) {
 			continue;
 		}
 		int dist;
@@ -181,7 +181,7 @@ static int prefectGetNearestEnemy(int x, int y, int *distance)
 			dist = Calc_distanceMaximum(x, y, f->x, f->y);
 		} else if (f->type == Figure_IndigenousNative && f->actionState == FigureActionState_159_NativeAttacking) {
 			dist = Calc_distanceMaximum(x, y, f->x, f->y);
-		} else if (WalkerIsEnemy(f->type)) {
+		} else if (FigureIsEnemy(f->type)) {
 			dist = 3 * Calc_distanceMaximum(x, y, f->x, f->y);
 		} else if (f->type == Figure_Wolf) {
 			dist = 4 * Calc_distanceMaximum(x, y, f->x, f->y);
@@ -225,9 +225,9 @@ static int prefectGoFightEnemy(int walkerId, struct Data_Walker *f)
 		f->actionState = FigureActionState_76_PrefectGoingToEnemy;
 		f->destinationX = Data_Walkers[enemyId].x;
 		f->destinationY = Data_Walkers[enemyId].y;
-		f->targetWalkerId = enemyId;
-		Data_Walkers[enemyId].targetedByWalkerId = walkerId;
-		f->targetWalkerCreatedSequence = Data_Walkers[enemyId].createdSequence;
+		f->targetFigureId = enemyId;
+		Data_Walkers[enemyId].targetedByFigureId = walkerId;
+		f->targetFigureCreatedSequence = Data_Walkers[enemyId].createdSequence;
 		FigureRoute_remove(walkerId);
 		return 1;
 	}
@@ -263,7 +263,7 @@ static int prefectGoFightFire(int walkerId, struct Data_Walker *f)
 		f->destinationY = Data_Buildings[ruinId].roadAccessY;
 		f->destinationBuildingId = ruinId;
 		FigureRoute_remove(walkerId);
-		Data_Buildings[ruinId].walkerId4 = walkerId;
+		Data_Buildings[ruinId].figureId4 = walkerId;
 		return 1;
 	}
 	return 0;
@@ -303,11 +303,11 @@ static void prefectExtinguishFire(int walkerId, struct Data_Walker *f)
 
 static int prefectTargetIsAlive(struct Data_Walker *f)
 {
-	if (f->targetWalkerId <= 0) {
+	if (f->targetFigureId <= 0) {
 		return 0;
 	}
-	struct Data_Walker *fTarget = &Data_Walkers[f->targetWalkerId];
-	if (!FigureIsDead(f->targetWalkerId) && fTarget->createdSequence == f->targetWalkerCreatedSequence) {
+	struct Data_Walker *fTarget = &Data_Walkers[f->targetFigureId];
+	if (!FigureIsDead(f->targetFigureId) && fTarget->createdSequence == f->targetFigureCreatedSequence) {
 		return 1;
 	}
 	return 0;
@@ -321,7 +321,7 @@ void FigureAction_prefect(int walkerId)
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 640;
-	if (!BuildingIsInUse(f->buildingId) || b->walkerId != walkerId) {
+	if (!BuildingIsInUse(f->buildingId) || b->figureId != walkerId) {
 		f->state = FigureState_Dead;
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);
@@ -423,8 +423,8 @@ void FigureAction_prefect(int walkerId)
 			}
 			FigureMovement_walkTicks(walkerId, 1);
 			if (f->direction == DirFigure_8_AtDestination) {
-				f->destinationX = Data_Walkers[f->targetWalkerId].x;
-				f->destinationY = Data_Walkers[f->targetWalkerId].y;
+				f->destinationX = Data_Walkers[f->targetFigureId].x;
+				f->destinationY = Data_Walkers[f->targetFigureId].y;
 				FigureRoute_remove(walkerId);
 			} else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
@@ -477,7 +477,7 @@ void FigureAction_worker(int walkerId)
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 384;
 	if (!BuildingIsInUse(f->buildingId) ||
-		Data_Buildings[f->buildingId].walkerId != walkerId) {
+		Data_Buildings[f->buildingId].figureId != walkerId) {
 		f->state = FigureState_Dead;
 	}
 }

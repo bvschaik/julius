@@ -112,12 +112,12 @@ static int drawWalker(int xView, int yView, int gridOffset)
 	int walkerId = Data_Grid_figureIds[gridOffset];
 	while (walkerId > 0) {
 		int type = Data_Walkers[walkerId].type;
-		if (WalkerIsLegion(type)) {
+		if (FigureIsLegion(type)) {
 			hasWalker = 1;
 			color = soldierColor;
 			break;
 		}
-		if (WalkerIsEnemy(type)) {
+		if (FigureIsEnemy(type)) {
 			hasWalker = 1;
 			color = enemyColor;
 			break;
@@ -133,7 +133,7 @@ static int drawWalker(int xView, int yView, int gridOffset)
 			color = Color_Black;
 			break;
 		}
-		walkerId = Data_Walkers[walkerId].nextWalkerIdOnSameTile;
+		walkerId = Data_Walkers[walkerId].nextFigureIdOnSameTile;
 	}
 	if (hasWalker) {
 		Graphics_drawLine(xView, yView, xView+1, yView, color);

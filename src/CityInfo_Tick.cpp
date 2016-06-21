@@ -247,7 +247,7 @@ void CityInfo_Tick_countBuildingTypes()
 			case Building_Wharf:
 				if (Data_Buildings[i].numWorkers > 0) {
 					++Data_CityInfo.numWorkingWharfs;
-					if (!Data_Buildings[i].data.other.boatWalkerId) {
+					if (!Data_Buildings[i].data.other.boatFigureId) {
 						++Data_CityInfo.shipyardBoatsRequested;
 					}
 				}
@@ -261,10 +261,10 @@ void CityInfo_Tick_countBuildingTypes()
 				}
 				break;
 		}
-		if (Data_Buildings[i].immigrantWalkerId) {
-			int immigrantId = Data_Buildings[i].immigrantWalkerId;
+		if (Data_Buildings[i].immigrantFigureId) {
+			int immigrantId = Data_Buildings[i].immigrantFigureId;
 			if (Data_Walkers[immigrantId].state != FigureState_Alive || Data_Walkers[immigrantId].destinationBuildingId != i) {
-				Data_Buildings[i].immigrantWalkerId = 0;
+				Data_Buildings[i].immigrantFigureId = 0;
 			}
 		}
 		if (isEntertainmentVenue) {

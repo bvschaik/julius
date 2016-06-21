@@ -162,7 +162,7 @@ static void tickDecreaseLegionDamage()
 {
 	for (int i = 1; i < MAX_FIGURES; i++) {
 		struct Data_Walker *f = &Data_Walkers[i];
-		if (f->state == FigureState_Alive && WalkerIsLegion(f->type)) {
+		if (f->state == FigureState_Alive && FigureIsLegion(f->type)) {
 			if (f->actionState == FigureActionState_80_SoldierAtRest) {
 				if (f->damage) {
 					f->damage--;
@@ -323,7 +323,7 @@ static void addRomanSoldierConcentration(int x, int y, int radius, int amount)
 			Data_Grid_romanSoldierConcentration[gridOffset] += amount;
 			if (Data_Grid_figureIds[gridOffset] > 0) {
 				int type = Data_Walkers[Data_Grid_figureIds[gridOffset]].type;
-				if (WalkerIsLegion(type)) {
+				if (FigureIsLegion(type)) {
 					Data_Grid_romanSoldierConcentration[gridOffset] += 2;
 				}
 			}
@@ -517,7 +517,7 @@ static void marsKillEnemies()
 		if (f->state != FigureState_Alive) {
 			continue;
 		}
-		if (WalkerIsEnemy(f->type) && f->type != Figure_Enemy54_Gladiator) {
+		if (FigureIsEnemy(f->type) && f->type != Figure_Enemy54_Gladiator) {
 			f->actionState = FigureActionState_149_Corpse;
 			toKill--;
 			if (!gridOffset) {
@@ -720,7 +720,7 @@ static void tickUpdateEnemies()
 			int walkerId = m->figureIds[n];
 			if (Data_Walkers[walkerId].actionState == FigureActionState_150_Attack) {
 				int opponentId = Data_Walkers[walkerId].opponentId;
-				if (!FigureIsDead(opponentId) && WalkerIsLegion(Data_Walkers[opponentId].type)) {
+				if (!FigureIsDead(opponentId) && FigureIsLegion(Data_Walkers[opponentId].type)) {
 					m->recentFight = 6;
 				}
 			}
@@ -840,9 +840,9 @@ static void moveAnimals(struct Data_Formation *m, int attackingAnimals)
 				f->actionState = FigureActionState_199_WolfAttacking;
 				f->destinationX = Data_Walkers[targetId].x;
 				f->destinationY = Data_Walkers[targetId].y;
-				f->targetWalkerId = targetId;
-				Data_Walkers[targetId].targetedByWalkerId = walkerId;
-				f->targetWalkerCreatedSequence = Data_Walkers[targetId].createdSequence;
+				f->targetFigureId = targetId;
+				Data_Walkers[targetId].targetedByFigureId = walkerId;
+				f->targetFigureCreatedSequence = Data_Walkers[targetId].createdSequence;
 				FigureRoute_remove(walkerId);
 			} else {
 				f->actionState = FigureActionState_196_HerdAnimalAtRest;
@@ -948,7 +948,7 @@ static void tickUpdateHerds()
 void Formation_Tick_updateAll(int secondTime)
 {
 	Formation_calculateLegionTotals();
-	Formation_calculateWalkers();
+	Formation_calculateFigures();
 	tickUpdateDirection();
 	tickDecreaseLegionDamage();
 	if (!secondTime) {

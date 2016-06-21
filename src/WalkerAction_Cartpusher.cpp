@@ -155,7 +155,7 @@ void FigureAction_cartpusher(int walkerId)
 				Data_Grid_routingLandCitizen[f->gridOffset] > Routing_Citizen_2_PassableTerrain) {
 				f->state = FigureState_Dead;
 			}
-			if (!BuildingIsInUse(buildingId) || b->walkerId != walkerId) {
+			if (!BuildingIsInUse(buildingId) || b->figureId != walkerId) {
 				f->state = FigureState_Dead;
 			}
 			f->waitTicks++;
@@ -419,7 +419,7 @@ void FigureAction_warehouseman(int walkerId)
 			break;
 		case FigureActionState_50_WarehousemanCreated:
 			if (!BuildingIsInUse(f->buildingId) ||
-				Data_Buildings[f->buildingId].walkerId != walkerId) {
+				Data_Buildings[f->buildingId].figureId != walkerId) {
 				f->state = FigureState_Dead;
 			}
 			f->waitTicks++;

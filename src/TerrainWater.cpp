@@ -196,7 +196,7 @@ int Terrain_Water_getWharfTileForNewFishingBoat(int walkerId, int *xTile, int *y
 	int wharfId = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		if (BuildingIsInUse(i) && Data_Buildings[i].type == Building_Wharf) {
-			int wharfBoatId = Data_Buildings[i].data.other.boatWalkerId;
+			int wharfBoatId = Data_Buildings[i].data.other.boatFigureId;
 			if (!wharfBoatId || wharfBoatId == walkerId) {
 				wharfId = i;
 				break;
@@ -314,8 +314,8 @@ int Terrain_Water_getFreeDockDestination(int figureId, int *xTile, int *yTile)
 	for (int i = 0; i < 10; i++) {
 		dockId = Data_CityInfo.workingDockBuildingIds[i];
 		if (!dockId) continue;
-		if (!Data_Buildings[dockId].data.other.boatWalkerId ||
-			Data_Buildings[dockId].data.other.boatWalkerId == figureId) {
+		if (!Data_Buildings[dockId].data.other.boatFigureId ||
+			Data_Buildings[dockId].data.other.boatFigureId == figureId) {
 			break;
 		}
 	}
@@ -331,7 +331,7 @@ int Terrain_Water_getFreeDockDestination(int figureId, int *xTile, int *yTile)
 		case 2: *xTile += 1; *yTile += 3; break;
 		default: *xTile -= 1; *yTile += 1; break;
 	}
-	Data_Buildings[dockId].data.other.boatWalkerId = figureId;
+	Data_Buildings[dockId].data.other.boatFigureId = figureId;
 	return dockId;
 }
 

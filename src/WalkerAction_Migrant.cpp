@@ -34,7 +34,7 @@ void FigureAction_immigrant(int figureId)
 	
 	f->terrainUsage = FigureTerrainUsage_Any;
 	f->cartGraphicId = 0;
-	if (!BuildingIsInUse(buildingId) || b->immigrantWalkerId != figureId || !b->houseSize) {
+	if (!BuildingIsInUse(buildingId) || b->immigrantFigureId != figureId || !b->houseSize) {
 		f->state = FigureState_Dead;
 		return;
 	}
@@ -77,7 +77,7 @@ void FigureAction_immigrant(int figureId)
 					FigureRoute_remove(figureId);
 					break;
 				case DirFigure_10_Lost:
-					b->immigrantWalkerId = 0;
+					b->immigrantFigureId = 0;
 					b->distanceFromEntry = 0;
 					f->state = FigureState_Dead;
 					break;
@@ -105,7 +105,7 @@ void FigureAction_immigrant(int figureId)
 				b->housePopulation += f->migrantNumPeople;
 				b->housePopulationRoom = maxPeople - b->housePopulation;
 				CityInfo_Population_addPeople(f->migrantNumPeople);
-				b->immigrantWalkerId = 0;
+				b->immigrantFigureId = 0;
 			}
 			f->isGhost = f->inBuildingWaitTicks ? 1 : 0;
 			break;
@@ -193,7 +193,7 @@ void FigureAction_homeless(int figureId)
 					struct Data_Building *b = &Data_Buildings[buildingId];
 					int xRoad, yRoad;
 					if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
-						b->immigrantWalkerId = figureId;
+						b->immigrantFigureId = figureId;
 						f->immigrantBuildingId = buildingId;
 						f->actionState = FigureActionState_8_HomelessGoingToHouse;
 						f->destinationX = xRoad;
@@ -215,7 +215,7 @@ void FigureAction_homeless(int figureId)
 			f->isGhost = 0;
 			FigureMovement_walkTicks(figureId, 1);
 			if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
-				Data_Buildings[f->immigrantBuildingId].immigrantWalkerId = 0;
+				Data_Buildings[f->immigrantBuildingId].immigrantFigureId = 0;
 				f->state = FigureState_Dead;
 			} else if (f->direction == DirFigure_8_AtDestination) {
 				f->actionState = FigureActionState_9_HomelessEnteringHouse;
@@ -249,7 +249,7 @@ void FigureAction_homeless(int figureId)
 					b->housePopulation += f->migrantNumPeople;
 					b->housePopulationRoom = maxPeople - b->housePopulation;
 					CityInfo_Population_addPeopleHomeless(f->migrantNumPeople);
-					b->immigrantWalkerId = 0;
+					b->immigrantFigureId = 0;
 				}
 			}
 			break;
@@ -268,7 +268,7 @@ void FigureAction_homeless(int figureId)
 					struct Data_Building *b = &Data_Buildings[buildingId];
 					int xRoad, yRoad;
 					if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
-						b->immigrantWalkerId = figureId;
+						b->immigrantFigureId = figureId;
 						f->immigrantBuildingId = buildingId;
 						f->actionState = FigureActionState_8_HomelessGoingToHouse;
 						f->destinationX = xRoad;

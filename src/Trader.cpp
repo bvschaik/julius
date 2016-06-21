@@ -76,25 +76,25 @@ static int generateTrader(int cityId)
 
 	int index;
 	if (maxTradersOnMap == 1) {
-		if (!city->traderWalkerIds[0]) {
+		if (!city->traderFigureIds[0]) {
 			index = 0;
 		} else {
 			return 0;
 		}
 	} else if (maxTradersOnMap == 2) {
-		if (!city->traderWalkerIds[0]) {
+		if (!city->traderFigureIds[0]) {
 			index = 0;
-		} else if (!city->traderWalkerIds[1]) {
+		} else if (!city->traderFigureIds[1]) {
 			index = 1;
 		} else {
 			return 0;
 		}
 	} else { // 3
-		if (!city->traderWalkerIds[0]) {
+		if (!city->traderFigureIds[0]) {
 			index = 0;
-		} else if (!city->traderWalkerIds[1]) {
+		} else if (!city->traderFigureIds[1]) {
 			index = 1;
-		} else if (!city->traderWalkerIds[2]) {
+		} else if (!city->traderFigureIds[2]) {
 			index = 2;
 		} else {
 			return 0;
@@ -114,7 +114,7 @@ static int generateTrader(int cityId)
 			!Data_CityInfo.tradeSeaProblemDuration) {
 			int shipId = Figure_create(Figure_TradeShip,
 				Data_Scenario.riverEntryPoint.x, Data_Scenario.riverEntryPoint.y, 0);
-			city->traderWalkerIds[index] = shipId;
+			city->traderFigureIds[index] = shipId;
 			Data_Walkers[shipId].empireCityId = cityId;
 			Data_Walkers[shipId].actionState = FigureActionState_110_TradeShipCreated;
 			Data_Walkers[shipId].waitTicks = 10;
@@ -126,7 +126,7 @@ static int generateTrader(int cityId)
 			// caravan head
 			int caravanId = Figure_create(Figure_TradeCaravan,
 				Data_CityInfo.entryPointX, Data_CityInfo.entryPointY, 0);
-			city->traderWalkerIds[index] = caravanId;
+			city->traderFigureIds[index] = caravanId;
 			Data_Walkers[caravanId].empireCityId = cityId;
 			Data_Walkers[caravanId].actionState = FigureActionState_100_TradeCaravanCreated;
 			Data_Walkers[caravanId].waitTicks = 10;
@@ -134,12 +134,12 @@ static int generateTrader(int cityId)
 			int donkey1 = Figure_create(Figure_TradeCaravanDonkey,
 				Data_CityInfo.entryPointX, Data_CityInfo.entryPointY, 0);
 			Data_Walkers[donkey1].actionState = FigureActionState_100_TradeCaravanCreated;
-			Data_Walkers[donkey1].inFrontWalkerId = caravanId;
+			Data_Walkers[donkey1].inFrontFigureId = caravanId;
 			// donkey 2
 			int donkey2 = Figure_create(Figure_TradeCaravanDonkey,
 				Data_CityInfo.entryPointX, Data_CityInfo.entryPointY, 0);
 			Data_Walkers[donkey2].actionState = FigureActionState_100_TradeCaravanCreated;
-			Data_Walkers[donkey2].inFrontWalkerId = donkey1;
+			Data_Walkers[donkey2].inFrontFigureId = donkey1;
 			return 1;
 		}
 	}
@@ -199,7 +199,7 @@ void Trader_tick()
 	}
 }
 
-int Trader_getClosestWarehouseForTradeCaravan(int walkerId, int x, int y, int cityId, int distanceFromEntry, int *warehouseX, int *warehouseY)
+int Trader_getClosestWarehouseForTradeCaravan(int figureId, int x, int y, int cityId, int distanceFromEntry, int *warehouseX, int *warehouseY)
 {
 	int exportable[Resource_Max];
 	int importable[Resource_Max];
@@ -207,7 +207,7 @@ int Trader_getClosestWarehouseForTradeCaravan(int walkerId, int x, int y, int ci
 	importable[Resource_None] = 0;
 	for (int r = Resource_Min; r < Resource_Max; r++) {
 		exportable[r] = Empire_canExportResourceToCity(cityId, r);
-		if (Data_Walkers[walkerId].traderAmountBought >= 8) {
+		if (Data_Walkers[figureId].traderAmountBought >= 8) {
 			exportable[r] = 0;
 		}
 		if (cityId) {
@@ -215,7 +215,7 @@ int Trader_getClosestWarehouseForTradeCaravan(int walkerId, int x, int y, int ci
 		} else { // exclude own city (id=0), shouldn't happen, but still..
 			importable[r] = 0;
 		}
-		if (Data_Walkers[walkerId].loadsSoldOrCarrying >= 8) {
+		if (Data_Walkers[figureId].loadsSoldOrCarrying >= 8) {
 			importable[r] = 0;
 		}
 	}

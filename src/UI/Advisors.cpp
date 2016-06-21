@@ -103,7 +103,7 @@ void UI_Advisors_init()
 	CityInfo_Culture_updateCoveragePercentages();
 
 	CityInfo_Resource_calculateFoodAndSupplyRomeWheat();
-	Formation_calculateWalkers();
+	Formation_calculateFigures();
 
 	CityInfo_Ratings_updateCultureExplanation();
 	CityInfo_Ratings_updateProsperityExplanation();

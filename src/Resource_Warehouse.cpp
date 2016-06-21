@@ -483,7 +483,7 @@ int Resource_determineWarehouseWorkerTask(int buildingId, int *resource)
 		}
 		if (room >= 8 && loadsStored <= 4 && Data_CityInfo.resourceStored[r] - loadsStored > 4) {
 			*resource = r;
-			return 0;
+			return StorageFigureTask_Getting;
 		}
 	}
 	// deliver weapons to barracks

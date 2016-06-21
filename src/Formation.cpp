@@ -69,7 +69,7 @@ int Formation_createLegion(int buildingId)
 	m->inUse = 1;
 	m->isLegion = 1;
 	m->ciid = 1;
-	m->figureType = b->subtype.fortWalkerType;
+	m->figureType = b->subtype.fortFigureType;
 	m->buildingId = buildingId;
 	m->layout = FormationLayout_DoubleLine1;
 	m->morale = 50;
@@ -156,9 +156,9 @@ int Formation_getNumLegions()
 int Formation_getLegionFormationAtGridOffset(int gridOffset)
 {
 	for (int walkerId = Data_Grid_figureIds[gridOffset];
-		walkerId && walkerId != Data_Walkers[walkerId].nextWalkerIdOnSameTile;
-		walkerId = Data_Walkers[walkerId].nextWalkerIdOnSameTile) {
-		if (WalkerIsLegion(Data_Walkers[walkerId].type) ||
+		walkerId && walkerId != Data_Walkers[walkerId].nextFigureIdOnSameTile;
+		walkerId = Data_Walkers[walkerId].nextFigureIdOnSameTile) {
+		if (FigureIsLegion(Data_Walkers[walkerId].type) ||
 			Data_Walkers[walkerId].type == Figure_FortStandard) {
 			return Data_Walkers[walkerId].formationId;
 		}
@@ -329,7 +329,7 @@ void Formation_setNewSoldierRequest(int buildingId)
 		return;
 	}
 	if (m->numFigures < m->maxFigures) {
-		int type = Data_Buildings[buildingId].subtype.fortWalkerType;
+		int type = Data_Buildings[buildingId].subtype.fortFigureType;
 		if (type == Figure_FortLegionary) {
 			m->legionRecruitType = 3;
 		} else if (type == Figure_FortJavelin) {
@@ -345,11 +345,11 @@ void Formation_setNewSoldierRequest(int buildingId)
 				tooMany--;
 			}
 		}
-		Formation_calculateWalkers();
+		Formation_calculateFigures();
 	}
 }
 
-void Formation_calculateWalkers()
+void Formation_calculateFigures()
 {
 	for (int i = 1; i < MAX_FORMATIONS; i++) {
 		for (int fig = 0; fig < MAX_FORMATION_FIGURES; fig++) {
@@ -365,7 +365,7 @@ void Formation_calculateWalkers()
 			continue;
 		}
 		int figtype = Data_Walkers[i].type;
-		if (!WalkerIsLegion(figtype) && !WalkerIsEnemy(figtype) && !WalkerIsHerd(figtype)) {
+		if (!FigureIsLegion(figtype) && !FigureIsEnemy(figtype) && !FigureIsHerd(figtype)) {
 			continue;
 		}
 		if (figtype == Figure_Enemy54_Gladiator) {
@@ -440,7 +440,7 @@ void Formation_calculateWalkers()
 
 void Formation_updateAfterDeath(int formationId)
 {
-	Formation_calculateWalkers();
+	Formation_calculateFigures();
 	int pctDead = Calc_getPercentage(1, Data_Formations[formationId].numFigures);
 	int morale;
 	if (pctDead < 8) {
@@ -632,7 +632,7 @@ int Formation_marsCurseFort()
 		}
 	}
 	m->cursedByMars = 96;
-	Formation_calculateWalkers();
+	Formation_calculateFigures();
 	return 1;
 }
 

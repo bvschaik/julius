@@ -7,7 +7,7 @@ int TerrainBridge_addToSpriteGrid(int x, int y, int isShipBridge); // returns le
 
 void TerrainBridge_removeFromSpriteGrid(int gridOffset, int onlyMarkDeleted);
 
-int TerrainBridge_countWalkersOnBridge(int gridOffset);
+int TerrainBridge_countFiguresOnBridge(int gridOffset);
 
 void TerrainBridge_updateSpriteIdsOnMapRotate(int ccw);
 

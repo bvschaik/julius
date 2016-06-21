@@ -64,7 +64,7 @@ void Natives_init()
 					break;
 				case Building_NativeHut:
 					b->sentiment.nativeAnger = 100;
-					b->walkerSpawnDelay = randomBit;
+					b->figureSpawnDelay = randomBit;
 					Terrain_markNativeLand(b->x, b->y, 1, 3);
 					break;
 			}

@@ -167,16 +167,16 @@ static void createImmigrants(int numPeople)
 	// clean up any dead immigrants
 	for (int i = 0; i < Data_BuildingList.large.size; i++) {
 		int buildingId = Data_BuildingList.large.items[i];
-		if (Data_Buildings[buildingId].immigrantWalkerId &&
-			Data_Walkers[Data_Buildings[buildingId].immigrantWalkerId].state != FigureState_Alive) {
-			Data_Buildings[buildingId].immigrantWalkerId = 0;
+		if (Data_Buildings[buildingId].immigrantFigureId &&
+			Data_Walkers[Data_Buildings[buildingId].immigrantFigureId].state != FigureState_Alive) {
+			Data_Buildings[buildingId].immigrantFigureId = 0;
 		}
 	}
 	// houses with plenty of room
 	for (int i = 0; i < Data_BuildingList.large.size && toImmigrate > 0; i++) {
 		int buildingId = Data_BuildingList.large.items[i];
 		struct Data_Building *b = &Data_Buildings[buildingId];
-		if (b->distanceFromEntry > 0 && b->housePopulationRoom >= 8 && !b->immigrantWalkerId) {
+		if (b->distanceFromEntry > 0 && b->housePopulationRoom >= 8 && !b->immigrantFigureId) {
 			if (toImmigrate <= 4) {
 				createImmigrantForBuilding(buildingId, toImmigrate);
 				toImmigrate = 0;
@@ -190,7 +190,7 @@ static void createImmigrants(int numPeople)
 	for (int i = 0; i < Data_BuildingList.large.size && toImmigrate > 0; i++) {
 		int buildingId = Data_BuildingList.large.items[i];
 		struct Data_Building *b = &Data_Buildings[buildingId];
-		if (b->distanceFromEntry > 0 && b->housePopulationRoom > 0 && !b->immigrantWalkerId) {
+		if (b->distanceFromEntry > 0 && b->housePopulationRoom > 0 && !b->immigrantFigureId) {
 			if (toImmigrate <= b->housePopulationRoom) {
 				createImmigrantForBuilding(buildingId, toImmigrate);
 				toImmigrate = 0;
@@ -240,7 +240,7 @@ static void createImmigrantForBuilding(int buildingId, int numPeople)
 		Data_CityInfo.entryPointX, Data_CityInfo.entryPointY, 0);
 	Data_Walkers[walkerId].actionState = FigureActionState_1_ImmigrantCreated;
 	Data_Walkers[walkerId].immigrantBuildingId = buildingId;
-	Data_Buildings[buildingId].immigrantWalkerId = walkerId;
+	Data_Buildings[buildingId].immigrantFigureId = walkerId;
 	Data_Walkers[walkerId].waitTicks =
 		10 + (Data_Buildings[buildingId].houseGenerationDelay & 0x7f);
 	Data_Walkers[walkerId].migrantNumPeople = numPeople;
@@ -269,7 +269,7 @@ int HousePopulation_getClosestHouseWithRoom(int x, int y)
 	for (int i = 1; i <= Data_Buildings_Extra.highestBuildingIdInUse; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
 		if (BuildingIsInUse(i) && b->houseSize && b->distanceFromEntry > 0 && b->housePopulationRoom > 0) {
-			if (!b->immigrantWalkerId) {
+			if (!b->immigrantFigureId) {
 				int dist = Calc_distanceMaximum(x, y, b->x, b->y);
 				if (dist < minDist) {
 					minDist = dist;

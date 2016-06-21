@@ -165,7 +165,7 @@ static void placeBuildingOnTerrain(int buildingId)
 		int size = Constant_BuildingProperties[b->type].size;
 		Terrain_addBuildingToGrids(buildingId, b->x, b->y, size, 0, 0);
 		if (b->type == Building_Wharf) {
-			b->data.other.boatWalkerId = 0;
+			b->data.other.boatFigureId = 0;
 		}
 	}
 	b->state = BuildingState_InUse;

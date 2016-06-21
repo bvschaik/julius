@@ -216,7 +216,7 @@ static void buttonEmpireService(int legionId, int param2)
 	} else {
 		Data_Formations[formationId].empireService = 1;
 	}
-	Formation_calculateWalkers();
+	Formation_calculateFigures();
 	UI_Window_requestRefresh();
 }
 

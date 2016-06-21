@@ -62,7 +62,7 @@ void UI_BuildingInfo_drawPrefect(BuildingInfoContext *c)
 	} else if (b->numWorkers <= 0) {
 		DRAW_DESC(88, 9);
 	} else {
-		if (b->walkerId) {
+		if (b->figureId) {
 			DRAW_DESC(88, 2);
 		} else {
 			DRAW_DESC(88, 3);
@@ -125,7 +125,7 @@ void UI_BuildingInfo_drawTower(BuildingInfoContext *c)
 		DRAW_DESC(69, 25);
 	} else if (Data_Buildings[c->buildingId].numWorkers <= 0) {
 		DRAW_DESC(91, 2);
-	} else if (Data_Buildings[c->buildingId].walkerId) {
+	} else if (Data_Buildings[c->buildingId].figureId) {
 		DRAW_DESC(91, 3);
 	} else {
 		DRAW_DESC(91, 4);

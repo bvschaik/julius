@@ -13,11 +13,11 @@ int FigureAction_CombatSoldier_getTarget(int x, int y, int maxDistance)
 			continue;
 		}
 		struct Data_Walker *f = &Data_Walkers[i];
-		if (WalkerIsEnemy(f->type) || f->type == Figure_Rioter ||
+		if (FigureIsEnemy(f->type) || f->type == Figure_Rioter ||
 			(f->type == Figure_IndigenousNative && f->actionState == FigureActionState_159_NativeAttacking)) {
 			int distance = Calc_distanceMaximum(x, y, f->x, f->y);
 			if (distance <= maxDistance) {
-				if (f->targetedByWalkerId) {
+				if (f->targetedByFigureId) {
 					distance *= 2; // penalty
 				}
 				if (distance < minDistance) {
@@ -35,7 +35,7 @@ int FigureAction_CombatSoldier_getTarget(int x, int y, int maxDistance)
 			continue;
 		}
 		struct Data_Walker *f = &Data_Walkers[i];
-		if (WalkerIsEnemy(f->type) || f->type == Figure_Rioter ||
+		if (FigureIsEnemy(f->type) || f->type == Figure_Rioter ||
 			(f->type == Figure_IndigenousNative && f->actionState == FigureActionState_159_NativeAttacking)) {
 			return i;
 		}
@@ -55,7 +55,7 @@ int FigureAction_CombatSoldier_getMissileTarget(int soldierId, int maxDistance, 
 			continue;
 		}
 		struct Data_Walker *f = &Data_Walkers[i];
-		if (WalkerIsEnemy(f->type) || WalkerIsHerd(f->type) ||
+		if (FigureIsEnemy(f->type) || FigureIsHerd(f->type) ||
 			(f->type == Figure_IndigenousNative && f->actionState == FigureActionState_159_NativeAttacking)) {
 			int distance = Calc_distanceMaximum(x, y, f->x, f->y);
 			if (distance < minDistance && FigureMovement_canLaunchCrossCountryMissile(x, y, f->x, f->y)) {
@@ -100,14 +100,14 @@ int FigureAction_CombatWolf_getTarget(int x, int y, int maxDistance)
 			case Figure_Creature:
 				continue;
 		}
-		if (WalkerIsEnemy(f->type) || WalkerIsHerd(f->type)) {
+		if (FigureIsEnemy(f->type) || FigureIsHerd(f->type)) {
 			continue;
 		}
-		if (WalkerIsLegion(f->type) && f->actionState == FigureActionState_80_SoldierAtRest) {
+		if (FigureIsLegion(f->type) && f->actionState == FigureActionState_80_SoldierAtRest) {
 			continue;
 		}
 		int distance = Calc_distanceMaximum(x, y, f->x, f->y);
-		if (f->targetedByWalkerId) {
+		if (f->targetedByFigureId) {
 			distance *= 2;
 		}
 		if (distance < minDistance) {
@@ -130,7 +130,7 @@ int FigureAction_CombatEnemy_getTarget(int x, int y)
 			continue;
 		}
 		struct Data_Walker *f = &Data_Walkers[i];
-		if (!f->targetedByWalkerId && WalkerIsLegion(f->type)) {
+		if (!f->targetedByFigureId && FigureIsLegion(f->type)) {
 			int distance = Calc_distanceMaximum(x, y, f->x, f->y);
 			if (distance < minDistance) {
 				minDistance = distance;
@@ -146,7 +146,7 @@ int FigureAction_CombatEnemy_getTarget(int x, int y)
 		if (FigureIsDead(i)) {
 			continue;
 		}
-		if (WalkerIsLegion(Data_Walkers[i].type)) {
+		if (FigureIsLegion(Data_Walkers[i].type)) {
 			return i;
 		}
 	}
@@ -186,7 +186,7 @@ int FigureAction_CombatEnemy_getMissileTarget(int enemyId, int maxDistance, int 
 				continue;
 		}
 		int distance;
-		if (WalkerIsLegion(f->type)) {
+		if (FigureIsLegion(f->type)) {
 			distance = Calc_distanceMaximum(x, y, f->x, f->y);
 		} else if (attackCitizens && f->isFriendly) {
 			distance = Calc_distanceMaximum(x, y, f->x, f->y) + 5;
@@ -207,7 +207,7 @@ int FigureAction_CombatEnemy_getMissileTarget(int enemyId, int maxDistance, int 
 }
 
 
-void FigureAction_Combat_attackWalker(int walkerId, int opponentId)
+void FigureAction_Combat_attackFigure(int walkerId, int opponentId)
 {
 	struct Data_Walker *f = &Data_Walkers[walkerId];
 	int figureCategory = Constant_FigureProperties[f->type].category;
@@ -221,7 +221,7 @@ void FigureAction_Combat_attackWalker(int walkerId, int opponentId)
 			break;
 		}
 		if (opponentId == walkerId) {
-			opponentId = Data_Walkers[opponentId].nextWalkerIdOnSameTile;
+			opponentId = Data_Walkers[opponentId].nextFigureIdOnSameTile;
 			continue;
 		}
 		struct Data_Walker *opponent = &Data_Walkers[opponentId];
@@ -286,6 +286,6 @@ void FigureAction_Combat_attackWalker(int walkerId, int opponentId)
 			}
 			return;
 		}
-		opponentId = opponent->nextWalkerIdOnSameTile;
+		opponentId = opponent->nextFigureIdOnSameTile;
 	}
 }

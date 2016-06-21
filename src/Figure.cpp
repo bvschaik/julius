@@ -30,7 +30,7 @@ void Figure_clearList()
 	Data_Figure_Extra.highestFigureIdEver = 0;
 }
 
-int Figure_create(int walkerType, int x, int y, char direction)
+int Figure_create(int figureType, int x, int y, char direction)
 {
 	int id = 0;
 	for (int i = 1; i < MAX_FIGURES; i++) {
@@ -45,7 +45,7 @@ int Figure_create(int walkerType, int x, int y, char direction)
 	struct Data_Walker *f = &Data_Walkers[id];
 	f->state = FigureState_Alive;
 	f->ciid = 1;
-	f->type = walkerType;
+	f->type = figureType;
 	f->useCrossCountry = 0;
 	f->isFriendly = 1;
 	f->createdSequence = Data_Figure_Extra.createdSequence++;
@@ -59,7 +59,7 @@ int Figure_create(int walkerType, int x, int y, char direction)
 	f->phraseSequenceCity = f->phraseSequenceExact = Data_Random.random1_7bit & 3;
 	FigureName_set(id);
 	Figure_addToTileList(id);
-	if (walkerType == Figure_TradeCaravan || walkerType == Figure_TradeShip) {
+	if (figureType == Figure_TradeCaravan || figureType == Figure_TradeShip) {
 		Trader_create(id);
 	}
 	if (id > Data_Figure_Extra.highestFigureIdEver) {
@@ -68,23 +68,23 @@ int Figure_create(int walkerType, int x, int y, char direction)
 	return id;
 }
 
-void Figure_delete(int walkerId)
+void Figure_delete(int figureId)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Walker *f = &Data_Walkers[figureId];
 	switch (f->type) {
 		case Figure_LaborSeeker:
 		case Figure_MarketBuyer:
 			if (f->buildingId) {
-				Data_Buildings[f->buildingId].walkerId2 = 0;
+				Data_Buildings[f->buildingId].figureId2 = 0;
 			}
 			break;
 		case Figure_Ballista:
-			Data_Buildings[f->buildingId].walkerId4 = 0;
+			Data_Buildings[f->buildingId].figureId4 = 0;
 			break;
 		case Figure_Dockman:
 			for (int i = 0; i < 3; i++) {
-				if (Data_Buildings[f->buildingId].data.other.dockWalkerIds[i] == walkerId) {
-					Data_Buildings[f->buildingId].data.other.dockWalkerIds[i] = 0;
+				if (Data_Buildings[f->buildingId].data.other.dockFigureIds[i] == figureId) {
+					Data_Buildings[f->buildingId].data.other.dockFigureIds[i] = 0;
 				}
 			}
 			break;
@@ -107,22 +107,22 @@ void Figure_delete(int walkerId)
 			break;
 		default:
 			if (f->buildingId) {
-				Data_Buildings[f->buildingId].walkerId = 0;
+				Data_Buildings[f->buildingId].figureId = 0;
 			}
 			break;
 	}
 	if (f->empireCityId) {
 		for (int i = 0; i < 3; i++) {
-			if (Data_Empire_Cities[f->empireCityId].traderWalkerIds[i] == walkerId) {
-				Data_Empire_Cities[f->empireCityId].traderWalkerIds[i] = 0;
+			if (Data_Empire_Cities[f->empireCityId].traderFigureIds[i] == figureId) {
+				Data_Empire_Cities[f->empireCityId].traderFigureIds[i] = 0;
 			}
 		}
 	}
 	if (f->immigrantBuildingId) {
-		Data_Buildings[f->buildingId].immigrantWalkerId = 0;
+		Data_Buildings[f->buildingId].immigrantFigureId = 0;
 	}
-	FigureRoute_remove(walkerId);
-	Figure_removeFromTileList(walkerId);
+	FigureRoute_remove(figureId);
+	Figure_removeFromTileList(figureId);
 	memset(f, 0, sizeof(struct Data_Walker));
 }
 
@@ -132,19 +132,19 @@ void Figure_addToTileList(int walkerId)
 		return;
 	}
 	struct Data_Walker *f = &Data_Walkers[walkerId];
-	f->numPreviousWalkersOnSameTile = 0;
+	f->numPreviousFiguresOnSameTile = 0;
 
 	int next = Data_Grid_figureIds[f->gridOffset];
 	if (next) {
-		f->numPreviousWalkersOnSameTile++;
-		while (Data_Walkers[next].nextWalkerIdOnSameTile) {
-			next = Data_Walkers[next].nextWalkerIdOnSameTile;
-			f->numPreviousWalkersOnSameTile++;
+		f->numPreviousFiguresOnSameTile++;
+		while (Data_Walkers[next].nextFigureIdOnSameTile) {
+			next = Data_Walkers[next].nextFigureIdOnSameTile;
+			f->numPreviousFiguresOnSameTile++;
 		}
-		if (f->numPreviousWalkersOnSameTile > 20) {
-			f->numPreviousWalkersOnSameTile = 20;
+		if (f->numPreviousFiguresOnSameTile > 20) {
+			f->numPreviousFiguresOnSameTile = 20;
 		}
-		Data_Walkers[next].nextWalkerIdOnSameTile = walkerId;
+		Data_Walkers[next].nextFigureIdOnSameTile = walkerId;
 	} else {
 		Data_Grid_figureIds[f->gridOffset] = walkerId;
 	}
@@ -153,18 +153,18 @@ void Figure_addToTileList(int walkerId)
 void Figure_updatePositionInTileList(int walkerId)
 {
 	struct Data_Walker *f = &Data_Walkers[walkerId];
-	f->numPreviousWalkersOnSameTile = 0;
+	f->numPreviousFiguresOnSameTile = 0;
 	
 	int next = Data_Grid_figureIds[f->gridOffset];
 	while (next) {
 		if (next == walkerId) {
 			return;
 		}
-		f->numPreviousWalkersOnSameTile++;
-		next = Data_Walkers[next].nextWalkerIdOnSameTile;
+		f->numPreviousFiguresOnSameTile++;
+		next = Data_Walkers[next].nextFigureIdOnSameTile;
 	}
-	if (f->numPreviousWalkersOnSameTile > 20) {
-		f->numPreviousWalkersOnSameTile = 20;
+	if (f->numPreviousFiguresOnSameTile > 20) {
+		f->numPreviousFiguresOnSameTile = 20;
 	}
 }
 
@@ -178,14 +178,14 @@ void Figure_removeFromTileList(int walkerId)
 	int cur = Data_Grid_figureIds[f->gridOffset];
 	if (cur) {
 		if (cur == walkerId) {
-			Data_Grid_figureIds[f->gridOffset] = f->nextWalkerIdOnSameTile;
+			Data_Grid_figureIds[f->gridOffset] = f->nextFigureIdOnSameTile;
 		} else {
-			while (cur && Data_Walkers[cur].nextWalkerIdOnSameTile != walkerId) {
-				cur = Data_Walkers[cur].nextWalkerIdOnSameTile;
+			while (cur && Data_Walkers[cur].nextFigureIdOnSameTile != walkerId) {
+				cur = Data_Walkers[cur].nextFigureIdOnSameTile;
 			}
-			Data_Walkers[cur].nextWalkerIdOnSameTile = f->nextWalkerIdOnSameTile;
+			Data_Walkers[cur].nextFigureIdOnSameTile = f->nextFigureIdOnSameTile;
 		}
-		f->nextWalkerIdOnSameTile = 0;
+		f->nextFigureIdOnSameTile = 0;
 	}
 }
 
@@ -360,7 +360,7 @@ int Figure_createSoldierFromBarracks(int buildingId, int x, int y)
 			f->actionState = FigureActionState_81_SoldierGoingToFort;
 		}
 	}
-	Formation_calculateWalkers();
+	Formation_calculateFigures();
 	return formationId ? 1 : 0;
 }
 
@@ -373,7 +373,7 @@ int Figure_createTowerSentryFromBarracks(int buildingId, int x, int y)
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
 		if (BuildingIsInUse(i) && b->type == Building_Tower && b->numWorkers > 0 &&
-			!b->walkerId && b->roadNetworkId == Data_Buildings[buildingId].roadNetworkId) {
+			!b->figureId && b->roadNetworkId == Data_Buildings[buildingId].roadNetworkId) {
 			towerId = i;
 			break;
 		}
@@ -392,7 +392,7 @@ int Figure_createTowerSentryFromBarracks(int buildingId, int x, int y)
 	} else {
 		f->state = FigureState_Dead;
 	}
-	tower->walkerId = walkerId;
+	tower->figureId = walkerId;
 	f->buildingId = towerId;
 	return 1;
 }
@@ -423,7 +423,7 @@ void Figure_sinkAllShips()
 		} else {
 			continue;
 		}
-		Data_Buildings[buildingId].data.other.boatWalkerId = 0;
+		Data_Buildings[buildingId].data.other.boatFigureId = 0;
 		f->buildingId = 0;
 		f->type = Figure_Shipwreck;
 		f->waitTicks = 0;
@@ -433,7 +433,7 @@ void Figure_sinkAllShips()
 int Figure_getCitizenOnSameTile(int walkerId)
 {
 	for (int w = Data_Grid_figureIds[Data_Walkers[walkerId].gridOffset];
-		w > 0; w = Data_Walkers[w].nextWalkerIdOnSameTile) {
+		w > 0; w = Data_Walkers[w].nextFigureIdOnSameTile) {
 		if (Data_Walkers[w].actionState != FigureActionState_149_Corpse) {
 			int type = Data_Walkers[w].type;
 			if (type && type != Figure_Explosion && type != Figure_FortStandard &&
@@ -448,10 +448,10 @@ int Figure_getCitizenOnSameTile(int walkerId)
 int Figure_getNonCitizenOnSameTile(int walkerId)
 {
 	for (int w = Data_Grid_figureIds[Data_Walkers[walkerId].gridOffset];
-		w > 0; w = Data_Walkers[w].nextWalkerIdOnSameTile) {
+		w > 0; w = Data_Walkers[w].nextFigureIdOnSameTile) {
 		if (Data_Walkers[w].actionState != FigureActionState_149_Corpse) {
 			int type = Data_Walkers[w].type;
-			if (WalkerIsEnemy(type)) {
+			if (FigureIsEnemy(type)) {
 				return w;
 			}
 			if (type == Figure_IndigenousNative && Data_Walkers[w].actionState == FigureActionState_159_NativeAttacking) {
@@ -469,7 +469,7 @@ int Figure_hasNearbyEnemy(int xStart, int yStart, int xEnd, int yEnd)
 {
 	for (int i = 1; i < MAX_FIGURES; i++) {
 		struct Data_Walker *f = &Data_Walkers[i];
-		if (f->state != FigureState_Alive || !WalkerIsEnemy(f->type)) {
+		if (f->state != FigureState_Alive || !FigureIsEnemy(f->type)) {
 			continue;
 		}
 		int dx = (f->x > xStart) ? (f->x - xStart) : (xStart - f->x);

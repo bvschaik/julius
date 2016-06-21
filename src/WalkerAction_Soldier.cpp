@@ -105,16 +105,16 @@ static void legionaryAttackAdjacentEnemy(int walkerId, struct Data_Walker *f)
 {
 	int gridOffset = f->gridOffset;
 	for (int i = 0; i < 8 && f->actionState != FigureActionState_150_Attack; i++) {
-		FigureAction_Combat_attackWalker(walkerId,
+		FigureAction_Combat_attackFigure(walkerId,
 			Data_Grid_figureIds[gridOffset + Constant_DirectionGridOffsets[i]]);
 	}
 }
 
 static int soldierFindMopUpTarget(int walkerId, struct Data_Walker *f)
 {
-	int targetId = f->targetWalkerId;
+	int targetId = f->targetFigureId;
 	if (FigureIsDead(targetId)) {
-		f->targetWalkerId = 0;
+		f->targetFigureId = 0;
 		targetId = 0;
 	}
 	if (targetId <= 0) {
@@ -123,9 +123,9 @@ static int soldierFindMopUpTarget(int walkerId, struct Data_Walker *f)
 			struct Data_Walker *fTarget = &Data_Walkers[targetId];
 			f->destinationX = fTarget->x;
 			f->destinationY = fTarget->y;
-			f->targetWalkerId = targetId;
-			fTarget->targetedByWalkerId = walkerId;
-			f->targetWalkerCreatedSequence = fTarget->createdSequence;
+			f->targetFigureId = targetId;
+			fTarget->targetedByFigureId = walkerId;
+			f->targetFigureCreatedSequence = fTarget->createdSequence;
 		} else {
 			f->actionState = FigureActionState_84_SoldierAtStandard;
 			f->graphicOffset = 0;
@@ -349,12 +349,12 @@ void FigureAction_soldier(int walkerId)
 			if (soldierFindMopUpTarget(walkerId, f)) {
 				FigureMovement_walkTicks(walkerId, speedFactor);
 				if (f->direction == DirFigure_8_AtDestination) {
-					f->destinationX = Data_Walkers[f->targetWalkerId].x;
-					f->destinationY = Data_Walkers[f->targetWalkerId].y;
+					f->destinationX = Data_Walkers[f->targetFigureId].x;
+					f->destinationY = Data_Walkers[f->targetFigureId].y;
 					FigureRoute_remove(walkerId);
 				} else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
 					f->actionState = FigureActionState_84_SoldierAtStandard;
-					f->targetWalkerId = 0;
+					f->targetFigureId = 0;
 					f->graphicOffset = 0;
 				}
 			}

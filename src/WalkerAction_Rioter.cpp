@@ -65,7 +65,7 @@ void FigureAction_rioter(int walkerId)
 {
 	struct Data_Walker *f = &Data_Walkers[walkerId];
 	Data_CityInfo.numRiotersInCity++;
-	if (!f->targetedByWalkerId) {
+	if (!f->targetedByFigureId) {
 		Data_CityInfo.riotersOrAttackingNativesInCity = 10;
 	}
 	f->terrainUsage = FigureTerrainUsage_Enemy;

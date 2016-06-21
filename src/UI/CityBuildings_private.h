@@ -100,10 +100,10 @@
 	}
 
 void UI_CityBuildings_drawOverlayFootprints();
-void UI_CityBuildings_drawOverlayTopsWalkersAnimation(int overlay);
+void UI_CityBuildings_drawOverlayTopsFiguresAnimation(int overlay);
 
-void UI_CityBuildings_drawWalker(int walkerId, int xOffset, int yOffset,
-	int selectedWalkerId, struct UI_CityPixelCoordinate *coord);
+void UI_CityBuildings_drawFigure(int figureId, int xOffset, int yOffset,
+	int selectedFigureId, struct UI_CityPixelCoordinate *coord);
 void UI_CityBuildings_drawBridge(int gridOffset, int xOffset, int yOffset);
 
 void UI_CityBuildings_drawSelectedBuildingGhost();

@@ -74,7 +74,7 @@ extern struct Data_Empire_City {
 	short empireObjectId;
 	unsigned char isSeaTrade;
 	unsigned char __unused4;
-	short traderWalkerIds[3];
+	short traderFigureIds[3];
 	unsigned char __padding[10];
 } Data_Empire_Cities[MAX_EMPIRE_CITIES];
 

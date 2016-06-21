@@ -185,7 +185,7 @@ extern struct Data_Building {
 		short warehouseResourceId;
 		short workshopResource;
 		short orientation;
-		short fortWalkerType;
+		short fortFigureType;
 		short nativeMeetingCenterId;
 	} subtype;
 	unsigned char roadNetworkId;
@@ -200,13 +200,13 @@ extern struct Data_Building {
 	short houseUnreachableTicks;
 	unsigned char roadAccessX; // 20
 	unsigned char roadAccessY; // 21
-	short walkerId;
-	short walkerId2; // labor seeker or market buyer
-	short immigrantWalkerId;
-	short walkerId4; // 28; tower ballista or burning ruin prefect
-	unsigned char walkerSpawnDelay; // 2a
+	short figureId;
+	short figureId2; // labor seeker or market buyer
+	short immigrantFigureId;
+	short figureId4; // 28; tower ballista or burning ruin prefect
+	unsigned char figureSpawnDelay; // 2a
 	unsigned char __unused_2b;
-	unsigned char walkerRoamDirection;
+	unsigned char figureRoamDirection;
 	unsigned char hasWaterAccess;
 	unsigned char __unused_2e;
 	unsigned char __unused_2f;
@@ -263,8 +263,8 @@ extern struct Data_Building {
 			char __unknown_69;
 			char __unknown_6a;
 			char __unknown_6b; // farm cursed
-			short dockWalkerIds[3]; // 6c, 6e, 70
-			short boatWalkerId; // 72
+			short dockFigureIds[3]; // 6c, 6e, 70
+			short boatFigureId; // 72
 		} other;
 		struct {
 			short unknown; //4a

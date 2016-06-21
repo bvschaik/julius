@@ -4,7 +4,7 @@
 void Formation_clearList();
 void Formation_clearInvasionInfo();
 
-int Formation_create(int walkerType, int formationLayout, int orientation, int x, int y);
+int Formation_create(int figureType, int formationLayout, int orientation, int x, int y);
 int Formation_createLegion(int buildingId);
 
 void Formation_deleteFortAndBanner(int formationId);
@@ -31,7 +31,7 @@ int Formation_getInvasionGridOffset(int invasionSeq);
 int Formation_getLegionFormationAtGridOffset(int gridOffset);
 int Formation_getFormationForBuilding(int gridOffset);
 
-void Formation_calculateWalkers();
+void Formation_calculateFigures();
 
 void Formation_dispatchLegionsToDistantBattle();
 void Formation_legionsReturnFromDistantBattle();

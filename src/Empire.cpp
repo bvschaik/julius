@@ -87,9 +87,9 @@ void Empire_initCities()
 		city->__unused2 = 10;
 		city->traderEntryDelay = 4;
 		city->__unused3 = 0;
-		city->traderWalkerIds[0] = 0;
-		city->traderWalkerIds[1] = 0;
-		city->traderWalkerIds[2] = 0;
+		city->traderFigureIds[0] = 0;
+		city->traderFigureIds[1] = 0;
+		city->traderFigureIds[2] = 0;
 		city->empireObjectId = i;
 	}
 }
