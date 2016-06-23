@@ -4,6 +4,7 @@
 #include "CityInfo.h"
 #include "CityView.h"
 #include "Figure.h"
+#include "FigureAction.h"
 #include "Formation.h"
 #include "HousePopulation.h"
 #include "PlayerMessage.h"
@@ -13,7 +14,6 @@
 #include "Terrain.h"
 #include "TerrainGraphics.h"
 #include "Undo.h"
-#include "WalkerAction.h"
 #include "UI/Warning.h"
 
 #include "Data/Building.h"

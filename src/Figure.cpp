@@ -1,13 +1,13 @@
 #include "Figure.h"
 
 #include "Calc.h"
+#include "FigureAction.h"
 #include "FigureMovement.h"
 #include "Formation.h"
 #include "Random.h"
 #include "Sound.h"
 #include "Terrain.h"
 #include "Trader.h"
-#include "WalkerAction.h"
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"

@@ -308,7 +308,7 @@ void FigureAction_tradeCaravan(int walkerId)
 			break;
 	}
 	int dir = f->direction < 8 ? f->direction : f->previousTileDirection;
-	WalkerActionNormalizeDirection(dir);
+	FigureActionNormalizeDirection(dir);
 	f->graphicId = GraphicId(ID_Graphic_Figure_TradeCaravan) + dir + 8 * f->graphicOffset;
 }
 
@@ -339,7 +339,7 @@ void FigureAction_tradeCaravanDonkey(int walkerId)
 		f->isGhost = 1;
 	}
 	int dir = f->direction < 8 ? f->direction : f->previousTileDirection;
-	WalkerActionNormalizeDirection(dir);
+	FigureActionNormalizeDirection(dir);
 	f->graphicId = GraphicId(ID_Graphic_Figure_TradeCaravan) + dir + 8 * f->graphicOffset;
 }
 
@@ -424,11 +424,11 @@ void FigureAction_nativeTrader(int walkerId)
 			break;
 	}
 	int dir = (f->direction < 8) ? f->direction : f->previousTileDirection;
-	WalkerActionNormalizeDirection(dir);
+	FigureActionNormalizeDirection(dir);
 	
 	if (f->actionState == FigureActionState_149_Corpse) {
 		f->graphicId = GraphicId(ID_Graphic_Figure_Cartpusher) +
-			96 + WalkerActionCorpseGraphicOffset(f);
+			96 + FigureActionCorpseGraphicOffset(f);
 		f->cartGraphicId = 0;
 	} else {
 		f->graphicId = GraphicId(ID_Graphic_Figure_Cartpusher) +
@@ -604,7 +604,7 @@ void FigureAction_tradeShip(int walkerId)
 			break;
 	}
 	int dir = f->direction < 8 ? f->direction : f->previousTileDirection;
-	WalkerActionNormalizeDirection(dir);
+	FigureActionNormalizeDirection(dir);
 	f->graphicId = GraphicId(ID_Graphic_Figure_Ship) + dir;
 }
 

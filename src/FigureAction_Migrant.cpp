@@ -11,10 +11,10 @@
 
 static void updateDirectionAndGraphic(int figureId, struct Data_Walker *f)
 {
-	int dir = WalkerActionDirection(f);
+	int dir = FigureActionDirection(f);
 	if (f->actionState == FigureActionState_149_Corpse) {
 		f->graphicId = GraphicId(ID_Graphic_Figure_Migrant) +
-			WalkerActionCorpseGraphicOffset(f) + 96;
+			FigureActionCorpseGraphicOffset(f) + 96;
 	} else {
 		f->graphicId = GraphicId(ID_Graphic_Figure_Migrant) +
 			dir + 8 * f->graphicOffset;
@@ -282,9 +282,9 @@ void FigureAction_homeless(int figureId)
 	}
 	if (f->actionState == FigureActionState_149_Corpse) {
 		f->graphicId = GraphicId(ID_Graphic_Figure_Homeless) +
-			WalkerActionCorpseGraphicOffset(f) + 96;
+			FigureActionCorpseGraphicOffset(f) + 96;
 	} else {
 		f->graphicId = GraphicId(ID_Graphic_Figure_Homeless) +
-			WalkerActionDirection(f) + 8 * f->graphicOffset;
+			FigureActionDirection(f) + 8 * f->graphicOffset;
 	}
 }

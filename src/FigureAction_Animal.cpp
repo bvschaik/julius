@@ -86,8 +86,8 @@ void FigureAction_sheep(int walkerId)
 			if (f->waitTicks > 400) {
 				f->waitTicks = walkerId & 0x1f;
 				f->actionState = FigureActionState_197_HerdAnimalMoving;
-				f->destinationX = m->destinationX + WalkerActionFormationLayoutPositionX(FormationLayout_Herd, f->indexInFormation);
-				f->destinationY = m->destinationY + WalkerActionFormationLayoutPositionY(FormationLayout_Herd, f->indexInFormation);
+				f->destinationX = m->destinationX + FigureActionFormationLayoutPositionX(FormationLayout_Herd, f->indexInFormation);
+				f->destinationY = m->destinationY + FigureActionFormationLayoutPositionY(FormationLayout_Herd, f->indexInFormation);
 				f->roamLength = 0;
 			}
 			break;
@@ -102,10 +102,10 @@ void FigureAction_sheep(int walkerId)
 			}
 			break;
 	}
-	int dir = WalkerActionDirection(f);
+	int dir = FigureActionDirection(f);
 	if (f->actionState == FigureActionState_149_Corpse) {
 		f->graphicId = GraphicId(ID_Graphic_Figure_Sheep) + 104 +
-			WalkerActionCorpseGraphicOffset(f);
+			FigureActionCorpseGraphicOffset(f);
 	} else if (f->actionState == FigureActionState_196_HerdAnimalAtRest) {
 		if (walkerId & 3) {
 			f->graphicId = GraphicId(ID_Graphic_Figure_Sheep) + 48 + dir +
@@ -140,8 +140,8 @@ void FigureAction_wolf(int walkerId)
 			if (f->waitTicks > 400) {
 				f->waitTicks = walkerId & 0x1f;
 				f->actionState = FigureActionState_197_HerdAnimalMoving;
-				f->destinationX = m->destinationX + WalkerActionFormationLayoutPositionX(FormationLayout_Herd, f->indexInFormation);
-				f->destinationY = m->destinationY + WalkerActionFormationLayoutPositionY(FormationLayout_Herd, f->indexInFormation);
+				f->destinationX = m->destinationX + FigureActionFormationLayoutPositionX(FormationLayout_Herd, f->indexInFormation);
+				f->destinationY = m->destinationY + FigureActionFormationLayoutPositionY(FormationLayout_Herd, f->indexInFormation);
 				f->roamLength = 0;
 			}
 			break;
@@ -180,10 +180,10 @@ void FigureAction_wolf(int walkerId)
 			}
 			break;
 	}
-	int dir = WalkerActionDirection(f);
+	int dir = FigureActionDirection(f);
 	if (f->actionState == FigureActionState_149_Corpse) {
 		f->graphicId = GraphicId(ID_Graphic_Figure_Wolf) + 96 +
-			WalkerActionCorpseGraphicOffset(f);
+			FigureActionCorpseGraphicOffset(f);
 	} else if (f->actionState == FigureActionState_150_Attack) {
 		f->graphicId = GraphicId(ID_Graphic_Figure_Wolf) + 104 +
 			dir + 8 * (f->attackGraphicOffset / 4);
@@ -216,8 +216,8 @@ void FigureAction_zebra(int walkerId)
 			if (f->waitTicks > 200) {
 				f->waitTicks = walkerId & 0x1f;
 				f->actionState = FigureActionState_197_HerdAnimalMoving;
-				f->destinationX = m->destinationX + WalkerActionFormationLayoutPositionX(FormationLayout_Herd, f->indexInFormation);
-				f->destinationY = m->destinationY + WalkerActionFormationLayoutPositionY(FormationLayout_Herd, f->indexInFormation);
+				f->destinationX = m->destinationX + FigureActionFormationLayoutPositionX(FormationLayout_Herd, f->indexInFormation);
+				f->destinationY = m->destinationY + FigureActionFormationLayoutPositionY(FormationLayout_Herd, f->indexInFormation);
 				f->roamLength = 0;
 			}
 			break;
@@ -232,10 +232,10 @@ void FigureAction_zebra(int walkerId)
 			}
 			break;
 	}
-	int dir = WalkerActionDirection(f);
+	int dir = FigureActionDirection(f);
 	if (f->actionState == FigureActionState_149_Corpse) {
 		f->graphicId = GraphicId(ID_Graphic_Figure_Zebra) + 96 +
-			WalkerActionCorpseGraphicOffset(f);
+			FigureActionCorpseGraphicOffset(f);
 	} else if (f->actionState == FigureActionState_196_HerdAnimalAtRest) {
 		f->graphicId = GraphicId(ID_Graphic_Figure_Zebra) + dir;
 	} else {
@@ -370,7 +370,7 @@ void FigureAction_hippodromeHorse(int walkerId)
 			break;
 	}
 
-	int dir = WalkerActionDirection(f);
+	int dir = FigureActionDirection(f);
 	if (f->resourceId == 0) {
 		f->graphicId = GraphicId(ID_Graphic_Figure_HippodromeHorse1) +
 			dir + 8 * f->graphicOffset;

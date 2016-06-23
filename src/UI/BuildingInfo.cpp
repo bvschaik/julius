@@ -251,7 +251,7 @@ void UI_BuildingInfo_init()
 	context.figure.selectedIndex = 0;
 	context.figure.count = 0;
 	for (int i = 0; i < 7; i++) {
-		context.figure.walkerIds[i] = 0;
+		context.figure.figureIds[i] = 0;
 	}
 	static const int walkerOffsets[] = {0, -162, 162, 1, -1, -163, -161, 161, 163};
 	for (int i = 0; i < 9 && context.figure.count < 7; i++) {
@@ -274,7 +274,7 @@ void UI_BuildingInfo_init()
 					case Figure_HippodromeMiniHorses:
 						break;
 					default:
-						context.figure.walkerIds[context.figure.count++] = walkerId;
+						context.figure.figureIds[context.figure.count++] = walkerId;
 						Figure_determinePhrase(walkerId);
 						break;
 				}
@@ -284,7 +284,7 @@ void UI_BuildingInfo_init()
 	}
 	// check for legion walkers
 	for (int i = 0; i < 7; i++) {
-		int walkerId = context.figure.walkerIds[i];
+		int walkerId = context.figure.figureIds[i];
 		if (walkerId <= 0) {
 			continue;
 		}
@@ -547,7 +547,7 @@ void UI_BuildingInfo_handleMouse()
 	if (context.type == BuildingInfoType_Legion) {
 		UI_BuildingInfo_handleMouseLegionInfo(&context);
 	} else if (context.figure.drawn) {
-		UI_BuildingInfo_handleMouseWalkerList(&context);
+		UI_BuildingInfo_handleMouseFigureList(&context);
 	} else if (context.type == BuildingInfoType_Building) {
 		int btype = Data_Buildings[context.buildingId].type;
 		if (btype == Building_Granary) {

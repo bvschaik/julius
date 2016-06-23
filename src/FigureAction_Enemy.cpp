@@ -162,8 +162,8 @@ static void FigureAction_enemyCommon(int walkerId, struct Data_Walker *f)
 	struct Data_Formation *m = &Data_Formations[f->formationId];
 	Data_CityInfo.numEnemiesInCity++;
 	f->terrainUsage = FigureTerrainUsage_Enemy;
-	f->formationPositionX = WalkerActionFormationLayoutPositionX(m->layout, f->indexInFormation);
-	f->formationPositionY = WalkerActionFormationLayoutPositionY(m->layout, f->indexInFormation);
+	f->formationPositionX = FigureActionFormationLayoutPositionX(m->layout, f->indexInFormation);
+	f->formationPositionY = FigureActionFormationLayoutPositionY(m->layout, f->indexInFormation);
 
 	switch (f->actionState) {
 		case FigureActionState_150_Attack:
@@ -207,7 +207,7 @@ static int getDirection(struct Data_Walker *f)
 	} else {
 		dir = f->previousTileDirection;
 	}
-	WalkerActionNormalizeDirection(dir);
+	FigureActionNormalizeDirection(dir);
 	return dir;
 }
 
@@ -221,7 +221,7 @@ static int getDirectionMissile(struct Data_Walker *f, struct Data_Formation *m)
 	} else {
 		dir = f->previousTileDirection;
 	}
-	WalkerActionNormalizeDirection(dir);
+	FigureActionNormalizeDirection(dir);
 	return dir;
 }
 
@@ -254,9 +254,9 @@ void FigureAction_enemy43_Spear(int walkerId)
 			f->graphicId = 745 + dir;
 		}
 	} else if (f->actionState == FigureActionState_151_EnemyInitial) {
-		f->graphicId = 697 + dir + 8 * WalkerActionMissileLauncherGraphicOffset(f);
+		f->graphicId = 697 + dir + 8 * FigureActionMissileLauncherGraphicOffset(f);
 	} else if (f->actionState == FigureActionState_149_Corpse) {
-		f->graphicId = 793 + WalkerActionCorpseGraphicOffset(f);
+		f->graphicId = 793 + FigureActionCorpseGraphicOffset(f);
 	} else if (f->direction == DirFigure_11_Attack) {
 		f->graphicId = 745 + dir + 8 * (f->graphicOffset / 2);
 	} else {
@@ -292,7 +292,7 @@ void FigureAction_enemy44_Sword(int walkerId)
 			f->graphicId = 545 + dir;
 		}
 	} else if (f->actionState == FigureActionState_149_Corpse) {
-		f->graphicId = 593 + WalkerActionCorpseGraphicOffset(f);
+		f->graphicId = 593 + FigureActionCorpseGraphicOffset(f);
 	} else if (f->direction == DirFigure_11_Attack) {
 		f->graphicId = 545 + dir + 8 * (f->graphicOffset / 2);
 	} else {
@@ -328,7 +328,7 @@ void FigureAction_enemy45_Sword(int walkerId)
 			f->graphicId = 545 + dir;
 		}
 	} else if (f->actionState == FigureActionState_149_Corpse) {
-		f->graphicId = 593 + WalkerActionCorpseGraphicOffset(f);
+		f->graphicId = 593 + FigureActionCorpseGraphicOffset(f);
 	} else if (f->direction == DirFigure_11_Attack) {
 		f->graphicId = 545 + dir + 8 * (f->graphicOffset / 2);
 	} else {
@@ -354,9 +354,9 @@ void FigureAction_enemy46_Camel(int walkerId)
 	} else if (f->actionState == FigureActionState_150_Attack) {
 		f->graphicId = 601 + dir;
 	} else if (f->actionState == FigureActionState_151_EnemyInitial) {
-		f->graphicId = 697 + dir + 8 * WalkerActionMissileLauncherGraphicOffset(f);
+		f->graphicId = 697 + dir + 8 * FigureActionMissileLauncherGraphicOffset(f);
 	} else if (f->actionState == FigureActionState_149_Corpse) {
-		f->graphicId = 745 + WalkerActionCorpseGraphicOffset(f);
+		f->graphicId = 745 + FigureActionCorpseGraphicOffset(f);
 	} else {
 		f->graphicId = 601 + dir + 8 * f->graphicOffset;
 	}
@@ -377,7 +377,7 @@ void FigureAction_enemy47_Elephant(int walkerId)
 	if (f->direction == DirFigure_11_Attack || f->actionState == FigureActionState_150_Attack) {
 		f->graphicId = 601 + dir + 8 * f->graphicOffset;
 	} else if (f->actionState == FigureActionState_149_Corpse) {
-		f->graphicId = 705 + WalkerActionCorpseGraphicOffset(f);
+		f->graphicId = 705 + FigureActionCorpseGraphicOffset(f);
 	} else {
 		f->graphicId = 601 + dir + 8 * f->graphicOffset;
 	}
@@ -398,7 +398,7 @@ void FigureAction_enemy48_Chariot(int walkerId)
 	if (f->direction == DirFigure_11_Attack || f->actionState == FigureActionState_150_Attack) {
 		f->graphicId = 697 + dir + 8 * (f->graphicOffset / 2);
 	} else if (f->actionState == FigureActionState_149_Corpse) {
-		f->graphicId = 745 + WalkerActionCorpseGraphicOffset(f);
+		f->graphicId = 745 + FigureActionCorpseGraphicOffset(f);
 	} else {
 		f->graphicId = 601 + dir + 8 * f->graphicOffset;
 	}
@@ -440,7 +440,7 @@ void FigureAction_enemy49_FastSword(int walkerId)
 			f->graphicId = attackId + dir;
 		}
 	} else if (f->actionState == FigureActionState_149_Corpse) {
-		f->graphicId = corpseId + WalkerActionCorpseGraphicOffset(f);
+		f->graphicId = corpseId + FigureActionCorpseGraphicOffset(f);
 	} else if (f->direction == DirFigure_11_Attack) {
 		f->graphicId = attackId + dir + 8 * (f->graphicOffset / 2);
 	} else {
@@ -471,7 +471,7 @@ void FigureAction_enemy50_Sword(int walkerId)
 			f->graphicId = 545 + dir;
 		}
 	} else if (f->actionState == FigureActionState_149_Corpse) {
-		f->graphicId = 593 + WalkerActionCorpseGraphicOffset(f);
+		f->graphicId = 593 + FigureActionCorpseGraphicOffset(f);
 	} else if (f->direction == DirFigure_11_Attack) {
 		f->graphicId = 545 + dir + 8 * (f->graphicOffset / 2);
 	} else {
@@ -502,9 +502,9 @@ void FigureAction_enemy51_Spear(int walkerId)
 			f->graphicId = 593 + dir;
 		}
 	} else if (f->actionState == FigureActionState_151_EnemyInitial) {
-		f->graphicId = 545 + dir + 8 * WalkerActionMissileLauncherGraphicOffset(f);
+		f->graphicId = 545 + dir + 8 * FigureActionMissileLauncherGraphicOffset(f);
 	} else if (f->actionState == FigureActionState_149_Corpse) {
-		f->graphicId = 641 + WalkerActionCorpseGraphicOffset(f);
+		f->graphicId = 641 + FigureActionCorpseGraphicOffset(f);
 	} else if (f->direction == DirFigure_11_Attack) {
 		f->graphicId = 593 + dir + 8 * (f->graphicOffset / 2);
 	} else {
@@ -530,9 +530,9 @@ void FigureAction_enemy52_MountedArcher(int walkerId)
 	} else if (f->actionState == FigureActionState_150_Attack) {
 		f->graphicId = 601 + dir;
 	} else if (f->actionState == FigureActionState_151_EnemyInitial) {
-		f->graphicId = 697 + dir + 8 * WalkerActionMissileLauncherGraphicOffset(f);
+		f->graphicId = 697 + dir + 8 * FigureActionMissileLauncherGraphicOffset(f);
 	} else if (f->actionState == FigureActionState_149_Corpse) {
-		f->graphicId = 745 + WalkerActionCorpseGraphicOffset(f);
+		f->graphicId = 745 + FigureActionCorpseGraphicOffset(f);
 	} else {
 		f->graphicId = 601 + dir + 8 * f->graphicOffset;
 	}
@@ -561,7 +561,7 @@ void FigureAction_enemy53_Axe(int walkerId)
 			f->graphicId = 697 + dir;
 		}
 	} else if (f->actionState == FigureActionState_149_Corpse) {
-		f->graphicId = 745 + WalkerActionCorpseGraphicOffset(f);
+		f->graphicId = 745 + FigureActionCorpseGraphicOffset(f);
 	} else if (f->direction == DirFigure_11_Attack) {
 		f->graphicId = 697 + dir + 8 * (f->graphicOffset / 2);
 	} else {
@@ -628,12 +628,12 @@ void FigureAction_enemy54_Gladiator(int walkerId)
 	} else {
 		dir = f->previousTileDirection;
 	}
-	WalkerActionNormalizeDirection(dir);
+	FigureActionNormalizeDirection(dir);
 
 	if (f->actionState == FigureActionState_150_Attack || f->direction == DirFigure_11_Attack) {
 		f->graphicId = GraphicId(ID_Graphic_Figure_Gladiator) + dir + 104 + 8 * (f->graphicOffset / 2);
 	} else if (f->actionState == FigureActionState_149_Corpse) {
-		f->graphicId = GraphicId(ID_Graphic_Figure_Gladiator) + 96 + WalkerActionCorpseGraphicOffset(f);
+		f->graphicId = GraphicId(ID_Graphic_Figure_Gladiator) + 96 + FigureActionCorpseGraphicOffset(f);
 	} else {
 		f->graphicId = GraphicId(ID_Graphic_Figure_Gladiator) + dir + 8 * f->graphicOffset;
 	}
@@ -666,7 +666,7 @@ void FigureAction_enemyCaesarLegionary(int walkerId)
 			break;
 		case FigureActionState_149_Corpse:
 			f->graphicId = GraphicId(ID_Graphic_Figure_CaesarLegionary) +
-				WalkerActionCorpseGraphicOffset(f) + 152;
+				FigureActionCorpseGraphicOffset(f) + 152;
 			break;
 		case FigureActionState_84_SoldierAtStandard:
 			if (m->isHalted && m->layout == FormationLayout_Tortoise && m->missileAttackTimeout) {
@@ -685,14 +685,14 @@ int FigureAction_HerdEnemy_moveFormationTo(int formationId, int x, int y, int *x
 {
 	struct Data_Formation *m = &Data_Formations[formationId];
 	int baseOffset = GridOffset(
-		WalkerActionFormationLayoutPositionX(m->layout, 0),
-		WalkerActionFormationLayoutPositionY(m->layout, 0));
+		FigureActionFormationLayoutPositionX(m->layout, 0),
+		FigureActionFormationLayoutPositionY(m->layout, 0));
 	int walkerOffsets[50];
 	walkerOffsets[0] = 0;
 	for (int i = 1; i < m->numFigures; i++) {
 		walkerOffsets[i] = GridOffset(
-			WalkerActionFormationLayoutPositionX(m->layout, i),
-			WalkerActionFormationLayoutPositionY(m->layout, i)) - baseOffset;
+			FigureActionFormationLayoutPositionX(m->layout, i),
+			FigureActionFormationLayoutPositionY(m->layout, i)) - baseOffset;
 	}
 	Routing_canTravelOverLandNonCitizen(x, y, -1, -1, 0, 600);
 	for (int r = 0; r <= 10; r++) {

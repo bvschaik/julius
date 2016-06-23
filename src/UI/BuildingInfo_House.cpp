@@ -17,14 +17,14 @@
 
 static void drawVacantLot(BuildingInfoContext *c)
 {
-	UI_BuildingInfo_drawWalkerImagesLocal(c);
+	UI_BuildingInfo_drawFigureImagesLocal(c);
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset,
 		c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(128, 0, c->xOffset, c->yOffset + 8,
 		16 * c->widthBlocks, Font_LargeBlack);
 	Widget_GameText_drawCentered(13, 1, c->xOffset, c->yOffset + 16 * c->heightBlocks - 22,
 		16 * c->widthBlocks, Font_NormalBlack);
-	UI_BuildingInfo_drawWalkerList(c);
+	UI_BuildingInfo_drawFigureList(c);
 
 	int textId = 2;
 	if (Terrain_getClosestRoadWithinRadius(

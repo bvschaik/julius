@@ -1,7 +1,7 @@
 #include "Figure.h"
 
 #include "Building.h"
-#include "WalkerAction.h"
+#include "FigureAction.h"
 
 #include "Data/Building.h"
 #include "Data/Constants.h"

@@ -290,11 +290,11 @@ void FigureAction_docker(int walkerId)
 	}
 
 	int dir = f->direction < 8 ? f->direction : f->previousTileDirection;
-	WalkerActionNormalizeDirection(dir);
+	FigureActionNormalizeDirection(dir);
 
 	if (f->actionState == FigureActionState_149_Corpse) {
 		f->graphicId = GraphicId(ID_Graphic_Figure_Cartpusher) +
-			WalkerActionCorpseGraphicOffset(f) + 96;
+			FigureActionCorpseGraphicOffset(f) + 96;
 		f->cartGraphicId = 0;
 	} else {
 		f->graphicId = GraphicId(ID_Graphic_Figure_Cartpusher) + dir + 8 * f->graphicOffset;

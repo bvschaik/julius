@@ -59,10 +59,10 @@ static void FigureAction_culture(int walkerId, int graphicCategory)
 	FigureAction_cultureCommon(walkerId, 1);
 	if (f->actionState == FigureActionState_149_Corpse) {
 		f->graphicId = GraphicId(graphicCategory) +
-			WalkerActionCorpseGraphicOffset(f) + 96;
+			FigureActionCorpseGraphicOffset(f) + 96;
 	} else {
 		f->graphicId = GraphicId(graphicCategory) +
-			WalkerActionDirection(f) + 8 * f->graphicOffset;
+			FigureActionDirection(f) + 8 * f->graphicOffset;
 	}
 }
 
@@ -100,10 +100,10 @@ void FigureAction_schoolChild(int walkerId)
 	}
 	if (f->actionState == FigureActionState_149_Corpse) {
 		f->graphicId = GraphicId(ID_Graphic_Figure_SchoolChild) +
-			WalkerActionCorpseGraphicOffset(f) + 96;
+			FigureActionCorpseGraphicOffset(f) + 96;
 	} else {
 		f->graphicId = GraphicId(ID_Graphic_Figure_SchoolChild) +
-			WalkerActionDirection(f) + 8 * f->graphicOffset;
+			FigureActionDirection(f) + 8 * f->graphicOffset;
 	}
 }
 

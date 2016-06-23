@@ -2,11 +2,11 @@
 #include "Terrain_private.h"
 
 #include "Building.h"
+#include "FigureAction.h"
 #include "Routing.h"
 #include "TerrainBridge.h"
 #include "TerrainGraphics.h"
 #include "Util.h"
-#include "WalkerAction.h"
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"

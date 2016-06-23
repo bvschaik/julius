@@ -441,7 +441,7 @@ void FigureAction_prefect(int walkerId)
 	} else {
 		dir = f->previousTileDirection;
 	}
-	WalkerActionNormalizeDirection(dir);
+	FigureActionNormalizeDirection(dir);
 	switch (f->actionState) {
 		case FigureActionState_74_PrefectGoingToFire:
 			f->graphicId = GraphicId(ID_Graphic_Figure_PrefectWithBucket) +
@@ -461,7 +461,7 @@ void FigureAction_prefect(int walkerId)
 			break;
 		case FigureActionState_149_Corpse:
 			f->graphicId = GraphicId(ID_Graphic_Figure_Prefect) +
-				96 + WalkerActionCorpseGraphicOffset(f);
+				96 + FigureActionCorpseGraphicOffset(f);
 			break;
 		default:
 			f->graphicId = GraphicId(ID_Graphic_Figure_Prefect) +

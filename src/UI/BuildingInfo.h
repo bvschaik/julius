@@ -49,7 +49,7 @@ typedef struct {
 		int selectedIndex;
 		int count;
 		int drawn;
-		int walkerIds[7];
+		int figureIds[7];
 	} figure;
 } BuildingInfoContext;
 
@@ -62,10 +62,10 @@ void UI_BuildingInfo_getTooltip(struct TooltipContext *c);
 int UI_BuildingInfo_getBuildingType();
 
 void UI_BuildingInfo_drawEmploymentInfo(BuildingInfoContext *c, int yOffset);
-void UI_BuildingInfo_drawWalkerImagesLocal(BuildingInfoContext *c);
-void UI_BuildingInfo_drawWalkerList(BuildingInfoContext *c);
-void UI_BuildingInfo_playWalkerPhrase(BuildingInfoContext *c);
-void UI_BuildingInfo_handleMouseWalkerList(BuildingInfoContext *c);
+void UI_BuildingInfo_drawFigureImagesLocal(BuildingInfoContext *c);
+void UI_BuildingInfo_drawFigureList(BuildingInfoContext *c);
+void UI_BuildingInfo_playFigurePhrase(BuildingInfoContext *c);
+void UI_BuildingInfo_handleMouseFigureList(BuildingInfoContext *c);
 
 void UI_BuildingInfo_showStorageOrders(int param1, int param2);
 

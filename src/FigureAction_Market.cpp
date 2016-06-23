@@ -171,10 +171,10 @@ void FigureAction_deliveryBoy(int walkerId)
 		f->isGhost = 1;
 	}
 	int dir = (f->direction < 8) ? f->direction : f->previousTileDirection;
-	WalkerActionNormalizeDirection(dir);
+	FigureActionNormalizeDirection(dir);
 	if (f->actionState == FigureActionState_149_Corpse) {
 		f->graphicId = GraphicId(ID_Graphic_Figure_DeliveryBoy) + 96 +
-			WalkerActionCorpseGraphicOffset(f);
+			FigureActionCorpseGraphicOffset(f);
 	} else {
 		f->graphicId = GraphicId(ID_Graphic_Figure_DeliveryBoy) +
 			dir + 8 * f->graphicOffset;

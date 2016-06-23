@@ -155,7 +155,7 @@ void FigureAction_fishingBoat(int walkerId)
 			break;
 	}
 	int dir = (f->direction < 8) ? f->direction : f->previousTileDirection;
-	WalkerActionNormalizeDirection(dir);
+	FigureActionNormalizeDirection(dir);
 	
 	if (f->actionState == FigureActionState_192_FishingBoatFishing) {
 		f->graphicId = GraphicId(ID_Graphic_Figure_Ship) + dir + 16;

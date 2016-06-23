@@ -86,7 +86,7 @@ static void updateShowsAtDestination(struct Data_Walker *f)
 static void updateGraphic(int walkerId, struct Data_Walker *f)
 {
 	int dir = f->direction < 8 ? f->direction : f->previousTileDirection;
-	WalkerActionNormalizeDirection(dir);
+	FigureActionNormalizeDirection(dir);
 
 	if (f->type == Figure_Charioteer) {
 		f->cartGraphicId = 0;
@@ -120,7 +120,7 @@ static void updateGraphic(int walkerId, struct Data_Walker *f)
 			f->graphicId = graphicId + dir;
 		}
 	} else if (f->actionState == FigureActionState_149_Corpse) {
-		f->graphicId = graphicId + 96 + WalkerActionCorpseGraphicOffset(f);
+		f->graphicId = graphicId + 96 + FigureActionCorpseGraphicOffset(f);
 		f->cartGraphicId = 0;
 	} else {
 		f->graphicId = graphicId + dir + 8 * f->graphicOffset;

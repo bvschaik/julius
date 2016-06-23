@@ -38,20 +38,20 @@ void UI_BuildingInfo_drawTerrain(BuildingInfoContext *c)
 		if (c->canPlaySound) {
 			c->canPlaySound = 0;
 			if (c->figure.count > 0) {
-				UI_BuildingInfo_playWalkerPhrase(c);
+				UI_BuildingInfo_playFigurePhrase(c);
 			} else {
 				Sound_Speech_playFile("wavs/empty_land.wav");
 			}
 		}
-		if (c->figure.count > 0 && c->figure.walkerIds[c->figure.selectedIndex]) {
-			if (Data_Walkers[c->figure.walkerIds[c->figure.selectedIndex]].type < Figure_Shipwreck) {
+		if (c->figure.count > 0 && c->figure.figureIds[c->figure.selectedIndex]) {
+			if (Data_Walkers[c->figure.figureIds[c->figure.selectedIndex]].type < Figure_Shipwreck) {
 				c->helpId = 42;
 			} else {
 				c->helpId = 330;
 			}
 		}
 		
-		UI_BuildingInfo_drawWalkerImagesLocal(c);
+		UI_BuildingInfo_drawFigureImagesLocal(c);
 		Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset,
 			c->widthBlocks, c->heightBlocks);
 		if (!c->figure.count) {
@@ -63,6 +63,6 @@ void UI_BuildingInfo_drawTerrain(BuildingInfoContext *c)
 				c->xOffset + 36, c->yOffset + 16 * c->heightBlocks - 113,
 				16 * (c->widthBlocks - 4), Font_NormalBlack);
 		}
-		UI_BuildingInfo_drawWalkerList(c);
+		UI_BuildingInfo_drawFigureList(c);
 	}
 }

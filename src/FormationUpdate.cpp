@@ -2,12 +2,12 @@
 
 #include "Calc.h"
 #include "Figure.h"
+#include "FigureAction.h"
 #include "Grid.h"
 #include "PlayerMessage.h"
 #include "Routing.h"
 #include "Sound.h"
 #include "TerrainGraphics.h"
-#include "WalkerAction.h"
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"

@@ -4,6 +4,7 @@
 #include "Calc.h"
 #include "CityInfo.h"
 #include "Figure.h"
+#include "FigureAction.h"
 #include "Formation.h"
 #include "PlayerMessage.h"
 #include "Routing.h"
@@ -13,7 +14,6 @@
 #include "TerrainGraphics.h"
 #include "Time.h"
 #include "Tutorial.h"
-#include "WalkerAction.h"
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"

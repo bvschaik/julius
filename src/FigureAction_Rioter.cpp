@@ -31,7 +31,7 @@ void FigureAction_protestor(int walkerId)
 	}
 	if (f->actionState == FigureActionState_149_Corpse) {
 		f->graphicId = GraphicId(ID_Graphic_Figure_Criminal) +
-			WalkerActionCorpseGraphicOffset(f) + 96;
+			FigureActionCorpseGraphicOffset(f) + 96;
 	} else {
 		f->graphicId = GraphicId(ID_Graphic_Figure_Criminal) +
 			criminalOffsets[f->graphicOffset / 4] + 104;
@@ -54,7 +54,7 @@ void FigureAction_criminal(int walkerId)
 	}
 	if (f->actionState == FigureActionState_149_Corpse) {
 		f->graphicId = GraphicId(ID_Graphic_Figure_Criminal) +
-			WalkerActionCorpseGraphicOffset(f) + 96;
+			FigureActionCorpseGraphicOffset(f) + 96;
 	} else {
 		f->graphicId = GraphicId(ID_Graphic_Figure_Criminal) +
 			criminalOffsets[f->graphicOffset / 2] + 104;
@@ -128,11 +128,11 @@ void FigureAction_rioter(int walkerId)
 	} else {
 		dir = f->previousTileDirection;
 	}
-	WalkerActionNormalizeDirection(dir);
+	FigureActionNormalizeDirection(dir);
 	
 	if (f->actionState == FigureActionState_149_Corpse) {
 		f->graphicId = GraphicId(ID_Graphic_Figure_Criminal) +
-			96 + WalkerActionCorpseGraphicOffset(f);
+			96 + FigureActionCorpseGraphicOffset(f);
 	} else if (f->direction == DirFigure_11_Attack) {
 		f->graphicId = GraphicId(ID_Graphic_Figure_Criminal) +
 			104 + criminalOffsets[f->graphicOffset];

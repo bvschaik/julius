@@ -84,7 +84,7 @@ void FigureAction_indigenousNative(int walkerId)
 	} else {
 		dir = f->previousTileDirection;
 	}
-	WalkerActionNormalizeDirection(dir);
+	FigureActionNormalizeDirection(dir);
 	
 	f->isEnemyGraphic = 1;
 	if (f->actionState == FigureActionState_150_Attack) {
@@ -94,7 +94,7 @@ void FigureAction_indigenousNative(int walkerId)
 			f->graphicId = 393 + dir;
 		}
 	} else if (f->actionState == FigureActionState_149_Corpse) {
-		f->graphicId = 441 + WalkerActionCorpseGraphicOffset(f);
+		f->graphicId = 441 + FigureActionCorpseGraphicOffset(f);
 	} else if (f->direction == DirFigure_11_Attack) {
 		f->graphicId = 393 + dir + 8 * (f->graphicOffset / 2);
 	} else if (f->actionState == FigureActionState_159_NativeAttacking) {

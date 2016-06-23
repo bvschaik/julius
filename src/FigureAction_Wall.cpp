@@ -87,7 +87,7 @@ void FigureAction_ballista(int walkerId)
 			}
 			break;
 	}
-	int dir = WalkerActionDirection(f);
+	int dir = FigureActionDirection(f);
 	if (f->actionState == FigureActionState_181_BallistaFiring) {
 		f->graphicId = GraphicId(ID_Graphic_Figure_Ballista) + dir +
 			8 * ballistaFiringOffsets[f->waitTicksMissile / 4];
@@ -259,10 +259,10 @@ void FigureAction_towerSentry(int walkerId)
 		f->inBuildingWaitTicks--;
 		f->heightAdjustedTicks = 0;
 	}
-	int dir = WalkerActionDirection(f);
+	int dir = FigureActionDirection(f);
 	if (f->actionState == FigureActionState_149_Corpse) {
 		f->graphicId = GraphicId(ID_Graphic_Figure_TowerSentry) +
-			136 + WalkerActionCorpseGraphicOffset(f);
+			136 + FigureActionCorpseGraphicOffset(f);
 	} else if (f->actionState == FigureActionState_172_TowerSentryFiring) {
 		f->graphicId = GraphicId(ID_Graphic_Figure_TowerSentry) +
 			dir + 96 + 8 * towerSentryFiringOffsets[f->waitTicksMissile / 2];

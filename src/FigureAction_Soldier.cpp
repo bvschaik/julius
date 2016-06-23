@@ -145,10 +145,10 @@ static void updateSoldierGraphicJavelin(struct Data_Walker *f, int dir)
 			f->graphicId = graphicId + 96 + dir + 8 * ((f->attackGraphicOffset - 12) / 2);
 		}
 	} else if (f->actionState == FigureActionState_149_Corpse) {
-		f->graphicId = graphicId + 144 + WalkerActionCorpseGraphicOffset(f);
+		f->graphicId = graphicId + 144 + FigureActionCorpseGraphicOffset(f);
 	} else if (f->actionState == FigureActionState_84_SoldierAtStandard) {
 		f->graphicId = graphicId + 96 + dir +
-			8 * WalkerActionMissileLauncherGraphicOffset(f);
+			8 * FigureActionMissileLauncherGraphicOffset(f);
 	} else {
 		f->graphicId = graphicId + dir + 8 * f->graphicOffset;
 	}
@@ -164,7 +164,7 @@ static void updateSoldierGraphicMounted(struct Data_Walker *f, int dir)
 			f->graphicId = graphicId + 96 + dir + 8 * ((f->attackGraphicOffset - 12) / 2);
 		}
 	} else if (f->actionState == FigureActionState_149_Corpse) {
-		f->graphicId = graphicId + 144 + WalkerActionCorpseGraphicOffset(f);
+		f->graphicId = graphicId + 144 + FigureActionCorpseGraphicOffset(f);
 	} else {
 		f->graphicId = graphicId + dir + 8 * f->graphicOffset;
 	}
@@ -180,7 +180,7 @@ static void updateSoldierGraphicLegionary(struct Data_Walker *f, struct Data_For
 			f->graphicId = graphicId + 96 + dir + 8 * ((f->attackGraphicOffset - 12) / 2);
 		}
 	} else if (f->actionState == FigureActionState_149_Corpse) {
-		f->graphicId = graphicId + 152 + WalkerActionCorpseGraphicOffset(f);
+		f->graphicId = graphicId + 152 + FigureActionCorpseGraphicOffset(f);
 	} else if (f->actionState == FigureActionState_84_SoldierAtStandard) {
 		if (m->isHalted && m->layout == FormationLayout_Tortoise && m->missileAttackTimeout) {
 			f->graphicId = graphicId + dir + 144;
@@ -206,7 +206,7 @@ static void updateSoldierGraphic(int walkerId, struct Data_Walker *f, struct Dat
 	} else {
 		dir = f->previousTileDirection;
 	}
-	WalkerActionNormalizeDirection(dir);
+	FigureActionNormalizeDirection(dir);
 	if (f->type == Figure_FortJavelin) {
 		updateSoldierGraphicJavelin(f, dir);
 	} else if (f->type == Figure_FortMounted) {
@@ -239,8 +239,8 @@ void FigureAction_soldier(int walkerId)
 	if (f->formationAtRest || f->actionState == FigureActionState_81_SoldierGoingToFort) {
 		layout = FormationLayout_AtRest;
 	}
-	f->formationPositionX = m->x + WalkerActionFormationLayoutPositionX(layout, f->indexInFormation);
-	f->formationPositionY = m->y + WalkerActionFormationLayoutPositionY(layout, f->indexInFormation);
+	f->formationPositionX = m->x + FigureActionFormationLayoutPositionX(layout, f->indexInFormation);
+	f->formationPositionY = m->y + FigureActionFormationLayoutPositionY(layout, f->indexInFormation);
 	
 	switch (f->actionState) {
 		case FigureActionState_150_Attack:
@@ -287,8 +287,8 @@ void FigureAction_soldier(int walkerId)
 			break;
 		case FigureActionState_83_SoldierGoingToStandard:
 			f->formationAtRest = 0;
-			f->destinationX = m->xStandard + WalkerActionFormationLayoutPositionX(m->layout, f->indexInFormation);
-			f->destinationY = m->yStandard + WalkerActionFormationLayoutPositionY(m->layout, f->indexInFormation);
+			f->destinationX = m->xStandard + FigureActionFormationLayoutPositionX(m->layout, f->indexInFormation);
+			f->destinationY = m->yStandard + FigureActionFormationLayoutPositionY(m->layout, f->indexInFormation);
 			if (f->alternativeLocationIndex) {
 				f->destinationX += soldierAlternativePoints[f->alternativeLocationIndex].x;
 				f->destinationY += soldierAlternativePoints[f->alternativeLocationIndex].y;
@@ -312,8 +312,8 @@ void FigureAction_soldier(int walkerId)
 			f->formationAtRest = 0;
 			f->graphicOffset = 0;
 			Figure_updatePositionInTileList(walkerId);
-			f->destinationX = m->xStandard + WalkerActionFormationLayoutPositionX(m->layout, f->indexInFormation);
-			f->destinationY = m->yStandard + WalkerActionFormationLayoutPositionY(m->layout, f->indexInFormation);
+			f->destinationX = m->xStandard + FigureActionFormationLayoutPositionX(m->layout, f->indexInFormation);
+			f->destinationY = m->yStandard + FigureActionFormationLayoutPositionY(m->layout, f->indexInFormation);
 			if (f->alternativeLocationIndex) {
 				f->destinationX += soldierAlternativePoints[f->alternativeLocationIndex].x;
 				f->destinationY += soldierAlternativePoints[f->alternativeLocationIndex].y;

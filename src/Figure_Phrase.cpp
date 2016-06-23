@@ -1,7 +1,7 @@
 #include "Building.h"
 #include "Calc.h"
+#include "FigureAction.h"
 #include "Sound.h"
-#include "WalkerAction.h"
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
