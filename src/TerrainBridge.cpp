@@ -271,9 +271,9 @@ int TerrainBridge_countFiguresOnBridge(int gridOffset)
 		gridOffset -= offsetUp;
 	}
 	
-	int walkers = 0;
+	int figures = 0;
 	if (Data_Grid_figureIds[gridOffset]) {
-		walkers = 1;
+		figures = 1;
 	}
 	Data_Grid_bitfields[gridOffset] &= Bitfield_NoDeleted;
 	while ((Data_Grid_terrain[gridOffset + offsetUp] & Terrain_Water) &&
@@ -281,10 +281,10 @@ int TerrainBridge_countFiguresOnBridge(int gridOffset)
 		gridOffset += offsetUp;
 		Data_Grid_bitfields[gridOffset] &= Bitfield_NoDeleted;
 		if (Data_Grid_figureIds[gridOffset]) {
-			walkers++;
+			figures++;
 		}
 	}
-	return walkers;
+	return figures;
 }
 
 void TerrainBridge_updateSpriteIdsOnMapRotate(int ccw)

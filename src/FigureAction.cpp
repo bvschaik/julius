@@ -3,7 +3,7 @@
 #include "Figure.h"
 #include "Data/CityInfo.h"
 
-static void (*walkerActionCallbacks[])(int walkerId) = {
+static void (*figureActionCallbacks[])(int figureId) = {
 	FigureAction_nobody, //0
 	FigureAction_immigrant,
 	FigureAction_emigrant,
@@ -99,17 +99,17 @@ void FigureAction_handle()
 		Data_CityInfo.riotersOrAttackingNativesInCity--;
 	}
 	for (int i = 1; i < MAX_FIGURES; i++) {
-		struct Data_Walker *f = &Data_Walkers[i];
+		struct Data_Figure *f = &Data_Figures[i];
 		if (f->state) {
 			if (f->targetedByFigureId) {
-				if (Data_Walkers[f->targetedByFigureId].state != FigureState_Alive) {
+				if (Data_Figures[f->targetedByFigureId].state != FigureState_Alive) {
 					f->targetedByFigureId = 0;
 				}
-				if (Data_Walkers[f->targetedByFigureId].targetFigureId != i) {
+				if (Data_Figures[f->targetedByFigureId].targetFigureId != i) {
 					f->targetedByFigureId = 0;
 				}
 			}
-			walkerActionCallbacks[f->type](i);
+			figureActionCallbacks[f->type](i);
 			if (f->state == FigureState_Dead) {
 				Figure_delete(i);
 			}
@@ -117,6 +117,6 @@ void FigureAction_handle()
 	}
 }
 
-void FigureAction_nobody(int walkerId)
+void FigureAction_nobody(int figureId)
 {
 }

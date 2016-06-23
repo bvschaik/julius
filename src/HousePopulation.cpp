@@ -168,7 +168,7 @@ static void createImmigrants(int numPeople)
 	for (int i = 0; i < Data_BuildingList.large.size; i++) {
 		int buildingId = Data_BuildingList.large.items[i];
 		if (Data_Buildings[buildingId].immigrantFigureId &&
-			Data_Walkers[Data_Buildings[buildingId].immigrantFigureId].state != FigureState_Alive) {
+			Data_Figures[Data_Buildings[buildingId].immigrantFigureId].state != FigureState_Alive) {
 			Data_Buildings[buildingId].immigrantFigureId = 0;
 		}
 	}
@@ -236,14 +236,14 @@ static void createEmigrants(int numPeople)
 
 static void createImmigrantForBuilding(int buildingId, int numPeople)
 {
-	int walkerId = Figure_create(Figure_Immigrant,
+	int figureId = Figure_create(Figure_Immigrant,
 		Data_CityInfo.entryPointX, Data_CityInfo.entryPointY, 0);
-	Data_Walkers[walkerId].actionState = FigureActionState_1_ImmigrantCreated;
-	Data_Walkers[walkerId].immigrantBuildingId = buildingId;
-	Data_Buildings[buildingId].immigrantFigureId = walkerId;
-	Data_Walkers[walkerId].waitTicks =
+	Data_Figures[figureId].actionState = FigureActionState_1_ImmigrantCreated;
+	Data_Figures[figureId].immigrantBuildingId = buildingId;
+	Data_Buildings[buildingId].immigrantFigureId = figureId;
+	Data_Figures[figureId].waitTicks =
 		10 + (Data_Buildings[buildingId].houseGenerationDelay & 0x7f);
-	Data_Walkers[walkerId].migrantNumPeople = numPeople;
+	Data_Figures[figureId].migrantNumPeople = numPeople;
 }
 
 static void createEmigrantForBuilding(int buildingId, int numPeople)
@@ -255,11 +255,11 @@ static void createEmigrantForBuilding(int buildingId, int numPeople)
 		Data_Buildings[buildingId].housePopulation = 0;
 		BuildingHouse_changeToVacantLot(buildingId);
 	}
-	int walkerId = Figure_create(Figure_Emigrant,
+	int figureId = Figure_create(Figure_Emigrant,
 		Data_Buildings[buildingId].x, Data_Buildings[buildingId].y, 0);
-	Data_Walkers[walkerId].actionState = FigureActionState_4_EmigrantCreated;
-	Data_Walkers[walkerId].waitTicks = 0;
-	Data_Walkers[walkerId].migrantNumPeople = numPeople;
+	Data_Figures[figureId].actionState = FigureActionState_4_EmigrantCreated;
+	Data_Figures[figureId].waitTicks = 0;
+	Data_Figures[figureId].migrantNumPeople = numPeople;
 }
 
 int HousePopulation_getClosestHouseWithRoom(int x, int y)
@@ -363,10 +363,10 @@ int HousePopulation_calculatePeoplePerType()
 
 void HousePopulation_createHomeless(int x, int y, int numPeople)
 {
-	int walkerId = Figure_create(Figure_Homeless, x, y, 0);
-	Data_Walkers[walkerId].actionState = FigureActionState_7_HomelessCreated;
-	Data_Walkers[walkerId].waitTicks = 0;
-	Data_Walkers[walkerId].migrantNumPeople = numPeople;
+	int figureId = Figure_create(Figure_Homeless, x, y, 0);
+	Data_Figures[figureId].actionState = FigureActionState_7_HomelessCreated;
+	Data_Figures[figureId].waitTicks = 0;
+	Data_Figures[figureId].migrantNumPeople = numPeople;
 	CityInfo_Population_removePeopleHomeless(numPeople);
 }
 

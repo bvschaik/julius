@@ -1162,7 +1162,7 @@ int Building_Dock_getNumIdleDockers(int buildingId)
 	int numIdle = 0;
 	for (int i = 0; i < 3; i++) {
 		if (b->data.other.dockFigureIds[i]) {
-			struct Data_Walker *f = &Data_Walkers[b->data.other.dockFigureIds[i]];
+			struct Data_Figure *f = &Data_Figures[b->data.other.dockFigureIds[i]];
 			if (f->actionState == FigureActionState_132_DockerIdling ||
 				f->actionState == FigureActionState_133_DockerImportQueue) {
 				numIdle++;

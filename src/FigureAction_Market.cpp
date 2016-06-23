@@ -3,18 +3,18 @@
 #include "Figure.h"
 #include "Resource.h"
 
-static int createDeliveryBoy(int leaderId, struct Data_Walker *f)
+static int createDeliveryBoy(int leaderId, struct Data_Figure *f)
 {
 	int boy = Figure_create(Figure_DeliveryBoy, f->x, f->y, 0);
-	Data_Walkers[boy].inFrontFigureId = leaderId;
-	Data_Walkers[boy].collectingItemId = f->collectingItemId;
-	Data_Walkers[boy].buildingId = f->buildingId;
+	Data_Figures[boy].inFrontFigureId = leaderId;
+	Data_Figures[boy].collectingItemId = f->collectingItemId;
+	Data_Figures[boy].buildingId = f->buildingId;
 	return boy;
 }
 
-static int marketBuyerTakeFoodFromGranary(int walkerId, int marketId, int granaryId)
+static int marketBuyerTakeFoodFromGranary(int figureId, int marketId, int granaryId)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	int resource;
 	switch (f->collectingItemId) {
 		case Inventory_Wheat: resource = Resource_Wheat; break;
@@ -54,16 +54,16 @@ static int marketBuyerTakeFoodFromGranary(int walkerId, int marketId, int granar
 	}
 	Resource_removeFromGranary(granaryId, resource, 100 * numLoads);
 	// create delivery boys
-	int previousBoy = walkerId;
+	int previousBoy = figureId;
 	for (int i = 0; i < numLoads; i++) {
 		previousBoy = createDeliveryBoy(previousBoy, f);
 	}
 	return 1;
 }
 
-static int marketBuyerTakeResourceFromWarehouse(int walkerId, int marketId, int warehouseId)
+static int marketBuyerTakeResourceFromWarehouse(int figureId, int marketId, int warehouseId)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	int resource;
 	switch (f->collectingItemId) {
 		case Inventory_Pottery: resource = Resource_Pottery; break;
@@ -85,40 +85,40 @@ static int marketBuyerTakeResourceFromWarehouse(int walkerId, int marketId, int 
 	Resource_removeFromWarehouse(warehouseId, resource, numLoads);
 	
 	// create delivery boys
-	int boy1 = createDeliveryBoy(walkerId, f);
+	int boy1 = createDeliveryBoy(figureId, f);
 	if (numLoads > 1) {
 		createDeliveryBoy(boy1, f);
 	}
 	return 1;
 }
 
-void FigureAction_marketBuyer(int walkerId)
+void FigureAction_marketBuyer(int figureId)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 800;
 	
-	if (!BuildingIsInUse(f->buildingId) || Data_Buildings[f->buildingId].figureId2 != walkerId) {
+	if (!BuildingIsInUse(f->buildingId) || Data_Buildings[f->buildingId].figureId2 != figureId) {
 		f->state = FigureState_Dead;
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);
 	switch (f->actionState) {
 		case FigureActionState_150_Attack:
-			FigureAction_Common_handleAttack(walkerId);
+			FigureAction_Common_handleAttack(figureId);
 			break;
 		case FigureActionState_149_Corpse:
-			FigureAction_Common_handleCorpse(walkerId);
+			FigureAction_Common_handleCorpse(figureId);
 			break;
 		case FigureActionState_145_MarketBuyerGoingToStorage:
-			FigureMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(figureId, 1);
 			if (f->direction == DirFigure_8_AtDestination) {
 				if (f->collectingItemId > 3) {
-					if (!marketBuyerTakeResourceFromWarehouse(walkerId, f->buildingId, f->destinationBuildingId)) {
+					if (!marketBuyerTakeResourceFromWarehouse(figureId, f->buildingId, f->destinationBuildingId)) {
 						f->state = FigureState_Dead;
 					}
 				} else {
-					if (!marketBuyerTakeFoodFromGranary(walkerId, f->buildingId, f->destinationBuildingId)) {
+					if (!marketBuyerTakeFoodFromGranary(figureId, f->buildingId, f->destinationBuildingId)) {
 						f->state = FigureState_Dead;
 					}
 				}
@@ -129,36 +129,36 @@ void FigureAction_marketBuyer(int walkerId)
 				f->actionState = FigureActionState_146_MarketBuyerReturning;
 				f->destinationX = f->sourceX;
 				f->destinationY = f->sourceY;
-				FigureRoute_remove(walkerId);
+				FigureRoute_remove(figureId);
 			}
 			break;
 		case FigureActionState_146_MarketBuyerReturning:
-			FigureMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(figureId, 1);
 			if (f->direction == DirFigure_8_AtDestination || f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
 			} else if (f->direction == DirFigure_9_Reroute) {
-				FigureRoute_remove(walkerId);
+				FigureRoute_remove(figureId);
 			}
 			break;
 	}
-	WalkerActionUpdateGraphic(f, GraphicId(ID_Graphic_Figure_MarketLady));
+	FigureActionUpdateGraphic(f, GraphicId(ID_Graphic_Figure_MarketLady));
 }
 
-void FigureAction_deliveryBoy(int walkerId)
+void FigureAction_deliveryBoy(int figureId)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	f->isGhost = 0;
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	
-	struct Data_Walker *leader = &Data_Walkers[f->inFrontFigureId];
+	struct Data_Figure *leader = &Data_Figures[f->inFrontFigureId];
 	if (f->inFrontFigureId <= 0 || leader->actionState == FigureActionState_149_Corpse) {
 		f->state = FigureState_Dead;
 	} else {
 		if (leader->state == FigureState_Alive) {
 			if (leader->type == Figure_MarketBuyer || leader->type == Figure_DeliveryBoy) {
-				FigureMovement_followTicks(walkerId, f->inFrontFigureId, 1);
+				FigureMovement_followTicks(figureId, f->inFrontFigureId, 1);
 			} else {
 				f->state = FigureState_Dead;
 			}

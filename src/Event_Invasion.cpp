@@ -38,7 +38,7 @@ static const struct {
 	int pctType1;
 	int pctType2;
 	int pctType3;
-	int walkerTypes[3];
+	int figureTypes[3];
 	int formationLayout;
 } enemyProperties[12] = {
 	{100, 0, 0, {49, 0, 0}, 8},
@@ -359,10 +359,10 @@ static int startInvasion(int enemyType, int amount, int invasionPoint, int attac
 		if (formationsPerType[type] <= 0) {
 			continue;
 		}
-		int walkerType = enemyProperties[enemyType].walkerTypes[type];
+		int figureType = enemyProperties[enemyType].figureTypes[type];
 		for (int i = 0; i < formationsPerType[type]; i++) {
 			int formationId = Formation_create(
-				walkerType, enemyProperties[enemyType].formationLayout,
+				figureType, enemyProperties[enemyType].formationLayout,
 				orientation, x, y);
 			if (formationId <= 0) {
 				continue;
@@ -374,13 +374,13 @@ static int startInvasion(int enemyType, int amount, int invasionPoint, int attac
 			f->invasionId = invasionId;
 			f->invasionSeq = Data_Event.lastInternalInvasionId;
 			for (int fig = 0; fig < soldiersPerFormation[type][i]; fig++) {
-				int walkerId = Figure_create(walkerType, x, y, orientation);
-				Data_Walkers[walkerId].isFriendly = 0;
-				Data_Walkers[walkerId].actionState = FigureActionState_151_EnemyInitial;
-				Data_Walkers[walkerId].waitTicks = 200 * seq + 10 * fig + 10;
-				Data_Walkers[walkerId].formationId = formationId;
-				FigureName_set(walkerId);
-				Data_Walkers[walkerId].isGhost = 1;
+				int figureId = Figure_create(figureType, x, y, orientation);
+				Data_Figures[figureId].isFriendly = 0;
+				Data_Figures[figureId].actionState = FigureActionState_151_EnemyInitial;
+				Data_Figures[figureId].waitTicks = 200 * seq + 10 * fig + 10;
+				Data_Figures[figureId].formationId = formationId;
+				FigureName_set(figureId);
+				Data_Figures[figureId].isGhost = 1;
 			}
 			seq++;
 		}

@@ -34,14 +34,14 @@ static const struct {
 	{-6, -4}, {-6, -5}, {-6, -6}, {-5, -6}, {-4, -6}, {-3, -6}, {-2, -6}, {-1, -6},
 };
 
-void FigureAction_militaryStandard(int walkerId)
+void FigureAction_militaryStandard(int figureId)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	struct Data_Formation *m = &Data_Formations[f->formationId];
 
 	f->terrainUsage = FigureTerrainUsage_Any;
 	FigureActionIncreaseGraphicOffset(f, 16);
-	Figure_removeFromTileList(walkerId);
+	Figure_removeFromTileList(figureId);
 	if (m->isAtFort) {
 		f->x = m->x;
 		f->y = m->y;
@@ -52,7 +52,7 @@ void FigureAction_militaryStandard(int walkerId)
 	f->gridOffset = GridOffset(f->x, f->y);
 	f->crossCountryX = 15 * f->x + 7;
 	f->crossCountryY = 15 * f->y + 7;
-	Figure_addToTileList(walkerId);
+	Figure_addToTileList(figureId);
 
 	f->graphicId = GraphicId(ID_Graphic_FortStandardPole) + 20 - m->morale / 5;
 	if (m->figureType == Figure_FortLegionary) {
@@ -76,13 +76,13 @@ void FigureAction_militaryStandard(int walkerId)
 	}
 }
 
-static void javelinLaunchMissile(int walkerId, struct Data_Walker *f)
+static void javelinLaunchMissile(int figureId, struct Data_Figure *f)
 {
 	int xTile, yTile;
 	f->waitTicksMissile++;
 	if (f->waitTicksMissile > Constant_FigureProperties[f->type].missileFrequency) {
 		f->waitTicksMissile = 0;
-		if (FigureAction_CombatSoldier_getMissileTarget(walkerId, 10, &xTile, &yTile)) {
+		if (FigureAction_CombatSoldier_getMissileTarget(figureId, 10, &xTile, &yTile)) {
 			f->attackGraphicOffset = 1;
 			f->direction = Routing_getDirectionForMissileShooter(f->x, f->y, xTile, yTile);
 		} else {
@@ -91,7 +91,7 @@ static void javelinLaunchMissile(int walkerId, struct Data_Walker *f)
 	}
 	if (f->attackGraphicOffset) {
 		if (f->attackGraphicOffset == 1) {
-			Figure_createMissile(walkerId, f->x, f->y, xTile, yTile, Figure_Javelin);
+			Figure_createMissile(figureId, f->x, f->y, xTile, yTile, Figure_Javelin);
 			Data_Formations[f->formationId].missileFired = 6;
 		}
 		f->attackGraphicOffset++;
@@ -101,16 +101,16 @@ static void javelinLaunchMissile(int walkerId, struct Data_Walker *f)
 	}
 }
 
-static void legionaryAttackAdjacentEnemy(int walkerId, struct Data_Walker *f)
+static void legionaryAttackAdjacentEnemy(int figureId, struct Data_Figure *f)
 {
 	int gridOffset = f->gridOffset;
 	for (int i = 0; i < 8 && f->actionState != FigureActionState_150_Attack; i++) {
-		FigureAction_Combat_attackFigure(walkerId,
+		FigureAction_Combat_attackFigure(figureId,
 			Data_Grid_figureIds[gridOffset + Constant_DirectionGridOffsets[i]]);
 	}
 }
 
-static int soldierFindMopUpTarget(int walkerId, struct Data_Walker *f)
+static int soldierFindMopUpTarget(int figureId, struct Data_Figure *f)
 {
 	int targetId = f->targetFigureId;
 	if (FigureIsDead(targetId)) {
@@ -120,22 +120,22 @@ static int soldierFindMopUpTarget(int walkerId, struct Data_Walker *f)
 	if (targetId <= 0) {
 		targetId = FigureAction_CombatSoldier_getTarget(f->x, f->y, 20);
 		if (targetId) {
-			struct Data_Walker *fTarget = &Data_Walkers[targetId];
+			struct Data_Figure *fTarget = &Data_Figures[targetId];
 			f->destinationX = fTarget->x;
 			f->destinationY = fTarget->y;
 			f->targetFigureId = targetId;
-			fTarget->targetedByFigureId = walkerId;
+			fTarget->targetedByFigureId = figureId;
 			f->targetFigureCreatedSequence = fTarget->createdSequence;
 		} else {
 			f->actionState = FigureActionState_84_SoldierAtStandard;
 			f->graphicOffset = 0;
 		}
-		FigureRoute_remove(walkerId);
+		FigureRoute_remove(figureId);
 	}
 	return targetId;
 }
 
-static void updateSoldierGraphicJavelin(struct Data_Walker *f, int dir)
+static void updateSoldierGraphicJavelin(struct Data_Figure *f, int dir)
 {
 	int graphicId = GraphicId(ID_Graphic_Figure_FortJavelin);
 	if (f->actionState == FigureActionState_150_Attack) {
@@ -154,7 +154,7 @@ static void updateSoldierGraphicJavelin(struct Data_Walker *f, int dir)
 	}
 }
 
-static void updateSoldierGraphicMounted(struct Data_Walker *f, int dir)
+static void updateSoldierGraphicMounted(struct Data_Figure *f, int dir)
 {
 	int graphicId = GraphicId(ID_Graphic_Figure_FortMounted);
 	if (f->actionState == FigureActionState_150_Attack) {
@@ -170,7 +170,7 @@ static void updateSoldierGraphicMounted(struct Data_Walker *f, int dir)
 	}
 }
 
-static void updateSoldierGraphicLegionary(struct Data_Walker *f, struct Data_Formation *m, int dir)
+static void updateSoldierGraphicLegionary(struct Data_Figure *f, struct Data_Formation *m, int dir)
 {
 	int graphicId = GraphicId(ID_Graphic_Figure_FortLegionary);
 	if (f->actionState == FigureActionState_150_Attack) {
@@ -192,7 +192,7 @@ static void updateSoldierGraphicLegionary(struct Data_Walker *f, struct Data_For
 	}
 }
 
-static void updateSoldierGraphic(int walkerId, struct Data_Walker *f, struct Data_Formation *m)
+static void updateSoldierGraphic(int figureId, struct Data_Figure *f, struct Data_Formation *m)
 {
 	int dir;
 	if (f->actionState == FigureActionState_150_Attack) {
@@ -216,9 +216,9 @@ static void updateSoldierGraphic(int walkerId, struct Data_Walker *f, struct Dat
 	}
 }
 
-void FigureAction_soldier(int walkerId)
+void FigureAction_soldier(int figureId)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	struct Data_Formation *m = &Data_Formations[f->formationId];
 	Data_CityInfo.numSoldiersInCity++;
 	f->terrainUsage = FigureTerrainUsage_Any;
@@ -244,13 +244,13 @@ void FigureAction_soldier(int walkerId)
 	
 	switch (f->actionState) {
 		case FigureActionState_150_Attack:
-			FigureAction_Common_handleAttack(walkerId);
+			FigureAction_Common_handleAttack(figureId);
 			break;
 		case FigureActionState_149_Corpse:
-			FigureAction_Common_handleCorpse(walkerId);
+			FigureAction_Common_handleCorpse(figureId);
 			break;
 		case FigureActionState_80_SoldierAtRest:
-			Figure_updatePositionInTileList(walkerId);
+			Figure_updatePositionInTileList(figureId);
 			f->waitTicks = 0;
 			f->formationAtRest = 1;
 			f->graphicOffset = 0;
@@ -265,11 +265,11 @@ void FigureAction_soldier(int walkerId)
 			f->destinationX = f->formationPositionX;
 			f->destinationY = f->formationPositionY;
 			f->destinationGridOffsetSoldier = GridOffset(f->destinationX, f->destinationY);
-			FigureMovement_walkTicks(walkerId, speedFactor);
+			FigureMovement_walkTicks(figureId, speedFactor);
 			if (f->direction == DirFigure_8_AtDestination) {
 				f->actionState = FigureActionState_80_SoldierAtRest;
 			} else if (f->direction == DirFigure_9_Reroute) {
-				FigureRoute_remove(walkerId);
+				FigureRoute_remove(figureId);
 			} else if (f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
 			}
@@ -278,11 +278,11 @@ void FigureAction_soldier(int walkerId)
 			f->formationAtRest = 1;
 			f->destinationX = f->sourceX;
 			f->destinationY = f->sourceY;
-			FigureMovement_walkTicks(walkerId, speedFactor);
+			FigureMovement_walkTicks(figureId, speedFactor);
 			if (f->direction == DirFigure_8_AtDestination || f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
 			} else if (f->direction == DirFigure_9_Reroute) {
-				FigureRoute_remove(walkerId);
+				FigureRoute_remove(figureId);
 			}
 			break;
 		case FigureActionState_83_SoldierGoingToStandard:
@@ -294,12 +294,12 @@ void FigureAction_soldier(int walkerId)
 				f->destinationY += soldierAlternativePoints[f->alternativeLocationIndex].y;
 			}
 			f->destinationGridOffsetSoldier = GridOffset(f->destinationX, f->destinationY);
-			FigureMovement_walkTicks(walkerId, speedFactor);
+			FigureMovement_walkTicks(figureId, speedFactor);
 			if (f->direction == DirFigure_8_AtDestination) {
 				f->actionState = FigureActionState_84_SoldierAtStandard;
 				f->graphicOffset = 0;
 			} else if (f->direction == DirFigure_9_Reroute) {
-				FigureRoute_remove(walkerId);
+				FigureRoute_remove(figureId);
 			} else if (f->direction == DirFigure_10_Lost) {
 				f->alternativeLocationIndex++;
 				if (f->alternativeLocationIndex > 168) {
@@ -311,7 +311,7 @@ void FigureAction_soldier(int walkerId)
 		case FigureActionState_84_SoldierAtStandard:
 			f->formationAtRest = 0;
 			f->graphicOffset = 0;
-			Figure_updatePositionInTileList(walkerId);
+			Figure_updatePositionInTileList(figureId);
 			f->destinationX = m->xStandard + FigureActionFormationLayoutPositionX(m->layout, f->indexInFormation);
 			f->destinationY = m->yStandard + FigureActionFormationLayoutPositionY(m->layout, f->indexInFormation);
 			if (f->alternativeLocationIndex) {
@@ -326,32 +326,32 @@ void FigureAction_soldier(int walkerId)
 			}
 			if (f->actionState != FigureActionState_83_SoldierGoingToStandard) {
 				if (f->type == Figure_FortJavelin) {
-					javelinLaunchMissile(walkerId, f);
+					javelinLaunchMissile(figureId, f);
 				} else if (f->type == Figure_FortLegionary) {
-					legionaryAttackAdjacentEnemy(walkerId, f);
+					legionaryAttackAdjacentEnemy(figureId, f);
 				}
 			}
 			break;
 		case FigureActionState_85_SoldierGoingToMilitaryAcademy:
 			m->hasMilitaryTraining = 1;
 			f->formationAtRest = 1;
-			FigureMovement_walkTicks(walkerId, speedFactor);
+			FigureMovement_walkTicks(figureId, speedFactor);
 			if (f->direction == DirFigure_8_AtDestination) {
 				f->actionState = FigureActionState_81_SoldierGoingToFort;
 			} else if (f->direction == DirFigure_9_Reroute) {
-				FigureRoute_remove(walkerId);
+				FigureRoute_remove(figureId);
 			} else if (f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
 			}
 			break;
 		case FigureActionState_86_SoldierMoppingUp:
 			f->formationAtRest = 0;
-			if (soldierFindMopUpTarget(walkerId, f)) {
-				FigureMovement_walkTicks(walkerId, speedFactor);
+			if (soldierFindMopUpTarget(figureId, f)) {
+				FigureMovement_walkTicks(figureId, speedFactor);
 				if (f->direction == DirFigure_8_AtDestination) {
-					f->destinationX = Data_Walkers[f->targetFigureId].x;
-					f->destinationY = Data_Walkers[f->targetFigureId].y;
-					FigureRoute_remove(walkerId);
+					f->destinationX = Data_Figures[f->targetFigureId].x;
+					f->destinationY = Data_Figures[f->targetFigureId].y;
+					FigureRoute_remove(figureId);
 				} else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
 					f->actionState = FigureActionState_84_SoldierAtStandard;
 					f->targetFigureId = 0;
@@ -363,12 +363,12 @@ void FigureAction_soldier(int walkerId)
 			f->formationAtRest = 0;
 			f->destinationX = Data_CityInfo.exitPointX;
 			f->destinationY = Data_CityInfo.exitPointY;
-			FigureMovement_walkTicks(walkerId, speedFactor);
+			FigureMovement_walkTicks(figureId, speedFactor);
 			if (f->direction == DirFigure_8_AtDestination) {
 				f->actionState = FigureActionState_89_SoldierAtDistantBattle;
-				FigureRoute_remove(walkerId);
+				FigureRoute_remove(figureId);
 			} else if (f->direction == DirFigure_9_Reroute) {
-				FigureRoute_remove(walkerId);
+				FigureRoute_remove(figureId);
 			} else if (f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
 			}
@@ -380,11 +380,11 @@ void FigureAction_soldier(int walkerId)
 			f->destinationX = f->formationPositionX;
 			f->destinationY = f->formationPositionY;
 			f->destinationGridOffsetSoldier = GridOffset(f->destinationX, f->destinationY);
-			FigureMovement_walkTicks(walkerId, speedFactor);
+			FigureMovement_walkTicks(figureId, speedFactor);
 			if (f->direction == DirFigure_8_AtDestination) {
 				f->actionState = FigureActionState_80_SoldierAtRest;
 			} else if (f->direction == DirFigure_9_Reroute) {
-				FigureRoute_remove(walkerId);
+				FigureRoute_remove(figureId);
 			} else if (f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
 			}
@@ -395,5 +395,5 @@ void FigureAction_soldier(int walkerId)
 			break;
 	}
 	
-	updateSoldierGraphic(walkerId, f, m);
+	updateSoldierGraphic(figureId, f, m);
 }

@@ -25,7 +25,7 @@
 void Figure_clearList()
 {
 	for (int i = 0; i < MAX_FIGURES; i++) {
-		memset(&Data_Walkers[i], 0, sizeof(struct Data_Walker));
+		memset(&Data_Figures[i], 0, sizeof(struct Data_Figure));
 	}
 	Data_Figure_Extra.highestFigureIdEver = 0;
 }
@@ -34,7 +34,7 @@ int Figure_create(int figureType, int x, int y, char direction)
 {
 	int id = 0;
 	for (int i = 1; i < MAX_FIGURES; i++) {
-		if (!Data_Walkers[i].state) {
+		if (!Data_Figures[i].state) {
 			id = i;
 			break;
 		}
@@ -42,7 +42,7 @@ int Figure_create(int figureType, int x, int y, char direction)
 	if (!id) {
 		return 0;
 	}
-	struct Data_Walker *f = &Data_Walkers[id];
+	struct Data_Figure *f = &Data_Figures[id];
 	f->state = FigureState_Alive;
 	f->ciid = 1;
 	f->type = figureType;
@@ -70,7 +70,7 @@ int Figure_create(int figureType, int x, int y, char direction)
 
 void Figure_delete(int figureId)
 {
-	struct Data_Walker *f = &Data_Walkers[figureId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	switch (f->type) {
 		case Figure_LaborSeeker:
 		case Figure_MarketBuyer:
@@ -123,67 +123,67 @@ void Figure_delete(int figureId)
 	}
 	FigureRoute_remove(figureId);
 	Figure_removeFromTileList(figureId);
-	memset(f, 0, sizeof(struct Data_Walker));
+	memset(f, 0, sizeof(struct Data_Figure));
 }
 
-void Figure_addToTileList(int walkerId)
+void Figure_addToTileList(int figureId)
 {
-	if (Data_Walkers[walkerId].gridOffset < 0) {
+	if (Data_Figures[figureId].gridOffset < 0) {
 		return;
 	}
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	f->numPreviousFiguresOnSameTile = 0;
 
 	int next = Data_Grid_figureIds[f->gridOffset];
 	if (next) {
 		f->numPreviousFiguresOnSameTile++;
-		while (Data_Walkers[next].nextFigureIdOnSameTile) {
-			next = Data_Walkers[next].nextFigureIdOnSameTile;
+		while (Data_Figures[next].nextFigureIdOnSameTile) {
+			next = Data_Figures[next].nextFigureIdOnSameTile;
 			f->numPreviousFiguresOnSameTile++;
 		}
 		if (f->numPreviousFiguresOnSameTile > 20) {
 			f->numPreviousFiguresOnSameTile = 20;
 		}
-		Data_Walkers[next].nextFigureIdOnSameTile = walkerId;
+		Data_Figures[next].nextFigureIdOnSameTile = figureId;
 	} else {
-		Data_Grid_figureIds[f->gridOffset] = walkerId;
+		Data_Grid_figureIds[f->gridOffset] = figureId;
 	}
 }
 
-void Figure_updatePositionInTileList(int walkerId)
+void Figure_updatePositionInTileList(int figureId)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	f->numPreviousFiguresOnSameTile = 0;
 	
 	int next = Data_Grid_figureIds[f->gridOffset];
 	while (next) {
-		if (next == walkerId) {
+		if (next == figureId) {
 			return;
 		}
 		f->numPreviousFiguresOnSameTile++;
-		next = Data_Walkers[next].nextFigureIdOnSameTile;
+		next = Data_Figures[next].nextFigureIdOnSameTile;
 	}
 	if (f->numPreviousFiguresOnSameTile > 20) {
 		f->numPreviousFiguresOnSameTile = 20;
 	}
 }
 
-void Figure_removeFromTileList(int walkerId)
+void Figure_removeFromTileList(int figureId)
 {
-	if (Data_Walkers[walkerId].gridOffset < 0) {
+	if (Data_Figures[figureId].gridOffset < 0) {
 		return;
 	}
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 
 	int cur = Data_Grid_figureIds[f->gridOffset];
 	if (cur) {
-		if (cur == walkerId) {
+		if (cur == figureId) {
 			Data_Grid_figureIds[f->gridOffset] = f->nextFigureIdOnSameTile;
 		} else {
-			while (cur && Data_Walkers[cur].nextFigureIdOnSameTile != walkerId) {
-				cur = Data_Walkers[cur].nextFigureIdOnSameTile;
+			while (cur && Data_Figures[cur].nextFigureIdOnSameTile != figureId) {
+				cur = Data_Figures[cur].nextFigureIdOnSameTile;
 			}
-			Data_Walkers[cur].nextFigureIdOnSameTile = f->nextFigureIdOnSameTile;
+			Data_Figures[cur].nextFigureIdOnSameTile = f->nextFigureIdOnSameTile;
 		}
 		f->nextFigureIdOnSameTile = 0;
 	}
@@ -205,15 +205,15 @@ void Figure_createDustCloud(int x, int y, int size)
 	int tileOffset = dustCloudTileOffsets[size];
 	int ccOffset = dustCloudCCOffsets[size];
 	for (int i = 0; i < 16; i++) {
-		int walkerId = Figure_create(Figure_Explosion,
+		int figureId = Figure_create(Figure_Explosion,
 			x + tileOffset, y + tileOffset, 0);
-		if (walkerId) {
-			struct Data_Walker *f = &Data_Walkers[walkerId];
+		if (figureId) {
+			struct Data_Figure *f = &Data_Figures[figureId];
 			f->crossCountryX += ccOffset;
 			f->crossCountryY += ccOffset;
 			f->destinationX += dustCloudDirectionX[i];
 			f->destinationY += dustCloudDirectionY[i];
-			FigureMovement_crossCountrySetDirection(walkerId,
+			FigureMovement_crossCountrySetDirection(figureId,
 				f->crossCountryX, f->crossCountryY,
 				15 * f->destinationX + ccOffset,
 				15 * f->destinationY + ccOffset, 0);
@@ -225,18 +225,18 @@ void Figure_createDustCloud(int x, int y, int size)
 
 int Figure_createMissile(int buildingId, int x, int y, int xDst, int yDst, int type)
 {
-	int walkerId = Figure_create(type, x, y, 0);
-	if (walkerId) {
-		struct Data_Walker *f = &Data_Walkers[walkerId];
+	int figureId = Figure_create(type, x, y, 0);
+	if (figureId) {
+		struct Data_Figure *f = &Data_Figures[figureId];
 		f->missileDamage = (type == Figure_Bolt) ? 60 : 10;
 		f->buildingId = buildingId;
 		f->destinationX = xDst;
 		f->destinationY = yDst;
 		FigureMovement_crossCountrySetDirection(
-			walkerId, f->crossCountryX, f->crossCountryY,
+			figureId, f->crossCountryX, f->crossCountryY,
 			15 * xDst, 15 * yDst, 1);
 	}
-	return walkerId;
+	return figureId;
 }
 
 void Figure_createFishingPoints()
@@ -246,11 +246,11 @@ void Figure_createFishingPoints()
 			Random_generateNext();
 			int fishId = Figure_create(Figure_FishGulls,
 				Data_Scenario.fishingPoints.x[i], Data_Scenario.fishingPoints.y[i], 0);
-			Data_Walkers[fishId].graphicOffset = Data_Random.random1_7bit & 0x1f;
-			Data_Walkers[fishId].progressOnTile = Data_Random.random1_7bit & 7;
+			Data_Figures[fishId].graphicOffset = Data_Random.random1_7bit & 0x1f;
+			Data_Figures[fishId].progressOnTile = Data_Random.random1_7bit & 7;
 			FigureMovement_crossCountrySetDirection(fishId,
-				Data_Walkers[fishId].crossCountryX, Data_Walkers[fishId].crossCountryY,
-				15 * Data_Walkers[fishId].destinationX, 15 * Data_Walkers[fishId].destinationY, 0);
+				Data_Figures[fishId].crossCountryX, Data_Figures[fishId].crossCountryY,
+				15 * Data_Figures[fishId].destinationX, 15 * Data_Figures[fishId].destinationY, 0);
 		}
 	}
 }
@@ -274,11 +274,11 @@ void Figure_createHerds()
 				Data_Formations[formationId].maxFigures = numAnimals;
 				for (int fig = 0; fig < numAnimals; fig++) {
 					Random_generateNext();
-					int walkerId = Figure_create(herdType,
+					int figureId = Figure_create(herdType,
 						Data_Scenario.herdPoints.x[i], Data_Scenario.herdPoints.y[i], 0);
-					Data_Walkers[walkerId].actionState = FigureActionState_196_HerdAnimalAtRest;
-					Data_Walkers[walkerId].formationId = formationId;
-					Data_Walkers[walkerId].waitTicks = walkerId & 0x1f;
+					Data_Figures[figureId].actionState = FigureActionState_196_HerdAnimalAtRest;
+					Data_Figures[figureId].formationId = formationId;
+					Data_Figures[figureId].waitTicks = figureId & 0x1f;
 				}
 			}
 		}
@@ -291,15 +291,15 @@ void Figure_createFlotsam(int xEntry, int yEntry, int hasWater)
 		return;
 	}
 	for (int i = 1; i < MAX_FIGURES; i++) {
-		if (Data_Walkers[i].state && Data_Walkers[i].type == Figure_Flotsam) {
+		if (Data_Figures[i].state && Data_Figures[i].type == Figure_Flotsam) {
 			Figure_delete(i);
 		}
 	}
 	const int resourceIds[] = {3, 1, 3, 2, 1, 3, 2, 3, 2, 1, 3, 3, 2, 3, 3, 3, 1, 2, 0, 1};
 	const int waitTicks[] = {10, 50, 100, 130, 200, 250, 400, 430, 500, 600, 70, 750, 820, 830, 900, 980, 1010, 1030, 1200, 1300};
 	for (int i = 0; i < 20; i++) {
-		int walkerId = Figure_create(Figure_Flotsam, xEntry, yEntry, 0);
-		struct Data_Walker *f = &Data_Walkers[walkerId];
+		int figureId = Figure_create(Figure_Flotsam, xEntry, yEntry, 0);
+		struct Data_Figure *f = &Data_Figures[figureId];
 		f->actionState = FigureActionState_128_FlotsamCreated;
 		f->resourceId = resourceIds[i];
 		f->waitTicks = waitTicks[i];
@@ -335,8 +335,8 @@ int Figure_createSoldierFromBarracks(int buildingId, int x, int y)
 	}
 	if (formationId > 0) {
 		struct Data_Formation *m = &Data_Formations[formationId];
-		int walkerId = Figure_create(m->figureType, x, y, 0);
-		struct Data_Walker *f = &Data_Walkers[walkerId];
+		int figureId = Figure_create(m->figureType, x, y, 0);
+		struct Data_Figure *f = &Data_Figures[figureId];
 		f->formationId = formationId;
 		f->formationAtRest = 1;
 		if (m->figureType == Figure_FortLegionary) {
@@ -382,8 +382,8 @@ int Figure_createTowerSentryFromBarracks(int buildingId, int x, int y)
 		return 0;
 	}
 	struct Data_Building *tower = &Data_Buildings[towerId];
-	int walkerId = Figure_create(Figure_TowerSentry, x, y, 0);
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	int figureId = Figure_create(Figure_TowerSentry, x, y, 0);
+	struct Data_Figure *f = &Data_Figures[figureId];
 	f->actionState = FigureActionState_174_TowerSentryGoingToTower;
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(tower->x, tower->y, tower->size, &xRoad, &yRoad)) {
@@ -392,7 +392,7 @@ int Figure_createTowerSentryFromBarracks(int buildingId, int x, int y)
 	} else {
 		f->state = FigureState_Dead;
 	}
-	tower->figureId = walkerId;
+	tower->figureId = figureId;
 	f->buildingId = towerId;
 	return 1;
 }
@@ -400,9 +400,9 @@ int Figure_createTowerSentryFromBarracks(int buildingId, int x, int y)
 void Figure_killTowerSentriesAt(int x, int y)
 {
 	for (int i = 0; i < MAX_FIGURES; i++) {
-		if (!FigureIsDead(i) && Data_Walkers[i].type == Figure_TowerSentry) {
-			if (Calc_distanceMaximum(Data_Walkers[i].x, Data_Walkers[i].y, x, y) <= 1) {
-				Data_Walkers[i].state = FigureState_Dead;
+		if (!FigureIsDead(i) && Data_Figures[i].type == Figure_TowerSentry) {
+			if (Calc_distanceMaximum(Data_Figures[i].x, Data_Figures[i].y, x, y) <= 1) {
+				Data_Figures[i].state = FigureState_Dead;
 			}
 		}
 	}
@@ -411,7 +411,7 @@ void Figure_killTowerSentriesAt(int x, int y)
 void Figure_sinkAllShips()
 {
 	for (int i = 1; i < MAX_FIGURES; i++) {
-		struct Data_Walker *f = &Data_Walkers[i];
+		struct Data_Figure *f = &Data_Figures[i];
 		if (f->state != FigureState_Alive) {
 			continue;
 		}
@@ -430,12 +430,12 @@ void Figure_sinkAllShips()
 	}
 }
 
-int Figure_getCitizenOnSameTile(int walkerId)
+int Figure_getCitizenOnSameTile(int figureId)
 {
-	for (int w = Data_Grid_figureIds[Data_Walkers[walkerId].gridOffset];
-		w > 0; w = Data_Walkers[w].nextFigureIdOnSameTile) {
-		if (Data_Walkers[w].actionState != FigureActionState_149_Corpse) {
-			int type = Data_Walkers[w].type;
+	for (int w = Data_Grid_figureIds[Data_Figures[figureId].gridOffset];
+		w > 0; w = Data_Figures[w].nextFigureIdOnSameTile) {
+		if (Data_Figures[w].actionState != FigureActionState_149_Corpse) {
+			int type = Data_Figures[w].type;
 			if (type && type != Figure_Explosion && type != Figure_FortStandard &&
 				type != Figure_MapFlag && type != Figure_Flotsam && type < Figure_IndigenousNative) {
 				return w;
@@ -445,16 +445,16 @@ int Figure_getCitizenOnSameTile(int walkerId)
 	return 0;
 }
 
-int Figure_getNonCitizenOnSameTile(int walkerId)
+int Figure_getNonCitizenOnSameTile(int figureId)
 {
-	for (int w = Data_Grid_figureIds[Data_Walkers[walkerId].gridOffset];
-		w > 0; w = Data_Walkers[w].nextFigureIdOnSameTile) {
-		if (Data_Walkers[w].actionState != FigureActionState_149_Corpse) {
-			int type = Data_Walkers[w].type;
+	for (int w = Data_Grid_figureIds[Data_Figures[figureId].gridOffset];
+		w > 0; w = Data_Figures[w].nextFigureIdOnSameTile) {
+		if (Data_Figures[w].actionState != FigureActionState_149_Corpse) {
+			int type = Data_Figures[w].type;
 			if (FigureIsEnemy(type)) {
 				return w;
 			}
-			if (type == Figure_IndigenousNative && Data_Walkers[w].actionState == FigureActionState_159_NativeAttacking) {
+			if (type == Figure_IndigenousNative && Data_Figures[w].actionState == FigureActionState_159_NativeAttacking) {
 				return w;
 			}
 			if (type == Figure_Wolf || type == Figure_Sheep || type == Figure_Zebra) {
@@ -468,7 +468,7 @@ int Figure_getNonCitizenOnSameTile(int walkerId)
 int Figure_hasNearbyEnemy(int xStart, int yStart, int xEnd, int yEnd)
 {
 	for (int i = 1; i < MAX_FIGURES; i++) {
-		struct Data_Walker *f = &Data_Walkers[i];
+		struct Data_Figure *f = &Data_Figures[i];
 		if (f->state != FigureState_Alive || !FigureIsEnemy(f->type)) {
 			continue;
 		}

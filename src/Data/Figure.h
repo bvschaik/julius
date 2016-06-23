@@ -85,7 +85,7 @@ enum {
 #define FigureIsLegion(t) ((t) >= Figure_FortJavelin && (t) <= Figure_FortLegionary)
 #define FigureIsHerd(t) ((t) >= Figure_Sheep && (t) <= Figure_Zebra)
 
-#define FigureIsDead(f) (Data_Walkers[f].state != FigureState_Alive || Data_Walkers[f].actionState == FigureActionState_149_Corpse)
+#define FigureIsDead(f) (Data_Figures[f].state != FigureState_Alive || Data_Figures[f].actionState == FigureActionState_149_Corpse)
 
 enum {
 	FigureState_Alive = 1,
@@ -249,7 +249,7 @@ extern struct _Data_Figure_NameSequence {
 	int enemyShip;
 } Data_Figure_NameSequence;
 
-extern struct Data_Walker {
+extern struct Data_Figure {
 	unsigned char alternativeLocationIndex;
 	unsigned char graphicOffset;
 	unsigned char isEnemyGraphic;
@@ -346,7 +346,7 @@ extern struct Data_Walker {
 	short attackerId1;
 	short attackerId2;
 	short opponentId; // 7e
-} Data_Walkers[MAX_FIGURES];
+} Data_Figures[MAX_FIGURES];
 
 extern struct Data_Figure_Trader {
 	int totalBought;

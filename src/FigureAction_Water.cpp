@@ -20,26 +20,26 @@ static const int flotsamType3[] = {
 	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1
 };
 
-void FigureAction_fishingBoat(int walkerId)
+void FigureAction_fishingBoat(int figureId)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	struct Data_Building *b = &Data_Buildings[f->buildingId];
 	if (!BuildingIsInUse(f->buildingId)) {
 		f->state = FigureState_Dead;
 	}
-	if (f->actionState != FigureActionState_190_FishingBoatCreated && b->data.other.boatFigureId != walkerId) {
+	if (f->actionState != FigureActionState_190_FishingBoatCreated && b->data.other.boatFigureId != figureId) {
 		int xTile, yTile;
-		int buildingId = Terrain_Water_getWharfTileForNewFishingBoat(walkerId, &xTile, &yTile);
+		int buildingId = Terrain_Water_getWharfTileForNewFishingBoat(figureId, &xTile, &yTile);
 		b = &Data_Buildings[buildingId];
 		if (buildingId) {
 			f->buildingId = buildingId;
-			b->data.other.boatFigureId = walkerId;
+			b->data.other.boatFigureId = figureId;
 			f->actionState = FigureActionState_193_FishingBoatSailingToWharf;
 			f->destinationX = xTile;
 			f->destinationY = yTile;
 			f->sourceX = xTile;
 			f->sourceY = yTile;
-			FigureRoute_remove(walkerId);
+			FigureRoute_remove(figureId);
 		} else {
 			f->state = FigureState_Dead;
 		}
@@ -54,27 +54,27 @@ void FigureAction_fishingBoat(int walkerId)
 			if (f->waitTicks >= 50) {
 				f->waitTicks = 0;
 				int xTile, yTile;
-				int buildingId = Terrain_Water_getWharfTileForNewFishingBoat(walkerId, &xTile, &yTile);
+				int buildingId = Terrain_Water_getWharfTileForNewFishingBoat(figureId, &xTile, &yTile);
 				if (buildingId) {
 					b->figureId = 0; // remove from original building
 					f->buildingId = buildingId;
-					Data_Buildings[buildingId].data.other.boatFigureId = walkerId;
+					Data_Buildings[buildingId].data.other.boatFigureId = figureId;
 					f->actionState = FigureActionState_193_FishingBoatSailingToWharf;
 					f->destinationX = xTile;
 					f->destinationY = yTile;
 					f->sourceX = xTile;
 					f->sourceY = yTile;
-					FigureRoute_remove(walkerId);
+					FigureRoute_remove(figureId);
 				}
 			}
 			break;
 		case FigureActionState_191_FishingBoatGoingToFish:
-			FigureMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(figureId, 1);
 			f->heightAdjustedTicks = 0;
 			if (f->direction == DirFigure_8_AtDestination) {
 				int xTile, yTile;
-				if (Terrain_Water_findAlternativeTileForFishingBoat(walkerId, &xTile, &yTile)) {
-					FigureRoute_remove(walkerId);
+				if (Terrain_Water_findAlternativeTileForFishingBoat(figureId, &xTile, &yTile)) {
+					FigureRoute_remove(figureId);
 					f->destinationX = xTile;
 					f->destinationY = yTile;
 					f->direction = f->previousTileDirection;
@@ -95,17 +95,17 @@ void FigureAction_fishingBoat(int walkerId)
 				f->actionState = FigureActionState_195_FishingBoatReturningWithFish;
 				f->destinationX = f->sourceX;
 				f->destinationY = f->sourceY;
-				FigureRoute_remove(walkerId);
+				FigureRoute_remove(figureId);
 			}
 			break;
 		case FigureActionState_193_FishingBoatSailingToWharf:
-			FigureMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(figureId, 1);
 			f->heightAdjustedTicks = 0;
 			if (f->direction == DirFigure_8_AtDestination) {
 				f->actionState = FigureActionState_194_FishingBoatAtWharf;
 				f->waitTicks = 0;
 			} else if (f->direction == DirFigure_9_Reroute) {
-				FigureRoute_remove(walkerId);
+				FigureRoute_remove(figureId);
 			} else if (f->direction == DirFigure_10_Lost) {
 				// cannot reach grounds
 				if (Data_Message.messageCategoryCount[MessageDelay_FishingBlocked] > 0) {
@@ -129,18 +129,18 @@ void FigureAction_fishingBoat(int walkerId)
 				if (f->waitTicks >= maxWaitTicks) {
 					f->waitTicks = 0;
 					int xTile, yTile;
-					if (Terrain_Water_getNearestFishTile(walkerId, &xTile, &yTile)) {
+					if (Terrain_Water_getNearestFishTile(figureId, &xTile, &yTile)) {
 						f->actionState = FigureActionState_191_FishingBoatGoingToFish;
 						f->destinationX = xTile;
 						f->destinationY = yTile;
-						FigureRoute_remove(walkerId);
+						FigureRoute_remove(figureId);
 					}
 				}
 			}
 			}
 			break;
 		case FigureActionState_195_FishingBoatReturningWithFish:
-			FigureMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(figureId, 1);
 			f->heightAdjustedTicks = 0;
 			if (f->direction == DirFigure_8_AtDestination) {
 				f->actionState = FigureActionState_194_FishingBoatAtWharf;
@@ -148,7 +148,7 @@ void FigureAction_fishingBoat(int walkerId)
 				b->figureSpawnDelay = 1;
 				b->data.other.fishingBoatHasFish++;
 			} else if (f->direction == DirFigure_9_Reroute) {
-				FigureRoute_remove(walkerId);
+				FigureRoute_remove(figureId);
 			} else if (f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
 			}
@@ -164,9 +164,9 @@ void FigureAction_fishingBoat(int walkerId)
 	}
 }
 
-void FigureAction_flotsam(int walkerId)
+void FigureAction_flotsam(int figureId)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	f->isBoat = 2;
 	if (Data_Scenario.riverExitPoint.x == -1 || Data_Scenario.riverExitPoint.y == -1) {
 		return;
@@ -195,7 +195,7 @@ void FigureAction_flotsam(int walkerId)
 			} else {
 				f->flotsamVisible = 1;
 				f->waitTicks++;
-				FigureMovement_walkTicks(walkerId, 1);
+				FigureMovement_walkTicks(figureId, 1);
 				f->isGhost = 0;
 				f->heightAdjustedTicks = 0;
 				if (f->direction == DirFigure_8_AtDestination ||
@@ -219,7 +219,7 @@ void FigureAction_flotsam(int walkerId)
 			} else {
 				f->waitTicks = 300 + Data_Random.random1_7bit;
 			}
-			Figure_removeFromTileList(walkerId);
+			Figure_removeFromTileList(figureId);
 			f->x = Data_Scenario.riverEntryPoint.x;
 			f->y = Data_Scenario.riverEntryPoint.y;
 			f->gridOffset = GridOffset(f->x, f->y);
@@ -255,24 +255,24 @@ void FigureAction_flotsam(int walkerId)
 	}
 }
 
-void FigureAction_shipwreck(int walkerId)
+void FigureAction_shipwreck(int figureId)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	f->isGhost = 0;
 	f->heightAdjustedTicks = 0;
 	f->isBoat = 1;
 	FigureActionIncreaseGraphicOffset(f, 128);
 	if (f->waitTicks < 1000) {
-		Figure_removeFromTileList(walkerId);
+		Figure_removeFromTileList(figureId);
 		int xTile, yTile;
-		if (Terrain_Water_findOpenWaterForShipwreck(walkerId, &xTile, &yTile)) {
+		if (Terrain_Water_findOpenWaterForShipwreck(figureId, &xTile, &yTile)) {
 			f->x = xTile;
 			f->y = yTile;
 			f->gridOffset = GridOffset(f->x, f->y);
 			f->crossCountryX = 15 * f->x + 7;
 			f->crossCountryY = 15 * f->y + 7;
 		}
-		Figure_addToTileList(walkerId);
+		Figure_addToTileList(figureId);
 		f->waitTicks = 1000;
 	}
 	f->waitTicks++;

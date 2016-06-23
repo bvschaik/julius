@@ -254,7 +254,7 @@ int Figure_determinePhrase(int figureId)
 		return 0;
 	}
 
-	struct Data_Walker *f = &Data_Walkers[figureId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	int phraseId = f->phraseId = 0;
 
 	if (FigureIsEnemyOrNative(f->type)) {
@@ -534,8 +534,8 @@ static void playFigureSoundFile(int figureSoundId, int phraseId)
 int Figure_playPhrase(int figureId)
 {
 	if (figureId > 0) {
-		int figureSoundId = figureTypeToSoundType[Data_Walkers[figureId].type];
-		playFigureSoundFile(figureSoundId, Data_Walkers[figureId].phraseId);
+		int figureSoundId = figureTypeToSoundType[Data_Figures[figureId].type];
+		playFigureSoundFile(figureSoundId, Data_Figures[figureId].phraseId);
 		return figureSoundId;
 	} else {
 		return 0;

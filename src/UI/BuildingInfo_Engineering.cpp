@@ -137,7 +137,7 @@ void UI_BuildingInfo_drawWharf(BuildingInfoContext *c)
 	} else {
 		int boatId = b->data.other.boatFigureId;
 		int textId;
-		switch (Data_Walkers[boatId].actionState) {
+		switch (Data_Figures[boatId].actionState) {
 			case FigureActionState_191_FishingBoatGoingToFish: textId = 3; break;
 			case FigureActionState_192_FishingBoatFishing: textId = 4; break;
 			case FigureActionState_193_FishingBoatSailingToWharf: textId = 5; break;

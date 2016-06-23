@@ -68,10 +68,10 @@ static int collectingItemIdToResourceId(int c)
 
 static void drawFigureInfoTrade(BuildingInfoContext *c, int figureId)
 {
-	while (Data_Walkers[figureId].type == Figure_TradeCaravanDonkey) {
-		figureId = Data_Walkers[figureId].inFrontFigureId;
+	while (Data_Figures[figureId].type == Figure_TradeCaravanDonkey) {
+		figureId = Data_Figures[figureId].inFrontFigureId;
 	}
-	struct Data_Walker *f = &Data_Walkers[figureId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	int cityId = f->empireCityId;
 	int width = Widget_GameText_draw(64, f->type,
 		c->xOffset + 40, c->yOffset + 110, Font_SmallBlack);
@@ -163,8 +163,8 @@ static void drawFigureInfoTrade(BuildingInfoContext *c, int figureId)
 static void drawFigureInfoEnemy(BuildingInfoContext *c, int figureId)
 {
 	int graphicId = 8;
-	int formationId = Data_Walkers[figureId].formationId;
-	switch (Data_Walkers[figureId].type) {
+	int formationId = Data_Figures[figureId].formationId;
+	switch (Data_Figures[figureId].type) {
 		case Figure_Enemy43_Spear:
 			switch (Data_Formations[formationId].enemyType) {
 				case EnemyType_5_Pergamum: graphicId = 44; break;
@@ -209,7 +209,7 @@ static void drawFigureInfoEnemy(BuildingInfoContext *c, int figureId)
 	Graphics_drawImage(GraphicId(ID_Graphic_BigPeople) + graphicId - 1,
 		c->xOffset + 28, c->yOffset + 112);
 	
-	Widget_GameText_draw(65, Data_Walkers[figureId].name,
+	Widget_GameText_draw(65, Data_Figures[figureId].name,
 		c->xOffset + 90, c->yOffset + 108, Font_LargeBrown);
 	Widget_GameText_draw(37, Data_Scenario.enemyId + 20,
 		c->xOffset + 92, c->yOffset + 149, Font_SmallBlack);
@@ -217,26 +217,26 @@ static void drawFigureInfoEnemy(BuildingInfoContext *c, int figureId)
 
 static void drawFigureInfoBoatAnimal(BuildingInfoContext *c, int figureId)
 {
-	Graphics_drawImage(BigPeopleGraphic(Data_Walkers[figureId].type),
+	Graphics_drawImage(BigPeopleGraphic(Data_Figures[figureId].type),
 		c->xOffset + 28, c->yOffset + 112);
 	
-	Widget_GameText_draw(64, Data_Walkers[figureId].type,
+	Widget_GameText_draw(64, Data_Figures[figureId].type,
 		c->xOffset + 92, c->yOffset + 139, Font_SmallBlack);
 }
 
 static void drawFigureInfoCartpusher(BuildingInfoContext *c, int figureId)
 {
-	Graphics_drawImage(BigPeopleGraphic(Data_Walkers[figureId].type),
+	Graphics_drawImage(BigPeopleGraphic(Data_Figures[figureId].type),
 		c->xOffset + 28, c->yOffset + 112);
 	
-	Widget_GameText_draw(65, Data_Walkers[figureId].name,
+	Widget_GameText_draw(65, Data_Figures[figureId].name,
 		c->xOffset + 90, c->yOffset + 108, Font_LargeBrown);
-	int width = Widget_GameText_draw(64, Data_Walkers[figureId].type,
+	int width = Widget_GameText_draw(64, Data_Figures[figureId].type,
 		c->xOffset + 92, c->yOffset + 139, Font_SmallBlack);
 	
-	if (Data_Walkers[figureId].actionState != FigureActionState_132_DockerIdling &&
-		Data_Walkers[figureId].resourceId) {
-		int resource = Data_Walkers[figureId].resourceId;
+	if (Data_Figures[figureId].actionState != FigureActionState_132_DockerIdling &&
+		Data_Figures[figureId].resourceId) {
+		int resource = Data_Figures[figureId].resourceId;
 		Graphics_drawImage(GraphicId(ID_Graphic_ResourceIcons) +
 			resource + Resource_getGraphicIdOffset(resource, 3),
 			c->xOffset + 92 + width, c->yOffset + 135);
@@ -245,13 +245,13 @@ static void drawFigureInfoCartpusher(BuildingInfoContext *c, int figureId)
 	Widget_GameText_drawMultiline(130, 21 * c->figure.soundId + c->figure.phraseId + 1,
 		c->xOffset + 90, c->yOffset + 160, 16 * (c->widthBlocks - 9), Font_SmallBlack);
 	
-	if (!Data_Walkers[figureId].buildingId) {
+	if (!Data_Figures[figureId].buildingId) {
 		return;
 	}
-	int sourceBuildingId = Data_Walkers[figureId].buildingId;
-	int targetBuildingId = Data_Walkers[figureId].destinationBuildingId;
+	int sourceBuildingId = Data_Figures[figureId].buildingId;
+	int targetBuildingId = Data_Figures[figureId].destinationBuildingId;
 	int isReturning = 0;
-	switch (Data_Walkers[figureId].actionState) {
+	switch (Data_Figures[figureId].actionState) {
 		case FigureActionState_27_CartpusherReturning:
 		case FigureActionState_53_WarehousemanReturningEmpty:
 		case FigureActionState_56_WarehousemanReturningWithFood:
@@ -262,7 +262,7 @@ static void drawFigureInfoCartpusher(BuildingInfoContext *c, int figureId)
 			isReturning = 1;
 			break;
 	}
-	if (Data_Walkers[figureId].actionState != FigureActionState_132_DockerIdling) {
+	if (Data_Figures[figureId].actionState != FigureActionState_132_DockerIdling) {
 		if (isReturning) {
 			width = Widget_GameText_draw(129, 16,
 				c->xOffset + 40, c->yOffset + 200, Font_SmallBlack);
@@ -287,7 +287,7 @@ static void drawFigureInfoCartpusher(BuildingInfoContext *c, int figureId)
 
 static void drawFigureInfoMarketBuyer(BuildingInfoContext *c, int figureId)
 {
-	struct Data_Walker *f = &Data_Walkers[figureId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	Graphics_drawImage(BigPeopleGraphic(f->type),
 		c->xOffset + 28, c->yOffset + 112);
 	
@@ -319,16 +319,16 @@ static void drawFigureInfoMarketBuyer(BuildingInfoContext *c, int figureId)
 
 static void drawFigureInfoNormal(BuildingInfoContext *c, int figureId)
 {
-	int graphicId = BigPeopleGraphic(Data_Walkers[figureId].type);
-	if (Data_Walkers[figureId].actionState == FigureActionState_74_PrefectGoingToFire ||
-		Data_Walkers[figureId].actionState == FigureActionState_75_PrefectAtFire) {
+	int graphicId = BigPeopleGraphic(Data_Figures[figureId].type);
+	if (Data_Figures[figureId].actionState == FigureActionState_74_PrefectGoingToFire ||
+		Data_Figures[figureId].actionState == FigureActionState_75_PrefectAtFire) {
 		graphicId = GraphicId(ID_Graphic_BigPeople) + 18;
 	}
 	Graphics_drawImage(graphicId, c->xOffset + 28, c->yOffset + 112);
 	
-	Widget_GameText_draw(65, Data_Walkers[figureId].name,
+	Widget_GameText_draw(65, Data_Figures[figureId].name,
 		c->xOffset + 90, c->yOffset + 108, Font_LargeBrown);
-	Widget_GameText_draw(64, Data_Walkers[figureId].type,
+	Widget_GameText_draw(64, Data_Figures[figureId].type,
 		c->xOffset + 92, c->yOffset + 139, Font_SmallBlack);
 	
 	if (c->figure.phraseId >= 0) {
@@ -341,7 +341,7 @@ static void drawFigureInfo(BuildingInfoContext *c, int figureId)
 {
 	Widget_Panel_drawButtonBorder(c->xOffset + 24, c->yOffset + 102, 16 * (c->widthBlocks - 3), 122, 0);
 	
-	int type = Data_Walkers[figureId].type;
+	int type = Data_Figures[figureId].type;
 	if (type == Figure_TradeCaravan || type == Figure_TradeCaravanDonkey || type == Figure_TradeShip) {
 		drawFigureInfoTrade(c, figureId);
 	} else if (FigureIsEnemy(type)) {
@@ -384,7 +384,7 @@ static void drawFigureInCity(int figureId, UI_CityPixelCoordinate *coord)
 	int xCam = Data_Settings_Map.camera.x;
 	int yCam = Data_Settings_Map.camera.y;
 
-	int gridOffset = Data_Walkers[figureId].gridOffset;
+	int gridOffset = Data_Figures[figureId].gridOffset;
 	int x, y;
 	CityView_gridOffsetToXYCoords(gridOffset, &x, &y);
 	Data_Settings_Map.camera.x = x - 2;
@@ -414,7 +414,7 @@ void UI_BuildingInfo_playFigurePhrase(BuildingInfoContext *c)
 {
 	int figureId = c->figure.figureIds[c->figure.selectedIndex];
 	c->figure.soundId = Figure_playPhrase(figureId);
-	c->figure.phraseId = Data_Walkers[figureId].phraseId;
+	c->figure.phraseId = Data_Figures[figureId].phraseId;
 }
 
 void UI_BuildingInfo_handleMouseFigureList(BuildingInfoContext *c)

@@ -35,7 +35,7 @@
 
 static void setBounds(int xOffset, int yOffset, int widthTiles, int heightTiles);
 static void drawMinimap(int xOffset, int yOffset, int widthTiles, int heightTiles);
-static int drawWalker(int xView, int yView, int gridOffset);
+static int drawFigure(int xView, int yView, int gridOffset);
 static void drawTile(int xView, int yView, int gridOffset);
 static void drawViewportRectangle(int xView, int yView, int widthTiles, int heightTiles);
 static int getMouseGridOffset(int xOffset, int yOffset, int widthTiles, int heightTiles);
@@ -104,38 +104,38 @@ static void drawMinimap(int xOffset, int yOffset, int widthTiles, int heightTile
 	);
 }
 
-static int drawWalker(int xView, int yView, int gridOffset)
+static int drawFigure(int xView, int yView, int gridOffset)
 {
 	Color color = Color_Black;
-	int hasWalker = 0;
+	int hasFigure = 0;
 
-	int walkerId = Data_Grid_figureIds[gridOffset];
-	while (walkerId > 0) {
-		int type = Data_Walkers[walkerId].type;
+	int figureId = Data_Grid_figureIds[gridOffset];
+	while (figureId > 0) {
+		int type = Data_Figures[figureId].type;
 		if (FigureIsLegion(type)) {
-			hasWalker = 1;
+			hasFigure = 1;
 			color = soldierColor;
 			break;
 		}
 		if (FigureIsEnemy(type)) {
-			hasWalker = 1;
+			hasFigure = 1;
 			color = enemyColor;
 			break;
 		}
 		if (type == Figure_IndigenousNative &&
-			Data_Walkers[walkerId].actionState == FigureActionState_159_NativeAttacking) {
-			hasWalker = 1;
+			Data_Figures[figureId].actionState == FigureActionState_159_NativeAttacking) {
+			hasFigure = 1;
 			color = enemyColor;
 			break;
 		}
 		if (type == Figure_Wolf) {
-			hasWalker = 1;
+			hasFigure = 1;
 			color = Color_Black;
 			break;
 		}
-		walkerId = Data_Walkers[walkerId].nextFigureIdOnSameTile;
+		figureId = Data_Figures[figureId].nextFigureIdOnSameTile;
 	}
-	if (hasWalker) {
+	if (hasFigure) {
 		Graphics_drawLine(xView, yView, xView+1, yView, color);
 		return 1;
 	} else {
@@ -150,7 +150,7 @@ static void drawTile(int xView, int yView, int gridOffset)
 		return;
 	}
 
-	if (drawWalker(xView, yView, gridOffset)) {
+	if (drawFigure(xView, yView, gridOffset)) {
 		return;
 	}
 	

@@ -332,14 +332,14 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 				}
 			}
 		} END_FOREACH_X_VIEW;
-		// draw walkers
+		// draw figures
 		FOREACH_X_VIEW {
-			int walkerId = Data_Grid_figureIds[gridOffset];
-			while (walkerId) {
-				if (!Data_Walkers[walkerId].isGhost) {
-					UI_CityBuildings_drawFigure(walkerId, xGraphic, yGraphic, selectedFigureId, coord);
+			int figureId = Data_Grid_figureIds[gridOffset];
+			while (figureId) {
+				if (!Data_Figures[figureId].isGhost) {
+					UI_CityBuildings_drawFigure(figureId, xGraphic, yGraphic, selectedFigureId, coord);
 				}
-				walkerId = Data_Walkers[walkerId].nextFigureIdOnSameTile;
+				figureId = Data_Figures[figureId].nextFigureIdOnSameTile;
 			}
 		} END_FOREACH_X_VIEW;
 		// draw animation
@@ -540,16 +540,16 @@ void UI_CityBuildings_drawBridge(int gridOffset, int x, int y)
 	}
 }
 
-static void drawHippodromeAndElevatedFigures(int selectedWalkerId)
+static void drawHippodromeAndElevatedFigures(int selectedFigureId)
 {
 	FOREACH_Y_VIEW {
 		FOREACH_X_VIEW {
-			for (int walkerId = Data_Grid_figureIds[gridOffset]; walkerId > 0; walkerId = Data_Walkers[walkerId].nextFigureIdOnSameTile) {
-				if (Data_Walkers[walkerId].useCrossCountry && !Data_Walkers[walkerId].isGhost) {
-					UI_CityBuildings_drawFigure(walkerId, xGraphic, yGraphic, selectedWalkerId, 0);
+			for (int figureId = Data_Grid_figureIds[gridOffset]; figureId > 0; figureId = Data_Figures[figureId].nextFigureIdOnSameTile) {
+				if (Data_Figures[figureId].useCrossCountry && !Data_Figures[figureId].isGhost) {
+					UI_CityBuildings_drawFigure(figureId, xGraphic, yGraphic, selectedFigureId, 0);
 				}
-				if (Data_Walkers[walkerId].heightAdjustedTicks) {
-					UI_CityBuildings_drawFigure(walkerId, xGraphic, yGraphic, selectedWalkerId, 0);
+				if (Data_Figures[figureId].heightAdjustedTicks) {
+					UI_CityBuildings_drawFigure(figureId, xGraphic, yGraphic, selectedFigureId, 0);
 				}
 			}
 		} END_FOREACH_X_VIEW;

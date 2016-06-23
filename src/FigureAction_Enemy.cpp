@@ -10,11 +10,11 @@
 #include "Data/Formation.h"
 #include "Data/Grid.h"
 
-static void enemyInitial(int walkerId, struct Data_Walker *f, struct Data_Formation *m)
+static void enemyInitial(int figureId, struct Data_Figure *f, struct Data_Formation *m)
 {
-	Figure_updatePositionInTileList(walkerId);
+	Figure_updatePositionInTileList(figureId);
 	f->graphicOffset = 0;
-	FigureRoute_remove(walkerId);
+	FigureRoute_remove(figureId);
 	f->waitTicks--;
 	if (f->waitTicks <= 0) {
 		if (f->isGhost && f->indexInFormation == 0) {
@@ -44,7 +44,7 @@ static void enemyInitial(int walkerId, struct Data_Walker *f, struct Data_Format
 		int xTile, yTile;
 		if (f->waitTicksMissile > Constant_FigureProperties[f->type].missileFrequency) {
 			f->waitTicksMissile = 0;
-			if (FigureAction_CombatEnemy_getMissileTarget(walkerId, 10, Data_CityInfo.numSoldiersInCity < 4, &xTile, &yTile)) {
+			if (FigureAction_CombatEnemy_getMissileTarget(figureId, 10, Data_CityInfo.numSoldiersInCity < 4, &xTile, &yTile)) {
 				f->attackGraphicOffset = 1;
 				f->direction = Routing_getDirectionForMissileShooter(f->x, f->y, xTile, yTile);
 			} else {
@@ -65,7 +65,7 @@ static void enemyInitial(int walkerId, struct Data_Walker *f, struct Data_Format
 					break;
 			}
 			if (f->attackGraphicOffset == 1) {
-				Figure_createMissile(walkerId, f->x, f->y, xTile, yTile, missileType);
+				Figure_createMissile(figureId, f->x, f->y, xTile, yTile, missileType);
 				m->missileFired = 6;
 			}
 			if (missileType == Figure_Arrow) {
@@ -83,7 +83,7 @@ static void enemyInitial(int walkerId, struct Data_Walker *f, struct Data_Format
 	}
 }
 
-static void enemyMarching(int walkerId, struct Data_Walker *f, struct Data_Formation *m)
+static void enemyMarching(int figureId, struct Data_Figure *f, struct Data_Formation *m)
 {
 	f->waitTicks--;
 	if (f->waitTicks <= 0) {
@@ -95,9 +95,9 @@ static void enemyMarching(int walkerId, struct Data_Walker *f, struct Data_Forma
 			return;
 		}
 		f->destinationBuildingId = m->destinationBuildingId;
-		FigureRoute_remove(walkerId);
+		FigureRoute_remove(figureId);
 	}
-	FigureMovement_walkTicks(walkerId, f->speedMultiplier);
+	FigureMovement_walkTicks(figureId, f->speedMultiplier);
 	if (f->direction == DirFigure_8_AtDestination ||
 		f->direction == DirFigure_9_Reroute ||
 		f->direction == DirFigure_10_Lost) {
@@ -105,7 +105,7 @@ static void enemyMarching(int walkerId, struct Data_Walker *f, struct Data_Forma
 	}
 }
 
-static void enemyFighting(int walkerId, struct Data_Walker *f, struct Data_Formation *m)
+static void enemyFighting(int figureId, struct Data_Figure *f, struct Data_Formation *m)
 {
 	if (!m->recentFight) {
 		f->actionState = FigureActionState_151_EnemyInitial;
@@ -133,20 +133,20 @@ static void enemyFighting(int walkerId, struct Data_Walker *f, struct Data_Forma
 	if (targetId <= 0) {
 		targetId = FigureAction_CombatEnemy_getTarget(f->x, f->y);
 		if (targetId) {
-			f->destinationX = Data_Walkers[targetId].x;
-			f->destinationY = Data_Walkers[targetId].y;
+			f->destinationX = Data_Figures[targetId].x;
+			f->destinationY = Data_Figures[targetId].y;
 			f->targetFigureId = targetId;
-			f->targetFigureCreatedSequence = Data_Walkers[targetId].createdSequence;
-			Data_Walkers[targetId].targetedByFigureId = walkerId;
-			FigureRoute_remove(walkerId);
+			f->targetFigureCreatedSequence = Data_Figures[targetId].createdSequence;
+			Data_Figures[targetId].targetedByFigureId = figureId;
+			FigureRoute_remove(figureId);
 		}
 	}
 	if (targetId > 0) {
-		FigureMovement_walkTicks(walkerId, f->speedMultiplier);
+		FigureMovement_walkTicks(figureId, f->speedMultiplier);
 		if (f->direction == DirFigure_8_AtDestination) {
-			f->destinationX = Data_Walkers[f->targetFigureId].x;
-			f->destinationY = Data_Walkers[f->targetFigureId].y;
-			FigureRoute_remove(walkerId);
+			f->destinationX = Data_Figures[f->targetFigureId].x;
+			f->destinationY = Data_Figures[f->targetFigureId].y;
+			FigureRoute_remove(figureId);
 		} else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
 			f->actionState = FigureActionState_151_EnemyInitial;
 			f->targetFigureId = 0;
@@ -157,7 +157,7 @@ static void enemyFighting(int walkerId, struct Data_Walker *f, struct Data_Forma
 	}
 }
 
-static void FigureAction_enemyCommon(int walkerId, struct Data_Walker *f)
+static void FigureAction_enemyCommon(int figureId, struct Data_Figure *f)
 {
 	struct Data_Formation *m = &Data_Formations[f->formationId];
 	Data_CityInfo.numEnemiesInCity++;
@@ -167,15 +167,15 @@ static void FigureAction_enemyCommon(int walkerId, struct Data_Walker *f)
 
 	switch (f->actionState) {
 		case FigureActionState_150_Attack:
-			FigureAction_Common_handleAttack(walkerId);
+			FigureAction_Common_handleAttack(figureId);
 			break;
 		case FigureActionState_149_Corpse:
-			FigureAction_Common_handleCorpse(walkerId);
+			FigureAction_Common_handleCorpse(figureId);
 			break;
 		case FigureActionState_148_Fleeing:
 			f->destinationX = f->sourceX;
 			f->destinationY = f->sourceY;
-			FigureMovement_walkTicks(walkerId, f->speedMultiplier);
+			FigureMovement_walkTicks(figureId, f->speedMultiplier);
 			if (f->direction == DirFigure_8_AtDestination ||
 				f->direction == DirFigure_9_Reroute ||
 				f->direction == DirFigure_10_Lost) {
@@ -183,21 +183,21 @@ static void FigureAction_enemyCommon(int walkerId, struct Data_Walker *f)
 			}
 			break;
 		case FigureActionState_151_EnemyInitial:
-			enemyInitial(walkerId, f, m);
+			enemyInitial(figureId, f, m);
 			break;
 		case FigureActionState_152_EnemyWaiting:
-			Figure_updatePositionInTileList(walkerId);
+			Figure_updatePositionInTileList(figureId);
 			break;
 		case FigureActionState_153_EnemyMarching:
-			enemyMarching(walkerId, f, m);
+			enemyMarching(figureId, f, m);
 			break;
 		case FigureActionState_154_EnemyFighting:
-			enemyFighting(walkerId, f, m);
+			enemyFighting(figureId, f, m);
 			break;
 	}
 }
 
-static int getDirection(struct Data_Walker *f)
+static int getDirection(struct Data_Figure *f)
 {
 	int dir;
 	if (f->actionState == FigureActionState_150_Attack) {
@@ -211,7 +211,7 @@ static int getDirection(struct Data_Walker *f)
 	return dir;
 }
 
-static int getDirectionMissile(struct Data_Walker *f, struct Data_Formation *m)
+static int getDirectionMissile(struct Data_Figure *f, struct Data_Formation *m)
 {
 	int dir;
 	if (f->actionState == FigureActionState_150_Attack) {
@@ -225,14 +225,14 @@ static int getDirectionMissile(struct Data_Walker *f, struct Data_Formation *m)
 	return dir;
 }
 
-void FigureAction_enemy43_Spear(int walkerId)
+void FigureAction_enemy43_Spear(int figureId)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	struct Data_Formation *m = &Data_Formations[f->formationId];
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	f->speedMultiplier = 1;
-	FigureAction_enemyCommon(walkerId, f);
+	FigureAction_enemyCommon(figureId, f);
 	
 	int dir = getDirectionMissile(f, m);
 	
@@ -264,14 +264,14 @@ void FigureAction_enemy43_Spear(int walkerId)
 	}
 }
 
-void FigureAction_enemy44_Sword(int walkerId)
+void FigureAction_enemy44_Sword(int figureId)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	struct Data_Formation *m = &Data_Formations[f->formationId];
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	f->speedMultiplier = 1;
-	FigureAction_enemyCommon(walkerId, f);
+	FigureAction_enemyCommon(figureId, f);
 	
 	int dir = getDirection(f);
 	
@@ -300,14 +300,14 @@ void FigureAction_enemy44_Sword(int walkerId)
 	}
 }
 
-void FigureAction_enemy45_Sword(int walkerId)
+void FigureAction_enemy45_Sword(int figureId)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	struct Data_Formation *m = &Data_Formations[f->formationId];
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	f->speedMultiplier = 1;
-	FigureAction_enemyCommon(walkerId, f);
+	FigureAction_enemyCommon(figureId, f);
 	
 	int dir = getDirection(f);
 	
@@ -336,14 +336,14 @@ void FigureAction_enemy45_Sword(int walkerId)
 	}
 }
 
-void FigureAction_enemy46_Camel(int walkerId)
+void FigureAction_enemy46_Camel(int figureId)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	struct Data_Formation *m = &Data_Formations[f->formationId];
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	f->speedMultiplier = 1;
-	FigureAction_enemyCommon(walkerId, f);
+	FigureAction_enemyCommon(figureId, f);
 	
 	int dir = getDirectionMissile(f, m);
 	
@@ -362,13 +362,13 @@ void FigureAction_enemy46_Camel(int walkerId)
 	}
 }
 
-void FigureAction_enemy47_Elephant(int walkerId)
+void FigureAction_enemy47_Elephant(int figureId)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	f->speedMultiplier = 1;
-	FigureAction_enemyCommon(walkerId, f);
+	FigureAction_enemyCommon(figureId, f);
 	
 	int dir = getDirection(f);
 	
@@ -383,13 +383,13 @@ void FigureAction_enemy47_Elephant(int walkerId)
 	}
 }
 
-void FigureAction_enemy48_Chariot(int walkerId)
+void FigureAction_enemy48_Chariot(int figureId)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	f->speedMultiplier = 3;
-	FigureAction_enemyCommon(walkerId, f);
+	FigureAction_enemyCommon(figureId, f);
 	
 	int dir = getDirection(f);
 	
@@ -404,14 +404,14 @@ void FigureAction_enemy48_Chariot(int walkerId)
 	}
 }
 
-void FigureAction_enemy49_FastSword(int walkerId)
+void FigureAction_enemy49_FastSword(int figureId)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	struct Data_Formation *m = &Data_Formations[f->formationId];
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	f->speedMultiplier = 2;
-	FigureAction_enemyCommon(walkerId, f);
+	FigureAction_enemyCommon(figureId, f);
 	
 	int dir = getDirection(f);
 	
@@ -448,14 +448,14 @@ void FigureAction_enemy49_FastSword(int walkerId)
 	}
 }
 
-void FigureAction_enemy50_Sword(int walkerId)
+void FigureAction_enemy50_Sword(int figureId)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	struct Data_Formation *m = &Data_Formations[f->formationId];
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	f->speedMultiplier = 1;
-	FigureAction_enemyCommon(walkerId, f);
+	FigureAction_enemyCommon(figureId, f);
 	
 	int dir = getDirection(f);
 	
@@ -479,14 +479,14 @@ void FigureAction_enemy50_Sword(int walkerId)
 	}
 }
 
-void FigureAction_enemy51_Spear(int walkerId)
+void FigureAction_enemy51_Spear(int figureId)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	struct Data_Formation *m = &Data_Formations[f->formationId];
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	f->speedMultiplier = 2;
-	FigureAction_enemyCommon(walkerId, f);
+	FigureAction_enemyCommon(figureId, f);
 	
 	int dir = getDirectionMissile(f, m);
 	
@@ -512,14 +512,14 @@ void FigureAction_enemy51_Spear(int walkerId)
 	}
 }
 
-void FigureAction_enemy52_MountedArcher(int walkerId)
+void FigureAction_enemy52_MountedArcher(int figureId)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	struct Data_Formation *m = &Data_Formations[f->formationId];
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	f->speedMultiplier = 3;
-	FigureAction_enemyCommon(walkerId, f);
+	FigureAction_enemyCommon(figureId, f);
 	
 	int dir = getDirectionMissile(f, m);
 	
@@ -538,14 +538,14 @@ void FigureAction_enemy52_MountedArcher(int walkerId)
 	}
 }
 
-void FigureAction_enemy53_Axe(int walkerId)
+void FigureAction_enemy53_Axe(int figureId)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	struct Data_Formation *m = &Data_Formations[f->formationId];
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	f->speedMultiplier = 1;
-	FigureAction_enemyCommon(walkerId, f);
+	FigureAction_enemyCommon(figureId, f);
 	
 	int dir = getDirection(f);
 	
@@ -569,9 +569,9 @@ void FigureAction_enemy53_Axe(int walkerId)
 	}
 }
 
-void FigureAction_enemy54_Gladiator(int walkerId)
+void FigureAction_enemy54_Gladiator(int figureId)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	f->terrainUsage = FigureTerrainUsage_Any;
 	f->useCrossCountry = 0;
 	FigureActionIncreaseGraphicOffset(f, 12);
@@ -585,16 +585,16 @@ void FigureAction_enemy54_Gladiator(int walkerId)
 	}
 	switch (f->actionState) {
 		case FigureActionState_150_Attack:
-			FigureAction_Common_handleAttack(walkerId);
+			FigureAction_Common_handleAttack(figureId);
 			FigureActionIncreaseGraphicOffset(f, 16);
 			break;
 		case FigureActionState_149_Corpse:
-			FigureAction_Common_handleCorpse(walkerId);
+			FigureAction_Common_handleCorpse(figureId);
 			break;
 		case FigureActionState_158_NativeCreated:
 			f->graphicOffset = 0;
 			f->waitTicks++;
-			if (f->waitTicks > 10 + (walkerId & 3)) {
+			if (f->waitTicks > 10 + (figureId & 3)) {
 				f->waitTicks = 0;
 				f->actionState = FigureActionState_159_NativeAttacking;
 				int xTile, yTile;
@@ -603,7 +603,7 @@ void FigureAction_enemy54_Gladiator(int walkerId)
 					f->destinationX = xTile;
 					f->destinationY = yTile;
 					f->destinationBuildingId = buildingId;
-					FigureRoute_remove(walkerId);
+					FigureRoute_remove(figureId);
 				} else {
 					f->state = FigureState_Dead;
 				}
@@ -612,7 +612,7 @@ void FigureAction_enemy54_Gladiator(int walkerId)
 		case FigureActionState_159_NativeAttacking:
 			Data_CityInfo.numAttackingNativesInCity = 10;
 			f->terrainUsage = FigureTerrainUsage_Enemy;
-			FigureMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(figureId, 1);
 			if (f->direction == DirFigure_8_AtDestination ||
 				f->direction == DirFigure_9_Reroute ||
 				f->direction == DirFigure_10_Lost) {
@@ -639,15 +639,15 @@ void FigureAction_enemy54_Gladiator(int walkerId)
 	}
 }
 
-void FigureAction_enemyCaesarLegionary(int walkerId)
+void FigureAction_enemyCaesarLegionary(int figureId)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	struct Data_Formation *m = &Data_Formations[f->formationId];
 	Data_CityInfo.numImperialSoldiersInCity++;
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	f->speedMultiplier = 1;
-	FigureAction_enemyCommon(walkerId, f);
+	FigureAction_enemyCommon(figureId, f);
 	
 	int dir = getDirection(f);
 	
@@ -687,10 +687,10 @@ int FigureAction_HerdEnemy_moveFormationTo(int formationId, int x, int y, int *x
 	int baseOffset = GridOffset(
 		FigureActionFormationLayoutPositionX(m->layout, 0),
 		FigureActionFormationLayoutPositionY(m->layout, 0));
-	int walkerOffsets[50];
-	walkerOffsets[0] = 0;
+	int figureOffsets[50];
+	figureOffsets[0] = 0;
 	for (int i = 1; i < m->numFigures; i++) {
-		walkerOffsets[i] = GridOffset(
+		figureOffsets[i] = GridOffset(
 			FigureActionFormationLayoutPositionX(m->layout, i),
 			FigureActionFormationLayoutPositionY(m->layout, i)) - baseOffset;
 	}
@@ -705,7 +705,7 @@ int FigureAction_HerdEnemy_moveFormationTo(int formationId, int x, int y, int *x
 			for (int xx = xMin; xx <= xMax; xx++) {
 				int canMove = 1;
 				for (int fig = 0; fig < m->numFigures; fig++) {
-					int gridOffset = GridOffset(xx, yy) + walkerOffsets[fig];
+					int gridOffset = GridOffset(xx, yy) + figureOffsets[fig];
 					if (Data_Grid_terrain[gridOffset] & Terrain_1237) {
 						canMove = 0;
 						break;
@@ -715,7 +715,7 @@ int FigureAction_HerdEnemy_moveFormationTo(int formationId, int x, int y, int *x
 						break;
 					}
 					if (Data_Grid_figureIds[gridOffset] &&
-						Data_Walkers[Data_Grid_figureIds[gridOffset]].formationId != formationId) {
+						Data_Figures[Data_Grid_figureIds[gridOffset]].formationId != formationId) {
 						canMove = 0;
 						break;
 					}

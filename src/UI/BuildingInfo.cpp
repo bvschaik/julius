@@ -247,19 +247,19 @@ void UI_BuildingInfo_init()
 				break;
 		}
 	}
-	// walkers
+	// figures
 	context.figure.selectedIndex = 0;
 	context.figure.count = 0;
 	for (int i = 0; i < 7; i++) {
 		context.figure.figureIds[i] = 0;
 	}
-	static const int walkerOffsets[] = {0, -162, 162, 1, -1, -163, -161, 161, 163};
+	static const int figureOffsets[] = {0, -162, 162, 1, -1, -163, -161, 161, 163};
 	for (int i = 0; i < 9 && context.figure.count < 7; i++) {
-		int walkerId = Data_Grid_figureIds[gridOffset + walkerOffsets[i]];
-		while (walkerId > 0 && context.figure.count < 7) {
-			if (Data_Walkers[walkerId].state != FigureState_Dead &&
-				Data_Walkers[walkerId].actionState != FigureActionState_149_Corpse) {
-				switch (Data_Walkers[walkerId].type) {
+		int figureId = Data_Grid_figureIds[gridOffset + figureOffsets[i]];
+		while (figureId > 0 && context.figure.count < 7) {
+			if (Data_Figures[figureId].state != FigureState_Dead &&
+				Data_Figures[figureId].actionState != FigureActionState_149_Corpse) {
+				switch (Data_Figures[figureId].type) {
 					case Figure_None:
 					case Figure_Explosion:
 					case Figure_MapFlag:
@@ -274,24 +274,24 @@ void UI_BuildingInfo_init()
 					case Figure_HippodromeMiniHorses:
 						break;
 					default:
-						context.figure.figureIds[context.figure.count++] = walkerId;
-						Figure_determinePhrase(walkerId);
+						context.figure.figureIds[context.figure.count++] = figureId;
+						Figure_determinePhrase(figureId);
 						break;
 				}
 			}
-			walkerId = Data_Walkers[walkerId].nextFigureIdOnSameTile;
+			figureId = Data_Figures[figureId].nextFigureIdOnSameTile;
 		}
 	}
-	// check for legion walkers
+	// check for legion figures
 	for (int i = 0; i < 7; i++) {
-		int walkerId = context.figure.figureIds[i];
-		if (walkerId <= 0) {
+		int figureId = context.figure.figureIds[i];
+		if (figureId <= 0) {
 			continue;
 		}
-		int type = Data_Walkers[walkerId].type;
+		int type = Data_Figures[figureId].type;
 		if (type == Figure_FortStandard || FigureIsLegion(type)) {
 			context.type = BuildingInfoType_Legion;
-			context.formationId = Data_Walkers[walkerId].formationId;
+			context.formationId = Data_Figures[figureId].formationId;
 			if (Data_Formations[context.formationId].figureType != Figure_FortLegionary) {
 				context.formationTypes = 5;
 			} else if (Data_Formations[context.formationId].hasMilitaryTraining) {

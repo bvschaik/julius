@@ -161,7 +161,7 @@ static void changeMoraleOfAllEnemies(int amount)
 static void tickDecreaseLegionDamage()
 {
 	for (int i = 1; i < MAX_FIGURES; i++) {
-		struct Data_Walker *f = &Data_Walkers[i];
+		struct Data_Figure *f = &Data_Figures[i];
 		if (f->state == FigureState_Alive && FigureIsLegion(f->type)) {
 			if (f->actionState == FigureActionState_80_SoldierAtRest) {
 				if (f->damage) {
@@ -215,7 +215,7 @@ static void tickUpdateDirection()
 		if (m->__unknown66) {
 			m->__unknown66--;
 		} else if (m->missileFired) {
-			m->direction = Data_Walkers[m->figureIds[0]].direction;
+			m->direction = Data_Figures[m->figureIds[0]].direction;
 		} else if (m->layout == FormationLayout_DoubleLine1 || m->layout == FormationLayout_SingleLine1) {
 			if (m->yHome < m->prevYHome) {
 				m->direction = Dir_0_Top;
@@ -275,14 +275,14 @@ static void tickUpdateLegions()
 			m->missileFired = 0;
 		}
 		for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {
-			if (Data_Walkers[m->figureIds[n]].actionState == FigureActionState_150_Attack) {
+			if (Data_Figures[m->figureIds[n]].actionState == FigureActionState_150_Attack) {
 				m->recentFight = 6;
 			}
 		}
 		if (m->monthsLowMorale || m->monthsVeryLowMorale) {
 			// flee back to fort
 			for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {
-				struct Data_Walker *f = &Data_Walkers[m->figureIds[n]];
+				struct Data_Figure *f = &Data_Figures[m->figureIds[n]];
 				if (f->actionState != FigureActionState_150_Attack &&
 					f->actionState != FigureActionState_149_Corpse &&
 					f->actionState != FigureActionState_148_Fleeing) {
@@ -295,7 +295,7 @@ static void tickUpdateLegions()
 				Data_CityInfo.numRiotersInCity +
 				Data_CityInfo.numAttackingNativesInCity > 0) {
 				for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {
-					struct Data_Walker *f = &Data_Walkers[m->figureIds[n]];
+					struct Data_Figure *f = &Data_Figures[m->figureIds[n]];
 					if (m->figureIds[n] != 0 &&
 						f->actionState != FigureActionState_150_Attack &&
 						f->actionState != FigureActionState_149_Corpse) {
@@ -322,7 +322,7 @@ static void addRomanSoldierConcentration(int x, int y, int radius, int amount)
 			int gridOffset = GridOffset(xx, yy);
 			Data_Grid_romanSoldierConcentration[gridOffset] += amount;
 			if (Data_Grid_figureIds[gridOffset] > 0) {
-				int type = Data_Walkers[Data_Grid_figureIds[gridOffset]].type;
+				int type = Data_Figures[Data_Grid_figureIds[gridOffset]].type;
 				if (FigureIsLegion(type)) {
 					Data_Grid_romanSoldierConcentration[gridOffset] += 2;
 				}
@@ -513,7 +513,7 @@ static void marsKillEnemies()
 	int toKill = Data_CityInfo.godBlessingMarsEnemiesToKill;
 	int gridOffset = 0;
 	for (int i = 1; i < MAX_FIGURES && toKill > 0; i++) {
-		struct Data_Walker *f = &Data_Walkers[i];
+		struct Data_Figure *f = &Data_Figures[i];
 		if (f->state != FigureState_Alive) {
 			continue;
 		}
@@ -529,12 +529,12 @@ static void marsKillEnemies()
 	PlayerMessage_post(1, Message_105_SpiritOfMars, 0, gridOffset);
 }
 
-static void setFormationWalkersToEnemyInitial(int formationId)
+static void setFormationFiguresToEnemyInitial(int formationId)
 {
 	struct Data_Formation *m = &Data_Formations[formationId];
 	for (int i = 0; i < MAX_FORMATION_FIGURES; i++) {
 		if (m->figureIds[i] > 0) {
-			struct Data_Walker *f = &Data_Walkers[m->figureIds[i]];
+			struct Data_Figure *f = &Data_Figures[m->figureIds[i]];
 			if (f->actionState != FigureActionState_149_Corpse &&
 				f->actionState != FigureActionState_150_Attack) {
 				f->actionState = FigureActionState_151_EnemyInitial;
@@ -603,7 +603,7 @@ static void updateEnemyMovement(int formationId, struct Data_Formation *m, int r
 			m->durationHalt--;
 			if (m->durationHalt <= 0) {
 				m->durationRegroup = regroupDuration;
-				setFormationWalkersToEnemyInitial(formationId);
+				setFormationFiguresToEnemyInitial(formationId);
 				regroup = 0;
 				halt = 1;
 			}
@@ -614,7 +614,7 @@ static void updateEnemyMovement(int formationId, struct Data_Formation *m, int r
 			m->durationRegroup--;
 			if (m->durationRegroup <= 0) {
 				m->durationAdvance = advanceDuration;
-				setFormationWalkersToEnemyInitial(formationId);
+				setFormationFiguresToEnemyInitial(formationId);
 				advance = 1;
 				regroup = 0;
 			}
@@ -625,7 +625,7 @@ static void updateEnemyMovement(int formationId, struct Data_Formation *m, int r
 			m->durationAdvance--;
 			if (m->durationAdvance <= 0) {
 				m->durationHalt = haltDuration;
-				setFormationWalkersToEnemyInitial(formationId);
+				setFormationFiguresToEnemyInitial(formationId);
 				halt = 1;
 				advance = 0;
 			}
@@ -717,17 +717,17 @@ static void tickUpdateEnemies()
 			m->missileFired = 0;
 		}
 		for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {
-			int walkerId = m->figureIds[n];
-			if (Data_Walkers[walkerId].actionState == FigureActionState_150_Attack) {
-				int opponentId = Data_Walkers[walkerId].opponentId;
-				if (!FigureIsDead(opponentId) && FigureIsLegion(Data_Walkers[opponentId].type)) {
+			int figureId = m->figureIds[n];
+			if (Data_Figures[figureId].actionState == FigureActionState_150_Attack) {
+				int opponentId = Data_Figures[figureId].opponentId;
+				if (!FigureIsDead(opponentId) && FigureIsLegion(Data_Figures[opponentId].type)) {
 					m->recentFight = 6;
 				}
 			}
 		}
 		if (m->monthsLowMorale || m->monthsVeryLowMorale) {
 			for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {
-				struct Data_Walker *f = &Data_Walkers[m->figureIds[n]];
+				struct Data_Figure *f = &Data_Figures[m->figureIds[n]];
 				if (f->actionState != FigureActionState_150_Attack &&
 					f->actionState != FigureActionState_149_Corpse &&
 					f->actionState != FigureActionState_148_Fleeing) {
@@ -737,9 +737,9 @@ static void tickUpdateEnemies()
 			}
 			continue;
 		}
-		if (m->figureIds[0] && Data_Walkers[m->figureIds[0]].state == FigureState_Alive) {
-			m->xHome = Data_Walkers[m->figureIds[0]].x;
-			m->yHome = Data_Walkers[m->figureIds[0]].y;
+		if (m->figureIds[0] && Data_Figures[m->figureIds[0]].state == FigureState_Alive) {
+			m->xHome = Data_Figures[m->figureIds[0]].x;
+			m->yHome = Data_Figures[m->figureIds[0]].y;
 		}
 		if (!Data_Formation_Invasion.formationId[m->invasionId]) {
 			Data_Formation_Invasion.formationId[m->invasionId] = i;
@@ -827,8 +827,8 @@ static void moveAnimals(struct Data_Formation *m, int attackingAnimals)
 {
 	for (int i = 0; i < MAX_FORMATION_FIGURES; i++) {
 		if (m->figureIds[i] <= 0) continue;
-		int walkerId = m->figureIds[i];
-		struct Data_Walker *f = &Data_Walkers[walkerId];
+		int figureId = m->figureIds[i];
+		struct Data_Figure *f = &Data_Figures[figureId];
 		if (f->actionState == FigureActionState_149_Corpse ||
 			f->actionState == FigureActionState_150_Attack) {
 			continue;
@@ -838,12 +838,12 @@ static void moveAnimals(struct Data_Formation *m, int attackingAnimals)
 			int targetId = FigureAction_CombatWolf_getTarget(f->x, f->y, 6);
 			if (targetId) {
 				f->actionState = FigureActionState_199_WolfAttacking;
-				f->destinationX = Data_Walkers[targetId].x;
-				f->destinationY = Data_Walkers[targetId].y;
+				f->destinationX = Data_Figures[targetId].x;
+				f->destinationY = Data_Figures[targetId].y;
 				f->targetFigureId = targetId;
-				Data_Walkers[targetId].targetedByFigureId = walkerId;
-				f->targetFigureCreatedSequence = Data_Walkers[targetId].createdSequence;
-				FigureRoute_remove(walkerId);
+				Data_Figures[targetId].targetedByFigureId = figureId;
+				f->targetFigureCreatedSequence = Data_Figures[targetId].createdSequence;
+				FigureRoute_remove(figureId);
 			} else {
 				f->actionState = FigureActionState_196_HerdAnimalAtRest;
 			}
@@ -870,25 +870,25 @@ static void tickUpdateHerds()
 				m->herdWolfSpawnDelay = 0;
 				if (!(Data_Grid_terrain[GridOffset(m->x, m->y)] & Terrain_d73f)) {
 					int wolfId = Figure_create(m->figureType, m->x, m->y, Dir_0_Top);
-					Data_Walkers[wolfId].actionState = FigureActionState_196_HerdAnimalAtRest;
-					Data_Walkers[wolfId].formationId = i;
-					Data_Walkers[wolfId].waitTicks = wolfId & 0x1f;
+					Data_Figures[wolfId].actionState = FigureActionState_196_HerdAnimalAtRest;
+					Data_Figures[wolfId].formationId = i;
+					Data_Figures[wolfId].waitTicks = wolfId & 0x1f;
 				}
 			}
 		}
 		int attackingAnimals = 0;
 		for (int fig = 0; fig < MAX_FORMATION_FIGURES; fig++) {
-			int walkerId = m->figureIds[fig];
-			if (walkerId > 0 && Data_Walkers[walkerId].actionState == FigureActionState_150_Attack) {
+			int figureId = m->figureIds[fig];
+			if (figureId > 0 && Data_Figures[figureId].actionState == FigureActionState_150_Attack) {
 				attackingAnimals++;
 			}
 		}
 		if (m->missileAttackTimeout) {
 			attackingAnimals = 1;
 		}
-		if (m->figureIds[0] && Data_Walkers[m->figureIds[0]].state == FigureState_Alive) {
-			m->xHome = Data_Walkers[m->figureIds[0]].x;
-			m->yHome = Data_Walkers[m->figureIds[0]].y;
+		if (m->figureIds[0] && Data_Figures[m->figureIds[0]].state == FigureState_Alive) {
+			m->xHome = Data_Figures[m->figureIds[0]].x;
+			m->yHome = Data_Figures[m->figureIds[0]].y;
 		}
 		int roamDistance;
 		int roamDelay;

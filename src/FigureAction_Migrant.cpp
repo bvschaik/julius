@@ -9,7 +9,7 @@
 #include "Data/CityInfo.h"
 #include "Data/Model.h"
 
-static void updateDirectionAndGraphic(int figureId, struct Data_Walker *f)
+static void updateDirectionAndGraphic(int figureId, struct Data_Figure *f)
 {
 	int dir = FigureActionDirection(f);
 	if (f->actionState == FigureActionState_149_Corpse) {
@@ -28,7 +28,7 @@ static void updateDirectionAndGraphic(int figureId, struct Data_Walker *f)
 
 void FigureAction_immigrant(int figureId)
 {
-	struct Data_Walker *f = &Data_Walkers[figureId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	int buildingId = f->immigrantBuildingId;
 	struct Data_Building *b = &Data_Buildings[buildingId];
 	
@@ -116,7 +116,7 @@ void FigureAction_immigrant(int figureId)
 
 void FigureAction_emigrant(int figureId)
 {
-	struct Data_Walker *f = &Data_Walkers[figureId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	
 	f->terrainUsage = FigureTerrainUsage_Any;
 	f->cartGraphicId = 0;
@@ -172,7 +172,7 @@ void FigureAction_emigrant(int figureId)
 
 void FigureAction_homeless(int figureId)
 {
-	struct Data_Walker *f = &Data_Walkers[figureId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->terrainUsage = FigureTerrainUsage_PreferRoads;

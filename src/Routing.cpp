@@ -536,14 +536,14 @@ void Routing_deleteClosestWallOrAqueduct(int x, int y)
 
 static int hasFightingFriendly(int gridOffset)
 {
-	int walkerId = Data_Grid_figureIds[gridOffset];
-	if (walkerId > 0) {
-		while (walkerId) {
-			if (Data_Walkers[walkerId].isFriendly &&
-				Data_Walkers[walkerId].actionState == FigureActionState_150_Attack) {
+	int figureId = Data_Grid_figureIds[gridOffset];
+	if (figureId > 0) {
+		while (figureId) {
+			if (Data_Figures[figureId].isFriendly &&
+				Data_Figures[figureId].actionState == FigureActionState_150_Attack) {
 				return 1;
 			}
-			walkerId = Data_Walkers[walkerId].nextFigureIdOnSameTile;
+			figureId = Data_Figures[figureId].nextFigureIdOnSameTile;
 		}
 	}
 	return 0;
@@ -551,14 +551,14 @@ static int hasFightingFriendly(int gridOffset)
 
 static int hasFightingEnemy(int gridOffset)
 {
-	int walkerId = Data_Grid_figureIds[gridOffset];
-	if (walkerId > 0) {
-		while (walkerId) {
-			if (!Data_Walkers[walkerId].isFriendly &&
-				Data_Walkers[walkerId].actionState == FigureActionState_150_Attack) {
+	int figureId = Data_Grid_figureIds[gridOffset];
+	if (figureId > 0) {
+		while (figureId) {
+			if (!Data_Figures[figureId].isFriendly &&
+				Data_Figures[figureId].actionState == FigureActionState_150_Attack) {
 				return 1;
 			}
-			walkerId = Data_Walkers[walkerId].nextFigureIdOnSameTile;
+			figureId = Data_Figures[figureId].nextFigureIdOnSameTile;
 		}
 	}
 	return 0;

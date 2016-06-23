@@ -19,9 +19,9 @@ void FigureRoute_clearList()
 void FigureRoute_clean()
 {
 	for (int i = 0; i < MAX_ROUTES; i++) {
-		int walkerId = Data_Routes.figureIds[i];
-		if (walkerId > 0 && walkerId < MAX_FIGURES) {
-			if (Data_Walkers[walkerId].state != FigureState_Alive || Data_Walkers[walkerId].routingPathId != i) {
+		int figureId = Data_Routes.figureIds[i];
+		if (figureId > 0 && figureId < MAX_FIGURES) {
+			if (Data_Figures[figureId].state != FigureState_Alive || Data_Figures[figureId].routingPathId != i) {
 				Data_Routes.figureIds[i] = 0;
 			}
 		}
@@ -49,9 +49,9 @@ static int getFirstAvailable()
 	return 0;
 }
 
-void FigureRoute_add(int walkerId)
+void FigureRoute_add(int figureId)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	f->routingPathId = 0;
 	f->routingPathCurrentTile = 0;
 	f->routingPathLength = 0;
@@ -71,7 +71,7 @@ void FigureRoute_add(int walkerId)
 				f->destinationX, f->destinationY, 0);
 		}
 	} else {
-		// land walker
+		// land figure
 		int canTravel;
 		switch (f->terrainUsage) {
 			case FigureTerrainUsage_Enemy:
@@ -128,19 +128,19 @@ void FigureRoute_add(int walkerId)
 		}
 	}
 	if (pathLength) {
-		Data_Routes.figureIds[pathId] = walkerId;
+		Data_Routes.figureIds[pathId] = figureId;
 		f->routingPathId = pathId;
 		f->routingPathLength = pathLength;
 	}
 }
 
-void FigureRoute_remove(int walkerId)
+void FigureRoute_remove(int figureId)
 {
-	int path = Data_Walkers[walkerId].routingPathId;
+	int path = Data_Figures[figureId].routingPathId;
 	if (path > 0) {
-		if (Data_Routes.figureIds[path] == walkerId) {
+		if (Data_Routes.figureIds[path] == figureId) {
 			Data_Routes.figureIds[path] = 0;
 		}
-		Data_Walkers[walkerId].routingPathId = 0;
+		Data_Figures[figureId].routingPathId = 0;
 	}
 }

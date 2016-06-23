@@ -9,7 +9,7 @@
 #define FigureActionFormationLayoutPositionX(layout, index) figureActionFormationLayoutPositionX[layout][index]
 #define FigureActionFormationLayoutPositionY(layout, index) figureActionFormationLayoutPositionY[layout][index]
 
-#define WalkerActionUpdateGraphic(f,g) \
+#define FigureActionUpdateGraphic(f,g) \
 	if ((f)->actionState == FigureActionState_149_Corpse) {\
 		(f)->graphicId = (g) + figureActionCorpseGraphicOffsets[f->waitTicks / 2] + 96;\
 	} else {\

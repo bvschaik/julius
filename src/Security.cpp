@@ -167,8 +167,8 @@ static void generateRioter(int buildingId)
 	int targetX, targetY;
 	int targetBuildingId = Formation_Rioter_getTargetBuilding(&targetX, &targetY);
 	for (int i = 0; i < peopleInMob; i++) {
-		int walkerId = Figure_create(Figure_Rioter, xRoad, yRoad, 4);
-		struct Data_Walker *f = &Data_Walkers[walkerId];
+		int figureId = Figure_create(Figure_Rioter, xRoad, yRoad, 4);
+		struct Data_Figure *f = &Data_Figures[figureId];
 		f->actionState = FigureActionState_120_RioterCreated;
 		f->roamLength = 0;
 		f->waitTicks = 10 + 4 * i;
@@ -204,15 +204,15 @@ static void generateMugger(int buildingId)
 		b->houseCriminalActive = 2;
 		int xRoad, yRoad;
 		if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
-			int walkerId = Figure_create(Figure_Criminal, xRoad, yRoad, 4);
-			Data_Walkers[walkerId].waitTicks = 10 + (b->houseGenerationDelay & 0xf);
+			int figureId = Figure_create(Figure_Criminal, xRoad, yRoad, 4);
+			Data_Figures[figureId].waitTicks = 10 + (b->houseGenerationDelay & 0xf);
 			Data_CityInfo.ratingPeaceNumCriminalsThisYear++;
 			if (Data_CityInfo.financeTaxesThisYear > 20) {
 				int moneyStolen = Data_CityInfo.financeTaxesThisYear / 4;
 				if (moneyStolen > 400) {
 					moneyStolen = 400 - Data_Random.random1_7bit / 2;
 				}
-				PlayerMessage_post(1, Message_52_Theft, moneyStolen, Data_Walkers[walkerId].gridOffset);
+				PlayerMessage_post(1, Message_52_Theft, moneyStolen, Data_Figures[figureId].gridOffset);
 				Data_CityInfo.financeStolenThisYear += moneyStolen;
 				Data_CityInfo.treasury -= moneyStolen;
 				Data_CityInfo.financeSundriesThisYear += moneyStolen;
@@ -229,8 +229,8 @@ static void generateProtester(int buildingId)
 		b->houseCriminalActive = 1;
 		int xRoad, yRoad;
 		if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
-			int walkerId = Figure_create(Figure_Protester, xRoad, yRoad, 4);
-			Data_Walkers[walkerId].waitTicks = 10 + (b->houseGenerationDelay & 0xf);
+			int figureId = Figure_create(Figure_Protester, xRoad, yRoad, 4);
+			Data_Figures[figureId].waitTicks = 10 + (b->houseGenerationDelay & 0xf);
 			Data_CityInfo.ratingPeaceNumCriminalsThisYear++;
 		}
 	}

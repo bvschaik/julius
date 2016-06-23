@@ -191,13 +191,13 @@ int Terrain_determineOrientationWatersideSize3(int x, int y, int adjustXY,
 	return 999;
 }
 
-int Terrain_Water_getWharfTileForNewFishingBoat(int walkerId, int *xTile, int *yTile)
+int Terrain_Water_getWharfTileForNewFishingBoat(int figureId, int *xTile, int *yTile)
 {
 	int wharfId = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		if (BuildingIsInUse(i) && Data_Buildings[i].type == Building_Wharf) {
 			int wharfBoatId = Data_Buildings[i].data.other.boatFigureId;
-			if (!wharfBoatId || wharfBoatId == walkerId) {
+			if (!wharfBoatId || wharfBoatId == figureId) {
 				wharfId = i;
 				break;
 			}
@@ -217,7 +217,7 @@ int Terrain_Water_getWharfTileForNewFishingBoat(int walkerId, int *xTile, int *y
 	return wharfId;
 }
 
-int Terrain_Water_getNearestFishTile(int walkerId, int *xTile, int *yTile)
+int Terrain_Water_getNearestFishTile(int figureId, int *xTile, int *yTile)
 {
 	int numFishingSpots = 0;
 	for (int i = 0; i < 8; i++) {
@@ -233,7 +233,7 @@ int Terrain_Water_getNearestFishTile(int walkerId, int *xTile, int *yTile)
 	for (int i = 0; i < 8; i++) {
 		if (Data_Scenario.fishingPoints.x > 0) {
 			int dist = Calc_distanceMaximum(
-				Data_Walkers[walkerId].x, Data_Walkers[walkerId].y,
+				Data_Figures[figureId].x, Data_Figures[figureId].y,
 				Data_Scenario.fishingPoints.x[i], Data_Scenario.fishingPoints.y[i]);
 			if (dist < minDist) {
 				minDist = dist;
@@ -249,15 +249,15 @@ int Terrain_Water_getNearestFishTile(int walkerId, int *xTile, int *yTile)
 	return 0;
 }
 
-int Terrain_Water_findAlternativeTileForFishingBoat(int walkerId, int *xTile, int *yTile)
+int Terrain_Water_findAlternativeTileForFishingBoat(int figureId, int *xTile, int *yTile)
 {
-	int gridOffset = Data_Walkers[walkerId].gridOffset;
-	if (Data_Grid_figureIds[gridOffset] == walkerId) {
+	int gridOffset = Data_Figures[figureId].gridOffset;
+	if (Data_Grid_figureIds[gridOffset] == figureId) {
 		return 0;
 	}
 	for (int radius = 1; radius <= 5; radius++) {
-		int wx = Data_Walkers[walkerId].x;
-		int wy = Data_Walkers[walkerId].y;
+		int wx = Data_Figures[figureId].x;
+		int wy = Data_Figures[figureId].y;
 		int xMin = wx - radius;
 		int yMin = wy - radius;
 		int xMax = wx + radius;
@@ -276,13 +276,13 @@ int Terrain_Water_findAlternativeTileForFishingBoat(int walkerId, int *xTile, in
 
 int Terrain_Water_findOpenWaterForShipwreck(int figureId, int *xTile, int *yTile)
 {
-	int gridOffset = Data_Walkers[figureId].gridOffset;
+	int gridOffset = Data_Figures[figureId].gridOffset;
 	if (Data_Grid_terrain[gridOffset] & Terrain_Water && Data_Grid_figureIds[gridOffset] == figureId) {
 		return 0;
 	}
 	for (int radius = 1; radius <= 5; radius++) {
-		int wx = Data_Walkers[figureId].x;
-		int wy = Data_Walkers[figureId].y;
+		int wx = Data_Figures[figureId].x;
+		int wy = Data_Figures[figureId].y;
 		int xMin = wx - radius;
 		int yMin = wy - radius;
 		int xMax = wx + radius;

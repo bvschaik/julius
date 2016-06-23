@@ -19,14 +19,14 @@
 
 #define SET_LABOR_PROBLEM(b) if (b->housesCovered <= 0) b->showOnProblemOverlay = 2
 #define SPAWN_LABOR_SEEKER(t) if (b->housesCovered <= t) generateLaborSeeker(buildingId, b, xRoad, yRoad);
-#define EXIT_IF_WALKER(t) if (buildingHasWalkerOfType(buildingId, t, 0)) return;
-#define EXIT_IF_WALKERS(t1,t2) if (buildingHasWalkerOfType(buildingId, t1, t2)) return;
+#define EXIT_IF_FIGURE(t) if (buildingHasFigureOfType(buildingId, t, 0)) return;
+#define EXIT_IF_FIGURES(t1,t2) if (buildingHasFigureOfType(buildingId, t1, t2)) return;
 
 #define WORKER_PERCENTAGE(b) Calc_getPercentage(b->numWorkers, Data_Model_Buildings[b->type].laborers)
 
-#define CREATE_WALKER(t,x,y,d) \
-	int walkerId = Figure_create(t, x, y, d);\
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+#define CREATE_FIGURE(t,x,y,d) \
+	int figureId = Figure_create(t, x, y, d);\
+	struct Data_Figure *f = &Data_Figures[figureId];
 
 static void generateLaborSeeker(int buildingId, struct Data_Building *b, int x, int y)
 {
@@ -34,26 +34,26 @@ static void generateLaborSeeker(int buildingId, struct Data_Building *b, int x, 
 		return;
 	}
 	if (b->figureId2) {
-		struct Data_Walker *f = &Data_Walkers[b->figureId2];
+		struct Data_Figure *f = &Data_Figures[b->figureId2];
 		if (!f->state || f->type != Figure_LaborSeeker || f->buildingId != buildingId) {
 			b->figureId2 = 0;
 		}
 	} else {
-		CREATE_WALKER(Figure_LaborSeeker, x, y, Dir_0_Top);
+		CREATE_FIGURE(Figure_LaborSeeker, x, y, Dir_0_Top);
 		f->actionState = FigureActionState_125_Roaming;
 		f->buildingId = buildingId;
-		b->figureId2 = walkerId;
-		FigureMovement_initRoaming(walkerId);
+		b->figureId2 = figureId;
+		FigureMovement_initRoaming(figureId);
 	}
 }
 
-static int buildingHasWalkerOfType(int buildingId, int type1, int type2)
+static int buildingHasFigureOfType(int buildingId, int type1, int type2)
 {
-	int walkerId = Data_Buildings[buildingId].figureId;
-	if (walkerId <= 0) {
+	int figureId = Data_Buildings[buildingId].figureId;
+	if (figureId <= 0) {
 		return 0;
 	}
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	if (f->state && f->buildingId == buildingId && (f->type == type1 || f->type == type2)) {
 		return 1;
 	} else {
@@ -62,7 +62,7 @@ static int buildingHasWalkerOfType(int buildingId, int type1, int type2)
 	}
 }
 
-static void spawnWalkerPatrician(int buildingId, struct Data_Building *b, int *patricianSpawned)
+static void spawnFigurePatrician(int buildingId, struct Data_Building *b, int *patricianSpawned)
 {
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
@@ -70,15 +70,15 @@ static void spawnWalkerPatrician(int buildingId, struct Data_Building *b, int *p
 		if (b->figureSpawnDelay > 40 && !*patricianSpawned) {
 			*patricianSpawned = 1;
 			b->figureSpawnDelay = 0;
-			CREATE_WALKER(Figure_Patrician, xRoad, yRoad, Dir_4_Bottom);
+			CREATE_FIGURE(Figure_Patrician, xRoad, yRoad, Dir_4_Bottom);
 			f->actionState = FigureActionState_125_Roaming;
 			f->buildingId = buildingId;
-			FigureMovement_initRoaming(walkerId);
+			FigureMovement_initRoaming(figureId);
 		}
 	}
 }
 
-static void spawnWalkerWarehouse(int buildingId, struct Data_Building *b)
+static void spawnFigureWarehouse(int buildingId, struct Data_Building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	int spaceId = buildingId;
@@ -92,41 +92,41 @@ static void spawnWalkerWarehouse(int buildingId, struct Data_Building *b)
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad) ||
 		Terrain_hasRoadAccess(b->x, b->y, 3, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(100);
-		EXIT_IF_WALKER(Figure_Warehouseman);
+		EXIT_IF_FIGURE(Figure_Warehouseman);
 		int resource;
 		int task = Resource_determineWarehouseWorkerTask(buildingId, &resource);
 		if (task >= 0) {
-			CREATE_WALKER(Figure_Warehouseman, xRoad, yRoad, Dir_4_Bottom);
+			CREATE_FIGURE(Figure_Warehouseman, xRoad, yRoad, Dir_4_Bottom);
 			f->actionState = FigureActionState_50_WarehousemanCreated;
 			f->resourceId = task;
 			if (task == StorageFigureTask_Getting) {
 				f->collectingItemId = resource;
 			}
-			b->figureId = walkerId;
+			b->figureId = figureId;
 			f->buildingId = buildingId;
 		}
 	}
 }
 
-static void spawnWalkerGranary(int buildingId, struct Data_Building *b)
+static void spawnFigureGranary(int buildingId, struct Data_Building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccessGranary(b->x, b->y, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(100);
-		EXIT_IF_WALKER(Figure_Warehouseman);
+		EXIT_IF_FIGURE(Figure_Warehouseman);
 		int task = Resource_determineGranaryWorkerTask(buildingId);
 		if (task >= 0) {
-			CREATE_WALKER(Figure_Warehouseman, xRoad, yRoad, Dir_4_Bottom);
+			CREATE_FIGURE(Figure_Warehouseman, xRoad, yRoad, Dir_4_Bottom);
 			f->actionState = FigureActionState_50_WarehousemanCreated;
 			f->resourceId = task;
-			b->figureId = walkerId;
+			b->figureId = figureId;
 			f->buildingId = buildingId;
 		}
 	}
 }
 
-static void spawnWalkerTower(int buildingId, struct Data_Building *b)
+static void spawnFigureTower(int buildingId, struct Data_Building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	int xRoad, yRoad;
@@ -136,22 +136,22 @@ static void spawnWalkerTower(int buildingId, struct Data_Building *b)
 			return;
 		}
 		if (!b->figureId4 && b->figureId) { // has sentry but no ballista -> create
-			CREATE_WALKER(Figure_Ballista, b->x, b->y, Dir_0_Top);
-			b->figureId4 = walkerId;
+			CREATE_FIGURE(Figure_Ballista, b->x, b->y, Dir_0_Top);
+			b->figureId4 = figureId;
 			f->buildingId = buildingId;
 			f->actionState = FigureActionState_180_BallistaCreated;
 		}
-		buildingHasWalkerOfType(buildingId, Figure_TowerSentry, 0);
+		buildingHasFigureOfType(buildingId, Figure_TowerSentry, 0);
 		if (b->figureId <= 0) {
 			Data_Buildings_Extra.barracksTowerSentryRequested = 2;
 		}
 	}
 }
 
-static void spawnWalkerEngineersPost(int buildingId, struct Data_Building *b)
+static void spawnFigureEngineersPost(int buildingId, struct Data_Building *b)
 {
 	SET_LABOR_PROBLEM(b);
-	EXIT_IF_WALKER(Figure_Engineer);
+	EXIT_IF_FIGURE(Figure_Engineer);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(100);
@@ -173,18 +173,18 @@ static void spawnWalkerEngineersPost(int buildingId, struct Data_Building *b)
 		b->figureSpawnDelay++;
 		if (b->figureSpawnDelay > spawnDelay) {
 			b->figureSpawnDelay = 0;
-			CREATE_WALKER(Figure_Engineer, xRoad, yRoad, Dir_0_Top);
+			CREATE_FIGURE(Figure_Engineer, xRoad, yRoad, Dir_0_Top);
 			f->actionState = FigureActionState_60_EngineerCreated;
 			f->buildingId = buildingId;
-			b->figureId = walkerId;
+			b->figureId = figureId;
 		}
 	}
 }
 
-static void spawnWalkerPrefecture(int buildingId, struct Data_Building *b)
+static void spawnFigurePrefecture(int buildingId, struct Data_Building *b)
 {
 	SET_LABOR_PROBLEM(b);
-	EXIT_IF_WALKER(Figure_Prefect);
+	EXIT_IF_FIGURE(Figure_Prefect);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(100);
@@ -206,15 +206,15 @@ static void spawnWalkerPrefecture(int buildingId, struct Data_Building *b)
 		b->figureSpawnDelay++;
 		if (b->figureSpawnDelay > spawnDelay) {
 			b->figureSpawnDelay = 0;
-			CREATE_WALKER(Figure_Prefect, xRoad, yRoad, Dir_0_Top);
+			CREATE_FIGURE(Figure_Prefect, xRoad, yRoad, Dir_0_Top);
 			f->actionState = FigureActionState_70_PrefectCreated;
 			f->buildingId = buildingId;
-			b->figureId = walkerId;
+			b->figureId = figureId;
 		}
 	}
 }
 
-static void spawnWalkerActorColony(int buildingId, struct Data_Building *b)
+static void spawnFigureActorColony(int buildingId, struct Data_Building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	int xRoad, yRoad;
@@ -238,15 +238,15 @@ static void spawnWalkerActorColony(int buildingId, struct Data_Building *b)
 		b->figureSpawnDelay++;
 		if (b->figureSpawnDelay > spawnDelay) {
 			b->figureSpawnDelay = 0;
-			CREATE_WALKER(Figure_Actor, xRoad, yRoad, Dir_0_Top);
+			CREATE_FIGURE(Figure_Actor, xRoad, yRoad, Dir_0_Top);
 			f->actionState = FigureActionState_90_EntertainerAtSchoolCreated;
 			f->buildingId = buildingId;
-			b->figureId = walkerId;
+			b->figureId = figureId;
 		}
 	}
 }
 
-static void spawnWalkerGladiatorSchool(int buildingId, struct Data_Building *b)
+static void spawnFigureGladiatorSchool(int buildingId, struct Data_Building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	int xRoad, yRoad;
@@ -270,15 +270,15 @@ static void spawnWalkerGladiatorSchool(int buildingId, struct Data_Building *b)
 		b->figureSpawnDelay++;
 		if (b->figureSpawnDelay > spawnDelay) {
 			b->figureSpawnDelay = 0;
-			CREATE_WALKER(Figure_Gladiator, xRoad, yRoad, Dir_0_Top);
+			CREATE_FIGURE(Figure_Gladiator, xRoad, yRoad, Dir_0_Top);
 			f->actionState = FigureActionState_90_EntertainerAtSchoolCreated;
 			f->buildingId = buildingId;
-			b->figureId = walkerId;
+			b->figureId = figureId;
 		}
 	}
 }
 
-static void spawnWalkerLionHouse(int buildingId, struct Data_Building *b)
+static void spawnFigureLionHouse(int buildingId, struct Data_Building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	int xRoad, yRoad;
@@ -302,15 +302,15 @@ static void spawnWalkerLionHouse(int buildingId, struct Data_Building *b)
 		b->figureSpawnDelay++;
 		if (b->figureSpawnDelay > spawnDelay) {
 			b->figureSpawnDelay = 0;
-			CREATE_WALKER(Figure_LionTamer, xRoad, yRoad, Dir_0_Top);
+			CREATE_FIGURE(Figure_LionTamer, xRoad, yRoad, Dir_0_Top);
 			f->actionState = FigureActionState_90_EntertainerAtSchoolCreated;
 			f->buildingId = buildingId;
-			b->figureId = walkerId;
+			b->figureId = figureId;
 		}
 	}
 }
 
-static void spawnWalkerChariotMaker(int buildingId, struct Data_Building *b)
+static void spawnFigureChariotMaker(int buildingId, struct Data_Building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	int xRoad, yRoad;
@@ -334,18 +334,18 @@ static void spawnWalkerChariotMaker(int buildingId, struct Data_Building *b)
 		b->figureSpawnDelay++;
 		if (b->figureSpawnDelay > spawnDelay) {
 			b->figureSpawnDelay = 0;
-			CREATE_WALKER(Figure_Charioteer, xRoad, yRoad, Dir_0_Top);
+			CREATE_FIGURE(Figure_Charioteer, xRoad, yRoad, Dir_0_Top);
 			f->actionState = FigureActionState_90_EntertainerAtSchoolCreated;
 			f->buildingId = buildingId;
-			b->figureId = walkerId;
+			b->figureId = figureId;
 		}
 	}
 }
 
-static void spawnWalkerAmphitheater(int buildingId, struct Data_Building *b)
+static void spawnFigureAmphitheater(int buildingId, struct Data_Building *b)
 {
 	SET_LABOR_PROBLEM(b);
-	EXIT_IF_WALKERS(Figure_Actor, Figure_Gladiator);
+	EXIT_IF_FIGURES(Figure_Actor, Figure_Gladiator);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		if (b->housesCovered <= 50 ||
@@ -370,25 +370,25 @@ static void spawnWalkerAmphitheater(int buildingId, struct Data_Building *b)
 		b->figureSpawnDelay++;
 		if (b->figureSpawnDelay > spawnDelay) {
 			b->figureSpawnDelay = 0;
-			int walkerId;
+			int figureId;
 			if (b->data.entertainment.days1 > 0) {
-				walkerId = Figure_create(Figure_Gladiator, xRoad, yRoad, Dir_0_Top);
+				figureId = Figure_create(Figure_Gladiator, xRoad, yRoad, Dir_0_Top);
 			} else {
-				walkerId = Figure_create(Figure_Actor, xRoad, yRoad, Dir_0_Top);
+				figureId = Figure_create(Figure_Actor, xRoad, yRoad, Dir_0_Top);
 			}
-			struct Data_Walker *f = &Data_Walkers[walkerId];
+			struct Data_Figure *f = &Data_Figures[figureId];
 			f->actionState = FigureActionState_94_EntertainerRoaming;
 			f->buildingId = buildingId;
-			b->figureId = walkerId;
-			FigureMovement_initRoaming(walkerId);
+			b->figureId = figureId;
+			FigureMovement_initRoaming(figureId);
 		}
 	}
 }
 
-static void spawnWalkerTheater(int buildingId, struct Data_Building *b)
+static void spawnFigureTheater(int buildingId, struct Data_Building *b)
 {
 	SET_LABOR_PROBLEM(b);
-	EXIT_IF_WALKER(Figure_Actor);
+	EXIT_IF_FIGURE(Figure_Actor);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		if (b->housesCovered <= 50 || b->data.entertainment.days1 <= 0) {
@@ -412,16 +412,16 @@ static void spawnWalkerTheater(int buildingId, struct Data_Building *b)
 		b->figureSpawnDelay++;
 		if (b->figureSpawnDelay > spawnDelay) {
 			b->figureSpawnDelay = 0;
-			CREATE_WALKER(Figure_Actor, xRoad, yRoad, Dir_0_Top);
+			CREATE_FIGURE(Figure_Actor, xRoad, yRoad, Dir_0_Top);
 			f->actionState = FigureActionState_94_EntertainerRoaming;
 			f->buildingId = buildingId;
-			b->figureId = walkerId;
-			FigureMovement_initRoaming(walkerId);
+			b->figureId = figureId;
+			FigureMovement_initRoaming(figureId);
 		}
 	}
 }
 
-static void spawnWalkerHippodrome(int buildingId, struct Data_Building *b)
+static void spawnFigureHippodrome(int buildingId, struct Data_Building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	if (b->prevPartBuildingId) {
@@ -434,7 +434,7 @@ static void spawnWalkerHippodrome(int buildingId, struct Data_Building *b)
 			Data_Buildings[partId].showOnProblemOverlay = b->showOnProblemOverlay;
 		}
 	}
-	EXIT_IF_WALKER(Figure_Charioteer);
+	EXIT_IF_FIGURE(Figure_Charioteer);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccessHippodrome(b->x, b->y, &xRoad, &yRoad)) {
 		if (b->housesCovered <= 50 || b->data.entertainment.days1 <= 0) {
@@ -459,23 +459,23 @@ static void spawnWalkerHippodrome(int buildingId, struct Data_Building *b)
 		if (b->figureSpawnDelay > spawnDelay) {
 			b->figureSpawnDelay = 0;
 			{
-				CREATE_WALKER(Figure_Charioteer, xRoad, yRoad, Dir_0_Top);
+				CREATE_FIGURE(Figure_Charioteer, xRoad, yRoad, Dir_0_Top);
 				f->actionState = FigureActionState_94_EntertainerRoaming;
 				f->buildingId = buildingId;
-				b->figureId = walkerId;
-				FigureMovement_initRoaming(walkerId);
+				b->figureId = figureId;
+				FigureMovement_initRoaming(figureId);
 			}
 			if (!Data_CityInfo.entertainmentHippodromeHasShow) {
 				// create mini-horses
 				{
-					CREATE_WALKER(Figure_HippodromeMiniHorses, b->x + 2, b->y + 1, Dir_2_Right);
+					CREATE_FIGURE(Figure_HippodromeMiniHorses, b->x + 2, b->y + 1, Dir_2_Right);
 					f->actionState = FigureActionState_200_HippodromeMiniHorseCreated;
 					f->buildingId = buildingId;
 					f->resourceId = 0;
 					f->speedMultiplier = 3;
 				}
 				{
-					CREATE_WALKER(Figure_HippodromeMiniHorses, b->x + 2, b->y + 2, Dir_2_Right);
+					CREATE_FIGURE(Figure_HippodromeMiniHorses, b->x + 2, b->y + 2, Dir_2_Right);
 					f->actionState = FigureActionState_200_HippodromeMiniHorseCreated;
 					f->buildingId = buildingId;
 					f->resourceId = 1;
@@ -492,10 +492,10 @@ static void spawnWalkerHippodrome(int buildingId, struct Data_Building *b)
 	}
 }
 
-static void spawnWalkerColosseum(int buildingId, struct Data_Building *b)
+static void spawnFigureColosseum(int buildingId, struct Data_Building *b)
 {
 	SET_LABOR_PROBLEM(b);
-	EXIT_IF_WALKERS(Figure_Gladiator, Figure_LionTamer);
+	EXIT_IF_FIGURES(Figure_Gladiator, Figure_LionTamer);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		if (b->housesCovered <= 50 ||
@@ -520,17 +520,17 @@ static void spawnWalkerColosseum(int buildingId, struct Data_Building *b)
 		b->figureSpawnDelay++;
 		if (b->figureSpawnDelay > spawnDelay) {
 			b->figureSpawnDelay = 0;
-			int walkerId;
+			int figureId;
 			if (b->data.entertainment.days1 > 0) {
-				walkerId = Figure_create(Figure_LionTamer, xRoad, yRoad, Dir_0_Top);
+				figureId = Figure_create(Figure_LionTamer, xRoad, yRoad, Dir_0_Top);
 			} else {
-				walkerId = Figure_create(Figure_Gladiator, xRoad, yRoad, Dir_0_Top);
+				figureId = Figure_create(Figure_Gladiator, xRoad, yRoad, Dir_0_Top);
 			}
-			struct Data_Walker *f = &Data_Walkers[walkerId];
+			struct Data_Figure *f = &Data_Figures[figureId];
 			f->actionState = FigureActionState_94_EntertainerRoaming;
 			f->buildingId = buildingId;
-			b->figureId = walkerId;
-			FigureMovement_initRoaming(walkerId);
+			b->figureId = figureId;
+			FigureMovement_initRoaming(figureId);
 			if (b->data.entertainment.days1 > 0 || b->data.entertainment.days2 > 0) {
 				if (!Data_CityInfo.messageShownColosseum) {
 					Data_CityInfo.messageShownColosseum = 1;
@@ -555,7 +555,7 @@ static void setMarketGraphic(int buildingId, struct Data_Building *b)
 	}
 }
 
-static void spawnWalkerMarket(int buildingId, struct Data_Building *b)
+static void spawnFigureMarket(int buildingId, struct Data_Building *b)
 {
 	setMarketGraphic(buildingId, b);
 	SET_LABOR_PROBLEM(b);
@@ -578,21 +578,21 @@ static void spawnWalkerMarket(int buildingId, struct Data_Building *b)
 			return;
 		}
 		// market trader
-		if (!buildingHasWalkerOfType(buildingId, Figure_MarketTrader, 0)) {
+		if (!buildingHasFigureOfType(buildingId, Figure_MarketTrader, 0)) {
 			b->figureSpawnDelay++;
 			if (b->figureSpawnDelay <= spawnDelay) {
 				return;
 			}
 			b->figureSpawnDelay = 0;
-			CREATE_WALKER(Figure_MarketTrader, xRoad, yRoad, Dir_0_Top);
+			CREATE_FIGURE(Figure_MarketTrader, xRoad, yRoad, Dir_0_Top);
 			f->actionState = FigureActionState_125_Roaming;
 			f->buildingId = buildingId;
-			b->figureId = walkerId;
-			FigureMovement_initRoaming(walkerId);
+			b->figureId = figureId;
+			FigureMovement_initRoaming(figureId);
 		}
 		// market buyer or labor seeker
 		if (b->figureId2) {
-			struct Data_Walker *f = &Data_Walkers[b->figureId2];
+			struct Data_Figure *f = &Data_Figures[b->figureId2];
 			if (f->state != FigureState_Alive || (f->type != Figure_MarketBuyer && f->type != Figure_LaborSeeker)) {
 				b->figureId2 = 0;
 			}
@@ -600,10 +600,10 @@ static void spawnWalkerMarket(int buildingId, struct Data_Building *b)
 			Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad);
 			int dstBuildingId = Building_Market_getDestinationGranaryWarehouse(buildingId);
 			if (dstBuildingId > 0) {
-				CREATE_WALKER(Figure_MarketBuyer, xRoad, yRoad, Dir_0_Top);
+				CREATE_FIGURE(Figure_MarketBuyer, xRoad, yRoad, Dir_0_Top);
 				f->actionState = FigureActionState_145_MarketBuyerGoingToStorage;
 				f->buildingId = buildingId;
-				b->figureId2 = walkerId;
+				b->figureId2 = figureId;
 				f->destinationBuildingId = dstBuildingId;
 				f->collectingItemId = b->data.market.fetchInventoryId;
 				struct Data_Building *bDst = &Data_Buildings[dstBuildingId];
@@ -650,14 +650,14 @@ static void setBathhouseGraphic(int buildingId, struct Data_Building *b)
 	}
 }
 
-static void spawnWalkerBathhouse(int buildingId, struct Data_Building *b)
+static void spawnFigureBathhouse(int buildingId, struct Data_Building *b)
 {
 	setBathhouseGraphic(buildingId, b);
 	SET_LABOR_PROBLEM(b);
 	if (!b->hasWaterAccess) {
 		b->showOnProblemOverlay = 2;
 	}
-	EXIT_IF_WALKER(Figure_BathhouseWorker);
+	EXIT_IF_FIGURE(Figure_BathhouseWorker);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad) && b->hasWaterAccess) {
 		SPAWN_LABOR_SEEKER(50);
@@ -679,19 +679,19 @@ static void spawnWalkerBathhouse(int buildingId, struct Data_Building *b)
 		b->figureSpawnDelay++;
 		if (b->figureSpawnDelay > spawnDelay) {
 			b->figureSpawnDelay = 0;
-			CREATE_WALKER(Figure_BathhouseWorker, xRoad, yRoad, Dir_0_Top);
+			CREATE_FIGURE(Figure_BathhouseWorker, xRoad, yRoad, Dir_0_Top);
 			f->actionState = FigureActionState_125_Roaming;
 			f->buildingId = buildingId;
-			b->figureId = walkerId;
-			FigureMovement_initRoaming(walkerId);
+			b->figureId = figureId;
+			FigureMovement_initRoaming(figureId);
 		}
 	}
 }
 
-static void spawnWalkerSchool(int buildingId, struct Data_Building *b)
+static void spawnFigureSchool(int buildingId, struct Data_Building *b)
 {
 	SET_LABOR_PROBLEM(b);
-	EXIT_IF_WALKER(Figure_SchoolChild);
+	EXIT_IF_FIGURE(Figure_SchoolChild);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(50);
@@ -714,38 +714,38 @@ static void spawnWalkerSchool(int buildingId, struct Data_Building *b)
 		if (b->figureSpawnDelay > spawnDelay) {
 			b->figureSpawnDelay = 0;
 			{
-				CREATE_WALKER(Figure_SchoolChild, xRoad, yRoad, Dir_0_Top);
+				CREATE_FIGURE(Figure_SchoolChild, xRoad, yRoad, Dir_0_Top);
 				f->actionState = FigureActionState_125_Roaming;
 				f->buildingId = buildingId;
-				b->figureId = walkerId;
-				FigureMovement_initRoaming(walkerId);
+				b->figureId = figureId;
+				FigureMovement_initRoaming(figureId);
 			}
 			{
-				CREATE_WALKER(Figure_SchoolChild, xRoad, yRoad, Dir_0_Top);
+				CREATE_FIGURE(Figure_SchoolChild, xRoad, yRoad, Dir_0_Top);
 				f->actionState = FigureActionState_125_Roaming;
 				f->buildingId = buildingId;
-				FigureMovement_initRoaming(walkerId);
+				FigureMovement_initRoaming(figureId);
 			}
 			{
-				CREATE_WALKER(Figure_SchoolChild, xRoad, yRoad, Dir_0_Top);
+				CREATE_FIGURE(Figure_SchoolChild, xRoad, yRoad, Dir_0_Top);
 				f->actionState = FigureActionState_125_Roaming;
 				f->buildingId = buildingId;
-				FigureMovement_initRoaming(walkerId);
+				FigureMovement_initRoaming(figureId);
 			}
 			{
-				CREATE_WALKER(Figure_SchoolChild, xRoad, yRoad, Dir_0_Top);
+				CREATE_FIGURE(Figure_SchoolChild, xRoad, yRoad, Dir_0_Top);
 				f->actionState = FigureActionState_125_Roaming;
 				f->buildingId = buildingId;
-				FigureMovement_initRoaming(walkerId);
+				FigureMovement_initRoaming(figureId);
 			}
 		}
 	}
 }
 
-static void spawnWalkerLibrary(int buildingId, struct Data_Building *b)
+static void spawnFigureLibrary(int buildingId, struct Data_Building *b)
 {
 	SET_LABOR_PROBLEM(b);
-	EXIT_IF_WALKER(Figure_Librarian);
+	EXIT_IF_FIGURE(Figure_Librarian);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(50);
@@ -767,19 +767,19 @@ static void spawnWalkerLibrary(int buildingId, struct Data_Building *b)
 		b->figureSpawnDelay++;
 		if (b->figureSpawnDelay > spawnDelay) {
 			b->figureSpawnDelay = 0;
-			CREATE_WALKER(Figure_Librarian, xRoad, yRoad, Dir_0_Top);
+			CREATE_FIGURE(Figure_Librarian, xRoad, yRoad, Dir_0_Top);
 			f->actionState = FigureActionState_125_Roaming;
 			f->buildingId = buildingId;
-			b->figureId = walkerId;
-			FigureMovement_initRoaming(walkerId);
+			b->figureId = figureId;
+			FigureMovement_initRoaming(figureId);
 		}
 	}
 }
 
-static void spawnWalkerAcademy(int buildingId, struct Data_Building *b)
+static void spawnFigureAcademy(int buildingId, struct Data_Building *b)
 {
 	SET_LABOR_PROBLEM(b);
-	EXIT_IF_WALKER(Figure_Teacher);
+	EXIT_IF_FIGURE(Figure_Teacher);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(50);
@@ -801,19 +801,19 @@ static void spawnWalkerAcademy(int buildingId, struct Data_Building *b)
 		b->figureSpawnDelay++;
 		if (b->figureSpawnDelay > spawnDelay) {
 			b->figureSpawnDelay = 0;
-			CREATE_WALKER(Figure_Teacher, xRoad, yRoad, Dir_0_Top);
+			CREATE_FIGURE(Figure_Teacher, xRoad, yRoad, Dir_0_Top);
 			f->actionState = FigureActionState_125_Roaming;
 			f->buildingId = buildingId;
-			b->figureId = walkerId;
-			FigureMovement_initRoaming(walkerId);
+			b->figureId = figureId;
+			FigureMovement_initRoaming(figureId);
 		}
 	}
 }
 
-static void spawnWalkerBarber(int buildingId, struct Data_Building *b)
+static void spawnFigureBarber(int buildingId, struct Data_Building *b)
 {
 	SET_LABOR_PROBLEM(b);
-	EXIT_IF_WALKER(Figure_Barber);
+	EXIT_IF_FIGURE(Figure_Barber);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(50);
@@ -835,19 +835,19 @@ static void spawnWalkerBarber(int buildingId, struct Data_Building *b)
 		b->figureSpawnDelay++;
 		if (b->figureSpawnDelay > spawnDelay) {
 			b->figureSpawnDelay = 0;
-			CREATE_WALKER(Figure_Barber, xRoad, yRoad, Dir_0_Top);
+			CREATE_FIGURE(Figure_Barber, xRoad, yRoad, Dir_0_Top);
 			f->actionState = FigureActionState_125_Roaming;
 			f->buildingId = buildingId;
-			b->figureId = walkerId;
-			FigureMovement_initRoaming(walkerId);
+			b->figureId = figureId;
+			FigureMovement_initRoaming(figureId);
 		}
 	}
 }
 
-static void spawnWalkerDoctor(int buildingId, struct Data_Building *b)
+static void spawnFigureDoctor(int buildingId, struct Data_Building *b)
 {
 	SET_LABOR_PROBLEM(b);
-	EXIT_IF_WALKER(Figure_Doctor);
+	EXIT_IF_FIGURE(Figure_Doctor);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(50);
@@ -869,19 +869,19 @@ static void spawnWalkerDoctor(int buildingId, struct Data_Building *b)
 		b->figureSpawnDelay++;
 		if (b->figureSpawnDelay > spawnDelay) {
 			b->figureSpawnDelay = 0;
-			CREATE_WALKER(Figure_Doctor, xRoad, yRoad, Dir_0_Top);
+			CREATE_FIGURE(Figure_Doctor, xRoad, yRoad, Dir_0_Top);
 			f->actionState = FigureActionState_125_Roaming;
 			f->buildingId = buildingId;
-			b->figureId = walkerId;
-			FigureMovement_initRoaming(walkerId);
+			b->figureId = figureId;
+			FigureMovement_initRoaming(figureId);
 		}
 	}
 }
 
-static void spawnWalkerHospital(int buildingId, struct Data_Building *b)
+static void spawnFigureHospital(int buildingId, struct Data_Building *b)
 {
 	SET_LABOR_PROBLEM(b);
-	EXIT_IF_WALKER(Figure_Surgeon);
+	EXIT_IF_FIGURE(Figure_Surgeon);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(50);
@@ -903,19 +903,19 @@ static void spawnWalkerHospital(int buildingId, struct Data_Building *b)
 		b->figureSpawnDelay++;
 		if (b->figureSpawnDelay > spawnDelay) {
 			b->figureSpawnDelay = 0;
-			CREATE_WALKER(Figure_Surgeon, xRoad, yRoad, Dir_0_Top);
+			CREATE_FIGURE(Figure_Surgeon, xRoad, yRoad, Dir_0_Top);
 			f->actionState = FigureActionState_125_Roaming;
 			f->buildingId = buildingId;
-			b->figureId = walkerId;
-			FigureMovement_initRoaming(walkerId);
+			b->figureId = figureId;
+			FigureMovement_initRoaming(figureId);
 		}
 	}
 }
 
-static void spawnWalkerTemple(int buildingId, struct Data_Building *b)
+static void spawnFigureTemple(int buildingId, struct Data_Building *b)
 {
 	SET_LABOR_PROBLEM(b);
-	EXIT_IF_WALKER(Figure_Priest);
+	EXIT_IF_FIGURE(Figure_Priest);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(50);
@@ -939,11 +939,11 @@ static void spawnWalkerTemple(int buildingId, struct Data_Building *b)
 		b->figureSpawnDelay++;
 		if (b->figureSpawnDelay > spawnDelay) {
 			b->figureSpawnDelay = 0;
-			CREATE_WALKER(Figure_Priest, xRoad, yRoad, Dir_0_Top);
+			CREATE_FIGURE(Figure_Priest, xRoad, yRoad, Dir_0_Top);
 			f->actionState = FigureActionState_125_Roaming;
 			f->buildingId = buildingId;
-			b->figureId = walkerId;
-			FigureMovement_initRoaming(walkerId);
+			b->figureId = figureId;
+			FigureMovement_initRoaming(figureId);
 		}
 	}
 }
@@ -962,13 +962,13 @@ static void setSenateGraphic(int buildingId, struct Data_Building *b)
 	}
 }
 
-static void spawnWalkerSenateForum(int buildingId, struct Data_Building *b)
+static void spawnFigureSenateForum(int buildingId, struct Data_Building *b)
 {
 	if (b->type == Building_SenateUpgraded) {
 		setSenateGraphic(buildingId, b);
 	}
 	SET_LABOR_PROBLEM(b);
-	EXIT_IF_WALKER(Figure_TaxCollector);
+	EXIT_IF_FIGURE(Figure_TaxCollector);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(50);
@@ -990,17 +990,17 @@ static void spawnWalkerSenateForum(int buildingId, struct Data_Building *b)
 		b->figureSpawnDelay++;
 		if (b->figureSpawnDelay > spawnDelay) {
 			b->figureSpawnDelay = 0;
-			CREATE_WALKER(Figure_TaxCollector, xRoad, yRoad, Dir_0_Top);
+			CREATE_FIGURE(Figure_TaxCollector, xRoad, yRoad, Dir_0_Top);
 			f->actionState = FigureActionState_40_TaxCollectorCreated;
 			f->buildingId = buildingId;
-			b->figureId = walkerId;
+			b->figureId = figureId;
 		}
 	}
 }
 
-static void spawnWalkerMissionPost(int buildingId, struct Data_Building *b)
+static void spawnFigureMissionPost(int buildingId, struct Data_Building *b)
 {
-	EXIT_IF_WALKER(Figure_Missionary);
+	EXIT_IF_FIGURE(Figure_Missionary);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		if (Data_CityInfo.population > 0) {
@@ -1008,40 +1008,40 @@ static void spawnWalkerMissionPost(int buildingId, struct Data_Building *b)
 			b->figureSpawnDelay++;
 			if (b->figureSpawnDelay > 1) {
 				b->figureSpawnDelay = 0;
-				CREATE_WALKER(Figure_Missionary, xRoad, yRoad, Dir_0_Top);
+				CREATE_FIGURE(Figure_Missionary, xRoad, yRoad, Dir_0_Top);
 				f->actionState = FigureActionState_125_Roaming;
 				f->buildingId = buildingId;
-				b->figureId = walkerId;
-				FigureMovement_initRoaming(walkerId);
+				b->figureId = figureId;
+				FigureMovement_initRoaming(figureId);
 			}
 		}
 	}
 }
 
-static void spawnWalkerIndustry(int buildingId, struct Data_Building *b)
+static void spawnFigureIndustry(int buildingId, struct Data_Building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(50);
-		EXIT_IF_WALKER(Figure_CartPusher);
+		EXIT_IF_FIGURE(Figure_CartPusher);
 		if (Building_Industry_hasProducedResource(buildingId)) {
 			Building_Industry_startNewProduction(buildingId);
-			CREATE_WALKER(Figure_CartPusher, xRoad, yRoad, Dir_4_Bottom);
+			CREATE_FIGURE(Figure_CartPusher, xRoad, yRoad, Dir_4_Bottom);
 			f->actionState = FigureActionState_20_CartpusherInitial;
 			f->resourceId = b->outputResourceId;
 			f->buildingId = buildingId;
-			b->figureId = walkerId;
+			b->figureId = figureId;
 			f->waitTicks = 30;
 		}
 	}
 }
 
-static void spawnWalkerWharf(int buildingId, struct Data_Building *b)
+static void spawnFigureWharf(int buildingId, struct Data_Building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	if (b->data.other.boatFigureId) {
-		struct Data_Walker *f = &Data_Walkers[b->data.other.boatFigureId];
+		struct Data_Figure *f = &Data_Figures[b->data.other.boatFigureId];
 		if (f->state != FigureState_Alive || f->type != Figure_FishingBoat) {
 			b->data.other.boatFigureId = 0;
 		}
@@ -1049,28 +1049,28 @@ static void spawnWalkerWharf(int buildingId, struct Data_Building *b)
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(50);
-		EXIT_IF_WALKER(Figure_CartPusher);
+		EXIT_IF_FIGURE(Figure_CartPusher);
 		if (b->figureSpawnDelay) {
 			b->figureSpawnDelay = 0;
 			b->data.other.fishingBoatHasFish = 0;
 			b->outputResourceId = Resource_Meat;
-			CREATE_WALKER(Figure_CartPusher, xRoad, yRoad, Dir_4_Bottom);
+			CREATE_FIGURE(Figure_CartPusher, xRoad, yRoad, Dir_4_Bottom);
 			f->actionState = FigureActionState_20_CartpusherInitial;
 			f->resourceId = Resource_Meat;
 			f->buildingId = buildingId;
-			b->figureId = walkerId;
+			b->figureId = figureId;
 			f->waitTicks = 30;
 		}
 	}
 }
 
-static void spawnWalkerShipyard(int buildingId, struct Data_Building *b)
+static void spawnFigureShipyard(int buildingId, struct Data_Building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(50);
-		EXIT_IF_WALKER(Figure_FishingBoat);
+		EXIT_IF_FIGURE(Figure_FishingBoat);
 		int pctWorkers = WORKER_PERCENTAGE(b);
 		if (pctWorkers >= 100) {
 			b->data.industry.progress += 10;
@@ -1087,16 +1087,16 @@ static void spawnWalkerShipyard(int buildingId, struct Data_Building *b)
 			b->data.industry.progress = 0;
 			int xBoat, yBoat;
 			if (Terrain_canSpawnFishingBoatInWater(b->x, b->y, b->size, &xBoat, &yBoat)) {
-				CREATE_WALKER(Figure_FishingBoat, xBoat, yBoat, Dir_0_Top);
+				CREATE_FIGURE(Figure_FishingBoat, xBoat, yBoat, Dir_0_Top);
 				f->actionState = FigureActionState_190_FishingBoatCreated;
 				f->buildingId = buildingId;
-				b->figureId = walkerId;
+				b->figureId = figureId;
 			}
 		}
 	}
 }
 
-static void spawnWalkerDock(int buildingId, struct Data_Building *b)
+static void spawnFigureDock(int buildingId, struct Data_Building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	int xRoad, yRoad;
@@ -1117,7 +1117,7 @@ static void spawnWalkerDock(int buildingId, struct Data_Building *b)
 		int existingDockers = 0;
 		for (int i = 0; i < 3; i++) {
 			if (b->data.other.dockFigureIds[i]) {
-				if (Data_Walkers[b->data.other.dockFigureIds[i]].type == Figure_Dockman) {
+				if (Data_Figures[b->data.other.dockFigureIds[i]].type == Figure_Dockman) {
 					existingDockers++;
 				} else {
 					b->data.other.dockFigureIds[i] = 0;
@@ -1128,17 +1128,17 @@ static void spawnWalkerDock(int buildingId, struct Data_Building *b)
 			// too many dockers, kill one of them
 			for (int i = 2; i >= 0; i--) {
 				if (b->data.other.dockFigureIds[i]) {
-					Data_Walkers[b->data.other.dockFigureIds[i]].state = FigureState_Dead;
+					Data_Figures[b->data.other.dockFigureIds[i]].state = FigureState_Dead;
 					break;
 				}
 			}
 		} else if (existingDockers < maxDockers) {
-			CREATE_WALKER(Figure_Dockman, xRoad, yRoad, Dir_4_Bottom);
+			CREATE_FIGURE(Figure_Dockman, xRoad, yRoad, Dir_4_Bottom);
 			f->actionState = FigureActionState_132_DockerIdling;
 			f->buildingId = buildingId;
 			for (int i = 0; i < 3; i++) {
 				if (!b->data.other.dockFigureIds[i]) {
-					b->data.other.dockFigureIds[i] = walkerId;
+					b->data.other.dockFigureIds[i] = figureId;
 					break;
 				}
 			}
@@ -1146,45 +1146,45 @@ static void spawnWalkerDock(int buildingId, struct Data_Building *b)
 	}
 }
 
-static void spawnWalkerNativeHut(int buildingId, struct Data_Building *b)
+static void spawnFigureNativeHut(int buildingId, struct Data_Building *b)
 {
 	Data_Grid_graphicIds[b->gridOffset] =
 		GraphicId(ID_Graphic_NativeBuilding) + (Data_Grid_random[b->gridOffset] & 1);
-	EXIT_IF_WALKER(Figure_IndigenousNative);
+	EXIT_IF_FIGURE(Figure_IndigenousNative);
 	int xOut, yOut;
 	if (b->subtype.nativeMeetingCenterId > 0 && Terrain_getAdjacentRoadOrClearLand(b->x, b->y, b->size, &xOut, &yOut)) {
 		b->figureSpawnDelay++;
 		if (b->figureSpawnDelay > 4) {
 			b->figureSpawnDelay = 0;
-			CREATE_WALKER(Figure_IndigenousNative, xOut, yOut, Dir_0_Top);
+			CREATE_FIGURE(Figure_IndigenousNative, xOut, yOut, Dir_0_Top);
 			f->actionState = FigureActionState_158_NativeCreated;
 			f->buildingId = buildingId;
-			b->figureId = walkerId;
+			b->figureId = figureId;
 		}
 	}
 }
 
-static void spawnWalkerNativeMeeting(int buildingId, struct Data_Building *b)
+static void spawnFigureNativeMeeting(int buildingId, struct Data_Building *b)
 {
 	Terrain_addBuildingToGrids(buildingId, b->x, b->y, 2,
 		GraphicId(ID_Graphic_NativeBuilding) + 2, Terrain_Building);
 	if (Data_CityInfo.nativeMissionPostOperational > 0 &&
-		!buildingHasWalkerOfType(buildingId, Figure_NativeTrader, 0)) {
+		!buildingHasFigureOfType(buildingId, Figure_NativeTrader, 0)) {
 		int xOut, yOut;
 		if (Terrain_getAdjacentRoadOrClearLand(b->x, b->y, b->size, &xOut, &yOut)) {
 			b->figureSpawnDelay++;
 			if (b->figureSpawnDelay > 8) {
 				b->figureSpawnDelay = 0;
-				CREATE_WALKER(Figure_NativeTrader, xOut, yOut, Dir_0_Top);
+				CREATE_FIGURE(Figure_NativeTrader, xOut, yOut, Dir_0_Top);
 				f->actionState = FigureActionState_162_NativeTraderCreated;
 				f->buildingId = buildingId;
-				b->figureId = walkerId;
+				b->figureId = figureId;
 			}
 		}
 	}
 }
 
-static void spawnWalkerBarracks(int buildingId, struct Data_Building *b)
+static void spawnFigureBarracks(int buildingId, struct Data_Building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	int xRoad, yRoad;
@@ -1216,7 +1216,7 @@ static void spawnWalkerBarracks(int buildingId, struct Data_Building *b)
 	}
 }
 
-static void spawnWalkerMilitaryAcademy(int buildingId, struct Data_Building *b)
+static void spawnFigureMilitaryAcademy(int buildingId, struct Data_Building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	int xRoad, yRoad;
@@ -1242,96 +1242,96 @@ void FigureGeneration_generateFiguresForBuildings()
 		b->showOnProblemOverlay = 0;
 		// range of building types
 		if (b->type >= Building_HouseSmallVilla && b->type <= Building_HouseLuxuryPalace) {
-			spawnWalkerPatrician(i, b, &patricianGenerated);
+			spawnFigurePatrician(i, b, &patricianGenerated);
 		} else if (b->type >= Building_WheatFarm && b->type <= Building_PotteryWorkshop) {
-			spawnWalkerIndustry(i, b);
+			spawnFigureIndustry(i, b);
 		} else if (b->type >= Building_Senate && b->type <= Building_ForumUpgraded) {
-			spawnWalkerSenateForum(i, b);
+			spawnFigureSenateForum(i, b);
 		} else if (b->type >= Building_SmallTempleCeres && b->type <= Building_LargeTempleVenus) {
-			spawnWalkerTemple(i, b);
+			spawnFigureTemple(i, b);
 		} else {
 			// single building type
 			switch (b->type) {
 				case Building_Warehouse:
-					spawnWalkerWarehouse(i, b);
+					spawnFigureWarehouse(i, b);
 					break;
 				case Building_Granary:
-					spawnWalkerGranary(i, b);
+					spawnFigureGranary(i, b);
 					break;
 				case Building_Tower:
-					spawnWalkerTower(i, b);
+					spawnFigureTower(i, b);
 					break;
 				case Building_EngineersPost:
-					spawnWalkerEngineersPost(i, b);
+					spawnFigureEngineersPost(i, b);
 					break;
 				case Building_Prefecture:
-					spawnWalkerPrefecture(i, b);
+					spawnFigurePrefecture(i, b);
 					break;
 				case Building_ActorColony:
-					spawnWalkerActorColony(i, b);
+					spawnFigureActorColony(i, b);
 					break;
 				case Building_GladiatorSchool:
-					spawnWalkerGladiatorSchool(i, b);
+					spawnFigureGladiatorSchool(i, b);
 					break;
 				case Building_LionHouse:
-					spawnWalkerLionHouse(i, b);
+					spawnFigureLionHouse(i, b);
 					break;
 				case Building_ChariotMaker:
-					spawnWalkerChariotMaker(i, b);
+					spawnFigureChariotMaker(i, b);
 					break;
 				case Building_Amphitheater:
-					spawnWalkerAmphitheater(i, b);
+					spawnFigureAmphitheater(i, b);
 					break;
 				case Building_Theater:
-					spawnWalkerTheater(i, b);
+					spawnFigureTheater(i, b);
 					break;
 				case Building_Hippodrome:
-					spawnWalkerHippodrome(i, b);
+					spawnFigureHippodrome(i, b);
 					break;
 				case Building_Colosseum:
-					spawnWalkerColosseum(i, b);
+					spawnFigureColosseum(i, b);
 					break;
 				case Building_Market:
-					spawnWalkerMarket(i, b);
+					spawnFigureMarket(i, b);
 					break;
 				case Building_Bathhouse:
-					spawnWalkerBathhouse(i, b);
+					spawnFigureBathhouse(i, b);
 					break;
 				case Building_School:
-					spawnWalkerSchool(i, b);
+					spawnFigureSchool(i, b);
 					break;
 				case Building_Library:
-					spawnWalkerLibrary(i, b);
+					spawnFigureLibrary(i, b);
 					break;
 				case Building_Academy:
-					spawnWalkerAcademy(i, b);
+					spawnFigureAcademy(i, b);
 					break;
 				case Building_Barber:
-					spawnWalkerBarber(i, b);
+					spawnFigureBarber(i, b);
 					break;
 				case Building_Doctor:
-					spawnWalkerDoctor(i, b);
+					spawnFigureDoctor(i, b);
 					break;
 				case Building_Hospital:
-					spawnWalkerHospital(i, b);
+					spawnFigureHospital(i, b);
 					break;
 				case Building_MissionPost:
-					spawnWalkerMissionPost(i, b);
+					spawnFigureMissionPost(i, b);
 					break;
 				case Building_Dock:
-					spawnWalkerDock(i, b);
+					spawnFigureDock(i, b);
 					break;
 				case Building_Wharf:
-					spawnWalkerWharf(i, b);
+					spawnFigureWharf(i, b);
 					break;
 				case Building_Shipyard:
-					spawnWalkerShipyard(i, b);
+					spawnFigureShipyard(i, b);
 					break;
 				case Building_NativeHut:
-					spawnWalkerNativeHut(i, b);
+					spawnFigureNativeHut(i, b);
 					break;
 				case Building_NativeMeeting:
-					spawnWalkerNativeMeeting(i, b);
+					spawnFigureNativeMeeting(i, b);
 					break;
 				case Building_NativeCrops:
 					TerrainGraphics_updateNativeCropProgress(i);
@@ -1340,10 +1340,10 @@ void FigureGeneration_generateFiguresForBuildings()
 					Formation_setNewSoldierRequest(i);
 					break;
 				case Building_Barracks:
-					spawnWalkerBarracks(i, b);
+					spawnFigureBarracks(i, b);
 					break;
 				case Building_MilitaryAcademy:
-					spawnWalkerMilitaryAcademy(i, b);
+					spawnFigureMilitaryAcademy(i, b);
 					break;
 			}
 		}

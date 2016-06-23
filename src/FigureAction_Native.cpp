@@ -6,26 +6,26 @@
 #include "Data/CityInfo.h"
 #include "Data/Formation.h"
 
-void FigureAction_indigenousNative(int walkerId)
+void FigureAction_indigenousNative(int figureId)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	struct Data_Building *b = &Data_Buildings[f->buildingId];
 	f->terrainUsage = FigureTerrainUsage_Any;
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 800;
-	if (!BuildingIsInUse(f->buildingId) || b->figureId != walkerId) {
+	if (!BuildingIsInUse(f->buildingId) || b->figureId != figureId) {
 		f->state = FigureState_Dead;
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);
 	switch (f->actionState) {
 		case FigureActionState_150_Attack:
-			FigureAction_Common_handleAttack(walkerId);
+			FigureAction_Common_handleAttack(figureId);
 			break;
 		case FigureActionState_149_Corpse:
-			FigureAction_Common_handleCorpse(walkerId);
+			FigureAction_Common_handleCorpse(figureId);
 			break;
 		case FigureActionState_156_NativeGoingToMeetingCenter:
-			FigureMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(figureId, 1);
 			if (f->direction == DirFigure_8_AtDestination) {
 				f->actionState = FigureActionState_157_NativeReturningFromMeetingCenter;
 				f->destinationX = f->sourceX;
@@ -35,7 +35,7 @@ void FigureAction_indigenousNative(int walkerId)
 			}
 			break;
 		case FigureActionState_157_NativeReturningFromMeetingCenter:
-			FigureMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(figureId, 1);
 			if (f->direction == DirFigure_8_AtDestination ||
 				f->direction == DirFigure_9_Reroute ||
 				f->direction == DirFigure_10_Lost) {
@@ -45,7 +45,7 @@ void FigureAction_indigenousNative(int walkerId)
 		case FigureActionState_158_NativeCreated:
 			f->graphicOffset = 0;
 			f->waitTicks++;
-			if (f->waitTicks > 10 + (walkerId & 3)) {
+			if (f->waitTicks > 10 + (figureId & 3)) {
 				f->waitTicks = 0;
 				if (Data_CityInfo.nativeAttackDuration == 0) {
 					int xTile, yTile;
@@ -61,14 +61,14 @@ void FigureAction_indigenousNative(int walkerId)
 					f->destinationY = Data_Formations[0].destinationY;
 					f->destinationBuildingId = Data_Formations[0].destinationBuildingId;
 				}
-				FigureRoute_remove(walkerId);
+				FigureRoute_remove(figureId);
 			}
 			break;
 		case FigureActionState_159_NativeAttacking:
 			Data_CityInfo.riotersOrAttackingNativesInCity = 10;
 			Data_CityInfo.numAttackingNativesInCity++;
 			f->terrainUsage = FigureTerrainUsage_Enemy;
-			FigureMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(figureId, 1);
 			if (f->direction == DirFigure_8_AtDestination ||
 				f->direction == DirFigure_9_Reroute ||
 				f->direction == DirFigure_10_Lost) {

@@ -53,13 +53,13 @@ void FigureName_init()
 }
 
 #define SET(var, off, max) \
-	Data_Walkers[walkerId].name = off + Data_Figure_NameSequence.var; \
+	Data_Figures[figureId].name = off + Data_Figure_NameSequence.var; \
 	++Data_Figure_NameSequence.var; \
 	if (Data_Figure_NameSequence.var >= max) Data_Figure_NameSequence.var = 0;
 
-void FigureName_set(int walkerId)
+void FigureName_set(int figureId)
 {
-	int type = Data_Walkers[walkerId].type;
+	int type = Data_Figures[figureId].type;
 	if (type == Figure_Explosion || type == Figure_FortStandard || type == Figure_FishGulls ||
 		type == Figure_Creature || type == Figure_HippodromeMiniHorses) {
 		return;
@@ -144,7 +144,7 @@ void FigureName_set(int walkerId)
 		case Figure_Enemy51_Spear:
 		case Figure_Enemy52_MountedArcher:
 		case Figure_Enemy53_Axe:
-			switch (Data_Formations[(int)Data_Walkers[walkerId].formationId].enemyType) {
+			switch (Data_Formations[(int)Data_Figures[figureId].formationId].enemyType) {
 				case EnemyType_8_Greek:
 					SET(enemyGreek, 463, 32);
 					break;

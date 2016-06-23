@@ -10,15 +10,15 @@ static const int cloudGraphicOffsets[] = {
 	2, 2, 2, 2, 3, 3, 3, 4, 4, 5, 6, 7
 };
 
-void FigureAction_explosionCloud(int walkerId)
+void FigureAction_explosionCloud(int figureId)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	f->useCrossCountry = 1;
 	f->progressOnTile++;
 	if (f->progressOnTile > 44) {
 		f->state = FigureState_Dead;
 	}
-	FigureMovement_crossCountryWalkTicks(walkerId, f->speedMultiplier);
+	FigureMovement_crossCountryWalkTicks(figureId, f->speedMultiplier);
 	if (f->progressOnTile < 48) {
 		f->graphicId = GraphicId(ID_Graphic_Figure_Explosion) +
 			cloudGraphicOffsets[f->progressOnTile / 2];
@@ -27,19 +27,19 @@ void FigureAction_explosionCloud(int walkerId)
 	}
 }
 
-void FigureAction_arrow(int walkerId)
+void FigureAction_arrow(int figureId)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	f->useCrossCountry = 1;
 	f->progressOnTile++;
 	if (f->progressOnTile > 120) {
 		f->state = FigureState_Dead;
 	}
-	int shouldDie = FigureMovement_crossCountryWalkTicks(walkerId, 4);
-	int targetId = Figure_getCitizenOnSameTile(walkerId);
+	int shouldDie = FigureMovement_crossCountryWalkTicks(figureId, 4);
+	int targetId = Figure_getCitizenOnSameTile(figureId);
 	if (targetId) {
-		int targetType = Data_Walkers[targetId].type;
-		int formationId = Data_Walkers[targetId].formationId;
+		int targetType = Data_Figures[targetId].type;
+		int formationId = Data_Figures[targetId].formationId;
 		int maxDamage = Constant_FigureProperties[targetType].maxDamage;
 		int damageInflicted =
 			Constant_FigureProperties[f->type].missileAttackValue -
@@ -52,18 +52,18 @@ void FigureAction_arrow(int walkerId)
 			Data_Formations[formationId].layout == FormationLayout_Tortoise) {
 			damageInflicted = 1;
 		}
-		int targetDamage = damageInflicted + Data_Walkers[targetId].damage;
+		int targetDamage = damageInflicted + Data_Figures[targetId].damage;
 		if (targetDamage <= maxDamage) {
-			Data_Walkers[targetId].damage = targetDamage;
+			Data_Figures[targetId].damage = targetDamage;
 		} else { // kill target
-			Data_Walkers[targetId].damage = maxDamage + 1;
-			Data_Walkers[targetId].actionState = FigureActionState_149_Corpse;
-			Data_Walkers[targetId].waitTicks = 0;
+			Data_Figures[targetId].damage = maxDamage + 1;
+			Data_Figures[targetId].actionState = FigureActionState_149_Corpse;
+			Data_Figures[targetId].waitTicks = 0;
 			Figure_playDieSound(targetType);
 			Formation_updateAfterDeath(formationId);
 		}
 		f->state = FigureState_Dead;
-		int arrowFormation = Data_Walkers[f->buildingId].formationId;
+		int arrowFormation = Data_Figures[f->buildingId].formationId;
 		Data_Formations[formationId].missileAttackTimeout = 6;
 		Data_Formations[formationId].missileAttackFormationId = arrowFormation;
 		Sound_Effects_playChannel(SoundChannel_ArrowHit);
@@ -74,19 +74,19 @@ void FigureAction_arrow(int walkerId)
 	f->graphicId = GraphicId(ID_Graphic_Figure_Missile) + 16 + dir;
 }
 
-void FigureAction_spear(int walkerId)
+void FigureAction_spear(int figureId)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	f->useCrossCountry = 1;
 	f->progressOnTile++;
 	if (f->progressOnTile > 120) {
 		f->state = FigureState_Dead;
 	}
-	int shouldDie = FigureMovement_crossCountryWalkTicks(walkerId, 4);
-	int targetId = Figure_getCitizenOnSameTile(walkerId);
+	int shouldDie = FigureMovement_crossCountryWalkTicks(figureId, 4);
+	int targetId = Figure_getCitizenOnSameTile(figureId);
 	if (targetId) {
-		int targetType = Data_Walkers[targetId].type;
-		int formationId = Data_Walkers[targetId].formationId;
+		int targetType = Data_Figures[targetId].type;
+		int formationId = Data_Figures[targetId].formationId;
 		int maxDamage = Constant_FigureProperties[targetType].maxDamage;
 		int damageInflicted =
 			Constant_FigureProperties[f->type].missileAttackValue -
@@ -99,17 +99,17 @@ void FigureAction_spear(int walkerId)
 			Data_Formations[formationId].layout == FormationLayout_Tortoise) {
 			damageInflicted = 1;
 		}
-		int targetDamage = damageInflicted + Data_Walkers[targetId].damage;
+		int targetDamage = damageInflicted + Data_Figures[targetId].damage;
 		if (targetDamage <= maxDamage) {
-			Data_Walkers[targetId].damage = targetDamage;
+			Data_Figures[targetId].damage = targetDamage;
 		} else { // kill target
-			Data_Walkers[targetId].damage = maxDamage + 1;
-			Data_Walkers[targetId].actionState = FigureActionState_149_Corpse;
-			Data_Walkers[targetId].waitTicks = 0;
+			Data_Figures[targetId].damage = maxDamage + 1;
+			Data_Figures[targetId].actionState = FigureActionState_149_Corpse;
+			Data_Figures[targetId].waitTicks = 0;
 			Figure_playDieSound(targetType);
 			Formation_updateAfterDeath(formationId);
 		}
-		int arrowFormation = Data_Walkers[f->buildingId].formationId;
+		int arrowFormation = Data_Figures[f->buildingId].formationId;
 		Data_Formations[formationId].missileAttackTimeout = 6;
 		Data_Formations[formationId].missileAttackFormationId = arrowFormation;
 		Sound_Effects_playChannel(SoundChannel_Javelin);
@@ -121,19 +121,19 @@ void FigureAction_spear(int walkerId)
 	f->graphicId = GraphicId(ID_Graphic_Figure_Missile) + dir;
 }
 
-void FigureAction_javelin(int walkerId)
+void FigureAction_javelin(int figureId)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	f->useCrossCountry = 1;
 	f->progressOnTile++;
 	if (f->progressOnTile > 120) {
 		f->state = FigureState_Dead;
 	}
-	int shouldDie = FigureMovement_crossCountryWalkTicks(walkerId, 4);
-	int targetId = Figure_getNonCitizenOnSameTile(walkerId);
+	int shouldDie = FigureMovement_crossCountryWalkTicks(figureId, 4);
+	int targetId = Figure_getNonCitizenOnSameTile(figureId);
 	if (targetId) {
-		int targetType = Data_Walkers[targetId].type;
-		int formationId = Data_Walkers[targetId].formationId;
+		int targetType = Data_Figures[targetId].type;
+		int formationId = Data_Figures[targetId].formationId;
 		int maxDamage = Constant_FigureProperties[targetType].maxDamage;
 		int damageInflicted =
 			Constant_FigureProperties[f->type].missileAttackValue -
@@ -146,17 +146,17 @@ void FigureAction_javelin(int walkerId)
 			Data_Formations[formationId].layout == FormationLayout_Tortoise) {
 			damageInflicted = 1;
 		}
-		int targetDamage = damageInflicted + Data_Walkers[targetId].damage;
+		int targetDamage = damageInflicted + Data_Figures[targetId].damage;
 		if (targetDamage <= maxDamage) {
-			Data_Walkers[targetId].damage = targetDamage;
+			Data_Figures[targetId].damage = targetDamage;
 		} else { // kill target
-			Data_Walkers[targetId].damage = maxDamage + 1;
-			Data_Walkers[targetId].actionState = FigureActionState_149_Corpse;
-			Data_Walkers[targetId].waitTicks = 0;
+			Data_Figures[targetId].damage = maxDamage + 1;
+			Data_Figures[targetId].actionState = FigureActionState_149_Corpse;
+			Data_Figures[targetId].waitTicks = 0;
 			Figure_playDieSound(targetType);
 			Formation_updateAfterDeath(formationId);
 		}
-		int javelinFormation = Data_Walkers[f->buildingId].formationId;
+		int javelinFormation = Data_Figures[f->buildingId].formationId;
 		Data_Formations[formationId].missileAttackTimeout = 6;
 		Data_Formations[formationId].missileAttackFormationId = javelinFormation;
 		Sound_Effects_playChannel(SoundChannel_Javelin);
@@ -168,19 +168,19 @@ void FigureAction_javelin(int walkerId)
 	f->graphicId = GraphicId(ID_Graphic_Figure_Missile) + dir;
 }
 
-void FigureAction_bolt(int walkerId)
+void FigureAction_bolt(int figureId)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	f->useCrossCountry = 1;
 	f->progressOnTile++;
 	if (f->progressOnTile > 120) {
 		f->state = FigureState_Dead;
 	}
-	int shouldDie = FigureMovement_crossCountryWalkTicks(walkerId, 4);
-	int targetId = Figure_getNonCitizenOnSameTile(walkerId);
+	int shouldDie = FigureMovement_crossCountryWalkTicks(figureId, 4);
+	int targetId = Figure_getNonCitizenOnSameTile(figureId);
 	if (targetId) {
-		int targetType = Data_Walkers[targetId].type;
-		int formationId = Data_Walkers[targetId].formationId;
+		int targetType = Data_Figures[targetId].type;
+		int formationId = Data_Figures[targetId].formationId;
 		int maxDamage = Constant_FigureProperties[targetType].maxDamage;
 		int damageInflicted =
 			Constant_FigureProperties[f->type].missileAttackValue -
@@ -188,13 +188,13 @@ void FigureAction_bolt(int walkerId)
 		if (damageInflicted < 0) {
 			damageInflicted = 0;
 		}
-		int targetDamage = damageInflicted + Data_Walkers[targetId].damage;
+		int targetDamage = damageInflicted + Data_Figures[targetId].damage;
 		if (targetDamage <= maxDamage) {
-			Data_Walkers[targetId].damage = targetDamage;
+			Data_Figures[targetId].damage = targetDamage;
 		} else { // kill target
-			Data_Walkers[targetId].damage = maxDamage + 1;
-			Data_Walkers[targetId].actionState = FigureActionState_149_Corpse;
-			Data_Walkers[targetId].waitTicks = 0;
+			Data_Figures[targetId].damage = maxDamage + 1;
+			Data_Figures[targetId].actionState = FigureActionState_149_Corpse;
+			Data_Figures[targetId].waitTicks = 0;
 			Figure_playDieSound(targetType);
 			Formation_updateAfterDeath(formationId);
 		}

@@ -10,7 +10,7 @@
 #include "../Data/Settings.h"
 #include "../Data/State.h"
 
-static int showOnOverlay(struct Data_Walker *f)
+static int showOnOverlay(struct Data_Figure *f)
 {
 	switch (Data_State.currentOverlay) {
 		case Overlay_Water:
@@ -103,7 +103,7 @@ static int showOnOverlay(struct Data_Walker *f)
 	return 1;
 }
 
-static void drawWalkerWithCart(struct Data_Walker *f, int xOffset, int yOffset)
+static void drawFigureWithCart(struct Data_Figure *f, int xOffset, int yOffset)
 {
 	if (f->yOffsetCart >= 0) {
 		Graphics_drawImage(f->graphicId, xOffset, yOffset);
@@ -114,7 +114,7 @@ static void drawWalkerWithCart(struct Data_Walker *f, int xOffset, int yOffset)
 	}
 }
 
-static void drawHippodromeHorses(struct Data_Walker *f, int xOffset, int yOffset)
+static void drawHippodromeHorses(struct Data_Figure *f, int xOffset, int yOffset)
 {
 	int val = f->waitTicksMissile;
 	switch (Data_Settings_Map.orientation) {
@@ -193,7 +193,7 @@ static void drawHippodromeHorses(struct Data_Walker *f, int xOffset, int yOffset
 			}
 			break;
 	}
-	drawWalkerWithCart(f, xOffset, yOffset);
+	drawFigureWithCart(f, xOffset, yOffset);
 }
 
 static int tileOffsetToPixelOffsetX(int x, int y)
@@ -254,9 +254,9 @@ static int tileProgressToPixelOffsetY(int direction, int progress)
 	return offset;
 }
 
-void UI_CityBuildings_drawFigure(int walkerId, int xOffset, int yOffset, int selectedWalkerId, struct UI_CityPixelCoordinate *coord)
+void UI_CityBuildings_drawFigure(int figureId, int xOffset, int yOffset, int selectedFigureId, struct UI_CityPixelCoordinate *coord)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 
 	// determining x/y offset on tile
 	int xTileOffset = 0;
@@ -292,13 +292,13 @@ void UI_CityBuildings_drawFigure(int walkerId, int xOffset, int yOffset, int sel
 		yOffset += yTileOffset - GraphicSpriteOffsetY(f->graphicId);
 	}
 
-	// excluding walkers
-	if (selectedWalkerId == 9999) {
+	// excluding figures
+	if (selectedFigureId == 9999) {
 		if (!showOnOverlay(f)) {
 			return;
 		}
-	} else if (selectedWalkerId) {
-		if (walkerId != selectedWalkerId) {
+	} else if (selectedFigureId) {
+		if (figureId != selectedFigureId) {
 			return;
 		}
 		if (coord) {
@@ -317,7 +317,7 @@ void UI_CityBuildings_drawFigure(int walkerId, int xOffset, int yOffset, int sel
 			case Figure_NativeTrader:
 			case Figure_Immigrant:
 			case Figure_Emigrant:
-				drawWalkerWithCart(f, xOffset, yOffset);
+				drawFigureWithCart(f, xOffset, yOffset);
 				break;
 			case Figure_HippodromeMiniHorses:
 				drawHippodromeHorses(f, xOffset, yOffset);

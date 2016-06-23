@@ -63,15 +63,15 @@ const int figureActionFormationLayoutPositionY[13][16] = {
 static const int cartOffsetsX[] = {13, 18, 12, 0, -13, -18, -13, 0};
 static const int cartOffsetsY[] = {-7, -1, 7, 11, 6, -1, -7, -12};
 
-void FigureAction_Common_handleCorpse(int walkerId)
+void FigureAction_Common_handleCorpse(int figureId)
 {
-	if (Data_Walkers[walkerId].waitTicks < 0) {
-		Data_Walkers[walkerId].waitTicks = 0;
+	if (Data_Figures[figureId].waitTicks < 0) {
+		Data_Figures[figureId].waitTicks = 0;
 	}
-	Data_Walkers[walkerId].waitTicks++;
-	if (Data_Walkers[walkerId].waitTicks >= 128) {
-		Data_Walkers[walkerId].waitTicks = 127;
-		Data_Walkers[walkerId].state = FigureState_Dead;
+	Data_Figures[figureId].waitTicks++;
+	if (Data_Figures[figureId].waitTicks >= 128) {
+		Data_Figures[figureId].waitTicks = 127;
+		Data_Figures[figureId].state = FigureState_Dead;
 	}
 }
 
@@ -91,20 +91,20 @@ static int attackIsSameDirection(int dir1, int dir2)
 	return 0;
 }
 
-static void resumeActivityAfterAttack(int walkerId, struct Data_Walker *f)
+static void resumeActivityAfterAttack(int figureId, struct Data_Figure *f)
 {
 	f->numAttackers = 0;
 	f->actionState = f->actionStateBeforeAttack;
 	f->opponentId = 0;
 	f->attackerId1 = 0;
 	f->attackerId2 = 0;
-	FigureRoute_remove(walkerId);
+	FigureRoute_remove(figureId);
 }
 
-static void hitOpponent(int walkerId, struct Data_Walker *f)
+static void hitOpponent(int figureId, struct Data_Figure *f)
 {
 	struct Data_Formation *m = &Data_Formations[f->formationId];
-	struct Data_Walker *opponent = &Data_Walkers[f->opponentId];
+	struct Data_Figure *opponent = &Data_Figures[f->opponentId];
 	struct Data_Formation *opponentFormation = &Data_Formations[opponent->formationId];
 	
 	int cat = Constant_FigureProperties[opponent->type].category;
@@ -124,7 +124,7 @@ static void hitOpponent(int walkerId, struct Data_Walker *f)
 			case Difficulty_Normal: figureAttack = 6; break;
 		}
 	}
-	if (opponent->opponentId != walkerId && m->figureType != Figure_FortLegionary &&
+	if (opponent->opponentId != figureId && m->figureType != Figure_FortLegionary &&
 			attackIsSameDirection(f->attackDirection, opponent->attackDirection)) {
 		figureAttack += 4; // attack opponent on the (exposed) back
 		Sound_Effects_playChannel(SoundChannel_SwordSwing);
@@ -163,22 +163,22 @@ static void hitOpponent(int walkerId, struct Data_Walker *f)
 	}
 }
 
-void FigureAction_Common_handleAttack(int walkerId)
+void FigureAction_Common_handleAttack(int figureId)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	
 	if (f->progressOnTile <= 5) {
 		f->progressOnTile++;
 		FigureMovement_advanceTick(f);
 	}
 	if (f->numAttackers == 0) {
-		resumeActivityAfterAttack(walkerId, f);
+		resumeActivityAfterAttack(figureId, f);
 		return;
 	}
 	if (f->numAttackers == 1) {
 		int targetId = f->opponentId;
 		if (FigureIsDead(targetId)) {
-			resumeActivityAfterAttack(walkerId, f);
+			resumeActivityAfterAttack(figureId, f);
 			return;
 		}
 	} else if (f->numAttackers == 2) {
@@ -191,7 +191,7 @@ void FigureAction_Common_handleAttack(int walkerId)
 			}
 			targetId = f->opponentId;
 			if (FigureIsDead(targetId)) {
-				resumeActivityAfterAttack(walkerId, f);
+				resumeActivityAfterAttack(figureId, f);
 				return;
 			}
 			f->numAttackers = 1;
@@ -201,17 +201,17 @@ void FigureAction_Common_handleAttack(int walkerId)
 	}
 	f->attackGraphicOffset++;
 	if (f->attackGraphicOffset >= 24) {
-		hitOpponent(walkerId, f);
+		hitOpponent(figureId, f);
 	}
 }
 
-void FigureAction_Common_setCartOffset(int walkerId, int direction)
+void FigureAction_Common_setCartOffset(int figureId, int direction)
 {
-	Data_Walkers[walkerId].xOffsetCart = cartOffsetsX[direction];
-	Data_Walkers[walkerId].yOffsetCart = cartOffsetsY[direction];
+	Data_Figures[figureId].xOffsetCart = cartOffsetsX[direction];
+	Data_Figures[figureId].yOffsetCart = cartOffsetsY[direction];
 }
 
-void FigureAction_Common_setCrossCountryDestination(int figureId, struct Data_Walker *f, int xDst, int yDst)
+void FigureAction_Common_setCrossCountryDestination(int figureId, struct Data_Figure *f, int xDst, int yDst)
 {
 	f->destinationX = xDst;
 	f->destinationY = yDst;

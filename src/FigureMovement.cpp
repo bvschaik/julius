@@ -14,9 +14,9 @@
 #include "Data/Settings.h"
 #include "Data/Figure.h"
 
-static void FigureMovement_walkTicksInternal(int walkerId, int numTicks, int roamingEnabled);
+static void FigureMovement_walkTicksInternal(int figureId, int numTicks, int roamingEnabled);
 
-void FigureMovement_advanceTick(struct Data_Walker *f)
+void FigureMovement_advanceTick(struct Data_Figure *f)
 {
 	switch (f->direction) {
 		case Dir_0_Top:
@@ -70,7 +70,7 @@ void FigureMovement_advanceTick(struct Data_Walker *f)
 	}
 }
 
-static void setTargetHeightBridge(struct Data_Walker *f)
+static void setTargetHeightBridge(struct Data_Figure *f)
 {
 	f->heightAdjustedTicks = 18;
 	if (Data_Grid_spriteOffsets[f->gridOffset] <= 6) {
@@ -90,11 +90,11 @@ static void setTargetHeightBridge(struct Data_Walker *f)
 	}
 }
 
-static void walkerMoveToNextTile(int walkerId, struct Data_Walker *f)
+static void figureMoveToNextTile(int figureId, struct Data_Figure *f)
 {
 	int oldX = f->x;
 	int oldY = f->y;
-	Figure_removeFromTileList(walkerId);
+	Figure_removeFromTileList(figureId);
 	switch (f->direction) {
 		default:
 			return;
@@ -131,7 +131,7 @@ static void walkerMoveToNextTile(int walkerId, struct Data_Walker *f)
 			f->gridOffset -= 163;
 			break;
 	}
-	Figure_addToTileList(walkerId);
+	Figure_addToTileList(figureId);
 	if (Data_Grid_terrain[f->gridOffset] & Terrain_Road) {
 		f->isOnRoad = 1;
 		if (Data_Grid_terrain[f->gridOffset] & Terrain_Water) { // bridge
@@ -140,14 +140,14 @@ static void walkerMoveToNextTile(int walkerId, struct Data_Walker *f)
 	} else {
 		f->isOnRoad = 0;
 	}
-	FigureAction_Combat_attackFigure(walkerId, Data_Grid_figureIds[f->gridOffset]);
+	FigureAction_Combat_attackFigure(figureId, Data_Grid_figureIds[f->gridOffset]);
 	f->previousTileX = oldX;
 	f->previousTileY = oldY;
 }
 
-void FigureMovement_initRoaming(int walkerId)
+void FigureMovement_initRoaming(int figureId)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	struct Data_Building *b = &Data_Buildings[f->buildingId];
 	f->progressOnTile = 15;
 	f->roamChooseDestination = 0;
@@ -176,7 +176,7 @@ void FigureMovement_initRoaming(int walkerId)
 	}
 }
 
-static void roamSetDirection(struct Data_Walker *f)
+static void roamSetDirection(struct Data_Figure *f)
 {
 	int gridOffset = GridOffset(f->x, f->y);
 	int direction = Routing_getGeneralDirection(f->x, f->y, f->destinationX, f->destinationY);
@@ -215,11 +215,11 @@ static void roamSetDirection(struct Data_Walker *f)
 	f->roamTicksUntilNextTurn = 5;
 }
 
-void FigureMovement_roamTicks(int walkerId, int numTicks)
+void FigureMovement_roamTicks(int figureId, int numTicks)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	if (f->roamChooseDestination == 0) {
-		FigureMovement_walkTicksInternal(walkerId, numTicks, 1);
+		FigureMovement_walkTicksInternal(figureId, numTicks, 1);
 		if (f->direction == DirFigure_8_AtDestination) {
 			f->roamChooseDestination = 1;
 			f->roamLength = 0;
@@ -243,7 +243,7 @@ void FigureMovement_roamTicks(int walkerId, int numTicks)
 			f->progressOnTile = 15;
 			f->roamRandomCounter++;
 			int cameFromDirection = (f->previousTileDirection + 4) % 8;
-			if (Figure_provideServiceCoverage(walkerId)) {
+			if (Figure_provideServiceCoverage(figureId)) {
 				return;
 			}
 			int roadTiles[8];
@@ -321,19 +321,19 @@ void FigureMovement_roamTicks(int walkerId, int numTicks)
 			f->routingPathCurrentTile++;
 			f->previousTileDirection = f->direction;
 			f->progressOnTile = 0;
-			walkerMoveToNextTile(walkerId, f);
+			figureMoveToNextTile(figureId, f);
 			FigureMovement_advanceTick(f);
 		}
 	}
 }
 
-static void walkerSetNextRouteTileDirection(int walkerId, struct Data_Walker *f)
+static void figureSetNextRouteTileDirection(int figureId, struct Data_Figure *f)
 {
 	if (f->routingPathId > 0) {
 		if (f->routingPathCurrentTile < f->routingPathLength) {
 			f->direction = Data_Routes.directionPaths[f->routingPathId][f->routingPathCurrentTile];
 		} else {
-			FigureRoute_remove(walkerId);
+			FigureRoute_remove(figureId);
 			f->direction = DirFigure_8_AtDestination;
 		}
 	} else { // should be at destination
@@ -344,7 +344,7 @@ static void walkerSetNextRouteTileDirection(int walkerId, struct Data_Walker *f)
 	}
 }
 
-static void walkerAdvanceRouteTile(struct Data_Walker *f, int roamingEnabled)
+static void figureAdvanceRouteTile(struct Data_Figure *f, int roamingEnabled)
 {
 	if (f->direction >= 8) {
 		return;
@@ -413,42 +413,42 @@ static void walkerAdvanceRouteTile(struct Data_Walker *f, int roamingEnabled)
 	}
 }
 
-static void FigureMovement_walkTicksInternal(int walkerId, int numTicks, int roamingEnabled)
+static void FigureMovement_walkTicksInternal(int figureId, int numTicks, int roamingEnabled)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	while (numTicks > 0) {
 		numTicks--;
 		f->progressOnTile++;
 		if (f->progressOnTile < 15) {
 			FigureMovement_advanceTick(f);
 		} else {
-			Figure_provideServiceCoverage(walkerId);
+			Figure_provideServiceCoverage(figureId);
 			f->progressOnTile = 15;
 			if (f->routingPathId <= 0) {
-				FigureRoute_add(walkerId);
+				FigureRoute_add(figureId);
 			}
-			walkerSetNextRouteTileDirection(walkerId, f);
-			walkerAdvanceRouteTile(f, roamingEnabled);
+			figureSetNextRouteTileDirection(figureId, f);
+			figureAdvanceRouteTile(f, roamingEnabled);
 			if (f->direction >= 8) {
 				break;
 			}
 			f->routingPathCurrentTile++;
 			f->previousTileDirection = f->direction;
 			f->progressOnTile = 0;
-			walkerMoveToNextTile(walkerId, f);
+			figureMoveToNextTile(figureId, f);
 			FigureMovement_advanceTick(f);
 		}
 	}
 }
 
-void FigureMovement_walkTicks(int walkerId, int numTicks)
+void FigureMovement_walkTicks(int figureId, int numTicks)
 {
-	FigureMovement_walkTicksInternal(walkerId, numTicks, 0);
+	FigureMovement_walkTicksInternal(figureId, numTicks, 0);
 }
 
-void FigureMovement_followTicks(int walkerId, int leaderWalkerId, int numTicks)
+void FigureMovement_followTicks(int figureId, int leaderFigureId, int numTicks)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	if (f->x == f->sourceX && f->y == f->sourceY) {
 		f->isGhost = 1;
 	}
@@ -460,22 +460,22 @@ void FigureMovement_followTicks(int walkerId, int leaderWalkerId, int numTicks)
 		} else {
 			f->progressOnTile = 15;
 			f->direction = Routing_getGeneralDirection(f->x, f->y,
-				Data_Walkers[leaderWalkerId].previousTileX,
-				Data_Walkers[leaderWalkerId].previousTileY);
+				Data_Figures[leaderFigureId].previousTileX,
+				Data_Figures[leaderFigureId].previousTileY);
 			if (f->direction >= 8) {
 				break;
 			}
 			f->previousTileDirection = f->direction;
 			f->progressOnTile = 0;
-			walkerMoveToNextTile(walkerId, f);
+			figureMoveToNextTile(figureId, f);
 			FigureMovement_advanceTick(f);
 		}
 	}
 }
 
-void FigureMovement_walkTicksTowerSentry(int walkerId, int numTicks)
+void FigureMovement_walkTicksTowerSentry(int figureId, int numTicks)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	while (numTicks > 0) {
 		numTicks--;
 		f->progressOnTile++;
@@ -487,10 +487,10 @@ void FigureMovement_walkTicksTowerSentry(int walkerId, int numTicks)
 	}
 }
 
-void FigureMovement_crossCountrySetDirection(int walkerId, int xSrc, int ySrc, int xDst, int yDst, int isMissile)
+void FigureMovement_crossCountrySetDirection(int figureId, int xSrc, int ySrc, int xDst, int yDst, int isMissile)
 {
 	// all x/y are in 1/15th of a tile
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	f->ccDestinationX = xDst;
 	f->ccDestinationY = yDst;
 	f->ccDeltaX = (xSrc > xDst) ? (xSrc - xDst) : (xDst - xSrc);
@@ -526,7 +526,7 @@ void FigureMovement_crossCountrySetDirection(int walkerId, int xSrc, int ySrc, i
 	}
 }
 
-static void crossCountryUpdateDelta(struct Data_Walker *f)
+static void crossCountryUpdateDelta(struct Data_Figure *f)
 {
 	if (f->ccDirection == 1) { // x
 		if (f->ccDeltaXY >= 0) {
@@ -545,7 +545,7 @@ static void crossCountryUpdateDelta(struct Data_Walker *f)
 	}
 }
 
-static void crossCountryAdvanceX(struct Data_Walker *f)
+static void crossCountryAdvanceX(struct Data_Figure *f)
 {
 	if (f->crossCountryX < f->ccDestinationX) {
 		f->crossCountryX++;
@@ -554,7 +554,7 @@ static void crossCountryAdvanceX(struct Data_Walker *f)
 	}
 }
 
-static void crossCountryAdvanceY(struct Data_Walker *f)
+static void crossCountryAdvanceY(struct Data_Figure *f)
 {
 	if (f->crossCountryY < f->ccDestinationY) {
 		f->crossCountryY++;
@@ -563,7 +563,7 @@ static void crossCountryAdvanceY(struct Data_Walker *f)
 	}
 }
 
-static void crossCountryAdvance(struct Data_Walker *f)
+static void crossCountryAdvance(struct Data_Figure *f)
 {
 	crossCountryUpdateDelta(f);
 	if (f->ccDirection == 2) { // y
@@ -581,10 +581,10 @@ static void crossCountryAdvance(struct Data_Walker *f)
 	}
 }
 
-int FigureMovement_crossCountryWalkTicks(int walkerId, int numTicks)
+int FigureMovement_crossCountryWalkTicks(int figureId, int numTicks)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
-	Figure_removeFromTileList(walkerId);
+	struct Data_Figure *f = &Data_Figures[figureId];
+	Figure_removeFromTileList(figureId);
 	int isAtDestination = 0;
 	while (numTicks > 0) {
 		numTicks--;
@@ -607,14 +607,14 @@ int FigureMovement_crossCountryWalkTicks(int walkerId, int numTicks)
 	} else if (f->inBuildingWaitTicks) {
 		f->inBuildingWaitTicks--;
 	}
-	Figure_addToTileList(walkerId);
+	Figure_addToTileList(figureId);
 	return isAtDestination;
 }
 
 int FigureMovement_canLaunchCrossCountryMissile(int xSrc, int ySrc, int xDst, int yDst)
 {
 	int height = 0;
-	struct Data_Walker *f = &Data_Walkers[0];
+	struct Data_Figure *f = &Data_Figures[0];
 	f->crossCountryX = 15 * xSrc;
 	f->crossCountryY = 15 * ySrc;
 	if (Data_Grid_terrain[GridOffset(xSrc, ySrc)] & Terrain_WallOrGatehouse) {

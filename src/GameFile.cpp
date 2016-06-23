@@ -108,7 +108,7 @@ static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{1, &Data_Grid_buildingDamage, 26244},
 	{1, &Data_Grid_Undo_aqueducts, 26244},
 	{1, &Data_Grid_Undo_spriteOffsets, 26244},
-	{1, &Data_Walkers, 128000},
+	{1, &Data_Figures, 128000},
 	{1, &Data_Routes.figureIds, 1200},
 	{1, &Data_Routes.directionPaths, 300000},
 	{1, &Data_Formations, 6400},
@@ -463,9 +463,9 @@ static void debug()
 	}
 	/**/
 	for (int i = 1; i < MAX_FIGURES; i++) {
-		struct Data_Walker *f = &Data_Walkers[i];
+		struct Data_Figure *f = &Data_Figures[i];
 		if (f->state == FigureState_Alive) {
-			printf("Walker %d type %d as %d wt %d mt %d\n",
+			printf("Figure %d type %d as %d wt %d mt %d\n",
 				i, f->type, f->actionState, f->waitTicks, f->waitTicksMissile);
 		}
 	}

@@ -27,7 +27,7 @@ int FigureAction_TradeCaravan_canBuy(int traderId, int warehouseId, int cityId)
 	if (Data_Buildings[warehouseId].type != Building_Warehouse) {
 		return 0;
 	}
-	if (Data_Walkers[traderId].traderAmountBought >= 8) {
+	if (Data_Figures[traderId].traderAmountBought >= 8) {
 		return 0;
 	}
 	for (int i = 0; i < 8; i++) {
@@ -79,7 +79,7 @@ int FigureAction_TradeCaravan_canSell(int traderId, int warehouseId, int cityId)
 	if (Data_Buildings[warehouseId].type != Building_Warehouse) {
 		return 0;
 	}
-	if (Data_Walkers[traderId].loadsSoldOrCarrying >= 8) {
+	if (Data_Figures[traderId].loadsSoldOrCarrying >= 8) {
 		return 0;
 	}
 	struct Data_Building_Storage *s = &Data_Building_Storages[Data_Buildings[warehouseId].storageId];
@@ -190,11 +190,11 @@ static int traderGetSellResource(int traderId, int warehouseId, int cityId)
 	return 0;
 }
 
-static void goToNextWarehouse(int walkerId, struct Data_Walker *f, int xSrc, int ySrc, int distToEntry)
+static void goToNextWarehouse(int figureId, struct Data_Figure *f, int xSrc, int ySrc, int distToEntry)
 {
 	int xDst, yDst;
 	int warehouseId = Trader_getClosestWarehouseForTradeCaravan(
-		walkerId, xSrc, ySrc, f->empireCityId, distToEntry, &xDst, &yDst);
+		figureId, xSrc, ySrc, f->empireCityId, distToEntry, &xDst, &yDst);
 	if (warehouseId) {
 		f->destinationBuildingId = warehouseId;
 		f->actionState = FigureActionState_101_TradeCaravanArriving;
@@ -207,19 +207,19 @@ static void goToNextWarehouse(int walkerId, struct Data_Walker *f, int xSrc, int
 	}
 }
 
-void FigureAction_tradeCaravan(int walkerId)
+void FigureAction_tradeCaravan(int figureId)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	f->isGhost = 0;
 	f->terrainUsage = FigureTerrainUsage_PreferRoads;
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	switch (f->actionState) {
 		case FigureActionState_150_Attack:
-			FigureAction_Common_handleAttack(walkerId);
+			FigureAction_Common_handleAttack(figureId);
 			break;
 		case FigureActionState_149_Corpse:
-			FigureAction_Common_handleCorpse(walkerId);
+			FigureAction_Common_handleCorpse(figureId);
 			break;
 		case FigureActionState_100_TradeCaravanCreated:
 			f->isGhost = 1;
@@ -234,18 +234,18 @@ void FigureAction_tradeCaravan(int walkerId)
 					xBase = f->x;
 					yBase = f->y;
 				}
-				goToNextWarehouse(walkerId, f, xBase, yBase, 0);
+				goToNextWarehouse(figureId, f, xBase, yBase, 0);
 			}
 			f->graphicOffset = 0;
 			break;
 		case FigureActionState_101_TradeCaravanArriving:
-			FigureMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(figureId, 1);
 			switch (f->direction) {
 				case DirFigure_8_AtDestination:
 					f->actionState = FigureActionState_102_TradeCaravanTrading;
 					break;
 				case DirFigure_9_Reroute:
-					FigureRoute_remove(walkerId);
+					FigureRoute_remove(figureId);
 					break;
 				case DirFigure_10_Lost:
 					f->state = FigureState_Dead;
@@ -261,11 +261,11 @@ void FigureAction_tradeCaravan(int walkerId)
 			if (f->waitTicks > 10) {
 				f->waitTicks = 0;
 				int moveOn = 0;
-				if (FigureAction_TradeCaravan_canBuy(walkerId, f->destinationBuildingId, f->empireCityId)) {
+				if (FigureAction_TradeCaravan_canBuy(figureId, f->destinationBuildingId, f->empireCityId)) {
 					int resource = traderGetBuyResource(f->destinationBuildingId, f->empireCityId);
 					if (resource) {
 						Data_Empire_Trade.tradedThisYear[Data_Empire_Cities[f->empireCityId].routeId][resource]++;
-						Trader_buyResource(walkerId, resource);
+						Trader_buyResource(figureId, resource);
 						f->traderAmountBought++;
 					} else {
 						moveOn++;
@@ -273,11 +273,11 @@ void FigureAction_tradeCaravan(int walkerId)
 				} else {
 					moveOn++;
 				}
-				if (FigureAction_TradeCaravan_canSell(walkerId, f->destinationBuildingId, f->empireCityId)) {
-					int resource = traderGetSellResource(walkerId, f->destinationBuildingId, f->empireCityId);
+				if (FigureAction_TradeCaravan_canSell(figureId, f->destinationBuildingId, f->empireCityId)) {
+					int resource = traderGetSellResource(figureId, f->destinationBuildingId, f->empireCityId);
 					if (resource) {
 						Data_Empire_Trade.tradedThisYear[Data_Empire_Cities[f->empireCityId].routeId][resource]++;
-						Trader_sellResource(walkerId, resource);
+						Trader_sellResource(figureId, resource);
 						f->loadsSoldOrCarrying++;
 					} else {
 						moveOn++;
@@ -286,20 +286,20 @@ void FigureAction_tradeCaravan(int walkerId)
 					moveOn++;
 				}
 				if (moveOn == 2) {
-					goToNextWarehouse(walkerId, f, f->x, f->y, -1);
+					goToNextWarehouse(figureId, f, f->x, f->y, -1);
 				}
 			}
 			f->graphicOffset = 0;
 			break;
 		case FigureActionState_103_TradeCaravanLeaving:
-			FigureMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(figureId, 1);
 			switch (f->direction) {
 				case DirFigure_8_AtDestination:
 					f->actionState = FigureActionState_100_TradeCaravanCreated;
 					f->state = FigureState_Dead;
 					break;
 				case DirFigure_9_Reroute:
-					FigureRoute_remove(walkerId);
+					FigureRoute_remove(figureId);
 					break;
 				case DirFigure_10_Lost:
 					f->state = FigureState_Dead;
@@ -312,15 +312,15 @@ void FigureAction_tradeCaravan(int walkerId)
 	f->graphicId = GraphicId(ID_Graphic_Figure_TradeCaravan) + dir + 8 * f->graphicOffset;
 }
 
-void FigureAction_tradeCaravanDonkey(int walkerId)
+void FigureAction_tradeCaravanDonkey(int figureId)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	f->isGhost = 0;
 	f->terrainUsage = FigureTerrainUsage_PreferRoads;
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 
-	struct Data_Walker *leader = &Data_Walkers[f->inFrontFigureId];
+	struct Data_Figure *leader = &Data_Figures[f->inFrontFigureId];
 	if (f->inFrontFigureId <= 0) {
 		f->state = FigureState_Dead;
 	} else {
@@ -331,7 +331,7 @@ void FigureAction_tradeCaravanDonkey(int walkerId)
 		} else if (leader->type != Figure_TradeCaravan && leader->type != Figure_TradeCaravanDonkey) {
 			f->state = FigureState_Dead;
 		} else {
-			FigureMovement_followTicks(walkerId, f->inFrontFigureId, 1);
+			FigureMovement_followTicks(figureId, f->inFrontFigureId, 1);
 		}
 	}
 
@@ -343,26 +343,26 @@ void FigureAction_tradeCaravanDonkey(int walkerId)
 	f->graphicId = GraphicId(ID_Graphic_Figure_TradeCaravan) + dir + 8 * f->graphicOffset;
 }
 
-void FigureAction_nativeTrader(int walkerId)
+void FigureAction_nativeTrader(int figureId)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	f->isGhost = 0;
 	f->terrainUsage = FigureTerrainUsage_Any;
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	switch (f->actionState) {
 		case FigureActionState_150_Attack:
-			FigureAction_Common_handleAttack(walkerId);
+			FigureAction_Common_handleAttack(figureId);
 			break;
 		case FigureActionState_149_Corpse:
-			FigureAction_Common_handleCorpse(walkerId);
+			FigureAction_Common_handleCorpse(figureId);
 			break;
 		case FigureActionState_160_NativeTraderGoingToWarehouse:
-			FigureMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(figureId, 1);
 			if (f->direction == DirFigure_8_AtDestination) {
 				f->actionState = FigureActionState_163_NativeTraderAtWarehouse;
 			} else if (f->direction == DirFigure_9_Reroute) {
-				FigureRoute_remove(walkerId);
+				FigureRoute_remove(figureId);
 			} else if (f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
 				f->isGhost = 1;
@@ -372,11 +372,11 @@ void FigureAction_nativeTrader(int walkerId)
 			}
 			break;
 		case FigureActionState_161_NativeTraderReturning:
-			FigureMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(figureId, 1);
 			if (f->direction == DirFigure_8_AtDestination || f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
 			} else if (f->direction == DirFigure_9_Reroute) {
-				FigureRoute_remove(walkerId);
+				FigureRoute_remove(figureId);
 			}
 			break;
 		case FigureActionState_162_NativeTraderCreated:
@@ -385,7 +385,7 @@ void FigureAction_nativeTrader(int walkerId)
 			if (f->waitTicks > 10) {
 				f->waitTicks = 0;
 				int xTile, yTile;
-				int buildingId = Trader_getClosestWarehouseForTradeCaravan(walkerId, f->x, f->y, 0, -1, &xTile, &yTile);
+				int buildingId = Trader_getClosestWarehouseForTradeCaravan(figureId, f->x, f->y, 0, -1, &xTile, &yTile);
 				if (buildingId) {
 					f->actionState = FigureActionState_160_NativeTraderGoingToWarehouse;
 					f->destinationBuildingId = buildingId;
@@ -401,13 +401,13 @@ void FigureAction_nativeTrader(int walkerId)
 			f->waitTicks++;
 			if (f->waitTicks > 10) {
 				f->waitTicks = 0;
-				if (FigureAction_TradeCaravan_canBuy(walkerId, f->destinationBuildingId, 0)) {
+				if (FigureAction_TradeCaravan_canBuy(figureId, f->destinationBuildingId, 0)) {
 					int resource = traderGetBuyResource(f->destinationBuildingId, 0);
-					Trader_buyResource(walkerId, resource);
+					Trader_buyResource(figureId, resource);
 					f->traderAmountBought += 3;
 				} else {
 					int xTile, yTile;
-					int buildingId = Trader_getClosestWarehouseForTradeCaravan(walkerId, f->x, f->y, 0, -1, &xTile, &yTile);
+					int buildingId = Trader_getClosestWarehouseForTradeCaravan(figureId, f->x, f->y, 0, -1, &xTile, &yTile);
 					if (buildingId) {
 						f->actionState = FigureActionState_160_NativeTraderGoingToWarehouse;
 						f->destinationBuildingId = buildingId;
@@ -438,36 +438,36 @@ void FigureAction_nativeTrader(int walkerId)
 		8 + 8 * f->resourceId; // BUGFIX should be within else statement?
 	if (f->cartGraphicId) {
 		f->cartGraphicId += dir;
-		FigureAction_Common_setCartOffset(walkerId, dir);
+		FigureAction_Common_setCartOffset(figureId, dir);
 	}
 }
 
-static int tradeShipLostQueue(int walkerId)
+static int tradeShipLostQueue(int figureId)
 {
-	int buildingId = Data_Walkers[walkerId].destinationBuildingId;
+	int buildingId = Data_Figures[figureId].destinationBuildingId;
 	struct Data_Building *b = &Data_Buildings[buildingId];
 	if (BuildingIsInUse(buildingId) && b->type == Building_Dock &&
-		b->numWorkers > 0 && b->data.other.boatFigureId == walkerId) {
+		b->numWorkers > 0 && b->data.other.boatFigureId == figureId) {
 		return 0;
 	}
 	return 1;
 }
 
-static int tradeShipDoneTrading(int walkerId)
+static int tradeShipDoneTrading(int figureId)
 {
-	int buildingId = Data_Walkers[walkerId].destinationBuildingId;
+	int buildingId = Data_Figures[figureId].destinationBuildingId;
 	struct Data_Building *b = &Data_Buildings[buildingId];
 	if (BuildingIsInUse(buildingId) && b->type == Building_Dock && b->numWorkers > 0) {
 		for (int i = 0; i < 3; i++) {
 			int dockerId = b->data.other.dockFigureIds[i];
-			if (dockerId && Data_Walkers[dockerId].state == FigureState_Alive &&
-				Data_Walkers[dockerId].actionState != FigureActionState_132_DockerIdling) {
+			if (dockerId && Data_Figures[dockerId].state == FigureState_Alive &&
+				Data_Figures[dockerId].actionState != FigureActionState_132_DockerIdling) {
 				return 0;
 			}
 		}
-		Data_Walkers[walkerId].tradeShipFailedDockAttempts++;
-		if (Data_Walkers[walkerId].tradeShipFailedDockAttempts >= 10) {
-			Data_Walkers[walkerId].tradeShipFailedDockAttempts = 11;
+		Data_Figures[figureId].tradeShipFailedDockAttempts++;
+		if (Data_Figures[figureId].tradeShipFailedDockAttempts >= 10) {
+			Data_Figures[figureId].tradeShipFailedDockAttempts = 11;
 			return 1;
 		}
 		return 0;
@@ -475,19 +475,19 @@ static int tradeShipDoneTrading(int walkerId)
 	return 1;
 }
 
-void FigureAction_tradeShip(int walkerId)
+void FigureAction_tradeShip(int figureId)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	f->isGhost = 0;
 	f->isBoat = 1;
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	switch (f->actionState) {
 		case FigureActionState_150_Attack:
-			FigureAction_Common_handleAttack(walkerId);
+			FigureAction_Common_handleAttack(figureId);
 			break;
 		case FigureActionState_149_Corpse:
-			FigureAction_Common_handleCorpse(walkerId);
+			FigureAction_Common_handleCorpse(figureId);
 			break;
 		case FigureActionState_110_TradeShipCreated:
 			f->loadsSoldOrCarrying = 12;
@@ -497,7 +497,7 @@ void FigureAction_tradeShip(int walkerId)
 			if (f->waitTicks > 20) {
 				f->waitTicks = 0;
 				int xTile, yTile;
-				int dockId = Terrain_Water_getFreeDockDestination(walkerId, &xTile, &yTile);
+				int dockId = Terrain_Water_getFreeDockDestination(figureId, &xTile, &yTile);
 				if (dockId) {
 					f->destinationBuildingId = dockId;
 					f->actionState = FigureActionState_111_TradeShipGoingToDock;
@@ -514,12 +514,12 @@ void FigureAction_tradeShip(int walkerId)
 			f->graphicOffset = 0;
 			break;
 		case FigureActionState_111_TradeShipGoingToDock:
-			FigureMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(figureId, 1);
 			f->heightAdjustedTicks = 0;
 			if (f->direction == DirFigure_8_AtDestination) {
 				f->actionState = FigureActionState_112_TradeShipMoored;
 			} else if (f->direction == DirFigure_9_Reroute) {
-				FigureRoute_remove(walkerId);
+				FigureRoute_remove(figureId);
 			} else if (f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
 				if (!Data_Message.messageCategoryCount[MessageDelay_BlockedDock]) {
@@ -535,13 +535,13 @@ void FigureAction_tradeShip(int walkerId)
 			}
 			break;
 		case FigureActionState_112_TradeShipMoored:
-			if (tradeShipLostQueue(walkerId)) {
+			if (tradeShipLostQueue(figureId)) {
 				f->tradeShipFailedDockAttempts = 0;
 				f->actionState = FigureActionState_115_TradeShipLeaving;
 				f->waitTicks = 0;
 				f->destinationX = Data_Scenario.riverEntryPoint.x;
 				f->destinationY = Data_Scenario.riverEntryPoint.y;
-			} else if (tradeShipDoneTrading(walkerId)) {
+			} else if (tradeShipDoneTrading(figureId)) {
 				f->tradeShipFailedDockAttempts = 0;
 				f->actionState = FigureActionState_115_TradeShipLeaving;
 				f->waitTicks = 0;
@@ -560,12 +560,12 @@ void FigureAction_tradeShip(int walkerId)
 			Data_Message.messageCategoryCount[MessageDelay_BlockedDock] = 0;
 			break;
 		case FigureActionState_113_TradeShipGoingToDockQueue:
-			FigureMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(figureId, 1);
 			f->heightAdjustedTicks = 0;
 			if (f->direction == DirFigure_8_AtDestination) {
 				f->actionState = FigureActionState_114_TradeShipAnchored;
 			} else if (f->direction == DirFigure_9_Reroute) {
-				FigureRoute_remove(walkerId);
+				FigureRoute_remove(figureId);
 			} else if (f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
 			}
@@ -574,13 +574,13 @@ void FigureAction_tradeShip(int walkerId)
 			f->waitTicks++;
 			if (f->waitTicks > 40) {
 				int xTile, yTile;
-				int dockId = Terrain_Water_getFreeDockDestination(walkerId, &xTile, &yTile);
+				int dockId = Terrain_Water_getFreeDockDestination(figureId, &xTile, &yTile);
 				if (dockId) {
 					f->destinationBuildingId = dockId;
 					f->actionState = FigureActionState_111_TradeShipGoingToDock;
 					f->destinationX = xTile;
 					f->destinationY = yTile;
-				} else if (Data_Grid_figureIds[f->gridOffset] != walkerId &&
+				} else if (Data_Grid_figureIds[f->gridOffset] != figureId &&
 					Terrain_Water_getQueueDockDestination(&xTile, &yTile)) {
 					f->actionState = FigureActionState_113_TradeShipGoingToDockQueue;
 					f->destinationX = xTile;
@@ -591,13 +591,13 @@ void FigureAction_tradeShip(int walkerId)
 			f->graphicOffset = 0;
 			break;
 		case FigureActionState_115_TradeShipLeaving:
-			FigureMovement_walkTicks(walkerId, 1);
+			FigureMovement_walkTicks(figureId, 1);
 			f->heightAdjustedTicks = 0;
 			if (f->direction == DirFigure_8_AtDestination) {
 				f->actionState = FigureActionState_110_TradeShipCreated;
 				f->state = FigureState_Dead;
 			} else if (f->direction == DirFigure_9_Reroute) {
-				FigureRoute_remove(walkerId);
+				FigureRoute_remove(figureId);
 			} else if (f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
 			}
@@ -608,15 +608,15 @@ void FigureAction_tradeShip(int walkerId)
 	f->graphicId = GraphicId(ID_Graphic_Figure_Ship) + dir;
 }
 
-int FigureAction_TradeShip_isBuyingOrSelling(int walkerId)
+int FigureAction_TradeShip_isBuyingOrSelling(int figureId)
 {
-	int buildingId = Data_Walkers[walkerId].destinationBuildingId;
+	int buildingId = Data_Figures[figureId].destinationBuildingId;
 	struct Data_Building *b = &Data_Buildings[buildingId];
 	if (!BuildingIsInUse(buildingId) || b->type != Building_Dock) {
 		return TradeShipState_Buying;
 	}
 	for (int i = 0; i < 3; i++) {
-		struct Data_Walker *f = &Data_Walkers[b->data.other.dockFigureIds[i]];
+		struct Data_Figure *f = &Data_Figures[b->data.other.dockFigureIds[i]];
 		if (!b->data.other.dockFigureIds[i] || f->state != FigureState_Alive) {
 			continue;
 		}

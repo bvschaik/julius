@@ -93,14 +93,14 @@ void UI_CityBuildings_drawOverlayFootprints()
 void UI_CityBuildings_drawOverlayTopsFiguresAnimation(int overlay)
 {
 	FOREACH_Y_VIEW {
-		// draw walkers
+		// draw figures
 		FOREACH_X_VIEW {
-			int walkerId = Data_Grid_figureIds[gridOffset];
-			while (walkerId) {
-				if (!Data_Walkers[walkerId].isGhost) {
-					UI_CityBuildings_drawFigure(walkerId, xGraphic, yGraphic, 9999, 0);
+			int figureId = Data_Grid_figureIds[gridOffset];
+			while (figureId) {
+				if (!Data_Figures[figureId].isGhost) {
+					UI_CityBuildings_drawFigure(figureId, xGraphic, yGraphic, 9999, 0);
 				}
-				walkerId = Data_Walkers[walkerId].nextFigureIdOnSameTile;
+				figureId = Data_Figures[figureId].nextFigureIdOnSameTile;
 			}
 		} END_FOREACH_X_VIEW;
 		// draw animation
@@ -1332,17 +1332,17 @@ static void drawBuildingTopForProblemsOverlay(int gridOffset, int buildingId, in
 			Data_Buildings[buildingId].showOnProblemOverlay = 1;
 		}
 	} else if (type >= Building_WheatFarm && type <= Building_ClayPit) {
-		int walkerId = Data_Buildings[buildingId].figureId;
-		if (walkerId &&
-			Data_Walkers[walkerId].actionState == FigureActionState_20_CartpusherInitial &&
-			Data_Walkers[walkerId].minMaxSeen) {
+		int figureId = Data_Buildings[buildingId].figureId;
+		if (figureId &&
+			Data_Figures[figureId].actionState == FigureActionState_20_CartpusherInitial &&
+			Data_Figures[figureId].minMaxSeen) {
 			Data_Buildings[buildingId].showOnProblemOverlay = 1;
 		}
 	} else if (BuildingIsWorkshop(type)) {
-		int walkerId = Data_Buildings[buildingId].figureId;
-		if (walkerId &&
-			Data_Walkers[walkerId].actionState == FigureActionState_20_CartpusherInitial &&
-			Data_Walkers[walkerId].minMaxSeen) {
+		int figureId = Data_Buildings[buildingId].figureId;
+		if (figureId &&
+			Data_Figures[figureId].actionState == FigureActionState_20_CartpusherInitial &&
+			Data_Figures[figureId].minMaxSeen) {
 			Data_Buildings[buildingId].showOnProblemOverlay = 1;
 		} else if (Data_Buildings[buildingId].loadsStored <= 0) {
 			Data_Buildings[buildingId].showOnProblemOverlay = 1;

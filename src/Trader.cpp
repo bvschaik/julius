@@ -23,26 +23,26 @@ void Trader_clearList()
 	Data_Figure_Extra.nextTraderId = 0;
 }
 
-void Trader_create(int walkerId)
+void Trader_create(int figureId)
 {
-	Data_Walkers[walkerId].traderId = Data_Figure_Extra.nextTraderId;
+	Data_Figures[figureId].traderId = Data_Figure_Extra.nextTraderId;
 	memset(&Data_Figure_Traders[Data_Figure_Extra.nextTraderId], 0, sizeof(struct Data_Figure_Trader));
 	if (++Data_Figure_Extra.nextTraderId >= 100) {
 		Data_Figure_Extra.nextTraderId = 0;
 	}
 }
 
-void Trader_sellResource(int walkerId, int resourceId)
+void Trader_sellResource(int figureId, int resourceId)
 {
-	int traderId = Data_Walkers[walkerId].traderId;
+	int traderId = Data_Figures[figureId].traderId;
 	Data_Figure_Traders[traderId].totalSold++;
 	Data_Figure_Traders[traderId].soldResources[resourceId]++;
 	Data_Figure_Traders[traderId].moneySoldResources += Data_TradePrices[resourceId].sell;
 }
 
-void Trader_buyResource(int walkerId, int resourceId)
+void Trader_buyResource(int figureId, int resourceId)
 {
-	int traderId = Data_Walkers[walkerId].traderId;
+	int traderId = Data_Figures[figureId].traderId;
 	Data_Figure_Traders[traderId].totalBought++;
 	Data_Figure_Traders[traderId].boughtResources[resourceId]++;
 	Data_Figure_Traders[traderId].moneyBoughtResources += Data_TradePrices[resourceId].buy;
@@ -115,9 +115,9 @@ static int generateTrader(int cityId)
 			int shipId = Figure_create(Figure_TradeShip,
 				Data_Scenario.riverEntryPoint.x, Data_Scenario.riverEntryPoint.y, 0);
 			city->traderFigureIds[index] = shipId;
-			Data_Walkers[shipId].empireCityId = cityId;
-			Data_Walkers[shipId].actionState = FigureActionState_110_TradeShipCreated;
-			Data_Walkers[shipId].waitTicks = 10;
+			Data_Figures[shipId].empireCityId = cityId;
+			Data_Figures[shipId].actionState = FigureActionState_110_TradeShipCreated;
+			Data_Figures[shipId].waitTicks = 10;
 			return 1;
 		}
 	} else {
@@ -127,19 +127,19 @@ static int generateTrader(int cityId)
 			int caravanId = Figure_create(Figure_TradeCaravan,
 				Data_CityInfo.entryPointX, Data_CityInfo.entryPointY, 0);
 			city->traderFigureIds[index] = caravanId;
-			Data_Walkers[caravanId].empireCityId = cityId;
-			Data_Walkers[caravanId].actionState = FigureActionState_100_TradeCaravanCreated;
-			Data_Walkers[caravanId].waitTicks = 10;
+			Data_Figures[caravanId].empireCityId = cityId;
+			Data_Figures[caravanId].actionState = FigureActionState_100_TradeCaravanCreated;
+			Data_Figures[caravanId].waitTicks = 10;
 			// donkey 1
 			int donkey1 = Figure_create(Figure_TradeCaravanDonkey,
 				Data_CityInfo.entryPointX, Data_CityInfo.entryPointY, 0);
-			Data_Walkers[donkey1].actionState = FigureActionState_100_TradeCaravanCreated;
-			Data_Walkers[donkey1].inFrontFigureId = caravanId;
+			Data_Figures[donkey1].actionState = FigureActionState_100_TradeCaravanCreated;
+			Data_Figures[donkey1].inFrontFigureId = caravanId;
 			// donkey 2
 			int donkey2 = Figure_create(Figure_TradeCaravanDonkey,
 				Data_CityInfo.entryPointX, Data_CityInfo.entryPointY, 0);
-			Data_Walkers[donkey2].actionState = FigureActionState_100_TradeCaravanCreated;
-			Data_Walkers[donkey2].inFrontFigureId = donkey1;
+			Data_Figures[donkey2].actionState = FigureActionState_100_TradeCaravanCreated;
+			Data_Figures[donkey2].inFrontFigureId = donkey1;
 			return 1;
 		}
 	}
@@ -207,7 +207,7 @@ int Trader_getClosestWarehouseForTradeCaravan(int figureId, int x, int y, int ci
 	importable[Resource_None] = 0;
 	for (int r = Resource_Min; r < Resource_Max; r++) {
 		exportable[r] = Empire_canExportResourceToCity(cityId, r);
-		if (Data_Walkers[figureId].traderAmountBought >= 8) {
+		if (Data_Figures[figureId].traderAmountBought >= 8) {
 			exportable[r] = 0;
 		}
 		if (cityId) {
@@ -215,7 +215,7 @@ int Trader_getClosestWarehouseForTradeCaravan(int figureId, int x, int y, int ci
 		} else { // exclude own city (id=0), shouldn't happen, but still..
 			importable[r] = 0;
 		}
-		if (Data_Walkers[figureId].loadsSoldOrCarrying >= 8) {
+		if (Data_Figures[figureId].loadsSoldOrCarrying >= 8) {
 			importable[r] = 0;
 		}
 	}

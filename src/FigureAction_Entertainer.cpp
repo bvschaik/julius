@@ -54,7 +54,7 @@ static int determineDestination(int x, int y, int btype1, int btype2)
 	return 0;
 }
 
-static void updateShowsAtDestination(struct Data_Walker *f)
+static void updateShowsAtDestination(struct Data_Figure *f)
 {
 	struct Data_Building *b = &Data_Buildings[f->destinationBuildingId];
 	switch (f->type) {
@@ -83,7 +83,7 @@ static void updateShowsAtDestination(struct Data_Walker *f)
 	}
 }
 
-static void updateGraphic(int walkerId, struct Data_Walker *f)
+static void updateGraphic(int figureId, struct Data_Figure *f)
 {
 	int dir = f->direction < 8 ? f->direction : f->previousTileDirection;
 	FigureActionNormalizeDirection(dir);
@@ -127,13 +127,13 @@ static void updateGraphic(int walkerId, struct Data_Walker *f)
 	}
 	if (f->cartGraphicId) {
 		f->cartGraphicId += dir + 8 * f->graphicOffset;
-		FigureAction_Common_setCartOffset(walkerId, dir);
+		FigureAction_Common_setCartOffset(figureId, dir);
 	}
 }
 
-void FigureAction_entertainer(int walkerId)
+void FigureAction_entertainer(int figureId)
 {
-	struct Data_Walker *f = &Data_Walkers[walkerId];
+	struct Data_Figure *f = &Data_Figures[figureId];
 	struct Data_Building *b = &Data_Buildings[f->buildingId];
 	f->cartGraphicId = GraphicId(ID_Graphic_Figure_CartpusherCart);
 	f->terrainUsage = FigureTerrainUsage_Roads;
@@ -149,7 +149,7 @@ void FigureAction_entertainer(int walkerId)
 			f->actionState == FigureActionState_94_EntertainerRoaming ||
 			f->actionState == FigureActionState_95_EntertainerReturning) {
 			f->type = Figure_Enemy54_Gladiator;
-			FigureRoute_remove(walkerId);
+			FigureRoute_remove(figureId);
 			f->roamLength = 0;
 			f->actionState = FigureActionState_158_NativeCreated;
 			return;
@@ -158,11 +158,11 @@ void FigureAction_entertainer(int walkerId)
 	int speedFactor = f->type == Figure_Charioteer ? 2 : 1;
 	switch (f->actionState) {
 		case FigureActionState_150_Attack:
-			FigureAction_Common_handleAttack(walkerId);
+			FigureAction_Common_handleAttack(figureId);
 			FigureActionIncreaseGraphicOffset(f, 32);
 			break;
 		case FigureActionState_149_Corpse:
-			FigureAction_Common_handleCorpse(walkerId);
+			FigureAction_Common_handleCorpse(figureId);
 			break;
 		case FigureActionState_90_EntertainerAtSchoolCreated:
 			f->isGhost = 1;
@@ -173,7 +173,7 @@ void FigureAction_entertainer(int walkerId)
 				int xRoad, yRoad;
 				if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
 					f->actionState = FigureActionState_91_EntertainerExitingSchool;
-					FigureAction_Common_setCrossCountryDestination(walkerId, f, xRoad, yRoad);
+					FigureAction_Common_setCrossCountryDestination(figureId, f, xRoad, yRoad);
 					f->roamLength = 0;
 				} else {
 					f->state = FigureState_Dead;
@@ -183,7 +183,7 @@ void FigureAction_entertainer(int walkerId)
 		case FigureActionState_91_EntertainerExitingSchool:
 			f->useCrossCountry = 1;
 			f->isGhost = 1;
-			if (FigureMovement_crossCountryWalkTicks(walkerId, 1) == 1) {
+			if (FigureMovement_crossCountryWalkTicks(figureId, 1) == 1) {
 				int dstBuildingId = 0;
 				switch (f->type) {
 					case Figure_Actor:
@@ -223,12 +223,12 @@ void FigureAction_entertainer(int walkerId)
 			if (f->roamLength >= 3200) {
 				f->state = FigureState_Dead;
 			}
-			FigureMovement_walkTicks(walkerId, speedFactor);
+			FigureMovement_walkTicks(figureId, speedFactor);
 			if (f->direction == DirFigure_8_AtDestination) {
 				updateShowsAtDestination(f);
 				f->state = FigureState_Dead;
 			} else if (f->direction == DirFigure_9_Reroute) {
-				FigureRoute_remove(walkerId);
+				FigureRoute_remove(figureId);
 			} else if (f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
 			}
@@ -246,15 +246,15 @@ void FigureAction_entertainer(int walkerId)
 					f->state = FigureState_Dead;
 				}
 			}
-			FigureMovement_roamTicks(walkerId, speedFactor);
+			FigureMovement_roamTicks(figureId, speedFactor);
 			break;
 		case FigureActionState_95_EntertainerReturning:
-			FigureMovement_walkTicks(walkerId, speedFactor);
+			FigureMovement_walkTicks(figureId, speedFactor);
 			if (f->direction == DirFigure_8_AtDestination ||
 				f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
 			}
 			break;
 	}
-	updateGraphic(walkerId, f);
+	updateGraphic(figureId, f);
 }
