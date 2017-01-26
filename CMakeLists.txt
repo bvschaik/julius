@@ -32,6 +32,32 @@ add_executable(opencaesar
 	src/Empire.cpp
 	src/Event.cpp
 	src/Event_Invasion.cpp
+	src/Figure.cpp
+	src/FigureAction.cpp
+	src/FigureAction_Animal.cpp
+	src/FigureAction_Cartpusher.cpp
+	src/FigureAction_Combat.cpp
+	src/FigureAction_Common.cpp
+	src/FigureAction_Culture.cpp
+	src/FigureAction_Docker.cpp
+	src/FigureAction_Enemy.cpp
+	src/FigureAction_Entertainer.cpp
+	src/FigureAction_Market.cpp
+	src/FigureAction_Migrant.cpp
+	src/FigureAction_Missile.cpp
+	src/FigureAction_Native.cpp
+	src/FigureAction_Rioter.cpp
+	src/FigureAction_Service.cpp
+	src/FigureAction_Soldier.cpp
+	src/FigureAction_Trader.cpp
+	src/FigureAction_Wall.cpp
+	src/FigureAction_Water.cpp
+	src/FigureGeneration.cpp
+	src/FigureMovement.cpp
+	src/FigureNames.cpp
+	src/FigureRoute.cpp
+	src/Figure_Phrase.cpp
+	src/Figure_Service.cpp
 	src/FileSystem.cpp
 	src/Formation.cpp
 	src/FormationUpdate.cpp
@@ -78,32 +104,6 @@ add_executable(opencaesar
 	src/Undo.cpp
 	src/UtilityManagement.cpp
 	src/Video.cpp
-	src/Walker.cpp
-	src/WalkerAction.cpp
-	src/WalkerAction_Animal.cpp
-	src/WalkerAction_Cartpusher.cpp
-	src/WalkerAction_Combat.cpp
-	src/WalkerAction_Common.cpp
-	src/WalkerAction_Culture.cpp
-	src/WalkerAction_Docker.cpp
-	src/WalkerAction_Enemy.cpp
-	src/WalkerAction_Entertainer.cpp
-	src/WalkerAction_Market.cpp
-	src/WalkerAction_Migrant.cpp
-	src/WalkerAction_Missile.cpp
-	src/WalkerAction_Native.cpp
-	src/WalkerAction_Rioter.cpp
-	src/WalkerAction_Service.cpp
-	src/WalkerAction_Soldier.cpp
-	src/WalkerAction_Trader.cpp
-	src/WalkerAction_Wall.cpp
-	src/WalkerAction_Water.cpp
-	src/FigureGeneration.cpp
-	src/FigureMovement.cpp
-	src/FigureNames.cpp
-	src/FigureRoute.cpp
-	src/Walker_Phrase.cpp
-	src/Walker_Service.cpp
 	src/Widget_Button.cpp
 	src/Widget_Menu.cpp
 	src/Widget_Panel.cpp
@@ -129,22 +129,22 @@ add_executable(opencaesar
 	src/UI/BuildingInfo_Distribution.cpp
 	src/UI/BuildingInfo_Engineering.cpp
 	src/UI/BuildingInfo_Entertainment.cpp
+	src/UI/BuildingInfo_Figures.cpp
 	src/UI/BuildingInfo_Government.cpp
 	src/UI/BuildingInfo_House.cpp
 	src/UI/BuildingInfo_Industry.cpp
 	src/UI/BuildingInfo_Military.cpp
 	src/UI/BuildingInfo_Native.cpp
 	src/UI/BuildingInfo_Terrain.cpp
-	src/UI/BuildingInfo_Walkers.cpp
 	src/UI/BuildingInfo_Water.cpp
 	src/UI/BuildingMenu.cpp
 	src/UI/CCKSelection.cpp
 	src/UI/City.cpp
 	src/UI/CityBuildings.cpp
+	src/UI/CityBuildings_Figures.cpp
 	src/UI/CityBuildings_Ghost.cpp
 	src/UI/CityBuildings_Overlay.cpp
 	src/UI/CityBuildings_Scroll.cpp
-	src/UI/CityBuildings_Walkers.cpp
 	src/UI/DifficultyOptions.cpp
 	src/UI/DisplayOptions.cpp
 	src/UI/DonateToCityDialog.cpp
