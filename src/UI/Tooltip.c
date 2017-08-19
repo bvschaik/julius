@@ -6,7 +6,6 @@
 #include "../Graphics.h"
 #include "../Language.h"
 #include "../String.h"
-#include "../Time.h"
 #include "../Widget.h"
 
 #include "../Data/CityInfo.h"
@@ -14,6 +13,8 @@
 #include "../Data/Mouse.h"
 #include "../Data/Screen.h"
 #include "../Data/Settings.h"
+
+#include "core/time.h"
 
 #include <string.h>
 
@@ -24,11 +25,11 @@ static void drawButtonTooltip(struct TooltipContext *c);
 static void drawOverlayTooltip(struct TooltipContext *c);
 static void drawSenateTooltip(struct TooltipContext *c);
 
-static TimeMillis lastUpdate = 0;
+static time_millis lastUpdate = 0;
 
 void UI_Tooltip_resetTimer()
 {
-	lastUpdate = Time_getMillis();
+	lastUpdate = time_get_millis();
 }
 
 void UI_Tooltip_handle(void (*func)(struct TooltipContext *))
@@ -57,7 +58,7 @@ static int shouldDrawTooltip(struct TooltipContext* c)
 		UI_Tooltip_resetTimer();
 		return 0;
 	}
-	if (Time_getMillis() - lastUpdate < 150) { // delay drawing by 150 ms
+	if (time_get_millis() - lastUpdate < 150) { // delay drawing by 150 ms
 		return 0;
 	}
 	return 1;

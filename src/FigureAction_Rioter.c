@@ -5,11 +5,12 @@
 #include "FigureMovement.h"
 #include "Formation.h"
 #include "PlayerMessage.h"
-#include "Time.h"
 
 #include "Data/CityInfo.h"
 #include "Data/Grid.h"
 #include "Data/Message.h"
+
+#include "core/time.h"
 
 static const int criminalOffsets[] = {
 	0, 0, 1, 2, 3, 4, 5, 6, 7, 7, 6, 5, 4, 3, 2, 1
@@ -166,7 +167,7 @@ int FigureAction_Rioter_collapseBuilding(int figureId)
 		if (b->houseSize && b->subtype.houseLevel < HouseLevel_SmallCasa) {
 			continue;
 		}
-		TimeMillis now = Time_getMillis();
+		time_millis now = time_get_millis();
 		if (now - Data_Message.lastSoundTime.rioterCollapse <= 15000) {
 			PlayerMessage_disableSoundForNextMessage();
 		} else {

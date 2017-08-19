@@ -9,8 +9,9 @@
 #include "Graphics.h"
 #include "Language.h"
 #include "String.h"
-#include "Time.h"
 #include "UI/Window.h"
+
+#include "core/time.h"
 
 static const int map_charToFontGraphic[] = {
 	0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00, 0x01,
@@ -39,7 +40,7 @@ static struct {
 	int position;
 	int width;
 	int visible;
-	TimeMillis updated;
+	time_millis updated;
 	int xOffset;
 	int yOffset;
 } inputCursor;
@@ -57,8 +58,8 @@ void Widget_Text_captureCursor()
 void Widget_Text_drawCursor(int xOffset, int yOffset)
 {
 	inputCursor.capture = 0;
-	TimeMillis curr = Time_getMillis();
-	TimeMillis diff = curr - inputCursor.updated;
+	time_millis curr = time_get_millis();
+	time_millis diff = curr - inputCursor.updated;
 	if (!inputCursor.visible && diff >= 200) {
 		inputCursor.visible = 1;
 		inputCursor.updated = curr;

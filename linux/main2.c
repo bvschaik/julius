@@ -6,7 +6,7 @@
 #include <unistd.h>
 
 #include "../src/UI/Window.h"
-#include "../src/Time.h"
+#include "../src/core/time.h"
 #include "../src/Runner.h"
 #include "../src/Screen.h"
 #include "../src/Data/AllData.h"
@@ -160,10 +160,10 @@ void runTicks(int ticks)
 {
 	int originalSpeed = Data_Settings.gameSpeed;
 	Data_Settings.gameSpeed = 100;
-	Time_setMillis(0);
+	time_set_millis(0);
 	for (int i = 1; i <= ticks; i++) {
 		UI_Window_goTo(Window_City);
-		Time_setMillis(2 * i);
+		time_set_millis(2 * i);
 		Runner_run();
 	}
 	Data_Settings.gameSpeed = originalSpeed;
@@ -206,7 +206,7 @@ void refresh()
 	static int numFrames = 0;
 	
 	Uint32 now = SDL_GetTicks();
-	Time_setMillis(now);
+	time_set_millis(now);
 	Runner_run();
 	
 	// debug

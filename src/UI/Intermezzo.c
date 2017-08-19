@@ -1,7 +1,6 @@
 #include "AllWindows.h"
 #include "Window.h"
 
-#include "../Time.h"
 #include "../Graphics.h"
 #include "../Sound.h"
 
@@ -9,6 +8,8 @@
 #include "../Data/Mouse.h"
 #include "../Data/Screen.h"
 #include "../Data/Settings.h"
+
+#include "core/time.h"
 
 static const char soundFilesBriefing[][32] = {
 	"wavs/01b.wav",
@@ -63,15 +64,15 @@ static const char soundFilesWon[][32] = {
 static struct {
 	int type;
 	WindowId nextWindowId;
-	TimeMillis startTime;
-	TimeMillis endTime;
+	time_millis startTime;
+	time_millis endTime;
 } data;
 
 void UI_Intermezzo_show(int type, WindowId nextWindowId, int timeMillis)
 {
 	data.type = type;
 	data.nextWindowId = nextWindowId;
-	data.startTime = Time_getMillis();
+	data.startTime = time_get_millis();
 	data.endTime = data.startTime + timeMillis;
 	UI_Window_goTo(Window_Intermezzo);
 }
@@ -110,7 +111,7 @@ void UI_Intermezzo_drawBackground()
 
 void UI_Intermezzo_handleMouse()
 {
-	TimeMillis currentTime = Time_getMillis();
+	time_millis currentTime = time_get_millis();
 	if (Data_Mouse.right.wentUp || currentTime > data.endTime) {
 		UI_Window_goTo(data.nextWindowId);
 	}

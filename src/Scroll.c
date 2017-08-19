@@ -1,6 +1,6 @@
 #include "Scroll.h"
 
-#include "Time.h"
+#include "core/time.h"
 
 #include "Data/Constants.h"
 #include "Data/Mouse.h"
@@ -10,14 +10,14 @@
 
 #define SCROLL_BORDER 5
 
-static TimeMillis lastScrollTime = 0;
+static time_millis lastScrollTime = 0;
 
 static int shouldScrollMap()
 {
 	if (!Data_Mouse.isInsideWindow) {
 		return 0;
 	}
-	TimeMillis currentTime = Time_getMillis();
+	time_millis currentTime = time_get_millis();
 	int diff = currentTime - lastScrollTime;
 	if (currentTime < lastScrollTime) {
 		diff = 10000;

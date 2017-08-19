@@ -11,18 +11,19 @@
 #include "../Routing.h"
 #include "../Scroll.h"
 #include "../Sound.h"
-#include "../Time.h"
 #include "../Undo.h"
 #include "../Widget.h"
 
 #include "../Data/Formation.h"
 #include "../Data/Mouse.h"
 
+#include "core/time.h"
+
 static void drawBuildingFootprints();
 static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_CityPixelCoordinate *coord);
 static void drawHippodromeAndElevatedFigures(int selectedFigureId);
 
-static TimeMillis lastWaterAnimationTime = 0;
+static time_millis lastWaterAnimationTime = 0;
 static int advanceWaterAnimation;
 
 void UI_CityBuildings_drawForeground(int x, int y)
@@ -34,7 +35,7 @@ void UI_CityBuildings_drawForeground(int x, int y)
 		Data_CityView.widthInPixels, Data_CityView.heightInPixels);
 
 	advanceWaterAnimation = 0;
-	TimeMillis now = Time_getMillis();
+	time_millis now = time_get_millis();
 	if (now - lastWaterAnimationTime > 60 || now < lastWaterAnimationTime) {
 		lastWaterAnimationTime = now;
 		advanceWaterAnimation = 1;

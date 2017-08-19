@@ -2,7 +2,8 @@
 #include "Data/Sound.h"
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
-#include "Time.h"
+
+#include "core/time.h"
 
 #include <string.h>
 
@@ -24,11 +25,11 @@ static int buildingTypeToChannelId[] = {
 	0, 0, 0, 0, 0, 0 //140-145
 };
 
-static TimeMillis lastUpdateTime;
+static time_millis lastUpdateTime;
 
 void Sound_City_init()
 {
-	lastUpdateTime = Time_getMillis();
+	lastUpdateTime = time_get_millis();
 	memset(Data_Sound_City, 0, 8960);
 	for (int i = 0; i < 70; i++) {
 		Data_Sound_City[i].lastPlayedTime = lastUpdateTime;
@@ -140,7 +141,7 @@ void Sound_City_decayViews()
 
 void Sound_City_play()
 {
-	TimeMillis now = Time_getMillis();
+	time_millis now = time_get_millis();
 	for (int i = 1; i < 70; i++) {
 		Data_Sound_City[i].shouldPlay = 0;
 		if (Data_Sound_City[i].available) {
@@ -162,7 +163,7 @@ void Sound_City_play()
 		// Only play 1 sound every 2 seconds
 		return;
 	}
-	TimeMillis maxDelay = 0;
+	time_millis maxDelay = 0;
 	int maxSoundId = 0;
 	for (int i = 1; i < 70; i++) {
 		if (Data_Sound_City[i].shouldPlay) {

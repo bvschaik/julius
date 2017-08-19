@@ -2,13 +2,14 @@
 
 #include "Window.h"
 #include "../Graphics.h"
-#include "../Time.h"
 #include "../Widget.h"
 
 #include "../Data/CityView.h"
 #include "../Data/Constants.h"
 #include "../Data/Mouse.h"
 #include "../Data/State.h"
+
+#include "core/time.h"
 
 static void handleSubmenu();
 
@@ -55,7 +56,7 @@ static int submenuIdToOverlayId[6][8] = {
 static int selectedMenu;
 static int selectedSubmenu;
 static int numSubmenuItems;
-static TimeMillis submenuFocusTime;
+static time_millis submenuFocusTime;
 
 static int menuFocusButtonId;
 static int submenuFocusButtonId;
@@ -123,13 +124,13 @@ static int countSubmenuItems(int submenuId)
 static void handleSubmenu()
 {
 	if (menuFocusButtonId || submenuFocusButtonId) {
-		submenuFocusTime = Time_getMillis();
+		submenuFocusTime = time_get_millis();
 		if (menuFocusButtonId) {
 			selectedMenu = menuFocusButtonId - 1;
 			selectedSubmenu = menuIdToSubmenuId[selectedMenu];
 			numSubmenuItems = countSubmenuItems(selectedSubmenu);
 		}
-	} else if (Time_getMillis() - submenuFocusTime > 500) {
+	} else if (time_get_millis() - submenuFocusTime > 500) {
 		selectedSubmenu = 0;
 		numSubmenuItems = 0;
 	}

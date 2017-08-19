@@ -1,10 +1,11 @@
 #include "Widget.h"
 #include "Graphics.h"
-#include "Time.h"
 #include "Sound.h"
 
 #include "Data/Mouse.h"
 #include "Data/Graphics.h"
+
+#include "core/time.h"
 
 #define PRESSED_EFFECT_MILLIS 100
 #define PRESSED_REPEAT_INITIAL_MILLIS 300
@@ -35,7 +36,7 @@ int Widget_Button_handleArrowButtons(int xOffset, int yOffset, ArrowButton *butt
 {
 	static int lastTime = 0;
 
-	TimeMillis currTime = Time_getMillis();
+	time_millis currTime = time_get_millis();
 	int shouldRepeat = 0;
 	if (currTime - lastTime >= 30) {
 		shouldRepeat = 1;
@@ -147,7 +148,7 @@ static int getCustomButton(int xOffset, int yOffset, CustomButton *buttons, int 
 
 static void imageButtonFadePressedEffect(ImageButton *buttons, int numButtons)
 {
-	TimeMillis currentTime = Time_getMillis();
+	time_millis currentTime = time_get_millis();
 	for (int i = 0; i < numButtons; i++) {
 		ImageButton *btn = &buttons[i];
 		if (btn->pressed) {
@@ -236,17 +237,17 @@ int Widget_Button_handleImageButtons(int xOffset, int yOffset, ImageButton *butt
 	if (Data_Mouse.left.wentDown) {
 		Sound_Effects_playChannel(SoundChannel_Icon);
 		hitButton->pressed = 1;
-		hitButton->pressedSince = Time_getMillis();
+		hitButton->pressedSince = time_get_millis();
 		hitButton->leftClickHandler(hitButton->parameter1, hitButton->parameter2);
 	} else if (Data_Mouse.right.wentUp) {
 		hitButton->pressed = 1;
-		hitButton->pressedSince = Time_getMillis();
+		hitButton->pressedSince = time_get_millis();
 		hitButton->rightClickHandler(hitButton->parameter1, hitButton->parameter2);
 	} else if (hitButton->buttonType == ImageButton_Scroll && Data_Mouse.left.isDown) {
-		TimeMillis delay = hitButton->pressed == 2 ? PRESSED_REPEAT_MILLIS : PRESSED_REPEAT_INITIAL_MILLIS;
-		if (hitButton->pressedSince + delay <= Time_getMillis()) {
+		time_millis delay = hitButton->pressed == 2 ? PRESSED_REPEAT_MILLIS : PRESSED_REPEAT_INITIAL_MILLIS;
+		if (hitButton->pressedSince + delay <= time_get_millis()) {
 			hitButton->pressed = 2;
-			hitButton->pressedSince = Time_getMillis();
+			hitButton->pressedSince = time_get_millis();
 			hitButton->leftClickHandler(hitButton->parameter1, hitButton->parameter2);
  		}
 	}

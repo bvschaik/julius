@@ -1,7 +1,7 @@
 #ifndef DATA_BUTTONS_H
 #define DATA_BUTTONS_H
 
-#include "Types.h"
+#include "core/time.h"
 
 enum {
 	ImageButton_Normal = 4,
@@ -25,7 +25,7 @@ typedef struct {
 	// state
 	char pressed;
 	char focused;
-	TimeMillis pressedSince;
+	time_millis pressedSince;
 } ImageButton;
 
 enum {

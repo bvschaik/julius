@@ -6,7 +6,6 @@
 #include "../Graphics.h"
 #include "../Language.h"
 #include "../Terrain.h"
-#include "../Time.h"
 #include "../Widget.h"
 
 #include "../Data/Building.h"
@@ -18,6 +17,8 @@
 #include "../Data/Scenario.h"
 #include "../Data/Screen.h"
 #include "../Data/Settings.h"
+
+#include "core/time.h"
 
 #include <string.h>
 
@@ -54,7 +55,7 @@ static struct {
 	short inUse;
 	short textLength;
 	short boxWidth;
-	TimeMillis time;
+	time_millis time;
 	char text[100];
 } warnings[5];
 
@@ -96,7 +97,7 @@ void UI_Warning_draw()
 			warnings[i].boxWidth, Font_NormalWhite, 0);
 
 		// clear after 15 seconds
-		if (Time_getMillis() > warnings[i].time + 15000) {
+		if (time_get_millis() > warnings[i].time + 15000) {
 			warnings[i].inUse = 0;
 		}
 	}
@@ -130,7 +131,7 @@ void UI_Warning_show(int warningId)
 		} else {
 			warnings[i].boxWidth = 460;
 		}
-		warnings[i].time = Time_getMillis();
+		warnings[i].time = time_get_millis();
 		warnings[i].textLength = strlen(text);
 		memset(warnings[i].text, 0, 100);
 		strncpy(warnings[i].text, text, warnings[i].textLength);

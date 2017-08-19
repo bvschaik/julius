@@ -6,7 +6,7 @@
 #include "Data/Model.h"
 
 #include "core/calc.h"
-#include "Time.h"
+#include "core/time.h"
 
 #define MAX_ANIM_TIMERS 51
 
@@ -23,7 +23,7 @@ void Animation_resetTimers()
 
 void Animation_updateTimers()
 {
-	TimeMillis currentTimeMillis = Time_getMillis();
+	time_millis currentTimeMillis = time_get_millis();
 	for (int i = 0; i < MAX_ANIM_TIMERS; i++) {
 		shouldUpdate[i] = 0;
 	}

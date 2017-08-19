@@ -3,12 +3,18 @@ project(julius)
 
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/cmake/")
 
-message("${CMAKE_CXX_FLAGS}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
 #set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
 set(SMK_FILES src/Video/smacker.c src/Video/smk_bitstream.c src/Video/smk_hufftree.c)
-set(CORE_FILES src/core/calc.c src/core/file.c src/core/dir.c src/core/io.c src/core/string.c)
+set(CORE_FILES
+    src/core/calc.c
+    src/core/dir.c
+    src/core/file.c
+    src/core/io.c
+    src/core/string.c
+    src/core/time.c
+)
 add_executable(julius
 	linux/main2.c
 	linux/SDLSoundDevice.c
@@ -97,7 +103,6 @@ add_executable(julius
 	src/TerrainGraphics.c
 	src/TerrainGraphics_Context.c
 	src/TerrainWater.c
-	src/Time.c
 	src/Trader.c
 	src/Tutorial.c
 	src/Undo.c

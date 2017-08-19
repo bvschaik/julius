@@ -13,7 +13,6 @@
 #include "../SidebarMenu.h"
 #include "../Sound.h"
 #include "../Terrain.h"
-#include "../Time.h"
 #include "../Undo.h"
 #include "../Widget.h"
 
@@ -26,6 +25,8 @@
 #include "../Data/State.h"
 #include "../Data/Settings.h"
 #include "../Data/Tutorial.h"
+
+#include "core/time.h"
 
 #define SIDEBAR_BORDER ((Data_Screen.width + 20) % 60)
 #define BOTTOM_BORDER ((Data_Screen.height - 24) % 15)
@@ -111,7 +112,7 @@ static const int progressToOffset[] = {
 };
 
 static struct {
-	TimeMillis slideStart;
+	time_millis slideStart;
 	int progress;
 	int focusButtonForTooltip;
 } data;
@@ -323,7 +324,7 @@ static void buttonOverlay(int param1, int param2)
 static void buttonCollapseExpand(int param1, int param2)
 {
 	data.progress = 0;
-	data.slideStart = Time_getMillis();
+	data.slideStart = time_get_millis();
 	UI_Window_goTo(Window_SlidingSidebar);
 	CityView_setViewportWithoutSidebar();
 	CityView_checkCameraBoundaries();
@@ -422,8 +423,8 @@ void UI_Sidebar_rotateMap(int clockWise)
 
 static void updateProgress()
 {
-	TimeMillis now = Time_getMillis();
-	TimeMillis diff = now - data.slideStart;
+	time_millis now = time_get_millis();
+	time_millis diff = now - data.slideStart;
 	data.progress = diff / 10;
 }
 

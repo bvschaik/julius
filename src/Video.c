@@ -4,11 +4,11 @@
 
 #include "Sound.h"
 #include "SoundDevice.h"
-#include "Time.h"
 #include "Data/Screen.h"
 #include "Data/Settings.h"
 
 #include "core/dir.h"
+#include "core/time.h"
 
 static struct {
 	int isPlaying;
@@ -19,7 +19,7 @@ static struct {
 		int width;
 		int height;
 		int microsPerFrame;
-		TimeMillis startRenderMillis;
+		time_millis startRenderMillis;
 		int currentFrame;
 		int totalFrames;
 	} video;
@@ -195,7 +195,7 @@ int Video_isFinished()
 
 void Video_init()
 {
-	data.video.startRenderMillis = Time_getMillis();
+	data.video.startRenderMillis = time_get_millis();
 	SoundDevice_useCustomMusicPlayer(data.audio.bitdepth, data.audio.channels, data.audio.rate, nextAudioFrame);
 }
 
@@ -204,7 +204,7 @@ void Video_draw(int xOffset, int yOffset)
 	if (!data.video.s) {
 		return;
 	}
-	TimeMillis nowMillis = Time_getMillis();
+	time_millis nowMillis = time_get_millis();
 	
 	int frameNo = (nowMillis - data.video.startRenderMillis) * 1000 / data.video.microsPerFrame;
 	if (frameNo > data.video.currentFrame) {

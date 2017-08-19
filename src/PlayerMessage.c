@@ -3,7 +3,7 @@
 #include "CityView.h"
 #include "Formation.h"
 #include "Sound.h"
-#include "Time.h"
+
 #include "UI/MessageDialog.h"
 #include "UI/Tooltip.h"
 #include "UI/Window.h"
@@ -13,6 +13,7 @@
 #include "Data/Message.h"
 
 #include "core/file.h"
+#include "core/time.h"
 
 #include <string.h>
 
@@ -258,12 +259,12 @@ void PlayerMessage_initProblemArea()
 {
 	Data_Message.hotspotCount = 0;
 	Data_Message.hotspotIndex = 0;
-	Data_Message.hotspotLastClick = Time_getMillis();
+	Data_Message.hotspotLastClick = time_get_millis();
 }
 
 void PlayerMessage_goToProblem()
 {
-	TimeMillis now = Time_getMillis();
+	time_millis now = time_get_millis();
 	if (now - Data_Message.hotspotLastClick > 3000) {
 		Data_Message.hotspotIndex = 0;
 	}

@@ -4,7 +4,6 @@
 #include "Window.h"
 #include "../Graphics.h"
 #include "../SidebarMenu.h"
-#include "../Time.h"
 #include "../Widget.h"
 
 #include "../Data/Building.h"
@@ -15,6 +14,8 @@
 #include "../Data/Scenario.h"
 #include "../Data/Settings.h"
 #include "../Data/State.h"
+
+#include "core/time.h"
 
 static void drawMenuButtons();
 static int handleBuildSubmenu();
@@ -228,7 +229,7 @@ static void buttonMenuItem(int item)
 	Data_State.selectedBuilding.rockRequired = 0;
 	Data_State.selectedBuilding.meadowRequired = 0;
 	Data_State.selectedBuilding.roadRequired = 0;
-	Data_State.selectedBuilding.roadLastUpdate = Time_getMillis();
+	Data_State.selectedBuilding.roadLastUpdate = time_get_millis();
 	Data_State.selectedBuilding.gridOffsetStart = 0;
 
 	Data_Settings_Map.current.gridOffset = 0;

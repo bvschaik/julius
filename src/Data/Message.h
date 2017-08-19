@@ -3,7 +3,7 @@
 
 #define MAX_MESSAGES 1000
 
-#include "Types.h"
+#include "core/time.h"
 
 struct Data_PlayerMessage {
 	int param1;
@@ -44,10 +44,10 @@ extern struct _Data_Message {
 	// sound related
 	int playSound;
 	struct {
-		TimeMillis fire;
-		TimeMillis collapse;
-		TimeMillis rioterGenerated;
-		TimeMillis rioterCollapse;
+		time_millis fire;
+		time_millis collapse;
+		time_millis rioterGenerated;
+		time_millis rioterCollapse;
 	} lastSoundTime;
 
 	// UI related
@@ -57,7 +57,7 @@ extern struct _Data_Message {
 	int scrollPositionDrag;
 	int hotspotCount;
 	int hotspotIndex;
-	TimeMillis hotspotLastClick;
+	time_millis hotspotLastClick;
 } Data_Message;
 
 enum {

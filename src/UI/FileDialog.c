@@ -8,7 +8,6 @@
 #include "../GameFile.h"
 #include "../Graphics.h"
 #include "../KeyboardInput.h"
-#include "../Time.h"
 #include "../Widget.h"
 
 #include "../Data/Constants.h"
@@ -16,6 +15,8 @@
 #include "../Data/KeyboardInput.h"
 #include "../Data/Mouse.h"
 #include "../Data/Screen.h"
+
+#include "core/time.h"
 
 #include <string.h>
 
@@ -48,7 +49,7 @@ static CustomButton customButtons[] = {
 
 #define NOT_EXIST_MESSAGE_TIMEOUT 500
 
-static TimeMillis messageNotExistTimeUntil;
+static time_millis messageNotExistTimeUntil;
 static int dialogType;
 static int focusButtonId;
 static int scrollPosition;
@@ -88,7 +89,7 @@ void UI_FileDialog_drawForeground()
 	Widget_Panel_drawInnerPanel(baseOffsetX + 144, baseOffsetY + 120, 20, 13);
 
 	// title
-	if (messageNotExistTimeUntil && Time_getMillis() < messageNotExistTimeUntil) {
+	if (messageNotExistTimeUntil && time_get_millis() < messageNotExistTimeUntil) {
 		Widget_GameText_drawCentered(43, 2,
 			baseOffsetX + 160, baseOffsetY + 50, 304, Font_LargeBlack);
 	} else if (dialogType == FileDialogType_Delete) {
@@ -199,7 +200,7 @@ static void buttonOkCancel(int isOk, int param2)
 
 	if (dialogType != FileDialogType_Save && !file_exists(Data_FileList.selectedCity)) {
 		file_remove_extension(Data_FileList.selectedCity);
-		messageNotExistTimeUntil = Time_getMillis() + NOT_EXIST_MESSAGE_TIMEOUT;
+		messageNotExistTimeUntil = time_get_millis() + NOT_EXIST_MESSAGE_TIMEOUT;
 		return;
 	}
 	if (dialogType == FileDialogType_Load) {

@@ -3,7 +3,6 @@
 
 typedef unsigned short Color;
 typedef unsigned int ScreenColor;
-typedef unsigned int TimeMillis;
 
 #define Color_Black 0
 #define Color_Red 0x7c00

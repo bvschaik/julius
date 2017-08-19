@@ -5,9 +5,10 @@
 #include "../Terrain.h"
 #include "../TerrainBridge.h"
 #include "../TerrainGraphics.h"
-#include "../Time.h"
 
 #include "../Data/Formation.h"
+
+#include "core/time.h"
 
 static void drawBuildingGhostDraggableReservoir();
 static void drawBuildingGhostAqueduct();
@@ -122,8 +123,8 @@ static void drawBuildingGhostDefault()
 	int fullyObstructed = 0;
 	int placementObstructed = 0;
 	if (Data_State.selectedBuilding.roadRequired > 0) {
-		if (Time_getMillis() > Data_State.selectedBuilding.roadLastUpdate + 1500) {
-			Data_State.selectedBuilding.roadLastUpdate = Time_getMillis();
+		if (time_get_millis() > Data_State.selectedBuilding.roadLastUpdate + 1500) {
+			Data_State.selectedBuilding.roadLastUpdate = time_get_millis();
 			Data_State.selectedBuilding.roadRequired = Data_State.selectedBuilding.roadRequired == 1 ? 2 : 1;
 		}
 	}

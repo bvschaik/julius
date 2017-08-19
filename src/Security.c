@@ -12,7 +12,6 @@
 #include "Sound.h"
 #include "Terrain.h"
 #include "TerrainGraphics.h"
-#include "Time.h"
 #include "Tutorial.h"
 
 #include "Data/Building.h"
@@ -26,6 +25,8 @@
 #include "Data/State.h"
 #include "Data/Tutorial.h"
 #include "Data/Figure.h"
+
+#include "core/time.h"
 
 #define EACH_BURNING_RUIN Data_BuildingList.burning.index = 0; Data_BuildingList.burning.index < Data_BuildingList.burning.size; Data_BuildingList.burning.index++
 
@@ -188,10 +189,10 @@ static void generateRioter(int buildingId)
 		Data_Tutorial.tutorial1.crime = 1;
 		SidebarMenu_enableBuildingMenuItemsAndButtons();
 	}
-	if (Time_getMillis() <= 15000 + Data_Message.lastSoundTime.rioterGenerated) {
+	if (time_get_millis() <= 15000 + Data_Message.lastSoundTime.rioterGenerated) {
 		PlayerMessage_disableSoundForNextMessage();
 	} else {
-		Data_Message.lastSoundTime.rioterGenerated = Time_getMillis();
+		Data_Message.lastSoundTime.rioterGenerated = time_get_millis();
 	}
 	PlayerMessage_postWithPopupDelay(MessageDelay_Riot, Message_11_RiotInTheCity, b->type, GridOffset(xRoad, yRoad));
 }
@@ -285,10 +286,10 @@ void Security_Tick_generateCriminal()
 
 static void collapseBuilding(int buildingId, struct Data_Building *b)
 {
-	if (Time_getMillis() - Data_Message.lastSoundTime.collapse <= 15000) {
+	if (time_get_millis() - Data_Message.lastSoundTime.collapse <= 15000) {
 		PlayerMessage_disableSoundForNextMessage();
 	} else {
-		Data_Message.lastSoundTime.collapse = Time_getMillis();
+		Data_Message.lastSoundTime.collapse = time_get_millis();
 	}
 	if (Data_Tutorial.tutorial1.collapse) {
 		PlayerMessage_postWithPopupDelay(MessageDelay_Collapse, Message_13_CollapsedBuilding, b->type, b->gridOffset);
@@ -305,10 +306,10 @@ static void collapseBuilding(int buildingId, struct Data_Building *b)
 
 static void fireBuilding(int buildingId, struct Data_Building *b)
 {
-	if (Time_getMillis() - Data_Message.lastSoundTime.fire <= 15000) {
+	if (time_get_millis() - Data_Message.lastSoundTime.fire <= 15000) {
 		PlayerMessage_disableSoundForNextMessage();
 	} else {
-		Data_Message.lastSoundTime.fire = Time_getMillis();
+		Data_Message.lastSoundTime.fire = time_get_millis();
 	}
 	if (Data_Tutorial.tutorial1.fire) {
 		PlayerMessage_postWithPopupDelay(MessageDelay_Fire, Message_12_FireInTheCity, b->type, b->gridOffset);

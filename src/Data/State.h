@@ -1,7 +1,7 @@
 #ifndef DATA_STATE_H
 #define DATA_STATE_H
 
-#include "Types.h"
+#include "core/time.h"
 
 enum {
 	Overlay_None = 0,
@@ -58,7 +58,7 @@ extern struct _Data_State {
 		int rockRequired;
 		int meadowRequired;
 		int roadRequired;
-		TimeMillis roadLastUpdate;
+		time_millis roadLastUpdate;
 		int drawAsOverlay;
 		int cost;
 		int reservoirOffsetX;

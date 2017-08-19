@@ -3,22 +3,23 @@
 #include "GameFile.h"
 #include "GameTick.h"
 #include "Sound.h"
-#include "Time.h"
 #include "UI/Window.h"
 
 #include "Data/Settings.h"
 #include "Data/State.h"
 
-static const TimeMillis millisPerTickPerSpeed[] = {
+#include "core/time.h"
+
+static const time_millis millisPerTickPerSpeed[] = {
 	0, 20, 35, 55, 80, 110, 160, 240, 350, 500, 700
 };
 
-static TimeMillis lastUpdate;
+static time_millis lastUpdate;
 
 static int getElapsedTicks()
 {
-	TimeMillis now = Time_getMillis();
-	TimeMillis diff = now - lastUpdate;
+	time_millis now = time_get_millis();
+	time_millis diff = now - lastUpdate;
 	if (now < lastUpdate) {
 		diff = 10000;
 	}
