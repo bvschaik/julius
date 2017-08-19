@@ -489,7 +489,7 @@ static void drawBuildingFootprintForOverlay(int buildingId, int gridOffset, int 
 	
 	int graphicId;
 	int origGraphicId = Data_Grid_graphicIds[gridOffset];
-	Data_Building *b = &Data_Buildings[buildingId];
+	struct Data_Building *b = &Data_Buildings[buildingId];
 	if (b->size == 1) {
 		graphicId = GraphicId(ID_Graphic_TerrainOverlay);
 		if (b->houseSize) {
@@ -1150,7 +1150,7 @@ static void drawBuildingTopForFoodStocksOverlay(int gridOffset, int buildingId, 
 			break;
 		default:
 			if (Data_Buildings[buildingId].houseSize) {
-				Data_Building *b = &Data_Buildings[buildingId];
+				struct Data_Building *b = &Data_Buildings[buildingId];
 				if (Data_Model_Houses[b->subtype.houseLevel].foodTypes) {
 					int pop = b->housePopulation;
 					int stocks = 0;

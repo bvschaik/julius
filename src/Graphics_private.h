@@ -3,6 +3,4 @@
 
 extern ScreenColor ColorLookup[65536];
 
-void Graphics_getClipInfo(int xOffset, int width);
-
 #endif

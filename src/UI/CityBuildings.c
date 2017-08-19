@@ -85,7 +85,7 @@ void UI_CityBuildings_drawBuildingCost()
 	Data_State.selectedBuilding.cost = 0;
 }
 
-void UI_CityBuildings_drawForegroundForFigure(int x, int y, int figureId, UI_CityPixelCoordinate *coord)
+void UI_CityBuildings_drawForegroundForFigure(int x, int y, int figureId, struct UI_CityPixelCoordinate *coord)
 {
 	Data_CityView.xInTiles = x;
 	Data_CityView.yInTiles = y;

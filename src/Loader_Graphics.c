@@ -124,7 +124,7 @@ int Loader_Graphics_loadEnemyGraphics(int enemyId)
 
 const char *Loader_Graphics_loadExternalImagePixelData(int graphicId)
 {
-	Data_Graphics_Index *index = &Data_Graphics_Main.index[graphicId];
+	struct Data_Graphics_Index *index = &Data_Graphics_Main.index[graphicId];
 	char filename[200] = "555/";
 	strcpy(&filename[4], Data_Graphics_Main.bitmaps[(int)index->bitmapId]);
 	FileSystem_changeExtension(filename, "555");
@@ -145,7 +145,7 @@ static void prepareMainGraphics()
 {
 	int offset = 4;
 	for (int i = 1; i < 10000; i++) {
-		Data_Graphics_Index *index = &Data_Graphics_Main.index[i];
+		struct Data_Graphics_Index *index = &Data_Graphics_Main.index[i];
 		if (index->isExternal) {
 			if (!index->offset) {
 				index->offset = 1;
@@ -162,7 +162,7 @@ static void prepareEnemyGraphics()
 {
 	int offset = 4;
 	for (int i = 1; i <= 800; i++) {
-		Data_Graphics_Index *index = &Data_Graphics_Enemy.index[i];
+		struct Data_Graphics_Index *index = &Data_Graphics_Enemy.index[i];
 		if (index->isExternal) {
 			if (!index->offset) {
 				index->offset = 1;

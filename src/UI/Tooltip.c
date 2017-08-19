@@ -47,7 +47,7 @@ void UI_Tooltip_handle(void (*func)(struct TooltipContext *))
 	}
 }
 
-static int shouldDrawTooltip(TooltipContext* c)
+static int shouldDrawTooltip(struct TooltipContext* c)
 {
 	if (c->type == TooltipType_None) {
 		UI_Tooltip_resetTimer();

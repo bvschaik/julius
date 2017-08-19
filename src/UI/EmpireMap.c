@@ -411,7 +411,7 @@ static void drawEmpireMap()
 	Graphics_drawImage(GraphicId(ID_Graphic_EmpireMap), xOffset, yOffset);
 
 	for (int i = 0; i < 200 && Data_Empire_Objects[i].inUse; i++) {
-		Data_Empire_Object *obj = &Data_Empire_Objects[i];
+		struct Data_Empire_Object *obj = &Data_Empire_Objects[i];
 		if (obj->type == EmpireObject_LandTradeRoute || obj->type == EmpireObject_SeaTradeRoute) {
 			if (!Empire_isTradeRouteOpen(obj->tradeRouteId)) {
 				continue;
@@ -489,7 +489,7 @@ static int getSelectedObject()
 	int minDist = 10000;
 	int objId = 0;
 	for (int i = 0; i < 200 && Data_Empire_Objects[i].inUse; i++) {
-		Data_Empire_Object *obj = &Data_Empire_Objects[i];
+		struct Data_Empire_Object *obj = &Data_Empire_Objects[i];
 		int xObj, yObj;
 		if (Data_Scenario.empireHasExpanded) {
 			xObj = obj->xExpanded;

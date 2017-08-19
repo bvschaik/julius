@@ -77,7 +77,7 @@ static const char missionSavedGames[][32] = {
 	"Caesar2.sav"
 };
 
-static GameFilePart scenarioParts[SCENARIO_PARTS] = {
+static struct GameFilePart scenarioParts[SCENARIO_PARTS] = {
 	{0, &Data_Grid_graphicIds, 52488},
 	{0, &Data_Grid_edge, 26244},
 	{0, &Data_Grid_terrain, 52488},
@@ -91,7 +91,7 @@ static GameFilePart scenarioParts[SCENARIO_PARTS] = {
 	{0, &Data_Scenario, 1720},
 };
 
-static GameFilePart saveGameParts[SAVEGAME_PARTS] = {
+static struct GameFilePart saveGameParts[SAVEGAME_PARTS] = {
 	{0, &Data_Settings.saveGameMissionId, 4},
 	{0, &savegameFileVersion, 4},
 	{1, &Data_Grid_graphicIds, 52488},

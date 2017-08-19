@@ -198,7 +198,7 @@ static int copyAudioFromBuffer(Uint8 *stream, int len)
 	return toWrite;
 }
 
-static void customMusicCallback(void *, Uint8 *stream, int len)
+static void customMusicCallback(void *dummy, Uint8 *stream, int len)
 {
 	int canContinue = 1;
 	do {

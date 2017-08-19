@@ -16,7 +16,7 @@ void UI_BuildingInfo_drawForum(BuildingInfoContext *c)
 	Graphics_drawImage(GraphicId(ID_Graphic_ResourceIcons) + Resource_Denarii,
 		c->xOffset + 16, c->yOffset + 36);
 
-	Data_Building *b = &Data_Buildings[c->buildingId];
+	struct Data_Building *b = &Data_Buildings[c->buildingId];
 	int width = Widget_GameText_draw(106, 2,
 		c->xOffset + 44, c->yOffset + 43, Font_NormalBlack);
 	Widget_GameText_drawNumberWithDescription(8, 0, b->taxIncomeOrStorage,
@@ -52,7 +52,7 @@ void UI_BuildingInfo_drawSenate(BuildingInfoContext *c)
 	Graphics_drawImage(GraphicId(ID_Graphic_ResourceIcons) + Resource_Denarii,
 		c->xOffset + 16, c->yOffset + 36);
 
-	Data_Building *b = &Data_Buildings[c->buildingId];
+	struct Data_Building *b = &Data_Buildings[c->buildingId];
 	int width = Widget_GameText_draw(105, 2,
 		c->xOffset + 44, c->yOffset + 43, Font_NormalBlack);
 	Widget_GameText_drawNumberWithDescription(8, 0, b->taxIncomeOrStorage,

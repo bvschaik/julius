@@ -32,7 +32,7 @@
 #include "Data/Settings.h"
 #include "Data/State.h"
 
-#include <cstdio>
+#include <stdio.h>
 
 static void advanceDay();
 static void advanceMonth();

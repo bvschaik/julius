@@ -56,7 +56,7 @@ void UI_BuildingInfo_drawPrefect(BuildingInfoContext *c)
 		c->xOffset, c->yOffset + 16 * c->heightBlocks - 24,
 		16 * c->widthBlocks, Font_NormalBlack);
 
-	Data_Building *b = &Data_Buildings[c->buildingId];
+	struct Data_Building *b = &Data_Buildings[c->buildingId];
 	if (!c->hasRoadAccess) {
 		DRAW_DESC(69, 25);
 	} else if (b->numWorkers <= 0) {
@@ -141,7 +141,7 @@ void UI_BuildingInfo_drawMilitaryAcademy(BuildingInfoContext *c)
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(135, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, Font_LargeBlack);
 
-	Data_Building *b = &Data_Buildings[c->buildingId];
+	struct Data_Building *b = &Data_Buildings[c->buildingId];
 	if (!c->hasRoadAccess) {
 		DRAW_DESC(69, 25);
 	} else if (b->numWorkers <= 0) {
@@ -164,7 +164,7 @@ void UI_BuildingInfo_drawBarracks(BuildingInfoContext *c)
 	Graphics_drawImage(GraphicId(ID_Graphic_ResourceIcons) + Resource_Weapons,
 		c->xOffset + 64, c->yOffset + 38);
 
-	Data_Building *b = &Data_Buildings[c->buildingId];
+	struct Data_Building *b = &Data_Buildings[c->buildingId];
 	if (b->loadsStored < 1) {
 		Widget_GameText_drawNumberWithDescription(8, 10, 0,
 			c->xOffset + 92, c->yOffset + 44, Font_NormalBlack);

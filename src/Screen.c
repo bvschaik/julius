@@ -5,8 +5,8 @@
 #include "UI/Warning.h"
 #include "Data/Screen.h"
 
-#include <cstdlib>
-#include <cstring>
+#include <stdlib.h>
+#include <string.h>
 
 static void setSize(int width, int height)
 {
@@ -31,7 +31,7 @@ void Screen_setResolution(int width, int height)
 	setSize(width, height);
 }
 
-void Screen_setResolution(int width, int height, void *pixels)
+void Screen_setResolutionWithPixels(int width, int height, void *pixels)
 {
 	Data_Screen.drawBuffer = (ScreenColor*) pixels;
 	setSize(width, height);

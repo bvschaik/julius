@@ -588,7 +588,7 @@ void UI_BuildingInfo_showStorageOrders(int param1, int param2)
 
 void UI_BuildingInfo_drawEmploymentInfo(BuildingInfoContext *c, int yOffset)
 {
-	Data_Building *b = &Data_Buildings[c->buildingId];
+	struct Data_Building *b = &Data_Buildings[c->buildingId];
 	int textId;
 	if (b->numWorkers >= Data_Model_Buildings[b->type].laborers) {
 		textId = 0;

@@ -386,7 +386,7 @@ SDL_Surface* createSurface(int width, int height, int fullscreen)
 			surface->format->Bshift,
 			surface->format->Ashift);
 
-		Screen_setResolution(width, height, surface->pixels);
+		Screen_setResolutionWithPixels(width, height, surface->pixels);
 	}
 	return surface;
 }

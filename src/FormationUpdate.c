@@ -405,7 +405,7 @@ static void setNativeTargetBuilding(int formationId)
 			case Building_Warehouse:
 			case Building_Fort:
 				break;
-			default:
+			default: {
 				int distance = calc_maximum_distance(
 					Data_CityInfo.nativeMainMeetingCenterX,
 					Data_CityInfo.nativeMainMeetingCenterY,
@@ -414,6 +414,7 @@ static void setNativeTargetBuilding(int formationId)
 					minBuildingId = i;
 					minDistance = distance;
 				}
+            }
 		}
 	}
 	if (minBuildingId > 0) {

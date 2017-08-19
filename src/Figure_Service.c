@@ -130,11 +130,11 @@ static int provideHippodromeCoverage(int x, int y)
 static int provideMarketGoods(int marketBuildingId, int x, int y)
 {
 	int serviced = 0;
-	Data_Building *market = &Data_Buildings[marketBuildingId];
+	struct Data_Building *market = &Data_Buildings[marketBuildingId];
 	FOR_XY_RADIUS {
 		if (Data_Buildings[buildingId].houseSize && Data_Buildings[buildingId].housePopulation > 0) {
 			serviced++;
-			Data_Building *house = &Data_Buildings[buildingId];
+			struct Data_Building *house = &Data_Buildings[buildingId];
 			int level = house->subtype.houseLevel;
 			if (level < HouseLevel_LuxuryPalace) {
 				level++;

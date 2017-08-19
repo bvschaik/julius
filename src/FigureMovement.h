@@ -1,6 +1,8 @@
 #ifndef FIGUREMOVEMENT_H
 #define FIGUREMOVEMENT_H
 
+#include "Data/Figure.h"
+
 void FigureMovement_initRoaming(int figureId);
 
 void FigureMovement_roamTicks(int figureId, int numTicks);

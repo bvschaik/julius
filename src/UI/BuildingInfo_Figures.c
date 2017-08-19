@@ -379,7 +379,7 @@ void UI_BuildingInfo_drawFigureList(BuildingInfoContext *c)
 	c->figure.drawn = 1;
 }
 
-static void drawFigureInCity(int figureId, UI_CityPixelCoordinate *coord)
+static void drawFigureInCity(int figureId, struct UI_CityPixelCoordinate *coord)
 {
 	int xCam = Data_Settings_Map.camera.x;
 	int yCam = Data_Settings_Map.camera.y;
@@ -401,7 +401,7 @@ static void drawFigureInCity(int figureId, UI_CityPixelCoordinate *coord)
 void UI_BuildingInfo_drawFigureImagesLocal(BuildingInfoContext *c)
 {
 	if (c->figure.count > 0) {
-		UI_CityPixelCoordinate coord = {0, 0};
+		struct UI_CityPixelCoordinate coord = {0, 0};
 		for (int i = 0; i < c->figure.count; i++) {
 			drawFigureInCity(c->figure.figureIds[i], &coord);
 			Graphics_saveToBuffer(coord.x, coord.y, 48, 48, figureImages[i]);

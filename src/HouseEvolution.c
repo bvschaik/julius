@@ -327,7 +327,7 @@ static int checkEvolveDesirability(int buildingId)
 
 static int hasRequiredGoodsAndServices(int buildingId, int forUpgrade)
 {
-	Data_Building *b = &Data_Buildings[buildingId];
+	struct Data_Building *b = &Data_Buildings[buildingId];
 	int level = b->subtype.houseLevel;
 	if (forUpgrade) {
 		++level;
@@ -452,7 +452,7 @@ static int hasRequiredGoodsAndServices(int buildingId, int forUpgrade)
 
 static void consumeResources(int buildingId)
 {
-	Data_Building *b = &Data_Buildings[buildingId];
+	struct Data_Building *b = &Data_Buildings[buildingId];
 	int level = b->subtype.houseLevel;
 	int pottery = Data_Model_Houses[level].pottery;
 	int furniture = Data_Model_Houses[level].furniture;
@@ -552,7 +552,7 @@ void HouseEvolution_Tick_calculateCultureServiceAggregates()
 		if (!BuildingIsInUse(i) || !Data_Buildings[i].houseSize) {
 			continue;
 		}
-		Data_Building *b = &Data_Buildings[i];
+		struct Data_Building *b = &Data_Buildings[i];
 
 		b->data.house.entertainment = 0;
 		b->data.house.education = 0;
@@ -626,7 +626,7 @@ void HouseEvolution_Tick_calculateCultureServiceAggregates()
 
 void HouseEvolution_determineEvolveText(int buildingId, int hasBadDesirabilityBuilding)
 {
-	Data_Building *b = &Data_Buildings[buildingId];
+	struct Data_Building *b = &Data_Buildings[buildingId];
 	int level = b->subtype.houseLevel;
 	
 	// this house will devolve soon because...

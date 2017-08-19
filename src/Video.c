@@ -1,8 +1,6 @@
 #include "Video.h"
 
-extern "C" {
-  #include "Video/smacker.h"
-}
+#include "Video/smacker.h"
 
 #include "FileSystem.h"
 #include "Sound.h"
