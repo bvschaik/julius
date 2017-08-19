@@ -1,7 +1,7 @@
 #include "CityInfo.h"
 
 #include "Building.h"
-#include "Calc.h"
+#include "core/calc.h"
 #include "HousePopulation.h"
 #include "PlayerMessage.h"
 #include "Util.h"
@@ -79,7 +79,7 @@ void CityInfo_Population_setMaxHappiness(int max)
 static int getSentimentPenaltyForTentDwellers()
 {
 	int penalty;
-	int pctTents = Calc_getPercentage(
+	int pctTents = calc_percentage(
 		Data_CityInfo.populationPeopleInTents, Data_CityInfo.population);
 	if (Data_CityInfo.populationPeopleInVillasPalaces > 0) {
 		if (pctTents >= 57) {
@@ -348,7 +348,7 @@ void CityInfo_Population_calculateMigrationSentiment()
 			Data_CityInfo.populationEmigrationDuration--;
 		} else {
 			Data_CityInfo.populationImmigrationAmountPerBatch =
-				Calc_adjustWithPercentage(12, Data_CityInfo.populationMigrationPercentage);
+				calc_adjust_with_percentage(12, Data_CityInfo.populationMigrationPercentage);
 			Data_CityInfo.populationImmigrationDuration = 2;
 		}
 	} else if (Data_CityInfo.populationMigrationPercentage < 0) {
@@ -357,7 +357,7 @@ void CityInfo_Population_calculateMigrationSentiment()
 			Data_CityInfo.populationImmigrationDuration--;
 		} else if (Data_CityInfo.population > 100) {
 			Data_CityInfo.populationEmigrationAmountPerBatch =
-				Calc_adjustWithPercentage(12, -Data_CityInfo.populationMigrationPercentage);
+				calc_adjust_with_percentage(12, -Data_CityInfo.populationMigrationPercentage);
 			Data_CityInfo.populationEmigrationDuration = 2;
 		}
 	}
@@ -394,7 +394,7 @@ void CityInfo_Population_updateHealthRate()
 			healthyPopulation += b->housePopulation / 4;
 		}
 	}
-	Data_CityInfo.healthRateTarget = Calc_getPercentage(healthyPopulation, totalPopulation);
+	Data_CityInfo.healthRateTarget = calc_percentage(healthyPopulation, totalPopulation);
 	if (Data_CityInfo.healthRate < Data_CityInfo.healthRateTarget) {
 		Data_CityInfo.healthRate += 2;
 		if (Data_CityInfo.healthRate > Data_CityInfo.healthRateTarget) {
@@ -426,7 +426,7 @@ static void healthCauseDisease(int totalPeople)
 		return;
 	}
 
-	int sickPeople = Calc_adjustWithPercentage(totalPeople, 7 + (Data_Random.random1_7bit & 3));
+	int sickPeople = calc_adjust_with_percentage(totalPeople, 7 + (Data_Random.random1_7bit & 3));
 	if (sickPeople <= 0) {
 		return;
 	}
@@ -658,7 +658,7 @@ static void yearlyAdvanceAgesAndCalculateDeaths()
 	Data_CityInfo.populationYearlyDeaths = 0;
 	for (int decennium = 9; decennium >= 0; decennium--) {
 		int people = getPeopleInAgeDecennium(decennium);
-		int deaths = Calc_adjustWithPercentage(people,
+		int deaths = calc_adjust_with_percentage(people,
 			yearlyDeathsPerHealthPerDecennium[Data_CityInfo.healthRate / 10][decennium]);
 		int removed = HousePopulation_removePeople(deaths + aged100);
 		removePeopleFromCensusInDecennium(decennium, removed);
@@ -673,7 +673,7 @@ static void yearlyCalculateBirths()
 	Data_CityInfo.populationYearlyBirths = 0;
 	for (int decennium = 9; decennium >= 0; decennium--) {
 		int people = getPeopleInAgeDecennium(decennium);
-		int births = Calc_adjustWithPercentage(people, yearlyBirthsPerDecennium[decennium]);
+		int births = calc_adjust_with_percentage(people, yearlyBirthsPerDecennium[decennium]);
 		int added = HousePopulation_addPeople(births);
 		Data_CityInfo.populationPerAge[0] += added;
 		Data_CityInfo.populationYearlyBirths += added;

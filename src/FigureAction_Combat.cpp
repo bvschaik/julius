@@ -1,6 +1,6 @@
 #include "FigureAction_private.h"
 
-#include "Calc.h"
+#include "core/calc.h"
 #include "FigureMovement.h"
 #include "Routing.h"
 
@@ -15,7 +15,7 @@ int FigureAction_CombatSoldier_getTarget(int x, int y, int maxDistance)
 		struct Data_Figure *f = &Data_Figures[i];
 		if (FigureIsEnemy(f->type) || f->type == Figure_Rioter ||
 			(f->type == Figure_IndigenousNative && f->actionState == FigureActionState_159_NativeAttacking)) {
-			int distance = Calc_distanceMaximum(x, y, f->x, f->y);
+			int distance = calc_maximum_distance(x, y, f->x, f->y);
 			if (distance <= maxDistance) {
 				if (f->targetedByFigureId) {
 					distance *= 2; // penalty
@@ -57,7 +57,7 @@ int FigureAction_CombatSoldier_getMissileTarget(int soldierId, int maxDistance, 
 		struct Data_Figure *f = &Data_Figures[i];
 		if (FigureIsEnemy(f->type) || FigureIsHerd(f->type) ||
 			(f->type == Figure_IndigenousNative && f->actionState == FigureActionState_159_NativeAttacking)) {
-			int distance = Calc_distanceMaximum(x, y, f->x, f->y);
+			int distance = calc_maximum_distance(x, y, f->x, f->y);
 			if (distance < minDistance && FigureMovement_canLaunchCrossCountryMissile(x, y, f->x, f->y)) {
 				minDistance = distance;
 				minFigureId = i;
@@ -106,7 +106,7 @@ int FigureAction_CombatWolf_getTarget(int x, int y, int maxDistance)
 		if (FigureIsLegion(f->type) && f->actionState == FigureActionState_80_SoldierAtRest) {
 			continue;
 		}
-		int distance = Calc_distanceMaximum(x, y, f->x, f->y);
+		int distance = calc_maximum_distance(x, y, f->x, f->y);
 		if (f->targetedByFigureId) {
 			distance *= 2;
 		}
@@ -131,7 +131,7 @@ int FigureAction_CombatEnemy_getTarget(int x, int y)
 		}
 		struct Data_Figure *f = &Data_Figures[i];
 		if (!f->targetedByFigureId && FigureIsLegion(f->type)) {
-			int distance = Calc_distanceMaximum(x, y, f->x, f->y);
+			int distance = calc_maximum_distance(x, y, f->x, f->y);
 			if (distance < minDistance) {
 				minDistance = distance;
 				minFigureId = i;
@@ -187,9 +187,9 @@ int FigureAction_CombatEnemy_getMissileTarget(int enemyId, int maxDistance, int 
 		}
 		int distance;
 		if (FigureIsLegion(f->type)) {
-			distance = Calc_distanceMaximum(x, y, f->x, f->y);
+			distance = calc_maximum_distance(x, y, f->x, f->y);
 		} else if (attackCitizens && f->isFriendly) {
-			distance = Calc_distanceMaximum(x, y, f->x, f->y) + 5;
+			distance = calc_maximum_distance(x, y, f->x, f->y) + 5;
 		} else {
 			continue;
 		}

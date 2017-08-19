@@ -5,7 +5,7 @@
 #include "Data/Building.h"
 #include "Data/Model.h"
 
-#include "Calc.h"
+#include "core/calc.h"
 #include "Time.h"
 
 #define MAX_ANIM_TIMERS 51
@@ -93,7 +93,7 @@ int Animation_getIndexForCityBuilding(int graphicId, int gridOffset)
 	int isReverse = 0;
 	if (b->type == Building_WineWorkshop) {
 		// exception for wine...
-		int pctDone = Calc_getPercentage(b->data.industry.progress, 400);
+		int pctDone = calc_percentage(b->data.industry.progress, 400);
 		if (pctDone <= 0) {
 			newSprite = 0;
 		} else if (pctDone < 4) {

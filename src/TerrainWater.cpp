@@ -1,7 +1,7 @@
 #include "Terrain.h"
 #include "Terrain_private.h"
 
-#include "Calc.h"
+#include "core/calc.h"
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
@@ -232,7 +232,7 @@ int Terrain_Water_getNearestFishTile(int figureId, int *xTile, int *yTile)
 	int minFishId = 0;
 	for (int i = 0; i < 8; i++) {
 		if (Data_Scenario.fishingPoints.x > 0) {
-			int dist = Calc_distanceMaximum(
+			int dist = calc_maximum_distance(
 				Data_Figures[figureId].x, Data_Figures[figureId].y,
 				Data_Scenario.fishingPoints.x[i], Data_Scenario.fishingPoints.y[i]);
 			if (dist < minDist) {

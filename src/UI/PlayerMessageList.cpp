@@ -1,7 +1,7 @@
 #include "AllWindows.h"
 #include "Window.h"
 #include "MessageDialog.h"
-#include "../Calc.h"
+#include "core/calc.h"
 #include "../Graphics.h"
 #include "../PlayerMessage.h"
 #include "../Widget.h"
@@ -148,9 +148,9 @@ void UI_PlayerMessageList_drawForeground()
 		} else if (Data_Message.scrollPosition >= Data_Message.maxScrollPosition) {
 			pctScrolled = 100;
 		} else {
-			pctScrolled = Calc_getPercentage(Data_Message.scrollPosition, Data_Message.maxScrollPosition);
+			pctScrolled = calc_percentage(Data_Message.scrollPosition, Data_Message.maxScrollPosition);
 		}
-		int dotOffset = Calc_adjustWithPercentage(16 * data.textHeightBlocks - 77, pctScrolled);
+		int dotOffset = calc_adjust_with_percentage(16 * data.textHeightBlocks - 77, pctScrolled);
 		if (Data_Message.isDraggingScrollbar) {
 			dotOffset = Data_Message.scrollPositionDrag;
 		}
@@ -214,8 +214,8 @@ static void handleMouseScrollbar()
 		if (dotOffset > scrollbarHeight) {
 			dotOffset = scrollbarHeight;
 		}
-		int pctScrolled = Calc_getPercentage(dotOffset, scrollbarHeight);
-		Data_Message.scrollPosition = Calc_adjustWithPercentage(
+		int pctScrolled = calc_percentage(dotOffset, scrollbarHeight);
+		Data_Message.scrollPosition = calc_adjust_with_percentage(
 			Data_Message.maxScrollPosition, pctScrolled);
 		Data_Message.isDraggingScrollbar = 1;
 		Data_Message.scrollPositionDrag = dotOffset - 25;

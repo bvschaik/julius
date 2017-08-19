@@ -1,5 +1,5 @@
 #include "BuildingInfo.h"
-#include "../Calc.h"
+#include "core/calc.h"
 #include "../Graphics.h"
 #include "../Sound.h"
 #include "../Widget.h"
@@ -19,7 +19,7 @@ static void drawFarm(BuildingInfoContext *c, int helpId, const char *soundFile, 
 	Widget_GameText_drawCentered(groupId, 0, c->xOffset, c->yOffset + 10,
 		16 * c->widthBlocks, Font_LargeBlack);
 
-	int pctGrown = Calc_getPercentage(Data_Buildings[c->buildingId].data.industry.progress, 200);
+	int pctGrown = calc_percentage(Data_Buildings[c->buildingId].data.industry.progress, 200);
 	int width = Widget_GameText_draw(groupId, 2, c->xOffset + 32, c->yOffset + 44, Font_NormalBlack);
 	width += Widget_Text_drawNumber(pctGrown, '@', "%",
 		c->xOffset + 32 + width, c->yOffset + 44, Font_NormalBlack);
@@ -93,7 +93,7 @@ static void drawRawMaterial(BuildingInfoContext *c, int helpId, const char *soun
 	Widget_GameText_drawCentered(groupId, 0, c->xOffset, c->yOffset + 10,
 		16 * c->widthBlocks, Font_LargeBlack);
 
-	int pctDone = Calc_getPercentage(Data_Buildings[c->buildingId].data.industry.progress, 200);
+	int pctDone = calc_percentage(Data_Buildings[c->buildingId].data.industry.progress, 200);
 	int width = Widget_GameText_draw(groupId, 2, c->xOffset + 32, c->yOffset + 44, Font_NormalBlack);
 	width += Widget_Text_drawNumber(pctDone, '@', "%",
 		c->xOffset + 32 + width, c->yOffset + 44, Font_NormalBlack);
@@ -155,7 +155,7 @@ static void drawWorkshop(BuildingInfoContext *c, int helpId, const char *soundFi
 	Widget_GameText_drawCentered(groupId, 0, c->xOffset, c->yOffset + 10,
 		16 * c->widthBlocks, Font_LargeBlack);
 
-	int pctDone = Calc_getPercentage(Data_Buildings[c->buildingId].data.industry.progress, 400);
+	int pctDone = calc_percentage(Data_Buildings[c->buildingId].data.industry.progress, 400);
 	int width = Widget_GameText_draw(groupId, 2, c->xOffset + 32, c->yOffset + 40, Font_NormalBlack);
 	width += Widget_Text_drawNumber(pctDone, '@', "%",
 		c->xOffset + 32 + width, c->yOffset + 40, Font_NormalBlack);

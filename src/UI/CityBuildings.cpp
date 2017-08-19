@@ -998,7 +998,7 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 			}
 			break;
 		case Overlay_TaxIncome: {
-			int denarii = Calc_adjustWithPercentage(
+			int denarii = calc_adjust_with_percentage(
 				b->taxIncomeOrStorage / 2, Data_CityInfo.taxPercentage);
 			if (denarii > 0) {
 				c->hasNumericPrefix = 1;
@@ -1022,7 +1022,7 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 				for (int i = Inventory_MinFood; i <= Inventory_MaxFood; i++) {
 					stocksPresent += b->data.house.inventory[i];
 				}
-				int stocksPerPop = Calc_getPercentage(stocksPresent, b->housePopulation);
+				int stocksPerPop = calc_percentage(stocksPresent, b->housePopulation);
 				if (stocksPerPop <= 0) {
 					c->textId = 4;
 				} else if (stocksPerPop < 100) {

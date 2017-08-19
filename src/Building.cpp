@@ -1,6 +1,6 @@
 #include "Building.h"
 
-#include "Calc.h"
+#include "core/calc.h"
 #include "CityInfo.h"
 #include "CityView.h"
 #include "Figure.h"
@@ -924,7 +924,7 @@ int Building_Market_getDestinationGranaryWarehouse(int marketId)
 			b->roadNetworkId != market->roadNetworkId) {
 			continue;
 		}
-		int distance = Calc_distanceMaximum(market->x, market->y, b->x, b->y);
+		int distance = calc_maximum_distance(market->x, market->y, b->x, b->y);
 		if (distance >= 40) {
 			continue;
 		}

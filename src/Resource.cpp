@@ -1,7 +1,7 @@
 #include "Resource.h"
 
 #include "Building.h"
-#include "Calc.h"
+#include "core/calc.h"
 #include "Terrain.h"
 #include "Tutorial.h"
 
@@ -218,5 +218,5 @@ int Resource_getDistance(int x1, int y1, int x2, int y2, int distToEntry1, int d
 	if (distToEntry1 == -1) {
 		diff = 0;
 	}
-	return diff + Calc_distanceMaximum(x1, y1, x2, y2);
+	return diff + calc_maximum_distance(x1, y1, x2, y2);
 }

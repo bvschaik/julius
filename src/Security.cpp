@@ -1,7 +1,7 @@
 #include "Security.h"
 
 #include "Building.h"
-#include "Calc.h"
+#include "core/calc.h"
 #include "CityInfo.h"
 #include "Figure.h"
 #include "FigureAction.h"
@@ -123,7 +123,7 @@ int Security_Fire_getClosestBurningRuin(int x, int y, int *distance)
 		int buildingId = Data_BuildingList.burning.items[Data_BuildingList.burning.index];
 		struct Data_Building *b = &Data_Buildings[buildingId];
 		if (BuildingIsInUse(buildingId) && b->type == Building_BurningRuin && !b->ruinHasPlague && b->distanceFromEntry) {
-			int dist = Calc_distanceMaximum(x, y, b->x, b->y);
+			int dist = calc_maximum_distance(x, y, b->x, b->y);
 			if (b->figureId4) {
 				if (dist < minOccupiedDist) {
 					minOccupiedDist = dist;

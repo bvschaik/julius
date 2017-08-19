@@ -1,6 +1,6 @@
 #include "Routing.h"
 
-#include "Calc.h"
+#include "core/calc.h"
 #include "Grid.h"
 #include "TerrainGraphics.h"
 
@@ -962,11 +962,11 @@ int Routing_getDirectionForMissileShooter(int xSrc, int ySrc, int xDst, int yDst
 	int dy = ySrc > yDst ? ySrc - yDst : yDst - ySrc;
 	int percentage;
 	if (dx > dy) {
-		percentage = Calc_getPercentage(dx, dy);
+		percentage = calc_percentage(dx, dy);
 	} else if (dx == dy) {
 		percentage = 100;
 	} else {
-		percentage = -Calc_getPercentage(dy, dx);
+		percentage = -calc_percentage(dy, dx);
 	}
 	if (xSrc == xDst) {
 		if (ySrc < yDst) {
@@ -1023,11 +1023,11 @@ int Routing_getDirectionForMissile(int xSrc, int ySrc, int xDst, int yDst)
 	int dy = ySrc > yDst ? ySrc - yDst : yDst - ySrc;
 	int percentage;
 	if (dx > dy) {
-		percentage = Calc_getPercentage(dx, dy);
+		percentage = calc_percentage(dx, dy);
 	} else if (dx == dy) {
 		percentage = 100;
 	} else {
-		percentage = -Calc_getPercentage(dy, dx);
+		percentage = -calc_percentage(dy, dx);
 	}
 	if (xSrc == xDst) {
 		if (ySrc < yDst) {

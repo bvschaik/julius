@@ -1,7 +1,7 @@
 #include "HousePopulation.h"
 
 #include "BuildingHouse.h"
-#include "Calc.h"
+#include "core/calc.h"
 #include "CityInfo.h"
 #include "Figure.h"
 #include "PlayerMessage.h"
@@ -154,10 +154,10 @@ static void calculateWorkers()
 			}
 		}
 	}
-	Data_CityInfo.populationPercentagePlebs = Calc_getPercentage(numPlebs, numPlebs + numPatricians);
+	Data_CityInfo.populationPercentagePlebs = calc_percentage(numPlebs, numPlebs + numPatricians);
 	int workingAge = CityInfo_Population_getPeopleOfWorkingAge();
-	Data_CityInfo.populationWorkingAge = Calc_adjustWithPercentage(workingAge, 60);
-	Data_CityInfo.workersAvailable = Calc_adjustWithPercentage(
+	Data_CityInfo.populationWorkingAge = calc_adjust_with_percentage(workingAge, 60);
+	Data_CityInfo.workersAvailable = calc_adjust_with_percentage(
 		Data_CityInfo.populationWorkingAge, Data_CityInfo.populationPercentagePlebs);
 }
 
@@ -270,7 +270,7 @@ int HousePopulation_getClosestHouseWithRoom(int x, int y)
 		struct Data_Building *b = &Data_Buildings[i];
 		if (BuildingIsInUse(i) && b->houseSize && b->distanceFromEntry > 0 && b->housePopulationRoom > 0) {
 			if (!b->immigrantFigureId) {
-				int dist = Calc_distanceMaximum(x, y, b->x, b->y);
+				int dist = calc_maximum_distance(x, y, b->x, b->y);
 				if (dist < minDist) {
 					minDist = dist;
 					minBuildingId = i;

@@ -1,6 +1,6 @@
 #include "FigureAction_private.h"
 
-#include "Calc.h"
+#include "core/calc.h"
 #include "Figure.h"
 #include "PlayerMessage.h"
 #include "Terrain.h"
@@ -119,7 +119,7 @@ void FigureAction_fishingBoat(int figureId)
 			break;
 		case FigureActionState_194_FishingBoatAtWharf:
 			{
-			int pctWorkers = Calc_getPercentage(b->numWorkers, Data_Model_Buildings[b->type].laborers);
+			int pctWorkers = calc_percentage(b->numWorkers, Data_Model_Buildings[b->type].laborers);
 			int maxWaitTicks = 5 * (102 - pctWorkers);
 			if (b->data.other.fishingBoatHasFish > 0) {
 				pctWorkers = 0;

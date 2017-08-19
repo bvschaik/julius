@@ -1,7 +1,7 @@
 #include "Event.h"
 
 #include "Building.h"
-#include "Calc.h"
+#include "core/calc.h"
 #include "CityInfo.h"
 #include "Empire.h"
 #include "Figure.h"
@@ -193,7 +193,7 @@ static int playerWonDistantBattle()
 		pctLoss = 100;
 	} else {
 		won = 1;
-		int pctAdvantage = Calc_getPercentage(
+		int pctAdvantage = calc_percentage(
 			Data_CityInfo.distantBattleRomanStrength - Data_CityInfo.distantBattleEnemyStrength,
 			Data_CityInfo.distantBattleRomanStrength);
 		if (pctAdvantage < 10) {

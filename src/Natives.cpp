@@ -1,7 +1,7 @@
 #include "Natives.h"
 
 #include "Building.h"
-#include "Calc.h"
+#include "core/calc.h"
 #include "Grid.h"
 #include "Terrain.h"
 
@@ -93,7 +93,7 @@ static void determineMeetingCenter()
 			int minMeetingId = 0;
 			for (int n = 0; n < Data_BuildingList.small.size; n++) {
 				int meetingId = Data_BuildingList.small.items[n];
-				int dist = Calc_distanceMaximum(Data_Buildings[i].x, Data_Buildings[i].y,
+				int dist = calc_maximum_distance(Data_Buildings[i].x, Data_Buildings[i].y,
 					Data_Buildings[meetingId].x, Data_Buildings[meetingId].y);
 				if (dist < minDist) {
 					minDist = dist;

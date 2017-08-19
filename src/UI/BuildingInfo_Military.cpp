@@ -1,6 +1,6 @@
 #include "BuildingInfo.h"
 
-#include "../Calc.h"
+#include "core/calc.h"
 #include "../Formation.h"
 #include "../Graphics.h"
 #include "../Sound.h"
@@ -240,7 +240,7 @@ void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)
 		c->xOffset + 294, c->yOffset + 60, Font_NormalBlack);
 	// health
 	Widget_GameText_draw(138, 24, c->xOffset + 100, c->yOffset + 80, Font_NormalBlack);
-	int health = Calc_getPercentage(m->totalDamage, m->maxTotalDamage);
+	int health = calc_percentage(m->totalDamage, m->maxTotalDamage);
 	if (health <= 0) {
 		textId = 26;
 	} else if (health <= 20) {

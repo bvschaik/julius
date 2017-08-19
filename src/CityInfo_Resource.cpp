@@ -1,6 +1,6 @@
 #include "CityInfo.h"
 
-#include "Calc.h"
+#include "core/calc.h"
 #include "Empire.h"
 #include "Terrain.h"
 #include "Tutorial.h"
@@ -57,7 +57,7 @@ void CityInfo_Resource_calculateFood()
 		b->hasRoadAccess = 0;
 		if (Terrain_hasRoadAccessGranary(b->x, b->y, 0, 0)) {
 			b->hasRoadAccess = 1;
-			int pctWorkers = Calc_getPercentage(
+			int pctWorkers = calc_percentage(
 				b->numWorkers, Data_Model_Buildings[b->type].laborers);
 			if (pctWorkers < 100) {
 				Data_CityInfo.foodInfoGranariesUnderstaffed++;
@@ -89,7 +89,7 @@ void CityInfo_Resource_calculateFood()
 		}
 	}
 	Data_CityInfo.foodInfoFoodNeededPerMonth =
-		Calc_adjustWithPercentage(Data_CityInfo.population, 50);
+		calc_adjust_with_percentage(Data_CityInfo.population, 50);
 	if (Data_CityInfo.foodInfoFoodNeededPerMonth > 0) {
 		Data_CityInfo.foodInfoFoodSupplyMonths =
 			Data_CityInfo.foodInfoFoodStoredInGranaries / Data_CityInfo.foodInfoFoodNeededPerMonth;
@@ -125,7 +125,7 @@ void CityInfo_Resource_housesConsumeFood()
 		struct Data_Building *b = &Data_Buildings[i];
 		if (BuildingIsInUse(i) && b->houseSize) {
 			int numTypes = Data_Model_Houses[b->subtype.houseLevel].foodTypes;
-			int amountPerType = Calc_adjustWithPercentage(b->housePopulation, 50);
+			int amountPerType = calc_adjust_with_percentage(b->housePopulation, 50);
 			if (numTypes > 1) {
 				amountPerType /= numTypes;
 			}

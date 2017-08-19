@@ -1,7 +1,7 @@
 #include "BuildingPlacement.h"
 
 #include "Building.h"
-#include "Calc.h"
+#include "core/calc.h"
 #include "CityInfo.h"
 #include "Figure.h"
 #include "Formation.h"
@@ -1065,7 +1065,7 @@ static int placeReservoirAndAqueducts(int measureOnly, int xStart, int yStart, i
 	Grid_copyByteGrid(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
 	Undo_restoreTerrainGraphics();
 
-	int distance = Calc_distanceMaximum(xStart, yStart, xEnd, yEnd);
+	int distance = calc_maximum_distance(xStart, yStart, xEnd, yEnd);
 	if (measureOnly && !Data_State.selectedBuilding.placementInProgress) {
 		distance = 0;
 	}

@@ -1,5 +1,5 @@
 #include "CityInfo.h"
-#include "Calc.h"
+#include "core/calc.h"
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
@@ -9,11 +9,11 @@
 void CityInfo_Culture_updateCoveragePercentages()
 {
 	// entertainment
-	Data_CityInfo_CultureCoverage.theater = Calc_getPercentage(
+	Data_CityInfo_CultureCoverage.theater = calc_percentage(
 		500 * Data_CityInfo_Buildings.theater.working, Data_CityInfo.population);
-	Data_CityInfo_CultureCoverage.amphitheater = Calc_getPercentage(
+	Data_CityInfo_CultureCoverage.amphitheater = calc_percentage(
 		800 * Data_CityInfo_Buildings.amphitheater.working, Data_CityInfo.population);
-	Data_CityInfo_CultureCoverage.colosseum = Calc_getPercentage(
+	Data_CityInfo_CultureCoverage.colosseum = calc_percentage(
 		1500 * Data_CityInfo_Buildings.colosseum.working, Data_CityInfo.population);
 	if (Data_CityInfo_Buildings.hippodrome.working <= 0) {
 		Data_CityInfo_CultureCoverage.hippodrome = 0;
@@ -25,32 +25,32 @@ void CityInfo_Culture_updateCoveragePercentages()
 	TOP(colosseum);
 
 	// religion
-	Data_CityInfo_CultureCoverage.religionCeres = Calc_getPercentage(
+	Data_CityInfo_CultureCoverage.religionCeres = calc_percentage(
 			500 * Data_CityInfo_Buildings.oracle.total +
 			750 * Data_CityInfo_Buildings.smallTempleCeres.working +
 			1500 * Data_CityInfo_Buildings.largeTempleCeres.working,
 		Data_CityInfo.population);
-	Data_CityInfo_CultureCoverage.religionNeptune = Calc_getPercentage(
+	Data_CityInfo_CultureCoverage.religionNeptune = calc_percentage(
 			500 * Data_CityInfo_Buildings.oracle.total +
 			750 * Data_CityInfo_Buildings.smallTempleNeptune.working +
 			1500 * Data_CityInfo_Buildings.largeTempleNeptune.working,
 		Data_CityInfo.population);
-	Data_CityInfo_CultureCoverage.religionMercury = Calc_getPercentage(
+	Data_CityInfo_CultureCoverage.religionMercury = calc_percentage(
 			500 * Data_CityInfo_Buildings.oracle.total +
 			750 * Data_CityInfo_Buildings.smallTempleMercury.working +
 			1500 * Data_CityInfo_Buildings.largeTempleMercury.working,
 		Data_CityInfo.population);
-	Data_CityInfo_CultureCoverage.religionMars = Calc_getPercentage(
+	Data_CityInfo_CultureCoverage.religionMars = calc_percentage(
 			500 * Data_CityInfo_Buildings.oracle.total +
 			750 * Data_CityInfo_Buildings.smallTempleMars.working +
 			1500 * Data_CityInfo_Buildings.largeTempleMars.working,
 		Data_CityInfo.population);
-	Data_CityInfo_CultureCoverage.religionVenus = Calc_getPercentage(
+	Data_CityInfo_CultureCoverage.religionVenus = calc_percentage(
 			500 * Data_CityInfo_Buildings.oracle.total +
 			750 * Data_CityInfo_Buildings.smallTempleVenus.working +
 			1500 * Data_CityInfo_Buildings.largeTempleVenus.working,
 		Data_CityInfo.population);
-	Data_CityInfo_CultureCoverage.oracle = Calc_getPercentage(
+	Data_CityInfo_CultureCoverage.oracle = calc_percentage(
 		500 * Data_CityInfo_Buildings.oracle.total, Data_CityInfo.population);
 	TOP(religionCeres);
 	TOP(religionNeptune);
@@ -71,18 +71,18 @@ void CityInfo_Culture_updateCoveragePercentages()
 	Data_CityInfo.populationSchoolAge = CityInfo_Population_getNumberOfSchoolAgeChildren();
 	Data_CityInfo.populationAcademyAge = CityInfo_Population_getNumberOfAcademyChildren();
 
-	Data_CityInfo_CultureCoverage.school = Calc_getPercentage(
+	Data_CityInfo_CultureCoverage.school = calc_percentage(
 		75 * Data_CityInfo_Buildings.school.working, Data_CityInfo.populationSchoolAge);
-	Data_CityInfo_CultureCoverage.library = Calc_getPercentage(
+	Data_CityInfo_CultureCoverage.library = calc_percentage(
 		800 * Data_CityInfo_Buildings.library.working, Data_CityInfo.population);
-	Data_CityInfo_CultureCoverage.academy = Calc_getPercentage(
+	Data_CityInfo_CultureCoverage.academy = calc_percentage(
 		100 * Data_CityInfo_Buildings.academy.working, Data_CityInfo.populationAcademyAge);
 	TOP(school);
 	TOP(library);
 	TOP(academy);
 
 	// health
-	Data_CityInfo_CultureCoverage.hospital = Calc_getPercentage(
+	Data_CityInfo_CultureCoverage.hospital = calc_percentage(
 		1000 * Data_CityInfo_Buildings.hospital.working, Data_CityInfo.population);
 	TOP(hospital);
 }

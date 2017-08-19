@@ -2,7 +2,7 @@
 
 #include "Animation.h"
 #include "Building.h"
-#include "Calc.h"
+#include "core/calc.h"
 #include "CityInfo.h"
 #include "CityView.h"
 #include "Empire.h"
@@ -69,7 +69,7 @@ void Scenario_initialize(const char *scenarioName)
 			UI_Window_goTo(Window_City);
 			return;
 		}
-		Data_CityInfo.treasury = Calc_adjustWithPercentage(Data_CityInfo.treasury,
+		Data_CityInfo.treasury = calc_adjust_with_percentage(Data_CityInfo.treasury,
 			Data_Model_Difficulty.moneyPercentage[Data_Settings.difficulty]);
 	}
 	Data_Settings.saveGameMissionId = saveMissionId;
@@ -223,7 +223,7 @@ static void loadScenario(const char *scenarioName)
 	Data_CityInfo.exitPointX = Data_Scenario.exitPoint.x;
 	Data_CityInfo.exitPointY = Data_Scenario.exitPoint.y;
 	Data_CityInfo.exitPointGridOffset = GridOffset(Data_CityInfo.exitPointX, Data_CityInfo.exitPointY);
-	Data_CityInfo.treasury = Calc_adjustWithPercentage(Data_Scenario.startFunds,
+	Data_CityInfo.treasury = calc_adjust_with_percentage(Data_Scenario.startFunds,
 		Data_Model_Difficulty.moneyPercentage[Data_Settings.difficulty]);
 	Data_CityInfo.financeBalanceLastYear = Data_CityInfo.treasury;
 	Data_CityInfo_Extra.gameTimeYear = Data_Scenario.startYear;

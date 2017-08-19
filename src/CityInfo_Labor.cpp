@@ -1,5 +1,5 @@
 #include "CityInfo.h"
-#include "Calc.h"
+#include "core/calc.h"
 #include "PlayerMessage.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
@@ -202,7 +202,7 @@ void CityInfo_Labor_allocateWorkersToCategories()
 	}
 	Data_CityInfo.workersUnemployed = Data_CityInfo.workersAvailable - Data_CityInfo.workersEmployed;
 	Data_CityInfo.unemploymentPercentage =
-		Calc_getPercentage(Data_CityInfo.workersUnemployed, Data_CityInfo.workersAvailable);
+		calc_percentage(Data_CityInfo.workersUnemployed, Data_CityInfo.workersAvailable);
 }
 
 void CityInfo_Labor_allocateWorkersToBuildings()
@@ -214,7 +214,7 @@ void CityInfo_Labor_allocateWorkersToBuildings()
 
 static void setBuildingWorkerWeight()
 {
-	int waterPer10kPerBuilding = Calc_getPercentage(100, Data_CityInfo.laborCategory[LaborCategory_Water].buildings);
+	int waterPer10kPerBuilding = calc_percentage(100, Data_CityInfo.laborCategory[LaborCategory_Water].buildings);
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		if (!BuildingIsInUse(i)) {
 			continue;
@@ -226,7 +226,7 @@ static void setBuildingWorkerWeight()
 			Data_Buildings[i].percentageHousesCovered = 0;
 			if (Data_Buildings[i].housesCovered) {
 				Data_Buildings[i].percentageHousesCovered =
-					Calc_getPercentage(100 * Data_Buildings[i].housesCovered,
+					calc_percentage(100 * Data_Buildings[i].housesCovered,
 						Data_CityInfo.laborCategory[cat].totalHousesCovered);
 			}
 		}
@@ -259,7 +259,7 @@ static void allocateWorkersToBuildings()
 		}
 		if (b->percentageHousesCovered > 0) {
 			if (categoryWorkersNeeded[cat]) {
-				int numWorkers = Calc_adjustWithPercentage(
+				int numWorkers = calc_adjust_with_percentage(
 					Data_CityInfo.laborCategory[cat].workersAllocated,
 					b->percentageHousesCovered) / 100;
 				if (numWorkers > Data_Model_Buildings[b->type].laborers) {
@@ -314,11 +314,11 @@ static void allocateWorkersToWater()
 {
 	static int startBuildingId = 1;
 
-	int percentageNotFilled = 100 - Calc_getPercentage(
+	int percentageNotFilled = 100 - calc_percentage(
 		Data_CityInfo.laborCategory[LaborCategory_Water].workersAllocated,
 		Data_CityInfo.laborCategory[LaborCategory_Water].workersNeeded);
 
-	int buildingsToSkip = Calc_adjustWithPercentage(
+	int buildingsToSkip = calc_adjust_with_percentage(
 		Data_CityInfo.laborCategory[LaborCategory_Water].buildings, percentageNotFilled);
 
 	int workersPerBuilding;

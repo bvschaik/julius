@@ -5,7 +5,7 @@
 #include "Data/KeyboardInput.h"
 #include "Data/Mouse.h"
 
-#include "Calc.h"
+#include "core/calc.h"
 #include "Graphics.h"
 #include "Language.h"
 #include "String.h"
@@ -854,9 +854,9 @@ void Widget_RichText_drawScrollbarDot()
 		} else if (data.scrollPosition >= data.maxScrollPosition) {
 			pct = 100;
 		} else {
-			pct = Calc_getPercentage(data.scrollPosition, data.maxScrollPosition);
+			pct = calc_percentage(data.scrollPosition, data.maxScrollPosition);
 		}
-		int offset = Calc_adjustWithPercentage(16 * data.textHeightBlocks - 77, pct);
+		int offset = calc_adjust_with_percentage(16 * data.textHeightBlocks - 77, pct);
 		if (data.isDraggingScroll) {
 			offset = data.scrollPositionDrag;
 		}
@@ -900,8 +900,8 @@ static int handleScrollbarDot()
 	if (dotHeight > totalHeight) {
 		dotHeight = totalHeight;
 	}
-	int pctScrolled = Calc_getPercentage(dotHeight, totalHeight);
-	data.scrollPosition = Calc_adjustWithPercentage(data.maxScrollPosition, pctScrolled);
+	int pctScrolled = calc_percentage(dotHeight, totalHeight);
+	data.scrollPosition = calc_adjust_with_percentage(data.maxScrollPosition, pctScrolled);
 	data.isDraggingScroll = 1;
 	data.scrollPositionDrag = dotHeight - 25;
 	Widget_RichText_clearLinks();

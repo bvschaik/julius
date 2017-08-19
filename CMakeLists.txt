@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.6)
-project(opencaesar)
+project(julius)
 
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/cmake/")
 
@@ -8,14 +8,14 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
 #set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
 set(SMK_FILES src/Video/smacker.c src/Video/smk_bitstream.c src/Video/smk_hufftree.c)
-add_executable(opencaesar
+set(CORE_FILES src/core/calc.c)
+add_executable(julius
 	linux/main2.cpp
 	linux/SDLSoundDevice.cpp
 	src/Animation.cpp
 	src/Building.cpp
 	src/BuildingHouse.cpp
 	src/BuildingPlacement.cpp
-	src/Calc.cpp
 	src/CityInfo.cpp
 	src/CityInfo_Culture.cpp
 	src/CityInfo_Finance.cpp
@@ -172,6 +172,7 @@ add_executable(opencaesar
 	src/UI/VideoIntermezzo.cpp
 	src/UI/Warning.cpp
 	src/UI/Window.cpp
+	${CORE_FILES}
 	${SMK_FILES})
 
 #include(FindPkgConfig)
@@ -186,6 +187,13 @@ include_directories(${SDL2_MIXER_INCLUDE_DIR})
 
 #set(LIBS ${LIBS} ${SDL_LIBRARY})
 #link_libraries(${LIBS})
-target_link_libraries (opencaesar ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY})
+target_link_libraries (julius ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY})
 
-install(TARGETS opencaesar RUNTIME DESTINATION bin)
+include_directories(src)
+
+install(TARGETS julius RUNTIME DESTINATION bin)
+
+# Unit tests
+enable_testing()
+add_subdirectory(test)
+

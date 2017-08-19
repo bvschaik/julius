@@ -1,7 +1,7 @@
 #include "Resource.h"
 
 #include "Building.h"
-#include "Calc.h"
+#include "core/calc.h"
 #include "Terrain.h"
 #include "Tutorial.h"
 
@@ -104,7 +104,7 @@ int Resource_getWarehouseForStoringResource(
 		if (s->resourceState[resource] == BuildingStorageState_NotAccepting || s->emptyAll) {
 			continue;
 		}
-		int pctWorkers = Calc_getPercentage(
+		int pctWorkers = calc_percentage(
 			Data_Buildings[dstBuildingId].numWorkers,
 			Data_Model_Buildings[Data_Buildings[dstBuildingId].type].laborers);
 		if (pctWorkers < 100) {
@@ -376,7 +376,7 @@ static int determineGranaryAcceptFoods()
 		if (!BuildingIsInUse(i) || b->type != Building_Granary || !b->hasRoadAccess) {
 			continue;
 		}
-		int pctWorkers = Calc_getPercentage(b->numWorkers, Data_Model_Buildings[b->type].laborers);
+		int pctWorkers = calc_percentage(b->numWorkers, Data_Model_Buildings[b->type].laborers);
 		if (pctWorkers >= 100 && b->data.storage.resourceStored[Resource_None] >= 1200) {
 			struct Data_Building_Storage *s = &Data_Building_Storages[b->storageId];
 			if (!s->emptyAll) {
@@ -406,7 +406,7 @@ static int determineGranaryGetFoods()
 		if (!BuildingIsInUse(i) || b->type != Building_Granary || !b->hasRoadAccess) {
 			continue;
 		}
-		int pctWorkers = Calc_getPercentage(b->numWorkers, Data_Model_Buildings[b->type].laborers);
+		int pctWorkers = calc_percentage(b->numWorkers, Data_Model_Buildings[b->type].laborers);
 		if (pctWorkers >= 100 && b->data.storage.resourceStored[Resource_None] > 100) {
 			struct Data_Building_Storage *s = &Data_Building_Storages[b->storageId];
 			if (!s->emptyAll) {
@@ -447,7 +447,7 @@ static int storesNonStockpiledFood(int spaceId, int *granaryResources)
 int Resource_determineWarehouseWorkerTask(int buildingId, int *resource)
 {
 	struct Data_Building *b = &Data_Buildings[buildingId];
-	int pctWorkers = Calc_getPercentage(b->numWorkers, Data_Model_Buildings[b->type].laborers);
+	int pctWorkers = calc_percentage(b->numWorkers, Data_Model_Buildings[b->type].laborers);
 	if (pctWorkers < 50) {
 		return -1;
 	}

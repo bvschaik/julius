@@ -1,6 +1,6 @@
 #include "Figure.h"
 
-#include "Calc.h"
+#include "core/calc.h"
 #include "FigureAction.h"
 #include "FigureMovement.h"
 #include "Formation.h"
@@ -320,7 +320,7 @@ int Figure_createSoldierFromBarracks(int buildingId, int x, int y)
 		if (m->legionRecruitType == 3 && noWeapons) {
 			continue;
 		}
-		int dist = Calc_distanceMaximum(
+		int dist = calc_maximum_distance(
 			Data_Buildings[buildingId].x, Data_Buildings[buildingId].y,
 			Data_Buildings[m->buildingId].x, Data_Buildings[m->buildingId].y);
 		if (m->legionRecruitType > recruitType) {
@@ -401,7 +401,7 @@ void Figure_killTowerSentriesAt(int x, int y)
 {
 	for (int i = 0; i < MAX_FIGURES; i++) {
 		if (!FigureIsDead(i) && Data_Figures[i].type == Figure_TowerSentry) {
-			if (Calc_distanceMaximum(Data_Figures[i].x, Data_Figures[i].y, x, y) <= 1) {
+			if (calc_maximum_distance(Data_Figures[i].x, Data_Figures[i].y, x, y) <= 1) {
 				Data_Figures[i].state = FigureState_Dead;
 			}
 		}

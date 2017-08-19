@@ -1,6 +1,6 @@
 #include "Formation.h"
 
-#include "Calc.h"
+#include "core/calc.h"
 #include "Figure.h"
 #include "FigureAction.h"
 #include "Grid.h"
@@ -406,7 +406,7 @@ static void setNativeTargetBuilding(int formationId)
 			case Building_Fort:
 				break;
 			default:
-				int distance = Calc_distanceMaximum(
+				int distance = calc_maximum_distance(
 					Data_CityInfo.nativeMainMeetingCenterX,
 					Data_CityInfo.nativeMainMeetingCenterY,
 					Data_Buildings[i].x, Data_Buildings[i].y);
@@ -439,7 +439,7 @@ static void setEnemyTargetBuilding(struct Data_Formation *m)
 		}
 		for (int n = 0; n < 24 && n <= bestTypeIndex && enemyAttackBuildingPriority[attack][n]; n++) {
 			if (b->type == enemyAttackBuildingPriority[attack][n]) {
-				int distance = Calc_distanceMaximum(m->xHome, m->yHome, b->x, b->y);
+				int distance = calc_maximum_distance(m->xHome, m->yHome, b->x, b->y);
 				if (n < bestTypeIndex) {
 					bestTypeIndex = n;
 					buildingId = i;
@@ -461,7 +461,7 @@ static void setEnemyTargetBuilding(struct Data_Formation *m)
 			}
 			for (int n = 0; n < 100 && n <= bestTypeIndex && rioterAttackBuildingPriority[n]; n++) {
 				if (b->type == rioterAttackBuildingPriority[n]) {
-					int distance = Calc_distanceMaximum(m->xHome, m->yHome, b->x, b->y);
+					int distance = calc_maximum_distance(m->xHome, m->yHome, b->x, b->y);
 					if (n < bestTypeIndex) {
 						bestTypeIndex = n;
 						buildingId = i;

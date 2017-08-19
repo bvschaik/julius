@@ -1,6 +1,6 @@
 #include "BuildingInfo.h"
 
-#include "../Calc.h"
+#include "core/calc.h"
 #include "../Graphics.h"
 #include "../Resource.h"
 #include "../Sound.h"
@@ -60,7 +60,7 @@ static void drawTaxInfo(BuildingInfoContext *c, int yOffset)
 {
 	struct Data_Building *b = &Data_Buildings[c->buildingId];
 	if (b->houseTaxCoverage) {
-		int pct = Calc_adjustWithPercentage(b->taxIncomeOrStorage / 2, Data_CityInfo.taxPercentage);
+		int pct = calc_adjust_with_percentage(b->taxIncomeOrStorage / 2, Data_CityInfo.taxPercentage);
 		int width = Widget_GameText_draw(127, 24, c->xOffset + 36, yOffset, Font_SmallBlack);
 		width += Widget_GameText_drawNumberWithDescription(8, 0, pct,
 			c->xOffset + 36 + width, yOffset, Font_SmallBlack);
@@ -203,7 +203,7 @@ void UI_BuildingInfo_houseDetermineWorstDesirabilityBuilding(BuildingInfoContext
 					// simplified desirability calculation
 					int stepSize = Data_Model_Buildings[b->type].desirabilityStepSize;
 					int range = Data_Model_Buildings[b->type].desirabilityRange;
-					int dist = Calc_distanceMaximum(x, y,
+					int dist = calc_maximum_distance(x, y,
 						Data_Buildings[c->buildingId].x, Data_Buildings[c->buildingId].y);
 					if (dist <= range) {
 						while (--dist > 1) {

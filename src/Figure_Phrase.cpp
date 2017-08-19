@@ -1,5 +1,5 @@
 #include "Building.h"
-#include "Calc.h"
+#include "core/calc.h"
 #include "FigureAction.h"
 #include "Sound.h"
 
@@ -323,7 +323,7 @@ int Figure_determinePhrase(int figureId)
 			} else if (f->actionState == FigureActionState_21_CartpusherDeliveringToWarehouse ||
 					f->actionState == FigureActionState_22_CartpusherDeliveringToGranary ||
 					f->actionState == FigureActionState_23_CartpusherDeliveringToWorkshop) {
-				if (Calc_distanceMaximum(
+				if (calc_maximum_distance(
 					f->destinationX, f->destinationY, f->sourceX, f->sourceY) >= 25) {
 					phraseId = 9; // too far
 				}
@@ -331,7 +331,7 @@ int Figure_determinePhrase(int figureId)
 			break;
 		case Figure_Warehouseman:
 			if (f->actionState == FigureActionState_51_WarehousemanDeliveringResource) {
-				if (Calc_distanceMaximum(
+				if (calc_maximum_distance(
 					f->destinationX, f->destinationY, f->sourceX, f->sourceY) >= 25) {
 					phraseId = 9; // too far
 				}
@@ -416,7 +416,7 @@ int Figure_determinePhrase(int figureId)
 		case Figure_Dockman:
 			if (f->actionState == FigureActionState_135_DockerImportGoingToWarehouse ||
 				f->actionState == FigureActionState_136_DockerExportGoingToWarehouse) {
-				if (Calc_distanceMaximum(
+				if (calc_maximum_distance(
 					f->destinationX, f->destinationY, f->sourceX, f->sourceY) >= 25) {
 					phraseId = 9; // too far
 				}

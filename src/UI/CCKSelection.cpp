@@ -1,6 +1,6 @@
 #include "Window.h"
 
-#include "../Calc.h"
+#include "core/calc.h"
 #include "../FileSystem.h"
 #include "../GameFile.h"
 #include "../Graphics.h"
@@ -101,9 +101,9 @@ static void drawScrollbarDot()
 		} else if (scrollPosition + 15 >= Data_FileList.numFiles) {
 			pct = 100;
 		} else {
-			pct = Calc_getPercentage(scrollPosition, Data_FileList.numFiles - 15);
+			pct = calc_percentage(scrollPosition, Data_FileList.numFiles - 15);
 		}
-		int yOffset = Calc_adjustWithPercentage(164, pct);
+		int yOffset = calc_adjust_with_percentage(164, pct);
 		Graphics_drawImage(GraphicId(ID_Graphic_PanelButton) + 39,
 			Data_Screen.offset640x480.x + 284,
 			Data_Screen.offset640x480.y + 245 + yOffset);
@@ -257,8 +257,8 @@ static int handleScrollbarClick()
 		if (yOffset > 164) {
 			yOffset = 164;
 		}
-		int pct = Calc_getPercentage(yOffset, 164);
-		scrollPosition = Calc_adjustWithPercentage(Data_FileList.numFiles - 15, pct);
+		int pct = calc_percentage(yOffset, 164);
+		scrollPosition = calc_adjust_with_percentage(Data_FileList.numFiles - 15, pct);
 		UI_Window_requestRefresh();
 		return 1;
 	}

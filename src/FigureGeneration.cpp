@@ -1,7 +1,7 @@
 #include "Figure.h"
 
 #include "Building.h"
-#include "Calc.h"
+#include "core/calc.h"
 #include "FigureMovement.h"
 #include "Formation.h"
 #include "PlayerMessage.h"
@@ -22,7 +22,7 @@
 #define EXIT_IF_FIGURE(t) if (buildingHasFigureOfType(buildingId, t, 0)) return;
 #define EXIT_IF_FIGURES(t1,t2) if (buildingHasFigureOfType(buildingId, t1, t2)) return;
 
-#define WORKER_PERCENTAGE(b) Calc_getPercentage(b->numWorkers, Data_Model_Buildings[b->type].laborers)
+#define WORKER_PERCENTAGE(b) calc_percentage(b->numWorkers, Data_Model_Buildings[b->type].laborers)
 
 #define CREATE_FIGURE(t,x,y,d) \
 	int figureId = Figure_create(t, x, y, d);\

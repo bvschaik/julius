@@ -6,7 +6,7 @@
 #include "Window.h"
 
 #include "../Building.h"
-#include "../Calc.h"
+#include "core/calc.h"
 #include "../CityInfo.h"
 #include "../Figure.h"
 #include "../Formation.h"
@@ -188,7 +188,7 @@ void UI_BuildingInfo_init()
 		context.terrainType = 10;
 	} else {
 		context.type = BuildingInfoType_Building;
-		context.workerPercentage = Calc_getPercentage(
+		context.workerPercentage = calc_percentage(
 			Data_Buildings[context.buildingId].numWorkers,
 			Data_Model_Buildings[Data_Buildings[context.buildingId].type].laborers);
 		switch (Data_Buildings[context.buildingId].type) {

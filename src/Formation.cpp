@@ -1,6 +1,6 @@
 #include "Formation.h"
 
-#include "Calc.h"
+#include "core/calc.h"
 #include "Figure.h"
 #include "FigureMovement.h"
 #include "Random.h"
@@ -311,7 +311,7 @@ int Formation_getClosestMilitaryAcademy(int formationId)
 		if (BuildingIsInUse(i) &&
 			Data_Buildings[i].type == Building_MilitaryAcademy &&
 			Data_Buildings[i].numWorkers >= Data_Model_Buildings[Building_MilitaryAcademy].laborers) {
-			int dist = Calc_distanceMaximum(fortX, fortY, Data_Buildings[i].x, Data_Buildings[i].y);
+			int dist = calc_maximum_distance(fortX, fortY, Data_Buildings[i].x, Data_Buildings[i].y);
 			if (dist < minDistance) {
 				minDistance = dist;
 				minBuildingId = i;
@@ -441,7 +441,7 @@ void Formation_calculateFigures()
 void Formation_updateAfterDeath(int formationId)
 {
 	Formation_calculateFigures();
-	int pctDead = Calc_getPercentage(1, Data_Formations[formationId].numFigures);
+	int pctDead = calc_percentage(1, Data_Formations[formationId].numFigures);
 	int morale;
 	if (pctDead < 8) {
 		morale = -5;
@@ -573,7 +573,7 @@ void Formation_legionKillSoldiersInDistantBattle(int killPercentage)
 				numSoldiersTotal++;
 			}
 		}
-		int numSoldiersToKill = Calc_adjustWithPercentage(numSoldiersTotal, killPercentage);
+		int numSoldiersToKill = calc_adjust_with_percentage(numSoldiersTotal, killPercentage);
 		if (numSoldiersToKill >= numSoldiersTotal) {
 			m->isAtFort = 1;
 			m->inDistantBattle = 0;
@@ -598,7 +598,7 @@ void Formation_moveHerdsAwayFrom(int x, int y)
 		if (m->inUse != 1 || m->isLegion || !m->isHerd || m->numFigures <= 0) {
 			continue;
 		}
-		if (Calc_distanceMaximum(x, y, m->xHome, m->yHome) <= 6) {
+		if (calc_maximum_distance(x, y, m->xHome, m->yHome) <= 6) {
 			m->waitTicks = 50;
 			m->herdDirection = Routing_getGeneralDirection(x, y, m->xHome, m->yHome);
 		}

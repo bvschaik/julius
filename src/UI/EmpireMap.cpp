@@ -5,7 +5,7 @@
 #include "MessageDialog.h"
 
 #include "../Animation.h"
-#include "../Calc.h"
+#include "core/calc.h"
 #include "../CityInfo.h"
 #include "../Empire.h"
 #include "../Graphics.h"
@@ -504,7 +504,7 @@ static int getSelectedObject()
 		if (yObj - 8 > yMap || yObj + obj->height + 8 <= yMap) {
 			continue;
 		}
-		int dist = Calc_distanceMaximum(xMap, yMap,
+		int dist = calc_maximum_distance(xMap, yMap,
 			xObj + obj->width / 2, yObj + obj->height / 2);
 		if (dist < minDist) {
 			minDist = dist;

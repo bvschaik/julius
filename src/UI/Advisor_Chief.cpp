@@ -1,5 +1,5 @@
 #include "Advisors_private.h"
-#include "../Calc.h"
+#include "core/calc.h"
 #include "../Event.h"
 #include "../Data/Scenario.h"
 
@@ -92,7 +92,7 @@ void UI_Advisor_Chief_drawBackground(int *advisorHeight)
 	if (Data_Scenario.romeSuppliesWheat) {
 		Widget_GameText_draw(61, 26, baseOffsetX + 240, baseOffsetY + 146, Font_NormalGreen);
 	} else {
-		int pct = Calc_getPercentage(Data_CityInfo.foodInfoFoodStoredLastMonth, Data_CityInfo.foodInfoFoodConsumedLastMonth);
+		int pct = calc_percentage(Data_CityInfo.foodInfoFoodStoredLastMonth, Data_CityInfo.foodInfoFoodConsumedLastMonth);
 		if (pct > 150) {
 			Widget_GameText_draw(61, 63, baseOffsetX + 240, baseOffsetY + 146, Font_NormalGreen);
 		} else if (pct > 105) {

@@ -1,7 +1,7 @@
 #include "Event.h"
 
 #include "Building.h"
-#include "Calc.h"
+#include "core/calc.h"
 #include "CityInfo.h"
 #include "Figure.h"
 #include "Formation.h"
@@ -266,7 +266,7 @@ static int startInvasion(int enemyType, int amount, int invasionPoint, int attac
 	int x, y;
 	int orientation;
 
-	amount = Calc_adjustWithPercentage(amount,
+	amount = calc_adjust_with_percentage(amount,
 		Data_Model_Difficulty.enemyPercentage[Data_Settings.difficulty]);
 	if (amount >= 150) {
 		amount = 150;
@@ -276,9 +276,9 @@ static int startInvasion(int enemyType, int amount, int invasionPoint, int attac
 		Data_Event.lastInternalInvasionId = 1;
 	}
 	// calculate soldiers per type
-	int numType1 = Calc_adjustWithPercentage(amount, enemyProperties[enemyType].pctType1);
-	int numType2 = Calc_adjustWithPercentage(amount, enemyProperties[enemyType].pctType2);
-	int numType3 = Calc_adjustWithPercentage(amount, enemyProperties[enemyType].pctType3);
+	int numType1 = calc_adjust_with_percentage(amount, enemyProperties[enemyType].pctType1);
+	int numType2 = calc_adjust_with_percentage(amount, enemyProperties[enemyType].pctType2);
+	int numType3 = calc_adjust_with_percentage(amount, enemyProperties[enemyType].pctType3);
 	numType1 += amount - (numType1 + numType2 + numType3); // assign leftovers to type1
 
 	for (int t = 0; t < 3; t++) {
@@ -418,7 +418,7 @@ static void updateDebtState()
 	}
 	if (Data_CityInfo.debtState == 0) {
 		// provide bailout
-		int rescueLoan = Calc_adjustWithPercentage(Data_Scenario.rescueLoan,
+		int rescueLoan = calc_adjust_with_percentage(Data_Scenario.rescueLoan,
 			Data_Model_Difficulty.moneyPercentage[Data_Settings.difficulty]);
 		Data_CityInfo.treasury += rescueLoan;
 		Data_CityInfo.financeDonatedThisYear += rescueLoan;

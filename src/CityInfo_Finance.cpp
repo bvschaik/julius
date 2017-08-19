@@ -1,5 +1,5 @@
 #include "CityInfo.h"
-#include "Calc.h"
+#include "core/calc.h"
 
 #include "Data/CityInfo.h"
 #include "Data/Building.h"
@@ -36,7 +36,7 @@ static void collectMonthlyTaxes()
 
 		int isPatrician = Data_Buildings[i].subtype.houseLevel >= HouseLevel_SmallVilla;
 		int population = Data_Buildings[i].housePopulation;
-		int trm = Calc_adjustWithPercentage(
+		int trm = calc_adjust_with_percentage(
 			Data_Model_Houses[Data_Buildings[i].subtype.houseLevel].taxMultiplier,
 			Data_Model_Difficulty.moneyPercentage[Data_Settings.difficulty]);
 		Data_CityInfo.populationPerLevel[Data_Buildings[i].subtype.houseLevel] += population;
@@ -62,20 +62,20 @@ static void collectMonthlyTaxes()
 		}
 	}
 
-	int collectedPatricians = Calc_adjustWithPercentage(
+	int collectedPatricians = calc_adjust_with_percentage(
 		Data_CityInfo.monthlyCollectedTaxFromPatricians / 2,
 		Data_CityInfo.taxPercentage);
-	int collectedPlebs = Calc_adjustWithPercentage(
+	int collectedPlebs = calc_adjust_with_percentage(
 		Data_CityInfo.monthlyCollectedTaxFromPlebs / 2,
 		Data_CityInfo.taxPercentage);
 	int collectedTotal = collectedPatricians + collectedPlebs;
 
 	Data_CityInfo.yearlyCollectedTaxFromPatricians += collectedPatricians;
 	Data_CityInfo.yearlyCollectedTaxFromPlebs += collectedPlebs;
-	Data_CityInfo.yearlyUncollectedTaxFromPatricians += Calc_adjustWithPercentage(
+	Data_CityInfo.yearlyUncollectedTaxFromPatricians += calc_adjust_with_percentage(
 		Data_CityInfo.monthlyUncollectedTaxFromPatricians / 2,
 		Data_CityInfo.taxPercentage);
-	Data_CityInfo.yearlyUncollectedTaxFromPlebs += Calc_adjustWithPercentage(
+	Data_CityInfo.yearlyUncollectedTaxFromPlebs += calc_adjust_with_percentage(
 		Data_CityInfo.monthlyUncollectedTaxFromPlebs / 2,
 		Data_CityInfo.taxPercentage);
 
@@ -83,9 +83,9 @@ static void collectMonthlyTaxes()
 
 	int totalPatricians = Data_CityInfo.monthlyTaxedPatricians + Data_CityInfo.monthlyUntaxedPatricians;
 	int totalPlebs = Data_CityInfo.monthlyTaxedPlebs + Data_CityInfo.monthlyUntaxedPlebs;
-	Data_CityInfo.percentageTaxedPatricians = Calc_getPercentage(Data_CityInfo.monthlyTaxedPatricians, totalPatricians);
-	Data_CityInfo.percentageTaxedPlebs = Calc_getPercentage(Data_CityInfo.monthlyTaxedPlebs, totalPlebs);
-	Data_CityInfo.percentageTaxedPeople = Calc_getPercentage(
+	Data_CityInfo.percentageTaxedPatricians = calc_percentage(Data_CityInfo.monthlyTaxedPatricians, totalPatricians);
+	Data_CityInfo.percentageTaxedPlebs = calc_percentage(Data_CityInfo.monthlyTaxedPlebs, totalPlebs);
+	Data_CityInfo.percentageTaxedPeople = calc_percentage(
 		Data_CityInfo.monthlyTaxedPatricians + Data_CityInfo.monthlyTaxedPlebs,
 		totalPatricians + totalPlebs);
 }
@@ -101,7 +101,7 @@ static void payMonthlyWages()
 static void payMonthlyInterest()
 {
 	if (Data_CityInfo.treasury < 0) {
-		int interest = Calc_adjustWithPercentage(-Data_CityInfo.treasury, 10) / 12;
+		int interest = calc_adjust_with_percentage(-Data_CityInfo.treasury, 10) / 12;
 		Data_CityInfo.treasury -= interest;
 		Data_CityInfo.financeInterestPaidThisYear += interest;
 	}
@@ -170,7 +170,7 @@ static void payTribute()
 		} else {
 			Data_CityInfo.financeTributeLastYear = 50;
 		}
-		int pctProfit = Calc_adjustWithPercentage(income - expenses, 25);
+		int pctProfit = calc_adjust_with_percentage(income - expenses, 25);
 		if (pctProfit > Data_CityInfo.financeTributeLastYear) {
 			Data_CityInfo.financeTributeLastYear = pctProfit;
 		}
@@ -284,7 +284,7 @@ void CityInfo_Finance_calculateEstimatedTaxes()
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		if (BuildingIsInUse(i) && Data_Buildings[i].houseSize && Data_Buildings[i].houseTaxCoverage) {
 			int isPatrician = Data_Buildings[i].subtype.houseLevel >= HouseLevel_SmallVilla;
-			int trm = Calc_adjustWithPercentage(
+			int trm = calc_adjust_with_percentage(
 				Data_Model_Houses[Data_Buildings[i].subtype.houseLevel].taxMultiplier,
 				Data_Model_Difficulty.moneyPercentage[Data_Settings.difficulty]);
 			if (isPatrician) {
@@ -294,10 +294,10 @@ void CityInfo_Finance_calculateEstimatedTaxes()
 			}
 		}
 	}
-	int monthlyPatricians = Calc_adjustWithPercentage(
+	int monthlyPatricians = calc_adjust_with_percentage(
 		Data_CityInfo.monthlyCollectedTaxFromPatricians / 2,
 		Data_CityInfo.taxPercentage);
-	int monthlyPlebs = Calc_adjustWithPercentage(
+	int monthlyPlebs = calc_adjust_with_percentage(
 		Data_CityInfo.monthlyCollectedTaxFromPlebs / 2,
 		Data_CityInfo.taxPercentage);
 	int estimatedRestOfYear = (12 - Data_CityInfo_Extra.gameTimeMonth) * (monthlyPatricians + monthlyPlebs);

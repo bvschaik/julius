@@ -1,6 +1,6 @@
 #include "CityInfo.h"
 
-#include "Calc.h"
+#include "core/calc.h"
 #include "Util.h"
 
 #include "Data/Building.h"
@@ -201,27 +201,27 @@ static void updateFavorRating(int isYearlyUpdate)
 		if (milestonePct) {
 			int bonus = 1;
 			if (Data_Scenario.winCriteria.cultureEnabled &&
-				Data_CityInfo.ratingCulture < Calc_adjustWithPercentage(
+				Data_CityInfo.ratingCulture < calc_adjust_with_percentage(
 					Data_Scenario.winCriteria.culture, milestonePct)) {
 				bonus = 0;
 			}
 			if (Data_Scenario.winCriteria.prosperityEnabled &&
-				Data_CityInfo.ratingProsperity < Calc_adjustWithPercentage(
+				Data_CityInfo.ratingProsperity < calc_adjust_with_percentage(
 					Data_Scenario.winCriteria.prosperity, milestonePct)) {
 				bonus = 0;
 			}
 			if (Data_Scenario.winCriteria.peaceEnabled &&
-				Data_CityInfo.ratingPeace < Calc_adjustWithPercentage(
+				Data_CityInfo.ratingPeace < calc_adjust_with_percentage(
 					Data_Scenario.winCriteria.peace, milestonePct)) {
 				bonus = 0;
 			}
 			if (Data_Scenario.winCriteria.favorEnabled &&
-				Data_CityInfo.ratingFavor < Calc_adjustWithPercentage(
+				Data_CityInfo.ratingFavor < calc_adjust_with_percentage(
 					Data_Scenario.winCriteria.favor, milestonePct)) {
 				bonus = 0;
 			}
 			if (Data_Scenario.winCriteria_populationEnabled &&
-				Data_CityInfo.population < Calc_adjustWithPercentage(
+				Data_CityInfo.population < calc_adjust_with_percentage(
 					Data_Scenario.winCriteria_population, milestonePct)) {
 				bonus = 0;
 			}
@@ -318,10 +318,10 @@ static void updateProsperityRating()
 		change -= 1;
 	}
 	// high percentage poor: -1, high percentage rich: +1
-	if (Calc_getPercentage(Data_CityInfo.populationPeopleInTentsShacks, Data_CityInfo.population) > 30) {
+	if (calc_percentage(Data_CityInfo.populationPeopleInTentsShacks, Data_CityInfo.population) > 30) {
 		change -= 1;
 	}
-	if (Calc_getPercentage(Data_CityInfo.populationPeopleInVillasPalaces, Data_CityInfo.population) > 10) {
+	if (calc_percentage(Data_CityInfo.populationPeopleInVillasPalaces, Data_CityInfo.population) > 10) {
 		change += 1;
 	}
 	// tribute not paid: -1
@@ -371,11 +371,11 @@ void CityInfo_Ratings_updateProsperityExplanation()
 		change -= 1;
 	}
 	// high percentage poor: -1, high percentage rich: +1
-	int pctTents = Calc_getPercentage(Data_CityInfo.populationPeopleInTentsShacks, Data_CityInfo.population);
+	int pctTents = calc_percentage(Data_CityInfo.populationPeopleInTentsShacks, Data_CityInfo.population);
 	if (pctTents > 30) {
 		change -= 1;
 	}
-	if (Calc_getPercentage(Data_CityInfo.populationPeopleInVillasPalaces, Data_CityInfo.population) > 10) {
+	if (calc_percentage(Data_CityInfo.populationPeopleInVillasPalaces, Data_CityInfo.population) > 10) {
 		change += 1;
 	}
 	// tribute not paid: -1

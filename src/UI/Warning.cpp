@@ -1,7 +1,7 @@
 #include "Warning.h"
 #include "Window.h"
 
-#include "../Calc.h"
+#include "core/calc.h"
 #include "../Empire.h"
 #include "../Graphics.h"
 #include "../Language.h"
@@ -187,7 +187,7 @@ void UI_Warning_checkFoodStocks(int buildingType)
 {
 	if (!hasWarningAlready && buildingType == Building_HouseVacantLot) {
 		if (Data_CityInfo.population >= 200 && !Data_Scenario.romeSuppliesWheat) {
-			if (Calc_getPercentage(Data_CityInfo.foodInfoFoodStoredLastMonth,
+			if (calc_percentage(Data_CityInfo.foodInfoFoodStoredLastMonth,
 					Data_CityInfo.foodInfoFoodConsumedLastMonth) <= 95) {
 				UI_Warning_show(Warning_MoreFoodNeeded);
 			}

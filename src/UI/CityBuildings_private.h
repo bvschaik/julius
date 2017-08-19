@@ -15,7 +15,7 @@
 #include "../Data/State.h"
 
 #include "../Animation.h"
-#include "../Calc.h"
+#include "core/calc.h"
 #include "../Graphics.h"
 
 

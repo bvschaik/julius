@@ -3,7 +3,7 @@
 #include "AllWindows.h"
 #include "Advisors.h"
 
-#include "../Calc.h"
+#include "core/calc.h"
 #include "../CityView.h"
 #include "../Formation.h"
 #include "../Graphics.h"

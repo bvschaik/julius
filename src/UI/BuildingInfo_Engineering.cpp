@@ -1,6 +1,6 @@
 #include "BuildingInfo.h"
 
-#include "../Calc.h"
+#include "core/calc.h"
 #include "../Graphics.h"
 #include "../Resource.h"
 #include "../Sound.h"
@@ -59,7 +59,7 @@ void UI_BuildingInfo_drawShipyard(BuildingInfoContext *c)
 	if (!c->hasRoadAccess) {
 		DRAW_DESC(69, 25);
 	} else {
-		int pctDone = Calc_getPercentage(b->data.industry.progress, 160);
+		int pctDone = calc_percentage(b->data.industry.progress, 160);
 		int width = Widget_GameText_draw(100, 2,
 			c->xOffset + 32, c->yOffset + 56, Font_NormalBlack);
 		width += Widget_Text_drawNumber(pctDone, '@', "%",

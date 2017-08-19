@@ -1,6 +1,6 @@
 #include "FigureAction_private.h"
 
-#include "Calc.h"
+#include "core/calc.h"
 #include "Figure.h"
 #include "Terrain.h"
 
@@ -42,7 +42,7 @@ static int determineDestination(int x, int y, int btype1, int btype2)
 		} else {
 			daysLeft = 0;
 		}
-		int dist = daysLeft + Calc_distanceMaximum(x, y, b->x, b->y);
+		int dist = daysLeft + calc_maximum_distance(x, y, b->x, b->y);
 		if (dist < minDistance) {
 			minDistance = dist;
 			minBuildingId = Data_BuildingList.small.items[i];

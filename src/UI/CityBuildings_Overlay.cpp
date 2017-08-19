@@ -1157,7 +1157,7 @@ static void drawBuildingTopForFoodStocksOverlay(int gridOffset, int buildingId, 
 					for (int i = Inventory_MinFood; i <= Inventory_MaxFood; i++) {
 						stocks += b->data.house.inventory[i];
 					}
-					int pctStocks = Calc_getPercentage(stocks, pop);
+					int pctStocks = calc_percentage(stocks, pop);
 					int colVal = 0;
 					if (pctStocks <= 0) {
 						colVal = 10;
@@ -1312,7 +1312,7 @@ static void drawBuildingTopForTaxIncomeOverlay(int gridOffset, int buildingId, i
 	} else if (Data_Buildings[buildingId].type == Building_Forum) {
 		DRAWTOP_SIZE2(graphicId, xOffset, yOffset);
 	} else if (Data_Buildings[buildingId].houseSize) {
-		int pct = Calc_adjustWithPercentage(
+		int pct = calc_adjust_with_percentage(
 			Data_Buildings[buildingId].taxIncomeOrStorage / 2,
 			Data_CityInfo.taxPercentage);
 		if (pct > 0) {
