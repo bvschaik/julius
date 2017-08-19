@@ -8,7 +8,6 @@
 #include "Empire.h"
 #include "Event.h"
 #include "Figure.h"
-#include "FileSystem.h"
 #include "Formation.h"
 #include "GameFile.h"
 #include "Grid.h"
@@ -38,6 +37,9 @@
 #include "Data/Settings.h"
 #include "Data/State.h"
 #include "Data/Tutorial.h"
+
+#include "core/file.h"
+#include "core/io.h"
 
 #include <string.h>
 
@@ -150,11 +152,11 @@ static void setTutorialFlags(int missionId)
 
 static int mapFileExists(const char *scenarioName)
 {
-	char filename[FILESYSTEM_MAX_FILENAME];
+	char filename[FILE_NAME_MAX];
 	strcpy(filename, scenarioName);
-	FileSystem_removeExtension(filename);
-	FileSystem_appendExtension(filename, "map");
-	return FileSystem_fileExists(filename);
+	file_remove_extension(filename);
+	file_append_extension(filename, "map");
+	return file_exists(filename);
 }
 
 static void initCustomScenario(const char *scenarioName)
@@ -292,10 +294,10 @@ static void loadScenario(const char *scenarioName)
 static void readScenarioAndInitGraphics()
 {
 	initGrids();
-	FileSystem_removeExtension(Data_FileList.selectedScenario);
-	FileSystem_appendExtension(Data_FileList.selectedScenario, "map");
+	file_remove_extension(Data_FileList.selectedScenario);
+	file_append_extension(Data_FileList.selectedScenario, "map");
 	GameFile_loadScenario(Data_FileList.selectedScenario);
-	FileSystem_removeExtension(Data_FileList.selectedScenario);
+	file_remove_extension(Data_FileList.selectedScenario);
 
 	Empire_initTradeAmountCodes();
 	Data_Settings_Map.width = Data_Scenario.mapSizeX;

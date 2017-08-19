@@ -2,7 +2,9 @@
 #include "Window.h"
 
 #include "core/calc.h"
-#include "../FileSystem.h"
+#include "core/dir.h"
+#include "core/file.h"
+
 #include "../GameFile.h"
 #include "../Graphics.h"
 #include "../KeyboardInput.h"
@@ -50,6 +52,7 @@ static TimeMillis messageNotExistTimeUntil;
 static int dialogType;
 static int focusButtonId;
 static int scrollPosition;
+static const dir_listing *savedGames;
 
 void UI_FileDialog_show(int type)
 {
@@ -57,7 +60,7 @@ void UI_FileDialog_show(int type)
 	messageNotExistTimeUntil = 0;
 	scrollPosition = 0;
 
-	FileSystem_findFilesWithExtension("sav");
+	savedGames = dir_find_files_with_extension("sav");
 
 	strcpy(Data_FileList.selectedCity, Data_FileList.lastLoadedCity);
 	Data_KeyboardInput.accepted = 0;
@@ -102,8 +105,8 @@ void UI_FileDialog_drawForeground()
 		if (focusButtonId == i + 1) {
 			font = Font_NormalWhite;
 		}
-		strcpy(file, Data_FileList.files[scrollPosition + i]);
-		FileSystem_removeExtension(file);
+		strcpy(file, savedGames->files[scrollPosition + i]);
+		file_remove_extension(file);
 		Widget_Text_draw(file, baseOffsetX + 160, baseOffsetY + 130 + 16 * i, font, 0);
 	}
 
@@ -116,14 +119,14 @@ void UI_FileDialog_drawForeground()
 
 static void drawScrollbarDot()
 {
-	if (Data_FileList.numFiles > 12) {
+	if (savedGames->num_files > 12) {
 		int pct;
 		if (scrollPosition <= 0) {
 			pct = 0;
-		} else if (scrollPosition + 12 >= Data_FileList.numFiles) {
+		} else if (scrollPosition + 12 >= savedGames->num_files) {
 			pct = 100;
 		} else {
-			pct = calc_percentage(scrollPosition, Data_FileList.numFiles - 12);
+			pct = calc_percentage(scrollPosition, savedGames->num_files - 12);
 		}
 		int yOffset = calc_adjust_with_percentage(130, pct);
 		Graphics_drawImage(GraphicId(ID_Graphic_PanelButton) + 39,
@@ -162,7 +165,7 @@ void UI_FileDialog_handleMouse()
 
 static int handleScrollbarClick()
 {
-	if (Data_FileList.numFiles <= 12) {
+	if (savedGames->num_files <= 12) {
 		return 0;
 	}
 	if (!Data_Mouse.left.isDown) {
@@ -177,7 +180,7 @@ static int handleScrollbarClick()
 			yOffset = 130;
 		}
 		int pct = calc_percentage(yOffset, 130);
-		scrollPosition = calc_adjust_with_percentage(Data_FileList.numFiles - 12, pct);
+		scrollPosition = calc_adjust_with_percentage(savedGames->num_files - 12, pct);
 		UI_Window_requestRefresh();
 		return 1;
 	}
@@ -191,11 +194,11 @@ static void buttonOkCancel(int isOk, int param2)
 		return;
 	}
 
-	FileSystem_removeExtension(Data_FileList.selectedCity);
-	FileSystem_appendExtension(Data_FileList.selectedCity, "sav");
+	file_remove_extension(Data_FileList.selectedCity);
+	file_append_extension(Data_FileList.selectedCity, "sav");
 
-	if (dialogType != FileDialogType_Save && !FileSystem_fileExists(Data_FileList.selectedCity)) {
-		FileSystem_removeExtension(Data_FileList.selectedCity);
+	if (dialogType != FileDialogType_Save && !file_exists(Data_FileList.selectedCity)) {
+		file_remove_extension(Data_FileList.selectedCity);
 		messageNotExistTimeUntil = Time_getMillis() + NOT_EXIST_MESSAGE_TIMEOUT;
 		return;
 	}
@@ -207,8 +210,8 @@ static void buttonOkCancel(int isOk, int param2)
 		UI_Window_goTo(Window_City);
 	} else if (dialogType == FileDialogType_Delete) {
 		if (GameFile_deleteSavedGame(Data_FileList.selectedCity)) {
-			FileSystem_findFilesWithExtension("sav");
-			if (scrollPosition + 12 >= Data_FileList.numFiles) {
+			dir_find_files_with_extension("sav");
+			if (scrollPosition + 12 >= savedGames->num_files) {
 				--scrollPosition;
 			}
 			if (scrollPosition < 0) {
@@ -217,17 +220,17 @@ static void buttonOkCancel(int isOk, int param2)
 		}
 	}
 	
-	FileSystem_removeExtension(Data_FileList.selectedCity);
+	file_remove_extension(Data_FileList.selectedCity);
 	strcpy(Data_FileList.lastLoadedCity, Data_FileList.selectedCity);
 }
 
 static void buttonScroll(int isDown, int numLines)
 {
-	if (Data_FileList.numFiles > 12) {
+	if (savedGames->num_files > 12) {
 		if (isDown) {
 			scrollPosition += numLines;
-			if (scrollPosition > Data_FileList.numFiles - 12) {
-				scrollPosition = Data_FileList.numFiles - 12;
+			if (scrollPosition > savedGames->num_files - 12) {
+				scrollPosition = savedGames->num_files - 12;
 			}
 		} else {
 			scrollPosition -= numLines;
@@ -241,10 +244,10 @@ static void buttonScroll(int isDown, int numLines)
 
 static void buttonSelectItem(int index, int param2)
 {
-	if (index < Data_FileList.numFiles) {
+	if (index < savedGames->num_files) {
 		memset(Data_FileList.selectedCity, 0, FILENAME_LENGTH);
-		strcpy(Data_FileList.selectedCity, Data_FileList.files[scrollPosition + index]);
-		FileSystem_removeExtension(Data_FileList.selectedCity);
+		strcpy(Data_FileList.selectedCity, savedGames->files[scrollPosition + index]);
+		file_remove_extension(Data_FileList.selectedCity);
 		KeyboardInput_initInput(2);
 		KeyboardInput_home();
 		KeyboardInput_end();

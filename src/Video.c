@@ -2,12 +2,13 @@
 
 #include "Video/smacker.h"
 
-#include "FileSystem.h"
 #include "Sound.h"
 #include "SoundDevice.h"
 #include "Time.h"
 #include "Data/Screen.h"
 #include "Data/Settings.h"
+
+#include "core/dir.h"
 
 static struct {
 	int isPlaying;
@@ -130,7 +131,7 @@ static int loadSmkAudio(const char *filename)
 
 int loadSmk(const char *filename)
 {
-	const char *path = FileSystem_getCaseSensitiveFile(filename);
+	const char *path = dir_get_case_corrected_file(filename);
 	if (!path) {
 		return 0;
 	}

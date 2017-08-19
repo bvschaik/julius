@@ -1,8 +1,9 @@
 #include "Sound.h"
 #include "SoundDevice.h"
 
-#include "FileSystem.h"
 #include "Data/Settings.h"
+
+#include "core/file.h"
 
 #include <ctype.h>
 #include <dirent.h>
@@ -201,7 +202,7 @@ static void initFilesystemNames()
 	struct dirent *entry;
 	int i = 0;
 	while ((entry = readdir(d)) && i < 500) {
-		if (FileSystem_hasExtension(entry->d_name, "wav")) {
+		if (file_has_extension(entry->d_name, "wav")) {
 			strncpy(fsFilenames[i].cased, dirs[wavs], 4);
 			fsFilenames[i].cased[4] = '/';
 			strncpy(&fsFilenames[i].cased[5], entry->d_name, 26);

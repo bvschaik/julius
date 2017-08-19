@@ -5,9 +5,6 @@
 #define FILENAME_LENGTH 100
 
 extern struct _Data_FileList {
-	char files[FILE_MAX][FILENAME_LENGTH];
-	int numFiles;
-
 	char selectedScenario[FILENAME_LENGTH];
 	char selectedCity[FILENAME_LENGTH];
 	char selectedPlayer[FILENAME_LENGTH];

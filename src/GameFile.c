@@ -5,7 +5,6 @@
 #include "Empire.h"
 #include "Event.h"
 #include "Figure.h"
-#include "FileSystem.h"
 #include "Loader.h"
 #include "PlayerMessage.h"
 #include "Resource.h"
@@ -36,6 +35,9 @@
 #include "Data/Tutorial.h"
 #include "Data/Figure.h"
 #include "Data/Figure.h"
+
+#include "core/file.h"
+#include "core/io.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -423,7 +425,7 @@ int GameFile_loadSavedGame(const char *filename)
 int GameFile_loadSavedGameFromMissionPack(int missionId)
 {
 	int offset;
-	if (!FileSystem_readFilePartIntoBuffer(missionPackFile, &offset, 4, 4 * missionId)) {
+	if (!io_read_file_part_into_buffer(missionPackFile, &offset, 4, 4 * missionId)) {
 		return 0;
 	}
 	if (offset <= 0) {
@@ -539,7 +541,7 @@ void GameFile_writeMissionSavedGameIfNeeded()
 	}
 	if (!Data_CityInfo.missionSavedGameWritten) {
 		Data_CityInfo.missionSavedGameWritten = 1;
-		if (!FileSystem_fileExists(missionSavedGames[missionId])) {
+		if (!file_exists(missionSavedGames[missionId])) {
 			GameFile_writeSavedGame(missionSavedGames[missionId]);
 		}
 	}

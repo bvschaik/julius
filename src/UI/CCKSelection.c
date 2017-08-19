@@ -1,7 +1,9 @@
 #include "Window.h"
 
 #include "core/calc.h"
-#include "../FileSystem.h"
+#include "core/dir.h"
+#include "core/file.h"
+
 #include "../GameFile.h"
 #include "../Graphics.h"
 #include "../Scenario.h"
@@ -53,10 +55,12 @@ static int scrollPosition;
 static int focusButtonId;
 static int selectedItem;
 
+static const dir_listing *scenarios;
+
 void UI_CCKSelection_init()
 {
 	Data_Settings.isCustomScenario = 2;
-	FileSystem_findFilesWithExtension("map");
+	scenarios = dir_find_files_with_extension("map");
 	scrollPosition = 0;
 	focusButtonId = 0;
 	buttonSelectItem(0, 0);
@@ -85,8 +89,8 @@ static void drawScenarioList()
 			font = Font_NormalWhite;
 		}
 		char file[FILENAME_LENGTH];
-		strcpy(file, Data_FileList.files[i + scrollPosition]);
-		FileSystem_removeExtension(file);
+		strcpy(file, scenarios->files[i + scrollPosition]);
+		file_remove_extension(file);
 		Widget_Text_draw(file, Data_Screen.offset640x480.x + 24,
 			Data_Screen.offset640x480.y + 220 + 16 * i, font, 0);
 	}
@@ -94,14 +98,14 @@ static void drawScenarioList()
 
 static void drawScrollbarDot()
 {
-	if (Data_FileList.numFiles > 15) {
+	if (scenarios->num_files > 15) {
 		int pct;
 		if (scrollPosition <= 0) {
 			pct = 0;
-		} else if (scrollPosition + 15 >= Data_FileList.numFiles) {
+		} else if (scrollPosition + 15 >= scenarios->num_files) {
 			pct = 100;
 		} else {
-			pct = calc_percentage(scrollPosition, Data_FileList.numFiles - 15);
+			pct = calc_percentage(scrollPosition, scenarios->num_files - 15);
 		}
 		int yOffset = calc_adjust_with_percentage(164, pct);
 		Graphics_drawImage(GraphicId(ID_Graphic_PanelButton) + 39,
@@ -243,7 +247,7 @@ void UI_CCKSelection_handleMouse()
 
 static int handleScrollbarClick()
 {
-	if (Data_FileList.numFiles <= 15) {
+	if (scenarios->num_files <= 15) {
 		return 0;
 	}
 	if (!Data_Mouse.left.isDown) {
@@ -258,7 +262,7 @@ static int handleScrollbarClick()
 			yOffset = 164;
 		}
 		int pct = calc_percentage(yOffset, 164);
-		scrollPosition = calc_adjust_with_percentage(Data_FileList.numFiles - 15, pct);
+		scrollPosition = calc_adjust_with_percentage(scenarios->num_files - 15, pct);
 		UI_Window_requestRefresh();
 		return 1;
 	}
@@ -267,23 +271,23 @@ static int handleScrollbarClick()
 
 static void buttonSelectItem(int index, int param2)
 {
-	if (index >= Data_FileList.numFiles) {
+	if (index >= scenarios->num_files) {
 		return;
 	}
 	selectedItem = scrollPosition + index;
-	strcpy(Data_FileList.selectedScenario, Data_FileList.files[selectedItem]);
+	strcpy(Data_FileList.selectedScenario, scenarios->files[selectedItem]);
 	GameFile_loadScenario(Data_FileList.selectedScenario);
-	FileSystem_removeExtension(Data_FileList.selectedScenario);
+	file_remove_extension(Data_FileList.selectedScenario);
 	UI_Window_requestRefresh();
 }
 
 static void buttonScroll(int isDown, int numLines)
 {
-	if (Data_FileList.numFiles > 15) {
+	if (scenarios->num_files > 15) {
 		if (isDown) {
 			scrollPosition += numLines;
-			if (scrollPosition > Data_FileList.numFiles - 15) {
-				scrollPosition = Data_FileList.numFiles - 15;
+			if (scrollPosition > scenarios->num_files - 15) {
+				scrollPosition = scenarios->num_files - 15;
 			}
 		} else {
 			scrollPosition -= numLines;

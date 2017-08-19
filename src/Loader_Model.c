@@ -2,8 +2,9 @@
 
 #include "Data/Model.h"
 
-#include "FileSystem.h"
 #include "String.h"
+
+#include "core/io.h"
 
 #include <string.h>
 
@@ -69,12 +70,8 @@ static const char *getValue(const char *ptr, int filesize, int *value) {
 int Loader_Model_loadC3ModelTxt()
 {
 	memset(buffer, 0, sizeof(buffer));
-	int filesize = FileSystem_getFileSize("c3_model.txt");
-	if (filesize >= TMP_BUFFER_SIZE) {
-		// too large
-		return 0;
-	}
-	if (!FileSystem_readFileIntoBuffer("c3_model.txt", buffer, TMP_BUFFER_SIZE)) {
+	int filesize = io_read_file_into_buffer("c3_model.txt", buffer, TMP_BUFFER_SIZE);
+	if (!filesize) {
 		// file doesn't exist
 		return 0;
 	}

@@ -8,7 +8,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
 #set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
 set(SMK_FILES src/Video/smacker.c src/Video/smk_bitstream.c src/Video/smk_hufftree.c)
-set(CORE_FILES src/core/calc.c)
+set(CORE_FILES src/core/calc.c src/core/file.c src/core/dir.c src/core/io.c src/core/string.c)
 add_executable(julius
 	linux/main2.c
 	linux/SDLSoundDevice.c
@@ -58,7 +58,6 @@ add_executable(julius
 	src/FigureRoute.c
 	src/Figure_Phrase.c
 	src/Figure_Service.c
-	src/FileSystem.c
 	src/Formation.c
 	src/FormationUpdate.c
 	src/Game.c
@@ -172,7 +171,7 @@ add_executable(julius
 	src/UI/VideoIntermezzo.c
 	src/UI/Warning.c
 	src/UI/Window.c
-	src/core/calc.c
+	${CORE_FILES}
 	${SMK_FILES})
 
 #include(FindPkgConfig)

@@ -1,7 +1,6 @@
 #include "PlayerMessage.h"
 
 #include "CityView.h"
-#include "FileSystem.h"
 #include "Formation.h"
 #include "Sound.h"
 #include "Time.h"
@@ -12,6 +11,8 @@
 #include "Data/CityInfo.h"
 #include "Data/Language.h"
 #include "Data/Message.h"
+
+#include "core/file.h"
 
 #include <string.h>
 
@@ -27,7 +28,7 @@ static int hasVideo(int textId)
 		return 0;
 	}
 	const char *videoFile = &Data_Language_Message.data[offset];
-	return FileSystem_getCaseSensitiveFile(videoFile) != 0;
+	return file_exists(videoFile) != 0;
 }
 
 void PlayerMessage_disableSoundForNextMessage()

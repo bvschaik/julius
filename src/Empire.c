@@ -1,5 +1,4 @@
 #include "Empire.h"
-#include "FileSystem.h"
 #include "PlayerMessage.h"
 
 #include "Data/Empire.h"
@@ -8,6 +7,8 @@
 #include "Data/Graphics.h"
 #include "Data/CityInfo.h"
 #include "Data/Screen.h"
+
+#include "core/io.h"
 
 #include <string.h>
 
@@ -19,10 +20,10 @@ static void setTradeAmountCode(int index, int resource, int amountCode);
 void Empire_load(int isCustomScenario, int empireId)
 {
 	const char *filename = isCustomScenario ? "c32.emp" : "c3.emp";
-	FileSystem_readFilePartIntoBuffer(filename, Data_Empire_Index, 1280, 0);
+	io_read_file_part_into_buffer(filename, Data_Empire_Index, 1280, 0);
 	memset(Data_Empire_Objects, 0, 12800);
 	int offset = 1280 + 12800 * Data_Scenario.empireId;
-	FileSystem_readFilePartIntoBuffer(filename, Data_Empire_Objects, 12800, offset);
+	io_read_file_part_into_buffer(filename, Data_Empire_Objects, 12800, offset);
 	fixGraphicIds();
 }
 

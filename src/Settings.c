@@ -1,9 +1,10 @@
 #include "Settings.h"
-#include "FileSystem.h"
 
 #include "UI/TopMenu.h"
 #include "Data/Model.h"
 #include "Data/Settings.h"
+
+#include "core/io.h"
 
 static void loadDefaults()
 {
@@ -35,10 +36,10 @@ static void loadDefaults()
 
 void Settings_load()
 {
-	FileSystem_readFileIntoBuffer("c3map.inf", &Data_Settings_Map, 48);
+	io_read_file_into_buffer("c3map.inf", &Data_Settings_Map, 48);
 	loadDefaults();
 	Settings_clearMissionSettings();
-	FileSystem_readFileIntoBuffer("c3.inf", &Data_Settings, 560);
+	io_read_file_into_buffer("c3.inf", &Data_Settings, 560);
 	Data_Settings.gamePaused = 0;
 	if (Data_Settings.windowedWidth + Data_Settings.windowedHeight < 500) {
 		Data_Settings.windowedWidth = 800;
@@ -49,8 +50,8 @@ void Settings_load()
 
 void Settings_save()
 {
-	FileSystem_writeBufferToFile("c3.inf", &Data_Settings, 560);
-	FileSystem_writeBufferToFile("c3map.inf", &Data_Settings_Map, 48);
+	io_write_buffer_to_file("c3.inf", &Data_Settings, 560);
+	io_write_buffer_to_file("c3map.inf", &Data_Settings_Map, 48);
 }
 
 void Settings_clearMissionSettings()

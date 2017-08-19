@@ -1,10 +1,11 @@
 #include "Sound.h"
 
-#include "FileSystem.h"
 #include "SoundDevice.h"
 
 #include "Data/Settings.h"
 #include "Data/CityInfo.h"
+
+#include "core/dir.h"
 
 enum {
 	Track_None = 0,
@@ -36,7 +37,7 @@ static const char tracks[][32] = {
 static void playTrack(int track)
 {
 	SoundDevice_stopMusic();
-	SoundDevice_playMusic(FileSystem_getCaseSensitiveFile(tracks[track]));
+	SoundDevice_playMusic(dir_get_case_corrected_file(tracks[track]));
 	SoundDevice_setMusicVolume(Data_Settings.soundMusicPercentage);
 	currentTrack = track;
 }
