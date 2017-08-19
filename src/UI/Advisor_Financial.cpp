@@ -28,37 +28,37 @@ void UI_Advisor_Financial_drawBackground(int *advisorHeight)
 	Graphics_drawImage(GraphicId(ID_Graphic_AdvisorIcons) + 10, baseOffsetX + 10, baseOffsetY + 10);
 
 	Widget_GameText_draw(60, 0, baseOffsetX + 60, baseOffsetY + 12, Font_LargeBlack);
-	Widget_Panel_drawInnerPanel(baseOffsetX + 64, baseOffsetY + 48, 34, 4);
-	Widget_Panel_drawInnerPanelBottom(baseOffsetX + 64, baseOffsetY + 104, 34);
+	Widget_Panel_drawInnerPanel(baseOffsetX + 64, baseOffsetY + 48, 34, 5);
+	//Widget_Panel_drawInnerPanelBottom(baseOffsetX + 64, baseOffsetY + 104, 34);
 
 	int width;
 	if (Data_CityInfo.treasury < 0) {
-		width = Widget_GameText_draw(60, 3, baseOffsetX + 70, baseOffsetY + 53, Font_NormalRed);
+		width = Widget_GameText_draw(60, 3, baseOffsetX + 70, baseOffsetY + 58, Font_NormalRed);
 		Widget_GameText_drawNumberWithDescription(8, 0,
-			-Data_CityInfo.treasury, baseOffsetX + 72 + width, baseOffsetY + 53, Font_NormalRed
+			-Data_CityInfo.treasury, baseOffsetX + 72 + width, baseOffsetY + 58, Font_NormalRed
 		);
 	} else {
-		width = Widget_GameText_draw(60, 2, baseOffsetX + 70, baseOffsetY + 53, Font_NormalWhite);
+		width = Widget_GameText_draw(60, 2, baseOffsetX + 70, baseOffsetY + 58, Font_NormalWhite);
 		Widget_GameText_drawNumberWithDescription(8, 0,
-			Data_CityInfo.treasury, baseOffsetX + 72 + width, baseOffsetY + 53, Font_NormalWhite
+			Data_CityInfo.treasury, baseOffsetX + 72 + width, baseOffsetY + 58, Font_NormalWhite
 		);
 	}
 
 	// tax percentage and estimated income
-	Widget_GameText_draw(60, 1, baseOffsetX + 70, baseOffsetY + 76, Font_NormalWhite);
+	Widget_GameText_draw(60, 1, baseOffsetX + 70, baseOffsetY + 81, Font_NormalWhite);
 	width = Widget_Text_drawNumber(Data_CityInfo.taxPercentage, '@', "%",
-		baseOffsetX + 240, baseOffsetY + 76, Font_NormalWhite
+		baseOffsetX + 240, baseOffsetY + 81, Font_NormalWhite
 	);
-	width += Widget_GameText_draw(60, 4, baseOffsetX + 240 + width, baseOffsetY + 76, Font_NormalWhite);
+	width += Widget_GameText_draw(60, 4, baseOffsetX + 240 + width, baseOffsetY + 81, Font_NormalWhite);
 	Widget_GameText_drawNumberWithDescription(8, 0,
-		Data_CityInfo.estimatedTaxIncome, baseOffsetX + 240 + width, baseOffsetY + 76, Font_NormalWhite
+		Data_CityInfo.estimatedTaxIncome, baseOffsetX + 240 + width, baseOffsetY + 81, Font_NormalWhite
 	);
 
 	// percentage taxpayers
 	width = Widget_Text_drawNumber(Data_CityInfo.percentageTaxedPeople, '@', "%",
-		baseOffsetX + 70, baseOffsetY + 98, Font_NormalWhite
+		baseOffsetX + 70, baseOffsetY + 103, Font_NormalWhite
 	);
-	Widget_GameText_draw(60, 5, baseOffsetX + 70 + width, baseOffsetY + 98, Font_NormalWhite);
+	Widget_GameText_draw(60, 5, baseOffsetX + 70 + width, baseOffsetY + 103, Font_NormalWhite);
 
 	// table headers
 	Widget_GameText_draw(60, 6, baseOffsetX + 270, baseOffsetY + 133, Font_NormalBlack);
