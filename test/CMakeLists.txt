@@ -5,13 +5,14 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --coverage")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
 
 set(TESTS
+    core/buffer
     core/calc
     core/dir
     core/file
     core/io
 #     core/random
     core/string
-#     core/time
+    core/time
 #     core/zip
 #     
 #     building/model

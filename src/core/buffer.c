@@ -72,21 +72,19 @@ uint8_t buffer_read_u8(buffer *buffer)
 uint16_t buffer_read_u16(buffer *buffer)
 {
     CHECK_READ(buffer, 2);
-    return (uint16_t) (
-        buffer->data[buffer->index++] |
-        (buffer->data[buffer->index++] << 8)
-    );
+    uint8_t b0 = buffer->data[buffer->index++];
+    uint8_t b1 = buffer->data[buffer->index++];
+    return (uint16_t) (b0 | (b1 << 8));
 }
 
 uint32_t buffer_read_u32(buffer *buffer)
 {
     CHECK_READ(buffer, 4);
-    return (uint32_t) (
-        buffer->data[buffer->index++] |
-        (buffer->data[buffer->index++] << 8) |
-        (buffer->data[buffer->index++] << 16) |
-        (buffer->data[buffer->index++] << 24)
-    );
+    uint8_t b0 = buffer->data[buffer->index++];
+    uint8_t b1 = buffer->data[buffer->index++];
+    uint8_t b2 = buffer->data[buffer->index++];
+    uint8_t b3 = buffer->data[buffer->index++];
+    return (uint32_t) (b0 | (b1 << 8) | (b2 << 16) | (b3 << 24));
 }
 
 int8_t buffer_read_i8(buffer *buffer)
@@ -98,21 +96,19 @@ int8_t buffer_read_i8(buffer *buffer)
 int16_t buffer_read_i16(buffer *buffer)
 {
     CHECK_READ(buffer, 2);
-    return (int16_t) (
-        buffer->data[buffer->index++] |
-        (buffer->data[buffer->index++] << 8)
-    );
+    uint8_t b0 = buffer->data[buffer->index++];
+    uint8_t b1 = buffer->data[buffer->index++];
+    return (int16_t) (b0 | (b1 << 8));
 }
 
 int32_t buffer_read_i32(buffer *buffer)
 {
     CHECK_READ(buffer, 4);
-    return (int32_t) (
-        buffer->data[buffer->index++] |
-        (buffer->data[buffer->index++] << 8) |
-        (buffer->data[buffer->index++] << 16) |
-        (buffer->data[buffer->index++] << 24)
-    );
+    uint8_t b0 = buffer->data[buffer->index++];
+    uint8_t b1 = buffer->data[buffer->index++];
+    uint8_t b2 = buffer->data[buffer->index++];
+    uint8_t b3 = buffer->data[buffer->index++];
+    return (int32_t) (b0 | (b1 << 8) | (b2 << 16) | (b3 << 24));
 }
 
 void buffer_read_raw(buffer *buffer, void *value, int size)
