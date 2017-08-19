@@ -6,11 +6,11 @@ set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
 
 set(TESTS
     core/calc
-#     core/dir
-#     core/file
-#     core/io
+    core/dir
+    core/file
+    core/io
 #     core/random
-#     core/string
+    core/string
 #     core/time
 #     core/zip
 #     

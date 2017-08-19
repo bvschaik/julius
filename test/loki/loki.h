@@ -122,42 +122,42 @@ int main()\
 void assert_eq(int expected, int actual)
 {
     if (actual != expected) {
-        testsuite_record_fail(&testsuite, "Integers not equal: expected <%d>, actual: <%d>\n", expected, actual);
+        testsuite_record_fail(&testsuite, "Integers not equal: expected [%d], actual: [%d]\n", expected, actual);
     }
 }
 
 void assert_eq_u(unsigned int expected, unsigned int actual)
 {
     if (actual != expected) {
-        testsuite_record_fail(&testsuite, "Integers not equal: expected <%u>, actual: <%u>\n", expected, actual);
+        testsuite_record_fail(&testsuite, "Integers not equal: expected [%u], actual: [%u]\n", expected, actual);
     }
 }
 
 void assert_not_eq(int expected, int actual)
 {
     if (actual == expected) {
-        testsuite_record_fail(&testsuite, "Integers equal: expected not <%d>, actual: <%d>\n", expected, actual);
+        testsuite_record_fail(&testsuite, "Integers equal: expected not [%d], actual: [%d]\n", expected, actual);
     }
 }
 
 void assert_eq_string(const char *expected, const char *actual)
 {
     if (0 != strcmp(expected, actual)) {
-        testsuite_record_fail(&testsuite, "Strings not equal: expected <%s>, actual: <%s>\n", expected, actual);
+        testsuite_record_fail(&testsuite, "Strings not equal: expected [%s], actual: [%s]\n", expected, actual);
     }
 }
 
 void assert_true(int actual)
 {
     if (!actual) {
-        testsuite_record_fail(&testsuite, "Value expected to be true but was: <%d>\n", actual);
+        testsuite_record_fail(&testsuite, "Value expected to be true but was: [%d]\n", actual);
     }
 }
 
 void assert_false(int actual)
 {
     if (actual) {
-        testsuite_record_fail(&testsuite, "Value expected to be false but was: <%d>\n", actual);
+        testsuite_record_fail(&testsuite, "Value expected to be false but was: [%d]\n", actual);
     }
 }
 
