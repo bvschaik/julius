@@ -13,7 +13,6 @@
 #include "Sound.h"
 #include "TerrainGraphics.h"
 #include "UtilityManagement.h"
-#include "Zip.h"
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
@@ -38,6 +37,7 @@
 
 #include "core/file.h"
 #include "core/io.h"
+#include "core/zip.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -600,7 +600,7 @@ static int writeCompressedChunk(FILE *fp, const void *buffer, int bytesToWrite)
 		return 0;
 	}
 	int outputSize = COMPRESS_BUFFER_SIZE;
-	if (Zip_compress(buffer, bytesToWrite, compressBuffer, &outputSize)) {
+	if (zip_compress(buffer, bytesToWrite, compressBuffer, &outputSize)) {
 		fwrite(&outputSize, 4, 1, fp);
 		fwrite(compressBuffer, 1, outputSize, fp);
 	} else {
@@ -623,7 +623,7 @@ static int readCompressedChunk(FILE *fp, void *buffer, int bytesToRead)
 		fread(buffer, 1, bytesToRead, fp);
 	} else {
 		fread(compressBuffer, 1, inputSize, fp);
-		if (!Zip_decompress(compressBuffer, inputSize, buffer, &bytesToRead)) {
+		if (!zip_decompress(compressBuffer, inputSize, buffer, &bytesToRead)) {
 			return 0;
 		}
 	}

@@ -13,7 +13,7 @@ set(TESTS
 #     core/random
     core/string
     core/time
-#     core/zip
+    core/zip
 #     
 #     building/model
 #     building/storage

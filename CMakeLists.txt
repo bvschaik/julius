@@ -9,11 +9,13 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
 set(SMK_FILES src/Video/smacker.c src/Video/smk_bitstream.c src/Video/smk_hufftree.c)
 set(CORE_FILES
     src/core/calc.c
+    src/core/debug.c
     src/core/dir.c
     src/core/file.c
     src/core/io.c
     src/core/string.c
     src/core/time.c
+    src/core/zip.c
 )
 add_executable(julius
 	linux/main2.c
@@ -112,7 +114,6 @@ add_executable(julius
 	src/Widget_Menu.c
 	src/Widget_Panel.c
 	src/Widget_Text.c
-	src/Zip.c
 	src/Data/Model.c
 	src/UI/Advisor_Chief.c
 	src/UI/Advisor_Education.c
