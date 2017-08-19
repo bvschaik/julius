@@ -141,7 +141,7 @@ void test_string_compare_greater()
     assert_true(string_compare_case_insensitive("bb", "b") > 0);
 }
 
-RUN_TESTS(string,
+RUN_TESTS(core/string,
     ADD_TEST(test_string_copy_short)
     ADD_TEST(test_string_copy_long)
     ADD_TEST(test_string_from_int_with_plus)

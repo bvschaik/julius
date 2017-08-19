@@ -32,7 +32,7 @@ int string_to_int(const uint8_t *str);
 int string_from_int(uint8_t *dst, int value, int force_plus_sign);
 
 /**
- * Compares the two strings case insensitively
+ * Compares the two strings case insensitively, used exclusively for filenames
  * @param a String A
  * @param b String B
  * @return Negative if A < B, positive if A > B, zero if A == B

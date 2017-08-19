@@ -83,7 +83,7 @@ void test_dir_find_files_txt()
     chdir("..");
 }
 
-RUN_TESTS(dir,
+RUN_TESTS(core/dir,
     ADD_TEST(test_dir_correct_simple_data)
     ADD_TEST(test_dir_correct_case_differs)
     ADD_TEST(test_dir_correct_case_differs_same_dir)

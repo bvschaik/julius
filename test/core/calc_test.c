@@ -51,7 +51,7 @@ void test_calc_bound()
     assert_eq(50, calc_bound(50, 0, 100));
 }
 
-RUN_TESTS(calc,
+RUN_TESTS(core/calc,
     ADD_TEST(test_calc_adjust_with_percentage)
     ADD_TEST(test_calc_percentage)
     ADD_TEST(test_calc_total_distance)

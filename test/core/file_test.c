@@ -104,7 +104,7 @@ void test_file_exists_false()
     assert_false(file_exists(filename));
 }
 
-RUN_TESTS(file,
+RUN_TESTS(core/file,
     ADD_TEST(test_file_has_extension_normal_extension)
     ADD_TEST(test_file_has_extension_double_extension)
     ADD_TEST(test_file_has_extension_no_extension)

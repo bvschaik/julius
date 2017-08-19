@@ -102,7 +102,7 @@ void test_io_write_buffer_to_file_existing()
     remove(output_file);
 }
 
-RUN_TESTS(io,
+RUN_TESTS(core/io,
     ADD_TEST(test_io_read_file_into_buffer)
     ADD_TEST(test_io_read_file_into_small_buffer)
     ADD_TEST(test_io_read_file_nonexisting)
