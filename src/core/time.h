@@ -1,5 +1,5 @@
-#ifndef TIME_H
-#define TIME_H
+#ifndef CORE_TIME_H
+#define CORE_TIME_H
 /**
  * @file
  * Time tracking functions.
@@ -22,4 +22,4 @@ time_millis time_get_millis();
  */
 void time_set_millis(time_millis millis);
 
-#endif // TIME_H
+#endif // CORE_TIME_H

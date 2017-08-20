@@ -1,5 +1,5 @@
-#ifndef IO_H
-#define IO_H
+#ifndef CORE_IO_H
+#define CORE_IO_H
 
 /**
  * @file
@@ -33,4 +33,4 @@ int io_read_file_part_into_buffer(const char *filepath, void *buffer, int size, 
  */
 int io_write_buffer_to_file(const char *filepath, const void *buffer, int size);
 
-#endif // IO_H
+#endif // CORE_IO_H

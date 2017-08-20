@@ -1,5 +1,5 @@
-#ifndef RANDOM_H
-#define RANDOM_H
+#ifndef CORE_RANDOM_H
+#define CORE_RANDOM_H
 
 #include <stdint.h>
 
@@ -62,4 +62,4 @@ void random_save_state(buffer *buf);
  */
 void random_load_state(buffer *buf);
 
-#endif // RANDOM_H
+#endif // CORE_RANDOM_H

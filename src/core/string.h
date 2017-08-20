@@ -1,5 +1,5 @@
-#ifndef STRING_H
-#define STRING_H
+#ifndef CORE_STRING_H
+#define CORE_STRING_H
 
 #include <stdint.h>
 
@@ -39,4 +39,4 @@ int string_from_int(uint8_t *dst, int value, int force_plus_sign);
  */
 int string_compare_case_insensitive(const char *a, const char *b);
 
-#endif // STRING_H
+#endif // CORE_STRING_H

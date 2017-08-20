@@ -1,5 +1,5 @@
-#ifndef DEBUG_H
-#define DEBUG_H
+#ifndef CORE_DEBUG_H
+#define CORE_DEBUG_H
 
 /**
  * @file
@@ -14,4 +14,4 @@
  */
 void debug_log(const char *msg, const char *param_str, int param_int);
 
-#endif // DEBUG_H
+#endif // CORE_DEBUG_H

@@ -1,5 +1,5 @@
-#ifndef DIR_H
-#define DIR_H
+#ifndef CORE_DIR_H
+#define CORE_DIR_H
 
 /**
  * @file
@@ -30,4 +30,4 @@ const dir_listing *dir_find_files_with_extension(const char *extension);
  */
 const char *dir_get_case_corrected_file(const char *filepath);
 
-#endif // DIR_H
+#endif // CORE_DIR_H

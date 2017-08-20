@@ -1,5 +1,5 @@
-#ifndef FILE_H
-#define FILE_H
+#ifndef CORE_FILE_H
+#define CORE_FILE_H
 
 /**
  * @file
@@ -48,4 +48,4 @@ void file_remove_extension(char *filename);
  */
 int file_exists(const char *filename);
 
-#endif // FILE_H
+#endif // CORE_FILE_H

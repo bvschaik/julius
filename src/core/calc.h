@@ -1,5 +1,5 @@
-#ifndef CALC_H
-#define CALC_H
+#ifndef CORE_CALC_H
+#define CORE_CALC_H
 
 #include <stdint.h>
 
@@ -51,4 +51,4 @@ int calc_minimum_distance(int x1, int y1, int x2, int y2);
  */
 int32_t calc_bound(int32_t value, int32_t min, int32_t max);
 
-#endif // CALC_H
+#endif // CORE_CALC_H

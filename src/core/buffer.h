@@ -1,5 +1,5 @@
-#ifndef BUFFER_H
-#define BUFFER_H
+#ifndef CORE_BUFFER_H
+#define CORE_BUFFER_H
 
 #include <stdint.h>
 
@@ -139,4 +139,4 @@ void buffer_read_raw(buffer *buffer, void *value, int size);
  */
 void buffer_skip(buffer *buffer, int size);
 
-#endif // BUFFER_H
+#endif // CORE_BUFFER_H
