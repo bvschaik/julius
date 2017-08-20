@@ -62,8 +62,6 @@ static char playerNames[2][32];
 
 static char compressBuffer[COMPRESS_BUFFER_SIZE];
 
-static int endMarker = 0;
-
 static const char missionPackFile[] = "mission1.pak";
 
 static const char missionSavedGames[][32] = {
@@ -890,7 +888,6 @@ static void savegame_deserialize(savegame_state *state)
     read_all_from_buffer(state->Data_Tutorial_tutorial3_disease, &Data_Tutorial.tutorial3.disease);
     read_all_from_buffer(state->Data_CityInfo_Extra_entryPointFlag_gridOffset, &Data_CityInfo_Extra.entryPointFlag.gridOffset);
     read_all_from_buffer(state->Data_CityInfo_Extra_exitPointFlag_gridOffset, &Data_CityInfo_Extra.exitPointFlag.gridOffset);
-    read_all_from_buffer(state->endMarker, &endMarker);
 }
 
 static void savegame_serialize(savegame_state *state)
@@ -1125,7 +1122,6 @@ static void savegame_serialize(savegame_state *state)
     write_all_to_buffer(state->Data_Tutorial_tutorial3_disease, &Data_Tutorial.tutorial3.disease);
     write_all_to_buffer(state->Data_CityInfo_Extra_entryPointFlag_gridOffset, &Data_CityInfo_Extra.entryPointFlag.gridOffset);
     write_all_to_buffer(state->Data_CityInfo_Extra_exitPointFlag_gridOffset, &Data_CityInfo_Extra.exitPointFlag.gridOffset);
-    write_all_to_buffer(state->endMarker, &endMarker);
 }
 
 static void setupFromSavedGame();
