@@ -36,7 +36,7 @@ void Resource_calculateWarehouseStocks()
 	}
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
-		if (BuildingIsInUse(i) && b->type == Building_Warehouse) {
+		if (BuildingIsInUse(i) && b->type == BUILDING_WAREHOUSE) {
 			b->hasRoadAccess = 0;
 			if (Terrain_hasRoadAccess(b->x, b->y, b->size, 0, 0)) {
 				b->hasRoadAccess = 1;
@@ -47,7 +47,7 @@ void Resource_calculateWarehouseStocks()
 	}
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
-		if (!BuildingIsInUse(i) || b->type != Building_WarehouseSpace) {
+		if (!BuildingIsInUse(i) || b->type != BUILDING_WAREHOUSE_SPACE) {
 			continue;
 		}
 		int warehouseId = Building_getMainBuildingId(i);

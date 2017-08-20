@@ -34,7 +34,7 @@ static int provideEngineerCoverage(int x, int y, int *maxDamageRiskSeen)
 {
 	int serviced = 0;
 	FOR_XY_RADIUS {
-		if (Data_Buildings[buildingId].type == Building_Hippodrome) {
+		if (Data_Buildings[buildingId].type == BUILDING_HIPPODROME) {
 			buildingId = Building_getMainBuildingId(buildingId);
 		}
 		if (Data_Buildings[buildingId].damageRisk > *maxDamageRiskSeen) {
@@ -52,7 +52,7 @@ static int providePrefectFireCoverage(int x, int y)
 {
 	int serviced = 0;
 	FOR_XY_RADIUS {
-		if (Data_Buildings[buildingId].type == Building_Hippodrome) {
+		if (Data_Buildings[buildingId].type == BUILDING_HIPPODROME) {
 			buildingId = Building_getMainBuildingId(buildingId);
 		}
 		Data_Buildings[buildingId].fireRisk = 0;
@@ -137,7 +137,7 @@ static int provideMarketGoods(int marketBuildingId, int x, int y)
 			serviced++;
 			struct Data_Building *house = &Data_Buildings[buildingId];
 			int level = house->subtype.houseLevel;
-			if (level < HouseLevel_LuxuryPalace) {
+			if (level < HOUSE_LUXURY_PALACE) {
 				level++;
 			}
 			int maxFoodStocks = 4 * house->houseMaxPopulationSeen;
@@ -345,8 +345,8 @@ static int provideMissionaryCoverage(int x, int y)
 		for (int xx = xMin; xx <= xMax; xx++) {
 			int buildingId = Data_Grid_buildingIds[gridOffset];
 			if (buildingId) {
-				if (Data_Buildings[buildingId].type == Building_NativeHut ||
-					Data_Buildings[buildingId].type == Building_NativeMeeting) {
+				if (Data_Buildings[buildingId].type == BUILDING_NATIVE_HUT ||
+					Data_Buildings[buildingId].type == BUILDING_NATIVE_MEETING) {
 					Data_Buildings[buildingId].sentiment.nativeAnger = 0;
 				}
 			}
@@ -430,24 +430,24 @@ int Figure_provideServiceCoverage(int figureId)
 			break;
 		case Figure_Priest:
 			switch (Data_Buildings[Data_Figures[figureId].buildingId].type) {
-				case Building_SmallTempleCeres:
-				case Building_LargeTempleCeres:
+				case BUILDING_SMALL_TEMPLE_CERES:
+				case BUILDING_LARGE_TEMPLE_CERES:
 					numHousesServiced = provideReligionCoverage(x, y, God_Ceres);
 					break;
-				case Building_SmallTempleNeptune:
-				case Building_LargeTempleNeptune:
+				case BUILDING_SMALL_TEMPLE_NEPTUNE:
+				case BUILDING_LARGE_TEMPLE_NEPTUNE:
 					numHousesServiced = provideReligionCoverage(x, y, God_Neptune);
 					break;
-				case Building_SmallTempleMercury:
-				case Building_LargeTempleMercury:
+				case BUILDING_SMALL_TEMPLE_MERCURY:
+				case BUILDING_LARGE_TEMPLE_MERCURY:
 					numHousesServiced = provideReligionCoverage(x, y, God_Mercury);
 					break;
-				case Building_SmallTempleMars:
-				case Building_LargeTempleMars:
+				case BUILDING_SMALL_TEMPLE_MARS:
+				case BUILDING_LARGE_TEMPLE_MARS:
 					numHousesServiced = provideReligionCoverage(x, y, God_Mars);
 					break;
-				case Building_SmallTempleVenus:
-				case Building_LargeTempleVenus:
+				case BUILDING_SMALL_TEMPLE_VENUS:
+				case BUILDING_LARGE_TEMPLE_VENUS:
 					numHousesServiced = provideReligionCoverage(x, y, God_Venus);
 					break;
 				default:
@@ -461,9 +461,9 @@ int Figure_provideServiceCoverage(int figureId)
 			} else { // going to venue
 				buildingId = Data_Figures[figureId].destinationBuildingId;
 			}
-			if (Data_Buildings[buildingId].type == Building_Theater) {
+			if (Data_Buildings[buildingId].type == BUILDING_THEATER) {
 				numHousesServiced = provideTheaterCoverage(x, y);
-			} else if (Data_Buildings[buildingId].type == Building_Amphitheater) {
+			} else if (Data_Buildings[buildingId].type == BUILDING_AMPHITHEATER) {
 				numHousesServiced = provideAmphitheaterCoverage(x, y,
 					Data_Buildings[buildingId].data.entertainment.days1 ? 2 : 1);
 			}
@@ -475,10 +475,10 @@ int Figure_provideServiceCoverage(int figureId)
 			} else { // going to venue
 				buildingId = Data_Figures[figureId].destinationBuildingId;
 			}
-			if (Data_Buildings[buildingId].type == Building_Amphitheater) {
+			if (Data_Buildings[buildingId].type == BUILDING_AMPHITHEATER) {
 				numHousesServiced = provideAmphitheaterCoverage(x, y,
 					Data_Buildings[buildingId].data.entertainment.days2 ? 2 : 1);
-			} else if (Data_Buildings[buildingId].type == Building_Colosseum) {
+			} else if (Data_Buildings[buildingId].type == BUILDING_COLOSSEUM) {
 				numHousesServiced = provideColosseumCoverage(x, y,
 					Data_Buildings[buildingId].data.entertainment.days1 ? 2 : 1);
 			}

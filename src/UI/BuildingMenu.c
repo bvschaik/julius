@@ -174,11 +174,11 @@ static void drawMenuButtons()
 		int buildingType = SidebarMenu_getBuildingType(menu.selectedSubmenu, itemIndex);
 		Widget_GameText_drawCentered(28, buildingType,
 			xOffset - 266, menu.yOffset + 113 + 24 * i, 176, Font_NormalGreen);
-		if (buildingType == Building_DraggableReservoir) {
-			buildingType = Building_Reservoir;
+		if (buildingType == BUILDING_DRAGGABLE_RESERVOIR) {
+			buildingType = BUILDING_RESERVOIR;
 		}
 		int cost = model_get_building(buildingType)->cost;
-		if (buildingType == Building_Fort) {
+		if (buildingType == BUILDING_FORT) {
 			cost = 0;
 		}
 		if (cost) {
@@ -241,26 +241,26 @@ static void buttonMenuItem(int item)
 	Data_State.selectedBuilding.yEnd = 0;
 	
 	int type = Data_State.selectedBuilding.type = SidebarMenu_getBuildingType(menu.selectedSubmenu, item);
-	if (type == Building_Menu_Farms || type == Building_Menu_RawMaterials ||
-		type == Building_Menu_Workshops || type == Building_Fort ||
-		type == Building_Menu_SmallTemples || type == Building_Menu_LargeTemples) {
+	if (type == BUILDING_MENU_FARMS || type == BUILDING_MENU_RAW_MATERIALS ||
+		type == BUILDING_MENU_WORKSHOPS || type == BUILDING_FORT ||
+		type == BUILDING_MENU_SMALL_TEMPLES || type == BUILDING_MENU_LARGE_TEMPLES) {
 		switch (type) {
-			case Building_Menu_Farms:
+			case BUILDING_MENU_FARMS:
 				menu.selectedSubmenu = 19;
 				break;
-			case Building_Menu_RawMaterials:
+			case BUILDING_MENU_RAW_MATERIALS:
 				menu.selectedSubmenu = 20;
 				break;
-			case Building_Menu_Workshops:
+			case BUILDING_MENU_WORKSHOPS:
 				menu.selectedSubmenu = 21;
 				break;
-			case Building_Menu_SmallTemples:
+			case BUILDING_MENU_SMALL_TEMPLES:
 				menu.selectedSubmenu = 22;
 				break;
-			case Building_Menu_LargeTemples:
+			case BUILDING_MENU_LARGE_TEMPLES:
 				menu.selectedSubmenu = 23;
 				break;
-			case Building_Fort:
+			case BUILDING_FORT:
 				menu.selectedSubmenu = 24;
 				break;
 		}
@@ -269,29 +269,29 @@ static void buttonMenuItem(int item)
 		Data_State.selectedBuilding.type = 0;
 	} else {
 		switch (type) {
-			case Building_WheatFarm:
-			case Building_VegetableFarm:
-			case Building_FruitFarm:
-			case Building_OliveFarm:
-			case Building_VinesFarm:
-			case Building_PigFarm:
+			case BUILDING_WHEAT_FARM:
+			case BUILDING_VEGETABLE_FARM:
+			case BUILDING_FRUIT_FARM:
+			case BUILDING_OLIVE_FARM:
+			case BUILDING_VINES_FARM:
+			case BUILDING_PIG_FARM:
 				Data_State.selectedBuilding.meadowRequired = 1;
 				break;
-			case Building_MarbleQuarry:
-			case Building_IronMine:
+			case BUILDING_MARBLE_QUARRY:
+			case BUILDING_IRON_MINE:
 				Data_State.selectedBuilding.rockRequired = 1;
 				break;
-			case Building_TimberYard:
+			case BUILDING_TIMBER_YARD:
 				Data_State.selectedBuilding.treesRequired = 1;
 				break;
-			case Building_ClayPit:
+			case BUILDING_CLAY_PIT:
 				Data_State.selectedBuilding.waterRequired = 1;
 				break;
-			case Building_Gatehouse:
-			case Building_TriumphalArch:
+			case BUILDING_GATEHOUSE:
+			case BUILDING_TRIUMPHAL_ARCH:
 				Data_State.selectedBuilding.roadRequired = 1;
 				break;
-			case Building_Tower:
+			case BUILDING_TOWER:
 				Data_State.selectedBuilding.wallRequired = 1;
 				break;
 		}

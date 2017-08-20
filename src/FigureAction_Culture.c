@@ -78,7 +78,7 @@ void FigureAction_schoolChild(int figureId)
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 96;
 	int buildingId = f->buildingId;
-	if (!BuildingIsInUse(buildingId) || Data_Buildings[buildingId].type != Building_School) {
+	if (!BuildingIsInUse(buildingId) || Data_Buildings[buildingId].type != BUILDING_SCHOOL) {
 		f->state = FigureState_Dead;
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);
@@ -194,8 +194,8 @@ void FigureAction_marketTrader(int figureId)
 	FigureActionIncreaseGraphicOffset(f, 12);
 	if (f->actionState == FigureActionState_125_Roaming) {
 		// force return on out of stock
-		int stock = Building_Market_getMaxFoodStock(f->buildingId) +
-			Building_Market_getMaxGoodsStock(f->buildingId);
+		int stock = BUILDING_MARKET_getMaxFoodStock(f->buildingId) +
+			BUILDING_MARKET_getMaxGoodsStock(f->buildingId);
 		if (f->roamLength >= 96 && stock <= 0) {
 			f->roamLength = f->maxRoamLength;
 		}

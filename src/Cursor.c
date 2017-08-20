@@ -127,7 +127,7 @@ void Cursor_set()
 {
 	if (UI_Window_getId() == Window_CityMilitary) {
 		System_setCursor(Cursor_Sword);
-	} else if (UI_Window_getId() == Window_City && Data_State.selectedBuilding.type == Building_ClearLand) {
+	} else if (UI_Window_getId() == Window_City && Data_State.selectedBuilding.type == BUILDING_CLEAR_LAND) {
 		System_setCursor(Cursor_Shovel);
 	} else {
 		System_setCursor(Cursor_Arrow);

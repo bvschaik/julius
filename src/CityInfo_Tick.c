@@ -72,179 +72,179 @@ void CityInfo_Tick_countBuildingTypes()
 		int isEntertainmentVenue = 0;
 		switch (Data_Buildings[i].type) {
 			// entertainment venues
-			case Building_Theater:
+			case BUILDING_THEATER:
 				isEntertainmentVenue = 1;
 				UPDATE(theater);
 				break;
-			case Building_Amphitheater:
+			case BUILDING_AMPHITHEATER:
 				isEntertainmentVenue = 1;
 				UPDATE(amphitheater);
 				break;
-			case Building_Colosseum:
+			case BUILDING_COLOSSEUM:
 				isEntertainmentVenue = 1;
 				UPDATE(colosseum);
 				break;
-			case Building_Hippodrome:
+			case BUILDING_HIPPODROME:
 				isEntertainmentVenue = 1;
 				UPDATE(hippodrome);
 				break;
 			// education
-			case Building_School:
+			case BUILDING_SCHOOL:
 				UPDATE(school);
 				break;
-			case Building_Library:
+			case BUILDING_LIBRARY:
 				UPDATE(library);
 				break;
-			case Building_Academy:
+			case BUILDING_ACADEMY:
 				UPDATE(academy);
 				break;
 			// health
-			case Building_Barber:
+			case BUILDING_BARBER:
 				UPDATE(barber);
 				break;
-			case Building_Bathhouse:
+			case BUILDING_BATHHOUSE:
 				UPDATE(bathhouse);
 				break;
-			case Building_Doctor:
+			case BUILDING_DOCTOR:
 				UPDATE(clinic);
 				break;
-			case Building_Hospital:
+			case BUILDING_HOSPITAL:
 				UPDATE(hospital);
 				Data_CityInfo.numHospitalWorkers += Data_Buildings[i].numWorkers;
 				break;
 			// government
-			case Building_Forum:
+			case BUILDING_FORUM:
 				UPDATE(forum);
 				break;
-			case Building_ForumUpgraded:
+			case BUILDING_FORUM_UPGRADED:
 				UPDATE(forumUpgraded);
 				break;
-			case Building_Senate:
+			case BUILDING_SENATE:
 				UPDATE(senate);
 				break;
-			case Building_SenateUpgraded:
+			case BUILDING_SENATE_UPGRADED:
 				UPDATE(senateUpgraded);
 				break;
 			// entertainment schools
-			case Building_ActorColony:
+			case BUILDING_ACTOR_COLONY:
 				UPDATE(actorColony);
 				break;
-			case Building_GladiatorSchool:
+			case BUILDING_GLADIATOR_SCHOOL:
 				UPDATE(gladiatorSchool);
 				break;
-			case Building_LionHouse:
+			case BUILDING_LION_HOUSE:
 				UPDATE(lionHouse);
 				break;
-			case Building_ChariotMaker:
+			case BUILDING_CHARIOT_MAKER:
 				UPDATE(chariotMaker);
 				break;
 			// distribution
-			case Building_Market:
+			case BUILDING_MARKET:
 				UPDATE(market);
 				break;
 			// military
-			case Building_MilitaryAcademy:
+			case BUILDING_MILITARY_ACADEMY:
 				UPDATE(militaryAcademy);
 				break;
-			case Building_Barracks:
+			case BUILDING_BARRACKS:
 				Data_CityInfo.buildingBarracksBuildingId = i;
 				UPDATE(barracks);
 				break;
 			// religion
-			case Building_SmallTempleCeres:
+			case BUILDING_SMALL_TEMPLE_CERES:
 				UPDATE(smallTempleCeres);
 				break;
-			case Building_SmallTempleNeptune:
+			case BUILDING_SMALL_TEMPLE_NEPTUNE:
 				UPDATE(smallTempleNeptune);
 				break;
-			case Building_SmallTempleMercury:
+			case BUILDING_SMALL_TEMPLE_MERCURY:
 				UPDATE(smallTempleMercury);
 				break;
-			case Building_SmallTempleMars:
+			case BUILDING_SMALL_TEMPLE_MARS:
 				UPDATE(smallTempleMars);
 				break;
-			case Building_SmallTempleVenus:
+			case BUILDING_SMALL_TEMPLE_VENUS:
 				UPDATE(smallTempleVenus);
 				break;
-			case Building_LargeTempleCeres:
+			case BUILDING_LARGE_TEMPLE_CERES:
 				UPDATE(largeTempleCeres);
 				break;
-			case Building_LargeTempleNeptune:
+			case BUILDING_LARGE_TEMPLE_NEPTUNE:
 				UPDATE(largeTempleNeptune);
 				break;
-			case Building_LargeTempleMercury:
+			case BUILDING_LARGE_TEMPLE_MERCURY:
 				UPDATE(largeTempleMercury);
 				break;
-			case Building_LargeTempleMars:
+			case BUILDING_LARGE_TEMPLE_MARS:
 				UPDATE(largeTempleMars);
 				break;
-			case Building_LargeTempleVenus:
+			case BUILDING_LARGE_TEMPLE_VENUS:
 				UPDATE(largeTempleVenus);
 				break;
-			case Building_Oracle:
+			case BUILDING_ORACLE:
 				++Data_CityInfo_Buildings.oracle.total;
 				break;
 			// water
-			case Building_Reservoir:
+			case BUILDING_RESERVOIR:
 				++Data_CityInfo_Buildings.reservoir.total;
 				if (Data_Buildings[i].hasWaterAccess) {
 					++Data_CityInfo_Buildings.reservoir.working;
 				}
 				break;
-			case Building_Fountain:
+			case BUILDING_FOUNTAIN:
 				++Data_CityInfo_Buildings.fountain.total;
 				if (Data_Buildings[i].hasWaterAccess) {
 					++Data_CityInfo_Buildings.fountain.working;
 				}
 				break;
 			// industry
-			case Building_WheatFarm:
+			case BUILDING_WHEAT_FARM:
 				UPDATE_RES(Resource_Wheat);
 				break;
-			case Building_VegetableFarm:
+			case BUILDING_VEGETABLE_FARM:
 				UPDATE_RES(Resource_Vegetables);
 				break;
-			case Building_FruitFarm:
+			case BUILDING_FRUIT_FARM:
 				UPDATE_RES(Resource_Fruit);
 				break;
-			case Building_OliveFarm:
+			case BUILDING_OLIVE_FARM:
 				UPDATE_RES(Resource_Olives);
 				break;
-			case Building_VinesFarm:
+			case BUILDING_VINES_FARM:
 				UPDATE_RES(Resource_Vines);
 				break;
-			case Building_PigFarm:
+			case BUILDING_PIG_FARM:
 				UPDATE_RES(Resource_Meat);
 				break;
-			case Building_MarbleQuarry:
+			case BUILDING_MARBLE_QUARRY:
 				UPDATE_RES(Resource_Marble);
 				break;
-			case Building_IronMine:
+			case BUILDING_IRON_MINE:
 				UPDATE_RES(Resource_Iron);
 				break;
-			case Building_TimberYard:
+			case BUILDING_TIMBER_YARD:
 				UPDATE_RES(Resource_Timber);
 				break;
-			case Building_ClayPit:
+			case BUILDING_CLAY_PIT:
 				UPDATE_RES(Resource_Clay);
 				break;
-			case Building_WineWorkshop:
+			case BUILDING_WINE_WORKSHOP:
 				UPDATE_RES(Resource_Wine);
 				break;
-			case Building_OilWorkshop:
+			case BUILDING_OIL_WORKSHOP:
 				UPDATE_RES(Resource_Oil);
 				break;
-			case Building_WeaponsWorkshop:
+			case BUILDING_WEAPONS_WORKSHOP:
 				UPDATE_RES(Resource_Weapons);
 				break;
-			case Building_FurnitureWorkshop:
+			case BUILDING_FURNITURE_WORKSHOP:
 				UPDATE_RES(Resource_Furniture);
 				break;
-			case Building_PotteryWorkshop:
+			case BUILDING_POTTERY_WORKSHOP:
 				UPDATE_RES(Resource_Pottery);
 				break;
 			// water-side
-			case Building_Wharf:
+			case BUILDING_WHARF:
 				if (Data_Buildings[i].numWorkers > 0) {
 					++Data_CityInfo.numWorkingWharfs;
 					if (!Data_Buildings[i].data.other.boatFigureId) {
@@ -252,7 +252,7 @@ void CityInfo_Tick_countBuildingTypes()
 					}
 				}
 				break;
-			case Building_Dock:
+			case BUILDING_DOCK:
 				if (Data_Buildings[i].numWorkers > 0 && Data_Buildings[i].hasWaterAccess) {
 					if (Data_CityInfo.numWorkingDocks < 10) {
 						Data_CityInfo.workingDockBuildingIds[Data_CityInfo.numWorkingDocks] = i;
@@ -316,11 +316,11 @@ void CityInfo_Tick_distributeTreasuryOverForumsAndSenates()
 		}
 		switch (Data_Buildings[i].type) {
 			// ordered based on importance: most important gets the remainder
-			case Building_SenateUpgraded:
+			case BUILDING_SENATE_UPGRADED:
 				Data_Buildings[i].taxIncomeOrStorage = 8 * amountPerUnit + remainder;
 				remainder = 0;
 				break;
-			case Building_Senate:
+			case BUILDING_SENATE:
 				if (remainder && !Data_CityInfo_Buildings.senateUpgraded.working) {
 					Data_Buildings[i].taxIncomeOrStorage = 5 * amountPerUnit + remainder;
 					remainder = 0;
@@ -328,7 +328,7 @@ void CityInfo_Tick_distributeTreasuryOverForumsAndSenates()
 					Data_Buildings[i].taxIncomeOrStorage = 5 * amountPerUnit;
 				}
 				break;
-			case Building_ForumUpgraded:
+			case BUILDING_FORUM_UPGRADED:
 				if (remainder && !(
 					Data_CityInfo_Buildings.senateUpgraded.working ||
 					Data_CityInfo_Buildings.senate.working)) {
@@ -338,7 +338,7 @@ void CityInfo_Tick_distributeTreasuryOverForumsAndSenates()
 					Data_Buildings[i].taxIncomeOrStorage = 2 * amountPerUnit;
 				}
 				break;
-			case Building_Forum:
+			case BUILDING_FORUM:
 				if (remainder && !(
 					Data_CityInfo_Buildings.senateUpgraded.working ||
 					Data_CityInfo_Buildings.senate.working ||

@@ -47,8 +47,8 @@ static void allocateWorkersToWater();
 static void allocateWorkersToBuildings();
 
 static int isIndustryDisabled(int buildingId) {
-	if (Data_Buildings[buildingId].type < Building_WheatFarm ||
-		Data_Buildings[buildingId].type > Building_PotteryWorkshop) {
+	if (Data_Buildings[buildingId].type < BUILDING_WHEAT_FARM ||
+		Data_Buildings[buildingId].type > BUILDING_POTTERY_WORKSHOP) {
 		return 0;
 	}
 	int resourceId = Data_Buildings[buildingId].outputResourceId;
@@ -66,7 +66,7 @@ static int shouldHaveWorkers(int buildingId, int category, int checkAccess)
 
 	// exceptions: hippodrome 'other' tiles and disabled industries
 	if (category == LaborCategory_Entertainment) {
-		if (Data_Buildings[buildingId].type == Building_Hippodrome && Data_Buildings[buildingId].prevPartBuildingId) {
+		if (Data_Buildings[buildingId].type == BUILDING_HIPPODROME && Data_Buildings[buildingId].prevPartBuildingId) {
 			return 0;
 		}
 	} else if (category == LaborCategory_FoodProduction || category == LaborCategory_IndustryCommerce) {

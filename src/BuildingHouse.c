@@ -247,8 +247,8 @@ void BuildingHouse_expandToLargeInsula(int buildingId)
 	prepareForMerge(buildingId, 4);
 
 	struct Data_Building *b = &Data_Buildings[buildingId];
-	b->type = Building_HouseLargeInsula;
-	b->subtype.houseLevel = HouseLevel_LargeInsula;
+	b->type = BUILDING_HOUSE_LARGE_INSULA;
+	b->subtype.houseLevel = HOUSE_LARGE_INSULA;
 	b->size = b->houseSize = 2;
 	b->housePopulation += mergeData.population;
 	for (int i = 0; i < Inventory_Max; i++) {
@@ -268,8 +268,8 @@ void BuildingHouse_expandToLargeVilla(int buildingId)
 	prepareForMerge(buildingId, 9);
 
 	struct Data_Building *b = &Data_Buildings[buildingId];
-	b->type = Building_HouseLargeVilla;
-	b->subtype.houseLevel = HouseLevel_LargeVilla;
+	b->type = BUILDING_HOUSE_LARGE_VILLA;
+	b->subtype.houseLevel = HOUSE_LARGE_VILLA;
 	b->size = b->houseSize = 3;
 	b->housePopulation += mergeData.population;
 	for (int i = 0; i < Inventory_Max; i++) {
@@ -289,8 +289,8 @@ void BuildingHouse_expandToLargePalace(int buildingId)
 	prepareForMerge(buildingId, 16);
 
 	struct Data_Building *b = &Data_Buildings[buildingId];
-	b->type = Building_HouseLargePalace;
-	b->subtype.houseLevel = HouseLevel_LargePalace;
+	b->type = BUILDING_HOUSE_LARGE_PALACE;
+	b->subtype.houseLevel = HOUSE_LARGE_PALACE;
 	b->size = b->houseSize = 4;
 	b->housePopulation += mergeData.population;
 	for (int i = 0; i < Inventory_Max; i++) {
@@ -375,7 +375,7 @@ static void splitSize2(int buildingId)
 	Terrain_removeBuildingFromGrids(buildingId, b->x, b->y);
 
 	// main tile
-	b->type = Building_HouseMediumInsula;
+	b->type = BUILDING_HOUSE_MEDIUM_INSULA;
 	b->subtype.houseLevel = b->type - 10;
 	b->size = b->houseSize = 1;
 	b->houseIsMerged = 0;
@@ -410,7 +410,7 @@ static void splitSize3(int buildingId)
 	Terrain_removeBuildingFromGrids(buildingId, b->x, b->y);
 
 	// main tile
-	b->type = Building_HouseMediumInsula;
+	b->type = BUILDING_HOUSE_MEDIUM_INSULA;
 	b->subtype.houseLevel = b->type - 10;
 	b->size = b->houseSize = 1;
 	b->houseIsMerged = 0;
@@ -425,14 +425,12 @@ static void splitSize3(int buildingId)
 		graphicId + (Data_Grid_random[b->gridOffset] & 1), Terrain_Building);
 
 	// the other tiles (new buildings)
-	CREATE_HOUSE_TILE(Building_HouseMediumInsula, b->x + 1, b->y);
-	CREATE_HOUSE_TILE(Building_HouseMediumInsula, b->x + 2, b->y);
-	CREATE_HOUSE_TILE(Building_HouseMediumInsula, b->x, b->y + 1);
-	CREATE_HOUSE_TILE(Building_HouseMediumInsula, b->x + 1, b->y + 1);
-	CREATE_HOUSE_TILE(Building_HouseMediumInsula, b->x + 2, b->y + 1);
-	CREATE_HOUSE_TILE(Building_HouseMediumInsula, b->x, b->y + 2);
-	CREATE_HOUSE_TILE(Building_HouseMediumInsula, b->x + 1, b->y + 2);
-	CREATE_HOUSE_TILE(Building_HouseMediumInsula, b->x + 2, b->y + 2);
+	CREATE_HOUSE_TILE(BUILDING_HOUSE_MEDIUM_INSULA, b->x, b->y + 1);
+	CREATE_HOUSE_TILE(BUILDING_HOUSE_MEDIUM_INSULA, b->x + 1, b->y + 1);
+	CREATE_HOUSE_TILE(BUILDING_HOUSE_MEDIUM_INSULA, b->x + 2, b->y + 1);
+	CREATE_HOUSE_TILE(BUILDING_HOUSE_MEDIUM_INSULA, b->x, b->y + 2);
+	CREATE_HOUSE_TILE(BUILDING_HOUSE_MEDIUM_INSULA, b->x + 1, b->y + 2);
+	CREATE_HOUSE_TILE(BUILDING_HOUSE_MEDIUM_INSULA, b->x + 2, b->y + 2);
 }
 
 void BuildingHouse_devolveFromLargeInsula(int buildingId)
@@ -455,7 +453,7 @@ void BuildingHouse_devolveFromLargeVilla(int buildingId)
 	Terrain_removeBuildingFromGrids(buildingId, b->x, b->y);
 
 	// main tile
-	b->type = Building_HouseMediumVilla;
+	b->type = BUILDING_HOUSE_MEDIUM_VILLA;
 	b->subtype.houseLevel = b->type - 10;
 	b->size = b->houseSize = 2;
 	b->houseIsMerged = 0;
@@ -470,12 +468,12 @@ void BuildingHouse_devolveFromLargeVilla(int buildingId)
 		graphicId + (Data_Grid_random[b->gridOffset] & 1), Terrain_Building);
 
 	// the other tiles (new buildings)
-	graphicId = HouseGraphicId(HouseLevel_MediumInsula);
-	CREATE_HOUSE_TILE(Building_HouseMediumInsula, b->x + 2, b->y);
-	CREATE_HOUSE_TILE(Building_HouseMediumInsula, b->x + 2, b->y + 1);
-	CREATE_HOUSE_TILE(Building_HouseMediumInsula, b->x, b->y + 2);
-	CREATE_HOUSE_TILE(Building_HouseMediumInsula, b->x + 1, b->y + 2);
-	CREATE_HOUSE_TILE(Building_HouseMediumInsula, b->x + 2, b->y + 2);
+	graphicId = HouseGraphicId(HOUSE_MEDIUM_INSULA);
+	CREATE_HOUSE_TILE(BUILDING_HOUSE_MEDIUM_INSULA, b->x + 2, b->y);
+	CREATE_HOUSE_TILE(BUILDING_HOUSE_MEDIUM_INSULA, b->x + 2, b->y + 1);
+	CREATE_HOUSE_TILE(BUILDING_HOUSE_MEDIUM_INSULA, b->x, b->y + 2);
+	CREATE_HOUSE_TILE(BUILDING_HOUSE_MEDIUM_INSULA, b->x + 1, b->y + 2);
+	CREATE_HOUSE_TILE(BUILDING_HOUSE_MEDIUM_INSULA, b->x + 2, b->y + 2);
 }
 
 void BuildingHouse_devolveFromLargePalace(int buildingId)
@@ -493,7 +491,7 @@ void BuildingHouse_devolveFromLargePalace(int buildingId)
 	Terrain_removeBuildingFromGrids(buildingId, b->x, b->y);
 
 	// main tile
-	b->type = Building_HouseMediumPalace;
+	b->type = BUILDING_HOUSE_MEDIUM_PALACE;
 	b->subtype.houseLevel = b->type - 10;
 	b->size = b->houseSize = 3;
 	b->houseIsMerged = 0;
@@ -507,14 +505,14 @@ void BuildingHouse_devolveFromLargePalace(int buildingId)
 	Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size, graphicId, Terrain_Building);
 
 	// the other tiles (new buildings)
-	graphicId = HouseGraphicId(HouseLevel_MediumInsula);
-	CREATE_HOUSE_TILE(Building_HouseMediumInsula, b->x + 3, b->y);
-	CREATE_HOUSE_TILE(Building_HouseMediumInsula, b->x + 3, b->y + 1);
-	CREATE_HOUSE_TILE(Building_HouseMediumInsula, b->x + 3, b->y + 2);
-	CREATE_HOUSE_TILE(Building_HouseMediumInsula, b->x, b->y + 3);
-	CREATE_HOUSE_TILE(Building_HouseMediumInsula, b->x + 1, b->y + 3);
-	CREATE_HOUSE_TILE(Building_HouseMediumInsula, b->x + 2, b->y + 3);
-	CREATE_HOUSE_TILE(Building_HouseMediumInsula, b->x + 3, b->y + 3);
+	graphicId = HouseGraphicId(HOUSE_MEDIUM_INSULA);
+	CREATE_HOUSE_TILE(BUILDING_HOUSE_MEDIUM_INSULA, b->x + 3, b->y);
+	CREATE_HOUSE_TILE(BUILDING_HOUSE_MEDIUM_INSULA, b->x + 3, b->y + 1);
+	CREATE_HOUSE_TILE(BUILDING_HOUSE_MEDIUM_INSULA, b->x + 3, b->y + 2);
+	CREATE_HOUSE_TILE(BUILDING_HOUSE_MEDIUM_INSULA, b->x, b->y + 3);
+	CREATE_HOUSE_TILE(BUILDING_HOUSE_MEDIUM_INSULA, b->x + 1, b->y + 3);
+	CREATE_HOUSE_TILE(BUILDING_HOUSE_MEDIUM_INSULA, b->x + 2, b->y + 3);
+	CREATE_HOUSE_TILE(BUILDING_HOUSE_MEDIUM_INSULA, b->x + 3, b->y + 3);
 }
 
 void BuildingHouse_changeTo(int buildingId, int buildingType)
@@ -538,7 +536,7 @@ void BuildingHouse_changeTo(int buildingId, int buildingType)
 void BuildingHouse_changeToVacantLot(int buildingId)
 {
 	struct Data_Building *b = &Data_Buildings[buildingId];
-	b->type = Building_HouseVacantLot;
+	b->type = BUILDING_HOUSE_VACANT_LOT;
 	b->subtype.houseLevel = b->type - 10;
 	int graphicId = GraphicId(ID_Graphic_HouseVacantLot);
 	if (b->houseIsMerged) {

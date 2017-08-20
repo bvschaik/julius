@@ -37,9 +37,9 @@ static int showOnOverlay(struct Data_Figure *f)
 			if (f->type == Figure_Actor) {
 				if (f->actionState == FigureActionState_94_EntertainerRoaming ||
 					f->actionState == FigureActionState_95_EntertainerReturning) {
-					return Data_Buildings[f->buildingId].type == Building_Theater;
+					return Data_Buildings[f->buildingId].type == BUILDING_THEATER;
 				} else {
-					return Data_Buildings[f->destinationBuildingId].type == Building_Theater;
+					return Data_Buildings[f->destinationBuildingId].type == BUILDING_THEATER;
 				}
 			}
 			return 0;
@@ -47,9 +47,9 @@ static int showOnOverlay(struct Data_Figure *f)
 			if (f->type == Figure_Actor || f->type == Figure_Gladiator) {
 				if (f->actionState == FigureActionState_94_EntertainerRoaming ||
 					f->actionState == FigureActionState_95_EntertainerReturning) {
-					return Data_Buildings[f->buildingId].type == Building_Amphitheater;
+					return Data_Buildings[f->buildingId].type == BUILDING_AMPHITHEATER;
 				} else {
-					return Data_Buildings[f->destinationBuildingId].type == Building_Amphitheater;
+					return Data_Buildings[f->destinationBuildingId].type == BUILDING_AMPHITHEATER;
 				}
 			}
 			return 0;
@@ -57,9 +57,9 @@ static int showOnOverlay(struct Data_Figure *f)
 			if (f->type == Figure_Gladiator) {
 				if (f->actionState == FigureActionState_94_EntertainerRoaming ||
 					f->actionState == FigureActionState_95_EntertainerReturning) {
-					return Data_Buildings[f->buildingId].type == Building_Colosseum;
+					return Data_Buildings[f->buildingId].type == BUILDING_COLOSSEUM;
 				} else {
-					return Data_Buildings[f->destinationBuildingId].type == Building_Colosseum;
+					return Data_Buildings[f->destinationBuildingId].type == BUILDING_COLOSSEUM;
 				}
 			} else if (f->type == Figure_LionTamer) {
 				return 1;

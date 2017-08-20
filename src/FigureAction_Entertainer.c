@@ -21,7 +21,7 @@ static int determineDestination(int x, int y, int btype1, int btype2)
 			continue;
 		}
 		if (b->distanceFromEntry && b->roadNetworkId == roadNetwork) {
-			if (b->type == Building_Hippodrome && b->prevPartBuildingId) {
+			if (b->type == BUILDING_HIPPODROME && b->prevPartBuildingId) {
 				continue;
 			}
 			DATA_BUILDINGLIST_SMALL_ENQUEUE(i);
@@ -63,14 +63,14 @@ static void updateShowsAtDestination(struct Data_Figure *f)
 			if (b->data.entertainment.play >= 5) {
 				b->data.entertainment.play = 0;
 			}
-			if (b->type == Building_Theater) {
+			if (b->type == BUILDING_THEATER) {
 				b->data.entertainment.days1 = 32;
 			} else {
 				b->data.entertainment.days2 = 32;
 			}
 			break;
 		case Figure_Gladiator:
-			if (b->type == Building_Amphitheater) {
+			if (b->type == BUILDING_AMPHITHEATER) {
 				b->data.entertainment.days1 = 32;
 			} else {
 				b->data.entertainment.days2 = 32;
@@ -187,16 +187,16 @@ void FigureAction_entertainer(int figureId)
 				int dstBuildingId = 0;
 				switch (f->type) {
 					case Figure_Actor:
-						dstBuildingId = determineDestination(f->x, f->y, Building_Theater, Building_Amphitheater);
+						dstBuildingId = determineDestination(f->x, f->y, BUILDING_THEATER, BUILDING_AMPHITHEATER);
 						break;
 					case Figure_Gladiator:
-						dstBuildingId = determineDestination(f->x, f->y, Building_Amphitheater, Building_Colosseum);
+						dstBuildingId = determineDestination(f->x, f->y, BUILDING_AMPHITHEATER, BUILDING_COLOSSEUM);
 						break;
 					case Figure_LionTamer:
-						dstBuildingId = determineDestination(f->x, f->y, Building_Colosseum, 0);
+						dstBuildingId = determineDestination(f->x, f->y, BUILDING_COLOSSEUM, 0);
 						break;
 					case Figure_Charioteer:
-						dstBuildingId = determineDestination(f->x, f->y, Building_Hippodrome, 0);
+						dstBuildingId = determineDestination(f->x, f->y, BUILDING_HIPPODROME, 0);
 						break;
 				}
 				if (dstBuildingId) {

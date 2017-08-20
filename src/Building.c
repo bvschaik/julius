@@ -75,13 +75,13 @@ int Building_create(int type, int x, int y)
 	
 	// house size
 	b->houseSize = 0;
-	if (type >= Building_HouseSmallTent && type <= Building_HouseMediumInsula) {
+	if (type >= BUILDING_HOUSE_SMALL_TENT && type <= BUILDING_HOUSE_MEDIUM_INSULA) {
 		b->houseSize = 1;
-	} else if (type >= Building_HouseLargeInsula && type <= Building_HouseMediumVilla) {
+	} else if (type >= BUILDING_HOUSE_LARGE_INSULA && type <= BUILDING_HOUSE_MEDIUM_VILLA) {
 		b->houseSize = 2;
-	} else if (type >= Building_HouseLargeVilla && type <= Building_HouseMediumPalace) {
+	} else if (type >= BUILDING_HOUSE_LARGE_VILLA && type <= BUILDING_HOUSE_MEDIUM_PALACE) {
 		b->houseSize = 3;
-	} else if (type >= Building_HouseLargePalace && type <= Building_HouseLuxuryPalace) {
+	} else if (type >= BUILDING_HOUSE_LARGE_PALACE && type <= BUILDING_HOUSE_LUXURY_PALACE) {
 		b->houseSize = 4;
 	}
 	
@@ -94,53 +94,53 @@ int Building_create(int type, int x, int y)
 	
 	// input/output resources
 	switch (type) {
-		case Building_WheatFarm:
+		case BUILDING_WHEAT_FARM:
 			b->outputResourceId = Resource_Wheat;
 			break;
-		case Building_VegetableFarm:
+		case BUILDING_VEGETABLE_FARM:
 			b->outputResourceId = Resource_Vegetables;
 			break;
-		case Building_FruitFarm:
+		case BUILDING_FRUIT_FARM:
 			b->outputResourceId = Resource_Fruit;
 			break;
-		case Building_OliveFarm:
+		case BUILDING_OLIVE_FARM:
 			b->outputResourceId = Resource_Olives;
 			break;
-		case Building_VinesFarm:
+		case BUILDING_VINES_FARM:
 			b->outputResourceId = Resource_Vines;
 			break;
-		case Building_PigFarm:
+		case BUILDING_PIG_FARM:
 			b->outputResourceId = Resource_Meat;
 			break;
-		case Building_MarbleQuarry:
+		case BUILDING_MARBLE_QUARRY:
 			b->outputResourceId = Resource_Marble;
 			break;
-		case Building_IronMine:
+		case BUILDING_IRON_MINE:
 			b->outputResourceId = Resource_Iron;
 			break;
-		case Building_TimberYard:
+		case BUILDING_TIMBER_YARD:
 			b->outputResourceId = Resource_Timber;
 			break;
-		case Building_ClayPit:
+		case BUILDING_CLAY_PIT:
 			b->outputResourceId = Resource_Clay;
 			break;
-		case Building_WineWorkshop:
+		case BUILDING_WINE_WORKSHOP:
 			b->outputResourceId = Resource_Wine;
 			b->subtype.workshopResource = WorkshopResource_VinesToWine;
 			break;
-		case Building_OilWorkshop:
+		case BUILDING_OIL_WORKSHOP:
 			b->outputResourceId = Resource_Oil;
 			b->subtype.workshopResource = WorkshopResource_OlivesToOil;
 			break;
-		case Building_WeaponsWorkshop:
+		case BUILDING_WEAPONS_WORKSHOP:
 			b->outputResourceId = Resource_Weapons;
 			b->subtype.workshopResource = WorkshopResource_IronToWeapons;
 			break;
-		case Building_FurnitureWorkshop:
+		case BUILDING_FURNITURE_WORKSHOP:
 			b->outputResourceId = Resource_Furniture;
 			b->subtype.workshopResource = WorkshopResource_TimberToFurniture;
 			break;
-		case Building_PotteryWorkshop:
+		case BUILDING_POTTERY_WORKSHOP:
 			b->outputResourceId = Resource_Pottery;
 			b->subtype.workshopResource = WorkshopResource_ClayToPottery;
 			break;
@@ -149,7 +149,7 @@ int Building_create(int type, int x, int y)
 			break;
 	}
 	
-	if (type == Building_Granary) {
+	if (type == BUILDING_GRANARY) {
 		b->data.storage.resourceStored[Resource_None] = 2400;
 	}
 	
@@ -176,31 +176,31 @@ void Building_deleteData(int buildingId)
 	if (b->storageId) {
 		Data_Building_Storages[b->storageId].inUse = 0;
 	}
-	if (b->type == Building_SenateUpgraded && b->gridOffset == Data_CityInfo.buildingSenateGridOffset) {
+	if (b->type == BUILDING_SENATE_UPGRADED && b->gridOffset == Data_CityInfo.buildingSenateGridOffset) {
 		Data_CityInfo.buildingSenateGridOffset = 0;
 		Data_CityInfo.buildingSenateX = 0;
 		Data_CityInfo.buildingSenateY = 0;
 		Data_CityInfo.buildingSenatePlaced = 0;
 	}
-	if (b->type == Building_Dock) {
+	if (b->type == BUILDING_DOCK) {
 		--Data_CityInfo.numWorkingDocks;
 	}
-	if (b->type == Building_Barracks && b->gridOffset == Data_CityInfo.buildingBarracksGridOffset) {
+	if (b->type == BUILDING_BARRACKS && b->gridOffset == Data_CityInfo.buildingBarracksGridOffset) {
 		Data_CityInfo.buildingBarracksGridOffset = 0;
 		Data_CityInfo.buildingBarracksX = 0;
 		Data_CityInfo.buildingBarracksY = 0;
 		Data_CityInfo.buildingBarracksPlaced = 0;
 	}
-	if (b->type == Building_DistributionCenter_Unused && b->gridOffset == Data_CityInfo.buildingDistributionCenterGridOffset) {
+	if (b->type == BUILDING_DISTRIBUTION_CENTER_UNUSED && b->gridOffset == Data_CityInfo.buildingDistributionCenterGridOffset) {
 		Data_CityInfo.buildingDistributionCenterGridOffset = 0;
 		Data_CityInfo.buildingDistributionCenterX = 0;
 		Data_CityInfo.buildingDistributionCenterY = 0;
 		Data_CityInfo.buildingDistributionCenterPlaced = 0;
 	}
-	if (b->type == Building_Fort) {
+	if (b->type == BUILDING_FORT) {
 		Formation_deleteFortAndBanner(b->formationId);
 	}
-	if (b->type == Building_Hippodrome) {
+	if (b->type == BUILDING_HIPPODROME) {
 		Data_CityInfo.buildingHippodromePlaced = 0;
 	}
 }
@@ -216,7 +216,7 @@ void Building_GameTick_updateState()
 		}
 		if (b->state != BuildingState_InUse || !b->houseSize) {
 			if (b->state == BuildingState_Undo || b->state == BuildingState_DeletedByPlayer) {
-				if (b->type == Building_Tower || b->type == Building_Gatehouse) {
+				if (b->type == BUILDING_TOWER || b->type == BUILDING_GATEHOUSE) {
 					wallRecalc = 1;
 				}
 				Terrain_removeBuildingFromGrids(i, b->x, b->y);
@@ -262,7 +262,7 @@ void Building_collapseOnFire(int buildingId, int hasPlague)
 		CityInfo_Population_removePeopleHomeRemoved(b->housePopulation);
 	}
 	// FIXED wasTent was always false because houseSize was reset above it
-	int wasTent = b->houseSize && b->subtype.houseLevel <= HouseLevel_LargeTent;
+	int wasTent = b->houseSize && b->subtype.houseLevel <= HOUSE_LARGE_TENT;
 	b->housePopulation = 0;
 	b->houseSize = 0;
 	b->outputResourceId = 0;
@@ -270,7 +270,7 @@ void Building_collapseOnFire(int buildingId, int hasPlague)
 	Building_deleteData(buildingId);
 
 	int watersideBuilding = 0;
-	if (b->type == Building_Dock || b->type == Building_Wharf || b->type == Building_Shipyard) {
+	if (b->type == BUILDING_DOCK || b->type == BUILDING_WHARF || b->type == BUILDING_SHIPYARD) {
 		watersideBuilding = 1;
 	}
 	int numTiles;
@@ -283,7 +283,7 @@ void Building_collapseOnFire(int buildingId, int hasPlague)
 	if (Data_Grid_terrain[b->gridOffset] & Terrain_Water) {
 		b->state = BuildingState_DeletedByGame;
 	} else {
-		b->type = Building_BurningRuin;
+		b->type = BUILDING_BURNING_RUIN;
 		b->figureId4 = 0;
 		b->taxIncomeOrStorage = 0;
 		b->fireDuration = (b->houseGenerationDelay & 7) + 1;
@@ -307,7 +307,7 @@ void Building_collapseOnFire(int buildingId, int hasPlague)
 		if (Data_Grid_terrain[GridOffset(x, y)] & Terrain_Water) {
 			continue;
 		}
-		int ruinId = Building_create(Building_BurningRuin, x, y);
+		int ruinId = Building_create(BUILDING_BURNING_RUIN, x, y);
 		struct Data_Building *ruin = &Data_Buildings[ruinId];
 		int graphicId;
 		if (wasTent) {
@@ -425,15 +425,15 @@ void Building_destroyByEnemy(int x, int y, int gridOffset)
 		TerrainGraphics_setBuildingAreaRubble(buildingId, b->x, b->y, b->size);
 		if (BuildingIsInUse(buildingId)) {
 			switch (b->type) {
-				case Building_HouseSmallTent:
-				case Building_HouseLargeTent:
-				case Building_Prefecture:
-				case Building_EngineersPost:
-				case Building_Well:
-				case Building_Fort:
-				case Building_FortGround:
-				case Building_Gatehouse:
-				case Building_Tower:
+				case BUILDING_HOUSE_SMALL_TENT:
+				case BUILDING_HOUSE_LARGE_TENT:
+				case BUILDING_PREFECTURE:
+				case BUILDING_ENGINEERS_POST:
+				case BUILDING_WELL:
+				case BUILDING_FORT:
+				case BUILDING_FORT_GROUND:
+				case BUILDING_GATEHOUSE:
+				case BUILDING_TOWER:
 					break;
 				default:
 					Data_CityInfo.ratingPeaceNumDestroyedBuildingsThisYear++;
@@ -499,7 +499,7 @@ void Building_decayHousesCovered()
 {
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		if (Data_Buildings[i].state != BuildingState_Unused &&
-			Data_Buildings[i].type != Building_Tower) {
+			Data_Buildings[i].type != BUILDING_TOWER) {
 			if (Data_Buildings[i].housesCovered <= 1) {
 				Data_Buildings[i].housesCovered = 0;
 			} else {
@@ -521,7 +521,7 @@ void Building_determineGraphicIdsForOrientedBuildings()
 		}
 		int graphicId;
 		switch (b->type) {
-			case Building_Gatehouse:
+			case BUILDING_GATEHOUSE:
 				if (b->subtype.orientation == 1) {
 					if (mapOrientationIsTopOrBottom) {
 						graphicId = GraphicId(ID_Graphic_Tower) + 1;
@@ -539,7 +539,7 @@ void Building_determineGraphicIdsForOrientedBuildings()
 					graphicId, Terrain_Gatehouse | Terrain_Building);
 				Terrain_addRoadsForGatehouse(b->x, b->y, b->subtype.orientation);
 				break;
-			case Building_TriumphalArch:
+			case BUILDING_TRIUMPHAL_ARCH:
 				if (b->subtype.orientation == 1) {
 					if (mapOrientationIsTopOrBottom) {
 						graphicId = GraphicId(ID_Graphic_TriumphalArch);
@@ -557,7 +557,7 @@ void Building_determineGraphicIdsForOrientedBuildings()
 					graphicId, Terrain_Building);
 				Terrain_addRoadsForTriumphalArch(b->x, b->y, b->subtype.orientation);
 				break;
-			case Building_Hippodrome:
+			case BUILDING_HIPPODROME:
 				if (mapOrientation == Dir_0_Top) {
 					graphicId = GraphicId(ID_Graphic_Hippodrome2);
 					switch (b->subtype.orientation) {
@@ -590,17 +590,17 @@ void Building_determineGraphicIdsForOrientedBuildings()
 				Terrain_addBuildingToGrids(i, b->x, b->y, b->size,
 					graphicId, Terrain_Building);
 				break;
-			case Building_Shipyard:
+			case BUILDING_SHIPYARD:
 				graphicOffset = (4 + b->data.other.dockOrientation - mapOrientation / 2) % 4;
 				graphicId = GraphicId(ID_Graphic_Shipyard) + graphicOffset;
 				Terrain_addWatersideBuildingToGrids(i, b->x, b->y, 2, graphicId);
 				break;
-			case Building_Wharf:
+			case BUILDING_WHARF:
 				graphicOffset = (4 + b->data.other.dockOrientation - mapOrientation / 2) % 4;
 				graphicId = GraphicId(ID_Graphic_Wharf) + graphicOffset;
 				Terrain_addWatersideBuildingToGrids(i, b->x, b->y, 2, graphicId);
 				break;
-			case Building_Dock:
+			case BUILDING_DOCK:
 				graphicOffset = (4 + b->data.other.dockOrientation - mapOrientation / 2) % 4;
 				switch (graphicOffset) {
 					case 0: graphicId = GraphicId(ID_Graphic_Dock1); break;
@@ -641,7 +641,7 @@ void BuildingStorage_resetBuildingIds()
 		if (Data_Buildings[i].state == BuildingState_Unused) {
 			continue;
 		}
-		if (Data_Buildings[i].type == Building_Granary || Data_Buildings[i].type == Building_Warehouse) {
+		if (Data_Buildings[i].type == BUILDING_GRANARY || Data_Buildings[i].type == BUILDING_WAREHOUSE) {
 			if (Data_Buildings[i].storageId) {
 				int storageId = Data_Buildings[i].storageId;
 				if (Data_Building_Storages[storageId].buildingId) {
@@ -697,7 +697,7 @@ void Building_GameTick_checkAccessToRome()
 					b->state = BuildingState_Undo;
 				}
 			}
-		} else if (b->type == Building_Warehouse) {
+		} else if (b->type == BUILDING_WAREHOUSE) {
 			if (!Data_CityInfo.buildingTradeCenterBuildingId) {
 				Data_CityInfo.buildingTradeCenterBuildingId = i;
 			}
@@ -709,14 +709,14 @@ void Building_GameTick_checkAccessToRome()
 				b->roadAccessX = xRoad;
 				b->roadAccessY = yRoad;
 			}
-		} else if (b->type == Building_WarehouseSpace) {
+		} else if (b->type == BUILDING_WAREHOUSE_SPACE) {
 			b->distanceFromEntry = 0;
 			struct Data_Building *main = &Data_Buildings[Building_getMainBuildingId(i)];
 			b->roadNetworkId = main->roadNetworkId;
 			b->distanceFromEntry = main->distanceFromEntry;
 			b->roadAccessX = main->roadAccessX;
 			b->roadAccessY = main->roadAccessY;
-		} else if (b->type == Building_Hippodrome) {
+		} else if (b->type == BUILDING_HIPPODROME) {
 			b->distanceFromEntry = 0;
 			int roadGridOffset = Terrain_getRoadToLargestRoadNetworkHippodrome(b->x, b->y, 5, &xRoad, &yRoad);
 			if (roadGridOffset >= 0) {
@@ -795,7 +795,7 @@ void Building_Industry_updateProduction()
 			if (b->data.industry.blessingDaysLeft) {
 				b->data.industry.blessingDaysLeft--;
 			}
-			if (b->type == Building_MarbleQuarry) {
+			if (b->type == BUILDING_MARBLE_QUARRY) {
 				b->data.industry.progress += b->numWorkers / 2;
 			} else {
 				b->data.industry.progress += b->numWorkers;
@@ -829,7 +829,7 @@ void Building_Industry_updateDoubleWheatProduction()
 		if (b->housesCovered <= 0 || b->numWorkers <= 0) {
 			continue;
 		}
-		if (b->type == Building_WheatFarm && !b->data.industry.curseDaysLeft) {
+		if (b->type == BUILDING_WHEAT_FARM && !b->data.industry.curseDaysLeft) {
 			b->data.industry.progress += b->numWorkers;
 			if (b->data.industry.blessingDaysLeft) {
 				b->data.industry.progress += b->numWorkers;
@@ -899,7 +899,7 @@ void Building_Industry_startNewProduction(int buildingId)
 	}
 }
 
-int Building_Market_getDestinationGranaryWarehouse(int marketId)
+int BUILDING_MARKET_getDestinationGranaryWarehouse(int marketId)
 {
 	struct {
 		int buildingId;
@@ -917,7 +917,7 @@ int Building_Market_getDestinationGranaryWarehouse(int marketId)
 			continue;
 		}
 		struct Data_Building *b = &Data_Buildings[i];
-		if (b->type != Building_Granary && b->type != Building_Warehouse) {
+		if (b->type != BUILDING_GRANARY && b->type != BUILDING_WAREHOUSE) {
 			continue;
 		}
 		if (!b->hasRoadAccess || b->distanceFromEntry <= 0 ||
@@ -928,7 +928,7 @@ int Building_Market_getDestinationGranaryWarehouse(int marketId)
 		if (distance >= 40) {
 			continue;
 		}
-		if (b->type == Building_Granary) {
+		if (b->type == BUILDING_GRANARY) {
 			if (Data_Scenario.romeSuppliesWheat) {
 				continue;
 			}
@@ -961,7 +961,7 @@ int Building_Market_getDestinationGranaryWarehouse(int marketId)
 					resources[Inventory_Meat].buildingId = i;
 				}
 			}
-		} else if (b->type == Building_Warehouse) {
+		} else if (b->type == BUILDING_WAREHOUSE) {
 			// goods
 			if (!Data_CityInfo.resourceStockpiled[Resource_Wine] &&
 				Resource_getAmountStoredInWarehouse(i, Resource_Wine) > 0) {
@@ -1128,10 +1128,10 @@ int Building_Market_getDestinationGranaryWarehouse(int marketId)
 	return resources[fetchInventoryId].buildingId;
 }
 
-int Building_Market_getMaxFoodStock(int buildingId)
+int BUILDING_MARKET_getMaxFoodStock(int buildingId)
 {
 	int maxStock = 0;
-	if (buildingId > 0 && Data_Buildings[buildingId].type == Building_Market) {
+	if (buildingId > 0 && Data_Buildings[buildingId].type == BUILDING_MARKET) {
 		for (int i = Inventory_MinFood; i < Inventory_MaxFood; i++) {
 			int stock = Data_Buildings[buildingId].data.market.inventory[i];
 			if (stock > maxStock) {
@@ -1142,10 +1142,10 @@ int Building_Market_getMaxFoodStock(int buildingId)
 	return maxStock;
 }
 
-int Building_Market_getMaxGoodsStock(int buildingId)
+int BUILDING_MARKET_getMaxGoodsStock(int buildingId)
 {
 	int maxStock = 0;
-	if (buildingId > 0 && Data_Buildings[buildingId].type == Building_Market) {
+	if (buildingId > 0 && Data_Buildings[buildingId].type == BUILDING_MARKET) {
 		for (int i = Inventory_MinGood; i < Inventory_MaxGood; i++) {
 			int stock = Data_Buildings[buildingId].data.market.inventory[i];
 			if (stock > maxStock) {
@@ -1156,7 +1156,7 @@ int Building_Market_getMaxGoodsStock(int buildingId)
 	return maxStock;
 }
 
-int Building_Dock_getNumIdleDockers(int buildingId)
+int BUILDING_DOCK_getNumIdleDockers(int buildingId)
 {
 	struct Data_Building *b = &Data_Buildings[buildingId];
 	int numIdle = 0;
@@ -1172,13 +1172,13 @@ int Building_Dock_getNumIdleDockers(int buildingId)
 	return numIdle;
 }
 
-void Building_Dock_updateOpenWaterAccess()
+void BUILDING_DOCK_updateOpenWaterAccess()
 {
 	Routing_getDistanceWaterBoat(
 		Data_Scenario.riverEntryPoint.x, Data_Scenario.riverEntryPoint.y);
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
-		if (BuildingIsInUse(i) && !b->houseSize && b->type == Building_Dock) {
+		if (BuildingIsInUse(i) && !b->houseSize && b->type == BUILDING_DOCK) {
 			if (Terrain_isAdjacentToOpenWater(b->x, b->y, 3)) {
 				b->hasWaterAccess = 1;
 			} else {
@@ -1188,7 +1188,7 @@ void Building_Dock_updateOpenWaterAccess()
 	}
 }
 
-int Building_Dock_isConnectedToOpenWater(int x, int y)
+int BUILDING_DOCK_isConnectedToOpenWater(int x, int y)
 {
 	Routing_getDistanceWaterBoat(
 		Data_Scenario.riverEntryPoint.x, Data_Scenario.riverEntryPoint.y);
@@ -1209,11 +1209,11 @@ void Building_Mercury_removeResources(int bigCurse)
 			continue;
 		}
 		int totalStored = 0;
-		if (b->type == Building_Warehouse) {
+		if (b->type == BUILDING_WAREHOUSE) {
 			for (int r = Resource_Min; r < Resource_Max; r++) {
 				totalStored += Resource_getAmountStoredInWarehouse(i, r);
 			}
-		} else if (b->type == Building_Granary) {
+		} else if (b->type == BUILDING_GRANARY) {
 			for (int r = Resource_MinFood; r < Resource_MaxFood; r++) {
 				totalStored += Resource_getAmountStoredInGranary(i, r);
 			}
@@ -1239,9 +1239,9 @@ void Building_Mercury_removeResources(int bigCurse)
 		Routing_determineLandCitizen();
 		Routing_determineLandNonCitizen();
 	} else {
-		if (b->type == Building_Warehouse) {
+		if (b->type == BUILDING_WAREHOUSE) {
 			Resource_removeFromWarehouseForMercury(maxBuildingId, 16);
-		} else if (b->type == Building_Granary) {
+		} else if (b->type == BUILDING_GRANARY) {
 			int amount = Resource_removeFromGranary(maxBuildingId, Resource_Wheat, 1600);
 			amount = Resource_removeFromGranary(maxBuildingId, Resource_Vegetables, amount);
 			amount = Resource_removeFromGranary(maxBuildingId, Resource_Fruit, amount);
@@ -1256,7 +1256,7 @@ void Building_Mercury_fillGranary()
 	int minBuildingId = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
-		if (!BuildingIsInUse(i) || b->type != Building_Granary) {
+		if (!BuildingIsInUse(i) || b->type != BUILDING_GRANARY) {
 			continue;
 		}
 		int totalStored = 0;

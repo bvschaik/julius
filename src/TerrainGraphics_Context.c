@@ -390,7 +390,7 @@ static void setTilesRoad(int gridOffset, int tiles[MAX_TILES])
 		int offset = gridOffset + contextTileOffsets[i];
 		if (Data_Grid_terrain[offset] & Terrain_Gatehouse) {
 			int buildingId = Data_Grid_buildingIds[offset];
-			if (Data_Buildings[buildingId].type == Building_Gatehouse &&
+			if (Data_Buildings[buildingId].type == BUILDING_GATEHOUSE &&
 				Data_Buildings[buildingId].subtype.orientation == 1 + ((i / 2) & 1)) { // 1,2,1,2
 				tiles[i] = 1;
 			}
@@ -417,7 +417,7 @@ static void setTerrainReservoir(int gridOffset, int index, int edgeMask, int til
 	int offset = gridOffset + contextTileOffsets[index];
 	if (Data_Grid_terrain[offset] & Terrain_Building) {
 		int buildingId = Data_Grid_buildingIds[offset];
-		if (Data_Buildings[buildingId].type == Building_Reservoir &&
+		if (Data_Buildings[buildingId].type == BUILDING_RESERVOIR &&
 			(Data_Grid_edge[offset] & Edge_MaskXY) == edgeMask) {
 			tiles[index] = 1;
 		}

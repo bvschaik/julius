@@ -599,7 +599,7 @@ static void spawnFigureMarket(int buildingId, struct Data_Building *b)
 			}
 		} else {
 			Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad);
-			int dstBuildingId = Building_Market_getDestinationGranaryWarehouse(buildingId);
+			int dstBuildingId = BUILDING_MARKET_getDestinationGranaryWarehouse(buildingId);
 			if (dstBuildingId > 0) {
 				CREATE_FIGURE(Figure_MarketBuyer, xRoad, yRoad, Dir_0_Top);
 				f->actionState = FigureActionState_145_MarketBuyerGoingToStorage;
@@ -965,7 +965,7 @@ static void setSenateGraphic(int buildingId, struct Data_Building *b)
 
 static void spawnFigureSenateForum(int buildingId, struct Data_Building *b)
 {
-	if (b->type == Building_SenateUpgraded) {
+	if (b->type == BUILDING_SENATE_UPGRADED) {
 		setSenateGraphic(buildingId, b);
 	}
 	SET_LABOR_PROBLEM(b);
@@ -1237,113 +1237,113 @@ void FigureGeneration_generateFiguresForBuildings()
 		if (!BuildingIsInUse(i)) {
 			continue;
 		}
-		if (b->type == Building_WarehouseSpace || (b->type == Building_Hippodrome && b->prevPartBuildingId)) {
+		if (b->type == BUILDING_WAREHOUSE_SPACE || (b->type == BUILDING_HIPPODROME && b->prevPartBuildingId)) {
 			continue;
 		}
 		b->showOnProblemOverlay = 0;
 		// range of building types
-		if (b->type >= Building_HouseSmallVilla && b->type <= Building_HouseLuxuryPalace) {
+		if (b->type >= BUILDING_HOUSE_SMALL_VILLA && b->type <= BUILDING_HOUSE_LUXURY_PALACE) {
 			spawnFigurePatrician(i, b, &patricianGenerated);
-		} else if (b->type >= Building_WheatFarm && b->type <= Building_PotteryWorkshop) {
+		} else if (b->type >= BUILDING_WHEAT_FARM && b->type <= BUILDING_POTTERY_WORKSHOP) {
 			spawnFigureIndustry(i, b);
-		} else if (b->type >= Building_Senate && b->type <= Building_ForumUpgraded) {
+		} else if (b->type >= BUILDING_SENATE && b->type <= BUILDING_FORUM_UPGRADED) {
 			spawnFigureSenateForum(i, b);
-		} else if (b->type >= Building_SmallTempleCeres && b->type <= Building_LargeTempleVenus) {
+		} else if (b->type >= BUILDING_SMALL_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS) {
 			spawnFigureTemple(i, b);
 		} else {
 			// single building type
 			switch (b->type) {
-				case Building_Warehouse:
+				case BUILDING_WAREHOUSE:
 					spawnFigureWarehouse(i, b);
 					break;
-				case Building_Granary:
+				case BUILDING_GRANARY:
 					spawnFigureGranary(i, b);
 					break;
-				case Building_Tower:
+				case BUILDING_TOWER:
 					spawnFigureTower(i, b);
 					break;
-				case Building_EngineersPost:
+				case BUILDING_ENGINEERS_POST:
 					spawnFigureEngineersPost(i, b);
 					break;
-				case Building_Prefecture:
+				case BUILDING_PREFECTURE:
 					spawnFigurePrefecture(i, b);
 					break;
-				case Building_ActorColony:
+				case BUILDING_ACTOR_COLONY:
 					spawnFigureActorColony(i, b);
 					break;
-				case Building_GladiatorSchool:
+				case BUILDING_GLADIATOR_SCHOOL:
 					spawnFigureGladiatorSchool(i, b);
 					break;
-				case Building_LionHouse:
+				case BUILDING_LION_HOUSE:
 					spawnFigureLionHouse(i, b);
 					break;
-				case Building_ChariotMaker:
+				case BUILDING_CHARIOT_MAKER:
 					spawnFigureChariotMaker(i, b);
 					break;
-				case Building_Amphitheater:
+				case BUILDING_AMPHITHEATER:
 					spawnFigureAmphitheater(i, b);
 					break;
-				case Building_Theater:
+				case BUILDING_THEATER:
 					spawnFigureTheater(i, b);
 					break;
-				case Building_Hippodrome:
+				case BUILDING_HIPPODROME:
 					spawnFigureHippodrome(i, b);
 					break;
-				case Building_Colosseum:
+				case BUILDING_COLOSSEUM:
 					spawnFigureColosseum(i, b);
 					break;
-				case Building_Market:
+				case BUILDING_MARKET:
 					spawnFigureMarket(i, b);
 					break;
-				case Building_Bathhouse:
+				case BUILDING_BATHHOUSE:
 					spawnFigureBathhouse(i, b);
 					break;
-				case Building_School:
+				case BUILDING_SCHOOL:
 					spawnFigureSchool(i, b);
 					break;
-				case Building_Library:
+				case BUILDING_LIBRARY:
 					spawnFigureLibrary(i, b);
 					break;
-				case Building_Academy:
+				case BUILDING_ACADEMY:
 					spawnFigureAcademy(i, b);
 					break;
-				case Building_Barber:
+				case BUILDING_BARBER:
 					spawnFigureBarber(i, b);
 					break;
-				case Building_Doctor:
+				case BUILDING_DOCTOR:
 					spawnFigureDoctor(i, b);
 					break;
-				case Building_Hospital:
+				case BUILDING_HOSPITAL:
 					spawnFigureHospital(i, b);
 					break;
-				case Building_MissionPost:
+				case BUILDING_MISSION_POST:
 					spawnFigureMissionPost(i, b);
 					break;
-				case Building_Dock:
+				case BUILDING_DOCK:
 					spawnFigureDock(i, b);
 					break;
-				case Building_Wharf:
+				case BUILDING_WHARF:
 					spawnFigureWharf(i, b);
 					break;
-				case Building_Shipyard:
+				case BUILDING_SHIPYARD:
 					spawnFigureShipyard(i, b);
 					break;
-				case Building_NativeHut:
+				case BUILDING_NATIVE_HUT:
 					spawnFigureNativeHut(i, b);
 					break;
-				case Building_NativeMeeting:
+				case BUILDING_NATIVE_MEETING:
 					spawnFigureNativeMeeting(i, b);
 					break;
-				case Building_NativeCrops:
+				case BUILDING_NATIVE_CROPS:
 					TerrainGraphics_updateNativeCropProgress(i);
 					break;
-				case Building_Fort:
+				case BUILDING_FORT:
 					Formation_setNewSoldierRequest(i);
 					break;
-				case Building_Barracks:
+				case BUILDING_BARRACKS:
 					spawnFigureBarracks(i, b);
 					break;
-				case Building_MilitaryAcademy:
+				case BUILDING_MILITARY_ACADEMY:
 					spawnFigureMilitaryAcademy(i, b);
 					break;
 			}

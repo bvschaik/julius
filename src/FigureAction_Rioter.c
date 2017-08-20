@@ -157,14 +157,14 @@ int FigureAction_Rioter_collapseBuilding(int figureId)
 		int buildingId = Data_Grid_buildingIds[gridOffset];
 		struct Data_Building *b = &Data_Buildings[buildingId];
 		switch (b->type) {
-			case Building_WarehouseSpace:
-			case Building_Warehouse:
-			case Building_FortGround:
-			case Building_Fort:
-			case Building_BurningRuin:
+			case BUILDING_WAREHOUSE_SPACE:
+			case BUILDING_WAREHOUSE:
+			case BUILDING_FORT_GROUND:
+			case BUILDING_FORT:
+			case BUILDING_BURNING_RUIN:
 				continue;
 		}
-		if (b->houseSize && b->subtype.houseLevel < HouseLevel_SmallCasa) {
+		if (b->houseSize && b->subtype.houseLevel < HOUSE_SMALL_CASA) {
 			continue;
 		}
 		time_millis now = time_get_millis();

@@ -115,8 +115,8 @@ void Sound_City_markBuildingView(int buildingId, int direction)
 	if (!channel) {
 		return;
 	}
-	if (type == Building_Theater || type == Building_Amphitheater ||
-		type == Building_GladiatorSchool || type == Building_Hippodrome) {
+	if (type == BUILDING_THEATER || type == BUILDING_AMPHITHEATER ||
+		type == BUILDING_GLADIATOR_SCHOOL || type == BUILDING_HIPPODROME) {
 		// entertainment is shut off when caesar invades
 		if (Data_Buildings[buildingId].numWorkers <= 0 ||
 			Data_CityInfo.numImperialSoldiersInCity > 0) {

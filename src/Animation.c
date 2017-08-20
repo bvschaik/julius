@@ -41,10 +41,10 @@ int Animation_getIndexForCityBuilding(int graphicId, int gridOffset)
 {
 	int buildingId = Data_Grid_buildingIds[gridOffset];
 	struct Data_Building *b = &Data_Buildings[buildingId];
-	if (b->type == Building_Fountain && (b->numWorkers <= 0 || !b->hasWaterAccess)) {
+	if (b->type == BUILDING_FOUNTAIN && (b->numWorkers <= 0 || !b->hasWaterAccess)) {
 		return 0;
 	}
-	if (b->type == Building_Reservoir && !b->hasWaterAccess) {
+	if (b->type == BUILDING_RESERVOIR && !b->hasWaterAccess) {
 		return 0;
 	}
 	if (BuildingIsWorkshop(b->type)) {
@@ -52,36 +52,36 @@ int Animation_getIndexForCityBuilding(int graphicId, int gridOffset)
 			return 0;
 		}
 	}
-	if ((b->type == Building_Prefecture || b->type == Building_EngineersPost) && b->numWorkers <= 0) {
+	if ((b->type == BUILDING_PREFECTURE || b->type == BUILDING_ENGINEERS_POST) && b->numWorkers <= 0) {
 		return 0;
 	}
-	if (b->type == Building_Market && b->numWorkers <= 0) {
+	if (b->type == BUILDING_MARKET && b->numWorkers <= 0) {
 		return 0;
 	}
-	if (b->type == Building_Warehouse && b->numWorkers < model_get_building(b->type)->laborers) {
+	if (b->type == BUILDING_WAREHOUSE && b->numWorkers < model_get_building(b->type)->laborers) {
 		return 0;
 	}
-	if (b->type == Building_Dock && b->data.other.dockNumShips <= 0) {
+	if (b->type == BUILDING_DOCK && b->data.other.dockNumShips <= 0) {
 		Data_Grid_spriteOffsets[gridOffset] = 1;
 		return 1;
 	}
-	if (b->type == Building_MarbleQuarry && b->numWorkers <= 0) {
+	if (b->type == BUILDING_MARBLE_QUARRY && b->numWorkers <= 0) {
 		Data_Grid_spriteOffsets[gridOffset] = 1;
 		return 1;
-	} else if ((b->type == Building_IronMine || b->type == Building_ClayPit ||
-		b->type == Building_TimberYard) && b->numWorkers <= 0) {
+	} else if ((b->type == BUILDING_IRON_MINE || b->type == BUILDING_CLAY_PIT ||
+		b->type == BUILDING_TIMBER_YARD) && b->numWorkers <= 0) {
 		return 0;
 	}
-	if (b->type == Building_GladiatorSchool) {
+	if (b->type == BUILDING_GLADIATOR_SCHOOL) {
 		if (b->numWorkers <= 0) {
 			Data_Grid_spriteOffsets[gridOffset] = 1;
 			return 1;
 		}
 	} else if (BuildingIsEntertainment(b->type) &&
-		b->type != Building_Hippodrome && b->numWorkers <= 0) {
+		b->type != BUILDING_HIPPODROME && b->numWorkers <= 0) {
 		return 0;
 	}
-	if (b->type == Building_Granary && b->numWorkers < model_get_building(b->type)->laborers) {
+	if (b->type == BUILDING_GRANARY && b->numWorkers < model_get_building(b->type)->laborers) {
 		return 0;
 	}
 
@@ -91,7 +91,7 @@ int Animation_getIndexForCityBuilding(int graphicId, int gridOffset)
 	// advance animation
 	int newSprite = 0;
 	int isReverse = 0;
-	if (b->type == Building_WineWorkshop) {
+	if (b->type == BUILDING_WINE_WORKSHOP) {
 		// exception for wine...
 		int pctDone = calc_percentage(b->data.industry.progress, 400);
 		if (pctDone <= 0) {

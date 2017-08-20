@@ -273,7 +273,7 @@ static void prefectExtinguishFire(int figureId, struct Data_Figure *f)
 {
 	struct Data_Building *burn = &Data_Buildings[f->destinationBuildingId];
 	int distance = calc_maximum_distance(f->x, f->y, burn->x, burn->y);
-	if (BuildingIsInUse(f->destinationBuildingId) && burn->type == Building_BurningRuin && distance < 2) {
+	if (BuildingIsInUse(f->destinationBuildingId) && burn->type == BUILDING_BURNING_RUIN && distance < 2) {
 		burn->fireDuration = 32;
 		Sound_Effects_playChannel(SoundChannel_FireSplash);
 	} else {

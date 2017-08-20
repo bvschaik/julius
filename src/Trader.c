@@ -228,7 +228,7 @@ int Trader_getClosestWarehouseForTradeCaravan(int figureId, int x, int y, int ci
 	int minDistance = 10000;
 	int minBuildingId = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (!BuildingIsInUse(i) || Data_Buildings[i].type != Building_Warehouse) {
+		if (!BuildingIsInUse(i) || Data_Buildings[i].type != BUILDING_WAREHOUSE) {
 			continue;
 		}
 		if (!Data_Buildings[i].hasRoadAccess || Data_Buildings[i].distanceFromEntry <= 0) {
@@ -319,7 +319,7 @@ int Trader_getClosestWarehouseForImportDocker(int x, int y, int cityId, int dist
 	int minBuildingId = 0;
 	int resourceId = Data_CityInfo.tradeNextImportResourceDocker;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (!BuildingIsInUse(i) || Data_Buildings[i].type != Building_Warehouse) {
+		if (!BuildingIsInUse(i) || Data_Buildings[i].type != BUILDING_WAREHOUSE) {
 			continue;
 		}
 		if (!Data_Buildings[i].hasRoadAccess || Data_Buildings[i].distanceFromEntry <= 0) {
@@ -395,7 +395,7 @@ int Trader_getClosestWarehouseForExportDocker(int x, int y, int cityId, int dist
 	int resourceId = Data_CityInfo.tradeNextExportResourceDocker;
 	
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (!BuildingIsInUse(i) || Data_Buildings[i].type != Building_Warehouse) {
+		if (!BuildingIsInUse(i) || Data_Buildings[i].type != BUILDING_WAREHOUSE) {
 			continue;
 		}
 		if (!Data_Buildings[i].hasRoadAccess || Data_Buildings[i].distanceFromEntry <= 0) {
@@ -442,7 +442,7 @@ int Trader_getClosestWarehouseForExportDocker(int x, int y, int cityId, int dist
 
 int Trader_tryImportResource(int buildingId, int resourceId, int cityId)
 {
-	if (Data_Buildings[buildingId].type != Building_Warehouse) {
+	if (Data_Buildings[buildingId].type != BUILDING_WAREHOUSE) {
 		return 0;
 	}
 	
@@ -475,7 +475,7 @@ int Trader_tryImportResource(int buildingId, int resourceId, int cityId)
 
 int Trader_tryExportResource(int buildingId, int resourceId, int cityId)
 {
-	if (Data_Buildings[buildingId].type != Building_Warehouse) {
+	if (Data_Buildings[buildingId].type != BUILDING_WAREHOUSE) {
 		return 0;
 	}
 	

@@ -157,7 +157,7 @@ static void drawTile(int xView, int yView, int gridOffset)
 	int terrain = Data_Grid_terrain[gridOffset];
 	// exception for fort ground: display as empty land
 	if (terrain & Terrain_Building) {
-		if (Data_Buildings[Data_Grid_buildingIds[gridOffset]].type == Building_FortGround) {
+		if (Data_Buildings[Data_Grid_buildingIds[gridOffset]].type == BUILDING_FORT_GROUND) {
 			terrain = 0;
 		}
 	}
@@ -168,7 +168,7 @@ static void drawTile(int xView, int yView, int gridOffset)
 			int buildingId = Data_Grid_buildingIds[gridOffset];
 			if (Data_Buildings[buildingId].houseSize) {
 				graphicId = GraphicId(ID_Graphic_MinimapHouse);
-			} else if (Data_Buildings[buildingId].type == Building_Reservoir) {
+			} else if (Data_Buildings[buildingId].type == BUILDING_RESERVOIR) {
 				graphicId = GraphicId(ID_Graphic_MinimapAqueduct) - 1;
 			} else {
 				graphicId = GraphicId(ID_Graphic_MinimapBuilding);

@@ -148,7 +148,7 @@ static void calculateWorkers()
 	for (int i = 0; i < Data_BuildingList.large.size; i++) {
 		int buildingId = Data_BuildingList.large.items[i];
 		if (Data_Buildings[buildingId].housePopulation > 0) {
-			if (Data_Buildings[buildingId].subtype.houseLevel >= HouseLevel_SmallVilla) {
+			if (Data_Buildings[buildingId].subtype.houseLevel >= HOUSE_SMALL_VILLA) {
 				numPatricians += Data_Buildings[buildingId].housePopulation;
 			} else {
 				numPlebs += Data_Buildings[buildingId].housePopulation;
@@ -211,7 +211,7 @@ static void createImmigrants(int numPeople)
 static void createEmigrants(int numPeople)
 {
 	int toEmigrate = numPeople;
-	for (int level = HouseLevel_SmallTent; level < HouseLevel_LargeInsula && toEmigrate > 0; level++) {
+	for (int level = HOUSE_SMALL_TENT; level < HOUSE_LARGE_INSULA && toEmigrate > 0; level++) {
 		for (int i = 0; i < Data_BuildingList.large.size && toEmigrate > 0; i++) {
 			int buildingId = Data_BuildingList.large.items[i];
 			if (Data_Buildings[buildingId].housePopulation > 0 &&
@@ -345,16 +345,16 @@ int HousePopulation_calculatePeoplePerType()
 		if (b->houseSize) {
 			int pop = b->housePopulation;
 			total += pop;
-			if (b->subtype.houseLevel <= HouseLevel_LargeTent) {
+			if (b->subtype.houseLevel <= HOUSE_LARGE_TENT) {
 				Data_CityInfo.populationPeopleInTents += pop;
 			}
-			if (b->subtype.houseLevel <= HouseLevel_LargeShack) {
+			if (b->subtype.houseLevel <= HOUSE_LARGE_SHACK) {
 				Data_CityInfo.populationPeopleInTentsShacks += pop;
 			}
-			if (b->subtype.houseLevel >= HouseLevel_LargeInsula) {
+			if (b->subtype.houseLevel >= HOUSE_LARGE_INSULA) {
 				Data_CityInfo.populationPeopleInLargeInsulaAndAbove += pop;
 			}
-			if (b->subtype.houseLevel >= HouseLevel_SmallVilla) {
+			if (b->subtype.houseLevel >= HOUSE_SMALL_VILLA) {
 				Data_CityInfo.populationPeopleInVillasPalaces += pop;
 			}
 		}

@@ -21,29 +21,29 @@
 
 static const int enemyAttackBuildingPriority[4][24] = {
 	{
-		Building_Granary, Building_Warehouse, Building_Market,
-		Building_WheatFarm, Building_VegetableFarm, Building_FruitFarm,
-		Building_OliveFarm, Building_VinesFarm, Building_PigFarm, 0
+		BUILDING_GRANARY, BUILDING_WAREHOUSE, BUILDING_MARKET,
+		BUILDING_WHEAT_FARM, BUILDING_VEGETABLE_FARM, BUILDING_FRUIT_FARM,
+		BUILDING_OLIVE_FARM, BUILDING_VINES_FARM, BUILDING_PIG_FARM, 0
 	},
 	{
-		Building_SenateUpgraded, Building_Senate,
-		Building_ForumUpgraded, Building_Forum, 0
+		BUILDING_SENATE_UPGRADED, BUILDING_SENATE,
+		BUILDING_FORUM_UPGRADED, BUILDING_FORUM, 0
 	},
 	{
-		Building_GovernorsPalace, Building_GovernorsVilla, Building_GovernorsHouse,
-		Building_HouseLuxuryPalace, Building_HouseLargePalace,
-		Building_HouseMediumPalace, Building_HouseSmallPalace,
-		Building_HouseGrandVilla, Building_HouseLargeVilla,
-		Building_HouseMediumVilla, Building_HouseSmallVilla,
-		Building_HouseGrandInsula, Building_HouseLargeInsula,
-		Building_HouseMediumInsula, Building_HouseSmallInsula,
-		Building_HouseLargeCasa, Building_HouseSmallCasa,
-		Building_HouseLargeHovel, Building_HouseSmallHovel,
-		Building_HouseLargeShack, Building_HouseSmallShack,
-		Building_HouseLargeTent, Building_HouseSmallTent, 0
+		BUILDING_GOVERNORS_PALACE, BUILDING_GOVERNORS_VILLA, BUILDING_GOVERNORS_HOUSE,
+		BUILDING_HOUSE_LUXURY_PALACE, BUILDING_HOUSE_LARGE_PALACE,
+        BUILDING_HOUSE_MEDIUM_PALACE, BUILDING_HOUSE_SMALL_PALACE,
+        BUILDING_HOUSE_GRAND_VILLA, BUILDING_HOUSE_LARGE_VILLA,
+        BUILDING_HOUSE_MEDIUM_VILLA, BUILDING_HOUSE_SMALL_VILLA,
+        BUILDING_HOUSE_GRAND_INSULA, BUILDING_HOUSE_LARGE_INSULA,
+        BUILDING_HOUSE_MEDIUM_INSULA, BUILDING_HOUSE_SMALL_INSULA,
+        BUILDING_HOUSE_LARGE_CASA, BUILDING_HOUSE_SMALL_CASA,
+        BUILDING_HOUSE_LARGE_HOVEL, BUILDING_HOUSE_SMALL_HOVEL,
+        BUILDING_HOUSE_LARGE_SHACK, BUILDING_HOUSE_SMALL_SHACK,
+		BUILDING_HOUSE_LARGE_TENT, BUILDING_HOUSE_SMALL_TENT, 0
 	},
 	{
-		Building_MilitaryAcademy, Building_Barracks, 0
+		BUILDING_MILITARY_ACADEMY, BUILDING_BARRACKS, 0
 	}
 };
 
@@ -399,12 +399,12 @@ static void setNativeTargetBuilding(int formationId)
 			continue;
 		}
 		switch (Data_Buildings[i].type) {
-			case Building_MissionPost:
-			case Building_NativeHut:
-			case Building_NativeCrops:
-			case Building_NativeMeeting:
-			case Building_Warehouse:
-			case Building_Fort:
+			case BUILDING_MISSION_POST:
+			case BUILDING_NATIVE_HUT:
+			case BUILDING_NATIVE_CROPS:
+			case BUILDING_NATIVE_MEETING:
+			case BUILDING_WAREHOUSE:
+			case BUILDING_FORT:
 				break;
 			default: {
 				int distance = calc_maximum_distance(
@@ -481,7 +481,7 @@ static void setEnemyTargetBuilding(struct Data_Formation *m)
 		return;
 	}
 	struct Data_Building *b = &Data_Buildings[buildingId];
-	if (b->type == Building_Warehouse) {
+	if (b->type == BUILDING_WAREHOUSE) {
 		m->destinationX = b->x + 1;
 		m->destinationY = b->y;
 		m->destinationBuildingId = buildingId + 1;
@@ -985,7 +985,7 @@ int Formation_Rioter_getTargetBuilding(int *xTile, int *yTile)
 		return 0;
 	}
 	struct Data_Building *b = &Data_Buildings[buildingId];
-	if (b->type == Building_Warehouse) {
+	if (b->type == BUILDING_WAREHOUSE) {
 		*xTile = b->x + 1;
 		*yTile = b->y;
 		return buildingId + 1;

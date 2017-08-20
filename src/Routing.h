@@ -53,8 +53,8 @@ int Routing_getDistanceForBuildingRoadOrAqueduct(int x, int y, int isAqueduct);
 int Routing_getDistanceForBuildingWall(int x, int y);
 
 typedef enum {
-	RoutedBuilding_Road = 0,
-	RoutedBuilding_Wall = 1,
+	RoutedBUILDING_ROAD = 0,
+	RoutedBUILDING_WALL = 1,
 	RoutedBuilding_Aqueduct = 2,
 	RoutedBuilding_AqueductWithoutGraphic = 4,
 } RoutedBuilding;

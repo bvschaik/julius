@@ -45,7 +45,7 @@ void Security_Tick_updateBurningRuins()
 	Data_BuildingList.burning.totalBurning = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
-		if (!BuildingIsInUse(i) || b->type != Building_BurningRuin) {
+		if (!BuildingIsInUse(i) || b->type != BUILDING_BURNING_RUIN) {
 			continue;
 		}
 		if (b->fireDuration < 0) {
@@ -123,7 +123,7 @@ int Security_Fire_getClosestBurningRuin(int x, int y, int *distance)
 	for (EACH_BURNING_RUIN) {
 		int buildingId = Data_BuildingList.burning.items[Data_BuildingList.burning.index];
 		struct Data_Building *b = &Data_Buildings[buildingId];
-		if (BuildingIsInUse(buildingId) && b->type == Building_BurningRuin && !b->ruinHasPlague && b->distanceFromEntry) {
+		if (BuildingIsInUse(buildingId) && b->type == BUILDING_BURNING_RUIN && !b->ruinHasPlague && b->distanceFromEntry) {
 			int dist = calc_maximum_distance(x, y, b->x, b->y);
 			if (b->figureId4) {
 				if (dist < minOccupiedDist) {
@@ -334,7 +334,7 @@ void Security_Tick_checkFireCollapse()
 		if (!BuildingIsInUse(i) || b->fireProof) {
 			continue;
 		}
-		if (b->type == Building_Hippodrome && b->prevPartBuildingId) {
+		if (b->type == BUILDING_HIPPODROME && b->prevPartBuildingId) {
 			continue;
 		}
 		int randomBuilding = (i + Data_Grid_random[b->gridOffset]) & 7;
@@ -343,7 +343,7 @@ void Security_Tick_checkFireCollapse()
 		if (Data_Tutorial.tutorial1.fire == 1 && !Data_Tutorial.tutorial1.collapse) {
 			b->damageRisk += 5;
 		}
-		if (b->houseSize && b->subtype.houseLevel <= HouseLevel_LargeTent) {
+		if (b->houseSize && b->subtype.houseLevel <= HOUSE_LARGE_TENT) {
 			b->damageRisk = 0;
 		}
 		if (b->damageRisk > 200) {
@@ -357,9 +357,9 @@ void Security_Tick_checkFireCollapse()
 				b->fireRisk += 5;
 			} else if (b->housePopulation <= 0) {
 				b->fireRisk = 0;
-			} else if (b->subtype.houseLevel <= HouseLevel_LargeShack) {
+			} else if (b->subtype.houseLevel <= HOUSE_LARGE_SHACK) {
 				b->fireRisk += 10;
-			} else if (b->subtype.houseLevel <= HouseLevel_GrandInsula) {
+			} else if (b->subtype.houseLevel <= HOUSE_GRAND_INSULA) {
 				b->fireRisk += 5;
 			} else {
 				b->fireRisk += 2;

@@ -200,14 +200,14 @@ void CityInfo_Culture_calculateEntertainment()
 			continue;
 		}
 		switch (b->type) {
-			case Building_Theater:
+			case BUILDING_THEATER:
 				if (b->data.entertainment.days1) {
 					Data_CityInfo.entertainmentTheaterShows++;
 				} else {
 					Data_CityInfo.entertainmentTheaterNoShowsWeighted++;
 				}
 				break;
-			case Building_Amphitheater:
+			case BUILDING_AMPHITHEATER:
 				if (b->data.entertainment.days1) {
 					Data_CityInfo.entertainmentAmphitheaterShows++;
 				} else {
@@ -219,7 +219,7 @@ void CityInfo_Culture_calculateEntertainment()
 					Data_CityInfo.entertainmentAmphitheaterNoShowsWeighted += 2;
 				}
 				break;
-			case Building_Colosseum:
+			case BUILDING_COLOSSEUM:
 				if (b->data.entertainment.days1) {
 					Data_CityInfo.entertainmentColosseumShows++;
 				} else {
@@ -231,7 +231,7 @@ void CityInfo_Culture_calculateEntertainment()
 					Data_CityInfo.entertainmentColosseumNoShowsWeighted += 3;
 				}
 				break;
-			case Building_Hippodrome:
+			case BUILDING_HIPPODROME:
 				if (b->data.entertainment.days1) {
 					Data_CityInfo.entertainmentHippodromeShows++;
 				} else {

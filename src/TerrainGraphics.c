@@ -551,7 +551,7 @@ void TerrainGraphics_setBuildingAreaRubble(int buildingId, int x, int y, int siz
 			if (Data_Grid_buildingIds[gridOffset] != buildingId) {
 				continue;
 			}
-			if (buildingId && Data_Buildings[Data_Grid_buildingIds[gridOffset]].type != Building_BurningRuin) {
+			if (buildingId && Data_Buildings[Data_Grid_buildingIds[gridOffset]].type != BUILDING_BURNING_RUIN) {
 				Data_Grid_rubbleBuildingType[gridOffset] = (unsigned char) Data_Buildings[buildingId].type;
 			}
 			Data_Grid_bitfields[gridOffset] &= Bitfield_NoOverlay;

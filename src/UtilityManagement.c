@@ -27,7 +27,7 @@ void UtilityManagement_updateHouseWaterAccess()
 		if (!BuildingIsInUse(i)) {
 			continue;
 		}
-		if (Data_Buildings[i].type == Building_Well) {
+		if (Data_Buildings[i].type == BUILDING_WELL) {
 			DATA_BUILDINGLIST_SMALL_ENQUEUE(i);
 		} else if (Data_Buildings[i].houseSize) {
 			Data_Buildings[i].hasWaterAccess = 0;
@@ -83,7 +83,7 @@ static void fillAqueductsFromOffset(int gridOffset)
 		for (int i = 0; i < 4; i++) {
 			int newOffset = gridOffset + adjacentOffsets[i];
 			int buildingId = Data_Grid_buildingIds[newOffset];
-			if (buildingId && Data_Buildings[buildingId].type == Building_Reservoir) {
+			if (buildingId && Data_Buildings[buildingId].type == BUILDING_RESERVOIR) {
 				// check if aqueduct connects to reservoir --> doesn't connect to corner
 				int xy = Data_Grid_edge[newOffset] & Edge_MaskXY;
 				if (xy != Edge_X0Y0 && xy != Edge_X2Y0 && xy != Edge_X0Y2 && xy != Edge_X2Y2) {
@@ -126,7 +126,7 @@ void UtilityManagement_updateReservoirFountain()
 	Data_BuildingList.large.size = 0;
 	// mark reservoirs next to water
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (BuildingIsInUse(i) && Data_Buildings[i].type == Building_Reservoir) {
+		if (BuildingIsInUse(i) && Data_Buildings[i].type == BUILDING_RESERVOIR) {
 			Data_BuildingList.large.items[Data_BuildingList.large.size++] = i;
 			if (Terrain_existsTileWithinAreaWithType(
 				Data_Buildings[i].x - 1, Data_Buildings[i].y - 1, 5, Terrain_Water)) {
@@ -164,7 +164,7 @@ void UtilityManagement_updateReservoirFountain()
 	// fountains
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
-		if (!BuildingIsInUse(i) || b->type != Building_Fountain) {
+		if (!BuildingIsInUse(i) || b->type != BUILDING_FOUNTAIN) {
 			continue;
 		}
 		int des = Data_Grid_desirability[b->gridOffset];

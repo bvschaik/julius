@@ -152,19 +152,19 @@ static void placeBuildingOnTerrain(int buildingId)
 		int graphicOffset;
 		switch (b->type) {
 			default:
-			case Building_WheatFarm: graphicOffset = 0; break;
-			case Building_VegetableFarm: graphicOffset = 5; break;
-			case Building_FruitFarm: graphicOffset = 10; break;
-			case Building_OliveFarm: graphicOffset = 15; break;
-			case Building_VinesFarm: graphicOffset = 20; break;
-			case Building_PigFarm: graphicOffset = 25; break;
+			case BUILDING_WHEAT_FARM: graphicOffset = 0; break;
+			case BUILDING_VEGETABLE_FARM: graphicOffset = 5; break;
+			case BUILDING_FRUIT_FARM: graphicOffset = 10; break;
+			case BUILDING_OLIVE_FARM: graphicOffset = 15; break;
+			case BUILDING_VINES_FARM: graphicOffset = 20; break;
+			case BUILDING_PIG_FARM: graphicOffset = 25; break;
 		}
 		TerrainGraphics_setBuildingFarm(buildingId, b->x, b->y,
 			GraphicId(ID_Graphic_FarmCrops) + graphicOffset, 0);
 	} else {
 		int size = Constant_BuildingProperties[b->type].size;
 		Terrain_addBuildingToGrids(buildingId, b->x, b->y, size, 0, 0);
-		if (b->type == Building_Wharf) {
+		if (b->type == BUILDING_WHARF) {
 			b->data.other.boatFigureId = 0;
 		}
 	}
@@ -179,7 +179,7 @@ void Undo_perform()
 	Data_State.undoAvailable = 0;
 	Data_CityInfo.treasury += data.buildingCost;
 	Data_CityInfo.financeConstructionThisYear -= data.buildingCost;
-	if (data.buildingType == Building_ClearLand) {
+	if (data.buildingType == BUILDING_CLEAR_LAND) {
 		for (int i = 0; i < data.numBuildings; i++) {
 			if (data.buildingIndex[i]) {
 				int buildingId = data.buildingIndex[i];
@@ -195,23 +195,23 @@ void Undo_perform()
 		Grid_copyByteGrid(Data_Grid_Undo_bitfields, Data_Grid_bitfields);
 		Grid_copyByteGrid(Data_Grid_Undo_edge, Data_Grid_edge);
 		Grid_andByteGrid(Data_Grid_bitfields, Bitfield_NoOverlayAndDeleted);
-	} else if (data.buildingType == Building_Aqueduct || data.buildingType == Building_Road ||
-			data.buildingType == Building_Wall) {
+	} else if (data.buildingType == BUILDING_AQUEDUCT || data.buildingType == BUILDING_ROAD ||
+			data.buildingType == BUILDING_WALL) {
 		Grid_copyShortGrid(Data_Grid_Undo_terrain, Data_Grid_terrain);
 		Grid_copyByteGrid(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
 		Undo_restoreTerrainGraphics();
-	} else if (data.buildingType == Building_LowBridge || data.buildingType == Building_ShipBridge) {
+	} else if (data.buildingType == BUILDING_LOW_BRIDGE || data.buildingType == BUILDING_SHIP_BRIDGE) {
 		Grid_copyShortGrid(Data_Grid_Undo_terrain, Data_Grid_terrain);
 		Grid_copyByteGrid(Data_Grid_Undo_spriteOffsets, Data_Grid_spriteOffsets);
 		Undo_restoreTerrainGraphics();
-	} else if (data.buildingType == Building_Plaza || data.buildingType == Building_Gardens) {
+	} else if (data.buildingType == BUILDING_PLAZA || data.buildingType == BUILDING_GARDENS) {
 		Grid_copyShortGrid(Data_Grid_Undo_terrain, Data_Grid_terrain);
 		Grid_copyByteGrid(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
 		Grid_copyByteGrid(Data_Grid_Undo_bitfields, Data_Grid_bitfields);
 		Grid_copyByteGrid(Data_Grid_Undo_edge, Data_Grid_edge);
 		Undo_restoreTerrainGraphics();
 	} else if (data.numBuildings) {
-		if (data.buildingType == Building_DraggableReservoir) {
+		if (data.buildingType == BUILDING_DRAGGABLE_RESERVOIR) {
 			Grid_copyShortGrid(Data_Grid_Undo_terrain, Data_Grid_terrain);
 			Grid_copyByteGrid(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
 			Undo_restoreTerrainGraphics();
@@ -219,7 +219,7 @@ void Undo_perform()
 		for (int i = 0; i < data.numBuildings; i++) {
 			if (data.buildingIndex[i]) {
 				struct Data_Building *b = &Data_Buildings[data.buildingIndex[i]];
-				if (b->type == Building_Oracle || (b->type >= Building_LargeTempleCeres && b->type <= Building_LargeTempleVenus)) {
+				if (b->type == BUILDING_ORACLE || (b->type >= BUILDING_LARGE_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS)) {
 					Resource_addToCityWarehouses(Resource_Marble, 2);
 				}
 				b->state = BuildingState_Undo;
@@ -245,14 +245,14 @@ void Undo_updateAvailable()
 	}
 	data.timeout--;
 	switch (data.buildingType) {
-		case Building_ClearLand:
-		case Building_Aqueduct:
-		case Building_Road:
-		case Building_Wall:
-		case Building_LowBridge:
-		case Building_ShipBridge:
-		case Building_Plaza:
-		case Building_Gardens:
+		case BUILDING_CLEAR_LAND:
+		case BUILDING_AQUEDUCT:
+		case BUILDING_ROAD:
+		case BUILDING_WALL:
+		case BUILDING_LOW_BRIDGE:
+		case BUILDING_SHIP_BRIDGE:
+		case BUILDING_PLAZA:
+		case BUILDING_GARDENS:
 			return;
 	}
 	if (data.numBuildings <= 0) {
@@ -260,7 +260,7 @@ void Undo_updateAvailable()
 		UI_Window_requestRefresh();
 		return;
 	}
-	if (data.buildingType == Building_HouseVacantLot) {
+	if (data.buildingType == BUILDING_HOUSE_VACANT_LOT) {
 		for (int i = 0; i < data.numBuildings; i++) {
 			if (data.buildingIndex[i] && Data_Buildings[data.buildingIndex[i]].housePopulation) {
 				// no undo on a new house where people moved in

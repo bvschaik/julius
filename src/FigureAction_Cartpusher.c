@@ -424,7 +424,7 @@ void FigureAction_warehouseman(int figureId)
 			}
 			f->waitTicks++;
 			if (f->waitTicks > 2) {
-				if (Data_Buildings[f->buildingId].type == Building_Granary) {
+				if (Data_Buildings[f->buildingId].type == BUILDING_GRANARY) {
 					determineGranarymanDestination(figureId, f, roadNetworkId);
 				} else {
 					determineWarehousemanDestination(figureId, f, roadNetworkId);
@@ -453,14 +453,14 @@ void FigureAction_warehouseman(int figureId)
 			if (f->waitTicks > 4) {
 				int buildingId = f->destinationBuildingId;
 				switch (Data_Buildings[buildingId].type) {
-					case Building_Granary:
+					case BUILDING_GRANARY:
 						Resource_addToGranary(buildingId, f->resourceId, 0);
 						break;
-					case Building_Barracks:
+					case BUILDING_BARRACKS:
 						Resource_addWeaponToBarracks(buildingId);
 						break;
-					case Building_Warehouse:
-					case Building_WarehouseSpace:
+					case BUILDING_WAREHOUSE:
+					case BUILDING_WAREHOUSE_SPACE:
 						Resource_addToWarehouse(buildingId, f->resourceId);
 						break;
 					default: // workshop

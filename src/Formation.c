@@ -170,7 +170,7 @@ int Formation_getFormationForBuilding(int gridOffset)
 	int buildingId = Data_Grid_buildingIds[gridOffset];
 	if (buildingId > 0) {
 		struct Data_Building *b = &Data_Buildings[buildingId];
-		if (BuildingIsInUse(buildingId) && (b->type == Building_Fort || b->type == Building_FortGround)) {
+		if (BuildingIsInUse(buildingId) && (b->type == BUILDING_FORT || b->type == BUILDING_FORT_GROUND)) {
 			return b->formationId;
 		}
 	}

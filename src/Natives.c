@@ -28,16 +28,16 @@ void Natives_init()
 			int randomBit = Data_Grid_random[gridOffset] & 1;
 			int buildingType;
 			if (Data_Grid_graphicIds[gridOffset] == Data_Scenario.nativeGraphics.hut) {
-				buildingType = Building_NativeHut;
+				buildingType = BUILDING_NATIVE_HUT;
 				Data_Grid_graphicIds[gridOffset] = nativeGraphic;
 			} else if (Data_Grid_graphicIds[gridOffset] == Data_Scenario.nativeGraphics.hut + 1) {
-				buildingType = Building_NativeHut;
+				buildingType = BUILDING_NATIVE_HUT;
 				Data_Grid_graphicIds[gridOffset] = nativeGraphic + 1;
 			} else if (Data_Grid_graphicIds[gridOffset] == Data_Scenario.nativeGraphics.meetingCenter) {
-				buildingType = Building_NativeMeeting;
+				buildingType = BUILDING_NATIVE_MEETING;
 				Data_Grid_graphicIds[gridOffset] = nativeGraphic + 2;
 			} else if (Data_Grid_graphicIds[gridOffset] == Data_Scenario.nativeGraphics.crops) {
-				buildingType = Building_NativeCrops;
+				buildingType = BUILDING_NATIVE_CROPS;
 				Data_Grid_graphicIds[gridOffset] = GraphicId(ID_Graphic_FarmCrops) + randomBit;
 			} else { //unknown building
 				Terrain_removeBuildingFromGrids(0, x, y);
@@ -48,10 +48,10 @@ void Natives_init()
 			struct Data_Building *b = &Data_Buildings[buildingId];
 			b->state = BuildingState_InUse;
 			switch (buildingType) {
-				case Building_NativeCrops:
+				case BUILDING_NATIVE_CROPS:
 					b->data.industry.progress = randomBit;
 					break;
-				case Building_NativeMeeting:
+				case BUILDING_NATIVE_MEETING:
 					b->sentiment.nativeAnger = 100;
 					Data_Grid_buildingIds[gridOffset + 1] = buildingId;
 					Data_Grid_buildingIds[gridOffset + 162] = buildingId;
@@ -62,7 +62,7 @@ void Natives_init()
 						Data_CityInfo.nativeMainMeetingCenterY = b->y;
 					}
 					break;
-				case Building_NativeHut:
+				case BUILDING_NATIVE_HUT:
 					b->sentiment.nativeAnger = 100;
 					b->figureSpawnDelay = randomBit;
 					Terrain_markNativeLand(b->x, b->y, 1, 3);
@@ -79,7 +79,7 @@ static void determineMeetingCenter()
 	// gather list of meeting centers
 	Data_BuildingList.small.size = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (BuildingIsInUse(i) && Data_Buildings[i].type == Building_NativeMeeting) {
+		if (BuildingIsInUse(i) && Data_Buildings[i].type == BUILDING_NATIVE_MEETING) {
 			DATA_BUILDINGLIST_SMALL_ENQUEUE(i);
 		}
 	}
@@ -88,7 +88,7 @@ static void determineMeetingCenter()
 	}
 	// determine closest meeting center for hut
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (BuildingIsInUse(i) && Data_Buildings[i].type == Building_NativeHut) {
+		if (BuildingIsInUse(i) && Data_Buildings[i].type == BUILDING_NATIVE_HUT) {
 			int minDist = 1000;
 			int minMeetingId = 0;
 			for (int n = 0; n < Data_BuildingList.small.size; n++) {
@@ -117,10 +117,10 @@ void Natives_checkLand()
 		}
 		struct Data_Building *b = &Data_Buildings[i];
 		int size, radius;
-		if (b->type == Building_NativeHut) {
+		if (b->type == BUILDING_NATIVE_HUT) {
 			size = 1;
 			radius = 3;
-		} else if (b->type == Building_NativeMeeting) {
+		} else if (b->type == BUILDING_NATIVE_MEETING) {
 			size = 2;
 			radius = 6;
 		} else {

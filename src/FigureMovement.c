@@ -392,7 +392,7 @@ static void figureAdvanceRouteTile(struct Data_Figure *f, int roamingEnabled)
 		}
 	} else if (targetTerrain & (Terrain_Road | Terrain_AccessRamp)) {
 		if (roamingEnabled && targetTerrain & Terrain_Building) {
-			if (Data_Buildings[Data_Grid_buildingIds[targetGridOffset]].type == Building_Gatehouse) {
+			if (Data_Buildings[Data_Grid_buildingIds[targetGridOffset]].type == BUILDING_GATEHOUSE) {
 				// do not allow roaming through gatehouse
 				f->direction = DirFigure_9_Reroute;
 			}
@@ -400,10 +400,10 @@ static void figureAdvanceRouteTile(struct Data_Figure *f, int roamingEnabled)
 	} else if (targetTerrain & Terrain_Building) {
 		int type = Data_Buildings[Data_Grid_buildingIds[targetGridOffset]].type;
 		switch (type) {
-			case Building_Warehouse:
-			case Building_Granary:
-			case Building_TriumphalArch:
-			case Building_FortGround:
+			case BUILDING_WAREHOUSE:
+			case BUILDING_GRANARY:
+			case BUILDING_TRIUMPHAL_ARCH:
+			case BUILDING_FORT_GROUND:
 				break; // OK to walk
 			default:
 				f->direction = DirFigure_9_Reroute;

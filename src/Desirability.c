@@ -44,10 +44,10 @@ static void updateTerrain()
 			if (Data_Grid_bitfields[gridOffset] & Bitfield_PlazaOrEarthquake) {
 				int type;
 				if (terrain & Terrain_Road) {
-					type = Building_Plaza;
+					type = BUILDING_PLAZA;
 				} else if (terrain & Terrain_Rock) {
 					// earthquake fault line: slight negative
-					type = Building_HouseVacantLot;
+					type = BUILDING_HOUSE_VACANT_LOT;
 				} else {
 					// invalid plaza/earthquake flag
 					Data_Grid_bitfields[gridOffset] &= ~Bitfield_PlazaOrEarthquake;

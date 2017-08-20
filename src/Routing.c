@@ -246,14 +246,14 @@ void Routing_determineLandCitizen()
 				}
 				int land = Routing_Citizen_m1_Blocked;
 				switch (Data_Buildings[buildingId].type) {
-					case Building_Warehouse:
-					case Building_Gatehouse:
+					case BUILDING_WAREHOUSE:
+					case BUILDING_GATEHOUSE:
 						land = Routing_Citizen_0_Road;
 						break;
-					case Building_FortGround:
+					case BUILDING_FORT_GROUND:
 						land = Routing_Citizen_2_PassableTerrain;
 						break;
-					case Building_TriumphalArch:
+					case BUILDING_TRIUMPHAL_ARCH:
 						if (Data_Buildings[buildingId].subtype.orientation == 3) {
 							switch (Data_Grid_edge[gridOffset] & Edge_MaskXY) {
 								case Edge_X0Y1:
@@ -272,7 +272,7 @@ void Routing_determineLandCitizen()
 							}
 						}
 						break;
-					case Building_Granary:
+					case BUILDING_GRANARY:
 						switch (Data_Grid_edge[gridOffset] & Edge_MaskXY) {
 							case Edge_X1Y0:
 							case Edge_X0Y1:
@@ -283,7 +283,7 @@ void Routing_determineLandCitizen()
 								break;
 						}
 						break;
-					case Building_Reservoir:
+					case BUILDING_RESERVOIR:
 						switch (Data_Grid_edge[gridOffset] & Edge_MaskXY) {
 							case Edge_X1Y0:
 							case Edge_X0Y1:
@@ -341,20 +341,20 @@ void Routing_determineLandNonCitizen()
 			} else if (terrain & Terrain_Building) {
 				int land = Routing_NonCitizen_1_Building;
 				switch (Data_Buildings[Data_Grid_buildingIds[gridOffset]].type) {
-					case Building_Warehouse:
-					case Building_FortGround:
+					case BUILDING_WAREHOUSE:
+					case BUILDING_FORT_GROUND:
 						land = Routing_NonCitizen_0_Passable;
 						break;
-					case Building_BurningRuin:
-					case Building_NativeHut:
-					case Building_NativeMeeting:
-					case Building_NativeCrops:
+					case BUILDING_BURNING_RUIN:
+					case BUILDING_NATIVE_HUT:
+					case BUILDING_NATIVE_MEETING:
+					case BUILDING_NATIVE_CROPS:
 						land = Routing_NonCitizen_m1_Blocked;
 						break;
-					case Building_Fort:
+					case BUILDING_FORT:
 						land = Routing_NonCitizen_5_Fort;
 						break;
-					case Building_Granary:
+					case BUILDING_GRANARY:
 						switch (Data_Grid_edge[gridOffset] & Edge_MaskXY) {
 							case Edge_X1Y0:
 							case Edge_X0Y1:
@@ -780,7 +780,7 @@ static int canPlaceInitialRoadOrAqueduct(int gridOffset, int isAqueduct)
 			return 1;
 		}
 		if (Data_Grid_terrain[gridOffset] & Terrain_Building) {
-			if (Data_Buildings[Data_Grid_buildingIds[gridOffset]].type == Building_Reservoir) {
+			if (Data_Buildings[Data_Grid_buildingIds[gridOffset]].type == BUILDING_RESERVOIR) {
 				return 1;
 			}
 		}
@@ -893,10 +893,10 @@ int Routing_placeRoutedBuilding(int xSrc, int ySrc, int xDst, int yDst, RoutedBu
 		}
 		switch (type) {
 			default:
-			case RoutedBuilding_Road:
+			case RoutedBUILDING_ROAD:
 				*items += TerrainGraphics_setTileRoad(xDst, yDst);
 				break;
-			case RoutedBuilding_Wall:
+			case RoutedBUILDING_WALL:
 				*items += TerrainGraphics_setTileWall(xDst, yDst);
 				break;
 			case RoutedBuilding_Aqueduct:

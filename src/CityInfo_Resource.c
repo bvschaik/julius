@@ -52,7 +52,7 @@ void CityInfo_Resource_calculateFood()
 	Data_CityInfo.foodInfoGranariesNotOperatingWithFood = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
-		if (!BuildingIsInUse(i) || b->type != Building_Granary) {
+		if (!BuildingIsInUse(i) || b->type != BUILDING_GRANARY) {
 			continue;
 		}
 		b->hasRoadAccess = 0;
@@ -109,7 +109,7 @@ void CityInfo_Resource_calculateFoodAndSupplyRomeWheat()
 	CityInfo_Resource_calculateFood();
 	if (Data_Scenario.romeSuppliesWheat) {
 		for (int i = 1; i < MAX_BUILDINGS; i++) {
-			if (BuildingIsInUse(i) && Data_Buildings[i].type == Building_Market) {
+			if (BuildingIsInUse(i) && Data_Buildings[i].type == BUILDING_MARKET) {
 				Data_Buildings[i].data.market.inventory[Inventory_Wheat] = 200;
 			}
 		}

@@ -101,7 +101,7 @@ void FigureAction_immigrant(int figureId)
 					f->migrantNumPeople = room;
 				}
 				if (!b->housePopulation) {
-					BuildingHouse_changeTo(buildingId, Building_HouseSmallTent);
+					BuildingHouse_changeTo(buildingId, BUILDING_HOUSE_SMALL_TENT);
 				}
 				b->housePopulation += f->migrantNumPeople;
 				b->housePopulationRoom = maxPeople - b->housePopulation;
@@ -245,7 +245,7 @@ void FigureAction_homeless(int figureId)
 						f->migrantNumPeople = room;
 					}
 					if (!b->housePopulation) {
-						BuildingHouse_changeTo(f->immigrantBuildingId, Building_HouseSmallTent);
+						BuildingHouse_changeTo(f->immigrantBuildingId, BUILDING_HOUSE_SMALL_TENT);
 					}
 					b->housePopulation += f->migrantNumPeople;
 					b->housePopulationRoom = maxPeople - b->housePopulation;

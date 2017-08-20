@@ -380,7 +380,7 @@ void CityInfo_Population_updateHealthRate()
 			continue;
 		}
 		totalPopulation += b->housePopulation;
-		if (b->subtype.houseLevel <= HouseLevel_LargeTent) {
+		if (b->subtype.houseLevel <= HOUSE_LARGE_TENT) {
 			if (b->data.house.clinic) {
 				healthyPopulation += b->housePopulation;
 			} else {
@@ -461,7 +461,7 @@ static void healthCauseDisease(int totalPeople)
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
 		if (BuildingIsInUse(i) && b->houseSize && b->housePopulation) {
-			if (b->subtype.houseLevel <= HouseLevel_LargeTent) {
+			if (b->subtype.houseLevel <= HOUSE_LARGE_TENT) {
 				peopleToKill -= b->housePopulation;
 				Building_collapseOnFire(i, 1);
 				if (peopleToKill <= 0) {

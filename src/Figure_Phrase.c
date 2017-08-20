@@ -291,17 +291,17 @@ int Figure_determinePhrase(int figureId)
 			}
 			break;
 		case Figure_TaxCollector:
-			if (f->minMaxSeen >= HouseLevel_LargeCasa) {
+			if (f->minMaxSeen >= HOUSE_LARGE_CASA) {
 				phraseId = 7;
-			} else if (f->minMaxSeen >= HouseLevel_SmallHovel) {
+			} else if (f->minMaxSeen >= HOUSE_SMALL_HOVEL) {
 				phraseId = 8;
-			} else if (f->minMaxSeen >= HouseLevel_LargeTent) {
+			} else if (f->minMaxSeen >= HOUSE_LARGE_TENT) {
 				phraseId = 9;
 			}
 			break;
 		case Figure_MarketTrader:
 			if (f->actionState == FigureActionState_126_RoamerReturning) {
-				if (Building_Market_getMaxFoodStock(f->buildingId) <= 0) {
+				if (BUILDING_MARKET_getMaxFoodStock(f->buildingId) <= 0) {
 					phraseId = 9; // run out of goods
 				}
 			}

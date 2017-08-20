@@ -78,38 +78,38 @@ void UI_CityBuildings_drawSelectedBuildingGhost()
 		return;
 	}
 	switch (Data_State.selectedBuilding.type) {
-		case Building_DraggableReservoir:
+		case BUILDING_DRAGGABLE_RESERVOIR:
 			drawBuildingGhostDraggableReservoir();
 			break;
-		case Building_Aqueduct:
+		case BUILDING_AQUEDUCT:
 			drawBuildingGhostAqueduct();
 			break;
-		case Building_Fountain:
+		case BUILDING_FOUNTAIN:
 			drawBuildingGhostFountain();
 			break;
-		case Building_Bathhouse:
+		case BUILDING_BATHHOUSE:
 			drawBuildingGhostBathhouse();
 			break;
-		case Building_LowBridge:
-		case Building_ShipBridge:
+		case BUILDING_LOW_BRIDGE:
+		case BUILDING_SHIP_BRIDGE:
 			drawBuildingGhostBridge();
 			break;
-		case Building_FortLegionaries:
-		case Building_FortJavelin:
-		case Building_FortMounted:
+		case BUILDING_FORT_LEGIONARIES:
+		case BUILDING_FORT_JAVELIN:
+		case BUILDING_FORT_MOUNTED:
 			drawBuildingGhostFort();
 			break;
-		case Building_Hippodrome:
+		case BUILDING_HIPPODROME:
 			drawBuildingGhostHippodrome();
 			break;
-		case Building_Shipyard:
-		case Building_Wharf:
+		case BUILDING_SHIPYARD:
+		case BUILDING_WHARF:
 			drawBuildingGhostShipyardWharf();
 			break;
-		case Building_Dock:
+		case BUILDING_DOCK:
 			drawBuildingGhostDock();
 			break;
-		case Building_Road:
+		case BUILDING_ROAD:
 			drawBuildingGhostRoad();
 			break;
 		default:
@@ -134,7 +134,7 @@ static void drawBuildingGhostDefault()
 	int graphicId =
 		GraphicId(Constant_BuildingProperties[type].graphicCategory) +
 		Constant_BuildingProperties[type].graphicOffset;
-	if (type == Building_Warehouse) {
+	if (type == BUILDING_WAREHOUSE) {
 		buildingSize = 3;
 	}
 	int xStart = 0, yStart = 0;
@@ -183,7 +183,7 @@ static void drawBuildingGhostDefault()
 			fullyObstructed = 1;
 			placementObstructed = 1;
 		}
-	} else if (Data_State.selectedBuilding.type == Building_Gatehouse) {
+	} else if (Data_State.selectedBuilding.type == BUILDING_GATEHOUSE) {
 		int orientation = Terrain_getOrientationGatehouse(
 			Data_Settings_Map.current.x, Data_Settings_Map.current.y);
 		int graphicOffset;
@@ -199,7 +199,7 @@ static void drawBuildingGhostDefault()
 			graphicOffset = 1 - graphicOffset;
 		}
 		graphicId += graphicOffset;
-	} else if (Data_State.selectedBuilding.type == Building_TriumphalArch) {
+	} else if (Data_State.selectedBuilding.type == BUILDING_TRIUMPHAL_ARCH) {
 		int orientation = Terrain_getOrientationTriumphalArch(
 			Data_Settings_Map.current.x, Data_Settings_Map.current.y);
 		int graphicOffset;
@@ -216,11 +216,11 @@ static void drawBuildingGhostDefault()
 		}
 		graphicId += graphicOffset;
 	}
-	if (Data_State.selectedBuilding.type == Building_SenateUpgraded && Data_CityInfo.buildingSenatePlaced) {
+	if (Data_State.selectedBuilding.type == BUILDING_SENATE_UPGRADED && Data_CityInfo.buildingSenatePlaced) {
 		fullyObstructed = 1;
 		placementObstructed = 1;
 	}
-	if (Data_State.selectedBuilding.type == Building_Barracks && Data_CityInfo_Buildings.barracks.total) {
+	if (Data_State.selectedBuilding.type == BUILDING_BARRACKS && Data_CityInfo_Buildings.barracks.total) {
 		fullyObstructed = 1;
 		placementObstructed = 1;
 	}
@@ -230,17 +230,17 @@ static void drawBuildingGhostDefault()
 	for (int i = 0; i < numTiles; i++) {
 		int tileOffset = gridOffset + tileGridOffsets[orientationIndex][i];
 		int terrain = Data_Grid_terrain[tileOffset] & Terrain_NotClear;
-		if (type == Building_Gatehouse || type == Building_TriumphalArch || type == Building_Plaza) {
+		if (type == BUILDING_GATEHOUSE || type == BUILDING_TRIUMPHAL_ARCH || type == BUILDING_PLAZA) {
 			terrain &= ~Terrain_Road;
 		}
-		if (type == Building_Tower) {
+		if (type == BUILDING_TOWER) {
 			terrain &= ~Terrain_Wall;
 		}
 		if (terrain || Data_Grid_figureIds[tileOffset]) {
 			placementObstructed = 1;
 		}
 	}
-	if (type == Building_Plaza && !(Data_Grid_terrain[gridOffset] & Terrain_Road)) {
+	if (type == BUILDING_PLAZA && !(Data_Grid_terrain[gridOffset] & Terrain_Road)) {
 		placementObstructed = 1;
 	}
 	if (Data_CityInfo.treasury <= MIN_TREASURY) {
@@ -253,7 +253,7 @@ static void drawBuildingGhostDefault()
 		for (int i = 0; i < numTiles; i++) {
 			int tileOffset = gridOffset + tileGridOffsets[orientationIndex][i];
 			int tileObstructed = Data_Grid_terrain[tileOffset] & Terrain_NotClear;
-			if (type == Building_Gatehouse) {
+			if (type == BUILDING_GATEHOUSE) {
 				tileObstructed &= ~Terrain_Road;
 			}
 			if (Data_Grid_figureIds[tileOffset]) {
@@ -280,7 +280,7 @@ static void drawBuildingGhostDefault()
 					xOffsetBase + xViewOffsets[i],
 					yOffsetBase + yViewOffsets[i], Color_MaskGreen);
 			}
-		} else if (type == Building_Warehouse) {
+		} else if (type == BUILDING_WAREHOUSE) {
 			Graphics_drawIsometricFootprint(graphicId,
 				xOffsetBase, yOffsetBase, Color_MaskGreen);
 			Graphics_drawIsometricTop(graphicId,
@@ -296,20 +296,20 @@ static void drawBuildingGhostDefault()
 				Graphics_drawIsometricTop(graphicIdSpace,
 					xOffset, yOffset, Color_MaskGreen);
 			}
-		} else if (type == Building_Granary) {
+		} else if (type == BUILDING_GRANARY) {
 			Graphics_drawIsometricFootprint(graphicId,
 				xOffsetBase, yOffsetBase, Color_MaskGreen);
 			Graphics_drawImageMasked(graphicId + 1,
 				xOffsetBase + GraphicSpriteOffsetX(graphicId + 1) - 32,
 				yOffsetBase + GraphicSpriteOffsetY(graphicId + 1) - 64,
 				Color_MaskGreen);
-		} else if (type == Building_HouseVacantLot) {
+		} else if (type == BUILDING_HOUSE_VACANT_LOT) {
 			int graphicIdLot = GraphicId(ID_Graphic_HouseVacantLot);
 			Graphics_drawIsometricFootprint(graphicIdLot,
 				xOffsetBase, yOffsetBase, Color_MaskGreen);
 			Graphics_drawIsometricTop(graphicIdLot,
 				xOffsetBase, yOffsetBase, Color_MaskGreen);
-		} else if (type == Building_TriumphalArch) {
+		} else if (type == BUILDING_TRIUMPHAL_ARCH) {
 			Graphics_drawIsometricFootprint(graphicId,
 				xOffsetBase, yOffsetBase, Color_MaskGreen);
 			Graphics_drawIsometricTop(graphicId,
@@ -325,7 +325,7 @@ static void drawBuildingGhostDefault()
 					yOffsetBase + GraphicSpriteOffsetY(graphicId + 1) - 56,
 					Color_MaskGreen);
 			}
-		} else if (type != Building_ClearLand) {
+		} else if (type != BUILDING_CLEAR_LAND) {
 			Graphics_drawIsometricFootprint(graphicId,
 				xOffsetBase, yOffsetBase, Color_MaskGreen);
 			Graphics_drawIsometricTop(graphicId,
@@ -446,7 +446,7 @@ static void drawBuildingGhostFountain()
 	int xOffset = Data_CityView.selectedTile.xOffsetInPixels;
 	int yOffset = Data_CityView.selectedTile.yOffsetInPixels;
 
-	int graphicId = GraphicId(Constant_BuildingProperties[Building_Fountain].graphicCategory);
+	int graphicId = GraphicId(Constant_BuildingProperties[BUILDING_FOUNTAIN].graphicCategory);
 	if (Data_CityInfo.treasury <= MIN_TREASURY) {
 		drawFlatTile(xOffset, yOffset, Color_MaskRed);
 	} else {
@@ -499,7 +499,7 @@ static void drawBuildingGhostBathhouse()
 			}
 		}
 	} else {
-		int graphicId = GraphicId(Constant_BuildingProperties[Building_Bathhouse].graphicCategory);
+		int graphicId = GraphicId(Constant_BuildingProperties[BUILDING_BATHHOUSE].graphicCategory);
 		Graphics_drawIsometricFootprint(graphicId, xOffsetBase, yOffsetBase, Color_MaskGreen);
 		Graphics_drawIsometricTop(graphicId, xOffsetBase, yOffsetBase, Color_MaskGreen);
 		int hasWater = 0;
@@ -523,7 +523,7 @@ static void drawBuildingGhostBridge()
 	int length, direction;
 	int endGridOffset = TerrainBridge_determineLengthAndDirection(
 		Data_Settings_Map.current.x, Data_Settings_Map.current.y,
-		Data_State.selectedBuilding.type == Building_LowBridge ? 0 : 1,
+		Data_State.selectedBuilding.type == BUILDING_LOW_BRIDGE ? 0 : 1,
 		&length, &direction);
 
 	int dir = direction - Data_Settings_Map.orientation;
@@ -531,7 +531,7 @@ static void drawBuildingGhostBridge()
 		dir += 8;
 	}
 	int obstructed = 0;
-	if (Data_State.selectedBuilding.type == Building_ShipBridge && length < 5) {
+	if (Data_State.selectedBuilding.type == BUILDING_SHIP_BRIDGE && length < 5) {
 		obstructed = 1;
 	} else if (!endGridOffset) {
 		obstructed = 1;
@@ -587,7 +587,7 @@ static void drawBuildingGhostBridge()
 		case Dir_6_Left: xAdd = -29; yAdd = -15; break;
 		default: return;
 	}
-	if (Data_State.selectedBuilding.type == Building_LowBridge) {
+	if (Data_State.selectedBuilding.type == BUILDING_LOW_BRIDGE) {
 		switch (dir) {
 			case Dir_0_Top:
 				graphicId = graphicBase + 5;
@@ -767,9 +767,9 @@ static void drawBuildingGhostFort()
 		placementObstructed = 1;
 	}
 
-	int numTilesFort = Constant_BuildingProperties[Building_Fort].size;
+	int numTilesFort = Constant_BuildingProperties[BUILDING_FORT].size;
 	numTilesFort *= numTilesFort;
-	int numTilesGround = Constant_BuildingProperties[Building_FortGround].size;
+	int numTilesGround = Constant_BuildingProperties[BUILDING_FORT_GROUND].size;
 	numTilesGround *= numTilesGround;
 
 	int orientationIndex = Data_Settings_Map.orientation / 2;

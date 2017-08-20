@@ -24,7 +24,7 @@ static void advanceTradeNextImportResourceCaravan()
 
 int FigureAction_TradeCaravan_canBuy(int traderId, int warehouseId, int cityId)
 {
-	if (Data_Buildings[warehouseId].type != Building_Warehouse) {
+	if (Data_Buildings[warehouseId].type != BUILDING_WAREHOUSE) {
 		return 0;
 	}
 	if (Data_Figures[traderId].traderAmountBought >= 8) {
@@ -42,7 +42,7 @@ int FigureAction_TradeCaravan_canBuy(int traderId, int warehouseId, int cityId)
 
 static int traderGetBuyResource(int warehouseId, int cityId)
 {
-	if (Data_Buildings[warehouseId].type != Building_Warehouse) {
+	if (Data_Buildings[warehouseId].type != BUILDING_WAREHOUSE) {
 		return Resource_None;
 	}
 	for (int i = 0; i < 8; i++) {
@@ -76,7 +76,7 @@ static int traderGetBuyResource(int warehouseId, int cityId)
 
 int FigureAction_TradeCaravan_canSell(int traderId, int warehouseId, int cityId)
 {
-	if (Data_Buildings[warehouseId].type != Building_Warehouse) {
+	if (Data_Buildings[warehouseId].type != BUILDING_WAREHOUSE) {
 		return 0;
 	}
 	if (Data_Figures[traderId].loadsSoldOrCarrying >= 8) {
@@ -133,7 +133,7 @@ int FigureAction_TradeCaravan_canSell(int traderId, int warehouseId, int cityId)
 
 static int traderGetSellResource(int traderId, int warehouseId, int cityId)
 {
-	if (Data_Buildings[warehouseId].type != Building_Warehouse) {
+	if (Data_Buildings[warehouseId].type != BUILDING_WAREHOUSE) {
 		return 0;
 	}
 	int imp = 1;
@@ -446,7 +446,7 @@ static int tradeShipLostQueue(int figureId)
 {
 	int buildingId = Data_Figures[figureId].destinationBuildingId;
 	struct Data_Building *b = &Data_Buildings[buildingId];
-	if (BuildingIsInUse(buildingId) && b->type == Building_Dock &&
+	if (BuildingIsInUse(buildingId) && b->type == BUILDING_DOCK &&
 		b->numWorkers > 0 && b->data.other.boatFigureId == figureId) {
 		return 0;
 	}
@@ -457,7 +457,7 @@ static int tradeShipDoneTrading(int figureId)
 {
 	int buildingId = Data_Figures[figureId].destinationBuildingId;
 	struct Data_Building *b = &Data_Buildings[buildingId];
-	if (BuildingIsInUse(buildingId) && b->type == Building_Dock && b->numWorkers > 0) {
+	if (BuildingIsInUse(buildingId) && b->type == BUILDING_DOCK && b->numWorkers > 0) {
 		for (int i = 0; i < 3; i++) {
 			int dockerId = b->data.other.dockFigureIds[i];
 			if (dockerId && Data_Figures[dockerId].state == FigureState_Alive &&
@@ -612,7 +612,7 @@ int FigureAction_TradeShip_isBuyingOrSelling(int figureId)
 {
 	int buildingId = Data_Figures[figureId].destinationBuildingId;
 	struct Data_Building *b = &Data_Buildings[buildingId];
-	if (!BuildingIsInUse(buildingId) || b->type != Building_Dock) {
+	if (!BuildingIsInUse(buildingId) || b->type != BUILDING_DOCK) {
 		return TradeShipState_Buying;
 	}
 	for (int i = 0; i < 3; i++) {

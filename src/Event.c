@@ -660,7 +660,7 @@ void Event_handleRandomEvents()
 			break;
 		case RandomEvent_IronMineCollapsed:
 			if (Data_Scenario.ironMineCollapseEnabled) {
-				int gridOffset = Building_collapseFirstOfType(Building_IronMine);
+				int gridOffset = Building_collapseFirstOfType(BUILDING_IRON_MINE);
 				if (gridOffset) {
 					PlayerMessage_post(1, Message_71_IronMineCollaped, 0, gridOffset);
 				}
@@ -668,7 +668,7 @@ void Event_handleRandomEvents()
 			break;
 		case RandomEvent_ClayPitFlooded:
 			if (Data_Scenario.clayPitFloodEnabled) {
-				int gridOffset = Building_collapseFirstOfType(Building_ClayPit);
+				int gridOffset = Building_collapseFirstOfType(BUILDING_CLAY_PIT);
 				if (gridOffset) {
 					PlayerMessage_post(1, Message_72_ClayPitFlooded, 0, gridOffset);
 				}

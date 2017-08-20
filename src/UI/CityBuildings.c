@@ -191,7 +191,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 				}
 				// specific buildings
 				struct Data_Building *b = &Data_Buildings[buildingId];
-				if (b->type == Building_SenateUpgraded) {
+				if (b->type == BUILDING_SENATE_UPGRADED) {
 					// rating flags
 					graphicId = GraphicId(ID_Graphic_Senate);
 					Graphics_drawImageMasked(graphicId + 1, xGraphic + 138,
@@ -225,15 +225,15 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 							xGraphic + 66, yGraphic + 20, colorMask);
 					}
 				}
-				if (b->type == Building_Amphitheater && b->numWorkers > 0) {
+				if (b->type == BUILDING_AMPHITHEATER && b->numWorkers > 0) {
 					Graphics_drawImageMasked(GraphicId(ID_Graphic_AmphitheaterShow),
 						xGraphic + 36, yGraphic - 47, colorMask);
 				}
-				if (b->type == Building_Theater && b->numWorkers > 0) {
+				if (b->type == BUILDING_THEATER && b->numWorkers > 0) {
 					Graphics_drawImageMasked(GraphicId(ID_Graphic_TheaterShow),
 						xGraphic + 34, yGraphic - 22, colorMask);
 				}
-				if (b->type == Building_Hippodrome &&
+				if (b->type == BUILDING_HIPPODROME &&
 					Data_Buildings[Building_getMainBuildingId(buildingId)].numWorkers > 0 &&
 					Data_CityInfo.entertainmentHippodromeHasShow) {
 					int subtype = b->subtype.orientation;
@@ -297,36 +297,36 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 						}
 					}
 				}
-				if (b->type == Building_Colosseum && b->numWorkers > 0) {
+				if (b->type == BUILDING_COLOSSEUM && b->numWorkers > 0) {
 					Graphics_drawImageMasked(GraphicId(ID_Graphic_ColosseumShow),
 						xGraphic + 70, yGraphic - 90, colorMask);
 				}
 				// workshops
-				if (b->type == Building_WineWorkshop) {
+				if (b->type == BUILDING_WINE_WORKSHOP) {
 					if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
 						Graphics_drawImageMasked(GraphicId(ID_Graphic_WorkshopRawMaterial),
 							xGraphic + 45, yGraphic + 23, colorMask);
 					}
 				}
-				if (b->type == Building_OilWorkshop) {
+				if (b->type == BUILDING_OIL_WORKSHOP) {
 					if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
 						Graphics_drawImageMasked(GraphicId(ID_Graphic_WorkshopRawMaterial) + 1,
 							xGraphic + 35, yGraphic + 15, colorMask);
 					}
 				}
-				if (b->type == Building_WeaponsWorkshop) {
+				if (b->type == BUILDING_WEAPONS_WORKSHOP) {
 					if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
 						Graphics_drawImageMasked(GraphicId(ID_Graphic_WorkshopRawMaterial) + 3,
 							xGraphic + 46, yGraphic + 24, colorMask);
 					}
 				}
-				if (b->type == Building_FurnitureWorkshop) {
+				if (b->type == BUILDING_FURNITURE_WORKSHOP) {
 					if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
 						Graphics_drawImageMasked(GraphicId(ID_Graphic_WorkshopRawMaterial) + 2,
 							xGraphic + 48, yGraphic + 19, colorMask);
 					}
 				}
-				if (b->type == Building_PotteryWorkshop) {
+				if (b->type == BUILDING_POTTERY_WORKSHOP) {
 					if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
 						Graphics_drawImageMasked(GraphicId(ID_Graphic_WorkshopRawMaterial) + 4,
 							xGraphic + 47, yGraphic + 24, colorMask);
@@ -355,8 +355,8 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 					if (buildingId && b->isDeleted) {
 						colorMask = Color_MaskRed;
 					}
-					if (b->type == Building_Dock) {
-						int numDockers = Building_Dock_getNumIdleDockers(buildingId);
+					if (b->type == BUILDING_DOCK) {
+						int numDockers = BUILDING_DOCK_getNumIdleDockers(buildingId);
 						if (numDockers > 0) {
 							int graphicIdDock = Data_Grid_graphicIds[b->gridOffset];
 							int graphicIdDockers = GraphicId(ID_Graphic_Dockers);
@@ -380,7 +380,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 								colorMask);
 						}
 					}
-					if (b->type == Building_Warehouse) {
+					if (b->type == BUILDING_WAREHOUSE) {
 						Graphics_drawImageMasked(GraphicId(ID_Graphic_Warehouse) + 17,
 							xGraphic - 4, yGraphic - 42, colorMask);
 						if (buildingId == Data_CityInfo.buildingTradeCenterBuildingId) {
@@ -388,7 +388,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 								xGraphic + 19, yGraphic - 56, colorMask);
 						}
 					}
-					if (b->type == Building_Granary) {
+					if (b->type == BUILDING_GRANARY) {
 						Graphics_drawImageMasked(GraphicId(ID_Graphic_Granary) + 1,
 							xGraphic + GraphicSpriteOffsetX(graphicId),
 							yGraphic + 60 + GraphicSpriteOffsetY(graphicId) - GraphicHeight(graphicId),
@@ -410,16 +410,16 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 								xGraphic + 117, yGraphic - 62, colorMask);
 						}
 					}
-					if (b->type == Building_BurningRuin && b->ruinHasPlague) {
+					if (b->type == BUILDING_BURNING_RUIN && b->ruinHasPlague) {
 						Graphics_drawImageMasked(GraphicId(ID_Graphic_PlagueSkull),
 							xGraphic + 18, yGraphic - 32, colorMask);
 					}
 					int animationOffset = Animation_getIndexForCityBuilding(graphicId, gridOffset);
-					if (b->type != Building_Hippodrome && animationOffset > 0) {
+					if (b->type != BUILDING_HIPPODROME && animationOffset > 0) {
 						if (animationOffset > GraphicNumAnimationSprites(graphicId)) {
 							animationOffset = GraphicNumAnimationSprites(graphicId);
 						}
-						if (b->type == Building_Granary) {
+						if (b->type == BUILDING_GRANARY) {
 							Graphics_drawImageMasked(graphicId + animationOffset + 5,
 								xGraphic + 77, yGraphic - 49, colorMask);
 						} else {
@@ -440,7 +440,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 				}
 			} else if (Data_Grid_spriteOffsets[gridOffset]) {
 				UI_CityBuildings_drawBridge(gridOffset, xGraphic, yGraphic);
-			} else if (Data_Buildings[Data_Grid_buildingIds[gridOffset]].type == Building_Fort) {
+			} else if (Data_Buildings[Data_Grid_buildingIds[gridOffset]].type == BUILDING_FORT) {
 				if (Data_Grid_edge[gridOffset] & Edge_LeftmostTile) {
 					int buildingId = Data_Grid_buildingIds[gridOffset];
 					int offset = 0;
@@ -454,7 +454,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 							xGraphic + 81, yGraphic + 5);
 					}
 				}
-			} else if (Data_Buildings[Data_Grid_buildingIds[gridOffset]].type == Building_Gatehouse) {
+			} else if (Data_Buildings[Data_Grid_buildingIds[gridOffset]].type == BUILDING_GATEHOUSE) {
 				int xy = Data_Grid_edge[gridOffset] & Edge_MaskXY;
 				if ((Data_Settings_Map.orientation == Dir_0_Top && xy == 9) ||
 					(Data_Settings_Map.orientation == Dir_2_Right && xy == 8) ||
@@ -560,7 +560,7 @@ static void drawHippodromeAndElevatedFigures(int selectedFigureId)
 				int graphicId = Data_Grid_graphicIds[gridOffset];
 				if (GraphicNumAnimationSprites(graphicId) &&
 					Data_Grid_edge[gridOffset] & Edge_LeftmostTile &&
-					Data_Buildings[Data_Grid_buildingIds[gridOffset]].type == Building_Hippodrome) {
+					Data_Buildings[Data_Grid_buildingIds[gridOffset]].type == BUILDING_HIPPODROME) {
 					switch (Data_Grid_bitfields[gridOffset] & Bitfield_Sizes) {
 						case Bitfield_Size1:
 							Graphics_drawImage(graphicId + 1,
@@ -657,18 +657,18 @@ static void buildStart()
 		if (Undo_recordBeforeBuild()) {
 			Data_State.selectedBuilding.placementInProgress = 1;
 			switch (Data_State.selectedBuilding.type) {
-				case Building_Road:
+				case BUILDING_ROAD:
 					Routing_getDistanceForBuildingRoadOrAqueduct(
 						Data_State.selectedBuilding.xStart,
 						Data_State.selectedBuilding.yStart, 0);
 					break;
-				case Building_Aqueduct:
-				case Building_DraggableReservoir:
+				case BUILDING_AQUEDUCT:
+				case BUILDING_DRAGGABLE_RESERVOIR:
 					Routing_getDistanceForBuildingRoadOrAqueduct(
 						Data_State.selectedBuilding.xStart,
 						Data_State.selectedBuilding.yStart, 1);
 					break;
-				case Building_Wall:
+				case BUILDING_WALL:
 					Routing_getDistanceForBuildingWall(
 						Data_State.selectedBuilding.xStart,
 						Data_State.selectedBuilding.yStart);
@@ -745,7 +745,7 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 	int buildingId = Data_Grid_buildingIds[gridOffset];
 	int overlay = Data_State.currentOverlay;
 	// regular tooltips
-	if (overlay == Overlay_None && buildingId && Data_Buildings[buildingId].type == Building_SenateUpgraded) {
+	if (overlay == Overlay_None && buildingId && Data_Buildings[buildingId].type == BUILDING_SENATE_UPGRADED) {
 		c->type = TooltipType_Senate;
 		c->priority = TooltipPriority_High;
 		return;

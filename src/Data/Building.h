@@ -1,127 +1,11 @@
 #ifndef DATA_BUILDING_H
 #define DATA_BUILDING_H
 
+#include "building/type.h"
+
 #define MAX_BUILDINGS 2000
 #define MAX_STORAGES 200
 #define MAX_HOUSE_LEVELS 20
-
-enum {
-	Building_None = 0,
-	Building_Menu_Farms = 2,
-	Building_Menu_RawMaterials = 3,
-	Building_Menu_Workshops = 4,
-	Building_Road = 5,
-	Building_Wall = 6,
-	Building_DraggableReservoir = 7,
-	Building_Aqueduct = 8,
-	Building_ClearLand = 9,
-	Building_HouseVacantLot = 10,
-	Building_HouseSmallTent = 10,
-	Building_HouseLargeTent = 11,
-	Building_HouseSmallShack = 12,
-	Building_HouseLargeShack = 13,
-	Building_HouseSmallHovel = 14,
-	Building_HouseLargeHovel = 15,
-	Building_HouseSmallCasa = 16,
-	Building_HouseLargeCasa = 17,
-	Building_HouseSmallInsula = 18,
-	Building_HouseMediumInsula = 19,
-	Building_HouseLargeInsula = 20,
-	Building_HouseGrandInsula = 21,
-	Building_HouseSmallVilla = 22,
-	Building_HouseMediumVilla = 23,
-	Building_HouseLargeVilla = 24,
-	Building_HouseGrandVilla = 25,
-	Building_HouseSmallPalace = 26,
-	Building_HouseMediumPalace = 27,
-	Building_HouseLargePalace = 28,
-	Building_HouseLuxuryPalace = 29,
-	Building_Amphitheater = 30,
-	Building_Theater = 31,
-	Building_Hippodrome = 32,
-	Building_Colosseum = 33,
-	Building_GladiatorSchool = 34,
-	Building_LionHouse = 35,
-	Building_ActorColony = 36,
-	Building_ChariotMaker = 37,
-	Building_Plaza = 38,
-	Building_Gardens = 39,
-	Building_FortLegionaries = 40,
-	Building_SmallStatue = 41,
-	Building_MediumStatue = 42,
-	Building_LargeStatue = 43,
-	Building_FortJavelin = 44,
-	Building_FortMounted = 45,
-	Building_Doctor = 46,
-	Building_Hospital = 47,
-	Building_Bathhouse = 48,
-	Building_Barber = 49,
-	Building_DistributionCenter_Unused = 50,
-	Building_School = 51,
-	Building_Academy = 52,
-	Building_Library = 53,
-	Building_FortGround = 54,
-	Building_Prefecture = 55,
-	Building_TriumphalArch = 56,
-	Building_Fort = 57,
-	Building_Gatehouse = 58,
-	Building_Tower = 59,
-	Building_SmallTempleCeres = 60,
-	Building_SmallTempleNeptune = 61,
-	Building_SmallTempleMercury = 62,
-	Building_SmallTempleMars = 63,
-	Building_SmallTempleVenus = 64,
-	Building_LargeTempleCeres = 65,
-	Building_LargeTempleNeptune = 66,
-	Building_LargeTempleMercury = 67,
-	Building_LargeTempleMars = 68,
-	Building_LargeTempleVenus = 69,
-	Building_Market = 70,
-	Building_Granary = 71,
-	Building_Warehouse = 72,
-	Building_WarehouseSpace = 73,
-	Building_Shipyard = 74,
-	Building_Dock = 75,
-	Building_Wharf = 76,
-	Building_GovernorsHouse = 77,
-	Building_GovernorsVilla = 78,
-	Building_GovernorsPalace = 79,
-	Building_MissionPost = 80,
-	Building_EngineersPost = 81,
-	Building_LowBridge = 82,
-	Building_ShipBridge = 83,
-	Building_Senate = 84,
-	Building_SenateUpgraded = 85,
-	Building_Forum = 86,
-	Building_ForumUpgraded = 87,
-	Building_NativeHut = 88,
-	Building_NativeMeeting = 89,
-	Building_Reservoir = 90,
-	Building_Fountain = 91,
-	Building_Well = 92,
-	Building_NativeCrops = 93,
-	Building_MilitaryAcademy = 94,
-	Building_Barracks = 95,
-	Building_Menu_SmallTemples = 96,
-	Building_Menu_LargeTemples = 97,
-	Building_Oracle = 98,
-	Building_BurningRuin = 99,
-	Building_WheatFarm = 100,
-	Building_VegetableFarm = 101,
-	Building_FruitFarm = 102,
-	Building_OliveFarm = 103,
-	Building_VinesFarm = 104,
-	Building_PigFarm = 105,
-	Building_MarbleQuarry = 106,
-	Building_IronMine = 107,
-	Building_TimberYard = 108,
-	Building_ClayPit = 109,
-	Building_WineWorkshop = 110,
-	Building_OilWorkshop = 111,
-	Building_WeaponsWorkshop = 112,
-	Building_FurnitureWorkshop = 113,
-	Building_PotteryWorkshop = 114
-};
 
 enum {
 	BuildingState_Unused = 0,
@@ -139,33 +23,10 @@ enum {
 	BuildingStorageState_Getting = 2
 };
 
-enum {
-	HouseLevel_SmallTent = 0,
-	HouseLevel_LargeTent = 1,
-	HouseLevel_SmallShack = 2,
-	HouseLevel_LargeShack = 3,
-	HouseLevel_SmallHovel = 4,
-	HouseLevel_LargeHovel = 5,
-	HouseLevel_SmallCasa = 6,
-	HouseLevel_LargeCasa = 7,
-	HouseLevel_SmallInsula = 8,
-	HouseLevel_MediumInsula = 9,
-	HouseLevel_LargeInsula = 10,
-	HouseLevel_GrandInsula = 11,
-	HouseLevel_SmallVilla = 12,
-	HouseLevel_MediumVilla = 13,
-	HouseLevel_LargeVilla = 14,
-	HouseLevel_GrandVilla = 15,
-	HouseLevel_SmallPalace = 16,
-	HouseLevel_MediumPalace = 17,
-	HouseLevel_LargePalace = 18,
-	HouseLevel_LuxuryPalace = 19,
-};
-
-#define BuildingIsHouse(type) ((type) >= Building_HouseVacantLot && (type) <= Building_HouseLuxuryPalace)
-#define BuildingIsFarm(type) ((type) >= Building_WheatFarm && (type) <= Building_PigFarm)
-#define BuildingIsWorkshop(type) ((type) >= Building_WineWorkshop && (type) <= Building_PotteryWorkshop)
-#define BuildingIsEntertainment(type) ((type) >= Building_Theater && (type) <= Building_ChariotMaker)
+#define BuildingIsHouse(type) ((type) >= BUILDING_HOUSE_VACANT_LOT && (type) <= BUILDING_HOUSE_LUXURY_PALACE)
+#define BuildingIsFarm(type) ((type) >= BUILDING_WHEAT_FARM && (type) <= BUILDING_PIG_FARM)
+#define BuildingIsWorkshop(type) ((type) >= BUILDING_WINE_WORKSHOP && (type) <= BUILDING_POTTERY_WORKSHOP)
+#define BuildingIsEntertainment(type) ((type) >= BUILDING_THEATER && (type) <= BUILDING_CHARIOT_MAKER)
 
 #define BuildingIsInUse(buildingId) (Data_Buildings[buildingId].state == BuildingState_InUse)
 

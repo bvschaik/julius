@@ -93,7 +93,7 @@ void FigureAction_docker(int figureId)
 	if (!BuildingIsInUse(f->buildingId)) {
 		f->state = FigureState_Dead;
 	}
-	if (b->type != Building_Dock && b->type != Building_Wharf) {
+	if (b->type != BUILDING_DOCK && b->type != BUILDING_WHARF) {
 		f->state = FigureState_Dead;
 	}
 	if (b->data.other.dockNumShips) {

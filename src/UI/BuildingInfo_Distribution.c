@@ -409,7 +409,7 @@ static void toggleResourceState(int index, int param2)
 {
 	int storageId = Data_Buildings[buildingId].storageId;
 	int resourceId;
-	if (Data_Buildings[buildingId].type == Building_Warehouse) {
+	if (Data_Buildings[buildingId].type == BUILDING_WAREHOUSE) {
 		resourceId = Data_CityInfo_Resource.availableResources[index-1];
 	} else {
 		resourceId = Data_CityInfo_Resource.availableFoods[index-1];

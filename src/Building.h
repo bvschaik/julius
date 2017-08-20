@@ -37,13 +37,13 @@ void Building_Industry_witherFarmCropsFromCeres(int bigCurse);
 int Building_Industry_hasProducedResource(int buildingId);
 void Building_Industry_startNewProduction(int buildingId);
 
-int Building_Market_getMaxFoodStock(int buildingId);
-int Building_Market_getMaxGoodsStock(int buildingId);
-int Building_Market_getDestinationGranaryWarehouse(int marketId);
+int BUILDING_MARKET_getMaxFoodStock(int buildingId);
+int BUILDING_MARKET_getMaxGoodsStock(int buildingId);
+int BUILDING_MARKET_getDestinationGranaryWarehouse(int marketId);
 
-int Building_Dock_getNumIdleDockers(int buildingId);
-void Building_Dock_updateOpenWaterAccess();
-int Building_Dock_isConnectedToOpenWater(int x, int y);
+int BUILDING_DOCK_getNumIdleDockers(int buildingId);
+void BUILDING_DOCK_updateOpenWaterAccess();
+int BUILDING_DOCK_isConnectedToOpenWater(int x, int y);
 
 void Building_Mercury_removeResources(int bigCurse);
 void Building_Mercury_fillGranary();

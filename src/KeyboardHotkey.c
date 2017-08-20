@@ -124,7 +124,7 @@ static void cycleLegion()
 static void cheatInitOrInvasion()
 {
 	if (UI_Window_getId() == Window_BuildingInfo) {
-		data.isCheating = UI_BuildingInfo_getBuildingType() == Building_Well;
+		data.isCheating = UI_BuildingInfo_getBuildingType() == BUILDING_WELL;
 	} else if (data.isCheating && UI_Window_getId() == Window_MessageDialog) {
 		data.isCheating = 2;
 		Event_startInvasionFromCheat();
