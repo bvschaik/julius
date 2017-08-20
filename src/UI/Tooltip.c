@@ -4,7 +4,6 @@
 #include "Window.h"
 
 #include "../Graphics.h"
-#include "../String.h"
 #include "../Widget.h"
 
 #include "../Data/CityInfo.h"
@@ -14,6 +13,7 @@
 #include "../Data/Settings.h"
 
 #include "core/lang.h"
+#include "core/string.h"
 #include "core/time.h"
 
 #include <string.h>
@@ -156,7 +156,7 @@ static void drawOverlayTooltip(struct TooltipContext *c)
 {
 	const uint8_t *text = lang_get_string(c->textGroup, c->textId);
 	if (c->hasNumericPrefix) {
-		int offset = String_fromInt(tmpString, c->numericPrefix, 0);
+		int offset = string_from_int(tmpString, c->numericPrefix, 0);
 		strcpy(&tmpString[offset], text);
 		text = tmpString;
 	}

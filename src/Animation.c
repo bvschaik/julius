@@ -3,8 +3,8 @@
 #include "Data/Graphics.h"
 #include "Data/Grid.h"
 #include "Data/Building.h"
-#include "Data/Model.h"
 
+#include "building/model.h"
 #include "core/calc.h"
 #include "core/time.h"
 
@@ -58,7 +58,7 @@ int Animation_getIndexForCityBuilding(int graphicId, int gridOffset)
 	if (b->type == Building_Market && b->numWorkers <= 0) {
 		return 0;
 	}
-	if (b->type == Building_Warehouse && b->numWorkers < Data_Model_Buildings[b->type].laborers) {
+	if (b->type == Building_Warehouse && b->numWorkers < model_get_building(b->type)->laborers) {
 		return 0;
 	}
 	if (b->type == Building_Dock && b->data.other.dockNumShips <= 0) {
@@ -81,7 +81,7 @@ int Animation_getIndexForCityBuilding(int graphicId, int gridOffset)
 		b->type != Building_Hippodrome && b->numWorkers <= 0) {
 		return 0;
 	}
-	if (b->type == Building_Granary && b->numWorkers < Data_Model_Buildings[b->type].laborers) {
+	if (b->type == Building_Granary && b->numWorkers < model_get_building(b->type)->laborers) {
 		return 0;
 	}
 

@@ -7,8 +7,9 @@
 #include "Data/Constants.h"
 #include "Data/Settings.h"
 #include "Data/Grid.h"
-#include "Data/Model.h"
 #include "Data/Figure.h"
+
+#include "building/model.h"
 
 #define FOR_XY_RADIUS \
 	int xMin = x - 2;\
@@ -146,7 +147,8 @@ static int provideMarketGoods(int marketBuildingId, int x, int y)
 					foodTypesStoredMax++;
 				}
 			}
-			if (Data_Model_Houses[level].foodTypes > foodTypesStoredMax) {
+			const model_house *model = model_get_house(level);
+			if (model->food_types > foodTypesStoredMax) {
 				for (int i = Inventory_MinFood; i < Inventory_MaxFood; i++) {
 					if (house->data.house.inventory[i] >= maxFoodStocks) {
 						continue;
@@ -162,9 +164,9 @@ static int provideMarketGoods(int marketBuildingId, int x, int y)
 					}
 				}
 			}
-			if (Data_Model_Houses[level].pottery) {
+			if (model->pottery) {
 				market->data.market.potteryDemand = 10;
-				int potteryWanted = 8 * Data_Model_Houses[level].pottery - house->data.house.inventory[Inventory_Pottery];
+				int potteryWanted = 8 * model->pottery - house->data.house.inventory[Inventory_Pottery];
 				if (market->data.market.inventory[Inventory_Pottery] > 0 && potteryWanted > 0) {
 					if (potteryWanted <= market->data.market.inventory[Inventory_Pottery]) {
 						house->data.house.inventory[Inventory_Pottery] += potteryWanted;
@@ -175,9 +177,9 @@ static int provideMarketGoods(int marketBuildingId, int x, int y)
 					}
 				}
 			}
-			if (Data_Model_Houses[level].furniture) {
+			if (model->furniture) {
 				market->data.market.furnitureDemand = 10;
-				int furnitureWanted = 4 * Data_Model_Houses[level].furniture - house->data.house.inventory[Inventory_Furniture];
+				int furnitureWanted = 4 * model->furniture - house->data.house.inventory[Inventory_Furniture];
 				if (market->data.market.inventory[Inventory_Furniture] > 0 && furnitureWanted > 0) {
 					if (furnitureWanted <= market->data.market.inventory[Inventory_Furniture]) {
 						house->data.house.inventory[Inventory_Furniture] += furnitureWanted;
@@ -188,9 +190,9 @@ static int provideMarketGoods(int marketBuildingId, int x, int y)
 					}
 				}
 			}
-			if (Data_Model_Houses[level].oil) {
+			if (model->oil) {
 				market->data.market.oilDemand = 10;
-				int oilWanted = 4 * Data_Model_Houses[level].oil - house->data.house.inventory[Inventory_Oil];
+				int oilWanted = 4 * model->oil - house->data.house.inventory[Inventory_Oil];
 				if (market->data.market.inventory[Inventory_Oil] > 0 && oilWanted > 0) {
 					if (oilWanted <= market->data.market.inventory[Inventory_Oil]) {
 						house->data.house.inventory[Inventory_Oil] += oilWanted;
@@ -201,9 +203,9 @@ static int provideMarketGoods(int marketBuildingId, int x, int y)
 					}
 				}
 			}
-			if (Data_Model_Houses[level].wine) {
+			if (model->wine) {
 				market->data.market.wineDemand = 10;
-				int wineWanted = 4 * Data_Model_Houses[level].wine - house->data.house.inventory[Inventory_Wine];
+				int wineWanted = 4 * model->wine - house->data.house.inventory[Inventory_Wine];
 				if (market->data.market.inventory[Inventory_Wine] > 0 && wineWanted > 0) {
 					if (wineWanted <= market->data.market.inventory[Inventory_Wine]) {
 						house->data.house.inventory[Inventory_Wine] += wineWanted;
@@ -372,7 +374,7 @@ static int provideTaxCollectorCoverage(int x, int y, unsigned char *maxTaxMultip
 	*maxTaxMultiplier = 0;
 	FOR_XY_RADIUS {
 		if (Data_Buildings[buildingId].houseSize && Data_Buildings[buildingId].housePopulation > 0) {
-			int taxMultiplier = Data_Model_Houses[Data_Buildings[buildingId].subtype.houseLevel].taxMultiplier;
+			int taxMultiplier = model_get_house(Data_Buildings[buildingId].subtype.houseLevel)->tax_multiplier;
 			if (taxMultiplier > *maxTaxMultiplier) {
 				*maxTaxMultiplier = taxMultiplier;
 			}

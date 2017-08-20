@@ -7,7 +7,8 @@
 #include "Terrain.h"
 
 #include "Data/CityInfo.h"
-#include "Data/Model.h"
+
+#include "building/model.h"
 
 static void updateDirectionAndGraphic(int figureId, struct Data_Figure *f)
 {
@@ -88,7 +89,7 @@ void FigureAction_immigrant(int figureId)
 			f->isGhost = 1;
 			if (FigureMovement_crossCountryWalkTicks(figureId, 1) == 1) {
 				f->state = FigureState_Dead;
-				int maxPeople = Data_Model_Houses[b->subtype.houseLevel].maxPeople;
+				int maxPeople = model_get_house(b->subtype.houseLevel)->max_people;
 				if (b->houseIsMerged) {
 					maxPeople *= 4;
 				}
@@ -232,7 +233,7 @@ void FigureAction_homeless(int figureId)
 				f->state = FigureState_Dead;
 				struct Data_Building *b = &Data_Buildings[f->immigrantBuildingId];
 				if (f->immigrantBuildingId && BuildingIsHouse(b->type)) {
-					int maxPeople = Data_Model_Houses[b->subtype.houseLevel].maxPeople;
+					int maxPeople = model_get_house(b->subtype.houseLevel)->max_people;
 					if (b->houseIsMerged) {
 						maxPeople *= 4;
 					}

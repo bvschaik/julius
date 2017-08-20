@@ -20,6 +20,9 @@ set(CORE_FILES
     src/core/time.c
     src/core/zip.c
 )
+set (BUILDING_FILES
+    src/building/model.c
+)
 add_executable(julius
 	linux/main2.c
 	linux/SDLSoundDevice.c
@@ -83,7 +86,6 @@ add_executable(julius
 	src/KeyboardInput.c
 	src/Loader.c
 	src/Loader_Graphics.c
-	src/Loader_Model.c
 	src/Natives.c
 	src/PlayerMessage.c
 	src/Resource.c
@@ -100,7 +102,6 @@ add_executable(julius
 	src/Sound.c
 	src/Sound_City.c
 	src/Sound_Music.c
-	src/String.c
 	src/Terrain.c
 	src/TerrainBridge.c
 	src/TerrainGraphics.c
@@ -179,6 +180,7 @@ add_executable(julius
 	src/UI/Warning.c
 	src/UI/Window.c
 	${CORE_FILES}
+	${BUILDING_FILES}
 	${SMK_FILES})
 
 #include(FindPkgConfig)

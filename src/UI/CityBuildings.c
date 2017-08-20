@@ -17,6 +17,7 @@
 #include "../Data/Formation.h"
 #include "../Data/Mouse.h"
 
+#include "building/model.h"
 #include "core/time.h"
 
 static void drawBuildingFootprints();
@@ -1016,7 +1017,7 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 			if (b->housePopulation <= 0) {
 				return;
 			}
-			if (!Data_Model_Houses[b->subtype.houseLevel].foodTypes) {
+			if (!model_get_house(b->subtype.houseLevel)->food_types) {
 				c->textId = 104;
 			} else {
 				int stocksPresent = 0;

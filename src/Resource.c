@@ -10,7 +10,6 @@
 #include "Data/Constants.h"
 #include "Data/Graphics.h"
 #include "Data/Grid.h"
-#include "Data/Model.h"
 #include "Data/Scenario.h"
 #include "Data/Trade.h"
 

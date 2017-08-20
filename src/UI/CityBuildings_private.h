@@ -10,7 +10,6 @@
 #include "../Data/Figure.h"
 #include "../Data/Graphics.h"
 #include "../Data/Grid.h"
-#include "../Data/Model.h"
 #include "../Data/Settings.h"
 #include "../Data/State.h"
 
@@ -18,6 +17,7 @@
 #include "core/calc.h"
 #include "../Graphics.h"
 
+#include "building/model.h"
 
 #define DRAWFOOT_SIZE1(g,x,y) Graphics_drawIsometricFootprint(g, x, y, 0)
 #define DRAWFOOT_SIZE2(g,x,y) Graphics_drawIsometricFootprint(g, x + 30, y - 15, 0)

@@ -1,12 +1,13 @@
 #include "CityInfo.h"
-#include "core/calc.h"
 #include "PlayerMessage.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 #include "Data/Building.h"
 #include "Data/Message.h"
-#include "Data/Model.h"
 #include "Data/Scenario.h"
+
+#include "building/model.h"
+#include "core/calc.h"
 
 #define MAX_CATS 10
 
@@ -101,7 +102,7 @@ void CityInfo_Labor_calculateWorkersNeededPerCategory()
 			continue;
 		}
 		Data_CityInfo.laborCategory[category].workersNeeded +=
-			Data_Model_Buildings[Data_Buildings[i].type].laborers;
+			model_get_building(Data_Buildings[i].type)->laborers;
 		Data_CityInfo.laborCategory[category].totalHousesCovered +=
 			Data_Buildings[i].housesCovered;
 		Data_CityInfo.laborCategory[category].buildings++;
@@ -258,17 +259,18 @@ static void allocateWorkersToBuildings()
 			continue;
 		}
 		if (b->percentageHousesCovered > 0) {
+            int requiredWorkers = model_get_building(b->type)->laborers;
 			if (categoryWorkersNeeded[cat]) {
 				int numWorkers = calc_adjust_with_percentage(
 					Data_CityInfo.laborCategory[cat].workersAllocated,
 					b->percentageHousesCovered) / 100;
-				if (numWorkers > Data_Model_Buildings[b->type].laborers) {
-					numWorkers = Data_Model_Buildings[b->type].laborers;
+				if (numWorkers > requiredWorkers) {
+					numWorkers = requiredWorkers;
 				}
 				b->numWorkers = numWorkers;
 				categoryWorkersAllocated[cat] += numWorkers;
 			} else {
-				b->numWorkers = Data_Model_Buildings[b->type].laborers;
+				b->numWorkers = requiredWorkers;
 			}
 		}
 	}
@@ -296,8 +298,9 @@ static void allocateWorkersToBuildings()
 			continue;
 		}
 		if (b->percentageHousesCovered > 0 && categoryWorkersNeeded[cat]) {
-			if (b->numWorkers < Data_Model_Buildings[b->type].laborers) {
-				int needed = Data_Model_Buildings[b->type].laborers - b->numWorkers;
+            int requiredWorkers = model_get_building(b->type)->laborers;
+			if (b->numWorkers < requiredWorkers) {
+				int needed = requiredWorkers - b->numWorkers;
 				if (needed > categoryWorkersNeeded[cat]) {
 					b->numWorkers += categoryWorkersNeeded[cat];
 					categoryWorkersNeeded[cat] = 0;
@@ -351,7 +354,7 @@ static void allocateWorkersToWater()
 				}
 			} else {
 				Data_Buildings[buildingId].numWorkers =
-					Data_Model_Buildings[Data_Buildings[buildingId].type].laborers;
+					model_get_building(Data_Buildings[buildingId].type)->laborers;
 			}
 		}
 	}

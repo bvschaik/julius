@@ -1,15 +1,15 @@
 #include "FigureAction_private.h"
 
-#include "core/calc.h"
 #include "Figure.h"
 #include "PlayerMessage.h"
 #include "Terrain.h"
 
 #include "Data/CityInfo.h"
 #include "Data/Message.h"
-#include "Data/Model.h"
 #include "Data/Scenario.h"
 
+#include "building/model.h"
+#include "core/calc.h"
 #include "core/random.h"
 
 static const int flotsamType0[] = {0, 1, 2, 3, 4, 4, 4, 3, 2, 1, 0, 0};
@@ -120,7 +120,7 @@ void FigureAction_fishingBoat(int figureId)
 			break;
 		case FigureActionState_194_FishingBoatAtWharf:
 			{
-			int pctWorkers = calc_percentage(b->numWorkers, Data_Model_Buildings[b->type].laborers);
+			int pctWorkers = calc_percentage(b->numWorkers, model_get_building(b->type)->laborers);
 			int maxWaitTicks = 5 * (102 - pctWorkers);
 			if (b->data.other.fishingBoatHasFish > 0) {
 				pctWorkers = 0;

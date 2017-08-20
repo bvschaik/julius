@@ -10,9 +10,10 @@
 #include "Data/Constants.h"
 #include "Data/Graphics.h"
 #include "Data/Grid.h"
-#include "Data/Model.h"
 #include "Data/Scenario.h"
 #include "Data/Trade.h"
+
+#include "building/model.h"
 
 static int granaryGettingResource[7];
 static int granaryAcceptingResource[7];
@@ -106,7 +107,7 @@ int Resource_getWarehouseForStoringResource(
 		}
 		int pctWorkers = calc_percentage(
 			Data_Buildings[dstBuildingId].numWorkers,
-			Data_Model_Buildings[Data_Buildings[dstBuildingId].type].laborers);
+			model_get_building(Data_Buildings[dstBuildingId].type)->laborers);
 		if (pctWorkers < 100) {
 			if (understaffed) {
 				*understaffed += 1;
@@ -376,7 +377,7 @@ static int determineGranaryAcceptFoods()
 		if (!BuildingIsInUse(i) || b->type != Building_Granary || !b->hasRoadAccess) {
 			continue;
 		}
-		int pctWorkers = calc_percentage(b->numWorkers, Data_Model_Buildings[b->type].laborers);
+		int pctWorkers = calc_percentage(b->numWorkers, model_get_building(b->type)->laborers);
 		if (pctWorkers >= 100 && b->data.storage.resourceStored[Resource_None] >= 1200) {
 			struct Data_Building_Storage *s = &Data_Building_Storages[b->storageId];
 			if (!s->emptyAll) {
@@ -406,7 +407,7 @@ static int determineGranaryGetFoods()
 		if (!BuildingIsInUse(i) || b->type != Building_Granary || !b->hasRoadAccess) {
 			continue;
 		}
-		int pctWorkers = calc_percentage(b->numWorkers, Data_Model_Buildings[b->type].laborers);
+		int pctWorkers = calc_percentage(b->numWorkers, model_get_building(b->type)->laborers);
 		if (pctWorkers >= 100 && b->data.storage.resourceStored[Resource_None] > 100) {
 			struct Data_Building_Storage *s = &Data_Building_Storages[b->storageId];
 			if (!s->emptyAll) {
@@ -447,7 +448,7 @@ static int storesNonStockpiledFood(int spaceId, int *granaryResources)
 int Resource_determineWarehouseWorkerTask(int buildingId, int *resource)
 {
 	struct Data_Building *b = &Data_Buildings[buildingId];
-	int pctWorkers = calc_percentage(b->numWorkers, Data_Model_Buildings[b->type].laborers);
+	int pctWorkers = calc_percentage(b->numWorkers, model_get_building(b->type)->laborers);
 	if (pctWorkers < 50) {
 		return -1;
 	}

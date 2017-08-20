@@ -7,10 +7,10 @@
 
 #include "core/calc.h"
 #include "Graphics.h"
-#include "String.h"
 #include "UI/Window.h"
 
 #include "core/lang.h"
+#include "core/string.h"
 #include "core/time.h"
 
 static const int map_charToFontGraphic[] = {
@@ -307,7 +307,7 @@ static void numberToString(char *str, int value, char prefix, const char *postfi
 	if (prefix) {
 		str[offset++] = prefix;
 	}
-	offset += String_fromInt(&str[offset], value, 0);
+	offset += string_from_int(&str[offset], value, 0);
 	while (*postfix) {
 		str[offset++] = *postfix;
 		postfix++;
@@ -660,7 +660,7 @@ static int drawRichText(const char *str, int xOffset, int yOffset,
 							}
 							str++; // skip 'G'
 							currentWidth = boxWidth;
-							graphicId = String_toInt(str);
+							graphicId = string_to_int(str);
 							c = *(str++);
 							while (c >= '0' && c <= '9') {
 								c = *(str++);
@@ -736,7 +736,7 @@ static void drawRichTextLine(const unsigned char *str, int x, int y, Color color
 	int numLinkChars = 0;
 	for (unsigned char c = *str; c; c = *(++str)) {
 		if (c == '@') {
-			int messageId = String_toInt((char*)++str);
+			int messageId = string_to_int(++str);
 			while (*str >= '0' && *str <= '9') {
 				str++;
 			}

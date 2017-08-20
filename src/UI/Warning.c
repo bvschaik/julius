@@ -12,11 +12,11 @@
 #include "../Data/Constants.h"
 #include "../Data/Graphics.h"
 #include "../Data/Grid.h"
-#include "../Data/Model.h"
 #include "../Data/Scenario.h"
 #include "../Data/Screen.h"
 #include "../Data/Settings.h"
 
+#include "building/model.h"
 #include "core/lang.h"
 #include "core/time.h"
 
@@ -56,7 +56,7 @@ static struct {
 	short textLength;
 	short boxWidth;
 	time_millis time;
-	char text[100];
+	uint8_t text[100];
 } warnings[5];
 
 static int numWarnings;
@@ -266,7 +266,7 @@ static void checkWater(int buildingType, int x, int y)
 static void checkWorkers(int buildingType)
 {
 	if (!hasWarningAlready && buildingType != Building_Well) {
-		if (Data_Model_Buildings[buildingType].laborers > 0 &&
+		if (model_get_building(buildingType)->laborers > 0 &&
 			Data_CityInfo.workersNeeded >= 10) {
 			UI_Warning_show(Warning_WorkersNeeded);
 		}

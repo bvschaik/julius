@@ -3,8 +3,6 @@
 #define DATA_INTERN 1
 #include "Grid.h"
 
-struct Data_Model_House Data_Model_Houses[20];
-struct Data_Model_Building Data_Model_Buildings[130];
 struct Data_Model_Difficulty Data_Model_Difficulty = {
 	{300, 200, 150, 100, 75}, // money percentage
 	{40, 60, 80, 100, 120}, // enemy percentage

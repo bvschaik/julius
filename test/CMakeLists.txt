@@ -14,8 +14,8 @@ set(TESTS
     core/string
     core/time
     core/zip
-#     
-#     building/model
+
+    building/model
 #     building/storage
 #     
 #     city/health

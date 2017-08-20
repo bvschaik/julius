@@ -12,8 +12,9 @@
 #include "../Data/Constants.h"
 #include "../Data/Graphics.h"
 #include "../Data/Grid.h"
-#include "../Data/Model.h"
 #include "../Data/Settings.h"
+
+#include "building/model.h"
 
 static void drawVacantLot(BuildingInfoContext *c)
 {
@@ -112,7 +113,7 @@ void UI_BuildingInfo_drawHouse(BuildingInfoContext *c)
 	
 	int resourceGraphic = GraphicId(ID_Graphic_ResourceIcons);
 	// food inventory
-	if (Data_Model_Houses[b->subtype.houseLevel].foodTypes) {
+	if (model_get_house(b->subtype.houseLevel)->food_types) {
 		// wheat
 		Graphics_drawImage(resourceGraphic + Resource_Wheat,
 			c->xOffset + 32, c->yOffset + 234);
@@ -166,7 +167,7 @@ void UI_BuildingInfo_drawHouse(BuildingInfoContext *c)
 			c->xOffset + 32, c->yOffset + 60, Font_NormalBlack);
 		width += Widget_GameText_drawColored(41, Data_Buildings[c->worstDesirabilityBuildingId].type,
 			c->xOffset + 32 + width, c->yOffset + 60, Font_NormalPlain, Color_Red);
-		Widget_Text_draw((uint8_t)")", c->xOffset + 32 + width, c->yOffset + 60, Font_NormalBlack, 0);
+		Widget_Text_draw((uint8_t*)")", c->xOffset + 32 + width, c->yOffset + 60, Font_NormalBlack, 0);
 		Widget_GameText_drawMultiline(127, 41 + b->data.house.evolveTextId,
 			c->xOffset + 32, c->yOffset + 76, 16 * (c->widthBlocks - 4), Font_NormalBlack);
 	} else {
@@ -198,11 +199,11 @@ void UI_BuildingInfo_houseDetermineWorstDesirabilityBuilding(BuildingInfoContext
 				continue;
 			}
 			if (!b->houseSize || b->type < Data_Buildings[c->buildingId].type) {
-				int des = Data_Model_Buildings[b->type].desirabilityValue;
+				int des = model_get_building(b->type)->desirability_value;
 				if (des < 0) {
 					// simplified desirability calculation
-					int stepSize = Data_Model_Buildings[b->type].desirabilityStepSize;
-					int range = Data_Model_Buildings[b->type].desirabilityRange;
+					int stepSize = model_get_building(b->type)->desirability_step_size;
+					int range = model_get_building(b->type)->desirability_range;
 					int dist = calc_maximum_distance(x, y,
 						Data_Buildings[c->buildingId].x, Data_Buildings[c->buildingId].y);
 					if (dist <= range) {

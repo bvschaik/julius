@@ -9,8 +9,9 @@
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Message.h"
-#include "Data/Model.h"
 #include "Data/Figure.h"
+
+#include "building/model.h"
 
 static void calculateWorkers();
 static void createImmigrants(int numPeople);
@@ -38,7 +39,7 @@ void HousePopulation_updateRoom()
 		struct Data_Building *b = &Data_Buildings[Data_BuildingList.large.items[i]];
 		b->housePopulationRoom = 0;
 		if (b->distanceFromEntry > 0) {
-			int maxPop = Data_Model_Houses[b->subtype.houseLevel].maxPeople;
+			int maxPop = model_get_house(b->subtype.houseLevel)->max_people;
 			if (b->houseIsMerged) {
 				maxPop *= 4;
 			}
@@ -292,7 +293,7 @@ int HousePopulation_addPeople(int amount)
 		struct Data_Building *b = &Data_Buildings[buildingId];
 		if (BuildingIsInUse(buildingId) && b->houseSize && b->distanceFromEntry > 0 && b->housePopulation > 0) {
 			Data_CityInfo.populationLastTargetHouseAdd = buildingId;
-			int maxPeople = Data_Model_Houses[b->subtype.houseLevel].maxPeople;
+			int maxPeople = model_get_house(b->subtype.houseLevel)->max_people;
 			if (b->houseIsMerged) {
 				maxPeople *= 4;
 			}

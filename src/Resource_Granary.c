@@ -5,8 +5,9 @@
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
-#include "Data/Model.h"
 #include "Data/Scenario.h"
+
+#include "building/model.h"
 
 static struct {
 	int buildingIds[100];
@@ -98,7 +99,7 @@ int Resource_getGranaryForStoringFood(
 		if (!b->hasRoadAccess || b->distanceFromEntry <= 0 || b->roadNetworkId != roadNetworkId) {
 			continue;
 		}
-		int pctWorkers = calc_percentage(b->numWorkers, Data_Model_Buildings[b->type].laborers);
+		int pctWorkers = calc_percentage(b->numWorkers, model_get_building(b->type)->laborers);
 		if (pctWorkers < 100) {
 			if (understaffed) {
 				*understaffed += 1;
@@ -147,7 +148,7 @@ int Resource_getGettingGranaryForStoringFood(
 		if (!b->hasRoadAccess || b->distanceFromEntry <= 0 || b->roadNetworkId != roadNetworkId) {
 			continue;
 		}
-		int pctWorkers = calc_percentage(b->numWorkers, Data_Model_Buildings[b->type].laborers);
+		int pctWorkers = calc_percentage(b->numWorkers, model_get_building(b->type)->laborers);
 		if (pctWorkers < 100) {
 			continue;
 		}
@@ -309,7 +310,7 @@ int Resource_removeFromGranary(int buildingId, int resource, int amount)
 int Resource_determineGranaryWorkerTask(int buildingId)
 {
 	struct Data_Building *b = &Data_Buildings[buildingId];
-	int pctWorkers = calc_percentage(b->numWorkers, Data_Model_Buildings[b->type].laborers);
+	int pctWorkers = calc_percentage(b->numWorkers, model_get_building(b->type)->laborers);
 	if (pctWorkers < 50) {
 		return -1;
 	}

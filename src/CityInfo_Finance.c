@@ -1,10 +1,12 @@
 #include "CityInfo.h"
-#include "core/calc.h"
 
 #include "Data/CityInfo.h"
 #include "Data/Building.h"
 #include "Data/Model.h"
 #include "Data/Settings.h"
+
+#include "building/model.h"
+#include "core/calc.h"
 
 void CityInfo_Finance_decayTaxCollectorAccess()
 {
@@ -37,7 +39,7 @@ static void collectMonthlyTaxes()
 		int isPatrician = Data_Buildings[i].subtype.houseLevel >= HouseLevel_SmallVilla;
 		int population = Data_Buildings[i].housePopulation;
 		int trm = calc_adjust_with_percentage(
-			Data_Model_Houses[Data_Buildings[i].subtype.houseLevel].taxMultiplier,
+			model_get_house(Data_Buildings[i].subtype.houseLevel)->tax_multiplier,
 			Data_Model_Difficulty.moneyPercentage[Data_Settings.difficulty]);
 		Data_CityInfo.populationPerLevel[Data_Buildings[i].subtype.houseLevel] += population;
 
@@ -285,7 +287,7 @@ void CityInfo_Finance_calculateEstimatedTaxes()
 		if (BuildingIsInUse(i) && Data_Buildings[i].houseSize && Data_Buildings[i].houseTaxCoverage) {
 			int isPatrician = Data_Buildings[i].subtype.houseLevel >= HouseLevel_SmallVilla;
 			int trm = calc_adjust_with_percentage(
-				Data_Model_Houses[Data_Buildings[i].subtype.houseLevel].taxMultiplier,
+				model_get_house(Data_Buildings[i].subtype.houseLevel)->tax_multiplier,
 				Data_Model_Difficulty.moneyPercentage[Data_Settings.difficulty]);
 			if (isPatrician) {
 				Data_CityInfo.monthlyCollectedTaxFromPatricians += Data_Buildings[i].housePopulation * trm;

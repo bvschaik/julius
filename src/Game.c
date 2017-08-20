@@ -12,6 +12,7 @@
 #include "Data/FileList.h"
 #include "Data/Settings.h"
 
+#include "building/model.h"
 #include "core/debug.h"
 #include "core/lang.h"
 #include "core/random.h"
@@ -61,7 +62,7 @@ int Game_init()
 		return 0;
 	}
 
-	if (!Loader_Model_loadC3ModelTxt()) {
+	if (!model_load()) {
 		errlog("ERR: unable to load c3_model.txt");
 		return 0;
 	}

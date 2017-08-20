@@ -1,13 +1,14 @@
 #include "CityInfo.h"
 
-#include "core/calc.h"
 #include "Util.h"
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
-#include "Data/Model.h"
 #include "Data/Scenario.h"
 #include "Data/Settings.h"
+
+#include "building/model.h"
+#include "core/calc.h"
 
 static void updateCultureRating();
 static void updateFavorRating(int isYearlyUpdate);
@@ -426,7 +427,7 @@ static void calculateMaxProsperity()
 	int houses = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		if (Data_Buildings[i].state && Data_Buildings[i].houseSize) {
-			points += Data_Model_Houses[Data_Buildings[i].subtype.houseLevel].prosperity;
+			points += model_get_house(Data_Buildings[i].subtype.houseLevel)->prosperity;
 			houses++;
 		}
 	}

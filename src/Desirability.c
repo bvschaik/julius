@@ -5,8 +5,9 @@
 
 #include "Data/Building.h"
 #include "Data/Grid.h"
-#include "Data/Model.h"
 #include "Data/Settings.h"
+
+#include "building/model.h"
 
 static void updateBuildings();
 static void updateTerrain();
@@ -22,14 +23,14 @@ static void updateBuildings()
 {
 	for (int i = 1; i <= Data_Buildings_Extra.highestBuildingIdInUse; i++) {
 		if (BuildingIsInUse(i)) {
-			int type = Data_Buildings[i].type;
+			const model_building *model = model_get_building(Data_Buildings[i].type);
 			Terrain_addDesirability(
 				Data_Buildings[i].x, Data_Buildings[i].y,
 				Data_Buildings[i].size,
-				Data_Model_Buildings[type].desirabilityValue,
-				Data_Model_Buildings[type].desirabilityStep,
-				Data_Model_Buildings[type].desirabilityStepSize,
-				Data_Model_Buildings[type].desirabilityRange);
+                model->desirability_value,
+                model->desirability_step,
+                model->desirability_step_size,
+                model->desirability_range);
 		}
 	}
 }
@@ -52,17 +53,19 @@ static void updateTerrain()
 					Data_Grid_bitfields[gridOffset] &= ~Bitfield_PlazaOrEarthquake;
 					continue;
 				}
+				const model_building *model = model_get_building(type);
 				Terrain_addDesirability(x, y, 1,
-					Data_Model_Buildings[type].desirabilityValue,
-					Data_Model_Buildings[type].desirabilityStep,
-					Data_Model_Buildings[type].desirabilityStepSize,
-					Data_Model_Buildings[type].desirabilityRange);
+                    model->desirability_value,
+                    model->desirability_step,
+                    model->desirability_step_size,
+                    model->desirability_range);
 			} else if (terrain & Terrain_Garden) {
-				Terrain_addDesirability(x, y, 1,
-					Data_Model_Buildings[Building_Gardens].desirabilityValue,
-					Data_Model_Buildings[Building_Gardens].desirabilityStep,
-					Data_Model_Buildings[Building_Gardens].desirabilityStepSize,
-					Data_Model_Buildings[Building_Gardens].desirabilityRange);
+                const model_building *model = model_get_building(BUILDING_GARDENS);
+                Terrain_addDesirability(x, y, 1,
+                    model->desirability_value,
+                    model->desirability_step,
+                    model->desirability_step_size,
+                    model->desirability_range);
 			} else if (terrain & Terrain_Rubble) {
 				Terrain_addDesirability(x, y, 1, -2, 1, 1, 2);
 			}

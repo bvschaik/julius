@@ -25,11 +25,11 @@
 #include "Data/Formation.h"
 #include "Data/Graphics.h"
 #include "Data/Grid.h"
-#include "Data/Model.h"
 #include "Data/Settings.h"
 #include "Data/State.h"
 #include "Data/Figure.h"
 
+#include "building/model.h"
 #include "core/random.h"
 
 #define BOUND_REGION() \
@@ -1025,7 +1025,7 @@ static int placeAqueduct(int measureOnly, int xStart, int yStart, int xEnd, int 
 	Grid_copyShortGrid(Data_Grid_Undo_terrain, Data_Grid_terrain);
 	Grid_copyByteGrid(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
 	Undo_restoreTerrainGraphics();
-	int itemCost = Data_Model_Buildings[Building_Aqueduct].cost;
+	int itemCost = model_get_building(BUILDING_AQUEDUCT)->cost;
 	*cost = 0;
 	int blocked = 0;
 	int gridOffset = GridOffset(xStart, yStart);
@@ -1093,7 +1093,7 @@ static int placeReservoirAndAqueducts(int measureOnly, int xStart, int yStart, i
 		return 0;
 	}
 	if (!distance) {
-		info->cost = Data_Model_Buildings[Building_Reservoir].cost;
+		info->cost = model_get_building(BUILDING_RESERVOIR)->cost;
 		return 1;
 	}
 	if (!Routing_getDistanceForBuildingRoadOrAqueduct(xStart, yStart, 1)) {
@@ -1140,13 +1140,13 @@ static int placeReservoirAndAqueducts(int measureOnly, int xStart, int yStart, i
 	Routing_placeRoutedBuilding(xStart + xAqStart, yStart + yAqStart,
 		xEnd + xAqEnd, yEnd + yAqEnd, RoutedBuilding_Aqueduct, &aqItems);
 	if (info->placeReservoirAtStart == PlaceReservoir_Yes) {
-		info->cost += Data_Model_Buildings[Building_Reservoir].cost;
+		info->cost += model_get_building(BUILDING_RESERVOIR)->cost;
 	}
 	if (info->placeReservoirAtEnd == PlaceReservoir_Yes) {
-		info->cost += Data_Model_Buildings[Building_Reservoir].cost;
+		info->cost += model_get_building(BUILDING_RESERVOIR)->cost;
 	}
 	if (aqItems) {
-		info->cost += aqItems * Data_Model_Buildings[Building_Aqueduct].cost;
+		info->cost += aqItems * model_get_building(BUILDING_AQUEDUCT)->cost;
 	}
 	return 1;
 }
@@ -1157,9 +1157,8 @@ void BuildingPlacement_update(int xStart, int yStart, int xEnd, int yEnd, int ty
 		Data_State.selectedBuilding.cost = 0;
 		return;
 	}
-	int currentCost = 0;
 	Grid_andByteGrid(Data_Grid_bitfields, Bitfield_NoOverlayAndDeleted);
-	currentCost = Data_Model_Buildings[type].cost;
+	int currentCost = model_get_building(type)->cost;
 
 	if (type == Building_ClearLand) {
 		clearRegion(1, xStart, yStart, xEnd, yEnd);
@@ -1285,7 +1284,7 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
 		return;
 	}
 
-	int placementCost = Data_Model_Buildings[type].cost;
+	int placementCost = model_get_building(type)->cost;
 	if (type == Building_ClearLand) {
 		clearRegion(0, xStart, yStart, xEnd, yEnd);
 		placementCost *= itemsPlaced;

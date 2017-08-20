@@ -13,10 +13,11 @@
 #include "Data/Constants.h"
 #include "Data/Formation.h"
 #include "Data/Grid.h"
-#include "Data/Model.h"
 #include "Data/Scenario.h"
 #include "Data/Settings.h"
 #include "Data/Figure.h"
+
+#include "building/model.h"
 
 #include <string.h>
 
@@ -307,8 +308,8 @@ int Formation_getClosestMilitaryAcademy(int formationId)
 	int minDistance = 10000;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		if (BuildingIsInUse(i) &&
-			Data_Buildings[i].type == Building_MilitaryAcademy &&
-			Data_Buildings[i].numWorkers >= Data_Model_Buildings[Building_MilitaryAcademy].laborers) {
+			Data_Buildings[i].type == BUILDING_MILITARY_ACADEMY &&
+			Data_Buildings[i].numWorkers >= model_get_building(BUILDING_MILITARY_ACADEMY)->laborers) {
 			int dist = calc_maximum_distance(fortX, fortY, Data_Buildings[i].x, Data_Buildings[i].y);
 			if (dist < minDistance) {
 				minDistance = dist;

@@ -23,10 +23,11 @@
 #include "../Data/Figure.h"
 #include "../Data/Formation.h"
 #include "../Data/Grid.h"
-#include "../Data/Model.h"
 #include "../Data/Mouse.h"
 #include "../Data/Screen.h"
 #include "../Data/Settings.h"
+
+#include "building/model.h"
 
 static void buttonHelp(int param1, int param2);
 static void buttonExit(int param1, int param2);
@@ -190,7 +191,7 @@ void UI_BuildingInfo_init()
 		context.type = BuildingInfoType_Building;
 		context.workerPercentage = calc_percentage(
 			Data_Buildings[context.buildingId].numWorkers,
-			Data_Model_Buildings[Data_Buildings[context.buildingId].type].laborers);
+			model_get_building(Data_Buildings[context.buildingId].type)->laborers);
 		switch (Data_Buildings[context.buildingId].type) {
 			case Building_FortGround:
 				context.buildingId = Data_Buildings[context.buildingId].prevPartBuildingId;
@@ -590,7 +591,7 @@ void UI_BuildingInfo_drawEmploymentInfo(BuildingInfoContext *c, int yOffset)
 {
 	struct Data_Building *b = &Data_Buildings[c->buildingId];
 	int textId;
-	if (b->numWorkers >= Data_Model_Buildings[b->type].laborers) {
+	if (b->numWorkers >= model_get_building(b->type)->laborers) {
 		textId = 0;
 	} else if (Data_CityInfo.population <= 0) {
 		textId = 16; // no people in city
@@ -611,14 +612,14 @@ void UI_BuildingInfo_drawEmploymentInfo(BuildingInfoContext *c, int yOffset)
 	if (textId) {
 		int width = Widget_GameText_drawNumberWithDescription(8, 12, b->numWorkers,
 			c->xOffset + 60, yOffset + 10, Font_SmallBlack);
-		width += Widget_Text_drawNumber(Data_Model_Buildings[b->type].laborers, '(', "",
+		width += Widget_Text_drawNumber(model_get_building(b->type)->laborers, '(', "",
 			c->xOffset + 70 + width, yOffset + 10, Font_SmallBlack);
 		Widget_GameText_draw(69, 0, c->xOffset + 70 + width, yOffset + 10, Font_SmallBlack);
 		Widget_GameText_draw(69, textId, c->xOffset + 70, yOffset + 26, Font_SmallBlack);
 	} else {
 		int width = Widget_GameText_drawNumberWithDescription(8, 12, b->numWorkers,
 			c->xOffset + 60, yOffset + 16, Font_SmallBlack);
-		width += Widget_Text_drawNumber(Data_Model_Buildings[b->type].laborers, '(', "",
+		width += Widget_Text_drawNumber(model_get_building(b->type)->laborers, '(', "",
 			c->xOffset + 70 + width, yOffset + 16, Font_SmallBlack);
 		Widget_GameText_draw(69, 0, c->xOffset + 70 + width, yOffset + 16, Font_SmallBlack);
 	}

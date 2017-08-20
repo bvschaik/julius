@@ -13,6 +13,7 @@
 #include "Data/Settings.h"
 #include "Data/Tutorial.h"
 
+#include "building/model.h"
 #include "core/random.h"
 
 static void addPeopleToCensus(int numPeople);
@@ -201,7 +202,7 @@ void CityInfo_Population_calculateSentiment()
 		housesCalculated++;
 		int sentimentContributionFood = 0;
 		int sentimentContributionTents = 0;
-		if (!Data_Model_Houses[b->subtype.houseLevel].foodTypes) {
+		if (!model_get_house(b->subtype.houseLevel)->food_types) {
 			// tents
 			b->houseDaysWithoutFood = 0;
 			sentimentContributionTents = sentimentPenaltyTents;

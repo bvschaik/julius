@@ -9,12 +9,12 @@
 #include "../Data/Building.h"
 #include "../Data/CityView.h"
 #include "../Data/Constants.h"
-#include "../Data/Model.h"
 #include "../Data/Mouse.h"
 #include "../Data/Scenario.h"
 #include "../Data/Settings.h"
 #include "../Data/State.h"
 
+#include "building/model.h"
 #include "core/time.h"
 
 static void drawMenuButtons();
@@ -177,7 +177,7 @@ static void drawMenuButtons()
 		if (buildingType == Building_DraggableReservoir) {
 			buildingType = Building_Reservoir;
 		}
-		int cost = Data_Model_Buildings[buildingType].cost;
+		int cost = model_get_building(buildingType)->cost;
 		if (buildingType == Building_Fort) {
 			cost = 0;
 		}

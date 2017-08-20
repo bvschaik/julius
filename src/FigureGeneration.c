@@ -14,15 +14,16 @@
 #include "Data/Constants.h"
 #include "Data/Graphics.h"
 #include "Data/Grid.h"
-#include "Data/Model.h"
 #include "Data/Figure.h"
+
+#include "building/model.h"
 
 #define SET_LABOR_PROBLEM(b) if (b->housesCovered <= 0) b->showOnProblemOverlay = 2
 #define SPAWN_LABOR_SEEKER(t) if (b->housesCovered <= t) generateLaborSeeker(buildingId, b, xRoad, yRoad);
 #define EXIT_IF_FIGURE(t) if (buildingHasFigureOfType(buildingId, t, 0)) return;
 #define EXIT_IF_FIGURES(t1,t2) if (buildingHasFigureOfType(buildingId, t1, t2)) return;
 
-#define WORKER_PERCENTAGE(b) calc_percentage(b->numWorkers, Data_Model_Buildings[b->type].laborers)
+#define WORKER_PERCENTAGE(b) calc_percentage(b->numWorkers, model_get_building(b->type)->laborers)
 
 #define CREATE_FIGURE(t,x,y,d) \
 	int figureId = Figure_create(t, x, y, d);\
@@ -921,7 +922,7 @@ static void spawnFigureTemple(int buildingId, struct Data_Building *b)
 		SPAWN_LABOR_SEEKER(50);
 		int pctWorkers = WORKER_PERCENTAGE(b);
 		int spawnDelay;
-		if (Data_Model_Buildings[b->type].laborers <= 0) {
+		if (model_get_building(b->type)->laborers <= 0) {
 			spawnDelay = 7;
 		} else if (pctWorkers >= 100) {
 			spawnDelay = 3;
