@@ -1,10 +1,8 @@
 #include "CityInfo.h"
 
 #include "Building.h"
-#include "core/calc.h"
 #include "HousePopulation.h"
 #include "PlayerMessage.h"
-#include "Util.h"
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
@@ -14,6 +12,7 @@
 #include "Data/Tutorial.h"
 
 #include "building/model.h"
+#include "core/calc.h"
 #include "core/random.h"
 
 static void addPeopleToCensus(int numPeople);
@@ -61,7 +60,8 @@ void CityInfo_Population_changeHappiness(int amount)
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		if (BuildingIsInUse(i) && Data_Buildings[i].houseSize) {
 			Data_Buildings[i].sentiment.houseHappiness += amount;
-			BOUND(Data_Buildings[i].sentiment.houseHappiness, 0, 100);
+			Data_Buildings[i].sentiment.houseHappiness =
+                calc_bound(Data_Buildings[i].sentiment.houseHappiness, 0, 100);
 		}
 	}
 }
@@ -73,7 +73,8 @@ void CityInfo_Population_setMaxHappiness(int max)
 			if (Data_Buildings[i].sentiment.houseHappiness > max) {
 				Data_Buildings[i].sentiment.houseHappiness = max;
 			}
-			BOUND(Data_Buildings[i].sentiment.houseHappiness, 0, 100);
+			Data_Buildings[i].sentiment.houseHappiness =
+                calc_bound(Data_Buildings[i].sentiment.houseHappiness, 0, 100);
 		}
 	}
 }
@@ -232,7 +233,7 @@ void CityInfo_Population_calculateSentiment()
 		b->sentiment.houseHappiness += sentimentContributionEmployment;
 		b->sentiment.houseHappiness += sentimentContributionFood;
 		b->sentiment.houseHappiness += sentimentContributionTents;
-		BOUND(b->sentiment.houseHappiness, 0, 100);
+		b->sentiment.houseHappiness = calc_bound(b->sentiment.houseHappiness, 0, 100);
 	}
 
 	int sentimentContributionFood = 0;
@@ -408,7 +409,7 @@ void CityInfo_Population_updateHealthRate()
 			Data_CityInfo.healthRate = Data_CityInfo.healthRateTarget;
 		}
 	}
-	BOUND(Data_CityInfo.healthRate, 0, 100);
+	Data_CityInfo.healthRate = calc_bound(Data_CityInfo.healthRate, 0, 100);
 
 	healthCauseDisease(totalPopulation);
 }
@@ -485,8 +486,7 @@ static void healthCauseDisease(int totalPeople)
 
 void CityInfo_Population_changeHealthRate(int amount)
 {
-	Data_CityInfo.healthRate += amount;
-	BOUND(Data_CityInfo.healthRate, 0, 100);
+	Data_CityInfo.healthRate = calc_bound(Data_CityInfo.healthRate + amount, 0, 100);
 }
 
 static void recalculatePopulation()

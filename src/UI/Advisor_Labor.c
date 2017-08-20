@@ -4,7 +4,6 @@
 #include "Window.h"
 #include "../CityInfo.h"
 #include "../Data/Mouse.h"
-#include "../Util.h"
 
 static void arrowButtonWages(int param1, int param2);
 static void buttonPriority(int param1, int param2);
@@ -156,7 +155,7 @@ static void arrowButtonWages(int isDown, int param2)
 	} else if (isDown == 0) {
 		Data_CityInfo.wages++;
 	}
-	BOUND(Data_CityInfo.wages, 0, 100);
+	Data_CityInfo.wages = calc_bound(Data_CityInfo.wages, 0, 100);
 	CityInfo_Finance_calculateEstimatedWages();
 	CityInfo_Finance_calculateTotals();
 	UI_Window_requestRefresh();

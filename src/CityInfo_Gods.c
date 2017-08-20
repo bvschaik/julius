@@ -5,12 +5,12 @@
 #include "Figure.h"
 #include "Formation.h"
 #include "PlayerMessage.h"
-#include "Util.h"
 
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 #include "Data/Settings.h"
 
+#include "core/calc.h"
 #include "core/random.h"
 
 #define MAX_GODS 5
@@ -312,7 +312,7 @@ void CityInfo_Gods_calculateMoods(int updateMoods)
 		minHappiness = 0;
 	}
 	for (int i = 0; i < MAX_GODS; i++) {
-		BOUND(Data_CityInfo.godTargetHappiness[i], minHappiness, 100);
+		Data_CityInfo.godTargetHappiness[i] = calc_bound(Data_CityInfo.godTargetHappiness[i], minHappiness, 100);
 	}
 	if (updateMoods) {
 		updateGodMoods();

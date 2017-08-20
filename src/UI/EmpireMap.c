@@ -12,7 +12,6 @@
 #include "../Resource.h"
 #include "../Scroll.h"
 #include "../SidebarMenu.h"
-#include "../Util.h"
 #include "../Widget.h"
 
 #include "../Data/CityInfo.h"
@@ -403,8 +402,8 @@ static void drawEmpireMap()
 {
 	Graphics_setClipRectangle(data.xMin + 16, data.yMin + 16, data.xMax - data.xMin - 32, data.yMax - data.yMin - 136);
 
-	BOUND(Data_Empire.scrollX, 0, 2000 - (data.xMax - data.xMin - 32));
-	BOUND(Data_Empire.scrollY, 0, 1000 - (data.yMax - data.yMin - 136));
+	Data_Empire.scrollX = calc_bound(Data_Empire.scrollX, 0, 2000 - (data.xMax - data.xMin - 32));
+	Data_Empire.scrollY = calc_bound(Data_Empire.scrollY, 0, 1000 - (data.yMax - data.yMin - 136));
 
 	int xOffset = data.xMin + 16 - Data_Empire.scrollX;
 	int yOffset = data.yMin + 16 - Data_Empire.scrollY;

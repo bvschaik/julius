@@ -1,7 +1,5 @@
 #include "CityInfo.h"
 
-#include "Util.h"
-
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Scenario.h"
@@ -115,7 +113,7 @@ static void updateCultureRating()
 	}
 	Data_CityInfo.ratingCulture += Data_CityInfo.ratingCulturePointsLibrary;
 
-	BOUND(Data_CityInfo.ratingCulture, 0, 100);
+    Data_CityInfo.ratingCulture = calc_bound(Data_CityInfo.ratingCulture, 0, 100);
 	CityInfo_Ratings_updateCultureExplanation();
 }
 
@@ -243,7 +241,7 @@ static void updateFavorRating(int isYearlyUpdate)
 		}
 		Data_CityInfo.ratingFavorLastYear = Data_CityInfo.ratingFavor;
 	}
-	BOUND(Data_CityInfo.ratingFavor, 0, 100);
+	Data_CityInfo.ratingFavor = calc_bound(Data_CityInfo.ratingFavor, 0, 100);
 	CityInfo_Ratings_updateFavorExplanation();
 }
 
@@ -337,7 +335,7 @@ static void updateProsperityRating()
 	if (Data_CityInfo.ratingProsperity > Data_CityInfo.ratingProsperityMax) {
 		Data_CityInfo.ratingProsperity = Data_CityInfo.ratingProsperityMax;
 	}
-	BOUND(Data_CityInfo.ratingProsperity, 0, 100);
+	Data_CityInfo.ratingProsperity = calc_bound(Data_CityInfo.ratingProsperity, 0, 100);
 
 	CityInfo_Ratings_updateProsperityExplanation();
 }
@@ -464,8 +462,7 @@ static void updatePeaceRating()
 	Data_CityInfo.ratingPeaceNumRiotersThisYear = 0;
 	Data_CityInfo.ratingPeaceNumDestroyedBuildingsThisYear = 0;
 
-	Data_CityInfo.ratingPeace += change;
-	BOUND(Data_CityInfo.ratingPeace, 0, 100);
+	Data_CityInfo.ratingPeace = calc_bound(Data_CityInfo.ratingPeace + change, 0, 100);
 	CityInfo_Ratings_updatePeaceExplanation();
 }
 
@@ -575,8 +572,7 @@ void CityInfo_Ratings_sendGiftToCaesar()
 
 void CityInfo_Ratings_changeFavor(int amount)
 {
-	Data_CityInfo.ratingFavor += amount;
-	BOUND(Data_CityInfo.ratingFavor, 0, 100);
+	Data_CityInfo.ratingFavor = calc_bound(Data_CityInfo.ratingFavor + amount, 0, 100);
 }
 
 void CityInfo_Ratings_setMaxFavor(int maxFavor)

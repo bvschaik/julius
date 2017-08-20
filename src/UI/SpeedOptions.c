@@ -2,13 +2,14 @@
 #include "Window.h"
 
 #include "../Widget.h"
-#include "../Util.h"
 
 #include "../Data/Screen.h"
 #include "../Data/Mouse.h"
 #include "../Data/Constants.h"
 #include "../Data/Settings.h"
 #include "../Data/Buttons.h"
+
+#include "core/calc.h"
 
 static void buttonOk(int param1, int param2);
 static void buttonCancel(int param1, int param2);
@@ -135,7 +136,7 @@ static void arrowButtonGame(int param1, int param2)
 	} else if (param1 == 0) {
 		Data_Settings.gameSpeed += 10;
 	}
-	BOUND(Data_Settings.gameSpeed, 10, 100);
+	Data_Settings.gameSpeed = calc_bound(Data_Settings.gameSpeed, 10, 100);
 	UI_Window_requestRefresh();
 }
 
@@ -146,6 +147,6 @@ static void arrowButtonScroll(int param1, int param2)
 	} else if (param1 == 0) {
 		Data_Settings.scrollSpeed += 10;
 	}
-	BOUND(Data_Settings.scrollSpeed, 0, 100);
+	Data_Settings.scrollSpeed = calc_bound(Data_Settings.scrollSpeed, 0, 100);
 	UI_Window_requestRefresh();
 }

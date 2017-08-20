@@ -3,11 +3,12 @@
 #include "../Widget.h"
 #include "../Graphics.h"
 #include "../CityInfo.h"
-#include "../Util.h"
 #include "Advisors_private.h"
 #include "../Data/CityInfo.h"
 #include "../Data/Screen.h"
 #include "../Data/Mouse.h"
+
+#include "core/calc.h"
 
 static void buttonSetAmount(int param1, int param2);
 static void buttonDonate(int param1, int param2);
@@ -112,8 +113,7 @@ static void buttonSetAmount(int param1, int param2)
 		case 4: amount = 1000000; break;
 		default: return;
 	}
-	Data_CityInfo.donateAmount = amount;
-	BOUND(Data_CityInfo.donateAmount, 0, Data_CityInfo.personalSavings);
+	Data_CityInfo.donateAmount = calc_bound(amount, 0, Data_CityInfo.personalSavings);
 	UI_Window_requestRefresh();
 }
 
@@ -138,7 +138,7 @@ static void arrowButtonAmount(int isDown, int param2)
 	} else if (isDown == 1) {
 		Data_CityInfo.donateAmount -= 10;
 	}
-	BOUND(Data_CityInfo.donateAmount, 0, Data_CityInfo.personalSavings);
+	Data_CityInfo.donateAmount = calc_bound(Data_CityInfo.donateAmount, 0, Data_CityInfo.personalSavings);
 	UI_Window_requestRefresh();
 }
 

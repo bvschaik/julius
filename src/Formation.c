@@ -5,7 +5,6 @@
 #include "FigureMovement.h"
 #include "Routing.h"
 #include "Sound.h"
-#include "Util.h"
 #include "UI/Warning.h"
 
 #include "Data/Building.h"
@@ -486,8 +485,7 @@ void Formation_changeMorale(int formationId, int amount)
 				break;
 		}
 	}
-	m->morale += amount;
-	BOUND(m->morale, 0, maxMorale);
+	m->morale = calc_bound(m->morale + amount, 0, maxMorale);
 }
 
 int Formation_getInvasionGridOffset(int invasionSeq)

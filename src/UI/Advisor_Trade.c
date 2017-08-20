@@ -5,7 +5,7 @@
 #include "../CityInfo.h"
 #include "../Empire.h"
 #include "../Resource.h"
-#include "../Util.h"
+
 #include "../Data/CityInfo.h"
 #include "../Data/Mouse.h"
 #include "../Data/Scenario.h"
@@ -380,7 +380,8 @@ static void resourceSettingsExportUpDown(int isDown, int param2)
 	} else {
 		++Data_CityInfo.resourceTradeExportOver[selectedResourceId];
 	}
-	BOUND(Data_CityInfo.resourceTradeExportOver[selectedResourceId], 0, 100);
+	Data_CityInfo.resourceTradeExportOver[selectedResourceId] =
+        calc_bound(Data_CityInfo.resourceTradeExportOver[selectedResourceId], 0, 100);
 }
 
 static void resourceSettingsToggleIndustry(int param1, int param2)

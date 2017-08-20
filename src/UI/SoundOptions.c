@@ -1,6 +1,5 @@
 #include "AllWindows.h"
 #include "Window.h"
-#include "../Util.h"
 #include "../Sound.h"
 #include "../Widget.h"
 
@@ -9,6 +8,7 @@
 #include "../Data/Screen.h"
 #include "../Data/Settings.h"
 
+#include "core/calc.h"
 
 static void buttonToggle(int param1, int param2);
 static void buttonOk(int param1, int param2);
@@ -244,7 +244,7 @@ static void arrowButtonMusic(int param1, int param2)
 	} else if (param1 == 0) {
 		Data_Settings.soundMusicPercentage++;
 	}
-	BOUND(Data_Settings.soundMusicPercentage, 0, 100);
+	Data_Settings.soundMusicPercentage = calc_bound(Data_Settings.soundMusicPercentage, 0, 100);
 	Sound_setMusicVolume(Data_Settings.soundMusicPercentage);
 
 	UI_Window_requestRefresh();
@@ -257,7 +257,7 @@ static void arrowButtonSpeech(int param1, int param2)
 	} else if (param1 == 0) {
 		Data_Settings.soundSpeechPercentage++;
 	}
-	BOUND(Data_Settings.soundSpeechPercentage, 0, 100);
+	Data_Settings.soundSpeechPercentage = calc_bound(Data_Settings.soundSpeechPercentage, 0, 100);
 	Sound_setSpeechVolume(Data_Settings.soundSpeechPercentage);
 
 	UI_Window_requestRefresh();
@@ -270,7 +270,7 @@ static void arrowButtonEffects(int param1, int param2)
 	} else if (param1 == 0) {
 		Data_Settings.soundEffectsPercentage++;
 	}
-	BOUND(Data_Settings.soundEffectsPercentage, 0, 100);
+	Data_Settings.soundEffectsPercentage = calc_bound(Data_Settings.soundEffectsPercentage, 0, 100);
 	Sound_setEffectsVolume(Data_Settings.soundEffectsPercentage);
 
 	UI_Window_requestRefresh();
@@ -283,7 +283,7 @@ static void arrowButtonCity(int param1, int param2)
 	} else if (param1 == 0) {
 		Data_Settings.soundCityPercentage++;
 	}
-	BOUND(Data_Settings.soundCityPercentage, 0, 100);
+	Data_Settings.soundCityPercentage = calc_bound(Data_Settings.soundCityPercentage, 0, 100);
 	Sound_setCityVolume(Data_Settings.soundCityPercentage);
 
 	UI_Window_requestRefresh();

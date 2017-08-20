@@ -4,10 +4,11 @@
 #include "Routing.h"
 #include "Sound.h"
 #include "Terrain.h"
-#include "Util.h"
 
 #include "Data/Formation.h"
 #include "Data/Grid.h"
+
+#include "core/calc.h"
 
 static int ballistaFiringOffsets[] = {
 	0, 1, 2, 3, 4, 5, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0,

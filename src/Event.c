@@ -1,7 +1,6 @@
 #include "Event.h"
 
 #include "Building.h"
-#include "core/calc.h"
 #include "CityInfo.h"
 #include "Empire.h"
 #include "Figure.h"
@@ -12,7 +11,6 @@
 #include "SidebarMenu.h"
 #include "Sound.h"
 #include "TerrainGraphics.h"
-#include "Util.h"
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
@@ -25,6 +23,7 @@
 #include "Data/Trade.h"
 #include "Data/Tutorial.h"
 
+#include "core/calc.h"
 #include "core/random.h"
 
 #include <string.h>
@@ -513,10 +512,8 @@ void Event_handleEarthquake()
 				case 15: index = 3; dx = 0; dy = 1; break;
 				default: return;
 			}
-			int x = Data_Event.earthquake.expand[index].x + dx;
-			int y = Data_Event.earthquake.expand[index].y + dy;
-			BOUND(x, 0, Data_Settings_Map.width - 1);
-			BOUND(y, 0, Data_Settings_Map.height - 1);
+			int x = calc_bound(Data_Event.earthquake.expand[index].x + dx, 0, Data_Settings_Map.width - 1);
+			int y = calc_bound(Data_Event.earthquake.expand[index].y + dy, 0, Data_Settings_Map.height - 1);
 			if (canAdvanceEarthquakeToTile(x, y)) {
 				Data_Event.earthquake.expand[index].x = x;
 				Data_Event.earthquake.expand[index].y = y;

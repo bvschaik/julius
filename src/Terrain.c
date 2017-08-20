@@ -6,7 +6,6 @@
 #include "Routing.h"
 #include "TerrainBridge.h"
 #include "TerrainGraphics.h"
-#include "Util.h"
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
@@ -16,6 +15,8 @@
 #include "Data/Scenario.h"
 #include "Data/Settings.h"
 #include "Data/State.h"
+
+#include "core/calc.h"
 
 static const int tilesAroundBuildingGridOffsets[][20] = {
 	{0},
@@ -1064,13 +1065,13 @@ static void addDesirabilityDistanceRing(int x, int y, int size, int distance, in
 		for (int i = start; i < end; i++) {
 			if (isInsideMapForRing(x + ringTiles[i].x, y + ringTiles[i].y)) {
 				Data_Grid_desirability[baseOffset + ringTiles[i].gridOffset] += desirability;
-				BOUND(Data_Grid_desirability[baseOffset], -100, 100); // BUGFIX: bounding on wrong tile
+				Data_Grid_desirability[baseOffset] = calc_bound(Data_Grid_desirability[baseOffset], -100, 100); // BUG: bounding on wrong tile
 			}
 		}
 	} else {
 		for (int i = start; i < end; i++) {
-			Data_Grid_desirability[baseOffset + ringTiles[i].gridOffset] += desirability;
-			BOUND(Data_Grid_desirability[baseOffset + ringTiles[i].gridOffset], -100, 100);
+			Data_Grid_desirability[baseOffset + ringTiles[i].gridOffset] =
+                calc_bound(Data_Grid_desirability[baseOffset + ringTiles[i].gridOffset] + desirability, -100, 100);
 		}
 	}
 }
