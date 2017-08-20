@@ -7,6 +7,7 @@
 #include "Data/Screen.h"
 #include "Data/Constants.h"
 
+#include "core/debug.h"
 #include "core/file.h"
 #include "core/io.h"
 
@@ -137,6 +138,7 @@ const char *Loader_Graphics_loadExternalImagePixelData(int graphicId)
 		if (!io_read_file_part_into_buffer(
 				filename, imagesScratchSpace,
 				index->dataLength, index->offset - 1)) {
+            debug_log("Unable to read external file", filename, 0);
 			return 0;
 		}
 	}

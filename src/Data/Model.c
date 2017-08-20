@@ -38,9 +38,6 @@ struct _Data_Screen Data_Screen;// = { 800, 600, {80, 60} };
 
 struct _Data_Mouse Data_Mouse;
 
-struct Data_Language_Text Data_Language_Text;
-struct Data_Language_Message Data_Language_Message;
-
 struct _Data_CityInfo Data_CityInfo;
 struct _Data_CityInfo_Buildings Data_CityInfo_Buildings;
 struct _Data_CityInfo_CultureCoverage Data_CityInfo_CultureCoverage;

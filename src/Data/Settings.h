@@ -1,6 +1,8 @@
 #ifndef DATA_SETTINGS_H
 #define DATA_SETTINGS_H
 
+#include <stdint.h>
+
 #define IsTutorial1() (Data_Settings.currentMissionId == 0 && !Data_Settings.isCustomScenario)
 #define IsTutorial2() (Data_Settings.currentMissionId == 1 && !Data_Settings.isCustomScenario)
 #define IsTutorial3() (Data_Settings.currentMissionId == 2 && !Data_Settings.isCustomScenario)
@@ -41,7 +43,7 @@ extern struct _Data_Settings {
 	int resolutionId;
 	int gameSpeed;
 	int scrollSpeed;
-	char playerName[32];
+	uint8_t playerName[32];
 	int __unused3[4];
 	int lastAdvisor;
 	int saveGameMissionId;

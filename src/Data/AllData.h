@@ -7,7 +7,6 @@
 #include "Screen.h"
 #include "Mouse.h"
 #include "Buttons.h"
-#include "Language.h"
 #include "CityInfo.h"
 #include "KeyboardInput.h"
 #include "State.h"

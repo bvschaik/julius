@@ -9,10 +9,10 @@
 #include "UI/Window.h"
 
 #include "Data/CityInfo.h"
-#include "Data/Language.h"
 #include "Data/Message.h"
 
 #include "core/file.h"
+#include "core/lang.h"
 #include "core/time.h"
 
 #include <string.h>
@@ -24,12 +24,11 @@ static int consecutiveMessageDelay;
 
 static int hasVideo(int textId)
 {
-	int offset = Data_Language_Message.index[textId].videoLinkOffset;
-	if (!offset) {
+    const lang_message *msg = lang_get_message(textId);
+	if (!msg->video.text) {
 		return 0;
 	}
-	const char *videoFile = &Data_Language_Message.data[offset];
-	return file_exists(videoFile) != 0;
+	return file_exists((const char*)msg->video.text);
 }
 
 void PlayerMessage_disableSoundForNextMessage()
@@ -55,8 +54,8 @@ void PlayerMessage_post(int usePopup, int messageType, int param1, short param2)
 	msg->param2 = param2;
 	msg->sequence = Data_Message.nextMessageSequence++;
 	int textId = PlayerMessage_getMessageTextId(messageType);
-	int langMessageType = Data_Language_Message.index[textId].messageType;
-	if (langMessageType == MessageType_Disaster || langMessageType == MessageType_Invasion) {
+	lang_message_type langMessageType = lang_get_message(textId)->message_type;
+	if (langMessageType == MESSAGE_TYPE_DISASTER || langMessageType == MESSAGE_TYPE_INVASION) {
 		Data_Message.hotspotCount = 1;
 		UI_Window_requestRefresh();
 	}
@@ -66,7 +65,7 @@ void PlayerMessage_post(int usePopup, int messageType, int param1, short param2)
 		msg->readFlag = 1;
 		UI_Tooltip_resetTimer();
 		if (!hasVideo(textId)) {
-			if (Data_Language_Message.index[textId].isUrgent == 1) {
+			if (lang_get_message(textId)->urgent == 1) {
 				Sound_Effects_playChannel(SoundChannel_FanfareUrgent);
 			} else {
 				Sound_Effects_playChannel(SoundChannel_Fanfare);
@@ -85,7 +84,7 @@ void PlayerMessage_post(int usePopup, int messageType, int param1, short param2)
 			}
 		}
 	} else if (playSound) {
-		if (Data_Language_Message.index[textId].isUrgent == 1) {
+		if (lang_get_message(textId)->urgent == 1) {
 			Sound_Effects_playChannel(SoundChannel_FanfareUrgent);
 		} else {
 			Sound_Effects_playChannel(SoundChannel_Fanfare);
@@ -145,7 +144,7 @@ void PlayerMessage_processQueue()
 	int textId = PlayerMessage_getMessageTextId(msg->messageType);
 	UI_Tooltip_resetTimer();
 	if (!hasVideo(textId)) {
-		if (Data_Language_Message.index[textId].isUrgent == 1) {
+		if (lang_get_message(textId)->urgent == 1) {
 			Sound_Effects_playChannel(SoundChannel_FanfareUrgent);
 		} else {
 			Sound_Effects_playChannel(SoundChannel_Fanfare);
@@ -275,10 +274,10 @@ void PlayerMessage_goToProblem()
 	for (int i = 0; i < 999; i++) {
 		struct Data_PlayerMessage *msg = &Data_Message.messages[i];
 		if (msg->messageType && msg->year >= Data_CityInfo_Extra.gameTimeYear - 1) {
-			int textId = PlayerMessage_getMessageTextId(msg->messageType);
-			int langMessageType = Data_Language_Message.index[textId].messageType;
-			if (langMessageType == MessageType_Disaster || langMessageType == MessageType_Invasion) {
-				if (langMessageType != MessageType_Invasion || Formation_getInvasionGridOffset(msg->param1) > 0) {
+            const lang_message *lang_msg = lang_get_message(PlayerMessage_getMessageTextId(msg->messageType));
+			lang_message_type langMessageType = lang_msg->message_type;
+			if (langMessageType == MESSAGE_TYPE_DISASTER || langMessageType == MESSAGE_TYPE_INVASION) {
+				if (langMessageType != MESSAGE_TYPE_INVASION || Formation_getInvasionGridOffset(msg->param1) > 0) {
 					Data_Message.hotspotCount++;
 				}
 			}
@@ -296,14 +295,14 @@ void PlayerMessage_goToProblem()
 		struct Data_PlayerMessage *msg = &Data_Message.messages[i];
 		if (msg->messageType && msg->year >= Data_CityInfo_Extra.gameTimeYear - 1) {
 			int textId = PlayerMessage_getMessageTextId(msg->messageType);
-			int langMessageType = Data_Language_Message.index[textId].messageType;
-			if (langMessageType == MessageType_Disaster || langMessageType == MessageType_Invasion) {
-				if (langMessageType != MessageType_Invasion || Formation_getInvasionGridOffset(msg->param1) > 0) {
+			lang_message_type langMessageType = lang_get_message(textId)->message_type;
+			if (langMessageType == MESSAGE_TYPE_DISASTER || langMessageType == MESSAGE_TYPE_INVASION) {
+				if (langMessageType != MESSAGE_TYPE_INVASION || Formation_getInvasionGridOffset(msg->param1) > 0) {
 					index++;
 					if (Data_Message.hotspotIndex < index) {
 						Data_Message.hotspotIndex++;
 						int gridOffset = msg->param2;
-						if (langMessageType == MessageType_Invasion) {
+						if (langMessageType == MESSAGE_TYPE_INVASION) {
 							gridOffset = Formation_getInvasionGridOffset(msg->param1);
 						}
 						if (gridOffset > 0) {

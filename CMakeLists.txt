@@ -14,6 +14,7 @@ set(CORE_FILES
     src/core/dir.c
     src/core/file.c
     src/core/io.c
+    src/core/lang.c
     src/core/random.c
     src/core/string.c
     src/core/time.c
@@ -80,7 +81,6 @@ add_executable(julius
 	src/HousePopulation.c
 	src/KeyboardHotkey.c
 	src/KeyboardInput.c
-	src/Language.c
 	src/Loader.c
 	src/Loader_Graphics.c
 	src/Loader_Model.c

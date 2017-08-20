@@ -10,13 +10,14 @@
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
 #include "../Data/FileList.h"
-#include "../Data/Language.h"
 #include "../Data/Mouse.h"
 #include "../Data/Scenario.h"
 #include "../Data/Screen.h"
 #include "../Data/Settings.h"
 #include "../Data/State.h"
 #include "../Data/Tutorial.h"
+
+#include "core/lang.h"
 
 static void startMission(int param1, int param2);
 static void briefingBack(int param1, int param2);
@@ -196,7 +197,7 @@ void UI_MissionStart_Briefing_drawBackground()
 	int yOffset = Data_Screen.offset640x480.y + 32;
 	
 	Widget_Panel_drawOuterPanel(xOffset, yOffset, 38, 27);
-	Widget_Text_draw(MessageText(textId, titleOffset), xOffset + 16, yOffset + 16, Font_LargeBlack, 0);
+	Widget_Text_draw(lang_get_message(textId)->title.text, xOffset + 16, yOffset + 16, Font_LargeBlack, 0);
 	Widget_GameText_draw(62, 7, xOffset + 360, yOffset + 401, Font_NormalBlack);
 	if (UI_Window_getId() == Window_MissionBriefingInitial && Data_Settings.currentMissionId >= 2) {
 		Widget_GameText_draw(13, 4, xOffset + 50, yOffset + 403, Font_NormalBlack);
@@ -289,11 +290,11 @@ void UI_MissionStart_Briefing_drawBackground()
 	Widget_Panel_drawInnerPanel(xOffset + 16, yOffset + 152, 33, 15);
 	
 	Widget_RichText_setFonts(Font_NormalWhite, Font_NormalRed);
-	Widget_RichText_init(MessageText(textId, contentOffset),
+	Widget_RichText_init(lang_get_message(textId)->content.text,
 		xOffset + 48, yOffset + 152, 31, 15, 0);
 
 	Graphics_setClipRectangle(xOffset + 19, yOffset + 155, 522, 234);
-	Widget_RichText_draw(MessageText(textId, contentOffset),
+	Widget_RichText_draw(lang_get_message(textId)->content.text,
 		xOffset + 32, yOffset + 164, 496, 14, 0);
 	Graphics_resetClipRectangle();
 }

@@ -128,9 +128,10 @@ int32_t buffer_read_i32(buffer *buffer);
  * Reads raw data
  * @param buffer Buffer
  * @param value Value to read into
- * @param size Size of the value
+ * @param max_size Size of the value, max bytes to read
+ * @return Bytes read
  */
-void buffer_read_raw(buffer *buffer, void *value, int size);
+int buffer_read_raw(buffer *buffer, void *value, int max_size);
 
 /**
  * Skip data in the buffer

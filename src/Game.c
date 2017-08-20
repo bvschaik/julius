@@ -1,6 +1,5 @@
 #include "Game.h"
 
-#include "Language.h"
 #include "Loader.h"
 #include "Settings.h"
 #include "Sound.h"
@@ -10,25 +9,37 @@
 #include "UI/Window.h"
 
 #include "Data/Constants.h"
+#include "Data/FileList.h"
+#include "Data/Settings.h"
 
 #include "core/debug.h"
+#include "core/lang.h"
 #include "core/random.h"
 
-#include <stdio.h>
+#include <string.h>
 
 static void errlog(const char *msg)
 {
     debug_log(msg, 0, 0);
 }
 
+static void loadDefaultNames()
+{
+    // TODO move out
+    strcpy((char*)Data_Settings.playerName, (char*)lang_get_string(9, 5));
+    strcpy(Data_FileList.selectedCity, (char*)lang_get_string(9, 6));
+    strcpy(Data_FileList.lastLoadedCity, (char*)lang_get_string(9, 6));
+    strcpy(Data_FileList.selectedScenario, (char*)lang_get_string(9, 7));
+}
+
 int Game_preInit()
 {
 	Settings_load();
-	if (!Language_load("c3.eng", "c3_mm.eng")) {
+	if (!lang_load("c3.eng", "c3_mm.eng")) {
 		errlog("ERR: 'c3.eng' or 'c3_mm.eng' files not found or too large.");
 		return 0;
 	}
-	Language_loadDefaultNames();
+	loadDefaultNames();
 	random_init();
 	return 1;
 }

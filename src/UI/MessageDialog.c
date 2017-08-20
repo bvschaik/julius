@@ -19,18 +19,17 @@
 #include "../Data/Graphics.h"
 #include "../Data/Message.h"
 #include "../Data/Mouse.h"
-#include "../Data/Language.h"
 #include "../Data/Scenario.h"
 #include "../Data/Screen.h"
 #include "../Data/Settings.h"
 
-#define MAX_HISTORY 200
+#include "core/lang.h"
 
-#define TEXT(offset) &Data_Language_Message.data[offset]
+#define MAX_HISTORY 200
 
 static void drawDialogNormal();
 static void drawDialogVideo();
-static void drawPlayerMessageContent(struct Data_Language_MessageEntry *msg);
+static void drawPlayerMessageContent(const lang_message *msg);
 static void drawForegroundNoVideo();
 static void drawForegroundVideo();
 static void buttonBack(int param1, int param2);
@@ -125,10 +124,10 @@ void UI_MessageDialog_show(int textId, int backgroundIsProvided)
 	data.dword_7e314c = 0;
 	data.textId = textId;
 	data.backgroundIsProvided = backgroundIsProvided;
+    const lang_message *msg = lang_get_message(textId);
 	if (playerMessage.usePopup != 1) {
 		data.showVideo = 0;
-	} else if (Data_Language_Message.index[textId].videoLinkOffset &&
-		Video_start(TEXT(Data_Language_Message.index[textId].videoLinkOffset))) {
+	} else if (msg->video.text && Video_start((char*)msg->video.text)) {
 		data.showVideo = 1;
 	} else {
 		data.showVideo = 0;
@@ -156,65 +155,66 @@ void UI_MessageDialog_drawBackground()
 static void drawDialogNormal()
 {
 	Widget_RichText_setFonts(Font_NormalWhite, Font_NormalRed);
-	struct Data_Language_MessageEntry *msg = &Data_Language_Message.index[data.textId];
+	const lang_message *msg = lang_get_message(data.textId);
 	data.x = Data_Screen.offset640x480.x + msg->x;
 	data.y = Data_Screen.offset640x480.y + msg->y;
 	if (!data.backgroundIsProvided) {
 		UI_City_drawBackground();
 		UI_City_drawForeground();
 	}
-	int someOffset = (msg->type == Type_Manual) ? 48 : 32;
+	int someOffset = (msg->type == TYPE_MANUAL) ? 48 : 32;
 	data.xText = data.x + 16;
-	Widget_Panel_drawOuterPanel(data.x, data.y, msg->widthBlocks, msg->heightBlocks);
+	Widget_Panel_drawOuterPanel(data.x, data.y, msg->width_blocks, msg->height_blocks);
 	// title
-	if (msg->titleX) {
-		Widget_Text_draw(TEXT(msg->titleOffset),
-			data.x + msg->titleX, data.y + msg->titleY, Font_LargeBlack, 0);
+	if (msg->title.x) {
+		Widget_Text_draw(msg->title.text,
+			data.x + msg->title.x, data.y + msg->title.y, Font_LargeBlack, 0);
 		data.yText = data.y + 32;
 	} else {
-		if (msg->messageType == MessageType_Tutorial) {
-			Widget_Text_drawCentered(TEXT(msg->titleOffset),
-				data.x, data.y + msg->titleY, 16 * msg->widthBlocks, Font_LargeBlack, 0);
+		if (msg->message_type == MESSAGE_TYPE_TUTORIAL) {
+			Widget_Text_drawCentered(msg->title.text,
+				data.x, data.y + msg->title.y, 16 * msg->width_blocks, Font_LargeBlack, 0);
 		} else {
-			Widget_Text_drawCentered(TEXT(msg->titleOffset),
-				data.x, data.y + 14, 16 * msg->widthBlocks, Font_LargeBlack, 0);
+			Widget_Text_drawCentered(msg->title.text,
+				data.x, data.y + 14, 16 * msg->width_blocks, Font_LargeBlack, 0);
 		}
 		data.yText = data.y + 48;
 	}
 	// pictures
-	if (msg->picture1_graphicId) {
-		int graphicId;
+	if (msg->image1.id) {
+		int graphicId, graphicX, graphicY;
 		if (data.textId) {
-			graphicId = GraphicId(ID_Graphic_MessageImages) + msg->picture1_graphicId - 1;
-		} else { // message id = 0 ==> about
-			msg->picture1_x = 16;
-			msg->picture1_y = 16;
+			graphicId = GraphicId(ID_Graphic_MessageImages) + msg->image1.id - 1;
+            graphicX = msg->image1.x;
+            graphicY = msg->image1.y;
+		} else { // message id = 0 ==> about, fixed image position
+			graphicX = graphicY = 16;
 			graphicId = GraphicId(ID_Graphic_BigPeople);
 		}
-		Graphics_drawImage(graphicId, data.x + msg->picture1_x, data.y + msg->picture1_y);
-		if (data.y + msg->picture1_y + GraphicHeight(graphicId) + 8 > data.yText) {
-			data.yText = data.y + msg->picture1_y + GraphicHeight(graphicId) + 8;
+		Graphics_drawImage(graphicId, data.x + graphicX, data.y + graphicY);
+		if (data.y + graphicY + GraphicHeight(graphicId) + 8 > data.yText) {
+			data.yText = data.y + graphicY + GraphicHeight(graphicId) + 8;
 		}
 	}
-	if (msg->picture2_graphicId) {
-		int graphicId = GraphicId(ID_Graphic_MessageImages) + msg->picture2_graphicId - 1;
-		Graphics_drawImage(graphicId, data.x + msg->picture2_x, data.y + msg->picture2_y);
-		if (data.y + msg->picture2_y + GraphicHeight(graphicId) + 8 > data.yText) {
-			data.yText = data.y + msg->picture2_y + GraphicHeight(graphicId) + 8;
+	if (msg->image2.id) {
+		int graphicId = GraphicId(ID_Graphic_MessageImages) + msg->image2.id - 1;
+		Graphics_drawImage(graphicId, data.x + msg->image2.x, data.y + msg->image2.y);
+		if (data.y + msg->image2.y + GraphicHeight(graphicId) + 8 > data.yText) {
+			data.yText = data.y + msg->image2.y + GraphicHeight(graphicId) + 8;
 		}
 	}
 	// subtitle
-	if (msg->subtitleX) {
-		int width = 16 * msg->widthBlocks - 16 - msg->subtitleX;
-		int height = Widget_Text_drawMultiline(TEXT(msg->subtitleOffset),
-			data.x + msg->subtitleX, data.y + msg->subtitleY, width,Font_NormalBlack);
-		if (data.y + msg->subtitleY + height > data.yText) {
-			data.yText = data.y + msg->subtitleY + height;
+	if (msg->subtitle.x) {
+		int width = 16 * msg->width_blocks - 16 - msg->subtitle.x;
+		int height = Widget_Text_drawMultiline(msg->subtitle.text,
+			data.x + msg->subtitle.x, data.y + msg->subtitle.y, width,Font_NormalBlack);
+		if (data.y + msg->subtitle.y + height > data.yText) {
+			data.yText = data.y + msg->subtitle.y + height;
 		}
 	}
-	data.textHeightBlocks = msg->heightBlocks - 1 - (someOffset + data.yText - data.y) / 16;
-	data.textWidthBlocks = Widget_RichText_init(TEXT(msg->contentOffset),
-		data.xText, data.yText, msg->widthBlocks - 4, data.textHeightBlocks, 1);
+	data.textHeightBlocks = msg->height_blocks - 1 - (someOffset + data.yText - data.y) / 16;
+	data.textWidthBlocks = Widget_RichText_init(msg->content.text,
+		data.xText, data.yText, msg->width_blocks - 4, data.textHeightBlocks, 1);
 
 	// content!
 	Widget_Panel_drawInnerPanel(data.xText, data.yText, data.textWidthBlocks, data.textHeightBlocks);
@@ -222,10 +222,10 @@ static void drawDialogNormal()
 		16 * data.textWidthBlocks - 6, 16 * data.textHeightBlocks - 6);
 	Widget_RichText_clearLinks();
 
-	if (msg->type == Type_Message) {
+	if (msg->type == TYPE_MESSAGE) {
 		drawPlayerMessageContent(msg);
 	} else {
-		Widget_RichText_draw(TEXT(msg->contentOffset),
+		Widget_RichText_draw(msg->content.text,
 			data.xText + 8, data.yText + 6, 16 * data.textWidthBlocks - 16,
 			data.textHeightBlocks - 1, 0);
 	}
@@ -236,7 +236,7 @@ static void drawDialogNormal()
 static void drawDialogVideo()
 {
 	Widget_RichText_setFonts(Font_NormalWhite, Font_NormalRed);
-	struct Data_Language_MessageEntry *msg = &Data_Language_Message.index[data.textId];
+	const lang_message *msg = lang_get_message(data.textId);
 	data.x = Data_Screen.offset640x480.x + 32;
 	data.y = Data_Screen.offset640x480.y + 28;
 	if (!data.backgroundIsProvided) {
@@ -248,7 +248,7 @@ static void drawDialogVideo()
 	Widget_RichText_clearLinks();
 	
 	Widget_Panel_drawInnerPanel(data.x + 8, data.y + 308, 25, 6);
-	Widget_Text_drawCentered(TEXT(msg->titleOffset),
+	Widget_Text_drawCentered(msg->title.text,
 		data.x + 8, data.y + 414, 400, Font_NormalBlack, 0);
 	
 	int width = Widget_GameText_draw(25, playerMessage.month,
@@ -256,7 +256,7 @@ static void drawDialogVideo()
 	width += Widget_GameText_drawYear(playerMessage.year,
 		data.x + 18 + width, data.y + 312, Font_NormalWhite);
 	
-	if (msg->type == Type_Message && msg->messageType == MessageType_Disaster &&
+	if (msg->type == TYPE_MESSAGE && msg->message_type == MESSAGE_TYPE_DISASTER &&
 		data.textId == 251) {
 		Widget_GameText_drawNumberWithDescription(8, 0, playerMessage.param1,
 			data.x + 90 + width, data.y + 312, Font_NormalWhite);
@@ -264,12 +264,12 @@ static void drawDialogVideo()
 		width += Widget_GameText_draw(63, 5, data.x + 90 + width, data.y + 312, Font_NormalWhite);
 		Widget_Text_draw(Data_Settings.playerName, data.x + 90 + width, data.y + 312, Font_NormalWhite, 0);
 	}
-	data.textHeightBlocks = msg->heightBlocks - 1 - (32 + data.yText - data.y) / 16;
-	data.textWidthBlocks = msg->widthBlocks - 4;
-	Widget_RichText_draw(TEXT(msg->contentOffset),
+	data.textHeightBlocks = msg->height_blocks - 1 - (32 + data.yText - data.y) / 16;
+	data.textWidthBlocks = msg->width_blocks - 4;
+	Widget_RichText_draw(msg->content.text,
 		data.x + 16, data.y + 332, 384, data.textHeightBlocks - 1, 0);
 
-	if (msg->type == Type_Message && msg->messageType == MessageType_Imperial) {
+	if (msg->type == TYPE_MESSAGE && msg->message_type == MESSAGE_TYPE_IMPERIAL) {
 		Widget_Text_drawNumber(Data_Scenario.requests.amount[playerMessage.param1],
 			'@', " ", data.x + 8, data.y + 384, Font_NormalWhite);
 		int resource = Data_Scenario.requests.resourceId[playerMessage.param1];
@@ -288,14 +288,14 @@ static void drawDialogVideo()
 	drawForegroundVideo();
 }
 
-static void drawPlayerMessageContent(struct Data_Language_MessageEntry *msg)
+static void drawPlayerMessageContent(const lang_message *msg)
 {
-	if (msg->messageType != MessageType_Tutorial) {
+	if (msg->message_type != MESSAGE_TYPE_TUTORIAL) {
 		int width = Widget_GameText_draw(25, playerMessage.month,
 			data.xText + 10, data.yText + 6, Font_NormalWhite);
 		width += Widget_GameText_drawYear(playerMessage.year,
 			data.xText + 12 + width, data.yText + 6, Font_NormalWhite);
-		if (msg->messageType == MessageType_Disaster && playerMessage.param1) {
+		if (msg->message_type == MESSAGE_TYPE_DISASTER && playerMessage.param1) {
 			if (data.textId == MessageDialog_Theft) {
 				// param1 = denarii
 				Widget_GameText_drawNumberWithDescription(8, 0, playerMessage.param1,
@@ -314,58 +314,58 @@ static void drawPlayerMessageContent(struct Data_Language_MessageEntry *msg)
 	}
 	int graphicId;
 	int lines = 0;
-	switch (msg->messageType) {
-		case MessageType_Disaster:
-		case MessageType_Invasion:
+	switch (msg->message_type) {
+		case MESSAGE_TYPE_DISASTER:
+		case MESSAGE_TYPE_INVASION:
 			Widget_GameText_draw(12, 1, data.x + 100, data.yText + 44, Font_NormalWhite);
-			Widget_RichText_draw(TEXT(msg->contentOffset), data.xText + 8, data.yText + 86,
+			Widget_RichText_draw(msg->content.text, data.xText + 8, data.yText + 86,
 				16 * data.textWidthBlocks, data.textHeightBlocks - 1, 0);
 			break;
 
-		case MessageType_Emigration:
+		case MESSAGE_TYPE_EMIGRATION:
 			if (Data_CityInfo.populationEmigrationCause >= 1 && Data_CityInfo.populationEmigrationCause <= 5) {
 				Widget_GameText_draw(12, Data_CityInfo.populationEmigrationCause + 2,
 					data.x + 64, data.yText + 44, Font_NormalWhite);
 			}
-			Widget_RichText_draw(TEXT(msg->contentOffset),
+			Widget_RichText_draw(msg->content.text,
 				data.xText + 8, data.yText + 86, 16 * data.textWidthBlocks - 16,
 				data.textHeightBlocks - 1, 0);
 			break;
 
-		case MessageType_Tutorial:
-			Widget_RichText_draw(TEXT(msg->contentOffset),
+		case MESSAGE_TYPE_TUTORIAL:
+			Widget_RichText_draw(msg->content.text,
 				data.xText + 8, data.yText + 6, 16 * data.textWidthBlocks - 16,
 				data.textHeightBlocks - 1, 0);
 			break;
 
-		case MessageType_TradeChange:
+		case MESSAGE_TYPE_TRADE_CHANGE:
 			graphicId = GraphicId(ID_Graphic_ResourceIcons) + playerMessage.param2;
 			graphicId += Resource_getGraphicIdOffset(playerMessage.param2, 3);
 			Graphics_drawImage(graphicId, data.x + 64, data.yText + 40);
 			Widget_GameText_draw(21, Data_Empire_Cities[playerMessage.param1].cityNameId,
 				data.x + 100, data.yText + 44, Font_NormalWhite);
-			Widget_RichText_draw(TEXT(msg->contentOffset),
+			Widget_RichText_draw(msg->content.text,
 				data.xText + 8, data.yText + 86, 16 * data.textWidthBlocks - 16,
 				data.textHeightBlocks - 1, 0);
 			break;
 
-		case MessageType_PriceChange:
+		case MESSAGE_TYPE_PRICE_CHANGE:
 			graphicId = GraphicId(ID_Graphic_ResourceIcons) + playerMessage.param2;
 			graphicId += Resource_getGraphicIdOffset(playerMessage.param2, 3);
 			Graphics_drawImage(graphicId, data.x + 64, data.yText + 40);
 			Widget_Text_drawNumber(playerMessage.param1, '@', " Dn",
 				data.x + 100, data.yText + 44, Font_NormalWhite);
-			Widget_RichText_draw(TEXT(msg->contentOffset),
+			Widget_RichText_draw(msg->content.text,
 				data.xText + 8, data.yText + 86, 16 * data.textWidthBlocks - 16,
 				data.textHeightBlocks - 1, 0);
 			break;
 
 		default:
-			lines = Widget_RichText_draw(TEXT(msg->contentOffset),
+			lines = Widget_RichText_draw(msg->content.text,
 				data.xText + 8, data.yText + 56, 16 * data.textWidthBlocks - 16,
 				data.textHeightBlocks - 1, 0);
 	}
-	if (msg->messageType == MessageType_Imperial) {
+	if (msg->message_type == MESSAGE_TYPE_IMPERIAL) {
 		int yOffset = data.yText + 86 + lines * 16;
 		Widget_Text_drawNumber(Data_Scenario.requests.amount[playerMessage.param1],
 			'@', " ", data.xText + 8, yOffset, Font_NormalWhite);
@@ -416,27 +416,27 @@ static void drawForegroundVideo()
 
 static void drawForegroundNoVideo()
 {
-	struct Data_Language_MessageEntry *msg = &Data_Language_Message.index[data.textId];
+	const lang_message *msg = lang_get_message(data.textId);
 	
-	if (msg->type == Type_Manual && data.numHistory > 0) {
+	if (msg->type == TYPE_MANUAL && data.numHistory > 0) {
 		Widget_Button_drawImageButtons(
-			data.x + 16, data.y + 16 * msg->heightBlocks - 36,
+			data.x + 16, data.y + 16 * msg->height_blocks - 36,
 			&imageButtonBack, 1);
 		Widget_GameText_draw(12, 0,
-			data.x + 52, data.y + 16 * msg->heightBlocks - 31, Font_NormalBlack);
+			data.x + 52, data.y + 16 * msg->height_blocks - 31, Font_NormalBlack);
 	}
 
-	if (msg->type == Type_Message) {
-		Widget_Button_drawImageButtons(data.x + 16, data.y + 16 * msg->heightBlocks - 40,
+	if (msg->type == TYPE_MESSAGE) {
+		Widget_Button_drawImageButtons(data.x + 16, data.y + 16 * msg->height_blocks - 40,
 			getAdvisorButton(), 1);
-		if (msg->messageType == MessageType_Disaster || msg->messageType == MessageType_Invasion) {
+		if (msg->message_type == MESSAGE_TYPE_DISASTER || msg->message_type == MESSAGE_TYPE_INVASION) {
 			Widget_Button_drawImageButtons(
 				data.x + 64, data.yText + 36, &imageButtonGoToProblem, 1);
 		}
 	}
 	Widget_Button_drawImageButtons(
-		data.x + 16 * msg->widthBlocks - 38,
-		data.y + 16 * msg->heightBlocks - 36,
+		data.x + 16 * msg->width_blocks - 38,
+		data.y + 16 * msg->height_blocks - 36,
 		&imageButtonClose, 1);
 	Widget_RichText_drawScrollbar();
 }
@@ -467,18 +467,18 @@ void UI_MessageDialog_handleMouse()
 		return;
 	}
 	// no video
-	struct Data_Language_MessageEntry *msg = &Data_Language_Message.index[data.textId];
+	const lang_message *msg = lang_get_message(data.textId);
 
-	if (msg->type == Type_Manual && Widget_Button_handleImageButtons(
-		data.x + 16, data.y + 16 * msg->heightBlocks - 36, &imageButtonBack, 1, 0)) {
+	if (msg->type == TYPE_MANUAL && Widget_Button_handleImageButtons(
+		data.x + 16, data.y + 16 * msg->height_blocks - 36, &imageButtonBack, 1, 0)) {
 		return;
 	}
-	if (msg->type == Type_Message) {
-		if (Widget_Button_handleImageButtons(data.x + 16, data.y + 16 * msg->heightBlocks - 40,
+	if (msg->type == TYPE_MESSAGE) {
+		if (Widget_Button_handleImageButtons(data.x + 16, data.y + 16 * msg->height_blocks - 40,
 			getAdvisorButton(), 1, 0)) {
 			return;
 		}
-		if (msg->messageType == MessageType_Disaster || msg->messageType == MessageType_Invasion) {
+		if (msg->message_type == MESSAGE_TYPE_DISASTER || msg->message_type == MESSAGE_TYPE_INVASION) {
 			if (Widget_Button_handleImageButtons(data.x + 64, data.yText + 36, &imageButtonGoToProblem, 1, 0)) {
 				return;
 			}
@@ -486,8 +486,8 @@ void UI_MessageDialog_handleMouse()
 	}
 
 	if (Widget_Button_handleImageButtons(
-		data.x + 16 * msg->widthBlocks - 38,
-		data.y + 16 * msg->heightBlocks - 36,
+		data.x + 16 * msg->width_blocks - 38,
+		data.y + 16 * msg->height_blocks - 36,
 		&imageButtonClose, 1, 0)) {
 		return;
 	}
@@ -553,9 +553,9 @@ static void buttonAdvisor(int advisor, int param2)
 static void buttonGoToProblem(int param1, int param2)
 {
 	cleanup();
-	struct Data_Language_MessageEntry *msg = &Data_Language_Message.index[data.textId];
+	const lang_message *msg = lang_get_message(data.textId);
 	int gridOffset = playerMessage.param2;
-	if (msg->messageType == MessageType_Invasion) {
+	if (msg->message_type == MESSAGE_TYPE_INVASION) {
 		int invasionGridOffset = Formation_getInvasionGridOffset(playerMessage.param1);
 		if (invasionGridOffset > 0) {
 			gridOffset = invasionGridOffset;

@@ -4,7 +4,6 @@
 #include "Window.h"
 
 #include "../Graphics.h"
-#include "../Language.h"
 #include "../String.h"
 #include "../Widget.h"
 
@@ -14,6 +13,7 @@
 #include "../Data/Screen.h"
 #include "../Data/Settings.h"
 
+#include "core/lang.h"
 #include "core/time.h"
 
 #include <string.h>
@@ -85,7 +85,7 @@ static void drawTooltip(struct TooltipContext *c)
 
 static void drawButtonTooltip(struct TooltipContext *c)
 {
-	const char *text = Language_getString(c->textGroup, c->textId);
+	const uint8_t *text = lang_get_string(c->textGroup, c->textId);
 	Widget_RichText_setFonts(Font_SmallPlain, Font_SmallPlain);
 
 	c->width = 200;
@@ -151,10 +151,10 @@ static void drawButtonTooltip(struct TooltipContext *c)
 		c->width - 5, lines, Color_Tooltip);
 }
 
-static char tmpString[1000];
+static uint8_t tmpString[1000];
 static void drawOverlayTooltip(struct TooltipContext *c)
 {
-	const char *text = Language_getString(c->textGroup, c->textId);
+	const uint8_t *text = lang_get_string(c->textGroup, c->textId);
 	if (c->hasNumericPrefix) {
 		int offset = String_fromInt(tmpString, c->numericPrefix, 0);
 		strcpy(&tmpString[offset], text);

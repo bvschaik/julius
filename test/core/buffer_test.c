@@ -272,10 +272,19 @@ void test_buffer_read_overflow()
     buffer_read_u8(&buf);
     buffer_read_u16(&buf);
     buffer_read_u32(&buf);
-    uint8_t val = 1;
-    buffer_read_raw(&buf, &val, 1);
-    
+
     assert_eq(0, buf.index);
+}
+
+void test_buffer_read_raw_overflow()
+{
+    uint8_t output[50];
+    buf.size = 10;
+
+    int result = buffer_read_raw(&buf, &output, 50);
+    
+    assert_eq(10, result);
+    assert_eq(10, buf.index);
 }
 
 void test_buffer_skip()
@@ -313,5 +322,6 @@ RUN_TESTS(core/buffer,
     ADD_TEST(test_buffer_read_i32)
     ADD_TEST(test_buffer_read_raw)
     ADD_TEST(test_buffer_read_overflow)
+    ADD_TEST(test_buffer_read_raw_overflow)
     ADD_TEST(test_buffer_skip)
 )

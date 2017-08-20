@@ -116,11 +116,15 @@ int32_t buffer_read_i32(buffer *buffer)
     return (int32_t) (b0 | (b1 << 8) | (b2 << 16) | (b3 << 24));
 }
 
-void buffer_read_raw(buffer *buffer, void *value, int size)
+int buffer_read_raw(buffer *buffer, void *value, int max_size)
 {
-    CHECK_WRITE(buffer, size);
+    int size = buffer->size - buffer->index;
+    if (size > max_size) {
+        size = max_size;
+    }
     memcpy(value, &buffer->data[buffer->index], size);
     buffer->index += size;
+    return size;
 }
 
 void buffer_skip(buffer *buffer, int size)

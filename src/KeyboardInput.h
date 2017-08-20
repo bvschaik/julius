@@ -3,8 +3,9 @@
 
 #include "Data/Types.h"
 
-void KeyboardInput_initTextField(int inputId, char *text, int maxLength,
-	int textboxWidth, int allowPunctuation, Font font);
+#include <stdint.h>
+
+void KeyboardInput_initTextField(int inputId, uint8_t *text, int maxLength, int textboxWidth, int allowPunctuation, Font font);
 
 void KeyboardInput_initInput(int inputId);
 

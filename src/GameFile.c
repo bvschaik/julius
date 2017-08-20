@@ -1172,7 +1172,7 @@ int GameFile_loadSavedGame(const char *filename)
 	
 	setupFromSavedGame();
 	BuildingStorage_resetBuildingIds();
-	strcpy(Data_Settings.playerName, playerNames[1]);
+	strcpy((char*)Data_Settings.playerName, playerNames[1]);
 	return 1;
 }
 
@@ -1303,7 +1303,7 @@ int GameFile_writeSavedGame(const char *filename)
     init_savegame_data();
 	printf("GameFile: Saving game to %s\n", filename);
 	savegameFileVersion = savegameVersion;
-	strcpy(playerNames[1], Data_Settings.playerName);
+	strcpy(playerNames[1], (char*)Data_Settings.playerName);
     savegame_serialize(&savegame_data.state);
 
 	FILE *fp = fopen(filename, "wb");

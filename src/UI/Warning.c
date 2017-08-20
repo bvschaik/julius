@@ -4,7 +4,6 @@
 #include "core/calc.h"
 #include "../Empire.h"
 #include "../Graphics.h"
-#include "../Language.h"
 #include "../Terrain.h"
 #include "../Widget.h"
 
@@ -18,6 +17,7 @@
 #include "../Data/Screen.h"
 #include "../Data/Settings.h"
 
+#include "core/lang.h"
 #include "core/time.h"
 
 #include <string.h>
@@ -113,11 +113,11 @@ void UI_Warning_show(int warningId)
 			continue;
 		}
 		warnings[i].inUse = 1;
-		const char *text;
+		const uint8_t *text;
 		if (warningId == Warning_Orientation) {
-			text = Language_getString(17, Data_Settings_Map.orientation);
+			text = lang_get_string(17, Data_Settings_Map.orientation);
 		} else {
-			text = Language_getString(19, warningId - 2);
+			text = lang_get_string(19, warningId - 2);
 		}
 		hasWarningAlready = 1;
 		warnings[i].warningId = warningId;

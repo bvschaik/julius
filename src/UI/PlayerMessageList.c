@@ -8,10 +8,11 @@
 
 #include "../Data/Constants.h"
 #include "../Data/Graphics.h"
-#include "../Data/Language.h"
 #include "../Data/Message.h"
 #include "../Data/Mouse.h"
 #include "../Data/Screen.h"
+
+#include "core/lang.h"
 
 static void buttonHelp(int param1, int param2);
 static void buttonClose(int param1, int param2);
@@ -113,7 +114,7 @@ void UI_PlayerMessageList_drawForeground()
 	for (int i = 0; i < max; i++, index++) {
 		int messageId = PlayerMessage_getMessageTextId(Data_Message.messages[index].messageType);
 		int graphicOffset = 0;
-		if (Data_Language_Message.index[messageId].messageType == MessageType_Disaster) {
+		if (lang_get_message(messageId)->message_type == MESSAGE_TYPE_DISASTER) {
 			graphicOffset = 2;
 		}
 		if (Data_Message.messages[index].readFlag) {
@@ -132,7 +133,7 @@ void UI_PlayerMessageList_drawForeground()
 		Widget_GameText_drawYear(Data_Message.messages[index].year,
 			data.xText + 42 + width, data.yText + 8 + 20 * i, font);
 		Widget_Text_draw(
-			&Data_Language_Message.data[Data_Language_Message.index[messageId].titleOffset],
+			lang_get_message(messageId)->title.text,
 			data.xText + 180, data.yText + 8 + 20 * i, font, 0);
 	}
 	if (Data_Message.maxScrollPosition > 0) {

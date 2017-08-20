@@ -11,13 +11,14 @@
 #include "../src/Screen.h"
 #include "../src/Data/AllData.h"
 #include "../src/Cursor.h"
-#include "../src/Language.h"
 #include "../src/KeyboardInput.h"
 #include "../src/KeyboardHotkey.h"
 #include "../src/Widget.h" // debug
 #include "../src/Graphics.h" // debug
 #include "../src/System.h"
 #include "../src/Game.h"
+
+#include "core/lang.h"
 
 #include <execinfo.h>
 #include <signal.h>
@@ -346,7 +347,7 @@ void createWindowAndRenderer(int fullscreen)
 		SDL.renderer = 0;
 	}
 	
-	const char *title = Language_getString(9, 0);
+	const char *title = (const char*)lang_get_string(9, 0);
 	if (fullscreen) {
 		SDL.window = SDL_CreateWindow(title,
 			SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,

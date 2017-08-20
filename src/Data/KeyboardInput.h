@@ -3,13 +3,15 @@
 
 #include "Types.h"
 
+#include <stdint.h>
+
 struct Data_KeyboardInputLine {
 	int cursorPosition;
 	int length;
 	int allowPunctuation;
 	int maxLength;
 	int boxWidth;
-	char *text;
+	uint8_t *text;
 	Font font;
 };
 
