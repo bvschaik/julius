@@ -12,6 +12,11 @@ void buffer_init(buffer *buffer, void *data, int size)
     buffer->index = 0;
 }
 
+void buffer_reset(buffer *buffer)
+{
+    buffer->index = 0;
+}
+
 void buffer_write_u8(buffer *buffer, uint8_t value)
 {
     CHECK_WRITE(buffer, 1);

@@ -30,6 +30,15 @@ void assert_bytes(uint8_t *expected, int size)
     }
 }
 
+void test_buffer_reset()
+{
+    buffer_write_i32(&buf, 1);
+    assert_eq(4, buf.index);
+    
+    buffer_reset(&buf);
+    assert_eq(0, buf.index);
+}
+
 void test_buffer_write_u8()
 {
     uint8_t v1 = 0;
@@ -285,6 +294,8 @@ void test_buffer_skip()
 }
 
 RUN_TESTS(core/buffer,
+    ADD_TEST(test_buffer_reset)
+
     ADD_TEST(test_buffer_write_u8)
     ADD_TEST(test_buffer_write_u16)
     ADD_TEST(test_buffer_write_u32)

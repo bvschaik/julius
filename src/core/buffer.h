@@ -12,9 +12,9 @@
 * Struct representing a buffer to read from / write to
 */
 typedef struct {
-    uint8_t *data; /**< @private */
-    int size; /**< @private */
-    int index; /**< @private */
+    uint8_t *data; /**< Read-only: data */
+    int size; /**< Read-only: size of the data */
+    int index; /**< Read-only: bytes read/written so far */
 } buffer;
 
 /**
@@ -24,6 +24,12 @@ typedef struct {
  * @param size Size of the data
  */
 void buffer_init(buffer *buffer, void *data, int size);
+
+/**
+ * Resets the buffer so that reading/writing starts at the beginning again
+ * @param buffer Buffer
+ */
+void buffer_reset(buffer *buffer);
 
 /**
  * Writes an unsigned 8-bit integer
