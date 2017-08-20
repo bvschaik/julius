@@ -225,30 +225,6 @@ enum {
 	FigureTerrainUsage_Animal = 5,
 };
 
-extern struct _Data_Figure_NameSequence {
-	int citizenMale;
-	int patrician;
-	int citizenFemale;
-	int taxCollector;
-	int engineer;
-	int prefect;
-	int javelinThrower;
-	int cavalry;
-	int legionary;
-	int actor;
-	int gladiator;
-	int lionTamer;
-	int charioteer;
-	int barbarian;
-	int enemyGreek;
-	int enemyEgyptian;
-	int enemyArabian;
-	int trader;
-	int tradeShip;
-	int warShip;
-	int enemyShip;
-} Data_Figure_NameSequence;
-
 extern struct Data_Figure {
 	unsigned char alternativeLocationIndex;
 	unsigned char graphicOffset;

@@ -39,6 +39,7 @@
 #include "core/file.h"
 #include "core/io.h"
 #include "core/random.h"
+#include "figure/name.h"
 
 #include <string.h>
 
@@ -175,7 +176,7 @@ static void initCustomScenario(const char *scenarioName)
 	BuildingStorage_clearList();
 	Figure_clearList();
 	Formation_clearInvasionInfo();
-	FigureName_init();
+	figure_name_init();
 	Formation_clearList();
 	FigureRoute_clearList();
 	CityInfo_initGameTime();

@@ -20,6 +20,7 @@
 #include "Data/Figure.h"
 
 #include "core/random.h"
+#include "figure/name.h"
 
 #include <string.h>
 
@@ -379,7 +380,7 @@ static int startInvasion(int enemyType, int amount, int invasionPoint, int attac
 				Data_Figures[figureId].actionState = FigureActionState_151_EnemyInitial;
 				Data_Figures[figureId].waitTicks = 200 * seq + 10 * fig + 10;
 				Data_Figures[figureId].formationId = formationId;
-				FigureName_set(figureId);
+				Data_Figures[figureId].name = figure_name_get(figureType, enemyType);
 				Data_Figures[figureId].isGhost = 1;
 			}
 			seq++;

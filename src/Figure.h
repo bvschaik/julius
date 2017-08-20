@@ -31,9 +31,6 @@ void Figure_playHitSound(int figureType);
 
 int Figure_provideServiceCoverage(int figureId);
 
-void FigureName_set(int figureId);
-void FigureName_init();
-
 void FigureRoute_clearList();
 void FigureRoute_clean();
 int FigureRoute_getNumAvailable();

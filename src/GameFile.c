@@ -39,6 +39,7 @@
 #include "core/io.h"
 #include "core/random.h"
 #include "core/zip.h"
+#include "figure/name.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -187,27 +188,7 @@ typedef struct {
     buffer *Data_CityInfo_Buildings_industry_total;
     buffer *Data_CityInfo_Buildings_industry_working;
     buffer *Data_TradePrices;
-    buffer *Data_Figure_NameSequence_citizenMale;
-    buffer *Data_Figure_NameSequence_patrician;
-    buffer *Data_Figure_NameSequence_citizenFemale;
-    buffer *Data_Figure_NameSequence_taxCollector;
-    buffer *Data_Figure_NameSequence_engineer;
-    buffer *Data_Figure_NameSequence_prefect;
-    buffer *Data_Figure_NameSequence_javelinThrower;
-    buffer *Data_Figure_NameSequence_cavalry;
-    buffer *Data_Figure_NameSequence_legionary;
-    buffer *Data_Figure_NameSequence_actor;
-    buffer *Data_Figure_NameSequence_gladiator;
-    buffer *Data_Figure_NameSequence_lionTamer;
-    buffer *Data_Figure_NameSequence_charioteer;
-    buffer *Data_Figure_NameSequence_barbarian;
-    buffer *Data_Figure_NameSequence_enemyGreek;
-    buffer *Data_Figure_NameSequence_enemyEgyptian;
-    buffer *Data_Figure_NameSequence_enemyArabian;
-    buffer *Data_Figure_NameSequence_trader;
-    buffer *Data_Figure_NameSequence_tradeShip;
-    buffer *Data_Figure_NameSequence_warShip;
-    buffer *Data_Figure_NameSequence_enemyShip;
+    buffer *figure_names;
     buffer *Data_CityInfo_CultureCoverage_theater;
     buffer *Data_CityInfo_CultureCoverage_amphitheater;
     buffer *Data_CityInfo_CultureCoverage_colosseum;
@@ -473,27 +454,7 @@ void init_savegame_data()
     state->Data_CityInfo_Buildings_industry_total = create_savegame_piece(64, 0);
     state->Data_CityInfo_Buildings_industry_working = create_savegame_piece(64, 0);
     state->Data_TradePrices = create_savegame_piece(128, 0);
-    state->Data_Figure_NameSequence_citizenMale = create_savegame_piece(4, 0);
-    state->Data_Figure_NameSequence_patrician = create_savegame_piece(4, 0);
-    state->Data_Figure_NameSequence_citizenFemale = create_savegame_piece(4, 0);
-    state->Data_Figure_NameSequence_taxCollector = create_savegame_piece(4, 0);
-    state->Data_Figure_NameSequence_engineer = create_savegame_piece(4, 0);
-    state->Data_Figure_NameSequence_prefect = create_savegame_piece(4, 0);
-    state->Data_Figure_NameSequence_javelinThrower = create_savegame_piece(4, 0);
-    state->Data_Figure_NameSequence_cavalry = create_savegame_piece(4, 0);
-    state->Data_Figure_NameSequence_legionary = create_savegame_piece(4, 0);
-    state->Data_Figure_NameSequence_actor = create_savegame_piece(4, 0);
-    state->Data_Figure_NameSequence_gladiator = create_savegame_piece(4, 0);
-    state->Data_Figure_NameSequence_lionTamer = create_savegame_piece(4, 0);
-    state->Data_Figure_NameSequence_charioteer = create_savegame_piece(4, 0);
-    state->Data_Figure_NameSequence_barbarian = create_savegame_piece(4, 0);
-    state->Data_Figure_NameSequence_enemyGreek = create_savegame_piece(4, 0);
-    state->Data_Figure_NameSequence_enemyEgyptian = create_savegame_piece(4, 0);
-    state->Data_Figure_NameSequence_enemyArabian = create_savegame_piece(4, 0);
-    state->Data_Figure_NameSequence_trader = create_savegame_piece(4, 0);
-    state->Data_Figure_NameSequence_tradeShip = create_savegame_piece(4, 0);
-    state->Data_Figure_NameSequence_warShip = create_savegame_piece(4, 0);
-    state->Data_Figure_NameSequence_enemyShip = create_savegame_piece(4, 0);
+    state->figure_names = create_savegame_piece(84, 0);
     state->Data_CityInfo_CultureCoverage_theater = create_savegame_piece(4, 0);
     state->Data_CityInfo_CultureCoverage_amphitheater = create_savegame_piece(4, 0);
     state->Data_CityInfo_CultureCoverage_colosseum = create_savegame_piece(4, 0);
@@ -743,27 +704,9 @@ static void savegame_deserialize(savegame_state *state)
     read_all_from_buffer(state->Data_CityInfo_Buildings_industry_total, &Data_CityInfo_Buildings.industry.total);
     read_all_from_buffer(state->Data_CityInfo_Buildings_industry_working, &Data_CityInfo_Buildings.industry.working);
     read_all_from_buffer(state->Data_TradePrices, &Data_TradePrices);
-    read_all_from_buffer(state->Data_Figure_NameSequence_citizenMale, &Data_Figure_NameSequence.citizenMale);
-    read_all_from_buffer(state->Data_Figure_NameSequence_patrician, &Data_Figure_NameSequence.patrician);
-    read_all_from_buffer(state->Data_Figure_NameSequence_citizenFemale, &Data_Figure_NameSequence.citizenFemale);
-    read_all_from_buffer(state->Data_Figure_NameSequence_taxCollector, &Data_Figure_NameSequence.taxCollector);
-    read_all_from_buffer(state->Data_Figure_NameSequence_engineer, &Data_Figure_NameSequence.engineer);
-    read_all_from_buffer(state->Data_Figure_NameSequence_prefect, &Data_Figure_NameSequence.prefect);
-    read_all_from_buffer(state->Data_Figure_NameSequence_javelinThrower, &Data_Figure_NameSequence.javelinThrower);
-    read_all_from_buffer(state->Data_Figure_NameSequence_cavalry, &Data_Figure_NameSequence.cavalry);
-    read_all_from_buffer(state->Data_Figure_NameSequence_legionary, &Data_Figure_NameSequence.legionary);
-    read_all_from_buffer(state->Data_Figure_NameSequence_actor, &Data_Figure_NameSequence.actor);
-    read_all_from_buffer(state->Data_Figure_NameSequence_gladiator, &Data_Figure_NameSequence.gladiator);
-    read_all_from_buffer(state->Data_Figure_NameSequence_lionTamer, &Data_Figure_NameSequence.lionTamer);
-    read_all_from_buffer(state->Data_Figure_NameSequence_charioteer, &Data_Figure_NameSequence.charioteer);
-    read_all_from_buffer(state->Data_Figure_NameSequence_barbarian, &Data_Figure_NameSequence.barbarian);
-    read_all_from_buffer(state->Data_Figure_NameSequence_enemyGreek, &Data_Figure_NameSequence.enemyGreek);
-    read_all_from_buffer(state->Data_Figure_NameSequence_enemyEgyptian, &Data_Figure_NameSequence.enemyEgyptian);
-    read_all_from_buffer(state->Data_Figure_NameSequence_enemyArabian, &Data_Figure_NameSequence.enemyArabian);
-    read_all_from_buffer(state->Data_Figure_NameSequence_trader, &Data_Figure_NameSequence.trader);
-    read_all_from_buffer(state->Data_Figure_NameSequence_tradeShip, &Data_Figure_NameSequence.tradeShip);
-    read_all_from_buffer(state->Data_Figure_NameSequence_warShip, &Data_Figure_NameSequence.warShip);
-    read_all_from_buffer(state->Data_Figure_NameSequence_enemyShip, &Data_Figure_NameSequence.enemyShip);
+    
+    figure_name_load_state(state->figure_names);
+    
     read_all_from_buffer(state->Data_CityInfo_CultureCoverage_theater, &Data_CityInfo_CultureCoverage.theater);
     read_all_from_buffer(state->Data_CityInfo_CultureCoverage_amphitheater, &Data_CityInfo_CultureCoverage.amphitheater);
     read_all_from_buffer(state->Data_CityInfo_CultureCoverage_colosseum, &Data_CityInfo_CultureCoverage.colosseum);
@@ -977,27 +920,9 @@ static void savegame_serialize(savegame_state *state)
     write_all_to_buffer(state->Data_CityInfo_Buildings_industry_total, &Data_CityInfo_Buildings.industry.total);
     write_all_to_buffer(state->Data_CityInfo_Buildings_industry_working, &Data_CityInfo_Buildings.industry.working);
     write_all_to_buffer(state->Data_TradePrices, &Data_TradePrices);
-    write_all_to_buffer(state->Data_Figure_NameSequence_citizenMale, &Data_Figure_NameSequence.citizenMale);
-    write_all_to_buffer(state->Data_Figure_NameSequence_patrician, &Data_Figure_NameSequence.patrician);
-    write_all_to_buffer(state->Data_Figure_NameSequence_citizenFemale, &Data_Figure_NameSequence.citizenFemale);
-    write_all_to_buffer(state->Data_Figure_NameSequence_taxCollector, &Data_Figure_NameSequence.taxCollector);
-    write_all_to_buffer(state->Data_Figure_NameSequence_engineer, &Data_Figure_NameSequence.engineer);
-    write_all_to_buffer(state->Data_Figure_NameSequence_prefect, &Data_Figure_NameSequence.prefect);
-    write_all_to_buffer(state->Data_Figure_NameSequence_javelinThrower, &Data_Figure_NameSequence.javelinThrower);
-    write_all_to_buffer(state->Data_Figure_NameSequence_cavalry, &Data_Figure_NameSequence.cavalry);
-    write_all_to_buffer(state->Data_Figure_NameSequence_legionary, &Data_Figure_NameSequence.legionary);
-    write_all_to_buffer(state->Data_Figure_NameSequence_actor, &Data_Figure_NameSequence.actor);
-    write_all_to_buffer(state->Data_Figure_NameSequence_gladiator, &Data_Figure_NameSequence.gladiator);
-    write_all_to_buffer(state->Data_Figure_NameSequence_lionTamer, &Data_Figure_NameSequence.lionTamer);
-    write_all_to_buffer(state->Data_Figure_NameSequence_charioteer, &Data_Figure_NameSequence.charioteer);
-    write_all_to_buffer(state->Data_Figure_NameSequence_barbarian, &Data_Figure_NameSequence.barbarian);
-    write_all_to_buffer(state->Data_Figure_NameSequence_enemyGreek, &Data_Figure_NameSequence.enemyGreek);
-    write_all_to_buffer(state->Data_Figure_NameSequence_enemyEgyptian, &Data_Figure_NameSequence.enemyEgyptian);
-    write_all_to_buffer(state->Data_Figure_NameSequence_enemyArabian, &Data_Figure_NameSequence.enemyArabian);
-    write_all_to_buffer(state->Data_Figure_NameSequence_trader, &Data_Figure_NameSequence.trader);
-    write_all_to_buffer(state->Data_Figure_NameSequence_tradeShip, &Data_Figure_NameSequence.tradeShip);
-    write_all_to_buffer(state->Data_Figure_NameSequence_warShip, &Data_Figure_NameSequence.warShip);
-    write_all_to_buffer(state->Data_Figure_NameSequence_enemyShip, &Data_Figure_NameSequence.enemyShip);
+    
+    figure_name_save_state(state->figure_names);
+    
     write_all_to_buffer(state->Data_CityInfo_CultureCoverage_theater, &Data_CityInfo_CultureCoverage.theater);
     write_all_to_buffer(state->Data_CityInfo_CultureCoverage_amphitheater, &Data_CityInfo_CultureCoverage.amphitheater);
     write_all_to_buffer(state->Data_CityInfo_CultureCoverage_colosseum, &Data_CityInfo_CultureCoverage.colosseum);

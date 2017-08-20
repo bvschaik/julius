@@ -46,7 +46,6 @@ struct Data_KeyboardInput Data_KeyboardInput;
 
 struct _Data_State Data_State;
 
-struct _Data_Figure_NameSequence Data_Figure_NameSequence;
 struct Data_Figure Data_Figures[MAX_FIGURES];
 struct _Data_Figure_Extra Data_Figure_Extra;
 struct Data_Figure_Trader Data_Figure_Traders[MAX_TRADERS];

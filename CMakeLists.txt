@@ -23,6 +23,9 @@ set(CORE_FILES
 set (BUILDING_FILES
     src/building/model.c
 )
+set (FIGURE_FILES
+    src/figure/name.c
+)
 add_executable(julius
 	linux/main2.c
 	linux/SDLSoundDevice.c
@@ -68,7 +71,6 @@ add_executable(julius
 	src/FigureAction_Water.c
 	src/FigureGeneration.c
 	src/FigureMovement.c
-	src/FigureNames.c
 	src/FigureRoute.c
 	src/Figure_Phrase.c
 	src/Figure_Service.c
@@ -181,6 +183,7 @@ add_executable(julius
 	src/UI/Window.c
 	${CORE_FILES}
 	${BUILDING_FILES}
+	${FIGURE_FILES}
 	${SMK_FILES})
 
 #include(FindPkgConfig)

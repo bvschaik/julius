@@ -16,6 +16,8 @@ set(TESTS
     core/zip
 
     building/model
+    
+    figure/name
 #     building/storage
 #     
 #     city/health
