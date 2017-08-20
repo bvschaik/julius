@@ -24,7 +24,6 @@
 #include "Data/Grid.h"
 #include "Data/Invasion.h"
 #include "Data/Message.h"
-#include "Data/Random.h"
 #include "Data/Routes.h"
 #include "Data/Scenario.h"
 #include "Data/Settings.h"
@@ -38,6 +37,7 @@
 #include "core/buffer.h"
 #include "core/file.h"
 #include "core/io.h"
+#include "core/random.h"
 #include "core/zip.h"
 
 #include <stdio.h>
@@ -142,8 +142,7 @@ typedef struct {
     buffer *Data_CityInfo_Extra_gameTimeTotalDays;
     buffer *Data_Buildings_Extra_highestBuildingIdEver;
     buffer *Data_Debug_maxConnectsEver;
-    buffer *Data_Random_iv1;
-    buffer *Data_Random_iv2;
+    buffer *random_iv;
     buffer *Data_Settings_Map_camera_x;
     buffer *Data_Settings_Map_camera_y;
     buffer *Data_CityInfo_Buildings_theater_total;
@@ -429,8 +428,7 @@ void init_savegame_data()
     state->Data_CityInfo_Extra_gameTimeTotalDays = create_savegame_piece(4, 0);
     state->Data_Buildings_Extra_highestBuildingIdEver = create_savegame_piece(4, 0);
     state->Data_Debug_maxConnectsEver = create_savegame_piece(4, 0);
-    state->Data_Random_iv1 = create_savegame_piece(4, 0);
-    state->Data_Random_iv2 = create_savegame_piece(4, 0);
+    state->random_iv = create_savegame_piece(8, 0);
     state->Data_Settings_Map_camera_x = create_savegame_piece(4, 0);
     state->Data_Settings_Map_camera_y = create_savegame_piece(4, 0);
     state->Data_CityInfo_Buildings_theater_total = create_savegame_piece(4, 0);
@@ -655,8 +653,7 @@ void scenario_deserialize(scenario_state *file)
     Data_Settings_Map.camera.x = buffer_read_i32(file->camera);
     Data_Settings_Map.camera.y = buffer_read_i32(file->camera);
     
-    Data_Random.iv1 = buffer_read_u32(file->random_iv);
-    Data_Random.iv2 = buffer_read_u32(file->random_iv);
+    random_load_state(file->random_iv);
 
     read_all_from_buffer(file->scenario, &Data_Scenario);
 }
@@ -699,8 +696,9 @@ static void savegame_deserialize(savegame_state *state)
     read_all_from_buffer(state->Data_CityInfo_Extra_gameTimeTotalDays, &Data_CityInfo_Extra.gameTimeTotalDays);
     read_all_from_buffer(state->Data_Buildings_Extra_highestBuildingIdEver, &Data_Buildings_Extra.highestBuildingIdEver);
     read_all_from_buffer(state->Data_Debug_maxConnectsEver, &Data_Debug.maxConnectsEver);
-    read_all_from_buffer(state->Data_Random_iv1, &Data_Random.iv1);
-    read_all_from_buffer(state->Data_Random_iv2, &Data_Random.iv2);
+    
+    random_load_state(state->random_iv);
+
     read_all_from_buffer(state->Data_Settings_Map_camera_x, &Data_Settings_Map.camera.x);
     read_all_from_buffer(state->Data_Settings_Map_camera_y, &Data_Settings_Map.camera.y);
     read_all_from_buffer(state->Data_CityInfo_Buildings_theater_total, &Data_CityInfo_Buildings.theater.total);
@@ -933,8 +931,9 @@ static void savegame_serialize(savegame_state *state)
     write_all_to_buffer(state->Data_CityInfo_Extra_gameTimeTotalDays, &Data_CityInfo_Extra.gameTimeTotalDays);
     write_all_to_buffer(state->Data_Buildings_Extra_highestBuildingIdEver, &Data_Buildings_Extra.highestBuildingIdEver);
     write_all_to_buffer(state->Data_Debug_maxConnectsEver, &Data_Debug.maxConnectsEver);
-    write_all_to_buffer(state->Data_Random_iv1, &Data_Random.iv1);
-    write_all_to_buffer(state->Data_Random_iv2, &Data_Random.iv2);
+    
+    random_save_state(state->random_iv);
+
     write_all_to_buffer(state->Data_Settings_Map_camera_x, &Data_Settings_Map.camera.x);
     write_all_to_buffer(state->Data_Settings_Map_camera_y, &Data_Settings_Map.camera.y);
     write_all_to_buffer(state->Data_CityInfo_Buildings_theater_total, &Data_CityInfo_Buildings.theater.total);

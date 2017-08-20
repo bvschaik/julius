@@ -10,9 +10,10 @@
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 #include "Data/Model.h"
-#include "Data/Random.h"
 #include "Data/Settings.h"
 #include "Data/Tutorial.h"
+
+#include "core/random.h"
 
 static void addPeopleToCensus(int numPeople);
 static void removePeopleFromCensus(int numPeople);
@@ -416,7 +417,7 @@ static void healthCauseDisease(int totalPeople)
 	if (Data_CityInfo.healthRate >= 40) {
 		return;
 	}
-	int chanceValue = Data_Random.random1_7bit & 0x3f;
+	int chanceValue = random_byte() & 0x3f;
 	if (Data_CityInfo.godCurseVenusActive) {
 		// force plague
 		chanceValue = 0;
@@ -426,7 +427,7 @@ static void healthCauseDisease(int totalPeople)
 		return;
 	}
 
-	int sickPeople = calc_adjust_with_percentage(totalPeople, 7 + (Data_Random.random1_7bit & 3));
+	int sickPeople = calc_adjust_with_percentage(totalPeople, 7 + (random_byte() & 3));
 	if (sickPeople <= 0) {
 		return;
 	}
@@ -528,21 +529,17 @@ static void removePeopleFromCensusInDecennium(int decennium, int numPeople)
 
 static void removePeopleFromCensus(int numPeople)
 {
-	int index = Data_Random.poolIndex;
+	int index = 0;
 	int emptyBuckets = 0;
 	// remove people randomly up to age 63
 	while (numPeople > 0 && emptyBuckets < 100) {
-		int age = Data_Random.pool[index] & 0x3f;
+		int age = random_from_pool(index++) & 0x3f;
 		if (Data_CityInfo.populationPerAge[age] <= 0) {
 			emptyBuckets++;
 		} else {
 			Data_CityInfo.populationPerAge[age]--;
 			numPeople--;
 			emptyBuckets = 0;
-		}
-		index++;
-		if (index >= 100) {
-			index = 0;
 		}
 	}
 	// if random didn't work: remove from age 10 and up
@@ -558,7 +555,7 @@ static void removePeopleFromCensus(int numPeople)
 		}
 		age++;
 		if (age >= 100) {
-			index = 0;
+			age = 0;
 		}
 	}
 }
@@ -566,19 +563,15 @@ static void removePeopleFromCensus(int numPeople)
 static void addPeopleToCensus(int numPeople)
 {
 	int odd = 0;
-	int index = Data_Random.poolIndex;
+	int index = 0;
 	for (int i = 0; i < numPeople; i++, odd = 1 - odd) {
-		int age = Data_Random.pool[index] & 0x3f; // 63
+		int age = random_from_pool(index++) & 0x3f; // 63
 		if (age > 50) {
 			age -= 30;
 		} else if (age < 10 && odd) {
 			age += 20;
 		}
 		Data_CityInfo.populationPerAge[age]++;
-		index++;
-		if (index >= 100) {
-			index = 0;
-		}
 	}
 }
 

@@ -9,8 +9,9 @@
 
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
-#include "Data/Random.h"
 #include "Data/Settings.h"
+
+#include "core/random.h"
 
 #define MAX_GODS 5
 
@@ -153,7 +154,7 @@ static void updateGodMoods()
 		}
 	}
 
-	int god = Data_Random.random1_7bit & 7;
+	int god = random_byte() & 7;
 	if (god < MAX_GODS) {
 		if (Data_CityInfo.godHappiness[god] >= 50) {
 			Data_CityInfo.godWrathBolts[god] = 0;

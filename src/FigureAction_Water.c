@@ -8,8 +8,9 @@
 #include "Data/CityInfo.h"
 #include "Data/Message.h"
 #include "Data/Model.h"
-#include "Data/Random.h"
 #include "Data/Scenario.h"
+
+#include "core/random.h"
 
 static const int flotsamType0[] = {0, 1, 2, 3, 4, 4, 4, 3, 2, 1, 0, 0};
 static const int flotsamType12[] = {
@@ -209,15 +210,15 @@ void FigureAction_flotsam(int figureId)
 			f->minMaxSeen = 0;
 			f->actionState = FigureActionState_128_FlotsamCreated;
 			if (f->waitTicks >= 400) {
-				f->waitTicks = Data_Random.random1_7bit & 7;
+				f->waitTicks = random_byte() & 7;
 			} else if (f->waitTicks >= 200) {
-				f->waitTicks = 50 + (Data_Random.random1_7bit & 0xf);
+				f->waitTicks = 50 + (random_byte() & 0xf);
 			} else if (f->waitTicks >= 100) {
-				f->waitTicks = 100 + (Data_Random.random1_7bit & 0x1f);
+				f->waitTicks = 100 + (random_byte() & 0x1f);
 			} else if (f->waitTicks >= 50) {
-				f->waitTicks = 200 + (Data_Random.random1_7bit & 0x3f);
+				f->waitTicks = 200 + (random_byte() & 0x3f);
 			} else {
-				f->waitTicks = 300 + Data_Random.random1_7bit;
+				f->waitTicks = 300 + random_byte();
 			}
 			Figure_removeFromTileList(figureId);
 			f->x = Data_Scenario.riverEntryPoint.x;

@@ -19,13 +19,13 @@
 #include "Data/Constants.h"
 #include "Data/Grid.h"
 #include "Data/Message.h"
-#include "Data/Random.h"
 #include "Data/Scenario.h"
 #include "Data/Settings.h"
 #include "Data/State.h"
 #include "Data/Tutorial.h"
 #include "Data/Figure.h"
 
+#include "core/random.h"
 #include "core/time.h"
 
 #define EACH_BURNING_RUIN Data_BuildingList.burning.index = 0; Data_BuildingList.burning.index < Data_BuildingList.burning.size; Data_BuildingList.burning.index++
@@ -34,7 +34,7 @@ static int burningRuinSpreadDirection;
 
 void Security_Tick_updateFireSpreadDirection()
 {
-	burningRuinSpreadDirection = Data_Random.random1_7bit & 7;
+	burningRuinSpreadDirection = random_byte() & 7;
 }
 
 void Security_Tick_updateBurningRuins()
@@ -76,7 +76,7 @@ void Security_Tick_updateBurningRuins()
 				continue;
 			}
 		}
-		if ((b->houseGenerationDelay & 3) != (Data_Random.random1_7bit & 3)) {
+		if ((b->houseGenerationDelay & 3) != (random_byte() & 3)) {
 			continue;
 		}
 		int dir1 = burningRuinSpreadDirection - 1;
@@ -211,7 +211,7 @@ static void generateMugger(int buildingId)
 			if (Data_CityInfo.financeTaxesThisYear > 20) {
 				int moneyStolen = Data_CityInfo.financeTaxesThisYear / 4;
 				if (moneyStolen > 400) {
-					moneyStolen = 400 - Data_Random.random1_7bit / 2;
+					moneyStolen = 400 - random_byte() / 2;
 				}
 				PlayerMessage_post(1, Message_52_Theft, moneyStolen, Data_Figures[figureId].gridOffset);
 				Data_CityInfo.financeStolenThisYear += moneyStolen;
@@ -257,7 +257,7 @@ void Security_Tick_generateCriminal()
 			return;
 		}
 		if (Data_CityInfo.citySentiment < 30) {
-			if (Data_Random.random1_7bit >= Data_CityInfo.citySentiment + 50) {
+			if (random_byte() >= Data_CityInfo.citySentiment + 50) {
 				if (minHappiness <= 10) {
 					generateRioter(minBuildingId);
 				} else if (minHappiness < 30) {
@@ -267,7 +267,7 @@ void Security_Tick_generateCriminal()
 				}
 			}
 		} else if (Data_CityInfo.citySentiment < 60) {
-			if (Data_Random.random1_7bit >= Data_CityInfo.citySentiment + 40) {
+			if (random_byte() >= Data_CityInfo.citySentiment + 40) {
 				if (minHappiness < 30) {
 					generateMugger(minBuildingId);
 				} else if (minHappiness < 50) {
@@ -275,7 +275,7 @@ void Security_Tick_generateCriminal()
 				}
 			}
 		} else {
-			if (Data_Random.random1_7bit >= Data_CityInfo.citySentiment + 20) {
+			if (random_byte() >= Data_CityInfo.citySentiment + 20) {
 				if (minHappiness < 50) {
 					generateProtester(minBuildingId);
 				}
@@ -328,7 +328,7 @@ void Security_Tick_checkFireCollapse()
 	Data_CityInfo.numCriminalsThisMonth = 0;
 	
 	int recalculateTerrain = 0;
-	int randomGlobal = Data_Random.random1_7bit & 7;
+	int randomGlobal = random_byte() & 7;
 	for (int i = 1; i <= Data_Buildings_Extra.highestBuildingIdInUse; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
 		if (!BuildingIsInUse(i) || b->fireProof) {

@@ -1,6 +1,5 @@
 #include "Routing.h"
 
-#include "core/calc.h"
 #include "Grid.h"
 #include "TerrainGraphics.h"
 
@@ -10,10 +9,12 @@
 #include "Data/Debug.h"
 #include "Data/Graphics.h"
 #include "Data/Grid.h"
-#include "Data/Random.h"
 #include "Data/Routes.h"
 #include "Data/Settings.h"
 #include "Data/Figure.h"
+
+#include "core/calc.h"
+#include "core/random.h"
 
 #include <string.h>
 
@@ -1278,7 +1279,7 @@ int Routing_getClosestXYWithinRange(int numDirections, int xSrc, int ySrc, int x
 
 int Routing_getPathOnWater(int routingPathId, int xSrc, int ySrc, int xDst, int yDst, int isFlotsam)
 {
-	int rand = Data_Random.random1_7bit & 3;
+	int rand = random_byte() & 3;
 	int dstGridOffset = GridOffset(xDst, yDst);
 	int distance = Data_Grid_routingDistance[dstGridOffset];
 	if (distance <= 0 || distance >= 998) {

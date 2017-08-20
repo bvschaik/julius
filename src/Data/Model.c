@@ -2,7 +2,6 @@
 
 #define DATA_INTERN 1
 #include "Grid.h"
-#include "Random.h"
 
 struct Data_Model_House Data_Model_Houses[20];
 struct Data_Model_Building Data_Model_Buildings[130];
@@ -23,8 +22,6 @@ struct _Data_Settings_Map Data_Settings_Map;
 struct _Data_Tutorial Data_Tutorial;
 
 struct _Data_Message Data_Message;
-
-struct _Data_Random Data_Random;
 
 struct _Data_Empire Data_Empire;
 struct _Data_Empire_Sizes Data_Empire_Sizes = {2000, 1000, 16, 16, 120};

@@ -1,55 +1,55 @@
 #include "Figure.h"
 
-#include "Random.h"
 #include "Data/Constants.h"
 #include "Data/Formation.h"
-#include "Data/Random.h"
 #include "Data/Figure.h"
+
+#include "core/random.h"
 
 void FigureName_init()
 {
-	Random_generateNext();
-	Data_Figure_NameSequence.citizenMale = Data_Random.random1_7bit & 0xf;
-	Random_generateNext();
-	Data_Figure_NameSequence.patrician = Data_Random.random1_7bit & 0xf;
-	Random_generateNext();
-	Data_Figure_NameSequence.citizenFemale = Data_Random.random1_7bit & 0xf;
-	Random_generateNext();
-	Data_Figure_NameSequence.taxCollector = Data_Random.random1_7bit & 0xf;
-	Random_generateNext();
-	Data_Figure_NameSequence.engineer = Data_Random.random1_7bit & 0xf;
-	Random_generateNext();
-	Data_Figure_NameSequence.prefect = Data_Random.random1_7bit & 0xf;
-	Random_generateNext();
-	Data_Figure_NameSequence.javelinThrower = Data_Random.random1_7bit & 0xf;
-	Random_generateNext();
-	Data_Figure_NameSequence.cavalry = Data_Random.random1_7bit & 0xf;
-	Random_generateNext();
-	Data_Figure_NameSequence.legionary = Data_Random.random1_7bit & 0xf;
-	Random_generateNext();
-	Data_Figure_NameSequence.actor = Data_Random.random1_7bit & 0xf;
-	Random_generateNext();
-	Data_Figure_NameSequence.gladiator = Data_Random.random1_7bit & 0xf;
-	Random_generateNext();
-	Data_Figure_NameSequence.lionTamer = Data_Random.random1_7bit & 0xf;
-	Random_generateNext();
-	Data_Figure_NameSequence.charioteer = Data_Random.random1_7bit & 0xf;
-	Random_generateNext();
-	Data_Figure_NameSequence.barbarian = Data_Random.random1_7bit & 0xf;
-	Random_generateNext();
-	Data_Figure_NameSequence.enemyGreek = Data_Random.random1_7bit & 0xf;
-	Random_generateNext();
-	Data_Figure_NameSequence.enemyEgyptian = Data_Random.random1_7bit & 0xf;
-	Random_generateNext();
-	Data_Figure_NameSequence.enemyArabian = Data_Random.random1_7bit & 0xf;
-	Random_generateNext();
-	Data_Figure_NameSequence.trader = Data_Random.random1_7bit & 0xf;
-	Random_generateNext();
-	Data_Figure_NameSequence.tradeShip = Data_Random.random1_7bit & 0xf;
-	Random_generateNext();
-	Data_Figure_NameSequence.warShip = Data_Random.random1_7bit & 0xf;
-	Random_generateNext();
-	Data_Figure_NameSequence.enemyShip = Data_Random.random1_7bit & 0xf;
+	random_generate_next();
+	Data_Figure_NameSequence.citizenMale = random_byte() & 0xf;
+	random_generate_next();
+	Data_Figure_NameSequence.patrician = random_byte() & 0xf;
+	random_generate_next();
+	Data_Figure_NameSequence.citizenFemale = random_byte() & 0xf;
+	random_generate_next();
+	Data_Figure_NameSequence.taxCollector = random_byte() & 0xf;
+	random_generate_next();
+	Data_Figure_NameSequence.engineer = random_byte() & 0xf;
+	random_generate_next();
+	Data_Figure_NameSequence.prefect = random_byte() & 0xf;
+	random_generate_next();
+	Data_Figure_NameSequence.javelinThrower = random_byte() & 0xf;
+	random_generate_next();
+	Data_Figure_NameSequence.cavalry = random_byte() & 0xf;
+	random_generate_next();
+	Data_Figure_NameSequence.legionary = random_byte() & 0xf;
+	random_generate_next();
+	Data_Figure_NameSequence.actor = random_byte() & 0xf;
+	random_generate_next();
+	Data_Figure_NameSequence.gladiator = random_byte() & 0xf;
+	random_generate_next();
+	Data_Figure_NameSequence.lionTamer = random_byte() & 0xf;
+	random_generate_next();
+	Data_Figure_NameSequence.charioteer = random_byte() & 0xf;
+	random_generate_next();
+	Data_Figure_NameSequence.barbarian = random_byte() & 0xf;
+	random_generate_next();
+	Data_Figure_NameSequence.enemyGreek = random_byte() & 0xf;
+	random_generate_next();
+	Data_Figure_NameSequence.enemyEgyptian = random_byte() & 0xf;
+	random_generate_next();
+	Data_Figure_NameSequence.enemyArabian = random_byte() & 0xf;
+	random_generate_next();
+	Data_Figure_NameSequence.trader = random_byte() & 0xf;
+	random_generate_next();
+	Data_Figure_NameSequence.tradeShip = random_byte() & 0xf;
+	random_generate_next();
+	Data_Figure_NameSequence.warShip = random_byte() & 0xf;
+	random_generate_next();
+	Data_Figure_NameSequence.enemyShip = random_byte() & 0xf;
 }
 
 #define SET(var, off, max) \

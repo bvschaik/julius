@@ -5,7 +5,8 @@
 
 #include "Data/CityInfo.h"
 #include "Data/Formation.h"
-#include "Data/Random.h"
+
+#include "core/random.h"
 
 static const int seagullOffsetsX[] = {0, 0, -2, 1, 2, -3, 4, -2};
 static const int seagullOffsetsY[] = {0, -2, 0, 2, 0, 1, -3, 4};
@@ -328,13 +329,13 @@ void FigureAction_hippodromeHorse(int figureId)
 						f->waitTicks = 0;
 						f->actionState = FigureActionState_202_HippodromeMiniHorseDone;
 					}
-					if ((figureId + Data_Random.random1_7bit) & 1) {
+					if ((figureId + random_byte()) & 1) {
 						f->speedMultiplier = 3;
 					} else {
 						f->speedMultiplier = 4;
 					}
 				} else if (f->waitTicksMissile == 11) {
-					if ((figureId + Data_Random.random1_7bit) & 1) {
+					if ((figureId + random_byte()) & 1) {
 						f->speedMultiplier = 3;
 					} else {
 						f->speedMultiplier = 4;

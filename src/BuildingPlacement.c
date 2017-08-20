@@ -26,10 +26,11 @@
 #include "Data/Graphics.h"
 #include "Data/Grid.h"
 #include "Data/Model.h"
-#include "Data/Random.h"
 #include "Data/Settings.h"
 #include "Data/State.h"
 #include "Data/Figure.h"
+
+#include "core/random.h"
 
 #define BOUND_REGION() \
 	if (xStart < xEnd) {\
@@ -518,7 +519,7 @@ static void addToTerrain(int type, int buildingId, int x, int y, int size,
 		// native buildings (unused, I think)
 		case Building_NativeHut:
 			Terrain_addBuildingToGrids(buildingId, x, y, size,
-				GraphicId(ID_Graphic_NativeBuilding) + (Data_Random.random1_7bit & 1), Terrain_Building);
+				GraphicId(ID_Graphic_NativeBuilding) + (random_byte() & 1), Terrain_Building);
 			break;
 		case Building_NativeMeeting:
 			Terrain_addBuildingToGrids(buildingId, x, y, size, GraphicId(ID_Graphic_NativeBuilding) + 2, Terrain_Building);

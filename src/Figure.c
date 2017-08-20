@@ -1,10 +1,8 @@
 #include "Figure.h"
 
-#include "core/calc.h"
 #include "FigureAction.h"
 #include "FigureMovement.h"
 #include "Formation.h"
-#include "Random.h"
 #include "Sound.h"
 #include "Terrain.h"
 #include "Trader.h"
@@ -16,9 +14,11 @@
 #include "Data/Figure.h"
 #include "Data/Formation.h"
 #include "Data/Grid.h"
-#include "Data/Random.h"
 #include "Data/Scenario.h"
 #include "Data/Settings.h"
+
+#include "core/calc.h"
+#include "core/random.h"
 
 #include <string.h>
 
@@ -56,7 +56,7 @@ int Figure_create(int figureType, int x, int y, char direction)
 	f->crossCountryX = 15 * x;
 	f->crossCountryY = 15 * y;
 	f->progressOnTile = 15;
-	f->phraseSequenceCity = f->phraseSequenceExact = Data_Random.random1_7bit & 3;
+	f->phraseSequenceCity = f->phraseSequenceExact = random_byte() & 3;
 	FigureName_set(id);
 	Figure_addToTileList(id);
 	if (figureType == Figure_TradeCaravan || figureType == Figure_TradeShip) {
@@ -243,11 +243,11 @@ void Figure_createFishingPoints()
 {
 	for (int i = 0; i < 8; i++) {
 		if (Data_Scenario.fishingPoints.x[i] > 0) {
-			Random_generateNext();
+			random_generate_next();
 			int fishId = Figure_create(Figure_FishGulls,
 				Data_Scenario.fishingPoints.x[i], Data_Scenario.fishingPoints.y[i], 0);
-			Data_Figures[fishId].graphicOffset = Data_Random.random1_7bit & 0x1f;
-			Data_Figures[fishId].progressOnTile = Data_Random.random1_7bit & 7;
+			Data_Figures[fishId].graphicOffset = random_byte() & 0x1f;
+			Data_Figures[fishId].progressOnTile = random_byte() & 7;
 			FigureMovement_crossCountrySetDirection(fishId,
 				Data_Figures[fishId].crossCountryX, Data_Figures[fishId].crossCountryY,
 				15 * Data_Figures[fishId].destinationX, 15 * Data_Figures[fishId].destinationY, 0);
@@ -273,7 +273,7 @@ void Figure_createHerds()
 				Data_Formations[formationId].waitTicks = 24;
 				Data_Formations[formationId].maxFigures = numAnimals;
 				for (int fig = 0; fig < numAnimals; fig++) {
-					Random_generateNext();
+					random_generate_next();
 					int figureId = Figure_create(herdType,
 						Data_Scenario.herdPoints.x[i], Data_Scenario.herdPoints.y[i], 0);
 					Data_Figures[figureId].actionState = FigureActionState_196_HerdAnimalAtRest;

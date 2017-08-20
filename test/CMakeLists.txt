@@ -10,7 +10,7 @@ set(TESTS
     core/dir
     core/file
     core/io
-#     core/random
+    core/random
     core/string
     core/time
     core/zip

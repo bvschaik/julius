@@ -7,7 +7,6 @@
 #include "Figure.h"
 #include "Formation.h"
 #include "PlayerMessage.h"
-#include "Random.h"
 #include "Resource.h"
 #include "Routing.h"
 #include "SidebarMenu.h"
@@ -21,11 +20,12 @@
 #include "Data/Empire.h"
 #include "Data/Event.h"
 #include "Data/Grid.h"
-#include "Data/Random.h"
 #include "Data/Scenario.h"
 #include "Data/Settings.h"
 #include "Data/Trade.h"
 #include "Data/Tutorial.h"
+
+#include "core/random.h"
 
 #include <string.h>
 
@@ -268,9 +268,9 @@ void Event_initDistantBattleCity()
 void Event_initRequests()
 {
 	for (int i = 0; i < MAX_EVENTS; i++) {
-		Random_generateNext();
+		random_generate_next();
 		if (Data_Scenario.requests.resourceId[i]) {
-			Data_Scenario.requests_month[i] = (Data_Random.random1_7bit & 7) + 2;
+			Data_Scenario.requests_month[i] = (random_byte() & 7) + 2;
 			Data_Scenario.requests_monthsToComply[i] = 12 * Data_Scenario.requests.deadlineYears[i];
 		}
 	}
@@ -361,7 +361,7 @@ void Event_dispatchRequest(int id)
 	} else {
 		Data_Scenario.requests_state[id] = RequestState_DispatchedLate;
 	}
-	Data_Scenario.requests_monthsToComply[id] = (Data_Random.random1_7bit & 3) + 1;
+	Data_Scenario.requests_monthsToComply[id] = (random_byte() & 3) + 1;
 	Data_Scenario.requests_isVisible[id] = 0;
 	int amount = Data_Scenario.requests.amount[id];
 	if (Data_Scenario.requests.resourceId[id] == Resource_Denarii) {
@@ -378,9 +378,9 @@ void Event_dispatchRequest(int id)
 void Event_initDemandChanges()
 {
 	for (int i = 0; i < MAX_EVENTS; i++) {
-		Random_generateNext();
+		random_generate_next();
 		if (Data_Scenario.demandChanges.year[i]) {
-			Data_Scenario.demandChanges.month[i] = (Data_Random.random1_7bit & 7) + 2;
+			Data_Scenario.demandChanges.month[i] = (random_byte() & 7) + 2;
 		}
 	}
 }
@@ -433,9 +433,9 @@ void Event_handleDemandChanges()
 void Event_initPriceChanges()
 {
 	for (int i = 0; i < MAX_EVENTS; i++) {
-		Random_generateNext();
+		random_generate_next();
 		if (Data_Scenario.priceChanges.year[i]) {
-			Data_Scenario.priceChanges.month[i] = (Data_Random.random1_7bit & 7) + 2;
+			Data_Scenario.priceChanges.month[i] = (random_byte() & 7) + 2;
 		}
 	}
 }
@@ -494,7 +494,7 @@ void Event_handleEarthquake()
 				Data_Event.earthquake.state = SpecialEvent_Finished;
 			}
 			int dx, dy, index;
-			switch (Data_Random.random1_7bit & 0xf) {
+			switch (random_byte() & 0xf) {
 				case 0: index = 0; dx = 0; dy = -1; break;
 				case 1: index = 1; dx = 1; dy = 0; break;
 				case 2: index = 2; dx = 0; dy = 1; break;
@@ -598,7 +598,7 @@ void Event_handleEmperorChange()
 
 void Event_handleRandomEvents()
 {
-	int event = randomEventProbability[Data_Random.random1_7bit];
+	int event = randomEventProbability[random_byte()];
 	if (event <= 0) {
 		return;
 	}
@@ -606,7 +606,7 @@ void Event_handleRandomEvents()
 		case RandomEvent_RomeRaisesWages:
 			if (Data_Scenario.raiseWagesEnabled) {
 				if (Data_CityInfo.wagesRome < 45) {
-					Data_CityInfo.wagesRome += 1 + (Data_Random.random2_7bit & 3);
+					Data_CityInfo.wagesRome += 1 + (random_byte_alt() & 3);
 					if (Data_CityInfo.wagesRome > 45) {
 						Data_CityInfo.wagesRome = 45;
 					}
@@ -617,7 +617,7 @@ void Event_handleRandomEvents()
 		case RandomEvent_RomeLowersWages:
 			if (Data_Scenario.lowerWagesEnabled) {
 				if (Data_CityInfo.wagesRome > 5) {
-					Data_CityInfo.wagesRome -= 1 + (Data_Random.random2_7bit & 3);
+					Data_CityInfo.wagesRome -= 1 + (random_byte_alt() & 3);
 					PlayerMessage_post(1, Message_69_RomeLowersWages, 0, 0);
 				}
 			}

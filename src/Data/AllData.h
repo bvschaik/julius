@@ -2,7 +2,6 @@
 #include "Scenario.h"
 #include "Settings.h"
 #include "Message.h"
-#include "Random.h"
 #include "Empire.h"
 #include "Graphics.h"
 #include "Screen.h"

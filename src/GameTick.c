@@ -13,7 +13,6 @@
 #include "HousePopulation.h"
 #include "Natives.h"
 #include "PlayerMessage.h"
-#include "Random.h"
 #include "Resource.h"
 #include "Routing.h"
 #include "Security.h"
@@ -32,6 +31,8 @@
 #include "Data/Settings.h"
 #include "Data/State.h"
 
+#include "core/random.h"
+
 #include <stdio.h>
 
 static void advanceDay();
@@ -41,7 +42,7 @@ static void advanceYear();
 void GameTick_doTick()
 {
 	printf("TICK %d.%d.%d\n", Data_CityInfo_Extra.gameTimeMonth, Data_CityInfo_Extra.gameTimeDay, Data_CityInfo_Extra.gameTimeTick);
-	Random_generateNext();
+	random_generate_next();
 	Undo_updateAvailable();
 	GameTick_advance();
 	FigureAction_handle();

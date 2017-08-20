@@ -14,6 +14,7 @@ set(CORE_FILES
     src/core/dir.c
     src/core/file.c
     src/core/io.c
+    src/core/random.c
     src/core/string.c
     src/core/time.c
     src/core/zip.c
@@ -85,7 +86,6 @@ add_executable(julius
 	src/Loader_Model.c
 	src/Natives.c
 	src/PlayerMessage.c
-	src/Random.c
 	src/Resource.c
 	src/Resource_Granary.c
 	src/Resource_Warehouse.c

@@ -14,7 +14,6 @@
 #include "Loader.h"
 #include "Natives.h"
 #include "PlayerMessage.h"
-#include "Random.h"
 #include "Routing.h"
 #include "SidebarMenu.h"
 #include "Sound.h"
@@ -32,7 +31,6 @@
 #include "Data/Graphics.h"
 #include "Data/Grid.h"
 #include "Data/Model.h"
-#include "Data/Random.h"
 #include "Data/Scenario.h"
 #include "Data/Settings.h"
 #include "Data/State.h"
@@ -40,6 +38,7 @@
 
 #include "core/file.h"
 #include "core/io.h"
+#include "core/random.h"
 
 #include <string.h>
 
@@ -233,22 +232,22 @@ static void loadScenario(const char *scenarioName)
 	// set up events
 	// earthquake
 	Data_Event.earthquake.gameYear = Data_Scenario.startYear + Data_Scenario.earthquakeYear;
-	Data_Event.earthquake.month = 2 + (Data_Random.random1_7bit & 7);
+	Data_Event.earthquake.month = 2 + (random_byte() & 7);
 	switch (Data_Scenario.earthquakeSeverity) {
 		default:
 			Data_Event.earthquake.maxDuration = 0;
 			Data_Event.earthquake.maxDelay = 0;
 			break;
 		case Earthquake_Small:
-			Data_Event.earthquake.maxDuration = 25 + (Data_Random.random1_7bit & 0x1f);
+			Data_Event.earthquake.maxDuration = 25 + (random_byte() & 0x1f);
 			Data_Event.earthquake.maxDelay = 10;
 			break;
 		case Earthquake_Medium:
-			Data_Event.earthquake.maxDuration = 100 + (Data_Random.random1_7bit & 0x3f);
+			Data_Event.earthquake.maxDuration = 100 + (random_byte() & 0x3f);
 			Data_Event.earthquake.maxDelay = 8;
 			break;
 		case Earthquake_Large:
-			Data_Event.earthquake.maxDuration = 250 + Data_Random.random1_7bit;
+			Data_Event.earthquake.maxDuration = 250 + random_byte();
 			Data_Event.earthquake.maxDelay = 6;
 			break;
 	}
@@ -259,12 +258,12 @@ static void loadScenario(const char *scenarioName)
 	}
 	// gladiator revolt
 	Data_Event.gladiatorRevolt.gameYear = Data_Scenario.startYear + Data_Scenario.gladiatorRevolt.year;
-	Data_Event.gladiatorRevolt.month = 3 + (Data_Random.random1_7bit & 3);
+	Data_Event.gladiatorRevolt.month = 3 + (random_byte() & 3);
 	Data_Event.gladiatorRevolt.endMonth = 3 + Data_Event.gladiatorRevolt.month;
 	Data_Event.gladiatorRevolt.state = SpecialEvent_NotStarted;
 	// emperor change
 	Data_Event.emperorChange.gameYear = Data_Scenario.startYear + Data_Scenario.emperorChange.year;
-	Data_Event.emperorChange.month = 1 + (Data_Random.random1_7bit & 7);
+	Data_Event.emperorChange.month = 1 + (random_byte() & 7);
 	Data_Event.emperorChange.state = 0;
 	// time limit
 	if (Data_Scenario.winCriteria.timeLimitYearsEnabled) {
@@ -375,8 +374,8 @@ static void initGridRandom()
 	int gridOffset = 0;
 	for (int y = 0; y < Data_Settings_Map.height; y++) {
 		for (int x = 0; x < Data_Settings_Map.width; x++, gridOffset++) {
-			Random_generateNext();
-			Data_Grid_random[gridOffset] = Data_Random.random1_15bit;
+			random_generate_next();
+			Data_Grid_random[gridOffset] = random_short();
 		}
 	}
 }

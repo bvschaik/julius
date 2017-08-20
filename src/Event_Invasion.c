@@ -6,7 +6,6 @@
 #include "Figure.h"
 #include "Formation.h"
 #include "PlayerMessage.h"
-#include "Random.h"
 
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
@@ -16,10 +15,11 @@
 #include "Data/Grid.h"
 #include "Data/Invasion.h"
 #include "Data/Model.h"
-#include "Data/Random.h"
 #include "Data/Scenario.h"
 #include "Data/Settings.h"
 #include "Data/Figure.h"
+
+#include "core/random.h"
 
 #include <string.h>
 
@@ -72,11 +72,11 @@ void Event_initInvasions()
 	}
 	struct Data_InvasionWarning *warning = &Data_InvasionWarnings[1];
 	for (int i = 0; i < MAX_EVENTS; i++) {
-		Random_generateNext();
+		random_generate_next();
 		if (!Data_Scenario.invasions.type[i]) {
 			continue;
 		}
-		Data_Scenario.invasions_month[i] = 2 + (Data_Random.random1_7bit & 7);
+		Data_Scenario.invasions_month[i] = 2 + (random_byte() & 7);
 		if (Data_Scenario.invasions.type[i] == InvasionType_LocalUprising ||
 			Data_Scenario.invasions.type[i] == InvasionType_DistantBattle) {
 			continue;
@@ -306,11 +306,11 @@ static int startInvasion(int enemyType, int amount, int invasionPoint, int attac
 		}
 		if (invasionPoint == 8) {
 			if (numPoints <= 2) {
-				invasionPoint = Data_Random.random1_7bit & 1;
+				invasionPoint = random_byte() & 1;
 			} else if (numPoints <= 4) {
-				invasionPoint = Data_Random.random1_7bit & 3;
+				invasionPoint = random_byte() & 3;
 			} else {
-				invasionPoint = Data_Random.random1_7bit & 7;
+				invasionPoint = random_byte() & 7;
 			}
 		}
 		if (numPoints > 0) {

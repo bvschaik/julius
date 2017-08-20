@@ -1,6 +1,5 @@
 #include "Formation.h"
 
-#include "core/calc.h"
 #include "Figure.h"
 #include "FigureAction.h"
 #include "Grid.h"
@@ -14,9 +13,11 @@
 #include "Data/Constants.h"
 #include "Data/Formation.h"
 #include "Data/Grid.h"
-#include "Data/Random.h"
 #include "Data/Settings.h"
 #include "Data/Figure.h"
+
+#include "core/calc.h"
+#include "core/random.h"
 
 static const int enemyAttackBuildingPriority[4][24] = {
 	{
@@ -428,7 +429,7 @@ static void setEnemyTargetBuilding(struct Data_Formation *m)
 {
 	int attack = m->attackType;
 	if (attack == FormationAttackType_Random) {
-		attack = Data_Random.random1_7bit & 3;
+		attack = random_byte() & 3;
 	}
 	int bestTypeIndex = 100;
 	int buildingId = 0;
@@ -786,7 +787,7 @@ static void tickUpdateEnemies()
 static int getHerdRoamingDestination(int formationId, int allowNegativeDesirability,
 	int x, int y, int distance, int direction, int *xTile, int *yTile)
 {
-	int targetDirection = (formationId + Data_Random.random1_7bit) & 6;
+	int targetDirection = (formationId + random_byte()) & 6;
 	if (direction) {
 		targetDirection = direction;
 		allowNegativeDesirability = 1;

@@ -2,7 +2,6 @@
 
 #include "CityView.h"
 #include "KeyboardInput.h"
-#include "Random.h"
 #include "Terrain.h"
 #include "UI/Warning.h"
 
@@ -11,6 +10,8 @@
 #include "Data/Screen.h"
 #include "Data/Settings.h"
 #include "Data/State.h"
+
+#include "core/random.h"
 
 void Loader_GameState_init()
 {
@@ -28,7 +29,7 @@ void Loader_GameState_init()
 	Data_Settings_Map.camera.y = 152;
 	CityView_checkCameraBoundaries();
 
-	Random_generatePool();
+	random_generate_pool();
 
 	Data_KeyboardInput.current = 0;
 	KeyboardInput_initTextField(1, Data_Settings.playerName, 25, 200, 0, Font_NormalWhite);
