@@ -10,6 +10,7 @@
 #include "Data/Constants.h"
 #include "Data/Settings.h"
 
+#include "building/count.h"
 #include "core/calc.h"
 #include "core/random.h"
 #include "game/time.h"
@@ -250,19 +251,19 @@ void CityInfo_Gods_calculateMoods(int updateMoods)
 		int numTemples = 0;
 		switch (i) {
 			case God_Ceres:
-				numTemples = Data_CityInfo_Buildings.smallTempleCeres.total + Data_CityInfo_Buildings.largeTempleCeres.total;
+				numTemples = building_count_total(BUILDING_SMALL_TEMPLE_CERES) + building_count_total(BUILDING_LARGE_TEMPLE_CERES);
 				break;
 			case God_Neptune:
-				numTemples = Data_CityInfo_Buildings.smallTempleNeptune.total + Data_CityInfo_Buildings.largeTempleNeptune.total;
+				numTemples = building_count_total(BUILDING_SMALL_TEMPLE_NEPTUNE) + building_count_total(BUILDING_LARGE_TEMPLE_NEPTUNE);
 				break;
 			case God_Mercury:
-				numTemples = Data_CityInfo_Buildings.smallTempleMercury.total + Data_CityInfo_Buildings.largeTempleMercury.total;
+				numTemples = building_count_total(BUILDING_SMALL_TEMPLE_MERCURY) + building_count_total(BUILDING_LARGE_TEMPLE_MERCURY);
 				break;
 			case God_Mars:
-				numTemples = Data_CityInfo_Buildings.smallTempleMars.total + Data_CityInfo_Buildings.largeTempleMars.total;
+				numTemples = building_count_total(BUILDING_SMALL_TEMPLE_MARS) + building_count_total(BUILDING_LARGE_TEMPLE_MARS);
 				break;
 			case God_Venus:
-				numTemples = Data_CityInfo_Buildings.smallTempleVenus.total + Data_CityInfo_Buildings.largeTempleVenus.total;
+				numTemples = building_count_total(BUILDING_SMALL_TEMPLE_VENUS) + building_count_total(BUILDING_LARGE_TEMPLE_VENUS);
 				break;
 		}
 		if (numTemples == maxTemples) {

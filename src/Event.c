@@ -22,6 +22,7 @@
 #include "Data/Settings.h"
 #include "Data/Tutorial.h"
 
+#include "building/count.h"
 #include "core/calc.h"
 #include "core/random.h"
 #include "empire/trade_prices.h"
@@ -560,7 +561,7 @@ void Event_handleGladiatorRevolt()
 	if (Data_Event.gladiatorRevolt.state == SpecialEvent_NotStarted) {
 		if (game_time_year() == Data_Event.gladiatorRevolt.gameYear &&
 			game_time_month() == Data_Event.gladiatorRevolt.month) {
-			if (Data_CityInfo_Buildings.gladiatorSchool.working > 0) {
+			if (building_count_active(BUILDING_GLADIATOR_SCHOOL) > 0) {
 				Data_Event.gladiatorRevolt.state = SpecialEvent_InProgress;
 				PlayerMessage_post(1, Message_63_GladiatorRevolt, 0, 0);
 			} else {

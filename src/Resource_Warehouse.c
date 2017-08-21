@@ -12,6 +12,7 @@
 #include "Data/Grid.h"
 #include "Data/Scenario.h"
 
+#include "building/count.h"
 #include "building/model.h"
 #include "empire/trade_prices.h"
 
@@ -490,7 +491,7 @@ int Resource_determineWarehouseWorkerTask(int buildingId, int *resource)
 		}
 	}
 	// deliver weapons to barracks
-	if (Data_CityInfo_Buildings.barracks.working > 0 && Data_CityInfo.militaryLegionaryLegions > 0 &&
+	if (building_count_active(BUILDING_BARRACKS) > 0 && Data_CityInfo.militaryLegionaryLegions > 0 &&
 		!Data_CityInfo.resourceStockpiled[Resource_Weapons]) {
 		int barracksId = Data_CityInfo.buildingBarracksBuildingId;
 		if (Data_Buildings[barracksId].loadsStored < 4 &&

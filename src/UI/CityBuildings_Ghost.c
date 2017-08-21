@@ -8,6 +8,7 @@
 
 #include "../Data/Formation.h"
 
+#include "building/count.h"
 #include "core/time.h"
 
 static void drawBuildingGhostDraggableReservoir();
@@ -220,7 +221,7 @@ static void drawBuildingGhostDefault()
 		fullyObstructed = 1;
 		placementObstructed = 1;
 	}
-	if (Data_State.selectedBuilding.type == BUILDING_BARRACKS && Data_CityInfo_Buildings.barracks.total) {
+	if (Data_State.selectedBuilding.type == BUILDING_BARRACKS && building_count_total(BUILDING_BARRACKS)) {
 		fullyObstructed = 1;
 		placementObstructed = 1;
 	}

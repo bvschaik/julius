@@ -12,6 +12,8 @@
 #include "Data/Grid.h"
 #include "Data/Scenario.h"
 
+#include "building/count.h"
+
 int Resource_getGraphicIdOffset(int resource, int type)
 {
 	if (resource == Resource_Meat && Data_Scenario.allowedBuildings.wharf) {
@@ -179,7 +181,7 @@ int Resource_getBarracksForWeapon(int xUnused, int yUnused, int resource, int ro
 	if (Data_CityInfo.resourceStockpiled[Resource_Weapons]) {
 		return 0;
 	}
-	if (Data_CityInfo_Buildings.barracks.working <= 0) {
+	if (building_count_active(BUILDING_BARRACKS) <= 0) {
 		return 0;
 	}
 	struct Data_Building *b = &Data_Buildings[Data_CityInfo.buildingBarracksBuildingId];

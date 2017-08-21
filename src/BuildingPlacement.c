@@ -29,6 +29,7 @@
 #include "Data/State.h"
 #include "Data/Figure.h"
 
+#include "building/count.h"
 #include "building/model.h"
 #include "core/random.h"
 
@@ -667,7 +668,7 @@ static int placeBuilding(int type, int x, int y)
 		UI_Warning_show(Warning_OneBuildingOfType);
 		return 0;
 	}
-	if (type == BUILDING_BARRACKS && Data_CityInfo_Buildings.barracks.total > 0) {
+	if (type == BUILDING_BARRACKS && building_count_total(BUILDING_BARRACKS) > 0) {
 		UI_Warning_show(Warning_OneBuildingOfType);
 		return 0;
 	}
@@ -1234,7 +1235,7 @@ void BuildingPlacement_update(int xStart, int yStart, int xEnd, int yEnd, int ty
 		Terrain_allTilesWithinRadiusHaveType(xEnd, yEnd, 2, 0, Terrain_Wall);
 	} else {
 		if (!(type == BUILDING_SENATE_UPGRADED && Data_CityInfo.buildingSenatePlaced) &&
-			!(type == BUILDING_BARRACKS && Data_CityInfo_Buildings.barracks.total > 0) &&
+			!(type == BUILDING_BARRACKS && building_count_total(BUILDING_BARRACKS) > 0) &&
 			!(type == BUILDING_DISTRIBUTION_CENTER_UNUSED && Data_CityInfo.buildingDistributionCenterPlaced)) {
 			int size = Constant_BuildingProperties[type].size;
 			Terrain_updateToPlaceBuildingToOverlay(size, xEnd, yEnd, Terrain_All, 0);

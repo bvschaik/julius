@@ -8,6 +8,7 @@
 #include "Data/CityInfo.h"
 #include "Data/Screen.h"
 
+#include "building/count.h"
 #include "core/io.h"
 #include "game/time.h"
 
@@ -278,7 +279,7 @@ int Empire_canImportResourceFromCity(int cityId, int resource)
 			break;
 	}
 	if (finishedGood) {
-		maxInStock = 2 + 2 * Data_CityInfo_Buildings.industry.working[finishedGood];
+		maxInStock = 2 + 2 * building_count_industry_active(finishedGood);
 	}
 	return inStock < maxInStock ? 1 : 0;
 }

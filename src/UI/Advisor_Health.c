@@ -1,5 +1,7 @@
 #include "Advisors_private.h"
 
+#include "building/count.h"
+
 void UI_Advisor_Health_drawBackground(int *advisorHeight)
 {
 	int baseOffsetX = Data_Screen.offset640x480.x;
@@ -30,11 +32,11 @@ void UI_Advisor_Health_drawBackground(int *advisorHeight)
 
 	// bathhouses
 	Widget_GameText_drawNumberWithDescription(8, 24,
-		Data_CityInfo_Buildings.bathhouse.total,
+		building_count_total(BUILDING_BATHHOUSE),
 		baseOffsetX + 40, baseOffsetY + 112, Font_NormalGreen
 	);
 	Widget_Text_drawNumberCentered(
-		Data_CityInfo_Buildings.bathhouse.working, '@', " ",
+		building_count_active(BUILDING_BATHHOUSE), '@', " ",
 		baseOffsetX + 150, baseOffsetY + 112, 100, Font_NormalGreen
 	);
 	Widget_GameText_draw(56, 2, baseOffsetX + 300, baseOffsetY + 112, Font_NormalGreen);
@@ -42,11 +44,11 @@ void UI_Advisor_Health_drawBackground(int *advisorHeight)
 
 	// barbers
 	Widget_GameText_drawNumberWithDescription(8, 26,
-		Data_CityInfo_Buildings.barber.total,
+		building_count_total(BUILDING_BARBER),
 		baseOffsetX + 40, baseOffsetY + 132, Font_NormalGreen
 	);
 	Widget_Text_drawNumberCentered(
-		Data_CityInfo_Buildings.barber.working, '@', " ",
+		building_count_active(BUILDING_BARBER), '@', " ",
 		baseOffsetX + 150, baseOffsetY + 132, 100, Font_NormalGreen
 	);
 	Widget_GameText_draw(56, 2, baseOffsetX + 300, baseOffsetY + 132, Font_NormalGreen);
@@ -54,11 +56,11 @@ void UI_Advisor_Health_drawBackground(int *advisorHeight)
 
 	// clinics
 	Widget_GameText_drawNumberWithDescription(8, 28,
-		Data_CityInfo_Buildings.clinic.total,
+		building_count_total(BUILDING_DOCTOR),
 		baseOffsetX + 40, baseOffsetY + 152, Font_NormalGreen
 	);
 	Widget_Text_drawNumberCentered(
-		Data_CityInfo_Buildings.clinic.working, '@', " ",
+		building_count_active(BUILDING_DOCTOR), '@', " ",
 		baseOffsetX + 150, baseOffsetY + 152, 100, Font_NormalGreen
 	);
 	Widget_GameText_draw(56, 2, baseOffsetX + 300, baseOffsetY + 152, Font_NormalGreen);
@@ -66,16 +68,16 @@ void UI_Advisor_Health_drawBackground(int *advisorHeight)
 
 	// hospitals
 	Widget_GameText_drawNumberWithDescription(8, 30,
-		Data_CityInfo_Buildings.hospital.total,
+		building_count_total(BUILDING_HOSPITAL),
 		baseOffsetX + 40, baseOffsetY + 172, Font_NormalGreen
 	);
 	Widget_Text_drawNumberCentered(
-		Data_CityInfo_Buildings.hospital.working, '@', " ",
+		building_count_active(BUILDING_HOSPITAL), '@', " ",
 		baseOffsetX + 150, baseOffsetY + 172, 100, Font_NormalGreen
 	);
 
 	int width = Widget_Text_drawNumber(
-		1000 * Data_CityInfo_Buildings.hospital.working,
+		1000 * building_count_active(BUILDING_HOSPITAL),
 		'@', " ", baseOffsetX + 280, baseOffsetY + 172, Font_NormalGreen
 	);
 	Widget_GameText_draw(56, 6, baseOffsetX + 280 + width, baseOffsetY + 172, Font_NormalGreen);

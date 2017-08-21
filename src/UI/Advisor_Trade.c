@@ -10,6 +10,7 @@
 #include "../Data/Mouse.h"
 #include "../Data/Scenario.h"
 
+#include "building/count.h"
 #include "core/calc.h"
 #include "empire/trade_prices.h"
 
@@ -239,24 +240,25 @@ void UI_ResourceSettingsDialog_drawForeground()
 	Widget_GameText_draw(23, selectedResourceId, baseOffsetX + 92, baseOffsetY + 137, Font_LargeBlack);
 
 	if (Empire_ourCityCanProduceResource(selectedResourceId)) {
-		if (Data_CityInfo_Buildings.industry.total[selectedResourceId] <= 0) {
+        int totalBuildings = building_count_industry_total(selectedResourceId);
+        int activeBuildings = building_count_industry_active(selectedResourceId);
+		if (building_count_industry_total(selectedResourceId) <= 0) {
 			Widget_GameText_draw(54, 7, baseOffsetX + 98, baseOffsetY + 172, Font_NormalBlack);
 		} else if (Data_CityInfo.resourceIndustryMothballed[selectedResourceId] == 1) {
 			int width = Widget_Text_drawNumber(
-				Data_CityInfo_Buildings.industry.total[selectedResourceId], '@', " ",
+				totalBuildings, '@', " ",
 				baseOffsetX + 98, baseOffsetY + 172, Font_NormalBlack);
-			if (Data_CityInfo_Buildings.industry.total[selectedResourceId] == 1) {
+			if (totalBuildings == 1) {
 				Widget_GameText_draw(54, 10, baseOffsetX + 98 + width, baseOffsetY + 172, Font_NormalBlack);
 			} else {
 				Widget_GameText_draw(54, 11, baseOffsetX + 98 + width, baseOffsetY + 172, Font_NormalBlack);
 			}
-		} else if (Data_CityInfo_Buildings.industry.total[selectedResourceId] ==
-			Data_CityInfo_Buildings.industry.working[selectedResourceId]) {
+		} else if (totalBuildings == activeBuildings) {
 			// not mothballed, all working
 			int width = Widget_Text_drawNumber(
-				Data_CityInfo_Buildings.industry.total[selectedResourceId], '@', " ",
+				totalBuildings, '@', " ",
 				baseOffsetX + 98, baseOffsetY + 172, Font_NormalBlack);
-			if (Data_CityInfo_Buildings.industry.total[selectedResourceId] == 1) {
+			if (totalBuildings == 1) {
 				Widget_GameText_draw(54, 8, baseOffsetX + 98 + width, baseOffsetY + 172, Font_NormalBlack);
 			} else {
 				Widget_GameText_draw(54, 9, baseOffsetX + 98 + width, baseOffsetY + 172, Font_NormalBlack);
@@ -264,14 +266,14 @@ void UI_ResourceSettingsDialog_drawForeground()
 		} else {
 			// not mothballed, some working
 			int width = Widget_Text_drawNumber(
-				Data_CityInfo_Buildings.industry.working[selectedResourceId], '@', " ",
+				activeBuildings, '@', " ",
 				baseOffsetX + 98, baseOffsetY + 172, Font_NormalBlack);
 			width += Widget_GameText_draw(54, 12, baseOffsetX + 98 + width, baseOffsetY + 172, Font_NormalBlack);
 			width += Widget_Text_drawNumber(
-				Data_CityInfo_Buildings.industry.total[selectedResourceId] -
-				Data_CityInfo_Buildings.industry.working[selectedResourceId], '@', " ",
+				totalBuildings -
+				activeBuildings, '@', " ",
 				baseOffsetX + 98 + width, baseOffsetY + 172, Font_NormalBlack);
-			if (Data_CityInfo_Buildings.industry.working[selectedResourceId] == 1) {
+			if (activeBuildings == 1) {
 				Widget_GameText_draw(54, 13, baseOffsetX + 98 + width, baseOffsetY + 172, Font_NormalBlack);
 			} else {
 				Widget_GameText_draw(54, 14, baseOffsetX + 98 + width, baseOffsetY + 172, Font_NormalBlack);
@@ -321,7 +323,7 @@ void UI_ResourceSettingsDialog_drawForeground()
 			baseOffsetX + 386, baseOffsetY + 221, Font_NormalBlack);
 	}
 
-	if (Data_CityInfo_Buildings.industry.total[selectedResourceId] > 0) {
+	if (building_count_industry_total(selectedResourceId) > 0) {
 		Widget_Panel_drawButtonBorder(baseOffsetX + 98, baseOffsetY + 250, 432, 30,
 			resourceFocusButtonId == 1);
 		if (Data_CityInfo.resourceIndustryMothballed[selectedResourceId]) {
@@ -388,7 +390,7 @@ static void resourceSettingsExportUpDown(int isDown, int param2)
 
 static void resourceSettingsToggleIndustry(int param1, int param2)
 {
-	if (Data_CityInfo_Buildings.industry.total[selectedResourceId] > 0) {
+	if (building_count_industry_total(selectedResourceId) > 0) {
 		if (Data_CityInfo.resourceIndustryMothballed[selectedResourceId]) {
 			Data_CityInfo.resourceIndustryMothballed[selectedResourceId] = 0;
 		} else {

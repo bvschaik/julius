@@ -2,6 +2,8 @@
 #include "Advisors_private.h"
 #include "../CityInfo.h"
 
+#include "building/count.h"
+
 static void drawFestivalBackground();
 
 static void buttonHoldFestival(int param1, int param2);
@@ -40,16 +42,16 @@ void UI_Advisor_Entertainment_drawBackground(int *advisorHeight)
 	Widget_Panel_drawInnerPanel(baseOffsetX + 32, baseOffsetY + 60, 36, 5);
 
 	// theaters
-	Widget_GameText_drawNumberWithDescription(8, 34, Data_CityInfo_Buildings.theater.total,
+	Widget_GameText_drawNumberWithDescription(8, 34, building_count_total(BUILDING_THEATER),
 		baseOffsetX + 40, baseOffsetY + 64, Font_NormalWhite
 	);
-	Widget_Text_drawNumberCentered(Data_CityInfo_Buildings.theater.working, '@', " ",
+	Widget_Text_drawNumberCentered(building_count_active(BUILDING_THEATER), '@', " ",
 		baseOffsetX + 150, baseOffsetY + 64, 100, Font_NormalWhite
 	);
 	Widget_Text_drawNumberCentered(Data_CityInfo.entertainmentTheaterShows, '@', " ",
 		baseOffsetX + 230, baseOffsetY + 64, 100, Font_NormalWhite
 	);
-	int width = Widget_Text_drawNumber(500 * Data_CityInfo_Buildings.theater.working, '@', " ",
+	int width = Widget_Text_drawNumber(500 * building_count_active(BUILDING_THEATER), '@', " ",
 		baseOffsetX + 340, baseOffsetY + 64, Font_NormalWhite
 	);
 	Widget_GameText_draw(58, 5, baseOffsetX + 340 + width, baseOffsetY + 64, Font_NormalWhite);
@@ -64,16 +66,16 @@ void UI_Advisor_Entertainment_drawBackground(int *advisorHeight)
 	}
 
 	// amphitheaters
-	Widget_GameText_drawNumberWithDescription(8, 36, Data_CityInfo_Buildings.amphitheater.total,
+	Widget_GameText_drawNumberWithDescription(8, 36, building_count_total(BUILDING_AMPHITHEATER),
 		baseOffsetX + 40, baseOffsetY + 84, Font_NormalWhite
 	);
-	Widget_Text_drawNumberCentered(Data_CityInfo_Buildings.amphitheater.working, '@', " ",
+	Widget_Text_drawNumberCentered(building_count_active(BUILDING_AMPHITHEATER), '@', " ",
 		baseOffsetX + 150, baseOffsetY + 84, 100, Font_NormalWhite
 	);
 	Widget_Text_drawNumberCentered(Data_CityInfo.entertainmentAmphitheaterShows, '@', " ",
 		baseOffsetX + 230, baseOffsetY + 84, 100, Font_NormalWhite
 	);
-	width = Widget_Text_drawNumber(800 * Data_CityInfo_Buildings.amphitheater.working, '@', " ",
+	width = Widget_Text_drawNumber(800 * building_count_active(BUILDING_AMPHITHEATER), '@', " ",
 		baseOffsetX + 340, baseOffsetY + 84, Font_NormalWhite
 	);
 	Widget_GameText_draw(58, 5, baseOffsetX + 340 + width, baseOffsetY + 84, Font_NormalWhite);
@@ -88,16 +90,16 @@ void UI_Advisor_Entertainment_drawBackground(int *advisorHeight)
 	}
 
 	// colosseums
-	Widget_GameText_drawNumberWithDescription(8, 38, Data_CityInfo_Buildings.colosseum.total,
+	Widget_GameText_drawNumberWithDescription(8, 38, building_count_total(BUILDING_COLOSSEUM),
 		baseOffsetX + 40, baseOffsetY + 104, Font_NormalWhite
 	);
-	Widget_Text_drawNumberCentered(Data_CityInfo_Buildings.colosseum.working, '@', " ",
+	Widget_Text_drawNumberCentered(building_count_active(BUILDING_COLOSSEUM), '@', " ",
 		baseOffsetX + 150, baseOffsetY + 104, 100, Font_NormalWhite
 	);
 	Widget_Text_drawNumberCentered(Data_CityInfo.entertainmentColosseumShows, '@', " ",
 		baseOffsetX + 230, baseOffsetY + 104, 100, Font_NormalWhite
 	);
-	width = Widget_Text_drawNumber(1500 * Data_CityInfo_Buildings.colosseum.working, '@', " ",
+	width = Widget_Text_drawNumber(1500 * building_count_active(BUILDING_COLOSSEUM), '@', " ",
 		baseOffsetX + 340, baseOffsetY + 104, Font_NormalWhite
 	);
 	Widget_GameText_draw(58, 5, baseOffsetX + 340 + width, baseOffsetY + 104, Font_NormalWhite);
@@ -112,10 +114,10 @@ void UI_Advisor_Entertainment_drawBackground(int *advisorHeight)
 	}
 
 	// hippodromes
-	Widget_GameText_drawNumberWithDescription(8, 40, Data_CityInfo_Buildings.hippodrome.total,
+	Widget_GameText_drawNumberWithDescription(8, 40, building_count_total(BUILDING_HIPPODROME),
 		baseOffsetX + 40, baseOffsetY + 123, Font_NormalWhite
 	);
-	Widget_Text_drawNumberCentered(Data_CityInfo_Buildings.hippodrome.working, '@', " ",
+	Widget_Text_drawNumberCentered(building_count_active(BUILDING_HIPPODROME), '@', " ",
 		baseOffsetX + 150, baseOffsetY + 123, 100, Font_NormalWhite
 	);
 	Widget_Text_drawNumberCentered(Data_CityInfo.entertainmentHippodromeShows, '@', " ",

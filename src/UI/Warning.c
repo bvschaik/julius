@@ -16,6 +16,7 @@
 #include "../Data/Screen.h"
 #include "../Data/Settings.h"
 
+#include "building/count.h"
 #include "building/model.h"
 #include "core/lang.h"
 #include "core/time.h"
@@ -199,7 +200,7 @@ void UI_Warning_checkFoodStocks(int buildingType)
 void UI_Warning_checkReservoirWater(int buildingType)
 {
 	if (!hasWarningAlready && buildingType == BUILDING_RESERVOIR) {
-		if (Data_CityInfo_Buildings.reservoir.working) {
+		if (building_count_active(BUILDING_RESERVOIR)) {
 			UI_Warning_show(Warning_ConnectToReservoir);
 		} else {
 			UI_Warning_show(Warning_PlaceReservoirNextToWater);
@@ -276,7 +277,7 @@ static void checkWorkers(int buildingType)
 static void checkMarket(int buildingType)
 {
 	if (!hasWarningAlready && buildingType == BUILDING_GRANARY) {
-		if (Data_CityInfo_Buildings.market.working <= 0) {
+		if (building_count_active(BUILDING_MARKET) <= 0) {
 			UI_Warning_show(Warning_BuildMarket);
 		}
 	}
@@ -288,7 +289,7 @@ static void checkBarracks(int buildingType)
 		if (buildingType == BUILDING_FORT_JAVELIN ||
 			buildingType == BUILDING_FORT_LEGIONARIES ||
 			buildingType == BUILDING_FORT_MOUNTED) {
-			if (Data_CityInfo_Buildings.barracks.working <= 0) {
+			if (building_count_active(BUILDING_BARRACKS) <= 0) {
 				UI_Warning_show(Warning_BuildBarracks);
 			}
 		}
@@ -316,7 +317,7 @@ static void checkWall(int buildingType, int x, int y, int size)
 static void checkActorAccess(int buildingType)
 {
 	if (!hasWarningAlready && buildingType == BUILDING_THEATER) {
-		if (Data_CityInfo_Buildings.actorColony.working <= 0) {
+		if (building_count_active(BUILDING_ACTOR_COLONY) <= 0) {
 			UI_Warning_show(Warning_BuildActorColony);
 		}
 	}
@@ -325,7 +326,7 @@ static void checkActorAccess(int buildingType)
 static void checkGladiatorAccess(int buildingType)
 {
 	if (!hasWarningAlready && buildingType == BUILDING_AMPHITHEATER) {
-		if (Data_CityInfo_Buildings.gladiatorSchool.working <= 0) {
+		if (building_count_active(BUILDING_GLADIATOR_SCHOOL) <= 0) {
 			UI_Warning_show(Warning_BuildGladiatorSchool);
 		}
 	}
@@ -334,7 +335,7 @@ static void checkGladiatorAccess(int buildingType)
 static void checkLionAccess(int buildingType)
 {
 	if (!hasWarningAlready && buildingType == BUILDING_COLOSSEUM) {
-		if (Data_CityInfo_Buildings.lionHouse.working <= 0) {
+		if (building_count_active(BUILDING_LION_HOUSE) <= 0) {
 			UI_Warning_show(Warning_BuildLionHouse);
 		}
 	}
@@ -343,7 +344,7 @@ static void checkLionAccess(int buildingType)
 static void checkCharioteerAccess(int buildingType)
 {
 	if (!hasWarningAlready && buildingType == BUILDING_HIPPODROME) {
-		if (Data_CityInfo_Buildings.chariotMaker.working <= 0) {
+		if (building_count_active(BUILDING_CHARIOT_MAKER) <= 0) {
 			UI_Warning_show(Warning_BuildChariotMaker);
 		}
 	}
@@ -352,7 +353,7 @@ static void checkCharioteerAccess(int buildingType)
 static void checkIronAccess(int buildingType)
 {
 	if (buildingType == BUILDING_WEAPONS_WORKSHOP &&
-		Data_CityInfo_Buildings.industry.working[Resource_Iron] <= 0) {
+		building_count_industry_active(RESOURCE_IRON) <= 0) {
 		if (Data_CityInfo.resourceStored[Resource_Weapons] <= 0 &&
 			Data_CityInfo.resourceStored[Resource_Iron] <= 0) {
 			UI_Warning_show(Warning_IronNeeded);
@@ -370,7 +371,7 @@ static void checkIronAccess(int buildingType)
 static void checkVinesAccess(int buildingType)
 {
 	if (buildingType == BUILDING_WINE_WORKSHOP &&
-		Data_CityInfo_Buildings.industry.working[Resource_Vines] <= 0) {
+		building_count_industry_active(RESOURCE_VINES) <= 0) {
 		if (Data_CityInfo.resourceStored[Resource_Wine] <= 0 &&
 			Data_CityInfo.resourceStored[Resource_Vines] <= 0) {
 			UI_Warning_show(Warning_VinesNeeded);
@@ -388,7 +389,7 @@ static void checkVinesAccess(int buildingType)
 static void checkOlivesAccess(int buildingType)
 {
 	if (buildingType == BUILDING_OIL_WORKSHOP &&
-		Data_CityInfo_Buildings.industry.working[Resource_Olives] <= 0) {
+		building_count_industry_active(RESOURCE_OLIVES) <= 0) {
 		if (Data_CityInfo.resourceStored[Resource_Oil] <= 0 &&
 			Data_CityInfo.resourceStored[Resource_Olives] <= 0) {
 			UI_Warning_show(Warning_OlivesNeeded);
@@ -406,7 +407,7 @@ static void checkOlivesAccess(int buildingType)
 static void checkTimberAccess(int buildingType)
 {
 	if (buildingType == BUILDING_FURNITURE_WORKSHOP &&
-		Data_CityInfo_Buildings.industry.working[Resource_Timber] <= 0) {
+		building_count_industry_active(RESOURCE_TIMBER) <= 0) {
 		if (Data_CityInfo.resourceStored[Resource_Furniture] <= 0 &&
 			Data_CityInfo.resourceStored[Resource_Timber] <= 0) {
 			UI_Warning_show(Warning_TimberNeeded);
@@ -424,7 +425,7 @@ static void checkTimberAccess(int buildingType)
 static void checkClayAccess(int buildingType)
 {
 	if (buildingType == BUILDING_POTTERY_WORKSHOP &&
-		Data_CityInfo_Buildings.industry.working[Resource_Clay] <= 0) {
+		building_count_industry_active(RESOURCE_CLAY) <= 0) {
 		if (Data_CityInfo.resourceStored[Resource_Pottery] <= 0 &&
 			Data_CityInfo.resourceStored[Resource_Clay] <= 0) {
 			UI_Warning_show(Warning_ClayNeeded);

@@ -123,6 +123,12 @@ void verify_##f##_times(int times)\
         testsuite_record_fail(&testsuite, "FAIL: expected call %d calls to '"#f"', recorded %d\n", times, total);\
     }\
 }\
+int count_##f args\
+{\
+    int total = 0;\
+    _MOCK_WALK_CALLS(f, actual, total++, checks)\
+    return total;\
+}\
 _VMOCK_RESET(f)
 
 
@@ -222,6 +228,12 @@ void verify_##f##_times(int times)\
     if (total != times) {\
         testsuite_record_fail(&testsuite, "FAIL: expected call %d calls to '"#f"', recorded %d\n", times, total);\
     }\
+}\
+int count_##f args\
+{\
+    int total = 0;\
+    _MOCK_WALK_CALLS(f, actual, total++, checks)\
+    return total;\
 }\
 _MOCK_RESET(f)
 

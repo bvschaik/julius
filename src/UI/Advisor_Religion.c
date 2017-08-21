@@ -2,6 +2,8 @@
 #include "../Data/Settings.h"
 #include "../CityInfo.h"
 
+#include "building/count.h"
+
 void UI_Advisor_Religion_drawBackground(int *advisorHeight)
 {
 	int baseOffsetX = Data_Screen.offset640x480.x;
@@ -40,11 +42,11 @@ void UI_Advisor_Religion_drawBackground(int *advisorHeight)
 	Widget_GameText_draw(59, 11, baseOffsetX + 40, baseOffsetY + 66, Font_NormalWhite);
 	Widget_GameText_draw(59, 16, baseOffsetX + 120, baseOffsetY + 67, Font_SmallPlain);
 	Widget_Text_drawNumberCentered(
-		Data_CityInfo_Buildings.smallTempleCeres.total, '@', " ",
+		building_count_total(BUILDING_SMALL_TEMPLE_CERES), '@', " ",
 		baseOffsetX + 230, baseOffsetY + 66, 50, Font_NormalWhite
 	);
 	Widget_Text_drawNumberCentered(
-		Data_CityInfo_Buildings.largeTempleCeres.total, '@', " ",
+		building_count_total(BUILDING_LARGE_TEMPLE_CERES), '@', " ",
 		baseOffsetX + 290, baseOffsetY + 66, 50, Font_NormalWhite
 	);
 	Widget_Text_drawNumberCentered(
@@ -64,11 +66,11 @@ void UI_Advisor_Religion_drawBackground(int *advisorHeight)
 	Widget_GameText_draw(59, 12, baseOffsetX + 40, baseOffsetY + 86, Font_NormalWhite);
 	Widget_GameText_draw(59, 17, baseOffsetX + 120, baseOffsetY + 87, Font_SmallPlain);
 	Widget_Text_drawNumberCentered(
-		Data_CityInfo_Buildings.smallTempleNeptune.total, '@', " ",
+		building_count_total(BUILDING_SMALL_TEMPLE_NEPTUNE), '@', " ",
 		baseOffsetX + 230, baseOffsetY + 86, 50, Font_NormalWhite
 	);
 	Widget_Text_drawNumberCentered(
-		Data_CityInfo_Buildings.largeTempleNeptune.total, '@', " ",
+		building_count_total(BUILDING_LARGE_TEMPLE_NEPTUNE), '@', " ",
 		baseOffsetX + 290, baseOffsetY + 86, 50, Font_NormalWhite
 	);
 	Widget_Text_drawNumberCentered(
@@ -88,11 +90,11 @@ void UI_Advisor_Religion_drawBackground(int *advisorHeight)
 	Widget_GameText_draw(59, 13, baseOffsetX + 40, baseOffsetY + 106, Font_NormalWhite);
 	Widget_GameText_draw(59, 18, baseOffsetX + 120, baseOffsetY + 107, Font_SmallPlain);
 	Widget_Text_drawNumberCentered(
-		Data_CityInfo_Buildings.smallTempleMercury.total, '@', " ",
+		building_count_total(BUILDING_SMALL_TEMPLE_MERCURY), '@', " ",
 		baseOffsetX + 230, baseOffsetY + 106, 50, Font_NormalWhite
 	);
 	Widget_Text_drawNumberCentered(
-		Data_CityInfo_Buildings.largeTempleMercury.total, '@', " ",
+		building_count_total(BUILDING_LARGE_TEMPLE_MERCURY), '@', " ",
 		baseOffsetX + 290, baseOffsetY + 106, 50, Font_NormalWhite
 	);
 	Widget_Text_drawNumberCentered(
@@ -112,11 +114,11 @@ void UI_Advisor_Religion_drawBackground(int *advisorHeight)
 	Widget_GameText_draw(59, 14, baseOffsetX + 40, baseOffsetY + 126, Font_NormalWhite);
 	Widget_GameText_draw(59, 19, baseOffsetX + 120, baseOffsetY + 127, Font_SmallPlain);
 	Widget_Text_drawNumberCentered(
-		Data_CityInfo_Buildings.smallTempleMars.total, '@', " ",
+		building_count_total(BUILDING_SMALL_TEMPLE_MARS), '@', " ",
 		baseOffsetX + 230, baseOffsetY + 126, 50, Font_NormalWhite
 	);
 	Widget_Text_drawNumberCentered(
-		Data_CityInfo_Buildings.largeTempleMars.total, '@', " ",
+		building_count_total(BUILDING_LARGE_TEMPLE_MARS), '@', " ",
 		baseOffsetX + 290, baseOffsetY + 126, 50, Font_NormalWhite
 	);
 	Widget_Text_drawNumberCentered(
@@ -136,11 +138,11 @@ void UI_Advisor_Religion_drawBackground(int *advisorHeight)
 	Widget_GameText_draw(59, 15, baseOffsetX + 40, baseOffsetY + 146, Font_NormalWhite);
 	Widget_GameText_draw(59, 20, baseOffsetX + 120, baseOffsetY + 147, Font_SmallPlain);
 	Widget_Text_drawNumberCentered(
-		Data_CityInfo_Buildings.smallTempleVenus.total, '@', " ",
+		building_count_total(BUILDING_SMALL_TEMPLE_VENUS), '@', " ",
 		baseOffsetX + 230, baseOffsetY + 146, 50, Font_NormalWhite
 	);
 	Widget_Text_drawNumberCentered(
-		Data_CityInfo_Buildings.largeTempleVenus.total, '@', " ",
+		building_count_total(BUILDING_LARGE_TEMPLE_VENUS), '@', " ",
 		baseOffsetX + 290, baseOffsetY + 146, 50, Font_NormalWhite
 	);
 	Widget_Text_drawNumberCentered(
@@ -159,7 +161,7 @@ void UI_Advisor_Religion_drawBackground(int *advisorHeight)
 	// oracles
 	Widget_GameText_draw(59, 8, baseOffsetX + 40, baseOffsetY + 166, Font_NormalWhite);
 	Widget_Text_drawNumberCentered(
-		Data_CityInfo_Buildings.oracle.total, '@', " ",
+		building_count_total(BUILDING_ORACLE), '@', " ",
 		baseOffsetX + 230, baseOffsetY + 166, 50, Font_NormalWhite
 	);
 	

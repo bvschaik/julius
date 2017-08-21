@@ -21,6 +21,7 @@ set(CORE_FILES
     src/core/zip.c
 )
 set (BUILDING_FILES
+    src/building/count.c
     src/building/model.c
 )
 set (EMPIRE_FILES

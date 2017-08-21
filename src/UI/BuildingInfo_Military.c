@@ -1,6 +1,5 @@
 #include "BuildingInfo.h"
 
-#include "core/calc.h"
 #include "../Formation.h"
 #include "../Graphics.h"
 #include "../Sound.h"
@@ -14,6 +13,9 @@
 #include "../Data/Formation.h"
 #include "../Data/Settings.h"
 #include "../Data/State.h"
+
+#include "building/count.h"
+#include "core/calc.h"
 
 static void buttonReturnToFort(int param1, int param2);
 static void buttonLayout(int param1, int param2);
@@ -297,7 +299,7 @@ void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)
 		// no soldiers
 		if (m->cursedByMars) {
 			groupId = 89; textId = 1;
-		} else if (Data_CityInfo_Buildings.barracks.working) {
+		} else if (building_count_active(BUILDING_BARRACKS)) {
 			groupId = 138; textId = 10;
 		} else {
 			groupId = 138; textId = 11;

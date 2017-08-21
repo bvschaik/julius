@@ -33,6 +33,7 @@
 #include "Data/Figure.h"
 #include "Data/Figure.h"
 
+#include "building/count.h"
 #include "core/buffer.h"
 #include "core/file.h"
 #include "core/io.h"
@@ -141,39 +142,7 @@ typedef struct {
     buffer *random_iv;
     buffer *Data_Settings_Map_camera_x;
     buffer *Data_Settings_Map_camera_y;
-    buffer *Data_CityInfo_Buildings_theater_total;
-    buffer *Data_CityInfo_Buildings_theater_working;
-    buffer *Data_CityInfo_Buildings_amphitheater_total;
-    buffer *Data_CityInfo_Buildings_amphitheater_working;
-    buffer *Data_CityInfo_Buildings_colosseum_total;
-    buffer *Data_CityInfo_Buildings_colosseum_working;
-    buffer *Data_CityInfo_Buildings_hippodrome_total;
-    buffer *Data_CityInfo_Buildings_hippodrome_working;
-    buffer *Data_CityInfo_Buildings_school_total;
-    buffer *Data_CityInfo_Buildings_school_working;
-    buffer *Data_CityInfo_Buildings_library_total;
-    buffer *Data_CityInfo_Buildings_library_working;
-    buffer *Data_CityInfo_Buildings_academy_total;
-    buffer *Data_CityInfo_Buildings_academy_working;
-    buffer *Data_CityInfo_Buildings_barber_total;
-    buffer *Data_CityInfo_Buildings_barber_working;
-    buffer *Data_CityInfo_Buildings_bathhouse_total;
-    buffer *Data_CityInfo_Buildings_bathhouse_working;
-    buffer *Data_CityInfo_Buildings_clinic_total;
-    buffer *Data_CityInfo_Buildings_clinic_working;
-    buffer *Data_CityInfo_Buildings_hospital_total;
-    buffer *Data_CityInfo_Buildings_hospital_working;
-    buffer *Data_CityInfo_Buildings_smallTempleCeres_total;
-    buffer *Data_CityInfo_Buildings_smallTempleNeptune_total;
-    buffer *Data_CityInfo_Buildings_smallTempleMercury_total;
-    buffer *Data_CityInfo_Buildings_smallTempleMars_total;
-    buffer *Data_CityInfo_Buildings_smallTempleVenus_total;
-    buffer *Data_CityInfo_Buildings_largeTempleCeres_total;
-    buffer *Data_CityInfo_Buildings_largeTempleNeptune_total;
-    buffer *Data_CityInfo_Buildings_largeTempleMercury_total;
-    buffer *Data_CityInfo_Buildings_largeTempleMars_total;
-    buffer *Data_CityInfo_Buildings_largeTempleVenus_total;
-    buffer *Data_CityInfo_Buildings_oracle_total;
+    buffer *building_count_culture1;
     buffer *Data_CityInfo_Extra_populationGraphOrder;
     buffer *Data_CityInfo_Extra_unknownOrder;
     buffer *Data_Event_emperorChange_gameYear;
@@ -182,8 +151,7 @@ typedef struct {
     buffer *Data_Empire_scrollY;
     buffer *Data_Empire_selectedObject;
     buffer *Data_Empire_Cities;
-    buffer *Data_CityInfo_Buildings_industry_total;
-    buffer *Data_CityInfo_Buildings_industry_working;
+    buffer *building_count_industry;
     buffer *trade_prices;
     buffer *figure_names;
     buffer *Data_CityInfo_CultureCoverage_theater;
@@ -242,30 +210,15 @@ typedef struct {
     buffer *Data_Tutorial_tutorial1_senateBuilt;
     buffer *Data_Tutorial_tutorial2_population450Reached;
     buffer *Data_Tutorial_tutorial2_potteryMade;
-    buffer *Data_CityInfo_Buildings_militaryAcademy_total;
-    buffer *Data_CityInfo_Buildings_militaryAcademy_working;
-    buffer *Data_CityInfo_Buildings_barracks_total;
-    buffer *Data_CityInfo_Buildings_barracks_working;
+    buffer *building_count_military;
     buffer *Data_Formation_Extra_numEnemyFormations;
     buffer *Data_Formation_Extra_numEnemySoldierStrength;
     buffer *Data_Formation_Extra_numLegionFormations;
     buffer *Data_Formation_Extra_numLegionSoldierStrength;
     buffer *Data_Formation_Extra_daysSinceRomanSoldierConcentration;
     buffer *Data_Building_Storages;
-    buffer *Data_CityInfo_Buildings_actorColony_total;
-    buffer *Data_CityInfo_Buildings_actorColony_working;
-    buffer *Data_CityInfo_Buildings_gladiatorSchool_total;
-    buffer *Data_CityInfo_Buildings_gladiatorSchool_working;
-    buffer *Data_CityInfo_Buildings_lionHouse_total;
-    buffer *Data_CityInfo_Buildings_lionHouse_working;
-    buffer *Data_CityInfo_Buildings_chariotMaker_total;
-    buffer *Data_CityInfo_Buildings_chariotMaker_working;
-    buffer *Data_CityInfo_Buildings_market_total;
-    buffer *Data_CityInfo_Buildings_market_working;
-    buffer *Data_CityInfo_Buildings_reservoir_total;
-    buffer *Data_CityInfo_Buildings_reservoir_working;
-    buffer *Data_CityInfo_Buildings_fountain_total;
-    buffer *Data_CityInfo_Buildings_fountain_working;
+    buffer *building_count_culture2;
+    buffer *building_count_support;
     buffer *Data_Tutorial_tutorial2_potteryMadeYear;
     buffer *Data_Event_gladiatorRevolt_gameYear;
     buffer *Data_Event_gladiatorRevolt_month;
@@ -279,16 +232,7 @@ typedef struct {
     buffer *Data_Routes_enemyRoutesCalculated;
     buffer *Data_Routes_totalRoutesCalculated;
     buffer *Data_Routes_unknown2RoutesCalculated;
-    buffer *Data_CityInfo_Buildings_smallTempleCeres_working;
-    buffer *Data_CityInfo_Buildings_smallTempleNeptune_working;
-    buffer *Data_CityInfo_Buildings_smallTempleMercury_working;
-    buffer *Data_CityInfo_Buildings_smallTempleMars_working;
-    buffer *Data_CityInfo_Buildings_smallTempleVenus_working;
-    buffer *Data_CityInfo_Buildings_largeTempleCeres_working;
-    buffer *Data_CityInfo_Buildings_largeTempleNeptune_working;
-    buffer *Data_CityInfo_Buildings_largeTempleMercury_working;
-    buffer *Data_CityInfo_Buildings_largeTempleMars_working;
-    buffer *Data_CityInfo_Buildings_largeTempleVenus_working;
+    buffer *building_count_culture3;
     buffer *Data_Formation_Invasion_formationId;
     buffer *Data_Formation_Invasion_homeX;
     buffer *Data_Formation_Invasion_homeY;
@@ -403,39 +347,7 @@ void init_savegame_data()
     state->random_iv = create_savegame_piece(8, 0);
     state->Data_Settings_Map_camera_x = create_savegame_piece(4, 0);
     state->Data_Settings_Map_camera_y = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_theater_total = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_theater_working = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_amphitheater_total = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_amphitheater_working = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_colosseum_total = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_colosseum_working = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_hippodrome_total = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_hippodrome_working = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_school_total = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_school_working = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_library_total = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_library_working = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_academy_total = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_academy_working = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_barber_total = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_barber_working = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_bathhouse_total = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_bathhouse_working = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_clinic_total = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_clinic_working = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_hospital_total = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_hospital_working = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_smallTempleCeres_total = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_smallTempleNeptune_total = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_smallTempleMercury_total = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_smallTempleMars_total = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_smallTempleVenus_total = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_largeTempleCeres_total = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_largeTempleNeptune_total = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_largeTempleMercury_total = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_largeTempleMars_total = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_largeTempleVenus_total = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_oracle_total = create_savegame_piece(4, 0);
+    state->building_count_culture1 = create_savegame_piece(132, 0);
     state->Data_CityInfo_Extra_populationGraphOrder = create_savegame_piece(4, 0);
     state->Data_CityInfo_Extra_unknownOrder = create_savegame_piece(4, 0);
     state->Data_Event_emperorChange_gameYear = create_savegame_piece(4, 0);
@@ -444,8 +356,7 @@ void init_savegame_data()
     state->Data_Empire_scrollY = create_savegame_piece(4, 0);
     state->Data_Empire_selectedObject = create_savegame_piece(4, 0);
     state->Data_Empire_Cities = create_savegame_piece(2706, 1);
-    state->Data_CityInfo_Buildings_industry_total = create_savegame_piece(64, 0);
-    state->Data_CityInfo_Buildings_industry_working = create_savegame_piece(64, 0);
+    state->building_count_industry = create_savegame_piece(128, 0);
     state->trade_prices = create_savegame_piece(128, 0);
     state->figure_names = create_savegame_piece(84, 0);
     state->Data_CityInfo_CultureCoverage_theater = create_savegame_piece(4, 0);
@@ -504,30 +415,15 @@ void init_savegame_data()
     state->Data_Tutorial_tutorial1_senateBuilt = create_savegame_piece(4, 0);
     state->Data_Tutorial_tutorial2_population450Reached = create_savegame_piece(4, 0);
     state->Data_Tutorial_tutorial2_potteryMade = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_militaryAcademy_total = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_militaryAcademy_working = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_barracks_total = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_barracks_working = create_savegame_piece(4, 0);
+    state->building_count_military = create_savegame_piece(16, 0);
     state->Data_Formation_Extra_numEnemyFormations = create_savegame_piece(4, 0);
     state->Data_Formation_Extra_numEnemySoldierStrength = create_savegame_piece(4, 0);
     state->Data_Formation_Extra_numLegionFormations = create_savegame_piece(4, 0);
     state->Data_Formation_Extra_numLegionSoldierStrength = create_savegame_piece(4, 0);
     state->Data_Formation_Extra_daysSinceRomanSoldierConcentration = create_savegame_piece(4, 0);
     state->Data_Building_Storages = create_savegame_piece(6400, 0);
-    state->Data_CityInfo_Buildings_actorColony_total = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_actorColony_working = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_gladiatorSchool_total = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_gladiatorSchool_working = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_lionHouse_total = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_lionHouse_working = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_chariotMaker_total = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_chariotMaker_working = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_market_total = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_market_working = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_reservoir_total = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_reservoir_working = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_fountain_total = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_fountain_working = create_savegame_piece(4, 0);
+    state->building_count_culture2 = create_savegame_piece(32, 0);
+    state->building_count_support = create_savegame_piece(24, 0);
     state->Data_Tutorial_tutorial2_potteryMadeYear = create_savegame_piece(4, 0);
     state->Data_Event_gladiatorRevolt_gameYear = create_savegame_piece(4, 0);
     state->Data_Event_gladiatorRevolt_month = create_savegame_piece(4, 0);
@@ -541,16 +437,7 @@ void init_savegame_data()
     state->Data_Routes_enemyRoutesCalculated = create_savegame_piece(4, 0);
     state->Data_Routes_totalRoutesCalculated = create_savegame_piece(4, 0);
     state->Data_Routes_unknown2RoutesCalculated = create_savegame_piece(4, 0); //state->unk_634470 = create_savegame_piece(4, 0); not referenced
-    state->Data_CityInfo_Buildings_smallTempleCeres_working = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_smallTempleNeptune_working = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_smallTempleMercury_working = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_smallTempleMars_working = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_smallTempleVenus_working = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_largeTempleCeres_working = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_largeTempleNeptune_working = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_largeTempleMercury_working = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_largeTempleMars_working = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Buildings_largeTempleVenus_working = create_savegame_piece(4, 0);
+    state->building_count_culture3 = create_savegame_piece(40, 0);
     state->Data_Formation_Invasion_formationId = create_savegame_piece(100, 0);
     state->Data_Formation_Invasion_homeX = create_savegame_piece(100, 0);
     state->Data_Formation_Invasion_homeY = create_savegame_piece(100, 0);
@@ -659,39 +546,14 @@ static void savegame_deserialize(savegame_state *state)
 
     read_all_from_buffer(state->Data_Settings_Map_camera_x, &Data_Settings_Map.camera.x);
     read_all_from_buffer(state->Data_Settings_Map_camera_y, &Data_Settings_Map.camera.y);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_theater_total, &Data_CityInfo_Buildings.theater.total);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_theater_working, &Data_CityInfo_Buildings.theater.working);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_amphitheater_total, &Data_CityInfo_Buildings.amphitheater.total);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_amphitheater_working, &Data_CityInfo_Buildings.amphitheater.working);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_colosseum_total, &Data_CityInfo_Buildings.colosseum.total);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_colosseum_working, &Data_CityInfo_Buildings.colosseum.working);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_hippodrome_total, &Data_CityInfo_Buildings.hippodrome.total);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_hippodrome_working, &Data_CityInfo_Buildings.hippodrome.working);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_school_total, &Data_CityInfo_Buildings.school.total);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_school_working, &Data_CityInfo_Buildings.school.working);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_library_total, &Data_CityInfo_Buildings.library.total);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_library_working, &Data_CityInfo_Buildings.library.working);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_academy_total, &Data_CityInfo_Buildings.academy.total);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_academy_working, &Data_CityInfo_Buildings.academy.working);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_barber_total, &Data_CityInfo_Buildings.barber.total);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_barber_working, &Data_CityInfo_Buildings.barber.working);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_bathhouse_total, &Data_CityInfo_Buildings.bathhouse.total);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_bathhouse_working, &Data_CityInfo_Buildings.bathhouse.working);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_clinic_total, &Data_CityInfo_Buildings.clinic.total);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_clinic_working, &Data_CityInfo_Buildings.clinic.working);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_hospital_total, &Data_CityInfo_Buildings.hospital.total);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_hospital_working, &Data_CityInfo_Buildings.hospital.working);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_smallTempleCeres_total, &Data_CityInfo_Buildings.smallTempleCeres.total);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_smallTempleNeptune_total, &Data_CityInfo_Buildings.smallTempleNeptune.total);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_smallTempleMercury_total, &Data_CityInfo_Buildings.smallTempleMercury.total);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_smallTempleMars_total, &Data_CityInfo_Buildings.smallTempleMars.total);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_smallTempleVenus_total, &Data_CityInfo_Buildings.smallTempleVenus.total);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_largeTempleCeres_total, &Data_CityInfo_Buildings.largeTempleCeres.total);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_largeTempleNeptune_total, &Data_CityInfo_Buildings.largeTempleNeptune.total);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_largeTempleMercury_total, &Data_CityInfo_Buildings.largeTempleMercury.total);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_largeTempleMars_total, &Data_CityInfo_Buildings.largeTempleMars.total);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_largeTempleVenus_total, &Data_CityInfo_Buildings.largeTempleVenus.total);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_oracle_total, &Data_CityInfo_Buildings.oracle.total);
+    
+    building_count_load_state(state->building_count_industry,
+                              state->building_count_culture1,
+                              state->building_count_culture2,
+                              state->building_count_culture3,
+                              state->building_count_military,
+                              state->building_count_support);
+
     read_all_from_buffer(state->Data_CityInfo_Extra_populationGraphOrder, &Data_CityInfo_Extra.populationGraphOrder);
     read_all_from_buffer(state->Data_CityInfo_Extra_unknownOrder, &Data_CityInfo_Extra.unknownOrder);
     read_all_from_buffer(state->Data_Event_emperorChange_gameYear, &Data_Event.emperorChange.gameYear);
@@ -700,8 +562,6 @@ static void savegame_deserialize(savegame_state *state)
     read_all_from_buffer(state->Data_Empire_scrollY, &Data_Empire.scrollY);
     read_all_from_buffer(state->Data_Empire_selectedObject, &Data_Empire.selectedObject);
     read_all_from_buffer(state->Data_Empire_Cities, &Data_Empire_Cities);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_industry_total, &Data_CityInfo_Buildings.industry.total);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_industry_working, &Data_CityInfo_Buildings.industry.working);
     
     trade_prices_load_state(state->trade_prices);
     figure_name_load_state(state->figure_names);
@@ -762,30 +622,12 @@ static void savegame_deserialize(savegame_state *state)
     read_all_from_buffer(state->Data_Tutorial_tutorial1_senateBuilt, &Data_Tutorial.tutorial1.senateBuilt);
     read_all_from_buffer(state->Data_Tutorial_tutorial2_population450Reached, &Data_Tutorial.tutorial2.population450Reached);
     read_all_from_buffer(state->Data_Tutorial_tutorial2_potteryMade, &Data_Tutorial.tutorial2.potteryMade);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_militaryAcademy_total, &Data_CityInfo_Buildings.militaryAcademy.total);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_militaryAcademy_working, &Data_CityInfo_Buildings.militaryAcademy.working);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_barracks_total, &Data_CityInfo_Buildings.barracks.total);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_barracks_working, &Data_CityInfo_Buildings.barracks.working);
     read_all_from_buffer(state->Data_Formation_Extra_numEnemyFormations, &Data_Formation_Extra.numEnemyFormations);
     read_all_from_buffer(state->Data_Formation_Extra_numEnemySoldierStrength, &Data_Formation_Extra.numEnemySoldierStrength);
     read_all_from_buffer(state->Data_Formation_Extra_numLegionFormations, &Data_Formation_Extra.numLegionFormations);
     read_all_from_buffer(state->Data_Formation_Extra_numLegionSoldierStrength, &Data_Formation_Extra.numLegionSoldierStrength);
     read_all_from_buffer(state->Data_Formation_Extra_daysSinceRomanSoldierConcentration, &Data_Formation_Extra.daysSinceRomanSoldierConcentration);
     read_all_from_buffer(state->Data_Building_Storages, &Data_Building_Storages);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_actorColony_total, &Data_CityInfo_Buildings.actorColony.total);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_actorColony_working, &Data_CityInfo_Buildings.actorColony.working);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_gladiatorSchool_total, &Data_CityInfo_Buildings.gladiatorSchool.total);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_gladiatorSchool_working, &Data_CityInfo_Buildings.gladiatorSchool.working);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_lionHouse_total, &Data_CityInfo_Buildings.lionHouse.total);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_lionHouse_working, &Data_CityInfo_Buildings.lionHouse.working);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_chariotMaker_total, &Data_CityInfo_Buildings.chariotMaker.total);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_chariotMaker_working, &Data_CityInfo_Buildings.chariotMaker.working);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_market_total, &Data_CityInfo_Buildings.market.total);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_market_working, &Data_CityInfo_Buildings.market.working);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_reservoir_total, &Data_CityInfo_Buildings.reservoir.total);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_reservoir_working, &Data_CityInfo_Buildings.reservoir.working);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_fountain_total, &Data_CityInfo_Buildings.fountain.total);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_fountain_working, &Data_CityInfo_Buildings.fountain.working);
     read_all_from_buffer(state->Data_Tutorial_tutorial2_potteryMadeYear, &Data_Tutorial.tutorial2.potteryMadeYear);
     read_all_from_buffer(state->Data_Event_gladiatorRevolt_gameYear, &Data_Event.gladiatorRevolt.gameYear);
     read_all_from_buffer(state->Data_Event_gladiatorRevolt_month, &Data_Event.gladiatorRevolt.month);
@@ -799,16 +641,6 @@ static void savegame_deserialize(savegame_state *state)
     read_all_from_buffer(state->Data_Routes_enemyRoutesCalculated, &Data_Routes.enemyRoutesCalculated);
     read_all_from_buffer(state->Data_Routes_totalRoutesCalculated, &Data_Routes.totalRoutesCalculated);
     read_all_from_buffer(state->Data_Routes_unknown2RoutesCalculated, &Data_Routes.unknown2RoutesCalculated); //read_all_from_buffer(state->unk_634470, &unk_634470); not referenced
-    read_all_from_buffer(state->Data_CityInfo_Buildings_smallTempleCeres_working, &Data_CityInfo_Buildings.smallTempleCeres.working);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_smallTempleNeptune_working, &Data_CityInfo_Buildings.smallTempleNeptune.working);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_smallTempleMercury_working, &Data_CityInfo_Buildings.smallTempleMercury.working);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_smallTempleMars_working, &Data_CityInfo_Buildings.smallTempleMars.working);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_smallTempleVenus_working, &Data_CityInfo_Buildings.smallTempleVenus.working);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_largeTempleCeres_working, &Data_CityInfo_Buildings.largeTempleCeres.working);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_largeTempleNeptune_working, &Data_CityInfo_Buildings.largeTempleNeptune.working);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_largeTempleMercury_working, &Data_CityInfo_Buildings.largeTempleMercury.working);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_largeTempleMars_working, &Data_CityInfo_Buildings.largeTempleMars.working);
-    read_all_from_buffer(state->Data_CityInfo_Buildings_largeTempleVenus_working, &Data_CityInfo_Buildings.largeTempleVenus.working);
     read_all_from_buffer(state->Data_Formation_Invasion_formationId, &Data_Formation_Invasion.formationId);
     read_all_from_buffer(state->Data_Formation_Invasion_homeX, &Data_Formation_Invasion.homeX);
     read_all_from_buffer(state->Data_Formation_Invasion_homeY, &Data_Formation_Invasion.homeY);
@@ -881,39 +713,14 @@ static void savegame_serialize(savegame_state *state)
 
     write_all_to_buffer(state->Data_Settings_Map_camera_x, &Data_Settings_Map.camera.x);
     write_all_to_buffer(state->Data_Settings_Map_camera_y, &Data_Settings_Map.camera.y);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_theater_total, &Data_CityInfo_Buildings.theater.total);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_theater_working, &Data_CityInfo_Buildings.theater.working);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_amphitheater_total, &Data_CityInfo_Buildings.amphitheater.total);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_amphitheater_working, &Data_CityInfo_Buildings.amphitheater.working);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_colosseum_total, &Data_CityInfo_Buildings.colosseum.total);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_colosseum_working, &Data_CityInfo_Buildings.colosseum.working);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_hippodrome_total, &Data_CityInfo_Buildings.hippodrome.total);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_hippodrome_working, &Data_CityInfo_Buildings.hippodrome.working);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_school_total, &Data_CityInfo_Buildings.school.total);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_school_working, &Data_CityInfo_Buildings.school.working);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_library_total, &Data_CityInfo_Buildings.library.total);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_library_working, &Data_CityInfo_Buildings.library.working);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_academy_total, &Data_CityInfo_Buildings.academy.total);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_academy_working, &Data_CityInfo_Buildings.academy.working);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_barber_total, &Data_CityInfo_Buildings.barber.total);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_barber_working, &Data_CityInfo_Buildings.barber.working);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_bathhouse_total, &Data_CityInfo_Buildings.bathhouse.total);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_bathhouse_working, &Data_CityInfo_Buildings.bathhouse.working);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_clinic_total, &Data_CityInfo_Buildings.clinic.total);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_clinic_working, &Data_CityInfo_Buildings.clinic.working);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_hospital_total, &Data_CityInfo_Buildings.hospital.total);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_hospital_working, &Data_CityInfo_Buildings.hospital.working);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_smallTempleCeres_total, &Data_CityInfo_Buildings.smallTempleCeres.total);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_smallTempleNeptune_total, &Data_CityInfo_Buildings.smallTempleNeptune.total);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_smallTempleMercury_total, &Data_CityInfo_Buildings.smallTempleMercury.total);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_smallTempleMars_total, &Data_CityInfo_Buildings.smallTempleMars.total);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_smallTempleVenus_total, &Data_CityInfo_Buildings.smallTempleVenus.total);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_largeTempleCeres_total, &Data_CityInfo_Buildings.largeTempleCeres.total);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_largeTempleNeptune_total, &Data_CityInfo_Buildings.largeTempleNeptune.total);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_largeTempleMercury_total, &Data_CityInfo_Buildings.largeTempleMercury.total);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_largeTempleMars_total, &Data_CityInfo_Buildings.largeTempleMars.total);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_largeTempleVenus_total, &Data_CityInfo_Buildings.largeTempleVenus.total);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_oracle_total, &Data_CityInfo_Buildings.oracle.total);
+
+    building_count_save_state(state->building_count_industry,
+                              state->building_count_culture1,
+                              state->building_count_culture2,
+                              state->building_count_culture3,
+                              state->building_count_military,
+                              state->building_count_support);
+
     write_all_to_buffer(state->Data_CityInfo_Extra_populationGraphOrder, &Data_CityInfo_Extra.populationGraphOrder);
     write_all_to_buffer(state->Data_CityInfo_Extra_unknownOrder, &Data_CityInfo_Extra.unknownOrder);
     write_all_to_buffer(state->Data_Event_emperorChange_gameYear, &Data_Event.emperorChange.gameYear);
@@ -922,8 +729,6 @@ static void savegame_serialize(savegame_state *state)
     write_all_to_buffer(state->Data_Empire_scrollY, &Data_Empire.scrollY);
     write_all_to_buffer(state->Data_Empire_selectedObject, &Data_Empire.selectedObject);
     write_all_to_buffer(state->Data_Empire_Cities, &Data_Empire_Cities);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_industry_total, &Data_CityInfo_Buildings.industry.total);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_industry_working, &Data_CityInfo_Buildings.industry.working);
     
     trade_prices_save_state(state->trade_prices);
     figure_name_save_state(state->figure_names);
@@ -984,30 +789,12 @@ static void savegame_serialize(savegame_state *state)
     write_all_to_buffer(state->Data_Tutorial_tutorial1_senateBuilt, &Data_Tutorial.tutorial1.senateBuilt);
     write_all_to_buffer(state->Data_Tutorial_tutorial2_population450Reached, &Data_Tutorial.tutorial2.population450Reached);
     write_all_to_buffer(state->Data_Tutorial_tutorial2_potteryMade, &Data_Tutorial.tutorial2.potteryMade);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_militaryAcademy_total, &Data_CityInfo_Buildings.militaryAcademy.total);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_militaryAcademy_working, &Data_CityInfo_Buildings.militaryAcademy.working);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_barracks_total, &Data_CityInfo_Buildings.barracks.total);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_barracks_working, &Data_CityInfo_Buildings.barracks.working);
     write_all_to_buffer(state->Data_Formation_Extra_numEnemyFormations, &Data_Formation_Extra.numEnemyFormations);
     write_all_to_buffer(state->Data_Formation_Extra_numEnemySoldierStrength, &Data_Formation_Extra.numEnemySoldierStrength);
     write_all_to_buffer(state->Data_Formation_Extra_numLegionFormations, &Data_Formation_Extra.numLegionFormations);
     write_all_to_buffer(state->Data_Formation_Extra_numLegionSoldierStrength, &Data_Formation_Extra.numLegionSoldierStrength);
     write_all_to_buffer(state->Data_Formation_Extra_daysSinceRomanSoldierConcentration, &Data_Formation_Extra.daysSinceRomanSoldierConcentration);
     write_all_to_buffer(state->Data_Building_Storages, &Data_Building_Storages);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_actorColony_total, &Data_CityInfo_Buildings.actorColony.total);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_actorColony_working, &Data_CityInfo_Buildings.actorColony.working);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_gladiatorSchool_total, &Data_CityInfo_Buildings.gladiatorSchool.total);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_gladiatorSchool_working, &Data_CityInfo_Buildings.gladiatorSchool.working);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_lionHouse_total, &Data_CityInfo_Buildings.lionHouse.total);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_lionHouse_working, &Data_CityInfo_Buildings.lionHouse.working);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_chariotMaker_total, &Data_CityInfo_Buildings.chariotMaker.total);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_chariotMaker_working, &Data_CityInfo_Buildings.chariotMaker.working);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_market_total, &Data_CityInfo_Buildings.market.total);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_market_working, &Data_CityInfo_Buildings.market.working);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_reservoir_total, &Data_CityInfo_Buildings.reservoir.total);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_reservoir_working, &Data_CityInfo_Buildings.reservoir.working);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_fountain_total, &Data_CityInfo_Buildings.fountain.total);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_fountain_working, &Data_CityInfo_Buildings.fountain.working);
     write_all_to_buffer(state->Data_Tutorial_tutorial2_potteryMadeYear, &Data_Tutorial.tutorial2.potteryMadeYear);
     write_all_to_buffer(state->Data_Event_gladiatorRevolt_gameYear, &Data_Event.gladiatorRevolt.gameYear);
     write_all_to_buffer(state->Data_Event_gladiatorRevolt_month, &Data_Event.gladiatorRevolt.month);
@@ -1021,16 +808,6 @@ static void savegame_serialize(savegame_state *state)
     write_all_to_buffer(state->Data_Routes_enemyRoutesCalculated, &Data_Routes.enemyRoutesCalculated);
     write_all_to_buffer(state->Data_Routes_totalRoutesCalculated, &Data_Routes.totalRoutesCalculated);
     write_all_to_buffer(state->Data_Routes_unknown2RoutesCalculated, &Data_Routes.unknown2RoutesCalculated); //write_all_to_buffer(state->unk_634470, &unk_634470); not referenced
-    write_all_to_buffer(state->Data_CityInfo_Buildings_smallTempleCeres_working, &Data_CityInfo_Buildings.smallTempleCeres.working);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_smallTempleNeptune_working, &Data_CityInfo_Buildings.smallTempleNeptune.working);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_smallTempleMercury_working, &Data_CityInfo_Buildings.smallTempleMercury.working);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_smallTempleMars_working, &Data_CityInfo_Buildings.smallTempleMars.working);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_smallTempleVenus_working, &Data_CityInfo_Buildings.smallTempleVenus.working);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_largeTempleCeres_working, &Data_CityInfo_Buildings.largeTempleCeres.working);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_largeTempleNeptune_working, &Data_CityInfo_Buildings.largeTempleNeptune.working);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_largeTempleMercury_working, &Data_CityInfo_Buildings.largeTempleMercury.working);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_largeTempleMars_working, &Data_CityInfo_Buildings.largeTempleMars.working);
-    write_all_to_buffer(state->Data_CityInfo_Buildings_largeTempleVenus_working, &Data_CityInfo_Buildings.largeTempleVenus.working);
     write_all_to_buffer(state->Data_Formation_Invasion_formationId, &Data_Formation_Invasion.formationId);
     write_all_to_buffer(state->Data_Formation_Invasion_homeX, &Data_Formation_Invasion.homeX);
     write_all_to_buffer(state->Data_Formation_Invasion_homeY, &Data_Formation_Invasion.homeY);

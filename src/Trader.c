@@ -15,6 +15,7 @@
 
 #include "Data/Figure.h"
 
+#include "building/count.h"
 #include "empire/trade_prices.h"
 
 #include <string.h>
@@ -153,7 +154,7 @@ void Trader_tick()
 	Data_CityInfo.tradeNumOpenSeaRoutes = 0;
 	Data_CityInfo.tradeNumOpenLandRoutes = 0;
 	// Wine types
-	Data_CityInfo.resourceWineTypesAvailable = Data_CityInfo_Buildings.industry.total[Resource_Wine] > 0 ? 1 : 0;
+	Data_CityInfo.resourceWineTypesAvailable = building_count_total(RESOURCE_WINE) > 0 ? 1 : 0;
 	for (int i = 1; i < MAX_EMPIRE_CITIES; i++) {
 		if (Data_Empire_Cities[i].inUse &&
 			Data_Empire_Cities[i].isOpen &&

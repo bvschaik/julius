@@ -762,61 +762,6 @@ struct Data_CityInfo_Building {
 };
 
 
-extern struct _Data_CityInfo_Buildings {
-	struct Data_CityInfo_Building
-		// health
-		clinic,
-		hospital,
-		barber,
-		bathhouse,
-		// entertainment schools
-		actorColony,
-		gladiatorSchool,
-		lionHouse,
-		chariotMaker,
-		// entertainment venues
-		theater,
-		amphitheater,
-		colosseum,
-		hippodrome,
-		// education
-		school,
-		library,
-		academy,
-		// religion
-		smallTempleCeres,
-		smallTempleNeptune,
-		smallTempleMercury,
-		smallTempleMars,
-		smallTempleVenus,
-		largeTempleCeres,
-		largeTempleNeptune,
-		largeTempleMercury,
-		largeTempleMars,
-		largeTempleVenus,
-		oracle,
-		// government
-		forum,
-		forumUpgraded,
-		senate,
-		senateUpgraded,
-		// water
-		//well, // ?
-		fountain,
-		reservoir,
-		// military
-		barracks,
-		militaryAcademy,
-		// distribution
-		market;
-		// granary?
-		// warehouse?
-	struct {
-		int total[16];
-		int working[16];
-	} industry;
-} Data_CityInfo_Buildings;
-
 extern struct _Data_CityInfo_CultureCoverage {
 	int theater;
 	int amphitheater;

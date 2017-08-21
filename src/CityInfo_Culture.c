@@ -4,18 +4,20 @@
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 
+#include "building/count.h"
+
 #define TOP(x) if (Data_CityInfo_CultureCoverage.x > 100) Data_CityInfo_CultureCoverage.x = 100;
 
 void CityInfo_Culture_updateCoveragePercentages()
 {
 	// entertainment
 	Data_CityInfo_CultureCoverage.theater = calc_percentage(
-		500 * Data_CityInfo_Buildings.theater.working, Data_CityInfo.population);
+		500 * building_count_active(BUILDING_THEATER), Data_CityInfo.population);
 	Data_CityInfo_CultureCoverage.amphitheater = calc_percentage(
-		800 * Data_CityInfo_Buildings.amphitheater.working, Data_CityInfo.population);
+		800 * building_count_active(BUILDING_AMPHITHEATER), Data_CityInfo.population);
 	Data_CityInfo_CultureCoverage.colosseum = calc_percentage(
-		1500 * Data_CityInfo_Buildings.colosseum.working, Data_CityInfo.population);
-	if (Data_CityInfo_Buildings.hippodrome.working <= 0) {
+		1500 * building_count_active(BUILDING_COLOSSEUM), Data_CityInfo.population);
+	if (building_count_active(BUILDING_HIPPODROME) <= 0) {
 		Data_CityInfo_CultureCoverage.hippodrome = 0;
 	} else {
 		Data_CityInfo_CultureCoverage.hippodrome = 100;
@@ -25,33 +27,34 @@ void CityInfo_Culture_updateCoveragePercentages()
 	TOP(colosseum);
 
 	// religion
+    int oracles = building_count_total(BUILDING_ORACLE);
 	Data_CityInfo_CultureCoverage.religionCeres = calc_percentage(
-			500 * Data_CityInfo_Buildings.oracle.total +
-			750 * Data_CityInfo_Buildings.smallTempleCeres.working +
-			1500 * Data_CityInfo_Buildings.largeTempleCeres.working,
+			500 * oracles +
+			750 * building_count_active(BUILDING_SMALL_TEMPLE_CERES) +
+			1500 * building_count_active(BUILDING_LARGE_TEMPLE_CERES),
 		Data_CityInfo.population);
 	Data_CityInfo_CultureCoverage.religionNeptune = calc_percentage(
-			500 * Data_CityInfo_Buildings.oracle.total +
-			750 * Data_CityInfo_Buildings.smallTempleNeptune.working +
-			1500 * Data_CityInfo_Buildings.largeTempleNeptune.working,
+			500 * oracles +
+			750 * building_count_active(BUILDING_SMALL_TEMPLE_NEPTUNE) +
+			1500 * building_count_active(BUILDING_LARGE_TEMPLE_NEPTUNE),
 		Data_CityInfo.population);
 	Data_CityInfo_CultureCoverage.religionMercury = calc_percentage(
-			500 * Data_CityInfo_Buildings.oracle.total +
-			750 * Data_CityInfo_Buildings.smallTempleMercury.working +
-			1500 * Data_CityInfo_Buildings.largeTempleMercury.working,
+			500 * oracles +
+			750 * building_count_active(BUILDING_SMALL_TEMPLE_MERCURY) +
+			1500 * building_count_active(BUILDING_LARGE_TEMPLE_MERCURY),
 		Data_CityInfo.population);
 	Data_CityInfo_CultureCoverage.religionMars = calc_percentage(
-			500 * Data_CityInfo_Buildings.oracle.total +
-			750 * Data_CityInfo_Buildings.smallTempleMars.working +
-			1500 * Data_CityInfo_Buildings.largeTempleMars.working,
+			500 * oracles +
+			750 * building_count_active(BUILDING_SMALL_TEMPLE_MARS) +
+			1500 * building_count_active(BUILDING_LARGE_TEMPLE_MARS),
 		Data_CityInfo.population);
 	Data_CityInfo_CultureCoverage.religionVenus = calc_percentage(
-			500 * Data_CityInfo_Buildings.oracle.total +
-			750 * Data_CityInfo_Buildings.smallTempleVenus.working +
-			1500 * Data_CityInfo_Buildings.largeTempleVenus.working,
+			500 * oracles +
+			750 * building_count_active(BUILDING_SMALL_TEMPLE_VENUS) +
+			1500 * building_count_active(BUILDING_LARGE_TEMPLE_VENUS),
 		Data_CityInfo.population);
 	Data_CityInfo_CultureCoverage.oracle = calc_percentage(
-		500 * Data_CityInfo_Buildings.oracle.total, Data_CityInfo.population);
+		500 * oracles, Data_CityInfo.population);
 	TOP(religionCeres);
 	TOP(religionNeptune);
 	TOP(religionMercury);
@@ -72,18 +75,18 @@ void CityInfo_Culture_updateCoveragePercentages()
 	Data_CityInfo.populationAcademyAge = CityInfo_Population_getNumberOfAcademyChildren();
 
 	Data_CityInfo_CultureCoverage.school = calc_percentage(
-		75 * Data_CityInfo_Buildings.school.working, Data_CityInfo.populationSchoolAge);
+		75 * building_count_active(BUILDING_SCHOOL), Data_CityInfo.populationSchoolAge);
 	Data_CityInfo_CultureCoverage.library = calc_percentage(
-		800 * Data_CityInfo_Buildings.library.working, Data_CityInfo.population);
+		800 * building_count_active(BUILDING_LIBRARY), Data_CityInfo.population);
 	Data_CityInfo_CultureCoverage.academy = calc_percentage(
-		100 * Data_CityInfo_Buildings.academy.working, Data_CityInfo.populationAcademyAge);
+		100 * building_count_active(BUILDING_ACADEMY), Data_CityInfo.populationAcademyAge);
 	TOP(school);
 	TOP(library);
 	TOP(academy);
 
 	// health
 	Data_CityInfo_CultureCoverage.hospital = calc_percentage(
-		1000 * Data_CityInfo_Buildings.hospital.working, Data_CityInfo.population);
+		1000 * building_count_active(BUILDING_HOSPITAL), Data_CityInfo.population);
 	TOP(hospital);
 }
 

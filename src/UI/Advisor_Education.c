@@ -1,5 +1,7 @@
 #include "Advisors_private.h"
 
+#include "building/count.h"
+
 void UI_Advisor_Education_drawBackground(int *advisorHeight)
 {
 	int baseOffsetX = Data_Screen.offset640x480.x;
@@ -39,14 +41,14 @@ void UI_Advisor_Education_drawBackground(int *advisorHeight)
 	
 	// schools
 	Widget_GameText_drawNumberWithDescription(
-		8, 18, Data_CityInfo_Buildings.school.total,
+		8, 18, building_count_total(BUILDING_SCHOOL),
 		baseOffsetX + 40, baseOffsetY + 105, Font_NormalWhite
 	);
-	Widget_Text_drawNumberCentered(Data_CityInfo_Buildings.school.working, '@', " ",
+	Widget_Text_drawNumberCentered(building_count_active(BUILDING_SCHOOL), '@', " ",
 		baseOffsetX + 150, baseOffsetY + 105, 100, Font_NormalWhite
 	);
 
-	width = Widget_Text_drawNumber(75 * Data_CityInfo_Buildings.school.working, '@', " ",
+	width = Widget_Text_drawNumber(75 * building_count_active(BUILDING_SCHOOL), '@', " ",
 		baseOffsetX + 280, baseOffsetY + 105, Font_NormalWhite
 	);
 	Widget_GameText_draw(57, 7, baseOffsetX + 280 + width, baseOffsetY + 105, Font_NormalWhite);
@@ -63,14 +65,14 @@ void UI_Advisor_Education_drawBackground(int *advisorHeight)
 
 	// academies
 	Widget_GameText_drawNumberWithDescription(
-		8, 20, Data_CityInfo_Buildings.academy.total,
+		8, 20, building_count_total(BUILDING_ACADEMY),
 		baseOffsetX + 40, baseOffsetY + 125, Font_NormalWhite
 	);
-	Widget_Text_drawNumberCentered(Data_CityInfo_Buildings.academy.working, '@', " ",
+	Widget_Text_drawNumberCentered(building_count_active(BUILDING_ACADEMY), '@', " ",
 		baseOffsetX + 150, baseOffsetY + 125, 100, Font_NormalWhite
 	);
 
-	width = Widget_Text_drawNumber(100 * Data_CityInfo_Buildings.academy.working, '@', " ",
+	width = Widget_Text_drawNumber(100 * building_count_active(BUILDING_ACADEMY), '@', " ",
 		baseOffsetX + 280, baseOffsetY + 125, Font_NormalWhite
 	);
 	Widget_GameText_draw(57, 8, baseOffsetX + 280 + width, baseOffsetY + 125, Font_NormalWhite);
@@ -87,14 +89,14 @@ void UI_Advisor_Education_drawBackground(int *advisorHeight)
 
 	// libraries
 	Widget_GameText_drawNumberWithDescription(
-		8, 22, Data_CityInfo_Buildings.library.total,
+		8, 22, building_count_total(BUILDING_LIBRARY),
 		baseOffsetX + 40, baseOffsetY + 145, Font_NormalWhite
 	);
-	Widget_Text_drawNumberCentered(Data_CityInfo_Buildings.library.working, '@', " ",
+	Widget_Text_drawNumberCentered(building_count_active(BUILDING_LIBRARY), '@', " ",
 		baseOffsetX + 150, baseOffsetY + 145, 100, Font_NormalWhite
 	);
 
-	width = Widget_Text_drawNumber(800 * Data_CityInfo_Buildings.library.working, '@', " ",
+	width = Widget_Text_drawNumber(800 * building_count_active(BUILDING_LIBRARY), '@', " ",
 		baseOffsetX + 280, baseOffsetY + 145, Font_NormalWhite
 	);
 	Widget_GameText_draw(57, 9, baseOffsetX + 280 + width, baseOffsetY + 145, Font_NormalWhite);

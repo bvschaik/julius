@@ -4,48 +4,11 @@
 #include "Data/Building.h"
 #include "Data/Figure.h"
 
-#define CLEAR(t) Data_CityInfo_Buildings.t.working = Data_CityInfo_Buildings.t.total = 0
-#define UPDATE(t) \
-	++Data_CityInfo_Buildings.t.total;\
-	if (Data_Buildings[i].numWorkers > 0) {\
-		++Data_CityInfo_Buildings.t.working;\
-	}
-#define UPDATE_RES(r) \
-	++Data_CityInfo_Buildings.industry.total[r];\
-	if (Data_Buildings[i].numWorkers > 0) {\
-		++Data_CityInfo_Buildings.industry.working[r];\
-	}
+#include "building/count.h"
 
 void CityInfo_Tick_countBuildingTypes()
 {
-	CLEAR(amphitheater);
-	CLEAR(theater);
-	CLEAR(hippodrome);
-	CLEAR(colosseum);
-	CLEAR(library);
-	CLEAR(school);
-	CLEAR(academy);
-	CLEAR(barber);
-	CLEAR(clinic);
-	CLEAR(bathhouse);
-	CLEAR(hospital);
-	CLEAR(forum);
-	CLEAR(forumUpgraded);
-	CLEAR(senate);
-	CLEAR(senateUpgraded);
-	CLEAR(actorColony);
-	CLEAR(gladiatorSchool);
-	CLEAR(lionHouse);
-	CLEAR(chariotMaker);
-	CLEAR(market);
-	CLEAR(reservoir);
-	CLEAR(fountain);
-	CLEAR(militaryAcademy);
-	CLEAR(barracks);
-	for (int i = 0; i < Resource_Max; i++) {
-		Data_CityInfo_Buildings.industry.working[i] = 0;
-		Data_CityInfo_Buildings.industry.total[i] = 0;
-	}
+    building_count_clear();
 	Data_CityInfo.numWorkingWharfs = 0;
 	Data_CityInfo.shipyardBoatsRequested = 0;
 	for (int i = 0; i < 8; i++) {
@@ -53,196 +16,125 @@ void CityInfo_Tick_countBuildingTypes()
 	}
 	Data_CityInfo.numWorkingDocks = 0;
 	Data_CityInfo.numHospitalWorkers = 0;
-	CLEAR(smallTempleCeres);
-	CLEAR(smallTempleNeptune);
-	CLEAR(smallTempleMercury);
-	CLEAR(smallTempleMars);
-	CLEAR(smallTempleVenus);
-	CLEAR(largeTempleCeres);
-	CLEAR(largeTempleNeptune);
-	CLEAR(largeTempleMercury);
-	CLEAR(largeTempleMars);
-	CLEAR(largeTempleVenus);
-	CLEAR(oracle);
 
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		if (!BuildingIsInUse(i) || Data_Buildings[i].houseSize) {
 			continue;
 		}
 		int isEntertainmentVenue = 0;
-		switch (Data_Buildings[i].type) {
-			// entertainment venues
-			case BUILDING_THEATER:
-				isEntertainmentVenue = 1;
-				UPDATE(theater);
-				break;
-			case BUILDING_AMPHITHEATER:
-				isEntertainmentVenue = 1;
-				UPDATE(amphitheater);
-				break;
-			case BUILDING_COLOSSEUM:
-				isEntertainmentVenue = 1;
-				UPDATE(colosseum);
-				break;
-			case BUILDING_HIPPODROME:
-				isEntertainmentVenue = 1;
-				UPDATE(hippodrome);
-				break;
+        int type = Data_Buildings[i].type;
+		switch (type) {
+            // SPECIAL TREATMENT
+            // entertainment venues
+            case BUILDING_THEATER:
+            case BUILDING_AMPHITHEATER:
+            case BUILDING_COLOSSEUM:
+            case BUILDING_HIPPODROME:
+                isEntertainmentVenue = 1;
+                building_count_increase(type, Data_Buildings[i].numWorkers > 0);
+                break;
+
+            case BUILDING_BARRACKS:
+                Data_CityInfo.buildingBarracksBuildingId = i;
+                building_count_increase(type, Data_Buildings[i].numWorkers > 0);
+                break;
+
+            case BUILDING_HOSPITAL:
+                building_count_increase(type, Data_Buildings[i].numWorkers > 0);
+                Data_CityInfo.numHospitalWorkers += Data_Buildings[i].numWorkers;
+                break;
+            
+            // water
+            case BUILDING_RESERVOIR:
+            case BUILDING_FOUNTAIN:
+                building_count_increase(type, Data_Buildings[i].hasWaterAccess);
+                break;
+
+            // DEFAULT TREATMENT
 			// education
 			case BUILDING_SCHOOL:
-				UPDATE(school);
-				break;
 			case BUILDING_LIBRARY:
-				UPDATE(library);
-				break;
 			case BUILDING_ACADEMY:
-				UPDATE(academy);
-				break;
 			// health
 			case BUILDING_BARBER:
-				UPDATE(barber);
-				break;
 			case BUILDING_BATHHOUSE:
-				UPDATE(bathhouse);
-				break;
 			case BUILDING_DOCTOR:
-				UPDATE(clinic);
-				break;
-			case BUILDING_HOSPITAL:
-				UPDATE(hospital);
-				Data_CityInfo.numHospitalWorkers += Data_Buildings[i].numWorkers;
-				break;
 			// government
 			case BUILDING_FORUM:
-				UPDATE(forum);
-				break;
 			case BUILDING_FORUM_UPGRADED:
-				UPDATE(forumUpgraded);
-				break;
 			case BUILDING_SENATE:
-				UPDATE(senate);
-				break;
 			case BUILDING_SENATE_UPGRADED:
-				UPDATE(senateUpgraded);
-				break;
 			// entertainment schools
 			case BUILDING_ACTOR_COLONY:
-				UPDATE(actorColony);
-				break;
 			case BUILDING_GLADIATOR_SCHOOL:
-				UPDATE(gladiatorSchool);
-				break;
 			case BUILDING_LION_HOUSE:
-				UPDATE(lionHouse);
-				break;
 			case BUILDING_CHARIOT_MAKER:
-				UPDATE(chariotMaker);
-				break;
 			// distribution
 			case BUILDING_MARKET:
-				UPDATE(market);
-				break;
 			// military
 			case BUILDING_MILITARY_ACADEMY:
-				UPDATE(militaryAcademy);
-				break;
-			case BUILDING_BARRACKS:
-				Data_CityInfo.buildingBarracksBuildingId = i;
-				UPDATE(barracks);
-				break;
 			// religion
 			case BUILDING_SMALL_TEMPLE_CERES:
-				UPDATE(smallTempleCeres);
-				break;
 			case BUILDING_SMALL_TEMPLE_NEPTUNE:
-				UPDATE(smallTempleNeptune);
-				break;
 			case BUILDING_SMALL_TEMPLE_MERCURY:
-				UPDATE(smallTempleMercury);
-				break;
 			case BUILDING_SMALL_TEMPLE_MARS:
-				UPDATE(smallTempleMars);
-				break;
 			case BUILDING_SMALL_TEMPLE_VENUS:
-				UPDATE(smallTempleVenus);
-				break;
 			case BUILDING_LARGE_TEMPLE_CERES:
-				UPDATE(largeTempleCeres);
-				break;
 			case BUILDING_LARGE_TEMPLE_NEPTUNE:
-				UPDATE(largeTempleNeptune);
-				break;
 			case BUILDING_LARGE_TEMPLE_MERCURY:
-				UPDATE(largeTempleMercury);
-				break;
 			case BUILDING_LARGE_TEMPLE_MARS:
-				UPDATE(largeTempleMars);
-				break;
 			case BUILDING_LARGE_TEMPLE_VENUS:
-				UPDATE(largeTempleVenus);
-				break;
 			case BUILDING_ORACLE:
-				++Data_CityInfo_Buildings.oracle.total;
+				building_count_increase(type, Data_Buildings[i].numWorkers > 0);
 				break;
-			// water
-			case BUILDING_RESERVOIR:
-				++Data_CityInfo_Buildings.reservoir.total;
-				if (Data_Buildings[i].hasWaterAccess) {
-					++Data_CityInfo_Buildings.reservoir.working;
-				}
-				break;
-			case BUILDING_FOUNTAIN:
-				++Data_CityInfo_Buildings.fountain.total;
-				if (Data_Buildings[i].hasWaterAccess) {
-					++Data_CityInfo_Buildings.fountain.working;
-				}
-				break;
+
 			// industry
 			case BUILDING_WHEAT_FARM:
-				UPDATE_RES(Resource_Wheat);
+				building_count_industry_increase(RESOURCE_WHEAT, Data_Buildings[i].numWorkers > 0);
 				break;
 			case BUILDING_VEGETABLE_FARM:
-				UPDATE_RES(Resource_Vegetables);
+				building_count_industry_increase(RESOURCE_VEGETABLES, Data_Buildings[i].numWorkers > 0);
 				break;
 			case BUILDING_FRUIT_FARM:
-				UPDATE_RES(Resource_Fruit);
+				building_count_industry_increase(RESOURCE_FRUIT, Data_Buildings[i].numWorkers > 0);
 				break;
 			case BUILDING_OLIVE_FARM:
-				UPDATE_RES(Resource_Olives);
+				building_count_industry_increase(RESOURCE_OLIVES, Data_Buildings[i].numWorkers > 0);
 				break;
 			case BUILDING_VINES_FARM:
-				UPDATE_RES(Resource_Vines);
+				building_count_industry_increase(RESOURCE_VINES, Data_Buildings[i].numWorkers > 0);
 				break;
 			case BUILDING_PIG_FARM:
-				UPDATE_RES(Resource_Meat);
+				building_count_industry_increase(RESOURCE_MEAT, Data_Buildings[i].numWorkers > 0);
 				break;
 			case BUILDING_MARBLE_QUARRY:
-				UPDATE_RES(Resource_Marble);
+				building_count_industry_increase(RESOURCE_MARBLE, Data_Buildings[i].numWorkers > 0);
 				break;
 			case BUILDING_IRON_MINE:
-				UPDATE_RES(Resource_Iron);
+				building_count_industry_increase(RESOURCE_IRON, Data_Buildings[i].numWorkers > 0);
 				break;
 			case BUILDING_TIMBER_YARD:
-				UPDATE_RES(Resource_Timber);
+				building_count_industry_increase(RESOURCE_TIMBER, Data_Buildings[i].numWorkers > 0);
 				break;
 			case BUILDING_CLAY_PIT:
-				UPDATE_RES(Resource_Clay);
+				building_count_industry_increase(RESOURCE_CLAY, Data_Buildings[i].numWorkers > 0);
 				break;
 			case BUILDING_WINE_WORKSHOP:
-				UPDATE_RES(Resource_Wine);
+				building_count_industry_increase(RESOURCE_WINE, Data_Buildings[i].numWorkers > 0);
 				break;
 			case BUILDING_OIL_WORKSHOP:
-				UPDATE_RES(Resource_Oil);
+				building_count_industry_increase(RESOURCE_OIL, Data_Buildings[i].numWorkers > 0);
 				break;
 			case BUILDING_WEAPONS_WORKSHOP:
-				UPDATE_RES(Resource_Weapons);
+				building_count_industry_increase(RESOURCE_WEAPONS, Data_Buildings[i].numWorkers > 0);
 				break;
 			case BUILDING_FURNITURE_WORKSHOP:
-				UPDATE_RES(Resource_Furniture);
+				building_count_industry_increase(RESOURCE_FURNITURE, Data_Buildings[i].numWorkers > 0);
 				break;
 			case BUILDING_POTTERY_WORKSHOP:
-				UPDATE_RES(Resource_Pottery);
+				building_count_industry_increase(RESOURCE_POTTERY, Data_Buildings[i].numWorkers > 0);
 				break;
+
 			// water-side
 			case BUILDING_WHARF:
 				if (Data_Buildings[i].numWorkers > 0) {
@@ -281,21 +173,16 @@ void CityInfo_Tick_countBuildingTypes()
 			Data_Buildings[i].data.entertainment.numShows = shows;
 		}
 	}
-	if (Data_CityInfo_Buildings.hippodrome.total > 1) {
-		Data_CityInfo_Buildings.hippodrome.total = 1;
-	}
-	if (Data_CityInfo_Buildings.hippodrome.working > 1) {
-		Data_CityInfo_Buildings.hippodrome.working = 1;
-	}
+	building_count_limit_hippodrome();
 }
 
 void CityInfo_Tick_distributeTreasuryOverForumsAndSenates()
 {
 	int units =
-		5 * Data_CityInfo_Buildings.senate.working +
-		1 * Data_CityInfo_Buildings.forum.working +
-		8 * Data_CityInfo_Buildings.senateUpgraded.working +
-		2 * Data_CityInfo_Buildings.forumUpgraded.working;
+		5 * building_count_active(BUILDING_SENATE) +
+		1 * building_count_active(BUILDING_FORUM) +
+		8 * building_count_active(BUILDING_SENATE_UPGRADED) +
+		2 * building_count_active(BUILDING_FORUM_UPGRADED);
 	int amountPerUnit;
 	int remainder;
 	if (Data_CityInfo.treasury > 0 && units > 0) {
@@ -321,7 +208,7 @@ void CityInfo_Tick_distributeTreasuryOverForumsAndSenates()
 				remainder = 0;
 				break;
 			case BUILDING_SENATE:
-				if (remainder && !Data_CityInfo_Buildings.senateUpgraded.working) {
+				if (remainder && !building_count_active(BUILDING_SENATE_UPGRADED)) {
 					Data_Buildings[i].taxIncomeOrStorage = 5 * amountPerUnit + remainder;
 					remainder = 0;
 				} else {
@@ -330,8 +217,8 @@ void CityInfo_Tick_distributeTreasuryOverForumsAndSenates()
 				break;
 			case BUILDING_FORUM_UPGRADED:
 				if (remainder && !(
-					Data_CityInfo_Buildings.senateUpgraded.working ||
-					Data_CityInfo_Buildings.senate.working)) {
+					building_count_active(BUILDING_SENATE_UPGRADED) ||
+					building_count_active(BUILDING_SENATE))) {
 					Data_Buildings[i].taxIncomeOrStorage = 2 * amountPerUnit + remainder;
 					remainder = 0;
 				} else {
@@ -340,9 +227,9 @@ void CityInfo_Tick_distributeTreasuryOverForumsAndSenates()
 				break;
 			case BUILDING_FORUM:
 				if (remainder && !(
-					Data_CityInfo_Buildings.senateUpgraded.working ||
-					Data_CityInfo_Buildings.senate.working ||
-					Data_CityInfo_Buildings.forumUpgraded.working)) {
+					building_count_active(BUILDING_SENATE_UPGRADED) ||
+					building_count_active(BUILDING_SENATE) ||
+					building_count_active(BUILDING_FORUM_UPGRADED))) {
 					Data_Buildings[i].taxIncomeOrStorage = amountPerUnit + remainder;
 					remainder = 0;
 				} else {
