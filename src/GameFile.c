@@ -29,7 +29,6 @@
 #include "Data/Settings.h"
 #include "Data/Sound.h"
 #include "Data/State.h"
-#include "Data/Trade.h"
 #include "Data/Tutorial.h"
 #include "Data/Figure.h"
 #include "Data/Figure.h"
@@ -39,6 +38,7 @@
 #include "core/io.h"
 #include "core/random.h"
 #include "core/zip.h"
+#include "empire/trade_prices.h"
 #include "figure/name.h"
 
 #include <stdio.h>
@@ -187,7 +187,7 @@ typedef struct {
     buffer *Data_Empire_Cities;
     buffer *Data_CityInfo_Buildings_industry_total;
     buffer *Data_CityInfo_Buildings_industry_working;
-    buffer *Data_TradePrices;
+    buffer *trade_prices;
     buffer *figure_names;
     buffer *Data_CityInfo_CultureCoverage_theater;
     buffer *Data_CityInfo_CultureCoverage_amphitheater;
@@ -453,7 +453,7 @@ void init_savegame_data()
     state->Data_Empire_Cities = create_savegame_piece(2706, 1);
     state->Data_CityInfo_Buildings_industry_total = create_savegame_piece(64, 0);
     state->Data_CityInfo_Buildings_industry_working = create_savegame_piece(64, 0);
-    state->Data_TradePrices = create_savegame_piece(128, 0);
+    state->trade_prices = create_savegame_piece(128, 0);
     state->figure_names = create_savegame_piece(84, 0);
     state->Data_CityInfo_CultureCoverage_theater = create_savegame_piece(4, 0);
     state->Data_CityInfo_CultureCoverage_amphitheater = create_savegame_piece(4, 0);
@@ -703,8 +703,8 @@ static void savegame_deserialize(savegame_state *state)
     read_all_from_buffer(state->Data_Empire_Cities, &Data_Empire_Cities);
     read_all_from_buffer(state->Data_CityInfo_Buildings_industry_total, &Data_CityInfo_Buildings.industry.total);
     read_all_from_buffer(state->Data_CityInfo_Buildings_industry_working, &Data_CityInfo_Buildings.industry.working);
-    read_all_from_buffer(state->Data_TradePrices, &Data_TradePrices);
     
+    trade_prices_load_state(state->trade_prices);
     figure_name_load_state(state->figure_names);
     
     read_all_from_buffer(state->Data_CityInfo_CultureCoverage_theater, &Data_CityInfo_CultureCoverage.theater);
@@ -919,8 +919,8 @@ static void savegame_serialize(savegame_state *state)
     write_all_to_buffer(state->Data_Empire_Cities, &Data_Empire_Cities);
     write_all_to_buffer(state->Data_CityInfo_Buildings_industry_total, &Data_CityInfo_Buildings.industry.total);
     write_all_to_buffer(state->Data_CityInfo_Buildings_industry_working, &Data_CityInfo_Buildings.industry.working);
-    write_all_to_buffer(state->Data_TradePrices, &Data_TradePrices);
     
+    trade_prices_save_state(state->trade_prices);
     figure_name_save_state(state->figure_names);
     
     write_all_to_buffer(state->Data_CityInfo_CultureCoverage_theater, &Data_CityInfo_CultureCoverage.theater);
@@ -1267,6 +1267,7 @@ int GameFile_loadScenario(const char *filename)
         }
     }
 
+    trade_prices_reset();
 	Empire_load(1, Data_Scenario.empireId);
 	Event_calculateDistantBattleRomanTravelTime();
 	Event_calculateDistantBattleEnemyTravelTime();

@@ -11,7 +11,6 @@
 #include "Data/Graphics.h"
 #include "Data/Grid.h"
 #include "Data/Scenario.h"
-#include "Data/Trade.h"
 
 int Resource_getGraphicIdOffset(int resource, int type)
 {

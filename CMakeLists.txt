@@ -23,6 +23,9 @@ set(CORE_FILES
 set (BUILDING_FILES
     src/building/model.c
 )
+set (EMPIRE_FILES
+    src/empire/trade_prices.c
+)
 set (FIGURE_FILES
     src/figure/name.c
 )
@@ -183,6 +186,7 @@ add_executable(julius
 	src/UI/Window.c
 	${CORE_FILES}
 	${BUILDING_FILES}
+	${EMPIRE_FILES}
 	${FIGURE_FILES}
 	${SMK_FILES})
 

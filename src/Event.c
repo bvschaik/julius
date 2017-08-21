@@ -20,11 +20,11 @@
 #include "Data/Grid.h"
 #include "Data/Scenario.h"
 #include "Data/Settings.h"
-#include "Data/Trade.h"
 #include "Data/Tutorial.h"
 
 #include "core/calc.h"
 #include "core/random.h"
+#include "empire/trade_prices.h"
 
 #include <string.h>
 
@@ -452,18 +452,13 @@ void Event_handlePricesChanges()
 		int amount = Data_Scenario.priceChanges.amount[i];
 		int resource = Data_Scenario.priceChanges.resourceId[i];
 		if (Data_Scenario.priceChanges.isRise[i]) {
-			Data_TradePrices[resource].buy += amount;
-			Data_TradePrices[resource].sell += amount;
-			PlayerMessage_post(1, Message_78_PriceIncreased, amount, resource);
-		} else if (Data_TradePrices[resource].sell > 0) {
-			if (Data_TradePrices[resource].sell <= amount) {
-				Data_TradePrices[resource].buy = 2;
-				Data_TradePrices[resource].sell = 0;
-			} else {
-				Data_TradePrices[resource].buy -= amount;
-				Data_TradePrices[resource].sell -= amount;
-			}
-			PlayerMessage_post(1, Message_79_PriceDecreased, amount, resource);
+            if (trade_price_change(resource, amount)) {
+                PlayerMessage_post(1, Message_78_PriceIncreased, amount, resource);
+            }
+		} else {
+			if (trade_price_change(resource, -amount)) {
+                PlayerMessage_post(1, Message_79_PriceDecreased, amount, resource);
+            }
 		}
 	}
 }

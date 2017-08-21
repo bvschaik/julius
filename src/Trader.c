@@ -12,8 +12,10 @@
 #include "Data/Empire.h"
 #include "Data/Message.h"
 #include "Data/Scenario.h"
-#include "Data/Trade.h"
+
 #include "Data/Figure.h"
+
+#include "empire/trade_prices.h"
 
 #include <string.h>
 
@@ -37,7 +39,7 @@ void Trader_sellResource(int figureId, int resourceId)
 	int traderId = Data_Figures[figureId].traderId;
 	Data_Figure_Traders[traderId].totalSold++;
 	Data_Figure_Traders[traderId].soldResources[resourceId]++;
-	Data_Figure_Traders[traderId].moneySoldResources += Data_TradePrices[resourceId].sell;
+	Data_Figure_Traders[traderId].moneySoldResources += trade_price_sell(resourceId);
 }
 
 void Trader_buyResource(int figureId, int resourceId)
@@ -45,7 +47,7 @@ void Trader_buyResource(int figureId, int resourceId)
 	int traderId = Data_Figures[figureId].traderId;
 	Data_Figure_Traders[traderId].totalBought++;
 	Data_Figure_Traders[traderId].boughtResources[resourceId]++;
-	Data_Figure_Traders[traderId].moneyBoughtResources += Data_TradePrices[resourceId].buy;
+	Data_Figure_Traders[traderId].moneyBoughtResources += trade_price_buy(resourceId);
 }
 
 static int generateTrader(int cityId)

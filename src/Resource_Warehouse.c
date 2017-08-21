@@ -11,9 +11,9 @@
 #include "Data/Graphics.h"
 #include "Data/Grid.h"
 #include "Data/Scenario.h"
-#include "Data/Trade.h"
 
 #include "building/model.h"
+#include "empire/trade_prices.h"
 
 static int granaryGettingResource[7];
 static int granaryAcceptingResource[7];
@@ -338,8 +338,9 @@ void Resource_addImportedResourceToWarehouseSpace(int spaceId, int resourceId)
 	Data_Buildings[spaceId].loadsStored++;
 	Data_Buildings[spaceId].subtype.warehouseResourceId = resourceId;
 	
-	Data_CityInfo.treasury -= Data_TradePrices[resourceId].buy;
-	Data_CityInfo.financeImportsThisYear += Data_TradePrices[resourceId].buy;
+    int price = trade_price_buy(resourceId);
+	Data_CityInfo.treasury -= price;
+	Data_CityInfo.financeImportsThisYear += price;
 	
 	Resource_setWarehouseSpaceGraphic(spaceId, resourceId);
 }
@@ -353,11 +354,12 @@ void Resource_removeExportedResourceFromWarehouseSpace(int spaceId, int resource
 		Data_Buildings[spaceId].subtype.warehouseResourceId = Resource_None;
 	}
 	
-	Data_CityInfo.treasury += Data_TradePrices[resourceId].sell;
-	Data_CityInfo.financeExportsThisYear += Data_TradePrices[resourceId].sell;
+	int price = trade_price_sell(resourceId);
+	Data_CityInfo.treasury += price;
+	Data_CityInfo.financeExportsThisYear += price;
 	if (Data_CityInfo.godBlessingNeptuneDoubleTrade) {
-		Data_CityInfo.treasury += Data_TradePrices[resourceId].sell;
-		Data_CityInfo.financeExportsThisYear += Data_TradePrices[resourceId].sell;
+		Data_CityInfo.treasury += price;
+		Data_CityInfo.financeExportsThisYear += price;
 	}
 	
 	Resource_setWarehouseSpaceGraphic(spaceId, resourceId);

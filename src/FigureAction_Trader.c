@@ -12,7 +12,8 @@
 #include "Data/Grid.h"
 #include "Data/Message.h"
 #include "Data/Scenario.h"
-#include "Data/Trade.h"
+
+#include "empire/trade_prices.h"
 
 static void advanceTradeNextImportResourceCaravan()
 {
@@ -60,11 +61,12 @@ static int traderGetBuyResource(int warehouseId, int cityId)
 				Data_Buildings[warehouseId].subtype.warehouseResourceId = Resource_None;
 			}
 			// update finances
-			Data_CityInfo.treasury += Data_TradePrices[resource].sell;
-			Data_CityInfo.financeExportsThisYear += Data_TradePrices[resource].sell;
+			int price = trade_price_sell(resource);
+			Data_CityInfo.treasury += price;
+			Data_CityInfo.financeExportsThisYear += price;
 			if (Data_CityInfo.godBlessingNeptuneDoubleTrade) {
-				Data_CityInfo.treasury += Data_TradePrices[resource].sell;
-				Data_CityInfo.financeExportsThisYear += Data_TradePrices[resource].sell;
+				Data_CityInfo.treasury += price;
+				Data_CityInfo.financeExportsThisYear += price;
 			}
 			// update graphics
 			Resource_setWarehouseSpaceGraphic(warehouseId, resource);

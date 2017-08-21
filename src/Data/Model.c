@@ -61,8 +61,6 @@ struct Data_CityView Data_CityView;
 
 struct Data_InvasionWarning Data_InvasionWarnings[MAX_INVASION_WARNINGS];
 
-struct Data_TradePrice Data_TradePrices[16];
-
 struct Data_Formation Data_Formations[MAX_FORMATIONS];
 struct _Data_Formation_Extra Data_Formation_Extra;
 struct _Data_Formation_Invasion Data_Formation_Invasion;

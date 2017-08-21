@@ -9,7 +9,9 @@
 #include "../Data/CityInfo.h"
 #include "../Data/Mouse.h"
 #include "../Data/Scenario.h"
-#include "../Data/Trade.h"
+
+#include "core/calc.h"
+#include "empire/trade_prices.h"
 
 static void buttonPrices(int param1, int param2);
 static void buttonEmpire(int param1, int param2);
@@ -176,9 +178,9 @@ void UI_TradePricesDialog_drawBackground()
 		int graphicOffset = i + Resource_getGraphicIdOffset(i, 3);
 		Graphics_drawImage(GraphicId(ID_Graphic_ResourceIcons) + graphicOffset,
 			baseOffsetX + 126 + 30 * i, baseOffsetY + 194);
-		Widget_Text_drawNumberCentered(Data_TradePrices[i].buy, '@', " ",
+		Widget_Text_drawNumberCentered(trade_price_buy(i), '@', " ",
 			baseOffsetX + 120 + 30 * i, baseOffsetY + 229, 30, Font_SmallPlain);
-		Widget_Text_drawNumberCentered(Data_TradePrices[i].sell, '@', " ",
+		Widget_Text_drawNumberCentered(trade_price_sell(i), '@', " ",
 			baseOffsetX + 120 + 30 * i, baseOffsetY + 254, 30, Font_SmallPlain);
 	}
 	Widget_GameText_drawCentered(13, 1, baseOffsetX + 16, baseOffsetY + 296, 608, Font_NormalBlack);

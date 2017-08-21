@@ -17,20 +17,9 @@ set(TESTS
 
     building/model
     
+    empire/trade_prices
+    
     figure/name
-#     building/storage
-#     
-#     city/health
-#     city/population
-#     
-#     graphics/arrowbutton
-#     graphics/button
-#     graphics/image
-#     graphics/imagebutton
-#     graphics/panel
-#     graphics/text
-#     
-#     gui/alertdialog
 )
 
 foreach (testcase ${TESTS})
