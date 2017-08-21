@@ -14,6 +14,8 @@
 #include "Data/Settings.h"
 #include "Data/Figure.h"
 
+#include "game/time.h"
+
 static void FigureMovement_walkTicksInternal(int figureId, int numTicks, int roamingEnabled);
 
 void FigureMovement_advanceTick(struct Data_Figure *f)
@@ -381,7 +383,7 @@ static void figureAdvanceRouteTile(struct Data_Figure *f, int roamingEnabled)
 			if (causeDamage) {
 				f->attackDirection = f->direction;
 				f->direction = DirFigure_11_Attack;
-				if (!(Data_CityInfo_Extra.gameTimeTick & 3)) {
+				if (!(game_time_tick() & 3)) {
 					Building_increaseDamageByEnemy(targetGridOffset, maxDamage);
 				}
 			}

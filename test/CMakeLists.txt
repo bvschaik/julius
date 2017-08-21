@@ -20,6 +20,8 @@ set(TESTS
     empire/trade_prices
     
     figure/name
+    
+    game/time
 )
 
 foreach (testcase ${TESTS})

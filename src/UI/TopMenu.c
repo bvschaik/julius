@@ -18,6 +18,8 @@
 #include "../Data/Settings.h"
 #include "../Data/State.h"
 
+#include "game/time.h"
+
 static void refreshSidebarButtons();
 
 static void menuFile_newGame(int param);
@@ -131,8 +133,8 @@ void UI_TopMenu_drawBackground()
 		width = Widget_GameText_draw(6, 1, 458, 5, Font_NormalGreen);
 		Widget_Text_drawNumber(Data_CityInfo.population, '@', " ", 450 + width, 5, Font_NormalGreen);
 
-		width = Widget_GameText_draw(25, Data_CityInfo_Extra.gameTimeMonth, 552, 5, Font_NormalGreen);
-		Widget_GameText_drawYearNoSpacing(Data_CityInfo_Extra.gameTimeYear, 541 + width, 5, Font_NormalGreen);
+		width = Widget_GameText_draw(25, game_time_month(), 552, 5, Font_NormalGreen);
+		Widget_GameText_drawYearNoSpacing(game_time_year(), 541 + width, 5, Font_NormalGreen);
 	} else if (Data_Screen.width < 1024) {
 		offsetFunds = 338;
 		offsetPopulation = 458;
@@ -144,8 +146,8 @@ void UI_TopMenu_drawBackground()
 		width = Widget_GameText_drawColored(6, 1, 470, 5, Font_NormalPlain, Color_White);
 		Widget_Text_drawNumberColored(Data_CityInfo.population, '@', " ", 466 + width, 5, Font_NormalPlain, Color_White);
 
-		width = Widget_GameText_drawColored(25, Data_CityInfo_Extra.gameTimeMonth, 655, 5, Font_NormalPlain, Color_Yellow);
-		Widget_GameText_drawYearColored(Data_CityInfo_Extra.gameTimeYear, 655 + width, 5, Font_NormalPlain, Color_Yellow);
+		width = Widget_GameText_drawColored(25, game_time_month(), 655, 5, Font_NormalPlain, Color_Yellow);
+		Widget_GameText_drawYearColored(game_time_year(), 655 + width, 5, Font_NormalPlain, Color_Yellow);
 	} else {
 		offsetFunds = 493;
 		offsetPopulation = 637;
@@ -157,19 +159,19 @@ void UI_TopMenu_drawBackground()
 		width = Widget_GameText_drawColored(6, 1, 645, 5, Font_NormalPlain, Color_White);
 		Widget_Text_drawNumberColored(Data_CityInfo.population, '@', " ", 651 + width, 5, Font_NormalPlain, Color_White);
 
-		width = Widget_GameText_drawColored(25, Data_CityInfo_Extra.gameTimeMonth, 850, 5, Font_NormalPlain, Color_Yellow);
-		Widget_GameText_drawYearColored(Data_CityInfo_Extra.gameTimeYear, 850 + width, 5, Font_NormalPlain, Color_Yellow);
+		width = Widget_GameText_drawColored(25, game_time_month(), 850, 5, Font_NormalPlain, Color_Yellow);
+		Widget_GameText_drawYearColored(game_time_year(), 850 + width, 5, Font_NormalPlain, Color_Yellow);
 	}
 	drawn.treasury = Data_CityInfo.treasury;
 	drawn.population = Data_CityInfo.population;
-	drawn.month = Data_CityInfo_Extra.gameTimeMonth;
+	drawn.month = game_time_month();
 }
 
 void UI_TopMenu_drawBackgroundIfNecessary()
 {
 	if (drawn.treasury != Data_CityInfo.treasury ||
 		drawn.population != Data_CityInfo.population ||
-		drawn.month != Data_CityInfo_Extra.gameTimeMonth) {
+		drawn.month != game_time_month()) {
 		UI_TopMenu_drawBackground();
 	}
 }

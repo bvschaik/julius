@@ -5,6 +5,8 @@
 #include "../CityInfo.h"
 #include "../Data/Mouse.h"
 
+#include "core/calc.h"
+
 static void arrowButtonWages(int param1, int param2);
 static void buttonPriority(int param1, int param2);
 static void buttonSetPriority(int param1, int param2);

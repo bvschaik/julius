@@ -1,5 +1,5 @@
-#ifndef EMPIRE_RESOURCE_H
-#define EMPIRE_RESOURCE_H
+#ifndef GAME_RESOURCE_H
+#define GAME_RESOURCE_H
 
 typedef enum {
     RESOURCE_NONE = 0,
@@ -27,4 +27,4 @@ typedef enum {
     RESOURCE_MAX_FOOD = 7
 } resource_type;
 
-#endif // EMPIRE_RESOURCE_H
+#endif // GAME_RESOURCE_H

@@ -10,6 +10,8 @@
 #include "Data/Settings.h"
 #include "Data/Tutorial.h"
 
+#include "game/time.h"
+
 static void refreshSidebarButtons()
 {
 	SidebarMenu_enableBuildingMenuItemsAndButtons();
@@ -47,7 +49,7 @@ void Tutorial_onAddToWarehouse()
 	if (Data_CityInfo.resourceStored[Resource_Pottery] >= 1 &&
 			!Data_Tutorial.tutorial2.potteryMade) {
 		Data_Tutorial.tutorial2.potteryMade = 1;
-		Data_Tutorial.tutorial2.potteryMadeYear = Data_CityInfo_Extra.gameTimeYear;
+		Data_Tutorial.tutorial2.potteryMadeYear = game_time_year();
 		refreshSidebarButtons();
 		PlayerMessage_post(1, Message_61_TutorialTrade, 0, 0);
 	}
@@ -78,7 +80,7 @@ void Tutorial_onDayTick()
 	}
 	if (Data_Tutorial.tutorial1.fire && !Data_Tutorial.tutorial1.senateBuilt) {
 		int populationAlmost = Data_CityInfo.population >= Data_Scenario.winCriteria_population - 20;
-		if (!Data_CityInfo_Extra.gameTimeDay || populationAlmost) {
+		if (!game_time_day() || populationAlmost) {
 			if (Data_CityInfo.buildingSenateGridOffset) {
 				Data_CityInfo.tutorial1SenateBuilt++;
 			}
@@ -94,7 +96,7 @@ void Tutorial_onDayTick()
 void Tutorial_onMonthTick()
 {
 	if (IsTutorial3()) {
-		if (Data_CityInfo_Extra.gameTimeMonth == 5) {
+		if (game_time_month() == 5) {
 			if (Data_Message.messageDelay[MessageDelay_Tutorial3] <= 0) {
 				Data_Message.messageDelay[MessageDelay_Tutorial3] = 1200;
 				PlayerMessage_post(1, Message_58_TutorialHungerHaltsImmigrants, 0, 0);

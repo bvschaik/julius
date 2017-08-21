@@ -25,6 +25,7 @@
 #include "core/calc.h"
 #include "core/random.h"
 #include "empire/trade_prices.h"
+#include "game/time.h"
 
 #include <string.h>
 
@@ -62,8 +63,8 @@ void Event_handleDistantBattle()
 {
 	for (int i = 0; i < MAX_EVENTS; i++) {
 		if (Data_Scenario.invasions.type[i] == InvasionType_DistantBattle &&
-			Data_CityInfo_Extra.gameTimeYear == Data_Scenario.invasions.year[i] + Data_Scenario.startYear &&
-			Data_CityInfo_Extra.gameTimeMonth == Data_Scenario.invasions_month[i] &&
+			game_time_year() == Data_Scenario.invasions.year[i] + Data_Scenario.startYear &&
+			game_time_month() == Data_Scenario.invasions_month[i] &&
 			Data_Scenario.distantBattleTravelMonthsEnemy > 4 &&
 			Data_Scenario.distantBattleTravelMonthsRoman > 4 &&
 			Data_CityInfo.distantBattleMonthsToBattle <= 0 &&
@@ -334,8 +335,8 @@ void Event_handleRequests()
 					}
 					year = Data_Tutorial.tutorial2.potteryMadeYear;
 				}
-				if (Data_CityInfo_Extra.gameTimeYear == year + Data_Scenario.requests.year[i] &&
-					Data_CityInfo_Extra.gameTimeMonth == Data_Scenario.requests_month[i]) {
+				if (game_time_year() == year + Data_Scenario.requests.year[i] &&
+					game_time_month() == Data_Scenario.requests_month[i]) {
 					Data_Scenario.requests_isVisible[i] = 1;
 					if (Data_CityInfo.resourceStored[Data_Scenario.requests.resourceId[i]] >= Data_Scenario.requests.amount[i]) {
 						Data_Scenario.requests_canComplyDialogShown[i] = 1;
@@ -390,8 +391,8 @@ void Event_handleDemandChanges()
 		if (!Data_Scenario.demandChanges.year[i]) {
 			continue;
 		}
-		if (Data_CityInfo_Extra.gameTimeYear != Data_Scenario.demandChanges.year[i] + Data_Scenario.startYear ||
-			Data_CityInfo_Extra.gameTimeMonth != Data_Scenario.demandChanges.month[i]) {
+		if (game_time_year() != Data_Scenario.demandChanges.year[i] + Data_Scenario.startYear ||
+			game_time_month() != Data_Scenario.demandChanges.month[i]) {
 			continue;
 		}
 		int route = Data_Scenario.demandChanges.routeId[i];
@@ -445,8 +446,8 @@ void Event_handlePricesChanges()
 		if (!Data_Scenario.priceChanges.year[i]) {
 			continue;
 		}
-		if (Data_CityInfo_Extra.gameTimeYear != Data_Scenario.priceChanges.year[i] + Data_Scenario.startYear ||
-			Data_CityInfo_Extra.gameTimeMonth != Data_Scenario.priceChanges.month[i]) {
+		if (game_time_year() != Data_Scenario.priceChanges.year[i] + Data_Scenario.startYear ||
+			game_time_month() != Data_Scenario.priceChanges.month[i]) {
 			continue;
 		}
 		int amount = Data_Scenario.priceChanges.amount[i];
@@ -470,8 +471,8 @@ void Event_handleEarthquake()
 		return;
 	}
 	if (Data_Event.earthquake.state == SpecialEvent_NotStarted) {
-		if (Data_CityInfo_Extra.gameTimeYear == Data_Event.earthquake.gameYear &&
-			Data_CityInfo_Extra.gameTimeMonth == Data_Event.earthquake.month) {
+		if (game_time_year() == Data_Event.earthquake.gameYear &&
+			game_time_month() == Data_Event.earthquake.month) {
 			Data_Event.earthquake.state = SpecialEvent_InProgress;
 			Data_Event.earthquake.duration = 0;
 			Data_Event.earthquake.delay = 0;
@@ -557,8 +558,8 @@ void Event_handleGladiatorRevolt()
 		return;
 	}
 	if (Data_Event.gladiatorRevolt.state == SpecialEvent_NotStarted) {
-		if (Data_CityInfo_Extra.gameTimeYear == Data_Event.gladiatorRevolt.gameYear &&
-			Data_CityInfo_Extra.gameTimeMonth == Data_Event.gladiatorRevolt.month) {
+		if (game_time_year() == Data_Event.gladiatorRevolt.gameYear &&
+			game_time_month() == Data_Event.gladiatorRevolt.month) {
 			if (Data_CityInfo_Buildings.gladiatorSchool.working > 0) {
 				Data_Event.gladiatorRevolt.state = SpecialEvent_InProgress;
 				PlayerMessage_post(1, Message_63_GladiatorRevolt, 0, 0);
@@ -567,7 +568,7 @@ void Event_handleGladiatorRevolt()
 			}
 		}
 	} else if (Data_Event.gladiatorRevolt.state == SpecialEvent_InProgress) {
-		if (Data_Event.gladiatorRevolt.endMonth == Data_CityInfo_Extra.gameTimeMonth) {
+		if (Data_Event.gladiatorRevolt.endMonth == game_time_month()) {
 			Data_Event.gladiatorRevolt.state = SpecialEvent_Finished;
 			PlayerMessage_post(1, Message_73_GladiatorRevoltFinished, 0, 0);
 		}
@@ -580,8 +581,8 @@ void Event_handleEmperorChange()
 		return;
 	}
 	if (Data_Event.emperorChange.state == 0) {
-		if (Data_CityInfo_Extra.gameTimeYear == Data_Event.emperorChange.gameYear &&
-			Data_CityInfo_Extra.gameTimeMonth == Data_Event.emperorChange.month) {
+		if (game_time_year() == Data_Event.emperorChange.gameYear &&
+			game_time_month() == Data_Event.emperorChange.month) {
 			Data_Event.emperorChange.state = 1; // done
 			PlayerMessage_post(1, Message_64_EmperorChange, 0, 0);
 		}

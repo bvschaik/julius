@@ -32,6 +32,7 @@
 #include "Data/State.h"
 
 #include "core/random.h"
+#include "game/time.h"
 
 #include <stdio.h>
 
@@ -41,7 +42,7 @@ static void advanceYear();
 
 void GameTick_doTick()
 {
-	printf("TICK %d.%d.%d\n", Data_CityInfo_Extra.gameTimeMonth, Data_CityInfo_Extra.gameTimeDay, Data_CityInfo_Extra.gameTimeTick);
+	printf("TICK %d.%d.%d\n", game_time_month(), game_time_day(), game_time_tick());
 	random_generate_next();
 	Undo_updateAvailable();
 	GameTick_advance();
@@ -56,7 +57,7 @@ void GameTick_advance()
 {
 	// NB: these ticks are noop:
 	// 0, 9, 11, 13, 14, 15, 26, 41, 42, 47
-	switch (Data_CityInfo_Extra.gameTimeTick) {
+	switch (game_time_tick()) {
 		case 1: CityInfo_Gods_calculateMoods(1); break;
 		case 2: Sound_Music_update(); break;
 		case 3: UI_Sidebar_requestMinimapRefresh(); break;
@@ -98,22 +99,17 @@ void GameTick_advance()
 		case 48: CityInfo_Finance_decayTaxCollectorAccess(); break;
 		case 49: CityInfo_Culture_calculateEntertainment(); break;
 	}
-	Data_CityInfo_Extra.gameTimeTick++;
-	if (Data_CityInfo_Extra.gameTimeTick >= 50) {
-		Data_CityInfo_Extra.gameTimeTick = 0;
+	if (game_time_advance_tick()) {
 		advanceDay();
 	}
 }
 
 static void advanceDay()
 {
-	Data_CityInfo_Extra.gameTimeDay++;
-	Data_CityInfo_Extra.gameTimeTotalDays++;
-	if (Data_CityInfo_Extra.gameTimeDay > 15) {
-		Data_CityInfo_Extra.gameTimeDay = 0;
+	if (game_time_advance_day()) {
 		advanceMonth();
 	}
-	if (Data_CityInfo_Extra.gameTimeDay == 0 || Data_CityInfo_Extra.gameTimeDay == 8) {
+	if (game_time_day() == 0 || game_time_day() == 8) {
 		CityInfo_Population_calculateSentiment();
 	}
 	Tutorial_onDayTick();
@@ -142,9 +138,7 @@ static void advanceMonth()
 	Routing_determineLandCitizen();
 	PlayerMessage_sortMessages();
 
-	Data_CityInfo_Extra.gameTimeMonth++;
-	if (Data_CityInfo_Extra.gameTimeMonth > 11) {
-		Data_CityInfo_Extra.gameTimeMonth = 0;
+	if (game_time_advance_month()) {
 		advanceYear();
 	} else {
 		CityInfo_Ratings_calculate(0);
@@ -162,7 +156,7 @@ static void advanceYear()
 {
 	Empire_handleExpandEvent();
 	Data_State.undoAvailable = 0;
-	Data_CityInfo_Extra.gameTimeYear++;
+	game_time_advance_year();
 	CityInfo_Population_requestYearlyUpdate();
 	CityInfo_Finance_handleYearChange();
 	Empire_resetYearlyTradeAmounts();

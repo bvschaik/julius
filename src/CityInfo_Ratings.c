@@ -7,6 +7,7 @@
 
 #include "building/model.h"
 #include "core/calc.h"
+#include "game/time.h"
 
 static void updateCultureRating();
 static void updateFavorRating(int isYearlyUpdate);
@@ -188,11 +189,11 @@ static void updateFavorRating(int isYearlyUpdate)
 		}
 		// milestone
 		int milestonePct;
-		if (Data_Scenario.startYear + Data_Scenario.milestone25 == Data_CityInfo_Extra.gameTimeYear) {
+		if (Data_Scenario.startYear + Data_Scenario.milestone25 == game_time_year()) {
 			milestonePct = 25;
-		} else if (Data_Scenario.startYear + Data_Scenario.milestone50 == Data_CityInfo_Extra.gameTimeYear) {
+		} else if (Data_Scenario.startYear + Data_Scenario.milestone50 == game_time_year()) {
 			milestonePct = 50;
-		} else if (Data_Scenario.startYear + Data_Scenario.milestone75 == Data_CityInfo_Extra.gameTimeYear) {
+		} else if (Data_Scenario.startYear + Data_Scenario.milestone75 == game_time_year()) {
 			milestonePct = 75;
 		} else {
 			milestonePct = 0;
@@ -387,7 +388,7 @@ void CityInfo_Ratings_updateProsperityExplanation()
 	}
 
 	int reason;
-	if (Data_CityInfo.ratingProsperity <= 0 && Data_CityInfo_Extra.gameTimeYear == Data_Scenario.startYear) {
+	if (Data_CityInfo.ratingProsperity <= 0 && game_time_year() == Data_Scenario.startYear) {
 		reason = 0;
 	} else if (Data_CityInfo.ratingProsperity >= Data_CityInfo.ratingProsperityMax) {
 		reason = 1;

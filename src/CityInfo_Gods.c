@@ -12,6 +12,7 @@
 
 #include "core/calc.h"
 #include "core/random.h"
+#include "game/time.h"
 
 #define MAX_GODS 5
 
@@ -171,7 +172,7 @@ static void updateGodMoods()
 			Data_CityInfo.godWrathBolts[god] = 50;
 		}
 	}
-	if (Data_CityInfo_Extra.gameTimeDay != 0) {
+	if (game_time_day() != 0) {
 		return;
 	}
 

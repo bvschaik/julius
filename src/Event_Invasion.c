@@ -21,6 +21,7 @@
 
 #include "core/random.h"
 #include "figure/name.h"
+#include "game/time.h"
 
 #include <string.h>
 
@@ -134,8 +135,8 @@ void Event_handleInvasions()
 		if (warning->monthsToGo <= 0) {
 			if (warning->handled != 1) {
 				warning->handled = 1;
-				warning->gameYearNotified = Data_CityInfo_Extra.gameTimeYear;
-				warning->gameMonthNotified = Data_CityInfo_Extra.gameTimeMonth;
+				warning->gameYearNotified = game_time_year();
+				warning->gameMonthNotified = game_time_month();
 				if (warning->warningYears > 2) {
 					PlayerMessage_post(0, Message_25_DistantBattle, 0, 0);
 				} else if (warning->warningYears > 1) {
@@ -145,8 +146,8 @@ void Event_handleInvasions()
 				}
 			}
 		}
-		if (Data_CityInfo_Extra.gameTimeYear >= Data_Scenario.startYear + Data_Scenario.invasions.year[warning->invasionId] &&
-			Data_CityInfo_Extra.gameTimeMonth >= Data_Scenario.invasions_month[warning->invasionId]) {
+		if (game_time_year() >= Data_Scenario.startYear + Data_Scenario.invasions.year[warning->invasionId] &&
+			game_time_month() >= Data_Scenario.invasions_month[warning->invasionId]) {
 			// invasion attack time has passed
 			warning->inUse = 0;
 			if (warning->warningYears > 1) {
@@ -184,8 +185,8 @@ void Event_handleInvasions()
 	// local uprisings
 	for (int i = 0; i < MAX_EVENTS; i++) {
 		if (Data_Scenario.invasions.type[i] == InvasionType_LocalUprising) {
-			if (Data_CityInfo_Extra.gameTimeYear == Data_Scenario.startYear + Data_Scenario.invasions.year[i] &&
-				Data_CityInfo_Extra.gameTimeMonth == Data_Scenario.invasions_month[i]) {
+			if (game_time_year() == Data_Scenario.startYear + Data_Scenario.invasions.year[i] &&
+				game_time_month() == Data_Scenario.invasions_month[i]) {
 				int gridOffset = startInvasion(
 					EnemyType_0_Barbarian,
 					Data_Scenario.invasions.amount[i],
@@ -440,7 +441,7 @@ static void updateDebtState()
 			PlayerMessage_post(1, Message_17_CityInDebtAgain, 0, 0);
 			Data_CityInfo.monthsInDebt = 0;
 		}
-		if (Data_CityInfo_Extra.gameTimeDay == 0) {
+		if (game_time_day() == 0) {
 			Data_CityInfo.monthsInDebt++;
 		}
 		if (Data_CityInfo.monthsInDebt >= 12) {
@@ -456,7 +457,7 @@ static void updateDebtState()
 			PlayerMessage_post(1, Message_18_CityStillInDebt, 0, 0);
 			Data_CityInfo.monthsInDebt = 0;
 		}
-		if (Data_CityInfo_Extra.gameTimeDay == 0) {
+		if (game_time_day() == 0) {
 			Data_CityInfo.monthsInDebt++;
 		}
 		if (Data_CityInfo.monthsInDebt >= 12) {

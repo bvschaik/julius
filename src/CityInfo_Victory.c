@@ -14,6 +14,8 @@
 #include "Data/Settings.h"
 #include "Data/State.h"
 
+#include "game/time.h"
+
 void CityInfo_Victory_check()
 {
 	if (Data_Scenario.isOpenPlay) {
@@ -61,7 +63,7 @@ void CityInfo_Victory_check()
 			numCriteria++;
 		}
 	}
-	if (Data_CityInfo_Extra.gameTimeYear >= Data_Event.timeLimitMaxGameYear) {
+	if (game_time_year() >= Data_Event.timeLimitMaxGameYear) {
 		if (Data_Scenario.winCriteria.timeLimitYearsEnabled) {
 			Data_State.winState = WinState_Lose;
 		} else if (Data_Scenario.winCriteria.survivalYearsEnabled) {

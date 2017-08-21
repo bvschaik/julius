@@ -7,6 +7,7 @@
 
 #include "building/model.h"
 #include "core/calc.h"
+#include "game/time.h"
 
 void CityInfo_Finance_decayTaxCollectorAccess()
 {
@@ -275,7 +276,7 @@ void CityInfo_Finance_calculateEstimatedWages()
 	int monthlyWages = Data_CityInfo.wages * Data_CityInfo.workersEmployed / 10 / 12;
 	Data_CityInfo.financeWagesThisYear = Data_CityInfo.financeWagesPaidThisYear;
 	Data_CityInfo.estimatedYearlyWages =
-		(12 - Data_CityInfo_Extra.gameTimeMonth) * monthlyWages +
+		(12 - game_time_month()) * monthlyWages +
 		Data_CityInfo.financeWagesPaidThisYear;
 }
 
@@ -302,7 +303,7 @@ void CityInfo_Finance_calculateEstimatedTaxes()
 	int monthlyPlebs = calc_adjust_with_percentage(
 		Data_CityInfo.monthlyCollectedTaxFromPlebs / 2,
 		Data_CityInfo.taxPercentage);
-	int estimatedRestOfYear = (12 - Data_CityInfo_Extra.gameTimeMonth) * (monthlyPatricians + monthlyPlebs);
+	int estimatedRestOfYear = (12 - game_time_month()) * (monthlyPatricians + monthlyPlebs);
 
 	Data_CityInfo.financeTaxesThisYear =
 		Data_CityInfo.yearlyCollectedTaxFromPlebs + Data_CityInfo.yearlyCollectedTaxFromPatricians;

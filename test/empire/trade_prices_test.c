@@ -9,8 +9,6 @@ INIT_MOCKS(
     INIT_BUFFER_MOCKS
 )
 
-buffer buf;
-
 void test_trade_price_reset()
 {
     trade_prices_reset();

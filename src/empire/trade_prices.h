@@ -2,7 +2,12 @@
 #define EMPIRE_TRADE_PRICES_H
 
 #include "core/buffer.h"
-#include "empire/resource.h"
+#include "game/resource.h"
+
+/**
+ * @file
+ * Trade prices.
+ */
 
 /**
  * Reset trade prices to the default

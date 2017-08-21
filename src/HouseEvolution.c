@@ -8,6 +8,7 @@
 #include "Data/Constants.h"
 
 #include "building/model.h"
+#include "game/time.h"
 
 static int checkEvolveDesirability(int buildingId);
 static int hasRequiredGoodsAndServices(int buildingId, int forUpgrade);
@@ -295,7 +296,7 @@ void HouseEvolution_Tick_evolveAndConsumeResources()
 		if (BuildingIsInUse(i) && BuildingIsHouse(Data_Buildings[i].type)) {
 			BuildingHouse_checkForCorruption(i);
 			(*callbacks[Data_Buildings[i].type - 10])(i, &hasExpanded);
-			if (Data_CityInfo_Extra.gameTimeDay == 0 || Data_CityInfo_Extra.gameTimeDay == 7) {
+			if (game_time_day() == 0 || game_time_day() == 7) {
 				consumeResources(i);
 			}
 		}

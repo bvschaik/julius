@@ -836,11 +836,6 @@ extern struct _Data_CityInfo_CultureCoverage {
 
 extern struct _Data_CityInfo_Extra {
 	int populationGraphOrder;
-	int gameTimeTick; // 50 ticks in a day
-	int gameTimeDay; // 16 days in a month
-	int gameTimeMonth; // 12 months in a year
-	int gameTimeYear;
-	int gameTimeTotalDays;
 	int startingFavor;
 	int personalSavingsLastMission;
 	struct {

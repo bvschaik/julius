@@ -40,6 +40,7 @@
 #include "core/zip.h"
 #include "empire/trade_prices.h"
 #include "figure/name.h"
+#include "game/time.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -134,11 +135,7 @@ typedef struct {
     buffer *Data_CityInfo_Extra_ciid;
     buffer *Data_Buildings;
     buffer *Data_Settings_Map_orientation;
-    buffer *Data_CityInfo_Extra_gameTimeTick;
-    buffer *Data_CityInfo_Extra_gameTimeDay;
-    buffer *Data_CityInfo_Extra_gameTimeMonth;
-    buffer *Data_CityInfo_Extra_gameTimeYear;
-    buffer *Data_CityInfo_Extra_gameTimeTotalDays;
+    buffer *game_time;
     buffer *Data_Buildings_Extra_highestBuildingIdEver;
     buffer *Data_Debug_maxConnectsEver;
     buffer *random_iv;
@@ -400,11 +397,7 @@ void init_savegame_data()
     state->Data_CityInfo_Extra_ciid = create_savegame_piece(4, 0);
     state->Data_Buildings = create_savegame_piece(256000, 1);
     state->Data_Settings_Map_orientation = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Extra_gameTimeTick = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Extra_gameTimeDay = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Extra_gameTimeMonth = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Extra_gameTimeYear = create_savegame_piece(4, 0);
-    state->Data_CityInfo_Extra_gameTimeTotalDays = create_savegame_piece(4, 0);
+    state->game_time = create_savegame_piece(20, 0);
     state->Data_Buildings_Extra_highestBuildingIdEver = create_savegame_piece(4, 0);
     state->Data_Debug_maxConnectsEver = create_savegame_piece(4, 0);
     state->random_iv = create_savegame_piece(8, 0);
@@ -615,6 +608,14 @@ void scenario_deserialize(scenario_state *file)
     random_load_state(file->random_iv);
 
     read_all_from_buffer(file->scenario, &Data_Scenario);
+    
+    // check if all buffers are empty
+    for (int i = 0; i < scenario_data.num_pieces; i++) {
+        buffer *buf = &scenario_data.pieces[i].buf;
+        if (buf->index != buf->size) {
+            printf("ERR: buffer %d not empty: %d of %d bytes used\n", i, buf->index, buf->size);
+        }
+    }
 }
 
 static void savegame_deserialize(savegame_state *state)
@@ -648,11 +649,9 @@ static void savegame_deserialize(savegame_state *state)
     read_all_from_buffer(state->Data_CityInfo_Extra_ciid, &Data_CityInfo_Extra.ciid);
     read_all_from_buffer(state->Data_Buildings, &Data_Buildings);
     read_all_from_buffer(state->Data_Settings_Map_orientation, &Data_Settings_Map.orientation);
-    read_all_from_buffer(state->Data_CityInfo_Extra_gameTimeTick, &Data_CityInfo_Extra.gameTimeTick);
-    read_all_from_buffer(state->Data_CityInfo_Extra_gameTimeDay, &Data_CityInfo_Extra.gameTimeDay);
-    read_all_from_buffer(state->Data_CityInfo_Extra_gameTimeMonth, &Data_CityInfo_Extra.gameTimeMonth);
-    read_all_from_buffer(state->Data_CityInfo_Extra_gameTimeYear, &Data_CityInfo_Extra.gameTimeYear);
-    read_all_from_buffer(state->Data_CityInfo_Extra_gameTimeTotalDays, &Data_CityInfo_Extra.gameTimeTotalDays);
+    
+    game_time_load_state(state->game_time);
+    
     read_all_from_buffer(state->Data_Buildings_Extra_highestBuildingIdEver, &Data_Buildings_Extra.highestBuildingIdEver);
     read_all_from_buffer(state->Data_Debug_maxConnectsEver, &Data_Debug.maxConnectsEver);
     
@@ -831,6 +830,14 @@ static void savegame_deserialize(savegame_state *state)
     read_all_from_buffer(state->Data_Tutorial_tutorial3_disease, &Data_Tutorial.tutorial3.disease);
     read_all_from_buffer(state->Data_CityInfo_Extra_entryPointFlag_gridOffset, &Data_CityInfo_Extra.entryPointFlag.gridOffset);
     read_all_from_buffer(state->Data_CityInfo_Extra_exitPointFlag_gridOffset, &Data_CityInfo_Extra.exitPointFlag.gridOffset);
+
+    // check if all buffers are empty
+    for (int i = 0; i < savegame_data.num_pieces; i++) {
+        buffer *buf = &savegame_data.pieces[i].buf;
+        if (buf->index != buf->size) {
+            printf("ERR: buffer %d not empty: %d of %d bytes used\n", i, buf->index, buf->size);
+        }
+    }
 }
 
 static void savegame_serialize(savegame_state *state)
@@ -864,11 +871,9 @@ static void savegame_serialize(savegame_state *state)
     write_all_to_buffer(state->Data_CityInfo_Extra_ciid, &Data_CityInfo_Extra.ciid);
     write_all_to_buffer(state->Data_Buildings, &Data_Buildings);
     write_all_to_buffer(state->Data_Settings_Map_orientation, &Data_Settings_Map.orientation);
-    write_all_to_buffer(state->Data_CityInfo_Extra_gameTimeTick, &Data_CityInfo_Extra.gameTimeTick);
-    write_all_to_buffer(state->Data_CityInfo_Extra_gameTimeDay, &Data_CityInfo_Extra.gameTimeDay);
-    write_all_to_buffer(state->Data_CityInfo_Extra_gameTimeMonth, &Data_CityInfo_Extra.gameTimeMonth);
-    write_all_to_buffer(state->Data_CityInfo_Extra_gameTimeYear, &Data_CityInfo_Extra.gameTimeYear);
-    write_all_to_buffer(state->Data_CityInfo_Extra_gameTimeTotalDays, &Data_CityInfo_Extra.gameTimeTotalDays);
+    
+    game_time_save_state(state->game_time);
+
     write_all_to_buffer(state->Data_Buildings_Extra_highestBuildingIdEver, &Data_Buildings_Extra.highestBuildingIdEver);
     write_all_to_buffer(state->Data_Debug_maxConnectsEver, &Data_Debug.maxConnectsEver);
     
@@ -1047,6 +1052,14 @@ static void savegame_serialize(savegame_state *state)
     write_all_to_buffer(state->Data_Tutorial_tutorial3_disease, &Data_Tutorial.tutorial3.disease);
     write_all_to_buffer(state->Data_CityInfo_Extra_entryPointFlag_gridOffset, &Data_CityInfo_Extra.entryPointFlag.gridOffset);
     write_all_to_buffer(state->Data_CityInfo_Extra_exitPointFlag_gridOffset, &Data_CityInfo_Extra.exitPointFlag.gridOffset);
+
+    // check if all buffers are empty
+    for (int i = 0; i < savegame_data.num_pieces; i++) {
+        buffer *buf = &savegame_data.pieces[i].buf;
+        if (buf->index != buf->size) {
+            printf("ERR: buffer %d not empty: %d of %d bytes used\n", i, buf->index, buf->size);
+        }
+    }
 }
 
 static void setupFromSavedGame();
@@ -1123,11 +1136,7 @@ int GameFile_loadSavedGameFromMissionPack(int missionId)
 
 static void debug()
 {
-	printf("TIME: y %d m %d d %d t %d\n",
-		Data_CityInfo_Extra.gameTimeYear,
-		Data_CityInfo_Extra.gameTimeMonth,
-		Data_CityInfo_Extra.gameTimeDay,
-		Data_CityInfo_Extra.gameTimeTick);
+	printf("TIME: y %d m %d d %d t %d\n", game_time_year(), game_time_month(), game_time_day(), game_time_tick());
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
 		if (b->state != BuildingState_Unused || b->type) {
@@ -1259,14 +1268,6 @@ int GameFile_loadScenario(const char *filename)
     
     scenario_deserialize(&scenario_data.state);
     
-    // check if all buffers are empty
-    for (int i = 0; i < scenario_data.num_pieces; i++) {
-        buffer *buf = &scenario_data.pieces[i].buf;
-        if (buf->index != buf->size) {
-            printf("ERR: buffer %d not empty: %d of %d bytes used\n", i, buf->index, buf->size);
-        }
-    }
-
     trade_prices_reset();
 	Empire_load(1, Data_Scenario.empireId);
 	Event_calculateDistantBattleRomanTravelTime();

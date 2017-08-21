@@ -2,6 +2,8 @@
 #include "Window.h"
 #include "../Data/Scenario.h"
 
+#include "game/time.h"
+
 static void drawHistoryGraph(int fullSize, int x, int y);
 static void drawCensusGraph(int fullSize, int x, int y);
 static void drawSocietyGraph(int fullSize, int x, int y);
@@ -450,8 +452,8 @@ static int getPopulationAtMonth(int max, int month)
 static void getMinMaxMonthYear(int maxMonths, int *startMonth, int *startYear, int *endMonth, int *endYear)
 {
 	if (Data_CityInfo.monthsSinceStart > maxMonths) {
-		*endMonth = Data_CityInfo_Extra.gameTimeMonth - 1;
-		*endYear = Data_CityInfo_Extra.gameTimeYear;
+		*endMonth = game_time_month() - 1;
+		*endYear = game_time_year();
 		if (*endMonth < 0) {
 			*endMonth += 12;
 			*endYear -= 1;

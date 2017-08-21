@@ -9,6 +9,7 @@
 #include "Data/Screen.h"
 
 #include "core/io.h"
+#include "game/time.h"
 
 #include <string.h>
 
@@ -558,7 +559,7 @@ void Empire_handleExpandEvent()
 	if (Data_Scenario.empireHasExpanded || Data_Scenario.empireExpansionYear <= 0) {
 		return;
 	}
-	if (Data_CityInfo_Extra.gameTimeYear < Data_Scenario.empireExpansionYear + Data_Scenario.startYear) {
+	if (game_time_year() < Data_Scenario.empireExpansionYear + Data_Scenario.startYear) {
 		return;
 	}
 

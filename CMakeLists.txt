@@ -29,6 +29,9 @@ set (EMPIRE_FILES
 set (FIGURE_FILES
     src/figure/name.c
 )
+set (GAME_FILES
+    src/game/time.c
+)
 add_executable(julius
 	linux/main2.c
 	linux/SDLSoundDevice.c
@@ -188,6 +191,7 @@ add_executable(julius
 	${BUILDING_FILES}
 	${EMPIRE_FILES}
 	${FIGURE_FILES}
+	${GAME_FILES}
 	${SMK_FILES})
 
 #include(FindPkgConfig)

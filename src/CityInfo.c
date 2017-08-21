@@ -5,6 +5,8 @@
 #include "Data/Constants.h"
 #include "Data/Debug.h"
 
+#include "game/time.h"
+
 #include <string.h>
 
 void CityInfo_init()
@@ -36,11 +38,7 @@ void CityInfo_init()
 
 void CityInfo_initGameTime()
 {
-	Data_CityInfo_Extra.gameTimeTick = 0;
-	Data_CityInfo_Extra.gameTimeTotalDays = 0;
-	Data_CityInfo_Extra.gameTimeDay = 0;
-	Data_CityInfo_Extra.gameTimeMonth = 0;
-	Data_CityInfo_Extra.gameTimeYear = 2098;
+    game_time_init(2098);
 	Data_Debug.incorrectHousePositions = 0;
 	Data_Debug.unfixableHousePositions = 0;
 	Data_Buildings_Extra.highestBuildingIdEver = 0;

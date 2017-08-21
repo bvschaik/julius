@@ -40,6 +40,7 @@
 #include "core/io.h"
 #include "core/random.h"
 #include "figure/name.h"
+#include "game/time.h"
 
 #include <string.h>
 
@@ -228,7 +229,7 @@ static void loadScenario(const char *scenarioName)
 	Data_CityInfo.treasury = calc_adjust_with_percentage(Data_Scenario.startFunds,
 		Data_Model_Difficulty.moneyPercentage[Data_Settings.difficulty]);
 	Data_CityInfo.financeBalanceLastYear = Data_CityInfo.treasury;
-	Data_CityInfo_Extra.gameTimeYear = Data_Scenario.startYear;
+	game_time_init(Data_Scenario.startYear);
 
 	// set up events
 	// earthquake

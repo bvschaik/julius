@@ -14,6 +14,7 @@
 #include "core/file.h"
 #include "core/lang.h"
 #include "core/time.h"
+#include "game/time.h"
 
 #include <string.h>
 
@@ -48,8 +49,8 @@ void PlayerMessage_post(int usePopup, int messageType, int param1, short param2)
 	struct Data_PlayerMessage *msg = &Data_Message.messages[id];
 	msg->messageType = messageType;
 	msg->readFlag = 0;
-	msg->year = Data_CityInfo_Extra.gameTimeYear;
-	msg->month = Data_CityInfo_Extra.gameTimeMonth;
+	msg->year = game_time_year();
+	msg->month = game_time_month();
 	msg->param1 = param1;
 	msg->param2 = param2;
 	msg->sequence = Data_Message.nextMessageSequence++;
@@ -273,7 +274,7 @@ void PlayerMessage_goToProblem()
 	Data_Message.hotspotCount = 0;
 	for (int i = 0; i < 999; i++) {
 		struct Data_PlayerMessage *msg = &Data_Message.messages[i];
-		if (msg->messageType && msg->year >= Data_CityInfo_Extra.gameTimeYear - 1) {
+		if (msg->messageType && msg->year >= game_time_year() - 1) {
             const lang_message *lang_msg = lang_get_message(PlayerMessage_getMessageTextId(msg->messageType));
 			lang_message_type langMessageType = lang_msg->message_type;
 			if (langMessageType == MESSAGE_TYPE_DISASTER || langMessageType == MESSAGE_TYPE_INVASION) {
@@ -293,7 +294,7 @@ void PlayerMessage_goToProblem()
 	int index = 0;
 	for (int i = 0; i < 999; i++) {
 		struct Data_PlayerMessage *msg = &Data_Message.messages[i];
-		if (msg->messageType && msg->year >= Data_CityInfo_Extra.gameTimeYear - 1) {
+		if (msg->messageType && msg->year >= game_time_year() - 1) {
 			int textId = PlayerMessage_getMessageTextId(msg->messageType);
 			lang_message_type langMessageType = lang_get_message(textId)->message_type;
 			if (langMessageType == MESSAGE_TYPE_DISASTER || langMessageType == MESSAGE_TYPE_INVASION) {
