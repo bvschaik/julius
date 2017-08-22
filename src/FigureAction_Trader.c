@@ -14,6 +14,7 @@
 #include "Data/Scenario.h"
 
 #include "empire/trade_prices.h"
+#include "figure/trader.h"
 
 static void advanceTradeNextImportResourceCaravan()
 {
@@ -267,7 +268,7 @@ void FigureAction_tradeCaravan(int figureId)
 					int resource = traderGetBuyResource(f->destinationBuildingId, f->empireCityId);
 					if (resource) {
 						Data_Empire_Trade.tradedThisYear[Data_Empire_Cities[f->empireCityId].routeId][resource]++;
-						Trader_buyResource(figureId, resource);
+						trader_record_bought_resource(f->traderId, resource);
 						f->traderAmountBought++;
 					} else {
 						moveOn++;
@@ -279,7 +280,7 @@ void FigureAction_tradeCaravan(int figureId)
 					int resource = traderGetSellResource(figureId, f->destinationBuildingId, f->empireCityId);
 					if (resource) {
 						Data_Empire_Trade.tradedThisYear[Data_Empire_Cities[f->empireCityId].routeId][resource]++;
-						Trader_sellResource(figureId, resource);
+						trader_record_sold_resource(f->traderId, resource);
 						f->loadsSoldOrCarrying++;
 					} else {
 						moveOn++;
@@ -405,7 +406,7 @@ void FigureAction_nativeTrader(int figureId)
 				f->waitTicks = 0;
 				if (FigureAction_TradeCaravan_canBuy(figureId, f->destinationBuildingId, 0)) {
 					int resource = traderGetBuyResource(f->destinationBuildingId, 0);
-					Trader_buyResource(figureId, resource);
+					trader_record_bought_resource(f->traderId, resource);
 					f->traderAmountBought += 3;
 				} else {
 					int xTile, yTile;

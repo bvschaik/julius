@@ -6,6 +6,8 @@
 
 #include "Data/CityInfo.h"
 
+#include "figure/trader.h"
+
 static int dockerDeliverImportResource(int figureId, int buildingId)
 {
 	int shipId = Data_Buildings[buildingId].data.other.boatFigureId;
@@ -103,8 +105,7 @@ void FigureAction_docker(int figureId)
 		struct Data_Figure *ship = &Data_Figures[b->data.other.boatFigureId];
 		if (ship->state != FigureState_Alive || ship->type != Figure_TradeShip) {
 			b->data.other.boatFigureId = 0;
-		} else if (Data_Figure_Traders[ship->traderId].totalBought >= 12 ||
-				Data_Figure_Traders[ship->traderId].totalSold >= 12) {
+		} else if (trader_has_traded_max(ship->traderId)) {
 			b->data.other.boatFigureId = 0;
 		} else if (ship->actionState == FigureActionState_115_TradeShipLeaving) {
 			b->data.other.boatFigureId = 0;
@@ -248,7 +249,8 @@ void FigureAction_docker(int figureId)
 					tradeCityId = 0;
 				}
 				if (Trader_tryImportResource(f->destinationBuildingId, f->resourceId, tradeCityId)) {
-					Trader_sellResource(b->data.other.boatFigureId, f->resourceId);
+                    int traderId = Data_Figures[b->data.other.boatFigureId].traderId;
+					trader_record_sold_resource(traderId, f->resourceId);
 					f->actionState = FigureActionState_138_DockerImportReturning;
 					f->waitTicks = 0;
 					f->destinationX = f->sourceX;
@@ -279,7 +281,8 @@ void FigureAction_docker(int figureId)
 				f->destinationY = f->sourceY;
 				f->waitTicks = 0;
 				if (Trader_tryExportResource(f->destinationBuildingId, f->resourceId, tradeCityId)) {
-					Trader_buyResource(b->data.other.boatFigureId, f->resourceId);
+                    int traderId = Data_Figures[b->data.other.boatFigureId].traderId;
+					trader_record_bought_resource(traderId, f->resourceId);
 					f->actionState = FigureActionState_137_DockerExportReturning;
 				} else {
 					dockerGetExportResource(figureId, f->buildingId);

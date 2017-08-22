@@ -19,7 +19,6 @@
 #include "Sound.h"
 #include "Terrain.h"
 #include "TerrainGraphics.h"
-#include "Trader.h"
 
 #include "UI/Window.h"
 
@@ -40,6 +39,7 @@
 #include "core/io.h"
 #include "core/random.h"
 #include "figure/name.h"
+#include "figure/trader.h"
 #include "game/time.h"
 
 #include <string.h>
@@ -278,7 +278,7 @@ static void loadScenario(const char *scenarioName)
 
 	Empire_load(1, Data_Scenario.empireId);
 	Empire_initCities();
-	Trader_clearList();
+	traders_clear();
 	Event_initInvasions();
 	Empire_determineDistantBattleCity();
 	Event_initRequests();

@@ -324,19 +324,9 @@ extern struct Data_Figure {
 	short opponentId; // 7e
 } Data_Figures[MAX_FIGURES];
 
-extern struct Data_Figure_Trader {
-	int totalBought;
-	int totalSold;
-	unsigned char boughtResources[16];
-	unsigned char soldResources[16];
-	int moneyBoughtResources;
-	int moneySoldResources;
-} Data_Figure_Traders[MAX_TRADERS];
-
 extern struct _Data_Figure_Extra {
 	int highestFigureIdEver;
 	int createdSequence;
-	int nextTraderId;
 } Data_Figure_Extra;
 
 #endif

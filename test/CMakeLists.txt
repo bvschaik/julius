@@ -21,6 +21,7 @@ set(TESTS
     empire/trade_prices
     
     figure/name
+    figure/trader
     
     game/time
 )

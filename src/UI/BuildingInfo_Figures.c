@@ -16,6 +16,8 @@
 #include "../Data/Scenario.h"
 #include "../Data/Settings.h"
 
+#include "figure/trader.h"
+
 static void selectFigure(int param1, int param2);
 
 static const int figureTypeToBigPeopleGraphicId[] = {
@@ -103,7 +105,7 @@ static void drawFigureInfoTrade(BuildingInfoContext *c, int figureId)
 				textId = 10;
 				break;
 			case FigureActionState_103_TradeCaravanLeaving:
-				if (Data_Figure_Traders[traderId].totalSold || Data_Figure_Traders[traderId].totalBought) {
+				if (trader_has_traded(traderId)) {
 					textId = 11;
 				} else {
 					textId = 13;
@@ -115,12 +117,12 @@ static void drawFigureInfoTrade(BuildingInfoContext *c, int figureId)
 		}
 		Widget_GameText_draw(129, textId, c->xOffset + 40, c->yOffset + 150, Font_SmallBlack);
 	}
-	if (Data_Figure_Traders[traderId].totalSold || Data_Figure_Traders[traderId].totalBought) {
+	if (trader_has_traded(traderId)) {
 		// bought
 		width = Widget_GameText_draw(129, 4, c->xOffset + 40, c->yOffset + 170, Font_SmallBlack);
 		for (int r = Resource_Min; r < Resource_Max; r++) {
-			if (Data_Figure_Traders[traderId].boughtResources[r]) {
-				width += Widget_Text_drawNumber(Data_Figure_Traders[traderId].boughtResources[r],
+			if (trader_bought_resources(traderId, r)) {
+				width += Widget_Text_drawNumber(trader_bought_resources(traderId, r),
 					'@', " ", c->xOffset + 40 + width, c->yOffset + 170, Font_SmallBlack);
 				int graphicId = GraphicId(ID_Graphic_ResourceIcons) + r + Resource_getGraphicIdOffset(r, 3);
 				Graphics_drawImage(graphicId, c->xOffset + 40 + width, c->yOffset + 167);
@@ -130,8 +132,8 @@ static void drawFigureInfoTrade(BuildingInfoContext *c, int figureId)
 		// sold
 		width = Widget_GameText_draw(129, 5, c->xOffset + 40, c->yOffset + 200, Font_SmallBlack);
 		for (int r = Resource_Min; r < Resource_Max; r++) {
-			if (Data_Figure_Traders[traderId].soldResources[r]) {
-				width += Widget_Text_drawNumber(Data_Figure_Traders[traderId].soldResources[r],
+			if (trader_sold_resources(traderId, r)) {
+				width += Widget_Text_drawNumber(trader_sold_resources(traderId, r),
 					'@', " ", c->xOffset + 40 + width, c->yOffset + 200, Font_SmallBlack);
 				int graphicId = GraphicId(ID_Graphic_ResourceIcons) + r + Resource_getGraphicIdOffset(r, 3);
 				Graphics_drawImage(graphicId, c->xOffset + 40 + width, c->yOffset + 197);

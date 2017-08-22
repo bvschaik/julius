@@ -29,6 +29,7 @@ set (EMPIRE_FILES
 )
 set (FIGURE_FILES
     src/figure/name.c
+    src/figure/trader.c
 )
 set (GAME_FILES
     src/game/time.c

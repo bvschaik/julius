@@ -47,7 +47,6 @@ struct _Data_State Data_State;
 
 struct Data_Figure Data_Figures[MAX_FIGURES];
 struct _Data_Figure_Extra Data_Figure_Extra;
-struct Data_Figure_Trader Data_Figure_Traders[MAX_TRADERS];
 
 struct Data_Building Data_Buildings[MAX_BUILDINGS];
 struct Data_Building_Storage Data_Building_Storages[MAX_STORAGES];

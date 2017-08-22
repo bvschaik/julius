@@ -20,37 +20,6 @@
 
 #include <string.h>
 
-void Trader_clearList()
-{
-	memset(Data_Figure_Traders, 0, MAX_TRADERS * sizeof(struct Data_Figure_Trader));
-	Data_Figure_Extra.nextTraderId = 0;
-}
-
-void Trader_create(int figureId)
-{
-	Data_Figures[figureId].traderId = Data_Figure_Extra.nextTraderId;
-	memset(&Data_Figure_Traders[Data_Figure_Extra.nextTraderId], 0, sizeof(struct Data_Figure_Trader));
-	if (++Data_Figure_Extra.nextTraderId >= 100) {
-		Data_Figure_Extra.nextTraderId = 0;
-	}
-}
-
-void Trader_sellResource(int figureId, int resourceId)
-{
-	int traderId = Data_Figures[figureId].traderId;
-	Data_Figure_Traders[traderId].totalSold++;
-	Data_Figure_Traders[traderId].soldResources[resourceId]++;
-	Data_Figure_Traders[traderId].moneySoldResources += trade_price_sell(resourceId);
-}
-
-void Trader_buyResource(int figureId, int resourceId)
-{
-	int traderId = Data_Figures[figureId].traderId;
-	Data_Figure_Traders[traderId].totalBought++;
-	Data_Figure_Traders[traderId].boughtResources[resourceId]++;
-	Data_Figure_Traders[traderId].moneyBoughtResources += trade_price_buy(resourceId);
-}
-
 static int generateTrader(int cityId)
 {
 	struct Data_Empire_City *city = &Data_Empire_Cities[cityId];

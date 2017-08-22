@@ -19,6 +19,7 @@
 
 #include "core/calc.h"
 #include "core/random.h"
+#include "figure/trader.h"
 #include "figure/name.h"
 
 #include <string.h>
@@ -61,7 +62,7 @@ int Figure_create(int figureType, int x, int y, char direction)
 	f->name = figure_name_get(figureType, 0);
 	Figure_addToTileList(id);
 	if (figureType == Figure_TradeCaravan || figureType == Figure_TradeShip) {
-		Trader_create(id);
+		f->traderId = trader_create();
 	}
 	if (id > Data_Figure_Extra.highestFigureIdEver) {
 		Data_Figure_Extra.highestFigureIdEver = id;

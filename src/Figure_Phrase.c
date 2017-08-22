@@ -8,6 +8,8 @@
 #include "Data/Constants.h"
 #include "Data/Figure.h"
 
+#include "figure/trader.h"
+
 #include <string.h>
 
 static char figureSounds[32][20][32] = {
@@ -428,8 +430,7 @@ int Figure_determinePhrase(int figureId)
 			}
 			phraseId = 8 + f->phraseSequenceExact;
 			if (f->actionState == FigureActionState_103_TradeCaravanLeaving) {
-				if (!Data_Figure_Traders[f->traderId].totalSold &&
-					!Data_Figure_Traders[f->traderId].totalBought) {
+				if (!trader_has_traded(f->traderId)) {
 					phraseId = 7; // no trade
 				}
 			} else if (f->actionState == FigureActionState_102_TradeCaravanTrading) {
@@ -442,8 +443,7 @@ int Figure_determinePhrase(int figureId)
 			break;
 		case Figure_TradeShip:
 			if (f->actionState == FigureActionState_115_TradeShipLeaving) {
-				if (!Data_Figure_Traders[f->traderId].totalSold &&
-					!Data_Figure_Traders[f->traderId].totalBought) {
+				if (!trader_has_traded(f->traderId)) {
 					phraseId = 9; // no trade
 				} else {
 					phraseId = 11; // good trade

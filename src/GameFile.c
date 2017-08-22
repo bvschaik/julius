@@ -41,6 +41,7 @@
 #include "core/zip.h"
 #include "empire/trade_prices.h"
 #include "figure/name.h"
+#include "figure/trader.h"
 #include "game/time.h"
 
 #include <stdio.h>
@@ -197,8 +198,7 @@ typedef struct {
     buffer *Data_Settings_isCustomScenario;
     buffer *Data_Sound_City;
     buffer *Data_Buildings_Extra_highestBuildingIdInUse;
-    buffer *Data_Figure_Traders;
-    buffer *Data_Figure_Extra_nextTraderId;
+    buffer *figure_traders;
     buffer *Data_BuildingList_burning_items;
     buffer *Data_BuildingList_small_items;
     buffer *Data_BuildingList_large_items;
@@ -402,8 +402,7 @@ void init_savegame_data()
     state->Data_Settings_isCustomScenario = create_savegame_piece(4, 0);
     state->Data_Sound_City = create_savegame_piece(8960, 0);
     state->Data_Buildings_Extra_highestBuildingIdInUse = create_savegame_piece(4, 0);
-    state->Data_Figure_Traders = create_savegame_piece(4800, 0);
-    state->Data_Figure_Extra_nextTraderId = create_savegame_piece(4, 0);
+    state->figure_traders = create_savegame_piece(4804, 0);
     state->Data_BuildingList_burning_items = create_savegame_piece(1000, 1);
     state->Data_BuildingList_small_items = create_savegame_piece(1000, 1);
     state->Data_BuildingList_large_items = create_savegame_piece(4000, 1);
@@ -609,8 +608,9 @@ static void savegame_deserialize(savegame_state *state)
     read_all_from_buffer(state->Data_Settings_isCustomScenario, &Data_Settings.isCustomScenario);
     read_all_from_buffer(state->Data_Sound_City, &Data_Sound_City);
     read_all_from_buffer(state->Data_Buildings_Extra_highestBuildingIdInUse, &Data_Buildings_Extra.highestBuildingIdInUse);
-    read_all_from_buffer(state->Data_Figure_Traders, &Data_Figure_Traders);
-    read_all_from_buffer(state->Data_Figure_Extra_nextTraderId, &Data_Figure_Extra.nextTraderId);
+    
+    traders_load_state(state->figure_traders);
+    
     read_all_from_buffer(state->Data_BuildingList_burning_items, &Data_BuildingList.burning.items);
     read_all_from_buffer(state->Data_BuildingList_small_items, &Data_BuildingList.small.items);
     read_all_from_buffer(state->Data_BuildingList_large_items, &Data_BuildingList.large.items);
@@ -776,8 +776,9 @@ static void savegame_serialize(savegame_state *state)
     write_all_to_buffer(state->Data_Settings_isCustomScenario, &Data_Settings.isCustomScenario);
     write_all_to_buffer(state->Data_Sound_City, &Data_Sound_City);
     write_all_to_buffer(state->Data_Buildings_Extra_highestBuildingIdInUse, &Data_Buildings_Extra.highestBuildingIdInUse);
-    write_all_to_buffer(state->Data_Figure_Traders, &Data_Figure_Traders);
-    write_all_to_buffer(state->Data_Figure_Extra_nextTraderId, &Data_Figure_Extra.nextTraderId);
+
+    traders_save_state(state->figure_traders);
+
     write_all_to_buffer(state->Data_BuildingList_burning_items, &Data_BuildingList.burning.items);
     write_all_to_buffer(state->Data_BuildingList_small_items, &Data_BuildingList.small.items);
     write_all_to_buffer(state->Data_BuildingList_large_items, &Data_BuildingList.large.items);
