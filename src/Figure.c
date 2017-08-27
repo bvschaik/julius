@@ -19,8 +19,9 @@
 
 #include "core/calc.h"
 #include "core/random.h"
-#include "figure/trader.h"
+#include "figure/formation.h"
 #include "figure/name.h"
+#include "figure/trader.h"
 
 #include <string.h>
 
@@ -268,12 +269,9 @@ void Figure_createHerds()
 	}
 	for (int i = 0; i < 4; i++) {
 		if (Data_Scenario.herdPoints.x[i] > 0) {
-			int formationId = Formation_create(herdType, FormationLayout_Herd, 0,
-				Data_Scenario.herdPoints.x[i], Data_Scenario.herdPoints.y[i]);
+			int formationId = formation_create_herd(herdType,
+				Data_Scenario.herdPoints.x[i], Data_Scenario.herdPoints.y[i], numAnimals);
 			if (formationId > 0) {
-				Data_Formations[formationId].isHerd = 1;
-				Data_Formations[formationId].waitTicks = 24;
-				Data_Formations[formationId].maxFigures = numAnimals;
 				for (int fig = 0; fig < numAnimals; fig++) {
 					random_generate_next();
 					int figureId = Figure_create(herdType,
@@ -308,45 +306,50 @@ void Figure_createFlotsam(int xEntry, int yEntry, int hasWater)
 	}
 }
 
+struct state {
+    const int building_id;
+    const int has_weapons;
+    int recruit_type;
+    int formation_id;
+    int min_distance;
+};
+
+static void update_closest_fort_needing_soldiers(const formation *formation, void *data)
+{
+    struct state *state = (struct state*) data;
+    if (formation->in_distant_battle || !formation->legion_recruit_type) {
+        return;
+    }
+    if (formation->legion_recruit_type == LEGION_RECRUIT_LEGIONARY && !state->has_weapons) {
+        return;
+    }
+    int dist = calc_maximum_distance(
+        Data_Buildings[state->building_id].x, Data_Buildings[state->building_id].y,
+        Data_Buildings[formation->building_id].x, Data_Buildings[formation->building_id].y);
+    if (formation->legion_recruit_type > state->recruit_type ||
+        (formation->legion_recruit_type == state->recruit_type && dist < state->min_distance)) {
+        state->recruit_type = formation->legion_recruit_type;
+        state->formation_id = formation->id;
+        state->min_distance = dist;
+    }
+}
+
 int Figure_createSoldierFromBarracks(int buildingId, int x, int y)
 {
-	int noWeapons = Data_Buildings[buildingId].loadsStored <= 0;
-	int recruitType = 0;
-	int formationId = 0;
-	int minDist = 10000;
-	for (int i = 1; i < MAX_FORMATIONS; i++) {
-		struct Data_Formation *m = &Data_Formations[i];
-		if (m->inUse != 1 || !m->isLegion || m->inDistantBattle || !m->legionRecruitType) {
-			continue;
-		}
-		if (m->legionRecruitType == 3 && noWeapons) {
-			continue;
-		}
-		int dist = calc_maximum_distance(
-			Data_Buildings[buildingId].x, Data_Buildings[buildingId].y,
-			Data_Buildings[m->buildingId].x, Data_Buildings[m->buildingId].y);
-		if (m->legionRecruitType > recruitType) {
-			recruitType = m->legionRecruitType;
-			formationId = i;
-			minDist = dist;
-		} else if (m->legionRecruitType == recruitType && dist < minDist) {
-			recruitType = m->legionRecruitType;
-			formationId = i;
-			minDist = dist;
-		}
-	}
-	if (formationId > 0) {
-		struct Data_Formation *m = &Data_Formations[formationId];
-		int figureId = Figure_create(m->figureType, x, y, 0);
+    struct state state = {buildingId, Data_Buildings[buildingId].loadsStored > 0, 0, 0, 10000};
+    formation_foreach_legion(update_closest_fort_needing_soldiers, &state);
+	if (state.formation_id > 0) {
+		const formation *m = formation_get(state.formation_id);
+		int figureId = Figure_create(m->figure_type, x, y, 0);
 		struct Data_Figure *f = &Data_Figures[figureId];
-		f->formationId = formationId;
+		f->formationId = state.formation_id;
 		f->formationAtRest = 1;
-		if (m->figureType == Figure_FortLegionary) {
+		if (m->figure_type == Figure_FortLegionary) {
 			if (Data_Buildings[buildingId].loadsStored > 0) {
 				Data_Buildings[buildingId].loadsStored--;
 			}
 		}
-		int academyId = Formation_getClosestMilitaryAcademy(formationId);
+		int academyId = Formation_getClosestMilitaryAcademy(state.formation_id);
 		if (academyId) {
 			int xRoad, yRoad;
 			if (Terrain_hasRoadAccess(Data_Buildings[academyId].x,
@@ -363,7 +366,7 @@ int Figure_createSoldierFromBarracks(int buildingId, int x, int y)
 		}
 	}
 	Formation_calculateFigures();
-	return formationId ? 1 : 0;
+	return state.formation_id ? 1 : 0;
 }
 
 int Figure_createTowerSentryFromBarracks(int buildingId, int x, int y)

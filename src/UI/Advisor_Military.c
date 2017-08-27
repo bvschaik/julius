@@ -9,6 +9,8 @@
 #include "../Data/Formation.h"
 #include "../Data/Settings.h"
 
+#include "figure/formation.h"
+
 static void buttonGoToLegion(int param1, int param2);
 static void buttonReturnToFort(int param1, int param2);
 static void buttonEmpireService(int param1, int param2);
@@ -55,7 +57,7 @@ void UI_Advisor_Military_drawBackground(int *advisorHeight)
 	Widget_GameText_draw(51, 6, baseOffsetX + 550, baseOffsetY + 58, Font_SmallPlain);
 	Widget_GameText_draw(138, 36, baseOffsetX + 290, baseOffsetY + 58, Font_SmallPlain);
 
-	numLegions = Formation_getNumLegions();
+	numLegions = formation_get_num_legions();
 
 	if (numLegions <= 0) {
 		Graphics_drawImage(GraphicId(ID_Graphic_Bullet), baseOffsetX + 100, baseOffsetY + 359);
@@ -124,16 +126,16 @@ void UI_Advisor_Military_drawBackground(int *advisorHeight)
 	}
 
 	for (int i = 0; i < numLegions; i++) {
-		int formationId = Formation_getLegionFormationId(i + 1);
-		struct Data_Formation *m = &Data_Formations[formationId];
+		int formationId = formation_for_legion(i + 1);
+		const formation *m = formation_get(formationId);
 		Widget_Panel_drawButtonBorder(baseOffsetX + 38, baseOffsetY + 77 + 44 * i, 560, 40, 0);
-		Graphics_drawImage(GraphicId(ID_Graphic_FortStandardIcons) + m->legionId,
+		Graphics_drawImage(GraphicId(ID_Graphic_FortStandardIcons) + m->legion_id,
 			baseOffsetX + 48, baseOffsetY + 82 + 44 * i);
-		Widget_GameText_draw(138, m->legionId,
+		Widget_GameText_draw(138, m->legion_id,
 			baseOffsetX + 100, baseOffsetY + 83 + 44 * i, Font_NormalWhite);
-		int width = Widget_Text_drawNumber(m->numFigures, '@', " ",
+		int width = Widget_Text_drawNumber(m->num_figures, '@', " ",
 			baseOffsetX + 100, baseOffsetY + 100 + 44 * i, Font_NormalGreen);
-		switch (m->figureType) {
+		switch (m->figure_type) {
 			case Figure_FortLegionary:
 				Widget_GameText_draw(138, 33, baseOffsetX + 100 + width, baseOffsetY + 100 + 44 * i, Font_NormalGreen);
 				break;
@@ -152,14 +154,14 @@ void UI_Advisor_Military_drawBackground(int *advisorHeight)
 		Graphics_drawImage(graphicId, baseOffsetX + 403, baseOffsetY + 86 + 44 * i);
 
 		Widget_Panel_drawButtonBorder(baseOffsetX + 480, baseOffsetY + 83 + 44 * i, 30, 30, 0);
-		if (m->isAtFort) {
+		if (m->is_at_fort) {
 			Graphics_drawImage(graphicId + 2, baseOffsetX + 483, baseOffsetY + 86 + 44 * i);
 		} else {
 			Graphics_drawImage(graphicId + 1, baseOffsetX + 483, baseOffsetY + 86 + 44 * i);
 		}
 
 		Widget_Panel_drawButtonBorder(baseOffsetX + 560, baseOffsetY + 83 + 44 * i, 30, 30, 0);
-		if (m->empireService) {
+		if (m->empire_service) {
 			Graphics_drawImage(graphicId + 3, baseOffsetX + 563, baseOffsetY + 86 + 44 * i);
 		} else {
 			Graphics_drawImage(graphicId + 4, baseOffsetX + 563, baseOffsetY + 86 + 44 * i);
@@ -172,7 +174,7 @@ void UI_Advisor_Military_drawForeground()
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
 
-	numLegions = Formation_getNumLegions();
+	numLegions = formation_get_num_legions();
 	for (int i = 0; i < numLegions; i++) {
 		Widget_Panel_drawButtonBorder(baseOffsetX + 400, baseOffsetY + 83 + 44 * i, 30, 30,
 			focusButtonId == 3 * i + 1);
@@ -193,16 +195,15 @@ void UI_Advisor_Military_handleMouse()
 
 static void buttonGoToLegion(int legionId, int param2)
 {
-	int formationId = Formation_getLegionFormationId(legionId);
-	CityView_goToGridOffset(GridOffset(
-		Data_Formations[formationId].xHome, Data_Formations[formationId].yHome));
+	const formation *m = formation_get(formation_for_legion(legionId));
+	CityView_goToGridOffset(GridOffset(m->x_home, m->y_home));
 	UI_Window_goTo(Window_City);
 }
 
 static void buttonReturnToFort(int legionId, int param2)
 {
-	int formationId = Formation_getLegionFormationId(legionId);
-	if (!Data_Formations[formationId].inDistantBattle) {
+	int formationId = formation_for_legion(legionId);
+	if (!formation_get(formationId)->in_distant_battle) {
 		Formation_legionReturnHome(formationId);
 		UI_Window_requestRefresh();
 	}
@@ -210,12 +211,8 @@ static void buttonReturnToFort(int legionId, int param2)
 
 static void buttonEmpireService(int legionId, int param2)
 {
-	int formationId = Formation_getLegionFormationId(legionId);
-	if (Data_Formations[formationId].empireService) {
-		Data_Formations[formationId].empireService = 0;
-	} else {
-		Data_Formations[formationId].empireService = 1;
-	}
+	int formationId = formation_for_legion(legionId);
+    formation_toggle_empire_service(formationId);
 	Formation_calculateFigures();
 	UI_Window_requestRefresh();
 }

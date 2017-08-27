@@ -6,10 +6,9 @@
 #include "../TerrainBridge.h"
 #include "../TerrainGraphics.h"
 
-#include "../Data/Formation.h"
-
 #include "building/count.h"
 #include "core/time.h"
+#include "figure/formation.h"
 
 static void drawBuildingGhostDraggableReservoir();
 static void drawBuildingGhostAqueduct();
@@ -763,7 +762,7 @@ static void drawBuildingGhostFort()
 {
 	int fullyObstructed = 0;
 	int placementObstructed = 0;
-	if (Data_Formation_Extra.numForts >= 6 || Data_CityInfo.treasury <= MIN_TREASURY) {
+	if (formation_get_num_legions_cached() >= 6 || Data_CityInfo.treasury <= MIN_TREASURY) {
 		fullyObstructed = 1;
 		placementObstructed = 1;
 	}

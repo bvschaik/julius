@@ -38,6 +38,7 @@
 #include "core/file.h"
 #include "core/io.h"
 #include "core/random.h"
+#include "figure/formation.h"
 #include "figure/name.h"
 #include "figure/trader.h"
 #include "game/time.h"
@@ -178,7 +179,7 @@ static void initCustomScenario(const char *scenarioName)
 	Figure_clearList();
 	Formation_clearInvasionInfo();
 	figure_name_init();
-	Formation_clearList();
+    formations_clear();
 	FigureRoute_clearList();
 	CityInfo_initGameTime();
 

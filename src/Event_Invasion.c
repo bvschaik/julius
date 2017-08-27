@@ -20,6 +20,7 @@
 #include "Data/Figure.h"
 
 #include "core/random.h"
+#include "figure/formation.h"
 #include "figure/name.h"
 #include "game/time.h"
 
@@ -363,24 +364,19 @@ static int startInvasion(int enemyType, int amount, int invasionPoint, int attac
 		}
 		int figureType = enemyProperties[enemyType].figureTypes[type];
 		for (int i = 0; i < formationsPerType[type]; i++) {
-			int formationId = Formation_create(
-				figureType, enemyProperties[enemyType].formationLayout,
-				orientation, x, y);
-			if (formationId <= 0) {
+            int formation_id = formation_create_enemy(
+                figureType, x, y, enemyProperties[enemyType].formationLayout, orientation,
+                enemyType, attackType, invasionId, Data_Event.lastInternalInvasionId
+            );
+			if (formation_id <= 0) {
 				continue;
 			}
-			struct Data_Formation *f = &Data_Formations[formationId];
-			f->attackType = attackType;
-			f->orientation = orientation;
-			f->enemyType = enemyType;
-			f->invasionId = invasionId;
-			f->invasionSeq = Data_Event.lastInternalInvasionId;
 			for (int fig = 0; fig < soldiersPerFormation[type][i]; fig++) {
 				int figureId = Figure_create(figureType, x, y, orientation);
 				Data_Figures[figureId].isFriendly = 0;
 				Data_Figures[figureId].actionState = FigureActionState_151_EnemyInitial;
 				Data_Figures[figureId].waitTicks = 200 * seq + 10 * fig + 10;
-				Data_Figures[figureId].formationId = formationId;
+				Data_Figures[figureId].formationId = formation_id;
 				Data_Figures[figureId].name = figure_name_get(figureType, enemyType);
 				Data_Figures[figureId].isGhost = 1;
 			}
@@ -392,20 +388,12 @@ static int startInvasion(int enemyType, int amount, int invasionPoint, int attac
 
 static void caesarInvasionPause()
 {
-	for (int i = 1; i < MAX_FORMATIONS; i++) {
-		if (Data_Formations[i].inUse == 1 && Data_Formations[i].figureType == Figure_EnemyCaesarLegionary) {
-			Data_Formations[i].waitTicks = 20;
-		}
-	}
+    formation_caesar_pause();
 }
 
 static void caesarInvasionRetreat()
 {
-	for (int i = 1; i < MAX_FORMATIONS; i++) {
-		if (Data_Formations[i].inUse == 1 && Data_Formations[i].figureType == Figure_EnemyCaesarLegionary) {
-			Data_Formations[i].monthsLowMorale = 1;
-		}
-	}
+    formation_caesar_retreat();
 	if (!Data_CityInfo.caesarInvasionRetreatMessageShown) {
 		Data_CityInfo.caesarInvasionRetreatMessageShown = 1;
 		PlayerMessage_post(1, Message_21_CaesarArmyRetreat, 0, 0);

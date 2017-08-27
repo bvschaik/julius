@@ -32,6 +32,7 @@
 #include "building/count.h"
 #include "building/model.h"
 #include "core/random.h"
+#include "figure/formation.h"
 
 #define BOUND_REGION() \
 	if (xStart < xEnd) {\
@@ -82,15 +83,15 @@ static void addToTerrainFort(int type, int buildingId, int x, int y, int size)
 	Data_Buildings[buildingId].formationId = formationId;
 	if (type == BUILDING_FORT_LEGIONARIES) {
 		Data_Buildings[buildingId].subtype.fortFigureType = Figure_FortLegionary;
-		Data_Formations[formationId].figureType = Figure_FortLegionary;
+        formation_set_figure_type(formationId, Figure_FortLegionary);
 	}
 	if (type == BUILDING_FORT_JAVELIN) {
 		Data_Buildings[buildingId].subtype.fortFigureType = Figure_FortJavelin;
-		Data_Formations[formationId].figureType = Figure_FortJavelin;
+        formation_set_figure_type(formationId, Figure_FortJavelin);
 	}
 	if (type == BUILDING_FORT_MOUNTED) {
 		Data_Buildings[buildingId].subtype.fortFigureType = Figure_FortMounted;
-		Data_Formations[formationId].figureType = Figure_FortMounted;
+        formation_set_figure_type(formationId, Figure_FortMounted);
 	}
 	// create parade ground
 	int groundId = Building_create(BUILDING_FORT_GROUND, x + 3, y - 1);
@@ -648,7 +649,7 @@ static int placeBuilding(int type, int x, int y)
 			UI_Warning_show(Warning_ClearLandNeeded);
 			return 0;
 		}
-		if (Data_Formation_Extra.numForts >= 6) {
+		if (formation_get_num_legions_cached() >= 6) {
 			UI_Warning_show(Warning_MaxLegionsReached);
 			return 0;
 		}
@@ -1198,7 +1199,7 @@ void BuildingPlacement_update(int xStart, int yStart, int xEnd, int yEnd, int ty
 	} else if (type == BUILDING_WAREHOUSE) {
 		Terrain_updateToPlaceBuildingToOverlay(3, xEnd, yEnd, Terrain_All, 0);
 	} else if (type == BUILDING_FORT_LEGIONARIES || type == BUILDING_FORT_JAVELIN || type == BUILDING_FORT_MOUNTED) {
-		if (Data_Formation_Extra.numForts < 6) {
+		if (formation_get_num_legions_cached() < 6) {
 			const int offsetsX[] = {3, 4, 4, 3};
 			const int offsetsY[] = {-1, -1, 0, 0};
 			int orientIndex = Data_Settings_Map.orientation / 2;
@@ -1363,7 +1364,7 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
 	if ((type >= BUILDING_LARGE_TEMPLE_CERES && type <= BUILDING_LARGE_TEMPLE_VENUS) || type == BUILDING_ORACLE) {
 		Resource_removeFromCityWarehouses(Resource_Marble, 2);
 	}
-	Formation_moveHerdsAwayFrom(xEnd, yEnd);
+	formation_move_herds_away(xEnd, yEnd);
 	CityInfo_Finance_spendOnConstruction(placementCost);
 	if (type != BUILDING_TRIUMPHAL_ARCH) {
 		Undo_recordBuild(placementCost);

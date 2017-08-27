@@ -16,6 +16,7 @@
 
 #include "building/count.h"
 #include "core/calc.h"
+#include "figure/formation.h"
 
 static void buttonReturnToFort(int param1, int param2);
 static void buttonLayout(int param1, int param2);
@@ -93,7 +94,7 @@ void UI_BuildingInfo_drawFort(BuildingInfoContext *c)
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(89, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, Font_LargeBlack);
 
-	if (Data_Formations[c->formationId].cursedByMars) {
+	if (formation_get(c->formationId)->cursed_by_mars) {
 		Widget_GameText_drawMultiline(89, 1,
 			c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 158,
 			16 * (c->widthBlocks - 4), Font_NormalBlack);
@@ -203,27 +204,27 @@ void UI_BuildingInfo_drawBarracks(BuildingInfoContext *c)
 void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)
 {
 	int textId, groupId;
-	struct Data_Formation *m = &Data_Formations[c->formationId];
+    const formation *m = formation_get(c->formationId);
 	c->helpId = 87;
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset,
 		c->widthBlocks, c->heightBlocks);
-	Widget_GameText_drawCentered(138, m->legionId,
+	Widget_GameText_drawCentered(138, m->legion_id,
 		c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, Font_LargeBlack);
 
 	// standard icon at the top
-	int graphicId = GraphicId(ID_Graphic_FortStandardIcons) + m->legionId;
+	int graphicId = GraphicId(ID_Graphic_FortStandardIcons) + m->legion_id;
 	int iconHeight = GraphicHeight(graphicId);
 	Graphics_drawImage(graphicId,
 		c->xOffset + 16 + (40 - GraphicWidth(graphicId)) / 2,
 		c->yOffset + 16);
 	// standard flag
 	graphicId = GraphicId(ID_Graphic_FortFlags);
-	if (m->figureType == Figure_FortJavelin) {
+	if (m->figure_type == Figure_FortJavelin) {
 		graphicId += 9;
-	} else if (m->figureType == Figure_FortMounted) {
+	} else if (m->figure_type == Figure_FortMounted) {
 		graphicId += 18;
 	}
-	if (m->isHalted) {
+	if (m->is_halted) {
 		graphicId += 8;
 	}
 	int flagHeight = GraphicHeight(graphicId);
@@ -238,11 +239,11 @@ void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)
 
 	// number of soldiers
 	Widget_GameText_draw(138, 23, c->xOffset + 100, c->yOffset + 60, Font_NormalBlack);
-	Widget_Text_drawNumber(m->numFigures, '@', " ",
+	Widget_Text_drawNumber(m->num_figures, '@', " ",
 		c->xOffset + 294, c->yOffset + 60, Font_NormalBlack);
 	// health
 	Widget_GameText_draw(138, 24, c->xOffset + 100, c->yOffset + 80, Font_NormalBlack);
-	int health = calc_percentage(m->totalDamage, m->maxTotalDamage);
+	int health = calc_percentage(m->total_damage, m->max_total_damage);
 	if (health <= 0) {
 		textId = 26;
 	} else if (health <= 20) {
@@ -261,17 +262,17 @@ void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)
 	Widget_GameText_draw(138, textId, c->xOffset + 300, c->yOffset + 80, Font_NormalBlack);
 	// military training
 	Widget_GameText_draw(138, 25, c->xOffset + 100, c->yOffset + 100, Font_NormalBlack);
-	Widget_GameText_draw(18, m->hasMilitaryTraining,
+	Widget_GameText_draw(18, m->has_military_training,
 		c->xOffset + 300, c->yOffset + 100, Font_NormalBlack);
 	// morale
-	if (m->cursedByMars) {
+	if (m->cursed_by_mars) {
 		Widget_GameText_draw(138, 59, c->xOffset + 100, c->yOffset + 120, Font_NormalBlack);
 	} else {
 		Widget_GameText_draw(138, 36, c->xOffset + 100, c->yOffset + 120, Font_NormalBlack);
 		Widget_GameText_draw(138, 37 + m->morale / 5,
 			c->xOffset + 300, c->yOffset + 120, Font_NormalBlack);
 	}
-	if (m->numFigures) {
+	if (m->num_figures) {
 		// layout
 		static const int offsetsLegionary[2][5] = {
 			{0, 0, 2, 3, 4}, {0, 0, 3, 2, 4},
@@ -285,7 +286,7 @@ void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)
 			Data_Settings_Map.orientation == Dir_2_Right) {
 			index = 1;
 		}
-		if (m->figureType == Figure_FortLegionary) {
+		if (m->figure_type == Figure_FortLegionary) {
 			offsets = offsetsLegionary[index];
 		} else {
 			offsets = offsetsOther[index];
@@ -297,7 +298,7 @@ void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)
 		UI_BuildingInfo_drawLegionInfoForeground(c);
 	} else {
 		// no soldiers
-		if (m->cursedByMars) {
+		if (m->cursed_by_mars) {
 			groupId = 89; textId = 1;
 		} else if (building_count_active(BUILDING_BARRACKS)) {
 			groupId = 138; textId = 10;
@@ -312,8 +313,8 @@ void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)
 
 void UI_BuildingInfo_drawLegionInfoForeground(BuildingInfoContext *c)
 {
-	struct Data_Formation *m = &Data_Formations[c->formationId];
-	if (!m->numFigures) {
+    const formation *m = formation_get(c->formationId);
+	if (!m->num_figures) {
 		return;
 	}
 	for (int i = 5 - c->formationTypes; i < 5; i++) {
@@ -322,7 +323,7 @@ void UI_BuildingInfo_drawLegionInfoForeground(BuildingInfoContext *c)
 			if (focusButtonId - 1 == i) {
 				hasFocus = 1;
 			}
-		} else if (m->figureType == Figure_FortLegionary) {
+		} else if (m->figure_type == Figure_FortLegionary) {
 			if (i == 0 && m->layout == 5) {
 				hasFocus = 1;
 			} else if (i == 1 && m->layout == 0) {
@@ -358,18 +359,18 @@ void UI_BuildingInfo_drawLegionInfoForeground(BuildingInfoContext *c)
 	switch (focusButtonId) {
 		// single line or testudo
 		case 1:
-			if (m->figureType == Figure_FortLegionary) {
+			if (m->figure_type == Figure_FortLegionary) {
 				titleId = 12;
-				textId = m->hasMilitaryTraining ? 18 : 17;
+				textId = m->has_military_training ? 18 : 17;
 			} else {
 				titleId = 16;
 				textId = 22;
 			}
 			break;
 		case 2:
-			if (m->figureType == Figure_FortLegionary) {
+			if (m->figure_type == Figure_FortLegionary) {
 				titleId = 13;
-				textId = m->hasMilitaryTraining ? 19 : 17;
+				textId = m->has_military_training ? 19 : 17;
 			} else {
 				titleId = 16;
 				textId = 22;
@@ -419,7 +420,7 @@ void UI_BuildingInfo_drawLegionInfoForeground(BuildingInfoContext *c)
 		c->xOffset + 24, c->yOffset + 252,
 		16 * (c->widthBlocks - 4), Font_NormalGreen);
 
-	if (!m->isAtFort) {
+	if (!m->is_at_fort) {
 		Widget_Panel_drawButtonBorder(
 			c->xOffset + 16 * (c->widthBlocks - 18) / 2,
 			c->yOffset + 16 * c->heightBlocks - 48,
@@ -436,8 +437,7 @@ void UI_BuildingInfo_handleMouseLegionInfo(BuildingInfoContext *c)
 	contextForCallback = c;
 	if (Widget_Button_handleCustomButtons(
 			c->xOffset, c->yOffset, layoutButtons, 5, &focusButtonId)) {
-		struct Data_Formation *m = &Data_Formations[c->formationId];
-		if (m->figureType == Figure_FortLegionary) {
+		if (formation_get(c->formationId)->figure_type == Figure_FortLegionary) {
 			if (focusButtonId == 1 || (focusButtonId == 2 && c->formationTypes == 3)) {
 				focusButtonId = 0;
 			}
@@ -459,8 +459,8 @@ int UI_BuildingInfo_getTooltipLegionInfo(BuildingInfoContext *c)
 static void buttonReturnToFort(int param1, int param2)
 {
 	int formationId = contextForCallback->formationId;
-	struct Data_Formation *m = &Data_Formations[formationId];
-	if (!m->inDistantBattle && m->isAtFort != 1) {
+    const formation *m = formation_get(formationId);
+	if (!m->in_distant_battle && m->is_at_fort != 1) {
 		Formation_legionReturnHome(formationId);
 		UI_Window_goTo(Window_City);
 	}
@@ -468,8 +468,8 @@ static void buttonReturnToFort(int param1, int param2)
 
 static void buttonLayout(int index, int param2)
 {
-	struct Data_Formation *m = &Data_Formations[contextForCallback->formationId];
-	if (m->inDistantBattle) {
+    const formation *m = formation_get(contextForCallback->formationId);
+	if (m->in_distant_battle) {
 		return;
 	}
 	if (index == 0 && contextForCallback->formationTypes < 5) {
@@ -479,26 +479,25 @@ static void buttonLayout(int index, int param2)
 		return;
 	}
 	// store layout in case of mop up
-	if (index == 4 && m->layout != FormationLayout_MopUp) {
-		m->layoutBeforeMopUp = m->layout;
-	}
-	if (m->figureType == Figure_FortLegionary) {
+	int new_layout;
+	if (m->figure_type == Figure_FortLegionary) {
 		switch (index) {
-			case 0: m->layout = FormationLayout_Tortoise; break;
-			case 1: m->layout = FormationLayout_Column; break;
-			case 2: m->layout = FormationLayout_DoubleLine1; break;
-			case 3: m->layout = FormationLayout_DoubleLine2; break;
-			case 4: m->layout = FormationLayout_MopUp; break;
+			case 0: new_layout = FormationLayout_Tortoise; break;
+			case 1: new_layout = FormationLayout_Column; break;
+			case 2: new_layout = FormationLayout_DoubleLine1; break;
+			case 3: new_layout = FormationLayout_DoubleLine2; break;
+			case 4: new_layout = FormationLayout_MopUp; break;
 		}
 	} else {
 		switch (index) {
-			case 0: m->layout = FormationLayout_SingleLine1; break;
-			case 1: m->layout = FormationLayout_SingleLine2; break;
-			case 2: m->layout = FormationLayout_DoubleLine1; break;
-			case 3: m->layout = FormationLayout_DoubleLine2; break;
-			case 4: m->layout = FormationLayout_MopUp; break;
+			case 0: new_layout = FormationLayout_SingleLine1; break;
+			case 1: new_layout = FormationLayout_SingleLine2; break;
+			case 2: new_layout = FormationLayout_DoubleLine1; break;
+			case 3: new_layout = FormationLayout_DoubleLine2; break;
+			case 4: new_layout = FormationLayout_MopUp; break;
 		}
 	}
+	formation_change_layout(m->id, new_layout);
 	switch (index) {
 		case 0: Sound_Speech_playFile("wavs/cohort1.wav"); break;
 		case 1: Sound_Speech_playFile("wavs/cohort2.wav"); break;

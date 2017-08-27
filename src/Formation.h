@@ -1,21 +1,11 @@
 #ifndef FORMATION_H
 #define FORMATION_H
 
-void Formation_clearList();
 void Formation_clearInvasionInfo();
 
-int Formation_create(int figureType, int formationLayout, int orientation, int x, int y);
 int Formation_createLegion(int buildingId);
 
 void Formation_deleteFortAndBanner(int formationId);
-
-void Formation_changeMorale(int formationId, int amount);
-
-void Formation_setMaxSoldierPerLegion();
-
-int Formation_getNumLegions();
-
-int Formation_getLegionFormationId(int legionId);
 
 void Formation_legionReturnHome(int formationId);
 void Formation_legionMoveTo(int formationId, int x, int y);
@@ -36,8 +26,6 @@ void Formation_calculateFigures();
 void Formation_dispatchLegionsToDistantBattle();
 void Formation_legionsReturnFromDistantBattle();
 void Formation_legionKillSoldiersInDistantBattle(int killPercentage);
-
-void Formation_moveHerdsAwayFrom(int x, int y);
 
 int Formation_marsCurseFort();
 

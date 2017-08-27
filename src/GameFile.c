@@ -40,6 +40,7 @@
 #include "core/random.h"
 #include "core/zip.h"
 #include "empire/trade_prices.h"
+#include "figure/formation.h"
 #include "figure/name.h"
 #include "figure/trader.h"
 #include "game/time.h"
@@ -127,10 +128,8 @@ typedef struct {
     buffer *Data_Figures;
     buffer *Data_Routes_figureIds;
     buffer *Data_Routes_directionPaths;
-    buffer *Data_Formations;
-    buffer *Data_Formation_Extra_idLastInUse;
-    buffer *Data_Formation_Extra_idLastLegion;
-    buffer *Data_Formation_Extra_numForts;
+    buffer *formations;
+    buffer *formation_totals;
     buffer *Data_CityInfo;
     buffer *Data_CityInfo_Extra_unknownBytes;
     buffer *playerNames;
@@ -331,10 +330,8 @@ void init_savegame_data()
     state->Data_Figures = create_savegame_piece(128000, 1);
     state->Data_Routes_figureIds = create_savegame_piece(1200, 1);
     state->Data_Routes_directionPaths = create_savegame_piece(300000, 1);
-    state->Data_Formations = create_savegame_piece(6400, 1);
-    state->Data_Formation_Extra_idLastInUse = create_savegame_piece(4, 0);
-    state->Data_Formation_Extra_idLastLegion = create_savegame_piece(4, 0);
-    state->Data_Formation_Extra_numForts = create_savegame_piece(4, 0);
+    state->formations = create_savegame_piece(6400, 1);
+    state->formation_totals = create_savegame_piece(12, 0);
     state->Data_CityInfo = create_savegame_piece(36136, 1);
     state->Data_CityInfo_Extra_unknownBytes = create_savegame_piece(2, 0);
     state->playerNames = create_savegame_piece(64, 0);
@@ -525,10 +522,9 @@ static void savegame_deserialize(savegame_state *state)
     read_all_from_buffer(state->Data_Figures, &Data_Figures);
     read_all_from_buffer(state->Data_Routes_figureIds, &Data_Routes.figureIds);
     read_all_from_buffer(state->Data_Routes_directionPaths, &Data_Routes.directionPaths);
-    read_all_from_buffer(state->Data_Formations, &Data_Formations);
-    read_all_from_buffer(state->Data_Formation_Extra_idLastInUse, &Data_Formation_Extra.idLastInUse);
-    read_all_from_buffer(state->Data_Formation_Extra_idLastLegion, &Data_Formation_Extra.idLastLegion);
-    read_all_from_buffer(state->Data_Formation_Extra_numForts, &Data_Formation_Extra.numForts);
+    
+    formations_load_state(state->formations, state->formation_totals);
+    
     read_all_from_buffer(state->Data_CityInfo, &Data_CityInfo);
     read_all_from_buffer(state->Data_CityInfo_Extra_unknownBytes, &Data_CityInfo_Extra.unknownBytes);
     read_all_from_buffer(state->playerNames, &playerNames);
@@ -693,10 +689,9 @@ static void savegame_serialize(savegame_state *state)
     write_all_to_buffer(state->Data_Figures, &Data_Figures);
     write_all_to_buffer(state->Data_Routes_figureIds, &Data_Routes.figureIds);
     write_all_to_buffer(state->Data_Routes_directionPaths, &Data_Routes.directionPaths);
-    write_all_to_buffer(state->Data_Formations, &Data_Formations);
-    write_all_to_buffer(state->Data_Formation_Extra_idLastInUse, &Data_Formation_Extra.idLastInUse);
-    write_all_to_buffer(state->Data_Formation_Extra_idLastLegion, &Data_Formation_Extra.idLastLegion);
-    write_all_to_buffer(state->Data_Formation_Extra_numForts, &Data_Formation_Extra.numForts);
+    
+    formations_save_state(state->formations, state->formation_totals);
+    
     write_all_to_buffer(state->Data_CityInfo, &Data_CityInfo);
     write_all_to_buffer(state->Data_CityInfo_Extra_unknownBytes, &Data_CityInfo_Extra.unknownBytes);
     write_all_to_buffer(state->playerNames, &playerNames);

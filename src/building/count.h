@@ -6,6 +6,11 @@
 #include "game/resource.h"
 
 /**
+ * @file
+ * Building totals
+ */
+
+/**
  * Clears all building counters
  */
 void building_count_clear();

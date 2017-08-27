@@ -7,6 +7,8 @@
 #include "Data/Constants.h"
 #include "Data/Formation.h"
 
+#include "figure/formation.h"
+
 const int figureActionCorpseGraphicOffsets[128] = {
 	0, 1, 2, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
 	5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
@@ -103,9 +105,9 @@ static void resumeActivityAfterAttack(int figureId, struct Data_Figure *f)
 
 static void hitOpponent(int figureId, struct Data_Figure *f)
 {
-	struct Data_Formation *m = &Data_Formations[f->formationId];
+	const formation *m = formation_get(f->formationId);
 	struct Data_Figure *opponent = &Data_Figures[f->opponentId];
-	struct Data_Formation *opponentFormation = &Data_Formations[opponent->formationId];
+	const formation *opponentFormation = formation_get(opponent->formationId);
 	
 	int cat = Constant_FigureProperties[opponent->type].category;
 	if (cat == FigureCategory_Citizen || cat == FigureCategory_Criminal) {
@@ -124,19 +126,19 @@ static void hitOpponent(int figureId, struct Data_Figure *f)
 			case Difficulty_Normal: figureAttack = 6; break;
 		}
 	}
-	if (opponent->opponentId != figureId && m->figureType != Figure_FortLegionary &&
+	if (opponent->opponentId != figureId && m->figure_type != Figure_FortLegionary &&
 			attackIsSameDirection(f->attackDirection, opponent->attackDirection)) {
 		figureAttack += 4; // attack opponent on the (exposed) back
 		Sound_Effects_playChannel(SoundChannel_SwordSwing);
 	}
-	if (m->isHalted && m->figureType == Figure_FortLegionary &&
+	if (m->is_halted && m->figure_type == Figure_FortLegionary &&
 			attackIsSameDirection(f->attackDirection, m->direction)) {
 		figureAttack += 4; // coordinated formation attack bonus
 	}
 	// defense modifiers
-	if (opponentFormation->isHalted &&
-			(opponentFormation->figureType == Figure_FortLegionary ||
-			opponentFormation->figureType == Figure_EnemyCaesarLegionary)) {
+	if (opponentFormation->is_halted &&
+			(opponentFormation->figure_type == Figure_FortLegionary ||
+			opponentFormation->figure_type == Figure_EnemyCaesarLegionary)) {
 		if (!attackIsSameDirection(opponent->attackDirection, opponentFormation->direction)) {
 			opponentDefense -= 4; // opponent not attacking in coordinated formation
 		} else if (opponentFormation->layout == FormationLayout_Tortoise) {

@@ -10,7 +10,9 @@
 #include "Data/Formation.h"
 #include "Data/Grid.h"
 
-static void enemyInitial(int figureId, struct Data_Figure *f, struct Data_Formation *m)
+#include "figure/formation.h"
+
+static void enemyInitial(int figureId, struct Data_Figure *f, const formation *m)
 {
 	Figure_updatePositionInTileList(figureId);
 	f->graphicOffset = 0;
@@ -27,11 +29,11 @@ static void enemyInitial(int figureId, struct Data_Figure *f, struct Data_Format
 			}
 		}
 		f->isGhost = 0;
-		if (m->recentFight) {
+		if (m->recent_fight) {
 			f->actionState = FigureActionState_154_EnemyFighting;
 		} else {
-			f->destinationX = m->destinationX + f->formationPositionX;
-			f->destinationY = m->destinationY + f->formationPositionY;
+			f->destinationX = m->destination_x + f->formationPositionX;
+			f->destinationY = m->destination_y + f->formationPositionY;
 			if (Routing_getGeneralDirection(f->x, f->y, f->destinationX, f->destinationY) < 8) {
 				f->actionState = FigureActionState_153_EnemyMarching;
 			}
@@ -53,7 +55,7 @@ static void enemyInitial(int figureId, struct Data_Figure *f, struct Data_Format
 		}
 		if (f->attackGraphicOffset) {
 			int missileType;
-			switch (m->enemyType) {
+			switch (m->enemy_type) {
 				case EnemyType_4_Goth:
 				case EnemyType_5_Pergamum:
 				case EnemyType_9_Egyptian:
@@ -66,7 +68,7 @@ static void enemyInitial(int figureId, struct Data_Figure *f, struct Data_Format
 			}
 			if (f->attackGraphicOffset == 1) {
 				Figure_createMissile(figureId, f->x, f->y, xTile, yTile, missileType);
-				m->missileFired = 6;
+				formation_record_missile_fired(m->id);
 			}
 			if (missileType == Figure_Arrow) {
 				Data_CityInfo.soundShootArrow--;
@@ -83,18 +85,18 @@ static void enemyInitial(int figureId, struct Data_Figure *f, struct Data_Format
 	}
 }
 
-static void enemyMarching(int figureId, struct Data_Figure *f, struct Data_Formation *m)
+static void enemyMarching(int figureId, struct Data_Figure *f, const formation *m)
 {
 	f->waitTicks--;
 	if (f->waitTicks <= 0) {
 		f->waitTicks = 50;
-		f->destinationX = m->destinationX + f->formationPositionX;
-		f->destinationY = m->destinationY + f->formationPositionY;
+		f->destinationX = m->destination_x + f->formationPositionX;
+		f->destinationY = m->destination_y + f->formationPositionY;
 		if (Routing_getGeneralDirection(f->x, f->y, f->destinationX, f->destinationY) == DirFigure_8_AtDestination) {
 			f->actionState = FigureActionState_151_EnemyInitial;
 			return;
 		}
-		f->destinationBuildingId = m->destinationBuildingId;
+		f->destinationBuildingId = m->destination_building_id;
 		FigureRoute_remove(figureId);
 	}
 	FigureMovement_walkTicks(figureId, f->speedMultiplier);
@@ -105,9 +107,9 @@ static void enemyMarching(int figureId, struct Data_Figure *f, struct Data_Forma
 	}
 }
 
-static void enemyFighting(int figureId, struct Data_Figure *f, struct Data_Formation *m)
+static void enemyFighting(int figureId, struct Data_Figure *f, const formation *m)
 {
-	if (!m->recentFight) {
+	if (!m->recent_fight) {
 		f->actionState = FigureActionState_151_EnemyInitial;
 	}
 	if (f->type != Figure_Enemy46_Camel && f->type != Figure_Enemy47_Elephant) {
@@ -159,7 +161,7 @@ static void enemyFighting(int figureId, struct Data_Figure *f, struct Data_Forma
 
 static void FigureAction_enemyCommon(int figureId, struct Data_Figure *f)
 {
-	struct Data_Formation *m = &Data_Formations[f->formationId];
+	const formation *m = formation_get(f->formationId);
 	Data_CityInfo.numEnemiesInCity++;
 	f->terrainUsage = FigureTerrainUsage_Enemy;
 	f->formationPositionX = FigureActionFormationLayoutPositionX(m->layout, f->indexInFormation);
@@ -211,12 +213,12 @@ static int getDirection(struct Data_Figure *f)
 	return dir;
 }
 
-static int getDirectionMissile(struct Data_Figure *f, struct Data_Formation *m)
+static int getDirectionMissile(struct Data_Figure *f, const formation *m)
 {
 	int dir;
 	if (f->actionState == FigureActionState_150_Attack) {
 		dir = f->attackDirection;
-	} else if (m->missileFired || f->direction < 8) {
+	} else if (m->missile_fired || f->direction < 8) {
 		dir = f->direction;
 	} else {
 		dir = f->previousTileDirection;
@@ -228,7 +230,7 @@ static int getDirectionMissile(struct Data_Figure *f, struct Data_Formation *m)
 void FigureAction_enemy43_Spear(int figureId)
 {
 	struct Data_Figure *f = &Data_Figures[figureId];
-	struct Data_Formation *m = &Data_Formations[f->formationId];
+	const formation *m = formation_get(f->formationId);
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	f->speedMultiplier = 1;
@@ -238,7 +240,7 @@ void FigureAction_enemy43_Spear(int figureId)
 	
 	f->isEnemyGraphic = 1;
 	
-	switch (m->enemyType) {
+	switch (m->enemy_type) {
 		case EnemyType_5_Pergamum:
 		case EnemyType_6_Seleucid:
 		case EnemyType_7_Etruscan:
@@ -267,7 +269,7 @@ void FigureAction_enemy43_Spear(int figureId)
 void FigureAction_enemy44_Sword(int figureId)
 {
 	struct Data_Figure *f = &Data_Figures[figureId];
-	struct Data_Formation *m = &Data_Formations[f->formationId];
+	const formation *m = formation_get(f->formationId);
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	f->speedMultiplier = 1;
@@ -277,7 +279,7 @@ void FigureAction_enemy44_Sword(int figureId)
 	
 	f->isEnemyGraphic = 1;
 	
-	switch (m->enemyType) {
+	switch (m->enemy_type) {
 		case EnemyType_5_Pergamum:
 		case EnemyType_6_Seleucid:
 		case EnemyType_9_Egyptian:
@@ -303,7 +305,7 @@ void FigureAction_enemy44_Sword(int figureId)
 void FigureAction_enemy45_Sword(int figureId)
 {
 	struct Data_Figure *f = &Data_Figures[figureId];
-	struct Data_Formation *m = &Data_Formations[f->formationId];
+	const formation *m = formation_get(f->formationId);
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	f->speedMultiplier = 1;
@@ -313,7 +315,7 @@ void FigureAction_enemy45_Sword(int figureId)
 	
 	f->isEnemyGraphic = 1;
 	
-	switch (m->enemyType) {
+	switch (m->enemy_type) {
 		case EnemyType_7_Etruscan:
 		case EnemyType_8_Greek:
 		case EnemyType_10_Carthaginian:
@@ -339,7 +341,7 @@ void FigureAction_enemy45_Sword(int figureId)
 void FigureAction_enemy46_Camel(int figureId)
 {
 	struct Data_Figure *f = &Data_Figures[figureId];
-	struct Data_Formation *m = &Data_Formations[f->formationId];
+	const formation *m = formation_get(f->formationId);
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	f->speedMultiplier = 1;
@@ -407,7 +409,7 @@ void FigureAction_enemy48_Chariot(int figureId)
 void FigureAction_enemy49_FastSword(int figureId)
 {
 	struct Data_Figure *f = &Data_Figures[figureId];
-	struct Data_Formation *m = &Data_Formations[f->formationId];
+	const formation *m = formation_get(f->formationId);
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	f->speedMultiplier = 2;
@@ -418,15 +420,15 @@ void FigureAction_enemy49_FastSword(int figureId)
 	f->isEnemyGraphic = 1;
 	
 	int attackId, corpseId, normalId;
-	if (m->enemyType == EnemyType_0_Barbarian) {
+	if (m->enemy_type == EnemyType_0_Barbarian) {
 		attackId = 393;
 		corpseId = 441;
 		normalId = 297;
-	} else if (m->enemyType == EnemyType_1_Numidian) {
+	} else if (m->enemy_type == EnemyType_1_Numidian) {
 		attackId = 593;
 		corpseId = 641;
 		normalId = 449;
-	} else if (m->enemyType == EnemyType_4_Goth) {
+	} else if (m->enemy_type == EnemyType_4_Goth) {
 		attackId = 545;
 		corpseId = 593;
 		normalId = 449;
@@ -451,7 +453,7 @@ void FigureAction_enemy49_FastSword(int figureId)
 void FigureAction_enemy50_Sword(int figureId)
 {
 	struct Data_Figure *f = &Data_Figures[figureId];
-	struct Data_Formation *m = &Data_Formations[f->formationId];
+	const formation *m = formation_get(f->formationId);
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	f->speedMultiplier = 1;
@@ -461,7 +463,7 @@ void FigureAction_enemy50_Sword(int figureId)
 	
 	f->isEnemyGraphic = 1;
 	
-	if (m->enemyType != EnemyType_2_Gaul && m->enemyType != EnemyType_3_Celt) {
+	if (m->enemy_type != EnemyType_2_Gaul && m->enemy_type != EnemyType_3_Celt) {
 		return;
 	}
 	if (f->actionState == FigureActionState_150_Attack) {
@@ -482,7 +484,7 @@ void FigureAction_enemy50_Sword(int figureId)
 void FigureAction_enemy51_Spear(int figureId)
 {
 	struct Data_Figure *f = &Data_Figures[figureId];
-	struct Data_Formation *m = &Data_Formations[f->formationId];
+	const formation *m = formation_get(f->formationId);
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	f->speedMultiplier = 2;
@@ -492,7 +494,7 @@ void FigureAction_enemy51_Spear(int figureId)
 	
 	f->isEnemyGraphic = 1;
 	
-	if (m->enemyType != EnemyType_1_Numidian) {
+	if (m->enemy_type != EnemyType_1_Numidian) {
 		return;
 	}
 	if (f->actionState == FigureActionState_150_Attack) {
@@ -515,7 +517,7 @@ void FigureAction_enemy51_Spear(int figureId)
 void FigureAction_enemy52_MountedArcher(int figureId)
 {
 	struct Data_Figure *f = &Data_Figures[figureId];
-	struct Data_Formation *m = &Data_Formations[f->formationId];
+	const formation *m = formation_get(f->formationId);
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	f->speedMultiplier = 3;
@@ -541,7 +543,7 @@ void FigureAction_enemy52_MountedArcher(int figureId)
 void FigureAction_enemy53_Axe(int figureId)
 {
 	struct Data_Figure *f = &Data_Figures[figureId];
-	struct Data_Formation *m = &Data_Formations[f->formationId];
+	const formation *m = formation_get(f->formationId);
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	f->speedMultiplier = 1;
@@ -551,7 +553,7 @@ void FigureAction_enemy53_Axe(int figureId)
 	
 	f->isEnemyGraphic = 1;
 	
-	if (m->enemyType != EnemyType_2_Gaul) {
+	if (m->enemy_type != EnemyType_2_Gaul) {
 		return;
 	}
 	if (f->actionState == FigureActionState_150_Attack) {
@@ -642,7 +644,7 @@ void FigureAction_enemy54_Gladiator(int figureId)
 void FigureAction_enemyCaesarLegionary(int figureId)
 {
 	struct Data_Figure *f = &Data_Figures[figureId];
-	struct Data_Formation *m = &Data_Formations[f->formationId];
+	const formation *m = formation_get(f->formationId);
 	Data_CityInfo.numImperialSoldiersInCity++;
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
@@ -669,7 +671,7 @@ void FigureAction_enemyCaesarLegionary(int figureId)
 				FigureActionCorpseGraphicOffset(f) + 152;
 			break;
 		case FigureActionState_84_SoldierAtStandard:
-			if (m->isHalted && m->layout == FormationLayout_Tortoise && m->missileAttackTimeout) {
+			if (m->is_halted && m->layout == FormationLayout_Tortoise && m->missile_attack_timeout) {
 				f->graphicId = GraphicId(ID_Graphic_Figure_FortLegionary) + dir + 144;
 			} else {
 				f->graphicId = GraphicId(ID_Graphic_Figure_FortLegionary) + dir;
@@ -683,13 +685,13 @@ void FigureAction_enemyCaesarLegionary(int figureId)
 
 int FigureAction_HerdEnemy_moveFormationTo(int formationId, int x, int y, int *xTile, int *yTile)
 {
-	struct Data_Formation *m = &Data_Formations[formationId];
+	const formation *m = formation_get(formationId);
 	int baseOffset = GridOffset(
 		FigureActionFormationLayoutPositionX(m->layout, 0),
 		FigureActionFormationLayoutPositionY(m->layout, 0));
 	int figureOffsets[50];
 	figureOffsets[0] = 0;
-	for (int i = 1; i < m->numFigures; i++) {
+	for (int i = 1; i < m->num_figures; i++) {
 		figureOffsets[i] = GridOffset(
 			FigureActionFormationLayoutPositionX(m->layout, i),
 			FigureActionFormationLayoutPositionY(m->layout, i)) - baseOffset;
@@ -704,7 +706,7 @@ int FigureAction_HerdEnemy_moveFormationTo(int formationId, int x, int y, int *x
 		for (int yy = yMin; yy <= yMax; yy++) {
 			for (int xx = xMin; xx <= xMax; xx++) {
 				int canMove = 1;
-				for (int fig = 0; fig < m->numFigures; fig++) {
+				for (int fig = 0; fig < m->num_figures; fig++) {
 					int gridOffset = GridOffset(xx, yy) + figureOffsets[fig];
 					if (Data_Grid_terrain[gridOffset] & Terrain_1237) {
 						canMove = 0;

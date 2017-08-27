@@ -7,6 +7,7 @@
 #include "Data/Formation.h"
 
 #include "core/random.h"
+#include "figure/formation.h"
 
 static const int seagullOffsetsX[] = {0, 0, -2, 1, 2, -3, 4, -2};
 static const int seagullOffsetsY[] = {0, -2, 0, 2, 0, 1, -3, 4};
@@ -68,7 +69,7 @@ void FigureAction_seagulls(int figureId)
 void FigureAction_sheep(int figureId)
 {
 	struct Data_Figure *f = &Data_Figures[figureId];
-	struct Data_Formation *m = &Data_Formations[f->formationId];
+	const formation *m = formation_get(f->formationId);
 	f->terrainUsage = FigureTerrainUsage_Animal;
 	f->useCrossCountry = 0;
 	f->isGhost = 0;
@@ -87,8 +88,8 @@ void FigureAction_sheep(int figureId)
 			if (f->waitTicks > 400) {
 				f->waitTicks = figureId & 0x1f;
 				f->actionState = FigureActionState_197_HerdAnimalMoving;
-				f->destinationX = m->destinationX + FigureActionFormationLayoutPositionX(FormationLayout_Herd, f->indexInFormation);
-				f->destinationY = m->destinationY + FigureActionFormationLayoutPositionY(FormationLayout_Herd, f->indexInFormation);
+				f->destinationX = m->destination_x + FigureActionFormationLayoutPositionX(FormationLayout_Herd, f->indexInFormation);
+				f->destinationY = m->destination_y + FigureActionFormationLayoutPositionY(FormationLayout_Herd, f->indexInFormation);
 				f->roamLength = 0;
 			}
 			break;
@@ -122,7 +123,7 @@ void FigureAction_sheep(int figureId)
 void FigureAction_wolf(int figureId)
 {
 	struct Data_Figure *f = &Data_Figures[figureId];
-	struct Data_Formation *m = &Data_Formations[f->formationId];
+	const formation *m = formation_get(f->formationId);
 	f->terrainUsage = FigureTerrainUsage_Animal;
 	f->useCrossCountry = 0;
 	f->isGhost = 0;
@@ -141,8 +142,8 @@ void FigureAction_wolf(int figureId)
 			if (f->waitTicks > 400) {
 				f->waitTicks = figureId & 0x1f;
 				f->actionState = FigureActionState_197_HerdAnimalMoving;
-				f->destinationX = m->destinationX + FigureActionFormationLayoutPositionX(FormationLayout_Herd, f->indexInFormation);
-				f->destinationY = m->destinationY + FigureActionFormationLayoutPositionY(FormationLayout_Herd, f->indexInFormation);
+				f->destinationX = m->destination_x + FigureActionFormationLayoutPositionX(FormationLayout_Herd, f->indexInFormation);
+				f->destinationY = m->destination_y + FigureActionFormationLayoutPositionY(FormationLayout_Herd, f->indexInFormation);
 				f->roamLength = 0;
 			}
 			break;
@@ -198,7 +199,7 @@ void FigureAction_wolf(int figureId)
 void FigureAction_zebra(int figureId)
 {
 	struct Data_Figure *f = &Data_Figures[figureId];
-	struct Data_Formation *m = &Data_Formations[f->formationId];
+	const formation *m = formation_get(f->formationId);
 	f->terrainUsage = FigureTerrainUsage_Animal;
 	f->useCrossCountry = 0;
 	f->isGhost = 0;
@@ -217,8 +218,8 @@ void FigureAction_zebra(int figureId)
 			if (f->waitTicks > 200) {
 				f->waitTicks = figureId & 0x1f;
 				f->actionState = FigureActionState_197_HerdAnimalMoving;
-				f->destinationX = m->destinationX + FigureActionFormationLayoutPositionX(FormationLayout_Herd, f->indexInFormation);
-				f->destinationY = m->destinationY + FigureActionFormationLayoutPositionY(FormationLayout_Herd, f->indexInFormation);
+				f->destinationX = m->destination_x + FigureActionFormationLayoutPositionX(FormationLayout_Herd, f->indexInFormation);
+				f->destinationY = m->destination_y + FigureActionFormationLayoutPositionY(FormationLayout_Herd, f->indexInFormation);
 				f->roamLength = 0;
 			}
 			break;

@@ -1,6 +1,14 @@
 #ifndef GAME_RESOURCE_H
 #define GAME_RESOURCE_H
 
+/**
+ * @file
+ * Type definitions for resources
+ */
+
+/**
+ * Resource types
+ */
 typedef enum {
     RESOURCE_NONE = 0,
     RESOURCE_WHEAT = 1,

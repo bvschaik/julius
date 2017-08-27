@@ -28,6 +28,7 @@
 #include "../Data/Settings.h"
 
 #include "building/model.h"
+#include "figure/formation.h"
 
 static void buttonHelp(int param1, int param2);
 static void buttonExit(int param1, int param2);
@@ -293,9 +294,10 @@ void UI_BuildingInfo_init()
 		if (type == Figure_FortStandard || FigureIsLegion(type)) {
 			context.type = BuildingInfoType_Legion;
 			context.formationId = Data_Figures[figureId].formationId;
-			if (Data_Formations[context.formationId].figureType != Figure_FortLegionary) {
+            const formation *m = formation_get(context.formationId);
+			if (m->figure_type != Figure_FortLegionary) {
 				context.formationTypes = 5;
-			} else if (Data_Formations[context.formationId].hasMilitaryTraining) {
+			} else if (m->has_military_training) {
 				context.formationTypes = 4;
 			} else {
 				context.formationTypes = 3;

@@ -16,6 +16,7 @@
 #include "../Data/Scenario.h"
 #include "../Data/Settings.h"
 
+#include "figure/formation.h"
 #include "figure/trader.h"
 
 static void selectFigure(int param1, int param2);
@@ -166,9 +167,10 @@ static void drawFigureInfoEnemy(BuildingInfoContext *c, int figureId)
 {
 	int graphicId = 8;
 	int formationId = Data_Figures[figureId].formationId;
+    int enemy_type = formation_get(formationId)->enemy_type;
 	switch (Data_Figures[figureId].type) {
 		case Figure_Enemy43_Spear:
-			switch (Data_Formations[formationId].enemyType) {
+			switch (enemy_type) {
 				case EnemyType_5_Pergamum: graphicId = 44; break;
 				case EnemyType_6_Seleucid: graphicId = 46; break;
 				case EnemyType_7_Etruscan: graphicId = 32; break;
@@ -176,34 +178,34 @@ static void drawFigureInfoEnemy(BuildingInfoContext *c, int figureId)
 			}
 			break;
 		case Figure_Enemy44_Sword:
-			switch (Data_Formations[formationId].enemyType) {
+			switch (enemy_type) {
 				case EnemyType_5_Pergamum: graphicId = 45; break;
 				case EnemyType_6_Seleucid: graphicId = 47; break;
 				case EnemyType_9_Egyptian: graphicId = 29; break;
 			}
 			break;
 		case Figure_Enemy45_Sword:
-			switch (Data_Formations[formationId].enemyType) {
+			switch (enemy_type) {
 				case EnemyType_7_Etruscan: graphicId = 31; break;
 				case EnemyType_8_Greek: graphicId = 37; break;
 				case EnemyType_10_Carthaginian: graphicId = 22; break;
 			}
 			break;
 		case Figure_Enemy49_FastSword:
-			switch (Data_Formations[formationId].enemyType) {
+			switch (enemy_type) {
 				case EnemyType_0_Barbarian: graphicId = 21; break;
 				case EnemyType_1_Numidian: graphicId = 20; break;
 				case EnemyType_4_Goth: graphicId = 35; break;
 			}
 			break;
 		case Figure_Enemy50_Sword:
-			switch (Data_Formations[formationId].enemyType) {
+			switch (enemy_type) {
 				case EnemyType_2_Gaul: graphicId = 40; break;
 				case EnemyType_3_Celt: graphicId = 24; break;
 			}
 			break;
 		case Figure_Enemy51_Spear:
-			switch (Data_Formations[formationId].enemyType) {
+			switch (enemy_type) {
 				case EnemyType_1_Numidian: graphicId = 20; break;
 			}
 			break;

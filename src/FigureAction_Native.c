@@ -6,6 +6,8 @@
 #include "Data/CityInfo.h"
 #include "Data/Formation.h"
 
+#include "figure/formation.h"
+
 void FigureAction_indigenousNative(int figureId)
 {
 	struct Data_Figure *f = &Data_Figures[figureId];
@@ -56,10 +58,11 @@ void FigureAction_indigenousNative(int figureId)
 						f->destinationY = yTile;
 					}
 				} else {
+                    const formation *m = formation_get(0); // TODO make separate function?
 					f->actionState = FigureActionState_159_NativeAttacking;
-					f->destinationX = Data_Formations[0].destinationX;
-					f->destinationY = Data_Formations[0].destinationY;
-					f->destinationBuildingId = Data_Formations[0].destinationBuildingId;
+					f->destinationX = m->destination_x;
+					f->destinationY = m->destination_y;
+					f->destinationBuildingId = m->destination_building_id;
 				}
 				FigureRoute_remove(figureId);
 			}

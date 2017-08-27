@@ -21,6 +21,8 @@
 #include "Data/Settings.h"
 #include "Data/State.h"
 
+#include "figure/formation.h"
+
 #define ExitMilitaryCommand() \
 	if (UI_Window_getId() == Window_CityMilitary) {\
 		UI_Window_goTo(Window_City);\
@@ -105,8 +107,8 @@ static void cycleLegion()
 			if (legionId > 6) {
 				legionId = 1;
 			}
-			struct Data_Formation *m = &Data_Formations[legionId];
-			if (m->inUse == 1 && !m->isHerd && m->isLegion) {
+			const formation *m = formation_get(legionId);
+			if (m->in_use == 1 && !m->is_herd && m->is_legion) {
 				if (currentLegionId == 0) {
 					currentLegionId = legionId;
 					break;
@@ -114,8 +116,8 @@ static void cycleLegion()
 			}
 		}
 		if (currentLegionId > 0) {
-			struct Data_Formation *m = &Data_Formations[currentLegionId];
-			CityView_goToGridOffset(GridOffset(m->xHome, m->yHome));
+			const formation *m = formation_get(currentLegionId);
+			CityView_goToGridOffset(GridOffset(m->x_home, m->y_home));
 			UI_Window_requestRefresh();
 		}
 	}

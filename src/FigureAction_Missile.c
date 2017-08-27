@@ -5,6 +5,8 @@
 #include "Sound.h"
 #include "Data/Formation.h"
 
+#include "figure/formation.h"
+
 static const int cloudGraphicOffsets[] = {
 	0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2,
 	2, 2, 2, 2, 3, 3, 3, 4, 4, 5, 6, 7
@@ -44,12 +46,11 @@ void FigureAction_arrow(int figureId)
 		int damageInflicted =
 			Constant_FigureProperties[f->type].missileAttackValue -
 			Constant_FigureProperties[targetType].missileDefenseValue;
+        const formation *m = formation_get(formationId);
 		if (damageInflicted < 0) {
 			damageInflicted = 0;
 		}
-		if (targetType == Figure_FortLegionary &&
-			Data_Formations[formationId].isHalted &&
-			Data_Formations[formationId].layout == FormationLayout_Tortoise) {
+		if (targetType == Figure_FortLegionary && m->is_halted && m->layout == FormationLayout_Tortoise) {
 			damageInflicted = 1;
 		}
 		int targetDamage = damageInflicted + Data_Figures[targetId].damage;
@@ -64,8 +65,7 @@ void FigureAction_arrow(int figureId)
 		}
 		f->state = FigureState_Dead;
 		int arrowFormation = Data_Figures[f->buildingId].formationId;
-		Data_Formations[formationId].missileAttackTimeout = 6;
-		Data_Formations[formationId].missileAttackFormationId = arrowFormation;
+        formation_record_missile_attack(formationId, arrowFormation);
 		Sound_Effects_playChannel(SoundChannel_ArrowHit);
 	} else if (shouldDie) {
 		f->state = FigureState_Dead;
@@ -91,12 +91,11 @@ void FigureAction_spear(int figureId)
 		int damageInflicted =
 			Constant_FigureProperties[f->type].missileAttackValue -
 			Constant_FigureProperties[targetType].missileDefenseValue;
+        const formation *m = formation_get(formationId);
 		if (damageInflicted < 0) {
 			damageInflicted = 0;
 		}
-		if (targetType == Figure_FortLegionary &&
-			Data_Formations[formationId].isHalted &&
-			Data_Formations[formationId].layout == FormationLayout_Tortoise) {
+		if (targetType == Figure_FortLegionary && m->is_halted && m->layout == FormationLayout_Tortoise) {
 			damageInflicted = 1;
 		}
 		int targetDamage = damageInflicted + Data_Figures[targetId].damage;
@@ -110,8 +109,7 @@ void FigureAction_spear(int figureId)
 			Formation_updateAfterDeath(formationId);
 		}
 		int arrowFormation = Data_Figures[f->buildingId].formationId;
-		Data_Formations[formationId].missileAttackTimeout = 6;
-		Data_Formations[formationId].missileAttackFormationId = arrowFormation;
+		formation_record_missile_attack(formationId, arrowFormation);
 		Sound_Effects_playChannel(SoundChannel_Javelin);
 		f->state = FigureState_Dead;
 	} else if (shouldDie) {
@@ -138,12 +136,12 @@ void FigureAction_javelin(int figureId)
 		int damageInflicted =
 			Constant_FigureProperties[f->type].missileAttackValue -
 			Constant_FigureProperties[targetType].missileDefenseValue;
+        const formation *m = formation_get(formationId);
 		if (damageInflicted < 0) {
 			damageInflicted = 0;
 		}
 		if (targetType == Figure_EnemyCaesarLegionary &&
-			Data_Formations[formationId].isHalted &&
-			Data_Formations[formationId].layout == FormationLayout_Tortoise) {
+			m->is_halted && m->layout == FormationLayout_Tortoise) {
 			damageInflicted = 1;
 		}
 		int targetDamage = damageInflicted + Data_Figures[targetId].damage;
@@ -157,8 +155,7 @@ void FigureAction_javelin(int figureId)
 			Formation_updateAfterDeath(formationId);
 		}
 		int javelinFormation = Data_Figures[f->buildingId].formationId;
-		Data_Formations[formationId].missileAttackTimeout = 6;
-		Data_Formations[formationId].missileAttackFormationId = javelinFormation;
+		formation_record_missile_attack(formationId, javelinFormation);
 		Sound_Effects_playChannel(SoundChannel_Javelin);
 		f->state = FigureState_Dead;
 	} else if (shouldDie) {

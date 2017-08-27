@@ -3,6 +3,18 @@
 
 #include <stdint.h>
 
+typedef enum {
+    DIR_0_TOP,
+    DIR_1_TOP_RIGHT,
+    DIR_2_RIGHT,
+    DIR_3_BOTTOM_RIGHT,
+    DIR_4_BOTTOM,
+    DIR_5_BOTTOM_LEFT,
+    DIR_6_LEFT,
+    DIR_7_TOP_LEFT,
+    DIR_8_NONE,
+} direction;
+
 /**
  * @file
  * Calculation functions.
@@ -41,6 +53,16 @@ int calc_maximum_distance(int x1, int y1, int x2, int y2);
  * @return min(dx, dy)
  */
 int calc_minimum_distance(int x1, int y1, int x2, int y2);
+
+/**
+ * Gets the general direction from 'from' to 'to'
+ * @param x_from Source X
+ * @param y_from Source Y
+ * @param x_to Destination X
+ * @param y_to Destination Y
+ * @return Direction
+ */
+direction calc_general_direction(int x_from, int y_from, int x_to, int y_to);
 
 /**
  * Make sure value is between min and max (inclusive)

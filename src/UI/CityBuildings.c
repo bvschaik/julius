@@ -19,6 +19,7 @@
 
 #include "building/model.h"
 #include "core/time.h"
+#include "figure/formation.h"
 
 static void drawBuildingFootprints();
 static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_CityPixelCoordinate *coord);
@@ -639,7 +640,7 @@ static int isLegionClick()
 	if (Data_Settings_Map.current.gridOffset) {
 		int formationId = Formation_getLegionFormationAtGridOffset(
 			GridOffset(Data_Settings_Map.current.x, Data_Settings_Map.current.y));
-		if (formationId > 0 && !Data_Formations[formationId].inDistantBattle) {
+		if (formationId > 0 && !formation_get(formationId)->in_distant_battle) {
 			Data_State.selectedLegionFormationId = formationId;
 			UI_Window_goTo(Window_CityMilitary);
 			return 1;
@@ -1059,8 +1060,8 @@ static void militaryMapClick()
 		return;
 	}
 	int formationId = Data_State.selectedLegionFormationId;
-	if (Data_Formations[formationId].inDistantBattle ||
-		Data_Formations[formationId].cursedByMars) {
+    const formation *m = formation_get(formationId);
+	if (m->in_distant_battle || m->cursed_by_mars) {
 		return;
 	}
 	int otherFormationId = Formation_getFormationForBuilding(

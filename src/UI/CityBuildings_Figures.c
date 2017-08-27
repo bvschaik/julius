@@ -10,6 +10,8 @@
 #include "../Data/Settings.h"
 #include "../Data/State.h"
 
+#include "figure/formation.h"
+
 static int showOnOverlay(struct Data_Figure *f)
 {
 	switch (Data_State.currentOverlay) {
@@ -323,7 +325,7 @@ void UI_CityBuildings_drawFigure(int figureId, int xOffset, int yOffset, int sel
 				drawHippodromeHorses(f, xOffset, yOffset);
 				break;
 			case Figure_FortStandard:
-				if (!Data_Formations[f->formationId].inDistantBattle) {
+				if (!formation_get(f->formationId)->in_distant_battle) {
 					// base
 					Graphics_drawImage(f->graphicId, xOffset, yOffset);
 					// flag

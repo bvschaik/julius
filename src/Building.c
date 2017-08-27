@@ -711,11 +711,11 @@ void Building_GameTick_checkAccessToRome()
 			}
 		} else if (b->type == BUILDING_WAREHOUSE_SPACE) {
 			b->distanceFromEntry = 0;
-			struct Data_Building *main = &Data_Buildings[Building_getMainBuildingId(i)];
-			b->roadNetworkId = main->roadNetworkId;
-			b->distanceFromEntry = main->distanceFromEntry;
-			b->roadAccessX = main->roadAccessX;
-			b->roadAccessY = main->roadAccessY;
+			struct Data_Building *mainBuilding = &Data_Buildings[Building_getMainBuildingId(i)];
+			b->roadNetworkId = mainBuilding->roadNetworkId;
+			b->distanceFromEntry = mainBuilding->distanceFromEntry;
+			b->roadAccessX = mainBuilding->roadAccessX;
+			b->roadAccessY = mainBuilding->roadAccessY;
 		} else if (b->type == BUILDING_HIPPODROME) {
 			b->distanceFromEntry = 0;
 			int roadGridOffset = Terrain_getRoadToLargestRoadNetworkHippodrome(b->x, b->y, 5, &xRoad, &yRoad);

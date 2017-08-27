@@ -53,6 +53,35 @@ int calc_minimum_distance(int x1, int y1, int x2, int y2)
     }
 }
 
+direction calc_general_direction(int x_from, int y_from, int x_to, int y_to)
+{
+    if (x_from < x_to) {
+        if (y_from > y_to) {
+            return DIR_1_TOP_RIGHT;
+        } else if (y_from == y_to) {
+            return DIR_2_RIGHT;
+        } else if (y_from < y_to) {
+            return DIR_3_BOTTOM_RIGHT;
+        }
+    } else if (x_from == x_to) {
+        if (y_from > y_to) {
+            return DIR_0_TOP;
+        } else if (y_from < y_to) {
+            return DIR_4_BOTTOM;
+        }
+    } else if (x_from > x_to) {
+        if (y_from > y_to) {
+            return DIR_7_TOP_LEFT;
+        } else if (y_from == y_to) {
+            return DIR_6_LEFT;
+        } else if (y_from < y_to) {
+            return DIR_5_BOTTOM_LEFT;
+        }
+    }
+    return DIR_8_NONE;
+}
+
+
 int32_t calc_bound(int32_t value, int32_t min, int32_t max)
 {
     if (value < min) {

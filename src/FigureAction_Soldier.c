@@ -7,6 +7,8 @@
 #include "Data/Formation.h"
 #include "Data/Grid.h"
 
+#include "figure/formation.h"
+
 static const struct {
 	int x;
 	int y;
@@ -37,17 +39,17 @@ static const struct {
 void FigureAction_militaryStandard(int figureId)
 {
 	struct Data_Figure *f = &Data_Figures[figureId];
-	struct Data_Formation *m = &Data_Formations[f->formationId];
+	const formation *m = formation_get(f->formationId);
 
 	f->terrainUsage = FigureTerrainUsage_Any;
 	FigureActionIncreaseGraphicOffset(f, 16);
 	Figure_removeFromTileList(figureId);
-	if (m->isAtFort) {
+	if (m->is_at_fort) {
 		f->x = m->x;
 		f->y = m->y;
 	} else {
-		f->x = m->xStandard;
-		f->y = m->yStandard;
+		f->x = m->x_standard;
+		f->y = m->y_standard;
 	}
 	f->gridOffset = GridOffset(f->x, f->y);
 	f->crossCountryX = 15 * f->x + 7;
@@ -55,20 +57,20 @@ void FigureAction_militaryStandard(int figureId)
 	Figure_addToTileList(figureId);
 
 	f->graphicId = GraphicId(ID_Graphic_FortStandardPole) + 20 - m->morale / 5;
-	if (m->figureType == Figure_FortLegionary) {
-		if (m->isHalted) {
+	if (m->figure_type == Figure_FortLegionary) {
+		if (m->is_halted) {
 			f->cartGraphicId = GraphicId(ID_Graphic_FortFlags) + 8;
 		} else {
 			f->cartGraphicId = GraphicId(ID_Graphic_FortFlags) + f->graphicOffset / 2;
 		}
-	} else if (m->figureType == Figure_FortMounted) {
-		if (m->isHalted) {
+	} else if (m->figure_type == Figure_FortMounted) {
+		if (m->is_halted) {
 			f->cartGraphicId = GraphicId(ID_Graphic_FortFlags) + 26;
 		} else {
 			f->cartGraphicId = GraphicId(ID_Graphic_FortFlags) + 18 + f->graphicOffset / 2;
 		}
 	} else {
-		if (m->isHalted) {
+		if (m->is_halted) {
 			f->cartGraphicId = GraphicId(ID_Graphic_FortFlags) + 17;
 		} else {
 			f->cartGraphicId = GraphicId(ID_Graphic_FortFlags) + 9 + f->graphicOffset / 2;
@@ -92,7 +94,7 @@ static void javelinLaunchMissile(int figureId, struct Data_Figure *f)
 	if (f->attackGraphicOffset) {
 		if (f->attackGraphicOffset == 1) {
 			Figure_createMissile(figureId, f->x, f->y, xTile, yTile, Figure_Javelin);
-			Data_Formations[f->formationId].missileFired = 6;
+            formation_record_missile_fired(f->formationId);
 		}
 		f->attackGraphicOffset++;
 		if (f->attackGraphicOffset > 100) {
@@ -170,7 +172,7 @@ static void updateSoldierGraphicMounted(struct Data_Figure *f, int dir)
 	}
 }
 
-static void updateSoldierGraphicLegionary(struct Data_Figure *f, struct Data_Formation *m, int dir)
+static void updateSoldierGraphicLegionary(struct Data_Figure *f, const formation *m, int dir)
 {
 	int graphicId = GraphicId(ID_Graphic_Figure_FortLegionary);
 	if (f->actionState == FigureActionState_150_Attack) {
@@ -182,7 +184,7 @@ static void updateSoldierGraphicLegionary(struct Data_Figure *f, struct Data_For
 	} else if (f->actionState == FigureActionState_149_Corpse) {
 		f->graphicId = graphicId + 152 + FigureActionCorpseGraphicOffset(f);
 	} else if (f->actionState == FigureActionState_84_SoldierAtStandard) {
-		if (m->isHalted && m->layout == FormationLayout_Tortoise && m->missileAttackTimeout) {
+		if (m->is_halted && m->layout == FormationLayout_Tortoise && m->missile_attack_timeout) {
 			f->graphicId = graphicId + dir + 144;
 		} else {
 			f->graphicId = graphicId + dir;
@@ -192,12 +194,12 @@ static void updateSoldierGraphicLegionary(struct Data_Figure *f, struct Data_For
 	}
 }
 
-static void updateSoldierGraphic(int figureId, struct Data_Figure *f, struct Data_Formation *m)
+static void updateSoldierGraphic(int figureId, struct Data_Figure *f, const formation *m)
 {
 	int dir;
 	if (f->actionState == FigureActionState_150_Attack) {
 		dir = f->attackDirection;
-	} else if (m->missileFired) {
+	} else if (m->missile_fired) {
 		dir = f->direction;
 	} else if (f->actionState == FigureActionState_84_SoldierAtStandard) {
 		dir = m->direction;
@@ -219,12 +221,12 @@ static void updateSoldierGraphic(int figureId, struct Data_Figure *f, struct Dat
 void FigureAction_soldier(int figureId)
 {
 	struct Data_Figure *f = &Data_Figures[figureId];
-	struct Data_Formation *m = &Data_Formations[f->formationId];
+	const formation *m = formation_get(f->formationId);
 	Data_CityInfo.numSoldiersInCity++;
 	f->terrainUsage = FigureTerrainUsage_Any;
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
-	if (m->inUse != 1) {
+	if (m->in_use != 1) {
 		f->actionState = FigureActionState_149_Corpse;
 	}
 	int speedFactor;
@@ -287,8 +289,8 @@ void FigureAction_soldier(int figureId)
 			break;
 		case FigureActionState_83_SoldierGoingToStandard:
 			f->formationAtRest = 0;
-			f->destinationX = m->xStandard + FigureActionFormationLayoutPositionX(m->layout, f->indexInFormation);
-			f->destinationY = m->yStandard + FigureActionFormationLayoutPositionY(m->layout, f->indexInFormation);
+			f->destinationX = m->x_standard + FigureActionFormationLayoutPositionX(m->layout, f->indexInFormation);
+			f->destinationY = m->y_standard + FigureActionFormationLayoutPositionY(m->layout, f->indexInFormation);
 			if (f->alternativeLocationIndex) {
 				f->destinationX += soldierAlternativePoints[f->alternativeLocationIndex].x;
 				f->destinationY += soldierAlternativePoints[f->alternativeLocationIndex].y;
@@ -312,14 +314,14 @@ void FigureAction_soldier(int figureId)
 			f->formationAtRest = 0;
 			f->graphicOffset = 0;
 			Figure_updatePositionInTileList(figureId);
-			f->destinationX = m->xStandard + FigureActionFormationLayoutPositionX(m->layout, f->indexInFormation);
-			f->destinationY = m->yStandard + FigureActionFormationLayoutPositionY(m->layout, f->indexInFormation);
+			f->destinationX = m->x_standard + FigureActionFormationLayoutPositionX(m->layout, f->indexInFormation);
+			f->destinationY = m->y_standard + FigureActionFormationLayoutPositionY(m->layout, f->indexInFormation);
 			if (f->alternativeLocationIndex) {
 				f->destinationX += soldierAlternativePoints[f->alternativeLocationIndex].x;
 				f->destinationY += soldierAlternativePoints[f->alternativeLocationIndex].y;
 			}
 			if (f->x != f->destinationX || f->y != f->destinationY) {
-				if (m->missileFired <= 0 && m->recentFight <= 0 && m->missileAttackTimeout <= 0) {
+				if (m->missile_fired <= 0 && m->recent_fight <= 0 && m->missile_attack_timeout <= 0) {
 					f->actionState = FigureActionState_83_SoldierGoingToStandard;
 					f->alternativeLocationIndex = 0;
 				}
@@ -333,7 +335,7 @@ void FigureAction_soldier(int figureId)
 			}
 			break;
 		case FigureActionState_85_SoldierGoingToMilitaryAcademy:
-			m->hasMilitaryTraining = 1;
+            formation_legion_set_trained(m->id);
 			f->formationAtRest = 1;
 			FigureMovement_walkTicks(figureId, speedFactor);
 			if (f->direction == DirFigure_8_AtDestination) {
