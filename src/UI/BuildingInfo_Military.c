@@ -10,13 +10,13 @@
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
 #include "../Data/Figure.h"
-#include "../Data/Formation.h"
 #include "../Data/Settings.h"
 #include "../Data/State.h"
 
 #include "building/count.h"
 #include "core/calc.h"
 #include "figure/formation.h"
+#include <../../opencaesar/src/Data/Formation.h>
 
 static void buttonReturnToFort(int param1, int param2);
 static void buttonLayout(int param1, int param2);
@@ -389,25 +389,25 @@ void UI_BuildingInfo_drawLegionInfoForeground(BuildingInfoContext *c)
 		default:
 			// no button selected: go for formation layout
 			switch (m->layout) {
-				case FormationLayout_SingleLine1:
-				case FormationLayout_SingleLine2:
+				case FORMATION_SINGLE_LINE_1:
+				case FORMATION_SINGLE_LINE_2:
 					titleId = 16;
 					textId = 22;
 					break;
-				case FormationLayout_DoubleLine1:
-				case FormationLayout_DoubleLine2:
+				case FORMATION_DOUBLE_LINE_1:
+				case FORMATION_DOUBLE_LINE_2:
 					titleId = 14;
 					textId = 20;
 					break;
-				case FormationLayout_Tortoise:
+				case FORMATION_TORTOISE:
 					titleId = 12;
 					textId = 18;
 					break;
-				case FormationLayout_MopUp:
+				case FORMATION_MOP_UP:
 					titleId = 15;
 					textId = 21;
 					break;
-				case FormationLayout_Column:
+				case FORMATION_COLUMN:
 					titleId = 13;
 					textId = 19;
 					break;
@@ -482,19 +482,19 @@ static void buttonLayout(int index, int param2)
 	int new_layout;
 	if (m->figure_type == Figure_FortLegionary) {
 		switch (index) {
-			case 0: new_layout = FormationLayout_Tortoise; break;
-			case 1: new_layout = FormationLayout_Column; break;
-			case 2: new_layout = FormationLayout_DoubleLine1; break;
-			case 3: new_layout = FormationLayout_DoubleLine2; break;
-			case 4: new_layout = FormationLayout_MopUp; break;
+			case 0: new_layout = FORMATION_TORTOISE; break;
+			case 1: new_layout = FORMATION_COLUMN; break;
+			case 2: new_layout = FORMATION_DOUBLE_LINE_1; break;
+			case 3: new_layout = FORMATION_DOUBLE_LINE_2; break;
+			case 4: new_layout = FORMATION_MOP_UP; break;
 		}
 	} else {
 		switch (index) {
-			case 0: new_layout = FormationLayout_SingleLine1; break;
-			case 1: new_layout = FormationLayout_SingleLine2; break;
-			case 2: new_layout = FormationLayout_DoubleLine1; break;
-			case 3: new_layout = FormationLayout_DoubleLine2; break;
-			case 4: new_layout = FormationLayout_MopUp; break;
+			case 0: new_layout = FORMATION_SINGLE_LINE_1; break;
+			case 1: new_layout = FORMATION_SINGLE_LINE_2; break;
+			case 2: new_layout = FORMATION_DOUBLE_LINE_1; break;
+			case 3: new_layout = FORMATION_DOUBLE_LINE_2; break;
+			case 4: new_layout = FORMATION_MOP_UP; break;
 		}
 	}
 	formation_change_layout(m->id, new_layout);

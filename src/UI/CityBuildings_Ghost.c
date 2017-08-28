@@ -762,7 +762,7 @@ static void drawBuildingGhostFort()
 {
 	int fullyObstructed = 0;
 	int placementObstructed = 0;
-	if (formation_get_num_legions_cached() >= 6 || Data_CityInfo.treasury <= MIN_TREASURY) {
+	if (formation_totals_get_num_legions() >= 6 || Data_CityInfo.treasury <= MIN_TREASURY) {
 		fullyObstructed = 1;
 		placementObstructed = 1;
 	}

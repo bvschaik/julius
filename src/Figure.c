@@ -12,7 +12,6 @@
 #include "Data/Constants.h"
 #include "Data/Empire.h"
 #include "Data/Figure.h"
-#include "Data/Formation.h"
 #include "Data/Grid.h"
 #include "Data/Scenario.h"
 #include "Data/Settings.h"

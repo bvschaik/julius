@@ -4,7 +4,6 @@
 #include "Routing.h"
 
 #include "Data/CityInfo.h"
-#include "Data/Formation.h"
 
 #include "core/random.h"
 #include "figure/formation.h"
@@ -88,8 +87,8 @@ void FigureAction_sheep(int figureId)
 			if (f->waitTicks > 400) {
 				f->waitTicks = figureId & 0x1f;
 				f->actionState = FigureActionState_197_HerdAnimalMoving;
-				f->destinationX = m->destination_x + FigureActionFormationLayoutPositionX(FormationLayout_Herd, f->indexInFormation);
-				f->destinationY = m->destination_y + FigureActionFormationLayoutPositionY(FormationLayout_Herd, f->indexInFormation);
+				f->destinationX = m->destination_x + FigureActionFormationLayoutPositionX(FORMATION_HERD, f->indexInFormation);
+				f->destinationY = m->destination_y + FigureActionFormationLayoutPositionY(FORMATION_HERD, f->indexInFormation);
 				f->roamLength = 0;
 			}
 			break;
@@ -142,8 +141,8 @@ void FigureAction_wolf(int figureId)
 			if (f->waitTicks > 400) {
 				f->waitTicks = figureId & 0x1f;
 				f->actionState = FigureActionState_197_HerdAnimalMoving;
-				f->destinationX = m->destination_x + FigureActionFormationLayoutPositionX(FormationLayout_Herd, f->indexInFormation);
-				f->destinationY = m->destination_y + FigureActionFormationLayoutPositionY(FormationLayout_Herd, f->indexInFormation);
+				f->destinationX = m->destination_x + FigureActionFormationLayoutPositionX(FORMATION_HERD, f->indexInFormation);
+				f->destinationY = m->destination_y + FigureActionFormationLayoutPositionY(FORMATION_HERD, f->indexInFormation);
 				f->roamLength = 0;
 			}
 			break;
@@ -218,8 +217,8 @@ void FigureAction_zebra(int figureId)
 			if (f->waitTicks > 200) {
 				f->waitTicks = figureId & 0x1f;
 				f->actionState = FigureActionState_197_HerdAnimalMoving;
-				f->destinationX = m->destination_x + FigureActionFormationLayoutPositionX(FormationLayout_Herd, f->indexInFormation);
-				f->destinationY = m->destination_y + FigureActionFormationLayoutPositionY(FormationLayout_Herd, f->indexInFormation);
+				f->destinationX = m->destination_x + FigureActionFormationLayoutPositionX(FORMATION_HERD, f->indexInFormation);
+				f->destinationY = m->destination_y + FigureActionFormationLayoutPositionY(FORMATION_HERD, f->indexInFormation);
 				f->roamLength = 0;
 			}
 			break;

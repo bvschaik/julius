@@ -5,10 +5,10 @@
 #include "Sound.h"
 #include "Terrain.h"
 
-#include "Data/Formation.h"
 #include "Data/Grid.h"
 
 #include "core/calc.h"
+#include "figure/enemy_army.h"
 
 static int ballistaFiringOffsets[] = {
 	0, 1, 2, 3, 4, 5, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -99,7 +99,7 @@ void FigureAction_ballista(int figureId)
 
 static void towerSentryPickTarget(int figureId, struct Data_Figure *f)
 {
-	if (Data_Formation_Extra.numEnemyFormations <= 0) {
+	if (enemy_army_total_enemy_formations() <= 0) {
 		return;
 	}
 	if (f->actionState == FigureActionState_150_Attack ||

@@ -15,6 +15,14 @@ enum {
 };
 
 enum {
+    FORMATION_ATTACK_FOOD_CHAIN= 0,
+    FORMATION_ATTACK_GOLD_STORES = 1,
+    FORMATION_ATTACK_BEST_BUILDINGS = 2,
+    FORMATION_ATTACK_TROOPS = 3,
+    FORMATION_ATTACK_RANDOM = 4
+};
+
+enum {
     FORMATION_TORTOISE = 0,
     FORMATION_DOUBLE_LINE_1 = 1,
     FORMATION_DOUBLE_LINE_2 = 2,
@@ -161,9 +169,9 @@ void formation_legion_set_trained(int formation_id);
 void formation_legion_set_max_figures();
 int formation_legion_prepare_to_move(int formation_id);
 
-int formation_get_num_legions_cached();
-void formation_cache_clear_legions();
-void formation_cache_add_legion(int formation_id);
+int formation_totals_get_num_legions();
+void formation_totals_clear_legions();
+void formation_totals_add_legion(int formation_id);
 
 int formation_get_num_legions();
 

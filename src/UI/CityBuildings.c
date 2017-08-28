@@ -14,7 +14,6 @@
 #include "../Undo.h"
 #include "../Widget.h"
 
-#include "../Data/Formation.h"
 #include "../Data/Mouse.h"
 
 #include "building/model.h"

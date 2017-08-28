@@ -17,7 +17,6 @@
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
-#include "Data/Formation.h"
 #include "Data/Settings.h"
 #include "Data/State.h"
 

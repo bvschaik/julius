@@ -22,7 +22,6 @@
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
-#include "Data/Formation.h"
 #include "Data/Graphics.h"
 #include "Data/Grid.h"
 #include "Data/Settings.h"
@@ -649,7 +648,7 @@ static int placeBuilding(int type, int x, int y)
 			UI_Warning_show(Warning_ClearLandNeeded);
 			return 0;
 		}
-		if (formation_get_num_legions_cached() >= 6) {
+		if (formation_totals_get_num_legions() >= 6) {
 			UI_Warning_show(Warning_MaxLegionsReached);
 			return 0;
 		}
@@ -1199,7 +1198,7 @@ void BuildingPlacement_update(int xStart, int yStart, int xEnd, int yEnd, int ty
 	} else if (type == BUILDING_WAREHOUSE) {
 		Terrain_updateToPlaceBuildingToOverlay(3, xEnd, yEnd, Terrain_All, 0);
 	} else if (type == BUILDING_FORT_LEGIONARIES || type == BUILDING_FORT_JAVELIN || type == BUILDING_FORT_MOUNTED) {
-		if (formation_get_num_legions_cached() < 6) {
+		if (formation_totals_get_num_legions() < 6) {
 			const int offsetsX[] = {3, 4, 4, 3};
 			const int offsetsY[] = {-1, -1, 0, 0};
 			int orientIndex = Data_Settings_Map.orientation / 2;

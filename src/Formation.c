@@ -10,34 +10,20 @@
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
-#include "Data/Formation.h"
 #include "Data/Grid.h"
 #include "Data/Scenario.h"
 #include "Data/Settings.h"
 #include "Data/Figure.h"
 
 #include "building/model.h"
+#include "figure/enemy_army.h"
 #include "figure/formation.h"
 
 #include <string.h>
 
 void Formation_clearInvasionInfo()
 {
-	for (int i = 0; i < MAX_INVASION_FORMATIONS; i++) {
-		Data_Formation_Invasion.formationId[i] = 0;
-		Data_Formation_Invasion.homeX[i] = 0;
-		Data_Formation_Invasion.homeY[i] = 0;
-		Data_Formation_Invasion.layout[i] = 0;
-		Data_Formation_Invasion.destinationX[i] = 0;
-		Data_Formation_Invasion.destinationY[i] = 0;
-		Data_Formation_Invasion.destinationBuildingId[i] = 0;
-		Data_Formation_Invasion.ignoreRomanSoldiers[i] = 0;
-	}
-	Data_Formation_Extra.numEnemyFormations = 0;
-	Data_Formation_Extra.numEnemySoldierStrength = 0;
-	Data_Formation_Extra.numLegionFormations = 0;
-	Data_Formation_Extra.numLegionSoldierStrength = 0;
-	Data_Formation_Extra.daysSinceRomanSoldierConcentration = 0;
+    enemy_armies_clear();
 }
 
 int Formation_createLegion(int buildingId)
@@ -157,7 +143,7 @@ void Formation_legionReturnHome(int formationId)
 static void update_totals(const formation *m)
 {
     if (m->is_legion) {
-        formation_cache_add_legion(m->id);
+        formation_totals_add_legion(m->id);
         if (m->figure_type == Figure_FortLegionary) {
             Data_CityInfo.militaryLegionaryLegions++;
         }
@@ -171,7 +157,7 @@ static void update_totals(const formation *m)
 }
 void Formation_calculateLegionTotals()
 {
-    formation_cache_clear_legions();
+    formation_totals_clear_legions();
     Data_CityInfo.militaryLegionaryLegions = 0;
     formation_foreach(update_totals);
 }
@@ -250,13 +236,15 @@ static void update_legion_enemy_totals(const formation *m, void *data)
                     formation_set_halted(m->id, 0);
                 }
             }
-            Data_Formation_Extra.numLegionFormations++;
-            Data_Formation_Extra.numLegionSoldierStrength += m->num_figures;
+            int total_strength = m->num_figures;
+            if (m->figure_type == FIGURE_FORT_LEGIONARY) {
+                total_strength += m->num_figures / 2;
+            }
+            enemy_army_totals_add_legion_formation(total_strength);
             if (m->figure_type == Figure_FortLegionary) {
                 if (!wasHalted && m->is_halted) {
                     Sound_Effects_playChannel(SoundChannel_FormationShield);
                 }
-                Data_Formation_Extra.numLegionSoldierStrength += m->num_figures / 2;
             }
         }
     } else {
@@ -264,8 +252,7 @@ static void update_legion_enemy_totals(const formation *m, void *data)
         if (m->num_figures <= 0) {
             formation_clear(m->id);
         } else {
-            Data_Formation_Extra.numEnemyFormations++;
-            Data_Formation_Extra.numEnemySoldierStrength += m->num_figures;
+            enemy_army_totals_add_enemy_formation(m->num_figures);
         }
     }
 }
@@ -302,10 +289,7 @@ void Formation_calculateFigures()
         Data_Figures[i].indexInFormation = index;
 	}
 
-    Data_Formation_Extra.numEnemyFormations = 0;
-    Data_Formation_Extra.numEnemySoldierStrength = 0;
-    Data_Formation_Extra.numLegionFormations = 0;
-    Data_Formation_Extra.numLegionSoldierStrength = 0;
+    enemy_army_totals_clear();
     formation_foreach_non_herd(update_legion_enemy_totals, 0);
 
     Data_CityInfo.militaryTotalLegionsEmpireService = 0;

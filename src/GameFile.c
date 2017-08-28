@@ -20,7 +20,6 @@
 #include "Data/Empire.h"
 #include "Data/Event.h"
 #include "Data/FileList.h"
-#include "Data/Formation.h"
 #include "Data/Grid.h"
 #include "Data/Invasion.h"
 #include "Data/Message.h"
@@ -40,6 +39,7 @@
 #include "core/random.h"
 #include "core/zip.h"
 #include "empire/trade_prices.h"
+#include "figure/enemy_army.h"
 #include "figure/formation.h"
 #include "figure/name.h"
 #include "figure/trader.h"
@@ -210,11 +210,7 @@ typedef struct {
     buffer *Data_Tutorial_tutorial2_population450Reached;
     buffer *Data_Tutorial_tutorial2_potteryMade;
     buffer *building_count_military;
-    buffer *Data_Formation_Extra_numEnemyFormations;
-    buffer *Data_Formation_Extra_numEnemySoldierStrength;
-    buffer *Data_Formation_Extra_numLegionFormations;
-    buffer *Data_Formation_Extra_numLegionSoldierStrength;
-    buffer *Data_Formation_Extra_daysSinceRomanSoldierConcentration;
+    buffer *enemy_army_totals;
     buffer *Data_Building_Storages;
     buffer *building_count_culture2;
     buffer *building_count_support;
@@ -232,15 +228,7 @@ typedef struct {
     buffer *Data_Routes_totalRoutesCalculated;
     buffer *Data_Routes_unknown2RoutesCalculated;
     buffer *building_count_culture3;
-    buffer *Data_Formation_Invasion_formationId;
-    buffer *Data_Formation_Invasion_homeX;
-    buffer *Data_Formation_Invasion_homeY;
-    buffer *Data_Formation_Invasion_layout;
-    buffer *Data_Formation_Invasion_destinationX;
-    buffer *Data_Formation_Invasion_destinationY;
-    buffer *Data_Formation_Invasion_destinationBuildingId;
-    buffer *Data_Formation_Invasion_numLegions;
-    buffer *Data_Formation_Invasion_ignoreRomanSoldiers;
+    buffer *enemy_armies;
     buffer *Data_CityInfo_Extra_entryPointFlag_x;
     buffer *Data_CityInfo_Extra_entryPointFlag_y;
     buffer *Data_CityInfo_Extra_exitPointFlag_x;
@@ -412,11 +400,7 @@ void init_savegame_data()
     state->Data_Tutorial_tutorial2_population450Reached = create_savegame_piece(4, 0);
     state->Data_Tutorial_tutorial2_potteryMade = create_savegame_piece(4, 0);
     state->building_count_military = create_savegame_piece(16, 0);
-    state->Data_Formation_Extra_numEnemyFormations = create_savegame_piece(4, 0);
-    state->Data_Formation_Extra_numEnemySoldierStrength = create_savegame_piece(4, 0);
-    state->Data_Formation_Extra_numLegionFormations = create_savegame_piece(4, 0);
-    state->Data_Formation_Extra_numLegionSoldierStrength = create_savegame_piece(4, 0);
-    state->Data_Formation_Extra_daysSinceRomanSoldierConcentration = create_savegame_piece(4, 0);
+    state->enemy_army_totals = create_savegame_piece(20, 0);
     state->Data_Building_Storages = create_savegame_piece(6400, 0);
     state->building_count_culture2 = create_savegame_piece(32, 0);
     state->building_count_support = create_savegame_piece(24, 0);
@@ -434,15 +418,7 @@ void init_savegame_data()
     state->Data_Routes_totalRoutesCalculated = create_savegame_piece(4, 0);
     state->Data_Routes_unknown2RoutesCalculated = create_savegame_piece(4, 0); //state->unk_634470 = create_savegame_piece(4, 0); not referenced
     state->building_count_culture3 = create_savegame_piece(40, 0);
-    state->Data_Formation_Invasion_formationId = create_savegame_piece(100, 0);
-    state->Data_Formation_Invasion_homeX = create_savegame_piece(100, 0);
-    state->Data_Formation_Invasion_homeY = create_savegame_piece(100, 0);
-    state->Data_Formation_Invasion_layout = create_savegame_piece(100, 0);
-    state->Data_Formation_Invasion_destinationX = create_savegame_piece(100, 0);
-    state->Data_Formation_Invasion_destinationY = create_savegame_piece(100, 0);
-    state->Data_Formation_Invasion_destinationBuildingId = create_savegame_piece(100, 0);
-    state->Data_Formation_Invasion_numLegions = create_savegame_piece(100, 0);
-    state->Data_Formation_Invasion_ignoreRomanSoldiers = create_savegame_piece(100, 0);
+    state->enemy_armies = create_savegame_piece(900, 0);
     state->Data_CityInfo_Extra_entryPointFlag_x = create_savegame_piece(4, 0);
     state->Data_CityInfo_Extra_entryPointFlag_y = create_savegame_piece(4, 0);
     state->Data_CityInfo_Extra_exitPointFlag_x = create_savegame_piece(4, 0);
@@ -618,11 +594,6 @@ static void savegame_deserialize(savegame_state *state)
     read_all_from_buffer(state->Data_Tutorial_tutorial1_senateBuilt, &Data_Tutorial.tutorial1.senateBuilt);
     read_all_from_buffer(state->Data_Tutorial_tutorial2_population450Reached, &Data_Tutorial.tutorial2.population450Reached);
     read_all_from_buffer(state->Data_Tutorial_tutorial2_potteryMade, &Data_Tutorial.tutorial2.potteryMade);
-    read_all_from_buffer(state->Data_Formation_Extra_numEnemyFormations, &Data_Formation_Extra.numEnemyFormations);
-    read_all_from_buffer(state->Data_Formation_Extra_numEnemySoldierStrength, &Data_Formation_Extra.numEnemySoldierStrength);
-    read_all_from_buffer(state->Data_Formation_Extra_numLegionFormations, &Data_Formation_Extra.numLegionFormations);
-    read_all_from_buffer(state->Data_Formation_Extra_numLegionSoldierStrength, &Data_Formation_Extra.numLegionSoldierStrength);
-    read_all_from_buffer(state->Data_Formation_Extra_daysSinceRomanSoldierConcentration, &Data_Formation_Extra.daysSinceRomanSoldierConcentration);
     read_all_from_buffer(state->Data_Building_Storages, &Data_Building_Storages);
     read_all_from_buffer(state->Data_Tutorial_tutorial2_potteryMadeYear, &Data_Tutorial.tutorial2.potteryMadeYear);
     read_all_from_buffer(state->Data_Event_gladiatorRevolt_gameYear, &Data_Event.gladiatorRevolt.gameYear);
@@ -637,15 +608,9 @@ static void savegame_deserialize(savegame_state *state)
     read_all_from_buffer(state->Data_Routes_enemyRoutesCalculated, &Data_Routes.enemyRoutesCalculated);
     read_all_from_buffer(state->Data_Routes_totalRoutesCalculated, &Data_Routes.totalRoutesCalculated);
     read_all_from_buffer(state->Data_Routes_unknown2RoutesCalculated, &Data_Routes.unknown2RoutesCalculated); //read_all_from_buffer(state->unk_634470, &unk_634470); not referenced
-    read_all_from_buffer(state->Data_Formation_Invasion_formationId, &Data_Formation_Invasion.formationId);
-    read_all_from_buffer(state->Data_Formation_Invasion_homeX, &Data_Formation_Invasion.homeX);
-    read_all_from_buffer(state->Data_Formation_Invasion_homeY, &Data_Formation_Invasion.homeY);
-    read_all_from_buffer(state->Data_Formation_Invasion_layout, &Data_Formation_Invasion.layout);
-    read_all_from_buffer(state->Data_Formation_Invasion_destinationX, &Data_Formation_Invasion.destinationX);
-    read_all_from_buffer(state->Data_Formation_Invasion_destinationY, &Data_Formation_Invasion.destinationY);
-    read_all_from_buffer(state->Data_Formation_Invasion_destinationBuildingId, &Data_Formation_Invasion.destinationBuildingId);
-    read_all_from_buffer(state->Data_Formation_Invasion_numLegions, &Data_Formation_Invasion.numLegions);
-    read_all_from_buffer(state->Data_Formation_Invasion_ignoreRomanSoldiers, &Data_Formation_Invasion.ignoreRomanSoldiers);
+    
+    enemy_armies_load_state(state->enemy_armies, state->enemy_army_totals);
+
     read_all_from_buffer(state->Data_CityInfo_Extra_entryPointFlag_x, &Data_CityInfo_Extra.entryPointFlag.x);
     read_all_from_buffer(state->Data_CityInfo_Extra_entryPointFlag_y, &Data_CityInfo_Extra.entryPointFlag.y);
     read_all_from_buffer(state->Data_CityInfo_Extra_exitPointFlag_x, &Data_CityInfo_Extra.exitPointFlag.x);
@@ -785,11 +750,6 @@ static void savegame_serialize(savegame_state *state)
     write_all_to_buffer(state->Data_Tutorial_tutorial1_senateBuilt, &Data_Tutorial.tutorial1.senateBuilt);
     write_all_to_buffer(state->Data_Tutorial_tutorial2_population450Reached, &Data_Tutorial.tutorial2.population450Reached);
     write_all_to_buffer(state->Data_Tutorial_tutorial2_potteryMade, &Data_Tutorial.tutorial2.potteryMade);
-    write_all_to_buffer(state->Data_Formation_Extra_numEnemyFormations, &Data_Formation_Extra.numEnemyFormations);
-    write_all_to_buffer(state->Data_Formation_Extra_numEnemySoldierStrength, &Data_Formation_Extra.numEnemySoldierStrength);
-    write_all_to_buffer(state->Data_Formation_Extra_numLegionFormations, &Data_Formation_Extra.numLegionFormations);
-    write_all_to_buffer(state->Data_Formation_Extra_numLegionSoldierStrength, &Data_Formation_Extra.numLegionSoldierStrength);
-    write_all_to_buffer(state->Data_Formation_Extra_daysSinceRomanSoldierConcentration, &Data_Formation_Extra.daysSinceRomanSoldierConcentration);
     write_all_to_buffer(state->Data_Building_Storages, &Data_Building_Storages);
     write_all_to_buffer(state->Data_Tutorial_tutorial2_potteryMadeYear, &Data_Tutorial.tutorial2.potteryMadeYear);
     write_all_to_buffer(state->Data_Event_gladiatorRevolt_gameYear, &Data_Event.gladiatorRevolt.gameYear);
@@ -804,15 +764,9 @@ static void savegame_serialize(savegame_state *state)
     write_all_to_buffer(state->Data_Routes_enemyRoutesCalculated, &Data_Routes.enemyRoutesCalculated);
     write_all_to_buffer(state->Data_Routes_totalRoutesCalculated, &Data_Routes.totalRoutesCalculated);
     write_all_to_buffer(state->Data_Routes_unknown2RoutesCalculated, &Data_Routes.unknown2RoutesCalculated); //write_all_to_buffer(state->unk_634470, &unk_634470); not referenced
-    write_all_to_buffer(state->Data_Formation_Invasion_formationId, &Data_Formation_Invasion.formationId);
-    write_all_to_buffer(state->Data_Formation_Invasion_homeX, &Data_Formation_Invasion.homeX);
-    write_all_to_buffer(state->Data_Formation_Invasion_homeY, &Data_Formation_Invasion.homeY);
-    write_all_to_buffer(state->Data_Formation_Invasion_layout, &Data_Formation_Invasion.layout);
-    write_all_to_buffer(state->Data_Formation_Invasion_destinationX, &Data_Formation_Invasion.destinationX);
-    write_all_to_buffer(state->Data_Formation_Invasion_destinationY, &Data_Formation_Invasion.destinationY);
-    write_all_to_buffer(state->Data_Formation_Invasion_destinationBuildingId, &Data_Formation_Invasion.destinationBuildingId);
-    write_all_to_buffer(state->Data_Formation_Invasion_numLegions, &Data_Formation_Invasion.numLegions);
-    write_all_to_buffer(state->Data_Formation_Invasion_ignoreRomanSoldiers, &Data_Formation_Invasion.ignoreRomanSoldiers);
+    
+    enemy_armies_save_state(state->enemy_armies, state->enemy_army_totals);
+
     write_all_to_buffer(state->Data_CityInfo_Extra_entryPointFlag_x, &Data_CityInfo_Extra.entryPointFlag.x);
     write_all_to_buffer(state->Data_CityInfo_Extra_entryPointFlag_y, &Data_CityInfo_Extra.entryPointFlag.y);
     write_all_to_buffer(state->Data_CityInfo_Extra_exitPointFlag_x, &Data_CityInfo_Extra.exitPointFlag.x);

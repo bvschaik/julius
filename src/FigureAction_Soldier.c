@@ -4,7 +4,6 @@
 #include "Routing.h"
 
 #include "Data/CityInfo.h"
-#include "Data/Formation.h"
 #include "Data/Grid.h"
 
 #include "figure/formation.h"
@@ -184,7 +183,7 @@ static void updateSoldierGraphicLegionary(struct Data_Figure *f, const formation
 	} else if (f->actionState == FigureActionState_149_Corpse) {
 		f->graphicId = graphicId + 152 + FigureActionCorpseGraphicOffset(f);
 	} else if (f->actionState == FigureActionState_84_SoldierAtStandard) {
-		if (m->is_halted && m->layout == FormationLayout_Tortoise && m->missile_attack_timeout) {
+		if (m->is_halted && m->layout == FORMATION_TORTOISE && m->missile_attack_timeout) {
 			f->graphicId = graphicId + dir + 144;
 		} else {
 			f->graphicId = graphicId + dir;
@@ -239,7 +238,7 @@ void FigureAction_soldier(int figureId)
 	}
 	int layout = m->layout;
 	if (f->formationAtRest || f->actionState == FigureActionState_81_SoldierGoingToFort) {
-		layout = FormationLayout_AtRest;
+		layout = FORMATION_AT_REST;
 	}
 	f->formationPositionX = m->x + FigureActionFormationLayoutPositionX(layout, f->indexInFormation);
 	f->formationPositionY = m->y + FigureActionFormationLayoutPositionY(layout, f->indexInFormation);

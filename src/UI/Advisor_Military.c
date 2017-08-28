@@ -6,7 +6,6 @@
 #include "../Formation.h"
 
 #include "../Data/Figure.h"
-#include "../Data/Formation.h"
 #include "../Data/Settings.h"
 
 #include "figure/formation.h"
@@ -63,9 +62,9 @@ void UI_Advisor_Military_drawBackground(int *advisorHeight)
 		Graphics_drawImage(GraphicId(ID_Graphic_Bullet), baseOffsetX + 100, baseOffsetY + 359);
 		int textId;
 		if (Data_CityInfo.numEnemiesInCity) {
-			textId = 11; // FIXED: was swapped with 10
-		} else if (Data_CityInfo.numImperialSoldiersInCity) {
 			textId = 10;
+		} else if (Data_CityInfo.numImperialSoldiersInCity) {
+			textId = 11;
 		} else if (Event_existsUpcomingInvasion()) {
 			textId = 9;
 		} else {
@@ -96,9 +95,9 @@ void UI_Advisor_Military_drawBackground(int *advisorHeight)
 		Graphics_drawImage(GraphicId(ID_Graphic_Bullet), baseOffsetX + 100, baseOffsetY + 369);
 		int textId;
 		if (Data_CityInfo.numEnemiesInCity) {
-			textId = 11;
-		} else if (Data_CityInfo.numImperialSoldiersInCity) {
 			textId = 10;
+		} else if (Data_CityInfo.numImperialSoldiersInCity) {
+			textId = 11;
 		} else if (Event_existsUpcomingInvasion()) {
 			textId = 9;
 		} else {

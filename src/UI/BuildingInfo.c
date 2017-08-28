@@ -21,7 +21,6 @@
 #include "../Data/CityView.h"
 #include "../Data/Constants.h"
 #include "../Data/Figure.h"
-#include "../Data/Formation.h"
 #include "../Data/Grid.h"
 #include "../Data/Mouse.h"
 #include "../Data/Screen.h"

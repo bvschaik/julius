@@ -5,7 +5,6 @@
 #include "Sound.h"
 
 #include "Data/Constants.h"
-#include "Data/Formation.h"
 
 #include "figure/formation.h"
 
@@ -141,10 +140,10 @@ static void hitOpponent(int figureId, struct Data_Figure *f)
 			opponentFormation->figure_type == Figure_EnemyCaesarLegionary)) {
 		if (!attackIsSameDirection(opponent->attackDirection, opponentFormation->direction)) {
 			opponentDefense -= 4; // opponent not attacking in coordinated formation
-		} else if (opponentFormation->layout == FormationLayout_Tortoise) {
+		} else if (opponentFormation->layout == FORMATION_TORTOISE) {
 			opponentDefense += 7;
-		} else if (opponentFormation->layout == FormationLayout_DoubleLine1 ||
-				opponentFormation->layout == FormationLayout_DoubleLine2) {
+		} else if (opponentFormation->layout == FORMATION_DOUBLE_LINE_1 ||
+				opponentFormation->layout == FORMATION_DOUBLE_LINE_2) {
 			opponentDefense += 4;
 		}
 	}

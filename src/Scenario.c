@@ -38,6 +38,7 @@
 #include "core/file.h"
 #include "core/io.h"
 #include "core/random.h"
+#include "figure/enemy_army.h"
 #include "figure/formation.h"
 #include "figure/name.h"
 #include "figure/trader.h"
@@ -177,7 +178,7 @@ static void initCustomScenario(const char *scenarioName)
 	Building_clearList();
 	BuildingStorage_clearList();
 	Figure_clearList();
-	Formation_clearInvasionInfo();
+	enemy_armies_clear();
 	figure_name_init();
     formations_clear();
 	FigureRoute_clearList();

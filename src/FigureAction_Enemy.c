@@ -7,7 +7,6 @@
 
 #include "Data/CityInfo.h"
 #include "Data/Event.h"
-#include "Data/Formation.h"
 #include "Data/Grid.h"
 
 #include "figure/formation.h"
@@ -20,9 +19,9 @@ static void enemyInitial(int figureId, struct Data_Figure *f, const formation *m
 	f->waitTicks--;
 	if (f->waitTicks <= 0) {
 		if (f->isGhost && f->indexInFormation == 0) {
-			if (m->layout == FormationLayout_Enemy8) {
+			if (m->layout == FORMATION_ENEMY8) {
 				Sound_Speech_playFile("wavs/drums.wav");
-			} else if (m->layout == FormationLayout_Enemy12) {
+			} else if (m->layout == FORMATION_ENEMY12) {
 				Sound_Speech_playFile("wavs/horn2.wav");
 			} else {
 				Sound_Speech_playFile("wavs/horn1.wav");
@@ -671,7 +670,7 @@ void FigureAction_enemyCaesarLegionary(int figureId)
 				FigureActionCorpseGraphicOffset(f) + 152;
 			break;
 		case FigureActionState_84_SoldierAtStandard:
-			if (m->is_halted && m->layout == FormationLayout_Tortoise && m->missile_attack_timeout) {
+			if (m->is_halted && m->layout == FORMATION_TORTOISE && m->missile_attack_timeout) {
 				f->graphicId = GraphicId(ID_Graphic_Figure_FortLegionary) + dir + 144;
 			} else {
 				f->graphicId = GraphicId(ID_Graphic_Figure_FortLegionary) + dir;

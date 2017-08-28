@@ -11,13 +11,13 @@
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
-#include "Data/Formation.h"
 #include "Data/Grid.h"
 #include "Data/Settings.h"
 #include "Data/Figure.h"
 
 #include "core/calc.h"
 #include "core/random.h"
+#include "figure/enemy_army.h"
 #include "figure/formation.h"
 
 static const int enemyAttackBuildingPriority[4][24] = {
@@ -187,8 +187,8 @@ static void tickUpdateLegions()
 					FigureRoute_remove(m->figures[n]);
 				}
 			}
-		} else if (m->layout == FormationLayout_MopUp) {
-			if (Data_Formation_Extra.numEnemyFormations +
+		} else if (m->layout == FORMATION_MOP_UP) {
+			if (enemy_army_total_enemy_formations() +
 				Data_CityInfo.numRiotersInCity +
 				Data_CityInfo.numAttackingNativesInCity > 0) {
 				for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {
@@ -325,7 +325,7 @@ static void setNativeTargetBuilding(int formationId)
 static void setEnemyTargetBuilding(const formation *m)
 {
 	int attack = m->attack_type;
-	if (attack == FormationAttackType_Random) {
+	if (attack == FORMATION_ATTACK_RANDOM) {
 		attack = random_byte() & 3;
 	}
 	int bestTypeIndex = 100;
@@ -440,6 +440,7 @@ static void setFormationFiguresToEnemyInitial(int formationId)
 
 static void updateEnemyMovement(const formation *m, int romanDistance)
 {
+    const enemy_army *army = enemy_army_get(m->invasion_id);
     formation_state *state = formation_get_state(m->id);
 	int regroup = 0;
 	int halt = 0;
@@ -454,14 +455,13 @@ static void updateEnemyMovement(const formation *m, int romanDistance)
 	} else if (m->wait_ticks < 32) {
 		regroup = 1;
 		state->duration_advance = 4;
-	} else if (Data_Formation_Invasion.ignoreRomanSoldiers[m->invasion_id]) {
+	} else if (army->ignore_roman_soldiers) {
 		halt = 0;
 		regroup = 0;
 		advance = 1;
 	} else {
 		int haltDuration, advanceDuration, regroupDuration;
-		if (Data_Formation_Invasion.layout[m->invasion_id] == FormationLayout_Enemy8 ||
-			Data_Formation_Invasion.layout[m->invasion_id] == FormationLayout_Enemy12) {
+		if (army->layout == FORMATION_ENEMY8 || army->layout == FORMATION_ENEMY12) {
 			switch (m->enemy_legion_index) {
 				case 0:
 				case 1:
@@ -539,27 +539,24 @@ static void updateEnemyMovement(const formation *m, int romanDistance)
                 formation_set_destination(m->id, target->x_home, target->y_home);
 			}
 		} else {
-            formation_set_destination(m->id,
-                Data_Formation_Invasion.destinationX[m->invasion_id],
-                Data_Formation_Invasion.destinationY[m->invasion_id]
-            );
+            formation_set_destination(m->id, army->destination_x, army->destination_y);
 		}
 	} else if (regroup) {
-		int layout = Data_Formation_Invasion.layout[m->invasion_id];
+		int layout = army->layout;
 		int xOffset = layoutOrientationLegionIndexOffsets[layout][m->orientation / 2][2 * m->enemy_legion_index] +
-			Data_Formation_Invasion.homeX[m->invasion_id];
+			army->home_x;
 		int yOffset = layoutOrientationLegionIndexOffsets[layout][m->orientation / 2][2 * m->enemy_legion_index + 1] +
-			Data_Formation_Invasion.homeY[m->invasion_id];
+			army->home_y;
 		int xTile, yTile;
 		if (FigureAction_HerdEnemy_moveFormationTo(m->id, xOffset, yOffset, &xTile, &yTile)) {
 			formation_set_destination(m->id, xTile, yTile);
 		}
 	} else if (advance) {
-		int layout = Data_Formation_Invasion.layout[m->invasion_id];
+		int layout = army->layout;
 		int xOffset = layoutOrientationLegionIndexOffsets[layout][m->orientation / 2][2 * m->enemy_legion_index] +
-			Data_Formation_Invasion.destinationX[m->invasion_id];
+			army->destination_x;
 		int yOffset = layoutOrientationLegionIndexOffsets[layout][m->orientation / 2][2 * m->enemy_legion_index + 1] +
-			Data_Formation_Invasion.destinationY[m->invasion_id];
+			army->destination_y;
 		int xTile, yTile;
 		if (FigureAction_HerdEnemy_moveFormationTo(m->id, xOffset, yOffset, &xTile, &yTile)) {
             formation_set_destination(m->id, xTile, yTile);
@@ -573,10 +570,10 @@ static void update_enemy_formation(const formation *m, void *data)
         return;
     }
     int *romanDistance = (int*) data;
-    int invasionId = m->invasion_id;
-    if (Data_Formation_Extra.numEnemySoldierStrength > 2 * Data_Formation_Extra.numLegionSoldierStrength) {
-        if (m->figure_type != Figure_FortJavelin) {
-            Data_Formation_Invasion.ignoreRomanSoldiers[invasionId] = 1;
+    enemy_army *army = enemy_army_get_editable(m->invasion_id);
+    if (enemy_army_is_stronger_than_legions()) {
+        if (m->figure_type != FIGURE_FORT_JAVELIN) {
+            army->ignore_roman_soldiers = 1;
         }
     }
     formation_decrease_monthly_counters(m->id);
@@ -607,11 +604,11 @@ static void update_enemy_formation(const formation *m, void *data)
     if (m->figures[0] && Data_Figures[m->figures[0]].state == FigureState_Alive) {
         formation_set_home(m->id, Data_Figures[m->figures[0]].x, Data_Figures[m->figures[0]].y);
     }
-    if (!Data_Formation_Invasion.formationId[invasionId]) {
-        Data_Formation_Invasion.formationId[invasionId] = m->id;
-        Data_Formation_Invasion.homeX[invasionId] = m->x_home;
-        Data_Formation_Invasion.homeY[invasionId] = m->y_home;
-        Data_Formation_Invasion.layout[invasionId] = m->layout;
+    if (!army->formation_id) {
+        army->formation_id = m->id;
+        army->home_x = m->x_home;
+        army->home_y = m->y_home;
+        army->layout = m->layout;
         *romanDistance = 0;
         Routing_canTravelOverLandNonCitizen(m->x_home, m->y_home, -2, -2, 100000, 300);
         int xTile, yTile;
@@ -620,54 +617,43 @@ static void update_enemy_formation(const formation *m, void *data)
         } else if (getHighestRomanSoldierConcentration(m->x_home, m->y_home, 32, &xTile, &yTile)) {
             *romanDistance = 2;
         }
-        if (Data_Formation_Invasion.ignoreRomanSoldiers[invasionId]) {
+        if (army->ignore_roman_soldiers) {
             *romanDistance = 0;
         }
         if (*romanDistance == 1) {
             // attack roman legion
-            Data_Formation_Invasion.destinationX[invasionId] = xTile;
-            Data_Formation_Invasion.destinationY[invasionId] = yTile;
-            Data_Formation_Invasion.destinationBuildingId[invasionId] = 0;
+            army->destination_x = xTile;
+            army->destination_y = yTile;
+            army->destination_building_id = 0;
         } else {
             setEnemyTargetBuilding(m);
             enemyApproachTarget(m);
-            Data_Formation_Invasion.destinationX[invasionId] = m->destination_x;
-            Data_Formation_Invasion.destinationY[invasionId] = m->destination_y;
-            Data_Formation_Invasion.destinationBuildingId[invasionId] = m->destination_building_id;
+            army->destination_x = m->destination_x;
+            army->destination_y = m->destination_y;
+            army->destination_building_id = m->destination_building_id;
         }
     }
-    formation_set_enemy_legion(m->id, Data_Formation_Invasion.numLegions[invasionId]++);
+    formation_set_enemy_legion(m->id, army->num_legions++);
     formation_increase_wait_ticks(m->id);
     formation_set_destination_building(m->id,
-        Data_Formation_Invasion.destinationX[invasionId],
-        Data_Formation_Invasion.destinationY[invasionId],
-        Data_Formation_Invasion.destinationBuildingId[invasionId]
+        army->destination_x, army->destination_y, army->destination_building_id
     );
 
     updateEnemyMovement(m, *romanDistance);
 }
 static void tickUpdateEnemies()
 {
-	if (Data_Formation_Extra.numEnemyFormations <= 0) {
-		for (int i = 0; i < MAX_INVASION_FORMATIONS; i++) {
-			Data_Formation_Invasion.ignoreRomanSoldiers[i] = 0;
-		}
-		setNativeTargetBuilding(0);
-		return;
-	}
-	Data_Formation_Extra.daysSinceRomanSoldierConcentration++;
-	if (Data_Formation_Extra.daysSinceRomanSoldierConcentration > 4) {
-		Data_Formation_Extra.daysSinceRomanSoldierConcentration = 0;
-		calculateRomanSoldierConcentration();
-	}
-	for (int i = 0; i < MAX_INVASION_FORMATIONS; i++) {
-		Data_Formation_Invasion.formationId[i] = 0;
-		Data_Formation_Invasion.numLegions[i] = 0;
-	}
-	int romanDistance = 0;
-    formation_foreach_non_herd(update_enemy_formation, &romanDistance);
-
-	setNativeTargetBuilding(0);
+    if (enemy_army_total_enemy_formations() <= 0) {
+        enemy_armies_clear_ignore_roman_soldiers();
+    } else {
+        if (enemy_army_totals_should_calculate_roman_influence()) {
+            calculateRomanSoldierConcentration();
+        }
+        enemy_armies_clear_formations();
+        int romanDistance = 0;
+        formation_foreach_non_herd(update_enemy_formation, &romanDistance);
+    }
+    setNativeTargetBuilding(0);
 }
 
 static int getHerdRoamingDestination(int formationId, int allowNegativeDesirability,

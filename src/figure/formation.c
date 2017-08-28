@@ -301,18 +301,18 @@ void formation_legion_set_max_figures()
     }
 }
 
-int formation_get_num_legions_cached()
+int formation_totals_get_num_legions()
 {
     return data.num_legions;
 }
 
-void formation_cache_clear_legions()
+void formation_totals_clear_legions()
 {
     data.id_last_legion = 0;
     data.num_legions = 0;
 }
 
-void formation_cache_add_legion(int formation_id)
+void formation_totals_add_legion(int formation_id)
 {
     data.id_last_legion = formation_id;
     data.num_legions++;

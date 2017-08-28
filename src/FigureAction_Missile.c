@@ -3,7 +3,6 @@
 #include "Figure.h"
 #include "Formation.h"
 #include "Sound.h"
-#include "Data/Formation.h"
 
 #include "figure/formation.h"
 
@@ -50,7 +49,7 @@ void FigureAction_arrow(int figureId)
 		if (damageInflicted < 0) {
 			damageInflicted = 0;
 		}
-		if (targetType == Figure_FortLegionary && m->is_halted && m->layout == FormationLayout_Tortoise) {
+		if (targetType == Figure_FortLegionary && m->is_halted && m->layout == FORMATION_TORTOISE) {
 			damageInflicted = 1;
 		}
 		int targetDamage = damageInflicted + Data_Figures[targetId].damage;
@@ -95,7 +94,7 @@ void FigureAction_spear(int figureId)
 		if (damageInflicted < 0) {
 			damageInflicted = 0;
 		}
-		if (targetType == Figure_FortLegionary && m->is_halted && m->layout == FormationLayout_Tortoise) {
+		if (targetType == Figure_FortLegionary && m->is_halted && m->layout == FORMATION_TORTOISE) {
 			damageInflicted = 1;
 		}
 		int targetDamage = damageInflicted + Data_Figures[targetId].damage;
@@ -141,7 +140,7 @@ void FigureAction_javelin(int figureId)
 			damageInflicted = 0;
 		}
 		if (targetType == Figure_EnemyCaesarLegionary &&
-			m->is_halted && m->layout == FormationLayout_Tortoise) {
+			m->is_halted && m->layout == FORMATION_TORTOISE) {
 			damageInflicted = 1;
 		}
 		int targetDamage = damageInflicted + Data_Figures[targetId].damage;

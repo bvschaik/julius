@@ -1,6 +1,5 @@
 #include "FigureAction_private.h"
 
-#include "core/calc.h"
 #include "Figure.h"
 #include "Routing.h"
 #include "Security.h"
@@ -8,8 +7,10 @@
 #include "Terrain.h"
 
 #include "Data/CityInfo.h"
-#include "Data/Formation.h"
 #include "Data/Grid.h"
+
+#include "core/calc.h"
+#include "figure/enemy_army.h"
 
 void FigureAction_taxCollector(int figureId)
 {
@@ -199,7 +200,7 @@ static int prefectGetNearestEnemy(int x, int y, int *distance)
 
 static int prefectGoFightEnemy(int figureId, struct Data_Figure *f)
 {
-	if (Data_CityInfo.riotersOrAttackingNativesInCity <= 0 && Data_Formation_Extra.numEnemyFormations <= 0) {
+	if (Data_CityInfo.riotersOrAttackingNativesInCity <= 0 && enemy_army_total_enemy_formations() <= 0) {
 		return 0;
 	}
 	switch (f->actionState) {

@@ -59,9 +59,6 @@ struct Data_CityView Data_CityView;
 
 struct Data_InvasionWarning Data_InvasionWarnings[MAX_INVASION_WARNINGS];
 
-struct _Data_Formation_Extra Data_Formation_Extra;
-struct _Data_Formation_Invasion Data_Formation_Invasion;
-
 struct _Data_FileList Data_FileList;
 
 struct _Data_Routes Data_Routes;

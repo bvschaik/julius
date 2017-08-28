@@ -4,7 +4,6 @@
 #include "Terrain.h"
 
 #include "Data/CityInfo.h"
-#include "Data/Formation.h"
 
 #include "figure/formation.h"
 

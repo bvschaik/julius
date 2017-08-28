@@ -11,7 +11,6 @@
 #include "Data/Constants.h"
 #include "Data/Empire.h"
 #include "Data/Event.h"
-#include "Data/Formation.h"
 #include "Data/Grid.h"
 #include "Data/Invasion.h"
 #include "Data/Model.h"
@@ -211,7 +210,7 @@ int Event_startInvasionLocalUprisingFromMars()
 	if (amount <= 0) {
 		return 0;
 	}
-	int gridOffset = startInvasion(EnemyType_0_Barbarian, amount, 8, FormationAttackType_FoodChain, 23);
+	int gridOffset = startInvasion(EnemyType_0_Barbarian, amount, 8, FORMATION_ATTACK_FOOD_CHAIN, 23);
 	if (gridOffset) {
 		PlayerMessage_post(1, Message_121_LocalUprisingMars, Data_Event.lastInternalInvasionId, gridOffset);
 	}
@@ -220,7 +219,7 @@ int Event_startInvasionLocalUprisingFromMars()
 
 void Event_startInvasionFromCheat()
 {
-	int gridOffset = startInvasion(enemyIdToEnemyType[Data_Scenario.enemyId], 150, 8, FormationAttackType_FoodChain, 23);
+	int gridOffset = startInvasion(enemyIdToEnemyType[Data_Scenario.enemyId], 150, 8, FORMATION_ATTACK_FOOD_CHAIN, 23);
 	if (gridOffset) {
 		if (enemyIdToEnemyType[Data_Scenario.enemyId] > 4) {
 			PlayerMessage_post(1, Message_114_EnemyArmyAttack, Data_Event.lastInternalInvasionId, gridOffset);
@@ -510,7 +509,7 @@ static void updateCaesarInvasion()
 				size = 144;
 			}
 			int invasionId = startInvasion(
-				EnemyType_11_Caesar, size, 0, FormationAttackType_BestBuildings, 24);
+				EnemyType_11_Caesar, size, 0, FORMATION_ATTACK_BEST_BUILDINGS, 24);
 			if (invasionId > 0) {
 				Data_CityInfo.caesarInvasionCount++;
 				Data_CityInfo.caesarInvasionDurationDayCountdown = 192;
