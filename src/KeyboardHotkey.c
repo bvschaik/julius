@@ -102,9 +102,9 @@ static void cycleLegion()
 	if (UI_Window_getId() == Window_City) {
 		int legionId = currentLegionId;
 		currentLegionId = 0;
-		for (int i = 1; i <= 6; i++) {
+		for (int i = 1; i <= MAX_LEGIONS; i++) {
 			legionId++;
-			if (legionId > 6) {
+			if (legionId > MAX_LEGIONS) {
 				legionId = 1;
 			}
 			const formation *m = formation_get(legionId);

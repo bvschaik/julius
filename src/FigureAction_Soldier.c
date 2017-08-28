@@ -48,8 +48,8 @@ void FigureAction_militaryStandard(int figureId)
 		f->x = m->x;
 		f->y = m->y;
 	} else {
-		f->x = m->x_standard;
-		f->y = m->y_standard;
+		f->x = m->standard_x;
+		f->y = m->standard_y;
 	}
 	f->gridOffset = GridOffset(f->x, f->y);
 	f->crossCountryX = 15 * f->x + 7;
@@ -289,8 +289,8 @@ void FigureAction_soldier(int figureId)
 			break;
 		case FigureActionState_83_SoldierGoingToStandard:
 			f->formationAtRest = 0;
-			f->destinationX = m->x_standard + FigureActionFormationLayoutPositionX(m->layout, f->indexInFormation);
-			f->destinationY = m->y_standard + FigureActionFormationLayoutPositionY(m->layout, f->indexInFormation);
+			f->destinationX = m->standard_x + FigureActionFormationLayoutPositionX(m->layout, f->indexInFormation);
+			f->destinationY = m->standard_y + FigureActionFormationLayoutPositionY(m->layout, f->indexInFormation);
 			if (f->alternativeLocationIndex) {
 				f->destinationX += soldierAlternativePoints[f->alternativeLocationIndex].x;
 				f->destinationY += soldierAlternativePoints[f->alternativeLocationIndex].y;
@@ -314,8 +314,8 @@ void FigureAction_soldier(int figureId)
 			f->formationAtRest = 0;
 			f->graphicOffset = 0;
 			Figure_updatePositionInTileList(figureId);
-			f->destinationX = m->x_standard + FigureActionFormationLayoutPositionX(m->layout, f->indexInFormation);
-			f->destinationY = m->y_standard + FigureActionFormationLayoutPositionY(m->layout, f->indexInFormation);
+			f->destinationX = m->standard_x + FigureActionFormationLayoutPositionX(m->layout, f->indexInFormation);
+			f->destinationY = m->standard_y + FigureActionFormationLayoutPositionY(m->layout, f->indexInFormation);
 			if (f->alternativeLocationIndex) {
 				f->destinationX += soldierAlternativePoints[f->alternativeLocationIndex].x;
 				f->destinationY += soldierAlternativePoints[f->alternativeLocationIndex].y;

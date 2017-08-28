@@ -58,7 +58,7 @@ void FigureAction_indigenousNative(int figureId)
 						f->destinationY = yTile;
 					}
 				} else {
-                    const formation *m = formation_get(0); // TODO make separate function?
+                    const formation *m = formation_get(0);
 					f->actionState = FigureActionState_159_NativeAttacking;
 					f->destinationX = m->destination_x;
 					f->destinationY = m->destination_y;

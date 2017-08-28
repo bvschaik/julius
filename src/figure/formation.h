@@ -4,6 +4,7 @@
 #include "core/buffer.h"
 #include "figure/type.h"
 
+#define MAX_LEGIONS 6
 #define MAX_FORMATION_FIGURES 16
 
 enum {
@@ -34,54 +35,82 @@ typedef struct {
     int duration_regroup;
 } formation_state;
 
+/**
+ * Formation data
+ */
 typedef struct {
-    int id;
-    
-    int in_use;
-    int is_herd;
-    int is_legion;
+    int id; /**< ID of the formation */
+    int faction_id; /**< 1 = player, 0 = everyone else */
 
-    int figure_type;
-    int legion_id;
-    int is_halted;
-    int morale;
-    int num_figures;
-    int max_figures;
-    int figures[MAX_FORMATION_FIGURES];
-    int in_distant_battle;
-    int cursed_by_mars;
-    int total_damage;
-    int max_total_damage;
-    int has_military_training;
+    /* General variables */
+    int in_use; /**< Flag whether this entry is in use */
+    int is_herd; /**< Flag to indicate herd */
+    int is_legion; /**< Flag to indicate (own) legion */
+    int legion_id; /**< Legion ID (0-5 for own troops) */
     int layout;
-    int is_at_fort;
-    int empire_service;
-    int enemy_type;
-    int enemy_legion_index;
+    int direction;
+    int orientation;
+
+    int morale;
+    int months_from_home;
+    int months_low_morale;
+    int months_very_low_morale;
+    
+    /* Figures */
+    int figure_type; /**< Type of figure in this formation */
+    int num_figures; /**< Current number of figures in the formation */
+    int max_figures; /**< Maximum number of figures */
+    int figures[MAX_FORMATION_FIGURES]; /**< Figure IDs */
+    int total_damage; /**< Total damage of all figures added */
+    int max_total_damage; /**< Maximum total damage of all figures added */
+    
+    /* Position */
     int x;
     int y;
     int x_home;
     int y_home;
     int building_id;
-    int x_standard;
-    int y_standard;
+    int standard_x;
+    int standard_y;
     int standard_figure_id;
     int destination_x;
     int destination_y;
     int destination_building_id;
+    
+    /* Movement */
+    int wait_ticks;
+    int is_halted;
     int recent_fight;
+    int unknown_fired;
     int missile_fired;
     int missile_attack_timeout;
     int missile_attack_formation_id;
-    int legion_recruit_type;
+
+    /* Legion-related */
+    int empire_service; /**< Flag to indicate this legion is selected for empire service */
+    int in_distant_battle; /**< Flag to indicate this legion is away in a distant battle */
+    int cursed_by_mars; /**< Flag to indicate this legion is cursed */
+    int has_military_training; /**< Flag to indicate this legion has had military training */
+    int legion_recruit_type; /**< Recruit type: none if this legion is fully occupied */
+    int is_at_fort; /**< Flag to indicate this legion is resting at the fort */
+    
+    /* Enemy-related */
+    int enemy_type;
+    int enemy_legion_index;
     int attack_type;
     int invasion_id;
-    int direction;
-    int orientation;
-    int wait_ticks;
-    int herd_direction;
-    
+    int invasion_sequence;
     formation_state enemy_state;
+    
+    /* Herd-related */
+    int herd_direction;
+    int herd_wolf_spawn_delay;
+    
+    struct {
+        int layout;
+        int x_home;
+        int y_home;
+    } prev;
 } formation;
 
 void formations_clear();

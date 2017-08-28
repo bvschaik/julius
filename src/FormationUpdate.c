@@ -137,11 +137,6 @@ static const int layoutOrientationLegionIndexOffsets[13][4][40] = {
 	}
 };
 
-struct morale_change {
-    int legion;
-    int enemy;
-};
-
 static void tickDecreaseLegionDamage()
 {
 	for (int i = 1; i < MAX_FIGURES; i++) {
@@ -167,7 +162,7 @@ static void tickUpdateDirection()
 
 static void tickUpdateLegions()
 {
-	for (int i = 1; i <= 6; i++) {
+	for (int i = 1; i <= MAX_LEGIONS; i++) {
 		const formation *m = formation_get(i);
 		if (m->in_use != 1 || !m->is_legion) {
 			continue;
@@ -236,7 +231,7 @@ static void addRomanSoldierConcentration(int x, int y, int radius, int amount)
 static void calculateRomanSoldierConcentration()
 {
 	Grid_clearUByteGrid(Data_Grid_romanSoldierConcentration);
-	for (int i = 1; i <= 6; i++) {
+	for (int i = 1; i <= MAX_LEGIONS; i++) {
 		const formation *m = formation_get(i);
 		if (m->in_use != 1 || !m->is_legion) {
 			continue;

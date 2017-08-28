@@ -314,7 +314,7 @@ struct state {
     int min_distance;
 };
 
-static void update_closest_fort_needing_soldiers(const formation *formation, void *data)
+static void get_closest_fort_needing_soldiers(const formation *formation, void *data)
 {
     struct state *state = (struct state*) data;
     if (formation->in_distant_battle || !formation->legion_recruit_type) {
@@ -337,7 +337,7 @@ static void update_closest_fort_needing_soldiers(const formation *formation, voi
 int Figure_createSoldierFromBarracks(int buildingId, int x, int y)
 {
     struct state state = {buildingId, Data_Buildings[buildingId].loadsStored > 0, 0, 0, 10000};
-    formation_foreach_legion(update_closest_fort_needing_soldiers, &state);
+    formation_foreach_legion(get_closest_fort_needing_soldiers, &state);
 	if (state.formation_id > 0) {
 		const formation *m = formation_get(state.formation_id);
 		int figureId = Figure_create(m->figure_type, x, y, 0);
