@@ -13,6 +13,8 @@
 #include "Data/Scenario.h"
 #include "Data/Settings.h"
 
+#include "building/list.h"
+
 #include <string.h>
 
 static const int adjacentOffsets[] = {-162, 1, 162, -1};
@@ -22,13 +24,13 @@ static int qTail;
 
 void UtilityManagement_updateHouseWaterAccess()
 {
-	Data_BuildingList.small.size = 0;
+    building_list_small_clear();
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		if (!BuildingIsInUse(i)) {
 			continue;
 		}
 		if (Data_Buildings[i].type == BUILDING_WELL) {
-			DATA_BUILDINGLIST_SMALL_ENQUEUE(i);
+			building_list_small_add(i);
 		} else if (Data_Buildings[i].houseSize) {
 			Data_Buildings[i].hasWaterAccess = 0;
 			Data_Buildings[i].hasWellAccess = 0;
@@ -39,9 +41,11 @@ void UtilityManagement_updateHouseWaterAccess()
 			}
 		}
 	}
-	DATA_BUILDINGLIST_SMALL_FOREACH(
-		Terrain_markBuildingsWithinWellRadius(item, 2);
-	);
+	int total_wells = building_list_small_size();
+    const int *wells = building_list_small_items();
+    for (int i = 0; i < total_wells; i++) {
+        Terrain_markBuildingsWithinWellRadius(wells[i], 2);
+    }
 }
 
 
@@ -122,12 +126,11 @@ void UtilityManagement_updateReservoirFountain()
 	Grid_andShortGrid(Data_Grid_terrain, ~(Terrain_FountainRange | Terrain_ReservoirRange));
 	// reservoirs
 	setAllAqueductsToNoWater();
-	memset(Data_BuildingList.large.items, 0, MAX_BUILDINGS * sizeof(short));
-	Data_BuildingList.large.size = 0;
+	building_list_large_clear(1);
 	// mark reservoirs next to water
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		if (BuildingIsInUse(i) && Data_Buildings[i].type == BUILDING_RESERVOIR) {
-			Data_BuildingList.large.items[Data_BuildingList.large.size++] = i;
+			building_list_large_add(i);
 			if (Terrain_existsTileWithinAreaWithType(
 				Data_Buildings[i].x - 1, Data_Buildings[i].y - 1, 5, Terrain_Water)) {
 				Data_Buildings[i].hasWaterAccess = 2;
@@ -136,13 +139,15 @@ void UtilityManagement_updateReservoirFountain()
 			}
 		}
 	}
+	int total_reservoirs = building_list_large_size();
+	const int *reservoirs = building_list_large_items();
 	// fill reservoirs from full ones
 	int changed = 1;
 	static const int connectorOffsets[] = {-161, 165, 487, 161};
 	while (changed == 1) {
 		changed = 0;
-		for (int i = 0; i < Data_BuildingList.large.size; i++) {
-			int buildingId = Data_BuildingList.large.items[i];
+		for (int i = 0; i < total_reservoirs; i++) {
+			int buildingId = reservoirs[i];
 			if (Data_Buildings[buildingId].hasWaterAccess == 2) {
 				Data_Buildings[buildingId].hasWaterAccess = 1;
 				changed = 1;
@@ -153,8 +158,8 @@ void UtilityManagement_updateReservoirFountain()
 		}
 	}
 	// mark reservoir ranges
-	for (int i = 0; i < Data_BuildingList.large.size; i++) {
-		int buildingId = Data_BuildingList.large.items[i];
+	for (int i = 0; i < total_reservoirs; i++) {
+		int buildingId = reservoirs[i];
 		if (Data_Buildings[buildingId].hasWaterAccess) {
 			Terrain_setWithRadius(
 				Data_Buildings[buildingId].x, Data_Buildings[buildingId].y,

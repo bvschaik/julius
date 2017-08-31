@@ -16,6 +16,7 @@ set(TESTS
     core/zip
 
     building/count
+    building/list
     building/model
     
     empire/trade_prices

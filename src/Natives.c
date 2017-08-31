@@ -13,6 +13,8 @@
 #include "Data/Scenario.h"
 #include "Data/Settings.h"
 
+#include "building/list.h"
+
 static void determineMeetingCenter();
 
 void Natives_init()
@@ -77,22 +79,24 @@ void Natives_init()
 static void determineMeetingCenter()
 {
 	// gather list of meeting centers
-	Data_BuildingList.small.size = 0;
+	building_list_small_clear();
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		if (BuildingIsInUse(i) && Data_Buildings[i].type == BUILDING_NATIVE_MEETING) {
-			DATA_BUILDINGLIST_SMALL_ENQUEUE(i);
+			building_list_small_add(i);
 		}
 	}
-	if (Data_BuildingList.small.size <= 0) {
+	int total_meetings = building_list_small_size();
+	if (total_meetings <= 0) {
 		return;
 	}
+	const int *meetings = building_list_small_items();
 	// determine closest meeting center for hut
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		if (BuildingIsInUse(i) && Data_Buildings[i].type == BUILDING_NATIVE_HUT) {
 			int minDist = 1000;
 			int minMeetingId = 0;
-			for (int n = 0; n < Data_BuildingList.small.size; n++) {
-				int meetingId = Data_BuildingList.small.items[n];
+			for (int n = 0; n < total_meetings; n++) {
+				int meetingId = meetings[n];
 				int dist = calc_maximum_distance(Data_Buildings[i].x, Data_Buildings[i].y,
 					Data_Buildings[meetingId].x, Data_Buildings[meetingId].y);
 				if (dist < minDist) {

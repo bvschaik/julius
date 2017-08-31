@@ -84,7 +84,7 @@ void test_building_count_load()
     assert_eq(6, count_buffer_read_i32(&sup));
 }
 
-RUN_TESTS(empire.trade_prices,
+RUN_TESTS(building.count,
     ADD_TEST(test_building_count_increase)
     ADD_TEST(test_building_count_industry_increase)
     ADD_TEST(test_building_count_limit_hippodrome)

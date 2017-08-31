@@ -33,6 +33,7 @@
 #include "Data/Figure.h"
 
 #include "building/count.h"
+#include "building/list.h"
 #include "core/buffer.h"
 #include "core/file.h"
 #include "core/io.h"
@@ -199,8 +200,8 @@ typedef struct {
     buffer *Data_Buildings_Extra_highestBuildingIdInUse;
     buffer *figure_traders;
     buffer *Data_BuildingList_burning_items;
-    buffer *Data_BuildingList_small_items;
-    buffer *Data_BuildingList_large_items;
+    buffer *building_list_small;
+    buffer *building_list_large;
     buffer *Data_Tutorial_tutorial1_fire;
     buffer *Data_Tutorial_tutorial1_crime;
     buffer *Data_Tutorial_tutorial1_collapse;
@@ -389,8 +390,8 @@ void init_savegame_data()
     state->Data_Buildings_Extra_highestBuildingIdInUse = create_savegame_piece(4, 0);
     state->figure_traders = create_savegame_piece(4804, 0);
     state->Data_BuildingList_burning_items = create_savegame_piece(1000, 1);
-    state->Data_BuildingList_small_items = create_savegame_piece(1000, 1);
-    state->Data_BuildingList_large_items = create_savegame_piece(4000, 1);
+    state->building_list_small = create_savegame_piece(1000, 1);
+    state->building_list_large = create_savegame_piece(4000, 1);
     state->Data_Tutorial_tutorial1_fire = create_savegame_piece(4, 0);
     state->Data_Tutorial_tutorial1_crime = create_savegame_piece(4, 0);
     state->Data_Tutorial_tutorial1_collapse = create_savegame_piece(4, 0);
@@ -584,8 +585,9 @@ static void savegame_deserialize(savegame_state *state)
     traders_load_state(state->figure_traders);
     
     read_all_from_buffer(state->Data_BuildingList_burning_items, &Data_BuildingList.burning.items);
-    read_all_from_buffer(state->Data_BuildingList_small_items, &Data_BuildingList.small.items);
-    read_all_from_buffer(state->Data_BuildingList_large_items, &Data_BuildingList.large.items);
+    
+    building_list_load_state(state->building_list_small, state->building_list_large);
+    
     read_all_from_buffer(state->Data_Tutorial_tutorial1_fire, &Data_Tutorial.tutorial1.fire);
     read_all_from_buffer(state->Data_Tutorial_tutorial1_crime, &Data_Tutorial.tutorial1.crime);
     read_all_from_buffer(state->Data_Tutorial_tutorial1_collapse, &Data_Tutorial.tutorial1.collapse);
@@ -740,8 +742,9 @@ static void savegame_serialize(savegame_state *state)
     traders_save_state(state->figure_traders);
 
     write_all_to_buffer(state->Data_BuildingList_burning_items, &Data_BuildingList.burning.items);
-    write_all_to_buffer(state->Data_BuildingList_small_items, &Data_BuildingList.small.items);
-    write_all_to_buffer(state->Data_BuildingList_large_items, &Data_BuildingList.large.items);
+
+    building_list_save_state(state->building_list_small, state->building_list_large);
+
     write_all_to_buffer(state->Data_Tutorial_tutorial1_fire, &Data_Tutorial.tutorial1.fire);
     write_all_to_buffer(state->Data_Tutorial_tutorial1_crime, &Data_Tutorial.tutorial1.crime);
     write_all_to_buffer(state->Data_Tutorial_tutorial1_collapse, &Data_Tutorial.tutorial1.collapse);

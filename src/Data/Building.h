@@ -219,30 +219,10 @@ extern struct _Data_Buildings_Extra {
 extern struct _Data_BuildingList {
 	struct {
 		int size;
-		short items[MAX_BUILDINGS];
-	} large;
-	struct {
-		int size;
-		short items[500];
-	} small;
-	struct {
-		int size;
 		short items[500];
 		int index;
 		int totalBurning;
 	} burning;
 } Data_BuildingList;
-
-#define DATA_BUILDINGLIST_SMALL_ENQUEUE(n) \
-	Data_BuildingList.small.items[Data_BuildingList.small.size++] = i;\
-	if (Data_BuildingList.small.size >= 500) {\
-		Data_BuildingList.small.size = 499;\
-	}
-
-#define DATA_BUILDINGLIST_SMALL_FOREACH(block) \
-	for (int i = 0; i < Data_BuildingList.small.size; i++) {\
-		int item = Data_BuildingList.small.items[i];\
-		block;\
-	}
 
 #endif

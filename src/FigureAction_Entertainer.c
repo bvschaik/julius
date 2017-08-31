@@ -7,11 +7,14 @@
 #include "Data/Event.h"
 #include "Data/Grid.h"
 
+#include "building/list.h"
+
 static int determineDestination(int x, int y, int btype1, int btype2)
 {
 	int roadNetwork = Data_Grid_roadNetworks[GridOffset(x,y)];
 
-	Data_BuildingList.small.size = 0;
+    building_list_small_clear();
+	
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
 		if (!BuildingIsInUse(i)) {
@@ -24,16 +27,18 @@ static int determineDestination(int x, int y, int btype1, int btype2)
 			if (b->type == BUILDING_HIPPODROME && b->prevPartBuildingId) {
 				continue;
 			}
-			DATA_BUILDINGLIST_SMALL_ENQUEUE(i);
+			building_list_small_add(i);
 		}
 	}
-	if (Data_BuildingList.small.size <= 0) {
+	int total_venues = building_list_small_size();
+	if (total_venues <= 0) {
 		return 0;
 	}
+	const int *venues = building_list_small_items();
 	int minBuildingId = 0;
 	int minDistance = 10000;
-	for (int i = 0; i < Data_BuildingList.small.size; i++) {
-		struct Data_Building *b = &Data_Buildings[Data_BuildingList.small.items[i]];
+	for (int i = 0; i < total_venues; i++) {
+		struct Data_Building *b = &Data_Buildings[venues[i]];
 		int daysLeft;
 		if (b->type == btype1) {
 			daysLeft = b->data.entertainment.days1;
@@ -45,7 +50,7 @@ static int determineDestination(int x, int y, int btype1, int btype2)
 		int dist = daysLeft + calc_maximum_distance(x, y, b->x, b->y);
 		if (dist < minDistance) {
 			minDistance = dist;
-			minBuildingId = Data_BuildingList.small.items[i];
+			minBuildingId = venues[i];
 		}
 	}
 	if (minBuildingId) {

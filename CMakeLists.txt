@@ -22,6 +22,7 @@ set(CORE_FILES
 )
 set (BUILDING_FILES
     src/building/count.c
+    src/building/list.c
     src/building/model.c
 )
 set (EMPIRE_FILES
