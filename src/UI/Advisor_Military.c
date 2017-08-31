@@ -58,31 +58,32 @@ void UI_Advisor_Military_drawBackground(int *advisorHeight)
 
 	numLegions = formation_get_num_legions();
 
+    int enemy_text_id;
+    if (Data_CityInfo.numEnemiesInCity) {
+        enemy_text_id = 10;
+    } else if (Data_CityInfo.numImperialSoldiersInCity) {
+        enemy_text_id = 11;
+    } else if (Event_existsUpcomingInvasion()) {
+        enemy_text_id = 9;
+    } else {
+        enemy_text_id = 8;
+    }
+    int distant_battle_text_id;
+    if (Data_CityInfo.distantBattleRomanMonthsToReturn > 0) {
+        distant_battle_text_id = 15;
+    } else if (Data_CityInfo.distantBattleRomanMonthsToTravel > 0) {
+        distant_battle_text_id = 14;
+    } else if (Data_CityInfo.distantBattleMonthsToBattle > 0) {
+        distant_battle_text_id = 13;
+    } else {
+        distant_battle_text_id = 12;
+    }
 	if (numLegions <= 0) {
 		Graphics_drawImage(GraphicId(ID_Graphic_Bullet), baseOffsetX + 100, baseOffsetY + 359);
-		int textId;
-		if (Data_CityInfo.numEnemiesInCity) {
-			textId = 10;
-		} else if (Data_CityInfo.numImperialSoldiersInCity) {
-			textId = 11;
-		} else if (Event_existsUpcomingInvasion()) {
-			textId = 9;
-		} else {
-			textId = 8;
-		}
-		Widget_GameText_draw(51, textId, baseOffsetX + 120, baseOffsetY + 358, Font_NormalBlack);
+		Widget_GameText_draw(51, enemy_text_id, baseOffsetX + 120, baseOffsetY + 358, Font_NormalBlack);
 
 		Graphics_drawImage(GraphicId(ID_Graphic_Bullet), baseOffsetX + 100, baseOffsetY + 379);
-		if (Data_CityInfo.distantBattleRomanMonthsToReturn > 0) {
-			textId = 15;
-		} else if (Data_CityInfo.distantBattleRomanMonthsToTravel > 0) {
-			textId = 14;
-		} else if (Data_CityInfo.distantBattleMonthsToBattle > 0) {
-			textId = 13;
-		} else {
-			textId = 12;
-		}
-		Widget_GameText_draw(51, textId, baseOffsetX + 120, baseOffsetY + 378, Font_NormalBlack);
+		Widget_GameText_draw(51, distant_battle_text_id, baseOffsetX + 120, baseOffsetY + 378, Font_NormalBlack);
 	} else {
 		// has forts
 		Graphics_drawImage(GraphicId(ID_Graphic_Bullet), baseOffsetX + 100, baseOffsetY + 349);
@@ -93,29 +94,10 @@ void UI_Advisor_Military_drawBackground(int *advisorHeight)
 			baseOffsetX + 120 + width, baseOffsetY + 348, Font_NormalBlack);
 
 		Graphics_drawImage(GraphicId(ID_Graphic_Bullet), baseOffsetX + 100, baseOffsetY + 369);
-		int textId;
-		if (Data_CityInfo.numEnemiesInCity) {
-			textId = 10;
-		} else if (Data_CityInfo.numImperialSoldiersInCity) {
-			textId = 11;
-		} else if (Event_existsUpcomingInvasion()) {
-			textId = 9;
-		} else {
-			textId = 8;
-		}
-		Widget_GameText_draw(51, textId, baseOffsetX + 120, baseOffsetY + 368, Font_NormalBlack);
+		Widget_GameText_draw(51, enemy_text_id, baseOffsetX + 120, baseOffsetY + 368, Font_NormalBlack);
 
 		Graphics_drawImage(GraphicId(ID_Graphic_Bullet), baseOffsetX + 100, baseOffsetY + 389);
-		if (Data_CityInfo.distantBattleRomanMonthsToReturn > 0) {
-			textId = 15;
-		} else if (Data_CityInfo.distantBattleRomanMonthsToTravel > 0) {
-			textId = 14;
-		} else if (Data_CityInfo.distantBattleMonthsToBattle > 0) {
-			textId = 13;
-		} else {
-			textId = 12;
-		}
-		Widget_GameText_draw(51, textId, baseOffsetX + 120, baseOffsetY + 388, Font_NormalBlack);
+		Widget_GameText_draw(51, distant_battle_text_id, baseOffsetX + 120, baseOffsetY + 388, Font_NormalBlack);
 	}
 
 	Widget_Panel_drawInnerPanel(baseOffsetX + 32, baseOffsetY + 70, 36, 17);

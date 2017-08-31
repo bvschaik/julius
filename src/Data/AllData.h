@@ -15,7 +15,6 @@
 #include "Sound.h"
 #include "CityView.h"
 #include "Invasion.h"
-#include "Formation.h"
 #include "FileList.h"
 #include "Routes.h"
 #include "Debug.h"

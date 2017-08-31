@@ -16,7 +16,6 @@
 #include "building/count.h"
 #include "core/calc.h"
 #include "figure/formation.h"
-#include <../../opencaesar/src/Data/Formation.h>
 
 static void buttonReturnToFort(int param1, int param2);
 static void buttonLayout(int param1, int param2);

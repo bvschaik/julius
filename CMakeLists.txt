@@ -28,6 +28,7 @@ set (EMPIRE_FILES
     src/empire/trade_prices.c
 )
 set (FIGURE_FILES
+    src/figure/enemy_army.c
     src/figure/formation.c
     src/figure/name.c
     src/figure/trader.c
