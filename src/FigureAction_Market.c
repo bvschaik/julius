@@ -3,9 +3,11 @@
 #include "Figure.h"
 #include "Resource.h"
 
+#include "figure/type.h"
+
 static int createDeliveryBoy(int leaderId, struct Data_Figure *f)
 {
-	int boy = Figure_create(Figure_DeliveryBoy, f->x, f->y, 0);
+	int boy = Figure_create(FIGURE_DELIVERY_BOY, f->x, f->y, 0);
 	Data_Figures[boy].inFrontFigureId = leaderId;
 	Data_Figures[boy].collectingItemId = f->collectingItemId;
 	Data_Figures[boy].buildingId = f->buildingId;
@@ -157,7 +159,7 @@ void FigureAction_deliveryBoy(int figureId)
 		f->state = FigureState_Dead;
 	} else {
 		if (leader->state == FigureState_Alive) {
-			if (leader->type == Figure_MarketBuyer || leader->type == Figure_DeliveryBoy) {
+			if (leader->type == FIGURE_MARKET_BUYER || leader->type == FIGURE_DELIVERY_BOY) {
 				FigureMovement_followTicks(figureId, f->inFrontFigureId, 1);
 			} else {
 				f->state = FigureState_Dead;

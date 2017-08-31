@@ -8,6 +8,7 @@
 #include "Data/Grid.h"
 
 #include "building/list.h"
+#include "figure/type.h"
 
 static int determineDestination(int x, int y, int btype1, int btype2)
 {
@@ -63,7 +64,7 @@ static void updateShowsAtDestination(struct Data_Figure *f)
 {
 	struct Data_Building *b = &Data_Buildings[f->destinationBuildingId];
 	switch (f->type) {
-		case Figure_Actor:
+		case FIGURE_ACTOR:
 			b->data.entertainment.play++;
 			if (b->data.entertainment.play >= 5) {
 				b->data.entertainment.play = 0;
@@ -74,15 +75,15 @@ static void updateShowsAtDestination(struct Data_Figure *f)
 				b->data.entertainment.days2 = 32;
 			}
 			break;
-		case Figure_Gladiator:
+		case FIGURE_GLADIATOR:
 			if (b->type == BUILDING_AMPHITHEATER) {
 				b->data.entertainment.days1 = 32;
 			} else {
 				b->data.entertainment.days2 = 32;
 			}
 			break;
-		case Figure_LionTamer:
-		case Figure_Charioteer:
+		case FIGURE_LION_TAMER:
+		case FIGURE_CHARIOTEER:
 			b->data.entertainment.days1 = 32;
 			break;
 	}
@@ -93,7 +94,7 @@ static void updateGraphic(int figureId, struct Data_Figure *f)
 	int dir = f->direction < 8 ? f->direction : f->previousTileDirection;
 	FigureActionNormalizeDirection(dir);
 
-	if (f->type == Figure_Charioteer) {
+	if (f->type == FIGURE_CHARIOTEER) {
 		f->cartGraphicId = 0;
 		if (f->actionState == FigureActionState_150_Attack ||
 			f->actionState == FigureActionState_149_Corpse) {
@@ -105,11 +106,11 @@ static void updateGraphic(int figureId, struct Data_Figure *f)
 		return;
 	}
 	int graphicId;
-	if (f->type == Figure_Actor) {
+	if (f->type == FIGURE_ACTOR) {
 		graphicId = GraphicId(ID_Graphic_Figure_Actor);
-	} else if (f->type == Figure_Gladiator) {
+	} else if (f->type == FIGURE_GLADIATOR) {
 		graphicId = GraphicId(ID_Graphic_Figure_Gladiator);
-	} else if (f->type == Figure_LionTamer) {
+	} else if (f->type == FIGURE_LION_TAMER) {
 		graphicId = GraphicId(ID_Graphic_Figure_LionTamer);
 		if (f->waitTicksMissile >= 96) {
 			graphicId = GraphicId(ID_Graphic_Figure_LionTamerWhip);
@@ -119,7 +120,7 @@ static void updateGraphic(int figureId, struct Data_Figure *f)
 		return;
 	}
 	if (f->actionState == FigureActionState_150_Attack) {
-		if (f->type == Figure_Gladiator) {
+		if (f->type == FIGURE_GLADIATOR) {
 			f->graphicId = graphicId + 104 + dir + 8 * (f->graphicOffset / 2);
 		} else {
 			f->graphicId = graphicId + dir;
@@ -149,18 +150,18 @@ void FigureAction_entertainer(int figureId)
 	if (f->waitTicksMissile >= 120) {
 		f->waitTicksMissile = 0;
 	}
-	if (Data_Event.gladiatorRevolt.state == SpecialEvent_InProgress && f->type == Figure_Gladiator) {
+	if (Data_Event.gladiatorRevolt.state == SpecialEvent_InProgress && f->type == FIGURE_GLADIATOR) {
 		if (f->actionState == FigureActionState_92_EntertainerGoingToVenue ||
 			f->actionState == FigureActionState_94_EntertainerRoaming ||
 			f->actionState == FigureActionState_95_EntertainerReturning) {
-			f->type = Figure_Enemy54_Gladiator;
+			f->type = FIGURE_ENEMY54_GLADIATOR;
 			FigureRoute_remove(figureId);
 			f->roamLength = 0;
 			f->actionState = FigureActionState_158_NativeCreated;
 			return;
 		}
 	}
-	int speedFactor = f->type == Figure_Charioteer ? 2 : 1;
+	int speedFactor = f->type == FIGURE_CHARIOTEER ? 2 : 1;
 	switch (f->actionState) {
 		case FigureActionState_150_Attack:
 			FigureAction_Common_handleAttack(figureId);
@@ -191,16 +192,16 @@ void FigureAction_entertainer(int figureId)
 			if (FigureMovement_crossCountryWalkTicks(figureId, 1) == 1) {
 				int dstBuildingId = 0;
 				switch (f->type) {
-					case Figure_Actor:
+					case FIGURE_ACTOR:
 						dstBuildingId = determineDestination(f->x, f->y, BUILDING_THEATER, BUILDING_AMPHITHEATER);
 						break;
-					case Figure_Gladiator:
+					case FIGURE_GLADIATOR:
 						dstBuildingId = determineDestination(f->x, f->y, BUILDING_AMPHITHEATER, BUILDING_COLOSSEUM);
 						break;
-					case Figure_LionTamer:
+					case FIGURE_LION_TAMER:
 						dstBuildingId = determineDestination(f->x, f->y, BUILDING_COLOSSEUM, 0);
 						break;
-					case Figure_Charioteer:
+					case FIGURE_CHARIOTEER:
 						dstBuildingId = determineDestination(f->x, f->y, BUILDING_HIPPODROME, 0);
 						break;
 				}

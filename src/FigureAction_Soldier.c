@@ -56,13 +56,13 @@ void FigureAction_militaryStandard(int figureId)
 	Figure_addToTileList(figureId);
 
 	f->graphicId = GraphicId(ID_Graphic_FortStandardPole) + 20 - m->morale / 5;
-	if (m->figure_type == Figure_FortLegionary) {
+	if (m->figure_type == FIGURE_FORT_LEGIONARY) {
 		if (m->is_halted) {
 			f->cartGraphicId = GraphicId(ID_Graphic_FortFlags) + 8;
 		} else {
 			f->cartGraphicId = GraphicId(ID_Graphic_FortFlags) + f->graphicOffset / 2;
 		}
-	} else if (m->figure_type == Figure_FortMounted) {
+	} else if (m->figure_type == FIGURE_FORT_MOUNTED) {
 		if (m->is_halted) {
 			f->cartGraphicId = GraphicId(ID_Graphic_FortFlags) + 26;
 		} else {
@@ -92,7 +92,7 @@ static void javelinLaunchMissile(int figureId, struct Data_Figure *f)
 	}
 	if (f->attackGraphicOffset) {
 		if (f->attackGraphicOffset == 1) {
-			Figure_createMissile(figureId, f->x, f->y, xTile, yTile, Figure_Javelin);
+			Figure_createMissile(figureId, f->x, f->y, xTile, yTile, FIGURE_JAVELIN);
             formation_record_missile_fired(f->formationId);
 		}
 		f->attackGraphicOffset++;
@@ -208,11 +208,11 @@ static void updateSoldierGraphic(int figureId, struct Data_Figure *f, const form
 		dir = f->previousTileDirection;
 	}
 	FigureActionNormalizeDirection(dir);
-	if (f->type == Figure_FortJavelin) {
+	if (f->type == FIGURE_FORT_JAVELIN) {
 		updateSoldierGraphicJavelin(f, dir);
-	} else if (f->type == Figure_FortMounted) {
+	} else if (f->type == FIGURE_FORT_MOUNTED) {
 		updateSoldierGraphicMounted(f, dir);
-	} else if (f->type == Figure_FortLegionary) {
+	} else if (f->type == FIGURE_FORT_LEGIONARY) {
 		updateSoldierGraphicLegionary(f, m, dir);
 	}
 }
@@ -229,9 +229,9 @@ void FigureAction_soldier(int figureId)
 		f->actionState = FigureActionState_149_Corpse;
 	}
 	int speedFactor;
-	if (f->type == Figure_FortMounted) {
+	if (f->type == FIGURE_FORT_MOUNTED) {
 		speedFactor = 3;
-	} else if (f->type == Figure_FortJavelin) {
+	} else if (f->type == FIGURE_FORT_JAVELIN) {
 		speedFactor = 2;
 	} else {
 		speedFactor = 1;
@@ -326,9 +326,9 @@ void FigureAction_soldier(int figureId)
 				}
 			}
 			if (f->actionState != FigureActionState_83_SoldierGoingToStandard) {
-				if (f->type == Figure_FortJavelin) {
+				if (f->type == FIGURE_FORT_JAVELIN) {
 					javelinLaunchMissile(figureId, f);
-				} else if (f->type == Figure_FortLegionary) {
+				} else if (f->type == FIGURE_FORT_LEGIONARY) {
 					legionaryAttackAdjacentEnemy(figureId, f);
 				}
 			}

@@ -5,6 +5,8 @@
 
 #include "../Data/Figure.h"
 
+#include "figure/type.h"
+
 void UI_BuildingInfo_drawNoPeople(BuildingInfoContext *c)
 {
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
@@ -44,7 +46,7 @@ void UI_BuildingInfo_drawTerrain(BuildingInfoContext *c)
 			}
 		}
 		if (c->figure.count > 0 && c->figure.figureIds[c->figure.selectedIndex]) {
-			if (Data_Figures[c->figure.figureIds[c->figure.selectedIndex]].type < Figure_Shipwreck) {
+			if (Data_Figures[c->figure.figureIds[c->figure.selectedIndex]].type < FIGURE_SHIPWRECK) {
 				c->helpId = 42;
 			} else {
 				c->helpId = 330;

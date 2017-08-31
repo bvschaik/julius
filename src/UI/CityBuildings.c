@@ -445,9 +445,9 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 					int buildingId = Data_Grid_buildingIds[gridOffset];
 					int offset = 0;
 					switch (Data_Buildings[buildingId].subtype.fortFigureType) {
-						case Figure_FortLegionary: offset = 4; break;
-						case Figure_FortMounted: offset = 3; break;
-						case Figure_FortJavelin: offset = 2; break;
+						case FIGURE_FORT_LEGIONARY: offset = 4; break;
+						case FIGURE_FORT_MOUNTED: offset = 3; break;
+						case FIGURE_FORT_JAVELIN: offset = 2; break;
 					}
 					if (offset) {
 						Graphics_drawImage(GraphicId(ID_Graphic_Fort) + offset,

@@ -9,6 +9,7 @@
 
 #include "core/calc.h"
 #include "figure/enemy_army.h"
+#include "figure/type.h"
 
 static int ballistaFiringOffsets[] = {
 	0, 1, 2, 3, 4, 5, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -80,7 +81,7 @@ void FigureAction_ballista(int figureId)
 				if (FigureAction_CombatSoldier_getMissileTarget(figureId, 15, &xTile, &yTile)) {
 					f->direction = Routing_getDirectionForMissileShooter(f->x, f->y, xTile, yTile);
 					f->waitTicksMissile = 0;
-					Figure_createMissile(figureId, f->x, f->y, xTile, yTile, Figure_Bolt);
+					Figure_createMissile(figureId, f->x, f->y, xTile, yTile, FIGURE_BOLT);
 					Sound_Effects_playChannel(SoundChannel_BallistaShoot);
 				} else {
 					f->actionState = FigureActionState_180_BallistaCreated;
@@ -214,7 +215,7 @@ void FigureAction_towerSentry(int figureId)
 				if (FigureAction_CombatSoldier_getMissileTarget(figureId, 10, &xTile, &yTile)) {
 					f->direction = Routing_getDirectionForMissileShooter(f->x, f->y, xTile, yTile);
 					f->waitTicksMissile = 0;
-					Figure_createMissile(figureId, f->x, f->y, xTile, yTile, Figure_Javelin);
+					Figure_createMissile(figureId, f->x, f->y, xTile, yTile, FIGURE_JAVELIN);
 				} else {
 					f->actionState = FigureActionState_173_TowerSentryReturning;
 					f->destinationX = f->sourceX;
@@ -277,7 +278,7 @@ void FigureAction_TowerSentry_reroute()
 {
 	for (int i = 1; i < MAX_FIGURES; i++) {
 		struct Data_Figure *f = &Data_Figures[i];
-		if (f->type != Figure_TowerSentry || Data_Grid_routingWalls[f->gridOffset] == 0) {
+		if (f->type != FIGURE_TOWER_SENTRY || Data_Grid_routingWalls[f->gridOffset] == 0) {
 			continue;
 		}
 		// tower sentry got off wall due to rotation

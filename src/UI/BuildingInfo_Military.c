@@ -218,9 +218,9 @@ void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)
 		c->yOffset + 16);
 	// standard flag
 	graphicId = GraphicId(ID_Graphic_FortFlags);
-	if (m->figure_type == Figure_FortJavelin) {
+	if (m->figure_type == FIGURE_FORT_JAVELIN) {
 		graphicId += 9;
-	} else if (m->figure_type == Figure_FortMounted) {
+	} else if (m->figure_type == FIGURE_FORT_MOUNTED) {
 		graphicId += 18;
 	}
 	if (m->is_halted) {
@@ -285,7 +285,7 @@ void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)
 			Data_Settings_Map.orientation == Dir_2_Right) {
 			index = 1;
 		}
-		if (m->figure_type == Figure_FortLegionary) {
+		if (m->figure_type == FIGURE_FORT_LEGIONARY) {
 			offsets = offsetsLegionary[index];
 		} else {
 			offsets = offsetsOther[index];
@@ -322,7 +322,7 @@ void UI_BuildingInfo_drawLegionInfoForeground(BuildingInfoContext *c)
 			if (focusButtonId - 1 == i) {
 				hasFocus = 1;
 			}
-		} else if (m->figure_type == Figure_FortLegionary) {
+		} else if (m->figure_type == FIGURE_FORT_LEGIONARY) {
 			if (i == 0 && m->layout == 5) {
 				hasFocus = 1;
 			} else if (i == 1 && m->layout == 0) {
@@ -358,7 +358,7 @@ void UI_BuildingInfo_drawLegionInfoForeground(BuildingInfoContext *c)
 	switch (focusButtonId) {
 		// single line or testudo
 		case 1:
-			if (m->figure_type == Figure_FortLegionary) {
+			if (m->figure_type == FIGURE_FORT_LEGIONARY) {
 				titleId = 12;
 				textId = m->has_military_training ? 18 : 17;
 			} else {
@@ -367,7 +367,7 @@ void UI_BuildingInfo_drawLegionInfoForeground(BuildingInfoContext *c)
 			}
 			break;
 		case 2:
-			if (m->figure_type == Figure_FortLegionary) {
+			if (m->figure_type == FIGURE_FORT_LEGIONARY) {
 				titleId = 13;
 				textId = m->has_military_training ? 19 : 17;
 			} else {
@@ -436,7 +436,7 @@ void UI_BuildingInfo_handleMouseLegionInfo(BuildingInfoContext *c)
 	contextForCallback = c;
 	if (Widget_Button_handleCustomButtons(
 			c->xOffset, c->yOffset, layoutButtons, 5, &focusButtonId)) {
-		if (formation_get(c->formationId)->figure_type == Figure_FortLegionary) {
+		if (formation_get(c->formationId)->figure_type == FIGURE_FORT_LEGIONARY) {
 			if (focusButtonId == 1 || (focusButtonId == 2 && c->formationTypes == 3)) {
 				focusButtonId = 0;
 			}
@@ -479,7 +479,7 @@ static void buttonLayout(int index, int param2)
 	}
 	// store layout in case of mop up
 	int new_layout;
-	if (m->figure_type == Figure_FortLegionary) {
+	if (m->figure_type == FIGURE_FORT_LEGIONARY) {
 		switch (index) {
 			case 0: new_layout = FORMATION_TORTOISE; break;
 			case 1: new_layout = FORMATION_COLUMN; break;

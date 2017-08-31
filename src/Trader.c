@@ -17,6 +17,7 @@
 
 #include "building/count.h"
 #include "empire/trade_prices.h"
+#include "figure/type.h"
 
 #include <string.h>
 
@@ -84,7 +85,7 @@ static int generateTrader(int cityId)
 		if (Data_CityInfo.numWorkingDocks > 0 &&
 			(Data_Scenario.riverEntryPoint.x != -1 || Data_Scenario.riverEntryPoint.y != -1) &&
 			!Data_CityInfo.tradeSeaProblemDuration) {
-			int shipId = Figure_create(Figure_TradeShip,
+			int shipId = Figure_create(FIGURE_TRADE_SHIP,
 				Data_Scenario.riverEntryPoint.x, Data_Scenario.riverEntryPoint.y, 0);
 			city->traderFigureIds[index] = shipId;
 			Data_Figures[shipId].empireCityId = cityId;
@@ -96,19 +97,19 @@ static int generateTrader(int cityId)
 		// generate caravan and donkeys
 		if (!Data_CityInfo.tradeLandProblemDuration) {
 			// caravan head
-			int caravanId = Figure_create(Figure_TradeCaravan,
+			int caravanId = Figure_create(FIGURE_TRADE_CARAVAN,
 				Data_CityInfo.entryPointX, Data_CityInfo.entryPointY, 0);
 			city->traderFigureIds[index] = caravanId;
 			Data_Figures[caravanId].empireCityId = cityId;
 			Data_Figures[caravanId].actionState = FigureActionState_100_TradeCaravanCreated;
 			Data_Figures[caravanId].waitTicks = 10;
 			// donkey 1
-			int donkey1 = Figure_create(Figure_TradeCaravanDonkey,
+			int donkey1 = Figure_create(FIGURE_TRADE_CARAVAN_DONKEY,
 				Data_CityInfo.entryPointX, Data_CityInfo.entryPointY, 0);
 			Data_Figures[donkey1].actionState = FigureActionState_100_TradeCaravanCreated;
 			Data_Figures[donkey1].inFrontFigureId = caravanId;
 			// donkey 2
-			int donkey2 = Figure_create(Figure_TradeCaravanDonkey,
+			int donkey2 = Figure_create(FIGURE_TRADE_CARAVAN_DONKEY,
 				Data_CityInfo.entryPointX, Data_CityInfo.entryPointY, 0);
 			Data_Figures[donkey2].actionState = FigureActionState_100_TradeCaravanCreated;
 			Data_Figures[donkey2].inFrontFigureId = donkey1;

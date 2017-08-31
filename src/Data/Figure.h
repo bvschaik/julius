@@ -2,88 +2,11 @@
 #define DATA_FIGURE_H
 
 #define MAX_FIGURES 1000
-#define MAX_TRADERS 100
 
-enum {
-	Figure_None = 0,
-	Figure_Immigrant = 1,
-	Figure_Emigrant = 2,
-	Figure_Homeless = 3,
-	Figure_CartPusher = 4,
-	Figure_LaborSeeker = 5,
-	Figure_Explosion = 6,
-	Figure_TaxCollector = 7,
-	Figure_Engineer = 8,
-	Figure_Warehouseman = 9,
-	Figure_Prefect = 10,
-	Figure_FortJavelin = 11,
-	Figure_FortMounted = 12,
-	Figure_FortLegionary = 13,
-	Figure_FortStandard = 14,
-	Figure_Actor = 15,
-	Figure_Gladiator = 16,
-	Figure_LionTamer = 17,
-	Figure_Charioteer = 18,
-	Figure_TradeCaravan = 19,
-	Figure_TradeShip = 20,
-	Figure_TradeCaravanDonkey = 21,
-	Figure_Protester = 22,
-	Figure_Criminal = 23,
-	Figure_Rioter = 24,
-	Figure_FishingBoat = 25,
-	Figure_MarketTrader = 26,
-	Figure_Priest = 27,
-	Figure_SchoolChild = 28,
-	Figure_Teacher = 29,
-	Figure_Librarian = 30,
-	Figure_Barber = 31,
-	Figure_BathhouseWorker = 32,
-	Figure_Doctor = 33,
-	Figure_Surgeon = 34,
-	Figure_35 = 35,
-	Figure_MapFlag = 36,
-	Figure_Flotsam = 37,
-	Figure_Dockman = 38,
-	Figure_MarketBuyer = 39,
-	Figure_Patrician = 40,
-	Figure_IndigenousNative = 41,
-	Figure_TowerSentry = 42,
-	Figure_Enemy43_Spear = 43,
-	Figure_Enemy44_Sword = 44,
-	Figure_Enemy45_Sword = 45,
-	Figure_Enemy46_Camel = 46,
-	Figure_Enemy47_Elephant = 47,
-	Figure_Enemy48_Chariot = 48,
-	Figure_Enemy49_FastSword = 49,
-	Figure_Enemy50_Sword = 50,
-	Figure_Enemy51_Spear = 51,
-	Figure_Enemy52_MountedArcher = 52,
-	Figure_Enemy53_Axe = 53,
-	Figure_Enemy54_Gladiator = 54,
-	Figure_Enemy55_Javelin = 55,
-	Figure_Enemy56_Mounted = 56,
-	Figure_EnemyCaesarLegionary = 57,
-	Figure_NativeTrader = 58,
-	Figure_Arrow = 59,
-	Figure_Javelin = 60,
-	Figure_Bolt = 61,
-	Figure_Ballista = 62,
-	Figure_Creature = 63,
-	Figure_Missionary = 64,
-	Figure_FishGulls = 65,
-	Figure_DeliveryBoy = 66,
-	Figure_Shipwreck = 67,
-	Figure_Sheep = 68,
-	Figure_Wolf = 69,
-	Figure_Zebra = 70,
-	Figure_Spear = 71,
-	Figure_HippodromeMiniHorses = 72
-};
-
-#define FigureIsEnemyOrNative(t) ((t) >= Figure_IndigenousNative && (t) <= Figure_NativeTrader)
-#define FigureIsEnemy(t) ((t) >= Figure_Enemy43_Spear && (t) <= Figure_EnemyCaesarLegionary)
-#define FigureIsLegion(t) ((t) >= Figure_FortJavelin && (t) <= Figure_FortLegionary)
-#define FigureIsHerd(t) ((t) >= Figure_Sheep && (t) <= Figure_Zebra)
+#define FigureIsEnemyOrNative(t) ((t) >= FIGURE_INDIGENOUS_NATIVE && (t) <= FIGURE_NATIVE_TRADER)
+#define FigureIsEnemy(t) ((t) >= FIGURE_ENEMY43_SPEAR && (t) <= FIGURE_ENEMY_CAESAR_LEGIONARY)
+#define FigureIsLegion(t) ((t) >= FIGURE_FORT_JAVELIN && (t) <= FIGURE_FORT_LEGIONARY)
+#define FigureIsHerd(t) ((t) >= FIGURE_SHEEP && (t) <= FIGURE_ZEBRA)
 
 #define FigureIsDead(f) (Data_Figures[f].state != FigureState_Alive || Data_Figures[f].actionState == FigureActionState_149_Corpse)
 

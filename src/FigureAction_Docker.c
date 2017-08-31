@@ -7,6 +7,7 @@
 #include "Data/CityInfo.h"
 
 #include "figure/trader.h"
+#include "figure/type.h"
 
 static int dockerDeliverImportResource(int figureId, int buildingId)
 {
@@ -103,7 +104,7 @@ void FigureAction_docker(int figureId)
 	}
 	if (b->data.other.boatFigureId) {
 		struct Data_Figure *ship = &Data_Figures[b->data.other.boatFigureId];
-		if (ship->state != FigureState_Alive || ship->type != Figure_TradeShip) {
+		if (ship->state != FigureState_Alive || ship->type != FIGURE_TRADE_SHIP) {
 			b->data.other.boatFigureId = 0;
 		} else if (trader_has_traded_max(ship->traderId)) {
 			b->data.other.boatFigureId = 0;

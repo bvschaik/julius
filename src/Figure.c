@@ -61,7 +61,7 @@ int Figure_create(int figureType, int x, int y, char direction)
 	f->phraseSequenceCity = f->phraseSequenceExact = random_byte() & 3;
 	f->name = figure_name_get(figureType, 0);
 	Figure_addToTileList(id);
-	if (figureType == Figure_TradeCaravan || figureType == Figure_TradeShip) {
+	if (figureType == FIGURE_TRADE_CARAVAN || figureType == FIGURE_TRADE_SHIP) {
 		f->traderId = trader_create();
 	}
 	if (id > Data_Figure_Extra.highestFigureIdEver) {
@@ -74,37 +74,37 @@ void Figure_delete(int figureId)
 {
 	struct Data_Figure *f = &Data_Figures[figureId];
 	switch (f->type) {
-		case Figure_LaborSeeker:
-		case Figure_MarketBuyer:
+		case FIGURE_LABOR_SEEKER:
+		case FIGURE_MARKET_BUYER:
 			if (f->buildingId) {
 				Data_Buildings[f->buildingId].figureId2 = 0;
 			}
 			break;
-		case Figure_Ballista:
+		case FIGURE_BALLISTA:
 			Data_Buildings[f->buildingId].figureId4 = 0;
 			break;
-		case Figure_Dockman:
+		case FIGURE_DOCKMAN:
 			for (int i = 0; i < 3; i++) {
 				if (Data_Buildings[f->buildingId].data.other.dockFigureIds[i] == figureId) {
 					Data_Buildings[f->buildingId].data.other.dockFigureIds[i] = 0;
 				}
 			}
 			break;
-		case Figure_EnemyCaesarLegionary:
+		case FIGURE_ENEMY_CAESAR_LEGIONARY:
 			Data_CityInfo.caesarInvasionSoldiersDied++;
 			break;
-		case Figure_Explosion:
-		case Figure_FortStandard:
-		case Figure_Arrow:
-		case Figure_Javelin:
-		case Figure_Bolt:
-		case Figure_Spear:
-		case Figure_FishGulls:
-		case Figure_Sheep:
-		case Figure_Wolf:
-		case Figure_Zebra:
-		case Figure_DeliveryBoy:
-		case Figure_Patrician:
+		case FIGURE_EXPLOSION:
+		case FIGURE_FORT_STANDARD:
+		case FIGURE_ARROW:
+		case FIGURE_JAVELIN:
+		case FIGURE_BOLT:
+		case FIGURE_SPEAR:
+		case FIGURE_FISH_GULLS:
+		case FIGURE_SHEEP:
+		case FIGURE_WOLF:
+		case FIGURE_ZEBRA:
+		case FIGURE_DELIVERY_BOY:
+		case FIGURE_PATRICIAN:
 			// nothing to do here
 			break;
 		default:
@@ -207,7 +207,7 @@ void Figure_createDustCloud(int x, int y, int size)
 	int tileOffset = dustCloudTileOffsets[size];
 	int ccOffset = dustCloudCCOffsets[size];
 	for (int i = 0; i < 16; i++) {
-		int figureId = Figure_create(Figure_Explosion,
+		int figureId = Figure_create(FIGURE_EXPLOSION,
 			x + tileOffset, y + tileOffset, 0);
 		if (figureId) {
 			struct Data_Figure *f = &Data_Figures[figureId];
@@ -230,7 +230,7 @@ int Figure_createMissile(int buildingId, int x, int y, int xDst, int yDst, int t
 	int figureId = Figure_create(type, x, y, 0);
 	if (figureId) {
 		struct Data_Figure *f = &Data_Figures[figureId];
-		f->missileDamage = (type == Figure_Bolt) ? 60 : 10;
+		f->missileDamage = (type == FIGURE_BOLT) ? 60 : 10;
 		f->buildingId = buildingId;
 		f->destinationX = xDst;
 		f->destinationY = yDst;
@@ -246,7 +246,7 @@ void Figure_createFishingPoints()
 	for (int i = 0; i < 8; i++) {
 		if (Data_Scenario.fishingPoints.x[i] > 0) {
 			random_generate_next();
-			int fishId = Figure_create(Figure_FishGulls,
+			int fishId = Figure_create(FIGURE_FISH_GULLS,
 				Data_Scenario.fishingPoints.x[i], Data_Scenario.fishingPoints.y[i], 0);
 			Data_Figures[fishId].graphicOffset = random_byte() & 0x1f;
 			Data_Figures[fishId].progressOnTile = random_byte() & 7;
@@ -261,9 +261,9 @@ void Figure_createHerds()
 {
 	int herdType, numAnimals;
 	switch (Data_Scenario.climate) {
-		case Climate_Central: herdType = Figure_Sheep; numAnimals = 10; break;
-		case Climate_Northern: herdType = Figure_Wolf; numAnimals = 8; break;
-		case Climate_Desert: herdType = Figure_Zebra; numAnimals = 12; break;
+		case Climate_Central: herdType = FIGURE_SHEEP; numAnimals = 10; break;
+		case Climate_Northern: herdType = FIGURE_WOLF; numAnimals = 8; break;
+		case Climate_Desert: herdType = FIGURE_ZEBRA; numAnimals = 12; break;
 		default: return;
 	}
 	for (int i = 0; i < 4; i++) {
@@ -290,14 +290,14 @@ void Figure_createFlotsam(int xEntry, int yEntry, int hasWater)
 		return;
 	}
 	for (int i = 1; i < MAX_FIGURES; i++) {
-		if (Data_Figures[i].state && Data_Figures[i].type == Figure_Flotsam) {
+		if (Data_Figures[i].state && Data_Figures[i].type == FIGURE_FLOTSAM) {
 			Figure_delete(i);
 		}
 	}
 	const int resourceIds[] = {3, 1, 3, 2, 1, 3, 2, 3, 2, 1, 3, 3, 2, 3, 3, 3, 1, 2, 0, 1};
 	const int waitTicks[] = {10, 50, 100, 130, 200, 250, 400, 430, 500, 600, 70, 750, 820, 830, 900, 980, 1010, 1030, 1200, 1300};
 	for (int i = 0; i < 20; i++) {
-		int figureId = Figure_create(Figure_Flotsam, xEntry, yEntry, 0);
+		int figureId = Figure_create(FIGURE_FLOTSAM, xEntry, yEntry, 0);
 		struct Data_Figure *f = &Data_Figures[figureId];
 		f->actionState = FigureActionState_128_FlotsamCreated;
 		f->resourceId = resourceIds[i];
@@ -343,7 +343,7 @@ int Figure_createSoldierFromBarracks(int buildingId, int x, int y)
 		struct Data_Figure *f = &Data_Figures[figureId];
 		f->formationId = state.formation_id;
 		f->formationAtRest = 1;
-		if (m->figure_type == Figure_FortLegionary) {
+		if (m->figure_type == FIGURE_FORT_LEGIONARY) {
 			if (Data_Buildings[buildingId].loadsStored > 0) {
 				Data_Buildings[buildingId].loadsStored--;
 			}
@@ -386,7 +386,7 @@ int Figure_createTowerSentryFromBarracks(int buildingId, int x, int y)
 		return 0;
 	}
 	struct Data_Building *tower = &Data_Buildings[towerId];
-	int figureId = Figure_create(Figure_TowerSentry, x, y, 0);
+	int figureId = Figure_create(FIGURE_TOWER_SENTRY, x, y, 0);
 	struct Data_Figure *f = &Data_Figures[figureId];
 	f->actionState = FigureActionState_174_TowerSentryGoingToTower;
 	int xRoad, yRoad;
@@ -404,7 +404,7 @@ int Figure_createTowerSentryFromBarracks(int buildingId, int x, int y)
 void Figure_killTowerSentriesAt(int x, int y)
 {
 	for (int i = 0; i < MAX_FIGURES; i++) {
-		if (!FigureIsDead(i) && Data_Figures[i].type == Figure_TowerSentry) {
+		if (!FigureIsDead(i) && Data_Figures[i].type == FIGURE_TOWER_SENTRY) {
 			if (calc_maximum_distance(Data_Figures[i].x, Data_Figures[i].y, x, y) <= 1) {
 				Data_Figures[i].state = FigureState_Dead;
 			}
@@ -420,16 +420,16 @@ void Figure_sinkAllShips()
 			continue;
 		}
 		int buildingId;
-		if (f->type == Figure_TradeShip) {
+		if (f->type == FIGURE_TRADE_SHIP) {
 			buildingId = f->destinationBuildingId;
-		} else if (f->type == Figure_FishingBoat) {
+		} else if (f->type == FIGURE_FISHING_BOAT) {
 			buildingId = f->buildingId;
 		} else {
 			continue;
 		}
 		Data_Buildings[buildingId].data.other.boatFigureId = 0;
 		f->buildingId = 0;
-		f->type = Figure_Shipwreck;
+		f->type = FIGURE_SHIPWRECK;
 		f->waitTicks = 0;
 	}
 }
@@ -440,8 +440,8 @@ int Figure_getCitizenOnSameTile(int figureId)
 		w > 0; w = Data_Figures[w].nextFigureIdOnSameTile) {
 		if (Data_Figures[w].actionState != FigureActionState_149_Corpse) {
 			int type = Data_Figures[w].type;
-			if (type && type != Figure_Explosion && type != Figure_FortStandard &&
-				type != Figure_MapFlag && type != Figure_Flotsam && type < Figure_IndigenousNative) {
+			if (type && type != FIGURE_EXPLOSION && type != FIGURE_FORT_STANDARD &&
+				type != FIGURE_MAP_FLAG && type != FIGURE_FLOTSAM && type < FIGURE_INDIGENOUS_NATIVE) {
 				return w;
 			}
 		}
@@ -458,10 +458,10 @@ int Figure_getNonCitizenOnSameTile(int figureId)
 			if (FigureIsEnemy(type)) {
 				return w;
 			}
-			if (type == Figure_IndigenousNative && Data_Figures[w].actionState == FigureActionState_159_NativeAttacking) {
+			if (type == FIGURE_INDIGENOUS_NATIVE && Data_Figures[w].actionState == FigureActionState_159_NativeAttacking) {
 				return w;
 			}
-			if (type == Figure_Wolf || type == Figure_Sheep || type == Figure_Zebra) {
+			if (type == FIGURE_WOLF || type == FIGURE_SHEEP || type == FIGURE_ZEBRA) {
 				return w;
 			}
 		}

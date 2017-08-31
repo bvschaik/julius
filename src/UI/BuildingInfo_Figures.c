@@ -70,7 +70,7 @@ static int collectingItemIdToResourceId(int c)
 
 static void drawFigureInfoTrade(BuildingInfoContext *c, int figureId)
 {
-	while (Data_Figures[figureId].type == Figure_TradeCaravanDonkey) {
+	while (Data_Figures[figureId].type == FIGURE_TRADE_CARAVAN_DONKEY) {
 		figureId = Data_Figures[figureId].inFrontFigureId;
 	}
 	struct Data_Figure *f = &Data_Figures[figureId];
@@ -82,11 +82,11 @@ static void drawFigureInfoTrade(BuildingInfoContext *c, int figureId)
 	
 	width = Widget_GameText_draw(129, 1,
 		c->xOffset + 40, c->yOffset + 130, Font_SmallBlack);
-	Widget_GameText_drawNumberWithDescription(8, 10, f->type == Figure_TradeShip ? 12 : 8,
+	Widget_GameText_drawNumberWithDescription(8, 10, f->type == FIGURE_TRADE_SHIP ? 12 : 8,
 		c->xOffset + 40 + width, c->yOffset + 130, Font_SmallBlack);
 	
 	int traderId = f->traderId;
-	if (f->type == Figure_TradeShip) {
+	if (f->type == FIGURE_TRADE_SHIP) {
 		int textId;
 		switch (f->actionState) {
 			case FigureActionState_114_TradeShipAnchored: textId = 6; break;
@@ -168,7 +168,7 @@ static void drawFigureInfoEnemy(BuildingInfoContext *c, int figureId)
 	int formationId = Data_Figures[figureId].formationId;
     int enemy_type = formation_get(formationId)->enemy_type;
 	switch (Data_Figures[figureId].type) {
-		case Figure_Enemy43_Spear:
+		case FIGURE_ENEMY43_SPEAR:
 			switch (enemy_type) {
 				case EnemyType_5_Pergamum: graphicId = 44; break;
 				case EnemyType_6_Seleucid: graphicId = 46; break;
@@ -176,34 +176,34 @@ static void drawFigureInfoEnemy(BuildingInfoContext *c, int figureId)
 				case EnemyType_8_Greek: graphicId = 36; break;
 			}
 			break;
-		case Figure_Enemy44_Sword:
+		case FIGURE_ENEMY44_SWORD:
 			switch (enemy_type) {
 				case EnemyType_5_Pergamum: graphicId = 45; break;
 				case EnemyType_6_Seleucid: graphicId = 47; break;
 				case EnemyType_9_Egyptian: graphicId = 29; break;
 			}
 			break;
-		case Figure_Enemy45_Sword:
+		case FIGURE_ENEMY45_SWORD:
 			switch (enemy_type) {
 				case EnemyType_7_Etruscan: graphicId = 31; break;
 				case EnemyType_8_Greek: graphicId = 37; break;
 				case EnemyType_10_Carthaginian: graphicId = 22; break;
 			}
 			break;
-		case Figure_Enemy49_FastSword:
+		case FIGURE_ENEMY49_FAST_SWORD:
 			switch (enemy_type) {
 				case EnemyType_0_Barbarian: graphicId = 21; break;
 				case EnemyType_1_Numidian: graphicId = 20; break;
 				case EnemyType_4_Goth: graphicId = 35; break;
 			}
 			break;
-		case Figure_Enemy50_Sword:
+		case FIGURE_ENEMY50_SWORD:
 			switch (enemy_type) {
 				case EnemyType_2_Gaul: graphicId = 40; break;
 				case EnemyType_3_Celt: graphicId = 24; break;
 			}
 			break;
-		case Figure_Enemy51_Spear:
+		case FIGURE_ENEMY51_SPEAR:
 			switch (enemy_type) {
 				case EnemyType_1_Numidian: graphicId = 20; break;
 			}
@@ -345,16 +345,16 @@ static void drawFigureInfo(BuildingInfoContext *c, int figureId)
 	Widget_Panel_drawButtonBorder(c->xOffset + 24, c->yOffset + 102, 16 * (c->widthBlocks - 3), 122, 0);
 	
 	int type = Data_Figures[figureId].type;
-	if (type == Figure_TradeCaravan || type == Figure_TradeCaravanDonkey || type == Figure_TradeShip) {
+	if (type == FIGURE_TRADE_CARAVAN || type == FIGURE_TRADE_CARAVAN_DONKEY || type == FIGURE_TRADE_SHIP) {
 		drawFigureInfoTrade(c, figureId);
 	} else if (FigureIsEnemy(type)) {
 		drawFigureInfoEnemy(c, figureId);
-	} else if (type == Figure_FishingBoat || type == Figure_Shipwreck ||
-			type == Figure_Sheep || type == Figure_Wolf || type == Figure_Zebra) {
+	} else if (type == FIGURE_FISHING_BOAT || type == FIGURE_SHIPWRECK ||
+			type == FIGURE_SHEEP || type == FIGURE_WOLF || type == FIGURE_ZEBRA) {
 		drawFigureInfoBoatAnimal(c, figureId);
-	} else if (type == Figure_CartPusher || type == Figure_Warehouseman || type == Figure_Dockman) {
+	} else if (type == FIGURE_CART_PUSHER || type == FIGURE_WAREHOUSEMAN || type == FIGURE_DOCKMAN) {
 		drawFigureInfoCartpusher(c, figureId);
-	} else if (type == Figure_MarketBuyer) {
+	} else if (type == FIGURE_MARKET_BUYER) {
 		drawFigureInfoMarketBuyer(c, figureId);
 	} else {
 		drawFigureInfoNormal(c, figureId);

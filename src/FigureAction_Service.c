@@ -11,6 +11,7 @@
 
 #include "core/calc.h"
 #include "figure/enemy_army.h"
+#include "figure/type.h"
 
 void FigureAction_taxCollector(int figureId)
 {
@@ -178,13 +179,13 @@ static int prefectGetNearestEnemy(int x, int y, int *distance)
 			continue;
 		}
 		int dist;
-		if (f->type == Figure_Rioter || f->type == Figure_Enemy54_Gladiator) {
+		if (f->type == FIGURE_RIOTER || f->type == FIGURE_ENEMY54_GLADIATOR) {
 			dist = calc_maximum_distance(x, y, f->x, f->y);
-		} else if (f->type == Figure_IndigenousNative && f->actionState == FigureActionState_159_NativeAttacking) {
+		} else if (f->type == FIGURE_INDIGENOUS_NATIVE && f->actionState == FigureActionState_159_NativeAttacking) {
 			dist = calc_maximum_distance(x, y, f->x, f->y);
 		} else if (FigureIsEnemy(f->type)) {
 			dist = 3 * calc_maximum_distance(x, y, f->x, f->y);
-		} else if (f->type == Figure_Wolf) {
+		} else if (f->type == FIGURE_WOLF) {
 			dist = 4 * calc_maximum_distance(x, y, f->x, f->y);
 		} else {
 			continue;

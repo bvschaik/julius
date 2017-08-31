@@ -35,7 +35,7 @@ int Formation_createLegion(int buildingId)
     if (!formation_id) {
         return 0;
     }
-	int standardId = Figure_create(Figure_FortStandard, 0, 0, 0);
+	int standardId = Figure_create(FIGURE_FORT_STANDARD, 0, 0, 0);
 	Data_Figures[standardId].buildingId = buildingId;
 	Data_Figures[standardId].formationId = formation_id;
     formation_set_standard(formation_id, standardId);
@@ -63,7 +63,7 @@ int Formation_getLegionFormationAtGridOffset(int gridOffset)
 		figureId && figureId != Data_Figures[figureId].nextFigureIdOnSameTile;
 		figureId = Data_Figures[figureId].nextFigureIdOnSameTile) {
 		if (FigureIsLegion(Data_Figures[figureId].type) ||
-			Data_Figures[figureId].type == Figure_FortStandard) {
+			Data_Figures[figureId].type == FIGURE_FORT_STANDARD) {
 			return Data_Figures[figureId].formationId;
 		}
 	}
@@ -144,7 +144,7 @@ static void update_totals(const formation *m)
 {
     if (m->is_legion) {
         formation_totals_add_legion(m->id);
-        if (m->figure_type == Figure_FortLegionary) {
+        if (m->figure_type == FIGURE_FORT_LEGIONARY) {
             Data_CityInfo.militaryLegionaryLegions++;
         }
     }
@@ -205,11 +205,11 @@ void Formation_setNewSoldierRequest(int buildingId)
 	}
 	if (m->num_figures < m->max_figures) {
 		int type = Data_Buildings[buildingId].subtype.fortFigureType;
-		if (type == Figure_FortLegionary) {
+		if (type == FIGURE_FORT_LEGIONARY) {
 			formation_set_recruit_type(m->id, LEGION_RECRUIT_LEGIONARY);
-		} else if (type == Figure_FortJavelin) {
+		} else if (type == FIGURE_FORT_JAVELIN) {
 			formation_set_recruit_type(m->id, LEGION_RECRUIT_JAVELIN);
-		} else if (type == Figure_FortMounted) {
+		} else if (type == FIGURE_FORT_MOUNTED) {
 			formation_set_recruit_type(m->id, LEGION_RECRUIT_MOUNTED);
 		}
 	} else { // too many figures
@@ -241,7 +241,7 @@ static void update_legion_enemy_totals(const formation *m, void *data)
                 total_strength += m->num_figures / 2;
             }
             enemy_army_totals_add_legion_formation(total_strength);
-            if (m->figure_type == Figure_FortLegionary) {
+            if (m->figure_type == FIGURE_FORT_LEGIONARY) {
                 if (!wasHalted && m->is_halted) {
                     Sound_Effects_playChannel(SoundChannel_FormationShield);
                 }
@@ -277,7 +277,7 @@ void Formation_calculateFigures()
 		if (!FigureIsLegion(figtype) && !FigureIsEnemy(figtype) && !FigureIsHerd(figtype)) {
 			continue;
 		}
-		if (figtype == Figure_Enemy54_Gladiator) {
+		if (figtype == FIGURE_ENEMY54_GLADIATOR) {
 			continue;
 		}
 		int formationId = Data_Figures[i].formationId;
@@ -342,9 +342,9 @@ static void dispatch_soldiers(const formation *m, void *data)
     *num_legions = *num_legions + 1;
     int strengthFactor;
     if (m->has_military_training) {
-        strengthFactor = m->figure_type == Figure_FortLegionary ? 3 : 2;
+        strengthFactor = m->figure_type == FIGURE_FORT_LEGIONARY ? 3 : 2;
     } else {
-        strengthFactor = m->figure_type == Figure_FortLegionary ? 2 : 1;
+        strengthFactor = m->figure_type == FIGURE_FORT_LEGIONARY ? 2 : 1;
     }
     Data_CityInfo.distantBattleRomanStrength += strengthFactor * m->num_figures;
     for (int fig = 0; fig < m->num_figures; fig++) {
@@ -434,7 +434,7 @@ int Formation_marsCurseFort()
 		const formation *m = formation_get(i);
 		if (m->in_use == 1 && m->is_legion) {
 			int weight = m->num_figures;
-			if (m->figure_type == Figure_FortLegionary) {
+			if (m->figure_type == FIGURE_FORT_LEGIONARY) {
 				weight *= 2;
 			}
 			if (weight > bestLegionWeight) {

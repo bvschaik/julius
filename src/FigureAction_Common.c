@@ -118,26 +118,26 @@ static void hitOpponent(int figureId, struct Data_Figure *f)
 	int opponentDefense = Constant_FigureProperties[opponent->type].defenseValue;
 	
 	// attack modifiers
-	if (f->type == Figure_Wolf) {
+	if (f->type == FIGURE_WOLF) {
 		switch (Data_Settings.difficulty) {
 			case Difficulty_VeryEasy: figureAttack = 2; break;
 			case Difficulty_Easy: figureAttack = 4; break;
 			case Difficulty_Normal: figureAttack = 6; break;
 		}
 	}
-	if (opponent->opponentId != figureId && m->figure_type != Figure_FortLegionary &&
+	if (opponent->opponentId != figureId && m->figure_type != FIGURE_FORT_LEGIONARY &&
 			attackIsSameDirection(f->attackDirection, opponent->attackDirection)) {
 		figureAttack += 4; // attack opponent on the (exposed) back
 		Sound_Effects_playChannel(SoundChannel_SwordSwing);
 	}
-	if (m->is_halted && m->figure_type == Figure_FortLegionary &&
+	if (m->is_halted && m->figure_type == FIGURE_FORT_LEGIONARY &&
 			attackIsSameDirection(f->attackDirection, m->direction)) {
 		figureAttack += 4; // coordinated formation attack bonus
 	}
 	// defense modifiers
 	if (opponentFormation->is_halted &&
-			(opponentFormation->figure_type == Figure_FortLegionary ||
-			opponentFormation->figure_type == Figure_EnemyCaesarLegionary)) {
+			(opponentFormation->figure_type == FIGURE_FORT_LEGIONARY ||
+			opponentFormation->figure_type == FIGURE_ENEMY_CAESAR_LEGIONARY)) {
 		if (!attackIsSameDirection(opponent->attackDirection, opponentFormation->direction)) {
 			opponentDefense -= 4; // opponent not attacking in coordinated formation
 		} else if (opponentFormation->layout == FORMATION_TORTOISE) {

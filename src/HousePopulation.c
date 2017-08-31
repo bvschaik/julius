@@ -13,6 +13,7 @@
 
 #include "building/list.h"
 #include "building/model.h"
+#include "figure/type.h"
 
 static void calculateWorkers();
 static void createImmigrants(int numPeople);
@@ -246,7 +247,7 @@ static void createEmigrants(int numPeople)
 
 static void createImmigrantForBuilding(int buildingId, int numPeople)
 {
-	int figureId = Figure_create(Figure_Immigrant,
+	int figureId = Figure_create(FIGURE_IMMIGRANT,
 		Data_CityInfo.entryPointX, Data_CityInfo.entryPointY, 0);
 	Data_Figures[figureId].actionState = FigureActionState_1_ImmigrantCreated;
 	Data_Figures[figureId].immigrantBuildingId = buildingId;
@@ -265,7 +266,7 @@ static void createEmigrantForBuilding(int buildingId, int numPeople)
 		Data_Buildings[buildingId].housePopulation = 0;
 		BuildingHouse_changeToVacantLot(buildingId);
 	}
-	int figureId = Figure_create(Figure_Emigrant,
+	int figureId = Figure_create(FIGURE_EMIGRANT,
 		Data_Buildings[buildingId].x, Data_Buildings[buildingId].y, 0);
 	Data_Figures[figureId].actionState = FigureActionState_4_EmigrantCreated;
 	Data_Figures[figureId].waitTicks = 0;
@@ -373,7 +374,7 @@ int HousePopulation_calculatePeoplePerType()
 
 void HousePopulation_createHomeless(int x, int y, int numPeople)
 {
-	int figureId = Figure_create(Figure_Homeless, x, y, 0);
+	int figureId = Figure_create(FIGURE_HOMELESS, x, y, 0);
 	Data_Figures[figureId].actionState = FigureActionState_7_HomelessCreated;
 	Data_Figures[figureId].waitTicks = 0;
 	Data_Figures[figureId].migrantNumPeople = numPeople;

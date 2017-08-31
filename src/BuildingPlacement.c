@@ -81,16 +81,16 @@ static void addToTerrainFort(int type, int buildingId, int x, int y, int size)
 	int formationId = Formation_createLegion(buildingId);
 	Data_Buildings[buildingId].formationId = formationId;
 	if (type == BUILDING_FORT_LEGIONARIES) {
-		Data_Buildings[buildingId].subtype.fortFigureType = Figure_FortLegionary;
-        formation_set_figure_type(formationId, Figure_FortLegionary);
+		Data_Buildings[buildingId].subtype.fortFigureType = FIGURE_FORT_LEGIONARY;
+        formation_set_figure_type(formationId, FIGURE_FORT_LEGIONARY);
 	}
 	if (type == BUILDING_FORT_JAVELIN) {
-		Data_Buildings[buildingId].subtype.fortFigureType = Figure_FortJavelin;
-        formation_set_figure_type(formationId, Figure_FortJavelin);
+		Data_Buildings[buildingId].subtype.fortFigureType = FIGURE_FORT_JAVELIN;
+        formation_set_figure_type(formationId, FIGURE_FORT_JAVELIN);
 	}
 	if (type == BUILDING_FORT_MOUNTED) {
-		Data_Buildings[buildingId].subtype.fortFigureType = Figure_FortMounted;
-        formation_set_figure_type(formationId, Figure_FortMounted);
+		Data_Buildings[buildingId].subtype.fortFigureType = FIGURE_FORT_MOUNTED;
+        formation_set_figure_type(formationId, FIGURE_FORT_MOUNTED);
 	}
 	// create parade ground
 	int groundId = Building_create(BUILDING_FORT_GROUND, x + 3, y - 1);

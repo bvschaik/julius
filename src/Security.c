@@ -27,6 +27,7 @@
 
 #include "core/random.h"
 #include "core/time.h"
+#include "figure/type.h"
 
 #define EACH_BURNING_RUIN Data_BuildingList.burning.index = 0; Data_BuildingList.burning.index < Data_BuildingList.burning.size; Data_BuildingList.burning.index++
 
@@ -168,7 +169,7 @@ static void generateRioter(int buildingId)
 	int targetX, targetY;
 	int targetBuildingId = Formation_Rioter_getTargetBuilding(&targetX, &targetY);
 	for (int i = 0; i < peopleInMob; i++) {
-		int figureId = Figure_create(Figure_Rioter, xRoad, yRoad, 4);
+		int figureId = Figure_create(FIGURE_RIOTER, xRoad, yRoad, 4);
 		struct Data_Figure *f = &Data_Figures[figureId];
 		f->actionState = FigureActionState_120_RioterCreated;
 		f->roamLength = 0;
@@ -205,7 +206,7 @@ static void generateMugger(int buildingId)
 		b->houseCriminalActive = 2;
 		int xRoad, yRoad;
 		if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
-			int figureId = Figure_create(Figure_Criminal, xRoad, yRoad, 4);
+			int figureId = Figure_create(FIGURE_CRIMINAL, xRoad, yRoad, 4);
 			Data_Figures[figureId].waitTicks = 10 + (b->houseGenerationDelay & 0xf);
 			Data_CityInfo.ratingPeaceNumCriminalsThisYear++;
 			if (Data_CityInfo.financeTaxesThisYear > 20) {
@@ -230,7 +231,7 @@ static void generateProtester(int buildingId)
 		b->houseCriminalActive = 1;
 		int xRoad, yRoad;
 		if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
-			int figureId = Figure_create(Figure_Protester, xRoad, yRoad, 4);
+			int figureId = Figure_create(FIGURE_PROTESTER, xRoad, yRoad, 4);
 			Data_Figures[figureId].waitTicks = 10 + (b->houseGenerationDelay & 0xf);
 			Data_CityInfo.ratingPeaceNumCriminalsThisYear++;
 		}

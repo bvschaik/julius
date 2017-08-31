@@ -117,13 +117,13 @@ void UI_Advisor_Military_drawBackground(int *advisorHeight)
 		int width = Widget_Text_drawNumber(m->num_figures, '@', " ",
 			baseOffsetX + 100, baseOffsetY + 100 + 44 * i, Font_NormalGreen);
 		switch (m->figure_type) {
-			case Figure_FortLegionary:
+			case FIGURE_FORT_LEGIONARY:
 				Widget_GameText_draw(138, 33, baseOffsetX + 100 + width, baseOffsetY + 100 + 44 * i, Font_NormalGreen);
 				break;
-			case Figure_FortMounted:
+			case FIGURE_FORT_MOUNTED:
 				Widget_GameText_draw(138, 34, baseOffsetX + 100 + width, baseOffsetY + 100 + 44 * i, Font_NormalGreen);
 				break;
-			case Figure_FortJavelin:
+			case FIGURE_FORT_JAVELIN:
 				Widget_GameText_draw(138, 35, baseOffsetX + 100 + width, baseOffsetY + 100 + 44 * i, Font_NormalGreen);
 				break;
 		}

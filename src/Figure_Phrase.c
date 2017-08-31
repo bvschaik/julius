@@ -9,6 +9,7 @@
 #include "Data/Figure.h"
 
 #include "figure/trader.h"
+#include "figure/type.h"
 
 #include <string.h>
 
@@ -265,21 +266,21 @@ int Figure_determinePhrase(int figureId)
 
 	// phrase id based on figure state
 	switch (f->type) {
-		case Figure_LaborSeeker:
-		case Figure_35:
-		case Figure_Actor:
-		case Figure_Charioteer:
-		case Figure_SchoolChild:
-		case Figure_BathhouseWorker:
-		case Figure_Barber:
-		case Figure_Doctor:
-		case Figure_Surgeon:
-		case Figure_Priest:
-		case Figure_Patrician:
-		case Figure_Teacher:
-		case Figure_Librarian:
+		case FIGURE_LABOR_SEEKER:
+		case FIGURE_WORKER:
+		case FIGURE_ACTOR:
+		case FIGURE_CHARIOTEER:
+		case FIGURE_SCHOOL_CHILD:
+		case FIGURE_BATHHOUSE_WORKER:
+		case FIGURE_BARBER:
+		case FIGURE_DOCTOR:
+		case FIGURE_SURGEON:
+		case FIGURE_PRIEST:
+		case FIGURE_PATRICIAN:
+		case FIGURE_TEACHER:
+		case FIGURE_LIBRARIAN:
 			break;
-		case Figure_LionTamer:
+		case FIGURE_LION_TAMER:
 			if (f->actionState == FigureActionState_150_Attack) {
 				if (++f->phraseSequenceExact >= 3) {
 					f->phraseSequenceExact = 0;
@@ -287,12 +288,12 @@ int Figure_determinePhrase(int figureId)
 				phraseId = 7 + f->phraseSequenceExact;
 			}
 			break;
-		case Figure_Gladiator:
+		case FIGURE_GLADIATOR:
 			if (f->actionState == FigureActionState_150_Attack) {
 				phraseId = 7;
 			}
 			break;
-		case Figure_TaxCollector:
+		case FIGURE_TAX_COLLECTOR:
 			if (f->minMaxSeen >= HOUSE_LARGE_CASA) {
 				phraseId = 7;
 			} else if (f->minMaxSeen >= HOUSE_SMALL_HOVEL) {
@@ -301,21 +302,21 @@ int Figure_determinePhrase(int figureId)
 				phraseId = 9;
 			}
 			break;
-		case Figure_MarketTrader:
+		case FIGURE_MARKET_TRADER:
 			if (f->actionState == FigureActionState_126_RoamerReturning) {
 				if (BUILDING_MARKET_getMaxFoodStock(f->buildingId) <= 0) {
 					phraseId = 9; // run out of goods
 				}
 			}
 			break;
-		case Figure_MarketBuyer:
+		case FIGURE_MARKET_BUYER:
 			if (f->actionState == FigureActionState_145_MarketBuyerGoingToStorage) {
 				phraseId = 7;
 			} else if (f->actionState == FigureActionState_146_MarketBuyerReturning) {
 				phraseId = 8;
 			}
 			break;
-		case Figure_CartPusher:
+		case FIGURE_CART_PUSHER:
 			if (f->actionState == FigureActionState_20_CartpusherInitial) {
 				if (f->minMaxSeen == 2) {
 					phraseId = 7;
@@ -331,7 +332,7 @@ int Figure_determinePhrase(int figureId)
 				}
 			}
 			break;
-		case Figure_Warehouseman:
+		case FIGURE_WAREHOUSEMAN:
 			if (f->actionState == FigureActionState_51_WarehousemanDeliveringResource) {
 				if (calc_maximum_distance(
 					f->destinationX, f->destinationY, f->sourceX, f->sourceY) >= 25) {
@@ -339,7 +340,7 @@ int Figure_determinePhrase(int figureId)
 				}
 			}
 			break;
-		case Figure_Prefect:
+		case FIGURE_PREFECT:
 			if (++f->phraseSequenceExact >= 4) {
 				f->phraseSequenceExact = 0;
 			}
@@ -357,31 +358,31 @@ int Figure_determinePhrase(int figureId)
 				phraseId = 9;
 			}
 			break;
-		case Figure_Engineer:
+		case FIGURE_ENGINEER:
 			if (f->minMaxSeen >= 60) {
 				phraseId = 7;
 			} else if (f->minMaxSeen >= 10) {
 				phraseId = 8;
 			}
 			break;
-		case Figure_Protester:
-		case Figure_Criminal:
-		case Figure_Rioter:
-		case Figure_DeliveryBoy:
-		case Figure_Missionary:
+		case FIGURE_PROTESTER:
+		case FIGURE_CRIMINAL:
+		case FIGURE_RIOTER:
+		case FIGURE_DELIVERY_BOY:
+		case FIGURE_MISSIONARY:
 			if (++f->phraseSequenceExact >= 3) {
 				f->phraseSequenceExact = 0;
 			}
 			phraseId = 7 + f->phraseSequenceExact;
 			break;
-		case Figure_Homeless:
-		case Figure_Immigrant:
+		case FIGURE_HOMELESS:
+		case FIGURE_IMMIGRANT:
 			if (++f->phraseSequenceExact >= 2) {
 				f->phraseSequenceExact = 0;
 			}
 			phraseId = 7 + f->phraseSequenceExact;
 			break;
-		case Figure_Emigrant:
+		case FIGURE_EMIGRANT:
 			switch (Data_CityInfo.populationEmigrationCause) {
 				case EmigrationCause_NoFood: phraseId = 8; break;
 				case EmigrationCause_NoJobs: phraseId = 7; break;
@@ -390,7 +391,7 @@ int Figure_determinePhrase(int figureId)
 				default: phraseId = 11; break;
 			}
 			break;
-		case Figure_TowerSentry:
+		case FIGURE_TOWER_SENTRY:
 			if (++f->phraseSequenceExact >= 2) {
 				f->phraseSequenceExact = 0;
 			}
@@ -404,9 +405,9 @@ int Figure_determinePhrase(int figureId)
 				phraseId = 11;
 			}
 			break;
-		case Figure_FortJavelin:
-		case Figure_FortMounted:
-		case Figure_FortLegionary:
+		case FIGURE_FORT_JAVELIN:
+		case FIGURE_FORT_MOUNTED:
+		case FIGURE_FORT_LEGIONARY:
 			if (Data_CityInfo.numEnemiesInCity >= 40) {
 				phraseId = 11;
 			} else if (Data_CityInfo.numEnemiesInCity > 20) {
@@ -415,7 +416,7 @@ int Figure_determinePhrase(int figureId)
 				phraseId = 9;
 			}
 			break;
-		case Figure_Dockman:
+		case FIGURE_DOCKMAN:
 			if (f->actionState == FigureActionState_135_DockerImportGoingToWarehouse ||
 				f->actionState == FigureActionState_136_DockerExportGoingToWarehouse) {
 				if (calc_maximum_distance(
@@ -424,7 +425,7 @@ int Figure_determinePhrase(int figureId)
 				}
 			}
 			break;
-		case Figure_TradeCaravan:
+		case FIGURE_TRADE_CARAVAN:
 			if (++f->phraseSequenceExact >= 2) {
 				f->phraseSequenceExact = 0;
 			}
@@ -441,7 +442,7 @@ int Figure_determinePhrase(int figureId)
 				}
 			}
 			break;
-		case Figure_TradeShip:
+		case FIGURE_TRADE_SHIP:
 			if (f->actionState == FigureActionState_115_TradeShipLeaving) {
 				if (!trader_has_traded(f->traderId)) {
 					phraseId = 9; // no trade
@@ -547,50 +548,50 @@ void Figure_playDieSound(int figureType)
 	int isSoldier = 0;
 	int isCitizen = 0;
 	switch (figureType) {
-		case Figure_Wolf:
+		case FIGURE_WOLF:
 			Sound_Effects_playChannel(SoundChannel_WolfDie);
 			break;
-		case Figure_Sheep:
+		case FIGURE_SHEEP:
 			Sound_Effects_playChannel(SoundChannel_SheepDie);
 			break;
-		case Figure_Zebra:
+		case FIGURE_ZEBRA:
 			Sound_Effects_playChannel(SoundChannel_ZebraDie);
 			break;
-		case Figure_LionTamer:
+		case FIGURE_LION_TAMER:
 			Sound_Effects_playChannel(SoundChannel_LionDie);
 			break;
-		case Figure_Enemy48_Chariot:
-		case Figure_Enemy52_MountedArcher:
+		case FIGURE_ENEMY48_CHARIOT:
+		case FIGURE_ENEMY52_MOUNTED_ARCHER:
 			Sound_Effects_playChannel(SoundChannel_Horse2);
 			break;
-		case Figure_Enemy46_Camel:
+		case FIGURE_ENEMY46_CAMEL:
 			Sound_Effects_playChannel(SoundChannel_Camel);
 			break;
-		case Figure_Enemy47_Elephant:
+		case FIGURE_ENEMY47_ELEPHANT:
 			Sound_Effects_playChannel(SoundChannel_ElephantDie);
 			break;
-		case Figure_NativeTrader:
-		case Figure_TradeCaravan:
-		case Figure_TradeCaravanDonkey:
+		case FIGURE_NATIVE_TRADER:
+		case FIGURE_TRADE_CARAVAN:
+		case FIGURE_TRADE_CARAVAN_DONKEY:
 			break;
-		case Figure_Prefect:
-		case Figure_FortJavelin:
-		case Figure_FortMounted:
-		case Figure_FortLegionary:
-		case Figure_Gladiator:
-		case Figure_IndigenousNative:
-		case Figure_TowerSentry:
-		case Figure_Enemy43_Spear:
-		case Figure_Enemy44_Sword:
-		case Figure_Enemy45_Sword:
-		case Figure_Enemy49_FastSword:
-		case Figure_Enemy50_Sword:
-		case Figure_Enemy51_Spear:
-		case Figure_Enemy53_Axe:
-		case Figure_Enemy54_Gladiator:
-		case Figure_Enemy55_Javelin:
-		case Figure_Enemy56_Mounted:
-		case Figure_EnemyCaesarLegionary:
+		case FIGURE_PREFECT:
+		case FIGURE_FORT_JAVELIN:
+		case FIGURE_FORT_MOUNTED:
+		case FIGURE_FORT_LEGIONARY:
+		case FIGURE_GLADIATOR:
+		case FIGURE_INDIGENOUS_NATIVE:
+		case FIGURE_TOWER_SENTRY:
+		case FIGURE_ENEMY43_SPEAR:
+		case FIGURE_ENEMY44_SWORD:
+		case FIGURE_ENEMY45_SWORD:
+		case FIGURE_ENEMY49_FAST_SWORD:
+		case FIGURE_ENEMY50_SWORD:
+		case FIGURE_ENEMY51_SPEAR:
+		case FIGURE_ENEMY53_AXE:
+		case FIGURE_ENEMY54_GLADIATOR:
+		case FIGURE_ENEMY55_JAVELIN:
+		case FIGURE_ENEMY56_MOUNTED:
+		case FIGURE_ENEMY_CAESAR_LEGIONARY:
 			isSoldier = 1;
 			break;
 		default:
@@ -631,36 +632,36 @@ void Figure_playDieSound(int figureType)
 void Figure_playHitSound(int figureType)
 {
 	switch (figureType) {
-		case Figure_FortLegionary:
-		case Figure_EnemyCaesarLegionary:
+		case FIGURE_FORT_LEGIONARY:
+		case FIGURE_ENEMY_CAESAR_LEGIONARY:
 			PLAY_HIT_SOUND(soundHitSoldier, SoundChannel_Sword);
 			break;
-		case Figure_FortMounted:
-		case Figure_Enemy45_Sword:
-		case Figure_Enemy48_Chariot:
-		case Figure_Enemy50_Sword:
-		case Figure_Enemy52_MountedArcher:
-		case Figure_Enemy54_Gladiator:
+		case FIGURE_FORT_MOUNTED:
+		case FIGURE_ENEMY45_SWORD:
+		case FIGURE_ENEMY48_CHARIOT:
+		case FIGURE_ENEMY50_SWORD:
+		case FIGURE_ENEMY52_MOUNTED_ARCHER:
+		case FIGURE_ENEMY54_GLADIATOR:
 			PLAY_HIT_SOUND(soundHitSoldier, SoundChannel_SwordSwing);
 			break;
-		case Figure_FortJavelin:
+		case FIGURE_FORT_JAVELIN:
 			PLAY_HIT_SOUND(soundHitSoldier, SoundChannel_SwordLight);
 			break;
-		case Figure_Enemy43_Spear:
-		case Figure_Enemy51_Spear:
+		case FIGURE_ENEMY43_SPEAR:
+		case FIGURE_ENEMY51_SPEAR:
 			PLAY_HIT_SOUND(soundHitSpear, SoundChannel_Spear);
 			break;
-		case Figure_Enemy44_Sword:
-		case Figure_Enemy49_FastSword:
+		case FIGURE_ENEMY44_SWORD:
+		case FIGURE_ENEMY49_FAST_SWORD:
 			PLAY_HIT_SOUND(soundHitClub, SoundChannel_Club);
 			break;
-		case Figure_Enemy53_Axe:
+		case FIGURE_ENEMY53_AXE:
 			PLAY_HIT_SOUND(soundHitAxe, SoundChannel_Axe);
 			break;
-		case Figure_Enemy46_Camel:
+		case FIGURE_ENEMY46_CAMEL:
 			Sound_Effects_playChannel(SoundChannel_Camel);
 			break;
-		case Figure_Enemy47_Elephant:
+		case FIGURE_ENEMY47_ELEPHANT:
 			if (Data_CityInfo.soundHitElephant == 1) {
 				Sound_Effects_playChannel(SoundChannel_ElephantHit);
 				Data_CityInfo.soundHitElephant = 0;
@@ -669,10 +670,10 @@ void Figure_playHitSound(int figureType)
 				Data_CityInfo.soundHitElephant = 1;
 			}
 			break;
-		case Figure_LionTamer:
+		case FIGURE_LION_TAMER:
 			Sound_Effects_playChannel(SoundChannel_LionAttack);
 			break;
-		case Figure_Wolf:
+		case FIGURE_WOLF:
 			Data_CityInfo.soundHitWolf--;
 			if (Data_CityInfo.soundHitWolf <= 0) {
 				Data_CityInfo.soundHitWolf = 4;

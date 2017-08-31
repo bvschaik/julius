@@ -12,6 +12,8 @@
 #include "../Data/Scenario.h"
 #include "../Data/Settings.h"
 
+#include "figure/type.h"
+
 #define FOREACH_XY_VIEW(block)\
 	int odd = 0;\
 	int yAbs = minimapAbsoluteY - 4;\
@@ -122,13 +124,13 @@ static int drawFigure(int xView, int yView, int gridOffset)
 			color = enemyColor;
 			break;
 		}
-		if (type == Figure_IndigenousNative &&
+		if (type == FIGURE_INDIGENOUS_NATIVE &&
 			Data_Figures[figureId].actionState == FigureActionState_159_NativeAttacking) {
 			hasFigure = 1;
 			color = enemyColor;
 			break;
 		}
-		if (type == Figure_Wolf) {
+		if (type == FIGURE_WOLF) {
 			hasFigure = 1;
 			color = Color_Black;
 			break;

@@ -4,6 +4,8 @@
 #include "FigureMovement.h"
 #include "Routing.h"
 
+#include "figure/type.h"
+
 int FigureAction_CombatSoldier_getTarget(int x, int y, int maxDistance)
 {
 	int minFigureId = 0;
@@ -13,8 +15,8 @@ int FigureAction_CombatSoldier_getTarget(int x, int y, int maxDistance)
 			continue;
 		}
 		struct Data_Figure *f = &Data_Figures[i];
-		if (FigureIsEnemy(f->type) || f->type == Figure_Rioter ||
-			(f->type == Figure_IndigenousNative && f->actionState == FigureActionState_159_NativeAttacking)) {
+		if (FigureIsEnemy(f->type) || f->type == FIGURE_RIOTER ||
+			(f->type == FIGURE_INDIGENOUS_NATIVE && f->actionState == FigureActionState_159_NativeAttacking)) {
 			int distance = calc_maximum_distance(x, y, f->x, f->y);
 			if (distance <= maxDistance) {
 				if (f->targetedByFigureId) {
@@ -35,8 +37,8 @@ int FigureAction_CombatSoldier_getTarget(int x, int y, int maxDistance)
 			continue;
 		}
 		struct Data_Figure *f = &Data_Figures[i];
-		if (FigureIsEnemy(f->type) || f->type == Figure_Rioter ||
-			(f->type == Figure_IndigenousNative && f->actionState == FigureActionState_159_NativeAttacking)) {
+		if (FigureIsEnemy(f->type) || f->type == FIGURE_RIOTER ||
+			(f->type == FIGURE_INDIGENOUS_NATIVE && f->actionState == FigureActionState_159_NativeAttacking)) {
 			return i;
 		}
 	}
@@ -56,7 +58,7 @@ int FigureAction_CombatSoldier_getMissileTarget(int soldierId, int maxDistance, 
 		}
 		struct Data_Figure *f = &Data_Figures[i];
 		if (FigureIsEnemy(f->type) || FigureIsHerd(f->type) ||
-			(f->type == Figure_IndigenousNative && f->actionState == FigureActionState_159_NativeAttacking)) {
+			(f->type == FIGURE_INDIGENOUS_NATIVE && f->actionState == FigureActionState_159_NativeAttacking)) {
 			int distance = calc_maximum_distance(x, y, f->x, f->y);
 			if (distance < minDistance && FigureMovement_canLaunchCrossCountryMissile(x, y, f->x, f->y)) {
 				minDistance = distance;
@@ -82,22 +84,21 @@ int FigureAction_CombatWolf_getTarget(int x, int y, int maxDistance)
 			continue;
 		}
 		switch (f->type) {
-			case Figure_Explosion:
-			case Figure_FortStandard:
-			case Figure_TradeShip:
-			case Figure_FishingBoat:
-			case Figure_MapFlag:
-			case Figure_Flotsam:
-				
-			case Figure_Shipwreck:
-			case Figure_IndigenousNative:
-			case Figure_TowerSentry:
-			case Figure_NativeTrader:
-			case Figure_Arrow:
-			case Figure_Javelin:
-			case Figure_Bolt:
-			case Figure_Ballista:
-			case Figure_Creature:
+			case FIGURE_EXPLOSION:
+			case FIGURE_FORT_STANDARD:
+			case FIGURE_TRADE_SHIP:
+			case FIGURE_FISHING_BOAT:
+			case FIGURE_MAP_FLAG:
+			case FIGURE_FLOTSAM:
+			case FIGURE_SHIPWRECK:
+			case FIGURE_INDIGENOUS_NATIVE:
+			case FIGURE_TOWER_SENTRY:
+			case FIGURE_NATIVE_TRADER:
+			case FIGURE_ARROW:
+			case FIGURE_JAVELIN:
+			case FIGURE_BOLT:
+			case FIGURE_BALLISTA:
+			case FIGURE_CREATURE:
 				continue;
 		}
 		if (FigureIsEnemy(f->type) || FigureIsHerd(f->type)) {
@@ -166,23 +167,23 @@ int FigureAction_CombatEnemy_getMissileTarget(int enemyId, int maxDistance, int 
 			continue;
 		}
 		switch (f->type) {
-			case Figure_Explosion:
-			case Figure_FortStandard:
-			case Figure_MapFlag:
-			case Figure_Flotsam:
-			case Figure_IndigenousNative:
-			case Figure_NativeTrader:
-			case Figure_Arrow:
-			case Figure_Javelin:
-			case Figure_Bolt:
-			case Figure_Ballista:
-			case Figure_Creature:
-			case Figure_FishGulls:
-			case Figure_Shipwreck:
-			case Figure_Sheep:
-			case Figure_Wolf:
-			case Figure_Zebra:
-			case Figure_Spear:
+			case FIGURE_EXPLOSION:
+			case FIGURE_FORT_STANDARD:
+			case FIGURE_MAP_FLAG:
+			case FIGURE_FLOTSAM:
+			case FIGURE_INDIGENOUS_NATIVE:
+			case FIGURE_NATIVE_TRADER:
+			case FIGURE_ARROW:
+			case FIGURE_JAVELIN:
+			case FIGURE_BOLT:
+			case FIGURE_BALLISTA:
+			case FIGURE_CREATURE:
+			case FIGURE_FISH_GULLS:
+			case FIGURE_SHIPWRECK:
+			case FIGURE_SHEEP:
+			case FIGURE_WOLF:
+			case FIGURE_ZEBRA:
+			case FIGURE_SPEAR:
 				continue;
 		}
 		int distance;

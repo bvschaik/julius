@@ -15,6 +15,7 @@
 
 #include "empire/trade_prices.h"
 #include "figure/trader.h"
+#include "figure/type.h"
 
 static void advanceTradeNextImportResourceCaravan()
 {
@@ -331,7 +332,7 @@ void FigureAction_tradeCaravanDonkey(int figureId)
 			f->state = FigureState_Dead;
 		} else if (leader->state != FigureState_Alive) {
 			f->state = FigureState_Dead;
-		} else if (leader->type != Figure_TradeCaravan && leader->type != Figure_TradeCaravanDonkey) {
+		} else if (leader->type != FIGURE_TRADE_CARAVAN && leader->type != FIGURE_TRADE_CARAVAN_DONKEY) {
 			f->state = FigureState_Dead;
 		} else {
 			FigureMovement_followTicks(figureId, f->inFrontFigureId, 1);

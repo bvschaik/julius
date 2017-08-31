@@ -10,6 +10,7 @@
 #include "Data/Figure.h"
 
 #include "building/model.h"
+#include "figure/type.h"
 
 #define FOR_XY_RADIUS \
 	int xMin = x - 2;\
@@ -392,43 +393,43 @@ int Figure_provideServiceCoverage(int figureId)
 	int y = Data_Figures[figureId].y;
 	int buildingId;
 	switch (Data_Figures[figureId].type) {
-		case Figure_Patrician:
+		case FIGURE_PATRICIAN:
 			return 0;
-		case Figure_LaborSeeker:
+		case FIGURE_LABOR_SEEKER:
 			numHousesServiced = provideLaborSeekerCoverage(x, y);
 			break;
-		case Figure_TaxCollector:
+		case FIGURE_TAX_COLLECTOR:
 			numHousesServiced = provideTaxCollectorCoverage(x, y, &Data_Figures[figureId].minMaxSeen);
 			break;
-		case Figure_MarketTrader:
-		case Figure_MarketBuyer:
+		case FIGURE_MARKET_TRADER:
+		case FIGURE_MARKET_BUYER:
 			numHousesServiced = provideMarketGoods(Data_Figures[figureId].buildingId, x, y);
 			break;
-		case Figure_BathhouseWorker:
+		case FIGURE_BATHHOUSE_WORKER:
 			numHousesServiced = provideBathhouseCoverage(x, y);
 			break;
-		case Figure_SchoolChild:
+		case FIGURE_SCHOOL_CHILD:
 			numHousesServiced = provideSchoolCoverage(x, y);
 			break;
-		case Figure_Teacher:
+		case FIGURE_TEACHER:
 			numHousesServiced = provideAcademyCoverage(x, y);
 			break;
-		case Figure_Librarian:
+		case FIGURE_LIBRARIAN:
 			numHousesServiced = provideLibraryCoverage(x, y);
 			break;
-		case Figure_Barber:
+		case FIGURE_BARBER:
 			numHousesServiced = provideBarberCoverage(x, y);
 			break;
-		case Figure_Doctor:
+		case FIGURE_DOCTOR:
 			numHousesServiced = provideClinicCoverage(x, y);
 			break;
-		case Figure_Surgeon:
+		case FIGURE_SURGEON:
 			numHousesServiced = provideHospitalCoverage(x, y);
 			break;
-		case Figure_Missionary:
+		case FIGURE_MISSIONARY:
 			numHousesServiced = provideMissionaryCoverage(x, y);
 			break;
-		case Figure_Priest:
+		case FIGURE_PRIEST:
 			switch (Data_Buildings[Data_Figures[figureId].buildingId].type) {
 				case BUILDING_SMALL_TEMPLE_CERES:
 				case BUILDING_LARGE_TEMPLE_CERES:
@@ -454,7 +455,7 @@ int Figure_provideServiceCoverage(int figureId)
 					break;
 			}
 			break;
-		case Figure_Actor:
+		case FIGURE_ACTOR:
 			if (Data_Figures[figureId].actionState == FigureActionState_94_EntertainerRoaming ||
 				Data_Figures[figureId].actionState == FigureActionState_95_EntertainerReturning) {
 				buildingId = Data_Figures[figureId].buildingId;
@@ -468,7 +469,7 @@ int Figure_provideServiceCoverage(int figureId)
 					Data_Buildings[buildingId].data.entertainment.days1 ? 2 : 1);
 			}
 			break;
-		case Figure_Gladiator:
+		case FIGURE_GLADIATOR:
 			if (Data_Figures[figureId].actionState == FigureActionState_94_EntertainerRoaming ||
 				Data_Figures[figureId].actionState == FigureActionState_95_EntertainerReturning) {
 				buildingId = Data_Figures[figureId].buildingId;
@@ -483,7 +484,7 @@ int Figure_provideServiceCoverage(int figureId)
 					Data_Buildings[buildingId].data.entertainment.days1 ? 2 : 1);
 			}
 			break;
-		case Figure_LionTamer:
+		case FIGURE_LION_TAMER:
 			if (Data_Figures[figureId].actionState == FigureActionState_94_EntertainerRoaming ||
 				Data_Figures[figureId].actionState == FigureActionState_95_EntertainerReturning) {
 				buildingId = Data_Figures[figureId].buildingId;
@@ -493,10 +494,10 @@ int Figure_provideServiceCoverage(int figureId)
 			numHousesServiced = provideColosseumCoverage(x, y,
 				Data_Buildings[buildingId].data.entertainment.days2 ? 2 : 1);
 			break;
-		case Figure_Charioteer:
+		case FIGURE_CHARIOTEER:
 			numHousesServiced = provideHippodromeCoverage(x, y);
 			break;
-		case Figure_Engineer:
+		case FIGURE_ENGINEER:
 			{int maxDamage = 0;
 			numHousesServiced = provideEngineerCoverage(x, y, &maxDamage);
 			if (maxDamage > Data_Figures[figureId].minMaxSeen) {
@@ -507,11 +508,11 @@ int Figure_provideServiceCoverage(int figureId)
 				Data_Figures[figureId].minMaxSeen -= 10;
 			}}
 			break;
-		case Figure_Prefect:
+		case FIGURE_PREFECT:
 			numHousesServiced = providePrefectFireCoverage(x, y);
 			Data_Figures[figureId].minMaxSeen = getPrefectCrimeCoverage(x, y);
 			break;
-		case Figure_Rioter:
+		case FIGURE_RIOTER:
 			if (FigureAction_Rioter_collapseBuilding(figureId) == 1) {
 				return 1;
 			}

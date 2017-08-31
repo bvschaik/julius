@@ -18,24 +18,24 @@ static int showOnOverlay(struct Data_Figure *f)
 		case Overlay_Desirability:
 			return 0;
 		case Overlay_Native:
-			return f->type == Figure_IndigenousNative || f->type == Figure_Missionary;
+			return f->type == FIGURE_INDIGENOUS_NATIVE || f->type == FIGURE_MISSIONARY;
 		case Overlay_Fire:
-			return f->type == Figure_Prefect;
+			return f->type == FIGURE_PREFECT;
 		case Overlay_Damage:
-			return f->type == Figure_Engineer;
+			return f->type == FIGURE_ENGINEER;
 		case Overlay_TaxIncome:
-			return f->type == Figure_TaxCollector;
+			return f->type == FIGURE_TAX_COLLECTOR;
 		case Overlay_Crime:
-			return f->type == Figure_Prefect || f->type == Figure_Protester ||
-				f->type == Figure_Criminal || f->type == Figure_Rioter;
+			return f->type == FIGURE_PREFECT || f->type == FIGURE_PROTESTER ||
+				f->type == FIGURE_CRIMINAL || f->type == FIGURE_RIOTER;
 		case Overlay_Entertainment:
-			return f->type == Figure_Actor || f->type == Figure_Gladiator ||
-				f->type == Figure_LionTamer || f->type == Figure_Charioteer;
+			return f->type == FIGURE_ACTOR || f->type == FIGURE_GLADIATOR ||
+				f->type == FIGURE_LION_TAMER || f->type == FIGURE_CHARIOTEER;
 		case Overlay_Education:
-			return f->type == Figure_SchoolChild || f->type == Figure_Librarian ||
-				f->type == Figure_Teacher;
+			return f->type == FIGURE_SCHOOL_CHILD || f->type == FIGURE_LIBRARIAN ||
+				f->type == FIGURE_TEACHER;
 		case Overlay_Theater:
-			if (f->type == Figure_Actor) {
+			if (f->type == FIGURE_ACTOR) {
 				if (f->actionState == FigureActionState_94_EntertainerRoaming ||
 					f->actionState == FigureActionState_95_EntertainerReturning) {
 					return Data_Buildings[f->buildingId].type == BUILDING_THEATER;
@@ -45,7 +45,7 @@ static int showOnOverlay(struct Data_Figure *f)
 			}
 			return 0;
 		case Overlay_Amphitheater:
-			if (f->type == Figure_Actor || f->type == Figure_Gladiator) {
+			if (f->type == FIGURE_ACTOR || f->type == FIGURE_GLADIATOR) {
 				if (f->actionState == FigureActionState_94_EntertainerRoaming ||
 					f->actionState == FigureActionState_95_EntertainerReturning) {
 					return Data_Buildings[f->buildingId].type == BUILDING_AMPHITHEATER;
@@ -55,48 +55,48 @@ static int showOnOverlay(struct Data_Figure *f)
 			}
 			return 0;
 		case Overlay_Colosseum:
-			if (f->type == Figure_Gladiator) {
+			if (f->type == FIGURE_GLADIATOR) {
 				if (f->actionState == FigureActionState_94_EntertainerRoaming ||
 					f->actionState == FigureActionState_95_EntertainerReturning) {
 					return Data_Buildings[f->buildingId].type == BUILDING_COLOSSEUM;
 				} else {
 					return Data_Buildings[f->destinationBuildingId].type == BUILDING_COLOSSEUM;
 				}
-			} else if (f->type == Figure_LionTamer) {
+			} else if (f->type == FIGURE_LION_TAMER) {
 				return 1;
 			}
 			return 0;
 		case Overlay_Hippodrome:
-			return f->type == Figure_Charioteer;
+			return f->type == FIGURE_CHARIOTEER;
 		case Overlay_Religion:
-			return f->type == Figure_Priest;
+			return f->type == FIGURE_PRIEST;
 		case Overlay_School:
-			return f->type == Figure_SchoolChild;
+			return f->type == FIGURE_SCHOOL_CHILD;
 		case Overlay_Library:
-			return f->type == Figure_Librarian;
+			return f->type == FIGURE_LIBRARIAN;
 		case Overlay_Academy:
-			return f->type == Figure_Teacher;
+			return f->type == FIGURE_TEACHER;
 		case Overlay_Barber:
-			return f->type == Figure_Barber;
+			return f->type == FIGURE_BARBER;
 		case Overlay_Bathhouse:
-			return f->type == Figure_BathhouseWorker;
+			return f->type == FIGURE_BATHHOUSE_WORKER;
 		case Overlay_Clinic:
-			return f->type == Figure_Doctor;
+			return f->type == FIGURE_DOCTOR;
 		case Overlay_Hospital:
-			return f->type == Figure_Surgeon;
+			return f->type == FIGURE_SURGEON;
 		case Overlay_FoodStocks:
-			if (f->type == Figure_MarketBuyer || f->type == Figure_MarketTrader ||
-				f->type == Figure_DeliveryBoy || f->type == Figure_FishingBoat) {
+			if (f->type == FIGURE_MARKET_BUYER || f->type == FIGURE_MARKET_TRADER ||
+				f->type == FIGURE_DELIVERY_BOY || f->type == FIGURE_FISHING_BOAT) {
 				return 1;
-			} else if (f->type == Figure_CartPusher) {
+			} else if (f->type == FIGURE_CART_PUSHER) {
 				return f->resourceId == Resource_Wheat || f->resourceId == Resource_Vegetables ||
 					f->resourceId == Resource_Fruit || f->resourceId == Resource_Meat;
 			}
 			return 0;
 		case Overlay_Problems:
-			if (f->type == Figure_LaborSeeker) {
+			if (f->type == FIGURE_LABOR_SEEKER) {
 				return Data_Buildings[f->buildingId].showOnProblemOverlay;
-			} else if (f->type == Figure_CartPusher) {
+			} else if (f->type == FIGURE_CART_PUSHER) {
 				return f->actionState == FigureActionState_20_CartpusherInitial || f->minMaxSeen;
 			}
 			return 0;
@@ -271,7 +271,7 @@ void UI_CityBuildings_drawFigure(int figureId, int xOffset, int yOffset, int sel
 		xTileOffset = tileProgressToPixelOffsetX(direction, f->progressOnTile);
 		yTileOffset = tileProgressToPixelOffsetY(direction, f->progressOnTile);
 		yTileOffset -= f->currentHeight;
-		if (f->numPreviousFiguresOnSameTile && f->type != Figure_Ballista) {
+		if (f->numPreviousFiguresOnSameTile && f->type != FIGURE_BALLISTA) {
 			static const int xOffsets[] = {
 				0, 8, 8, -8, -8, 0, 16, 0, -16, 8, -8, 16, -16, 16, -16, 8, -8, 0, 24, 0, -24, 0, 0, 0
 			};
@@ -311,19 +311,19 @@ void UI_CityBuildings_drawFigure(int figureId, int xOffset, int yOffset, int sel
 	// actual drawing
 	if (f->cartGraphicId) {
 		switch (f->type) {
-			case Figure_CartPusher:
-			case Figure_Warehouseman:
-			case Figure_LionTamer:
-			case Figure_Dockman:
-			case Figure_NativeTrader:
-			case Figure_Immigrant:
-			case Figure_Emigrant:
+			case FIGURE_CART_PUSHER:
+			case FIGURE_WAREHOUSEMAN:
+			case FIGURE_LION_TAMER:
+			case FIGURE_DOCKMAN:
+			case FIGURE_NATIVE_TRADER:
+			case FIGURE_IMMIGRANT:
+			case FIGURE_EMIGRANT:
 				drawFigureWithCart(f, xOffset, yOffset);
 				break;
-			case Figure_HippodromeMiniHorses:
+			case FIGURE_HIPPODROME_HORSES:
 				drawHippodromeHorses(f, xOffset, yOffset);
 				break;
-			case Figure_FortStandard:
+			case FIGURE_FORT_STANDARD:
 				if (!formation_get(f->formationId)->in_distant_battle) {
 					// base
 					Graphics_drawImage(f->graphicId, xOffset, yOffset);

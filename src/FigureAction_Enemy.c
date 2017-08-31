@@ -38,8 +38,8 @@ static void enemyInitial(int figureId, struct Data_Figure *f, const formation *m
 			}
 		}
 	}
-	if (f->type == Figure_Enemy43_Spear || f->type == Figure_Enemy46_Camel ||
-		f->type == Figure_Enemy51_Spear || f->type == Figure_Enemy52_MountedArcher) {
+	if (f->type == FIGURE_ENEMY43_SPEAR || f->type == FIGURE_ENEMY46_CAMEL ||
+		f->type == FIGURE_ENEMY51_SPEAR || f->type == FIGURE_ENEMY52_MOUNTED_ARCHER) {
 		// missile throwers
 		f->waitTicksMissile++;
 		int xTile, yTile;
@@ -59,17 +59,17 @@ static void enemyInitial(int figureId, struct Data_Figure *f, const formation *m
 				case EnemyType_5_Pergamum:
 				case EnemyType_9_Egyptian:
 				case EnemyType_10_Carthaginian:
-					missileType = Figure_Arrow;
+					missileType = FIGURE_ARROW;
 					break;
 				default:
-					missileType = Figure_Spear;
+					missileType = FIGURE_SPEAR;
 					break;
 			}
 			if (f->attackGraphicOffset == 1) {
 				Figure_createMissile(figureId, f->x, f->y, xTile, yTile, missileType);
 				formation_record_missile_fired(m->id);
 			}
-			if (missileType == Figure_Arrow) {
+			if (missileType == FIGURE_ARROW) {
 				Data_CityInfo.soundShootArrow--;
 				if (Data_CityInfo.soundShootArrow <= 0) {
 					Data_CityInfo.soundShootArrow = 10;
@@ -111,8 +111,8 @@ static void enemyFighting(int figureId, struct Data_Figure *f, const formation *
 	if (!m->recent_fight) {
 		f->actionState = FigureActionState_151_EnemyInitial;
 	}
-	if (f->type != Figure_Enemy46_Camel && f->type != Figure_Enemy47_Elephant) {
-		if (f->type == Figure_Enemy48_Chariot || f->type == Figure_Enemy52_MountedArcher) {
+	if (f->type != FIGURE_ENEMY46_CAMEL && f->type != FIGURE_ENEMY47_ELEPHANT) {
+		if (f->type == FIGURE_ENEMY48_CHARIOT || f->type == FIGURE_ENEMY52_MOUNTED_ARCHER) {
 			Data_CityInfo.soundMarchHorse--;
 			if (Data_CityInfo.soundMarchHorse <= 0) {
 				Data_CityInfo.soundMarchHorse = 200;

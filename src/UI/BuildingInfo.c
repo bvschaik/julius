@@ -261,18 +261,18 @@ void UI_BuildingInfo_init()
 			if (Data_Figures[figureId].state != FigureState_Dead &&
 				Data_Figures[figureId].actionState != FigureActionState_149_Corpse) {
 				switch (Data_Figures[figureId].type) {
-					case Figure_None:
-					case Figure_Explosion:
-					case Figure_MapFlag:
-					case Figure_Flotsam:
-					case Figure_Arrow:
-					case Figure_Javelin:
-					case Figure_Bolt:
-					case Figure_Ballista:
-					case Figure_Creature:
-					case Figure_FishGulls:
-					case Figure_Spear:
-					case Figure_HippodromeMiniHorses:
+					case FIGURE_NONE:
+					case FIGURE_EXPLOSION:
+					case FIGURE_MAP_FLAG:
+					case FIGURE_FLOTSAM:
+					case FIGURE_ARROW:
+					case FIGURE_JAVELIN:
+					case FIGURE_BOLT:
+					case FIGURE_BALLISTA:
+					case FIGURE_CREATURE:
+					case FIGURE_FISH_GULLS:
+					case FIGURE_SPEAR:
+					case FIGURE_HIPPODROME_HORSES:
 						break;
 					default:
 						context.figure.figureIds[context.figure.count++] = figureId;
@@ -290,11 +290,11 @@ void UI_BuildingInfo_init()
 			continue;
 		}
 		int type = Data_Figures[figureId].type;
-		if (type == Figure_FortStandard || FigureIsLegion(type)) {
+		if (type == FIGURE_FORT_STANDARD || FigureIsLegion(type)) {
 			context.type = BuildingInfoType_Legion;
 			context.formationId = Data_Figures[figureId].formationId;
             const formation *m = formation_get(context.formationId);
-			if (m->figure_type != Figure_FortLegionary) {
+			if (m->figure_type != FIGURE_FORT_LEGIONARY) {
 				context.formationTypes = 5;
 			} else if (m->has_military_training) {
 				context.formationTypes = 4;

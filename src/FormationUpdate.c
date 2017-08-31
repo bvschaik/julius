@@ -411,7 +411,7 @@ static void marsKillEnemies()
 		if (f->state != FigureState_Alive) {
 			continue;
 		}
-		if (FigureIsEnemy(f->type) && f->type != Figure_Enemy54_Gladiator) {
+		if (FigureIsEnemy(f->type) && f->type != FIGURE_ENEMY54_GLADIATOR) {
 			f->actionState = FigureActionState_149_Corpse;
 			toKill--;
 			if (!gridOffset) {
@@ -755,19 +755,19 @@ static void update_herd_formation(const formation *m)
     int roamDelay;
     int allowNegativeDesirability;
     switch (m->figure_type) {
-        case Figure_Sheep:
+        case FIGURE_SHEEP:
             roamDistance = 8;
             roamDelay = 20;
             allowNegativeDesirability = 0;
             attackingAnimals = 0;
             break;
-        case Figure_Zebra:
+        case FIGURE_ZEBRA:
             roamDistance = 20;
             roamDelay = 4;
             allowNegativeDesirability = 0;
             attackingAnimals = 0;
             break;
-        case Figure_Wolf:
+        case FIGURE_WOLF:
             roamDistance = 16;
             roamDelay = 6;
             allowNegativeDesirability = 1;
@@ -787,7 +787,7 @@ static void update_herd_formation(const formation *m)
                 formation_herd_clear_direction(m->id);
                 if (FigureAction_HerdEnemy_moveFormationTo(m->id, xTile, yTile, &xTile, &yTile)) {
                     formation_set_destination(m->id, xTile, yTile);
-                    if (m->figure_type == Figure_Wolf) {
+                    if (m->figure_type == FIGURE_WOLF) {
                         Data_CityInfo.soundMarchWolf--;
                         if (Data_CityInfo.soundMarchWolf <= 0) {
                             Data_CityInfo.soundMarchWolf = 12;
