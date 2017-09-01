@@ -58,7 +58,7 @@ static void drawDot(int x, int y, Color color)
 {
 	if (x >= clipRectangle.xStart && x < clipRectangle.xEnd) {
 		if (y >= clipRectangle.yStart && y < clipRectangle.yEnd) {
-			ScreenPixel(x, y) = ColorLookup[color];
+			ScreenPixel(x, y) = color;
 		}
 	}
 }
@@ -151,7 +151,7 @@ void Graphics_shadeRect(int x, int y, int width, int height, int darkness)
 			int b = (pixel & 0xf8) >> 3;
 			int grey = (r + g + b) / 3 >> darkness;
 			Color newPixel = (Color) (grey << 10 | grey << 5 | grey);
-			ScreenPixel(xx, yy) = ColorLookup[newPixel];
+			ScreenPixel(xx, yy) = newPixel;
 		}
 	}
 }
@@ -356,28 +356,28 @@ static void drawImageUncompressed(struct Data_Graphics_Index *index, const Color
 		if (type == ColorType_None) {
 			for (int x = clip->clippedPixelsLeft; x < xMax; x++, dst++) {
 				if (*data != Color_Transparent) {
-					*dst = ColorLookup[*data];
+					*dst = *data;
 				}
 				data++;
 			}
 		} else if (type == ColorType_Set) {
 			for (int x = clip->clippedPixelsLeft; x < xMax; x++, dst++) {
 				if (*data != Color_Transparent) {
-					*dst = ColorLookup[color];
+					*dst = color;
 				}
 				data++;
 			}
 		} else if (type == ColorType_And) {
 			for (int x = clip->clippedPixelsLeft; x < xMax; x++, dst++) {
 				if (*data != Color_Transparent) {
-					*dst = ColorLookup[*data & color];
+					*dst = *data & color;
 				}
 				data++;
 			}
 		} else if (type == ColorType_Blend) {
 			for (int x = clip->clippedPixelsLeft; x < xMax; x++, dst++) {
 				if (*data != Color_Transparent) {
-					*dst &= ColorLookup[color];
+					*dst &= color;
 				}
 				data++;
 			}
@@ -415,7 +415,7 @@ static void drawImageCompressed(struct Data_Graphics_Index *index, const Color *
 				if (unclipped) {
 					x += b;
 					while (b) {
-						*dst = ColorLookup[*pixels];
+						*dst = *pixels;
 						dst++;
 						pixels++;
 						b--;
@@ -423,7 +423,7 @@ static void drawImageCompressed(struct Data_Graphics_Index *index, const Color *
 				} else {
 					while (b) {
 						if (x >= clip->clippedPixelsLeft && x < index->width - clip->clippedPixelsRight) {
-							*dst = ColorLookup[*pixels];
+							*dst = *pixels;
 						}
 						dst++;
 						x++;
@@ -445,7 +445,7 @@ static void drawImageCompressedSet(struct Data_Graphics_Index *index, const Colo
 	}
 	int unclipped = clip->clipX == ClipNone;
 
-	ScreenColor screenColor = ColorLookup[color];
+	ScreenColor screenColor = color;
 	for (int y = 0; y < height - clip->clippedPixelsBottom; y++) {
 		int x = 0;
 		while (x < index->width) {
@@ -516,7 +516,7 @@ static void drawImageCompressedAnd(struct Data_Graphics_Index *index, const Colo
 				if (unclipped) {
 					x += b;
 					while (b) {
-						*dst = ColorLookup[*pixels & color];
+						*dst = *pixels & color;
 						dst++;
 						pixels++;
 						b--;
@@ -524,7 +524,7 @@ static void drawImageCompressedAnd(struct Data_Graphics_Index *index, const Colo
 				} else {
 					while (b) {
 						if (x >= clip->clippedPixelsLeft && x < index->width - clip->clippedPixelsRight) {
-							*dst = ColorLookup[*pixels & color];
+							*dst = *pixels & color;
 						}
 						dst++;
 						x++;
@@ -546,7 +546,7 @@ static void drawImageCompressedBlend(struct Data_Graphics_Index *index, const Co
 	}
 	int unclipped = clip->clipX == ClipNone;
 
-	ScreenColor screenColor = ColorLookup[color];
+	ScreenColor screenColor = color;
 	for (int y = 0; y < height - clip->clippedPixelsBottom; y++) {
 		int x = 0;
 		while (x < index->width) {

@@ -138,7 +138,7 @@ int Loader_Graphics_loadEnemyGraphics(int enemyId)
 static int convertUncompressed(buffer *buf, int buf_length, Color *dst)
 {
     for (int i = 0; i < buf_length; i += 2) {
-        *dst = buffer_read_u16(buf);
+        *dst = ColorLookup[buffer_read_u16(buf)];
         dst++;
     }
     return buf_length / 2;
@@ -159,7 +159,7 @@ static int convertCompressed(buffer *buf, int buf_length, Color *dst)
             // control = number of concrete pixels
             *(dst++) = control;
             for (int i = 0; i < control; i++) {
-                *(dst++) = buffer_read_u16(buf);
+                *(dst++) = ColorLookup[buffer_read_u16(buf)];
             }
             dst_length += control + 1;
             buf_length -= control * 2 + 1;
