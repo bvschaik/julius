@@ -192,8 +192,7 @@ void Graphics_drawIsometricTop(int graphicId, int xOffset, int yOffset, Color co
 	if (!index->hasCompressedPart) {
 		return;
 	}
-	const Color *data = &Data_Graphics_PixelData.main[index->offset];
-	data += index->uncompressedLength;
+	const Color *data = &Data_Graphics_PixelData.main[index->offset] + index->uncompressedLength;
 
 	int height = index->height;
 	switch (index->width) {
@@ -414,12 +413,7 @@ static void drawImageCompressed(struct Data_Graphics_Index *index, const Color *
 				ScreenColor *dst = &ScreenPixel(xOffset + x, yOffset + y);
 				if (unclipped) {
 					x += b;
-					while (b) {
-						*dst = *pixels;
-						dst++;
-						pixels++;
-						b--;
-					}
+					memcpy(dst, pixels, b * sizeof(Color));
 				} else {
 					while (b) {
 						if (x >= clip->clippedPixelsLeft && x < index->width - clip->clippedPixelsRight) {

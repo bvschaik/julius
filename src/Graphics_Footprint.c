@@ -79,9 +79,8 @@ static void drawFootprintTile(Color *data, int xOffset, int yOffset, Color color
 			}
 			ScreenColor *buffer = &ScreenPixel(xOffset + xStart, yOffset + y);
 			if (colorMask == Color_NoMask) {
-				for (int x = 0; x < xMax; x++, buffer++, src++) {
-					*buffer = *src;
-				}
+				memcpy(buffer, src, xMax * sizeof(Color));
+				src += xMax;
 			} else {
 				for (int x = 0; x < xMax; x++, buffer++, src++) {
 					*buffer = *src & colorMask;
@@ -106,9 +105,8 @@ static void drawFootprintTile(Color *data, int xOffset, int yOffset, Color color
 			}
 			ScreenColor *buffer = &ScreenPixel(xOffset + xStart, 15 + yOffset + y);
 			if (colorMask == Color_NoMask) {
-				for (int x = 0; x < xMax; x++, buffer++, src++) {
-					*buffer = *src;
-				}
+				memcpy(buffer, src, xMax * sizeof(Color));
+				src += xMax;
 			} else {
 				for (int x = 0; x < xMax; x++, buffer++, src++) {
 					*buffer = *src & colorMask;
