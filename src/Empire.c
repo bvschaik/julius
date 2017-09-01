@@ -10,6 +10,7 @@
 
 #include "building/count.h"
 #include "core/io.h"
+#include "empire/trade_route.h"
 #include "game/time.h"
 
 #include <string.h>
@@ -70,22 +71,15 @@ void Empire_initCities()
 				city->buysResourceFlag[resource] = 1;
 			}
 			int amountCode = getTradeAmountCode(i, resource);
-			int routeId = city->routeId;
+			int routeId = city->routeId;{}
+			int amount;
 			switch (amountCode) {
-				case 1:
-					Data_Empire_Trade.maxPerYear[routeId][resource] = 15;
-					break;
-				case 2:
-					Data_Empire_Trade.maxPerYear[routeId][resource] = 25;
-					break;
-				case 3:
-					Data_Empire_Trade.maxPerYear[routeId][resource] = 40;
-					break;
-				default:
-					Data_Empire_Trade.maxPerYear[routeId][resource] = 0;
-					break;
+				case 1: amount = 15; break;
+				case 2: amount = 25; break;
+				case 3: amount = 40; break;
+				default: amount = 0; break;
 			}
-			Data_Empire_Trade.tradedThisYear[routeId][resource] = 0;
+			trade_route_init(routeId, resource, amount);
 		}
 		city->__unused2 = 10;
 		city->traderEntryDelay = 4;
@@ -202,9 +196,7 @@ int Empire_citySellsResource(int objectId, int resource)
 int Empire_canExportResourceToCity(int cityId, int resource)
 {
 	int routeId = Data_Empire_Cities[cityId].routeId;
-	if (cityId &&
-		Data_Empire_Trade.tradedThisYear[routeId][resource] >=
-		Data_Empire_Trade.maxPerYear[routeId][resource]) {
+	if (cityId && trade_route_limit_reached(routeId, resource)) {
 		// quota reached
 		return 0;
 	}
@@ -228,8 +220,7 @@ int Empire_canImportResourceFromCity(int cityId, int resource)
 		return 0;
 	}
 	int routeId = Data_Empire_Cities[cityId].routeId;
-	if (Data_Empire_Trade.tradedThisYear[routeId][resource] >=
-		Data_Empire_Trade.maxPerYear[routeId][resource]) {
+	if (trade_route_limit_reached(routeId, resource)) {
 		return 0;
 	}
 
@@ -430,10 +421,7 @@ void Empire_resetYearlyTradeAmounts()
 {
 	for (int i = 0; i < MAX_EMPIRE_CITIES; i++) {
 		if (Data_Empire_Cities[i].inUse && Data_Empire_Cities[i].isOpen) {
-			int routeId = Data_Empire_Cities[i].routeId;
-			for (int resource = Resource_Min; resource < Resource_Max; resource++) {
-				Data_Empire_Trade.tradedThisYear[routeId][resource] = 0;
-			}
+			trade_route_reset_traded(Data_Empire_Cities[i].routeId);
 		}
 	}
 }

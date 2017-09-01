@@ -17,6 +17,7 @@
 
 #include "building/count.h"
 #include "empire/trade_prices.h"
+#include "empire/trade_route.h"
 #include "figure/type.h"
 
 #include <string.h>
@@ -29,7 +30,7 @@ static int generateTrader(int cityId)
 	for (int r = Resource_Min; r < Resource_Max; r++) {
 		if (city->buysResourceFlag[r] || city->sellsResourceFlag[r]) {
 			++numResources;
-			switch (Data_Empire_Trade.maxPerYear[city->routeId][r]) {
+			switch (trade_route_limit(city->routeId, r)) {
 				case 15: maxTradersOnMap += 1; break;
 				case 25: maxTradersOnMap += 2; break;
 				case 40: maxTradersOnMap += 3; break;
@@ -428,7 +429,7 @@ int Trader_tryImportResource(int buildingId, int resourceId, int cityId)
 			Data_Buildings[spaceId].loadsStored &&
 			Data_Buildings[spaceId].loadsStored < 4 &&
 			Data_Buildings[spaceId].subtype.warehouseResourceId == resourceId) {
-			Data_Empire_Trade.tradedThisYear[routeId][resourceId]++;
+			trade_route_increase_traded(routeId, resourceId);
 			Resource_addImportedResourceToWarehouseSpace(spaceId, resourceId);
 			return 1;
 		}
@@ -438,7 +439,7 @@ int Trader_tryImportResource(int buildingId, int resourceId, int cityId)
 	for (int i = 0; i < 8; i++) {
 		spaceId = Data_Buildings[spaceId].nextPartBuildingId;
 		if (spaceId > 0 && Data_Buildings[spaceId].subtype.warehouseResourceId == Resource_None) {
-			Data_Empire_Trade.tradedThisYear[routeId][resourceId]++;
+			trade_route_increase_traded(routeId, resourceId);
 			Resource_addImportedResourceToWarehouseSpace(spaceId, resourceId);
 			return 1;
 		}
@@ -458,7 +459,7 @@ int Trader_tryExportResource(int buildingId, int resourceId, int cityId)
 		if (spaceId > 0) {
 			if (Data_Buildings[spaceId].loadsStored &&
 				Data_Buildings[spaceId].subtype.warehouseResourceId == resourceId) {
-				Data_Empire_Trade.tradedThisYear[Data_Empire_Cities[cityId].routeId][resourceId]++;
+				trade_route_increase_traded(Data_Empire_Cities[cityId].routeId, resourceId);
 				Resource_removeExportedResourceFromWarehouseSpace(spaceId, resourceId);
 				return 1;
 			}

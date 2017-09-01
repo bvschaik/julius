@@ -23,6 +23,8 @@
 #include "../Data/Scenario.h"
 #include "../Data/Screen.h"
 
+#include "empire/trade_route.h"
+
 #define MAX_WIDTH 2032
 #define MAX_HEIGHT 1136
 
@@ -205,7 +207,8 @@ static void drawPanelInfoCity()
 			int resourceOffset = Resource_getGraphicIdOffset(good, 3);
 			Graphics_drawImage(graphicId + resourceOffset, xOffset + 100 * goodOffset + 121, yOffset + 22);
 			int routeId = Data_Empire_Cities[data.selectedCity].routeId;
-			switch (Data_Empire_Trade.maxPerYear[routeId][good]) {
+			int tradeMax = trade_route_limit(routeId, good);
+			switch (tradeMax) {
 				case 15:
 					Graphics_drawImage(GraphicId(ID_Graphic_TradeAmount),
 						xOffset + 100 * goodOffset + 141, yOffset + 20);
@@ -219,8 +222,7 @@ static void drawPanelInfoCity()
 						xOffset + 100 * goodOffset + 133, yOffset + 20);
 					break;
 			}
-			int tradeNow = Data_Empire_Trade.tradedThisYear[routeId][good];
-			int tradeMax = Data_Empire_Trade.maxPerYear[routeId][good];
+			int tradeNow = trade_route_traded(routeId, good);
 			if (tradeNow > tradeMax) {
 				tradeMax = tradeNow;
 			}
@@ -244,7 +246,8 @@ static void drawPanelInfoCity()
 			int resourceOffset = Resource_getGraphicIdOffset(good, 3);
 			Graphics_drawImage(graphicId + resourceOffset, xOffset + 100 * goodOffset + 121, yOffset + 52);
 			int routeId = Data_Empire_Cities[data.selectedCity].routeId;
-			switch (Data_Empire_Trade.maxPerYear[routeId][good]) {
+			int tradeMax = trade_route_limit(routeId, good);
+			switch (tradeMax) {
 				case 15:
 					Graphics_drawImage(GraphicId(ID_Graphic_TradeAmount),
 						xOffset + 100 * goodOffset + 141, yOffset + 50);
@@ -258,8 +261,7 @@ static void drawPanelInfoCity()
 						xOffset + 100 * goodOffset + 133, yOffset + 50);
 					break;
 			}
-			int tradeNow = Data_Empire_Trade.tradedThisYear[routeId][good];
-			int tradeMax = Data_Empire_Trade.maxPerYear[routeId][good];
+			int tradeNow = trade_route_traded(routeId, good);
 			if (tradeNow > tradeMax) {
 				tradeMax = tradeNow;
 			}
@@ -282,7 +284,7 @@ static void drawPanelInfoCity()
 			int resourceOffset = Resource_getGraphicIdOffset(good, 3);
 			Graphics_drawImage(graphicId + resourceOffset, xOffset + goodOffset + 61, yOffset + 34);
 			int routeId = Data_Empire_Cities[data.selectedCity].routeId;
-			switch (Data_Empire_Trade.maxPerYear[routeId][good]) {
+			switch (trade_route_limit(routeId, good)) {
 				case 15:
 					Graphics_drawImage(GraphicId(ID_Graphic_TradeAmount),
 						xOffset + goodOffset + 81, yOffset + 32);
@@ -308,7 +310,7 @@ static void drawPanelInfoCity()
 			int resourceOffset = Resource_getGraphicIdOffset(good, 3);
 			Graphics_drawImage(graphicId + resourceOffset, xOffset + goodOffset + 110, yOffset + 34);
 			int routeId = Data_Empire_Cities[data.selectedCity].routeId;
-			switch (Data_Empire_Trade.maxPerYear[routeId][good]) {
+			switch (trade_route_limit(routeId, good)) {
 				case 15:
 					Graphics_drawImage(GraphicId(ID_Graphic_TradeAmount),
 						xOffset + goodOffset + 130, yOffset + 32);

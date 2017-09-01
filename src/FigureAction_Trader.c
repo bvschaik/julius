@@ -14,6 +14,7 @@
 #include "Data/Scenario.h"
 
 #include "empire/trade_prices.h"
+#include "empire/trade_route.h"
 #include "figure/trader.h"
 #include "figure/type.h"
 
@@ -268,7 +269,7 @@ void FigureAction_tradeCaravan(int figureId)
 				if (FigureAction_TradeCaravan_canBuy(figureId, f->destinationBuildingId, f->empireCityId)) {
 					int resource = traderGetBuyResource(f->destinationBuildingId, f->empireCityId);
 					if (resource) {
-						Data_Empire_Trade.tradedThisYear[Data_Empire_Cities[f->empireCityId].routeId][resource]++;
+						trade_route_increase_traded(Data_Empire_Cities[f->empireCityId].routeId, resource);
 						trader_record_bought_resource(f->traderId, resource);
 						f->traderAmountBought++;
 					} else {
@@ -280,7 +281,7 @@ void FigureAction_tradeCaravan(int figureId)
 				if (FigureAction_TradeCaravan_canSell(figureId, f->destinationBuildingId, f->empireCityId)) {
 					int resource = traderGetSellResource(figureId, f->destinationBuildingId, f->empireCityId);
 					if (resource) {
-						Data_Empire_Trade.tradedThisYear[Data_Empire_Cities[f->empireCityId].routeId][resource]++;
+						trade_route_increase_traded(Data_Empire_Cities[f->empireCityId].routeId, resource);
 						trader_record_sold_resource(f->traderId, resource);
 						f->loadsSoldOrCarrying++;
 					} else {

@@ -26,6 +26,7 @@
 #include "core/calc.h"
 #include "core/random.h"
 #include "empire/trade_prices.h"
+#include "empire/trade_route.h"
 #include "game/time.h"
 
 #include <string.h>
@@ -400,28 +401,12 @@ void Event_handleDemandChanges()
 		int resource = Data_Scenario.demandChanges.resourceId[i];
 		int cityId = Empire_getCityForTradeRoute(route);
 		if (Data_Scenario.demandChanges.isRise[i]) {
-			int max = 0;
-			switch (Data_Empire_Trade.maxPerYear[route][resource]) {
-				case 0: max = 15; break;
-				case 15: max = 25; break;
-				case 25: max = 40; break;
-				default: continue;
-			}
-			Data_Empire_Trade.maxPerYear[route][resource] = max;
-			if (Empire_isTradeRouteOpen(route)) {
+			if (trade_route_increase_limit(route, resource) && Empire_isTradeRouteOpen(route)) {
 				PlayerMessage_post(1, Message_74_IncreasedTrading, cityId, resource);
 			}
 		} else {
-			int max;
-			switch (Data_Empire_Trade.maxPerYear[route][resource]) {
-				case 40: max = 25; break;
-				case 25: max = 15; break;
-				case 15: max = 0; break;
-				default: continue;
-			}
-			Data_Empire_Trade.maxPerYear[route][resource] = max;
-			if (Empire_isTradeRouteOpen(route)) {
-				if (max > 0) {
+			if (trade_route_decrease_limit(route, resource) && Empire_isTradeRouteOpen(route)) {
+				if (trade_route_limit(route, resource) > 0) {
 					PlayerMessage_post(1, Message_75_DecreasedTrading, cityId, resource);
 				} else {
 					PlayerMessage_post(1, Message_76_TradeStopped, cityId, resource);

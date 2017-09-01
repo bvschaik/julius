@@ -40,6 +40,7 @@
 #include "core/random.h"
 #include "core/zip.h"
 #include "empire/trade_prices.h"
+#include "empire/trade_route.h"
 #include "figure/enemy_army.h"
 #include "figure/formation.h"
 #include "figure/name.h"
@@ -220,8 +221,8 @@ typedef struct {
     buffer *Data_Event_gladiatorRevolt_month;
     buffer *Data_Event_gladiatorRevolt_endMonth;
     buffer *Data_Event_gladiatorRevolt_state;
-    buffer *Data_Empire_Trade_maxPerYear;
-    buffer *Data_Empire_Trade_tradedThisYear;
+    buffer *trade_route_limit;
+    buffer *trade_route_traded;
     buffer *Data_Buildings_Extra_barracksTowerSentryRequested;
     buffer *Data_Buildings_Extra_createdSequence;
     buffer *Data_Routes_unknown1RoutesCalculated;
@@ -410,8 +411,8 @@ void init_savegame_data()
     state->Data_Event_gladiatorRevolt_month = create_savegame_piece(4, 0);
     state->Data_Event_gladiatorRevolt_endMonth = create_savegame_piece(4, 0);
     state->Data_Event_gladiatorRevolt_state = create_savegame_piece(4, 0);
-    state->Data_Empire_Trade_maxPerYear = create_savegame_piece(1280, 1);
-    state->Data_Empire_Trade_tradedThisYear = create_savegame_piece(1280, 1);
+    state->trade_route_limit = create_savegame_piece(1280, 1);
+    state->trade_route_traded = create_savegame_piece(1280, 1);
     state->Data_Buildings_Extra_barracksTowerSentryRequested = create_savegame_piece(4, 0);
     state->Data_Buildings_Extra_createdSequence = create_savegame_piece(4, 0);
     state->Data_Routes_unknown1RoutesCalculated = create_savegame_piece(4, 0); //state->unk_634474 = create_savegame_piece(4, 0); not referenced
@@ -602,8 +603,9 @@ static void savegame_deserialize(savegame_state *state)
     read_all_from_buffer(state->Data_Event_gladiatorRevolt_month, &Data_Event.gladiatorRevolt.month);
     read_all_from_buffer(state->Data_Event_gladiatorRevolt_endMonth, &Data_Event.gladiatorRevolt.endMonth);
     read_all_from_buffer(state->Data_Event_gladiatorRevolt_state, &Data_Event.gladiatorRevolt.state);
-    read_all_from_buffer(state->Data_Empire_Trade_maxPerYear, &Data_Empire_Trade.maxPerYear);
-    read_all_from_buffer(state->Data_Empire_Trade_tradedThisYear, &Data_Empire_Trade.tradedThisYear);
+    
+    trade_routes_load_state(state->trade_route_limit, state->trade_route_traded);
+    
     read_all_from_buffer(state->Data_Buildings_Extra_barracksTowerSentryRequested, &Data_Buildings_Extra.barracksTowerSentryRequested);
     read_all_from_buffer(state->Data_Buildings_Extra_createdSequence, &Data_Buildings_Extra.createdSequence);
     read_all_from_buffer(state->Data_Routes_unknown1RoutesCalculated, &Data_Routes.unknown1RoutesCalculated); //read_all_from_buffer(state->unk_634474, &unk_634474); not referenced
@@ -759,8 +761,9 @@ static void savegame_serialize(savegame_state *state)
     write_all_to_buffer(state->Data_Event_gladiatorRevolt_month, &Data_Event.gladiatorRevolt.month);
     write_all_to_buffer(state->Data_Event_gladiatorRevolt_endMonth, &Data_Event.gladiatorRevolt.endMonth);
     write_all_to_buffer(state->Data_Event_gladiatorRevolt_state, &Data_Event.gladiatorRevolt.state);
-    write_all_to_buffer(state->Data_Empire_Trade_maxPerYear, &Data_Empire_Trade.maxPerYear);
-    write_all_to_buffer(state->Data_Empire_Trade_tradedThisYear, &Data_Empire_Trade.tradedThisYear);
+    
+    trade_routes_save_state(state->trade_route_limit, state->trade_route_traded);
+
     write_all_to_buffer(state->Data_Buildings_Extra_barracksTowerSentryRequested, &Data_Buildings_Extra.barracksTowerSentryRequested);
     write_all_to_buffer(state->Data_Buildings_Extra_createdSequence, &Data_Buildings_Extra.createdSequence);
     write_all_to_buffer(state->Data_Routes_unknown1RoutesCalculated, &Data_Routes.unknown1RoutesCalculated); //write_all_to_buffer(state->unk_634474, &unk_634474); not referenced

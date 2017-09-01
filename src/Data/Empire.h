@@ -78,9 +78,4 @@ extern struct Data_Empire_City {
 	unsigned char __padding[10];
 } Data_Empire_Cities[MAX_EMPIRE_CITIES];
 
-extern struct _Data_Empire_Trade {
-	int maxPerYear[20][16];
-	int tradedThisYear[20][16];
-} Data_Empire_Trade;
-
 #endif
