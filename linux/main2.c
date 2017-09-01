@@ -227,7 +227,6 @@ void refresh()
 	Widget_Text_drawNumberColored(then2 - then, 'd', "", Data_Screen.width - 40, 5, Font_NormalPlain, 0xf800);
 	
 	SDL_UpdateTexture(SDL.texture, NULL, Data_Screen.drawBuffer, Data_Screen.width * 4);
-	SDL_RenderClear(SDL.renderer);
 	SDL_RenderCopy(SDL.renderer, SDL.texture, NULL, NULL);
 	SDL_RenderPresent(SDL.renderer);
 	last = now;
@@ -563,11 +562,57 @@ void initSdl()
 	Desktop.height = mode.h;
 }
 
+int runPerformance(const char *savedGameToLoad, int ticksToRun)
+{
+    printf("Running performance test on %s for %d ticks\n", savedGameToLoad, ticksToRun);
+    signal(SIGSEGV, handler);
+    initSdl();
+    chdir("../data");
+
+    if (!Game_preInit()) {
+        return 1;
+    }
+    
+    createWindowAndRenderer(0);
+    createSurface(1024, 768, 0);
+
+    if (!Game_init()) {
+        return 2;
+    }
+
+    GameFile_loadSavedGame(savedGameToLoad);
+    
+    int originalSpeed = Data_Settings.gameSpeed;
+    Data_Settings.gameSpeed = 100;
+    time_set_millis(0);
+    for (int i = 1; i <= ticksToRun; i++) {
+        UI_Window_goTo(Window_City);
+        time_set_millis(2 * i);
+        Runner_run();
+        Runner_draw();
+        SDL_UpdateTexture(SDL.texture, NULL, Data_Screen.drawBuffer, Data_Screen.width * 4);
+        //SDL_RenderClear(SDL.renderer);
+        SDL_RenderCopy(SDL.renderer, SDL.texture, NULL, NULL);
+        SDL_RenderPresent(SDL.renderer);
+    }
+    Data_Settings.gameSpeed = originalSpeed;
+
+    
+    Game_exit();
+
+    // Shutdown all subsystems
+    SDL_Quit();
+    
+    return 0;
+}
+
 int main(int argc, char **argv)
 {
 	if (argc == 4) {
 		return runAutopilot(argv[1], argv[2], atoi(argv[3]));
-	}
+	} else if (argc == 3) {
+        return runPerformance(argv[1], atoi(argv[2]));
+    }
 	signal(SIGSEGV, handler);
 	
 	sanityCheck();
