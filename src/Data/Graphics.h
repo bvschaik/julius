@@ -1,6 +1,8 @@
 #ifndef DATA_GRAPHICS_H
 #define DATA_GRAPHICS_H
 
+#include "Types.h"
+
 #define GraphicId(index) (Data_Graphics_Main.graphicIds[index])
 #define GraphicHeight(id) (Data_Graphics_Main.index[id].height)
 #define GraphicWidth(id) (Data_Graphics_Main.index[id].width)
@@ -57,8 +59,8 @@ extern struct _Data_Graphics_Enemy {
 } Data_Graphics_Enemy;
 
 extern struct _Data_Graphics_PixelData {
-	char *main;
-	char *enemy;
+	Color *main;
+	Color *enemy;
 	//void *empire;
 } Data_Graphics_PixelData;
 

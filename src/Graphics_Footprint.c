@@ -10,7 +10,7 @@
 #define FOOTPRINT_HEIGHT 30
 #define FOOTPRINT_DATA_LENGTH 1800
 
-#define GETDATA(graphicId) Color *data = (Color*) &Data_Graphics_PixelData.main[Data_Graphics_Main.index[graphicId].offset]
+#define GETDATA(graphicId) Color *data = &Data_Graphics_PixelData.main[Data_Graphics_Main.index[graphicId].offset]
 #define DATA(index) &data[900 * index]
 
 static void drawFootprintTopFullNoMask(Color *src, int xOffset, int yOffset)
