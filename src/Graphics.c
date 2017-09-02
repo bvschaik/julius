@@ -146,11 +146,11 @@ void Graphics_shadeRect(int x, int y, int width, int height, int darkness)
 	for (int yy = y; yy < y + height; yy++) {
 		for (int xx = x; xx < x + width; xx++) {
 			ScreenColor pixel = ScreenPixel(xx, yy);
-			int r = (pixel & 0xf80000) >> 19;
-			int g = (pixel & 0xfc00) >> 11;
-			int b = (pixel & 0xf8) >> 3;
+			int r = (pixel & 0xff0000) >> 16;
+			int g = (pixel & 0xff00) >> 8;
+			int b = (pixel & 0xff);
 			int grey = (r + g + b) / 3 >> darkness;
-			Color newPixel = (Color) (grey << 10 | grey << 5 | grey);
+			Color newPixel = (Color) (grey << 16 | grey << 8 | grey);
 			ScreenPixel(xx, yy) = newPixel;
 		}
 	}
