@@ -202,14 +202,14 @@ void UI_LaborPriorityDialog_drawBackground()
 	Widget_Panel_drawOuterPanel(baseOffsetX + 160, baseOffsetY + 176, 20, 9);
 	Widget_GameText_drawCentered(50, 25, baseOffsetX + 160, baseOffsetY + 185, 320, Font_LargeBlack);
 	for (int i = 0; i < 9; i++) {
-		Graphics_drawRect(baseOffsetX + 178 + 32 * i, baseOffsetY + 221, 27, 27, Color_Black);
+		Graphics_drawRect(baseOffsetX + 178 + 32 * i, baseOffsetY + 221, 27, 27, COLOR_BLACK);
 		Widget_GameText_drawCentered(50, 27 + i, baseOffsetX + 178 + 32 * i, baseOffsetY + 224, 27, Font_LargeBlack);
 		if (i >= priorityMaxItems) {
 			Graphics_shadeRect(baseOffsetX + 179 + 32 * i, baseOffsetY + 222, 25, 25, 1);
 		}
 	}
 
-	Graphics_drawRect(baseOffsetX + 180, baseOffsetY + 256, 280, 25, Color_Black);
+	Graphics_drawRect(baseOffsetX + 180, baseOffsetY + 256, 280, 25, COLOR_BLACK);
 	Widget_GameText_drawCentered(50, 26, baseOffsetX + 180, baseOffsetY + 263, 280, Font_NormalBlack);
 	Widget_GameText_drawCentered(13, 3, baseOffsetX + 160, baseOffsetY + 296, 320, Font_NormalBlack);
 }
@@ -221,15 +221,15 @@ void UI_LaborPriorityDialog_drawForeground()
 	
 	color_t color;
 	for (int i = 0; i < 9; i++) {
-		color = Color_Black;
+		color = COLOR_BLACK;
 		if (i == priorityFocusButtonId - 2) {
-			color = Color_Red;
+			color = COLOR_RED;
 		}
 		Graphics_drawRect(baseOffsetX + 178 + 32 * i, baseOffsetY + 221, 27, 27, color);
 	}
-	color = Color_Black;
+	color = COLOR_BLACK;
 	if (priorityFocusButtonId == 1) {
-		color = Color_Red;
+		color = COLOR_RED;
 	}
 	Graphics_drawRect(baseOffsetX + 180, baseOffsetY + 256, 280, 25, color);
 }

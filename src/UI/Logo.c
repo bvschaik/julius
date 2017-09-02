@@ -21,7 +21,7 @@ void UI_Logo_drawBackground()
 	Graphics_drawImage(GraphicId(ID_Graphic_Logo), Data_Screen.offset640x480.x, Data_Screen.offset640x480.y);
 	Widget_GameText_drawCenteredColored(13, 7,
 		(Data_Screen.width - 320) / 2, Data_Screen.offset640x480.y + 462,
-		320, Font_NormalPlain, Color_White);
+		320, Font_NormalPlain, COLOR_WHITE);
 }
 
 void UI_Logo_handleMouse()

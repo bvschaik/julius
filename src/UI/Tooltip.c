@@ -145,10 +145,10 @@ static void drawButtonTooltip(struct TooltipContext *c)
 			break;
 	}
 
-	Graphics_drawRect(c->x, c->y, c->width, c->height, Color_Black);
-	Graphics_fillRect(c->x + 1, c->y + 1, c->width - 2, c->height - 2, Color_White);
+	Graphics_drawRect(c->x, c->y, c->width, c->height, COLOR_BLACK);
+	Graphics_fillRect(c->x + 1, c->y + 1, c->width - 2, c->height - 2, COLOR_WHITE);
 	Widget_RichText_drawColored(text, c->x + 5, c->y + 7,
-		c->width - 5, lines, Color_Tooltip);
+		c->width - 5, lines, COLOR_TOOLTIP);
 }
 
 static uint8_t tmpString[1000];
@@ -183,10 +183,10 @@ static void drawOverlayTooltip(struct TooltipContext *c)
 		c->y = Data_Mouse.y - 72;
 	}
 
-	Graphics_drawRect(c->x, c->y, c->width, c->height, Color_Black);
-	Graphics_fillRect(c->x + 1, c->y + 1, c->width - 2, c->height - 2, Color_White);
+	Graphics_drawRect(c->x, c->y, c->width, c->height, COLOR_BLACK);
+	Graphics_fillRect(c->x + 1, c->y + 1, c->width - 2, c->height - 2, COLOR_WHITE);
 	Widget_RichText_drawColored(text, c->x + 5, c->y + 7,
-		c->width - 5, lines, Color_Tooltip);
+		c->width - 5, lines, COLOR_TOOLTIP);
 }
 
 static void drawSenateTooltip(struct TooltipContext *c)
@@ -204,28 +204,28 @@ static void drawSenateTooltip(struct TooltipContext *c)
 		c->y = Data_Mouse.y - 32;
 	}
 	
-	Graphics_drawRect(c->x, c->y, c->width, c->height, Color_Black);
-	Graphics_fillRect(c->x + 1, c->y + 1, c->width - 2, c->height - 2, Color_White);
+	Graphics_drawRect(c->x, c->y, c->width, c->height, COLOR_BLACK);
+	Graphics_fillRect(c->x + 1, c->y + 1, c->width - 2, c->height - 2, COLOR_WHITE);
 	
 	// unemployment
-	Widget_GameText_drawColored(68, 148, c->x + 5, c->y + 5, Font_SmallPlain, Color_Tooltip);
+	Widget_GameText_drawColored(68, 148, c->x + 5, c->y + 5, Font_SmallPlain, COLOR_TOOLTIP);
 	Widget_Text_drawNumberColored(Data_CityInfo.unemploymentPercentage, '@', "%",
-		c->x + 140, c->y + 5, Font_SmallPlain, Color_Tooltip);
+		c->x + 140, c->y + 5, Font_SmallPlain, COLOR_TOOLTIP);
 	
 	// ratings
-	Widget_GameText_drawColored(68, 149, c->x + 5, c->y + 19, Font_SmallPlain, Color_Tooltip);
+	Widget_GameText_drawColored(68, 149, c->x + 5, c->y + 19, Font_SmallPlain, COLOR_TOOLTIP);
 	Widget_Text_drawNumberColored(Data_CityInfo.ratingCulture, '@', " ",
-		c->x + 140, c->y + 19, Font_SmallPlain, Color_Tooltip);
+		c->x + 140, c->y + 19, Font_SmallPlain, COLOR_TOOLTIP);
 
-	Widget_GameText_drawColored(68, 150, c->x + 5, c->y + 33, Font_SmallPlain, Color_Tooltip);
+	Widget_GameText_drawColored(68, 150, c->x + 5, c->y + 33, Font_SmallPlain, COLOR_TOOLTIP);
 	Widget_Text_drawNumberColored(Data_CityInfo.ratingProsperity, '@', " ",
-		c->x + 140, c->y + 33, Font_SmallPlain, Color_Tooltip);
+		c->x + 140, c->y + 33, Font_SmallPlain, COLOR_TOOLTIP);
 
-	Widget_GameText_drawColored(68, 151, c->x + 5, c->y + 47, Font_SmallPlain, Color_Tooltip);
+	Widget_GameText_drawColored(68, 151, c->x + 5, c->y + 47, Font_SmallPlain, COLOR_TOOLTIP);
 	Widget_Text_drawNumberColored(Data_CityInfo.ratingPeace, '@', " ",
-		c->x + 140, c->y + 47, Font_SmallPlain, Color_Tooltip);
+		c->x + 140, c->y + 47, Font_SmallPlain, COLOR_TOOLTIP);
 
-	Widget_GameText_drawColored(68, 152, c->x + 5, c->y + 61, Font_SmallPlain, Color_Tooltip);
+	Widget_GameText_drawColored(68, 152, c->x + 5, c->y + 61, Font_SmallPlain, COLOR_TOOLTIP);
 	Widget_Text_drawNumberColored(Data_CityInfo.ratingFavor, '@', " ",
-		c->x + 140, c->y + 61, Font_SmallPlain, Color_Tooltip);
+		c->x + 140, c->y + 61, Font_SmallPlain, COLOR_TOOLTIP);
 }

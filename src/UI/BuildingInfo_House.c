@@ -166,7 +166,7 @@ void UI_BuildingInfo_drawHouse(BuildingInfoContext *c)
 		int width = Widget_GameText_draw(127, 40 + b->data.house.evolveTextId,
 			c->xOffset + 32, c->yOffset + 60, Font_NormalBlack);
 		width += Widget_GameText_drawColored(41, Data_Buildings[c->worstDesirabilityBuildingId].type,
-			c->xOffset + 32 + width, c->yOffset + 60, Font_NormalPlain, Color_Red);
+			c->xOffset + 32 + width, c->yOffset + 60, Font_NormalPlain, COLOR_RED);
 		Widget_Text_draw((uint8_t*)")", c->xOffset + 32 + width, c->yOffset + 60, Font_NormalBlack, 0);
 		Widget_GameText_drawMultiline(127, 41 + b->data.house.evolveTextId,
 			c->xOffset + 32, c->yOffset + 76, 16 * (c->widthBlocks - 4), Font_NormalBlack);

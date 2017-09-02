@@ -50,14 +50,14 @@ static void drawFootprintTopFullNoMask(const color_t *src, int xOffset, int yOff
 static void drawFootprintTile(const color_t *data, int xOffset, int yOffset, color_t colorMask)
 {
 	if (!colorMask) {
-		colorMask = Color_NoMask;
+		colorMask = COLOR_NO_MASK;
 	}
 	GraphicsClipInfo *clip = Graphics_getClipInfo(xOffset, yOffset, 58, 30);
 	if (!clip->isVisible) {
 		return;
 	}
 	// footprints are ALWAYS clipped in half, if they are clipped
-	if (clip->clipY == ClipNone && clip->clipX == ClipNone && colorMask == Color_NoMask) {
+	if (clip->clipY == ClipNone && clip->clipX == ClipNone && colorMask == COLOR_NO_MASK) {
 		drawFootprintTopFullNoMask(data, xOffset, yOffset);
 		return;
 	}
@@ -76,7 +76,7 @@ static void drawFootprintTile(const color_t *data, int xOffset, int yOffset, col
 				src += xMax + 2;
 			}
 			color_t *buffer = &ScreenPixel(xOffset + xStart, yOffset + y);
-			if (colorMask == Color_NoMask) {
+			if (colorMask == COLOR_NO_MASK) {
 				memcpy(buffer, src, xMax * sizeof(color_t));
 				src += xMax;
 			} else {
@@ -102,7 +102,7 @@ static void drawFootprintTile(const color_t *data, int xOffset, int yOffset, col
 				src += xMax + 2;
 			}
 			color_t *buffer = &ScreenPixel(xOffset + xStart, 15 + yOffset + y);
-			if (colorMask == Color_NoMask) {
+			if (colorMask == COLOR_NO_MASK) {
 				memcpy(buffer, src, xMax * sizeof(color_t));
 				src += xMax;
 			} else {

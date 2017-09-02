@@ -244,7 +244,7 @@ static void drawDialogVideo()
 		UI_City_drawForeground();
 	}
 	Widget_Panel_drawOuterPanel(data.x, data.y, 26, 28);
-	Graphics_drawRect(data.x + 7, data.y + 7, 402, 294, Color_Black);
+	Graphics_drawRect(data.x + 7, data.y + 7, 402, 294, COLOR_BLACK);
 	Widget_RichText_clearLinks();
 	
 	Widget_Panel_drawInnerPanel(data.x + 8, data.y + 308, 25, 6);

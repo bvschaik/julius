@@ -72,19 +72,19 @@ void Widget_Text_drawCursor(int xOffset, int yOffset)
 			Graphics_drawLine(
 				xOffset + inputCursor.xOffset - 3, yOffset + inputCursor.yOffset - 3,
 				xOffset + inputCursor.xOffset + 1, yOffset + inputCursor.yOffset - 3,
-				Color_White);
+				COLOR_WHITE);
 			Graphics_drawLine(
 				xOffset + inputCursor.xOffset - 1, yOffset + inputCursor.yOffset - 3,
 				xOffset + inputCursor.xOffset - 1, yOffset + inputCursor.yOffset + 13,
-				Color_White);
+				COLOR_WHITE);
 			Graphics_drawLine(
 				xOffset + inputCursor.xOffset - 3, yOffset + inputCursor.yOffset + 14,
 				xOffset + inputCursor.xOffset + 1, yOffset + inputCursor.yOffset + 14,
-				Color_White);
+				COLOR_WHITE);
 		} else {
 			Graphics_fillRect(
 				xOffset + inputCursor.xOffset, yOffset + inputCursor.yOffset + 14,
-				inputCursor.width, 2, Color_White);
+				inputCursor.width, 2, COLOR_WHITE);
 		}
 	}
 }

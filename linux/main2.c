@@ -221,10 +221,10 @@ void refresh()
 		lastFpsTime = then2;
 		numFrames = 0;
 	}
-	Graphics_fillRect(Data_Screen.width - 120, 0, Data_Screen.width, 20, Color_White);
-	Widget_Text_drawNumberColored(lastFps, 'f', "", Data_Screen.width - 120, 5, Font_NormalPlain, 0xf800);
-	Widget_Text_drawNumberColored(then - now, 'g', "", Data_Screen.width - 70, 5, Font_NormalPlain, 0xf800);
-	Widget_Text_drawNumberColored(then2 - then, 'd', "", Data_Screen.width - 40, 5, Font_NormalPlain, 0xf800);
+	Graphics_fillRect(Data_Screen.width - 120, 0, Data_Screen.width, 20, COLOR_WHITE);
+	Widget_Text_drawNumberColored(lastFps, 'f', "", Data_Screen.width - 120, 5, Font_NormalPlain, COLOR_RED);
+	Widget_Text_drawNumberColored(then - now, 'g', "", Data_Screen.width - 70, 5, Font_NormalPlain, COLOR_RED);
+	Widget_Text_drawNumberColored(then2 - then, 'd', "", Data_Screen.width - 40, 5, Font_NormalPlain, COLOR_RED);
 	
 	SDL_UpdateTexture(SDL.texture, NULL, Data_Screen.drawBuffer, Data_Screen.width * 4);
 	SDL_RenderCopy(SDL.renderer, SDL.texture, NULL, NULL);

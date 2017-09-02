@@ -55,13 +55,13 @@ void UI_Minimap_draw(int xOffset, int yOffset, int widthTiles, int heightTiles)
 {
 	Graphics_setClipRectangle(xOffset, yOffset, 2 * widthTiles, heightTiles);
 	
-	soldierColor = Color_Soldier;
+	soldierColor = COLOR_SOLDIER;
 	if (Data_Scenario.climate == Climate_Central) {
-		enemyColor = Color_EnemyCentral;
+		enemyColor = COLOR_ENEMY_CENTRAL;
 	} else if (Data_Scenario.climate == Climate_Northern) {
-		enemyColor = Color_EnemyNorthern;
+		enemyColor = COLOR_ENEMY_NORTHERN;
 	} else {
-		enemyColor = Color_EnemyDesert;
+		enemyColor = COLOR_ENEMY_DESERT;
 	}
 
 	setBounds(xOffset, yOffset, widthTiles, heightTiles);
@@ -108,7 +108,7 @@ static void drawMinimap(int xOffset, int yOffset, int widthTiles, int heightTile
 
 static int drawFigure(int xView, int yView, int gridOffset)
 {
-	color_t color = Color_Black;
+	color_t color = COLOR_BLACK;
 	int hasFigure = 0;
 
 	int figureId = Data_Grid_figureIds[gridOffset];
@@ -132,7 +132,7 @@ static int drawFigure(int xView, int yView, int gridOffset)
 		}
 		if (type == FIGURE_WOLF) {
 			hasFigure = 1;
-			color = Color_Black;
+			color = COLOR_BLACK;
 			break;
 		}
 		figureId = Data_Figures[figureId].nextFigureIdOnSameTile;
@@ -229,7 +229,7 @@ static void drawViewportRectangle(int xView, int yView, int widthTiles, int heig
 	Graphics_drawRect(xOffset, yOffset,
 		Data_CityView.widthInTiles * 2 + 4,
 		Data_CityView.heightInTiles - 4,
-		Color_Yellow);
+		COLOR_YELLOW);
 }
 
 static int getMouseGridOffset(int xOffset, int yOffset, int widthTiles, int heightTiles)

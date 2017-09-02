@@ -70,8 +70,8 @@ void UI_Advisor_Financial_drawBackground(int *advisorHeight)
 	ROW(60, 9, 170, Data_CityInfo.financeExportsLastYear, Data_CityInfo.financeExportsThisYear);
 	ROW(60, 20, 185, Data_CityInfo.financeDonatedLastYear, Data_CityInfo.financeDonatedThisYear);
 
-	Graphics_drawLine(baseOffsetX + 280, baseOffsetY + 198, baseOffsetX + 350, baseOffsetY + 198, Color_Black);
-	Graphics_drawLine(baseOffsetX + 420, baseOffsetY + 198, baseOffsetX + 490, baseOffsetY + 198, Color_Black);
+	Graphics_drawLine(baseOffsetX + 280, baseOffsetY + 198, baseOffsetX + 350, baseOffsetY + 198, COLOR_BLACK);
+	Graphics_drawLine(baseOffsetX + 420, baseOffsetY + 198, baseOffsetX + 490, baseOffsetY + 198, COLOR_BLACK);
 	
 	ROW(60, 10, 203, Data_CityInfo.financeTotalIncomeLastYear, Data_CityInfo.financeTotalIncomeThisYear);
 
@@ -90,8 +90,8 @@ void UI_Advisor_Financial_drawBackground(int *advisorHeight)
 	ROW(60, 16, 302, Data_CityInfo.financeSundriesLastYear, Data_CityInfo.financeSundriesThisYear);
 	ROW(60, 21, 317, Data_CityInfo.financeTributeLastYear, Data_CityInfo.financeTributeThisYear);
 
-	Graphics_drawLine(baseOffsetX + 280, baseOffsetY + 330, baseOffsetX + 350, baseOffsetY + 330, Color_Black);
-	Graphics_drawLine(baseOffsetX + 420, baseOffsetY + 330, baseOffsetX + 490, baseOffsetY + 330, Color_Black);
+	Graphics_drawLine(baseOffsetX + 280, baseOffsetY + 330, baseOffsetX + 350, baseOffsetY + 330, COLOR_BLACK);
+	Graphics_drawLine(baseOffsetX + 420, baseOffsetY + 330, baseOffsetX + 490, baseOffsetY + 330, COLOR_BLACK);
 	
 	ROW(60, 17, 335, Data_CityInfo.financeTotalExpensesLastYear, Data_CityInfo.financeTotalExpensesThisYear);
 	ROW(60, 18, 358, Data_CityInfo.financeNetInOutLastYear, Data_CityInfo.financeNetInOutThisYear);

@@ -279,7 +279,7 @@ static void drawHistoryGraph(int fullSize, int x, int y)
 						break;
 					default:
 						Graphics_drawLine(x + m, y + 200 - val,
-							x + m, y + 199, Color_Red);
+							x + m, y + 199, COLOR_RED);
 						break;
 				}
 			}
@@ -291,9 +291,9 @@ static void drawHistoryGraph(int fullSize, int x, int y)
 			int val = getPopulationAtMonth(maxMonths, m) >> yShift;
 			if (val > 0) {
 				if (maxMonths == 20) {
-					Graphics_fillRect(x + m, y + 50 - val, 4, val + 1, Color_Red);
+					Graphics_fillRect(x + m, y + 50 - val, 4, val + 1, COLOR_RED);
 				} else {
-					Graphics_drawLine(x + m, y + 50 - val, x + m, y + 50, Color_Red);
+					Graphics_drawLine(x + m, y + 50 - val, x + m, y + 50, COLOR_RED);
 				}
 			}
 		}
@@ -346,7 +346,7 @@ static void drawCensusGraph(int fullSize, int x, int y)
 		for (int i = 0; i < 100; i++) {
 			int val = Data_CityInfo.populationPerAge[i] >> yShift;
 			if (val > 0) {
-				Graphics_drawLine(x + i, y + 50 - val, x + i, y + 50, Color_Red);
+				Graphics_drawLine(x + i, y + 50 - val, x + i, y + 50, COLOR_RED);
 			}
 		}
 	}
@@ -398,7 +398,7 @@ static void drawSocietyGraph(int fullSize, int x, int y)
 		for (int i = 0; i < 20; i++) {
 			int val = Data_CityInfo.populationPerLevel[i] >> yShift;
 			if (val > 0) {
-				Graphics_fillRect(x + 5 * i, y + 50 - val, 4, val + 1, Color_Red);
+				Graphics_fillRect(x + 5 * i, y + 50 - val, 4, val + 1, COLOR_RED);
 			}
 		}
 	}

@@ -7,6 +7,8 @@
 #include "Data/Types.h"
 #include "Data/Constants.h"
 
+#include "graphics/color.h"
+
 #include <stdio.h> // remove later
 #include <stdlib.h> // remove later
 #include <string.h>
@@ -103,10 +105,10 @@ void Graphics_drawInsetRect(int x, int y, int width, int height)
 	if (height + y >= Data_Screen.height) {
 		height = Data_Screen.height - y;
 	}
-	Graphics_drawLine(x, y, x + width - 1, y, Color_InsetDark);
-	Graphics_drawLine(x + width - 1, y, x + width - 1, y + height - 1, Color_InsetLight);
-	Graphics_drawLine(x, y + height - 1, x + width - 1, y + height - 1, Color_InsetLight);
-	Graphics_drawLine(x, y, x, y + height - 1, Color_InsetDark);
+	Graphics_drawLine(x, y, x + width - 1, y, COLOR_INSET_DARK);
+	Graphics_drawLine(x + width - 1, y, x + width - 1, y + height - 1, COLOR_INSET_LIGHT);
+	Graphics_drawLine(x, y + height - 1, x + width - 1, y + height - 1, COLOR_INSET_LIGHT);
+	Graphics_drawLine(x, y, x, y + height - 1, COLOR_INSET_DARK);
 }
 
 void Graphics_fillRect(int x, int y, int width, int height, color_t color)
@@ -318,7 +320,7 @@ static void drawImageUncompressed(const image *img, const color_t *data, int xOf
         if (type == ColorType_None) {
             if (img->draw.type == 0) { // can be transparent
                 for (int x = clip->clippedPixelsLeft; x < xMax; x++, dst++) {
-                    if (*data != Color_Transparent) {
+                    if (*data != COLOR_TRANSPARENT) {
                         *dst = *data;
                     }
                     data++;
@@ -330,21 +332,21 @@ static void drawImageUncompressed(const image *img, const color_t *data, int xOf
             }
 		} else if (type == ColorType_Set) {
 			for (int x = clip->clippedPixelsLeft; x < xMax; x++, dst++) {
-				if (*data != Color_Transparent) {
+				if (*data != COLOR_TRANSPARENT) {
 					*dst = color;
 				}
 				data++;
 			}
 		} else if (type == ColorType_And) {
 			for (int x = clip->clippedPixelsLeft; x < xMax; x++, dst++) {
-				if (*data != Color_Transparent) {
+				if (*data != COLOR_TRANSPARENT) {
 					*dst = *data & color;
 				}
 				data++;
 			}
 		} else if (type == ColorType_Blend) {
 			for (int x = clip->clippedPixelsLeft; x < xMax; x++, dst++) {
-				if (*data != Color_Transparent) {
+				if (*data != COLOR_TRANSPARENT) {
 					*dst &= color;
 				}
 				data++;

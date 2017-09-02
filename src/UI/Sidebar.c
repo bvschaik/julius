@@ -166,10 +166,10 @@ static void drawNumberOfMessages()
 		if (Data_Message.totalMessages) {
 			Widget_Text_drawNumberCenteredColored(
 				Data_Message.totalMessages, '@', " ",
-				XOFFSET_EXPANDED + 74, 452, 32, Font_SmallPlain, Color_Black);
+				XOFFSET_EXPANDED + 74, 452, 32, Font_SmallPlain, COLOR_BLACK);
 			Widget_Text_drawNumberCenteredColored(
 				Data_Message.totalMessages, '@', " ",
-				XOFFSET_EXPANDED + 73, 453, 32, Font_SmallPlain, Color_White);
+				XOFFSET_EXPANDED + 73, 453, 32, Font_SmallPlain, COLOR_WHITE);
 		}
 	}
 }
@@ -220,7 +220,7 @@ static void drawFillerBorders()
 	}
 
 	int borderBottomHeight = BOTTOM_BORDER;
-	Graphics_fillRect(0, Data_Screen.height - borderBottomHeight, Data_Screen.width, borderBottomHeight, Color_Black);
+	Graphics_fillRect(0, Data_Screen.height - borderBottomHeight, Data_Screen.width, borderBottomHeight, COLOR_BLACK);
 }
 
 static void drawButtons()
@@ -255,9 +255,9 @@ void UI_Sidebar_drawMinimap(int force)
 		if (minimapRedrawRequested || Data_State.isScrollingMap || force) {
 			int xOffset = XOFFSET_EXPANDED;
 			UI_Minimap_draw(xOffset + 8, 59, 73, 111);
-			Graphics_drawLine(xOffset + 7, 58, xOffset + 153, 58, Color_Minimap_Dark);
-			Graphics_drawLine(xOffset + 7, 59, xOffset + 7, 170, Color_Minimap_Dark);
-			Graphics_drawLine(xOffset + 153, 59, xOffset + 153, 170, Color_Minimap_Light);
+			Graphics_drawLine(xOffset + 7, 58, xOffset + 153, 58, COLOR_MINIMAP_DARK);
+			Graphics_drawLine(xOffset + 7, 59, xOffset + 7, 170, COLOR_MINIMAP_DARK);
+			Graphics_drawLine(xOffset + 153, 59, xOffset + 153, 170, COLOR_MINIMAP_LIGHT);
 		}
 	}
 }
@@ -475,7 +475,7 @@ void UI_SlidingSidebar_drawForeground()
 	Widget_Button_drawImageButtons(xOffsetExpanded, 24, buttonTopExpanded, 6);
 
 	// black out minimap
-	Graphics_fillRect(xOffsetExpanded + 8, 59, 145, 111, Color_Black);
+	Graphics_fillRect(xOffsetExpanded + 8, 59, 145, 111, COLOR_BLACK);
 
 	drawOverlayText(xOffsetExpanded + 4);
 	UI_BuildingMenu_drawSidebarImage(xOffsetExpanded + 6, 1);

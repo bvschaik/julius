@@ -73,13 +73,13 @@ void UI_CityBuildings_drawBuildingCost()
 		Data_CityView.widthInPixels, Data_CityView.heightInPixels);
 	color_t color;
 	if (Data_State.selectedBuilding.cost <= Data_CityInfo.treasury) {
-		color = Color_Orange;
+		color = COLOR_ORANGE;
 	} else {
-		color = Color_Red;
+		color = COLOR_RED;
 	}
 	Widget_Text_drawNumberColored(Data_State.selectedBuilding.cost, '@', " ",
 		Data_CityView.selectedTile.xOffsetInPixels + 58 + 1,
-		Data_CityView.selectedTile.yOffsetInPixels + 1, Font_NormalPlain, Color_Black);
+		Data_CityView.selectedTile.yOffsetInPixels + 1, Font_NormalPlain, COLOR_BLACK);
 	Widget_Text_drawNumberColored(Data_State.selectedBuilding.cost, '@', " ",
 		Data_CityView.selectedTile.xOffsetInPixels + 58,
 		Data_CityView.selectedTile.yOffsetInPixels, Font_NormalPlain, color);
@@ -123,7 +123,7 @@ static void drawBuildingFootprints()
 			color_t colorMask = 0;
 			if (buildingId) {
 				if (Data_Buildings[buildingId].isDeleted) {
-					colorMask = Color_MaskRed;
+					colorMask = COLOR_MASK_RED;
 				}
 				if (x < 4) {
 					Sound_City_markBuildingView(buildingId, 0);
@@ -180,7 +180,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 				int graphicId = Data_Grid_graphicIds[gridOffset];
 				color_t colorMask = 0;
 				if (buildingId && Data_Buildings[buildingId].isDeleted) {
-					colorMask = Color_MaskRed;
+					colorMask = COLOR_MASK_RED;
 				}
 				switch (Data_Grid_bitfields[gridOffset] & Bitfield_Sizes) {
 					case Bitfield_Size1: DRAWTOP_SIZE1_C(graphicId, xGraphic, yGraphic, colorMask); break;
@@ -353,7 +353,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 					struct Data_Building *b = &Data_Buildings[buildingId];
 					int colorMask = 0;
 					if (buildingId && b->isDeleted) {
-						colorMask = Color_MaskRed;
+						colorMask = COLOR_MASK_RED;
 					}
 					if (b->type == BUILDING_DOCK) {
 						int numDockers = BUILDING_DOCK_getNumIdleDockers(buildingId);
@@ -492,7 +492,7 @@ void UI_CityBuildings_drawBridge(int gridOffset, int x, int y)
 	}
 	color_t colorMask = 0;
 	if (Data_Grid_bitfields[gridOffset] & Bitfield_Deleted) {
-		colorMask = Color_MaskRed;
+		colorMask = COLOR_MASK_RED;
 	}
 	int graphicId = GraphicId(ID_Graphic_Bridge);
 	switch (Data_Grid_spriteOffsets[gridOffset]) {

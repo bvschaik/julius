@@ -26,9 +26,9 @@ void Widget_Menu_drawSubMenu(MenuBarItem *menu, int focusSubMenu)
 		int yOffset = 30 + menu->yStart + sub->yStart;
 		if (i == focusSubMenu - 1) {
 			Graphics_fillRect(menu->xStart, yOffset - 2,
-				160, 16, Color_Black);
+				160, 16, COLOR_BLACK);
 			Widget_GameText_drawColored(menu->textGroup, sub->textNumber,
-				menu->xStart + 8, yOffset, Font_NormalPlain, Color_Orange
+				menu->xStart + 8, yOffset, Font_NormalPlain, COLOR_ORANGE
 			);
 		} else {
 			Widget_GameText_draw(menu->textGroup, sub->textNumber,

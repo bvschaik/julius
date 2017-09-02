@@ -262,74 +262,74 @@ static void drawBuildingGhostDefault()
 			int xOffset = xOffsetBase + xViewOffsets[i];
 			int yOffset = yOffsetBase + yViewOffsets[i];
 			if (fullyObstructed || tileObstructed) {
-				drawFlatTile(xOffset, yOffset, Color_MaskRed);
+				drawFlatTile(xOffset, yOffset, COLOR_MASK_RED);
 			} else {
-				drawFlatTile(xOffset, yOffset, Color_MaskGreen);
+				drawFlatTile(xOffset, yOffset, COLOR_MASK_GREEN);
 			}
 		}
 	} else {
 		// can place, draw ghost
 		if (BuildingIsFarm(type)) {
 			Graphics_drawIsometricFootprint(graphicId,
-				xOffsetBase, yOffsetBase, Color_MaskGreen);
+				xOffsetBase, yOffsetBase, COLOR_MASK_GREEN);
 			Graphics_drawIsometricTop(graphicId,
-				xOffsetBase, yOffsetBase, Color_MaskGreen);
+				xOffsetBase, yOffsetBase, COLOR_MASK_GREEN);
 			// fields
 			for (int i = 4; i < 9; i++) {
 				Graphics_drawIsometricFootprint(graphicId + 1,
 					xOffsetBase + xViewOffsets[i],
-					yOffsetBase + yViewOffsets[i], Color_MaskGreen);
+					yOffsetBase + yViewOffsets[i], COLOR_MASK_GREEN);
 			}
 		} else if (type == BUILDING_WAREHOUSE) {
 			Graphics_drawIsometricFootprint(graphicId,
-				xOffsetBase, yOffsetBase, Color_MaskGreen);
+				xOffsetBase, yOffsetBase, COLOR_MASK_GREEN);
 			Graphics_drawIsometricTop(graphicId,
-				xOffsetBase, yOffsetBase, Color_MaskGreen);
+				xOffsetBase, yOffsetBase, COLOR_MASK_GREEN);
 			Graphics_drawImageMasked(GraphicId(ID_Graphic_Warehouse) + 17,
-				xOffsetBase - 4, yOffsetBase - 42, Color_MaskGreen);
+				xOffsetBase - 4, yOffsetBase - 42, COLOR_MASK_GREEN);
 			int graphicIdSpace = GraphicId(ID_Graphic_WarehouseStorageEmpty);
 			for (int i = 1; i < 9; i++) {
 				int xOffset = xOffsetBase + xViewOffsets[i];
 				int yOffset = yOffsetBase + yViewOffsets[i];
 				Graphics_drawIsometricFootprint(graphicIdSpace,
-					xOffset, yOffset, Color_MaskGreen);
+					xOffset, yOffset, COLOR_MASK_GREEN);
 				Graphics_drawIsometricTop(graphicIdSpace,
-					xOffset, yOffset, Color_MaskGreen);
+					xOffset, yOffset, COLOR_MASK_GREEN);
 			}
 		} else if (type == BUILDING_GRANARY) {
 			Graphics_drawIsometricFootprint(graphicId,
-				xOffsetBase, yOffsetBase, Color_MaskGreen);
+				xOffsetBase, yOffsetBase, COLOR_MASK_GREEN);
 			Graphics_drawImageMasked(graphicId + 1,
 				xOffsetBase + GraphicSpriteOffsetX(graphicId + 1) - 32,
 				yOffsetBase + GraphicSpriteOffsetY(graphicId + 1) - 64,
-				Color_MaskGreen);
+				COLOR_MASK_GREEN);
 		} else if (type == BUILDING_HOUSE_VACANT_LOT) {
 			int graphicIdLot = GraphicId(ID_Graphic_HouseVacantLot);
 			Graphics_drawIsometricFootprint(graphicIdLot,
-				xOffsetBase, yOffsetBase, Color_MaskGreen);
+				xOffsetBase, yOffsetBase, COLOR_MASK_GREEN);
 			Graphics_drawIsometricTop(graphicIdLot,
-				xOffsetBase, yOffsetBase, Color_MaskGreen);
+				xOffsetBase, yOffsetBase, COLOR_MASK_GREEN);
 		} else if (type == BUILDING_TRIUMPHAL_ARCH) {
 			Graphics_drawIsometricFootprint(graphicId,
-				xOffsetBase, yOffsetBase, Color_MaskGreen);
+				xOffsetBase, yOffsetBase, COLOR_MASK_GREEN);
 			Graphics_drawIsometricTop(graphicId,
-				xOffsetBase, yOffsetBase, Color_MaskGreen);
+				xOffsetBase, yOffsetBase, COLOR_MASK_GREEN);
 			if (graphicId == GraphicId(ID_Graphic_TriumphalArch)) {
 				Graphics_drawImageMasked(graphicId + 1,
 					xOffsetBase + GraphicSpriteOffsetX(graphicId + 1) + 4,
 					yOffsetBase + GraphicSpriteOffsetY(graphicId + 1) - 51,
-					Color_MaskGreen);
+					COLOR_MASK_GREEN);
 			} else {
 				Graphics_drawImageMasked(graphicId + 1,
 					xOffsetBase + GraphicSpriteOffsetX(graphicId + 1) - 33,
 					yOffsetBase + GraphicSpriteOffsetY(graphicId + 1) - 56,
-					Color_MaskGreen);
+					COLOR_MASK_GREEN);
 			}
 		} else if (type != BUILDING_CLEAR_LAND) {
 			Graphics_drawIsometricFootprint(graphicId,
-				xOffsetBase, yOffsetBase, Color_MaskGreen);
+				xOffsetBase, yOffsetBase, COLOR_MASK_GREEN);
 			Graphics_drawIsometricTop(graphicId,
-				xOffsetBase, yOffsetBase, Color_MaskGreen);
+				xOffsetBase, yOffsetBase, COLOR_MASK_GREEN);
 		}
 	}
 }
@@ -361,12 +361,12 @@ static void drawBuildingGhostDraggableReservoir()
 			for (int i = 0; i < 9; i++) {
 				int xOffset = xOffsetBase + xViewOffsets[i];
 				int yOffset = yOffsetBase + yViewOffsets[i];
-				drawFlatTile(xOffset, yOffset, Color_MaskRed);
+				drawFlatTile(xOffset, yOffset, COLOR_MASK_RED);
 			}
 		} else {
 			int graphicId = GraphicId(ID_Graphic_Reservoir);
-			Graphics_drawIsometricFootprint(graphicId, xOffsetBase, yOffsetBase, Color_MaskGreen);
-			Graphics_drawIsometricTop(graphicId, xOffsetBase, yOffsetBase, Color_MaskGreen);
+			Graphics_drawIsometricFootprint(graphicId, xOffsetBase, yOffsetBase, COLOR_MASK_GREEN);
+			Graphics_drawIsometricTop(graphicId, xOffsetBase, yOffsetBase, COLOR_MASK_GREEN);
 		}
 	}
 	int xOffsetBase = Data_CityView.selectedTile.xOffsetInPixels;
@@ -375,19 +375,19 @@ static void drawBuildingGhostDraggableReservoir()
 		for (int i = 0; i < 9; i++) {
 			int xOffset = xOffsetBase + xViewOffsets[i];
 			int yOffset = yOffsetBase + yViewOffsets[i];
-			drawFlatTile(xOffset, yOffset, Color_MaskRed);
+			drawFlatTile(xOffset, yOffset, COLOR_MASK_RED);
 		}
 	} else {
 		int graphicId = GraphicId(ID_Graphic_Reservoir);
-		Graphics_drawIsometricFootprint(graphicId, xOffsetBase, yOffsetBase, Color_MaskGreen);
-		Graphics_drawIsometricTop(graphicId, xOffsetBase, yOffsetBase, Color_MaskGreen);
+		Graphics_drawIsometricFootprint(graphicId, xOffsetBase, yOffsetBase, COLOR_MASK_GREEN);
+		Graphics_drawIsometricTop(graphicId, xOffsetBase, yOffsetBase, COLOR_MASK_GREEN);
 		if (Terrain_existsTileWithinAreaWithType(
 			Data_Settings_Map.current.x - 2, Data_Settings_Map.current.y - 2,
 			5, Terrain_Water)) {
 			Graphics_drawImageMasked(graphicId + 1,
 				xOffsetBase - 58 + GraphicSpriteOffsetX(graphicId) - 2,
 				yOffsetBase + GraphicSpriteOffsetY(graphicId) - (GraphicHeight(graphicId) - 90),
-				Color_MaskGreen);
+				COLOR_MASK_GREEN);
 		}
 	}
 }
@@ -413,7 +413,7 @@ static void drawBuildingGhostAqueduct()
 	int xOffset = Data_CityView.selectedTile.xOffsetInPixels;
 	int yOffset = Data_CityView.selectedTile.yOffsetInPixels;
 	if (placementObstructed) {
-		drawFlatTile(xOffset, yOffset, Color_MaskRed);
+		drawFlatTile(xOffset, yOffset, COLOR_MASK_RED);
 	} else {
 		int gridOffset = Data_Settings_Map.current.gridOffset;
 		int graphicId = GraphicId(ID_Graphic_Aqueduct);
@@ -435,8 +435,8 @@ static void drawBuildingGhostAqueduct()
 		} else {
 			graphicId += graphic->groupOffset + 15;
 		}
-		Graphics_drawIsometricFootprint(graphicId, xOffset, yOffset, Color_MaskGreen);
-		Graphics_drawIsometricTop(graphicId, xOffset, yOffset, Color_MaskGreen);
+		Graphics_drawIsometricFootprint(graphicId, xOffset, yOffset, COLOR_MASK_GREEN);
+		Graphics_drawIsometricTop(graphicId, xOffset, yOffset, COLOR_MASK_GREEN);
 	}
 }
 
@@ -448,14 +448,14 @@ static void drawBuildingGhostFountain()
 
 	int graphicId = GraphicId(Constant_BuildingProperties[BUILDING_FOUNTAIN].graphicCategory);
 	if (Data_CityInfo.treasury <= MIN_TREASURY) {
-		drawFlatTile(xOffset, yOffset, Color_MaskRed);
+		drawFlatTile(xOffset, yOffset, COLOR_MASK_RED);
 	} else {
-		Graphics_drawIsometricFootprint(graphicId, xOffset, yOffset, Color_MaskGreen);
-		Graphics_drawIsometricTop(graphicId, xOffset, yOffset, Color_MaskGreen);
+		Graphics_drawIsometricFootprint(graphicId, xOffset, yOffset, COLOR_MASK_GREEN);
+		Graphics_drawIsometricTop(graphicId, xOffset, yOffset, COLOR_MASK_GREEN);
 		if (Data_Grid_terrain[gridOffset] & Terrain_ReservoirRange) {
 			Graphics_drawImageMasked(graphicId + 1,
 				xOffset + GraphicSpriteOffsetX(graphicId),
-				yOffset + GraphicSpriteOffsetY(graphicId), Color_MaskGreen);
+				yOffset + GraphicSpriteOffsetY(graphicId), COLOR_MASK_GREEN);
 		}
 	}
 }
@@ -493,15 +493,15 @@ static void drawBuildingGhostBathhouse()
 			int xOffset = xOffsetBase + xViewOffsets[i];
 			int yOffset = yOffsetBase + yViewOffsets[i];
 			if (fullyObstructed || tileObstructed) {
-				drawFlatTile(xOffset, yOffset, Color_MaskRed);
+				drawFlatTile(xOffset, yOffset, COLOR_MASK_RED);
 			} else {
-				drawFlatTile(xOffset, yOffset, Color_MaskGreen);
+				drawFlatTile(xOffset, yOffset, COLOR_MASK_GREEN);
 			}
 		}
 	} else {
 		int graphicId = GraphicId(Constant_BuildingProperties[BUILDING_BATHHOUSE].graphicCategory);
-		Graphics_drawIsometricFootprint(graphicId, xOffsetBase, yOffsetBase, Color_MaskGreen);
-		Graphics_drawIsometricTop(graphicId, xOffsetBase, yOffsetBase, Color_MaskGreen);
+		Graphics_drawIsometricFootprint(graphicId, xOffsetBase, yOffsetBase, COLOR_MASK_GREEN);
+		Graphics_drawIsometricTop(graphicId, xOffsetBase, yOffsetBase, COLOR_MASK_GREEN);
 		int hasWater = 0;
 		for (int i = 0; i < numTiles; i++) { // FIXED: was not accurate on rotated maps
 			int tileOffset = gridOffset + tileGridOffsets[orientationIndex][i];
@@ -513,7 +513,7 @@ static void drawBuildingGhostBathhouse()
 			Graphics_drawImageMasked(graphicId - 1,
 				xOffsetBase + GraphicSpriteOffsetX(graphicId),
 				yOffsetBase + GraphicSpriteOffsetY(graphicId),
-				Color_MaskGreen);
+				COLOR_MASK_GREEN);
 		}
 	}
 }
@@ -542,7 +542,7 @@ static void drawBuildingGhostBridge()
 	if (obstructed) {
 		int xOffset = Data_CityView.selectedTile.xOffsetInPixels;
 		int yOffset = Data_CityView.selectedTile.yOffsetInPixels;
-		drawFlatTile(xOffset, yOffset, length > 0 ? Color_MaskGreen : Color_MaskRed);
+		drawFlatTile(xOffset, yOffset, length > 0 ? COLOR_MASK_GREEN : COLOR_MASK_RED);
 		if (length > 1) {
 			switch (dir) {
 				case Dir_0_Top:
@@ -563,7 +563,7 @@ static void drawBuildingGhostBridge()
 					break;
 				default: return;
 			}
-			drawFlatTile(xOffset, yOffset, Color_MaskRed);
+			drawFlatTile(xOffset, yOffset, COLOR_MASK_RED);
 		}
 		return;
 	}
@@ -610,7 +610,7 @@ static void drawBuildingGhostBridge()
 				yOffset = yOffsetBase - 20;
 				break;
 		}
-		Graphics_drawImageMasked(graphicId, xOffset, yOffset, Color_MaskGreen);
+		Graphics_drawImageMasked(graphicId, xOffset, yOffset, COLOR_MASK_GREEN);
 		tiles[numTiles].xOffset = xOffset;
 		tiles[numTiles].yOffset = yOffset;
 		tiles[numTiles++].graphicId = graphicId;
@@ -650,7 +650,7 @@ static void drawBuildingGhostBridge()
 				}
 				yOffset = yOffsetBase - 21;
 			}
-			Graphics_drawImageMasked(graphicId, xOffset, yOffset, Color_MaskGreen);
+			Graphics_drawImageMasked(graphicId, xOffset, yOffset, COLOR_MASK_GREEN);
 			tiles[numTiles].xOffset = xOffset;
 			tiles[numTiles].yOffset = yOffset;
 			tiles[numTiles++].graphicId = graphicId;
@@ -690,7 +690,7 @@ static void drawBuildingGhostBridge()
 				yOffset = yOffsetBase - 53;
 				break;
 		}
-		Graphics_drawImageMasked(graphicId, xOffset, yOffset, Color_MaskGreen);
+		Graphics_drawImageMasked(graphicId, xOffset, yOffset, COLOR_MASK_GREEN);
 		tiles[numTiles].xOffset = xOffset;
 		tiles[numTiles].yOffset = yOffset;
 		tiles[numTiles++].graphicId = graphicId;
@@ -743,7 +743,7 @@ static void drawBuildingGhostBridge()
 					yOffset = yOffsetBase - 38;
 				}
 			}
-			Graphics_drawImageMasked(graphicId, xOffset, yOffset, Color_MaskGreen);
+			Graphics_drawImageMasked(graphicId, xOffset, yOffset, COLOR_MASK_GREEN);
 			tiles[numTiles].xOffset = xOffset;
 			tiles[numTiles].yOffset = yOffset;
 			tiles[numTiles++].graphicId = graphicId;
@@ -753,7 +753,7 @@ static void drawBuildingGhostBridge()
 		// draw in opposite order
 		for (int i = numTiles - 1; i >= 0; i--) {
 			Graphics_drawImageMasked(tiles[i].graphicId,
-				tiles[i].xOffset, tiles[i].yOffset, Color_MaskGreen);
+				tiles[i].xOffset, tiles[i].yOffset, COLOR_MASK_GREEN);
 		}
 	}
 }
@@ -804,9 +804,9 @@ static void drawBuildingGhostFort()
 			int xOffset = xOffsetBase + xViewOffsets[i];
 			int yOffset = yOffsetBase + yViewOffsets[i];
 			if (fullyObstructed || tileObstructed) {
-				drawFlatTile(xOffset, yOffset, Color_MaskRed);
+				drawFlatTile(xOffset, yOffset, COLOR_MASK_RED);
 			} else {
-				drawFlatTile(xOffset, yOffset, Color_MaskGreen);
+				drawFlatTile(xOffset, yOffset, COLOR_MASK_GREEN);
 			}
 		}
 		for (int i = 0; i < numTilesGround; i++) {
@@ -818,27 +818,27 @@ static void drawBuildingGhostFort()
 			int xOffset = xOffsetGround + xViewOffsets[i];
 			int yOffset = yOffsetGround + yViewOffsets[i];
 			if (fullyObstructed || tileObstructed) {
-				drawFlatTile(xOffset, yOffset, Color_MaskRed);
+				drawFlatTile(xOffset, yOffset, COLOR_MASK_RED);
 			} else {
-				drawFlatTile(xOffset, yOffset, Color_MaskGreen);
+				drawFlatTile(xOffset, yOffset, COLOR_MASK_GREEN);
 			}
 		}
 	} else {
 		int graphicId = GraphicId(ID_Graphic_Fort);
 		if (orientationIndex == 0 || orientationIndex == 3) {
 			// draw fort first
-			Graphics_drawIsometricFootprint(graphicId, xOffsetBase, yOffsetBase, Color_MaskGreen);
-			Graphics_drawIsometricTop(graphicId, xOffsetBase, yOffsetBase, Color_MaskGreen);
+			Graphics_drawIsometricFootprint(graphicId, xOffsetBase, yOffsetBase, COLOR_MASK_GREEN);
+			Graphics_drawIsometricTop(graphicId, xOffsetBase, yOffsetBase, COLOR_MASK_GREEN);
 			// then ground
-			Graphics_drawIsometricFootprint(graphicId + 1, xOffsetGround, yOffsetGround, Color_MaskGreen);
-			Graphics_drawIsometricTop(graphicId + 1, xOffsetGround, yOffsetGround, Color_MaskGreen);
+			Graphics_drawIsometricFootprint(graphicId + 1, xOffsetGround, yOffsetGround, COLOR_MASK_GREEN);
+			Graphics_drawIsometricTop(graphicId + 1, xOffsetGround, yOffsetGround, COLOR_MASK_GREEN);
 		} else {
 			// draw ground first
-			Graphics_drawIsometricFootprint(graphicId + 1, xOffsetGround, yOffsetGround, Color_MaskGreen);
-			Graphics_drawIsometricTop(graphicId + 1, xOffsetGround, yOffsetGround, Color_MaskGreen);
+			Graphics_drawIsometricFootprint(graphicId + 1, xOffsetGround, yOffsetGround, COLOR_MASK_GREEN);
+			Graphics_drawIsometricTop(graphicId + 1, xOffsetGround, yOffsetGround, COLOR_MASK_GREEN);
 			// then fort
-			Graphics_drawIsometricFootprint(graphicId, xOffsetBase, yOffsetBase, Color_MaskGreen);
-			Graphics_drawIsometricTop(graphicId, xOffsetBase, yOffsetBase, Color_MaskGreen);
+			Graphics_drawIsometricFootprint(graphicId, xOffsetBase, yOffsetBase, COLOR_MASK_GREEN);
+			Graphics_drawIsometricTop(graphicId, xOffsetBase, yOffsetBase, COLOR_MASK_GREEN);
 		}
 	}
 }
@@ -892,9 +892,9 @@ static void drawBuildingGhostHippodrome()
 			int xOffset = xOffsetBase1 + xViewOffsets[i];
 			int yOffset = yOffsetBase1 + yViewOffsets[i];
 			if (fullyObstructed || tileObstructed) {
-				drawFlatTile(xOffset, yOffset, Color_MaskRed);
+				drawFlatTile(xOffset, yOffset, COLOR_MASK_RED);
 			} else {
-				drawFlatTile(xOffset, yOffset, Color_MaskGreen);
+				drawFlatTile(xOffset, yOffset, COLOR_MASK_GREEN);
 			}
 		}
 		for (int i = 0; i < numTiles; i++) {
@@ -906,9 +906,9 @@ static void drawBuildingGhostHippodrome()
 			int xOffset = xOffsetBase2 + xViewOffsets[i];
 			int yOffset = yOffsetBase2 + yViewOffsets[i];
 			if (fullyObstructed || tileObstructed) {
-				drawFlatTile(xOffset, yOffset, Color_MaskRed);
+				drawFlatTile(xOffset, yOffset, COLOR_MASK_RED);
 			} else {
-				drawFlatTile(xOffset, yOffset, Color_MaskGreen);
+				drawFlatTile(xOffset, yOffset, COLOR_MASK_GREEN);
 			}
 		}
 		for (int i = 0; i < numTiles; i++) {
@@ -920,9 +920,9 @@ static void drawBuildingGhostHippodrome()
 			int xOffset = xOffsetBase3 + xViewOffsets[i];
 			int yOffset = yOffsetBase3 + yViewOffsets[i];
 			if (fullyObstructed || tileObstructed) {
-				drawFlatTile(xOffset, yOffset, Color_MaskRed);
+				drawFlatTile(xOffset, yOffset, COLOR_MASK_RED);
 			} else {
-				drawFlatTile(xOffset, yOffset, Color_MaskGreen);
+				drawFlatTile(xOffset, yOffset, COLOR_MASK_GREEN);
 			}
 		}
 	} else {
@@ -930,70 +930,70 @@ static void drawBuildingGhostHippodrome()
 			int graphicId = GraphicId(ID_Graphic_Hippodrome2);
 			// part 1
 			Graphics_drawIsometricFootprint(graphicId,
-				xOffsetBase1, yOffsetBase1, Color_MaskGreen);
+				xOffsetBase1, yOffsetBase1, COLOR_MASK_GREEN);
 			Graphics_drawIsometricTop(graphicId,
-				xOffsetBase1, yOffsetBase1, Color_MaskGreen);
+				xOffsetBase1, yOffsetBase1, COLOR_MASK_GREEN);
 			// part 2
 			Graphics_drawIsometricFootprint(graphicId + 2,
-				xOffsetBase2, yOffsetBase2, Color_MaskGreen);
+				xOffsetBase2, yOffsetBase2, COLOR_MASK_GREEN);
 			Graphics_drawIsometricTop(graphicId + 2,
-				xOffsetBase2, yOffsetBase2, Color_MaskGreen);
+				xOffsetBase2, yOffsetBase2, COLOR_MASK_GREEN);
 			// part 3
 			Graphics_drawIsometricFootprint(graphicId + 4,
-				xOffsetBase3, yOffsetBase3, Color_MaskGreen);
+				xOffsetBase3, yOffsetBase3, COLOR_MASK_GREEN);
 			Graphics_drawIsometricTop(graphicId + 4,
-				xOffsetBase3, yOffsetBase3, Color_MaskGreen);
+				xOffsetBase3, yOffsetBase3, COLOR_MASK_GREEN);
 		} else if (orientationIndex == 1) {
 			int graphicId = GraphicId(ID_Graphic_Hippodrome1);
 			// part 3
 			Graphics_drawIsometricFootprint(graphicId,
-				xOffsetBase3, yOffsetBase3, Color_MaskGreen);
+				xOffsetBase3, yOffsetBase3, COLOR_MASK_GREEN);
 			Graphics_drawIsometricTop(graphicId,
-				xOffsetBase3, yOffsetBase3, Color_MaskGreen);
+				xOffsetBase3, yOffsetBase3, COLOR_MASK_GREEN);
 			// part 2
 			Graphics_drawIsometricFootprint(graphicId + 2,
-				xOffsetBase2, yOffsetBase2, Color_MaskGreen);
+				xOffsetBase2, yOffsetBase2, COLOR_MASK_GREEN);
 			Graphics_drawIsometricTop(graphicId + 2,
-				xOffsetBase2, yOffsetBase2, Color_MaskGreen);
+				xOffsetBase2, yOffsetBase2, COLOR_MASK_GREEN);
 			// part 1
 			Graphics_drawIsometricFootprint(graphicId + 4,
-				xOffsetBase1, yOffsetBase1, Color_MaskGreen);
+				xOffsetBase1, yOffsetBase1, COLOR_MASK_GREEN);
 			Graphics_drawIsometricTop(graphicId + 4,
-				xOffsetBase1, yOffsetBase1, Color_MaskGreen);
+				xOffsetBase1, yOffsetBase1, COLOR_MASK_GREEN);
 		} else if (orientationIndex == 2) {
 			int graphicId = GraphicId(ID_Graphic_Hippodrome2);
 			// part 1
 			Graphics_drawIsometricFootprint(graphicId + 4,
-				xOffsetBase1, yOffsetBase1, Color_MaskGreen);
+				xOffsetBase1, yOffsetBase1, COLOR_MASK_GREEN);
 			Graphics_drawIsometricTop(graphicId + 4,
-				xOffsetBase1, yOffsetBase1, Color_MaskGreen);
+				xOffsetBase1, yOffsetBase1, COLOR_MASK_GREEN);
 			// part 2
 			Graphics_drawIsometricFootprint(graphicId + 2,
-				xOffsetBase2, yOffsetBase2, Color_MaskGreen);
+				xOffsetBase2, yOffsetBase2, COLOR_MASK_GREEN);
 			Graphics_drawIsometricTop(graphicId + 2,
-				xOffsetBase2, yOffsetBase2, Color_MaskGreen);
+				xOffsetBase2, yOffsetBase2, COLOR_MASK_GREEN);
 			// part 3
 			Graphics_drawIsometricFootprint(graphicId,
-				xOffsetBase3, yOffsetBase3, Color_MaskGreen);
+				xOffsetBase3, yOffsetBase3, COLOR_MASK_GREEN);
 			Graphics_drawIsometricTop(graphicId,
-				xOffsetBase3, yOffsetBase3, Color_MaskGreen);
+				xOffsetBase3, yOffsetBase3, COLOR_MASK_GREEN);
 		} else if (orientationIndex == 3) {
 			int graphicId = GraphicId(ID_Graphic_Hippodrome1);
 			// part 3
 			Graphics_drawIsometricFootprint(graphicId + 4,
-				xOffsetBase3, yOffsetBase3, Color_MaskGreen);
+				xOffsetBase3, yOffsetBase3, COLOR_MASK_GREEN);
 			Graphics_drawIsometricTop(graphicId + 4,
-				xOffsetBase3, yOffsetBase3, Color_MaskGreen);
+				xOffsetBase3, yOffsetBase3, COLOR_MASK_GREEN);
 			// part 2
 			Graphics_drawIsometricFootprint(graphicId + 2,
-				xOffsetBase2, yOffsetBase2, Color_MaskGreen);
+				xOffsetBase2, yOffsetBase2, COLOR_MASK_GREEN);
 			Graphics_drawIsometricTop(graphicId + 2,
-				xOffsetBase2, yOffsetBase2, Color_MaskGreen);
+				xOffsetBase2, yOffsetBase2, COLOR_MASK_GREEN);
 			// part 1
 			Graphics_drawIsometricFootprint(graphicId,
-				xOffsetBase1, yOffsetBase1, Color_MaskGreen);
+				xOffsetBase1, yOffsetBase1, COLOR_MASK_GREEN);
 			Graphics_drawIsometricTop(graphicId,
-				xOffsetBase1, yOffsetBase1, Color_MaskGreen);
+				xOffsetBase1, yOffsetBase1, COLOR_MASK_GREEN);
 		}
 	}
 }
@@ -1011,7 +1011,7 @@ static void drawBuildingGhostShipyardWharf()
 		for (int i = 0; i < 4; i++) {
 			int xOffset = Data_CityView.selectedTile.xOffsetInPixels + xViewOffsets[i];
 			int yOffset = Data_CityView.selectedTile.yOffsetInPixels + yViewOffsets[i];
-			drawFlatTile(xOffset, yOffset, Color_MaskRed);
+			drawFlatTile(xOffset, yOffset, COLOR_MASK_RED);
 		}
 	} else {
 		int type = Data_State.selectedBuilding.type;
@@ -1019,8 +1019,8 @@ static void drawBuildingGhostShipyardWharf()
 			Constant_BuildingProperties[type].graphicOffset + dirRelative;
 		int xOffset = Data_CityView.selectedTile.xOffsetInPixels;
 		int yOffset = Data_CityView.selectedTile.yOffsetInPixels;
-		Graphics_drawIsometricFootprint(graphicId, xOffset, yOffset, Color_MaskGreen);
-		Graphics_drawIsometricTop(graphicId, xOffset, yOffset, Color_MaskGreen);
+		Graphics_drawIsometricFootprint(graphicId, xOffset, yOffset, COLOR_MASK_GREEN);
+		Graphics_drawIsometricTop(graphicId, xOffset, yOffset, COLOR_MASK_GREEN);
 	}
 }
 
@@ -1037,7 +1037,7 @@ static void drawBuildingGhostDock()
 		for (int i = 0; i < 9; i++) {
 			int xOffset = Data_CityView.selectedTile.xOffsetInPixels + xViewOffsets[i];
 			int yOffset = Data_CityView.selectedTile.yOffsetInPixels + yViewOffsets[i];
-			drawFlatTile(xOffset, yOffset, Color_MaskRed);
+			drawFlatTile(xOffset, yOffset, COLOR_MASK_RED);
 		}
 	} else {
 		int graphicId;
@@ -1049,8 +1049,8 @@ static void drawBuildingGhostDock()
 		}
 		int xOffset = Data_CityView.selectedTile.xOffsetInPixels;
 		int yOffset = Data_CityView.selectedTile.yOffsetInPixels;
-		Graphics_drawIsometricFootprint(graphicId, xOffset, yOffset, Color_MaskGreen);
-		Graphics_drawIsometricTop(graphicId, xOffset, yOffset, Color_MaskGreen);
+		Graphics_drawIsometricFootprint(graphicId, xOffset, yOffset, COLOR_MASK_GREEN);
+		Graphics_drawIsometricTop(graphicId, xOffset, yOffset, COLOR_MASK_GREEN);
 	}
 }
 
@@ -1081,10 +1081,10 @@ static void drawBuildingGhostRoad()
 		tileObstructed = 1;
 	}
 	if (tileObstructed) {
-		drawFlatTile(xOffset, yOffset, Color_MaskRed);
+		drawFlatTile(xOffset, yOffset, COLOR_MASK_RED);
 	} else {
-		Graphics_drawIsometricFootprint(graphicId, xOffset, yOffset, Color_MaskGreen);
-		Graphics_drawIsometricTop(graphicId, xOffset, yOffset, Color_MaskGreen);
+		Graphics_drawIsometricFootprint(graphicId, xOffset, yOffset, COLOR_MASK_GREEN);
+		Graphics_drawIsometricTop(graphicId, xOffset, yOffset, COLOR_MASK_GREEN);
 	}
 }
 
