@@ -3,8 +3,6 @@
 
 #include <stdint.h>
 
-typedef uint32_t Color;
-
 #define Color_Black 0x000000
 #define Color_Red 0xff0000
 #define Color_Orange 0xff5a08

@@ -21,7 +21,7 @@ static void drawBuildingGhostShipyardWharf();
 static void drawBuildingGhostDock();
 static void drawBuildingGhostRoad();
 static void drawBuildingGhostDefault();
-static void drawFlatTile(int xOffset, int yOffset, Color mask);
+static void drawFlatTile(int xOffset, int yOffset, color_t mask);
 
 static const int xViewOffsets[25] = {
 	0,
@@ -1088,7 +1088,7 @@ static void drawBuildingGhostRoad()
 	}
 }
 
-static void drawFlatTile(int xOffset, int yOffset, Color mask)
+static void drawFlatTile(int xOffset, int yOffset, color_t mask)
 {
 	Graphics_drawImageBlend(GraphicId(ID_Graphic_FlatTile), xOffset, yOffset, mask);
 }

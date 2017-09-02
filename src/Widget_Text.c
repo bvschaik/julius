@@ -45,7 +45,7 @@ static struct {
 	int yOffset;
 } inputCursor;
 
-static int drawCharacter(Font font, unsigned int c, int x, int y, int lineHeight, Color color);
+static int drawCharacter(Font font, unsigned int c, int x, int y, int lineHeight, color_t color);
 
 void Widget_Text_captureCursor()
 {
@@ -196,7 +196,7 @@ static int getWordWidth(const unsigned char *str, Font font, int *outNumChars)
 	return width;
 }
 
-void Widget_Text_drawCentered(const uint8_t *str, int x, int y, int boxWidth, Font font, Color color)
+void Widget_Text_drawCentered(const uint8_t *str, int x, int y, int boxWidth, Font font, color_t color)
 {
 	int offset = (boxWidth - Widget_Text_getWidth(str, font)) / 2;
 	if (offset < 0) {
@@ -205,7 +205,7 @@ void Widget_Text_drawCentered(const uint8_t *str, int x, int y, int boxWidth, Fo
 	Widget_Text_draw(str, offset + x, y, font, color);
 }
 
-int Widget_Text_draw(const uint8_t *str, int x, int y, Font font, Color color)
+int Widget_Text_draw(const uint8_t *str, int x, int y, Font font, color_t color)
 {
 	int letterSpacing;
 	int lineHeight;
@@ -282,7 +282,7 @@ int Widget_Text_draw(const uint8_t *str, int x, int y, Font font, Color color)
 	return currentX - x;
 }
 
-static int drawCharacter(Font font, unsigned int c, int x, int y, int lineHeight, Color color)
+static int drawCharacter(Font font, unsigned int c, int x, int y, int lineHeight, color_t color)
 {
 	int graphicOffset = map_charToFontGraphic[c];
 	if (!graphicOffset) {
@@ -322,7 +322,7 @@ int Widget_Text_drawNumber(int value, char prefix, const char *postfix, int xOff
 	return Widget_Text_draw(str, xOffset, yOffset, font, 0);
 }
 
-int Widget_Text_drawNumberColored(int value, char prefix, const char *postfix, int xOffset, int yOffset, Font font, Color color)
+int Widget_Text_drawNumberColored(int value, char prefix, const char *postfix, int xOffset, int yOffset, Font font, color_t color)
 {
 	uint8_t str[100];
 	numberToString(str, value, prefix, postfix);
@@ -336,7 +336,7 @@ void Widget_Text_drawNumberCentered(int value, char prefix, const char *postfix,
 	Widget_Text_drawCentered(str, xOffset, yOffset, boxWidth, font, 0);
 }
 
-void Widget_Text_drawNumberCenteredColored(int value, char prefix, const char *postfix, int xOffset, int yOffset, int boxWidth, Font font, Color color)
+void Widget_Text_drawNumberCenteredColored(int value, char prefix, const char *postfix, int xOffset, int yOffset, int boxWidth, Font font, color_t color)
 {
 	uint8_t str[100];
 	numberToString(str, value, prefix, postfix);
@@ -350,7 +350,7 @@ int Widget_GameText_draw(int group, int number, int xOffset, int yOffset, Font f
 	return Widget_Text_draw(str, xOffset, yOffset, font, 0);
 }
 
-int Widget_GameText_drawColored(int group, int number, int xOffset, int yOffset, Font font, Color color)
+int Widget_GameText_drawColored(int group, int number, int xOffset, int yOffset, Font font, color_t color)
 {
     const uint8_t *str = lang_get_string(group, number);
 	return Widget_Text_draw(str, xOffset, yOffset, font, color);
@@ -362,7 +362,7 @@ void Widget_GameText_drawCentered(int group, int number, int xOffset, int yOffse
 	Widget_Text_drawCentered(str, xOffset, yOffset, boxWidth, font, 0);
 }
 
-void Widget_GameText_drawCenteredColored(int group, int number, int xOffset, int yOffset, int boxWidth, Font font, Color color)
+void Widget_GameText_drawCenteredColored(int group, int number, int xOffset, int yOffset, int boxWidth, Font font, color_t color)
 {
     const uint8_t *str = lang_get_string(group, number);
 	Widget_Text_drawCentered(str, xOffset, yOffset, boxWidth, font, color);
@@ -399,7 +399,7 @@ int Widget_GameText_drawYear(int year, int xOffset, int yOffset, Font font)
 	return width;
 }
 
-int Widget_GameText_drawYearColored(int year, int xOffset, int yOffset, Font font, Color color)
+int Widget_GameText_drawYearColored(int year, int xOffset, int yOffset, Font font, color_t color)
 {
 	int width = 0;
 	if (year >= 0) {
@@ -494,9 +494,9 @@ int Widget_GameText_drawMultiline(int group, int number, int xOffset, int yOffse
 
 #define MAX_LINKS 50
 
-static void drawRichTextLine(const unsigned char *str, int x, int y, Color color, int measureOnly);
+static void drawRichTextLine(const unsigned char *str, int x, int y, color_t color, int measureOnly);
 static int getRichTextWordWidth(const unsigned char *str, int *outNumChars);
-static int drawRichTextCharacter(Font font, unsigned int c, int x, int y, Color color, int measureOnly);
+static int drawRichTextCharacter(Font font, unsigned int c, int x, int y, color_t color, int measureOnly);
 
 static ImageButton imageButtonScrollUp = {
 	0, 0, 39, 26, ImageButton_Scroll, 96, 8, Widget_RichText_scroll, Widget_Button_doNothing, 0, 1, 1
@@ -602,7 +602,7 @@ void Widget_RichText_restore()
 }
 
 static int drawRichText(const char *str, int xOffset, int yOffset,
-						int boxWidth, int heightLines, Color color, int measureOnly)
+						int boxWidth, int heightLines, color_t color, int measureOnly)
 {
 	int graphicHeightLines = 0;
 	int graphicId = 0;
@@ -726,12 +726,12 @@ int Widget_RichText_draw(const char *str, int xOffset, int yOffset,
 }
 
 int Widget_RichText_drawColored(const char *str, int xOffset, int yOffset,
-								int boxWidth, int heightLines, Color color)
+								int boxWidth, int heightLines, color_t color)
 {
 	return drawRichText(str, xOffset, yOffset, boxWidth, heightLines, color, 0);
 }
 
-static void drawRichTextLine(const unsigned char *str, int x, int y, Color color, int measureOnly)
+static void drawRichTextLine(const unsigned char *str, int x, int y, color_t color, int measureOnly)
 {
 	int numLinkChars = 0;
 	for (unsigned char c = *str; c; c = *(++str)) {
@@ -810,7 +810,7 @@ static int getRichTextWordWidth(const unsigned char *str, int *outNumChars)
 	return width;
 }
 
-static int drawRichTextCharacter(Font font, unsigned int c, int x, int y, Color color, int measureOnly)
+static int drawRichTextCharacter(Font font, unsigned int c, int x, int y, color_t color, int measureOnly)
 {
 	int graphicOffset = map_charToFontGraphic[c];
 	if (!graphicOffset) {

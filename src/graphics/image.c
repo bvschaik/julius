@@ -86,15 +86,15 @@ static struct {
     char bitmaps[100][200];
     image main[MAIN_ENTRIES];
     image enemy[ENEMY_ENTRIES];
-    color *main_data;
-    color *enemy_data;
+    color_t *main_data;
+    color_t *enemy_data;
     uint8_t *tmp_data;
 } data = {.current_climate = -1};
 
 int image_init()
 {
-    data.enemy_data = (color *) malloc(ENEMY_DATA_SIZE);
-    data.main_data = (color *) malloc(MAIN_DATA_SIZE);
+    data.enemy_data = (color_t *) malloc(ENEMY_DATA_SIZE);
+    data.main_data = (color_t *) malloc(MAIN_DATA_SIZE);
     data.tmp_data = (uint8_t *) malloc(SCRATCH_DATA_SIZE);
     if (!data.enemy_data || !data.main_data || !data.tmp_data) {
         return 0;
@@ -162,14 +162,14 @@ static void read_header(buffer *buf)
     buffer_read_raw(buf, data.bitmaps, 20000);
 }
 
-static color to_32_bit(uint16_t c)
+static color_t to_32_bit(uint16_t c)
 {
     return ((c & 0x7c00) << 9) | ((c & 0x7000) << 4) |
            ((c & 0x3e0) << 6)  | ((c & 0x380) << 1) |
            ((c & 0x1f) << 3)   | ((c & 0x1c) >> 2);
 }
 
-static int convert_uncompressed(buffer *buf, int buf_length, color *dst)
+static int convert_uncompressed(buffer *buf, int buf_length, color_t *dst)
 {
     for (int i = 0; i < buf_length; i += 2) {
         *dst = to_32_bit(buffer_read_u16(buf));
@@ -178,7 +178,7 @@ static int convert_uncompressed(buffer *buf, int buf_length, color *dst)
     return buf_length / 2;
 }
 
-static int convert_compressed(buffer *buf, int buf_length, color *dst)
+static int convert_compressed(buffer *buf, int buf_length, color_t *dst)
 {
     int dst_length = 0;
     while (buf_length > 0) {
@@ -202,9 +202,9 @@ static int convert_compressed(buffer *buf, int buf_length, color *dst)
     return dst_length;
 }
 
-static void convert_images(image *images, int size, buffer *buf, color *dst)
+static void convert_images(image *images, int size, buffer *buf, color_t *dst)
 {
-    color *start_dst = dst;
+    color_t *start_dst = dst;
     for (int i = 0; i < size; i++) {
         image *img = &images[i];
         if (img->draw.is_external) {
@@ -272,7 +272,7 @@ int image_load_enemy(int enemy_id)
     return 1;
 }
 
-static const color *load_external_data(int image_id)
+static const color_t *load_external_data(int image_id)
 {
     image *img = &data.main[image_id];
     char filename[200] = "555/";
@@ -296,7 +296,7 @@ static const color *load_external_data(int image_id)
     }
     buffer buf;
     buffer_init(&buf, data.tmp_data, size);
-    color *dst = (color*) &data.tmp_data[4000000];
+    color_t *dst = (color_t*) &data.tmp_data[4000000];
     // NB: isometric images are never external
     if (img->draw.is_fully_compressed) {
         convert_compressed(&buf, img->draw.data_length, dst);
@@ -321,7 +321,7 @@ const image *image_get_enemy(int id)
     return &data.enemy[id];
 }
 
-const color *image_data(int id)
+const color_t *image_data(int id)
 {
     if (data.main[id].draw.is_external) {
         return load_external_data(id);
@@ -330,7 +330,7 @@ const color *image_data(int id)
     }
 }
 
-const color *image_data_enemy(int id)
+const color_t *image_data_enemy(int id)
 {
     if (data.enemy[id].draw.offset > 0) {
         return &data.enemy_data[data.enemy[id].draw.offset];

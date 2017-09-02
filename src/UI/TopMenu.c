@@ -118,7 +118,7 @@ void UI_TopMenu_drawBackground()
 	Widget_Menu_drawMenuBar(menu, 4);
 
 	int width;
-	Color treasureColor = Color_White;
+	color_t treasureColor = Color_White;
 	if (Data_CityInfo.treasury < 0) {
 		treasureColor = Color_Red;
 	}

@@ -48,8 +48,8 @@ static int minimapLeft;
 static int minimapTop;
 static int minimapRight;
 static int minimapBottom;
-static Color soldierColor;
-static Color enemyColor;
+static color_t soldierColor;
+static color_t enemyColor;
 
 void UI_Minimap_draw(int xOffset, int yOffset, int widthTiles, int heightTiles)
 {
@@ -108,7 +108,7 @@ static void drawMinimap(int xOffset, int yOffset, int widthTiles, int heightTile
 
 static int drawFigure(int xView, int yView, int gridOffset)
 {
-	Color color = Color_Black;
+	color_t color = Color_Black;
 	int hasFigure = 0;
 
 	int figureId = Data_Grid_figureIds[gridOffset];

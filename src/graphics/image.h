@@ -53,13 +53,6 @@ int image_load_climate(int climate_id);
 int image_load_enemy(int enemy_id);
 
 /**
- * Loads data from an external image
- * @param image_id ID of the image
- * @return Pointer to data or null. Short-term use only
- */
-const color *image_load_external_data(int image_id);
-
-/**
  * Gets the image id of the first image in the group
  * @param group Image group
  * @return Image id of first image
@@ -85,13 +78,13 @@ const image *image_get_enemy(int id);
  * @param id Image ID
  * @return Pointer to data or null, short term use only.
  */
-const color *image_data(int id);
+const color_t *image_data(int id);
 
 /**
  * Gets enemy image pixel data by id
  * @param id Enemy image ID
  * @return Pointer to data or null, short term use only.
  */
-const color *image_data_enemy(int id);
+const color_t *image_data_enemy(int id);
 
 #endif // GRAPHICS_IMAGE_H

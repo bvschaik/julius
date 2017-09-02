@@ -71,7 +71,7 @@ void UI_CityBuildings_drawBuildingCost()
 	Graphics_setClipRectangle(
 		Data_CityView.xOffsetInPixels, Data_CityView.yOffsetInPixels,
 		Data_CityView.widthInPixels, Data_CityView.heightInPixels);
-	Color color;
+	color_t color;
 	if (Data_State.selectedBuilding.cost <= Data_CityInfo.treasury) {
 		color = Color_Orange;
 	} else {
@@ -120,7 +120,7 @@ static void drawBuildingFootprints()
 		} else if (Data_Grid_edge[gridOffset] & Edge_LeftmostTile) {
 			// Valid gridOffset and leftmost tile -> draw
 			int buildingId = Data_Grid_buildingIds[gridOffset];
-			Color colorMask = 0;
+			color_t colorMask = 0;
 			if (buildingId) {
 				if (Data_Buildings[buildingId].isDeleted) {
 					colorMask = Color_MaskRed;
@@ -178,7 +178,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 			if (Data_Grid_edge[gridOffset] & Edge_LeftmostTile) {
 				int buildingId = Data_Grid_buildingIds[gridOffset];
 				int graphicId = Data_Grid_graphicIds[gridOffset];
-				Color colorMask = 0;
+				color_t colorMask = 0;
 				if (buildingId && Data_Buildings[buildingId].isDeleted) {
 					colorMask = Color_MaskRed;
 				}
@@ -490,7 +490,7 @@ void UI_CityBuildings_drawBridge(int gridOffset, int x, int y)
 	if (Data_Grid_terrain[gridOffset] & Terrain_Building) {
 		return;
 	}
-	Color colorMask = 0;
+	color_t colorMask = 0;
 	if (Data_Grid_bitfields[gridOffset] & Bitfield_Deleted) {
 		colorMask = Color_MaskRed;
 	}

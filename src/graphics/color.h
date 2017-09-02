@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-typedef uint32_t color;
+typedef uint32_t color_t;
 
 
 #endif // GRAPHICS_COLOR_H

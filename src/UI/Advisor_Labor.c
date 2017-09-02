@@ -219,7 +219,7 @@ void UI_LaborPriorityDialog_drawForeground()
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
 	
-	Color color;
+	color_t color;
 	for (int i = 0; i < 9; i++) {
 		color = Color_Black;
 		if (i == priorityFocusButtonId - 2) {

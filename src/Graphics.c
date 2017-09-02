@@ -27,21 +27,21 @@ static struct ClipRectangle {
 
 static GraphicsClipInfo clipInfo;
 
-static void drawImageUncompressed(const image *img, const Color *data, int xOffset, int yOffset, Color color, ColorType type);
-static void drawImageCompressed(const image *img, const Color *data, int xOffset, int yOffset, int height);
-static void drawImageCompressedSet(const image *img, const Color *data, int xOffset, int yOffset, int height, Color color);
-static void drawImageCompressedAnd(const image *img, const Color *data, int xOffset, int yOffset, int height, Color color);
-static void drawImageCompressedBlend(const image *img, const Color *data, int xOffset, int yOffset, int height, Color color);
+static void drawImageUncompressed(const image *img, const color_t *data, int xOffset, int yOffset, color_t color, ColorType type);
+static void drawImageCompressed(const image *img, const color_t *data, int xOffset, int yOffset, int height);
+static void drawImageCompressedSet(const image *img, const color_t *data, int xOffset, int yOffset, int height, color_t color);
+static void drawImageCompressedAnd(const image *img, const color_t *data, int xOffset, int yOffset, int height, color_t color);
+static void drawImageCompressedBlend(const image *img, const color_t *data, int xOffset, int yOffset, int height, color_t color);
 static void setClipX(int xOffset, int width);
 static void setClipY(int yOffset, int height);
 
 
 void Graphics_clearScreen()
 {
-	memset(Data_Screen.drawBuffer, 0, sizeof(Color) * Data_Screen.width * Data_Screen.height);
+	memset(Data_Screen.drawBuffer, 0, sizeof(color_t) * Data_Screen.width * Data_Screen.height);
 }
 
-static void drawDot(int x, int y, Color color)
+static void drawDot(int x, int y, color_t color)
 {
 	if (x >= clipRectangle.xStart && x < clipRectangle.xEnd) {
 		if (y >= clipRectangle.yStart && y < clipRectangle.yEnd) {
@@ -50,7 +50,7 @@ static void drawDot(int x, int y, Color color)
 	}
 }
 
-void Graphics_drawLine(int x1, int y1, int x2, int y2, Color color)
+void Graphics_drawLine(int x1, int y1, int x2, int y2, color_t color)
 {
 	if (x1 == x2) {
 		int yMin = y1 < y2 ? y1 : y2;
@@ -69,7 +69,7 @@ void Graphics_drawLine(int x1, int y1, int x2, int y2, Color color)
 	}
 }
 
-void Graphics_drawRect(int x, int y, int width, int height, Color color)
+void Graphics_drawRect(int x, int y, int width, int height, color_t color)
 {
 	if (x < 0) {
 		x = 0;
@@ -109,7 +109,7 @@ void Graphics_drawInsetRect(int x, int y, int width, int height)
 	Graphics_drawLine(x, y, x, y + height - 1, Color_InsetDark);
 }
 
-void Graphics_fillRect(int x, int y, int width, int height, Color color)
+void Graphics_fillRect(int x, int y, int width, int height, color_t color)
 {
 	if (x < 0) {
 		x = 0;
@@ -132,18 +132,18 @@ void Graphics_shadeRect(int x, int y, int width, int height, int darkness)
 {
 	for (int yy = y; yy < y + height; yy++) {
 		for (int xx = x; xx < x + width; xx++) {
-			Color pixel = ScreenPixel(xx, yy);
+			color_t pixel = ScreenPixel(xx, yy);
 			int r = (pixel & 0xff0000) >> 16;
 			int g = (pixel & 0xff00) >> 8;
 			int b = (pixel & 0xff);
 			int grey = (r + g + b) / 3 >> darkness;
-			Color newPixel = (Color) (grey << 16 | grey << 8 | grey);
+			color_t newPixel = (color_t) (grey << 16 | grey << 8 | grey);
 			ScreenPixel(xx, yy) = newPixel;
 		}
 	}
 }
 
-void Graphics_drawIsometricFootprint(int graphicId, int xOffset, int yOffset, Color colorMask)
+void Graphics_drawIsometricFootprint(int graphicId, int xOffset, int yOffset, color_t colorMask)
 {
 	const image *img = image_get(graphicId);
 	if (img->draw.type == 30) { // isometric
@@ -169,7 +169,7 @@ void Graphics_drawIsometricFootprint(int graphicId, int xOffset, int yOffset, Co
 	}
 }
 
-void Graphics_drawIsometricTop(int graphicId, int xOffset, int yOffset, Color colorMask)
+void Graphics_drawIsometricTop(int graphicId, int xOffset, int yOffset, color_t colorMask)
 {
 	const image *img = image_get(graphicId);
 	if (img->draw.type != 30) { // isometric
@@ -179,7 +179,7 @@ void Graphics_drawIsometricTop(int graphicId, int xOffset, int yOffset, Color co
 	if (!img->draw.has_compressed_part) {
 		return;
 	}
-	const Color *data = &image_data(graphicId)[img->draw.uncompressed_length];
+	const color_t *data = &image_data(graphicId)[img->draw.uncompressed_length];
 
 	int height = img->height;
 	switch (img->width) {
@@ -226,7 +226,7 @@ void Graphics_drawFullScreenImage(int graphicId)
 void Graphics_drawImage(int graphicId, int xOffset, int yOffset)
 {
 	const image *img = image_get(graphicId);
-	const Color *data = image_data(graphicId);
+	const color_t *data = image_data(graphicId);
 	if (!data) {
 		return;
 	}
@@ -238,10 +238,10 @@ void Graphics_drawImage(int graphicId, int xOffset, int yOffset)
 	}
 }
 
-void Graphics_drawImageMasked(int graphicId, int xOffset, int yOffset, Color colorMask)
+void Graphics_drawImageMasked(int graphicId, int xOffset, int yOffset, color_t colorMask)
 {
 	const image *img = image_get(graphicId);
-	const Color *data = image_data(graphicId);
+	const color_t *data = image_data(graphicId);
 	if (!data) {
 		return;
 	}
@@ -263,10 +263,10 @@ void Graphics_drawImageMasked(int graphicId, int xOffset, int yOffset, Color col
 	}
 }
 
-void Graphics_drawImageBlend(int graphicId, int xOffset, int yOffset, Color color)
+void Graphics_drawImageBlend(int graphicId, int xOffset, int yOffset, color_t color)
 {
 	const image *img = image_get(graphicId);
-	const Color *data = image_data(graphicId);
+	const color_t *data = image_data(graphicId);
 	if (!data) {
 		return;
 	}
@@ -283,10 +283,10 @@ void Graphics_drawImageBlend(int graphicId, int xOffset, int yOffset, Color colo
 	}
 }
 
-void Graphics_drawLetter(int graphicId, int xOffset, int yOffset, Color color)
+void Graphics_drawLetter(int graphicId, int xOffset, int yOffset, color_t color)
 {
 	const image *img = image_get(graphicId);
-	const Color *data = image_data(graphicId);
+	const color_t *data = image_data(graphicId);
 	if (!data) {
 		return;
 	}
@@ -303,7 +303,7 @@ void Graphics_drawLetter(int graphicId, int xOffset, int yOffset, Color color)
 	}
 }
 
-static void drawImageUncompressed(const image *img, const Color *data, int xOffset, int yOffset, Color color, ColorType type)
+static void drawImageUncompressed(const image *img, const color_t *data, int xOffset, int yOffset, color_t color, ColorType type)
 {
 	GraphicsClipInfo *clip = Graphics_getClipInfo(
 		xOffset, yOffset, img->width, img->height);
@@ -313,7 +313,7 @@ static void drawImageUncompressed(const image *img, const Color *data, int xOffs
 	data += img->width * clip->clippedPixelsTop;
 	for (int y = clip->clippedPixelsTop; y < img->height - clip->clippedPixelsBottom; y++) {
 		data += clip->clippedPixelsLeft;
-		Color *dst = &ScreenPixel(xOffset + clip->clippedPixelsLeft, yOffset + y);
+		color_t *dst = &ScreenPixel(xOffset + clip->clippedPixelsLeft, yOffset + y);
 		int xMax = img->width - clip->clippedPixelsRight;
         if (type == ColorType_None) {
             if (img->draw.type == 0) { // can be transparent
@@ -325,7 +325,7 @@ static void drawImageUncompressed(const image *img, const Color *data, int xOffs
                 }
             } else {
                 int num_pixels = xMax - clip->clippedPixelsLeft;
-                memcpy(dst, data, num_pixels * sizeof(Color));
+                memcpy(dst, data, num_pixels * sizeof(color_t));
                 data += num_pixels;
             }
 		} else if (type == ColorType_Set) {
@@ -354,7 +354,7 @@ static void drawImageUncompressed(const image *img, const Color *data, int xOffs
 	}
 }
 
-static void drawImageCompressed(const image *img, const Color *data, int xOffset, int yOffset, int height)
+static void drawImageCompressed(const image *img, const color_t *data, int xOffset, int yOffset, int height)
 {
 	GraphicsClipInfo *clip = Graphics_getClipInfo(
 		xOffset, yOffset, img->width, height);
@@ -366,7 +366,7 @@ static void drawImageCompressed(const image *img, const Color *data, int xOffset
 	for (int y = 0; y < height - clip->clippedPixelsBottom; y++) {
 		int x = 0;
 		while (x < img->width) {
-			Color b = *data;
+			color_t b = *data;
 			data++;
 			if (b == 255) {
 				// transparent pixels to skip
@@ -377,12 +377,12 @@ static void drawImageCompressed(const image *img, const Color *data, int xOffset
 				x += b;
 			} else {
 				// number of concrete pixels
-				const Color *pixels = data;
+				const color_t *pixels = data;
 				data += b;
-				Color *dst = &ScreenPixel(xOffset + x, yOffset + y);
+				color_t *dst = &ScreenPixel(xOffset + x, yOffset + y);
 				if (unclipped) {
 					x += b;
-					memcpy(dst, pixels, b * sizeof(Color));
+					memcpy(dst, pixels, b * sizeof(color_t));
 				} else {
 					while (b) {
 						if (x >= clip->clippedPixelsLeft && x < img->width - clip->clippedPixelsRight) {
@@ -399,7 +399,7 @@ static void drawImageCompressed(const image *img, const Color *data, int xOffset
 	}
 }
 
-static void drawImageCompressedSet(const image *img, const Color *data, int xOffset, int yOffset, int height, Color color)
+static void drawImageCompressedSet(const image *img, const color_t *data, int xOffset, int yOffset, int height, color_t color)
 {
 	GraphicsClipInfo *clip = Graphics_getClipInfo(
 		xOffset, yOffset, img->width, height);
@@ -411,7 +411,7 @@ static void drawImageCompressedSet(const image *img, const Color *data, int xOff
 	for (int y = 0; y < height - clip->clippedPixelsBottom; y++) {
 		int x = 0;
 		while (x < img->width) {
-			Color b = *data;
+			color_t b = *data;
 			data++;
 			if (b == 255) {
 				// transparent pixels to skip
@@ -422,9 +422,9 @@ static void drawImageCompressedSet(const image *img, const Color *data, int xOff
 				x += b;
 			} else {
 				// number of concrete pixels
-				const Color *pixels = data;
+				const color_t *pixels = data;
 				data += b;
-				Color *dst = &ScreenPixel(xOffset + x, yOffset + y);
+				color_t *dst = &ScreenPixel(xOffset + x, yOffset + y);
 				if (unclipped) {
 					x += b;
 					while (b) {
@@ -449,7 +449,7 @@ static void drawImageCompressedSet(const image *img, const Color *data, int xOff
 	}
 }
 
-static void drawImageCompressedAnd(const image *img, const Color *data, int xOffset, int yOffset, int height, Color color)
+static void drawImageCompressedAnd(const image *img, const color_t *data, int xOffset, int yOffset, int height, color_t color)
 {
 	GraphicsClipInfo *clip = Graphics_getClipInfo(
 		xOffset, yOffset, img->width, height);
@@ -461,7 +461,7 @@ static void drawImageCompressedAnd(const image *img, const Color *data, int xOff
 	for (int y = 0; y < height - clip->clippedPixelsBottom; y++) {
 		int x = 0;
 		while (x < img->width) {
-			Color b = *data;
+			color_t b = *data;
 			data++;
 			if (b == 255) {
 				// transparent pixels to skip
@@ -472,9 +472,9 @@ static void drawImageCompressedAnd(const image *img, const Color *data, int xOff
 				x += b;
 			} else {
 				// number of concrete pixels
-				const Color *pixels = data;
+				const color_t *pixels = data;
 				data += b;
-				Color *dst = &ScreenPixel(xOffset + x, yOffset + y);
+				color_t *dst = &ScreenPixel(xOffset + x, yOffset + y);
 				if (unclipped) {
 					x += b;
 					while (b) {
@@ -499,7 +499,7 @@ static void drawImageCompressedAnd(const image *img, const Color *data, int xOff
 	}
 }
 
-static void drawImageCompressedBlend(const image *img, const Color *data, int xOffset, int yOffset, int height, Color color)
+static void drawImageCompressedBlend(const image *img, const color_t *data, int xOffset, int yOffset, int height, color_t color)
 {
 	GraphicsClipInfo *clip = Graphics_getClipInfo(
 		xOffset, yOffset, img->width, height);
@@ -511,7 +511,7 @@ static void drawImageCompressedBlend(const image *img, const Color *data, int xO
 	for (int y = 0; y < height - clip->clippedPixelsBottom; y++) {
 		int x = 0;
 		while (x < img->width) {
-			Color b = *data;
+			color_t b = *data;
 			data++;
 			if (b == 255) {
 				// transparent pixels to skip
@@ -522,9 +522,9 @@ static void drawImageCompressedBlend(const image *img, const Color *data, int xO
 				x += b;
 			} else {
 				// number of concrete pixels
-				const Color *pixels = data;
+				const color_t *pixels = data;
 				data += b;
-				Color *dst = &ScreenPixel(xOffset + x, yOffset + y);
+				color_t *dst = &ScreenPixel(xOffset + x, yOffset + y);
 				if (unclipped) {
 					x += b;
 					while (b) {
@@ -646,29 +646,29 @@ void Graphics_drawEnemyImage(int graphicId, int xOffset, int yOffset)
 		return;
 	}
 	const image *img = image_get_enemy(graphicId);
-	const color *data = image_data_enemy(graphicId);
+	const color_t *data = image_data_enemy(graphicId);
 	if (data) {
 		drawImageCompressed(img, data, xOffset, yOffset, img->height);
 	}
 }
 
-void Graphics_saveToBuffer(int x, int y, int width, int height, Color *buffer)
+void Graphics_saveToBuffer(int x, int y, int width, int height, color_t *buffer)
 {
 	for (int dy = 0; dy < height; dy++) {
-		memcpy(&buffer[dy * height], &ScreenPixel(x, y + dy), sizeof(Color) * width);
+		memcpy(&buffer[dy * height], &ScreenPixel(x, y + dy), sizeof(color_t) * width);
 	}
 }
 
-void Graphics_loadFromBuffer(int x, int y, int width, int height, const Color *buffer)
+void Graphics_loadFromBuffer(int x, int y, int width, int height, const color_t *buffer)
 {
 	for (int dy = 0; dy < height; dy++) {
-		memcpy(&ScreenPixel(x, y + dy), &buffer[dy * height], sizeof(Color) * width);
+		memcpy(&ScreenPixel(x, y + dy), &buffer[dy * height], sizeof(color_t) * width);
 	}
 }
 
 /////debug/////
 
-static void pixel(Color input, unsigned char *r, unsigned char *g, unsigned char *b)
+static void pixel(color_t input, unsigned char *r, unsigned char *g, unsigned char *b)
 {
 	int rr = (input & 0xff0000) >> 16;
 	int gg = (input & 0x00ff00) >> 8;
@@ -703,7 +703,7 @@ void Graphics_saveScreenshot(const char *filename)
 	fwrite(&header.B, 1, 26, fp);
 	for (int y = Data_Screen.height - 1; y >= 0; y--) {
 		for (int x = 0; x < Data_Screen.width; x++) {
-			pixel(((Color*)Data_Screen.drawBuffer)[y*Data_Screen.width+x],
+			pixel(((color_t*)Data_Screen.drawBuffer)[y*Data_Screen.width+x],
 				&pixels[3*x+2], &pixels[3*x+1], &pixels[3*x]);
 		}
 		fwrite(pixels, 1, Data_Screen.width * 3, fp);

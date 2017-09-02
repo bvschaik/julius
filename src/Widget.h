@@ -4,31 +4,33 @@
 #include "Data/Types.h"
 #include "Data/Buttons.h"
 
+#include "graphics/color.h"
+
 #include <stdint.h>
 
 void Widget_Text_captureCursor();
 void Widget_Text_drawCursor(int xOffset, int yOffset);
 
-int Widget_Text_draw(const uint8_t *str, int x, int y, Font font, Color color);
+int Widget_Text_draw(const uint8_t *str, int x, int y, Font font, color_t color);
 
-void Widget_Text_drawCentered(const uint8_t *str, int x, int y, int boxWidth, Font font, Color color);
+void Widget_Text_drawCentered(const uint8_t *str, int x, int y, int boxWidth, Font font, color_t color);
 
 int Widget_GameText_draw(int group, int number, int xOffset, int yOffset, Font font);
-int Widget_GameText_drawColored(int group, int number, int xOffset, int yOffset, Font font, Color color);
+int Widget_GameText_drawColored(int group, int number, int xOffset, int yOffset, Font font, color_t color);
 
 void Widget_GameText_drawCentered(int group, int number, int xOffset, int yOffset, int boxWidth, Font font);
-void Widget_GameText_drawCenteredColored(int group, int number, int xOffset, int yOffset, int boxWidth, Font font, Color color);
+void Widget_GameText_drawCenteredColored(int group, int number, int xOffset, int yOffset, int boxWidth, Font font, color_t color);
 
 int Widget_Text_drawNumber(int value, char prefix, const char *postfix, int xOffset, int yOffset, Font font);
-int Widget_Text_drawNumberColored(int value, char prefix, const char *postfix, int xOffset, int yOffset, Font font, Color color);
+int Widget_Text_drawNumberColored(int value, char prefix, const char *postfix, int xOffset, int yOffset, Font font, color_t color);
 
 void Widget_Text_drawNumberCentered(int value, char prefix, const char *postfix, int xOffset, int yOffset, int boxWidth, Font font);
-void Widget_Text_drawNumberCenteredColored(int value, char prefix, const char *postfix, int xOffset, int yOffset, int boxWidth, Font font, Color color);
+void Widget_Text_drawNumberCenteredColored(int value, char prefix, const char *postfix, int xOffset, int yOffset, int boxWidth, Font font, color_t color);
 
 int Widget_GameText_drawNumberWithDescription(int group, int number, int amount, int xOffset, int yOffset, Font font);
 
 int Widget_GameText_drawYear(int year, int xOffset, int yOffset, Font font);
-int Widget_GameText_drawYearColored(int year, int xOffset, int yOffset, Font font, Color color);
+int Widget_GameText_drawYearColored(int year, int xOffset, int yOffset, Font font, color_t color);
 
 int Widget_GameText_drawYearNoSpacing(int year, int xOffset, int yOffset, Font font);
 
@@ -45,7 +47,7 @@ void Widget_RichText_setFonts(Font normalFont, Font linkFont);
 int Widget_RichText_draw(const char *text, int xOffset, int yOffset,
 						 int boxWidthPixels, int boxHeightLines, int measureOnly);
 int Widget_RichText_drawColored(const char *str, int xOffset, int yOffset,
-								int boxWidth, int heightLines, Color color);
+								int boxWidth, int heightLines, color_t color);
 int Widget_RichText_getClickedLink();
 void Widget_RichText_clearLinks();
 void Widget_RichText_scroll(int isDown, int numLines);

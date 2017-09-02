@@ -5,6 +5,8 @@
 #include "UI/Warning.h"
 #include "Data/Screen.h"
 
+#include "graphics/color.h"
+
 #include <stdlib.h>
 #include <string.h>
 
@@ -26,13 +28,13 @@ void Screen_setResolution(int width, int height)
 	if (Data_Screen.drawBuffer) {
 		free(Data_Screen.drawBuffer);
 	}
-	Data_Screen.drawBuffer = malloc(width * height * sizeof(Color));
-	memset(Data_Screen.drawBuffer, 0, width * height * sizeof(Color));
+	Data_Screen.drawBuffer = malloc(width * height * sizeof(color_t));
+	memset(Data_Screen.drawBuffer, 0, width * height * sizeof(color_t));
 	setSize(width, height);
 }
 
 void Screen_setResolutionWithPixels(int width, int height, void *pixels)
 {
-	Data_Screen.drawBuffer = (Color*) pixels;
+	Data_Screen.drawBuffer = (color_t*) pixels;
 	setSize(width, height);
 }
