@@ -1,5 +1,4 @@
 #include "Graphics.h"
-#include "Graphics_private.h"
 #include "Graphics_Footprint.h"
 #include "Loader.h"
 
@@ -36,18 +35,6 @@ static void drawImageCompressedBlend(struct Data_Graphics_Index *index, const Co
 static void setClipX(int xOffset, int width);
 static void setClipY(int yOffset, int height);
 
-
-ScreenColor ColorLookup[65536];
-
-void Graphics_initialize()
-{
-	for (int c = 0; c < 65536; c++) {
-		ColorLookup[c] =
-			((c & 0x7c00) << 9) | ((c & 0x7000) << 4) |
-			((c & 0x3e0) << 6)  | ((c & 0x380) << 1) |
-			((c & 0x1f) << 3)   | ((c & 0x1c) >> 2);
-	}
-}
 
 void Graphics_clearScreen()
 {

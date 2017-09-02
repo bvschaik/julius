@@ -1,6 +1,5 @@
 #include "Graphics_Footprint.h"
 #include "Graphics.h"
-#include "Graphics_private.h"
 
 #include "Data/Graphics.h"
 #include "Data/Screen.h"

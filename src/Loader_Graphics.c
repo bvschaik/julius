@@ -3,8 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "Graphics.h"
-#include "Graphics_private.h"
 #include "Data/Screen.h"
 #include "Data/Constants.h"
 
@@ -88,7 +86,6 @@ int Loader_Graphics_initGraphics()
 	if (!Data_Graphics_PixelData.main || !Data_Graphics_PixelData.enemy || !imagesScratchSpace) {
 		return 0;
 	}
-	Graphics_initialize();
 	return 1;
 }
 
@@ -135,10 +132,17 @@ int Loader_Graphics_loadEnemyGraphics(int enemyId)
 	return 1;
 }
 
+static Color to_32_bit(uint16_t c)
+{
+     return ((c & 0x7c00) << 9) | ((c & 0x7000) << 4) |
+            ((c & 0x3e0) << 6)  | ((c & 0x380) << 1) |
+            ((c & 0x1f) << 3)   | ((c & 0x1c) >> 2);
+}
+
 static int convertUncompressed(buffer *buf, int buf_length, Color *dst)
 {
     for (int i = 0; i < buf_length; i += 2) {
-        *dst = ColorLookup[buffer_read_u16(buf)];
+        *dst = to_32_bit(buffer_read_u16(buf));
         dst++;
     }
     return buf_length / 2;
@@ -159,7 +163,7 @@ static int convertCompressed(buffer *buf, int buf_length, Color *dst)
             // control = number of concrete pixels
             *(dst++) = control;
             for (int i = 0; i < control; i++) {
-                *(dst++) = ColorLookup[buffer_read_u16(buf)];
+                *(dst++) = to_32_bit(buffer_read_u16(buf));
             }
             dst_length += control + 1;
             buf_length -= control * 2 + 1;
