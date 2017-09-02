@@ -11,13 +11,13 @@ void UI_Advisor_Chief_drawBackground(int *advisorHeight)
 
 	*advisorHeight = 23;
 	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
-	Graphics_drawImage(GraphicId(ID_Graphic_AdvisorIcons) + 11, baseOffsetX + 10, baseOffsetY + 10);
+	Graphics_drawImage(image_group(ID_Graphic_AdvisorIcons) + 11, baseOffsetX + 10, baseOffsetY + 10);
 
 	Widget_GameText_draw(61, 0, baseOffsetX + 60, baseOffsetY + 12, Font_LargeBlack);
 	Widget_Panel_drawInnerPanel(baseOffsetX + 32, baseOffsetY + 60, 36, 16);
 
 	// workers
-	Graphics_drawImage(GraphicId(ID_Graphic_Bullet), baseOffsetX + 40, baseOffsetY + 67);
+	Graphics_drawImage(image_group(ID_Graphic_Bullet), baseOffsetX + 40, baseOffsetY + 67);
 	Widget_GameText_draw(61, 1, baseOffsetX + 60, baseOffsetY + 66, Font_NormalWhite);
 	if (Data_CityInfo.unemploymentPercentage > 0) {
 		width = Widget_GameText_draw(61, 12, baseOffsetX + 240, baseOffsetY + 66, Font_NormalRed);
@@ -32,7 +32,7 @@ void UI_Advisor_Chief_drawBackground(int *advisorHeight)
 	}
 
 	// finance
-	Graphics_drawImage(GraphicId(ID_Graphic_Bullet), baseOffsetX + 40, baseOffsetY + 87);
+	Graphics_drawImage(image_group(ID_Graphic_Bullet), baseOffsetX + 40, baseOffsetY + 87);
 	Widget_GameText_draw(61, 2, baseOffsetX + 60, baseOffsetY + 86, Font_NormalWhite);
 	if (Data_CityInfo.treasury > Data_CityInfo.financeBalanceLastYear) {
 		width = Widget_GameText_draw(61, 15, baseOffsetX + 240, baseOffsetY + 86, Font_NormalGreen);
@@ -47,7 +47,7 @@ void UI_Advisor_Chief_drawBackground(int *advisorHeight)
 	}
 
 	// migration
-	Graphics_drawImage(GraphicId(ID_Graphic_Bullet), baseOffsetX + 40, baseOffsetY + 107);
+	Graphics_drawImage(image_group(ID_Graphic_Bullet), baseOffsetX + 40, baseOffsetY + 107);
 	Widget_GameText_draw(61, 3, baseOffsetX + 60, baseOffsetY + 106, Font_NormalGreen);
 	if (Data_CityInfo.numEnemiesInCity + Data_CityInfo.numImperialSoldiersInCity > 3) {
 		Widget_GameText_draw(61, 79, baseOffsetX + 240, baseOffsetY + 106, Font_NormalGreen);
@@ -74,7 +74,7 @@ void UI_Advisor_Chief_drawBackground(int *advisorHeight)
 	}
 
 	// food stocks
-	Graphics_drawImage(GraphicId(ID_Graphic_Bullet), baseOffsetX + 40, baseOffsetY + 127);
+	Graphics_drawImage(image_group(ID_Graphic_Bullet), baseOffsetX + 40, baseOffsetY + 127);
 	Widget_GameText_draw(61, 4, baseOffsetX + 60, baseOffsetY + 126, Font_NormalWhite);
 	if (Data_Scenario.romeSuppliesWheat) {
 		Widget_GameText_draw(61, 26, baseOffsetX + 240, baseOffsetY + 126, Font_NormalGreen);
@@ -87,7 +87,7 @@ void UI_Advisor_Chief_drawBackground(int *advisorHeight)
 	}
 
 	// food consumption
-	Graphics_drawImage(GraphicId(ID_Graphic_Bullet), baseOffsetX + 40, baseOffsetY + 147);
+	Graphics_drawImage(image_group(ID_Graphic_Bullet), baseOffsetX + 40, baseOffsetY + 147);
 	Widget_GameText_draw(61, 62, baseOffsetX + 60, baseOffsetY + 146, Font_NormalWhite);
 	if (Data_Scenario.romeSuppliesWheat) {
 		Widget_GameText_draw(61, 26, baseOffsetX + 240, baseOffsetY + 146, Font_NormalGreen);
@@ -111,7 +111,7 @@ void UI_Advisor_Chief_drawBackground(int *advisorHeight)
 	}
 
 	// military
-	Graphics_drawImage(GraphicId(ID_Graphic_Bullet), baseOffsetX + 40, baseOffsetY + 167);
+	Graphics_drawImage(image_group(ID_Graphic_Bullet), baseOffsetX + 40, baseOffsetY + 167);
 	Widget_GameText_draw(61, 5, baseOffsetX + 60, baseOffsetY + 166, Font_NormalWhite);
 	if (Data_CityInfo.numImperialSoldiersInCity) {
 		Widget_GameText_draw(61, 76, baseOffsetX + 240, baseOffsetY + 166, Font_NormalRed);
@@ -131,7 +131,7 @@ void UI_Advisor_Chief_drawBackground(int *advisorHeight)
 	}
 
 	// crime
-	Graphics_drawImage(GraphicId(ID_Graphic_Bullet), baseOffsetX + 40, baseOffsetY + 187);
+	Graphics_drawImage(image_group(ID_Graphic_Bullet), baseOffsetX + 40, baseOffsetY + 187);
 	Widget_GameText_draw(61, 6, baseOffsetX + 60, baseOffsetY + 186, Font_NormalWhite);
 	if (Data_CityInfo.numRiotersInCity) {
 		Widget_GameText_draw(61, 33, baseOffsetX + 240, baseOffsetY + 186, Font_NormalRed);
@@ -146,7 +146,7 @@ void UI_Advisor_Chief_drawBackground(int *advisorHeight)
 	}
 
 	// health
-	Graphics_drawImage(GraphicId(ID_Graphic_Bullet), baseOffsetX + 40, baseOffsetY + 207);
+	Graphics_drawImage(image_group(ID_Graphic_Bullet), baseOffsetX + 40, baseOffsetY + 207);
 	Widget_GameText_draw(61, 7, baseOffsetX + 60, baseOffsetY + 206, Font_NormalWhite);
 	if (Data_CityInfo.healthRate >= 40) {
 		Widget_GameText_draw(56, Data_CityInfo.healthRate / 10 + 27,
@@ -157,7 +157,7 @@ void UI_Advisor_Chief_drawBackground(int *advisorHeight)
 	}
 
 	// education
-	Graphics_drawImage(GraphicId(ID_Graphic_Bullet), baseOffsetX + 40, baseOffsetY + 227);
+	Graphics_drawImage(image_group(ID_Graphic_Bullet), baseOffsetX + 40, baseOffsetY + 227);
 	Widget_GameText_draw(61, 8, baseOffsetX + 60, baseOffsetY + 226, Font_NormalWhite);
 	if (Data_CityInfo.educationDemand == 1) {
 		Widget_GameText_draw(61, 39, baseOffsetX + 240, baseOffsetY + 226, Font_NormalRed);
@@ -170,7 +170,7 @@ void UI_Advisor_Chief_drawBackground(int *advisorHeight)
 	}
 
 	// religion
-	Graphics_drawImage(GraphicId(ID_Graphic_Bullet), baseOffsetX + 40, baseOffsetY + 247);
+	Graphics_drawImage(image_group(ID_Graphic_Bullet), baseOffsetX + 40, baseOffsetY + 247);
 	Widget_GameText_draw(61, 9, baseOffsetX + 60, baseOffsetY + 246, Font_NormalWhite);
 	if (Data_CityInfo.religionDemand == 1) {
 		Widget_GameText_draw(61, 46, baseOffsetX + 240, baseOffsetY + 246, Font_NormalRed);
@@ -183,7 +183,7 @@ void UI_Advisor_Chief_drawBackground(int *advisorHeight)
 	}
 
 	// entertainment
-	Graphics_drawImage(GraphicId(ID_Graphic_Bullet), baseOffsetX + 40, baseOffsetY + 267);
+	Graphics_drawImage(image_group(ID_Graphic_Bullet), baseOffsetX + 40, baseOffsetY + 267);
 	Widget_GameText_draw(61, 10, baseOffsetX + 60, baseOffsetY + 266, Font_NormalWhite);
 	if (Data_CityInfo.entertainmentDemand == 1) {
 		Widget_GameText_draw(61, 43, baseOffsetX + 240, baseOffsetY + 266, Font_NormalRed);
@@ -194,7 +194,7 @@ void UI_Advisor_Chief_drawBackground(int *advisorHeight)
 	}
 
 	// sentiment
-	Graphics_drawImage(GraphicId(ID_Graphic_Bullet), baseOffsetX + 40, baseOffsetY + 287);
+	Graphics_drawImage(image_group(ID_Graphic_Bullet), baseOffsetX + 40, baseOffsetY + 287);
 	Widget_GameText_draw(61, 11, baseOffsetX + 60, baseOffsetY + 286, Font_NormalWhite);
 	if (Data_CityInfo.citySentiment <= 0) {
 		Widget_GameText_draw(61, 50, baseOffsetX + 240, baseOffsetY + 286, Font_NormalRed);

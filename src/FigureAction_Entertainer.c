@@ -98,24 +98,24 @@ static void updateGraphic(int figureId, struct Data_Figure *f)
 		f->cartGraphicId = 0;
 		if (f->actionState == FigureActionState_150_Attack ||
 			f->actionState == FigureActionState_149_Corpse) {
-			f->graphicId = GraphicId(ID_Graphic_Figure_Charioteer) + dir;
+			f->graphicId = image_group(ID_Graphic_Figure_Charioteer) + dir;
 		} else {
-			f->graphicId = GraphicId(ID_Graphic_Figure_Charioteer) +
+			f->graphicId = image_group(ID_Graphic_Figure_Charioteer) +
 				dir + 8 * f->graphicOffset;
 		}
 		return;
 	}
 	int graphicId;
 	if (f->type == FIGURE_ACTOR) {
-		graphicId = GraphicId(ID_Graphic_Figure_Actor);
+		graphicId = image_group(ID_Graphic_Figure_Actor);
 	} else if (f->type == FIGURE_GLADIATOR) {
-		graphicId = GraphicId(ID_Graphic_Figure_Gladiator);
+		graphicId = image_group(ID_Graphic_Figure_Gladiator);
 	} else if (f->type == FIGURE_LION_TAMER) {
-		graphicId = GraphicId(ID_Graphic_Figure_LionTamer);
+		graphicId = image_group(ID_Graphic_Figure_LionTamer);
 		if (f->waitTicksMissile >= 96) {
-			graphicId = GraphicId(ID_Graphic_Figure_LionTamerWhip);
+			graphicId = image_group(ID_Graphic_Figure_LionTamerWhip);
 		}
-		f->cartGraphicId = GraphicId(ID_Graphic_Figure_Lion);
+		f->cartGraphicId = image_group(ID_Graphic_Figure_Lion);
 	} else {
 		return;
 	}
@@ -141,7 +141,7 @@ void FigureAction_entertainer(int figureId)
 {
 	struct Data_Figure *f = &Data_Figures[figureId];
 	struct Data_Building *b = &Data_Buildings[f->buildingId];
-	f->cartGraphicId = GraphicId(ID_Graphic_Figure_CartpusherCart);
+	f->cartGraphicId = image_group(ID_Graphic_Figure_CartpusherCart);
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 512;

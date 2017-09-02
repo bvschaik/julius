@@ -314,7 +314,7 @@ void FigureAction_tradeCaravan(int figureId)
 	}
 	int dir = f->direction < 8 ? f->direction : f->previousTileDirection;
 	FigureActionNormalizeDirection(dir);
-	f->graphicId = GraphicId(ID_Graphic_Figure_TradeCaravan) + dir + 8 * f->graphicOffset;
+	f->graphicId = image_group(ID_Graphic_Figure_TradeCaravan) + dir + 8 * f->graphicOffset;
 }
 
 void FigureAction_tradeCaravanDonkey(int figureId)
@@ -345,7 +345,7 @@ void FigureAction_tradeCaravanDonkey(int figureId)
 	}
 	int dir = f->direction < 8 ? f->direction : f->previousTileDirection;
 	FigureActionNormalizeDirection(dir);
-	f->graphicId = GraphicId(ID_Graphic_Figure_TradeCaravan) + dir + 8 * f->graphicOffset;
+	f->graphicId = image_group(ID_Graphic_Figure_TradeCaravan) + dir + 8 * f->graphicOffset;
 }
 
 void FigureAction_nativeTrader(int figureId)
@@ -432,14 +432,14 @@ void FigureAction_nativeTrader(int figureId)
 	FigureActionNormalizeDirection(dir);
 	
 	if (f->actionState == FigureActionState_149_Corpse) {
-		f->graphicId = GraphicId(ID_Graphic_Figure_Cartpusher) +
+		f->graphicId = image_group(ID_Graphic_Figure_Cartpusher) +
 			96 + FigureActionCorpseGraphicOffset(f);
 		f->cartGraphicId = 0;
 	} else {
-		f->graphicId = GraphicId(ID_Graphic_Figure_Cartpusher) +
+		f->graphicId = image_group(ID_Graphic_Figure_Cartpusher) +
 			dir + 8 * f->graphicOffset;
 	}
-	f->cartGraphicId = GraphicId(ID_Graphic_Figure_MigrantCart) +
+	f->cartGraphicId = image_group(ID_Graphic_Figure_MigrantCart) +
 		8 + 8 * f->resourceId; // BUGFIX should be within else statement?
 	if (f->cartGraphicId) {
 		f->cartGraphicId += dir;
@@ -610,7 +610,7 @@ void FigureAction_tradeShip(int figureId)
 	}
 	int dir = f->direction < 8 ? f->direction : f->previousTileDirection;
 	FigureActionNormalizeDirection(dir);
-	f->graphicId = GraphicId(ID_Graphic_Figure_Ship) + dir;
+	f->graphicId = image_group(ID_Graphic_Figure_Ship) + dir;
 }
 
 int FigureAction_TradeShip_isBuyingOrSelling(int figureId)

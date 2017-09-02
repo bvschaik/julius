@@ -9,7 +9,7 @@ void UI_Advisor_Education_drawBackground(int *advisorHeight)
 
 	*advisorHeight = 16;
 	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
-	Graphics_drawImage(GraphicId(ID_Graphic_AdvisorIcons) + 7, baseOffsetX + 10, baseOffsetY + 10);
+	Graphics_drawImage(image_group(ID_Graphic_AdvisorIcons) + 7, baseOffsetX + 10, baseOffsetY + 10);
 	Widget_GameText_draw(57, 0, baseOffsetX + 60, baseOffsetY + 12, Font_LargeBlack);
 
 	// x population, y school age, z academy age

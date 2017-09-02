@@ -10,11 +10,11 @@
 #include "../Data/Building.h"
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
-#include "../Data/Graphics.h"
 #include "../Data/Grid.h"
 #include "../Data/Settings.h"
 
 #include "building/model.h"
+#include "graphics/image.h"
 
 static void drawVacantLot(BuildingInfoContext *c)
 {
@@ -41,7 +41,7 @@ static void drawVacantLot(BuildingInfoContext *c)
 static void drawPopulationInfo(BuildingInfoContext *c, int yOffset)
 {
 	struct Data_Building *b = &Data_Buildings[c->buildingId];
-	Graphics_drawImage(GraphicId(ID_Graphic_ContextIcons) + 13, c->xOffset + 34, yOffset + 4);
+	Graphics_drawImage(image_group(ID_Graphic_ContextIcons) + 13, c->xOffset + 34, yOffset + 4);
 	int width = Widget_Text_drawNumber(b->housePopulation, '@', " ",
 		c->xOffset + 50, yOffset + 14, Font_SmallBlack);
 	width += Widget_GameText_draw(127, 20, c->xOffset + 50 + width, yOffset + 14, Font_SmallBlack);
@@ -111,7 +111,7 @@ void UI_BuildingInfo_drawHouse(BuildingInfoContext *c)
 	drawTaxInfo(c, c->yOffset + 194);
 	drawHappinessInfo(c, c->yOffset + 214);
 	
-	int resourceGraphic = GraphicId(ID_Graphic_ResourceIcons);
+	int resourceGraphic = image_group(ID_Graphic_ResourceIcons);
 	// food inventory
 	if (model_get_house(b->subtype.houseLevel)->food_types) {
 		// wheat

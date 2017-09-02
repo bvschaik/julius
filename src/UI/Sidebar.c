@@ -18,7 +18,6 @@
 
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
-#include "../Data/Graphics.h"
 #include "../Data/Message.h"
 #include "../Data/Mouse.h"
 #include "../Data/Screen.h"
@@ -27,6 +26,7 @@
 #include "../Data/Tutorial.h"
 
 #include "core/time.h"
+#include "graphics/image.h"
 
 #define SIDEBAR_BORDER ((Data_Screen.width + 20) % 60)
 #define BOTTOM_BORDER ((Data_Screen.height - 24) % 15)
@@ -176,7 +176,7 @@ static void drawNumberOfMessages()
 
 static void drawSidebar()
 {
-	int graphicBase = GraphicId(ID_Graphic_SidePanel);
+	int graphicBase = image_group(ID_Graphic_SidePanel);
 	int xOffsetPanel = Data_Screen.width - SIDEBAR_BORDER;
 	if (Data_State.sidebarCollapsed) {
 		xOffsetPanel -= 42;
@@ -208,7 +208,7 @@ static void drawFillerBorders()
 {
 	int borderRightWidth = SIDEBAR_BORDER;
 	if (borderRightWidth) {
-		int graphicId = GraphicId(ID_Graphic_TopMenuSidebar) + 13;
+		int graphicId = image_group(ID_Graphic_TopMenuSidebar) + 13;
 		if (borderRightWidth > 24) {
 			// larger border
 			graphicId -= 1;
@@ -455,7 +455,7 @@ void UI_SlidingSidebar_drawForeground()
 		Data_Screen.width - SIDEBAR_BORDER - 162, 24,
 		162, Data_Screen.height - 24 - BOTTOM_BORDER);
 
-	int graphicBase = GraphicId(ID_Graphic_SidePanel);
+	int graphicBase = image_group(ID_Graphic_SidePanel);
 	// draw collapsed sidebar
 	int xOffsetCollapsed = Data_Screen.width - SIDEBAR_BORDER - 42;
 	Graphics_drawImage(graphicBase, xOffsetCollapsed, 24);

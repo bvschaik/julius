@@ -26,8 +26,9 @@ extern const int figureActionFormationLayoutPositionY[13][16];
 
 #include "Data/Building.h"
 #include "Data/Constants.h"
-#include "Data/Graphics.h"
 #include "Data/Settings.h"
 #include "Data/Figure.h"
+
+#include "graphics/image.h"
 
 #endif

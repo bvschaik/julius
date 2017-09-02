@@ -12,13 +12,13 @@
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
 #include "../Data/FileList.h"
-#include "../Data/Graphics.h"
 #include "../Data/Mouse.h"
 #include "../Data/Screen.h"
 #include "../Data/Settings.h"
 #include "../Data/State.h"
 
 #include "game/time.h"
+#include "graphics/image.h"
 
 static void refreshSidebarButtons();
 
@@ -179,7 +179,7 @@ void UI_TopMenu_drawBackgroundIfNecessary()
 static void refreshSidebarButtons()
 {
 	int blockWidth = 24;
-	int graphicBase = GraphicId(ID_Graphic_TopMenuSidebar);
+	int graphicBase = image_group(ID_Graphic_TopMenuSidebar);
 	for (int i = 0; i * blockWidth < Data_Screen.width; i++) {
 		Graphics_drawImage(graphicBase + i % 8, i * blockWidth, 0);
 	}

@@ -12,13 +12,13 @@
 #include "../Data/CityView.h"
 #include "../Data/Constants.h"
 #include "../Data/Event.h"
-#include "../Data/Graphics.h"
 #include "../Data/Scenario.h"
 #include "../Data/Screen.h"
 #include "../Data/Settings.h"
 #include "../Data/State.h"
 
 #include "game/time.h"
+#include "graphics/image.h"
 
 void UI_City_drawBackground()
 {

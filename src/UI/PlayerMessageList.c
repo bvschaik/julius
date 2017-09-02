@@ -7,12 +7,12 @@
 #include "../Widget.h"
 
 #include "../Data/Constants.h"
-#include "../Data/Graphics.h"
 #include "../Data/Message.h"
 #include "../Data/Mouse.h"
 #include "../Data/Screen.h"
 
 #include "core/lang.h"
+#include "graphics/image.h"
 
 static void buttonHelp(int param1, int param2);
 static void buttonClose(int param1, int param2);
@@ -118,10 +118,10 @@ void UI_PlayerMessageList_drawForeground()
 			graphicOffset = 2;
 		}
 		if (Data_Message.messages[index].readFlag) {
-			Graphics_drawImage(GraphicId(ID_Graphic_MessageIcon) + 15 + graphicOffset,
+			Graphics_drawImage(image_group(ID_Graphic_MessageIcon) + 15 + graphicOffset,
 				data.xText + 12, data.yText + 6 + 20 * i);
 		} else {
-			Graphics_drawImage(GraphicId(ID_Graphic_MessageIcon) + 14 + graphicOffset,
+			Graphics_drawImage(image_group(ID_Graphic_MessageIcon) + 14 + graphicOffset,
 				data.xText + 12, data.yText + 6 + 20 * i);
 		}
 		Font font = Font_NormalWhite;
@@ -155,7 +155,7 @@ void UI_PlayerMessageList_drawForeground()
 		if (Data_Message.isDraggingScrollbar) {
 			dotOffset = Data_Message.scrollPositionDrag;
 		}
-		Graphics_drawImage(GraphicId(ID_Graphic_PanelButton) + 39,
+		Graphics_drawImage(image_group(ID_Graphic_PanelButton) + 39,
 			data.xText + 9 + 16 * data.textWidthBlocks, data.yText + 26 + dotOffset);
 	}
 }

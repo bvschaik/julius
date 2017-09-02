@@ -68,7 +68,7 @@ void UI_CCKSelection_init()
 
 void UI_CCKSelection_drawBackground()
 {
-	Graphics_drawFullScreenImage(GraphicId(ID_Graphic_CCKBackground));
+	Graphics_drawFullScreenImage(image_group(ID_Graphic_CCKBackground));
 	Widget_Panel_drawInnerPanel(
 		Data_Screen.offset640x480.x + 280,
 		Data_Screen.offset640x480.y + 242, 2, 12);
@@ -108,7 +108,7 @@ static void drawScrollbarDot()
 			pct = calc_percentage(scrollPosition, scenarios->num_files - 15);
 		}
 		int yOffset = calc_adjust_with_percentage(164, pct);
-		Graphics_drawImage(GraphicId(ID_Graphic_PanelButton) + 39,
+		Graphics_drawImage(image_group(ID_Graphic_PanelButton) + 39,
 			Data_Screen.offset640x480.x + 284,
 			Data_Screen.offset640x480.y + 245 + yOffset);
 	}
@@ -119,7 +119,7 @@ static void drawScenarioInfo()
 	int baseOffsetX = Data_Screen.offset640x480.x + 320;
 	int baseOffsetY = Data_Screen.offset640x480.y + 20;
 
-	Graphics_drawImage(GraphicId(ID_Graphic_ScenarioImage) + Data_Scenario.imageId,
+	Graphics_drawImage(image_group(ID_Graphic_ScenarioImage) + Data_Scenario.imageId,
 		Data_Screen.offset640x480.x + 78, Data_Screen.offset640x480.y + 36);
 
 	Widget_Text_drawCentered(Data_FileList.selectedScenario,

@@ -13,7 +13,7 @@ void UI_BuildingInfo_drawForum(BuildingInfoContext *c)
 	PLAY_SOUND("wavs/forum.wav");
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(106, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, Font_LargeBlack);
-	Graphics_drawImage(GraphicId(ID_Graphic_ResourceIcons) + Resource_Denarii,
+	Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + Resource_Denarii,
 		c->xOffset + 16, c->yOffset + 36);
 
 	struct Data_Building *b = &Data_Buildings[c->buildingId];
@@ -49,7 +49,7 @@ void UI_BuildingInfo_drawSenate(BuildingInfoContext *c)
 	PLAY_SOUND("wavs/senate.wav");
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(105, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, Font_LargeBlack);
-	Graphics_drawImage(GraphicId(ID_Graphic_ResourceIcons) + Resource_Denarii,
+	Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + Resource_Denarii,
 		c->xOffset + 16, c->yOffset + 36);
 
 	struct Data_Building *b = &Data_Buildings[c->buildingId];

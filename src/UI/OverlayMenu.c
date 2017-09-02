@@ -83,7 +83,7 @@ void UI_OverlayMenu_drawForeground()
 			xOffset - 170, 77 + 24 * i, 160, Font_NormalGreen);
 	}
 	if (selectedSubmenu > 0) {
-		Graphics_drawImage(GraphicId(ID_Graphic_Bullet),
+		Graphics_drawImage(image_group(ID_Graphic_Bullet),
 			xOffset - 185, 80 + 24 * selectedMenu);
 		for (int i = 0; i < numSubmenuItems; i++) {
 			Widget_Panel_drawSmallLabelButton(

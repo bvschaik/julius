@@ -8,18 +8,18 @@
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
-#include "Data/Graphics.h"
 #include "Data/Grid.h"
 #include "Data/Scenario.h"
 #include "Data/Settings.h"
 
 #include "building/list.h"
+#include "graphics/image.h"
 
 static void determineMeetingCenter();
 
 void Natives_init()
 {
-	int nativeGraphic = GraphicId(ID_Graphic_NativeBuilding);
+	int nativeGraphic = image_group(ID_Graphic_NativeBuilding);
 	int gridOffset = Data_Settings_Map.gridStartOffset;
 	for (int y = 0; y < Data_Settings_Map.height; y++, gridOffset += Data_Settings_Map.gridBorderSize) {
 		for (int x = 0; x < Data_Settings_Map.width; x++, gridOffset++) {
@@ -40,7 +40,7 @@ void Natives_init()
 				Data_Grid_graphicIds[gridOffset] = nativeGraphic + 2;
 			} else if (Data_Grid_graphicIds[gridOffset] == Data_Scenario.nativeGraphics.crops) {
 				buildingType = BUILDING_NATIVE_CROPS;
-				Data_Grid_graphicIds[gridOffset] = GraphicId(ID_Graphic_FarmCrops) + randomBit;
+				Data_Grid_graphicIds[gridOffset] = image_group(ID_Graphic_FarmCrops) + randomBit;
 			} else { //unknown building
 				Terrain_removeBuildingFromGrids(0, x, y);
 				continue;

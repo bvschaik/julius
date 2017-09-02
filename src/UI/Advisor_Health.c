@@ -9,7 +9,7 @@ void UI_Advisor_Health_drawBackground(int *advisorHeight)
 
 	*advisorHeight = 18;
 	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
-	Graphics_drawImage(GraphicId(ID_Graphic_AdvisorIcons) + 6, baseOffsetX + 10, baseOffsetY + 10);
+	Graphics_drawImage(image_group(ID_Graphic_AdvisorIcons) + 6, baseOffsetX + 10, baseOffsetY + 10);
 
 	Widget_GameText_draw(56, 0, baseOffsetX + 60, baseOffsetY + 12, Font_LargeBlack);
 	if (Data_CityInfo.population >= 200) {

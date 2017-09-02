@@ -11,10 +11,11 @@
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 #include "Data/Event.h"
-#include "Data/Graphics.h"
 #include "Data/Grid.h"
 #include "Data/Settings.h"
 #include "Data/State.h"
+
+#include "graphics/image.h"
 
 #include <string.h>
 
@@ -160,7 +161,7 @@ static void placeBuildingOnTerrain(int buildingId)
 			case BUILDING_PIG_FARM: graphicOffset = 25; break;
 		}
 		TerrainGraphics_setBuildingFarm(buildingId, b->x, b->y,
-			GraphicId(ID_Graphic_FarmCrops) + graphicOffset, 0);
+			image_group(ID_Graphic_FarmCrops) + graphicOffset, 0);
 	} else {
 		int size = Constant_BuildingProperties[b->type].size;
 		Terrain_addBuildingToGrids(buildingId, b->x, b->y, size, 0, 0);

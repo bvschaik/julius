@@ -1,9 +1,10 @@
 #include "Graphics_Footprint.h"
 #include "Graphics.h"
 
-#include "Data/Graphics.h"
 #include "Data/Screen.h"
 #include "Data/Constants.h"
+
+#include "graphics/image.h"
 
 #define FOOTPRINT_WIDTH 58
 #define FOOTPRINT_HEIGHT 30

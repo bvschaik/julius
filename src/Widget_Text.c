@@ -1,7 +1,6 @@
 #include "Widget.h"
 
 #include "Data/Constants.h"
-#include "Data/Graphics.h"
 #include "Data/KeyboardInput.h"
 #include "Data/Mouse.h"
 
@@ -12,6 +11,7 @@
 #include "core/lang.h"
 #include "core/string.h"
 #include "core/time.h"
+#include "graphics/image.h"
 
 static const int map_charToFontGraphic[] = {
 	0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00, 0x01,
@@ -110,7 +110,7 @@ int Widget_Text_getWidth(const uint8_t *str, Font font)
 	
 	int maxlen = 10000;
 	int width = 0;
-	int graphicBase = GraphicId(ID_Graphic_Font);
+	int graphicBase = image_group(ID_Graphic_Font);
 	while (*str && maxlen > 0) {
 		if (*str == ' ') {
 			width += spaceWidth;
@@ -118,7 +118,7 @@ int Widget_Text_getWidth(const uint8_t *str, Font font)
 			int graphicOffset = map_charToFontGraphic[*str];
 			if (graphicOffset) {
 				int graphicId = graphicBase + font + graphicOffset - 1;
-				width += letterSpacing + GraphicWidth(graphicId);
+				width += letterSpacing + image_get(graphicId)->width;
 			}
 		}
 		str++;
@@ -162,8 +162,8 @@ static int getCharacterWidth(unsigned char c, Font font)
 	if (!graphicOffset) {
 		return 0;
 	}
-	int graphicId = GraphicId(ID_Graphic_Font) + font + graphicOffset - 1;
-	return 1 + GraphicWidth(graphicId);
+	int graphicId = image_group(ID_Graphic_Font) + font + graphicOffset - 1;
+	return 1 + image_get(graphicId)->width;
 }
 
 static int getWordWidth(const unsigned char *str, Font font, int *outNumChars)
@@ -289,8 +289,8 @@ static int drawCharacter(Font font, unsigned int c, int x, int y, int lineHeight
 		return 0;
 	}
 
-	int graphicId = GraphicId(ID_Graphic_Font) + font + graphicOffset - 1;
-	int height = GraphicHeight(graphicId) - lineHeight;
+	int graphicId = image_group(ID_Graphic_Font) + font + graphicOffset - 1;
+	int height = image_get(graphicId)->height - lineHeight;
 	if (height < 0) {
 		height = 0;
 	}
@@ -298,7 +298,7 @@ static int drawCharacter(Font font, unsigned int c, int x, int y, int lineHeight
 		height = 0;
 	}
 	Graphics_drawLetter(graphicId, x, y - height, color);
-	return GraphicWidth(graphicId);
+	return image_get(graphicId)->width;
 }
 
 static void numberToString(char *str, int value, char prefix, const char *postfix)
@@ -665,8 +665,8 @@ static int drawRichText(const char *str, int xOffset, int yOffset,
 							while (c >= '0' && c <= '9') {
 								c = *(str++);
 							}
-							graphicId += GraphicId(ID_Graphic_MessageImages) - 1;
-							graphicHeightLines = GraphicHeight(graphicId) / 16 + 2;
+							graphicId += image_group(ID_Graphic_MessageImages) - 1;
+							graphicHeightLines = image_get(graphicId)->height / 16 + 2;
 							if (line > 0) {
 								linesBeforeGraphic = 1;
 							}
@@ -697,8 +697,9 @@ static int drawRichText(const char *str, int xOffset, int yOffset,
 				if (linesBeforeGraphic) {
 					linesBeforeGraphic--;
 				} else {
-					graphicHeightLines = GraphicHeight(graphicId) / 16 + 2;
-					int xOffsetGraphic = xOffset + (boxWidth - GraphicWidth(graphicId)) / 2 - 4;
+				    const image *img = image_get(graphicId);
+					graphicHeightLines = img->height / 16 + 2;
+					int xOffsetGraphic = xOffset + (boxWidth - img->width) / 2 - 4;
 					if (line < heightLines + data.scrollPosition) {
 						if (line >= data.scrollPosition) {
 							Graphics_drawImage(graphicId, xOffsetGraphic, y + 8);
@@ -817,8 +818,8 @@ static int drawRichTextCharacter(Font font, unsigned int c, int x, int y, color_
 		return 0;
 	}
 
-	int graphicId = GraphicId(ID_Graphic_Font) + font + graphicOffset - 1;
-	int height = GraphicHeight(graphicId) - 11;
+	int graphicId = image_group(ID_Graphic_Font) + font + graphicOffset - 1;
+	int height = image_get(graphicId)->height - 11;
 	if (height < 0) {
 		height = 0;
 	}
@@ -828,7 +829,7 @@ static int drawRichTextCharacter(Font font, unsigned int c, int x, int y, color_
 	if (!measureOnly) {
 		Graphics_drawLetter(graphicId, x, y - height, color);
 	}
-	return GraphicWidth(graphicId);
+	return image_get(graphicId)->width;
 }
 
 void Widget_RichText_drawScrollbar()
@@ -861,7 +862,7 @@ void Widget_RichText_drawScrollbarDot()
 		if (data.isDraggingScroll) {
 			offset = data.scrollPositionDrag;
 		}
-		Graphics_drawImage(GraphicId(ID_Graphic_PanelButton) + 39,
+		Graphics_drawImage(image_group(ID_Graphic_PanelButton) + 39,
 			data.xText + 16 * data.textWidthBlocks + 6, data.yText + offset + 26);
 	}
 }

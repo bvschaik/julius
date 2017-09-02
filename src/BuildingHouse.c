@@ -6,9 +6,10 @@
 #include "Data/Building.h"
 #include "Data/Constants.h"
 #include "Data/Debug.h"
-#include "Data/Graphics.h"
 #include "Data/Grid.h"
 #include "Data/Settings.h"
+
+#include "graphics/image.h"
 
 #define CREATE_HOUSE_TILE(tt, xx,yy)\
 	{\
@@ -53,7 +54,7 @@ static const int houseGraphicNumTypes[20] = {
 	2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1
 };
 
-#define HouseGraphicId(level) GraphicId(houseGraphicGroup[level]) + houseGraphicOffset[level]
+#define Houseimage_group(level) image_group(houseGraphicGroup[level]) + houseGraphicOffset[level]
 
 static struct {
 	int x;
@@ -254,7 +255,7 @@ void BuildingHouse_expandToLargeInsula(int buildingId)
 	for (int i = 0; i < Inventory_Max; i++) {
 		b->data.house.inventory[i] += mergeData.inventory[i];
 	}
-	int graphicId = HouseGraphicId(b->subtype.houseLevel) + (Data_Grid_random[b->gridOffset] & 1);
+	int graphicId = Houseimage_group(b->subtype.houseLevel) + (Data_Grid_random[b->gridOffset] & 1);
 	Terrain_removeBuildingFromGrids(buildingId, b->x, b->y);
 	b->x = mergeData.x;
 	b->y = mergeData.y;
@@ -275,7 +276,7 @@ void BuildingHouse_expandToLargeVilla(int buildingId)
 	for (int i = 0; i < Inventory_Max; i++) {
 		b->data.house.inventory[i] += mergeData.inventory[i];
 	}
-	int graphicId = HouseGraphicId(b->subtype.houseLevel);
+	int graphicId = Houseimage_group(b->subtype.houseLevel);
 	Terrain_removeBuildingFromGrids(buildingId, b->x, b->y);
 	b->x = mergeData.x;
 	b->y = mergeData.y;
@@ -296,7 +297,7 @@ void BuildingHouse_expandToLargePalace(int buildingId)
 	for (int i = 0; i < Inventory_Max; i++) {
 		b->data.house.inventory[i] += mergeData.inventory[i];
 	}
-	int graphicId = HouseGraphicId(b->subtype.houseLevel);
+	int graphicId = Houseimage_group(b->subtype.houseLevel);
 	Terrain_removeBuildingFromGrids(buildingId, b->x, b->y);
 	b->x = mergeData.x;
 	b->y = mergeData.y;
@@ -314,7 +315,7 @@ static void merge(int buildingId)
 	for (int i = 0; i < Inventory_Max; i++) {
 		b->data.house.inventory[i] += mergeData.inventory[i];
 	}
-	int graphicId = GraphicId(houseGraphicGroup[b->subtype.houseLevel]) + 4;
+	int graphicId = image_group(houseGraphicGroup[b->subtype.houseLevel]) + 4;
 	if (houseGraphicOffset[b->subtype.houseLevel]) {
 		graphicId += 1;
 	}
@@ -350,7 +351,7 @@ static void splitMerged(int buildingId)
 	}
 	b->distanceFromEntry = 0;
 
-	int graphicId = HouseGraphicId(b->subtype.houseLevel);
+	int graphicId = Houseimage_group(b->subtype.houseLevel);
 	Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size,
 		graphicId + (Data_Grid_random[b->gridOffset] & 1), Terrain_Building);
 	
@@ -385,7 +386,7 @@ static void splitSize2(int buildingId)
 	}
 	b->distanceFromEntry = 0;
 
-	int graphicId = HouseGraphicId(b->subtype.houseLevel);
+	int graphicId = Houseimage_group(b->subtype.houseLevel);
 	Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size,
 		graphicId + (Data_Grid_random[b->gridOffset] & 1), Terrain_Building);
 
@@ -420,7 +421,7 @@ static void splitSize3(int buildingId)
 	}
 	b->distanceFromEntry = 0;
 
-	int graphicId = HouseGraphicId(b->subtype.houseLevel);
+	int graphicId = Houseimage_group(b->subtype.houseLevel);
 	Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size,
 		graphicId + (Data_Grid_random[b->gridOffset] & 1), Terrain_Building);
 
@@ -463,12 +464,12 @@ void BuildingHouse_devolveFromLargeVilla(int buildingId)
 	}
 	b->distanceFromEntry = 0;
 
-	int graphicId = HouseGraphicId(b->subtype.houseLevel);
+	int graphicId = Houseimage_group(b->subtype.houseLevel);
 	Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size,
 		graphicId + (Data_Grid_random[b->gridOffset] & 1), Terrain_Building);
 
 	// the other tiles (new buildings)
-	graphicId = HouseGraphicId(HOUSE_MEDIUM_INSULA);
+	graphicId = Houseimage_group(HOUSE_MEDIUM_INSULA);
 	CREATE_HOUSE_TILE(BUILDING_HOUSE_MEDIUM_INSULA, b->x + 2, b->y);
 	CREATE_HOUSE_TILE(BUILDING_HOUSE_MEDIUM_INSULA, b->x + 2, b->y + 1);
 	CREATE_HOUSE_TILE(BUILDING_HOUSE_MEDIUM_INSULA, b->x, b->y + 2);
@@ -501,11 +502,11 @@ void BuildingHouse_devolveFromLargePalace(int buildingId)
 	}
 	b->distanceFromEntry = 0;
 
-	int graphicId = HouseGraphicId(b->subtype.houseLevel);
+	int graphicId = Houseimage_group(b->subtype.houseLevel);
 	Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size, graphicId, Terrain_Building);
 
 	// the other tiles (new buildings)
-	graphicId = HouseGraphicId(HOUSE_MEDIUM_INSULA);
+	graphicId = Houseimage_group(HOUSE_MEDIUM_INSULA);
 	CREATE_HOUSE_TILE(BUILDING_HOUSE_MEDIUM_INSULA, b->x + 3, b->y);
 	CREATE_HOUSE_TILE(BUILDING_HOUSE_MEDIUM_INSULA, b->x + 3, b->y + 1);
 	CREATE_HOUSE_TILE(BUILDING_HOUSE_MEDIUM_INSULA, b->x + 3, b->y + 2);
@@ -520,7 +521,7 @@ void BuildingHouse_changeTo(int buildingId, int buildingType)
 	struct Data_Building *b = &Data_Buildings[buildingId];
 	b->type = buildingType;
 	b->subtype.houseLevel = b->type - 10;
-	int graphicId = GraphicId(houseGraphicGroup[b->subtype.houseLevel]);
+	int graphicId = image_group(houseGraphicGroup[b->subtype.houseLevel]);
 	if (b->houseIsMerged) {
 		graphicId += 4;
 		if (houseGraphicOffset[b->subtype.houseLevel]) {
@@ -538,7 +539,7 @@ void BuildingHouse_changeToVacantLot(int buildingId)
 	struct Data_Building *b = &Data_Buildings[buildingId];
 	b->type = BUILDING_HOUSE_VACANT_LOT;
 	b->subtype.houseLevel = b->type - 10;
-	int graphicId = GraphicId(ID_Graphic_HouseVacantLot);
+	int graphicId = image_group(ID_Graphic_HouseVacantLot);
 	if (b->houseIsMerged) {
 		Terrain_removeBuildingFromGrids(buildingId, b->x, b->y);
 		b->houseIsMerged = 0;

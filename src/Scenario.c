@@ -27,7 +27,6 @@
 #include "Data/Empire.h"
 #include "Data/Event.h"
 #include "Data/FileList.h"
-#include "Data/Graphics.h"
 #include "Data/Grid.h"
 #include "Data/Model.h"
 #include "Data/Scenario.h"
@@ -43,6 +42,7 @@
 #include "figure/name.h"
 #include "figure/trader.h"
 #include "game/time.h"
+#include "graphics/image.h"
 
 #include <string.h>
 
@@ -387,7 +387,7 @@ static void initGridRandom()
 static void initGridGraphicIds()
 {
 	int gridOffset = Data_Settings_Map.gridStartOffset;
-	int graphicId = GraphicId(ID_Graphic_TerrainUglyGrass);
+	int graphicId = image_group(ID_Graphic_TerrainUglyGrass);
 	for (int y = 0; y < Data_Settings_Map.height; y++, gridOffset += Data_Settings_Map.gridBorderSize) {
 		for (int x = 0; x < Data_Settings_Map.width; x++, gridOffset++) {
 			Data_Grid_graphicIds[gridOffset] = graphicId + (Data_Grid_random[gridOffset] & 7);

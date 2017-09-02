@@ -83,7 +83,7 @@ static int dockerGetExportResource(int figureId, int buildingId)
 
 static void setCartGraphic(struct Data_Figure *f)
 {
-	f->cartGraphicId = GraphicId(ID_Graphic_Figure_CartpusherCart) + 8 * f->resourceId;
+	f->cartGraphicId = image_group(ID_Graphic_Figure_CartpusherCart) + 8 * f->resourceId;
 	f->cartGraphicId += Resource_getGraphicIdOffset(f->resourceId, 1);
 }
 
@@ -200,7 +200,7 @@ void FigureAction_docker(int figureId)
 			}
 			break;
 		case FigureActionState_136_DockerExportGoingToWarehouse:
-			f->cartGraphicId = GraphicId(ID_Graphic_Figure_CartpusherCart); // empty
+			f->cartGraphicId = image_group(ID_Graphic_Figure_CartpusherCart); // empty
 			FigureMovement_walkTicks(figureId, 1);
 			if (f->direction == DirFigure_8_AtDestination) {
 				f->actionState = FigureActionState_140_DockerExportAtWarehouse;
@@ -268,7 +268,7 @@ void FigureAction_docker(int figureId)
 			f->graphicOffset = 0;
 			break;
 		case FigureActionState_140_DockerExportAtWarehouse:
-			f->cartGraphicId = GraphicId(ID_Graphic_Figure_CartpusherCart); // empty
+			f->cartGraphicId = image_group(ID_Graphic_Figure_CartpusherCart); // empty
 			f->waitTicks++;
 			if (f->waitTicks > 10) {
 				int tradeCityId;
@@ -297,11 +297,11 @@ void FigureAction_docker(int figureId)
 	FigureActionNormalizeDirection(dir);
 
 	if (f->actionState == FigureActionState_149_Corpse) {
-		f->graphicId = GraphicId(ID_Graphic_Figure_Cartpusher) +
+		f->graphicId = image_group(ID_Graphic_Figure_Cartpusher) +
 			FigureActionCorpseGraphicOffset(f) + 96;
 		f->cartGraphicId = 0;
 	} else {
-		f->graphicId = GraphicId(ID_Graphic_Figure_Cartpusher) + dir + 8 * f->graphicOffset;
+		f->graphicId = image_group(ID_Graphic_Figure_Cartpusher) + dir + 8 * f->graphicOffset;
 	}
 	if (f->cartGraphicId) {
 		f->cartGraphicId += dir;

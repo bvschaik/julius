@@ -7,7 +7,8 @@
 #include "../Data/Screen.h"
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
-#include "../Data/Graphics.h"
+
+#include "graphics/image.h"
 
 void UI_Advisor_drawGeneralBackground();
 

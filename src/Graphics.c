@@ -2,12 +2,12 @@
 #include "Graphics_Footprint.h"
 #include "Loader.h"
 
-#include "Data/Graphics.h"
 #include "Data/Screen.h"
 #include "Data/Types.h"
 #include "Data/Constants.h"
 
 #include "graphics/color.h"
+#include "graphics/image.h"
 
 #include <stdio.h> // remove later
 #include <stdlib.h> // remove later

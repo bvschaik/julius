@@ -53,10 +53,10 @@ void UI_HoldFestivalDialog_drawBackground()
 			Widget_Panel_drawButtonBorder(
 				baseOffsetX + 100 * god + 66,
 				baseOffsetY + 92, 90, 100, 1);
-			Graphics_drawImage(GraphicId(ID_Graphic_PanelWindows) + god + 21,
+			Graphics_drawImage(image_group(ID_Graphic_PanelWindows) + god + 21,
 				baseOffsetX + 100 * god + 70, baseOffsetY + 96);
 		} else {
-			Graphics_drawImage(GraphicId(ID_Graphic_PanelWindows) + god + 16,
+			Graphics_drawImage(image_group(ID_Graphic_PanelWindows) + god + 16,
 				baseOffsetX + 100 * god + 70, baseOffsetY + 96);
 		}
 	}
@@ -107,7 +107,7 @@ static void drawButtons()
 		baseOffsetX + 110 + width, baseOffsetY + 284, Font_NormalBlack);
 	width += Widget_GameText_drawNumberWithDescription(8, 10, Data_CityInfo.festivalWineGrand,
 		baseOffsetX + 120 + width, baseOffsetY + 284, Font_NormalBlack);
-	Graphics_drawImage(GraphicId(ID_Graphic_ResourceIcons) + Resource_Wine,
+	Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + Resource_Wine,
 		baseOffsetX + 120 + width, baseOffsetY + 279);
 	
 	// greying out of buttons

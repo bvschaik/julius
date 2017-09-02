@@ -6,13 +6,13 @@
 #include "../Data/CityView.h"
 #include "../Data/Constants.h"
 #include "../Data/Figure.h"
-#include "../Data/Graphics.h"
 #include "../Data/Grid.h"
 #include "../Data/Mouse.h"
 #include "../Data/Scenario.h"
 #include "../Data/Settings.h"
 
 #include "figure/type.h"
+#include "graphics/image.h"
 
 #define FOREACH_XY_VIEW(block)\
 	int odd = 0;\
@@ -148,7 +148,7 @@ static int drawFigure(int xView, int yView, int gridOffset)
 static void drawTile(int xView, int yView, int gridOffset)
 {
 	if (gridOffset < 0) {
-		Graphics_drawImage(GraphicId(ID_Graphic_MinimapBlack), xView, yView);
+		Graphics_drawImage(image_group(ID_Graphic_MinimapBlack), xView, yView);
 		return;
 	}
 
@@ -169,11 +169,11 @@ static void drawTile(int xView, int yView, int gridOffset)
 			int graphicId;
 			int buildingId = Data_Grid_buildingIds[gridOffset];
 			if (Data_Buildings[buildingId].houseSize) {
-				graphicId = GraphicId(ID_Graphic_MinimapHouse);
+				graphicId = image_group(ID_Graphic_MinimapHouse);
 			} else if (Data_Buildings[buildingId].type == BUILDING_RESERVOIR) {
-				graphicId = GraphicId(ID_Graphic_MinimapAqueduct) - 1;
+				graphicId = image_group(ID_Graphic_MinimapAqueduct) - 1;
 			} else {
-				graphicId = GraphicId(ID_Graphic_MinimapBuilding);
+				graphicId = image_group(ID_Graphic_MinimapBuilding);
 			}
 			switch (Data_Grid_bitfields[gridOffset] & Bitfield_Sizes) {
 				case 0:
@@ -192,25 +192,25 @@ static void drawTile(int xView, int yView, int gridOffset)
 		int rand = Data_Grid_random[gridOffset];
 		int graphicId;
 		if (terrain & Terrain_Water) {
-			graphicId = GraphicId(ID_Graphic_MinimapWater) + (rand & 3);
+			graphicId = image_group(ID_Graphic_MinimapWater) + (rand & 3);
 		} else if (terrain & Terrain_Scrub) {
-			graphicId = GraphicId(ID_Graphic_MinimapTree) + (rand & 3);
+			graphicId = image_group(ID_Graphic_MinimapTree) + (rand & 3);
 		} else if (terrain & Terrain_Tree) {
-			graphicId = GraphicId(ID_Graphic_MinimapTree) + (rand & 3);
+			graphicId = image_group(ID_Graphic_MinimapTree) + (rand & 3);
 		} else if (terrain & Terrain_Rock) {
-			graphicId = GraphicId(ID_Graphic_MinimapRock) + (rand & 3);
+			graphicId = image_group(ID_Graphic_MinimapRock) + (rand & 3);
 		} else if (terrain & Terrain_Elevation) {
-			graphicId = GraphicId(ID_Graphic_MinimapRock) + (rand & 3);
+			graphicId = image_group(ID_Graphic_MinimapRock) + (rand & 3);
 		} else if (terrain & Terrain_Road) {
-			graphicId = GraphicId(ID_Graphic_MinimapRoad);
+			graphicId = image_group(ID_Graphic_MinimapRoad);
 		} else if (terrain & Terrain_Aqueduct) {
-			graphicId = GraphicId(ID_Graphic_MinimapAqueduct);
+			graphicId = image_group(ID_Graphic_MinimapAqueduct);
 		} else if (terrain & Terrain_Wall) {
-			graphicId = GraphicId(ID_Graphic_MinimapWall);
+			graphicId = image_group(ID_Graphic_MinimapWall);
 		} else if (terrain & Terrain_Meadow) {
-			graphicId = GraphicId(ID_Graphic_MinimapMeadow) + (rand & 3);
+			graphicId = image_group(ID_Graphic_MinimapMeadow) + (rand & 3);
 		} else {
-			graphicId = GraphicId(ID_Graphic_MinimapEmptyLand) + (rand & 7);
+			graphicId = image_group(ID_Graphic_MinimapEmptyLand) + (rand & 7);
 		}
 		Graphics_drawImage(graphicId, xView, yView);
 	}

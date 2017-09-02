@@ -8,12 +8,12 @@
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
-#include "Data/Graphics.h"
 #include "Data/Grid.h"
 #include "Data/Scenario.h"
 #include "Data/Settings.h"
 
 #include "building/list.h"
+#include "graphics/image.h"
 
 #include <string.h>
 
@@ -51,7 +51,7 @@ void UtilityManagement_updateHouseWaterAccess()
 
 static void setAllAqueductsToNoWater()
 {
-	int graphicId = GraphicId(ID_Graphic_Aqueduct) + 15;
+	int graphicId = image_group(ID_Graphic_Aqueduct) + 15;
 	int gridOffset = Data_Settings_Map.gridStartOffset;
 	for (int y = 0; y < Data_Settings_Map.height; y++, gridOffset += Data_Settings_Map.gridBorderSize) {
 		for (int x = 0; x < Data_Settings_Map.width; x++, gridOffset++) {
@@ -74,7 +74,7 @@ static void fillAqueductsFromOffset(int gridOffset)
 	qHead = qTail = 0;
 	int guard = 0;
 	int nextOffset;
-	int graphicWithoutWater = GraphicId(ID_Graphic_Aqueduct) + 15;
+	int graphicWithoutWater = image_group(ID_Graphic_Aqueduct) + 15;
 	do {
 		if (++guard >= GRID_SIZE * GRID_SIZE) {
 			break;
@@ -175,13 +175,13 @@ void UtilityManagement_updateReservoirFountain()
 		int des = Data_Grid_desirability[b->gridOffset];
 		int graphicId;
 		if (des > 60) {
-			graphicId = GraphicId(ID_Graphic_Fountain4);
+			graphicId = image_group(ID_Graphic_Fountain4);
 		} else if (des > 40) {
-			graphicId = GraphicId(ID_Graphic_Fountain3);
+			graphicId = image_group(ID_Graphic_Fountain3);
 		} else if (des > 20) {
-			graphicId = GraphicId(ID_Graphic_Fountain2);
+			graphicId = image_group(ID_Graphic_Fountain2);
 		} else {
-			graphicId = GraphicId(ID_Graphic_Fountain1);
+			graphicId = image_group(ID_Graphic_Fountain1);
 		}
 		Terrain_addBuildingToGrids(i, b->x, b->y, 1, graphicId, Terrain_Building);
 		if ((Data_Grid_terrain[b->gridOffset] & Terrain_ReservoirRange) && b->numWorkers) {

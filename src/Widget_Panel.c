@@ -1,12 +1,13 @@
 #include "Widget.h"
-#include "Data/Graphics.h"
 #include "Data/Constants.h"
 
 #include "Graphics.h"
 
+#include "graphics/image.h"
+
 void Widget_Panel_drawOuterPanel(int xOffset, int yOffset, int widthInBlocks, int heightInBlocks)
 {
-	int graphicBase = GraphicId(ID_Graphic_DialogBackground);
+	int graphicBase = image_group(ID_Graphic_DialogBackground);
 	int graphicId;
 	int graphicY = 0;
 	int yAdd = 0;
@@ -58,7 +59,7 @@ void Widget_Panel_drawOuterPanel(int xOffset, int yOffset, int widthInBlocks, in
 
 void Widget_Panel_drawUnborderedPanel(int xOffset, int yOffset, int widthInBlocks, int heightInBlocks)
 {
-	int graphicBase = GraphicId(ID_Graphic_DialogBackground);
+	int graphicBase = image_group(ID_Graphic_DialogBackground);
 	int graphicY = 0;
 	for (int y = 0; y < heightInBlocks; y++) {
 		int graphicX = 0;
@@ -81,7 +82,7 @@ void Widget_Panel_drawUnborderedPanel(int xOffset, int yOffset, int widthInBlock
 
 void Widget_Panel_drawInnerPanel(int xOffset, int yOffset, int widthInBlocks, int heightInBlocks)
 {
-	int graphicBase = GraphicId(ID_Graphic_SunkenTextboxBackground);
+	int graphicBase = image_group(ID_Graphic_SunkenTextboxBackground);
 	int graphicId;
 	int graphicY = 0;
 	int yAdd = 0;
@@ -133,7 +134,7 @@ void Widget_Panel_drawInnerPanel(int xOffset, int yOffset, int widthInBlocks, in
 
 void Widget_Panel_drawInnerPanelBottom(int xOffset, int yOffset, int widthInBlocks)
 {
-	int graphicBase = GraphicId(ID_Graphic_SunkenTextboxBackground);
+	int graphicBase = image_group(ID_Graphic_SunkenTextboxBackground);
 	int graphicId;
 	int graphicX = 0;
 	for (int x = 0; x < widthInBlocks; x++) {
@@ -167,7 +168,7 @@ void Widget_Panel_drawButtonBorder(int xOffset, int yOffset, int widthInPixels, 
 	int lastBlockPixelOffsetX = 16 * widthInBlocks - widthInPixels;
 	int lastBlockPixelOffsetY = 16 * heightInBlocks - heightInPixels;
 
-	int graphicBase = GraphicId(ID_Graphic_BorderedButton);
+	int graphicBase = image_group(ID_Graphic_BorderedButton);
 	if (hasFocus) {
 		graphicBase += 8;
 	}
@@ -207,7 +208,7 @@ void Widget_Panel_drawButtonBorder(int xOffset, int yOffset, int widthInPixels, 
 
 void Widget_Panel_drawLargeLabelButton(int xOffset, int yOffset, int widthInBlocks, int type)
 {
-	int graphicBase = GraphicId(ID_Graphic_PanelButton);
+	int graphicBase = image_group(ID_Graphic_PanelButton);
 	for (int i = 0; i < widthInBlocks; i++) {
 		int graphicId;
 		if (i == 0) {
@@ -223,7 +224,7 @@ void Widget_Panel_drawLargeLabelButton(int xOffset, int yOffset, int widthInBloc
 
 void Widget_Panel_drawSmallLabelButton(int xOffset, int yOffset, int widthInBlocks, int type)
 {
-	int graphicBase = GraphicId(ID_Graphic_PanelButton);
+	int graphicBase = image_group(ID_Graphic_PanelButton);
 	for (int i = 0; i < widthInBlocks; i++) {
 		int graphicId;
 		if (i == 0) {

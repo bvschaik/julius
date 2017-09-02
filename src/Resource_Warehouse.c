@@ -8,13 +8,13 @@
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
-#include "Data/Graphics.h"
 #include "Data/Grid.h"
 #include "Data/Scenario.h"
 
 #include "building/count.h"
 #include "building/model.h"
 #include "empire/trade_prices.h"
+#include "graphics/image.h"
 
 static int granaryGettingResource[7];
 static int granaryAcceptingResource[7];
@@ -23,9 +23,9 @@ void Resource_setWarehouseSpaceGraphic(int spaceId, int resource)
 {
 	int graphicId;
 	if (Data_Buildings[spaceId].loadsStored <= 0) {
-		graphicId = GraphicId(ID_Graphic_WarehouseStorageEmpty);
+		graphicId = image_group(ID_Graphic_WarehouseStorageEmpty);
 	} else {
-		graphicId = GraphicId(ID_Graphic_WarehouseStorageFilled) +
+		graphicId = image_group(ID_Graphic_WarehouseStorageFilled) +
 			4 * (resource - 1) + Resource_getGraphicIdOffset(resource, 0) +
 			Data_Buildings[spaceId].loadsStored - 1;
 	}

@@ -16,7 +16,6 @@
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
 #include "../Data/Empire.h"
-#include "../Data/Graphics.h"
 #include "../Data/Message.h"
 #include "../Data/Mouse.h"
 #include "../Data/Scenario.h"
@@ -24,6 +23,7 @@
 #include "../Data/Settings.h"
 
 #include "core/lang.h"
+#include "graphics/image.h"
 
 #define MAX_HISTORY 200
 
@@ -184,23 +184,23 @@ static void drawDialogNormal()
 	if (msg->image1.id) {
 		int graphicId, graphicX, graphicY;
 		if (data.textId) {
-			graphicId = GraphicId(ID_Graphic_MessageImages) + msg->image1.id - 1;
+			graphicId = image_group(ID_Graphic_MessageImages) + msg->image1.id - 1;
             graphicX = msg->image1.x;
             graphicY = msg->image1.y;
 		} else { // message id = 0 ==> about, fixed image position
 			graphicX = graphicY = 16;
-			graphicId = GraphicId(ID_Graphic_BigPeople);
+			graphicId = image_group(ID_Graphic_BigPeople);
 		}
 		Graphics_drawImage(graphicId, data.x + graphicX, data.y + graphicY);
-		if (data.y + graphicY + GraphicHeight(graphicId) + 8 > data.yText) {
-			data.yText = data.y + graphicY + GraphicHeight(graphicId) + 8;
+		if (data.y + graphicY + image_get(graphicId)->height + 8 > data.yText) {
+			data.yText = data.y + graphicY + image_get(graphicId)->height + 8;
 		}
 	}
 	if (msg->image2.id) {
-		int graphicId = GraphicId(ID_Graphic_MessageImages) + msg->image2.id - 1;
+		int graphicId = image_group(ID_Graphic_MessageImages) + msg->image2.id - 1;
 		Graphics_drawImage(graphicId, data.x + msg->image2.x, data.y + msg->image2.y);
-		if (data.y + msg->image2.y + GraphicHeight(graphicId) + 8 > data.yText) {
-			data.yText = data.y + msg->image2.y + GraphicHeight(graphicId) + 8;
+		if (data.y + msg->image2.y + image_get(graphicId)->height + 8 > data.yText) {
+			data.yText = data.y + msg->image2.y + image_get(graphicId)->height + 8;
 		}
 	}
 	// subtitle
@@ -274,7 +274,7 @@ static void drawDialogVideo()
 			'@', " ", data.x + 8, data.y + 384, Font_NormalWhite);
 		int resource = Data_Scenario.requests.resourceId[playerMessage.param1];
 		Graphics_drawImage(
-			GraphicId(ID_Graphic_ResourceIcons) + resource + Resource_getGraphicIdOffset(resource, 3),
+			image_group(ID_Graphic_ResourceIcons) + resource + Resource_getGraphicIdOffset(resource, 3),
 			data.x + 70, data.y + 379);
 		Widget_GameText_draw(23, resource, data.x + 100, data.y + 384, Font_NormalWhite);
 		if (Data_Scenario.requests_state[playerMessage.param1] <= 1) {
@@ -339,7 +339,7 @@ static void drawPlayerMessageContent(const lang_message *msg)
 			break;
 
 		case MESSAGE_TYPE_TRADE_CHANGE:
-			graphicId = GraphicId(ID_Graphic_ResourceIcons) + playerMessage.param2;
+			graphicId = image_group(ID_Graphic_ResourceIcons) + playerMessage.param2;
 			graphicId += Resource_getGraphicIdOffset(playerMessage.param2, 3);
 			Graphics_drawImage(graphicId, data.x + 64, data.yText + 40);
 			Widget_GameText_draw(21, Data_Empire_Cities[playerMessage.param1].cityNameId,
@@ -350,7 +350,7 @@ static void drawPlayerMessageContent(const lang_message *msg)
 			break;
 
 		case MESSAGE_TYPE_PRICE_CHANGE:
-			graphicId = GraphicId(ID_Graphic_ResourceIcons) + playerMessage.param2;
+			graphicId = image_group(ID_Graphic_ResourceIcons) + playerMessage.param2;
 			graphicId += Resource_getGraphicIdOffset(playerMessage.param2, 3);
 			Graphics_drawImage(graphicId, data.x + 64, data.yText + 40);
 			Widget_Text_drawNumber(playerMessage.param1, '@', " Dn",
@@ -369,7 +369,7 @@ static void drawPlayerMessageContent(const lang_message *msg)
 		int yOffset = data.yText + 86 + lines * 16;
 		Widget_Text_drawNumber(Data_Scenario.requests.amount[playerMessage.param1],
 			'@', " ", data.xText + 8, yOffset, Font_NormalWhite);
-		graphicId = GraphicId(ID_Graphic_ResourceIcons) +
+		graphicId = image_group(ID_Graphic_ResourceIcons) +
 			Data_Scenario.requests.resourceId[playerMessage.param1];
 		graphicId += Resource_getGraphicIdOffset(
 			Data_Scenario.requests.resourceId[playerMessage.param1], 3);

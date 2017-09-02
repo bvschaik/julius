@@ -1,12 +1,12 @@
 #include "Animation.h"
 
-#include "Data/Graphics.h"
 #include "Data/Grid.h"
 #include "Data/Building.h"
 
 #include "building/model.h"
 #include "core/calc.h"
 #include "core/time.h"
+#include "graphics/image.h"
 
 #define MAX_ANIM_TIMERS 51
 
@@ -85,7 +85,8 @@ int Animation_getIndexForCityBuilding(int graphicId, int gridOffset)
 		return 0;
 	}
 
-	if (!shouldUpdate[GraphicAnimationSpeed(graphicId)]) {
+	const image *img = image_get(graphicId);
+	if (!shouldUpdate[img->animation_speed_id]) {
 		return Data_Grid_spriteOffsets[gridOffset] & 0x7f;
 	}
 	// advance animation
@@ -122,7 +123,7 @@ int Animation_getIndexForCityBuilding(int graphicId, int gridOffset)
 				}
 			}
 		}
-	} else if (GraphicAnimationCanReverse(graphicId)) {
+	} else if (img->animation_can_reverse) {
 		if (Data_Grid_spriteOffsets[gridOffset] & 0x80) {
 			isReverse = 1;
 		}
@@ -135,15 +136,15 @@ int Animation_getIndexForCityBuilding(int graphicId, int gridOffset)
 			}
 		} else {
 			newSprite = currentSprite + 1;
-			if (newSprite > GraphicNumAnimationSprites(graphicId)) {
-				newSprite = GraphicNumAnimationSprites(graphicId);
+			if (newSprite > img->num_animation_sprites) {
+				newSprite = img->num_animation_sprites;
 				isReverse = 1;
 			}
 		}
 	} else {
 		// Absolutely normal case
 		newSprite = Data_Grid_spriteOffsets[gridOffset] + 1;
-		if (newSprite > GraphicNumAnimationSprites(graphicId)) {
+		if (newSprite > img->num_animation_sprites) {
 			newSprite = 1;
 		}
 	}
@@ -160,11 +161,12 @@ int Animation_getIndexForEmpireMap(int graphicId, int currentIndex)
 	if (currentIndex <= 0) {
 		currentIndex = 1;
 	}
-	int animationSpeed = GraphicAnimationSpeed(graphicId);
+	const image *img = image_get(graphicId);
+	int animationSpeed = img->animation_speed_id;
 	if (!shouldUpdate[animationSpeed]) {
 		return currentIndex;
 	}
-	if (GraphicAnimationCanReverse(graphicId)) {
+	if (img->animation_can_reverse) {
 		int isReverse = 0;
 		if (currentIndex & 0x80) {
 			isReverse = 1;
@@ -178,8 +180,8 @@ int Animation_getIndexForEmpireMap(int graphicId, int currentIndex)
 			}
 		} else {
 			currentIndex = currentSprite + 1;
-			if (currentIndex > GraphicNumAnimationSprites(graphicId)) {
-				currentIndex = GraphicNumAnimationSprites(graphicId);
+			if (currentIndex > img->num_animation_sprites) {
+				currentIndex = img->num_animation_sprites;
 				isReverse = 1;
 			}
 		}
@@ -189,7 +191,7 @@ int Animation_getIndexForEmpireMap(int graphicId, int currentIndex)
 	} else {
 		// Absolutely normal case
 		currentIndex++;
-		if (currentIndex > GraphicNumAnimationSprites(graphicId)) {
+		if (currentIndex > img->num_animation_sprites) {
 			currentIndex = 1;
 		}
 	}

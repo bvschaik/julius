@@ -22,7 +22,7 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
 
 	*advisorHeight = 27;
 	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
-	Graphics_drawImage(GraphicId(ID_Graphic_AdvisorIcons) + 3,
+	Graphics_drawImage(image_group(ID_Graphic_AdvisorIcons) + 3,
 		baseOffsetX + 10, baseOffsetY + 10);
 	width = Widget_GameText_draw(53, 0,
 		baseOffsetX + 60, baseOffsetY + 12, Font_LargeBlack);
@@ -36,7 +36,7 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
 			baseOffsetX + 80 + width, baseOffsetY + 17, Font_NormalBlack);
 	}
 
-	Graphics_drawImage(GraphicId(ID_Graphic_RatingsBackground),
+	Graphics_drawImage(image_group(ID_Graphic_RatingsBackground),
 		baseOffsetX + 60, baseOffsetY + 48);
 
 	// culture
@@ -175,8 +175,8 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
 
 static void drawRatingColumn(int xOffset, int yOffset, int value, int hasReached)
 {
-	int graphicBase = GraphicId(ID_Graphic_RatingsColumn);
-	int y = yOffset - GraphicHeight(graphicBase);
+	int graphicBase = image_group(ID_Graphic_RatingsColumn);
+	int y = yOffset - image_get(graphicBase)->height;
 	Graphics_drawImage(graphicBase, xOffset, y);
 	for (int i = 0; i < 2 * value; i++) {
 		Graphics_drawImage(graphicBase + 1, xOffset + 11, --y);

@@ -124,7 +124,7 @@ void UI_BuildingInfo_drawWharf(BuildingInfoContext *c)
 	PLAY_SOUND("wavs/wharf.wav");
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(102, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, Font_LargeBlack);
-	Graphics_drawImage(GraphicId(ID_Graphic_ResourceIcons) + Resource_Meat +
+	Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + Resource_Meat +
 		Resource_getGraphicIdOffset(Resource_Meat, 3),
 		c->xOffset + 10, c->yOffset + 10);
 

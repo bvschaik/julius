@@ -17,13 +17,13 @@
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
 #include "../Data/Empire.h"
-#include "../Data/Graphics.h"
 #include "../Data/Invasion.h"
 #include "../Data/Mouse.h"
 #include "../Data/Scenario.h"
 #include "../Data/Screen.h"
 
 #include "empire/trade_route.h"
+#include "graphics/image.h"
 
 #define MAX_WIDTH 2032
 #define MAX_HEIGHT 1136
@@ -105,7 +105,7 @@ void UI_Empire_drawForeground()
 
 static void drawPaneling()
 {
-	int graphicBase = GraphicId(ID_Graphic_EmpirePanels);
+	int graphicBase = image_group(ID_Graphic_EmpirePanels);
 	// bottom panel background
 	Graphics_setClipRectangle(data.xMin, data.yMin, data.xMax - data.xMin, data.yMax - data.yMin);
 	for (int x = data.xMin; x < data.xMax; x += 70) {
@@ -203,22 +203,22 @@ static void drawPanelInfoCity()
 				continue;
 			}
 			Graphics_drawInsetRect(xOffset + 100 * goodOffset + 120, yOffset + 21, 26, 26);
-			int graphicId = good + GraphicId(ID_Graphic_EmpireResource);
+			int graphicId = good + image_group(ID_Graphic_EmpireResource);
 			int resourceOffset = Resource_getGraphicIdOffset(good, 3);
 			Graphics_drawImage(graphicId + resourceOffset, xOffset + 100 * goodOffset + 121, yOffset + 22);
 			int routeId = Data_Empire_Cities[data.selectedCity].routeId;
 			int tradeMax = trade_route_limit(routeId, good);
 			switch (tradeMax) {
 				case 15:
-					Graphics_drawImage(GraphicId(ID_Graphic_TradeAmount),
+					Graphics_drawImage(image_group(ID_Graphic_TradeAmount),
 						xOffset + 100 * goodOffset + 141, yOffset + 20);
 					break;
 				case 25:
-					Graphics_drawImage(GraphicId(ID_Graphic_TradeAmount) + 1,
+					Graphics_drawImage(image_group(ID_Graphic_TradeAmount) + 1,
 						xOffset + 100 * goodOffset + 137, yOffset + 20);
 					break;
 				case 40:
-					Graphics_drawImage(GraphicId(ID_Graphic_TradeAmount) + 2,
+					Graphics_drawImage(image_group(ID_Graphic_TradeAmount) + 2,
 						xOffset + 100 * goodOffset + 133, yOffset + 20);
 					break;
 			}
@@ -242,22 +242,22 @@ static void drawPanelInfoCity()
 				continue;
 			}
 			Graphics_drawInsetRect(xOffset + 100 * goodOffset + 120, yOffset + 51, 26, 26);
-			int graphicId = good + GraphicId(ID_Graphic_EmpireResource);
+			int graphicId = good + image_group(ID_Graphic_EmpireResource);
 			int resourceOffset = Resource_getGraphicIdOffset(good, 3);
 			Graphics_drawImage(graphicId + resourceOffset, xOffset + 100 * goodOffset + 121, yOffset + 52);
 			int routeId = Data_Empire_Cities[data.selectedCity].routeId;
 			int tradeMax = trade_route_limit(routeId, good);
 			switch (tradeMax) {
 				case 15:
-					Graphics_drawImage(GraphicId(ID_Graphic_TradeAmount),
+					Graphics_drawImage(image_group(ID_Graphic_TradeAmount),
 						xOffset + 100 * goodOffset + 141, yOffset + 50);
 					break;
 				case 25:
-					Graphics_drawImage(GraphicId(ID_Graphic_TradeAmount) + 1,
+					Graphics_drawImage(image_group(ID_Graphic_TradeAmount) + 1,
 						xOffset + 100 * goodOffset + 137, yOffset + 50);
 					break;
 				case 40:
-					Graphics_drawImage(GraphicId(ID_Graphic_TradeAmount) + 2,
+					Graphics_drawImage(image_group(ID_Graphic_TradeAmount) + 2,
 						xOffset + 100 * goodOffset + 133, yOffset + 50);
 					break;
 			}
@@ -280,21 +280,21 @@ static void drawPanelInfoCity()
 				continue;
 			}
 			Graphics_drawInsetRect(xOffset + goodOffset + 60, yOffset + 33, 26, 26);
-			int graphicId = good + GraphicId(ID_Graphic_EmpireResource);
+			int graphicId = good + image_group(ID_Graphic_EmpireResource);
 			int resourceOffset = Resource_getGraphicIdOffset(good, 3);
 			Graphics_drawImage(graphicId + resourceOffset, xOffset + goodOffset + 61, yOffset + 34);
 			int routeId = Data_Empire_Cities[data.selectedCity].routeId;
 			switch (trade_route_limit(routeId, good)) {
 				case 15:
-					Graphics_drawImage(GraphicId(ID_Graphic_TradeAmount),
+					Graphics_drawImage(image_group(ID_Graphic_TradeAmount),
 						xOffset + goodOffset + 81, yOffset + 32);
 					break;
 				case 25:
-					Graphics_drawImage(GraphicId(ID_Graphic_TradeAmount) + 1,
+					Graphics_drawImage(image_group(ID_Graphic_TradeAmount) + 1,
 						xOffset + goodOffset + 77, yOffset + 32);
 					break;
 				case 40:
-					Graphics_drawImage(GraphicId(ID_Graphic_TradeAmount) + 2,
+					Graphics_drawImage(image_group(ID_Graphic_TradeAmount) + 2,
 						xOffset + goodOffset + 73, yOffset + 32);
 					break;
 			}
@@ -306,21 +306,21 @@ static void drawPanelInfoCity()
 				continue;
 			}
 			Graphics_drawInsetRect(xOffset + goodOffset + 110, yOffset + 33, 26, 26);
-			int graphicId = good + GraphicId(ID_Graphic_EmpireResource);
+			int graphicId = good + image_group(ID_Graphic_EmpireResource);
 			int resourceOffset = Resource_getGraphicIdOffset(good, 3);
 			Graphics_drawImage(graphicId + resourceOffset, xOffset + goodOffset + 110, yOffset + 34);
 			int routeId = Data_Empire_Cities[data.selectedCity].routeId;
 			switch (trade_route_limit(routeId, good)) {
 				case 15:
-					Graphics_drawImage(GraphicId(ID_Graphic_TradeAmount),
+					Graphics_drawImage(image_group(ID_Graphic_TradeAmount),
 						xOffset + goodOffset + 130, yOffset + 32);
 					break;
 				case 25:
-					Graphics_drawImage(GraphicId(ID_Graphic_TradeAmount) + 1,
+					Graphics_drawImage(image_group(ID_Graphic_TradeAmount) + 1,
 						xOffset + goodOffset + 126, yOffset + 32);
 					break;
 				case 40:
-					Graphics_drawImage(GraphicId(ID_Graphic_TradeAmount) + 2,
+					Graphics_drawImage(image_group(ID_Graphic_TradeAmount) + 2,
 						xOffset + goodOffset + 122, yOffset + 32);
 					break;
 			}
@@ -373,7 +373,7 @@ static void drawPanelInfoEnemyArmy()
 
 static void drawPanelInfoCityName()
 {
-	int graphicBase = GraphicId(ID_Graphic_EmpirePanels);
+	int graphicBase = image_group(ID_Graphic_EmpirePanels);
 	Graphics_drawImage(graphicBase + 6, data.xMin + 2, data.yMax - 199);
 	Graphics_drawImage(graphicBase + 7, data.xMax - 84, data.yMax - 199);
 	Graphics_drawImage(graphicBase + 8, (data.xMin + data.xMax - 332) / 2, data.yMax - 181);
@@ -409,7 +409,7 @@ static void drawEmpireMap()
 
 	int xOffset = data.xMin + 16 - Data_Empire.scrollX;
 	int yOffset = data.yMin + 16 - Data_Empire.scrollY;
-	Graphics_drawImage(GraphicId(ID_Graphic_EmpireMap), xOffset, yOffset);
+	Graphics_drawImage(image_group(ID_Graphic_EmpireMap), xOffset, yOffset);
 
 	for (int i = 0; i < 200 && Data_Empire_Objects[i].inUse; i++) {
 		struct Data_Empire_Object *obj = &Data_Empire_Objects[i];
@@ -433,7 +433,7 @@ static void drawEmpireMap()
 			int city = Empire_getCityForObject(i);
 			if (Data_Empire_Cities[city].cityType == EmpireCity_DistantForeign ||
 				Data_Empire_Cities[city].cityType == EmpireCity_FutureRoman) {
-				graphicId = GraphicId(ID_Graphic_EmpireForeignCity);
+				graphicId = image_group(ID_Graphic_EmpireForeignCity);
 			}
 		}
 		if (obj->type == EmpireObject_BattleIcon) {
@@ -458,11 +458,12 @@ static void drawEmpireMap()
 			}
 		}
 		Graphics_drawImage(graphicId, xOffset + x, yOffset + y);
-		if (GraphicAnimationSpeed(graphicId)) {
+		const image *img = image_get(graphicId);
+		if (img->animation_speed_id) {
 			obj->animationIndex = Animation_getIndexForEmpireMap(graphicId, obj->animationIndex);
 			Graphics_drawImage(graphicId + obj->animationIndex,
-				xOffset + x + GraphicSpriteOffsetX(graphicId),
-				yOffset + y + GraphicSpriteOffsetY(graphicId));
+				xOffset + x + img->sprite_offset_x,
+				yOffset + y + img->sprite_offset_y);
 		}
 	}
 

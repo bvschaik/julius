@@ -58,10 +58,10 @@ void FigureAction_seagulls(int figureId)
 	}
 	if (figureId & 1) {
 		FigureActionIncreaseGraphicOffset(f, 54);
-		f->graphicId = GraphicId(ID_Graphic_Figure_Seagulls) + f->graphicOffset / 3;
+		f->graphicId = image_group(ID_Graphic_Figure_Seagulls) + f->graphicOffset / 3;
 	} else {
 		FigureActionIncreaseGraphicOffset(f, 72);
-		f->graphicId = GraphicId(ID_Graphic_Figure_Seagulls) + 18 + f->graphicOffset / 3;
+		f->graphicId = image_group(ID_Graphic_Figure_Seagulls) + 18 + f->graphicOffset / 3;
 	}
 }
 
@@ -105,17 +105,17 @@ void FigureAction_sheep(int figureId)
 	}
 	int dir = FigureActionDirection(f);
 	if (f->actionState == FigureActionState_149_Corpse) {
-		f->graphicId = GraphicId(ID_Graphic_Figure_Sheep) + 104 +
+		f->graphicId = image_group(ID_Graphic_Figure_Sheep) + 104 +
 			FigureActionCorpseGraphicOffset(f);
 	} else if (f->actionState == FigureActionState_196_HerdAnimalAtRest) {
 		if (figureId & 3) {
-			f->graphicId = GraphicId(ID_Graphic_Figure_Sheep) + 48 + dir +
+			f->graphicId = image_group(ID_Graphic_Figure_Sheep) + 48 + dir +
 				8 * sheepGraphicOffsets[f->waitTicks & 0x3f];
 		} else {
-			f->graphicId = GraphicId(ID_Graphic_Figure_Sheep) + 96 + dir;
+			f->graphicId = image_group(ID_Graphic_Figure_Sheep) + 96 + dir;
 		}
 	} else {
-		f->graphicId = GraphicId(ID_Graphic_Figure_Sheep) + dir + 8 * f->graphicOffset;
+		f->graphicId = image_group(ID_Graphic_Figure_Sheep) + dir + 8 * f->graphicOffset;
 	}
 }
 
@@ -183,15 +183,15 @@ void FigureAction_wolf(int figureId)
 	}
 	int dir = FigureActionDirection(f);
 	if (f->actionState == FigureActionState_149_Corpse) {
-		f->graphicId = GraphicId(ID_Graphic_Figure_Wolf) + 96 +
+		f->graphicId = image_group(ID_Graphic_Figure_Wolf) + 96 +
 			FigureActionCorpseGraphicOffset(f);
 	} else if (f->actionState == FigureActionState_150_Attack) {
-		f->graphicId = GraphicId(ID_Graphic_Figure_Wolf) + 104 +
+		f->graphicId = image_group(ID_Graphic_Figure_Wolf) + 104 +
 			dir + 8 * (f->attackGraphicOffset / 4);
 	} else if (f->actionState == FigureActionState_196_HerdAnimalAtRest) {
-		f->graphicId = GraphicId(ID_Graphic_Figure_Wolf) + 152 + dir;
+		f->graphicId = image_group(ID_Graphic_Figure_Wolf) + 152 + dir;
 	} else {
-		f->graphicId = GraphicId(ID_Graphic_Figure_Wolf) + dir + 8 * f->graphicOffset;
+		f->graphicId = image_group(ID_Graphic_Figure_Wolf) + dir + 8 * f->graphicOffset;
 	}
 }
 
@@ -235,12 +235,12 @@ void FigureAction_zebra(int figureId)
 	}
 	int dir = FigureActionDirection(f);
 	if (f->actionState == FigureActionState_149_Corpse) {
-		f->graphicId = GraphicId(ID_Graphic_Figure_Zebra) + 96 +
+		f->graphicId = image_group(ID_Graphic_Figure_Zebra) + 96 +
 			FigureActionCorpseGraphicOffset(f);
 	} else if (f->actionState == FigureActionState_196_HerdAnimalAtRest) {
-		f->graphicId = GraphicId(ID_Graphic_Figure_Zebra) + dir;
+		f->graphicId = image_group(ID_Graphic_Figure_Zebra) + dir;
 	} else {
-		f->graphicId = GraphicId(ID_Graphic_Figure_Zebra) + dir + 8 * f->graphicOffset;
+		f->graphicId = image_group(ID_Graphic_Figure_Zebra) + dir + 8 * f->graphicOffset;
 	}
 }
 
@@ -373,13 +373,13 @@ void FigureAction_hippodromeHorse(int figureId)
 
 	int dir = FigureActionDirection(f);
 	if (f->resourceId == 0) {
-		f->graphicId = GraphicId(ID_Graphic_Figure_HippodromeHorse1) +
+		f->graphicId = image_group(ID_Graphic_Figure_HippodromeHorse1) +
 			dir + 8 * f->graphicOffset;
-		f->cartGraphicId = GraphicId(ID_Graphic_Figure_HippodromeCart1) + dir;
+		f->cartGraphicId = image_group(ID_Graphic_Figure_HippodromeCart1) + dir;
 	} else {
-		f->graphicId = GraphicId(ID_Graphic_Figure_HippodromeHorse2) +
+		f->graphicId = image_group(ID_Graphic_Figure_HippodromeHorse2) +
 			dir + 8 * f->graphicOffset;
-		f->cartGraphicId = GraphicId(ID_Graphic_Figure_HippodromeCart2) + dir;
+		f->cartGraphicId = image_group(ID_Graphic_Figure_HippodromeCart2) + dir;
 	}
 	int cartDir = (dir + 4) % 8;
 	FigureAction_Common_setCartOffset(figureId, cartDir);

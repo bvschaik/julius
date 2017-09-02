@@ -83,7 +83,7 @@ void UI_Intermezzo_drawBackground()
 	int xOffset = (Data_Screen.width - 1024) / 2;
 	int yOffset = (Data_Screen.height - 768) / 2;
 
-	int graphicBase = GraphicId(ID_Graphic_IntermezzoBackground);
+	int graphicBase = image_group(ID_Graphic_IntermezzoBackground);
 	if (data.type == Intermezzo_MissionBriefing) {
 		Sound_stopMusic();
 		Sound_stopSpeech();

@@ -163,7 +163,7 @@ void UI_BuildingInfo_drawBarracks(BuildingInfoContext *c)
 	PLAY_SOUND("wavs/barracks.wav");
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(136, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, Font_LargeBlack);
-	Graphics_drawImage(GraphicId(ID_Graphic_ResourceIcons) + Resource_Weapons,
+	Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + Resource_Weapons,
 		c->xOffset + 64, c->yOffset + 38);
 
 	struct Data_Building *b = &Data_Buildings[c->buildingId];
@@ -211,13 +211,13 @@ void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)
 		c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, Font_LargeBlack);
 
 	// standard icon at the top
-	int graphicId = GraphicId(ID_Graphic_FortStandardIcons) + m->legion_id;
-	int iconHeight = GraphicHeight(graphicId);
+	int graphicId = image_group(ID_Graphic_FortStandardIcons) + m->legion_id;
+	int iconHeight = image_get(graphicId)->height;
 	Graphics_drawImage(graphicId,
-		c->xOffset + 16 + (40 - GraphicWidth(graphicId)) / 2,
+		c->xOffset + 16 + (40 - image_get(graphicId)->width) / 2,
 		c->yOffset + 16);
 	// standard flag
-	graphicId = GraphicId(ID_Graphic_FortFlags);
+	graphicId = image_group(ID_Graphic_FortFlags);
 	if (m->figure_type == FIGURE_FORT_JAVELIN) {
 		graphicId += 9;
 	} else if (m->figure_type == FIGURE_FORT_MOUNTED) {
@@ -226,14 +226,14 @@ void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)
 	if (m->is_halted) {
 		graphicId += 8;
 	}
-	int flagHeight = GraphicHeight(graphicId);
+	int flagHeight = image_get(graphicId)->height;
 	Graphics_drawImage(graphicId,
-		c->xOffset + 16 + (40 - GraphicWidth(graphicId)) / 2,
+		c->xOffset + 16 + (40 - image_get(graphicId)->width) / 2,
 		c->yOffset + 16 + iconHeight);
 	// standard pole and morale ball
-	graphicId = GraphicId(ID_Graphic_FortStandardPole) + 20 - m->morale / 5;
+	graphicId = image_group(ID_Graphic_FortStandardPole) + 20 - m->morale / 5;
 	Graphics_drawImage(graphicId,
-		c->xOffset + 16 + (40 - GraphicWidth(graphicId)) / 2,
+		c->xOffset + 16 + (40 - image_get(graphicId)->width) / 2,
 		c->yOffset + 16 + iconHeight + flagHeight);
 
 	// number of soldiers
@@ -291,7 +291,7 @@ void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)
 			offsets = offsetsOther[index];
 		}
 		for (int i = 5 - c->formationTypes; i < 5; i++) {
-			Graphics_drawImage(GraphicId(ID_Graphic_FortFormations) + offsets[i],
+			Graphics_drawImage(image_group(ID_Graphic_FortFormations) + offsets[i],
 				c->xOffset + 21 + 85 * i, c->yOffset + 141);
 		}
 		UI_BuildingInfo_drawLegionInfoForeground(c);

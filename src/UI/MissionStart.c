@@ -87,8 +87,8 @@ void UI_MissionStart_Selection_drawBackground()
 	int yOffset = Data_Screen.offset640x480.y;
 	int missionId = Data_Settings.currentMissionId;
 	
-	Graphics_drawFullScreenImage(GraphicId(ID_Graphic_SelectMissionBackground));
-	Graphics_drawImage(GraphicId(ID_Graphic_SelectMission) +
+	Graphics_drawFullScreenImage(image_group(ID_Graphic_SelectMissionBackground));
+	Graphics_drawImage(image_group(ID_Graphic_SelectMission) +
 		backgroundGraphicOffset[missionId],
 		xOffset, yOffset);
 	Widget_GameText_draw(144, 1 + 3 * missionId, xOffset + 20, yOffset + 410, Font_LargeBlack);
@@ -129,7 +129,7 @@ void UI_MissionStart_Selection_drawForeground()
 	if (isMouseHit(xMilitary, yMilitary, 44)) {
 		selected = 2;
 	}
-	int graphicId = GraphicId(ID_Graphic_SelectMissionButton);
+	int graphicId = image_group(ID_Graphic_SelectMissionButton);
 	if (data.choice == 0) {
 		Graphics_drawImage(selected == 1 ? graphicId + 1 : graphicId, xPeaceful, yPeaceful);
 		Graphics_drawImage(selected == 2 ? graphicId + 1 : graphicId, xMilitary, yMilitary);

@@ -58,10 +58,10 @@ static void FigureAction_culture(int figureId, int graphicCategory)
 	FigureActionIncreaseGraphicOffset(f, 12);
 	FigureAction_cultureCommon(figureId, 1);
 	if (f->actionState == FigureActionState_149_Corpse) {
-		f->graphicId = GraphicId(graphicCategory) +
+		f->graphicId = image_group(graphicCategory) +
 			FigureActionCorpseGraphicOffset(f) + 96;
 	} else {
-		f->graphicId = GraphicId(graphicCategory) +
+		f->graphicId = image_group(graphicCategory) +
 			FigureActionDirection(f) + 8 * f->graphicOffset;
 	}
 }
@@ -99,10 +99,10 @@ void FigureAction_schoolChild(int figureId)
 			break;
 	}
 	if (f->actionState == FigureActionState_149_Corpse) {
-		f->graphicId = GraphicId(ID_Graphic_Figure_SchoolChild) +
+		f->graphicId = image_group(ID_Graphic_Figure_SchoolChild) +
 			FigureActionCorpseGraphicOffset(f) + 96;
 	} else {
-		f->graphicId = GraphicId(ID_Graphic_Figure_SchoolChild) +
+		f->graphicId = image_group(ID_Graphic_Figure_SchoolChild) +
 			FigureActionDirection(f) + 8 * f->graphicOffset;
 	}
 }
@@ -149,7 +149,7 @@ void FigureAction_missionary(int figureId)
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);
 	FigureAction_cultureCommon(figureId, 1);
-	FigureActionUpdateGraphic(f, GraphicId(ID_Graphic_Figure_Missionary));
+	FigureActionUpdateGraphic(f, image_group(ID_Graphic_Figure_Missionary));
 }
 
 void FigureAction_patrician(int figureId)
@@ -163,7 +163,7 @@ void FigureAction_patrician(int figureId)
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);
 	FigureAction_cultureCommon(figureId, 1);
-	FigureActionUpdateGraphic(f, GraphicId(ID_Graphic_Figure_Patrician));
+	FigureActionUpdateGraphic(f, image_group(ID_Graphic_Figure_Patrician));
 }
 
 void FigureAction_laborSeeker(int figureId)
@@ -178,7 +178,7 @@ void FigureAction_laborSeeker(int figureId)
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);
 	FigureAction_cultureCommon(figureId, 1);
-	FigureActionUpdateGraphic(f, GraphicId(ID_Graphic_Figure_LaborSeeker));
+	FigureActionUpdateGraphic(f, image_group(ID_Graphic_Figure_LaborSeeker));
 }
 
 void FigureAction_marketTrader(int figureId)
@@ -201,6 +201,6 @@ void FigureAction_marketTrader(int figureId)
 		}
 	}
 	FigureAction_cultureCommon(figureId, 1);
-	FigureActionUpdateGraphic(f, GraphicId(ID_Graphic_Figure_MarketLady));
+	FigureActionUpdateGraphic(f, image_group(ID_Graphic_Figure_MarketLady));
 }
 

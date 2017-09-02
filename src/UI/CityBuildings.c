@@ -104,7 +104,7 @@ void UI_CityBuildings_drawForegroundForFigure(int x, int y, int figureId, struct
 
 static void drawBuildingFootprints()
 {
-	int graphicIdWaterFirst = GraphicId(ID_Graphic_TerrainWater);
+	int graphicIdWaterFirst = image_group(ID_Graphic_TerrainWater);
 	int graphicIdWaterLast = 5 + graphicIdWaterFirst;
 
 	FOREACH_XY_VIEW {
@@ -115,7 +115,7 @@ static void drawBuildingFootprints()
 		}
 		if (gridOffset < 0) {
 			// Outside map: draw black tile
-			Graphics_drawIsometricFootprint(GraphicId(ID_Graphic_TerrainBlack),
+			Graphics_drawIsometricFootprint(image_group(ID_Graphic_TerrainBlack),
 				xGraphic, yGraphic, 0);
 		} else if (Data_Grid_edge[gridOffset] & Edge_LeftmostTile) {
 			// Valid gridOffset and leftmost tile -> draw
@@ -139,7 +139,7 @@ static void drawBuildingFootprints()
 			}
 			int graphicId = Data_Grid_graphicIds[gridOffset];
 			if (Data_Grid_bitfields[gridOffset] & Bitfield_Overlay) {
-				graphicId = GraphicId(ID_Graphic_TerrainOverlay);
+				graphicId = image_group(ID_Graphic_TerrainOverlay);
 			}
 			switch (Data_Grid_bitfields[gridOffset] & Bitfield_Sizes) {
 				case Bitfield_Size1:
@@ -193,7 +193,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 				struct Data_Building *b = &Data_Buildings[buildingId];
 				if (b->type == BUILDING_SENATE_UPGRADED) {
 					// rating flags
-					graphicId = GraphicId(ID_Graphic_Senate);
+					graphicId = image_group(ID_Graphic_Senate);
 					Graphics_drawImageMasked(graphicId + 1, xGraphic + 138,
 						yGraphic + 44 - Data_CityInfo.ratingCulture / 2, colorMask);
 					Graphics_drawImageMasked(graphicId + 2, xGraphic + 168,
@@ -203,7 +203,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 					Graphics_drawImageMasked(graphicId + 4, xGraphic + 228,
 						yGraphic + 19 - Data_CityInfo.ratingFavor / 2, colorMask);
 					// unemployed
-					graphicId = GraphicId(ID_Graphic_Figure_Homeless);
+					graphicId = image_group(ID_Graphic_Figure_Homeless);
 					if (Data_CityInfo.unemploymentPercentageForSenate > 0) {
 						Graphics_drawImageMasked(graphicId + 108,
 							xGraphic + 80, yGraphic, colorMask);
@@ -226,11 +226,11 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 					}
 				}
 				if (b->type == BUILDING_AMPHITHEATER && b->numWorkers > 0) {
-					Graphics_drawImageMasked(GraphicId(ID_Graphic_AmphitheaterShow),
+					Graphics_drawImageMasked(image_group(ID_Graphic_AmphitheaterShow),
 						xGraphic + 36, yGraphic - 47, colorMask);
 				}
 				if (b->type == BUILDING_THEATER && b->numWorkers > 0) {
-					Graphics_drawImageMasked(GraphicId(ID_Graphic_TheaterShow),
+					Graphics_drawImageMasked(image_group(ID_Graphic_TheaterShow),
 						xGraphic + 34, yGraphic - 22, colorMask);
 				}
 				if (b->type == BUILDING_HIPPODROME &&
@@ -241,22 +241,22 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 						switch (Data_Settings_Map.orientation) {
 							case Dir_0_Top:
 								Graphics_drawImageMasked(
-									GraphicId(ID_Graphic_Hippodrome2) + 6,
+									image_group(ID_Graphic_Hippodrome2) + 6,
 									xGraphic + 147, yGraphic - 72, colorMask);
 								break;
 							case Dir_2_Right:
 								Graphics_drawImageMasked(
-									GraphicId(ID_Graphic_Hippodrome1) + 8,
+									image_group(ID_Graphic_Hippodrome1) + 8,
 									xGraphic + 58, yGraphic - 79, colorMask);
 								break;
 							case Dir_4_Bottom:
 								Graphics_drawImageMasked(
-									GraphicId(ID_Graphic_Hippodrome2) + 8,
+									image_group(ID_Graphic_Hippodrome2) + 8,
 									xGraphic + 119, yGraphic - 80, colorMask);
 								break;
 							case Dir_6_Left:
 								Graphics_drawImageMasked(
-									GraphicId(ID_Graphic_Hippodrome1) + 6,
+									image_group(ID_Graphic_Hippodrome1) + 6,
 									xGraphic, yGraphic - 72, colorMask);
 						}
 					} else if ((subtype == 1 || subtype == 4) && Data_CityInfo.population > 100) {
@@ -264,71 +264,71 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 							case Dir_0_Top:
 							case Dir_4_Bottom:
 								Graphics_drawImageMasked(
-									GraphicId(ID_Graphic_Hippodrome2) + 7,
+									image_group(ID_Graphic_Hippodrome2) + 7,
 									xGraphic + 122, yGraphic - 79, colorMask);
 								break;
 							case Dir_2_Right:
 							case Dir_6_Left:
 								Graphics_drawImageMasked(
-									GraphicId(ID_Graphic_Hippodrome1) + 7,
+									image_group(ID_Graphic_Hippodrome1) + 7,
 									xGraphic, yGraphic - 80, colorMask);
 						}
 					} else if ((subtype == 2 || subtype == 5) && Data_CityInfo.population > 1000) {
 						switch (Data_Settings_Map.orientation) {
 							case Dir_0_Top:
 								Graphics_drawImageMasked(
-									GraphicId(ID_Graphic_Hippodrome2) + 8,
+									image_group(ID_Graphic_Hippodrome2) + 8,
 									xGraphic + 119, yGraphic - 80, colorMask);
 								break;
 							case Dir_2_Right:
 								Graphics_drawImageMasked(
-									GraphicId(ID_Graphic_Hippodrome1) + 6,
+									image_group(ID_Graphic_Hippodrome1) + 6,
 									xGraphic, yGraphic - 72, colorMask);
 								break;
 							case Dir_4_Bottom:
 								Graphics_drawImageMasked(
-									GraphicId(ID_Graphic_Hippodrome2) + 6,
+									image_group(ID_Graphic_Hippodrome2) + 6,
 									xGraphic + 147, yGraphic - 72, colorMask);
 								break;
 							case Dir_6_Left:
 								Graphics_drawImageMasked(
-									GraphicId(ID_Graphic_Hippodrome1) + 8,
+									image_group(ID_Graphic_Hippodrome1) + 8,
 									xGraphic + 58, yGraphic - 79, colorMask);
 						}
 					}
 				}
 				if (b->type == BUILDING_COLOSSEUM && b->numWorkers > 0) {
-					Graphics_drawImageMasked(GraphicId(ID_Graphic_ColosseumShow),
+					Graphics_drawImageMasked(image_group(ID_Graphic_ColosseumShow),
 						xGraphic + 70, yGraphic - 90, colorMask);
 				}
 				// workshops
 				if (b->type == BUILDING_WINE_WORKSHOP) {
 					if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
-						Graphics_drawImageMasked(GraphicId(ID_Graphic_WorkshopRawMaterial),
+						Graphics_drawImageMasked(image_group(ID_Graphic_WorkshopRawMaterial),
 							xGraphic + 45, yGraphic + 23, colorMask);
 					}
 				}
 				if (b->type == BUILDING_OIL_WORKSHOP) {
 					if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
-						Graphics_drawImageMasked(GraphicId(ID_Graphic_WorkshopRawMaterial) + 1,
+						Graphics_drawImageMasked(image_group(ID_Graphic_WorkshopRawMaterial) + 1,
 							xGraphic + 35, yGraphic + 15, colorMask);
 					}
 				}
 				if (b->type == BUILDING_WEAPONS_WORKSHOP) {
 					if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
-						Graphics_drawImageMasked(GraphicId(ID_Graphic_WorkshopRawMaterial) + 3,
+						Graphics_drawImageMasked(image_group(ID_Graphic_WorkshopRawMaterial) + 3,
 							xGraphic + 46, yGraphic + 24, colorMask);
 					}
 				}
 				if (b->type == BUILDING_FURNITURE_WORKSHOP) {
 					if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
-						Graphics_drawImageMasked(GraphicId(ID_Graphic_WorkshopRawMaterial) + 2,
+						Graphics_drawImageMasked(image_group(ID_Graphic_WorkshopRawMaterial) + 2,
 							xGraphic + 48, yGraphic + 19, colorMask);
 					}
 				}
 				if (b->type == BUILDING_POTTERY_WORKSHOP) {
 					if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
-						Graphics_drawImageMasked(GraphicId(ID_Graphic_WorkshopRawMaterial) + 4,
+						Graphics_drawImageMasked(image_group(ID_Graphic_WorkshopRawMaterial) + 4,
 							xGraphic + 47, yGraphic + 24, colorMask);
 					}
 				}
@@ -347,7 +347,8 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 		// draw animation
 		FOREACH_X_VIEW {
 			int graphicId = Data_Grid_graphicIds[gridOffset];
-			if (GraphicNumAnimationSprites(graphicId)) {
+			const image *img = image_get(graphicId);
+			if (img->num_animation_sprites) {
 				if (Data_Grid_edge[gridOffset] & Edge_LeftmostTile) {
 					int buildingId = Data_Grid_buildingIds[gridOffset];
 					struct Data_Building *b = &Data_Buildings[buildingId];
@@ -359,12 +360,12 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 						int numDockers = BUILDING_DOCK_getNumIdleDockers(buildingId);
 						if (numDockers > 0) {
 							int graphicIdDock = Data_Grid_graphicIds[b->gridOffset];
-							int graphicIdDockers = GraphicId(ID_Graphic_Dockers);
-							if (graphicIdDock == GraphicId(ID_Graphic_Dock1)) {
+							int graphicIdDockers = image_group(ID_Graphic_Dockers);
+							if (graphicIdDock == image_group(ID_Graphic_Dock1)) {
 								graphicIdDockers += 0;
-							} else if (graphicIdDock == GraphicId(ID_Graphic_Dock2)) {
+							} else if (graphicIdDock == image_group(ID_Graphic_Dock2)) {
 								graphicIdDockers += 3;
-							} else if (graphicIdDock == GraphicId(ID_Graphic_Dock3)) {
+							} else if (graphicIdDock == image_group(ID_Graphic_Dock3)) {
 								graphicIdDockers += 6;
 							} else {
 								graphicIdDockers += 9;
@@ -375,49 +376,49 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 								graphicIdDockers += 2;
 							}
 							Graphics_drawImageMasked(graphicIdDockers,
-								xGraphic + GraphicSpriteOffsetX(graphicIdDockers),
-								yGraphic + GraphicSpriteOffsetY(graphicIdDockers),
+								xGraphic + image_get(graphicIdDockers)->sprite_offset_x,
+								yGraphic + image_get(graphicIdDockers)->sprite_offset_y,
 								colorMask);
 						}
 					}
 					if (b->type == BUILDING_WAREHOUSE) {
-						Graphics_drawImageMasked(GraphicId(ID_Graphic_Warehouse) + 17,
+						Graphics_drawImageMasked(image_group(ID_Graphic_Warehouse) + 17,
 							xGraphic - 4, yGraphic - 42, colorMask);
 						if (buildingId == Data_CityInfo.buildingTradeCenterBuildingId) {
-							Graphics_drawImageMasked(GraphicId(ID_Graphic_TradeCenterFlag),
+							Graphics_drawImageMasked(image_group(ID_Graphic_TradeCenterFlag),
 								xGraphic + 19, yGraphic - 56, colorMask);
 						}
 					}
 					if (b->type == BUILDING_GRANARY) {
-						Graphics_drawImageMasked(GraphicId(ID_Graphic_Granary) + 1,
-							xGraphic + GraphicSpriteOffsetX(graphicId),
-							yGraphic + 60 + GraphicSpriteOffsetY(graphicId) - GraphicHeight(graphicId),
+						Graphics_drawImageMasked(image_group(ID_Graphic_Granary) + 1,
+							xGraphic + img->sprite_offset_x,
+							yGraphic + 60 + img->sprite_offset_y - img->height,
 							colorMask);
 						if (b->data.storage.resourceStored[Resource_None] < 2400) {
-							Graphics_drawImageMasked(GraphicId(ID_Graphic_Granary) + 2,
+							Graphics_drawImageMasked(image_group(ID_Graphic_Granary) + 2,
 								xGraphic + 33, yGraphic - 60, colorMask);
 						}
 						if (b->data.storage.resourceStored[Resource_None] < 1800) {
-							Graphics_drawImageMasked(GraphicId(ID_Graphic_Granary) + 3,
+							Graphics_drawImageMasked(image_group(ID_Graphic_Granary) + 3,
 								xGraphic + 56, yGraphic - 50, colorMask);
 						}
 						if (b->data.storage.resourceStored[Resource_None] < 1200) {
-							Graphics_drawImageMasked(GraphicId(ID_Graphic_Granary) + 4,
+							Graphics_drawImageMasked(image_group(ID_Graphic_Granary) + 4,
 								xGraphic + 91, yGraphic - 50, colorMask);
 						}
 						if (b->data.storage.resourceStored[Resource_None] < 600) {
-							Graphics_drawImageMasked(GraphicId(ID_Graphic_Granary) + 5,
+							Graphics_drawImageMasked(image_group(ID_Graphic_Granary) + 5,
 								xGraphic + 117, yGraphic - 62, colorMask);
 						}
 					}
 					if (b->type == BUILDING_BURNING_RUIN && b->ruinHasPlague) {
-						Graphics_drawImageMasked(GraphicId(ID_Graphic_PlagueSkull),
+						Graphics_drawImageMasked(image_group(ID_Graphic_PlagueSkull),
 							xGraphic + 18, yGraphic - 32, colorMask);
 					}
 					int animationOffset = Animation_getIndexForCityBuilding(graphicId, gridOffset);
 					if (b->type != BUILDING_HIPPODROME && animationOffset > 0) {
-						if (animationOffset > GraphicNumAnimationSprites(graphicId)) {
-							animationOffset = GraphicNumAnimationSprites(graphicId);
+						if (animationOffset > img->num_animation_sprites) {
+							animationOffset = img->num_animation_sprites;
 						}
 						if (b->type == BUILDING_GRANARY) {
 							Graphics_drawImageMasked(graphicId + animationOffset + 5,
@@ -432,8 +433,8 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 								case 8: ydiff = 90; break;
 							}
 							Graphics_drawImageMasked(graphicId + animationOffset,
-								xGraphic + GraphicSpriteOffsetX(graphicId),
-								yGraphic + ydiff + GraphicSpriteOffsetY(graphicId) - GraphicHeight(graphicId),
+								xGraphic + img->sprite_offset_x,
+								yGraphic + ydiff + img->sprite_offset_y - img->height,
 								colorMask);
 						}
 					}
@@ -450,7 +451,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 						case FIGURE_FORT_JAVELIN: offset = 2; break;
 					}
 					if (offset) {
-						Graphics_drawImage(GraphicId(ID_Graphic_Fort) + offset,
+						Graphics_drawImage(image_group(ID_Graphic_Fort) + offset,
 							xGraphic + 81, yGraphic + 5);
 					}
 				}
@@ -461,7 +462,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 					(Data_Settings_Map.orientation == Dir_4_Bottom && xy == 0) ||
 					(Data_Settings_Map.orientation == Dir_6_Left && xy == 1)) {
 					int buildingId = Data_Grid_buildingIds[gridOffset];
-					int graphicId = GraphicId(ID_Graphic_Gatehouse);
+					int graphicId = image_group(ID_Graphic_Gatehouse);
 					if (Data_Buildings[buildingId].subtype.orientation == 1) {
 						if (Data_Settings_Map.orientation == Dir_0_Top || Data_Settings_Map.orientation == Dir_4_Bottom) {
 							Graphics_drawImage(graphicId, xGraphic - 22, yGraphic - 80);
@@ -494,7 +495,7 @@ void UI_CityBuildings_drawBridge(int gridOffset, int x, int y)
 	if (Data_Grid_bitfields[gridOffset] & Bitfield_Deleted) {
 		colorMask = COLOR_MASK_RED;
 	}
-	int graphicId = GraphicId(ID_Graphic_Bridge);
+	int graphicId = image_group(ID_Graphic_Bridge);
 	switch (Data_Grid_spriteOffsets[gridOffset]) {
 		case 1:
 			Graphics_drawImageMasked(graphicId + 5, x, y - 20, colorMask);
@@ -558,34 +559,35 @@ static void drawHippodromeAndElevatedFigures(int selectedFigureId)
 		FOREACH_X_VIEW {
 			if (!Data_State.currentOverlay) {
 				int graphicId = Data_Grid_graphicIds[gridOffset];
-				if (GraphicNumAnimationSprites(graphicId) &&
+				const image *img = image_get(graphicId);
+				if (img->num_animation_sprites &&
 					Data_Grid_edge[gridOffset] & Edge_LeftmostTile &&
 					Data_Buildings[Data_Grid_buildingIds[gridOffset]].type == BUILDING_HIPPODROME) {
 					switch (Data_Grid_bitfields[gridOffset] & Bitfield_Sizes) {
 						case Bitfield_Size1:
 							Graphics_drawImage(graphicId + 1,
-								xGraphic + GraphicSpriteOffsetX(graphicId),
-								yGraphic + GraphicSpriteOffsetY(graphicId) - GraphicHeight(graphicId) + 30);
+								xGraphic + img->sprite_offset_x,
+								yGraphic + img->sprite_offset_y - img->height + 30);
 							break;
 						case Bitfield_Size2:
 							Graphics_drawImage(graphicId + 1,
-								xGraphic + GraphicSpriteOffsetX(graphicId),
-								yGraphic + GraphicSpriteOffsetY(graphicId) - GraphicHeight(graphicId) + 45);
+								xGraphic + img->sprite_offset_x,
+								yGraphic + img->sprite_offset_y - img->height + 45);
 							break;
 						case Bitfield_Size3:
 							Graphics_drawImage(graphicId + 1,
-								xGraphic + GraphicSpriteOffsetX(graphicId),
-								yGraphic + GraphicSpriteOffsetY(graphicId) - GraphicHeight(graphicId) + 60);
+								xGraphic + img->sprite_offset_x,
+								yGraphic + img->sprite_offset_y - img->height + 60);
 							break;
 						case Bitfield_Size4:
 							Graphics_drawImage(graphicId + 1,
-								xGraphic + GraphicSpriteOffsetX(graphicId),
-								yGraphic + GraphicSpriteOffsetY(graphicId) - GraphicHeight(graphicId) + 75);
+								xGraphic + img->sprite_offset_x,
+								yGraphic + img->sprite_offset_y - img->height + 75);
 							break;
 						case Bitfield_Size5:
 							Graphics_drawImage(graphicId + 1,
-								xGraphic + GraphicSpriteOffsetX(graphicId),
-								yGraphic + GraphicSpriteOffsetY(graphicId) - GraphicHeight(graphicId) + 90);
+								xGraphic + img->sprite_offset_x,
+								yGraphic + img->sprite_offset_y - img->height + 90);
 							break;
 					}
 				}

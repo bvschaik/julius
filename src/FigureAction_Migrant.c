@@ -14,14 +14,14 @@ static void updateDirectionAndGraphic(int figureId, struct Data_Figure *f)
 {
 	int dir = FigureActionDirection(f);
 	if (f->actionState == FigureActionState_149_Corpse) {
-		f->graphicId = GraphicId(ID_Graphic_Figure_Migrant) +
+		f->graphicId = image_group(ID_Graphic_Figure_Migrant) +
 			FigureActionCorpseGraphicOffset(f) + 96;
 	} else {
-		f->graphicId = GraphicId(ID_Graphic_Figure_Migrant) +
+		f->graphicId = image_group(ID_Graphic_Figure_Migrant) +
 			dir + 8 * f->graphicOffset;
 	}
 	if (f->actionState == FigureActionState_2_ImmigrantArriving) {
-		f->cartGraphicId = GraphicId(ID_Graphic_Figure_MigrantCart) + dir;
+		f->cartGraphicId = image_group(ID_Graphic_Figure_MigrantCart) + dir;
 		int cartDir = (dir + 4) % 8;
 		FigureAction_Common_setCartOffset(figureId, cartDir);
 	}
@@ -282,10 +282,10 @@ void FigureAction_homeless(int figureId)
 			break;
 	}
 	if (f->actionState == FigureActionState_149_Corpse) {
-		f->graphicId = GraphicId(ID_Graphic_Figure_Homeless) +
+		f->graphicId = image_group(ID_Graphic_Figure_Homeless) +
 			FigureActionCorpseGraphicOffset(f) + 96;
 	} else {
-		f->graphicId = GraphicId(ID_Graphic_Figure_Homeless) +
+		f->graphicId = image_group(ID_Graphic_Figure_Homeless) +
 			FigureActionDirection(f) + 8 * f->graphicOffset;
 	}
 }

@@ -45,7 +45,7 @@ void UI_Advisor_Imperial_drawBackground(int *advisorHeight)
 
 	*advisorHeight = 27;
 	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
-	Graphics_drawImage(GraphicId(ID_Graphic_AdvisorIcons) + 2, baseOffsetX + 10, baseOffsetY + 10);
+	Graphics_drawImage(image_group(ID_Graphic_AdvisorIcons) + 2, baseOffsetX + 10, baseOffsetY + 10);
 
 	Widget_Text_draw(Data_Settings.playerName, baseOffsetX + 60, baseOffsetY + 12, Font_LargeBlack, 0);
 
@@ -61,7 +61,7 @@ void UI_Advisor_Imperial_drawBackground(int *advisorHeight)
 	if (Data_CityInfo.distantBattleMonthsToBattle > 0 && Data_CityInfo.distantBattleRomanMonthsToTravel <= 0) {
 		// can send to distant battle
 		Widget_Panel_drawButtonBorder(baseOffsetX + 38, baseOffsetY + 96, 560, 40, 0);
-		Graphics_drawImage(GraphicId(ID_Graphic_ResourceIcons) + Resource_Weapons,
+		Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + Resource_Weapons,
 			baseOffsetX + 50, baseOffsetY + 106);
 		width = Widget_GameText_draw(52, 72, baseOffsetX + 80, baseOffsetY + 102, Font_NormalWhite);
 		Widget_GameText_draw(21, Data_Empire_Cities[Data_CityInfo.distantBattleCityId].cityNameId,
@@ -86,7 +86,7 @@ void UI_Advisor_Imperial_drawBackground(int *advisorHeight)
 				baseOffsetX + 40, baseOffsetY + 102 + 42 * numRequests, Font_NormalWhite);
 			int resourceOffset = Data_Scenario.requests.resourceId[i] +
 				Resource_getGraphicIdOffset(Data_Scenario.requests.resourceId[i], 3);
-			Graphics_drawImage(GraphicId(ID_Graphic_ResourceIcons) + resourceOffset,
+			Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + resourceOffset,
 				baseOffsetX + 110, baseOffsetY + 100 + 42 * numRequests);
 			Widget_GameText_draw(23, Data_Scenario.requests.resourceId[i],
 				baseOffsetX + 150, baseOffsetY + 102 + 42 * numRequests, Font_NormalWhite);

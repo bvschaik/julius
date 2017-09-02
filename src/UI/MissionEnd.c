@@ -9,11 +9,12 @@
 
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
-#include "../Data/Graphics.h"
 #include "../Data/Mouse.h"
 #include "../Data/Screen.h"
 #include "../Data/Settings.h"
 #include "../Data/State.h"
+
+#include "graphics/image.h"
 
 static void victoryAccept(int param1, int param2);
 static void victoryContinueGoverning(int param1, int param2);

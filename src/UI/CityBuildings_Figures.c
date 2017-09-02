@@ -10,6 +10,7 @@
 #include "../Data/State.h"
 
 #include "figure/formation.h"
+#include "graphics/image.h"
 
 static int showOnOverlay(struct Data_Figure *f)
 {
@@ -285,13 +286,10 @@ void UI_CityBuildings_drawFigure(int figureId, int xOffset, int yOffset, int sel
 
 	xTileOffset += 29;
 	yTileOffset += 15;
-	if (f->isEnemyGraphic) {
-		xOffset += xTileOffset - GraphicEnemySpriteOffsetX(f->graphicId);
-		yOffset += yTileOffset - GraphicEnemySpriteOffsetY(f->graphicId);
-	} else {
-		xOffset += xTileOffset - GraphicSpriteOffsetX(f->graphicId);
-		yOffset += yTileOffset - GraphicSpriteOffsetY(f->graphicId);
-	}
+
+	const image *img = f->isEnemyGraphic ? image_get_enemy(f->graphicId) : image_get(f->graphicId);
+	xOffset += xTileOffset - img->sprite_offset_x;
+	yOffset += yTileOffset - img->sprite_offset_y;
 
 	// excluding figures
 	if (selectedFigureId == 9999) {
@@ -329,11 +327,11 @@ void UI_CityBuildings_drawFigure(int figureId, int xOffset, int yOffset, int sel
 					Graphics_drawImage(f->graphicId, xOffset, yOffset);
 					// flag
 					Graphics_drawImage(f->cartGraphicId,
-						xOffset, yOffset - GraphicHeight(f->cartGraphicId));
+						xOffset, yOffset - image_get(f->cartGraphicId)->height);
 					// top icon
-					int iconGraphicId = GraphicId(ID_Graphic_FortStandardIcons) + f->formationId - 1;
+					int iconGraphicId = image_group(ID_Graphic_FortStandardIcons) + f->formationId - 1;
 					Graphics_drawImage(iconGraphicId,
-						xOffset, yOffset - GraphicHeight(iconGraphicId) - GraphicHeight(f->cartGraphicId));
+						xOffset, yOffset - image_get(iconGraphicId)->height - image_get(f->cartGraphicId)->height);
 				}
 				break;
 			default:

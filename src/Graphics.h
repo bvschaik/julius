@@ -2,7 +2,8 @@
 #define GRAPHICS_H
 
 #include "Data/Types.h"
-#include "Data/Graphics.h"
+
+#include "graphics/image.h"
 
 void Graphics_clearScreen();
 

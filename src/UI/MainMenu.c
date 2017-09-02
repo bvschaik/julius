@@ -7,9 +7,10 @@
 #include "../Graphics.h"
 #include "../System.h"
 #include "../Data/Constants.h"
-#include "../Data/Graphics.h"
 #include "../Data/Mouse.h"
 #include "../Data/Screen.h"
+
+#include "graphics/image.h"
 
 static void buttonClick(int param1, int param2);
 
@@ -26,7 +27,7 @@ void UI_MainMenu_drawBackground()
 {
 	Graphics_clearScreen();
 	Graphics_drawImage(
-		GraphicId(ID_Graphic_MainMenuBackground),
+		image_group(ID_Graphic_MainMenuBackground),
 		Data_Screen.offset640x480.x,
 		Data_Screen.offset640x480.y);
 }

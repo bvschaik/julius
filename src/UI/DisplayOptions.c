@@ -5,7 +5,6 @@
 #include "../Widget.h"
 
 #include "../Data/Constants.h"
-#include "../Data/Graphics.h"
 #include "../Data/Mouse.h"
 #include "../Data/Screen.h"
 #include "../Data/Settings.h"

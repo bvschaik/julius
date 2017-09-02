@@ -3,9 +3,9 @@
 #include "Sound.h"
 
 #include "Data/Mouse.h"
-#include "Data/Graphics.h"
 
 #include "core/time.h"
+#include "graphics/image.h"
 
 #define PRESSED_EFFECT_MILLIS 100
 #define PRESSED_REPEAT_INITIAL_MILLIS 300
@@ -180,7 +180,7 @@ void Widget_Button_drawImageButtons(int xOffset, int yOffset, ImageButton *butto
 	imageButtonFadePressedEffect(buttons, numButtons);
 	for (int i = 0; i < numButtons; i++) {
 		ImageButton *btn = &buttons[i];
-		int graphicId = GraphicId(btn->graphicCollection) + btn->graphicIdOffset;
+		int graphicId = image_group(btn->graphicCollection) + btn->graphicIdOffset;
 		if (btn->enabled) {
 			if (btn->pressed) {
 				graphicId += 2;

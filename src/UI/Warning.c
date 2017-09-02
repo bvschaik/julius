@@ -10,7 +10,6 @@
 #include "../Data/Building.h"
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
-#include "../Data/Graphics.h"
 #include "../Data/Grid.h"
 #include "../Data/Scenario.h"
 #include "../Data/Screen.h"
@@ -20,6 +19,7 @@
 #include "building/model.h"
 #include "core/lang.h"
 #include "core/time.h"
+#include "graphics/image.h"
 
 #include <string.h>
 
@@ -88,9 +88,9 @@ void UI_Warning_draw()
 			warnings[i].boxWidth / 16 + 1, 1);
 		if (warnings[i].boxWidth < 460) {
 			// ornaments at the side
-			Graphics_drawImage(GraphicId(ID_Graphic_ContextIcons) + 15,
+			Graphics_drawImage(image_group(ID_Graphic_ContextIcons) + 15,
 				center - warnings[i].boxWidth / 2 + 2, topOffset + 2);
-			Graphics_drawImage(GraphicId(ID_Graphic_ContextIcons) + 15,
+			Graphics_drawImage(image_group(ID_Graphic_ContextIcons) + 15,
 				center + warnings[i].boxWidth / 2 - 30, topOffset + 2);
 		}
 		Widget_Text_drawCentered(warnings[i].text,

@@ -4,7 +4,6 @@
 #include "Data/Empire.h"
 #include "Data/Scenario.h"
 #include "Data/Constants.h"
-#include "Data/Graphics.h"
 #include "Data/CityInfo.h"
 #include "Data/Screen.h"
 
@@ -12,6 +11,7 @@
 #include "core/io.h"
 #include "empire/trade_route.h"
 #include "game/time.h"
+#include "graphics/image.h"
 
 #include <string.h>
 
@@ -437,9 +437,9 @@ static void fixGraphicIds()
 			break;
 		}
 	}
-	if (graphicId > 0 && graphicId != GraphicId(ID_Graphic_EmpireCity)) {
+	if (graphicId > 0 && graphicId != image_group(ID_Graphic_EmpireCity)) {
 		// empire map uses old version of graphics: increase every graphic id
-		int offset = GraphicId(ID_Graphic_EmpireCity) - graphicId;
+		int offset = image_group(ID_Graphic_EmpireCity) - graphicId;
 		for (int i = 0; i < MAX_EMPIRE_OBJECTS; i++) {
 			if (!Data_Empire_Objects[i].inUse) {
 				continue;
@@ -566,9 +566,9 @@ void Empire_handleExpandEvent()
 		int objectId = Data_Empire_Cities[i].empireObjectId;
 		Data_Empire_Objects[objectId].cityType = Data_Empire_Cities[i].cityType;
 		if (Data_Empire_Cities[i].cityType == EmpireCity_Trade) {
-			Data_Empire_Objects[i].graphicIdExpanded = GraphicId(ID_Graphic_EmpireCityTrade);
+			Data_Empire_Objects[i].graphicIdExpanded = image_group(ID_Graphic_EmpireCityTrade);
 		} else if (Data_Empire_Cities[i].cityType == EmpireCity_DistantRoman) {
-			Data_Empire_Objects[i].graphicIdExpanded = GraphicId(ID_Graphic_EmpireCityDistantRoman);
+			Data_Empire_Objects[i].graphicIdExpanded = image_group(ID_Graphic_EmpireCityDistantRoman);
 		}
 	}
 

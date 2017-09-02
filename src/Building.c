@@ -19,12 +19,13 @@
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
-#include "Data/Graphics.h"
 #include "Data/Grid.h"
 #include "Data/Scenario.h"
 #include "Data/Settings.h"
 #include "Data/State.h"
 #include "Data/Figure.h"
+
+#include "graphics/image.h"
 
 #include <string.h>
 
@@ -292,10 +293,10 @@ void Building_collapseOnFire(int buildingId, int hasPlague)
 		b->ruinHasPlague = hasPlague;
 		int graphicId;
 		if (wasTent) {
-			graphicId = GraphicId(ID_Graphic_RubbleTent);
+			graphicId = image_group(ID_Graphic_RubbleTent);
 		} else {
 			int random = Data_Grid_random[b->gridOffset] & 3;
-			graphicId = GraphicId(ID_Graphic_RubbleGeneral) + 9 * random;
+			graphicId = image_group(ID_Graphic_RubbleGeneral) + 9 * random;
 		}
 		Terrain_addBuildingToGrids(buildingId, b->x, b->y, 1, graphicId, Terrain_Building);
 	}
@@ -311,10 +312,10 @@ void Building_collapseOnFire(int buildingId, int hasPlague)
 		struct Data_Building *ruin = &Data_Buildings[ruinId];
 		int graphicId;
 		if (wasTent) {
-			graphicId = GraphicId(ID_Graphic_RubbleTent);
+			graphicId = image_group(ID_Graphic_RubbleTent);
 		} else {
 			int random = Data_Grid_random[ruin->gridOffset] & 3;
-			graphicId = GraphicId(ID_Graphic_RubbleGeneral) + 9 * random;
+			graphicId = image_group(ID_Graphic_RubbleGeneral) + 9 * random;
 		}
 		Terrain_addBuildingToGrids(ruinId, ruin->x, ruin->y, 1, graphicId, Terrain_Building);
 		ruin->fireDuration = (ruin->houseGenerationDelay & 7) + 1;
@@ -524,15 +525,15 @@ void Building_determineGraphicIdsForOrientedBuildings()
 			case BUILDING_GATEHOUSE:
 				if (b->subtype.orientation == 1) {
 					if (mapOrientationIsTopOrBottom) {
-						graphicId = GraphicId(ID_Graphic_Tower) + 1;
+						graphicId = image_group(ID_Graphic_Tower) + 1;
 					} else {
-						graphicId = GraphicId(ID_Graphic_Tower) + 2;
+						graphicId = image_group(ID_Graphic_Tower) + 2;
 					}
 				} else {
 					if (mapOrientationIsTopOrBottom) {
-						graphicId = GraphicId(ID_Graphic_Tower) + 2;
+						graphicId = image_group(ID_Graphic_Tower) + 2;
 					} else {
-						graphicId = GraphicId(ID_Graphic_Tower) + 1;
+						graphicId = image_group(ID_Graphic_Tower) + 1;
 					}
 				}
 				Terrain_addBuildingToGrids(i, b->x, b->y, b->size,
@@ -542,15 +543,15 @@ void Building_determineGraphicIdsForOrientedBuildings()
 			case BUILDING_TRIUMPHAL_ARCH:
 				if (b->subtype.orientation == 1) {
 					if (mapOrientationIsTopOrBottom) {
-						graphicId = GraphicId(ID_Graphic_TriumphalArch);
+						graphicId = image_group(ID_Graphic_TriumphalArch);
 					} else {
-						graphicId = GraphicId(ID_Graphic_TriumphalArch) + 2;
+						graphicId = image_group(ID_Graphic_TriumphalArch) + 2;
 					}
 				} else {
 					if (mapOrientationIsTopOrBottom) {
-						graphicId = GraphicId(ID_Graphic_TriumphalArch) + 2;
+						graphicId = image_group(ID_Graphic_TriumphalArch) + 2;
 					} else {
-						graphicId = GraphicId(ID_Graphic_TriumphalArch);
+						graphicId = image_group(ID_Graphic_TriumphalArch);
 					}
 				}
 				Terrain_addBuildingToGrids(i, b->x, b->y, b->size,
@@ -559,28 +560,28 @@ void Building_determineGraphicIdsForOrientedBuildings()
 				break;
 			case BUILDING_HIPPODROME:
 				if (mapOrientation == Dir_0_Top) {
-					graphicId = GraphicId(ID_Graphic_Hippodrome2);
+					graphicId = image_group(ID_Graphic_Hippodrome2);
 					switch (b->subtype.orientation) {
 						case 0: case 3: graphicId += 0; break;
 						case 1: case 4: graphicId += 2; break;
 						case 2: case 5: graphicId += 4; break;
 					}
 				} else if (mapOrientation == Dir_4_Bottom) {
-					graphicId = GraphicId(ID_Graphic_Hippodrome2);
+					graphicId = image_group(ID_Graphic_Hippodrome2);
 					switch (b->subtype.orientation) {
 						case 0: case 3: graphicId += 4; break;
 						case 1: case 4: graphicId += 2; break;
 						case 2: case 5: graphicId += 0; break;
 					}
 				} else if (mapOrientation == Dir_6_Left) {
-					graphicId = GraphicId(ID_Graphic_Hippodrome1);
+					graphicId = image_group(ID_Graphic_Hippodrome1);
 					switch (b->subtype.orientation) {
 						case 0: case 3: graphicId += 0; break;
 						case 1: case 4: graphicId += 2; break;
 						case 2: case 5: graphicId += 4; break;
 					}
 				} else { // Dir_2_Right
-					graphicId = GraphicId(ID_Graphic_Hippodrome1);
+					graphicId = image_group(ID_Graphic_Hippodrome1);
 					switch (b->subtype.orientation) {
 						case 0: case 3: graphicId += 4; break;
 						case 1: case 4: graphicId += 2; break;
@@ -592,21 +593,21 @@ void Building_determineGraphicIdsForOrientedBuildings()
 				break;
 			case BUILDING_SHIPYARD:
 				graphicOffset = (4 + b->data.other.dockOrientation - mapOrientation / 2) % 4;
-				graphicId = GraphicId(ID_Graphic_Shipyard) + graphicOffset;
+				graphicId = image_group(ID_Graphic_Shipyard) + graphicOffset;
 				Terrain_addWatersideBuildingToGrids(i, b->x, b->y, 2, graphicId);
 				break;
 			case BUILDING_WHARF:
 				graphicOffset = (4 + b->data.other.dockOrientation - mapOrientation / 2) % 4;
-				graphicId = GraphicId(ID_Graphic_Wharf) + graphicOffset;
+				graphicId = image_group(ID_Graphic_Wharf) + graphicOffset;
 				Terrain_addWatersideBuildingToGrids(i, b->x, b->y, 2, graphicId);
 				break;
 			case BUILDING_DOCK:
 				graphicOffset = (4 + b->data.other.dockOrientation - mapOrientation / 2) % 4;
 				switch (graphicOffset) {
-					case 0: graphicId = GraphicId(ID_Graphic_Dock1); break;
-					case 1: graphicId = GraphicId(ID_Graphic_Dock2); break;
-					case 2: graphicId = GraphicId(ID_Graphic_Dock3); break;
-					default: graphicId = GraphicId(ID_Graphic_Dock4); break;
+					case 0: graphicId = image_group(ID_Graphic_Dock1); break;
+					case 1: graphicId = image_group(ID_Graphic_Dock2); break;
+					case 2: graphicId = image_group(ID_Graphic_Dock3); break;
+					default: graphicId = image_group(ID_Graphic_Dock4); break;
 				}
 				Terrain_addWatersideBuildingToGrids(i, b->x, b->y, 3, graphicId);
 				break;
@@ -809,7 +810,7 @@ void Building_Industry_updateProduction()
 			}
 			if (BuildingIsFarm(b->type)) {
 				TerrainGraphics_setBuildingFarm(i, b->x, b->y,
-					GraphicId(ID_Graphic_FarmCrops) + 5 * (b->outputResourceId - 1),
+					image_group(ID_Graphic_FarmCrops) + 5 * (b->outputResourceId - 1),
 					b->data.industry.progress);
 			}
 		}
@@ -838,7 +839,7 @@ void Building_Industry_updateDoubleWheatProduction()
 				b->data.industry.progress = 200;
 			}
 			TerrainGraphics_setBuildingFarm(i, b->x, b->y,
-				GraphicId(ID_Graphic_FarmCrops) + 5 * (b->outputResourceId - 1),
+				image_group(ID_Graphic_FarmCrops) + 5 * (b->outputResourceId - 1),
 				b->data.industry.progress);
 		}
 	}
@@ -853,7 +854,7 @@ void Building_Industry_witherFarmCropsFromCeres(int bigCurse)
 			b->data.industry.blessingDaysLeft = 0;
 			b->data.industry.curseDaysLeft = bigCurse ? 48 : 4;
 			TerrainGraphics_setBuildingFarm(i, b->x, b->y,
-				GraphicId(ID_Graphic_FarmCrops) + 5 * (b->outputResourceId - 1),
+				image_group(ID_Graphic_FarmCrops) + 5 * (b->outputResourceId - 1),
 				b->data.industry.progress);
 		}
 	}
@@ -868,7 +869,7 @@ void Building_Industry_blessFarmsFromCeres()
 			b->data.industry.curseDaysLeft = 0;
 			b->data.industry.blessingDaysLeft = 16;
 			TerrainGraphics_setBuildingFarm(i, b->x, b->y,
-				GraphicId(ID_Graphic_FarmCrops) + 5 * (b->outputResourceId - 1),
+				image_group(ID_Graphic_FarmCrops) + 5 * (b->outputResourceId - 1),
 				b->data.industry.progress);
 		}
 	}
@@ -894,7 +895,7 @@ void Building_Industry_startNewProduction(int buildingId)
 	}
 	if (BuildingIsFarm(b->type)) {
 		TerrainGraphics_setBuildingFarm(buildingId, b->x, b->y,
-			GraphicId(ID_Graphic_FarmCrops) + 5 * (b->outputResourceId - 1),
+			image_group(ID_Graphic_FarmCrops) + 5 * (b->outputResourceId - 1),
 			b->data.industry.progress);
 	}
 }

@@ -10,13 +10,13 @@
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
-#include "Data/Graphics.h"
 #include "Data/Grid.h"
 #include "Data/Scenario.h"
 #include "Data/Settings.h"
 #include "Data/State.h"
 
 #include "core/calc.h"
+#include "graphics/image.h"
 
 static const int tilesAroundBuildingGridOffsets[][20] = {
 	{0},
@@ -182,7 +182,7 @@ void Terrain_removeBuildingFromGrids(int buildingId, int x, int y)
 				TerrainGraphics_setTileWater(x + dx, y + dy);
 			} else {
 				Data_Grid_graphicIds[gridOffset] =
-					GraphicId(ID_Graphic_TerrainUglyGrass) +
+					image_group(ID_Graphic_TerrainUglyGrass) +
 					(Data_Grid_random[gridOffset] & 7);
 				Data_Grid_terrain[gridOffset] &= Terrain_2e80;
 			}
@@ -1198,7 +1198,7 @@ void Terrain_updateEntryExitFlags(int remove)
 		Data_CityInfo_Extra.entryPointFlag.gridOffset = gridOffsetFlag;
 		Data_Grid_terrain[gridOffsetFlag] |= Terrain_Rock;
 		int orientation = (Data_Settings_Map.orientation + entryOrientation) % 8;
-		Data_Grid_graphicIds[gridOffsetFlag] = GraphicId(ID_Graphic_EntryExitFlag) + orientation / 2;
+		Data_Grid_graphicIds[gridOffsetFlag] = image_group(ID_Graphic_EntryExitFlag) + orientation / 2;
 	}
 	if (exitOrientation >= 0) {
 		int gridOffset = GridOffset(Data_Scenario.exitPoint.x, Data_Scenario.exitPoint.y);
@@ -1216,7 +1216,7 @@ void Terrain_updateEntryExitFlags(int remove)
 		Data_CityInfo_Extra.exitPointFlag.gridOffset = gridOffsetFlag;
 		Data_Grid_terrain[gridOffsetFlag] |= Terrain_Rock;
 		int orientation = (Data_Settings_Map.orientation + exitOrientation) % 8;
-		Data_Grid_graphicIds[gridOffsetFlag] = GraphicId(ID_Graphic_EntryExitFlag) + 4 + orientation / 2;
+		Data_Grid_graphicIds[gridOffsetFlag] = image_group(ID_Graphic_EntryExitFlag) + 4 + orientation / 2;
 	}
 }
 

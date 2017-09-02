@@ -88,7 +88,7 @@ void FigureAction_taxCollector(int figureId)
 			}
 			break;
 	}
-	FigureActionUpdateGraphic(f, GraphicId(ID_Graphic_Figure_TaxCollector));
+	FigureActionUpdateGraphic(f, image_group(ID_Graphic_Figure_TaxCollector));
 }
 
 void FigureAction_engineer(int figureId)
@@ -166,7 +166,7 @@ void FigureAction_engineer(int figureId)
 			}
 			break;
 	}
-	FigureActionUpdateGraphic(f, GraphicId(ID_Graphic_Figure_Engineer));
+	FigureActionUpdateGraphic(f, image_group(ID_Graphic_Figure_Engineer));
 }
 
 static int prefectGetNearestEnemy(int x, int y, int *distance)
@@ -446,27 +446,27 @@ void FigureAction_prefect(int figureId)
 	FigureActionNormalizeDirection(dir);
 	switch (f->actionState) {
 		case FigureActionState_74_PrefectGoingToFire:
-			f->graphicId = GraphicId(ID_Graphic_Figure_PrefectWithBucket) +
+			f->graphicId = image_group(ID_Graphic_Figure_PrefectWithBucket) +
 				dir + 8 * f->graphicOffset;
 			break;
 		case FigureActionState_75_PrefectAtFire:
-			f->graphicId = GraphicId(ID_Graphic_Figure_PrefectWithBucket) +
+			f->graphicId = image_group(ID_Graphic_Figure_PrefectWithBucket) +
 				dir + 96 + 8 * (f->graphicOffset / 2);
 			break;
 		case FigureActionState_150_Attack:
 			if (f->attackGraphicOffset >= 12) {
-				f->graphicId = GraphicId(ID_Graphic_Figure_Prefect) +
+				f->graphicId = image_group(ID_Graphic_Figure_Prefect) +
 					104 + dir + 8 * ((f->attackGraphicOffset - 12) / 2);
 			} else {
-				f->graphicId = GraphicId(ID_Graphic_Figure_Prefect) + 104 + dir;
+				f->graphicId = image_group(ID_Graphic_Figure_Prefect) + 104 + dir;
 			}
 			break;
 		case FigureActionState_149_Corpse:
-			f->graphicId = GraphicId(ID_Graphic_Figure_Prefect) +
+			f->graphicId = image_group(ID_Graphic_Figure_Prefect) +
 				96 + FigureActionCorpseGraphicOffset(f);
 			break;
 		default:
-			f->graphicId = GraphicId(ID_Graphic_Figure_Prefect) +
+			f->graphicId = image_group(ID_Graphic_Figure_Prefect) +
 				dir + 8 * f->graphicOffset;
 			break;
 	}
