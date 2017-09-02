@@ -27,10 +27,6 @@ struct Data_Empire_Index Data_Empire_Index[40];
 struct Data_Empire_Object Data_Empire_Objects[MAX_EMPIRE_OBJECTS];
 struct Data_Empire_City Data_Empire_Cities[MAX_EMPIRE_CITIES];
 
-struct _Data_Graphics_Main Data_Graphics_Main;
-struct _Data_Graphics_Enemy Data_Graphics_Enemy;
-struct _Data_Graphics_PixelData Data_Graphics_PixelData;
-
 struct _Data_Screen Data_Screen;// = { 800, 600, {80, 60} };
 
 struct _Data_Mouse Data_Mouse;

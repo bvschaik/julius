@@ -46,6 +46,7 @@
 #include "figure/name.h"
 #include "figure/trader.h"
 #include "game/time.h"
+#include "graphics/image.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -628,6 +629,8 @@ static void savegame_deserialize(savegame_state *state)
     read_all_from_buffer(state->Data_CityInfo_Extra_entryPointFlag_gridOffset, &Data_CityInfo_Extra.entryPointFlag.gridOffset);
     read_all_from_buffer(state->Data_CityInfo_Extra_exitPointFlag_gridOffset, &Data_CityInfo_Extra.exitPointFlag.gridOffset);
 
+    buffer_skip(state->endMarker, 284);
+
     // check if all buffers are empty
     for (int i = 0; i < savegame_data.num_pieces; i++) {
         buffer *buf = &savegame_data.pieces[i].buf;
@@ -786,6 +789,8 @@ static void savegame_serialize(savegame_state *state)
     write_all_to_buffer(state->Data_CityInfo_Extra_entryPointFlag_gridOffset, &Data_CityInfo_Extra.entryPointFlag.gridOffset);
     write_all_to_buffer(state->Data_CityInfo_Extra_exitPointFlag_gridOffset, &Data_CityInfo_Extra.exitPointFlag.gridOffset);
 
+    buffer_skip(state->endMarker, 284);
+
     // check if all buffers are empty
     for (int i = 0; i < savegame_data.num_pieces; i++) {
         buffer *buf = &savegame_data.pieces[i].buf;
@@ -933,8 +938,8 @@ static void setupFromSavedGame()
 	Data_CityInfo.tutorial1FireMessageShown = 1;
 	Data_CityInfo.tutorial3DiseaseMessageShown = 1;
 
-	Loader_Graphics_loadMainGraphics(Data_Scenario.climate);
-	Loader_Graphics_loadEnemyGraphics(Data_Scenario.enemyId);
+    image_load_climate(Data_Scenario.climate);
+    image_load_enemy(Data_Scenario.enemyId);
 	Empire_determineDistantBattleCity();
 	TerrainGraphics_determineGardensFromGraphicIds();
 

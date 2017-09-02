@@ -17,6 +17,11 @@ void buffer_reset(buffer *buffer)
     buffer->index = 0;
 }
 
+void buffer_set(buffer *buffer, int offset)
+{
+    buffer->index = offset;
+}
+
 void buffer_write_u8(buffer *buffer, uint8_t value)
 {
     CHECK_WRITE(buffer, 1);

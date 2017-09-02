@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+#include "graphics/color.h"
+
 /**
  * @file
  * Image functions
@@ -12,23 +14,23 @@
  * Image metadata
  */
 typedef struct {
-    int offset;
-    int data_length;
-    int uncompressed_length;
-    int inverted_image_offset;
     int width;
     int height;
     int num_animation_sprites;
     int sprite_offset_x;
     int sprite_offset_y;
     int animation_can_reverse;
-    int type;
-    int is_fully_compressed;
-    int is_external;
-    int has_compressed_part;
-    int building_size;
-    int bitmap_id;
     int animation_speed_id;
+    struct {
+        int type;
+        int is_fully_compressed;
+        int is_external;
+        int has_compressed_part;
+        int bitmap_id;
+        int offset;
+        int data_length;
+        int uncompressed_length;
+    } draw;
 } image;
 
 /**
@@ -55,7 +57,7 @@ int image_load_enemy(int enemy_id);
  * @param image_id ID of the image
  * @return Pointer to data or null. Short-term use only
  */
-const uint8_t *image_load_external_data(int image_id);
+const color *image_load_external_data(int image_id);
 
 /**
  * Gets the image id of the first image in the group
@@ -66,7 +68,30 @@ int image_group(int group);
 
 /**
  * Gets an image by id
+ * @param id Image ID
+ * @return Image
  */
 const image *image_get(int id);
+
+/**
+ * Gets an enemy image by id
+ * @param id Enemy image ID
+ * @return Enemy image
+ */
+const image *image_get_enemy(int id);
+
+/**
+ * Gets image pixel data by id
+ * @param id Image ID
+ * @return Pointer to data or null, short term use only.
+ */
+const color *image_data(int id);
+
+/**
+ * Gets enemy image pixel data by id
+ * @param id Enemy image ID
+ * @return Pointer to data or null, short term use only.
+ */
+const color *image_data_enemy(int id);
 
 #endif // GRAPHICS_IMAGE_H

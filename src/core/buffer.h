@@ -32,6 +32,13 @@ void buffer_init(buffer *buffer, void *data, int size);
 void buffer_reset(buffer *buffer);
 
 /**
+ * Sets the buffer so that reading/writing starts at the specififed offset
+ * @param buffer Buffer
+ * @param offset Offset to set it to
+ */
+void buffer_set(buffer *buffer, int offset);
+
+/**
  * Writes an unsigned 8-bit integer
  * @param buffer Buffer
  * @param value Value to write

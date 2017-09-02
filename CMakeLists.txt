@@ -38,6 +38,9 @@ set (FIGURE_FILES
 set (GAME_FILES
     src/game/time.c
 )
+set (GRAPHICS_FILES
+    src/graphics/image.c
+)
 add_executable(julius
 	linux/main2.c
 	linux/SDLSoundDevice.c
@@ -99,7 +102,6 @@ add_executable(julius
 	src/KeyboardHotkey.c
 	src/KeyboardInput.c
 	src/Loader.c
-	src/Loader_Graphics.c
 	src/Natives.c
 	src/PlayerMessage.c
 	src/Resource.c
@@ -198,6 +200,7 @@ add_executable(julius
 	${EMPIRE_FILES}
 	${FIGURE_FILES}
 	${GAME_FILES}
+	${GRAPHICS_FILES}
 	${SMK_FILES})
 
 #include(FindPkgConfig)

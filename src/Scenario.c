@@ -290,8 +290,8 @@ static void loadScenario(const char *scenarioName)
 	Data_Empire.scrollY = Data_Empire_Index[Data_Scenario.empireId].initialScrollY;
 	Empire_checkScrollBoundaries();
 	SidebarMenu_enableBuildingMenuItemsAndButtons();
-	Loader_Graphics_loadMainGraphics(Data_Scenario.climate);
-	Loader_Graphics_loadEnemyGraphics(Data_Scenario.enemyId);
+	image_load_climate(Data_Scenario.climate);
+	image_load_enemy(Data_Scenario.enemyId);
 }
 
 static void readScenarioAndInitGraphics()

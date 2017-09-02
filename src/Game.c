@@ -16,6 +16,7 @@
 #include "core/debug.h"
 #include "core/lang.h"
 #include "core/random.h"
+#include "graphics/image.h"
 
 #include <string.h>
 
@@ -48,16 +49,16 @@ int Game_preInit()
 int Game_init()
 {
 	System_initCursors();
-	if (!Loader_Graphics_initGraphics()) {
+	if (!image_init()) {
 		errlog("ERR: unable to init graphics");
 		return 0;
 	}
 	
-	if (!Loader_Graphics_loadMainGraphics(Climate_Central)) {
+	if (!image_load_climate(Climate_Central)) {
 		errlog("ERR: unable to load main graphics");
 		return 0;
 	}
-	if (!Loader_Graphics_loadEnemyGraphics(EnemyType_0_Barbarian)) {
+	if (!image_load_enemy(EnemyType_0_Barbarian)) {
 		errlog("ERR: unable to load enemy graphics");
 		return 0;
 	}
