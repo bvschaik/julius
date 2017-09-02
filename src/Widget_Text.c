@@ -118,7 +118,7 @@ int Widget_Text_getWidth(const uint8_t *str, Font font)
 			int graphicOffset = map_charToFontGraphic[*str];
 			if (graphicOffset) {
 				int graphicId = graphicBase + font + graphicOffset - 1;
-				width += letterSpacing + Data_Graphics_Main.index[graphicId].width;
+				width += letterSpacing + GraphicWidth(graphicId);
 			}
 		}
 		str++;
@@ -163,7 +163,7 @@ static int getCharacterWidth(unsigned char c, Font font)
 		return 0;
 	}
 	int graphicId = GraphicId(ID_Graphic_Font) + font + graphicOffset - 1;
-	return 1 + Data_Graphics_Main.index[graphicId].width;
+	return 1 + GraphicWidth(graphicId);
 }
 
 static int getWordWidth(const unsigned char *str, Font font, int *outNumChars)
@@ -290,7 +290,7 @@ static int drawCharacter(Font font, unsigned int c, int x, int y, int lineHeight
 	}
 
 	int graphicId = GraphicId(ID_Graphic_Font) + font + graphicOffset - 1;
-	int height = Data_Graphics_Main.index[graphicId].height - lineHeight;
+	int height = GraphicHeight(graphicId) - lineHeight;
 	if (height < 0) {
 		height = 0;
 	}
@@ -298,7 +298,7 @@ static int drawCharacter(Font font, unsigned int c, int x, int y, int lineHeight
 		height = 0;
 	}
 	Graphics_drawLetter(graphicId, x, y - height, color);
-	return Data_Graphics_Main.index[graphicId].width;
+	return GraphicWidth(graphicId);
 }
 
 static void numberToString(char *str, int value, char prefix, const char *postfix)
@@ -698,7 +698,7 @@ static int drawRichText(const char *str, int xOffset, int yOffset,
 					linesBeforeGraphic--;
 				} else {
 					graphicHeightLines = GraphicHeight(graphicId) / 16 + 2;
-					int xOffsetGraphic = xOffset + (boxWidth - Data_Graphics_Main.index[graphicId].width) / 2 - 4;
+					int xOffsetGraphic = xOffset + (boxWidth - GraphicWidth(graphicId)) / 2 - 4;
 					if (line < heightLines + data.scrollPosition) {
 						if (line >= data.scrollPosition) {
 							Graphics_drawImage(graphicId, xOffsetGraphic, y + 8);
@@ -818,7 +818,7 @@ static int drawRichTextCharacter(Font font, unsigned int c, int x, int y, Color 
 	}
 
 	int graphicId = GraphicId(ID_Graphic_Font) + font + graphicOffset - 1;
-	int height = Data_Graphics_Main.index[graphicId].height - 11;
+	int height = GraphicHeight(graphicId) - 11;
 	if (height < 0) {
 		height = 0;
 	}
@@ -828,7 +828,7 @@ static int drawRichTextCharacter(Font font, unsigned int c, int x, int y, Color 
 	if (!measureOnly) {
 		Graphics_drawLetter(graphicId, x, y - height, color);
 	}
-	return Data_Graphics_Main.index[graphicId].width;
+	return GraphicWidth(graphicId);
 }
 
 void Widget_RichText_drawScrollbar()

@@ -85,7 +85,7 @@ int Animation_getIndexForCityBuilding(int graphicId, int gridOffset)
 		return 0;
 	}
 
-	if (!shouldUpdate[Data_Graphics_Main.index[graphicId].animationSpeedId]) {
+	if (!shouldUpdate[GraphicAnimationSpeed(graphicId)]) {
 		return Data_Grid_spriteOffsets[gridOffset] & 0x7f;
 	}
 	// advance animation
@@ -122,7 +122,7 @@ int Animation_getIndexForCityBuilding(int graphicId, int gridOffset)
 				}
 			}
 		}
-	} else if (Data_Graphics_Main.index[graphicId].animationCanReverse) {
+	} else if (GraphicAnimationCanReverse(graphicId)) {
 		if (Data_Grid_spriteOffsets[gridOffset] & 0x80) {
 			isReverse = 1;
 		}
@@ -160,11 +160,11 @@ int Animation_getIndexForEmpireMap(int graphicId, int currentIndex)
 	if (currentIndex <= 0) {
 		currentIndex = 1;
 	}
-	int animationSpeed = Data_Graphics_Main.index[graphicId].animationSpeedId;
+	int animationSpeed = GraphicAnimationSpeed(graphicId);
 	if (!shouldUpdate[animationSpeed]) {
 		return currentIndex;
 	}
-	if (Data_Graphics_Main.index[graphicId].animationCanReverse) {
+	if (GraphicAnimationCanReverse(graphicId)) {
 		int isReverse = 0;
 		if (currentIndex & 0x80) {
 			isReverse = 1;

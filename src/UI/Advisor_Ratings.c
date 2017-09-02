@@ -176,7 +176,7 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
 static void drawRatingColumn(int xOffset, int yOffset, int value, int hasReached)
 {
 	int graphicBase = GraphicId(ID_Graphic_RatingsColumn);
-	int y = yOffset - Data_Graphics_Main.index[graphicBase].height;
+	int y = yOffset - GraphicHeight(graphicBase);
 	Graphics_drawImage(graphicBase, xOffset, y);
 	for (int i = 0; i < 2 * value; i++) {
 		Graphics_drawImage(graphicBase + 1, xOffset + 11, --y);
