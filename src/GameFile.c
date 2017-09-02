@@ -868,7 +868,7 @@ int GameFile_loadSavedGameFromMissionPack(int missionId)
 }
 
 static void debug()
-{
+{/*
 	printf("TIME: y %d m %d d %d t %d\n", game_time_year(), game_time_month(), game_time_day(), game_time_tick());
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
@@ -877,14 +877,13 @@ static void debug()
 				i, b->type, b->state, b->x, b->y, b->numWorkers, b->figureId, b->figureId2, b->housesCovered);
 		}
 	}
-	/**/
 	for (int i = 1; i < MAX_FIGURES; i++) {
 		struct Data_Figure *f = &Data_Figures[i];
 		if (f->state == FigureState_Alive) {
 			printf("Figure %d type %d as %d wt %d mt %d\n",
 				i, f->type, f->actionState, f->waitTicks, f->waitTicksMissile);
 		}
-	}
+	}*/
 }
 
 static void setupFromSavedGame()
