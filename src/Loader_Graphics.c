@@ -11,9 +11,8 @@
 #include "core/file.h"
 #include "core/io.h"
 
-// NOTE done x4/x2, revert to more conservative size after testing
-#define MAIN_SIZE 48400000
-#define ENEMY_SIZE 9800000
+#define MAIN_SIZE 30000000
+#define ENEMY_SIZE 2400000
 #define SCRATCH_SIZE 12100000
 
 static const char mainGraphicsSg2[][32] = {
@@ -174,7 +173,7 @@ static int convertCompressed(buffer *buf, int buf_length, Color *dst)
 
 static void convertGraphics(struct Data_Graphics_Index *indexList, int size, buffer *buf, Color *dst)
 {
-    Color *orig_dst = dst;
+    Color *start_dst = dst;
     for (int img = 0; img < size; img++) {
         struct Data_Graphics_Index *index = &indexList[img];
         if (index->isExternal) {
@@ -183,7 +182,7 @@ static void convertGraphics(struct Data_Graphics_Index *indexList, int size, buf
         buffer_reset(buf);
         buffer_skip(buf, index->offset);
         
-        int img_offset = dst - orig_dst;
+        int img_offset = dst - start_dst;
         if (index->isFullyCompressed) {
             dst += convertCompressed(buf, index->dataLength, dst);
         } else if (index->hasCompressedPart) {
