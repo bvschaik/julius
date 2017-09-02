@@ -29,8 +29,8 @@ void Graphics_drawIsometricTop(int graphicId, int xOffset, int yOffset, Color co
 
 void Graphics_drawEnemyImage(int graphicId, int xOffset, int yOffset);
 
-void Graphics_saveToBuffer(int x, int y, int width, int height, ScreenColor *buffer);
-void Graphics_loadFromBuffer(int x, int y, int width, int height, const ScreenColor *buffer);
+void Graphics_saveToBuffer(int x, int y, int width, int height, Color *buffer);
+void Graphics_loadFromBuffer(int x, int y, int width, int height, const Color *buffer);
 
 void Graphics_saveScreenshot(const char *filename);
 

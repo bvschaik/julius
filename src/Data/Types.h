@@ -1,8 +1,9 @@
 #ifndef TYPES_H
 #define TYPES_H
 
-typedef unsigned int Color;
-typedef unsigned int ScreenColor;
+#include <stdint.h>
+
+typedef uint32_t Color;
 
 #define Color_Black 0x000000
 #define Color_Red 0xff0000

@@ -3,7 +3,7 @@
 
 #include "Types.h"
 
-#define ScreenPixel(x,y) ((ScreenColor*)Data_Screen.drawBuffer)[(y) * Data_Screen.width + (x)]
+#define ScreenPixel(x,y) ((Color*)Data_Screen.drawBuffer)[(y) * Data_Screen.width + (x)]
 
 extern struct _Data_Screen {
 	int width;

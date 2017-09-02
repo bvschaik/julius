@@ -223,7 +223,7 @@ void Video_draw(int xOffset, int yOffset)
 	if (frame && pal) {
 		for (int y = 0; y < data.video.height; y++) {
 			for (int x = 0; x < data.video.width; x++) {
-				ScreenColor color = 0xFF000000 |
+				Color color = 0xFF000000 |
 					(pal[frame[(y * data.video.width) + x] * 3] << 16) |
 					(pal[frame[(y * data.video.width) + x] * 3 + 1] << 8) |
 					(pal[frame[(y * data.video.width) + x] * 3 + 2]);

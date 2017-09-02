@@ -48,7 +48,7 @@ static CustomButton figureButtons[] = {
 	{386, 46, 436, 96, CustomButton_Immediate, selectFigure, Widget_Button_doNothing, 6, 0},
 };
 
-static ScreenColor figureImages[7][48*48];
+static Color figureImages[7][48*48];
 
 static int focusButtonId;
 static BuildingInfoContext *contextForCallback;

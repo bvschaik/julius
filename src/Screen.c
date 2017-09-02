@@ -26,13 +26,13 @@ void Screen_setResolution(int width, int height)
 	if (Data_Screen.drawBuffer) {
 		free(Data_Screen.drawBuffer);
 	}
-	Data_Screen.drawBuffer = malloc(width * height * sizeof(ScreenColor));
-	memset(Data_Screen.drawBuffer, 0, width * height * sizeof(ScreenColor));
+	Data_Screen.drawBuffer = malloc(width * height * sizeof(Color));
+	memset(Data_Screen.drawBuffer, 0, width * height * sizeof(Color));
 	setSize(width, height);
 }
 
 void Screen_setResolutionWithPixels(int width, int height, void *pixels)
 {
-	Data_Screen.drawBuffer = (ScreenColor*) pixels;
+	Data_Screen.drawBuffer = (Color*) pixels;
 	setSize(width, height);
 }

@@ -38,7 +38,7 @@ static void setClipY(int yOffset, int height);
 
 void Graphics_clearScreen()
 {
-	memset(Data_Screen.drawBuffer, 0, sizeof(ScreenColor) * Data_Screen.width * Data_Screen.height);
+	memset(Data_Screen.drawBuffer, 0, sizeof(Color) * Data_Screen.width * Data_Screen.height);
 }
 
 static void drawDot(int x, int y, Color color)
@@ -132,7 +132,7 @@ void Graphics_shadeRect(int x, int y, int width, int height, int darkness)
 {
 	for (int yy = y; yy < y + height; yy++) {
 		for (int xx = x; xx < x + width; xx++) {
-			ScreenColor pixel = ScreenPixel(xx, yy);
+			Color pixel = ScreenPixel(xx, yy);
 			int r = (pixel & 0xff0000) >> 16;
 			int g = (pixel & 0xff00) >> 8;
 			int b = (pixel & 0xff);
@@ -337,7 +337,7 @@ static void drawImageUncompressed(struct Data_Graphics_Index *index, const Color
 	data += index->width * clip->clippedPixelsTop;
 	for (int y = clip->clippedPixelsTop; y < index->height - clip->clippedPixelsBottom; y++) {
 		data += clip->clippedPixelsLeft;
-		ScreenColor *dst = &ScreenPixel(xOffset + clip->clippedPixelsLeft, yOffset + y);
+		Color *dst = &ScreenPixel(xOffset + clip->clippedPixelsLeft, yOffset + y);
 		int xMax = index->width - clip->clippedPixelsRight;
         if (type == ColorType_None) {
             if (index->type == 0) { // can be transparent
@@ -403,7 +403,7 @@ static void drawImageCompressed(struct Data_Graphics_Index *index, const Color *
 				// number of concrete pixels
 				const Color *pixels = data;
 				data += b;
-				ScreenColor *dst = &ScreenPixel(xOffset + x, yOffset + y);
+				Color *dst = &ScreenPixel(xOffset + x, yOffset + y);
 				if (unclipped) {
 					x += b;
 					memcpy(dst, pixels, b * sizeof(Color));
@@ -432,7 +432,6 @@ static void drawImageCompressedSet(struct Data_Graphics_Index *index, const Colo
 	}
 	int unclipped = clip->clipX == ClipNone;
 
-	ScreenColor screenColor = color;
 	for (int y = 0; y < height - clip->clippedPixelsBottom; y++) {
 		int x = 0;
 		while (x < index->width) {
@@ -449,11 +448,11 @@ static void drawImageCompressedSet(struct Data_Graphics_Index *index, const Colo
 				// number of concrete pixels
 				const Color *pixels = data;
 				data += b;
-				ScreenColor *dst = &ScreenPixel(xOffset + x, yOffset + y);
+				Color *dst = &ScreenPixel(xOffset + x, yOffset + y);
 				if (unclipped) {
 					x += b;
 					while (b) {
-						*dst = screenColor;
+						*dst = color;
 						dst++;
 						pixels++;
 						b--;
@@ -461,7 +460,7 @@ static void drawImageCompressedSet(struct Data_Graphics_Index *index, const Colo
 				} else {
 					while (b) {
 						if (x >= clip->clippedPixelsLeft && x < index->width - clip->clippedPixelsRight) {
-							*dst = screenColor;
+							*dst = color;
 						}
 						dst++;
 						x++;
@@ -499,7 +498,7 @@ static void drawImageCompressedAnd(struct Data_Graphics_Index *index, const Colo
 				// number of concrete pixels
 				const Color *pixels = data;
 				data += b;
-				ScreenColor *dst = &ScreenPixel(xOffset + x, yOffset + y);
+				Color *dst = &ScreenPixel(xOffset + x, yOffset + y);
 				if (unclipped) {
 					x += b;
 					while (b) {
@@ -533,7 +532,6 @@ static void drawImageCompressedBlend(struct Data_Graphics_Index *index, const Co
 	}
 	int unclipped = clip->clipX == ClipNone;
 
-	ScreenColor screenColor = color;
 	for (int y = 0; y < height - clip->clippedPixelsBottom; y++) {
 		int x = 0;
 		while (x < index->width) {
@@ -550,11 +548,11 @@ static void drawImageCompressedBlend(struct Data_Graphics_Index *index, const Co
 				// number of concrete pixels
 				const Color *pixels = data;
 				data += b;
-				ScreenColor *dst = &ScreenPixel(xOffset + x, yOffset + y);
+				Color *dst = &ScreenPixel(xOffset + x, yOffset + y);
 				if (unclipped) {
 					x += b;
 					while (b) {
-						*dst &= screenColor;
+						*dst &= color;
 						dst++;
 						pixels++;
 						b--;
@@ -562,7 +560,7 @@ static void drawImageCompressedBlend(struct Data_Graphics_Index *index, const Co
 				} else {
 					while (b) {
 						if (x >= clip->clippedPixelsLeft && x < index->width - clip->clippedPixelsRight) {
-							*dst &= screenColor;
+							*dst &= color;
 						}
 						dst++;
 						x++;
@@ -678,23 +676,23 @@ void Graphics_drawEnemyImage(int graphicId, int xOffset, int yOffset)
 	}
 }
 
-void Graphics_saveToBuffer(int x, int y, int width, int height, ScreenColor *buffer)
+void Graphics_saveToBuffer(int x, int y, int width, int height, Color *buffer)
 {
 	for (int dy = 0; dy < height; dy++) {
-		memcpy(&buffer[dy * height], &ScreenPixel(x, y + dy), sizeof(ScreenColor) * width);
+		memcpy(&buffer[dy * height], &ScreenPixel(x, y + dy), sizeof(Color) * width);
 	}
 }
 
-void Graphics_loadFromBuffer(int x, int y, int width, int height, const ScreenColor *buffer)
+void Graphics_loadFromBuffer(int x, int y, int width, int height, const Color *buffer)
 {
 	for (int dy = 0; dy < height; dy++) {
-		memcpy(&ScreenPixel(x, y + dy), &buffer[dy * height], sizeof(ScreenColor) * width);
+		memcpy(&ScreenPixel(x, y + dy), &buffer[dy * height], sizeof(Color) * width);
 	}
 }
 
 /////debug/////
 
-static void pixel(ScreenColor input, unsigned char *r, unsigned char *g, unsigned char *b)
+static void pixel(Color input, unsigned char *r, unsigned char *g, unsigned char *b)
 {
 	int rr = (input & 0xff0000) >> 16;
 	int gg = (input & 0x00ff00) >> 8;
@@ -729,7 +727,7 @@ void Graphics_saveScreenshot(const char *filename)
 	fwrite(&header.B, 1, 26, fp);
 	for (int y = Data_Screen.height - 1; y >= 0; y--) {
 		for (int x = 0; x < Data_Screen.width; x++) {
-			pixel(((ScreenColor*)Data_Screen.drawBuffer)[y*Data_Screen.width+x],
+			pixel(((Color*)Data_Screen.drawBuffer)[y*Data_Screen.width+x],
 				&pixels[3*x+2], &pixels[3*x+1], &pixels[3*x]);
 		}
 		fwrite(pixels, 1, Data_Screen.width * 3, fp);
