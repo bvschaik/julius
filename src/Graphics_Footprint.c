@@ -8,7 +8,6 @@
 
 #define FOOTPRINT_WIDTH 58
 #define FOOTPRINT_HEIGHT 30
-#define FOOTPRINT_DATA_LENGTH 1800
 
 #define DATA(index) &data[900 * index]
 
@@ -53,7 +52,7 @@ static void drawFootprintTile(const color_t *data, int xOffset, int yOffset, col
 	if (!colorMask) {
 		colorMask = COLOR_NO_MASK;
 	}
-	GraphicsClipInfo *clip = Graphics_getClipInfo(xOffset, yOffset, 58, 30);
+	GraphicsClipInfo *clip = Graphics_getClipInfo(xOffset, yOffset, FOOTPRINT_WIDTH, FOOTPRINT_HEIGHT);
 	if (!clip->isVisible) {
 		return;
 	}
