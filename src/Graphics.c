@@ -352,13 +352,19 @@ static void drawImageUncompressed(struct Data_Graphics_Index *index, const Color
 		data += clip->clippedPixelsLeft;
 		ScreenColor *dst = &ScreenPixel(xOffset + clip->clippedPixelsLeft, yOffset + y);
 		int xMax = index->width - clip->clippedPixelsRight;
-		if (type == ColorType_None) {
-			for (int x = clip->clippedPixelsLeft; x < xMax; x++, dst++) {
-				if (*data != Color_Transparent) {
-					*dst = *data;
-				}
-				data++;
-			}
+        if (type == ColorType_None) {
+            if (index->type == 0) { // can be transparent
+                for (int x = clip->clippedPixelsLeft; x < xMax; x++, dst++) {
+                    if (*data != Color_Transparent) {
+                        *dst = *data;
+                    }
+                    data++;
+                }
+            } else {
+                int num_pixels = xMax - clip->clippedPixelsLeft;
+                memcpy(dst, data, num_pixels * sizeof(Color));
+                data += num_pixels;
+            }
 		} else if (type == ColorType_Set) {
 			for (int x = clip->clippedPixelsLeft; x < xMax; x++, dst++) {
 				if (*data != Color_Transparent) {
