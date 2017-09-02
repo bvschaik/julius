@@ -95,7 +95,7 @@ void UI_Warning_draw()
 		}
 		Widget_Text_drawCentered(warnings[i].text,
 			center - warnings[i].boxWidth / 2 + 1, topOffset + 4,
-			warnings[i].boxWidth, Font_NormalWhite, 0);
+			warnings[i].boxWidth, FONT_NORMAL_WHITE, 0);
 
 		// clear after 15 seconds
 		if (time_get_millis() > warnings[i].time + 15000) {
@@ -122,7 +122,7 @@ void UI_Warning_show(int warningId)
 		}
 		hasWarningAlready = 1;
 		warnings[i].warningId = warningId;
-		int width = Widget_Text_getWidth(text, Font_NormalBlack);
+		int width = Widget_Text_getWidth(text, FONT_NORMAL_BLACK);
 		if (width <= 100) {
 			warnings[i].boxWidth = 200;
 		} else if (width <= 200) {

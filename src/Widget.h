@@ -1,48 +1,48 @@
 #ifndef WIDGET_H
 #define WIDGET_H
 
-#include "Data/Types.h"
 #include "Data/Buttons.h"
 
 #include "graphics/color.h"
+#include "graphics/font.h"
 
 #include <stdint.h>
 
 void Widget_Text_captureCursor();
 void Widget_Text_drawCursor(int xOffset, int yOffset);
 
-int Widget_Text_draw(const uint8_t *str, int x, int y, Font font, color_t color);
+int Widget_Text_draw(const uint8_t *str, int x, int y, font_t font, color_t color);
 
-void Widget_Text_drawCentered(const uint8_t *str, int x, int y, int boxWidth, Font font, color_t color);
+void Widget_Text_drawCentered(const uint8_t *str, int x, int y, int boxWidth, font_t font, color_t color);
 
-int Widget_GameText_draw(int group, int number, int xOffset, int yOffset, Font font);
-int Widget_GameText_drawColored(int group, int number, int xOffset, int yOffset, Font font, color_t color);
+int Widget_GameText_draw(int group, int number, int xOffset, int yOffset, font_t font);
+int Widget_GameText_drawColored(int group, int number, int xOffset, int yOffset, font_t font, color_t color);
 
-void Widget_GameText_drawCentered(int group, int number, int xOffset, int yOffset, int boxWidth, Font font);
-void Widget_GameText_drawCenteredColored(int group, int number, int xOffset, int yOffset, int boxWidth, Font font, color_t color);
+void Widget_GameText_drawCentered(int group, int number, int xOffset, int yOffset, int boxWidth, font_t font);
+void Widget_GameText_drawCenteredColored(int group, int number, int xOffset, int yOffset, int boxWidth, font_t font, color_t color);
 
-int Widget_Text_drawNumber(int value, char prefix, const char *postfix, int xOffset, int yOffset, Font font);
-int Widget_Text_drawNumberColored(int value, char prefix, const char *postfix, int xOffset, int yOffset, Font font, color_t color);
+int Widget_Text_drawNumber(int value, char prefix, const char *postfix, int xOffset, int yOffset, font_t font);
+int Widget_Text_drawNumberColored(int value, char prefix, const char *postfix, int xOffset, int yOffset, font_t font, color_t color);
 
-void Widget_Text_drawNumberCentered(int value, char prefix, const char *postfix, int xOffset, int yOffset, int boxWidth, Font font);
-void Widget_Text_drawNumberCenteredColored(int value, char prefix, const char *postfix, int xOffset, int yOffset, int boxWidth, Font font, color_t color);
+void Widget_Text_drawNumberCentered(int value, char prefix, const char *postfix, int xOffset, int yOffset, int boxWidth, font_t font);
+void Widget_Text_drawNumberCenteredColored(int value, char prefix, const char *postfix, int xOffset, int yOffset, int boxWidth, font_t font, color_t color);
 
-int Widget_GameText_drawNumberWithDescription(int group, int number, int amount, int xOffset, int yOffset, Font font);
+int Widget_GameText_drawNumberWithDescription(int group, int number, int amount, int xOffset, int yOffset, font_t font);
 
-int Widget_GameText_drawYear(int year, int xOffset, int yOffset, Font font);
-int Widget_GameText_drawYearColored(int year, int xOffset, int yOffset, Font font, color_t color);
+int Widget_GameText_drawYear(int year, int xOffset, int yOffset, font_t font);
+int Widget_GameText_drawYearColored(int year, int xOffset, int yOffset, font_t font, color_t color);
 
-int Widget_GameText_drawYearNoSpacing(int year, int xOffset, int yOffset, Font font);
+int Widget_GameText_drawYearNoSpacing(int year, int xOffset, int yOffset, font_t font);
 
-int Widget_Text_drawMultiline(const uint8_t *str, int xOffset, int yOffset, int boxWidth, Font font);
+int Widget_Text_drawMultiline(const uint8_t *str, int xOffset, int yOffset, int boxWidth, font_t font);
 
-int Widget_GameText_drawMultiline(int group, int number, int xOffset, int yOffset, int boxWidth, Font font);
+int Widget_GameText_drawMultiline(int group, int number, int xOffset, int yOffset, int boxWidth, font_t font);
 
-int Widget_Text_getWidth(const uint8_t *str, Font font);
-int Widget_GameText_getWidth(int group, int number, Font font);
-int Widget_GameText_getDrawWidth(int group, int number, Font font);
+int Widget_Text_getWidth(const uint8_t *str, font_t font);
+int Widget_GameText_getWidth(int group, int number, font_t font);
+int Widget_GameText_getDrawWidth(int group, int number, font_t font);
 
-void Widget_RichText_setFonts(Font normalFont, Font linkFont);
+void Widget_RichText_setFonts(font_t normalFont, font_t linkFont);
 // returns total number of lines
 int Widget_RichText_draw(const char *text, int xOffset, int yOffset,
 						 int boxWidthPixels, int boxHeightLines, int measureOnly);

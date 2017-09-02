@@ -25,15 +25,15 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
 	Graphics_drawImage(image_group(ID_Graphic_AdvisorIcons) + 3,
 		baseOffsetX + 10, baseOffsetY + 10);
 	width = Widget_GameText_draw(53, 0,
-		baseOffsetX + 60, baseOffsetY + 12, Font_LargeBlack);
+		baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK);
 	if (!Data_Scenario.winCriteria_populationEnabled || Data_Scenario.isOpenPlay) {
 		Widget_GameText_draw(53, 7,
-			baseOffsetX + 80 + width, baseOffsetY + 17, Font_NormalBlack);
+			baseOffsetX + 80 + width, baseOffsetY + 17, FONT_NORMAL_BLACK);
 	} else {
 		width += Widget_GameText_draw(53, 6,
-			baseOffsetX + 80 + width, baseOffsetY + 17, Font_NormalBlack);
+			baseOffsetX + 80 + width, baseOffsetY + 17, FONT_NORMAL_BLACK);
 		Widget_Text_drawNumber(Data_Scenario.winCriteria_population, '@', ")",
-			baseOffsetX + 80 + width, baseOffsetY + 17, Font_NormalBlack);
+			baseOffsetX + 80 + width, baseOffsetY + 17, FONT_NORMAL_BLACK);
 	}
 
 	Graphics_drawImage(image_group(ID_Graphic_RatingsBackground),
@@ -43,17 +43,17 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
 	Widget_Panel_drawButtonBorder(baseOffsetX + 80, baseOffsetY + 286,
 		110, 66, focusButtonId == 1);
 	Widget_GameText_drawCentered(53, 1, baseOffsetX + 80, baseOffsetY + 294,
-		110, Font_NormalBlack);
+		110, FONT_NORMAL_BLACK);
 	Widget_Text_drawNumberCentered(Data_CityInfo.ratingCulture, '@', " ",
-		baseOffsetX + 80, baseOffsetY + 309, 100, Font_LargeBlack);
+		baseOffsetX + 80, baseOffsetY + 309, 100, FONT_LARGE_BLACK);
 	if (Data_Scenario.winCriteria.cultureEnabled) {
 		width = Widget_Text_drawNumber(Data_Scenario.winCriteria.culture, '@', " ",
-			baseOffsetX + 85, baseOffsetY + 334, Font_NormalBlack);
+			baseOffsetX + 85, baseOffsetY + 334, FONT_NORMAL_BLACK);
 	} else {
 		width = Widget_Text_drawNumber(0, '@', " ",
-			baseOffsetX + 85, baseOffsetY + 334, Font_NormalBlack);
+			baseOffsetX + 85, baseOffsetY + 334, FONT_NORMAL_BLACK);
 	}
-	Widget_GameText_draw(53, 5, baseOffsetX + 85 + width, baseOffsetY + 334, Font_NormalBlack);
+	Widget_GameText_draw(53, 5, baseOffsetX + 85 + width, baseOffsetY + 334, FONT_NORMAL_BLACK);
 	hasReached = !Data_Scenario.winCriteria.cultureEnabled ||
 		Data_CityInfo.ratingCulture > Data_Scenario.winCriteria.culture ||
 		Data_CityInfo.ratingCulture == 100; // FIXED: capital bug fixed
@@ -63,17 +63,17 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
 	Widget_Panel_drawButtonBorder(baseOffsetX + 200, baseOffsetY + 286,
 		110, 66, focusButtonId == 2);
 	Widget_GameText_drawCentered(53, 2, baseOffsetX + 200, baseOffsetY + 294,
-		110, Font_NormalBlack);
+		110, FONT_NORMAL_BLACK);
 	Widget_Text_drawNumberCentered(Data_CityInfo.ratingProsperity, '@', " ",
-		baseOffsetX + 200, baseOffsetY + 309, 100, Font_LargeBlack);
+		baseOffsetX + 200, baseOffsetY + 309, 100, FONT_LARGE_BLACK);
 	if (Data_Scenario.winCriteria.prosperityEnabled) {
 		width = Widget_Text_drawNumber(Data_Scenario.winCriteria.prosperity, '@', " ",
-			baseOffsetX + 205, baseOffsetY + 334, Font_NormalBlack);
+			baseOffsetX + 205, baseOffsetY + 334, FONT_NORMAL_BLACK);
 	} else {
 		width = Widget_Text_drawNumber(0, '@', " ",
-			baseOffsetX + 205, baseOffsetY + 334, Font_NormalBlack);
+			baseOffsetX + 205, baseOffsetY + 334, FONT_NORMAL_BLACK);
 	}
-	Widget_GameText_draw(53, 5, baseOffsetX + 205 + width, baseOffsetY + 334, Font_NormalBlack);
+	Widget_GameText_draw(53, 5, baseOffsetX + 205 + width, baseOffsetY + 334, FONT_NORMAL_BLACK);
 	hasReached = !Data_Scenario.winCriteria.prosperityEnabled ||
 		Data_CityInfo.ratingProsperity > Data_Scenario.winCriteria.prosperity ||
 		Data_CityInfo.ratingProsperity == 100; // FIXED: capital bug fixed
@@ -83,17 +83,17 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
 	Widget_Panel_drawButtonBorder(baseOffsetX + 320, baseOffsetY + 286,
 		110, 66, focusButtonId == 3);
 	Widget_GameText_drawCentered(53, 3, baseOffsetX + 320, baseOffsetY + 294,
-		110, Font_NormalBlack);
+		110, FONT_NORMAL_BLACK);
 	Widget_Text_drawNumberCentered(Data_CityInfo.ratingPeace, '@', " ",
-		baseOffsetX + 320, baseOffsetY + 309, 100, Font_LargeBlack);
+		baseOffsetX + 320, baseOffsetY + 309, 100, FONT_LARGE_BLACK);
 	if (Data_Scenario.winCriteria.peaceEnabled) {
 		width = Widget_Text_drawNumber(Data_Scenario.winCriteria.peace, '@', " ",
-			baseOffsetX + 325, baseOffsetY + 334, Font_NormalBlack);
+			baseOffsetX + 325, baseOffsetY + 334, FONT_NORMAL_BLACK);
 	} else {
 		width = Widget_Text_drawNumber(0, '@', " ",
-			baseOffsetX + 325, baseOffsetY + 334, Font_NormalBlack);
+			baseOffsetX + 325, baseOffsetY + 334, FONT_NORMAL_BLACK);
 	}
-	Widget_GameText_draw(53, 5, baseOffsetX + 325 + width, baseOffsetY + 334, Font_NormalBlack);
+	Widget_GameText_draw(53, 5, baseOffsetX + 325 + width, baseOffsetY + 334, FONT_NORMAL_BLACK);
 	hasReached = !Data_Scenario.winCriteria.peaceEnabled ||
 		Data_CityInfo.ratingPeace > Data_Scenario.winCriteria.peace ||
 		Data_CityInfo.ratingPeace == 100; // FIXED: capital bug fixed
@@ -103,17 +103,17 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
 	Widget_Panel_drawButtonBorder(baseOffsetX + 440, baseOffsetY + 286,
 		110, 66, focusButtonId == 4);
 	Widget_GameText_drawCentered(53, 4, baseOffsetX + 440, baseOffsetY + 294,
-		110, Font_NormalBlack);
+		110, FONT_NORMAL_BLACK);
 	Widget_Text_drawNumberCentered(Data_CityInfo.ratingFavor, '@', " ",
-		baseOffsetX + 440, baseOffsetY + 309, 100, Font_LargeBlack);
+		baseOffsetX + 440, baseOffsetY + 309, 100, FONT_LARGE_BLACK);
 	if (Data_Scenario.winCriteria.favorEnabled) {
 		width = Widget_Text_drawNumber(Data_Scenario.winCriteria.favor, '@', " ",
-			baseOffsetX + 445, baseOffsetY + 334, Font_NormalBlack);
+			baseOffsetX + 445, baseOffsetY + 334, FONT_NORMAL_BLACK);
 	} else {
 		width = Widget_Text_drawNumber(0, '@', " ",
-			baseOffsetX + 445, baseOffsetY + 334, Font_NormalBlack);
+			baseOffsetX + 445, baseOffsetY + 334, FONT_NORMAL_BLACK);
 	}
-	Widget_GameText_draw(53, 5, baseOffsetX + 445 + width, baseOffsetY + 334, Font_NormalBlack);
+	Widget_GameText_draw(53, 5, baseOffsetX + 445 + width, baseOffsetY + 334, FONT_NORMAL_BLACK);
 	hasReached = !Data_Scenario.winCriteria.favorEnabled ||
 		Data_CityInfo.ratingFavor > Data_Scenario.winCriteria.favor ||
 		Data_CityInfo.ratingFavor == 100; // FIXED: capital bug fixed
@@ -124,51 +124,51 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
 	switch (Data_CityInfo.ratingAdvisorSelection) {
 		case 1:
 			Widget_GameText_draw(53, 1,
-				baseOffsetX + 72, baseOffsetY + 359, Font_NormalWhite);
+				baseOffsetX + 72, baseOffsetY + 359, FONT_NORMAL_WHITE);
 			if (Data_CityInfo.ratingCulture <= 90) {
 				Widget_GameText_drawMultiline(53, 9 + Data_CityInfo.ratingAdvisorExplanationCulture,
-					baseOffsetX + 72, baseOffsetY + 374, 496, Font_NormalWhite);
+					baseOffsetX + 72, baseOffsetY + 374, 496, FONT_NORMAL_WHITE);
 			} else {
 				Widget_GameText_drawMultiline(53, 50,
-					baseOffsetX + 72, baseOffsetY + 374, 496, Font_NormalWhite);
+					baseOffsetX + 72, baseOffsetY + 374, 496, FONT_NORMAL_WHITE);
 			}
 			break;
 		case 2:
 			Widget_GameText_draw(53, 2,
-				baseOffsetX + 72, baseOffsetY + 359, Font_NormalWhite);
+				baseOffsetX + 72, baseOffsetY + 359, FONT_NORMAL_WHITE);
 			if (Data_CityInfo.ratingProsperity <= 90) {
 				Widget_GameText_drawMultiline(53, 16 + Data_CityInfo.ratingAdvisorExplanationProsperity,
-					baseOffsetX + 72, baseOffsetY + 374, 496, Font_NormalWhite);
+					baseOffsetX + 72, baseOffsetY + 374, 496, FONT_NORMAL_WHITE);
 			} else {
 				Widget_GameText_drawMultiline(53, 51,
-					baseOffsetX + 72, baseOffsetY + 374, 496, Font_NormalWhite);
+					baseOffsetX + 72, baseOffsetY + 374, 496, FONT_NORMAL_WHITE);
 			}
 			break;
 		case 3:
 			Widget_GameText_draw(53, 3,
-				baseOffsetX + 72, baseOffsetY + 359, Font_NormalWhite);
+				baseOffsetX + 72, baseOffsetY + 359, FONT_NORMAL_WHITE);
 			if (Data_CityInfo.ratingPeace <= 90) {
 				Widget_GameText_drawMultiline(53, 41 + Data_CityInfo.ratingAdvisorExplanationPeace,
-					baseOffsetX + 72, baseOffsetY + 374, 496, Font_NormalWhite);
+					baseOffsetX + 72, baseOffsetY + 374, 496, FONT_NORMAL_WHITE);
 			} else {
 				Widget_GameText_drawMultiline(53, 52,
-					baseOffsetX + 72, baseOffsetY + 374, 496, Font_NormalWhite);
+					baseOffsetX + 72, baseOffsetY + 374, 496, FONT_NORMAL_WHITE);
 			}
 			break;
 		case 4:
 			Widget_GameText_draw(53, 4,
-				baseOffsetX + 72, baseOffsetY + 359, Font_NormalWhite);
+				baseOffsetX + 72, baseOffsetY + 359, FONT_NORMAL_WHITE);
 			if (Data_CityInfo.ratingFavor <= 90) {
 				Widget_GameText_drawMultiline(53, 27 + Data_CityInfo.ratingAdvisorExplanationFavor,
-					baseOffsetX + 72, baseOffsetY + 374, 496, Font_NormalWhite);
+					baseOffsetX + 72, baseOffsetY + 374, 496, FONT_NORMAL_WHITE);
 			} else {
 				Widget_GameText_drawMultiline(53, 53,
-					baseOffsetX + 72, baseOffsetY + 374, 496, Font_NormalWhite);
+					baseOffsetX + 72, baseOffsetY + 374, 496, FONT_NORMAL_WHITE);
 			}
 			break;
 		default:
 			Widget_GameText_drawCentered(53, 8,
-				baseOffsetX + 72, baseOffsetY + 380, 496, Font_NormalWhite);
+				baseOffsetX + 72, baseOffsetY + 380, 496, FONT_NORMAL_WHITE);
 			break;
 	}
 }

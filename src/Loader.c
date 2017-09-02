@@ -32,8 +32,8 @@ void Loader_GameState_init()
 	random_generate_pool();
 
 	Data_KeyboardInput.current = 0;
-	KeyboardInput_initTextField(1, Data_Settings.playerName, 25, 200, 0, Font_NormalWhite);
-	KeyboardInput_initTextField(2, (char*)Data_FileList.selectedCity, 64, 280, 1, Font_NormalWhite);
+	KeyboardInput_initTextField(1, Data_Settings.playerName, 25, 200, 0, FONT_NORMAL_WHITE);
+	KeyboardInput_initTextField(2, (uint8_t*)Data_FileList.selectedCity, 64, 280, 1, FONT_NORMAL_WHITE);
 
 	UI_Warning_clearAll();
 }

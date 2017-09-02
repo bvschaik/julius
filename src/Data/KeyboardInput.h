@@ -1,7 +1,7 @@
 #ifndef DATA_KEYBOARDINPUT_H
 #define DATA_KEYBOARDINPUT_H
 
-#include "Types.h"
+#include "graphics/font.h"
 
 #include <stdint.h>
 
@@ -12,7 +12,7 @@ struct Data_KeyboardInputLine {
 	int maxLength;
 	int boxWidth;
 	uint8_t *text;
-	Font font;
+	font_t font;
 };
 
 extern struct Data_KeyboardInput {

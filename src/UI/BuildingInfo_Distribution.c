@@ -58,7 +58,7 @@ void UI_BuildingInfo_drawMarket(BuildingInfoContext *c)
 	c->helpId = 2;
 	PLAY_SOUND("wavs/market.wav");
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-	Widget_GameText_drawCentered(97, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, Font_LargeBlack);
+	Widget_GameText_drawCentered(97, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	struct Data_Building *b = &Data_Buildings[c->buildingId];
 	if (!c->hasRoadAccess) {
 		DRAW_DESC(69, 25);
@@ -72,42 +72,42 @@ void UI_BuildingInfo_drawMarket(BuildingInfoContext *c)
 			Graphics_drawImage(graphicId + Resource_Wheat,
 				c->xOffset + 32, c->yOffset + 64);
 			Widget_Text_drawNumber(b->data.market.inventory[Inventory_Wheat], '@', " ",
-				c->xOffset + 64, c->yOffset + 70, Font_NormalBlack);
+				c->xOffset + 64, c->yOffset + 70, FONT_NORMAL_BLACK);
 			Graphics_drawImage(graphicId + Resource_Vegetables,
 				c->xOffset + 142, c->yOffset + 64);
 			Widget_Text_drawNumber(b->data.market.inventory[Inventory_Vegetables], '@', " ",
-				c->xOffset + 174, c->yOffset + 70, Font_NormalBlack);
+				c->xOffset + 174, c->yOffset + 70, FONT_NORMAL_BLACK);
 			Graphics_drawImage(graphicId + Resource_Fruit,
 				c->xOffset + 252, c->yOffset + 64);
 			Widget_Text_drawNumber(b->data.market.inventory[Inventory_Fruit], '@', " ",
-				c->xOffset + 284, c->yOffset + 70, Font_NormalBlack);
+				c->xOffset + 284, c->yOffset + 70, FONT_NORMAL_BLACK);
 			Graphics_drawImage(graphicId + Resource_Meat +
 				Resource_getGraphicIdOffset(Resource_Meat, 3),
 				c->xOffset + 362, c->yOffset + 64);
 			Widget_Text_drawNumber(b->data.market.inventory[Inventory_Meat], '@', " ",
-				c->xOffset + 394, c->yOffset + 70, Font_NormalBlack);
+				c->xOffset + 394, c->yOffset + 70, FONT_NORMAL_BLACK);
 		} else {
 			Widget_GameText_drawMultiline(97, 4,
 				c->xOffset + 32, c->yOffset + 48,
-				16 * (c->widthBlocks - 4), Font_NormalBlack);
+				16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
 		}
 		// good stocks
 		Graphics_drawImage(graphicId + Resource_Pottery,
 			c->xOffset + 32, c->yOffset + 104);
 		Widget_Text_drawNumber(b->data.market.inventory[Inventory_Pottery], '@', " ",
-			c->xOffset + 64, c->yOffset + 110, Font_NormalBlack);
+			c->xOffset + 64, c->yOffset + 110, FONT_NORMAL_BLACK);
 		Graphics_drawImage(graphicId + Resource_Furniture,
 			c->xOffset + 142, c->yOffset + 104);
 		Widget_Text_drawNumber(b->data.market.inventory[Inventory_Furniture], '@', " ",
-			c->xOffset + 174, c->yOffset + 110, Font_NormalBlack);
+			c->xOffset + 174, c->yOffset + 110, FONT_NORMAL_BLACK);
 		Graphics_drawImage(graphicId + Resource_Oil,
 			c->xOffset + 252, c->yOffset + 104);
 		Widget_Text_drawNumber(b->data.market.inventory[Inventory_Oil], '@', " ",
-			c->xOffset + 284, c->yOffset + 110, Font_NormalBlack);
+			c->xOffset + 284, c->yOffset + 110, FONT_NORMAL_BLACK);
 		Graphics_drawImage(graphicId + Resource_Wine,
 			c->xOffset + 362, c->yOffset + 104);
 		Widget_Text_drawNumber(b->data.market.inventory[Inventory_Wine], '@', " ",
-			c->xOffset + 394, c->yOffset + 110, Font_NormalBlack);
+			c->xOffset + 394, c->yOffset + 110, FONT_NORMAL_BLACK);
 	}
 	Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
 	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 142);
@@ -118,7 +118,7 @@ void UI_BuildingInfo_drawGranary(BuildingInfoContext *c)
 	c->helpId = 3;
 	PLAY_SOUND("wavs/granary.wav");
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-	Widget_GameText_drawCentered(98, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, Font_LargeBlack);
+	Widget_GameText_drawCentered(98, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	struct Data_Building *b = &Data_Buildings[c->buildingId];
 	if (!c->hasRoadAccess) {
 		DRAW_DESC_AT(40, 69, 25);
@@ -130,15 +130,15 @@ void UI_BuildingInfo_drawGranary(BuildingInfoContext *c)
 			totalStored += b->data.storage.resourceStored[i];
 		}
 		int width = Widget_GameText_draw(98, 2,
-			c->xOffset + 34, c->yOffset + 40, Font_NormalBlack);
+			c->xOffset + 34, c->yOffset + 40, FONT_NORMAL_BLACK);
 		Widget_GameText_drawNumberWithDescription(8, 16, totalStored,
-			c->xOffset + 34 + width, c->yOffset + 40, Font_NormalBlack);
+			c->xOffset + 34 + width, c->yOffset + 40, FONT_NORMAL_BLACK);
 
 		width = Widget_GameText_draw(98, 3,
-			c->xOffset + 220, c->yOffset + 40, Font_NormalBlack);
+			c->xOffset + 220, c->yOffset + 40, FONT_NORMAL_BLACK);
 		Widget_GameText_drawNumberWithDescription(8, 16,
 			b->data.storage.resourceStored[Resource_None],
-			c->xOffset + 220 + width, c->yOffset + 40, Font_NormalBlack);
+			c->xOffset + 220 + width, c->yOffset + 40, FONT_NORMAL_BLACK);
 
 		int graphicId = image_group(ID_Graphic_ResourceIcons);
 		// wheat
@@ -146,34 +146,34 @@ void UI_BuildingInfo_drawGranary(BuildingInfoContext *c)
 			c->xOffset + 34, c->yOffset + 68);
 		width = Widget_Text_drawNumber(
 			b->data.storage.resourceStored[Resource_Wheat], '@', " ",
-			c->xOffset + 68, c->yOffset + 75, Font_NormalBlack);
+			c->xOffset + 68, c->yOffset + 75, FONT_NORMAL_BLACK);
 		Widget_GameText_draw(23, Resource_Wheat,
-			c->xOffset + 68 + width, c->yOffset + 75, Font_NormalBlack);
+			c->xOffset + 68 + width, c->yOffset + 75, FONT_NORMAL_BLACK);
 		// vegetables
 		Graphics_drawImage(graphicId + Resource_Vegetables,
 			c->xOffset + 34, c->yOffset + 92);
 		width = Widget_Text_drawNumber(
 			b->data.storage.resourceStored[Resource_Vegetables], '@', " ",
-			c->xOffset + 68, c->yOffset + 99, Font_NormalBlack);
+			c->xOffset + 68, c->yOffset + 99, FONT_NORMAL_BLACK);
 		Widget_GameText_draw(23, Resource_Vegetables,
-			c->xOffset + 68 + width, c->yOffset + 99, Font_NormalBlack);
+			c->xOffset + 68 + width, c->yOffset + 99, FONT_NORMAL_BLACK);
 		// fruit
 		Graphics_drawImage(graphicId + Resource_Fruit,
 			c->xOffset + 240, c->yOffset + 68);
 		width = Widget_Text_drawNumber(
 			b->data.storage.resourceStored[Resource_Fruit], '@', " ",
-			c->xOffset + 274, c->yOffset + 75, Font_NormalBlack);
+			c->xOffset + 274, c->yOffset + 75, FONT_NORMAL_BLACK);
 		Widget_GameText_draw(23, Resource_Fruit,
-			c->xOffset + 274 + width, c->yOffset + 75, Font_NormalBlack);
+			c->xOffset + 274 + width, c->yOffset + 75, FONT_NORMAL_BLACK);
 		// meat/fish
 		Graphics_drawImage(graphicId + Resource_Meat +
 			Resource_getGraphicIdOffset(Resource_Meat, 3),
 			c->xOffset + 240, c->yOffset + 92);
 		width = Widget_Text_drawNumber(
 			b->data.storage.resourceStored[Resource_Meat], '@', " ",
-			c->xOffset + 274, c->yOffset + 99, Font_NormalBlack);
+			c->xOffset + 274, c->yOffset + 99, FONT_NORMAL_BLACK);
 		Widget_GameText_draw(23, Resource_Meat,
-			c->xOffset + 274 + width, c->yOffset + 99, Font_NormalBlack);
+			c->xOffset + 274 + width, c->yOffset + 99, FONT_NORMAL_BLACK);
 	}
 	Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
 	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 142);
@@ -186,7 +186,7 @@ void UI_BuildingInfo_drawGranaryForeground(BuildingInfoContext *c)
 		16 * (c->widthBlocks - 10), 20, focusButtonId == 1 ? 1 : 0);
 	Widget_GameText_drawCentered(98, 5,
 		c->xOffset + 80, c->yOffset + 16 * c->heightBlocks - 30,
-		16 * (c->widthBlocks - 10), Font_NormalBlack);
+		16 * (c->widthBlocks - 10), FONT_NORMAL_BLACK);
 }
 
 void UI_BuildingInfo_handleMouseGranary(BuildingInfoContext *c)
@@ -201,7 +201,7 @@ void UI_BuildingInfo_drawGranaryOrders(BuildingInfoContext *c)
 	c->helpId = 3;
 	Widget_Panel_drawOuterPanel(c->xOffset, 32, 29, 28);
 	Widget_GameText_drawCentered(98, 6,
-		c->xOffset, 42, 16 * c->widthBlocks, Font_LargeBlack);
+		c->xOffset, 42, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	Widget_Panel_drawInnerPanel(c->xOffset + 16, 74, c->widthBlocks - 2, 21);
 }
 
@@ -213,12 +213,12 @@ void UI_BuildingInfo_drawGranaryOrdersForeground(BuildingInfoContext *c)
 	int storageId = Data_Buildings[c->buildingId].storageId;
 	if (Data_Building_Storages[storageId].emptyAll) {
 		Widget_GameText_drawCentered(98, 8, c->xOffset + 80, 440,
-			16 * (c->widthBlocks - 10), Font_NormalBlack);
+			16 * (c->widthBlocks - 10), FONT_NORMAL_BLACK);
 		Widget_GameText_drawCentered(98, 9, c->xOffset + 80, 416,
-			16 * (c->widthBlocks - 10), Font_NormalBlack);
+			16 * (c->widthBlocks - 10), FONT_NORMAL_BLACK);
 	} else {
 		Widget_GameText_drawCentered(98, 7, c->xOffset + 80, 440,
-			16 * (c->widthBlocks - 10), Font_NormalBlack);
+			16 * (c->widthBlocks - 10), FONT_NORMAL_BLACK);
 	}
 
 	for (int i = 0; i < Data_CityInfo_Resource.numAvailableFoods; i++) {
@@ -228,19 +228,19 @@ void UI_BuildingInfo_drawGranaryOrdersForeground(BuildingInfoContext *c)
 		Graphics_drawImage(graphicId, c->xOffset + 32, 78 + 22 * i);
 		Graphics_drawImage(graphicId, c->xOffset + 408, 78 + 22 * i);
 		Widget_GameText_draw(23, resourceId,
-			c->xOffset + 72, 82 + 22 * i, Font_NormalWhite);
+			c->xOffset + 72, 82 + 22 * i, FONT_NORMAL_WHITE);
 		Widget_Panel_drawButtonBorder(c->xOffset + 180, 78 + 22 * i, 210, 22,
 			resourceFocusButtonId == i + 1);
 		
 		int state = Data_Building_Storages[storageId].resourceState[resourceId];
 		if (state == BuildingStorageState_Accepting) {
-			Widget_GameText_draw(99, 7, c->xOffset + 230, 83 + 22 * i, Font_NormalWhite);
+			Widget_GameText_draw(99, 7, c->xOffset + 230, 83 + 22 * i, FONT_NORMAL_WHITE);
 		} else if (state == BuildingStorageState_NotAccepting) {
-			Widget_GameText_draw(99, 8, c->xOffset + 230, 83 + 22 * i, Font_NormalRed);
+			Widget_GameText_draw(99, 8, c->xOffset + 230, 83 + 22 * i, FONT_NORMAL_RED);
 		} else if (state == BuildingStorageState_Getting) {
 			Graphics_drawImage(image_group(ID_Graphic_ContextIcons) + 12,
 				c->xOffset + 186, 81 + 22 * i);
-			Widget_GameText_draw(99, 10, c->xOffset + 230, 83 + 22 * i, Font_NormalWhite);
+			Widget_GameText_draw(99, 10, c->xOffset + 230, 83 + 22 * i, FONT_NORMAL_WHITE);
 		}
 	}
 }
@@ -262,7 +262,7 @@ void UI_BuildingInfo_drawWarehouse(BuildingInfoContext *c)
 	c->helpId = 4;
 	PLAY_SOUND("wavs/warehouse.wav");
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-	Widget_GameText_drawCentered(99, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, Font_LargeBlack);
+	Widget_GameText_drawCentered(99, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	struct Data_Building *b = &Data_Buildings[c->buildingId];
 	if (!c->hasRoadAccess) {
 		DRAW_DESC(69, 25);
@@ -284,9 +284,9 @@ void UI_BuildingInfo_drawWarehouse(BuildingInfoContext *c)
 				Resource_getGraphicIdOffset(r, 3);
 			Graphics_drawImage(graphicId, x, y);
 			int width = Widget_Text_drawNumber(amount, '@', " ",
-				x + 24, y + 7, Font_SmallPlain);
+				x + 24, y + 7, FONT_SMALL_PLAIN);
 			Widget_GameText_draw(23, r,
-				x + 24 + width, y + 7, Font_SmallPlain);
+				x + 24 + width, y + 7, FONT_SMALL_PLAIN);
 		}
 	}
 	Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 168, c->widthBlocks - 2, 5);
@@ -300,22 +300,22 @@ void UI_BuildingInfo_drawWarehouse(BuildingInfoContext *c)
 			c->xOffset + 32, c->yOffset + 220);
 		Widget_GameText_drawMultiline(99, 17,
 			c->xOffset + 64, c->yOffset + 223,
-			16 * (c->widthBlocks - 6), Font_SmallBlack);
+			16 * (c->widthBlocks - 6), FONT_SMALL_BLACK);
 	} else if (b->numWorkers) {
 		// cartpusher is waiting for orders
 		Widget_GameText_drawMultiline(99, 15,
 			c->xOffset + 32, c->yOffset + 223,
-			16 * (c->widthBlocks - 4), Font_SmallBlack);
+			16 * (c->widthBlocks - 4), FONT_SMALL_BLACK);
 	}
 
 	if (c->warehouseSpaceText == 1) { // full
 		Widget_GameText_drawMultiline(99, 13,
 			c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 93,
-			16 * (c->widthBlocks - 4), Font_NormalBlack);
+			16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
 	} else if (c->warehouseSpaceText == 2) {
 		Widget_GameText_drawMultiline(99, 14,
 			c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 93,
-			16 * (c->widthBlocks - 4), Font_NormalBlack);
+			16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
 	}
 }
 
@@ -326,7 +326,7 @@ void UI_BuildingInfo_drawWarehouseForeground(BuildingInfoContext *c)
 		16 * (c->widthBlocks - 10), 20, focusButtonId == 1 ? 1 : 0);
 	Widget_GameText_drawCentered(99, 2,
 		c->xOffset + 80, c->yOffset + 16 * c->heightBlocks - 30,
-		16 * (c->widthBlocks - 10), Font_NormalBlack);
+		16 * (c->widthBlocks - 10), FONT_NORMAL_BLACK);
 }
 
 void UI_BuildingInfo_handleMouseWarehouse(BuildingInfoContext *c)
@@ -341,7 +341,7 @@ void UI_BuildingInfo_drawWarehouseOrders(BuildingInfoContext *c)
 	c->helpId = 4;
 	Widget_Panel_drawOuterPanel(c->xOffset, 32, 29, 28);
 	Widget_GameText_drawCentered(99, 3,
-		c->xOffset, 42, 16 * c->widthBlocks, Font_LargeBlack);
+		c->xOffset, 42, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	Widget_Panel_drawInnerPanel(c->xOffset + 16, 74, c->widthBlocks - 2, 21);
 }
 
@@ -353,12 +353,12 @@ void UI_BuildingInfo_drawWarehouseOrdersForeground(BuildingInfoContext *c)
 	int storageId = Data_Buildings[c->buildingId].storageId;
 	if (Data_Building_Storages[storageId].emptyAll) {
 		Widget_GameText_drawCentered(99, 5, c->xOffset + 80, 440,
-			16 * (c->widthBlocks - 10), Font_NormalBlack);
+			16 * (c->widthBlocks - 10), FONT_NORMAL_BLACK);
 		Widget_GameText_drawCentered(99, 6, c->xOffset + 80, 458,
-			16 * (c->widthBlocks - 10), Font_SmallPlain);
+			16 * (c->widthBlocks - 10), FONT_SMALL_PLAIN);
 	} else {
 		Widget_GameText_drawCentered(99, 4, c->xOffset + 80, 440,
-			16 * (c->widthBlocks - 10), Font_NormalBlack);
+			16 * (c->widthBlocks - 10), FONT_NORMAL_BLACK);
 	}
 
 	// trade center
@@ -367,7 +367,7 @@ void UI_BuildingInfo_drawWarehouseOrdersForeground(BuildingInfoContext *c)
 		ordersFocusButtonId == 2 ? 1 : 0);
 	int isTradeCenter = c->buildingId == Data_CityInfo.buildingTradeCenterBuildingId;
 	Widget_GameText_drawCentered(99, isTradeCenter ? 11 : 12,
-		c->xOffset + 80, 418, 16 * (c->widthBlocks - 10), Font_NormalBlack);
+		c->xOffset + 80, 418, 16 * (c->widthBlocks - 10), FONT_NORMAL_BLACK);
 
 	for (int i = 0; i < Data_CityInfo_Resource.numAvailableResources; i++) {
 		int resourceId = Data_CityInfo_Resource.availableResources[i];
@@ -376,19 +376,19 @@ void UI_BuildingInfo_drawWarehouseOrdersForeground(BuildingInfoContext *c)
 		Graphics_drawImage(graphicId, c->xOffset + 32, 78 + 22 * i);
 		Graphics_drawImage(graphicId, c->xOffset + 408, 78 + 22 * i);
 		Widget_GameText_draw(23, resourceId,
-			c->xOffset + 72, 82 + 22 * i, Font_NormalWhite);
+			c->xOffset + 72, 82 + 22 * i, FONT_NORMAL_WHITE);
 		Widget_Panel_drawButtonBorder(c->xOffset + 180, 78 + 22 * i, 210, 22,
 			resourceFocusButtonId == i + 1);
 		
 		int state = Data_Building_Storages[storageId].resourceState[resourceId];
 		if (state == BuildingStorageState_Accepting) {
-			Widget_GameText_draw(99, 7, c->xOffset + 230, 83 + 22 * i, Font_NormalWhite);
+			Widget_GameText_draw(99, 7, c->xOffset + 230, 83 + 22 * i, FONT_NORMAL_WHITE);
 		} else if (state == BuildingStorageState_NotAccepting) {
-			Widget_GameText_draw(99, 8, c->xOffset + 230, 83 + 22 * i, Font_NormalRed);
+			Widget_GameText_draw(99, 8, c->xOffset + 230, 83 + 22 * i, FONT_NORMAL_RED);
 		} else if (state == BuildingStorageState_Getting) {
 			Graphics_drawImage(image_group(ID_Graphic_ContextIcons) + 12,
 				c->xOffset + 186, 81 + 22 * i);
-			Widget_GameText_draw(99, 9, c->xOffset + 230, 83 + 22 * i, Font_NormalWhite);
+			Widget_GameText_draw(99, 9, c->xOffset + 230, 83 + 22 * i, FONT_NORMAL_WHITE);
 		}
 	}
 }

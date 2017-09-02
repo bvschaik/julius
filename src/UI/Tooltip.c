@@ -86,7 +86,7 @@ static void drawTooltip(struct TooltipContext *c)
 static void drawButtonTooltip(struct TooltipContext *c)
 {
 	const uint8_t *text = lang_get_string(c->textGroup, c->textId);
-	Widget_RichText_setFonts(Font_SmallPlain, Font_SmallPlain);
+	Widget_RichText_setFonts(FONT_SMALL_PLAIN, FONT_SMALL_PLAIN);
 
 	c->width = 200;
 	int lines = Widget_RichText_draw(text, c->x + 5, c->y + 5,
@@ -160,7 +160,7 @@ static void drawOverlayTooltip(struct TooltipContext *c)
 		strcpy(&tmpString[offset], text);
 		text = tmpString;
 	}
-	Widget_RichText_setFonts(Font_SmallPlain, Font_SmallPlain);
+	Widget_RichText_setFonts(FONT_SMALL_PLAIN, FONT_SMALL_PLAIN);
 
 	c->width = 200;
 	int lines = Widget_RichText_draw(text, c->x + 5, c->y + 5,
@@ -208,24 +208,24 @@ static void drawSenateTooltip(struct TooltipContext *c)
 	Graphics_fillRect(c->x + 1, c->y + 1, c->width - 2, c->height - 2, COLOR_WHITE);
 	
 	// unemployment
-	Widget_GameText_drawColored(68, 148, c->x + 5, c->y + 5, Font_SmallPlain, COLOR_TOOLTIP);
+	Widget_GameText_drawColored(68, 148, c->x + 5, c->y + 5, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
 	Widget_Text_drawNumberColored(Data_CityInfo.unemploymentPercentage, '@', "%",
-		c->x + 140, c->y + 5, Font_SmallPlain, COLOR_TOOLTIP);
+		c->x + 140, c->y + 5, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
 	
 	// ratings
-	Widget_GameText_drawColored(68, 149, c->x + 5, c->y + 19, Font_SmallPlain, COLOR_TOOLTIP);
+	Widget_GameText_drawColored(68, 149, c->x + 5, c->y + 19, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
 	Widget_Text_drawNumberColored(Data_CityInfo.ratingCulture, '@', " ",
-		c->x + 140, c->y + 19, Font_SmallPlain, COLOR_TOOLTIP);
+		c->x + 140, c->y + 19, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
 
-	Widget_GameText_drawColored(68, 150, c->x + 5, c->y + 33, Font_SmallPlain, COLOR_TOOLTIP);
+	Widget_GameText_drawColored(68, 150, c->x + 5, c->y + 33, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
 	Widget_Text_drawNumberColored(Data_CityInfo.ratingProsperity, '@', " ",
-		c->x + 140, c->y + 33, Font_SmallPlain, COLOR_TOOLTIP);
+		c->x + 140, c->y + 33, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
 
-	Widget_GameText_drawColored(68, 151, c->x + 5, c->y + 47, Font_SmallPlain, COLOR_TOOLTIP);
+	Widget_GameText_drawColored(68, 151, c->x + 5, c->y + 47, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
 	Widget_Text_drawNumberColored(Data_CityInfo.ratingPeace, '@', " ",
-		c->x + 140, c->y + 47, Font_SmallPlain, COLOR_TOOLTIP);
+		c->x + 140, c->y + 47, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
 
-	Widget_GameText_drawColored(68, 152, c->x + 5, c->y + 61, Font_SmallPlain, COLOR_TOOLTIP);
+	Widget_GameText_drawColored(68, 152, c->x + 5, c->y + 61, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
 	Widget_Text_drawNumberColored(Data_CityInfo.ratingFavor, '@', " ",
-		c->x + 140, c->y + 61, Font_SmallPlain, COLOR_TOOLTIP);
+		c->x + 140, c->y + 61, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
 }

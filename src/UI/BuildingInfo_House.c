@@ -22,9 +22,9 @@ static void drawVacantLot(BuildingInfoContext *c)
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset,
 		c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(128, 0, c->xOffset, c->yOffset + 8,
-		16 * c->widthBlocks, Font_LargeBlack);
+		16 * c->widthBlocks, FONT_LARGE_BLACK);
 	Widget_GameText_drawCentered(13, 1, c->xOffset, c->yOffset + 16 * c->heightBlocks - 22,
-		16 * c->widthBlocks, Font_NormalBlack);
+		16 * c->widthBlocks, FONT_NORMAL_BLACK);
 	UI_BuildingInfo_drawFigureList(c);
 
 	int textId = 2;
@@ -35,7 +35,7 @@ static void drawVacantLot(BuildingInfoContext *c)
 	}
 	Widget_GameText_drawMultiline(128, textId,
 		c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 113,
-		16 * (c->widthBlocks - 4), Font_NormalBlack);
+		16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
 }
 
 static void drawPopulationInfo(BuildingInfoContext *c, int yOffset)
@@ -43,17 +43,17 @@ static void drawPopulationInfo(BuildingInfoContext *c, int yOffset)
 	struct Data_Building *b = &Data_Buildings[c->buildingId];
 	Graphics_drawImage(image_group(ID_Graphic_ContextIcons) + 13, c->xOffset + 34, yOffset + 4);
 	int width = Widget_Text_drawNumber(b->housePopulation, '@', " ",
-		c->xOffset + 50, yOffset + 14, Font_SmallBlack);
-	width += Widget_GameText_draw(127, 20, c->xOffset + 50 + width, yOffset + 14, Font_SmallBlack);
+		c->xOffset + 50, yOffset + 14, FONT_SMALL_BLACK);
+	width += Widget_GameText_draw(127, 20, c->xOffset + 50 + width, yOffset + 14, FONT_SMALL_BLACK);
 	
 	if (b->housePopulationRoom < 0) {
 		width += Widget_Text_drawNumber(-b->housePopulationRoom, '@', " ",
-			c->xOffset + 50 + width, yOffset + 14, Font_SmallBlack);
-		Widget_GameText_draw(127, 21, c->xOffset + 50 + width, yOffset + 14, Font_SmallBlack);
+			c->xOffset + 50 + width, yOffset + 14, FONT_SMALL_BLACK);
+		Widget_GameText_draw(127, 21, c->xOffset + 50 + width, yOffset + 14, FONT_SMALL_BLACK);
 	} else if (b->housePopulationRoom > 0) {
-		width += Widget_GameText_draw(127, 22, c->xOffset + 50 + width, yOffset + 14, Font_SmallBlack);
+		width += Widget_GameText_draw(127, 22, c->xOffset + 50 + width, yOffset + 14, FONT_SMALL_BLACK);
 		Widget_Text_drawNumber(b->housePopulationRoom, '@', " ",
-			c->xOffset + 50 + width, yOffset + 14, Font_SmallBlack);
+			c->xOffset + 50 + width, yOffset + 14, FONT_SMALL_BLACK);
 	}
 }
 
@@ -62,12 +62,12 @@ static void drawTaxInfo(BuildingInfoContext *c, int yOffset)
 	struct Data_Building *b = &Data_Buildings[c->buildingId];
 	if (b->houseTaxCoverage) {
 		int pct = calc_adjust_with_percentage(b->taxIncomeOrStorage / 2, Data_CityInfo.taxPercentage);
-		int width = Widget_GameText_draw(127, 24, c->xOffset + 36, yOffset, Font_SmallBlack);
+		int width = Widget_GameText_draw(127, 24, c->xOffset + 36, yOffset, FONT_SMALL_BLACK);
 		width += Widget_GameText_drawNumberWithDescription(8, 0, pct,
-			c->xOffset + 36 + width, yOffset, Font_SmallBlack);
-		Widget_GameText_draw(127, 25, c->xOffset + 36 + width, yOffset, Font_SmallBlack);
+			c->xOffset + 36 + width, yOffset, FONT_SMALL_BLACK);
+		Widget_GameText_draw(127, 25, c->xOffset + 36 + width, yOffset, FONT_SMALL_BLACK);
 	} else {
-		Widget_GameText_draw(127, 23, c->xOffset + 36, yOffset, Font_SmallBlack);
+		Widget_GameText_draw(127, 23, c->xOffset + 36, yOffset, FONT_SMALL_BLACK);
 	}
 }
 
@@ -90,7 +90,7 @@ static void drawHappinessInfo(BuildingInfoContext *c, int yOffset)
 	} else {
 		textId = 32;
 	}
-	Widget_GameText_draw(127, textId, c->xOffset + 36, yOffset, Font_SmallBlack);
+	Widget_GameText_draw(127, textId, c->xOffset + 36, yOffset, FONT_SMALL_BLACK);
 }
 
 void UI_BuildingInfo_drawHouse(BuildingInfoContext *c)
@@ -104,7 +104,7 @@ void UI_BuildingInfo_drawHouse(BuildingInfoContext *c)
 	}
 	int level = b->type - 10;
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-	Widget_GameText_drawCentered(29, level, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, Font_LargeBlack);
+	Widget_GameText_drawCentered(29, level, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 148, c->widthBlocks - 2, 10);
 	
 	drawPopulationInfo(c, c->yOffset + 154);
@@ -118,61 +118,61 @@ void UI_BuildingInfo_drawHouse(BuildingInfoContext *c)
 		Graphics_drawImage(resourceGraphic + Resource_Wheat,
 			c->xOffset + 32, c->yOffset + 234);
 		Widget_Text_drawNumber(b->data.house.inventory[Inventory_Wheat], '@', " ",
-			c->xOffset + 64, c->yOffset + 238, Font_SmallBlack);
+			c->xOffset + 64, c->yOffset + 238, FONT_SMALL_BLACK);
 		// vegetables
 		Graphics_drawImage(resourceGraphic + Resource_Vegetables,
 			c->xOffset + 142, c->yOffset + 234);
 		Widget_Text_drawNumber(b->data.house.inventory[Inventory_Vegetables], '@', " ",
-			c->xOffset + 174, c->yOffset + 238, Font_SmallBlack);
+			c->xOffset + 174, c->yOffset + 238, FONT_SMALL_BLACK);
 		// fruit
 		Graphics_drawImage(resourceGraphic + Resource_Fruit,
 			c->xOffset + 252, c->yOffset + 234);
 		Widget_Text_drawNumber(b->data.house.inventory[Inventory_Fruit], '@', " ",
-			c->xOffset + 284, c->yOffset + 238, Font_SmallBlack);
+			c->xOffset + 284, c->yOffset + 238, FONT_SMALL_BLACK);
 		// meat/fish
 		Graphics_drawImage(resourceGraphic + Resource_Meat +
 			Resource_getGraphicIdOffset(Resource_Meat, 3),
 			c->xOffset + 362, c->yOffset + 234);
 		Widget_Text_drawNumber(b->data.house.inventory[Inventory_Meat], '@', " ",
-			c->xOffset + 394, c->yOffset + 238, Font_SmallBlack);
+			c->xOffset + 394, c->yOffset + 238, FONT_SMALL_BLACK);
 	} else {
 		// no food necessary
 		Widget_GameText_drawMultiline(127, 33, c->xOffset + 36, c->yOffset + 234,
-			16 * (c->widthBlocks - 6), Font_SmallBlack);
+			16 * (c->widthBlocks - 6), FONT_SMALL_BLACK);
 	}
 	// goods inventory
 	// pottery
 	Graphics_drawImage(resourceGraphic + Resource_Pottery,
 		c->xOffset + 32, c->yOffset + 274);
 	Widget_Text_drawNumber(b->data.house.inventory[Inventory_Pottery], '@', " ",
-		c->xOffset + 64, c->yOffset + 278, Font_SmallBlack);
+		c->xOffset + 64, c->yOffset + 278, FONT_SMALL_BLACK);
 	// furniture
 	Graphics_drawImage(resourceGraphic + Resource_Furniture,
 		c->xOffset + 142, c->yOffset + 274);
 	Widget_Text_drawNumber(b->data.house.inventory[Inventory_Furniture], '@', " ",
-		c->xOffset + 174, c->yOffset + 278, Font_SmallBlack);
+		c->xOffset + 174, c->yOffset + 278, FONT_SMALL_BLACK);
 	// oil
 	Graphics_drawImage(resourceGraphic + Resource_Oil,
 		c->xOffset + 252, c->yOffset + 274);
 	Widget_Text_drawNumber(b->data.house.inventory[Inventory_Oil], '@', " ",
-		c->xOffset + 284, c->yOffset + 278, Font_SmallBlack);
+		c->xOffset + 284, c->yOffset + 278, FONT_SMALL_BLACK);
 	// wine
 	Graphics_drawImage(resourceGraphic + Resource_Wine,
 		c->xOffset + 362, c->yOffset + 274);
 	Widget_Text_drawNumber(b->data.house.inventory[Inventory_Wine], '@', " ",
-		c->xOffset + 394, c->yOffset + 278, Font_SmallBlack);
+		c->xOffset + 394, c->yOffset + 278, FONT_SMALL_BLACK);
 	
 	if (b->data.house.evolveTextId == 62) {
 		int width = Widget_GameText_draw(127, 40 + b->data.house.evolveTextId,
-			c->xOffset + 32, c->yOffset + 60, Font_NormalBlack);
+			c->xOffset + 32, c->yOffset + 60, FONT_NORMAL_BLACK);
 		width += Widget_GameText_drawColored(41, Data_Buildings[c->worstDesirabilityBuildingId].type,
-			c->xOffset + 32 + width, c->yOffset + 60, Font_NormalPlain, COLOR_RED);
-		Widget_Text_draw((uint8_t*)")", c->xOffset + 32 + width, c->yOffset + 60, Font_NormalBlack, 0);
+			c->xOffset + 32 + width, c->yOffset + 60, FONT_NORMAL_PLAIN, COLOR_RED);
+		Widget_Text_draw((uint8_t*)")", c->xOffset + 32 + width, c->yOffset + 60, FONT_NORMAL_BLACK, 0);
 		Widget_GameText_drawMultiline(127, 41 + b->data.house.evolveTextId,
-			c->xOffset + 32, c->yOffset + 76, 16 * (c->widthBlocks - 4), Font_NormalBlack);
+			c->xOffset + 32, c->yOffset + 76, 16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
 	} else {
 		Widget_GameText_drawMultiline(127, 40 + b->data.house.evolveTextId,
-			c->xOffset + 32, c->yOffset + 70, 16 * (c->widthBlocks - 4), Font_NormalBlack);
+			c->xOffset + 32, c->yOffset + 70, 16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
 	}
 }
 

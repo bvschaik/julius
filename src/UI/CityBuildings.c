@@ -79,10 +79,10 @@ void UI_CityBuildings_drawBuildingCost()
 	}
 	Widget_Text_drawNumberColored(Data_State.selectedBuilding.cost, '@', " ",
 		Data_CityView.selectedTile.xOffsetInPixels + 58 + 1,
-		Data_CityView.selectedTile.yOffsetInPixels + 1, Font_NormalPlain, COLOR_BLACK);
+		Data_CityView.selectedTile.yOffsetInPixels + 1, FONT_NORMAL_PLAIN, COLOR_BLACK);
 	Widget_Text_drawNumberColored(Data_State.selectedBuilding.cost, '@', " ",
 		Data_CityView.selectedTile.xOffsetInPixels + 58,
-		Data_CityView.selectedTile.yOffsetInPixels, Font_NormalPlain, color);
+		Data_CityView.selectedTile.yOffsetInPixels, FONT_NORMAL_PLAIN, color);
 	Graphics_resetClipRectangle();
 	Data_State.selectedBuilding.cost = 0;
 }

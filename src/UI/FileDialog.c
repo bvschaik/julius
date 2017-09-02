@@ -91,20 +91,20 @@ void UI_FileDialog_drawForeground()
 	// title
 	if (messageNotExistTimeUntil && time_get_millis() < messageNotExistTimeUntil) {
 		Widget_GameText_drawCentered(43, 2,
-			baseOffsetX + 160, baseOffsetY + 50, 304, Font_LargeBlack);
+			baseOffsetX + 160, baseOffsetY + 50, 304, FONT_LARGE_BLACK);
 	} else if (dialogType == FileDialogType_Delete) {
 		Widget_GameText_drawCentered(43, 6,
-			baseOffsetX + 160, baseOffsetY + 50, 304, Font_LargeBlack);
+			baseOffsetX + 160, baseOffsetY + 50, 304, FONT_LARGE_BLACK);
 	} else {
 		Widget_GameText_drawCentered(43, dialogType,
-			baseOffsetX + 160, baseOffsetY + 50, 304, Font_LargeBlack);
+			baseOffsetX + 160, baseOffsetY + 50, 304, FONT_LARGE_BLACK);
 	}
-	Widget_GameText_draw(43, 5, baseOffsetX + 224, baseOffsetY + 342, Font_NormalBlack);
+	Widget_GameText_draw(43, 5, baseOffsetX + 224, baseOffsetY + 342, FONT_NORMAL_BLACK);
 
 	for (int i = 0; i < 12; i++) {
-		Font font = Font_NormalGreen;
+		font_t font = FONT_NORMAL_GREEN;
 		if (focusButtonId == i + 1) {
-			font = Font_NormalWhite;
+			font = FONT_NORMAL_WHITE;
 		}
 		strcpy(file, savedGames->files[scrollPosition + i]);
 		file_remove_extension(file);
@@ -113,7 +113,7 @@ void UI_FileDialog_drawForeground()
 
 	Widget_Button_drawImageButtons(baseOffsetX, baseOffsetY, imageButtons, 4);
 	Widget_Text_captureCursor();
-	Widget_Text_draw(Data_FileList.selectedCity, baseOffsetX + 160, baseOffsetY + 90, Font_NormalWhite, 0);
+	Widget_Text_draw(Data_FileList.selectedCity, baseOffsetX + 160, baseOffsetY + 90, FONT_NORMAL_WHITE, 0);
 	Widget_Text_drawCursor(baseOffsetX + 160, baseOffsetY + 91);
 	drawScrollbarDot();
 }

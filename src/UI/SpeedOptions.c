@@ -61,33 +61,33 @@ void UI_SpeedOptions_drawForeground()
 	
 	Widget_GameText_drawCentered(45, 0,
 		baseOffsetX + 128, baseOffsetY + 92,
-		224, Font_LargeBlack
+		224, FONT_LARGE_BLACK
 	);
 	Widget_GameText_drawCentered(45, 4,
 		baseOffsetX + 128, baseOffsetY + 236,
-		224, Font_NormalGreen
+		224, FONT_NORMAL_GREEN
 	);
 	Widget_GameText_drawCentered(45, 1,
 		baseOffsetX + 128, baseOffsetY + 266,
-		224, Font_NormalGreen
+		224, FONT_NORMAL_GREEN
 	);
 	Widget_GameText_draw(45, 2,
 		baseOffsetX + 144, baseOffsetY + 146,
-		Font_NormalPlain
+		FONT_NORMAL_PLAIN
 	);
 	Widget_Text_drawNumber(
 		Data_Settings.gameSpeed, 64, "%",
 		baseOffsetX + 296, baseOffsetY + 146,
-		Font_NormalPlain
+		FONT_NORMAL_PLAIN
 	);
 	Widget_GameText_draw(45, 3,
 		baseOffsetX + 144, baseOffsetY + 182,
-		Font_NormalPlain
+		FONT_NORMAL_PLAIN
 	);
 	Widget_Text_drawNumber(
 		Data_Settings.scrollSpeed, 64, "%",
 		baseOffsetX + 296, baseOffsetY + 182,
-		Font_NormalPlain
+		FONT_NORMAL_PLAIN
 	);
 
 	Widget_Button_drawArrowButtons(

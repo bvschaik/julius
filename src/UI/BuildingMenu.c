@@ -173,7 +173,7 @@ static void drawMenuButtons()
 			16, buildMenuFocusButtonId == i + 1 ? 1 : 2);
 		int buildingType = SidebarMenu_getBuildingType(menu.selectedSubmenu, itemIndex);
 		Widget_GameText_drawCentered(28, buildingType,
-			xOffset - 266, menu.yOffset + 113 + 24 * i, 176, Font_NormalGreen);
+			xOffset - 266, menu.yOffset + 113 + 24 * i, 176, FONT_NORMAL_GREEN);
 		if (buildingType == BUILDING_DRAGGABLE_RESERVOIR) {
 			buildingType = BUILDING_RESERVOIR;
 		}
@@ -183,7 +183,7 @@ static void drawMenuButtons()
 		}
 		if (cost) {
 			Widget_Text_drawNumber(cost, '@', "Dn",
-				xOffset - 82, menu.yOffset + 114 + 24 * i, Font_NormalGreen);
+				xOffset - 82, menu.yOffset + 114 + 24 * i, FONT_NORMAL_GREEN);
 		}
 	}
 }

@@ -80,19 +80,19 @@ void UI_PlayerMessageList_drawBackground()
 	data.textHeightBlocks = data.heightBlocks - 9;
 
 	Widget_Panel_drawOuterPanel(data.x, data.y, data.widthBlocks, data.heightBlocks);
-	Widget_GameText_drawCentered(63, 0, data.x, data.y + 16, 16 * data.widthBlocks, Font_LargeBlack);
+	Widget_GameText_drawCentered(63, 0, data.x, data.y + 16, 16 * data.widthBlocks, FONT_LARGE_BLACK);
 	Widget_Panel_drawInnerPanel(data.xText, data.yText, data.textWidthBlocks, data.textHeightBlocks);
 
 	if (Data_Message.totalMessages > 0) {
-		Widget_GameText_draw(63, 2, data.xText + 42, data.yText - 12, Font_SmallPlain);
-		Widget_GameText_draw(63, 3, data.xText + 180, data.yText - 12, Font_SmallPlain);
+		Widget_GameText_draw(63, 2, data.xText + 42, data.yText - 12, FONT_SMALL_PLAIN);
+		Widget_GameText_draw(63, 3, data.xText + 180, data.yText - 12, FONT_SMALL_PLAIN);
 		Widget_GameText_drawMultiline(63, 4,
 			data.xText + 50, data.yText + 12 + 16 * data.textHeightBlocks,
-			16 * data.textWidthBlocks - 100, Font_NormalBlack);
+			16 * data.textWidthBlocks - 100, FONT_NORMAL_BLACK);
 	} else {
 		Widget_GameText_drawMultiline(63, 1,
 			data.xText + 16, data.yText + 80,
-			16 * data.textWidthBlocks - 48, Font_NormalGreen);
+			16 * data.textWidthBlocks - 48, FONT_NORMAL_GREEN);
 	}
 }
 
@@ -124,9 +124,9 @@ void UI_PlayerMessageList_drawForeground()
 			Graphics_drawImage(image_group(ID_Graphic_MessageIcon) + 14 + graphicOffset,
 				data.xText + 12, data.yText + 6 + 20 * i);
 		}
-		Font font = Font_NormalWhite;
+		font_t font = FONT_NORMAL_WHITE;
 		if (focusButtonId == i + 1) {
-			font = Font_NormalRed;
+			font = FONT_NORMAL_RED;
 		}
 		int width = Widget_GameText_draw(25, Data_Message.messages[index].month,
 			data.xText + 42, data.yText + 8 + 20 * i, font);

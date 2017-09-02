@@ -1,9 +1,29 @@
 #ifndef GRAPHICS_H
 #define GRAPHICS_H
 
-#include "Data/Types.h"
-
 #include "graphics/image.h"
+
+enum ClipCode {
+    ClipNone,
+    ClipLeft,
+    ClipRight,
+    ClipTop,
+    ClipBottom,
+    ClipBoth,
+    ClipInvisible
+};
+
+typedef struct {
+    enum ClipCode clipX;
+    enum ClipCode clipY;
+    int clippedPixelsLeft;
+    int clippedPixelsRight;
+    int clippedPixelsTop;
+    int clippedPixelsBottom;
+    int visiblePixelsX;
+    int visiblePixelsY;
+    int isVisible;
+} GraphicsClipInfo;
 
 void Graphics_clearScreen();
 

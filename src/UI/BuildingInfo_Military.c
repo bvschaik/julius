@@ -42,10 +42,10 @@ void UI_BuildingInfo_drawWall(BuildingInfoContext *c)
 	c->helpId = 85;
 	PLAY_SOUND("wavs/wall.wav");
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-	Widget_GameText_drawCentered(139, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, Font_LargeBlack);
+	Widget_GameText_drawCentered(139, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	Widget_GameText_drawMultiline(139, 1,
 		c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 158,
-		16 * (c->widthBlocks - 4), Font_NormalBlack);
+		16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
 }
 
 void UI_BuildingInfo_drawPrefect(BuildingInfoContext *c)
@@ -53,10 +53,10 @@ void UI_BuildingInfo_drawPrefect(BuildingInfoContext *c)
 	c->helpId = 86;
 	PLAY_SOUND("wavs/prefecture.wav");
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-	Widget_GameText_drawCentered(88, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, Font_LargeBlack);
+	Widget_GameText_drawCentered(88, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	Widget_GameText_drawCentered(13, 1,
 		c->xOffset, c->yOffset + 16 * c->heightBlocks - 24,
-		16 * c->widthBlocks, Font_NormalBlack);
+		16 * c->widthBlocks, FONT_NORMAL_BLACK);
 
 	struct Data_Building *b = &Data_Buildings[c->buildingId];
 	if (!c->hasRoadAccess) {
@@ -91,16 +91,16 @@ void UI_BuildingInfo_drawFort(BuildingInfoContext *c)
 	c->helpId = 87;
 	PLAY_SOUND("wavs/fort.wav");
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-	Widget_GameText_drawCentered(89, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, Font_LargeBlack);
+	Widget_GameText_drawCentered(89, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 
 	if (formation_get(c->formationId)->cursed_by_mars) {
 		Widget_GameText_drawMultiline(89, 1,
 			c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 158,
-			16 * (c->widthBlocks - 4), Font_NormalBlack);
+			16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
 	} else {
 		Widget_GameText_drawMultiline(89, 2,
 			c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 158,
-			16 * (c->widthBlocks - 4), Font_NormalBlack);
+			16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
 	}
 }
 
@@ -109,11 +109,11 @@ void UI_BuildingInfo_drawGatehouse(BuildingInfoContext *c)
 	c->helpId = 85;
 	PLAY_SOUND("wavs/gatehouse.wav");
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-	Widget_GameText_drawCentered(90, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, Font_LargeBlack);
+	Widget_GameText_drawCentered(90, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 
 	Widget_GameText_drawMultiline(90, 1,
 		c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 158,
-		16 * (c->widthBlocks - 4), Font_NormalBlack);
+		16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
 }
 
 void UI_BuildingInfo_drawTower(BuildingInfoContext *c)
@@ -121,7 +121,7 @@ void UI_BuildingInfo_drawTower(BuildingInfoContext *c)
 	c->helpId = 85;
 	PLAY_SOUND("wavs/tower.wav");
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-	Widget_GameText_drawCentered(91, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, Font_LargeBlack);
+	Widget_GameText_drawCentered(91, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 
 	if (!c->hasRoadAccess) {
 		DRAW_DESC(69, 25);
@@ -141,7 +141,7 @@ void UI_BuildingInfo_drawMilitaryAcademy(BuildingInfoContext *c)
 	c->helpId = 88;
 	PLAY_SOUND("wavs/mil_acad.wav");
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-	Widget_GameText_drawCentered(135, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, Font_LargeBlack);
+	Widget_GameText_drawCentered(135, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 
 	struct Data_Building *b = &Data_Buildings[c->buildingId];
 	if (!c->hasRoadAccess) {
@@ -162,17 +162,17 @@ void UI_BuildingInfo_drawBarracks(BuildingInfoContext *c)
 	c->helpId = 37;
 	PLAY_SOUND("wavs/barracks.wav");
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-	Widget_GameText_drawCentered(136, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, Font_LargeBlack);
+	Widget_GameText_drawCentered(136, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + Resource_Weapons,
 		c->xOffset + 64, c->yOffset + 38);
 
 	struct Data_Building *b = &Data_Buildings[c->buildingId];
 	if (b->loadsStored < 1) {
 		Widget_GameText_drawNumberWithDescription(8, 10, 0,
-			c->xOffset + 92, c->yOffset + 44, Font_NormalBlack);
+			c->xOffset + 92, c->yOffset + 44, FONT_NORMAL_BLACK);
 	} else {
 		Widget_GameText_drawNumberWithDescription(8, 10, b->loadsStored,
-			c->xOffset + 92, c->yOffset + 44, Font_NormalBlack);
+			c->xOffset + 92, c->yOffset + 44, FONT_NORMAL_BLACK);
 	}
 
 	if (!c->hasRoadAccess) {
@@ -208,7 +208,7 @@ void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset,
 		c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(138, m->legion_id,
-		c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, Font_LargeBlack);
+		c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 
 	// standard icon at the top
 	int graphicId = image_group(ID_Graphic_FortStandardIcons) + m->legion_id;
@@ -237,11 +237,11 @@ void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)
 		c->yOffset + 16 + iconHeight + flagHeight);
 
 	// number of soldiers
-	Widget_GameText_draw(138, 23, c->xOffset + 100, c->yOffset + 60, Font_NormalBlack);
+	Widget_GameText_draw(138, 23, c->xOffset + 100, c->yOffset + 60, FONT_NORMAL_BLACK);
 	Widget_Text_drawNumber(m->num_figures, '@', " ",
-		c->xOffset + 294, c->yOffset + 60, Font_NormalBlack);
+		c->xOffset + 294, c->yOffset + 60, FONT_NORMAL_BLACK);
 	// health
-	Widget_GameText_draw(138, 24, c->xOffset + 100, c->yOffset + 80, Font_NormalBlack);
+	Widget_GameText_draw(138, 24, c->xOffset + 100, c->yOffset + 80, FONT_NORMAL_BLACK);
 	int health = calc_percentage(m->total_damage, m->max_total_damage);
 	if (health <= 0) {
 		textId = 26;
@@ -258,18 +258,18 @@ void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)
 	} else {
 		textId = 32;
 	}
-	Widget_GameText_draw(138, textId, c->xOffset + 300, c->yOffset + 80, Font_NormalBlack);
+	Widget_GameText_draw(138, textId, c->xOffset + 300, c->yOffset + 80, FONT_NORMAL_BLACK);
 	// military training
-	Widget_GameText_draw(138, 25, c->xOffset + 100, c->yOffset + 100, Font_NormalBlack);
+	Widget_GameText_draw(138, 25, c->xOffset + 100, c->yOffset + 100, FONT_NORMAL_BLACK);
 	Widget_GameText_draw(18, m->has_military_training,
-		c->xOffset + 300, c->yOffset + 100, Font_NormalBlack);
+		c->xOffset + 300, c->yOffset + 100, FONT_NORMAL_BLACK);
 	// morale
 	if (m->cursed_by_mars) {
-		Widget_GameText_draw(138, 59, c->xOffset + 100, c->yOffset + 120, Font_NormalBlack);
+		Widget_GameText_draw(138, 59, c->xOffset + 100, c->yOffset + 120, FONT_NORMAL_BLACK);
 	} else {
-		Widget_GameText_draw(138, 36, c->xOffset + 100, c->yOffset + 120, Font_NormalBlack);
+		Widget_GameText_draw(138, 36, c->xOffset + 100, c->yOffset + 120, FONT_NORMAL_BLACK);
 		Widget_GameText_draw(138, 37 + m->morale / 5,
-			c->xOffset + 300, c->yOffset + 120, Font_NormalBlack);
+			c->xOffset + 300, c->yOffset + 120, FONT_NORMAL_BLACK);
 	}
 	if (m->num_figures) {
 		// layout
@@ -306,7 +306,7 @@ void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)
 		}
 		Widget_GameText_drawMultiline(groupId, textId,
 			c->xOffset + 32, c->yOffset + 172,
-			16 * (c->widthBlocks - 4), Font_NormalBlack);
+			16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
 	}
 }
 
@@ -414,10 +414,10 @@ void UI_BuildingInfo_drawLegionInfoForeground(BuildingInfoContext *c)
 			break;
 	}
 	Widget_GameText_draw(138, titleId,
-		c->xOffset + 24, c->yOffset + 236, Font_NormalWhite);
+		c->xOffset + 24, c->yOffset + 236, FONT_NORMAL_WHITE);
 	Widget_GameText_drawMultiline(138, textId,
 		c->xOffset + 24, c->yOffset + 252,
-		16 * (c->widthBlocks - 4), Font_NormalGreen);
+		16 * (c->widthBlocks - 4), FONT_NORMAL_GREEN);
 
 	if (!m->is_at_fort) {
 		Widget_Panel_drawButtonBorder(
@@ -427,7 +427,7 @@ void UI_BuildingInfo_drawLegionInfoForeground(BuildingInfoContext *c)
 		Widget_GameText_drawCentered(138, 58,
 			c->xOffset + 16 * (c->widthBlocks - 18) / 2,
 			c->yOffset + 16 * c->heightBlocks - 39,
-			288, Font_NormalBlack);
+			288, FONT_NORMAL_BLACK);
 	}
 }
 

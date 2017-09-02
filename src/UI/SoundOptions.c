@@ -99,61 +99,61 @@ void UI_SoundOptions_drawForeground()
 	
 	Widget_GameText_drawCentered(46, 0,
 		baseOffsetX + 96, baseOffsetY + 92,
-		288, Font_LargeBlack
+		288, FONT_LARGE_BLACK
 	);
 	
 	Widget_GameText_drawCentered(46, 12,
 		baseOffsetX + 128, baseOffsetY + 300,
-		224, Font_NormalGreen
+		224, FONT_NORMAL_GREEN
 	);
 	Widget_GameText_drawCentered(46, 9,
 		baseOffsetX + 128, baseOffsetY + 330,
-		224, Font_NormalGreen
+		224, FONT_NORMAL_GREEN
 	);
 	
 	Widget_GameText_draw(46, 10,
 		baseOffsetX + 112, baseOffsetY + 142,
-		Font_SmallPlain
+		FONT_SMALL_PLAIN
 	);
 	Widget_GameText_draw(46, 11,
 		baseOffsetX + 336, baseOffsetY + 142,
-		Font_SmallPlain
+		FONT_SMALL_PLAIN
 	);
 	
 	Widget_GameText_drawCentered(46, Data_Settings.soundMusicEnabled ? 2 : 1,
 		baseOffsetX + 64, baseOffsetY + 166,
-		224, Font_NormalGreen
+		224, FONT_NORMAL_GREEN
 	);
 	Widget_Text_drawNumber(Data_Settings.soundMusicPercentage, 64, "%",
 		baseOffsetX + 374, baseOffsetY + 166,
-		Font_NormalPlain
+		FONT_NORMAL_PLAIN
 	);
 	
 	Widget_GameText_drawCentered(46, Data_Settings.soundSpeechEnabled ? 4 : 3,
 		baseOffsetX + 64, baseOffsetY + 196,
-		224, Font_NormalGreen
+		224, FONT_NORMAL_GREEN
 	);
 	Widget_Text_drawNumber(Data_Settings.soundSpeechPercentage, 64, "%",
 		baseOffsetX + 374, baseOffsetY + 196,
-		Font_NormalPlain
+		FONT_NORMAL_PLAIN
 	);
 	
 	Widget_GameText_drawCentered(46, Data_Settings.soundEffectsEnabled ? 6 : 5,
 		baseOffsetX + 64, baseOffsetY + 226,
-		224, Font_NormalGreen
+		224, FONT_NORMAL_GREEN
 	);
 	Widget_Text_drawNumber(Data_Settings.soundEffectsPercentage, 64, "%",
 		baseOffsetX + 374, baseOffsetY + 226,
-		Font_NormalPlain
+		FONT_NORMAL_PLAIN
 	);
 	
 	Widget_GameText_drawCentered(46, Data_Settings.soundCityEnabled ? 8 : 7,
 		baseOffsetX + 64, baseOffsetY + 256,
-		224, Font_NormalGreen
+		224, FONT_NORMAL_GREEN
 	);
 	Widget_Text_drawNumber(Data_Settings.soundCityPercentage, 64, "%",
 		baseOffsetX + 374, baseOffsetY + 256,
-		Font_NormalPlain
+		FONT_NORMAL_PLAIN
 	);
 
 	Widget_Button_drawArrowButtons(

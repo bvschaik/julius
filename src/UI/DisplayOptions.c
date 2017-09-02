@@ -55,30 +55,30 @@ void UI_DisplayOptions_drawForeground()
 	
 	Widget_GameText_drawCentered(42, 0,
 		baseOffsetX + 128, baseOffsetY + 94,
-		224, Font_LargeBlack
+		224, FONT_LARGE_BLACK
 	);
 	
 	Widget_GameText_drawCentered(42,
 		Data_Settings.fullscreen ? 2 : 1,
 		baseOffsetX + 128, baseOffsetY + 140,
-		224, Font_NormalGreen
+		224, FONT_NORMAL_GREEN
 	);
 	
 	Widget_GameText_drawCentered(42, 3,
 		baseOffsetX + 128, baseOffsetY + 164,
-		224, Font_NormalGreen
+		224, FONT_NORMAL_GREEN
 	);
 	Widget_GameText_drawCentered(42, 4,
 		baseOffsetX + 128, baseOffsetY + 188,
-		224, Font_NormalGreen
+		224, FONT_NORMAL_GREEN
 	);
 	Widget_GameText_drawCentered(42, 5,
 		baseOffsetX + 128, baseOffsetY + 212,
-		224, Font_NormalGreen
+		224, FONT_NORMAL_GREEN
 	);
 	Widget_GameText_drawCentered(42, 6,
 		baseOffsetX + 128, baseOffsetY + 236,
-		224, Font_NormalGreen
+		224, FONT_NORMAL_GREEN
 	);
 }
 

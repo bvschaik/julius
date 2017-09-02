@@ -156,7 +156,7 @@ static void drawPanelInfo()
 				break;
 		}
 	} else {
-		Widget_GameText_drawCentered(47, 8, data.xMin, data.yMax - 48, data.xMax - data.xMin, Font_NormalGreen);
+		Widget_GameText_drawCentered(47, 8, data.xMin, data.yMax - 48, data.xMax - data.xMin, FONT_NORMAL_GREEN);
 	}
 }
 
@@ -167,25 +167,25 @@ static void drawPanelInfoCity()
 	int yOffset = data.yMax - 88;
 
 	if (Data_Empire_Cities[data.selectedCity].cityType == EmpireCity_DistantRoman) {
-		Widget_GameText_drawCentered(47, 12, xOffset, yOffset + 42, 240, Font_NormalGreen);
+		Widget_GameText_drawCentered(47, 12, xOffset, yOffset + 42, 240, FONT_NORMAL_GREEN);
 		return;
 	}
 	if (Data_Empire_Cities[data.selectedCity].cityType == EmpireCity_VulnerableRoman) {
 		if (Data_CityInfo.distantBattleCityMonthsUntilRoman <= 0) {
-			Widget_GameText_drawCentered(47, 12, xOffset, yOffset + 42, 240, Font_NormalGreen);
+			Widget_GameText_drawCentered(47, 12, xOffset, yOffset + 42, 240, FONT_NORMAL_GREEN);
 		} else {
-			Widget_GameText_drawCentered(47, 13, xOffset, yOffset + 42, 240, Font_NormalGreen);
+			Widget_GameText_drawCentered(47, 13, xOffset, yOffset + 42, 240, FONT_NORMAL_GREEN);
 		}
 		return;
 	}
 	if (Data_Empire_Cities[data.selectedCity].cityType == EmpireCity_FutureTrade ||
 		Data_Empire_Cities[data.selectedCity].cityType == EmpireCity_DistantForeign ||
 		Data_Empire_Cities[data.selectedCity].cityType == EmpireCity_FutureRoman) {
-		Widget_GameText_drawCentered(47, 0, xOffset, yOffset + 42, 240, Font_NormalGreen);
+		Widget_GameText_drawCentered(47, 0, xOffset, yOffset + 42, 240, FONT_NORMAL_GREEN);
 		return;
 	}
 	if (Data_Empire_Cities[data.selectedCity].cityType == EmpireCity_Ours) {
-		Widget_GameText_drawCentered(47, 1, xOffset, yOffset + 42, 240, Font_NormalGreen);
+		Widget_GameText_drawCentered(47, 1, xOffset, yOffset + 42, 240, FONT_NORMAL_GREEN);
 		return;
 	}
 	if (Data_Empire_Cities[data.selectedCity].cityType != EmpireCity_Trade) {
@@ -196,7 +196,7 @@ static void drawPanelInfoCity()
 	yOffset = data.yMax - 108;
 	if (Data_Empire_Cities[data.selectedCity].isOpen) {
 		// city sells
-		Widget_GameText_draw(47, 10, xOffset + 40, yOffset + 30, Font_NormalGreen);
+		Widget_GameText_draw(47, 10, xOffset + 40, yOffset + 30, FONT_NORMAL_GREEN);
 		int goodOffset = 0;
 		for (int good = 1; good <= 15; good++) {
 			if (!Empire_citySellsResource(objectId, good)) {
@@ -227,15 +227,15 @@ static void drawPanelInfoCity()
 				tradeMax = tradeNow;
 			}
 			int textWidth = Widget_Text_drawNumber(tradeNow, '@', "",
-				xOffset + 100 * goodOffset + 150, yOffset + 30, Font_NormalGreen);
+				xOffset + 100 * goodOffset + 150, yOffset + 30, FONT_NORMAL_GREEN);
 			textWidth += Widget_GameText_draw(47, 11,
-				xOffset + 100 * goodOffset + 148 + textWidth, yOffset + 30, Font_NormalGreen);
+				xOffset + 100 * goodOffset + 148 + textWidth, yOffset + 30, FONT_NORMAL_GREEN);
 			Widget_Text_drawNumber(tradeMax, '@', "",
-				xOffset + 100 * goodOffset + 138 + textWidth, yOffset + 30, Font_NormalGreen);
+				xOffset + 100 * goodOffset + 138 + textWidth, yOffset + 30, FONT_NORMAL_GREEN);
 			goodOffset++;
 		}
 		// city buys
-		Widget_GameText_draw(47, 9, xOffset + 40, yOffset + 60, Font_NormalGreen);
+		Widget_GameText_draw(47, 9, xOffset + 40, yOffset + 60, FONT_NORMAL_GREEN);
 		goodOffset = 0;
 		for (int good = 1; good <= 15; good++) {
 			if (!Empire_cityBuysResource(objectId, good)) {
@@ -266,15 +266,15 @@ static void drawPanelInfoCity()
 				tradeMax = tradeNow;
 			}
 			int textWidth = Widget_Text_drawNumber(tradeNow, '@', "",
-				xOffset + 100 * goodOffset + 150, yOffset + 60, Font_NormalGreen);
+				xOffset + 100 * goodOffset + 150, yOffset + 60, FONT_NORMAL_GREEN);
 			textWidth += Widget_GameText_draw(47, 11,
-				xOffset + 100 * goodOffset + 148 + textWidth, yOffset + 60, Font_NormalGreen);
+				xOffset + 100 * goodOffset + 148 + textWidth, yOffset + 60, FONT_NORMAL_GREEN);
 			Widget_Text_drawNumber(tradeMax, '@', "",
-				xOffset + 100 * goodOffset + 138 + textWidth, yOffset + 60, Font_NormalGreen);
+				xOffset + 100 * goodOffset + 138 + textWidth, yOffset + 60, FONT_NORMAL_GREEN);
 			goodOffset++;
 		}
 	} else { // trade is closed
-		int goodOffset = Widget_GameText_draw(47, 5, xOffset + 50, yOffset + 42, Font_NormalGreen);
+		int goodOffset = Widget_GameText_draw(47, 5, xOffset + 50, yOffset + 42, FONT_NORMAL_GREEN);
 		for (int good = 1; good <= 15; good++) {
 			if (!Empire_citySellsResource(objectId, good)) {
 				continue;
@@ -300,7 +300,7 @@ static void drawPanelInfoCity()
 			}
 			goodOffset += 32;
 		}
-		goodOffset += Widget_GameText_draw(47, 4, xOffset + goodOffset + 100, yOffset + 42, Font_NormalGreen);
+		goodOffset += Widget_GameText_draw(47, 4, xOffset + goodOffset + 100, yOffset + 42, FONT_NORMAL_GREEN);
 		for (int good = 1; good <= 15; good++) {
 			if (!Empire_cityBuysResource(objectId, good)) {
 				continue;
@@ -329,8 +329,8 @@ static void drawPanelInfoCity()
 		Widget_Panel_drawButtonBorder(xOffset + 50, yOffset + 68, 400, 20, data.selectedButton);
 		goodOffset = Widget_GameText_drawNumberWithDescription(8, 0,
 			Data_Empire_Cities[data.selectedCity].costToOpen,
-			xOffset + 60, yOffset + 73, Font_NormalGreen);
-		Widget_GameText_draw(47, 6, xOffset + goodOffset + 60, yOffset + 73, Font_NormalGreen);
+			xOffset + 60, yOffset + 73, FONT_NORMAL_GREEN);
+		Widget_GameText_draw(47, 6, xOffset + goodOffset + 60, yOffset + 73, FONT_NORMAL_GREEN);
 	}
 }
 
@@ -353,7 +353,7 @@ static void drawPanelInfoRomanArmy()
 			} else {
 				textId = 16;
 			}
-			Widget_GameText_drawMultiline(47, textId, xOffset, yOffset, 240, Font_NormalBlack);
+			Widget_GameText_drawMultiline(47, textId, xOffset, yOffset, 240, FONT_NORMAL_BLACK);
 		}
 	}
 }
@@ -366,7 +366,7 @@ static void drawPanelInfoEnemyArmy()
 			Widget_GameText_drawMultiline(47, 14,
 				(data.xMin + data.xMax - 240) / 2,
 				data.yMax - 68,
-				240, Font_NormalBlack);
+				240, FONT_NORMAL_BLACK);
 		}
 	}
 }
@@ -380,7 +380,7 @@ static void drawPanelInfoCityName()
 	if (Data_Empire.selectedObject > 0) {
 		if (Data_Empire_Objects[Data_Empire.selectedObject-1].type == EmpireObject_City) {
 			Widget_GameText_drawCentered(21, Data_Empire_Cities[data.selectedCity].cityNameId,
-				(data.xMin + data.xMax - 332) / 2 + 64, data.yMax - 118, 268, Font_LargeBlack);
+				(data.xMin + data.xMax - 332) / 2 + 64, data.yMax - 118, 268, FONT_LARGE_BLACK);
 		}
 	}
 }
@@ -591,7 +591,7 @@ static int getTooltipResource()
 			}
 		}
 	} else {
-		int itemOffset = Widget_GameText_getDrawWidth(47, 5, Font_NormalGreen);
+		int itemOffset = Widget_GameText_getDrawWidth(47, 5, FONT_NORMAL_GREEN);
 		for (int r = 1; r <= 15; r++) {
 			if (Empire_citySellsResource(objectId, r)) {
 				if (isMouseHit(xOffset + 60 + itemOffset, yOffset + 35, 26)) {
@@ -600,7 +600,7 @@ static int getTooltipResource()
 				itemOffset += 32;
 			}
 		}
-		itemOffset += Widget_GameText_getDrawWidth(47, 4, Font_NormalGreen);
+		itemOffset += Widget_GameText_getDrawWidth(47, 4, FONT_NORMAL_GREEN);
 		for (int r = 1; r <= 15; r++) {
 			if (Empire_cityBuysResource(objectId, r)) {
 				if (isMouseHit(xOffset + 110 + itemOffset, yOffset + 35, 26)) {
@@ -669,14 +669,14 @@ void UI_TradeOpenedDialog_drawBackground()
 	int xOffset = Data_Screen.offset640x480.x;
 	int yOffset = Data_Screen.offset640x480.y;
 	Widget_Panel_drawOuterPanel(xOffset + 80, yOffset + 64, 30, 14);
-	Widget_GameText_drawCentered(142, 0, xOffset + 80, yOffset + 80, 480, Font_LargeBlack);
+	Widget_GameText_drawCentered(142, 0, xOffset + 80, yOffset + 80, 480, FONT_LARGE_BLACK);
 	if (Data_Empire_Cities[data.selectedCity].isSeaTrade) {
-		Widget_GameText_drawMultiline(142, 1, xOffset + 112, yOffset + 120, 416, Font_NormalBlack);
-		Widget_GameText_drawMultiline(142, 3, xOffset + 112, yOffset + 184, 416, Font_NormalBlack);
+		Widget_GameText_drawMultiline(142, 1, xOffset + 112, yOffset + 120, 416, FONT_NORMAL_BLACK);
+		Widget_GameText_drawMultiline(142, 3, xOffset + 112, yOffset + 184, 416, FONT_NORMAL_BLACK);
 	} else {
-		Widget_GameText_drawMultiline(142, 1, xOffset + 112, yOffset + 152, 416, Font_NormalBlack);
+		Widget_GameText_drawMultiline(142, 1, xOffset + 112, yOffset + 152, 416, FONT_NORMAL_BLACK);
 	}
-	Widget_GameText_draw(142, 2, xOffset + 128, yOffset + 256, Font_NormalBlack);
+	Widget_GameText_draw(142, 2, xOffset + 128, yOffset + 256, FONT_NORMAL_BLACK);
 }
 
 void UI_TradeOpenedDialog_drawForeground()

@@ -127,40 +127,40 @@ void UI_TopMenu_drawBackground()
 		offsetPopulation = 453;
 		offsetDate = 547;
 		
-		width = Widget_GameText_drawColored(6, 0, 350, 5, Font_NormalPlain, treasureColor);
-		Widget_Text_drawNumberColored(Data_CityInfo.treasury, '@', " ", 346 + width, 5, Font_NormalPlain, treasureColor);
+		width = Widget_GameText_drawColored(6, 0, 350, 5, FONT_NORMAL_PLAIN, treasureColor);
+		Widget_Text_drawNumberColored(Data_CityInfo.treasury, '@', " ", 346 + width, 5, FONT_NORMAL_PLAIN, treasureColor);
 
-		width = Widget_GameText_draw(6, 1, 458, 5, Font_NormalGreen);
-		Widget_Text_drawNumber(Data_CityInfo.population, '@', " ", 450 + width, 5, Font_NormalGreen);
+		width = Widget_GameText_draw(6, 1, 458, 5, FONT_NORMAL_GREEN);
+		Widget_Text_drawNumber(Data_CityInfo.population, '@', " ", 450 + width, 5, FONT_NORMAL_GREEN);
 
-		width = Widget_GameText_draw(25, game_time_month(), 552, 5, Font_NormalGreen);
-		Widget_GameText_drawYearNoSpacing(game_time_year(), 541 + width, 5, Font_NormalGreen);
+		width = Widget_GameText_draw(25, game_time_month(), 552, 5, FONT_NORMAL_GREEN);
+		Widget_GameText_drawYearNoSpacing(game_time_year(), 541 + width, 5, FONT_NORMAL_GREEN);
 	} else if (Data_Screen.width < 1024) {
 		offsetFunds = 338;
 		offsetPopulation = 458;
 		offsetDate = 652;
 		
-		width = Widget_GameText_drawColored(6, 0, 350, 5, Font_NormalPlain, treasureColor);
-		Widget_Text_drawNumberColored(Data_CityInfo.treasury, '@', " ", 346 + width, 5, Font_NormalPlain, treasureColor);
+		width = Widget_GameText_drawColored(6, 0, 350, 5, FONT_NORMAL_PLAIN, treasureColor);
+		Widget_Text_drawNumberColored(Data_CityInfo.treasury, '@', " ", 346 + width, 5, FONT_NORMAL_PLAIN, treasureColor);
 
-		width = Widget_GameText_drawColored(6, 1, 470, 5, Font_NormalPlain, COLOR_WHITE);
-		Widget_Text_drawNumberColored(Data_CityInfo.population, '@', " ", 466 + width, 5, Font_NormalPlain, COLOR_WHITE);
+		width = Widget_GameText_drawColored(6, 1, 470, 5, FONT_NORMAL_PLAIN, COLOR_WHITE);
+		Widget_Text_drawNumberColored(Data_CityInfo.population, '@', " ", 466 + width, 5, FONT_NORMAL_PLAIN, COLOR_WHITE);
 
-		width = Widget_GameText_drawColored(25, game_time_month(), 655, 5, Font_NormalPlain, COLOR_YELLOW);
-		Widget_GameText_drawYearColored(game_time_year(), 655 + width, 5, Font_NormalPlain, COLOR_YELLOW);
+		width = Widget_GameText_drawColored(25, game_time_month(), 655, 5, FONT_NORMAL_PLAIN, COLOR_YELLOW);
+		Widget_GameText_drawYearColored(game_time_year(), 655 + width, 5, FONT_NORMAL_PLAIN, COLOR_YELLOW);
 	} else {
 		offsetFunds = 493;
 		offsetPopulation = 637;
 		offsetDate = 852;
 		
-		width = Widget_GameText_drawColored(6, 0, 495, 5, Font_NormalPlain, treasureColor);
-		Widget_Text_drawNumberColored(Data_CityInfo.treasury, '@', " ", 501 + width, 5, Font_NormalPlain, treasureColor);
+		width = Widget_GameText_drawColored(6, 0, 495, 5, FONT_NORMAL_PLAIN, treasureColor);
+		Widget_Text_drawNumberColored(Data_CityInfo.treasury, '@', " ", 501 + width, 5, FONT_NORMAL_PLAIN, treasureColor);
 
-		width = Widget_GameText_drawColored(6, 1, 645, 5, Font_NormalPlain, COLOR_WHITE);
-		Widget_Text_drawNumberColored(Data_CityInfo.population, '@', " ", 651 + width, 5, Font_NormalPlain, COLOR_WHITE);
+		width = Widget_GameText_drawColored(6, 1, 645, 5, FONT_NORMAL_PLAIN, COLOR_WHITE);
+		Widget_Text_drawNumberColored(Data_CityInfo.population, '@', " ", 651 + width, 5, FONT_NORMAL_PLAIN, COLOR_WHITE);
 
-		width = Widget_GameText_drawColored(25, game_time_month(), 850, 5, Font_NormalPlain, COLOR_YELLOW);
-		Widget_GameText_drawYearColored(game_time_year(), 850 + width, 5, Font_NormalPlain, COLOR_YELLOW);
+		width = Widget_GameText_drawColored(25, game_time_month(), 850, 5, FONT_NORMAL_PLAIN, COLOR_YELLOW);
+		Widget_GameText_drawYearColored(game_time_year(), 850 + width, 5, FONT_NORMAL_PLAIN, COLOR_YELLOW);
 	}
 	drawn.treasury = Data_CityInfo.treasury;
 	drawn.population = Data_CityInfo.population;

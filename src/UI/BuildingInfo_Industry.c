@@ -18,13 +18,13 @@ static void drawFarm(BuildingInfoContext *c, int helpId, const char *soundFile, 
 	Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + resourceId,
 		c->xOffset + 10, c->yOffset + 10);
 	Widget_GameText_drawCentered(groupId, 0, c->xOffset, c->yOffset + 10,
-		16 * c->widthBlocks, Font_LargeBlack);
+		16 * c->widthBlocks, FONT_LARGE_BLACK);
 
 	int pctGrown = calc_percentage(Data_Buildings[c->buildingId].data.industry.progress, 200);
-	int width = Widget_GameText_draw(groupId, 2, c->xOffset + 32, c->yOffset + 44, Font_NormalBlack);
+	int width = Widget_GameText_draw(groupId, 2, c->xOffset + 32, c->yOffset + 44, FONT_NORMAL_BLACK);
 	width += Widget_Text_drawNumber(pctGrown, '@', "%",
-		c->xOffset + 32 + width, c->yOffset + 44, Font_NormalBlack);
-	Widget_GameText_draw(groupId, 3, c->xOffset + 32 + width, c->yOffset + 44, Font_NormalBlack);
+		c->xOffset + 32 + width, c->yOffset + 44, FONT_NORMAL_BLACK);
+	Widget_GameText_draw(groupId, 3, c->xOffset + 32 + width, c->yOffset + 44, FONT_NORMAL_BLACK);
 
 	if (!c->hasRoadAccess) {
 		DRAW_DESC_AT(70, 69, 25);
@@ -50,7 +50,7 @@ static void drawFarm(BuildingInfoContext *c, int helpId, const char *soundFile, 
 	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 142);
 	Widget_GameText_drawMultiline(groupId, 1,
 		c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 113,
-		16 * (c->widthBlocks - 4), Font_NormalBlack);
+		16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
 }
 
 void UI_BuildingInfo_drawWheatFarm(BuildingInfoContext *c)
@@ -92,13 +92,13 @@ static void drawRawMaterial(BuildingInfoContext *c, int helpId, const char *soun
 	Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + resourceId,
 		c->xOffset + 10, c->yOffset + 10);
 	Widget_GameText_drawCentered(groupId, 0, c->xOffset, c->yOffset + 10,
-		16 * c->widthBlocks, Font_LargeBlack);
+		16 * c->widthBlocks, FONT_LARGE_BLACK);
 
 	int pctDone = calc_percentage(Data_Buildings[c->buildingId].data.industry.progress, 200);
-	int width = Widget_GameText_draw(groupId, 2, c->xOffset + 32, c->yOffset + 44, Font_NormalBlack);
+	int width = Widget_GameText_draw(groupId, 2, c->xOffset + 32, c->yOffset + 44, FONT_NORMAL_BLACK);
 	width += Widget_Text_drawNumber(pctDone, '@', "%",
-		c->xOffset + 32 + width, c->yOffset + 44, Font_NormalBlack);
-	Widget_GameText_draw(groupId, 3, c->xOffset + 32 + width, c->yOffset + 44, Font_NormalBlack);
+		c->xOffset + 32 + width, c->yOffset + 44, FONT_NORMAL_BLACK);
+	Widget_GameText_draw(groupId, 3, c->xOffset + 32 + width, c->yOffset + 44, FONT_NORMAL_BLACK);
 
 	if (!c->hasRoadAccess) {
 		DRAW_DESC_AT(70, 69, 25);
@@ -122,7 +122,7 @@ static void drawRawMaterial(BuildingInfoContext *c, int helpId, const char *soun
 	UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 142);
 	Widget_GameText_drawMultiline(groupId, 1,
 		c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 113,
-		16 * (c->widthBlocks - 4), Font_NormalBlack);
+		16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
 }
 
 void UI_BuildingInfo_drawMarbleQuarry(BuildingInfoContext *c)
@@ -154,24 +154,24 @@ static void drawWorkshop(BuildingInfoContext *c, int helpId, const char *soundFi
 	Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + resourceId,
 		c->xOffset + 10, c->yOffset + 10);
 	Widget_GameText_drawCentered(groupId, 0, c->xOffset, c->yOffset + 10,
-		16 * c->widthBlocks, Font_LargeBlack);
+		16 * c->widthBlocks, FONT_LARGE_BLACK);
 
 	int pctDone = calc_percentage(Data_Buildings[c->buildingId].data.industry.progress, 400);
-	int width = Widget_GameText_draw(groupId, 2, c->xOffset + 32, c->yOffset + 40, Font_NormalBlack);
+	int width = Widget_GameText_draw(groupId, 2, c->xOffset + 32, c->yOffset + 40, FONT_NORMAL_BLACK);
 	width += Widget_Text_drawNumber(pctDone, '@', "%",
-		c->xOffset + 32 + width, c->yOffset + 40, Font_NormalBlack);
-	Widget_GameText_draw(groupId, 3, c->xOffset + 32 + width, c->yOffset + 40, Font_NormalBlack);
+		c->xOffset + 32 + width, c->yOffset + 40, FONT_NORMAL_BLACK);
+	Widget_GameText_draw(groupId, 3, c->xOffset + 32 + width, c->yOffset + 40, FONT_NORMAL_BLACK);
 
 	Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + inputResourceId,
 		c->xOffset + 32, c->yOffset + 56);
-	width = Widget_GameText_draw(groupId, 12, c->xOffset + 60, c->yOffset + 60, Font_NormalBlack);
+	width = Widget_GameText_draw(groupId, 12, c->xOffset + 60, c->yOffset + 60, FONT_NORMAL_BLACK);
 	if (Data_Buildings[c->buildingId].loadsStored < 1) {
 		Widget_GameText_drawNumberWithDescription(8, 10, 0,
-			c->xOffset + 60 + width, c->yOffset + 60, Font_NormalBlack);
+			c->xOffset + 60 + width, c->yOffset + 60, FONT_NORMAL_BLACK);
 	} else {
 		Widget_GameText_drawNumberWithDescription(8, 10,
 			Data_Buildings[c->buildingId].loadsStored,
-			c->xOffset + 60 + width, c->yOffset + 60, Font_NormalBlack);
+			c->xOffset + 60 + width, c->yOffset + 60, FONT_NORMAL_BLACK);
 	}
 
 	if (!c->hasRoadAccess) {

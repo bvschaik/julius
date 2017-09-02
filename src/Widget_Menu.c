@@ -11,7 +11,7 @@ void Widget_Menu_drawMenuBar(MenuBarItem *items, int numItems)
 	int xOffset = items[0].xStart;
 	for (int i = 0; i < numItems; i++) {
 		items[i].xStart = xOffset;
-		xOffset += Widget_GameText_draw(items[i].textGroup, 0, xOffset, items[i].yStart, Font_NormalGreen);
+		xOffset += Widget_GameText_draw(items[i].textGroup, 0, xOffset, items[i].yStart, FONT_NORMAL_GREEN);
 		items[i].xEnd = xOffset;
 		xOffset += 32; // spacing
 	}
@@ -28,11 +28,11 @@ void Widget_Menu_drawSubMenu(MenuBarItem *menu, int focusSubMenu)
 			Graphics_fillRect(menu->xStart, yOffset - 2,
 				160, 16, COLOR_BLACK);
 			Widget_GameText_drawColored(menu->textGroup, sub->textNumber,
-				menu->xStart + 8, yOffset, Font_NormalPlain, COLOR_ORANGE
+				menu->xStart + 8, yOffset, FONT_NORMAL_PLAIN, COLOR_ORANGE
 			);
 		} else {
 			Widget_GameText_draw(menu->textGroup, sub->textNumber,
-				menu->xStart + 8, yOffset, Font_NormalBlack
+				menu->xStart + 8, yOffset, FONT_NORMAL_BLACK
 			);
 		}
 	}

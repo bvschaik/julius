@@ -82,11 +82,11 @@ static void drawScenarioList()
 	Widget_Panel_drawInnerPanel(Data_Screen.offset640x480.x + 16,
 		Data_Screen.offset640x480.y + 210, 16, 16);
 	for (int i = 0; i < 15; i++) {
-		Font font = Font_NormalGreen;
+		font_t font = FONT_NORMAL_GREEN;
 		if (focusButtonId == i + 1) {
-			font = Font_NormalWhite;
+			font = FONT_NORMAL_WHITE;
 		} else if (!focusButtonId && selectedItem == i + scrollPosition) {
-			font = Font_NormalWhite;
+			font = FONT_NORMAL_WHITE;
 		}
 		char file[FILENAME_LENGTH];
 		strcpy(file, scenarios->files[i + scrollPosition]);
@@ -123,13 +123,13 @@ static void drawScenarioInfo()
 		Data_Screen.offset640x480.x + 78, Data_Screen.offset640x480.y + 36);
 
 	Widget_Text_drawCentered(Data_FileList.selectedScenario,
-		baseOffsetX + 15, baseOffsetY + 5, 260, Font_LargeBlack, 0);
+		baseOffsetX + 15, baseOffsetY + 5, 260, FONT_LARGE_BLACK, 0);
 	Widget_Text_drawCentered(Data_Scenario.briefDescription,
-		baseOffsetX + 15, baseOffsetY + 40, 260, Font_NormalWhite, 0);
+		baseOffsetX + 15, baseOffsetY + 40, 260, FONT_NORMAL_WHITE, 0);
 	Widget_GameText_drawYear(Data_Scenario.startYear,
-		baseOffsetX + 90, baseOffsetY + 70, Font_LargeBlack);
+		baseOffsetX + 90, baseOffsetY + 70, FONT_LARGE_BLACK);
 	Widget_GameText_drawCentered(44, 77 + Data_Scenario.climate,
-		baseOffsetX + 15, baseOffsetY + 130, 260, Font_NormalBlack);
+		baseOffsetX + 15, baseOffsetY + 130, 260, FONT_NORMAL_BLACK);
 
 	// map size
 	int textId;
@@ -142,7 +142,7 @@ static void drawScenarioInfo()
 		default: textId = 126; break;
 	}
 	Widget_GameText_drawCentered(44, textId,
-		baseOffsetX + 15, baseOffsetY + 150, 260, Font_NormalBlack);
+		baseOffsetX + 15, baseOffsetY + 150, 260, FONT_NORMAL_BLACK);
 
 	// military
 	int numInvasions = 0;
@@ -163,61 +163,61 @@ static void drawScenarioInfo()
 		textId = 116;
 	}
 	Widget_GameText_drawCentered(44, textId,
-		baseOffsetX + 15, baseOffsetY + 170, 260, Font_NormalBlack);
+		baseOffsetX + 15, baseOffsetY + 170, 260, FONT_NORMAL_BLACK);
 
 	Widget_GameText_drawCentered(32, 11 + Data_Scenario.playerRank,
-		baseOffsetX + 15, baseOffsetY + 190, 260, Font_NormalBlack);
+		baseOffsetX + 15, baseOffsetY + 190, 260, FONT_NORMAL_BLACK);
 	if (Data_Scenario.isOpenPlay) {
 		Widget_GameText_drawMultiline(145, Data_Scenario.openPlayScenarioId,
-			baseOffsetX + 25, baseOffsetY + 250, 260, Font_NormalBlack);
+			baseOffsetX + 25, baseOffsetY + 250, 260, FONT_NORMAL_BLACK);
 	} else {
 		Widget_GameText_drawCentered(44, 127,
-			baseOffsetX + 15, baseOffsetY + 242, 260, Font_NormalBlack);
+			baseOffsetX + 15, baseOffsetY + 242, 260, FONT_NORMAL_BLACK);
 		int width;
 		if (Data_Scenario.winCriteria.cultureEnabled) {
 			width = Widget_Text_drawNumber(Data_Scenario.winCriteria.culture, '@', " ",
-				baseOffsetX + 90, baseOffsetY + 270, Font_NormalBlack);
+				baseOffsetX + 90, baseOffsetY + 270, FONT_NORMAL_BLACK);
 			Widget_GameText_draw(44, 129,
-				baseOffsetX + 90 + width, baseOffsetY + 270, Font_NormalBlack);
+				baseOffsetX + 90 + width, baseOffsetY + 270, FONT_NORMAL_BLACK);
 		}
 		if (Data_Scenario.winCriteria.prosperityEnabled) {
 			width = Widget_Text_drawNumber(Data_Scenario.winCriteria.prosperity, '@', " ",
-				baseOffsetX + 90, baseOffsetY + 286, Font_NormalBlack);
+				baseOffsetX + 90, baseOffsetY + 286, FONT_NORMAL_BLACK);
 			Widget_GameText_draw(44, 130,
-				baseOffsetX + 90 + width, baseOffsetY + 286, Font_NormalBlack);
+				baseOffsetX + 90 + width, baseOffsetY + 286, FONT_NORMAL_BLACK);
 		}
 		if (Data_Scenario.winCriteria.peaceEnabled) {
 			width = Widget_Text_drawNumber(Data_Scenario.winCriteria.peace, '@', " ",
-				baseOffsetX + 90, baseOffsetY + 302, Font_NormalBlack);
+				baseOffsetX + 90, baseOffsetY + 302, FONT_NORMAL_BLACK);
 			Widget_GameText_draw(44, 131,
-				baseOffsetX + 90 + width, baseOffsetY + 302, Font_NormalBlack);
+				baseOffsetX + 90 + width, baseOffsetY + 302, FONT_NORMAL_BLACK);
 		}
 		if (Data_Scenario.winCriteria.favorEnabled) {
 			width = Widget_Text_drawNumber(Data_Scenario.winCriteria.favor, '@', " ",
-				baseOffsetX + 90, baseOffsetY + 318, Font_NormalBlack);
+				baseOffsetX + 90, baseOffsetY + 318, FONT_NORMAL_BLACK);
 			Widget_GameText_draw(44, 132,
-				baseOffsetX + 90 + width, baseOffsetY + 318, Font_NormalBlack);
+				baseOffsetX + 90 + width, baseOffsetY + 318, FONT_NORMAL_BLACK);
 		}
 		if (Data_Scenario.winCriteria_populationEnabled) {
 			width = Widget_Text_drawNumber(Data_Scenario.winCriteria_population, '@', " ",
-				baseOffsetX + 90, baseOffsetY + 334, Font_NormalBlack);
+				baseOffsetX + 90, baseOffsetY + 334, FONT_NORMAL_BLACK);
 			Widget_GameText_draw(44, 133,
-				baseOffsetX + 90 + width, baseOffsetY + 334, Font_NormalBlack);
+				baseOffsetX + 90 + width, baseOffsetY + 334, FONT_NORMAL_BLACK);
 		}
 		if (Data_Scenario.winCriteria.timeLimitYearsEnabled) {
 			width = Widget_Text_drawNumber(Data_Scenario.winCriteria.timeLimitYears, '@', " ",
-				baseOffsetX + 90, baseOffsetY + 350, Font_NormalBlack);
+				baseOffsetX + 90, baseOffsetY + 350, FONT_NORMAL_BLACK);
 			Widget_GameText_draw(44, 134,
-				baseOffsetX + 90 + width, baseOffsetY + 350, Font_NormalBlack);
+				baseOffsetX + 90 + width, baseOffsetY + 350, FONT_NORMAL_BLACK);
 		}
 		if (Data_Scenario.winCriteria.survivalYearsEnabled) {
 			width = Widget_Text_drawNumber(Data_Scenario.winCriteria.survivalYears, '@', " ",
-				baseOffsetX + 90, baseOffsetY + 366, Font_NormalBlack);
+				baseOffsetX + 90, baseOffsetY + 366, FONT_NORMAL_BLACK);
 			Widget_GameText_draw(44, 135,
-				baseOffsetX + 90 + width, baseOffsetY + 366, Font_NormalBlack);
+				baseOffsetX + 90 + width, baseOffsetY + 366, FONT_NORMAL_BLACK);
 		}
 	}
-	Widget_GameText_draw(44, 136, baseOffsetX + 100, baseOffsetY + 426, Font_NormalBlack);
+	Widget_GameText_draw(44, 136, baseOffsetX + 100, baseOffsetY + 426, FONT_NORMAL_BLACK);
 }
 
 void UI_CCKSelection_drawForeground()

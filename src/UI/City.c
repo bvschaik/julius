@@ -62,8 +62,8 @@ void UI_City_drawPausedAndTimeLeft()
 		}
 		int totalMonths = 12 - game_time_month() + 12 * years;
 		Widget_Panel_drawSmallLabelButton(1, 25, 15, 1);
-		int width = Widget_GameText_draw(6, 2, 6, 29, Font_NormalBlack);
-		Widget_Text_drawNumber(totalMonths, '@', " ", 6 + width, 29, Font_NormalBlack);
+		int width = Widget_GameText_draw(6, 2, 6, 29, FONT_NORMAL_BLACK);
+		Widget_Text_drawNumber(totalMonths, '@', " ", 6 + width, 29, FONT_NORMAL_BLACK);
 	} else if (Data_Scenario.winCriteria.survivalYearsEnabled) {
 		int years;
 		if (Data_Event.timeLimitMaxGameYear <= game_time_year() + 1) {
@@ -73,14 +73,14 @@ void UI_City_drawPausedAndTimeLeft()
 		}
 		int totalMonths = 12 - game_time_month() + 12 * years;
 		Widget_Panel_drawSmallLabelButton(1, 25, 15, 1);
-		int width = Widget_GameText_draw(6, 3, 6, 29, Font_NormalBlack);
-		Widget_Text_drawNumber(totalMonths, '@', " ", 6 + width, 29, Font_NormalBlack);
+		int width = Widget_GameText_draw(6, 3, 6, 29, FONT_NORMAL_BLACK);
+		Widget_Text_drawNumber(totalMonths, '@', " ", 6 + width, 29, FONT_NORMAL_BLACK);
 	}
 	if (Data_Settings.gamePaused) {
 		int width = Data_CityView.widthInPixels;
 		Widget_Panel_drawOuterPanel((width - 448) / 2, 40, 28, 3);
 		Widget_GameText_drawCentered(13, 2,
-			(width - 448) / 2, 58, 448, Font_NormalBlack);
+			(width - 448) / 2, 58, 448, FONT_NORMAL_BLACK);
 	}
 }
 

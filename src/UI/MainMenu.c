@@ -56,19 +56,19 @@ void UI_MainMenu_drawForeground()
 
 	Widget_GameText_drawCentered(30, 1,
 		baseOffsetX + 192, baseOffsetY + 106,
-		256, Font_NormalGreen
+		256, FONT_NORMAL_GREEN
 	);
 	Widget_GameText_drawCentered(30, 2,
 		baseOffsetX + 192, baseOffsetY + 146,
-		256, Font_NormalGreen
+		256, FONT_NORMAL_GREEN
 	);
 	Widget_GameText_drawCentered(30, 3,
 		baseOffsetX + 192, baseOffsetY + 186,
-		256, Font_NormalGreen
+		256, FONT_NORMAL_GREEN
 	);
 	Widget_GameText_drawCentered(30, 5,
 		baseOffsetX + 192, baseOffsetY + 226,
-		256, Font_NormalGreen
+		256, FONT_NORMAL_GREEN
 	);
 }
 

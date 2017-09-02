@@ -154,7 +154,7 @@ void UI_MessageDialog_drawBackground()
 
 static void drawDialogNormal()
 {
-	Widget_RichText_setFonts(Font_NormalWhite, Font_NormalRed);
+	Widget_RichText_setFonts(FONT_NORMAL_WHITE, FONT_NORMAL_RED);
 	const lang_message *msg = lang_get_message(data.textId);
 	data.x = Data_Screen.offset640x480.x + msg->x;
 	data.y = Data_Screen.offset640x480.y + msg->y;
@@ -168,15 +168,15 @@ static void drawDialogNormal()
 	// title
 	if (msg->title.x) {
 		Widget_Text_draw(msg->title.text,
-			data.x + msg->title.x, data.y + msg->title.y, Font_LargeBlack, 0);
+			data.x + msg->title.x, data.y + msg->title.y, FONT_LARGE_BLACK, 0);
 		data.yText = data.y + 32;
 	} else {
 		if (msg->message_type == MESSAGE_TYPE_TUTORIAL) {
 			Widget_Text_drawCentered(msg->title.text,
-				data.x, data.y + msg->title.y, 16 * msg->width_blocks, Font_LargeBlack, 0);
+				data.x, data.y + msg->title.y, 16 * msg->width_blocks, FONT_LARGE_BLACK, 0);
 		} else {
 			Widget_Text_drawCentered(msg->title.text,
-				data.x, data.y + 14, 16 * msg->width_blocks, Font_LargeBlack, 0);
+				data.x, data.y + 14, 16 * msg->width_blocks, FONT_LARGE_BLACK, 0);
 		}
 		data.yText = data.y + 48;
 	}
@@ -207,7 +207,7 @@ static void drawDialogNormal()
 	if (msg->subtitle.x) {
 		int width = 16 * msg->width_blocks - 16 - msg->subtitle.x;
 		int height = Widget_Text_drawMultiline(msg->subtitle.text,
-			data.x + msg->subtitle.x, data.y + msg->subtitle.y, width,Font_NormalBlack);
+			data.x + msg->subtitle.x, data.y + msg->subtitle.y, width,FONT_NORMAL_BLACK);
 		if (data.y + msg->subtitle.y + height > data.yText) {
 			data.yText = data.y + msg->subtitle.y + height;
 		}
@@ -235,7 +235,7 @@ static void drawDialogNormal()
 
 static void drawDialogVideo()
 {
-	Widget_RichText_setFonts(Font_NormalWhite, Font_NormalRed);
+	Widget_RichText_setFonts(FONT_NORMAL_WHITE, FONT_NORMAL_RED);
 	const lang_message *msg = lang_get_message(data.textId);
 	data.x = Data_Screen.offset640x480.x + 32;
 	data.y = Data_Screen.offset640x480.y + 28;
@@ -249,20 +249,20 @@ static void drawDialogVideo()
 	
 	Widget_Panel_drawInnerPanel(data.x + 8, data.y + 308, 25, 6);
 	Widget_Text_drawCentered(msg->title.text,
-		data.x + 8, data.y + 414, 400, Font_NormalBlack, 0);
+		data.x + 8, data.y + 414, 400, FONT_NORMAL_BLACK, 0);
 	
 	int width = Widget_GameText_draw(25, playerMessage.month,
-		data.x + 16, data.y + 312, Font_NormalWhite);
+		data.x + 16, data.y + 312, FONT_NORMAL_WHITE);
 	width += Widget_GameText_drawYear(playerMessage.year,
-		data.x + 18 + width, data.y + 312, Font_NormalWhite);
+		data.x + 18 + width, data.y + 312, FONT_NORMAL_WHITE);
 	
 	if (msg->type == TYPE_MESSAGE && msg->message_type == MESSAGE_TYPE_DISASTER &&
 		data.textId == 251) {
 		Widget_GameText_drawNumberWithDescription(8, 0, playerMessage.param1,
-			data.x + 90 + width, data.y + 312, Font_NormalWhite);
+			data.x + 90 + width, data.y + 312, FONT_NORMAL_WHITE);
 	} else {
-		width += Widget_GameText_draw(63, 5, data.x + 90 + width, data.y + 312, Font_NormalWhite);
-		Widget_Text_draw(Data_Settings.playerName, data.x + 90 + width, data.y + 312, Font_NormalWhite, 0);
+		width += Widget_GameText_draw(63, 5, data.x + 90 + width, data.y + 312, FONT_NORMAL_WHITE);
+		Widget_Text_draw(Data_Settings.playerName, data.x + 90 + width, data.y + 312, FONT_NORMAL_WHITE, 0);
 	}
 	data.textHeightBlocks = msg->height_blocks - 1 - (32 + data.yText - data.y) / 16;
 	data.textWidthBlocks = msg->width_blocks - 4;
@@ -271,17 +271,17 @@ static void drawDialogVideo()
 
 	if (msg->type == TYPE_MESSAGE && msg->message_type == MESSAGE_TYPE_IMPERIAL) {
 		Widget_Text_drawNumber(Data_Scenario.requests.amount[playerMessage.param1],
-			'@', " ", data.x + 8, data.y + 384, Font_NormalWhite);
+			'@', " ", data.x + 8, data.y + 384, FONT_NORMAL_WHITE);
 		int resource = Data_Scenario.requests.resourceId[playerMessage.param1];
 		Graphics_drawImage(
 			image_group(ID_Graphic_ResourceIcons) + resource + Resource_getGraphicIdOffset(resource, 3),
 			data.x + 70, data.y + 379);
-		Widget_GameText_draw(23, resource, data.x + 100, data.y + 384, Font_NormalWhite);
+		Widget_GameText_draw(23, resource, data.x + 100, data.y + 384, FONT_NORMAL_WHITE);
 		if (Data_Scenario.requests_state[playerMessage.param1] <= 1) {
 			width = Widget_GameText_drawNumberWithDescription(8, 4,
 				Data_Scenario.requests_monthsToComply[playerMessage.param1],
-				data.x + 200, data.y + 384, Font_NormalWhite);
-			Widget_GameText_draw(12, 2, data.x + 200 + width, data.y + 384, Font_NormalWhite);
+				data.x + 200, data.y + 384, FONT_NORMAL_WHITE);
+			Widget_GameText_draw(12, 2, data.x + 200 + width, data.y + 384, FONT_NORMAL_WHITE);
 		}
 	}
 
@@ -292,24 +292,24 @@ static void drawPlayerMessageContent(const lang_message *msg)
 {
 	if (msg->message_type != MESSAGE_TYPE_TUTORIAL) {
 		int width = Widget_GameText_draw(25, playerMessage.month,
-			data.xText + 10, data.yText + 6, Font_NormalWhite);
+			data.xText + 10, data.yText + 6, FONT_NORMAL_WHITE);
 		width += Widget_GameText_drawYear(playerMessage.year,
-			data.xText + 12 + width, data.yText + 6, Font_NormalWhite);
+			data.xText + 12 + width, data.yText + 6, FONT_NORMAL_WHITE);
 		if (msg->message_type == MESSAGE_TYPE_DISASTER && playerMessage.param1) {
 			if (data.textId == MessageDialog_Theft) {
 				// param1 = denarii
 				Widget_GameText_drawNumberWithDescription(8, 0, playerMessage.param1,
-					data.x + 240, data.yText + 6, Font_NormalWhite);
+					data.x + 240, data.yText + 6, FONT_NORMAL_WHITE);
 			} else {
 				// param1 = building type
 				Widget_GameText_draw(41, playerMessage.param1,
-					data.x + 240, data.yText + 6, Font_NormalWhite);
+					data.x + 240, data.yText + 6, FONT_NORMAL_WHITE);
 			}
 		} else {
 			width += Widget_GameText_draw(63, 5,
-				data.xText + width + 80, data.yText + 6, Font_NormalWhite);
+				data.xText + width + 80, data.yText + 6, FONT_NORMAL_WHITE);
 			Widget_Text_draw(Data_Settings.playerName,
-				data.xText + width + 80, data.yText + 6, Font_NormalWhite, 0);
+				data.xText + width + 80, data.yText + 6, FONT_NORMAL_WHITE, 0);
 		}
 	}
 	int graphicId;
@@ -317,7 +317,7 @@ static void drawPlayerMessageContent(const lang_message *msg)
 	switch (msg->message_type) {
 		case MESSAGE_TYPE_DISASTER:
 		case MESSAGE_TYPE_INVASION:
-			Widget_GameText_draw(12, 1, data.x + 100, data.yText + 44, Font_NormalWhite);
+			Widget_GameText_draw(12, 1, data.x + 100, data.yText + 44, FONT_NORMAL_WHITE);
 			Widget_RichText_draw(msg->content.text, data.xText + 8, data.yText + 86,
 				16 * data.textWidthBlocks, data.textHeightBlocks - 1, 0);
 			break;
@@ -325,7 +325,7 @@ static void drawPlayerMessageContent(const lang_message *msg)
 		case MESSAGE_TYPE_EMIGRATION:
 			if (Data_CityInfo.populationEmigrationCause >= 1 && Data_CityInfo.populationEmigrationCause <= 5) {
 				Widget_GameText_draw(12, Data_CityInfo.populationEmigrationCause + 2,
-					data.x + 64, data.yText + 44, Font_NormalWhite);
+					data.x + 64, data.yText + 44, FONT_NORMAL_WHITE);
 			}
 			Widget_RichText_draw(msg->content.text,
 				data.xText + 8, data.yText + 86, 16 * data.textWidthBlocks - 16,
@@ -343,7 +343,7 @@ static void drawPlayerMessageContent(const lang_message *msg)
 			graphicId += Resource_getGraphicIdOffset(playerMessage.param2, 3);
 			Graphics_drawImage(graphicId, data.x + 64, data.yText + 40);
 			Widget_GameText_draw(21, Data_Empire_Cities[playerMessage.param1].cityNameId,
-				data.x + 100, data.yText + 44, Font_NormalWhite);
+				data.x + 100, data.yText + 44, FONT_NORMAL_WHITE);
 			Widget_RichText_draw(msg->content.text,
 				data.xText + 8, data.yText + 86, 16 * data.textWidthBlocks - 16,
 				data.textHeightBlocks - 1, 0);
@@ -354,7 +354,7 @@ static void drawPlayerMessageContent(const lang_message *msg)
 			graphicId += Resource_getGraphicIdOffset(playerMessage.param2, 3);
 			Graphics_drawImage(graphicId, data.x + 64, data.yText + 40);
 			Widget_Text_drawNumber(playerMessage.param1, '@', " Dn",
-				data.x + 100, data.yText + 44, Font_NormalWhite);
+				data.x + 100, data.yText + 44, FONT_NORMAL_WHITE);
 			Widget_RichText_draw(msg->content.text,
 				data.xText + 8, data.yText + 86, 16 * data.textWidthBlocks - 16,
 				data.textHeightBlocks - 1, 0);
@@ -368,19 +368,19 @@ static void drawPlayerMessageContent(const lang_message *msg)
 	if (msg->message_type == MESSAGE_TYPE_IMPERIAL) {
 		int yOffset = data.yText + 86 + lines * 16;
 		Widget_Text_drawNumber(Data_Scenario.requests.amount[playerMessage.param1],
-			'@', " ", data.xText + 8, yOffset, Font_NormalWhite);
+			'@', " ", data.xText + 8, yOffset, FONT_NORMAL_WHITE);
 		graphicId = image_group(ID_Graphic_ResourceIcons) +
 			Data_Scenario.requests.resourceId[playerMessage.param1];
 		graphicId += Resource_getGraphicIdOffset(
 			Data_Scenario.requests.resourceId[playerMessage.param1], 3);
 		Graphics_drawImage(graphicId, data.xText + 70, yOffset - 5);
 		Widget_GameText_draw(23, Data_Scenario.requests.resourceId[playerMessage.param1],
-			data.xText + 100, yOffset, Font_NormalWhite);
+			data.xText + 100, yOffset, FONT_NORMAL_WHITE);
 		if (Data_Scenario.requests_state[playerMessage.param1] <= 1) {
 			int width = Widget_GameText_drawNumberWithDescription(8, 4,
 				Data_Scenario.requests_monthsToComply[playerMessage.param1],
-				data.xText + 200, yOffset, Font_NormalWhite);
-			Widget_GameText_draw(12, 2, data.xText + 200 + width, yOffset, Font_NormalWhite);
+				data.xText + 200, yOffset, FONT_NORMAL_WHITE);
+			Widget_GameText_draw(12, 2, data.xText + 200 + width, yOffset, FONT_NORMAL_WHITE);
 		}
 	}
 }
@@ -423,7 +423,7 @@ static void drawForegroundNoVideo()
 			data.x + 16, data.y + 16 * msg->height_blocks - 36,
 			&imageButtonBack, 1);
 		Widget_GameText_draw(12, 0,
-			data.x + 52, data.y + 16 * msg->height_blocks - 31, Font_NormalBlack);
+			data.x + 52, data.y + 16 * msg->height_blocks - 31, FONT_NORMAL_BLACK);
 	}
 
 	if (msg->type == TYPE_MESSAGE) {

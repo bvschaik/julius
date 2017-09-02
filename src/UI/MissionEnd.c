@@ -44,46 +44,46 @@ void UI_MissionEnd_drawBackground()
 	if (Data_State.winState != WinState_Win) {
 		// lost mission
 		Widget_Panel_drawOuterPanel(xOffset, yOffset - 112, 34, 16);
-		Widget_GameText_drawCentered(62, 1, xOffset, yOffset - 96, 544, Font_LargeBlack);
-		Widget_GameText_drawMultiline(62, 16, xOffset + 16, yOffset - 56, 496, Font_NormalBlack);
+		Widget_GameText_drawCentered(62, 1, xOffset, yOffset - 96, 544, FONT_LARGE_BLACK);
+		Widget_GameText_drawMultiline(62, 16, xOffset + 16, yOffset - 56, 496, FONT_NORMAL_BLACK);
 		return;
 	}
 	// won mission
 	Widget_Panel_drawOuterPanel(xOffset, yOffset, 34, 18);
-	Widget_GameText_drawCentered(62, 0, xOffset, yOffset + 16, 544, Font_LargeBlack);
+	Widget_GameText_drawCentered(62, 0, xOffset, yOffset + 16, 544, FONT_LARGE_BLACK);
 	
 	Widget_Panel_drawInnerPanel(xOffset + 16, yOffset + 56, 32, 7);
 
 	if (Data_Settings.isCustomScenario) {
-		Widget_GameText_drawMultiline(147, 20, xOffset + 32, yOffset + 64, 496, Font_NormalWhite);
+		Widget_GameText_drawMultiline(147, 20, xOffset + 32, yOffset + 64, 496, FONT_NORMAL_WHITE);
 	} else {
-		Widget_GameText_drawMultiline(147, Data_Settings.saveGameMissionId, xOffset + 32, yOffset + 64, 496, Font_NormalWhite);
+		Widget_GameText_drawMultiline(147, Data_Settings.saveGameMissionId, xOffset + 32, yOffset + 64, 496, FONT_NORMAL_WHITE);
 	}
-	int width = Widget_GameText_draw(148, 0, xOffset + 40, yOffset + 180, Font_NormalBlack);
+	int width = Widget_GameText_draw(148, 0, xOffset + 40, yOffset + 180, FONT_NORMAL_BLACK);
 	Widget_Text_drawNumber(Data_CityInfo.ratingCulture, '@', " ",
-		xOffset + 40 + width, yOffset + 180, Font_NormalBlack);
+		xOffset + 40 + width, yOffset + 180, FONT_NORMAL_BLACK);
 
-	width = Widget_GameText_draw(148, 1, xOffset + 300, yOffset + 180, Font_NormalBlack);
+	width = Widget_GameText_draw(148, 1, xOffset + 300, yOffset + 180, FONT_NORMAL_BLACK);
 	Widget_Text_drawNumber(Data_CityInfo.ratingProsperity, '@', " ",
-		xOffset + 300 + width, yOffset + 180, Font_NormalBlack);
+		xOffset + 300 + width, yOffset + 180, FONT_NORMAL_BLACK);
 
-	width = Widget_GameText_draw(148, 2, xOffset + 40, yOffset + 200, Font_NormalBlack);
+	width = Widget_GameText_draw(148, 2, xOffset + 40, yOffset + 200, FONT_NORMAL_BLACK);
 	Widget_Text_drawNumber(Data_CityInfo.ratingPeace, '@', " ",
-		xOffset + 40 + width, yOffset + 200, Font_NormalBlack);
+		xOffset + 40 + width, yOffset + 200, FONT_NORMAL_BLACK);
 
-	width = Widget_GameText_draw(148, 3, xOffset + 300, yOffset + 200, Font_NormalBlack);
+	width = Widget_GameText_draw(148, 3, xOffset + 300, yOffset + 200, FONT_NORMAL_BLACK);
 	Widget_Text_drawNumber(Data_CityInfo.ratingFavor, '@', " ",
-		xOffset + 300 + width, yOffset + 200, Font_NormalBlack);
+		xOffset + 300 + width, yOffset + 200, FONT_NORMAL_BLACK);
 
-	width = Widget_GameText_draw(148, 4, xOffset + 40, yOffset + 220, Font_NormalBlack);
+	width = Widget_GameText_draw(148, 4, xOffset + 40, yOffset + 220, FONT_NORMAL_BLACK);
 	Widget_Text_drawNumber(Data_CityInfo.population, '@', " ",
-		xOffset + 40 + width, yOffset + 220, Font_NormalBlack);
+		xOffset + 40 + width, yOffset + 220, FONT_NORMAL_BLACK);
 
-	width = Widget_GameText_draw(148, 5, xOffset + 300, yOffset + 220, Font_NormalBlack);
+	width = Widget_GameText_draw(148, 5, xOffset + 300, yOffset + 220, FONT_NORMAL_BLACK);
 	Widget_Text_drawNumber(Data_CityInfo.treasury, '@', " ",
-		xOffset + 300 + width, yOffset + 220, Font_NormalBlack);
+		xOffset + 300 + width, yOffset + 220, FONT_NORMAL_BLACK);
 
-	Widget_GameText_drawCentered(13, 1, xOffset + 16, yOffset + 260, 512, Font_NormalBlack);
+	Widget_GameText_drawCentered(13, 1, xOffset + 16, yOffset + 260, 512, FONT_NORMAL_BLACK);
 }
 
 void UI_MissionEnd_drawForeground()
@@ -143,12 +143,12 @@ void UI_VictoryDialog_drawBackground()
 
 	Widget_Panel_drawOuterPanel(xOffset, yOffset, 34, 15);
 	if (Data_Settings.currentMissionId < 10 || Data_Settings.isCustomScenario) {
-		Widget_GameText_drawCentered(62, 0, xOffset, yOffset + 16, 544, Font_LargeBlack);
-		Widget_GameText_drawCentered(62, 2, xOffset, yOffset + 47, 544, Font_NormalBlack);
-		Widget_GameText_drawCentered(32, Data_CityInfo.playerRank + 1, xOffset, yOffset + 66, 544, Font_LargeBlack);
+		Widget_GameText_drawCentered(62, 0, xOffset, yOffset + 16, 544, FONT_LARGE_BLACK);
+		Widget_GameText_drawCentered(62, 2, xOffset, yOffset + 47, 544, FONT_NORMAL_BLACK);
+		Widget_GameText_drawCentered(32, Data_CityInfo.playerRank + 1, xOffset, yOffset + 66, 544, FONT_LARGE_BLACK);
 	} else {
-		Widget_Text_drawCentered(Data_Settings.playerName, xOffset, yOffset + 16, 512, Font_LargeBlack, 0);
-		Widget_GameText_drawMultiline(62, 26, xOffset + 16, yOffset + 47, 480, Font_NormalBlack);
+		Widget_Text_drawCentered(Data_Settings.playerName, xOffset, yOffset + 16, 512, FONT_LARGE_BLACK, 0);
+		Widget_GameText_drawMultiline(62, 26, xOffset + 16, yOffset + 47, 480, FONT_NORMAL_BLACK);
 	}
 }
 
@@ -161,23 +161,23 @@ void UI_VictoryDialog_drawForeground()
 		Widget_Panel_drawLargeLabelButton(xOffset + 32, yOffset + 112, 30, focusButtonId == 1);
 		if (Data_Settings.currentMissionId < 10 || Data_Settings.isCustomScenario) {
 			Widget_GameText_drawCentered(62, 3,
-				xOffset + 32, yOffset + 118, 480, Font_NormalGreen);
+				xOffset + 32, yOffset + 118, 480, FONT_NORMAL_GREEN);
 		} else {
 			Widget_GameText_drawCentered(62, 27,
-				xOffset + 32, yOffset + 118, 480, Font_NormalGreen);
+				xOffset + 32, yOffset + 118, 480, FONT_NORMAL_GREEN);
 		}
 		if (Data_Settings.currentMissionId >= 2 || Data_Settings.isCustomScenario) {
 			// Continue for 2/5 years
 			Widget_Panel_drawLargeLabelButton(xOffset + 32, yOffset + 144, 30, focusButtonId == 2);
-			Widget_GameText_drawCentered(62, 4, xOffset + 32, yOffset + 150, 480, Font_NormalGreen);
+			Widget_GameText_drawCentered(62, 4, xOffset + 32, yOffset + 150, 480, FONT_NORMAL_GREEN);
 
 			Widget_Panel_drawLargeLabelButton(xOffset + 32, yOffset + 176, 30, focusButtonId == 3);
-			Widget_GameText_drawCentered(62, 5, xOffset + 32, yOffset + 182, 480, Font_NormalGreen);
+			Widget_GameText_drawCentered(62, 5, xOffset + 32, yOffset + 182, 480, FONT_NORMAL_GREEN);
 		}
 	} else {
 		// lost
 		Widget_Panel_drawLargeLabelButton(xOffset + 32, yOffset + 96, 30, focusButtonId == 1);
-		Widget_GameText_drawCentered(62, 6, xOffset + 32, yOffset + 102, 480, Font_NormalGreen);
+		Widget_GameText_drawCentered(62, 6, xOffset + 32, yOffset + 102, 480, FONT_NORMAL_GREEN);
 	}
 }
 

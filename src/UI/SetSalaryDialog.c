@@ -40,12 +40,12 @@ void UI_SetSalaryDialog_drawForeground()
 	Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + 16,
 		baseOffsetX + 144, baseOffsetY + 48);
 	Widget_GameText_drawCentered(52, 15,
-		baseOffsetX + 144, baseOffsetY + 48, 368, Font_LargeBlack);
+		baseOffsetX + 144, baseOffsetY + 48, 368, FONT_LARGE_BLACK);
 
 	Widget_Panel_drawInnerPanel(baseOffsetX + 144, baseOffsetY + 80, 22, 15);
 
 	for (int rank = 0; rank < 11; rank++) {
-		Font font = (focusButtonId == rank + 2) ? Font_NormalRed : Font_NormalWhite;
+		font_t font = (focusButtonId == rank + 2) ? FONT_NORMAL_RED : FONT_NORMAL_WHITE;
 		int width = Widget_GameText_draw(52, rank + 4,
 			baseOffsetX + 176, baseOffsetY + 90 + 20 * rank, font);
 		Widget_Text_drawNumber(Constant_SalaryForRank[rank], '@', " Dn",
@@ -55,18 +55,18 @@ void UI_SetSalaryDialog_drawForeground()
 	if (Data_CityInfo.victoryContinueMonths <= 0) {
 		if (Data_CityInfo.salaryRank <= Data_CityInfo.playerRank) {
 			Widget_GameText_drawMultiline(52, 76,
-				baseOffsetX + 152, baseOffsetY + 336, 336, Font_NormalBlack);
+				baseOffsetX + 152, baseOffsetY + 336, 336, FONT_NORMAL_BLACK);
 		} else {
 			Widget_GameText_drawMultiline(52, 71,
-				baseOffsetX + 152, baseOffsetY + 336, 336, Font_NormalBlack);
+				baseOffsetX + 152, baseOffsetY + 336, 336, FONT_NORMAL_BLACK);
 		}
 	} else {
 		Widget_GameText_drawMultiline(52, 77,
-				baseOffsetX + 152, baseOffsetY + 336, 336, Font_NormalBlack);
+				baseOffsetX + 152, baseOffsetY + 336, 336, FONT_NORMAL_BLACK);
 	}
 	Widget_Panel_drawButtonBorder(baseOffsetX + 240, baseOffsetY + 395,
 		160, 20, focusButtonId == 1);
-	Widget_GameText_drawCentered(13, 4, baseOffsetX + 176, baseOffsetY + 400, 288, Font_NormalBlack);
+	Widget_GameText_drawCentered(13, 4, baseOffsetX + 176, baseOffsetY + 400, 288, FONT_NORMAL_BLACK);
 }
 
 void UI_SetSalaryDialog_handleMouse()

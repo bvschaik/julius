@@ -1,11 +1,11 @@
 #ifndef KEYBOARDINPUT_H
 #define KEYBOARDINPUT_H
 
-#include "Data/Types.h"
+#include "graphics/font.h"
 
 #include <stdint.h>
 
-void KeyboardInput_initTextField(int inputId, uint8_t *text, int maxLength, int textboxWidth, int allowPunctuation, Font font);
+void KeyboardInput_initTextField(int inputId, uint8_t *text, int maxLength, int textboxWidth, int allowPunctuation, font_t font);
 
 void KeyboardInput_initInput(int inputId);
 

@@ -86,7 +86,7 @@ static void addCharacter(char value)
 }
 
 void KeyboardInput_initTextField(int inputId, uint8_t *text, int maxLength,
-	int textboxWidth, int allowPunctuation, Font font)
+	int textboxWidth, int allowPunctuation, font_t font)
 {
 	Data_KeyboardInput.lines[inputId].font = font;
 	Data_KeyboardInput.lines[inputId].maxLength = maxLength;

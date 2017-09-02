@@ -166,10 +166,10 @@ static void drawNumberOfMessages()
 		if (Data_Message.totalMessages) {
 			Widget_Text_drawNumberCenteredColored(
 				Data_Message.totalMessages, '@', " ",
-				XOFFSET_EXPANDED + 74, 452, 32, Font_SmallPlain, COLOR_BLACK);
+				XOFFSET_EXPANDED + 74, 452, 32, FONT_SMALL_PLAIN, COLOR_BLACK);
 			Widget_Text_drawNumberCenteredColored(
 				Data_Message.totalMessages, '@', " ",
-				XOFFSET_EXPANDED + 73, 453, 32, Font_SmallPlain, COLOR_WHITE);
+				XOFFSET_EXPANDED + 73, 453, 32, FONT_SMALL_PLAIN, COLOR_WHITE);
 		}
 	}
 }
@@ -242,9 +242,9 @@ static void drawOverlayText(int xOffset)
 {
 	if (!Data_State.sidebarCollapsed) {
 		if (Data_State.currentOverlay) {
-			Widget_GameText_drawCentered(14, Data_State.currentOverlay, xOffset, 32, 117, Font_NormalGreen);
+			Widget_GameText_drawCentered(14, Data_State.currentOverlay, xOffset, 32, 117, FONT_NORMAL_GREEN);
 		} else {
-			Widget_GameText_drawCentered(6, 4, xOffset, 32, 117, Font_NormalGreen);
+			Widget_GameText_drawCentered(6, 4, xOffset, 32, 117, FONT_NORMAL_GREEN);
 		}
 	}
 }

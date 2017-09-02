@@ -91,13 +91,13 @@ void UI_MissionStart_Selection_drawBackground()
 	Graphics_drawImage(image_group(ID_Graphic_SelectMission) +
 		backgroundGraphicOffset[missionId],
 		xOffset, yOffset);
-	Widget_GameText_draw(144, 1 + 3 * missionId, xOffset + 20, yOffset + 410, Font_LargeBlack);
+	Widget_GameText_draw(144, 1 + 3 * missionId, xOffset + 20, yOffset + 410, FONT_LARGE_BLACK);
 	if (data.choice) {
 		Widget_GameText_drawMultiline(144, 1 + 3 * missionId + data.choice,
-			xOffset + 20, yOffset + 440, 560, Font_NormalBlack);
+			xOffset + 20, yOffset + 440, 560, FONT_NORMAL_BLACK);
 	} else {
 		Widget_GameText_drawMultiline(144, 0,
-			xOffset + 20, yOffset + 440, 560, Font_NormalBlack);
+			xOffset + 20, yOffset + 440, 560, FONT_NORMAL_BLACK);
 	}
 }
 
@@ -197,59 +197,59 @@ void UI_MissionStart_Briefing_drawBackground()
 	int yOffset = Data_Screen.offset640x480.y + 32;
 	
 	Widget_Panel_drawOuterPanel(xOffset, yOffset, 38, 27);
-	Widget_Text_draw(lang_get_message(textId)->title.text, xOffset + 16, yOffset + 16, Font_LargeBlack, 0);
-	Widget_GameText_draw(62, 7, xOffset + 360, yOffset + 401, Font_NormalBlack);
+	Widget_Text_draw(lang_get_message(textId)->title.text, xOffset + 16, yOffset + 16, FONT_LARGE_BLACK, 0);
+	Widget_GameText_draw(62, 7, xOffset + 360, yOffset + 401, FONT_NORMAL_BLACK);
 	if (UI_Window_getId() == Window_MissionBriefingInitial && Data_Settings.currentMissionId >= 2) {
-		Widget_GameText_draw(13, 4, xOffset + 50, yOffset + 403, Font_NormalBlack);
+		Widget_GameText_draw(13, 4, xOffset + 50, yOffset + 403, FONT_NORMAL_BLACK);
 	}
 	
 	Widget_Panel_drawInnerPanel(xOffset + 16, yOffset + 64, 33, 5);
-	Widget_GameText_draw(62, 10, xOffset + 32, yOffset + 72, Font_NormalWhite);
+	Widget_GameText_draw(62, 10, xOffset + 32, yOffset + 72, FONT_NORMAL_WHITE);
 	int goalIndex = 0;
 	if (Data_Scenario.winCriteria_populationEnabled) {
 		int x = goalOffsetsX[goalIndex];
 		int y = goalOffsetsY[goalIndex];
 		goalIndex++;
 		Widget_Panel_drawSmallLabelButton(xOffset + x, yOffset + y, 15, 1);
-		int width = Widget_GameText_draw(62, 11, xOffset + x + 8, yOffset + y + 3, Font_NormalRed);
+		int width = Widget_GameText_draw(62, 11, xOffset + x + 8, yOffset + y + 3, FONT_NORMAL_RED);
 		Widget_Text_drawNumber(Data_Scenario.winCriteria_population, '@', " ",
-			xOffset + x + 8 + width, yOffset + y + 3, Font_NormalRed);
+			xOffset + x + 8 + width, yOffset + y + 3, FONT_NORMAL_RED);
 	}
 	if (Data_Scenario.winCriteria.cultureEnabled) {
 		int x = goalOffsetsX[goalIndex];
 		int y = goalOffsetsY[goalIndex];
 		goalIndex++;
 		Widget_Panel_drawSmallLabelButton(xOffset + x, yOffset + y, 15, 1);
-		int width = Widget_GameText_draw(62, 12, xOffset + x + 8, yOffset + y + 3, Font_NormalRed);
+		int width = Widget_GameText_draw(62, 12, xOffset + x + 8, yOffset + y + 3, FONT_NORMAL_RED);
 		Widget_Text_drawNumber(Data_Scenario.winCriteria.culture, '@', " ",
-			xOffset + x + 8 + width, yOffset + y + 3, Font_NormalRed);
+			xOffset + x + 8 + width, yOffset + y + 3, FONT_NORMAL_RED);
 	}
 	if (Data_Scenario.winCriteria.prosperityEnabled) {
 		int x = goalOffsetsX[goalIndex];
 		int y = goalOffsetsY[goalIndex];
 		goalIndex++;
 		Widget_Panel_drawSmallLabelButton(xOffset + x, yOffset + y, 15, 1);
-		int width = Widget_GameText_draw(62, 13, xOffset + x + 8, yOffset + y + 3, Font_NormalRed);
+		int width = Widget_GameText_draw(62, 13, xOffset + x + 8, yOffset + y + 3, FONT_NORMAL_RED);
 		Widget_Text_drawNumber(Data_Scenario.winCriteria.prosperity, '@', " ",
-			xOffset + x + 8 + width, yOffset + y + 3, Font_NormalRed);
+			xOffset + x + 8 + width, yOffset + y + 3, FONT_NORMAL_RED);
 	}
 	if (Data_Scenario.winCriteria.peaceEnabled) {
 		int x = goalOffsetsX[goalIndex];
 		int y = goalOffsetsY[goalIndex];
 		goalIndex++;
 		Widget_Panel_drawSmallLabelButton(xOffset + x, yOffset + y, 15, 1);
-		int width = Widget_GameText_draw(62, 14, xOffset + x + 8, yOffset + y + 3, Font_NormalRed);
+		int width = Widget_GameText_draw(62, 14, xOffset + x + 8, yOffset + y + 3, FONT_NORMAL_RED);
 		Widget_Text_drawNumber(Data_Scenario.winCriteria.peace, '@', " ",
-			xOffset + x + 8 + width, yOffset + y + 3, Font_NormalRed);
+			xOffset + x + 8 + width, yOffset + y + 3, FONT_NORMAL_RED);
 	}
 	if (Data_Scenario.winCriteria.favorEnabled) {
 		int x = goalOffsetsX[goalIndex];
 		int y = goalOffsetsY[goalIndex];
 		goalIndex++;
 		Widget_Panel_drawSmallLabelButton(xOffset + x, yOffset + y, 15, 1);
-		int width = Widget_GameText_draw(62, 15, xOffset + x + 8, yOffset + y + 3, Font_NormalRed);
+		int width = Widget_GameText_draw(62, 15, xOffset + x + 8, yOffset + y + 3, FONT_NORMAL_RED);
 		Widget_Text_drawNumber(Data_Scenario.winCriteria.favor, '@', " ",
-			xOffset + x + 8 + width, yOffset + y + 3, Font_NormalRed);
+			xOffset + x + 8 + width, yOffset + y + 3, FONT_NORMAL_RED);
 	}
 	if (IsTutorial1()) {
 		int x = goalOffsetsX[2];
@@ -266,7 +266,7 @@ void UI_MissionStart_Briefing_drawBackground()
 		} else {
 			text = 20;
 		}
-		Widget_GameText_draw(62, text, xOffset + x + 8, yOffset + y + 3, Font_NormalRed);
+		Widget_GameText_draw(62, text, xOffset + x + 8, yOffset + y + 3, FONT_NORMAL_RED);
 	} else if (IsTutorial2()) {
 		int x = goalOffsetsX[2];
 		int y = goalOffsetsY[2];
@@ -284,12 +284,12 @@ void UI_MissionStart_Briefing_drawBackground()
 		} else {
 			text = 25;
 		}
-		Widget_GameText_draw(62, text, xOffset + x + 8, yOffset + y + 3, Font_NormalRed);
+		Widget_GameText_draw(62, text, xOffset + x + 8, yOffset + y + 3, FONT_NORMAL_RED);
 	}
 	
 	Widget_Panel_drawInnerPanel(xOffset + 16, yOffset + 152, 33, 15);
 	
-	Widget_RichText_setFonts(Font_NormalWhite, Font_NormalRed);
+	Widget_RichText_setFonts(FONT_NORMAL_WHITE, FONT_NORMAL_RED);
 	Widget_RichText_init(lang_get_message(textId)->content.text,
 		xOffset + 48, yOffset + 152, 31, 15, 0);
 

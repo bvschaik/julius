@@ -58,51 +58,51 @@ void UI_Advisor_Labor_drawBackground(int *advisorHeight)
 	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
 	Graphics_drawImage(image_group(ID_Graphic_AdvisorIcons), baseOffsetX + 10, baseOffsetY + 10);
 	
-	Widget_GameText_draw(50, 0, baseOffsetX + 60, baseOffsetY + 12, Font_LargeBlack);
+	Widget_GameText_draw(50, 0, baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK);
 	
 	// table headers
-	Widget_GameText_draw(50, 21, baseOffsetX + 60, baseOffsetY + 56, Font_SmallPlain);
-	Widget_GameText_draw(50, 22, baseOffsetX + 170, baseOffsetY + 56, Font_SmallPlain);
-	Widget_GameText_draw(50, 23, baseOffsetX + 400, baseOffsetY + 56, Font_SmallPlain);
-	Widget_GameText_draw(50, 24, baseOffsetX + 500, baseOffsetY + 56, Font_SmallPlain);
+	Widget_GameText_draw(50, 21, baseOffsetX + 60, baseOffsetY + 56, FONT_SMALL_PLAIN);
+	Widget_GameText_draw(50, 22, baseOffsetX + 170, baseOffsetY + 56, FONT_SMALL_PLAIN);
+	Widget_GameText_draw(50, 23, baseOffsetX + 400, baseOffsetY + 56, FONT_SMALL_PLAIN);
+	Widget_GameText_draw(50, 24, baseOffsetX + 500, baseOffsetY + 56, FONT_SMALL_PLAIN);
 	
 	int width = Widget_Text_drawNumber(Data_CityInfo.workersEmployed, '@', " ",
-		baseOffsetX + 32, baseOffsetY + 320, Font_NormalBlack
+		baseOffsetX + 32, baseOffsetY + 320, FONT_NORMAL_BLACK
 	);
 	width += Widget_GameText_draw(50, 12,
-		baseOffsetX + 32 + width, baseOffsetY + 320, Font_NormalBlack
+		baseOffsetX + 32 + width, baseOffsetY + 320, FONT_NORMAL_BLACK
 	);
 	width += Widget_Text_drawNumber(Data_CityInfo.workersUnemployed, '@', " ",
-		baseOffsetX + 50 + width, baseOffsetY + 320, Font_NormalBlack
+		baseOffsetX + 50 + width, baseOffsetY + 320, FONT_NORMAL_BLACK
 	);
 	width += Widget_GameText_draw(50, 13,
-		baseOffsetX + 50 + width, baseOffsetY + 320, Font_NormalBlack
+		baseOffsetX + 50 + width, baseOffsetY + 320, FONT_NORMAL_BLACK
 	);
 	width += Widget_Text_drawNumber(Data_CityInfo.unemploymentPercentage, '@', "%)",
-		baseOffsetX + 50 + width, baseOffsetY + 320, Font_NormalBlack
+		baseOffsetX + 50 + width, baseOffsetY + 320, FONT_NORMAL_BLACK
 	);
 	
 	Widget_Panel_drawInnerPanel(baseOffsetX + 64, baseOffsetY + 350, 32, 2);
-	Widget_GameText_draw(50, 14, baseOffsetX + 70, baseOffsetY + 359, Font_NormalWhite);
+	Widget_GameText_draw(50, 14, baseOffsetX + 70, baseOffsetY + 359, FONT_NORMAL_WHITE);
 	
 	width = Widget_Text_drawNumber(Data_CityInfo.wages, '@', " ",
-		baseOffsetX + 230, baseOffsetY + 359, Font_NormalWhite
+		baseOffsetX + 230, baseOffsetY + 359, FONT_NORMAL_WHITE
 	);
 	width += Widget_GameText_draw(50, 15,
-		baseOffsetX + 230 + width, baseOffsetY + 359, Font_NormalWhite
+		baseOffsetX + 230 + width, baseOffsetY + 359, FONT_NORMAL_WHITE
 	);
 	width += Widget_GameText_draw(50, 18,
-		baseOffsetX + 230 + width, baseOffsetY + 359, Font_NormalWhite
+		baseOffsetX + 230 + width, baseOffsetY + 359, FONT_NORMAL_WHITE
 	);
 	width += Widget_Text_drawNumber(Data_CityInfo.wagesRome, '@', " )",
-		baseOffsetX + 230 + width, baseOffsetY + 359, Font_NormalWhite
+		baseOffsetX + 230 + width, baseOffsetY + 359, FONT_NORMAL_WHITE
 	);
 	
 	width = Widget_GameText_draw(50, 19,
-		baseOffsetX + 64, baseOffsetY + 390, Font_NormalBlack
+		baseOffsetX + 64, baseOffsetY + 390, FONT_NORMAL_BLACK
 	);
 	width += Widget_Text_drawNumber(Data_CityInfo.estimatedYearlyWages, '@', " Dn",
-		baseOffsetX + 64 + width, baseOffsetY + 390, Font_NormalBlack
+		baseOffsetX + 64 + width, baseOffsetY + 390, FONT_NORMAL_BLACK
 	);
 }
 
@@ -126,15 +126,15 @@ void UI_Advisor_Labor_drawForeground()
 			Graphics_drawImage(image_group(ID_Graphic_LaborPriorityLock),
 				baseOffsetX + 70, baseOffsetY + 80 + 25 * i);
 			Widget_Text_drawNumber(Data_CityInfo.laborCategory[i].priority, '@', " ",
-				baseOffsetX + 90, baseOffsetY + 82 + 25 * i, Font_NormalWhite);
+				baseOffsetX + 90, baseOffsetY + 82 + 25 * i, FONT_NORMAL_WHITE);
 		}
 		Widget_GameText_draw(50, i + 1,
-			baseOffsetX + 170, baseOffsetY + 82 + 25 * i, Font_NormalWhite);
+			baseOffsetX + 170, baseOffsetY + 82 + 25 * i, FONT_NORMAL_WHITE);
 		Widget_Text_drawNumber(Data_CityInfo.laborCategory[i].workersNeeded, '@', " ",
-			baseOffsetX + 410, baseOffsetY + 82 + 25 * i, Font_NormalWhite);
-		Font font = Font_NormalWhite;
+			baseOffsetX + 410, baseOffsetY + 82 + 25 * i, FONT_NORMAL_WHITE);
+		font_t font = FONT_NORMAL_WHITE;
 		if (Data_CityInfo.laborCategory[i].workersNeeded != Data_CityInfo.laborCategory[i].workersAllocated) {
-			font = Font_NormalRed;
+			font = FONT_NORMAL_RED;
 		}
 		Widget_Text_drawNumber(Data_CityInfo.laborCategory[i].workersAllocated, '@', " ",
 			baseOffsetX + 510, baseOffsetY + 82 + 25 * i, font);
@@ -200,18 +200,18 @@ void UI_LaborPriorityDialog_drawBackground()
 	UI_Advisor_Labor_drawForeground();
 
 	Widget_Panel_drawOuterPanel(baseOffsetX + 160, baseOffsetY + 176, 20, 9);
-	Widget_GameText_drawCentered(50, 25, baseOffsetX + 160, baseOffsetY + 185, 320, Font_LargeBlack);
+	Widget_GameText_drawCentered(50, 25, baseOffsetX + 160, baseOffsetY + 185, 320, FONT_LARGE_BLACK);
 	for (int i = 0; i < 9; i++) {
 		Graphics_drawRect(baseOffsetX + 178 + 32 * i, baseOffsetY + 221, 27, 27, COLOR_BLACK);
-		Widget_GameText_drawCentered(50, 27 + i, baseOffsetX + 178 + 32 * i, baseOffsetY + 224, 27, Font_LargeBlack);
+		Widget_GameText_drawCentered(50, 27 + i, baseOffsetX + 178 + 32 * i, baseOffsetY + 224, 27, FONT_LARGE_BLACK);
 		if (i >= priorityMaxItems) {
 			Graphics_shadeRect(baseOffsetX + 179 + 32 * i, baseOffsetY + 222, 25, 25, 1);
 		}
 	}
 
 	Graphics_drawRect(baseOffsetX + 180, baseOffsetY + 256, 280, 25, COLOR_BLACK);
-	Widget_GameText_drawCentered(50, 26, baseOffsetX + 180, baseOffsetY + 263, 280, Font_NormalBlack);
-	Widget_GameText_drawCentered(13, 3, baseOffsetX + 160, baseOffsetY + 296, 320, Font_NormalBlack);
+	Widget_GameText_drawCentered(50, 26, baseOffsetX + 180, baseOffsetY + 263, 280, FONT_NORMAL_BLACK);
+	Widget_GameText_drawCentered(13, 3, baseOffsetX + 160, baseOffsetY + 296, 320, FONT_NORMAL_BLACK);
 }
 
 void UI_LaborPriorityDialog_drawForeground()

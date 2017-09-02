@@ -80,7 +80,7 @@ void UI_OverlayMenu_drawForeground()
 		Widget_Panel_drawSmallLabelButton(xOffset - 170, 74 + 24 * i,
 			10, menuFocusButtonId == i + 1 ? 1 : 2);
 		Widget_GameText_drawCentered(14, menuIdToOverlayId[i],
-			xOffset - 170, 77 + 24 * i, 160, Font_NormalGreen);
+			xOffset - 170, 77 + 24 * i, 160, FONT_NORMAL_GREEN);
 	}
 	if (selectedSubmenu > 0) {
 		Graphics_drawImage(image_group(ID_Graphic_Bullet),
@@ -90,7 +90,7 @@ void UI_OverlayMenu_drawForeground()
 				xOffset - 348, 74 + 24 * (i + selectedMenu),
 				10, submenuFocusButtonId == i + 1 ? 1 : 2);
 			Widget_GameText_drawCentered(14, submenuIdToOverlayId[selectedSubmenu][i],
-				xOffset - 348, 77 + 24 * (i + selectedMenu), 160, Font_NormalGreen);
+				xOffset - 348, 77 + 24 * (i + selectedMenu), 160, FONT_NORMAL_GREEN);
 		}
 	}
 }

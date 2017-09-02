@@ -34,11 +34,11 @@ void UI_NewCareerDialog_drawForeground()
 	int xOffset = Data_Screen.offset640x480.x;
 	int yOffset = Data_Screen.offset640x480.y;
 	Widget_Panel_drawOuterPanel(xOffset + 128, yOffset + 160, 24, 8);
-	Widget_GameText_drawCentered(31, 0, xOffset + 128, yOffset + 172, 384, Font_LargeBlack);
-	Widget_GameText_draw(13, 5, xOffset + 352, yOffset + 256, Font_NormalBlack);
+	Widget_GameText_drawCentered(31, 0, xOffset + 128, yOffset + 172, 384, FONT_LARGE_BLACK);
+	Widget_GameText_draw(13, 5, xOffset + 352, yOffset + 256, FONT_NORMAL_BLACK);
 	Widget_Panel_drawInnerPanel(xOffset + 160, yOffset + 208, 20, 2);
 	Widget_Text_captureCursor();
-	Widget_Text_draw(Data_Settings.playerName, xOffset + 176, yOffset + 216, Font_NormalWhite, 0);
+	Widget_Text_draw(Data_Settings.playerName, xOffset + 176, yOffset + 216, FONT_NORMAL_WHITE, 0);
 	Widget_Text_drawCursor(xOffset + 176, yOffset + 217);
 	
 	Widget_Button_drawImageButtons(xOffset + 464, yOffset + 249, &imageButtonStartMission, 1);

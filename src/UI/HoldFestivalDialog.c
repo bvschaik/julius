@@ -47,7 +47,7 @@ void UI_HoldFestivalDialog_drawBackground()
 
 	Widget_Panel_drawOuterPanel(baseOffsetX + 48, baseOffsetY + 48, 34, 20);
 	Widget_GameText_drawCentered(58, 25 + Data_CityInfo.festivalGod,
-		baseOffsetX + 48, baseOffsetY + 60, 544, Font_LargeBlack);
+		baseOffsetX + 48, baseOffsetY + 60, 544, FONT_LARGE_BLACK);
 	for (int god = 0; god < 5; god++) {
 		if (god == Data_CityInfo.festivalGod) {
 			Widget_Panel_drawButtonBorder(
@@ -62,7 +62,7 @@ void UI_HoldFestivalDialog_drawBackground()
 	}
 	drawButtons();
 	Widget_GameText_draw(58, 30 + Data_CityInfo.festivalSize,
-		baseOffsetX + 180, baseOffsetY + 322, Font_NormalBlack);
+		baseOffsetX + 180, baseOffsetY + 322, FONT_NORMAL_BLACK);
 }
 
 void UI_HoldFestivalDialog_drawForeground()
@@ -84,29 +84,29 @@ static void drawButtons()
 		baseOffsetX + 102, baseOffsetY + 216,
 		430, 26, focusButtonId == 6);
 	width = Widget_GameText_draw(58, 31,
-		baseOffsetX + 110, baseOffsetY + 224, Font_NormalBlack);
+		baseOffsetX + 110, baseOffsetY + 224, FONT_NORMAL_BLACK);
 	Widget_GameText_drawNumberWithDescription(8, 0, Data_CityInfo.festivalCostSmall,
-		baseOffsetX + 110 + width, baseOffsetY + 224, Font_NormalBlack);
+		baseOffsetX + 110 + width, baseOffsetY + 224, FONT_NORMAL_BLACK);
 
 	// large festival
 	Widget_Panel_drawButtonBorder(
 		baseOffsetX + 102, baseOffsetY + 246,
 		430, 26, focusButtonId == 7);
 	width = Widget_GameText_draw(58, 32,
-		baseOffsetX + 110, baseOffsetY + 254, Font_NormalBlack);
+		baseOffsetX + 110, baseOffsetY + 254, FONT_NORMAL_BLACK);
 	Widget_GameText_drawNumberWithDescription(8, 0, Data_CityInfo.festivalCostLarge,
-		baseOffsetX + 110 + width, baseOffsetY + 254, Font_NormalBlack);
+		baseOffsetX + 110 + width, baseOffsetY + 254, FONT_NORMAL_BLACK);
 
 	// grand festival
 	Widget_Panel_drawButtonBorder(
 		baseOffsetX + 102, baseOffsetY + 276,
 		430, 26, focusButtonId == 8);
 	width = Widget_GameText_draw(58, 33,
-		baseOffsetX + 110, baseOffsetY + 284, Font_NormalBlack);
+		baseOffsetX + 110, baseOffsetY + 284, FONT_NORMAL_BLACK);
 	width += Widget_GameText_drawNumberWithDescription(8, 0, Data_CityInfo.festivalCostGrand,
-		baseOffsetX + 110 + width, baseOffsetY + 284, Font_NormalBlack);
+		baseOffsetX + 110 + width, baseOffsetY + 284, FONT_NORMAL_BLACK);
 	width += Widget_GameText_drawNumberWithDescription(8, 10, Data_CityInfo.festivalWineGrand,
-		baseOffsetX + 120 + width, baseOffsetY + 284, Font_NormalBlack);
+		baseOffsetX + 120 + width, baseOffsetY + 284, FONT_NORMAL_BLACK);
 	Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + Resource_Wine,
 		baseOffsetX + 120 + width, baseOffsetY + 279);
 	
