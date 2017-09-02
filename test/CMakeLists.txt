@@ -25,6 +25,8 @@ set(TESTS
     figure/trader
     
     game/time
+    
+    graphics/image
 )
 
 foreach (testcase ${TESTS})

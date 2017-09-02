@@ -3,7 +3,6 @@
 #include "Settings.h"
 #include "Message.h"
 #include "Empire.h"
-#include "Graphics.h"
 #include "Screen.h"
 #include "Mouse.h"
 #include "Buttons.h"

@@ -205,6 +205,7 @@ static int convert_compressed(buffer *buf, int buf_length, color_t *dst)
 static void convert_images(image *images, int size, buffer *buf, color_t *dst)
 {
     color_t *start_dst = dst;
+    dst++; // make sure img->offset > 0
     for (int i = 0; i < size; i++) {
         image *img = &images[i];
         if (img->draw.is_external) {
