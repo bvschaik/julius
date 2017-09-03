@@ -27,8 +27,8 @@ extern struct _Data_Scenario {
 	int mapSizeY;
 	int gridFirstElement;
 	int gridBorderSize;
-	char briefDescription[64];
-	char briefing[522];
+	unsigned char briefDescription[64];
+	unsigned char briefing[522];
 	unsigned char requests_canComplyDialogShown[20];
 	short imageId;
 	short isOpenPlay;

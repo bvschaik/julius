@@ -18,6 +18,7 @@
 #include "building/count.h"
 #include "building/model.h"
 #include "core/lang.h"
+#include "core/string.h"
 #include "core/time.h"
 #include "graphics/image.h"
 
@@ -135,7 +136,7 @@ void UI_Warning_show(int warningId)
 		warnings[i].time = time_get_millis();
 		warnings[i].textLength = strlen(text);
 		memset(warnings[i].text, 0, 100);
-		strncpy(warnings[i].text, text, warnings[i].textLength);
+		string_copy(text, warnings[i].text, warnings[i].textLength);
 		return;
 	}
 }

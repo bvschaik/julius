@@ -157,7 +157,7 @@ static void drawOverlayTooltip(struct TooltipContext *c)
 	const uint8_t *text = lang_get_string(c->textGroup, c->textId);
 	if (c->hasNumericPrefix) {
 		int offset = string_from_int(tmpString, c->numericPrefix, 0);
-		strcpy(&tmpString[offset], text);
+		string_copy(text, &tmpString[offset], 1000);
 		text = tmpString;
 	}
 	Widget_RichText_setFonts(FONT_SMALL_PLAIN, FONT_SMALL_PLAIN);
