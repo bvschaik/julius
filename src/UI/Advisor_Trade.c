@@ -193,13 +193,12 @@ void UI_TradePricesDialog_handleMouse(const mouse *m)
 	}
 }
 
-static int getTradePriceTooltipResource()
+static int getTradePriceTooltipResource(struct TooltipContext *c)
 {
-    const mouse *m = mouse_get();
 	int xBase = Data_Screen.offset640x480.x + 124;
 	int y = Data_Screen.offset640x480.y + 192;
-	int xMouse = m->x;
-	int yMouse = m->y;
+	int xMouse = c->mouse_x;
+	int yMouse = c->mouse_y;
 	
 	for (int i = 1; i < 16; i++) {
 		int x = xBase + 30 * i;
@@ -212,7 +211,7 @@ static int getTradePriceTooltipResource()
 
 void UI_TradePricesDialog_getTooltip(struct TooltipContext *c)
 {
-	int resource = getTradePriceTooltipResource();
+	int resource = getTradePriceTooltipResource(c);
 	if (!resource) {
 		return;
 	}

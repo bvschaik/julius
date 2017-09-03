@@ -556,14 +556,14 @@ void UI_Empire_handleMouse(const mouse *m)
 	}
 }
 
-static int isMouseHit(const mouse *m, int x, int y, int size)
+static int isMouseHit(struct TooltipContext *c, int x, int y, int size)
 {
-    int mx = m->x;
-    int my = m->y;
+    int mx = c->mouse_x;
+    int my = c->mouse_y;
     return x <= mx && mx < x + size && y <= my && my < y + size;
 }
 
-static int getTooltipResource(const mouse *m)
+static int getTooltipResource(struct TooltipContext *c)
 {
 	if (Data_Empire_Cities[data.selectedCity].cityType != EmpireCity_Trade) {
 		return 0;
@@ -575,7 +575,7 @@ static int getTooltipResource(const mouse *m)
 	if (Data_Empire_Cities[data.selectedCity].isOpen) {
 		for (int r = 1, index = 0; r <= 15; r++) {
 			if (Empire_citySellsResource(objectId, r)) {
-				if (isMouseHit(m, xOffset + 120 + 100 * index, yOffset + 21, 26)) {
+				if (isMouseHit(c, xOffset + 120 + 100 * index, yOffset + 21, 26)) {
 					return r;
 				}
 				index++;
@@ -583,7 +583,7 @@ static int getTooltipResource(const mouse *m)
 		}
 		for (int r = 1, index = 0; r <= 15; r++) {
 			if (Empire_cityBuysResource(objectId, r)) {
-				if (isMouseHit(m, xOffset + 120 + 100 * index, yOffset + 51, 26)) {
+				if (isMouseHit(c, xOffset + 120 + 100 * index, yOffset + 51, 26)) {
 					return r;
 				}
 				index++;
@@ -593,7 +593,7 @@ static int getTooltipResource(const mouse *m)
 		int itemOffset = Widget_GameText_getDrawWidth(47, 5, FONT_NORMAL_GREEN);
 		for (int r = 1; r <= 15; r++) {
 			if (Empire_citySellsResource(objectId, r)) {
-				if (isMouseHit(m, xOffset + 60 + itemOffset, yOffset + 35, 26)) {
+				if (isMouseHit(c, xOffset + 60 + itemOffset, yOffset + 35, 26)) {
 					return r;
 				}
 				itemOffset += 32;
@@ -602,7 +602,7 @@ static int getTooltipResource(const mouse *m)
 		itemOffset += Widget_GameText_getDrawWidth(47, 4, FONT_NORMAL_GREEN);
 		for (int r = 1; r <= 15; r++) {
 			if (Empire_cityBuysResource(objectId, r)) {
-				if (isMouseHit(m, xOffset + 110 + itemOffset, yOffset + 35, 26)) {
+				if (isMouseHit(c, xOffset + 110 + itemOffset, yOffset + 35, 26)) {
 					return r;
 				}
 				itemOffset += 32;
@@ -614,7 +614,7 @@ static int getTooltipResource(const mouse *m)
 
 void UI_EmpireMap_getTooltip(struct TooltipContext *c)
 {
-	int resource = getTooltipResource(mouse_get());
+	int resource = getTooltipResource(c);
 	if (resource) {
 		c->type = TooltipType_Button;
 		c->textId = 131 + resource;

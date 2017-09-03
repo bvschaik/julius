@@ -97,7 +97,7 @@ void UI_City_handleMouse(const mouse *m)
 
 void UI_City_getTooltip(struct TooltipContext *c)
 {
-	int textId = UI_TopMenu_getTooltipText(mouse_get());
+	int textId = UI_TopMenu_getTooltipText(c);
 	if (!textId) {
 		textId = UI_Sidebar_getTooltipText();
 	}

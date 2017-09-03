@@ -1,6 +1,8 @@
 #ifndef UI_TOOLTIP_H
 #define UI_TOOLTIP_H
 
+#include "graphics/mouse.h"
+
 enum {
 	TooltipType_None = 0,
 	TooltipType_Button = 1,
@@ -14,12 +16,11 @@ enum {
 };
 
 struct TooltipContext {
+    // read-only
+    const int mouse_x;
+    const int mouse_y;
 	int type;
 	int priority;
-	int x;
-	int y;
-	int width;
-	int height;
 	int textGroup;
 	int textId;
 	int hasNumericPrefix;
@@ -29,6 +30,6 @@ struct TooltipContext {
 
 void UI_Tooltip_resetTimer();
 
-void UI_Tooltip_handle(void (*func)(struct TooltipContext *));
+void UI_Tooltip_handle(const mouse *m, void (*func)(struct TooltipContext *));
 
 #endif

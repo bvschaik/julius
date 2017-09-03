@@ -233,18 +233,18 @@ static int handleMouseSubmenu(const mouse *m)
 	return 0;
 }
 
-static int getFundsPopDate(const mouse *m)
+static int getFundsPopDate(int mouse_x, int mouse_y)
 {
-	if (m->y < 4 || m->y >= 18) {
+	if (mouse_y < 4 || mouse_y >= 18) {
 		return 0;
 	}
-	if (m->x > offsetFunds && m->x < offsetFunds + 128) {
+	if (mouse_x > offsetFunds && mouse_x < offsetFunds + 128) {
 		return 1;
 	}
-	if (m->x > offsetPopulation && m->x < offsetPopulation + 128) {
+	if (mouse_x > offsetPopulation && mouse_x < offsetPopulation + 128) {
 		return 2;
 	}
-	if (m->x > offsetDate && m->x < offsetDate + 128) {
+	if (mouse_x > offsetDate && mouse_x < offsetDate + 128) {
 		return 3;
 	}
 	return 0;
@@ -274,7 +274,7 @@ static int handleMouseMenu(const mouse *m)
 		return 1;
 	}
 	if (m->right.went_up) {
-		return handleTopMenuRightClick(getFundsPopDate(m));
+		return handleTopMenuRightClick(getFundsPopDate(m->x, m->y));
 	}
 	return 0;
 }
@@ -288,12 +288,12 @@ int UI_TopMenu_handleMouseWidget(const mouse *m)
 	}
 }
 
-int UI_TopMenu_getTooltipText(const mouse *m)
+int UI_TopMenu_getTooltipText(struct TooltipContext *c)
 {
 	if (focusMenuId) {
 		return 49 + focusMenuId;
 	}
-	int buttonId = getFundsPopDate(m);
+	int buttonId = getFundsPopDate(c->mouse_x, c->mouse_y);
 	if (buttonId) {
 		return 59 + buttonId;
 	}

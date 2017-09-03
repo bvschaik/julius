@@ -114,8 +114,9 @@ void UI_Window_refresh(int force)
 	}
 	windows[currentWindow].drawForeground();
 	KeyboardInput_initInput(0);
-	windows[currentWindow].handleMouse(mouse_get());
-	UI_Tooltip_handle(windows[currentWindow].getTooltip);
+    const mouse *m = mouse_get();
+	windows[currentWindow].handleMouse(m);
+	UI_Tooltip_handle(m, windows[currentWindow].getTooltip);
 	UI_Warning_draw();
 	updateMouseAfter();
 }

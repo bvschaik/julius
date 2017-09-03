@@ -31,9 +31,9 @@ void UI_Tooltip_resetTimer()
 	lastUpdate = time_get_millis();
 }
 
-void UI_Tooltip_handle(void (*func)(struct TooltipContext *))
+void UI_Tooltip_handle(const mouse *m, void (*func)(struct TooltipContext *))
 {
-	struct TooltipContext tooltipContext = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+	struct TooltipContext tooltipContext = {m->x, m->y, 0, 0, 0, 0, 0, 0};
 	tooltipContext.textGroup = 68; // default group
 	tooltipContext.priority = TooltipPriority_Low;
 	if (Data_Settings.mouseTooltips && func) {
@@ -87,68 +87,66 @@ static void drawButtonTooltip(struct TooltipContext *c)
 	const uint8_t *text = lang_get_string(c->textGroup, c->textId);
 	Widget_RichText_setFonts(FONT_SMALL_PLAIN, FONT_SMALL_PLAIN);
 
-	c->width = 200;
-	int lines = Widget_RichText_draw(text, c->x + 5, c->y + 5,
-		c->width - 5, 30, 1);
+	int width = 200;
+	int lines = Widget_RichText_draw(text, 0, 0, width - 5, 30, 1);
 	if (lines > 2) {
-		c->width = 300;
-		lines = Widget_RichText_draw(text, c->x + 5, c->y + 5,
-			c->width - 5, 30, 1);
+		width = 300;
+		lines = Widget_RichText_draw(text, 0, 0, width - 5, 30, 1);
 	}
-	c->height = 16 * lines + 10;
+	int height = 16 * lines + 10;
 
-    const mouse *m = mouse_get();
-	if (m->x < Data_Screen.offset640x480.x + c->width + 100) {
+	int x, y;
+	if (c->mouse_x < Data_Screen.offset640x480.x + width + 100) {
 		if (UI_Window_getId() == Window_Advisors) {
-			c->x = m->x + 50;
+			x = c->mouse_x + 50;
 		} else {
-			c->x = m->x + 20;
+			x = c->mouse_x + 20;
 		}
 	} else {
-		c->x = m->x - c->width - 20;
+		x = c->mouse_x - width - 20;
 	}
 	
 	switch (UI_Window_getId()) {
 		case Window_Advisors:
-			if (m->y < Data_Screen.offset640x480.y + 432) {
-				c->y = m->y;
+			if (c->mouse_y < Data_Screen.offset640x480.y + 432) {
+				y = c->mouse_y;
 				switch (UI_Advisors_getId()) {
-					case Advisor_Labor: c->y -= 74; break;
-					case Advisor_Trade: c->y -= 54; break;
-					case Advisor_Population: c->y -= 58; break;
-					default: c->y -= 64; break;
+					case Advisor_Labor: y -= 74; break;
+					case Advisor_Trade: y -= 54; break;
+					case Advisor_Population: y -= 58; break;
+					default: y -= 64; break;
 				}
 			} else {
-				c->y = Data_Screen.offset640x480.y + 432;
+				y = Data_Screen.offset640x480.y + 432;
 			}
 			break;
 		case Window_TradePricesDialog: // FIXED used to cause ghosting
-			c->y = m->y - 42;
+			y = c->mouse_y - 42;
 			break;
 		case Window_DonateToCityDialog:
-			c->y = m->y - 52;
+			y = c->mouse_y - 52;
 			break;
 		case Window_LaborPriorityDialog:
-			c->x = m->x - c->width / 2 - 10;
-			if (m->y < Data_Screen.offset640x480.y + 200) {
-				c->y = m->y + 40;
+			x = c->mouse_x - width / 2 - 10;
+			if (c->mouse_y < Data_Screen.offset640x480.y + 200) {
+				y = c->mouse_y + 40;
 			} else {
-				c->y = m->y - 72;
+				y = c->mouse_y - 72;
 			}
 			break;
 		default:
-			if (m->y < Data_Screen.offset640x480.y + 200) {
-				c->y = m->y + 40;
+			if (c->mouse_y < Data_Screen.offset640x480.y + 200) {
+				y = c->mouse_y + 40;
 			} else {
-				c->y = m->y - 62;
+				y = c->mouse_y - 62;
 			}
 			break;
 	}
 
-	Graphics_drawRect(c->x, c->y, c->width, c->height, COLOR_BLACK);
-	Graphics_fillRect(c->x + 1, c->y + 1, c->width - 2, c->height - 2, COLOR_WHITE);
-	Widget_RichText_drawColored(text, c->x + 5, c->y + 7,
-		c->width - 5, lines, COLOR_TOOLTIP);
+	Graphics_drawRect(x, y, width, height, COLOR_BLACK);
+	Graphics_fillRect(x + 1, y + 1, width - 2, height - 2, COLOR_WHITE);
+	Widget_RichText_drawColored(text, x + 5, y + 7,
+		width - 5, lines, COLOR_TOOLTIP);
 }
 
 static uint8_t tmpString[1000];
@@ -162,72 +160,70 @@ static void drawOverlayTooltip(struct TooltipContext *c)
 	}
 	Widget_RichText_setFonts(FONT_SMALL_PLAIN, FONT_SMALL_PLAIN);
 
-	c->width = 200;
-	int lines = Widget_RichText_draw(text, c->x + 5, c->y + 5,
-		c->width - 5, 30, 1);
+	int width = 200;
+	int lines = Widget_RichText_draw(text, 0, 0, width - 5, 30, 1);
 	if (lines > 2) {
-		c->width = 300;
-		lines = Widget_RichText_draw(text, c->x + 5, c->y + 5,
-			c->width - 5, 30, 1);
+		width = 300;
+		lines = Widget_RichText_draw(text, 0, 0, width - 5, 30, 1);
 	}
-	c->height = 16 * lines + 10;
+	int height = 16 * lines + 10;
 
-    const mouse *m = mouse_get();
-	if (m->x < c->width + 20) {
-		c->x = m->x + 20;
+	int x, y;
+	if (c->mouse_x < width + 20) {
+		x = c->mouse_x + 20;
 	} else {
-		c->x = m->x - c->width - 20;
+		x = c->mouse_x - width - 20;
 	}
-	if (m->y < 200) {
-		c->y = m->y + 50;
+	if (c->mouse_y < 200) {
+		y = c->mouse_y + 50;
 	} else {
-		c->y = m->y - 72;
+		y = c->mouse_y - 72;
 	}
 
-	Graphics_drawRect(c->x, c->y, c->width, c->height, COLOR_BLACK);
-	Graphics_fillRect(c->x + 1, c->y + 1, c->width - 2, c->height - 2, COLOR_WHITE);
-	Widget_RichText_drawColored(text, c->x + 5, c->y + 7,
-		c->width - 5, lines, COLOR_TOOLTIP);
+	Graphics_drawRect(x, y, width, height, COLOR_BLACK);
+	Graphics_fillRect(x + 1, y + 1, width - 2, height - 2, COLOR_WHITE);
+	Widget_RichText_drawColored(text, x + 5, y + 7,
+		width - 5, lines, COLOR_TOOLTIP);
 }
 
 static void drawSenateTooltip(struct TooltipContext *c)
 {
-    const mouse *m = mouse_get();
-	c->width = 180;
-	c->height = 80;
-	if (m->x < c->width + 20) {
-		c->x = m->x + 20;
+    int x, y;
+	int width = 180;
+	int height = 80;
+	if (c->mouse_x < width + 20) {
+		x = c->mouse_x + 20;
 	} else {
-		c->x = m->x - c->width - 20;
+		x = c->mouse_x - width - 20;
 	}
-	if (m->y < 200) {
-		c->y = m->y + 10;
+	if (c->mouse_y < 200) {
+		y = c->mouse_y + 10;
 	} else {
-		c->y = m->y - 32;
+		y = c->mouse_y - 32;
 	}
 	
-	Graphics_drawRect(c->x, c->y, c->width, c->height, COLOR_BLACK);
-	Graphics_fillRect(c->x + 1, c->y + 1, c->width - 2, c->height - 2, COLOR_WHITE);
+	Graphics_drawRect(x, y, width, height, COLOR_BLACK);
+	Graphics_fillRect(x + 1, y + 1, width - 2, height - 2, COLOR_WHITE);
 	
 	// unemployment
-	Widget_GameText_drawColored(68, 148, c->x + 5, c->y + 5, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+	Widget_GameText_drawColored(68, 148, x + 5, y + 5, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
 	Widget_Text_drawNumberColored(Data_CityInfo.unemploymentPercentage, '@', "%",
-		c->x + 140, c->y + 5, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+		x + 140, y + 5, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
 	
 	// ratings
-	Widget_GameText_drawColored(68, 149, c->x + 5, c->y + 19, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+	Widget_GameText_drawColored(68, 149, x + 5, y + 19, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
 	Widget_Text_drawNumberColored(Data_CityInfo.ratingCulture, '@', " ",
-		c->x + 140, c->y + 19, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+		x + 140, y + 19, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
 
-	Widget_GameText_drawColored(68, 150, c->x + 5, c->y + 33, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+	Widget_GameText_drawColored(68, 150, x + 5, y + 33, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
 	Widget_Text_drawNumberColored(Data_CityInfo.ratingProsperity, '@', " ",
-		c->x + 140, c->y + 33, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+		x + 140, y + 33, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
 
-	Widget_GameText_drawColored(68, 151, c->x + 5, c->y + 47, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+	Widget_GameText_drawColored(68, 151, x + 5, y + 47, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
 	Widget_Text_drawNumberColored(Data_CityInfo.ratingPeace, '@', " ",
-		c->x + 140, c->y + 47, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+		x + 140, y + 47, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
 
-	Widget_GameText_drawColored(68, 152, c->x + 5, c->y + 61, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+	Widget_GameText_drawColored(68, 152, x + 5, y + 61, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
 	Widget_Text_drawNumberColored(Data_CityInfo.ratingFavor, '@', " ",
-		c->x + 140, c->y + 61, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+		x + 140, y + 61, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
 }
