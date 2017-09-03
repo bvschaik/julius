@@ -329,17 +329,17 @@ int Widget_Text_drawNumberColored(int value, char prefix, const char *postfix, i
 	return Widget_Text_draw(str, xOffset, yOffset, font, color);
 }
 
-void Widget_Text_drawNumberCentered(int value, char prefix, const char *postfix, int xOffset, int yOffset, int boxWidth, font_t font)
+void Widget_Text_drawNumberCentered(int value, int xOffset, int yOffset, int boxWidth, font_t font)
 {
 	uint8_t str[100];
-	numberToString(str, value, prefix, postfix);
+	numberToString(str, value, '@', " ");
 	Widget_Text_drawCentered(str, xOffset, yOffset, boxWidth, font, 0);
 }
 
-void Widget_Text_drawNumberCenteredColored(int value, char prefix, const char *postfix, int xOffset, int yOffset, int boxWidth, font_t font, color_t color)
+void Widget_Text_drawNumberCenteredColored(int value, int xOffset, int yOffset, int boxWidth, font_t font, color_t color)
 {
 	uint8_t str[100];
-	numberToString(str, value, prefix, postfix);
+	numberToString(str, value, '@', " ");
 	Widget_Text_drawCentered(str, xOffset, yOffset, boxWidth, font, color);
 }
 

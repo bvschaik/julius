@@ -42,15 +42,15 @@ void UI_Advisor_Religion_drawBackground(int *advisorHeight)
 	Widget_GameText_draw(59, 11, baseOffsetX + 40, baseOffsetY + 66, FONT_NORMAL_WHITE);
 	Widget_GameText_draw(59, 16, baseOffsetX + 120, baseOffsetY + 67, FONT_SMALL_PLAIN);
 	Widget_Text_drawNumberCentered(
-		building_count_total(BUILDING_SMALL_TEMPLE_CERES), '@', " ",
+		building_count_total(BUILDING_SMALL_TEMPLE_CERES),
 		baseOffsetX + 230, baseOffsetY + 66, 50, FONT_NORMAL_WHITE
 	);
 	Widget_Text_drawNumberCentered(
-		building_count_total(BUILDING_LARGE_TEMPLE_CERES), '@', " ",
+		building_count_total(BUILDING_LARGE_TEMPLE_CERES),
 		baseOffsetX + 290, baseOffsetY + 66, 50, FONT_NORMAL_WHITE
 	);
 	Widget_Text_drawNumberCentered(
-		Data_CityInfo.godMonthsSinceFestival[God_Ceres], '@', " ",
+		Data_CityInfo.godMonthsSinceFestival[God_Ceres],
 		baseOffsetX + 360, baseOffsetY + 66, 50, FONT_NORMAL_WHITE
 	);
 	width = Widget_GameText_draw(59, 32 + Data_CityInfo.godHappiness[God_Ceres] / 10,
@@ -66,15 +66,15 @@ void UI_Advisor_Religion_drawBackground(int *advisorHeight)
 	Widget_GameText_draw(59, 12, baseOffsetX + 40, baseOffsetY + 86, FONT_NORMAL_WHITE);
 	Widget_GameText_draw(59, 17, baseOffsetX + 120, baseOffsetY + 87, FONT_SMALL_PLAIN);
 	Widget_Text_drawNumberCentered(
-		building_count_total(BUILDING_SMALL_TEMPLE_NEPTUNE), '@', " ",
+		building_count_total(BUILDING_SMALL_TEMPLE_NEPTUNE),
 		baseOffsetX + 230, baseOffsetY + 86, 50, FONT_NORMAL_WHITE
 	);
 	Widget_Text_drawNumberCentered(
-		building_count_total(BUILDING_LARGE_TEMPLE_NEPTUNE), '@', " ",
+		building_count_total(BUILDING_LARGE_TEMPLE_NEPTUNE),
 		baseOffsetX + 290, baseOffsetY + 86, 50, FONT_NORMAL_WHITE
 	);
 	Widget_Text_drawNumberCentered(
-		Data_CityInfo.godMonthsSinceFestival[God_Neptune], '@', " ",
+		Data_CityInfo.godMonthsSinceFestival[God_Neptune],
 		baseOffsetX + 360, baseOffsetY + 86, 50, FONT_NORMAL_WHITE
 	);
 	width = Widget_GameText_draw(59, 32 + Data_CityInfo.godHappiness[God_Neptune] / 10,
@@ -90,15 +90,15 @@ void UI_Advisor_Religion_drawBackground(int *advisorHeight)
 	Widget_GameText_draw(59, 13, baseOffsetX + 40, baseOffsetY + 106, FONT_NORMAL_WHITE);
 	Widget_GameText_draw(59, 18, baseOffsetX + 120, baseOffsetY + 107, FONT_SMALL_PLAIN);
 	Widget_Text_drawNumberCentered(
-		building_count_total(BUILDING_SMALL_TEMPLE_MERCURY), '@', " ",
+		building_count_total(BUILDING_SMALL_TEMPLE_MERCURY),
 		baseOffsetX + 230, baseOffsetY + 106, 50, FONT_NORMAL_WHITE
 	);
 	Widget_Text_drawNumberCentered(
-		building_count_total(BUILDING_LARGE_TEMPLE_MERCURY), '@', " ",
+		building_count_total(BUILDING_LARGE_TEMPLE_MERCURY),
 		baseOffsetX + 290, baseOffsetY + 106, 50, FONT_NORMAL_WHITE
 	);
 	Widget_Text_drawNumberCentered(
-		Data_CityInfo.godMonthsSinceFestival[God_Mercury], '@', " ",
+		Data_CityInfo.godMonthsSinceFestival[God_Mercury],
 		baseOffsetX + 360, baseOffsetY + 106, 50, FONT_NORMAL_WHITE
 	);
 	width = Widget_GameText_draw(59, 32 + Data_CityInfo.godHappiness[God_Mercury] / 10,
@@ -114,15 +114,15 @@ void UI_Advisor_Religion_drawBackground(int *advisorHeight)
 	Widget_GameText_draw(59, 14, baseOffsetX + 40, baseOffsetY + 126, FONT_NORMAL_WHITE);
 	Widget_GameText_draw(59, 19, baseOffsetX + 120, baseOffsetY + 127, FONT_SMALL_PLAIN);
 	Widget_Text_drawNumberCentered(
-		building_count_total(BUILDING_SMALL_TEMPLE_MARS), '@', " ",
+		building_count_total(BUILDING_SMALL_TEMPLE_MARS),
 		baseOffsetX + 230, baseOffsetY + 126, 50, FONT_NORMAL_WHITE
 	);
 	Widget_Text_drawNumberCentered(
-		building_count_total(BUILDING_LARGE_TEMPLE_MARS), '@', " ",
+		building_count_total(BUILDING_LARGE_TEMPLE_MARS),
 		baseOffsetX + 290, baseOffsetY + 126, 50, FONT_NORMAL_WHITE
 	);
 	Widget_Text_drawNumberCentered(
-		Data_CityInfo.godMonthsSinceFestival[God_Mars], '@', " ",
+		Data_CityInfo.godMonthsSinceFestival[God_Mars],
 		baseOffsetX + 360, baseOffsetY + 126, 50, FONT_NORMAL_WHITE
 	);
 	width = Widget_GameText_draw(59, 32 + Data_CityInfo.godHappiness[God_Mars] / 10,
@@ -138,15 +138,15 @@ void UI_Advisor_Religion_drawBackground(int *advisorHeight)
 	Widget_GameText_draw(59, 15, baseOffsetX + 40, baseOffsetY + 146, FONT_NORMAL_WHITE);
 	Widget_GameText_draw(59, 20, baseOffsetX + 120, baseOffsetY + 147, FONT_SMALL_PLAIN);
 	Widget_Text_drawNumberCentered(
-		building_count_total(BUILDING_SMALL_TEMPLE_VENUS), '@', " ",
+		building_count_total(BUILDING_SMALL_TEMPLE_VENUS),
 		baseOffsetX + 230, baseOffsetY + 146, 50, FONT_NORMAL_WHITE
 	);
 	Widget_Text_drawNumberCentered(
-		building_count_total(BUILDING_LARGE_TEMPLE_VENUS), '@', " ",
+		building_count_total(BUILDING_LARGE_TEMPLE_VENUS),
 		baseOffsetX + 290, baseOffsetY + 146, 50, FONT_NORMAL_WHITE
 	);
 	Widget_Text_drawNumberCentered(
-		Data_CityInfo.godMonthsSinceFestival[God_Venus], '@', " ",
+		Data_CityInfo.godMonthsSinceFestival[God_Venus],
 		baseOffsetX + 360, baseOffsetY + 146, 50, FONT_NORMAL_WHITE
 	);
 	width = Widget_GameText_draw(59, 32 + Data_CityInfo.godHappiness[God_Venus] / 10,
@@ -161,7 +161,7 @@ void UI_Advisor_Religion_drawBackground(int *advisorHeight)
 	// oracles
 	Widget_GameText_draw(59, 8, baseOffsetX + 40, baseOffsetY + 166, FONT_NORMAL_WHITE);
 	Widget_Text_drawNumberCentered(
-		building_count_total(BUILDING_ORACLE), '@', " ",
+		building_count_total(BUILDING_ORACLE),
 		baseOffsetX + 230, baseOffsetY + 166, 50, FONT_NORMAL_WHITE
 	);
 	

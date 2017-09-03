@@ -164,11 +164,9 @@ static void drawNumberOfMessages()
 		buttonBuildExpanded[13].enabled = Data_Message.totalMessages > 0;
 		buttonBuildExpanded[14].enabled = Data_Message.hotspotCount > 0;
 		if (Data_Message.totalMessages) {
-			Widget_Text_drawNumberCenteredColored(
-				Data_Message.totalMessages, '@', " ",
+			Widget_Text_drawNumberCenteredColored(Data_Message.totalMessages,
 				XOFFSET_EXPANDED + 74, 452, 32, FONT_SMALL_PLAIN, COLOR_BLACK);
-			Widget_Text_drawNumberCenteredColored(
-				Data_Message.totalMessages, '@', " ",
+			Widget_Text_drawNumberCenteredColored(Data_Message.totalMessages,
 				XOFFSET_EXPANDED + 73, 453, 32, FONT_SMALL_PLAIN, COLOR_WHITE);
 		}
 	}

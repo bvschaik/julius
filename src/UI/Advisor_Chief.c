@@ -48,7 +48,7 @@ void UI_Advisor_Chief_drawBackground(int *advisorHeight)
 
 	// migration
 	Graphics_drawImage(image_group(ID_Graphic_Bullet), baseOffsetX + 40, baseOffsetY + 107);
-	Widget_GameText_draw(61, 3, baseOffsetX + 60, baseOffsetY + 106, FONT_NORMAL_GREEN);
+	Widget_GameText_draw(61, 3, baseOffsetX + 60, baseOffsetY + 106, FONT_NORMAL_WHITE);
 	if (Data_CityInfo.numEnemiesInCity + Data_CityInfo.numImperialSoldiersInCity > 3) {
 		Widget_GameText_draw(61, 79, baseOffsetX + 240, baseOffsetY + 106, FONT_NORMAL_GREEN);
 	} else if (Data_CityInfo.populationNewcomersThisMonth >= 5) {

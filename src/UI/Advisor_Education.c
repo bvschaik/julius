@@ -44,7 +44,7 @@ void UI_Advisor_Education_drawBackground(int *advisorHeight)
 		8, 18, building_count_total(BUILDING_SCHOOL),
 		baseOffsetX + 40, baseOffsetY + 105, FONT_NORMAL_WHITE
 	);
-	Widget_Text_drawNumberCentered(building_count_active(BUILDING_SCHOOL), '@', " ",
+	Widget_Text_drawNumberCentered(building_count_active(BUILDING_SCHOOL),
 		baseOffsetX + 150, baseOffsetY + 105, 100, FONT_NORMAL_WHITE
 	);
 
@@ -68,7 +68,7 @@ void UI_Advisor_Education_drawBackground(int *advisorHeight)
 		8, 20, building_count_total(BUILDING_ACADEMY),
 		baseOffsetX + 40, baseOffsetY + 125, FONT_NORMAL_WHITE
 	);
-	Widget_Text_drawNumberCentered(building_count_active(BUILDING_ACADEMY), '@', " ",
+	Widget_Text_drawNumberCentered(building_count_active(BUILDING_ACADEMY),
 		baseOffsetX + 150, baseOffsetY + 125, 100, FONT_NORMAL_WHITE
 	);
 
@@ -92,7 +92,7 @@ void UI_Advisor_Education_drawBackground(int *advisorHeight)
 		8, 22, building_count_total(BUILDING_LIBRARY),
 		baseOffsetX + 40, baseOffsetY + 145, FONT_NORMAL_WHITE
 	);
-	Widget_Text_drawNumberCentered(building_count_active(BUILDING_LIBRARY), '@', " ",
+	Widget_Text_drawNumberCentered(building_count_active(BUILDING_LIBRARY),
 		baseOffsetX + 150, baseOffsetY + 145, 100, FONT_NORMAL_WHITE
 	);
 

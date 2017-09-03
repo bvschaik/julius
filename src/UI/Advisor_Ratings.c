@@ -44,7 +44,7 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
 		110, 66, focusButtonId == 1);
 	Widget_GameText_drawCentered(53, 1, baseOffsetX + 80, baseOffsetY + 294,
 		110, FONT_NORMAL_BLACK);
-	Widget_Text_drawNumberCentered(Data_CityInfo.ratingCulture, '@', " ",
+	Widget_Text_drawNumberCentered(Data_CityInfo.ratingCulture,
 		baseOffsetX + 80, baseOffsetY + 309, 100, FONT_LARGE_BLACK);
 	if (Data_Scenario.winCriteria.cultureEnabled) {
 		width = Widget_Text_drawNumber(Data_Scenario.winCriteria.culture, '@', " ",
@@ -64,7 +64,7 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
 		110, 66, focusButtonId == 2);
 	Widget_GameText_drawCentered(53, 2, baseOffsetX + 200, baseOffsetY + 294,
 		110, FONT_NORMAL_BLACK);
-	Widget_Text_drawNumberCentered(Data_CityInfo.ratingProsperity, '@', " ",
+	Widget_Text_drawNumberCentered(Data_CityInfo.ratingProsperity,
 		baseOffsetX + 200, baseOffsetY + 309, 100, FONT_LARGE_BLACK);
 	if (Data_Scenario.winCriteria.prosperityEnabled) {
 		width = Widget_Text_drawNumber(Data_Scenario.winCriteria.prosperity, '@', " ",
@@ -84,7 +84,7 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
 		110, 66, focusButtonId == 3);
 	Widget_GameText_drawCentered(53, 3, baseOffsetX + 320, baseOffsetY + 294,
 		110, FONT_NORMAL_BLACK);
-	Widget_Text_drawNumberCentered(Data_CityInfo.ratingPeace, '@', " ",
+	Widget_Text_drawNumberCentered(Data_CityInfo.ratingPeace,
 		baseOffsetX + 320, baseOffsetY + 309, 100, FONT_LARGE_BLACK);
 	if (Data_Scenario.winCriteria.peaceEnabled) {
 		width = Widget_Text_drawNumber(Data_Scenario.winCriteria.peace, '@', " ",
@@ -104,7 +104,7 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
 		110, 66, focusButtonId == 4);
 	Widget_GameText_drawCentered(53, 4, baseOffsetX + 440, baseOffsetY + 294,
 		110, FONT_NORMAL_BLACK);
-	Widget_Text_drawNumberCentered(Data_CityInfo.ratingFavor, '@', " ",
+	Widget_Text_drawNumberCentered(Data_CityInfo.ratingFavor,
 		baseOffsetX + 440, baseOffsetY + 309, 100, FONT_LARGE_BLACK);
 	if (Data_Scenario.winCriteria.favorEnabled) {
 		width = Widget_Text_drawNumber(Data_Scenario.winCriteria.favor, '@', " ",

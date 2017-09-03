@@ -45,10 +45,10 @@ void UI_Advisor_Entertainment_drawBackground(int *advisorHeight)
 	Widget_GameText_drawNumberWithDescription(8, 34, building_count_total(BUILDING_THEATER),
 		baseOffsetX + 40, baseOffsetY + 64, FONT_NORMAL_WHITE
 	);
-	Widget_Text_drawNumberCentered(building_count_active(BUILDING_THEATER), '@', " ",
+	Widget_Text_drawNumberCentered(building_count_active(BUILDING_THEATER),
 		baseOffsetX + 150, baseOffsetY + 64, 100, FONT_NORMAL_WHITE
 	);
-	Widget_Text_drawNumberCentered(Data_CityInfo.entertainmentTheaterShows, '@', " ",
+	Widget_Text_drawNumberCentered(Data_CityInfo.entertainmentTheaterShows,
 		baseOffsetX + 230, baseOffsetY + 64, 100, FONT_NORMAL_WHITE
 	);
 	int width = Widget_Text_drawNumber(500 * building_count_active(BUILDING_THEATER), '@', " ",
@@ -69,10 +69,10 @@ void UI_Advisor_Entertainment_drawBackground(int *advisorHeight)
 	Widget_GameText_drawNumberWithDescription(8, 36, building_count_total(BUILDING_AMPHITHEATER),
 		baseOffsetX + 40, baseOffsetY + 84, FONT_NORMAL_WHITE
 	);
-	Widget_Text_drawNumberCentered(building_count_active(BUILDING_AMPHITHEATER), '@', " ",
+	Widget_Text_drawNumberCentered(building_count_active(BUILDING_AMPHITHEATER),
 		baseOffsetX + 150, baseOffsetY + 84, 100, FONT_NORMAL_WHITE
 	);
-	Widget_Text_drawNumberCentered(Data_CityInfo.entertainmentAmphitheaterShows, '@', " ",
+	Widget_Text_drawNumberCentered(Data_CityInfo.entertainmentAmphitheaterShows,
 		baseOffsetX + 230, baseOffsetY + 84, 100, FONT_NORMAL_WHITE
 	);
 	width = Widget_Text_drawNumber(800 * building_count_active(BUILDING_AMPHITHEATER), '@', " ",
@@ -93,10 +93,10 @@ void UI_Advisor_Entertainment_drawBackground(int *advisorHeight)
 	Widget_GameText_drawNumberWithDescription(8, 38, building_count_total(BUILDING_COLOSSEUM),
 		baseOffsetX + 40, baseOffsetY + 104, FONT_NORMAL_WHITE
 	);
-	Widget_Text_drawNumberCentered(building_count_active(BUILDING_COLOSSEUM), '@', " ",
+	Widget_Text_drawNumberCentered(building_count_active(BUILDING_COLOSSEUM),
 		baseOffsetX + 150, baseOffsetY + 104, 100, FONT_NORMAL_WHITE
 	);
-	Widget_Text_drawNumberCentered(Data_CityInfo.entertainmentColosseumShows, '@', " ",
+	Widget_Text_drawNumberCentered(Data_CityInfo.entertainmentColosseumShows,
 		baseOffsetX + 230, baseOffsetY + 104, 100, FONT_NORMAL_WHITE
 	);
 	width = Widget_Text_drawNumber(1500 * building_count_active(BUILDING_COLOSSEUM), '@', " ",
@@ -117,10 +117,10 @@ void UI_Advisor_Entertainment_drawBackground(int *advisorHeight)
 	Widget_GameText_drawNumberWithDescription(8, 40, building_count_total(BUILDING_HIPPODROME),
 		baseOffsetX + 40, baseOffsetY + 123, FONT_NORMAL_WHITE
 	);
-	Widget_Text_drawNumberCentered(building_count_active(BUILDING_HIPPODROME), '@', " ",
+	Widget_Text_drawNumberCentered(building_count_active(BUILDING_HIPPODROME),
 		baseOffsetX + 150, baseOffsetY + 123, 100, FONT_NORMAL_WHITE
 	);
-	Widget_Text_drawNumberCentered(Data_CityInfo.entertainmentHippodromeShows, '@', " ",
+	Widget_Text_drawNumberCentered(Data_CityInfo.entertainmentHippodromeShows,
 		baseOffsetX + 230, baseOffsetY + 123, 100, FONT_NORMAL_WHITE
 	);
 	Widget_GameText_draw(58, 6, baseOffsetX + 360, baseOffsetY + 123, FONT_NORMAL_WHITE);

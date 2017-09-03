@@ -55,10 +55,10 @@ void UI_DonateToCityDialog_drawBackground()
 
 	Widget_Panel_drawInnerPanel(baseOffsetX + 112, baseOffsetY + 208, 26, 4);
 
-	Widget_Text_drawNumberCentered(0, '@', " ", baseOffsetX + 124, baseOffsetY + 221, 64, FONT_NORMAL_WHITE);
-	Widget_Text_drawNumberCentered(500, '@', " ", baseOffsetX + 204, baseOffsetY + 221, 64, FONT_NORMAL_WHITE);
-	Widget_Text_drawNumberCentered(2000, '@', " ", baseOffsetX + 284, baseOffsetY + 221, 64, FONT_NORMAL_WHITE);
-	Widget_Text_drawNumberCentered(5000, '@', " ", baseOffsetX + 364, baseOffsetY + 221, 64, FONT_NORMAL_WHITE);
+	Widget_Text_drawNumberCentered(0, baseOffsetX + 124, baseOffsetY + 221, 64, FONT_NORMAL_WHITE);
+	Widget_Text_drawNumberCentered(500, baseOffsetX + 204, baseOffsetY + 221, 64, FONT_NORMAL_WHITE);
+	Widget_Text_drawNumberCentered(2000, baseOffsetX + 284, baseOffsetY + 221, 64, FONT_NORMAL_WHITE);
+	Widget_Text_drawNumberCentered(5000, baseOffsetX + 364, baseOffsetY + 221, 64, FONT_NORMAL_WHITE);
 	Widget_GameText_drawCentered(52, 19, baseOffsetX + 444, baseOffsetY + 221, 64, FONT_NORMAL_WHITE);
 
 	Widget_GameText_draw(52, 17, baseOffsetX + 128, baseOffsetY + 248, FONT_NORMAL_WHITE);

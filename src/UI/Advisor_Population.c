@@ -232,11 +232,11 @@ static void drawHistoryGraph(int fullSize, int x, int y)
 	getYAxis(maxValue, &yMax, &yShift);
 	if (fullSize) {
 		// y axis
-		Widget_Text_drawNumberCentered(yMax, '@', " ",
+		Widget_Text_drawNumberCentered(yMax,
 			x - 66, y - 3, 60, FONT_SMALL_PLAIN);
-		Widget_Text_drawNumberCentered(yMax / 2, '@', " ",
+		Widget_Text_drawNumberCentered(yMax / 2,
 			x - 66, y + 96, 60, FONT_SMALL_PLAIN);
-		Widget_Text_drawNumberCentered(0, '@', " ",
+		Widget_Text_drawNumberCentered(0,
 			x - 66, y + 196, 60, FONT_SMALL_PLAIN);
 		// x axis
 		int startMonth, startYear, endMonth, endYear;
@@ -312,15 +312,15 @@ static void drawCensusGraph(int fullSize, int x, int y)
 	getYAxis(maxValue, &yMax, &yShift);
 	if (fullSize) {
 		// y axis
-		Widget_Text_drawNumberCentered(yMax, '@', " ",
+		Widget_Text_drawNumberCentered(yMax,
 			x - 66, y - 3, 60, FONT_SMALL_PLAIN);
-		Widget_Text_drawNumberCentered(yMax / 2, '@', " ",
+		Widget_Text_drawNumberCentered(yMax / 2,
 			x - 66, y + 96, 60, FONT_SMALL_PLAIN);
-		Widget_Text_drawNumberCentered(0, '@', " ",
+		Widget_Text_drawNumberCentered(0,
 			x - 66, y + 196, 60, FONT_SMALL_PLAIN);
 		// x axis
 		for (int i = 0; i <= 10; i++) {
-			Widget_Text_drawNumberCentered(i * 10, '@', " ",
+			Widget_Text_drawNumberCentered(i * 10,
 				x + 40 * i - 22, y + 210, 40, FONT_SMALL_PLAIN);
 		}
 	}
@@ -364,11 +364,11 @@ static void drawSocietyGraph(int fullSize, int x, int y)
 	getYAxis(maxValue, &yMax, &yShift);
 	if (fullSize) {
 		// y axis
-		Widget_Text_drawNumberCentered(yMax, '@', " ",
+		Widget_Text_drawNumberCentered(yMax,
 			x - 66, y - 3, 60, FONT_SMALL_PLAIN);
-		Widget_Text_drawNumberCentered(yMax / 2, '@', " ",
+		Widget_Text_drawNumberCentered(yMax / 2,
 			x - 66, y + 96, 60, FONT_SMALL_PLAIN);
-		Widget_Text_drawNumberCentered(0, '@', " ",
+		Widget_Text_drawNumberCentered(0,
 			x - 66, y + 196, 60, FONT_SMALL_PLAIN);
 		// x axis
 		Widget_GameText_drawCentered(55, 9,

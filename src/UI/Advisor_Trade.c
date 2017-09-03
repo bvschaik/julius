@@ -103,7 +103,7 @@ void UI_Advisor_Trade_drawForeground()
 			Widget_Panel_drawButtonBorder(baseOffsetX + 80, offsetY + 54, 480, 24, 1);
 		}
 		Widget_GameText_draw(23, resource, baseOffsetX + 88, offsetY + 61, FONT_NORMAL_WHITE);
-		Widget_Text_drawNumberCentered(Data_CityInfo.resourceStored[resource], '@', " ",
+		Widget_Text_drawNumberCentered(Data_CityInfo.resourceStored[resource],
 			baseOffsetX + 180, offsetY + 61, 100, FONT_NORMAL_WHITE);
 		if (Data_CityInfo.resourceIndustryMothballed[resource]) {
 			Widget_GameText_draw(18, 5, baseOffsetX + 300, offsetY + 61, FONT_NORMAL_WHITE);
@@ -179,9 +179,9 @@ void UI_TradePricesDialog_drawBackground()
 		int graphicOffset = i + Resource_getGraphicIdOffset(i, 3);
 		Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + graphicOffset,
 			baseOffsetX + 126 + 30 * i, baseOffsetY + 194);
-		Widget_Text_drawNumberCentered(trade_price_buy(i), '@', " ",
+		Widget_Text_drawNumberCentered(trade_price_buy(i),
 			baseOffsetX + 120 + 30 * i, baseOffsetY + 229, 30, FONT_SMALL_PLAIN);
-		Widget_Text_drawNumberCentered(trade_price_sell(i), '@', " ",
+		Widget_Text_drawNumberCentered(trade_price_sell(i),
 			baseOffsetX + 120 + 30 * i, baseOffsetY + 254, 30, FONT_SMALL_PLAIN);
 	}
 	Widget_GameText_drawCentered(13, 1, baseOffsetX + 16, baseOffsetY + 296, 608, FONT_NORMAL_BLACK);
