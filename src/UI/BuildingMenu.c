@@ -9,7 +9,6 @@
 #include "../Data/Building.h"
 #include "../Data/CityView.h"
 #include "../Data/Constants.h"
-#include "../Data/Mouse.h"
 #include "../Data/Scenario.h"
 #include "../Data/Settings.h"
 #include "../Data/State.h"
@@ -188,15 +187,15 @@ static void drawMenuButtons()
 	}
 }
 
-void UI_BuildingMenu_handleMouse()
+void UI_BuildingMenu_handleMouse(const mouse *m)
 {
-	if (Data_Mouse.right.wentUp) {
+	if (m->right.went_up) {
 		UI_Window_goTo(Window_City);
 		return;
 	}
 
 	if (!handleBuildSubmenu()) {
-		UI_Sidebar_handleMouseBuildButtons();
+		UI_Sidebar_handleMouseBuildButtons(m);
 	}
 }
 

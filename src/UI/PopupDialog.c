@@ -5,7 +5,6 @@
 #include "../CityInfo.h"
 #include "../Data/CityInfo.h"
 #include "../Data/Screen.h"
-#include "../Data/Mouse.h"
 
 #define GROUP 5
 
@@ -61,13 +60,13 @@ void UI_PopupDialog_drawForeground()
 	}
 }
 
-void UI_PopupDialog_handleMouse()
+void UI_PopupDialog_handleMouse(const mouse *m)
 {
 	int xOffset = Data_Screen.offset640x480.x + 80;
 	int yOffset = Data_Screen.offset640x480.y + 80;
 	if (data.hasButtons) {
 		Widget_Button_handleImageButtons(xOffset, yOffset, buttons, 2, 0);
-	} else if (Data_Mouse.right.wentUp) {
+	} else if (m->right.went_up) {
 		data.closeFunc(0);
 		UI_Window_goBack();
 	}

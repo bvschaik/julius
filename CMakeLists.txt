@@ -40,6 +40,7 @@ set (GAME_FILES
 )
 set (GRAPHICS_FILES
     src/graphics/image.c
+    src/graphics/mouse.c
 )
 add_executable(julius
 	linux/main2.c

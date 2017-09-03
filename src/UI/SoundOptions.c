@@ -4,7 +4,6 @@
 #include "../Widget.h"
 
 #include "../Data/Constants.h"
-#include "../Data/Mouse.h"
 #include "../Data/Screen.h"
 #include "../Data/Settings.h"
 
@@ -162,9 +161,9 @@ void UI_SoundOptions_drawForeground()
 	);
 }
 
-void UI_SoundOptions_handleMouse()
+void UI_SoundOptions_handleMouse(const mouse *m)
 {
-	if (Data_Mouse.right.wentUp) {
+	if (m->right.went_up) {
 		// cancel dialog
 		UI_Window_goTo(Window_City);
 	} else {

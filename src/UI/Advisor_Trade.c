@@ -7,7 +7,6 @@
 #include "../Resource.h"
 
 #include "../Data/CityInfo.h"
-#include "../Data/Mouse.h"
 #include "../Data/Scenario.h"
 
 #include "building/count.h"
@@ -187,19 +186,20 @@ void UI_TradePricesDialog_drawBackground()
 	Widget_GameText_drawCentered(13, 1, baseOffsetX + 16, baseOffsetY + 296, 608, FONT_NORMAL_BLACK);
 }
 
-void UI_TradePricesDialog_handleMouse()
+void UI_TradePricesDialog_handleMouse(const mouse *m)
 {
-	if (Data_Mouse.right.wentUp) {
+	if (m->right.went_up) {
 		UI_Window_goTo(Window_Advisors);
 	}
 }
 
 static int getTradePriceTooltipResource()
 {
+    const mouse *m = mouse_get();
 	int xBase = Data_Screen.offset640x480.x + 124;
 	int y = Data_Screen.offset640x480.y + 192;
-	int xMouse = Data_Mouse.x;
-	int yMouse = Data_Mouse.y;
+	int xMouse = m->x;
+	int yMouse = m->y;
 	
 	for (int i = 1; i < 16; i++) {
 		int x = xBase + 30 * i;
@@ -349,12 +349,12 @@ void UI_ResourceSettingsDialog_drawForeground()
 	}
 }
 
-void UI_ResourceSettingsDialog_handleMouse()
+void UI_ResourceSettingsDialog_handleMouse(const mouse *m)
 {
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
 
-	if (Data_Mouse.right.wentUp) {
+	if (m->right.went_up) {
 		UI_Window_goTo(Window_Advisors);
 	} else if (Widget_Button_handleImageButtons(baseOffsetX, baseOffsetY, resourceImageButtons, 2, 0)) {
 		return;

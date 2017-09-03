@@ -6,7 +6,6 @@
 
 #include "../Data/CityView.h"
 #include "../Data/Constants.h"
-#include "../Data/Mouse.h"
 #include "../Data/State.h"
 
 #include "core/time.h"
@@ -95,9 +94,9 @@ void UI_OverlayMenu_drawForeground()
 	}
 }
 
-void UI_OverlayMenu_handleMouse()
+void UI_OverlayMenu_handleMouse(const mouse *m)
 {
-	if (Data_Mouse.right.wentDown) {
+	if (m->right.went_down) {
 		UI_Window_goTo(Window_City);
 		return;
 	}

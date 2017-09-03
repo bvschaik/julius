@@ -8,7 +8,6 @@
 #include "Advisors_private.h"
 #include "../Data/CityInfo.h"
 #include "../Data/Screen.h"
-#include "../Data/Mouse.h"
 
 static void drawButtons();
 static void buttonGod(int param1, int param2);
@@ -120,9 +119,9 @@ static void drawButtons()
 	}
 }
 
-void UI_HoldFestivalDialog_handleMouse()
+void UI_HoldFestivalDialog_handleMouse(const mouse *m)
 {
-	if (Data_Mouse.right.wentUp) {
+	if (m->right.went_up) {
 		UI_Window_goTo(Window_Advisors);
 		return;
 	}

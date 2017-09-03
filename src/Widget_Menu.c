@@ -1,10 +1,9 @@
 #include "Widget.h"
 #include "Graphics.h"
 #include "Data/Constants.h"
-#include "Data/Mouse.h"
 
-static int getMenuBarItem(MenuBarItem *items, int numItems);
-static int getMenuItem(MenuBarItem *menu);
+static int getMenuBarItem(const mouse *m, MenuBarItem *items, int numItems);
+static int getMenuItem(const mouse *m, MenuBarItem *menu);
 
 void Widget_Menu_drawMenuBar(MenuBarItem *items, int numItems)
 {
@@ -38,9 +37,9 @@ void Widget_Menu_drawSubMenu(MenuBarItem *menu, int focusSubMenu)
 	}
 }
 
-int Widget_Menu_handleMenuBar(MenuBarItem *items, int numItems, int *focusMenuId)
+int Widget_Menu_handleMenuBar(const mouse *m, MenuBarItem *items, int numItems, int *focusMenuId)
 {
-	int menuId = getMenuBarItem(items, numItems);
+	int menuId = getMenuBarItem(m, items, numItems);
 	if (focusMenuId) {
 		*focusMenuId = menuId;
 	}
@@ -50,41 +49,39 @@ int Widget_Menu_handleMenuBar(MenuBarItem *items, int numItems, int *focusMenuId
 	return menuId;
 }
 
-static int getMenuBarItem(MenuBarItem *items, int numItems)
+static int getMenuBarItem(const mouse *m, MenuBarItem *items, int numItems)
 {
-	int mouseX = Data_Mouse.x;
-	int mouseY = Data_Mouse.y;
 	for (int i = 0; i < numItems; i++) {
-		if (items[i].xStart <= mouseX &&
-			items[i].xEnd > mouseX &&
-			items[i].yStart <= mouseY &&
-			items[i].yStart + 12 > mouseY) {
+		if (items[i].xStart <= m->x &&
+			items[i].xEnd > m->x &&
+			items[i].yStart <= m->y &&
+			items[i].yStart + 12 > m->y) {
 			return i + 1;
 		}
 	}
 	return 0;
 }
 
-int Widget_Menu_handleMenuItem(MenuBarItem *menu, int *focusSubMenuId)
+int Widget_Menu_handleMenuItem(const mouse *m, MenuBarItem *menu, int *focusSubMenuId)
 {
-	int subMenuId = getMenuItem(menu);
+	int subMenuId = getMenuItem(m, menu);
 	if (focusSubMenuId) {
 		*focusSubMenuId = subMenuId;
 	}
 	if (!subMenuId) {
 		return 0;
 	}
-	if (Data_Mouse.left.wentDown) {
+	if (m->left.went_down) {
 		MenuItem *item = &menu->items[subMenuId-1];
 		item->leftClickHandler(item->parameter);
 	}
 	return subMenuId;
 }
 
-static int getMenuItem(MenuBarItem *menu)
+static int getMenuItem(const mouse *m, MenuBarItem *menu)
 {
-	int mouseX = Data_Mouse.x;
-	int mouseY = Data_Mouse.y;
+	int mouseX = m->x;
+	int mouseY = m->y;
 	for (int i = 0; i < menu->numItems; i++) {
 		if (menu->xStart <= mouseX &&
 			menu->xStart + 160 > mouseX &&

@@ -2,6 +2,7 @@
 #define UI_BUILDINGINFO_H
 
 #include "Tooltip.h"
+#include "graphics/mouse.h"
 
 #define PLAY_SOUND(f) \
 	if (c->canPlaySound) {\
@@ -56,7 +57,7 @@ typedef struct {
 void UI_BuildingInfo_init();
 void UI_BuildingInfo_drawBackground();
 void UI_BuildingInfo_drawForeground();
-void UI_BuildingInfo_handleMouse();
+void UI_BuildingInfo_handleMouse(const mouse *m);
 void UI_BuildingInfo_getTooltip(struct TooltipContext *c);
 
 int UI_BuildingInfo_getBuildingType();

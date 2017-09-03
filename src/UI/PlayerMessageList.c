@@ -8,7 +8,6 @@
 
 #include "../Data/Constants.h"
 #include "../Data/Message.h"
-#include "../Data/Mouse.h"
 #include "../Data/Screen.h"
 
 #include "core/lang.h"
@@ -20,7 +19,7 @@ static void buttonScroll(int param1, int param2);
 static void buttonMessage(int param1, int param2);
 static void buttonDelete(int param1, int param2);
 
-static void handleMouseScrollbar();
+static void handleMouseScrollbar(const mouse *m);
 
 static ImageButton imageButtonHelp = {
 	0, 0, 27, 27, ImageButton_Normal, 134, 0, buttonHelp, Widget_Button_doNothing, 0, 0, 1
@@ -160,11 +159,11 @@ void UI_PlayerMessageList_drawForeground()
 	}
 }
 
-void UI_PlayerMessageList_handleMouse()
+void UI_PlayerMessageList_handleMouse(const mouse *m)
 {
-	if (Data_Mouse.scrollDown) {
+	if (m->scrolled == SCROLL_DOWN) {
 		buttonScroll(1, 3);
-	} else if (Data_Mouse.scrollUp) {
+	} else if (m->scrolled == SCROLL_UP) {
 		buttonScroll(0, 3);
 	}
 	int buttonId;
@@ -198,20 +197,20 @@ void UI_PlayerMessageList_handleMouse()
 		}
 		return;
 	}
-	handleMouseScrollbar();
+	handleMouseScrollbar(m);
 }
 
-static void handleMouseScrollbar()
+static void handleMouseScrollbar(const mouse *m)
 {
-	if (Data_Message.maxScrollPosition <= 0 || !Data_Mouse.leftDown) {
+	if (Data_Message.maxScrollPosition <= 0 || !m->left.went_down) {
 		return;
 	}
 	int scrollbarX = data.xText + 16 * data.textWidthBlocks + 1;
 	int scrollbarY = data.yText + 26;
 	int scrollbarHeight = 16 * data.textHeightBlocks - 52;
-	if (Data_Mouse.x >= scrollbarX && Data_Mouse.x <= scrollbarX + 40 &&
-		Data_Mouse.y >= scrollbarY && Data_Mouse.y <= scrollbarY + scrollbarHeight) {
-		int dotOffset = Data_Mouse.y - data.yText - 11;
+	if (m->x >= scrollbarX && m->x <= scrollbarX + 40 &&
+		m->y >= scrollbarY && m->y <= scrollbarY + scrollbarHeight) {
+		int dotOffset = m->y - data.yText - 11;
 		if (dotOffset > scrollbarHeight) {
 			dotOffset = scrollbarHeight;
 		}

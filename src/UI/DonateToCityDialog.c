@@ -6,7 +6,6 @@
 #include "Advisors_private.h"
 #include "../Data/CityInfo.h"
 #include "../Data/Screen.h"
-#include "../Data/Mouse.h"
 
 #include "core/calc.h"
 
@@ -88,10 +87,10 @@ void UI_DonateToCityDialog_drawForeground()
 	Widget_Button_drawArrowButtons(baseOffsetX, baseOffsetY, arrowButtons, 2);
 }
 
-void UI_DonateToCityDialog_handleMouse()
+void UI_DonateToCityDialog_handleMouse(const mouse *m)
 {
 	arrowButtonFocus = 0;
-	if (Data_Mouse.right.wentUp) {
+	if (m->right.went_up) {
 		UI_Window_goTo(Window_Advisors);
 	} else {
 		int offsetX = Data_Screen.offset640x480.x;

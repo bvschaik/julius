@@ -12,7 +12,6 @@
 
 #include "../Data/Constants.h"
 #include "../Data/FileList.h"
-#include "../Data/Mouse.h"
 #include "../Data/Scenario.h"
 #include "../Data/Screen.h"
 #include "../Data/Settings.h"
@@ -22,7 +21,7 @@
 static void drawScenarioList();
 static void drawScrollbarDot();
 static void drawScenarioInfo();
-static int handleScrollbarClick();
+static int handleScrollbarClick(const mouse *m);
 static void buttonSelectItem(int param1, int param2);
 static void buttonScroll(int param1, int param2);
 static void buttonStartScenario(int param1, int param2);
@@ -226,14 +225,14 @@ void UI_CCKSelection_drawForeground()
 	drawScenarioList();
 }
 
-void UI_CCKSelection_handleMouse()
+void UI_CCKSelection_handleMouse(const mouse *m)
 {
-	if (Data_Mouse.scrollDown) {
+	if (m->scrolled == SCROLL_DOWN) {
 		buttonScroll(1, 3);
-	} else if (Data_Mouse.scrollUp) {
+	} else if (m->scrolled == SCROLL_UP) {
 		buttonScroll(0, 3);
 	}
-	if (handleScrollbarClick()) {
+	if (handleScrollbarClick(m)) {
 		return;
 	}
 	if (Widget_Button_handleImageButtons(
@@ -245,19 +244,19 @@ void UI_CCKSelection_handleMouse()
 		customButtons, 15, &focusButtonId);
 }
 
-static int handleScrollbarClick()
+static int handleScrollbarClick(const mouse *m)
 {
 	if (scenarios->num_files <= 15) {
 		return 0;
 	}
-	if (!Data_Mouse.left.isDown) {
+	if (!m->left.is_down) {
 		return 0;
 	}
 	int x = Data_Screen.offset640x480.x;
 	int y = Data_Screen.offset640x480.y;
-	if (Data_Mouse.x >= x + 280 && Data_Mouse.x <= x + 312 &&
-		Data_Mouse.y >= y + 245 && Data_Mouse.y <= y + 434) {
-		int yOffset = Data_Mouse.y - (y + 245);
+	if (m->x >= x + 280 && m->x <= x + 312 &&
+		m->y >= y + 245 && m->y <= y + 434) {
+		int yOffset = m->y - (y + 245);
 		if (yOffset > 164) {
 			yOffset = 164;
 		}

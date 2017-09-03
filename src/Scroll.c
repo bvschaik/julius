@@ -3,7 +3,6 @@
 #include "core/time.h"
 
 #include "Data/Constants.h"
-#include "Data/Mouse.h"
 #include "Data/Screen.h"
 #include "Data/Settings.h"
 #include "Data/State.h"
@@ -12,9 +11,9 @@
 
 static time_millis lastScrollTime = 0;
 
-static int shouldScrollMap()
+static int shouldScrollMap(const mouse *m)
 {
-	if (!Data_Mouse.isInsideWindow) {
+	if (!m->is_inside_window) {
 		return 0;
 	}
 	time_millis currentTime = time_get_millis();
@@ -32,8 +31,8 @@ static int shouldScrollMap()
 	return 0;
 }
 
-int Scroll_getDirection() {
-	if (!shouldScrollMap()) {
+int Scroll_getDirection(const mouse *m) {
+	if (!shouldScrollMap(m)) {
 		return Dir_8_None;
 	}
 	Data_State.isScrollingMap = 0;
@@ -42,19 +41,19 @@ int Scroll_getDirection() {
 	int left = 0;
 	int right = 0;
 	// mouse near map edge
-	if (Data_Mouse.x < SCROLL_BORDER) {
+	if (m->x < SCROLL_BORDER) {
 		left = 1;
 		Data_State.isScrollingMap = 1;
 	}
-	if (Data_Mouse.x >= Data_Screen.width - SCROLL_BORDER) {
+	if (m->x >= Data_Screen.width - SCROLL_BORDER) {
 		right = 1;
 		Data_State.isScrollingMap = 1;
 	}
-	if (Data_Mouse.y < SCROLL_BORDER) {
+	if (m->y < SCROLL_BORDER) {
 		top = 1;
 		Data_State.isScrollingMap = 1;
 	}
-	if (Data_Mouse.y >= Data_Screen.height - SCROLL_BORDER) {
+	if (m->y >= Data_Screen.height - SCROLL_BORDER) {
 		bottom = 1;
 		Data_State.isScrollingMap = 1;
 	}

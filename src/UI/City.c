@@ -84,20 +84,20 @@ void UI_City_drawPausedAndTimeLeft()
 	}
 }
 
-void UI_City_handleMouse()
+void UI_City_handleMouse(const mouse *m)
 {
-	if (UI_TopMenu_handleMouseWidget()) {
+	if (UI_TopMenu_handleMouseWidget(m)) {
 		return;
 	}
-	if (UI_Sidebar_handleMouse()) {
+	if (UI_Sidebar_handleMouse(m)) {
 		return;
 	}
-	UI_CityBuildings_handleMouse();
+	UI_CityBuildings_handleMouse(m);
 }
 
 void UI_City_getTooltip(struct TooltipContext *c)
 {
-	int textId = UI_TopMenu_getTooltipText();
+	int textId = UI_TopMenu_getTooltipText(mouse_get());
 	if (!textId) {
 		textId = UI_Sidebar_getTooltipText();
 	}
@@ -109,7 +109,7 @@ void UI_City_getTooltip(struct TooltipContext *c)
 	UI_CityBuildings_getTooltip(c);
 }
 
-void UI_City_handleMouseMilitary()
+void UI_City_handleMouseMilitary(const mouse *m)
 {
-	UI_CityBuildings_handleMouseMilitary();
+	UI_CityBuildings_handleMouseMilitary(m);
 }

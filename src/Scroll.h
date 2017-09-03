@@ -1,6 +1,8 @@
 #ifndef SCROLL_H
 #define SCROLL_H
 
-int Scroll_getDirection();
+#include "graphics/mouse.h"
+
+int Scroll_getDirection(const mouse *m);
 
 #endif

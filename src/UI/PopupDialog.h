@@ -1,6 +1,8 @@
 #ifndef UI_POPUPDIALOG_H
 #define UI_POPUPDIALOG_H
 
+#include "graphics/mouse.h"
+
 enum {
 	PopupDialog_Quit = 0,
 	PopupDialog_OpenTrade = 2,
@@ -17,6 +19,6 @@ void UI_PopupDialog_show(int msgId, void (*okFunc)(int), int hasOkCancelButtons)
 
 void UI_PopupDialog_drawBackground();
 void UI_PopupDialog_drawForeground();
-void UI_PopupDialog_handleMouse();
+void UI_PopupDialog_handleMouse(const mouse *m);
 
 #endif

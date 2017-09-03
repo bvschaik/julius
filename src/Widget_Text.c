@@ -2,7 +2,6 @@
 
 #include "Data/Constants.h"
 #include "Data/KeyboardInput.h"
-#include "Data/Mouse.h"
 
 #include "core/calc.h"
 #include "Graphics.h"
@@ -555,12 +554,12 @@ void Widget_RichText_setFonts(font_t normalFont, font_t linkFont)
 	richTextLinkFont = linkFont;
 }
 
-int Widget_RichText_getClickedLink()
+int Widget_RichText_getClickedLink(const mouse *m)
 {
-	if (Data_Mouse.left.wentDown) {
+	if (m->left.went_down) {
 		for (int i = 0; i < numLinks; i++) {
-			if (Data_Mouse.x >= links[i].xMin && Data_Mouse.x <= links[i].xMax &&
-				Data_Mouse.y >= links[i].yMin && Data_Mouse.y <= links[i].yMax) {
+			if (m->x >= links[i].xMin && m->x <= links[i].xMax &&
+				m->y >= links[i].yMin && m->y <= links[i].yMax) {
 				return links[i].messageId;
 			}
 		}
@@ -898,20 +897,20 @@ void Widget_RichText_scroll(int isDown, int numLines)
 	UI_Window_requestRefresh();
 }
 
-static int handleScrollbarDot()
+static int handleScrollbarDot(const mouse *m)
 {
-	if (data.maxScrollPosition <= 0 || !Data_Mouse.left.isDown) {
+	if (data.maxScrollPosition <= 0 || !m->left.is_down) {
 		return 0;
 	}
 	int totalHeight = 16 * data.textHeightBlocks - 52;
-	if (Data_Mouse.x < data.xText + 16 * data.textWidthBlocks + 1 ||
-		Data_Mouse.x > data.xText + 16 * data.textWidthBlocks + 41) {
+	if (m->x < data.xText + 16 * data.textWidthBlocks + 1 ||
+		m->x > data.xText + 16 * data.textWidthBlocks + 41) {
 		return 0;
 	}
-	if (Data_Mouse.y < data.yText + 26 || Data_Mouse.y > data.yText + 26 + totalHeight) {
+	if (m->y < data.yText + 26 || m->y > data.yText + 26 + totalHeight) {
 		return 0;
 	}
-	int dotHeight = Data_Mouse.y - data.yText - 11;
+	int dotHeight = m->y - data.yText - 11;
 	if (dotHeight > totalHeight) {
 		dotHeight = totalHeight;
 	}
@@ -927,11 +926,11 @@ static int handleScrollbarDot()
 	return 1;
 }
 
-int Widget_RichText_handleScrollbar()
+int Widget_RichText_handleScrollbar(const mouse *m)
 {
-	if (Data_Mouse.scrollDown) {
+	if (m->scrolled == SCROLL_DOWN) {
 		Widget_RichText_scroll(1, 3);
-	} else if (Data_Mouse.scrollUp) {
+	} else if (m->scrolled == SCROLL_UP) {
 		Widget_RichText_scroll(0, 3);
 	}
 
@@ -947,7 +946,7 @@ int Widget_RichText_handleScrollbar()
 		&imageButtonScrollDown, 1, 0)) {
 			return 1;
 	}
-	return handleScrollbarDot();
+	return handleScrollbarDot(m);
 }
 
 int Widget_RichText_getScrollPosition()

@@ -19,7 +19,6 @@
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
 #include "../Data/Message.h"
-#include "../Data/Mouse.h"
 #include "../Data/Screen.h"
 #include "../Data/State.h"
 #include "../Data/Settings.h"
@@ -260,7 +259,7 @@ void UI_Sidebar_drawMinimap(int force)
 	}
 }
 
-int UI_Sidebar_handleMouse()
+int UI_Sidebar_handleMouse(const mouse *m)
 {
 	int buttonId;
 	data.focusButtonForTooltip = 0;
@@ -275,7 +274,7 @@ int UI_Sidebar_handleMouse()
 			data.focusButtonForTooltip = buttonId + 19;
 		}
 	} else {
-		if (UI_Minimap_handleClick()) {
+		if (UI_Minimap_handleClick(m)) {
 			return 1;
 		}
 		int xOffset = XOFFSET_EXPANDED;
@@ -295,7 +294,7 @@ int UI_Sidebar_handleMouse()
 	return buttonId != 0;
 }
 
-void UI_Sidebar_handleMouseBuildButtons()
+void UI_Sidebar_handleMouseBuildButtons(const mouse *m)
 {
 	if (Data_State.sidebarCollapsed) {
 		int xOffset = Data_Screen.width - SIDEBAR_BORDER - 42;

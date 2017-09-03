@@ -6,7 +6,6 @@
 #include "Advisors_private.h"
 #include "../Data/CityInfo.h"
 #include "../Data/Screen.h"
-#include "../Data/Mouse.h"
 
 static void buttonSetGift(int param1, int param2);
 static void buttonSendGift(int param1, int param2);
@@ -104,9 +103,9 @@ void UI_SendGiftToCaesarDialog_drawForeground()
 		baseOffsetX + 400, baseOffsetY + 336, 160, 20, focusButtonId == 5);
 }
 
-void UI_SendGiftToCaesarDialog_handleMouse()
+void UI_SendGiftToCaesarDialog_handleMouse(const mouse *m)
 {
-	if (Data_Mouse.right.wentUp) {
+	if (m->right.went_up) {
 		UI_Window_goTo(Window_Advisors);
 	} else {
 		int offsetX = Data_Screen.offset640x480.x;

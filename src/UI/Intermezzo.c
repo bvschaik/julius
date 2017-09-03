@@ -5,7 +5,6 @@
 #include "../Sound.h"
 
 #include "../Data/Constants.h"
-#include "../Data/Mouse.h"
 #include "../Data/Screen.h"
 #include "../Data/Settings.h"
 
@@ -109,10 +108,10 @@ void UI_Intermezzo_drawBackground()
 	}
 }
 
-void UI_Intermezzo_handleMouse()
+void UI_Intermezzo_handleMouse(const mouse *m)
 {
 	time_millis currentTime = time_get_millis();
-	if (Data_Mouse.right.wentUp || currentTime > data.endTime) {
+	if (m->right.went_up || currentTime > data.endTime) {
 		UI_Window_goTo(data.nextWindowId);
 	}
 }

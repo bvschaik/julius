@@ -1,6 +1,8 @@
 #ifndef UI_MESSAGEDIALOG_H
 #define UI_MESSAGEDIALOG_H
 
+#include "graphics/mouse.h"
+
 enum {
 	MessageDialog_About = 0,
 	MessageDialog_Help = 10,
@@ -20,7 +22,7 @@ void UI_MessageDialog_setPlayerMessage(int year, int month,
 void UI_MessageDialog_init();
 void UI_MessageDialog_drawBackground();
 void UI_MessageDialog_drawForeground();
-void UI_MessageDialog_handleMouse();
+void UI_MessageDialog_handleMouse(const mouse *m);
 
 void UI_MessageDialog_close();
 

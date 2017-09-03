@@ -7,7 +7,6 @@
 
 #include "../Data/Constants.h"
 #include "../Data/KeyboardInput.h"
-#include "../Data/Mouse.h"
 #include "../Data/Screen.h"
 #include "../Data/Settings.h"
 
@@ -44,9 +43,9 @@ void UI_NewCareerDialog_drawForeground()
 	Widget_Button_drawImageButtons(xOffset + 464, yOffset + 249, &imageButtonStartMission, 1);
 }
 
-void UI_NewCareerDialog_handleMouse()
+void UI_NewCareerDialog_handleMouse(const mouse *m)
 {
-	if (Data_Mouse.right.wentUp) {
+	if (m->right.went_up) {
 		UI_Window_goTo(Window_MainMenu);
 	}
 

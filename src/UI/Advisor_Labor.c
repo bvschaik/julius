@@ -3,9 +3,9 @@
 #include "Tooltip.h"
 #include "Window.h"
 #include "../CityInfo.h"
-#include "../Data/Mouse.h"
 
 #include "core/calc.h"
+#include "graphics/mouse.h"
 
 static void arrowButtonWages(int param1, int param2);
 static void buttonPriority(int param1, int param2);
@@ -234,9 +234,9 @@ void UI_LaborPriorityDialog_drawForeground()
 	Graphics_drawRect(baseOffsetX + 180, baseOffsetY + 256, 280, 25, color);
 }
 
-void UI_LaborPriorityDialog_handleMouse()
+void UI_LaborPriorityDialog_handleMouse(const mouse *m)
 {
-	if (Data_Mouse.right.wentUp) {
+	if (m->right.went_up) {
 		UI_Window_goTo(Window_Advisors);
 	} else {
 		int offsetX = Data_Screen.offset640x480.x;

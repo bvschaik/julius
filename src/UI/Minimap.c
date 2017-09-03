@@ -7,7 +7,6 @@
 #include "../Data/Constants.h"
 #include "../Data/Figure.h"
 #include "../Data/Grid.h"
-#include "../Data/Mouse.h"
 #include "../Data/Scenario.h"
 #include "../Data/Settings.h"
 
@@ -40,7 +39,7 @@ static void drawMinimap(int xOffset, int yOffset, int widthTiles, int heightTile
 static int drawFigure(int xView, int yView, int gridOffset);
 static void drawTile(int xView, int yView, int gridOffset);
 static void drawViewportRectangle(int xView, int yView, int widthTiles, int heightTiles);
-static int getMouseGridOffset(int xOffset, int yOffset, int widthTiles, int heightTiles);
+static int getMouseGridOffset(const mouse *m, int xOffset, int yOffset, int widthTiles, int heightTiles);
 
 static int minimapAbsoluteX;
 static int minimapAbsoluteY;
@@ -232,11 +231,11 @@ static void drawViewportRectangle(int xView, int yView, int widthTiles, int heig
 		COLOR_YELLOW);
 }
 
-static int getMouseGridOffset(int xOffset, int yOffset, int widthTiles, int heightTiles)
+static int getMouseGridOffset(const mouse *m, int xOffset, int yOffset, int widthTiles, int heightTiles)
 {
 	setBounds(xOffset, yOffset, widthTiles, heightTiles);
 	FOREACH_XY_VIEW(
-		if (Data_Mouse.y == yView && (Data_Mouse.x == xView || Data_Mouse.x == xView + 1)) {
+		if (m->y == yView && (m->x == xView || m->x == xView + 1)) {
 			int gridOffset = ViewToGridOffset(xAbs, yAbs);
 			return gridOffset < 0 ? 0 : gridOffset;
 		}
@@ -244,20 +243,20 @@ static int getMouseGridOffset(int xOffset, int yOffset, int widthTiles, int heig
 	return 0;
 }
 
-static int isMinimapClick()
+static int isMinimapClick(const mouse *m)
 {
-	if (Data_Mouse.x >= minimapLeft && Data_Mouse.x < minimapRight &&
-		Data_Mouse.y >= minimapTop && Data_Mouse.y < minimapBottom) {
+	if (m->x >= minimapLeft && m->x < minimapRight &&
+		m->y >= minimapTop && m->y < minimapBottom) {
 		return 1;
 	}
 	return 0;
 }
 
-int UI_Minimap_handleClick()
+int UI_Minimap_handleClick(const mouse *m)
 {
-	if (isMinimapClick()) {
-		if (Data_Mouse.left.wentDown || Data_Mouse.right.wentDown) {
-			int gridOffset = getMouseGridOffset(minimapLeft, minimapTop, 73, 111);
+	if (isMinimapClick(m)) {
+		if (m->left.went_down || m->right.went_down) {
+			int gridOffset = getMouseGridOffset(m, minimapLeft, minimapTop, 73, 111);
 			if (gridOffset > 0) {
 				CityView_goToGridOffset(gridOffset);
 				UI_Sidebar_requestMinimapRefresh();

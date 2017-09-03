@@ -1,11 +1,13 @@
 #ifndef UI_SIDEBAR_H
 #define UI_SIDEBAR_H
 
+#include "graphics/mouse.h"
+
 void UI_Sidebar_drawBackground();
 void UI_Sidebar_drawForeground();
 
-int UI_Sidebar_handleMouse();
-void UI_Sidebar_handleMouseBuildButtons();
+int UI_Sidebar_handleMouse(const mouse *m);
+void UI_Sidebar_handleMouseBuildButtons(const mouse *m);
 int UI_Sidebar_getTooltipText();
 
 void UI_Sidebar_rotateMap(int clockWise);

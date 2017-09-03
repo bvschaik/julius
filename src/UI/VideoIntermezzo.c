@@ -3,7 +3,6 @@
 #include "../Video.h"
 
 #include "../Graphics.h"
-#include "../Data/Mouse.h"
 #include "../Data/Screen.h"
 
 static struct {
@@ -39,9 +38,9 @@ void UI_VideoIntermezzo_drawForeground()
 	Video_draw((Data_Screen.width - data.width) / 2, (Data_Screen.height - data.height) / 2);
 }
 
-void UI_VideoIntermezzo_handleMouse()
+void UI_VideoIntermezzo_handleMouse(const mouse *m)
 {
-	if (Data_Mouse.left.wentUp || Data_Mouse.right.wentUp || Video_isFinished()) {
+	if (m->left.went_up || m->right.went_up || Video_isFinished()) {
 		Video_stop();
 		UI_Window_goTo(data.nextWindowId);
 	}

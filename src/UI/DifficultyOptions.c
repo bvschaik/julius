@@ -3,9 +3,10 @@
 #include "../Widget.h"
 #include "../Graphics.h"
 #include "../Data/Constants.h"
-#include "../Data/Mouse.h"
 #include "../Data/Screen.h"
 #include "../Data/Settings.h"
+
+#include "graphics/mouse.h"
 
 static void arrowButtonDifficulty(int param1, int param2);
 static void arrowButtonGods(int param1, int param2);
@@ -50,9 +51,9 @@ void UI_DifficultyOptions_drawForeground()
 	);
 }
 
-void UI_DifficultyOptions_handleMouse()
+void UI_DifficultyOptions_handleMouse(const mouse *m)
 {
-	if (Data_Mouse.right.wentUp) {
+	if (m->right.went_up) {
 		// cancel dialog
 		UI_Window_goTo(Window_City);
 	} else {

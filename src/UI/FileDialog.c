@@ -13,7 +13,6 @@
 #include "../Data/Constants.h"
 #include "../Data/FileList.h"
 #include "../Data/KeyboardInput.h"
-#include "../Data/Mouse.h"
 #include "../Data/Screen.h"
 
 #include "core/time.h"
@@ -21,7 +20,7 @@
 #include <string.h>
 
 static void drawScrollbarDot();
-static int handleScrollbarClick();
+static int handleScrollbarClick(const mouse *m);
 static void buttonOkCancel(int isOk, int param2);
 static void buttonScroll(int isDown, int numLines);
 static void buttonSelectItem(int index, int numLines);
@@ -136,11 +135,11 @@ static void drawScrollbarDot()
 	}
 }
 
-void UI_FileDialog_handleMouse()
+void UI_FileDialog_handleMouse(const mouse *m)
 {
-	if (Data_Mouse.scrollDown) {
+	if (m->scrolled == SCROLL_DOWN) {
 		buttonScroll(1, 3);
-	} else if (Data_Mouse.scrollUp) {
+	} else if (m->scrolled == SCROLL_UP) {
 		buttonScroll(0, 3);
 	}
 
@@ -151,7 +150,7 @@ void UI_FileDialog_handleMouse()
 		return;
 	}
 
-	if (Data_Mouse.right.wentDown) {
+	if (m->right.went_down) {
 		UI_Window_goBack();
 		return;
 	}
@@ -159,24 +158,24 @@ void UI_FileDialog_handleMouse()
 	int yOffset = Data_Screen.offset640x480.y;
 	if (!Widget_Button_handleCustomButtons(xOffset, yOffset, customButtons, 12, &focusButtonId)) {
 		if (!Widget_Button_handleImageButtons(xOffset, yOffset, imageButtons, 4, 0)) {
-			handleScrollbarClick();
+			handleScrollbarClick(m);
 		}
 	}
 }
 
-static int handleScrollbarClick()
+static int handleScrollbarClick(const mouse *m)
 {
 	if (savedGames->num_files <= 12) {
 		return 0;
 	}
-	if (!Data_Mouse.left.isDown) {
+	if (!m->left.is_down) {
 		return 0;
 	}
 	int x = Data_Screen.offset640x480.x;
 	int y = Data_Screen.offset640x480.y;
-	if (Data_Mouse.x >= x + 464 && Data_Mouse.x <= x + 496 &&
-		Data_Mouse.y >= y + 145 && Data_Mouse.y <= y + 300) {
-		int yOffset = Data_Mouse.y - (y + 145);
+	if (m->x >= x + 464 && m->x <= x + 496 &&
+		m->y >= y + 145 && m->y <= y + 300) {
+		int yOffset = m->y - (y + 145);
 		if (yOffset > 130) {
 			yOffset = 130;
 		}

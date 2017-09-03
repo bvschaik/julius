@@ -4,7 +4,6 @@
 #include "../Widget.h"
 
 #include "../Data/Screen.h"
-#include "../Data/Mouse.h"
 #include "../Data/Constants.h"
 #include "../Data/Settings.h"
 #include "../Data/Buttons.h"
@@ -96,9 +95,9 @@ void UI_SpeedOptions_drawForeground()
 	);
 }
 
-void UI_SpeedOptions_handleMouse()
+void UI_SpeedOptions_handleMouse(const mouse *m)
 {
-	if (Data_Mouse.right.wentUp) {
+	if (m->right.went_up) {
 		// cancel dialog
 		UI_Window_goTo(Window_City);
 	} else {

@@ -2,7 +2,6 @@
 #include "Window.h"
 #include "Advisors_private.h"
 #include "../CityInfo.h"
-#include "../Data/Mouse.h"
 #include "../Data/Constants.h"
 
 static void buttonCancel(int param1, int param2);
@@ -69,9 +68,9 @@ void UI_SetSalaryDialog_drawForeground()
 	Widget_GameText_drawCentered(13, 4, baseOffsetX + 176, baseOffsetY + 400, 288, FONT_NORMAL_BLACK);
 }
 
-void UI_SetSalaryDialog_handleMouse()
+void UI_SetSalaryDialog_handleMouse(const mouse *m)
 {
-	if (Data_Mouse.right.wentUp) {
+	if (m->right.went_up) {
 		UI_Window_goTo(Window_Advisors);
 	} else {
 		int offsetX = Data_Screen.offset640x480.x;

@@ -8,13 +8,13 @@
 
 #include "Data/CityInfo.h"
 #include "Data/Event.h"
-#include "Data/Mouse.h"
 #include "Data/Scenario.h"
 #include "Data/Screen.h"
 #include "Data/Settings.h"
 #include "Data/State.h"
 
 #include "game/time.h"
+#include "graphics/mouse.h"
 
 void CityInfo_Victory_check()
 {
@@ -102,8 +102,7 @@ void CityInfo_Victory_check()
 		} else if (Data_State.winState == WinState_Win) {
 			Sound_stopMusic();
 			if (Data_CityInfo.messageShownVictory) {
-				Data_Mouse.right.wentUp = 0;
-				Data_Mouse.left.wentUp = 0;
+				mouse_reset_up_state();
 				
 				if (IsTutorial1() || IsTutorial2()) {
 					// tutorials: immediately go to next mission

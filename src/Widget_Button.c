@@ -2,17 +2,16 @@
 #include "Graphics.h"
 #include "Sound.h"
 
-#include "Data/Mouse.h"
-
 #include "core/time.h"
 #include "graphics/image.h"
+#include "graphics/mouse.h"
 
 #define PRESSED_EFFECT_MILLIS 100
 #define PRESSED_REPEAT_INITIAL_MILLIS 300
 #define PRESSED_REPEAT_MILLIS 50
 
-static int getArrowButton(int xOffset, int yOffset, ArrowButton *buttons, int numButtons);
-static int getCustomButton(int xOffset, int yOffset, CustomButton *buttons, int numButtons);
+static int getArrowButton(const mouse *m, int xOffset, int yOffset, ArrowButton *buttons, int numButtons);
+static int getCustomButton(const mouse *m, int xOffset, int yOffset, CustomButton *buttons, int numButtons);
 
 
 void Widget_Button_doNothing(int param1, int param2)
@@ -53,18 +52,19 @@ int Widget_Button_handleArrowButtons(int xOffset, int yOffset, ArrowButton *butt
 			btn->repeats = 0;
 		}
 	}
-	int buttonId = getArrowButton(xOffset, yOffset, buttons, numButtons);
+	const mouse *m = mouse_get();
+	int buttonId = getArrowButton(m, xOffset, yOffset, buttons, numButtons);
 	if (!buttonId) {
 		return 0;
 	}
 	ArrowButton *btn = &buttons[buttonId-1];
-	if (Data_Mouse.left.wentDown) {
+	if (m->left.went_down) {
 		btn->pressed = 3;
 		btn->repeats = 0;
 		btn->leftClickHandler(btn->parameter1, btn->parameter2);
 		return buttonId;
 	}
-	if (Data_Mouse.left.isDown) {
+	if (m->left.is_down) {
 		btn->pressed = 3;
 		if (shouldRepeat) {
 			btn->repeats++;
@@ -86,15 +86,13 @@ int Widget_Button_handleArrowButtons(int xOffset, int yOffset, ArrowButton *butt
 	return buttonId;
 }
 
-static int getArrowButton(int xOffset, int yOffset, ArrowButton *buttons, int numButtons)
+static int getArrowButton(const mouse *m, int xOffset, int yOffset, ArrowButton *buttons, int numButtons)
 {
-	int mouseX = Data_Mouse.x;
-	int mouseY = Data_Mouse.y;
 	for (int i = 0; i < numButtons; i++) {
-		if (xOffset + buttons[i].xOffset <= mouseX &&
-			xOffset + buttons[i].xOffset + buttons[i].size > mouseX &&
-			yOffset + buttons[i].yOffset <= mouseY &&
-			yOffset + buttons[i].yOffset + buttons[i].size > mouseY) {
+		if (xOffset + buttons[i].xOffset <= m->x &&
+			xOffset + buttons[i].xOffset + buttons[i].size > m->x &&
+			yOffset + buttons[i].yOffset <= m->y &&
+			yOffset + buttons[i].yOffset + buttons[i].size > m->y) {
 			return i + 1;
 		}
 	}
@@ -103,7 +101,8 @@ static int getArrowButton(int xOffset, int yOffset, ArrowButton *buttons, int nu
 
 int Widget_Button_handleCustomButtons(int xOffset, int yOffset, CustomButton *buttons, int numButtons, int *focusButtonId)
 {
-	int buttonId = getCustomButton(xOffset, yOffset, buttons, numButtons);
+    const mouse *m = mouse_get();
+	int buttonId = getCustomButton(m, xOffset, yOffset, buttons, numButtons);
 	if (focusButtonId) {
 		*focusButtonId = buttonId;
 	}
@@ -112,17 +111,17 @@ int Widget_Button_handleCustomButtons(int xOffset, int yOffset, CustomButton *bu
 	}
 	CustomButton *button = &buttons[buttonId-1];
 	if (button->buttonType == CustomButton_Immediate) {
-		if (Data_Mouse.left.wentDown) {
+		if (m->left.went_down) {
 			button->leftClickHandler(button->parameter1, button->parameter2);
-		} else if (Data_Mouse.right.wentDown) {
+		} else if (m->right.went_down) {
 			button->rightClickHandler(button->parameter1, button->parameter2);
 		} else {
 			return 0;
 		}
 	} else if (button->buttonType == CustomButton_OnMouseUp) {
-		if (Data_Mouse.left.wentUp) {
+		if (m->left.went_up) {
 			button->leftClickHandler(button->parameter1, button->parameter2);
-		} else if (Data_Mouse.right.wentUp) {
+		} else if (m->right.went_up) {
 			button->rightClickHandler(button->parameter1, button->parameter2);
 		} else {
 			return 0;
@@ -131,10 +130,10 @@ int Widget_Button_handleCustomButtons(int xOffset, int yOffset, CustomButton *bu
 	return buttonId;
 }
 
-static int getCustomButton(int xOffset, int yOffset, CustomButton *buttons, int numButtons)
+static int getCustomButton(const mouse *m, int xOffset, int yOffset, CustomButton *buttons, int numButtons)
 {
-	int mouseX = Data_Mouse.x;
-	int mouseY = Data_Mouse.y;
+	int mouseX = m->x;
+	int mouseY = m->y;
 	for (int i = 0; i < numButtons; i++) {
 		if (xOffset + buttons[i].xStart <= mouseX &&
 			xOffset + buttons[i].xEnd > mouseX &&
@@ -157,7 +156,7 @@ static void imageButtonFadePressedEffect(ImageButton *buttons, int numButtons)
 					btn->pressed = 0;
 				}
 			} else if (btn->buttonType == ImageButton_Scroll) {
-				if (btn->pressedSince + PRESSED_EFFECT_MILLIS < currentTime && !Data_Mouse.left.isDown) {
+				if (btn->pressedSince + PRESSED_EFFECT_MILLIS < currentTime && !mouse_get()->left.is_down) {
 					btn->pressed = 0;
 				}
 			}
@@ -196,10 +195,9 @@ void Widget_Button_drawImageButtons(int xOffset, int yOffset, ImageButton *butto
 
 int Widget_Button_handleImageButtons(int xOffset, int yOffset, ImageButton *buttons, int numButtons, int *focusButtonId)
 {
+    const mouse *m = mouse_get();
 	imageButtonFadePressedEffect(buttons, numButtons);
 	imageButtonRemovePressedEffectBuild(buttons, numButtons);
-	int mouseX = Data_Mouse.x;
-	int mouseY = Data_Mouse.y;
 	ImageButton *hitButton = 0;
 	if (focusButtonId) {
 		*focusButtonId = 0;
@@ -209,10 +207,10 @@ int Widget_Button_handleImageButtons(int xOffset, int yOffset, ImageButton *butt
 		if (btn->focused) {
 			btn->focused--;
 		}
-		if (xOffset + btn->xOffset <= mouseX &&
-			xOffset + btn->xOffset + btn->width > mouseX &&
-			yOffset + btn->yOffset <= mouseY &&
-			yOffset + btn->yOffset + btn->height > mouseY) {
+		if (xOffset + btn->xOffset <= m->x &&
+			xOffset + btn->xOffset + btn->width > m->x &&
+			yOffset + btn->yOffset <= m->y &&
+			yOffset + btn->yOffset + btn->height > m->y) {
 			if (focusButtonId) {
 				*focusButtonId = i + 1;
 			}
@@ -226,24 +224,24 @@ int Widget_Button_handleImageButtons(int xOffset, int yOffset, ImageButton *butt
 		return 0;
 	}
 	if (hitButton->buttonType == ImageButton_Scroll) {
-		if (!Data_Mouse.left.wentDown && !Data_Mouse.left.isDown) {
+		if (!m->left.went_down && !m->left.is_down) {
 			return 0;
 		}
 	} else if (hitButton->buttonType == ImageButton_Build || hitButton->buttonType == ImageButton_Normal) {
-		if (!Data_Mouse.left.wentDown && !Data_Mouse.right.wentDown) {
+		if (!m->left.went_down && !m->right.went_down) {
 			return 0;
 		}
 	}
-	if (Data_Mouse.left.wentDown) {
+	if (m->left.went_down) {
 		Sound_Effects_playChannel(SoundChannel_Icon);
 		hitButton->pressed = 1;
 		hitButton->pressedSince = time_get_millis();
 		hitButton->leftClickHandler(hitButton->parameter1, hitButton->parameter2);
-	} else if (Data_Mouse.right.wentUp) {
+	} else if (m->right.went_up) {
 		hitButton->pressed = 1;
 		hitButton->pressedSince = time_get_millis();
 		hitButton->rightClickHandler(hitButton->parameter1, hitButton->parameter2);
-	} else if (hitButton->buttonType == ImageButton_Scroll && Data_Mouse.left.isDown) {
+	} else if (hitButton->buttonType == ImageButton_Scroll && m->left.is_down) {
 		time_millis delay = hitButton->pressed == 2 ? PRESSED_REPEAT_MILLIS : PRESSED_REPEAT_INITIAL_MILLIS;
 		if (hitButton->pressedSince + delay <= time_get_millis()) {
 			hitButton->pressed = 2;

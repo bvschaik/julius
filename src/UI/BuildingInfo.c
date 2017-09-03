@@ -22,7 +22,6 @@
 #include "../Data/Constants.h"
 #include "../Data/Figure.h"
 #include "../Data/Grid.h"
-#include "../Data/Mouse.h"
 #include "../Data/Screen.h"
 #include "../Data/Settings.h"
 
@@ -317,7 +316,7 @@ void UI_BuildingInfo_init()
 	}
 	// dialog placement
 	if (Data_Screen.height >= 600) {
-		if (Data_Mouse.y <= (Data_Screen.height - 24) / 2 + 24) {
+		if (mouse_get()->y <= (Data_Screen.height - 24) / 2 + 24) {
 			context.yOffset = Data_Screen.height - 16 * context.heightBlocks - 16;
 		} else {
 			context.yOffset = 32;
@@ -522,9 +521,9 @@ void UI_BuildingInfo_drawForeground()
 	}
 }
 
-void UI_BuildingInfo_handleMouse()
+void UI_BuildingInfo_handleMouse(const mouse *m)
 {
-	if (Data_Mouse.right.wentUp) {
+	if (m->right.went_up) {
 		UI_Window_goTo(Window_City);
 		return;
 	}

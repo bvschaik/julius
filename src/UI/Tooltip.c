@@ -8,7 +8,6 @@
 
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
-#include "../Data/Mouse.h"
 #include "../Data/Screen.h"
 #include "../Data/Settings.h"
 
@@ -98,20 +97,21 @@ static void drawButtonTooltip(struct TooltipContext *c)
 	}
 	c->height = 16 * lines + 10;
 
-	if (Data_Mouse.x < Data_Screen.offset640x480.x + c->width + 100) {
+    const mouse *m = mouse_get();
+	if (m->x < Data_Screen.offset640x480.x + c->width + 100) {
 		if (UI_Window_getId() == Window_Advisors) {
-			c->x = Data_Mouse.x + 50;
+			c->x = m->x + 50;
 		} else {
-			c->x = Data_Mouse.x + 20;
+			c->x = m->x + 20;
 		}
 	} else {
-		c->x = Data_Mouse.x - c->width - 20;
+		c->x = m->x - c->width - 20;
 	}
 	
 	switch (UI_Window_getId()) {
 		case Window_Advisors:
-			if (Data_Mouse.y < Data_Screen.offset640x480.y + 432) {
-				c->y = Data_Mouse.y;
+			if (m->y < Data_Screen.offset640x480.y + 432) {
+				c->y = m->y;
 				switch (UI_Advisors_getId()) {
 					case Advisor_Labor: c->y -= 74; break;
 					case Advisor_Trade: c->y -= 54; break;
@@ -123,24 +123,24 @@ static void drawButtonTooltip(struct TooltipContext *c)
 			}
 			break;
 		case Window_TradePricesDialog: // FIXED used to cause ghosting
-			c->y = Data_Mouse.y - 42;
+			c->y = m->y - 42;
 			break;
 		case Window_DonateToCityDialog:
-			c->y = Data_Mouse.y - 52;
+			c->y = m->y - 52;
 			break;
 		case Window_LaborPriorityDialog:
-			c->x = Data_Mouse.x - c->width / 2 - 10;
-			if (Data_Mouse.y < Data_Screen.offset640x480.y + 200) {
-				c->y = Data_Mouse.y + 40;
+			c->x = m->x - c->width / 2 - 10;
+			if (m->y < Data_Screen.offset640x480.y + 200) {
+				c->y = m->y + 40;
 			} else {
-				c->y = Data_Mouse.y - 72;
+				c->y = m->y - 72;
 			}
 			break;
 		default:
-			if (Data_Mouse.y < Data_Screen.offset640x480.y + 200) {
-				c->y = Data_Mouse.y + 40;
+			if (m->y < Data_Screen.offset640x480.y + 200) {
+				c->y = m->y + 40;
 			} else {
-				c->y = Data_Mouse.y - 62;
+				c->y = m->y - 62;
 			}
 			break;
 	}
@@ -172,15 +172,16 @@ static void drawOverlayTooltip(struct TooltipContext *c)
 	}
 	c->height = 16 * lines + 10;
 
-	if (Data_Mouse.x < c->width + 20) {
-		c->x = Data_Mouse.x + 20;
+    const mouse *m = mouse_get();
+	if (m->x < c->width + 20) {
+		c->x = m->x + 20;
 	} else {
-		c->x = Data_Mouse.x - c->width - 20;
+		c->x = m->x - c->width - 20;
 	}
-	if (Data_Mouse.y < 200) {
-		c->y = Data_Mouse.y + 50;
+	if (m->y < 200) {
+		c->y = m->y + 50;
 	} else {
-		c->y = Data_Mouse.y - 72;
+		c->y = m->y - 72;
 	}
 
 	Graphics_drawRect(c->x, c->y, c->width, c->height, COLOR_BLACK);
@@ -191,17 +192,18 @@ static void drawOverlayTooltip(struct TooltipContext *c)
 
 static void drawSenateTooltip(struct TooltipContext *c)
 {
+    const mouse *m = mouse_get();
 	c->width = 180;
 	c->height = 80;
-	if (Data_Mouse.x < c->width + 20) {
-		c->x = Data_Mouse.x + 20;
+	if (m->x < c->width + 20) {
+		c->x = m->x + 20;
 	} else {
-		c->x = Data_Mouse.x - c->width - 20;
+		c->x = m->x - c->width - 20;
 	}
-	if (Data_Mouse.y < 200) {
-		c->y = Data_Mouse.y + 10;
+	if (m->y < 200) {
+		c->y = m->y + 10;
 	} else {
-		c->y = Data_Mouse.y - 32;
+		c->y = m->y - 32;
 	}
 	
 	Graphics_drawRect(c->x, c->y, c->width, c->height, COLOR_BLACK);

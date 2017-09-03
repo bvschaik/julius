@@ -8,7 +8,6 @@
 #include "../CityInfo.h"
 #include "../Formation.h"
 
-#include "../Data/Mouse.h"
 #include "../Data/Settings.h"
 #include "../Data/Tutorial.h"
 
@@ -213,7 +212,7 @@ void UI_Advisor_drawGeneralBackground()
 	}
 }
 
-void UI_Advisors_handleMouse()
+void UI_Advisors_handleMouse(const mouse *m)
 {
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
@@ -226,7 +225,7 @@ void UI_Advisors_handleMouse()
 		focusButtonId = -1;
 		return;
 	}
-	if (Data_Mouse.right.wentUp) {
+	if (m->right.went_up) {
 		UI_Window_goTo(Window_City);
 		return;
 	}

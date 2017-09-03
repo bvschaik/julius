@@ -7,7 +7,6 @@
 #include "../Graphics.h"
 #include "../System.h"
 #include "../Data/Constants.h"
-#include "../Data/Mouse.h"
 #include "../Data/Screen.h"
 
 #include "graphics/image.h"
@@ -72,7 +71,7 @@ void UI_MainMenu_drawForeground()
 	);
 }
 
-void UI_MainMenu_handleMouse()
+void UI_MainMenu_handleMouse(const mouse *m)
 {
 	Widget_Button_handleCustomButtons(
 		Data_Screen.offset640x480.x, Data_Screen.offset640x480.y,

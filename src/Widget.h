@@ -5,6 +5,7 @@
 
 #include "graphics/color.h"
 #include "graphics/font.h"
+#include "graphics/mouse.h"
 
 #include <stdint.h>
 
@@ -50,7 +51,7 @@ int Widget_RichText_draw(const uint8_t *text, int xOffset, int yOffset,
 						 int boxWidthPixels, int boxHeightLines, int measureOnly);
 int Widget_RichText_drawColored(const uint8_t *str, int xOffset, int yOffset,
 								int boxWidth, int heightLines, color_t color);
-int Widget_RichText_getClickedLink();
+int Widget_RichText_getClickedLink(const mouse *m);
 void Widget_RichText_clearLinks();
 void Widget_RichText_scroll(int isDown, int numLines);
 void Widget_RichText_reset(int scrollPosition);
@@ -59,7 +60,7 @@ void Widget_RichText_restore();
 void Widget_RichText_drawScrollbar();
 void Widget_RichText_drawScrollbarDot();
 int Widget_RichText_getScrollPosition();
-int Widget_RichText_handleScrollbar();
+int Widget_RichText_handleScrollbar(const mouse *m);
 int Widget_RichText_init(const uint8_t *str, int xText, int yText, int widthBlocks, int heightBlocks, int adjustWidthOnNoScroll);
 
 void Widget_Panel_drawOuterPanel(int xOffset, int yOffset, int widthInBlocks, int heightInBlocks);
@@ -94,7 +95,7 @@ void Widget_Button_doNothing(int param1, int param2);
 void Widget_Menu_drawMenuBar(MenuBarItem *items, int numItems);
 void Widget_Menu_drawSubMenu(MenuBarItem *menu, int focusSubMenu);
 
-int Widget_Menu_handleMenuBar(MenuBarItem *items, int numItems, int *focusMenuId);
-int Widget_Menu_handleMenuItem(MenuBarItem *items, int *focusSubMenuId);
+int Widget_Menu_handleMenuBar(const mouse *m, MenuBarItem *items, int numItems, int *focusMenuId);
+int Widget_Menu_handleMenuItem(const mouse *m, MenuBarItem *menu, int *focusSubMenuId);
 
 #endif

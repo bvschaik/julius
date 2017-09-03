@@ -9,7 +9,6 @@
 
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
-#include "../Data/Mouse.h"
 #include "../Data/Screen.h"
 #include "../Data/Settings.h"
 #include "../Data/State.h"
@@ -119,10 +118,10 @@ static void advanceToNextMission()
 	}
 }
 
-void UI_MissionEnd_handleMouse()
+void UI_MissionEnd_handleMouse(const mouse *m)
 {
 	if (Data_State.winState == WinState_Win) {
-		if (Data_Mouse.right.wentUp) {
+		if (m->right.went_up) {
 			Sound_stopMusic();
 			Sound_stopSpeech();
 			advanceToNextMission();
@@ -181,7 +180,7 @@ void UI_VictoryDialog_drawForeground()
 	}
 }
 
-void UI_VictoryDialog_handleMouse()
+void UI_VictoryDialog_handleMouse(const mouse *m)
 {
 	int xOffset = Data_Screen.offset640x480.x + 48;
 	int yOffset = Data_Screen.offset640x480.y + 128;

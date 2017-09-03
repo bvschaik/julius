@@ -17,13 +17,13 @@
 #include "../Data/Constants.h"
 #include "../Data/Empire.h"
 #include "../Data/Message.h"
-#include "../Data/Mouse.h"
 #include "../Data/Scenario.h"
 #include "../Data/Screen.h"
 #include "../Data/Settings.h"
 
 #include "core/lang.h"
 #include "graphics/image.h"
+#include "graphics/mouse.h"
 
 #define MAX_HISTORY 200
 
@@ -450,11 +450,11 @@ void UI_MessageDialog_drawForeground()
 	}
 }
 
-void UI_MessageDialog_handleMouse()
+void UI_MessageDialog_handleMouse(const mouse *m)
 {
-	if (Data_Mouse.scrollDown) {
+	if (m->scrolled == SCROLL_DOWN) {
 		Widget_RichText_scroll(1, 3);
-	} else if (Data_Mouse.scrollUp) {
+	} else if (m->scrolled == SCROLL_UP) {
 		Widget_RichText_scroll(0, 3);
 	}
 	if (data.showVideo) {
@@ -491,8 +491,8 @@ void UI_MessageDialog_handleMouse()
 		&imageButtonClose, 1, 0)) {
 		return;
 	}
-	Widget_RichText_handleScrollbar();
-	int textId = Widget_RichText_getClickedLink();
+	Widget_RichText_handleScrollbar(m);
+	int textId = Widget_RichText_getClickedLink(m);
 	if (textId >= 0) {
 		if (data.numHistory < MAX_HISTORY - 1) {
 			data.history[data.numHistory].textId = data.textId;

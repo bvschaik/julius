@@ -18,7 +18,6 @@
 #include "../Data/Constants.h"
 #include "../Data/Empire.h"
 #include "../Data/Invasion.h"
-#include "../Data/Mouse.h"
 #include "../Data/Scenario.h"
 #include "../Data/Screen.h"
 
@@ -37,7 +36,7 @@ static void drawPanelInfoEnemyArmy();
 static void drawPanelInfoCityName();
 static void drawPanelButtons();
 static void drawEmpireMap();
-static int getSelectedObject();
+static int getSelectedObject(const mouse *m);
 
 static void buttonHelp(int param1, int param2);
 static void buttonReturnToCity(int param1, int param2);
@@ -477,17 +476,17 @@ static void drawEmpireMap()
 	Graphics_resetClipRectangle();
 }
 
-static int getSelectedObject()
+static int getSelectedObject(const mouse *m)
 {
-	if (!Data_Mouse.left.wentDown) {
+	if (!m->left.went_down) {
 		return -1;
 	}
-	if (Data_Mouse.x < data.xMin + 16 || Data_Mouse.x >= data.xMax - 16 ||
-		Data_Mouse.y < data.yMin + 16 || Data_Mouse.y >= data.yMax - 120) {
+	if (m->x < data.xMin + 16 || m->x >= data.xMax - 16 ||
+		m->y < data.yMin + 16 || m->y >= data.yMax - 120) {
 		return -1;
 	}
-	int xMap = Data_Mouse.x + Data_Empire.scrollX - data.xMin - 16;
-	int yMap = Data_Mouse.y + Data_Empire.scrollY - data.yMin - 16;
+	int xMap = m->x + Data_Empire.scrollX - data.xMin - 16;
+	int yMap = m->y + Data_Empire.scrollY - data.yMin - 16;
 	int minDist = 10000;
 	int objId = 0;
 	for (int i = 0; i < 200 && Data_Empire_Objects[i].inUse; i++) {
@@ -517,9 +516,9 @@ static int getSelectedObject()
 	return objId;
 }
 
-void UI_Empire_handleMouse()
+void UI_Empire_handleMouse(const mouse *m)
 {
-	Empire_scrollMap(Scroll_getDirection());
+	Empire_scrollMap(Scroll_getDirection(m));
 	data.focusButtonId = 0;
 	int buttonId;
 	Widget_Button_handleImageButtons(data.xMin + 20, data.yMax - 44, imageButtonHelp, 1, &buttonId);
@@ -537,13 +536,13 @@ void UI_Empire_handleMouse()
 	if (data.focusButtonId) {
 		return;
 	}
-	int objectId = getSelectedObject();
+	int objectId = getSelectedObject(m);
 	if (objectId > 0) {
 		Data_Empire.selectedObject = objectId;
 	} else if (objectId == 0) {
 		Data_Empire.selectedObject = 0;
 	}
-	if (Data_Mouse.right.wentDown) {
+	if (m->right.went_down) {
 		Data_Empire.selectedObject = 0;
 		UI_Window_requestRefresh();
 	}
@@ -557,14 +556,14 @@ void UI_Empire_handleMouse()
 	}
 }
 
-static int isMouseHit(int x, int y, int size)
+static int isMouseHit(const mouse *m, int x, int y, int size)
 {
-        int mx = Data_Mouse.x;
-        int my = Data_Mouse.y;
-        return x <= mx && mx < x + size && y <= my && my < y + size;
+    int mx = m->x;
+    int my = m->y;
+    return x <= mx && mx < x + size && y <= my && my < y + size;
 }
 
-static int getTooltipResource()
+static int getTooltipResource(const mouse *m)
 {
 	if (Data_Empire_Cities[data.selectedCity].cityType != EmpireCity_Trade) {
 		return 0;
@@ -576,7 +575,7 @@ static int getTooltipResource()
 	if (Data_Empire_Cities[data.selectedCity].isOpen) {
 		for (int r = 1, index = 0; r <= 15; r++) {
 			if (Empire_citySellsResource(objectId, r)) {
-				if (isMouseHit(xOffset + 120 + 100 * index, yOffset + 21, 26)) {
+				if (isMouseHit(m, xOffset + 120 + 100 * index, yOffset + 21, 26)) {
 					return r;
 				}
 				index++;
@@ -584,7 +583,7 @@ static int getTooltipResource()
 		}
 		for (int r = 1, index = 0; r <= 15; r++) {
 			if (Empire_cityBuysResource(objectId, r)) {
-				if (isMouseHit(xOffset + 120 + 100 * index, yOffset + 51, 26)) {
+				if (isMouseHit(m, xOffset + 120 + 100 * index, yOffset + 51, 26)) {
 					return r;
 				}
 				index++;
@@ -594,7 +593,7 @@ static int getTooltipResource()
 		int itemOffset = Widget_GameText_getDrawWidth(47, 5, FONT_NORMAL_GREEN);
 		for (int r = 1; r <= 15; r++) {
 			if (Empire_citySellsResource(objectId, r)) {
-				if (isMouseHit(xOffset + 60 + itemOffset, yOffset + 35, 26)) {
+				if (isMouseHit(m, xOffset + 60 + itemOffset, yOffset + 35, 26)) {
 					return r;
 				}
 				itemOffset += 32;
@@ -603,7 +602,7 @@ static int getTooltipResource()
 		itemOffset += Widget_GameText_getDrawWidth(47, 4, FONT_NORMAL_GREEN);
 		for (int r = 1; r <= 15; r++) {
 			if (Empire_cityBuysResource(objectId, r)) {
-				if (isMouseHit(xOffset + 110 + itemOffset, yOffset + 35, 26)) {
+				if (isMouseHit(m, xOffset + 110 + itemOffset, yOffset + 35, 26)) {
 					return r;
 				}
 				itemOffset += 32;
@@ -615,7 +614,7 @@ static int getTooltipResource()
 
 void UI_EmpireMap_getTooltip(struct TooltipContext *c)
 {
-	int resource = getTooltipResource();
+	int resource = getTooltipResource(mouse_get());
 	if (resource) {
 		c->type = TooltipType_Button;
 		c->textId = 131 + resource;
@@ -686,7 +685,7 @@ void UI_TradeOpenedDialog_drawForeground()
 		imageButtonsTradeOpened, 2);
 }
 
-void UI_TradeOpenedDialog_handleMouse()
+void UI_TradeOpenedDialog_handleMouse(const mouse *m)
 {
 	Widget_Button_handleImageButtons(
 		Data_Screen.offset640x480.x, Data_Screen.offset640x480.y,

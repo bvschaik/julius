@@ -4,7 +4,6 @@
 #include "Message.h"
 #include "Empire.h"
 #include "Screen.h"
-#include "Mouse.h"
 #include "Buttons.h"
 #include "CityInfo.h"
 #include "KeyboardInput.h"

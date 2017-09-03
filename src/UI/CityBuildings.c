@@ -14,8 +14,6 @@
 #include "../Undo.h"
 #include "../Widget.h"
 
-#include "../Data/Mouse.h"
-
 #include "building/model.h"
 #include "core/time.h"
 #include "figure/formation.h"
@@ -598,11 +596,11 @@ static void drawHippodromeAndElevatedFigures(int selectedFigureId)
 
 // MOUSE HANDLING
 
-static void updateCityViewCoords()
+static void updateCityViewCoords(const mouse *m)
 {
 	Data_Settings_Map.current.x = Data_Settings_Map.current.y = 0;
 	int gridOffset = Data_Settings_Map.current.gridOffset =
-		CityView_pixelCoordsToGridOffset(Data_Mouse.x, Data_Mouse.y);
+		CityView_pixelCoordsToGridOffset(m->x, m->y);
 	if (gridOffset) {
 		Data_Settings_Map.current.x = (gridOffset - Data_Settings_Map.gridStartOffset) % 162;
 		Data_Settings_Map.current.y = (gridOffset - Data_Settings_Map.gridStartOffset) / 162;
@@ -712,20 +710,20 @@ static void buildEnd()
 	}
 }
 
-void UI_CityBuildings_handleMouse()
+void UI_CityBuildings_handleMouse(const mouse *m)
 {
-	UI_CityBuildings_scrollMap(Scroll_getDirection());
-	updateCityViewCoords();
+	UI_CityBuildings_scrollMap(Scroll_getDirection(m));
+	updateCityViewCoords(m);
 	Data_State.selectedBuilding.drawAsOverlay = 0;
-	if (Data_Mouse.left.wentDown) {
+	if (m->left.went_down) {
 		if (!isLegionClick()) {
 			buildStart();
 		}
-	} else if (Data_Mouse.left.isDown) {
+	} else if (m->left.is_down) {
 		buildMove();
-	} else if (Data_Mouse.left.wentUp) {
+	} else if (m->left.went_up) {
 		buildEnd();
-	} else if (Data_Mouse.right.wentUp) {
+	} else if (m->right.went_up) {
 		if (handleRightClickAllowBuildingInfo()) {
 			UI_Window_goTo(Window_BuildingInfo);
 		}
@@ -734,7 +732,7 @@ void UI_CityBuildings_handleMouse()
 
 void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 {
-	if (!Data_Settings.mouseTooltips || Data_Mouse.right.isDown) {
+	if (!Data_Settings.mouseTooltips || mouse_get()->right.is_down) {
 		return;
 	}
 	if (UI_Window_getId() != Window_City) {
@@ -1077,19 +1075,19 @@ static void militaryMapClick()
 	UI_Window_goTo(Window_City);
 }
 
-void UI_CityBuildings_handleMouseMilitary()
+void UI_CityBuildings_handleMouseMilitary(const mouse *m)
 {
-	updateCityViewCoords();
-	if (!Data_State.sidebarCollapsed && UI_Minimap_handleClick()) {
+	updateCityViewCoords(m);
+	if (!Data_State.sidebarCollapsed && UI_Minimap_handleClick(m)) {
 		return;
 	}
-	UI_CityBuildings_scrollMap(Scroll_getDirection());
-	if (Data_Mouse.right.wentUp) {
+	UI_CityBuildings_scrollMap(Scroll_getDirection(m));
+	if (m->right.went_up) {
 		UI_Warning_clearAll();
 		UI_Window_goTo(Window_City);
 	} else {
-		updateCityViewCoords();
-		if (Data_Mouse.left.wentDown) {
+		updateCityViewCoords(m);
+		if (m->left.went_down) {
 			militaryMapClick();
 		}
 	}

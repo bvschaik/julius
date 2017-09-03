@@ -6,7 +6,6 @@
 
 #include "../Data/Constants.h"
 #include "../Data/Screen.h"
-#include "../Data/Mouse.h"
 
 #include "graphics/image.h"
 
@@ -24,9 +23,9 @@ void UI_Logo_drawBackground()
 		320, FONT_NORMAL_PLAIN, COLOR_WHITE);
 }
 
-void UI_Logo_handleMouse()
+void UI_Logo_handleMouse(const mouse *m)
 {
-	if (Data_Mouse.left.wentUp || Data_Mouse.right.wentUp) {
+	if (m->left.went_up || m->right.went_up) {
 		UI_Window_goTo(Window_MainMenu);
 	}
 }

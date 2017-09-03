@@ -14,13 +14,13 @@
 
 #include "../Cursor.h"
 #include "../KeyboardInput.h"
-#include "../Data/Mouse.h"
+#include "graphics/mouse.h"
 
 struct Window {
 	void (*init)(void);
 	void (*drawBackground)(void);
 	void (*drawForeground)(void);
-	void (*handleMouse)(void);
+	void (*handleMouse)(const mouse *m);
 	void (*getTooltip)(struct TooltipContext *c);
 };
 
@@ -96,38 +96,12 @@ void UI_Window_goBack()
 
 static void updateMouseBefore()
 {
-	int prevLeftIsDown = Data_Mouse.left.isDown;
-	int prevRightIsDown = Data_Mouse.right.isDown;
-	Data_Mouse.left.isDown = 0;
-	Data_Mouse.left.wentDown = 0;
-	Data_Mouse.left.wentUp = 0;
-	Data_Mouse.right.isDown = 0;
-	Data_Mouse.right.wentDown = 0;
-	Data_Mouse.right.wentUp = 0;
-
-	Data_Mouse.left.isDown = Data_Mouse.leftDown;
-	Data_Mouse.right.isDown = Data_Mouse.rightDown;
-
-	if (Data_Mouse.left.isDown != prevLeftIsDown) {
-		if (Data_Mouse.left.isDown) {
-			Data_Mouse.left.wentDown = 1;
-		} else {
-			Data_Mouse.left.wentUp = 1;
-		}
-	}
-	if (Data_Mouse.right.isDown != prevRightIsDown) {
-		if (Data_Mouse.right.isDown) {
-			Data_Mouse.right.wentDown = 1;
-		} else {
-			Data_Mouse.right.wentUp = 1;
-		}
-	}
+    mouse_determine_button_state();
 }
 
 static void updateMouseAfter()
 {
-	Data_Mouse.scrollDown = 0;
-	Data_Mouse.scrollUp = 0;
+    mouse_set_scroll(SCROLL_NONE);
 	Cursor_set();
 }
 
@@ -140,7 +114,7 @@ void UI_Window_refresh(int force)
 	}
 	windows[currentWindow].drawForeground();
 	KeyboardInput_initInput(0);
-	windows[currentWindow].handleMouse();
+	windows[currentWindow].handleMouse(mouse_get());
 	UI_Tooltip_handle(windows[currentWindow].getTooltip);
 	UI_Warning_draw();
 	updateMouseAfter();

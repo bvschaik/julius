@@ -19,6 +19,7 @@
 #include "../src/Game.h"
 
 #include "core/lang.h"
+#include "graphics/mouse.h"
 
 #include <execinfo.h>
 #include <signal.h>
@@ -420,7 +421,7 @@ void mainLoop()
 	SDL_Event refreshEvent;
 	refreshEvent.user.type = SDL_USEREVENT;
 	refreshEvent.user.code = UserEventRefresh;
-	Data_Mouse.isInsideWindow = 1;
+	mouse_set_inside_window(1);
 	
 	refresh();
 	while (1) {
@@ -432,10 +433,10 @@ void mainLoop()
 					switch (event.window.event) {
 						case SDL_WINDOWEVENT_ENTER:
 							active = 1;
-							Data_Mouse.isInsideWindow = 1;
+							mouse_set_inside_window(1);
 							break;
 						case SDL_WINDOWEVENT_LEAVE:
-							Data_Mouse.isInsideWindow = 0;
+							mouse_set_inside_window(0);
 							active = 0;
 							break;
 						case SDL_WINDOWEVENT_SIZE_CHANGED:
@@ -461,36 +462,29 @@ void mainLoop()
 					break;
 				
 				case SDL_MOUSEMOTION:
-					Data_Mouse.x = event.motion.x;
-					Data_Mouse.y = event.motion.y;
+					mouse_set_position(event.motion.x, event.motion.y);
 					break;
 				
 				case SDL_MOUSEBUTTONDOWN:
-					Data_Mouse.x = event.button.x;
-					Data_Mouse.y = event.button.y;
+					mouse_set_position(event.motion.x, event.motion.y);
 					if (event.button.button == SDL_BUTTON_LEFT) {
-						Data_Mouse.leftDown = 1;
+						mouse_set_left_down(1);
 					} else if (event.button.button == SDL_BUTTON_RIGHT) {
-						Data_Mouse.rightDown = 1;
+						mouse_set_right_down(1);
 					}
 					break;
 				
 				case SDL_MOUSEBUTTONUP:
-					Data_Mouse.x = event.button.x;
-					Data_Mouse.y = event.button.y;
+					mouse_set_position(event.button.x, event.button.y);
 					if (event.button.button == SDL_BUTTON_LEFT) {
-						Data_Mouse.leftDown = 0;
+						mouse_set_left_down(0);
 					} else if (event.button.button == SDL_BUTTON_RIGHT) {
-						Data_Mouse.rightDown = 0;
+						mouse_set_right_down(0);
 					}
 					break;
 				
 				case SDL_MOUSEWHEEL:
-					if (event.wheel.y > 0) {
-						Data_Mouse.scrollUp = 1;
-					} else if (event.wheel.y < 0) {
-						Data_Mouse.scrollDown = 1;
-					}
+					mouse_set_scroll(event.wheel.y > 0 ? SCROLL_UP : event.wheel.y < 0 ? SCROLL_DOWN : SCROLL_NONE);
 					break;
 
 				case SDL_QUIT:

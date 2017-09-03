@@ -12,7 +12,6 @@
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
 #include "../Data/FileList.h"
-#include "../Data/Mouse.h"
 #include "../Data/Screen.h"
 #include "../Data/Settings.h"
 #include "../Data/State.h"
@@ -213,19 +212,19 @@ static void clearState()
 	focusSubMenuId = 0;
 }
 
-static int handleMouseSubmenu()
+static int handleMouseSubmenu(const mouse *m)
 {
-	if (Data_Mouse.right.wentUp) {
+	if (m->right.went_up) {
 		clearState();
 		UI_Window_goBack();
 		return 1;
 	}
-	int menuId = Widget_Menu_handleMenuBar(menu, 4, &focusMenuId);
+	int menuId = Widget_Menu_handleMenuBar(m, menu, 4, &focusMenuId);
 	if (menuId && menuId != openSubMenu) {
 		openSubMenu = menuId;
 	}
-	if (!Widget_Menu_handleMenuItem(&menu[openSubMenu-1], &focusSubMenuId)) {
-		if (Data_Mouse.left.wentDown) {
+	if (!Widget_Menu_handleMenuItem(m, &menu[openSubMenu-1], &focusSubMenuId)) {
+		if (m->left.went_down) {
 			clearState();
 			UI_Window_goBack();
 			return 1;
@@ -234,18 +233,18 @@ static int handleMouseSubmenu()
 	return 0;
 }
 
-static int getFundsPopDate()
+static int getFundsPopDate(const mouse *m)
 {
-	if (Data_Mouse.y < 4 || Data_Mouse.y >= 18) {
+	if (m->y < 4 || m->y >= 18) {
 		return 0;
 	}
-	if (Data_Mouse.x > offsetFunds && Data_Mouse.x < offsetFunds + 128) {
+	if (m->x > offsetFunds && m->x < offsetFunds + 128) {
 		return 1;
 	}
-	if (Data_Mouse.x > offsetPopulation && Data_Mouse.x < offsetPopulation + 128) {
+	if (m->x > offsetPopulation && m->x < offsetPopulation + 128) {
 		return 2;
 	}
-	if (Data_Mouse.x > offsetDate && Data_Mouse.x < offsetDate + 128) {
+	if (m->x > offsetDate && m->x < offsetDate + 128) {
 		return 3;
 	}
 	return 0;
@@ -266,44 +265,44 @@ static int handleTopMenuRightClick(int type)
 	return 1;
 }
 
-static int handleMouseMenu()
+static int handleMouseMenu(const mouse *m)
 {
-	int menuId = Widget_Menu_handleMenuBar(menu, 4, &focusMenuId);
-	if (menuId && Data_Mouse.left.wentDown) {
+	int menuId = Widget_Menu_handleMenuBar(m, menu, 4, &focusMenuId);
+	if (menuId && m->left.went_down) {
 		openSubMenu = menuId;
 		UI_Window_goTo(Window_TopMenu);
 		return 1;
 	}
-	if (Data_Mouse.right.wentUp) {
-		return handleTopMenuRightClick(getFundsPopDate());
+	if (m->right.went_up) {
+		return handleTopMenuRightClick(getFundsPopDate(m));
 	}
 	return 0;
 }
 
-int UI_TopMenu_handleMouseWidget()
+int UI_TopMenu_handleMouseWidget(const mouse *m)
 {
 	if (openSubMenu) {
-		return handleMouseSubmenu();
+		return handleMouseSubmenu(m);
 	} else {
-		return handleMouseMenu();
+		return handleMouseMenu(m);
 	}
 }
 
-int UI_TopMenu_getTooltipText()
+int UI_TopMenu_getTooltipText(const mouse *m)
 {
 	if (focusMenuId) {
 		return 49 + focusMenuId;
 	}
-	int buttonId = getFundsPopDate();
+	int buttonId = getFundsPopDate(m);
 	if (buttonId) {
 		return 59 + buttonId;
 	}
 	return 0;
 }
 
-void UI_TopMenu_handleMouse()
+void UI_TopMenu_handleMouse(const mouse *m)
 {
-	UI_TopMenu_handleMouseWidget();
+	UI_TopMenu_handleMouseWidget(m);
 }
 
 static void menuFile_newGame(int param)
