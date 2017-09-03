@@ -143,7 +143,7 @@ void UI_Advisor_Imperial_drawForeground()
 	
 	int width = Widget_GameText_draw(52, 1,
 		baseOffsetX + 72, baseOffsetY + 372, FONT_NORMAL_WHITE);
-	Widget_Text_drawNumber(Data_CityInfo.personalSavings, '@', " Dn",
+	Widget_Text_drawMoney(Data_CityInfo.personalSavings,
 		baseOffsetX + 80 + width, baseOffsetY + 372, FONT_NORMAL_WHITE);
 
 	Widget_Panel_drawButtonBorder(baseOffsetX + 320, baseOffsetY + 367,

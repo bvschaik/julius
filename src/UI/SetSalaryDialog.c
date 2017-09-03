@@ -48,7 +48,7 @@ void UI_SetSalaryDialog_drawForeground()
 		font_t font = (focusButtonId == rank + 2) ? FONT_NORMAL_RED : FONT_NORMAL_WHITE;
 		int width = Widget_GameText_draw(52, rank + 4,
 			baseOffsetX + 176, baseOffsetY + 90 + 20 * rank, font);
-		Widget_Text_drawNumber(Constant_SalaryForRank[rank], '@', " Dn",
+		Widget_Text_drawMoney(Constant_SalaryForRank[rank],
 			baseOffsetX + 176 + width, baseOffsetY + 90 + 20 * rank, font);
 	}
 

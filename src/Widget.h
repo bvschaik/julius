@@ -23,6 +23,8 @@ void Widget_GameText_drawCenteredColored(int group, int number, int xOffset, int
 
 int Widget_Text_drawNumber(int value, char prefix, const char *postfix, int xOffset, int yOffset, font_t font);
 int Widget_Text_drawNumberColored(int value, char prefix, const char *postfix, int xOffset, int yOffset, font_t font, color_t color);
+int Widget_Text_drawMoney(int value, int xOffset, int yOffset, font_t font);
+int Widget_Text_drawPercentage(int value, int xOffset, int yOffset, font_t font);
 
 void Widget_Text_drawNumberCentered(int value, int xOffset, int yOffset, int boxWidth, font_t font);
 void Widget_Text_drawNumberCenteredColored(int value, int xOffset, int yOffset, int boxWidth, font_t font, color_t color);
@@ -44,9 +46,9 @@ int Widget_GameText_getDrawWidth(int group, int number, font_t font);
 
 void Widget_RichText_setFonts(font_t normalFont, font_t linkFont);
 // returns total number of lines
-int Widget_RichText_draw(const char *text, int xOffset, int yOffset,
+int Widget_RichText_draw(const uint8_t *text, int xOffset, int yOffset,
 						 int boxWidthPixels, int boxHeightLines, int measureOnly);
-int Widget_RichText_drawColored(const char *str, int xOffset, int yOffset,
+int Widget_RichText_drawColored(const uint8_t *str, int xOffset, int yOffset,
 								int boxWidth, int heightLines, color_t color);
 int Widget_RichText_getClickedLink();
 void Widget_RichText_clearLinks();
@@ -58,7 +60,7 @@ void Widget_RichText_drawScrollbar();
 void Widget_RichText_drawScrollbarDot();
 int Widget_RichText_getScrollPosition();
 int Widget_RichText_handleScrollbar();
-int Widget_RichText_init(const char *str, int xText, int yText, int widthBlocks, int heightBlocks, int adjustWidthOnNoScroll);
+int Widget_RichText_init(const uint8_t *str, int xText, int yText, int widthBlocks, int heightBlocks, int adjustWidthOnNoScroll);
 
 void Widget_Panel_drawOuterPanel(int xOffset, int yOffset, int widthInBlocks, int heightInBlocks);
 

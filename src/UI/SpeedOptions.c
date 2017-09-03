@@ -75,8 +75,8 @@ void UI_SpeedOptions_drawForeground()
 		baseOffsetX + 144, baseOffsetY + 146,
 		FONT_NORMAL_PLAIN
 	);
-	Widget_Text_drawNumber(
-		Data_Settings.gameSpeed, 64, "%",
+	Widget_Text_drawPercentage(
+		Data_Settings.gameSpeed,
 		baseOffsetX + 296, baseOffsetY + 146,
 		FONT_NORMAL_PLAIN
 	);
@@ -84,8 +84,8 @@ void UI_SpeedOptions_drawForeground()
 		baseOffsetX + 144, baseOffsetY + 182,
 		FONT_NORMAL_PLAIN
 	);
-	Widget_Text_drawNumber(
-		Data_Settings.scrollSpeed, 64, "%",
+	Widget_Text_drawPercentage(
+		Data_Settings.scrollSpeed,
 		baseOffsetX + 296, baseOffsetY + 182,
 		FONT_NORMAL_PLAIN
 	);

@@ -101,7 +101,7 @@ void UI_Advisor_Labor_drawBackground(int *advisorHeight)
 	width = Widget_GameText_draw(50, 19,
 		baseOffsetX + 64, baseOffsetY + 390, FONT_NORMAL_BLACK
 	);
-	width += Widget_Text_drawNumber(Data_CityInfo.estimatedYearlyWages, '@', " Dn",
+	width += Widget_Text_drawMoney(Data_CityInfo.estimatedYearlyWages,
 		baseOffsetX + 64 + width, baseOffsetY + 390, FONT_NORMAL_BLACK
 	);
 }

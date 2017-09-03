@@ -301,7 +301,7 @@ static int drawCharacter(font_t font, unsigned int c, int x, int y, int lineHeig
 	return image_get(graphicId)->width;
 }
 
-static void numberToString(char *str, int value, char prefix, const char *postfix)
+static void numberToString(uint8_t *str, int value, char prefix, const char *postfix)
 {
 	int offset = 0;
 	if (prefix) {
@@ -327,6 +327,20 @@ int Widget_Text_drawNumberColored(int value, char prefix, const char *postfix, i
 	uint8_t str[100];
 	numberToString(str, value, prefix, postfix);
 	return Widget_Text_draw(str, xOffset, yOffset, font, color);
+}
+
+int Widget_Text_drawMoney(int value, int xOffset, int yOffset, font_t font)
+{
+    uint8_t str[100];
+    numberToString(str, value, '@', " Dn");
+    return Widget_Text_draw(str, xOffset, yOffset, font, 0);
+}
+
+int Widget_Text_drawPercentage(int value, int xOffset, int yOffset, font_t font)
+{
+    uint8_t str[100];
+    numberToString(str, value, '@', "%");
+    return Widget_Text_draw(str, xOffset, yOffset, font, 0);
 }
 
 void Widget_Text_drawNumberCentered(int value, int xOffset, int yOffset, int boxWidth, font_t font)
@@ -601,7 +615,7 @@ void Widget_RichText_restore()
 	data.textHeightLines = data.backup.textHeightLines;
 }
 
-static int drawRichText(const char *str, int xOffset, int yOffset,
+static int drawRichText(const uint8_t *str, int xOffset, int yOffset,
 						int boxWidth, int heightLines, color_t color, int measureOnly)
 {
 	int graphicHeightLines = 0;
@@ -636,7 +650,7 @@ static int drawRichText(const char *str, int xOffset, int yOffset,
 				break;
 			}
 			int wordNumChars;
-			currentWidth += getRichTextWordWidth((const unsigned char*)str, &wordNumChars);
+			currentWidth += getRichTextWordWidth(str, &wordNumChars);
 			if (currentWidth >= boxWidth) {
 				if (currentWidth == 0) {
 					hasMoreCharacters = 0;
@@ -720,14 +734,13 @@ static int drawRichText(const char *str, int xOffset, int yOffset,
 	return numLines;
 }
 
-int Widget_RichText_draw(const char *str, int xOffset, int yOffset,
+int Widget_RichText_draw(const uint8_t *str, int xOffset, int yOffset,
 						 int boxWidth, int heightLines, int measureOnly)
 {
 	return drawRichText(str, xOffset, yOffset, boxWidth, heightLines, 0, measureOnly);
 }
 
-int Widget_RichText_drawColored(const char *str, int xOffset, int yOffset,
-								int boxWidth, int heightLines, color_t color)
+int Widget_RichText_drawColored(const uint8_t *str, int xOffset, int yOffset, int boxWidth, int heightLines, color_t color)
 {
 	return drawRichText(str, xOffset, yOffset, boxWidth, heightLines, color, 0);
 }
@@ -942,7 +955,7 @@ int Widget_RichText_getScrollPosition()
 	return data.scrollPosition;
 }
 
-int Widget_RichText_init(const char *str, int xText, int yText, int widthBlocks, int heightBlocks, int adjustWidthOnNoScroll)
+int Widget_RichText_init(const uint8_t *str, int xText, int yText, int widthBlocks, int heightBlocks, int adjustWidthOnNoScroll)
 {
 	data.xText = xText;
 	data.yText = yText;

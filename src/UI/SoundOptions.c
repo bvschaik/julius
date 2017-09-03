@@ -124,7 +124,7 @@ void UI_SoundOptions_drawForeground()
 		baseOffsetX + 64, baseOffsetY + 166,
 		224, FONT_NORMAL_GREEN
 	);
-	Widget_Text_drawNumber(Data_Settings.soundMusicPercentage, 64, "%",
+	Widget_Text_drawPercentage(Data_Settings.soundMusicPercentage,
 		baseOffsetX + 374, baseOffsetY + 166,
 		FONT_NORMAL_PLAIN
 	);
@@ -133,7 +133,7 @@ void UI_SoundOptions_drawForeground()
 		baseOffsetX + 64, baseOffsetY + 196,
 		224, FONT_NORMAL_GREEN
 	);
-	Widget_Text_drawNumber(Data_Settings.soundSpeechPercentage, 64, "%",
+	Widget_Text_drawPercentage(Data_Settings.soundSpeechPercentage,
 		baseOffsetX + 374, baseOffsetY + 196,
 		FONT_NORMAL_PLAIN
 	);
@@ -142,7 +142,7 @@ void UI_SoundOptions_drawForeground()
 		baseOffsetX + 64, baseOffsetY + 226,
 		224, FONT_NORMAL_GREEN
 	);
-	Widget_Text_drawNumber(Data_Settings.soundEffectsPercentage, 64, "%",
+	Widget_Text_drawPercentage(Data_Settings.soundEffectsPercentage,
 		baseOffsetX + 374, baseOffsetY + 226,
 		FONT_NORMAL_PLAIN
 	);
@@ -151,7 +151,7 @@ void UI_SoundOptions_drawForeground()
 		baseOffsetX + 64, baseOffsetY + 256,
 		224, FONT_NORMAL_GREEN
 	);
-	Widget_Text_drawNumber(Data_Settings.soundCityPercentage, 64, "%",
+	Widget_Text_drawPercentage(Data_Settings.soundCityPercentage,
 		baseOffsetX + 374, baseOffsetY + 256,
 		FONT_NORMAL_PLAIN
 	);

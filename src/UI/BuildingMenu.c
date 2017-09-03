@@ -182,7 +182,7 @@ static void drawMenuButtons()
 			cost = 0;
 		}
 		if (cost) {
-			Widget_Text_drawNumber(cost, '@', "Dn",
+			Widget_Text_drawMoney(cost,
 				xOffset - 82, menu.yOffset + 114 + 24 * i, FONT_NORMAL_GREEN);
 		}
 	}

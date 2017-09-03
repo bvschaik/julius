@@ -21,7 +21,7 @@ void UI_Advisor_Chief_drawBackground(int *advisorHeight)
 	Widget_GameText_draw(61, 1, baseOffsetX + 60, baseOffsetY + 66, FONT_NORMAL_WHITE);
 	if (Data_CityInfo.unemploymentPercentage > 0) {
 		width = Widget_GameText_draw(61, 12, baseOffsetX + 240, baseOffsetY + 66, FONT_NORMAL_RED);
-		Widget_Text_drawNumber(Data_CityInfo.unemploymentPercentage, '@', "%",
+		Widget_Text_drawPercentage(Data_CityInfo.unemploymentPercentage,
 			baseOffsetX + 240 + width, baseOffsetY + 66, FONT_NORMAL_RED);
 	} else if (Data_CityInfo.workersNeeded > 0) {
 		width = Widget_GameText_draw(61, 13, baseOffsetX + 240, baseOffsetY + 66, FONT_NORMAL_RED);
@@ -36,11 +36,11 @@ void UI_Advisor_Chief_drawBackground(int *advisorHeight)
 	Widget_GameText_draw(61, 2, baseOffsetX + 60, baseOffsetY + 86, FONT_NORMAL_WHITE);
 	if (Data_CityInfo.treasury > Data_CityInfo.financeBalanceLastYear) {
 		width = Widget_GameText_draw(61, 15, baseOffsetX + 240, baseOffsetY + 86, FONT_NORMAL_GREEN);
-		Widget_Text_drawNumber(Data_CityInfo.treasury - Data_CityInfo.financeBalanceLastYear, '@', "Dn",
+		Widget_Text_drawMoney(Data_CityInfo.treasury - Data_CityInfo.financeBalanceLastYear,
 			baseOffsetX + 240 + width, baseOffsetY + 86, FONT_NORMAL_GREEN);
 	} else if (Data_CityInfo.treasury < Data_CityInfo.financeBalanceLastYear) {
 		width = Widget_GameText_draw(61, 16, baseOffsetX + 240, baseOffsetY + 86, FONT_NORMAL_RED);
-		Widget_Text_drawNumber(Data_CityInfo.financeBalanceLastYear - Data_CityInfo.treasury, '@', "Dn",
+		Widget_Text_drawMoney(Data_CityInfo.financeBalanceLastYear - Data_CityInfo.treasury,
 			baseOffsetX + 240 + width, baseOffsetY + 86, FONT_NORMAL_RED);
 	} else {
 		Widget_GameText_draw(61, 17, baseOffsetX + 240, baseOffsetY + 86, FONT_NORMAL_GREEN);

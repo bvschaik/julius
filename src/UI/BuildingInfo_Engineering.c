@@ -62,7 +62,7 @@ void UI_BuildingInfo_drawShipyard(BuildingInfoContext *c)
 		int pctDone = calc_percentage(b->data.industry.progress, 160);
 		int width = Widget_GameText_draw(100, 2,
 			c->xOffset + 32, c->yOffset + 56, FONT_NORMAL_BLACK);
-		width += Widget_Text_drawNumber(pctDone, '@', "%",
+		width += Widget_Text_drawPercentage(pctDone,
 			c->xOffset + 32 + width, c->yOffset + 56, FONT_NORMAL_BLACK);
 		Widget_GameText_draw(100, 3,
 			c->xOffset + 32 + width, c->yOffset + 56, FONT_NORMAL_BLACK);

@@ -353,7 +353,7 @@ static void drawPlayerMessageContent(const lang_message *msg)
 			graphicId = image_group(ID_Graphic_ResourceIcons) + playerMessage.param2;
 			graphicId += Resource_getGraphicIdOffset(playerMessage.param2, 3);
 			Graphics_drawImage(graphicId, data.x + 64, data.yText + 40);
-			Widget_Text_drawNumber(playerMessage.param1, '@', " Dn",
+			Widget_Text_drawMoney(playerMessage.param1,
 				data.x + 100, data.yText + 44, FONT_NORMAL_WHITE);
 			Widget_RichText_draw(msg->content.text,
 				data.xText + 8, data.yText + 86, 16 * data.textWidthBlocks - 16,

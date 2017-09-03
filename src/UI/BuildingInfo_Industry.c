@@ -22,7 +22,7 @@ static void drawFarm(BuildingInfoContext *c, int helpId, const char *soundFile, 
 
 	int pctGrown = calc_percentage(Data_Buildings[c->buildingId].data.industry.progress, 200);
 	int width = Widget_GameText_draw(groupId, 2, c->xOffset + 32, c->yOffset + 44, FONT_NORMAL_BLACK);
-	width += Widget_Text_drawNumber(pctGrown, '@', "%",
+	width += Widget_Text_drawPercentage(pctGrown,
 		c->xOffset + 32 + width, c->yOffset + 44, FONT_NORMAL_BLACK);
 	Widget_GameText_draw(groupId, 3, c->xOffset + 32 + width, c->yOffset + 44, FONT_NORMAL_BLACK);
 
@@ -96,7 +96,7 @@ static void drawRawMaterial(BuildingInfoContext *c, int helpId, const char *soun
 
 	int pctDone = calc_percentage(Data_Buildings[c->buildingId].data.industry.progress, 200);
 	int width = Widget_GameText_draw(groupId, 2, c->xOffset + 32, c->yOffset + 44, FONT_NORMAL_BLACK);
-	width += Widget_Text_drawNumber(pctDone, '@', "%",
+	width += Widget_Text_drawPercentage(pctDone,
 		c->xOffset + 32 + width, c->yOffset + 44, FONT_NORMAL_BLACK);
 	Widget_GameText_draw(groupId, 3, c->xOffset + 32 + width, c->yOffset + 44, FONT_NORMAL_BLACK);
 
@@ -158,7 +158,7 @@ static void drawWorkshop(BuildingInfoContext *c, int helpId, const char *soundFi
 
 	int pctDone = calc_percentage(Data_Buildings[c->buildingId].data.industry.progress, 400);
 	int width = Widget_GameText_draw(groupId, 2, c->xOffset + 32, c->yOffset + 40, FONT_NORMAL_BLACK);
-	width += Widget_Text_drawNumber(pctDone, '@', "%",
+	width += Widget_Text_drawPercentage(pctDone,
 		c->xOffset + 32 + width, c->yOffset + 40, FONT_NORMAL_BLACK);
 	Widget_GameText_draw(groupId, 3, c->xOffset + 32 + width, c->yOffset + 40, FONT_NORMAL_BLACK);
 
