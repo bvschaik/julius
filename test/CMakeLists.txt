@@ -27,6 +27,7 @@ set(TESTS
     game/time
     
     graphics/image
+    graphics/mouse
 )
 
 foreach (testcase ${TESTS})
