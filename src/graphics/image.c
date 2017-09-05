@@ -263,9 +263,6 @@ int image_load_enemy(int enemy_id)
     if (ENEMY_INDEX_SIZE != io_read_file_part_into_buffer(filename_idx, data.tmp_data, ENEMY_INDEX_SIZE, ENEMY_INDEX_OFFSET)) {
         return 0;
     }
-    if (!io_read_file_into_buffer(filename_bmp, data.enemy_data, ENEMY_DATA_SIZE)) {
-        return 0;
-    }
 
     buffer buf;
     buffer_init(&buf, data.tmp_data, ENTRY_SIZE * ENEMY_ENTRIES);
