@@ -270,6 +270,13 @@ int image_load_enemy(int enemy_id)
     buffer buf;
     buffer_init(&buf, data.tmp_data, ENTRY_SIZE * ENEMY_ENTRIES);
     read_index(&buf, data.enemy, ENEMY_ENTRIES);
+
+    int data_size = io_read_file_into_buffer(filename_bmp, data.tmp_data, SCRATCH_DATA_SIZE);
+    if (!data_size) {
+        return 0;
+    }
+    buffer_init(&buf, data.tmp_data, data_size);
+    convert_images(data.enemy, ENEMY_ENTRIES, &buf, data.enemy_data);
     return 1;
 }
 
