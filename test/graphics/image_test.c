@@ -95,31 +95,10 @@ void test_image_load_enemy_ok()
     int result = image_load_enemy(1);
     
     assert_true(result);
-    verify_buffer_init_times(1);
+    verify_buffer_init_times(2);
     verify_buffer_read_i32_times(801 * 3);
 }
-/*
-void test_image_load_external_data_fail()
-{
-    when_io_read_file_part_into_buffer_dynamic(any_read_part)->then_return = 0;
-    
-    image_init();
-    const uint8_t *result = image_load_external_data(100);
-    
-    assert_true(NULL == result);
-    verify_buffer_read_i32_times(0);
-}
 
-void test_image_load_external_data_ok()
-{
-    when_io_read_file_part_into_buffer_dynamic(any_read_part)->then_return = 1;
-    
-    image_init();
-    const uint8_t *result = image_load_external_data(100);
-    
-    assert_false(NULL == result);
-}
-*/
 RUN_TESTS(graphics.image,
     ADD_TEST(test_image_load_climate_fail)
     ADD_TEST(test_image_load_climate_ok)
@@ -127,6 +106,4 @@ RUN_TESTS(graphics.image,
     ADD_TEST(test_image_load_enemy_fail)
     ADD_TEST(test_image_load_enemy_fail_data)
     ADD_TEST(test_image_load_enemy_ok)
-    //ADD_TEST(test_image_load_external_data_fail)
-    //ADD_TEST(test_image_load_external_data_ok)
 )
