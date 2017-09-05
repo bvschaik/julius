@@ -29,6 +29,7 @@
 
 #include "building/count.h"
 #include "building/model.h"
+#include "building/properties.h"
 #include "core/random.h"
 #include "figure/formation.h"
 #include "graphics/image.h"
@@ -552,7 +553,7 @@ static int placeBuilding(int type, int x, int y)
 	} else if (type == BUILDING_TOWER) {
 		terrainMask = ~Terrain_Wall;
 	}
-	int size = Constant_BuildingProperties[type].size;
+	int size = building_properties_for_type(type)->size;
 	if (type == BUILDING_WAREHOUSE) {
 		size = 3;
 	}
@@ -1237,7 +1238,7 @@ void BuildingPlacement_update(int xStart, int yStart, int xEnd, int yEnd, int ty
 		if (!(type == BUILDING_SENATE_UPGRADED && Data_CityInfo.buildingSenatePlaced) &&
 			!(type == BUILDING_BARRACKS && building_count_total(BUILDING_BARRACKS) > 0) &&
 			!(type == BUILDING_DISTRIBUTION_CENTER_UNUSED && Data_CityInfo.buildingDistributionCenterPlaced)) {
-			int size = Constant_BuildingProperties[type].size;
+			int size = building_properties_for_type(type)->size;
 			Terrain_updateToPlaceBuildingToOverlay(size, xEnd, yEnd, Terrain_All, 0);
 		}
 	}

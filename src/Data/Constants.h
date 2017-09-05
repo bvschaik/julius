@@ -431,15 +431,6 @@ enum {
 extern const int Constant_SalaryForRank[11];
 extern const int Constant_DirectionGridOffsets[8];
 
-struct BuildingProperties {
-	int size;
-	int fireProof;
-	int graphicCategory;
-	int graphicOffset;
-};
-
-extern const struct BuildingProperties Constant_BuildingProperties[140];
-
 struct MissionId {
 	int peaceful;
 	int military;

@@ -15,6 +15,7 @@
 #include "Data/Settings.h"
 #include "Data/State.h"
 
+#include "building/properties.h"
 #include "graphics/image.h"
 
 #include <string.h>
@@ -163,7 +164,7 @@ static void placeBuildingOnTerrain(int buildingId)
 		TerrainGraphics_setBuildingFarm(buildingId, b->x, b->y,
 			image_group(ID_Graphic_FarmCrops) + graphicOffset, 0);
 	} else {
-		int size = Constant_BuildingProperties[b->type].size;
+		int size = building_properties_for_type(b->type)->size;
 		Terrain_addBuildingToGrids(buildingId, b->x, b->y, size, 0, 0);
 		if (b->type == BUILDING_WHARF) {
 			b->data.other.boatFigureId = 0;

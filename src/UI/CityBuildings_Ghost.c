@@ -7,6 +7,7 @@
 #include "../TerrainGraphics.h"
 
 #include "building/count.h"
+#include "building/properties.h"
 #include "core/time.h"
 #include "figure/formation.h"
 
@@ -128,12 +129,11 @@ static void drawBuildingGhostDefault()
 			Data_State.selectedBuilding.roadRequired = Data_State.selectedBuilding.roadRequired == 1 ? 2 : 1;
 		}
 	}
-	int type = Data_State.selectedBuilding.type;
+	building_type type = Data_State.selectedBuilding.type;
+    const building_properties *props = building_properties_for_type(type);
 	int gridOffset = Data_Settings_Map.current.gridOffset;
-	int buildingSize = Constant_BuildingProperties[type].size;
-	int graphicId =
-		image_group(Constant_BuildingProperties[type].graphicCategory) +
-		Constant_BuildingProperties[type].graphicOffset;
+	int buildingSize = props->size;
+	int graphicId = image_group(props->image_group) + props->image_offset;
 	if (type == BUILDING_WAREHOUSE) {
 		buildingSize = 3;
 	}
@@ -447,7 +447,7 @@ static void drawBuildingGhostFountain()
 	int xOffset = Data_CityView.selectedTile.xOffsetInPixels;
 	int yOffset = Data_CityView.selectedTile.yOffsetInPixels;
 
-	int graphicId = image_group(Constant_BuildingProperties[BUILDING_FOUNTAIN].graphicCategory);
+	int graphicId = image_group(building_properties_for_type(BUILDING_FOUNTAIN)->image_group);
 	if (Data_CityInfo.treasury <= MIN_TREASURY) {
 		drawFlatTile(xOffset, yOffset, COLOR_MASK_RED);
 	} else {
@@ -500,7 +500,7 @@ static void drawBuildingGhostBathhouse()
 			}
 		}
 	} else {
-		int graphicId = image_group(Constant_BuildingProperties[BUILDING_BATHHOUSE].graphicCategory);
+		int graphicId = image_group(building_properties_for_type(BUILDING_BATHHOUSE)->image_group);
 		Graphics_drawIsometricFootprint(graphicId, xOffsetBase, yOffsetBase, COLOR_MASK_GREEN);
 		Graphics_drawIsometricTop(graphicId, xOffsetBase, yOffsetBase, COLOR_MASK_GREEN);
 		int hasWater = 0;
@@ -768,9 +768,9 @@ static void drawBuildingGhostFort()
 		placementObstructed = 1;
 	}
 
-	int numTilesFort = Constant_BuildingProperties[BUILDING_FORT].size;
+	int numTilesFort = building_properties_for_type(BUILDING_FORT)->size;
 	numTilesFort *= numTilesFort;
-	int numTilesGround = Constant_BuildingProperties[BUILDING_FORT_GROUND].size;
+	int numTilesGround = building_properties_for_type(BUILDING_FORT_GROUND)->size;
 	numTilesGround *= numTilesGround;
 
 	int orientationIndex = Data_Settings_Map.orientation / 2;
@@ -1015,9 +1015,9 @@ static void drawBuildingGhostShipyardWharf()
 			drawFlatTile(xOffset, yOffset, COLOR_MASK_RED);
 		}
 	} else {
-		int type = Data_State.selectedBuilding.type;
-		int graphicId = image_group(Constant_BuildingProperties[type].graphicCategory) +
-			Constant_BuildingProperties[type].graphicOffset + dirRelative;
+		building_type type = Data_State.selectedBuilding.type;
+        const building_properties *props = building_properties_for_type(type);
+		int graphicId = image_group(props->image_group) + props->image_offset + dirRelative;
 		int xOffset = Data_CityView.selectedTile.xOffsetInPixels;
 		int yOffset = Data_CityView.selectedTile.yOffsetInPixels;
 		Graphics_drawIsometricFootprint(graphicId, xOffset, yOffset, COLOR_MASK_GREEN);

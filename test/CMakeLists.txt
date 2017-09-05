@@ -18,10 +18,12 @@ set(TESTS
     building/count
     building/list
     building/model
+    building/properties
     
     empire/trade_prices
     
     figure/name
+    figure/properties
     figure/trader
     
     game/time

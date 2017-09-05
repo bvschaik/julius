@@ -25,6 +25,7 @@
 #include "Data/State.h"
 #include "Data/Figure.h"
 
+#include "building/properties.h"
 #include "graphics/image.h"
 
 #include <string.h>
@@ -64,12 +65,13 @@ int Building_create(int type, int x, int y)
 	}
 	
 	struct Data_Building *b = &Data_Buildings[buildingId];
+    const building_properties *props = building_properties_for_type(type);
 	
 	b->state = BuildingState_Created;
 	b->ciid = 1;
 	b->__unknown_02 = Data_CityInfo.__unknown_00a5; // TODO ??
 	b->type = type;
-	b->size = Constant_BuildingProperties[type].size;
+	b->size = props->size;
 	b->createdSequence = Data_Buildings_Extra.createdSequence++;
 	b->sentiment.houseHappiness = 50;
 	b->distanceFromEntry = 0;
@@ -159,7 +161,7 @@ int Building_create(int type, int x, int y)
 	b->gridOffset = GridOffset(x, y);
 	b->houseGenerationDelay = Data_Grid_random[b->gridOffset] & 0x7f;
 	b->figureRoamDirection = b->houseGenerationDelay & 6;
-	b->fireProof = Constant_BuildingProperties[type].fireProof;
+	b->fireProof = props->fire_proof;
 	b->isAdjacentToWater = Terrain_isAdjacentToWater(x, y, b->size);
 
 	return buildingId;
