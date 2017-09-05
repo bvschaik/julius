@@ -7,6 +7,7 @@
 #include "Data/Constants.h"
 
 #include "figure/formation.h"
+#include "figure/properties.h"
 
 const int figureActionCorpseGraphicOffsets[128] = {
 	0, 1, 2, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
@@ -106,16 +107,18 @@ static void hitOpponent(int figureId, struct Data_Figure *f)
 {
 	const formation *m = formation_get(f->formationId);
 	struct Data_Figure *opponent = &Data_Figures[f->opponentId];
-	const formation *opponentFormation = formation_get(opponent->formationId);
+	const formation *opponentFormation = formation_get(opponent->formationId);{}
 	
-	int cat = Constant_FigureProperties[opponent->type].category;
-	if (cat == FigureCategory_Citizen || cat == FigureCategory_Criminal) {
+	const figure_properties *props = figure_properties_for_type(f->type);
+	const figure_properties *opponent_props = figure_properties_for_type(opponent->type);
+	int cat = opponent_props->category;
+	if (cat == FIGURE_CATEGORY_CITIZEN || cat == FIGURE_CATEGORY_CRIMINAL) {
 		f->attackGraphicOffset = 12;
 	} else {
 		f->attackGraphicOffset = 0;
 	}
-	int figureAttack = Constant_FigureProperties[f->type].attackValue;
-	int opponentDefense = Constant_FigureProperties[opponent->type].defenseValue;
+	int figureAttack = props->attack_value;
+	int opponentDefense = opponent_props->defense_value;
 	
 	// attack modifiers
 	if (f->type == FIGURE_WOLF) {
@@ -148,7 +151,7 @@ static void hitOpponent(int figureId, struct Data_Figure *f)
 		}
 	}
 	
-	int maxDamage = Constant_FigureProperties[opponent->type].maxDamage;
+	int maxDamage = opponent_props->max_damage;
 	int netAttack = figureAttack - opponentDefense;
 	if (netAttack < 0) {
 		netAttack = 0;

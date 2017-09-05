@@ -4,6 +4,7 @@
 #include "FigureMovement.h"
 #include "Routing.h"
 
+#include "figure/properties.h"
 #include "figure/type.h"
 
 int FigureAction_CombatSoldier_getTarget(int x, int y, int maxDistance)
@@ -211,8 +212,8 @@ int FigureAction_CombatEnemy_getMissileTarget(int enemyId, int maxDistance, int 
 void FigureAction_Combat_attackFigure(int figureId, int opponentId)
 {
 	struct Data_Figure *f = &Data_Figures[figureId];
-	int figureCategory = Constant_FigureProperties[f->type].category;
-	if (figureCategory <= FigureCategory_Inactive || figureCategory >= FigureCategory_Criminal ||
+	int figureCategory = figure_properties_for_type(f->type)->category;
+	if (figureCategory <= FIGURE_CATEGORY_INACTIVE || figureCategory >= FIGURE_CATEGORY_CRIMINAL ||
 			f->actionState == FigureActionState_150_Attack) {
 		return;
 	}
@@ -226,29 +227,29 @@ void FigureAction_Combat_attackFigure(int figureId, int opponentId)
 			continue;
 		}
 		struct Data_Figure *opponent = &Data_Figures[opponentId];
-		int opponentCategory = Constant_FigureProperties[opponent->type].category;
+		int opponentCategory = figure_properties_for_type(opponent->type)->category;
 		int attack = 0;
 		if (opponent->state != FigureState_Alive) {
 			attack = 0;
 		} else if (opponent->actionState == FigureActionState_149_Corpse) {
 			attack = 0;
-		} else if (figureCategory == FigureCategory_Armed && opponentCategory == FigureCategory_Native) {
+		} else if (figureCategory == FIGURE_CATEGORY_ARMED && opponentCategory == FIGURE_CATEGORY_NATIVE) {
 			if (opponent->actionState == FigureActionState_159_NativeAttacking) {
 				attack = 1;
 			}
-		} else if (figureCategory == FigureCategory_Armed && opponentCategory == FigureCategory_Criminal) {
+		} else if (figureCategory == FIGURE_CATEGORY_ARMED && opponentCategory == FIGURE_CATEGORY_CRIMINAL) {
 			attack = 1;
-		} else if (figureCategory == FigureCategory_Armed && opponentCategory == FigureCategory_Hostile) {
+		} else if (figureCategory == FIGURE_CATEGORY_ARMED && opponentCategory == FIGURE_CATEGORY_HOSTILE) {
 			attack = 1;
-		} else if (figureCategory == FigureCategory_Hostile && opponentCategory == FigureCategory_Citizen) {
+		} else if (figureCategory == FIGURE_CATEGORY_HOSTILE && opponentCategory == FIGURE_CATEGORY_CITIZEN) {
 			attack = 1;
-		} else if (figureCategory == FigureCategory_Hostile && opponentCategory == FigureCategory_Armed) {
+		} else if (figureCategory == FIGURE_CATEGORY_HOSTILE && opponentCategory == FIGURE_CATEGORY_ARMED) {
 			attack = 1;
-		} else if (figureCategory == FigureCategory_Hostile && opponentCategory == FigureCategory_Criminal) {
+		} else if (figureCategory == FIGURE_CATEGORY_HOSTILE && opponentCategory == FIGURE_CATEGORY_CRIMINAL) {
 			attack = 1;
-		} else if (figureCategory == FigureCategory_Armed && opponentCategory == FigureCategory_Animal) {
+		} else if (figureCategory == FIGURE_CATEGORY_ARMED && opponentCategory == FIGURE_CATEGORY_ANIMAL) {
 			attack = 1;
-		} else if (figureCategory == FigureCategory_Hostile && opponentCategory == FigureCategory_Animal) {
+		} else if (figureCategory == FIGURE_CATEGORY_HOSTILE && opponentCategory == FIGURE_CATEGORY_ANIMAL) {
 			attack = 1;
 		}
 		if (attack && opponent->actionState == FigureActionState_150_Attack && opponent->numAttackers >= 2) {

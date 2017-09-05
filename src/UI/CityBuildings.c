@@ -732,7 +732,7 @@ void UI_CityBuildings_handleMouse(const mouse *m)
 
 void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 {
-	if (!Data_Settings.mouseTooltips || mouse_get()->right.is_down) {
+	if (!Data_Settings.mouseTooltips) {
 		return;
 	}
 	if (UI_Window_getId() != Window_City) {

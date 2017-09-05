@@ -5,6 +5,7 @@
 #include "Sound.h"
 
 #include "figure/formation.h"
+#include "figure/properties.h"
 
 static const int cloudGraphicOffsets[] = {
 	0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2,
@@ -41,10 +42,11 @@ void FigureAction_arrow(int figureId)
 	if (targetId) {
 		int targetType = Data_Figures[targetId].type;
 		int formationId = Data_Figures[targetId].formationId;
-		int maxDamage = Constant_FigureProperties[targetType].maxDamage;
-		int damageInflicted =
-			Constant_FigureProperties[f->type].missileAttackValue -
-			Constant_FigureProperties[targetType].missileDefenseValue;
+        const figure_properties *target_props = figure_properties_for_type(targetType);
+        int maxDamage = target_props->max_damage;
+        int damageInflicted =
+            figure_properties_for_type(f->type)->missile_attack_value -
+            target_props->missile_defense_value;
         const formation *m = formation_get(formationId);
 		if (damageInflicted < 0) {
 			damageInflicted = 0;
@@ -86,10 +88,11 @@ void FigureAction_spear(int figureId)
 	if (targetId) {
 		int targetType = Data_Figures[targetId].type;
 		int formationId = Data_Figures[targetId].formationId;
-		int maxDamage = Constant_FigureProperties[targetType].maxDamage;
-		int damageInflicted =
-			Constant_FigureProperties[f->type].missileAttackValue -
-			Constant_FigureProperties[targetType].missileDefenseValue;
+        const figure_properties *target_props = figure_properties_for_type(targetType);
+        int maxDamage = target_props->max_damage;
+        int damageInflicted =
+            figure_properties_for_type(f->type)->missile_attack_value -
+            target_props->missile_defense_value;
         const formation *m = formation_get(formationId);
 		if (damageInflicted < 0) {
 			damageInflicted = 0;
@@ -131,10 +134,11 @@ void FigureAction_javelin(int figureId)
 	if (targetId) {
 		int targetType = Data_Figures[targetId].type;
 		int formationId = Data_Figures[targetId].formationId;
-		int maxDamage = Constant_FigureProperties[targetType].maxDamage;
-		int damageInflicted =
-			Constant_FigureProperties[f->type].missileAttackValue -
-			Constant_FigureProperties[targetType].missileDefenseValue;
+        const figure_properties *target_props = figure_properties_for_type(targetType);
+        int maxDamage = target_props->max_damage;
+        int damageInflicted =
+            figure_properties_for_type(f->type)->missile_attack_value -
+            target_props->missile_defense_value;
         const formation *m = formation_get(formationId);
 		if (damageInflicted < 0) {
 			damageInflicted = 0;
@@ -177,10 +181,11 @@ void FigureAction_bolt(int figureId)
 	if (targetId) {
 		int targetType = Data_Figures[targetId].type;
 		int formationId = Data_Figures[targetId].formationId;
-		int maxDamage = Constant_FigureProperties[targetType].maxDamage;
-		int damageInflicted =
-			Constant_FigureProperties[f->type].missileAttackValue -
-			Constant_FigureProperties[targetType].missileDefenseValue;
+        const figure_properties *target_props = figure_properties_for_type(targetType);
+        int maxDamage = target_props->max_damage;
+        int damageInflicted =
+            figure_properties_for_type(f->type)->missile_attack_value -
+            target_props->missile_defense_value;
 		if (damageInflicted < 0) {
 			damageInflicted = 0;
 		}

@@ -33,6 +33,7 @@ set (FIGURE_FILES
     src/figure/enemy_army.c
     src/figure/formation.c
     src/figure/name.c
+    src/figure/properties.c
     src/figure/trader.c
 )
 set (GAME_FILES

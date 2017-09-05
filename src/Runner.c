@@ -52,7 +52,8 @@ static int getElapsedTicks()
 		return 0;
 	}
 	lastUpdate = now;
-	return 1;
+    // run twice as fast on 100% speed
+	return gameSpeedIndex == 0 ? 2 : 1;
 }
 
 void Runner_run()

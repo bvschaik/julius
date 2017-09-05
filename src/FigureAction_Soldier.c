@@ -7,6 +7,7 @@
 #include "Data/Grid.h"
 
 #include "figure/formation.h"
+#include "figure/properties.h"
 
 static const struct {
 	int x;
@@ -81,7 +82,7 @@ static void javelinLaunchMissile(int figureId, struct Data_Figure *f)
 {
 	int xTile, yTile;
 	f->waitTicksMissile++;
-	if (f->waitTicksMissile > Constant_FigureProperties[f->type].missileFrequency) {
+	if (f->waitTicksMissile > figure_properties_for_type(f->type)->missile_delay) {
 		f->waitTicksMissile = 0;
 		if (FigureAction_CombatSoldier_getMissileTarget(figureId, 10, &xTile, &yTile)) {
 			f->attackGraphicOffset = 1;

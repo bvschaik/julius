@@ -9,6 +9,7 @@
 
 #include "core/calc.h"
 #include "figure/enemy_army.h"
+#include "figure/properties.h"
 #include "figure/type.h"
 
 static int ballistaFiringOffsets[] = {
@@ -70,13 +71,13 @@ void FigureAction_ballista(int figureId)
 				int xTile, yTile;
 				if (FigureAction_CombatSoldier_getMissileTarget(figureId, 15, &xTile, &yTile)) {
 					f->actionState = FigureActionState_181_BallistaFiring;
-					f->waitTicksMissile = Constant_FigureProperties[f->type].missileFrequency;
+					f->waitTicksMissile = figure_properties_for_type(f->type)->missile_delay;
 				}
 			}
 			break;
 		case FigureActionState_181_BallistaFiring:
 			f->waitTicksMissile++;
-			if (f->waitTicksMissile > Constant_FigureProperties[f->type].missileFrequency) {
+			if (f->waitTicksMissile > figure_properties_for_type(f->type)->missile_delay) {
 				int xTile, yTile;
 				if (FigureAction_CombatSoldier_getMissileTarget(figureId, 15, &xTile, &yTile)) {
 					f->direction = Routing_getDirectionForMissileShooter(f->x, f->y, xTile, yTile);
@@ -210,7 +211,7 @@ void FigureAction_towerSentry(int figureId)
 		case FigureActionState_172_TowerSentryFiring:
 			FigureMovement_walkTicksTowerSentry(figureId, 1);
 			f->waitTicksMissile++;
-			if (f->waitTicksMissile > Constant_FigureProperties[f->type].missileFrequency) {
+			if (f->waitTicksMissile > figure_properties_for_type(f->type)->missile_delay) {
 				int xTile, yTile;
 				if (FigureAction_CombatSoldier_getMissileTarget(figureId, 10, &xTile, &yTile)) {
 					f->direction = Routing_getDirectionForMissileShooter(f->x, f->y, xTile, yTile);

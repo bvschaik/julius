@@ -440,29 +440,6 @@ struct BuildingProperties {
 
 extern const struct BuildingProperties Constant_BuildingProperties[140];
 
-struct FigureProperties {
-	int category;
-	int maxDamage;
-	int attackValue;
-	int defenseValue;
-	int missileDefenseValue;
-	int missileAttackValue;
-	int __unused6; // unreferenced
-	int missileFrequency;
-};
-
-enum {
-	FigureCategory_Inactive = 0,
-	FigureCategory_Citizen = 1,
-	FigureCategory_Armed = 2,
-	FigureCategory_Hostile = 3,
-	FigureCategory_Criminal = 4,
-	FigureCategory_Native = 5,
-	FigureCategory_Animal = 6
-};
-
-extern const struct FigureProperties Constant_FigureProperties[80];
-
 struct MissionId {
 	int peaceful;
 	int military;

@@ -10,6 +10,7 @@
 #include "Data/Grid.h"
 
 #include "figure/formation.h"
+#include "figure/properties.h"
 
 static void enemyInitial(int figureId, struct Data_Figure *f, const formation *m)
 {
@@ -43,7 +44,7 @@ static void enemyInitial(int figureId, struct Data_Figure *f, const formation *m
 		// missile throwers
 		f->waitTicksMissile++;
 		int xTile, yTile;
-		if (f->waitTicksMissile > Constant_FigureProperties[f->type].missileFrequency) {
+		if (f->waitTicksMissile > figure_properties_for_type(f->type)->missile_delay) {
 			f->waitTicksMissile = 0;
 			if (FigureAction_CombatEnemy_getMissileTarget(figureId, 10, Data_CityInfo.numSoldiersInCity < 4, &xTile, &yTile)) {
 				f->attackGraphicOffset = 1;

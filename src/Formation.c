@@ -18,6 +18,7 @@
 #include "building/model.h"
 #include "figure/enemy_army.h"
 #include "figure/formation.h"
+#include "figure/properties.h"
 
 #include <string.h>
 
@@ -284,7 +285,7 @@ void Formation_calculateFigures()
         int index = formation_add_figure(formationId, i,
             Data_Figures[i].formationAtRest != 1,
             Data_Figures[i].damage,
-            Constant_FigureProperties[figtype].maxDamage
+            figure_properties_for_type(figtype)->max_damage
         );
         Data_Figures[i].indexInFormation = index;
 	}
