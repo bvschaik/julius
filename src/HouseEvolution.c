@@ -785,7 +785,7 @@ void HouseEvolution_determineEvolveText(int buildingId, int hasBadDesirabilityBu
 		}
 		return;
 	}
-	++level;
+	model = model_get_house(++level);
 	// water
 	water = model->water;
 	if (water == 1 && !b->hasWaterAccess && !b->hasWellAccess) {
