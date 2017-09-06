@@ -96,7 +96,7 @@ static void advanceToNextMission()
 {
 	Data_Settings.startingFavor = Data_CityInfo.ratingFavor;
 	Data_Settings.personalSavingsLastMission = Data_CityInfo.personalSavings;
-	Data_Settings.personalSavingsPerMission[Data_Settings.currentMissionId] = Data_CityInfo.personalSavings;
+	Data_Settings.personalSavingsPerMission[Data_Settings.currentMissionId + 1] = Data_CityInfo.personalSavings;
 	Data_Settings.currentMissionId++;
 
 	Data_CityInfo.victoryHasWonScenario = 0;
