@@ -490,12 +490,12 @@ extern struct _Data_CityInfo {
 	signed char soundHitSoldier;
 	signed char soundHitSpear;
 	signed char soundHitClub;
-	signed char soundMarchEnemy;
-	signed char soundMarchHorse;
+	unsigned char soundMarchEnemy;
+	unsigned char soundMarchHorse;
 	signed char soundHitElephant;
 	signed char soundHitAxe;
 	signed char soundHitWolf;
-	signed char soundMarchWolf;
+	unsigned char soundMarchWolf;
 	char __unused_45a5[6];
 	char populationSentimentIncludeTents;
 	int caesarInvasionCount;
