@@ -1,10 +1,10 @@
 #include "Settings.h"
 
 #include "UI/TopMenu.h"
-#include "Data/Model.h"
 #include "Data/Settings.h"
 
 #include "core/io.h"
+#include "game/difficulty.h"
 #include "game/settings.h"
 
 void Settings_load()
@@ -25,7 +25,7 @@ void Settings_save()
 void Settings_clearMissionSettings()
 {
 	setting_clear_personal_savings();
-	Data_Settings.startingFavor = Data_Model_Difficulty.startingFavor[Data_Settings.difficulty];
+	Data_Settings.startingFavor = difficulty_favor();
 	Data_Settings.personalSavingsLastMission = 0;
 	Data_Settings.currentMissionId = 0;
 	Data_Settings.isCustomScenario = 0;

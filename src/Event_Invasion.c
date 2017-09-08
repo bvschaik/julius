@@ -13,7 +13,6 @@
 #include "Data/Event.h"
 #include "Data/Grid.h"
 #include "Data/Invasion.h"
-#include "Data/Model.h"
 #include "Data/Scenario.h"
 #include "Data/Settings.h"
 #include "Data/Figure.h"
@@ -21,6 +20,7 @@
 #include "core/random.h"
 #include "figure/formation.h"
 #include "figure/name.h"
+#include "game/difficulty.h"
 #include "game/time.h"
 
 #include <string.h>
@@ -268,8 +268,7 @@ static int startInvasion(int enemyType, int amount, int invasionPoint, int attac
 	int x, y;
 	int orientation;
 
-	amount = calc_adjust_with_percentage(amount,
-		Data_Model_Difficulty.enemyPercentage[Data_Settings.difficulty]);
+	amount = difficulty_adjust_enemies(amount);
 	if (amount >= 150) {
 		amount = 150;
 	}
@@ -407,8 +406,7 @@ static void updateDebtState()
 	}
 	if (Data_CityInfo.debtState == 0) {
 		// provide bailout
-		int rescueLoan = calc_adjust_with_percentage(Data_Scenario.rescueLoan,
-			Data_Model_Difficulty.moneyPercentage[Data_Settings.difficulty]);
+		int rescueLoan = difficulty_adjust_money(Data_Scenario.rescueLoan);
 		Data_CityInfo.treasury += rescueLoan;
 		Data_CityInfo.financeDonatedThisYear += rescueLoan;
 		

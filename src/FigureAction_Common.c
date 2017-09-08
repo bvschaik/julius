@@ -8,6 +8,7 @@
 
 #include "figure/formation.h"
 #include "figure/properties.h"
+#include "game/difficulty.h"
 
 const int figureActionCorpseGraphicOffsets[128] = {
 	0, 1, 2, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
@@ -122,11 +123,7 @@ static void hitOpponent(int figureId, struct Data_Figure *f)
 	
 	// attack modifiers
 	if (f->type == FIGURE_WOLF) {
-		switch (Data_Settings.difficulty) {
-			case Difficulty_VeryEasy: figureAttack = 2; break;
-			case Difficulty_Easy: figureAttack = 4; break;
-			case Difficulty_Normal: figureAttack = 6; break;
-		}
+	    figureAttack = difficulty_adjust_wolf_attack(figureAttack);
 	}
 	if (opponent->opponentId != figureId && m->figure_type != FIGURE_FORT_LEGIONARY &&
 			attackIsSameDirection(f->attackDirection, opponent->attackDirection)) {

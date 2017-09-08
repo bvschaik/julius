@@ -3,13 +3,6 @@
 #define DATA_INTERN 1
 #include "Grid.h"
 
-struct Data_Model_Difficulty Data_Model_Difficulty = {
-	{300, 200, 150, 100, 75}, // money percentage
-	{40, 60, 80, 100, 120}, // enemy percentage
-	{70, 60, 50, 50, 40}, // starting favor
-	{80, 70, 60, 50, 40}, // sentiment
-};
-
 struct _Data_Scenario Data_Scenario;
 
 struct _Data_Event Data_Event = {0};

@@ -28,7 +28,6 @@
 #include "Data/Event.h"
 #include "Data/FileList.h"
 #include "Data/Grid.h"
-#include "Data/Model.h"
 #include "Data/Scenario.h"
 #include "Data/Settings.h"
 #include "Data/State.h"
@@ -41,6 +40,7 @@
 #include "figure/formation.h"
 #include "figure/name.h"
 #include "figure/trader.h"
+#include "game/difficulty.h"
 #include "game/settings.h"
 #include "game/time.h"
 #include "graphics/image.h"
@@ -75,13 +75,12 @@ void Scenario_initialize(const char *scenarioName)
 			UI_Window_goTo(Window_City);
 			return;
 		}
-		Data_CityInfo.treasury = calc_adjust_with_percentage(Data_CityInfo.treasury,
-			Data_Model_Difficulty.moneyPercentage[Data_Settings.difficulty]);
+		Data_CityInfo.treasury = difficulty_adjust_money(Data_CityInfo.treasury);
 	}
 	Data_Settings.saveGameMissionId = saveMissionId;
 	Data_Settings.currentMissionId = curMissionId;
 
-	Data_CityInfo_Extra.startingFavor = Data_Model_Difficulty.startingFavor[Data_Settings.difficulty];
+	Data_CityInfo_Extra.startingFavor = difficulty_favor();
 	Data_Settings.personalSavingsLastMission = setting_personal_savings_for_mission(curMissionId);
 	
 	Data_CityInfo.ratingFavor = Data_CityInfo_Extra.startingFavor;
@@ -229,8 +228,7 @@ static void loadScenario(const char *scenarioName)
 	Data_CityInfo.exitPointX = Data_Scenario.exitPoint.x;
 	Data_CityInfo.exitPointY = Data_Scenario.exitPoint.y;
 	Data_CityInfo.exitPointGridOffset = GridOffset(Data_CityInfo.exitPointX, Data_CityInfo.exitPointY);
-	Data_CityInfo.treasury = calc_adjust_with_percentage(Data_Scenario.startFunds,
-		Data_Model_Difficulty.moneyPercentage[Data_Settings.difficulty]);
+	Data_CityInfo.treasury = difficulty_adjust_money(Data_Scenario.startFunds);
 	Data_CityInfo.financeBalanceLastYear = Data_CityInfo.treasury;
 	game_time_init(Data_Scenario.startYear);
 

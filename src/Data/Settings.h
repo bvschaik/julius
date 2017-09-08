@@ -68,7 +68,7 @@ extern struct _Data_Settings {
 	int __unused6;
 	int _personalSavingsPerMission[100];
 	int _lastVictoryVideoPlayed;
-	int difficulty;
+	int _difficulty;
 	int _godsEnabled;
 } Data_Settings;
 

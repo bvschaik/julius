@@ -7,13 +7,13 @@
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
-#include "Data/Model.h"
 #include "Data/Settings.h"
 #include "Data/Tutorial.h"
 
 #include "building/model.h"
 #include "core/calc.h"
 #include "core/random.h"
+#include "game/difficulty.h"
 
 static void addPeopleToCensus(int numPeople);
 static void removePeopleFromCensus(int numPeople);
@@ -184,7 +184,7 @@ void CityInfo_Population_calculateSentiment()
 		}
 		if (!b->housePopulation) {
 			b->sentiment.houseHappiness =
-				10 + Data_Model_Difficulty.sentiment[Data_Settings.difficulty];
+				10 + difficulty_sentiment();
 			continue;
 		}
 		if (Data_CityInfo.population < 300) {
@@ -193,7 +193,7 @@ void CityInfo_Population_calculateSentiment()
 			sentimentContributionTaxes = 0;
 			sentimentContributionWages = 0;
 
-			b->sentiment.houseHappiness = Data_Model_Difficulty.sentiment[Data_Settings.difficulty];
+			b->sentiment.houseHappiness = difficulty_sentiment();
 			if (Data_CityInfo.population < 200) {
 				b->sentiment.houseHappiness += 10;
 			}

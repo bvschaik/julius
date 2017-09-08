@@ -2,11 +2,11 @@
 
 #include "Data/CityInfo.h"
 #include "Data/Building.h"
-#include "Data/Model.h"
 #include "Data/Settings.h"
 
 #include "building/model.h"
 #include "core/calc.h"
+#include "game/difficulty.h"
 #include "game/time.h"
 
 void CityInfo_Finance_decayTaxCollectorAccess()
@@ -39,9 +39,8 @@ static void collectMonthlyTaxes()
 
 		int isPatrician = Data_Buildings[i].subtype.houseLevel >= HOUSE_SMALL_VILLA;
 		int population = Data_Buildings[i].housePopulation;
-		int trm = calc_adjust_with_percentage(
-			model_get_house(Data_Buildings[i].subtype.houseLevel)->tax_multiplier,
-			Data_Model_Difficulty.moneyPercentage[Data_Settings.difficulty]);
+		int trm = difficulty_adjust_money(
+			model_get_house(Data_Buildings[i].subtype.houseLevel)->tax_multiplier);
 		Data_CityInfo.populationPerLevel[Data_Buildings[i].subtype.houseLevel] += population;
 
 		int tax = population * trm;
@@ -287,9 +286,8 @@ void CityInfo_Finance_calculateEstimatedTaxes()
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		if (BuildingIsInUse(i) && Data_Buildings[i].houseSize && Data_Buildings[i].houseTaxCoverage) {
 			int isPatrician = Data_Buildings[i].subtype.houseLevel >= HOUSE_SMALL_VILLA;
-			int trm = calc_adjust_with_percentage(
-				model_get_house(Data_Buildings[i].subtype.houseLevel)->tax_multiplier,
-				Data_Model_Difficulty.moneyPercentage[Data_Settings.difficulty]);
+			int trm = difficulty_adjust_money(
+				model_get_house(Data_Buildings[i].subtype.houseLevel)->tax_multiplier);
 			if (isPatrician) {
 				Data_CityInfo.monthlyCollectedTaxFromPatricians += Data_Buildings[i].housePopulation * trm;
 			} else {
