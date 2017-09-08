@@ -38,6 +38,7 @@ set (FIGURE_FILES
     src/figure/trader.c
 )
 set (GAME_FILES
+    src/game/settings.c
     src/game/time.c
 )
 set (GRAPHICS_FILES
