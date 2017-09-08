@@ -20,6 +20,7 @@
 #include "core/lang.h"
 #include "core/string.h"
 #include "core/time.h"
+#include "game/settings.h"
 #include "graphics/image.h"
 
 #include <string.h>
@@ -107,7 +108,7 @@ void UI_Warning_draw()
 
 void UI_Warning_show(int warningId)
 {
-	if (!Data_Settings.warningsEnabled) {
+	if (!setting_warnings()) {
 		return;
 	}
 	for (int i = 0; i < 5; i++) {

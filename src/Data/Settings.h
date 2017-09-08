@@ -31,45 +31,45 @@ enum {
 };
 
 extern struct _Data_Settings {
-	int bpp;
-	int fullscreen;
+	int _bpp;
+	int _fullscreen;
 	unsigned char gamePaused;
 	unsigned char __unused1;
-	char cddrive;
-	unsigned char soundEffectsEnabled;
-	unsigned char soundMusicEnabled;
-	unsigned char soundSpeechEnabled;
+	char _cddrive;
+	unsigned char _soundEffectsEnabled;
+	unsigned char _soundMusicEnabled;
+	unsigned char _soundSpeechEnabled;
 	short __unused2;
-	int resolutionId;
-	int gameSpeed;
-	int scrollSpeed;
+	int _resolutionId;
+	int _gameSpeed;
+	int _scrollSpeed;
 	uint8_t playerName[32];
 	int __unused3[4];
 	int lastAdvisor;
 	int saveGameMissionId;
-	int mouseTooltips;
+	int _mouseTooltips;
 	int startingFavor;
 	int personalSavingsLastMission;
 	int currentMissionId;
 	int isCustomScenario;
-	unsigned char soundCityEnabled;
-	unsigned char warningsEnabled;
-	unsigned char monthlyAutosaveEnabled;
-	unsigned char autoclearEnabled;
-	int soundEffectsPercentage;
-	int soundMusicPercentage;
-	int soundSpeechPercentage;
-	int soundCityPercentage;
+	unsigned char _soundCityEnabled;
+	unsigned char _warningsEnabled;
+	unsigned char _monthlyAutosaveEnabled;
+	unsigned char _autoclearEnabled;
+	int _soundEffectsPercentage;
+	int _soundMusicPercentage;
+	int _soundSpeechPercentage;
+	int _soundCityPercentage;
 	int __unused4;
-	int ram;
-	int windowedWidth; // addition
-	int windowedHeight; // addition
-	int maxConfirmedResolution;
+	int _ram;
+	int _windowedWidth; // addition
+	int _windowedHeight; // addition
+	int _maxConfirmedResolution;
 	int __unused6;
-	int personalSavingsPerMission[100];
-	int lastVictoryVideoPlayed;
+	int _personalSavingsPerMission[100];
+	int _lastVictoryVideoPlayed;
 	int difficulty;
-	int godsEnabled;
+	int _godsEnabled;
 } Data_Settings;
 
 extern struct _Data_Settings_Map {

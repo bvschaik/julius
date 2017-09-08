@@ -9,6 +9,7 @@
 #include "../Data/Buttons.h"
 
 #include "core/calc.h"
+#include "game/settings.h"
 
 static void buttonOk(int param1, int param2);
 static void buttonCancel(int param1, int param2);
@@ -35,8 +36,8 @@ static int focusButtonId;
 
 void UI_SpeedOptions_init()
 {
-	original_gameSpeed = Data_Settings.gameSpeed;
-	original_scrollSpeed = Data_Settings.scrollSpeed;
+	original_gameSpeed = setting_game_speed();
+	original_scrollSpeed = setting_scroll_speed();
 }
 
 void UI_SpeedOptions_drawForeground()
@@ -75,7 +76,7 @@ void UI_SpeedOptions_drawForeground()
 		FONT_NORMAL_PLAIN
 	);
 	Widget_Text_drawPercentage(
-		Data_Settings.gameSpeed,
+		setting_game_speed(),
 		baseOffsetX + 296, baseOffsetY + 146,
 		FONT_NORMAL_PLAIN
 	);
@@ -84,7 +85,7 @@ void UI_SpeedOptions_drawForeground()
 		FONT_NORMAL_PLAIN
 	);
 	Widget_Text_drawPercentage(
-		Data_Settings.scrollSpeed,
+		setting_scroll_speed(),
 		baseOffsetX + 296, baseOffsetY + 182,
 		FONT_NORMAL_PLAIN
 	);
@@ -123,29 +124,26 @@ static void buttonOk(int param1, int param2)
 
 static void buttonCancel(int param1, int param2)
 {
-	Data_Settings.gameSpeed = original_gameSpeed;
-	Data_Settings.scrollSpeed = original_scrollSpeed;
+    setting_reset_speeds(original_gameSpeed, original_scrollSpeed);
 	UI_Window_goTo(Window_City);
 }
 
 static void arrowButtonGame(int param1, int param2)
 {
-	if (param1 == 1) {
-		Data_Settings.gameSpeed -= 10;
-	} else if (param1 == 0) {
-		Data_Settings.gameSpeed += 10;
-	}
-	Data_Settings.gameSpeed = calc_bound(Data_Settings.gameSpeed, 10, 100);
+    if (param1) {
+        setting_increase_game_speed();
+    } else {
+        setting_decrease_game_speed();
+    }
 	UI_Window_requestRefresh();
 }
 
 static void arrowButtonScroll(int param1, int param2)
 {
 	if (param1 == 1) {
-		Data_Settings.scrollSpeed -= 10;
+	    setting_increase_scroll_speed();
 	} else if (param1 == 0) {
-		Data_Settings.scrollSpeed += 10;
+	    setting_decrease_scroll_speed();
 	}
-	Data_Settings.scrollSpeed = calc_bound(Data_Settings.scrollSpeed, 0, 100);
 	UI_Window_requestRefresh();
 }

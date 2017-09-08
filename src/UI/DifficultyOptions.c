@@ -4,7 +4,8 @@
 #include "../Graphics.h"
 #include "../Data/Constants.h"
 #include "../Data/Screen.h"
-#include "../Data/Settings.h"
+
+#include "game/settings.h"
 
 #include "graphics/mouse.h"
 
@@ -32,12 +33,12 @@ void UI_DifficultyOptions_drawForeground()
 		384, FONT_LARGE_BLACK
 	);
 	
-	Widget_GameText_drawCentered(153, Data_Settings.difficulty + 1,
+	Widget_GameText_drawCentered(153, setting_difficulty() + 1,
 		baseOffsetX + 80, baseOffsetY + 142,
 		224, FONT_NORMAL_BLACK
 	);
 	Widget_GameText_drawCentered(
-		153, Data_Settings.godsEnabled ? 7 : 6,
+		153, setting_gods_enabled() ? 7 : 6,
 		baseOffsetX + 80, baseOffsetY + 190,
 		224, FONT_NORMAL_BLACK
 	);
@@ -66,27 +67,17 @@ void UI_DifficultyOptions_handleMouse(const mouse *m)
 
 static void arrowButtonDifficulty(int param1, int param2)
 {
-	if (param1) {
-		Data_Settings.difficulty--;
-	} else {
-		Data_Settings.difficulty++;
-	}
-	if (Data_Settings.difficulty < Difficulty_VeryEasy) {
-		Data_Settings.difficulty = Difficulty_VeryEasy;
-	}
-	if (Data_Settings.difficulty > Difficulty_VeryHard) {
-		Data_Settings.difficulty = Difficulty_VeryHard;
-	}
+    if (param1) {
+        setting_decrease_difficulty();
+    } else {
+        setting_increase_difficulty();
+    }
 	UI_Window_requestRefresh();
 }
 
 static void arrowButtonGods(int param1, int param2)
 {
-	if (Data_Settings.godsEnabled) {
-		Data_Settings.godsEnabled = 0;
-	} else {
-		Data_Settings.godsEnabled = 1;
-	}
+    setting_toggle_gods_enabled();
 	UI_Window_requestRefresh();
 }
 

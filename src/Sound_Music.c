@@ -2,10 +2,10 @@
 
 #include "SoundDevice.h"
 
-#include "Data/Settings.h"
 #include "Data/CityInfo.h"
 
 #include "core/dir.h"
+#include "game/settings.h"
 
 enum {
 	Track_None = 0,
@@ -38,7 +38,7 @@ static void playTrack(int track)
 {
 	SoundDevice_stopMusic();
 	SoundDevice_playMusic(dir_get_case_corrected_file(tracks[track]));
-	SoundDevice_setMusicVolume(Data_Settings.soundMusicPercentage);
+	SoundDevice_setMusicVolume(setting_sound(SOUND_MUSIC)->volume);
 	currentTrack = track;
 }
 
@@ -59,7 +59,7 @@ void Sound_Music_update()
 		--nextCheck;
 		return;
 	}
-	if (!Data_Settings.soundMusicEnabled) {
+	if (!setting_sound(SOUND_MUSIC)->enabled) {
 		return;
 	}
 	int track = Track_None;

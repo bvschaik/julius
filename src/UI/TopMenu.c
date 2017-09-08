@@ -16,6 +16,7 @@
 #include "../Data/Settings.h"
 #include "../Data/State.h"
 
+#include "game/settings.h"
 #include "game/time.h"
 #include "graphics/image.h"
 
@@ -99,16 +100,24 @@ static struct {
 	int month;
 } drawn;
 
+static void set_text_for_tooltips()
+{
+    switch (setting_tooltips()) {
+    case TOOLTIPS_NONE: menuHelp[1].textNumber = 2; break;
+    case TOOLTIPS_SOME: menuHelp[1].textNumber = 3; break;
+    case TOOLTIPS_FULL: menuHelp[1].textNumber = 4; break;
+    }
+}
+
+static void set_text_for_warnings()
+{
+    menuHelp[2].textNumber = setting_warnings() ? 6 : 5;
+}
+
 void UI_TopMenu_initFromSettings()
 {
-	if (Data_Settings.mouseTooltips == 1) {
-		menuHelp[1].textNumber = 3;
-	} else if (Data_Settings.mouseTooltips == 2) {
-		menuHelp[1].textNumber = 4;
-	}
-	if (Data_Settings.warningsEnabled) {
-		menuHelp[2].textNumber = 6;
-	}
+    set_text_for_tooltips();
+    set_text_for_warnings();
 }
 
 void UI_TopMenu_drawBackground()
@@ -398,27 +407,14 @@ static void menuHelp_help(int param)
 
 static void menuHelp_mouseHelp(int param)
 {
-	if (Data_Settings.mouseTooltips == 2) {
-		Data_Settings.mouseTooltips = 0;
-		menuHelp[1].textNumber = 2;
-	} else if (Data_Settings.mouseTooltips == 1) {
-		Data_Settings.mouseTooltips = 2;
-		menuHelp[1].textNumber = 4;
-	} else {
-		Data_Settings.mouseTooltips = 1;
-		menuHelp[1].textNumber = 3;
-	}
+    setting_cycle_tooltips();
+    set_text_for_tooltips();
 }
 
 static void menuHelp_warnings(int param)
 {
-	if (Data_Settings.warningsEnabled) {
-		Data_Settings.warningsEnabled = 0;
-		menuHelp[2].textNumber = 5;
-	} else {
-		Data_Settings.warningsEnabled = 1;
-		menuHelp[2].textNumber = 6;
-	}
+    setting_toggle_warnings();
+    set_text_for_warnings();
 }
 
 static void menuHelp_about(int param)

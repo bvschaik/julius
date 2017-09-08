@@ -5,10 +5,10 @@
 #include "Sound.h"
 #include "SoundDevice.h"
 #include "Data/Screen.h"
-#include "Data/Settings.h"
 
 #include "core/dir.h"
 #include "core/time.h"
+#include "game/settings.h"
 #include "graphics/color.h"
 
 static struct {
@@ -100,7 +100,7 @@ static int loadSmkVideo(const char *filename)
 
 static int loadSmkAudio(const char *filename)
 {
-	if (!Data_Settings.soundEffectsEnabled) {
+	if (!setting_sound(SOUND_EFFECTS)->enabled) {
 		// no sound when sound effects are disabled
 		return 1;
 	}

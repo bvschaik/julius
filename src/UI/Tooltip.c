@@ -9,11 +9,11 @@
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
 #include "../Data/Screen.h"
-#include "../Data/Settings.h"
 
 #include "core/lang.h"
 #include "core/string.h"
 #include "core/time.h"
+#include "game/settings.h"
 
 #include <string.h>
 
@@ -36,7 +36,7 @@ void UI_Tooltip_handle(const mouse *m, void (*func)(struct TooltipContext *))
 	struct TooltipContext tooltipContext = {m->x, m->y, 0, 0, 0, 0, 0, 0};
 	tooltipContext.textGroup = 68; // default group
 	tooltipContext.priority = TooltipPriority_Low;
-	if (Data_Settings.mouseTooltips && func) {
+	if (setting_tooltips() && func) {
 		func(&tooltipContext);
 	}
 	if (shouldDrawTooltip(&tooltipContext)) {
@@ -53,7 +53,7 @@ static int shouldDrawTooltip(struct TooltipContext* c)
 		UI_Tooltip_resetTimer();
 		return 0;
 	}
-	if (c->priority == TooltipPriority_Low && Data_Settings.mouseTooltips < 2) {
+	if (c->priority == TooltipPriority_Low && setting_tooltips() != TOOLTIPS_FULL) {
 		UI_Tooltip_resetTimer();
 		return 0;
 	}

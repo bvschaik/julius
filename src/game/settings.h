@@ -72,5 +72,6 @@ int setting_victory_video();
 
 int setting_personal_savings_for_mission(int mission_id);
 void setting_set_personal_savings_for_mission(int mission_id, int savings);
+void setting_clear_personal_savings();
 
 #endif // GAME_SETTINGS_H

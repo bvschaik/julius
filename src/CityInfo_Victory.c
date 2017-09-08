@@ -13,6 +13,7 @@
 #include "Data/Settings.h"
 #include "Data/State.h"
 
+#include "game/settings.h"
 #include "game/time.h"
 #include "graphics/mouse.h"
 
@@ -111,12 +112,10 @@ void CityInfo_Victory_check()
 					// Won game
 					UI_VideoIntermezzo_show("smk/win_game.smk", 400, 292, Window_VictoryIntermezzo);
 				} else {
-					if (Data_Settings.lastVictoryVideoPlayed) {
-						UI_VideoIntermezzo_show("smk/victory_senate.smk", 400, 292, Window_VictoryIntermezzo);
-						Data_Settings.lastVictoryVideoPlayed = 0;
-					} else {
+					if (setting_victory_video()) {
 						UI_VideoIntermezzo_show("smk/victory_balcony.smk", 400, 292, Window_VictoryIntermezzo);
-						Data_Settings.lastVictoryVideoPlayed = 1;
+					} else {
+						UI_VideoIntermezzo_show("smk/victory_senate.smk", 400, 292, Window_VictoryIntermezzo);
 					}
 				}
 				Data_State.forceWinCheat = 0;

@@ -8,6 +8,7 @@
 #include "../Data/Settings.h"
 
 #include "core/calc.h"
+#include "game/settings.h"
 
 static void buttonToggle(int param1, int param2);
 static void buttonOk(int param1, int param2);
@@ -19,10 +20,10 @@ static void arrowButtonEffects(int param1, int param2);
 static void arrowButtonCity(int param1, int param2);
 
 static CustomButton buttons[] = {
-	{64, 162, 288, 182, CustomButton_Immediate, buttonToggle, Widget_Button_doNothing, 1, 0},
-	{64, 192, 288, 212, CustomButton_Immediate, buttonToggle, Widget_Button_doNothing, 2, 0},
-	{64, 222, 288, 242, CustomButton_Immediate, buttonToggle, Widget_Button_doNothing, 3, 0},
-	{64, 252, 288, 272, CustomButton_Immediate, buttonToggle, Widget_Button_doNothing, 4, 0},
+	{64, 162, 288, 182, CustomButton_Immediate, buttonToggle, Widget_Button_doNothing, SOUND_MUSIC, 0},
+	{64, 192, 288, 212, CustomButton_Immediate, buttonToggle, Widget_Button_doNothing, SOUND_SPEECH, 0},
+	{64, 222, 288, 242, CustomButton_Immediate, buttonToggle, Widget_Button_doNothing, SOUND_EFFECTS, 0},
+	{64, 252, 288, 272, CustomButton_Immediate, buttonToggle, Widget_Button_doNothing, SOUND_CITY, 0},
 	{144, 296, 336, 316, CustomButton_Immediate, buttonOk, Widget_Button_doNothing, 1, 0},
 	{144, 296, 336, 346, CustomButton_Immediate, buttonCancel, Widget_Button_doNothing, 1, 0},
 };
@@ -38,27 +39,19 @@ static ArrowButton arrowButtons[] = {
 	{136, 190, 15, 24, arrowButtonCity, 0, 0},
 };
 
-static char original_soundEffectsEnabled;
-static char original_soundMusicEnabled;
-static char original_soundSpeechEnabled;
-static char original_soundCityEnabled;
-static int original_soundEffectsPercentage;
-static int original_soundMusicPercentage;
-static int original_soundSpeechPercentage;
-static int original_soundCityPercentage;
+static set_sound original_effects;
+static set_sound original_music;
+static set_sound original_speech;
+static set_sound original_city;
 
 static int focusButtonId;
 
 void UI_SoundOptions_init()
 {
-	original_soundEffectsEnabled = Data_Settings.soundEffectsEnabled;
-	original_soundMusicEnabled = Data_Settings.soundMusicEnabled;
-	original_soundSpeechEnabled = Data_Settings.soundSpeechEnabled;
-	original_soundCityEnabled = Data_Settings.soundCityEnabled;
-	original_soundEffectsPercentage = Data_Settings.soundEffectsPercentage;
-	original_soundMusicPercentage = Data_Settings.soundMusicPercentage;
-	original_soundSpeechPercentage = Data_Settings.soundSpeechPercentage;
-	original_soundCityPercentage = Data_Settings.soundCityPercentage;
+	original_effects = *setting_sound(SOUND_EFFECTS);
+	original_music = *setting_sound(SOUND_MUSIC);
+	original_speech = *setting_sound(SOUND_SPEECH);
+	original_city = *setting_sound(SOUND_CITY);
 }
 
 void UI_SoundOptions_drawForeground()
@@ -119,38 +112,42 @@ void UI_SoundOptions_drawForeground()
 		FONT_SMALL_PLAIN
 	);
 	
-	Widget_GameText_drawCentered(46, Data_Settings.soundMusicEnabled ? 2 : 1,
+	const set_sound *music = setting_sound(SOUND_MUSIC);
+	Widget_GameText_drawCentered(46, music->enabled ? 2 : 1,
 		baseOffsetX + 64, baseOffsetY + 166,
 		224, FONT_NORMAL_GREEN
 	);
-	Widget_Text_drawPercentage(Data_Settings.soundMusicPercentage,
+	Widget_Text_drawPercentage(music->volume,
 		baseOffsetX + 374, baseOffsetY + 166,
 		FONT_NORMAL_PLAIN
 	);
 	
-	Widget_GameText_drawCentered(46, Data_Settings.soundSpeechEnabled ? 4 : 3,
+	const set_sound *speech = setting_sound(SOUND_SPEECH);
+	Widget_GameText_drawCentered(46, speech->enabled ? 4 : 3,
 		baseOffsetX + 64, baseOffsetY + 196,
 		224, FONT_NORMAL_GREEN
 	);
-	Widget_Text_drawPercentage(Data_Settings.soundSpeechPercentage,
+	Widget_Text_drawPercentage(speech->volume,
 		baseOffsetX + 374, baseOffsetY + 196,
 		FONT_NORMAL_PLAIN
 	);
 	
-	Widget_GameText_drawCentered(46, Data_Settings.soundEffectsEnabled ? 6 : 5,
+	const set_sound *effects = setting_sound(SOUND_EFFECTS);
+	Widget_GameText_drawCentered(46, effects->enabled ? 6 : 5,
 		baseOffsetX + 64, baseOffsetY + 226,
 		224, FONT_NORMAL_GREEN
 	);
-	Widget_Text_drawPercentage(Data_Settings.soundEffectsPercentage,
+	Widget_Text_drawPercentage(effects->volume,
 		baseOffsetX + 374, baseOffsetY + 226,
 		FONT_NORMAL_PLAIN
 	);
 	
-	Widget_GameText_drawCentered(46, Data_Settings.soundCityEnabled ? 8 : 7,
+	const set_sound *city = setting_sound(SOUND_CITY);
+	Widget_GameText_drawCentered(46, city->enabled ? 8 : 7,
 		baseOffsetX + 64, baseOffsetY + 256,
 		224, FONT_NORMAL_GREEN
 	);
-	Widget_Text_drawPercentage(Data_Settings.soundCityPercentage,
+	Widget_Text_drawPercentage(city->volume,
 		baseOffsetX + 374, baseOffsetY + 256,
 		FONT_NORMAL_PLAIN
 	);
@@ -177,34 +174,24 @@ void UI_SoundOptions_handleMouse(const mouse *m)
 	}
 }
 
-static void buttonToggle(int param1, int param2)
+static void buttonToggle(int type, int param2)
 {
-	switch (param1) {
-		case 1: // music
-			Data_Settings.soundMusicEnabled = Data_Settings.soundMusicEnabled ? 0 : 1;
-			if (Data_Settings.soundMusicEnabled) {
-				Sound_Music_reset();
-				Sound_Music_update();
-			} else {
-				Sound_stopMusic();
-			}
-			break;
-
-		case 2: // speech
-			Data_Settings.soundSpeechEnabled = Data_Settings.soundSpeechEnabled ? 0 : 1;
-			if (!Data_Settings.soundSpeechEnabled) {
-				Sound_stopSpeech();
-			}
-			break;
-
-		case 3: // effects
-			Data_Settings.soundEffectsEnabled = Data_Settings.soundEffectsEnabled ? 0 : 1;
-			break;
-
-		case 4: // city
-			Data_Settings.soundCityEnabled = Data_Settings.soundCityEnabled ? 0 : 1;
-			break;
-	}
+    setting_toggle_sound_enabled(type);
+    switch (type) {
+    case SOUND_MUSIC:
+        if (setting_sound(SOUND_MUSIC)->enabled) {
+            Sound_Music_reset();
+            Sound_Music_update();
+        } else {
+            Sound_stopMusic();
+        }
+        break;
+    case SOUND_SPEECH:
+        if (!setting_sound(SOUND_SPEECH)->enabled) {
+            Sound_stopSpeech();
+        }
+        break;
+    }
 }
 
 static void buttonOk(int param1, int param2)
@@ -214,76 +201,60 @@ static void buttonOk(int param1, int param2)
 
 static void buttonCancel(int param1, int param2)
 {
-	Data_Settings.soundEffectsEnabled = original_soundEffectsEnabled;
-	Data_Settings.soundMusicEnabled = original_soundMusicEnabled;
-	Data_Settings.soundSpeechEnabled = original_soundSpeechEnabled;
-	Data_Settings.soundCityEnabled = original_soundCityEnabled;
-	Data_Settings.soundEffectsPercentage = original_soundEffectsPercentage;
-	Data_Settings.soundMusicPercentage = original_soundMusicPercentage;
-	Data_Settings.soundSpeechPercentage = original_soundSpeechPercentage;
-	Data_Settings.soundCityPercentage = original_soundCityPercentage;
-	if (Data_Settings.soundMusicEnabled) {
+    setting_reset_sound(SOUND_EFFECTS, original_effects.enabled, original_effects.volume);
+    setting_reset_sound(SOUND_MUSIC, original_music.enabled, original_music.volume);
+    setting_reset_sound(SOUND_SPEECH, original_speech.enabled, original_speech.volume);
+    setting_reset_sound(SOUND_CITY, original_city.enabled, original_city.volume);
+	if (original_music.enabled) {
 		Sound_Music_reset();
 		Sound_Music_update();
 	} else {
 		Sound_stopMusic();
 	}
-	Sound_setMusicVolume(Data_Settings.soundMusicPercentage);
-	Sound_setSpeechVolume(Data_Settings.soundSpeechPercentage);
-	Sound_setEffectsVolume(Data_Settings.soundEffectsPercentage);
-	Sound_setCityVolume(Data_Settings.soundCityPercentage);
+	Sound_setMusicVolume(original_music.volume);
+	Sound_setSpeechVolume(original_speech.volume);
+	Sound_setEffectsVolume(original_effects.volume);
+	Sound_setCityVolume(original_city.volume);
 
 	UI_Window_goTo(Window_City);
 }
 
+static void update_volume(set_sound_type type, int is_decrease)
+{
+	if (is_decrease) {
+		setting_decrease_sound_volume(type);
+	} else {
+		setting_increase_sound_volume(type);
+	}
+}
 static void arrowButtonMusic(int param1, int param2)
 {
-	if (param1 == 1) {
-		Data_Settings.soundMusicPercentage--;
-	} else if (param1 == 0) {
-		Data_Settings.soundMusicPercentage++;
-	}
-	Data_Settings.soundMusicPercentage = calc_bound(Data_Settings.soundMusicPercentage, 0, 100);
-	Sound_setMusicVolume(Data_Settings.soundMusicPercentage);
+    update_volume(SOUND_MUSIC, param1);
+	Sound_setMusicVolume(setting_sound(SOUND_MUSIC)->volume);
 
 	UI_Window_requestRefresh();
 }
 
 static void arrowButtonSpeech(int param1, int param2)
 {
-	if (param1 == 1) {
-		Data_Settings.soundSpeechPercentage--;
-	} else if (param1 == 0) {
-		Data_Settings.soundSpeechPercentage++;
-	}
-	Data_Settings.soundSpeechPercentage = calc_bound(Data_Settings.soundSpeechPercentage, 0, 100);
-	Sound_setSpeechVolume(Data_Settings.soundSpeechPercentage);
+    update_volume(SOUND_SPEECH, param1);
+	Sound_setSpeechVolume(setting_sound(SOUND_SPEECH)->volume);
 
 	UI_Window_requestRefresh();
 }
 
 static void arrowButtonEffects(int param1, int param2)
 {
-	if (param1 == 1) {
-		Data_Settings.soundEffectsPercentage--;
-	} else if (param1 == 0) {
-		Data_Settings.soundEffectsPercentage++;
-	}
-	Data_Settings.soundEffectsPercentage = calc_bound(Data_Settings.soundEffectsPercentage, 0, 100);
-	Sound_setEffectsVolume(Data_Settings.soundEffectsPercentage);
+    update_volume(SOUND_EFFECTS, param1);
+	Sound_setEffectsVolume(setting_sound(SOUND_EFFECTS)->volume);
 
 	UI_Window_requestRefresh();
 }
 
 static void arrowButtonCity(int param1, int param2)
 {
-	if (param1 == 1) {
-		Data_Settings.soundCityPercentage--;
-	} else if (param1 == 0) {
-		Data_Settings.soundCityPercentage++;
-	}
-	Data_Settings.soundCityPercentage = calc_bound(Data_Settings.soundCityPercentage, 0, 100);
-	Sound_setCityVolume(Data_Settings.soundCityPercentage);
+    update_volume(SOUND_CITY, param1);
+	Sound_setCityVolume(setting_sound(SOUND_CITY)->volume);
 
 	UI_Window_requestRefresh();
 }

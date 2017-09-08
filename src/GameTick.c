@@ -32,6 +32,7 @@
 #include "Data/State.h"
 
 #include "core/random.h"
+#include "game/settings.h"
 #include "game/time.h"
 
 #include <stdio.h>
@@ -147,7 +148,7 @@ static void advanceMonth()
 	CityInfo_Population_recordMonthlyPopulation();
 	CityInfo_Gods_checkFestival();
 	Tutorial_onMonthTick();
-	if (Data_Settings.monthlyAutosaveEnabled) {
+	if (setting_monthly_autosave()) {
 		GameFile_writeSavedGame("last.sav");
 	}
 }

@@ -19,6 +19,7 @@
 #include "../src/Game.h"
 
 #include "core/lang.h"
+#include "game/settings.h"
 #include "graphics/mouse.h"
 
 #include <execinfo.h>
@@ -107,7 +108,7 @@ void System_toggleFullscreen()
 {
 	SDL_Event event;
 	event.user.type = SDL_USEREVENT;
-	if (Data_Settings.fullscreen) {
+	if (setting_fullscreen()) {
 		event.user.code = UserEventWindowed;
 	} else {
 		event.user.code = UserEventFullscreen;
@@ -160,15 +161,15 @@ void System_initCursors()
 
 void runTicks(int ticks)
 {
-	int originalSpeed = Data_Settings.gameSpeed;
-	Data_Settings.gameSpeed = 100;
+	int originalSpeed = setting_game_speed();
+	setting_reset_speeds(100, setting_scroll_speed());
 	time_set_millis(0);
 	for (int i = 1; i <= ticks; i++) {
 		UI_Window_goTo(Window_City);
 		time_set_millis(2 * i);
 		Runner_run();
 	}
-	Data_Settings.gameSpeed = originalSpeed;
+	setting_reset_speeds(originalSpeed, setting_scroll_speed());
 }
 
 int runAutopilot(const char *savedGameToLoad, const char *savedGameToWrite, int ticksToRun)
@@ -354,10 +355,11 @@ void createWindowAndRenderer(int fullscreen)
 			Desktop.width, Desktop.height,
 			SDL_WINDOW_RESIZABLE | SDL_WINDOW_FULLSCREEN);
 	} else {
+	    int width, height;
+	    setting_window(&width, &height);
 		SDL.window = SDL_CreateWindow(title,
 			SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-			Data_Settings.windowedWidth, Data_Settings.windowedHeight,
-			SDL_WINDOW_RESIZABLE);
+			width, height, SDL_WINDOW_RESIZABLE);
 	}
 	
 	SDL.renderer = SDL_CreateRenderer(SDL.window, -1, 0);
@@ -370,11 +372,7 @@ void createSurface(int width, int height, int fullscreen)
 		SDL.texture = 0;
 	}
 	
-	Data_Settings.fullscreen = fullscreen;
-	if (!fullscreen) {
-		Data_Settings.windowedWidth = width;
-		Data_Settings.windowedHeight = height;
-	}
+	setting_set_display(fullscreen, width, height);
 	SDL.texture = SDL_CreateTexture(SDL.renderer,
 		SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING,
 		width, height);
@@ -441,8 +439,8 @@ void mainLoop()
 							break;
 						case SDL_WINDOWEVENT_SIZE_CHANGED:
 						//case SDL_WINDOWEVENT_RESIZED:
-							printf("System resize to %d x %d full %d\n", event.window.data1, event.window.data2, Data_Settings.fullscreen);
-							createSurface(event.window.data1, event.window.data2, Data_Settings.fullscreen);
+							printf("System resize to %d x %d\n", event.window.data1, event.window.data2);
+							createSurface(event.window.data1, event.window.data2, setting_fullscreen());
 							UI_Window_requestRefresh();
 							break;
 					}
@@ -497,7 +495,7 @@ void mainLoop()
 						SDL_SetWindowSize(SDL.window, *(int*)event.user.data1, *(int*)event.user.data2);
 						SDL_SetWindowFullscreen(SDL.window, 0);
 						printf("User resize to %d x %d\n", *(int*)event.user.data1, *(int*)event.user.data2);
-						Data_Settings.fullscreen = 0;
+						setting_set_display(0, *(int*)event.user.data1, *(int*)event.user.data2);
 						//createSurface(*(int*)event.user.data1, *(int*)event.user.data2, 0);
 						//UI_Window_requestRefresh();
 					} else if (event.user.code == UserEventFullscreen) {
@@ -508,14 +506,16 @@ void mainLoop()
 						mode.h = Desktop.height;
 						SDL_SetWindowDisplayMode(SDL.window, &mode);
 						SDL_SetWindowFullscreen(SDL.window, SDL_WINDOW_FULLSCREEN);
-						Data_Settings.fullscreen = 1;
+						setting_set_display(1, Desktop.width, Desktop.height);
 						//createSurface(Desktop.width, Desktop.height, 1);
 						//UI_Window_requestRefresh();
 					} else if (event.user.code == UserEventWindowed) {
-						printf("User to windowed %d x %d\n", Data_Settings.windowedWidth, Data_Settings.windowedHeight);
-						SDL_SetWindowSize(SDL.window, Data_Settings.windowedWidth, Data_Settings.windowedHeight);
+					    int width, height;
+					    setting_window(&width, &height);
+						printf("User to windowed %d x %d\n", width, height);
+						SDL_SetWindowSize(SDL.window, width, height);
 						SDL_SetWindowFullscreen(SDL.window, 0);
-						Data_Settings.fullscreen = 0;
+						setting_set_display(0, width, height);
 						//createSurface(Data_Settings.windowedWidth, Data_Settings.windowedHeight, 0);
 						//UI_Window_requestRefresh();
 					}
@@ -576,8 +576,8 @@ int runPerformance(const char *savedGameToLoad, int ticksToRun)
 
     GameFile_loadSavedGame(savedGameToLoad);
     
-    int originalSpeed = Data_Settings.gameSpeed;
-    Data_Settings.gameSpeed = 100;
+    int originalSpeed = setting_game_speed();
+    setting_reset_speeds(100, setting_scroll_speed());
     time_set_millis(0);
     for (int i = 1; i <= ticksToRun; i++) {
         UI_Window_goTo(Window_City);
@@ -589,7 +589,7 @@ int runPerformance(const char *savedGameToLoad, int ticksToRun)
         SDL_RenderCopy(SDL.renderer, SDL.texture, NULL, NULL);
         SDL_RenderPresent(SDL.renderer);
     }
-    Data_Settings.gameSpeed = originalSpeed;
+    setting_reset_speeds(originalSpeed, setting_scroll_speed());
 
     
     Game_exit();
@@ -625,11 +625,13 @@ int main(int argc, char **argv)
 		return 1;
 	}
 	
-	createWindowAndRenderer(Data_Settings.fullscreen);
-	if (Data_Settings.fullscreen) {
+	int width, height;
+	setting_window(&width, &height);
+	createWindowAndRenderer(setting_fullscreen());
+	if (setting_fullscreen()) {
 		createSurface(Desktop.width, Desktop.height, 1);
 	} else {
-		createSurface(Data_Settings.windowedWidth, Data_Settings.windowedHeight, 0);
+		createSurface(width, height, 0);
 	}
 	
 	if (!Game_init()) {

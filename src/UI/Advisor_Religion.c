@@ -1,15 +1,15 @@
 #include "Advisors_private.h"
-#include "../Data/Settings.h"
 #include "../CityInfo.h"
 
 #include "building/count.h"
+#include "game/settings.h"
 
 void UI_Advisor_Religion_drawBackground(int *advisorHeight)
 {
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
 	
-	if (Data_Settings.godsEnabled) {
+	if (setting_gods_enabled()) {
 		*advisorHeight = 17;
 		Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
 	} else {

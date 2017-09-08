@@ -4,8 +4,9 @@
 
 #include "Data/Constants.h"
 #include "Data/Screen.h"
-#include "Data/Settings.h"
 #include "Data/State.h"
+
+#include "game/settings.h"
 
 #define SCROLL_BORDER 5
 
@@ -21,7 +22,7 @@ static int shouldScrollMap(const mouse *m)
 	if (currentTime < lastScrollTime) {
 		diff = 10000;
 	}
-	int scrollDelay = (100 - Data_Settings.scrollSpeed) / 10;
+	int scrollDelay = (100 - setting_scroll_speed()) / 10;
 	if (scrollDelay < 10) { // 0% = 10 = no scroll at all
 		if (diff >= 12 * scrollDelay + 2) {
 			lastScrollTime = currentTime;

@@ -9,6 +9,7 @@
 #include "Data/State.h"
 
 #include "core/time.h"
+#include "game/settings.h"
 
 static const time_millis millisPerTickPerSpeed[] = {
 	0, 20, 35, 55, 80, 110, 160, 240, 350, 500, 700
@@ -23,7 +24,7 @@ static int getElapsedTicks()
 	if (now < lastUpdate) {
 		diff = 10000;
 	}
-	int gameSpeedIndex = (100 - Data_Settings.gameSpeed) / 10;
+	int gameSpeedIndex = (100 - setting_game_speed()) / 10;
 	if (gameSpeedIndex >= 10) {
 		return 0;
 	} else if (gameSpeedIndex < 0) {

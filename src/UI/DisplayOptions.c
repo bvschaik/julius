@@ -6,7 +6,8 @@
 
 #include "../Data/Constants.h"
 #include "../Data/Screen.h"
-#include "../Data/Settings.h"
+
+#include "game/settings.h"
 
 #include "graphics/mouse.h"
 
@@ -60,7 +61,7 @@ void UI_DisplayOptions_drawForeground()
 	);
 	
 	Widget_GameText_drawCentered(42,
-		Data_Settings.fullscreen ? 2 : 1,
+		setting_fullscreen() ? 2 : 1,
 		baseOffsetX + 128, baseOffsetY + 140,
 		224, FONT_NORMAL_GREEN
 	);

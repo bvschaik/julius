@@ -115,6 +115,12 @@ void settings_load()
     buffer buf;
     buffer_init(&buf, data.inf_file, size);
     load_settings(&buf);
+    
+    if (data.window_width + data.window_height < 500) {
+        // most likely migration from Caesar 3
+        data.window_width = 800;
+        data.window_height = 600;
+    }
 }
 
 void settings_save()
@@ -308,17 +314,19 @@ set_difficulty setting_difficulty()
 
 void setting_increase_difficulty()
 {
-    data.difficulty++;
-    if (data.difficulty > DIFFICULTY_VERY_HARD) {
+    if (data.difficulty >= DIFFICULTY_VERY_HARD) {
         data.difficulty = DIFFICULTY_VERY_HARD;
+    } else {
+        data.difficulty++;
     }
 }
 
 void setting_decrease_difficulty()
 {
-    data.difficulty--;
-    if (data.difficulty < DIFFICULTY_VERY_EASY) {
+    if (data.difficulty <= DIFFICULTY_VERY_EASY) {
         data.difficulty = DIFFICULTY_VERY_EASY;
+    } else {
+        data.difficulty--;
     }
 }
 
@@ -336,4 +344,11 @@ int setting_personal_savings_for_mission(int mission_id)
 void setting_set_personal_savings_for_mission(int mission_id, int savings)
 {
     data.personal_savings[mission_id] = savings;
+}
+
+void setting_clear_personal_savings()
+{
+    for (int i = 0; i < MAX_PERSONAL_SAVINGS; i++) {
+        data.personal_savings[i] = 0;
+    }
 }

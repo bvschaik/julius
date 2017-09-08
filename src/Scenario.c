@@ -41,6 +41,7 @@
 #include "figure/formation.h"
 #include "figure/name.h"
 #include "figure/trader.h"
+#include "game/settings.h"
 #include "game/time.h"
 #include "graphics/image.h"
 
@@ -81,7 +82,7 @@ void Scenario_initialize(const char *scenarioName)
 	Data_Settings.currentMissionId = curMissionId;
 
 	Data_CityInfo_Extra.startingFavor = Data_Model_Difficulty.startingFavor[Data_Settings.difficulty];
-	Data_Settings.personalSavingsLastMission = Data_Settings.personalSavingsPerMission[curMissionId];
+	Data_Settings.personalSavingsLastMission = setting_personal_savings_for_mission(curMissionId);
 	
 	Data_CityInfo.ratingFavor = Data_CityInfo_Extra.startingFavor;
 	Data_CityInfo.personalSavings = Data_Settings.personalSavingsLastMission;
@@ -100,7 +101,7 @@ void Scenario_initialize(const char *scenarioName)
 	setTutorialFlags(curMissionId);
 
 	if (IsTutorial1()) {
-		Data_Settings.personalSavingsPerMission[0] = 0;
+		setting_set_personal_savings_for_mission(0, 0);
 		Data_Settings.personalSavingsLastMission = 0;
 		Data_CityInfo.personalSavings = 0;
 	}

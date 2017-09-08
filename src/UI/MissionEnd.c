@@ -13,6 +13,7 @@
 #include "../Data/Settings.h"
 #include "../Data/State.h"
 
+#include "game/settings.h"
 #include "graphics/image.h"
 
 static void victoryAccept(int param1, int param2);
@@ -94,9 +95,10 @@ void UI_MissionEnd_drawForeground()
 
 static void advanceToNextMission()
 {
+    // TODO move out of UI code
 	Data_Settings.startingFavor = Data_CityInfo.ratingFavor;
 	Data_Settings.personalSavingsLastMission = Data_CityInfo.personalSavings;
-	Data_Settings.personalSavingsPerMission[Data_Settings.currentMissionId + 1] = Data_CityInfo.personalSavings;
+	setting_set_personal_savings_for_mission(Data_Settings.currentMissionId + 1, Data_CityInfo.personalSavings);
 	Data_Settings.currentMissionId++;
 
 	Data_CityInfo.victoryHasWonScenario = 0;

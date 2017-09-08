@@ -1,9 +1,8 @@
 #include "Sound.h"
 #include "SoundDevice.h"
 
-#include "Data/Settings.h"
-
 #include "core/file.h"
+#include "game/settings.h"
 
 #include <ctype.h>
 #include <dirent.h>
@@ -302,7 +301,7 @@ void Sound_stopSpeech()
 void Sound_playCityChannel_internal(int channel, int direction)
 {
 	channel += SoundChannel_CityOffset;
-	if (!Data_Settings.soundCityEnabled) {
+	if (!setting_sound(SOUND_CITY)->enabled) {
 		return;
 	}
 	if (!SoundDevice_hasChannel(channel) || SoundDevice_isChannelPlaying(channel)) {
@@ -332,7 +331,7 @@ void Sound_playCityChannel_internal(int channel, int direction)
 
 void Sound_Effects_playChannel(int channel)
 {
-	if (!Data_Settings.soundEffectsEnabled) {
+	if (!setting_sound(SOUND_EFFECTS)->enabled) {
 		return;
 	}
 	if (!SoundDevice_hasChannel(channel) || SoundDevice_isChannelPlaying(channel)) {
@@ -343,7 +342,7 @@ void Sound_Effects_playChannel(int channel)
 
 void Sound_Speech_playFile(const char *filename)
 {
-	if (!Data_Settings.soundSpeechEnabled) {
+	if (!setting_sound(SOUND_SPEECH)->enabled) {
 		return;
 	}
 	if (SoundDevice_isChannelPlaying(SoundChannel_Speech)) {
@@ -352,6 +351,6 @@ void Sound_Speech_playFile(const char *filename)
 	const char *casedFilename = getCasedFilename(filename);
 	if (casedFilename) {
 		SoundDevice_playSoundOnChannel(casedFilename, SoundChannel_Speech);
-		SoundDevice_setChannelVolume(SoundChannel_Speech, Data_Settings.soundSpeechPercentage);
+		SoundDevice_setChannelVolume(SoundChannel_Speech, setting_sound(SOUND_SPEECH)->volume);
 	}
 }

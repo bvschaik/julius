@@ -16,6 +16,7 @@
 #include "core/debug.h"
 #include "core/lang.h"
 #include "core/random.h"
+#include "game/settings.h"
 #include "graphics/image.h"
 
 #include <string.h>
@@ -37,6 +38,7 @@ static void loadDefaultNames()
 int Game_preInit()
 {
 	Settings_load();
+	settings_load();
 	if (!lang_load("c3.eng", "c3_mm.eng")) {
 		errlog("ERR: 'c3.eng' or 'c3_mm.eng' files not found or too large.");
 		return 0;
@@ -77,6 +79,7 @@ int Game_init()
 void Game_exit()
 {
 	Video_shutdown();
+	settings_save();
 	Settings_save();
 	Sound_shutdown();
 }

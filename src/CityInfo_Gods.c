@@ -13,6 +13,7 @@
 #include "building/count.h"
 #include "core/calc.h"
 #include "core/random.h"
+#include "game/settings.h"
 #include "game/time.h"
 
 #define MAX_GODS 5
@@ -186,7 +187,7 @@ static void updateGodMoods()
 			god = Data_CityInfo.godLeastHappy - 1;
 		}
 	}
-	if (!Data_Settings.godsEnabled) {
+	if (!setting_gods_enabled()) {
 		return;
 	}
 	if (god < MAX_GODS) {

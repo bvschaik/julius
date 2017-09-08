@@ -17,6 +17,7 @@
 #include "building/model.h"
 #include "core/time.h"
 #include "figure/formation.h"
+#include "game/settings.h"
 
 static void drawBuildingFootprints();
 static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_CityPixelCoordinate *coord);
@@ -732,7 +733,7 @@ void UI_CityBuildings_handleMouse(const mouse *m)
 
 void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 {
-	if (!Data_Settings.mouseTooltips) {
+	if (setting_tooltips() == TOOLTIPS_NONE) {
 		return;
 	}
 	if (UI_Window_getId() != Window_City) {
