@@ -1,0 +1,36 @@
+#ifndef FIGURE_NAME_H
+#define FIGURE_NAME_H
+
+#include "core/buffer.hpp"
+#include "figure/type.hpp"
+
+/**
+ * @file
+ * Figure name generation
+ */
+
+/**
+ * Initializes the figure name generator.
+ */
+void figure_name_init();
+
+/**
+ * Determines a new name for the figure type
+ * @param type Type of figure
+ * @return Name ID
+ */
+int figure_name_get(figure_type type, enemy_type enemy);
+
+/**
+ * Saves generator state
+ * @param buf Buffer to save to
+ */
+void figure_name_save_state(buffer *buf);
+
+/**
+ * Loads generator state
+ * @param buf Buffer to load from
+ */
+void figure_name_load_state(buffer *buf);
+
+#endif // FIGURE_NAME_H

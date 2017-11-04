@@ -1,3 +1,8 @@
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 #define INIT_MOCK(f) reset_##f();
 #define SETUP(f) f();
 #define INIT_MOCKS(block) \
@@ -298,3 +303,6 @@ CREATE_MOCK(r, f,\
     (walk->a1, walk->a2, walk->a3, walk->a4, walk->a5)\
 )
 
+#ifdef __cplusplus
+}
+#endif

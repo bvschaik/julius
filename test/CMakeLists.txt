@@ -1,7 +1,7 @@
 
 include_directories(.)
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --coverage")
+set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} --coverage")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
 
 set(TESTS
@@ -17,7 +17,7 @@ set(TESTS
 
     building/count
     building/list
-    building/model
+    #building/model
     building/properties
     
     empire/trade_prices
@@ -34,7 +34,7 @@ set(TESTS
 
 foreach (testcase ${TESTS})
     string(REPLACE "/" "_" testname ${testcase})
-    add_executable(${testname}_test ../src/${testcase}.c ${testcase}_test.c)
+    add_executable(${testname}_test ../src/${testcase}.cpp ${testcase}_test.cpp)
     add_test(NAME ${testname} COMMAND ${testname}_test)
 endforeach (testcase)
 

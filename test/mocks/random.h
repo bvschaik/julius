@@ -1,4 +1,4 @@
-#include "core/random.h"
+#include "core/random.hpp"
 
 #define CREATE_RANDOM_MOCKS \
     CREATE_VMOCK0(random_generate_next) \

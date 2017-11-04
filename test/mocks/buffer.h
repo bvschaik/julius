@@ -1,4 +1,4 @@
-#include "core/buffer.h"
+#include "core/buffer.hpp"
 
 #define CREATE_BUFFER_MOCKS \
     CREATE_VMOCK3(buffer_init, buffer*, void*, int) \
