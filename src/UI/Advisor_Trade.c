@@ -6,8 +6,8 @@
 #include "../Empire.h"
 #include "../Resource.h"
 
-#include "data/CityInfo.h"
-#include "data/Scenario.h"
+#include "data/CityInfo.hpp"
+#include "data/Scenario.hpp"
 
 #include "building/count.h"
 #include "core/calc.h"

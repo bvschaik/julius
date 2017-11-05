@@ -1,8 +1,8 @@
 #ifndef TERRAIN_PRIVATE_H
 #define TERRAIN_PRIVATE_H
 
-#include "data/Grid.h"
-#include "data/Settings.h"
+#include "data/Grid.hpp"
+#include "data/Settings.hpp"
 
 #define DELTA(x, y) ((y) * GRID_SIZE + (x))
 

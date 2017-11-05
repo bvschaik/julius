@@ -3,11 +3,11 @@
 #include "Building.h"
 #include "Terrain.h"
 
-#include "data/Building.h"
-#include "data/Constants.h"
-#include "data/Debug.h"
-#include "data/Grid.h"
-#include "data/Settings.h"
+#include "data/Building.hpp"
+#include "data/Constants.hpp"
+#include "data/Debug.hpp"
+#include "data/Grid.hpp"
+#include "data/Settings.hpp"
 
 #include "graphics/image.h"
 

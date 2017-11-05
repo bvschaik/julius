@@ -3,7 +3,7 @@
 #include "Figure.h"
 #include "Terrain.h"
 
-#include "data/CityInfo.h"
+#include "data/CityInfo.hpp"
 
 #include "figure/formation.h"
 

@@ -1,11 +1,11 @@
 #include "Empire.h"
 #include "PlayerMessage.h"
 
-#include "data/Empire.h"
-#include "data/Scenario.h"
-#include "data/Constants.h"
-#include "data/CityInfo.h"
-#include "data/Screen.h"
+#include "data/Empire.hpp"
+#include "data/Scenario.hpp"
+#include "data/Constants.hpp"
+#include "data/CityInfo.hpp"
+#include "data/Screen.hpp"
 
 #include "building/count.h"
 #include "core/io.h"

@@ -15,7 +15,7 @@ file(GLOB GAME_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/game/*.*)
 file(GLOB GRAPHICS_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/graphics/*.*)
 file(GLOB MAIN_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.*)
 file(GLOB UI_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/UI/*.*)
-file(GLOB DATA_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/data/*.c)
+file(GLOB DATA_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/data/*.*)
 
 add_executable(julius
   linux/main2.c

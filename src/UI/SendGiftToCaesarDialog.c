@@ -4,8 +4,8 @@
 #include "../Graphics.h"
 #include "../CityInfo.h"
 #include "Advisors_private.h"
-#include "data/CityInfo.h"
-#include "data/Screen.h"
+#include "data/CityInfo.hpp"
+#include "data/Screen.hpp"
 
 static void buttonSetGift(int param1, int param2);
 static void buttonSendGift(int param1, int param2);

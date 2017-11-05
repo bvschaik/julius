@@ -7,11 +7,11 @@
 #include "../Sound.h"
 #include "../Widget.h"
 
-#include "data/Building.h"
-#include "data/CityInfo.h"
-#include "data/Constants.h"
-#include "data/Figure.h"
-#include "data/Scenario.h"
+#include "data/Building.hpp"
+#include "data/CityInfo.hpp"
+#include "data/Constants.hpp"
+#include "data/Figure.hpp"
+#include "data/Scenario.hpp"
 
 static void toggleResourceState(int param1, int param2);
 static void granaryOrders(int index, int param2);

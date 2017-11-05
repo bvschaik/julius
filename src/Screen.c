@@ -3,7 +3,7 @@
 #include "CityView.h"
 #include "Graphics.h"
 #include "UI/Warning.h"
-#include "data/Screen.h"
+#include "data/Screen.hpp"
 
 #include "graphics/color.h"
 

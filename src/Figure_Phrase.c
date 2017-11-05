@@ -3,10 +3,10 @@
 #include "FigureAction.h"
 #include "Sound.h"
 
-#include "data/Building.h"
-#include "data/CityInfo.h"
-#include "data/Constants.h"
-#include "data/Figure.h"
+#include "data/Building.hpp"
+#include "data/CityInfo.hpp"
+#include "data/Constants.hpp"
+#include "data/Figure.hpp"
 
 #include "figure/trader.h"
 #include "figure/type.h"

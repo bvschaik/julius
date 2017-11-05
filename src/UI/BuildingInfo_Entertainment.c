@@ -1,7 +1,7 @@
 #include "BuildingInfo.h"
 #include "../Sound.h"
 #include "../Widget.h"
-#include "data/Building.h"
+#include "data/Building.hpp"
 
 void UI_BuildingInfo_drawAmphitheater(BuildingInfoContext *c)
 {

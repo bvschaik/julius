@@ -4,7 +4,7 @@
 
 #include "Sound.h"
 #include "SoundDevice.h"
-#include "data/Screen.h"
+#include "data/Screen.hpp"
 
 #include "core/dir.h"
 #include "core/time.h"

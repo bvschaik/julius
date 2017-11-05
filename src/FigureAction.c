@@ -1,7 +1,7 @@
 #include "FigureAction_private.h"
 
 #include "Figure.h"
-#include "data/CityInfo.h"
+#include "data/CityInfo.hpp"
 
 static void (*figureActionCallbacks[])(int figureId) = {
 	FigureAction_nobody, //0

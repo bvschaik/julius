@@ -8,8 +8,8 @@
 #include "UI/Tooltip.h"
 #include "UI/Window.h"
 
-#include "data/CityInfo.h"
-#include "data/Message.h"
+#include "data/CityInfo.hpp"
+#include "data/Message.hpp"
 
 #include "core/file.h"
 #include "core/lang.h"

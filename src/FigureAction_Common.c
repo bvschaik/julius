@@ -4,7 +4,7 @@
 #include "Formation.h"
 #include "Sound.h"
 
-#include "data/Constants.h"
+#include "data/Constants.hpp"
 
 #include "figure/formation.h"
 #include "figure/properties.h"

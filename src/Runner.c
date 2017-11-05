@@ -5,8 +5,8 @@
 #include "Sound.h"
 #include "UI/Window.h"
 
-#include "data/Settings.h"
-#include "data/State.h"
+#include "data/Settings.hpp"
+#include "data/State.hpp"
 
 #include "core/time.h"
 #include "game/settings.h"

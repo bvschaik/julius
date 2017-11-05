@@ -7,11 +7,11 @@
 #include "Terrain.h"
 #include "Trader.h"
 
-#include "data/CityInfo.h"
-#include "data/Empire.h"
-#include "data/Grid.h"
-#include "data/Message.h"
-#include "data/Scenario.h"
+#include "data/CityInfo.hpp"
+#include "data/Empire.hpp"
+#include "data/Grid.hpp"
+#include "data/Message.hpp"
+#include "data/Scenario.hpp"
 
 #include "empire/trade_prices.h"
 #include "empire/trade_route.h"

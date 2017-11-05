@@ -1,8 +1,8 @@
 #include "CityInfo.h"
 
-#include "data/CityInfo.h"
-#include "data/Building.h"
-#include "data/Settings.h"
+#include "data/CityInfo.hpp"
+#include "data/Building.hpp"
+#include "data/Settings.hpp"
 
 #include "building/model.h"
 #include "core/calc.h"

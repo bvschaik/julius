@@ -3,9 +3,9 @@
 #include "Routing.h"
 #include "Terrain.h"
 
-#include "data/Constants.h"
-#include "data/Grid.h"
-#include "data/Settings.h"
+#include "data/Constants.hpp"
+#include "data/Grid.hpp"
+#include "data/Settings.hpp"
 
 struct TerrainBridge {
 	int startGridOffset;

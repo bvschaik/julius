@@ -5,11 +5,11 @@
 #include "Terrain.h"
 #include "UI/Warning.h"
 
-#include "data/KeyboardInput.h"
-#include "data/FileList.h"
-#include "data/Screen.h"
-#include "data/Settings.h"
-#include "data/State.h"
+#include "data/KeyboardInput.hpp"
+#include "data/FileList.hpp"
+#include "data/Screen.hpp"
+#include "data/Settings.hpp"
+#include "data/State.hpp"
 
 #include "core/random.h"
 

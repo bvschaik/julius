@@ -4,7 +4,7 @@
 #include "Resource.h"
 #include "Trader.h"
 
-#include "data/CityInfo.h"
+#include "data/CityInfo.hpp"
 
 #include "figure/trader.h"
 #include "figure/type.h"

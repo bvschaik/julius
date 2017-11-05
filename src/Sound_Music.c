@@ -2,7 +2,7 @@
 
 #include "SoundDevice.h"
 
-#include "data/CityInfo.h"
+#include "data/CityInfo.hpp"
 
 #include "core/dir.h"
 #include "game/settings.h"

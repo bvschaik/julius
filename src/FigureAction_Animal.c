@@ -3,7 +3,7 @@
 #include "Figure.h"
 #include "Routing.h"
 
-#include "data/CityInfo.h"
+#include "data/CityInfo.hpp"
 
 #include "core/random.h"
 #include "figure/formation.h"

@@ -3,11 +3,11 @@
 #include "Building.h"
 #include "FigureAction.h"
 
-#include "data/Building.h"
-#include "data/Constants.h"
-#include "data/Settings.h"
-#include "data/Grid.h"
-#include "data/Figure.h"
+#include "data/Building.hpp"
+#include "data/Constants.hpp"
+#include "data/Settings.hpp"
+#include "data/Grid.hpp"
+#include "data/Figure.hpp"
 
 #include "building/model.h"
 #include "figure/type.h"

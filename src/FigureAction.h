@@ -1,7 +1,7 @@
 #ifndef FIGUREACTION_H
 #define FIGUREACTION_H
 
-#include "data/Figure.h"
+#include "data/Figure.hpp"
 
 enum
 {

@@ -27,9 +27,9 @@
 #include "UI/Sidebar.h"
 #include "UI/Window.h"
 
-#include "data/CityInfo.h"
-#include "data/Settings.h"
-#include "data/State.h"
+#include "data/CityInfo.hpp"
+#include "data/Settings.hpp"
+#include "data/State.hpp"
 
 #include "core/random.h"
 #include "game/settings.h"

@@ -3,7 +3,7 @@
 #include "../Sound.h"
 #include "../Widget.h"
 
-#include "data/Figure.h"
+#include "data/Figure.hpp"
 
 #include "figure/type.h"
 

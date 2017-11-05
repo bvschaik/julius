@@ -9,7 +9,7 @@
 #include "core/time.h"
 #include "Runner.h"
 #include "Screen.h"
-#include "data/AllData.h"
+#include "data/AllData.hpp"
 #include "Cursor.h"
 #include "KeyboardInput.h"
 #include "KeyboardHotkey.h"

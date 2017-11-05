@@ -2,12 +2,12 @@
 
 #include "UI/CityBuildings.h"
 
-#include "data/CityView.h"
-#include "data/Constants.h"
-#include "data/Grid.h"
-#include "data/Screen.h"
-#include "data/Settings.h"
-#include "data/State.h"
+#include "data/CityView.hpp"
+#include "data/Constants.hpp"
+#include "data/Grid.hpp"
+#include "data/Screen.hpp"
+#include "data/Settings.hpp"
+#include "data/State.hpp"
 
 static void setViewport(int xOffset, int yOffset, int widthInTiles, int heightInTiles);
 

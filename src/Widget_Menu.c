@@ -1,6 +1,6 @@
 #include "Widget.h"
 #include "Graphics.h"
-#include "data/Constants.h"
+#include "data/Constants.hpp"
 
 static int getMenuBarItem(const mouse *m, MenuBarItem *items, int numItems);
 static int getMenuItem(const mouse *m, MenuBarItem *menu);

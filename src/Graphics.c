@@ -2,8 +2,8 @@
 #include "Graphics_Footprint.h"
 #include "Loader.h"
 
-#include "data/Screen.h"
-#include "data/Constants.h"
+#include "data/Screen.hpp"
+#include "data/Constants.hpp"
 
 #include "graphics/image.h"
 

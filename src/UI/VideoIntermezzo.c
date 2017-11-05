@@ -3,7 +3,7 @@
 #include "../Video.h"
 
 #include "../Graphics.h"
-#include "data/Screen.h"
+#include "data/Screen.hpp"
 
 static struct {
 	WindowId nextWindowId;

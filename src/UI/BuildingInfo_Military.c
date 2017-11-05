@@ -6,12 +6,12 @@
 #include "../Widget.h"
 #include "../UI/Window.h"
 
-#include "data/Building.h"
-#include "data/CityInfo.h"
-#include "data/Constants.h"
-#include "data/Figure.h"
-#include "data/Settings.h"
-#include "data/State.h"
+#include "data/Building.hpp"
+#include "data/CityInfo.hpp"
+#include "data/Constants.hpp"
+#include "data/Figure.hpp"
+#include "data/Settings.hpp"
+#include "data/State.hpp"
 
 #include "building/count.h"
 #include "core/calc.h"

@@ -2,8 +2,8 @@
 #include "Window.h"
 #include "../Widget.h"
 #include "../Graphics.h"
-#include "data/Constants.h"
-#include "data/Screen.h"
+#include "data/Constants.hpp"
+#include "data/Screen.hpp"
 
 #include "game/settings.h"
 

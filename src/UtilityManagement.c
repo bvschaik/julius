@@ -5,12 +5,12 @@
 #include "Terrain.h"
 #include "TerrainGraphics.h"
 
-#include "data/Building.h"
-#include "data/CityInfo.h"
-#include "data/Constants.h"
-#include "data/Grid.h"
-#include "data/Scenario.h"
-#include "data/Settings.h"
+#include "data/Building.hpp"
+#include "data/CityInfo.hpp"
+#include "data/Constants.hpp"
+#include "data/Grid.hpp"
+#include "data/Scenario.hpp"
+#include "data/Settings.hpp"
 
 #include "building/list.h"
 #include "graphics/image.h"

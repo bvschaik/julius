@@ -4,9 +4,9 @@
 #include "../Graphics.h"
 #include "../Sound.h"
 
-#include "data/Constants.h"
-#include "data/Screen.h"
-#include "data/Settings.h"
+#include "data/Constants.hpp"
+#include "data/Screen.hpp"
+#include "data/Settings.hpp"
 
 #include "core/time.h"
 

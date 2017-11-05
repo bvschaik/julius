@@ -1,7 +1,7 @@
 #include "Advisors_private.h"
 #include "core/calc.h"
 #include "../Event.h"
-#include "data/Scenario.h"
+#include "data/Scenario.hpp"
 
 void UI_Advisor_Chief_drawBackground(int *advisorHeight)
 {

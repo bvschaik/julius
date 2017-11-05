@@ -8,9 +8,9 @@
 
 #include "UI/Window.h"
 
-#include "data/Constants.h"
-#include "data/FileList.h"
-#include "data/Settings.h"
+#include "data/Constants.hpp"
+#include "data/FileList.hpp"
+#include "data/Settings.hpp"
 
 #include "building/model.h"
 #include "core/debug.h"

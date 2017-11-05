@@ -1,9 +1,9 @@
 #include "CityInfo.h"
 
-#include "data/Building.h"
-#include "data/CityInfo.h"
-#include "data/Constants.h"
-#include "data/Debug.h"
+#include "data/Building.hpp"
+#include "data/CityInfo.hpp"
+#include "data/Constants.hpp"
+#include "data/Debug.hpp"
 
 #include "game/time.h"
 

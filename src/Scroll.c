@@ -2,9 +2,9 @@
 
 #include "core/time.h"
 
-#include "data/Constants.h"
-#include "data/Screen.h"
-#include "data/State.h"
+#include "data/Constants.hpp"
+#include "data/Screen.hpp"
+#include "data/State.hpp"
 
 #include "game/settings.h"
 

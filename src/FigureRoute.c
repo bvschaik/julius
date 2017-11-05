@@ -2,9 +2,9 @@
 
 #include "Routing.h"
 
-#include "data/Building.h"
-#include "data/Routes.h"
-#include "data/Figure.h"
+#include "data/Building.hpp"
+#include "data/Routes.hpp"
+#include "data/Figure.hpp"
 
 void FigureRoute_clearList()
 {

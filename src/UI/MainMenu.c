@@ -6,8 +6,8 @@
 #include "../Widget.h"
 #include "../Graphics.h"
 #include "../System.h"
-#include "data/Constants.h"
-#include "data/Screen.h"
+#include "data/Constants.hpp"
+#include "data/Screen.hpp"
 
 #include "graphics/image.h"
 

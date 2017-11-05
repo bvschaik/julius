@@ -1,9 +1,9 @@
-#include "AllData.h"
+#include "AllData.hpp"
 
 #define DATA_INTERN 1
-#include "Grid.h"
+#include "data/Grid.hpp"
 
-struct _Data_Scenario Data_Scenario;
+_Data_Scenario Data_Scenario;
 
 struct _Data_Event Data_Event = {0};
 
@@ -54,17 +54,18 @@ struct _Data_Debug Data_Debug;
 const int Constant_SalaryForRank[11] = {0, 2, 5, 8, 12, 20, 30, 40, 60, 80, 100};
 const int Constant_DirectionGridOffsets[8] = {-162, -161, 1, 163, 162, 161, -1, -163};
 
-const struct MissionId Constant_MissionIds[12] = {
-	{0, 0},
-	{1, 1},
-	{2, 3},
-	{4, 5},
-	{6, 7},
-	{8, 9},
-	{10, 11},
-	{12, 13},
-	{14, 15},
-	{16, 17},
-	{18, 19},
-	{20, 21},
+const struct MissionId Constant_MissionIds[12] =
+{
+    {0, 0},
+    {1, 1},
+    {2, 3},
+    {4, 5},
+    {6, 7},
+    {8, 9},
+    {10, 11},
+    {12, 13},
+    {14, 15},
+    {16, 17},
+    {18, 19},
+    {20, 21},
 };

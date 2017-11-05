@@ -4,11 +4,11 @@
 #include "HousePopulation.h"
 #include "PlayerMessage.h"
 
-#include "data/Building.h"
-#include "data/CityInfo.h"
-#include "data/Constants.h"
-#include "data/Settings.h"
-#include "data/Tutorial.h"
+#include "data/Building.hpp"
+#include "data/CityInfo.hpp"
+#include "data/Constants.hpp"
+#include "data/Settings.hpp"
+#include "data/Tutorial.hpp"
 
 #include "building/model.h"
 #include "core/calc.h"

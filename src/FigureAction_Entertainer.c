@@ -4,8 +4,8 @@
 #include "Figure.h"
 #include "Terrain.h"
 
-#include "data/Event.h"
-#include "data/Grid.h"
+#include "data/Event.hpp"
+#include "data/Grid.hpp"
 
 #include "building/list.h"
 #include "figure/type.h"

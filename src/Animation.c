@@ -1,7 +1,7 @@
 #include "Animation.h"
 
-#include "data/Grid.h"
-#include "data/Building.h"
+#include "data/Grid.hpp"
+#include "data/Building.hpp"
 
 #include "building/model.h"
 #include "core/calc.h"

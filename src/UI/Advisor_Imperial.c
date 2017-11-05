@@ -7,9 +7,9 @@
 #include "../Formation.h"
 #include "../Resource.h"
 
-#include "data/Empire.h"
-#include "data/Scenario.h"
-#include "data/Settings.h"
+#include "data/Empire.hpp"
+#include "data/Scenario.hpp"
+#include "data/Settings.hpp"
 
 static void buttonDonateToCity(int param1, int param2);
 static void buttonSetSalary(int param1, int param2);

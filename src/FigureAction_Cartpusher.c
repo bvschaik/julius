@@ -4,8 +4,8 @@
 #include "Resource.h"
 #include "Routing.h"
 
-#include "data/CityInfo.h"
-#include "data/Grid.h"
+#include "data/CityInfo.hpp"
+#include "data/Grid.hpp"
 
 static const int cartResourceOffsetMultipleLoadsFood[] = {0, 0, 8, 16, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 static const int cartResourceOffsetMultipleLoadsNonFood[] = {0, 0, 0, 0, 0, 8, 0, 16, 24, 32, 40, 48, 56, 64, 72, 80};

@@ -3,7 +3,7 @@
 #include "../Sound.h"
 #include "../Terrain.h"
 #include "../Widget.h"
-#include "data/Building.h"
+#include "data/Building.hpp"
 
 void UI_BuildingInfo_drawAqueduct(BuildingInfoContext *c)
 {

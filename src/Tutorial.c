@@ -3,12 +3,12 @@
 #include "PlayerMessage.h"
 #include "SidebarMenu.h"
 
-#include "data/CityInfo.h"
-#include "data/Constants.h"
-#include "data/Message.h"
-#include "data/Scenario.h"
-#include "data/Settings.h"
-#include "data/Tutorial.h"
+#include "data/CityInfo.hpp"
+#include "data/Constants.hpp"
+#include "data/Message.hpp"
+#include "data/Scenario.hpp"
+#include "data/Settings.hpp"
+#include "data/Tutorial.hpp"
 
 #include "game/time.h"
 

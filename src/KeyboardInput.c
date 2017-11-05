@@ -1,7 +1,7 @@
 #include "KeyboardInput.h"
 
 #include "Widget.h"
-#include "data/KeyboardInput.h"
+#include "data/KeyboardInput.hpp"
 
 enum {
 	CursorPosition_InString = 0,
