@@ -5,7 +5,7 @@
 
 #include "core/calc.h"
 #include "Graphics.h"
-#include "UI/Window.h"
+#include "ui/window.h"
 
 #include "core/lang.h"
 #include "core/string.h"

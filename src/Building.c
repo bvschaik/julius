@@ -14,7 +14,7 @@
 #include "Terrain.h"
 #include "TerrainGraphics.h"
 #include "Undo.h"
-#include "UI/Warning.h"
+#include "ui/warning.h"
 
 #include "data/building.hpp"
 #include "data/cityinfo.hpp"

@@ -3,7 +3,7 @@
 #include "GameFile.h"
 #include "GameTick.h"
 #include "Sound.h"
-#include "UI/Window.h"
+#include "ui/window.h"
 
 #include "data/settings.hpp"
 #include "data/state.hpp"

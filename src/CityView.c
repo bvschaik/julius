@@ -1,6 +1,6 @@
 #include "CityView.h"
 
-#include "UI/CityBuildings.h"
+#include "ui/citybuildings.h"
 
 #include "data/cityview.hpp"
 #include "data/constants.hpp"

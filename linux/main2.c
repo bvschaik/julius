@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
-#include "UI/Window.h"
+#include "ui/window.h"
 #include "core/time.h"
 #include "Runner.h"
 #include "Screen.h"

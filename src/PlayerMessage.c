@@ -4,9 +4,9 @@
 #include "Formation.h"
 #include "Sound.h"
 
-#include "UI/MessageDialog.h"
-#include "UI/Tooltip.h"
-#include "UI/Window.h"
+#include "ui/messagedialog.h"
+#include "ui/tooltip.h"
+#include "ui/window.h"
 
 #include "data/cityinfo.hpp"
 #include "data/message.hpp"

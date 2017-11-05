@@ -5,7 +5,7 @@
 #include "Routing.h"
 #include "Terrain.h"
 #include "TerrainGraphics.h"
-#include "UI/Window.h"
+#include "ui/window.h"
 
 #include "data/building.hpp"
 #include "data/cityinfo.hpp"

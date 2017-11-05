@@ -6,7 +6,7 @@
 #include "data/scenario.hpp"
 #include "data/settings.hpp"
 #include "data/tutorial.hpp"
-#include "UI/Sidebar.h"
+#include "ui/sidebar.h"
 
 #define MAX_BUILDINGITEMS 30
 static int menuBuildingType[MAX_BUILDINGITEMS][MAX_BUILDINGITEMS] = {

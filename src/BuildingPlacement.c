@@ -15,9 +15,9 @@
 #include "TerrainGraphics.h"
 #include "Undo.h"
 
-#include "UI/PopupDialog.h"
-#include "UI/Warning.h"
-#include "UI/Window.h"
+#include "ui/popupdialog.h"
+#include "ui/warning.h"
+#include "ui/window.h"
 
 #include "data/building.hpp"
 #include "data/cityinfo.hpp"

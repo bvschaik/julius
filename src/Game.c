@@ -6,7 +6,7 @@
 #include "System.h"
 #include "Video.h"
 
-#include "UI/Window.h"
+#include "ui/window.h"
 
 #include "data/constants.hpp"
 #include "data/filelist.hpp"

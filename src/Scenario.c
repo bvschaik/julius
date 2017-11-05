@@ -20,7 +20,7 @@
 #include "Terrain.h"
 #include "TerrainGraphics.h"
 
-#include "UI/Window.h"
+#include "ui/window.h"
 
 #include "data/cityinfo.hpp"
 #include "data/constants.hpp"

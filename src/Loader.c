@@ -3,7 +3,7 @@
 #include "CityView.h"
 #include "KeyboardInput.h"
 #include "Terrain.h"
-#include "UI/Warning.h"
+#include "ui/warning.h"
 
 #include "data/keyboardinput.hpp"
 #include "data/filelist.hpp"

@@ -1,6 +1,6 @@
 #include "Settings.h"
 
-#include "UI/TopMenu.h"
+#include "ui/topmenu.h"
 #include "data/settings.hpp"
 
 #include "core/io.h"

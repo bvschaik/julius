@@ -2,7 +2,7 @@
 
 #include "CityView.h"
 #include "Graphics.h"
-#include "UI/Warning.h"
+#include "ui/warning.h"
 #include "data/screen.hpp"
 
 #include "graphics/color.h"

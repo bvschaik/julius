@@ -2,9 +2,9 @@
 
 #include "PlayerMessage.h"
 #include "Sound.h"
-#include "UI/AllWindows.h"
-#include "UI/VideoIntermezzo.h"
-#include "UI/Window.h"
+#include "ui/allwindows.h"
+#include "ui/videointermezzo.h"
+#include "ui/window.h"
 
 #include "data/cityinfo.hpp"
 #include "data/event.hpp"

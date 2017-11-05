@@ -23,9 +23,9 @@
 #include "Tutorial.h"
 #include "Undo.h"
 #include "UtilityManagement.h"
-#include "UI/AllWindows.h"
-#include "UI/Sidebar.h"
-#include "UI/Window.h"
+#include "ui/allwindows.h"
+#include "ui/sidebar.h"
+#include "ui/window.h"
 
 #include "data/cityinfo.hpp"
 #include "data/settings.hpp"

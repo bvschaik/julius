@@ -1,7 +1,7 @@
 #include "Cursor.h"
 
 #include "System.h"
-#include "UI/Window.h"
+#include "ui/window.h"
 #include "data/building.hpp"
 #include "data/state.hpp"
 
