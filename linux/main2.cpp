@@ -187,6 +187,8 @@ void runTicks(int ticks)
     setting_reset_speeds(originalSpeed, setting_scroll_speed());
 }
 
+static Game game;
+
 int runAutopilot(const char *savedGameToLoad, const char *savedGameToWrite, int ticksToRun)
 {
     autopilot = 1;
@@ -196,12 +198,12 @@ int runAutopilot(const char *savedGameToLoad, const char *savedGameToWrite, int 
     // C3 setup
     chdir("../data");
 
-    if (!Game_preInit())
+    if (!game.preInit())
     {
         return 1;
     }
 
-    if (!Game_init())
+    if (!game.init())
     {
         return 2;
     }
@@ -212,7 +214,7 @@ int runAutopilot(const char *savedGameToLoad, const char *savedGameToWrite, int 
     GameFile_writeSavedGame(savedGameToWrite);
     printf("Done\n");
 
-    Game_exit();
+    game.exit();
 
     return 0;
 }
@@ -639,7 +641,7 @@ int runPerformance(const char *savedGameToLoad, int ticksToRun)
     initSdl();
     chdir("../data");
 
-    if (!Game_preInit())
+    if (!game.preInit())
     {
         return 1;
     }
@@ -647,7 +649,7 @@ int runPerformance(const char *savedGameToLoad, int ticksToRun)
     createWindowAndRenderer(0);
     createSurface(1024, 768, 0);
 
-    if (!Game_init())
+    if (!game.init())
     {
         return 2;
     }
@@ -671,7 +673,7 @@ int runPerformance(const char *savedGameToLoad, int ticksToRun)
     setting_reset_speeds(originalSpeed, setting_scroll_speed());
 
 
-    Game_exit();
+    game.exit();
 
     // Shutdown all subsystems
     SDL_Quit();
@@ -704,7 +706,7 @@ int main(int argc, char **argv)
         printf("data directory not found!!\n");
     }
 
-    if (!Game_preInit())
+    if (!game.preInit())
     {
         return 1;
     }
@@ -721,7 +723,7 @@ int main(int argc, char **argv)
         createSurface(width, height, 0);
     }
 
-    if (!Game_init())
+    if (!game.init())
     {
         return 2;
     }
@@ -730,7 +732,7 @@ int main(int argc, char **argv)
 
     printf("Quiting SDL.\n");
 
-    Game_exit();
+    game.exit();
 
     // Shutdown all subsystems
     SDL_Quit();
