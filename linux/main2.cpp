@@ -16,7 +16,7 @@
 #include "widget.h" // debug
 #include "graphics.h" // debug
 #include "system.h"
-#include "game.h"
+#include "game/game.h"
 
 #include "core/lang.h"
 #include "game/settings.h"
@@ -113,7 +113,8 @@ void System_toggleFullscreen()
 {
     SDL_Event event;
     event.user.type = SDL_USEREVENT;
-    if (setting_fullscreen())
+
+    if (game.settings.isFullscreen())
     {
         event.user.code = UserEventWindowed;
     }
@@ -187,7 +188,7 @@ void runTicks(int ticks)
     setting_reset_speeds(originalSpeed, setting_scroll_speed());
 }
 
-static Game game;
+Game game;
 
 int runAutopilot(const char *savedGameToLoad, const char *savedGameToWrite, int ticksToRun)
 {
@@ -501,7 +502,7 @@ void mainLoop()
                 case SDL_WINDOWEVENT_SIZE_CHANGED:
                     //case SDL_WINDOWEVENT_RESIZED:
                     printf("System resize to %d x %d\n", event.window.data1, event.window.data2);
-                    createSurface(event.window.data1, event.window.data2, setting_fullscreen());
+                    createSurface(event.window.data1, event.window.data2, game.settings.isFullscreen());
                     UI_Window_requestRefresh();
                     break;
                 }
@@ -713,8 +714,8 @@ int main(int argc, char **argv)
 
     int width, height;
     setting_window(&width, &height);
-    createWindowAndRenderer(setting_fullscreen());
-    if (setting_fullscreen())
+    createWindowAndRenderer(game.settings.isFullscreen());
+    if (game.settings.isFullscreen())
     {
         createSurface(Desktop.width, Desktop.height, 1);
     }

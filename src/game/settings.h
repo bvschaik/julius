@@ -31,15 +31,10 @@ typedef struct
     int volume;
 } set_sound;
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 void settings_load();
 
 void settings_save();
 
-int setting_fullscreen();
 void setting_window(int *width, int *height);
 void setting_set_display(int fullscreen, int width, int height);
 
@@ -81,9 +76,10 @@ int setting_personal_savings_for_mission(int mission_id);
 void setting_set_personal_savings_for_mission(int mission_id, int savings);
 void setting_clear_personal_savings();
 
+struct GameSettings
+{
+    int isFullscreen();
+};
 
-#ifdef __cplusplus
-}
-#endif
 
 #endif // GAME_SETTINGS_H

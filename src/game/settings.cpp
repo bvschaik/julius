@@ -34,6 +34,11 @@ static struct
     uint8_t inf_file[INF_SIZE];
 } data;
 
+int GameSettings::isFullscreen()
+{
+    return data.fullscreen;
+}
+
 
 static void load_default_settings()
 {
@@ -171,11 +176,6 @@ void settings_save()
     buffer_write_i32(buf, data.victory_video);
     buffer_write_i32(buf, data.difficulty);
     buffer_write_i32(buf, data.gods_enabled);
-}
-
-int setting_fullscreen()
-{
-    return data.fullscreen;
 }
 
 void setting_window(int *width, int *height)

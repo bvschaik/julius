@@ -1,7 +1,7 @@
 #include "game.h"
 
 #include "loader.h"
-#include "settings.h"
+#include "game/game_settings.h"
 #include "sound.h"
 #include "system.h"
 #include "video.h"
