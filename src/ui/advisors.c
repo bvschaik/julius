@@ -5,8 +5,8 @@
 #include "messagedialog.h"
 #include "warning.h"
 
-#include "../CityInfo.h"
-#include "../Formation.h"
+#include "cityinfo.h"
+#include "formation.h"
 
 #include "data/settings.hpp"
 #include "data/tutorial.hpp"

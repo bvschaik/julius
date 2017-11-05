@@ -1,6 +1,6 @@
 #include "advisors_private.h"
 #include "window.h"
-#include "../CityInfo.h"
+#include "cityinfo.h"
 
 #include "core/calc.h"
 

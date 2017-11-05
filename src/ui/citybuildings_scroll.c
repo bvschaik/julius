@@ -1,7 +1,7 @@
 #include "citybuildings.h"
 
-#include "../CityView.h"
-#include "../Sound.h"
+#include "cityview.h"
+#include "sound.h"
 
 #include "data/constants.hpp"
 #include "data/settings.hpp"

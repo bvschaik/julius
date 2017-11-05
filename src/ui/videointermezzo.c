@@ -1,8 +1,8 @@
 #include "videointermezzo.h"
 
-#include "../Video.h"
+#include "video.h"
 
-#include "../Graphics.h"
+#include "graphics.h"
 #include "data/screen.hpp"
 
 static struct {

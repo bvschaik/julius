@@ -1,8 +1,8 @@
 #include "buildinginfo.h"
-#include "../Graphics.h"
-#include "../Sound.h"
-#include "../Terrain.h"
-#include "../Widget.h"
+#include "graphics.h"
+#include "sound.h"
+#include "terrain.h"
+#include "widget.h"
 #include "data/building.hpp"
 
 void UI_BuildingInfo_drawAqueduct(BuildingInfoContext *c)

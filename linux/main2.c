@@ -7,16 +7,16 @@
 
 #include "ui/window.h"
 #include "core/time.h"
-#include "Runner.h"
-#include "Screen.h"
+#include "runner.h"
+#include "screen.h"
 #include "data/alldata.hpp"
-#include "Cursor.h"
-#include "KeyboardInput.h"
-#include "KeyboardHotkey.h"
-#include "Widget.h" // debug
-#include "Graphics.h" // debug
-#include "System.h"
-#include "Game.h"
+#include "cursor.h"
+#include "keyboardinput.h"
+#include "keyboardhotkey.h"
+#include "widget.h" // debug
+#include "graphics.h" // debug
+#include "system.h"
+#include "game.h"
 
 #include "core/lang.h"
 #include "game/settings.h"
@@ -171,7 +171,7 @@ void System_initCursors()
     System_setCursor(0);
 }
 
-#include "GameFile.h"
+#include "gamefile.h"
 
 void runTicks(int ticks)
 {

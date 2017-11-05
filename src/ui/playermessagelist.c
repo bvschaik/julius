@@ -2,9 +2,9 @@
 #include "window.h"
 #include "messagedialog.h"
 #include "core/calc.h"
-#include "../Graphics.h"
-#include "../PlayerMessage.h"
-#include "../Widget.h"
+#include "graphics.h"
+#include "playermessage.h"
+#include "widget.h"
 
 #include "data/constants.hpp"
 #include "data/message.hpp"

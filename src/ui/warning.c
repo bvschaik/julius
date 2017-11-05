@@ -2,10 +2,10 @@
 #include "window.h"
 
 #include "core/calc.h"
-#include "../Empire.h"
-#include "../Graphics.h"
-#include "../Terrain.h"
-#include "../Widget.h"
+#include "empire.h"
+#include "graphics.h"
+#include "terrain.h"
+#include "widget.h"
 
 #include "data/building.hpp"
 #include "data/cityinfo.hpp"

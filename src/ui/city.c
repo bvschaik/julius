@@ -4,9 +4,9 @@
 #include "topmenu.h"
 #include "window.h"
 
-#include "../Graphics.h"
-#include "../PlayerMessage.h"
-#include "../Widget.h"
+#include "graphics.h"
+#include "playermessage.h"
+#include "widget.h"
 
 #include "data/cityinfo.hpp"
 #include "data/cityview.hpp"

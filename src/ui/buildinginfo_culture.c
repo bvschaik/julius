@@ -1,7 +1,7 @@
 #include "buildinginfo.h"
-#include "../Graphics.h"
-#include "../Sound.h"
-#include "../Widget.h"
+#include "graphics.h"
+#include "sound.h"
+#include "widget.h"
 #include "data/building.hpp"
 #include "data/constants.hpp"
 

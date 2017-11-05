@@ -1,9 +1,9 @@
 #include "buildinginfo.h"
 
-#include "Formation.h"
-#include "Graphics.h"
-#include "Sound.h"
-#include "Widget.h"
+#include "formation.h"
+#include "graphics.h"
+#include "sound.h"
+#include "widget.h"
 #include "ui/window.h"
 
 #include "data/building.hpp"

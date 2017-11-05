@@ -12,8 +12,8 @@
 #include "videointermezzo.h"
 #include "warning.h"
 
-#include "../Cursor.h"
-#include "../KeyboardInput.h"
+#include "cursor.h"
+#include "keyboardinput.h"
 #include "graphics/mouse.h"
 
 struct Window {

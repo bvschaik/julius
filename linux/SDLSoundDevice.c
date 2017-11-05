@@ -1,4 +1,4 @@
-#include "SoundDevice.h"
+#include "sounddevice.h"
 #include "SDL.h"
 #include "SDL_mixer.h"
 

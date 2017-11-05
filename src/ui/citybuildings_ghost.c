@@ -1,10 +1,10 @@
 #include "citybuildings_private.h"
 
-#include "../BuildingPlacement.h"
-#include "../Routing.h"
-#include "../Terrain.h"
-#include "../TerrainBridge.h"
-#include "../TerrainGraphics.h"
+#include "buildingplacement.h"
+#include "routing.h"
+#include "terrain.h"
+#include "terrainbridge.h"
+#include "terraingraphics.h"
 
 #include "building/count.h"
 #include "building/properties.h"

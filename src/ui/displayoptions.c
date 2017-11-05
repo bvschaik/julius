@@ -1,8 +1,8 @@
 #include "window.h"
 
-#include "../Graphics.h"
-#include "../System.h"
-#include "../Widget.h"
+#include "graphics.h"
+#include "system.h"
+#include "widget.h"
 
 #include "data/constants.hpp"
 #include "data/screen.hpp"

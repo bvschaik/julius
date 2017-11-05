@@ -3,9 +3,9 @@
 #include "popupdialog.h"
 #include "window.h"
 
-#include "../Widget.h"
-#include "../Graphics.h"
-#include "../System.h"
+#include "widget.h"
+#include "graphics.h"
+#include "system.h"
 #include "data/constants.hpp"
 #include "data/screen.hpp"
 

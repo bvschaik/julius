@@ -2,10 +2,10 @@
 #include "popupdialog.h"
 #include "window.h"
 
-#include "../CityInfo.h"
-#include "../Event.h"
-#include "../Formation.h"
-#include "../Resource.h"
+#include "cityinfo.h"
+#include "event.h"
+#include "formation.h"
+#include "resource.h"
 
 #include "data/empire.hpp"
 #include "data/scenario.hpp"

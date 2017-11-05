@@ -1,7 +1,7 @@
 #include "citybuildings.h"
 #include "citybuildings_private.h"
 
-#include "../Graphics.h"
+#include "graphics.h"
 
 #include "data/building.hpp"
 #include "data/constants.hpp"

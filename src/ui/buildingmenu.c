@@ -2,9 +2,9 @@
 
 #include "sidebar.h"
 #include "window.h"
-#include "../Graphics.h"
-#include "../SidebarMenu.h"
-#include "../Widget.h"
+#include "graphics.h"
+#include "sidebarmenu.h"
+#include "widget.h"
 
 #include "data/building.hpp"
 #include "data/cityview.hpp"

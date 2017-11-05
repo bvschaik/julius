@@ -1,9 +1,9 @@
 #include "window.h"
 #include "allwindows.h"
-#include "../Widget.h"
-#include "../Graphics.h"
-#include "../KeyboardInput.h"
-#include "../Settings.h"
+#include "widget.h"
+#include "graphics.h"
+#include "keyboardinput.h"
+#include "settings.h"
 
 #include "data/constants.hpp"
 #include "data/keyboardinput.hpp"

@@ -2,10 +2,10 @@
 #include "allwindows.h"
 #include "window.h"
 
-#include "../Graphics.h"
-#include "../Scenario.h"
-#include "../Sound.h"
-#include "../Widget.h"
+#include "graphics.h"
+#include "scenario.h"
+#include "sound.h"
+#include "widget.h"
 
 #include "data/cityinfo.hpp"
 #include "data/constants.hpp"

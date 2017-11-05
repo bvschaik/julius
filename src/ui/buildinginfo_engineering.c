@@ -1,10 +1,10 @@
 #include "buildinginfo.h"
 
 #include "core/calc.h"
-#include "../Graphics.h"
-#include "../Resource.h"
-#include "../Sound.h"
-#include "../Widget.h"
+#include "graphics.h"
+#include "resource.h"
+#include "sound.h"
+#include "widget.h"
 
 #include "data/building.hpp"
 #include "data/cityinfo.hpp"

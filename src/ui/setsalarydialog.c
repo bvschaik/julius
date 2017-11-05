@@ -1,7 +1,7 @@
 #include "allwindows.h"
 #include "window.h"
 #include "advisors_private.h"
-#include "../CityInfo.h"
+#include "cityinfo.h"
 #include "data/constants.hpp"
 
 static void buttonCancel(int param1, int param2);

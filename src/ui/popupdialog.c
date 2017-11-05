@@ -1,8 +1,8 @@
 #include "popupdialog.h"
 #include "window.h"
-#include "../Widget.h"
-#include "../Graphics.h"
-#include "../CityInfo.h"
+#include "widget.h"
+#include "graphics.h"
+#include "cityinfo.h"
 #include "data/cityinfo.hpp"
 #include "data/screen.hpp"
 

@@ -1,11 +1,11 @@
 #include "allwindows.h"
 #include "window.h"
 
-#include "../CityInfo.h"
-#include "../Graphics.h"
-#include "../Settings.h"
-#include "../Sound.h"
-#include "../Widget.h"
+#include "cityinfo.h"
+#include "graphics.h"
+#include "settings.h"
+#include "sound.h"
+#include "widget.h"
 
 #include "data/cityinfo.hpp"
 #include "data/constants.hpp"

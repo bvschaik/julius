@@ -1,9 +1,9 @@
 #include "advisors_private.h"
 #include "window.h"
 
-#include "../CityView.h"
-#include "../Event.h"
-#include "../Formation.h"
+#include "cityview.h"
+#include "event.h"
+#include "formation.h"
 
 #include "data/figure.hpp"
 #include "data/settings.hpp"

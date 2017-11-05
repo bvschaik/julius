@@ -5,10 +5,10 @@
 #include "core/dir.h"
 #include "core/file.h"
 
-#include "../GameFile.h"
-#include "../Graphics.h"
-#include "../KeyboardInput.h"
-#include "../Widget.h"
+#include "gamefile.h"
+#include "graphics.h"
+#include "keyboardinput.h"
+#include "widget.h"
 
 #include "data/constants.hpp"
 #include "data/filelist.hpp"

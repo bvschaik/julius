@@ -1,6 +1,6 @@
 #include "window.h"
 #include "advisors_private.h"
-#include "../CityInfo.h"
+#include "cityinfo.h"
 
 #include "building/count.h"
 

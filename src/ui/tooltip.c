@@ -3,8 +3,8 @@
 #include "advisors.h"
 #include "window.h"
 
-#include "../Graphics.h"
-#include "../Widget.h"
+#include "graphics.h"
+#include "widget.h"
 
 #include "data/cityinfo.hpp"
 #include "data/constants.hpp"

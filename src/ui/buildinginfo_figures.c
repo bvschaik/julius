@@ -2,11 +2,11 @@
 
 #include "citybuildings.h"
 #include "window.h"
-#include "../CityView.h"
-#include "../Figure.h"
-#include "../Graphics.h"
-#include "../Resource.h"
-#include "../Widget.h"
+#include "cityview.h"
+#include "figure.h"
+#include "graphics.h"
+#include "resource.h"
+#include "widget.h"
 
 #include "data/building.hpp"
 #include "data/constants.hpp"

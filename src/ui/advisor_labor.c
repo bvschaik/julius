@@ -2,7 +2,7 @@
 
 #include "tooltip.h"
 #include "window.h"
-#include "../CityInfo.h"
+#include "cityinfo.h"
 
 #include "core/calc.h"
 #include "graphics/mouse.h"

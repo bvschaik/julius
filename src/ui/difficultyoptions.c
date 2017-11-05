@@ -1,7 +1,7 @@
 
 #include "window.h"
-#include "../Widget.h"
-#include "../Graphics.h"
+#include "widget.h"
+#include "graphics.h"
 #include "data/constants.hpp"
 #include "data/screen.hpp"
 

@@ -1,8 +1,8 @@
 #include "allwindows.h"
 #include "window.h"
 
-#include "../Graphics.h"
-#include "../Sound.h"
+#include "graphics.h"
+#include "sound.h"
 
 #include "data/constants.hpp"
 #include "data/screen.hpp"

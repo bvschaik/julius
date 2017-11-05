@@ -12,9 +12,9 @@
 #include "data/settings.hpp"
 #include "data/state.hpp"
 
-#include "../Animation.h"
+#include "animation.h"
 #include "core/calc.h"
-#include "../Graphics.h"
+#include "graphics.h"
 
 #include "building/model.h"
 #include "graphics/image.h"

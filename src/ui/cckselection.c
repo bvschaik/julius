@@ -4,11 +4,11 @@
 #include "core/dir.h"
 #include "core/file.h"
 
-#include "../GameFile.h"
-#include "../Graphics.h"
-#include "../Scenario.h"
-#include "../Sound.h"
-#include "../Widget.h"
+#include "gamefile.h"
+#include "graphics.h"
+#include "scenario.h"
+#include "sound.h"
+#include "widget.h"
 
 #include "data/constants.hpp"
 #include "data/filelist.hpp"

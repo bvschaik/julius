@@ -2,9 +2,9 @@
 #include "tooltip.h"
 #include "window.h"
 #include "messagedialog.h"
-#include "../CityInfo.h"
-#include "../Empire.h"
-#include "../Resource.h"
+#include "cityinfo.h"
+#include "empire.h"
+#include "resource.h"
 
 #include "data/cityinfo.hpp"
 #include "data/scenario.hpp"

@@ -1,8 +1,8 @@
 #include "allwindows.h"
 
 #include "window.h"
-#include "../Graphics.h"
-#include "../Widget.h"
+#include "graphics.h"
+#include "widget.h"
 
 #include "data/cityview.hpp"
 #include "data/constants.hpp"

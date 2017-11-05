@@ -1,8 +1,8 @@
 #ifndef UI_ADVISORS_PRIVATE_H
 #define UI_ADVISORS_PRIVATE_H
 
-#include "../Widget.h"
-#include "../Graphics.h"
+#include "widget.h"
+#include "graphics.h"
 
 #include "data/screen.hpp"
 #include "data/cityinfo.hpp"

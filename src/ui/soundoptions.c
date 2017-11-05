@@ -1,7 +1,7 @@
 #include "allwindows.h"
 #include "window.h"
-#include "../Sound.h"
-#include "../Widget.h"
+#include "sound.h"
+#include "widget.h"
 
 #include "data/constants.hpp"
 #include "data/screen.hpp"
