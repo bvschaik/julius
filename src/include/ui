@@ -1,0 +1,19 @@
+#ifndef _JULIUS_INCLUDE_UI_H_
+#define _JULIUS_INCLUDE_UI_H_
+
+#include "ui/window.hpp"
+#include "ui/warning.hpp"
+#include "ui/messagedialog.hpp"
+#include "ui/tooltip.hpp"
+#include "ui/window.hpp"
+#include "ui/allwindows.hpp"
+#include "ui/videointermezzo.hpp"
+#include "ui/sidebar.hpp"
+#include "ui/popupdialog.hpp"
+#include "ui/advisors.hpp"
+#include "ui/buildinginfo.hpp"
+#include "ui/popupdialog.hpp"
+#include "ui/sidebar.hpp"
+
+
+#endif //_JULIUS_INCLUDE_UI_H_

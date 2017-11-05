@@ -1,0 +1,27 @@
+#ifndef _JULIUS_INCLUDE_DATA_H_
+#define _JULIUS_INCLUDE_DATA_H_
+
+#include "data/alldata.hpp"
+#include "data/scenario.hpp"
+#include "data/settings.hpp"
+#include "data/message.hpp"
+#include "data/empire.hpp"
+#include "data/screen.hpp"
+#include "data/buttons.hpp"
+#include "data/cityinfo.hpp"
+#include "data/keyboardinput.hpp"
+#include "data/state.hpp"
+#include "data/figure.hpp"
+#include "data/building.hpp"
+#include "data/sound.hpp"
+#include "data/cityview.hpp"
+#include "data/invasion.hpp"
+#include "data/filelist.hpp"
+#include "data/routes.hpp"
+#include "data/debug.hpp"
+#include "data/constants.hpp"
+#include "data/event.hpp"
+#include "data/grid.hpp"
+#include "data/tutorial.hpp"
+
+#endif

@@ -34,7 +34,7 @@ set(TESTS
 
 foreach (testcase ${TESTS})
     string(REPLACE "/" "_" testname ${testcase})
-    add_executable(${testname}_test ../src/${testcase}.cpp ${testcase}_test.cpp)
+    add_executable(${testname}_test ../src/${testcase}.c ${testcase}_test.c)
     add_test(NAME ${testname} COMMAND ${testname}_test)
 endforeach (testcase)
 

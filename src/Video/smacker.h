@@ -59,10 +59,6 @@ typedef struct smk_t *smk;
 
 /* PUBLIC FUNCTIONS */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /* OPEN OPERATIONS */
 /* open an smk (from a file) */
 smk smk_open_file(const char *filename, const unsigned char mode);
@@ -98,9 +94,5 @@ char smk_first(smk object);
 char smk_next(smk object);
 /* seek to first keyframe before/at N in an smk */
 char smk_seek_keyframe(smk object, unsigned long );
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif
