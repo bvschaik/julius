@@ -1,6 +1,11 @@
 #ifndef KEYBOARDHOTKEY_H
 #define KEYBOARDHOTKEY_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 void KeyboardHotkey_character(int c);
 
 void KeyboardHotkey_left();
@@ -18,5 +23,10 @@ void KeyboardHotkey_alt(int isDown);
 void KeyboardHotkey_shift(int isDown);
 
 void KeyboardHotkey_resetState();
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

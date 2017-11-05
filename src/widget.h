@@ -9,6 +9,11 @@
 
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 void Widget_Text_captureCursor();
 void Widget_Text_drawCursor(int xOffset, int yOffset);
 
@@ -97,5 +102,10 @@ void Widget_Menu_drawSubMenu(MenuBarItem *menu, int focusSubMenu);
 
 int Widget_Menu_handleMenuBar(const mouse *m, MenuBarItem *items, int numItems, int *focusMenuId);
 int Widget_Menu_handleMenuItem(const mouse *m, MenuBarItem *menu, int *focusSubMenuId);
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -1,14 +1,15 @@
 #ifndef GAME_SETTINGS_H
 #define GAME_SETTINGS_H
 
-
-typedef enum {
+typedef enum
+{
     TOOLTIPS_NONE = 0,
     TOOLTIPS_SOME = 1,
     TOOLTIPS_FULL = 2
 } set_tooltips;
 
-typedef enum {
+typedef enum
+{
     DIFFICULTY_VERY_EASY = 0,
     DIFFICULTY_EASY = 1,
     DIFFICULTY_NORMAL = 2,
@@ -16,17 +17,23 @@ typedef enum {
     DIFFICULTY_VERY_HARD = 4
 } set_difficulty;
 
-typedef enum {
-	SOUND_MUSIC = 1,
-	SOUND_SPEECH = 2,
-	SOUND_EFFECTS = 3,
-	SOUND_CITY = 4,
+typedef enum
+{
+    SOUND_MUSIC = 1,
+    SOUND_SPEECH = 2,
+    SOUND_EFFECTS = 3,
+    SOUND_CITY = 4,
 } set_sound_type;
 
-typedef struct {
+typedef struct
+{
     int enabled;
     int volume;
 } set_sound;
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 void settings_load();
 
@@ -73,5 +80,10 @@ int setting_victory_video();
 int setting_personal_savings_for_mission(int mission_id);
 void setting_set_personal_savings_for_mission(int mission_id, int savings);
 void setting_clear_personal_savings();
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // GAME_SETTINGS_H

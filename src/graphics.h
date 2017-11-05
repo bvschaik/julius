@@ -3,7 +3,8 @@
 
 #include "graphics/image.h"
 
-enum ClipCode {
+enum ClipCode
+{
     ClipNone,
     ClipLeft,
     ClipRight,
@@ -13,7 +14,8 @@ enum ClipCode {
     ClipInvisible
 };
 
-typedef struct {
+typedef struct
+{
     enum ClipCode clipX;
     enum ClipCode clipY;
     int clippedPixelsLeft;
@@ -24,6 +26,11 @@ typedef struct {
     int visiblePixelsY;
     int isVisible;
 } GraphicsClipInfo;
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 void Graphics_clearScreen();
 
@@ -54,5 +61,10 @@ void Graphics_saveToBuffer(int x, int y, int width, int height, color_t *buffer)
 void Graphics_loadFromBuffer(int x, int y, int width, int height, const color_t *buffer);
 
 void Graphics_saveScreenshot(const char *filename);
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

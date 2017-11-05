@@ -9,7 +9,8 @@
 /**
  * Mouse button state
  */
-typedef struct {
+typedef struct
+{
     int is_down; /**< Mouse button is down */
     int went_down; /**< Mouse button went down during this cycle */
     int went_up; /**< Mouse button went up during this cycle */
@@ -17,7 +18,8 @@ typedef struct {
 } mouse_button;
 
 
-typedef enum {
+typedef enum
+{
     SCROLL_NONE = 0,
     SCROLL_UP = -1,
     SCROLL_DOWN = 1
@@ -25,7 +27,8 @@ typedef enum {
 /**
  * Mouse state
  */
-typedef struct {
+typedef struct
+{
     int x; /**< Global position X */
     int y; /**< Global position Y */
     scroll_state scrolled; /**< Scroll state (up/down/none) */
@@ -33,6 +36,11 @@ typedef struct {
     mouse_button right; /**< Right mouse button */
     int is_inside_window; /**< Whether the mouse is in the window */
 } mouse;
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 /**
  * Gets the mouse state
@@ -58,5 +66,10 @@ void mouse_set_inside_window(int inside);
 void mouse_reset_up_state();
 
 void mouse_determine_button_state();
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // GRAPHICS_MOUSE_H

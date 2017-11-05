@@ -11,7 +11,8 @@
 /**
  * Type
  */
-typedef enum {
+typedef enum
+{
     TYPE_MANUAL = 0,
     TYPE_ABOUT = 1,
     TYPE_MESSAGE = 2,
@@ -21,7 +22,8 @@ typedef enum {
 /**
  * Message type
  */
-typedef enum {
+typedef enum
+{
     MESSAGE_TYPE_GENERAL = 0,
     MESSAGE_TYPE_DISASTER = 1,
     MESSAGE_TYPE_IMPERIAL = 2,
@@ -35,7 +37,8 @@ typedef enum {
 /**
  * Image in a message
  */
-struct lang_message_image {
+struct lang_message_image
+{
     int id; /**< ID of the image */
     int x; /**< X offset */
     int y; /**< Y offset */
@@ -44,7 +47,8 @@ struct lang_message_image {
 /**
  * Message string
  */
-struct lang_message_string {
+struct lang_message_string
+{
     uint8_t *text; /**< Text */
     int x; /**< X offset */
     int y; /**< Y offset */
@@ -53,7 +57,8 @@ struct lang_message_string {
 /**
  * Message
  */
-typedef struct {
+typedef struct
+{
     lang_type type;
     lang_message_type message_type;
     int x;
@@ -68,6 +73,10 @@ typedef struct {
     struct lang_message_string video;
     struct lang_message_string content;
 } lang_message;
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /**
  * Loads the language files
@@ -91,5 +100,10 @@ const uint8_t *lang_get_string(int group, int index);
  * @return Message
  */
 const lang_message *lang_get_message(int id);
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // CORE_LANG_H

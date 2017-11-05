@@ -1,6 +1,11 @@
 #ifndef SOUNDDEVICE_H
 #define SOUNDDEVICE_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 void SoundDevice_open();
 void SoundDevice_close();
 
@@ -20,5 +25,10 @@ void SoundDevice_stopChannel(int channel);
 
 void SoundDevice_useCustomMusicPlayer(int bitdepth, int channels, int rate, const unsigned char *(*callback)(int *outLen));
 void SoundDevice_useDefaultMusicPlayer();
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

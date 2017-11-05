@@ -8,6 +8,10 @@
 /**
  * Time in millisecond-precision. Use only for time difference calculations.
  */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef unsigned int time_millis;
 
 /**
@@ -21,5 +25,10 @@ time_millis time_get_millis();
  * @param millis Current milliseconds
  */
 void time_set_millis(time_millis millis);
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // CORE_TIME_H

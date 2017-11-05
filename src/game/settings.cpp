@@ -7,7 +7,8 @@
 #define INF_SIZE 560
 #define MAX_PERSONAL_SAVINGS 100
 
-static struct {
+static struct
+{
     // display settings
     int fullscreen;
     int window_width;
@@ -39,7 +40,7 @@ static void load_default_settings()
     data.fullscreen = 1;
     data.window_width = 800;
     data.window_height = 600;
-    
+
     data.sound_effects.enabled = 1;
     data.sound_effects.volume = 100;
     data.sound_music.enabled = 1;
@@ -48,17 +49,18 @@ static void load_default_settings()
     data.sound_speech.volume = 100;
     data.sound_city.enabled = 1;
     data.sound_city.volume = 100;
-    
+
     data.game_speed = 90;
     data.scroll_speed = 70;
-    
+
     data.difficulty = DIFFICULTY_HARD;
     data.tooltips = TOOLTIPS_FULL;
     data.warnings = 1;
     data.gods_enabled = 1;
     data.victory_video = 0;
-    
-    for (int i = 0; i < MAX_PERSONAL_SAVINGS; i++) {
+
+    for (int i = 0; i < MAX_PERSONAL_SAVINGS; i++)
+    {
         data.personal_savings[i] = 0;
     }
 }
@@ -78,7 +80,7 @@ static void load_settings(buffer *buf)
     buffer_skip(buf, 16);
     buffer_skip(buf, 4); //int lastAdvisor;
     buffer_skip(buf, 4); //int saveGameMissionId;
-    data.tooltips = buffer_read_i32(buf);
+    data.tooltips = (set_tooltips)buffer_read_i32(buf);
     buffer_skip(buf, 4); //int startingFavor;
     buffer_skip(buf, 4); //int personalSavingsLastMission;
     buffer_skip(buf, 4); //int currentMissionId;
@@ -95,28 +97,31 @@ static void load_settings(buffer *buf)
     data.window_width = buffer_read_i32(buf);
     data.window_height = buffer_read_i32(buf);
     buffer_skip(buf, 8); //int maxConfirmedResolution;
-    for (int i = 0; i < MAX_PERSONAL_SAVINGS; i++) {
+    for (int i = 0; i < MAX_PERSONAL_SAVINGS; i++)
+    {
         data.personal_savings[i] = buffer_read_i32(buf);
     }
     data.victory_video = buffer_read_i32(buf);
-    data.difficulty = buffer_read_i32(buf);
+    data.difficulty = (set_difficulty)buffer_read_i32(buf);
     data.gods_enabled = buffer_read_i32(buf);
 }
 
 void settings_load()
 {
     load_default_settings();
-    
+
     int size = io_read_file_into_buffer("c3.inf", data.inf_file, INF_SIZE);
-    if (!size) {
+    if (!size)
+    {
         return;
     }
-    
+
     buffer buf;
     buffer_init(&buf, data.inf_file, size);
     load_settings(&buf);
-    
-    if (data.window_width + data.window_height < 500) {
+
+    if (data.window_width + data.window_height < 500)
+    {
         // most likely migration from Caesar 3
         data.window_width = 800;
         data.window_height = 600;
@@ -128,7 +133,7 @@ void settings_save()
     buffer b;
     buffer *buf = &b;
     buffer_init(buf, data.inf_file, INF_SIZE);
-    
+
     buffer_skip(buf, 4);
     buffer_write_i32(buf, data.fullscreen);
     buffer_skip(buf, 3);
@@ -159,7 +164,8 @@ void settings_save()
     buffer_write_i32(buf, data.window_width);
     buffer_write_i32(buf, data.window_height);
     buffer_skip(buf, 8); //int maxConfirmedResolution;
-    for (int i = 0; i < MAX_PERSONAL_SAVINGS; i++) {
+    for (int i = 0; i < MAX_PERSONAL_SAVINGS; i++)
+    {
         buffer_write_i32(buf, data.personal_savings[i]);
     }
     buffer_write_i32(buf, data.victory_video);
@@ -181,19 +187,25 @@ void setting_window(int *width, int *height)
 void setting_set_display(int fullscreen, int width, int height)
 {
     data.fullscreen = fullscreen;
-    if (!fullscreen) {
+    if (!fullscreen)
+    {
         data.window_width = width;
         data.window_height = height;
-	}
+    }
 }
 
 static set_sound *get_sound(set_sound_type type)
 {
-    switch (type) {
-    case SOUND_MUSIC: return &data.sound_music;
-    case SOUND_EFFECTS: return &data.sound_effects;
-    case SOUND_SPEECH: return &data.sound_speech;
-    case SOUND_CITY: return &data.sound_city;
+    switch (type)
+    {
+    case SOUND_MUSIC:
+        return &data.sound_music;
+    case SOUND_EFFECTS:
+        return &data.sound_effects;
+    case SOUND_SPEECH:
+        return &data.sound_speech;
+    case SOUND_CITY:
+        return &data.sound_city;
     }
 }
 
@@ -270,10 +282,17 @@ set_tooltips setting_tooltips()
 
 void setting_cycle_tooltips()
 {
-    switch (data.tooltips) {
-    case TOOLTIPS_NONE: data.tooltips = TOOLTIPS_SOME; break;
-    case TOOLTIPS_SOME: data.tooltips = TOOLTIPS_FULL; break;
-    default: data.tooltips = TOOLTIPS_NONE; break;
+    switch (data.tooltips)
+    {
+    case TOOLTIPS_NONE:
+        data.tooltips = TOOLTIPS_SOME;
+        break;
+    case TOOLTIPS_SOME:
+        data.tooltips = TOOLTIPS_FULL;
+        break;
+    default:
+        data.tooltips = TOOLTIPS_NONE;
+        break;
     }
 }
 
@@ -314,19 +333,25 @@ set_difficulty setting_difficulty()
 
 void setting_increase_difficulty()
 {
-    if (data.difficulty >= DIFFICULTY_VERY_HARD) {
+    if (data.difficulty >= DIFFICULTY_VERY_HARD)
+    {
         data.difficulty = DIFFICULTY_VERY_HARD;
-    } else {
-        data.difficulty++;
+    }
+    else
+    {
+        data.difficulty = (set_difficulty)(data.difficulty+1);
     }
 }
 
 void setting_decrease_difficulty()
 {
-    if (data.difficulty <= DIFFICULTY_VERY_EASY) {
+    if (data.difficulty <= DIFFICULTY_VERY_EASY)
+    {
         data.difficulty = DIFFICULTY_VERY_EASY;
-    } else {
-        data.difficulty--;
+    }
+    else
+    {
+        data.difficulty = (set_difficulty)(data.difficulty-1);;
     }
 }
 
@@ -348,7 +373,8 @@ void setting_set_personal_savings_for_mission(int mission_id, int savings)
 
 void setting_clear_personal_savings()
 {
-    for (int i = 0; i < MAX_PERSONAL_SAVINGS; i++) {
+    for (int i = 0; i < MAX_PERSONAL_SAVINGS; i++)
+    {
         data.personal_savings[i] = 0;
     }
 }

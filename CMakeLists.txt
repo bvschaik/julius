@@ -4,6 +4,7 @@ project(julius)
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/cmake/")
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror=implicit-function-declaration")
+set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -fpermissive")
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
 #set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
 set(SMK_FILES src/video/smacker.c src/video/smk_bitstream.c src/video/smk_hufftree.c)
@@ -18,7 +19,7 @@ file(GLOB UI_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/ui/*.*)
 file(GLOB DATA_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/data/*.*)
 
 add_executable(julius
-  linux/main2.c
+  linux/main2.cpp
   linux/SDLSoundDevice.c
   ${DATA_FILES}
   ${UI_FILES}
