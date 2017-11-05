@@ -1,7 +1,7 @@
 #ifndef FIGUREMOVEMENT_H
 #define FIGUREMOVEMENT_H
 
-#include "data/Figure.hpp"
+#include "data/figure.hpp"
 
 void FigureMovement_initRoaming(int figureId);
 

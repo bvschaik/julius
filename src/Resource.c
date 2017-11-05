@@ -5,11 +5,11 @@
 #include "Terrain.h"
 #include "Tutorial.h"
 
-#include "data/Building.hpp"
-#include "data/CityInfo.hpp"
-#include "data/Constants.hpp"
-#include "data/Grid.hpp"
-#include "data/Scenario.hpp"
+#include "data/building.hpp"
+#include "data/cityinfo.hpp"
+#include "data/constants.hpp"
+#include "data/grid.hpp"
+#include "data/scenario.hpp"
 
 #include "building/count.h"
 

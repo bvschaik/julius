@@ -1,7 +1,7 @@
 #include "Sound.h"
-#include "data/Sound.hpp"
-#include "data/Building.hpp"
-#include "data/CityInfo.hpp"
+#include "data/sound.hpp"
+#include "data/building.hpp"
+#include "data/cityinfo.hpp"
 
 #include "core/time.h"
 

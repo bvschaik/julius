@@ -1,7 +1,7 @@
 #include "Settings.h"
 
 #include "UI/TopMenu.h"
-#include "data/Settings.hpp"
+#include "data/settings.hpp"
 
 #include "core/io.h"
 #include "game/difficulty.h"

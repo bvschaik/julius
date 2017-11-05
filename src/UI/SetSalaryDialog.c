@@ -2,7 +2,7 @@
 #include "Window.h"
 #include "Advisors_private.h"
 #include "../CityInfo.h"
-#include "data/Constants.hpp"
+#include "data/constants.hpp"
 
 static void buttonCancel(int param1, int param2);
 static void buttonSetSalary(int param1, int param2);

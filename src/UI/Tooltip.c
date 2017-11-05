@@ -6,9 +6,9 @@
 #include "../Graphics.h"
 #include "../Widget.h"
 
-#include "data/CityInfo.hpp"
-#include "data/Constants.hpp"
-#include "data/Screen.hpp"
+#include "data/cityinfo.hpp"
+#include "data/constants.hpp"
+#include "data/screen.hpp"
 
 #include "core/lang.h"
 #include "core/string.h"

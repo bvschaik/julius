@@ -6,9 +6,9 @@
 #include "Formation.h"
 #include "PlayerMessage.h"
 
-#include "data/CityInfo.hpp"
-#include "data/Grid.hpp"
-#include "data/Message.hpp"
+#include "data/cityinfo.hpp"
+#include "data/grid.hpp"
+#include "data/message.hpp"
 
 #include "core/time.h"
 

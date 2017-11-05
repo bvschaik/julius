@@ -4,8 +4,8 @@
 #include "../System.h"
 #include "../Widget.h"
 
-#include "data/Constants.hpp"
-#include "data/Screen.hpp"
+#include "data/constants.hpp"
+#include "data/screen.hpp"
 
 #include "game/settings.h"
 

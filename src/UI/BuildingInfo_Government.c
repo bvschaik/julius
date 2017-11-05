@@ -4,8 +4,8 @@
 #include "../Sound.h"
 #include "../Widget.h"
 
-#include "data/Building.hpp"
-#include "data/Constants.hpp"
+#include "data/building.hpp"
+#include "data/constants.hpp"
 
 void UI_BuildingInfo_drawForum(BuildingInfoContext *c)
 {

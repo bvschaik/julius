@@ -6,12 +6,12 @@
 #include "../SidebarMenu.h"
 #include "../Widget.h"
 
-#include "data/Building.hpp"
-#include "data/CityView.hpp"
-#include "data/Constants.hpp"
-#include "data/Scenario.hpp"
-#include "data/Settings.hpp"
-#include "data/State.hpp"
+#include "data/building.hpp"
+#include "data/cityview.hpp"
+#include "data/constants.hpp"
+#include "data/scenario.hpp"
+#include "data/settings.hpp"
+#include "data/state.hpp"
 
 #include "building/model.h"
 #include "core/time.h"

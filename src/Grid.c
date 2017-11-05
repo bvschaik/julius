@@ -1,6 +1,6 @@
 #include "Grid.h"
 
-#include "data/Grid.hpp"
+#include "data/grid.hpp"
 
 #include <string.h>
 

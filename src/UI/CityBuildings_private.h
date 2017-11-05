@@ -3,14 +3,14 @@
 
 #include "CityBuildings.h"
 
-#include "data/Building.hpp"
-#include "data/CityInfo.hpp"
-#include "data/CityView.hpp"
-#include "data/Constants.hpp"
-#include "data/Figure.hpp"
-#include "data/Grid.hpp"
-#include "data/Settings.hpp"
-#include "data/State.hpp"
+#include "data/building.hpp"
+#include "data/cityinfo.hpp"
+#include "data/cityview.hpp"
+#include "data/constants.hpp"
+#include "data/figure.hpp"
+#include "data/grid.hpp"
+#include "data/settings.hpp"
+#include "data/state.hpp"
 
 #include "../Animation.h"
 #include "core/calc.h"

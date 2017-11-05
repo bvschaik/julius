@@ -8,12 +8,12 @@
 #include "../Resource.h"
 #include "../Widget.h"
 
-#include "data/Building.hpp"
-#include "data/Constants.hpp"
-#include "data/Empire.hpp"
-#include "data/Figure.hpp"
-#include "data/Scenario.hpp"
-#include "data/Settings.hpp"
+#include "data/building.hpp"
+#include "data/constants.hpp"
+#include "data/empire.hpp"
+#include "data/figure.hpp"
+#include "data/scenario.hpp"
+#include "data/settings.hpp"
 
 #include "figure/formation.h"
 #include "figure/trader.h"

@@ -7,11 +7,11 @@
 #include "../Terrain.h"
 #include "../Widget.h"
 
-#include "data/Building.hpp"
-#include "data/CityInfo.hpp"
-#include "data/Constants.hpp"
-#include "data/Grid.hpp"
-#include "data/Settings.hpp"
+#include "data/building.hpp"
+#include "data/cityinfo.hpp"
+#include "data/constants.hpp"
+#include "data/grid.hpp"
+#include "data/settings.hpp"
 
 #include "building/model.h"
 #include "graphics/image.h"

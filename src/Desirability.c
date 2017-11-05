@@ -3,9 +3,9 @@
 #include "Grid.h"
 #include "Terrain.h"
 
-#include "data/Building.hpp"
-#include "data/Grid.hpp"
-#include "data/Settings.hpp"
+#include "data/building.hpp"
+#include "data/grid.hpp"
+#include "data/settings.hpp"
 
 #include "building/model.h"
 

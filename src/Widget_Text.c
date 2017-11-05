@@ -1,7 +1,7 @@
 #include "Widget.h"
 
-#include "data/Constants.hpp"
-#include "data/KeyboardInput.hpp"
+#include "data/constants.hpp"
+#include "data/keyboardinput.hpp"
 
 #include "core/calc.h"
 #include "Graphics.h"

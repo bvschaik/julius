@@ -1,11 +1,11 @@
 #include "SidebarMenu.h"
 #include "Empire.h"
-#include "data/Building.hpp"
-#include "data/CityInfo.hpp"
-#include "data/Constants.hpp"
-#include "data/Scenario.hpp"
-#include "data/Settings.hpp"
-#include "data/Tutorial.hpp"
+#include "data/building.hpp"
+#include "data/cityinfo.hpp"
+#include "data/constants.hpp"
+#include "data/scenario.hpp"
+#include "data/settings.hpp"
+#include "data/tutorial.hpp"
 #include "UI/Sidebar.h"
 
 #define MAX_BUILDINGITEMS 30

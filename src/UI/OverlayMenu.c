@@ -4,9 +4,9 @@
 #include "../Graphics.h"
 #include "../Widget.h"
 
-#include "data/CityView.hpp"
-#include "data/Constants.hpp"
-#include "data/State.hpp"
+#include "data/cityview.hpp"
+#include "data/constants.hpp"
+#include "data/state.hpp"
 
 #include "core/time.h"
 

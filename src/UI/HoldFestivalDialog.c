@@ -6,8 +6,8 @@
 #include "../CityInfo.h"
 #include "../Resource.h"
 #include "Advisors_private.h"
-#include "data/CityInfo.hpp"
-#include "data/Screen.hpp"
+#include "data/cityinfo.hpp"
+#include "data/screen.hpp"
 
 static void drawButtons();
 static void buttonGod(int param1, int param2);

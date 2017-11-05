@@ -1,5 +1,5 @@
 #include "Advisors_private.h"
-#include "data/Scenario.hpp"
+#include "data/scenario.hpp"
 #include "Window.h"
 
 static void drawRatingColumn(int xOffset, int yOffset, int value, int hasReached);

@@ -4,9 +4,9 @@
 #include "../Widget.h"
 #include "../Graphics.h"
 
-#include "data/Screen.hpp"
-#include "data/CityInfo.hpp"
-#include "data/Constants.hpp"
+#include "data/screen.hpp"
+#include "data/cityinfo.hpp"
+#include "data/constants.hpp"
 
 #include "graphics/image.h"
 

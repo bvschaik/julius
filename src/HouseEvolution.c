@@ -3,9 +3,9 @@
 #include "Routing.h"
 #include "TerrainGraphics.h"
 
-#include "data/Building.hpp"
-#include "data/CityInfo.hpp"
-#include "data/Constants.hpp"
+#include "data/building.hpp"
+#include "data/cityinfo.hpp"
+#include "data/constants.hpp"
 
 #include "building/model.h"
 #include "game/time.h"

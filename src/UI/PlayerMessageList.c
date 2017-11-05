@@ -6,9 +6,9 @@
 #include "../PlayerMessage.h"
 #include "../Widget.h"
 
-#include "data/Constants.hpp"
-#include "data/Message.hpp"
-#include "data/Screen.hpp"
+#include "data/constants.hpp"
+#include "data/message.hpp"
+#include "data/screen.hpp"
 
 #include "core/lang.h"
 #include "graphics/image.h"

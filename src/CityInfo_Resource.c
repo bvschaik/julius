@@ -4,10 +4,10 @@
 #include "Terrain.h"
 #include "Tutorial.h"
 
-#include "data/Building.hpp"
-#include "data/CityInfo.hpp"
-#include "data/Constants.hpp"
-#include "data/Scenario.hpp"
+#include "data/building.hpp"
+#include "data/cityinfo.hpp"
+#include "data/constants.hpp"
+#include "data/scenario.hpp"
 
 #include "building/model.h"
 #include "core/calc.h"

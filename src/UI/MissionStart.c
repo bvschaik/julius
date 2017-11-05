@@ -7,14 +7,14 @@
 #include "../Sound.h"
 #include "../Widget.h"
 
-#include "data/CityInfo.hpp"
-#include "data/Constants.hpp"
-#include "data/FileList.hpp"
-#include "data/Scenario.hpp"
-#include "data/Screen.hpp"
-#include "data/Settings.hpp"
-#include "data/State.hpp"
-#include "data/Tutorial.hpp"
+#include "data/cityinfo.hpp"
+#include "data/constants.hpp"
+#include "data/filelist.hpp"
+#include "data/scenario.hpp"
+#include "data/screen.hpp"
+#include "data/settings.hpp"
+#include "data/state.hpp"
+#include "data/tutorial.hpp"
 
 #include "core/lang.h"
 

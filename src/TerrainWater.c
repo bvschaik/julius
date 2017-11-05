@@ -3,11 +3,11 @@
 
 #include "core/calc.h"
 
-#include "data/Building.hpp"
-#include "data/CityInfo.hpp"
-#include "data/Constants.hpp"
-#include "data/Scenario.hpp"
-#include "data/Figure.hpp"
+#include "data/building.hpp"
+#include "data/cityinfo.hpp"
+#include "data/constants.hpp"
+#include "data/scenario.hpp"
+#include "data/figure.hpp"
 
 void Terrain_addWatersideBuildingToGrids(int buildingId, int x, int y, int size, int graphicId)
 {

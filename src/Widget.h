@@ -1,7 +1,7 @@
 #ifndef WIDGET_H
 #define WIDGET_H
 
-#include "data/Buttons.hpp"
+#include "data/buttons.hpp"
 
 #include "graphics/color.h"
 #include "graphics/font.h"

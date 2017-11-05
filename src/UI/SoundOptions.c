@@ -3,9 +3,9 @@
 #include "../Sound.h"
 #include "../Widget.h"
 
-#include "data/Constants.hpp"
-#include "data/Screen.hpp"
-#include "data/Settings.hpp"
+#include "data/constants.hpp"
+#include "data/screen.hpp"
+#include "data/settings.hpp"
 
 #include "core/calc.h"
 #include "game/settings.h"

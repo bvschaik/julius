@@ -1,6 +1,6 @@
 #include "Advisors_private.h"
 #include "Window.h"
-#include "data/Scenario.hpp"
+#include "data/scenario.hpp"
 
 #include "game/time.h"
 

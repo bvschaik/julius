@@ -8,8 +8,8 @@
 #include "../CityInfo.h"
 #include "../Formation.h"
 
-#include "data/Settings.hpp"
-#include "data/Tutorial.hpp"
+#include "data/settings.hpp"
+#include "data/tutorial.hpp"
 
 static void buttonChangeAdvisor(int param1, int param2);
 static void buttonHelp(int param1, int param2);

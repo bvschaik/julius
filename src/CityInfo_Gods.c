@@ -6,9 +6,9 @@
 #include "Formation.h"
 #include "PlayerMessage.h"
 
-#include "data/CityInfo.hpp"
-#include "data/Constants.hpp"
-#include "data/Settings.hpp"
+#include "data/cityinfo.hpp"
+#include "data/constants.hpp"
+#include "data/settings.hpp"
 
 #include "building/count.h"
 #include "core/calc.h"

@@ -2,8 +2,8 @@
 #include "../Graphics.h"
 #include "../Sound.h"
 #include "../Widget.h"
-#include "data/Building.hpp"
-#include "data/Constants.hpp"
+#include "data/building.hpp"
+#include "data/constants.hpp"
 
 #include "graphics/image.h"
 

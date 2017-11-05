@@ -5,7 +5,7 @@
 #include "Sound.h"
 #include "Terrain.h"
 
-#include "data/Grid.hpp"
+#include "data/grid.hpp"
 
 #include "core/calc.h"
 #include "figure/enemy_army.h"

@@ -5,9 +5,9 @@
 #include "Routing.h"
 #include "Sound.h"
 
-#include "data/CityInfo.hpp"
-#include "data/Event.hpp"
-#include "data/Grid.hpp"
+#include "data/cityinfo.hpp"
+#include "data/event.hpp"
+#include "data/grid.hpp"
 
 #include "figure/formation.h"
 #include "figure/properties.h"

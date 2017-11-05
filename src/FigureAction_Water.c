@@ -4,9 +4,9 @@
 #include "PlayerMessage.h"
 #include "Terrain.h"
 
-#include "data/CityInfo.hpp"
-#include "data/Message.hpp"
-#include "data/Scenario.hpp"
+#include "data/cityinfo.hpp"
+#include "data/message.hpp"
+#include "data/scenario.hpp"
 
 #include "building/model.h"
 #include "core/calc.h"

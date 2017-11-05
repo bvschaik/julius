@@ -7,11 +7,11 @@
 #include "../Sound.h"
 #include "../Widget.h"
 
-#include "data/CityInfo.hpp"
-#include "data/Constants.hpp"
-#include "data/Screen.hpp"
-#include "data/Settings.hpp"
-#include "data/State.hpp"
+#include "data/cityinfo.hpp"
+#include "data/constants.hpp"
+#include "data/screen.hpp"
+#include "data/settings.hpp"
+#include "data/state.hpp"
 
 #include "game/settings.h"
 #include "graphics/image.h"

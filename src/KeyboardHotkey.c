@@ -14,11 +14,11 @@
 #include "UI/Warning.h"
 #include "UI/Window.h"
 
-#include "data/Building.hpp"
-#include "data/CityInfo.hpp"
-#include "data/Constants.hpp"
-#include "data/Settings.hpp"
-#include "data/State.hpp"
+#include "data/building.hpp"
+#include "data/cityinfo.hpp"
+#include "data/constants.hpp"
+#include "data/settings.hpp"
+#include "data/state.hpp"
 
 #include "figure/formation.h"
 

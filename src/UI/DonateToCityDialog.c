@@ -4,8 +4,8 @@
 #include "../Graphics.h"
 #include "../CityInfo.h"
 #include "Advisors_private.h"
-#include "data/CityInfo.hpp"
-#include "data/Screen.hpp"
+#include "data/cityinfo.hpp"
+#include "data/screen.hpp"
 
 #include "core/calc.h"
 

@@ -5,8 +5,8 @@
 #include "../Event.h"
 #include "../Formation.h"
 
-#include "data/Figure.hpp"
-#include "data/Settings.hpp"
+#include "data/figure.hpp"
+#include "data/settings.hpp"
 
 #include "figure/formation.h"
 

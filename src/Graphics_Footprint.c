@@ -1,8 +1,8 @@
 #include "Graphics_Footprint.h"
 #include "Graphics.h"
 
-#include "data/Screen.hpp"
-#include "data/Constants.hpp"
+#include "data/screen.hpp"
+#include "data/constants.hpp"
 
 #include "graphics/image.h"
 

@@ -3,10 +3,10 @@
 
 #include "../Widget.h"
 
-#include "data/Screen.hpp"
-#include "data/Constants.hpp"
-#include "data/Settings.hpp"
-#include "data/Buttons.hpp"
+#include "data/screen.hpp"
+#include "data/constants.hpp"
+#include "data/settings.hpp"
+#include "data/buttons.hpp"
 
 #include "core/calc.h"
 #include "game/settings.h"

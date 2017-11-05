@@ -10,10 +10,10 @@
 #include "../KeyboardInput.h"
 #include "../Widget.h"
 
-#include "data/Constants.hpp"
-#include "data/FileList.hpp"
-#include "data/KeyboardInput.hpp"
-#include "data/Screen.hpp"
+#include "data/constants.hpp"
+#include "data/filelist.hpp"
+#include "data/keyboardinput.hpp"
+#include "data/screen.hpp"
 
 #include "core/time.h"
 

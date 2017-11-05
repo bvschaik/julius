@@ -6,13 +6,13 @@
 #include "Routing.h"
 #include "Terrain.h"
 
-#include "data/Building.hpp"
-#include "data/CityInfo.hpp"
-#include "data/Constants.hpp"
-#include "data/Grid.hpp"
-#include "data/Routes.hpp"
-#include "data/Settings.hpp"
-#include "data/Figure.hpp"
+#include "data/building.hpp"
+#include "data/cityinfo.hpp"
+#include "data/constants.hpp"
+#include "data/grid.hpp"
+#include "data/routes.hpp"
+#include "data/settings.hpp"
+#include "data/figure.hpp"
 
 #include "game/time.h"
 

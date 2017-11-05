@@ -6,10 +6,10 @@
 #include "Figure.h"
 #include "PlayerMessage.h"
 
-#include "data/Building.hpp"
-#include "data/CityInfo.hpp"
-#include "data/Message.hpp"
-#include "data/Figure.hpp"
+#include "data/building.hpp"
+#include "data/cityinfo.hpp"
+#include "data/message.hpp"
+#include "data/figure.hpp"
 
 #include "building/list.h"
 #include "building/model.h"

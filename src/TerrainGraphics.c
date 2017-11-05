@@ -3,8 +3,8 @@
 #include "Terrain.h"
 #include "Terrain_private.h"
 
-#include "data/Building.hpp"
-#include "data/Constants.hpp"
+#include "data/building.hpp"
+#include "data/constants.hpp"
 
 #include "graphics/image.h"
 

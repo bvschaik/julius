@@ -6,10 +6,10 @@
 #include "../Sound.h"
 #include "../Widget.h"
 
-#include "data/Building.hpp"
-#include "data/CityInfo.hpp"
-#include "data/Constants.hpp"
-#include "data/Figure.hpp"
+#include "data/building.hpp"
+#include "data/cityinfo.hpp"
+#include "data/constants.hpp"
+#include "data/figure.hpp"
 
 void UI_BuildingInfo_drawEngineersPost(BuildingInfoContext *c)
 {

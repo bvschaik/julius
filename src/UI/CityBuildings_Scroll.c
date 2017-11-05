@@ -3,8 +3,8 @@
 #include "../CityView.h"
 #include "../Sound.h"
 
-#include "data/Constants.hpp"
-#include "data/Settings.hpp"
+#include "data/constants.hpp"
+#include "data/settings.hpp"
 
 void UI_CityBuildings_scrollMap(int direction)
 {

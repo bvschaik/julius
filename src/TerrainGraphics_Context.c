@@ -1,8 +1,8 @@
 #include "TerrainGraphics.h"
 
-#include "data/Building.hpp"
-#include "data/Grid.hpp"
-#include "data/Settings.hpp"
+#include "data/building.hpp"
+#include "data/grid.hpp"
+#include "data/settings.hpp"
 
 #define MAX_TILES 8
 

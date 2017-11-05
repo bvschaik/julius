@@ -14,12 +14,12 @@
 #include "../SidebarMenu.h"
 #include "../Widget.h"
 
-#include "data/CityInfo.hpp"
-#include "data/Constants.hpp"
-#include "data/Empire.hpp"
-#include "data/Invasion.hpp"
-#include "data/Scenario.hpp"
-#include "data/Screen.hpp"
+#include "data/cityinfo.hpp"
+#include "data/constants.hpp"
+#include "data/empire.hpp"
+#include "data/invasion.hpp"
+#include "data/scenario.hpp"
+#include "data/screen.hpp"
 
 #include "empire/trade_route.h"
 #include "graphics/image.h"

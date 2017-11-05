@@ -3,8 +3,8 @@
 #include "../Widget.h"
 #include "../Graphics.h"
 #include "../CityInfo.h"
-#include "data/CityInfo.hpp"
-#include "data/Screen.hpp"
+#include "data/cityinfo.hpp"
+#include "data/screen.hpp"
 
 #define GROUP 5
 

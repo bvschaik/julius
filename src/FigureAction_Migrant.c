@@ -6,7 +6,7 @@
 #include "HousePopulation.h"
 #include "Terrain.h"
 
-#include "data/CityInfo.hpp"
+#include "data/cityinfo.hpp"
 
 #include "building/model.h"
 

@@ -5,10 +5,10 @@
 #include "../KeyboardInput.h"
 #include "../Settings.h"
 
-#include "data/Constants.hpp"
-#include "data/KeyboardInput.hpp"
-#include "data/Screen.hpp"
-#include "data/Settings.hpp"
+#include "data/constants.hpp"
+#include "data/keyboardinput.hpp"
+#include "data/screen.hpp"
+#include "data/settings.hpp"
 
 static void startMission(int param1, int param2);
 

@@ -6,12 +6,12 @@
 #include "UI/VideoIntermezzo.h"
 #include "UI/Window.h"
 
-#include "data/CityInfo.hpp"
-#include "data/Event.hpp"
-#include "data/Scenario.hpp"
-#include "data/Screen.hpp"
-#include "data/Settings.hpp"
-#include "data/State.hpp"
+#include "data/cityinfo.hpp"
+#include "data/event.hpp"
+#include "data/scenario.hpp"
+#include "data/screen.hpp"
+#include "data/settings.hpp"
+#include "data/state.hpp"
 
 #include "game/settings.h"
 #include "game/time.h"

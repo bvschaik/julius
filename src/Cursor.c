@@ -2,8 +2,8 @@
 
 #include "System.h"
 #include "UI/Window.h"
-#include "data/Building.hpp"
-#include "data/State.hpp"
+#include "data/building.hpp"
+#include "data/state.hpp"
 
 static const struct Cursor arrow = {
 	0, 0,

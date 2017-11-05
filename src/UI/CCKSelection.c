@@ -10,11 +10,11 @@
 #include "../Sound.h"
 #include "../Widget.h"
 
-#include "data/Constants.hpp"
-#include "data/FileList.hpp"
-#include "data/Scenario.hpp"
-#include "data/Screen.hpp"
-#include "data/Settings.hpp"
+#include "data/constants.hpp"
+#include "data/filelist.hpp"
+#include "data/scenario.hpp"
+#include "data/screen.hpp"
+#include "data/settings.hpp"
 
 #include <string.h>
 

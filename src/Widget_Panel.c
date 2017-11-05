@@ -1,5 +1,5 @@
 #include "Widget.h"
-#include "data/Constants.hpp"
+#include "data/constants.hpp"
 
 #include "Graphics.h"
 

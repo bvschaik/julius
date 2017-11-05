@@ -6,8 +6,8 @@
 #include "Sound.h"
 #include "Terrain.h"
 
-#include "data/CityInfo.hpp"
-#include "data/Grid.hpp"
+#include "data/cityinfo.hpp"
+#include "data/grid.hpp"
 
 #include "core/calc.h"
 #include "figure/enemy_army.h"

@@ -1,9 +1,9 @@
 #include "CityInfo.h"
 
-#include "data/Building.hpp"
-#include "data/CityInfo.hpp"
-#include "data/Scenario.hpp"
-#include "data/Settings.hpp"
+#include "data/building.hpp"
+#include "data/cityinfo.hpp"
+#include "data/scenario.hpp"
+#include "data/settings.hpp"
 
 #include "building/model.h"
 #include "core/calc.h"
