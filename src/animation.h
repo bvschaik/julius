@@ -1,10 +1,12 @@
 #ifndef ANIMATION_H
 #define ANIMATION_H
 
-void Animation_resetTimers();
-void Animation_updateTimers();
-
-int Animation_getIndexForCityBuilding(int graphicId, int gridOffset);
-int Animation_getIndexForEmpireMap(int graphicId, int currentIndex);
+struct Animation
+{
+    static void resetTimers();
+    static void updateTimers();
+    static int getIndexForCityBuilding(int graphicId, int gridOffset);
+    static int getIndexForEmpireMap(int graphicId, int currentIndex);
+};
 
 #endif
