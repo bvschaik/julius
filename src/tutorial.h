@@ -1,16 +1,16 @@
 #ifndef TUTORIAL_H
 #define TUTORIAL_H
 
-void Tutorial_onFire();
+struct Tutorial
+{
+    static void onFire();
+    static void onCollapse();
+    static void onFilledGranary();
+    static void onAddToWarehouse();
+    static void onDayTick();
+    static void onMonthTick();
+};
 
-void Tutorial_onCollapse();
 
-void Tutorial_onFilledGranary();
-
-void Tutorial_onAddToWarehouse();
-
-void Tutorial_onDayTick();
-
-void Tutorial_onMonthTick();
 
 #endif
