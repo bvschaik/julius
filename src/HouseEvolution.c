@@ -8,6 +8,7 @@
 #include "Data/Constants.h"
 
 #include "building/model.h"
+#include "city/culture.h"
 #include "game/time.h"
 
 static int checkEvolveDesirability(int buildingId);
@@ -552,6 +553,7 @@ void HouseEvolution_Tick_decayCultureService()
 
 void HouseEvolution_Tick_calculateCultureServiceAggregates()
 {
+    int baseEntertainment = city_culture_coverage_average_entertainment() / 5;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		if (!BuildingIsInUse(i) || !Data_Buildings[i].houseSize) {
 			continue;
@@ -564,11 +566,7 @@ void HouseEvolution_Tick_calculateCultureServiceAggregates()
 		b->data.house.numGods = 0;
 
 		// entertainment
-		b->data.house.entertainment =
-			((Data_CityInfo_CultureCoverage.hippodrome +
-			Data_CityInfo_CultureCoverage.colosseum +
-			Data_CityInfo_CultureCoverage.amphitheater +
-			Data_CityInfo_CultureCoverage.theater) / 4) / 5;
+		b->data.house.entertainment = baseEntertainment;
 		if (b->data.house.theater) {
 			b->data.house.entertainment += 10;
 		}

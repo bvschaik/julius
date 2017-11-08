@@ -27,6 +27,9 @@ set (BUILDING_FILES
     src/building/properties.c
     src/building/storage.c
 )
+set (CITY_FILES
+    src/city/culture.c
+)
 set (EMPIRE_FILES
     src/empire/trade_prices.c
     src/empire/trade_route.c
@@ -203,6 +206,7 @@ add_executable(julius
 	src/UI/Window.c
 	${CORE_FILES}
 	${BUILDING_FILES}
+	${CITY_FILES}
 	${EMPIRE_FILES}
 	${FIGURE_FILES}
 	${GAME_FILES}

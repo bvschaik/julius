@@ -1,6 +1,7 @@
 #include "Advisors_private.h"
 
 #include "building/count.h"
+#include "city/culture.h"
 
 void UI_Advisor_Education_drawBackground(int *advisorHeight)
 {
@@ -53,10 +54,11 @@ void UI_Advisor_Education_drawBackground(int *advisorHeight)
 	);
 	Widget_GameText_draw(57, 7, baseOffsetX + 280 + width, baseOffsetY + 105, FONT_NORMAL_WHITE);
 
-	if (Data_CityInfo_CultureCoverage.school == 0) {
+	int pct_school = city_culture_coverage_school();
+	if (pct_school == 0) {
 		Widget_GameText_drawCentered(57, 10, baseOffsetX + 420, baseOffsetY + 105, 200, FONT_NORMAL_WHITE);
-	} else if (Data_CityInfo_CultureCoverage.school < 100) {
-		Widget_GameText_drawCentered(57, Data_CityInfo_CultureCoverage.school / 10 + 11,
+	} else if (pct_school < 100) {
+		Widget_GameText_drawCentered(57, pct_school / 10 + 11,
 			baseOffsetX + 420, baseOffsetY + 105, 200, FONT_NORMAL_WHITE
 		);
 	} else {
@@ -77,10 +79,11 @@ void UI_Advisor_Education_drawBackground(int *advisorHeight)
 	);
 	Widget_GameText_draw(57, 8, baseOffsetX + 280 + width, baseOffsetY + 125, FONT_NORMAL_WHITE);
 
-	if (Data_CityInfo_CultureCoverage.academy == 0) {
+	int pct_academy = city_culture_coverage_academy();
+	if (pct_academy == 0) {
 		Widget_GameText_drawCentered(57, 10, baseOffsetX + 420, baseOffsetY + 125, 200, FONT_NORMAL_WHITE);
-	} else if (Data_CityInfo_CultureCoverage.academy < 100) {
-		Widget_GameText_drawCentered(57, Data_CityInfo_CultureCoverage.academy / 10 + 11,
+	} else if (pct_academy < 100) {
+		Widget_GameText_drawCentered(57, pct_academy / 10 + 11,
 			baseOffsetX + 420, baseOffsetY + 125, 200, FONT_NORMAL_WHITE
 		);
 	} else {
@@ -101,10 +104,11 @@ void UI_Advisor_Education_drawBackground(int *advisorHeight)
 	);
 	Widget_GameText_draw(57, 9, baseOffsetX + 280 + width, baseOffsetY + 145, FONT_NORMAL_WHITE);
 
-	if (Data_CityInfo_CultureCoverage.library == 0) {
+	int pct_library = city_culture_coverage_library();
+	if (pct_library == 0) {
 		Widget_GameText_drawCentered(57, 10, baseOffsetX + 420, baseOffsetY + 145, 200, FONT_NORMAL_WHITE);
-	} else if (Data_CityInfo_CultureCoverage.library < 100) {
-		Widget_GameText_drawCentered(57, Data_CityInfo_CultureCoverage.library / 10 + 11,
+	} else if (pct_library < 100) {
+		Widget_GameText_drawCentered(57, pct_library / 10 + 11,
 			baseOffsetX + 420, baseOffsetY + 145, 200, FONT_NORMAL_WHITE
 		);
 	} else {
@@ -119,9 +123,9 @@ void UI_Advisor_Education_drawBackground(int *advisorHeight)
 	} else if (Data_CityInfo.educationDemand == 3) {
 		adviceId = 4;
 	} else {
-		int coverageSchool = Data_CityInfo_CultureCoverage.school;
-		int coverageAcademy = Data_CityInfo_CultureCoverage.academy;
-		int coverageLibrary = Data_CityInfo_CultureCoverage.library;
+		int coverageSchool = city_culture_coverage_school();
+		int coverageAcademy = city_culture_coverage_academy();
+		int coverageLibrary = city_culture_coverage_library();
 		if (!Data_CityInfo.housesRequiringSchool) {
 			adviceId = 5; // no demands yet
 		} else if (!Data_CityInfo.housesRequiringLibrary) {

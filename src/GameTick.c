@@ -30,6 +30,7 @@
 #include "Data/Settings.h"
 #include "Data/State.h"
 
+#include "city/culture.h"
 #include "core/random.h"
 #include "game/settings.h"
 #include "game/time.h"
@@ -85,7 +86,7 @@ void GameTick_advance()
 		case 30: UI_Sidebar_requestMinimapRefresh(); break;
 		case 31: FigureGeneration_generateFiguresForBuildings(); break;
 		case 32: Trader_tick(); break;
-		case 33: CityInfo_Tick_countBuildingTypes(); CityInfo_Culture_updateCoveragePercentages(); break;
+		case 33: CityInfo_Tick_countBuildingTypes(); city_culture_update_coverage(); break;
 		case 34: CityInfo_Tick_distributeTreasuryOverForumsAndSenates(); break;
 		case 35: HouseEvolution_Tick_decayCultureService(); break;
 		case 36: HouseEvolution_Tick_calculateCultureServiceAggregates(); break;

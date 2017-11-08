@@ -11,6 +11,7 @@
 #include "Data/Settings.h"
 
 #include "building/count.h"
+#include "city/culture.h"
 #include "core/calc.h"
 #include "core/random.h"
 #include "game/settings.h"
@@ -238,11 +239,11 @@ static void updateGodMoods()
 void CityInfo_Gods_calculateMoods(int updateMoods)
 {
 	// base happiness: percentage of houses covered
-	Data_CityInfo.godTargetHappiness[God_Ceres] = Data_CityInfo_CultureCoverage.religionCeres;
-	Data_CityInfo.godTargetHappiness[God_Neptune] = Data_CityInfo_CultureCoverage.religionNeptune;
-	Data_CityInfo.godTargetHappiness[God_Mercury] = Data_CityInfo_CultureCoverage.religionMercury;
-	Data_CityInfo.godTargetHappiness[God_Mars] = Data_CityInfo_CultureCoverage.religionMars;
-	Data_CityInfo.godTargetHappiness[God_Venus] = Data_CityInfo_CultureCoverage.religionVenus;
+	Data_CityInfo.godTargetHappiness[GOD_CERES] = city_culture_coverage_religion(GOD_CERES);
+	Data_CityInfo.godTargetHappiness[GOD_NEPTUNE] = city_culture_coverage_religion(GOD_NEPTUNE);
+	Data_CityInfo.godTargetHappiness[GOD_MERCURY] = city_culture_coverage_religion(GOD_MERCURY);
+	Data_CityInfo.godTargetHappiness[GOD_MARS] = city_culture_coverage_religion(GOD_MARS);
+	Data_CityInfo.godTargetHappiness[GOD_VENUS] = city_culture_coverage_religion(GOD_VENUS);
 
 	int maxTemples = 0;
 	int maxGod = TIE;
@@ -251,19 +252,19 @@ void CityInfo_Gods_calculateMoods(int updateMoods)
 	for (int i = 0; i < MAX_GODS; i++) {
 		int numTemples = 0;
 		switch (i) {
-			case God_Ceres:
+			case GOD_CERES:
 				numTemples = building_count_total(BUILDING_SMALL_TEMPLE_CERES) + building_count_total(BUILDING_LARGE_TEMPLE_CERES);
 				break;
-			case God_Neptune:
+			case GOD_NEPTUNE:
 				numTemples = building_count_total(BUILDING_SMALL_TEMPLE_NEPTUNE) + building_count_total(BUILDING_LARGE_TEMPLE_NEPTUNE);
 				break;
-			case God_Mercury:
+			case GOD_MERCURY:
 				numTemples = building_count_total(BUILDING_SMALL_TEMPLE_MERCURY) + building_count_total(BUILDING_LARGE_TEMPLE_MERCURY);
 				break;
-			case God_Mars:
+			case GOD_MARS:
 				numTemples = building_count_total(BUILDING_SMALL_TEMPLE_MARS) + building_count_total(BUILDING_LARGE_TEMPLE_MARS);
 				break;
-			case God_Venus:
+			case GOD_VENUS:
 				numTemples = building_count_total(BUILDING_SMALL_TEMPLE_VENUS) + building_count_total(BUILDING_LARGE_TEMPLE_VENUS);
 				break;
 		}

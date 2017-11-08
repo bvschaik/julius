@@ -10,6 +10,7 @@
 
 #include "../Data/Settings.h"
 
+#include "city/culture.h"
 #include "game/tutorial.h"
 
 static void buttonChangeAdvisor(int param1, int param2);
@@ -90,7 +91,7 @@ void UI_Advisors_init()
 	CityInfo_Finance_calculateTotals();
 
 	CityInfo_Culture_calculateDemandsForAdvisors();
-	CityInfo_Culture_updateCoveragePercentages();
+	city_culture_update_coverage();
 
 	CityInfo_Resource_calculateFoodAndSupplyRomeWheat();
 	Formation_calculateFigures();

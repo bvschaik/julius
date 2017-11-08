@@ -756,23 +756,6 @@ extern struct _Data_CityInfo {
 	char __unknown_4733;
 } Data_CityInfo;
 
-extern struct _Data_CityInfo_CultureCoverage {
-	int theater;
-	int amphitheater;
-	int colosseum;
-	int hippodrome;
-	int hospital;
-	int school;
-	int academy;
-	int library;
-	int religionCeres;
-	int religionNeptune;
-	int religionMercury;
-	int religionMars;
-	int religionVenus;
-	int oracle;
-} Data_CityInfo_CultureCoverage;
-
 extern struct _Data_CityInfo_Extra {
 	int populationGraphOrder;
 	int startingFavor;

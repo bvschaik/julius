@@ -6,6 +6,7 @@
 #include "Data/Settings.h"
 
 #include "building/model.h"
+#include "city/culture.h"
 #include "core/calc.h"
 #include "game/time.h"
 
@@ -34,7 +35,7 @@ static void updateCultureRating()
 		return;
 	}
 
-	int pctTheater = Data_CityInfo_CultureCoverage.theater;
+	int pctTheater = city_culture_coverage_theater();
 	if (pctTheater >= 100) {
 		Data_CityInfo.ratingCulturePointsTheater = 25;
 	} else if (pctTheater > 85) {
@@ -66,7 +67,7 @@ static void updateCultureRating()
 	}
 	Data_CityInfo.ratingCulture += Data_CityInfo.ratingCulturePointsReligion;
 
-	int pctSchool = Data_CityInfo_CultureCoverage.school;
+	int pctSchool = city_culture_coverage_school();
 	if (pctSchool >= 100) {
 		Data_CityInfo.ratingCulturePointsSchool = 15;
 	} else if (pctSchool > 85) {
@@ -82,7 +83,7 @@ static void updateCultureRating()
 	}
 	Data_CityInfo.ratingCulture += Data_CityInfo.ratingCulturePointsSchool;
 
-	int pctAcademy = Data_CityInfo_CultureCoverage.academy;
+	int pctAcademy = city_culture_coverage_academy();
 	if (pctAcademy >= 100) {
 		Data_CityInfo.ratingCulturePointsAcademy = 10;
 	} else if (pctAcademy > 85) {
@@ -98,7 +99,7 @@ static void updateCultureRating()
 	}
 	Data_CityInfo.ratingCulture += Data_CityInfo.ratingCulturePointsAcademy;
 
-	int pctLibrary = Data_CityInfo_CultureCoverage.library;
+	int pctLibrary = city_culture_coverage_library();
 	if (pctLibrary >= 100) {
 		Data_CityInfo.ratingCulturePointsLibrary = 20;
 	} else if (pctLibrary > 85) {
@@ -126,20 +127,24 @@ void CityInfo_Ratings_updateCultureExplanation()
 		minPercentage = Data_CityInfo.cultureCoverageReligion;
 		reason = 4;
 	}
-	if (Data_CityInfo_CultureCoverage.theater < minPercentage) {
-		minPercentage = Data_CityInfo_CultureCoverage.theater;
+	int pctTheater = city_culture_coverage_theater();
+	if (pctTheater < minPercentage) {
+		minPercentage = pctTheater;
 		reason = 5;
 	}
-	if (Data_CityInfo_CultureCoverage.library < minPercentage) {
-		minPercentage = Data_CityInfo_CultureCoverage.library;
+	int pctLibrary = city_culture_coverage_library();
+	if (pctLibrary < minPercentage) {
+		minPercentage = pctLibrary;
 		reason = 2;
 	}
-	if (Data_CityInfo_CultureCoverage.school < minPercentage) {
-		minPercentage = Data_CityInfo_CultureCoverage.school;
+	int pctSchool = city_culture_coverage_school();
+	if (pctSchool < minPercentage) {
+		minPercentage = pctSchool;
 		reason = 1;
 	}
-	if (Data_CityInfo_CultureCoverage.academy < minPercentage) {
-		minPercentage = Data_CityInfo_CultureCoverage.academy;
+	int pctAcademy = city_culture_coverage_academy();
+	if (pctAcademy < minPercentage) {
+		minPercentage = pctAcademy;
 		reason = 3;
 	}
 	Data_CityInfo.ratingAdvisorExplanationCulture = reason;

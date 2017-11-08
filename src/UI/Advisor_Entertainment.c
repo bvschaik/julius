@@ -3,6 +3,7 @@
 #include "../CityInfo.h"
 
 #include "building/count.h"
+#include "city/culture.h"
 
 static void drawFestivalBackground();
 
@@ -55,10 +56,11 @@ void UI_Advisor_Entertainment_drawBackground(int *advisorHeight)
 		baseOffsetX + 340, baseOffsetY + 64, FONT_NORMAL_WHITE
 	);
 	Widget_GameText_draw(58, 5, baseOffsetX + 340 + width, baseOffsetY + 64, FONT_NORMAL_WHITE);
-	if (Data_CityInfo_CultureCoverage.theater == 0) {
+	int pct_theater = city_culture_coverage_theater();
+	if (pct_theater == 0) {
 		Widget_GameText_drawCentered(57, 10, baseOffsetX + 470, baseOffsetY + 64, 100, FONT_NORMAL_WHITE);
-	} else if (Data_CityInfo_CultureCoverage.theater < 100) {
-		Widget_GameText_drawCentered(57, 11 + Data_CityInfo_CultureCoverage.theater / 10,
+	} else if (pct_theater < 100) {
+		Widget_GameText_drawCentered(57, 11 + pct_theater / 10,
 			baseOffsetX + 470, baseOffsetY + 64, 100, FONT_NORMAL_WHITE
 		);
 	} else {
@@ -79,10 +81,11 @@ void UI_Advisor_Entertainment_drawBackground(int *advisorHeight)
 		baseOffsetX + 340, baseOffsetY + 84, FONT_NORMAL_WHITE
 	);
 	Widget_GameText_draw(58, 5, baseOffsetX + 340 + width, baseOffsetY + 84, FONT_NORMAL_WHITE);
-	if (Data_CityInfo_CultureCoverage.amphitheater == 0) {
+	int pct_amphitheater = city_culture_coverage_amphitheater();
+	if (pct_amphitheater == 0) {
 		Widget_GameText_drawCentered(57, 10, baseOffsetX + 470, baseOffsetY + 84, 100, FONT_NORMAL_WHITE);
-	} else if (Data_CityInfo_CultureCoverage.amphitheater < 100) {
-		Widget_GameText_drawCentered(57, 11 + Data_CityInfo_CultureCoverage.amphitheater / 10,
+	} else if (pct_amphitheater < 100) {
+		Widget_GameText_drawCentered(57, 11 + pct_amphitheater / 10,
 			baseOffsetX + 470, baseOffsetY + 84, 100, FONT_NORMAL_WHITE
 		);
 	} else {
@@ -103,10 +106,11 @@ void UI_Advisor_Entertainment_drawBackground(int *advisorHeight)
 		baseOffsetX + 340, baseOffsetY + 104, FONT_NORMAL_WHITE
 	);
 	Widget_GameText_draw(58, 5, baseOffsetX + 340 + width, baseOffsetY + 104, FONT_NORMAL_WHITE);
-	if (Data_CityInfo_CultureCoverage.colosseum == 0) {
+	int pct_colosseum = city_culture_coverage_colosseum();
+	if (pct_colosseum == 0) {
 		Widget_GameText_drawCentered(57, 10, baseOffsetX + 470, baseOffsetY + 104, 100, FONT_NORMAL_WHITE);
-	} else if (Data_CityInfo_CultureCoverage.colosseum < 100) {
-		Widget_GameText_drawCentered(57, 11 + Data_CityInfo_CultureCoverage.colosseum / 10,
+	} else if (pct_colosseum < 100) {
+		Widget_GameText_drawCentered(57, 11 + pct_colosseum / 10,
 			baseOffsetX + 470, baseOffsetY + 104, 100, FONT_NORMAL_WHITE
 		);
 	} else {
@@ -124,7 +128,7 @@ void UI_Advisor_Entertainment_drawBackground(int *advisorHeight)
 		baseOffsetX + 230, baseOffsetY + 123, 100, FONT_NORMAL_WHITE
 	);
 	Widget_GameText_draw(58, 6, baseOffsetX + 360, baseOffsetY + 123, FONT_NORMAL_WHITE);
-	if (Data_CityInfo_CultureCoverage.hippodrome == 0) {
+	if (city_culture_coverage_hippodrome() == 0) {
 		Widget_GameText_drawCentered(57, 10, baseOffsetX + 470, baseOffsetY + 123, 100, FONT_NORMAL_WHITE);
 	} else {
 		Widget_GameText_drawCentered(57, 21, baseOffsetX + 470, baseOffsetY + 123, 100, FONT_NORMAL_WHITE);
