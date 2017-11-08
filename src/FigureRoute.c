@@ -28,17 +28,6 @@ void FigureRoute_clean()
 	}
 }
 
-int FigureRoute_getNumAvailable()
-{
-	int available = 0;
-	for (int i = 1; i < MAX_ROUTES; i++) {
-		if (!Data_Routes.figureIds[i]) {
-			available++;
-		}
-	}
-	return available;
-}
-
 static int getFirstAvailable()
 {
 	for (int i = 1; i < MAX_ROUTES; i++) {
