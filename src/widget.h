@@ -9,31 +9,11 @@
 
 #include <stdint.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-
-void Widget_Text_captureCursor();
-void Widget_Text_drawCursor(int xOffset, int yOffset);
-
-int Widget_Text_draw(const uint8_t *str, int x, int y, font_t font, color_t color);
-
-void Widget_Text_drawCentered(const uint8_t *str, int x, int y, int boxWidth, font_t font, color_t color);
-
 int Widget_GameText_draw(int group, int number, int xOffset, int yOffset, font_t font);
 int Widget_GameText_drawColored(int group, int number, int xOffset, int yOffset, font_t font, color_t color);
 
 void Widget_GameText_drawCentered(int group, int number, int xOffset, int yOffset, int boxWidth, font_t font);
 void Widget_GameText_drawCenteredColored(int group, int number, int xOffset, int yOffset, int boxWidth, font_t font, color_t color);
-
-int Widget_Text_drawNumber(int value, char prefix, const char *postfix, int xOffset, int yOffset, font_t font);
-int Widget_Text_drawNumberColored(int value, char prefix, const char *postfix, int xOffset, int yOffset, font_t font, color_t color);
-int Widget_Text_drawMoney(int value, int xOffset, int yOffset, font_t font);
-int Widget_Text_drawPercentage(int value, int xOffset, int yOffset, font_t font);
-
-void Widget_Text_drawNumberCentered(int value, int xOffset, int yOffset, int boxWidth, font_t font);
-void Widget_Text_drawNumberCenteredColored(int value, int xOffset, int yOffset, int boxWidth, font_t font, color_t color);
 
 int Widget_GameText_drawNumberWithDescription(int group, int number, int amount, int xOffset, int yOffset, font_t font);
 
@@ -102,10 +82,5 @@ void Widget_Menu_drawSubMenu(MenuBarItem *menu, int focusSubMenu);
 
 int Widget_Menu_handleMenuBar(const mouse *m, MenuBarItem *items, int numItems, int *focusMenuId);
 int Widget_Menu_handleMenuItem(const mouse *m, MenuBarItem *menu, int *focusSubMenuId);
-
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif

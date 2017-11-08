@@ -1,6 +1,6 @@
 #include "window.h"
 #include "allwindows.h"
-#include "widget.h"
+#include "widget_text.h"
 #include "graphics.h"
 #include "keyboardinput.h"
 #include "game/game_settings.h"
@@ -37,9 +37,9 @@ void UI_NewCareerDialog_drawForeground()
     Widget_GameText_drawCentered(31, 0, xOffset + 128, yOffset + 172, 384, FONT_LARGE_BLACK);
     Widget_GameText_draw(13, 5, xOffset + 352, yOffset + 256, FONT_NORMAL_BLACK);
     Widget_Panel_drawInnerPanel(xOffset + 160, yOffset + 208, 20, 2);
-    Widget_Text_captureCursor();
-    Widget_Text_draw(Data_Settings.playerName, xOffset + 176, yOffset + 216, FONT_NORMAL_WHITE, 0);
-    Widget_Text_drawCursor(xOffset + 176, yOffset + 217);
+    Widget::Text::captureCursor();
+    Widget::Text::draw(Data_Settings.playerName, xOffset + 176, yOffset + 216, FONT_NORMAL_WHITE, 0);
+    Widget::Text::drawCursor(xOffset + 176, yOffset + 217);
 
     Widget_Button_drawImageButtons(xOffset + 464, yOffset + 249, &imageButtonStartMission, 1);
 }

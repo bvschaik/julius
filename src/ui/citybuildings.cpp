@@ -12,7 +12,7 @@
 #include "scroll.h"
 #include "sound.h"
 #include "undo.h"
-#include "widget.h"
+#include "widget_text.h"
 
 #include "building/model.h"
 #include "core/time.h"
@@ -86,12 +86,12 @@ void UI_CityBuildings_drawBuildingCost()
     {
         color = COLOR_RED;
     }
-    Widget_Text_drawNumberColored(Data_State.selectedBuilding.cost, '@', " ",
-                                  Data_CityView.selectedTile.xOffsetInPixels + 58 + 1,
-                                  Data_CityView.selectedTile.yOffsetInPixels + 1, FONT_NORMAL_PLAIN, COLOR_BLACK);
-    Widget_Text_drawNumberColored(Data_State.selectedBuilding.cost, '@', " ",
-                                  Data_CityView.selectedTile.xOffsetInPixels + 58,
-                                  Data_CityView.selectedTile.yOffsetInPixels, FONT_NORMAL_PLAIN, color);
+    Widget::Text::drawNumberColored(Data_State.selectedBuilding.cost, '@', " ",
+                                    Data_CityView.selectedTile.xOffsetInPixels + 58 + 1,
+                                    Data_CityView.selectedTile.yOffsetInPixels + 1, FONT_NORMAL_PLAIN, COLOR_BLACK);
+    Widget::Text::drawNumberColored(Data_State.selectedBuilding.cost, '@', " ",
+                                    Data_CityView.selectedTile.xOffsetInPixels + 58,
+                                    Data_CityView.selectedTile.yOffsetInPixels, FONT_NORMAL_PLAIN, color);
     Graphics_resetClipRectangle();
     Data_State.selectedBuilding.cost = 0;
 }

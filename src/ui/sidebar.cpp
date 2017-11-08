@@ -14,7 +14,7 @@
 #include "sound.h"
 #include "terrain.h"
 #include "undo.h"
-#include "widget.h"
+#include "widget_text.h"
 
 #include "data/cityinfo.hpp"
 #include "data/constants.hpp"
@@ -178,10 +178,10 @@ static void drawNumberOfMessages()
         buttonBuildExpanded[14].enabled = Data_Message.hotspotCount > 0;
         if (Data_Message.totalMessages)
         {
-            Widget_Text_drawNumberCenteredColored(Data_Message.totalMessages,
-                                                  XOFFSET_EXPANDED + 74, 452, 32, FONT_SMALL_PLAIN, COLOR_BLACK);
-            Widget_Text_drawNumberCenteredColored(Data_Message.totalMessages,
-                                                  XOFFSET_EXPANDED + 73, 453, 32, FONT_SMALL_PLAIN, COLOR_WHITE);
+            Widget::Text::drawNumberCenteredColored(Data_Message.totalMessages,
+                                                    XOFFSET_EXPANDED + 74, 452, 32, FONT_SMALL_PLAIN, COLOR_BLACK);
+            Widget::Text::drawNumberCenteredColored(Data_Message.totalMessages,
+                                                    XOFFSET_EXPANDED + 73, 453, 32, FONT_SMALL_PLAIN, COLOR_WHITE);
         }
     }
 }

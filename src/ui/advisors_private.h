@@ -1,7 +1,7 @@
 #ifndef UI_ADVISORS_PRIVATE_H
 #define UI_ADVISORS_PRIVATE_H
 
-#include "widget.h"
+#include "widget_text.h"
 #include "graphics.h"
 
 #include "data/screen.hpp"

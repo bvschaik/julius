@@ -45,19 +45,10 @@ typedef enum
 
 WindowId UI_Window_getId();
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 void UI_Window_goTo(WindowId windowId);
 void UI_Window_goBack();
 
 void UI_Window_refresh(int force);
 void UI_Window_requestRefresh();
-
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif

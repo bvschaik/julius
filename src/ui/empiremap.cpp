@@ -12,7 +12,7 @@
 #include "resource.h"
 #include "scroll.h"
 #include "sidebarmenu.h"
-#include "widget.h"
+#include "widget_text.h"
 
 #include "data/cityinfo.hpp"
 #include "data/constants.hpp"
@@ -255,12 +255,12 @@ static void drawPanelInfoCity()
             {
                 tradeMax = tradeNow;
             }
-            int textWidth = Widget_Text_drawNumber(tradeNow, '@', "",
-                                                   xOffset + 100 * goodOffset + 150, yOffset + 30, FONT_NORMAL_GREEN);
+            int textWidth = Widget::Text::drawNumber(tradeNow, '@', "",
+                            xOffset + 100 * goodOffset + 150, yOffset + 30, FONT_NORMAL_GREEN);
             textWidth += Widget_GameText_draw(47, 11,
                                               xOffset + 100 * goodOffset + 148 + textWidth, yOffset + 30, FONT_NORMAL_GREEN);
-            Widget_Text_drawNumber(tradeMax, '@', "",
-                                   xOffset + 100 * goodOffset + 138 + textWidth, yOffset + 30, FONT_NORMAL_GREEN);
+            Widget::Text::drawNumber(tradeMax, '@', "",
+                                     xOffset + 100 * goodOffset + 138 + textWidth, yOffset + 30, FONT_NORMAL_GREEN);
             goodOffset++;
         }
         // city buys
@@ -298,12 +298,12 @@ static void drawPanelInfoCity()
             {
                 tradeMax = tradeNow;
             }
-            int textWidth = Widget_Text_drawNumber(tradeNow, '@', "",
-                                                   xOffset + 100 * goodOffset + 150, yOffset + 60, FONT_NORMAL_GREEN);
+            int textWidth = Widget::Text::drawNumber(tradeNow, '@', "",
+                            xOffset + 100 * goodOffset + 150, yOffset + 60, FONT_NORMAL_GREEN);
             textWidth += Widget_GameText_draw(47, 11,
                                               xOffset + 100 * goodOffset + 148 + textWidth, yOffset + 60, FONT_NORMAL_GREEN);
-            Widget_Text_drawNumber(tradeMax, '@', "",
-                                   xOffset + 100 * goodOffset + 138 + textWidth, yOffset + 60, FONT_NORMAL_GREEN);
+            Widget::Text::drawNumber(tradeMax, '@', "",
+                                     xOffset + 100 * goodOffset + 138 + textWidth, yOffset + 60, FONT_NORMAL_GREEN);
             goodOffset++;
         }
     }

@@ -5,7 +5,7 @@
 #include "graphics.h"
 #include "game/game_settings.h"
 #include "sound.h"
-#include "widget.h"
+#include "widget_text.h"
 
 #include "data/cityinfo.hpp"
 #include "data/constants.hpp"
@@ -66,28 +66,28 @@ void UI_MissionEnd_drawBackground()
         Widget_GameText_drawMultiline(147, Data_Settings.saveGameMissionId, xOffset + 32, yOffset + 64, 496, FONT_NORMAL_WHITE);
     }
     int width = Widget_GameText_draw(148, 0, xOffset + 40, yOffset + 180, FONT_NORMAL_BLACK);
-    Widget_Text_drawNumber(Data_CityInfo.ratingCulture, '@', " ",
-                           xOffset + 40 + width, yOffset + 180, FONT_NORMAL_BLACK);
+    Widget::Text::drawNumber(Data_CityInfo.ratingCulture, '@', " ",
+                             xOffset + 40 + width, yOffset + 180, FONT_NORMAL_BLACK);
 
     width = Widget_GameText_draw(148, 1, xOffset + 300, yOffset + 180, FONT_NORMAL_BLACK);
-    Widget_Text_drawNumber(Data_CityInfo.ratingProsperity, '@', " ",
-                           xOffset + 300 + width, yOffset + 180, FONT_NORMAL_BLACK);
+    Widget::Text::drawNumber(Data_CityInfo.ratingProsperity, '@', " ",
+                             xOffset + 300 + width, yOffset + 180, FONT_NORMAL_BLACK);
 
     width = Widget_GameText_draw(148, 2, xOffset + 40, yOffset + 200, FONT_NORMAL_BLACK);
-    Widget_Text_drawNumber(Data_CityInfo.ratingPeace, '@', " ",
-                           xOffset + 40 + width, yOffset + 200, FONT_NORMAL_BLACK);
+    Widget::Text::drawNumber(Data_CityInfo.ratingPeace, '@', " ",
+                             xOffset + 40 + width, yOffset + 200, FONT_NORMAL_BLACK);
 
     width = Widget_GameText_draw(148, 3, xOffset + 300, yOffset + 200, FONT_NORMAL_BLACK);
-    Widget_Text_drawNumber(Data_CityInfo.ratingFavor, '@', " ",
-                           xOffset + 300 + width, yOffset + 200, FONT_NORMAL_BLACK);
+    Widget::Text::drawNumber(Data_CityInfo.ratingFavor, '@', " ",
+                             xOffset + 300 + width, yOffset + 200, FONT_NORMAL_BLACK);
 
     width = Widget_GameText_draw(148, 4, xOffset + 40, yOffset + 220, FONT_NORMAL_BLACK);
-    Widget_Text_drawNumber(Data_CityInfo.population, '@', " ",
-                           xOffset + 40 + width, yOffset + 220, FONT_NORMAL_BLACK);
+    Widget::Text::drawNumber(Data_CityInfo.population, '@', " ",
+                             xOffset + 40 + width, yOffset + 220, FONT_NORMAL_BLACK);
 
     width = Widget_GameText_draw(148, 5, xOffset + 300, yOffset + 220, FONT_NORMAL_BLACK);
-    Widget_Text_drawNumber(Data_CityInfo.treasury, '@', " ",
-                           xOffset + 300 + width, yOffset + 220, FONT_NORMAL_BLACK);
+    Widget::Text::drawNumber(Data_CityInfo.treasury, '@', " ",
+                             xOffset + 300 + width, yOffset + 220, FONT_NORMAL_BLACK);
 
     Widget_GameText_drawCentered(13, 1, xOffset + 16, yOffset + 260, 512, FONT_NORMAL_BLACK);
 }
@@ -166,7 +166,7 @@ void UI_VictoryDialog_drawBackground()
     }
     else
     {
-        Widget_Text_drawCentered(Data_Settings.playerName, xOffset, yOffset + 16, 512, FONT_LARGE_BLACK, 0);
+        Widget::Text::drawCentered(Data_Settings.playerName, xOffset, yOffset + 16, 512, FONT_LARGE_BLACK, 0);
         Widget_GameText_drawMultiline(62, 26, xOffset + 16, yOffset + 47, 480, FONT_NORMAL_BLACK);
     }
 }

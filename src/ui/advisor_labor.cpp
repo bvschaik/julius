@@ -66,26 +66,26 @@ void UI_Advisor_Labor_drawBackground(int *advisorHeight)
 	Widget_GameText_draw(50, 23, baseOffsetX + 400, baseOffsetY + 56, FONT_SMALL_PLAIN);
 	Widget_GameText_draw(50, 24, baseOffsetX + 500, baseOffsetY + 56, FONT_SMALL_PLAIN);
 	
-	int width = Widget_Text_drawNumber(Data_CityInfo.workersEmployed, '@', " ",
+	int width = Widget::Text::drawNumber(Data_CityInfo.workersEmployed, '@', " ",
 		baseOffsetX + 32, baseOffsetY + 320, FONT_NORMAL_BLACK
 	);
 	width += Widget_GameText_draw(50, 12,
 		baseOffsetX + 32 + width, baseOffsetY + 320, FONT_NORMAL_BLACK
 	);
-	width += Widget_Text_drawNumber(Data_CityInfo.workersUnemployed, '@', " ",
+	width += Widget::Text::drawNumber(Data_CityInfo.workersUnemployed, '@', " ",
 		baseOffsetX + 50 + width, baseOffsetY + 320, FONT_NORMAL_BLACK
 	);
 	width += Widget_GameText_draw(50, 13,
 		baseOffsetX + 50 + width, baseOffsetY + 320, FONT_NORMAL_BLACK
 	);
-	width += Widget_Text_drawNumber(Data_CityInfo.unemploymentPercentage, '@', "%)",
+	width += Widget::Text::drawNumber(Data_CityInfo.unemploymentPercentage, '@', "%)",
 		baseOffsetX + 50 + width, baseOffsetY + 320, FONT_NORMAL_BLACK
 	);
 	
 	Widget_Panel_drawInnerPanel(baseOffsetX + 64, baseOffsetY + 350, 32, 2);
 	Widget_GameText_draw(50, 14, baseOffsetX + 70, baseOffsetY + 359, FONT_NORMAL_WHITE);
 	
-	width = Widget_Text_drawNumber(Data_CityInfo.wages, '@', " ",
+	width = Widget::Text::drawNumber(Data_CityInfo.wages, '@', " ",
 		baseOffsetX + 230, baseOffsetY + 359, FONT_NORMAL_WHITE
 	);
 	width += Widget_GameText_draw(50, 15,
@@ -94,14 +94,14 @@ void UI_Advisor_Labor_drawBackground(int *advisorHeight)
 	width += Widget_GameText_draw(50, 18,
 		baseOffsetX + 230 + width, baseOffsetY + 359, FONT_NORMAL_WHITE
 	);
-	width += Widget_Text_drawNumber(Data_CityInfo.wagesRome, '@', " )",
+	width += Widget::Text::drawNumber(Data_CityInfo.wagesRome, '@', " )",
 		baseOffsetX + 230 + width, baseOffsetY + 359, FONT_NORMAL_WHITE
 	);
 	
 	width = Widget_GameText_draw(50, 19,
 		baseOffsetX + 64, baseOffsetY + 390, FONT_NORMAL_BLACK
 	);
-	width += Widget_Text_drawMoney(Data_CityInfo.estimatedYearlyWages,
+	width += Widget::Text::drawMoney(Data_CityInfo.estimatedYearlyWages,
 		baseOffsetX + 64 + width, baseOffsetY + 390, FONT_NORMAL_BLACK
 	);
 }
@@ -125,18 +125,18 @@ void UI_Advisor_Labor_drawForeground()
 		if (Data_CityInfo.laborCategory[i].priority) {
 			Graphics_drawImage(image_group(ID_Graphic_LaborPriorityLock),
 				baseOffsetX + 70, baseOffsetY + 80 + 25 * i);
-			Widget_Text_drawNumber(Data_CityInfo.laborCategory[i].priority, '@', " ",
+			Widget::Text::drawNumber(Data_CityInfo.laborCategory[i].priority, '@', " ",
 				baseOffsetX + 90, baseOffsetY + 82 + 25 * i, FONT_NORMAL_WHITE);
 		}
 		Widget_GameText_draw(50, i + 1,
 			baseOffsetX + 170, baseOffsetY + 82 + 25 * i, FONT_NORMAL_WHITE);
-		Widget_Text_drawNumber(Data_CityInfo.laborCategory[i].workersNeeded, '@', " ",
+		Widget::Text::drawNumber(Data_CityInfo.laborCategory[i].workersNeeded, '@', " ",
 			baseOffsetX + 410, baseOffsetY + 82 + 25 * i, FONT_NORMAL_WHITE);
 		font_t font = FONT_NORMAL_WHITE;
 		if (Data_CityInfo.laborCategory[i].workersNeeded != Data_CityInfo.laborCategory[i].workersAllocated) {
 			font = FONT_NORMAL_RED;
 		}
-		Widget_Text_drawNumber(Data_CityInfo.laborCategory[i].workersAllocated, '@', " ",
+		Widget::Text::drawNumber(Data_CityInfo.laborCategory[i].workersAllocated, '@', " ",
 			baseOffsetX + 510, baseOffsetY + 82 + 25 * i, font);
 	}
 }

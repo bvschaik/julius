@@ -17,6 +17,7 @@
 #include "graphics.h" // debug
 #include "system.h"
 #include "game/game.h"
+#include "widget_text.h"
 
 #include "core/lang.h"
 #include "game/settings.h"
@@ -245,9 +246,9 @@ void refresh()
         numFrames = 0;
     }
     Graphics_fillRect(Data_Screen.width - 120, 0, Data_Screen.width, 20, COLOR_WHITE);
-    Widget_Text_drawNumberColored(lastFps, 'f', "", Data_Screen.width - 120, 5, FONT_NORMAL_PLAIN, COLOR_RED);
-    Widget_Text_drawNumberColored(then - now, 'g', "", Data_Screen.width - 70, 5, FONT_NORMAL_PLAIN, COLOR_RED);
-    Widget_Text_drawNumberColored(then2 - then, 'd', "", Data_Screen.width - 40, 5, FONT_NORMAL_PLAIN, COLOR_RED);
+    Widget::Text::drawNumberColored(lastFps, 'f', "", Data_Screen.width - 120, 5, FONT_NORMAL_PLAIN, COLOR_RED);
+    Widget::Text::drawNumberColored(then - now, 'g', "", Data_Screen.width - 70, 5, FONT_NORMAL_PLAIN, COLOR_RED);
+    Widget::Text::drawNumberColored(then2 - then, 'd', "", Data_Screen.width - 40, 5, FONT_NORMAL_PLAIN, COLOR_RED);
 
     SDL_UpdateTexture(SDL.texture, NULL, Data_Screen.drawBuffer, Data_Screen.width * 4);
     SDL_RenderCopy(SDL.renderer, SDL.texture, NULL, NULL);

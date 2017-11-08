@@ -13,19 +13,19 @@ void UI_Advisor_Education_drawBackground(int *advisorHeight)
 	Widget_GameText_draw(57, 0, baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK);
 
 	// x population, y school age, z academy age
-	int width = Widget_Text_drawNumber(Data_CityInfo.population, '@', " ",
+	int width = Widget::Text::drawNumber(Data_CityInfo.population, '@', " ",
 		baseOffsetX + 60, baseOffsetY + 50, FONT_NORMAL_BLACK
 	);
 	width += Widget_GameText_draw(57, 1,
 		baseOffsetX + 60 + width, baseOffsetY + 50, FONT_NORMAL_BLACK
 	);
-	width += Widget_Text_drawNumber(Data_CityInfo.populationSchoolAge, '@', " ",
+	width += Widget::Text::drawNumber(Data_CityInfo.populationSchoolAge, '@', " ",
 		baseOffsetX + 60 + width, baseOffsetY + 50, FONT_NORMAL_BLACK
 	);
 	width += Widget_GameText_draw(57, 2,
 		baseOffsetX + 60 + width, baseOffsetY + 50, FONT_NORMAL_BLACK
 	);
-	width += Widget_Text_drawNumber(Data_CityInfo.populationAcademyAge, '@', " ",
+	width += Widget::Text::drawNumber(Data_CityInfo.populationAcademyAge, '@', " ",
 		baseOffsetX + 60 + width, baseOffsetY + 50, FONT_NORMAL_BLACK
 	);
 	width += Widget_GameText_draw(57, 3,
@@ -44,11 +44,11 @@ void UI_Advisor_Education_drawBackground(int *advisorHeight)
 		8, 18, building_count_total(BUILDING_SCHOOL),
 		baseOffsetX + 40, baseOffsetY + 105, FONT_NORMAL_WHITE
 	);
-	Widget_Text_drawNumberCentered(building_count_active(BUILDING_SCHOOL),
+	Widget::Text::drawNumberCentered(building_count_active(BUILDING_SCHOOL),
 		baseOffsetX + 150, baseOffsetY + 105, 100, FONT_NORMAL_WHITE
 	);
 
-	width = Widget_Text_drawNumber(75 * building_count_active(BUILDING_SCHOOL), '@', " ",
+	width = Widget::Text::drawNumber(75 * building_count_active(BUILDING_SCHOOL), '@', " ",
 		baseOffsetX + 280, baseOffsetY + 105, FONT_NORMAL_WHITE
 	);
 	Widget_GameText_draw(57, 7, baseOffsetX + 280 + width, baseOffsetY + 105, FONT_NORMAL_WHITE);
@@ -68,11 +68,11 @@ void UI_Advisor_Education_drawBackground(int *advisorHeight)
 		8, 20, building_count_total(BUILDING_ACADEMY),
 		baseOffsetX + 40, baseOffsetY + 125, FONT_NORMAL_WHITE
 	);
-	Widget_Text_drawNumberCentered(building_count_active(BUILDING_ACADEMY),
+	Widget::Text::drawNumberCentered(building_count_active(BUILDING_ACADEMY),
 		baseOffsetX + 150, baseOffsetY + 125, 100, FONT_NORMAL_WHITE
 	);
 
-	width = Widget_Text_drawNumber(100 * building_count_active(BUILDING_ACADEMY), '@', " ",
+	width = Widget::Text::drawNumber(100 * building_count_active(BUILDING_ACADEMY), '@', " ",
 		baseOffsetX + 280, baseOffsetY + 125, FONT_NORMAL_WHITE
 	);
 	Widget_GameText_draw(57, 8, baseOffsetX + 280 + width, baseOffsetY + 125, FONT_NORMAL_WHITE);
@@ -92,11 +92,11 @@ void UI_Advisor_Education_drawBackground(int *advisorHeight)
 		8, 22, building_count_total(BUILDING_LIBRARY),
 		baseOffsetX + 40, baseOffsetY + 145, FONT_NORMAL_WHITE
 	);
-	Widget_Text_drawNumberCentered(building_count_active(BUILDING_LIBRARY),
+	Widget::Text::drawNumberCentered(building_count_active(BUILDING_LIBRARY),
 		baseOffsetX + 150, baseOffsetY + 145, 100, FONT_NORMAL_WHITE
 	);
 
-	width = Widget_Text_drawNumber(800 * building_count_active(BUILDING_LIBRARY), '@', " ",
+	width = Widget::Text::drawNumber(800 * building_count_active(BUILDING_LIBRARY), '@', " ",
 		baseOffsetX + 280, baseOffsetY + 145, FONT_NORMAL_WHITE
 	);
 	Widget_GameText_draw(57, 9, baseOffsetX + 280 + width, baseOffsetY + 145, FONT_NORMAL_WHITE);

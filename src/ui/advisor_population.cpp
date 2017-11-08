@@ -136,13 +136,13 @@ void UI_Advisor_Population_drawBackground(int *advisorHeight)
 
 	// food types eaten
 	width = Widget_GameText_draw(55, 16, baseOffsetX + 75, baseOffsetY + 360, FONT_NORMAL_WHITE);
-	Widget_Text_drawNumber(Data_CityInfo.foodInfoFoodTypesAvailable, '@', " ",
+	Widget::Text::drawNumber(Data_CityInfo.foodInfoFoodTypesAvailable, '@', " ",
 		baseOffsetX + 75 + width, baseOffsetY + 360, FONT_NORMAL_WHITE);
 
 	// immigration
 	if (Data_CityInfo.populationNewcomersThisMonth >= 5) {
 		Widget_GameText_draw(55, 24, baseOffsetX + 75, baseOffsetY + 378, FONT_NORMAL_WHITE);
-		width = Widget_Text_drawNumber(Data_CityInfo.populationNewcomersThisMonth, '@', " ",
+		width = Widget::Text::drawNumber(Data_CityInfo.populationNewcomersThisMonth, '@', " ",
 			baseOffsetX + 75, baseOffsetY + 396, FONT_NORMAL_WHITE);
 		Widget_GameText_draw(55, 17, baseOffsetX + 75 + width, baseOffsetY + 396, FONT_NORMAL_WHITE);
 	} else if (Data_CityInfo.populationRefusedImmigrantsNoRoom || Data_CityInfo.populationRoomInHouses <= 0) {
@@ -165,7 +165,7 @@ void UI_Advisor_Population_drawBackground(int *advisorHeight)
 		}
 	} else {
 		Widget_GameText_draw(55, 24, baseOffsetX + 75, baseOffsetY + 378, FONT_NORMAL_WHITE);
-		width = Widget_Text_drawNumber(Data_CityInfo.populationNewcomersThisMonth, '@', " ",
+		width = Widget::Text::drawNumber(Data_CityInfo.populationNewcomersThisMonth, '@', " ",
 			baseOffsetX + 75, baseOffsetY + 396, FONT_NORMAL_WHITE);
 		if (Data_CityInfo.populationNewcomersThisMonth == 1) {
 			Widget_GameText_draw(55, 18, baseOffsetX + 75 + width, baseOffsetY + 396, FONT_NORMAL_WHITE);
@@ -232,11 +232,11 @@ static void drawHistoryGraph(int fullSize, int x, int y)
 	getYAxis(maxValue, &yMax, &yShift);
 	if (fullSize) {
 		// y axis
-		Widget_Text_drawNumberCentered(yMax,
+		Widget::Text::drawNumberCentered(yMax,
 			x - 66, y - 3, 60, FONT_SMALL_PLAIN);
-		Widget_Text_drawNumberCentered(yMax / 2,
+		Widget::Text::drawNumberCentered(yMax / 2,
 			x - 66, y + 96, 60, FONT_SMALL_PLAIN);
-		Widget_Text_drawNumberCentered(0,
+		Widget::Text::drawNumberCentered(0,
 			x - 66, y + 196, 60, FONT_SMALL_PLAIN);
 		// x axis
 		int startMonth, startYear, endMonth, endYear;
@@ -312,15 +312,15 @@ static void drawCensusGraph(int fullSize, int x, int y)
 	getYAxis(maxValue, &yMax, &yShift);
 	if (fullSize) {
 		// y axis
-		Widget_Text_drawNumberCentered(yMax,
+		Widget::Text::drawNumberCentered(yMax,
 			x - 66, y - 3, 60, FONT_SMALL_PLAIN);
-		Widget_Text_drawNumberCentered(yMax / 2,
+		Widget::Text::drawNumberCentered(yMax / 2,
 			x - 66, y + 96, 60, FONT_SMALL_PLAIN);
-		Widget_Text_drawNumberCentered(0,
+		Widget::Text::drawNumberCentered(0,
 			x - 66, y + 196, 60, FONT_SMALL_PLAIN);
 		// x axis
 		for (int i = 0; i <= 10; i++) {
-			Widget_Text_drawNumberCentered(i * 10,
+			Widget::Text::drawNumberCentered(i * 10,
 				x + 40 * i - 22, y + 210, 40, FONT_SMALL_PLAIN);
 		}
 	}
@@ -364,11 +364,11 @@ static void drawSocietyGraph(int fullSize, int x, int y)
 	getYAxis(maxValue, &yMax, &yShift);
 	if (fullSize) {
 		// y axis
-		Widget_Text_drawNumberCentered(yMax,
+		Widget::Text::drawNumberCentered(yMax,
 			x - 66, y - 3, 60, FONT_SMALL_PLAIN);
-		Widget_Text_drawNumberCentered(yMax / 2,
+		Widget::Text::drawNumberCentered(yMax / 2,
 			x - 66, y + 96, 60, FONT_SMALL_PLAIN);
-		Widget_Text_drawNumberCentered(0,
+		Widget::Text::drawNumberCentered(0,
 			x - 66, y + 196, 60, FONT_SMALL_PLAIN);
 		// x axis
 		Widget_GameText_drawCentered(55, 9,
