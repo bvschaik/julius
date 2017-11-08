@@ -194,6 +194,7 @@ static set_sound *get_sound(set_sound_type type)
     case SOUND_EFFECTS: return &data.sound_effects;
     case SOUND_SPEECH: return &data.sound_speech;
     case SOUND_CITY: return &data.sound_city;
+    default: return 0;
     }
 }
 

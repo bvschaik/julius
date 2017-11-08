@@ -7,6 +7,7 @@
 #include "game/difficulty.h"
 #include "game/settings.h"
 
+
 void Settings_load()
 {
 	io_read_file_into_buffer("c3map.inf", &Data_Settings_Map, 48);
@@ -25,7 +26,7 @@ void Settings_save()
 void Settings_clearMissionSettings()
 {
 	setting_clear_personal_savings();
-	Data_Settings.startingFavor = difficulty_favor();
+	Data_Settings.startingFavor = difficulty_starting_favor();
 	Data_Settings.personalSavingsLastMission = 0;
 	Data_Settings.currentMissionId = 0;
 	Data_Settings.isCustomScenario = 0;

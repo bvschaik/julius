@@ -6,7 +6,7 @@
 static const struct {
     int money;
     int enemies;
-    int favor;
+    int starting_favor;
     int sentiment;
 } data[] = {
     {300, 40, 70, 80}, // very easy
@@ -16,9 +16,9 @@ static const struct {
     {75, 120, 40, 40} // very hard
 };
 
-int difficulty_favor()
+int difficulty_starting_favor()
 {
-    return data[setting_difficulty()].favor;
+    return data[setting_difficulty()].starting_favor;
 }
 
 int difficulty_sentiment()
