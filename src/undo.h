@@ -1,18 +1,16 @@
 #ifndef UNDO_H
 #define UNDO_H
 
-int Undo_recordBeforeBuild();
-
-void Undo_restoreTerrainGraphics();
-void Undo_restoreBuildings();
-
-void Undo_addBuildingToList(int buildingId);
-int Undo_isBuildingInList(int buildingId);
-
-void Undo_recordBuild(int cost);
-
-void Undo_perform();
-
-void Undo_updateAvailable();
+struct Undo
+{
+    static int recordBeforeBuild();
+    static void restoreTerrainGraphics();
+    static void restoreBuildings();
+    static void addBuildingToList(int buildingId);
+    static int isBuildingInList(int buildingId);
+    static void recordBuild(int cost);
+    static void perform();
+    static void updateAvailable();
+};
 
 #endif

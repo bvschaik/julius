@@ -809,7 +809,7 @@ static void buildStart()
         Data_State.selectedBuilding.xEnd = Data_State.selectedBuilding.xStart = Data_Settings_Map.current.x;
         Data_State.selectedBuilding.yEnd = Data_State.selectedBuilding.yStart = Data_Settings_Map.current.y;
         Data_State.selectedBuilding.gridOffsetStart = Data_Settings_Map.current.gridOffset;
-        if (Undo_recordBeforeBuild())
+        if (Undo::recordBeforeBuild())
         {
             Data_State.selectedBuilding.placementInProgress = 1;
             switch (Data_State.selectedBuilding.type)

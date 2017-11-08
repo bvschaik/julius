@@ -45,7 +45,7 @@ void GameTick_doTick()
 {
     printf("TICK %d.%d.%d\n", game_time_month(), game_time_day(), game_time_tick());
     random_generate_next();
-    Undo_updateAvailable();
+    Undo::updateAvailable();
     GameTick_advance();
     FigureAction_handle();
     Event_handleEarthquake();

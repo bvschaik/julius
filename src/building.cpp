@@ -58,7 +58,7 @@ int Building_create(int type, int x, int y)
     int buildingId = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++)
     {
-        if (Data_Buildings[i].state == BuildingState_Unused && !Undo_isBuildingInList(i))
+        if (Data_Buildings[i].state == BuildingState_Unused && !Undo::isBuildingInList(i))
         {
             buildingId = i;
             break;
