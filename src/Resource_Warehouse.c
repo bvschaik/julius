@@ -12,6 +12,7 @@
 
 #include "building/count.h"
 #include "building/model.h"
+#include "building/storage.h"
 #include "empire/trade_prices.h"
 #include "graphics/image.h"
 #include "game/tutorial.h"
@@ -62,8 +63,8 @@ int Resource_removeFromCityWarehouses(int resource, int amount)
 		}
 		if (BuildingIsInUse(buildingId) &&
 			Data_Buildings[buildingId].type == BUILDING_WAREHOUSE) {
-			int storageId = Data_Buildings[buildingId].storageId;
-			if (Data_Building_Storages[storageId].resourceState[resource] != BuildingStorageState_Getting) {
+			int storageId = Data_Buildings[buildingId].storage_id;
+			if (building_storage_get(storageId)->resource_state[resource] != BUILDING_STORAGE_STATE_GETTING) {
 				Data_CityInfo.resourceLastTargetWarehouse = buildingId;
 				amountLeft = Resource_removeFromWarehouse(buildingId, resource, amountLeft);
 			}
@@ -102,8 +103,8 @@ int Resource_getWarehouseForStoringResource(
 		if (srcBuildingId == dstBuildingId) {
 			continue;
 		}
-		struct Data_Building_Storage *s = &Data_Building_Storages[Data_Buildings[dstBuildingId].storageId];
-		if (s->resourceState[resource] == BuildingStorageState_NotAccepting || s->emptyAll) {
+		const building_storage *s = building_storage_get(Data_Buildings[dstBuildingId].storage_id);
+		if (s->resource_state[resource] == BUILDING_STORAGE_STATE_NOT_ACCEPTING || s->empty_all) {
 			continue;
 		}
 		int pctWorkers = calc_percentage(
@@ -116,7 +117,7 @@ int Resource_getWarehouseForStoringResource(
 			continue;
 		}
 		int dist;
-		if (b->subtype.warehouseResourceId == Resource_None) { // empty warehouse space
+		if (b->subtype.warehouseResourceId == RESOURCE_NONE) { // empty warehouse space
 			dist = Resource_getDistance(b->x, b->y, x, y, distanceFromEntry, b->distanceFromEntry);
 		} else if (b->subtype.warehouseResourceId == resource && b->loadsStored < 4) {
 			dist = Resource_getDistance(b->x, b->y, x, y, distanceFromEntry, b->distanceFromEntry);
@@ -154,7 +155,7 @@ int Resource_getWarehouseForGettingResource(int srcBuildingId, int resource, int
 		}
 		int loadsStored = 0;
 		int spaceId = i;
-		struct Data_Building_Storage *s = &Data_Building_Storages[b->storageId];
+		const building_storage *s = building_storage_get(b->storage_id);
 		for (int t = 0; t < 8; t++) {
 			spaceId = Data_Buildings[spaceId].nextPartBuildingId;
 			if (spaceId > 0 && Data_Buildings[spaceId].loadsStored > 0) {
@@ -163,7 +164,7 @@ int Resource_getWarehouseForGettingResource(int srcBuildingId, int resource, int
 				}
 			}
 		}
-		if (loadsStored > 0 && s->resourceState[resource] != BuildingStorageState_Getting) {
+		if (loadsStored > 0 && s->resource_state[resource] != BUILDING_STORAGE_STATE_GETTING) {
 			int dist = Resource_getDistance(b->x, b->y, bSrc->x, bSrc->y,
 				bSrc->distanceFromEntry, b->distanceFromEntry);
 			dist -= 4 * loadsStored;
@@ -382,10 +383,10 @@ static int determineGranaryAcceptFoods()
 		}
 		int pctWorkers = calc_percentage(b->numWorkers, model_get_building(b->type)->laborers);
 		if (pctWorkers >= 100 && b->data.storage.resourceStored[Resource_None] >= 1200) {
-			struct Data_Building_Storage *s = &Data_Building_Storages[b->storageId];
-			if (!s->emptyAll) {
+			const building_storage *s = building_storage_get(b->storage_id);
+			if (!s->empty_all) {
 				for (int r = 0; r < Resource_MaxFood; r++) {
-					if (s->resourceState[r] != BuildingStorageState_NotAccepting) {
+					if (s->resource_state[r] != BUILDING_STORAGE_STATE_NOT_ACCEPTING) {
 						granaryAcceptingResource[r]++;
 						canAccept = 1;
 					}
@@ -412,10 +413,10 @@ static int determineGranaryGetFoods()
 		}
 		int pctWorkers = calc_percentage(b->numWorkers, model_get_building(b->type)->laborers);
 		if (pctWorkers >= 100 && b->data.storage.resourceStored[Resource_None] > 100) {
-			struct Data_Building_Storage *s = &Data_Building_Storages[b->storageId];
-			if (!s->emptyAll) {
+			const building_storage *s = building_storage_get(b->storage_id);
+			if (!s->empty_all) {
 				for (int r = 0; r < Resource_MaxFood; r++) {
-					if (s->resourceState[r] == BuildingStorageState_Getting) {
+					if (s->resource_state[r] == BUILDING_STORAGE_STATE_GETTING) {
 						granaryGettingResource[r]++;
 						canGet = 1;
 					}
@@ -455,11 +456,11 @@ int Resource_determineWarehouseWorkerTask(int buildingId, int *resource)
 	if (pctWorkers < 50) {
 		return -1;
 	}
-	struct Data_Building_Storage *s = &Data_Building_Storages[b->storageId];
+	const building_storage *s = building_storage_get(b->storage_id);
 	int spaceId;
 	// get resources
 	for (int r = Resource_Min; r < Resource_Max; r++) {
-		if (s->resourceState[r] != BuildingStorageState_Getting || Data_CityInfo.resourceStockpiled[r]) {
+		if (s->resource_state[r] != BUILDING_STORAGE_STATE_GETTING || Data_CityInfo.resourceStockpiled[r]) {
 			continue;
 		}
 		int loadsStored = 0;
@@ -562,7 +563,7 @@ int Resource_determineWarehouseWorkerTask(int buildingId, int *resource)
 		}
 	}
 	// move goods to other warehouses
-	if (s->emptyAll) {
+	if (s->empty_all) {
 		spaceId = buildingId;
 		for (int i = 0; i < 8; i++) {
 			spaceId = Data_Buildings[spaceId].nextPartBuildingId;

@@ -17,12 +17,6 @@ enum {
 	BuildingState_DeletedByPlayer = 6
 };
 
-enum {
-	BuildingStorageState_Accepting = 0,
-	BuildingStorageState_NotAccepting = 1,
-	BuildingStorageState_Getting = 2
-};
-
 #define BuildingIsHouse(type) ((type) >= BUILDING_HOUSE_VACANT_LOT && (type) <= BUILDING_HOUSE_LUXURY_PALACE)
 #define BuildingIsFarm(type) ((type) >= BUILDING_WHEAT_FARM && (type) <= BUILDING_PIG_FARM)
 #define BuildingIsWorkshop(type) ((type) >= BUILDING_WINE_WORKSHOP && (type) <= BUILDING_POTTERY_WORKSHOP)
@@ -193,21 +187,13 @@ extern struct Data_Building {
 	signed char desirability;
 	unsigned char isDeleted; // 7b
 	unsigned char isAdjacentToWater;
-	unsigned char storageId;
+	unsigned char storage_id;
 	union {
 		char houseHappiness;
 		char nativeAnger;
 	} sentiment;
 	unsigned char showOnProblemOverlay;
 } Data_Buildings[MAX_BUILDINGS];
-
-extern struct Data_Building_Storage {
-	int startUnused;
-	int buildingId;
-	unsigned char inUse;
-	unsigned char emptyAll;
-	unsigned char resourceState[22];
-} Data_Building_Storages[MAX_STORAGES];
 
 extern struct _Data_Buildings_Extra {
 	int highestBuildingIdInUse;

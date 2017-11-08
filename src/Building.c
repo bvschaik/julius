@@ -26,6 +26,7 @@
 #include "Data/Figure.h"
 
 #include "building/properties.h"
+#include "building/storage.h"
 #include "graphics/image.h"
 
 #include <string.h>
@@ -176,8 +177,8 @@ void Building_delete(int buildingId)
 void Building_deleteData(int buildingId)
 {
 	struct Data_Building *b = &Data_Buildings[buildingId];
-	if (b->storageId) {
-		Data_Building_Storages[b->storageId].inUse = 0;
+	if (b->storage_id) {
+		building_storage_delete(b->storage_id);
 	}
 	if (b->type == BUILDING_SENATE_UPGRADED && b->gridOffset == Data_CityInfo.buildingSenateGridOffset) {
 		Data_CityInfo.buildingSenateGridOffset = 0;
@@ -613,47 +614,6 @@ void Building_determineGraphicIdsForOrientedBuildings()
 				}
 				Terrain_addWatersideBuildingToGrids(i, b->x, b->y, 3, graphicId);
 				break;
-		}
-	}
-}
-
-void BuildingStorage_clearList()
-{
-	memset(Data_Building_Storages, 0, MAX_STORAGES * sizeof(struct Data_Building_Storage));
-}
-
-int BuildingStorage_create()
-{
-	for (int i = 1; i < MAX_STORAGES; i++) {
-		if (!Data_Building_Storages[i].inUse) {
-			memset(&Data_Building_Storages[i], 0, sizeof(struct Data_Building_Storage));
-			Data_Building_Storages[i].inUse = 1;
-			return i;
-		}
-	}
-	return 0;
-}
-
-void BuildingStorage_resetBuildingIds()
-{
-	for (int i = 1; i < MAX_STORAGES; i++) {
-		Data_Building_Storages[i].buildingId = 0;
-	}
-	
-	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].state == BuildingState_Unused) {
-			continue;
-		}
-		if (Data_Buildings[i].type == BUILDING_GRANARY || Data_Buildings[i].type == BUILDING_WAREHOUSE) {
-			if (Data_Buildings[i].storageId) {
-				int storageId = Data_Buildings[i].storageId;
-				if (Data_Building_Storages[storageId].buildingId) {
-					// is already connected to a building: corrupt, create new
-					Data_Buildings[i].storageId = BuildingStorage_create();
-				} else {
-					Data_Building_Storages[storageId].buildingId = i;
-				}
-			}
 		}
 	}
 }

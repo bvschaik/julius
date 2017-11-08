@@ -8,6 +8,8 @@
 #include "Data/Scenario.h"
 
 #include "building/model.h"
+#include "building/storage.h"
+#include "../../opencaesar/src/Data/Building.h"
 
 static struct {
 	int buildingIds[100];
@@ -49,21 +51,21 @@ void Resource_gatherGranaryGettingInfo()
 		if (!b->hasRoadAccess || b->distanceFromEntry <= 0) {
 			continue;
 		}
-		struct Data_Building_Storage *s = &Data_Building_Storages[b->storageId];
+		const building_storage *s = building_storage_get(b->storage_id);
 		int totalNonGetting = 0;
-		if (s->resourceState[Resource_Wheat] != BuildingStorageState_Getting) {
+		if (s->resource_state[Resource_Wheat] != BUILDING_STORAGE_STATE_GETTING) {
 			totalNonGetting += b->data.storage.resourceStored[Resource_Wheat];
 			nonGettingGranaries.totalStorageWheat += b->data.storage.resourceStored[Resource_Wheat];
 		}
-		if (s->resourceState[Resource_Vegetables] != BuildingStorageState_Getting) {
+		if (s->resource_state[Resource_Vegetables] != BUILDING_STORAGE_STATE_GETTING) {
 			totalNonGetting += b->data.storage.resourceStored[Resource_Vegetables];
 			nonGettingGranaries.totalStorageVegetables += b->data.storage.resourceStored[Resource_Vegetables];
 		}
-		if (s->resourceState[Resource_Fruit] != BuildingStorageState_Getting) {
+		if (s->resource_state[Resource_Fruit] != BUILDING_STORAGE_STATE_GETTING) {
 			totalNonGetting += b->data.storage.resourceStored[Resource_Fruit];
 			nonGettingGranaries.totalStorageFruit += b->data.storage.resourceStored[Resource_Fruit];
 		}
-		if (s->resourceState[Resource_Meat] != BuildingStorageState_Getting) {
+		if (s->resource_state[Resource_Meat] != BUILDING_STORAGE_STATE_GETTING) {
 			totalNonGetting += b->data.storage.resourceStored[Resource_Meat];
 			nonGettingGranaries.totalStorageMeat += b->data.storage.resourceStored[Resource_Meat];
 		}
@@ -106,11 +108,11 @@ int Resource_getGranaryForStoringFood(
 			}
 			continue;
 		}
-		struct Data_Building_Storage *s = &Data_Building_Storages[b->storageId];
-		if (s->resourceState[resource] == BuildingStorageState_NotAccepting || s->emptyAll) {
+		const building_storage *s = building_storage_get(b->storage_id);
+		if (s->resource_state[resource] == BUILDING_STORAGE_STATE_NOT_ACCEPTING || s->empty_all) {
 			continue;
 		}
-		if (b->data.storage.resourceStored[Resource_None] >= 100) {
+		if (b->data.storage.resourceStored[RESOURCE_NONE] >= 100) {
 			// there is room
 			int dist = Resource_getDistance(b->x + 1, b->y + 1, x, y, distanceFromEntry, b->distanceFromEntry);
 			if (dist < minDist) {
@@ -152,8 +154,8 @@ int Resource_getGettingGranaryForStoringFood(
 		if (pctWorkers < 100) {
 			continue;
 		}
-		struct Data_Building_Storage *s = &Data_Building_Storages[b->storageId];
-		if (s->resourceState[resource] != BuildingStorageState_Getting || s->emptyAll) {
+		const building_storage *s = building_storage_get(b->storage_id);
+		if (s->resource_state[resource] != BUILDING_STORAGE_STATE_GETTING || s->empty_all) {
 			continue;
 		}
 		if (b->data.storage.resourceStored[Resource_None] > 100) {
@@ -173,24 +175,24 @@ int Resource_getGettingGranaryForStoringFood(
 int Resource_getGranaryForGettingFood(int srcBuildingId, int *xDst, int *yDst)
 {
 	struct Data_Building *bSrc = &Data_Buildings[srcBuildingId];
-	struct Data_Building_Storage *sSrc = &Data_Building_Storages[bSrc->storageId];
-	if (sSrc->emptyAll) {
+	const building_storage *sSrc = building_storage_get(bSrc->storage_id);
+	if (sSrc->empty_all) {
 		return 0;
 	}
 	if (Data_Scenario.romeSuppliesWheat) {
 		return 0;
 	}
 	int numGetting = 0;
-	if (sSrc->resourceState[Resource_Wheat] == BuildingStorageState_Getting) {
+	if (sSrc->resource_state[Resource_Wheat] == BUILDING_STORAGE_STATE_GETTING) {
 		numGetting++;
 	}
-	if (sSrc->resourceState[Resource_Vegetables] == BuildingStorageState_Getting) {
+	if (sSrc->resource_state[Resource_Vegetables] == BUILDING_STORAGE_STATE_GETTING) {
 		numGetting++;
 	}
-	if (sSrc->resourceState[Resource_Fruit] == BuildingStorageState_Getting) {
+	if (sSrc->resource_state[Resource_Fruit] == BUILDING_STORAGE_STATE_GETTING) {
 		numGetting++;
 	}
-	if (sSrc->resourceState[Resource_Meat] == BuildingStorageState_Getting) {
+	if (sSrc->resource_state[Resource_Meat] == BUILDING_STORAGE_STATE_GETTING) {
 		numGetting++;
 	}
 	if (numGetting <= 0) {
@@ -205,22 +207,22 @@ int Resource_getGranaryForGettingFood(int srcBuildingId, int *xDst, int *yDst)
 		if (b->roadNetworkId != bSrc->roadNetworkId) {
 			continue;
 		}
-		struct Data_Building_Storage *s = &Data_Building_Storages[b->storageId];
+		const building_storage *s = building_storage_get(b->storage_id);
 		int amountGettable = 0;
-		if (sSrc->resourceState[Resource_Wheat] == BuildingStorageState_Getting &&
-			s->resourceState[Resource_Wheat] != BuildingStorageState_Getting) {
+		if (sSrc->resource_state[Resource_Wheat] == BUILDING_STORAGE_STATE_GETTING &&
+			s->resource_state[Resource_Wheat] != BUILDING_STORAGE_STATE_GETTING) {
 			amountGettable += b->data.storage.resourceStored[Resource_Wheat];
 		}
-		if (sSrc->resourceState[Resource_Vegetables] == BuildingStorageState_Getting &&
-			s->resourceState[Resource_Vegetables] != BuildingStorageState_Getting) {
+		if (sSrc->resource_state[Resource_Vegetables] == BUILDING_STORAGE_STATE_GETTING &&
+			s->resource_state[Resource_Vegetables] != BUILDING_STORAGE_STATE_GETTING) {
 			amountGettable += b->data.storage.resourceStored[Resource_Vegetables];
 		}
-		if (sSrc->resourceState[Resource_Fruit] == BuildingStorageState_Getting &&
-			s->resourceState[Resource_Fruit] != BuildingStorageState_Getting) {
+		if (sSrc->resource_state[Resource_Fruit] == BUILDING_STORAGE_STATE_GETTING &&
+			s->resource_state[Resource_Fruit] != BUILDING_STORAGE_STATE_GETTING) {
 			amountGettable += b->data.storage.resourceStored[Resource_Fruit];
 		}
-		if (sSrc->resourceState[Resource_Meat] == BuildingStorageState_Getting &&
-			s->resourceState[Resource_Meat] != BuildingStorageState_Getting) {
+		if (sSrc->resource_state[Resource_Meat] == BUILDING_STORAGE_STATE_GETTING &&
+			s->resource_state[Resource_Meat] != BUILDING_STORAGE_STATE_GETTING) {
 			amountGettable += b->data.storage.resourceStored[Resource_Meat];
 		}
 		if (amountGettable > 0) {
@@ -314,8 +316,8 @@ int Resource_determineGranaryWorkerTask(int buildingId)
 	if (pctWorkers < 50) {
 		return -1;
 	}
-	struct Data_Building_Storage *s = &Data_Building_Storages[b->storageId];
-	if (s->emptyAll) {
+	const building_storage *s = building_storage_get(b->storage_id);
+	if (s->empty_all) {
 		// bring food to another granary
 		for (int i = Resource_MinFood; i < Resource_MaxFood; i++) {
 			if (b->data.storage.resourceStored[i]) {
@@ -327,16 +329,16 @@ int Resource_determineGranaryWorkerTask(int buildingId)
 	if (b->data.storage.resourceStored[Resource_None] <= 0) {
 		return -1; // granary full, nothing to get
 	}
-	if (s->resourceState[Resource_Wheat] == BuildingStorageState_Getting && nonGettingGranaries.totalStorageWheat > 100) {
+	if (s->resource_state[Resource_Wheat] == BUILDING_STORAGE_STATE_GETTING && nonGettingGranaries.totalStorageWheat > 100) {
 		return 0;
 	}
-	if (s->resourceState[Resource_Vegetables] == BuildingStorageState_Getting && nonGettingGranaries.totalStorageVegetables > 100) {
+	if (s->resource_state[Resource_Vegetables] == BUILDING_STORAGE_STATE_GETTING && nonGettingGranaries.totalStorageVegetables > 100) {
 		return 0;
 	}
-	if (s->resourceState[Resource_Fruit] == BuildingStorageState_Getting && nonGettingGranaries.totalStorageFruit > 100) {
+	if (s->resource_state[Resource_Fruit] == BUILDING_STORAGE_STATE_GETTING && nonGettingGranaries.totalStorageFruit > 100) {
 		return 0;
 	}
-	if (s->resourceState[Resource_Meat] == BuildingStorageState_Getting && nonGettingGranaries.totalStorageMeat > 100) {
+	if (s->resource_state[Resource_Meat] == BUILDING_STORAGE_STATE_GETTING && nonGettingGranaries.totalStorageMeat > 100) {
 		return 0;
 	}
 	return -1;
@@ -345,35 +347,35 @@ int Resource_determineGranaryWorkerTask(int buildingId)
 int Resource_takeFoodFromGranaryForGettingDeliveryman(int dstBuildingId, int srcBuildingId, int *resource)
 {
 	struct Data_Building *bSrc = &Data_Buildings[srcBuildingId];
-	struct Data_Building_Storage *sSrc = &Data_Building_Storages[bSrc->storageId];
+	const building_storage *sSrc = building_storage_get(bSrc->storage_id);
 	struct Data_Building *bDst = &Data_Buildings[dstBuildingId];
-	struct Data_Building_Storage *sDst = &Data_Building_Storages[bDst->storageId];
+	const building_storage *sDst = building_storage_get(bDst->storage_id);
 	
 	int maxAmount = 0;
 	int maxResource = 0;
-	if (sDst->resourceState[Resource_Wheat] == BuildingStorageState_Getting &&
-		sSrc->resourceState[Resource_Wheat] != BuildingStorageState_Getting) {
+	if (sDst->resource_state[Resource_Wheat] == BUILDING_STORAGE_STATE_GETTING &&
+		sSrc->resource_state[Resource_Wheat] != BUILDING_STORAGE_STATE_GETTING) {
 		if (bSrc->data.storage.resourceStored[Resource_Wheat] > maxAmount) {
 			maxAmount = bSrc->data.storage.resourceStored[Resource_Wheat];
 			maxResource = Resource_Wheat;
 		}
 	}
-	if (sDst->resourceState[Resource_Vegetables] == BuildingStorageState_Getting &&
-		sSrc->resourceState[Resource_Vegetables] != BuildingStorageState_Getting) {
+	if (sDst->resource_state[Resource_Vegetables] == BUILDING_STORAGE_STATE_GETTING &&
+		sSrc->resource_state[Resource_Vegetables] != BUILDING_STORAGE_STATE_GETTING) {
 		if (bSrc->data.storage.resourceStored[Resource_Vegetables] > maxAmount) {
 			maxAmount = bSrc->data.storage.resourceStored[Resource_Vegetables];
 			maxResource = Resource_Vegetables;
 		}
 	}
-	if (sDst->resourceState[Resource_Fruit] == BuildingStorageState_Getting &&
-		sSrc->resourceState[Resource_Fruit] != BuildingStorageState_Getting) {
+	if (sDst->resource_state[Resource_Fruit] == BUILDING_STORAGE_STATE_GETTING &&
+		sSrc->resource_state[Resource_Fruit] != BUILDING_STORAGE_STATE_GETTING) {
 		if (bSrc->data.storage.resourceStored[Resource_Fruit] > maxAmount) {
 			maxAmount = bSrc->data.storage.resourceStored[Resource_Fruit];
 			maxResource = Resource_Fruit;
 		}
 	}
-	if (sDst->resourceState[Resource_Meat] == BuildingStorageState_Getting &&
-		sSrc->resourceState[Resource_Meat] != BuildingStorageState_Getting) {
+	if (sDst->resource_state[Resource_Meat] == BUILDING_STORAGE_STATE_GETTING &&
+		sSrc->resource_state[Resource_Meat] != BUILDING_STORAGE_STATE_GETTING) {
 		if (bSrc->data.storage.resourceStored[Resource_Meat] > maxAmount) {
 			maxAmount = bSrc->data.storage.resourceStored[Resource_Meat];
 			maxResource = Resource_Meat;

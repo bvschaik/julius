@@ -13,6 +13,7 @@
 #include "Data/Message.h"
 #include "Data/Scenario.h"
 
+#include "building/storage.h"
 #include "empire/trade_prices.h"
 #include "empire/trade_route.h"
 #include "figure/trader.h"
@@ -87,13 +88,13 @@ int FigureAction_TradeCaravan_canSell(int traderId, int warehouseId, int cityId)
 	if (Data_Figures[traderId].loadsSoldOrCarrying >= 8) {
 		return 0;
 	}
-	struct Data_Building_Storage *s = &Data_Building_Storages[Data_Buildings[warehouseId].storageId];
-	if (s->emptyAll) {
+	const building_storage *s = building_storage_get(Data_Buildings[warehouseId].storage_id);
+	if (s->empty_all) {
 		return 0;
 	}
 	int numImportable = 0;
-	for (int r = Resource_Min; r < Resource_Max; r++) {
-		if (s->resourceState[r] != BuildingStorageState_NotAccepting) {
+	for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
+		if (s->resource_state[r] != BUILDING_STORAGE_STATE_NOT_ACCEPTING) {
 			if (Empire_canImportResourceFromCity(cityId, r)) {
 				numImportable++;
 			}
@@ -103,13 +104,13 @@ int FigureAction_TradeCaravan_canSell(int traderId, int warehouseId, int cityId)
 		return 0;
 	}
 	int canImport = 0;
-	if (s->resourceState[Data_CityInfo.tradeNextImportResourceCaravan] != BuildingStorageState_NotAccepting &&
+	if (s->resource_state[Data_CityInfo.tradeNextImportResourceCaravan] != BUILDING_STORAGE_STATE_NOT_ACCEPTING &&
 		Empire_canImportResourceFromCity(cityId, Data_CityInfo.tradeNextImportResourceCaravan)) {
 		canImport = 1;
 	} else {
-		for (int i = Resource_Min; i < Resource_Max; i++) {
+		for (int i = RESOURCE_MIN; i < RESOURCE_MAX; i++) {
 			advanceTradeNextImportResourceCaravan();
-			if (s->resourceState[Data_CityInfo.tradeNextImportResourceCaravan] != BuildingStorageState_NotAccepting &&
+			if (s->resource_state[Data_CityInfo.tradeNextImportResourceCaravan] != BUILDING_STORAGE_STATE_NOT_ACCEPTING &&
 					Empire_canImportResourceFromCity(cityId, Data_CityInfo.tradeNextImportResourceCaravan)) {
 				canImport = 1;
 				break;

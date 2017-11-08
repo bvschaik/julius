@@ -16,6 +16,7 @@
 #include "Data/Figure.h"
 
 #include "building/count.h"
+#include "building/storage.h"
 #include "empire/trade_prices.h"
 #include "empire/trade_route.h"
 #include "figure/type.h"
@@ -208,10 +209,10 @@ int Trader_getClosestWarehouseForTradeCaravan(int figureId, int x, int y, int ci
 		if (!Data_Buildings[i].hasRoadAccess || Data_Buildings[i].distanceFromEntry <= 0) {
 			continue;
 		}
-		struct Data_Building_Storage *s = &Data_Building_Storages[Data_Buildings[i].storageId];
+		const building_storage *s = building_storage_get(Data_Buildings[i].storage_id);
 		int numImportsForWarehouse = 0;
 		for (int r = Resource_Min; r < Resource_Max; r++) {
-			if (s->resourceState[r] != BuildingStorageState_NotAccepting && Empire_canImportResourceFromCity(cityId, r)) {
+			if (s->resource_state[r] != BUILDING_STORAGE_STATE_NOT_ACCEPTING && Empire_canImportResourceFromCity(cityId, r)) {
 				numImportsForWarehouse++;
 			}
 		}
@@ -222,18 +223,18 @@ int Trader_getClosestWarehouseForTradeCaravan(int figureId, int x, int y, int ci
 			if (spaceId && exportable[Data_Buildings[spaceId].subtype.warehouseResourceId]) {
 				distancePenalty -= 4;
 			}
-			if (numImportable && numImportsForWarehouse && !s->emptyAll) {
+			if (numImportable && numImportsForWarehouse && !s->empty_all) {
 				for (int r = Resource_Min; r < Resource_Max; r++) {
 					Data_CityInfo.tradeNextImportResourceCaravan++;
 					if (Data_CityInfo.tradeNextImportResourceCaravan > 15) {
 						Data_CityInfo.tradeNextImportResourceCaravan = 1;
 					}
-					if (s->resourceState[Data_CityInfo.tradeNextImportResourceCaravan] != BuildingStorageState_NotAccepting) {
+					if (s->resource_state[Data_CityInfo.tradeNextImportResourceCaravan] != BUILDING_STORAGE_STATE_NOT_ACCEPTING) {
 						break;
 					}
 				}
-				if (s->resourceState[Data_CityInfo.tradeNextImportResourceCaravan] != BuildingStorageState_NotAccepting) {
-					if (Data_Buildings[spaceId].subtype.warehouseResourceId == Resource_None) {
+				if (s->resource_state[Data_CityInfo.tradeNextImportResourceCaravan] != BUILDING_STORAGE_STATE_NOT_ACCEPTING) {
+					if (Data_Buildings[spaceId].subtype.warehouseResourceId == RESOURCE_NONE) {
 						distancePenalty -= 16;
 					}
 					if (spaceId && importable[Data_Buildings[spaceId].subtype.warehouseResourceId] &&
@@ -302,8 +303,8 @@ int Trader_getClosestWarehouseForImportDocker(int x, int y, int cityId, int dist
 		if (Data_Buildings[i].roadNetworkId != roadNetworkId) {
 			continue;
 		}
-		struct Data_Building_Storage *s = &Data_Building_Storages[Data_Buildings[i].storageId];
-		if (s->resourceState[resourceId] != BuildingStorageState_NotAccepting && !s->emptyAll) {
+		const building_storage *s = building_storage_get(Data_Buildings[i].storage_id);
+		if (s->resource_state[resourceId] != BUILDING_STORAGE_STATE_NOT_ACCEPTING && !s->empty_all) {
 			int distancePenalty = 32;
 			int spaceId = i;
 			for (int spaceCounter = 0; spaceCounter < 8; spaceCounter++) {

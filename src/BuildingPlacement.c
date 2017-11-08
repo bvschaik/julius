@@ -30,6 +30,7 @@
 #include "building/count.h"
 #include "building/model.h"
 #include "building/properties.h"
+#include "building/storage.h"
 #include "core/random.h"
 #include "figure/formation.h"
 #include "graphics/image.h"
@@ -177,7 +178,7 @@ static int addToTerrainWarehouseSpace(int x, int y, int prevId)
 
 static void addToTerrainWarehouse(int type, int buildingId, int x, int y)
 {
-	Data_Buildings[buildingId].storageId = BuildingStorage_create();
+	Data_Buildings[buildingId].storage_id = building_storage_create();
 	Data_Buildings[buildingId].prevPartBuildingId = 0;
 	Terrain_addBuildingToGrids(buildingId, x, y, 1, image_group(ID_Graphic_Warehouse), Terrain_Building);
 
@@ -364,7 +365,7 @@ static void addToTerrain(int type, int buildingId, int x, int y, int size,
 			break;
 		// distribution
 		case BUILDING_GRANARY:
-			Data_Buildings[buildingId].storageId = BuildingStorage_create();
+			Data_Buildings[buildingId].storage_id = building_storage_create();
 			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(ID_Graphic_Granary), Terrain_Building);
 			break;
 		case BUILDING_MARKET:

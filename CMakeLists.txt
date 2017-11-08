@@ -25,6 +25,7 @@ set (BUILDING_FILES
     src/building/list.c
     src/building/model.c
     src/building/properties.c
+    src/building/storage.c
 )
 set (EMPIRE_FILES
     src/empire/trade_prices.c

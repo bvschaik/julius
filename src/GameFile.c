@@ -33,6 +33,7 @@
 
 #include "building/count.h"
 #include "building/list.h"
+#include "building/storage.h"
 #include "core/buffer.h"
 #include "core/file.h"
 #include "core/io.h"
@@ -207,7 +208,7 @@ typedef struct {
     buffer *tutorial_part1;
     buffer *building_count_military;
     buffer *enemy_army_totals;
-    buffer *Data_Building_Storages;
+    buffer *building_storages;
     buffer *building_count_culture2;
     buffer *building_count_support;
     buffer *tutorial_part2;
@@ -390,7 +391,7 @@ void init_savegame_data()
     state->tutorial_part1 = create_savegame_piece(32, 0);
     state->building_count_military = create_savegame_piece(16, 0);
     state->enemy_army_totals = create_savegame_piece(20, 0);
-    state->Data_Building_Storages = create_savegame_piece(6400, 0);
+    state->building_storages = create_savegame_piece(6400, 0);
     state->building_count_culture2 = create_savegame_piece(32, 0);
     state->building_count_support = create_savegame_piece(24, 0);
     state->tutorial_part2 = create_savegame_piece(4, 0);
@@ -578,7 +579,8 @@ static void savegame_deserialize(savegame_state *state)
     
     tutorial_load_state(state->tutorial_part1, state->tutorial_part2, state->tutorial_part3);
 
-    read_all_from_buffer(state->Data_Building_Storages, &Data_Building_Storages);
+    building_storage_load_state(state->building_storages);
+
     read_all_from_buffer(state->Data_Event_gladiatorRevolt_gameYear, &Data_Event.gladiatorRevolt.gameYear);
     read_all_from_buffer(state->Data_Event_gladiatorRevolt_month, &Data_Event.gladiatorRevolt.month);
     read_all_from_buffer(state->Data_Event_gladiatorRevolt_endMonth, &Data_Event.gladiatorRevolt.endMonth);
@@ -730,7 +732,8 @@ static void savegame_serialize(savegame_state *state)
 
     tutorial_save_state(state->tutorial_part1, state->tutorial_part2, state->tutorial_part3);
 
-    write_all_to_buffer(state->Data_Building_Storages, &Data_Building_Storages);
+    building_storage_save_state(state->building_storages);
+
     write_all_to_buffer(state->Data_Event_gladiatorRevolt_gameYear, &Data_Event.gladiatorRevolt.gameYear);
     write_all_to_buffer(state->Data_Event_gladiatorRevolt_month, &Data_Event.gladiatorRevolt.month);
     write_all_to_buffer(state->Data_Event_gladiatorRevolt_endMonth, &Data_Event.gladiatorRevolt.endMonth);
@@ -813,7 +816,7 @@ int GameFile_loadSavedGame(const char *filename)
     savegame_deserialize(&savegame_data.state);
 	
 	setupFromSavedGame();
-	BuildingStorage_resetBuildingIds();
+	building_storage_reset_building_ids();
 	strcpy((char*)Data_Settings.playerName, playerNames[1]);
 	return 1;
 }
