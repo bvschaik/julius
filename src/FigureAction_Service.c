@@ -9,6 +9,7 @@
 #include "Data/CityInfo.h"
 #include "Data/Grid.h"
 
+#include "building/list.h"
 #include "core/calc.h"
 #include "figure/enemy_army.h"
 #include "figure/type.h"
@@ -238,7 +239,7 @@ static int prefectGoFightEnemy(int figureId, struct Data_Figure *f)
 
 static int prefectGoFightFire(int figureId, struct Data_Figure *f)
 {
-	if (Data_BuildingList.burning.size <= 0) {
+	if (building_list_burning_size() <= 0) {
 		return 0;
 	}
 	switch (f->actionState) {

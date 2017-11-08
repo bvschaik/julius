@@ -191,8 +191,7 @@ typedef struct {
     buffer *Data_Message_populationMessagesShown;
     buffer *Data_Message_messageCategoryCount;
     buffer *Data_Message_messageDelay;
-    buffer *Data_BuildingList_burning_totalBurning;
-    buffer *Data_BuildingList_burning_index;
+    buffer *building_list_burning_totals;
     buffer *Data_Figure_Extra_createdSequence;
     buffer *Data_Settings_startingFavor;
     buffer *Data_Settings_personalSavingsLastMission;
@@ -202,7 +201,7 @@ typedef struct {
     buffer *Data_Sound_City;
     buffer *Data_Buildings_Extra_highestBuildingIdInUse;
     buffer *figure_traders;
-    buffer *Data_BuildingList_burning_items;
+    buffer *building_list_burning;
     buffer *building_list_small;
     buffer *building_list_large;
     buffer *tutorial_part1;
@@ -374,8 +373,7 @@ void init_savegame_data()
     state->Data_Message_populationMessagesShown = create_savegame_piece(10, 0);
     state->Data_Message_messageCategoryCount = create_savegame_piece(80, 0);
     state->Data_Message_messageDelay = create_savegame_piece(80, 0);
-    state->Data_BuildingList_burning_totalBurning = create_savegame_piece(4, 0);
-    state->Data_BuildingList_burning_index = create_savegame_piece(4, 0);
+    state->building_list_burning_totals = create_savegame_piece(8, 0);
     state->Data_Figure_Extra_createdSequence = create_savegame_piece(4, 0);
     state->Data_Settings_startingFavor = create_savegame_piece(4, 0);
     state->Data_Settings_personalSavingsLastMission = create_savegame_piece(4, 0);
@@ -385,7 +383,7 @@ void init_savegame_data()
     state->Data_Sound_City = create_savegame_piece(8960, 0);
     state->Data_Buildings_Extra_highestBuildingIdInUse = create_savegame_piece(4, 0);
     state->figure_traders = create_savegame_piece(4804, 0);
-    state->Data_BuildingList_burning_items = create_savegame_piece(1000, 1);
+    state->building_list_burning = create_savegame_piece(1000, 1);
     state->building_list_small = create_savegame_piece(1000, 1);
     state->building_list_large = create_savegame_piece(4000, 1);
     state->tutorial_part1 = create_savegame_piece(32, 0);
@@ -560,8 +558,6 @@ static void savegame_deserialize(savegame_state *state)
     read_all_from_buffer(state->Data_Message_populationMessagesShown, &Data_Message.populationMessagesShown);
     read_all_from_buffer(state->Data_Message_messageCategoryCount, &Data_Message.messageCategoryCount);
     read_all_from_buffer(state->Data_Message_messageDelay, &Data_Message.messageDelay);
-    read_all_from_buffer(state->Data_BuildingList_burning_totalBurning, &Data_BuildingList.burning.totalBurning);
-    read_all_from_buffer(state->Data_BuildingList_burning_index, &Data_BuildingList.burning.index);
     read_all_from_buffer(state->Data_Figure_Extra_createdSequence, &Data_Figure_Extra.createdSequence);
     read_all_from_buffer(state->Data_Settings_startingFavor, &Data_Settings.startingFavor);
     read_all_from_buffer(state->Data_Settings_personalSavingsLastMission, &Data_Settings.personalSavingsLastMission);
@@ -573,9 +569,8 @@ static void savegame_deserialize(savegame_state *state)
     
     traders_load_state(state->figure_traders);
     
-    read_all_from_buffer(state->Data_BuildingList_burning_items, &Data_BuildingList.burning.items);
-    
-    building_list_load_state(state->building_list_small, state->building_list_large);
+    building_list_load_state(state->building_list_small, state->building_list_large,
+                             state->building_list_burning, state->building_list_burning_totals);
     
     tutorial_load_state(state->tutorial_part1, state->tutorial_part2, state->tutorial_part3);
 
@@ -713,8 +708,6 @@ static void savegame_serialize(savegame_state *state)
     write_all_to_buffer(state->Data_Message_populationMessagesShown, &Data_Message.populationMessagesShown);
     write_all_to_buffer(state->Data_Message_messageCategoryCount, &Data_Message.messageCategoryCount);
     write_all_to_buffer(state->Data_Message_messageDelay, &Data_Message.messageDelay);
-    write_all_to_buffer(state->Data_BuildingList_burning_totalBurning, &Data_BuildingList.burning.totalBurning);
-    write_all_to_buffer(state->Data_BuildingList_burning_index, &Data_BuildingList.burning.index);
     write_all_to_buffer(state->Data_Figure_Extra_createdSequence, &Data_Figure_Extra.createdSequence);
     write_all_to_buffer(state->Data_Settings_startingFavor, &Data_Settings.startingFavor);
     write_all_to_buffer(state->Data_Settings_personalSavingsLastMission, &Data_Settings.personalSavingsLastMission);
@@ -726,9 +719,8 @@ static void savegame_serialize(savegame_state *state)
 
     traders_save_state(state->figure_traders);
 
-    write_all_to_buffer(state->Data_BuildingList_burning_items, &Data_BuildingList.burning.items);
-
-    building_list_save_state(state->building_list_small, state->building_list_large);
+    building_list_save_state(state->building_list_small, state->building_list_large,
+                             state->building_list_burning, state->building_list_burning_totals);
 
     tutorial_save_state(state->tutorial_part1, state->tutorial_part2, state->tutorial_part3);
 

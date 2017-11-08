@@ -23,12 +23,11 @@
 #include "Data/State.h"
 #include "Data/Figure.h"
 
+#include "building/list.h"
 #include "core/random.h"
 #include "core/time.h"
 #include "figure/type.h"
 #include "game/tutorial.h"
-
-#define EACH_BURNING_RUIN Data_BuildingList.burning.index = 0; Data_BuildingList.burning.index < Data_BuildingList.burning.size; Data_BuildingList.burning.index++
 
 static int burningRuinSpreadDirection;
 
@@ -40,9 +39,7 @@ void Security_Tick_updateFireSpreadDirection()
 void Security_Tick_updateBurningRuins()
 {
 	int recalculateTerrain = 0;
-	Data_BuildingList.burning.index = 0;
-	Data_BuildingList.burning.size = 0;
-	Data_BuildingList.burning.totalBurning = 0;
+	building_list_burning_clear();
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
 		if (!BuildingIsInUse(i) || b->type != BUILDING_BURNING_RUIN) {
@@ -62,11 +59,7 @@ void Security_Tick_updateBurningRuins()
 		if (b->ruinHasPlague) {
 			continue;
 		}
-		Data_BuildingList.burning.totalBurning++;
-		Data_BuildingList.burning.items[Data_BuildingList.burning.size++] = i;
-		if (Data_BuildingList.burning.size >= 500) {
-			Data_BuildingList.burning.size = 499;
-		}
+		building_list_burning_add(i);
 		if (Data_Scenario.climate == Climate_Desert) {
 			if (b->fireDuration & 3) { // check spread every 4 ticks
 				continue;
@@ -120,8 +113,11 @@ int Security_Fire_getClosestBurningRuin(int x, int y, int *distance)
 	int minFreeBuildingId = 0;
 	int minOccupiedBuildingId = 0;
 	int minOccupiedDist = *distance = 10000;
-	for (EACH_BURNING_RUIN) {
-		int buildingId = Data_BuildingList.burning.items[Data_BuildingList.burning.index];
+
+	const int *burning = building_list_burning_items();
+	int burning_size = building_list_burning_size();
+	for (int i = 0; i < burning_size; i++) {
+		int buildingId = burning[i];
 		struct Data_Building *b = &Data_Buildings[buildingId];
 		if (BuildingIsInUse(buildingId) && b->type == BUILDING_BURNING_RUIN && !b->ruinHasPlague && b->distanceFromEntry) {
 			int dist = calc_maximum_distance(x, y, b->x, b->y);

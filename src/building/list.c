@@ -4,6 +4,7 @@
 
 #define MAX_SMALL 500
 #define MAX_LARGE 2000
+#define MAX_BURNING 500
 
 static struct {
     struct {
@@ -14,6 +15,11 @@ static struct {
         int size;
         int items[MAX_LARGE];
     } large;
+    struct {
+        int size;
+        int items[MAX_BURNING];
+        int total;
+    } burning;
 } data;
 
 void building_list_small_clear()
@@ -64,7 +70,33 @@ const int *building_list_large_items()
     return data.large.items;
 }
 
-void building_list_save_state(buffer *small, buffer *large)
+void building_list_burning_clear()
+{
+    data.burning.size = 0;
+    data.burning.total = 0;
+}
+
+void building_list_burning_add(int building_id)
+{
+    data.burning.total++;
+    data.burning.items[data.burning.size++] = building_id;
+    if (data.burning.size >= MAX_BURNING) {
+        data.burning.size = MAX_BURNING - 1;
+    }
+}
+
+int building_list_burning_size()
+{
+    return data.burning.size;
+}
+
+const int *building_list_burning_items()
+{
+    return data.burning.items;
+}
+
+
+void building_list_save_state(buffer *small, buffer *large, buffer *burning, buffer *burning_totals)
 {
     for (int i = 0; i < MAX_SMALL; i++) {
         buffer_write_i16(small, data.small.items[i]);
@@ -72,9 +104,14 @@ void building_list_save_state(buffer *small, buffer *large)
     for (int i = 0; i < MAX_LARGE; i++) {
         buffer_write_i16(large, data.large.items[i]);
     }
+    for (int i = 0; i < MAX_BURNING; i++) {
+        buffer_write_i16(burning, data.burning.items[i]);
+    }
+    buffer_write_i32(burning_totals, data.burning.total);
+    buffer_write_i32(burning_totals, data.burning.size);
 }
 
-void building_list_load_state(buffer *small, buffer *large)
+void building_list_load_state(buffer *small, buffer *large, buffer *burning, buffer *burning_totals)
 {
     for (int i = 0; i < MAX_SMALL; i++) {
         data.small.items[i] = buffer_read_i16(small);
@@ -82,4 +119,9 @@ void building_list_load_state(buffer *small, buffer *large)
     for (int i = 0; i < MAX_LARGE; i++) {
         data.large.items[i] = buffer_read_i16(large);
     }
+    for (int i = 0; i < MAX_BURNING; i++) {
+        data.burning.items[i] = buffer_read_i16(burning);
+    }
+    data.burning.total = buffer_read_i32(burning_totals);
+    data.burning.size = buffer_read_i32(burning_totals);
 }

@@ -79,7 +79,7 @@ void test_building_list_large_clear()
 
 void test_building_list_save()
 {
-    buffer small, large;
+    buffer small, large, burning, burning_totals;
     
     building_list_large_clear(1);
     for (int i = 0; i < 500; i++) {
@@ -87,7 +87,7 @@ void test_building_list_save()
     }
     building_list_small_clear();
     
-    building_list_save_state(&small, &large);
+    building_list_save_state(&small, &large, &burning, &burning_totals);
     
     assert_eq(500, count_buffer_write_i16(&small, 0));
     assert_eq(2000, count_buffer_write_i16(&large, 0));
@@ -95,9 +95,9 @@ void test_building_list_save()
 
 void test_building_list_load()
 {
-    buffer small, large;
+    buffer small, large, burning, burning_totals;
     
-    building_list_load_state(&small, &large);
+    building_list_load_state(&small, &large, &burning, &burning_totals);
     
     assert_eq(500, count_buffer_read_i16(&small));
     assert_eq(2000, count_buffer_read_i16(&large));

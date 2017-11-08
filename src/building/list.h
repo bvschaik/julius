@@ -55,10 +55,17 @@ int building_list_large_size();
  */
 const int* building_list_large_items();
 
+void building_list_burning_clear();
 
-void building_list_save_state(buffer *small, buffer *large);
+void building_list_burning_add(int building_id);
 
-void building_list_load_state(buffer *small, buffer *large);
+int building_list_burning_size();
+
+const int* building_list_burning_items();
+
+void building_list_save_state(buffer *small, buffer *large, buffer *burning, buffer *burning_totals);
+
+void building_list_load_state(buffer *small, buffer *large, buffer *burning, buffer *burning_totals);
 
 
 #endif // BUILDING_LIST_H
