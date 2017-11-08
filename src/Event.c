@@ -20,7 +20,6 @@
 #include "Data/Grid.h"
 #include "Data/Scenario.h"
 #include "Data/Settings.h"
-#include "Data/Tutorial.h"
 
 #include "building/count.h"
 #include "core/calc.h"
@@ -28,6 +27,7 @@
 #include "empire/trade_prices.h"
 #include "empire/trade_route.h"
 #include "game/time.h"
+#include "game/tutorial.h"
 
 #include <string.h>
 
@@ -331,12 +331,9 @@ void Event_handleRequests()
 			} else {
 				// request is not visible
 				int year = Data_Scenario.startYear;
-				if (IsTutorial2()) {
-					if (!Data_Tutorial.tutorial2.potteryMade) {
-						return;
-					}
-					year = Data_Tutorial.tutorial2.potteryMadeYear;
-				}
+                if (!tutorial_adjust_request_year(&year)) {
+                    return;
+                }
 				if (game_time_year() == year + Data_Scenario.requests.year[i] &&
 					game_time_month() == Data_Scenario.requests_month[i]) {
 					Data_Scenario.requests_isVisible[i] = 1;

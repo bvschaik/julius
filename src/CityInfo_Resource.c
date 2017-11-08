@@ -2,7 +2,6 @@
 
 #include "Empire.h"
 #include "Terrain.h"
-#include "Tutorial.h"
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
@@ -11,6 +10,7 @@
 
 #include "building/model.h"
 #include "core/calc.h"
+#include "game/tutorial.h"
 
 void CityInfo_Resource_calculateAvailableResources()
 {
@@ -78,7 +78,7 @@ void CityInfo_Resource_calculateFood()
 					Data_CityInfo.resourceGranaryFoodStored[r] += b->data.storage.resourceStored[r];
 				}
 				if (amountStored > 400) {
-					Tutorial_onFilledGranary();
+					tutorial_on_filled_granary();
 				}
 			}
 		}

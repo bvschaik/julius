@@ -3,7 +3,6 @@
 #include "Building.h"
 #include "core/calc.h"
 #include "Terrain.h"
-#include "Tutorial.h"
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
@@ -15,6 +14,7 @@
 #include "building/model.h"
 #include "empire/trade_prices.h"
 #include "graphics/image.h"
+#include "game/tutorial.h"
 
 static int granaryGettingResource[7];
 static int granaryAcceptingResource[7];
@@ -222,7 +222,7 @@ int Resource_addToWarehouse(int buildingId, int resource)
 	Data_CityInfo.resourceStored[resource]++;
 	b->subtype.warehouseResourceId = resource;
 	b->loadsStored++;
-	Tutorial_onAddToWarehouse();
+	tutorial_on_add_to_warehouse();
 	Resource_setWarehouseSpaceGraphic(buildingId, resource);
 	return 1;
 }

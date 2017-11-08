@@ -3,7 +3,6 @@
 #include "Building.h"
 #include "core/calc.h"
 #include "Terrain.h"
-#include "Tutorial.h"
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
@@ -12,6 +11,7 @@
 #include "Data/Scenario.h"
 
 #include "building/count.h"
+#include "game/tutorial.h"
 
 int Resource_getGraphicIdOffset(int resource, int type)
 {

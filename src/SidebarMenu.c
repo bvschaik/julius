@@ -5,8 +5,9 @@
 #include "Data/Constants.h"
 #include "Data/Scenario.h"
 #include "Data/Settings.h"
-#include "Data/Tutorial.h"
 #include "UI/Sidebar.h"
+
+#include "game/tutorial.h"
 
 #define MAX_BUILDINGITEMS 30
 static int menuBuildingType[MAX_BUILDINGITEMS][MAX_BUILDINGITEMS] = {
@@ -216,44 +217,30 @@ static void disableResources(int sub, int item, int buildingType)
 
 void SidebarMenu_enableBuildingMenuItems()
 {
-	for (int sub = 0; sub < MAX_BUILDINGITEMS; sub++) {
-		for (int item = 0; item < MAX_BUILDINGITEMS; item++) {
-			int buildingType = menuBuildingType[sub][item];
-			//first 12 items always disabled
-			if (sub < 12) {
-				menuEnabled[sub][item] = 0;
-			} else {
-				menuEnabled[sub][item] = 1;
-			}
-			if (Data_Settings.currentMissionId == 0) { // tutorial 1
-				if (!Data_Tutorial.tutorial1.fire && !Data_Tutorial.tutorial1.crime) {
-					enableTutorial1Start(sub, item, buildingType);
-				} else if (!Data_Tutorial.tutorial1.collapse) {
-					enableTutorial1AfterFire(sub, item, buildingType);
-				} else if (!Data_Tutorial.tutorial1.senateBuilt) {
-					enableTutorial1AfterCollapse(sub, item, buildingType);
-				} else {
-					enableNormal(sub, item, buildingType);
-				}
-			} else if (Data_Settings.currentMissionId == 1) { // tutorial 2
-				if (!Data_Tutorial.tutorial2.granaryBuilt) {
-					enableTutorial2Start(sub, item, buildingType);
-				} else if (!Data_Tutorial.tutorial2.population250Reached) {
-					enableTutorial2UpTo250(sub, item, buildingType);
-				} else if (!Data_Tutorial.tutorial2.population450Reached) {
-					enableTutorial2UpTo450(sub, item, buildingType);
-				} else if (!Data_Tutorial.tutorial2.potteryMade) {
-					enableTutorial2After450(sub, item, buildingType);
-				} else {
-					enableNormal(sub, item, buildingType);
-				}
-			} else {
-				enableNormal(sub, item, buildingType);
-			}
-			
-			disableResources(sub, item, buildingType);
-		}
-	}
+    tutorial_build_buttons tutorialButtons = tutorial_get_build_buttons();
+    for (int sub = 0; sub < MAX_BUILDINGITEMS; sub++) {
+        for (int item = 0; item < MAX_BUILDINGITEMS; item++) {
+            int buildingType = menuBuildingType[sub][item];
+            //first 12 items always disabled
+            if (sub < 12) {
+                menuEnabled[sub][item] = 0;
+            } else {
+                menuEnabled[sub][item] = 1;
+            }
+            switch (tutorialButtons) {
+                case TUT1_BUILD_START: enableTutorial1Start(sub, item, buildingType); break;
+                case TUT1_BUILD_AFTER_FIRE: enableTutorial1AfterFire(sub, item, buildingType); break;
+                case TUT1_BUILD_AFTER_COLLAPSE: enableTutorial1AfterCollapse(sub, item, buildingType); break;
+                case TUT2_BUILD_START: enableTutorial2Start(sub, item, buildingType); break;
+                case TUT2_BUILD_UP_TO_250: enableTutorial2UpTo250(sub, item, buildingType); break;
+                case TUT2_BUILD_UP_TO_450: enableTutorial2UpTo450(sub, item, buildingType); break;
+                case TUT2_BUILD_AFTER_450: enableTutorial2After450(sub, item, buildingType); break;
+                default: enableNormal(sub, item, buildingType); break;
+            }
+
+            disableResources(sub, item, buildingType);
+        }
+    }
 }
 
 void SidebarMenu_enableBuildingMenuItemsAndButtons()

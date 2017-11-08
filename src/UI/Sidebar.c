@@ -22,10 +22,10 @@
 #include "../Data/Screen.h"
 #include "../Data/State.h"
 #include "../Data/Settings.h"
-#include "../Data/Tutorial.h"
 
 #include "core/time.h"
 #include "graphics/image.h"
+#include "game/tutorial.h"
 
 #define SIDEBAR_BORDER ((Data_Screen.width + 20) % 60)
 #define BOTTOM_BORDER ((Data_Screen.height - 24) % 15)
@@ -360,15 +360,17 @@ static void buttonAdvisors(int param1, int param2)
 
 static void buttonEmpire(int param1, int param2)
 {
-	if (IsTutorial1()) {
-		UI_Warning_show(Warning_NotAvailable);
-		return;
-	}
-	if (IsTutorial2() && !Data_Tutorial.tutorial2.population250Reached) {
-		UI_Warning_show(Warning_NotAvailableYet);
-		return;
-	}
-	UI_Window_goTo(Window_Empire);
+    switch (tutorial_advisor_empire_availability()) {
+        case NOT_AVAILABLE:
+            UI_Warning_show(Warning_NotAvailable);
+            break;
+        case NOT_AVAILABLE_YET:
+            UI_Warning_show(Warning_NotAvailableYet);
+            break;
+        case AVAILABLE:
+            UI_Window_goTo(Window_Empire);
+            break;
+    }
 }
 static void buttonMissionBriefing(int param1, int param2)
 {

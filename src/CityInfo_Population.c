@@ -8,12 +8,12 @@
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 #include "Data/Settings.h"
-#include "Data/Tutorial.h"
 
 #include "building/model.h"
 #include "core/calc.h"
 #include "core/random.h"
 #include "game/difficulty.h"
+#include "game/tutorial.h"
 
 static void addPeopleToCensus(int numPeople);
 static void removePeopleFromCensus(int numPeople);
@@ -321,20 +321,7 @@ void CityInfo_Population_calculateMigrationSentiment()
 	Data_CityInfo.populationImmigrationAmountPerBatch = 0;
 	Data_CityInfo.populationEmigrationAmountPerBatch = 0;
 
-	int populationCap = 200000;
-	if (IsTutorial1()) {
-		if (!Data_Tutorial.tutorial1.fire ||
-			!Data_Tutorial.tutorial1.collapse ||
-			!Data_Tutorial.tutorial1.senateBuilt) {
-			populationCap = 80;
-		}
-	} else if (IsTutorial2()) {
-		if (!Data_Tutorial.tutorial2.granaryBuilt) {
-			populationCap = 150;
-		} else if (!Data_Tutorial.tutorial2.potteryMade) {
-			populationCap = 520;
-		}
-	}
+	int populationCap = tutorial_get_population_cap(200000);
 	if (Data_CityInfo.population >= populationCap) {
 		Data_CityInfo.populationMigrationPercentage = 0;
 		return;
@@ -444,7 +431,7 @@ static void healthCauseDisease(int totalPeople)
 	} else {
 		PlayerMessage_post(1, Message_104_HealthPestilence, 0, 0);
 	}
-	Data_Tutorial.tutorial3.disease = 1;
+	tutorial_on_disease();
 	// kill people who don't have access to a doctor
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		struct Data_Building *b = &Data_Buildings[i];

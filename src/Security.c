@@ -12,7 +12,6 @@
 #include "Sound.h"
 #include "Terrain.h"
 #include "TerrainGraphics.h"
-#include "Tutorial.h"
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
@@ -22,12 +21,12 @@
 #include "Data/Scenario.h"
 #include "Data/Settings.h"
 #include "Data/State.h"
-#include "Data/Tutorial.h"
 #include "Data/Figure.h"
 
 #include "core/random.h"
 #include "core/time.h"
 #include "figure/type.h"
+#include "game/tutorial.h"
 
 #define EACH_BURNING_RUIN Data_BuildingList.burning.index = 0; Data_BuildingList.burning.index < Data_BuildingList.burning.size; Data_BuildingList.burning.index++
 
@@ -186,10 +185,7 @@ static void generateRioter(int buildingId)
 	Data_CityInfo.ratingPeaceNumRiotersThisYear++;
 	Data_CityInfo.riotCause = Data_CityInfo.populationEmigrationCause;
 	CityInfo_Population_changeHappiness(20);
-	if (!Data_Tutorial.tutorial1.crime) {
-		Data_Tutorial.tutorial1.crime = 1;
-		SidebarMenu_enableBuildingMenuItemsAndButtons();
-	}
+    tutorial_on_crime();
 	if (time_get_millis() <= 15000 + Data_Message.lastSoundTime.rioterGenerated) {
 		PlayerMessage_disableSoundForNextMessage();
 	} else {
@@ -292,10 +288,8 @@ static void collapseBuilding(int buildingId, struct Data_Building *b)
 	} else {
 		Data_Message.lastSoundTime.collapse = time_get_millis();
 	}
-	if (Data_Tutorial.tutorial1.collapse) {
+	if (!tutorial_handle_collapse()) {
 		PlayerMessage_postWithPopupDelay(MessageDelay_Collapse, Message_13_CollapsedBuilding, b->type, b->gridOffset);
-	} else {
-		Tutorial_onCollapse();
 	}
 	
 	Data_State.undoAvailable = 0;
@@ -312,10 +306,8 @@ static void fireBuilding(int buildingId, struct Data_Building *b)
 	} else {
 		Data_Message.lastSoundTime.fire = time_get_millis();
 	}
-	if (Data_Tutorial.tutorial1.fire) {
+	if (!tutorial_handle_fire()) {
 		PlayerMessage_postWithPopupDelay(MessageDelay_Fire, Message_12_FireInTheCity, b->type, b->gridOffset);
-	} else {
-		Tutorial_onFire();
 	}
 	
 	Building_collapseOnFire(buildingId, 0);
@@ -341,7 +333,7 @@ void Security_Tick_checkFireCollapse()
 		int randomBuilding = (i + Data_Grid_random[b->gridOffset]) & 7;
 		// damage
 		b->damageRisk += (randomBuilding == randomGlobal) ? 3 : 1;
-		if (Data_Tutorial.tutorial1.fire == 1 && !Data_Tutorial.tutorial1.collapse) {
+		if (tutorial_extra_damage_risk()) {
 			b->damageRisk += 5;
 		}
 		if (b->houseSize && b->subtype.houseLevel <= HOUSE_LARGE_TENT) {
@@ -365,7 +357,7 @@ void Security_Tick_checkFireCollapse()
 			} else {
 				b->fireRisk += 2;
 			}
-			if (!Data_Tutorial.tutorial1.fire) {
+			if (tutorial_extra_fire_risk()) {
 				b->fireRisk += 5;
 			}
 			if (Data_Scenario.climate == Climate_Northern) {

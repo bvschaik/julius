@@ -31,7 +31,6 @@
 #include "Data/Scenario.h"
 #include "Data/Settings.h"
 #include "Data/State.h"
-#include "Data/Tutorial.h"
 
 #include "core/file.h"
 #include "core/io.h"
@@ -43,13 +42,13 @@
 #include "game/difficulty.h"
 #include "game/settings.h"
 #include "game/time.h"
+#include "game/tutorial.h"
 #include "graphics/image.h"
 
 #include <string.h>
 
 static int mapFileExists(const char *scenarioName);
 static void clearBookmarks();
-static void setTutorialFlags(int missionId);
 static void initCustomScenario(const char *scenarioName);
 static void loadScenario(const char *scenarioName);
 static void readScenarioAndInitGraphics();
@@ -97,7 +96,7 @@ void Scenario_initialize(const char *scenarioName)
 	}
 	Data_CityInfo.salaryAmount = Constant_SalaryForRank[Data_CityInfo.salaryRank];
 
-	setTutorialFlags(curMissionId);
+	tutorial_init();
 
 	if (IsTutorial1()) {
 		setting_set_personal_savings_for_mission(0, 0);
@@ -115,42 +114,6 @@ static void clearBookmarks()
 		Data_CityInfo_Extra.bookmarks[i].x = -1;
 		Data_CityInfo_Extra.bookmarks[i].y = -1;
 	}
-}
-
-static void setTutorialFlags(int missionId)
-{
-	int tut1, tut2, tut3;
-	if (Data_Settings.isCustomScenario) {
-		tut1 = tut2 = tut3 = 1;
-	} else if (missionId == 0) {
-		tut1 = tut2 = 0;
-		tut3 = 1;
-	} else if (missionId == 1) {
-		tut1 = 1;
-		tut2 = 0;
-		tut3 = 1;
-	} else if (missionId == 2) {
-		tut1 = 1;
-		tut2 = 1;
-		tut3 = 0;
-	} else {
-		tut1 = tut2 = tut3 = 1;
-	}
-
-	Data_Tutorial.tutorial1.fire = tut1;
-	Data_Tutorial.tutorial1.crime = tut1;
-	Data_Tutorial.tutorial1.collapse = tut1;
-	Data_Tutorial.tutorial1.senateBuilt = tut1;
-	Data_CityInfo.tutorial1FireMessageShown = tut1;
-
-	Data_Tutorial.tutorial2.granaryBuilt = tut2;
-	Data_Tutorial.tutorial2.population250Reached = tut2;
-	Data_Tutorial.tutorial2.population450Reached = tut2;
-	Data_Tutorial.tutorial2.potteryMade = tut2;
-	Data_Tutorial.tutorial2.potteryMadeYear = tut2;
-
-	Data_Tutorial.tutorial3.disease = tut3;
-	Data_CityInfo.tutorial3DiseaseMessageShown = tut3;
 }
 
 static int mapFileExists(const char *scenarioName)

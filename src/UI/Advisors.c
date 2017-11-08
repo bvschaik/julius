@@ -9,7 +9,8 @@
 #include "../Formation.h"
 
 #include "../Data/Settings.h"
-#include "../Data/Tutorial.h"
+
+#include "game/tutorial.h"
 
 static void buttonChangeAdvisor(int param1, int param2);
 static void buttonHelp(int param1, int param2);
@@ -50,22 +51,15 @@ int UI_Advisors_getId()
 
 void UI_Advisors_goToFromMessage(int advisor)
 {
-	if (IsTutorial1()) {
-		if (UI_Window_getId() == Window_MessageDialog) {
-			UI_MessageDialog_close();
-			UI_Window_goTo(Window_City);
-		}
-		UI_Warning_show(Warning_NotAvailable);
-		return;
-	}
-	if (IsTutorial2() && !Data_Tutorial.tutorial2.population250Reached) {
-		if (UI_Window_getId() == Window_MessageDialog) {
-			UI_MessageDialog_close();
-			UI_Window_goTo(Window_City);
-		}
-		UI_Warning_show(Warning_NotAvailableYet);
-		return;
-	}
+    tutorial_availability avail = tutorial_advisor_empire_availability();
+    if (avail == NOT_AVAILABLE || avail == NOT_AVAILABLE_YET) {
+        if (UI_Window_getId() == Window_MessageDialog) {
+            UI_MessageDialog_close();
+            UI_Window_goTo(Window_City);
+        }
+        UI_Warning_show(avail == NOT_AVAILABLE ? Warning_NotAvailable : Warning_NotAvailableYet);
+        return;
+    }
 	currentAdvisor = advisor;
 	Data_Settings.lastAdvisor = advisor;
 	UI_Advisors_init();
@@ -74,17 +68,14 @@ void UI_Advisors_goToFromMessage(int advisor)
 
 void UI_Advisors_goToFromSidepanel()
 {
-	if (IsTutorial1()) {
-		UI_Warning_show(Warning_NotAvailable);
-		return;
-	}
-	if (IsTutorial2() && !Data_Tutorial.tutorial2.population250Reached) {
-		UI_Warning_show(Warning_NotAvailableYet);
-		return;
-	}
-	currentAdvisor = Data_Settings.lastAdvisor;
-	UI_Advisors_init();
-	UI_Window_goTo(Window_Advisors);
+    tutorial_availability avail = tutorial_advisor_empire_availability();
+    if (avail == AVAILABLE) {
+        currentAdvisor = Data_Settings.lastAdvisor;
+        UI_Advisors_init();
+        UI_Window_goTo(Window_Advisors);
+    } else {
+        UI_Warning_show(avail == NOT_AVAILABLE ? Warning_NotAvailable : Warning_NotAvailableYet);
+    }
 }
 
 void UI_Advisors_init()

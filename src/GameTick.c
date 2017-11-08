@@ -20,7 +20,6 @@
 #include "Sound.h"
 #include "TerrainGraphics.h"
 #include "Trader.h"
-#include "Tutorial.h"
 #include "Undo.h"
 #include "UtilityManagement.h"
 #include "UI/AllWindows.h"
@@ -34,6 +33,7 @@
 #include "core/random.h"
 #include "game/settings.h"
 #include "game/time.h"
+#include "game/tutorial.h"
 
 #include <stdio.h>
 
@@ -113,7 +113,7 @@ static void advanceDay()
 	if (game_time_day() == 0 || game_time_day() == 8) {
 		CityInfo_Population_calculateSentiment();
 	}
-	Tutorial_onDayTick();
+	tutorial_on_day_tick();
 }
 
 static void advanceMonth()
@@ -147,7 +147,7 @@ static void advanceMonth()
 
 	CityInfo_Population_recordMonthlyPopulation();
 	CityInfo_Gods_checkFestival();
-	Tutorial_onMonthTick();
+	tutorial_on_month_tick();
 	if (setting_monthly_autosave()) {
 		GameFile_writeSavedGame("last.sav");
 	}

@@ -41,6 +41,7 @@ set (GAME_FILES
     src/game/difficulty.c
     src/game/settings.c
     src/game/time.c
+    src/game/tutorial.c
 )
 set (GRAPHICS_FILES
     src/graphics/image.c
@@ -129,7 +130,6 @@ add_executable(julius
 	src/TerrainGraphics_Context.c
 	src/TerrainWater.c
 	src/Trader.c
-	src/Tutorial.c
 	src/Undo.c
 	src/UtilityManagement.c
 	src/Video.c
