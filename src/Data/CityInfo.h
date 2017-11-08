@@ -756,12 +756,6 @@ extern struct _Data_CityInfo {
 	char __unknown_4733;
 } Data_CityInfo;
 
-struct Data_CityInfo_Building {
-	int total;
-	int working;
-};
-
-
 extern struct _Data_CityInfo_CultureCoverage {
 	int theater;
 	int amphitheater;

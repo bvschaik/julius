@@ -22,14 +22,6 @@
 	if ((xMax) >= Data_Settings_Map.width) (xMax) = Data_Settings_Map.width - 1;\
 	if ((yMax) >= Data_Settings_Map.height) (yMax) = Data_Settings_Map.height - 1;
 
-enum {
-	Difficulty_VeryEasy = 0,
-	Difficulty_Easy = 1,
-	Difficulty_Normal = 2,
-	Difficulty_Hard = 3,
-	Difficulty_VeryHard = 4
-};
-
 extern struct _Data_Settings {
 	int _bpp;
 	int _fullscreen;
