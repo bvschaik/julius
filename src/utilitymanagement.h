@@ -1,9 +1,12 @@
 #ifndef UTILITYMANAGEMENT_H
 #define UTILITYMANAGEMENT_H
 
-void UtilityManagement_updateHouseWaterAccess();
-void UtilityManagement_updateReservoirFountain();
+struct UtilityManagement
+{
+    static void updateHouseWaterAccess();
+    static void updateReservoirFountain();
+    static void determineRoadNetworks();
+};
 
-void UtilityManagement_determineRoadNetworks();
 
 #endif

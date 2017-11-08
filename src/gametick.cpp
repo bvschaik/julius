@@ -79,7 +79,7 @@ void GameTick_advance()
         Natives_checkLand();
         break;
     case 7:
-        UtilityManagement_determineRoadNetworks();
+        UtilityManagement::determineRoadNetworks();
         break;
     case 8:
         Resource_gatherGranaryGettingInfo();
@@ -121,10 +121,10 @@ void GameTick_advance()
         CityInfo_Labor_update();
         break;
     case 27:
-        UtilityManagement_updateReservoirFountain();
+        UtilityManagement::updateReservoirFountain();
         break;
     case 28:
-        UtilityManagement_updateHouseWaterAccess();
+        UtilityManagement::updateHouseWaterAccess();
         break;
     case 29:
         Formation_Tick_updateAll(1);

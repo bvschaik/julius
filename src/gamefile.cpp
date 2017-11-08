@@ -57,10 +57,11 @@
 #define COMPRESS_BUFFER_SIZE 600000
 #define UNCOMPRESSED 0x80000000
 
-struct GameFilePart {
-	int compressed;
-	void *data;
-	int lengthInBytes;
+struct GameFilePart
+{
+    int compressed;
+    void *data;
+    int lengthInBytes;
 };
 
 static const int savegameVersion = 0x66;
@@ -72,27 +73,30 @@ static char compressBuffer[COMPRESS_BUFFER_SIZE];
 
 static const char missionPackFile[] = "mission1.pak";
 
-static const char missionSavedGames[][32] = {
-	"Citizen.sav",
-	"Clerk.sav",
-	"Engineer.sav",
-	"Architect.sav",
-	"Quaestor.sav",
-	"Procurator.sav",
-	"Aedile.sav",
-	"Praetor.sav",
-	"Consul.sav",
-	"Proconsul.sav"
-	"Caesar.sav",
-	"Caesar2.sav"
+static const char missionSavedGames[][32] =
+{
+    "Citizen.sav",
+    "Clerk.sav",
+    "Engineer.sav",
+    "Architect.sav",
+    "Quaestor.sav",
+    "Procurator.sav",
+    "Aedile.sav",
+    "Praetor.sav",
+    "Consul.sav",
+    "Proconsul.sav"
+    "Caesar.sav",
+    "Caesar2.sav"
 };
 
-typedef struct {
+typedef struct
+{
     buffer buf;
     int compressed;
 } file_piece;
 
-typedef struct {
+typedef struct
+{
     buffer *graphic_ids;
     buffer *edge;
     buffer *terrain;
@@ -104,14 +108,16 @@ typedef struct {
     buffer *scenario;
 } scenario_state;
 
-struct {
+struct
+{
     int num_pieces;
     file_piece pieces[9];
     scenario_state state;
 } scenario_data = {0};
 
 
-typedef struct {
+typedef struct
+{
     buffer *Data_Settings_saveGameMissionId;
     buffer *savegameFileVersion;
     buffer *Data_Grid_graphicIds;
@@ -246,7 +252,8 @@ typedef struct {
     buffer *Data_CityInfo_Extra_exitPointFlag_gridOffset;
     buffer *endMarker;
 } savegame_state;
-struct {
+struct
+{
     int num_pieces;
     file_piece pieces[300];
     savegame_state state;
@@ -275,8 +282,10 @@ buffer *create_savegame_piece(int size, int compressed)
 
 void init_scenario_data()
 {
-    if (scenario_data.num_pieces > 0) {
-        for (int i = 0; i < scenario_data.num_pieces; i++) {
+    if (scenario_data.num_pieces > 0)
+    {
+        for (int i = 0; i < scenario_data.num_pieces; i++)
+        {
             buffer_reset(&scenario_data.pieces[i].buf);
         }
         return;
@@ -295,8 +304,10 @@ void init_scenario_data()
 
 void init_savegame_data()
 {
-    if (savegame_data.num_pieces > 0) {
-        for (int i = 0; i < savegame_data.num_pieces; i++) {
+    if (savegame_data.num_pieces > 0)
+    {
+        for (int i = 0; i < savegame_data.num_pieces; i++)
+        {
             buffer_reset(&savegame_data.pieces[i].buf);
         }
         return;
@@ -439,7 +450,8 @@ void init_savegame_data()
 
 void init_all()
 {
-    if (!savegame_data.num_pieces) {
+    if (!savegame_data.num_pieces)
+    {
         init_scenario_data();
         init_savegame_data();
     }
@@ -463,18 +475,20 @@ void scenario_deserialize(scenario_state *file)
     read_all_from_buffer(file->bitfields, &Data_Grid_bitfields);
     read_all_from_buffer(file->random, &Data_Grid_random);
     read_all_from_buffer(file->elevation, &Data_Grid_elevation);
-    
+
     Data_Settings_Map.camera.x = buffer_read_i32(file->camera);
     Data_Settings_Map.camera.y = buffer_read_i32(file->camera);
-    
+
     random_load_state(file->random_iv);
 
     read_all_from_buffer(file->scenario, &Data_Scenario);
-    
+
     // check if all buffers are empty
-    for (int i = 0; i < scenario_data.num_pieces; i++) {
+    for (int i = 0; i < scenario_data.num_pieces; i++)
+    {
         buffer *buf = &scenario_data.pieces[i].buf;
-        if (buf->index != buf->size) {
+        if (buf->index != buf->size)
+        {
             printf("ERR: buffer %d not empty: %d of %d bytes used\n", i, buf->index, buf->size);
         }
     }
@@ -501,26 +515,26 @@ static void savegame_deserialize(savegame_state *state)
     read_all_from_buffer(state->Data_Figures, &Data_Figures);
     read_all_from_buffer(state->Data_Routes_figureIds, &Data_Routes.figureIds);
     read_all_from_buffer(state->Data_Routes_directionPaths, &Data_Routes.directionPaths);
-    
+
     formations_load_state(state->formations, state->formation_totals);
-    
+
     read_all_from_buffer(state->Data_CityInfo, &Data_CityInfo);
     read_all_from_buffer(state->Data_CityInfo_Extra_unknownBytes, &Data_CityInfo_Extra.unknownBytes);
     read_all_from_buffer(state->playerNames, &playerNames);
     read_all_from_buffer(state->Data_CityInfo_Extra_ciid, &Data_CityInfo_Extra.ciid);
     read_all_from_buffer(state->Data_Buildings, &Data_Buildings);
     read_all_from_buffer(state->Data_Settings_Map_orientation, &Data_Settings_Map.orientation);
-    
+
     game_time_load_state(state->game_time);
-    
+
     read_all_from_buffer(state->Data_Buildings_Extra_highestBuildingIdEver, &Data_Buildings_Extra.highestBuildingIdEver);
     read_all_from_buffer(state->Data_Debug_maxConnectsEver, &Data_Debug.maxConnectsEver);
-    
+
     random_load_state(state->random_iv);
 
     read_all_from_buffer(state->Data_Settings_Map_camera_x, &Data_Settings_Map.camera.x);
     read_all_from_buffer(state->Data_Settings_Map_camera_y, &Data_Settings_Map.camera.y);
-    
+
     building_count_load_state(state->building_count_industry,
                               state->building_count_culture1,
                               state->building_count_culture2,
@@ -536,10 +550,10 @@ static void savegame_deserialize(savegame_state *state)
     read_all_from_buffer(state->Data_Empire_scrollY, &Data_Empire.scrollY);
     read_all_from_buffer(state->Data_Empire_selectedObject, &Data_Empire.selectedObject);
     read_all_from_buffer(state->Data_Empire_Cities, &Data_Empire_Cities);
-    
+
     trade_prices_load_state(state->trade_prices);
     figure_name_load_state(state->figure_names);
-    
+
     read_all_from_buffer(state->Data_CityInfo_CultureCoverage_theater, &Data_CityInfo_CultureCoverage.theater);
     read_all_from_buffer(state->Data_CityInfo_CultureCoverage_amphitheater, &Data_CityInfo_CultureCoverage.amphitheater);
     read_all_from_buffer(state->Data_CityInfo_CultureCoverage_colosseum, &Data_CityInfo_CultureCoverage.colosseum);
@@ -583,13 +597,13 @@ static void savegame_deserialize(savegame_state *state)
     read_all_from_buffer(state->Data_Settings_isCustomScenario, &Data_Settings.isCustomScenario);
     read_all_from_buffer(state->Data_Sound_City, &Data_Sound_City);
     read_all_from_buffer(state->Data_Buildings_Extra_highestBuildingIdInUse, &Data_Buildings_Extra.highestBuildingIdInUse);
-    
+
     traders_load_state(state->figure_traders);
-    
+
     read_all_from_buffer(state->Data_BuildingList_burning_items, &Data_BuildingList.burning.items);
-    
+
     building_list_load_state(state->building_list_small, state->building_list_large);
-    
+
     read_all_from_buffer(state->Data_Tutorial_tutorial1_fire, &Data_Tutorial.tutorial1.fire);
     read_all_from_buffer(state->Data_Tutorial_tutorial1_crime, &Data_Tutorial.tutorial1.crime);
     read_all_from_buffer(state->Data_Tutorial_tutorial1_collapse, &Data_Tutorial.tutorial1.collapse);
@@ -604,16 +618,16 @@ static void savegame_deserialize(savegame_state *state)
     read_all_from_buffer(state->Data_Event_gladiatorRevolt_month, &Data_Event.gladiatorRevolt.month);
     read_all_from_buffer(state->Data_Event_gladiatorRevolt_endMonth, &Data_Event.gladiatorRevolt.endMonth);
     read_all_from_buffer(state->Data_Event_gladiatorRevolt_state, &Data_Event.gladiatorRevolt.state);
-    
+
     trade_routes_load_state(state->trade_route_limit, state->trade_route_traded);
-    
+
     read_all_from_buffer(state->Data_Buildings_Extra_barracksTowerSentryRequested, &Data_Buildings_Extra.barracksTowerSentryRequested);
     read_all_from_buffer(state->Data_Buildings_Extra_createdSequence, &Data_Buildings_Extra.createdSequence);
     read_all_from_buffer(state->Data_Routes_unknown1RoutesCalculated, &Data_Routes.unknown1RoutesCalculated); //read_all_from_buffer(state->unk_634474, &unk_634474); not referenced
     read_all_from_buffer(state->Data_Routes_enemyRoutesCalculated, &Data_Routes.enemyRoutesCalculated);
     read_all_from_buffer(state->Data_Routes_totalRoutesCalculated, &Data_Routes.totalRoutesCalculated);
     read_all_from_buffer(state->Data_Routes_unknown2RoutesCalculated, &Data_Routes.unknown2RoutesCalculated); //read_all_from_buffer(state->unk_634470, &unk_634470); not referenced
-    
+
     enemy_armies_load_state(state->enemy_armies, state->enemy_army_totals);
 
     read_all_from_buffer(state->Data_CityInfo_Extra_entryPointFlag_x, &Data_CityInfo_Extra.entryPointFlag.x);
@@ -632,9 +646,11 @@ static void savegame_deserialize(savegame_state *state)
     buffer_skip(state->endMarker, 284);
 
     // check if all buffers are empty
-    for (int i = 0; i < savegame_data.num_pieces; i++) {
+    for (int i = 0; i < savegame_data.num_pieces; i++)
+    {
         buffer *buf = &savegame_data.pieces[i].buf;
-        if (buf->index != buf->size) {
+        if (buf->index != buf->size)
+        {
             printf("ERR: buffer %d not empty: %d of %d bytes used\n", i, buf->index, buf->size);
         }
     }
@@ -661,21 +677,21 @@ static void savegame_serialize(savegame_state *state)
     write_all_to_buffer(state->Data_Figures, &Data_Figures);
     write_all_to_buffer(state->Data_Routes_figureIds, &Data_Routes.figureIds);
     write_all_to_buffer(state->Data_Routes_directionPaths, &Data_Routes.directionPaths);
-    
+
     formations_save_state(state->formations, state->formation_totals);
-    
+
     write_all_to_buffer(state->Data_CityInfo, &Data_CityInfo);
     write_all_to_buffer(state->Data_CityInfo_Extra_unknownBytes, &Data_CityInfo_Extra.unknownBytes);
     write_all_to_buffer(state->playerNames, &playerNames);
     write_all_to_buffer(state->Data_CityInfo_Extra_ciid, &Data_CityInfo_Extra.ciid);
     write_all_to_buffer(state->Data_Buildings, &Data_Buildings);
     write_all_to_buffer(state->Data_Settings_Map_orientation, &Data_Settings_Map.orientation);
-    
+
     game_time_save_state(state->game_time);
 
     write_all_to_buffer(state->Data_Buildings_Extra_highestBuildingIdEver, &Data_Buildings_Extra.highestBuildingIdEver);
     write_all_to_buffer(state->Data_Debug_maxConnectsEver, &Data_Debug.maxConnectsEver);
-    
+
     random_save_state(state->random_iv);
 
     write_all_to_buffer(state->Data_Settings_Map_camera_x, &Data_Settings_Map.camera.x);
@@ -696,10 +712,10 @@ static void savegame_serialize(savegame_state *state)
     write_all_to_buffer(state->Data_Empire_scrollY, &Data_Empire.scrollY);
     write_all_to_buffer(state->Data_Empire_selectedObject, &Data_Empire.selectedObject);
     write_all_to_buffer(state->Data_Empire_Cities, &Data_Empire_Cities);
-    
+
     trade_prices_save_state(state->trade_prices);
     figure_name_save_state(state->figure_names);
-    
+
     write_all_to_buffer(state->Data_CityInfo_CultureCoverage_theater, &Data_CityInfo_CultureCoverage.theater);
     write_all_to_buffer(state->Data_CityInfo_CultureCoverage_amphitheater, &Data_CityInfo_CultureCoverage.amphitheater);
     write_all_to_buffer(state->Data_CityInfo_CultureCoverage_colosseum, &Data_CityInfo_CultureCoverage.colosseum);
@@ -764,7 +780,7 @@ static void savegame_serialize(savegame_state *state)
     write_all_to_buffer(state->Data_Event_gladiatorRevolt_month, &Data_Event.gladiatorRevolt.month);
     write_all_to_buffer(state->Data_Event_gladiatorRevolt_endMonth, &Data_Event.gladiatorRevolt.endMonth);
     write_all_to_buffer(state->Data_Event_gladiatorRevolt_state, &Data_Event.gladiatorRevolt.state);
-    
+
     trade_routes_save_state(state->trade_route_limit, state->trade_route_traded);
 
     write_all_to_buffer(state->Data_Buildings_Extra_barracksTowerSentryRequested, &Data_Buildings_Extra.barracksTowerSentryRequested);
@@ -773,7 +789,7 @@ static void savegame_serialize(savegame_state *state)
     write_all_to_buffer(state->Data_Routes_enemyRoutesCalculated, &Data_Routes.enemyRoutesCalculated);
     write_all_to_buffer(state->Data_Routes_totalRoutesCalculated, &Data_Routes.totalRoutesCalculated);
     write_all_to_buffer(state->Data_Routes_unknown2RoutesCalculated, &Data_Routes.unknown2RoutesCalculated); //write_all_to_buffer(state->unk_634470, &unk_634470); not referenced
-    
+
     enemy_armies_save_state(state->enemy_armies, state->enemy_army_totals);
 
     write_all_to_buffer(state->Data_CityInfo_Extra_entryPointFlag_x, &Data_CityInfo_Extra.entryPointFlag.x);
@@ -792,9 +808,11 @@ static void savegame_serialize(savegame_state *state)
     buffer_skip(state->endMarker, 284);
 
     // check if all buffers are empty
-    for (int i = 0; i < savegame_data.num_pieces; i++) {
+    for (int i = 0; i < savegame_data.num_pieces; i++)
+    {
         buffer *buf = &savegame_data.pieces[i].buf;
-        if (buf->index != buf->size) {
+        if (buf->index != buf->size)
+        {
             printf("ERR: buffer %d not empty: %d of %d bytes used\n", i, buf->index, buf->size);
         }
     }
@@ -806,11 +824,15 @@ static int readCompressedChunk(FILE *fp, void *buffer, int bytesToRead);
 
 static void savegame_read_from_file(FILE *fp)
 {
-    for (int i = 0; i < savegame_data.num_pieces; i++) {
+    for (int i = 0; i < savegame_data.num_pieces; i++)
+    {
         file_piece *piece = &savegame_data.pieces[i];
-        if (piece->compressed) {
+        if (piece->compressed)
+        {
             readCompressedChunk(fp, piece->buf.data, piece->buf.size);
-        } else {
+        }
+        else
+        {
             fread(piece->buf.data, 1, piece->buf.size, fp);
         }
     }
@@ -818,12 +840,16 @@ static void savegame_read_from_file(FILE *fp)
 
 static void savegame_write_to_file(FILE *fp)
 {
-    for (int i = 0; i < savegame_data.num_pieces; i++) {
+    for (int i = 0; i < savegame_data.num_pieces; i++)
+    {
         file_piece *piece = &savegame_data.pieces[i];
         printf("Writing piece %d (size %d)\n", i, piece->buf.size);
-        if (piece->compressed) {
+        if (piece->compressed)
+        {
             writeCompressedChunk(fp, piece->buf.data, piece->buf.size);
-        } else {
+        }
+        else
+        {
             fwrite(piece->buf.data, 1, piece->buf.size, fp);
         }
     }
@@ -832,218 +858,244 @@ static void savegame_write_to_file(FILE *fp)
 int GameFile_loadSavedGame(const char *filename)
 {
     init_savegame_data();
-	FILE *fp = fopen(filename, "rb");
-	if (!fp) {
-		return 0;
-	}
-	Sound_stopMusic();
+    FILE *fp = fopen(filename, "rb");
+    if (!fp)
+    {
+        return 0;
+    }
+    Sound_stopMusic();
     savegame_read_from_file(fp);
-	fclose(fp);
-    
+    fclose(fp);
+
     savegame_deserialize(&savegame_data.state);
-	
-	setupFromSavedGame();
-	BuildingStorage_resetBuildingIds();
-	strcpy((char*)Data_Settings.playerName, playerNames[1]);
-	return 1;
+
+    setupFromSavedGame();
+    BuildingStorage_resetBuildingIds();
+    strcpy((char*)Data_Settings.playerName, playerNames[1]);
+    return 1;
 }
 
 int GameFile_loadSavedGameFromMissionPack(int missionId)
 {
     init_savegame_data();
-	int offset;
-	if (!io_read_file_part_into_buffer(missionPackFile, &offset, 4, 4 * missionId)) {
-		return 0;
-	}
-	if (offset <= 0) {
-		return 0;
-	}
-	FILE *fp = fopen(missionPackFile, "rb");
-	if (!fp) {
-		return 0;
-	}
-	fseek(fp, offset, SEEK_SET);
+    int offset;
+    if (!io_read_file_part_into_buffer(missionPackFile, &offset, 4, 4 * missionId))
+    {
+        return 0;
+    }
+    if (offset <= 0)
+    {
+        return 0;
+    }
+    FILE *fp = fopen(missionPackFile, "rb");
+    if (!fp)
+    {
+        return 0;
+    }
+    fseek(fp, offset, SEEK_SET);
     savegame_read_from_file(fp);
-	fclose(fp);
+    fclose(fp);
 
     savegame_deserialize(&savegame_data.state);
 
     setupFromSavedGame();
-	return 1;
+    return 1;
 }
 
 static void debug()
-{/*
-	printf("TIME: y %d m %d d %d t %d\n", game_time_year(), game_time_month(), game_time_day(), game_time_tick());
-	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		struct Data_Building *b = &Data_Buildings[i];
-		if (b->state != BuildingState_Unused || b->type) {
-			printf("Building %d type %d inUse %d x %d y %d emp %d w %d ls %d hc %d\n",
-				i, b->type, b->state, b->x, b->y, b->numWorkers, b->figureId, b->figureId2, b->housesCovered);
-		}
-	}
-	for (int i = 1; i < MAX_FIGURES; i++) {
-		struct Data_Figure *f = &Data_Figures[i];
-		if (f->state == FigureState_Alive) {
-			printf("Figure %d type %d as %d wt %d mt %d\n",
-				i, f->type, f->actionState, f->waitTicks, f->waitTicksMissile);
-		}
-	}*/
+{
+    /*
+    printf("TIME: y %d m %d d %d t %d\n", game_time_year(), game_time_month(), game_time_day(), game_time_tick());
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
+      struct Data_Building *b = &Data_Buildings[i];
+      if (b->state != BuildingState_Unused || b->type) {
+        printf("Building %d type %d inUse %d x %d y %d emp %d w %d ls %d hc %d\n",
+          i, b->type, b->state, b->x, b->y, b->numWorkers, b->figureId, b->figureId2, b->housesCovered);
+      }
+    }
+    for (int i = 1; i < MAX_FIGURES; i++) {
+      struct Data_Figure *f = &Data_Figures[i];
+      if (f->state == FigureState_Alive) {
+        printf("Figure %d type %d as %d wt %d mt %d\n",
+          i, f->type, f->actionState, f->waitTicks, f->waitTicksMissile);
+      }
+    }*/
 }
 
 static void setupFromSavedGame()
 {
-	debug();
-	Empire_load(Data_Settings.isCustomScenario, Data_Scenario.empireId);
-	Event_calculateDistantBattleRomanTravelTime();
-	Event_calculateDistantBattleEnemyTravelTime();
+    debug();
+    Empire_load(Data_Settings.isCustomScenario, Data_Scenario.empireId);
+    Event_calculateDistantBattleRomanTravelTime();
+    Event_calculateDistantBattleEnemyTravelTime();
 
-	Data_Settings_Map.width = Data_Scenario.mapSizeX;
-	Data_Settings_Map.height = Data_Scenario.mapSizeY;
-	Data_Settings_Map.gridStartOffset = Data_Scenario.gridFirstElement;
-	Data_Settings_Map.gridBorderSize = Data_Scenario.gridBorderSize;
+    Data_Settings_Map.width = Data_Scenario.mapSizeX;
+    Data_Settings_Map.height = Data_Scenario.mapSizeY;
+    Data_Settings_Map.gridStartOffset = Data_Scenario.gridFirstElement;
+    Data_Settings_Map.gridBorderSize = Data_Scenario.gridBorderSize;
 
-	if (Data_Settings_Map.orientation >= 0 && Data_Settings_Map.orientation <= 6) {
-		// ensure even number
-		Data_Settings_Map.orientation = 2 * (Data_Settings_Map.orientation / 2);
-	} else {
-		Data_Settings_Map.orientation = 0;
-	}
+    if (Data_Settings_Map.orientation >= 0 && Data_Settings_Map.orientation <= 6)
+    {
+        // ensure even number
+        Data_Settings_Map.orientation = 2 * (Data_Settings_Map.orientation / 2);
+    }
+    else
+    {
+        Data_Settings_Map.orientation = 0;
+    }
 
-	CityView_calculateLookup();
-	CityView_checkCameraBoundaries();
+    CityView_calculateLookup();
+    CityView_checkCameraBoundaries();
 
-	Routing_clearLandTypeCitizen();
-	Routing_determineLandCitizen();
-	Routing_determineLandNonCitizen();
-	Routing_determineWater();
-	Routing_determineWalls();
+    Routing_clearLandTypeCitizen();
+    Routing_determineLandCitizen();
+    Routing_determineLandNonCitizen();
+    Routing_determineWater();
+    Routing_determineWalls();
 
-	Building_determineGraphicIdsForOrientedBuildings();
-	FigureRoute_clean();
-	UtilityManagement_determineRoadNetworks();
-	Building_GameTick_checkAccessToRome();
-	Resource_gatherGranaryGettingInfo();
-	SidebarMenu_enableBuildingMenuItemsAndButtons();
-	PlayerMessage_initProblemArea();
+    Building_determineGraphicIdsForOrientedBuildings();
+    FigureRoute_clean();
+    UtilityManagement::determineRoadNetworks();
+    Building_GameTick_checkAccessToRome();
+    Resource_gatherGranaryGettingInfo();
+    SidebarMenu_enableBuildingMenuItemsAndButtons();
+    PlayerMessage_initProblemArea();
 
-	Sound_City_init();
-	Sound_Music_reset();
+    Sound_City_init();
+    Sound_Music_reset();
 
-	Data_State.undoAvailable = 0;
-	Data_State.currentOverlay = 0;
-	Data_State.previousOverlay = 0;
-	Data_State.missionBriefingShown = 1;
+    Data_State.undoAvailable = 0;
+    Data_State.currentOverlay = 0;
+    Data_State.previousOverlay = 0;
+    Data_State.missionBriefingShown = 1;
 
-	Data_CityInfo.tutorial1FireMessageShown = 1;
-	Data_CityInfo.tutorial3DiseaseMessageShown = 1;
+    Data_CityInfo.tutorial1FireMessageShown = 1;
+    Data_CityInfo.tutorial3DiseaseMessageShown = 1;
 
     image_load_climate(Data_Scenario.climate);
     image_load_enemy(Data_Scenario.enemyId);
-	Empire_determineDistantBattleCity();
-	TerrainGraphics_determineGardensFromGraphicIds();
+    Empire_determineDistantBattleCity();
+    TerrainGraphics_determineGardensFromGraphicIds();
 
-	Data_Message.maxScrollPosition = 0;
-	Data_Message.scrollPosition = 0;
+    Data_Message.maxScrollPosition = 0;
+    Data_Message.scrollPosition = 0;
 
-	Data_Settings.gamePaused = 0;
+    Data_Settings.gamePaused = 0;
 }
 
 void GameFile_writeMissionSavedGameIfNeeded()
 {
-	int missionId = Data_Settings.currentMissionId;
-	if (missionId < 0) {
-		missionId = 0;
-	} else if (missionId > 11) {
-		missionId = 11;
-	}
-	if (!Data_CityInfo.missionSavedGameWritten) {
-		Data_CityInfo.missionSavedGameWritten = 1;
-		if (!file_exists(missionSavedGames[missionId])) {
-			GameFile_writeSavedGame(missionSavedGames[missionId]);
-		}
-	}
+    int missionId = Data_Settings.currentMissionId;
+    if (missionId < 0)
+    {
+        missionId = 0;
+    }
+    else if (missionId > 11)
+    {
+        missionId = 11;
+    }
+    if (!Data_CityInfo.missionSavedGameWritten)
+    {
+        Data_CityInfo.missionSavedGameWritten = 1;
+        if (!file_exists(missionSavedGames[missionId]))
+        {
+            GameFile_writeSavedGame(missionSavedGames[missionId]);
+        }
+    }
 }
 
 int GameFile_writeSavedGame(const char *filename)
 {
     init_savegame_data();
-	printf("GameFile: Saving game to %s\n", filename);
-	savegameFileVersion = savegameVersion;
-	strcpy(playerNames[1], (char*)Data_Settings.playerName);
+    printf("GameFile: Saving game to %s\n", filename);
+    savegameFileVersion = savegameVersion;
+    strcpy(playerNames[1], (char*)Data_Settings.playerName);
     savegame_serialize(&savegame_data.state);
 
-	FILE *fp = fopen(filename, "wb");
-	if (!fp) {
-		return 0;
-	}
-	savegame_write_to_file(fp);
-	fclose(fp);
-	return 1;
+    FILE *fp = fopen(filename, "wb");
+    if (!fp)
+    {
+        return 0;
+    }
+    savegame_write_to_file(fp);
+    fclose(fp);
+    return 1;
 }
 
 int GameFile_deleteSavedGame(const char *filename)
 {
-	if (remove(filename) == 0) {
-		return 1;
-	}
-	return 0;
+    if (remove(filename) == 0)
+    {
+        return 1;
+    }
+    return 0;
 }
 
 int GameFile_loadScenario(const char *filename)
 {
     init_scenario_data();
-	FILE *fp = fopen(filename, "rb");
-	if (!fp) {
-		return 1;
-	}
+    FILE *fp = fopen(filename, "rb");
+    if (!fp)
+    {
+        return 1;
+    }
 
-	for (int i = 0; i < scenario_data.num_pieces; i++) {
-		fread(scenario_data.pieces[i].buf.data, 1, scenario_data.pieces[i].buf.size, fp);
-	}
-	fclose(fp);
-    
+    for (int i = 0; i < scenario_data.num_pieces; i++)
+    {
+        fread(scenario_data.pieces[i].buf.data, 1, scenario_data.pieces[i].buf.size, fp);
+    }
+    fclose(fp);
+
     scenario_deserialize(&scenario_data.state);
-    
+
     trade_prices_reset();
-	Empire_load(1, Data_Scenario.empireId);
-	Event_calculateDistantBattleRomanTravelTime();
-	Event_calculateDistantBattleEnemyTravelTime();
-	return 0;
+    Empire_load(1, Data_Scenario.empireId);
+    Event_calculateDistantBattleRomanTravelTime();
+    Event_calculateDistantBattleEnemyTravelTime();
+    return 0;
 }
 
 static int writeCompressedChunk(FILE *fp, const void *buffer, int bytesToWrite)
 {
-	if (bytesToWrite > COMPRESS_BUFFER_SIZE) {
-		return 0;
-	}
-	int outputSize = COMPRESS_BUFFER_SIZE;
-	if (zip_compress(buffer, bytesToWrite, compressBuffer, &outputSize)) {
-		fwrite(&outputSize, 4, 1, fp);
-		fwrite(compressBuffer, 1, outputSize, fp);
-	} else {
-		// unable to compress: write uncompressed
-		outputSize = UNCOMPRESSED;
-		fwrite(&outputSize, 4, 1, fp);
-		fwrite(buffer, 1, bytesToWrite, fp);
-	}
-	return 1;
+    if (bytesToWrite > COMPRESS_BUFFER_SIZE)
+    {
+        return 0;
+    }
+    int outputSize = COMPRESS_BUFFER_SIZE;
+    if (zip_compress(buffer, bytesToWrite, compressBuffer, &outputSize))
+    {
+        fwrite(&outputSize, 4, 1, fp);
+        fwrite(compressBuffer, 1, outputSize, fp);
+    }
+    else
+    {
+        // unable to compress: write uncompressed
+        outputSize = UNCOMPRESSED;
+        fwrite(&outputSize, 4, 1, fp);
+        fwrite(buffer, 1, bytesToWrite, fp);
+    }
+    return 1;
 }
 
 static int readCompressedChunk(FILE *fp, void *buffer, int bytesToRead)
 {
-	if (bytesToRead > COMPRESS_BUFFER_SIZE) {
-		return 0;
-	}
-	int inputSize = bytesToRead;
-	fread(&inputSize, 4, 1, fp);
-	if ((unsigned int) inputSize == UNCOMPRESSED) {
-		fread(buffer, 1, bytesToRead, fp);
-	} else {
-		fread(compressBuffer, 1, inputSize, fp);
-		if (!zip_decompress(compressBuffer, inputSize, buffer, &bytesToRead)) {
-			return 0;
-		}
-	}
-	return 1;
+    if (bytesToRead > COMPRESS_BUFFER_SIZE)
+    {
+        return 0;
+    }
+    int inputSize = bytesToRead;
+    fread(&inputSize, 4, 1, fp);
+    if ((unsigned int) inputSize == UNCOMPRESSED)
+    {
+        fread(buffer, 1, bytesToRead, fp);
+    }
+    else
+    {
+        fread(compressBuffer, 1, inputSize, fp);
+        if (!zip_decompress(compressBuffer, inputSize, buffer, &bytesToRead))
+        {
+            return 0;
+        }
+    }
+    return 1;
 }
