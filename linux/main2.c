@@ -361,7 +361,7 @@ void createWindowAndRenderer(int fullscreen)
 			width, height, SDL_WINDOW_RESIZABLE);
 	}
 	
-	SDL.renderer = SDL_CreateRenderer(SDL.window, -1, 0);
+	SDL.renderer = SDL_CreateRenderer(SDL.window, -1, SDL_RENDERER_PRESENTVSYNC);
 }
 
 void createSurface(int width, int height, int fullscreen)
