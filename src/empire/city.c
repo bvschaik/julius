@@ -1,6 +1,7 @@
 #include "city.h"
 
 #include "empire/trade_route.h"
+#include "empire/type.h"
 
 #include "Data/Empire.h"
 #include "Data/Constants.h"
@@ -31,7 +32,7 @@ int empire_city_can_import_resource(int resource)
 {
     for (int i = 0; i < MAX_CITIES; i++) {
         if (cities[i].in_use &&
-            cities[i].type == EmpireCity_Trade &&
+            cities[i].type == EMPIRE_CITY_TRADE &&
             cities[i].is_open &&
             cities[i].sells_resource[resource] == 1) {
             return 1;
@@ -44,7 +45,7 @@ int empire_city_can_import_resource_potentially(int resource)
 {
     for (int i = 0; i < MAX_CITIES; i++) {
         if (cities[i].in_use &&
-            cities[i].type == EmpireCity_Trade &&
+            cities[i].type == EMPIRE_CITY_TRADE &&
             cities[i].sells_resource[resource] == 1) {
             return 1;
         }
@@ -56,7 +57,7 @@ int empire_city_can_export_resource(int resource)
 {
     for (int i = 0; i < MAX_CITIES; i++) {
         if (cities[i].in_use &&
-            cities[i].type == EmpireCity_Trade &&
+            cities[i].type == EMPIRE_CITY_TRADE &&
             cities[i].is_open &&
             cities[i].buys_resource[resource] == 1) {
             return 1;
@@ -69,7 +70,7 @@ int empire_city_can_produce_ourselves(int resource)
 {
     for (int i = 0; i < MAX_CITIES; i++) {
         if (cities[i].in_use &&
-            cities[i].type == EmpireCity_Ours &&
+            cities[i].type == EMPIRE_CITY_OURS &&
             cities[i].sells_resource[resource] == 1) {
             return 1;
         }
@@ -134,7 +135,7 @@ int empire_city_determine_distant_battle_city()
     int city = 0;
     for (int i = 0; i < MAX_CITIES; i++) {
         if (cities[i].in_use) {
-            if (cities[i].type == EmpireCity_VulnerableRoman) {
+            if (cities[i].type == EMPIRE_CITY_VULNERABLE_ROMAN) {
                 city = i;
             }
         }
@@ -148,18 +149,18 @@ void empire_city_expand_empire()
         if (!cities[i].in_use) {
             continue;
         }
-        if (cities[i].type == EmpireCity_FutureTrade) {
-            cities[i].type = EmpireCity_Trade;
-        } else if (cities[i].type == EmpireCity_FutureRoman) {
-            cities[i].type = EmpireCity_DistantRoman;
+        if (cities[i].type == EMPIRE_CITY_FUTURE_TRADE) {
+            cities[i].type = EMPIRE_CITY_TRADE;
+        } else if (cities[i].type == EMPIRE_CITY_FUTURE_ROMAN) {
+            cities[i].type = EMPIRE_CITY_DISTANT_ROMAN;
         } else {
             continue;
         }
         int objectId = cities[i].empire_object_id;
         Data_Empire_Objects[objectId].cityType = cities[i].type;
-        if (cities[i].type == EmpireCity_Trade) {
+        if (cities[i].type == EMPIRE_CITY_TRADE) {
             Data_Empire_Objects[i].graphicIdExpanded = image_group(ID_Graphic_EmpireCityTrade);
-        } else if (cities[i].type == EmpireCity_DistantRoman) {
+        } else if (cities[i].type == EMPIRE_CITY_DISTANT_ROMAN) {
             Data_Empire_Objects[i].graphicIdExpanded = image_group(ID_Graphic_EmpireCityDistantRoman);
         }
     }
@@ -177,12 +178,12 @@ void empire_city_remove_trader(int city_id, int figure_id)
 
 void empire_city_set_vulnerable(int city_id)
 {
-    cities[city_id].type = EmpireCity_VulnerableRoman;
+    cities[city_id].type = EMPIRE_CITY_VULNERABLE_ROMAN;
 }
 
 void empire_city_set_foreign(int city_id)
 {
-    cities[city_id].type = EmpireCity_DistantForeign;
+    cities[city_id].type = EMPIRE_CITY_DISTANT_FOREIGN;
 }
 
 void empire_city_foreach_open_until(int (*until_func)(int, empire_city*))
@@ -240,10 +241,10 @@ void empire_city_load_state(buffer *buf)
         city->name_id = buffer_read_u8(buf);
         city->route_id = buffer_read_u8(buf);
         city->is_open = buffer_read_u8(buf);
-        for (int r = 0; r < 16; r++) {
+        for (int r = 0; r < RESOURCE_MAX; r++) {
             city->buys_resource[r] = buffer_read_u8(buf);
         }
-        for (int r = 0; r < 16; r++) {
+        for (int r = 0; r < RESOURCE_MAX; r++) {
             city->sells_resource[r] = buffer_read_u8(buf);
         }
         city->cost_to_open = buffer_read_i16(buf);

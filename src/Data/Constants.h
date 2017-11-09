@@ -249,26 +249,6 @@ enum {
 };
 
 enum {
-	EmpireObject_Ornament = 0,
-	EmpireObject_City = 1,
-	EmpireObject_BattleIcon = 3,
-	EmpireObject_LandTradeRoute = 4,
-	EmpireObject_SeaTradeRoute = 5,
-	EmpireObject_RomanArmy = 6,
-	EmpireObject_EnemyArmy = 7,
-};
-
-enum {
-	EmpireCity_DistantRoman = 0,
-	EmpireCity_Ours = 1,
-	EmpireCity_Trade = 2,
-	EmpireCity_FutureTrade = 3,
-	EmpireCity_DistantForeign = 4,
-	EmpireCity_VulnerableRoman = 5,
-	EmpireCity_FutureRoman = 6,
-};
-
-enum {
 	Dir_0_Top = 0,
 	Dir_1_TopRight = 1,
 	Dir_2_Right = 2,

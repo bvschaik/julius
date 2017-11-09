@@ -23,6 +23,7 @@
 
 #include "empire/city.h"
 #include "empire/trade_route.h"
+#include "empire/type.h"
 #include "graphics/image.h"
 
 #define MAX_WIDTH 2032
@@ -142,16 +143,16 @@ static void drawPanelInfo()
 {
 	if (Data_Empire.selectedObject) {
 		switch (Data_Empire_Objects[Data_Empire.selectedObject-1].type) {
-			case EmpireObject_City:
+			case EMPIRE_OBJECT_CITY:
 				drawPanelInfoCity();
 				break;
-			case EmpireObject_BattleIcon:
+			case EMPIRE_OBJECT_BATTLE_ICON:
 				drawPanelInfoBattleIcon();
 				break;
-			case EmpireObject_RomanArmy:
+			case EMPIRE_OBJECT_ROMAN_ARMY:
 				drawPanelInfoRomanArmy();
 				break;
-			case EmpireObject_EnemyArmy:
+			case EMPIRE_OBJECT_ENEMY_ARMY:
 				drawPanelInfoEnemyArmy();
 				break;
 		}
@@ -167,11 +168,11 @@ static void drawPanelInfoCity()
 	int yOffset = data.yMax - 88;
 
 	const empire_city *city = empire_city_get(data.selectedCity);
-	if (city->type == EmpireCity_DistantRoman) {
+	if (city->type == EMPIRE_CITY_DISTANT_ROMAN) {
 		Widget_GameText_drawCentered(47, 12, xOffset, yOffset + 42, 240, FONT_NORMAL_GREEN);
 		return;
 	}
-	if (city->type == EmpireCity_VulnerableRoman) {
+	if (city->type == EMPIRE_CITY_VULNERABLE_ROMAN) {
 		if (Data_CityInfo.distantBattleCityMonthsUntilRoman <= 0) {
 			Widget_GameText_drawCentered(47, 12, xOffset, yOffset + 42, 240, FONT_NORMAL_GREEN);
 		} else {
@@ -179,17 +180,17 @@ static void drawPanelInfoCity()
 		}
 		return;
 	}
-	if (city->type == EmpireCity_FutureTrade ||
-		city->type == EmpireCity_DistantForeign ||
-		city->type == EmpireCity_FutureRoman) {
+	if (city->type == EMPIRE_CITY_FUTURE_TRADE ||
+		city->type == EMPIRE_CITY_DISTANT_FOREIGN ||
+		city->type == EMPIRE_CITY_FUTURE_ROMAN) {
 		Widget_GameText_drawCentered(47, 0, xOffset, yOffset + 42, 240, FONT_NORMAL_GREEN);
 		return;
 	}
-	if (city->type == EmpireCity_Ours) {
+	if (city->type == EMPIRE_CITY_OURS) {
 		Widget_GameText_drawCentered(47, 1, xOffset, yOffset + 42, 240, FONT_NORMAL_GREEN);
 		return;
 	}
-	if (city->type != EmpireCity_Trade) {
+	if (city->type != EMPIRE_CITY_TRADE) {
 		return;
 	}
 	// trade city
@@ -374,7 +375,7 @@ static void drawPanelInfoCityName()
 	Graphics_drawImage(graphicBase + 7, data.xMax - 84, data.yMax - 199);
 	Graphics_drawImage(graphicBase + 8, (data.xMin + data.xMax - 332) / 2, data.yMax - 181);
 	if (Data_Empire.selectedObject > 0) {
-		if (Data_Empire_Objects[Data_Empire.selectedObject-1].type == EmpireObject_City) {
+		if (Data_Empire_Objects[Data_Empire.selectedObject-1].type == EMPIRE_OBJECT_CITY) {
 			Widget_GameText_drawCentered(21, empire_city_get(data.selectedCity)->name_id,
 				(data.xMin + data.xMax - 332) / 2 + 64, data.yMax - 118, 268, FONT_LARGE_BLACK);
 		}
@@ -387,10 +388,10 @@ static void drawPanelButtons()
 	Widget_Button_drawImageButtons(data.xMax - 44, data.yMax - 44, imageButtonReturnToCity, 1);
 	Widget_Button_drawImageButtons(data.xMax - 44, data.yMax - 100, imageButtonAdvisor, 1);
 	if (Data_Empire.selectedObject) {
-		if (Data_Empire_Objects[Data_Empire.selectedObject-1].type == EmpireObject_City) {
+		if (Data_Empire_Objects[Data_Empire.selectedObject-1].type == EMPIRE_OBJECT_CITY) {
 			data.selectedCity = empire_city_get_for_object(Data_Empire.selectedObject-1);
 			const empire_city *city = empire_city_get(data.selectedCity);
-			if (city->type == EmpireCity_Trade && !city->is_open) {
+			if (city->type == EMPIRE_CITY_TRADE && !city->is_open) {
 				Widget_Panel_drawButtonBorder((data.xMin + data.xMax - 500) / 2 + 50, data.yMax - 40, 400, 20, data.selectedButton);
 			}
 		}
@@ -410,7 +411,7 @@ static void drawEmpireMap()
 
 	for (int i = 0; i < 200 && Data_Empire_Objects[i].inUse; i++) {
 		struct Data_Empire_Object *obj = &Data_Empire_Objects[i];
-		if (obj->type == EmpireObject_LandTradeRoute || obj->type == EmpireObject_SeaTradeRoute) {
+		if (obj->type == EMPIRE_OBJECT_LAND_TRADE_ROUTE || obj->type == EMPIRE_OBJECT_SEA_TRADE_ROUTE) {
 			if (!empire_city_is_trade_route_open(obj->tradeRouteId)) {
 				continue;
 			}
@@ -426,18 +427,18 @@ static void drawEmpireMap()
 			graphicId = obj->graphicId;
 		}
 
-		if (obj->type == EmpireObject_City) {
+		if (obj->type == EMPIRE_OBJECT_CITY) {
 			const empire_city *city = empire_city_get(empire_city_get_for_object(i));
-			if (city->type == EmpireCity_DistantForeign ||
-				city->type == EmpireCity_FutureRoman) {
+			if (city->type == EMPIRE_CITY_DISTANT_FOREIGN ||
+				city->type == EMPIRE_CITY_FUTURE_ROMAN) {
 				graphicId = image_group(ID_Graphic_EmpireForeignCity);
 			}
 		}
-		if (obj->type == EmpireObject_BattleIcon) {
+		if (obj->type == EMPIRE_OBJECT_BATTLE_ICON) {
 			// handled below
 			continue;
 		}
-		if (obj->type == EmpireObject_EnemyArmy) {
+		if (obj->type == EMPIRE_OBJECT_ENEMY_ARMY) {
 			if (Data_CityInfo.distantBattleMonthsToBattle <= 0) {
 				continue;
 			}
@@ -445,7 +446,7 @@ static void drawEmpireMap()
 				continue;
 			}
 		}
-		if (obj->type == EmpireObject_RomanArmy) {
+		if (obj->type == EMPIRE_OBJECT_ROMAN_ARMY) {
 			if (Data_CityInfo.distantBattleRomanMonthsToTravel <= 0 &&
 				Data_CityInfo.distantBattleRomanMonthsToReturn <= 0) {
 				continue;
@@ -545,10 +546,10 @@ void UI_Empire_handleMouse(const mouse *m)
 		UI_Window_requestRefresh();
 	}
 	if (Data_Empire.selectedObject) {
-		if (Data_Empire_Objects[Data_Empire.selectedObject-1].type == EmpireObject_City) {
+		if (Data_Empire_Objects[Data_Empire.selectedObject-1].type == EMPIRE_OBJECT_CITY) {
 			data.selectedCity = empire_city_get_for_object(Data_Empire.selectedObject-1);
 			const empire_city *city = empire_city_get(data.selectedCity);
-			if (city->type == EmpireCity_Trade && !city->is_open) {
+			if (city->type == EMPIRE_CITY_TRADE && !city->is_open) {
 				Widget_Button_handleCustomButtons((data.xMin + data.xMax - 500) / 2, data.yMax - 105, customButtonOpenTrade, 1, &data.selectedButton);
 			}
 		}
@@ -565,7 +566,7 @@ static int isMouseHit(struct TooltipContext *c, int x, int y, int size)
 static int getTooltipResource(struct TooltipContext *c)
 {
     const empire_city *city = empire_city_get(data.selectedCity);
-	if (city->type != EmpireCity_Trade) {
+	if (city->type != EMPIRE_CITY_TRADE) {
 		return 0;
 	}
 	int objectId = Data_Empire.selectedObject - 1;

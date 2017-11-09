@@ -18,6 +18,7 @@
 #include "Data/Figure.h"
 
 #include "core/random.h"
+#include "empire/type.h"
 #include "figure/formation.h"
 #include "figure/name.h"
 #include "game/difficulty.h"
@@ -63,7 +64,7 @@ void Event_initInvasions()
 	int pathCurrent = 1;
 	int pathMax = 0;
 	for (int i = 0; i < MAX_EMPIRE_OBJECTS; i++) {
-		if (Data_Empire_Objects[i].inUse && Data_Empire_Objects[i].type == EmpireObject_BattleIcon) {
+		if (Data_Empire_Objects[i].inUse && Data_Empire_Objects[i].type == EMPIRE_OBJECT_BATTLE_ICON) {
 			if (Data_Empire_Objects[i].invasionPathId > pathMax) {
 				pathMax = Data_Empire_Objects[i].invasionPathId;
 			}
@@ -115,7 +116,7 @@ static int getEmpireObjectForInvasion(int pathId, int year)
 {
 	for (int i = 0; i < MAX_EMPIRE_OBJECTS; i++) {
 		struct Data_Empire_Object *obj = &Data_Empire_Objects[i];
-		if (obj->inUse && obj->type == EmpireObject_BattleIcon &&
+		if (obj->inUse && obj->type == EMPIRE_OBJECT_BATTLE_ICON &&
 			obj->invasionPathId == pathId && obj->invasionYears == year) {
 			return i;
 		}
