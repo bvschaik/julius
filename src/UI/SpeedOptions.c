@@ -131,19 +131,19 @@ static void buttonCancel(int param1, int param2)
 static void arrowButtonGame(int param1, int param2)
 {
     if (param1) {
-        setting_increase_game_speed();
-    } else {
         setting_decrease_game_speed();
+    } else {
+        setting_increase_game_speed();
     }
 	UI_Window_requestRefresh();
 }
 
 static void arrowButtonScroll(int param1, int param2)
 {
-	if (param1 == 1) {
-	    setting_increase_scroll_speed();
-	} else if (param1 == 0) {
+	if (param1) {
 	    setting_decrease_scroll_speed();
+	} else if (param1 == 0) {
+	    setting_increase_scroll_speed();
 	}
 	UI_Window_requestRefresh();
 }
