@@ -22,6 +22,7 @@
 #include "../Data/Settings.h"
 
 #include "core/lang.h"
+#include "empire/city.h"
 #include "graphics/image.h"
 #include "graphics/mouse.h"
 
@@ -342,7 +343,7 @@ static void drawPlayerMessageContent(const lang_message *msg)
 			graphicId = image_group(ID_Graphic_ResourceIcons) + playerMessage.param2;
 			graphicId += Resource_getGraphicIdOffset(playerMessage.param2, 3);
 			Graphics_drawImage(graphicId, data.x + 64, data.yText + 40);
-			Widget_GameText_draw(21, Data_Empire_Cities[playerMessage.param1].cityNameId,
+			Widget_GameText_draw(21, empire_city_get(playerMessage.param1)->name_id,
 				data.x + 100, data.yText + 44, FONT_NORMAL_WHITE);
 			Widget_RichText_draw(msg->content.text,
 				data.xText + 8, data.yText + 86, 16 * data.textWidthBlocks - 16,

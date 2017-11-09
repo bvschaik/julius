@@ -17,21 +17,21 @@
 
 #include "building/count.h"
 #include "building/storage.h"
+#include "empire/city.h"
 #include "empire/trade_prices.h"
 #include "empire/trade_route.h"
 #include "figure/type.h"
 
 #include <string.h>
 
-static int generateTrader(int cityId)
+static int generateTrader(int cityId, empire_city *city)
 {
-	struct Data_Empire_City *city = &Data_Empire_Cities[cityId];
 	int maxTradersOnMap = 0;
 	int numResources = 0;
 	for (int r = Resource_Min; r < Resource_Max; r++) {
-		if (city->buysResourceFlag[r] || city->sellsResourceFlag[r]) {
+		if (city->buys_resource[r] || city->sells_resource[r]) {
 			++numResources;
-			switch (trade_route_limit(city->routeId, r)) {
+			switch (trade_route_limit(city->route_id, r)) {
 				case 15: maxTradersOnMap += 1; break;
 				case 25: maxTradersOnMap += 2; break;
 				case 40: maxTradersOnMap += 3; break;
@@ -51,45 +51,45 @@ static int generateTrader(int cityId)
 
 	int index;
 	if (maxTradersOnMap == 1) {
-		if (!city->traderFigureIds[0]) {
+		if (!city->trader_figure_ids[0]) {
 			index = 0;
 		} else {
 			return 0;
 		}
 	} else if (maxTradersOnMap == 2) {
-		if (!city->traderFigureIds[0]) {
+		if (!city->trader_figure_ids[0]) {
 			index = 0;
-		} else if (!city->traderFigureIds[1]) {
+		} else if (!city->trader_figure_ids[1]) {
 			index = 1;
 		} else {
 			return 0;
 		}
 	} else { // 3
-		if (!city->traderFigureIds[0]) {
+		if (!city->trader_figure_ids[0]) {
 			index = 0;
-		} else if (!city->traderFigureIds[1]) {
+		} else if (!city->trader_figure_ids[1]) {
 			index = 1;
-		} else if (!city->traderFigureIds[2]) {
+		} else if (!city->trader_figure_ids[2]) {
 			index = 2;
 		} else {
 			return 0;
 		}
 	}
 
-	if (city->traderEntryDelay > 0) {
-		city->traderEntryDelay--;
+	if (city->trader_entry_delay > 0) {
+		city->trader_entry_delay--;
 		return 0;
 	}
-	city->traderEntryDelay = city->isSeaTrade ? 30 : 4;
+	city->trader_entry_delay = city->is_sea_trade ? 30 : 4;
 
-	if (city->isSeaTrade) {
+	if (city->is_sea_trade) {
 		// generate ship
 		if (Data_CityInfo.numWorkingDocks > 0 &&
 			(Data_Scenario.riverEntryPoint.x != -1 || Data_Scenario.riverEntryPoint.y != -1) &&
 			!Data_CityInfo.tradeSeaProblemDuration) {
 			int shipId = Figure_create(FIGURE_TRADE_SHIP,
 				Data_Scenario.riverEntryPoint.x, Data_Scenario.riverEntryPoint.y, 0);
-			city->traderFigureIds[index] = shipId;
+			city->trader_figure_ids[index] = shipId;
 			Data_Figures[shipId].empireCityId = cityId;
 			Data_Figures[shipId].actionState = FigureActionState_110_TradeShipCreated;
 			Data_Figures[shipId].waitTicks = 10;
@@ -101,7 +101,7 @@ static int generateTrader(int cityId)
 			// caravan head
 			int caravanId = Figure_create(FIGURE_TRADE_CARAVAN,
 				Data_CityInfo.entryPointX, Data_CityInfo.entryPointY, 0);
-			city->traderFigureIds[index] = caravanId;
+			city->trader_figure_ids[index] = caravanId;
 			Data_Figures[caravanId].empireCityId = cityId;
 			Data_Figures[caravanId].actionState = FigureActionState_100_TradeCaravanCreated;
 			Data_Figures[caravanId].waitTicks = 10;
@@ -121,20 +121,37 @@ static int generateTrader(int cityId)
 	return 0;
 }
 
+int canGenerateTraderForCity(int city_id, empire_city *city)
+{
+    if (city->is_sea_trade) {
+        if (Data_CityInfo.numWorkingDocks <= 0) {
+            if (Data_Message.messageCategoryCount[MessageDelay_NoWorkingDock] > 0) {
+                Data_Message.messageCategoryCount[MessageDelay_NoWorkingDock]--;
+            } else {
+                PlayerMessage_post(1, Message_117_NoWorkingDock, 0, 0);
+                Data_Message.messageCategoryCount[MessageDelay_NoWorkingDock] = 384; // 1 year
+            }
+            return 0;
+        }
+        if (Data_Scenario.riverEntryPoint.x == -1 && Data_Scenario.riverEntryPoint.y == -1) {
+            return 0;
+        }
+        Data_CityInfo.tradeNumOpenSeaRoutes++;
+    } else {
+        Data_CityInfo.tradeNumOpenLandRoutes++;
+    }
+    return generateTrader(city_id, city);
+}
+
 void Trader_tick()
 {
 	Data_CityInfo.tradeNumOpenSeaRoutes = 0;
 	Data_CityInfo.tradeNumOpenLandRoutes = 0;
 	// Wine types
 	Data_CityInfo.resourceWineTypesAvailable = building_count_industry_total(RESOURCE_WINE) > 0 ? 1 : 0;
-	for (int i = 1; i < MAX_EMPIRE_CITIES; i++) {
-		if (Data_Empire_Cities[i].inUse &&
-			Data_Empire_Cities[i].isOpen &&
-			Data_Empire_Cities[i].sellsResourceFlag[Resource_Wine] &&
-			Data_CityInfo.resourceTradeStatus[Resource_Wine] == TradeStatus_Import) {
-			++Data_CityInfo.resourceWineTypesAvailable;
-		}
-	}
+    if (Data_CityInfo.resourceTradeStatus[Resource_Wine] == TradeStatus_Import) {
+        Data_CityInfo.resourceWineTypesAvailable += empire_city_count_wine_sources();
+    }
 	// Update trade problems
 	if (Data_CityInfo.tradeLandProblemDuration > 0) {
 		Data_CityInfo.tradeLandProblemDuration--;
@@ -147,31 +164,7 @@ void Trader_tick()
 		Data_CityInfo.tradeSeaProblemDuration = 0;
 	}
 	// Generate traders
-	for (int i = 1; i < MAX_EMPIRE_CITIES; i++) {
-		if (!Data_Empire_Cities[i].inUse || !Data_Empire_Cities[i].isOpen) {
-			continue;
-		}
-		if (Data_Empire_Cities[i].isSeaTrade) {
-			if (Data_CityInfo.numWorkingDocks <= 0) {
-				if (Data_Message.messageCategoryCount[MessageDelay_NoWorkingDock] > 0) {
-					Data_Message.messageCategoryCount[MessageDelay_NoWorkingDock]--;
-				} else {
-					PlayerMessage_post(1, Message_117_NoWorkingDock, 0, 0);
-					Data_Message.messageCategoryCount[MessageDelay_NoWorkingDock] = 384; // 1 year
-				}
-				continue;
-			}
-			if (Data_Scenario.riverEntryPoint.x == -1 && Data_Scenario.riverEntryPoint.y == -1) {
-				continue;
-			}
-			Data_CityInfo.tradeNumOpenSeaRoutes++;
-		} else {
-			Data_CityInfo.tradeNumOpenLandRoutes++;
-		}
-		if (generateTrader(i)) {
-			return;
-		}
-	}
+	empire_city_foreach_open_until(canGenerateTraderForCity);
 }
 
 int Trader_getClosestWarehouseForTradeCaravan(int figureId, int x, int y, int cityId, int distanceFromEntry, int *warehouseX, int *warehouseY)
@@ -421,7 +414,7 @@ int Trader_tryImportResource(int buildingId, int resourceId, int cityId)
 		return 0;
 	}
 	
-	int routeId = Data_Empire_Cities[cityId].routeId;
+	int routeId = empire_city_get_route_id(cityId);
 	// try existing storage bay with the same resource
 	int spaceId = buildingId;
 	for (int i = 0; i < 8; i++) {
@@ -460,7 +453,7 @@ int Trader_tryExportResource(int buildingId, int resourceId, int cityId)
 		if (spaceId > 0) {
 			if (Data_Buildings[spaceId].loadsStored &&
 				Data_Buildings[spaceId].subtype.warehouseResourceId == resourceId) {
-				trade_route_increase_traded(Data_Empire_Cities[cityId].routeId, resourceId);
+				trade_route_increase_traded(empire_city_get_route_id(cityId), resourceId);
 				Resource_removeExportedResourceFromWarehouseSpace(spaceId, resourceId);
 				return 1;
 			}

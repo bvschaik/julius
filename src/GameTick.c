@@ -32,6 +32,7 @@
 
 #include "city/culture.h"
 #include "core/random.h"
+#include "empire/city.h"
 #include "game/settings.h"
 #include "game/time.h"
 #include "game/tutorial.h"
@@ -161,7 +162,7 @@ static void advanceYear()
 	game_time_advance_year();
 	CityInfo_Population_requestYearlyUpdate();
 	CityInfo_Finance_handleYearChange();
-	Empire_resetYearlyTradeAmounts();
+	empire_city_reset_yearly_trade_amounts();
 	Security_Tick_updateFireSpreadDirection();
 	CityInfo_Ratings_calculate(1);
 	Data_CityInfo.godBlessingNeptuneDoubleTrade = 0;

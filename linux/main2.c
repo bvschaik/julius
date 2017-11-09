@@ -73,8 +73,6 @@ void sanityCheck()
 	assert("Scenario settings", 1720, sizeof(Data_Scenario));
 	assert("Empire object", 64, sizeof(struct Data_Empire_Object));
 	assert("Empire object list", 12800, sizeof(Data_Empire_Objects));
-	assert("Trade city", 66, sizeof(struct Data_Empire_City));
-	assert("Trade city list", 2706, sizeof(Data_Empire_Cities));
 	assert("City info", 2*18068, sizeof(Data_CityInfo));
 	assert("Building object", 128, sizeof(struct Data_Building));
 	assert("City sound", 128, sizeof(struct Data_Sound_City));

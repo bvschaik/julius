@@ -9,6 +9,7 @@
 
 #include "building/count.h"
 #include "core/io.h"
+#include "empire/city.h"
 #include "empire/trade_route.h"
 #include "game/time.h"
 #include "graphics/image.h"
@@ -32,7 +33,7 @@ void Empire_load(int isCustomScenario, int empireId)
 
 void Empire_initCities()
 {
-	memset(Data_Empire_Cities, 0, 2706);
+	empire_city_clear_all();
 	int routeIndex = 1;
 	for (int i = 0; i < MAX_EMPIRE_OBJECTS; i++) {
 		if (!Data_Empire_Objects[i].inUse
@@ -40,38 +41,38 @@ void Empire_initCities()
 			continue;
 		}
 		struct Data_Empire_Object *obj = &Data_Empire_Objects[i];
-		struct Data_Empire_City *city = &Data_Empire_Cities[routeIndex++];
-		city->inUse = 1;
-		city->cityType = obj->cityType;
-		city->cityNameId = obj->cityNameId;
+		empire_city *city = empire_city_get(routeIndex++);
+		city->in_use = 1;
+		city->type = obj->cityType;
+		city->name_id = obj->cityNameId;
 		if (obj->tradeRouteId < 0) {
 			obj->tradeRouteId = 0;
 		}
 		if (obj->tradeRouteId >= 20) {
 			obj->tradeRouteId = 19;
 		}
-		city->routeId = obj->tradeRouteId;
-		city->isOpen = obj->tradeRouteOpen;
-		city->costToOpen = obj->tradeRouteCostToOpen;
-		city->isSeaTrade = isSeaTradeRoute(obj->tradeRouteId);
+		city->route_id = obj->tradeRouteId;
+		city->is_open = obj->tradeRouteOpen;
+		city->cost_to_open = obj->tradeRouteCostToOpen;
+		city->is_sea_trade = isSeaTradeRoute(obj->tradeRouteId);
 		
 		for (int resource = Resource_Min; resource < Resource_Max; resource++) {
-			city->sellsResourceFlag[resource] = 0;
-			city->buysResourceFlag[resource] = 0;
-			if (city->cityType == EmpireCity_DistantRoman
-				|| city->cityType == EmpireCity_DistantForeign
-				|| city->cityType == EmpireCity_VulnerableRoman
-				|| city->cityType == EmpireCity_FutureRoman) {
+			city->sells_resource[resource] = 0;
+			city->buys_resource[resource] = 0;
+			if (city->type == EmpireCity_DistantRoman
+				|| city->type == EmpireCity_DistantForeign
+				|| city->type== EmpireCity_VulnerableRoman
+				|| city->type== EmpireCity_FutureRoman) {
 				continue;
 			}
 			if (Empire_citySellsResource(i, resource)) {
-				city->sellsResourceFlag[resource] = 1;
+				city->sells_resource[resource] = 1;
 			}
 			if (Empire_cityBuysResource(i, resource)) {
-				city->buysResourceFlag[resource] = 1;
+				city->buys_resource[resource] = 1;
 			}
 			int amountCode = getTradeAmountCode(i, resource);
-			int routeId = city->routeId;{}
+			int routeId = city->route_id;
 			int amount;
 			switch (amountCode) {
 				case 1: amount = 15; break;
@@ -81,13 +82,11 @@ void Empire_initCities()
 			}
 			trade_route_init(routeId, resource, amount);
 		}
-		city->__unused2 = 10;
-		city->traderEntryDelay = 4;
-		city->__unused3 = 0;
-		city->traderFigureIds[0] = 0;
-		city->traderFigureIds[1] = 0;
-		city->traderFigureIds[2] = 0;
-		city->empireObjectId = i;
+		city->trader_entry_delay = 4;
+		city->trader_figure_ids[0] = 0;
+		city->trader_figure_ids[1] = 0;
+		city->trader_figure_ids[2] = 0;
+		city->empire_object_id = i;
 	}
 }
 
@@ -195,8 +194,8 @@ int Empire_citySellsResource(int objectId, int resource)
 
 int Empire_canExportResourceToCity(int cityId, int resource)
 {
-	int routeId = Data_Empire_Cities[cityId].routeId;
-	if (cityId && trade_route_limit_reached(routeId, resource)) {
+	empire_city *city = empire_city_get(cityId);
+	if (cityId && trade_route_limit_reached(city->route_id, resource)) {
 		// quota reached
 		return 0;
 	}
@@ -204,7 +203,7 @@ int Empire_canExportResourceToCity(int cityId, int resource)
 		// stocks too low
 		return 0;
 	}
-	if (cityId == 0 || Data_Empire_Cities[cityId].buysResourceFlag[resource]) {
+	if (cityId == 0 || city->buys_resource[resource]) {
 		return Data_CityInfo.resourceTradeStatus[resource] == TradeStatus_Export;
 	} else {
 		return 0;
@@ -213,14 +212,14 @@ int Empire_canExportResourceToCity(int cityId, int resource)
 
 int Empire_canImportResourceFromCity(int cityId, int resource)
 {
-	if (!Data_Empire_Cities[cityId].sellsResourceFlag[resource]) {
+	empire_city *city = empire_city_get(cityId);
+	if (!city->sells_resource[resource]) {
 		return 0;
 	}
 	if (Data_CityInfo.resourceTradeStatus[resource] != TradeStatus_Import) {
 		return 0;
 	}
-	int routeId = Data_Empire_Cities[cityId].routeId;
-	if (trade_route_limit_reached(routeId, resource)) {
+	if (trade_route_limit_reached(city->route_id, resource)) {
 		return 0;
 	}
 
@@ -275,88 +274,43 @@ int Empire_canImportResourceFromCity(int cityId, int resource)
 	return inStock < maxInStock ? 1 : 0;
 }
 
-int Empire_canImportResource(int resource)
-{
-	for (int i = 0; i < MAX_EMPIRE_CITIES; i++) {
-		if (Data_Empire_Cities[i].inUse &&
-			Data_Empire_Cities[i].cityType == EmpireCity_Trade &&
-			Data_Empire_Cities[i].isOpen &&
-			Data_Empire_Cities[i].sellsResourceFlag[resource] == 1) {
-			return 1;
-		}
-	}
-	return 0;
-}
-
-int Empire_canImportResourcePotentially(int resource)
-{
-	for (int i = 0; i < MAX_EMPIRE_CITIES; i++) {
-		if (Data_Empire_Cities[i].inUse &&
-			Data_Empire_Cities[i].cityType == EmpireCity_Trade &&
-			Data_Empire_Cities[i].sellsResourceFlag[resource] == 1) {
-			return 1;
-		}
-	}
-	return 0;
-}
-
-int Empire_canExportResource(int resource)
-{
-	for (int i = 0; i < MAX_EMPIRE_CITIES; i++) {
-		if (Data_Empire_Cities[i].inUse &&
-			Data_Empire_Cities[i].cityType == EmpireCity_Trade &&
-			Data_Empire_Cities[i].isOpen &&
-			Data_Empire_Cities[i].buysResourceFlag[resource] == 1) {
-			return 1;
-		}
-	}
-	return 0;
-}
-
 int Empire_ourCityCanProduceResource(int resource)
 {
 	// finished goods: check imports of raw materials
 	switch (resource) {
 		case Resource_Pottery:
 			resource = Resource_Clay;
-			if (Empire_canImportResource(resource)) {
+			if (empire_city_can_import_resource(resource)) {
 				return 1;
 			}
 			break;
 		case Resource_Furniture:
 			resource = Resource_Timber;
-			if (Empire_canImportResource(resource)) {
+			if (empire_city_can_import_resource(resource)) {
 				return 1;
 			}
 			break;
 		case Resource_Oil:
 			resource = Resource_Olives;
-			if (Empire_canImportResource(resource)) {
+			if (empire_city_can_import_resource(resource)) {
 				return 1;
 			}
 			break;
 		case Resource_Wine:
 			resource = Resource_Vines;
-			if (Empire_canImportResource(resource)) {
+			if (empire_city_can_import_resource(resource)) {
 				return 1;
 			}
 			break;
 		case Resource_Weapons:
 			resource = Resource_Iron;
-			if (Empire_canImportResource(resource)) {
+			if (empire_city_can_import_resource(resource)) {
 				return 1;
 			}
 			break;
 	}
 	// check if we can produce the raw materials
-	for (int i = 0; i < MAX_EMPIRE_CITIES; i++) {
-		if (Data_Empire_Cities[i].inUse &&
-			Data_Empire_Cities[i].cityType == EmpireCity_Ours &&
-			Data_Empire_Cities[i].sellsResourceFlag[resource] == 1) {
-			return 1;
-		}
-	}
-	return 0;
+	return empire_city_can_produce_ourselves(resource);
 }
 
 int Empire_ourCityCanProduceResourcePotentially(int resource)
@@ -365,65 +319,42 @@ int Empire_ourCityCanProduceResourcePotentially(int resource)
 	switch (resource) {
 		case Resource_Pottery:
 			resource = Resource_Clay;
-			if (Empire_canImportResourcePotentially(resource)) {
+			if (empire_city_can_import_resource_potentially(resource)) {
 				return 1;
 			}
 			break;
 		case Resource_Furniture:
 			resource = Resource_Timber;
-			if (Empire_canImportResourcePotentially(resource)) {
+			if (empire_city_can_import_resource_potentially(resource)) {
 				return 1;
 			}
 			break;
 		case Resource_Oil:
 			resource = Resource_Olives;
-			if (Empire_canImportResourcePotentially(resource)) {
+			if (empire_city_can_import_resource_potentially(resource)) {
 				return 1;
 			}
 			break;
 		case Resource_Wine:
 			resource = Resource_Vines;
-			if (Empire_canImportResourcePotentially(resource)) {
+			if (empire_city_can_import_resource_potentially(resource)) {
 				return 1;
 			}
 			break;
 		case Resource_Weapons:
 			resource = Resource_Iron;
-			if (Empire_canImportResourcePotentially(resource)) {
+			if (empire_city_can_import_resource_potentially(resource)) {
 				return 1;
 			}
 			break;
 	}
 	// check if we can produce the raw materials
-	for (int i = 0; i < MAX_EMPIRE_CITIES; i++) {
-		if (Data_Empire_Cities[i].inUse &&
-			Data_Empire_Cities[i].cityType == EmpireCity_Ours &&
-			Data_Empire_Cities[i].sellsResourceFlag[resource] == 1) {
-			return 1;
-		}
-	}
-	return 0;
+	return empire_city_can_produce_ourselves(resource);
 }
 
 void Empire_determineDistantBattleCity()
 {
-	Data_CityInfo.distantBattleCityId = 0;
-	for (int i = 0; i < MAX_EMPIRE_CITIES; i++) {
-		if (Data_Empire_Cities[i].inUse) {
-			if (Data_Empire_Cities[i].cityType == EmpireCity_VulnerableRoman) {
-				Data_CityInfo.distantBattleCityId = i;
-			}
-		}
-	}
-}
-
-void Empire_resetYearlyTradeAmounts()
-{
-	for (int i = 0; i < MAX_EMPIRE_CITIES; i++) {
-		if (Data_Empire_Cities[i].inUse && Data_Empire_Cities[i].isOpen) {
-			trade_route_reset_traded(Data_Empire_Cities[i].routeId);
-		}
-	}
+	Data_CityInfo.distantBattleCityId = empire_city_determine_distant_battle_city();
 }
 
 static void fixGraphicIds()
@@ -513,36 +444,6 @@ static void setTradeAmountCode(int index, int resource, int amountCode)
 	}
 }
 
-int Empire_getCityForObject(int empireObjectId)
-{
-	for (int i = 0; i < MAX_EMPIRE_CITIES; i++) {
-		if (Data_Empire_Cities[i].inUse && Data_Empire_Cities[i].empireObjectId == empireObjectId) {
-			return i;
-		}
-	}
-	return 0;
-}
-
-int Empire_getCityForTradeRoute(int routeId)
-{
-	for (int i = 0; i < MAX_EMPIRE_CITIES; i++) {
-		if (Data_Empire_Cities[i].inUse && Data_Empire_Cities[i].routeId == routeId) {
-			return i;
-		}
-	}
-	return 0;
-}
-
-int Empire_isTradeRouteOpen(int routeId)
-{
-	for (int i = 0; i < MAX_EMPIRE_CITIES; i++) {
-		if (Data_Empire_Cities[i].inUse && Data_Empire_Cities[i].routeId == routeId) {
-			return Data_Empire_Cities[i].isOpen ? 1 : 0;
-		}
-	}
-	return 0;
-}
-
 void Empire_handleExpandEvent()
 {
 	if (Data_Scenario.empireHasExpanded || Data_Scenario.empireExpansionYear <= 0) {
@@ -552,25 +453,7 @@ void Empire_handleExpandEvent()
 		return;
 	}
 
-	for (int i = 0; i < MAX_EMPIRE_CITIES; i++) {
-		if (!Data_Empire_Cities[i].inUse) {
-			continue;
-		}
-		if (Data_Empire_Cities[i].cityType == EmpireCity_FutureTrade) {
-			Data_Empire_Cities[i].cityType = EmpireCity_Trade;
-		} else if (Data_Empire_Cities[i].cityType == EmpireCity_FutureRoman) {
-			Data_Empire_Cities[i].cityType = EmpireCity_DistantRoman;
-		} else {
-			continue;
-		}
-		int objectId = Data_Empire_Cities[i].empireObjectId;
-		Data_Empire_Objects[objectId].cityType = Data_Empire_Cities[i].cityType;
-		if (Data_Empire_Cities[i].cityType == EmpireCity_Trade) {
-			Data_Empire_Objects[i].graphicIdExpanded = image_group(ID_Graphic_EmpireCityTrade);
-		} else if (Data_Empire_Cities[i].cityType == EmpireCity_DistantRoman) {
-			Data_Empire_Objects[i].graphicIdExpanded = image_group(ID_Graphic_EmpireCityDistantRoman);
-		}
-	}
+	empire_city_expand_empire();
 
 	Data_Scenario.empireHasExpanded = 1;
 	PlayerMessage_post(1, Message_77_EmpireHasExpanded, 0, 0);

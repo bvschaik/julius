@@ -108,7 +108,7 @@ static void hitOpponent(int figureId, struct Data_Figure *f)
 {
 	const formation *m = formation_get(f->formationId);
 	struct Data_Figure *opponent = &Data_Figures[f->opponentId];
-	const formation *opponentFormation = formation_get(opponent->formationId);{}
+	const formation *opponentFormation = formation_get(opponent->formationId);
 	
 	const figure_properties *props = figure_properties_for_type(f->type);
 	const figure_properties *opponent_props = figure_properties_for_type(opponent->type);

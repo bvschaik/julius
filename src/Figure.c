@@ -18,6 +18,7 @@
 
 #include "core/calc.h"
 #include "core/random.h"
+#include "empire/city.h"
 #include "figure/formation.h"
 #include "figure/name.h"
 #include "figure/trader.h"
@@ -114,11 +115,7 @@ void Figure_delete(int figureId)
 			break;
 	}
 	if (f->empireCityId) {
-		for (int i = 0; i < 3; i++) {
-			if (Data_Empire_Cities[f->empireCityId].traderFigureIds[i] == figureId) {
-				Data_Empire_Cities[f->empireCityId].traderFigureIds[i] = 0;
-			}
-		}
+		empire_city_remove_trader(f->empireCityId, figureId);
 	}
 	if (f->immigrantBuildingId) {
 		Data_Buildings[f->buildingId].immigrantFigureId = 0;

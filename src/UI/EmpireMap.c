@@ -21,6 +21,7 @@
 #include "../Data/Scenario.h"
 #include "../Data/Screen.h"
 
+#include "empire/city.h"
 #include "empire/trade_route.h"
 #include "graphics/image.h"
 
@@ -74,7 +75,7 @@ void UI_Empire_init()
 {
 	data.selectedButton = 0;
 	if (Data_Empire.selectedObject) {
-		data.selectedCity = Empire_getCityForObject(Data_Empire.selectedObject-1);
+		data.selectedCity = empire_city_get_for_object(Data_Empire.selectedObject-1);
 	} else {
 		data.selectedCity = 0;
 	}
@@ -165,11 +166,12 @@ static void drawPanelInfoCity()
 	int xOffset = (data.xMin + data.xMax - 240) / 2;
 	int yOffset = data.yMax - 88;
 
-	if (Data_Empire_Cities[data.selectedCity].cityType == EmpireCity_DistantRoman) {
+	const empire_city *city = empire_city_get(data.selectedCity);
+	if (city->type == EmpireCity_DistantRoman) {
 		Widget_GameText_drawCentered(47, 12, xOffset, yOffset + 42, 240, FONT_NORMAL_GREEN);
 		return;
 	}
-	if (Data_Empire_Cities[data.selectedCity].cityType == EmpireCity_VulnerableRoman) {
+	if (city->type == EmpireCity_VulnerableRoman) {
 		if (Data_CityInfo.distantBattleCityMonthsUntilRoman <= 0) {
 			Widget_GameText_drawCentered(47, 12, xOffset, yOffset + 42, 240, FONT_NORMAL_GREEN);
 		} else {
@@ -177,23 +179,23 @@ static void drawPanelInfoCity()
 		}
 		return;
 	}
-	if (Data_Empire_Cities[data.selectedCity].cityType == EmpireCity_FutureTrade ||
-		Data_Empire_Cities[data.selectedCity].cityType == EmpireCity_DistantForeign ||
-		Data_Empire_Cities[data.selectedCity].cityType == EmpireCity_FutureRoman) {
+	if (city->type == EmpireCity_FutureTrade ||
+		city->type == EmpireCity_DistantForeign ||
+		city->type == EmpireCity_FutureRoman) {
 		Widget_GameText_drawCentered(47, 0, xOffset, yOffset + 42, 240, FONT_NORMAL_GREEN);
 		return;
 	}
-	if (Data_Empire_Cities[data.selectedCity].cityType == EmpireCity_Ours) {
+	if (city->type == EmpireCity_Ours) {
 		Widget_GameText_drawCentered(47, 1, xOffset, yOffset + 42, 240, FONT_NORMAL_GREEN);
 		return;
 	}
-	if (Data_Empire_Cities[data.selectedCity].cityType != EmpireCity_Trade) {
+	if (city->type != EmpireCity_Trade) {
 		return;
 	}
 	// trade city
 	xOffset = (data.xMin + data.xMax - 500) / 2;
 	yOffset = data.yMax - 108;
-	if (Data_Empire_Cities[data.selectedCity].isOpen) {
+	if (city->is_open) {
 		// city sells
 		Widget_GameText_draw(47, 10, xOffset + 40, yOffset + 30, FONT_NORMAL_GREEN);
 		int goodOffset = 0;
@@ -205,8 +207,7 @@ static void drawPanelInfoCity()
 			int graphicId = good + image_group(ID_Graphic_EmpireResource);
 			int resourceOffset = Resource_getGraphicIdOffset(good, 3);
 			Graphics_drawImage(graphicId + resourceOffset, xOffset + 100 * goodOffset + 121, yOffset + 22);
-			int routeId = Data_Empire_Cities[data.selectedCity].routeId;
-			int tradeMax = trade_route_limit(routeId, good);
+			int tradeMax = trade_route_limit(city->route_id, good);
 			switch (tradeMax) {
 				case 15:
 					Graphics_drawImage(image_group(ID_Graphic_TradeAmount),
@@ -221,7 +222,7 @@ static void drawPanelInfoCity()
 						xOffset + 100 * goodOffset + 133, yOffset + 20);
 					break;
 			}
-			int tradeNow = trade_route_traded(routeId, good);
+			int tradeNow = trade_route_traded(city->route_id, good);
 			if (tradeNow > tradeMax) {
 				tradeMax = tradeNow;
 			}
@@ -244,8 +245,7 @@ static void drawPanelInfoCity()
 			int graphicId = good + image_group(ID_Graphic_EmpireResource);
 			int resourceOffset = Resource_getGraphicIdOffset(good, 3);
 			Graphics_drawImage(graphicId + resourceOffset, xOffset + 100 * goodOffset + 121, yOffset + 52);
-			int routeId = Data_Empire_Cities[data.selectedCity].routeId;
-			int tradeMax = trade_route_limit(routeId, good);
+			int tradeMax = trade_route_limit(city->route_id, good);
 			switch (tradeMax) {
 				case 15:
 					Graphics_drawImage(image_group(ID_Graphic_TradeAmount),
@@ -260,7 +260,7 @@ static void drawPanelInfoCity()
 						xOffset + 100 * goodOffset + 133, yOffset + 50);
 					break;
 			}
-			int tradeNow = trade_route_traded(routeId, good);
+			int tradeNow = trade_route_traded(city->route_id, good);
 			if (tradeNow > tradeMax) {
 				tradeMax = tradeNow;
 			}
@@ -282,8 +282,7 @@ static void drawPanelInfoCity()
 			int graphicId = good + image_group(ID_Graphic_EmpireResource);
 			int resourceOffset = Resource_getGraphicIdOffset(good, 3);
 			Graphics_drawImage(graphicId + resourceOffset, xOffset + goodOffset + 61, yOffset + 34);
-			int routeId = Data_Empire_Cities[data.selectedCity].routeId;
-			switch (trade_route_limit(routeId, good)) {
+			switch (trade_route_limit(city->route_id, good)) {
 				case 15:
 					Graphics_drawImage(image_group(ID_Graphic_TradeAmount),
 						xOffset + goodOffset + 81, yOffset + 32);
@@ -308,8 +307,7 @@ static void drawPanelInfoCity()
 			int graphicId = good + image_group(ID_Graphic_EmpireResource);
 			int resourceOffset = Resource_getGraphicIdOffset(good, 3);
 			Graphics_drawImage(graphicId + resourceOffset, xOffset + goodOffset + 110, yOffset + 34);
-			int routeId = Data_Empire_Cities[data.selectedCity].routeId;
-			switch (trade_route_limit(routeId, good)) {
+			switch (trade_route_limit(city->route_id, good)) {
 				case 15:
 					Graphics_drawImage(image_group(ID_Graphic_TradeAmount),
 						xOffset + goodOffset + 130, yOffset + 32);
@@ -326,8 +324,7 @@ static void drawPanelInfoCity()
 			goodOffset += 32;
 		}
 		Widget_Panel_drawButtonBorder(xOffset + 50, yOffset + 68, 400, 20, data.selectedButton);
-		goodOffset = Widget_GameText_drawNumberWithDescription(8, 0,
-			Data_Empire_Cities[data.selectedCity].costToOpen,
+		goodOffset = Widget_GameText_drawNumberWithDescription(8, 0, city->cost_to_open,
 			xOffset + 60, yOffset + 73, FONT_NORMAL_GREEN);
 		Widget_GameText_draw(47, 6, xOffset + goodOffset + 60, yOffset + 73, FONT_NORMAL_GREEN);
 	}
@@ -378,7 +375,7 @@ static void drawPanelInfoCityName()
 	Graphics_drawImage(graphicBase + 8, (data.xMin + data.xMax - 332) / 2, data.yMax - 181);
 	if (Data_Empire.selectedObject > 0) {
 		if (Data_Empire_Objects[Data_Empire.selectedObject-1].type == EmpireObject_City) {
-			Widget_GameText_drawCentered(21, Data_Empire_Cities[data.selectedCity].cityNameId,
+			Widget_GameText_drawCentered(21, empire_city_get(data.selectedCity)->name_id,
 				(data.xMin + data.xMax - 332) / 2 + 64, data.yMax - 118, 268, FONT_LARGE_BLACK);
 		}
 	}
@@ -391,8 +388,9 @@ static void drawPanelButtons()
 	Widget_Button_drawImageButtons(data.xMax - 44, data.yMax - 100, imageButtonAdvisor, 1);
 	if (Data_Empire.selectedObject) {
 		if (Data_Empire_Objects[Data_Empire.selectedObject-1].type == EmpireObject_City) {
-			data.selectedCity = Empire_getCityForObject(Data_Empire.selectedObject-1);
-			if (Data_Empire_Cities[data.selectedCity].cityType == EmpireCity_Trade && !Data_Empire_Cities[data.selectedCity].isOpen) {
+			data.selectedCity = empire_city_get_for_object(Data_Empire.selectedObject-1);
+			const empire_city *city = empire_city_get(data.selectedCity);
+			if (city->type == EmpireCity_Trade && !city->is_open) {
 				Widget_Panel_drawButtonBorder((data.xMin + data.xMax - 500) / 2 + 50, data.yMax - 40, 400, 20, data.selectedButton);
 			}
 		}
@@ -413,7 +411,7 @@ static void drawEmpireMap()
 	for (int i = 0; i < 200 && Data_Empire_Objects[i].inUse; i++) {
 		struct Data_Empire_Object *obj = &Data_Empire_Objects[i];
 		if (obj->type == EmpireObject_LandTradeRoute || obj->type == EmpireObject_SeaTradeRoute) {
-			if (!Empire_isTradeRouteOpen(obj->tradeRouteId)) {
+			if (!empire_city_is_trade_route_open(obj->tradeRouteId)) {
 				continue;
 			}
 		}
@@ -429,9 +427,9 @@ static void drawEmpireMap()
 		}
 
 		if (obj->type == EmpireObject_City) {
-			int city = Empire_getCityForObject(i);
-			if (Data_Empire_Cities[city].cityType == EmpireCity_DistantForeign ||
-				Data_Empire_Cities[city].cityType == EmpireCity_FutureRoman) {
+			const empire_city *city = empire_city_get(empire_city_get_for_object(i));
+			if (city->type == EmpireCity_DistantForeign ||
+				city->type == EmpireCity_FutureRoman) {
 				graphicId = image_group(ID_Graphic_EmpireForeignCity);
 			}
 		}
@@ -548,8 +546,9 @@ void UI_Empire_handleMouse(const mouse *m)
 	}
 	if (Data_Empire.selectedObject) {
 		if (Data_Empire_Objects[Data_Empire.selectedObject-1].type == EmpireObject_City) {
-			data.selectedCity = Empire_getCityForObject(Data_Empire.selectedObject-1);
-			if (Data_Empire_Cities[data.selectedCity].cityType == EmpireCity_Trade && !Data_Empire_Cities[data.selectedCity].isOpen) {
+			data.selectedCity = empire_city_get_for_object(Data_Empire.selectedObject-1);
+			const empire_city *city = empire_city_get(data.selectedCity);
+			if (city->type == EmpireCity_Trade && !city->is_open) {
 				Widget_Button_handleCustomButtons((data.xMin + data.xMax - 500) / 2, data.yMax - 105, customButtonOpenTrade, 1, &data.selectedButton);
 			}
 		}
@@ -565,14 +564,15 @@ static int isMouseHit(struct TooltipContext *c, int x, int y, int size)
 
 static int getTooltipResource(struct TooltipContext *c)
 {
-	if (Data_Empire_Cities[data.selectedCity].cityType != EmpireCity_Trade) {
+    const empire_city *city = empire_city_get(data.selectedCity);
+	if (city->type != EmpireCity_Trade) {
 		return 0;
 	}
 	int objectId = Data_Empire.selectedObject - 1;
 	int xOffset = (data.xMin + data.xMax - 500) / 2;
 	int yOffset = data.yMax - 108;
 
-	if (Data_Empire_Cities[data.selectedCity].isOpen) {
+	if (city->is_open) {
 		for (int r = 1, index = 0; r <= 15; r++) {
 			if (Empire_citySellsResource(objectId, r)) {
 				if (isMouseHit(c, xOffset + 120 + 100 * index, yOffset + 21, 26)) {
@@ -656,8 +656,9 @@ static void buttonEmpireMap(int param1, int param2)
 static void confirmOpenTrade(int accepted)
 {
 	if (accepted) {
-		CityInfo_Finance_spendOnConstruction(Data_Empire_Cities[data.selectedCity].costToOpen);
-		Data_Empire_Cities[data.selectedCity].isOpen = 1;
+        empire_city *city = empire_city_get(data.selectedCity);
+		CityInfo_Finance_spendOnConstruction(city->cost_to_open);
+		city->is_open = 1;
 		SidebarMenu_enableBuildingMenuItemsAndButtons();
 		UI_Window_goTo(Window_TradeOpenedDialog);
 	}
@@ -669,7 +670,7 @@ void UI_TradeOpenedDialog_drawBackground()
 	int yOffset = Data_Screen.offset640x480.y;
 	Widget_Panel_drawOuterPanel(xOffset + 80, yOffset + 64, 30, 14);
 	Widget_GameText_drawCentered(142, 0, xOffset + 80, yOffset + 80, 480, FONT_LARGE_BLACK);
-	if (Data_Empire_Cities[data.selectedCity].isSeaTrade) {
+	if (empire_city_get(data.selectedCity)->is_sea_trade) {
 		Widget_GameText_drawMultiline(142, 1, xOffset + 112, yOffset + 120, 416, FONT_NORMAL_BLACK);
 		Widget_GameText_drawMultiline(142, 3, xOffset + 112, yOffset + 184, 416, FONT_NORMAL_BLACK);
 	} else {

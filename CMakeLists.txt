@@ -31,6 +31,7 @@ set (CITY_FILES
     src/city/culture.c
 )
 set (EMPIRE_FILES
+    src/empire/city.c
     src/empire/trade_prices.c
     src/empire/trade_route.c
 )

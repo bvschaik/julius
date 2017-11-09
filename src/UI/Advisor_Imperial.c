@@ -11,6 +11,8 @@
 #include "../Data/Scenario.h"
 #include "../Data/Settings.h"
 
+#include "empire/city.h"
+
 static void buttonDonateToCity(int param1, int param2);
 static void buttonSetSalary(int param1, int param2);
 static void buttonGiftToCaesar(int param1, int param2);
@@ -64,7 +66,7 @@ void UI_Advisor_Imperial_drawBackground(int *advisorHeight)
 		Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + Resource_Weapons,
 			baseOffsetX + 50, baseOffsetY + 106);
 		width = Widget_GameText_draw(52, 72, baseOffsetX + 80, baseOffsetY + 102, FONT_NORMAL_WHITE);
-		Widget_GameText_draw(21, Data_Empire_Cities[Data_CityInfo.distantBattleCityId].cityNameId,
+		Widget_GameText_draw(21, empire_city_get(Data_CityInfo.distantBattleCityId)->name_id,
 			baseOffsetX + 50 + width, baseOffsetY + 102, FONT_NORMAL_WHITE);
 		int strengthTextId;
 		if (Data_CityInfo.distantBattleEnemyStrength < 46) {
