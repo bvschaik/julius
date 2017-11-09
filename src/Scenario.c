@@ -249,9 +249,7 @@ static void loadScenario(const char *scenarioName)
 	Event_initRequests();
 	Event_initDemandChanges();
 	Event_initPriceChanges();
-	Data_Empire.scrollX = Data_Empire_Index[Data_Scenario.empireId].initialScrollX;
-	Data_Empire.scrollY = Data_Empire_Index[Data_Scenario.empireId].initialScrollY;
-	Empire_checkScrollBoundaries();
+	Empire_initScroll();
 	SidebarMenu_enableBuildingMenuItemsAndButtons();
 	image_load_climate(Data_Scenario.climate);
 	image_load_enemy(Data_Scenario.enemyId);

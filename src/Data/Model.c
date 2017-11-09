@@ -13,8 +13,6 @@ struct _Data_Settings_Map Data_Settings_Map;
 struct _Data_Message Data_Message;
 
 struct _Data_Empire Data_Empire;
-struct _Data_Empire_Sizes Data_Empire_Sizes = {2000, 1000, 16, 16, 120};
-struct Data_Empire_Index Data_Empire_Index[40];
 struct Data_Empire_Object Data_Empire_Objects[MAX_EMPIRE_OBJECTS];
 
 struct _Data_Screen Data_Screen;// = { 800, 600, {80, 60} };
