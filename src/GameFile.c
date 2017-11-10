@@ -41,6 +41,7 @@
 #include "core/random.h"
 #include "core/zip.h"
 #include "empire/city.h"
+#include "empire/empire.h"
 #include "empire/trade_prices.h"
 #include "empire/trade_route.h"
 #include "figure/enemy_army.h"
@@ -153,9 +154,7 @@ typedef struct {
     buffer *Data_CityInfo_Extra_unknownOrder;
     buffer *Data_Event_emperorChange_gameYear;
     buffer *Data_Event_emperorChange_month;
-    buffer *Data_Empire_scrollX;
-    buffer *Data_Empire_scrollY;
-    buffer *Data_Empire_selectedObject;
+    buffer *empire;
     buffer *empire_cities;
     buffer *building_count_industry;
     buffer *trade_prices;
@@ -321,9 +320,7 @@ void init_savegame_data()
     state->Data_CityInfo_Extra_unknownOrder = create_savegame_piece(4, 0);
     state->Data_Event_emperorChange_gameYear = create_savegame_piece(4, 0);
     state->Data_Event_emperorChange_month = create_savegame_piece(4, 0);
-    state->Data_Empire_scrollX = create_savegame_piece(4, 0);
-    state->Data_Empire_scrollY = create_savegame_piece(4, 0);
-    state->Data_Empire_selectedObject = create_savegame_piece(4, 0);
+    state->empire = create_savegame_piece(12, 0);
     state->empire_cities = create_savegame_piece(2706, 1);
     state->building_count_industry = create_savegame_piece(128, 0);
     state->trade_prices = create_savegame_piece(128, 0);
@@ -491,10 +488,8 @@ static void savegame_deserialize(savegame_state *state)
     read_all_from_buffer(state->Data_CityInfo_Extra_unknownOrder, &Data_CityInfo_Extra.unknownOrder);
     read_all_from_buffer(state->Data_Event_emperorChange_gameYear, &Data_Event.emperorChange.gameYear);
     read_all_from_buffer(state->Data_Event_emperorChange_month, &Data_Event.emperorChange.month);
-    read_all_from_buffer(state->Data_Empire_scrollX, &Data_Empire.scrollX);
-    read_all_from_buffer(state->Data_Empire_scrollY, &Data_Empire.scrollY);
-    read_all_from_buffer(state->Data_Empire_selectedObject, &Data_Empire.selectedObject);
     
+    empire_load_state(state->empire);
     empire_city_load_state(state->empire_cities);
     trade_prices_load_state(state->trade_prices);
     figure_name_load_state(state->figure_names);
@@ -628,10 +623,8 @@ static void savegame_serialize(savegame_state *state)
     write_all_to_buffer(state->Data_CityInfo_Extra_unknownOrder, &Data_CityInfo_Extra.unknownOrder);
     write_all_to_buffer(state->Data_Event_emperorChange_gameYear, &Data_Event.emperorChange.gameYear);
     write_all_to_buffer(state->Data_Event_emperorChange_month, &Data_Event.emperorChange.month);
-    write_all_to_buffer(state->Data_Empire_scrollX, &Data_Empire.scrollX);
-    write_all_to_buffer(state->Data_Empire_scrollY, &Data_Empire.scrollY);
-    write_all_to_buffer(state->Data_Empire_selectedObject, &Data_Empire.selectedObject);
     
+    empire_save_state(state->empire);
     empire_city_save_state(state->empire_cities);
     trade_prices_save_state(state->trade_prices);
     figure_name_save_state(state->figure_names);

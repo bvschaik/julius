@@ -32,6 +32,7 @@ set (CITY_FILES
 )
 set (EMPIRE_FILES
     src/empire/city.c
+    src/empire/empire.c
     src/empire/trade_prices.c
     src/empire/trade_route.c
 )

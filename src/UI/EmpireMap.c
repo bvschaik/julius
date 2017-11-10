@@ -22,6 +22,7 @@
 #include "../Data/Screen.h"
 
 #include "empire/city.h"
+#include "empire/empire.h"
 #include "empire/trade_route.h"
 #include "empire/type.h"
 #include "graphics/image.h"
@@ -38,7 +39,7 @@ static void drawPanelInfoEnemyArmy();
 static void drawPanelInfoCityName();
 static void drawPanelButtons();
 static void drawEmpireMap();
-static int getSelectedObject(const mouse *m);
+static void determineSelectedObject(const mouse *m);
 
 static void buttonHelp(int param1, int param2);
 static void buttonReturnToCity(int param1, int param2);
@@ -75,8 +76,9 @@ static struct {
 void UI_Empire_init()
 {
 	data.selectedButton = 0;
-	if (Data_Empire.selectedObject) {
-		data.selectedCity = empire_city_get_for_object(Data_Empire.selectedObject-1);
+	int selectedObject = empire_selected_object();
+	if (selectedObject) {
+		data.selectedCity = empire_city_get_for_object(selectedObject - 1);
 	} else {
 		data.selectedCity = 0;
 	}
@@ -141,8 +143,9 @@ static void drawPaneling()
 
 static void drawPanelInfo()
 {
-	if (Data_Empire.selectedObject) {
-		switch (Data_Empire_Objects[Data_Empire.selectedObject-1].type) {
+    int selectedObject = empire_selected_object();
+	if (selectedObject) {
+		switch (Data_Empire_Objects[selectedObject-1].type) {
 			case EMPIRE_OBJECT_CITY:
 				drawPanelInfoCity();
 				break;
@@ -163,7 +166,7 @@ static void drawPanelInfo()
 
 static void drawPanelInfoCity()
 {
-	int objectId = Data_Empire.selectedObject - 1;
+	int objectId = empire_selected_object() - 1;
 	int xOffset = (data.xMin + data.xMax - 240) / 2;
 	int yOffset = data.yMax - 88;
 
@@ -341,7 +344,7 @@ static void drawPanelInfoRomanArmy()
 	if (Data_CityInfo.distantBattleRomanMonthsToTravel > 0 ||
 		Data_CityInfo.distantBattleRomanMonthsToReturn > 0) {
 		if (Data_CityInfo.distantBattleRomanMonthsTraveled ==
-			Data_Empire_Objects[Data_Empire.selectedObject-1].distantBattleTravelMonths) {
+			Data_Empire_Objects[empire_selected_object()-1].distantBattleTravelMonths) {
 			int xOffset = (data.xMin + data.xMax - 240) / 2;
 			int yOffset = data.yMax - 88;
 			int textId;
@@ -359,7 +362,7 @@ static void drawPanelInfoEnemyArmy()
 {
 	if (Data_CityInfo.distantBattleMonthsToBattle > 0) {
 		if (Data_CityInfo.distantBattleEnemyMonthsTraveled ==
-			Data_Empire_Objects[Data_Empire.selectedObject-1].distantBattleTravelMonths) {
+			Data_Empire_Objects[empire_selected_object()-1].distantBattleTravelMonths) {
 			Widget_GameText_drawMultiline(47, 14,
 				(data.xMin + data.xMax - 240) / 2,
 				data.yMax - 68,
@@ -374,8 +377,8 @@ static void drawPanelInfoCityName()
 	Graphics_drawImage(graphicBase + 6, data.xMin + 2, data.yMax - 199);
 	Graphics_drawImage(graphicBase + 7, data.xMax - 84, data.yMax - 199);
 	Graphics_drawImage(graphicBase + 8, (data.xMin + data.xMax - 332) / 2, data.yMax - 181);
-	if (Data_Empire.selectedObject > 0) {
-		if (Data_Empire_Objects[Data_Empire.selectedObject-1].type == EMPIRE_OBJECT_CITY) {
+	if (empire_selected_object() > 0) {
+		if (Data_Empire_Objects[empire_selected_object()-1].type == EMPIRE_OBJECT_CITY) {
 			Widget_GameText_drawCentered(21, empire_city_get(data.selectedCity)->name_id,
 				(data.xMin + data.xMax - 332) / 2 + 64, data.yMax - 118, 268, FONT_LARGE_BLACK);
 		}
@@ -387,9 +390,10 @@ static void drawPanelButtons()
 	Widget_Button_drawImageButtons(data.xMin + 20, data.yMax - 44, imageButtonHelp, 1);
 	Widget_Button_drawImageButtons(data.xMax - 44, data.yMax - 44, imageButtonReturnToCity, 1);
 	Widget_Button_drawImageButtons(data.xMax - 44, data.yMax - 100, imageButtonAdvisor, 1);
-	if (Data_Empire.selectedObject) {
-		if (Data_Empire_Objects[Data_Empire.selectedObject-1].type == EMPIRE_OBJECT_CITY) {
-			data.selectedCity = empire_city_get_for_object(Data_Empire.selectedObject-1);
+    int selectedObject = empire_selected_object();
+	if (selectedObject) {
+		if (Data_Empire_Objects[selectedObject-1].type == EMPIRE_OBJECT_CITY) {
+			data.selectedCity = empire_city_get_for_object(selectedObject-1);
 			const empire_city *city = empire_city_get(data.selectedCity);
 			if (city->type == EMPIRE_CITY_TRADE && !city->is_open) {
 				Widget_Panel_drawButtonBorder((data.xMin + data.xMax - 500) / 2 + 50, data.yMax - 40, 400, 20, data.selectedButton);
@@ -402,14 +406,14 @@ static void drawEmpireMap()
 {
 	Graphics_setClipRectangle(data.xMin + 16, data.yMin + 16, data.xMax - data.xMin - 32, data.yMax - data.yMin - 136);
 
-	Data_Empire.scrollX = calc_bound(Data_Empire.scrollX, 0, 2000 - (data.xMax - data.xMin - 32));
-	Data_Empire.scrollY = calc_bound(Data_Empire.scrollY, 0, 1000 - (data.yMax - data.yMin - 136));
+	empire_set_viewport(data.xMax - data.xMin - 32, data.yMax - data.yMin - 136);
 
-	int xOffset = data.xMin + 16 - Data_Empire.scrollX;
-	int yOffset = data.yMin + 16 - Data_Empire.scrollY;
+	int xOffset = data.xMin + 16;
+	int yOffset = data.yMin + 16;
+    empire_adjust_scroll(&xOffset, &yOffset);
 	Graphics_drawImage(image_group(ID_Graphic_EmpireMap), xOffset, yOffset);
 
-	for (int i = 0; i < 200 && Data_Empire_Objects[i].inUse; i++) {
+	for (int i = 0; i < MAX_EMPIRE_OBJECTS && Data_Empire_Objects[i].inUse; i++) {
 		struct Data_Empire_Object *obj = &Data_Empire_Objects[i];
 		if (obj->type == EMPIRE_OBJECT_LAND_TRADE_ROUTE || obj->type == EMPIRE_OBJECT_SEA_TRADE_ROUTE) {
 			if (!empire_city_is_trade_route_open(obj->tradeRouteId)) {
@@ -475,49 +479,22 @@ static void drawEmpireMap()
 	Graphics_resetClipRectangle();
 }
 
-static int getSelectedObject(const mouse *m)
+static void determineSelectedObject(const mouse *m)
 {
 	if (!m->left.went_down) {
-		return -1;
+		return;
 	}
 	if (m->x < data.xMin + 16 || m->x >= data.xMax - 16 ||
 		m->y < data.yMin + 16 || m->y >= data.yMax - 120) {
-		return -1;
+		return;
 	}
-	int xMap = m->x + Data_Empire.scrollX - data.xMin - 16;
-	int yMap = m->y + Data_Empire.scrollY - data.yMin - 16;
-	int minDist = 10000;
-	int objId = 0;
-	for (int i = 0; i < 200 && Data_Empire_Objects[i].inUse; i++) {
-		struct Data_Empire_Object *obj = &Data_Empire_Objects[i];
-		int xObj, yObj;
-		if (Data_Scenario.empireHasExpanded) {
-			xObj = obj->xExpanded;
-			yObj = obj->yExpanded;
-		} else {
-			xObj = obj->x;
-			yObj = obj->y;
-		}
-		if (xObj - 8 > xMap || xObj + obj->width + 8 <= xMap) {
-			continue;
-		}
-		if (yObj - 8 > yMap || yObj + obj->height + 8 <= yMap) {
-			continue;
-		}
-		int dist = calc_maximum_distance(xMap, yMap,
-			xObj + obj->width / 2, yObj + obj->height / 2);
-		if (dist < minDist) {
-			minDist = dist;
-			objId = i + 1;
-		}
-	}
+	empire_select_object(m->x - data.xMin - 16, m->y - data.yMin - 16);
 	UI_Window_requestRefresh();
-	return objId;
 }
 
 void UI_Empire_handleMouse(const mouse *m)
 {
-	Empire_scrollMap(Scroll_getDirection(m));
+	empire_scroll_map(Scroll_getDirection(m));
 	data.focusButtonId = 0;
 	int buttonId;
 	Widget_Button_handleImageButtons(data.xMin + 20, data.yMax - 44, imageButtonHelp, 1, &buttonId);
@@ -535,19 +512,15 @@ void UI_Empire_handleMouse(const mouse *m)
 	if (data.focusButtonId) {
 		return;
 	}
-	int objectId = getSelectedObject(m);
-	if (objectId > 0) {
-		Data_Empire.selectedObject = objectId;
-	} else if (objectId == 0) {
-		Data_Empire.selectedObject = 0;
-	}
+	determineSelectedObject(m);
 	if (m->right.went_down) {
-		Data_Empire.selectedObject = 0;
+		empire_clear_selected_object();
 		UI_Window_requestRefresh();
 	}
-	if (Data_Empire.selectedObject) {
-		if (Data_Empire_Objects[Data_Empire.selectedObject-1].type == EMPIRE_OBJECT_CITY) {
-			data.selectedCity = empire_city_get_for_object(Data_Empire.selectedObject-1);
+	int selectedObject = empire_selected_object();
+	if (selectedObject) {
+		if (Data_Empire_Objects[selectedObject-1].type == EMPIRE_OBJECT_CITY) {
+			data.selectedCity = empire_city_get_for_object(selectedObject-1);
 			const empire_city *city = empire_city_get(data.selectedCity);
 			if (city->type == EMPIRE_CITY_TRADE && !city->is_open) {
 				Widget_Button_handleCustomButtons((data.xMin + data.xMax - 500) / 2, data.yMax - 105, customButtonOpenTrade, 1, &data.selectedButton);
@@ -569,7 +542,7 @@ static int getTooltipResource(struct TooltipContext *c)
 	if (city->type != EMPIRE_CITY_TRADE) {
 		return 0;
 	}
-	int objectId = Data_Empire.selectedObject - 1;
+	int objectId = empire_selected_object() - 1;
 	int xOffset = (data.xMin + data.xMax - 500) / 2;
 	int yOffset = data.yMax - 108;
 

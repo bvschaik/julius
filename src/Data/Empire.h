@@ -3,12 +3,6 @@
 
 #define MAX_EMPIRE_OBJECTS 200
 
-extern struct _Data_Empire {
-	int scrollX;
-	int scrollY;
-	int selectedObject;
-} Data_Empire;
-
 extern struct Data_Empire_Object {
 	unsigned char type;
 	unsigned char inUse;
