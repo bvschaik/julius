@@ -5,6 +5,8 @@
 #include "core/file.h"
 #include "core/io.h"
 
+#include "Data/Constants.h"
+
 #include <stdlib.h>
 #include <string.h>
 
@@ -19,6 +21,7 @@
 #define ENEMY_ENTRIES 801
 
 #define MAIN_DATA_SIZE 30000000
+#define EMPIRE_DATA_SIZE 2000*1000*4
 #define ENEMY_DATA_SIZE 2400000
 #define SCRATCH_DATA_SIZE 12100000
 
@@ -34,6 +37,8 @@ static const char main_graphics_555[][NAME_SIZE] = {
     "c3_north.555",
     "c3_south.555"
 };
+static const char empire_555[NAME_SIZE] = "The_empire.555";
+
 static const char enemy_graphics_sg2[][NAME_SIZE] = {
     "goths.sg2",
     "Etruscan.sg2",
@@ -87,6 +92,7 @@ static struct {
     image main[MAIN_ENTRIES];
     image enemy[ENEMY_ENTRIES];
     color_t *main_data;
+    color_t *empire_data;
     color_t *enemy_data;
     uint8_t *tmp_data;
 } data = {.current_climate = -1};
@@ -95,8 +101,9 @@ int image_init()
 {
     data.enemy_data = (color_t *) malloc(ENEMY_DATA_SIZE);
     data.main_data = (color_t *) malloc(MAIN_DATA_SIZE);
+    data.empire_data = (color_t *) malloc(EMPIRE_DATA_SIZE);
     data.tmp_data = (uint8_t *) malloc(SCRATCH_DATA_SIZE);
-    if (!data.enemy_data || !data.main_data || !data.tmp_data) {
+    if (!data.main_data || !data.empire_data || !data.enemy_data || !data.tmp_data) {
         return 0;
     }
     return 1;
@@ -226,6 +233,18 @@ static void convert_images(image *images, int size, buffer *buf, color_t *dst)
     }
 }
 
+static void load_empire()
+{
+    int size = io_read_file_into_buffer(empire_555, data.tmp_data, EMPIRE_DATA_SIZE);
+    if (size != EMPIRE_DATA_SIZE / 2) {
+        debug_log("ERR: unable to load empire data", empire_555, 0);
+        return;
+    }
+    buffer buf;
+    buffer_init(&buf, data.tmp_data, size);
+    convert_uncompressed(&buf, size, data.empire_data);
+}
+
 int image_load_climate(int climate_id)
 {
     if (climate_id == data.current_climate) {
@@ -252,6 +271,8 @@ int image_load_climate(int climate_id)
     buffer_init(&buf, data.tmp_data, data_size);
     convert_images(data.main, MAIN_ENTRIES, &buf, data.main_data);
     data.current_climate = climate_id;
+
+    load_empire();
     return 1;
 }
 
@@ -328,10 +349,12 @@ const image *image_get_enemy(int id)
 
 const color_t *image_data(int id)
 {
-    if (data.main[id].draw.is_external) {
-        return load_external_data(id);
-    } else {
+    if (!data.main[id].draw.is_external) {
         return &data.main_data[data.main[id].draw.offset];
+    } else if (id == image_group(ID_Graphic_EmpireMap)) {
+        return data.empire_data;
+    } else {
+        return load_external_data(id);
     }
 }
 
