@@ -208,6 +208,11 @@ void empire_handle_expand_event()
     PlayerMessage_post(1, Message_77_EmpireHasExpanded, 0, 0);
 }
 
+void empire_determine_distant_battle_city()
+{
+    Data_CityInfo.distantBattleCityId = empire_city_get_vulnerable_roman();
+}
+
 void empire_save_state(buffer *buf)
 {
     buffer_write_i32(buf, data.scroll_x);

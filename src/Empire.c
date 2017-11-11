@@ -56,8 +56,3 @@ void Empire_initTradeAmountCodes()
 {
     empire_object_init_trade_amounts();
 }
-
-void Empire_determineDistantBattleCity()
-{
-	Data_CityInfo.distantBattleCityId = empire_city_determine_distant_battle_city();
-}

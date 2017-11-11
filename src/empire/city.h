@@ -45,7 +45,7 @@ void empire_city_reset_yearly_trade_amounts();
 
 int empire_city_count_wine_sources();
 
-int empire_city_determine_distant_battle_city();
+int empire_city_get_vulnerable_roman();
 
 void empire_city_expand_empire();
 

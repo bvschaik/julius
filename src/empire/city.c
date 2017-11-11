@@ -205,7 +205,7 @@ int empire_city_count_wine_sources()
     return sources;
 }
 
-int empire_city_determine_distant_battle_city()
+int empire_city_get_vulnerable_roman()
 {
     int city = 0;
     for (int i = 0; i < MAX_CITIES; i++) {

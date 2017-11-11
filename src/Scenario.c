@@ -35,6 +35,7 @@
 #include "core/file.h"
 #include "core/io.h"
 #include "core/random.h"
+#include "empire/empire.h"
 #include "figure/enemy_army.h"
 #include "figure/formation.h"
 #include "figure/name.h"
@@ -152,7 +153,7 @@ static void initCustomScenario(const char *scenarioName)
 	Data_CityInfo_Extra.ciid = 1;
 	Data_CityInfo.__unknown_00a2 = 1;
 	Data_CityInfo.__unknown_00a3 = 1;
-	Empire_determineDistantBattleCity();
+	empire_determine_distant_battle_city();
 }
 
 static void loadScenario(const char *scenarioName)
@@ -244,7 +245,7 @@ static void loadScenario(const char *scenarioName)
 	Empire_initCities();
 	traders_clear();
 	Event_initInvasions();
-	Empire_determineDistantBattleCity();
+	empire_determine_distant_battle_city();
 	Event_initRequests();
 	Event_initDemandChanges();
 	Event_initPriceChanges();
