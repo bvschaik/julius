@@ -34,9 +34,7 @@ typedef struct {
 static full_empire_object objects[MAX_OBJECTS];
 
 static int get_trade_amount_code(int index, int resource);
-static void set_trade_amount_code(int index, int resource, int amount_code);
 static int is_sea_trade_route(int route_id);
-
 
 static void fix_image_ids()
 {
@@ -108,31 +106,6 @@ void empire_object_load(buffer *buf)
     }
 
     fix_image_ids();
-}
-
-void empire_object_init_trade_amounts()
-{
-    for (int i = 0; i < MAX_OBJECTS; i++) {
-        if (!objects[i].in_use || objects[i].obj.type != EMPIRE_OBJECT_CITY) {
-            continue;
-        }
-        int total_amount = 0;
-        for (int res = RESOURCE_MIN; res < RESOURCE_MAX; res++) {
-            total_amount += get_trade_amount_code(i, res);
-        }
-        if (total_amount) {
-            for (int res = RESOURCE_MIN; res < RESOURCE_MAX; res++) {
-                if (!empire_object_city_sells_resource(i, res) && !empire_object_city_buys_resource(i, res)) {
-                    set_trade_amount_code(i, res, 0);
-                }
-            }
-        } else {
-            // reset everything to 25
-            for (int res = RESOURCE_MIN; res < RESOURCE_MAX; res++) {
-                set_trade_amount_code(i, res, 2);
-            }
-        }
-    }
 }
 
 void empire_object_init_cities()
@@ -333,26 +306,6 @@ static int get_trade_amount_code(int index, int resource)
         return 1;
     }
     return 0;
-}
-
-static void set_trade_amount_code(int index, int resource, int amount_code)
-{
-    if (!is_trade_city(index)) {
-        return;
-    }
-    int resource_flag = 1 << resource;
-    // clear flags
-    objects[index].trade40 &= ~resource_flag;
-    objects[index].trade25 &= ~resource_flag;
-    objects[index].trade15 &= ~resource_flag;
-    // set correct flag
-    if (amount_code == 1) {
-        objects[index].trade15 |= resource_flag;
-    } else if (amount_code == 2) {
-        objects[index].trade25 |= resource_flag;
-    } else if (amount_code == 3) {
-        objects[index].trade40 |= resource_flag;
-    }
 }
 
 static int is_sea_trade_route(int route_id)

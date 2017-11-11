@@ -153,7 +153,6 @@ static void initCustomScenario(const char *scenarioName)
 	Data_CityInfo_Extra.ciid = 1;
 	Data_CityInfo.__unknown_00a2 = 1;
 	Data_CityInfo.__unknown_00a3 = 1;
-	empire_determine_distant_battle_city();
 }
 
 static void loadScenario(const char *scenarioName)
@@ -263,7 +262,6 @@ static void readScenarioAndInitGraphics()
 	GameFile_loadScenario(Data_FileList.selectedScenario);
 	file_remove_extension(Data_FileList.selectedScenario);
 
-	Empire_initTradeAmountCodes();
 	Data_Settings_Map.width = Data_Scenario.mapSizeX;
 	Data_Settings_Map.height = Data_Scenario.mapSizeY;
 	Data_Settings_Map.gridStartOffset = Data_Scenario.gridFirstElement;

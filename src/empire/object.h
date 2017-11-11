@@ -25,8 +25,6 @@ typedef struct {
 
 void empire_object_load(buffer *buf);
 
-void empire_object_init_trade_amounts();
-
 void empire_object_init_cities();
 
 int empire_object_init_distant_battle_travel_months(int object_type);
