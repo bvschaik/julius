@@ -74,7 +74,6 @@ add_executable(julius
 	src/CityView.c
 	src/Cursor.c
 	src/Desirability.c
-	src/Empire.c
 	src/Event.c
 	src/Event_Invasion.c
 	src/Figure.c

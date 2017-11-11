@@ -3,7 +3,8 @@
 
 #include "core/buffer.h"
 
-void empire_init_scroll();
+void empire_load();
+void empire_init_scenario();
 void empire_scroll_map(int direction);
 void empire_set_viewport(int width, int height);
 void empire_adjust_scroll(int *x_offset, int *y_offset);
