@@ -8,7 +8,6 @@
 #include "Trader.h"
 
 #include "Data/CityInfo.h"
-#include "Data/Empire.h"
 #include "Data/Grid.h"
 #include "Data/Message.h"
 #include "Data/Scenario.h"

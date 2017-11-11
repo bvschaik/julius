@@ -9,7 +9,6 @@
 
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
-#include "Data/Empire.h"
 #include "Data/Event.h"
 #include "Data/Grid.h"
 #include "Data/Invasion.h"
@@ -18,6 +17,7 @@
 #include "Data/Figure.h"
 
 #include "core/random.h"
+#include "empire/object.h"
 #include "empire/type.h"
 #include "figure/formation.h"
 #include "figure/name.h"
@@ -26,7 +26,6 @@
 
 #include <string.h>
 
-static int getEmpireObjectForInvasion(int pathId, int year);
 static int startInvasion(int enemyType, int amount, int invasionPoint, int attackType, int invasionId);
 
 static const int enemyIdToEnemyType[20] = {
@@ -62,14 +61,7 @@ void Event_initInvasions()
 {
 	memset(Data_InvasionWarnings, 0, sizeof(Data_InvasionWarnings));
 	int pathCurrent = 1;
-	int pathMax = 0;
-	for (int i = 0; i < MAX_EMPIRE_OBJECTS; i++) {
-		if (Data_Empire_Objects[i].inUse && Data_Empire_Objects[i].type == EMPIRE_OBJECT_BATTLE_ICON) {
-			if (Data_Empire_Objects[i].invasionPathId > pathMax) {
-				pathMax = Data_Empire_Objects[i].invasionPathId;
-			}
-		}
-	}
+	int pathMax = empire_object_get_max_invasion_path();
 	if (pathMax == 0) {
 		return;
 	}
@@ -85,19 +77,18 @@ void Event_initInvasions()
 			continue;
 		}
 		for (int year = 1; year < 8; year++) {
-			int objectId = getEmpireObjectForInvasion(pathCurrent, year);
-			if (!objectId) {
+			const empire_object *obj = empire_object_get_battle_icon(pathCurrent, year);
+			if (!obj) {
 				continue;
 			}
-			struct Data_Empire_Object *obj = &Data_Empire_Objects[objectId];
 			warning->inUse = 1;
-			warning->empireInvasionPathId = obj->invasionPathId;
-			warning->warningYears = obj->invasionYears;
+			warning->empireInvasionPathId = obj->invasion_path_id;
+			warning->warningYears = obj->invasion_years;
 			warning->empireX = obj->x;
 			warning->empireY = obj->y;
-			warning->empireGraphicId = obj->graphicId;
+			warning->empireGraphicId = obj->image_id;
 			warning->invasionId = i;
-			warning->empireObjectId = objectId;
+			warning->empireObjectId = obj->id;
 			warning->gameMonthNotified = 0;
 			warning->gameYearNotified = 0;
 			warning->monthsToGo = 12 * Data_Scenario.invasions.year[i];
@@ -110,18 +101,6 @@ void Event_initInvasions()
 			pathCurrent = 1;
 		}
 	}
-}
-
-static int getEmpireObjectForInvasion(int pathId, int year)
-{
-	for (int i = 0; i < MAX_EMPIRE_OBJECTS; i++) {
-		struct Data_Empire_Object *obj = &Data_Empire_Objects[i];
-		if (obj->inUse && obj->type == EMPIRE_OBJECT_BATTLE_ICON &&
-			obj->invasionPathId == pathId && obj->invasionYears == year) {
-			return i;
-		}
-	}
-	return 0;
 }
 
 void Event_handleInvasions()

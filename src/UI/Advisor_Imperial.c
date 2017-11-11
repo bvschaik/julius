@@ -7,7 +7,6 @@
 #include "../Formation.h"
 #include "../Resource.h"
 
-#include "../Data/Empire.h"
 #include "../Data/Scenario.h"
 #include "../Data/Settings.h"
 

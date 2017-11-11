@@ -1,17 +1,18 @@
 #include "Empire.h"
 #include "PlayerMessage.h"
 
-#include "Data/Empire.h"
 #include "Data/Scenario.h"
 #include "Data/Constants.h"
 #include "Data/CityInfo.h"
 #include "Data/Screen.h"
 
 #include "building/count.h"
+#include "core/buffer.h"
 #include "core/calc.h"
 #include "core/io.h"
 #include "empire/city.h"
 #include "empire/empire.h"
+#include "empire/object.h"
 #include "empire/trade_route.h"
 #include "empire/type.h"
 #include "game/time.h"
@@ -26,19 +27,16 @@ static struct {
     short __padding[13];
 } Data_Empire_Index[40];
 
-static void fixGraphicIds();
-static int isSeaTradeRoute(int routeId);
-static int getTradeAmountCode(int index, int resource);
-static void setTradeAmountCode(int index, int resource, int amountCode);
-
 void Empire_load(int isCustomScenario, int empireId)
 {
 	const char *filename = isCustomScenario ? "c32.emp" : "c3.emp";
 	io_read_file_part_into_buffer(filename, Data_Empire_Index, 1280, 0);
-	memset(Data_Empire_Objects, 0, 12800);
 	int offset = 1280 + 12800 * Data_Scenario.empireId;
-	io_read_file_part_into_buffer(filename, Data_Empire_Objects, 12800, offset);
-	fixGraphicIds();
+    char obj_buffer[12800];
+	io_read_file_part_into_buffer(filename, obj_buffer, 12800, offset);
+    buffer buf;
+    buffer_init(&buf, obj_buffer, 12800);
+	empire_object_load(&buf);
 }
 
 void Empire_initScroll()
@@ -51,93 +49,19 @@ void Empire_initScroll()
 
 void Empire_initCities()
 {
-	empire_city_clear_all();
-	int routeIndex = 1;
-	for (int i = 0; i < MAX_EMPIRE_OBJECTS; i++) {
-		if (!Data_Empire_Objects[i].inUse
-			|| Data_Empire_Objects[i].type != EMPIRE_OBJECT_CITY) {
-			continue;
-		}
-		struct Data_Empire_Object *obj = &Data_Empire_Objects[i];
-		empire_city *city = empire_city_get(routeIndex++);
-		city->in_use = 1;
-		city->type = obj->cityType;
-		city->name_id = obj->cityNameId;
-		if (obj->tradeRouteId < 0) {
-			obj->tradeRouteId = 0;
-		}
-		if (obj->tradeRouteId >= 20) {
-			obj->tradeRouteId = 19;
-		}
-		city->route_id = obj->tradeRouteId;
-		city->is_open = obj->tradeRouteOpen;
-		city->cost_to_open = obj->tradeRouteCostToOpen;
-		city->is_sea_trade = isSeaTradeRoute(obj->tradeRouteId);
-		
-		for (int resource = Resource_Min; resource < Resource_Max; resource++) {
-			city->sells_resource[resource] = 0;
-			city->buys_resource[resource] = 0;
-			if (city->type == EMPIRE_CITY_DISTANT_ROMAN
-				|| city->type == EMPIRE_CITY_DISTANT_FOREIGN
-				|| city->type== EMPIRE_CITY_VULNERABLE_ROMAN
-				|| city->type== EMPIRE_CITY_FUTURE_ROMAN) {
-				continue;
-			}
-			if (Empire_citySellsResource(i, resource)) {
-				city->sells_resource[resource] = 1;
-			}
-			if (Empire_cityBuysResource(i, resource)) {
-				city->buys_resource[resource] = 1;
-			}
-			int amountCode = getTradeAmountCode(i, resource);
-			int routeId = city->route_id;
-			int amount;
-			switch (amountCode) {
-				case 1: amount = 15; break;
-				case 2: amount = 25; break;
-				case 3: amount = 40; break;
-				default: amount = 0; break;
-			}
-			trade_route_init(routeId, resource, amount);
-		}
-		city->trader_entry_delay = 4;
-		city->trader_figure_ids[0] = 0;
-		city->trader_figure_ids[1] = 0;
-		city->trader_figure_ids[2] = 0;
-		city->empire_object_id = i;
-	}
+    empire_object_init_cities();
 }
 
 void Empire_initTradeAmountCodes()
 {
-	for (int i = 0; i < MAX_EMPIRE_OBJECTS; i++) {
-		if (!Data_Empire_Objects[i].inUse
-			|| Data_Empire_Objects[i].type != EMPIRE_OBJECT_CITY) {
-			continue;
-		}
-		int totalAmount = 0;
-		for (int res = Resource_Min; res < Resource_Max; res++) {
-			totalAmount += getTradeAmountCode(i, res);
-		}
-		if (totalAmount) {
-			for (int res = Resource_Min; res < Resource_Max; res++) {
-				if (!Empire_citySellsResource(i, res) && !Empire_cityBuysResource(i, res)) {
-					setTradeAmountCode(i, res, 0);
-				}
-			}
-		} else {
-			// reset everything to 25
-			for (int res = Resource_Min; res < Resource_Max; res++) {
-				setTradeAmountCode(i, res, 2);
-			}
-		}
-	}
+    empire_object_init_trade_amounts();
 }
 
 int Empire_cityBuysResource(int objectId, int resource)
 {
+    const empire_object *object = empire_object_get(objectId);
 	for (int i = 0; i < 8; i++) {
-		if (Data_Empire_Objects[objectId].cityBuys[i] == resource) {
+		if (object->city_buys_resource[i] == resource) {
 			return 1;
 		}
 	}
@@ -146,8 +70,9 @@ int Empire_cityBuysResource(int objectId, int resource)
 
 int Empire_citySellsResource(int objectId, int resource)
 {
+    const empire_object *object = empire_object_get(objectId);
 	for (int i = 0; i < 10; i++) {
-		if (Data_Empire_Objects[objectId].citySells[i] == resource) {
+		if (object->city_sells_resource[i] == resource) {
 			return 1;
 		}
 	}
@@ -317,93 +242,6 @@ int Empire_ourCityCanProduceResourcePotentially(int resource)
 void Empire_determineDistantBattleCity()
 {
 	Data_CityInfo.distantBattleCityId = empire_city_determine_distant_battle_city();
-}
-
-static void fixGraphicIds()
-{
-	int graphicId = 0;
-	for (int i = 0; i < MAX_EMPIRE_OBJECTS; i++) {
-		if (Data_Empire_Objects[i].inUse
-			&& Data_Empire_Objects[i].type == EMPIRE_OBJECT_CITY
-			&& Data_Empire_Objects[i].cityType == EMPIRE_CITY_OURS) {
-			graphicId = Data_Empire_Objects[i].graphicId;
-			break;
-		}
-	}
-	if (graphicId > 0 && graphicId != image_group(ID_Graphic_EmpireCity)) {
-		// empire map uses old version of graphics: increase every graphic id
-		int offset = image_group(ID_Graphic_EmpireCity) - graphicId;
-		for (int i = 0; i < MAX_EMPIRE_OBJECTS; i++) {
-			if (!Data_Empire_Objects[i].inUse) {
-				continue;
-			}
-			if (Data_Empire_Objects[i].graphicId) {
-				Data_Empire_Objects[i].graphicId += offset;
-				if (Data_Empire_Objects[i].graphicIdExpanded) {
-					Data_Empire_Objects[i].graphicIdExpanded += offset;
-				}
-			}
-		}
-	}
-}
-
-static int isSeaTradeRoute(int routeId)
-{
-	for (int i = 0; i < MAX_EMPIRE_OBJECTS; i++) {
-		if (Data_Empire_Objects[i].inUse && Data_Empire_Objects[i].tradeRouteId == routeId) {
-			if (Data_Empire_Objects[i].type == EMPIRE_OBJECT_SEA_TRADE_ROUTE) {
-				return 1;
-			}
-			if (Data_Empire_Objects[i].type == EMPIRE_OBJECT_LAND_TRADE_ROUTE) {
-				return 0;
-			}
-		}
-	}
-	return 0;
-}
-
-static int getTradeAmountCode(int index, int resource)
-{
-	if (Data_Empire_Objects[index].type != EMPIRE_OBJECT_CITY) {
-		return 0;
-	}
-	if (Data_Empire_Objects[index].cityType <= 1 || Data_Empire_Objects[index].cityType >= 6) {
-		return 0;
-	}
-	int resourceFlag = 1 << resource;
-	if (Data_Empire_Objects[index].trade40 & resourceFlag) {
-		return 3;
-	}
-	if (Data_Empire_Objects[index].trade25 & resourceFlag) {
-		return 2;
-	}
-	if (Data_Empire_Objects[index].trade15 & resourceFlag) {
-		return 1;
-	}
-	return 0;
-}
-
-static void setTradeAmountCode(int index, int resource, int amountCode)
-{
-	if (Data_Empire_Objects[index].type != EMPIRE_OBJECT_CITY) {
-		return;
-	}
-	if (Data_Empire_Objects[index].cityType <= 1 || Data_Empire_Objects[index].cityType >= 6) {
-		return;
-	}
-	int resourceFlag = 1 << resource;
-	// clear flags
-	Data_Empire_Objects[index].trade40 &= ~resourceFlag;
-	Data_Empire_Objects[index].trade25 &= ~resourceFlag;
-	Data_Empire_Objects[index].trade15 &= ~resourceFlag;
-	// set correct flag
-	if (amountCode == 1) {
-		Data_Empire_Objects[index].trade15 |= resourceFlag;
-	} else if (amountCode == 2) {
-		Data_Empire_Objects[index].trade25 |= resourceFlag;
-	} else if (amountCode == 3) {
-		Data_Empire_Objects[index].trade40 |= resourceFlag;
-	}
 }
 
 void Empire_handleExpandEvent()

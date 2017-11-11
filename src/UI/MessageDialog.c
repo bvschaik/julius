@@ -15,7 +15,6 @@
 #include "../Data/Buttons.h"
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
-#include "../Data/Empire.h"
 #include "../Data/Message.h"
 #include "../Data/Scenario.h"
 #include "../Data/Screen.h"

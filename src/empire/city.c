@@ -1,17 +1,14 @@
 #include "city.h"
 
+#include "empire/object.h"
 #include "empire/trade_route.h"
 #include "empire/type.h"
-
-#include "Data/Empire.h"
-#include "Data/Constants.h"
-#include "graphics/image.h"
 
 #include <string.h>
 
 #define MAX_CITIES 41
 
-empire_city cities[MAX_CITIES];
+static empire_city cities[MAX_CITIES];
 
 void empire_city_clear_all()
 {
@@ -156,13 +153,7 @@ void empire_city_expand_empire()
         } else {
             continue;
         }
-        int objectId = cities[i].empire_object_id;
-        Data_Empire_Objects[objectId].cityType = cities[i].type;
-        if (cities[i].type == EMPIRE_CITY_TRADE) {
-            Data_Empire_Objects[i].graphicIdExpanded = image_group(ID_Graphic_EmpireCityTrade);
-        } else if (cities[i].type == EMPIRE_CITY_DISTANT_ROMAN) {
-            Data_Empire_Objects[i].graphicIdExpanded = image_group(ID_Graphic_EmpireCityDistantRoman);
-        }
+        empire_object_set_expanded(cities[i].empire_object_id, cities[i].type);
     }
 }
 

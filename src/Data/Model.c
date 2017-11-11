@@ -12,8 +12,6 @@ struct _Data_Settings_Map Data_Settings_Map;
 
 struct _Data_Message Data_Message;
 
-struct Data_Empire_Object Data_Empire_Objects[MAX_EMPIRE_OBJECTS];
-
 struct _Data_Screen Data_Screen;// = { 800, 600, {80, 60} };
 
 struct _Data_CityInfo Data_CityInfo;

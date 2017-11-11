@@ -24,7 +24,6 @@
 
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
-#include "Data/Empire.h"
 #include "Data/Event.h"
 #include "Data/FileList.h"
 #include "Data/Grid.h"

@@ -1,7 +1,6 @@
 #include "Scenario.h"
 #include "Settings.h"
 #include "Message.h"
-#include "Empire.h"
 #include "Screen.h"
 #include "Buttons.h"
 #include "CityInfo.h"

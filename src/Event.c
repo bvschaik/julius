@@ -15,7 +15,6 @@
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
-#include "Data/Empire.h"
 #include "Data/Event.h"
 #include "Data/Grid.h"
 #include "Data/Scenario.h"
@@ -25,6 +24,7 @@
 #include "core/calc.h"
 #include "core/random.h"
 #include "empire/city.h"
+#include "empire/object.h"
 #include "empire/trade_prices.h"
 #include "empire/trade_route.h"
 #include "empire/type.h"
@@ -222,24 +222,14 @@ static int playerWonDistantBattle()
 
 void Event_calculateDistantBattleRomanTravelTime()
 {
-	Data_Scenario.distantBattleTravelMonthsRoman = 0;
-	for (int i = 0; i < MAX_EMPIRE_OBJECTS; i++) {
-		if (Data_Empire_Objects[i].inUse && Data_Empire_Objects[i].type == EMPIRE_OBJECT_ROMAN_ARMY) {
-			Data_Scenario.distantBattleTravelMonthsRoman++;
-			Data_Empire_Objects[i].distantBattleTravelMonths = Data_Scenario.distantBattleTravelMonthsRoman;
-		}
-	}
+    Data_Scenario.distantBattleTravelMonthsRoman =
+        empire_object_init_distant_battle_travel_months(EMPIRE_OBJECT_ROMAN_ARMY);
 }
 
 void Event_calculateDistantBattleEnemyTravelTime()
 {
-	Data_Scenario.distantBattleTravelMonthsEnemy = 0;
-	for (int i = 0; i < MAX_EMPIRE_OBJECTS; i++) {
-		if (Data_Empire_Objects[i].inUse && Data_Empire_Objects[i].type == EMPIRE_OBJECT_ENEMY_ARMY) {
-			Data_Scenario.distantBattleTravelMonthsEnemy++;
-			Data_Empire_Objects[i].distantBattleTravelMonths = Data_Scenario.distantBattleTravelMonthsEnemy;
-		}
-	}
+    Data_Scenario.distantBattleTravelMonthsEnemy =
+        empire_object_init_distant_battle_travel_months(EMPIRE_OBJECT_ENEMY_ARMY);
 }
 
 static void setDistantBattleCityVulnerable()
