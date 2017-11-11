@@ -65,7 +65,6 @@ void CityInfo_Resource_calculateFoodAndSupplyRomeWheat();
 void CityInfo_Resource_calculateFood();
 void CityInfo_Resource_housesConsumeFood();
 
-void CityInfo_Culture_updateCoveragePercentages();
 void CityInfo_Culture_calculateDemandsForAdvisors();
 void CityInfo_Culture_calculateEntertainment();
 

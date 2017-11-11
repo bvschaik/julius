@@ -1,7 +1,7 @@
 #include "advisors_private.h"
 
 #include "building/count.h"
-#include "widget_text.h"
+#include "city/culture.h"
 
 void UI_Advisor_Health_drawBackground(int *advisorHeight)
 {
@@ -86,16 +86,16 @@ void UI_Advisor_Health_drawBackground(int *advisorHeight)
                 );
     Widget_GameText_draw(56, 6, baseOffsetX + 280 + width, baseOffsetY + 172, FONT_NORMAL_GREEN);
 
-    if (Data_CityInfo_CultureCoverage.hospital == 0)
+    int pct_hospital = city_culture_coverage_hospital();
+    if (pct_hospital == 0)
     {
         Widget_GameText_drawCentered(57, 10,
                                      baseOffsetX + 420, baseOffsetY + 172, 200, FONT_NORMAL_GREEN
                                     );
     }
-    else if (Data_CityInfo_CultureCoverage.hospital < 100)
+    else if (pct_hospital < 100)
     {
-        Widget_GameText_drawCentered(57,
-                                     Data_CityInfo_CultureCoverage.hospital / 10 + 11,
+        Widget_GameText_drawCentered(57, pct_hospital / 10 + 11,
                                      baseOffsetX + 420, baseOffsetY + 172, 200, FONT_NORMAL_GREEN
                                     );
     }

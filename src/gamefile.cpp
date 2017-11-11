@@ -31,6 +31,7 @@
 #include "game/tutorial.h"
 #include "data/figure.hpp"
 #include "data/figure.hpp"
+#include "city/culture.h"
 
 #include "building/count.h"
 #include "building/list.h"
@@ -164,21 +165,7 @@ typedef struct
     buffer *building_count_industry;
     buffer *trade_prices;
     buffer *figure_names;
-    buffer *Data_CityInfo_CultureCoverage_theater;
-    buffer *Data_CityInfo_CultureCoverage_amphitheater;
-    buffer *Data_CityInfo_CultureCoverage_colosseum;
-    buffer *Data_CityInfo_CultureCoverage_hospital1;
-    buffer *Data_CityInfo_CultureCoverage_hippodrome;
-    buffer *Data_CityInfo_CultureCoverage_religionCeres;
-    buffer *Data_CityInfo_CultureCoverage_religionNeptune;
-    buffer *Data_CityInfo_CultureCoverage_religionMercury;
-    buffer *Data_CityInfo_CultureCoverage_religionMars;
-    buffer *Data_CityInfo_CultureCoverage_religionVenus;
-    buffer *Data_CityInfo_CultureCoverage_oracle;
-    buffer *Data_CityInfo_CultureCoverage_school;
-    buffer *Data_CityInfo_CultureCoverage_library;
-    buffer *Data_CityInfo_CultureCoverage_academy;
-    buffer *Data_CityInfo_CultureCoverage_hospital;
+    buffer *culture_coverage;
     buffer *Data_Scenario;
     buffer *Data_Event_timeLimitMaxGameYear;
     buffer *Data_Event_earthquake_gameYear;
@@ -351,21 +338,7 @@ void init_savegame_data()
     state->building_count_industry = create_savegame_piece(128, 0);
     state->trade_prices = create_savegame_piece(128, 0);
     state->figure_names = create_savegame_piece(84, 0);
-    state->Data_CityInfo_CultureCoverage_theater = create_savegame_piece(4, 0);
-    state->Data_CityInfo_CultureCoverage_amphitheater = create_savegame_piece(4, 0);
-    state->Data_CityInfo_CultureCoverage_colosseum = create_savegame_piece(4, 0);
-    state->Data_CityInfo_CultureCoverage_hospital1 = create_savegame_piece(4, 0);
-    state->Data_CityInfo_CultureCoverage_hippodrome = create_savegame_piece(4, 0);
-    state->Data_CityInfo_CultureCoverage_religionCeres = create_savegame_piece(4, 0);
-    state->Data_CityInfo_CultureCoverage_religionNeptune = create_savegame_piece(4, 0);
-    state->Data_CityInfo_CultureCoverage_religionMercury = create_savegame_piece(4, 0);
-    state->Data_CityInfo_CultureCoverage_religionMars = create_savegame_piece(4, 0);
-    state->Data_CityInfo_CultureCoverage_religionVenus = create_savegame_piece(4, 0);
-    state->Data_CityInfo_CultureCoverage_oracle = create_savegame_piece(4, 0);
-    state->Data_CityInfo_CultureCoverage_school = create_savegame_piece(4, 0);
-    state->Data_CityInfo_CultureCoverage_library = create_savegame_piece(4, 0);
-    state->Data_CityInfo_CultureCoverage_academy = create_savegame_piece(4, 0);
-    state->Data_CityInfo_CultureCoverage_hospital = create_savegame_piece(4, 0);
+    state->culture_coverage = create_savegame_piece(60, 0);
     state->Data_Scenario = create_savegame_piece(1720, 0);
     state->Data_Event_timeLimitMaxGameYear = create_savegame_piece(4, 0);
     state->Data_Event_earthquake_gameYear = create_savegame_piece(4, 0);
@@ -539,21 +512,7 @@ static void savegame_deserialize(savegame_state *state)
     trade_prices_load_state(state->trade_prices);
     figure_name_load_state(state->figure_names);
 
-    read_all_from_buffer(state->Data_CityInfo_CultureCoverage_theater, &Data_CityInfo_CultureCoverage.theater);
-    read_all_from_buffer(state->Data_CityInfo_CultureCoverage_amphitheater, &Data_CityInfo_CultureCoverage.amphitheater);
-    read_all_from_buffer(state->Data_CityInfo_CultureCoverage_colosseum, &Data_CityInfo_CultureCoverage.colosseum);
-    read_all_from_buffer(state->Data_CityInfo_CultureCoverage_hospital1, &Data_CityInfo_CultureCoverage.hospital);
-    read_all_from_buffer(state->Data_CityInfo_CultureCoverage_hippodrome, &Data_CityInfo_CultureCoverage.hippodrome);
-    read_all_from_buffer(state->Data_CityInfo_CultureCoverage_religionCeres, &Data_CityInfo_CultureCoverage.religionCeres);
-    read_all_from_buffer(state->Data_CityInfo_CultureCoverage_religionNeptune, &Data_CityInfo_CultureCoverage.religionNeptune);
-    read_all_from_buffer(state->Data_CityInfo_CultureCoverage_religionMercury, &Data_CityInfo_CultureCoverage.religionMercury);
-    read_all_from_buffer(state->Data_CityInfo_CultureCoverage_religionMars, &Data_CityInfo_CultureCoverage.religionMars);
-    read_all_from_buffer(state->Data_CityInfo_CultureCoverage_religionVenus, &Data_CityInfo_CultureCoverage.religionVenus);
-    read_all_from_buffer(state->Data_CityInfo_CultureCoverage_oracle, &Data_CityInfo_CultureCoverage.oracle);
-    read_all_from_buffer(state->Data_CityInfo_CultureCoverage_school, &Data_CityInfo_CultureCoverage.school);
-    read_all_from_buffer(state->Data_CityInfo_CultureCoverage_library, &Data_CityInfo_CultureCoverage.library);
-    read_all_from_buffer(state->Data_CityInfo_CultureCoverage_academy, &Data_CityInfo_CultureCoverage.academy);
-    read_all_from_buffer(state->Data_CityInfo_CultureCoverage_hospital, &Data_CityInfo_CultureCoverage.hospital);
+    city_culture_load_state(state->culture_coverage);
     read_all_from_buffer(state->Data_Scenario, &Data_Scenario);
     read_all_from_buffer(state->Data_Event_timeLimitMaxGameYear, &Data_Event.timeLimitMaxGameYear);
     read_all_from_buffer(state->Data_Event_earthquake_gameYear, &Data_Event.earthquake.gameYear);
@@ -691,21 +650,7 @@ static void savegame_serialize(savegame_state *state)
     trade_prices_save_state(state->trade_prices);
     figure_name_save_state(state->figure_names);
 
-    write_all_to_buffer(state->Data_CityInfo_CultureCoverage_theater, &Data_CityInfo_CultureCoverage.theater);
-    write_all_to_buffer(state->Data_CityInfo_CultureCoverage_amphitheater, &Data_CityInfo_CultureCoverage.amphitheater);
-    write_all_to_buffer(state->Data_CityInfo_CultureCoverage_colosseum, &Data_CityInfo_CultureCoverage.colosseum);
-    write_all_to_buffer(state->Data_CityInfo_CultureCoverage_hospital1, &Data_CityInfo_CultureCoverage.hospital);
-    write_all_to_buffer(state->Data_CityInfo_CultureCoverage_hippodrome, &Data_CityInfo_CultureCoverage.hippodrome);
-    write_all_to_buffer(state->Data_CityInfo_CultureCoverage_religionCeres, &Data_CityInfo_CultureCoverage.religionCeres);
-    write_all_to_buffer(state->Data_CityInfo_CultureCoverage_religionNeptune, &Data_CityInfo_CultureCoverage.religionNeptune);
-    write_all_to_buffer(state->Data_CityInfo_CultureCoverage_religionMercury, &Data_CityInfo_CultureCoverage.religionMercury);
-    write_all_to_buffer(state->Data_CityInfo_CultureCoverage_religionMars, &Data_CityInfo_CultureCoverage.religionMars);
-    write_all_to_buffer(state->Data_CityInfo_CultureCoverage_religionVenus, &Data_CityInfo_CultureCoverage.religionVenus);
-    write_all_to_buffer(state->Data_CityInfo_CultureCoverage_oracle, &Data_CityInfo_CultureCoverage.oracle);
-    write_all_to_buffer(state->Data_CityInfo_CultureCoverage_school, &Data_CityInfo_CultureCoverage.school);
-    write_all_to_buffer(state->Data_CityInfo_CultureCoverage_library, &Data_CityInfo_CultureCoverage.library);
-    write_all_to_buffer(state->Data_CityInfo_CultureCoverage_academy, &Data_CityInfo_CultureCoverage.academy);
-    write_all_to_buffer(state->Data_CityInfo_CultureCoverage_hospital, &Data_CityInfo_CultureCoverage.hospital);
+    city_culture_save_state(state->culture_coverage);
     write_all_to_buffer(state->Data_Scenario, &Data_Scenario);
     write_all_to_buffer(state->Data_Event_timeLimitMaxGameYear, &Data_Event.timeLimitMaxGameYear);
     write_all_to_buffer(state->Data_Event_earthquake_gameYear, &Data_Event.earthquake.gameYear);

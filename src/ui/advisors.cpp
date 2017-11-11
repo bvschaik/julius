@@ -8,6 +8,7 @@
 
 #include "cityinfo.h"
 #include "formation.h"
+#include "city/culture.h"
 
 #include "data/settings.hpp"
 
@@ -97,7 +98,7 @@ void UI_Advisors_init()
     CityInfo_Finance_calculateTotals();
 
     CityInfo_Culture_calculateDemandsForAdvisors();
-    CityInfo_Culture_updateCoveragePercentages();
+    city_culture_update_coverage();
 
     CityInfo_Resource_calculateFoodAndSupplyRomeWheat();
     Formation_calculateFigures();

@@ -21,7 +21,7 @@ struct Data_Empire_City Data_Empire_Cities[MAX_EMPIRE_CITIES];
 struct _Data_Screen Data_Screen;// = { 800, 600, {80, 60} };
 
 struct _Data_CityInfo Data_CityInfo;
-struct _Data_CityInfo_CultureCoverage Data_CityInfo_CultureCoverage;
+
 struct _Data_CityInfo_Extra Data_CityInfo_Extra;
 struct _Data_CityInfo_Resource Data_CityInfo_Resource;
 

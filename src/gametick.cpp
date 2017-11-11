@@ -30,6 +30,7 @@
 #include "data/cityinfo.hpp"
 #include "data/settings.hpp"
 #include "data/state.hpp"
+#include "city/culture.h"
 
 #include "core/random.h"
 #include "game/settings.h"
@@ -140,7 +141,7 @@ void GameTick_advance()
         break;
     case 33:
         CityInfo_Tick_countBuildingTypes();
-        CityInfo_Culture_updateCoveragePercentages();
+        city_culture_update_coverage();
         break;
     case 34:
         CityInfo_Tick_distributeTreasuryOverForumsAndSenates();

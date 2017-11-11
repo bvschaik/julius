@@ -16,6 +16,7 @@ file(GLOB GAME_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/game/*.*)
 file(GLOB GRAPHICS_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/graphics/*.*)
 file(GLOB MAIN_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.*)
 file(GLOB UI_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/ui/*.*)
+file(GLOB CITY_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/city/*.*)
 file(GLOB DATA_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/data/*.*)
 
 add_executable(julius
@@ -27,6 +28,7 @@ add_executable(julius
   ${CORE_FILES}
   ${BUILDING_FILES}
   ${EMPIRE_FILES}
+  ${CITY_FILES}
   ${FIGURE_FILES}
   ${GAME_FILES}
   ${GRAPHICS_FILES}
