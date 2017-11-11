@@ -708,6 +708,10 @@ int FigureAction_HerdEnemy_moveFormationTo(int formationId, int x, int y, int *x
 				int canMove = 1;
 				for (int fig = 0; fig < m->num_figures; fig++) {
 					int gridOffset = GridOffset(xx, yy) + figureOffsets[fig];
+                    if (gridOffset < 0 || gridOffset >= GRID_SIZE * GRID_SIZE) {
+                        canMove = 0;
+                        break;
+                    }
 					if (Data_Grid_terrain[gridOffset] & Terrain_1237) {
 						canMove = 0;
 						break;
