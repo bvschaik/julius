@@ -3,7 +3,6 @@
 #include "Building.h"
 #include "CityInfo.h"
 #include "Desirability.h"
-#include "Empire.h"
 #include "Event.h"
 #include "Figure.h"
 #include "FigureAction.h"
@@ -33,6 +32,7 @@
 #include "city/culture.h"
 #include "core/random.h"
 #include "empire/city.h"
+#include "empire/empire.h"
 #include "game/settings.h"
 #include "game/time.h"
 #include "game/tutorial.h"
@@ -157,7 +157,7 @@ static void advanceMonth()
 
 static void advanceYear()
 {
-	Empire_handleExpandEvent();
+	empire_handle_expand_event();
 	Data_State.undoAvailable = 0;
 	game_time_advance_year();
 	CityInfo_Population_requestYearlyUpdate();

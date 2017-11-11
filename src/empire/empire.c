@@ -1,10 +1,16 @@
 #include "empire.h"
 
+#include "building/count.h"
 #include "core/calc.h"
+#include "empire/city.h"
 #include "empire/object.h"
+#include "empire/trade_route.h"
+#include "game/time.h"
 
+#include "Data/CityInfo.h"
 #include "Data/Constants.h"
 #include "Data/Scenario.h"
+#include "PlayerMessage.h"
 
 enum {
     EMPIRE_WIDTH = 2000,
@@ -103,6 +109,103 @@ void empire_select_object(int x, int y)
     int map_y = y + data.scroll_y;
     
     data.selected_object = empire_object_get_closest(map_x, map_y);
+}
+
+int empire_can_export_resource_to_city(int city_id, int resource)
+{
+    empire_city *city = empire_city_get(city_id);
+    if (city_id && trade_route_limit_reached(city->route_id, resource)) {
+        // quota reached
+        return 0;
+    }
+    if (Data_CityInfo.resourceStored[resource] <= Data_CityInfo.resourceTradeExportOver[resource]) {
+        // stocks too low
+        return 0;
+    }
+    if (city_id == 0 || city->buys_resource[resource]) {
+        return Data_CityInfo.resourceTradeStatus[resource] == TradeStatus_Export;
+    } else {
+        return 0;
+    }
+}
+
+int empire_can_import_resource_from_city(int city_id, int resource)
+{
+    empire_city *city = empire_city_get(city_id);
+    if (!city->sells_resource[resource]) {
+        return 0;
+    }
+    if (Data_CityInfo.resourceTradeStatus[resource] != TradeStatus_Import) {
+        return 0;
+    }
+    if (trade_route_limit_reached(city->route_id, resource)) {
+        return 0;
+    }
+
+    int in_stock = Data_CityInfo.resourceStored[resource];
+    int max_in_stock = 0;
+    int finished_good = RESOURCE_NONE;
+    switch (resource) {
+        // food and finished materials
+        case RESOURCE_WHEAT:
+        case RESOURCE_VEGETABLES:
+        case RESOURCE_FRUIT:
+        case RESOURCE_MEAT:
+        case RESOURCE_POTTERY:
+        case RESOURCE_FURNITURE:
+        case RESOURCE_OIL:
+        case RESOURCE_WINE:
+            if (Data_CityInfo.population < 2000) {
+                max_in_stock = 10;
+            } else if (Data_CityInfo.population < 4000) {
+                max_in_stock = 20;
+            } else if (Data_CityInfo.population < 6000) {
+                max_in_stock = 30;
+            } else {
+                max_in_stock = 40;
+            }
+            break;
+
+        case RESOURCE_MARBLE:
+        case RESOURCE_WEAPONS:
+            max_in_stock = 10;
+            break;
+
+        case RESOURCE_CLAY:
+            finished_good = RESOURCE_POTTERY;
+            break;
+        case RESOURCE_TIMBER:
+            finished_good = RESOURCE_FURNITURE;
+            break;
+        case RESOURCE_OLIVES:
+            finished_good = RESOURCE_OIL;
+            break;
+        case RESOURCE_VINES:
+            finished_good = RESOURCE_WINE;
+            break;
+        case RESOURCE_IRON:
+            finished_good = RESOURCE_WEAPONS;
+            break;
+    }
+    if (finished_good) {
+        max_in_stock = 2 + 2 * building_count_industry_active(finished_good);
+    }
+    return in_stock < max_in_stock ? 1 : 0;
+}
+
+void empire_handle_expand_event()
+{
+    if (Data_Scenario.empireHasExpanded || Data_Scenario.empireExpansionYear <= 0) {
+        return;
+    }
+    if (game_time_year() < Data_Scenario.empireExpansionYear + Data_Scenario.startYear) {
+        return;
+    }
+
+    empire_city_expand_empire();
+
+    Data_Scenario.empireHasExpanded = 1;
+    PlayerMessage_post(1, Message_77_EmpireHasExpanded, 0, 0);
 }
 
 void empire_save_state(buffer *buf)

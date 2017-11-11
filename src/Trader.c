@@ -1,6 +1,5 @@
 #include "Trader.h"
 
-#include "Empire.h"
 #include "Figure.h"
 #include "PlayerMessage.h"
 #include "Resource.h"
@@ -17,6 +16,7 @@
 #include "building/count.h"
 #include "building/storage.h"
 #include "empire/city.h"
+#include "empire/empire.h"
 #include "empire/trade_prices.h"
 #include "empire/trade_route.h"
 #include "figure/type.h"
@@ -173,12 +173,12 @@ int Trader_getClosestWarehouseForTradeCaravan(int figureId, int x, int y, int ci
 	exportable[Resource_None] = 0;
 	importable[Resource_None] = 0;
 	for (int r = Resource_Min; r < Resource_Max; r++) {
-		exportable[r] = Empire_canExportResourceToCity(cityId, r);
+		exportable[r] = empire_can_export_resource_to_city(cityId, r);
 		if (Data_Figures[figureId].traderAmountBought >= 8) {
 			exportable[r] = 0;
 		}
 		if (cityId) {
-			importable[r] = Empire_canImportResourceFromCity(cityId, r);
+			importable[r] = empire_can_import_resource_from_city(cityId, r);
 		} else { // exclude own city (id=0), shouldn't happen, but still..
 			importable[r] = 0;
 		}
@@ -204,7 +204,7 @@ int Trader_getClosestWarehouseForTradeCaravan(int figureId, int x, int y, int ci
 		const building_storage *s = building_storage_get(Data_Buildings[i].storage_id);
 		int numImportsForWarehouse = 0;
 		for (int r = Resource_Min; r < Resource_Max; r++) {
-			if (s->resource_state[r] != BUILDING_STORAGE_STATE_NOT_ACCEPTING && Empire_canImportResourceFromCity(cityId, r)) {
+			if (s->resource_state[r] != BUILDING_STORAGE_STATE_NOT_ACCEPTING && empire_can_import_resource_from_city(cityId, r)) {
 				numImportsForWarehouse++;
 			}
 		}
@@ -267,7 +267,7 @@ int Trader_getClosestWarehouseForImportDocker(int x, int y, int cityId, int dist
 	int importable[16];
 	importable[Resource_None] = 0;
 	for (int r = Resource_Min; r < Resource_Max; r++) {
-		importable[r] = Empire_canImportResourceFromCity(cityId, r);
+		importable[r] = empire_can_import_resource_from_city(cityId, r);
 	}
 	Data_CityInfo.tradeNextImportResourceDocker++;
 	if (Data_CityInfo.tradeNextImportResourceDocker > 15) {
@@ -342,7 +342,7 @@ int Trader_getClosestWarehouseForExportDocker(int x, int y, int cityId, int dist
 	int exportable[16];
 	exportable[Resource_None] = 0;
 	for (int r = Resource_Min; r < Resource_Max; r++) {
-		exportable[r] = Empire_canExportResourceToCity(cityId, r);
+		exportable[r] = empire_can_export_resource_to_city(cityId, r);
 	}
 	Data_CityInfo.tradeNextExportResourceDocker++;
 	if (Data_CityInfo.tradeNextExportResourceDocker > 15) {

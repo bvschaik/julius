@@ -9,7 +9,6 @@
 
 #include "building/model.h"
 #include "building/storage.h"
-#include "../../opencaesar/src/Data/Building.h"
 
 static struct {
 	int buildingIds[100];
