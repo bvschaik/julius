@@ -78,8 +78,8 @@ int Game_init()
 
 void Game_exit()
 {
-	Video_shutdown();
-	settings_save();
-	Settings_save();
-	Sound_shutdown();
+    Video_shutdown();
+    Settings_save();
+    settings_save();
+    Sound_shutdown();
 }

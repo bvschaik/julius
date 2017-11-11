@@ -165,6 +165,8 @@ void settings_save()
     buffer_write_i32(buf, data.victory_video);
     buffer_write_i32(buf, data.difficulty);
     buffer_write_i32(buf, data.gods_enabled);
+
+    io_write_buffer_to_file("c3.inf", data.inf_file, INF_SIZE);
 }
 
 int setting_fullscreen()
