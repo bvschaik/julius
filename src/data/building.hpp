@@ -214,15 +214,4 @@ extern struct _Data_Buildings_Extra
     int barracksTowerSentryRequested;
 } Data_Buildings_Extra;
 
-extern struct _Data_BuildingList
-{
-    struct
-    {
-        int size;
-        short items[500];
-        int index;
-        int totalBurning;
-    } burning;
-} Data_BuildingList;
-
 #endif
