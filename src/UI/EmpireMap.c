@@ -211,7 +211,7 @@ static void drawPanelInfoCity(const empire_object *object)
 		Widget_GameText_draw(47, 10, xOffset + 40, yOffset + 30, FONT_NORMAL_GREEN);
 		int goodOffset = 0;
 		for (int good = 1; good <= 15; good++) {
-			if (!Empire_citySellsResource(object->id, good)) {
+			if (!empire_object_city_sells_resource(object->id, good)) {
 				continue;
 			}
 			Graphics_drawInsetRect(xOffset + 100 * goodOffset + 120, yOffset + 21, 26, 26);
@@ -249,7 +249,7 @@ static void drawPanelInfoCity(const empire_object *object)
 		Widget_GameText_draw(47, 9, xOffset + 40, yOffset + 60, FONT_NORMAL_GREEN);
 		goodOffset = 0;
 		for (int good = 1; good <= 15; good++) {
-			if (!Empire_cityBuysResource(object->id, good)) {
+			if (!empire_object_city_buys_resource(object->id, good)) {
 				continue;
 			}
 			Graphics_drawInsetRect(xOffset + 100 * goodOffset + 120, yOffset + 51, 26, 26);
@@ -286,7 +286,7 @@ static void drawPanelInfoCity(const empire_object *object)
 	} else { // trade is closed
 		int goodOffset = Widget_GameText_draw(47, 5, xOffset + 50, yOffset + 42, FONT_NORMAL_GREEN);
 		for (int good = 1; good <= 15; good++) {
-			if (!Empire_citySellsResource(object->id, good)) {
+			if (!empire_object_city_sells_resource(object->id, good)) {
 				continue;
 			}
 			Graphics_drawInsetRect(xOffset + goodOffset + 60, yOffset + 33, 26, 26);
@@ -311,7 +311,7 @@ static void drawPanelInfoCity(const empire_object *object)
 		}
 		goodOffset += Widget_GameText_draw(47, 4, xOffset + goodOffset + 100, yOffset + 42, FONT_NORMAL_GREEN);
 		for (int good = 1; good <= 15; good++) {
-			if (!Empire_cityBuysResource(object->id, good)) {
+			if (!empire_object_city_buys_resource(object->id, good)) {
 				continue;
 			}
 			Graphics_drawInsetRect(xOffset + goodOffset + 110, yOffset + 33, 26, 26);
@@ -544,7 +544,7 @@ static int getTooltipResource(struct TooltipContext *c)
 
 	if (city->is_open) {
 		for (int r = 1, index = 0; r <= 15; r++) {
-			if (Empire_citySellsResource(objectId, r)) {
+			if (empire_object_city_sells_resource(objectId, r)) {
 				if (isMouseHit(c, xOffset + 120 + 100 * index, yOffset + 21, 26)) {
 					return r;
 				}
@@ -552,7 +552,7 @@ static int getTooltipResource(struct TooltipContext *c)
 			}
 		}
 		for (int r = 1, index = 0; r <= 15; r++) {
-			if (Empire_cityBuysResource(objectId, r)) {
+			if (empire_object_city_buys_resource(objectId, r)) {
 				if (isMouseHit(c, xOffset + 120 + 100 * index, yOffset + 51, 26)) {
 					return r;
 				}
@@ -562,7 +562,7 @@ static int getTooltipResource(struct TooltipContext *c)
 	} else {
 		int itemOffset = Widget_GameText_getDrawWidth(47, 5, FONT_NORMAL_GREEN);
 		for (int r = 1; r <= 15; r++) {
-			if (Empire_citySellsResource(objectId, r)) {
+			if (empire_object_city_sells_resource(objectId, r)) {
 				if (isMouseHit(c, xOffset + 60 + itemOffset, yOffset + 35, 26)) {
 					return r;
 				}
@@ -571,7 +571,7 @@ static int getTooltipResource(struct TooltipContext *c)
 		}
 		itemOffset += Widget_GameText_getDrawWidth(47, 4, FONT_NORMAL_GREEN);
 		for (int r = 1; r <= 15; r++) {
-			if (Empire_cityBuysResource(objectId, r)) {
+			if (empire_object_city_buys_resource(objectId, r)) {
 				if (isMouseHit(c, xOffset + 110 + itemOffset, yOffset + 35, 26)) {
 					return r;
 				}

@@ -57,28 +57,6 @@ void Empire_initTradeAmountCodes()
     empire_object_init_trade_amounts();
 }
 
-int Empire_cityBuysResource(int objectId, int resource)
-{
-    const empire_object *object = empire_object_get(objectId);
-	for (int i = 0; i < 8; i++) {
-		if (object->city_buys_resource[i] == resource) {
-			return 1;
-		}
-	}
-	return 0;
-}
-
-int Empire_citySellsResource(int objectId, int resource)
-{
-    const empire_object *object = empire_object_get(objectId);
-	for (int i = 0; i < 10; i++) {
-		if (object->city_sells_resource[i] == resource) {
-			return 1;
-		}
-	}
-	return 0;
-}
-
 void Empire_determineDistantBattleCity()
 {
 	Data_CityInfo.distantBattleCityId = empire_city_determine_distant_battle_city();

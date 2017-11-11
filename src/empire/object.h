@@ -5,7 +5,6 @@
 
 typedef struct {
     int id;
-    int in_use;
     int type;
     int animation_index;
     int x;
@@ -19,20 +18,9 @@ typedef struct {
         int image_id;
     } expanded;
     int distant_battle_travel_months;
-    // city-related
-    int city_type;
-    int city_name_id;
     int trade_route_id;
-    int trade_route_open;
-    int trade_route_cost;
-    int city_sells_resource[10];
-    int city_buys_resource[8];
-    int owner_city_object;
     int invasion_path_id;
     int invasion_years;
-    int trade40;
-    int trade25;
-    int trade15;
 } empire_object;
 
 void empire_object_load(buffer *buf);
@@ -54,6 +42,9 @@ int empire_object_get_max_invasion_path();
 int empire_object_get_closest(int x, int y);
 
 void empire_object_set_expanded(int object_id, int new_city_type);
+
+int empire_object_city_buys_resource(int object_id, int resource);
+int empire_object_city_sells_resource(int object_id, int resource);
 
 void empire_object_update_animation(int object_id, int new_animation_index);
 
