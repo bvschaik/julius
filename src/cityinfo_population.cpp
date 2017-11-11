@@ -239,6 +239,7 @@ void CityInfo_Population_calculateSentiment()
     int housesNeedingFood = 0;
     int totalSentimentContributionFood = 0;
     int totalSentimentPenaltyTents = 0;
+    int defaultSentiment = difficulty_sentiment();
     for (int i = 1; i < MAX_BUILDINGS; i++)
     {
         struct Data_Building *b = &Data_Buildings[i];
@@ -248,8 +249,7 @@ void CityInfo_Population_calculateSentiment()
         }
         if (!b->housePopulation)
         {
-            b->sentiment.houseHappiness =
-                10 + difficulty_sentiment();
+            b->sentiment.houseHappiness = 10 + defaultSentiment;
             continue;
         }
         if (Data_CityInfo.population < 300)
@@ -259,7 +259,7 @@ void CityInfo_Population_calculateSentiment()
             sentimentContributionTaxes = 0;
             sentimentContributionWages = 0;
 
-            b->sentiment.houseHappiness = difficulty_sentiment();
+            b->sentiment.houseHappiness = defaultSentiment;
             if (Data_CityInfo.population < 200)
             {
                 b->sentiment.houseHappiness += 10;

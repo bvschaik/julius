@@ -3,12 +3,14 @@
 #include "core/calc.h"
 #include "game/settings.h"
 
-static const struct {
+static const struct
+{
     int money;
     int enemies;
-    int favor;
+    int starting_favor;
     int sentiment;
-} data[] = {
+} data[] =
+{
     {300, 40, 70, 80}, // very easy
     {200, 60, 60, 70}, // easy
     {150, 80, 50, 60}, // normal
@@ -16,9 +18,9 @@ static const struct {
     {75, 120, 40, 40} // very hard
 };
 
-int difficulty_favor()
+int difficulty_starting_favor()
 {
-    return data[setting_difficulty()].favor;
+    return data[setting_difficulty()].starting_favor;
 }
 
 int difficulty_sentiment()
@@ -38,10 +40,15 @@ int difficulty_adjust_enemies(int enemies)
 
 int difficulty_adjust_wolf_attack(int attack)
 {
-    switch (setting_difficulty()) {
-    case DIFFICULTY_VERY_EASY: return 2;
-    case DIFFICULTY_EASY: return 4;
-    case DIFFICULTY_NORMAL: return 6;
-    default: return attack;
+    switch (setting_difficulty())
+    {
+    case DIFFICULTY_VERY_EASY:
+        return 2;
+    case DIFFICULTY_EASY:
+        return 4;
+    case DIFFICULTY_NORMAL:
+        return 6;
+    default:
+        return attack;
     }
 }

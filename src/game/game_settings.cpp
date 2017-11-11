@@ -25,7 +25,7 @@ void Settings_save()
 void Settings_clearMissionSettings()
 {
     setting_clear_personal_savings();
-    Data_Settings.startingFavor = difficulty_favor();
+    Data_Settings.startingFavor = difficulty_starting_favor();
     Data_Settings.personalSavingsLastMission = 0;
     Data_Settings.currentMissionId = 0;
     Data_Settings.isCustomScenario = 0;
