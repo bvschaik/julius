@@ -12,6 +12,7 @@
 #include "data/constants.hpp"
 #include "data/figure.hpp"
 #include "data/scenario.hpp"
+#include "building/storage.h"
 
 static void toggleResourceState(int param1, int param2);
 static void granaryOrders(int index, int param2);
@@ -228,8 +229,8 @@ void UI_BuildingInfo_drawGranaryOrdersForeground(BuildingInfoContext *c)
     Widget_Panel_drawButtonBorder(
         c->xOffset + 80, 436, 16 * (c->widthBlocks - 10), 20,
         ordersFocusButtonId == 1 ? 1 : 0);
-    int storageId = Data_Buildings[c->buildingId].storageId;
-    if (Data_Building_Storages[storageId].emptyAll)
+    const building_storage *storage = building_storage_get(Data_Buildings[c->buildingId].storage_id);
+    if (storage->empty_all)
     {
         Widget_GameText_drawCentered(98, 8, c->xOffset + 80, 440,
                                      16 * (c->widthBlocks - 10), FONT_NORMAL_BLACK);
@@ -254,16 +255,16 @@ void UI_BuildingInfo_drawGranaryOrdersForeground(BuildingInfoContext *c)
         Widget_Panel_drawButtonBorder(c->xOffset + 180, 78 + 22 * i, 210, 22,
                                       resourceFocusButtonId == i + 1);
 
-        int state = Data_Building_Storages[storageId].resourceState[resourceId];
-        if (state == BuildingStorageState_Accepting)
+        int state = storage->resource_state[resourceId];
+        if (state == BUILDING_STORAGE_STATE_ACCEPTING)
         {
             Widget_GameText_draw(99, 7, c->xOffset + 230, 83 + 22 * i, FONT_NORMAL_WHITE);
         }
-        else if (state == BuildingStorageState_NotAccepting)
+        else if (state == BUILDING_STORAGE_STATE_NOT_ACCEPTING)
         {
             Widget_GameText_draw(99, 8, c->xOffset + 230, 83 + 22 * i, FONT_NORMAL_RED);
         }
-        else if (state == BuildingStorageState_Getting)
+        else if (state == BUILDING_STORAGE_STATE_GETTING)
         {
             Graphics_drawImage(image_group(ID_Graphic_ContextIcons) + 12,
                                c->xOffset + 186, 81 + 22 * i);
@@ -393,8 +394,8 @@ void UI_BuildingInfo_drawWarehouseOrdersForeground(BuildingInfoContext *c)
     Widget_Panel_drawButtonBorder(
         c->xOffset + 80, 436, 16 * (c->widthBlocks - 10), 20,
         ordersFocusButtonId == 1 ? 1 : 0);
-    int storageId = Data_Buildings[c->buildingId].storageId;
-    if (Data_Building_Storages[storageId].emptyAll)
+    const building_storage *storage = building_storage_get(Data_Buildings[c->buildingId].storage_id);
+    if (storage->empty_all)
     {
         Widget_GameText_drawCentered(99, 5, c->xOffset + 80, 440,
                                      16 * (c->widthBlocks - 10), FONT_NORMAL_BLACK);
@@ -427,16 +428,16 @@ void UI_BuildingInfo_drawWarehouseOrdersForeground(BuildingInfoContext *c)
         Widget_Panel_drawButtonBorder(c->xOffset + 180, 78 + 22 * i, 210, 22,
                                       resourceFocusButtonId == i + 1);
 
-        int state = Data_Building_Storages[storageId].resourceState[resourceId];
-        if (state == BuildingStorageState_Accepting)
+        int state = storage->resource_state[resourceId];
+        if (state == BUILDING_STORAGE_STATE_ACCEPTING)
         {
             Widget_GameText_draw(99, 7, c->xOffset + 230, 83 + 22 * i, FONT_NORMAL_WHITE);
         }
-        else if (state == BuildingStorageState_NotAccepting)
+        else if (state == BUILDING_STORAGE_STATE_NOT_ACCEPTING)
         {
             Widget_GameText_draw(99, 8, c->xOffset + 230, 83 + 22 * i, FONT_NORMAL_RED);
         }
-        else if (state == BuildingStorageState_Getting)
+        else if (state == BUILDING_STORAGE_STATE_GETTING)
         {
             Graphics_drawImage(image_group(ID_Graphic_ContextIcons) + 12,
                                c->xOffset + 186, 81 + 22 * i);
@@ -460,7 +461,7 @@ void UI_BuildingInfo_handleMouseWarehouseOrders(BuildingInfoContext *c)
 
 static void toggleResourceState(int index, int param2)
 {
-    int storageId = Data_Buildings[buildingId].storageId;
+    int storageId = Data_Buildings[buildingId].storage_id;
     int resourceId;
     if (Data_Buildings[buildingId].type == BUILDING_WAREHOUSE)
     {
@@ -470,34 +471,14 @@ static void toggleResourceState(int index, int param2)
     {
         resourceId = Data_CityInfo_Resource.availableFoods[index-1];
     }
-    int state = Data_Building_Storages[storageId].resourceState[resourceId];
-    if (state == BuildingStorageState_Accepting)
-    {
-        state = BuildingStorageState_NotAccepting;
-    }
-    else if (state == BuildingStorageState_NotAccepting)
-    {
-        state = BuildingStorageState_Getting;
-    }
-    else if (state == BuildingStorageState_Getting)
-    {
-        state = BuildingStorageState_Accepting;
-    }
-    Data_Building_Storages[storageId].resourceState[resourceId] = state;
+    building_storage_cycle_resource_state(storageId, resourceId);
     UI_Window_requestRefresh();
 }
 
 static void granaryOrders(int index, int param2)
 {
-    int storageId = Data_Buildings[buildingId].storageId;
-    if (Data_Building_Storages[storageId].emptyAll)
-    {
-        Data_Building_Storages[storageId].emptyAll = 0;
-    }
-    else
-    {
-        Data_Building_Storages[storageId].emptyAll = 1;
-    }
+    int storageId = Data_Buildings[buildingId].storage_id;
+    building_storage_toggle_empty_all(storageId);
     UI_Window_requestRefresh();
 }
 
@@ -505,15 +486,8 @@ static void warehouseOrders(int index, int param2)
 {
     if (index == 0)
     {
-        int storageId = Data_Buildings[buildingId].storageId;
-        if (Data_Building_Storages[storageId].emptyAll)
-        {
-            Data_Building_Storages[storageId].emptyAll = 0;
-        }
-        else
-        {
-            Data_Building_Storages[storageId].emptyAll = 1;
-        }
+        int storageId = Data_Buildings[buildingId].storage_id;
+        building_storage_toggle_empty_all(storageId);
     }
     else if (index == 1)
     {

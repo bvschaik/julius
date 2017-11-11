@@ -24,10 +24,6 @@ void Building_setDesirability();
 void Building_decayHousesCovered();
 void Building_determineGraphicIdsForOrientedBuildings();
 
-void BuildingStorage_clearList();
-int BuildingStorage_create();
-void BuildingStorage_resetBuildingIds();
-
 void Building_GameTick_checkAccessToRome();
 
 void Building_Industry_updateProduction();

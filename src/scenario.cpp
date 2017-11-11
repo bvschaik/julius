@@ -22,6 +22,7 @@
 
 #include "ui/window.h"
 #include "game/tutorial.h"
+#include "building/storage.h"
 
 #include "data/cityinfo.hpp"
 #include "data/constants.hpp"
@@ -149,7 +150,7 @@ static void initCustomScenario(const char *scenarioName)
     Sound_Music_reset();
     SidebarMenu_enableAllBuildingMenuItems();
     Building_clearList();
-    BuildingStorage_clearList();
+    building_storage_clear_all();
     Figure_clearList();
     enemy_armies_clear();
     figure_name_init();
