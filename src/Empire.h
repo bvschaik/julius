@@ -13,7 +13,4 @@ int Empire_citySellsResource(int objectId, int resource);
 int Empire_canExportResourceToCity(int cityId, int resource);
 int Empire_canImportResourceFromCity(int cityId, int resource);
 
-int Empire_ourCityCanProduceResource(int resource);
-int Empire_ourCityCanProduceResourcePotentially(int resource);
-
 #endif

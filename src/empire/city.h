@@ -31,7 +31,9 @@ int empire_city_can_import_resource_potentially(int resource);
 
 int empire_city_can_export_resource(int resource);
 
-int empire_city_can_produce_ourselves(int resource);
+int empire_our_city_can_produce(int resource);
+
+int empire_our_city_can_produce_potentially(int resource);
 
 int empire_city_get_for_object(int empire_object_id);
 

@@ -1,5 +1,4 @@
 #include "SidebarMenu.h"
-#include "Empire.h"
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
@@ -7,6 +6,7 @@
 #include "Data/Settings.h"
 #include "UI/Sidebar.h"
 
+#include "empire/city.h"
 #include "game/tutorial.h"
 
 #define MAX_BUILDINGITEMS 30
@@ -57,8 +57,8 @@ static int menuEnabled[MAX_BUILDINGITEMS][MAX_BUILDINGITEMS];
 #define ENABLE_HOUSE() if (buildingType >= BUILDING_HOUSE_VACANT_LOT && buildingType <= BUILDING_HOUSE_LUXURY_PALACE) menuEnabled[sub][item] = 1
 #define ENABLE_IF(b,a) if (buildingType == b && Data_Scenario.allowedBuildings.a) menuEnabled[sub][item] = 1
 #define ENABLE(b) if (buildingType == b) menuEnabled[sub][item] = 1
-#define DISABLE_RAW(b,r) if (buildingType == b && !Empire_ourCityCanProduceResource(r)) menuEnabled[sub][item] = 0
-#define DISABLE_FINISHED(b,r) if (buildingType == b && !Empire_ourCityCanProduceResourcePotentially(r)) menuEnabled[sub][item] = 0
+#define DISABLE_RAW(b,r) if (buildingType == b && !empire_our_city_can_produce(r)) menuEnabled[sub][item] = 0
+#define DISABLE_FINISHED(b,r) if (buildingType == b && !empire_our_city_can_produce_potentially(r)) menuEnabled[sub][item] = 0
 
 void SidebarMenu_enableBuildingButtons()
 {
