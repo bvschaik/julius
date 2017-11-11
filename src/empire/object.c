@@ -11,7 +11,6 @@
 
 #include "Data/Constants.h"
 #include "Data/Scenario.h"
-#include "Empire.h"
 
 #define HEADER_SIZE 1280
 #define DATA_SIZE 12800

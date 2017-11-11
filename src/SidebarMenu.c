@@ -57,8 +57,8 @@ static int menuEnabled[MAX_BUILDINGITEMS][MAX_BUILDINGITEMS];
 #define ENABLE_HOUSE() if (buildingType >= BUILDING_HOUSE_VACANT_LOT && buildingType <= BUILDING_HOUSE_LUXURY_PALACE) menuEnabled[sub][item] = 1
 #define ENABLE_IF(b,a) if (buildingType == b && Data_Scenario.allowedBuildings.a) menuEnabled[sub][item] = 1
 #define ENABLE(b) if (buildingType == b) menuEnabled[sub][item] = 1
-#define DISABLE_RAW(b,r) if (buildingType == b && !empire_our_city_can_produce(r)) menuEnabled[sub][item] = 0
-#define DISABLE_FINISHED(b,r) if (buildingType == b && !empire_our_city_can_produce_potentially(r)) menuEnabled[sub][item] = 0
+#define DISABLE_RAW(b,r) if (buildingType == b && !empire_can_produce_resource(r)) menuEnabled[sub][item] = 0
+#define DISABLE_FINISHED(b,r) if (buildingType == b && !empire_can_produce_resource_potentially(r)) menuEnabled[sub][item] = 0
 
 void SidebarMenu_enableBuildingButtons()
 {
