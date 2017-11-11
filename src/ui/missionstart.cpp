@@ -14,7 +14,7 @@
 #include "data/screen.hpp"
 #include "data/settings.hpp"
 #include "data/state.hpp"
-#include "data/tutorial.hpp"
+#include "game/tutorial.h"
 
 #include "core/lang.h"
 
@@ -211,7 +211,6 @@ void UI_MissionStart_Briefing_init()
 {
     Widget_RichText_reset(0);
 }
-
 void UI_MissionStart_Briefing_drawBackground()
 {
     if (!Data_State.missionBriefingShown)
@@ -289,59 +288,14 @@ void UI_MissionStart_Briefing_drawBackground()
         Widget::Text::drawNumber(Data_Scenario.winCriteria.favor, '@', " ",
                                  xOffset + x + 8 + width, yOffset + y + 3, FONT_NORMAL_RED);
     }
-    if (IsTutorial1())
+    int immediateGoalText = Tutorial::get_immediate_goal_text();
+    if (immediateGoalText)
     {
         int x = goalOffsetsX[2];
         int y = goalOffsetsY[2];
         goalIndex++;
         Widget_Panel_drawSmallLabelButton(xOffset + x, yOffset + y, 31, 1);
-        int text;
-        if (!Data_Tutorial.tutorial1.fire && !Data_Tutorial.tutorial1.crime)
-        {
-            text = 17;
-        }
-        else if (!Data_Tutorial.tutorial1.collapse)
-        {
-            text = 18;
-        }
-        else if (!Data_Tutorial.tutorial1.senateBuilt)
-        {
-            text = 19;
-        }
-        else
-        {
-            text = 20;
-        }
-        Widget_GameText_draw(62, text, xOffset + x + 8, yOffset + y + 3, FONT_NORMAL_RED);
-    }
-    else if (IsTutorial2())
-    {
-        int x = goalOffsetsX[2];
-        int y = goalOffsetsY[2];
-        goalIndex++;
-        Widget_Panel_drawSmallLabelButton(xOffset + x, yOffset + y, 31, 1);
-        int text;
-        if (!Data_Tutorial.tutorial2.granaryBuilt)
-        {
-            text = 21;
-        }
-        else if (!Data_Tutorial.tutorial2.population250Reached)
-        {
-            text = 22;
-        }
-        else if (!Data_Tutorial.tutorial2.population450Reached)
-        {
-            text = 23;
-        }
-        else if (!Data_Tutorial.tutorial2.potteryMade)
-        {
-            text = 24;
-        }
-        else
-        {
-            text = 25;
-        }
-        Widget_GameText_draw(62, text, xOffset + x + 8, yOffset + y + 3, FONT_NORMAL_RED);
+        Widget_GameText_draw(62, immediateGoalText, xOffset + x + 8, yOffset + y + 3, FONT_NORMAL_RED);
     }
 
     Widget_Panel_drawInnerPanel(xOffset + 16, yOffset + 152, 33, 15);

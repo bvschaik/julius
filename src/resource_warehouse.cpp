@@ -3,7 +3,7 @@
 #include "building.h"
 #include "core/calc.h"
 #include "terrain.h"
-#include "tutorial.h"
+#include "game/tutorial.h"
 
 #include "data/building.hpp"
 #include "data/cityinfo.hpp"
@@ -275,7 +275,7 @@ int Resource_addToWarehouse(int buildingId, int resource)
     Data_CityInfo.resourceStored[resource]++;
     b->subtype.warehouseResourceId = resource;
     b->loadsStored++;
-    Tutorial::onAddToWarehouse();
+    Tutorial::on_add_to_warehouse();
     Resource_setWarehouseSpaceGraphic(buildingId, resource);
     return 1;
 }

@@ -28,7 +28,7 @@
 #include "data/settings.hpp"
 #include "data/sound.hpp"
 #include "data/state.hpp"
-#include "data/tutorial.hpp"
+#include "game/tutorial.h"
 #include "data/figure.hpp"
 #include "data/figure.hpp"
 
@@ -210,20 +210,13 @@ typedef struct
     buffer *Data_BuildingList_burning_items;
     buffer *building_list_small;
     buffer *building_list_large;
-    buffer *Data_Tutorial_tutorial1_fire;
-    buffer *Data_Tutorial_tutorial1_crime;
-    buffer *Data_Tutorial_tutorial1_collapse;
-    buffer *Data_Tutorial_tutorial2_granaryBuilt;
-    buffer *Data_Tutorial_tutorial2_population250Reached;
-    buffer *Data_Tutorial_tutorial1_senateBuilt;
-    buffer *Data_Tutorial_tutorial2_population450Reached;
-    buffer *Data_Tutorial_tutorial2_potteryMade;
+    buffer *tutorial_part1;
     buffer *building_count_military;
     buffer *enemy_army_totals;
     buffer *Data_Building_Storages;
     buffer *building_count_culture2;
     buffer *building_count_support;
-    buffer *Data_Tutorial_tutorial2_potteryMadeYear;
+    buffer *tutorial_part2;
     buffer *Data_Event_gladiatorRevolt_gameYear;
     buffer *Data_Event_gladiatorRevolt_month;
     buffer *Data_Event_gladiatorRevolt_endMonth;
@@ -247,7 +240,7 @@ typedef struct
     buffer *Data_Debug_unfixableHousePositions;
     buffer *Data_FileList_selectedScenario;
     buffer *Data_CityInfo_Extra_bookmarks;
-    buffer *Data_Tutorial_tutorial3_disease;
+    buffer *tutorial_part3;
     buffer *Data_CityInfo_Extra_entryPointFlag_gridOffset;
     buffer *Data_CityInfo_Extra_exitPointFlag_gridOffset;
     buffer *endMarker;
@@ -405,20 +398,13 @@ void init_savegame_data()
     state->Data_BuildingList_burning_items = create_savegame_piece(1000, 1);
     state->building_list_small = create_savegame_piece(1000, 1);
     state->building_list_large = create_savegame_piece(4000, 1);
-    state->Data_Tutorial_tutorial1_fire = create_savegame_piece(4, 0);
-    state->Data_Tutorial_tutorial1_crime = create_savegame_piece(4, 0);
-    state->Data_Tutorial_tutorial1_collapse = create_savegame_piece(4, 0);
-    state->Data_Tutorial_tutorial2_granaryBuilt = create_savegame_piece(4, 0);
-    state->Data_Tutorial_tutorial2_population250Reached = create_savegame_piece(4, 0);
-    state->Data_Tutorial_tutorial1_senateBuilt = create_savegame_piece(4, 0);
-    state->Data_Tutorial_tutorial2_population450Reached = create_savegame_piece(4, 0);
-    state->Data_Tutorial_tutorial2_potteryMade = create_savegame_piece(4, 0);
+    state->tutorial_part1 = create_savegame_piece(32, 0);
     state->building_count_military = create_savegame_piece(16, 0);
     state->enemy_army_totals = create_savegame_piece(20, 0);
     state->Data_Building_Storages = create_savegame_piece(6400, 0);
     state->building_count_culture2 = create_savegame_piece(32, 0);
     state->building_count_support = create_savegame_piece(24, 0);
-    state->Data_Tutorial_tutorial2_potteryMadeYear = create_savegame_piece(4, 0);
+    state->tutorial_part2 = create_savegame_piece(4, 0);
     state->Data_Event_gladiatorRevolt_gameYear = create_savegame_piece(4, 0);
     state->Data_Event_gladiatorRevolt_month = create_savegame_piece(4, 0);
     state->Data_Event_gladiatorRevolt_endMonth = create_savegame_piece(4, 0);
@@ -442,7 +428,7 @@ void init_savegame_data()
     state->Data_Debug_unfixableHousePositions = create_savegame_piece(4, 0);
     state->Data_FileList_selectedScenario = create_savegame_piece(65, 0);
     state->Data_CityInfo_Extra_bookmarks = create_savegame_piece(32, 0);
-    state->Data_Tutorial_tutorial3_disease = create_savegame_piece(4, 0);
+    state->tutorial_part3 = create_savegame_piece(4, 0);
     state->Data_CityInfo_Extra_entryPointFlag_gridOffset = create_savegame_piece(4, 0);
     state->Data_CityInfo_Extra_exitPointFlag_gridOffset = create_savegame_piece(4, 0);
     state->endMarker = create_savegame_piece(284, 0); // 71x 4-bytes emptiness
@@ -604,16 +590,7 @@ static void savegame_deserialize(savegame_state *state)
 
     building_list_load_state(state->building_list_small, state->building_list_large);
 
-    read_all_from_buffer(state->Data_Tutorial_tutorial1_fire, &Data_Tutorial.tutorial1.fire);
-    read_all_from_buffer(state->Data_Tutorial_tutorial1_crime, &Data_Tutorial.tutorial1.crime);
-    read_all_from_buffer(state->Data_Tutorial_tutorial1_collapse, &Data_Tutorial.tutorial1.collapse);
-    read_all_from_buffer(state->Data_Tutorial_tutorial2_granaryBuilt, &Data_Tutorial.tutorial2.granaryBuilt);
-    read_all_from_buffer(state->Data_Tutorial_tutorial2_population250Reached, &Data_Tutorial.tutorial2.population250Reached);
-    read_all_from_buffer(state->Data_Tutorial_tutorial1_senateBuilt, &Data_Tutorial.tutorial1.senateBuilt);
-    read_all_from_buffer(state->Data_Tutorial_tutorial2_population450Reached, &Data_Tutorial.tutorial2.population450Reached);
-    read_all_from_buffer(state->Data_Tutorial_tutorial2_potteryMade, &Data_Tutorial.tutorial2.potteryMade);
-    read_all_from_buffer(state->Data_Building_Storages, &Data_Building_Storages);
-    read_all_from_buffer(state->Data_Tutorial_tutorial2_potteryMadeYear, &Data_Tutorial.tutorial2.potteryMadeYear);
+    Tutorial::load_state(state->tutorial_part1, state->tutorial_part2, state->tutorial_part3);
     read_all_from_buffer(state->Data_Event_gladiatorRevolt_gameYear, &Data_Event.gladiatorRevolt.gameYear);
     read_all_from_buffer(state->Data_Event_gladiatorRevolt_month, &Data_Event.gladiatorRevolt.month);
     read_all_from_buffer(state->Data_Event_gladiatorRevolt_endMonth, &Data_Event.gladiatorRevolt.endMonth);
@@ -639,7 +616,6 @@ static void savegame_deserialize(savegame_state *state)
     read_all_from_buffer(state->Data_Debug_unfixableHousePositions, &Data_Debug.unfixableHousePositions);
     read_all_from_buffer(state->Data_FileList_selectedScenario, &Data_FileList.selectedScenario);
     read_all_from_buffer(state->Data_CityInfo_Extra_bookmarks, &Data_CityInfo_Extra.bookmarks);
-    read_all_from_buffer(state->Data_Tutorial_tutorial3_disease, &Data_Tutorial.tutorial3.disease);
     read_all_from_buffer(state->Data_CityInfo_Extra_entryPointFlag_gridOffset, &Data_CityInfo_Extra.entryPointFlag.gridOffset);
     read_all_from_buffer(state->Data_CityInfo_Extra_exitPointFlag_gridOffset, &Data_CityInfo_Extra.exitPointFlag.gridOffset);
 
@@ -766,16 +742,8 @@ static void savegame_serialize(savegame_state *state)
 
     building_list_save_state(state->building_list_small, state->building_list_large);
 
-    write_all_to_buffer(state->Data_Tutorial_tutorial1_fire, &Data_Tutorial.tutorial1.fire);
-    write_all_to_buffer(state->Data_Tutorial_tutorial1_crime, &Data_Tutorial.tutorial1.crime);
-    write_all_to_buffer(state->Data_Tutorial_tutorial1_collapse, &Data_Tutorial.tutorial1.collapse);
-    write_all_to_buffer(state->Data_Tutorial_tutorial2_granaryBuilt, &Data_Tutorial.tutorial2.granaryBuilt);
-    write_all_to_buffer(state->Data_Tutorial_tutorial2_population250Reached, &Data_Tutorial.tutorial2.population250Reached);
-    write_all_to_buffer(state->Data_Tutorial_tutorial1_senateBuilt, &Data_Tutorial.tutorial1.senateBuilt);
-    write_all_to_buffer(state->Data_Tutorial_tutorial2_population450Reached, &Data_Tutorial.tutorial2.population450Reached);
-    write_all_to_buffer(state->Data_Tutorial_tutorial2_potteryMade, &Data_Tutorial.tutorial2.potteryMade);
+    Tutorial::save_state(state->tutorial_part1, state->tutorial_part2, state->tutorial_part3);
     write_all_to_buffer(state->Data_Building_Storages, &Data_Building_Storages);
-    write_all_to_buffer(state->Data_Tutorial_tutorial2_potteryMadeYear, &Data_Tutorial.tutorial2.potteryMadeYear);
     write_all_to_buffer(state->Data_Event_gladiatorRevolt_gameYear, &Data_Event.gladiatorRevolt.gameYear);
     write_all_to_buffer(state->Data_Event_gladiatorRevolt_month, &Data_Event.gladiatorRevolt.month);
     write_all_to_buffer(state->Data_Event_gladiatorRevolt_endMonth, &Data_Event.gladiatorRevolt.endMonth);
@@ -801,7 +769,6 @@ static void savegame_serialize(savegame_state *state)
     write_all_to_buffer(state->Data_Debug_unfixableHousePositions, &Data_Debug.unfixableHousePositions);
     write_all_to_buffer(state->Data_FileList_selectedScenario, &Data_FileList.selectedScenario);
     write_all_to_buffer(state->Data_CityInfo_Extra_bookmarks, &Data_CityInfo_Extra.bookmarks);
-    write_all_to_buffer(state->Data_Tutorial_tutorial3_disease, &Data_Tutorial.tutorial3.disease);
     write_all_to_buffer(state->Data_CityInfo_Extra_entryPointFlag_gridOffset, &Data_CityInfo_Extra.entryPointFlag.gridOffset);
     write_all_to_buffer(state->Data_CityInfo_Extra_exitPointFlag_gridOffset, &Data_CityInfo_Extra.exitPointFlag.gridOffset);
 

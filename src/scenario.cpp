@@ -21,6 +21,7 @@
 #include "terraingraphics.h"
 
 #include "ui/window.h"
+#include "game/tutorial.h"
 
 #include "data/cityinfo.hpp"
 #include "data/constants.hpp"
@@ -31,7 +32,6 @@
 #include "data/scenario.hpp"
 #include "data/settings.hpp"
 #include "data/state.hpp"
-#include "data/tutorial.hpp"
 
 #include "core/file.h"
 #include "core/io.h"
@@ -104,7 +104,7 @@ void Scenario_initialize(const char *scenarioName)
     }
     Data_CityInfo.salaryAmount = Constant_SalaryForRank[Data_CityInfo.salaryRank];
 
-    setTutorialFlags(curMissionId);
+    Tutorial::init();
 
     if (IsTutorial1())
     {
@@ -124,51 +124,6 @@ static void clearBookmarks()
         Data_CityInfo_Extra.bookmarks[i].x = -1;
         Data_CityInfo_Extra.bookmarks[i].y = -1;
     }
-}
-
-static void setTutorialFlags(int missionId)
-{
-    int tut1, tut2, tut3;
-    if (Data_Settings.isCustomScenario)
-    {
-        tut1 = tut2 = tut3 = 1;
-    }
-    else if (missionId == 0)
-    {
-        tut1 = tut2 = 0;
-        tut3 = 1;
-    }
-    else if (missionId == 1)
-    {
-        tut1 = 1;
-        tut2 = 0;
-        tut3 = 1;
-    }
-    else if (missionId == 2)
-    {
-        tut1 = 1;
-        tut2 = 1;
-        tut3 = 0;
-    }
-    else
-    {
-        tut1 = tut2 = tut3 = 1;
-    }
-
-    Data_Tutorial.tutorial1.fire = tut1;
-    Data_Tutorial.tutorial1.crime = tut1;
-    Data_Tutorial.tutorial1.collapse = tut1;
-    Data_Tutorial.tutorial1.senateBuilt = tut1;
-    Data_CityInfo.tutorial1FireMessageShown = tut1;
-
-    Data_Tutorial.tutorial2.granaryBuilt = tut2;
-    Data_Tutorial.tutorial2.population250Reached = tut2;
-    Data_Tutorial.tutorial2.population450Reached = tut2;
-    Data_Tutorial.tutorial2.potteryMade = tut2;
-    Data_Tutorial.tutorial2.potteryMadeYear = tut2;
-
-    Data_Tutorial.tutorial3.disease = tut3;
-    Data_CityInfo.tutorial3DiseaseMessageShown = tut3;
 }
 
 static int mapFileExists(const char *scenarioName)

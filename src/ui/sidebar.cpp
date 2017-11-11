@@ -22,7 +22,7 @@
 #include "data/screen.hpp"
 #include "data/state.hpp"
 #include "data/settings.hpp"
-#include "data/tutorial.hpp"
+#include "game/tutorial.h"
 
 #include "core/time.h"
 #include "graphics/image.h"
@@ -407,18 +407,20 @@ static void buttonAdvisors(int param1, int param2)
 
 static void buttonEmpire(int param1, int param2)
 {
-    if (IsTutorial1())
+    switch (Tutorial::advisor_empire_availability())
     {
+    case NOT_AVAILABLE:
         UI_Warning_show(Warning_NotAvailable);
-        return;
-    }
-    if (IsTutorial2() && !Data_Tutorial.tutorial2.population250Reached)
-    {
+        break;
+    case NOT_AVAILABLE_YET:
         UI_Warning_show(Warning_NotAvailableYet);
-        return;
+        break;
+    case AVAILABLE:
+        UI_Window_goTo(Window_Empire);
+        break;
     }
-    UI_Window_goTo(Window_Empire);
 }
+
 static void buttonMissionBriefing(int param1, int param2)
 {
     if (!Data_Settings.isCustomScenario)

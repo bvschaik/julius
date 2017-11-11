@@ -12,7 +12,7 @@
 #include "sound.h"
 #include "terrain.h"
 #include "terraingraphics.h"
-#include "tutorial.h"
+#include "game/tutorial.h"
 
 #include "data/building.hpp"
 #include "data/cityinfo.hpp"
@@ -22,7 +22,6 @@
 #include "data/scenario.hpp"
 #include "data/settings.hpp"
 #include "data/state.hpp"
-#include "data/tutorial.hpp"
 #include "data/figure.hpp"
 
 #include "core/random.h"
@@ -229,11 +228,7 @@ static void generateRioter(int buildingId)
     Data_CityInfo.ratingPeaceNumRiotersThisYear++;
     Data_CityInfo.riotCause = Data_CityInfo.populationEmigrationCause;
     CityInfo_Population_changeHappiness(20);
-    if (!Data_Tutorial.tutorial1.crime)
-    {
-        Data_Tutorial.tutorial1.crime = 1;
-        SidebarMenu_enableBuildingMenuItemsAndButtons();
-    }
+    Tutorial::on_crime();
     if (time_get_millis() <= 15000 + Data_Message.lastSoundTime.rioterGenerated)
     {
         PlayerMessage_disableSoundForNextMessage();
@@ -373,13 +368,9 @@ static void collapseBuilding(int buildingId, struct Data_Building *b)
         Data_Message.lastSoundTime.collapse = time_get_millis();
     }
 
-    if (Data_Tutorial.tutorial1.collapse)
+    if (!Tutorial::handle_collapse())
     {
         PlayerMessage_postWithPopupDelay(MessageDelay_Collapse, Message_13_CollapsedBuilding, b->type, b->gridOffset);
-    }
-    else
-    {
-        Tutorial::onCollapse();
     }
 
     Data_State.undoAvailable = 0;
@@ -400,13 +391,9 @@ static void fireBuilding(int buildingId, struct Data_Building *b)
         Data_Message.lastSoundTime.fire = time_get_millis();
     }
 
-    if (Data_Tutorial.tutorial1.fire)
+    if (!Tutorial::handle_fire())
     {
         PlayerMessage_postWithPopupDelay(MessageDelay_Fire, Message_12_FireInTheCity, b->type, b->gridOffset);
-    }
-    else
-    {
-        Tutorial::onFire();
     }
 
     Building_collapseOnFire(buildingId, 0);
@@ -435,7 +422,7 @@ void Security_Tick_checkFireCollapse()
         int randomBuilding = (i + Data_Grid_random[b->gridOffset]) & 7;
         // damage
         b->damageRisk += (randomBuilding == randomGlobal) ? 3 : 1;
-        if (Data_Tutorial.tutorial1.fire == 1 && !Data_Tutorial.tutorial1.collapse)
+        if (Tutorial::extra_damage_risk())
         {
             b->damageRisk += 5;
         }
@@ -472,7 +459,7 @@ void Security_Tick_checkFireCollapse()
             {
                 b->fireRisk += 2;
             }
-            if (!Data_Tutorial.tutorial1.fire)
+            if (Tutorial::extra_fire_risk())
             {
                 b->fireRisk += 5;
             }

@@ -2,7 +2,7 @@
 
 #include "empire.h"
 #include "terrain.h"
-#include "tutorial.h"
+#include "game/tutorial.h"
 
 #include "data/building.hpp"
 #include "data/cityinfo.hpp"
@@ -96,7 +96,7 @@ void CityInfo_Resource_calculateFood()
                 }
                 if (amountStored > 400)
                 {
-                    Tutorial::onFilledGranary();
+                    Tutorial::on_filled_granary();
                 }
             }
         }
