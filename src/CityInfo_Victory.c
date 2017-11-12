@@ -1,6 +1,5 @@
 #include "CityInfo.h"
 
-#include "PlayerMessage.h"
 #include "Sound.h"
 #include "UI/AllWindows.h"
 #include "UI/VideoIntermezzo.h"
@@ -13,6 +12,7 @@
 #include "Data/Settings.h"
 #include "Data/State.h"
 
+#include "city/message.h"
 #include "game/settings.h"
 #include "game/time.h"
 #include "graphics/mouse.h"
@@ -97,7 +97,7 @@ void CityInfo_Victory_check()
 				UI_Intermezzo_show(Intermezzo_Fired, Window_MissionEnd, 1000);
 			} else {
 				Data_CityInfo.messageShownFired = 1;
-				PlayerMessage_post(1, Message_112_Fired, 0, 0);
+				city_message_post(1, Message_112_Fired, 0, 0);
 			}
 			Data_State.forceWinCheat = 0;
 		} else if (Data_State.winState == WinState_Win) {

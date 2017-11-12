@@ -3,7 +3,6 @@
 #include "Figure.h"
 #include "FigureAction.h"
 #include "Grid.h"
-#include "PlayerMessage.h"
 #include "Routing.h"
 #include "Sound.h"
 #include "TerrainGraphics.h"
@@ -15,6 +14,7 @@
 #include "Data/Settings.h"
 #include "Data/Figure.h"
 
+#include "city/message.h"
 #include "core/calc.h"
 #include "core/random.h"
 #include "figure/enemy_army.h"
@@ -420,7 +420,7 @@ static void marsKillEnemies()
 		}
 	}
 	Data_CityInfo.godBlessingMarsEnemiesToKill = 0;
-	PlayerMessage_post(1, Message_105_SpiritOfMars, 0, gridOffset);
+	city_message_post(1, Message_105_SpiritOfMars, 0, gridOffset);
 }
 
 static void setFormationFiguresToEnemyInitial(int formationId)

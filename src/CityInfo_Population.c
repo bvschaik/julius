@@ -2,7 +2,6 @@
 
 #include "Building.h"
 #include "HousePopulation.h"
-#include "PlayerMessage.h"
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
@@ -10,6 +9,7 @@
 #include "Data/Settings.h"
 
 #include "building/model.h"
+#include "city/message.h"
 #include "core/calc.h"
 #include "core/random.h"
 #include "game/difficulty.h"
@@ -266,11 +266,11 @@ void CityInfo_Population_calculateSentiment()
 		if (Data_CityInfo.citySentimentChangeMessageDelay <= 0) {
 			Data_CityInfo.citySentimentChangeMessageDelay = 3;
 			if (Data_CityInfo.citySentiment < 35) {
-				PlayerMessage_post(0, Message_48_PeopleAngry, 0, 0);
+				city_message_post(0, Message_48_PeopleAngry, 0, 0);
 			} else if (Data_CityInfo.citySentiment < 40) {
-				PlayerMessage_post(0, Message_47_PeopleUnhappy, 0, 0);
+				city_message_post(0, Message_47_PeopleUnhappy, 0, 0);
 			} else {
-				PlayerMessage_post(0, Message_46_PeopleDisgruntled, 0, 0);
+				city_message_post(0, Message_46_PeopleDisgruntled, 0, 0);
 			}
 		}
 	}
@@ -423,13 +423,13 @@ static void healthCauseDisease(int totalPeople)
 	CityInfo_Population_changeHealthRate(10);
 	int peopleToKill = sickPeople - Data_CityInfo.numHospitalWorkers;
 	if (peopleToKill <= 0) {
-		PlayerMessage_post(1, Message_102_HealthIllness, 0, 0);
+		city_message_post(1, Message_102_HealthIllness, 0, 0);
 		return;
 	}
 	if (Data_CityInfo.numHospitalWorkers > 0) {
-		PlayerMessage_post(1, Message_103_HealthDisease, 0, 0);
+		city_message_post(1, Message_103_HealthDisease, 0, 0);
 	} else {
-		PlayerMessage_post(1, Message_104_HealthPestilence, 0, 0);
+		city_message_post(1, Message_104_HealthPestilence, 0, 0);
 	}
 	tutorial_on_disease();
 	// kill people who don't have access to a doctor

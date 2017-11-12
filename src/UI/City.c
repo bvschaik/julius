@@ -17,6 +17,7 @@
 #include "../Data/Settings.h"
 #include "../Data/State.h"
 
+#include "city/message.h"
 #include "game/time.h"
 #include "graphics/image.h"
 
@@ -35,7 +36,7 @@ void UI_City_drawForeground()
 	UI_City_drawPausedAndTimeLeft();
 	UI_CityBuildings_drawBuildingCost();
     if (UI_Window_getId() == Window_City) {
-        PlayerMessage_processQueue();
+        city_message_process_queue();
     }
 }
 

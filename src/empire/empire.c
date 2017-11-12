@@ -1,6 +1,7 @@
 #include "empire.h"
 
 #include "building/count.h"
+#include "city/message.h"
 #include "core/calc.h"
 #include "core/io.h"
 #include "empire/city.h"
@@ -11,7 +12,6 @@
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 #include "Data/Scenario.h"
-#include "PlayerMessage.h"
 
 enum {
     EMPIRE_WIDTH = 2000,
@@ -229,7 +229,7 @@ void empire_handle_expand_event()
     empire_city_expand_empire();
 
     Data_Scenario.empireHasExpanded = 1;
-    PlayerMessage_post(1, Message_77_EmpireHasExpanded, 0, 0);
+    city_message_post(1, Message_77_EmpireHasExpanded, 0, 0);
 }
 
 void empire_determine_distant_battle_city()

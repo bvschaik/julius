@@ -18,11 +18,11 @@
 
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
-#include "../Data/Message.h"
 #include "../Data/Screen.h"
 #include "../Data/State.h"
 #include "../Data/Settings.h"
 
+#include "city/message.h"
 #include "core/time.h"
 #include "graphics/image.h"
 #include "game/tutorial.h"
@@ -159,10 +159,10 @@ void UI_Sidebar_drawForeground()
 static void drawNumberOfMessages()
 {
 	if (UI_Window_getId() == Window_City && !Data_State.sidebarCollapsed) {
-        int messages = Data_Message.totalMessages;
+        int messages = city_message_count();
 		buttonBuildExpanded[12].enabled = Data_State.undoReady && Data_State.undoAvailable;
 		buttonBuildExpanded[13].enabled = messages > 0;
-		buttonBuildExpanded[14].enabled = Data_Message.hotspotCount > 0;
+		buttonBuildExpanded[14].enabled = city_message_problem_area_count();
 		if (messages) {
 			Widget_Text_drawNumberCenteredColored(messages,
 				XOFFSET_EXPANDED + 74, 452, 32, FONT_SMALL_PLAIN, COLOR_BLACK);
@@ -352,7 +352,7 @@ static void buttonHelp(int param1, int param2)
 
 static void buttonGoToProblem(int param1, int param2)
 {
-    int gridOffset = PlayerMessage_getNextProblemAreaGridOffset();
+    int gridOffset = city_message_next_problem_area_grid_offset();
     if (gridOffset) {
         CityView_goToGridOffset(gridOffset);
         UI_Window_goTo(Window_City);

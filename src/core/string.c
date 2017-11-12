@@ -17,6 +17,11 @@ void string_copy(const uint8_t *src, uint8_t *dst, int maxlength)
     *dst = 0;
 }
 
+const char *string_to_ascii(const uint8_t *str)
+{
+    return (const char*) str;
+}
+
 int string_to_int(const uint8_t *str)
 {
     static const int multipliers[] = {1, 10, 100, 1000, 10000, 100000, 1000000, 10000000};

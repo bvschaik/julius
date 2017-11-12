@@ -168,7 +168,7 @@ static void refresh_buttons()
 
 static void post_message(int message)
 {
-    PlayerMessage_post(1, message, 0, 0);
+    city_message_post(1, message, 0, 0);
 }
 
 int tutorial_handle_fire()

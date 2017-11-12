@@ -531,7 +531,7 @@ void FigureAction_tradeShip(int figureId)
 			} else if (f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
 				if (!city_message_get_category_count(MESSAGE_CAT_BLOCKED_DOCK)) {
-					PlayerMessage_post(1, Message_15_NavigationImpossible, 0, 0);
+					city_message_post(1, Message_15_NavigationImpossible, 0, 0);
 					city_message_increase_category_count(MESSAGE_CAT_BLOCKED_DOCK);
 				}
 			}

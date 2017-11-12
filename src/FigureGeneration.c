@@ -1,10 +1,8 @@
 #include "Figure.h"
 
 #include "Building.h"
-#include "core/calc.h"
 #include "FigureMovement.h"
 #include "Formation.h"
-#include "PlayerMessage.h"
 #include "Resource.h"
 #include "Terrain.h"
 #include "TerrainGraphics.h"
@@ -16,6 +14,8 @@
 #include "Data/Figure.h"
 
 #include "building/model.h"
+#include "city/message.h"
+#include "core/calc.h"
 #include "figure/type.h"
 #include "graphics/image.h"
 
@@ -486,7 +486,7 @@ static void spawnFigureHippodrome(int buildingId, struct Data_Building *b)
 				if (b->data.entertainment.days1 > 0) {
 					if (!Data_CityInfo.messageShownHippodrome) {
 						Data_CityInfo.messageShownHippodrome = 1;
-						PlayerMessage_post(1, Message_109_WorkingHippodrome, 0, 0);
+						city_message_post(1, Message_109_WorkingHippodrome, 0, 0);
 					}
 				}
 			}
@@ -536,7 +536,7 @@ static void spawnFigureColosseum(int buildingId, struct Data_Building *b)
 			if (b->data.entertainment.days1 > 0 || b->data.entertainment.days2 > 0) {
 				if (!Data_CityInfo.messageShownColosseum) {
 					Data_CityInfo.messageShownColosseum = 1;
-					PlayerMessage_post(1, Message_110_WorkingColosseum, 0, 0);
+					city_message_post(1, Message_110_WorkingColosseum, 0, 0);
 				}
 			}
 		}

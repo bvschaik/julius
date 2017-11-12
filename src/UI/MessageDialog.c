@@ -3,11 +3,9 @@
 #include "AllWindows.h"
 #include "Advisors.h"
 
-#include "core/calc.h"
 #include "../CityView.h"
 #include "../Formation.h"
 #include "../Graphics.h"
-#include "../PlayerMessage.h"
 #include "../Resource.h"
 #include "../Video.h"
 #include "../Widget.h"
@@ -20,6 +18,8 @@
 #include "../Data/Screen.h"
 #include "../Data/Settings.h"
 
+#include "city/message.h"
+#include "core/calc.h"
 #include "core/lang.h"
 #include "empire/city.h"
 #include "graphics/image.h"
