@@ -3,8 +3,10 @@
 
 #include "core/buffer.h"
 #include "game/resource.h"
+#include "type.h"
 
-typedef struct {
+typedef struct
+{
     int in_use;
     int type;
     int name_id;
