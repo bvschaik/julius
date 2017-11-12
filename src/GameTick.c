@@ -30,6 +30,7 @@
 #include "Data/State.h"
 
 #include "city/culture.h"
+#include "city/message.h"
 #include "core/random.h"
 #include "empire/city.h"
 #include "empire/empire.h"
@@ -134,7 +135,7 @@ static void advanceMonth()
 	Event_handlePricesChanges();
 	CityInfo_Victory_updateMonthsToGovern();
 	Formation_Tick_updateRestMorale();
-	PlayerMessage_updateMessageDelays();
+	city_message_decrease_delays();
 
 	TerrainGraphics_updateAllRoads();
 	TerrainGraphics_updateRegionWater(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);

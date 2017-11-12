@@ -10,6 +10,7 @@
 #include "Data/Grid.h"
 #include "Data/Message.h"
 
+#include "city/message.h"
 #include "core/time.h"
 
 static const int criminalOffsets[] = {
@@ -174,7 +175,7 @@ int FigureAction_Rioter_collapseBuilding(int figureId)
 			Data_Message.lastSoundTime.rioterCollapse = now;
 		}
 		PlayerMessage_post(0, Message_14_DestroyedBuilding, b->type, f->gridOffset);
-		Data_Message.messageCategoryCount[MessageDelay_RiotCollapse]++;
+		city_message_increase_category_count(MESSAGE_CAT_RIOT_COLLAPSE);
 		Building_collapseOnFire(buildingId, 0);
 		f->actionState = FigureActionState_120_RioterCreated;
 		f->waitTicks = 0;

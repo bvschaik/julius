@@ -9,6 +9,7 @@
 #include "Data/Scenario.h"
 
 #include "building/model.h"
+#include "city/message.h"
 #include "core/calc.h"
 #include "core/random.h"
 
@@ -109,12 +110,7 @@ void FigureAction_fishingBoat(int figureId)
 				FigureRoute_remove(figureId);
 			} else if (f->direction == DirFigure_10_Lost) {
 				// cannot reach grounds
-				if (Data_Message.messageCategoryCount[MessageDelay_FishingBlocked] > 0) {
-					Data_Message.messageCategoryCount[MessageDelay_FishingBlocked]--;
-				} else {
-					PlayerMessage_post(1, Message_118_FishingBoatBlocked, 0, 0);
-					Data_Message.messageCategoryCount[MessageDelay_FishingBlocked] = 12;
-				}
+				city_message_post_with_message_delay(MESSAGE_CAT_FISHING_BLOCKED, 1, Message_118_FishingBoatBlocked, 12);
 				f->state = FigureState_Dead;
 			}
 			break;

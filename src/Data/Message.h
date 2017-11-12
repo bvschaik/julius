@@ -24,8 +24,6 @@ extern struct _Data_Message {
 	int currentMessageId;
 	int currentProblemAreaMessageId;
 
-	int messageCategoryCount[20];
-	int messageDelay[20];
 	int popupMessageQueue[20];
 	int consecutiveMessageDelay;
 
@@ -47,17 +45,5 @@ extern struct _Data_Message {
 	int hotspotIndex;
 	time_millis hotspotLastClick;
 } Data_Message;
-
-enum {
-	MessageDelay_Riot = 0,
-	MessageDelay_Fire = 1,
-	MessageDelay_Collapse = 2,
-	MessageDelay_RiotCollapse = 3,
-	MessageDelay_BlockedDock = 4,
-	MessageDelay_WorkersNeeded = 8,
-	MessageDelay_Tutorial3 = 9,
-	MessageDelay_NoWorkingDock = 10,
-	MessageDelay_FishingBlocked = 11,
-};
 
 #endif
