@@ -6,20 +6,11 @@
 #include "core/io.h"
 #include "empire/city.h"
 #include "empire/trade_route.h"
-#include "empire/type.h"
+#include "empire/empire.h"
 #include "game/time.h"
 #include "graphics/image.h"
 #include "core/calc.h"
 #include <string.h>
-
-struct
-{
-    int width;
-    int height;
-    int borderTop;
-    int borderSides;
-    int borderBottom;
-} Data_Empire_Sizes = {2000, 1000, 16, 16, 120};
 
 static struct
 {
@@ -44,20 +35,12 @@ void Empire_load(int isCustomScenario, int empireId)
     fixGraphicIds();
 }
 
-static void checkScrollBoundaries()
-{
-    int maxX = Data_Empire_Sizes.width - (Data_Screen.width - 2 * Data_Empire_Sizes.borderSides);
-    int maxY = Data_Empire_Sizes.height - (Data_Screen.height - Data_Empire_Sizes.borderTop - Data_Empire_Sizes.borderBottom);
-
-    Data_Empire.scrollX = calc_bound(Data_Empire.scrollX, 0, maxX - 1);
-    Data_Empire.scrollY = calc_bound(Data_Empire.scrollY, 0, maxY - 1);
-}
-
 void Empire_initScroll()
 {
-    Data_Empire.scrollX = Data_Empire_Index[Data_Scenario.empireId].initialScrollX;
-    Data_Empire.scrollY = Data_Empire_Index[Data_Scenario.empireId].initialScrollY;
-    checkScrollBoundaries();
+    empire_init_scroll(
+        Data_Empire_Index[Data_Scenario.empireId].initialScrollX,
+        Data_Empire_Index[Data_Scenario.empireId].initialScrollY
+    );
 }
 
 void Empire_initCities()
@@ -171,45 +154,6 @@ void Empire_initTradeAmountCodes()
     }
 }
 
-void Empire_scrollMap(int direction)
-{
-    if (direction == Dir_8_None)
-    {
-        return;
-    }
-    switch (direction)
-    {
-    case Dir_0_Top:
-        Data_Empire.scrollY -= 20;
-        break;
-    case Dir_1_TopRight:
-        Data_Empire.scrollX += 20;
-        Data_Empire.scrollY -= 20;
-        break;
-    case Dir_2_Right:
-        Data_Empire.scrollX += 20;
-        break;
-    case Dir_3_BottomRight:
-        Data_Empire.scrollX += 20;
-        Data_Empire.scrollY += 20;
-        break;
-    case Dir_4_Bottom:
-        Data_Empire.scrollY += 20;
-        break;
-    case Dir_5_BottomLeft:
-        Data_Empire.scrollX -= 20;
-        Data_Empire.scrollY += 20;
-        break;
-    case Dir_6_Left:
-        Data_Empire.scrollX -= 20;
-        break;
-    case Dir_7_TopLeft:
-        Data_Empire.scrollX -= 20;
-        Data_Empire.scrollY -= 20;
-        break;
-    };
-    checkScrollBoundaries();
-}
 
 int Empire_cityBuysResource(int objectId, int resource)
 {
