@@ -6,6 +6,11 @@
 #include "Sound.h"
 #include "SoundDevice.h"
 
+void sound_speech_set_volume(int percentage)
+{
+    SoundDevice_setChannelVolume(SoundChannel_Speech, percentage);
+}
+
 void sound_speech_play_file(const char *filename)
 {
     if (!setting_sound(SOUND_SPEECH)->enabled) {
@@ -17,7 +22,7 @@ void sound_speech_play_file(const char *filename)
     const char *cased_filename = dir_get_case_corrected_file(filename);
     if (cased_filename) {
         SoundDevice_playSoundOnChannel(cased_filename, SoundChannel_Speech);
-        SoundDevice_setChannelVolume(SoundChannel_Speech, setting_sound(SOUND_SPEECH)->volume);
+        sound_speech_set_volume(setting_sound(SOUND_SPEECH)->volume);
     }
 }
 

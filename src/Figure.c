@@ -21,6 +21,7 @@
 #include "figure/formation.h"
 #include "figure/name.h"
 #include "figure/trader.h"
+#include "sound/effect.h"
 
 #include <string.h>
 
@@ -218,7 +219,7 @@ void Figure_createDustCloud(int x, int y, int size)
 			f->speedMultiplier = dustCloudSpeed[i];
 		}
 	}
-	Sound_Effects_playChannel(SoundChannel_Explosion);
+	sound_effect_play(SoundChannel_Explosion);
 }
 
 int Figure_createMissile(int buildingId, int x, int y, int xDst, int yDst, int type)

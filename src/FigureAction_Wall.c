@@ -11,6 +11,7 @@
 #include "figure/enemy_army.h"
 #include "figure/properties.h"
 #include "figure/type.h"
+#include "sound/effect.h"
 
 static int ballistaFiringOffsets[] = {
 	0, 1, 2, 3, 4, 5, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -83,7 +84,7 @@ void FigureAction_ballista(int figureId)
 					f->direction = Routing_getDirectionForMissileShooter(f->x, f->y, xTile, yTile);
 					f->waitTicksMissile = 0;
 					Figure_createMissile(figureId, f->x, f->y, xTile, yTile, FIGURE_BOLT);
-					Sound_Effects_playChannel(SoundChannel_BallistaShoot);
+					sound_effect_play(SoundChannel_BallistaShoot);
 				} else {
 					f->actionState = FigureActionState_180_BallistaCreated;
 				}

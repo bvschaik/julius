@@ -9,6 +9,7 @@
 #include "figure/formation.h"
 #include "figure/properties.h"
 #include "game/difficulty.h"
+#include "sound/effect.h"
 
 const int figureActionCorpseGraphicOffsets[128] = {
 	0, 1, 2, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
@@ -128,7 +129,7 @@ static void hitOpponent(int figureId, struct Data_Figure *f)
 	if (opponent->opponentId != figureId && m->figure_type != FIGURE_FORT_LEGIONARY &&
 			attackIsSameDirection(f->attackDirection, opponent->attackDirection)) {
 		figureAttack += 4; // attack opponent on the (exposed) back
-		Sound_Effects_playChannel(SoundChannel_SwordSwing);
+		sound_effect_play(SoundChannel_SwordSwing);
 	}
 	if (m->is_halted && m->figure_type == FIGURE_FORT_LEGIONARY &&
 			attackIsSameDirection(f->attackDirection, m->direction)) {

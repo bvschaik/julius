@@ -13,6 +13,7 @@
 #include "core/calc.h"
 #include "figure/enemy_army.h"
 #include "figure/type.h"
+#include "sound/effect.h"
 
 void FigureAction_taxCollector(int figureId)
 {
@@ -278,7 +279,7 @@ static void prefectExtinguishFire(int figureId, struct Data_Figure *f)
 	int distance = calc_maximum_distance(f->x, f->y, burn->x, burn->y);
 	if (BuildingIsInUse(f->destinationBuildingId) && burn->type == BUILDING_BURNING_RUIN && distance < 2) {
 		burn->fireDuration = 32;
-		Sound_Effects_playChannel(SoundChannel_FireSplash);
+		sound_effect_play(SoundChannel_FireSplash);
 	} else {
 		f->waitTicks = 1;
 	}

@@ -10,6 +10,7 @@
 
 #include "figure/trader.h"
 #include "figure/type.h"
+#include "sound/effect.h"
 #include "sound/speech.h"
 
 #include <string.h>
@@ -550,26 +551,26 @@ void Figure_playDieSound(int figureType)
 	int isCitizen = 0;
 	switch (figureType) {
 		case FIGURE_WOLF:
-			Sound_Effects_playChannel(SoundChannel_WolfDie);
+			sound_effect_play(SoundChannel_WolfDie);
 			break;
 		case FIGURE_SHEEP:
-			Sound_Effects_playChannel(SoundChannel_SheepDie);
+			sound_effect_play(SoundChannel_SheepDie);
 			break;
 		case FIGURE_ZEBRA:
-			Sound_Effects_playChannel(SoundChannel_ZebraDie);
+			sound_effect_play(SoundChannel_ZebraDie);
 			break;
 		case FIGURE_LION_TAMER:
-			Sound_Effects_playChannel(SoundChannel_LionDie);
+			sound_effect_play(SoundChannel_LionDie);
 			break;
 		case FIGURE_ENEMY48_CHARIOT:
 		case FIGURE_ENEMY52_MOUNTED_ARCHER:
-			Sound_Effects_playChannel(SoundChannel_Horse2);
+			sound_effect_play(SoundChannel_Horse2);
 			break;
 		case FIGURE_ENEMY46_CAMEL:
-			Sound_Effects_playChannel(SoundChannel_Camel);
+			sound_effect_play(SoundChannel_Camel);
 			break;
 		case FIGURE_ENEMY47_ELEPHANT:
-			Sound_Effects_playChannel(SoundChannel_ElephantDie);
+			sound_effect_play(SoundChannel_ElephantDie);
 			break;
 		case FIGURE_NATIVE_TRADER:
 		case FIGURE_TRADE_CARAVAN:
@@ -604,13 +605,13 @@ void Figure_playDieSound(int figureType)
 		if (Data_CityInfo.dieSoundSoldier >= 4) {
 			Data_CityInfo.dieSoundSoldier = 0;
 		}
-		Sound_Effects_playChannel(SoundChannel_SoldierDie + Data_CityInfo.dieSoundSoldier);
+		sound_effect_play(SoundChannel_SoldierDie + Data_CityInfo.dieSoundSoldier);
 	} else if (isCitizen) {
 		Data_CityInfo.dieSoundCitizen++;
 		if (Data_CityInfo.dieSoundCitizen >= 4) {
 			Data_CityInfo.dieSoundCitizen = 0;
 		}
-		Sound_Effects_playChannel(SoundChannel_CitizenDie + Data_CityInfo.dieSoundCitizen);
+		sound_effect_play(SoundChannel_CitizenDie + Data_CityInfo.dieSoundCitizen);
 	}
 	if (FigureIsEnemy(figureType)) {
 		if (Data_CityInfo.numEnemiesInCity == 1) {
@@ -627,7 +628,7 @@ void Figure_playDieSound(int figureType)
 	Data_CityInfo.t--;\
 	if (Data_CityInfo.t <= 0) {\
 		Data_CityInfo.t = 8;\
-		Sound_Effects_playChannel(ch);\
+		sound_effect_play(ch);\
 	}
 
 void Figure_playHitSound(int figureType)
@@ -660,25 +661,25 @@ void Figure_playHitSound(int figureType)
 			PLAY_HIT_SOUND(soundHitAxe, SoundChannel_Axe);
 			break;
 		case FIGURE_ENEMY46_CAMEL:
-			Sound_Effects_playChannel(SoundChannel_Camel);
+			sound_effect_play(SoundChannel_Camel);
 			break;
 		case FIGURE_ENEMY47_ELEPHANT:
 			if (Data_CityInfo.soundHitElephant == 1) {
-				Sound_Effects_playChannel(SoundChannel_ElephantHit);
+				sound_effect_play(SoundChannel_ElephantHit);
 				Data_CityInfo.soundHitElephant = 0;
 			} else {
-				Sound_Effects_playChannel(SoundChannel_Elephant);
+				sound_effect_play(SoundChannel_Elephant);
 				Data_CityInfo.soundHitElephant = 1;
 			}
 			break;
 		case FIGURE_LION_TAMER:
-			Sound_Effects_playChannel(SoundChannel_LionAttack);
+			sound_effect_play(SoundChannel_LionAttack);
 			break;
 		case FIGURE_WOLF:
 			Data_CityInfo.soundHitWolf--;
 			if (Data_CityInfo.soundHitWolf <= 0) {
 				Data_CityInfo.soundHitWolf = 4;
-				Sound_Effects_playChannel(SoundChannel_WolfAttack);
+				sound_effect_play(SoundChannel_WolfAttack);
 			}
 			break;
 	}

@@ -37,17 +37,24 @@ static const char tracks[][32] = {
     "wavs/setup.wav"
 };
 
+void sound_music_set_volume(int percentage)
+{
+    SoundDevice_setMusicVolume(percentage);
+}
+
 static void play_track(int track)
 {
     SoundDevice_stopMusic();
     SoundDevice_playMusic(dir_get_case_corrected_file(tracks[track]));
-    SoundDevice_setMusicVolume(setting_sound(SOUND_MUSIC)->volume);
+    sound_music_set_volume(setting_sound(SOUND_MUSIC)->volume);
     data.current_track = track;
 }
 
 void sound_music_play_intro()
 {
-    play_track(TRACK_INTRO);
+    if (setting_sound(SOUND_MUSIC)->enabled) {
+        play_track(TRACK_INTRO);
+    }
 }
 
 void sound_music_reset()

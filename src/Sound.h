@@ -129,14 +129,4 @@ enum {
 void Sound_init();
 void Sound_shutdown();
 
-void Sound_setMusicVolume(int percentage);
-void Sound_setSpeechVolume(int percentage);
-void Sound_setEffectsVolume(int percentage);
-void Sound_setCityVolume(int percentage);
-
-// NB: only internal use!
-void Sound_playCityChannel_internal(int channel, int direction);
-
-void Sound_Effects_playChannel(int channel);
-
 #endif

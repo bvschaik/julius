@@ -9,6 +9,8 @@
 
 #include "core/calc.h"
 #include "game/settings.h"
+#include "sound/city.h"
+#include "sound/effect.h"
 #include "sound/music.h"
 #include "sound/speech.h"
 
@@ -213,10 +215,10 @@ static void buttonCancel(int param1, int param2)
 	} else {
 		sound_music_stop();
 	}
-	Sound_setMusicVolume(original_music.volume);
-	Sound_setSpeechVolume(original_speech.volume);
-	Sound_setEffectsVolume(original_effects.volume);
-	Sound_setCityVolume(original_city.volume);
+	sound_music_set_volume(original_music.volume);
+	sound_speech_set_volume(original_speech.volume);
+	sound_effect_set_volume(original_effects.volume);
+	sound_city_set_volume(original_city.volume);
 
 	UI_Window_goTo(Window_City);
 }
@@ -232,7 +234,7 @@ static void update_volume(set_sound_type type, int is_decrease)
 static void arrowButtonMusic(int param1, int param2)
 {
     update_volume(SOUND_MUSIC, param1);
-	Sound_setMusicVolume(setting_sound(SOUND_MUSIC)->volume);
+    sound_music_set_volume(setting_sound(SOUND_MUSIC)->volume);
 
 	UI_Window_requestRefresh();
 }
@@ -240,7 +242,7 @@ static void arrowButtonMusic(int param1, int param2)
 static void arrowButtonSpeech(int param1, int param2)
 {
     update_volume(SOUND_SPEECH, param1);
-	Sound_setSpeechVolume(setting_sound(SOUND_SPEECH)->volume);
+	sound_speech_set_volume(setting_sound(SOUND_SPEECH)->volume);
 
 	UI_Window_requestRefresh();
 }
@@ -248,7 +250,7 @@ static void arrowButtonSpeech(int param1, int param2)
 static void arrowButtonEffects(int param1, int param2)
 {
     update_volume(SOUND_EFFECTS, param1);
-	Sound_setEffectsVolume(setting_sound(SOUND_EFFECTS)->volume);
+	sound_effect_set_volume(setting_sound(SOUND_EFFECTS)->volume);
 
 	UI_Window_requestRefresh();
 }
@@ -256,7 +258,7 @@ static void arrowButtonEffects(int param1, int param2)
 static void arrowButtonCity(int param1, int param2)
 {
     update_volume(SOUND_CITY, param1);
-	Sound_setCityVolume(setting_sound(SOUND_CITY)->volume);
+    sound_city_set_volume(setting_sound(SOUND_CITY)->volume);
 
 	UI_Window_requestRefresh();
 }

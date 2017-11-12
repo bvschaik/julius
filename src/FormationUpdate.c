@@ -19,6 +19,7 @@
 #include "core/random.h"
 #include "figure/enemy_army.h"
 #include "figure/formation.h"
+#include "sound/effect.h"
 
 static const int enemyAttackBuildingPriority[4][24] = {
 	{
@@ -791,7 +792,7 @@ static void update_herd_formation(const formation *m)
                         Data_CityInfo.soundMarchWolf--;
                         if (Data_CityInfo.soundMarchWolf <= 0) {
                             Data_CityInfo.soundMarchWolf = 12;
-                            Sound_Effects_playChannel(SoundChannel_WolfHowl);
+                            sound_effect_play(SoundChannel_WolfHowl);
                         }
                     }
                     moveAnimals(m, attackingAnimals);

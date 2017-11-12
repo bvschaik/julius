@@ -1,8 +1,10 @@
 #include "city.h"
 
 #include "core/time.h"
+#include "game/settings.h"
 
 #include "Sound.h"
+#include "SoundDevice.h"
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
 
@@ -122,6 +124,15 @@ void sound_city_init()
     channels[63].channel = SoundChannel_City_MissionPost;
 }
 
+void sound_city_set_volume(int percentage)
+{
+    for (int i = SoundChannel_CityMin; i <= SoundChannel_CityMax; i++) {
+        if (SoundDevice_hasChannel(i)) {
+            SoundDevice_setChannelVolume(i, percentage);
+        }
+    }
+}
+
 void sound_city_mark_building_view(int building_id, int direction)
 {
     if (Data_Buildings[building_id].state == BuildingState_Unused) {
@@ -154,6 +165,37 @@ void sound_city_decay_views()
         }
         channels[i].total_views /= 2;
     }
+}
+
+static void play_channel(int channel, int direction)
+{
+    channel += SoundChannel_CityOffset;
+    if (!setting_sound(SOUND_CITY)->enabled) {
+        return;
+    }
+    if (!SoundDevice_hasChannel(channel) || SoundDevice_isChannelPlaying(channel)) {
+        return;
+    }
+    int left_pan;
+    int right_pan;
+    switch (direction) {
+        case SoundDirectionCenter:
+            left_pan = right_pan = 100;
+            break;
+        case SoundDirectionLeft:
+            left_pan = 100;
+            right_pan = 0;
+            break;
+        case SoundDirectionRight:
+            left_pan = 0;
+            right_pan = 100;
+            break;
+        default:
+            left_pan = right_pan = 0;
+            break;
+    }
+    SoundDevice_setChannelPanning(channel, left_pan, right_pan);
+    SoundDevice_playChannel(channel);
 }
 
 void sound_city_play()
@@ -207,7 +249,7 @@ void sound_city_play()
         direction = SoundDirectionCenter;
     }
 
-    Sound_playCityChannel_internal(channel, direction);
+    play_channel(channel, direction);
     last_update_time = now;
     channels[max_sound_id].last_played_time = now;
     channels[max_sound_id].total_views = 0;
@@ -266,5 +308,3 @@ void sound_city_load_state(buffer *buf)
         buffer_skip(buf, 36);
     }
 }
-
-

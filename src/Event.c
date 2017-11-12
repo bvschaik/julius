@@ -29,6 +29,7 @@
 #include "empire/type.h"
 #include "game/time.h"
 #include "game/tutorial.h"
+#include "sound/effect.h"
 
 #include <string.h>
 
@@ -487,7 +488,7 @@ static void advanceEarthquakeToTile(int x, int y)
 	if (buildingId) {
 		Building_collapseOnFire(buildingId, 0);
 		Building_collapseLinked(buildingId, 1);
-		Sound_Effects_playChannel(SoundChannel_Explosion);
+		sound_effect_play(SoundChannel_Explosion);
 		Data_Buildings[buildingId].state = BuildingState_DeletedByGame;
 	}
 	Data_Grid_terrain[gridOffset] = 0;

@@ -20,6 +20,7 @@
 #include "game/settings.h"
 #include "sound/city.h"
 #include "sound/speech.h"
+#include "sound/effect.h"
 
 static void drawBuildingFootprints();
 static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_CityPixelCoordinate *coord);
@@ -704,7 +705,7 @@ static void buildEnd()
 			Data_Settings_Map.current.gridOffset = Data_State.selectedBuilding.gridOffsetEnd;
 		}
 		if (Data_State.selectedBuilding.type > 0) {
-			Sound_Effects_playChannel(SoundChannel_Build);
+			sound_effect_play(SoundChannel_Build);
 		}
 		BuildingPlacement_place(Data_Settings_Map.orientation,
 			Data_State.selectedBuilding.xStart, Data_State.selectedBuilding.yStart,

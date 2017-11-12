@@ -25,6 +25,7 @@
 #include "core/time.h"
 #include "graphics/image.h"
 #include "game/tutorial.h"
+#include "sound/effect.h"
 
 #define SIDEBAR_BORDER ((Data_Screen.width + 20) % 60)
 #define BOTTOM_BORDER ((Data_Screen.height - 24) % 15)
@@ -325,7 +326,7 @@ static void buttonCollapseExpand(int param1, int param2)
 	UI_Window_goTo(Window_SlidingSidebar);
 	CityView_setViewportWithoutSidebar();
 	CityView_checkCameraBoundaries();
-	Sound_Effects_playChannel(SoundChannel_Sidebar);
+	sound_effect_play(SoundChannel_Sidebar);
 }
 
 static void buttonBuild(int submenu, int param2)

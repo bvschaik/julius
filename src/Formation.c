@@ -19,6 +19,7 @@
 #include "figure/enemy_army.h"
 #include "figure/formation.h"
 #include "figure/properties.h"
+#include "sound/effect.h"
 
 #include <string.h>
 
@@ -244,7 +245,7 @@ static void update_legion_enemy_totals(const formation *m, void *data)
             enemy_army_totals_add_legion_formation(total_strength);
             if (m->figure_type == FIGURE_FORT_LEGIONARY) {
                 if (!wasHalted && m->is_halted) {
-                    Sound_Effects_playChannel(SoundChannel_FormationShield);
+                    sound_effect_play(SoundChannel_FormationShield);
                 }
             }
         }

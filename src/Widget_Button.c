@@ -5,6 +5,7 @@
 #include "core/time.h"
 #include "graphics/image.h"
 #include "graphics/mouse.h"
+#include "sound/effect.h"
 
 #define PRESSED_EFFECT_MILLIS 100
 #define PRESSED_REPEAT_INITIAL_MILLIS 300
@@ -233,7 +234,7 @@ int Widget_Button_handleImageButtons(int xOffset, int yOffset, ImageButton *butt
 		}
 	}
 	if (m->left.went_down) {
-		Sound_Effects_playChannel(SoundChannel_Icon);
+		sound_effect_play(SoundChannel_Icon);
 		hitButton->pressed = 1;
 		hitButton->pressedSince = time_get_millis();
 		hitButton->leftClickHandler(hitButton->parameter1, hitButton->parameter2);

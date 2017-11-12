@@ -5,6 +5,7 @@
 #include "core/string.h"
 #include "core/time.h"
 #include "game/time.h"
+#include "sound/effect.h"
 
 #include "Formation.h"
 #include "Sound.h"
@@ -125,9 +126,9 @@ static void enqueue_message(int sequence)
 static void play_sound(int text_id)
 {
     if (lang_get_message(text_id)->urgent == 1) {
-        Sound_Effects_playChannel(SoundChannel_FanfareUrgent);
+        sound_effect_play(SoundChannel_FanfareUrgent);
     } else {
-        Sound_Effects_playChannel(SoundChannel_Fanfare);
+        sound_effect_play(SoundChannel_Fanfare);
     }
 }
 
