@@ -5,7 +5,6 @@
 #include "Window.h"
 
 #include "../Graphics.h"
-#include "../PlayerMessage.h"
 #include "../Widget.h"
 
 #include "../Data/CityInfo.h"

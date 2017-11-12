@@ -116,7 +116,6 @@ add_executable(julius
 	src/KeyboardInput.c
 	src/Loader.c
 	src/Natives.c
-	src/PlayerMessage.c
 	src/Resource.c
 	src/Resource_Granary.c
 	src/Resource_Warehouse.c

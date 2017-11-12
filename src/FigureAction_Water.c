@@ -1,11 +1,9 @@
 #include "FigureAction_private.h"
 
 #include "Figure.h"
-#include "PlayerMessage.h"
 #include "Terrain.h"
 
 #include "Data/CityInfo.h"
-#include "Data/Message.h"
 #include "Data/Scenario.h"
 
 #include "building/model.h"
@@ -110,7 +108,7 @@ void FigureAction_fishingBoat(int figureId)
 				FigureRoute_remove(figureId);
 			} else if (f->direction == DirFigure_10_Lost) {
 				// cannot reach grounds
-				city_message_post_with_message_delay(MESSAGE_CAT_FISHING_BLOCKED, 1, Message_118_FishingBoatBlocked, 12);
+				city_message_post_with_message_delay(MESSAGE_CAT_FISHING_BLOCKED, 1, MESSAGE_FISHING_BOAT_BLOCKED, 12);
 				f->state = FigureState_Dead;
 			}
 			break;

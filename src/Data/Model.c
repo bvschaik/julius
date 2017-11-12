@@ -10,8 +10,6 @@ struct _Data_Event Data_Event = {0};
 struct _Data_Settings Data_Settings;
 struct _Data_Settings_Map Data_Settings_Map;
 
-struct _Data_Message Data_Message;
-
 struct _Data_Screen Data_Screen;// = { 800, 600, {80, 60} };
 
 struct _Data_CityInfo Data_CityInfo;

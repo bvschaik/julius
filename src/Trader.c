@@ -1,14 +1,12 @@
 #include "Trader.h"
 
 #include "Figure.h"
-#include "PlayerMessage.h"
 #include "Resource.h"
 #include "Terrain.h"
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
-#include "Data/Message.h"
 #include "Data/Scenario.h"
 
 #include "Data/Figure.h"
@@ -126,7 +124,7 @@ int canGenerateTraderForCity(int city_id, empire_city *city)
     if (city->is_sea_trade) {
         if (Data_CityInfo.numWorkingDocks <= 0) {
             // delay of 384 = 1 year
-            city_message_post_with_message_delay(MESSAGE_CAT_NO_WORKING_DOCK, 1, Message_117_NoWorkingDock, 384);
+            city_message_post_with_message_delay(MESSAGE_CAT_NO_WORKING_DOCK, 1, MESSAGE_NO_WORKING_DOCK, 384);
             return 0;
         }
         if (Data_Scenario.riverEntryPoint.x == -1 && Data_Scenario.riverEntryPoint.y == -1) {

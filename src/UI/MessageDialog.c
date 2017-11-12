@@ -13,7 +13,6 @@
 #include "../Data/Buttons.h"
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
-#include "../Data/Message.h"
 #include "../Data/Scenario.h"
 #include "../Data/Screen.h"
 #include "../Data/Settings.h"
@@ -388,19 +387,19 @@ static void drawPlayerMessageContent(const lang_message *msg)
 static ImageButton *getAdvisorButton()
 {
 	switch (playerMessage.messageAdvisor) {
-		case MessageAdvisor_Labor:
+		case MESSAGE_ADVISOR_LABOR:
 			return &imageButtonLabor;
-		case MessageAdvisor_Trade:
+		case MESSAGE_ADVISOR_TRADE:
 			return &imageButtonTrade;
-		case MessageAdvisor_Population:
+		case MESSAGE_ADVISOR_POPULATION:
 			return &imageButtonPopulation;
-		case MessageAdvisor_Imperial:
+		case MESSAGE_ADVISOR_IMPERIAL:
 			return &imageButtonImperial;
-		case MessageAdvisor_Military:
+		case MESSAGE_ADVISOR_MILITARY:
 			return &imageButtonMilitary;
-		case MessageAdvisor_Health:
+		case MESSAGE_ADVISOR_HEALTH:
 			return &imageButtonHealth;
-		case MessageAdvisor_Religion:
+		case MESSAGE_ADVISOR_RELIGION:
 			return &imageButtonReligion;
 		default:
 			return &imageButtonHelp;

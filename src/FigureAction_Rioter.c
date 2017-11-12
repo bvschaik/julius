@@ -4,11 +4,9 @@
 #include "Figure.h"
 #include "FigureMovement.h"
 #include "Formation.h"
-#include "PlayerMessage.h"
 
 #include "Data/CityInfo.h"
 #include "Data/Grid.h"
-#include "Data/Message.h"
 
 #include "city/message.h"
 
@@ -168,7 +166,7 @@ int FigureAction_Rioter_collapseBuilding(int figureId)
 			continue;
 		}
 		city_message_apply_sound_interval(MESSAGE_CAT_RIOT_COLLAPSE);
-		city_message_post(0, Message_14_DestroyedBuilding, b->type, f->gridOffset);
+		city_message_post(0, MESSAGE_DESTROYED_BUILDING, b->type, f->gridOffset);
 		city_message_increase_category_count(MESSAGE_CAT_RIOT_COLLAPSE);
 		Building_collapseOnFire(buildingId, 0);
 		f->actionState = FigureActionState_120_RioterCreated;

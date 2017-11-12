@@ -2,14 +2,12 @@
 
 #include "Figure.h"
 
-#include "PlayerMessage.h"
 #include "Resource.h"
 #include "Terrain.h"
 #include "Trader.h"
 
 #include "Data/CityInfo.h"
 #include "Data/Grid.h"
-#include "Data/Message.h"
 #include "Data/Scenario.h"
 
 #include "building/storage.h"
@@ -531,7 +529,7 @@ void FigureAction_tradeShip(int figureId)
 			} else if (f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
 				if (!city_message_get_category_count(MESSAGE_CAT_BLOCKED_DOCK)) {
-					city_message_post(1, Message_15_NavigationImpossible, 0, 0);
+					city_message_post(1, MESSAGE_NAVIGATION_IMPOSSIBLE, 0, 0);
 					city_message_increase_category_count(MESSAGE_CAT_BLOCKED_DOCK);
 				}
 			}

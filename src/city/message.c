@@ -7,7 +7,6 @@
 #include "game/time.h"
 
 #include "Formation.h"
-#include "PlayerMessage.h"
 #include "Sound.h"
 #include "UI/Tooltip.h"
 #include "UI/MessageDialog.h"
@@ -303,39 +302,39 @@ int city_message_get_text_id(city_message_type message_type)
 message_advisor city_message_get_advisor(city_message_type message_type)
 {
     switch (message_type) {
-        case Message_22_LocalUprising:
-        case Message_23_BarbarianAttack:
-        case Message_24_CaesarArmyAttack:
-        case Message_25_DistantBattle:
-        case Message_26_EnemiesClosing:
-        case Message_27_EnemiesAtTheDoor:
-            return MessageAdvisor_Military;
+        case MESSAGE_LOCAL_UPRISING:
+        case MESSAGE_BARBARIAN_ATTACK:
+        case MESSAGE_CAESAR_ARMY_ATTACK:
+        case MESSAGE_DISTANT_BATTLE:
+        case MESSAGE_ENEMIES_CLOSING:
+        case MESSAGE_ENEMIES_AT_THE_DOOR:
+            return MESSAGE_ADVISOR_MILITARY;
 
-        case Message_28_CaesarRequestsGoods:
-        case Message_29_CaesarRequestsMoney:
-        case Message_30_CaesarRequestsArmy:
-        case Message_31_RequestReminder:
-        case Message_32_RequestReceived:
-        case Message_33_RequestRefused:
-        case Message_34_RequestRefusedOverdue:
-        case Message_35_RequestReceivedLate:
-            return MessageAdvisor_Imperial;
+        case MESSAGE_CAESAR_REQUESTS_GOODS:
+        case MESSAGE_CAESAR_REQUESTS_MONEY:
+        case MESSAGE_CAESAR_REQUESTS_ARMY:
+        case MESSAGE_REQUEST_REMINDER:
+        case MESSAGE_REQUEST_RECEIVED:
+        case MESSAGE_REQUEST_REFUSED:
+        case MESSAGE_REQUEST_REFUSED_OVERDUE:
+        case MESSAGE_REQUEST_RECEIVED_LATE:
+            return MESSAGE_ADVISOR_IMPERIAL;
 
-        case Message_36_Unemployment:
-        case Message_37_WorkersNeeded:
-            return MessageAdvisor_Labor;
+        case MESSAGE_UNEMPLOYMENT:
+        case MESSAGE_WORKERS_NEEDED:
+            return MESSAGE_ADVISOR_LABOR;
 
-        case Message_49_NotEnoughFood:
-        case Message_50_FoodNotDelivered:
-            return MessageAdvisor_Population;
+        case MESSAGE_NOT_ENOUGH_FOOD:
+        case MESSAGE_FOOD_NOT_DELIVERED:
+            return MESSAGE_ADVISOR_POPULATION;
 
-        case Message_102_HealthIllness:
-        case Message_103_HealthDisease:
-        case Message_104_HealthPestilence:
-            return MessageAdvisor_Health;
+        case MESSAGE_HEALTH_ILLNESS:
+        case MESSAGE_HEALTH_DISEASE:
+        case MESSAGE_HEALTH_PESTILENCE:
+            return MESSAGE_ADVISOR_HEALTH;
 
         default:
-            return MessageAdvisor_None;
+            return MESSAGE_ADVISOR_NONE;
     }
 }
 

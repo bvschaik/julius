@@ -3,11 +3,9 @@
 #include "MessageDialog.h"
 #include "core/calc.h"
 #include "../Graphics.h"
-#include "../PlayerMessage.h"
 #include "../Widget.h"
 
 #include "../Data/Constants.h"
-#include "../Data/Message.h"
 #include "../Data/Screen.h"
 
 #include "city/message.h"

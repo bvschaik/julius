@@ -9,7 +9,6 @@
 
 #include "../CityView.h"
 #include "../Graphics.h"
-#include "../PlayerMessage.h"
 #include "../SidebarMenu.h"
 #include "../Sound.h"
 #include "../Terrain.h"
