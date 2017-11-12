@@ -15,6 +15,7 @@ typedef struct {
     uint8_t *data; /**< Read-only: data */
     int size; /**< Read-only: size of the data */
     int index; /**< Read-only: bytes read/written so far */
+    int overflow; /**< Read-only: indicates attempt to read/write beyond end of buffer */
 } buffer;
 
 /**

@@ -566,6 +566,8 @@ static void savegame_deserialize(savegame_state *state)
         buffer *buf = &savegame_data.pieces[i].buf;
         if (buf->index != buf->size) {
             printf("ERR: buffer %d not empty: %d of %d bytes used\n", i, buf->index, buf->size);
+        } else if (buf->overflow) {
+            printf("ERR: buffer %d overflowed\n", i);
         }
     }
 }

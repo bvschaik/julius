@@ -2,19 +2,21 @@
 
 #include <string.h>
 
-#define CHECK_WRITE(b, s) if ((b->index + s) > b->size) return
-#define CHECK_READ(b, s) if ((b->index + s) > b->size) return 0
+#define CHECK_WRITE(b, s) if ((b->index + s) > b->size) { b->overflow = 1; return; }
+#define CHECK_READ(b, s) if ((b->index + s) > b->size) { b->overflow = 1; return 0; }
 
 void buffer_init(buffer *buffer, void *data, int size)
 {
     buffer->data = data;
     buffer->size = size;
     buffer->index = 0;
+    buffer->overflow = 0;
 }
 
 void buffer_reset(buffer *buffer)
 {
     buffer->index = 0;
+    buffer->overflow = 0;
 }
 
 void buffer_set(buffer *buffer, int offset)
