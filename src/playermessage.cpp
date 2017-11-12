@@ -40,6 +40,15 @@ void PlayerMessage_disableSoundForNextMessage()
     playSound = 0;
 }
 
+void PlayerMessage_postWithMessageDelay(int type, int usePopup, int messageType, int delay)
+{
+    if (Data_Message.messageDelay[type] <= 0)
+    {
+        Data_Message.messageDelay[type] = delay;
+        PlayerMessage_post(usePopup, messageType, 0, 0);
+    }
+}
+
 void PlayerMessage_post(int usePopup, int messageType, int param1, short param2)
 {
     int id = getNewMessageId();
