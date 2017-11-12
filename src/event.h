@@ -1,13 +1,14 @@
 #ifndef EVENT_H
 #define EVENT_H
 
-enum {
-	RequestState_Normal = 0,
-	RequestState_Overdue = 1,
-	RequestState_Dispatched = 2,
-	RequestState_DispatchedLate = 3,
-	RequestState_Ignored = 4,
-	RequestState_Received = 5,
+enum
+{
+    RequestState_Normal = 0,
+    RequestState_Overdue = 1,
+    RequestState_Dispatched = 2,
+    RequestState_DispatchedLate = 3,
+    RequestState_Ignored = 4,
+    RequestState_Received = 5,
 };
 
 void Event_initInvasions();
@@ -18,7 +19,6 @@ int Event_existsUpcomingInvasion();
 
 void Event_Caesar_update();
 
-void Event_initDistantBattleCity();
 void Event_calculateDistantBattleRomanTravelTime();
 void Event_calculateDistantBattleEnemyTravelTime();
 void Event_handleDistantBattle();
