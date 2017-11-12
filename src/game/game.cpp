@@ -84,7 +84,7 @@ int Game::init()
 void Game::exit()
 {
     Video_shutdown();
-    settings_save();
     Settings_save();
+    settings_save();
     Sound_shutdown();
 }
