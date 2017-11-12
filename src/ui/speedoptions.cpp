@@ -138,24 +138,24 @@ static void arrowButtonGame(int param1, int param2)
 {
     if (param1)
     {
-        setting_increase_game_speed();
+        setting_decrease_game_speed();
     }
     else
     {
-        setting_decrease_game_speed();
+        setting_increase_game_speed();
     }
     UI_Window_requestRefresh();
 }
 
 static void arrowButtonScroll(int param1, int param2)
 {
-    if (param1 == 1)
+    if (param1)
     {
-        setting_increase_scroll_speed();
+        setting_decrease_scroll_speed();
     }
     else if (param1 == 0)
     {
-        setting_decrease_scroll_speed();
+        setting_increase_scroll_speed();
     }
     UI_Window_requestRefresh();
 }
