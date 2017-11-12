@@ -34,7 +34,9 @@ void UI_City_drawForeground()
 	UI_Sidebar_drawForeground();
 	UI_City_drawPausedAndTimeLeft();
 	UI_CityBuildings_drawBuildingCost();
-	PlayerMessage_processQueue();
+    if (UI_Window_getId() == Window_City) {
+        PlayerMessage_processQueue();
+    }
 }
 
 void UI_City_drawForegroundMilitary()

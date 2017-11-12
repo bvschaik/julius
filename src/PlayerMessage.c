@@ -38,6 +38,32 @@ void PlayerMessage_disableSoundForNextMessage()
 	playSound = 0;
 }
 
+static void play_sound(int text_id)
+{
+    if (lang_get_message(text_id)->urgent == 1) {
+        Sound_Effects_playChannel(SoundChannel_FanfareUrgent);
+    } else {
+        Sound_Effects_playChannel(SoundChannel_Fanfare);
+    }
+}
+
+static void show_message_popup(int message_id)
+{
+    struct Data_PlayerMessage *msg = &Data_Message.messages[message_id];
+    consecutiveMessageDelay = 5;
+    Data_Message.currentProblemAreaMessageId = message_id;
+    msg->readFlag = 1;
+    int text_id = PlayerMessage_getMessageTextId(msg->messageType);
+    UI_Tooltip_resetTimer();
+    if (!hasVideo(text_id)) {
+        play_sound(text_id);
+    }
+    UI_MessageDialog_setPlayerMessage(
+        msg->year, msg->month, msg->param1, msg->param2,
+        PlayerMessage_getAdvisorForMessageType(msg->messageType), 1);
+    UI_MessageDialog_show(text_id, 0);
+}
+
 void PlayerMessage_post(int usePopup, int messageType, int param1, short param2)
 {
 	int id = getNewMessageId();
@@ -62,21 +88,7 @@ void PlayerMessage_post(int usePopup, int messageType, int param1, short param2)
 		UI_Window_requestRefresh();
 	}
 	if (usePopup && UI_Window_getId() == Window_City) {
-		consecutiveMessageDelay = 5;
-		Data_Message.currentProblemAreaMessageId = Data_Message.currentMessageId;
-		msg->readFlag = 1;
-		UI_Tooltip_resetTimer();
-		if (!hasVideo(textId)) {
-			if (lang_get_message(textId)->urgent == 1) {
-				Sound_Effects_playChannel(SoundChannel_FanfareUrgent);
-			} else {
-				Sound_Effects_playChannel(SoundChannel_Fanfare);
-			}
-		}
-		UI_MessageDialog_setPlayerMessage(
-			msg->year, msg->month, msg->param1, msg->param2,
-			PlayerMessage_getAdvisorForMessageType(msg->messageType), usePopup);
-		UI_MessageDialog_show(textId, 0);
+		show_message_popup(id);
 	} else if (usePopup) {
 		// add to queue to be processed when player returns to city
 		for (int i = 0; i < 20; i++) {
@@ -86,20 +98,13 @@ void PlayerMessage_post(int usePopup, int messageType, int param1, short param2)
 			}
 		}
 	} else if (playSound) {
-		if (lang_get_message(textId)->urgent == 1) {
-			Sound_Effects_playChannel(SoundChannel_FanfareUrgent);
-		} else {
-			Sound_Effects_playChannel(SoundChannel_Fanfare);
-		}
+		play_sound(textId);
 	}
 	playSound = 1;
 }
 
 void PlayerMessage_processQueue()
 {
-	if (UI_Window_getId() != Window_City) {
-		return;
-	}
 	if (consecutiveMessageDelay > 0) {
 		consecutiveMessageDelay--;
 		return;
@@ -125,26 +130,9 @@ void PlayerMessage_processQueue()
 			break;
 		}
 	}
-	if (msgId < 0) {
-		return;
+	if (msgId >= 0) {
+		show_message_popup(msgId);
 	}
-	consecutiveMessageDelay = 5;
-	struct Data_PlayerMessage *msg = &Data_Message.messages[msgId];
-	msg->readFlag = 1;
-	Data_Message.currentProblemAreaMessageId = msgId;
-	int textId = PlayerMessage_getMessageTextId(msg->messageType);
-	UI_Tooltip_resetTimer();
-	if (!hasVideo(textId)) {
-		if (lang_get_message(textId)->urgent == 1) {
-			Sound_Effects_playChannel(SoundChannel_FanfareUrgent);
-		} else {
-			Sound_Effects_playChannel(SoundChannel_Fanfare);
-		}
-	}
-	UI_MessageDialog_setPlayerMessage(
-		msg->year, msg->month, msg->param1, msg->param2,
-		PlayerMessage_getAdvisorForMessageType(msg->messageType), 1);
-	UI_MessageDialog_show(textId, 0);
 }
 
 static int getNewMessageId()
@@ -230,7 +218,7 @@ void PlayerMessage_initProblemArea()
 	Data_Message.hotspotLastClick = time_get_millis();
 }
 
-void PlayerMessage_goToProblem()
+int PlayerMessage_getNextProblemAreaGridOffset()
 {
 	time_millis now = time_get_millis();
 	if (now - Data_Message.hotspotLastClick > 3000) {
@@ -254,7 +242,7 @@ void PlayerMessage_goToProblem()
 	}
 	if (Data_Message.hotspotCount <= 0) {
 		Data_Message.hotspotIndex = 0;
-		return;
+		return 0;
 	}
 	if (Data_Message.hotspotIndex >= Data_Message.hotspotCount) {
 		Data_Message.hotspotIndex = 0;
@@ -274,17 +262,13 @@ void PlayerMessage_goToProblem()
 						if (langMessageType == MESSAGE_TYPE_INVASION) {
 							gridOffset = Formation_getInvasionGridOffset(msg->param1);
 						}
-						if (gridOffset > 0) {
-							CityView_goToGridOffset(gridOffset);
-							UI_Window_goTo(Window_City);
-						}
-						return;
+						return gridOffset;
 					}
 				}
 			}
 		}
 	}
-	UI_Window_requestRefresh();
+	return 0;
 }
 
 void PlayerMessage_sortMessages()

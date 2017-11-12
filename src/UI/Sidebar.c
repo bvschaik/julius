@@ -351,8 +351,15 @@ static void buttonHelp(int param1, int param2)
 
 static void buttonGoToProblem(int param1, int param2)
 {
-	PlayerMessage_goToProblem();
+    int gridOffset = PlayerMessage_getNextProblemAreaGridOffset();
+    if (gridOffset) {
+        CityView_goToGridOffset(gridOffset);
+        UI_Window_goTo(Window_City);
+    } else {
+        UI_Window_requestRefresh();
+    }
 }
+
 static void buttonAdvisors(int param1, int param2)
 {
 	UI_Advisors_goToFromSidepanel();
