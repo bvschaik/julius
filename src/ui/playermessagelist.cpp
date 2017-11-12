@@ -61,9 +61,36 @@ static struct
     int yText;
     int textWidthBlocks;
     int textHeightBlocks;
+    int scrollPosition;
+    int maxScrollPosition;
+    int isDraggingScrollbar;
+    int scrollPositionDrag;
 } data;
 
 static int focusButtonId;
+
+static void update_scroll_position()
+{
+    if (Data_Message.totalMessages <= 10)
+    {
+        data.scrollPosition = 0;
+        data.maxScrollPosition = 0;
+    }
+    else
+    {
+        data.maxScrollPosition = Data_Message.totalMessages - 10;
+        if (data.scrollPosition >= data.maxScrollPosition)
+        {
+            data.scrollPosition = data.maxScrollPosition;
+        }
+    }
+}
+
+void UI_PlayerMessageList_resetScroll()
+{
+    data.scrollPosition = 0;
+    data.maxScrollPosition = 0;
+}
 
 void UI_PlayerMessageList_init()
 {
@@ -119,7 +146,7 @@ void UI_PlayerMessageList_drawForeground()
     }
 
     int max = Data_Message.totalMessages < 10 ? Data_Message.totalMessages : 10;
-    int index = Data_Message.scrollPosition;
+    int index = data.scrollPosition;
     for (int i = 0; i < max; i++, index++)
     {
         int messageId = PlayerMessage_getMessageTextId(Data_Message.messages[index].messageType);
@@ -151,7 +178,7 @@ void UI_PlayerMessageList_drawForeground()
             lang_get_message(messageId)->title.text,
             data.xText + 180, data.yText + 8 + 20 * i, font, 0);
     }
-    if (Data_Message.maxScrollPosition > 0)
+    if (data.maxScrollPosition > 0)
     {
         Widget_Button_drawImageButtons(
             data.xText + 16 * data.textWidthBlocks, data.yText,
@@ -160,22 +187,22 @@ void UI_PlayerMessageList_drawForeground()
             data.xText + 16 * data.textWidthBlocks, data.yText + 16 * data.textHeightBlocks - 26,
             &imageButtonScrollDown, 1);
         int pctScrolled;
-        if (Data_Message.scrollPosition <= 0)
+        if (data.scrollPosition <= 0)
         {
             pctScrolled = 0;
         }
-        else if (Data_Message.scrollPosition >= Data_Message.maxScrollPosition)
+        else if (data.scrollPosition >= data.maxScrollPosition)
         {
             pctScrolled = 100;
         }
         else
         {
-            pctScrolled = calc_percentage(Data_Message.scrollPosition, Data_Message.maxScrollPosition);
+            pctScrolled = calc_percentage(data.scrollPosition, data.maxScrollPosition);
         }
         int dotOffset = calc_adjust_with_percentage(16 * data.textHeightBlocks - 77, pctScrolled);
-        if (Data_Message.isDraggingScrollbar)
+        if (data.isDraggingScrollbar)
         {
-            dotOffset = Data_Message.scrollPositionDrag;
+            dotOffset = data.scrollPositionDrag;
         }
         Graphics_drawImage(image_group(ID_Graphic_PanelButton) + 39,
                            data.xText + 9 + 16 * data.textWidthBlocks, data.yText + 26 + dotOffset);
@@ -234,7 +261,7 @@ void UI_PlayerMessageList_handleMouse(const mouse *m)
 
 static void handleMouseScrollbar(const mouse *m)
 {
-    if (Data_Message.maxScrollPosition <= 0 || !m->left.went_down)
+    if (data.maxScrollPosition <= 0 || !m->left.went_down)
     {
         return;
     }
@@ -250,13 +277,13 @@ static void handleMouseScrollbar(const mouse *m)
             dotOffset = scrollbarHeight;
         }
         int pctScrolled = calc_percentage(dotOffset, scrollbarHeight);
-        Data_Message.scrollPosition = calc_adjust_with_percentage(
-                                          Data_Message.maxScrollPosition, pctScrolled);
-        Data_Message.isDraggingScrollbar = 1;
-        Data_Message.scrollPositionDrag = dotOffset - 25;
-        if (Data_Message.scrollPositionDrag < 0)
+        data.scrollPosition = calc_adjust_with_percentage(
+                                  data.maxScrollPosition, pctScrolled);
+        data.isDraggingScrollbar = 1;
+        data.scrollPositionDrag = dotOffset - 25;
+        if (data.scrollPositionDrag < 0)
         {
-            Data_Message.scrollPositionDrag = 0;
+            data.scrollPositionDrag = 0;
         }
         UI_Window_requestRefresh();
     }
@@ -266,21 +293,21 @@ static void buttonScroll(int isDown, int numLines)
 {
     if (isDown)
     {
-        Data_Message.scrollPosition += numLines;
-        if (Data_Message.scrollPosition > Data_Message.maxScrollPosition)
+        data.scrollPosition += numLines;
+        if (data.scrollPosition > data.maxScrollPosition)
         {
-            Data_Message.scrollPosition = Data_Message.maxScrollPosition;
+            data.scrollPosition = data.maxScrollPosition;
         }
     }
     else
     {
-        Data_Message.scrollPosition -= numLines;
-        if (Data_Message.scrollPosition < 0)
+        data.scrollPosition -= numLines;
+        if (data.scrollPosition < 0)
         {
-            Data_Message.scrollPosition = 0;
+            data.scrollPosition = 0;
         }
     }
-    Data_Message.isDraggingScrollbar = 0;
+    data.isDraggingScrollbar = 0;
     UI_Window_requestRefresh();
 }
 
@@ -296,7 +323,7 @@ static void buttonClose(int param1, int param2)
 
 static void buttonMessage(int param1, int param2)
 {
-    int id = Data_Message.currentMessageId = Data_Message.scrollPosition + param1;
+    int id = Data_Message.currentMessageId = data.scrollPosition + param1;
     if (id < Data_Message.totalMessages)
     {
         Data_Message.messages[id].readFlag = 1;
@@ -314,18 +341,18 @@ static void buttonMessage(int param1, int param2)
 
 static void buttonDelete(int param1, int param2)
 {
-    int id = Data_Message.currentMessageId = Data_Message.scrollPosition + param1;
+    int id = Data_Message.currentMessageId = data.scrollPosition + param1;
     if (id < Data_Message.totalMessages)
     {
         Data_Message.messages[id].messageType = 0;
         PlayerMessage_sortMessages();
-        if (Data_Message.scrollPosition >= Data_Message.maxScrollPosition)
+        if (data.scrollPosition >= data.maxScrollPosition)
         {
-            --Data_Message.scrollPosition;
+            --data.scrollPosition;
         }
-        if (Data_Message.scrollPosition < 0)
+        if (data.scrollPosition < 0)
         {
-            Data_Message.scrollPosition = 0;
+            data.scrollPosition = 0;
         }
         UI_Window_requestRefresh();
     }

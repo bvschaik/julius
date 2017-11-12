@@ -31,6 +31,7 @@
 #include "data/figure.hpp"
 #include "data/figure.hpp"
 #include "city/culture.h"
+#include "ui/allwindows.h"
 
 #include "building/count.h"
 #include "building/list.h"
@@ -883,8 +884,7 @@ static void setupFromSavedGame()
     empire_determine_distant_battle_city();
     TerrainGraphics_determineGardensFromGraphicIds();
 
-    Data_Message.maxScrollPosition = 0;
-    Data_Message.scrollPosition = 0;
+    UI_PlayerMessageList_resetScroll();
 
     Data_Settings.gamePaused = 0;
 }

@@ -96,6 +96,7 @@ void UI_EmpireMap_getTooltip(struct TooltipContext *c);
 void UI_TradeOpenedDialog_drawBackground();
 void UI_TradeOpenedDialog_drawForeground();
 void UI_TradeOpenedDialog_handleMouse(const mouse *m);
+void UI_PlayerMessageList_resetScroll();
 
 void UI_PlayerMessageList_init();
 void UI_PlayerMessageList_drawBackground();
@@ -114,10 +115,11 @@ void UI_BuildingMenu_drawBackground();
 void UI_BuildingMenu_drawForeground();
 void UI_BuildingMenu_handleMouse(const mouse *m);
 
-enum {
-	Intermezzo_MissionBriefing = 0,
-	Intermezzo_Fired = 1,
-	Intermezzo_Won = 2,
+enum
+{
+    Intermezzo_MissionBriefing = 0,
+    Intermezzo_Fired = 1,
+    Intermezzo_Won = 2,
 };
 void UI_Intermezzo_show(int type, WindowId nextWindowId, int timeMillis);
 void UI_Intermezzo_drawBackground();
