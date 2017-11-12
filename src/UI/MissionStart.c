@@ -17,6 +17,7 @@
 
 #include "core/lang.h"
 #include "game/tutorial.h"
+#include "sound/music.h"
 
 static void startMission(int param1, int param2);
 static void briefingBack(int param1, int param2);
@@ -339,7 +340,7 @@ static void startMission(int param1, int param2)
 			break;
 		default:
 			Sound_stopSpeech();
-			Sound_Music_reset();
+			sound_music_reset();
 			UI_Window_goTo(Window_City);
 			Data_CityInfo.missionSavedGameWritten = 0;
 			break;

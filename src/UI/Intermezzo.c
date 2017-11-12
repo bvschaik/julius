@@ -9,6 +9,7 @@
 #include "../Data/Settings.h"
 
 #include "core/time.h"
+#include "sound/music.h"
 
 static const char soundFilesBriefing[][32] = {
 	"wavs/01b.wav",
@@ -84,7 +85,7 @@ void UI_Intermezzo_drawBackground()
 
 	int graphicBase = image_group(ID_Graphic_IntermezzoBackground);
 	if (data.type == Intermezzo_MissionBriefing) {
-		Sound_stopMusic();
+		sound_music_stop();
 		Sound_stopSpeech();
 		if (Data_Settings.isCustomScenario) {
 			Graphics_drawImage(graphicBase + 1, xOffset, yOffset);
@@ -96,7 +97,7 @@ void UI_Intermezzo_drawBackground()
 	} else if (data.type == Intermezzo_Fired) {
 		Graphics_drawImage(graphicBase, xOffset, yOffset);
 	} else if (data.type == Intermezzo_Won) {
-		Sound_stopMusic();
+		sound_music_stop();
 		Sound_stopSpeech();
 		if (Data_Settings.isCustomScenario) {
 			Graphics_drawImage(graphicBase + 2, xOffset, yOffset);

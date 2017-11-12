@@ -48,6 +48,7 @@
 #include "game/tutorial.h"
 #include "graphics/image.h"
 #include "sound/city.h"
+#include "sound/music.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -737,7 +738,7 @@ int GameFile_loadSavedGame(const char *filename)
 	if (!fp) {
 		return 0;
 	}
-	Sound_stopMusic();
+	sound_music_stop();
     savegame_read_from_file(fp);
 	fclose(fp);
     
@@ -829,7 +830,7 @@ static void setupFromSavedGame()
 	city_message_init_problem_areas();
 
 	sound_city_init();
-	Sound_Music_reset();
+	sound_music_reset();
 
 	Data_State.undoAvailable = 0;
 	Data_State.currentOverlay = 0;

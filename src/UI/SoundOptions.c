@@ -9,6 +9,7 @@
 
 #include "core/calc.h"
 #include "game/settings.h"
+#include "sound/music.h"
 
 static void buttonToggle(int param1, int param2);
 static void buttonOk(int param1, int param2);
@@ -180,10 +181,10 @@ static void buttonToggle(int type, int param2)
     switch (type) {
     case SOUND_MUSIC:
         if (setting_sound(SOUND_MUSIC)->enabled) {
-            Sound_Music_reset();
-            Sound_Music_update();
+            sound_music_reset();
+            sound_music_update();
         } else {
-            Sound_stopMusic();
+            sound_music_stop();
         }
         break;
     case SOUND_SPEECH:
@@ -206,10 +207,10 @@ static void buttonCancel(int param1, int param2)
     setting_reset_sound(SOUND_SPEECH, original_speech.enabled, original_speech.volume);
     setting_reset_sound(SOUND_CITY, original_city.enabled, original_city.volume);
 	if (original_music.enabled) {
-		Sound_Music_reset();
-		Sound_Music_update();
+		sound_music_reset();
+		sound_music_update();
 	} else {
-		Sound_stopMusic();
+		sound_music_stop();
 	}
 	Sound_setMusicVolume(original_music.volume);
 	Sound_setSpeechVolume(original_speech.volume);

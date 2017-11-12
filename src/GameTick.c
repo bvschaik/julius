@@ -36,6 +36,7 @@
 #include "game/settings.h"
 #include "game/time.h"
 #include "game/tutorial.h"
+#include "sound/music.h"
 
 #include <stdio.h>
 
@@ -62,7 +63,7 @@ void GameTick_advance()
 	// 0, 9, 11, 13, 14, 15, 26, 41, 42, 47
 	switch (game_time_tick()) {
 		case 1: CityInfo_Gods_calculateMoods(1); break;
-		case 2: Sound_Music_update(); break;
+		case 2: sound_music_update(); break;
 		case 3: UI_Sidebar_requestMinimapRefresh(); break;
 		case 4: Event_Caesar_update(); break;
 		case 5: Formation_Tick_updateAll(0); break;

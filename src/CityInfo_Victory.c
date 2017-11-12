@@ -16,6 +16,7 @@
 #include "game/settings.h"
 #include "game/time.h"
 #include "graphics/mouse.h"
+#include "sound/music.h"
 
 void CityInfo_Victory_check()
 {
@@ -101,7 +102,7 @@ void CityInfo_Victory_check()
 			}
 			Data_State.forceWinCheat = 0;
 		} else if (Data_State.winState == WinState_Win) {
-			Sound_stopMusic();
+			sound_music_stop();
 			if (Data_CityInfo.messageShownVictory) {
 				mouse_reset_up_state();
 				

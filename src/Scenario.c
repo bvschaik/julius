@@ -14,7 +14,6 @@
 #include "Natives.h"
 #include "Routing.h"
 #include "SidebarMenu.h"
-#include "Sound.h"
 #include "Terrain.h"
 #include "TerrainGraphics.h"
 
@@ -44,6 +43,8 @@
 #include "game/time.h"
 #include "game/tutorial.h"
 #include "graphics/image.h"
+#include "sound/city.h"
+#include "sound/music.h"
 
 #include <string.h>
 
@@ -135,8 +136,8 @@ static void initCustomScenario(const char *scenarioName)
 	city_message_init_scenario();
 	Loader_GameState_init();
 	Animation_resetTimers();
-	Sound_City_init();
-	Sound_Music_reset();
+	sound_city_init();
+	sound_music_reset();
 	SidebarMenu_enableAllBuildingMenuItems();
 	Building_clearList();
 	building_storage_clear_all();

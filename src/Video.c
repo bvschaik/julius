@@ -10,6 +10,7 @@
 #include "core/time.h"
 #include "game/settings.h"
 #include "graphics/color.h"
+#include "sound/music.h"
 
 static struct {
 	int isPlaying;
@@ -147,8 +148,8 @@ int loadSmk(const char *filename)
 static void endVideo()
 {
 	SoundDevice_useDefaultMusicPlayer();
-	Sound_Music_reset();
-	Sound_Music_update();
+	sound_music_reset();
+	sound_music_update();
 }
 
 int Video_start(const char *filename)
@@ -157,7 +158,7 @@ int Video_start(const char *filename)
 	data.isEnded = 0;
 	
 	if (loadSmk(filename)) {
-		Sound_stopMusic();
+		sound_music_stop();
 		Sound_stopSpeech();
 		data.isPlaying = 1;
 		return 1;

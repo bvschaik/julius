@@ -15,6 +15,7 @@
 
 #include "game/settings.h"
 #include "graphics/image.h"
+#include "sound/music.h"
 
 static void victoryAccept(int param1, int param2);
 static void victoryContinueGoverning(int param1, int param2);
@@ -33,7 +34,7 @@ static int focusButtonId = 0;
 
 void UI_VictoryIntermezzo_init()
 {
-	Sound_Music_reset();
+	sound_music_reset();
 	UI_Intermezzo_show(Intermezzo_Won, Window_MissionEnd, 1000);
 }
 
@@ -124,7 +125,7 @@ void UI_MissionEnd_handleMouse(const mouse *m)
 {
 	if (Data_State.winState == WinState_Win) {
 		if (m->right.went_up) {
-			Sound_stopMusic();
+			sound_music_stop();
 			Sound_stopSpeech();
 			advanceToNextMission();
 		}
@@ -220,8 +221,8 @@ static void victoryContinueGoverning(int duration, int param2)
 	UI_Window_goTo(Window_City);
 	Data_State.winState = WinState_None;
 	Data_State.forceWinCheat = 0;
-	Sound_Music_reset();
-	Sound_Music_update();
+	sound_music_reset();
+	sound_music_update();
 }
 
 static void firedAccept(int param1, int param2)

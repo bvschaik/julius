@@ -288,11 +288,6 @@ void Sound_setCityVolume(int percentage)
 	}
 }
 
-void Sound_stopMusic()
-{
-	SoundDevice_stopMusic();
-}
-
 void Sound_stopSpeech()
 {
 	SoundDevice_stopChannel(SoundChannel_Speech);

@@ -57,6 +57,7 @@ set (GRAPHICS_FILES
 )
 set (SOUND_FILES
     src/sound/city.c
+    src/sound/music.c
 )
 add_executable(julius
 	linux/main2.c
@@ -131,7 +132,6 @@ add_executable(julius
 	src/Settings.c
 	src/SidebarMenu.c
 	src/Sound.c
-	src/Sound_Music.c
 	src/Terrain.c
 	src/TerrainBridge.c
 	src/TerrainGraphics.c

@@ -1,17 +1,17 @@
 #include "AllWindows.h"
 
 #include "../Graphics.h"
-#include "../Sound.h"
 #include "../Widget.h"
 
 #include "../Data/Constants.h"
 #include "../Data/Screen.h"
 
 #include "graphics/image.h"
+#include "sound/music.h"
 
 void UI_Logo_init()
 {
-	Sound_Music_playIntro();
+	sound_music_play_intro();
 }
 
 void UI_Logo_drawBackground()
