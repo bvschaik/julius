@@ -16,6 +16,7 @@
 #include "game/settings.h"
 #include "graphics/image.h"
 #include "sound/music.h"
+#include "sound/speech.h"
 
 static void victoryAccept(int param1, int param2);
 static void victoryContinueGoverning(int param1, int param2);
@@ -126,7 +127,7 @@ void UI_MissionEnd_handleMouse(const mouse *m)
 	if (Data_State.winState == WinState_Win) {
 		if (m->right.went_up) {
 			sound_music_stop();
-			Sound_stopSpeech();
+			sound_speech_stop();
 			advanceToNextMission();
 		}
 	} else {

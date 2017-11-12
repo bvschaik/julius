@@ -498,11 +498,11 @@ static void buttonLayout(int index, int param2)
 	}
 	formation_change_layout(m->id, new_layout);
 	switch (index) {
-		case 0: Sound_Speech_playFile("wavs/cohort1.wav"); break;
-		case 1: Sound_Speech_playFile("wavs/cohort2.wav"); break;
-		case 2: Sound_Speech_playFile("wavs/cohort3.wav"); break;
-		case 3: Sound_Speech_playFile("wavs/cohort4.wav"); break;
-		case 4: Sound_Speech_playFile("wavs/cohort5.wav"); break;
+		case 0: sound_speech_play_file("wavs/cohort1.wav"); break;
+		case 1: sound_speech_play_file("wavs/cohort2.wav"); break;
+		case 2: sound_speech_play_file("wavs/cohort3.wav"); break;
+		case 3: sound_speech_play_file("wavs/cohort4.wav"); break;
+		case 4: sound_speech_play_file("wavs/cohort5.wav"); break;
 	}
 	Data_State.selectedLegionFormationId = contextForCallback->formationId;
 	UI_Window_goTo(Window_CityMilitary);

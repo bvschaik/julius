@@ -42,7 +42,7 @@ void UI_BuildingInfo_drawTerrain(BuildingInfoContext *c)
 			if (c->figure.count > 0) {
 				UI_BuildingInfo_playFigurePhrase(c);
 			} else {
-				Sound_Speech_playFile("wavs/empty_land.wav");
+				sound_speech_play_file("wavs/empty_land.wav");
 			}
 		}
 		if (c->figure.count > 0 && c->figure.figureIds[c->figure.selectedIndex]) {

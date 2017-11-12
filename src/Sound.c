@@ -234,18 +234,6 @@ static void initChannelFilenames()
 	}
 }
 
-static const char *getCasedFilename(const char *filename)
-{
-	struct FilesystemName key, *entry;
-	strcpy(key.lower, filename);
-	entry = (struct FilesystemName*) bsearch(&key, fsFilenames, numFsNames,
-		sizeof(struct FilesystemName), compareLower);
-	if (entry) {
-		return entry->cased;
-	}
-	return 0;
-}
-
 void Sound_init()
 {
 	initFilesystemNames();
@@ -288,10 +276,6 @@ void Sound_setCityVolume(int percentage)
 	}
 }
 
-void Sound_stopSpeech()
-{
-	SoundDevice_stopChannel(SoundChannel_Speech);
-}
 
 void Sound_playCityChannel_internal(int channel, int direction)
 {
@@ -333,19 +317,4 @@ void Sound_Effects_playChannel(int channel)
 		return;
 	}
 	SoundDevice_playChannel(channel);
-}
-
-void Sound_Speech_playFile(const char *filename)
-{
-	if (!setting_sound(SOUND_SPEECH)->enabled) {
-		return;
-	}
-	if (SoundDevice_isChannelPlaying(SoundChannel_Speech)) {
-		SoundDevice_stopChannel(SoundChannel_Speech);
-	}
-	const char *casedFilename = getCasedFilename(filename);
-	if (casedFilename) {
-		SoundDevice_playSoundOnChannel(casedFilename, SoundChannel_Speech);
-		SoundDevice_setChannelVolume(SoundChannel_Speech, setting_sound(SOUND_SPEECH)->volume);
-	}
 }

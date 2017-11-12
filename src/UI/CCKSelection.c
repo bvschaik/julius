@@ -4,6 +4,7 @@
 #include "core/dir.h"
 #include "core/file.h"
 #include "core/string.h"
+#include "sound/speech.h"
 
 #include "../GameFile.h"
 #include "../Graphics.h"
@@ -300,7 +301,7 @@ static void buttonScroll(int isDown, int numLines)
 
 static void buttonStartScenario(int param1, int param2)
 {
-	Sound_stopSpeech();
+	sound_speech_stop();
 	Scenario_initialize(Data_FileList.selectedScenario);
 	UI_Window_goTo(Window_City);
 }

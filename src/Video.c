@@ -11,6 +11,7 @@
 #include "game/settings.h"
 #include "graphics/color.h"
 #include "sound/music.h"
+#include "sound/speech.h"
 
 static struct {
 	int isPlaying;
@@ -159,7 +160,7 @@ int Video_start(const char *filename)
 	
 	if (loadSmk(filename)) {
 		sound_music_stop();
-		Sound_stopSpeech();
+		sound_speech_stop();
 		data.isPlaying = 1;
 		return 1;
 	} else {

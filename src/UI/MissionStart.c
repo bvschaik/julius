@@ -18,6 +18,7 @@
 #include "core/lang.h"
 #include "game/tutorial.h"
 #include "sound/music.h"
+#include "sound/speech.h"
 
 static void startMission(int param1, int param2);
 static void briefingBack(int param1, int param2);
@@ -168,13 +169,13 @@ void UI_MissionStart_Selection_handleMouse(const mouse *m)
 			Data_Settings.saveGameMissionId = Constant_MissionIds[missionId].peaceful;
 			data.choice = 1;
 			UI_Window_requestRefresh();
-			Sound_Speech_playFile("wavs/fanfare_nu1.wav");
+			sound_speech_play_file("wavs/fanfare_nu1.wav");
 		}
 		if (isMouseHit(m, xMilitary, yMilitary, 44)) {
 			Data_Settings.saveGameMissionId = Constant_MissionIds[missionId].military;
 			data.choice = 2;
 			UI_Window_requestRefresh();
-			Sound_Speech_playFile("wavs/fanfare_nu5.wav");
+			sound_speech_play_file("wavs/fanfare_nu5.wav");
 		}
 	}
 }
@@ -325,7 +326,7 @@ void UI_MissionStart_BriefingReview_handleMouse(const mouse *m)
 static void briefingBack(int param1, int param2)
 {
 	if (UI_Window_getId() == Window_MissionBriefingInitial) {
-		Sound_stopSpeech();
+		sound_speech_stop();
 		UI_Window_goTo(Window_MissionSelection);
 	}
 }
@@ -339,7 +340,7 @@ static void startMission(int param1, int param2)
 			UI_MissionStart_show();
 			break;
 		default:
-			Sound_stopSpeech();
+			sound_speech_stop();
 			sound_music_reset();
 			UI_Window_goTo(Window_City);
 			Data_CityInfo.missionSavedGameWritten = 0;

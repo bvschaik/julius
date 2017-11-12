@@ -10,6 +10,7 @@
 #include "core/calc.h"
 #include "game/settings.h"
 #include "sound/music.h"
+#include "sound/speech.h"
 
 static void buttonToggle(int param1, int param2);
 static void buttonOk(int param1, int param2);
@@ -189,7 +190,7 @@ static void buttonToggle(int type, int param2)
         break;
     case SOUND_SPEECH:
         if (!setting_sound(SOUND_SPEECH)->enabled) {
-            Sound_stopSpeech();
+            sound_speech_stop();
         }
         break;
     }

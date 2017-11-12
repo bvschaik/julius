@@ -10,6 +10,7 @@
 
 #include "figure/trader.h"
 #include "figure/type.h"
+#include "sound/speech.h"
 
 #include <string.h>
 
@@ -528,7 +529,7 @@ static void playFigureSoundFile(int figureSoundId, int phraseId)
 	if (figureSoundId >= 0 && phraseId >= 0) {
 		strcpy(path, "wavs/");
 		strcat(path, figureSounds[figureSoundId][phraseId]);
-		Sound_Speech_playFile(path);
+		sound_speech_play_file(path);
 	}
 }
 
@@ -613,11 +614,11 @@ void Figure_playDieSound(int figureType)
 	}
 	if (FigureIsEnemy(figureType)) {
 		if (Data_CityInfo.numEnemiesInCity == 1) {
-			Sound_Speech_playFile("wavs/army_war_cry.wav");
+			sound_speech_play_file("wavs/army_war_cry.wav");
 		}
 	} else if (FigureIsLegion(figureType)) {
 		if (Data_CityInfo.numSoldiersInCity == 1) {
-			Sound_Speech_playFile("wavs/barbarian_war_cry.wav");
+			sound_speech_play_file("wavs/barbarian_war_cry.wav");
 		}
 	}
 }

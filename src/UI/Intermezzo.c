@@ -10,6 +10,7 @@
 
 #include "core/time.h"
 #include "sound/music.h"
+#include "sound/speech.h"
 
 static const char soundFilesBriefing[][32] = {
 	"wavs/01b.wav",
@@ -86,24 +87,24 @@ void UI_Intermezzo_drawBackground()
 	int graphicBase = image_group(ID_Graphic_IntermezzoBackground);
 	if (data.type == Intermezzo_MissionBriefing) {
 		sound_music_stop();
-		Sound_stopSpeech();
+		sound_speech_stop();
 		if (Data_Settings.isCustomScenario) {
 			Graphics_drawImage(graphicBase + 1, xOffset, yOffset);
 		} else {
 			Graphics_drawImage(graphicBase + 1 + 2 * Data_Settings.saveGameMissionId, xOffset, yOffset);
-			Sound_Speech_playFile(soundFilesBriefing[Data_Settings.saveGameMissionId]);
+			sound_speech_play_file(soundFilesBriefing[Data_Settings.saveGameMissionId]);
 		}
 		UI_Window_requestRefresh();
 	} else if (data.type == Intermezzo_Fired) {
 		Graphics_drawImage(graphicBase, xOffset, yOffset);
 	} else if (data.type == Intermezzo_Won) {
 		sound_music_stop();
-		Sound_stopSpeech();
+		sound_speech_stop();
 		if (Data_Settings.isCustomScenario) {
 			Graphics_drawImage(graphicBase + 2, xOffset, yOffset);
 		} else {
 			Graphics_drawImage(graphicBase + 2 + 2 * Data_Settings.saveGameMissionId, xOffset, yOffset);
-			Sound_Speech_playFile(soundFilesWon[Data_Settings.saveGameMissionId]);
+			sound_speech_play_file(soundFilesWon[Data_Settings.saveGameMissionId]);
 		}
 		UI_Window_requestRefresh();
 	}

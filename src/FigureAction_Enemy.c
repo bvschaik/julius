@@ -11,6 +11,7 @@
 
 #include "figure/formation.h"
 #include "figure/properties.h"
+#include "sound/speech.h"
 
 static void enemyInitial(int figureId, struct Data_Figure *f, const formation *m)
 {
@@ -21,11 +22,11 @@ static void enemyInitial(int figureId, struct Data_Figure *f, const formation *m
 	if (f->waitTicks <= 0) {
 		if (f->isGhost && f->indexInFormation == 0) {
 			if (m->layout == FORMATION_ENEMY8) {
-				Sound_Speech_playFile("wavs/drums.wav");
+				sound_speech_play_file("wavs/drums.wav");
 			} else if (m->layout == FORMATION_ENEMY12) {
-				Sound_Speech_playFile("wavs/horn2.wav");
+				sound_speech_play_file("wavs/horn2.wav");
 			} else {
-				Sound_Speech_playFile("wavs/horn1.wav");
+				sound_speech_play_file("wavs/horn1.wav");
 			}
 		}
 		f->isGhost = 0;

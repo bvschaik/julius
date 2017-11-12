@@ -58,6 +58,7 @@ set (GRAPHICS_FILES
 set (SOUND_FILES
     src/sound/city.c
     src/sound/music.c
+    src/sound/speech.c
 )
 add_executable(julius
 	linux/main2.c

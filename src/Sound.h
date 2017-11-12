@@ -134,13 +134,9 @@ void Sound_setSpeechVolume(int percentage);
 void Sound_setEffectsVolume(int percentage);
 void Sound_setCityVolume(int percentage);
 
-void Sound_stopSpeech();
-
 // NB: only internal use!
 void Sound_playCityChannel_internal(int channel, int direction);
 
 void Sound_Effects_playChannel(int channel);
-
-void Sound_Speech_playFile(const char *filename);
 
 #endif

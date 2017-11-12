@@ -19,6 +19,7 @@
 #include "figure/formation.h"
 #include "game/settings.h"
 #include "sound/city.h"
+#include "sound/speech.h"
 
 static void drawBuildingFootprints();
 static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_CityPixelCoordinate *coord);
@@ -1072,7 +1073,7 @@ static void militaryMapClick()
 	} else {
 		Formation_legionMoveTo(formationId,
 			Data_Settings_Map.current.x, Data_Settings_Map.current.y);
-		Sound_Speech_playFile("wavs/cohort5.wav");
+		sound_speech_play_file("wavs/cohort5.wav");
 	}
 	UI_Window_goTo(Window_City);
 }
