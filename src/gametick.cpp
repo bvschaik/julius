@@ -26,6 +26,7 @@
 #include "ui/allwindows.h"
 #include "ui/sidebar.h"
 #include "ui/window.h"
+#include "empire/city.h"
 
 #include "data/cityinfo.hpp"
 #include "data/settings.hpp"
@@ -250,7 +251,7 @@ static void advanceYear()
     game_time_advance_year();
     CityInfo_Population_requestYearlyUpdate();
     CityInfo_Finance_handleYearChange();
-    Empire_resetYearlyTradeAmounts();
+    empire_city_reset_yearly_trade_amounts();
     Security_Tick_updateFireSpreadDirection();
     CityInfo_Ratings_calculate(1);
     Data_CityInfo.godBlessingNeptuneDoubleTrade = 0;

@@ -15,6 +15,7 @@
 #include "data/scenario.hpp"
 #include "data/settings.hpp"
 
+#include "empire/city.h"
 #include "figure/formation.h"
 #include "figure/trader.h"
 
@@ -87,10 +88,10 @@ static void drawFigureInfoTrade(BuildingInfoContext *c, int figureId)
         figureId = Data_Figures[figureId].inFrontFigureId;
     }
     struct Data_Figure *f = &Data_Figures[figureId];
-    int cityId = f->empireCityId;
+    const empire_city *city = empire_city_get(f->empireCityId);
     int width = Widget_GameText_draw(64, f->type,
                                      c->xOffset + 40, c->yOffset + 110, FONT_SMALL_BLACK);
-    Widget_GameText_draw(21, Data_Empire_Cities[cityId].cityNameId,
+    Widget_GameText_draw(21, city->name_id,
                          c->xOffset + 40 + width, c->yOffset + 110, FONT_SMALL_BLACK);
 
     width = Widget_GameText_draw(129, 1,
@@ -181,7 +182,7 @@ static void drawFigureInfoTrade(BuildingInfoContext *c, int figureId)
         width = Widget_GameText_draw(129, 2, c->xOffset + 40, c->yOffset + 170, FONT_SMALL_BLACK);
         for (int r = Resource_Min; r < Resource_Max; r++)
         {
-            if (Data_Empire_Cities[cityId].buysResourceFlag[r])
+            if (city->buys_resource[r])
             {
                 int graphicId = image_group(ID_Graphic_ResourceIcons) + r + Resource_getGraphicIdOffset(r, 3);
                 Graphics_drawImage(graphicId, c->xOffset + 40 + width, c->yOffset + 167);
@@ -192,7 +193,7 @@ static void drawFigureInfoTrade(BuildingInfoContext *c, int figureId)
         width = Widget_GameText_draw(129, 3, c->xOffset + 40, c->yOffset + 200, FONT_SMALL_BLACK);
         for (int r = Resource_Min; r < Resource_Max; r++)
         {
-            if (Data_Empire_Cities[cityId].sellsResourceFlag[r])
+            if (city->sells_resource[r])
             {
                 int graphicId = image_group(ID_Graphic_ResourceIcons) + r + Resource_getGraphicIdOffset(r, 3);
                 Graphics_drawImage(graphicId, c->xOffset + 40 + width, c->yOffset + 197);

@@ -8,6 +8,7 @@
 #include "data/cityinfo.hpp"
 #include "data/constants.hpp"
 #include "data/scenario.hpp"
+#include "empire/city.h"
 
 #include "building/model.h"
 #include "core/calc.h"
@@ -24,7 +25,7 @@ void CityInfo_Resource_calculateAvailableResources()
 
     for (int i = Resource_Min; i < Resource_Max; i++)
     {
-        if (Empire_ourCityCanProduceResource(i) || Empire_canImportResource(i) ||
+        if (Empire_ourCityCanProduceResource(i) || empire_city_can_import_resource(i) ||
                 (i == Resource_Meat && Data_Scenario.allowedBuildings.wharf))
         {
             Data_CityInfo_Resource.availableResources[Data_CityInfo_Resource.numAvailableResources++] = i;
@@ -36,7 +37,7 @@ void CityInfo_Resource_calculateAvailableResources()
         {
             continue;
         }
-        if (Empire_ourCityCanProduceResource(i) || Empire_canImportResource(i) ||
+        if (Empire_ourCityCanProduceResource(i) || empire_city_can_import_resource(i) ||
                 (i == Resource_Meat && Data_Scenario.allowedBuildings.wharf))
         {
             Data_CityInfo_Resource.availableFoods[Data_CityInfo_Resource.numAvailableFoods++] = i;

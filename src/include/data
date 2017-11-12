@@ -22,6 +22,5 @@
 #include "data/constants.hpp"
 #include "data/event.hpp"
 #include "data/grid.hpp"
-#include "data/tutorial.hpp"
 
 #endif

@@ -12,22 +12,16 @@
 #include "sound.h"
 #include "terraingraphics.h"
 
-#include "data/building.hpp"
-#include "data/cityinfo.hpp"
-#include "data/constants.hpp"
-#include "data/empire.hpp"
-#include "data/event.hpp"
-#include "data/grid.hpp"
-#include "data/scenario.hpp"
-#include "data/settings.hpp"
-#include "game/tutorial.h"
+#include <data>
 
 #include "building/count.h"
 #include "core/calc.h"
 #include "core/random.h"
+#include "empire/city.h"
 #include "empire/trade_prices.h"
 #include "empire/trade_route.h"
 #include "game/time.h"
+#include "game/tutorial.h"
 
 #include <string.h>
 
@@ -299,7 +293,7 @@ static void setDistantBattleCityVulnerable()
 {
     if (Data_CityInfo.distantBattleCityId)
     {
-        Data_Empire_Cities[Data_CityInfo.distantBattleCityId].cityType = EmpireCity_VulnerableRoman;
+        empire_city_set_vulnerable(Data_CityInfo.distantBattleCityId);
     }
 }
 
@@ -307,7 +301,7 @@ static void setDistantBattleCityForeign()
 {
     if (Data_CityInfo.distantBattleCityId)
     {
-        Data_Empire_Cities[Data_CityInfo.distantBattleCityId].cityType = EmpireCity_DistantForeign;
+        empire_city_set_foreign(Data_CityInfo.distantBattleCityId);
     }
 }
 
@@ -497,17 +491,17 @@ void Event_handleDemandChanges()
         }
         int route = Data_Scenario.demandChanges.routeId[i];
         int resource = Data_Scenario.demandChanges.resourceId[i];
-        int cityId = Empire_getCityForTradeRoute(route);
+        int cityId = empire_city_get_for_trade_route(route);
         if (Data_Scenario.demandChanges.isRise[i])
         {
-            if (trade_route_increase_limit(route, resource) && Empire_isTradeRouteOpen(route))
+            if (trade_route_increase_limit(route, resource) && empire_city_is_trade_route_open(route))
             {
                 PlayerMessage_post(1, Message_74_IncreasedTrading, cityId, resource);
             }
         }
         else
         {
-            if (trade_route_decrease_limit(route, resource) && Empire_isTradeRouteOpen(route))
+            if (trade_route_decrease_limit(route, resource) && empire_city_is_trade_route_open(route))
             {
                 if (trade_route_limit(route, resource) > 0)
                 {

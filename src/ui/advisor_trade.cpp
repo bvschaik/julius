@@ -1,7 +1,6 @@
 #include "advisors_private.h"
 #include "tooltip.h"
 #include "window.h"
-#include "widget_text.h"
 #include "messagedialog.h"
 #include "cityinfo.h"
 #include "empire.h"
@@ -12,6 +11,7 @@
 
 #include "building/count.h"
 #include "core/calc.h"
+#include "empire/city.h"
 #include "empire/trade_prices.h"
 
 static void buttonPrices(int param1, int param2);
@@ -333,11 +333,11 @@ void UI_ResourceSettingsDialog_drawForeground()
     Widget_GameText_draw(54, 15, baseOffsetX + 98 + width, baseOffsetY + 192, FONT_NORMAL_BLACK);
 
     int tradeFlags = TradeStatus_None;
-    if (Empire_canImportResource(selectedResourceId))
+    if (empire_city_can_import_resource(selectedResourceId))
     {
         tradeFlags |= TradeStatus_Import;
     }
-    if (Empire_canExportResource(selectedResourceId))
+    if (empire_city_can_export_resource(selectedResourceId))
     {
         tradeFlags |= TradeStatus_Export;
     }
@@ -480,12 +480,12 @@ static void resourceSettingsToggleTrade(int param1, int param2)
     }
 
     if (Data_CityInfo.resourceTradeStatus[selectedResourceId] == TradeStatus_Import &&
-            !Empire_canImportResource(selectedResourceId))
+            !empire_city_can_import_resource(selectedResourceId))
     {
         Data_CityInfo.resourceTradeStatus[selectedResourceId] = TradeStatus_Export;
     }
     if (Data_CityInfo.resourceTradeStatus[selectedResourceId] == TradeStatus_Export &&
-            !Empire_canExportResource(selectedResourceId))
+            !empire_city_can_export_resource(selectedResourceId))
     {
         Data_CityInfo.resourceTradeStatus[selectedResourceId] = TradeStatus_None;
     }

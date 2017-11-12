@@ -7,17 +7,13 @@
 #include "terrain.h"
 #include "trader.h"
 
-#include "data/cityinfo.hpp"
-#include "data/empire.hpp"
-#include "data/grid.hpp"
-#include "data/message.hpp"
-#include "data/scenario.hpp"
-
+#include <data>
+#include "building/storage.h"
+#include "empire/city.h"
 #include "empire/trade_prices.h"
 #include "empire/trade_route.h"
 #include "figure/trader.h"
 #include "figure/type.h"
-#include "building/storage.h"
 
 static void advanceTradeNextImportResourceCaravan()
 {
@@ -129,7 +125,7 @@ int FigureAction_TradeCaravan_canSell(int traderId, int warehouseId, int cityId)
     }
     else
     {
-        for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++)
+        for (int i = RESOURCE_MIN; i < RESOURCE_MAX; i++)
         {
             advanceTradeNextImportResourceCaravan();
             if (s->resource_state[Data_CityInfo.tradeNextImportResourceCaravan] != BUILDING_STORAGE_STATE_NOT_ACCEPTING &&
@@ -323,7 +319,7 @@ void FigureAction_tradeCaravan(int figureId)
                 int resource = traderGetBuyResource(f->destinationBuildingId, f->empireCityId);
                 if (resource)
                 {
-                    trade_route_increase_traded(Data_Empire_Cities[f->empireCityId].routeId, resource);
+                    trade_route_increase_traded(empire_city_get_route_id(f->empireCityId), resource);
                     trader_record_bought_resource(f->traderId, resource);
                     f->traderAmountBought++;
                 }
@@ -341,7 +337,7 @@ void FigureAction_tradeCaravan(int figureId)
                 int resource = traderGetSellResource(figureId, f->destinationBuildingId, f->empireCityId);
                 if (resource)
                 {
-                    trade_route_increase_traded(Data_Empire_Cities[f->empireCityId].routeId, resource);
+                    trade_route_increase_traded(empire_city_get_route_id(f->empireCityId), resource);
                     trader_record_sold_resource(f->traderId, resource);
                     f->loadsSoldOrCarrying++;
                 }

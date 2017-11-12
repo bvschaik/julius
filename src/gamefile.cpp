@@ -13,6 +13,7 @@
 #include "sound.h"
 #include "terraingraphics.h"
 #include "utilitymanagement.h"
+#include "empire/city.h"
 
 #include "data/building.hpp"
 #include "data/cityinfo.hpp"
@@ -161,7 +162,7 @@ typedef struct
     buffer *Data_Empire_scrollX;
     buffer *Data_Empire_scrollY;
     buffer *Data_Empire_selectedObject;
-    buffer *Data_Empire_Cities;
+    buffer *empire_cities;
     buffer *building_count_industry;
     buffer *trade_prices;
     buffer *figure_names;
@@ -334,7 +335,7 @@ void init_savegame_data()
     state->Data_Empire_scrollX = create_savegame_piece(4, 0);
     state->Data_Empire_scrollY = create_savegame_piece(4, 0);
     state->Data_Empire_selectedObject = create_savegame_piece(4, 0);
-    state->Data_Empire_Cities = create_savegame_piece(2706, 1);
+    state->empire_cities = create_savegame_piece(2706, 1);
     state->building_count_industry = create_savegame_piece(128, 0);
     state->trade_prices = create_savegame_piece(128, 0);
     state->figure_names = create_savegame_piece(84, 0);
@@ -507,8 +508,8 @@ static void savegame_deserialize(savegame_state *state)
     read_all_from_buffer(state->Data_Empire_scrollX, &Data_Empire.scrollX);
     read_all_from_buffer(state->Data_Empire_scrollY, &Data_Empire.scrollY);
     read_all_from_buffer(state->Data_Empire_selectedObject, &Data_Empire.selectedObject);
-    read_all_from_buffer(state->Data_Empire_Cities, &Data_Empire_Cities);
 
+    empire_city_load_state(state->empire_cities);
     trade_prices_load_state(state->trade_prices);
     figure_name_load_state(state->figure_names);
 
@@ -645,8 +646,8 @@ static void savegame_serialize(savegame_state *state)
     write_all_to_buffer(state->Data_Empire_scrollX, &Data_Empire.scrollX);
     write_all_to_buffer(state->Data_Empire_scrollY, &Data_Empire.scrollY);
     write_all_to_buffer(state->Data_Empire_selectedObject, &Data_Empire.selectedObject);
-    write_all_to_buffer(state->Data_Empire_Cities, &Data_Empire_Cities);
 
+    empire_city_save_state(state->empire_cities);
     trade_prices_save_state(state->trade_prices);
     figure_name_save_state(state->figure_names);
 

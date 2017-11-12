@@ -7,19 +7,14 @@
 #include "terrain.h"
 #include "widget_text.h"
 
-#include "data/building.hpp"
-#include "data/cityinfo.hpp"
-#include "data/constants.hpp"
-#include "data/grid.hpp"
-#include "data/scenario.hpp"
-#include "data/screen.hpp"
-#include "data/settings.hpp"
+#include <data>
 
 #include "building/count.h"
 #include "building/model.h"
 #include "core/lang.h"
 #include "core/string.h"
 #include "core/time.h"
+#include "empire/city.h"
 #include "game/settings.h"
 #include "graphics/image.h"
 
@@ -432,7 +427,7 @@ static void checkIronAccess(int buildingType)
             {
                 UI_Warning_show(Warning_BuildIronMine);
             }
-            else if (!Empire_canImportResource(Resource_Iron))
+            else if (!empire_city_can_import_resource(Resource_Iron))
             {
                 UI_Warning_show(Warning_OpenTradeToImport);
             }
@@ -457,7 +452,7 @@ static void checkVinesAccess(int buildingType)
             {
                 UI_Warning_show(Warning_BuildVinesFarm);
             }
-            else if (!Empire_canImportResource(Resource_Vines))
+            else if (!empire_city_can_import_resource(Resource_Vines))
             {
                 UI_Warning_show(Warning_OpenTradeToImport);
             }
@@ -482,7 +477,7 @@ static void checkOlivesAccess(int buildingType)
             {
                 UI_Warning_show(Warning_BuildOliveFarm);
             }
-            else if (!Empire_canImportResource(Resource_Olives))
+            else if (!empire_city_can_import_resource(Resource_Olives))
             {
                 UI_Warning_show(Warning_OpenTradeToImport);
             }
@@ -507,7 +502,7 @@ static void checkTimberAccess(int buildingType)
             {
                 UI_Warning_show(Warning_BuildTimberYard);
             }
-            else if (!Empire_canImportResource(Resource_Timber))
+            else if (!empire_city_can_import_resource(Resource_Timber))
             {
                 UI_Warning_show(Warning_OpenTradeToImport);
             }
@@ -532,7 +527,7 @@ static void checkClayAccess(int buildingType)
             {
                 UI_Warning_show(Warning_BuildClayPit);
             }
-            else if (!Empire_canImportResource(Resource_Clay))
+            else if (!empire_city_can_import_resource(Resource_Clay))
             {
                 UI_Warning_show(Warning_OpenTradeToImport);
             }

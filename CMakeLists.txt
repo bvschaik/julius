@@ -43,6 +43,7 @@ find_package(SDL2_mixer REQUIRED)
 
 include_directories(${SDL2_INCLUDE_DIR})
 include_directories(${SDL2_MIXER_INCLUDE_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/include)
 
 #set(LIBS ${LIBS} ${SDL_LIBRARY})
 #link_libraries(${LIBS})
