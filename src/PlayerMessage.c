@@ -224,10 +224,6 @@ void PlayerMessage_initList()
 	Data_Message.maxScrollPosition = 0;
 
 	Data_Message.playSound = 1;
-	Data_Message.lastSoundTime.fire = 0;
-	Data_Message.lastSoundTime.collapse = 0;
-	Data_Message.lastSoundTime.rioterGenerated = 0;
-	Data_Message.lastSoundTime.rioterCollapse = 0;
 
 	PlayerMessage_initProblemArea();
 }

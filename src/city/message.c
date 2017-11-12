@@ -1,5 +1,7 @@
 #include "message.h"
 
+#include "core/time.h"
+
 #include "PlayerMessage.h"
 
 #define MAX_MESSAGE_CATEGORIES 20
@@ -19,6 +21,8 @@ static struct {
 
     int message_count[MAX_MESSAGE_CATEGORIES];
     int message_delay[MAX_MESSAGE_CATEGORIES];
+
+    time_millis last_sound_time[MESSAGE_CAT_RIOT_COLLAPSE+1];
 } data;
 
 void city_message_init_scenario()
@@ -37,29 +41,19 @@ void city_message_init_scenario()
     data.population_shown.pop15000 = 0;
     data.population_shown.pop20000 = 0;
     data.population_shown.pop25000 = 0;
+
+    for (int i = 0; i <= MESSAGE_CAT_RIOT_COLLAPSE; i++) {
+        data.last_sound_time[i] = 0;
+    }
 }
 
-void city_message_reset_category_count(message_category category)
+void city_message_apply_sound_interval(message_category category)
 {
-    data.message_count[category] = 0;
-}
-
-void city_message_increase_category_count(message_category category)
-{
-    data.message_count[category]++;
-}
-
-int city_message_get_category_count(message_category category)
-{
-    return data.message_count[category];
-}
-
-void city_message_decrease_delays()
-{
-    for (int i = 0; i < MAX_MESSAGE_CATEGORIES; i++) {
-        if (data.message_delay[i] > 0) {
-            data.message_delay[i]--;
-        }
+    time_millis now = time_get_millis();
+    if (now <= 15000 + data.last_sound_time[category]) {
+        PlayerMessage_disableSoundForNextMessage();
+    } else {
+        data.last_sound_time[category] = now;
     }
 }
 
@@ -89,6 +83,30 @@ void city_message_post_with_message_delay(message_category category, int use_pop
         if (data.message_delay[category] <= 0) {
             data.message_delay[category] = delay;
             PlayerMessage_post(use_popup, message_type, 0, 0);
+        }
+    }
+}
+
+void city_message_reset_category_count(message_category category)
+{
+    data.message_count[category] = 0;
+}
+
+void city_message_increase_category_count(message_category category)
+{
+    data.message_count[category]++;
+}
+
+int city_message_get_category_count(message_category category)
+{
+    return data.message_count[category];
+}
+
+void city_message_decrease_delays()
+{
+    for (int i = 0; i < MAX_MESSAGE_CATEGORIES; i++) {
+        if (data.message_delay[i] > 0) {
+            data.message_delay[i]--;
         }
     }
 }

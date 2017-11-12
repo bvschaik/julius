@@ -23,6 +23,8 @@ void city_message_post_with_popup_delay(message_category category, int message_t
 
 void city_message_post_with_message_delay(message_category category, int use_popup, int message_type, int delay);
 
+void city_message_apply_sound_interval(message_category category);
+
 int city_message_get_category_count(message_category category);
 void city_message_reset_category_count(message_category category);
 void city_message_increase_category_count(message_category category);
