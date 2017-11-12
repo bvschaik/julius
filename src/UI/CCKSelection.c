@@ -3,6 +3,7 @@
 #include "core/calc.h"
 #include "core/dir.h"
 #include "core/file.h"
+#include "core/string.h"
 
 #include "../GameFile.h"
 #include "../Graphics.h"
@@ -90,7 +91,7 @@ static void drawScenarioList()
 		char file[FILENAME_LENGTH];
 		strcpy(file, scenarios->files[i + scrollPosition]);
 		file_remove_extension(file);
-		Widget_Text_draw(file, Data_Screen.offset640x480.x + 24,
+		Widget_Text_draw(string_from_ascii(file), Data_Screen.offset640x480.x + 24,
 			Data_Screen.offset640x480.y + 220 + 16 * i, font, 0);
 	}
 }
@@ -121,7 +122,7 @@ static void drawScenarioInfo()
 	Graphics_drawImage(image_group(ID_Graphic_ScenarioImage) + Data_Scenario.imageId,
 		Data_Screen.offset640x480.x + 78, Data_Screen.offset640x480.y + 36);
 
-	Widget_Text_drawCentered(Data_FileList.selectedScenario,
+	Widget_Text_drawCentered(string_from_ascii(Data_FileList.selectedScenario),
 		baseOffsetX + 15, baseOffsetY + 5, 260, FONT_LARGE_BLACK, 0);
 	Widget_Text_drawCentered(Data_Scenario.briefDescription,
 		baseOffsetX + 15, baseOffsetY + 40, 260, FONT_NORMAL_WHITE, 0);

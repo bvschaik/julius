@@ -219,8 +219,8 @@ void Video_draw(int xOffset, int yOffset)
 		data.video.currentFrame++;
 	}
 	
-	unsigned char *frame = smk_get_video(data.video.s);
-	unsigned char *pal = smk_get_palette(data.video.s);
+	const unsigned char *frame = smk_get_video(data.video.s);
+	const unsigned char *pal = smk_get_palette(data.video.s);
 	if (frame && pal) {
 		for (int y = 0; y < data.video.height; y++) {
 			for (int x = 0; x < data.video.width; x++) {

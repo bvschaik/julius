@@ -4,6 +4,7 @@
 #include "core/calc.h"
 #include "core/dir.h"
 #include "core/file.h"
+#include "core/string.h"
 
 #include "../GameFile.h"
 #include "../Graphics.h"
@@ -107,12 +108,12 @@ void UI_FileDialog_drawForeground()
 		}
 		strcpy(file, savedGames->files[scrollPosition + i]);
 		file_remove_extension(file);
-		Widget_Text_draw(file, baseOffsetX + 160, baseOffsetY + 130 + 16 * i, font, 0);
+		Widget_Text_draw(string_from_ascii(file), baseOffsetX + 160, baseOffsetY + 130 + 16 * i, font, 0);
 	}
 
 	Widget_Button_drawImageButtons(baseOffsetX, baseOffsetY, imageButtons, 4);
 	Widget_Text_captureCursor();
-	Widget_Text_draw(Data_FileList.selectedCity, baseOffsetX + 160, baseOffsetY + 90, FONT_NORMAL_WHITE, 0);
+	Widget_Text_draw(string_from_ascii(Data_FileList.selectedCity), baseOffsetX + 160, baseOffsetY + 90, FONT_NORMAL_WHITE, 0);
 	Widget_Text_drawCursor(baseOffsetX + 160, baseOffsetY + 91);
 	drawScrollbarDot();
 }
