@@ -1,7 +1,6 @@
 #include "figureaction_private.h"
 
 #include "figure.h"
-#include "empire.h"
 #include "playermessage.h"
 #include "resource.h"
 #include "terrain.h"
@@ -10,6 +9,7 @@
 #include <data>
 #include "building/storage.h"
 #include "empire/city.h"
+#include "empire/empire.h"
 #include "empire/trade_prices.h"
 #include "empire/trade_route.h"
 #include "figure/trader.h"
@@ -38,7 +38,7 @@ int FigureAction_TradeCaravan_canBuy(int traderId, int warehouseId, int cityId)
     {
         warehouseId = Data_Buildings[warehouseId].nextPartBuildingId;
         if (warehouseId > 0 && Data_Buildings[warehouseId].loadsStored > 0 &&
-                Empire_canExportResourceToCity(cityId, Data_Buildings[warehouseId].subtype.warehouseResourceId))
+                empire_can_export_resource_to_city(cityId, Data_Buildings[warehouseId].subtype.warehouseResourceId))
         {
             return 1;
         }
@@ -60,7 +60,7 @@ static int traderGetBuyResource(int warehouseId, int cityId)
             continue;
         }
         int resource = Data_Buildings[warehouseId].subtype.warehouseResourceId;
-        if (Data_Buildings[warehouseId].loadsStored > 0 && Empire_canExportResourceToCity(cityId, resource))
+        if (Data_Buildings[warehouseId].loadsStored > 0 && empire_can_export_resource_to_city(cityId, resource))
         {
             // update stocks
             Data_CityInfo.resourceSpaceInWarehouses[resource]++;
@@ -107,7 +107,7 @@ int FigureAction_TradeCaravan_canSell(int traderId, int warehouseId, int cityId)
     {
         if (s->resource_state[r] != BUILDING_STORAGE_STATE_NOT_ACCEPTING)
         {
-            if (Empire_canImportResourceFromCity(cityId, r))
+            if (empire_can_import_resource_from_city(cityId, r))
             {
                 numImportable++;
             }
@@ -119,7 +119,7 @@ int FigureAction_TradeCaravan_canSell(int traderId, int warehouseId, int cityId)
     }
     int canImport = 0;
     if (s->resource_state[Data_CityInfo.tradeNextImportResourceCaravan] != BUILDING_STORAGE_STATE_NOT_ACCEPTING &&
-            Empire_canImportResourceFromCity(cityId, Data_CityInfo.tradeNextImportResourceCaravan))
+            empire_can_import_resource_from_city(cityId, Data_CityInfo.tradeNextImportResourceCaravan))
     {
         canImport = 1;
     }
@@ -129,7 +129,7 @@ int FigureAction_TradeCaravan_canSell(int traderId, int warehouseId, int cityId)
         {
             advanceTradeNextImportResourceCaravan();
             if (s->resource_state[Data_CityInfo.tradeNextImportResourceCaravan] != BUILDING_STORAGE_STATE_NOT_ACCEPTING &&
-                    Empire_canImportResourceFromCity(cityId, Data_CityInfo.tradeNextImportResourceCaravan))
+                    empire_can_import_resource_from_city(cityId, Data_CityInfo.tradeNextImportResourceCaravan))
             {
                 canImport = 1;
                 break;
@@ -151,7 +151,7 @@ int FigureAction_TradeCaravan_canSell(int traderId, int warehouseId, int cityId)
                     // empty space
                     return 1;
                 }
-                if (Empire_canImportResourceFromCity(cityId, Data_Buildings[spaceId].subtype.warehouseResourceId))
+                if (empire_can_import_resource_from_city(cityId, Data_Buildings[spaceId].subtype.warehouseResourceId))
                 {
                     return 1;
                 }
@@ -168,7 +168,7 @@ static int traderGetSellResource(int traderId, int warehouseId, int cityId)
         return 0;
     }
     int imp = 1;
-    while (imp < 16 && !Empire_canImportResourceFromCity(cityId, Data_CityInfo.tradeNextImportResourceCaravan))
+    while (imp < 16 && !empire_can_import_resource_from_city(cityId, Data_CityInfo.tradeNextImportResourceCaravan))
     {
         imp++;
         advanceTradeNextImportResourceCaravan();
@@ -214,7 +214,7 @@ static int traderGetSellResource(int traderId, int warehouseId, int cityId)
             Data_CityInfo.tradeNextImportResourceCaravanBackup = 1;
         }
         resourceToImport = Data_CityInfo.tradeNextImportResourceCaravanBackup;
-        if (Empire_canImportResourceFromCity(cityId, resourceToImport))
+        if (empire_can_import_resource_from_city(cityId, resourceToImport))
         {
             spaceId = warehouseId;
             for (int i = 0; i < 8; i++)

@@ -13,6 +13,10 @@ int empire_selected_object();
 void empire_clear_selected_object();
 void empire_select_object(int x, int y);
 
+int empire_can_export_resource_to_city(int city_id, int resource);
+int empire_can_import_resource_from_city(int city_id, int resource);
+
+void empire_handle_expand_event();
 
 void empire_save_state(buffer *buf);
 void empire_load_state(buffer *buf);
