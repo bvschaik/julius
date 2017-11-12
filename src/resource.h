@@ -1,6 +1,8 @@
 #ifndef RESOURCE_H
 #define RESOURCE_H
 
+#include "game/resource.h"
+
 // general functions
 void Resource_calculateWarehouseStocks();
 void Resource_calculateWorkshopStocks();
@@ -16,8 +18,8 @@ void Resource_addToCityWarehouses(int resource, int amount);
 int Resource_removeFromCityWarehouses(int resource, int amount);
 
 int Resource_getWarehouseForStoringResource(
-	int srcBuildingId, int x, int y, int resource, int distanceFromEntry, int roadNetworkId,
-	int *understaffed, int *xDst, int *yDst);
+    int srcBuildingId, int x, int y, int resource, int distanceFromEntry, int roadNetworkId,
+    int *understaffed, int *xDst, int *yDst);
 int Resource_getWarehouseForGettingResource(int srcBuildingId, int resource, int *xDst, int *yDst);
 
 int Resource_addToWarehouse(int buildingId, int resource);
@@ -37,11 +39,11 @@ int Resource_determineWarehouseWorkerTask(int buildingId, int *resource);
 void Resource_gatherGranaryGettingInfo();
 
 int Resource_getGranaryForStoringFood(
-	int forceOnStockpile, int x, int y, int resource, int distanceFromEntry, int roadNetworkId,
-	int *understaffed, int *xDst, int *yDst);
+    int forceOnStockpile, int x, int y, int resource, int distanceFromEntry, int roadNetworkId,
+    int *understaffed, int *xDst, int *yDst);
 int Resource_getGettingGranaryForStoringFood(
-	int x, int y, int resource, int distanceFromEntry, int roadNetworkId,
-	int *xDst, int *yDst);
+    int x, int y, int resource, int distanceFromEntry, int roadNetworkId,
+    int *xDst, int *yDst);
 int Resource_getGranaryForGettingFood(int srcBuildingId, int *xDst, int *yDst);
 int Resource_getAmountStoredInGranary(int buildingId, int resource);
 int Resource_addToGranary(int buildingId, int resource, int countAsProduced);
@@ -57,9 +59,10 @@ int Resource_getBarracksForWeapon(int xUnused, int yUnused, int resource, int ro
 void Resource_addRawMaterialToWorkshop(int buildingId);
 void Resource_addWeaponToBarracks(int buildingId);
 
-enum {
-	StorageFigureTask_Getting = 0,
-	StorageFigureTask_Delivering = 1,
+enum
+{
+    StorageFigureTask_Getting = 0,
+    StorageFigureTask_Delivering = 1,
 };
 
 #endif

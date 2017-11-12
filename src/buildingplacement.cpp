@@ -1536,13 +1536,13 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
         UI_Warning_show(Warning_OutOfMoney);
         return;
     }
-    if (type >= BUILDING_LARGE_TEMPLE_CERES && type <= BUILDING_LARGE_TEMPLE_VENUS && Data_CityInfo.resourceStored[Resource_Marble] < 2)
+    if (type >= BUILDING_LARGE_TEMPLE_CERES && type <= BUILDING_LARGE_TEMPLE_VENUS && Data_CityInfo.resourceStored[RESOURCE_MARBLE] < 2)
     {
         Grid_andByteGrid(Data_Grid_bitfields, Bitfield_NoOverlayAndDeleted);
         UI_Warning_show(Warning_MarbleNeededLargeTemple);
         return;
     }
-    if (type == BUILDING_ORACLE && Data_CityInfo.resourceStored[Resource_Marble] < 2)
+    if (type == BUILDING_ORACLE && Data_CityInfo.resourceStored[RESOURCE_MARBLE] < 2)
     {
         Grid_andByteGrid(Data_Grid_bitfields, Bitfield_NoOverlayAndDeleted);
         UI_Warning_show(Warning_MarbleNeededOracle);
@@ -1682,7 +1682,7 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
     }
     if ((type >= BUILDING_LARGE_TEMPLE_CERES && type <= BUILDING_LARGE_TEMPLE_VENUS) || type == BUILDING_ORACLE)
     {
-        Resource_removeFromCityWarehouses(Resource_Marble, 2);
+        Resource_removeFromCityWarehouses(RESOURCE_MARBLE, 2);
     }
     formation_move_herds_away(xEnd, yEnd);
     CityInfo_Finance_spendOnConstruction(placementCost);

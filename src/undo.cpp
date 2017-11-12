@@ -277,7 +277,7 @@ void Undo::perform()
                 struct Data_Building *b = &Data_Buildings[data.buildingIndex[i]];
                 if (b->type == BUILDING_ORACLE || (b->type >= BUILDING_LARGE_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS))
                 {
-                    Resource_addToCityWarehouses(Resource_Marble, 2);
+                    Resource_addToCityWarehouses(RESOURCE_MARBLE, 2);
                 }
                 b->state = BuildingState_Undo;
             }

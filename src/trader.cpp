@@ -22,7 +22,7 @@ static int generateTrader(int cityId, empire_city *city)
 {
     int maxTradersOnMap = 0;
     int numResources = 0;
-    for (int r = Resource_Min; r < Resource_Max; r++)
+    for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++)
     {
         if (city->buys_resource[r] || city->sells_resource[r])
         {
@@ -191,7 +191,7 @@ void Trader_tick()
     Data_CityInfo.tradeNumOpenLandRoutes = 0;
     // Wine types
     Data_CityInfo.resourceWineTypesAvailable = building_count_industry_total(RESOURCE_WINE) > 0 ? 1 : 0;
-    if (Data_CityInfo.resourceTradeStatus[Resource_Wine] == TradeStatus_Import)
+    if (Data_CityInfo.resourceTradeStatus[RESOURCE_WINE] == TradeStatus_Import)
     {
         Data_CityInfo.resourceWineTypesAvailable += empire_city_count_wine_sources();
     }
@@ -218,11 +218,11 @@ void Trader_tick()
 
 int Trader_getClosestWarehouseForTradeCaravan(int figureId, int x, int y, int cityId, int distanceFromEntry, int *warehouseX, int *warehouseY)
 {
-    int exportable[Resource_Max];
-    int importable[Resource_Max];
-    exportable[Resource_None] = 0;
-    importable[Resource_None] = 0;
-    for (int r = Resource_Min; r < Resource_Max; r++)
+    int exportable[RESOURCE_MAX];
+    int importable[RESOURCE_MAX];
+    exportable[RESOURCE_NONE] = 0;
+    importable[RESOURCE_NONE] = 0;
+    for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++)
     {
         exportable[r] = empire_can_export_resource_to_city(cityId, r);
         if (Data_Figures[figureId].traderAmountBought >= 8)
@@ -243,7 +243,7 @@ int Trader_getClosestWarehouseForTradeCaravan(int figureId, int x, int y, int ci
         }
     }
     int numImportable = 0;
-    for (int r = Resource_Min; r < Resource_Max; r++)
+    for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++)
     {
         if (importable[r])
         {
@@ -264,7 +264,7 @@ int Trader_getClosestWarehouseForTradeCaravan(int figureId, int x, int y, int ci
         }
         const building_storage *s = building_storage_get(Data_Buildings[i].storage_id);
         int numImportsForWarehouse = 0;
-        for (int r = Resource_Min; r < Resource_Max; r++)
+        for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++)
         {
             if (s->resource_state[r] != BUILDING_STORAGE_STATE_NOT_ACCEPTING && empire_can_import_resource_from_city(cityId, r))
             {
@@ -282,7 +282,7 @@ int Trader_getClosestWarehouseForTradeCaravan(int figureId, int x, int y, int ci
             }
             if (numImportable && numImportsForWarehouse && !s->empty_all)
             {
-                for (int r = Resource_Min; r < Resource_Max; r++)
+                for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++)
                 {
                     Data_CityInfo.tradeNextImportResourceCaravan++;
                     if (Data_CityInfo.tradeNextImportResourceCaravan > 15)
@@ -343,8 +343,8 @@ int Trader_getClosestWarehouseForTradeCaravan(int figureId, int x, int y, int ci
 int Trader_getClosestWarehouseForImportDocker(int x, int y, int cityId, int distanceFromEntry, int roadNetworkId, int *warehouseX, int *warehouseY)
 {
     int importable[16];
-    importable[Resource_None] = 0;
-    for (int r = Resource_Min; r < Resource_Max; r++)
+    importable[RESOURCE_NONE] = 0;
+    for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++)
     {
         importable[r] = empire_can_import_resource_from_city(cityId, r);
     }
@@ -353,7 +353,7 @@ int Trader_getClosestWarehouseForImportDocker(int x, int y, int cityId, int dist
     {
         Data_CityInfo.tradeNextImportResourceDocker = 1;
     }
-    for (int i = Resource_Min; i < Resource_Max && !importable[Data_CityInfo.tradeNextImportResourceDocker]; i++)
+    for (int i = RESOURCE_MIN; i < RESOURCE_MAX && !importable[Data_CityInfo.tradeNextImportResourceDocker]; i++)
     {
         Data_CityInfo.tradeNextImportResourceDocker++;
         if (Data_CityInfo.tradeNextImportResourceDocker > 15)
@@ -390,7 +390,7 @@ int Trader_getClosestWarehouseForImportDocker(int x, int y, int cityId, int dist
             for (int spaceCounter = 0; spaceCounter < 8; spaceCounter++)
             {
                 spaceId = Data_Buildings[spaceId].nextPartBuildingId;
-                if (spaceId && Data_Buildings[spaceId].subtype.warehouseResourceId == Resource_None)
+                if (spaceId && Data_Buildings[spaceId].subtype.warehouseResourceId == RESOURCE_NONE)
                 {
                     distancePenalty -= 8;
                 }
@@ -437,8 +437,8 @@ int Trader_getClosestWarehouseForImportDocker(int x, int y, int cityId, int dist
 int Trader_getClosestWarehouseForExportDocker(int x, int y, int cityId, int distanceFromEntry, int roadNetworkId, int *warehouseX, int *warehouseY)
 {
     int exportable[16];
-    exportable[Resource_None] = 0;
-    for (int r = Resource_Min; r < Resource_Max; r++)
+    exportable[RESOURCE_NONE] = 0;
+    for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++)
     {
         exportable[r] = empire_can_export_resource_to_city(cityId, r);
     }
@@ -447,7 +447,7 @@ int Trader_getClosestWarehouseForExportDocker(int x, int y, int cityId, int dist
     {
         Data_CityInfo.tradeNextExportResourceDocker = 1;
     }
-    for (int i = Resource_Min; i < Resource_Max && !exportable[Data_CityInfo.tradeNextExportResourceDocker]; i++)
+    for (int i = RESOURCE_MIN; i < RESOURCE_MAX && !exportable[Data_CityInfo.tradeNextExportResourceDocker]; i++)
     {
         Data_CityInfo.tradeNextExportResourceDocker++;
         if (Data_CityInfo.tradeNextExportResourceDocker > 15)
@@ -549,7 +549,7 @@ int Trader_tryImportResource(int buildingId, int resourceId, int cityId)
     for (int i = 0; i < 8; i++)
     {
         spaceId = Data_Buildings[spaceId].nextPartBuildingId;
-        if (spaceId > 0 && Data_Buildings[spaceId].subtype.warehouseResourceId == Resource_None)
+        if (spaceId > 0 && Data_Buildings[spaceId].subtype.warehouseResourceId == RESOURCE_NONE)
         {
             trade_route_increase_traded(routeId, resourceId);
             Resource_addImportedResourceToWarehouseSpace(spaceId, resourceId);

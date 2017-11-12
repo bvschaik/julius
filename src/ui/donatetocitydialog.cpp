@@ -7,6 +7,7 @@
 #include "data/cityinfo.hpp"
 #include "data/screen.hpp"
 #include "widget_text.h"
+#include "game/resource.h"
 
 #include "core/calc.h"
 
@@ -51,7 +52,7 @@ void UI_DonateToCityDialog_drawBackground()
     int baseOffsetY = Data_Screen.offset640x480.y;
 
     Widget_Panel_drawOuterPanel(baseOffsetX + 64, baseOffsetY + 160, 32, 10);
-    Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + Resource_Denarii,
+    Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + RESOURCE_DENARII,
                        baseOffsetX + 96, baseOffsetY + 176);
     Widget_GameText_drawCentered(52, 16,
                                  baseOffsetX + 80, baseOffsetY + 176, 496, FONT_LARGE_BLACK);

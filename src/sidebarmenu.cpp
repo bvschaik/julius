@@ -69,8 +69,8 @@ static int menuEnabled[MAX_BUILDINGITEMS][MAX_BUILDINGITEMS];
 #define ENABLE_HOUSE() if (buildingType >= BUILDING_HOUSE_VACANT_LOT && buildingType <= BUILDING_HOUSE_LUXURY_PALACE) menuEnabled[sub][item] = 1
 #define ENABLE_IF(b,a) if (buildingType == b && Data_Scenario.allowedBuildings.a) menuEnabled[sub][item] = 1
 #define ENABLE(b) if (buildingType == b) menuEnabled[sub][item] = 1
-#define DISABLE_RAW(b,r) if (buildingType == b && !empire_our_city_can_produce(r)) menuEnabled[sub][item] = 0
-#define DISABLE_FINISHED(b,r) if (buildingType == b && !empire_our_city_can_produce_potentially(r)) menuEnabled[sub][item] = 0
+#define DISABLE_RAW(b,r) if (buildingType == b && !empire_can_produce_resource(r)) menuEnabled[sub][item] = 0
+#define DISABLE_FINISHED(b,r) if (buildingType == b && !empire_can_produce_resource_potentially(r)) menuEnabled[sub][item] = 0
 
 void SidebarMenu_enableBuildingButtons()
 {
@@ -212,21 +212,21 @@ static void enableTutorial2After450(int sub, int item, int buildingType)
 
 static void disableResources(int sub, int item, int buildingType)
 {
-    DISABLE_RAW(BUILDING_WHEAT_FARM, Resource_Wheat);
-    DISABLE_RAW(BUILDING_VEGETABLE_FARM, Resource_Vegetables);
-    DISABLE_RAW(BUILDING_FRUIT_FARM, Resource_Fruit);
-    DISABLE_RAW(BUILDING_PIG_FARM, Resource_Meat);
-    DISABLE_RAW(BUILDING_OLIVE_FARM, Resource_Olives);
-    DISABLE_RAW(BUILDING_VINES_FARM, Resource_Vines);
-    DISABLE_RAW(BUILDING_CLAY_PIT, Resource_Clay);
-    DISABLE_RAW(BUILDING_TIMBER_YARD, Resource_Timber);
-    DISABLE_RAW(BUILDING_IRON_MINE, Resource_Iron);
-    DISABLE_RAW(BUILDING_MARBLE_QUARRY, Resource_Marble);
-    DISABLE_FINISHED(BUILDING_POTTERY_WORKSHOP, Resource_Pottery);
-    DISABLE_FINISHED(BUILDING_FURNITURE_WORKSHOP, Resource_Furniture);
-    DISABLE_FINISHED(BUILDING_OIL_WORKSHOP, Resource_Oil);
-    DISABLE_FINISHED(BUILDING_WINE_WORKSHOP, Resource_Wine);
-    DISABLE_FINISHED(BUILDING_WEAPONS_WORKSHOP, Resource_Weapons);
+    DISABLE_RAW(BUILDING_WHEAT_FARM, RESOURCE_WHEAT);
+    DISABLE_RAW(BUILDING_VEGETABLE_FARM, RESOURCES_VEGETABLES);
+    DISABLE_RAW(BUILDING_FRUIT_FARM, RESOURCE_FRUIT);
+    DISABLE_RAW(BUILDING_PIG_FARM, RESOURCE_MEAT);
+    DISABLE_RAW(BUILDING_OLIVE_FARM, RESOURCE_OLIVES);
+    DISABLE_RAW(BUILDING_VINES_FARM, RESOURCE_VINES);
+    DISABLE_RAW(BUILDING_CLAY_PIT, RESOURCE_CLAY);
+    DISABLE_RAW(BUILDING_TIMBER_YARD, RESOURCE_TIMBER);
+    DISABLE_RAW(BUILDING_IRON_MINE, RESOURCE_IRON);
+    DISABLE_RAW(BUILDING_MARBLE_QUARRY, RESOURCE_MARBLE);
+    DISABLE_FINISHED(BUILDING_POTTERY_WORKSHOP, RESOURCE_POTTERY);
+    DISABLE_FINISHED(BUILDING_FURNITURE_WORKSHOP, RESOURCE_FURNITURE);
+    DISABLE_FINISHED(BUILDING_OIL_WORKSHOP, RESOURCE_OIL);
+    DISABLE_FINISHED(BUILDING_WINE_WORKSHOP, RESOURCE_WINE);
+    DISABLE_FINISHED(BUILDING_WEAPONS_WORKSHOP, RESOURCE_WEAPONS);
 }
 
 void SidebarMenu_enableBuildingMenuItems()

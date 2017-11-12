@@ -27,9 +27,9 @@ empire_city * empire_city_get(int city_id);
 
 int empire_city_get_route_id(int city_id);
 
-int empire_city_can_import_resource(int resource);
+int empire_can_import_resource(int resource);
 
-int empire_city_can_import_resource_potentially(int resource);
+int empire_can_import_resource_potentially(int resource);
 
 int empire_city_can_export_resource(int resource);
 
@@ -61,8 +61,8 @@ void empire_city_save_state(buffer *buf);
 
 void empire_city_load_state(buffer *buf);
 
-int empire_our_city_can_produce(int resource);
+int empire_can_produce_resource(int resource);
 
-int empire_our_city_can_produce_potentially(int resource);
+int empire_can_produce_resource_potentially(int resource);
 
 #endif // EMPIRE_CITY_H

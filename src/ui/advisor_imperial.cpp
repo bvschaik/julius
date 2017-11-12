@@ -64,7 +64,7 @@ void UI_Advisor_Imperial_drawBackground(int *advisorHeight)
     {
         // can send to distant battle
         Widget_Panel_drawButtonBorder(baseOffsetX + 38, baseOffsetY + 96, 560, 40, 0);
-        Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + Resource_Weapons,
+        Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + RESOURCE_WEAPONS,
                            baseOffsetX + 50, baseOffsetY + 106);
         width = Widget_GameText_draw(52, 72, baseOffsetX + 80, baseOffsetY + 102, FONT_NORMAL_WHITE);
         Widget_GameText_draw(21, empire_city_get(Data_CityInfo.distantBattleCityId)->name_id,
@@ -105,7 +105,7 @@ void UI_Advisor_Imperial_drawBackground(int *advisorHeight)
                     baseOffsetX + 310, baseOffsetY + 102 + 42 * numRequests, FONT_NORMAL_WHITE);
             Widget_GameText_draw(12, 2, baseOffsetX + 310 + width, baseOffsetY + 102 + 42 * numRequests, FONT_NORMAL_WHITE);
 
-            if (Data_Scenario.requests.resourceId[i] == Resource_Denarii)
+            if (Data_Scenario.requests.resourceId[i] == RESOURCE_DENARII)
             {
                 // request for money
                 width = Widget::Text::drawNumber(Data_CityInfo.treasury, '@', " ",
@@ -239,7 +239,7 @@ static int getRequestStatus(int index)
         {
             if (numRequests == index)
             {
-                if (Data_Scenario.requests.resourceId[i] == Resource_Denarii)
+                if (Data_Scenario.requests.resourceId[i] == RESOURCE_DENARII)
                 {
                     if (Data_CityInfo.treasury <= Data_Scenario.requests.amount[i])
                     {

@@ -7,7 +7,6 @@
 #include "animation.h"
 #include "core/calc.h"
 #include "cityinfo.h"
-#include "empire.h"
 #include "graphics.h"
 #include "resource.h"
 #include "scroll.h"

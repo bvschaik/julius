@@ -3,6 +3,7 @@
 #include "core/calc.h"
 #include "graphics.h"
 #include "resource.h"
+#include "game/resource.h"
 #include "sound.h"
 #include "widget_text.h"
 
@@ -166,8 +167,8 @@ void UI_BuildingInfo_drawWharf(BuildingInfoContext *c)
     PLAY_SOUND("wavs/wharf.wav");
     Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
     Widget_GameText_drawCentered(102, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
-    Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + Resource_Meat +
-                       Resource_getGraphicIdOffset(Resource_Meat, 3),
+    Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + RESOURCE_MEAT +
+                       Resource_getGraphicIdOffset(RESOURCE_MEAT, 3),
                        c->xOffset + 10, c->yOffset + 10);
 
     struct Data_Building *b = &Data_Buildings[c->buildingId];

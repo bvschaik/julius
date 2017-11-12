@@ -159,7 +159,7 @@ int empire_can_import_resource_from_city(int city_id, int resource)
     {
     // food and finished materials
     case RESOURCE_WHEAT:
-    case RESOURCE_VEGETABLES:
+    case RESOURCES_VEGETABLES:
     case RESOURCE_FRUIT:
     case RESOURCE_MEAT:
     case RESOURCE_POTTERY:

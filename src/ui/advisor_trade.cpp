@@ -263,7 +263,7 @@ void UI_ResourceSettingsDialog_drawForeground()
 
     Widget_GameText_draw(23, selectedResourceId, baseOffsetX + 92, baseOffsetY + 137, FONT_LARGE_BLACK);
 
-    if (empire_our_city_can_produce(selectedResourceId))
+    if (empire_can_produce_resource(selectedResourceId))
     {
         int totalBuildings = building_count_industry_total(selectedResourceId);
         int activeBuildings = building_count_industry_active(selectedResourceId);
@@ -321,7 +321,7 @@ void UI_ResourceSettingsDialog_drawForeground()
             }
         }
     }
-    else if (selectedResourceId != Resource_Meat || !Data_Scenario.allowedBuildings.wharf)
+    else if (selectedResourceId != RESOURCE_MEAT || !Data_Scenario.allowedBuildings.wharf)
     {
         // we cannot produce this good
         Widget_GameText_draw(54, 25, baseOffsetX + 98, baseOffsetY + 172, FONT_NORMAL_BLACK);
@@ -333,7 +333,7 @@ void UI_ResourceSettingsDialog_drawForeground()
     Widget_GameText_draw(54, 15, baseOffsetX + 98 + width, baseOffsetY + 192, FONT_NORMAL_BLACK);
 
     int tradeFlags = TradeStatus_None;
-    if (empire_city_can_import_resource(selectedResourceId))
+    if (empire_can_import_resource(selectedResourceId))
     {
         tradeFlags |= TradeStatus_Import;
     }
@@ -480,7 +480,7 @@ static void resourceSettingsToggleTrade(int param1, int param2)
     }
 
     if (Data_CityInfo.resourceTradeStatus[selectedResourceId] == TradeStatus_Import &&
-            !empire_city_can_import_resource(selectedResourceId))
+            !empire_can_import_resource(selectedResourceId))
     {
         Data_CityInfo.resourceTradeStatus[selectedResourceId] = TradeStatus_Export;
     }

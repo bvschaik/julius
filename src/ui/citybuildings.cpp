@@ -18,6 +18,7 @@
 #include "core/time.h"
 #include "figure/formation.h"
 #include "game/settings.h"
+#include "game/resource.h"
 
 static void drawBuildingFootprints();
 static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_CityPixelCoordinate *coord);
@@ -482,22 +483,22 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
                                                  xGraphic + img->sprite_offset_x,
                                                  yGraphic + 60 + img->sprite_offset_y - img->height,
                                                  colorMask);
-                        if (b->data.storage.resourceStored[Resource_None] < 2400)
+                        if (b->data.storage.resourceStored[RESOURCE_NONE] < 2400)
                         {
                             Graphics_drawImageMasked(image_group(ID_Graphic_Granary) + 2,
                                                      xGraphic + 33, yGraphic - 60, colorMask);
                         }
-                        if (b->data.storage.resourceStored[Resource_None] < 1800)
+                        if (b->data.storage.resourceStored[RESOURCE_NONE] < 1800)
                         {
                             Graphics_drawImageMasked(image_group(ID_Graphic_Granary) + 3,
                                                      xGraphic + 56, yGraphic - 50, colorMask);
                         }
-                        if (b->data.storage.resourceStored[Resource_None] < 1200)
+                        if (b->data.storage.resourceStored[RESOURCE_NONE] < 1200)
                         {
                             Graphics_drawImageMasked(image_group(ID_Graphic_Granary) + 4,
                                                      xGraphic + 91, yGraphic - 50, colorMask);
                         }
-                        if (b->data.storage.resourceStored[Resource_None] < 600)
+                        if (b->data.storage.resourceStored[RESOURCE_NONE] < 600)
                         {
                             Graphics_drawImageMasked(image_group(ID_Graphic_Granary) + 5,
                                                      xGraphic + 117, yGraphic - 62, colorMask);

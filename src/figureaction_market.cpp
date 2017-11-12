@@ -19,10 +19,10 @@ static int marketBuyerTakeFoodFromGranary(int figureId, int marketId, int granar
 	struct Data_Figure *f = &Data_Figures[figureId];
 	int resource;
 	switch (f->collectingItemId) {
-		case Inventory_Wheat: resource = Resource_Wheat; break;
-		case Inventory_Vegetables: resource = Resource_Vegetables; break;
-		case Inventory_Fruit: resource = Resource_Fruit; break;
-		case Inventory_Meat: resource = Resource_Meat; break;
+		case Inventory_Wheat: resource = RESOURCE_WHEAT; break;
+		case Inventory_Vegetables: resource = RESOURCES_VEGETABLES; break;
+		case Inventory_Fruit: resource = RESOURCE_FRUIT; break;
+		case Inventory_Meat: resource = RESOURCE_MEAT; break;
 		default: return 0;
 	}
 	int marketUnits = Data_Buildings[marketId].data.market.inventory[f->collectingItemId];
@@ -68,10 +68,10 @@ static int marketBuyerTakeResourceFromWarehouse(int figureId, int marketId, int 
 	struct Data_Figure *f = &Data_Figures[figureId];
 	int resource;
 	switch (f->collectingItemId) {
-		case Inventory_Pottery: resource = Resource_Pottery; break;
-		case Inventory_Furniture: resource = Resource_Furniture; break;
-		case Inventory_Oil: resource = Resource_Oil; break;
-		case Inventory_Wine: resource = Resource_Wine; break;
+		case Inventory_Pottery: resource = RESOURCE_POTTERY; break;
+		case Inventory_Furniture: resource = RESOURCE_FURNITURE; break;
+		case Inventory_Oil: resource = RESOURCE_OIL; break;
+		case Inventory_Wine: resource = RESOURCE_WINE; break;
 		default: return 0;
 	}
 	int numLoads;

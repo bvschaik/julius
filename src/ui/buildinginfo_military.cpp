@@ -199,7 +199,7 @@ void UI_BuildingInfo_drawBarracks(BuildingInfoContext *c)
     PLAY_SOUND("wavs/barracks.wav");
     Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
     Widget_GameText_drawCentered(136, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
-    Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + Resource_Weapons,
+    Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + RESOURCE_WEAPONS,
                        c->xOffset + 64, c->yOffset + 38);
 
     struct Data_Building *b = &Data_Buildings[c->buildingId];

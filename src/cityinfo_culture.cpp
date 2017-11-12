@@ -226,7 +226,7 @@ void CityInfo_Culture_calculateEntertainment()
     Data_CityInfo.festivalCostGrand = Data_CityInfo.population / 5 + 40;
     Data_CityInfo.festivalWineGrand = Data_CityInfo.population / 500 + 1;
     Data_CityInfo.festivalNotEnoughWine = 0;
-    if (Data_CityInfo.resourceStored[Resource_Wine] < Data_CityInfo.festivalWineGrand)
+    if (Data_CityInfo.resourceStored[RESOURCE_WINE] < Data_CityInfo.festivalWineGrand)
     {
         Data_CityInfo.festivalNotEnoughWine = 1;
         if (Data_CityInfo.festivalSize == Festival_Grand)

@@ -15,6 +15,7 @@
 
 #include "building/model.h"
 #include "graphics/image.h"
+#include "game/resource.h"
 
 static void drawVacantLot(BuildingInfoContext *c)
 {
@@ -137,23 +138,23 @@ void UI_BuildingInfo_drawHouse(BuildingInfoContext *c)
     if (model_get_house(b->subtype.houseLevel)->food_types)
     {
         // wheat
-        Graphics_drawImage(resourceGraphic + Resource_Wheat,
+        Graphics_drawImage(resourceGraphic + RESOURCE_WHEAT,
                            c->xOffset + 32, c->yOffset + 234);
         Widget::Text::drawNumber(b->data.house.inventory[Inventory_Wheat], '@', " ",
                                  c->xOffset + 64, c->yOffset + 238, FONT_SMALL_BLACK);
         // vegetables
-        Graphics_drawImage(resourceGraphic + Resource_Vegetables,
+        Graphics_drawImage(resourceGraphic + RESOURCES_VEGETABLES,
                            c->xOffset + 142, c->yOffset + 234);
         Widget::Text::drawNumber(b->data.house.inventory[Inventory_Vegetables], '@', " ",
                                  c->xOffset + 174, c->yOffset + 238, FONT_SMALL_BLACK);
         // fruit
-        Graphics_drawImage(resourceGraphic + Resource_Fruit,
+        Graphics_drawImage(resourceGraphic + RESOURCE_FRUIT,
                            c->xOffset + 252, c->yOffset + 234);
         Widget::Text::drawNumber(b->data.house.inventory[Inventory_Fruit], '@', " ",
                                  c->xOffset + 284, c->yOffset + 238, FONT_SMALL_BLACK);
         // meat/fish
-        Graphics_drawImage(resourceGraphic + Resource_Meat +
-                           Resource_getGraphicIdOffset(Resource_Meat, 3),
+        Graphics_drawImage(resourceGraphic + RESOURCE_MEAT +
+                           Resource_getGraphicIdOffset(RESOURCE_MEAT, 3),
                            c->xOffset + 362, c->yOffset + 234);
         Widget::Text::drawNumber(b->data.house.inventory[Inventory_Meat], '@', " ",
                                  c->xOffset + 394, c->yOffset + 238, FONT_SMALL_BLACK);
@@ -166,22 +167,22 @@ void UI_BuildingInfo_drawHouse(BuildingInfoContext *c)
     }
     // goods inventory
     // pottery
-    Graphics_drawImage(resourceGraphic + Resource_Pottery,
+    Graphics_drawImage(resourceGraphic + RESOURCE_POTTERY,
                        c->xOffset + 32, c->yOffset + 274);
     Widget::Text::drawNumber(b->data.house.inventory[Inventory_Pottery], '@', " ",
                              c->xOffset + 64, c->yOffset + 278, FONT_SMALL_BLACK);
     // furniture
-    Graphics_drawImage(resourceGraphic + Resource_Furniture,
+    Graphics_drawImage(resourceGraphic + RESOURCE_FURNITURE,
                        c->xOffset + 142, c->yOffset + 274);
     Widget::Text::drawNumber(b->data.house.inventory[Inventory_Furniture], '@', " ",
                              c->xOffset + 174, c->yOffset + 278, FONT_SMALL_BLACK);
     // oil
-    Graphics_drawImage(resourceGraphic + Resource_Oil,
+    Graphics_drawImage(resourceGraphic + RESOURCE_OIL,
                        c->xOffset + 252, c->yOffset + 274);
     Widget::Text::drawNumber(b->data.house.inventory[Inventory_Oil], '@', " ",
                              c->xOffset + 284, c->yOffset + 278, FONT_SMALL_BLACK);
     // wine
-    Graphics_drawImage(resourceGraphic + Resource_Wine,
+    Graphics_drawImage(resourceGraphic + RESOURCE_WINE,
                        c->xOffset + 362, c->yOffset + 274);
     Widget::Text::drawNumber(b->data.house.inventory[Inventory_Wine], '@', " ",
                              c->xOffset + 394, c->yOffset + 278, FONT_SMALL_BLACK);

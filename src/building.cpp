@@ -116,63 +116,63 @@ int Building_create(int type, int x, int y)
     switch (type)
     {
     case BUILDING_WHEAT_FARM:
-        b->outputResourceId = Resource_Wheat;
+        b->outputResourceId = RESOURCE_WHEAT;
         break;
     case BUILDING_VEGETABLE_FARM:
-        b->outputResourceId = Resource_Vegetables;
+        b->outputResourceId = RESOURCES_VEGETABLES;
         break;
     case BUILDING_FRUIT_FARM:
-        b->outputResourceId = Resource_Fruit;
+        b->outputResourceId = RESOURCE_FRUIT;
         break;
     case BUILDING_OLIVE_FARM:
-        b->outputResourceId = Resource_Olives;
+        b->outputResourceId = RESOURCE_OLIVES;
         break;
     case BUILDING_VINES_FARM:
-        b->outputResourceId = Resource_Vines;
+        b->outputResourceId = RESOURCE_VINES;
         break;
     case BUILDING_PIG_FARM:
-        b->outputResourceId = Resource_Meat;
+        b->outputResourceId = RESOURCE_MEAT;
         break;
     case BUILDING_MARBLE_QUARRY:
-        b->outputResourceId = Resource_Marble;
+        b->outputResourceId = RESOURCE_MARBLE;
         break;
     case BUILDING_IRON_MINE:
-        b->outputResourceId = Resource_Iron;
+        b->outputResourceId = RESOURCE_IRON;
         break;
     case BUILDING_TIMBER_YARD:
-        b->outputResourceId = Resource_Timber;
+        b->outputResourceId = RESOURCE_TIMBER;
         break;
     case BUILDING_CLAY_PIT:
-        b->outputResourceId = Resource_Clay;
+        b->outputResourceId = RESOURCE_CLAY;
         break;
     case BUILDING_WINE_WORKSHOP:
-        b->outputResourceId = Resource_Wine;
-        b->subtype.workshopResource = WorkshopResource_VinesToWine;
+        b->outputResourceId = RESOURCE_WINE;
+        b->subtype.workshopResource = WorkshopRESOURCE_VINESToWine;
         break;
     case BUILDING_OIL_WORKSHOP:
-        b->outputResourceId = Resource_Oil;
-        b->subtype.workshopResource = WorkshopResource_OlivesToOil;
+        b->outputResourceId = RESOURCE_OIL;
+        b->subtype.workshopResource = WorkshopRESOURCE_OLIVESToOil;
         break;
     case BUILDING_WEAPONS_WORKSHOP:
-        b->outputResourceId = Resource_Weapons;
-        b->subtype.workshopResource = WorkshopResource_IronToWeapons;
+        b->outputResourceId = RESOURCE_WEAPONS;
+        b->subtype.workshopResource = WorkshopRESOURCE_IRONToWeapons;
         break;
     case BUILDING_FURNITURE_WORKSHOP:
-        b->outputResourceId = Resource_Furniture;
-        b->subtype.workshopResource = WorkshopResource_TimberToFurniture;
+        b->outputResourceId = RESOURCE_FURNITURE;
+        b->subtype.workshopResource = WorkshopRESOURCE_TIMBERToFurniture;
         break;
     case BUILDING_POTTERY_WORKSHOP:
-        b->outputResourceId = Resource_Pottery;
-        b->subtype.workshopResource = WorkshopResource_ClayToPottery;
+        b->outputResourceId = RESOURCE_POTTERY;
+        b->subtype.workshopResource = WorkshopRESOURCE_CLAYToPottery;
         break;
     default:
-        b->outputResourceId = Resource_None;
+        b->outputResourceId = RESOURCE_NONE;
         break;
     }
 
     if (type == BUILDING_GRANARY)
     {
-        b->data.storage.resourceStored[Resource_None] = 2400;
+        b->data.storage.resourceStored[RESOURCE_NONE] = 2400;
     }
 
     b->x = x;
@@ -1149,7 +1149,7 @@ int BUILDING_MARKET_getDestinationGranaryWarehouse(int marketId)
                 continue;
             }
             // foods
-            if (b->data.storage.resourceStored[Resource_Wheat])
+            if (b->data.storage.resourceStored[RESOURCE_WHEAT])
             {
                 resources[Inventory_Wheat].numBuildings++;
                 if (distance < resources[Inventory_Wheat].distance)
@@ -1158,7 +1158,7 @@ int BUILDING_MARKET_getDestinationGranaryWarehouse(int marketId)
                     resources[Inventory_Wheat].buildingId = i;
                 }
             }
-            if (b->data.storage.resourceStored[Resource_Vegetables])
+            if (b->data.storage.resourceStored[RESOURCES_VEGETABLES])
             {
                 resources[Inventory_Vegetables].numBuildings++;
                 if (distance < resources[Inventory_Vegetables].distance)
@@ -1167,7 +1167,7 @@ int BUILDING_MARKET_getDestinationGranaryWarehouse(int marketId)
                     resources[Inventory_Vegetables].buildingId = i;
                 }
             }
-            if (b->data.storage.resourceStored[Resource_Fruit])
+            if (b->data.storage.resourceStored[RESOURCE_FRUIT])
             {
                 resources[Inventory_Fruit].numBuildings++;
                 if (distance < resources[Inventory_Fruit].distance)
@@ -1176,7 +1176,7 @@ int BUILDING_MARKET_getDestinationGranaryWarehouse(int marketId)
                     resources[Inventory_Fruit].buildingId = i;
                 }
             }
-            if (b->data.storage.resourceStored[Resource_Meat])
+            if (b->data.storage.resourceStored[RESOURCE_MEAT])
             {
                 resources[Inventory_Meat].numBuildings++;
                 if (distance < resources[Inventory_Meat].distance)
@@ -1189,8 +1189,8 @@ int BUILDING_MARKET_getDestinationGranaryWarehouse(int marketId)
         else if (b->type == BUILDING_WAREHOUSE)
         {
             // goods
-            if (!Data_CityInfo.resourceStockpiled[Resource_Wine] &&
-                    Resource_getAmountStoredInWarehouse(i, Resource_Wine) > 0)
+            if (!Data_CityInfo.resourceStockpiled[RESOURCE_WINE] &&
+                    Resource_getAmountStoredInWarehouse(i, RESOURCE_WINE) > 0)
             {
                 resources[Inventory_Wine].numBuildings++;
                 if (distance < resources[Inventory_Wine].distance)
@@ -1199,8 +1199,8 @@ int BUILDING_MARKET_getDestinationGranaryWarehouse(int marketId)
                     resources[Inventory_Wine].buildingId = i;
                 }
             }
-            if (!Data_CityInfo.resourceStockpiled[Resource_Oil] &&
-                    Resource_getAmountStoredInWarehouse(i, Resource_Oil) > 0)
+            if (!Data_CityInfo.resourceStockpiled[RESOURCE_OIL] &&
+                    Resource_getAmountStoredInWarehouse(i, RESOURCE_OIL) > 0)
             {
                 resources[Inventory_Oil].numBuildings++;
                 if (distance < resources[Inventory_Oil].distance)
@@ -1209,8 +1209,8 @@ int BUILDING_MARKET_getDestinationGranaryWarehouse(int marketId)
                     resources[Inventory_Oil].buildingId = i;
                 }
             }
-            if (!Data_CityInfo.resourceStockpiled[Resource_Pottery] &&
-                    Resource_getAmountStoredInWarehouse(i, Resource_Pottery) > 0)
+            if (!Data_CityInfo.resourceStockpiled[RESOURCE_POTTERY] &&
+                    Resource_getAmountStoredInWarehouse(i, RESOURCE_POTTERY) > 0)
             {
                 resources[Inventory_Pottery].numBuildings++;
                 if (distance < resources[Inventory_Pottery].distance)
@@ -1219,8 +1219,8 @@ int BUILDING_MARKET_getDestinationGranaryWarehouse(int marketId)
                     resources[Inventory_Pottery].buildingId = i;
                 }
             }
-            if (!Data_CityInfo.resourceStockpiled[Resource_Furniture] &&
-                    Resource_getAmountStoredInWarehouse(i, Resource_Furniture) > 0)
+            if (!Data_CityInfo.resourceStockpiled[RESOURCE_FURNITURE] &&
+                    Resource_getAmountStoredInWarehouse(i, RESOURCE_FURNITURE) > 0)
             {
                 resources[Inventory_Furniture].numBuildings++;
                 if (distance < resources[Inventory_Furniture].distance)
@@ -1507,14 +1507,14 @@ void Building_Mercury_removeResources(int bigCurse)
         int totalStored = 0;
         if (b->type == BUILDING_WAREHOUSE)
         {
-            for (int r = Resource_Min; r < Resource_Max; r++)
+            for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++)
             {
                 totalStored += Resource_getAmountStoredInWarehouse(i, r);
             }
         }
         else if (b->type == BUILDING_GRANARY)
         {
-            for (int r = Resource_MinFood; r < Resource_MaxFood; r++)
+            for (int r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++)
             {
                 totalStored += Resource_getAmountStoredInGranary(i, r);
             }
@@ -1553,10 +1553,10 @@ void Building_Mercury_removeResources(int bigCurse)
         }
         else if (b->type == BUILDING_GRANARY)
         {
-            int amount = Resource_removeFromGranary(maxBuildingId, Resource_Wheat, 1600);
-            amount = Resource_removeFromGranary(maxBuildingId, Resource_Vegetables, amount);
-            amount = Resource_removeFromGranary(maxBuildingId, Resource_Fruit, amount);
-            Resource_removeFromGranary(maxBuildingId, Resource_Meat, amount);
+            int amount = Resource_removeFromGranary(maxBuildingId, RESOURCE_WHEAT, 1600);
+            amount = Resource_removeFromGranary(maxBuildingId, RESOURCES_VEGETABLES, amount);
+            amount = Resource_removeFromGranary(maxBuildingId, RESOURCE_FRUIT, amount);
+            Resource_removeFromGranary(maxBuildingId, RESOURCE_MEAT, amount);
         }
     }
 }
@@ -1573,7 +1573,7 @@ void Building_Mercury_fillGranary()
             continue;
         }
         int totalStored = 0;
-        for (int r = Resource_MinFood; r < Resource_MaxFood; r++)
+        for (int r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++)
         {
             totalStored += Resource_getAmountStoredInGranary(i, r);
         }
@@ -1587,19 +1587,19 @@ void Building_Mercury_fillGranary()
     {
         for (int n = 0; n < 6; n++)
         {
-            Resource_addToGranary(minBuildingId, Resource_Wheat, 0);
+            Resource_addToGranary(minBuildingId, RESOURCE_WHEAT, 0);
         }
         for (int n = 0; n < 6; n++)
         {
-            Resource_addToGranary(minBuildingId, Resource_Vegetables, 0);
+            Resource_addToGranary(minBuildingId, RESOURCES_VEGETABLES, 0);
         }
         for (int n = 0; n < 6; n++)
         {
-            Resource_addToGranary(minBuildingId, Resource_Fruit, 0);
+            Resource_addToGranary(minBuildingId, RESOURCE_FRUIT, 0);
         }
         for (int n = 0; n < 6; n++)
         {
-            Resource_addToGranary(minBuildingId, Resource_Meat, 0);
+            Resource_addToGranary(minBuildingId, RESOURCE_MEAT, 0);
         }
     }
 }

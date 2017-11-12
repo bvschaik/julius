@@ -60,21 +60,21 @@ static int collectingItemIdToResourceId(int c)
     switch (c)
     {
     case 0:
-        return Resource_Wheat;
+        return RESOURCE_WHEAT;
     case 1:
-        return Resource_Vegetables;
+        return RESOURCES_VEGETABLES;
     case 2:
-        return Resource_Fruit;
+        return RESOURCE_FRUIT;
     case 3:
-        return Resource_Meat;
+        return RESOURCE_MEAT;
     case 4:
-        return Resource_Wine;
+        return RESOURCE_WINE;
     case 5:
-        return Resource_Oil;
+        return RESOURCE_OIL;
     case 6:
-        return Resource_Furniture;
+        return RESOURCE_FURNITURE;
     case 7:
-        return Resource_Pottery;
+        return RESOURCE_POTTERY;
     default:
         return 0;
     }
@@ -150,7 +150,7 @@ static void drawFigureInfoTrade(BuildingInfoContext *c, int figureId)
     {
         // bought
         width = Widget_GameText_draw(129, 4, c->xOffset + 40, c->yOffset + 170, FONT_SMALL_BLACK);
-        for (int r = Resource_Min; r < Resource_Max; r++)
+        for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++)
         {
             if (trader_bought_resources(traderId, r))
             {
@@ -163,7 +163,7 @@ static void drawFigureInfoTrade(BuildingInfoContext *c, int figureId)
         }
         // sold
         width = Widget_GameText_draw(129, 5, c->xOffset + 40, c->yOffset + 200, FONT_SMALL_BLACK);
-        for (int r = Resource_Min; r < Resource_Max; r++)
+        for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++)
         {
             if (trader_sold_resources(traderId, r))
             {
@@ -179,7 +179,7 @@ static void drawFigureInfoTrade(BuildingInfoContext *c, int figureId)
     {
         // buying
         width = Widget_GameText_draw(129, 2, c->xOffset + 40, c->yOffset + 170, FONT_SMALL_BLACK);
-        for (int r = Resource_Min; r < Resource_Max; r++)
+        for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++)
         {
             if (city->buys_resource[r])
             {
@@ -190,7 +190,7 @@ static void drawFigureInfoTrade(BuildingInfoContext *c, int figureId)
         }
         // selling
         width = Widget_GameText_draw(129, 3, c->xOffset + 40, c->yOffset + 200, FONT_SMALL_BLACK);
-        for (int r = Resource_Min; r < Resource_Max; r++)
+        for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++)
         {
             if (city->sells_resource[r])
             {

@@ -387,11 +387,11 @@ void Event_handleRequests()
                     {
                         Data_Scenario.requests_canComplyDialogShown[i] = 1;
                     }
-                    if (Data_Scenario.requests.resourceId[i] == Resource_Denarii)
+                    if (Data_Scenario.requests.resourceId[i] == RESOURCE_DENARII)
                     {
                         PlayerMessage_post(1, Message_29_CaesarRequestsMoney, i, 0);
                     }
-                    else if (Data_Scenario.requests.resourceId[i] == Resource_Troops)
+                    else if (Data_Scenario.requests.resourceId[i] == RESOURCES_TROOPS)
                     {
                         PlayerMessage_post(1, Message_30_CaesarRequestsArmy, i, 0);
                     }
@@ -418,15 +418,15 @@ void Event_dispatchRequest(int id)
     Data_Scenario.requests_monthsToComply[id] = (random_byte() & 3) + 1;
     Data_Scenario.requests_isVisible[id] = 0;
     int amount = Data_Scenario.requests.amount[id];
-    if (Data_Scenario.requests.resourceId[id] == Resource_Denarii)
+    if (Data_Scenario.requests.resourceId[id] == RESOURCE_DENARII)
     {
         Data_CityInfo.treasury -= amount;
         Data_CityInfo.financeSundriesThisYear += amount;
     }
-    else if (Data_Scenario.requests.resourceId[id] == Resource_Troops)
+    else if (Data_Scenario.requests.resourceId[id] == RESOURCES_TROOPS)
     {
         CityInfo_Population_removePeopleForTroopRequest(amount);
-        Resource_removeFromCityWarehouses(Resource_Weapons, amount);
+        Resource_removeFromCityWarehouses(RESOURCE_WEAPONS, amount);
     }
     else
     {

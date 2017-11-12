@@ -352,7 +352,7 @@ static void checkWeaponsAccess(int buildingType)
 {
     if (!hasWarningAlready && buildingType == BUILDING_BARRACKS)
     {
-        if (Data_CityInfo.resourceStored[Resource_Weapons] <= 0)
+        if (Data_CityInfo.resourceStored[RESOURCE_WEAPONS] <= 0)
         {
             UI_Warning_show(Warning_WeaponsNeeded);
         }
@@ -419,19 +419,19 @@ static void checkIronAccess(int buildingType)
     if (buildingType == BUILDING_WEAPONS_WORKSHOP &&
             building_count_industry_active(RESOURCE_IRON) <= 0)
     {
-        if (Data_CityInfo.resourceStored[Resource_Weapons] <= 0 &&
-                Data_CityInfo.resourceStored[Resource_Iron] <= 0)
+        if (Data_CityInfo.resourceStored[RESOURCE_WEAPONS] <= 0 &&
+                Data_CityInfo.resourceStored[RESOURCE_IRON] <= 0)
         {
             UI_Warning_show(Warning_IronNeeded);
-            if (empire_our_city_can_produce(Resource_Iron))
+            if (empire_can_produce_resource(RESOURCE_IRON))
             {
                 UI_Warning_show(Warning_BuildIronMine);
             }
-            else if (!empire_city_can_import_resource(Resource_Iron))
+            else if (!empire_can_import_resource(RESOURCE_IRON))
             {
                 UI_Warning_show(Warning_OpenTradeToImport);
             }
-            else if (Data_CityInfo.resourceTradeStatus[Resource_Iron] != TradeStatus_Import)
+            else if (Data_CityInfo.resourceTradeStatus[RESOURCE_IRON] != TradeStatus_Import)
             {
                 UI_Warning_show(Warning_TradeImportResource);
             }
@@ -444,19 +444,19 @@ static void checkVinesAccess(int buildingType)
     if (buildingType == BUILDING_WINE_WORKSHOP &&
             building_count_industry_active(RESOURCE_VINES) <= 0)
     {
-        if (Data_CityInfo.resourceStored[Resource_Wine] <= 0 &&
-                Data_CityInfo.resourceStored[Resource_Vines] <= 0)
+        if (Data_CityInfo.resourceStored[RESOURCE_WINE] <= 0 &&
+                Data_CityInfo.resourceStored[RESOURCE_VINES] <= 0)
         {
             UI_Warning_show(Warning_VinesNeeded);
-            if (empire_our_city_can_produce(Resource_Vines))
+            if (empire_can_produce_resource(RESOURCE_VINES))
             {
                 UI_Warning_show(Warning_BuildVinesFarm);
             }
-            else if (!empire_city_can_import_resource(Resource_Vines))
+            else if (!empire_can_import_resource(RESOURCE_VINES))
             {
                 UI_Warning_show(Warning_OpenTradeToImport);
             }
-            else if (Data_CityInfo.resourceTradeStatus[Resource_Vines] != TradeStatus_Import)
+            else if (Data_CityInfo.resourceTradeStatus[RESOURCE_VINES] != TradeStatus_Import)
             {
                 UI_Warning_show(Warning_TradeImportResource);
             }
@@ -469,19 +469,19 @@ static void checkOlivesAccess(int buildingType)
     if (buildingType == BUILDING_OIL_WORKSHOP &&
             building_count_industry_active(RESOURCE_OLIVES) <= 0)
     {
-        if (Data_CityInfo.resourceStored[Resource_Oil] <= 0 &&
-                Data_CityInfo.resourceStored[Resource_Olives] <= 0)
+        if (Data_CityInfo.resourceStored[RESOURCE_OIL] <= 0 &&
+                Data_CityInfo.resourceStored[RESOURCE_OLIVES] <= 0)
         {
             UI_Warning_show(Warning_OlivesNeeded);
-            if (empire_our_city_can_produce(Resource_Olives))
+            if (empire_can_produce_resource(RESOURCE_OLIVES))
             {
                 UI_Warning_show(Warning_BuildOliveFarm);
             }
-            else if (!empire_city_can_import_resource(Resource_Olives))
+            else if (!empire_can_import_resource(RESOURCE_OLIVES))
             {
                 UI_Warning_show(Warning_OpenTradeToImport);
             }
-            else if (Data_CityInfo.resourceTradeStatus[Resource_Olives] != TradeStatus_Import)
+            else if (Data_CityInfo.resourceTradeStatus[RESOURCE_OLIVES] != TradeStatus_Import)
             {
                 UI_Warning_show(Warning_TradeImportResource);
             }
@@ -494,19 +494,19 @@ static void checkTimberAccess(int buildingType)
     if (buildingType == BUILDING_FURNITURE_WORKSHOP &&
             building_count_industry_active(RESOURCE_TIMBER) <= 0)
     {
-        if (Data_CityInfo.resourceStored[Resource_Furniture] <= 0 &&
-                Data_CityInfo.resourceStored[Resource_Timber] <= 0)
+        if (Data_CityInfo.resourceStored[RESOURCE_FURNITURE] <= 0 &&
+                Data_CityInfo.resourceStored[RESOURCE_TIMBER] <= 0)
         {
             UI_Warning_show(Warning_TimberNeeded);
-            if (empire_our_city_can_produce(Resource_Timber))
+            if (empire_can_produce_resource(RESOURCE_TIMBER))
             {
                 UI_Warning_show(Warning_BuildTimberYard);
             }
-            else if (!empire_city_can_import_resource(Resource_Timber))
+            else if (!empire_can_import_resource(RESOURCE_TIMBER))
             {
                 UI_Warning_show(Warning_OpenTradeToImport);
             }
-            else if (Data_CityInfo.resourceTradeStatus[Resource_Timber] != TradeStatus_Import)
+            else if (Data_CityInfo.resourceTradeStatus[RESOURCE_TIMBER] != TradeStatus_Import)
             {
                 UI_Warning_show(Warning_TradeImportResource);
             }
@@ -519,19 +519,19 @@ static void checkClayAccess(int buildingType)
     if (buildingType == BUILDING_POTTERY_WORKSHOP &&
             building_count_industry_active(RESOURCE_CLAY) <= 0)
     {
-        if (Data_CityInfo.resourceStored[Resource_Pottery] <= 0 &&
-                Data_CityInfo.resourceStored[Resource_Clay] <= 0)
+        if (Data_CityInfo.resourceStored[RESOURCE_POTTERY] <= 0 &&
+                Data_CityInfo.resourceStored[RESOURCE_CLAY] <= 0)
         {
             UI_Warning_show(Warning_ClayNeeded);
-            if (empire_our_city_can_produce(Resource_Clay))
+            if (empire_can_produce_resource(RESOURCE_CLAY))
             {
                 UI_Warning_show(Warning_BuildClayPit);
             }
-            else if (!empire_city_can_import_resource(Resource_Clay))
+            else if (!empire_can_import_resource(RESOURCE_CLAY))
             {
                 UI_Warning_show(Warning_OpenTradeToImport);
             }
-            else if (Data_CityInfo.resourceTradeStatus[Resource_Clay] != TradeStatus_Import)
+            else if (Data_CityInfo.resourceTradeStatus[RESOURCE_CLAY] != TradeStatus_Import)
             {
                 UI_Warning_show(Warning_TradeImportResource);
             }

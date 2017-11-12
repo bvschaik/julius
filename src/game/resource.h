@@ -9,10 +9,11 @@
 /**
  * Resource types
  */
-typedef enum {
+typedef enum
+{
     RESOURCE_NONE = 0,
     RESOURCE_WHEAT = 1,
-    RESOURCE_VEGETABLES = 2,
+    RESOURCES_VEGETABLES = 2,
     RESOURCE_FRUIT = 3,
     RESOURCE_OLIVES = 4,
     RESOURCE_VINES = 5,
@@ -27,12 +28,17 @@ typedef enum {
     RESOURCE_FURNITURE = 14,
     RESOURCE_POTTERY = 15,
     RESOURCE_DENARII = 16,
-    RESOURCE_TROOPS = 17,
+    RESOURCES_TROOPS = 17,
     // helper constants
     RESOURCE_MIN = 1,
     RESOURCE_MAX = 16,
     RESOURCE_MIN_FOOD = 1,
     RESOURCE_MAX_FOOD = 7
 } resource_type;
+
+inline bool ResourceIsFood(int t)
+{
+    return (t>=RESOURCE_MIN_FOOD && t<=RESOURCE_MAX_FOOD);
+}
 
 #endif // GAME_RESOURCE_H

@@ -318,7 +318,7 @@ int Resource_removeFromWarehouse(int buildingId, int resource, int amount)
             Data_CityInfo.resourceStored[resource] -= b->loadsStored;
             amount -= b->loadsStored;
             b->loadsStored = 0;
-            b->subtype.warehouseResourceId = Resource_None;
+            b->subtype.warehouseResourceId = RESOURCE_NONE;
         }
         Resource_setWarehouseSpaceGraphic(buildingId, resource);
     }
@@ -354,7 +354,7 @@ void Resource_removeFromWarehouseForMercury(int buildingId, int amount)
             Data_CityInfo.resourceStored[resource] -= b->loadsStored;
             amount -= b->loadsStored;
             b->loadsStored = 0;
-            b->subtype.warehouseResourceId = Resource_None;
+            b->subtype.warehouseResourceId = RESOURCE_NONE;
         }
         Resource_setWarehouseSpaceGraphic(buildingId, resource);
     }
@@ -434,7 +434,7 @@ void Resource_removeExportedResourceFromWarehouseSpace(int spaceId, int resource
     Data_Buildings[spaceId].loadsStored--;
     if (Data_Buildings[spaceId].loadsStored <= 0)
     {
-        Data_Buildings[spaceId].subtype.warehouseResourceId = Resource_None;
+        Data_Buildings[spaceId].subtype.warehouseResourceId = RESOURCE_NONE;
     }
 
     int price = trade_price_sell(resourceId);
@@ -455,7 +455,7 @@ static int determineGranaryAcceptFoods()
     {
         return 0;
     }
-    for (int i = 0; i < Resource_MaxFood; i++)
+    for (int i = 0; i < RESOURCE_MAX_FOOD; i++)
     {
         granaryAcceptingResource[i] = 0;
     }
@@ -468,12 +468,12 @@ static int determineGranaryAcceptFoods()
             continue;
         }
         int pctWorkers = calc_percentage(b->numWorkers, model_get_building(b->type)->laborers);
-        if (pctWorkers >= 100 && b->data.storage.resourceStored[Resource_None] >= 1200)
+        if (pctWorkers >= 100 && b->data.storage.resourceStored[RESOURCE_NONE] >= 1200)
         {
             const building_storage *s = building_storage_get(b->storage_id);
             if (!s->empty_all)
             {
-                for (int r = 0; r < Resource_MaxFood; r++)
+                for (int r = 0; r < RESOURCE_MAX_FOOD; r++)
                 {
                     if (s->resource_state[r] != BUILDING_STORAGE_STATE_NOT_ACCEPTING)
                     {
@@ -493,7 +493,7 @@ static int determineGranaryGetFoods()
     {
         return 0;
     }
-    for (int i = 0; i < Resource_MaxFood; i++)
+    for (int i = 0; i < RESOURCE_MAX_FOOD; i++)
     {
         granaryGettingResource[i] = 0;
     }
@@ -506,12 +506,12 @@ static int determineGranaryGetFoods()
             continue;
         }
         int pctWorkers = calc_percentage(b->numWorkers, model_get_building(b->type)->laborers);
-        if (pctWorkers >= 100 && b->data.storage.resourceStored[Resource_None] > 100)
+        if (pctWorkers >= 100 && b->data.storage.resourceStored[RESOURCE_NONE] > 100)
         {
             const building_storage *s = building_storage_get(b->storage_id);
             if (!s->empty_all)
             {
-                for (int r = 0; r < Resource_MaxFood; r++)
+                for (int r = 0; r < RESOURCE_MAX_FOOD; r++)
                 {
                     if (s->resource_state[r] == BUILDING_STORAGE_STATE_GETTING)
                     {
@@ -540,8 +540,8 @@ static int storesNonStockpiledFood(int spaceId, int *granaryResources)
     {
         return 0;
     }
-    if (resource == Resource_Wheat || resource == Resource_Vegetables ||
-            resource == Resource_Fruit || resource == Resource_Meat)
+    if (resource == RESOURCE_WHEAT || resource == RESOURCES_VEGETABLES ||
+            resource == RESOURCE_FRUIT || resource == RESOURCE_MEAT)
     {
         if (granaryResources[resource] > 0)
         {
@@ -563,7 +563,7 @@ int Resource_determineWarehouseWorkerTask(int buildingId, int *resource)
     const building_storage *s = building_storage_get(b->storage_id);
     int spaceId;
     // get resources
-    for (int r = Resource_Min; r < Resource_Max; r++)
+    for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++)
     {
         if (s->resource_state[r] != BUILDING_STORAGE_STATE_GETTING || Data_CityInfo.resourceStockpiled[r])
         {
@@ -607,7 +607,7 @@ int Resource_determineWarehouseWorkerTask(int buildingId, int *resource)
     }
     // deliver weapons to barracks
     if (building_count_active(BUILDING_BARRACKS) > 0 && Data_CityInfo.militaryLegionaryLegions > 0 &&
-            !Data_CityInfo.resourceStockpiled[Resource_Weapons])
+            !Data_CityInfo.resourceStockpiled[RESOURCE_WEAPONS])
     {
         int barracksId = Data_CityInfo.buildingBarracksBuildingId;
         if (Data_Buildings[barracksId].loadsStored < 4 &&
@@ -618,9 +618,9 @@ int Resource_determineWarehouseWorkerTask(int buildingId, int *resource)
             {
                 spaceId = Data_Buildings[spaceId].nextPartBuildingId;
                 if (spaceId > 0 && Data_Buildings[spaceId].loadsStored > 0 &&
-                        Data_Buildings[spaceId].subtype.warehouseResourceId == Resource_Weapons)
+                        Data_Buildings[spaceId].subtype.warehouseResourceId == RESOURCE_WEAPONS)
                 {
-                    return Resource_Weapons;
+                    return RESOURCE_WEAPONS;
                 }
             }
         }
@@ -638,20 +638,20 @@ int Resource_determineWarehouseWorkerTask(int buildingId, int *resource)
                 int workshopType;
                 switch (resource)
                 {
-                case Resource_Olives:
-                    workshopType = WorkshopResource_OlivesToOil;
+                case RESOURCE_OLIVES:
+                    workshopType = WorkshopRESOURCE_OLIVESToOil;
                     break;
-                case Resource_Vines:
-                    workshopType = WorkshopResource_VinesToWine;
+                case RESOURCE_VINES:
+                    workshopType = WorkshopRESOURCE_VINESToWine;
                     break;
-                case Resource_Iron:
-                    workshopType = WorkshopResource_IronToWeapons;
+                case RESOURCE_IRON:
+                    workshopType = WorkshopRESOURCE_IRONToWeapons;
                     break;
-                case Resource_Timber:
-                    workshopType = WorkshopResource_TimberToFurniture;
+                case RESOURCE_TIMBER:
+                    workshopType = WorkshopRESOURCE_TIMBERToFurniture;
                     break;
-                case Resource_Clay:
-                    workshopType = WorkshopResource_ClayToPottery;
+                case RESOURCE_CLAY:
+                    workshopType = WorkshopRESOURCE_CLAYToPottery;
                     break;
                 default:
                     workshopType = 0;
