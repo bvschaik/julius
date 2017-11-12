@@ -3,7 +3,8 @@
 
 #include "core/buffer.h"
 
-typedef struct {
+typedef struct
+{
     int id;
     int type;
     int animation_index;
@@ -12,7 +13,8 @@ typedef struct {
     int width;
     int height;
     int image_id;
-    struct {
+    struct
+    {
         int x;
         int y;
         int image_id;
@@ -24,8 +26,6 @@ typedef struct {
 } empire_object;
 
 void empire_object_load(buffer *buf);
-
-void empire_object_init_trade_amounts();
 
 void empire_object_init_cities();
 

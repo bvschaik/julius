@@ -48,8 +48,3 @@ void Empire_initCities()
 {
     empire_object_init_cities();
 }
-
-void Empire_initTradeAmountCodes()
-{
-    empire_object_init_trade_amounts();
-}
