@@ -3,5 +3,6 @@ build
 data
 data_rus
 doc
+sdl2
 *.user
 *.kdev4

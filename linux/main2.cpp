@@ -122,7 +122,9 @@ void System_toggleFullscreen()
 
 void System_setCursor(int cursorId)
 {
-    if (autopilot) return;
+    if (autopilot)
+        return;
+
     SDL_SetCursor(Cursors[cursorId]);
 }
 

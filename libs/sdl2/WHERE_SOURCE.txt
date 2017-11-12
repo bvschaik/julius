@@ -1,0 +1,2 @@
+Put sources from http://libsdl.org/hg.php and unpack here
+Then set BUILD_SDL2STATIC ON in julius CMakeLists.txt
