@@ -26,8 +26,6 @@ struct _Data_Figure_Extra Data_Figure_Extra;
 struct Data_Building Data_Buildings[MAX_BUILDINGS];
 struct _Data_Buildings_Extra Data_Buildings_Extra;
 
-struct Data_Sound_City Data_Sound_City[70];
-
 struct Data_CityView Data_CityView;
 
 struct Data_InvasionWarning Data_InvasionWarnings[MAX_INVASION_WARNINGS];

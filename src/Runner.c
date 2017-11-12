@@ -2,7 +2,6 @@
 #include "Animation.h"
 #include "GameFile.h"
 #include "GameTick.h"
-#include "Sound.h"
 #include "UI/Window.h"
 
 #include "Data/Settings.h"
@@ -10,6 +9,7 @@
 
 #include "core/time.h"
 #include "game/settings.h"
+#include "sound/city.h"
 
 static const time_millis millisPerTickPerSpeed[] = {
 	0, 20, 35, 55, 80, 110, 160, 240, 350, 500, 700
@@ -70,5 +70,5 @@ void Runner_run()
 void Runner_draw()
 {
 	UI_Window_refresh(0);
-	Sound_City_play();
+	sound_city_play();
 }

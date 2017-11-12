@@ -18,6 +18,7 @@
 #include "core/time.h"
 #include "figure/formation.h"
 #include "game/settings.h"
+#include "sound/city.h"
 
 static void drawBuildingFootprints();
 static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_CityPixelCoordinate *coord);
@@ -125,16 +126,16 @@ static void drawBuildingFootprints()
 					colorMask = COLOR_MASK_RED;
 				}
 				if (x < 4) {
-					Sound_City_markBuildingView(buildingId, 0);
+					sound_city_mark_building_view(buildingId, 0);
 				} else if (x > Data_CityView.widthInTiles + 2) {
-					Sound_City_markBuildingView(buildingId, 4);
+					sound_city_mark_building_view(buildingId, 4);
 				} else {
-					Sound_City_markBuildingView(buildingId, 2);
+					sound_city_mark_building_view(buildingId, 2);
 				}
 			}
 			if (Data_Grid_terrain[gridOffset] & Terrain_Garden) {
 				Data_Buildings[0].type = Terrain_Garden;
-				Sound_City_markBuildingView(0, 2);
+				sound_city_mark_building_view(0, 2);
 			}
 			int graphicId = Data_Grid_graphicIds[gridOffset];
 			if (Data_Grid_bitfields[gridOffset] & Bitfield_Overlay) {

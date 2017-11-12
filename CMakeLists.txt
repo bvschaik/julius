@@ -55,6 +55,9 @@ set (GRAPHICS_FILES
     src/graphics/image.c
     src/graphics/mouse.c
 )
+set (SOUND_FILES
+    src/sound/city.c
+)
 add_executable(julius
 	linux/main2.c
 	linux/SDLSoundDevice.c
@@ -128,7 +131,6 @@ add_executable(julius
 	src/Settings.c
 	src/SidebarMenu.c
 	src/Sound.c
-	src/Sound_City.c
 	src/Sound_Music.c
 	src/Terrain.c
 	src/TerrainBridge.c
@@ -213,7 +215,9 @@ add_executable(julius
 	${FIGURE_FILES}
 	${GAME_FILES}
 	${GRAPHICS_FILES}
-	${SMK_FILES})
+	${SOUND_FILES}
+	${SMK_FILES}
+)
 
 #include(FindPkgConfig)
 #pkg_search_module(SDL2 REQUIRED sdl2)
