@@ -1,7 +1,12 @@
 #include "system.h"
 
 #include "core/dir.h"
+#include "game/settings.h"
 #include "sound/channel.h"
+#include "sound/city.h"
+#include "sound/effect.h"
+#include "sound/music.h"
+#include "sound/speech.h"
 
 #include "SoundDevice.h"
 
@@ -186,6 +191,11 @@ void sound_system_init()
     
     SoundDevice_open();
     SoundDevice_initChannels(SOUND_CHANNEL_MAX, channel_filenames);
+
+    sound_city_set_volume(setting_sound(SOUND_CITY)->volume);
+    sound_effect_set_volume(setting_sound(SOUND_EFFECTS)->volume);
+    sound_music_set_volume(setting_sound(SOUND_MUSIC)->volume);
+    sound_speech_set_volume(setting_sound(SOUND_SPEECH)->volume);
 }
 
 void sound_system_shutdown()
