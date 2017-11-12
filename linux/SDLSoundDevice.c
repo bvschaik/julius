@@ -60,7 +60,7 @@ void SoundDevice_initChannels(int numChannels, const char filenames[][32])
 		}
 		Mix_AllocateChannels(numChannels);
 		for (int i = 0; i < numChannels; i++) {
-			if (filenames[i]) {
+			if (filenames[i][0]) {
 				channels[i] = Mix_LoadWAV(filenames[i]);
 			}
 		}

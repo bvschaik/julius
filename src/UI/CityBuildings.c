@@ -127,11 +127,11 @@ static void drawBuildingFootprints()
 					colorMask = COLOR_MASK_RED;
 				}
 				if (x < 4) {
-					sound_city_mark_building_view(buildingId, 0);
+					sound_city_mark_building_view(buildingId, SOUND_DIRECTION_LEFT);
 				} else if (x > Data_CityView.widthInTiles + 2) {
-					sound_city_mark_building_view(buildingId, 4);
+					sound_city_mark_building_view(buildingId, SOUND_DIRECTION_RIGHT);
 				} else {
-					sound_city_mark_building_view(buildingId, 2);
+					sound_city_mark_building_view(buildingId, SOUND_DIRECTION_CENTER);
 				}
 			}
 			if (Data_Grid_terrain[gridOffset] & Terrain_Garden) {

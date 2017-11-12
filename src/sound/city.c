@@ -2,8 +2,8 @@
 
 #include "core/time.h"
 #include "game/settings.h"
+#include "sound/channel.h"
 
-#include "Sound.h"
 #include "SoundDevice.h"
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
@@ -195,7 +195,7 @@ void sound_city_init()
 
 void sound_city_set_volume(int percentage)
 {
-    for (int i = SoundChannel_CityMin; i <= SoundChannel_CityMax; i++) {
+    for (int i = SOUND_CHANNEL_CITY_MIN; i <= SOUND_CHANNEL_CITY_MAX; i++) {
         if (SoundDevice_hasChannel(i)) {
             SoundDevice_setChannelVolume(i, percentage);
         }
@@ -248,14 +248,14 @@ static void play_channel(int channel, int direction)
     int left_pan;
     int right_pan;
     switch (direction) {
-        case SoundDirectionCenter:
+        case SOUND_DIRECTION_CENTER:
             left_pan = right_pan = 100;
             break;
-        case SoundDirectionLeft:
+        case SOUND_DIRECTION_LEFT:
             left_pan = 100;
             right_pan = 0;
             break;
-        case SoundDirectionRight:
+        case SOUND_DIRECTION_RIGHT:
             left_pan = 0;
             right_pan = 100;
             break;
@@ -308,14 +308,14 @@ void sound_city_play()
     // always only one channel available... use it
     int channel = channels[max_sound_id].channel;
     int direction;
-    if (channels[max_sound_id].direction_views[SoundDirectionCenter] > 10) {
-        direction = SoundDirectionCenter;
-    } else if (channels[max_sound_id].direction_views[SoundDirectionLeft] > 10) {
-        direction = SoundDirectionLeft;
-    } else if (channels[max_sound_id].direction_views[SoundDirectionRight] > 10) {
-        direction = SoundDirectionRight;
+    if (channels[max_sound_id].direction_views[SOUND_DIRECTION_CENTER] > 10) {
+        direction = SOUND_DIRECTION_CENTER;
+    } else if (channels[max_sound_id].direction_views[SOUND_DIRECTION_LEFT] > 10) {
+        direction = SOUND_DIRECTION_LEFT;
+    } else if (channels[max_sound_id].direction_views[SOUND_DIRECTION_RIGHT] > 10) {
+        direction = SOUND_DIRECTION_RIGHT;
     } else {
-        direction = SoundDirectionCenter;
+        direction = SOUND_DIRECTION_CENTER;
     }
 
     play_channel(channel, direction);

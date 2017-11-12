@@ -2,7 +2,6 @@
 
 #include "Loader.h"
 #include "Settings.h"
-#include "Sound.h"
 #include "System.h"
 #include "Video.h"
 
@@ -18,6 +17,7 @@
 #include "core/random.h"
 #include "game/settings.h"
 #include "graphics/image.h"
+#include "sound/system.h"
 
 #include <string.h>
 
@@ -70,7 +70,7 @@ int Game_init()
 		return 0;
 	}
 
-	Sound_init();
+	sound_system_init();
 	Loader_GameState_init();
 	UI_Window_goTo(Window_Logo);
 	return 1;
@@ -81,5 +81,5 @@ void Game_exit()
     Video_shutdown();
     Settings_save();
     settings_save();
-    Sound_shutdown();
+    sound_system_shutdown();
 }

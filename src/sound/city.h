@@ -3,6 +3,12 @@
 
 #include "core/buffer.h"
 
+enum {
+    SOUND_DIRECTION_LEFT = 0,
+    SOUND_DIRECTION_CENTER = 2,
+    SOUND_DIRECTION_RIGHT = 4
+};
+
 void sound_city_init();
 
 void sound_city_set_volume(int percentage);

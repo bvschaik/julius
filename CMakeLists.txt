@@ -60,6 +60,7 @@ set (SOUND_FILES
     src/sound/effect.c
     src/sound/music.c
     src/sound/speech.c
+    src/sound/system.c
 )
 add_executable(julius
 	linux/main2.c
@@ -133,7 +134,6 @@ add_executable(julius
 	src/Security.c
 	src/Settings.c
 	src/SidebarMenu.c
-	src/Sound.c
 	src/Terrain.c
 	src/TerrainBridge.c
 	src/TerrainGraphics.c

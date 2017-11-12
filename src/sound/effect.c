@@ -1,13 +1,13 @@
 #include "effect.h"
 
 #include "game/settings.h"
+#include "sound/channel.h"
 
-#include "Sound.h"
 #include "SoundDevice.h"
 
 void sound_effect_set_volume(int percentage)
 {
-    for (int i = SoundChannel_EffectsMin; i <= SoundChannel_EffectsMax; i++) {
+    for (int i = SOUND_CHANNEL_EFFECTS_MIN; i <= SOUND_CHANNEL_EFFECTS_MAX; i++) {
         if (SoundDevice_hasChannel(i)) {
             SoundDevice_setChannelVolume(i, percentage);
         }
