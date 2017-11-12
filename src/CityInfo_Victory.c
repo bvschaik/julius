@@ -1,6 +1,5 @@
 #include "CityInfo.h"
 
-#include "Sound.h"
 #include "UI/AllWindows.h"
 #include "UI/VideoIntermezzo.h"
 #include "UI/Window.h"

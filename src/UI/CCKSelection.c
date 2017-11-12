@@ -9,7 +9,6 @@
 #include "../GameFile.h"
 #include "../Graphics.h"
 #include "../Scenario.h"
-#include "../Sound.h"
 #include "../Widget.h"
 
 #include "../Data/Constants.h"

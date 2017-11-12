@@ -7,7 +7,6 @@
 #include "State.h"
 #include "Figure.h"
 #include "Building.h"
-#include "Sound.h"
 #include "CityView.h"
 #include "Invasion.h"
 #include "FileList.h"

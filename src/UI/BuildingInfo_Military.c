@@ -2,7 +2,6 @@
 
 #include "../Formation.h"
 #include "../Graphics.h"
-#include "../Sound.h"
 #include "../Widget.h"
 #include "../UI/Window.h"
 

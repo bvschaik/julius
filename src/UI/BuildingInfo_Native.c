@@ -1,5 +1,4 @@
 #include "BuildingInfo.h"
-#include "../Sound.h"
 #include "../Widget.h"
 
 static void drawNative(BuildingInfoContext *c, int groupId)

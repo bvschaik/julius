@@ -2,7 +2,6 @@
 
 #include "Figure.h"
 #include "Formation.h"
-#include "Sound.h"
 
 #include "Data/Constants.h"
 
@@ -129,7 +128,7 @@ static void hitOpponent(int figureId, struct Data_Figure *f)
 	if (opponent->opponentId != figureId && m->figure_type != FIGURE_FORT_LEGIONARY &&
 			attackIsSameDirection(f->attackDirection, opponent->attackDirection)) {
 		figureAttack += 4; // attack opponent on the (exposed) back
-		sound_effect_play(SoundChannel_SwordSwing);
+		sound_effect_play(SOUND_EFFECT_SWORD_SWING);
 	}
 	if (m->is_halted && m->figure_type == FIGURE_FORT_LEGIONARY &&
 			attackIsSameDirection(f->attackDirection, m->direction)) {

@@ -2,7 +2,6 @@
 
 #include "Video/smacker.h"
 
-#include "Sound.h"
 #include "SoundDevice.h"
 #include "Data/Screen.h"
 

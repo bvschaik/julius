@@ -10,7 +10,6 @@
 #include "../Formation.h"
 #include "../Routing.h"
 #include "../Scroll.h"
-#include "../Sound.h"
 #include "../Undo.h"
 #include "../Widget.h"
 
@@ -705,7 +704,7 @@ static void buildEnd()
 			Data_Settings_Map.current.gridOffset = Data_State.selectedBuilding.gridOffsetEnd;
 		}
 		if (Data_State.selectedBuilding.type > 0) {
-			sound_effect_play(SoundChannel_Build);
+			sound_effect_play(SOUND_EFFECT_BUILD);
 		}
 		BuildingPlacement_place(Data_Settings_Map.orientation,
 			Data_State.selectedBuilding.xStart, Data_State.selectedBuilding.yStart,

@@ -8,7 +8,6 @@
 #include "sound/effect.h"
 
 #include "Formation.h"
-#include "Sound.h"
 #include "UI/Tooltip.h"
 #include "UI/MessageDialog.h"
 #include "UI/Window.h"
@@ -126,9 +125,9 @@ static void enqueue_message(int sequence)
 static void play_sound(int text_id)
 {
     if (lang_get_message(text_id)->urgent == 1) {
-        sound_effect_play(SoundChannel_FanfareUrgent);
+        sound_effect_play(SOUND_EFFECT_FANFARE_URGENT);
     } else {
-        sound_effect_play(SoundChannel_Fanfare);
+        sound_effect_play(SOUND_EFFECT_FANFARE);
     }
 }
 

@@ -2,7 +2,6 @@
 
 #include "Figure.h"
 #include "Routing.h"
-#include "Sound.h"
 #include "Terrain.h"
 
 #include "Data/Grid.h"
@@ -84,7 +83,7 @@ void FigureAction_ballista(int figureId)
 					f->direction = Routing_getDirectionForMissileShooter(f->x, f->y, xTile, yTile);
 					f->waitTicksMissile = 0;
 					Figure_createMissile(figureId, f->x, f->y, xTile, yTile, FIGURE_BOLT);
-					sound_effect_play(SoundChannel_BallistaShoot);
+					sound_effect_play(SOUND_EFFECT_BALLISTA_SHOOT);
 				} else {
 					f->actionState = FigureActionState_180_BallistaCreated;
 				}

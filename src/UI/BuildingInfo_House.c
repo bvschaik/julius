@@ -3,7 +3,6 @@
 #include "core/calc.h"
 #include "../Graphics.h"
 #include "../Resource.h"
-#include "../Sound.h"
 #include "../Terrain.h"
 #include "../Widget.h"
 

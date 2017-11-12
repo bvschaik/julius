@@ -1,6 +1,5 @@
 #include "Widget.h"
 #include "Graphics.h"
-#include "Sound.h"
 
 #include "core/time.h"
 #include "graphics/image.h"
@@ -234,7 +233,7 @@ int Widget_Button_handleImageButtons(int xOffset, int yOffset, ImageButton *butt
 		}
 	}
 	if (m->left.went_down) {
-		sound_effect_play(SoundChannel_Icon);
+		sound_effect_play(SOUND_EFFECT_ICON);
 		hitButton->pressed = 1;
 		hitButton->pressedSince = time_get_millis();
 		hitButton->leftClickHandler(hitButton->parameter1, hitButton->parameter2);

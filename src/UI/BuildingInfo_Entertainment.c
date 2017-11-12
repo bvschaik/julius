@@ -1,5 +1,4 @@
 #include "BuildingInfo.h"
-#include "../Sound.h"
 #include "../Widget.h"
 #include "../Data/Building.h"
 

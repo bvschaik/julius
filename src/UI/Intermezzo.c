@@ -2,7 +2,6 @@
 #include "Window.h"
 
 #include "../Graphics.h"
-#include "../Sound.h"
 
 #include "../Data/Constants.h"
 #include "../Data/Screen.h"

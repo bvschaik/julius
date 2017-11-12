@@ -3,7 +3,6 @@
 #include "FigureAction.h"
 #include "FigureMovement.h"
 #include "Formation.h"
-#include "Sound.h"
 #include "Terrain.h"
 #include "Trader.h"
 
@@ -219,7 +218,7 @@ void Figure_createDustCloud(int x, int y, int size)
 			f->speedMultiplier = dustCloudSpeed[i];
 		}
 	}
-	sound_effect_play(SoundChannel_Explosion);
+	sound_effect_play(SOUND_EFFECT_EXPLOSION);
 }
 
 int Figure_createMissile(int buildingId, int x, int y, int xDst, int yDst, int type)

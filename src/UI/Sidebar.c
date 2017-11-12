@@ -10,7 +10,6 @@
 #include "../CityView.h"
 #include "../Graphics.h"
 #include "../SidebarMenu.h"
-#include "../Sound.h"
 #include "../Terrain.h"
 #include "../Undo.h"
 #include "../Widget.h"
@@ -326,7 +325,7 @@ static void buttonCollapseExpand(int param1, int param2)
 	UI_Window_goTo(Window_SlidingSidebar);
 	CityView_setViewportWithoutSidebar();
 	CityView_checkCameraBoundaries();
-	sound_effect_play(SoundChannel_Sidebar);
+	sound_effect_play(SOUND_EFFECT_SIDEBAR);
 }
 
 static void buttonBuild(int submenu, int param2)

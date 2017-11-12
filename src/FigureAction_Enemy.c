@@ -3,7 +3,6 @@
 #include "Figure.h"
 #include "Formation.h"
 #include "Routing.h"
-#include "Sound.h"
 
 #include "Data/CityInfo.h"
 #include "Data/Event.h"
@@ -76,7 +75,7 @@ static void enemyInitial(int figureId, struct Data_Figure *f, const formation *m
 				Data_CityInfo.soundShootArrow--;
 				if (Data_CityInfo.soundShootArrow <= 0) {
 					Data_CityInfo.soundShootArrow = 10;
-					sound_effect_play(SoundChannel_Arrow);
+					sound_effect_play(SOUND_EFFECT_ARROW);
 				}
 			}
 			f->attackGraphicOffset++;
@@ -119,13 +118,13 @@ static void enemyFighting(int figureId, struct Data_Figure *f, const formation *
 			Data_CityInfo.soundMarchHorse--;
 			if (Data_CityInfo.soundMarchHorse <= 0) {
 				Data_CityInfo.soundMarchHorse = 200;
-				sound_effect_play(SoundChannel_HorseMoving);
+				sound_effect_play(SOUND_EFFECT_HORSE_MOVING);
 			}
 		} else {
 			Data_CityInfo.soundMarchEnemy--;
 			if (Data_CityInfo.soundMarchEnemy <= 0) {
 				Data_CityInfo.soundMarchEnemy = 200;
-				sound_effect_play(SoundChannel_Marching);
+				sound_effect_play(SOUND_EFFECT_MARCHING);
 			}
 		}
 	}

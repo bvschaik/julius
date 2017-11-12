@@ -4,7 +4,6 @@
 #include "FigureAction.h"
 #include "Grid.h"
 #include "Routing.h"
-#include "Sound.h"
 #include "TerrainGraphics.h"
 
 #include "Data/Building.h"
@@ -792,7 +791,7 @@ static void update_herd_formation(const formation *m)
                         Data_CityInfo.soundMarchWolf--;
                         if (Data_CityInfo.soundMarchWolf <= 0) {
                             Data_CityInfo.soundMarchWolf = 12;
-                            sound_effect_play(SoundChannel_WolfHowl);
+                            sound_effect_play(SOUND_EFFECT_WOLF_HOWL);
                         }
                     }
                     moveAnimals(m, attackingAnimals);

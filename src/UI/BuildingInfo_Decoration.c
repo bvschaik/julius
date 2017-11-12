@@ -1,6 +1,5 @@
 #include "BuildingInfo.h"
 #include "../Graphics.h"
-#include "../Sound.h"
 #include "../Widget.h"
 
 void UI_BuildingInfo_drawGarden(BuildingInfoContext *c)

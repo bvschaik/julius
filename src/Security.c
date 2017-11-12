@@ -8,7 +8,6 @@
 #include "Formation.h"
 #include "Routing.h"
 #include "SidebarMenu.h"
-#include "Sound.h"
 #include "Terrain.h"
 #include "TerrainGraphics.h"
 
@@ -81,21 +80,21 @@ void Security_Tick_updateBurningRuins()
 		if (nextBuildingId && !Data_Buildings[nextBuildingId].fireProof) {
 			Building_collapseOnFire(nextBuildingId, 0);
 			Building_collapseLinked(nextBuildingId, 1);
-			sound_effect_play(SoundChannel_Explosion);
+			sound_effect_play(SOUND_EFFECT_EXPLOSION);
 			recalculateTerrain = 1;
 		} else {
 			nextBuildingId = Data_Grid_buildingIds[gridOffset + Constant_DirectionGridOffsets[dir1]];
 			if (nextBuildingId && !Data_Buildings[nextBuildingId].fireProof) {
 				Building_collapseOnFire(nextBuildingId, 0);
 				Building_collapseLinked(nextBuildingId, 1);
-				sound_effect_play(SoundChannel_Explosion);
+				sound_effect_play(SOUND_EFFECT_EXPLOSION);
 				recalculateTerrain = 1;
 			} else {
 				nextBuildingId = Data_Grid_buildingIds[gridOffset + Constant_DirectionGridOffsets[dir2]];
 				if (nextBuildingId && !Data_Buildings[nextBuildingId].fireProof) {
 					Building_collapseOnFire(nextBuildingId, 0);
 					Building_collapseLinked(nextBuildingId, 1);
-					sound_effect_play(SoundChannel_Explosion);
+					sound_effect_play(SOUND_EFFECT_EXPLOSION);
 					recalculateTerrain = 1;
 				}
 			}
@@ -295,7 +294,7 @@ static void fireBuilding(int buildingId, struct Data_Building *b)
 	
 	Building_collapseOnFire(buildingId, 0);
 	Building_collapseLinked(buildingId, 1);
-	sound_effect_play(SoundChannel_Explosion);
+	sound_effect_play(SOUND_EFFECT_EXPLOSION);
 }
 
 void Security_Tick_checkFireCollapse()

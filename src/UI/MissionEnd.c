@@ -4,7 +4,6 @@
 #include "../CityInfo.h"
 #include "../Graphics.h"
 #include "../Settings.h"
-#include "../Sound.h"
 #include "../Widget.h"
 
 #include "../Data/CityInfo.h"

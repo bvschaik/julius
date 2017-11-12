@@ -3,7 +3,6 @@
 #include "Figure.h"
 #include "Routing.h"
 #include "Security.h"
-#include "Sound.h"
 #include "Terrain.h"
 
 #include "Data/CityInfo.h"
@@ -279,7 +278,7 @@ static void prefectExtinguishFire(int figureId, struct Data_Figure *f)
 	int distance = calc_maximum_distance(f->x, f->y, burn->x, burn->y);
 	if (BuildingIsInUse(f->destinationBuildingId) && burn->type == BUILDING_BURNING_RUIN && distance < 2) {
 		burn->fireDuration = 32;
-		sound_effect_play(SoundChannel_FireSplash);
+		sound_effect_play(SOUND_EFFECT_FIRE_SPLASH);
 	} else {
 		f->waitTicks = 1;
 	}

@@ -9,7 +9,6 @@
 #include "HousePopulation.h"
 #include "Resource.h"
 #include "Routing.h"
-#include "Sound.h"
 #include "Terrain.h"
 #include "TerrainGraphics.h"
 #include "Undo.h"
@@ -404,7 +403,7 @@ int Building_collapseFirstOfType(int buildingType)
 			
 			TerrainGraphics_setBuildingAreaRubble(i, Data_Buildings[i].x, Data_Buildings[i].y,
 				Data_Buildings[i].size);
-			sound_effect_play(SoundChannel_Explosion);
+			sound_effect_play(SOUND_EFFECT_EXPLOSION);
 			Routing_determineLandCitizen();
 			Routing_determineLandNonCitizen();
 			return gridOffset;
@@ -1199,7 +1198,7 @@ void Building_Mercury_removeResources(int bigCurse)
 		city_message_post(0, MESSAGE_FIRE, b->type, b->gridOffset);
 		Building_collapseOnFire(maxBuildingId, 0);
 		Building_collapseLinked(maxBuildingId, 1);
-		sound_effect_play(SoundChannel_Explosion);
+		sound_effect_play(SOUND_EFFECT_EXPLOSION);
 		Routing_determineLandCitizen();
 		Routing_determineLandNonCitizen();
 	} else {

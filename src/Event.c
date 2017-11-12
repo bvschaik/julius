@@ -7,7 +7,6 @@
 #include "Resource.h"
 #include "Routing.h"
 #include "SidebarMenu.h"
-#include "Sound.h"
 #include "TerrainGraphics.h"
 
 #include "Data/Building.h"
@@ -488,7 +487,7 @@ static void advanceEarthquakeToTile(int x, int y)
 	if (buildingId) {
 		Building_collapseOnFire(buildingId, 0);
 		Building_collapseLinked(buildingId, 1);
-		sound_effect_play(SoundChannel_Explosion);
+		sound_effect_play(SOUND_EFFECT_EXPLOSION);
 		Data_Buildings[buildingId].state = BuildingState_DeletedByGame;
 	}
 	Data_Grid_terrain[gridOffset] = 0;

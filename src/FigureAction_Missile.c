@@ -2,7 +2,6 @@
 
 #include "Figure.h"
 #include "Formation.h"
-#include "Sound.h"
 
 #include "figure/formation.h"
 #include "figure/properties.h"
@@ -68,7 +67,7 @@ void FigureAction_arrow(int figureId)
 		f->state = FigureState_Dead;
 		int arrowFormation = Data_Figures[f->buildingId].formationId;
         formation_record_missile_attack(formationId, arrowFormation);
-		sound_effect_play(SoundChannel_ArrowHit);
+		sound_effect_play(SOUND_EFFECT_ARROW_HIT);
 	} else if (shouldDie) {
 		f->state = FigureState_Dead;
 	}
@@ -113,7 +112,7 @@ void FigureAction_spear(int figureId)
 		}
 		int arrowFormation = Data_Figures[f->buildingId].formationId;
 		formation_record_missile_attack(formationId, arrowFormation);
-		sound_effect_play(SoundChannel_Javelin);
+		sound_effect_play(SOUND_EFFECT_JAVELIN);
 		f->state = FigureState_Dead;
 	} else if (shouldDie) {
 		f->state = FigureState_Dead;
@@ -160,7 +159,7 @@ void FigureAction_javelin(int figureId)
 		}
 		int javelinFormation = Data_Figures[f->buildingId].formationId;
 		formation_record_missile_attack(formationId, javelinFormation);
-		sound_effect_play(SoundChannel_Javelin);
+		sound_effect_play(SOUND_EFFECT_JAVELIN);
 		f->state = FigureState_Dead;
 	} else if (shouldDie) {
 		f->state = FigureState_Dead;
@@ -200,11 +199,11 @@ void FigureAction_bolt(int figureId)
 			Figure_playDieSound(targetType);
 			Formation_updateAfterDeath(formationId);
 		}
-		sound_effect_play(SoundChannel_BallistaHitPerson);
+		sound_effect_play(SOUND_EFFECT_BALLISTA_HIT_PERSON);
 		f->state = FigureState_Dead;
 	} else if (shouldDie) {
 		f->state = FigureState_Dead;
-		sound_effect_play(SoundChannel_BallistaHitGround);
+		sound_effect_play(SOUND_EFFECT_BALLISTA_HIT_GROUND);
 	}
 	int dir = (16 + f->direction - 2 * Data_Settings_Map.orientation) % 16;
 	f->graphicId = image_group(ID_Graphic_Figure_Missile) + 32 + dir;

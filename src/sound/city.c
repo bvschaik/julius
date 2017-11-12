@@ -12,6 +12,75 @@
 
 #define MAX_CHANNELS 70
 
+// for compatibility with the original game:
+#define CITY_CHANNEL_OFFSET 15
+
+enum {
+    SoundChannel_City_HouseSlum = 30,
+    SoundChannel_City_HousePoor = 34,
+    SoundChannel_City_HouseMedium = 38,
+    SoundChannel_City_HouseGood = 42,
+    SoundChannel_City_HousePosh = 46,
+    SoundChannel_City_Amphitheater = 50,
+    SoundChannel_City_Theater = 51,
+    SoundChannel_City_Hippodrome = 52,
+    SoundChannel_City_Colosseum = 53,
+    SoundChannel_City_GladiatorSchool = 54,
+    SoundChannel_City_LionPit = 55,
+    SoundChannel_City_ActorColony = 56,
+    SoundChannel_City_ChariotMaker = 57,
+    SoundChannel_City_Garden = 58,
+    SoundChannel_City_Clinic = 62,
+    SoundChannel_City_Hospital = 63,
+    SoundChannel_City_Bathhouse = 64,
+    SoundChannel_City_Barber = 65,
+    SoundChannel_City_School = 66,
+    SoundChannel_City_Academy = 67,
+    SoundChannel_City_Library = 68,
+    SoundChannel_City_Prefecture = 69,
+    SoundChannel_City_Fort = 70,
+    SoundChannel_City_Tower = 74,
+    SoundChannel_City_TempleCeres = 78,
+    SoundChannel_City_TempleNeptune = 79,
+    SoundChannel_City_TempleMercury = 80,
+    SoundChannel_City_TempleMars = 81,
+    SoundChannel_City_TempleVenus = 82,
+    SoundChannel_City_Market = 83,
+    SoundChannel_City_Granary = 87,
+    SoundChannel_City_Warehouse = 89,
+    SoundChannel_City_Shipyard = 91,
+    SoundChannel_City_Dock = 93,
+    SoundChannel_City_Wharf = 95,
+    SoundChannel_City_Palace = 97,
+    SoundChannel_City_EngineersPost = 98,
+    SoundChannel_City_Senate = 99,
+    SoundChannel_City_Forum = 100,
+    SoundChannel_City_Reservoir = 101,
+    SoundChannel_City_Fountain = 102,
+    SoundChannel_City_Well = 106,
+    SoundChannel_City_MilitaryAcademy = 110,
+    SoundChannel_City_Oracle = 111,
+    SoundChannel_City_BurningRuin = 112,
+    SoundChannel_City_WheatFarm = 113,
+    SoundChannel_City_VegetableFarm = 114,
+    SoundChannel_City_FruitFarm = 115,
+    SoundChannel_City_OliveFarm = 116,
+    SoundChannel_City_VineFarm = 117,
+    SoundChannel_City_PigFarm = 118,
+    SoundChannel_City_Quarry = 119,
+    SoundChannel_City_IronMine = 120,
+    SoundChannel_City_TimberYard = 121,
+    SoundChannel_City_ClayPit = 122,
+    SoundChannel_City_WineWorkshop = 123,
+    SoundChannel_City_OilWorkshop = 124,
+    SoundChannel_City_WeaponsWorkshop = 125,
+    SoundChannel_City_FurnitureWorkshop = 126,
+    SoundChannel_City_PotteryWorkshop = 127,
+    SoundChannel_City_EmptyLand = 128,
+    SoundChannel_City_River = 132,
+    SoundChannel_City_MissionPost = 133,
+};
+
 typedef struct {
     int in_use;
     int available;
@@ -169,7 +238,7 @@ void sound_city_decay_views()
 
 static void play_channel(int channel, int direction)
 {
-    channel += SoundChannel_CityOffset;
+    channel += CITY_CHANNEL_OFFSET;
     if (!setting_sound(SOUND_CITY)->enabled) {
         return;
     }
