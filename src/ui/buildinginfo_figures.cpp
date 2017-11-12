@@ -10,7 +10,6 @@
 
 #include "data/building.hpp"
 #include "data/constants.hpp"
-#include "data/empire.hpp"
 #include "data/figure.hpp"
 #include "data/scenario.hpp"
 #include "data/settings.hpp"

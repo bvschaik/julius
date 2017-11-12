@@ -5,7 +5,6 @@
 #include "data/scenario.hpp"
 #include "data/settings.hpp"
 #include "data/message.hpp"
-#include "data/empire.hpp"
 #include "data/screen.hpp"
 #include "data/buttons.hpp"
 #include "data/cityinfo.hpp"

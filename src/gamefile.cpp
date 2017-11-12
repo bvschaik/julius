@@ -18,7 +18,6 @@
 #include "data/building.hpp"
 #include "data/cityinfo.hpp"
 #include "data/debug.hpp"
-#include "data/empire.hpp"
 #include "data/event.hpp"
 #include "data/filelist.hpp"
 #include "data/grid.hpp"

@@ -1,6 +1,7 @@
 #include "empire.h"
 
 #include "core/calc.h"
+#include "empire/object.h"
 
 #include <data>
 enum
@@ -102,38 +103,8 @@ void empire_select_object(int x, int y)
 {
     int map_x = x + data.scroll_x;
     int map_y = y + data.scroll_y;
-    int min_dist = 10000;
-    int obj_id = 0;
-    for (int i = 0; i < MAX_EMPIRE_OBJECTS && Data_Empire_Objects[i].inUse; i++)
-    {
-        struct Data_Empire_Object *obj = &Data_Empire_Objects[i];
-        int obj_x, obj_y;
-        if (Data_Scenario.empireHasExpanded)
-        {
-            obj_x = obj->xExpanded;
-            obj_y = obj->yExpanded;
-        }
-        else
-        {
-            obj_x = obj->x;
-            obj_y = obj->y;
-        }
-        if (obj_x - 8 > map_x || obj_x + obj->width + 8 <= map_x)
-        {
-            continue;
-        }
-        if (obj_y - 8 > map_y || obj_y + obj->height + 8 <= map_y)
-        {
-            continue;
-        }
-        int dist = calc_maximum_distance(map_x, map_y, obj_x + obj->width / 2, obj_y + obj->height / 2);
-        if (dist < min_dist)
-        {
-            min_dist = dist;
-            obj_id = i + 1;
-        }
-    }
-    data.selected_object = obj_id;
+
+    data.selected_object = empire_object_get_closest(map_x, map_y);
 }
 
 void empire_save_state(buffer *buf)

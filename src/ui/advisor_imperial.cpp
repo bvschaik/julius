@@ -9,7 +9,6 @@
 #include "widget_text.h"
 #include "empire/city.h"
 
-#include "data/empire.hpp"
 #include "data/scenario.hpp"
 #include "data/settings.hpp"
 

@@ -16,7 +16,6 @@
 #include "data/buttons.hpp"
 #include "data/cityinfo.hpp"
 #include "data/constants.hpp"
-#include "data/empire.hpp"
 #include "data/message.hpp"
 #include "data/scenario.hpp"
 #include "data/screen.hpp"

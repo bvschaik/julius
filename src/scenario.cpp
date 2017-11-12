@@ -26,7 +26,6 @@
 
 #include "data/cityinfo.hpp"
 #include "data/constants.hpp"
-#include "data/empire.hpp"
 #include "data/event.hpp"
 #include "data/filelist.hpp"
 #include "data/grid.hpp"
