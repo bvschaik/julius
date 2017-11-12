@@ -13,6 +13,7 @@
 
 #include "building/list.h"
 #include "building/model.h"
+#include "city/message.h"
 #include "figure/type.h"
 
 static void calculateWorkers();
@@ -107,41 +108,32 @@ void HousePopulation_updateMigration()
 	CityInfo_Population_yearlyUpdate();
 	calculateWorkers();
 	// population messages
-	if (Data_CityInfo.population >= 500 && !Data_Message.populationMessagesShown.pop500) {
+	if (Data_CityInfo.population >= 500 && city_message_mark_population_shown(500)) {
 		PlayerMessage_post(1, Message_2_Population500, 0, 0);
-		Data_Message.populationMessagesShown.pop500 = 1;
 	}
-	if (Data_CityInfo.population >= 1000 && !Data_Message.populationMessagesShown.pop1000) {
+	if (Data_CityInfo.population >= 1000 && city_message_mark_population_shown(1000)) {
 		PlayerMessage_post(1, Message_3_Population1000, 0, 0);
-		Data_Message.populationMessagesShown.pop1000 = 1;
 	}
-	if (Data_CityInfo.population >= 2000 && !Data_Message.populationMessagesShown.pop2000) {
+	if (Data_CityInfo.population >= 2000 && city_message_mark_population_shown(2000)) {
 		PlayerMessage_post(1, Message_4_Population2000, 0, 0);
-		Data_Message.populationMessagesShown.pop2000 = 1;
 	}
-	if (Data_CityInfo.population >= 3000 && !Data_Message.populationMessagesShown.pop3000) {
+	if (Data_CityInfo.population >= 3000 && city_message_mark_population_shown(3000)) {
 		PlayerMessage_post(1, Message_5_Population3000, 0, 0);
-		Data_Message.populationMessagesShown.pop3000 = 1;
 	}
-	if (Data_CityInfo.population >= 5000 && !Data_Message.populationMessagesShown.pop5000) {
+	if (Data_CityInfo.population >= 5000 && city_message_mark_population_shown(5000)) {
 		PlayerMessage_post(1, Message_6_Population5000, 0, 0);
-		Data_Message.populationMessagesShown.pop5000 = 1;
 	}
-	if (Data_CityInfo.population >= 10000 && !Data_Message.populationMessagesShown.pop10000) {
+	if (Data_CityInfo.population >= 10000 && city_message_mark_population_shown(10000)) {
 		PlayerMessage_post(1, Message_7_Population10000, 0, 0);
-		Data_Message.populationMessagesShown.pop10000 = 1;
 	}
-	if (Data_CityInfo.population >= 15000 && !Data_Message.populationMessagesShown.pop15000) {
+	if (Data_CityInfo.population >= 15000 && city_message_mark_population_shown(15000)) {
 		PlayerMessage_post(1, Message_8_Population15000, 0, 0);
-		Data_Message.populationMessagesShown.pop15000 = 1;
 	}
-	if (Data_CityInfo.population >= 20000 && !Data_Message.populationMessagesShown.pop20000) {
+	if (Data_CityInfo.population >= 20000 && city_message_mark_population_shown(20000)) {
 		PlayerMessage_post(1, Message_9_Population20000, 0, 0);
-		Data_Message.populationMessagesShown.pop20000 = 1;
 	}
-	if (Data_CityInfo.population >= 25000 && !Data_Message.populationMessagesShown.pop25000) {
+	if (Data_CityInfo.population >= 25000 && city_message_mark_population_shown(25000)) {
 		PlayerMessage_post(1, Message_10_Population25000, 0, 0);
-		Data_Message.populationMessagesShown.pop25000 = 1;
 	}
 }
 

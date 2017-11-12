@@ -11,6 +11,7 @@
 #include "Data/CityInfo.h"
 #include "Data/Message.h"
 
+#include "city/message.h"
 #include "core/file.h"
 #include "core/lang.h"
 #include "core/time.h"
@@ -220,16 +221,7 @@ void PlayerMessage_initList()
 	for (int i = 0; i < MAX_MESSAGES; i++) {
 		Data_Message.messages[i].messageType = 0;
 	}
-	Data_Message.populationMessagesShown.pop0 = 0;
-	Data_Message.populationMessagesShown.pop500 = 0;
-	Data_Message.populationMessagesShown.pop1000 = 0;
-	Data_Message.populationMessagesShown.pop2000 = 0;
-	Data_Message.populationMessagesShown.pop3000 = 0;
-	Data_Message.populationMessagesShown.pop5000 = 0;
-	Data_Message.populationMessagesShown.pop10000 = 0;
-	Data_Message.populationMessagesShown.pop15000 = 0;
-	Data_Message.populationMessagesShown.pop20000 = 0;
-	Data_Message.populationMessagesShown.pop25000 = 0;
+	city_message_init_scenario();
 	for (int i = 0; i < 20; i++) {
 		Data_Message.messageCategoryCount[i] = 0;
 		Data_Message.messageDelay[i] = 0;
