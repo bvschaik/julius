@@ -129,10 +129,7 @@ void CityInfo_Labor_checkEmployment()
 	// workers needed message
 	if (!origNeeded && Data_CityInfo.workersNeeded > 0) {
 		if (game_time_year() >= Data_Scenario.startYear) {
-			if (Data_Message.messageDelay[MessageDelay_WorkersNeeded] <= 0) {
-				Data_Message.messageDelay[MessageDelay_WorkersNeeded] = 6;
-				PlayerMessage_post(0, Message_37_WorkersNeeded, 0, 0);
-			}
+			PlayerMessage_postWithMessageDelay(MessageDelay_WorkersNeeded, 0, Message_37_WorkersNeeded, 6);
 		}
 	}
 }

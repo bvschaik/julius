@@ -106,6 +106,15 @@ void PlayerMessage_postWithPopupDelay(int type, int messageType, int param1, sho
 	Data_Message.messageCategoryCount[type]++;
 }
 
+void PlayerMessage_postWithMessageDelay(int type, int usePopup, int messageType, int delay)
+{
+    if (Data_Message.messageDelay[type] <= 0) {
+        Data_Message.messageDelay[type] = delay;
+        PlayerMessage_post(usePopup, messageType, 0, 0);
+    }
+}
+
+
 void PlayerMessage_processQueue()
 {
 	if (UI_Window_getId() != Window_City) {

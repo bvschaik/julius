@@ -267,10 +267,7 @@ void tutorial_on_month_tick()
 {
     if (IsTutorial3()) {
         if (game_time_month() == 5) {
-            if (Data_Message.messageDelay[MessageDelay_Tutorial3] <= 0) {
-                Data_Message.messageDelay[MessageDelay_Tutorial3] = 1200;
-                post_message(Message_58_TutorialHungerHaltsImmigrants);
-            }
+            PlayerMessage_postWithMessageDelay(MessageDelay_Tutorial3, 1, Message_58_TutorialHungerHaltsImmigrants, 1200);
         }
     }
 }
