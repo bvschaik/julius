@@ -33,7 +33,6 @@ int Figure_provideServiceCoverage(int figureId);
 
 void FigureRoute_clearList();
 void FigureRoute_clean();
-int FigureRoute_getNumAvailable();
 void FigureRoute_add(int figureId);
 void FigureRoute_remove(int figureId);
 
