@@ -9,6 +9,7 @@
 #include "building/model.h"
 #include "core/calc.h"
 #include "game/time.h"
+#include "city/message.h"
 
 #define MAX_CATS 10
 
@@ -155,7 +156,7 @@ void CityInfo_Labor_checkEmployment()
     {
         if (game_time_year() >= Data_Scenario.startYear)
         {
-            PlayerMessage_postWithMessageDelay(MessageDelay_WorkersNeeded, 0, Message_37_WorkersNeeded, 6);
+            city_message_post_with_message_delay(MESSAGE_CAT_WORKERS_NEEDED, 0, Message_37_WorkersNeeded, 6);
         }
     }
 }

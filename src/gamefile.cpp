@@ -181,8 +181,8 @@ typedef struct
     buffer *Data_Message_totalMessages;
     buffer *Data_Message_currentMessageId;
     buffer *population_messages;
-    buffer *Data_Message_messageCategoryCount;
-    buffer *Data_Message_messageDelay;
+    buffer *message_counts;
+    buffer *message_delays;
     buffer *building_list_burning_totals;
     buffer *Data_Figure_Extra_createdSequence;
     buffer *Data_Settings_startingFavor;
@@ -352,8 +352,8 @@ void init_savegame_data()
     state->Data_Message_totalMessages = create_savegame_piece(4, 0);
     state->Data_Message_currentMessageId = create_savegame_piece(4, 0);
     state->population_messages = create_savegame_piece(10, 0);
-    state->Data_Message_messageCategoryCount = create_savegame_piece(80, 0);
-    state->Data_Message_messageDelay = create_savegame_piece(80, 0);
+    state->message_counts = create_savegame_piece(80, 0);
+    state->message_delays = create_savegame_piece(80, 0);
     state->building_list_burning_totals = create_savegame_piece(8, 0);
     state->Data_Figure_Extra_createdSequence = create_savegame_piece(4, 0);
     state->Data_Settings_startingFavor = create_savegame_piece(4, 0);
@@ -524,10 +524,8 @@ static void savegame_deserialize(savegame_state *state)
     read_all_from_buffer(state->Data_Message_totalMessages, &Data_Message.totalMessages);
     read_all_from_buffer(state->Data_Message_currentMessageId, &Data_Message.currentMessageId);
 
-    city_message_load_state(state->population_messages);
+    city_message_load_state(state->message_counts, state->message_delays, state->population_messages);
 
-    read_all_from_buffer(state->Data_Message_messageCategoryCount, &Data_Message.messageCategoryCount);
-    read_all_from_buffer(state->Data_Message_messageDelay, &Data_Message.messageDelay);
     read_all_from_buffer(state->Data_Figure_Extra_createdSequence, &Data_Figure_Extra.createdSequence);
     read_all_from_buffer(state->Data_Settings_startingFavor, &Data_Settings.startingFavor);
     read_all_from_buffer(state->Data_Settings_personalSavingsLastMission, &Data_Settings.personalSavingsLastMission);
@@ -661,10 +659,8 @@ static void savegame_serialize(savegame_state *state)
     write_all_to_buffer(state->Data_Message_totalMessages, &Data_Message.totalMessages);
     write_all_to_buffer(state->Data_Message_currentMessageId, &Data_Message.currentMessageId);
 
-    city_message_save_state(state->population_messages);
+    city_message_save_state(state->message_counts, state->message_delays, state->population_messages);
 
-    write_all_to_buffer(state->Data_Message_messageCategoryCount, &Data_Message.messageCategoryCount);
-    write_all_to_buffer(state->Data_Message_messageDelay, &Data_Message.messageDelay);
     write_all_to_buffer(state->Data_Figure_Extra_createdSequence, &Data_Figure_Extra.createdSequence);
     write_all_to_buffer(state->Data_Settings_startingFavor, &Data_Settings.startingFavor);
     write_all_to_buffer(state->Data_Settings_personalSavingsLastMission, &Data_Settings.personalSavingsLastMission);

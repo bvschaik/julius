@@ -135,13 +135,10 @@ enum
 
 void PlayerMessage_disableSoundForNextMessage();
 void PlayerMessage_post(int usePopup, int messageType, int param1, short param2);
-void PlayerMessage_postWithPopupDelay(int type, int messageType, int param1, short param2);
-void PlayerMessage_postWithMessageDelay(int type, int usePopup, int messageType, int delay);
 
 void PlayerMessage_initList();
 void PlayerMessage_initProblemArea();
 void PlayerMessage_sortMessages();
-void PlayerMessage_updateMessageDelays();
 void PlayerMessage_processQueue();
 void PlayerMessage_goToProblem();
 

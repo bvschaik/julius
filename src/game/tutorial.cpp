@@ -10,6 +10,7 @@
 
 #include "game/resource.h"
 #include "game/time.h"
+#include "city/message.h"
 
 struct
 {
@@ -341,7 +342,7 @@ void Tutorial::on_month_tick()
     {
         if (game_time_month() == 5)
         {
-            PlayerMessage_postWithMessageDelay(MessageDelay_Tutorial3, 1, Message_58_TutorialHungerHaltsImmigrants, 1200);
+            city_message_post_with_message_delay(MESSAGE_CAT_TUTORIAL3, 1, Message_58_TutorialHungerHaltsImmigrants, 1200);
         }
     }
 }

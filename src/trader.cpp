@@ -15,6 +15,7 @@
 #include "empire/trade_route.h"
 #include "empire/empire.h"
 #include "figure/type.h"
+#include "city/message.h"
 
 #include <string.h>
 
@@ -161,15 +162,7 @@ int canGenerateTraderForCity(int city_id, empire_city *city)
     {
         if (Data_CityInfo.numWorkingDocks <= 0)
         {
-            if (Data_Message.messageCategoryCount[MessageDelay_NoWorkingDock] > 0)
-            {
-                Data_Message.messageCategoryCount[MessageDelay_NoWorkingDock]--;
-            }
-            else
-            {
-                PlayerMessage_post(1, Message_117_NoWorkingDock, 0, 0);
-                Data_Message.messageCategoryCount[MessageDelay_NoWorkingDock] = 384; // 1 year
-            }
+            city_message_post_with_message_delay(MESSAGE_CAT_NO_WORKING_DOCK, 1, Message_117_NoWorkingDock, 384);
             return 0;
         }
         if (Data_Scenario.riverEntryPoint.x == -1 && Data_Scenario.riverEntryPoint.y == -1)

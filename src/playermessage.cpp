@@ -40,15 +40,6 @@ void PlayerMessage_disableSoundForNextMessage()
     playSound = 0;
 }
 
-void PlayerMessage_postWithMessageDelay(int type, int usePopup, int messageType, int delay)
-{
-    if (Data_Message.messageDelay[type] <= 0)
-    {
-        Data_Message.messageDelay[type] = delay;
-        PlayerMessage_post(usePopup, messageType, 0, 0);
-    }
-}
-
 void PlayerMessage_post(int usePopup, int messageType, int param1, short param2)
 {
     int id = getNewMessageId();
@@ -120,18 +111,6 @@ void PlayerMessage_post(int usePopup, int messageType, int param1, short param2)
         }
     }
     playSound = 1;
-}
-
-void PlayerMessage_postWithPopupDelay(int type, int messageType, int param1, short param2)
-{
-    int usePopup = 0;
-    if (Data_Message.messageDelay[type] <= 0)
-    {
-        usePopup = 1;
-        Data_Message.messageDelay[type] = 12;
-    }
-    PlayerMessage_post(usePopup, messageType, param1, param2);
-    Data_Message.messageCategoryCount[type]++;
 }
 
 void PlayerMessage_processQueue()
@@ -270,11 +249,6 @@ void PlayerMessage_initList()
         Data_Message.messages[i].messageType = 0;
     }
     city_message_init_scenario();
-    for (int i = 0; i < 20; i++)
-    {
-        Data_Message.messageCategoryCount[i] = 0;
-        Data_Message.messageDelay[i] = 0;
-    }
     for (int i = 0; i < 20; i++)
     {
         Data_Message.popupMessageQueue[i] = 0;
@@ -420,16 +394,5 @@ void PlayerMessage_sortMessages()
     else
     {
         Data_Message.maxScrollPosition = Data_Message.totalMessages - 10;
-    }
-}
-
-void PlayerMessage_updateMessageDelays()
-{
-    for (int i = 0; i < 20; i++)
-    {
-        if (Data_Message.messageDelay[i] > 0)
-        {
-            Data_Message.messageDelay[i]--;
-        }
     }
 }

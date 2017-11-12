@@ -27,6 +27,7 @@
 #include "ui/window.h"
 #include "empire/city.h"
 #include "empire/empire.h"
+#include "city/message.h"
 
 #include "data/cityinfo.hpp"
 #include "data/settings.hpp"
@@ -219,7 +220,7 @@ static void advanceMonth()
     Event_handlePricesChanges();
     CityInfo_Victory_updateMonthsToGovern();
     Formation_Tick_updateRestMorale();
-    PlayerMessage_updateMessageDelays();
+    city_message_decrease_delays();
 
     TerrainGraphics_updateAllRoads();
     TerrainGraphics_updateRegionWater(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);

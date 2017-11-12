@@ -14,6 +14,7 @@
 #include "empire/trade_route.h"
 #include "figure/trader.h"
 #include "figure/type.h"
+#include "city/message.h"
 
 static void advanceTradeNextImportResourceCaravan()
 {
@@ -642,10 +643,10 @@ void FigureAction_tradeShip(int figureId)
         else if (f->direction == DirFigure_10_Lost)
         {
             f->state = FigureState_Dead;
-            if (!Data_Message.messageCategoryCount[MessageDelay_BlockedDock])
+            if (!city_message_get_category_count(MESSAGE_CAT_BLOCKED_DOCK))
             {
                 PlayerMessage_post(1, Message_15_NavigationImpossible, 0, 0);
-                Data_Message.messageCategoryCount[MessageDelay_BlockedDock]++;
+                city_message_increase_category_count(MESSAGE_CAT_BLOCKED_DOCK);
             }
         }
         if (!BuildingIsInUse(f->destinationBuildingId))
@@ -691,7 +692,7 @@ void FigureAction_tradeShip(int figureId)
             break;
         }
         f->graphicOffset = 0;
-        Data_Message.messageCategoryCount[MessageDelay_BlockedDock] = 0;
+        city_message_reset_category_count(MESSAGE_CAT_BLOCKED_DOCK);
         break;
     case FigureActionState_113_TradeShipGoingToDockQueue:
         FigureMovement_walkTicks(figureId, 1);

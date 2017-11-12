@@ -13,6 +13,7 @@
 #include "terrain.h"
 #include "terraingraphics.h"
 #include "game/tutorial.h"
+#include "city/message.h"
 
 #include "data/building.hpp"
 #include "data/cityinfo.hpp"
@@ -231,7 +232,7 @@ static void generateRioter(int buildingId)
     {
         Data_Message.lastSoundTime.rioterGenerated = time_get_millis();
     }
-    PlayerMessage_postWithPopupDelay(MessageDelay_Riot, Message_11_RiotInTheCity, b->type, GridOffset(xRoad, yRoad));
+    city_message_post_with_popup_delay(MESSAGE_CAT_RIOT, Message_11_RiotInTheCity, b->type, GridOffset(xRoad, yRoad));
 }
 
 static void generateMugger(int buildingId)
@@ -364,7 +365,7 @@ static void collapseBuilding(int buildingId, struct Data_Building *b)
 
     if (!Tutorial::handle_collapse())
     {
-        PlayerMessage_postWithPopupDelay(MessageDelay_Collapse, Message_13_CollapsedBuilding, b->type, b->gridOffset);
+        city_message_post_with_popup_delay(MESSAGE_CAT_COLLAPSE, Message_13_CollapsedBuilding, b->type, b->gridOffset);
     }
 
     Data_State.undoAvailable = 0;
@@ -387,7 +388,7 @@ static void fireBuilding(int buildingId, struct Data_Building *b)
 
     if (!Tutorial::handle_fire())
     {
-        PlayerMessage_postWithPopupDelay(MessageDelay_Fire, Message_12_FireInTheCity, b->type, b->gridOffset);
+        city_message_post_with_popup_delay(MESSAGE_CAT_FIRE, Message_12_FireInTheCity, b->type, b->gridOffset);
     }
 
     Building_collapseOnFire(buildingId, 0);

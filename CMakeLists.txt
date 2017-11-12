@@ -1,10 +1,13 @@
 cmake_minimum_required(VERSION 2.6)
 project(julius)
 
+option( BUILD_SDL2MINI "Static sdl2-mini" OFF )
+
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/cmake/")
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror=implicit-function-declaration")
+#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
 set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -fpermissive")
+set(LIBS_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libs" )
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
 #set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
 set(SMK_FILES src/video/smacker.c src/video/smk_bitstream.c src/video/smk_hufftree.c)
@@ -19,7 +22,16 @@ file(GLOB UI_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/ui/*.*)
 file(GLOB CITY_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/city/*.*)
 file(GLOB DATA_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/data/*.*)
 
-add_executable(julius
+if (BUILD_SDL2MINI)
+  set(SDL2MINI_NAME "sdl2mini")
+  set(SDL2MINI_HOME "${LIBS_SOURCE_DIR}/${SDL2MINI_NAME}" )
+  add_subdirectory(${SDL2MINI_HOME})
+else()
+  include_directories(${SDL2_INCLUDE_DIR})
+  find_package(SDL2 REQUIRED)
+endif()
+
+add_executable(${PROJECT_NAME}
   linux/main2.cpp
   linux/SDLSoundDevice.c
   ${DATA_FILES}
@@ -38,21 +50,29 @@ add_executable(julius
 #pkg_search_module(SDL2 REQUIRED sdl2)
 #pkg_search_module(SDL2_MIXER REQUIRED SDL2_mixer)
 
-find_package(SDL2 REQUIRED)
 find_package(SDL2_mixer REQUIRED)
 
-include_directories(${SDL2_INCLUDE_DIR})
 include_directories(${SDL2_MIXER_INCLUDE_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/include)
 
+if (BUILD_SDL2MINI)
+  include_directories(${SDL2MINI_INCLUDE_DIR})
+  target_link_libraries(${PROJECT_NAME} ${SDL2MINI_LIBRARY})
+  target_link_libraries(${PROJECT_NAME} "GL")
+  target_link_libraries(${PROJECT_NAME} "dl")
+else()
+  target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY})
+endif()
+
 #set(LIBS ${LIBS} ${SDL_LIBRARY})
 #link_libraries(${LIBS})
-target_link_libraries (julius ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY})
+target_link_libraries (julius ${SDL2_MIXER_LIBRARY})
 
 include_directories(src)
 
 install(TARGETS julius RUNTIME DESTINATION bin)
 
+message( "C++ compiler is ${CMAKE_CXX_COMPILER_ID}" )
 # Unit tests
 #enable_testing()
 #add_subdirectory(test)
