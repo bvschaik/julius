@@ -136,6 +136,11 @@ int empire_can_export_resource_to_city(int city_id, int resource)
     }
 }
 
+void empire_determine_distant_battle_city()
+{
+    Data_CityInfo.distantBattleCityId = empire_city_get_vulnerable_roman();
+}
+
 int empire_can_import_resource_from_city(int city_id, int resource)
 {
     empire_city *city = empire_city_get(city_id);

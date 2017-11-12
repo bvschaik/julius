@@ -876,7 +876,7 @@ static void setupFromSavedGame()
 
     image_load_climate(Data_Scenario.climate);
     image_load_enemy(Data_Scenario.enemyId);
-    Empire_determineDistantBattleCity();
+    empire_determine_distant_battle_city();
     TerrainGraphics_determineGardensFromGraphicIds();
 
     Data_Message.maxScrollPosition = 0;

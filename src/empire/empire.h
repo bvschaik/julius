@@ -20,5 +20,6 @@ void empire_handle_expand_event();
 
 void empire_save_state(buffer *buf);
 void empire_load_state(buffer *buf);
+void empire_determine_distant_battle_city();
 
 #endif // EMPIRE_EMPIRE_H
