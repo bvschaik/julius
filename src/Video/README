@@ -1,20 +1,19 @@
 libsmacker
 A C library for decoding .smk Smacker Video files
 
-version 1.0
-2013-03-09
+version 1.1
+2017-01-27
 
-(c) Greg Kennedy 2013
+(c) Greg Kennedy 2013-2017
 http://libsmacker.sourceforge.net
 ----
 
 ---
 Introduction
 ---
-
 libsmacker is a cross-platform C library which can be used for decoding Smacker Video files produced by RAD Game Tools. Smacker Video was the king of video middleware in the 1990s, and its 256-color compressed video format was used in over 2600 software titles.
 
-libsmacker implements the minimum feature set required from smackw32.dll to get an smk off a disk and the frames / audio into a buffer in the correct order. Hence, libsmacker.
+libsmacker implements the minimum feature set required from smackw32.dll to get an smk off a disk and the frames / audio into a buffer in the correct order.
 
 ---
 License
@@ -37,6 +36,16 @@ See the webpage for sample code and function documentation.  The source package 
 * smk2avi.c - converts smk file(s) to AVI files - uncompressed 24-bit color and PCM audio stream.
 
 Though the libraries are "bulletproofed" the sample apps are not: be cautious if you plan to implement in some critical environment.
+
+---
+Changelog
+---
+1.1
+* Switch to autotools-based build
+* Incorporates patches from Dalerank Slim, Gennady Trafimenkov, and Bianca van Schaik
+* Performance improvements and code cleanup / safety.
+1.0
+* Initial revision
 
 ---
 Contact
