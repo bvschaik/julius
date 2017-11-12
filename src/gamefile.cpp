@@ -446,6 +446,10 @@ void scenario_deserialize(scenario_state *file)
         {
             printf("ERR: buffer %d not empty: %d of %d bytes used\n", i, buf->index, buf->size);
         }
+        else if (buf->overflow)
+        {
+            printf("ERR: buffer %d overflowed\n", i);
+        }
     }
 }
 

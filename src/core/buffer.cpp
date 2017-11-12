@@ -2,19 +2,21 @@
 
 #include <string.h>
 
-#define CHECK_WRITE(b, s) if ((b->index + s) > b->size) return
-#define CHECK_READ(b, s) if ((b->index + s) > b->size) return 0
+#define CHECK_WRITE(b, s) if ((b->index + s) > b->size) { b->overflow = 1; return; }
+#define CHECK_READ(b, s) if ((b->index + s) > b->size) { b->overflow = 1; return 0; }
 
 void buffer_init(buffer *buffer, void *data, int size)
 {
     buffer->data = data;
     buffer->size = size;
     buffer->index = 0;
+    buffer->overflow = 0;
 }
 
 void buffer_reset(buffer *buffer)
 {
     buffer->index = 0;
+    buffer->overflow = 0;
 }
 
 void buffer_set(buffer *buffer, int offset)
@@ -124,7 +126,8 @@ int32_t buffer_read_i32(buffer *buffer)
 int buffer_read_raw(buffer *buffer, void *value, int max_size)
 {
     int size = buffer->size - buffer->index;
-    if (size > max_size) {
+    if (size > max_size)
+    {
         size = max_size;
     }
     memcpy(value, &buffer->data[buffer->index], size);
@@ -136,4 +139,3 @@ void buffer_skip(buffer *buffer, int size)
 {
     buffer->index += size;
 }
-
