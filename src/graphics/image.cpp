@@ -5,6 +5,8 @@
 #include "core/file.h"
 #include "core/io.h"
 
+#include "data/constants.hpp"
+
 #include <stdlib.h>
 #include <string.h>
 
@@ -19,22 +21,28 @@
 #define ENEMY_ENTRIES 801
 
 #define MAIN_DATA_SIZE 30000000
+#define EMPIRE_DATA_SIZE 2000*1000*4
 #define ENEMY_DATA_SIZE 2400000
 #define SCRATCH_DATA_SIZE 12100000
 
 #define NAME_SIZE 32
 
-static const char main_graphics_sg2[][NAME_SIZE] = {
+static const char main_graphics_sg2[][NAME_SIZE] =
+{
     "c3.sg2",
     "c3_north.sg2",
     "c3_south.sg2"
 };
-static const char main_graphics_555[][NAME_SIZE] = {
+static const char main_graphics_555[][NAME_SIZE] =
+{
     "c3.555",
     "c3_north.555",
     "c3_south.555"
 };
-static const char enemy_graphics_sg2[][NAME_SIZE] = {
+static const char empire_555[NAME_SIZE] = "The_empire.555";
+
+static const char enemy_graphics_sg2[][NAME_SIZE] =
+{
     "goths.sg2",
     "Etruscan.sg2",
     "Etruscan.sg2",
@@ -56,7 +64,8 @@ static const char enemy_graphics_sg2[][NAME_SIZE] = {
     "North African.sg2",
     "Phoenician.sg2",
 };
-static const char enemy_graphics_555[][NAME_SIZE] = {
+static const char enemy_graphics_555[][NAME_SIZE] =
+{
     "goths.555",
     "Etruscan.555",
     "Etruscan.555",
@@ -79,7 +88,8 @@ static const char enemy_graphics_555[][NAME_SIZE] = {
     "Phoenician.555",
 };
 
-static struct {
+static struct
+{
     int current_climate;
 
     uint16_t group_image_ids[300];
@@ -87,6 +97,7 @@ static struct {
     image main[MAIN_ENTRIES];
     image enemy[ENEMY_ENTRIES];
     color_t *main_data;
+    color_t *empire_data;
     color_t *enemy_data;
     uint8_t *tmp_data;
 } data = {.current_climate = -1};
@@ -95,8 +106,10 @@ int image_init()
 {
     data.enemy_data = (color_t *) malloc(ENEMY_DATA_SIZE);
     data.main_data = (color_t *) malloc(MAIN_DATA_SIZE);
+    data.empire_data = (color_t *) malloc(EMPIRE_DATA_SIZE);
     data.tmp_data = (uint8_t *) malloc(SCRATCH_DATA_SIZE);
-    if (!data.enemy_data || !data.main_data || !data.tmp_data) {
+    if (!data.main_data || !data.empire_data || !data.enemy_data || !data.tmp_data)
+    {
         return 0;
     }
     return 1;
@@ -105,13 +118,18 @@ int image_init()
 static void prepare_index(image *images, int size)
 {
     int offset = 4;
-    for (int i = 1; i < size; i++) {
+    for (int i = 1; i < size; i++)
+    {
         image *img = &images[i];
-        if (img->draw.is_external) {
-            if (!img->draw.offset) {
+        if (img->draw.is_external)
+        {
+            if (!img->draw.offset)
+            {
                 img->draw.offset = 1;
             }
-        } else {
+        }
+        else
+        {
             img->draw.offset = offset;
             offset += img->draw.data_length;
         }
@@ -147,7 +165,8 @@ static void read_index_entry(buffer *buf, image *img)
 
 static void read_index(buffer *buf, image *images, int size)
 {
-    for (int i = 0; i < size; i++) {
+    for (int i = 0; i < size; i++)
+    {
         read_index_entry(buf, &images[i]);
     }
     prepare_index(images, size);
@@ -156,7 +175,8 @@ static void read_index(buffer *buf, image *images, int size)
 static void read_header(buffer *buf)
 {
     buffer_skip(buf, 80); // header integers
-    for (int i = 0; i < 300; i++) {
+    for (int i = 0; i < 300; i++)
+    {
         data.group_image_ids[i] = buffer_read_u16(buf);
     }
     buffer_read_raw(buf, data.bitmaps, 20000);
@@ -171,7 +191,8 @@ static color_t to_32_bit(uint16_t c)
 
 static int convert_uncompressed(buffer *buf, int buf_length, color_t *dst)
 {
-    for (int i = 0; i < buf_length; i += 2) {
+    for (int i = 0; i < buf_length; i += 2)
+    {
         *dst = to_32_bit(buffer_read_u16(buf));
         dst++;
     }
@@ -181,18 +202,23 @@ static int convert_uncompressed(buffer *buf, int buf_length, color_t *dst)
 static int convert_compressed(buffer *buf, int buf_length, color_t *dst)
 {
     int dst_length = 0;
-    while (buf_length > 0) {
+    while (buf_length > 0)
+    {
         int control = buffer_read_u8(buf);
-        if (control == 255) {
+        if (control == 255)
+        {
             // next byte = transparent pixels to skip
             *(dst++) = 255;
             *(dst++) = buffer_read_u8(buf);
             dst_length += 2;
             buf_length -= 2;
-        } else {
+        }
+        else
+        {
             // control = number of concrete pixels
             *(dst++) = control;
-            for (int i = 0; i < control; i++) {
+            for (int i = 0; i < control; i++)
+            {
                 *(dst++) = to_32_bit(buffer_read_u16(buf));
             }
             dst_length += control + 1;
@@ -206,19 +232,26 @@ static void convert_images(image *images, int size, buffer *buf, color_t *dst)
 {
     color_t *start_dst = dst;
     dst++; // make sure img->offset > 0
-    for (int i = 0; i < size; i++) {
+    for (int i = 0; i < size; i++)
+    {
         image *img = &images[i];
-        if (img->draw.is_external) {
+        if (img->draw.is_external)
+        {
             continue;
         }
         buffer_set(buf, img->draw.offset);
         int img_offset = dst - start_dst;
-        if (img->draw.is_fully_compressed) {
+        if (img->draw.is_fully_compressed)
+        {
             dst += convert_compressed(buf, img->draw.data_length, dst);
-        } else if (img->draw.has_compressed_part) { // isometric tile
+        }
+        else if (img->draw.has_compressed_part)     // isometric tile
+        {
             dst += convert_uncompressed(buf, img->draw.uncompressed_length, dst);
             dst += convert_compressed(buf, img->draw.data_length - img->draw.uncompressed_length, dst);
-        } else {
+        }
+        else
+        {
             dst += convert_uncompressed(buf, img->draw.data_length, dst);
         }
         img->draw.offset = img_offset;
@@ -226,16 +259,31 @@ static void convert_images(image *images, int size, buffer *buf, color_t *dst)
     }
 }
 
+static void load_empire()
+{
+    int size = io_read_file_into_buffer(empire_555, data.tmp_data, EMPIRE_DATA_SIZE);
+    if (size != EMPIRE_DATA_SIZE / 2)
+    {
+        debug_log("ERR: unable to load empire data", empire_555, 0);
+        return;
+    }
+    buffer buf;
+    buffer_init(&buf, data.tmp_data, size);
+    convert_uncompressed(&buf, size, data.empire_data);
+}
+
 int image_load_climate(int climate_id)
 {
-    if (climate_id == data.current_climate) {
+    if (climate_id == data.current_climate)
+    {
         return 1;
     }
 
     const char *filename_bmp = main_graphics_555[climate_id];
     const char *filename_idx = main_graphics_sg2[climate_id];
 
-    if (MAIN_INDEX_SIZE != io_read_file_into_buffer(filename_idx, data.tmp_data, MAIN_INDEX_SIZE)) {
+    if (MAIN_INDEX_SIZE != io_read_file_into_buffer(filename_idx, data.tmp_data, MAIN_INDEX_SIZE))
+    {
         return 0;
     }
 
@@ -244,14 +292,17 @@ int image_load_climate(int climate_id)
     read_header(&buf);
     buffer_init(&buf, &data.tmp_data[HEADER_SIZE], ENTRY_SIZE * MAIN_ENTRIES);
     read_index(&buf, data.main, MAIN_ENTRIES);
-    
+
     int data_size = io_read_file_into_buffer(filename_bmp, data.tmp_data, SCRATCH_DATA_SIZE);
-    if (!data_size) {
+    if (!data_size)
+    {
         return 0;
     }
     buffer_init(&buf, data.tmp_data, data_size);
     convert_images(data.main, MAIN_ENTRIES, &buf, data.main_data);
     data.current_climate = climate_id;
+
+    load_empire();
     return 1;
 }
 
@@ -260,7 +311,8 @@ int image_load_enemy(int enemy_id)
     const char *filename_bmp = enemy_graphics_555[enemy_id];
     const char *filename_idx = enemy_graphics_sg2[enemy_id];
 
-    if (ENEMY_INDEX_SIZE != io_read_file_part_into_buffer(filename_idx, data.tmp_data, ENEMY_INDEX_SIZE, ENEMY_INDEX_OFFSET)) {
+    if (ENEMY_INDEX_SIZE != io_read_file_part_into_buffer(filename_idx, data.tmp_data, ENEMY_INDEX_SIZE, ENEMY_INDEX_OFFSET))
+    {
         return 0;
     }
 
@@ -269,7 +321,8 @@ int image_load_enemy(int enemy_id)
     read_index(&buf, data.enemy, ENEMY_ENTRIES);
 
     int data_size = io_read_file_into_buffer(filename_bmp, data.tmp_data, SCRATCH_DATA_SIZE);
-    if (!data_size) {
+    if (!data_size)
+    {
         return 0;
     }
     buffer_init(&buf, data.tmp_data, data_size);
@@ -284,16 +337,18 @@ static const color_t *load_external_data(int image_id)
     strcpy(&filename[4], data.bitmaps[img->draw.bitmap_id]);
     file_change_extension(filename, "555");
     int size = io_read_file_part_into_buffer(
-        &filename[4], data.tmp_data,
-        img->draw.data_length, img->draw.offset - 1
-    );
-    if (!size) {
+                   &filename[4], data.tmp_data,
+                   img->draw.data_length, img->draw.offset - 1
+               );
+    if (!size)
+    {
         // try in 555 dir
         size = io_read_file_part_into_buffer(
-            filename, data.tmp_data,
-            img->draw.data_length, img->draw.offset - 1
-        );
-        if (!size) {
+                   filename, data.tmp_data,
+                   img->draw.data_length, img->draw.offset - 1
+               );
+        if (!size)
+        {
             debug_log("ERR: unable to load external image",
                       data.bitmaps[img->draw.bitmap_id], image_id);
             return NULL;
@@ -303,9 +358,12 @@ static const color_t *load_external_data(int image_id)
     buffer_init(&buf, data.tmp_data, size);
     color_t *dst = (color_t*) &data.tmp_data[4000000];
     // NB: isometric images are never external
-    if (img->draw.is_fully_compressed) {
+    if (img->draw.is_fully_compressed)
+    {
         convert_compressed(&buf, img->draw.data_length, dst);
-    } else {
+    }
+    else
+    {
         convert_uncompressed(&buf, img->draw.data_length, dst);
     }
     return dst;
@@ -328,18 +386,25 @@ const image *image_get_enemy(int id)
 
 const color_t *image_data(int id)
 {
-    if (data.main[id].draw.is_external) {
-        return load_external_data(id);
-    } else {
+    if (!data.main[id].draw.is_external)
+    {
         return &data.main_data[data.main[id].draw.offset];
+    }
+    else if (id == image_group(ID_Graphic_EmpireMap))
+    {
+        return data.empire_data;
+    }
+    else
+    {
+        return load_external_data(id);
     }
 }
 
 const color_t *image_data_enemy(int id)
 {
-    if (data.enemy[id].draw.offset > 0) {
+    if (data.enemy[id].draw.offset > 0)
+    {
         return &data.enemy_data[data.enemy[id].draw.offset];
     }
     return NULL;
 }
-
