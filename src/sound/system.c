@@ -12,9 +12,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#define SOUND_FILENAME_MAX 32
-
-static char channel_filenames[SOUND_CHANNEL_MAX][SOUND_FILENAME_MAX] = {
+static char channel_filenames[SOUND_CHANNEL_MAX][CHANNEL_FILENAME_MAX] = {
     "", // speech channel
     "wavs/panel1.wav",
     "wavs/panel3.wav",
@@ -179,7 +177,7 @@ static void correct_channel_filenames()
         if (!corrected) {
             channel_filenames[i][0] = 0;
         } else if (corrected != original) {
-            strncpy(original, corrected, SOUND_FILENAME_MAX);
+            strncpy(original, corrected, CHANNEL_FILENAME_MAX);
         }
     }
 }
