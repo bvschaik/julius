@@ -11,23 +11,6 @@ extern struct _Data_Empire
     int selectedObject;
 } Data_Empire;
 
-extern struct _Data_Empire_Sizes
-{
-    int width;
-    int height;
-    int borderTop;
-    int borderSides;
-    int borderBottom;
-} Data_Empire_Sizes;
-
-extern struct Data_Empire_Index
-{
-    short initialScrollX;
-    short initialScrollY;
-    short inUse;
-    short __padding[13];
-} Data_Empire_Index[40];
-
 extern struct Data_Empire_Object
 {
     unsigned char type;
