@@ -159,13 +159,14 @@ void UI_Sidebar_drawForeground()
 static void drawNumberOfMessages()
 {
 	if (UI_Window_getId() == Window_City && !Data_State.sidebarCollapsed) {
+        int messages = Data_Message.totalMessages;
 		buttonBuildExpanded[12].enabled = Data_State.undoReady && Data_State.undoAvailable;
-		buttonBuildExpanded[13].enabled = Data_Message.totalMessages > 0;
+		buttonBuildExpanded[13].enabled = messages > 0;
 		buttonBuildExpanded[14].enabled = Data_Message.hotspotCount > 0;
-		if (Data_Message.totalMessages) {
-			Widget_Text_drawNumberCenteredColored(Data_Message.totalMessages,
+		if (messages) {
+			Widget_Text_drawNumberCenteredColored(messages,
 				XOFFSET_EXPANDED + 74, 452, 32, FONT_SMALL_PLAIN, COLOR_BLACK);
-			Widget_Text_drawNumberCenteredColored(Data_Message.totalMessages,
+			Widget_Text_drawNumberCenteredColored(messages,
 				XOFFSET_EXPANDED + 73, 453, 32, FONT_SMALL_PLAIN, COLOR_WHITE);
 		}
 	}

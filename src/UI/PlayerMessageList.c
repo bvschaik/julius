@@ -66,11 +66,12 @@ static int focusButtonId;
 
 static void update_scroll_position()
 {
-    if (Data_Message.totalMessages <= 10) {
+    int totalMessages = Data_Message.totalMessages;
+    if (totalMessages <= 10) {
         data.scrollPosition = 0;
         data.maxScrollPosition = 0;
     } else {
-        data.maxScrollPosition = Data_Message.totalMessages - 10;
+        data.maxScrollPosition = totalMessages - 10;
         if (data.scrollPosition >= data.maxScrollPosition) {
             data.scrollPosition = data.maxScrollPosition;
         }
@@ -129,19 +130,21 @@ void UI_PlayerMessageList_drawForeground()
 		data.x + 16 * data.widthBlocks - 38, data.y + 16 * data.heightBlocks - 36,
 		&imageButtonClose, 1);
 
-	if (Data_Message.totalMessages <= 0) {
+    int totalMessages = Data_Message.totalMessages;
+	if (totalMessages <= 0) {
 		return;
 	}
 
-	int max = Data_Message.totalMessages < 10 ? Data_Message.totalMessages : 10;
+	int max = totalMessages < 10 ? totalMessages : 10;
 	int index = data.scrollPosition;
 	for (int i = 0; i < max; i++, index++) {
-		int messageId = PlayerMessage_getMessageTextId(Data_Message.messages[index].messageType);
+        const struct Data_PlayerMessage *msg = &Data_Message.messages[index];
+		int messageId = PlayerMessage_getMessageTextId(msg->messageType);
 		int graphicOffset = 0;
 		if (lang_get_message(messageId)->message_type == MESSAGE_TYPE_DISASTER) {
 			graphicOffset = 2;
 		}
-		if (Data_Message.messages[index].readFlag) {
+		if (msg->readFlag) {
 			Graphics_drawImage(image_group(ID_Graphic_MessageIcon) + 15 + graphicOffset,
 				data.xText + 12, data.yText + 6 + 20 * i);
 		} else {
@@ -152,9 +155,9 @@ void UI_PlayerMessageList_drawForeground()
 		if (focusButtonId == i + 1) {
 			font = FONT_NORMAL_RED;
 		}
-		int width = Widget_GameText_draw(25, Data_Message.messages[index].month,
+		int width = Widget_GameText_draw(25, msg->month,
 			data.xText + 42, data.yText + 8 + 20 * i, font);
-		Widget_GameText_drawYear(Data_Message.messages[index].year,
+		Widget_GameText_drawYear(msg->year,
 			data.xText + 42 + width, data.yText + 8 + 20 * i, font);
 		Widget_Text_draw(
 			lang_get_message(messageId)->title.text,
@@ -281,13 +284,11 @@ static void buttonMessage(int param1, int param2)
 {
 	int id = Data_Message.currentMessageId = data.scrollPosition + param1;
 	if (id < Data_Message.totalMessages) {
+        const struct Data_PlayerMessage *msg = &Data_Message.messages[id];
 		Data_Message.messages[id].readFlag = 1;
 		int type = Data_Message.messages[id].messageType;
 		UI_MessageDialog_setPlayerMessage(
-			Data_Message.messages[id].year,
-			Data_Message.messages[id].month,
-			Data_Message.messages[id].param1,
-			Data_Message.messages[id].param2,
+			msg->year, msg->month, msg->param1, msg->param2,
 			PlayerMessage_getAdvisorForMessageType(type),
 			0);
 		UI_MessageDialog_show(PlayerMessage_getMessageTextId(type), 0);
