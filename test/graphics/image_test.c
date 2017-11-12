@@ -49,7 +49,7 @@ void test_image_load_climate_ok()
     int result = image_load_climate(1);
 
     assert_true(result);
-    verify_io_read_file_into_buffer_times(2);
+    verify_io_read_file_into_buffer_times(3);
     verify_buffer_read_i32_times(10000 * 3);
 }
 
@@ -62,7 +62,7 @@ void test_image_load_climate_request_twice_loaded_once()
     int result = image_load_climate(2);
 
     assert_true(result);
-    verify_io_read_file_into_buffer_times(2);
+    verify_io_read_file_into_buffer_times(3);
     verify_buffer_read_i32_times(10000 * 3);
 }
 
