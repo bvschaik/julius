@@ -78,7 +78,7 @@ void UI_BuildingInfo_drawWheatFarm(BuildingInfoContext *c)
 
 void UI_BuildingInfo_drawVegetableFarm(BuildingInfoContext *c)
 {
-    drawFarm(c, 90, "wavs/veg_farm.wav", 113, RESOURCES_VEGETABLES);
+    drawFarm(c, 90, "wavs/veg_farm.wav", 113, RESOURCE_VEGETABLES);
 }
 
 void UI_BuildingInfo_drawFruitFarm(BuildingInfoContext *c)

@@ -6,7 +6,6 @@
 #include "cityinfo.h"
 #include "cityview.h"
 #include "empire/empire.h"
-#include "empire.h"
 #include "event.h"
 #include "figure.h"
 #include "formation.h"
@@ -260,15 +259,14 @@ static void loadScenario(const char *scenarioName)
         Data_Event.timeLimitMaxGameYear = 1000000 + Data_Scenario.startYear;
     }
 
-    Empire_load(1, Data_Scenario.empireId);
-    Empire_initCities();
+    empire_init_scenario();
     traders_clear();
     Event_initInvasions();
     empire_determine_distant_battle_city();
     Event_initRequests();
     Event_initDemandChanges();
     Event_initPriceChanges();
-    Empire_initScroll();
+
     SidebarMenu_enableBuildingMenuItemsAndButtons();
     image_load_climate(Data_Scenario.climate);
     image_load_enemy(Data_Scenario.enemyId);

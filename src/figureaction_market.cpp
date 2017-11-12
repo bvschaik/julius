@@ -20,7 +20,7 @@ static int marketBuyerTakeFoodFromGranary(int figureId, int marketId, int granar
 	int resource;
 	switch (f->collectingItemId) {
 		case Inventory_Wheat: resource = RESOURCE_WHEAT; break;
-		case Inventory_Vegetables: resource = RESOURCES_VEGETABLES; break;
+		case Inventory_Vegetables: resource = RESOURCE_VEGETABLES; break;
 		case Inventory_Fruit: resource = RESOURCE_FRUIT; break;
 		case Inventory_Meat: resource = RESOURCE_MEAT; break;
 		default: return 0;

@@ -2,7 +2,6 @@
 #include "window.h"
 
 #include "core/calc.h"
-#include "empire.h"
 #include "graphics.h"
 #include "terrain.h"
 #include "widget_text.h"

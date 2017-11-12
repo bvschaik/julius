@@ -93,7 +93,7 @@ void CityInfo_Tick_countBuildingTypes()
 				building_count_industry_increase(RESOURCE_WHEAT, Data_Buildings[i].numWorkers > 0);
 				break;
 			case BUILDING_VEGETABLE_FARM:
-				building_count_industry_increase(RESOURCES_VEGETABLES, Data_Buildings[i].numWorkers > 0);
+				building_count_industry_increase(RESOURCE_VEGETABLES, Data_Buildings[i].numWorkers > 0);
 				break;
 			case BUILDING_FRUIT_FARM:
 				building_count_industry_increase(RESOURCE_FRUIT, Data_Buildings[i].numWorkers > 0);

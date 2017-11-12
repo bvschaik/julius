@@ -143,7 +143,7 @@ void UI_BuildingInfo_drawHouse(BuildingInfoContext *c)
         Widget::Text::drawNumber(b->data.house.inventory[Inventory_Wheat], '@', " ",
                                  c->xOffset + 64, c->yOffset + 238, FONT_SMALL_BLACK);
         // vegetables
-        Graphics_drawImage(resourceGraphic + RESOURCES_VEGETABLES,
+        Graphics_drawImage(resourceGraphic + RESOURCE_VEGETABLES,
                            c->xOffset + 142, c->yOffset + 234);
         Widget::Text::drawNumber(b->data.house.inventory[Inventory_Vegetables], '@', " ",
                                  c->xOffset + 174, c->yOffset + 238, FONT_SMALL_BLACK);

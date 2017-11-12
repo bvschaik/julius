@@ -540,7 +540,7 @@ static int storesNonStockpiledFood(int spaceId, int *granaryResources)
     {
         return 0;
     }
-    if (resource == RESOURCE_WHEAT || resource == RESOURCES_VEGETABLES ||
+    if (resource == RESOURCE_WHEAT || resource == RESOURCE_VEGETABLES ||
             resource == RESOURCE_FRUIT || resource == RESOURCE_MEAT)
     {
         if (granaryResources[resource] > 0)

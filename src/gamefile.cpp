@@ -2,7 +2,6 @@
 
 #include "building.h"
 #include "cityview.h"
-#include "empire.h"
 #include "event.h"
 #include "figure.h"
 #include "loader.h"
@@ -827,7 +826,7 @@ static void debug()
 static void setupFromSavedGame()
 {
     debug();
-    Empire_load(Data_Settings.isCustomScenario, Data_Scenario.empireId);
+    empire_load(Data_Settings.isCustomScenario, Data_Scenario.empireId);
     Event_calculateDistantBattleRomanTravelTime();
     Event_calculateDistantBattleEnemyTravelTime();
 
@@ -935,6 +934,7 @@ int GameFile_deleteSavedGame(const char *filename)
 
 int GameFile_loadScenario(const char *filename)
 {
+    printf("Loading scenario: %s\n", filename);
     init_scenario_data();
     FILE *fp = fopen(filename, "rb");
     if (!fp)
@@ -951,7 +951,7 @@ int GameFile_loadScenario(const char *filename)
     scenario_deserialize(&scenario_data.state);
 
     trade_prices_reset();
-    Empire_load(1, Data_Scenario.empireId);
+    empire_load(1, Data_Scenario.empireId);
     Event_calculateDistantBattleRomanTravelTime();
     Event_calculateDistantBattleEnemyTravelTime();
     return 0;

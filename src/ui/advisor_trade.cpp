@@ -3,7 +3,6 @@
 #include "window.h"
 #include "messagedialog.h"
 #include "cityinfo.h"
-#include "empire.h"
 #include "resource.h"
 
 #include "data/cityinfo.hpp"

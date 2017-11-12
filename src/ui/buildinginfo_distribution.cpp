@@ -84,7 +84,7 @@ void UI_BuildingInfo_drawMarket(BuildingInfoContext *c)
                                c->xOffset + 32, c->yOffset + 64);
             Widget::Text::drawNumber(b->data.market.inventory[Inventory_Wheat], '@', " ",
                                      c->xOffset + 64, c->yOffset + 70, FONT_NORMAL_BLACK);
-            Graphics_drawImage(graphicId + RESOURCES_VEGETABLES,
+            Graphics_drawImage(graphicId + RESOURCE_VEGETABLES,
                                c->xOffset + 142, c->yOffset + 64);
             Widget::Text::drawNumber(b->data.market.inventory[Inventory_Vegetables], '@', " ",
                                      c->xOffset + 174, c->yOffset + 70, FONT_NORMAL_BLACK);
@@ -169,12 +169,12 @@ void UI_BuildingInfo_drawGranary(BuildingInfoContext *c)
         Widget_GameText_draw(23, RESOURCE_WHEAT,
                              c->xOffset + 68 + width, c->yOffset + 75, FONT_NORMAL_BLACK);
         // vegetables
-        Graphics_drawImage(graphicId + RESOURCES_VEGETABLES,
+        Graphics_drawImage(graphicId + RESOURCE_VEGETABLES,
                            c->xOffset + 34, c->yOffset + 92);
         width = Widget::Text::drawNumber(
-                    b->data.storage.resourceStored[RESOURCES_VEGETABLES], '@', " ",
+                    b->data.storage.resourceStored[RESOURCE_VEGETABLES], '@', " ",
                     c->xOffset + 68, c->yOffset + 99, FONT_NORMAL_BLACK);
-        Widget_GameText_draw(23, RESOURCES_VEGETABLES,
+        Widget_GameText_draw(23, RESOURCE_VEGETABLES,
                              c->xOffset + 68 + width, c->yOffset + 99, FONT_NORMAL_BLACK);
         // fruit
         Graphics_drawImage(graphicId + RESOURCE_FRUIT,

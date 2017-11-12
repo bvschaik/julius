@@ -119,7 +119,7 @@ int Building_create(int type, int x, int y)
         b->outputResourceId = RESOURCE_WHEAT;
         break;
     case BUILDING_VEGETABLE_FARM:
-        b->outputResourceId = RESOURCES_VEGETABLES;
+        b->outputResourceId = RESOURCE_VEGETABLES;
         break;
     case BUILDING_FRUIT_FARM:
         b->outputResourceId = RESOURCE_FRUIT;
@@ -1158,7 +1158,7 @@ int BUILDING_MARKET_getDestinationGranaryWarehouse(int marketId)
                     resources[Inventory_Wheat].buildingId = i;
                 }
             }
-            if (b->data.storage.resourceStored[RESOURCES_VEGETABLES])
+            if (b->data.storage.resourceStored[RESOURCE_VEGETABLES])
             {
                 resources[Inventory_Vegetables].numBuildings++;
                 if (distance < resources[Inventory_Vegetables].distance)
@@ -1554,7 +1554,7 @@ void Building_Mercury_removeResources(int bigCurse)
         else if (b->type == BUILDING_GRANARY)
         {
             int amount = Resource_removeFromGranary(maxBuildingId, RESOURCE_WHEAT, 1600);
-            amount = Resource_removeFromGranary(maxBuildingId, RESOURCES_VEGETABLES, amount);
+            amount = Resource_removeFromGranary(maxBuildingId, RESOURCE_VEGETABLES, amount);
             amount = Resource_removeFromGranary(maxBuildingId, RESOURCE_FRUIT, amount);
             Resource_removeFromGranary(maxBuildingId, RESOURCE_MEAT, amount);
         }
@@ -1591,7 +1591,7 @@ void Building_Mercury_fillGranary()
         }
         for (int n = 0; n < 6; n++)
         {
-            Resource_addToGranary(minBuildingId, RESOURCES_VEGETABLES, 0);
+            Resource_addToGranary(minBuildingId, RESOURCE_VEGETABLES, 0);
         }
         for (int n = 0; n < 6; n++)
         {

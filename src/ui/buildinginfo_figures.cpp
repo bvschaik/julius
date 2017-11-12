@@ -62,7 +62,7 @@ static int collectingItemIdToResourceId(int c)
     case 0:
         return RESOURCE_WHEAT;
     case 1:
-        return RESOURCES_VEGETABLES;
+        return RESOURCE_VEGETABLES;
     case 2:
         return RESOURCE_FRUIT;
     case 3:

@@ -2,6 +2,7 @@
 
 #include "building/count.h"
 #include "core/calc.h"
+#include "core/io.h"
 #include "empire/city.h"
 #include "empire/object.h"
 #include "empire/trade_route.h"
@@ -18,12 +19,43 @@ enum
 
 static struct
 {
+    int initial_scroll_x;
+    int initial_scroll_y;
     int scroll_x;
     int scroll_y;
     int selected_object;
     int viewport_width;
     int viewport_height;
 } data;
+
+void empire_load(int is_custom_scenario, int empire_id)
+{
+    char raw_data[12800];
+    const char *filename = is_custom_scenario ? "c32.emp" : "c3.emp";
+
+    // read header with scroll positions
+    io_read_file_part_into_buffer(filename, raw_data, 4, 32 * empire_id);
+    buffer buf;
+    buffer_init(&buf, raw_data, 4);
+    data.initial_scroll_x = buffer_read_i16(&buf);
+    data.initial_scroll_y = buffer_read_i16(&buf);
+
+    // read data section with objects
+    int offset = 1280 + 12800 * empire_id;
+    io_read_file_part_into_buffer(filename, raw_data, 12800, offset);
+    buffer_init(&buf, raw_data, 12800);
+    empire_object_load(&buf);
+}
+
+void empire_init_scenario()
+{
+    data.scroll_x = data.initial_scroll_x;
+    data.scroll_y = data.initial_scroll_y;
+    data.viewport_width = EMPIRE_WIDTH;
+    data.viewport_height = EMPIRE_HEIGHT;
+
+    empire_object_init_cities();
+}
 
 static void check_scroll_boundaries()
 {
@@ -32,14 +64,6 @@ static void check_scroll_boundaries()
 
     data.scroll_x = calc_bound(data.scroll_x, 0, max_x - 1);
     data.scroll_y = calc_bound(data.scroll_y, 0, max_y - 1);
-}
-
-void empire_init_scroll(int x, int y)
-{
-    data.scroll_x = x;
-    data.scroll_y = y;
-    data.viewport_width = EMPIRE_WIDTH;
-    data.viewport_height = EMPIRE_HEIGHT;
 }
 
 void empire_set_viewport(int width, int height)
@@ -136,11 +160,6 @@ int empire_can_export_resource_to_city(int city_id, int resource)
     }
 }
 
-void empire_determine_distant_battle_city()
-{
-    Data_CityInfo.distantBattleCityId = empire_city_get_vulnerable_roman();
-}
-
 int empire_can_import_resource_from_city(int city_id, int resource)
 {
     empire_city *city = empire_city_get(city_id);
@@ -164,7 +183,7 @@ int empire_can_import_resource_from_city(int city_id, int resource)
     {
     // food and finished materials
     case RESOURCE_WHEAT:
-    case RESOURCES_VEGETABLES:
+    case RESOURCE_VEGETABLES:
     case RESOURCE_FRUIT:
     case RESOURCE_MEAT:
     case RESOURCE_POTTERY:
@@ -232,6 +251,11 @@ void empire_handle_expand_event()
 
     Data_Scenario.empireHasExpanded = 1;
     PlayerMessage_post(1, Message_77_EmpireHasExpanded, 0, 0);
+}
+
+void empire_determine_distant_battle_city()
+{
+    Data_CityInfo.distantBattleCityId = empire_city_get_vulnerable_roman();
 }
 
 void empire_save_state(buffer *buf)

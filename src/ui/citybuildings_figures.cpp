@@ -109,7 +109,7 @@ static int showOnOverlay(struct Data_Figure *f)
         }
         else if (f->type == FIGURE_CART_PUSHER)
         {
-            return f->resourceId == RESOURCE_WHEAT || f->resourceId == RESOURCES_VEGETABLES ||
+            return f->resourceId == RESOURCE_WHEAT || f->resourceId == RESOURCE_VEGETABLES ||
                    f->resourceId == RESOURCE_FRUIT || f->resourceId == RESOURCE_MEAT;
         }
         return 0;
