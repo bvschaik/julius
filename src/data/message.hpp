@@ -25,20 +25,6 @@ extern struct _Data_Message
     int totalMessages;
     int currentMessageId;
     int currentProblemAreaMessageId;
-    struct
-    {
-        unsigned char pop0;
-        unsigned char pop500;
-        unsigned char pop1000;
-        unsigned char pop2000;
-        unsigned char pop3000;
-        unsigned char pop5000;
-        unsigned char pop10000;
-        unsigned char pop15000;
-        unsigned char pop20000;
-        unsigned char pop25000;
-    } populationMessagesShown;
-
     int messageCategoryCount[20];
     int messageDelay[20];
     int popupMessageQueue[20];
