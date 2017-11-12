@@ -26,11 +26,6 @@ extern struct _Data_Message {
 
 	int popupMessageQueue[20];
 
-	// UI related
-	int scrollPosition;
-	int maxScrollPosition;
-	int isDraggingScrollbar;
-	int scrollPositionDrag;
 	int hotspotCount;
 	int hotspotIndex;
 	time_millis hotspotLastClick;

@@ -220,9 +220,6 @@ void PlayerMessage_initList()
 	Data_Message.currentMessageId = -1;
 	Data_Message.currentProblemAreaMessageId = 0;
 
-	Data_Message.scrollPosition = 0;
-	Data_Message.maxScrollPosition = 0;
-
 	PlayerMessage_initProblemArea();
 }
 
@@ -317,11 +314,6 @@ void PlayerMessage_sortMessages()
 		if (Data_Message.messages[i].messageType) {
 			Data_Message.totalMessages++;
 		}
-	}
-	if (Data_Message.totalMessages <= 10) {
-		Data_Message.scrollPosition = 0;
-	} else {
-		Data_Message.maxScrollPosition = Data_Message.totalMessages - 10;
 	}
 }
 

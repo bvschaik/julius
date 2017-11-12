@@ -28,6 +28,7 @@
 #include "Data/State.h"
 #include "Data/Figure.h"
 #include "Data/Figure.h"
+#include "UI/AllWindows.h" // TODO: try to eliminate this
 
 #include "building/count.h"
 #include "building/list.h"
@@ -850,8 +851,7 @@ static void setupFromSavedGame()
 	empire_determine_distant_battle_city();
 	TerrainGraphics_determineGardensFromGraphicIds();
 
-	Data_Message.maxScrollPosition = 0;
-	Data_Message.scrollPosition = 0;
+    UI_PlayerMessageList_resetScroll();
 
 	Data_Settings.gamePaused = 0;
 }

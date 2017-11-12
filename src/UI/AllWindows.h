@@ -97,6 +97,7 @@ void UI_TradeOpenedDialog_drawBackground();
 void UI_TradeOpenedDialog_drawForeground();
 void UI_TradeOpenedDialog_handleMouse(const mouse *m);
 
+void UI_PlayerMessageList_resetScroll();
 void UI_PlayerMessageList_init();
 void UI_PlayerMessageList_drawBackground();
 void UI_PlayerMessageList_drawForeground();
