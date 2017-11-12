@@ -14,7 +14,6 @@
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
-#include "Data/Debug.h"
 #include "Data/Event.h"
 #include "Data/FileList.h"
 #include "Data/Grid.h"
@@ -464,7 +463,7 @@ static void savegame_deserialize(savegame_state *state)
     game_time_load_state(state->game_time);
     
     read_all_from_buffer(state->Data_Buildings_Extra_highestBuildingIdEver, &Data_Buildings_Extra.highestBuildingIdEver);
-    read_all_from_buffer(state->Data_Debug_maxConnectsEver, &Data_Debug.maxConnectsEver);
+    read_all_from_buffer(state->Data_Debug_maxConnectsEver, &Data_Buildings_Extra.maxConnectsEver);
     
     random_load_state(state->random_iv);
 
@@ -545,8 +544,8 @@ static void savegame_deserialize(savegame_state *state)
     read_all_from_buffer(state->Data_CityInfo_Extra_exitPointFlag_x, &Data_CityInfo_Extra.exitPointFlag.x);
     read_all_from_buffer(state->Data_CityInfo_Extra_exitPointFlag_y, &Data_CityInfo_Extra.exitPointFlag.y);
     read_all_from_buffer(state->Data_Event_lastInternalInvasionId, &Data_Event.lastInternalInvasionId);
-    read_all_from_buffer(state->Data_Debug_incorrectHousePositions, &Data_Debug.incorrectHousePositions);
-    read_all_from_buffer(state->Data_Debug_unfixableHousePositions, &Data_Debug.unfixableHousePositions);
+    read_all_from_buffer(state->Data_Debug_incorrectHousePositions, &Data_Buildings_Extra.incorrectHousePositions);
+    read_all_from_buffer(state->Data_Debug_unfixableHousePositions, &Data_Buildings_Extra.unfixableHousePositions);
     read_all_from_buffer(state->Data_FileList_selectedScenario, &Data_FileList.selectedScenario);
     read_all_from_buffer(state->Data_CityInfo_Extra_bookmarks, &Data_CityInfo_Extra.bookmarks);
     read_all_from_buffer(state->Data_CityInfo_Extra_entryPointFlag_gridOffset, &Data_CityInfo_Extra.entryPointFlag.gridOffset);
@@ -599,7 +598,7 @@ static void savegame_serialize(savegame_state *state)
     game_time_save_state(state->game_time);
 
     write_all_to_buffer(state->Data_Buildings_Extra_highestBuildingIdEver, &Data_Buildings_Extra.highestBuildingIdEver);
-    write_all_to_buffer(state->Data_Debug_maxConnectsEver, &Data_Debug.maxConnectsEver);
+    write_all_to_buffer(state->Data_Debug_maxConnectsEver, &Data_Buildings_Extra.maxConnectsEver);
     
     random_save_state(state->random_iv);
 
@@ -679,8 +678,8 @@ static void savegame_serialize(savegame_state *state)
     write_all_to_buffer(state->Data_CityInfo_Extra_exitPointFlag_x, &Data_CityInfo_Extra.exitPointFlag.x);
     write_all_to_buffer(state->Data_CityInfo_Extra_exitPointFlag_y, &Data_CityInfo_Extra.exitPointFlag.y);
     write_all_to_buffer(state->Data_Event_lastInternalInvasionId, &Data_Event.lastInternalInvasionId);
-    write_all_to_buffer(state->Data_Debug_incorrectHousePositions, &Data_Debug.incorrectHousePositions);
-    write_all_to_buffer(state->Data_Debug_unfixableHousePositions, &Data_Debug.unfixableHousePositions);
+    write_all_to_buffer(state->Data_Debug_incorrectHousePositions, &Data_Buildings_Extra.incorrectHousePositions);
+    write_all_to_buffer(state->Data_Debug_unfixableHousePositions, &Data_Buildings_Extra.unfixableHousePositions);
     write_all_to_buffer(state->Data_FileList_selectedScenario, &Data_FileList.selectedScenario);
     write_all_to_buffer(state->Data_CityInfo_Extra_bookmarks, &Data_CityInfo_Extra.bookmarks);
     write_all_to_buffer(state->Data_CityInfo_Extra_entryPointFlag_gridOffset, &Data_CityInfo_Extra.entryPointFlag.gridOffset);

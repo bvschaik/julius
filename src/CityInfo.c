@@ -3,7 +3,6 @@
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
-#include "Data/Debug.h"
 
 #include "game/time.h"
 
@@ -39,8 +38,8 @@ void CityInfo_init()
 void CityInfo_initGameTime()
 {
     game_time_init(2098);
-	Data_Debug.incorrectHousePositions = 0;
-	Data_Debug.unfixableHousePositions = 0;
+	Data_Buildings_Extra.incorrectHousePositions = 0;
+	Data_Buildings_Extra.unfixableHousePositions = 0;
 	Data_Buildings_Extra.highestBuildingIdEver = 0;
 }
 

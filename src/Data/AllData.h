@@ -12,6 +12,5 @@
 #include "Invasion.h"
 #include "FileList.h"
 #include "Routes.h"
-#include "Debug.h"
 #include "Constants.h"
 #include "Event.h"

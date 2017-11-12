@@ -200,6 +200,10 @@ extern struct _Data_Buildings_Extra {
 	int highestBuildingIdEver;
 	int createdSequence;
 	int barracksTowerSentryRequested;
+
+    int maxConnectsEver; // only used in saved game
+    int incorrectHousePositions;
+    int unfixableHousePositions;
 } Data_Buildings_Extra;
 
 #endif

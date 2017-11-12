@@ -5,7 +5,6 @@
 
 #include "Data/Building.h"
 #include "Data/Constants.h"
-#include "Data/Debug.h"
 #include "Data/Grid.h"
 #include "Data/Settings.h"
 
@@ -151,7 +150,7 @@ void BuildingHouse_checkForCorruption(int buildingId)
 	int calcGridOffset = GridOffset(b->x, b->y);
 	b->data.house.noSpaceToExpand = 0;
 	if (houseGridOffset != calcGridOffset || Data_Grid_buildingIds[houseGridOffset] != buildingId) {
-		++Data_Debug.incorrectHousePositions;
+		++Data_Buildings_Extra.incorrectHousePositions;
 		for (int y = 0; y < Data_Settings_Map.height; y++) {
 			for (int x = 0; x < Data_Settings_Map.width; x++) {
 				int gridOffset = GridOffset(x, y);
@@ -163,7 +162,7 @@ void BuildingHouse_checkForCorruption(int buildingId)
 				}
 			}
 		}
-		++Data_Debug.unfixableHousePositions;
+		++Data_Buildings_Extra.unfixableHousePositions;
 		b->state = BuildingState_Rubble;
 	}
 }
