@@ -7,7 +7,4 @@ void Empire_initCities();
 void Empire_initTradeAmountCodes();
 void Empire_determineDistantBattleCity();
 
-int Empire_cityBuysResource(int objectId, int resource);
-int Empire_citySellsResource(int objectId, int resource);
-
 #endif
