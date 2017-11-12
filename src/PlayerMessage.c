@@ -214,7 +214,7 @@ void PlayerMessage_initList()
 	for (int i = 0; i < 20; i++) {
 		Data_Message.popupMessageQueue[i] = 0;
 	}
-	Data_Message.consecutiveMessageDelay = 0;
+	consecutiveMessageDelay = 0;
 	Data_Message.nextMessageSequence = 0;
 	Data_Message.totalMessages = 0;
 	Data_Message.currentMessageId = -1;
@@ -222,8 +222,6 @@ void PlayerMessage_initList()
 
 	Data_Message.scrollPosition = 0;
 	Data_Message.maxScrollPosition = 0;
-
-	Data_Message.playSound = 1;
 
 	PlayerMessage_initProblemArea();
 }

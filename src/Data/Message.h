@@ -25,10 +25,6 @@ extern struct _Data_Message {
 	int currentProblemAreaMessageId;
 
 	int popupMessageQueue[20];
-	int consecutiveMessageDelay;
-
-	// sound related
-	int playSound;
 
 	// UI related
 	int scrollPosition;
