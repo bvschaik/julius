@@ -224,14 +224,7 @@ static void generateRioter(int buildingId)
     Data_CityInfo.riotCause = Data_CityInfo.populationEmigrationCause;
     CityInfo_Population_changeHappiness(20);
     Tutorial::on_crime();
-    if (time_get_millis() <= 15000 + Data_Message.lastSoundTime.rioterGenerated)
-    {
-        PlayerMessage_disableSoundForNextMessage();
-    }
-    else
-    {
-        Data_Message.lastSoundTime.rioterGenerated = time_get_millis();
-    }
+    city_message_apply_sound_interval(MESSAGE_CAT_RIOT);
     city_message_post_with_popup_delay(MESSAGE_CAT_RIOT, Message_11_RiotInTheCity, b->type, GridOffset(xRoad, yRoad));
 }
 
@@ -354,14 +347,7 @@ void Security_Tick_generateCriminal()
 
 static void collapseBuilding(int buildingId, struct Data_Building *b)
 {
-    if (time_get_millis() - Data_Message.lastSoundTime.collapse <= 15000)
-    {
-        PlayerMessage_disableSoundForNextMessage();
-    }
-    else
-    {
-        Data_Message.lastSoundTime.collapse = time_get_millis();
-    }
+    city_message_apply_sound_interval(MESSAGE_CAT_COLLAPSE);
 
     if (!Tutorial::handle_collapse())
     {
@@ -377,14 +363,7 @@ static void collapseBuilding(int buildingId, struct Data_Building *b)
 
 static void fireBuilding(int buildingId, struct Data_Building *b)
 {
-    if (time_get_millis() - Data_Message.lastSoundTime.fire <= 15000)
-    {
-        PlayerMessage_disableSoundForNextMessage();
-    }
-    else
-    {
-        Data_Message.lastSoundTime.fire = time_get_millis();
-    }
+    city_message_apply_sound_interval(MESSAGE_CAT_FIRE);
 
     if (!Tutorial::handle_fire())
     {

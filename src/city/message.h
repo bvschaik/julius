@@ -4,7 +4,8 @@
 #include "core/buffer.h"
 
 
-typedef enum {
+typedef enum
+{
     MESSAGE_CAT_RIOT = 0,
     MESSAGE_CAT_FIRE = 1,
     MESSAGE_CAT_COLLAPSE = 2,
@@ -26,6 +27,8 @@ void city_message_post_with_message_delay(message_category category, int use_pop
 int city_message_get_category_count(message_category category);
 void city_message_reset_category_count(message_category category);
 void city_message_increase_category_count(message_category category);
+
+void city_message_apply_sound_interval(message_category category);
 
 void city_message_decrease_delays();
 

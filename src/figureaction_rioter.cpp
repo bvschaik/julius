@@ -210,15 +210,7 @@ int FigureAction_Rioter_collapseBuilding(int figureId)
         {
             continue;
         }
-        time_millis now = time_get_millis();
-        if (now - Data_Message.lastSoundTime.rioterCollapse <= 15000)
-        {
-            PlayerMessage_disableSoundForNextMessage();
-        }
-        else
-        {
-            Data_Message.lastSoundTime.rioterCollapse = now;
-        }
+        city_message_apply_sound_interval(MESSAGE_CAT_RIOT_COLLAPSE);
         PlayerMessage_post(0, Message_14_DestroyedBuilding, b->type, f->gridOffset);
         city_message_increase_category_count(MESSAGE_CAT_RIOT_COLLAPSE);
         Building_collapseOnFire(buildingId, 0);

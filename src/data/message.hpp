@@ -30,14 +30,6 @@ extern struct _Data_Message
 
     // sound related
     int playSound;
-    struct
-    {
-        time_millis fire;
-        time_millis collapse;
-        time_millis rioterGenerated;
-        time_millis rioterCollapse;
-    } lastSoundTime;
-
     // UI related
     int scrollPosition;
     int maxScrollPosition;
