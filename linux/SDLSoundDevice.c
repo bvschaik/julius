@@ -1,4 +1,4 @@
-#include "../src/SoundDevice.h"
+#include "../src/sound/device.h"
 #include "SDL.h"
 #include "SDL_mixer.h"
 
@@ -28,7 +28,7 @@ static int percentageToVolume(int percentage)
 	return percentage * 128 / 100;
 }
 
-void SoundDevice_open()
+void sound_device_open()
 {
 	if (0 == Mix_OpenAudio(AUDIO_RATE, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_BUFFERS)) {
 		initialized = 1;
@@ -41,18 +41,18 @@ void SoundDevice_open()
 	}
 }
 
-void SoundDevice_close()
+void sound_device_close()
 {
 	if (initialized) {
 		for (int i = 0; i < MAX_CHANNELS; i++) {
-			SoundDevice_stopChannel(i);
+			sound_device_stop_channel(i);
 		}
 		Mix_CloseAudio();
 		initialized = 0;
 	}
 }
 
-void SoundDevice_initChannels(int numChannels, const char filenames[][32])
+void sound_device_init_channels(int numChannels, const char filenames[][32])
 {
 	if (initialized) {
 		if (numChannels > MAX_CHANNELS) {
@@ -67,39 +67,40 @@ void SoundDevice_initChannels(int numChannels, const char filenames[][32])
 	}
 }
 
-int SoundDevice_hasChannel(int channel)
+int sound_device_has_channel(int channel)
 {
 	return channels[channel] ? 1 : 0;
 }
-int SoundDevice_isChannelPlaying(int channel)
+
+int sound_device_is_channel_playing(int channel)
 {
 	return Mix_Playing(channel);
 }
 
-void SoundDevice_setMusicVolume(int volumePercentage)
+void sound_device_set_music_volume(int volumePercentage)
 {
 	Mix_VolumeMusic(percentageToVolume(volumePercentage));
 }
 
-void SoundDevice_setChannelVolume(int channel, int volumePercentage)
+void sound_device_set_channel_volume(int channel, int volumePercentage)
 {
 	if (channels[channel]) {
 		Mix_VolumeChunk(channels[channel], percentageToVolume(volumePercentage));
 	}
 }
 
-void SoundDevice_setChannelPanning(int channel, int leftPct, int rightPct)
+void sound_device_set_channel_panning(int channel, int leftPct, int rightPct)
 {
 	if (channels[channel]) {
 		Mix_SetPanning(channel, leftPct * 255 / 100, rightPct * 255 / 100);
 	}
 }
 
-void SoundDevice_playMusic(const char *filename)
+void sound_device_play_music(const char *filename)
 {
 	printf("SOUND: trying music file: %s\n", filename);
 	if (initialized) {
-		SoundDevice_stopMusic();
+		sound_device_stop_music();
 		music = Mix_LoadMUS(filename);
 		if (music) {
 			printf("SOUND: playing music file: %s\n", filename);
@@ -108,11 +109,11 @@ void SoundDevice_playMusic(const char *filename)
 	}
 }
 
-void SoundDevice_playSoundOnChannel(const char *filename, int channel)
+void sound_device_play_file_on_channel(const char *filename, int channel)
 {
 	if (initialized) {
 		if (channels[channel]) {
-			SoundDevice_stopChannel(channel);
+			sound_device_stop_channel(channel);
 		}
 		channels[channel] = Mix_LoadWAV(filename);
 		if (channels[channel]) {
@@ -122,7 +123,7 @@ void SoundDevice_playSoundOnChannel(const char *filename, int channel)
 	}
 }
 
-void SoundDevice_playChannel(int channel)
+void sound_device_play_channel(int channel)
 {
 	if (initialized) {
 		if (channels[channel]) {
@@ -132,7 +133,7 @@ void SoundDevice_playChannel(int channel)
 	}
 }
 
-void SoundDevice_stopMusic()
+void sound_device_stop_music()
 {
 	if (initialized) {
 		if (music) {
@@ -143,7 +144,7 @@ void SoundDevice_stopMusic()
 	}
 }
 
-void SoundDevice_stopChannel(int channel)
+void sound_device_stop_channel(int channel)
 {
 	if (initialized) {
 		if (channels[channel]) {
@@ -219,14 +220,14 @@ static void customMusicCallback(void *dummy, Uint8 *stream, int len)
 	}
 }
 
-void SoundDevice_useCustomMusicPlayer(int bitdepth, int channels, int rate, const unsigned char *(*callback)(int *outLen))
+void sound_device_use_custom_music_player(int bitdepth, int channels, int rate, const unsigned char *(*callback)(int *outLen))
 {
 	SDL_BuildAudioCVT(&customMusic.cvt, bitdepth, channels, rate, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_RATE);
 	customMusic.callback = callback;
 	Mix_HookMusic(customMusicCallback, 0);
 }
 
-void SoundDevice_useDefaultMusicPlayer()
+void sound_device_use_default_music_player()
 {
 	if (customMusic.data) {
 		free(customMusic.data);
