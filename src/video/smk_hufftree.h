@@ -1,6 +1,6 @@
-/*
+/**
 	libsmacker - A C library for decoding .smk Smacker Video files
-	Copyright (C) 2012-2013 Greg Kennedy
+	Copyright (C) 2012-2017 Greg Kennedy
 
 	See smacker.h for more information.
 
@@ -16,89 +16,73 @@
 
 #include "smk_bitstream.h"
 
-/*
-	Tree node structure.
-	If b0 is non-null, this is a branch, and b1 from the union should be used.
-	If b0 is null, this is a leaf, and val / escape code from union should be used.
-*/
-struct smk_huff_t
-{
-	struct smk_huff_t *b0;
-	union
-	{
-		struct smk_huff_t *b1;
-		struct
-		{
-			unsigned short value;
-			unsigned char escapecode;
-		} leaf;
-	} u;
-};
+/** Tree node structures - Forward declaration */
+struct smk_huff8_t;
+struct smk_huff16_t;
 
-/*
-	"Big"tree struct: holds a huff_t structure,
-	as well as a cache of three 16-bit values.
-*/
-struct smk_huff_big_t
-{
-	struct smk_huff_t *t;
-	unsigned short cache[3];
-};
-
-/* function to recursively delete a huffman tree */
-void smk_huff_free(struct smk_huff_t *);
-
-/* This macro interrogates return code from smk_huff_lookup and
+/*********************** 8-BIT HUFF-TREE FUNCTIONS ***********************/
+/** This macro checks return code from _smk_huff8_build and
 	jumps to error label if problems occur. */
-#define smk_huff_safe_build(bs,t) \
+#define smk_huff8_build(bs,t) \
 { \
-	if (!(t = smk_huff_build(bs))) \
+	if (!(t = _smk_huff8_build(bs))) \
 	{ \
-		fprintf(stderr,"libsmacker::smk_huff_safe_build(" #bs "," #t ") - ERROR (file: %s, line: %lu)\n", __FILE__, (unsigned long)__LINE__); \
+		fprintf(stderr, "libsmacker::smk_huff8_build(" #bs ", " #t ") - ERROR (file: %s, line: %lu)\n", __FILE__, (unsigned long)__LINE__); \
 		goto error; \
 	} \
 }
-/* Build a tree from a bitstream */
-struct smk_huff_t *smk_huff_build(struct smk_bit_t *);
+/** Build an 8-bit tree from a bitstream */
+struct smk_huff8_t* _smk_huff8_build(struct smk_bit_t* bs);
 
-/* This macro interrogates return code from smk_huff_lookup and
+/** This macro checks return code from _smk_huff8_lookup and
 	jumps to error label if problems occur. */
-#define smk_huff_safe_lookup(bs,t,s) \
+#define smk_huff8_lookup(bs,t,s) \
 { \
-	if ((short)(s = smk_huff_lookup(bs,t)) < 0) \
+	if ((short)(s = _smk_huff8_lookup(bs, t)) < 0) \
 	{ \
-		fprintf(stderr,"libsmacker::smk_huff_safe_lookup(" #bs "," #t "," #s ") - ERROR (file: %s, line: %lu)\n", __FILE__, (unsigned long)__LINE__); \
+		fprintf(stderr, "libsmacker::smk_huff8_lookup(" #bs ", " #t ", " #s ") - ERROR (file: %s, line: %lu)\n", __FILE__, (unsigned long)__LINE__); \
 		goto error; \
 	} \
 }
-/* Look up an 8-bit value in the referenced tree by following a bitstream
+/** Look up an 8-bit value in the referenced tree by following a bitstream
 	returns -1 on error */
-short smk_huff_lookup (struct smk_bit_t *, const struct smk_huff_t *);
+short _smk_huff8_lookup(struct smk_bit_t* bs, const struct smk_huff8_t* t);
 
-#define smk_huff_big_safe_build(bs,t) \
+/** function to recursively delete an 8-bit huffman tree */
+void smk_huff8_free(struct smk_huff8_t* t);
+
+/************************ 16-BIT HUFF-TREE FUNCTIONS ************************/
+/** This macro checks return code from _smk_huff16_build and
+	jumps to error label if problems occur. */
+#define smk_huff16_build(bs,t) \
 { \
-	if (!(t = smk_huff_big_build(bs))) \
+	if (!(t = _smk_huff16_build(bs))) \
 	{ \
-		fprintf(stderr,"libsmacker::smk_huff_big_safe_build(" #bs "," #t ") - ERROR (file: %s, line: %lu)\n", __FILE__, (unsigned long)__LINE__); \
+		fprintf(stderr, "libsmacker::smk_huff16_build(" #bs ", " #t ") - ERROR (file: %s, line: %lu)\n", __FILE__, (unsigned long)__LINE__); \
 		goto error; \
 	} \
 }
-/* Build a bigtree from a bitstream */
-struct smk_huff_big_t *smk_huff_big_build(struct smk_bit_t *);
+/** Build a 16-bit tree from a bitstream */
+struct smk_huff16_t* _smk_huff16_build(struct smk_bit_t* bs);
 
-#define smk_huff_big_safe_lookup(bs,t,s) \
+/** This macro checks return code from smk_huff16_lookup and
+	jumps to error label if problems occur. */
+#define smk_huff16_lookup(bs,t,s) \
 { \
-	if ((s = smk_huff_big_lookup(bs,t)) < 0) \
+	if ((s = _smk_huff16_lookup(bs, t)) < 0) \
 	{ \
-		fprintf(stderr,"libsmacker::smk_huff_big_safe_lookup(" #bs "," #t "," #s ") - ERROR (file: %s, line: %lu)\n", __FILE__, (unsigned long)__LINE__); \
+		fprintf(stderr, "libsmacker::smk_huff16_lookup(" #bs ", " #t ", " #s ") - ERROR (file: %s, line: %lu)\n", __FILE__, (unsigned long)__LINE__); \
 		goto error; \
 	} \
 }
-/* Look up a 16-bit value in the bigtree by following a bitstream
+/** Look up a 16-bit value in the bigtree by following a bitstream
 	returns -1 on error */
-long smk_huff_big_lookup (struct smk_bit_t *, struct smk_huff_big_t *);
+long _smk_huff16_lookup(struct smk_bit_t* bs, struct smk_huff16_t* big);
 
-/* Reset the cache in a bigtree */
-void smk_huff_big_reset (struct smk_huff_big_t *);
+/** Reset the cache in a 16-bit tree */
+void smk_huff16_reset(struct smk_huff16_t* big);
+
+/** function to recursively delete a 16-bit huffman tree */
+void smk_huff16_free(struct smk_huff16_t* big);
 
 #endif
