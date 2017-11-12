@@ -61,4 +61,8 @@ void empire_city_save_state(buffer *buf);
 
 void empire_city_load_state(buffer *buf);
 
+int empire_our_city_can_produce(int resource);
+
+int empire_our_city_can_produce_potentially(int resource);
+
 #endif // EMPIRE_CITY_H

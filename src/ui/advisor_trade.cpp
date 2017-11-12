@@ -263,7 +263,7 @@ void UI_ResourceSettingsDialog_drawForeground()
 
     Widget_GameText_draw(23, selectedResourceId, baseOffsetX + 92, baseOffsetY + 137, FONT_LARGE_BLACK);
 
-    if (Empire_ourCityCanProduceResource(selectedResourceId))
+    if (empire_our_city_can_produce(selectedResourceId))
     {
         int totalBuildings = building_count_industry_total(selectedResourceId);
         int activeBuildings = building_count_industry_active(selectedResourceId);

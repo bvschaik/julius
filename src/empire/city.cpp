@@ -68,7 +68,7 @@ int empire_city_can_export_resource(int resource)
     return 0;
 }
 
-int empire_city_can_produce_ourselves(int resource)
+int can_produce_resource(int resource)
 {
     for (int i = 0; i < MAX_CITIES; i++)
     {
@@ -81,6 +81,97 @@ int empire_city_can_produce_ourselves(int resource)
     }
     return 0;
 }
+
+int empire_our_city_can_produce(int resource)
+{
+    // finished goods: check imports of raw materials
+    switch (resource)
+    {
+    case RESOURCE_POTTERY:
+        resource = RESOURCE_CLAY;
+        if (empire_city_can_import_resource(resource))
+        {
+            return 1;
+        }
+        break;
+    case RESOURCE_FURNITURE:
+        resource = RESOURCE_TIMBER;
+        if (empire_city_can_import_resource(resource))
+        {
+            return 1;
+        }
+        break;
+    case RESOURCE_OIL:
+        resource = RESOURCE_OLIVES;
+        if (empire_city_can_import_resource(resource))
+        {
+            return 1;
+        }
+        break;
+    case RESOURCE_WINE:
+        resource = RESOURCE_VINES;
+        if (empire_city_can_import_resource(resource))
+        {
+            return 1;
+        }
+        break;
+    case RESOURCE_WEAPONS:
+        resource = RESOURCE_IRON;
+        if (empire_city_can_import_resource(resource))
+        {
+            return 1;
+        }
+        break;
+    }
+    // check if we can produce the raw materials
+    return can_produce_resource(resource);
+}
+
+int empire_our_city_can_produce_potentially(int resource)
+{
+    // finished goods: check imports of raw materials
+    switch (resource)
+    {
+    case RESOURCE_POTTERY:
+        resource = RESOURCE_CLAY;
+        if (empire_city_can_import_resource_potentially(resource))
+        {
+            return 1;
+        }
+        break;
+    case RESOURCE_FURNITURE:
+        resource = RESOURCE_TIMBER;
+        if (empire_city_can_import_resource_potentially(resource))
+        {
+            return 1;
+        }
+        break;
+    case RESOURCE_OIL:
+        resource = RESOURCE_OLIVES;
+        if (empire_city_can_import_resource_potentially(resource))
+        {
+            return 1;
+        }
+        break;
+    case RESOURCE_WINE:
+        resource = RESOURCE_VINES;
+        if (empire_city_can_import_resource_potentially(resource))
+        {
+            return 1;
+        }
+        break;
+    case RESOURCE_WEAPONS:
+        resource = RESOURCE_IRON;
+        if (empire_city_can_import_resource_potentially(resource))
+        {
+            return 1;
+        }
+        break;
+    }
+    // check if we can produce the raw materials
+    return can_produce_resource(resource);
+}
+
 
 int empire_city_get_for_object(int empire_object_id)
 {

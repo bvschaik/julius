@@ -423,7 +423,7 @@ static void checkIronAccess(int buildingType)
                 Data_CityInfo.resourceStored[Resource_Iron] <= 0)
         {
             UI_Warning_show(Warning_IronNeeded);
-            if (Empire_ourCityCanProduceResource(Resource_Iron))
+            if (empire_our_city_can_produce(Resource_Iron))
             {
                 UI_Warning_show(Warning_BuildIronMine);
             }
@@ -448,7 +448,7 @@ static void checkVinesAccess(int buildingType)
                 Data_CityInfo.resourceStored[Resource_Vines] <= 0)
         {
             UI_Warning_show(Warning_VinesNeeded);
-            if (Empire_ourCityCanProduceResource(Resource_Vines))
+            if (empire_our_city_can_produce(Resource_Vines))
             {
                 UI_Warning_show(Warning_BuildVinesFarm);
             }
@@ -473,7 +473,7 @@ static void checkOlivesAccess(int buildingType)
                 Data_CityInfo.resourceStored[Resource_Olives] <= 0)
         {
             UI_Warning_show(Warning_OlivesNeeded);
-            if (Empire_ourCityCanProduceResource(Resource_Olives))
+            if (empire_our_city_can_produce(Resource_Olives))
             {
                 UI_Warning_show(Warning_BuildOliveFarm);
             }
@@ -498,7 +498,7 @@ static void checkTimberAccess(int buildingType)
                 Data_CityInfo.resourceStored[Resource_Timber] <= 0)
         {
             UI_Warning_show(Warning_TimberNeeded);
-            if (Empire_ourCityCanProduceResource(Resource_Timber))
+            if (empire_our_city_can_produce(Resource_Timber))
             {
                 UI_Warning_show(Warning_BuildTimberYard);
             }
@@ -523,7 +523,7 @@ static void checkClayAccess(int buildingType)
                 Data_CityInfo.resourceStored[Resource_Clay] <= 0)
         {
             UI_Warning_show(Warning_ClayNeeded);
-            if (Empire_ourCityCanProduceResource(Resource_Clay))
+            if (empire_our_city_can_produce(Resource_Clay))
             {
                 UI_Warning_show(Warning_BuildClayPit);
             }

@@ -2,7 +2,6 @@
 
 #include "building.h"
 #include "cityinfo.h"
-#include "empire.h"
 #include "figure.h"
 #include "formation.h"
 #include "playermessage.h"
