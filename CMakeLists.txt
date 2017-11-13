@@ -4,6 +4,10 @@ project(julius)
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/cmake/")
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror=implicit-function-declaration")
+
+#project sources 
+file(GLOB BUILDING_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/building/*.*)
+
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
 #set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
 set(SMK_FILES src/Video/smacker.c src/Video/smk_bitstream.c src/Video/smk_hufftree.c)
@@ -19,13 +23,6 @@ set(CORE_FILES
     src/core/string.c
     src/core/time.c
     src/core/zip.c
-)
-set (BUILDING_FILES
-    src/building/count.c
-    src/building/list.c
-    src/building/model.c
-    src/building/properties.c
-    src/building/storage.c
 )
 set (CITY_FILES
     src/city/culture.c
