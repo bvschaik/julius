@@ -11,7 +11,6 @@
 #include "../Data/CityView.h"
 #include "../Data/Constants.h"
 #include "../Data/Event.h"
-#include "../Data/Scenario.h"
 #include "../Data/Screen.h"
 #include "../Data/Settings.h"
 #include "../Data/State.h"
@@ -19,6 +18,7 @@
 #include "city/message.h"
 #include "game/time.h"
 #include "graphics/image.h"
+#include "scenario/criteria.h"
 
 void UI_City_drawBackground()
 {
@@ -55,7 +55,7 @@ void UI_City_drawCity()
 
 void UI_City_drawPausedAndTimeLeft()
 {
-	if (Data_Scenario.winCriteria.timeLimitYearsEnabled) {
+	if (scenario_criteria_time_limit_enabled()) {
 		int years;
 		if (Data_Event.timeLimitMaxGameYear <= game_time_year() + 1) {
 			years = 0;
@@ -66,7 +66,7 @@ void UI_City_drawPausedAndTimeLeft()
 		Widget_Panel_drawSmallLabelButton(1, 25, 15, 1);
 		int width = Widget_GameText_draw(6, 2, 6, 29, FONT_NORMAL_BLACK);
 		Widget_Text_drawNumber(totalMonths, '@', " ", 6 + width, 29, FONT_NORMAL_BLACK);
-	} else if (Data_Scenario.winCriteria.survivalYearsEnabled) {
+	} else if (scenario_criteria_survival_enabled()) {
 		int years;
 		if (Data_Event.timeLimitMaxGameYear <= game_time_year() + 1) {
 			years = 0;

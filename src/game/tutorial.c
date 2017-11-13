@@ -3,12 +3,12 @@
 #include "SidebarMenu.h"
 
 #include "Data/CityInfo.h"
-#include "Data/Scenario.h"
 #include "Data/Settings.h"
 
 #include "city/message.h"
 #include "game/resource.h"
 #include "game/time.h"
+#include "scenario/criteria.h"
 
 struct {
     struct {
@@ -248,7 +248,7 @@ void tutorial_on_day_tick()
         }
     }
     if (data.tutorial1.fire && !data.tutorial1.senate_built) {
-        int population_almost = Data_CityInfo.population >= Data_Scenario.winCriteria_population - 20;
+        int population_almost = Data_CityInfo.population >= scenario_criteria_population() - 20;
         if (!game_time_day() || population_almost) {
             if (Data_CityInfo.buildingSenateGridOffset) {
                 Data_CityInfo.tutorial1SenateBuilt++;

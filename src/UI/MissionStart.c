@@ -9,13 +9,13 @@
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
 #include "../Data/FileList.h"
-#include "../Data/Scenario.h"
 #include "../Data/Screen.h"
 #include "../Data/Settings.h"
 #include "../Data/State.h"
 
 #include "core/lang.h"
 #include "game/tutorial.h"
+#include "scenario/criteria.h"
 #include "sound/music.h"
 #include "sound/speech.h"
 
@@ -208,49 +208,49 @@ void UI_MissionStart_Briefing_drawBackground()
 	Widget_Panel_drawInnerPanel(xOffset + 16, yOffset + 64, 33, 5);
 	Widget_GameText_draw(62, 10, xOffset + 32, yOffset + 72, FONT_NORMAL_WHITE);
 	int goalIndex = 0;
-	if (Data_Scenario.winCriteria_populationEnabled) {
+	if (scenario_criteria_population_enabled()) {
 		int x = goalOffsetsX[goalIndex];
 		int y = goalOffsetsY[goalIndex];
 		goalIndex++;
 		Widget_Panel_drawSmallLabelButton(xOffset + x, yOffset + y, 15, 1);
 		int width = Widget_GameText_draw(62, 11, xOffset + x + 8, yOffset + y + 3, FONT_NORMAL_RED);
-		Widget_Text_drawNumber(Data_Scenario.winCriteria_population, '@', " ",
+		Widget_Text_drawNumber(scenario_criteria_population(), '@', " ",
 			xOffset + x + 8 + width, yOffset + y + 3, FONT_NORMAL_RED);
 	}
-	if (Data_Scenario.winCriteria.cultureEnabled) {
+	if (scenario_criteria_culture_enabled()) {
 		int x = goalOffsetsX[goalIndex];
 		int y = goalOffsetsY[goalIndex];
 		goalIndex++;
 		Widget_Panel_drawSmallLabelButton(xOffset + x, yOffset + y, 15, 1);
 		int width = Widget_GameText_draw(62, 12, xOffset + x + 8, yOffset + y + 3, FONT_NORMAL_RED);
-		Widget_Text_drawNumber(Data_Scenario.winCriteria.culture, '@', " ",
+		Widget_Text_drawNumber(scenario_criteria_culture(), '@', " ",
 			xOffset + x + 8 + width, yOffset + y + 3, FONT_NORMAL_RED);
 	}
-	if (Data_Scenario.winCriteria.prosperityEnabled) {
+	if (scenario_criteria_prosperity_enabled()) {
 		int x = goalOffsetsX[goalIndex];
 		int y = goalOffsetsY[goalIndex];
 		goalIndex++;
 		Widget_Panel_drawSmallLabelButton(xOffset + x, yOffset + y, 15, 1);
 		int width = Widget_GameText_draw(62, 13, xOffset + x + 8, yOffset + y + 3, FONT_NORMAL_RED);
-		Widget_Text_drawNumber(Data_Scenario.winCriteria.prosperity, '@', " ",
+		Widget_Text_drawNumber(scenario_criteria_prosperity(), '@', " ",
 			xOffset + x + 8 + width, yOffset + y + 3, FONT_NORMAL_RED);
 	}
-	if (Data_Scenario.winCriteria.peaceEnabled) {
+	if (scenario_criteria_peace_enabled()) {
 		int x = goalOffsetsX[goalIndex];
 		int y = goalOffsetsY[goalIndex];
 		goalIndex++;
 		Widget_Panel_drawSmallLabelButton(xOffset + x, yOffset + y, 15, 1);
 		int width = Widget_GameText_draw(62, 14, xOffset + x + 8, yOffset + y + 3, FONT_NORMAL_RED);
-		Widget_Text_drawNumber(Data_Scenario.winCriteria.peace, '@', " ",
+		Widget_Text_drawNumber(scenario_criteria_peace(), '@', " ",
 			xOffset + x + 8 + width, yOffset + y + 3, FONT_NORMAL_RED);
 	}
-	if (Data_Scenario.winCriteria.favorEnabled) {
+	if (scenario_criteria_favor_enabled()) {
 		int x = goalOffsetsX[goalIndex];
 		int y = goalOffsetsY[goalIndex];
 		goalIndex++;
 		Widget_Panel_drawSmallLabelButton(xOffset + x, yOffset + y, 15, 1);
 		int width = Widget_GameText_draw(62, 15, xOffset + x + 8, yOffset + y + 3, FONT_NORMAL_RED);
-		Widget_Text_drawNumber(Data_Scenario.winCriteria.favor, '@', " ",
+		Widget_Text_drawNumber(scenario_criteria_favor(), '@', " ",
 			xOffset + x + 8 + width, yOffset + y + 3, FONT_NORMAL_RED);
 	}
 	int immediateGoalText = tutorial_get_immediate_goal_text();

@@ -4,6 +4,7 @@
 #include "core/dir.h"
 #include "core/file.h"
 #include "core/string.h"
+#include "scenario/criteria.h"
 #include "sound/speech.h"
 
 #include "../GameFile.h"
@@ -167,51 +168,51 @@ static void drawScenarioInfo()
 
 	Widget_GameText_drawCentered(32, 11 + Data_Scenario.playerRank,
 		baseOffsetX + 15, baseOffsetY + 190, 260, FONT_NORMAL_BLACK);
-	if (Data_Scenario.isOpenPlay) {
+	if (scenario_is_open_play()) {
 		Widget_GameText_drawMultiline(145, Data_Scenario.openPlayScenarioId,
 			baseOffsetX + 25, baseOffsetY + 250, 260, FONT_NORMAL_BLACK);
 	} else {
 		Widget_GameText_drawCentered(44, 127,
 			baseOffsetX + 15, baseOffsetY + 242, 260, FONT_NORMAL_BLACK);
 		int width;
-		if (Data_Scenario.winCriteria.cultureEnabled) {
-			width = Widget_Text_drawNumber(Data_Scenario.winCriteria.culture, '@', " ",
+		if (scenario_criteria_culture_enabled()) {
+			width = Widget_Text_drawNumber(scenario_criteria_culture(), '@', " ",
 				baseOffsetX + 90, baseOffsetY + 270, FONT_NORMAL_BLACK);
 			Widget_GameText_draw(44, 129,
 				baseOffsetX + 90 + width, baseOffsetY + 270, FONT_NORMAL_BLACK);
 		}
-		if (Data_Scenario.winCriteria.prosperityEnabled) {
-			width = Widget_Text_drawNumber(Data_Scenario.winCriteria.prosperity, '@', " ",
+		if (scenario_criteria_prosperity_enabled()) {
+			width = Widget_Text_drawNumber(scenario_criteria_prosperity(), '@', " ",
 				baseOffsetX + 90, baseOffsetY + 286, FONT_NORMAL_BLACK);
 			Widget_GameText_draw(44, 130,
 				baseOffsetX + 90 + width, baseOffsetY + 286, FONT_NORMAL_BLACK);
 		}
-		if (Data_Scenario.winCriteria.peaceEnabled) {
-			width = Widget_Text_drawNumber(Data_Scenario.winCriteria.peace, '@', " ",
+		if (scenario_criteria_peace_enabled()) {
+			width = Widget_Text_drawNumber(scenario_criteria_peace(), '@', " ",
 				baseOffsetX + 90, baseOffsetY + 302, FONT_NORMAL_BLACK);
 			Widget_GameText_draw(44, 131,
 				baseOffsetX + 90 + width, baseOffsetY + 302, FONT_NORMAL_BLACK);
 		}
-		if (Data_Scenario.winCriteria.favorEnabled) {
-			width = Widget_Text_drawNumber(Data_Scenario.winCriteria.favor, '@', " ",
+		if (scenario_criteria_favor_enabled()) {
+			width = Widget_Text_drawNumber(scenario_criteria_favor(), '@', " ",
 				baseOffsetX + 90, baseOffsetY + 318, FONT_NORMAL_BLACK);
 			Widget_GameText_draw(44, 132,
 				baseOffsetX + 90 + width, baseOffsetY + 318, FONT_NORMAL_BLACK);
 		}
-		if (Data_Scenario.winCriteria_populationEnabled) {
-			width = Widget_Text_drawNumber(Data_Scenario.winCriteria_population, '@', " ",
+		if (scenario_criteria_population_enabled()) {
+			width = Widget_Text_drawNumber(scenario_criteria_population(), '@', " ",
 				baseOffsetX + 90, baseOffsetY + 334, FONT_NORMAL_BLACK);
 			Widget_GameText_draw(44, 133,
 				baseOffsetX + 90 + width, baseOffsetY + 334, FONT_NORMAL_BLACK);
 		}
-		if (Data_Scenario.winCriteria.timeLimitYearsEnabled) {
-			width = Widget_Text_drawNumber(Data_Scenario.winCriteria.timeLimitYears, '@', " ",
+		if (scenario_criteria_time_limit_enabled()) {
+			width = Widget_Text_drawNumber(scenario_criteria_time_limit_years(), '@', " ",
 				baseOffsetX + 90, baseOffsetY + 350, FONT_NORMAL_BLACK);
 			Widget_GameText_draw(44, 134,
 				baseOffsetX + 90 + width, baseOffsetY + 350, FONT_NORMAL_BLACK);
 		}
-		if (Data_Scenario.winCriteria.survivalYearsEnabled) {
-			width = Widget_Text_drawNumber(Data_Scenario.winCriteria.survivalYears, '@', " ",
+		if (scenario_criteria_survival_enabled()) {
+			width = Widget_Text_drawNumber(scenario_criteria_survival_years(), '@', " ",
 				baseOffsetX + 90, baseOffsetY + 366, FONT_NORMAL_BLACK);
 			Widget_GameText_draw(44, 135,
 				baseOffsetX + 90 + width, baseOffsetY + 366, FONT_NORMAL_BLACK);

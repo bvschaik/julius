@@ -6,7 +6,6 @@
 
 #include "Data/CityInfo.h"
 #include "Data/Event.h"
-#include "Data/Scenario.h"
 #include "Data/Screen.h"
 #include "Data/Settings.h"
 #include "Data/State.h"
@@ -15,59 +14,60 @@
 #include "game/settings.h"
 #include "game/time.h"
 #include "graphics/mouse.h"
+#include "scenario/criteria.h"
 #include "sound/music.h"
 
 void CityInfo_Victory_check()
 {
-	if (Data_Scenario.isOpenPlay) {
+	if (scenario_is_open_play()) {
 		return;
 	}
 	int numCriteria = 0;
 	Data_State.winState = WinState_Win;
-	if (Data_Scenario.winCriteria.cultureEnabled) {
+	if (scenario_criteria_culture_enabled()) {
 		numCriteria++;
-		if (Data_CityInfo.ratingCulture < Data_Scenario.winCriteria.culture) {
+		if (Data_CityInfo.ratingCulture < scenario_criteria_culture()) {
 			Data_State.winState = WinState_None;
 		}
 	}
-	if (Data_Scenario.winCriteria.prosperityEnabled) {
+	if (scenario_criteria_prosperity_enabled()) {
 		numCriteria++;
-		if (Data_CityInfo.ratingProsperity < Data_Scenario.winCriteria.prosperity) {
+		if (Data_CityInfo.ratingProsperity < scenario_criteria_prosperity()) {
 			Data_State.winState = WinState_None;
 		}
 	}
-	if (Data_Scenario.winCriteria.peaceEnabled) {
+	if (scenario_criteria_peace_enabled()) {
 		numCriteria++;
-		if (Data_CityInfo.ratingPeace < Data_Scenario.winCriteria.peace) {
+		if (Data_CityInfo.ratingPeace < scenario_criteria_peace()) {
 			Data_State.winState = WinState_None;
 		}
 	}
-	if (Data_Scenario.winCriteria.favorEnabled) {
+	if (scenario_criteria_favor_enabled()) {
 		numCriteria++;
-		if (Data_CityInfo.ratingFavor < Data_Scenario.winCriteria.favor) {
+		if (Data_CityInfo.ratingFavor < scenario_criteria_favor()) {
 			Data_State.winState = WinState_None;
 		}
 	}
-	if (Data_Scenario.winCriteria_populationEnabled) {
+	if (scenario_criteria_population_enabled()) {
 		numCriteria++;
-		if (Data_CityInfo.population < Data_Scenario.winCriteria_population) {
+		if (Data_CityInfo.population < scenario_criteria_population()) {
 			Data_State.winState = WinState_None;
 		}
 	}
 
 	if (numCriteria <= 0) {
 		Data_State.winState = WinState_None;
-		if (Data_Scenario.winCriteria.timeLimitYearsEnabled) {
+		if (scenario_criteria_time_limit_enabled()) {
 			numCriteria++;
 		}
-		if (Data_Scenario.winCriteria.survivalYearsEnabled) {
+		if (scenario_criteria_survival_enabled()) {
 			numCriteria++;
 		}
 	}
 	if (game_time_year() >= Data_Event.timeLimitMaxGameYear) {
-		if (Data_Scenario.winCriteria.timeLimitYearsEnabled) {
+		if (scenario_criteria_time_limit_enabled()) {
 			Data_State.winState = WinState_Lose;
-		} else if (Data_Scenario.winCriteria.survivalYearsEnabled) {
+		} else if (scenario_criteria_survival_enabled()) {
 			Data_State.winState = WinState_Win;
 		}
 	}
