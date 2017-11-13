@@ -51,6 +51,9 @@ set (GAME_FILES
     src/game/time.c
     src/game/tutorial.c
 )
+set (SCENARIO_FILES
+    src/scenario/demand_change.c
+)
 set (GRAPHICS_FILES
     src/graphics/image.c
     src/graphics/mouse.c
@@ -216,6 +219,7 @@ add_executable(julius
 	${EMPIRE_FILES}
 	${FIGURE_FILES}
 	${GAME_FILES}
+	${SCENARIO_FILES}
 	${GRAPHICS_FILES}
 	${SOUND_FILES}
 	${SMK_FILES}

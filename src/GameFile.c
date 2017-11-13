@@ -22,7 +22,6 @@
 #include "Data/Settings.h"
 #include "Data/State.h"
 #include "Data/Figure.h"
-#include "Data/Figure.h"
 #include "UI/AllWindows.h" // TODO: try to eliminate this
 
 #include "building/count.h"

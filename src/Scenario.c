@@ -43,6 +43,7 @@
 #include "game/time.h"
 #include "game/tutorial.h"
 #include "graphics/image.h"
+#include "scenario/demand_change.h"
 #include "sound/city.h"
 #include "sound/music.h"
 
@@ -245,7 +246,7 @@ static void loadScenario(const char *scenarioName)
 	Event_initInvasions();
 	empire_determine_distant_battle_city();
 	Event_initRequests();
-	Event_initDemandChanges();
+	scenario_demand_change_init();
 	Event_initPriceChanges();
 	SidebarMenu_enableBuildingMenuItemsAndButtons();
 	image_load_climate(Data_Scenario.climate);
