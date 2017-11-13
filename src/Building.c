@@ -27,6 +27,7 @@
 #include "building/storage.h"
 #include "city/message.h"
 #include "graphics/image.h"
+#include "scenario/map.h"
 #include "sound/effect.h"
 
 #include <string.h>
@@ -862,7 +863,7 @@ void Building_Industry_startNewProduction(int buildingId)
 	}
 }
 
-int BUILDING_MARKET_getDestinationGranaryWarehouse(int marketId)
+int Building_Market_getDestinationGranaryWarehouse(int marketId)
 {
 	struct {
 		int buildingId;
@@ -1091,7 +1092,7 @@ int BUILDING_MARKET_getDestinationGranaryWarehouse(int marketId)
 	return resources[fetchInventoryId].buildingId;
 }
 
-int BUILDING_MARKET_getMaxFoodStock(int buildingId)
+int Building_Market_getMaxFoodStock(int buildingId)
 {
 	int maxStock = 0;
 	if (buildingId > 0 && Data_Buildings[buildingId].type == BUILDING_MARKET) {
@@ -1105,7 +1106,7 @@ int BUILDING_MARKET_getMaxFoodStock(int buildingId)
 	return maxStock;
 }
 
-int BUILDING_MARKET_getMaxGoodsStock(int buildingId)
+int Building_Market_getMaxGoodsStock(int buildingId)
 {
 	int maxStock = 0;
 	if (buildingId > 0 && Data_Buildings[buildingId].type == BUILDING_MARKET) {
@@ -1119,7 +1120,7 @@ int BUILDING_MARKET_getMaxGoodsStock(int buildingId)
 	return maxStock;
 }
 
-int BUILDING_DOCK_getNumIdleDockers(int buildingId)
+int Building_Dock_getNumIdleDockers(int buildingId)
 {
 	struct Data_Building *b = &Data_Buildings[buildingId];
 	int numIdle = 0;
@@ -1135,10 +1136,10 @@ int BUILDING_DOCK_getNumIdleDockers(int buildingId)
 	return numIdle;
 }
 
-void BUILDING_DOCK_updateOpenWaterAccess()
+void Building_Dock_updateOpenWaterAccess()
 {
-	Routing_getDistanceWaterBoat(
-		Data_Scenario.riverEntryPoint.x, Data_Scenario.riverEntryPoint.y);
+    map_point river_entry = scenario_map_river_entry();
+	Routing_getDistanceWaterBoat(river_entry.x, river_entry.y);
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
 		if (BuildingIsInUse(i) && !b->houseSize && b->type == BUILDING_DOCK) {
@@ -1151,10 +1152,10 @@ void BUILDING_DOCK_updateOpenWaterAccess()
 	}
 }
 
-int BUILDING_DOCK_isConnectedToOpenWater(int x, int y)
+int Building_Dock_isConnectedToOpenWater(int x, int y)
 {
-	Routing_getDistanceWaterBoat(
-		Data_Scenario.riverEntryPoint.x, Data_Scenario.riverEntryPoint.y);
+    map_point river_entry = scenario_map_river_entry();
+	Routing_getDistanceWaterBoat(river_entry.x, river_entry.y);
 	if (Terrain_isAdjacentToOpenWater(x, y, 3)) {
 		return 1;
 	} else {

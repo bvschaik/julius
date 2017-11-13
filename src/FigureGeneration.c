@@ -600,7 +600,7 @@ static void spawnFigureMarket(int buildingId, struct Data_Building *b)
 			}
 		} else {
 			Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad);
-			int dstBuildingId = BUILDING_MARKET_getDestinationGranaryWarehouse(buildingId);
+			int dstBuildingId = Building_Market_getDestinationGranaryWarehouse(buildingId);
 			if (dstBuildingId > 0) {
 				CREATE_FIGURE(FIGURE_MARKET_BUYER, xRoad, yRoad, Dir_0_Top);
 				f->actionState = FigureActionState_145_MarketBuyerGoingToStorage;

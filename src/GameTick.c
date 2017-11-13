@@ -77,7 +77,7 @@ void GameTick_advance()
 		case 16: Resource_calculateWarehouseStocks(); break;
 		case 17: CityInfo_Resource_calculateFoodAndSupplyRomeWheat(); break;
 		case 18: Resource_calculateWorkshopStocks(); break;
-		case 19: BUILDING_DOCK_updateOpenWaterAccess(); break;
+		case 19: Building_Dock_updateOpenWaterAccess(); break;
 		case 20: Building_Industry_updateProduction(); break;
 		case 21: Building_GameTick_checkAccessToRome(); break;
 		case 22: HousePopulation_updateRoom(); break;

@@ -7,7 +7,6 @@
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
-#include "Data/Scenario.h"
 
 #include "Data/Figure.h"
 
@@ -19,6 +18,7 @@
 #include "empire/trade_prices.h"
 #include "empire/trade_route.h"
 #include "figure/type.h"
+#include "scenario/map.h"
 
 #include <string.h>
 
@@ -82,11 +82,10 @@ static int generateTrader(int cityId, empire_city *city)
 
 	if (city->is_sea_trade) {
 		// generate ship
-		if (Data_CityInfo.numWorkingDocks > 0 &&
-			(Data_Scenario.riverEntryPoint.x != -1 || Data_Scenario.riverEntryPoint.y != -1) &&
+		if (Data_CityInfo.numWorkingDocks > 0 && scenario_map_has_river_entry() &&
 			!Data_CityInfo.tradeSeaProblemDuration) {
-			int shipId = Figure_create(FIGURE_TRADE_SHIP,
-				Data_Scenario.riverEntryPoint.x, Data_Scenario.riverEntryPoint.y, 0);
+            map_point river_entry = scenario_map_river_entry();
+			int shipId = Figure_create(FIGURE_TRADE_SHIP, river_entry.x, river_entry.y, 0);
 			city->trader_figure_ids[index] = shipId;
 			Data_Figures[shipId].empireCityId = cityId;
 			Data_Figures[shipId].actionState = FigureActionState_110_TradeShipCreated;
@@ -127,7 +126,7 @@ int canGenerateTraderForCity(int city_id, empire_city *city)
             city_message_post_with_message_delay(MESSAGE_CAT_NO_WORKING_DOCK, 1, MESSAGE_NO_WORKING_DOCK, 384);
             return 0;
         }
-        if (Data_Scenario.riverEntryPoint.x == -1 && Data_Scenario.riverEntryPoint.y == -1) {
+        if (!scenario_map_has_river_entry()) {
             return 0;
         }
         Data_CityInfo.tradeNumOpenSeaRoutes++;
