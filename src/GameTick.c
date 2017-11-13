@@ -36,6 +36,7 @@
 #include "game/time.h"
 #include "game/tutorial.h"
 #include "scenario/demand_change.h"
+#include "scenario/price_change.h"
 #include "sound/music.h"
 
 #include <stdio.h>
@@ -132,7 +133,7 @@ static void advanceMonth()
 	Event_handleInvasions();
 	Event_handleRequests();
 	scenario_demand_change_process();
-	Event_handlePricesChanges();
+	scenario_price_change_process();
 	CityInfo_Victory_updateMonthsToGovern();
 	Formation_Tick_updateRestMorale();
 	city_message_decrease_delays();

@@ -26,9 +26,6 @@ void Event_initRequests();
 void Event_handleRequests();
 void Event_dispatchRequest(int id);
 
-void Event_initPriceChanges();
-void Event_handlePricesChanges();
-
 void Event_handleRandomEvents();
 
 void Event_handleEarthquake();

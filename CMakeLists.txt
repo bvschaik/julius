@@ -53,6 +53,7 @@ set (GAME_FILES
 )
 set (SCENARIO_FILES
     src/scenario/demand_change.c
+    src/scenario/price_change.c
 )
 set (GRAPHICS_FILES
     src/graphics/image.c
