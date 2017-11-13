@@ -140,7 +140,7 @@ void PlayerMessage_initList();
 void PlayerMessage_initProblemArea();
 void PlayerMessage_sortMessages();
 void PlayerMessage_processQueue();
-void PlayerMessage_goToProblem();
+int PlayerMessage_getNextProblemAreaGridOffset();
 
 int PlayerMessage_getAdvisorForMessageType(int messageType);
 int PlayerMessage_getMessageTextId(int messageType);
