@@ -45,6 +45,7 @@
 #include "graphics/image.h"
 #include "scenario/demand_change.h"
 #include "scenario/price_change.h"
+#include "scenario/request.h"
 #include "sound/city.h"
 #include "sound/music.h"
 
@@ -246,7 +247,7 @@ static void loadScenario(const char *scenarioName)
 	traders_clear();
 	Event_initInvasions();
 	empire_determine_distant_battle_city();
-	Event_initRequests();
+	scenario_request_init();
 	scenario_demand_change_init();
 	scenario_price_change_init();
 	SidebarMenu_enableBuildingMenuItemsAndButtons();

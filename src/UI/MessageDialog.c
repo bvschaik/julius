@@ -13,7 +13,6 @@
 #include "../Data/Buttons.h"
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
-#include "../Data/Scenario.h"
 #include "../Data/Screen.h"
 #include "../Data/Settings.h"
 
@@ -23,6 +22,7 @@
 #include "empire/city.h"
 #include "graphics/image.h"
 #include "graphics/mouse.h"
+#include "scenario/request.h"
 
 #define MAX_HISTORY 200
 
@@ -269,16 +269,15 @@ static void drawDialogVideo()
 		data.x + 16, data.y + 332, 384, data.textHeightBlocks - 1, 0);
 
 	if (msg->type == TYPE_MESSAGE && msg->message_type == MESSAGE_TYPE_IMPERIAL) {
-		Widget_Text_drawNumber(Data_Scenario.requests.amount[playerMessage.param1],
+        const scenario_request *request = scenario_request_get(playerMessage.param1);
+		Widget_Text_drawNumber(request->amount,
 			'@', " ", data.x + 8, data.y + 384, FONT_NORMAL_WHITE);
-		int resource = Data_Scenario.requests.resourceId[playerMessage.param1];
 		Graphics_drawImage(
-			image_group(ID_Graphic_ResourceIcons) + resource + Resource_getGraphicIdOffset(resource, 3),
+			image_group(ID_Graphic_ResourceIcons) + request->resource + Resource_getGraphicIdOffset(request->resource, 3),
 			data.x + 70, data.y + 379);
-		Widget_GameText_draw(23, resource, data.x + 100, data.y + 384, FONT_NORMAL_WHITE);
-		if (Data_Scenario.requests_state[playerMessage.param1] <= 1) {
-			width = Widget_GameText_drawNumberWithDescription(8, 4,
-				Data_Scenario.requests_monthsToComply[playerMessage.param1],
+		Widget_GameText_draw(23, request->resource, data.x + 100, data.y + 384, FONT_NORMAL_WHITE);
+		if (request->state == REQUEST_STATE_NORMAL || request->state == REQUEST_STATE_OVERDUE) {
+			width = Widget_GameText_drawNumberWithDescription(8, 4, request->months_to_comply,
 				data.x + 200, data.y + 384, FONT_NORMAL_WHITE);
 			Widget_GameText_draw(12, 2, data.x + 200 + width, data.y + 384, FONT_NORMAL_WHITE);
 		}
@@ -365,19 +364,18 @@ static void drawPlayerMessageContent(const lang_message *msg)
 				data.textHeightBlocks - 1, 0);
 	}
 	if (msg->message_type == MESSAGE_TYPE_IMPERIAL) {
+        const scenario_request *request = scenario_request_get(playerMessage.param1);
 		int yOffset = data.yText + 86 + lines * 16;
-		Widget_Text_drawNumber(Data_Scenario.requests.amount[playerMessage.param1],
+		Widget_Text_drawNumber(request->amount,
 			'@', " ", data.xText + 8, yOffset, FONT_NORMAL_WHITE);
-		graphicId = image_group(ID_Graphic_ResourceIcons) +
-			Data_Scenario.requests.resourceId[playerMessage.param1];
-		graphicId += Resource_getGraphicIdOffset(
-			Data_Scenario.requests.resourceId[playerMessage.param1], 3);
+		graphicId = image_group(ID_Graphic_ResourceIcons) + request->resource;
+		graphicId += Resource_getGraphicIdOffset(request->resource, 3);
 		Graphics_drawImage(graphicId, data.xText + 70, yOffset - 5);
-		Widget_GameText_draw(23, Data_Scenario.requests.resourceId[playerMessage.param1],
+		Widget_GameText_draw(23, request->resource,
 			data.xText + 100, yOffset, FONT_NORMAL_WHITE);
-		if (Data_Scenario.requests_state[playerMessage.param1] <= 1) {
+		if (request->state == REQUEST_STATE_NORMAL || request->state == REQUEST_STATE_OVERDUE) {
 			int width = Widget_GameText_drawNumberWithDescription(8, 4,
-				Data_Scenario.requests_monthsToComply[playerMessage.param1],
+				request->months_to_comply,
 				data.xText + 200, yOffset, FONT_NORMAL_WHITE);
 			Widget_GameText_draw(12, 2, data.xText + 200 + width, yOffset, FONT_NORMAL_WHITE);
 		}

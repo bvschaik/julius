@@ -7,10 +7,10 @@
 #include "../Formation.h"
 #include "../Resource.h"
 
-#include "../Data/Scenario.h"
 #include "../Data/Settings.h"
 
 #include "empire/city.h"
+#include "scenario/request.h"
 
 static void buttonDonateToCity(int param1, int param2);
 static void buttonSetSalary(int param1, int param2);
@@ -36,6 +36,58 @@ static CustomButton imperialButtons[] = {
 
 static int focusButtonId;
 static int selectedRequestId;
+
+void draw_request(int index, const scenario_request *request)
+{
+    if (index >= 5) {
+        return;
+    }
+    int baseOffsetX = Data_Screen.offset640x480.x;
+    int baseOffsetY = Data_Screen.offset640x480.y;
+
+    Widget_Panel_drawButtonBorder(baseOffsetX + 38, baseOffsetY + 96 + 42 * index, 560, 40, 0);
+    Widget_Text_drawNumber(request->amount, '@', " ",
+        baseOffsetX + 40, baseOffsetY + 102 + 42 * index, FONT_NORMAL_WHITE);
+    int resourceOffset = request->resource +
+        Resource_getGraphicIdOffset(request->resource, 3);
+    Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + resourceOffset,
+        baseOffsetX + 110, baseOffsetY + 100 + 42 * index);
+    Widget_GameText_draw(23, request->resource,
+        baseOffsetX + 150, baseOffsetY + 102 + 42 * index, FONT_NORMAL_WHITE);
+    
+    int width = Widget_GameText_drawNumberWithDescription(8, 4, request->months_to_comply,
+        baseOffsetX + 310, baseOffsetY + 102 + 42 * index, FONT_NORMAL_WHITE);
+    Widget_GameText_draw(12, 2, baseOffsetX + 310 + width, baseOffsetY + 102 + 42 * index, FONT_NORMAL_WHITE);
+
+    if (request->resource == Resource_Denarii) {
+        // request for money
+        width = Widget_Text_drawNumber(Data_CityInfo.treasury, '@', " ",
+            baseOffsetX + 40, baseOffsetY + 120 + 42 * index, FONT_NORMAL_WHITE);
+        width += Widget_GameText_draw(52, 44,
+            baseOffsetX + 40 + width, baseOffsetY + 120 + 42 * index, FONT_NORMAL_WHITE);
+        if (Data_CityInfo.treasury < request->amount) {
+            Widget_GameText_draw(52, 48,
+                baseOffsetX + 80 + width, baseOffsetY + 120 + 42 * index, FONT_NORMAL_WHITE);
+        } else {
+            Widget_GameText_draw(52, 47,
+                baseOffsetX + 80 + width, baseOffsetY + 120 + 42 * index, FONT_NORMAL_WHITE);
+        }
+    } else {
+        // normal goods request
+        int resourceId = request->resource;
+        width = Widget_Text_drawNumber(Data_CityInfo.resourceStored[resourceId], '@', " ",
+            baseOffsetX + 40, baseOffsetY + 120 + 42 * index, FONT_NORMAL_WHITE);
+        width += Widget_GameText_draw(52, 43,
+            baseOffsetX + 40 + width, baseOffsetY + 120 + 42 * index, FONT_NORMAL_WHITE);
+        if (Data_CityInfo.resourceStored[resourceId] < request->amount) {
+            Widget_GameText_draw(52, 48,
+                baseOffsetX + 80 + width, baseOffsetY + 120 + 42 * index, FONT_NORMAL_WHITE);
+        } else {
+            Widget_GameText_draw(52, 47,
+                baseOffsetX + 80 + width, baseOffsetY + 120 + 42 * index, FONT_NORMAL_WHITE);
+        }
+    }
+}
 
 void UI_Advisor_Imperial_drawBackground(int *advisorHeight)
 {
@@ -80,53 +132,7 @@ void UI_Advisor_Imperial_drawBackground(int *advisorHeight)
 			baseOffsetX + 80 + width, baseOffsetY + 120, FONT_NORMAL_WHITE);
 		numRequests = 1;
 	}
-	for (int i = 0; i < 20; i++) {
-		if (Data_Scenario.requests.resourceId[i] && Data_Scenario.requests_isVisible[i] && numRequests < 5) {
-			Widget_Panel_drawButtonBorder(baseOffsetX + 38, baseOffsetY + 96 + 42 * numRequests, 560, 40, 0);
-			Widget_Text_drawNumber(Data_Scenario.requests.amount[i], '@', " ",
-				baseOffsetX + 40, baseOffsetY + 102 + 42 * numRequests, FONT_NORMAL_WHITE);
-			int resourceOffset = Data_Scenario.requests.resourceId[i] +
-				Resource_getGraphicIdOffset(Data_Scenario.requests.resourceId[i], 3);
-			Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + resourceOffset,
-				baseOffsetX + 110, baseOffsetY + 100 + 42 * numRequests);
-			Widget_GameText_draw(23, Data_Scenario.requests.resourceId[i],
-				baseOffsetX + 150, baseOffsetY + 102 + 42 * numRequests, FONT_NORMAL_WHITE);
-			
-			width = Widget_GameText_drawNumberWithDescription(8, 4, Data_Scenario.requests_monthsToComply[i],
-				baseOffsetX + 310, baseOffsetY + 102 + 42 * numRequests, FONT_NORMAL_WHITE);
-			Widget_GameText_draw(12, 2, baseOffsetX + 310 + width, baseOffsetY + 102 + 42 * numRequests, FONT_NORMAL_WHITE);
-
-			if (Data_Scenario.requests.resourceId[i] == Resource_Denarii) {
-				// request for money
-				width = Widget_Text_drawNumber(Data_CityInfo.treasury, '@', " ",
-					baseOffsetX + 40, baseOffsetY + 120 + 42 * numRequests, FONT_NORMAL_WHITE);
-				width += Widget_GameText_draw(52, 44,
-					baseOffsetX + 40 + width, baseOffsetY + 120 + 42 * numRequests, FONT_NORMAL_WHITE);
-				if (Data_CityInfo.treasury < Data_Scenario.requests.amount[i]) {
-					Widget_GameText_draw(52, 48,
-						baseOffsetX + 80 + width, baseOffsetY + 120 + 42 * numRequests, FONT_NORMAL_WHITE);
-				} else {
-					Widget_GameText_draw(52, 47,
-						baseOffsetX + 80 + width, baseOffsetY + 120 + 42 * numRequests, FONT_NORMAL_WHITE);
-				}
-			} else {
-				// normal goods request
-				int resourceId = Data_Scenario.requests.resourceId[i];
-				width = Widget_Text_drawNumber(Data_CityInfo.resourceStored[resourceId], '@', " ",
-					baseOffsetX + 40, baseOffsetY + 120 + 42 * numRequests, FONT_NORMAL_WHITE);
-				width += Widget_GameText_draw(52, 43,
-					baseOffsetX + 40 + width, baseOffsetY + 120 + 42 * numRequests, FONT_NORMAL_WHITE);
-				if (Data_CityInfo.resourceStored[resourceId] < Data_Scenario.requests.amount[i]) {
-					Widget_GameText_draw(52, 48,
-						baseOffsetX + 80 + width, baseOffsetY + 120 + 42 * numRequests, FONT_NORMAL_WHITE);
-				} else {
-					Widget_GameText_draw(52, 47,
-						baseOffsetX + 80 + width, baseOffsetY + 120 + 42 * numRequests, FONT_NORMAL_WHITE);
-				}
-			}
-			numRequests++;
-		}
-	}
+	numRequests = scenario_request_foreach_visible(numRequests, draw_request);
 	if (!numRequests) {
 		Widget_GameText_drawMultiline(52, 21, baseOffsetX + 64, baseOffsetY + 160, 512, FONT_NORMAL_WHITE);
 	}
@@ -201,26 +207,20 @@ static int getRequestStatus(int index)
 			}
 		}
 	}
-	for (int i = 0; i < 20; i++) {
-		if (Data_Scenario.requests.resourceId[i] && Data_Scenario.requests_isVisible[i] &&
-			Data_Scenario.requests_state[i] <= 1) {
-			if (numRequests == index) {
-				if (Data_Scenario.requests.resourceId[i] == Resource_Denarii) {
-					if (Data_CityInfo.treasury <= Data_Scenario.requests.amount[i]) {
-						return -1;
-					}
-				} else {
-					int resourceId = Data_Scenario.requests.resourceId[i];
-					if (Data_CityInfo.resourceStored[resourceId] < Data_Scenario.requests.amount[i]) {
-						return -1;
-					}
-				}
-				return i + 1;
-			}
-			numRequests++;
-		}
-	}
-	return 0;
+    const scenario_request *request = scenario_request_get_visible(index - numRequests);
+    if (request) {
+        if (request->resource == RESOURCE_DENARII) {
+            if (Data_CityInfo.treasury <= request->amount) {
+                return -1;
+            }
+        } else {
+            if (Data_CityInfo.resourceStored[request->resource] < request->amount) {
+                return -1;
+            }
+        }
+        return request->id + 1;
+    }
+    return 0;
 }
 
 void UI_Advisor_Imperial_handleMouse()
@@ -288,7 +288,7 @@ static void confirmSendTroops(int accepted)
 static void confirmSendGoods(int accepted)
 {
 	if (accepted) {
-		Event_dispatchRequest(selectedRequestId);
+		scenario_request_dispatch(selectedRequestId);
 	}
 }
 
