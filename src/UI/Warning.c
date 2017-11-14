@@ -10,7 +10,6 @@
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
 #include "../Data/Grid.h"
-#include "../Data/Scenario.h"
 #include "../Data/Screen.h"
 #include "../Data/Settings.h"
 
@@ -22,6 +21,7 @@
 #include "empire/city.h"
 #include "game/settings.h"
 #include "graphics/image.h"
+#include "scenario/property.h"
 
 #include <string.h>
 
@@ -190,7 +190,7 @@ void UI_Warning_checkNewBuilding(int buildingType, int x, int y, int size)
 void UI_Warning_checkFoodStocks(int buildingType)
 {
 	if (!hasWarningAlready && buildingType == BUILDING_HOUSE_VACANT_LOT) {
-		if (Data_CityInfo.population >= 200 && !Data_Scenario.romeSuppliesWheat) {
+		if (Data_CityInfo.population >= 200 && !scenario_property_rome_supplies_wheat()) {
 			if (calc_percentage(Data_CityInfo.foodInfoFoodStoredLastMonth,
 					Data_CityInfo.foodInfoFoodConsumedLastMonth) <= 95) {
 				UI_Warning_show(Warning_MoreFoodNeeded);

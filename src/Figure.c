@@ -11,7 +11,6 @@
 #include "Data/Constants.h"
 #include "Data/Figure.h"
 #include "Data/Grid.h"
-#include "Data/Scenario.h"
 #include "Data/Settings.h"
 
 #include "core/calc.h"
@@ -21,6 +20,7 @@
 #include "figure/name.h"
 #include "figure/trader.h"
 #include "scenario/map.h"
+#include "scenario/property.h"
 #include "sound/effect.h"
 
 #include <string.h>
@@ -257,10 +257,10 @@ void Figure_createFishingPoints()
 static void create_herd(int x, int y)
 {
     int herdType, numAnimals;
-    switch (Data_Scenario.climate) {
-        case Climate_Central: herdType = FIGURE_SHEEP; numAnimals = 10; break;
-        case Climate_Northern: herdType = FIGURE_WOLF; numAnimals = 8; break;
-        case Climate_Desert: herdType = FIGURE_ZEBRA; numAnimals = 12; break;
+    switch (scenario_property_climate()) {
+        case CLIMATE_CENTRAL: herdType = FIGURE_SHEEP; numAnimals = 10; break;
+        case CLIMATE_NORTHERN: herdType = FIGURE_WOLF; numAnimals = 8; break;
+        case CLIMATE_DESERT: herdType = FIGURE_ZEBRA; numAnimals = 12; break;
         default: return;
     }
     int formationId = formation_create_herd(herdType, x, y, numAnimals);

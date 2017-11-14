@@ -5,10 +5,10 @@
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
-#include "Data/Scenario.h"
 
 #include "building/model.h"
 #include "building/storage.h"
+#include "scenario/property.h"
 
 static struct {
 	int buildingIds[100];
@@ -81,7 +81,7 @@ int Resource_getGranaryForStoringFood(
 	int forceOnStockpile, int x, int y, int resource, int distanceFromEntry, int roadNetworkId,
 	int *understaffed, int *xDst, int *yDst)
 {
-	if (Data_Scenario.romeSuppliesWheat) {
+	if (scenario_property_rome_supplies_wheat()) {
 		return 0;
 	}
 	if (!isFood(resource)) {
@@ -130,7 +130,7 @@ int Resource_getGettingGranaryForStoringFood(
 	int x, int y, int resource, int distanceFromEntry, int roadNetworkId,
 	int *xDst, int *yDst)
 {
-	if (Data_Scenario.romeSuppliesWheat) {
+	if (scenario_property_rome_supplies_wheat()) {
 		return 0;
 	}
 	if (!isFood(resource)) {
@@ -178,7 +178,7 @@ int Resource_getGranaryForGettingFood(int srcBuildingId, int *xDst, int *yDst)
 	if (sSrc->empty_all) {
 		return 0;
 	}
-	if (Data_Scenario.romeSuppliesWheat) {
+	if (scenario_property_rome_supplies_wheat()) {
 		return 0;
 	}
 	int numGetting = 0;

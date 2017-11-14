@@ -1,7 +1,9 @@
 #include "Advisors_private.h"
+
 #include "core/calc.h"
+#include "scenario/property.h"
+
 #include "../Event.h"
-#include "../Data/Scenario.h"
 
 void UI_Advisor_Chief_drawBackground(int *advisorHeight)
 {
@@ -76,7 +78,7 @@ void UI_Advisor_Chief_drawBackground(int *advisorHeight)
 	// food stocks
 	Graphics_drawImage(image_group(ID_Graphic_Bullet), baseOffsetX + 40, baseOffsetY + 127);
 	Widget_GameText_draw(61, 4, baseOffsetX + 60, baseOffsetY + 126, FONT_NORMAL_WHITE);
-	if (Data_Scenario.romeSuppliesWheat) {
+	if (scenario_property_rome_supplies_wheat()) {
 		Widget_GameText_draw(61, 26, baseOffsetX + 240, baseOffsetY + 126, FONT_NORMAL_GREEN);
 	} else if (Data_CityInfo.foodInfoFoodSupplyMonths > 0) {
 		width = Widget_GameText_draw(61, 28, baseOffsetX + 240, baseOffsetY + 126, FONT_NORMAL_GREEN);
@@ -89,7 +91,7 @@ void UI_Advisor_Chief_drawBackground(int *advisorHeight)
 	// food consumption
 	Graphics_drawImage(image_group(ID_Graphic_Bullet), baseOffsetX + 40, baseOffsetY + 147);
 	Widget_GameText_draw(61, 62, baseOffsetX + 60, baseOffsetY + 146, FONT_NORMAL_WHITE);
-	if (Data_Scenario.romeSuppliesWheat) {
+	if (scenario_property_rome_supplies_wheat()) {
 		Widget_GameText_draw(61, 26, baseOffsetX + 240, baseOffsetY + 146, FONT_NORMAL_GREEN);
 	} else {
 		int pct = calc_percentage(Data_CityInfo.foodInfoFoodStoredLastMonth, Data_CityInfo.foodInfoFoodConsumedLastMonth);

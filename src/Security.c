@@ -15,7 +15,6 @@
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 #include "Data/Grid.h"
-#include "Data/Scenario.h"
 #include "Data/Settings.h"
 #include "Data/State.h"
 #include "Data/Figure.h"
@@ -25,6 +24,7 @@
 #include "core/random.h"
 #include "figure/type.h"
 #include "game/tutorial.h"
+#include "scenario/property.h"
 #include "sound/effect.h"
 
 static int burningRuinSpreadDirection;
@@ -36,6 +36,7 @@ void Security_Tick_updateFireSpreadDirection()
 
 void Security_Tick_updateBurningRuins()
 {
+    scenario_climate climate = scenario_property_climate();
 	int recalculateTerrain = 0;
 	building_list_burning_clear();
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
@@ -58,7 +59,7 @@ void Security_Tick_updateBurningRuins()
 			continue;
 		}
 		building_list_burning_add(i);
-		if (Data_Scenario.climate == Climate_Desert) {
+		if (climate == CLIMATE_DESERT) {
 			if (b->fireDuration & 3) { // check spread every 4 ticks
 				continue;
 			}
@@ -301,7 +302,8 @@ void Security_Tick_checkFireCollapse()
 {
 	Data_CityInfo.numProtestersThisMonth = 0;
 	Data_CityInfo.numCriminalsThisMonth = 0;
-	
+
+	scenario_climate climate = scenario_property_climate();
 	int recalculateTerrain = 0;
 	int randomGlobal = random_byte() & 7;
 	for (int i = 1; i <= Data_Buildings_Extra.highestBuildingIdInUse; i++) {
@@ -342,10 +344,9 @@ void Security_Tick_checkFireCollapse()
 			if (tutorial_extra_fire_risk()) {
 				b->fireRisk += 5;
 			}
-			if (Data_Scenario.climate == Climate_Northern) {
+			if (climate == CLIMATE_NORTHERN) {
 				b->fireRisk = 0;
-			}
-			if (Data_Scenario.climate == Climate_Desert) {
+			} else if (climate == CLIMATE_DESERT) {
 				b->fireRisk += 3;
 			}
 		}

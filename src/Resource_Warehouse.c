@@ -8,7 +8,6 @@
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 #include "Data/Grid.h"
-#include "Data/Scenario.h"
 
 #include "building/count.h"
 #include "building/model.h"
@@ -16,6 +15,7 @@
 #include "empire/trade_prices.h"
 #include "graphics/image.h"
 #include "game/tutorial.h"
+#include "scenario/property.h"
 
 static int granaryGettingResource[7];
 static int granaryAcceptingResource[7];
@@ -369,7 +369,7 @@ void Resource_removeExportedResourceFromWarehouseSpace(int spaceId, int resource
 
 static int determineGranaryAcceptFoods()
 {
-	if (Data_Scenario.romeSuppliesWheat) {
+	if (scenario_property_rome_supplies_wheat()) {
 		return 0;
 	}
 	for (int i = 0; i < Resource_MaxFood; i++) {
@@ -399,7 +399,7 @@ static int determineGranaryAcceptFoods()
 
 static int determineGranaryGetFoods()
 {
-	if (Data_Scenario.romeSuppliesWheat) {
+	if (scenario_property_rome_supplies_wheat()) {
 		return 0;
 	}
 	for (int i = 0; i < Resource_MaxFood; i++) {
@@ -553,7 +553,7 @@ int Resource_determineWarehouseWorkerTask(int buildingId, int *resource)
 		}
 	}
 	// deliver food to accepting granary
-	if (determineGranaryAcceptFoods() && !Data_Scenario.romeSuppliesWheat) {
+	if (determineGranaryAcceptFoods() && !scenario_property_rome_supplies_wheat()) {
 		spaceId = buildingId;
 		for (int i = 0; i < 8; i++) {
 			spaceId = Data_Buildings[spaceId].nextPartBuildingId;

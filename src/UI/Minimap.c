@@ -12,6 +12,7 @@
 
 #include "figure/type.h"
 #include "graphics/image.h"
+#include "scenario/property.h"
 
 #define FOREACH_XY_VIEW(block)\
 	int odd = 0;\
@@ -55,13 +56,11 @@ void UI_Minimap_draw(int xOffset, int yOffset, int widthTiles, int heightTiles)
 	Graphics_setClipRectangle(xOffset, yOffset, 2 * widthTiles, heightTiles);
 	
 	soldierColor = COLOR_SOLDIER;
-	if (Data_Scenario.climate == Climate_Central) {
-		enemyColor = COLOR_ENEMY_CENTRAL;
-	} else if (Data_Scenario.climate == Climate_Northern) {
-		enemyColor = COLOR_ENEMY_NORTHERN;
-	} else {
-		enemyColor = COLOR_ENEMY_DESERT;
-	}
+    switch (scenario_property_climate()) {
+        case CLIMATE_CENTRAL: enemyColor = COLOR_ENEMY_CENTRAL; break;
+        case CLIMATE_NORTHERN: enemyColor = COLOR_ENEMY_NORTHERN; break;
+        default: enemyColor = COLOR_ENEMY_DESERT; break;
+    }
 
 	setBounds(xOffset, yOffset, widthTiles, heightTiles);
 	drawMinimap(xOffset, yOffset, widthTiles, heightTiles);

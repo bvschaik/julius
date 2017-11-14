@@ -28,6 +28,7 @@
 #include "empire/type.h"
 #include "game/time.h"
 #include "game/tutorial.h"
+#include "scenario/property.h"
 #include "sound/effect.h"
 
 #include <string.h>
@@ -400,7 +401,7 @@ void Event_handleRandomEvents()
 			if (Data_Scenario.landTradeProblemEnabled) {
 				if (Data_CityInfo.tradeNumOpenLandRoutes > 0) {
 					Data_CityInfo.tradeLandProblemDuration = 48;
-					if (Data_Scenario.climate == Climate_Desert) {
+					if (scenario_property_climate() == CLIMATE_DESERT) {
 						city_message_post(1, MESSAGE_LAND_TRADE_DISRUPTED_SANDSTORMS, 0, 0);
 					} else {
 						city_message_post(1, MESSAGE_LAND_TRADE_DISRUPTED_LANDSLIDES, 0, 0);

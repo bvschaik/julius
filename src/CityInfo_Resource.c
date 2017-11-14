@@ -11,6 +11,7 @@
 #include "core/calc.h"
 #include "empire/city.h"
 #include "game/tutorial.h"
+#include "scenario/property.h"
 
 void CityInfo_Resource_calculateAvailableResources()
 {
@@ -98,7 +99,7 @@ void CityInfo_Resource_calculateFood()
 		Data_CityInfo.foodInfoFoodSupplyMonths =
 			Data_CityInfo.foodInfoFoodStoredInGranaries > 0 ? 1 : 0;
 	}
-	if (Data_Scenario.romeSuppliesWheat) {
+	if (scenario_property_rome_supplies_wheat()) {
 		Data_CityInfo.foodInfoFoodTypesAvailable = 1;
 		Data_CityInfo.foodInfoFoodSupplyMonths = 12;
 	}
@@ -107,7 +108,7 @@ void CityInfo_Resource_calculateFood()
 void CityInfo_Resource_calculateFoodAndSupplyRomeWheat()
 {
 	CityInfo_Resource_calculateFood();
-	if (Data_Scenario.romeSuppliesWheat) {
+	if (scenario_property_rome_supplies_wheat()) {
 		for (int i = 1; i < MAX_BUILDINGS; i++) {
 			if (BuildingIsInUse(i) && Data_Buildings[i].type == BUILDING_MARKET) {
 				Data_Buildings[i].data.market.inventory[Inventory_Wheat] = 200;
@@ -131,7 +132,7 @@ void CityInfo_Resource_housesConsumeFood()
 				amountPerType /= numTypes;
 			}
 			b->data.house.numFoods = 0;
-			if (Data_Scenario.romeSuppliesWheat) {
+			if (scenario_property_rome_supplies_wheat()) {
 				Data_CityInfo.foodInfoFoodTypesEaten = 1;
 				Data_CityInfo.foodInfoFoodTypesAvailable = 1;
 				b->data.house.inventory[Inventory_Wheat] = amountPerType;

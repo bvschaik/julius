@@ -17,6 +17,7 @@
 #include "core/random.h"
 #include "game/settings.h"
 #include "graphics/image.h"
+#include "scenario/property.h"
 #include "sound/system.h"
 
 #include <string.h>
@@ -56,7 +57,7 @@ int Game_init()
 		return 0;
 	}
 	
-	if (!image_load_climate(Climate_Central)) {
+	if (!image_load_climate(CLIMATE_CENTRAL)) {
 		errlog("ERR: unable to load main graphics");
 		return 0;
 	}

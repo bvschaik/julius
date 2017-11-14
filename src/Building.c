@@ -18,7 +18,6 @@
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 #include "Data/Grid.h"
-#include "Data/Scenario.h"
 #include "Data/Settings.h"
 #include "Data/State.h"
 #include "Data/Figure.h"
@@ -28,6 +27,7 @@
 #include "city/message.h"
 #include "graphics/image.h"
 #include "scenario/map.h"
+#include "scenario/property.h"
 #include "sound/effect.h"
 
 #include <string.h>
@@ -782,7 +782,7 @@ void Building_Industry_updateProduction()
 
 void Building_Industry_updateDoubleWheatProduction()
 {
-	if (Data_Scenario.climate == Climate_Northern) {
+	if (scenario_property_climate() == CLIMATE_NORTHERN) {
 		return;
 	}
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
@@ -893,7 +893,7 @@ int Building_Market_getDestinationGranaryWarehouse(int marketId)
 			continue;
 		}
 		if (b->type == BUILDING_GRANARY) {
-			if (Data_Scenario.romeSuppliesWheat) {
+			if (scenario_property_rome_supplies_wheat()) {
 				continue;
 			}
 			// foods

@@ -3,6 +3,7 @@
 #include "../Data/Scenario.h"
 
 #include "game/time.h"
+#include "scenario/property.h"
 
 static void drawHistoryGraph(int fullSize, int x, int y);
 static void drawCensusGraph(int fullSize, int x, int y);
@@ -114,7 +115,7 @@ void UI_Advisor_Population_drawBackground(int *advisorHeight)
 	Graphics_drawImage(graphicId, baseOffsetX + 56, baseOffsetY + 398);
 
 	// food stores
-	if (Data_Scenario.romeSuppliesWheat) {
+	if (scenario_property_rome_supplies_wheat()) {
 		Widget_GameText_draw(55, 11, baseOffsetX + 75, baseOffsetY + 342, FONT_NORMAL_WHITE);
 	} else {
 		width = Widget_GameText_drawNumberWithDescription(

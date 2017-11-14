@@ -10,9 +10,9 @@
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
 #include "../Data/Figure.h"
-#include "../Data/Scenario.h"
 
 #include "building/storage.h"
+#include "scenario/property.h"
 
 static void toggleResourceState(int param1, int param2);
 static void granaryOrders(int index, int param2);
@@ -123,7 +123,7 @@ void UI_BuildingInfo_drawGranary(BuildingInfoContext *c)
 	struct Data_Building *b = &Data_Buildings[c->buildingId];
 	if (!c->hasRoadAccess) {
 		DRAW_DESC_AT(40, 69, 25);
-	} else if (Data_Scenario.romeSuppliesWheat) {
+	} else if (scenario_property_rome_supplies_wheat()) {
 		DRAW_DESC_AT(40, 98, 4);
 	} else {
 		int totalStored = 0;

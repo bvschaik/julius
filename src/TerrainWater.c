@@ -7,7 +7,6 @@
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
-#include "Data/Scenario.h"
 #include "Data/Figure.h"
 
 void Terrain_addWatersideBuildingToGrids(int buildingId, int x, int y, int size, int graphicId)

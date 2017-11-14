@@ -9,11 +9,11 @@
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 #include "Data/Grid.h"
-#include "Data/Scenario.h"
 #include "Data/Settings.h"
 
 #include "building/list.h"
 #include "graphics/image.h"
+#include "scenario/property.h"
 
 #include <string.h>
 
@@ -187,7 +187,7 @@ void UtilityManagement_updateReservoirFountain()
 		if ((Data_Grid_terrain[b->gridOffset] & Terrain_ReservoirRange) && b->numWorkers) {
 			b->hasWaterAccess = 1;
 			Terrain_setWithRadius(b->x, b->y, 1,
-				Data_Scenario.climate == Climate_Desert ? 3 : 4,
+				scenario_property_climate() == CLIMATE_DESERT ? 3 : 4,
 				Terrain_FountainRange);
 		} else {
 			b->hasWaterAccess = 0;

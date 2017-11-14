@@ -318,12 +318,6 @@ enum {
 };
 
 enum {
-	Climate_Central = 0,
-	Climate_Northern = 1,
-	Climate_Desert = 2
-};
-
-enum {
 	LaborCategory_IndustryCommerce = 0,
 	LaborCategory_FoodProduction = 1,
 	LaborCategory_Engineering = 2,
