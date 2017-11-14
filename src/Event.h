@@ -1,15 +1,6 @@
 #ifndef EVENT_H
 #define EVENT_H
 
-enum {
-	RequestState_Normal = 0,
-	RequestState_Overdue = 1,
-	RequestState_Dispatched = 2,
-	RequestState_DispatchedLate = 3,
-	RequestState_Ignored = 4,
-	RequestState_Received = 5,
-};
-
 void Event_initInvasions();
 void Event_handleInvasions();
 int Event_startInvasionLocalUprisingFromMars();

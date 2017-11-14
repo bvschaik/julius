@@ -76,3 +76,16 @@ int scenario_criteria_survival_years()
 {
     return Data_Scenario.winCriteria.survivalYears;
 }
+
+int scenario_criteria_milestone_year(int percentage)
+{
+    switch (percentage) {
+        case 25:
+            return Data_Scenario.startYear + Data_Scenario.milestone25;
+        case 50:
+            return Data_Scenario.startYear + Data_Scenario.milestone50;
+        case 75:
+            return Data_Scenario.startYear + Data_Scenario.milestone75;
+    }
+    return 0;
+}
