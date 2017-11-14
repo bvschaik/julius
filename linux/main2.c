@@ -9,7 +9,6 @@
 #include "../src/core/time.h"
 #include "../src/Runner.h"
 #include "../src/Screen.h"
-#include "../src/Data/AllData.h"
 #include "../src/Cursor.h"
 #include "../src/KeyboardInput.h"
 #include "../src/KeyboardHotkey.h"
@@ -17,6 +16,12 @@
 #include "../src/Graphics.h" // debug
 #include "../src/System.h"
 #include "../src/Game.h"
+
+// debug data:
+#include "../src/Data/Scenario.h"
+#include "../src/Data/CityInfo.h"
+#include "../src/Data/Building.h"
+#include "../src/Data/Screen.h"
 
 #include "core/lang.h"
 #include "game/settings.h"
