@@ -1,7 +1,6 @@
 #include "trader.h"
 
 #include "figure.h"
-#include "playermessage.h"
 #include "resource.h"
 #include "terrain.h"
 

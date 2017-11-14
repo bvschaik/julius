@@ -6,7 +6,6 @@
 #include "figure.h"
 #include "figureaction.h"
 #include "formation.h"
-#include "playermessage.h"
 #include "routing.h"
 #include "sidebarmenu.h"
 #include "sound.h"
@@ -248,7 +247,7 @@ static void generateMugger(int buildingId)
                 {
                     moneyStolen = 400 - random_byte() / 2;
                 }
-                PlayerMessage_post(1, Message_52_Theft, moneyStolen, Data_Figures[figureId].gridOffset);
+                city_message_post(1, Message_52_Theft, moneyStolen, Data_Figures[figureId].gridOffset);
                 Data_CityInfo.financeStolenThisYear += moneyStolen;
                 Data_CityInfo.treasury -= moneyStolen;
                 Data_CityInfo.financeSundriesThisYear += moneyStolen;

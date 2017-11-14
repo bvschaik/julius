@@ -7,7 +7,7 @@
 #include "cityview.h"
 #include "formation.h"
 #include "graphics.h"
-#include "playermessage.h"
+#include "city/message.h"
 #include "resource.h"
 #include "video.h"
 #include "widget_text.h"

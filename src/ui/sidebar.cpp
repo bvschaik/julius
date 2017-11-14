@@ -9,7 +9,7 @@
 
 #include "cityview.h"
 #include "graphics.h"
-#include "playermessage.h"
+#include "city/message.h"
 #include "sidebarmenu.h"
 #include "sound.h"
 #include "terrain.h"
@@ -173,7 +173,7 @@ static void drawNumberOfMessages()
 {
     if (UI_Window_getId() == Window_City && !Data_State.sidebarCollapsed)
     {
-        int totalMessages = Data_Message.totalMessages;
+        int totalMessages = city_message_count();
         buttonBuildExpanded[12].enabled = Data_State.undoReady && Data_State.undoAvailable;
         buttonBuildExpanded[13].enabled = totalMessages > 0;
         buttonBuildExpanded[14].enabled = Data_Message.hotspotCount > 0;
@@ -399,7 +399,7 @@ static void buttonHelp(int param1, int param2)
 
 static void buttonGoToProblem(int param1, int param2)
 {
-    int gridOffset = PlayerMessage_getNextProblemAreaGridOffset();
+    int gridOffset = city_message_next_problem_area_grid_offset();
     if (gridOffset)
     {
         CityView_goToGridOffset(gridOffset);

@@ -4,7 +4,7 @@
 #include "cityinfo.h"
 #include "figure.h"
 #include "formation.h"
-#include "playermessage.h"
+#include "city/message.h"
 #include "resource.h"
 #include "routing.h"
 #include "sidebarmenu.h"
@@ -73,7 +73,7 @@ void Event_handleDistantBattle()
                 Data_CityInfo.distantBattleCityMonthsUntilRoman <= 0)
         {
 
-            PlayerMessage_post(1, Message_30_CaesarRequestsArmy, 0, 0);
+            city_message_post(1, Message_30_CaesarRequestsArmy, 0, 0);
             Data_CityInfo.distantBattleEnemyMonthsTraveled = 1;
             Data_CityInfo.distantBattleRomanMonthsTraveled = 1;
             Data_CityInfo.distantBattleMonthsToBattle = 24;
@@ -146,14 +146,14 @@ static void fightDistantBattle()
 {
     if (Data_CityInfo.distantBattleRomanMonthsToTravel <= 0)
     {
-        PlayerMessage_post(1, Message_84_DistantBattleLostNoTroops, 0, 0);
+        city_message_post(1, Message_84_DistantBattleLostNoTroops, 0, 0);
         CityInfo_Ratings_changeFavor(-50);
         setDistantBattleCityForeign();
         Data_CityInfo.distantBattleCityMonthsUntilRoman = 24;
     }
     else if (Data_CityInfo.distantBattleRomanMonthsToTravel > 2)
     {
-        PlayerMessage_post(1, Message_85_DistantBattleLostTooLate, 0, 0);
+        city_message_post(1, Message_85_DistantBattleLostTooLate, 0, 0);
         CityInfo_Ratings_changeFavor(-25);
         setDistantBattleCityForeign();
         Data_CityInfo.distantBattleCityMonthsUntilRoman = 24;
@@ -161,7 +161,7 @@ static void fightDistantBattle()
     }
     else if (!playerWonDistantBattle())
     {
-        PlayerMessage_post(1, Message_86_DistantBattleLostTooWeak, 0, 0);
+        city_message_post(1, Message_86_DistantBattleLostTooWeak, 0, 0);
         CityInfo_Ratings_changeFavor(-10);
         setDistantBattleCityForeign();
         Data_CityInfo.distantBattleCityMonthsUntilRoman = 24;
@@ -170,7 +170,7 @@ static void fightDistantBattle()
     }
     else
     {
-        PlayerMessage_post(1, Message_87_DistantBattleWon, 0, 0);
+        city_message_post(1, Message_87_DistantBattleWon, 0, 0);
         CityInfo_Ratings_changeFavor(25);
         Data_CityInfo.triumphalArchesAvailable++;
         SidebarMenu_enableBuildingMenuItems();
@@ -194,12 +194,12 @@ static void updateDistantBattleAftermath()
             if (Data_CityInfo.distantBattleCityMonthsUntilRoman)
             {
                 // soldiers return - not in time
-                PlayerMessage_post(1, Message_88_TroopsReturnFailed, 0, Data_CityInfo.exitPointGridOffset);
+                city_message_post(1, Message_88_TroopsReturnFailed, 0, Data_CityInfo.exitPointGridOffset);
             }
             else
             {
                 // victorious
-                PlayerMessage_post(1, Message_89_TroopsReturnVictorious, 0, Data_CityInfo.exitPointGridOffset);
+                city_message_post(1, Message_89_TroopsReturnVictorious, 0, Data_CityInfo.exitPointGridOffset);
             }
             Data_CityInfo.distantBattleRomanMonthsTraveled = 0;
             Formation_legionsReturnFromDistantBattle();
@@ -210,7 +210,7 @@ static void updateDistantBattleAftermath()
         Data_CityInfo.distantBattleCityMonthsUntilRoman--;
         if (Data_CityInfo.distantBattleCityMonthsUntilRoman <= 0)
         {
-            PlayerMessage_post(1, Message_90_DistantBattleCityRetaken, 0, 0);
+            city_message_post(1, Message_90_DistantBattleCityRetaken, 0, 0);
             setDistantBattleCityVulnerable();
         }
     }
@@ -319,12 +319,12 @@ void Event_handleRequests()
             {
                 if (state == RequestState_Dispatched)
                 {
-                    PlayerMessage_post(1, Message_32_RequestReceived, i, 0);
+                    city_message_post(1, Message_32_RequestReceived, i, 0);
                     CityInfo_Ratings_changeFavor(Data_Scenario.requests_favor[i]);
                 }
                 else
                 {
-                    PlayerMessage_post(1, Message_35_RequestReceivedLate, i, 0);
+                    city_message_post(1, Message_35_RequestReceivedLate, i, 0);
                     CityInfo_Ratings_changeFavor(Data_Scenario.requests_favor[i] / 2);
                 }
                 Data_Scenario.requests_state[i] = RequestState_Received;
@@ -342,11 +342,11 @@ void Event_handleRequests()
                     if (Data_Scenario.requests_monthsToComply[i] == 12)
                     {
                         // reminder
-                        PlayerMessage_post(1, Message_31_RequestReminder, i, 0);
+                        city_message_post(1, Message_31_RequestReminder, i, 0);
                     }
                     if (Data_Scenario.requests_monthsToComply[i] <= 0)
                     {
-                        PlayerMessage_post(1, Message_33_RequestRefused, i, 0);
+                        city_message_post(1, Message_33_RequestRefused, i, 0);
                         Data_Scenario.requests_state[i] = RequestState_Overdue;
                         Data_Scenario.requests_monthsToComply[i] = 24;
                         CityInfo_Ratings_changeFavor(-3);
@@ -357,7 +357,7 @@ void Event_handleRequests()
                 {
                     if (Data_Scenario.requests_monthsToComply[i] <= 0)
                     {
-                        PlayerMessage_post(1, Message_34_RequestRefusedOverdue, i, 0);
+                        city_message_post(1, Message_34_RequestRefusedOverdue, i, 0);
                         Data_Scenario.requests_state[i] = RequestState_Ignored;
                         Data_Scenario.requests_isVisible[i] = 0;
                         CityInfo_Ratings_changeFavor(-5);
@@ -368,7 +368,7 @@ void Event_handleRequests()
                         Data_CityInfo.resourceStored[Data_Scenario.requests.resourceId[i]] >= Data_Scenario.requests.amount[i])
                 {
                     Data_Scenario.requests_canComplyDialogShown[i] = 1;
-                    PlayerMessage_post(1, Message_115_RequestCanComply, i, 0);
+                    city_message_post(1, Message_115_RequestCanComply, i, 0);
                 }
             }
             else
@@ -389,15 +389,15 @@ void Event_handleRequests()
                     }
                     if (Data_Scenario.requests.resourceId[i] == RESOURCE_DENARII)
                     {
-                        PlayerMessage_post(1, Message_29_CaesarRequestsMoney, i, 0);
+                        city_message_post(1, Message_29_CaesarRequestsMoney, i, 0);
                     }
                     else if (Data_Scenario.requests.resourceId[i] == RESOURCES_TROOPS)
                     {
-                        PlayerMessage_post(1, Message_30_CaesarRequestsArmy, i, 0);
+                        city_message_post(1, Message_30_CaesarRequestsArmy, i, 0);
                     }
                     else
                     {
-                        PlayerMessage_post(1, Message_28_CaesarRequestsGoods, i, 0);
+                        city_message_post(1, Message_28_CaesarRequestsGoods, i, 0);
                     }
                 }
             }
@@ -466,7 +466,7 @@ void Event_handleDemandChanges()
         {
             if (trade_route_increase_limit(route, resource) && empire_city_is_trade_route_open(route))
             {
-                PlayerMessage_post(1, Message_74_IncreasedTrading, cityId, resource);
+                city_message_post(1, Message_74_IncreasedTrading, cityId, resource);
             }
         }
         else
@@ -475,11 +475,11 @@ void Event_handleDemandChanges()
             {
                 if (trade_route_limit(route, resource) > 0)
                 {
-                    PlayerMessage_post(1, Message_75_DecreasedTrading, cityId, resource);
+                    city_message_post(1, Message_75_DecreasedTrading, cityId, resource);
                 }
                 else
                 {
-                    PlayerMessage_post(1, Message_76_TradeStopped, cityId, resource);
+                    city_message_post(1, Message_76_TradeStopped, cityId, resource);
                 }
             }
         }
@@ -517,14 +517,14 @@ void Event_handlePricesChanges()
         {
             if (trade_price_change(resource, amount))
             {
-                PlayerMessage_post(1, Message_78_PriceIncreased, amount, resource);
+                city_message_post(1, Message_78_PriceIncreased, amount, resource);
             }
         }
         else
         {
             if (trade_price_change(resource, -amount))
             {
-                PlayerMessage_post(1, Message_79_PriceDecreased, amount, resource);
+                city_message_post(1, Message_79_PriceDecreased, amount, resource);
             }
         }
     }
@@ -546,8 +546,8 @@ void Event_handleEarthquake()
             Data_Event.earthquake.duration = 0;
             Data_Event.earthquake.delay = 0;
             advanceEarthquakeToTile(Data_Event.earthquake.expand[0].x, Data_Event.earthquake.expand[0].y);
-            PlayerMessage_post(1, Message_62_Earthquake, 0,
-                               GridOffset(Data_Event.earthquake.expand[0].x, Data_Event.earthquake.expand[0].y));
+            city_message_post(1, Message_62_Earthquake, 0,
+                              GridOffset(Data_Event.earthquake.expand[0].x, Data_Event.earthquake.expand[0].y));
         }
     }
     else if (Data_Event.earthquake.state == SpecialEvent_InProgress)
@@ -710,7 +710,7 @@ void Event_handleGladiatorRevolt()
             if (building_count_active(BUILDING_GLADIATOR_SCHOOL) > 0)
             {
                 Data_Event.gladiatorRevolt.state = SpecialEvent_InProgress;
-                PlayerMessage_post(1, Message_63_GladiatorRevolt, 0, 0);
+                city_message_post(1, Message_63_GladiatorRevolt, 0, 0);
             }
             else
             {
@@ -723,7 +723,7 @@ void Event_handleGladiatorRevolt()
         if (Data_Event.gladiatorRevolt.endMonth == game_time_month())
         {
             Data_Event.gladiatorRevolt.state = SpecialEvent_Finished;
-            PlayerMessage_post(1, Message_73_GladiatorRevoltFinished, 0, 0);
+            city_message_post(1, Message_73_GladiatorRevoltFinished, 0, 0);
         }
     }
 }
@@ -740,7 +740,7 @@ void Event_handleEmperorChange()
                 game_time_month() == Data_Event.emperorChange.month)
         {
             Data_Event.emperorChange.state = 1; // done
-            PlayerMessage_post(1, Message_64_EmperorChange, 0, 0);
+            city_message_post(1, Message_64_EmperorChange, 0, 0);
         }
     }
 }
@@ -764,7 +764,7 @@ void Event_handleRandomEvents()
                 {
                     Data_CityInfo.wagesRome = 45;
                 }
-                PlayerMessage_post(1, Message_68_RomeRaisesWages, 0, 0);
+                city_message_post(1, Message_68_RomeRaisesWages, 0, 0);
             }
         }
         break;
@@ -774,7 +774,7 @@ void Event_handleRandomEvents()
             if (Data_CityInfo.wagesRome > 5)
             {
                 Data_CityInfo.wagesRome -= 1 + (random_byte_alt() & 3);
-                PlayerMessage_post(1, Message_69_RomeLowersWages, 0, 0);
+                city_message_post(1, Message_69_RomeLowersWages, 0, 0);
             }
         }
         break;
@@ -786,11 +786,11 @@ void Event_handleRandomEvents()
                 Data_CityInfo.tradeLandProblemDuration = 48;
                 if (Data_Scenario.climate == Climate_Desert)
                 {
-                    PlayerMessage_post(1, Message_65_LandTradeDisruptedSandstorms, 0, 0);
+                    city_message_post(1, Message_65_LandTradeDisruptedSandstorms, 0, 0);
                 }
                 else
                 {
-                    PlayerMessage_post(1, Message_67_LandTradeDisruptedLandslides, 0, 0);
+                    city_message_post(1, Message_67_LandTradeDisruptedLandslides, 0, 0);
                 }
             }
         }
@@ -801,7 +801,7 @@ void Event_handleRandomEvents()
             if (Data_CityInfo.tradeNumOpenSeaRoutes > 0)
             {
                 Data_CityInfo.tradeSeaProblemDuration = 48;
-                PlayerMessage_post(1, Message_66_SeaTradeDisrupted, 0, 0);
+                city_message_post(1, Message_66_SeaTradeDisrupted, 0, 0);
             }
         }
         break;
@@ -824,7 +824,7 @@ void Event_handleRandomEvents()
                     change = -25;
                 }
                 CityInfo_Population_changeHealthRate(change);
-                PlayerMessage_post(1, Message_70_ContaminatedWater, 0, 0);
+                city_message_post(1, Message_70_ContaminatedWater, 0, 0);
             }
         }
         break;
@@ -834,7 +834,7 @@ void Event_handleRandomEvents()
             int gridOffset = Building_collapseFirstOfType(BUILDING_IRON_MINE);
             if (gridOffset)
             {
-                PlayerMessage_post(1, Message_71_IronMineCollaped, 0, gridOffset);
+                city_message_post(1, Message_71_IronMineCollaped, 0, gridOffset);
             }
         }
         break;
@@ -844,7 +844,7 @@ void Event_handleRandomEvents()
             int gridOffset = Building_collapseFirstOfType(BUILDING_CLAY_PIT);
             if (gridOffset)
             {
-                PlayerMessage_post(1, Message_72_ClayPitFlooded, 0, gridOffset);
+                city_message_post(1, Message_72_ClayPitFlooded, 0, gridOffset);
             }
         }
         break;

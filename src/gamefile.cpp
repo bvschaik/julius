@@ -5,7 +5,7 @@
 #include "event.h"
 #include "figure.h"
 #include "loader.h"
-#include "playermessage.h"
+#include "city/message.h"
 #include "resource.h"
 #include "routing.h"
 #include "sidebarmenu.h"
@@ -177,10 +177,8 @@ typedef struct
     buffer *Data_Event_earthquake_delay;
     buffer *Data_Event_earthquake_expand;
     buffer *Data_Event_emperorChange_state;
-    buffer *Data_Message_messages;
-    buffer *Data_Message_nextMessageSequence;
-    buffer *Data_Message_totalMessages;
-    buffer *Data_Message_currentMessageId;
+    buffer *messages;
+    buffer *message_extra;
     buffer *population_messages;
     buffer *message_counts;
     buffer *message_delays;
@@ -348,10 +346,8 @@ void init_savegame_data()
     state->Data_Event_earthquake_delay = create_savegame_piece(4, 0);
     state->Data_Event_earthquake_expand = create_savegame_piece(32, 0);
     state->Data_Event_emperorChange_state = create_savegame_piece(4, 0);
-    state->Data_Message_messages = create_savegame_piece(16000, 1);
-    state->Data_Message_nextMessageSequence = create_savegame_piece(4, 0);
-    state->Data_Message_totalMessages = create_savegame_piece(4, 0);
-    state->Data_Message_currentMessageId = create_savegame_piece(4, 0);
+    state->messages = create_savegame_piece(16000, 1);
+    state->message_extra = create_savegame_piece(12, 0);
     state->population_messages = create_savegame_piece(10, 0);
     state->message_counts = create_savegame_piece(80, 0);
     state->message_delays = create_savegame_piece(80, 0);
@@ -524,12 +520,10 @@ static void savegame_deserialize(savegame_state *state)
     read_all_from_buffer(state->Data_Event_earthquake_delay, &Data_Event.earthquake.delay);
     read_all_from_buffer(state->Data_Event_earthquake_expand, &Data_Event.earthquake.expand);
     read_all_from_buffer(state->Data_Event_emperorChange_state, &Data_Event.emperorChange.state);
-    read_all_from_buffer(state->Data_Message_messages, &Data_Message.messages);
-    read_all_from_buffer(state->Data_Message_nextMessageSequence, &Data_Message.nextMessageSequence);
-    read_all_from_buffer(state->Data_Message_totalMessages, &Data_Message.totalMessages);
-    read_all_from_buffer(state->Data_Message_currentMessageId, &Data_Message.currentMessageId);
 
-    city_message_load_state(state->message_counts, state->message_delays, state->population_messages);
+    city_message_load_state(state->messages, state->message_extra,
+                            state->message_counts, state->message_delays,
+                            state->population_messages);
 
     read_all_from_buffer(state->Data_Figure_Extra_createdSequence, &Data_Figure_Extra.createdSequence);
     read_all_from_buffer(state->Data_Settings_startingFavor, &Data_Settings.startingFavor);
@@ -659,13 +653,9 @@ static void savegame_serialize(savegame_state *state)
     write_all_to_buffer(state->Data_Event_earthquake_delay, &Data_Event.earthquake.delay);
     write_all_to_buffer(state->Data_Event_earthquake_expand, &Data_Event.earthquake.expand);
     write_all_to_buffer(state->Data_Event_emperorChange_state, &Data_Event.emperorChange.state);
-    write_all_to_buffer(state->Data_Message_messages, &Data_Message.messages);
-    write_all_to_buffer(state->Data_Message_nextMessageSequence, &Data_Message.nextMessageSequence);
-    write_all_to_buffer(state->Data_Message_totalMessages, &Data_Message.totalMessages);
-    write_all_to_buffer(state->Data_Message_currentMessageId, &Data_Message.currentMessageId);
-
-    city_message_save_state(state->message_counts, state->message_delays, state->population_messages);
-
+    city_message_save_state(state->messages, state->message_extra,
+                            state->message_counts, state->message_delays,
+                            state->population_messages);
     write_all_to_buffer(state->Data_Figure_Extra_createdSequence, &Data_Figure_Extra.createdSequence);
     write_all_to_buffer(state->Data_Settings_startingFavor, &Data_Settings.startingFavor);
     write_all_to_buffer(state->Data_Settings_personalSavingsLastMission, &Data_Settings.personalSavingsLastMission);
@@ -866,7 +856,7 @@ static void setupFromSavedGame()
     Building_GameTick_checkAccessToRome();
     Resource_gatherGranaryGettingInfo();
     SidebarMenu_enableBuildingMenuItemsAndButtons();
-    PlayerMessage_initProblemArea();
+    city_message_init_problem_areas();
 
     Sound_City_init();
     Sound_Music_reset();

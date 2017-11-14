@@ -11,7 +11,6 @@
 #include "houseevolution.h"
 #include "housepopulation.h"
 #include "natives.h"
-#include "playermessage.h"
 #include "resource.h"
 #include "routing.h"
 #include "security.h"
@@ -225,7 +224,7 @@ static void advanceMonth()
     TerrainGraphics_updateAllRoads();
     TerrainGraphics_updateRegionWater(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
     Routing_determineLandCitizen();
-    PlayerMessage_sortMessages();
+    city_message_sort_and_compact();
 
     if (game_time_advance_month())
     {

@@ -6,7 +6,7 @@
 #include "widget_text.h"
 
 #include "graphics.h"
-#include "playermessage.h"
+#include "city/message.h"
 #include "widget.h"
 
 #include "data/cityinfo.hpp"
@@ -37,7 +37,7 @@ void UI_City_drawForeground()
     UI_CityBuildings_drawBuildingCost();
     if (UI_Window_getId() == Window_City)
     {
-        PlayerMessage_processQueue();
+        city_message_process_queue();
     }
 }
 

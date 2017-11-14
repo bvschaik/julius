@@ -1,6 +1,5 @@
 #include "tutorial.h"
 
-#include "playermessage.h"
 #include "sidebarmenu.h"
 
 #include "data/cityinfo.hpp"
@@ -225,7 +224,7 @@ static void refresh_buttons()
 
 static void post_message(int message)
 {
-    PlayerMessage_post(1, message, 0, 0);
+    city_message_post(1, message, 0, 0);
 }
 
 int Tutorial::handle_fire()

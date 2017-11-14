@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.6)
+ cmake_minimum_required(VERSION 2.6)
 project(julius)
 
 option(BUILD_SDL2STATIC "Static sdl2" ON)

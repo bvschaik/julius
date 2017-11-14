@@ -1,7 +1,7 @@
 #include "figureaction_private.h"
 
 #include "figure.h"
-#include "playermessage.h"
+#include "city/message.h"
 #include "terrain.h"
 
 #include "data/cityinfo.hpp"

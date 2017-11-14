@@ -13,7 +13,7 @@
 #include "grid.h"
 #include "loader.h"
 #include "natives.h"
-#include "playermessage.h"
+#include "city/message.h"
 #include "routing.h"
 #include "sidebarmenu.h"
 #include "sound.h"
@@ -114,7 +114,7 @@ void Scenario_initialize(const char *scenarioName)
     }
 
     SidebarMenu_enableBuildingMenuItemsAndButtons();
-    PlayerMessage_initList();
+    city_message_init_scenario();
 }
 
 static void clearBookmarks()
@@ -142,7 +142,7 @@ static void initCustomScenario(const char *scenarioName)
     Data_State.selectedBuilding.type = 0;
     CityInfo_init();
     Data_CityInfo_Extra.ciid = 1;
-    PlayerMessage_initList();
+    city_message_init_scenario();
     Loader_GameState_init();
     Animation::resetTimers();
     Sound_City_init();

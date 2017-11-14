@@ -1,7 +1,6 @@
 #include "figureaction_private.h"
 
 #include "figure.h"
-#include "playermessage.h"
 #include "resource.h"
 #include "terrain.h"
 #include "trader.h"
@@ -645,7 +644,7 @@ void FigureAction_tradeShip(int figureId)
             f->state = FigureState_Dead;
             if (!city_message_get_category_count(MESSAGE_CAT_BLOCKED_DOCK))
             {
-                PlayerMessage_post(1, Message_15_NavigationImpossible, 0, 0);
+                city_message_post(1, Message_15_NavigationImpossible, 0, 0);
                 city_message_increase_category_count(MESSAGE_CAT_BLOCKED_DOCK);
             }
         }
