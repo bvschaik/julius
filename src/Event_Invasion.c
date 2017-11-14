@@ -23,6 +23,7 @@
 #include "figure/name.h"
 #include "game/difficulty.h"
 #include "game/time.h"
+#include "scenario/map.h"
 
 #include <string.h>
 
@@ -276,8 +277,9 @@ static int startInvasion(int enemyType, int amount, int invasionPoint, int attac
 
 	// determine invasion point
 	if (enemyType == EnemyType_11_Caesar) {
-		x = Data_Scenario.entryPoint.x;
-		y = Data_Scenario.entryPoint.y;
+        map_point entry_point = scenario_map_entry();
+		x = entry_point.x;
+		y = entry_point.y;
 	} else {
 		int numPoints = 0;
 		for (int i = 0; i < 8; i++) {
@@ -306,8 +308,9 @@ static int startInvasion(int enemyType, int amount, int invasionPoint, int attac
 		y = Data_Scenario.invasionPoints.y[invasionPoint];
 	}
 	if (x == -1 || y == -1) {
-		x = Data_Scenario.exitPoint.x;
-		y = Data_Scenario.exitPoint.y;
+        map_point exit_point = scenario_map_exit();
+		x = exit_point.x;
+		y = exit_point.y;
 	}
 	// determine orientation
 	if (y == 0) {

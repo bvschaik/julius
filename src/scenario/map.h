@@ -6,6 +6,10 @@ typedef struct {
     int y;
 } map_point;
 
+map_point scenario_map_entry();
+
+map_point scenario_map_exit();
+
 int scenario_map_has_river_entry();
 
 map_point scenario_map_river_entry();
@@ -19,5 +23,7 @@ void scenario_map_foreach_herd_point(void (*callback)(int x, int y));
 void scenario_map_foreach_fishing_point(void (*callback)(int x, int y));
 
 int scenario_map_closest_fishing_point(int x, int y, int *fish_x, int *fish_y);
+
+int scenario_map_has_flotsam();
 
 #endif // SCENARIO_MAP_H

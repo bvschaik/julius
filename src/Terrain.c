@@ -11,12 +11,12 @@
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 #include "Data/Grid.h"
-#include "Data/Scenario.h"
 #include "Data/Settings.h"
 #include "Data/State.h"
 
 #include "core/calc.h"
 #include "graphics/image.h"
+#include "scenario/map.h"
 
 static const int tilesAroundBuildingGridOffsets[][20] = {
 	{0},
@@ -1159,35 +1159,37 @@ void Terrain_updateEntryExitFlags(int remove)
 		return;
 	}
 	int entryOrientation;
-	if (Data_Scenario.entryPoint.x == 0) {
+    map_point entry_point = scenario_map_entry();
+	if (entry_point.x == 0) {
 		entryOrientation = Dir_2_Right;
-	} else if (Data_Scenario.entryPoint.x == Data_Settings_Map.width - 1) {
+	} else if (entry_point.x == Data_Settings_Map.width - 1) {
 		entryOrientation = Dir_6_Left;
-	} else if (Data_Scenario.entryPoint.y == 0) {
+	} else if (entry_point.y == 0) {
 		entryOrientation = Dir_0_Top;
-	} else if (Data_Scenario.entryPoint.y == Data_Settings_Map.height - 1) {
+	} else if (entry_point.y == Data_Settings_Map.height - 1) {
 		entryOrientation = Dir_4_Bottom;
 	} else {
 		entryOrientation = -1;
 	}
 	int exitOrientation;
-	if (Data_Scenario.exitPoint.x == 0) {
+    map_point exit_point = scenario_map_exit();
+	if (exit_point.x == 0) {
 		exitOrientation = Dir_2_Right;
-	} else if (Data_Scenario.exitPoint.x == Data_Settings_Map.width - 1) {
+	} else if (exit_point.x == Data_Settings_Map.width - 1) {
 		exitOrientation = Dir_6_Left;
-	} else if (Data_Scenario.exitPoint.y == 0) {
+	} else if (exit_point.y == 0) {
 		exitOrientation = Dir_0_Top;
-	} else if (Data_Scenario.exitPoint.y == Data_Settings_Map.height - 1) {
+	} else if (exit_point.y == Data_Settings_Map.height - 1) {
 		exitOrientation = Dir_4_Bottom;
 	} else {
 		exitOrientation = -1;
 	}
 	if (entryOrientation >= 0) {
-		int gridOffset = GridOffset(Data_Scenario.entryPoint.x, Data_Scenario.entryPoint.y);
+		int gridOffset = GridOffset(entry_point.x, entry_point.y);
 		int xTile, yTile;
 		for (int i = 1; i < 10; i++) {
 			if (Terrain_existsClearTileWithinRadius(
-					Data_Scenario.entryPoint.x, Data_Scenario.entryPoint.y,
+					    entry_point.x, entry_point.y,
 					1, i, gridOffset, &xTile, &yTile)) {
 				break;
 			}
@@ -1201,11 +1203,11 @@ void Terrain_updateEntryExitFlags(int remove)
 		Data_Grid_graphicIds[gridOffsetFlag] = image_group(ID_Graphic_EntryExitFlag) + orientation / 2;
 	}
 	if (exitOrientation >= 0) {
-		int gridOffset = GridOffset(Data_Scenario.exitPoint.x, Data_Scenario.exitPoint.y);
+		int gridOffset = GridOffset(exit_point.x, exit_point.y);
 		int xTile, yTile;
 		for (int i = 1; i < 10; i++) {
 			if (Terrain_existsClearTileWithinRadius(
-					Data_Scenario.exitPoint.x, Data_Scenario.exitPoint.y,
+					    exit_point.x, exit_point.y,
 					1, i, gridOffset, &xTile, &yTile)) {
 				break;
 			}
