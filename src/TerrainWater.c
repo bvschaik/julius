@@ -2,6 +2,7 @@
 #include "Terrain_private.h"
 
 #include "core/calc.h"
+#include "scenario/map.h"
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
@@ -219,34 +220,8 @@ int Terrain_Water_getWharfTileForNewFishingBoat(int figureId, int *xTile, int *y
 
 int Terrain_Water_getNearestFishTile(int figureId, int *xTile, int *yTile)
 {
-	int numFishingSpots = 0;
-	for (int i = 0; i < 8; i++) {
-		if (Data_Scenario.fishingPoints.x[i] > 0) {
-			numFishingSpots++;
-		}
-	}
-	if (numFishingSpots <= 0) {
-		return 0;
-	}
-	int minDist = 10000;
-	int minFishId = 0;
-	for (int i = 0; i < 8; i++) {
-		if (Data_Scenario.fishingPoints.x > 0) {
-			int dist = calc_maximum_distance(
-				Data_Figures[figureId].x, Data_Figures[figureId].y,
-				Data_Scenario.fishingPoints.x[i], Data_Scenario.fishingPoints.y[i]);
-			if (dist < minDist) {
-				minDist = dist;
-				minFishId = i;
-			}
-		}
-	}
-	if (minDist < 10000) {
-		*xTile = Data_Scenario.fishingPoints.x[minFishId];
-		*yTile = Data_Scenario.fishingPoints.y[minFishId];
-		return 1;
-	}
-	return 0;
+    return scenario_map_closest_fishing_point(
+        Data_Figures[figureId].x, Data_Figures[figureId].y, xTile, yTile);
 }
 
 int Terrain_Water_findAlternativeTileForFishingBoat(int figureId, int *xTile, int *yTile)
