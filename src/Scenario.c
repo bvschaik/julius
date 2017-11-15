@@ -44,7 +44,9 @@
 #include "game/tutorial.h"
 #include "graphics/image.h"
 #include "scenario/demand_change.h"
+#include "scenario/map.h"
 #include "scenario/price_change.h"
+#include "scenario/property.h"
 #include "scenario/request.h"
 #include "sound/city.h"
 #include "sound/music.h"
@@ -92,8 +94,8 @@ void Scenario_initialize(const char *scenarioName)
 	Data_CityInfo.salaryRank = curMissionId;
 	if (Data_Settings.isCustomScenario) {
 		Data_CityInfo.personalSavings = 0;
-		Data_CityInfo.playerRank = Data_Scenario.playerRank;
-		Data_CityInfo.salaryRank = Data_Scenario.playerRank;
+		Data_CityInfo.playerRank = scenario_property_player_rank();
+		Data_CityInfo.salaryRank = scenario_property_player_rank();
 	}
 	if (Data_CityInfo.salaryRank > 10) {
 		Data_CityInfo.salaryRank = 10;
@@ -163,40 +165,29 @@ static void loadScenario(const char *scenarioName)
 	Data_CityInfo_Extra.ciid = 1;
 	strcpy(Data_FileList.selectedScenario, scenarioName);
 	readScenarioAndInitGraphics();
-	int hasWaterEntry = 0;
-	if (Data_Scenario.riverEntryPoint.x != -1 &&
-		Data_Scenario.riverEntryPoint.y != -1 &&
-		Data_Scenario.riverExitPoint.x != -1 &&
-		Data_Scenario.riverExitPoint.x != -1) {
-		hasWaterEntry = 1;
-	}
+
 	Figure_createFishingPoints();
 	Figure_createHerds();
-	Figure_createFlotsam(Data_Scenario.riverEntryPoint.x, Data_Scenario.riverEntryPoint.y, hasWaterEntry);
+	Figure_createFlotsam();
 
 	Routing_determineLandCitizen();
 	Routing_determineLandNonCitizen();
 	Routing_determineWater();
 	Routing_determineWalls();
 
-	if (Data_Scenario.entryPoint.x == -1 || Data_Scenario.entryPoint.y == -1) {
-		Data_Scenario.entryPoint.x = Data_Settings_Map.width - 1;
-		Data_Scenario.entryPoint.y = Data_Settings_Map.height / 2;
-	}
+	scenario_map_init_entry_exit();
+
 	Data_CityInfo.entryPointX = Data_Scenario.entryPoint.x;
 	Data_CityInfo.entryPointY = Data_Scenario.entryPoint.y;
 	Data_CityInfo.entryPointGridOffset = GridOffset(Data_CityInfo.entryPointX, Data_CityInfo.entryPointY);
 
-	if (Data_Scenario.exitPoint.x == -1 || Data_Scenario.exitPoint.y == -1) {
-		Data_Scenario.exitPoint.x = Data_Scenario.entryPoint.x;
-		Data_Scenario.exitPoint.y = Data_Scenario.entryPoint.y;
-	}
 	Data_CityInfo.exitPointX = Data_Scenario.exitPoint.x;
 	Data_CityInfo.exitPointY = Data_Scenario.exitPoint.y;
 	Data_CityInfo.exitPointGridOffset = GridOffset(Data_CityInfo.exitPointX, Data_CityInfo.exitPointY);
+
 	Data_CityInfo.treasury = difficulty_adjust_money(Data_Scenario.startFunds);
 	Data_CityInfo.financeBalanceLastYear = Data_CityInfo.treasury;
-	game_time_init(Data_Scenario.startYear);
+	game_time_init(scenario_property_start_year());
 
 	// set up events
 	// earthquake
@@ -251,8 +242,8 @@ static void loadScenario(const char *scenarioName)
 	scenario_demand_change_init();
 	scenario_price_change_init();
 	SidebarMenu_enableBuildingMenuItemsAndButtons();
-	image_load_climate(Data_Scenario.climate);
-	image_load_enemy(Data_Scenario.enemyId);
+	image_load_climate(scenario_property_climate());
+	image_load_enemy(scenario_property_enemy());
 }
 
 static void readScenarioAndInitGraphics()

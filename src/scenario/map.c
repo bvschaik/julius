@@ -7,6 +7,18 @@
 #define MAX_HERDS 4
 #define MAX_FISH 8
 
+void scenario_map_init_entry_exit()
+{
+    if (Data_Scenario.entryPoint.x == -1 || Data_Scenario.entryPoint.y == -1) {
+        Data_Scenario.entryPoint.x = Data_Scenario.mapSizeX - 1;
+        Data_Scenario.entryPoint.y = Data_Scenario.mapSizeY / 2;
+    }
+    if (Data_Scenario.exitPoint.x == -1 || Data_Scenario.exitPoint.y == -1) {
+        Data_Scenario.exitPoint.x = Data_Scenario.entryPoint.x;
+        Data_Scenario.exitPoint.y = Data_Scenario.entryPoint.y;
+    }
+}
+
 map_point scenario_map_entry()
 {
     map_point point = {Data_Scenario.entryPoint.x, Data_Scenario.entryPoint.y};

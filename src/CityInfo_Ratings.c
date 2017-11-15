@@ -2,7 +2,6 @@
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
-#include "Data/Scenario.h"
 #include "Data/Settings.h"
 
 #include "building/model.h"
@@ -10,6 +9,7 @@
 #include "core/calc.h"
 #include "game/time.h"
 #include "scenario/criteria.h"
+#include "scenario/property.h"
 
 static void updateCultureRating();
 static void updateFavorRating(int isYearlyUpdate);
@@ -153,7 +153,7 @@ void CityInfo_Ratings_updateCultureExplanation()
 
 static void updateFavorRating(int isYearlyUpdate)
 {
-	if (Data_Scenario.isOpenPlay) {
+	if (scenario_is_open_play()) {
 		Data_CityInfo.ratingFavor = 50;
 		return;
 	}
@@ -394,7 +394,7 @@ void CityInfo_Ratings_updateProsperityExplanation()
 	}
 
 	int reason;
-	if (Data_CityInfo.ratingProsperity <= 0 && game_time_year() == Data_Scenario.startYear) {
+	if (Data_CityInfo.ratingProsperity <= 0 && game_time_year() == scenario_property_start_year()) {
 		reason = 0;
 	} else if (Data_CityInfo.ratingProsperity >= Data_CityInfo.ratingProsperityMax) {
 		reason = 1;

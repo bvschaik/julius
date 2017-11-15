@@ -24,6 +24,7 @@
 #include "game/difficulty.h"
 #include "game/time.h"
 #include "scenario/map.h"
+#include "scenario/property.h"
 
 #include <string.h>
 
@@ -106,6 +107,7 @@ void Event_initInvasions()
 
 void Event_handleInvasions()
 {
+    int enemy_id = scenario_property_enemy();
 	for (int i = 0; i < MAX_INVASION_WARNINGS; i++) {
 		if (!Data_InvasionWarnings[i].inUse) {
 			continue;
@@ -137,13 +139,13 @@ void Event_handleInvasions()
 			// enemy invasions
 			if (Data_Scenario.invasions.type[warning->invasionId] == InvasionType_EnemyArmy) {
 				int gridOffset = startInvasion(
-					enemyIdToEnemyType[Data_Scenario.enemyId],
+					enemyIdToEnemyType[enemy_id],
 					Data_Scenario.invasions.amount[warning->invasionId],
 					Data_Scenario.invasions.from[warning->invasionId],
 					Data_Scenario.invasions.attackType[warning->invasionId],
 					warning->invasionId);
 				if (gridOffset > 0) {
-					if (enemyIdToEnemyType[Data_Scenario.enemyId] > 4) {
+					if (enemyIdToEnemyType[enemy_id] > 4) {
 						city_message_post(1, MESSAGE_ENEMY_ARMY_ATTACK, Data_Event.lastInternalInvasionId, gridOffset);
 					} else {
 						city_message_post(1, MESSAGE_BARBARIAN_ATTACK, Data_Event.lastInternalInvasionId, gridOffset);
@@ -200,9 +202,10 @@ int Event_startInvasionLocalUprisingFromMars()
 
 void Event_startInvasionFromCheat()
 {
-	int gridOffset = startInvasion(enemyIdToEnemyType[Data_Scenario.enemyId], 150, 8, FORMATION_ATTACK_FOOD_CHAIN, 23);
+    int enemy_id = scenario_property_enemy();
+	int gridOffset = startInvasion(enemyIdToEnemyType[enemy_id], 150, 8, FORMATION_ATTACK_FOOD_CHAIN, 23);
 	if (gridOffset) {
-		if (enemyIdToEnemyType[Data_Scenario.enemyId] > 4) {
+		if (enemyIdToEnemyType[enemy_id] > 4) {
 			city_message_post(1, MESSAGE_ENEMY_ARMY_ATTACK, Data_Event.lastInternalInvasionId, gridOffset);
 		} else {
 			city_message_post(1, MESSAGE_BARBARIAN_ATTACK, Data_Event.lastInternalInvasionId, gridOffset);

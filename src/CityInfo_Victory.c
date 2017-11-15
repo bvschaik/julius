@@ -15,6 +15,7 @@
 #include "game/time.h"
 #include "graphics/mouse.h"
 #include "scenario/criteria.h"
+#include "scenario/property.h"
 #include "sound/music.h"
 
 void CityInfo_Victory_check()

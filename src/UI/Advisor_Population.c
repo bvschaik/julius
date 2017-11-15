@@ -1,6 +1,5 @@
 #include "Advisors_private.h"
 #include "Window.h"
-#include "../Data/Scenario.h"
 
 #include "game/time.h"
 #include "scenario/property.h"
@@ -463,7 +462,7 @@ static void getMinMaxMonthYear(int maxMonths, int *startMonth, int *startYear, i
 		*startYear = *endYear - maxMonths / 12;
 	} else {
 		*startMonth = 0;
-		*startYear = Data_Scenario.startYear;
+		*startYear = scenario_property_start_year();
 		*endMonth = (maxMonths + *startMonth) % 12;
 		*endYear = (maxMonths + *startMonth) / 12 + *startYear;
 	}

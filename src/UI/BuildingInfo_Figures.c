@@ -11,12 +11,12 @@
 #include "../Data/Building.h"
 #include "../Data/Constants.h"
 #include "../Data/Figure.h"
-#include "../Data/Scenario.h"
 #include "../Data/Settings.h"
 
 #include "empire/city.h"
 #include "figure/formation.h"
 #include "figure/trader.h"
+#include "scenario/property.h"
 
 static void selectFigure(int param1, int param2);
 
@@ -214,7 +214,7 @@ static void drawFigureInfoEnemy(BuildingInfoContext *c, int figureId)
 	
 	Widget_GameText_draw(65, Data_Figures[figureId].name,
 		c->xOffset + 90, c->yOffset + 108, FONT_LARGE_BROWN);
-	Widget_GameText_draw(37, Data_Scenario.enemyId + 20,
+	Widget_GameText_draw(37, scenario_property_enemy() + 20,
 		c->xOffset + 92, c->yOffset + 149, FONT_SMALL_BLACK);
 }
 

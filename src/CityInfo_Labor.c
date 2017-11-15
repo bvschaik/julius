@@ -2,12 +2,12 @@
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 #include "Data/Building.h"
-#include "Data/Scenario.h"
 
 #include "building/model.h"
 #include "city/message.h"
 #include "core/calc.h"
 #include "game/time.h"
+#include "scenario/property.h"
 
 #define MAX_CATS 10
 
@@ -127,7 +127,7 @@ void CityInfo_Labor_checkEmployment()
 
 	// workers needed message
 	if (!origNeeded && Data_CityInfo.workersNeeded > 0) {
-		if (game_time_year() >= Data_Scenario.startYear) {
+		if (game_time_year() >= scenario_property_start_year()) {
 			city_message_post_with_message_delay(MESSAGE_CAT_WORKERS_NEEDED, 0, MESSAGE_WORKERS_NEEDED, 6);
 		}
 	}

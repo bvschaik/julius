@@ -1,8 +1,6 @@
 #ifndef SCENARIO_CRITERIA_H
 #define SCENARIO_CRITERIA_H
 
-int scenario_is_open_play();
-
 int scenario_criteria_population_enabled();
 int scenario_criteria_population();
 
