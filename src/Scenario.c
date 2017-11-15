@@ -21,7 +21,6 @@
 
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
-#include "Data/Event.h"
 #include "Data/FileList.h"
 #include "Data/Grid.h"
 #include "Data/Scenario.h"
@@ -48,6 +47,7 @@
 #include "scenario/earthquake.h"
 #include "scenario/emperor_change.h"
 #include "scenario/gladiator_revolt.h"
+#include "scenario/invasion.h"
 #include "scenario/map.h"
 #include "scenario/price_change.h"
 #include "scenario/property.h"
@@ -201,7 +201,7 @@ static void loadScenario(const char *scenarioName)
 
 	empire_init_scenario();
 	traders_clear();
-	Event_initInvasions();
+	scenario_invasion_init();
 	empire_determine_distant_battle_city();
 	scenario_request_init();
 	scenario_demand_change_init();

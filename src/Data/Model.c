@@ -19,8 +19,6 @@
 
 struct _Data_Scenario Data_Scenario;
 
-struct _Data_Event Data_Event = {0};
-
 struct _Data_Settings Data_Settings;
 struct _Data_Settings_Map Data_Settings_Map;
 

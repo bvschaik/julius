@@ -16,6 +16,7 @@
 #include "core/random.h"
 #include "game/settings.h"
 #include "game/time.h"
+#include "scenario/invasion.h"
 
 #define MAX_GODS 5
 
@@ -71,7 +72,7 @@ static void performSmallCurse(int god)
 			Building_Mercury_removeResources(0);
 			break;
 		case God_Mars:
-			if (Event_startInvasionLocalUprisingFromMars()) {
+			if (scenario_invasion_start_from_mars()) {
 				city_message_post(1, MESSAGE_MARS_IS_UPSET, 0, 0);
 			} else {
 				city_message_post(1, MESSAGE_WRATH_OF_MARS_NO_MILITARY, 0, 0);
@@ -112,7 +113,7 @@ static int performLargeCurse(int god)
 		case God_Mars:
 			if (Formation_marsCurseFort()) {
 				city_message_post(1, MESSAGE_WRATH_OF_MARS, 0, 0);
-				Event_startInvasionLocalUprisingFromMars();
+				scenario_invasion_start_from_mars();
 			} else {
 				city_message_post(1, MESSAGE_WRATH_OF_MARS_NO_MILITARY, 0, 0);
 			}

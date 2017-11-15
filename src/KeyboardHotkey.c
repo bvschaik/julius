@@ -1,7 +1,6 @@
 #include "KeyboardHotkey.h"
 
 #include "CityView.h"
-#include "Event.h"
 #include "Graphics.h"
 #include "System.h"
 #include "Video.h"
@@ -21,6 +20,7 @@
 #include "Data/State.h"
 
 #include "figure/formation.h"
+#include "scenario/invasion.h"
 
 #define ExitMilitaryCommand() \
 	if (UI_Window_getId() == Window_CityMilitary) {\
@@ -128,7 +128,7 @@ static void cheatInitOrInvasion()
 		data.isCheating = UI_BuildingInfo_getBuildingType() == BUILDING_WELL;
 	} else if (data.isCheating && UI_Window_getId() == Window_MessageDialog) {
 		data.isCheating = 2;
-		Event_startInvasionFromCheat();
+		scenario_invasion_start_from_cheat();
 	} else {
 		data.isCheating = 0;
 	}

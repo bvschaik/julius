@@ -10,7 +10,6 @@
 #include "../Data/CityInfo.h"
 #include "../Data/CityView.h"
 #include "../Data/Constants.h"
-#include "../Data/Event.h"
 #include "../Data/Screen.h"
 #include "../Data/Settings.h"
 #include "../Data/State.h"

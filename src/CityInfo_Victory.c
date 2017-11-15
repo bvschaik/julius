@@ -5,7 +5,6 @@
 #include "UI/Window.h"
 
 #include "Data/CityInfo.h"
-#include "Data/Event.h"
 #include "Data/Screen.h"
 #include "Data/Settings.h"
 #include "Data/State.h"

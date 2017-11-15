@@ -12,7 +12,6 @@
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
-#include "Data/Event.h"
 #include "Data/Grid.h"
 #include "Data/Scenario.h"
 #include "Data/Settings.h"
@@ -29,6 +28,7 @@
 #include "game/time.h"
 #include "game/tutorial.h"
 #include "scenario/property.h"
+#include "scenario/data.h"
 #include "sound/effect.h"
 
 #include <string.h>
@@ -63,8 +63,8 @@ static const int randomEventProbability[128] = {
 
 void Event_handleDistantBattle()
 {
-	for (int i = 0; i < MAX_EVENTS; i++) {
-		if (Data_Scenario.invasions.type[i] == InvasionType_DistantBattle &&
+	for (int i = 0; i < 20; i++) {
+		if (Data_Scenario.invasions.type[i] == INVASION_TYPE_DISTANT_BATTLE &&
 			game_time_year() == Data_Scenario.invasions.year[i] + Data_Scenario.startYear &&
 			game_time_month() == Data_Scenario.invasions_month[i] &&
 			Data_Scenario.distantBattleTravelMonthsEnemy > 4 &&

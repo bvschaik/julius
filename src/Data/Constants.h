@@ -374,12 +374,6 @@ enum {
 	EnemyType_11_Caesar = 11
 };
 
-enum {
-	InvasionType_LocalUprising = 1,
-	InvasionType_EnemyArmy = 2,
-	InvasionType_Caesar = 3,
-	InvasionType_DistantBattle = 4,
-};
 /*
 0x00: Barbarians
 0x01: Etruscans

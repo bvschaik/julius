@@ -13,7 +13,6 @@
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
-#include "Data/Event.h"
 #include "Data/FileList.h"
 #include "Data/Grid.h"
 #include "Data/Invasion.h"
@@ -49,6 +48,7 @@
 #include "scenario/earthquake.h"
 #include "scenario/emperor_change.h"
 #include "scenario/gladiator_revolt.h"
+#include "scenario/invasion.h"
 #include "scenario/property.h"
 #include "sound/city.h"
 #include "sound/music.h"
@@ -204,7 +204,7 @@ typedef struct {
     buffer *Data_CityInfo_Extra_entryPointFlag_y;
     buffer *Data_CityInfo_Extra_exitPointFlag_x;
     buffer *Data_CityInfo_Extra_exitPointFlag_y;
-    buffer *Data_Event_lastInternalInvasionId;
+    buffer *last_invasion_id;
     buffer *Data_Debug_incorrectHousePositions;
     buffer *Data_Debug_unfixableHousePositions;
     buffer *Data_FileList_selectedScenario;
@@ -357,7 +357,7 @@ void init_savegame_data()
     state->Data_CityInfo_Extra_entryPointFlag_y = create_savegame_piece(4, 0);
     state->Data_CityInfo_Extra_exitPointFlag_x = create_savegame_piece(4, 0);
     state->Data_CityInfo_Extra_exitPointFlag_y = create_savegame_piece(4, 0);
-    state->Data_Event_lastInternalInvasionId = create_savegame_piece(2, 0);
+    state->last_invasion_id = create_savegame_piece(2, 0);
     state->Data_Debug_incorrectHousePositions = create_savegame_piece(4, 0);
     state->Data_Debug_unfixableHousePositions = create_savegame_piece(4, 0);
     state->Data_FileList_selectedScenario = create_savegame_piece(65, 0);
@@ -513,7 +513,9 @@ static void savegame_deserialize(savegame_state *state)
     read_all_from_buffer(state->Data_CityInfo_Extra_entryPointFlag_y, &Data_CityInfo_Extra.entryPointFlag.y);
     read_all_from_buffer(state->Data_CityInfo_Extra_exitPointFlag_x, &Data_CityInfo_Extra.exitPointFlag.x);
     read_all_from_buffer(state->Data_CityInfo_Extra_exitPointFlag_y, &Data_CityInfo_Extra.exitPointFlag.y);
-    read_all_from_buffer(state->Data_Event_lastInternalInvasionId, &Data_Event.lastInternalInvasionId);
+
+    scenario_invasion_load_state(state->last_invasion_id);
+
     read_all_from_buffer(state->Data_Debug_incorrectHousePositions, &Data_Buildings_Extra.incorrectHousePositions);
     read_all_from_buffer(state->Data_Debug_unfixableHousePositions, &Data_Buildings_Extra.unfixableHousePositions);
     read_all_from_buffer(state->Data_FileList_selectedScenario, &Data_FileList.selectedScenario);
@@ -635,7 +637,9 @@ static void savegame_serialize(savegame_state *state)
     write_all_to_buffer(state->Data_CityInfo_Extra_entryPointFlag_y, &Data_CityInfo_Extra.entryPointFlag.y);
     write_all_to_buffer(state->Data_CityInfo_Extra_exitPointFlag_x, &Data_CityInfo_Extra.exitPointFlag.x);
     write_all_to_buffer(state->Data_CityInfo_Extra_exitPointFlag_y, &Data_CityInfo_Extra.exitPointFlag.y);
-    write_all_to_buffer(state->Data_Event_lastInternalInvasionId, &Data_Event.lastInternalInvasionId);
+
+    scenario_invasion_save_state(state->last_invasion_id);
+
     write_all_to_buffer(state->Data_Debug_incorrectHousePositions, &Data_Buildings_Extra.incorrectHousePositions);
     write_all_to_buffer(state->Data_Debug_unfixableHousePositions, &Data_Buildings_Extra.unfixableHousePositions);
     write_all_to_buffer(state->Data_FileList_selectedScenario, &Data_FileList.selectedScenario);
