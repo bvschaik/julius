@@ -2,6 +2,8 @@
 
 #include "Data/Scenario.h"
 
+static int max_game_year;
+
 int scenario_criteria_population_enabled()
 {
     return Data_Scenario.winCriteria_populationEnabled;
@@ -83,4 +85,30 @@ int scenario_criteria_milestone_year(int percentage)
             return Data_Scenario.startYear + Data_Scenario.milestone75;
     }
     return 0;
+}
+
+void scenario_criteria_init_max_year()
+{
+    if (Data_Scenario.winCriteria.timeLimitYearsEnabled) {
+        max_game_year = Data_Scenario.startYear + Data_Scenario.winCriteria.timeLimitYears;
+    } else if (Data_Scenario.winCriteria.survivalYearsEnabled) {
+        max_game_year = Data_Scenario.startYear + Data_Scenario.winCriteria.survivalYears;
+    } else {
+        max_game_year = 1000000 + Data_Scenario.startYear;
+    }
+}
+
+int scenario_criteria_max_year()
+{
+    return max_game_year;
+}
+
+void scenario_criteria_save_state(buffer *buf)
+{
+    buffer_write_i32(buf, max_game_year);
+}
+
+void scenario_criteria_load_state(buffer *buf)
+{
+    max_game_year = buffer_read_i32(buf);
 }

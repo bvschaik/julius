@@ -65,7 +65,7 @@ void CityInfo_Victory_check()
 			numCriteria++;
 		}
 	}
-	if (game_time_year() >= Data_Event.timeLimitMaxGameYear) {
+	if (game_time_year() >= scenario_criteria_max_year()) {
 		if (scenario_criteria_time_limit_enabled()) {
 			Data_State.winState = WinState_Lose;
 		} else if (scenario_criteria_survival_enabled()) {

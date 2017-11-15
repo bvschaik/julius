@@ -37,6 +37,7 @@
 #include "game/tutorial.h"
 #include "scenario/demand_change.h"
 #include "scenario/earthquake.h"
+#include "scenario/emperor_change.h"
 #include "scenario/gladiator_revolt.h"
 #include "scenario/price_change.h"
 #include "scenario/request.h"
@@ -57,7 +58,7 @@ void GameTick_doTick()
 	FigureAction_handle();
 	scenario_earthquake_process();
 	scenario_gladiator_revolt_process();
-	Event_handleEmperorChange();
+	scenario_emperor_change_process();
 	CityInfo_Victory_check();
 }
 

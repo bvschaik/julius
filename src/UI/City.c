@@ -57,10 +57,10 @@ void UI_City_drawPausedAndTimeLeft()
 {
 	if (scenario_criteria_time_limit_enabled()) {
 		int years;
-		if (Data_Event.timeLimitMaxGameYear <= game_time_year() + 1) {
+		if (scenario_criteria_max_year() <= game_time_year() + 1) {
 			years = 0;
 		} else {
-			years = Data_Event.timeLimitMaxGameYear - game_time_year() - 1;
+			years = scenario_criteria_max_year() - game_time_year() - 1;
 		}
 		int totalMonths = 12 - game_time_month() + 12 * years;
 		Widget_Panel_drawSmallLabelButton(1, 25, 15, 1);
@@ -68,10 +68,10 @@ void UI_City_drawPausedAndTimeLeft()
 		Widget_Text_drawNumber(totalMonths, '@', " ", 6 + width, 29, FONT_NORMAL_BLACK);
 	} else if (scenario_criteria_survival_enabled()) {
 		int years;
-		if (Data_Event.timeLimitMaxGameYear <= game_time_year() + 1) {
+		if (scenario_criteria_max_year() <= game_time_year() + 1) {
 			years = 0;
 		} else {
-			years = Data_Event.timeLimitMaxGameYear - game_time_year() - 1;
+			years = scenario_criteria_max_year() - game_time_year() - 1;
 		}
 		int totalMonths = 12 - game_time_month() + 12 * years;
 		Widget_Panel_drawSmallLabelButton(1, 25, 15, 1);

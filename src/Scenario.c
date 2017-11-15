@@ -43,8 +43,10 @@
 #include "game/time.h"
 #include "game/tutorial.h"
 #include "graphics/image.h"
+#include "scenario/criteria.h"
 #include "scenario/demand_change.h"
 #include "scenario/earthquake.h"
+#include "scenario/emperor_change.h"
 #include "scenario/gladiator_revolt.h"
 #include "scenario/map.h"
 #include "scenario/price_change.h"
@@ -194,18 +196,8 @@ static void loadScenario(const char *scenarioName)
 	// set up events
 	scenario_earthquake_init();
 	scenario_gladiator_revolt_init();
-	// emperor change
-	Data_Event.emperorChange.gameYear = Data_Scenario.startYear + Data_Scenario.emperorChange.year;
-	Data_Event.emperorChange.month = 1 + (random_byte() & 7);
-	Data_Event.emperorChange.state = 0;
-	// time limit
-	if (Data_Scenario.winCriteria.timeLimitYearsEnabled) {
-		Data_Event.timeLimitMaxGameYear = Data_Scenario.startYear + Data_Scenario.winCriteria.timeLimitYears;
-	} else if (Data_Scenario.winCriteria.survivalYearsEnabled) {
-		Data_Event.timeLimitMaxGameYear = Data_Scenario.startYear + Data_Scenario.winCriteria.survivalYears;
-	} else {
-		Data_Event.timeLimitMaxGameYear = 1000000 + Data_Scenario.startYear;
-	}
+	scenario_emperor_change_init();
+	scenario_criteria_init_max_year();
 
 	empire_init_scenario();
 	traders_clear();
