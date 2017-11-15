@@ -316,7 +316,7 @@ static void drawImageUncompressed(const image *img, const color_t *data, int xOf
 		color_t *dst = &ScreenPixel(xOffset + clip->clippedPixelsLeft, yOffset + y);
 		int xMax = img->width - clip->clippedPixelsRight;
         if (type == ColorType_None) {
-            if (img->draw.type == 0) { // can be transparent
+            if (img->draw.type == 0 || img->draw.is_external) { // can be transparent
                 for (int x = clip->clippedPixelsLeft; x < xMax; x++, dst++) {
                     if (*data != COLOR_TRANSPARENT) {
                         *dst = *data;
