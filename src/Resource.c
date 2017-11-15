@@ -8,14 +8,14 @@
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 #include "Data/Grid.h"
-#include "Data/Scenario.h"
 
 #include "building/count.h"
 #include "game/tutorial.h"
+#include "scenario/building.h"
 
 int Resource_getGraphicIdOffset(int resource, int type)
 {
-	if (resource == Resource_Meat && Data_Scenario.allowedBuildings.wharf) {
+	if (resource == Resource_Meat && scenario_building_allowed(BUILDING_WHARF)) {
 		switch (type) {
 			case 0: return 40;
 			case 1: return 648;

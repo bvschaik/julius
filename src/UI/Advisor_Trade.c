@@ -6,12 +6,12 @@
 #include "../Resource.h"
 
 #include "../Data/CityInfo.h"
-#include "../Data/Scenario.h"
 
 #include "building/count.h"
 #include "core/calc.h"
 #include "empire/city.h"
 #include "empire/trade_prices.h"
+#include "scenario/building.h"
 
 static void buttonPrices(int param1, int param2);
 static void buttonEmpire(int param1, int param2);
@@ -278,7 +278,7 @@ void UI_ResourceSettingsDialog_drawForeground()
 				Widget_GameText_draw(54, 14, baseOffsetX + 98 + width, baseOffsetY + 172, FONT_NORMAL_BLACK);
 			}
 		}
-	} else if (selectedResourceId != Resource_Meat || !Data_Scenario.allowedBuildings.wharf) {
+	} else if (selectedResourceId != Resource_Meat || !scenario_building_allowed(BUILDING_WHARF)) {
 		// we cannot produce this good
 		Widget_GameText_draw(54, 25, baseOffsetX + 98, baseOffsetY + 172, FONT_NORMAL_BLACK);
 	}

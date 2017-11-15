@@ -52,6 +52,7 @@ set (GAME_FILES
     src/game/tutorial.c
 )
 set (SCENARIO_FILES
+    src/scenario/building.c
     src/scenario/criteria.c
     src/scenario/demand_change.c
     src/scenario/map.c
