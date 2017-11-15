@@ -45,6 +45,7 @@
 #include "graphics/image.h"
 #include "scenario/demand_change.h"
 #include "scenario/earthquake.h"
+#include "scenario/gladiator_revolt.h"
 #include "scenario/map.h"
 #include "scenario/price_change.h"
 #include "scenario/property.h"
@@ -192,11 +193,7 @@ static void loadScenario(const char *scenarioName)
 
 	// set up events
 	scenario_earthquake_init();
-	// gladiator revolt
-	Data_Event.gladiatorRevolt.gameYear = Data_Scenario.startYear + Data_Scenario.gladiatorRevolt.year;
-	Data_Event.gladiatorRevolt.month = 3 + (random_byte() & 3);
-	Data_Event.gladiatorRevolt.endMonth = 3 + Data_Event.gladiatorRevolt.month;
-	Data_Event.gladiatorRevolt.state = SpecialEvent_NotStarted;
+	scenario_gladiator_revolt_init();
 	// emperor change
 	Data_Event.emperorChange.gameYear = Data_Scenario.startYear + Data_Scenario.emperorChange.year;
 	Data_Event.emperorChange.month = 1 + (random_byte() & 7);

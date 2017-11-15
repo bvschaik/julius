@@ -4,11 +4,11 @@
 #include "Figure.h"
 #include "Terrain.h"
 
-#include "Data/Event.h"
 #include "Data/Grid.h"
 
 #include "building/list.h"
 #include "figure/type.h"
+#include "scenario/gladiator_revolt.h"
 
 static int determineDestination(int x, int y, int btype1, int btype2)
 {
@@ -150,7 +150,7 @@ void FigureAction_entertainer(int figureId)
 	if (f->waitTicksMissile >= 120) {
 		f->waitTicksMissile = 0;
 	}
-	if (Data_Event.gladiatorRevolt.state == SpecialEvent_InProgress && f->type == FIGURE_GLADIATOR) {
+	if (scenario_gladiator_revolt_is_in_progress() && f->type == FIGURE_GLADIATOR) {
 		if (f->actionState == FigureActionState_92_EntertainerGoingToVenue ||
 			f->actionState == FigureActionState_94_EntertainerRoaming ||
 			f->actionState == FigureActionState_95_EntertainerReturning) {

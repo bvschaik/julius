@@ -46,6 +46,7 @@
 #include "game/tutorial.h"
 #include "graphics/image.h"
 #include "scenario/earthquake.h"
+#include "scenario/gladiator_revolt.h"
 #include "scenario/property.h"
 #include "sound/city.h"
 #include "sound/music.h"
@@ -187,10 +188,7 @@ typedef struct {
     buffer *building_count_culture2;
     buffer *building_count_support;
     buffer *tutorial_part2;
-    buffer *Data_Event_gladiatorRevolt_gameYear;
-    buffer *Data_Event_gladiatorRevolt_month;
-    buffer *Data_Event_gladiatorRevolt_endMonth;
-    buffer *Data_Event_gladiatorRevolt_state;
+    buffer *gladiator_revolt;
     buffer *trade_route_limit;
     buffer *trade_route_traded;
     buffer *Data_Buildings_Extra_barracksTowerSentryRequested;
@@ -344,10 +342,7 @@ void init_savegame_data()
     state->building_count_culture2 = create_savegame_piece(32, 0);
     state->building_count_support = create_savegame_piece(24, 0);
     state->tutorial_part2 = create_savegame_piece(4, 0);
-    state->Data_Event_gladiatorRevolt_gameYear = create_savegame_piece(4, 0);
-    state->Data_Event_gladiatorRevolt_month = create_savegame_piece(4, 0);
-    state->Data_Event_gladiatorRevolt_endMonth = create_savegame_piece(4, 0);
-    state->Data_Event_gladiatorRevolt_state = create_savegame_piece(4, 0);
+    state->gladiator_revolt = create_savegame_piece(16, 0);
     state->trade_route_limit = create_savegame_piece(1280, 1);
     state->trade_route_traded = create_savegame_piece(1280, 1);
     state->Data_Buildings_Extra_barracksTowerSentryRequested = create_savegame_piece(4, 0);
@@ -506,12 +501,7 @@ static void savegame_deserialize(savegame_state *state)
     tutorial_load_state(state->tutorial_part1, state->tutorial_part2, state->tutorial_part3);
 
     building_storage_load_state(state->building_storages);
-
-    read_all_from_buffer(state->Data_Event_gladiatorRevolt_gameYear, &Data_Event.gladiatorRevolt.gameYear);
-    read_all_from_buffer(state->Data_Event_gladiatorRevolt_month, &Data_Event.gladiatorRevolt.month);
-    read_all_from_buffer(state->Data_Event_gladiatorRevolt_endMonth, &Data_Event.gladiatorRevolt.endMonth);
-    read_all_from_buffer(state->Data_Event_gladiatorRevolt_state, &Data_Event.gladiatorRevolt.state);
-    
+    scenario_gladiator_revolt_load_state(state->gladiator_revolt);
     trade_routes_load_state(state->trade_route_limit, state->trade_route_traded);
     
     read_all_from_buffer(state->Data_Buildings_Extra_barracksTowerSentryRequested, &Data_Buildings_Extra.barracksTowerSentryRequested);
@@ -637,12 +627,7 @@ static void savegame_serialize(savegame_state *state)
     tutorial_save_state(state->tutorial_part1, state->tutorial_part2, state->tutorial_part3);
 
     building_storage_save_state(state->building_storages);
-
-    write_all_to_buffer(state->Data_Event_gladiatorRevolt_gameYear, &Data_Event.gladiatorRevolt.gameYear);
-    write_all_to_buffer(state->Data_Event_gladiatorRevolt_month, &Data_Event.gladiatorRevolt.month);
-    write_all_to_buffer(state->Data_Event_gladiatorRevolt_endMonth, &Data_Event.gladiatorRevolt.endMonth);
-    write_all_to_buffer(state->Data_Event_gladiatorRevolt_state, &Data_Event.gladiatorRevolt.state);
-    
+    scenario_gladiator_revolt_save_state(state->gladiator_revolt);
     trade_routes_save_state(state->trade_route_limit, state->trade_route_traded);
 
     write_all_to_buffer(state->Data_Buildings_Extra_barracksTowerSentryRequested, &Data_Buildings_Extra.barracksTowerSentryRequested);

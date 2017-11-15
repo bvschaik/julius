@@ -17,12 +17,6 @@ extern struct _Data_Event {
 		int month;
 		int state;
 	} emperorChange;
-	struct {
-		int gameYear;
-		int month;
-		int endMonth;
-		int state;
-	} gladiatorRevolt;
 } Data_Event;
 
 #endif
