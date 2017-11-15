@@ -96,7 +96,6 @@ add_executable(julius
 	src/Cursor.c
 	src/Desirability.c
 	src/Event.c
-	src/Event_Invasion.c
 	src/Figure.c
 	src/FigureAction.c
 	src/FigureAction_Animal.c

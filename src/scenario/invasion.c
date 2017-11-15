@@ -105,6 +105,27 @@ void scenario_invasion_init()
     }
 }
 
+int scenario_invasion_exists_upcoming()
+{
+    for (int i = 0; i < MAX_INVASION_WARNINGS; i++) {
+        if (Data_InvasionWarnings[i].inUse && Data_InvasionWarnings[i].handled) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int scenario_invasion_count()
+{
+    int num_invasions = 0;
+    for (int i = 0; i < MAX_INVASIONS; i++) {
+        if (Data_Scenario.invasions.type[i]) {
+            num_invasions++;
+        }
+    }
+    return num_invasions;
+}
+
 static void determine_formations(int num_soldiers, int *num_formations, int soldiers_per_formation[])
 {
     if (num_soldiers > 0) {

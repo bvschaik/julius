@@ -7,6 +7,11 @@
 #define MAX_HERDS 4
 #define MAX_FISH 8
 
+int scenario_map_size()
+{
+    return Data_Scenario.mapSizeX;
+}
+
 void scenario_map_init_entry_exit()
 {
     if (Data_Scenario.entryPoint.x == -1 || Data_Scenario.entryPoint.y == -1) {

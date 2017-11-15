@@ -27,4 +27,8 @@ int scenario_image_id();
 
 const uint8_t *scenario_brief_description();
 
+int scenario_initial_funds();
+
+int scenario_rescue_loan();
+
 #endif // SCENARIO_PROPERTY_H

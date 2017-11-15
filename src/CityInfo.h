@@ -34,6 +34,8 @@ void CityInfo_Finance_handleMonthChange();
 void CityInfo_Finance_handleYearChange();
 void CityInfo_Finance_spendOnConstruction(int amount);
 
+void CityInfo_Finance_updateDebtState();
+
 void CityInfo_Population_recordMonthlyPopulation();
 int CityInfo_Population_getPeopleOfWorkingAge();
 int CityInfo_Population_getNumberOfSchoolAgeChildren();

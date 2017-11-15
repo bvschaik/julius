@@ -189,7 +189,7 @@ static void loadScenario(const char *scenarioName)
 	Data_CityInfo.exitPointY = Data_Scenario.exitPoint.y;
 	Data_CityInfo.exitPointGridOffset = GridOffset(Data_CityInfo.exitPointX, Data_CityInfo.exitPointY);
 
-	Data_CityInfo.treasury = difficulty_adjust_money(Data_Scenario.startFunds);
+	Data_CityInfo.treasury = difficulty_adjust_money(scenario_initial_funds());
 	Data_CityInfo.financeBalanceLastYear = Data_CityInfo.treasury;
 	game_time_init(scenario_property_start_year());
 

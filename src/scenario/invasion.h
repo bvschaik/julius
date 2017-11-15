@@ -5,6 +5,10 @@
 
 void scenario_invasion_init();
 
+int scenario_invasion_exists_upcoming();
+
+int scenario_invasion_count();
+
 int scenario_invasion_start_from_mars();
 
 void scenario_invasion_start_from_cheat();

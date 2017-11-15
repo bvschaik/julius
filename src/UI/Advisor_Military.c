@@ -2,13 +2,13 @@
 #include "Window.h"
 
 #include "../CityView.h"
-#include "../Event.h"
 #include "../Formation.h"
 
 #include "../Data/Figure.h"
 #include "../Data/Settings.h"
 
 #include "figure/formation.h"
+#include "scenario/invasion.h"
 
 static void buttonGoToLegion(int param1, int param2);
 static void buttonReturnToFort(int param1, int param2);
@@ -63,7 +63,7 @@ void UI_Advisor_Military_drawBackground(int *advisorHeight)
         enemy_text_id = 10;
     } else if (Data_CityInfo.numImperialSoldiersInCity) {
         enemy_text_id = 11;
-    } else if (Event_existsUpcomingInvasion()) {
+    } else if (scenario_invasion_exists_upcoming()) {
         enemy_text_id = 9;
     } else {
         enemy_text_id = 8;

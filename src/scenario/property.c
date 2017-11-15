@@ -46,3 +46,13 @@ const uint8_t *scenario_brief_description()
 {
     return Data_Scenario.briefDescription;
 }
+
+int scenario_initial_funds()
+{
+    return Data_Scenario.startFunds;
+}
+
+int scenario_rescue_loan()
+{
+    return Data_Scenario.rescueLoan;
+}

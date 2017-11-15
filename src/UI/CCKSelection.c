@@ -5,6 +5,8 @@
 #include "core/file.h"
 #include "core/string.h"
 #include "scenario/criteria.h"
+#include "scenario/invasion.h"
+#include "scenario/map.h"
 #include "scenario/property.h"
 #include "sound/speech.h"
 
@@ -15,7 +17,6 @@
 
 #include "../Data/Constants.h"
 #include "../Data/FileList.h"
-#include "../Data/Scenario.h"
 #include "../Data/Screen.h"
 #include "../Data/Settings.h"
 
@@ -135,7 +136,7 @@ static void drawScenarioInfo()
 
 	// map size
 	int textId;
-	switch (Data_Scenario.mapSizeX) {
+	switch (scenario_map_size()) {
 		case 40: textId = 121; break;
 		case 60: textId = 122; break;
 		case 80: textId = 123; break;
@@ -147,12 +148,7 @@ static void drawScenarioInfo()
 		baseOffsetX + 15, baseOffsetY + 150, 260, FONT_NORMAL_BLACK);
 
 	// military
-	int numInvasions = 0;
-	for (int i = 0; i < 20; i++) {
-		if (Data_Scenario.invasions.type[i]) {
-			numInvasions++;
-		}
-	}
+	int numInvasions = scenario_invasion_count();
 	if (numInvasions <= 0) {
 		textId = 112;
 	} else if (numInvasions <= 2) {
