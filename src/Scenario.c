@@ -44,6 +44,7 @@
 #include "game/tutorial.h"
 #include "graphics/image.h"
 #include "scenario/demand_change.h"
+#include "scenario/earthquake.h"
 #include "scenario/map.h"
 #include "scenario/price_change.h"
 #include "scenario/property.h"
@@ -190,32 +191,7 @@ static void loadScenario(const char *scenarioName)
 	game_time_init(scenario_property_start_year());
 
 	// set up events
-	// earthquake
-	Data_Event.earthquake.gameYear = Data_Scenario.startYear + Data_Scenario.earthquakeYear;
-	Data_Event.earthquake.month = 2 + (random_byte() & 7);
-	switch (Data_Scenario.earthquakeSeverity) {
-		default:
-			Data_Event.earthquake.maxDuration = 0;
-			Data_Event.earthquake.maxDelay = 0;
-			break;
-		case Earthquake_Small:
-			Data_Event.earthquake.maxDuration = 25 + (random_byte() & 0x1f);
-			Data_Event.earthquake.maxDelay = 10;
-			break;
-		case Earthquake_Medium:
-			Data_Event.earthquake.maxDuration = 100 + (random_byte() & 0x3f);
-			Data_Event.earthquake.maxDelay = 8;
-			break;
-		case Earthquake_Large:
-			Data_Event.earthquake.maxDuration = 250 + random_byte();
-			Data_Event.earthquake.maxDelay = 6;
-			break;
-	}
-	Data_Event.earthquake.state = SpecialEvent_NotStarted;
-	for (int i = 0; i < 4; i++) {
-		Data_Event.earthquake.expand[i].x = Data_Scenario.earthquakePoint.x;
-		Data_Event.earthquake.expand[i].y = Data_Scenario.earthquakePoint.y;
-	}
+	scenario_earthquake_init();
 	// gladiator revolt
 	Data_Event.gladiatorRevolt.gameYear = Data_Scenario.startYear + Data_Scenario.gladiatorRevolt.year;
 	Data_Event.gladiatorRevolt.month = 3 + (random_byte() & 3);

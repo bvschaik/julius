@@ -9,16 +9,19 @@
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 #include "Data/Grid.h"
-#include "Data/Scenario.h"
 #include "Data/Settings.h"
 
 #include "building/list.h"
 #include "graphics/image.h"
+#include "scenario/building.h"
 
 static void determineMeetingCenter();
 
 void Natives_init()
 {
+    int image_hut = scenario_building_image_native_hut();
+    int image_meeting = scenario_building_image_native_meeting();
+    int image_crops = scenario_building_image_native_crops();
 	int nativeGraphic = image_group(ID_Graphic_NativeBuilding);
 	int gridOffset = Data_Settings_Map.gridStartOffset;
 	for (int y = 0; y < Data_Settings_Map.height; y++, gridOffset += Data_Settings_Map.gridBorderSize) {
@@ -29,16 +32,16 @@ void Natives_init()
 			
 			int randomBit = Data_Grid_random[gridOffset] & 1;
 			int buildingType;
-			if (Data_Grid_graphicIds[gridOffset] == Data_Scenario.nativeGraphics.hut) {
+			if (Data_Grid_graphicIds[gridOffset] == image_hut) {
 				buildingType = BUILDING_NATIVE_HUT;
 				Data_Grid_graphicIds[gridOffset] = nativeGraphic;
-			} else if (Data_Grid_graphicIds[gridOffset] == Data_Scenario.nativeGraphics.hut + 1) {
+			} else if (Data_Grid_graphicIds[gridOffset] == image_hut + 1) {
 				buildingType = BUILDING_NATIVE_HUT;
 				Data_Grid_graphicIds[gridOffset] = nativeGraphic + 1;
-			} else if (Data_Grid_graphicIds[gridOffset] == Data_Scenario.nativeGraphics.meetingCenter) {
+			} else if (Data_Grid_graphicIds[gridOffset] == image_meeting) {
 				buildingType = BUILDING_NATIVE_MEETING;
 				Data_Grid_graphicIds[gridOffset] = nativeGraphic + 2;
-			} else if (Data_Grid_graphicIds[gridOffset] == Data_Scenario.nativeGraphics.crops) {
+			} else if (Data_Grid_graphicIds[gridOffset] == image_crops) {
 				buildingType = BUILDING_NATIVE_CROPS;
 				Data_Grid_graphicIds[gridOffset] = image_group(ID_Graphic_FarmCrops) + randomBit;
 			} else { //unknown building

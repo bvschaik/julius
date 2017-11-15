@@ -55,6 +55,7 @@ set (SCENARIO_FILES
     src/scenario/building.c
     src/scenario/criteria.c
     src/scenario/demand_change.c
+    src/scenario/earthquake.c
     src/scenario/map.c
     src/scenario/price_change.c
     src/scenario/property.c

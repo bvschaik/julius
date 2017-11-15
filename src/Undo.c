@@ -17,6 +17,7 @@
 
 #include "building/properties.h"
 #include "graphics/image.h"
+#include "scenario/earthquake.h"
 
 #include <string.h>
 
@@ -239,7 +240,7 @@ void Undo_updateAvailable()
 	if (!Data_State.undoAvailable || !Data_State.undoReady) {
 		return;
 	}
-	if (data.timeout <= 0 || Data_Event.earthquake.state == SpecialEvent_InProgress) {
+	if (data.timeout <= 0 || scenario_earthquake_is_in_progress()) {
 		Data_State.undoAvailable = 0;
 		clearBuildingList();
 		UI_Window_requestRefresh();
