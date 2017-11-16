@@ -3,7 +3,6 @@
 #include "Building.h"
 #include "CityInfo.h"
 #include "Desirability.h"
-#include "Event.h"
 #include "Figure.h"
 #include "FigureAction.h"
 #include "Formation.h"
@@ -42,6 +41,7 @@
 #include "scenario/gladiator_revolt.h"
 #include "scenario/invasion.h"
 #include "scenario/price_change.h"
+#include "scenario/random_event.h"
 #include "scenario/request.h"
 #include "sound/music.h"
 
@@ -132,7 +132,7 @@ static void advanceMonth()
 	Data_CityInfo.monthsSinceFestival++;
 
 	CityInfo_Population_updateHealthRate();
-	Event_handleRandomEvents();
+	scenario_random_event_process();
 	CityInfo_Finance_handleMonthChange();
 	CityInfo_Resource_housesConsumeFood();
 	scenario_distant_battle_process();

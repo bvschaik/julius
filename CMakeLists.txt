@@ -63,6 +63,7 @@ set (SCENARIO_FILES
     src/scenario/map.c
     src/scenario/price_change.c
     src/scenario/property.c
+    src/scenario/random_event.c
     src/scenario/request.c
 )
 set (GRAPHICS_FILES
@@ -96,7 +97,6 @@ add_executable(julius
 	src/CityView.c
 	src/Cursor.c
 	src/Desirability.c
-	src/Event.c
 	src/Figure.c
 	src/FigureAction.c
 	src/FigureAction_Animal.c
