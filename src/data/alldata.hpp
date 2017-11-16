@@ -12,6 +12,5 @@
 #include "invasion.hpp"
 #include "filelist.hpp"
 #include "routes.hpp"
-#include "debug.hpp"
 #include "constants.hpp"
 #include "event.hpp"

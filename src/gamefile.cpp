@@ -16,7 +16,6 @@
 
 #include "data/building.hpp"
 #include "data/cityinfo.hpp"
-#include "data/debug.hpp"
 #include "data/event.hpp"
 #include "data/filelist.hpp"
 #include "data/grid.hpp"
@@ -150,7 +149,7 @@ typedef struct
     buffer *Data_Settings_Map_orientation;
     buffer *game_time;
     buffer *Data_Buildings_Extra_highestBuildingIdEver;
-    buffer *Data_Debug_maxConnectsEver;
+    buffer *Data_Buildings_Extra_maxConnectsEver;
     buffer *random_iv;
     buffer *Data_Settings_Map_camera_x;
     buffer *Data_Settings_Map_camera_y;
@@ -220,8 +219,8 @@ typedef struct
     buffer *Data_CityInfo_Extra_exitPointFlag_x;
     buffer *Data_CityInfo_Extra_exitPointFlag_y;
     buffer *Data_Event_lastInternalInvasionId;
-    buffer *Data_Debug_incorrectHousePositions;
-    buffer *Data_Debug_unfixableHousePositions;
+    buffer *Data_Buildings_Extra_incorrectHousePositions;
+    buffer *Data_Buildings_Extra_unfixableHousePositions;
     buffer *Data_FileList_selectedScenario;
     buffer *Data_CityInfo_Extra_bookmarks;
     buffer *tutorial_part3;
@@ -319,7 +318,7 @@ void init_savegame_data()
     state->Data_Settings_Map_orientation = create_savegame_piece(4, 0);
     state->game_time = create_savegame_piece(20, 0);
     state->Data_Buildings_Extra_highestBuildingIdEver = create_savegame_piece(4, 0);
-    state->Data_Debug_maxConnectsEver = create_savegame_piece(4, 0);
+    state->Data_Buildings_Extra_maxConnectsEver = create_savegame_piece(4, 0);
     state->random_iv = create_savegame_piece(8, 0);
     state->Data_Settings_Map_camera_x = create_savegame_piece(4, 0);
     state->Data_Settings_Map_camera_y = create_savegame_piece(4, 0);
@@ -389,8 +388,8 @@ void init_savegame_data()
     state->Data_CityInfo_Extra_exitPointFlag_x = create_savegame_piece(4, 0);
     state->Data_CityInfo_Extra_exitPointFlag_y = create_savegame_piece(4, 0);
     state->Data_Event_lastInternalInvasionId = create_savegame_piece(2, 0);
-    state->Data_Debug_incorrectHousePositions = create_savegame_piece(4, 0);
-    state->Data_Debug_unfixableHousePositions = create_savegame_piece(4, 0);
+    state->Data_Buildings_Extra_incorrectHousePositions = create_savegame_piece(4, 0);
+    state->Data_Buildings_Extra_unfixableHousePositions = create_savegame_piece(4, 0);
     state->Data_FileList_selectedScenario = create_savegame_piece(65, 0);
     state->Data_CityInfo_Extra_bookmarks = create_savegame_piece(32, 0);
     state->tutorial_part3 = create_savegame_piece(4, 0);
@@ -483,7 +482,7 @@ static void savegame_deserialize(savegame_state *state)
     game_time_load_state(state->game_time);
 
     read_all_from_buffer(state->Data_Buildings_Extra_highestBuildingIdEver, &Data_Buildings_Extra.highestBuildingIdEver);
-    read_all_from_buffer(state->Data_Debug_maxConnectsEver, &Data_Debug.maxConnectsEver);
+    read_all_from_buffer(state->Data_Buildings_Extra_maxConnectsEver, &Data_Buildings_Extra.maxConnectsEver);
 
     random_load_state(state->random_iv);
 
@@ -563,8 +562,8 @@ static void savegame_deserialize(savegame_state *state)
     read_all_from_buffer(state->Data_CityInfo_Extra_exitPointFlag_x, &Data_CityInfo_Extra.exitPointFlag.x);
     read_all_from_buffer(state->Data_CityInfo_Extra_exitPointFlag_y, &Data_CityInfo_Extra.exitPointFlag.y);
     read_all_from_buffer(state->Data_Event_lastInternalInvasionId, &Data_Event.lastInternalInvasionId);
-    read_all_from_buffer(state->Data_Debug_incorrectHousePositions, &Data_Debug.incorrectHousePositions);
-    read_all_from_buffer(state->Data_Debug_unfixableHousePositions, &Data_Debug.unfixableHousePositions);
+    read_all_from_buffer(state->Data_Buildings_Extra_incorrectHousePositions, &Data_Buildings_Extra.incorrectHousePositions);
+    read_all_from_buffer(state->Data_Buildings_Extra_unfixableHousePositions, &Data_Buildings_Extra.unfixableHousePositions);
     read_all_from_buffer(state->Data_FileList_selectedScenario, &Data_FileList.selectedScenario);
     read_all_from_buffer(state->Data_CityInfo_Extra_bookmarks, &Data_CityInfo_Extra.bookmarks);
     read_all_from_buffer(state->Data_CityInfo_Extra_entryPointFlag_gridOffset, &Data_CityInfo_Extra.entryPointFlag.gridOffset);
@@ -617,7 +616,7 @@ static void savegame_serialize(savegame_state *state)
     game_time_save_state(state->game_time);
 
     write_all_to_buffer(state->Data_Buildings_Extra_highestBuildingIdEver, &Data_Buildings_Extra.highestBuildingIdEver);
-    write_all_to_buffer(state->Data_Debug_maxConnectsEver, &Data_Debug.maxConnectsEver);
+    write_all_to_buffer(state->Data_Buildings_Extra_maxConnectsEver, &Data_Buildings_Extra.maxConnectsEver);
 
     random_save_state(state->random_iv);
 
@@ -694,8 +693,8 @@ static void savegame_serialize(savegame_state *state)
     write_all_to_buffer(state->Data_CityInfo_Extra_exitPointFlag_x, &Data_CityInfo_Extra.exitPointFlag.x);
     write_all_to_buffer(state->Data_CityInfo_Extra_exitPointFlag_y, &Data_CityInfo_Extra.exitPointFlag.y);
     write_all_to_buffer(state->Data_Event_lastInternalInvasionId, &Data_Event.lastInternalInvasionId);
-    write_all_to_buffer(state->Data_Debug_incorrectHousePositions, &Data_Debug.incorrectHousePositions);
-    write_all_to_buffer(state->Data_Debug_unfixableHousePositions, &Data_Debug.unfixableHousePositions);
+    write_all_to_buffer(state->Data_Buildings_Extra_incorrectHousePositions, &Data_Buildings_Extra.incorrectHousePositions);
+    write_all_to_buffer(state->Data_Buildings_Extra_unfixableHousePositions, &Data_Buildings_Extra.unfixableHousePositions);
     write_all_to_buffer(state->Data_FileList_selectedScenario, &Data_FileList.selectedScenario);
     write_all_to_buffer(state->Data_CityInfo_Extra_bookmarks, &Data_CityInfo_Extra.bookmarks);
     write_all_to_buffer(state->Data_CityInfo_Extra_entryPointFlag_gridOffset, &Data_CityInfo_Extra.entryPointFlag.gridOffset);
