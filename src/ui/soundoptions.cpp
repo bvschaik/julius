@@ -182,7 +182,7 @@ void UI_SoundOptions_handleMouse(const mouse *m)
 
 static void buttonToggle(int type, int param2)
 {
-    setting_toggle_sound_enabled(type);
+    setting_toggle_sound_enabled((set_sound_type)type);
     switch (type)
     {
     case SOUND_MUSIC:

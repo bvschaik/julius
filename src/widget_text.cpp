@@ -233,7 +233,7 @@ static int getWordWidth(const unsigned char *str, font_t font, int *outNumChars)
     return width;
 }
 
-void Widget::Text::drawCentered(const uint8_t *str, int x, int y, int boxWidth, font_t font, color_t color)
+void Widget::Text::drawCentered(const char *str, int x, int y, int boxWidth, font_t font, color_t color)
 {
     int offset = (boxWidth - Widget_Text_getWidth(str, font)) / 2;
     if (offset < 0)
@@ -243,7 +243,7 @@ void Widget::Text::drawCentered(const uint8_t *str, int x, int y, int boxWidth, 
     Widget::Text::draw(str, offset + x, y, font, color);
 }
 
-int Widget::Text::draw(const uint8_t *str, int x, int y, font_t font, color_t color)
+int Widget::Text::draw(const char *str, int x, int y, font_t font, color_t color)
 {
     int letterSpacing;
     int lineHeight;
@@ -505,7 +505,7 @@ int Widget_GameText_drawYearNoSpacing(int year, int xOffset, int yOffset, font_t
     return width;
 }
 
-int Widget_Text_drawMultiline(const uint8_t *str, int xOffset, int yOffset, int boxWidth, font_t font)
+int Widget_Text_drawMultiline(const char *str, int xOffset, int yOffset, int boxWidth, font_t font)
 {
     int lineHeight;
     switch (font)
@@ -858,7 +858,7 @@ static int drawRichText(const uint8_t *str, int xOffset, int yOffset,
     return numLines;
 }
 
-int Widget_RichText_draw(const uint8_t *str, int xOffset, int yOffset,
+int Widget_RichText_draw(const char *str, int xOffset, int yOffset,
                          int boxWidth, int heightLines, int measureOnly)
 {
     return drawRichText(str, xOffset, yOffset, boxWidth, heightLines, 0, measureOnly);
@@ -1129,7 +1129,7 @@ int Widget_RichText_getScrollPosition()
     return data.scrollPosition;
 }
 
-int Widget_RichText_init(const uint8_t *str, int xText, int yText, int widthBlocks, int heightBlocks, int adjustWidthOnNoScroll)
+int Widget_RichText_init(const char *str, int xText, int yText, int widthBlocks, int heightBlocks, int adjustWidthOnNoScroll)
 {
     data.xText = xText;
     data.yText = yText;

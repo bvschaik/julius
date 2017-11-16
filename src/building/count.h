@@ -60,7 +60,7 @@ int building_count_industry_active(resource_type resource);
  * @param resource Resource type
  * @return Total number of buildings
  */
-int building_count_industry_total(resource_type resource);
+int building_count_industry_total(int resource);
 
 /**
  * Save the building counts

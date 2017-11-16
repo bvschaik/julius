@@ -11,7 +11,8 @@
 /**
  * Building model
  */
-typedef struct {
+typedef struct
+{
     int cost; /**< Cost of structure or of one tile of a structure (for walls) */
     int desirability_value; /**< Initial desirability value */
     int desirability_step; /**< Desirability step (in tiles) */
@@ -23,7 +24,8 @@ typedef struct {
 /**
  * House model
  */
-typedef struct {
+typedef struct
+{
     int devolve_desirability; /**< Desirability at which the house devolves */
     int evolve_desirability; /**< Desirability at which the house evolves */
     int entertainment; /**< Entertainment points required */

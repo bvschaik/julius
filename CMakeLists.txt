@@ -5,12 +5,25 @@ option(BUILD_SDL2STATIC "Static sdl2" ON)
 
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/cmake/")
 
+#select compiler
+if (CMAKE_COMPILER_IS_CLANG)
+  # using Clang
+  add_definitions("-DAPP_COMPILER_NAME=\"clang\"")
+elseif (CMAKE_COMPILER_IS_GNUCXX)
+  # using GCC
+  add_definitions("-DAPP_COMPILER_NAME=\"gcc\"")
+elseif (MSVC)
+  # using Visual Studio C++
+  add_definitions("-DAPP_COMPILER_NAME=\"msvc\"")
+endif()
+
 #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
 set(LIBS_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libs" )
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
 #set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
 set(SMK_FILES src/video/smacker.c src/video/smk_bitstream.c src/video/smk_hufftree.c)
+set(APP_FILES linux/main2.cpp linux/SDLSoundDevice.c)
 file(GLOB CORE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/core/*.*)
 file(GLOB BUILDING_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/building/*.*)
 file(GLOB EMPIRE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/empire/*.*)
@@ -34,8 +47,7 @@ else()
 endif()
 
 add_executable(${PROJECT_NAME}
-  linux/main2.cpp
-  linux/SDLSoundDevice.c
+  ${APP_FILES}
   ${DATA_FILES}
   ${UI_FILES}
   ${MAIN_FILES}
@@ -46,7 +58,8 @@ add_executable(${PROJECT_NAME}
   ${FIGURE_FILES}
   ${GAME_FILES}
   ${GRAPHICS_FILES}
-  ${SMK_FILES})
+  ${SMK_FILES}
+)
 
 #include(FindPkgConfig)
 #pkg_search_module(SDL2 REQUIRED sdl2)
@@ -71,9 +84,88 @@ target_link_libraries (julius ${SDL2_MIXER_LIBRARY})
 
 include_directories(src)
 
+######################## Win32 settings #################################
+
+if(WIN32)
+  if(MSVC)
+    ########################## set visual studio virtual folders ###############
+    source_group("building" FILES ${BUILDING_FILES})
+    source_group("app" FILES ${APP_FILES})
+    source_group("data" FILES ${DATA_FILES})
+    source_group("ui" FILES ${UI_FILES})
+    source_group("main" FILES ${MAIN_FILES})
+    source_group("core" FILES ${CORE_FILES})
+    source_group("empire" FILES ${EMPIRE_FILES})
+    source_group("city" FILES ${CITY_FILES})
+    source_group("figure" FILES ${FIGURE_FILES})
+    source_group("game" FILES ${GAME_FILES})
+    source_group("graphics" FILES ${GRAPHICS_FILES})
+    source_group("smk" FILES ${SMK_FILES})
+
+    #############################################################################
+
+    #avoid compiler warning
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc")
+
+    set(COMPILER_SUPPORTS_CXX11 1)
+  elseif(CMAKE_COMPILER_IS_GNUCXX)
+    ####################### Win32 mingw settings ##################################
+    #not show console window
+    include(CheckCXXCompilerFlag)
+    CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -mwindows -static-libstdc++ -static-libgcc")
+  endif()
+
+   target_link_libraries(${PROJECT_NAME} "opengl32")
+   target_link_libraries(${PROJECT_NAME} "winmm")
+   target_link_libraries(${PROJECT_NAME} "imagehlp")
+
+  #include steam libraries
+  set(GAME_BINARY_FILENAME "julius")
+endif(WIN32)
+
+######################## osx clang settings ##################################
+
+if(APPLE)
+  # Enforce C++11
+  set(USE_CPP11 ON)
+
+  # Check for C++11 suport
+  include(CheckCXXCompilerFlag)
+  CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
+
+  set(GAME_BINARY_FILENAME "julius.app")
+  INCLUDE_DIRECTORIES ( /System/Library/Frameworks )
+  FIND_LIBRARY(OpenGL_LIBRARY OpenGL)
+  target_link_libraries(${PROJECT_NAME} ${OpenGL_LIBRARY} )
+endif(APPLE)
+
+####################### linux gcc settings ######################################
+
+if(UNIX AND NOT APPLE)
+  set(APP_BINARY_FILENAME "julius.x64")
+
+  # set compiler options
+  if(NOT CMAKE_BUILD_TYPE_RELEASE)
+    message("App: building in debug mode")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-unused-value -g")
+    add_definitions(-DDEBUG)
+  else()
+    #release options strip bin
+    message("App: building in release mode")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s -fno-permissive")
+  endif()
+
+  # Check for C++11 suport
+  include(CheckCXXCompilerFlag)
+  CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
+endif()
+
 install(TARGETS julius RUNTIME DESTINATION bin)
 
 message( "C++ compiler is ${CMAKE_CXX_COMPILER_ID}" )
+
+set_property(TARGET ${PROJECT_NAME} PROPERTY OUTPUT_NAME ${APP_BINARY_FILENAME})
 # Unit tests
 #enable_testing()
 #add_subdirectory(test)

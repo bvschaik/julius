@@ -1284,7 +1284,7 @@ static void drawBuildingGhostShipyardWharf()
     }
     else
     {
-        building_type type = Data_State.selectedBuilding.type;
+        building_type type = (building_type)Data_State.selectedBuilding.type;
         const building_properties *props = building_properties_for_type(type);
         int graphicId = image_group(props->image_group) + props->image_offset + dirRelative;
         int xOffset = Data_CityView.selectedTile.xOffsetInPixels;

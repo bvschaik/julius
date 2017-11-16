@@ -2,12 +2,14 @@
 
 #include <string.h>
 
-struct record {
+struct record
+{
     int active;
     int total;
 };
 
-static struct {
+static struct
+{
     struct record buildings[BUILDING_TYPE_MAX];
     struct record industry[RESOURCE_MAX];
 } data;
@@ -20,7 +22,8 @@ void building_count_clear()
 void building_count_increase(building_type type, int active)
 {
     ++data.buildings[type].total;
-    if (active) {
+    if (active)
+    {
         ++data.buildings[type].active;
     }
 }
@@ -28,17 +31,20 @@ void building_count_increase(building_type type, int active)
 void building_count_industry_increase(resource_type resource, int active)
 {
     ++data.industry[resource].total;
-    if (active) {
+    if (active)
+    {
         ++data.industry[resource].active;
     }
 }
 
 void building_count_limit_hippodrome()
 {
-    if (data.buildings[BUILDING_HIPPODROME].total > 1) {
+    if (data.buildings[BUILDING_HIPPODROME].total > 1)
+    {
         data.buildings[BUILDING_HIPPODROME].total = 1;
     }
-    if (data.buildings[BUILDING_HIPPODROME].active > 1) {
+    if (data.buildings[BUILDING_HIPPODROME].active > 1)
+    {
         data.buildings[BUILDING_HIPPODROME].active = 1;
     }
 }
@@ -58,23 +64,25 @@ int building_count_industry_active(resource_type resource)
     return data.industry[resource].active;
 }
 
-int building_count_industry_total(resource_type resource)
+int building_count_industry_total(int resource)
 {
     return data.industry[resource].total;
 }
 
 
 void building_count_save_state(buffer *industry, buffer *culture1, buffer *culture2,
-                                buffer *culture3, buffer *military, buffer *support)
+                               buffer *culture3, buffer *military, buffer *support)
 {
     // industry
-    for (int i = 0; i < RESOURCE_MAX; i++) {
+    for (int i = 0; i < RESOURCE_MAX; i++)
+    {
         buffer_write_i32(industry, data.industry[i].total);
     }
-    for (int i = 0; i < RESOURCE_MAX; i++) {
+    for (int i = 0; i < RESOURCE_MAX; i++)
+    {
         buffer_write_i32(industry, data.industry[i].active);
     }
-    
+
     // culture 1
     buffer_write_i32(culture1, data.buildings[BUILDING_THEATER].total);
     buffer_write_i32(culture1, data.buildings[BUILDING_THEATER].active);
@@ -137,7 +145,7 @@ void building_count_save_state(buffer *industry, buffer *culture1, buffer *cultu
     buffer_write_i32(military, data.buildings[BUILDING_MILITARY_ACADEMY].active);
     buffer_write_i32(military, data.buildings[BUILDING_BARRACKS].total);
     buffer_write_i32(military, data.buildings[BUILDING_BARRACKS].active);
-    
+
     // support
     buffer_write_i32(support, data.buildings[BUILDING_MARKET].total);
     buffer_write_i32(support, data.buildings[BUILDING_MARKET].active);
@@ -148,16 +156,18 @@ void building_count_save_state(buffer *industry, buffer *culture1, buffer *cultu
 }
 
 void building_count_load_state(buffer *industry, buffer *culture1, buffer *culture2,
-                                buffer *culture3, buffer *military, buffer *support)
+                               buffer *culture3, buffer *military, buffer *support)
 {
     // industry
-    for (int i = 0; i < RESOURCE_MAX; i++) {
+    for (int i = 0; i < RESOURCE_MAX; i++)
+    {
         data.industry[i].total = buffer_read_i32(industry);
     }
-    for (int i = 0; i < RESOURCE_MAX; i++) {
+    for (int i = 0; i < RESOURCE_MAX; i++)
+    {
         data.industry[i].active = buffer_read_i32(industry);
     }
-    
+
     // culture 1
     data.buildings[BUILDING_THEATER].total = buffer_read_i32(culture1);
     data.buildings[BUILDING_THEATER].active = buffer_read_i32(culture1);
@@ -220,7 +230,7 @@ void building_count_load_state(buffer *industry, buffer *culture1, buffer *cultu
     data.buildings[BUILDING_MILITARY_ACADEMY].active = buffer_read_i32(military);
     data.buildings[BUILDING_BARRACKS].total = buffer_read_i32(military);
     data.buildings[BUILDING_BARRACKS].active = buffer_read_i32(military);
-    
+
     // support
     data.buildings[BUILDING_MARKET].total = buffer_read_i32(support);
     data.buildings[BUILDING_MARKET].active = buffer_read_i32(support);

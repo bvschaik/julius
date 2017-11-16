@@ -471,7 +471,7 @@ static void toggleResourceState(int index, int param2)
     {
         resourceId = Data_CityInfo_Resource.availableFoods[index-1];
     }
-    building_storage_cycle_resource_state(storageId, resourceId);
+    building_storage_cycle_resource_state(storageId, (resource_type)resourceId);
     UI_Window_requestRefresh();
 }
 

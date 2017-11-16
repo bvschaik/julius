@@ -4,7 +4,8 @@
 #include "core/buffer.h"
 
 
-typedef enum {
+typedef enum
+{
     MESSAGE_CAT_RIOT = 0,
     MESSAGE_CAT_FIRE = 1,
     MESSAGE_CAT_COLLAPSE = 2,
@@ -16,7 +17,8 @@ typedef enum {
     MESSAGE_CAT_FISHING_BLOCKED = 11,
 } message_category;
 
-typedef enum {
+typedef enum
+{
     MessageAdvisor_None = 0,
     MESSAGE_ADVISOR_LABOR = 1,
     MESSAGE_ADVISOR_TRADE = 2,
@@ -27,7 +29,8 @@ typedef enum {
     MESSAGE_ADVISOR_RELIGION = 7,
 } message_advisor;
 
-typedef enum {
+typedef enum
+{
     MESSAGE_POPULATION_500 = 2,
     MESSAGE_POPULATION_1000 = 3,
     MESSAGE_POPULATION_2000 = 4,
@@ -146,7 +149,8 @@ typedef enum {
     MESSAGE_LOCAL_UPRISING_MARS = 121,
 } city_message_type;
 
-typedef struct {
+typedef struct
+{
     int sequence;
     int message_type;
     int year;
@@ -174,9 +178,9 @@ void city_message_process_queue();
 
 void city_message_sort_and_compact();
 
-int city_message_get_text_id(city_message_type message_type);
+int city_message_get_text_id(int message_type);
 
-message_advisor city_message_get_advisor(city_message_type message_type);
+message_advisor city_message_get_advisor(int message_type);
 
 void city_message_reset_category_count(message_category category);
 

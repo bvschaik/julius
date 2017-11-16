@@ -30,7 +30,7 @@ typedef struct
     int mapSizeY;
     int gridFirstElement;
     int gridBorderSize;
-    unsigned char briefDescription[64];
+    char briefDescription[64];
     unsigned char briefing[522];
     unsigned char requests_canComplyDialogShown[20];
     short imageId;

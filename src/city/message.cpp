@@ -342,7 +342,7 @@ void city_message_sort_and_compact()
     }
 }
 
-int city_message_get_text_id(city_message_type message_type)
+int city_message_get_text_id(int message_type)
 {
     if (message_type > 50)
     {
@@ -354,7 +354,7 @@ int city_message_get_text_id(city_message_type message_type)
     }
 }
 
-message_advisor city_message_get_advisor(city_message_type message_type)
+message_advisor city_message_get_advisor(int message_type)
 {
     switch (message_type)
     {

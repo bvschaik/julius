@@ -9,7 +9,6 @@ void trade_route_init(int route_id, resource_type resource, int limit);
 int trade_route_limit(int route_id, resource_type resource);
 
 int trade_route_traded(int route_id, resource_type resource);
-
 /**
  * Increases the trade limit of the resource
  * @param route_id Trade route

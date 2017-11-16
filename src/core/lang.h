@@ -49,7 +49,7 @@ struct lang_message_image
  */
 struct lang_message_string
 {
-    uint8_t *text; /**< Text */
+    char *text; /**< Text */
     int x; /**< X offset */
     int y; /**< Y offset */
 };
