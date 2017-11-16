@@ -1,6 +1,8 @@
 #ifndef SCENARIO_DATA_H
 #define SCENARIO_DATA_H
 
+#define MAX_INVASIONS 20
+
 enum {
     EVENT_NOT_STARTED = 0,
     EVENT_IN_PROGRESS = 1,

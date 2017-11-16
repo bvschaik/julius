@@ -23,7 +23,6 @@
 #include "CityInfo.h"
 #include "Figure.h"
 
-#define MAX_INVASIONS 20
 #define MAX_INVASION_WARNINGS 101
 
 static const int ENEMY_ID_TO_ENEMY_TYPE[20] = {

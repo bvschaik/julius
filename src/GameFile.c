@@ -2,7 +2,6 @@
 
 #include "Building.h"
 #include "CityView.h"
-#include "Event.h"
 #include "Figure.h"
 #include "Loader.h"
 #include "Resource.h"
@@ -44,6 +43,7 @@
 #include "game/tutorial.h"
 #include "graphics/image.h"
 #include "scenario/criteria.h"
+#include "scenario/distant_battle.h"
 #include "scenario/earthquake.h"
 #include "scenario/emperor_change.h"
 #include "scenario/gladiator_revolt.h"
@@ -747,12 +747,17 @@ static void debug()
 	}*/
 }
 
+static void load_empire_data(int is_custom_scenario, int empire_id)
+{
+    empire_load();
+    scenario_distant_battle_set_roman_travel_months();
+    scenario_distant_battle_set_enemy_travel_months();
+}
+
 static void setupFromSavedGame()
 {
 	debug();
-	empire_load(Data_Settings.isCustomScenario, Data_Scenario.empireId);
-	Event_calculateDistantBattleRomanTravelTime();
-	Event_calculateDistantBattleEnemyTravelTime();
+	load_empire_data(Data_Settings.isCustomScenario, Data_Scenario.empireId);
 
 	Data_Settings_Map.width = Data_Scenario.mapSizeX;
 	Data_Settings_Map.height = Data_Scenario.mapSizeY;
@@ -862,9 +867,7 @@ int GameFile_loadScenario(const char *filename)
     scenario_deserialize(&scenario_data.state);
     
     trade_prices_reset();
-	empire_load(1, Data_Scenario.empireId);
-	Event_calculateDistantBattleRomanTravelTime();
-	Event_calculateDistantBattleEnemyTravelTime();
+	load_empire_data(1, Data_Scenario.empireId);
 	return 0;
 }
 

@@ -1,7 +1,6 @@
 #include "CityInfo.h"
 
 #include "Building.h"
-#include "Event.h"
 #include "Figure.h"
 #include "Formation.h"
 

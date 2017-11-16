@@ -3,7 +3,6 @@
 #include "Window.h"
 
 #include "../CityInfo.h"
-#include "../Event.h"
 #include "../Formation.h"
 #include "../Resource.h"
 

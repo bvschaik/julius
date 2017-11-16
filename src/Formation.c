@@ -10,7 +10,6 @@
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 #include "Data/Grid.h"
-#include "Data/Scenario.h"
 #include "Data/Settings.h"
 #include "Data/Figure.h"
 
@@ -18,6 +17,7 @@
 #include "figure/enemy_army.h"
 #include "figure/formation.h"
 #include "figure/properties.h"
+#include "scenario/distant_battle.h"
 #include "sound/effect.h"
 
 #include <string.h>
@@ -364,7 +364,7 @@ void Formation_dispatchLegionsToDistantBattle()
 	int numLegions = 0;
     formation_foreach_legion(dispatch_soldiers, &numLegions);
 	if (numLegions > 0) {
-		Data_CityInfo.distantBattleRomanMonthsToTravel = Data_Scenario.distantBattleTravelMonthsRoman;
+		Data_CityInfo.distantBattleRomanMonthsToTravel = scenario_distant_battle_roman_travel_months();
 	}
 }
 

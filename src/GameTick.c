@@ -36,6 +36,7 @@
 #include "game/time.h"
 #include "game/tutorial.h"
 #include "scenario/demand_change.h"
+#include "scenario/distant_battle.h"
 #include "scenario/earthquake.h"
 #include "scenario/emperor_change.h"
 #include "scenario/gladiator_revolt.h"
@@ -134,7 +135,7 @@ static void advanceMonth()
 	Event_handleRandomEvents();
 	CityInfo_Finance_handleMonthChange();
 	CityInfo_Resource_housesConsumeFood();
-	Event_handleDistantBattle();
+	scenario_distant_battle_process();
 	scenario_invasion_process();
 	scenario_request_process();
 	scenario_demand_change_process();

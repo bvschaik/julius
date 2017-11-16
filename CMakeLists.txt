@@ -55,6 +55,7 @@ set (SCENARIO_FILES
     src/scenario/building.c
     src/scenario/criteria.c
     src/scenario/demand_change.c
+    src/scenario/distant_battle.c
     src/scenario/earthquake.c
     src/scenario/emperor_change.c
     src/scenario/gladiator_revolt.c
