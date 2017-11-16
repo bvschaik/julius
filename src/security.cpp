@@ -18,7 +18,6 @@
 #include "data/cityinfo.hpp"
 #include "data/constants.hpp"
 #include "data/grid.hpp"
-#include "data/message.hpp"
 #include "data/scenario.hpp"
 #include "data/settings.hpp"
 #include "data/state.hpp"
@@ -224,7 +223,7 @@ static void generateRioter(int buildingId)
     CityInfo_Population_changeHappiness(20);
     Tutorial::on_crime();
     city_message_apply_sound_interval(MESSAGE_CAT_RIOT);
-    city_message_post_with_popup_delay(MESSAGE_CAT_RIOT, Message_11_RiotInTheCity, b->type, GridOffset(xRoad, yRoad));
+    city_message_post_with_popup_delay(MESSAGE_CAT_RIOT, MESSAGE_RIOT, b->type, GridOffset(xRoad, yRoad));
 }
 
 static void generateMugger(int buildingId)
@@ -247,7 +246,7 @@ static void generateMugger(int buildingId)
                 {
                     moneyStolen = 400 - random_byte() / 2;
                 }
-                city_message_post(1, Message_52_Theft, moneyStolen, Data_Figures[figureId].gridOffset);
+                city_message_post(1, MESSAGE_THEFT, moneyStolen, Data_Figures[figureId].gridOffset);
                 Data_CityInfo.financeStolenThisYear += moneyStolen;
                 Data_CityInfo.treasury -= moneyStolen;
                 Data_CityInfo.financeSundriesThisYear += moneyStolen;
@@ -350,7 +349,7 @@ static void collapseBuilding(int buildingId, struct Data_Building *b)
 
     if (!Tutorial::handle_collapse())
     {
-        city_message_post_with_popup_delay(MESSAGE_CAT_COLLAPSE, Message_13_CollapsedBuilding, b->type, b->gridOffset);
+        city_message_post_with_popup_delay(MESSAGE_CAT_COLLAPSE, MESSAGE_COLLAPSED_BUILDING, b->type, b->gridOffset);
     }
 
     Data_State.undoAvailable = 0;
@@ -366,7 +365,7 @@ static void fireBuilding(int buildingId, struct Data_Building *b)
 
     if (!Tutorial::handle_fire())
     {
-        city_message_post_with_popup_delay(MESSAGE_CAT_FIRE, Message_12_FireInTheCity, b->type, b->gridOffset);
+        city_message_post_with_popup_delay(MESSAGE_CAT_FIRE, MESSAGE_FIRE, b->type, b->gridOffset);
     }
 
     Building_collapseOnFire(buildingId, 0);

@@ -637,7 +637,7 @@ static void spawnFigureHippodrome(int buildingId, struct Data_Building *b)
                     if (!Data_CityInfo.messageShownHippodrome)
                     {
                         Data_CityInfo.messageShownHippodrome = 1;
-                        city_message_post(1, Message_109_WorkingHippodrome, 0, 0);
+                        city_message_post(1, MESSAGE_WORKING_HIPPODROME, 0, 0);
                     }
                 }
             }
@@ -706,7 +706,7 @@ static void spawnFigureColosseum(int buildingId, struct Data_Building *b)
                 if (!Data_CityInfo.messageShownColosseum)
                 {
                     Data_CityInfo.messageShownColosseum = 1;
-                    city_message_post(1, Message_110_WorkingColosseum, 0, 0);
+                    city_message_post(1, MESSAGE_WORKING_COLOSSEUM, 0, 0);
                 }
             }
         }

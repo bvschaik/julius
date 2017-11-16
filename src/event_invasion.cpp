@@ -127,15 +127,15 @@ void Event_handleInvasions()
                 warning->gameMonthNotified = game_time_month();
                 if (warning->warningYears > 2)
                 {
-                    city_message_post(0, Message_25_DistantBattle, 0, 0);
+                    city_message_post(0, MESSAGE_DISTANT_BATTLE, 0, 0);
                 }
                 else if (warning->warningYears > 1)
                 {
-                    city_message_post(0, Message_26_EnemiesClosing, 0, 0);
+                    city_message_post(0, MESSAGE_ENEMIES_CLOSING, 0, 0);
                 }
                 else
                 {
-                    city_message_post(0, Message_27_EnemiesAtTheDoor, 0, 0);
+                    city_message_post(0, MESSAGE_ENEMIES_AT_THE_DOOR, 0, 0);
                 }
             }
         }
@@ -161,11 +161,11 @@ void Event_handleInvasions()
                 {
                     if (enemyIdToEnemyType[Data_Scenario.enemyId] > 4)
                     {
-                        city_message_post(1, Message_114_EnemyArmyAttack, Data_Event.lastInternalInvasionId, gridOffset);
+                        city_message_post(1, MESSAGE_ENEMY_ARMY_ATTACK, Data_Event.lastInternalInvasionId, gridOffset);
                     }
                     else
                     {
-                        city_message_post(1, Message_23_BarbarianAttack, Data_Event.lastInternalInvasionId, gridOffset);
+                        city_message_post(1, MESSAGE_BARBARIAN_ATTACK, Data_Event.lastInternalInvasionId, gridOffset);
                     }
                 }
             }
@@ -179,7 +179,7 @@ void Event_handleInvasions()
                                      warning->invasionId);
                 if (gridOffset > 0)
                 {
-                    city_message_post(1, Message_24_CaesarArmyAttack, Data_Event.lastInternalInvasionId, gridOffset);
+                    city_message_post(1, MESSAGE_CAESAR_ARMY_ATTACK, Data_Event.lastInternalInvasionId, gridOffset);
                 }
             }
         }
@@ -200,7 +200,7 @@ void Event_handleInvasions()
                                      i);
                 if (gridOffset > 0)
                 {
-                    city_message_post(1, Message_22_LocalUprising, Data_Event.lastInternalInvasionId, gridOffset);
+                    city_message_post(1, MESSAGE_LOCAL_UPRISING, Data_Event.lastInternalInvasionId, gridOffset);
                 }
             }
         }
@@ -221,7 +221,7 @@ int Event_startInvasionLocalUprisingFromMars()
     int gridOffset = startInvasion(EnemyType_0_Barbarian, amount, 8, FORMATION_ATTACK_FOOD_CHAIN, 23);
     if (gridOffset)
     {
-        city_message_post(1, Message_121_LocalUprisingMars, Data_Event.lastInternalInvasionId, gridOffset);
+        city_message_post(1, MESSAGE_LOCAL_UPRISING_MARS, Data_Event.lastInternalInvasionId, gridOffset);
     }
     return 1;
 }
@@ -233,11 +233,11 @@ void Event_startInvasionFromCheat()
     {
         if (enemyIdToEnemyType[Data_Scenario.enemyId] > 4)
         {
-            city_message_post(1, Message_114_EnemyArmyAttack, Data_Event.lastInternalInvasionId, gridOffset);
+            city_message_post(1, MESSAGE_ENEMY_ARMY_ATTACK, Data_Event.lastInternalInvasionId, gridOffset);
         }
         else
         {
-            city_message_post(1, Message_23_BarbarianAttack, Data_Event.lastInternalInvasionId, gridOffset);
+            city_message_post(1, MESSAGE_BARBARIAN_ATTACK, Data_Event.lastInternalInvasionId, gridOffset);
         }
     }
 }
@@ -550,7 +550,7 @@ static void updateCaesarInvasion()
             }
             else if (Data_CityInfo.caesarInvasionDurationDayCountdown == 0)
             {
-                city_message_post(1, Message_20_CaesarArmyContinue, 0, 0); // a year has passed (11 months), siege goes on
+                city_message_post(1, MESSAGE_CAESAR_ARMY_CONTINUE, 0, 0); // a year has passed (11 months), siege goes on
             }
         }
     }
@@ -564,11 +564,11 @@ static void updateCaesarInvasion()
             CityInfo_Ratings_changeFavor(10);
             if (Data_CityInfo.caesarInvasionCount < 2)
             {
-                city_message_post(1, Message_106_CaesarRespect1, 0, 0);
+                city_message_post(1, MESSAGE_CAESAR_RESPECT_1, 0, 0);
             }
             else if (Data_CityInfo.caesarInvasionCount < 3)
             {
-                city_message_post(1, Message_107_CaesarRespect2, 0, 0);
+                city_message_post(1, MESSAGE_CAESAR_RESPECT_2, 0, 0);
             }
             else
             {
@@ -585,7 +585,7 @@ static void updateCaesarInvasion()
             Data_CityInfo.caesarInvasionDaysUntilInvasion = 192;
             if (Data_CityInfo.caesarInvasionWarningsGiven <= 1)
             {
-                city_message_post(1, Message_19_CaesarWrath, 0, 0);
+                city_message_post(1, MESSAGE_CAESAR_WRATH, 0, 0);
             }
         }
     }
@@ -619,7 +619,7 @@ static void updateCaesarInvasion()
                 Data_CityInfo.caesarInvasionCount++;
                 Data_CityInfo.caesarInvasionDurationDayCountdown = 192;
                 Data_CityInfo.caesarInvasionRetreatMessageShown = 0;
-                city_message_post(1, Message_24_CaesarArmyAttack, Data_Event.lastInternalInvasionId, invasionId);
+                city_message_post(1, MESSAGE_CAESAR_ARMY_ATTACK, Data_Event.lastInternalInvasionId, invasionId);
                 Data_CityInfo.caesarInvasionSize = size;
                 Data_CityInfo.caesarInvasionSoldiersDied = 0;
             }

@@ -5,7 +5,6 @@
 #include "terrain.h"
 
 #include "data/cityinfo.hpp"
-#include "data/message.hpp"
 #include "city/message.h"
 #include "data/scenario.hpp"
 
@@ -132,7 +131,7 @@ void FigureAction_fishingBoat(int figureId)
         else if (f->direction == DirFigure_10_Lost)
         {
             // cannot reach grounds
-            city_message_post_with_message_delay(MESSAGE_CAT_FISHING_BLOCKED, 1, Message_118_FishingBoatBlocked, 12);
+            city_message_post_with_message_delay(MESSAGE_CAT_FISHING_BLOCKED, 1, MESSAGE_FISHING_BOAT_BLOCKED, 12);
             f->state = FigureState_Dead;
         }
         break;

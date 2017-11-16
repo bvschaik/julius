@@ -7,7 +7,6 @@
 #include "widget_text.h"
 
 #include "data/constants.hpp"
-#include "data/message.hpp"
 #include "data/screen.hpp"
 
 #include "core/lang.h"

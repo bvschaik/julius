@@ -250,7 +250,7 @@ void empire_handle_expand_event()
     empire_city_expand_empire();
 
     Data_Scenario.empireHasExpanded = 1;
-    city_message_post(1, Message_77_EmpireHasExpanded, 0, 0);
+    city_message_post(1, MESSAGE_EMPIRE_HAS_EXPANDED, 0, 0);
 }
 
 void empire_determine_distant_battle_city()

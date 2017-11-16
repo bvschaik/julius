@@ -1,6 +1,5 @@
 #include "scenario.hpp"
 #include "settings.hpp"
-#include "message.hpp"
 #include "screen.hpp"
 #include "buttons.hpp"
 #include "cityinfo.hpp"

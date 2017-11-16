@@ -2,7 +2,6 @@
 #include "data/cityinfo.hpp"
 #include "data/constants.hpp"
 #include "data/building.hpp"
-#include "data/message.hpp"
 #include "data/scenario.hpp"
 
 #include "building/model.h"
@@ -155,7 +154,7 @@ void CityInfo_Labor_checkEmployment()
     {
         if (game_time_year() >= Data_Scenario.startYear)
         {
-            city_message_post_with_message_delay(MESSAGE_CAT_WORKERS_NEEDED, 0, Message_37_WorkersNeeded, 6);
+            city_message_post_with_message_delay(MESSAGE_CAT_WORKERS_NEEDED, 0, MESSAGE_WORKERS_NEEDED, 6);
         }
     }
 }

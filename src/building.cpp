@@ -449,7 +449,7 @@ void Building_collapseLastPlaced()
     }
     if (buildingId)
     {
-        city_message_post(1, Message_80_RoadToRomeBlocked, 0, Data_Buildings[buildingId].gridOffset);
+        city_message_post(1, MESSAGE_ROAD_TO_ROME_BLOCKED, 0, Data_Buildings[buildingId].gridOffset);
         Data_State.undoAvailable = 0;
         Data_Buildings[buildingId].state = BuildingState_Rubble;
         TerrainGraphics_setBuildingAreaRubble(buildingId,
@@ -937,7 +937,7 @@ void Building_GameTick_checkAccessToRome()
 
             if (Data_Grid_routingDistance[Data_CityInfo.exitPointGridOffset])
             {
-                city_message_post(1, Message_116_RoadToRomeObstructed, 0, 0);
+                city_message_post(1, MESSAGE_ROAD_TO_ROME_OBSTRUCTED, 0, 0);
                 Data_State.undoAvailable = 0;
                 return;
             }
@@ -1538,7 +1538,7 @@ void Building_Mercury_removeResources(int bigCurse)
     if (bigCurse == 1)
     {
         city_message_disable_sound_for_next_message();
-        city_message_post(0, Message_12_FireInTheCity, b->type, b->gridOffset);
+        city_message_post(0, MESSAGE_FIRE, b->type, b->gridOffset);
         Building_collapseOnFire(maxBuildingId, 0);
         Building_collapseLinked(maxBuildingId, 1);
         Sound_Effects_playChannel(SoundChannel_Explosion);

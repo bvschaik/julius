@@ -21,7 +21,6 @@
 #include "data/filelist.hpp"
 #include "data/grid.hpp"
 #include "data/invasion.hpp"
-#include "data/message.hpp"
 #include "data/routes.hpp"
 #include "data/scenario.hpp"
 #include "data/settings.hpp"

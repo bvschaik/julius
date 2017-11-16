@@ -110,7 +110,7 @@ void HousePopulation_updateMigration()
             if (!Data_CityInfo.messageShownEmigration)
             {
                 Data_CityInfo.messageShownEmigration = 1;
-                city_message_post(1, Message_111_Emigration, 0, 0);
+                city_message_post(1, MESSAGE_EMIGRATION, 0, 0);
             }
         }
         else
@@ -128,39 +128,39 @@ void HousePopulation_updateMigration()
     // population messages
     if (Data_CityInfo.population >= 500 && city_message_mark_population_shown(500))
     {
-        city_message_post(1, Message_2_Population500, 0, 0);
+        city_message_post(1, MESSAGE_POPULATION_500, 0, 0);
     }
     if (Data_CityInfo.population >= 1000 && city_message_mark_population_shown(1000))
     {
-        city_message_post(1, Message_3_Population1000, 0, 0);
+        city_message_post(1, MESSAGE_POPULATION_1000, 0, 0);
     }
     if (Data_CityInfo.population >= 2000 && city_message_mark_population_shown(2000))
     {
-        city_message_post(1, Message_4_Population2000, 0, 0);
+        city_message_post(1, MESSAGE_POPULATION_2000, 0, 0);
     }
     if (Data_CityInfo.population >= 3000 && city_message_mark_population_shown(3000))
     {
-        city_message_post(1, Message_5_Population3000, 0, 0);
+        city_message_post(1, MESSAGE_POPULATION_3000, 0, 0);
     }
     if (Data_CityInfo.population >= 5000 && city_message_mark_population_shown(5000))
     {
-        city_message_post(1, Message_6_Population5000, 0, 0);
+        city_message_post(1, MESSAGE_POPULATION_5000, 0, 0);
     }
     if (Data_CityInfo.population >= 10000 && city_message_mark_population_shown(10000))
     {
-        city_message_post(1, Message_7_Population10000, 0, 0);
+        city_message_post(1, MESSAGE_POPULATION_10000, 0, 0);
     }
     if (Data_CityInfo.population >= 15000 && city_message_mark_population_shown(15000))
     {
-        city_message_post(1, Message_8_Population15000, 0, 0);
+        city_message_post(1, MESSAGE_POPULATION_15000, 0, 0);
     }
     if (Data_CityInfo.population >= 20000 && city_message_mark_population_shown(20000))
     {
-        city_message_post(1, Message_9_Population20000, 0, 0);
+        city_message_post(1, MESSAGE_POPULATION_20000, 0, 0);
     }
     if (Data_CityInfo.population >= 25000 && city_message_mark_population_shown(25000))
     {
-        city_message_post(1, Message_10_Population25000, 0, 0);
+        city_message_post(1, MESSAGE_POPULATION_25000, 0, 0);
     }
 }
 

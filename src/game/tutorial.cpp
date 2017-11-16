@@ -3,7 +3,6 @@
 #include "sidebarmenu.h"
 
 #include "data/cityinfo.hpp"
-#include "data/message.hpp"
 #include "data/scenario.hpp"
 #include "data/settings.hpp"
 
@@ -235,7 +234,7 @@ int Tutorial::handle_fire()
     }
     data.tutorial1.fire = 1;
     refresh_buttons();
-    post_message(Message_53_TutorialFirstFire);
+    post_message(MESSAGE_TUTORIAL_FIRE);
     return 1;
 }
 
@@ -247,7 +246,7 @@ int Tutorial::handle_collapse()
     }
     data.tutorial1.collapse = 1;
     refresh_buttons();
-    post_message(Message_54_TutorialFirstCollapse);
+    post_message(MESSAGE_TUTORIAL_COLLAPSE);
     return 1;
 }
 
@@ -271,7 +270,7 @@ void Tutorial::on_filled_granary()
     {
         data.tutorial2.granary_built = 1;
         refresh_buttons();
-        post_message(Message_56_TutorialProvidingWater);
+        post_message(MESSAGE_TUTORIAL_WATER);
     }
 }
 
@@ -283,7 +282,7 @@ void Tutorial::on_add_to_warehouse()
         data.tutorial2.pottery_made = 1;
         data.tutorial2.pottery_made_year = game_time_year();
         refresh_buttons();
-        post_message(Message_61_TutorialTrade);
+        post_message(MESSAGE_TUTORIAL_TRADE);
     }
 }
 
@@ -296,7 +295,7 @@ void Tutorial::on_day_tick()
     if (data.tutorial3.disease && !Data_CityInfo.tutorial3DiseaseMessageShown)
     {
         Data_CityInfo.tutorial3DiseaseMessageShown = 1;
-        post_message(Message_119_TutorialHealth);
+        post_message(MESSAGE_TUTORIAL_HEALTH);
     }
     if (data.tutorial2.granary_built)
     {
@@ -304,7 +303,7 @@ void Tutorial::on_day_tick()
         {
             data.tutorial2.population_250_reached = 1;
             refresh_buttons();
-            post_message(Message_57_TutorialGrowingYourCity);
+            post_message(MESSAGE_TUTORIAL_GROWING_YOUR_CITY);
         }
     }
     if (data.tutorial2.population_250_reached)
@@ -313,7 +312,7 @@ void Tutorial::on_day_tick()
         {
             data.tutorial2.population_450_reached = 1;
             refresh_buttons();
-            post_message(Message_60_TutorialTaxesIndustry);
+            post_message(MESSAGE_TUTORIAL_TAXES_INDUSTRY);
         }
     }
     if (data.tutorial1.fire && !data.tutorial1.senate_built)
@@ -329,7 +328,7 @@ void Tutorial::on_day_tick()
             {
                 data.tutorial1.senate_built = 1;
                 refresh_buttons();
-                post_message(Message_59_TutorialReligion);
+                post_message(MESSAGE_TUTORIAL_RELIGION);
             }
         }
     }
@@ -341,7 +340,7 @@ void Tutorial::on_month_tick()
     {
         if (game_time_month() == 5)
         {
-            city_message_post_with_message_delay(MESSAGE_CAT_TUTORIAL3, 1, Message_58_TutorialHungerHaltsImmigrants, 1200);
+            city_message_post_with_message_delay(MESSAGE_CAT_TUTORIAL3, 1, MESSAGE_TUTORIAL_HUNGER_HALTS_IMMIGRANTS, 1200);
         }
     }
 }

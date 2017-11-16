@@ -491,7 +491,7 @@ static void marsKillEnemies()
         }
     }
     Data_CityInfo.godBlessingMarsEnemiesToKill = 0;
-    city_message_post(1, Message_105_SpiritOfMars, 0, gridOffset);
+    city_message_post(1, MESSAGE_SPIRIT_OF_MARS, 0, gridOffset);
 }
 
 static void setFormationFiguresToEnemyInitial(int formationId)

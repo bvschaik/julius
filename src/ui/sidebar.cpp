@@ -18,7 +18,6 @@
 
 #include "data/cityinfo.hpp"
 #include "data/constants.hpp"
-#include "data/message.hpp"
 #include "data/screen.hpp"
 #include "data/state.hpp"
 #include "data/settings.hpp"
@@ -176,7 +175,7 @@ static void drawNumberOfMessages()
         int totalMessages = city_message_count();
         buttonBuildExpanded[12].enabled = Data_State.undoReady && Data_State.undoAvailable;
         buttonBuildExpanded[13].enabled = totalMessages > 0;
-        buttonBuildExpanded[14].enabled = Data_Message.hotspotCount > 0;
+        buttonBuildExpanded[14].enabled = city_message_problem_area_count() > 0;
         if (totalMessages)
         {
             Widget::Text::drawNumberCenteredColored(totalMessages,

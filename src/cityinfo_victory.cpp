@@ -127,7 +127,7 @@ void CityInfo_Victory_check()
             else
             {
                 Data_CityInfo.messageShownFired = 1;
-                city_message_post(1, Message_112_Fired, 0, 0);
+                city_message_post(1, MESSAGE_FIRED, 0, 0);
             }
             Data_State.forceWinCheat = 0;
         }
