@@ -8,11 +8,9 @@
 #include "Figure.h"
 #include "Building.h"
 #include "CityView.h"
-#include "Invasion.h"
 #include "FileList.h"
 #include "Routes.h"
 #include "Constants.h"
-#include "Event.h"
 
 #define DATA_INTERN 1
 #include "Grid.h"
@@ -39,8 +37,6 @@ struct Data_Building Data_Buildings[MAX_BUILDINGS];
 struct _Data_Buildings_Extra Data_Buildings_Extra;
 
 struct Data_CityView Data_CityView;
-
-struct Data_InvasionWarning Data_InvasionWarnings[MAX_INVASION_WARNINGS];
 
 struct _Data_FileList Data_FileList;
 

@@ -12,7 +12,7 @@
 #include "Data/Scenario.h"
 #include "Data/Settings.h"
 
-#include "Building.h"
+#include "../Building.h"
 #include "Figure.h"
 #include "Routing.h"
 #include "TerrainGraphics.h"

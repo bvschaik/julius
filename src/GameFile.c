@@ -15,7 +15,6 @@
 #include "Data/CityInfo.h"
 #include "Data/FileList.h"
 #include "Data/Grid.h"
-#include "Data/Invasion.h"
 #include "Data/Routes.h"
 #include "Data/Scenario.h"
 #include "Data/Settings.h"
@@ -174,7 +173,7 @@ typedef struct {
     buffer *Data_Settings_startingFavor;
     buffer *Data_Settings_personalSavingsLastMission;
     buffer *Data_Settings_currentMissionId;
-    buffer *Data_InvasionWarnings;
+    buffer *invasion_warnings;
     buffer *Data_Settings_isCustomScenario;
     buffer *city_sounds;
     buffer *Data_Buildings_Extra_highestBuildingIdInUse;
@@ -327,7 +326,7 @@ void init_savegame_data()
     state->Data_Settings_startingFavor = create_savegame_piece(4, 0);
     state->Data_Settings_personalSavingsLastMission = create_savegame_piece(4, 0);
     state->Data_Settings_currentMissionId = create_savegame_piece(4, 0);
-    state->Data_InvasionWarnings = create_savegame_piece(3232, 1);
+    state->invasion_warnings = create_savegame_piece(3232, 1);
     state->Data_Settings_isCustomScenario = create_savegame_piece(4, 0);
     state->city_sounds = create_savegame_piece(8960, 0);
     state->Data_Buildings_Extra_highestBuildingIdInUse = create_savegame_piece(4, 0);
@@ -482,7 +481,6 @@ static void savegame_deserialize(savegame_state *state)
     read_all_from_buffer(state->Data_Settings_startingFavor, &Data_Settings.startingFavor);
     read_all_from_buffer(state->Data_Settings_personalSavingsLastMission, &Data_Settings.personalSavingsLastMission);
     read_all_from_buffer(state->Data_Settings_currentMissionId, &Data_Settings.currentMissionId);
-    read_all_from_buffer(state->Data_InvasionWarnings, &Data_InvasionWarnings);
     read_all_from_buffer(state->Data_Settings_isCustomScenario, &Data_Settings.isCustomScenario);
 
     sound_city_load_state(state->city_sounds);
@@ -514,7 +512,7 @@ static void savegame_deserialize(savegame_state *state)
     read_all_from_buffer(state->Data_CityInfo_Extra_exitPointFlag_x, &Data_CityInfo_Extra.exitPointFlag.x);
     read_all_from_buffer(state->Data_CityInfo_Extra_exitPointFlag_y, &Data_CityInfo_Extra.exitPointFlag.y);
 
-    scenario_invasion_load_state(state->last_invasion_id);
+    scenario_invasion_load_state(state->last_invasion_id, state->invasion_warnings);
 
     read_all_from_buffer(state->Data_Debug_incorrectHousePositions, &Data_Buildings_Extra.incorrectHousePositions);
     read_all_from_buffer(state->Data_Debug_unfixableHousePositions, &Data_Buildings_Extra.unfixableHousePositions);
@@ -606,7 +604,6 @@ static void savegame_serialize(savegame_state *state)
     write_all_to_buffer(state->Data_Settings_startingFavor, &Data_Settings.startingFavor);
     write_all_to_buffer(state->Data_Settings_personalSavingsLastMission, &Data_Settings.personalSavingsLastMission);
     write_all_to_buffer(state->Data_Settings_currentMissionId, &Data_Settings.currentMissionId);
-    write_all_to_buffer(state->Data_InvasionWarnings, &Data_InvasionWarnings);
     write_all_to_buffer(state->Data_Settings_isCustomScenario, &Data_Settings.isCustomScenario);
 
     sound_city_save_state(state->city_sounds);
@@ -638,7 +635,7 @@ static void savegame_serialize(savegame_state *state)
     write_all_to_buffer(state->Data_CityInfo_Extra_exitPointFlag_x, &Data_CityInfo_Extra.exitPointFlag.x);
     write_all_to_buffer(state->Data_CityInfo_Extra_exitPointFlag_y, &Data_CityInfo_Extra.exitPointFlag.y);
 
-    scenario_invasion_save_state(state->last_invasion_id);
+    scenario_invasion_save_state(state->last_invasion_id, state->invasion_warnings);
 
     write_all_to_buffer(state->Data_Debug_incorrectHousePositions, &Data_Buildings_Extra.incorrectHousePositions);
     write_all_to_buffer(state->Data_Debug_unfixableHousePositions, &Data_Buildings_Extra.unfixableHousePositions);

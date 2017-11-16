@@ -17,7 +17,6 @@
 #include "Data/Constants.h"
 #include "Data/Figure.h"
 #include "Data/Grid.h"
-#include "Data/Invasion.h"
 #include "Data/Scenario.h"
 #include "Data/Settings.h"
 #include "../Building.h"
@@ -25,6 +24,7 @@
 #include "Figure.h"
 
 #define MAX_INVASIONS 20
+#define MAX_INVASION_WARNINGS 101
 
 static const int ENEMY_ID_TO_ENEMY_TYPE[20] = {
     0, 7, 7, 10, 8, 8, 9, 5, 6, 3, 3, 3, 2, 2, 4, 4, 4, 6, 1, 6
@@ -55,19 +55,35 @@ static const struct {
     {100, 0, 0, {57, 0, 0}, 0}
 };
 
+typedef struct {
+    int in_use;
+    int handled;
+    int invasion_path_id;
+    int warning_years;
+    int x;
+    int y;
+    int image_id;
+    int empire_object_id;
+    int year_notified;
+    int month_notified;
+    int months_to_go;
+    int invasion_id;
+} invasion_warning;
+
 static struct {
     int last_internal_invasion_id;
+    invasion_warning warnings[MAX_INVASION_WARNINGS];
 } data;
 
 void scenario_invasion_init()
 {
-    memset(Data_InvasionWarnings, 0, sizeof(Data_InvasionWarnings));
+    memset(data.warnings, 0, MAX_INVASION_WARNINGS * sizeof(invasion_warning));
     int path_current = 1;
     int path_max = empire_object_get_max_invasion_path();
     if (path_max == 0) {
         return;
     }
-    struct Data_InvasionWarning *warning = &Data_InvasionWarnings[1];
+    invasion_warning *warning = &data.warnings[1];
     for (int i = 0; i < MAX_INVASIONS; i++) {
         random_generate_next();
         if (!Data_Scenario.invasions.type[i]) {
@@ -83,19 +99,19 @@ void scenario_invasion_init()
             if (!obj) {
                 continue;
             }
-            warning->inUse = 1;
-            warning->empireInvasionPathId = obj->invasion_path_id;
-            warning->warningYears = obj->invasion_years;
-            warning->empireX = obj->x;
-            warning->empireY = obj->y;
-            warning->empireGraphicId = obj->image_id;
-            warning->invasionId = i;
-            warning->empireObjectId = obj->id;
-            warning->gameMonthNotified = 0;
-            warning->gameYearNotified = 0;
-            warning->monthsToGo = 12 * Data_Scenario.invasions.year[i];
-            warning->monthsToGo += Data_Scenario.invasions_month[i];
-            warning->monthsToGo -= 12 * year;
+            warning->in_use = 1;
+            warning->invasion_path_id = obj->invasion_path_id;
+            warning->warning_years = obj->invasion_years;
+            warning->x = obj->x;
+            warning->y = obj->y;
+            warning->image_id = obj->image_id;
+            warning->invasion_id = i;
+            warning->empire_object_id = obj->id;
+            warning->month_notified = 0;
+            warning->year_notified = 0;
+            warning->months_to_go = 12 * Data_Scenario.invasions.year[i];
+            warning->months_to_go += Data_Scenario.invasions_month[i];
+            warning->months_to_go -= 12 * year;
             ++warning;
         }
         path_current++;
@@ -108,11 +124,20 @@ void scenario_invasion_init()
 int scenario_invasion_exists_upcoming()
 {
     for (int i = 0; i < MAX_INVASION_WARNINGS; i++) {
-        if (Data_InvasionWarnings[i].inUse && Data_InvasionWarnings[i].handled) {
+        if (data.warnings[i].in_use && data.warnings[i].handled) {
             return 1;
         }
     }
     return 0;
+}
+
+void scenario_invasion_foreach_warning(void (*callback)(int x, int y, int image_id))
+{
+    for (int i = 0; i < MAX_INVASION_WARNINGS; i++) {
+        if (data.warnings[i].in_use && data.warnings[i].handled) {
+            callback(data.warnings[i].x, data.warnings[i].y, data.warnings[i].image_id);
+        }
+    }
 }
 
 int scenario_invasion_count()
@@ -277,41 +302,41 @@ void scenario_invasion_process()
 {
     int enemy_id = Data_Scenario.enemyId;
     for (int i = 0; i < MAX_INVASION_WARNINGS; i++) {
-        if (!Data_InvasionWarnings[i].inUse) {
+        if (!data.warnings[i].in_use) {
             continue;
         }
         // update warnings
-        struct Data_InvasionWarning *warning = &Data_InvasionWarnings[i];
-        warning->monthsToGo--;
-        if (warning->monthsToGo <= 0) {
+        invasion_warning *warning = &data.warnings[i];
+        warning->months_to_go--;
+        if (warning->months_to_go <= 0) {
             if (warning->handled != 1) {
                 warning->handled = 1;
-                warning->gameYearNotified = game_time_year();
-                warning->gameMonthNotified = game_time_month();
-                if (warning->warningYears > 2) {
+                warning->year_notified = game_time_year();
+                warning->month_notified = game_time_month();
+                if (warning->warning_years > 2) {
                     city_message_post(0, MESSAGE_DISTANT_BATTLE, 0, 0);
-                } else if (warning->warningYears > 1) {
+                } else if (warning->warning_years > 1) {
                     city_message_post(0, MESSAGE_ENEMIES_CLOSING, 0, 0);
                 } else {
                     city_message_post(0, MESSAGE_ENEMIES_AT_THE_DOOR, 0, 0);
                 }
             }
         }
-        if (game_time_year() >= Data_Scenario.startYear + Data_Scenario.invasions.year[warning->invasionId] &&
-            game_time_month() >= Data_Scenario.invasions_month[warning->invasionId]) {
+        if (game_time_year() >= Data_Scenario.startYear + Data_Scenario.invasions.year[warning->invasion_id] &&
+            game_time_month() >= Data_Scenario.invasions_month[warning->invasion_id]) {
             // invasion attack time has passed
-            warning->inUse = 0;
-            if (warning->warningYears > 1) {
+            warning->in_use = 0;
+            if (warning->warning_years > 1) {
                 continue;
             }
             // enemy invasions
-            if (Data_Scenario.invasions.type[warning->invasionId] == INVASION_TYPE_ENEMY_ARMY) {
+            if (Data_Scenario.invasions.type[warning->invasion_id] == INVASION_TYPE_ENEMY_ARMY) {
                 int grid_offset = start_invasion(
                     ENEMY_ID_TO_ENEMY_TYPE[enemy_id],
-                    Data_Scenario.invasions.amount[warning->invasionId],
-                    Data_Scenario.invasions.from[warning->invasionId],
-                    Data_Scenario.invasions.attackType[warning->invasionId],
-                    warning->invasionId);
+                    Data_Scenario.invasions.amount[warning->invasion_id],
+                    Data_Scenario.invasions.from[warning->invasion_id],
+                    Data_Scenario.invasions.attackType[warning->invasion_id],
+                    warning->invasion_id);
                 if (grid_offset > 0) {
                     if (ENEMY_ID_TO_ENEMY_TYPE[enemy_id] > 4) {
                         city_message_post(1, MESSAGE_ENEMY_ARMY_ATTACK, data.last_internal_invasion_id, grid_offset);
@@ -320,13 +345,13 @@ void scenario_invasion_process()
                     }
                 }
             }
-            if (Data_Scenario.invasions.type[warning->invasionId] == INVASION_TYPE_CAESAR) {
+            if (Data_Scenario.invasions.type[warning->invasion_id] == INVASION_TYPE_CAESAR) {
                 int grid_offset = start_invasion(
                     EnemyType_11_Caesar,
-                    Data_Scenario.invasions.amount[warning->invasionId],
-                    Data_Scenario.invasions.from[warning->invasionId],
-                    Data_Scenario.invasions.attackType[warning->invasionId],
-                    warning->invasionId);
+                    Data_Scenario.invasions.amount[warning->invasion_id],
+                    Data_Scenario.invasions.from[warning->invasion_id],
+                    Data_Scenario.invasions.attackType[warning->invasion_id],
+                    warning->invasion_id);
                 if (grid_offset > 0) {
                     city_message_post(1, MESSAGE_CAESAR_ARMY_ATTACK, data.last_internal_invasion_id, grid_offset);
                 }
@@ -460,12 +485,48 @@ void scenario_invasion_process_caesar()
     }
 }
 
-void scenario_invasion_save_state(buffer *buf)
+void scenario_invasion_save_state(buffer *invasion_id, buffer *warnings)
 {
-    buffer_write_u16(buf, data.last_internal_invasion_id);
+    buffer_write_u16(invasion_id, data.last_internal_invasion_id);
+
+    for (int i = 0; i < MAX_INVASION_WARNINGS; i++) {
+        const invasion_warning *w = &data.warnings[i];
+        buffer_write_u8(warnings, w->in_use);
+        buffer_write_u8(warnings, w->handled);
+        buffer_write_u8(warnings, w->invasion_path_id);
+        buffer_write_u8(warnings, w->warning_years);
+        buffer_write_i16(warnings, w->x);
+        buffer_write_i16(warnings, w->y);
+        buffer_write_i16(warnings, w->image_id);
+        buffer_write_i16(warnings, w->empire_object_id);
+        buffer_write_i16(warnings, w->month_notified);
+        buffer_write_i16(warnings, w->year_notified);
+        buffer_write_i32(warnings, w->months_to_go);
+        buffer_write_u8(warnings, w->invasion_id);
+        for (int x = 0; x < 11; x++) {
+            buffer_write_u8(warnings, 0);
+        }
+    }
 }
 
-void scenario_invasion_load_state(buffer *buf)
+void scenario_invasion_load_state(buffer *invasion_id, buffer *warnings)
 {
-    data.last_internal_invasion_id = buffer_read_u16(buf);
+    data.last_internal_invasion_id = buffer_read_u16(invasion_id);
+
+    for (int i = 0; i < MAX_INVASION_WARNINGS; i++) {
+        invasion_warning *w = &data.warnings[i];
+        w->in_use = buffer_read_u8(warnings);
+        w->handled = buffer_read_u8(warnings);
+        w->invasion_path_id = buffer_read_u8(warnings);
+        w->warning_years = buffer_read_u8(warnings);
+        w->x = buffer_read_i16(warnings);
+        w->y = buffer_read_i16(warnings);
+        w->image_id = buffer_read_i16(warnings);
+        w->empire_object_id = buffer_read_i16(warnings);
+        w->month_notified = buffer_read_i16(warnings);
+        w->year_notified = buffer_read_i16(warnings);
+        w->months_to_go = buffer_read_i32(warnings);
+        w->invasion_id = buffer_read_u8(warnings);
+        buffer_skip(warnings, 11);
+    }
 }

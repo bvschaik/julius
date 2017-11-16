@@ -15,7 +15,6 @@
 
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
-#include "../Data/Invasion.h"
 #include "../Data/Scenario.h"
 #include "../Data/Screen.h"
 
@@ -25,6 +24,7 @@
 #include "empire/trade_route.h"
 #include "empire/type.h"
 #include "graphics/image.h"
+#include "scenario/invasion.h"
 
 #define MAX_WIDTH 2032
 #define MAX_HEIGHT 1136
@@ -451,6 +451,11 @@ static void drawEmpireObject(const empire_object *obj)
     }
 }
 
+static void draw_invasion_warning(int x, int y, int image_id)
+{
+    Graphics_drawImage(image_id, data.xDrawOffset + x, data.yDrawOffset + y);
+}
+
 static void drawEmpireMap()
 {
 	Graphics_setClipRectangle(data.xMin + 16, data.yMin + 16, data.xMax - data.xMin - 32, data.yMax - data.yMin - 136);
@@ -464,13 +469,8 @@ static void drawEmpireMap()
 
 	empire_object_foreach(drawEmpireObject);
 
-	for (int i = 0; i < 101; i++) {
-		if (Data_InvasionWarnings[i].inUse && Data_InvasionWarnings[i].handled) {
-			Graphics_drawImage(Data_InvasionWarnings[i].empireGraphicId,
-				data.xDrawOffset+ Data_InvasionWarnings[i].empireX,
-				data.yDrawOffset+ Data_InvasionWarnings[i].empireY);
-		}
-	}
+	scenario_invasion_foreach_warning(draw_invasion_warning);
+
 	Graphics_resetClipRectangle();
 }
 
