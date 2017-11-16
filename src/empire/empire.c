@@ -217,21 +217,6 @@ int empire_can_import_resource_from_city(int city_id, int resource)
     return in_stock < max_in_stock ? 1 : 0;
 }
 
-void empire_handle_expand_event()
-{
-    if (Data_Scenario.empireHasExpanded || Data_Scenario.empireExpansionYear <= 0) {
-        return;
-    }
-    if (game_time_year() < Data_Scenario.empireExpansionYear + Data_Scenario.startYear) {
-        return;
-    }
-
-    empire_city_expand_empire();
-
-    Data_Scenario.empireHasExpanded = 1;
-    city_message_post(1, MESSAGE_EMPIRE_HAS_EXPANDED, 0, 0);
-}
-
 void empire_determine_distant_battle_city()
 {
     Data_CityInfo.distantBattleCityId = empire_city_get_vulnerable_roman();

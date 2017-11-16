@@ -30,7 +30,6 @@
 #include "city/message.h"
 #include "core/random.h"
 #include "empire/city.h"
-#include "empire/empire.h"
 #include "game/settings.h"
 #include "game/time.h"
 #include "game/tutorial.h"
@@ -38,6 +37,7 @@
 #include "scenario/distant_battle.h"
 #include "scenario/earthquake.h"
 #include "scenario/emperor_change.h"
+#include "scenario/empire.h"
 #include "scenario/gladiator_revolt.h"
 #include "scenario/invasion.h"
 #include "scenario/price_change.h"
@@ -165,7 +165,7 @@ static void advanceMonth()
 
 static void advanceYear()
 {
-	empire_handle_expand_event();
+	scenario_empire_process_expansion();
 	Data_State.undoAvailable = 0;
 	game_time_advance_year();
 	CityInfo_Population_requestYearlyUpdate();

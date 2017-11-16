@@ -58,6 +58,7 @@ set (SCENARIO_FILES
     src/scenario/distant_battle.c
     src/scenario/earthquake.c
     src/scenario/emperor_change.c
+    src/scenario/empire.c
     src/scenario/gladiator_revolt.c
     src/scenario/invasion.c
     src/scenario/map.c

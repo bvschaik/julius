@@ -15,7 +15,6 @@
 
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
-#include "../Data/Scenario.h"
 #include "../Data/Screen.h"
 
 #include "empire/city.h"
@@ -24,6 +23,7 @@
 #include "empire/trade_route.h"
 #include "empire/type.h"
 #include "graphics/image.h"
+#include "scenario/empire.h"
 #include "scenario/invasion.h"
 
 #define MAX_WIDTH 2032
@@ -402,7 +402,7 @@ static void drawEmpireObject(const empire_object *obj)
         }
     }
     int x, y, image_id;
-    if (Data_Scenario.empireHasExpanded) {
+    if (scenario_empire_is_expanded()) {
         x = obj->expanded.x;
         y = obj->expanded.y;
         image_id = obj->expanded.image_id;

@@ -46,6 +46,7 @@
 #include "scenario/distant_battle.h"
 #include "scenario/earthquake.h"
 #include "scenario/emperor_change.h"
+#include "scenario/empire.h"
 #include "scenario/gladiator_revolt.h"
 #include "scenario/invasion.h"
 #include "scenario/property.h"
@@ -757,7 +758,7 @@ static void load_empire_data(int is_custom_scenario, int empire_id)
 static void setupFromSavedGame()
 {
 	debug();
-	load_empire_data(Data_Settings.isCustomScenario, Data_Scenario.empireId);
+	load_empire_data(Data_Settings.isCustomScenario, scenario_empire_id());
 
 	Data_Settings_Map.width = Data_Scenario.mapSizeX;
 	Data_Settings_Map.height = Data_Scenario.mapSizeY;
@@ -867,7 +868,7 @@ int GameFile_loadScenario(const char *filename)
     scenario_deserialize(&scenario_data.state);
     
     trade_prices_reset();
-	load_empire_data(1, Data_Scenario.empireId);
+	load_empire_data(1, scenario_empire_id());
 	return 0;
 }
 
