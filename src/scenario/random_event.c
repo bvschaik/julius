@@ -7,7 +7,7 @@
 
 #include "Data/CityInfo.h"
 #include "Data/Scenario.h"
-#include "Building.h"
+#include "../Building.h"
 #include "CityInfo.h"
 
 enum {
