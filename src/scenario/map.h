@@ -6,6 +6,8 @@ typedef struct {
     int y;
 } map_point;
 
+void scenario_map_init();
+
 int scenario_map_size();
 
 void scenario_map_init_entry_exit();

@@ -49,6 +49,7 @@
 #include "scenario/empire.h"
 #include "scenario/gladiator_revolt.h"
 #include "scenario/invasion.h"
+#include "scenario/map.h"
 #include "scenario/property.h"
 #include "sound/city.h"
 #include "sound/music.h"
@@ -760,10 +761,7 @@ static void setupFromSavedGame()
 	debug();
 	load_empire_data(Data_Settings.isCustomScenario, scenario_empire_id());
 
-	Data_Settings_Map.width = Data_Scenario.mapSizeX;
-	Data_Settings_Map.height = Data_Scenario.mapSizeY;
-	Data_Settings_Map.gridStartOffset = Data_Scenario.gridFirstElement;
-	Data_Settings_Map.gridBorderSize = Data_Scenario.gridBorderSize;
+	scenario_map_init();
 
 	if (Data_Settings_Map.orientation >= 0 && Data_Settings_Map.orientation <= 6) {
 		// ensure even number

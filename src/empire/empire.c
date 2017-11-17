@@ -11,7 +11,6 @@
 
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
-#include "Data/Scenario.h"
 
 enum {
     EMPIRE_WIDTH = 2000,

@@ -22,7 +22,6 @@
 #include "Data/Constants.h"
 #include "Data/FileList.h"
 #include "Data/Grid.h"
-#include "Data/Scenario.h"
 #include "Data/Settings.h"
 #include "Data/State.h"
 
@@ -180,12 +179,15 @@ static void loadScenario(const char *scenarioName)
 
 	scenario_map_init_entry_exit();
 
-	Data_CityInfo.entryPointX = Data_Scenario.entryPoint.x;
-	Data_CityInfo.entryPointY = Data_Scenario.entryPoint.y;
+    map_point entry = scenario_map_entry();
+    map_point exit = scenario_map_exit();
+
+	Data_CityInfo.entryPointX = entry.x;
+	Data_CityInfo.entryPointY = entry.y;
 	Data_CityInfo.entryPointGridOffset = GridOffset(Data_CityInfo.entryPointX, Data_CityInfo.entryPointY);
 
-	Data_CityInfo.exitPointX = Data_Scenario.exitPoint.x;
-	Data_CityInfo.exitPointY = Data_Scenario.exitPoint.y;
+	Data_CityInfo.exitPointX = exit.x;
+	Data_CityInfo.exitPointY = exit.y;
 	Data_CityInfo.exitPointGridOffset = GridOffset(Data_CityInfo.exitPointX, Data_CityInfo.exitPointY);
 
 	Data_CityInfo.treasury = difficulty_adjust_money(scenario_initial_funds());
@@ -218,10 +220,7 @@ static void readScenarioAndInitGraphics()
 	GameFile_loadScenario(Data_FileList.selectedScenario);
 	file_remove_extension(Data_FileList.selectedScenario);
 
-	Data_Settings_Map.width = Data_Scenario.mapSizeX;
-	Data_Settings_Map.height = Data_Scenario.mapSizeY;
-	Data_Settings_Map.gridStartOffset = Data_Scenario.gridFirstElement;
-	Data_Settings_Map.gridBorderSize = Data_Scenario.gridBorderSize;
+	scenario_map_init();
 
 	CityView_calculateLookup();
 	TerrainGraphics_updateRegionElevation(0, 0, Data_Settings_Map.width - 2, Data_Settings_Map.height - 2);

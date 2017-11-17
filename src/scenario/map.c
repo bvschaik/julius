@@ -3,9 +3,18 @@
 #include "core/calc.h"
 
 #include "Data/Scenario.h"
+#include "Data/Settings.h"
 
 #define MAX_HERDS 4
 #define MAX_FISH 8
+
+void scenario_map_init()
+{
+    Data_Settings_Map.width = Data_Scenario.mapSizeX;
+    Data_Settings_Map.height = Data_Scenario.mapSizeY;
+    Data_Settings_Map.gridStartOffset = Data_Scenario.gridFirstElement;
+    Data_Settings_Map.gridBorderSize = Data_Scenario.gridBorderSize;
+}
 
 int scenario_map_size()
 {
