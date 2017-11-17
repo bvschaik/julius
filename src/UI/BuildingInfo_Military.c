@@ -322,28 +322,28 @@ void UI_BuildingInfo_drawLegionInfoForeground(BuildingInfoContext *c)
 				hasFocus = 1;
 			}
 		} else if (m->figure_type == FIGURE_FORT_LEGIONARY) {
-			if (i == 0 && m->layout == 5) {
+			if (i == 0 && m->layout == FORMATION_COLUMN) {
 				hasFocus = 1;
-			} else if (i == 1 && m->layout == 0) {
+			} else if (i == 1 && m->layout == FORMATION_TORTOISE) {
 				hasFocus = 1;
-			} else if (i == 2 && m->layout == 1) {
+			} else if (i == 2 && m->layout == FORMATION_DOUBLE_LINE_1) {
 				hasFocus = 1;
-			} else if (i == 3 && m->layout == 2) {
+			} else if (i == 3 && m->layout == FORMATION_DOUBLE_LINE_2) {
 				hasFocus = 1;
-			} else if (i == 4 && m->layout == 6) {
+			} else if (i == 4 && m->layout == FORMATION_MOP_UP) {
 				hasFocus = 1;
 			}
 		} else { // mounted/javelin
-			if (i == 0 && m->layout == 3) {
+			if (i == 0 && m->layout == FORMATION_SINGLE_LINE_1) {
 				hasFocus = 1;
-			} else if (i == 1 && m->layout == 4) {
+			} else if (i == 1 && m->layout == FORMATION_SINGLE_LINE_2) {
 				hasFocus = 1;
-			} else if (i == 2 && m->layout == 1) {
+			} else if (i == 2 && m->layout == FORMATION_DOUBLE_LINE_1) {
 				hasFocus = 1;
-			} else if (i == 3 && m->layout == 2) {
+			} else if (i == 3 && m->layout == FORMATION_DOUBLE_LINE_2) {
 				hasFocus = 1;
-			} else if (i == 4 && m->layout == 6) {
-				hasFocus = 0;
+			} else if (i == 4 && m->layout == FORMATION_MOP_UP) {
+				hasFocus = 1;
 			}
 		}
 		Widget_Panel_drawButtonBorder(c->xOffset + 19 + 85 * i,
@@ -480,8 +480,8 @@ static void buttonLayout(int index, int param2)
 	int new_layout;
 	if (m->figure_type == FIGURE_FORT_LEGIONARY) {
 		switch (index) {
-			case 0: new_layout = FORMATION_TORTOISE; break;
-			case 1: new_layout = FORMATION_COLUMN; break;
+			case 0: new_layout = FORMATION_COLUMN; break;
+			case 1: new_layout = FORMATION_TORTOISE; break;
 			case 2: new_layout = FORMATION_DOUBLE_LINE_1; break;
 			case 3: new_layout = FORMATION_DOUBLE_LINE_2; break;
 			case 4: new_layout = FORMATION_MOP_UP; break;
