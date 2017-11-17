@@ -17,7 +17,6 @@
 #include "Data/Constants.h"
 #include "Data/Figure.h"
 #include "Data/Grid.h"
-#include "Data/Scenario.h"
 #include "Data/Settings.h"
 #include "../Building.h"
 #include "CityInfo.h"
@@ -85,12 +84,12 @@ void scenario_invasion_init()
     invasion_warning *warning = &data.warnings[1];
     for (int i = 0; i < MAX_INVASIONS; i++) {
         random_generate_next();
-        if (!Data_Scenario.invasions.type[i]) {
+        if (!scenario.invasions[i].type) {
             continue;
         }
-        Data_Scenario.invasions_month[i] = 2 + (random_byte() & 7);
-        if (Data_Scenario.invasions.type[i] == INVASION_TYPE_LOCAL_UPRISING ||
-            Data_Scenario.invasions.type[i] == INVASION_TYPE_DISTANT_BATTLE) {
+        scenario.invasions[i].month = 2 + (random_byte() & 7);
+        if (scenario.invasions[i].type == INVASION_TYPE_LOCAL_UPRISING ||
+            scenario.invasions[i].type == INVASION_TYPE_DISTANT_BATTLE) {
             continue;
         }
         for (int year = 1; year < 8; year++) {
@@ -108,8 +107,8 @@ void scenario_invasion_init()
             warning->empire_object_id = obj->id;
             warning->month_notified = 0;
             warning->year_notified = 0;
-            warning->months_to_go = 12 * Data_Scenario.invasions.year[i];
-            warning->months_to_go += Data_Scenario.invasions_month[i];
+            warning->months_to_go = 12 * scenario.invasions[i].year;
+            warning->months_to_go += scenario.invasions[i].month;
             warning->months_to_go -= 12 * year;
             ++warning;
         }
@@ -143,7 +142,7 @@ int scenario_invasion_count()
 {
     int num_invasions = 0;
     for (int i = 0; i < MAX_INVASIONS; i++) {
-        if (Data_Scenario.invasions.type[i]) {
+        if (scenario.invasions[i].type) {
             num_invasions++;
         }
     }
@@ -212,12 +211,12 @@ static int start_invasion(int enemy_type, int amount, int invasion_point, int at
         y = entry_point.y;
     } else {
         int num_points = 0;
-        for (int i = 0; i < 8; i++) {
-            if (Data_Scenario.invasionPoints.x[i] != -1) {
+        for (int i = 0; i < MAX_INVASION_POINTS; i++) {
+            if (scenario.invasion_points[i].x != -1) {
                 num_points++;
             }
         }
-        if (invasion_point == 8) {
+        if (invasion_point == MAX_INVASION_POINTS) { // random
             if (num_points <= 2) {
                 invasion_point = random_byte() & 1;
             } else if (num_points <= 4) {
@@ -227,15 +226,15 @@ static int start_invasion(int enemy_type, int amount, int invasion_point, int at
             }
         }
         if (num_points > 0) {
-            while (Data_Scenario.invasionPoints.x[invasion_point] == -1) {
+            while (scenario.invasion_points[invasion_point].x == -1) {
                 invasion_point++;
-                if (invasion_point >= 8) {
+                if (invasion_point >= MAX_INVASION_POINTS) {
                     invasion_point = 0;
                 }
             }
         }
-        x = Data_Scenario.invasionPoints.x[invasion_point];
-        y = Data_Scenario.invasionPoints.y[invasion_point];
+        x = scenario.invasion_points[invasion_point].x;
+        y = scenario.invasion_points[invasion_point].y;
     }
     if (x == -1 || y == -1) {
         map_point exit_point = scenario_map_exit();
@@ -245,11 +244,11 @@ static int start_invasion(int enemy_type, int amount, int invasion_point, int at
     // determine orientation
     if (y == 0) {
         orientation = Dir_4_Bottom;
-    } else if (y >= Data_Scenario.mapSizeY - 1) {
+    } else if (y >= scenario.map.height - 1) {
         orientation = Dir_0_Top;
     } else if (x == 0) {
         orientation = Dir_2_Right;
-    } else if (x >= Data_Scenario.mapSizeX - 1) {
+    } else if (x >= scenario.map.width - 1) {
         orientation = Dir_6_Left;
     } else {
         orientation = Dir_4_Bottom;
@@ -299,7 +298,7 @@ static int start_invasion(int enemy_type, int amount, int invasion_point, int at
 
 void scenario_invasion_process()
 {
-    int enemy_id = Data_Scenario.enemyId;
+    int enemy_id = scenario.enemy_id;
     for (int i = 0; i < MAX_INVASION_WARNINGS; i++) {
         if (!data.warnings[i].in_use) {
             continue;
@@ -321,20 +320,20 @@ void scenario_invasion_process()
                 }
             }
         }
-        if (game_time_year() >= Data_Scenario.startYear + Data_Scenario.invasions.year[warning->invasion_id] &&
-            game_time_month() >= Data_Scenario.invasions_month[warning->invasion_id]) {
+        if (game_time_year() >= scenario.start_year + scenario.invasions[warning->invasion_id].year &&
+            game_time_month() >= scenario.invasions[warning->invasion_id].month) {
             // invasion attack time has passed
             warning->in_use = 0;
             if (warning->warning_years > 1) {
                 continue;
             }
             // enemy invasions
-            if (Data_Scenario.invasions.type[warning->invasion_id] == INVASION_TYPE_ENEMY_ARMY) {
+            if (scenario.invasions[warning->invasion_id].type == INVASION_TYPE_ENEMY_ARMY) {
                 int grid_offset = start_invasion(
                     ENEMY_ID_TO_ENEMY_TYPE[enemy_id],
-                    Data_Scenario.invasions.amount[warning->invasion_id],
-                    Data_Scenario.invasions.from[warning->invasion_id],
-                    Data_Scenario.invasions.attackType[warning->invasion_id],
+                    scenario.invasions[warning->invasion_id].amount,
+                    scenario.invasions[warning->invasion_id].from,
+                    scenario.invasions[warning->invasion_id].attack_type,
                     warning->invasion_id);
                 if (grid_offset > 0) {
                     if (ENEMY_ID_TO_ENEMY_TYPE[enemy_id] > 4) {
@@ -344,12 +343,12 @@ void scenario_invasion_process()
                     }
                 }
             }
-            if (Data_Scenario.invasions.type[warning->invasion_id] == INVASION_TYPE_CAESAR) {
+            if (scenario.invasions[warning->invasion_id].type == INVASION_TYPE_CAESAR) {
                 int grid_offset = start_invasion(
                     EnemyType_11_Caesar,
-                    Data_Scenario.invasions.amount[warning->invasion_id],
-                    Data_Scenario.invasions.from[warning->invasion_id],
-                    Data_Scenario.invasions.attackType[warning->invasion_id],
+                    scenario.invasions[warning->invasion_id].amount,
+                    scenario.invasions[warning->invasion_id].from,
+                    scenario.invasions[warning->invasion_id].attack_type,
                     warning->invasion_id);
                 if (grid_offset > 0) {
                     city_message_post(1, MESSAGE_CAESAR_ARMY_ATTACK, data.last_internal_invasion_id, grid_offset);
@@ -359,14 +358,14 @@ void scenario_invasion_process()
     }
     // local uprisings
     for (int i = 0; i < MAX_INVASIONS; i++) {
-        if (Data_Scenario.invasions.type[i] == INVASION_TYPE_LOCAL_UPRISING) {
-            if (game_time_year() == Data_Scenario.startYear + Data_Scenario.invasions.year[i] &&
-                game_time_month() == Data_Scenario.invasions_month[i]) {
+        if (scenario.invasions[i].type == INVASION_TYPE_LOCAL_UPRISING) {
+            if (game_time_year() == scenario.start_year + scenario.invasions[i].year &&
+                game_time_month() == scenario.invasions[i].month) {
                 int grid_offset = start_invasion(
                     EnemyType_0_Barbarian,
-                    Data_Scenario.invasions.amount[i],
-                    Data_Scenario.invasions.from[i],
-                    Data_Scenario.invasions.attackType[i],
+                    scenario.invasions[i].amount,
+                    scenario.invasions[i].from,
+                    scenario.invasions[i].attack_type,
                     i);
                 if (grid_offset > 0) {
                     city_message_post(1, MESSAGE_LOCAL_UPRISING, data.last_internal_invasion_id, grid_offset);
@@ -394,7 +393,7 @@ int scenario_invasion_start_from_mars()
 
 void scenario_invasion_start_from_cheat()
 {
-    int enemy_id = Data_Scenario.enemyId;
+    int enemy_id = scenario.enemy_id;
     int grid_offset = start_invasion(ENEMY_ID_TO_ENEMY_TYPE[enemy_id], 150, 8, FORMATION_ATTACK_FOOD_CHAIN, 23);
     if (grid_offset) {
         if (ENEMY_ID_TO_ENEMY_TYPE[enemy_id] > 4) {

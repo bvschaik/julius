@@ -6,8 +6,6 @@
 #include "game/time.h"
 #include "scenario/data.h"
 
-#include "Data/Scenario.h"
-
 static struct {
     int game_year;
     int month;
@@ -17,7 +15,7 @@ static struct {
 
 void scenario_gladiator_revolt_init()
 {
-    data.game_year = Data_Scenario.startYear + Data_Scenario.gladiatorRevolt.year;
+    data.game_year = scenario.start_year + scenario.gladiator_revolt.year;
     data.month = 3 + (random_byte() & 3);
     data.end_month = 3 + data.month;
     data.state = EVENT_NOT_STARTED;
@@ -25,7 +23,7 @@ void scenario_gladiator_revolt_init()
 
 void scenario_gladiator_revolt_process()
 {
-    if (!Data_Scenario.gladiatorRevolt.enabled) {
+    if (!scenario.gladiator_revolt.enabled) {
         return;
     }
     if (data.state == EVENT_NOT_STARTED) {

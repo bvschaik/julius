@@ -205,11 +205,11 @@ void scenario_save_state(buffer *buf)
     
     // win criteria
     buffer_write_i32(buf, scenario.win_criteria.culture.goal);
-    buffer_write_i32(buf, scenario.win_criteria.properity.goal);
+    buffer_write_i32(buf, scenario.win_criteria.prosperity.goal);
     buffer_write_i32(buf, scenario.win_criteria.peace.goal);
     buffer_write_i32(buf, scenario.win_criteria.favor.goal);
     buffer_write_u8(buf, scenario.win_criteria.culture.enabled);
-    buffer_write_u8(buf, scenario.win_criteria.properity.enabled);
+    buffer_write_u8(buf, scenario.win_criteria.prosperity.enabled);
     buffer_write_u8(buf, scenario.win_criteria.peace.enabled);
     buffer_write_u8(buf, scenario.win_criteria.favor.enabled);
     buffer_write_i32(buf, scenario.win_criteria.time_limit.enabled);
@@ -462,11 +462,11 @@ void scenario_load_state(buffer *buf)
     
     // win criteria
     scenario.win_criteria.culture.goal = buffer_read_i32(buf);
-    scenario.win_criteria.properity.goal = buffer_read_i32(buf);
+    scenario.win_criteria.prosperity.goal = buffer_read_i32(buf);
     scenario.win_criteria.peace.goal = buffer_read_i32(buf);
     scenario.win_criteria.favor.goal = buffer_read_i32(buf);
     scenario.win_criteria.culture.enabled = buffer_read_u8(buf);
-    scenario.win_criteria.properity.enabled = buffer_read_u8(buf);
+    scenario.win_criteria.prosperity.enabled = buffer_read_u8(buf);
     scenario.win_criteria.peace.enabled = buffer_read_u8(buf);
     scenario.win_criteria.favor.enabled = buffer_read_u8(buf);
     scenario.win_criteria.time_limit.enabled = buffer_read_i32(buf);

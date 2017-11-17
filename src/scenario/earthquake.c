@@ -9,7 +9,6 @@
 
 #include "Data/Building.h"
 #include "Data/Grid.h"
-#include "Data/Scenario.h"
 #include "Data/Settings.h"
 
 #include "../Building.h"
@@ -40,9 +39,9 @@ static struct {
 
 void scenario_earthquake_init()
 {
-    data.game_year = Data_Scenario.startYear + Data_Scenario.earthquakeYear;
+    data.game_year = scenario.start_year + scenario.earthquake.year;
     data.month = 2 + (random_byte() & 7);
-    switch (Data_Scenario.earthquakeSeverity) {
+    switch (scenario.earthquake.severity) {
         default:
             data.max_duration = 0;
             data.max_delay = 0;
@@ -62,8 +61,8 @@ void scenario_earthquake_init()
     }
     data.state = EVENT_NOT_STARTED;
     for (int i = 0; i < 4; i++) {
-        data.expand[i].x = Data_Scenario.earthquakePoint.x;
-        data.expand[i].y = Data_Scenario.earthquakePoint.y;
+        data.expand[i].x = scenario.earthquake_point.x;
+        data.expand[i].y = scenario.earthquake_point.y;
     }
 }
 
@@ -102,8 +101,8 @@ static void advanceEarthquakeToTile(int x, int y)
 
 void scenario_earthquake_process()
 {
-    if (Data_Scenario.earthquakeSeverity == EARTHQUAKE_NONE ||
-        Data_Scenario.earthquakePoint.x == -1 || Data_Scenario.earthquakePoint.y == -1) {
+    if (scenario.earthquake.severity == EARTHQUAKE_NONE ||
+        scenario.earthquake_point.x == -1 || scenario.earthquake_point.y == -1) {
         return;
     }
     if (data.state == EVENT_NOT_STARTED) {

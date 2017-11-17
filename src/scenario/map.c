@@ -3,73 +3,72 @@
 #include "core/calc.h"
 #include "scenario/data.h"
 
-#include "Data/Scenario.h"
 #include "Data/Settings.h"
 
 void scenario_map_init()
 {
-    Data_Settings_Map.width = Data_Scenario.mapSizeX;
-    Data_Settings_Map.height = Data_Scenario.mapSizeY;
-    Data_Settings_Map.gridStartOffset = Data_Scenario.gridFirstElement;
-    Data_Settings_Map.gridBorderSize = Data_Scenario.gridBorderSize;
+    Data_Settings_Map.width = scenario.map.width;
+    Data_Settings_Map.height = scenario.map.height;
+    Data_Settings_Map.gridStartOffset = scenario.map.grid_start;
+    Data_Settings_Map.gridBorderSize = scenario.map.grid_border_size;
 }
 
 int scenario_map_size()
 {
-    return Data_Scenario.mapSizeX;
+    return scenario.map.width;
 }
 
 void scenario_map_init_entry_exit()
 {
-    if (Data_Scenario.entryPoint.x == -1 || Data_Scenario.entryPoint.y == -1) {
-        Data_Scenario.entryPoint.x = Data_Scenario.mapSizeX - 1;
-        Data_Scenario.entryPoint.y = Data_Scenario.mapSizeY / 2;
+    if (scenario.entry_point.x == -1 || scenario.entry_point.y == -1) {
+        scenario.entry_point.x = scenario.map.width - 1;
+        scenario.entry_point.y = scenario.map.height / 2;
     }
-    if (Data_Scenario.exitPoint.x == -1 || Data_Scenario.exitPoint.y == -1) {
-        Data_Scenario.exitPoint.x = Data_Scenario.entryPoint.x;
-        Data_Scenario.exitPoint.y = Data_Scenario.entryPoint.y;
+    if (scenario.exit_point.x == -1 || scenario.exit_point.y == -1) {
+        scenario.exit_point.x = scenario.entry_point.x;
+        scenario.exit_point.y = scenario.entry_point.y;
     }
 }
 
 map_point scenario_map_entry()
 {
-    map_point point = {Data_Scenario.entryPoint.x, Data_Scenario.entryPoint.y};
+    map_point point = {scenario.entry_point.x, scenario.entry_point.y};
     return point;
 }
 
 map_point scenario_map_exit()
 {
-    map_point point = {Data_Scenario.exitPoint.x, Data_Scenario.exitPoint.y};
+    map_point point = {scenario.exit_point.x, scenario.exit_point.y};
     return point;
 }
 
 int scenario_map_has_river_entry()
 {
-    return Data_Scenario.riverEntryPoint.x != -1 && Data_Scenario.riverEntryPoint.y != -1;
+    return scenario.river_entry_point.x != -1 && scenario.river_entry_point.y != -1;
 }
 
 map_point scenario_map_river_entry()
 {
-    map_point point = {Data_Scenario.riverEntryPoint.x, Data_Scenario.riverEntryPoint.y};
+    map_point point = {scenario.river_entry_point.x, scenario.river_entry_point.y};
     return point;
 }
 
 int scenario_map_has_river_exit()
 {
-    return Data_Scenario.riverExitPoint.x != -1 && Data_Scenario.riverExitPoint.y != -1;
+    return scenario.river_exit_point.x != -1 && scenario.river_exit_point.y != -1;
 }
 
 map_point scenario_map_river_exit()
 {
-    map_point point = {Data_Scenario.riverExitPoint.x, Data_Scenario.riverExitPoint.y};
+    map_point point = {scenario.river_exit_point.x, scenario.river_exit_point.y};
     return point;
 }
 
 void scenario_map_foreach_herd_point(void (*callback)(int x, int y))
 {
     for (int i = 0; i < MAX_HERD_POINTS; i++) {
-        if (Data_Scenario.herdPoints.x[i] > 0) {
-            callback(Data_Scenario.herdPoints.x[i], Data_Scenario.herdPoints.y[i]);
+        if (scenario.herd_points[i].x > 0) {
+            callback(scenario.herd_points[i].x, scenario.herd_points[i].y);
         }
     }
 }
@@ -77,8 +76,8 @@ void scenario_map_foreach_herd_point(void (*callback)(int x, int y))
 void scenario_map_foreach_fishing_point(void (*callback)(int x, int y))
 {
     for (int i = 0; i < MAX_FISH_POINTS; i++) {
-        if (Data_Scenario.fishingPoints.x[i] > 0) {
-            callback(Data_Scenario.fishingPoints.x[i], Data_Scenario.fishingPoints.y[i]);
+        if (scenario.fishing_points[i].x > 0) {
+            callback(scenario.fishing_points[i].x, scenario.fishing_points[i].y);
         }
     }
 }
@@ -87,7 +86,7 @@ int scenario_map_closest_fishing_point(int x, int y, int *fish_x, int *fish_y)
 {
     int numFishingSpots = 0;
     for (int i = 0; i < MAX_FISH_POINTS; i++) {
-        if (Data_Scenario.fishingPoints.x[i] > 0) {
+        if (scenario.fishing_points[i].x > 0) {
             numFishingSpots++;
         }
     }
@@ -97,9 +96,9 @@ int scenario_map_closest_fishing_point(int x, int y, int *fish_x, int *fish_y)
     int minDist = 10000;
     int minFishId = 0;
     for (int i = 0; i < MAX_FISH_POINTS; i++) {
-        if (Data_Scenario.fishingPoints.x[i] > 0) {
+        if (scenario.fishing_points[i].x > 0) {
             int dist = calc_maximum_distance(x, y,
-                Data_Scenario.fishingPoints.x[i], Data_Scenario.fishingPoints.y[i]);
+                scenario.fishing_points[i].x, scenario.fishing_points[i].y);
             if (dist < minDist) {
                 minDist = dist;
                 minFishId = i;
@@ -107,8 +106,8 @@ int scenario_map_closest_fishing_point(int x, int y, int *fish_x, int *fish_y)
         }
     }
     if (minDist < 10000) {
-        *fish_x = Data_Scenario.fishingPoints.x[minFishId];
-        *fish_y = Data_Scenario.fishingPoints.y[minFishId];
+        *fish_x = scenario.fishing_points[minFishId].x;
+        *fish_y = scenario.fishing_points[minFishId].y;
         return 1;
     }
     return 0;
@@ -116,5 +115,5 @@ int scenario_map_closest_fishing_point(int x, int y, int *fish_x, int *fish_y)
 
 int scenario_map_has_flotsam()
 {
-    return Data_Scenario.flotsamEnabled;
+    return scenario.flotsam_enabled;
 }

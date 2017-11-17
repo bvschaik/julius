@@ -3,6 +3,8 @@
 
 #include "scenario/map.h"
 
+#include <stdint.h>
+
 #define MAX_REQUESTS 20
 #define MAX_INVASIONS 20
 #define MAX_DEMAND_CHANGES 20
@@ -48,7 +50,7 @@ extern struct scenario_t {
     struct {
         struct win_criteria_t population;
         struct win_criteria_t culture;
-        struct win_criteria_t properity;
+        struct win_criteria_t prosperity;
         struct win_criteria_t peace;
         struct win_criteria_t favor;
         struct {

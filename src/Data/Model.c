@@ -1,4 +1,3 @@
-#include "Scenario.h"
 #include "Settings.h"
 #include "Screen.h"
 #include "Buttons.h"
@@ -14,8 +13,6 @@
 
 #define DATA_INTERN 1
 #include "Grid.h"
-
-struct _Data_Scenario Data_Scenario;
 
 struct _Data_Settings Data_Settings;
 struct _Data_Settings_Map Data_Settings_Map;
