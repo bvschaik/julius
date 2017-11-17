@@ -322,9 +322,9 @@ void UI_BuildingInfo_drawLegionInfoForeground(BuildingInfoContext *c)
 				hasFocus = 1;
 			}
 		} else if (m->figure_type == FIGURE_FORT_LEGIONARY) {
-			if (i == 0 && m->layout == FORMATION_COLUMN) {
+			if (i == 0 && m->layout == FORMATION_TORTOISE) {
 				hasFocus = 1;
-			} else if (i == 1 && m->layout == FORMATION_TORTOISE) {
+			} else if (i == 1 && m->layout == FORMATION_COLUMN) {
 				hasFocus = 1;
 			} else if (i == 2 && m->layout == FORMATION_DOUBLE_LINE_1) {
 				hasFocus = 1;
@@ -433,14 +433,14 @@ void UI_BuildingInfo_drawLegionInfoForeground(BuildingInfoContext *c)
 void UI_BuildingInfo_handleMouseLegionInfo(BuildingInfoContext *c)
 {
 	contextForCallback = c;
-	if (Widget_Button_handleCustomButtons(
-			c->xOffset, c->yOffset, layoutButtons, 5, &focusButtonId)) {
-		if (formation_get(c->formationId)->figure_type == FIGURE_FORT_LEGIONARY) {
-			if (focusButtonId == 1 || (focusButtonId == 2 && c->formationTypes == 3)) {
-				focusButtonId = 0;
-			}
-		}
-	} else {
+    int handled = Widget_Button_handleCustomButtons(
+			c->xOffset, c->yOffset, layoutButtons, 5, &focusButtonId);
+    if (formation_get(c->formationId)->figure_type == FIGURE_FORT_LEGIONARY) {
+        if (focusButtonId == 1 || (focusButtonId == 2 && c->formationTypes == 3)) {
+            focusButtonId = 0;
+        }
+    }
+	if (!handled) {
 		Widget_Button_handleCustomButtons(
 			c->xOffset + 16 * (c->widthBlocks - 18) / 2,
 			c->yOffset + 16 * c->heightBlocks - 48,
@@ -480,8 +480,8 @@ static void buttonLayout(int index, int param2)
 	int new_layout;
 	if (m->figure_type == FIGURE_FORT_LEGIONARY) {
 		switch (index) {
-			case 0: new_layout = FORMATION_COLUMN; break;
-			case 1: new_layout = FORMATION_TORTOISE; break;
+			case 0: new_layout = FORMATION_TORTOISE; break;
+			case 1: new_layout = FORMATION_COLUMN; break;
 			case 2: new_layout = FORMATION_DOUBLE_LINE_1; break;
 			case 3: new_layout = FORMATION_DOUBLE_LINE_2; break;
 			case 4: new_layout = FORMATION_MOP_UP; break;

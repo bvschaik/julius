@@ -184,7 +184,7 @@ static void updateSoldierGraphicLegionary(struct Data_Figure *f, const formation
 	} else if (f->actionState == FigureActionState_149_Corpse) {
 		f->graphicId = graphicId + 152 + FigureActionCorpseGraphicOffset(f);
 	} else if (f->actionState == FigureActionState_84_SoldierAtStandard) {
-		if (m->is_halted && m->layout == FORMATION_TORTOISE && m->missile_attack_timeout) {
+		if (m->is_halted && m->layout == FORMATION_COLUMN && m->missile_attack_timeout) {
 			f->graphicId = graphicId + dir + 144;
 		} else {
 			f->graphicId = graphicId + dir;
