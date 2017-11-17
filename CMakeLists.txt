@@ -66,6 +66,7 @@ set (SCENARIO_FILES
     src/scenario/property.c
     src/scenario/random_event.c
     src/scenario/request.c
+    src/scenario/scenario.c
 )
 set (GRAPHICS_FILES
     src/graphics/image.c

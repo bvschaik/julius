@@ -5,10 +5,9 @@
 #include "empire/city.h"
 #include "empire/trade_route.h"
 #include "game/time.h"
+#include "scenario/data.h"
 
 #include "Data/Scenario.h"
-
-#define MAX_DEMAND_CHANGES 20
 
 void scenario_demand_change_init()
 {

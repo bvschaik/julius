@@ -1,12 +1,10 @@
 #include "map.h"
 
 #include "core/calc.h"
+#include "scenario/data.h"
 
 #include "Data/Scenario.h"
 #include "Data/Settings.h"
-
-#define MAX_HERDS 4
-#define MAX_FISH 8
 
 void scenario_map_init()
 {
@@ -69,7 +67,7 @@ map_point scenario_map_river_exit()
 
 void scenario_map_foreach_herd_point(void (*callback)(int x, int y))
 {
-    for (int i = 0; i < MAX_HERDS; i++) {
+    for (int i = 0; i < MAX_HERD_POINTS; i++) {
         if (Data_Scenario.herdPoints.x[i] > 0) {
             callback(Data_Scenario.herdPoints.x[i], Data_Scenario.herdPoints.y[i]);
         }
@@ -78,7 +76,7 @@ void scenario_map_foreach_herd_point(void (*callback)(int x, int y))
 
 void scenario_map_foreach_fishing_point(void (*callback)(int x, int y))
 {
-    for (int i = 0; i < MAX_FISH; i++) {
+    for (int i = 0; i < MAX_FISH_POINTS; i++) {
         if (Data_Scenario.fishingPoints.x[i] > 0) {
             callback(Data_Scenario.fishingPoints.x[i], Data_Scenario.fishingPoints.y[i]);
         }
@@ -88,7 +86,7 @@ void scenario_map_foreach_fishing_point(void (*callback)(int x, int y))
 int scenario_map_closest_fishing_point(int x, int y, int *fish_x, int *fish_y)
 {
     int numFishingSpots = 0;
-    for (int i = 0; i < MAX_FISH; i++) {
+    for (int i = 0; i < MAX_FISH_POINTS; i++) {
         if (Data_Scenario.fishingPoints.x[i] > 0) {
             numFishingSpots++;
         }
@@ -98,7 +96,7 @@ int scenario_map_closest_fishing_point(int x, int y, int *fish_x, int *fish_y)
     }
     int minDist = 10000;
     int minFishId = 0;
-    for (int i = 0; i < MAX_FISH; i++) {
+    for (int i = 0; i < MAX_FISH_POINTS; i++) {
         if (Data_Scenario.fishingPoints.x[i] > 0) {
             int dist = calc_maximum_distance(x, y,
                 Data_Scenario.fishingPoints.x[i], Data_Scenario.fishingPoints.y[i]);

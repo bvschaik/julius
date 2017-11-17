@@ -4,10 +4,9 @@
 #include "core/random.h"
 #include "empire/trade_prices.h"
 #include "game/time.h"
+#include "scenario/data.h"
 
 #include "Data/Scenario.h"
-
-#define MAX_PRICE_CHANGES 20
 
 void scenario_price_change_init()
 {

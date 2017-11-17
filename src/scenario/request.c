@@ -5,13 +5,12 @@
 #include "game/resource.h"
 #include "game/time.h"
 #include "game/tutorial.h"
+#include "scenario/data.h"
 
 #include "Data/CityInfo.h"
 #include "Data/Scenario.h"
 #include "CityInfo.h"
 #include "Resource.h"
-
-#define MAX_REQUESTS 20
 
 void scenario_request_init()
 {
