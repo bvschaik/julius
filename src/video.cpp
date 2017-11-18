@@ -2,8 +2,6 @@
 
 #include "video/smacker.h"
 
-#include "sounddevice.h"
-
 #include <sound>
 #include <data>
 
@@ -168,7 +166,7 @@ int loadSmk(const char *filename)
 
 static void endVideo()
 {
-    SoundDevice_useDefaultMusicPlayer();
+    sound_device_use_default_music_player();
     sound_music_reset();
     sound_music_update();
 }
@@ -227,7 +225,7 @@ int Video_isFinished()
 void Video_init()
 {
     data.video.startRenderMillis = time_get_millis();
-    SoundDevice_useCustomMusicPlayer(data.audio.bitdepth, data.audio.channels, data.audio.rate, nextAudioFrame);
+    sound_device_use_custom_music_player(data.audio.bitdepth, data.audio.channels, data.audio.rate, nextAudioFrame);
 }
 
 void Video_draw(int xOffset, int yOffset)

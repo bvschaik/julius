@@ -8,5 +8,6 @@
 #include "sound/speech.h"
 #include "sound/effect.h"
 #include "sound/channel.h"
+#include "sound/device.h"
 
 #endif

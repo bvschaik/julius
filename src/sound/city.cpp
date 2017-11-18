@@ -3,7 +3,6 @@
 #include "core/time.h"
 #include "game/settings.h"
 
-#include "sounddevice.h"
 #include <data>
 #include <sound>
 
@@ -201,9 +200,9 @@ void sound_city_set_volume(int percentage)
 {
     for (int i = SOUND_CHANNEL_CITY_MIN; i <= SOUND_CHANNEL_CITY_MAX; i++)
     {
-        if (SoundDevice_hasChannel(i))
+        if (sound_device_has_channel(i))
         {
-            SoundDevice_setChannelVolume(i, percentage);
+            sound_device_set_channel_volume(i, percentage);
         }
     }
 }
@@ -255,7 +254,7 @@ static void play_channel(int channel, int direction)
     {
         return;
     }
-    if (!SoundDevice_hasChannel(channel) || SoundDevice_isChannelPlaying(channel))
+    if (!sound_device_has_channel(channel) || sound_device_is_channel_playing(channel))
     {
         return;
     }
@@ -278,8 +277,8 @@ static void play_channel(int channel, int direction)
         left_pan = right_pan = 0;
         break;
     }
-    SoundDevice_setChannelPanning(channel, left_pan, right_pan);
-    SoundDevice_playChannel(channel);
+    sound_device_set_channel_panning(channel, left_pan, right_pan);
+    sound_device_play_channel(channel);
 }
 
 void sound_city_play()

@@ -1,7 +1,5 @@
 #include "music.h"
 
-#include "sounddevice.h"
-
 #include <sound>
 #include <data>
 
@@ -42,13 +40,13 @@ static const char tracks[][32] =
 
 void sound_music_set_volume(int percentage)
 {
-    SoundDevice_setMusicVolume(percentage);
+    sound_device_set_music_volume(percentage);
 }
 
 static void play_track(int track)
 {
-    SoundDevice_stopMusic();
-    SoundDevice_playMusic(dir_get_case_corrected_file(tracks[track]));
+    sound_device_stop_music();
+    sound_device_play_music(dir_get_case_corrected_file(tracks[track]));
     sound_music_set_volume(setting_sound(SOUND_MUSIC)->volume);
     data.current_track = track;
 }
@@ -119,6 +117,6 @@ void sound_music_update()
 
 void sound_music_stop()
 {
-    SoundDevice_stopMusic();
+    sound_device_stop_music();
     data.current_track = TRACK_NONE;
 }
