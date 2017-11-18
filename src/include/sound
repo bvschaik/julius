@@ -1,0 +1,12 @@
+#ifndef _JULIUS_INCLUDE_SOUND_H_
+#define _JULIUS_INCLUDE_SOUND_H_
+
+#include "sound/city.h"
+#include "sound/effect.h"
+#include "sound/music.h"
+#include "sound/system.h"
+#include "sound/speech.h"
+#include "sound/effect.h"
+#include "sound/channel.h"
+
+#endif

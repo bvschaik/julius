@@ -4,9 +4,11 @@
 #include "tooltip.h"
 #include "graphics/mouse.h"
 
+#include <sound>
+
 #define PLAY_SOUND(f) \
 	if (c->canPlaySound) {\
-		Sound_Speech_playFile(f);\
+		sound_speech_playfile(f);\
 		c->canPlaySound = 0;\
 	}
 

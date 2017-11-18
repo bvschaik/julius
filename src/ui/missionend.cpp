@@ -3,16 +3,12 @@
 
 #include "cityinfo.h"
 #include "graphics.h"
-#include "game/game_settings.h"
-#include "sound.h"
 #include "widget_text.h"
 
-#include "data/cityinfo.hpp"
-#include "data/constants.hpp"
-#include "data/screen.hpp"
-#include "data/settings.hpp"
-#include "data/state.hpp"
+#include <sound>
+#include <data>
 
+#include "game/game_settings.h"
 #include "game/settings.h"
 #include "graphics/image.h"
 
@@ -35,7 +31,7 @@ static int focusButtonId = 0;
 
 void UI_VictoryIntermezzo_init()
 {
-    Sound_Music_reset();
+    sound_music_reset();
     UI_Intermezzo_show(Intermezzo_Won, Window_MissionEnd, 1000);
 }
 
@@ -137,8 +133,8 @@ void UI_MissionEnd_handleMouse(const mouse *m)
     {
         if (m->right.went_up)
         {
-            Sound_stopMusic();
-            Sound_stopSpeech();
+            sound_music_stop();
+            sound_speech_stop();
             advanceToNextMission();
         }
     }
@@ -251,8 +247,8 @@ static void victoryContinueGoverning(int duration, int param2)
     UI_Window_goTo(Window_City);
     Data_State.winState = WinState_None;
     Data_State.forceWinCheat = 0;
-    Sound_Music_reset();
-    Sound_Music_update();
+    sound_music_reset();
+    sound_music_update();
 }
 
 static void firedAccept(int param1, int param2)

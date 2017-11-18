@@ -11,17 +11,14 @@
 #include "graphics.h"
 #include "city/message.h"
 #include "sidebarmenu.h"
-#include "sound.h"
 #include "terrain.h"
 #include "undo.h"
 #include "widget_text.h"
 
-#include "data/cityinfo.hpp"
-#include "data/constants.hpp"
-#include "data/screen.hpp"
-#include "data/state.hpp"
-#include "data/settings.hpp"
 #include "game/tutorial.h"
+
+#include <sound>
+#include <data>
 
 #include "core/time.h"
 #include "graphics/image.h"
@@ -372,7 +369,7 @@ static void buttonCollapseExpand(int param1, int param2)
     UI_Window_goTo(Window_SlidingSidebar);
     CityView_setViewportWithoutSidebar();
     CityView_checkCameraBoundaries();
-    Sound_Effects_playChannel(SoundChannel_Sidebar);
+    sound_effect_play(SOUND_EFFECT_SIDEBAR);
 }
 
 static void buttonBuild(int submenu, int param2)

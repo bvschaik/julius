@@ -2,11 +2,10 @@
 #include "animation.h"
 #include "gamefile.h"
 #include "gametick.h"
-#include "sound.h"
 #include "ui/window.h"
 
-#include "data/settings.hpp"
-#include "data/state.hpp"
+#include <sound>
+#include <data>
 
 #include "core/time.h"
 #include "game/settings.h"
@@ -81,5 +80,5 @@ void Runner_run()
 void Runner_draw()
 {
     UI_Window_refresh(0);
-    Sound_City_play();
+    sound_city_play();
 }

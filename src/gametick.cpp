@@ -15,7 +15,6 @@
 #include "routing.h"
 #include "security.h"
 #include "sidebarmenu.h"
-#include "sound.h"
 #include "terraingraphics.h"
 #include "trader.h"
 #include "game/tutorial.h"
@@ -28,9 +27,9 @@
 #include "empire/empire.h"
 #include "city/message.h"
 
-#include "data/cityinfo.hpp"
-#include "data/settings.hpp"
-#include "data/state.hpp"
+#include <sound>
+#include <data>
+
 #include "city/culture.h"
 
 #include "core/random.h"
@@ -66,7 +65,7 @@ void GameTick_advance()
         CityInfo_Gods_calculateMoods(1);
         break;
     case 2:
-        Sound_Music_update();
+        sound_music_update();
         break;
     case 3:
         UI_Sidebar_requestMinimapRefresh();

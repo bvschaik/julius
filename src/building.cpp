@@ -10,20 +10,13 @@
 #include "city/message.h"
 #include "resource.h"
 #include "routing.h"
-#include "sound.h"
 #include "terrain.h"
 #include "terraingraphics.h"
 #include "undo.h"
 #include "ui/warning.h"
 
-#include "data/building.hpp"
-#include "data/cityinfo.hpp"
-#include "data/constants.hpp"
-#include "data/grid.hpp"
-#include "data/scenario.hpp"
-#include "data/settings.hpp"
-#include "data/state.hpp"
-#include "data/figure.hpp"
+#include <sound>
+#include <data>
 
 #include "building/properties.h"
 #include "building/storage.h"
@@ -475,7 +468,7 @@ int Building_collapseFirstOfType(int buildingType)
 
             TerrainGraphics_setBuildingAreaRubble(i, Data_Buildings[i].x, Data_Buildings[i].y,
                                                   Data_Buildings[i].size);
-            Sound_Effects_playChannel(SoundChannel_Explosion);
+            sound_effect_play(SOUND_EFFECT_EXPLOSION);
             Routing_determineLandCitizen();
             Routing_determineLandNonCitizen();
             return gridOffset;
@@ -1541,7 +1534,7 @@ void Building_Mercury_removeResources(int bigCurse)
         city_message_post(0, MESSAGE_FIRE, b->type, b->gridOffset);
         Building_collapseOnFire(maxBuildingId, 0);
         Building_collapseLinked(maxBuildingId, 1);
-        Sound_Effects_playChannel(SoundChannel_Explosion);
+        sound_effect_play(SOUND_EFFECT_EXPLOSION);
         Routing_determineLandCitizen();
         Routing_determineLandNonCitizen();
     }

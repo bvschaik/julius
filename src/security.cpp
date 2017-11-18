@@ -8,20 +8,13 @@
 #include "formation.h"
 #include "routing.h"
 #include "sidebarmenu.h"
-#include "sound.h"
 #include "terrain.h"
 #include "terraingraphics.h"
 #include "game/tutorial.h"
 #include "city/message.h"
 
-#include "data/building.hpp"
-#include "data/cityinfo.hpp"
-#include "data/constants.hpp"
-#include "data/grid.hpp"
-#include "data/scenario.hpp"
-#include "data/settings.hpp"
-#include "data/state.hpp"
-#include "data/figure.hpp"
+#include <sound>
+#include <data>
 
 #include "core/random.h"
 #include "core/time.h"
@@ -93,7 +86,7 @@ void Security_Tick_updateBurningRuins()
         {
             Building_collapseOnFire(nextBuildingId, 0);
             Building_collapseLinked(nextBuildingId, 1);
-            Sound_Effects_playChannel(SoundChannel_Explosion);
+            sound_effect_play(SOUND_EFFECT_EXPLOSION);
             recalculateTerrain = 1;
         }
         else
@@ -103,7 +96,7 @@ void Security_Tick_updateBurningRuins()
             {
                 Building_collapseOnFire(nextBuildingId, 0);
                 Building_collapseLinked(nextBuildingId, 1);
-                Sound_Effects_playChannel(SoundChannel_Explosion);
+                sound_effect_play(SOUND_EFFECT_EXPLOSION);
                 recalculateTerrain = 1;
             }
             else
@@ -113,7 +106,7 @@ void Security_Tick_updateBurningRuins()
                 {
                     Building_collapseOnFire(nextBuildingId, 0);
                     Building_collapseLinked(nextBuildingId, 1);
-                    Sound_Effects_playChannel(SoundChannel_Explosion);
+                    sound_effect_play(SOUND_EFFECT_EXPLOSION);
                     recalculateTerrain = 1;
                 }
             }
@@ -370,7 +363,7 @@ static void fireBuilding(int buildingId, struct Data_Building *b)
 
     Building_collapseOnFire(buildingId, 0);
     Building_collapseLinked(buildingId, 1);
-    Sound_Effects_playChannel(SoundChannel_Explosion);
+    sound_effect_play(SOUND_EFFECT_EXPLOSION);
 }
 
 void Security_Tick_checkFireCollapse()

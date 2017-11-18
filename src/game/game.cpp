@@ -2,15 +2,13 @@
 
 #include "loader.h"
 #include "game/game_settings.h"
-#include "sound.h"
 #include "system.h"
 #include "video.h"
 
 #include "ui/window.h"
 
-#include "data/constants.hpp"
-#include "data/filelist.hpp"
-#include "data/settings.hpp"
+#include <sound>
+#include <data>
 
 #include "building/model.h"
 #include "core/debug.h"
@@ -75,7 +73,7 @@ int Game::init()
         return 0;
     }
 
-    Sound_init();
+    sound_system_init();
     Loader_GameState_init();
     UI_Window_goTo(Window_Logo);
     return 1;
@@ -86,5 +84,5 @@ void Game::exit()
     Video_shutdown();
     Settings_save();
     settings_save();
-    Sound_shutdown();
+    sound_system_shutdown();
 }

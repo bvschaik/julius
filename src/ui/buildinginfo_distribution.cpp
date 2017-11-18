@@ -4,7 +4,6 @@
 
 #include "graphics.h"
 #include "resource.h"
-#include "sound.h"
 #include "widget_text.h"
 
 #include "data/building.hpp"

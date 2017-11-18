@@ -8,10 +8,11 @@
 
 #include "formation.h"
 #include "city/message.h"
-#include "sound.h"
 #include "ui/tooltip.h"
 #include "ui/messagedialog.h"
 #include "ui/window.h"
+
+#include <sound>
 
 #define MAX_MESSAGES 1000
 #define MAX_QUEUE 20
@@ -138,11 +139,11 @@ static void play_sound(int text_id)
 {
     if (lang_get_message(text_id)->urgent == 1)
     {
-        Sound_Effects_playChannel(SoundChannel_FanfareUrgent);
+        sound_effect_play(SOUND_EFFECT_FANFARE_URGENT);
     }
     else
     {
-        Sound_Effects_playChannel(SoundChannel_Fanfare);
+        sound_effect_play(SOUND_EFFECT_FANFARE);
     }
 }
 

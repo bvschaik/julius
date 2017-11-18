@@ -1,17 +1,12 @@
 #include "cityinfo.h"
 
 #include "city/message.h"
-#include "sound.h"
 #include "ui/allwindows.h"
 #include "ui/videointermezzo.h"
 #include "ui/window.h"
 
-#include "data/cityinfo.hpp"
-#include "data/event.hpp"
-#include "data/scenario.hpp"
-#include "data/screen.hpp"
-#include "data/settings.hpp"
-#include "data/state.hpp"
+#include <sound>
+#include <data>
 
 #include "game/settings.h"
 #include "game/time.h"
@@ -133,7 +128,7 @@ void CityInfo_Victory_check()
         }
         else if (Data_State.winState == WinState_Win)
         {
-            Sound_stopMusic();
+            sound_music_stop();
             if (Data_CityInfo.messageShownVictory)
             {
                 mouse_reset_up_state();

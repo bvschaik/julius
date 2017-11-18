@@ -3,11 +3,10 @@
 #include "figure.h"
 #include "routing.h"
 #include "security.h"
-#include "sound.h"
 #include "terrain.h"
 
-#include "data/cityinfo.hpp"
-#include "data/grid.hpp"
+#include <sound>
+#include <data>
 
 #include "core/calc.h"
 #include "figure/enemy_army.h"
@@ -333,7 +332,7 @@ static void prefectExtinguishFire(int figureId, struct Data_Figure *f)
     if (BuildingIsInUse(f->destinationBuildingId) && burn->type == BUILDING_BURNING_RUIN && distance < 2)
     {
         burn->fireDuration = 32;
-        Sound_Effects_playChannel(SoundChannel_FireSplash);
+        sound_effect_play(SOUND_EFFECT_FIRE_SPLASH);
     }
     else
     {

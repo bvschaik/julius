@@ -3,11 +3,9 @@
 #include "figure.h"
 #include "formation.h"
 #include "routing.h"
-#include "sound.h"
 
-#include "data/cityinfo.hpp"
-#include "data/event.hpp"
-#include "data/grid.hpp"
+#include <sound>
+#include <data>
 
 #include "figure/formation.h"
 #include "figure/properties.h"
@@ -24,15 +22,15 @@ static void enemyInitial(int figureId, struct Data_Figure *f, const formation *m
         {
             if (m->layout == FORMATION_ENEMY8)
             {
-                Sound_Speech_playFile("wavs/drums.wav");
+                sound_speech_playfile("wavs/drums.wav");
             }
             else if (m->layout == FORMATION_ENEMY12)
             {
-                Sound_Speech_playFile("wavs/horn2.wav");
+                sound_speech_playfile("wavs/horn2.wav");
             }
             else
             {
-                Sound_Speech_playFile("wavs/horn1.wav");
+                sound_speech_playfile("wavs/horn1.wav");
             }
         }
         f->isGhost = 0;
@@ -95,7 +93,7 @@ static void enemyInitial(int figureId, struct Data_Figure *f, const formation *m
                 if (Data_CityInfo.soundShootArrow <= 0)
                 {
                     Data_CityInfo.soundShootArrow = 10;
-                    Sound_Effects_playChannel(SoundChannel_Arrow);
+                    sound_effect_play(SOUND_EFFECT_ARROW);
                 }
             }
             f->attackGraphicOffset++;
@@ -146,7 +144,7 @@ static void enemyFighting(int figureId, struct Data_Figure *f, const formation *
             if (Data_CityInfo.soundMarchHorse <= 0)
             {
                 Data_CityInfo.soundMarchHorse = 200;
-                Sound_Effects_playChannel(SoundChannel_HorseMoving);
+                sound_effect_play(SOUND_EFFECT_HORSE_MOVING);
             }
         }
         else
@@ -155,7 +153,7 @@ static void enemyFighting(int figureId, struct Data_Figure *f, const formation *
             if (Data_CityInfo.soundMarchEnemy <= 0)
             {
                 Data_CityInfo.soundMarchEnemy = 200;
-                Sound_Effects_playChannel(SoundChannel_Marching);
+                sound_effect_play(SOUND_EFFECT_MARCHING);
             }
         }
     }

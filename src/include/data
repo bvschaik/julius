@@ -11,7 +11,6 @@
 #include "data/state.hpp"
 #include "data/figure.hpp"
 #include "data/building.hpp"
-#include "data/sound.hpp"
 #include "data/cityview.hpp"
 #include "data/invasion.hpp"
 #include "data/filelist.hpp"

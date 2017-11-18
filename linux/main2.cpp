@@ -79,7 +79,6 @@ void sanityCheck()
     assert("Scenario settings", 1720, sizeof(Data_Scenario));
     assert("City info", 2*18068, sizeof(Data_CityInfo));
     assert("Building object", 128, sizeof(struct Data_Building));
-    assert("City sound", 128, sizeof(struct Data_Sound_City));
 }
 
 void System_exit()

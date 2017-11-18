@@ -3,15 +3,11 @@
 #include "core/calc.h"
 #include "graphics.h"
 #include "resource.h"
-#include "sound.h"
 #include "terrain.h"
 #include "widget_text.h"
 
-#include "data/building.hpp"
-#include "data/cityinfo.hpp"
-#include "data/constants.hpp"
-#include "data/grid.hpp"
-#include "data/settings.hpp"
+#include <sound>
+#include <data>
 
 #include "building/model.h"
 #include "graphics/image.h"

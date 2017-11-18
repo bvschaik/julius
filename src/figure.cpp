@@ -3,17 +3,12 @@
 #include "figureaction.h"
 #include "figuremovement.h"
 #include "formation.h"
-#include "sound.h"
 #include "terrain.h"
 #include "trader.h"
 
-#include "data/building.hpp"
-#include "data/cityinfo.hpp"
-#include "data/constants.hpp"
-#include "data/figure.hpp"
-#include "data/grid.hpp"
-#include "data/scenario.hpp"
-#include "data/settings.hpp"
+#include <sound>
+#include <data>
+
 #include "empire/city.h"
 
 #include "core/calc.h"
@@ -251,7 +246,7 @@ void Figure_createDustCloud(int x, int y, int size)
             f->speedMultiplier = dustCloudSpeed[i];
         }
     }
-    Sound_Effects_playChannel(SoundChannel_Explosion);
+    sound_effect_play(SOUND_EFFECT_EXPLOSION);
 }
 
 int Figure_createMissile(int buildingId, int x, int y, int xDst, int yDst, int type)

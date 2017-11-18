@@ -1,7 +1,6 @@
 #include "buildinginfo.h"
 
 #include "graphics.h"
-#include "sound.h"
 #include "widget.h"
 
 #include "game/resource.h"

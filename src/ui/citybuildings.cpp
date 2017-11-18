@@ -10,7 +10,6 @@
 #include "formation.h"
 #include "routing.h"
 #include "scroll.h"
-#include "sound.h"
 #include "undo.h"
 #include "widget_text.h"
 
@@ -19,6 +18,8 @@
 #include "figure/formation.h"
 #include "game/settings.h"
 #include "game/resource.h"
+
+#include <sound>
 
 static void drawBuildingFootprints();
 static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_CityPixelCoordinate *coord);
@@ -144,21 +145,21 @@ static void drawBuildingFootprints()
                 }
                 if (x < 4)
                 {
-                    Sound_City_markBuildingView(buildingId, 0);
+                    sound_city_mark_building_view(buildingId, SOUND_DIRECTION_LEFT);
                 }
-                else if (x > Data_CityView.widthInTiles + 2)
+                else if (x > Data_CityView.widthInTiles + SOUND_DIRECTION_RIGHT)
                 {
-                    Sound_City_markBuildingView(buildingId, 4);
+                    sound_city_mark_building_view(buildingId, SOUND_DIRECTION_CENTER);
                 }
                 else
                 {
-                    Sound_City_markBuildingView(buildingId, 2);
+                    sound_city_mark_building_view(buildingId, 2);
                 }
             }
             if (Data_Grid_terrain[gridOffset] & Terrain_Garden)
             {
                 Data_Buildings[0].type = Terrain_Garden;
-                Sound_City_markBuildingView(0, 2);
+                sound_city_mark_building_view(0, 2);
             }
             int graphicId = Data_Grid_graphicIds[gridOffset];
             if (Data_Grid_bitfields[gridOffset] & Bitfield_Overlay)
@@ -863,7 +864,7 @@ static void buildEnd()
         }
         if (Data_State.selectedBuilding.type > 0)
         {
-            Sound_Effects_playChannel(SoundChannel_Build);
+            sound_effect_play(SOUND_EFFECT_BUILD);
         }
         BuildingPlacement_place(Data_Settings_Map.orientation,
                                 Data_State.selectedBuilding.xStart, Data_State.selectedBuilding.yStart,
@@ -1438,7 +1439,7 @@ static void militaryMapClick()
     {
         Formation_legionMoveTo(formationId,
                                Data_Settings_Map.current.x, Data_Settings_Map.current.y);
-        Sound_Speech_playFile("wavs/cohort5.wav");
+        sound_speech_playfile("wavs/cohort5.wav");
     }
     UI_Window_goTo(Window_City);
 }

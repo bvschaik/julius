@@ -2,16 +2,11 @@
 
 #include "formation.h"
 #include "graphics.h"
-#include "sound.h"
 #include "widget_text.h"
 #include "ui/window.h"
 
-#include "data/building.hpp"
-#include "data/cityinfo.hpp"
-#include "data/constants.hpp"
-#include "data/figure.hpp"
-#include "data/settings.hpp"
-#include "data/state.hpp"
+#include <sound>
+#include <data>
 
 #include "building/count.h"
 #include "core/calc.h"
@@ -661,19 +656,19 @@ static void buttonLayout(int index, int param2)
     switch (index)
     {
     case 0:
-        Sound_Speech_playFile("wavs/cohort1.wav");
+        sound_speech_playfile("wavs/cohort1.wav");
         break;
     case 1:
-        Sound_Speech_playFile("wavs/cohort2.wav");
+        sound_speech_playfile("wavs/cohort2.wav");
         break;
     case 2:
-        Sound_Speech_playFile("wavs/cohort3.wav");
+        sound_speech_playfile("wavs/cohort3.wav");
         break;
     case 3:
-        Sound_Speech_playFile("wavs/cohort4.wav");
+        sound_speech_playfile("wavs/cohort4.wav");
         break;
     case 4:
-        Sound_Speech_playFile("wavs/cohort5.wav");
+        sound_speech_playfile("wavs/cohort5.wav");
         break;
     }
     Data_State.selectedLegionFormationId = contextForCallback->formationId;

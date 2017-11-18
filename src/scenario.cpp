@@ -16,7 +16,6 @@
 #include "city/message.h"
 #include "routing.h"
 #include "sidebarmenu.h"
-#include "sound.h"
 #include "terrain.h"
 #include "terraingraphics.h"
 
@@ -24,14 +23,8 @@
 #include "game/tutorial.h"
 #include "building/storage.h"
 
-#include "data/cityinfo.hpp"
-#include "data/constants.hpp"
-#include "data/event.hpp"
-#include "data/filelist.hpp"
-#include "data/grid.hpp"
-#include "data/scenario.hpp"
-#include "data/settings.hpp"
-#include "data/state.hpp"
+#include <sound>
+#include <data>
 
 #include "core/file.h"
 #include "core/io.h"
@@ -145,8 +138,8 @@ static void initCustomScenario(const char *scenarioName)
     city_message_init_scenario();
     Loader_GameState_init();
     Animation::resetTimers();
-    Sound_City_init();
-    Sound_Music_reset();
+    sound_city_init();
+    sound_music_reset();
     SidebarMenu_enableAllBuildingMenuItems();
     Building_clearList();
     building_storage_clear_all();

@@ -9,22 +9,13 @@
 #include "resource.h"
 #include "routing.h"
 #include "sidebarmenu.h"
-#include "sound.h"
 #include "terraingraphics.h"
 #include "utilitymanagement.h"
 #include "empire/city.h"
 
-#include "data/building.hpp"
-#include "data/cityinfo.hpp"
-#include "data/event.hpp"
-#include "data/filelist.hpp"
-#include "data/grid.hpp"
-#include "data/invasion.hpp"
-#include "data/routes.hpp"
-#include "data/scenario.hpp"
-#include "data/settings.hpp"
-#include "data/sound.hpp"
-#include "data/state.hpp"
+#include <sound>
+#include <data>
+
 #include "game/tutorial.h"
 #include "data/figure.hpp"
 #include "data/figure.hpp"
@@ -187,7 +178,7 @@ typedef struct
     buffer *Data_Settings_currentMissionId;
     buffer *Data_InvasionWarnings;
     buffer *Data_Settings_isCustomScenario;
-    buffer *Data_Sound_City;
+    buffer *city_sounds;
     buffer *Data_Buildings_Extra_highestBuildingIdInUse;
     buffer *figure_traders;
     buffer *building_list_burning;
@@ -356,7 +347,7 @@ void init_savegame_data()
     state->Data_Settings_currentMissionId = create_savegame_piece(4, 0);
     state->Data_InvasionWarnings = create_savegame_piece(3232, 1);
     state->Data_Settings_isCustomScenario = create_savegame_piece(4, 0);
-    state->Data_Sound_City = create_savegame_piece(8960, 0);
+    state->city_sounds = create_savegame_piece(8960, 0);
     state->Data_Buildings_Extra_highestBuildingIdInUse = create_savegame_piece(4, 0);
     state->figure_traders = create_savegame_piece(4804, 0);
     state->building_list_burning = create_savegame_piece(1000, 1);
@@ -529,7 +520,9 @@ static void savegame_deserialize(savegame_state *state)
     read_all_from_buffer(state->Data_Settings_currentMissionId, &Data_Settings.currentMissionId);
     read_all_from_buffer(state->Data_InvasionWarnings, &Data_InvasionWarnings);
     read_all_from_buffer(state->Data_Settings_isCustomScenario, &Data_Settings.isCustomScenario);
-    read_all_from_buffer(state->Data_Sound_City, &Data_Sound_City);
+
+    sound_city_load_state(state->city_sounds);
+
     read_all_from_buffer(state->Data_Buildings_Extra_highestBuildingIdInUse, &Data_Buildings_Extra.highestBuildingIdInUse);
 
     traders_load_state(state->figure_traders);
@@ -660,7 +653,9 @@ static void savegame_serialize(savegame_state *state)
     write_all_to_buffer(state->Data_Settings_currentMissionId, &Data_Settings.currentMissionId);
     write_all_to_buffer(state->Data_InvasionWarnings, &Data_InvasionWarnings);
     write_all_to_buffer(state->Data_Settings_isCustomScenario, &Data_Settings.isCustomScenario);
-    write_all_to_buffer(state->Data_Sound_City, &Data_Sound_City);
+
+    sound_city_save_state(state->city_sounds);
+
     write_all_to_buffer(state->Data_Buildings_Extra_highestBuildingIdInUse, &Data_Buildings_Extra.highestBuildingIdInUse);
 
     traders_save_state(state->figure_traders);
@@ -758,7 +753,7 @@ int GameFile_loadSavedGame(const char *filename)
     {
         return 0;
     }
-    Sound_stopMusic();
+    sound_music_stop();
     savegame_read_from_file(fp);
     fclose(fp);
 
@@ -856,8 +851,8 @@ static void setupFromSavedGame()
     SidebarMenu_enableBuildingMenuItemsAndButtons();
     city_message_init_problem_areas();
 
-    Sound_City_init();
-    Sound_Music_reset();
+    sound_city_init();
+    sound_music_reset();
 
     Data_State.undoAvailable = 0;
     Data_State.currentOverlay = 0;

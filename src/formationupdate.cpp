@@ -5,15 +5,10 @@
 #include "grid.h"
 #include "city/message.h"
 #include "routing.h"
-#include "sound.h"
 #include "terraingraphics.h"
 
-#include "data/building.hpp"
-#include "data/cityinfo.hpp"
-#include "data/constants.hpp"
-#include "data/grid.hpp"
-#include "data/settings.hpp"
-#include "data/figure.hpp"
+#include <sound>
+#include <data>
 
 #include "core/calc.h"
 #include "core/random.h"
@@ -993,7 +988,7 @@ static void update_herd_formation(const formation *m)
                         if (Data_CityInfo.soundMarchWolf <= 0)
                         {
                             Data_CityInfo.soundMarchWolf = 12;
-                            Sound_Effects_playChannel(SoundChannel_WolfHowl);
+                            sound_effect_play(SOUND_EFFECT_WOLF_HOWL);
                         }
                     }
                     moveAnimals(m, attackingAnimals);
