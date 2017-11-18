@@ -324,7 +324,7 @@ void Figure_createHerds()
 
 void Figure_createFlotsam(int xEntry, int yEntry, int hasWater)
 {
-    if (!hasWater || !Data_Scenario.flotsamEnabled)
+    if (!hasWater || !scenario_map_has_flotsam())
     {
         return;
     }

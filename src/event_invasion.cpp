@@ -8,6 +8,7 @@
 #include "city/message.h"
 
 #include <data>
+#include <scenario>
 
 #include "core/random.h"
 #include "empire/object.h"
@@ -367,8 +368,9 @@ static int startInvasion(int enemyType, int amount, int invasionPoint, int attac
     }
     if (x == -1 || y == -1)
     {
-        x = Data_Scenario.exitPoint.x;
-        y = Data_Scenario.exitPoint.y;
+        map_point exit_point = scenario_map_exit();
+        x = exit_point.x;
+        y = exit_point.y;
     }
     // determine orientation
     if (y == 0)

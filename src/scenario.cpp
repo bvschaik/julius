@@ -185,8 +185,9 @@ static void loadScenario(const char *scenarioName)
         Data_Scenario.entryPoint.x = Data_Settings_Map.width - 1;
         Data_Scenario.entryPoint.y = Data_Settings_Map.height / 2;
     }
-    Data_CityInfo.entryPointX = Data_Scenario.entryPoint.x;
-    Data_CityInfo.entryPointY = Data_Scenario.entryPoint.y;
+    map_point entry_point = scenario_map_entry();
+    Data_CityInfo.entryPointX = entry_point.x;
+    Data_CityInfo.entryPointY = entry_point.y;
     Data_CityInfo.entryPointGridOffset = GridOffset(Data_CityInfo.entryPointX, Data_CityInfo.entryPointY);
 
     if (Data_Scenario.exitPoint.x == -1 || Data_Scenario.exitPoint.y == -1)

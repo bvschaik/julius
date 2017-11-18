@@ -84,3 +84,20 @@ int scenario_map_closest_fishing_point(int x, int y, int *fish_x, int *fish_y)
     }
     return 0;
 }
+
+map_point scenario_map_entry()
+{
+    map_point point = {Data_Scenario.entryPoint.x, Data_Scenario.entryPoint.y};
+    return point;
+}
+
+map_point scenario_map_exit()
+{
+    map_point point = {Data_Scenario.exitPoint.x, Data_Scenario.exitPoint.y};
+    return point;
+}
+
+int scenario_map_has_flotsam()
+{
+    return Data_Scenario.flotsamEnabled;
+}
