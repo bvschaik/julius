@@ -6,6 +6,8 @@
 #include "trader.h"
 
 #include <data>
+#include <scenario>
+
 #include "building/storage.h"
 #include "empire/city.h"
 #include "empire/empire.h"
@@ -652,8 +654,9 @@ void FigureAction_tradeShip(int figureId)
         {
             f->actionState = FigureActionState_115_TradeShipLeaving;
             f->waitTicks = 0;
-            f->destinationX = Data_Scenario.riverExitPoint.x;
-            f->destinationY = Data_Scenario.riverExitPoint.y;
+            map_point river_exit = scenario_map_river_exit();
+            f->destinationX = river_exit.x;
+            f->destinationY = river_exit.y;
         }
         break;
     case FigureActionState_112_TradeShipMoored:
@@ -662,16 +665,18 @@ void FigureAction_tradeShip(int figureId)
             f->tradeShipFailedDockAttempts = 0;
             f->actionState = FigureActionState_115_TradeShipLeaving;
             f->waitTicks = 0;
-            f->destinationX = Data_Scenario.riverEntryPoint.x;
-            f->destinationY = Data_Scenario.riverEntryPoint.y;
+            map_point river_entry = scenario_map_river_entry();
+            f->destinationX = river_entry.x;
+            f->destinationY = river_entry.y;
         }
         else if (tradeShipDoneTrading(figureId))
         {
             f->tradeShipFailedDockAttempts = 0;
             f->actionState = FigureActionState_115_TradeShipLeaving;
             f->waitTicks = 0;
-            f->destinationX = Data_Scenario.riverEntryPoint.x;
-            f->destinationY = Data_Scenario.riverEntryPoint.y;
+            map_point river_entry = scenario_map_river_entry();
+            f->destinationX = river_entry.x;
+            f->destinationY = river_entry.y;
             Data_Buildings[f->destinationBuildingId].data.other.dockQueuedDockerId = 0;
             Data_Buildings[f->destinationBuildingId].data.other.dockNumShips = 0;
         }

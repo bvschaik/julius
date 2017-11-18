@@ -4,10 +4,10 @@
 #include "city/message.h"
 #include "terrain.h"
 
-#include "data/cityinfo.hpp"
-#include "city/message.h"
-#include "data/scenario.hpp"
+#include <data>
+#include <scenario>
 
+#include "city/message.h"
 #include "building/model.h"
 #include "core/calc.h"
 #include "core/random.h"
@@ -198,7 +198,7 @@ void FigureAction_flotsam(int figureId)
 {
     struct Data_Figure *f = &Data_Figures[figureId];
     f->isBoat = 2;
-    if (Data_Scenario.riverExitPoint.x == -1 || Data_Scenario.riverExitPoint.y == -1)
+    if (!scenario_map_has_river_exit())
     {
         return;
     }
@@ -219,8 +219,9 @@ void FigureAction_flotsam(int figureId)
                 f->minMaxSeen = 1;
                 Data_CityInfo.godCurseNeptuneSankShips = 0;
             }
-            f->destinationX = Data_Scenario.riverExitPoint.x;
-            f->destinationY = Data_Scenario.riverExitPoint.y;
+            map_point river_exit = scenario_map_river_exit();
+            f->destinationX = river_exit.x;
+            f->destinationY = river_exit.y;
         }
         break;
     case FigureActionState_129_FlotsamFloating:
@@ -267,8 +268,9 @@ void FigureAction_flotsam(int figureId)
             f->waitTicks = 300 + random_byte();
         }
         Figure_removeFromTileList(figureId);
-        f->x = Data_Scenario.riverEntryPoint.x;
-        f->y = Data_Scenario.riverEntryPoint.y;
+        map_point river_entry = scenario_map_river_entry();
+        f->x = river_entry.x;
+        f->y = river_entry.y;
         f->gridOffset = GridOffset(f->x, f->y);
         f->crossCountryX = 15 * f->x;
         f->crossCountryY = 15 * f->y;

@@ -433,7 +433,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
                     }
                     if (b->type == BUILDING_DOCK)
                     {
-                        int numDockers = BUILDING_DOCK_getNumIdleDockers(buildingId);
+                        int numDockers = Building_Dock_getNumIdleDockers(buildingId);
                         if (numDockers > 0)
                         {
                             int graphicIdDock = Data_Grid_graphicIds[b->gridOffset];

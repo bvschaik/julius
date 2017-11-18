@@ -347,7 +347,7 @@ int Figure_determinePhrase(int figureId)
     case FIGURE_MARKET_TRADER:
         if (f->actionState == FigureActionState_126_RoamerReturning)
         {
-            if (BUILDING_MARKET_getMaxFoodStock(f->buildingId) <= 0)
+            if (Building_Market_getMaxGoodsStock(f->buildingId) <= 0)
             {
                 phraseId = 9; // run out of goods
             }

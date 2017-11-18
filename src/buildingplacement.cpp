@@ -695,7 +695,7 @@ static int placeBuilding(int type, int x, int y)
             UI_Warning_show(Warning_ShoreNeeded);
             return 0;
         }
-        if (!BUILDING_DOCK_isConnectedToOpenWater(x, y))
+        if (!Building_Dock_isConnectedToOpenWater(x, y))
         {
             UI_Warning_show(Warning_DockOpenWaterNeeded);
             return 0;

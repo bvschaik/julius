@@ -4,5 +4,6 @@
 #include "scenario/demand_change.h"
 #include "scenario/price_change.h"
 #include "scenario/request.h"
+#include "scenario/map.h"
 
 #endif

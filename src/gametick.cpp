@@ -102,7 +102,7 @@ void GameTick_advance()
         Resource_calculateWorkshopStocks();
         break;
     case 19:
-        BUILDING_DOCK_updateOpenWaterAccess();
+        Building_Dock_updateOpenWaterAccess();
         break;
     case 20:
         Building_Industry_updateProduction();
