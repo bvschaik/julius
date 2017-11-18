@@ -270,15 +270,15 @@ static void updateFavorRating(int isYearlyUpdate)
         }
         // milestone
         int milestonePct;
-        if (Data_Scenario.startYear + Data_Scenario.milestone25 == game_time_year())
+        if (scenario_criteria_milestone_year(25) == game_time_year())
         {
             milestonePct = 25;
         }
-        else if (Data_Scenario.startYear + Data_Scenario.milestone50 == game_time_year())
+        else if (scenario_criteria_milestone_year(50) == game_time_year())
         {
             milestonePct = 50;
         }
-        else if (Data_Scenario.startYear + Data_Scenario.milestone75 == game_time_year())
+        else if (scenario_criteria_milestone_year(75) == game_time_year())
         {
             milestonePct = 75;
         }

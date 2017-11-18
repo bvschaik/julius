@@ -24,4 +24,6 @@ int scenario_criteria_time_limit_years();
 int scenario_criteria_survival_enabled();
 int scenario_criteria_survival_years();
 
+int scenario_criteria_milestone_year(int percentage);
+
 #endif // SCENARIO_CRITERIA_H
