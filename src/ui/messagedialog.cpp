@@ -3,26 +3,22 @@
 #include "allwindows.h"
 #include "advisors.h"
 
-#include "core/calc.h"
 #include "cityview.h"
 #include "formation.h"
 #include "graphics.h"
-#include "city/message.h"
 #include "resource.h"
 #include "video.h"
 #include "widget_text.h"
-#include "empire/city.h"
 
-#include "data/buttons.hpp"
-#include "data/cityinfo.hpp"
-#include "data/constants.hpp"
-#include "data/scenario.hpp"
-#include "data/screen.hpp"
-#include "data/settings.hpp"
+#include <data>
 
+#include "city/message.h"
+#include "core/calc.h"
 #include "core/lang.h"
+#include "empire/city.h"
 #include "graphics/image.h"
 #include "graphics/mouse.h"
+#include "scenario/request.h"
 
 #define MAX_HISTORY 200
 
@@ -244,8 +240,8 @@ static void drawDialogNormal()
     if (msg->subtitle.x)
     {
         int width = 16 * msg->width_blocks - 16 - msg->subtitle.x;
-        int height = Widget_Text_drawMultiline(msg->subtitle.text,
-                                               data.x + msg->subtitle.x, data.y + msg->subtitle.y, width,FONT_NORMAL_BLACK);
+        int height = Widget::Text::drawMultiline(msg->subtitle.text,
+                     data.x + msg->subtitle.x, data.y + msg->subtitle.y, width,FONT_NORMAL_BLACK);
         if (data.y + msg->subtitle.y + height > data.yText)
         {
             data.yText = data.y + msg->subtitle.y + height;
@@ -317,17 +313,16 @@ static void drawDialogVideo()
 
     if (msg->type == TYPE_MESSAGE && msg->message_type == MESSAGE_TYPE_IMPERIAL)
     {
-        Widget::Text::drawNumber(Data_Scenario.requests.amount[playerMessage.param1],
+        const scenario_request *request = scenario_request_get(playerMessage.param1);
+        Widget::Text::drawNumber(request->amount,
                                  '@', " ", data.x + 8, data.y + 384, FONT_NORMAL_WHITE);
-        int resource = Data_Scenario.requests.resourceId[playerMessage.param1];
         Graphics_drawImage(
-            image_group(ID_Graphic_ResourceIcons) + resource + Resource_getGraphicIdOffset(resource, 3),
+            image_group(ID_Graphic_ResourceIcons) + request->resource + Resource_getGraphicIdOffset(request->resource, 3),
             data.x + 70, data.y + 379);
-        Widget_GameText_draw(23, resource, data.x + 100, data.y + 384, FONT_NORMAL_WHITE);
-        if (Data_Scenario.requests_state[playerMessage.param1] <= 1)
+        Widget_GameText_draw(23, request->resource, data.x + 100, data.y + 384, FONT_NORMAL_WHITE);
+        if (request->state == REQUEST_STATE_NORMAL || request->state == REQUEST_STATE_OVERDUE)
         {
-            width = Widget_GameText_drawNumberWithDescription(8, 4,
-                    Data_Scenario.requests_monthsToComply[playerMessage.param1],
+            width = Widget_GameText_drawNumberWithDescription(8, 4, request->months_to_comply,
                     data.x + 200, data.y + 384, FONT_NORMAL_WHITE);
             Widget_GameText_draw(12, 2, data.x + 200 + width, data.y + 384, FONT_NORMAL_WHITE);
         }
@@ -424,20 +419,19 @@ static void drawPlayerMessageContent(const lang_message *msg)
     }
     if (msg->message_type == MESSAGE_TYPE_IMPERIAL)
     {
+        const scenario_request *request = scenario_request_get(playerMessage.param1);
         int yOffset = data.yText + 86 + lines * 16;
-        Widget::Text::drawNumber(Data_Scenario.requests.amount[playerMessage.param1],
+        Widget::Text::drawNumber(request->amount,
                                  '@', " ", data.xText + 8, yOffset, FONT_NORMAL_WHITE);
-        graphicId = image_group(ID_Graphic_ResourceIcons) +
-                    Data_Scenario.requests.resourceId[playerMessage.param1];
-        graphicId += Resource_getGraphicIdOffset(
-                         Data_Scenario.requests.resourceId[playerMessage.param1], 3);
+        graphicId = image_group(ID_Graphic_ResourceIcons) + request->resource;
+        graphicId += Resource_getGraphicIdOffset(request->resource, 3);
         Graphics_drawImage(graphicId, data.xText + 70, yOffset - 5);
-        Widget_GameText_draw(23, Data_Scenario.requests.resourceId[playerMessage.param1],
+        Widget_GameText_draw(23, request->resource,
                              data.xText + 100, yOffset, FONT_NORMAL_WHITE);
-        if (Data_Scenario.requests_state[playerMessage.param1] <= 1)
+        if (request->state == REQUEST_STATE_NORMAL || request->state == REQUEST_STATE_OVERDUE)
         {
             int width = Widget_GameText_drawNumberWithDescription(8, 4,
-                        Data_Scenario.requests_monthsToComply[playerMessage.param1],
+                        request->months_to_comply,
                         data.xText + 200, yOffset, FONT_NORMAL_WHITE);
             Widget_GameText_draw(12, 2, data.xText + 200 + width, yOffset, FONT_NORMAL_WHITE);
         }

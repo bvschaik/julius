@@ -505,7 +505,7 @@ int Widget_GameText_drawYearNoSpacing(int year, int xOffset, int yOffset, font_t
     return width;
 }
 
-int Widget_Text_drawMultiline(const char *str, int xOffset, int yOffset, int boxWidth, font_t font)
+int Widget::Text::drawMultiline(const char *str, int xOffset, int yOffset, int boxWidth, font_t font)
 {
     int lineHeight;
     switch (font)
@@ -577,7 +577,7 @@ int Widget_Text_drawMultiline(const char *str, int xOffset, int yOffset, int box
 int Widget_GameText_drawMultiline(int group, int number, int xOffset, int yOffset, int boxWidth, font_t font)
 {
     const uint8_t *str = lang_get_string(group, number);
-    return Widget_Text_drawMultiline(str, xOffset, yOffset, boxWidth, font);
+    return Widget::Text::drawMultiline(str, xOffset, yOffset, boxWidth, font);
 }
 
 

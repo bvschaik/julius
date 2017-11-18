@@ -22,8 +22,6 @@ int Widget_GameText_drawYearColored(int year, int xOffset, int yOffset, font_t f
 
 int Widget_GameText_drawYearNoSpacing(int year, int xOffset, int yOffset, font_t font);
 
-int Widget_Text_drawMultiline(const char *str, int xOffset, int yOffset, int boxWidth, font_t font);
-
 int Widget_GameText_drawMultiline(int group, int number, int xOffset, int yOffset, int boxWidth, font_t font);
 
 int Widget_Text_getWidth(const uint8_t *str, font_t font);

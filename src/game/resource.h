@@ -28,7 +28,7 @@ typedef enum
     RESOURCE_FURNITURE = 14,
     RESOURCE_POTTERY = 15,
     RESOURCE_DENARII = 16,
-    RESOURCES_TROOPS = 17,
+    RESOURCE_TROOPS = 17,
     // helper constants
     RESOURCE_MIN = 1,
     RESOURCE_MAX = 16,

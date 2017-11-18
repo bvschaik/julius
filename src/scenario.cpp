@@ -25,6 +25,7 @@
 
 #include <sound>
 #include <data>
+#include <scenario>
 
 #include "core/file.h"
 #include "core/io.h"
@@ -256,9 +257,9 @@ static void loadScenario(const char *scenarioName)
     traders_clear();
     Event_initInvasions();
     empire_determine_distant_battle_city();
-    Event_initRequests();
-    Event_initDemandChanges();
-    Event_initPriceChanges();
+    scenario_request_init();
+    scenario_demand_change_init();
+    scenario_price_change_init();
 
     SidebarMenu_enableBuildingMenuItemsAndButtons();
     image_load_climate(Data_Scenario.climate);

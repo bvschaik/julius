@@ -36,6 +36,7 @@ file(GLOB UI_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/ui/*.*)
 file(GLOB CITY_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/city/*.*)
 file(GLOB SOUND_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/sound/*.*)
 file(GLOB DATA_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/data/*.*)
+file(GLOB SCENARIO_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/scenario/*.*)
 
 if (BUILD_SDL2STATIC)
   set(SDL2STATIC_NAME "sdl2")
@@ -63,6 +64,7 @@ add_executable(${PROJECT_NAME}
   ${SOUND_FILES}
   ${SMK_FILES}
   ${INCLUDE_FILES}
+  ${SCENARIO_FILES}
 )
 
 #include(FindPkgConfig)

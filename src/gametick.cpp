@@ -29,6 +29,7 @@
 
 #include <sound>
 #include <data>
+#include <scenario>
 
 #include "city/culture.h"
 
@@ -213,9 +214,9 @@ static void advanceMonth()
     CityInfo_Resource_housesConsumeFood();
     Event_handleDistantBattle();
     Event_handleInvasions();
-    Event_handleRequests();
-    Event_handleDemandChanges();
-    Event_handlePricesChanges();
+    scenario_request_process();
+    scenario_demand_change_process();
+    scenario_price_change_process();
     CityInfo_Victory_updateMonthsToGovern();
     Formation_Tick_updateRestMorale();
     city_message_decrease_delays();

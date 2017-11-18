@@ -1,15 +1,12 @@
 #ifndef SOUNDDEVICE_H
 #define SOUNDDEVICE_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
+#define CHANNEL_FILENAME_MAX 32
 
 void sound_device_open();
 void sound_device_close();
 
-void sound_device_init_channels(int numChannels, const char filenames[][32]);
+void sound_device_init_channels(int numChannels, const char filenames[][CHANNEL_FILENAME_MAX]);
 int sound_device_has_channel(int channel);
 int sound_device_is_channel_playing(int channel);
 
@@ -26,9 +23,5 @@ void sound_device_stop_channel(int channel);
 void sound_device_use_custom_music_player(int bitdepth, int channels, int rate, const unsigned char *(*callback)(int *outLen));
 void sound_device_use_default_music_player();
 
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif

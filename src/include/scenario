@@ -1,0 +1,8 @@
+#ifndef _JULIUS_INCLUDE_SCENARIO_H_
+#define _JULIUS_INCLUDE_SCENARIO_H_
+
+#include "scenario/demand_change.h"
+#include "scenario/price_change.h"
+#include "scenario/request.h"
+
+#endif
