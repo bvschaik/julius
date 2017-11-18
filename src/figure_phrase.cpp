@@ -682,7 +682,7 @@ static void playFigureSoundFile(int figureSoundId, int phraseId)
     {
         strcpy(path, "wavs/");
         strcat(path, figureSounds[figureSoundId][phraseId]);
-        sound_speech_playfile(path);
+        sound_speech_play_file(path);
     }
 }
 
@@ -778,14 +778,14 @@ void Figure_playDieSound(int figureType)
     {
         if (Data_CityInfo.numEnemiesInCity == 1)
         {
-            sound_speech_playfile("wavs/army_war_cry.wav");
+            sound_speech_play_file("wavs/army_war_cry.wav");
         }
     }
     else if (FigureIsLegion(figureType))
     {
         if (Data_CityInfo.numSoldiersInCity == 1)
         {
-            sound_speech_playfile("wavs/barbarian_war_cry.wav");
+            sound_speech_play_file("wavs/barbarian_war_cry.wav");
         }
     }
 }

@@ -1439,7 +1439,7 @@ static void militaryMapClick()
     {
         Formation_legionMoveTo(formationId,
                                Data_Settings_Map.current.x, Data_Settings_Map.current.y);
-        sound_speech_playfile("wavs/cohort5.wav");
+        sound_speech_play_file("wavs/cohort5.wav");
     }
     UI_Window_goTo(Window_City);
 }

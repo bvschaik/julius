@@ -2,9 +2,8 @@
 
 #include "sidebarmenu.h"
 
-#include "data/cityinfo.hpp"
-#include "data/scenario.hpp"
-#include "data/settings.hpp"
+#include <data>
+#include <scenario>
 
 #include "game/resource.h"
 #include "game/time.h"
@@ -317,7 +316,7 @@ void Tutorial::on_day_tick()
     }
     if (data.tutorial1.fire && !data.tutorial1.senate_built)
     {
-        int population_almost = Data_CityInfo.population >= Data_Scenario.winCriteria_population - 20;
+        int population_almost = Data_CityInfo.population >= scenario_criteria_population() - 20;
         if (!game_time_day() || population_almost)
         {
             if (Data_CityInfo.buildingSenateGridOffset)

@@ -1,7 +1,7 @@
 #ifndef SOUND_SPEECH_H
 #define SOUND_SPEECH_H
 
-void sound_speech_playfile(const char *filename);
+void sound_speech_play_file(const char *filename);
 
 void sound_speech_set_volume(int percentage);
 

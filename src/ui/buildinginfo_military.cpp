@@ -656,19 +656,19 @@ static void buttonLayout(int index, int param2)
     switch (index)
     {
     case 0:
-        sound_speech_playfile("wavs/cohort1.wav");
+        sound_speech_play_file("wavs/cohort1.wav");
         break;
     case 1:
-        sound_speech_playfile("wavs/cohort2.wav");
+        sound_speech_play_file("wavs/cohort2.wav");
         break;
     case 2:
-        sound_speech_playfile("wavs/cohort3.wav");
+        sound_speech_play_file("wavs/cohort3.wav");
         break;
     case 3:
-        sound_speech_playfile("wavs/cohort4.wav");
+        sound_speech_play_file("wavs/cohort4.wav");
         break;
     case 4:
-        sound_speech_playfile("wavs/cohort5.wav");
+        sound_speech_play_file("wavs/cohort5.wav");
         break;
     }
     Data_State.selectedLegionFormationId = contextForCallback->formationId;

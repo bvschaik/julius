@@ -3,6 +3,9 @@
 #include "core/calc.h"
 #include "core/dir.h"
 #include "core/file.h"
+#include "core/string.h"
+#include "scenario/criteria.h"
+#include "sound/speech.h"
 
 #include "gamefile.h"
 #include "graphics.h"
@@ -10,7 +13,6 @@
 #include "widget_text.h"
 
 #include <data>
-#include <sound>"
 
 #include <string.h>
 
@@ -23,30 +25,30 @@ static void buttonScroll(int param1, int param2);
 static void buttonStartScenario(int param1, int param2);
 
 static ImageButton imageButtons[] =
-    {
-        {276, 210, 34, 34, ImageButton_Normal, 96, 8, buttonScroll, Widget_Button_doNothing, 0, 1, 1},
-        {276, 440, 34, 34, ImageButton_Normal, 96, 12, buttonScroll, Widget_Button_doNothing, 1, 1, 1},
-        {600, 440, 27, 27, ImageButton_Normal, 92, 56, buttonStartScenario, Widget_Button_doNothing, 1, 0, 1},
-    };
+{
+    {276, 210, 34, 34, ImageButton_Normal, 96, 8, buttonScroll, Widget_Button_doNothing, 0, 1, 1},
+    {276, 440, 34, 34, ImageButton_Normal, 96, 12, buttonScroll, Widget_Button_doNothing, 1, 1, 1},
+    {600, 440, 27, 27, ImageButton_Normal, 92, 56, buttonStartScenario, Widget_Button_doNothing, 1, 0, 1},
+};
 
 static CustomButton customButtons[] =
-    {
-        {28, 220, 280, 236, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 0, 0},
-        {28, 236, 280, 252, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 1, 0},
-        {28, 252, 280, 268, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 2, 0},
-        {28, 268, 280, 284, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 3, 0},
-        {28, 284, 280, 300, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 4, 0},
-        {28, 300, 280, 316, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 5, 0},
-        {28, 316, 280, 332, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 6, 0},
-        {28, 332, 280, 348, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 7, 0},
-        {28, 348, 280, 364, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 8, 0},
-        {28, 364, 280, 380, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 9, 0},
-        {28, 380, 280, 396, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 10, 0},
-        {28, 396, 280, 412, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 11, 0},
-        {28, 412, 280, 428, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 12, 0},
-        {28, 428, 280, 444, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 13, 0},
-        {28, 444, 280, 460, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 14, 0},
-    };
+{
+    {28, 220, 280, 236, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 0, 0},
+    {28, 236, 280, 252, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 1, 0},
+    {28, 252, 280, 268, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 2, 0},
+    {28, 268, 280, 284, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 3, 0},
+    {28, 284, 280, 300, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 4, 0},
+    {28, 300, 280, 316, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 5, 0},
+    {28, 316, 280, 332, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 6, 0},
+    {28, 332, 280, 348, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 7, 0},
+    {28, 348, 280, 364, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 8, 0},
+    {28, 364, 280, 380, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 9, 0},
+    {28, 380, 280, 396, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 10, 0},
+    {28, 396, 280, 412, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 11, 0},
+    {28, 412, 280, 428, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 12, 0},
+    {28, 428, 280, 444, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 13, 0},
+    {28, 444, 280, 460, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 14, 0},
+};
 
 static int scrollPosition;
 static int focusButtonId;
@@ -198,7 +200,7 @@ static void drawScenarioInfo()
 
     Widget_GameText_drawCentered(32, 11 + Data_Scenario.playerRank,
                                  baseOffsetX + 15, baseOffsetY + 190, 260, FONT_NORMAL_BLACK);
-    if (Data_Scenario.isOpenPlay)
+    if (scenario_is_open_play())
     {
         Widget_GameText_drawMultiline(145, Data_Scenario.openPlayScenarioId,
                                       baseOffsetX + 25, baseOffsetY + 250, 260, FONT_NORMAL_BLACK);
@@ -208,51 +210,51 @@ static void drawScenarioInfo()
         Widget_GameText_drawCentered(44, 127,
                                      baseOffsetX + 15, baseOffsetY + 242, 260, FONT_NORMAL_BLACK);
         int width;
-        if (Data_Scenario.winCriteria.cultureEnabled)
+        if (scenario_criteria_culture_enabled())
         {
-            width = Widget::Text::drawNumber(Data_Scenario.winCriteria.culture, '@', " ",
+            width = Widget::Text::drawNumber(scenario_criteria_culture(), '@', " ",
                                              baseOffsetX + 90, baseOffsetY + 270, FONT_NORMAL_BLACK);
             Widget_GameText_draw(44, 129,
                                  baseOffsetX + 90 + width, baseOffsetY + 270, FONT_NORMAL_BLACK);
         }
-        if (Data_Scenario.winCriteria.prosperityEnabled)
+        if (scenario_criteria_prosperity_enabled())
         {
-            width = Widget::Text::drawNumber(Data_Scenario.winCriteria.prosperity, '@', " ",
+            width = Widget::Text::drawNumber(scenario_criteria_prosperity(), '@', " ",
                                              baseOffsetX + 90, baseOffsetY + 286, FONT_NORMAL_BLACK);
             Widget_GameText_draw(44, 130,
                                  baseOffsetX + 90 + width, baseOffsetY + 286, FONT_NORMAL_BLACK);
         }
-        if (Data_Scenario.winCriteria.peaceEnabled)
+        if (scenario_criteria_peace_enabled())
         {
-            width = Widget::Text::drawNumber(Data_Scenario.winCriteria.peace, '@', " ",
+            width = Widget::Text::drawNumber(scenario_criteria_peace(), '@', " ",
                                              baseOffsetX + 90, baseOffsetY + 302, FONT_NORMAL_BLACK);
             Widget_GameText_draw(44, 131,
                                  baseOffsetX + 90 + width, baseOffsetY + 302, FONT_NORMAL_BLACK);
         }
-        if (Data_Scenario.winCriteria.favorEnabled)
+        if (scenario_criteria_favor_enabled())
         {
-            width = Widget::Text::drawNumber(Data_Scenario.winCriteria.favor, '@', " ",
+            width = Widget::Text::drawNumber(scenario_criteria_favor(), '@', " ",
                                              baseOffsetX + 90, baseOffsetY + 318, FONT_NORMAL_BLACK);
             Widget_GameText_draw(44, 132,
                                  baseOffsetX + 90 + width, baseOffsetY + 318, FONT_NORMAL_BLACK);
         }
-        if (Data_Scenario.winCriteria_populationEnabled)
+        if (scenario_criteria_population_enabled())
         {
-            width = Widget::Text::drawNumber(Data_Scenario.winCriteria_population, '@', " ",
+            width = Widget::Text::drawNumber(scenario_criteria_population(), '@', " ",
                                              baseOffsetX + 90, baseOffsetY + 334, FONT_NORMAL_BLACK);
             Widget_GameText_draw(44, 133,
                                  baseOffsetX + 90 + width, baseOffsetY + 334, FONT_NORMAL_BLACK);
         }
-        if (Data_Scenario.winCriteria.timeLimitYearsEnabled)
+        if (scenario_criteria_time_limit_enabled())
         {
-            width = Widget::Text::drawNumber(Data_Scenario.winCriteria.timeLimitYears, '@', " ",
+            width = Widget::Text::drawNumber(scenario_criteria_time_limit_years(), '@', " ",
                                              baseOffsetX + 90, baseOffsetY + 350, FONT_NORMAL_BLACK);
             Widget_GameText_draw(44, 134,
                                  baseOffsetX + 90 + width, baseOffsetY + 350, FONT_NORMAL_BLACK);
         }
-        if (Data_Scenario.winCriteria.survivalYearsEnabled)
+        if (scenario_criteria_survival_enabled())
         {
-            width = Widget::Text::drawNumber(Data_Scenario.winCriteria.survivalYears, '@', " ",
+            width = Widget::Text::drawNumber(scenario_criteria_survival_years(), '@', " ",
                                              baseOffsetX + 90, baseOffsetY + 366, FONT_NORMAL_BLACK);
             Widget_GameText_draw(44, 135,
                                  baseOffsetX + 90 + width, baseOffsetY + 366, FONT_NORMAL_BLACK);

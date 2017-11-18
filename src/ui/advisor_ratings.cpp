@@ -1,7 +1,8 @@
 #include "advisors_private.h"
-#include "data/scenario.hpp"
+
 #include "window.h"
-#include "widget_text.h"
+
+#include "scenario/criteria.h"
 
 static void drawRatingColumn(int xOffset, int yOffset, int value, int hasReached);
 static void buttonRating(int param1, int param2);
@@ -28,7 +29,7 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
                        baseOffsetX + 10, baseOffsetY + 10);
     width = Widget_GameText_draw(53, 0,
                                  baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK);
-    if (!Data_Scenario.winCriteria_populationEnabled || Data_Scenario.isOpenPlay)
+    if (!scenario_criteria_population_enabled() || scenario_is_open_play())
     {
         Widget_GameText_draw(53, 7,
                              baseOffsetX + 80 + width, baseOffsetY + 17, FONT_NORMAL_BLACK);
@@ -37,7 +38,7 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
     {
         width += Widget_GameText_draw(53, 6,
                                       baseOffsetX + 80 + width, baseOffsetY + 17, FONT_NORMAL_BLACK);
-        Widget::Text::drawNumber(Data_Scenario.winCriteria_population, '@', ")",
+        Widget::Text::drawNumber(scenario_criteria_population(), '@', ")",
                                  baseOffsetX + 80 + width, baseOffsetY + 17, FONT_NORMAL_BLACK);
     }
 
@@ -51,9 +52,9 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
                                  110, FONT_NORMAL_BLACK);
     Widget::Text::drawNumberCentered(Data_CityInfo.ratingCulture,
                                      baseOffsetX + 80, baseOffsetY + 309, 100, FONT_LARGE_BLACK);
-    if (Data_Scenario.winCriteria.cultureEnabled)
+    if (scenario_criteria_culture_enabled())
     {
-        width = Widget::Text::drawNumber(Data_Scenario.winCriteria.culture, '@', " ",
+        width = Widget::Text::drawNumber(scenario_criteria_culture(), '@', " ",
                                          baseOffsetX + 85, baseOffsetY + 334, FONT_NORMAL_BLACK);
     }
     else
@@ -62,8 +63,8 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
                                          baseOffsetX + 85, baseOffsetY + 334, FONT_NORMAL_BLACK);
     }
     Widget_GameText_draw(53, 5, baseOffsetX + 85 + width, baseOffsetY + 334, FONT_NORMAL_BLACK);
-    hasReached = !Data_Scenario.winCriteria.cultureEnabled ||
-                 Data_CityInfo.ratingCulture > Data_Scenario.winCriteria.culture ||
+    hasReached = !scenario_criteria_culture_enabled() ||
+                 Data_CityInfo.ratingCulture > scenario_criteria_culture() ||
                  Data_CityInfo.ratingCulture == 100; // FIXED: capital bug fixed
     drawRatingColumn(baseOffsetX + 110, baseOffsetY + 274, Data_CityInfo.ratingCulture, hasReached);
 
@@ -74,9 +75,9 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
                                  110, FONT_NORMAL_BLACK);
     Widget::Text::drawNumberCentered(Data_CityInfo.ratingProsperity,
                                      baseOffsetX + 200, baseOffsetY + 309, 100, FONT_LARGE_BLACK);
-    if (Data_Scenario.winCriteria.prosperityEnabled)
+    if (scenario_criteria_prosperity_enabled())
     {
-        width = Widget::Text::drawNumber(Data_Scenario.winCriteria.prosperity, '@', " ",
+        width = Widget::Text::drawNumber(scenario_criteria_prosperity(), '@', " ",
                                          baseOffsetX + 205, baseOffsetY + 334, FONT_NORMAL_BLACK);
     }
     else
@@ -85,8 +86,8 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
                                          baseOffsetX + 205, baseOffsetY + 334, FONT_NORMAL_BLACK);
     }
     Widget_GameText_draw(53, 5, baseOffsetX + 205 + width, baseOffsetY + 334, FONT_NORMAL_BLACK);
-    hasReached = !Data_Scenario.winCriteria.prosperityEnabled ||
-                 Data_CityInfo.ratingProsperity > Data_Scenario.winCriteria.prosperity ||
+    hasReached = !scenario_criteria_prosperity_enabled() ||
+                 Data_CityInfo.ratingProsperity > scenario_criteria_prosperity() ||
                  Data_CityInfo.ratingProsperity == 100; // FIXED: capital bug fixed
     drawRatingColumn(baseOffsetX + 230, baseOffsetY + 274, Data_CityInfo.ratingProsperity, hasReached);
 
@@ -97,9 +98,9 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
                                  110, FONT_NORMAL_BLACK);
     Widget::Text::drawNumberCentered(Data_CityInfo.ratingPeace,
                                      baseOffsetX + 320, baseOffsetY + 309, 100, FONT_LARGE_BLACK);
-    if (Data_Scenario.winCriteria.peaceEnabled)
+    if (scenario_criteria_peace_enabled())
     {
-        width = Widget::Text::drawNumber(Data_Scenario.winCriteria.peace, '@', " ",
+        width = Widget::Text::drawNumber(scenario_criteria_peace(), '@', " ",
                                          baseOffsetX + 325, baseOffsetY + 334, FONT_NORMAL_BLACK);
     }
     else
@@ -108,8 +109,8 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
                                          baseOffsetX + 325, baseOffsetY + 334, FONT_NORMAL_BLACK);
     }
     Widget_GameText_draw(53, 5, baseOffsetX + 325 + width, baseOffsetY + 334, FONT_NORMAL_BLACK);
-    hasReached = !Data_Scenario.winCriteria.peaceEnabled ||
-                 Data_CityInfo.ratingPeace > Data_Scenario.winCriteria.peace ||
+    hasReached = !scenario_criteria_peace_enabled() ||
+                 Data_CityInfo.ratingPeace > scenario_criteria_peace() ||
                  Data_CityInfo.ratingPeace == 100; // FIXED: capital bug fixed
     drawRatingColumn(baseOffsetX + 350, baseOffsetY + 274, Data_CityInfo.ratingPeace, hasReached);
 
@@ -120,9 +121,9 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
                                  110, FONT_NORMAL_BLACK);
     Widget::Text::drawNumberCentered(Data_CityInfo.ratingFavor,
                                      baseOffsetX + 440, baseOffsetY + 309, 100, FONT_LARGE_BLACK);
-    if (Data_Scenario.winCriteria.favorEnabled)
+    if (scenario_criteria_favor_enabled())
     {
-        width = Widget::Text::drawNumber(Data_Scenario.winCriteria.favor, '@', " ",
+        width = Widget::Text::drawNumber(scenario_criteria_favor(), '@', " ",
                                          baseOffsetX + 445, baseOffsetY + 334, FONT_NORMAL_BLACK);
     }
     else
@@ -131,8 +132,8 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
                                          baseOffsetX + 445, baseOffsetY + 334, FONT_NORMAL_BLACK);
     }
     Widget_GameText_draw(53, 5, baseOffsetX + 445 + width, baseOffsetY + 334, FONT_NORMAL_BLACK);
-    hasReached = !Data_Scenario.winCriteria.favorEnabled ||
-                 Data_CityInfo.ratingFavor > Data_Scenario.winCriteria.favor ||
+    hasReached = !scenario_criteria_favor_enabled() ||
+                 Data_CityInfo.ratingFavor > scenario_criteria_favor() ||
                  Data_CityInfo.ratingFavor == 100; // FIXED: capital bug fixed
     drawRatingColumn(baseOffsetX + 470, baseOffsetY + 274, Data_CityInfo.ratingFavor, hasReached);
 

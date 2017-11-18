@@ -22,15 +22,15 @@ static void enemyInitial(int figureId, struct Data_Figure *f, const formation *m
         {
             if (m->layout == FORMATION_ENEMY8)
             {
-                sound_speech_playfile("wavs/drums.wav");
+                sound_speech_play_file("wavs/drums.wav");
             }
             else if (m->layout == FORMATION_ENEMY12)
             {
-                sound_speech_playfile("wavs/horn2.wav");
+                sound_speech_play_file("wavs/horn2.wav");
             }
             else
             {
-                sound_speech_playfile("wavs/horn1.wav");
+                sound_speech_play_file("wavs/horn1.wav");
             }
         }
         f->isGhost = 0;

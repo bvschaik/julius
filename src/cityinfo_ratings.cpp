@@ -1,14 +1,12 @@
 #include "cityinfo.h"
 
-#include "data/building.hpp"
-#include "data/cityinfo.hpp"
-#include "data/scenario.hpp"
-#include "data/settings.hpp"
+#include <data>
 
 #include "building/model.h"
-#include "core/calc.h"
 #include "city/culture.h"
+#include "core/calc.h"
 #include "game/time.h"
+#include "scenario/criteria.h"
 
 static void updateCultureRating();
 static void updateFavorRating(int isYearlyUpdate);
@@ -291,33 +289,33 @@ static void updateFavorRating(int isYearlyUpdate)
         if (milestonePct)
         {
             int bonus = 1;
-            if (Data_Scenario.winCriteria.cultureEnabled &&
+            if (scenario_criteria_culture_enabled() &&
                     Data_CityInfo.ratingCulture < calc_adjust_with_percentage(
-                        Data_Scenario.winCriteria.culture, milestonePct))
+                        scenario_criteria_culture(), milestonePct))
             {
                 bonus = 0;
             }
-            if (Data_Scenario.winCriteria.prosperityEnabled &&
+            if (scenario_criteria_prosperity_enabled() &&
                     Data_CityInfo.ratingProsperity < calc_adjust_with_percentage(
-                        Data_Scenario.winCriteria.prosperity, milestonePct))
+                        scenario_criteria_prosperity(), milestonePct))
             {
                 bonus = 0;
             }
-            if (Data_Scenario.winCriteria.peaceEnabled &&
+            if (scenario_criteria_peace_enabled() &&
                     Data_CityInfo.ratingPeace < calc_adjust_with_percentage(
-                        Data_Scenario.winCriteria.peace, milestonePct))
+                        scenario_criteria_peace(), milestonePct))
             {
                 bonus = 0;
             }
-            if (Data_Scenario.winCriteria.favorEnabled &&
+            if (scenario_criteria_favor_enabled() &&
                     Data_CityInfo.ratingFavor < calc_adjust_with_percentage(
-                        Data_Scenario.winCriteria.favor, milestonePct))
+                        scenario_criteria_favor(), milestonePct))
             {
                 bonus = 0;
             }
-            if (Data_Scenario.winCriteria_populationEnabled &&
+            if (scenario_criteria_population_enabled() &&
                     Data_CityInfo.population < calc_adjust_with_percentage(
-                        Data_Scenario.winCriteria_population, milestonePct))
+                        scenario_criteria_population(), milestonePct))
             {
                 bonus = 0;
             }

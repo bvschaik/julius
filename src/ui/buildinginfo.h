@@ -8,7 +8,7 @@
 
 #define PLAY_SOUND(f) \
 	if (c->canPlaySound) {\
-		sound_speech_playfile(f);\
+	  sound_speech_play_file(f);\
 		c->canPlaySound = 0;\
 	}
 

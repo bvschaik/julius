@@ -95,7 +95,7 @@ void UI_Intermezzo_drawBackground()
         else
         {
             Graphics_drawImage(graphicBase + 1 + 2 * Data_Settings.saveGameMissionId, xOffset, yOffset);
-            sound_speech_playfile(soundFilesBriefing[Data_Settings.saveGameMissionId]);
+            sound_speech_play_file(soundFilesBriefing[Data_Settings.saveGameMissionId]);
         }
         UI_Window_requestRefresh();
     }
@@ -114,7 +114,7 @@ void UI_Intermezzo_drawBackground()
         else
         {
             Graphics_drawImage(graphicBase + 2 + 2 * Data_Settings.saveGameMissionId, xOffset, yOffset);
-            sound_speech_playfile(soundFilesWon[Data_Settings.saveGameMissionId]);
+            sound_speech_play_file(soundFilesWon[Data_Settings.saveGameMissionId]);
         }
         UI_Window_requestRefresh();
     }

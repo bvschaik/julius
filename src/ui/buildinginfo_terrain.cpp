@@ -67,7 +67,7 @@ void UI_BuildingInfo_drawTerrain(BuildingInfoContext *c)
             }
             else
             {
-                sound_speech_playfile("wavs/empty_land.wav");
+                sound_speech_play_file("wavs/empty_land.wav");
             }
         }
         if (c->figure.count > 0 && c->figure.figureIds[c->figure.selectedIndex])

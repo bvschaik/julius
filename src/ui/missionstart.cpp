@@ -8,11 +8,10 @@
 
 #include <data>
 #include <sound>
-#include "game/tutorial.h"
 
 #include "core/lang.h"
-
-#include <sound>
+#include "game/tutorial.h"
+#include "scenario/criteria.h"
 
 static void startMission(int param1, int param2);
 static void briefingBack(int param1, int param2);
@@ -191,14 +190,14 @@ void UI_MissionStart_Selection_handleMouse(const mouse *m)
             Data_Settings.saveGameMissionId = Constant_MissionIds[missionId].peaceful;
             data.choice = 1;
             UI_Window_requestRefresh();
-            sound_speech_playfile("wavs/fanfare_nu1.wav");
+            sound_speech_play_file("wavs/fanfare_nu1.wav");
         }
         if (isMouseHit(m, xMilitary, yMilitary, 44))
         {
             Data_Settings.saveGameMissionId = Constant_MissionIds[missionId].military;
             data.choice = 2;
             UI_Window_requestRefresh();
-            sound_speech_playfile("wavs/fanfare_nu5.wav");
+            sound_speech_play_file("wavs/fanfare_nu5.wav");
         }
     }
 }
@@ -207,6 +206,7 @@ void UI_MissionStart_Briefing_init()
 {
     Widget_RichText_reset(0);
 }
+
 void UI_MissionStart_Briefing_drawBackground()
 {
     if (!Data_State.missionBriefingShown)
@@ -234,54 +234,54 @@ void UI_MissionStart_Briefing_drawBackground()
     Widget_Panel_drawInnerPanel(xOffset + 16, yOffset + 64, 33, 5);
     Widget_GameText_draw(62, 10, xOffset + 32, yOffset + 72, FONT_NORMAL_WHITE);
     int goalIndex = 0;
-    if (Data_Scenario.winCriteria_populationEnabled)
+    if (scenario_criteria_population_enabled())
     {
         int x = goalOffsetsX[goalIndex];
         int y = goalOffsetsY[goalIndex];
         goalIndex++;
         Widget_Panel_drawSmallLabelButton(xOffset + x, yOffset + y, 15, 1);
         int width = Widget_GameText_draw(62, 11, xOffset + x + 8, yOffset + y + 3, FONT_NORMAL_RED);
-        Widget::Text::drawNumber(Data_Scenario.winCriteria_population, '@', " ",
+        Widget::Text::drawNumber(scenario_criteria_population(), '@', " ",
                                  xOffset + x + 8 + width, yOffset + y + 3, FONT_NORMAL_RED);
     }
-    if (Data_Scenario.winCriteria.cultureEnabled)
+    if (scenario_criteria_culture_enabled())
     {
         int x = goalOffsetsX[goalIndex];
         int y = goalOffsetsY[goalIndex];
         goalIndex++;
         Widget_Panel_drawSmallLabelButton(xOffset + x, yOffset + y, 15, 1);
         int width = Widget_GameText_draw(62, 12, xOffset + x + 8, yOffset + y + 3, FONT_NORMAL_RED);
-        Widget::Text::drawNumber(Data_Scenario.winCriteria.culture, '@', " ",
+        Widget::Text::drawNumber(scenario_criteria_culture(), '@', " ",
                                  xOffset + x + 8 + width, yOffset + y + 3, FONT_NORMAL_RED);
     }
-    if (Data_Scenario.winCriteria.prosperityEnabled)
+    if (scenario_criteria_prosperity_enabled())
     {
         int x = goalOffsetsX[goalIndex];
         int y = goalOffsetsY[goalIndex];
         goalIndex++;
         Widget_Panel_drawSmallLabelButton(xOffset + x, yOffset + y, 15, 1);
         int width = Widget_GameText_draw(62, 13, xOffset + x + 8, yOffset + y + 3, FONT_NORMAL_RED);
-        Widget::Text::drawNumber(Data_Scenario.winCriteria.prosperity, '@', " ",
+        Widget::Text::drawNumber(scenario_criteria_prosperity(), '@', " ",
                                  xOffset + x + 8 + width, yOffset + y + 3, FONT_NORMAL_RED);
     }
-    if (Data_Scenario.winCriteria.peaceEnabled)
+    if (scenario_criteria_peace_enabled())
     {
         int x = goalOffsetsX[goalIndex];
         int y = goalOffsetsY[goalIndex];
         goalIndex++;
         Widget_Panel_drawSmallLabelButton(xOffset + x, yOffset + y, 15, 1);
         int width = Widget_GameText_draw(62, 14, xOffset + x + 8, yOffset + y + 3, FONT_NORMAL_RED);
-        Widget::Text::drawNumber(Data_Scenario.winCriteria.peace, '@', " ",
+        Widget::Text::drawNumber(scenario_criteria_peace(), '@', " ",
                                  xOffset + x + 8 + width, yOffset + y + 3, FONT_NORMAL_RED);
     }
-    if (Data_Scenario.winCriteria.favorEnabled)
+    if (scenario_criteria_favor_enabled())
     {
         int x = goalOffsetsX[goalIndex];
         int y = goalOffsetsY[goalIndex];
         goalIndex++;
         Widget_Panel_drawSmallLabelButton(xOffset + x, yOffset + y, 15, 1);
         int width = Widget_GameText_draw(62, 15, xOffset + x + 8, yOffset + y + 3, FONT_NORMAL_RED);
-        Widget::Text::drawNumber(Data_Scenario.winCriteria.favor, '@', " ",
+        Widget::Text::drawNumber(scenario_criteria_favor(), '@', " ",
                                  xOffset + x + 8 + width, yOffset + y + 3, FONT_NORMAL_RED);
     }
     int immediateGoalText = Tutorial::get_immediate_goal_text();

@@ -9,17 +9,11 @@
 #include "city/message.h"
 #include "widget.h"
 
-#include "data/cityinfo.hpp"
-#include "data/cityview.hpp"
-#include "data/constants.hpp"
-#include "data/event.hpp"
-#include "data/scenario.hpp"
-#include "data/screen.hpp"
-#include "data/settings.hpp"
-#include "data/state.hpp"
-
 #include "game/time.h"
 #include "graphics/image.h"
+
+#include <scenario>
+#include <data>
 
 void UI_City_drawBackground()
 {
@@ -57,7 +51,7 @@ void UI_City_drawCity()
 
 void UI_City_drawPausedAndTimeLeft()
 {
-    if (Data_Scenario.winCriteria.timeLimitYearsEnabled)
+    if (scenario_criteria_time_limit_enabled())
     {
         int years;
         if (Data_Event.timeLimitMaxGameYear <= game_time_year() + 1)
@@ -73,7 +67,7 @@ void UI_City_drawPausedAndTimeLeft()
         int width = Widget_GameText_draw(6, 2, 6, 29, FONT_NORMAL_BLACK);
         Widget::Text::drawNumber(totalMonths, '@', " ", 6 + width, 29, FONT_NORMAL_BLACK);
     }
-    else if (Data_Scenario.winCriteria.survivalYearsEnabled)
+    else if (scenario_criteria_survival_enabled())
     {
         int years;
         if (Data_Event.timeLimitMaxGameYear <= game_time_year() + 1)

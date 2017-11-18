@@ -240,11 +240,11 @@ static void loadScenario(const char *scenarioName)
     Data_Event.emperorChange.month = 1 + (random_byte() & 7);
     Data_Event.emperorChange.state = 0;
     // time limit
-    if (Data_Scenario.winCriteria.timeLimitYearsEnabled)
+    if (scenario_criteria_time_limit_enabled())
     {
         Data_Event.timeLimitMaxGameYear = Data_Scenario.startYear + Data_Scenario.winCriteria.timeLimitYears;
     }
-    else if (Data_Scenario.winCriteria.survivalYearsEnabled)
+    else if (scenario_criteria_survival_enabled())
     {
         Data_Event.timeLimitMaxGameYear = Data_Scenario.startYear + Data_Scenario.winCriteria.survivalYears;
     }
