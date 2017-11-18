@@ -8,6 +8,7 @@
 
 #include <sound>
 #include <data>
+#include <scenario>
 
 #include "empire/city.h"
 
@@ -266,25 +267,23 @@ int Figure_createMissile(int buildingId, int x, int y, int xDst, int yDst, int t
     return figureId;
 }
 
-void Figure_createFishingPoints()
+static void create_fishing_point(int x, int y)
 {
-    for (int i = 0; i < 8; i++)
-    {
-        if (Data_Scenario.fishingPoints.x[i] > 0)
-        {
-            random_generate_next();
-            int fishId = Figure_create(FIGURE_FISH_GULLS,
-                                       Data_Scenario.fishingPoints.x[i], Data_Scenario.fishingPoints.y[i], 0);
-            Data_Figures[fishId].graphicOffset = random_byte() & 0x1f;
-            Data_Figures[fishId].progressOnTile = random_byte() & 7;
-            FigureMovement_crossCountrySetDirection(fishId,
-                                                    Data_Figures[fishId].crossCountryX, Data_Figures[fishId].crossCountryY,
-                                                    15 * Data_Figures[fishId].destinationX, 15 * Data_Figures[fishId].destinationY, 0);
-        }
-    }
+    random_generate_next();
+    int fishId = Figure_create(FIGURE_FISH_GULLS, x, y, 0);
+    Data_Figures[fishId].graphicOffset = random_byte() & 0x1f;
+    Data_Figures[fishId].progressOnTile = random_byte() & 7;
+    FigureMovement_crossCountrySetDirection(fishId,
+                                            Data_Figures[fishId].crossCountryX, Data_Figures[fishId].crossCountryY,
+                                            15 * Data_Figures[fishId].destinationX, 15 * Data_Figures[fishId].destinationY, 0);
 }
 
-void Figure_createHerds()
+void Figure_createFishingPoints()
+{
+    scenario_map_foreach_fishing_point(create_fishing_point);
+}
+
+static void create_herd(int x, int y)
 {
     int herdType, numAnimals;
     switch (Data_Scenario.climate)
@@ -304,26 +303,23 @@ void Figure_createHerds()
     default:
         return;
     }
-    for (int i = 0; i < 4; i++)
+    int formationId = formation_create_herd(herdType, x, y, numAnimals);
+    if (formationId > 0)
     {
-        if (Data_Scenario.herdPoints.x[i] > 0)
+        for (int fig = 0; fig < numAnimals; fig++)
         {
-            int formationId = formation_create_herd(herdType,
-                                                    Data_Scenario.herdPoints.x[i], Data_Scenario.herdPoints.y[i], numAnimals);
-            if (formationId > 0)
-            {
-                for (int fig = 0; fig < numAnimals; fig++)
-                {
-                    random_generate_next();
-                    int figureId = Figure_create(herdType,
-                                                 Data_Scenario.herdPoints.x[i], Data_Scenario.herdPoints.y[i], 0);
-                    Data_Figures[figureId].actionState = FigureActionState_196_HerdAnimalAtRest;
-                    Data_Figures[figureId].formationId = formationId;
-                    Data_Figures[figureId].waitTicks = figureId & 0x1f;
-                }
-            }
+            random_generate_next();
+            int figureId = Figure_create(herdType, x, y, 0);
+            Data_Figures[figureId].actionState = FigureActionState_196_HerdAnimalAtRest;
+            Data_Figures[figureId].formationId = formationId;
+            Data_Figures[figureId].waitTicks = figureId & 0x1f;
         }
     }
+}
+
+void Figure_createHerds()
+{
+    scenario_map_foreach_herd_point(create_herd);
 }
 
 void Figure_createFlotsam(int xEntry, int yEntry, int hasWater)
