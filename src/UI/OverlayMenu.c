@@ -5,7 +5,6 @@
 #include "../Widget.h"
 
 #include "../Data/CityView.h"
-#include "../Data/Constants.h"
 #include "../Data/State.h"
 
 #include "core/time.h"

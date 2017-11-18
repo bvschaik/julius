@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 #include "graphics/color.h"
+#include "graphics/image_group.h"
 
 /**
  * @file

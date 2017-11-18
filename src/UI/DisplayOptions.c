@@ -4,7 +4,6 @@
 #include "../System.h"
 #include "../Widget.h"
 
-#include "../Data/Constants.h"
 #include "../Data/Screen.h"
 
 #include "game/settings.h"

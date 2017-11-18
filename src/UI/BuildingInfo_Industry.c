@@ -4,8 +4,8 @@
 #include "../Widget.h"
 #include "../Data/Building.h"
 #include "../Data/CityInfo.h"
-#include "../Data/Constants.h"
 
+#include "game/resource.h"
 #include "graphics/image.h"
 
 static void drawFarm(BuildingInfoContext *c, int helpId, const char *soundFile, int groupId, int resourceId)
@@ -54,32 +54,32 @@ static void drawFarm(BuildingInfoContext *c, int helpId, const char *soundFile, 
 
 void UI_BuildingInfo_drawWheatFarm(BuildingInfoContext *c)
 {
-	drawFarm(c, 89, "wavs/wheat_farm.wav", 112, Resource_Wheat);
+	drawFarm(c, 89, "wavs/wheat_farm.wav", 112, RESOURCE_WHEAT);
 }
 
 void UI_BuildingInfo_drawVegetableFarm(BuildingInfoContext *c)
 {
-	drawFarm(c, 90, "wavs/veg_farm.wav", 113, Resource_Vegetables);
+	drawFarm(c, 90, "wavs/veg_farm.wav", 113, RESOURCE_VEGETABLES);
 }
 
 void UI_BuildingInfo_drawFruitFarm(BuildingInfoContext *c)
 {
-	drawFarm(c, 90, "wavs/figs_farm.wav", 114, Resource_Fruit);
+	drawFarm(c, 90, "wavs/figs_farm.wav", 114, RESOURCE_FRUIT);
 }
 
 void UI_BuildingInfo_drawOliveFarm(BuildingInfoContext *c)
 {
-	drawFarm(c, 91, "wavs/olives_farm.wav", 115, Resource_Olives);
+	drawFarm(c, 91, "wavs/olives_farm.wav", 115, RESOURCE_OLIVES);
 }
 
 void UI_BuildingInfo_drawVinesFarm(BuildingInfoContext *c)
 {
-	drawFarm(c, 91, "wavs/vines_farm.wav", 116, Resource_Vines);
+	drawFarm(c, 91, "wavs/vines_farm.wav", 116, RESOURCE_VINES);
 }
 
 void UI_BuildingInfo_drawPigFarm(BuildingInfoContext *c)
 {
-	drawFarm(c, 90, "wavs/meat_farm.wav", 117, Resource_Meat);
+	drawFarm(c, 90, "wavs/meat_farm.wav", 117, RESOURCE_MEAT);
 }
 
 static void drawRawMaterial(BuildingInfoContext *c, int helpId, const char *soundFile, int groupId, int resourceId)
@@ -126,22 +126,22 @@ static void drawRawMaterial(BuildingInfoContext *c, int helpId, const char *soun
 
 void UI_BuildingInfo_drawMarbleQuarry(BuildingInfoContext *c)
 {
-	drawRawMaterial(c, 95, "wavs/quarry.wav", 118, Resource_Marble);
+	drawRawMaterial(c, 95, "wavs/quarry.wav", 118, RESOURCE_MARBLE);
 }
 
 void UI_BuildingInfo_drawIronMine(BuildingInfoContext *c)
 {
-	drawRawMaterial(c, 93, "wavs/mine.wav", 119, Resource_Iron);
+	drawRawMaterial(c, 93, "wavs/mine.wav", 119, RESOURCE_IRON);
 }
 
 void UI_BuildingInfo_drawTimberYard(BuildingInfoContext *c)
 {
-	drawRawMaterial(c, 94, "wavs/timber.wav", 120, Resource_Timber);
+	drawRawMaterial(c, 94, "wavs/timber.wav", 120, RESOURCE_TIMBER);
 }
 
 void UI_BuildingInfo_drawClayPit(BuildingInfoContext *c)
 {
-	drawRawMaterial(c, 92, "wavs/clay.wav", 121, Resource_Clay);
+	drawRawMaterial(c, 92, "wavs/clay.wav", 121, RESOURCE_CLAY);
 }
 
 static void drawWorkshop(BuildingInfoContext *c, int helpId, const char *soundFile, int groupId, int resourceId, int inputResourceId)
@@ -199,25 +199,25 @@ static void drawWorkshop(BuildingInfoContext *c, int helpId, const char *soundFi
 
 void UI_BuildingInfo_drawWineWorkshop(BuildingInfoContext *c)
 {
-	drawWorkshop(c, 96, "wavs/wine_workshop.wav", 122, Resource_Wine, Resource_Vines);
+	drawWorkshop(c, 96, "wavs/wine_workshop.wav", 122, RESOURCE_WINE, RESOURCE_VINES);
 }
 
 void UI_BuildingInfo_drawOilWorkshop(BuildingInfoContext *c)
 {
-	drawWorkshop(c, 97, "wavs/oil_workshop.wav", 123, Resource_Oil, Resource_Olives);
+	drawWorkshop(c, 97, "wavs/oil_workshop.wav", 123, RESOURCE_OIL, RESOURCE_OLIVES);
 }
 
 void UI_BuildingInfo_drawWeaponsWorkshop(BuildingInfoContext *c)
 {
-	drawWorkshop(c, 98, "wavs/weapons_workshop.wav", 124, Resource_Weapons, Resource_Iron);
+	drawWorkshop(c, 98, "wavs/weapons_workshop.wav", 124, RESOURCE_WEAPONS, RESOURCE_IRON);
 }
 
 void UI_BuildingInfo_drawFurnitureWorkshop(BuildingInfoContext *c)
 {
-	drawWorkshop(c, 99, "wavs/furniture_workshop.wav", 125, Resource_Furniture, Resource_Timber);
+	drawWorkshop(c, 99, "wavs/furniture_workshop.wav", 125, RESOURCE_FURNITURE, RESOURCE_TIMBER);
 }
 
 void UI_BuildingInfo_drawPotteryWorkshop(BuildingInfoContext *c)
 {
-	drawWorkshop(c, 1, "wavs/pottery_workshop.wav", 126, Resource_Pottery, Resource_Clay);
+	drawWorkshop(c, 1, "wavs/pottery_workshop.wav", 126, RESOURCE_POTTERY, RESOURCE_CLAY);
 }

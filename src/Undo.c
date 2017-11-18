@@ -9,12 +9,12 @@
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
-#include "Data/Constants.h"
 #include "Data/Grid.h"
 #include "Data/Settings.h"
 #include "Data/State.h"
 
 #include "building/properties.h"
+#include "game/resource.h"
 #include "graphics/image.h"
 #include "scenario/earthquake.h"
 
@@ -222,7 +222,7 @@ void Undo_perform()
 			if (data.buildingIndex[i]) {
 				struct Data_Building *b = &Data_Buildings[data.buildingIndex[i]];
 				if (b->type == BUILDING_ORACLE || (b->type >= BUILDING_LARGE_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS)) {
-					Resource_addToCityWarehouses(Resource_Marble, 2);
+					Resource_addToCityWarehouses(RESOURCE_MARBLE, 2);
 				}
 				b->state = BuildingState_Undo;
 			}

@@ -8,6 +8,7 @@
 #include "../CityInfo.h"
 #include "../Formation.h"
 
+#include "../Data/Constants.h"
 #include "../Data/Settings.h"
 
 #include "city/culture.h"

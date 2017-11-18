@@ -15,7 +15,6 @@
 #include "../Scenario.h"
 #include "../Widget.h"
 
-#include "../Data/Constants.h"
 #include "../Data/FileList.h"
 #include "../Data/Screen.h"
 #include "../Data/Settings.h"

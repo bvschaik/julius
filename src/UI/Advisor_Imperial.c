@@ -9,6 +9,7 @@
 #include "../Data/Settings.h"
 
 #include "empire/city.h"
+#include "game/resource.h"
 #include "scenario/request.h"
 
 static void buttonDonateToCity(int param1, int param2);
@@ -58,7 +59,7 @@ void draw_request(int index, const scenario_request *request)
         baseOffsetX + 310, baseOffsetY + 102 + 42 * index, FONT_NORMAL_WHITE);
     Widget_GameText_draw(12, 2, baseOffsetX + 310 + width, baseOffsetY + 102 + 42 * index, FONT_NORMAL_WHITE);
 
-    if (request->resource == Resource_Denarii) {
+    if (request->resource == RESOURCE_DENARII) {
         // request for money
         width = Widget_Text_drawNumber(Data_CityInfo.treasury, '@', " ",
             baseOffsetX + 40, baseOffsetY + 120 + 42 * index, FONT_NORMAL_WHITE);
@@ -113,7 +114,7 @@ void UI_Advisor_Imperial_drawBackground(int *advisorHeight)
 	if (Data_CityInfo.distantBattleMonthsToBattle > 0 && Data_CityInfo.distantBattleRomanMonthsToTravel <= 0) {
 		// can send to distant battle
 		Widget_Panel_drawButtonBorder(baseOffsetX + 38, baseOffsetY + 96, 560, 40, 0);
-		Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + Resource_Weapons,
+		Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + RESOURCE_WEAPONS,
 			baseOffsetX + 50, baseOffsetY + 106);
 		width = Widget_GameText_draw(52, 72, baseOffsetX + 80, baseOffsetY + 102, FONT_NORMAL_WHITE);
 		Widget_GameText_draw(21, empire_city_get(Data_CityInfo.distantBattleCityId)->name_id,

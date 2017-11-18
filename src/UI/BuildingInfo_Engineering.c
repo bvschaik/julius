@@ -1,13 +1,14 @@
 #include "BuildingInfo.h"
 
 #include "core/calc.h"
+#include "game/resource.h"
+
 #include "../Graphics.h"
 #include "../Resource.h"
 #include "../Widget.h"
 
 #include "../Data/Building.h"
 #include "../Data/CityInfo.h"
-#include "../Data/Constants.h"
 #include "../Data/Figure.h"
 
 void UI_BuildingInfo_drawEngineersPost(BuildingInfoContext *c)
@@ -123,8 +124,8 @@ void UI_BuildingInfo_drawWharf(BuildingInfoContext *c)
 	PLAY_SOUND("wavs/wharf.wav");
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(102, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
-	Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + Resource_Meat +
-		Resource_getGraphicIdOffset(Resource_Meat, 3),
+	Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + RESOURCE_MEAT +
+		Resource_getGraphicIdOffset(RESOURCE_MEAT, 3),
 		c->xOffset + 10, c->yOffset + 10);
 
 	struct Data_Building *b = &Data_Buildings[c->buildingId];

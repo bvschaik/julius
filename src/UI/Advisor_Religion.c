@@ -2,6 +2,7 @@
 #include "../CityInfo.h"
 
 #include "building/count.h"
+#include "city/culture.h"
 #include "game/settings.h"
 
 void UI_Advisor_Religion_drawBackground(int *advisorHeight)
@@ -50,13 +51,13 @@ void UI_Advisor_Religion_drawBackground(int *advisorHeight)
 		baseOffsetX + 290, baseOffsetY + 66, 50, FONT_NORMAL_WHITE
 	);
 	Widget_Text_drawNumberCentered(
-		Data_CityInfo.godMonthsSinceFestival[God_Ceres],
+		Data_CityInfo.godMonthsSinceFestival[GOD_CERES],
 		baseOffsetX + 360, baseOffsetY + 66, 50, FONT_NORMAL_WHITE
 	);
-	width = Widget_GameText_draw(59, 32 + Data_CityInfo.godHappiness[God_Ceres] / 10,
+	width = Widget_GameText_draw(59, 32 + Data_CityInfo.godHappiness[GOD_CERES] / 10,
 		baseOffsetX + 460, baseOffsetY + 66, FONT_NORMAL_WHITE
 	);
-	for (int i = 0; i < Data_CityInfo.godWrathBolts[God_Ceres] / 10; i++) {
+	for (int i = 0; i < Data_CityInfo.godWrathBolts[GOD_CERES] / 10; i++) {
 		Graphics_drawImage(graphicIdBolt,
 			10 * i + baseOffsetX + width + 460, baseOffsetY + 62
 		);
@@ -74,13 +75,13 @@ void UI_Advisor_Religion_drawBackground(int *advisorHeight)
 		baseOffsetX + 290, baseOffsetY + 86, 50, FONT_NORMAL_WHITE
 	);
 	Widget_Text_drawNumberCentered(
-		Data_CityInfo.godMonthsSinceFestival[God_Neptune],
+		Data_CityInfo.godMonthsSinceFestival[GOD_NEPTUNE],
 		baseOffsetX + 360, baseOffsetY + 86, 50, FONT_NORMAL_WHITE
 	);
-	width = Widget_GameText_draw(59, 32 + Data_CityInfo.godHappiness[God_Neptune] / 10,
+	width = Widget_GameText_draw(59, 32 + Data_CityInfo.godHappiness[GOD_NEPTUNE] / 10,
 		baseOffsetX + 460, baseOffsetY + 86, FONT_NORMAL_WHITE
 	);
-	for (int i = 0; i < Data_CityInfo.godWrathBolts[God_Neptune] / 10; i++) {
+	for (int i = 0; i < Data_CityInfo.godWrathBolts[GOD_NEPTUNE] / 10; i++) {
 		Graphics_drawImage(graphicIdBolt,
 			10 * i + baseOffsetX + width + 460, baseOffsetY + 82
 		);
@@ -98,13 +99,13 @@ void UI_Advisor_Religion_drawBackground(int *advisorHeight)
 		baseOffsetX + 290, baseOffsetY + 106, 50, FONT_NORMAL_WHITE
 	);
 	Widget_Text_drawNumberCentered(
-		Data_CityInfo.godMonthsSinceFestival[God_Mercury],
+		Data_CityInfo.godMonthsSinceFestival[GOD_MERCURY],
 		baseOffsetX + 360, baseOffsetY + 106, 50, FONT_NORMAL_WHITE
 	);
-	width = Widget_GameText_draw(59, 32 + Data_CityInfo.godHappiness[God_Mercury] / 10,
+	width = Widget_GameText_draw(59, 32 + Data_CityInfo.godHappiness[GOD_MERCURY] / 10,
 		baseOffsetX + 460, baseOffsetY + 106, FONT_NORMAL_WHITE
 	);
-	for (int i = 0; i < Data_CityInfo.godWrathBolts[God_Mercury] / 10; i++) {
+	for (int i = 0; i < Data_CityInfo.godWrathBolts[GOD_MERCURY] / 10; i++) {
 		Graphics_drawImage(graphicIdBolt,
 			10 * i + baseOffsetX + width + 460, baseOffsetY + 102
 		);
@@ -122,13 +123,13 @@ void UI_Advisor_Religion_drawBackground(int *advisorHeight)
 		baseOffsetX + 290, baseOffsetY + 126, 50, FONT_NORMAL_WHITE
 	);
 	Widget_Text_drawNumberCentered(
-		Data_CityInfo.godMonthsSinceFestival[God_Mars],
+		Data_CityInfo.godMonthsSinceFestival[GOD_MARS],
 		baseOffsetX + 360, baseOffsetY + 126, 50, FONT_NORMAL_WHITE
 	);
-	width = Widget_GameText_draw(59, 32 + Data_CityInfo.godHappiness[God_Mars] / 10,
+	width = Widget_GameText_draw(59, 32 + Data_CityInfo.godHappiness[GOD_MARS] / 10,
 		baseOffsetX + 460, baseOffsetY + 126, FONT_NORMAL_WHITE
 	);
-	for (int i = 0; i < Data_CityInfo.godWrathBolts[God_Mars] / 10; i++) {
+	for (int i = 0; i < Data_CityInfo.godWrathBolts[GOD_MARS] / 10; i++) {
 		Graphics_drawImage(graphicIdBolt,
 			10 * i + baseOffsetX + width + 460, baseOffsetY + 122
 		);
@@ -146,13 +147,13 @@ void UI_Advisor_Religion_drawBackground(int *advisorHeight)
 		baseOffsetX + 290, baseOffsetY + 146, 50, FONT_NORMAL_WHITE
 	);
 	Widget_Text_drawNumberCentered(
-		Data_CityInfo.godMonthsSinceFestival[God_Venus],
+		Data_CityInfo.godMonthsSinceFestival[GOD_VENUS],
 		baseOffsetX + 360, baseOffsetY + 146, 50, FONT_NORMAL_WHITE
 	);
-	width = Widget_GameText_draw(59, 32 + Data_CityInfo.godHappiness[God_Venus] / 10,
+	width = Widget_GameText_draw(59, 32 + Data_CityInfo.godHappiness[GOD_VENUS] / 10,
 		baseOffsetX + 460, baseOffsetY + 146, FONT_NORMAL_WHITE
 	);
-	for (int i = 0; i < Data_CityInfo.godWrathBolts[God_Venus] / 10; i++) {
+	for (int i = 0; i < Data_CityInfo.godWrathBolts[GOD_VENUS] / 10; i++) {
 		Graphics_drawImage(graphicIdBolt,
 			10 * i + baseOffsetX + width + 460, baseOffsetY + 142
 		);

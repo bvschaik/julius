@@ -7,7 +7,10 @@
 #include "../Resource.h"
 #include "Advisors_private.h"
 #include "../Data/CityInfo.h"
+#include "../Data/Constants.h"
 #include "../Data/Screen.h"
+
+#include "game/resource.h"
 
 static void drawButtons();
 static void buttonGod(int param1, int param2);
@@ -106,7 +109,7 @@ static void drawButtons()
 		baseOffsetX + 110 + width, baseOffsetY + 284, FONT_NORMAL_BLACK);
 	width += Widget_GameText_drawNumberWithDescription(8, 10, Data_CityInfo.festivalWineGrand,
 		baseOffsetX + 120 + width, baseOffsetY + 284, FONT_NORMAL_BLACK);
-	Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + Resource_Wine,
+	Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + RESOURCE_WINE,
 		baseOffsetX + 120 + width, baseOffsetY + 279);
 	
 	// greying out of buttons
@@ -185,7 +188,7 @@ static void buttonHoldFestival(int param1, int param2)
 	Data_CityInfo.financeSundriesThisYear += cost;
 
 	if (Data_CityInfo.festivalSize == Festival_Grand) {
-		Resource_removeFromCityWarehouses(Resource_Wine, Data_CityInfo.festivalWineGrand);
+		Resource_removeFromCityWarehouses(RESOURCE_WINE, Data_CityInfo.festivalWineGrand);
 	}
 	UI_Window_goTo(Window_Advisors);
 }

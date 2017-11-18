@@ -8,10 +8,10 @@
 
 #include "../Data/Building.h"
 #include "../Data/CityInfo.h"
-#include "../Data/Constants.h"
 #include "../Data/Figure.h"
 
 #include "building/storage.h"
+#include "game/resource.h"
 #include "scenario/property.h"
 
 static void toggleResourceState(int param1, int param2);
@@ -67,25 +67,25 @@ void UI_BuildingInfo_drawMarket(BuildingInfoContext *c)
 		DRAW_DESC(97, 2);
 	} else {
 		int graphicId = image_group(ID_Graphic_ResourceIcons);
-		if (b->data.market.inventory[Inventory_Wheat] || b->data.market.inventory[Inventory_Vegetables] ||
-			b->data.market.inventory[Inventory_Fruit] || b->data.market.inventory[Inventory_Meat]) {
+		if (b->data.market.inventory[INVENTORY_WHEAT] || b->data.market.inventory[INVENTORY_VEGETABLES] ||
+			b->data.market.inventory[INVENTORY_FRUIT] || b->data.market.inventory[INVENTORY_MEAT]) {
 			// food stocks
-			Graphics_drawImage(graphicId + Resource_Wheat,
+			Graphics_drawImage(graphicId + RESOURCE_WHEAT,
 				c->xOffset + 32, c->yOffset + 64);
-			Widget_Text_drawNumber(b->data.market.inventory[Inventory_Wheat], '@', " ",
+			Widget_Text_drawNumber(b->data.market.inventory[INVENTORY_WHEAT], '@', " ",
 				c->xOffset + 64, c->yOffset + 70, FONT_NORMAL_BLACK);
-			Graphics_drawImage(graphicId + Resource_Vegetables,
+			Graphics_drawImage(graphicId + RESOURCE_VEGETABLES,
 				c->xOffset + 142, c->yOffset + 64);
-			Widget_Text_drawNumber(b->data.market.inventory[Inventory_Vegetables], '@', " ",
+			Widget_Text_drawNumber(b->data.market.inventory[INVENTORY_VEGETABLES], '@', " ",
 				c->xOffset + 174, c->yOffset + 70, FONT_NORMAL_BLACK);
-			Graphics_drawImage(graphicId + Resource_Fruit,
+			Graphics_drawImage(graphicId + RESOURCE_FRUIT,
 				c->xOffset + 252, c->yOffset + 64);
-			Widget_Text_drawNumber(b->data.market.inventory[Inventory_Fruit], '@', " ",
+			Widget_Text_drawNumber(b->data.market.inventory[INVENTORY_FRUIT], '@', " ",
 				c->xOffset + 284, c->yOffset + 70, FONT_NORMAL_BLACK);
-			Graphics_drawImage(graphicId + Resource_Meat +
-				Resource_getGraphicIdOffset(Resource_Meat, 3),
+			Graphics_drawImage(graphicId + RESOURCE_MEAT +
+				Resource_getGraphicIdOffset(RESOURCE_MEAT, 3),
 				c->xOffset + 362, c->yOffset + 64);
-			Widget_Text_drawNumber(b->data.market.inventory[Inventory_Meat], '@', " ",
+			Widget_Text_drawNumber(b->data.market.inventory[INVENTORY_MEAT], '@', " ",
 				c->xOffset + 394, c->yOffset + 70, FONT_NORMAL_BLACK);
 		} else {
 			Widget_GameText_drawMultiline(97, 4,
@@ -93,21 +93,21 @@ void UI_BuildingInfo_drawMarket(BuildingInfoContext *c)
 				16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
 		}
 		// good stocks
-		Graphics_drawImage(graphicId + Resource_Pottery,
+		Graphics_drawImage(graphicId + RESOURCE_POTTERY,
 			c->xOffset + 32, c->yOffset + 104);
-		Widget_Text_drawNumber(b->data.market.inventory[Inventory_Pottery], '@', " ",
+		Widget_Text_drawNumber(b->data.market.inventory[INVENTORY_POTTERY], '@', " ",
 			c->xOffset + 64, c->yOffset + 110, FONT_NORMAL_BLACK);
-		Graphics_drawImage(graphicId + Resource_Furniture,
+		Graphics_drawImage(graphicId + RESOURCE_FURNITURE,
 			c->xOffset + 142, c->yOffset + 104);
-		Widget_Text_drawNumber(b->data.market.inventory[Inventory_Furniture], '@', " ",
+		Widget_Text_drawNumber(b->data.market.inventory[INVENTORY_FURNITURE], '@', " ",
 			c->xOffset + 174, c->yOffset + 110, FONT_NORMAL_BLACK);
-		Graphics_drawImage(graphicId + Resource_Oil,
+		Graphics_drawImage(graphicId + RESOURCE_OIL,
 			c->xOffset + 252, c->yOffset + 104);
-		Widget_Text_drawNumber(b->data.market.inventory[Inventory_Oil], '@', " ",
+		Widget_Text_drawNumber(b->data.market.inventory[INVENTORY_OIL], '@', " ",
 			c->xOffset + 284, c->yOffset + 110, FONT_NORMAL_BLACK);
-		Graphics_drawImage(graphicId + Resource_Wine,
+		Graphics_drawImage(graphicId + RESOURCE_WINE,
 			c->xOffset + 362, c->yOffset + 104);
-		Widget_Text_drawNumber(b->data.market.inventory[Inventory_Wine], '@', " ",
+		Widget_Text_drawNumber(b->data.market.inventory[INVENTORY_WINE], '@', " ",
 			c->xOffset + 394, c->yOffset + 110, FONT_NORMAL_BLACK);
 	}
 	Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
@@ -127,7 +127,7 @@ void UI_BuildingInfo_drawGranary(BuildingInfoContext *c)
 		DRAW_DESC_AT(40, 98, 4);
 	} else {
 		int totalStored = 0;
-		for (int i = Resource_Wheat; i <= Resource_Meat; i++) {
+		for (int i = RESOURCE_WHEAT; i <= RESOURCE_MEAT; i++) {
 			totalStored += b->data.storage.resourceStored[i];
 		}
 		int width = Widget_GameText_draw(98, 2,
@@ -138,42 +138,42 @@ void UI_BuildingInfo_drawGranary(BuildingInfoContext *c)
 		width = Widget_GameText_draw(98, 3,
 			c->xOffset + 220, c->yOffset + 40, FONT_NORMAL_BLACK);
 		Widget_GameText_drawNumberWithDescription(8, 16,
-			b->data.storage.resourceStored[Resource_None],
+			b->data.storage.resourceStored[RESOURCE_NONE],
 			c->xOffset + 220 + width, c->yOffset + 40, FONT_NORMAL_BLACK);
 
 		int graphicId = image_group(ID_Graphic_ResourceIcons);
 		// wheat
-		Graphics_drawImage(graphicId + Resource_Wheat,
+		Graphics_drawImage(graphicId + RESOURCE_WHEAT,
 			c->xOffset + 34, c->yOffset + 68);
 		width = Widget_Text_drawNumber(
-			b->data.storage.resourceStored[Resource_Wheat], '@', " ",
+			b->data.storage.resourceStored[RESOURCE_WHEAT], '@', " ",
 			c->xOffset + 68, c->yOffset + 75, FONT_NORMAL_BLACK);
-		Widget_GameText_draw(23, Resource_Wheat,
+		Widget_GameText_draw(23, RESOURCE_WHEAT,
 			c->xOffset + 68 + width, c->yOffset + 75, FONT_NORMAL_BLACK);
 		// vegetables
-		Graphics_drawImage(graphicId + Resource_Vegetables,
+		Graphics_drawImage(graphicId + RESOURCE_VEGETABLES,
 			c->xOffset + 34, c->yOffset + 92);
 		width = Widget_Text_drawNumber(
-			b->data.storage.resourceStored[Resource_Vegetables], '@', " ",
+			b->data.storage.resourceStored[RESOURCE_VEGETABLES], '@', " ",
 			c->xOffset + 68, c->yOffset + 99, FONT_NORMAL_BLACK);
-		Widget_GameText_draw(23, Resource_Vegetables,
+		Widget_GameText_draw(23, RESOURCE_VEGETABLES,
 			c->xOffset + 68 + width, c->yOffset + 99, FONT_NORMAL_BLACK);
 		// fruit
-		Graphics_drawImage(graphicId + Resource_Fruit,
+		Graphics_drawImage(graphicId + RESOURCE_FRUIT,
 			c->xOffset + 240, c->yOffset + 68);
 		width = Widget_Text_drawNumber(
-			b->data.storage.resourceStored[Resource_Fruit], '@', " ",
+			b->data.storage.resourceStored[RESOURCE_FRUIT], '@', " ",
 			c->xOffset + 274, c->yOffset + 75, FONT_NORMAL_BLACK);
-		Widget_GameText_draw(23, Resource_Fruit,
+		Widget_GameText_draw(23, RESOURCE_FRUIT,
 			c->xOffset + 274 + width, c->yOffset + 75, FONT_NORMAL_BLACK);
 		// meat/fish
-		Graphics_drawImage(graphicId + Resource_Meat +
-			Resource_getGraphicIdOffset(Resource_Meat, 3),
+		Graphics_drawImage(graphicId + RESOURCE_MEAT +
+			Resource_getGraphicIdOffset(RESOURCE_MEAT, 3),
 			c->xOffset + 240, c->yOffset + 92);
 		width = Widget_Text_drawNumber(
-			b->data.storage.resourceStored[Resource_Meat], '@', " ",
+			b->data.storage.resourceStored[RESOURCE_MEAT], '@', " ",
 			c->xOffset + 274, c->yOffset + 99, FONT_NORMAL_BLACK);
-		Widget_GameText_draw(23, Resource_Meat,
+		Widget_GameText_draw(23, RESOURCE_MEAT,
 			c->xOffset + 274 + width, c->yOffset + 99, FONT_NORMAL_BLACK);
 	}
 	Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);

@@ -4,7 +4,6 @@
 #include "../Graphics.h"
 
 #include "../Data/Building.h"
-#include "../Data/Constants.h"
 #include "../Data/Figure.h"
 #include "../Data/Settings.h"
 #include "../Data/State.h"

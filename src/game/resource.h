@@ -35,4 +35,21 @@ typedef enum {
     RESOURCE_MAX_FOOD = 7
 } resource_type;
 
+typedef enum {
+    INVENTORY_WHEAT = 0,
+    INVENTORY_VEGETABLES = 1,
+    INVENTORY_FRUIT = 2,
+    INVENTORY_MEAT = 3,
+    INVENTORY_WINE = 4,
+    INVENTORY_OIL = 5,
+    INVENTORY_FURNITURE = 6,
+    INVENTORY_POTTERY = 7,
+    // helper constants
+    INVENTORY_MIN_FOOD = 0,
+    INVENTORY_MAX_FOOD = 4,
+    INVENTORY_MIN_GOOD = 4,
+    INVENTORY_MAX_GOOD = 8,
+    INVENTORY_MAX = 8
+} inventory_type;
+
 #endif // GAME_RESOURCE_H
