@@ -143,7 +143,7 @@ void FigureAction_marketBuyer(int figureId)
 			}
 			break;
 	}
-	FigureActionUpdateGraphic(f, image_group(ID_Graphic_Figure_MarketLady));
+	FigureActionUpdateGraphic(f, image_group(GROUP_FIGURE_MARKET_LADY));
 }
 
 void FigureAction_deliveryBoy(int figureId)
@@ -175,10 +175,10 @@ void FigureAction_deliveryBoy(int figureId)
 	int dir = (f->direction < 8) ? f->direction : f->previousTileDirection;
 	FigureActionNormalizeDirection(dir);
 	if (f->actionState == FigureActionState_149_Corpse) {
-		f->graphicId = image_group(ID_Graphic_Figure_DeliveryBoy) + 96 +
+		f->graphicId = image_group(GROUP_FIGURE_DELIVERY_BOY) + 96 +
 			FigureActionCorpseGraphicOffset(f);
 	} else {
-		f->graphicId = image_group(ID_Graphic_Figure_DeliveryBoy) +
+		f->graphicId = image_group(GROUP_FIGURE_DELIVERY_BOY) +
 			dir + 8 * f->graphicOffset;
 	}
 }

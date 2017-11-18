@@ -634,11 +634,11 @@ void FigureAction_enemy54_Gladiator(int figureId)
 	FigureActionNormalizeDirection(dir);
 
 	if (f->actionState == FigureActionState_150_Attack || f->direction == DirFigure_11_Attack) {
-		f->graphicId = image_group(ID_Graphic_Figure_Gladiator) + dir + 104 + 8 * (f->graphicOffset / 2);
+		f->graphicId = image_group(GROUP_FIGURE_GLADIATOR) + dir + 104 + 8 * (f->graphicOffset / 2);
 	} else if (f->actionState == FigureActionState_149_Corpse) {
-		f->graphicId = image_group(ID_Graphic_Figure_Gladiator) + 96 + FigureActionCorpseGraphicOffset(f);
+		f->graphicId = image_group(GROUP_FIGURE_GLADIATOR) + 96 + FigureActionCorpseGraphicOffset(f);
 	} else {
-		f->graphicId = image_group(ID_Graphic_Figure_Gladiator) + dir + 8 * f->graphicOffset;
+		f->graphicId = image_group(GROUP_FIGURE_GLADIATOR) + dir + 8 * f->graphicOffset;
 	}
 }
 
@@ -655,31 +655,31 @@ void FigureAction_enemyCaesarLegionary(int figureId)
 	int dir = getDirection(f);
 	
 	if (f->direction == DirFigure_11_Attack) {
-		f->graphicId = image_group(ID_Graphic_Figure_CaesarLegionary) + dir +
+		f->graphicId = image_group(GROUP_FIGURE_CAESAR_LEGIONARY) + dir +
 			8 * ((f->attackGraphicOffset - 12) / 2);
 	}
 	switch (f->actionState) {
 		case FigureActionState_150_Attack:
 			if (f->attackGraphicOffset >= 12) {
-				f->graphicId = image_group(ID_Graphic_Figure_CaesarLegionary) + dir +
+				f->graphicId = image_group(GROUP_FIGURE_CAESAR_LEGIONARY) + dir +
 					8 * ((f->attackGraphicOffset - 12) / 2);
 			} else {
-				f->graphicId = image_group(ID_Graphic_Figure_CaesarLegionary) + dir;
+				f->graphicId = image_group(GROUP_FIGURE_CAESAR_LEGIONARY) + dir;
 			}
 			break;
 		case FigureActionState_149_Corpse:
-			f->graphicId = image_group(ID_Graphic_Figure_CaesarLegionary) +
+			f->graphicId = image_group(GROUP_FIGURE_CAESAR_LEGIONARY) +
 				FigureActionCorpseGraphicOffset(f) + 152;
 			break;
 		case FigureActionState_84_SoldierAtStandard:
 			if (m->is_halted && m->layout == FORMATION_COLUMN && m->missile_attack_timeout) {
-				f->graphicId = image_group(ID_Graphic_Figure_FortLegionary) + dir + 144;
+				f->graphicId = image_group(GROUP_BUILDING_FORT_LEGIONARY) + dir + 144;
 			} else {
-				f->graphicId = image_group(ID_Graphic_Figure_FortLegionary) + dir;
+				f->graphicId = image_group(GROUP_BUILDING_FORT_LEGIONARY) + dir;
 			}
 			break;
 		default:
-			f->graphicId = image_group(ID_Graphic_Figure_CaesarLegionary) + 48 + dir + 8 * f->graphicOffset;
+			f->graphicId = image_group(GROUP_FIGURE_CAESAR_LEGIONARY) + 48 + dir + 8 * f->graphicOffset;
 			break;
 	}
 }

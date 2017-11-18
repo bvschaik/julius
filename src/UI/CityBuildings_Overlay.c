@@ -39,7 +39,7 @@ void UI_CityBuildings_drawOverlayFootprints()
 		}
 		if (gridOffset < 0) {
 			// Outside map: draw black tile
-			DRAWFOOT_SIZE1(image_group(ID_Graphic_TerrainBlack),
+			DRAWFOOT_SIZE1(image_group(GROUP_TERRAIN_BLACK),
 				xGraphic, yGraphic);
 		} else if (Data_State.currentOverlay == Overlay_Desirability) {
 			drawBuildingFootprintForDesirabilityOverlay(gridOffset, xGraphic, yGraphic);
@@ -51,7 +51,7 @@ void UI_CityBuildings_drawOverlayFootprints()
 				drawFootprintForNativeOverlay(gridOffset, xGraphic, yGraphic);
 			} else if (terrain & (Terrain_Aqueduct | Terrain_Wall)) {
 				// display grass
-				int graphicId = image_group(ID_Graphic_TerrainGrass1) + (Data_Grid_random[gridOffset] & 7);
+				int graphicId = image_group(GROUP_TERRAIN_GRASS_1) + (Data_Grid_random[gridOffset] & 7);
 				DRAWFOOT_SIZE1(graphicId, xGraphic, yGraphic);
 			} else if ((terrain & Terrain_Road) && !(terrain & Terrain_Building)) {
 				int graphicId = Data_Grid_graphicIds[gridOffset];
@@ -228,24 +228,24 @@ void UI_CityBuildings_drawOverlayTopsFiguresAnimation(int overlay)
 					struct Data_Building *b = &Data_Buildings[buildingId];
 					int colorMask = 0;
 					if (b->type == BUILDING_GRANARY) {
-						Graphics_drawImageMasked(image_group(ID_Graphic_Granary) + 1,
+						Graphics_drawImageMasked(image_group(GROUP_BUILDING_GRANARY) + 1,
 							xGraphic + img->sprite_offset_x,
 							yGraphic + 60 + img->sprite_offset_y - img->height,
 							colorMask);
 						if (b->data.storage.resourceStored[Resource_None] < 2400) {
-							Graphics_drawImageMasked(image_group(ID_Graphic_Granary) + 2,
+							Graphics_drawImageMasked(image_group(GROUP_BUILDING_GRANARY) + 2,
 								xGraphic + 33, yGraphic - 60, colorMask);
 						}
 						if (b->data.storage.resourceStored[Resource_None] < 1800) {
-							Graphics_drawImageMasked(image_group(ID_Graphic_Granary) + 3,
+							Graphics_drawImageMasked(image_group(GROUP_BUILDING_GRANARY) + 3,
 								xGraphic + 56, yGraphic - 50, colorMask);
 						}
 						if (b->data.storage.resourceStored[Resource_None] < 1200) {
-							Graphics_drawImageMasked(image_group(ID_Graphic_Granary) + 4,
+							Graphics_drawImageMasked(image_group(GROUP_BUILDING_GRANARY) + 4,
 								xGraphic + 91, yGraphic - 50, colorMask);
 						}
 						if (b->data.storage.resourceStored[Resource_None] < 600) {
-							Graphics_drawImageMasked(image_group(ID_Graphic_Granary) + 5,
+							Graphics_drawImageMasked(image_group(GROUP_BUILDING_GRANARY) + 5,
 								xGraphic + 117, yGraphic - 62, colorMask);
 						}
 					} else {
@@ -307,7 +307,7 @@ static void drawFootprintForWaterOverlay(int gridOffset, int xOffset, int yOffse
 		}
 	} else if (terrain & Terrain_Wall) {
 		// display grass
-		int graphicId = image_group(ID_Graphic_TerrainGrass1) + (Data_Grid_random[gridOffset] & 7);
+		int graphicId = image_group(GROUP_TERRAIN_GRASS_1) + (Data_Grid_random[gridOffset] & 7);
 		DRAWFOOT_SIZE1(graphicId, xOffset, yOffset);
 	} else if (terrain & Terrain_Building) {
 		int buildingId = Data_Grid_buildingIds[gridOffset];
@@ -421,13 +421,13 @@ static void drawFootprintForNativeOverlay(int gridOffset, int xOffset, int yOffs
 		}
 	} else if (terrain & (Terrain_Wall | Terrain_Aqueduct)) {
 		// display grass
-		int graphicId = image_group(ID_Graphic_TerrainGrass1) + (Data_Grid_random[gridOffset] & 7);
+		int graphicId = image_group(GROUP_TERRAIN_GRASS_1) + (Data_Grid_random[gridOffset] & 7);
 		DRAWFOOT_SIZE1(graphicId, xOffset, yOffset);
 	} else if (terrain & Terrain_Building) {
 		drawBuildingFootprintForOverlay(Data_Grid_buildingIds[gridOffset],
 		gridOffset, xOffset, yOffset, 0);
 	} else {
-		int graphicId = image_group(ID_Graphic_TerrainDesirability);
+		int graphicId = image_group(GROUP_TERRAIN_DESIRABILITY);
 		if (Data_Grid_edge[gridOffset] & Edge_NativeLand) {
 			DRAWTOP_SIZE1(graphicId + 1, xOffset, yOffset);
 		} else {
@@ -832,7 +832,7 @@ static void drawBuildingFootprintForDesirabilityOverlay(int gridOffset, int xOff
 		}
 	} else if (terrain & (Terrain_Wall | Terrain_Aqueduct)) {
 		// display empty land/grass
-		int graphicId = image_group(ID_Graphic_TerrainGrass1) + (Data_Grid_random[gridOffset] & 7);
+		int graphicId = image_group(GROUP_TERRAIN_GRASS_1) + (Data_Grid_random[gridOffset] & 7);
 		DRAWFOOT_SIZE1(graphicId, xOffset, yOffset);
 	} else if ((terrain & Terrain_Building) || Data_Grid_desirability[gridOffset]) {
 		int des = Data_Grid_desirability[gridOffset];
@@ -858,7 +858,7 @@ static void drawBuildingFootprintForDesirabilityOverlay(int gridOffset, int xOff
 		} else {
 			offset = 9;
 		}
-		DRAWFOOT_SIZE1(image_group(ID_Graphic_TerrainDesirability) + offset, xOffset, yOffset);
+		DRAWFOOT_SIZE1(image_group(GROUP_TERRAIN_DESIRABILITY) + offset, xOffset, yOffset);
 	} else {
 		DRAWFOOT_SIZE1(Data_Grid_graphicIds[gridOffset], xOffset, yOffset);
 	}
@@ -916,7 +916,7 @@ static void drawBuildingTopForDesirabilityOverlay(int gridOffset, int xOffset, i
 		} else {
 			offset = 9;
 		}
-		DRAWTOP_SIZE1(image_group(ID_Graphic_TerrainDesirability) + offset, xOffset, yOffset);
+		DRAWTOP_SIZE1(image_group(GROUP_TERRAIN_DESIRABILITY) + offset, xOffset, yOffset);
 	} else {
 		DRAWTOP_SIZE1(Data_Grid_graphicIds[gridOffset], xOffset, yOffset);
 	}
@@ -1375,29 +1375,29 @@ static void drawBuildingTopForProblemsOverlay(int gridOffset, int buildingId, in
 	if (type == BUILDING_GRANARY) {
 		int graphicId = Data_Grid_graphicIds[gridOffset];
 		const image *img = image_get(graphicId);
-		Graphics_drawImage(image_group(ID_Graphic_Granary) + 1,
+		Graphics_drawImage(image_group(GROUP_BUILDING_GRANARY) + 1,
 			xOffset + img->sprite_offset_x,
 			yOffset + img->sprite_offset_y - 30 -
 			(img->height - 90));
 		if (Data_Buildings[buildingId].data.storage.resourceStored[Resource_None] < 2400) {
-			Graphics_drawImage(image_group(ID_Graphic_Granary) + 2,
+			Graphics_drawImage(image_group(GROUP_BUILDING_GRANARY) + 2,
 				xOffset + 32, yOffset - 61);
 			if (Data_Buildings[buildingId].data.storage.resourceStored[Resource_None] < 1800) {
-				Graphics_drawImage(image_group(ID_Graphic_Granary) + 3,
+				Graphics_drawImage(image_group(GROUP_BUILDING_GRANARY) + 3,
 					xOffset + 56, yOffset - 51);
 			}
 			if (Data_Buildings[buildingId].data.storage.resourceStored[Resource_None] < 1200) {
-				Graphics_drawImage(image_group(ID_Graphic_Granary) + 4,
+				Graphics_drawImage(image_group(GROUP_BUILDING_GRANARY) + 4,
 					xOffset + 91, yOffset - 51);
 			}
 			if (Data_Buildings[buildingId].data.storage.resourceStored[Resource_None] < 600) {
-				Graphics_drawImage(image_group(ID_Graphic_Granary) + 5,
+				Graphics_drawImage(image_group(GROUP_BUILDING_GRANARY) + 5,
 					xOffset + 118, yOffset - 61);
 			}
 		}
 	}
 	if (type == BUILDING_WAREHOUSE) {
-		Graphics_drawImage(image_group(ID_Graphic_Warehouse) + 17, xOffset - 4, yOffset - 42);
+		Graphics_drawImage(image_group(GROUP_BUILDING_WAREHOUSE) + 17, xOffset - 4, yOffset - 42);
 	}
 
 	int graphicId = Data_Grid_graphicIds[gridOffset];

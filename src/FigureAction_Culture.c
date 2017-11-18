@@ -68,7 +68,7 @@ static void FigureAction_culture(int figureId, int graphicCategory)
 
 void FigureAction_priest(int figureId)
 {
-	FigureAction_culture(figureId, ID_Graphic_Figure_Priest);
+	FigureAction_culture(figureId, GROUP_FIGURE_PRIEST);
 }
 
 void FigureAction_schoolChild(int figureId)
@@ -99,42 +99,42 @@ void FigureAction_schoolChild(int figureId)
 			break;
 	}
 	if (f->actionState == FigureActionState_149_Corpse) {
-		f->graphicId = image_group(ID_Graphic_Figure_SchoolChild) +
+		f->graphicId = image_group(GROUP_FIGURE_SCHOOL_CHILD) +
 			FigureActionCorpseGraphicOffset(f) + 96;
 	} else {
-		f->graphicId = image_group(ID_Graphic_Figure_SchoolChild) +
+		f->graphicId = image_group(GROUP_FIGURE_SCHOOL_CHILD) +
 			FigureActionDirection(f) + 8 * f->graphicOffset;
 	}
 }
 
 void FigureAction_teacher(int figureId)
 {
-	FigureAction_culture(figureId, ID_Graphic_Figure_TeacherLibrarian);
+	FigureAction_culture(figureId, GROUP_FIGURE_TEACHER_LIBRARIAN);
 }
 
 void FigureAction_librarian(int figureId)
 {
-	FigureAction_culture(figureId, ID_Graphic_Figure_TeacherLibrarian);
+	FigureAction_culture(figureId, GROUP_FIGURE_TEACHER_LIBRARIAN);
 }
 
 void FigureAction_barber(int figureId)
 {
-	FigureAction_culture(figureId, ID_Graphic_Figure_Barber);
+	FigureAction_culture(figureId, GROUP_FIGURE_BARBER);
 }
 
 void FigureAction_bathhouseWorker(int figureId)
 {
-	FigureAction_culture(figureId, ID_Graphic_Figure_BathhouseWorker);
+	FigureAction_culture(figureId, GROUP_FIGURE_BATHHOUSE_WORKER);
 }
 
 void FigureAction_doctor(int figureId)
 {
-	FigureAction_culture(figureId, ID_Graphic_Figure_DoctorSurgeon);
+	FigureAction_culture(figureId, GROUP_FIGURE_DOCTOR_SURGEON);
 }
 
 void FigureAction_surgeon(int figureId)
 {
-	FigureAction_culture(figureId, ID_Graphic_Figure_DoctorSurgeon);
+	FigureAction_culture(figureId, GROUP_FIGURE_DOCTOR_SURGEON);
 }
 
 void FigureAction_missionary(int figureId)
@@ -149,7 +149,7 @@ void FigureAction_missionary(int figureId)
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);
 	FigureAction_cultureCommon(figureId, 1);
-	FigureActionUpdateGraphic(f, image_group(ID_Graphic_Figure_Missionary));
+	FigureActionUpdateGraphic(f, image_group(GROUP_FIGURE_MISSIONARY));
 }
 
 void FigureAction_patrician(int figureId)
@@ -163,7 +163,7 @@ void FigureAction_patrician(int figureId)
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);
 	FigureAction_cultureCommon(figureId, 1);
-	FigureActionUpdateGraphic(f, image_group(ID_Graphic_Figure_Patrician));
+	FigureActionUpdateGraphic(f, image_group(GROUP_FIGURE_PATRICIAN));
 }
 
 void FigureAction_laborSeeker(int figureId)
@@ -178,7 +178,7 @@ void FigureAction_laborSeeker(int figureId)
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);
 	FigureAction_cultureCommon(figureId, 1);
-	FigureActionUpdateGraphic(f, image_group(ID_Graphic_Figure_LaborSeeker));
+	FigureActionUpdateGraphic(f, image_group(GROUP_FIGURE_LABOR_SEEKER));
 }
 
 void FigureAction_marketTrader(int figureId)
@@ -201,6 +201,6 @@ void FigureAction_marketTrader(int figureId)
 		}
 	}
 	FigureAction_cultureCommon(figureId, 1);
-	FigureActionUpdateGraphic(f, image_group(ID_Graphic_Figure_MarketLady));
+	FigureActionUpdateGraphic(f, image_group(GROUP_FIGURE_MARKET_LADY));
 }
 

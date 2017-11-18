@@ -301,7 +301,7 @@ static void initGridRandom()
 static void initGridGraphicIds()
 {
 	int gridOffset = Data_Settings_Map.gridStartOffset;
-	int graphicId = image_group(ID_Graphic_TerrainUglyGrass);
+	int graphicId = image_group(GROUP_TERRAIN_UGLY_GRASS);
 	for (int y = 0; y < Data_Settings_Map.height; y++, gridOffset += Data_Settings_Map.gridBorderSize) {
 		for (int x = 0; x < Data_Settings_Map.width; x++, gridOffset++) {
 			Data_Grid_graphicIds[gridOffset] = graphicId + (Data_Grid_random[gridOffset] & 7);

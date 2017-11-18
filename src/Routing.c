@@ -238,7 +238,7 @@ void Routing_determineLandCitizen()
 					// shouldn't happen
 					Data_Grid_routingLandNonCitizen[gridOffset] = 4; // BUG: should be citizen?
 					Data_Grid_terrain[gridOffset] &= ~Terrain_Building; // remove 8 = building
-					Data_Grid_graphicIds[gridOffset] = (Data_Grid_random[gridOffset] & 7) + image_group(ID_Graphic_TerrainGrass1);
+					Data_Grid_graphicIds[gridOffset] = (Data_Grid_random[gridOffset] & 7) + image_group(GROUP_TERRAIN_GRASS_1);
 					Data_Grid_edge[gridOffset] = Edge_LeftmostTile;
 					Data_Grid_bitfields[gridOffset] &= 0xf0; // remove sizes
 					continue;
@@ -295,7 +295,7 @@ void Routing_determineLandCitizen()
 				}
 				Data_Grid_routingLandCitizen[gridOffset] = land;
 			} else if (Data_Grid_terrain[gridOffset] & Terrain_Aqueduct) {
-				int graphicId = Data_Grid_graphicIds[gridOffset] - image_group(ID_Graphic_Aqueduct);
+				int graphicId = Data_Grid_graphicIds[gridOffset] - image_group(GROUP_BUILDING_AQUEDUCT);
 				int land;
 				if (graphicId <= 3) {
 					land = Routing_Citizen_m3_Aqueduct;
@@ -669,7 +669,7 @@ int Routing_canTravelThroughEverythingNonCitizen(int xSrc, int ySrc, int xDst, i
 
 int Routing_canPlaceRoadUnderAqueduct(int gridOffset)
 {
-	int graphic = Data_Grid_graphicIds[gridOffset] - image_group(ID_Graphic_Aqueduct);
+	int graphic = Data_Grid_graphicIds[gridOffset] - image_group(GROUP_BUILDING_AQUEDUCT);
 	int checkRoadY;
 	switch (graphic) {
 		case 0:
@@ -718,7 +718,7 @@ int Routing_canPlaceRoadUnderAqueduct(int gridOffset)
 
 int Routing_getAqueductGraphicOffsetWithRoad(int gridOffset)
 {
-	int graphic = Data_Grid_graphicIds[gridOffset] - image_group(ID_Graphic_Aqueduct);
+	int graphic = Data_Grid_graphicIds[gridOffset] - image_group(GROUP_BUILDING_AQUEDUCT);
 	switch (graphic) {
 		case 2:
 			return 8;
@@ -744,7 +744,7 @@ int Routing_getAqueductGraphicOffsetWithRoad(int gridOffset)
 
 static int canPlaceAqueductOnRoad(int gridOffset)
 {
-	int graphic = Data_Grid_graphicIds[gridOffset] - image_group(ID_Graphic_Road);
+	int graphic = Data_Grid_graphicIds[gridOffset] - image_group(GROUP_TERRAIN_ROAD);
 	if (graphic != 0 && graphic != 1 && graphic != 49 && graphic != 50) {
 		return 0;
 	}

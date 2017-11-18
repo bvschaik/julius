@@ -50,7 +50,7 @@ void UtilityManagement_updateHouseWaterAccess()
 
 static void setAllAqueductsToNoWater()
 {
-	int graphicId = image_group(ID_Graphic_Aqueduct) + 15;
+	int graphicId = image_group(GROUP_BUILDING_AQUEDUCT) + 15;
 	int gridOffset = Data_Settings_Map.gridStartOffset;
 	for (int y = 0; y < Data_Settings_Map.height; y++, gridOffset += Data_Settings_Map.gridBorderSize) {
 		for (int x = 0; x < Data_Settings_Map.width; x++, gridOffset++) {
@@ -73,7 +73,7 @@ static void fillAqueductsFromOffset(int gridOffset)
 	qHead = qTail = 0;
 	int guard = 0;
 	int nextOffset;
-	int graphicWithoutWater = image_group(ID_Graphic_Aqueduct) + 15;
+	int graphicWithoutWater = image_group(GROUP_BUILDING_AQUEDUCT) + 15;
 	do {
 		if (++guard >= GRID_SIZE * GRID_SIZE) {
 			break;
@@ -174,13 +174,13 @@ void UtilityManagement_updateReservoirFountain()
 		int des = Data_Grid_desirability[b->gridOffset];
 		int graphicId;
 		if (des > 60) {
-			graphicId = image_group(ID_Graphic_Fountain4);
+			graphicId = image_group(GROUP_BUILDING_FOUNTAIN_4);
 		} else if (des > 40) {
-			graphicId = image_group(ID_Graphic_Fountain3);
+			graphicId = image_group(GROUP_BUILDING_FOUNTAIN_3);
 		} else if (des > 20) {
-			graphicId = image_group(ID_Graphic_Fountain2);
+			graphicId = image_group(GROUP_BUILDING_FOUNTAIN_2);
 		} else {
-			graphicId = image_group(ID_Graphic_Fountain1);
+			graphicId = image_group(GROUP_BUILDING_FOUNTAIN_1);
 		}
 		Terrain_addBuildingToGrids(i, b->x, b->y, 1, graphicId, Terrain_Building);
 		if ((Data_Grid_terrain[b->gridOffset] & Terrain_ReservoirRange) && b->numWorkers) {

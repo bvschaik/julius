@@ -139,7 +139,7 @@ static int soldierFindMopUpTarget(int figureId, struct Data_Figure *f)
 
 static void updateSoldierGraphicJavelin(struct Data_Figure *f, int dir)
 {
-	int graphicId = image_group(ID_Graphic_Figure_FortJavelin);
+	int graphicId = image_group(GROUP_BUILDING_FORT_JAVELIN);
 	if (f->actionState == FigureActionState_150_Attack) {
 		if (f->attackGraphicOffset < 12) {
 			f->graphicId = graphicId + 96 + dir;
@@ -158,7 +158,7 @@ static void updateSoldierGraphicJavelin(struct Data_Figure *f, int dir)
 
 static void updateSoldierGraphicMounted(struct Data_Figure *f, int dir)
 {
-	int graphicId = image_group(ID_Graphic_Figure_FortMounted);
+	int graphicId = image_group(GROUP_FIGURE_FORT_MOUNTED);
 	if (f->actionState == FigureActionState_150_Attack) {
 		if (f->attackGraphicOffset < 12) {
 			f->graphicId = graphicId + 96 + dir;
@@ -174,7 +174,7 @@ static void updateSoldierGraphicMounted(struct Data_Figure *f, int dir)
 
 static void updateSoldierGraphicLegionary(struct Data_Figure *f, const formation *m, int dir)
 {
-	int graphicId = image_group(ID_Graphic_Figure_FortLegionary);
+	int graphicId = image_group(GROUP_BUILDING_FORT_LEGIONARY);
 	if (f->actionState == FigureActionState_150_Attack) {
 		if (f->attackGraphicOffset < 12) {
 			f->graphicId = graphicId + 96 + dir;

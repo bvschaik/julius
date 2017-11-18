@@ -108,7 +108,7 @@ int Widget_Text_getWidth(const uint8_t *str, font_t font)
 	
 	int maxlen = 10000;
 	int width = 0;
-	int graphicBase = image_group(ID_Graphic_Font);
+	int graphicBase = image_group(GROUP_FONT);
 	while (*str && maxlen > 0) {
 		if (*str == ' ') {
 			width += spaceWidth;
@@ -160,7 +160,7 @@ static int getCharacterWidth(unsigned char c, font_t font)
 	if (!graphicOffset) {
 		return 0;
 	}
-	int graphicId = image_group(ID_Graphic_Font) + font + graphicOffset - 1;
+	int graphicId = image_group(GROUP_FONT) + font + graphicOffset - 1;
 	return 1 + image_get(graphicId)->width;
 }
 
@@ -287,7 +287,7 @@ static int drawCharacter(font_t font, unsigned int c, int x, int y, int lineHeig
 		return 0;
 	}
 
-	int graphicId = image_group(ID_Graphic_Font) + font + graphicOffset - 1;
+	int graphicId = image_group(GROUP_FONT) + font + graphicOffset - 1;
 	int height = image_get(graphicId)->height - lineHeight;
 	if (height < 0) {
 		height = 0;
@@ -829,7 +829,7 @@ static int drawRichTextCharacter(font_t font, unsigned int c, int x, int y, colo
 		return 0;
 	}
 
-	int graphicId = image_group(ID_Graphic_Font) + font + graphicOffset - 1;
+	int graphicId = image_group(GROUP_FONT) + font + graphicOffset - 1;
 	int height = image_get(graphicId)->height - 11;
 	if (height < 0) {
 		height = 0;

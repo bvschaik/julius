@@ -538,7 +538,7 @@ void BuildingHouse_changeToVacantLot(int buildingId)
 	struct Data_Building *b = &Data_Buildings[buildingId];
 	b->type = BUILDING_HOUSE_VACANT_LOT;
 	b->subtype.houseLevel = b->type - 10;
-	int graphicId = image_group(ID_Graphic_HouseVacantLot);
+	int graphicId = image_group(GROUP_BUILDING_HOUSE_VACANT_LOT);
 	if (b->houseIsMerged) {
 		Terrain_removeBuildingFromGrids(buildingId, b->x, b->y);
 		b->houseIsMerged = 0;

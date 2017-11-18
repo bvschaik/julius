@@ -24,9 +24,9 @@ void Resource_setWarehouseSpaceGraphic(int spaceId, int resource)
 {
 	int graphicId;
 	if (Data_Buildings[spaceId].loadsStored <= 0) {
-		graphicId = image_group(ID_Graphic_WarehouseStorageEmpty);
+		graphicId = image_group(GROUP_BUILDING_WAREHOUSE_STORAGE_EMPTY);
 	} else {
-		graphicId = image_group(ID_Graphic_WarehouseStorageFilled) +
+		graphicId = image_group(GROUP_BUILDING_WAREHOUSE_STORAGE_FILLED) +
 			4 * (resource - 1) + Resource_getGraphicIdOffset(resource, 0) +
 			Data_Buildings[spaceId].loadsStored - 1;
 	}

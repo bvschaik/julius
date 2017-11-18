@@ -285,9 +285,9 @@ static void drawBuildingGhostDefault()
 				xOffsetBase, yOffsetBase, COLOR_MASK_GREEN);
 			Graphics_drawIsometricTop(graphicId,
 				xOffsetBase, yOffsetBase, COLOR_MASK_GREEN);
-			Graphics_drawImageMasked(image_group(ID_Graphic_Warehouse) + 17,
+			Graphics_drawImageMasked(image_group(GROUP_BUILDING_WAREHOUSE) + 17,
 				xOffsetBase - 4, yOffsetBase - 42, COLOR_MASK_GREEN);
-			int graphicIdSpace = image_group(ID_Graphic_WarehouseStorageEmpty);
+			int graphicIdSpace = image_group(GROUP_BUILDING_WAREHOUSE_STORAGE_EMPTY);
 			for (int i = 1; i < 9; i++) {
 				int xOffset = xOffsetBase + xViewOffsets[i];
 				int yOffset = yOffsetBase + yViewOffsets[i];
@@ -304,7 +304,7 @@ static void drawBuildingGhostDefault()
 				yOffsetBase + image_get(graphicId + 1)->sprite_offset_y - 64,
 				COLOR_MASK_GREEN);
 		} else if (type == BUILDING_HOUSE_VACANT_LOT) {
-			int graphicIdLot = image_group(ID_Graphic_HouseVacantLot);
+			int graphicIdLot = image_group(GROUP_BUILDING_HOUSE_VACANT_LOT);
 			Graphics_drawIsometricFootprint(graphicIdLot,
 				xOffsetBase, yOffsetBase, COLOR_MASK_GREEN);
 			Graphics_drawIsometricTop(graphicIdLot,
@@ -314,7 +314,7 @@ static void drawBuildingGhostDefault()
 				xOffsetBase, yOffsetBase, COLOR_MASK_GREEN);
 			Graphics_drawIsometricTop(graphicId,
 				xOffsetBase, yOffsetBase, COLOR_MASK_GREEN);
-			if (graphicId == image_group(ID_Graphic_TriumphalArch)) {
+			if (graphicId == image_group(GROUP_BUILDING_TRIUMPHAL_ARCH)) {
 				Graphics_drawImageMasked(graphicId + 1,
 					xOffsetBase + image_get(graphicId + 1)->sprite_offset_x + 4,
 					yOffsetBase + image_get(graphicId + 1)->sprite_offset_y - 51,
@@ -364,7 +364,7 @@ static void drawBuildingGhostDraggableReservoir()
 				drawFlatTile(xOffset, yOffset, COLOR_MASK_RED);
 			}
 		} else {
-			int graphicId = image_group(ID_Graphic_Reservoir);
+			int graphicId = image_group(GROUP_BUILDING_RESERVOIR);
 			Graphics_drawIsometricFootprint(graphicId, xOffsetBase, yOffsetBase, COLOR_MASK_GREEN);
 			Graphics_drawIsometricTop(graphicId, xOffsetBase, yOffsetBase, COLOR_MASK_GREEN);
 		}
@@ -378,7 +378,7 @@ static void drawBuildingGhostDraggableReservoir()
 			drawFlatTile(xOffset, yOffset, COLOR_MASK_RED);
 		}
 	} else {
-		int graphicId = image_group(ID_Graphic_Reservoir);
+		int graphicId = image_group(GROUP_BUILDING_RESERVOIR);
 		Graphics_drawIsometricFootprint(graphicId, xOffsetBase, yOffsetBase, COLOR_MASK_GREEN);
 		Graphics_drawIsometricTop(graphicId, xOffsetBase, yOffsetBase, COLOR_MASK_GREEN);
 		if (Terrain_existsTileWithinAreaWithType(
@@ -417,7 +417,7 @@ static void drawBuildingGhostAqueduct()
 		drawFlatTile(xOffset, yOffset, COLOR_MASK_RED);
 	} else {
 		int gridOffset = Data_Settings_Map.current.gridOffset;
-		int graphicId = image_group(ID_Graphic_Aqueduct);
+		int graphicId = image_group(GROUP_BUILDING_AQUEDUCT);
 		const struct TerrainGraphic *graphic = TerrainGraphicsContext_getAqueduct(gridOffset, 0);
 		if (Data_Grid_terrain[gridOffset] & Terrain_Road) {
 			int groupOffset = graphic->groupOffset;
@@ -825,7 +825,7 @@ static void drawBuildingGhostFort()
 			}
 		}
 	} else {
-		int graphicId = image_group(ID_Graphic_Fort);
+		int graphicId = image_group(GROUP_BUILDING_FORT);
 		if (orientationIndex == 0 || orientationIndex == 3) {
 			// draw fort first
 			Graphics_drawIsometricFootprint(graphicId, xOffsetBase, yOffsetBase, COLOR_MASK_GREEN);
@@ -928,7 +928,7 @@ static void drawBuildingGhostHippodrome()
 		}
 	} else {
 		if (orientationIndex == 0) {
-			int graphicId = image_group(ID_Graphic_Hippodrome2);
+			int graphicId = image_group(GROUP_BUILDING_HIPPODROME_2);
 			// part 1
 			Graphics_drawIsometricFootprint(graphicId,
 				xOffsetBase1, yOffsetBase1, COLOR_MASK_GREEN);
@@ -945,7 +945,7 @@ static void drawBuildingGhostHippodrome()
 			Graphics_drawIsometricTop(graphicId + 4,
 				xOffsetBase3, yOffsetBase3, COLOR_MASK_GREEN);
 		} else if (orientationIndex == 1) {
-			int graphicId = image_group(ID_Graphic_Hippodrome1);
+			int graphicId = image_group(GROUP_BUILDING_HIPPODROME_1);
 			// part 3
 			Graphics_drawIsometricFootprint(graphicId,
 				xOffsetBase3, yOffsetBase3, COLOR_MASK_GREEN);
@@ -962,7 +962,7 @@ static void drawBuildingGhostHippodrome()
 			Graphics_drawIsometricTop(graphicId + 4,
 				xOffsetBase1, yOffsetBase1, COLOR_MASK_GREEN);
 		} else if (orientationIndex == 2) {
-			int graphicId = image_group(ID_Graphic_Hippodrome2);
+			int graphicId = image_group(GROUP_BUILDING_HIPPODROME_2);
 			// part 1
 			Graphics_drawIsometricFootprint(graphicId + 4,
 				xOffsetBase1, yOffsetBase1, COLOR_MASK_GREEN);
@@ -979,7 +979,7 @@ static void drawBuildingGhostHippodrome()
 			Graphics_drawIsometricTop(graphicId,
 				xOffsetBase3, yOffsetBase3, COLOR_MASK_GREEN);
 		} else if (orientationIndex == 3) {
-			int graphicId = image_group(ID_Graphic_Hippodrome1);
+			int graphicId = image_group(GROUP_BUILDING_HIPPODROME_1);
 			// part 3
 			Graphics_drawIsometricFootprint(graphicId + 4,
 				xOffsetBase3, yOffsetBase3, COLOR_MASK_GREEN);
@@ -1043,10 +1043,10 @@ static void drawBuildingGhostDock()
 	} else {
 		int graphicId;
 		switch (dirRelative) {
-			case 0: graphicId = image_group(ID_Graphic_Dock1); break;
-			case 1: graphicId = image_group(ID_Graphic_Dock2); break;
-			case 2: graphicId = image_group(ID_Graphic_Dock3); break;
-			default: graphicId = image_group(ID_Graphic_Dock4); break;
+			case 0: graphicId = image_group(GROUP_BUILDING_DOCK_1); break;
+			case 1: graphicId = image_group(GROUP_BUILDING_DOCK_2); break;
+			case 2: graphicId = image_group(GROUP_BUILDING_DOCK_3); break;
+			default: graphicId = image_group(GROUP_BUILDING_DOCK_4); break;
 		}
 		int xOffset = Data_CityView.selectedTile.xOffsetInPixels;
 		int yOffset = Data_CityView.selectedTile.yOffsetInPixels;
@@ -1063,7 +1063,7 @@ static void drawBuildingGhostRoad()
 	int gridOffset = Data_Settings_Map.current.gridOffset;
 	int graphicId;
 	if (Data_Grid_terrain[gridOffset] & Terrain_Aqueduct) {
-		graphicId = image_group(ID_Graphic_Aqueduct);
+		graphicId = image_group(GROUP_BUILDING_AQUEDUCT);
 		if (Routing_canPlaceRoadUnderAqueduct(gridOffset)) {
 			graphicId += Routing_getAqueductGraphicOffsetWithRoad(gridOffset);
 		} else {
@@ -1072,7 +1072,7 @@ static void drawBuildingGhostRoad()
 	} else if (Data_Grid_terrain[gridOffset] & Terrain_NotClear) {
 		tileObstructed = 1;
 	} else {
-		graphicId = image_group(ID_Graphic_Road);
+		graphicId = image_group(GROUP_TERRAIN_ROAD);
 		if (!Terrain_hasTerrainTypeSameXAdjacentTo(gridOffset, Terrain_Road) &&
 			Terrain_hasTerrainTypeSameYAdjacentTo(gridOffset, Terrain_Road)) {
 			graphicId++;
