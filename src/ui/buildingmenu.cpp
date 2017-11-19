@@ -4,14 +4,9 @@
 #include "window.h"
 #include "graphics.h"
 #include "sidebarmenu.h"
-#include "widget_text.h"
 
-#include "data/building.hpp"
-#include "data/cityview.hpp"
-#include "data/constants.hpp"
-#include "data/scenario.hpp"
-#include "data/settings.hpp"
-#include "data/state.hpp"
+#include <data>
+#include <ui>
 
 #include "building/model.h"
 #include "core/time.h"

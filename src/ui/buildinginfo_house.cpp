@@ -4,10 +4,10 @@
 #include "graphics.h"
 #include "resource.h"
 #include "terrain.h"
-#include "widget_text.h"
 
 #include <sound>
 #include <data>
+#include <ui>
 
 #include "building/model.h"
 #include "graphics/image.h"

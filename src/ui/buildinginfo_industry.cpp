@@ -1,12 +1,12 @@
 #include "buildinginfo.h"
 #include "core/calc.h"
 #include "graphics.h"
-#include "widget_text.h"
 #include "game/resource.h"
 #include "graphics/image.h"
 
 #include <sound>
 #include <data>
+#include <ui>
 
 static void drawFarm(BuildingInfoContext *c, int helpId, const char *soundFile, int groupId, int resourceId)
 {

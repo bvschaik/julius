@@ -18,7 +18,8 @@ struct Text
     static int drawPercentage(int value, int xOffset, int yOffset, font_t font);
     static void drawNumberCentered(int value, int xOffset, int yOffset, int boxWidth, font_t font);
     static void drawNumberCenteredColored(int value, int xOffset, int yOffset, int boxWidth, font_t font, color_t color);
-    static int Widget::Text::drawMultiline(const char *str, int xOffset, int yOffset, int boxWidth, font_t font);
+    static int drawMultiline(const char *str, int xOffset, int yOffset, int boxWidth, font_t font);
+    static int getWidth(const uint8_t *str, font_t font);
 };
 
 }

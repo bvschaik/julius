@@ -1,9 +1,9 @@
 #include "allwindows.h"
 #include "window.h"
-#include "widget_text.h"
 
 #include <sound>
 #include <data>
+#include <ui>
 
 #include "core/calc.h"
 #include "game/settings.h"

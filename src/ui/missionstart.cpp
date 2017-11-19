@@ -4,10 +4,10 @@
 
 #include "graphics.h"
 #include "scenario.h"
-#include "widget_text.h"
 
 #include <data>
 #include <sound>
+#include <ui>
 
 #include "core/lang.h"
 #include "game/tutorial.h"

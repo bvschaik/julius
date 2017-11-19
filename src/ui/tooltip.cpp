@@ -4,11 +4,9 @@
 #include "window.h"
 
 #include "graphics.h"
-#include "widget_text.h"
 
-#include "data/cityinfo.hpp"
-#include "data/constants.hpp"
-#include "data/screen.hpp"
+#include <data>
+#include <ui>
 
 #include "core/lang.h"
 #include "core/string.h"

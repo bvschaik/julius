@@ -1,14 +1,11 @@
 #include "window.h"
 #include "allwindows.h"
-#include "widget_text.h"
 #include "graphics.h"
 #include "keyboardinput.h"
 #include "game/game_settings.h"
 
-#include "data/constants.hpp"
-#include "data/keyboardinput.hpp"
-#include "data/screen.hpp"
-#include "data/settings.hpp"
+#include <data>
+#include <ui>
 
 static void startMission(int param1, int param2);
 

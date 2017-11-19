@@ -4,10 +4,9 @@
 #include "cityview.h"
 #include "event.h"
 #include "formation.h"
-#include "widget_text.h"
 
-#include "data/figure.hpp"
-#include "data/settings.hpp"
+#include <data>
+#include <ui>
 
 #include "figure/formation.h"
 

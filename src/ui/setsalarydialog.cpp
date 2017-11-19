@@ -2,8 +2,10 @@
 #include "window.h"
 #include "advisors_private.h"
 #include "cityinfo.h"
-#include "widget_text.h"
+
 #include "data/constants.hpp"
+
+#include <ui>
 
 static void buttonCancel(int param1, int param2);
 static void buttonSetSalary(int param1, int param2);

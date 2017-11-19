@@ -6,13 +6,9 @@
 #include "figure.h"
 #include "graphics.h"
 #include "resource.h"
-#include "widget_text.h"
 
-#include "data/building.hpp"
-#include "data/constants.hpp"
-#include "data/figure.hpp"
-#include "data/scenario.hpp"
-#include "data/settings.hpp"
+#include <data>
+#include <ui>
 
 #include "empire/city.h"
 #include "figure/formation.h"

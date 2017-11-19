@@ -4,9 +4,9 @@
 #include "core/calc.h"
 #include "graphics.h"
 #include "terrain.h"
-#include "widget_text.h"
 
 #include <data>
+#include <ui>
 
 #include "building/count.h"
 #include "building/model.h"
@@ -133,7 +133,7 @@ void UI_Warning_show(int warningId)
         }
         hasWarningAlready = 1;
         warnings[i].warningId = warningId;
-        int width = Widget_Text_getWidth(text, FONT_NORMAL_BLACK);
+        int width = Widget::Text::getWidth(text, FONT_NORMAL_BLACK);
         if (width <= 100)
         {
             warnings[i].boxWidth = 200;

@@ -4,13 +4,10 @@
 
 #include "graphics.h"
 #include "resource.h"
-#include "widget_text.h"
 
-#include "data/building.hpp"
-#include "data/cityinfo.hpp"
-#include "data/constants.hpp"
-#include "data/figure.hpp"
-#include "data/scenario.hpp"
+#include <data>
+#include <ui>
+
 #include "building/storage.h"
 
 static void toggleResourceState(int param1, int param2);

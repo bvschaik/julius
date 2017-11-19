@@ -4,10 +4,9 @@
 #include "core/calc.h"
 #include "graphics.h"
 #include "city/message.h"
-#include "widget_text.h"
 
-#include "data/constants.hpp"
-#include "data/screen.hpp"
+#include <data>
+#include <ui>
 
 #include "core/lang.h"
 #include "graphics/image.h"

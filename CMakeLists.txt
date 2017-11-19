@@ -33,6 +33,7 @@ file(GLOB GAME_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/game/*.*)
 file(GLOB GRAPHICS_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/graphics/*.*)
 file(GLOB MAIN_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.*)
 file(GLOB UI_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/ui/*.*)
+file(GLOB UICORE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/uicore/*.*)
 file(GLOB CITY_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/city/*.*)
 file(GLOB SOUND_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/sound/*.*)
 file(GLOB DATA_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/data/*.*)
@@ -53,6 +54,7 @@ add_executable(${PROJECT_NAME}
   ${APP_FILES}
   ${DATA_FILES}
   ${UI_FILES}
+  ${UICORE_FILES}
   ${MAIN_FILES}
   ${CORE_FILES}
   ${BUILDING_FILES}
@@ -99,6 +101,7 @@ if(WIN32)
     source_group("app" FILES ${APP_FILES})
     source_group("data" FILES ${DATA_FILES})
     source_group("ui" FILES ${UI_FILES})
+    source_group("uicore" FILES ${UICORE_FILES})
     source_group("main" FILES ${MAIN_FILES})
     source_group("core" FILES ${CORE_FILES})
     source_group("empire" FILES ${EMPIRE_FILES})

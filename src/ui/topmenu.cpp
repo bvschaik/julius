@@ -8,13 +8,9 @@
 #include "graphics.h"
 #include "scenario.h"
 #include "system.h"
-#include "widget_text.h"
-#include "data/cityinfo.hpp"
-#include "data/constants.hpp"
-#include "data/filelist.hpp"
-#include "data/screen.hpp"
-#include "data/settings.hpp"
-#include "data/state.hpp"
+
+#include <data>
+#include <ui>
 
 #include "game/settings.h"
 #include "game/time.h"

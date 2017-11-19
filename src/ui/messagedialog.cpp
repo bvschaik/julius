@@ -8,9 +8,9 @@
 #include "graphics.h"
 #include "resource.h"
 #include "video.h"
-#include "widget_text.h"
 
 #include <data>
+#include <ui>
 
 #include "city/message.h"
 #include "core/calc.h"

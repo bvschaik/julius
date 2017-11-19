@@ -2,11 +2,10 @@
 
 #include "formation.h"
 #include "graphics.h"
-#include "widget_text.h"
-#include "ui/window.h"
 
 #include <sound>
 #include <data>
+#include <ui>
 
 #include "building/count.h"
 #include "core/calc.h"

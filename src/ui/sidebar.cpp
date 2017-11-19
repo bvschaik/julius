@@ -13,12 +13,12 @@
 #include "sidebarmenu.h"
 #include "terrain.h"
 #include "undo.h"
-#include "widget_text.h"
 
 #include "game/tutorial.h"
 
 #include <sound>
 #include <data>
+#include <ui>
 
 #include "core/time.h"
 #include "graphics/image.h"

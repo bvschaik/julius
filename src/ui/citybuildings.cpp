@@ -11,7 +11,6 @@
 #include "routing.h"
 #include "scroll.h"
 #include "undo.h"
-#include "widget_text.h"
 
 #include "building/model.h"
 #include "core/time.h"
@@ -19,6 +18,7 @@
 #include "game/settings.h"
 #include "game/resource.h"
 
+#include <ui>
 #include <sound>
 
 static void drawBuildingFootprints();

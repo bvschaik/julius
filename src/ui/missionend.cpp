@@ -3,10 +3,10 @@
 
 #include "cityinfo.h"
 #include "graphics.h"
-#include "widget_text.h"
 
 #include <sound>
 #include <data>
+#include <ui>
 
 #include "game/game_settings.h"
 #include "game/settings.h"

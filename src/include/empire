@@ -1,0 +1,10 @@
+#ifndef _JULIUS_INCLUDE_EMPIRE_H_
+#define _JULIUS_INCLUDE_EMPIRE_H_
+
+#include "empire/city.h"
+#include "empire/empire.h"
+#include "empire/object.h"
+#include "empire/trade_route.h"
+#include "empire/type.h"
+
+#endif

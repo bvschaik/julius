@@ -17,7 +17,6 @@
 #include "graphics.h" // debug
 #include "system.h"
 #include "game/game.h"
-#include "widget_text.h"
 
 #include "core/lang.h"
 #include "game/settings.h"
@@ -25,6 +24,8 @@
 
 #include <execinfo.h>
 #include <signal.h>
+
+#include <ui>
 
 static struct
 {

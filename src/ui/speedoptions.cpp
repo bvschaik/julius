@@ -1,12 +1,8 @@
 #include "allwindows.h"
 #include "window.h"
 
-#include "widget_text.h"
-
-#include "data/screen.hpp"
-#include "data/constants.hpp"
-#include "data/settings.hpp"
-#include "data/buttons.hpp"
+#include <data>
+#include <ui>
 
 #include "core/calc.h"
 #include "game/settings.h"

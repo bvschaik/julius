@@ -10,9 +10,9 @@
 #include "gamefile.h"
 #include "graphics.h"
 #include "scenario.h"
-#include "widget_text.h"
 
 #include <data>
+#include <ui>
 
 #include <string.h>
 

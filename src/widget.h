@@ -9,6 +9,26 @@
 
 #include <stdint.h>
 
+struct _InputCursor
+{
+    int capture;
+    int seen;
+    int position;
+    int width;
+    int visible;
+    time_millis updated;
+    int xOffset;
+    int yOffset;
+};
+
+extern _InputCursor inputCursor;
+extern const int map_charToFontGraphic[];
+extern uint8_t tmpLine[200];
+
+int getWordWidth(const unsigned char *str, font_t font, int *outNumChars);
+void numberToString(uint8_t *str, int value, char prefix, const char *postfix);
+int drawCharacter(font_t font, unsigned int c, int x, int y, int lineHeight, color_t color);
+
 int Widget_GameText_draw(int group, int number, int xOffset, int yOffset, font_t font);
 int Widget_GameText_drawColored(int group, int number, int xOffset, int yOffset, font_t font, color_t color);
 
@@ -24,7 +44,6 @@ int Widget_GameText_drawYearNoSpacing(int year, int xOffset, int yOffset, font_t
 
 int Widget_GameText_drawMultiline(int group, int number, int xOffset, int yOffset, int boxWidth, font_t font);
 
-int Widget_Text_getWidth(const uint8_t *str, font_t font);
 int Widget_GameText_getWidth(int group, int number, font_t font);
 int Widget_GameText_getDrawWidth(int group, int number, font_t font);
 

@@ -3,7 +3,6 @@
 #include "sidebar.h"
 #include "topmenu.h"
 #include "window.h"
-#include "widget_text.h"
 
 #include "graphics.h"
 #include "city/message.h"
@@ -13,6 +12,7 @@
 #include "graphics/image.h"
 
 #include <scenario>
+#include <ui>
 #include <data>
 
 void UI_City_drawBackground()

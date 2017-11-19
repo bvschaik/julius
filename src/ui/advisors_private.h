@@ -1,12 +1,10 @@
 #ifndef UI_ADVISORS_PRIVATE_H
 #define UI_ADVISORS_PRIVATE_H
 
-#include "widget_text.h"
 #include "graphics.h"
 
-#include "data/screen.hpp"
-#include "data/cityinfo.hpp"
-#include "data/constants.hpp"
+#include <data>
+#include <ui>
 
 #include "graphics/image.h"
 

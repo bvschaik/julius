@@ -4,7 +4,7 @@
 #include "building/count.h"
 #include "game/settings.h"
 
-#include "widget_text.h"
+#include <ui>
 
 void UI_Advisor_Religion_drawBackground(int *advisorHeight)
 {

@@ -14,16 +14,9 @@
 #include "houseevolution.h"
 #include "resource.h"
 #include "terrain.h"
-#include "widget_text.h"
 
-#include "data/building.hpp"
-#include "data/cityinfo.hpp"
-#include "data/cityview.hpp"
-#include "data/constants.hpp"
-#include "data/figure.hpp"
-#include "data/grid.hpp"
-#include "data/screen.hpp"
-#include "data/settings.hpp"
+#include <ui>
+#include <data>
 
 #include "building/model.h"
 #include "figure/formation.h"

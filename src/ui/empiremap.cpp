@@ -11,15 +11,11 @@
 #include "resource.h"
 #include "scroll.h"
 #include "sidebarmenu.h"
-#include "widget_text.h"
 
+#include <ui>
 #include <data>
+#include <empire>
 
-#include "empire/city.h"
-#include "empire/empire.h"
-#include "empire/object.h"
-#include "empire/trade_route.h"
-#include "empire/type.h"
 #include "graphics/image.h"
 
 #define MAX_WIDTH 2032

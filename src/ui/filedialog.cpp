@@ -8,12 +8,9 @@
 #include "gamefile.h"
 #include "graphics.h"
 #include "keyboardinput.h"
-#include "widget_text.h"
 
-#include "data/constants.hpp"
-#include "data/filelist.hpp"
-#include "data/keyboardinput.hpp"
-#include "data/screen.hpp"
+#include <data>
+#include <ui>
 
 #include "core/time.h"
 

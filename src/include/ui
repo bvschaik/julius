@@ -5,7 +5,7 @@
 #include "ui/warning.h"
 #include "ui/messagedialog.h"
 #include "ui/tooltip.h"
-#include "ui/window.h"
+#include "widget.h"
 #include "ui/allwindows.h"
 #include "ui/videointermezzo.h"
 #include "ui/sidebar.h"
@@ -14,6 +14,6 @@
 #include "ui/buildinginfo.h"
 #include "ui/popupdialog.h"
 #include "ui/sidebar.h"
-//#include "ui/widget_text.h"
+#include "uicore/widget_text.h"
 
 #endif //_JULIUS_INCLUDE_UI_H_

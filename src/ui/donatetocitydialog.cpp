@@ -6,10 +6,11 @@
 #include "advisors_private.h"
 #include "data/cityinfo.hpp"
 #include "data/screen.hpp"
-#include "widget_text.h"
 #include "game/resource.h"
 
 #include "core/calc.h"
+
+#include <ui>
 
 static void buttonSetAmount(int param1, int param2);
 static void buttonDonate(int param1, int param2);
