@@ -27,6 +27,8 @@ static struct {
     int warnings;
     int gods_enabled;
     int victory_video;
+    // persistent game state
+    int last_advisor;
     // personal savings
     int personal_savings[MAX_PERSONAL_SAVINGS];
     // file data
@@ -76,7 +78,7 @@ static void load_settings(buffer *buf)
     data.scroll_speed = buffer_read_i32(buf);
     buffer_skip(buf, 32); //uint8_t playerName[32];
     buffer_skip(buf, 16);
-    buffer_skip(buf, 4); //int lastAdvisor;
+    data.last_advisor = buffer_read_i32(buf);
     buffer_skip(buf, 4); //int saveGameMissionId;
     data.tooltips = buffer_read_i32(buf);
     buffer_skip(buf, 4); //int startingFavor;
@@ -337,6 +339,16 @@ int setting_victory_video()
 {
     data.victory_video = data.victory_video ? 0 : 1;
     return data.victory_video;
+}
+
+int setting_last_advisor()
+{
+    return data.last_advisor;
+}
+
+void setting_set_last_advisor(int advisor)
+{
+    data.last_advisor = advisor;
 }
 
 int setting_personal_savings_for_mission(int mission_id)

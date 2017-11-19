@@ -70,6 +70,9 @@ void setting_decrease_difficulty();
 
 int setting_victory_video();
 
+int setting_last_advisor();
+void setting_set_last_advisor(int advisor);
+
 int setting_personal_savings_for_mission(int mission_id);
 void setting_set_personal_savings_for_mission(int mission_id, int savings);
 void setting_clear_personal_savings();

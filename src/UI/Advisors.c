@@ -9,9 +9,9 @@
 #include "../Formation.h"
 
 #include "../Data/Constants.h"
-#include "../Data/Settings.h"
 
 #include "city/culture.h"
+#include "game/settings.h"
 #include "game/tutorial.h"
 
 static void buttonChangeAdvisor(int param1, int param2);
@@ -63,7 +63,7 @@ void UI_Advisors_goToFromMessage(int advisor)
         return;
     }
 	currentAdvisor = advisor;
-	Data_Settings.lastAdvisor = advisor;
+	setting_set_last_advisor(advisor);
 	UI_Advisors_init();
 	UI_Window_goTo(Window_Advisors);
 }
@@ -72,7 +72,7 @@ void UI_Advisors_goToFromSidepanel()
 {
     tutorial_availability avail = tutorial_advisor_empire_availability();
     if (avail == AVAILABLE) {
-        currentAdvisor = Data_Settings.lastAdvisor;
+        currentAdvisor = setting_last_advisor();
         UI_Advisors_init();
         UI_Window_goTo(Window_Advisors);
     } else {
@@ -255,7 +255,7 @@ static void buttonChangeAdvisor(int param1, int param2)
 {
 	if (param1) {
 		currentAdvisor = param1;
-		Data_Settings.lastAdvisor = param1;
+		setting_set_last_advisor(param1);
 		UI_Window_requestRefresh();
 	} else {
 		UI_Window_goTo(Window_City);
