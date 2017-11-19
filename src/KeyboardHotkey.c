@@ -16,7 +16,6 @@
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
-#include "Data/Settings.h"
 #include "Data/State.h"
 
 #include "figure/formation.h"
@@ -288,8 +287,8 @@ void KeyboardHotkey_esc()
 static void setBookmark(int number)
 {
 	if (number >= 0 && number < 4) {
-		Data_CityInfo_Extra.bookmarks[number].x = Data_Settings_Map.camera.x;
-		Data_CityInfo_Extra.bookmarks[number].y = Data_Settings_Map.camera.y;
+		Data_CityInfo_Extra.bookmarks[number].x = Data_State.map.camera.x;
+		Data_CityInfo_Extra.bookmarks[number].y = Data_State.map.camera.y;
 	}
 }
 
@@ -299,8 +298,8 @@ static void goToBookmark(int number)
 		int x = Data_CityInfo_Extra.bookmarks[number].x;
 		int y = Data_CityInfo_Extra.bookmarks[number].y;
 		if (x > -1 && GridOffset(x, y) > -1) {
-			Data_Settings_Map.camera.x = x;
-			Data_Settings_Map.camera.y = y;
+			Data_State.map.camera.x = x;
+			Data_State.map.camera.y = y;
 			CityView_checkCameraBoundaries();
 			UI_Window_requestRefresh();
 		}

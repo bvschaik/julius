@@ -11,7 +11,7 @@
 #include "Data/Constants.h"
 #include "Data/Figure.h"
 #include "Data/Grid.h"
-#include "Data/Settings.h"
+#include "Data/State.h"
 
 #include "core/calc.h"
 #include "core/random.h"

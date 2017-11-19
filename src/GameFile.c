@@ -15,7 +15,6 @@
 #include "Data/FileList.h"
 #include "Data/Grid.h"
 #include "Data/Routes.h"
-#include "Data/Settings.h"
 #include "Data/State.h"
 #include "Data/Figure.h"
 #include "UI/AllWindows.h" // TODO: try to eliminate this
@@ -391,8 +390,8 @@ void scenario_deserialize(scenario_state *file)
     read_all_from_buffer(file->random, &Data_Grid_random);
     read_all_from_buffer(file->elevation, &Data_Grid_elevation);
     
-    Data_Settings_Map.camera.x = buffer_read_i32(file->camera);
-    Data_Settings_Map.camera.y = buffer_read_i32(file->camera);
+    Data_State.map.camera.x = buffer_read_i32(file->camera);
+    Data_State.map.camera.y = buffer_read_i32(file->camera);
     
     random_load_state(file->random_iv);
 
@@ -441,7 +440,7 @@ static void savegame_deserialize(savegame_state *state)
     read_all_from_buffer(state->Data_CityInfo_Extra_unknownBytes, &Data_CityInfo_Extra.unknownBytes);
     read_all_from_buffer(state->Data_CityInfo_Extra_ciid, &Data_CityInfo_Extra.ciid);
     read_all_from_buffer(state->Data_Buildings, &Data_Buildings);
-    read_all_from_buffer(state->Data_Settings_Map_orientation, &Data_Settings_Map.orientation);
+    read_all_from_buffer(state->Data_Settings_Map_orientation, &Data_State.map.orientation);
     
     game_time_load_state(state->game_time);
     
@@ -450,8 +449,8 @@ static void savegame_deserialize(savegame_state *state)
     
     random_load_state(state->random_iv);
 
-    read_all_from_buffer(state->Data_Settings_Map_camera_x, &Data_Settings_Map.camera.x);
-    read_all_from_buffer(state->Data_Settings_Map_camera_y, &Data_Settings_Map.camera.y);
+    read_all_from_buffer(state->Data_Settings_Map_camera_x, &Data_State.map.camera.x);
+    read_all_from_buffer(state->Data_Settings_Map_camera_y, &Data_State.map.camera.y);
     
     building_count_load_state(state->building_count_industry,
                               state->building_count_culture1,
@@ -563,7 +562,7 @@ static void savegame_serialize(savegame_state *state)
     write_all_to_buffer(state->Data_CityInfo_Extra_unknownBytes, &Data_CityInfo_Extra.unknownBytes);
     write_all_to_buffer(state->Data_CityInfo_Extra_ciid, &Data_CityInfo_Extra.ciid);
     write_all_to_buffer(state->Data_Buildings, &Data_Buildings);
-    write_all_to_buffer(state->Data_Settings_Map_orientation, &Data_Settings_Map.orientation);
+    write_all_to_buffer(state->Data_Settings_Map_orientation, &Data_State.map.orientation);
     
     game_time_save_state(state->game_time);
 
@@ -572,8 +571,8 @@ static void savegame_serialize(savegame_state *state)
     
     random_save_state(state->random_iv);
 
-    write_all_to_buffer(state->Data_Settings_Map_camera_x, &Data_Settings_Map.camera.x);
-    write_all_to_buffer(state->Data_Settings_Map_camera_y, &Data_Settings_Map.camera.y);
+    write_all_to_buffer(state->Data_Settings_Map_camera_x, &Data_State.map.camera.x);
+    write_all_to_buffer(state->Data_Settings_Map_camera_y, &Data_State.map.camera.y);
 
     building_count_save_state(state->building_count_industry,
                               state->building_count_culture1,
@@ -758,11 +757,11 @@ static void setupFromSavedGame()
 
 	scenario_map_init();
 
-	if (Data_Settings_Map.orientation >= 0 && Data_Settings_Map.orientation <= 6) {
+	if (Data_State.map.orientation >= 0 && Data_State.map.orientation <= 6) {
 		// ensure even number
-		Data_Settings_Map.orientation = 2 * (Data_Settings_Map.orientation / 2);
+		Data_State.map.orientation = 2 * (Data_State.map.orientation / 2);
 	} else {
-		Data_Settings_Map.orientation = 0;
+		Data_State.map.orientation = 0;
 	}
 
 	CityView_calculateLookup();

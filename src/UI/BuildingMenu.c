@@ -8,7 +8,6 @@
 
 #include "../Data/Building.h"
 #include "../Data/CityView.h"
-#include "../Data/Settings.h"
 #include "../Data/State.h"
 
 #include "building/model.h"
@@ -230,7 +229,7 @@ static void buttonMenuItem(int item)
 	Data_State.selectedBuilding.roadLastUpdate = time_get_millis();
 	Data_State.selectedBuilding.gridOffsetStart = 0;
 
-	Data_Settings_Map.current.gridOffset = 0;
+	Data_State.map.current.gridOffset = 0;
 	
 	Data_State.selectedBuilding.placementInProgress = 0;
 	Data_State.selectedBuilding.xStart = 0;

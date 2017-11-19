@@ -10,7 +10,6 @@
 #include "../Data/CityInfo.h"
 #include "../Data/CityView.h"
 #include "../Data/Screen.h"
-#include "../Data/Settings.h"
 #include "../Data/State.h"
 
 #include "city/message.h"
@@ -48,7 +47,7 @@ void UI_City_drawForegroundMilitary()
 void UI_City_drawCity()
 {
 	UI_CityBuildings_drawForeground(
-		Data_Settings_Map.camera.x, Data_Settings_Map.camera.y);
+		Data_State.map.camera.x, Data_State.map.camera.y);
 }
 
 void UI_City_drawPausedAndTimeLeft()

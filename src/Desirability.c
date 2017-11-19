@@ -5,7 +5,8 @@
 
 #include "Data/Building.h"
 #include "Data/Grid.h"
-#include "Data/Settings.h"
+
+#include "Data/State.h"
 
 #include "building/model.h"
 
@@ -37,9 +38,9 @@ static void updateBuildings()
 
 static void updateTerrain()
 {
-	int gridOffset = Data_Settings_Map.gridStartOffset;
-	for (int y = 0; y < Data_Settings_Map.height; y++, gridOffset += Data_Settings_Map.gridBorderSize) {
-		for (int x = 0; x < Data_Settings_Map.width; x++, gridOffset++) {
+	int gridOffset = Data_State.map.gridStartOffset;
+	for (int y = 0; y < Data_State.map.height; y++, gridOffset += Data_State.map.gridBorderSize) {
+		for (int x = 0; x < Data_State.map.width; x++, gridOffset++) {
 			int terrain = Data_Grid_terrain[gridOffset];
 			if (Data_Grid_bitfields[gridOffset] & Bitfield_PlazaOrEarthquake) {
 				int type;

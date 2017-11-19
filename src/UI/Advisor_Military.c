@@ -5,7 +5,7 @@
 #include "../Formation.h"
 
 #include "../Data/Figure.h"
-#include "../Data/Settings.h"
+#include "../Data/State.h"
 
 #include "figure/formation.h"
 #include "scenario/invasion.h"

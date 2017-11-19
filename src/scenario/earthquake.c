@@ -9,7 +9,7 @@
 
 #include "Data/Building.h"
 #include "Data/Grid.h"
-#include "Data/Settings.h"
+#include "Data/State.h"
 
 #include "../Building.h"
 #include "Figure.h"
@@ -90,7 +90,7 @@ static void advanceEarthquakeToTile(int x, int y)
     TerrainGraphics_setTileEarthquake(x, y);
     TerrainGraphics_updateAllGardens();
     TerrainGraphics_updateAllRoads();
-    TerrainGraphics_updateRegionPlazas(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
+    TerrainGraphics_updateRegionPlazas(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
     
     Routing_determineLandCitizen();
     Routing_determineLandNonCitizen();
@@ -143,8 +143,8 @@ void scenario_earthquake_process()
                 case 15: index = 3; dx = 0; dy = 1; break;
                 default: return;
             }
-            int x = calc_bound(data.expand[index].x + dx, 0, Data_Settings_Map.width - 1);
-            int y = calc_bound(data.expand[index].y + dy, 0, Data_Settings_Map.height - 1);
+            int x = calc_bound(data.expand[index].x + dx, 0, Data_State.map.width - 1);
+            int y = calc_bound(data.expand[index].y + dy, 0, Data_State.map.height - 1);
             if (canAdvanceEarthquakeToTile(x, y)) {
                 data.expand[index].x = x;
                 data.expand[index].y = y;

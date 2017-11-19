@@ -1,7 +1,6 @@
 #include "Game.h"
 
 #include "Loader.h"
-#include "Settings.h"
 #include "System.h"
 #include "Video.h"
 
@@ -9,7 +8,6 @@
 
 #include "Data/Constants.h"
 #include "Data/FileList.h"
-#include "Data/Settings.h"
 #include "Data/State.h"
 #include "UI/TopMenu.h"
 
@@ -41,8 +39,7 @@ static void loadDefaultNames()
 
 int Game_preInit()
 {
-	Settings_load();
-	settings_load();
+    settings_load();
     scenario_settings_init();
     Data_State.gamePaused = 0;
     UI_TopMenu_initFromSettings(); // TODO eliminate need for this
@@ -87,7 +84,6 @@ int Game_init()
 void Game_exit()
 {
     Video_shutdown();
-    Settings_save();
     settings_save();
     sound_system_shutdown();
 }

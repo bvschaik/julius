@@ -6,7 +6,7 @@
 #include "../Data/CityView.h"
 #include "../Data/Figure.h"
 #include "../Data/Grid.h"
-#include "../Data/Settings.h"
+#include "../Data/State.h"
 
 #include "figure/type.h"
 #include "graphics/image.h"
@@ -76,14 +76,14 @@ static void setBounds(int xOffset, int yOffset, int widthTiles, int heightTiles)
 	minimapRight = xOffset + 2 * widthTiles;
 	minimapBottom = yOffset + heightTiles;
 
-	if ((Data_Settings_Map.width - widthTiles) / 2 > 0) {
+	if ((Data_State.map.width - widthTiles) / 2 > 0) {
 		if (Data_CityView.xInTiles < minimapAbsoluteX) {
 			minimapAbsoluteX = Data_CityView.xInTiles;
 		} else if (Data_CityView.xInTiles > widthTiles + minimapAbsoluteX - Data_CityView.widthInTiles) {
 			minimapAbsoluteX = Data_CityView.widthInTiles + Data_CityView.xInTiles - widthTiles;
 		}
 	}
-	if ((2 * Data_Settings_Map.height - heightTiles) / 2 > 0) {
+	if ((2 * Data_State.map.height - heightTiles) / 2 > 0) {
 		if (Data_CityView.yInTiles < minimapAbsoluteY) {
 			minimapAbsoluteY = Data_CityView.yInTiles;
 		} else if (Data_CityView.yInTiles > heightTiles + minimapAbsoluteY - Data_CityView.heightInTiles) {

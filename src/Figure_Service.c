@@ -5,9 +5,9 @@
 
 #include "Data/Building.h"
 #include "Data/Constants.h"
-#include "Data/Settings.h"
 #include "Data/Grid.h"
 #include "Data/Figure.h"
+#include "Data/State.h"
 
 #include "building/model.h"
 #include "figure/type.h"

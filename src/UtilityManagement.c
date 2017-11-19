@@ -8,7 +8,7 @@
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Grid.h"
-#include "Data/Settings.h"
+#include "Data/State.h"
 
 #include "building/list.h"
 #include "graphics/image.h"
@@ -51,9 +51,9 @@ void UtilityManagement_updateHouseWaterAccess()
 static void setAllAqueductsToNoWater()
 {
 	int graphicId = image_group(GROUP_BUILDING_AQUEDUCT) + 15;
-	int gridOffset = Data_Settings_Map.gridStartOffset;
-	for (int y = 0; y < Data_Settings_Map.height; y++, gridOffset += Data_Settings_Map.gridBorderSize) {
-		for (int x = 0; x < Data_Settings_Map.width; x++, gridOffset++) {
+	int gridOffset = Data_State.map.gridStartOffset;
+	for (int y = 0; y < Data_State.map.height; y++, gridOffset += Data_State.map.gridBorderSize) {
+		for (int x = 0; x < Data_State.map.width; x++, gridOffset++) {
 			if (Data_Grid_terrain[gridOffset] & Terrain_Aqueduct) {
 				Data_Grid_aqueducts[gridOffset] = 0;
 				if (Data_Grid_graphicIds[gridOffset] < graphicId) {
@@ -249,9 +249,9 @@ void UtilityManagement_determineRoadNetworks()
 	}
 	Grid_clearUByteGrid(Data_Grid_roadNetworks);
 	int roadNetworkId = 1;
-	int gridOffset = Data_Settings_Map.gridStartOffset;
-	for (int y = 0; y < Data_Settings_Map.height; y++, gridOffset += Data_Settings_Map.gridBorderSize) {
-		for (int x = 0; x < Data_Settings_Map.width; x++, gridOffset++) {
+	int gridOffset = Data_State.map.gridStartOffset;
+	for (int y = 0; y < Data_State.map.height; y++, gridOffset += Data_State.map.gridBorderSize) {
+		for (int x = 0; x < Data_State.map.width; x++, gridOffset++) {
 			if (Data_Grid_terrain[gridOffset] & Terrain_Road && !Data_Grid_roadNetworks[gridOffset]) {
 				int size = markRoadNetwork(gridOffset, roadNetworkId);
 				for (int n = 0; n < 10; n++) {

@@ -4,7 +4,6 @@
 #include "../Widget.h"
 
 #include "../Data/Screen.h"
-#include "../Data/Settings.h"
 #include "../Data/Buttons.h"
 
 #include "core/calc.h"

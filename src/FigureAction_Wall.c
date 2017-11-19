@@ -51,7 +51,7 @@ void FigureAction_ballista(int figureId)
 		f->state = FigureState_Dead;
 	}
 	Figure_removeFromTileList(figureId);
-	switch (Data_Settings_Map.orientation) {
+	switch (Data_State.map.orientation) {
 		case Dir_0_Top: f->x = b->x; f->y = b->y; break;
 		case Dir_2_Right: f->x = b->x + 1; f->y = b->y; break;
 		case Dir_4_Bottom: f->x = b->x + 1; f->y = b->y + 1; break;

@@ -2,7 +2,7 @@
 
 #include "Data/Building.h"
 #include "Data/Grid.h"
-#include "Data/Settings.h"
+#include "Data/State.h"
 
 #define MAX_TILES 8
 
@@ -324,7 +324,7 @@ const TerrainGraphic *TerrainGraphicsContext_getGraphic(int group, int tiles[MAX
 				context[i].currentItemOffset = 0;
 			}
 			result.isValid = 1;
-			result.groupOffset = context[i].offsetForOrientation[Data_Settings_Map.orientation / 2];
+			result.groupOffset = context[i].offsetForOrientation[Data_State.map.orientation / 2];
 			result.itemOffset = context[i].currentItemOffset;
 			result.aqueductOffset = context[i].aqueductOffset;
 			break;

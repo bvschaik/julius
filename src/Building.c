@@ -18,7 +18,6 @@
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 #include "Data/Grid.h"
-#include "Data/Settings.h"
 #include "Data/State.h"
 #include "Data/Figure.h"
 
@@ -516,7 +515,7 @@ void Building_decayHousesCovered()
 
 void Building_determineGraphicIdsForOrientedBuildings()
 {
-	int mapOrientation = Data_Settings_Map.orientation;
+	int mapOrientation = Data_State.map.orientation;
 	int mapOrientationIsTopOrBottom = mapOrientation == Dir_0_Top || mapOrientation == Dir_4_Bottom;
 	int graphicOffset;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
@@ -714,11 +713,11 @@ void Building_GameTick_checkAccessToRome()
 
 			TerrainGraphics_updateAllWalls();
 			TerrainGraphics_updateRegionAqueduct(0, 0,
-				Data_Settings_Map.width - 1, Data_Settings_Map.height - 1, 0);
+				Data_State.map.width - 1, Data_State.map.height - 1, 0);
 			TerrainGraphics_updateRegionEmptyLand(0, 0,
-				Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
+				Data_State.map.width - 1, Data_State.map.height - 1);
 			TerrainGraphics_updateRegionMeadow(0, 0,
-				Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
+				Data_State.map.width - 1, Data_State.map.height - 1);
 			
 			Routing_determineLandCitizen();
 			Routing_determineLandNonCitizen();

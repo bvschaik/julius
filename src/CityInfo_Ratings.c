@@ -2,7 +2,6 @@
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
-#include "Data/Settings.h"
 
 #include "building/model.h"
 #include "city/culture.h"

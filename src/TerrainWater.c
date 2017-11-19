@@ -16,7 +16,7 @@ void Terrain_addWatersideBuildingToGrids(int buildingId, int x, int y, int size,
 	}
 	int xLeftmost;
 	int yLeftmost;
-	switch (Data_Settings_Map.orientation) {
+	switch (Data_State.map.orientation) {
 		case Dir_0_Top:
 			xLeftmost = 0;
 			yLeftmost = size - 1;
@@ -59,7 +59,7 @@ int Terrain_determineOrientationWatersideSize2(int x, int y, int adjustXY,
 	int *orientationAbsolute, int *orientationRelative)
 {
 	if (adjustXY == 1) {
-		switch (Data_Settings_Map.orientation) {
+		switch (Data_State.map.orientation) {
 			case Dir_0_Top: break;
 			case Dir_2_Right: x--; break;
 			case Dir_6_Left: y--; break;
@@ -115,7 +115,7 @@ int Terrain_determineOrientationWatersideSize2(int x, int y, int adjustXY,
 				*orientationAbsolute = dir;
 			}
 			if (orientationRelative) {
-				*orientationRelative = (4 + dir - Data_Settings_Map.orientation / 2) % 4;
+				*orientationRelative = (4 + dir - Data_State.map.orientation / 2) % 4;
 			}
 			return blockedTiles;
 		}
@@ -127,7 +127,7 @@ int Terrain_determineOrientationWatersideSize3(int x, int y, int adjustXY,
 	int *orientationAbsolute, int *orientationRelative)
 {
 	if (adjustXY == 1) {
-		switch (Data_Settings_Map.orientation) {
+		switch (Data_State.map.orientation) {
 			case Dir_0_Top: break;
 			case Dir_2_Right: x -= 2; break;
 			case Dir_6_Left: y -= 2; break;
@@ -183,7 +183,7 @@ int Terrain_determineOrientationWatersideSize3(int x, int y, int adjustXY,
 				*orientationAbsolute = dir;
 			}
 			if (orientationRelative) {
-				*orientationRelative = (4 + dir - Data_Settings_Map.orientation / 2) % 4;
+				*orientationRelative = (4 + dir - Data_State.map.orientation / 2) % 4;
 			}
 			return blockedTiles;
 		}

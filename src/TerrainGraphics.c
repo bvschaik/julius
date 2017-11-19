@@ -284,7 +284,7 @@ static int getAccessRampGraphicOffset(int x, int y)
 	if (graphicOffset < 0) {
 		return -1;
 	}
-	switch (Data_Settings_Map.orientation) {
+	switch (Data_State.map.orientation) {
 		case Dir_0_Top: break;
 		case Dir_6_Left: graphicOffset += 1; break;
 		case Dir_4_Bottom: graphicOffset += 2; break;
@@ -593,7 +593,7 @@ void TerrainGraphics_setBuildingFarm(int buildingId, int x, int y, int cropGraph
 	}
 	// farmhouse
 	int leftmostX, leftmostY;
-	switch (Data_Settings_Map.orientation) {
+	switch (Data_State.map.orientation) {
 		case Dir_0_Top: leftmostX = 0; leftmostY = 1; break;
 		case Dir_2_Right: leftmostX = 0; leftmostY = 0; break;
 		case Dir_4_Bottom: leftmostX = 1; leftmostY = 0; break;
@@ -910,7 +910,7 @@ static void setWallGatehouseGraphicManually(int gridOffset)
 	int buildingIdDown = getGatehouseBuildingId(gridOffset + DELTA(0, 1));
 	int buildingIdRight = getGatehouseBuildingId(gridOffset + DELTA(1, 0));
 	int graphicOffset = 0;
-	if (Data_Settings_Map.orientation == Dir_0_Top) {
+	if (Data_State.map.orientation == Dir_0_Top) {
 		if (buildingIdUp && !buildingIdLeft) {
 			int pos = getGatehousePosition(gridOffset, Dir_0_Top, buildingIdUp);
 			if (pos > 0) {
@@ -934,7 +934,7 @@ static void setWallGatehouseGraphicManually(int gridOffset)
 				}
 			}
 		}
-	} else if (Data_Settings_Map.orientation == Dir_2_Right) {
+	} else if (Data_State.map.orientation == Dir_2_Right) {
 		if (buildingIdUp && !buildingIdRight) {
 			int pos = getGatehousePosition(gridOffset, Dir_0_Top, buildingIdUp);
 			if (pos > 0) {
@@ -958,7 +958,7 @@ static void setWallGatehouseGraphicManually(int gridOffset)
 				}
 			}
 		}
-	} else if (Data_Settings_Map.orientation == Dir_4_Bottom) {
+	} else if (Data_State.map.orientation == Dir_4_Bottom) {
 		if (buildingIdDown && !buildingIdRight) {
 			int pos = getGatehousePosition(gridOffset, Dir_4_Bottom, buildingIdDown);
 			if (pos > 0) {
@@ -982,7 +982,7 @@ static void setWallGatehouseGraphicManually(int gridOffset)
 				}
 			}
 		}
-	} else if (Data_Settings_Map.orientation == Dir_6_Left) {
+	} else if (Data_State.map.orientation == Dir_6_Left) {
 		if (buildingIdDown && !buildingIdLeft) {
 			int pos = getGatehousePosition(gridOffset, Dir_4_Bottom, buildingIdDown);
 			if (pos > 0) {

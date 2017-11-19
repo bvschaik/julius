@@ -3,7 +3,6 @@
 #include "../Widget.h"
 
 #include "../Data/Screen.h"
-#include "../Data/Settings.h"
 
 #include "core/calc.h"
 #include "game/settings.h"

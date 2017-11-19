@@ -23,7 +23,7 @@
 #include "../Data/Figure.h"
 #include "../Data/Grid.h"
 #include "../Data/Screen.h"
-#include "../Data/Settings.h"
+#include "../Data/State.h"
 
 #include "building/model.h"
 #include "figure/formation.h"
@@ -134,7 +134,7 @@ static int getHeightId()
 
 void UI_BuildingInfo_init()
 {
-	int gridOffset = Data_Settings_Map.current.gridOffset;
+	int gridOffset = Data_State.map.current.gridOffset;
 	int terrain = Data_Grid_terrain[gridOffset];
 	context.canPlaySound = 1;
 	context.storageShowSpecialOrders = 0;

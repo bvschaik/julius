@@ -668,10 +668,10 @@ static void drawBuildingFootprintForOverlay(int buildingId, int gridOffset, int 
 			if (b->type >= BUILDING_WHEAT_FARM && b->type <= BUILDING_PIG_FARM) {
 				int isField = 0;
 				int edge = Data_Grid_edge[gridOffset];
-				if ((Data_Settings_Map.orientation == Dir_0_Top && edge != 0x48) ||
-					(Data_Settings_Map.orientation == Dir_2_Right && edge != 0x40) ||
-					(Data_Settings_Map.orientation == Dir_4_Bottom && edge != 0x41) ||
-					(Data_Settings_Map.orientation == Dir_6_Left && edge != 0x49)) {
+				if ((Data_State.map.orientation == Dir_0_Top && edge != 0x48) ||
+					(Data_State.map.orientation == Dir_2_Right && edge != 0x40) ||
+					(Data_State.map.orientation == Dir_4_Bottom && edge != 0x41) ||
+					(Data_State.map.orientation == Dir_6_Left && edge != 0x49)) {
 					isField = 1;
 				}
 				if (isField) {
@@ -688,10 +688,10 @@ static void drawBuildingFootprintForOverlay(int buildingId, int gridOffset, int 
 			int draw = 1;
 			if (b->type >= BUILDING_WHEAT_FARM && b->type <= BUILDING_PIG_FARM) {
 				int edge = Data_Grid_edge[gridOffset];
-				if ((Data_Settings_Map.orientation == Dir_0_Top && edge != 0x50) ||
-					(Data_Settings_Map.orientation == Dir_2_Right && edge != 0x40) ||
-					(Data_Settings_Map.orientation == Dir_4_Bottom && edge != 0x42) ||
-					(Data_Settings_Map.orientation == Dir_6_Left && edge != 0x52)) {
+				if ((Data_State.map.orientation == Dir_0_Top && edge != 0x50) ||
+					(Data_State.map.orientation == Dir_2_Right && edge != 0x40) ||
+					(Data_State.map.orientation == Dir_4_Bottom && edge != 0x42) ||
+					(Data_State.map.orientation == Dir_6_Left && edge != 0x52)) {
 					draw = 0;
 				}
 			}
@@ -934,10 +934,10 @@ static void drawBuildingTopForFireOverlay(int gridOffset, int buildingId, int xO
 		if (Data_Buildings[buildingId].type >= BUILDING_WHEAT_FARM &&
 			Data_Buildings[buildingId].type <= BUILDING_PIG_FARM) {
 			int edge = Data_Grid_edge[gridOffset];
-			if ((Data_Settings_Map.orientation == Dir_0_Top && edge != 0x50) ||
-				(Data_Settings_Map.orientation == Dir_2_Right && edge != 0x40) ||
-				(Data_Settings_Map.orientation == Dir_4_Bottom && edge != 0x42) ||
-				(Data_Settings_Map.orientation == Dir_6_Left && edge != 0x52)) {
+			if ((Data_State.map.orientation == Dir_0_Top && edge != 0x50) ||
+				(Data_State.map.orientation == Dir_2_Right && edge != 0x40) ||
+				(Data_State.map.orientation == Dir_4_Bottom && edge != 0x42) ||
+				(Data_State.map.orientation == Dir_6_Left && edge != 0x52)) {
 				draw = 0;
 			}
 		}
@@ -959,10 +959,10 @@ static void drawBuildingTopForDamageOverlay(int gridOffset, int buildingId, int 
 		if (Data_Buildings[buildingId].type >= BUILDING_WHEAT_FARM &&
 			Data_Buildings[buildingId].type <= BUILDING_PIG_FARM) {
 			int edge = Data_Grid_edge[gridOffset];
-			if ((Data_Settings_Map.orientation == Dir_0_Top && edge != 0x50) ||
-				(Data_Settings_Map.orientation == Dir_2_Right && edge != 0x40) ||
-				(Data_Settings_Map.orientation == Dir_4_Bottom && edge != 0x42) ||
-				(Data_Settings_Map.orientation == Dir_6_Left && edge != 0x52)) {
+			if ((Data_State.map.orientation == Dir_0_Top && edge != 0x50) ||
+				(Data_State.map.orientation == Dir_2_Right && edge != 0x40) ||
+				(Data_State.map.orientation == Dir_4_Bottom && edge != 0x42) ||
+				(Data_State.map.orientation == Dir_6_Left && edge != 0x52)) {
 				draw = 0;
 			}
 		}
@@ -1357,10 +1357,10 @@ static void drawBuildingTopForProblemsOverlay(int gridOffset, int buildingId, in
 	if (type >= BUILDING_WHEAT_FARM && type <= BUILDING_PIG_FARM) {
 		int isField = 0;
 		int edge = Data_Grid_edge[gridOffset];
-		if ((Data_Settings_Map.orientation == Dir_0_Top && edge != 0x48) ||
-			(Data_Settings_Map.orientation == Dir_2_Right && edge != 0x40) ||
-			(Data_Settings_Map.orientation == Dir_4_Bottom && edge != 0x41) ||
-			(Data_Settings_Map.orientation == Dir_6_Left && edge != 0x49)) {
+		if ((Data_State.map.orientation == Dir_0_Top && edge != 0x48) ||
+			(Data_State.map.orientation == Dir_2_Right && edge != 0x40) ||
+			(Data_State.map.orientation == Dir_4_Bottom && edge != 0x41) ||
+			(Data_State.map.orientation == Dir_6_Left && edge != 0x49)) {
 			isField = 1;
 		}
 		if (isField) {

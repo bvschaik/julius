@@ -10,8 +10,8 @@
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 #include "Data/Grid.h"
-#include "Data/Settings.h"
 #include "Data/Figure.h"
+#include "Data/State.h"
 
 #include "city/message.h"
 #include "core/calc.h"
@@ -681,10 +681,10 @@ static int getHerdRoamingDestination(int formationId, int allowNegativeDesirabil
 			xTarget = 1;
 		} else if (yTarget <= 0) {
 			yTarget = 1;
-		} else if (xTarget >= Data_Settings_Map.width - 1) {
-			xTarget = Data_Settings_Map.width - 2;
-		} else if (yTarget >= Data_Settings_Map.height - 1) {
-			yTarget = Data_Settings_Map.height - 2;
+		} else if (xTarget >= Data_State.map.width - 1) {
+			xTarget = Data_State.map.width - 2;
+		} else if (yTarget >= Data_State.map.height - 1) {
+			yTarget = Data_State.map.height - 2;
 		}
 		if (TerrainGraphics_getFreeTileForHerd(xTarget, yTarget, allowNegativeDesirability, xTile, yTile)) {
 			return 1;

@@ -11,7 +11,6 @@
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 #include "Data/Grid.h"
-#include "Data/Settings.h"
 #include "Data/State.h"
 
 #include "core/calc.h"
@@ -83,7 +82,7 @@ void Terrain_addBuildingToGrids(int buildingId, int x, int y, int size, int grap
 		return;
 	}
 	int xLeftmost, yLeftmost;
-	switch (Data_Settings_Map.orientation) {
+	switch (Data_State.map.orientation) {
 		case Dir_0_Top:
 			xLeftmost = 0;
 			yLeftmost = size - 1;
@@ -379,7 +378,7 @@ int Terrain_hasRoadAccessGranary(int x, int y, int *roadX, int *roadY)
 
 int Terrain_getOrientationGatehouse(int x, int y)
 {
-	switch (Data_Settings_Map.orientation) {
+	switch (Data_State.map.orientation) {
 		case Dir_2_Right: x--; break;
 		case Dir_4_Bottom: x--; y--; break;
 		case Dir_6_Left: y--; break;
@@ -469,7 +468,7 @@ int Terrain_getOrientationGatehouse(int x, int y)
 
 int Terrain_getOrientationTriumphalArch(int x, int y)
 {
-	switch (Data_Settings_Map.orientation) {
+	switch (Data_State.map.orientation) {
 		case Dir_2_Right: x -= 2; break;
 		case Dir_4_Bottom: x -= 2; y -= 2; break;
 		case Dir_6_Left: y -= 2; break;
@@ -1012,8 +1011,8 @@ void Terrain_initDistanceRing()
 
 static int isInsideMapForRing(int x, int y)
 {
-	return x >= -1 && x <= Data_Settings_Map.width &&
-		y >= -1 && y <= Data_Settings_Map.height;
+	return x >= -1 && x <= Data_State.map.width &&
+		y >= -1 && y <= Data_State.map.height;
 }
 
 int Terrain_isAllRockAndTreesAtDistanceRing(int x, int y, int distance)
@@ -1051,10 +1050,10 @@ int Terrain_isAllMeadowAtDistanceRing(int x, int y, int distance)
 static void addDesirabilityDistanceRing(int x, int y, int size, int distance, int desirability)
 {
 	int isPartiallyOutsideMap = 0;
-	if (x - distance < -1 || x + distance + size - 1 > Data_Settings_Map.width) {
+	if (x - distance < -1 || x + distance + size - 1 > Data_State.map.width) {
 		isPartiallyOutsideMap = 1;
 	}
-	if (y - distance < -1 || y + distance + size - 1 > Data_Settings_Map.height) {
+	if (y - distance < -1 || y + distance + size - 1 > Data_State.map.height) {
 		isPartiallyOutsideMap = 1;
 	}
 	int start = ringIndex[size][distance];
@@ -1162,11 +1161,11 @@ void Terrain_updateEntryExitFlags(int remove)
     map_point entry_point = scenario_map_entry();
 	if (entry_point.x == 0) {
 		entryOrientation = Dir_2_Right;
-	} else if (entry_point.x == Data_Settings_Map.width - 1) {
+	} else if (entry_point.x == Data_State.map.width - 1) {
 		entryOrientation = Dir_6_Left;
 	} else if (entry_point.y == 0) {
 		entryOrientation = Dir_0_Top;
-	} else if (entry_point.y == Data_Settings_Map.height - 1) {
+	} else if (entry_point.y == Data_State.map.height - 1) {
 		entryOrientation = Dir_4_Bottom;
 	} else {
 		entryOrientation = -1;
@@ -1175,11 +1174,11 @@ void Terrain_updateEntryExitFlags(int remove)
     map_point exit_point = scenario_map_exit();
 	if (exit_point.x == 0) {
 		exitOrientation = Dir_2_Right;
-	} else if (exit_point.x == Data_Settings_Map.width - 1) {
+	} else if (exit_point.x == Data_State.map.width - 1) {
 		exitOrientation = Dir_6_Left;
 	} else if (exit_point.y == 0) {
 		exitOrientation = Dir_0_Top;
-	} else if (exit_point.y == Data_Settings_Map.height - 1) {
+	} else if (exit_point.y == Data_State.map.height - 1) {
 		exitOrientation = Dir_4_Bottom;
 	} else {
 		exitOrientation = -1;
@@ -1199,7 +1198,7 @@ void Terrain_updateEntryExitFlags(int remove)
 		Data_CityInfo_Extra.entryPointFlag.y = yTile;
 		Data_CityInfo_Extra.entryPointFlag.gridOffset = gridOffsetFlag;
 		Data_Grid_terrain[gridOffsetFlag] |= Terrain_Rock;
-		int orientation = (Data_Settings_Map.orientation + entryOrientation) % 8;
+		int orientation = (Data_State.map.orientation + entryOrientation) % 8;
 		Data_Grid_graphicIds[gridOffsetFlag] = image_group(GROUP_TERRAIN_ENTRY_EXIT_FLAGS) + orientation / 2;
 	}
 	if (exitOrientation >= 0) {
@@ -1217,14 +1216,14 @@ void Terrain_updateEntryExitFlags(int remove)
 		Data_CityInfo_Extra.exitPointFlag.y = yTile;
 		Data_CityInfo_Extra.exitPointFlag.gridOffset = gridOffsetFlag;
 		Data_Grid_terrain[gridOffsetFlag] |= Terrain_Rock;
-		int orientation = (Data_Settings_Map.orientation + exitOrientation) % 8;
+		int orientation = (Data_State.map.orientation + exitOrientation) % 8;
 		Data_Grid_graphicIds[gridOffsetFlag] = image_group(GROUP_TERRAIN_ENTRY_EXIT_FLAGS) + 4 + orientation / 2;
 	}
 }
 
 int Terrain_isClearToBuild(int size, int x, int y, int terrainMask)
 {
-	switch (Data_Settings_Map.orientation) {
+	switch (Data_State.map.orientation) {
 		case 2: x = x - size + 1; break;
 		case 4: x = x - size + 1; // fall-through
 		case 6: y = y - size + 1; break;
@@ -1246,7 +1245,7 @@ int Terrain_isClearToBuild(int size, int x, int y, int terrainMask)
 void Terrain_updateToPlaceBuildingToOverlay(int size, int x, int y, int terrainMask, int isAbsoluteXY)
 {
 	if (!isAbsoluteXY) {
-		switch (Data_Settings_Map.orientation) {
+		switch (Data_State.map.orientation) {
 			case 2: x = x - size + 1; break;
 			case 4: x = x - size + 1; // fall-through
 			case 6: y = y - size + 1; break;
@@ -1276,8 +1275,8 @@ void Terrain_updateToPlaceBuildingToOverlay(int size, int x, int y, int terrainM
 
 static void determineLeftmostTile()
 {
-	for (int y = 0; y < Data_Settings_Map.height; y++) {
-		for (int x = 0; x < Data_Settings_Map.width; x++) {
+	for (int y = 0; y < Data_State.map.height; y++) {
+		for (int x = 0; x < Data_State.map.width; x++) {
 			int gridOffset = GridOffset(x, y);
 			int sizeCode = Data_Grid_bitfields[gridOffset] & Bitfield_Sizes;
 			int xy = Data_Grid_edge[gridOffset] & Edge_MaskXY;
@@ -1302,7 +1301,7 @@ static void determineLeftmostTile()
 				EdgeXY(0, max), EdgeXY(0, 0),
 				EdgeXY(max, 0), EdgeXY(max, max)
 			};
-			int orientationIndex = Data_Settings_Map.orientation / 2;
+			int orientationIndex = Data_State.map.orientation / 2;
 			if (xy == leftmost[orientationIndex]) {
 				Data_Grid_edge[gridOffset] |= Edge_LeftmostTile;
 			}
@@ -1339,21 +1338,21 @@ void Terrain_rotateMap(int ccw)
 	Data_State.undoAvailable = 0;
 	determineLeftmostTile();
 
-	TerrainGraphics_updateRegionElevation(0, 0, Data_Settings_Map.width - 2, Data_Settings_Map.height - 2);
-	TerrainGraphics_updateRegionWater(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
-	TerrainGraphics_updateRegionEarthquake(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
+	TerrainGraphics_updateRegionElevation(0, 0, Data_State.map.width - 2, Data_State.map.height - 2);
+	TerrainGraphics_updateRegionWater(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
+	TerrainGraphics_updateRegionEarthquake(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
 	TerrainGraphics_updateAllRoads();
 	TerrainGraphics_updateAllGardens();
 
 	Terrain_updateEntryExitFlags(0);
 
-	TerrainGraphics_updateRegionEmptyLand(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
-	TerrainGraphics_updateRegionMeadow(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
-	TerrainGraphics_updateRegionRubble(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
+	TerrainGraphics_updateRegionEmptyLand(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
+	TerrainGraphics_updateRegionMeadow(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
+	TerrainGraphics_updateRegionRubble(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
 	TerrainGraphics_updateAllRoads();
-	TerrainGraphics_updateRegionPlazas(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
+	TerrainGraphics_updateRegionPlazas(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
 	TerrainGraphics_updateAllWalls();
-	TerrainGraphics_updateRegionAqueduct(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1, 0);
+	TerrainGraphics_updateRegionAqueduct(0, 0, Data_State.map.width - 1, Data_State.map.height - 1, 0);
 
 	Building_determineGraphicIdsForOrientedBuildings();
 	TerrainBridge_updateSpriteIdsOnMapRotate(ccw);

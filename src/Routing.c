@@ -8,8 +8,8 @@
 #include "Data/Constants.h"
 #include "Data/Grid.h"
 #include "Data/Routes.h"
-#include "Data/Settings.h"
 #include "Data/Figure.h"
+#include "Data/State.h"
 
 #include "core/calc.h"
 #include "core/random.h"
@@ -225,9 +225,9 @@ static void routeQueueDir8(int source, void (*callback)(int, int))
 void Routing_determineLandCitizen()
 {
 	memset(Data_Grid_routingLandCitizen, -1, GRID_SIZE * GRID_SIZE);
-	int gridOffset = Data_Settings_Map.gridStartOffset;
-	for (int y = 0; y < Data_Settings_Map.height; y++, gridOffset += Data_Settings_Map.gridBorderSize) {
-		for (int x = 0; x < Data_Settings_Map.width; x++, gridOffset++) {
+	int gridOffset = Data_State.map.gridStartOffset;
+	for (int y = 0; y < Data_State.map.height; y++, gridOffset += Data_State.map.gridBorderSize) {
+		for (int x = 0; x < Data_State.map.width; x++, gridOffset++) {
 			if (Data_Grid_terrain[gridOffset] & Terrain_Road) {
 				Data_Grid_routingLandCitizen[gridOffset] = Routing_Citizen_0_Road;
 			} else if (Data_Grid_terrain[gridOffset] & (Terrain_Rubble | Terrain_AccessRamp | Terrain_Garden)) {
@@ -327,9 +327,9 @@ void Routing_determineLandCitizen()
 void Routing_determineLandNonCitizen()
 {
 	memset(Data_Grid_routingLandNonCitizen, -1, GRID_SIZE * GRID_SIZE);
-	int gridOffset = Data_Settings_Map.gridStartOffset;
-	for (int y = 0; y < Data_Settings_Map.height; y++, gridOffset += Data_Settings_Map.gridBorderSize) {
-		for (int x = 0; x < Data_Settings_Map.width; x++, gridOffset++) {
+	int gridOffset = Data_State.map.gridStartOffset;
+	for (int y = 0; y < Data_State.map.height; y++, gridOffset += Data_State.map.gridBorderSize) {
+		for (int x = 0; x < Data_State.map.width; x++, gridOffset++) {
 			int terrain = Data_Grid_terrain[gridOffset] & Terrain_NotClear;
 			if (Data_Grid_terrain[gridOffset] & Terrain_Gatehouse) {
 				Data_Grid_routingLandNonCitizen[gridOffset] = Routing_NonCitizen_4_Gatehouse;
@@ -382,16 +382,16 @@ void Routing_determineLandNonCitizen()
 void Routing_determineWater()
 {
 	memset(Data_Grid_routingWater, -1, GRID_SIZE * GRID_SIZE);
-	int gridOffset = Data_Settings_Map.gridStartOffset;
-	for (int y = 0; y < Data_Settings_Map.height; y++, gridOffset += Data_Settings_Map.gridBorderSize) {
-		for (int x = 0; x < Data_Settings_Map.width; x++, gridOffset++) {
+	int gridOffset = Data_State.map.gridStartOffset;
+	for (int y = 0; y < Data_State.map.height; y++, gridOffset += Data_State.map.gridBorderSize) {
+		for (int x = 0; x < Data_State.map.width; x++, gridOffset++) {
 			if (Data_Grid_terrain[gridOffset] & Terrain_Water) {
 				if ((Data_Grid_terrain[gridOffset - 162] & Terrain_Water) &&
 					(Data_Grid_terrain[gridOffset - 1] & Terrain_Water) &&
 					(Data_Grid_terrain[gridOffset + 1] & Terrain_Water) &&
 					(Data_Grid_terrain[gridOffset + 162] & Terrain_Water)) {
-					if (x > 0 && x < Data_Settings_Map.width - 1 &&
-						y > 0 && y < Data_Settings_Map.height - 1) {
+					if (x > 0 && x < Data_State.map.width - 1 &&
+						y > 0 && y < Data_State.map.height - 1) {
 						switch (Data_Grid_spriteOffsets[gridOffset]) {
 							case 5:
 							case 6: // low bridge middle section
@@ -420,12 +420,12 @@ void Routing_determineWater()
 void Routing_determineWalls()
 {
 	memset(Data_Grid_routingWalls, -1, GRID_SIZE * GRID_SIZE);
-	int gridOffset = Data_Settings_Map.gridStartOffset;
-	for (int y = 0; y < Data_Settings_Map.height; y++, gridOffset += Data_Settings_Map.gridBorderSize) {
-		for (int x = 0; x < Data_Settings_Map.width; x++, gridOffset++) {
+	int gridOffset = Data_State.map.gridStartOffset;
+	for (int y = 0; y < Data_State.map.height; y++, gridOffset += Data_State.map.gridBorderSize) {
+		for (int x = 0; x < Data_State.map.width; x++, gridOffset++) {
 			if (Data_Grid_terrain[gridOffset] & Terrain_Wall) {
 				int adjacent = 0;
-				switch (Data_Settings_Map.orientation) {
+				switch (Data_State.map.orientation) {
 					case Dir_0_Top:
 						if (Data_Grid_terrain[gridOffset + 162] & Terrain_WallOrGatehouse) {
 							adjacent++;
@@ -691,7 +691,7 @@ int Routing_canPlaceRoadUnderAqueduct(int gridOffset)
 		default: // not a straight aqueduct
 			return 0;
 	}
-	if (Data_Settings_Map.orientation == Dir_6_Left || Data_Settings_Map.orientation == Dir_2_Right) {
+	if (Data_State.map.orientation == Dir_6_Left || Data_State.map.orientation == Dir_2_Right) {
 		checkRoadY = !checkRoadY;
 	}
 	if (checkRoadY) {
@@ -749,7 +749,7 @@ static int canPlaceAqueductOnRoad(int gridOffset)
 		return 0;
 	}
 	int checkRoadY = graphic == 0 || graphic == 49;
-	if (Data_Settings_Map.orientation == Dir_6_Left || Data_Settings_Map.orientation == Dir_2_Right) {
+	if (Data_State.map.orientation == Dir_6_Left || Data_State.map.orientation == Dir_2_Right) {
 		checkRoadY = !checkRoadY;
 	}
 	if (checkRoadY) {

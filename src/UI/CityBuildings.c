@@ -60,7 +60,7 @@ void UI_CityBuildings_drawForeground(int x, int y)
 
 void UI_CityBuildings_drawBuildingCost()
 {
-	if (!Data_Settings_Map.current.gridOffset) {
+	if (!Data_State.map.current.gridOffset) {
 		return;
 	}
 	if (Data_State.isScrollingMap) {
@@ -239,7 +239,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 					Data_CityInfo.entertainmentHippodromeHasShow) {
 					int subtype = b->subtype.orientation;
 					if ((subtype == 0 || subtype == 3) && Data_CityInfo.population > 2000) {
-						switch (Data_Settings_Map.orientation) {
+						switch (Data_State.map.orientation) {
 							case Dir_0_Top:
 								Graphics_drawImageMasked(
 									image_group(GROUP_BUILDING_HIPPODROME_2) + 6,
@@ -261,7 +261,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 									xGraphic, yGraphic - 72, colorMask);
 						}
 					} else if ((subtype == 1 || subtype == 4) && Data_CityInfo.population > 100) {
-						switch (Data_Settings_Map.orientation) {
+						switch (Data_State.map.orientation) {
 							case Dir_0_Top:
 							case Dir_4_Bottom:
 								Graphics_drawImageMasked(
@@ -275,7 +275,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 									xGraphic, yGraphic - 80, colorMask);
 						}
 					} else if ((subtype == 2 || subtype == 5) && Data_CityInfo.population > 1000) {
-						switch (Data_Settings_Map.orientation) {
+						switch (Data_State.map.orientation) {
 							case Dir_0_Top:
 								Graphics_drawImageMasked(
 									image_group(GROUP_BUILDING_HIPPODROME_2) + 8,
@@ -458,20 +458,20 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 				}
 			} else if (Data_Buildings[Data_Grid_buildingIds[gridOffset]].type == BUILDING_GATEHOUSE) {
 				int xy = Data_Grid_edge[gridOffset] & Edge_MaskXY;
-				if ((Data_Settings_Map.orientation == Dir_0_Top && xy == 9) ||
-					(Data_Settings_Map.orientation == Dir_2_Right && xy == 8) ||
-					(Data_Settings_Map.orientation == Dir_4_Bottom && xy == 0) ||
-					(Data_Settings_Map.orientation == Dir_6_Left && xy == 1)) {
+				if ((Data_State.map.orientation == Dir_0_Top && xy == 9) ||
+					(Data_State.map.orientation == Dir_2_Right && xy == 8) ||
+					(Data_State.map.orientation == Dir_4_Bottom && xy == 0) ||
+					(Data_State.map.orientation == Dir_6_Left && xy == 1)) {
 					int buildingId = Data_Grid_buildingIds[gridOffset];
 					int graphicId = image_group(GROUP_BULIDING_GATEHOUSE);
 					if (Data_Buildings[buildingId].subtype.orientation == 1) {
-						if (Data_Settings_Map.orientation == Dir_0_Top || Data_Settings_Map.orientation == Dir_4_Bottom) {
+						if (Data_State.map.orientation == Dir_0_Top || Data_State.map.orientation == Dir_4_Bottom) {
 							Graphics_drawImage(graphicId, xGraphic - 22, yGraphic - 80);
 						} else {
 							Graphics_drawImage(graphicId + 1, xGraphic - 18, yGraphic - 81);
 						}
 					} else if (Data_Buildings[buildingId].subtype.orientation == 2) {
-						if (Data_Settings_Map.orientation == Dir_0_Top || Data_Settings_Map.orientation == Dir_4_Bottom) {
+						if (Data_State.map.orientation == Dir_0_Top || Data_State.map.orientation == Dir_4_Bottom) {
 							Graphics_drawImage(graphicId + 1, xGraphic - 18, yGraphic - 81);
 						} else {
 							Graphics_drawImage(graphicId, xGraphic - 22, yGraphic - 80);
@@ -601,12 +601,12 @@ static void drawHippodromeAndElevatedFigures(int selectedFigureId)
 
 static void updateCityViewCoords(const mouse *m)
 {
-	Data_Settings_Map.current.x = Data_Settings_Map.current.y = 0;
-	int gridOffset = Data_Settings_Map.current.gridOffset =
+	Data_State.map.current.x = Data_State.map.current.y = 0;
+	int gridOffset = Data_State.map.current.gridOffset =
 		CityView_pixelCoordsToGridOffset(m->x, m->y);
 	if (gridOffset) {
-		Data_Settings_Map.current.x = (gridOffset - Data_Settings_Map.gridStartOffset) % 162;
-		Data_Settings_Map.current.y = (gridOffset - Data_Settings_Map.gridStartOffset) / 162;
+		Data_State.map.current.x = (gridOffset - Data_State.map.gridStartOffset) % 162;
+		Data_State.map.current.y = (gridOffset - Data_State.map.gridStartOffset) / 162;
 	}
 }
 
@@ -627,7 +627,7 @@ static int handleRightClickAllowBuildingInfo()
 	Data_State.selectedBuilding.yEnd = 0;
 	UI_Window_goTo(Window_City);
 
-	if (!Data_Settings_Map.current.gridOffset) {
+	if (!Data_State.map.current.gridOffset) {
 		allow = 0;
 	}
 	if (UI_Warning_hasWarnings()) {
@@ -639,9 +639,9 @@ static int handleRightClickAllowBuildingInfo()
 
 static int isLegionClick()
 {
-	if (Data_Settings_Map.current.gridOffset) {
+	if (Data_State.map.current.gridOffset) {
 		int formationId = Formation_getLegionFormationAtGridOffset(
-			GridOffset(Data_Settings_Map.current.x, Data_Settings_Map.current.y));
+			GridOffset(Data_State.map.current.x, Data_State.map.current.y));
 		if (formationId > 0 && !formation_get(formationId)->in_distant_battle) {
 			Data_State.selectedLegionFormationId = formationId;
 			UI_Window_goTo(Window_CityMilitary);
@@ -653,10 +653,10 @@ static int isLegionClick()
 
 static void buildStart()
 {
-	if (Data_Settings_Map.current.gridOffset /*&& !Data_State.gamePaused*/) { // TODO FIXME
-		Data_State.selectedBuilding.xEnd = Data_State.selectedBuilding.xStart = Data_Settings_Map.current.x;
-		Data_State.selectedBuilding.yEnd = Data_State.selectedBuilding.yStart = Data_Settings_Map.current.y;
-		Data_State.selectedBuilding.gridOffsetStart = Data_Settings_Map.current.gridOffset;
+	if (Data_State.map.current.gridOffset /*&& !Data_State.gamePaused*/) { // TODO FIXME
+		Data_State.selectedBuilding.xEnd = Data_State.selectedBuilding.xStart = Data_State.map.current.x;
+		Data_State.selectedBuilding.yEnd = Data_State.selectedBuilding.yStart = Data_State.map.current.y;
+		Data_State.selectedBuilding.gridOffsetStart = Data_State.map.current.gridOffset;
 		if (Undo_recordBeforeBuild()) {
 			Data_State.selectedBuilding.placementInProgress = 1;
 			switch (Data_State.selectedBuilding.type) {
@@ -684,12 +684,12 @@ static void buildStart()
 static void buildMove()
 {
 	if (!Data_State.selectedBuilding.placementInProgress ||
-		!Data_Settings_Map.current.gridOffset) {
+		!Data_State.map.current.gridOffset) {
 		return;
 	}
-	Data_State.selectedBuilding.gridOffsetEnd = Data_Settings_Map.current.gridOffset;
-	Data_State.selectedBuilding.xEnd = Data_Settings_Map.current.x;
-	Data_State.selectedBuilding.yEnd = Data_Settings_Map.current.y;
+	Data_State.selectedBuilding.gridOffsetEnd = Data_State.map.current.gridOffset;
+	Data_State.selectedBuilding.xEnd = Data_State.map.current.x;
+	Data_State.selectedBuilding.yEnd = Data_State.map.current.y;
 	BuildingPlacement_update(
 		Data_State.selectedBuilding.xStart, Data_State.selectedBuilding.yStart,
 		Data_State.selectedBuilding.xEnd, Data_State.selectedBuilding.yEnd,
@@ -700,13 +700,13 @@ static void buildEnd()
 {
 	if (Data_State.selectedBuilding.placementInProgress) {
 		Data_State.selectedBuilding.placementInProgress = 0;
-		if (!Data_Settings_Map.current.gridOffset) {
-			Data_Settings_Map.current.gridOffset = Data_State.selectedBuilding.gridOffsetEnd;
+		if (!Data_State.map.current.gridOffset) {
+			Data_State.map.current.gridOffset = Data_State.selectedBuilding.gridOffsetEnd;
 		}
 		if (Data_State.selectedBuilding.type > 0) {
 			sound_effect_play(SOUND_EFFECT_BUILD);
 		}
-		BuildingPlacement_place(Data_Settings_Map.orientation,
+		BuildingPlacement_place(Data_State.map.orientation,
 			Data_State.selectedBuilding.xStart, Data_State.selectedBuilding.yStart,
 			Data_State.selectedBuilding.xEnd, Data_State.selectedBuilding.yEnd,
 			Data_State.selectedBuilding.type);
@@ -741,10 +741,10 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 	if (UI_Window_getId() != Window_City) {
 		return;
 	}
-	if (Data_Settings_Map.current.gridOffset == 0) {
+	if (Data_State.map.current.gridOffset == 0) {
 		return;
 	}
-	int gridOffset = Data_Settings_Map.current.gridOffset;
+	int gridOffset = Data_State.map.current.gridOffset;
 	int buildingId = Data_Grid_buildingIds[gridOffset];
 	int overlay = Data_State.currentOverlay;
 	// regular tooltips
@@ -1057,7 +1057,7 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 
 static void militaryMapClick()
 {
-	if (!Data_Settings_Map.current.gridOffset) {
+	if (!Data_State.map.current.gridOffset) {
 		UI_Window_goTo(Window_City);
 		return;
 	}
@@ -1067,12 +1067,12 @@ static void militaryMapClick()
 		return;
 	}
 	int otherFormationId = Formation_getFormationForBuilding(
-		GridOffset(Data_Settings_Map.current.x, Data_Settings_Map.current.y));
+		GridOffset(Data_State.map.current.x, Data_State.map.current.y));
 	if (otherFormationId && otherFormationId == formationId) {
 		Formation_legionReturnHome(formationId);
 	} else {
 		Formation_legionMoveTo(formationId,
-			Data_Settings_Map.current.x, Data_Settings_Map.current.y);
+			Data_State.map.current.x, Data_State.map.current.y);
 		sound_speech_play_file("wavs/cohort5.wav");
 	}
 	UI_Window_goTo(Window_City);

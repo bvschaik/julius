@@ -147,7 +147,6 @@ add_executable(julius
 	src/Screen.c
 	src/Scroll.c
 	src/Security.c
-	src/Settings.c
 	src/SidebarMenu.c
 	src/Terrain.c
 	src/TerrainBridge.c

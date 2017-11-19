@@ -18,7 +18,6 @@
 #include "../Data/Constants.h"
 #include "../Data/Screen.h"
 #include "../Data/State.h"
-#include "../Data/Settings.h"
 
 #include "city/message.h"
 #include "core/time.h"
@@ -389,7 +388,7 @@ static void buttonMissionBriefing(int param1, int param2)
 
 static void buttonRotateNorth(int param1, int param2)
 {
-	switch (Data_Settings_Map.orientation) {
+	switch (Data_State.map.orientation) {
 		case Dir_0_Top: // already north
 			return;
 		case Dir_2_Right:

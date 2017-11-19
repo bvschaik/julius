@@ -2,7 +2,6 @@
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
-#include "Data/Settings.h"
 #include "UI/Sidebar.h"
 
 #include "empire/city.h"

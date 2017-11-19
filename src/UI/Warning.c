@@ -11,7 +11,6 @@
 #include "../Data/Constants.h"
 #include "../Data/Grid.h"
 #include "../Data/Screen.h"
-#include "../Data/Settings.h"
 #include "../Data/State.h"
 
 #include "building/count.h"
@@ -119,7 +118,7 @@ void UI_Warning_show(int warningId)
 		warnings[i].inUse = 1;
 		const uint8_t *text;
 		if (warningId == Warning_Orientation) {
-			text = lang_get_string(17, Data_Settings_Map.orientation);
+			text = lang_get_string(17, Data_State.map.orientation);
 		} else {
 			text = lang_get_string(19, warningId - 2);
 		}
@@ -247,7 +246,7 @@ static void checkWater(int buildingType, int x, int y)
 {
 	if (!hasWarningAlready) {
 		if (buildingType == BUILDING_FOUNTAIN || buildingType == BUILDING_BATHHOUSE) {
-			int gridOffset = Data_Settings_Map.gridStartOffset + GRID_SIZE * y + x;
+			int gridOffset = Data_State.map.gridStartOffset + GRID_SIZE * y + x;
 			int hasWater = 0;
 			if (Data_Grid_terrain[gridOffset] & Terrain_ReservoirRange) {
 				hasWater = 1;

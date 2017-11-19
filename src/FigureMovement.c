@@ -11,7 +11,7 @@
 #include "Data/Constants.h"
 #include "Data/Grid.h"
 #include "Data/Routes.h"
-#include "Data/Settings.h"
+#include "Data/State.h"
 #include "Data/Figure.h"
 
 #include "game/time.h"

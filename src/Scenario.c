@@ -22,7 +22,6 @@
 #include "Data/Constants.h"
 #include "Data/FileList.h"
 #include "Data/Grid.h"
-#include "Data/Settings.h"
 #include "Data/State.h"
 
 #include "building/storage.h"
@@ -221,17 +220,17 @@ static void readScenarioAndInitGraphics()
 	scenario_map_init();
 
 	CityView_calculateLookup();
-	TerrainGraphics_updateRegionElevation(0, 0, Data_Settings_Map.width - 2, Data_Settings_Map.height - 2);
-	TerrainGraphics_updateRegionWater(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
-	TerrainGraphics_updateRegionEarthquake(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
+	TerrainGraphics_updateRegionElevation(0, 0, Data_State.map.width - 2, Data_State.map.height - 2);
+	TerrainGraphics_updateRegionWater(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
+	TerrainGraphics_updateRegionEarthquake(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
 	TerrainGraphics_updateAllRocks();
 	Terrain_updateEntryExitFlags(0);
-	TerrainGraphics_updateRegionEmptyLand(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
-	TerrainGraphics_updateRegionMeadow(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
+	TerrainGraphics_updateRegionEmptyLand(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
+	TerrainGraphics_updateRegionMeadow(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
 	TerrainGraphics_updateAllRoads();
-	TerrainGraphics_updateRegionPlazas(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
+	TerrainGraphics_updateRegionPlazas(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
 	TerrainGraphics_updateAllWalls();
-	TerrainGraphics_updateRegionAqueduct(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1, 0);
+	TerrainGraphics_updateRegionAqueduct(0, 0, Data_State.map.width - 1, Data_State.map.height - 1, 0);
 
 	Natives_init();
 
@@ -271,14 +270,14 @@ static void initGrids()
 static void initGridTerrain()
 {
 	int gridOffset = 0;
-	for (int y = 0; y < Data_Settings_Map.height; y++) {
-		for (int x = 0; x < Data_Settings_Map.width; x++, gridOffset++) {
-			if (x < (GRID_SIZE - Data_Settings_Map.width) / 2 ||
-				x >= (GRID_SIZE - Data_Settings_Map.width) / 2 + Data_Settings_Map.width) {
+	for (int y = 0; y < Data_State.map.height; y++) {
+		for (int x = 0; x < Data_State.map.width; x++, gridOffset++) {
+			if (x < (GRID_SIZE - Data_State.map.width) / 2 ||
+				x >= (GRID_SIZE - Data_State.map.width) / 2 + Data_State.map.width) {
 				Data_Grid_terrain[gridOffset] = Terrain_OutsideMap;
 			}
-			if (y < (GRID_SIZE - Data_Settings_Map.height) / 2 ||
-				y >= (GRID_SIZE - Data_Settings_Map.height) / 2 + Data_Settings_Map.height) {
+			if (y < (GRID_SIZE - Data_State.map.height) / 2 ||
+				y >= (GRID_SIZE - Data_State.map.height) / 2 + Data_State.map.height) {
 				Data_Grid_terrain[gridOffset] = Terrain_OutsideMap;
 			}
 		}
@@ -288,8 +287,8 @@ static void initGridTerrain()
 static void initGridRandom()
 {
 	int gridOffset = 0;
-	for (int y = 0; y < Data_Settings_Map.height; y++) {
-		for (int x = 0; x < Data_Settings_Map.width; x++, gridOffset++) {
+	for (int y = 0; y < Data_State.map.height; y++) {
+		for (int x = 0; x < Data_State.map.width; x++, gridOffset++) {
 			random_generate_next();
 			Data_Grid_random[gridOffset] = random_short();
 		}
@@ -298,10 +297,10 @@ static void initGridRandom()
 
 static void initGridGraphicIds()
 {
-	int gridOffset = Data_Settings_Map.gridStartOffset;
+	int gridOffset = Data_State.map.gridStartOffset;
 	int graphicId = image_group(GROUP_TERRAIN_UGLY_GRASS);
-	for (int y = 0; y < Data_Settings_Map.height; y++, gridOffset += Data_Settings_Map.gridBorderSize) {
-		for (int x = 0; x < Data_Settings_Map.width; x++, gridOffset++) {
+	for (int y = 0; y < Data_State.map.height; y++, gridOffset += Data_State.map.gridBorderSize) {
+		for (int x = 0; x < Data_State.map.width; x++, gridOffset++) {
 			Data_Grid_graphicIds[gridOffset] = graphicId + (Data_Grid_random[gridOffset] & 7);
 			if (Data_Grid_random[gridOffset] & 1) {
 				Data_Grid_bitfields[gridOffset] |= Bitfield_AlternateTerrain;

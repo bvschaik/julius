@@ -23,7 +23,6 @@
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 #include "Data/Grid.h"
-#include "Data/Settings.h"
 #include "Data/State.h"
 #include "Data/Figure.h"
 
@@ -112,14 +111,14 @@ static void addToTerrainHippodrome(int type, int buildingId, int x, int y, int s
 	Data_CityInfo.buildingHippodromePlaced = 1;
 
 	struct Data_Building *part1 = &Data_Buildings[buildingId];
-	if (Data_Settings_Map.orientation == Dir_0_Top || Data_Settings_Map.orientation == Dir_4_Bottom) {
+	if (Data_State.map.orientation == Dir_0_Top || Data_State.map.orientation == Dir_4_Bottom) {
 		part1->subtype.orientation = 0;
 	} else {
 		part1->subtype.orientation = 3;
 	}
 	part1->prevPartBuildingId = 0;
 	int graphicId;
-	switch (Data_Settings_Map.orientation) {
+	switch (Data_State.map.orientation) {
 		case Dir_0_Top:    graphicId = graphicId2; break;
 		case Dir_2_Right:  graphicId = graphicId1 + 4; break;
 		case Dir_4_Bottom: graphicId = graphicId2 + 4; break;
@@ -131,7 +130,7 @@ static void addToTerrainHippodrome(int type, int buildingId, int x, int y, int s
 	int part2Id = Building_create(BUILDING_HIPPODROME, x + 5, y);
 	struct Data_Building *part2 = &Data_Buildings[part2Id];
 	Undo_addBuildingToList(part2Id);
-	if (Data_Settings_Map.orientation == Dir_0_Top || Data_Settings_Map.orientation == Dir_4_Bottom) {
+	if (Data_State.map.orientation == Dir_0_Top || Data_State.map.orientation == Dir_4_Bottom) {
 		part2->subtype.orientation = 1;
 	} else {
 		part2->subtype.orientation = 4;
@@ -139,7 +138,7 @@ static void addToTerrainHippodrome(int type, int buildingId, int x, int y, int s
 	part2->prevPartBuildingId = buildingId;
 	part1->nextPartBuildingId = part2Id;
 	part2->nextPartBuildingId = 0;
-	switch (Data_Settings_Map.orientation) {
+	switch (Data_State.map.orientation) {
 		case Dir_0_Top: case Dir_4_Bottom: graphicId = graphicId2 + 2; break;
 		case Dir_2_Right: case Dir_6_Left: graphicId = graphicId1 + 2; break;
 	}
@@ -148,7 +147,7 @@ static void addToTerrainHippodrome(int type, int buildingId, int x, int y, int s
 	int part3Id = Building_create(BUILDING_HIPPODROME, x + 10, y);
 	struct Data_Building *part3 = &Data_Buildings[part3Id];
 	Undo_addBuildingToList(part3Id);
-	if (Data_Settings_Map.orientation == Dir_0_Top || Data_Settings_Map.orientation == Dir_4_Bottom) {
+	if (Data_State.map.orientation == Dir_0_Top || Data_State.map.orientation == Dir_4_Bottom) {
 		part3->subtype.orientation = 2;
 	} else {
 		part3->subtype.orientation = 5;
@@ -156,7 +155,7 @@ static void addToTerrainHippodrome(int type, int buildingId, int x, int y, int s
 	part3->prevPartBuildingId = part2Id;
 	part2->nextPartBuildingId = part3Id;
 	part3->nextPartBuildingId = 0;
-	switch (Data_Settings_Map.orientation) {
+	switch (Data_State.map.orientation) {
 		case Dir_0_Top: graphicId = graphicId2 + 4; break;
 		case Dir_2_Right: graphicId = graphicId1; break;
 		case Dir_4_Bottom: graphicId = graphicId2; break;
@@ -474,7 +473,7 @@ static void addToTerrain(int type, int buildingId, int x, int y, int size,
 			Building_determineGraphicIdsForOrientedBuildings();
 			Terrain_addRoadsForGatehouse(x, y, orientation);
 			TerrainGraphics_updateAreaRoads(x, y, 5);
-			TerrainGraphics_updateRegionPlazas(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
+			TerrainGraphics_updateRegionPlazas(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
 			TerrainGraphics_updateAreaWalls(x, y, 5);
 			break;
 		case BUILDING_TRIUMPHAL_ARCH:
@@ -484,7 +483,7 @@ static void addToTerrain(int type, int buildingId, int x, int y, int size,
 			Building_determineGraphicIdsForOrientedBuildings();
 			Terrain_addRoadsForTriumphalArch(x, y, orientation);
 			TerrainGraphics_updateAreaRoads(x, y, 5);
-			TerrainGraphics_updateRegionPlazas(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
+			TerrainGraphics_updateRegionPlazas(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
 			Data_CityInfo.triumphalArchesPlaced++;
 			SidebarMenu_enableBuildingMenuItems();
 			Data_State.selectedBuilding.type = 0;
@@ -564,7 +563,7 @@ static int placeBuilding(int type, int x, int y)
 	} else if (type == BUILDING_TRIUMPHAL_ARCH) {
 		buildingOrientation = Terrain_getOrientationTriumphalArch(x, y);
 	}
-	switch (Data_Settings_Map.orientation) {
+	switch (Data_State.map.orientation) {
 		case Dir_2_Right: x = x - size + 1; break;
 		case Dir_4_Bottom: x = x - size + 1; y = y - size + 1; break;
 		case Dir_6_Left: y = y - size + 1; break;
@@ -842,7 +841,7 @@ static void clearRegionConfirmed(int measureOnly, int xStart, int yStart, int xE
 	TerrainGraphics_updateRegionRubble(xMin, yMin, xMax, yMax);
 	TerrainGraphics_updateAllGardens();
 	TerrainGraphics_updateAreaRoads(xMin, yMin, radius);
-	TerrainGraphics_updateRegionPlazas(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
+	TerrainGraphics_updateRegionPlazas(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
 	TerrainGraphics_updateAreaWalls(xMin, yMin, radius);
 	if (!measureOnly) {
 		Routing_determineLandCitizen();
@@ -996,7 +995,7 @@ static void placePlaza(int measureOnly, int xStart, int yStart, int xEnd, int yE
 		}
 	}
 	TerrainGraphics_updateRegionPlazas(0, 0,
-		Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
+		Data_State.map.width - 1, Data_State.map.height - 1);
 }
 
 static void placeGarden(int xStart, int yStart, int xEnd, int yEnd)
@@ -1183,12 +1182,12 @@ void BuildingPlacement_update(int xStart, int yStart, int xEnd, int yEnd, int ty
 		if (length > 1) currentCost *= length;
 	} else if (type == BUILDING_AQUEDUCT) {
 		placeAqueduct(1, xStart, yStart, xEnd, yEnd, &currentCost);
-		TerrainGraphics_updateRegionAqueduct(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1, 0);
+		TerrainGraphics_updateRegionAqueduct(0, 0, Data_State.map.width - 1, Data_State.map.height - 1, 0);
 	} else if (type == BUILDING_DRAGGABLE_RESERVOIR) {
 		struct ReservoirInfo info;
 		placeReservoirAndAqueducts(1, xStart, yStart, xEnd, yEnd, &info);
 		currentCost = info.cost;
-		TerrainGraphics_updateRegionAqueduct(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1, 1);
+		TerrainGraphics_updateRegionAqueduct(0, 0, Data_State.map.width - 1, Data_State.map.height - 1, 1);
 		Data_State.selectedBuilding.drawAsOverlay = 0;
 	} else if (type == BUILDING_HOUSE_VACANT_LOT) {
 		placeHouses(1, xStart, yStart, xEnd, yEnd);
@@ -1203,7 +1202,7 @@ void BuildingPlacement_update(int xStart, int yStart, int xEnd, int yEnd, int ty
 		if (formation_totals_get_num_legions() < 6) {
 			const int offsetsX[] = {3, 4, 4, 3};
 			const int offsetsY[] = {-1, -1, 0, 0};
-			int orientIndex = Data_Settings_Map.orientation / 2;
+			int orientIndex = Data_State.map.orientation / 2;
 			int xOffset = offsetsX[orientIndex];
 			int yOffset = offsetsY[orientIndex];
 			if (Terrain_isClearToBuild(3, xEnd, yEnd, Terrain_All) &&
@@ -1326,7 +1325,7 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
 			return;
 		}
 		placementCost = cost;
-		TerrainGraphics_updateRegionAqueduct(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1, 0);
+		TerrainGraphics_updateRegionAqueduct(0, 0, Data_State.map.width - 1, Data_State.map.height - 1, 0);
 		Routing_determineLandCitizen();
 		Routing_determineLandNonCitizen();
 	} else if (type == BUILDING_DRAGGABLE_RESERVOIR) {
@@ -1351,7 +1350,7 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
 			}
 		}
 		placementCost = info.cost;
-		TerrainGraphics_updateRegionAqueduct(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1, 0);
+		TerrainGraphics_updateRegionAqueduct(0, 0, Data_State.map.width - 1, Data_State.map.height - 1, 0);
 		Routing_determineLandCitizen();
 		Routing_determineLandNonCitizen();
 	} else if (type == BUILDING_HOUSE_VACANT_LOT) {

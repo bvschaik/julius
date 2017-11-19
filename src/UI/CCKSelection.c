@@ -17,7 +17,6 @@
 
 #include "../Data/FileList.h"
 #include "../Data/Screen.h"
-#include "../Data/Settings.h"
 
 #include <string.h>
 

@@ -10,7 +10,6 @@
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Grid.h"
-#include "Data/Settings.h"
 #include "Data/State.h"
 
 #include "building/properties.h"
@@ -134,8 +133,8 @@ void Undo_recordBuild(int cost)
 
 void Undo_restoreTerrainGraphics()
 {
-	for (int y = 0; y < Data_Settings_Map.height; y++) {
-		for (int x = 0; x < Data_Settings_Map.width; x++) {
+	for (int y = 0; y < Data_State.map.height; y++) {
+		for (int x = 0; x < Data_State.map.width; x++) {
 			int gridOffset = GridOffset(x, y);
 			if (!Data_Grid_buildingIds[gridOffset]) {
 				Data_Grid_graphicIds[gridOffset] = Data_Grid_Undo_graphicIds[gridOffset];

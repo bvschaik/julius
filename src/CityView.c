@@ -6,7 +6,6 @@
 #include "Data/Constants.h"
 #include "Data/Grid.h"
 #include "Data/Screen.h"
-#include "Data/Settings.h"
 #include "Data/State.h"
 
 static void setViewport(int xOffset, int yOffset, int widthInTiles, int heightInTiles);
@@ -64,7 +63,7 @@ void CityView_calculateLookup()
 	int xViewStart;
 	int xViewSkip;
 	int xViewStep;
-	switch (Data_Settings_Map.orientation) {
+	switch (Data_State.map.orientation) {
 		default:
 		case Dir_0_Top:
 			xViewStart = VIEW_X_MAX - 1;
@@ -122,29 +121,29 @@ void CityView_goToGridOffset(int gridOffset)
 {
 	int x, y;
 	CityView_gridOffsetToXYCoords(gridOffset, &x, &y);
-	Data_Settings_Map.camera.x = x - Data_CityView.widthInTiles / 2;
-	Data_Settings_Map.camera.y = y - Data_CityView.heightInTiles / 2;
-	Data_Settings_Map.camera.y &= ~1;
+	Data_State.map.camera.x = x - Data_CityView.widthInTiles / 2;
+	Data_State.map.camera.y = y - Data_CityView.heightInTiles / 2;
+	Data_State.map.camera.y &= ~1;
 	CityView_checkCameraBoundaries();
 }
 
 void CityView_checkCameraBoundaries()
 {
-	int xMin = (165 - Data_Settings_Map.width) / 2;
-	int yMin = (323 - 2 * Data_Settings_Map.height) / 2;
-	if (Data_Settings_Map.camera.x < xMin - 1) {
-		Data_Settings_Map.camera.x = xMin - 1;
+	int xMin = (165 - Data_State.map.width) / 2;
+	int yMin = (323 - 2 * Data_State.map.height) / 2;
+	if (Data_State.map.camera.x < xMin - 1) {
+		Data_State.map.camera.x = xMin - 1;
 	}
-	if (Data_Settings_Map.camera.x > 165 - xMin - Data_CityView.widthInTiles) {
-		Data_Settings_Map.camera.x = 165 - xMin - Data_CityView.widthInTiles;
+	if (Data_State.map.camera.x > 165 - xMin - Data_CityView.widthInTiles) {
+		Data_State.map.camera.x = 165 - xMin - Data_CityView.widthInTiles;
 	}
-	if (Data_Settings_Map.camera.y < yMin) {
-		Data_Settings_Map.camera.y = yMin;
+	if (Data_State.map.camera.y < yMin) {
+		Data_State.map.camera.y = yMin;
 	}
-	if (Data_Settings_Map.camera.y > 327 - yMin - Data_CityView.heightInTiles) {
-		Data_Settings_Map.camera.y = 327 - yMin - Data_CityView.heightInTiles;
+	if (Data_State.map.camera.y > 327 - yMin - Data_CityView.heightInTiles) {
+		Data_State.map.camera.y = 327 - yMin - Data_CityView.heightInTiles;
 	}
-	Data_Settings_Map.camera.y &= ~1;
+	Data_State.map.camera.y &= ~1;
 }
 
 void CityView_gridOffsetToXYCoords(int gridOffset, int *xInTiles, int *yInTiles)
@@ -205,22 +204,22 @@ int CityView_pixelCoordsToGridOffset(int xPixels, int yPixels)
 void CityView_rotateLeft()
 {
 	int centerGridOffset = ViewToGridOffset(
-		Data_Settings_Map.camera.x + Data_CityView.widthInTiles / 2,
-		Data_Settings_Map.camera.y + Data_CityView.heightInTiles / 2);
+		Data_State.map.camera.x + Data_CityView.widthInTiles / 2,
+		Data_State.map.camera.y + Data_CityView.heightInTiles / 2);
 
-	Data_Settings_Map.orientation += 2;
-	if (Data_Settings_Map.orientation > 6) {
-		Data_Settings_Map.orientation = Dir_0_Top;
+	Data_State.map.orientation += 2;
+	if (Data_State.map.orientation > 6) {
+		Data_State.map.orientation = Dir_0_Top;
 	}
 	CityView_calculateLookup();
 	if (centerGridOffset >= 0) {
 		int x, y;
 		CityView_gridOffsetToXYCoords(centerGridOffset, &x, &y);
-		Data_Settings_Map.camera.x = x - Data_CityView.widthInTiles / 2;
-		Data_Settings_Map.camera.y = y - Data_CityView.heightInTiles / 2;
-		if (Data_Settings_Map.orientation == Dir_0_Top ||
-			Data_Settings_Map.orientation == Dir_4_Bottom) {
-			Data_Settings_Map.camera.x++;
+		Data_State.map.camera.x = x - Data_CityView.widthInTiles / 2;
+		Data_State.map.camera.y = y - Data_CityView.heightInTiles / 2;
+		if (Data_State.map.orientation == Dir_0_Top ||
+			Data_State.map.orientation == Dir_4_Bottom) {
+			Data_State.map.camera.x++;
 		}
 	}
 }
@@ -228,22 +227,22 @@ void CityView_rotateLeft()
 void CityView_rotateRight()
 {
 	int centerGridOffset = ViewToGridOffset(
-		Data_Settings_Map.camera.x + Data_CityView.widthInTiles / 2,
-		Data_Settings_Map.camera.y + Data_CityView.heightInTiles / 2);
+		Data_State.map.camera.x + Data_CityView.widthInTiles / 2,
+		Data_State.map.camera.y + Data_CityView.heightInTiles / 2);
 	
-	Data_Settings_Map.orientation -= 2;
-	if (Data_Settings_Map.orientation < 0) {
-		Data_Settings_Map.orientation = Dir_6_Left;
+	Data_State.map.orientation -= 2;
+	if (Data_State.map.orientation < 0) {
+		Data_State.map.orientation = Dir_6_Left;
 	}
 	CityView_calculateLookup();
 	if (centerGridOffset >= 0) {
 		int x, y;
 		CityView_gridOffsetToXYCoords(centerGridOffset, &x, &y);
-		Data_Settings_Map.camera.x = x - Data_CityView.widthInTiles / 2;
-		Data_Settings_Map.camera.y = y - Data_CityView.heightInTiles / 2;
-		if (Data_Settings_Map.orientation == Dir_0_Top ||
-			Data_Settings_Map.orientation == Dir_4_Bottom) {
-			Data_Settings_Map.camera.y += 2;
+		Data_State.map.camera.x = x - Data_CityView.widthInTiles / 2;
+		Data_State.map.camera.y = y - Data_CityView.heightInTiles / 2;
+		if (Data_State.map.orientation == Dir_0_Top ||
+			Data_State.map.orientation == Dir_4_Bottom) {
+			Data_State.map.camera.y += 2;
 		}
 	}
 }
