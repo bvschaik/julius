@@ -14,7 +14,6 @@
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
 #include "../Data/Screen.h"
-#include "../Data/Settings.h"
 
 #include "city/message.h"
 #include "core/calc.h"
@@ -22,6 +21,7 @@
 #include "empire/city.h"
 #include "graphics/image.h"
 #include "graphics/mouse.h"
+#include "scenario/property.h"
 #include "scenario/request.h"
 
 #define MAX_HISTORY 200
@@ -261,7 +261,7 @@ static void drawDialogVideo()
 			data.x + 90 + width, data.y + 312, FONT_NORMAL_WHITE);
 	} else {
 		width += Widget_GameText_draw(63, 5, data.x + 90 + width, data.y + 312, FONT_NORMAL_WHITE);
-		Widget_Text_draw(Data_Settings.playerName, data.x + 90 + width, data.y + 312, FONT_NORMAL_WHITE, 0);
+		Widget_Text_draw(scenario_player_name(), data.x + 90 + width, data.y + 312, FONT_NORMAL_WHITE, 0);
 	}
 	data.textHeightBlocks = msg->height_blocks - 1 - (32 + data.yText - data.y) / 16;
 	data.textWidthBlocks = msg->width_blocks - 4;
@@ -306,7 +306,7 @@ static void drawPlayerMessageContent(const lang_message *msg)
 		} else {
 			width += Widget_GameText_draw(63, 5,
 				data.xText + width + 80, data.yText + 6, FONT_NORMAL_WHITE);
-			Widget_Text_draw(Data_Settings.playerName,
+			Widget_Text_draw(scenario_player_name(),
 				data.xText + width + 80, data.yText + 6, FONT_NORMAL_WHITE, 0);
 		}
 	}

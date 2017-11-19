@@ -7,7 +7,8 @@
 
 #include "../Data/KeyboardInput.h"
 #include "../Data/Screen.h"
-#include "../Data/Settings.h"
+
+#include "scenario/property.h"
 
 static void startMission(int param1, int param2);
 
@@ -36,7 +37,7 @@ void UI_NewCareerDialog_drawForeground()
 	Widget_GameText_draw(13, 5, xOffset + 352, yOffset + 256, FONT_NORMAL_BLACK);
 	Widget_Panel_drawInnerPanel(xOffset + 160, yOffset + 208, 20, 2);
 	Widget_Text_captureCursor();
-	Widget_Text_draw(Data_Settings.playerName, xOffset + 176, yOffset + 216, FONT_NORMAL_WHITE, 0);
+	Widget_Text_draw(scenario_player_name(), xOffset + 176, yOffset + 216, FONT_NORMAL_WHITE, 0);
 	Widget_Text_drawCursor(xOffset + 176, yOffset + 217);
 	
 	Widget_Button_drawImageButtons(xOffset + 464, yOffset + 249, &imageButtonStartMission, 1);

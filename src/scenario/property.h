@@ -23,6 +23,9 @@ int scenario_is_tutorial_3();
 int scenario_starting_favor();
 int scenario_starting_personal_savings();
 
+const uint8_t *scenario_player_name();
+void scenario_set_player_name(const uint8_t *name);
+
 int scenario_is_open_play();
 
 int scenario_open_play_id();

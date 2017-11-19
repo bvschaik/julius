@@ -9,7 +9,6 @@
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
 #include "../Data/Screen.h"
-#include "../Data/Settings.h"
 #include "../Data/State.h"
 
 #include "game/settings.h"
@@ -148,7 +147,7 @@ void UI_VictoryDialog_drawBackground()
 		Widget_GameText_drawCentered(62, 2, xOffset, yOffset + 47, 544, FONT_NORMAL_BLACK);
 		Widget_GameText_drawCentered(32, Data_CityInfo.playerRank + 1, xOffset, yOffset + 66, 544, FONT_LARGE_BLACK);
 	} else {
-		Widget_Text_drawCentered(Data_Settings.playerName, xOffset, yOffset + 16, 512, FONT_LARGE_BLACK, 0);
+		Widget_Text_drawCentered(scenario_player_name(), xOffset, yOffset + 16, 512, FONT_LARGE_BLACK, 0);
 		Widget_GameText_drawMultiline(62, 26, xOffset + 16, yOffset + 47, 480, FONT_NORMAL_BLACK);
 	}
 }

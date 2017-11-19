@@ -14,6 +14,8 @@
 #define MAX_FISH_POINTS 8
 #define MAX_INVASION_POINTS 8
 
+#define MAX_PLAYER_NAME 32
+
 enum {
     EVENT_NOT_STARTED = 0,
     EVENT_IN_PROGRESS = 1,
@@ -214,6 +216,7 @@ extern struct scenario_t {
         int is_custom;
         int starting_favor;
         int starting_personal_savings;
+        uint8_t player_name[32];
     } settings;
 } scenario;
 

@@ -1,5 +1,6 @@
 #include "property.h"
 
+#include "core/string.h"
 #include "scenario/data.h"
 
 int scenario_is_custom()
@@ -55,6 +56,16 @@ int scenario_starting_favor()
 int scenario_starting_personal_savings()
 {
     return scenario.settings.starting_personal_savings;
+}
+
+const uint8_t *scenario_player_name()
+{
+    return scenario.settings.player_name;
+}
+
+void scenario_set_player_name(const uint8_t *name)
+{
+    string_copy(name, scenario.settings.player_name, MAX_PLAYER_NAME);
 }
 
 int scenario_is_open_play()

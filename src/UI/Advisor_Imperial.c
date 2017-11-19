@@ -6,10 +6,9 @@
 #include "../Formation.h"
 #include "../Resource.h"
 
-#include "../Data/Settings.h"
-
 #include "empire/city.h"
 #include "game/resource.h"
+#include "scenario/property.h"
 #include "scenario/request.h"
 
 static void buttonDonateToCity(int param1, int param2);
@@ -100,7 +99,7 @@ void UI_Advisor_Imperial_drawBackground(int *advisorHeight)
 	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
 	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 2, baseOffsetX + 10, baseOffsetY + 10);
 
-	Widget_Text_draw(Data_Settings.playerName, baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK, 0);
+	Widget_Text_draw(scenario_player_name(), baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK, 0);
 
 	int width = Widget_GameText_draw(52, 0, baseOffsetX + 60, baseOffsetY + 44, FONT_NORMAL_BLACK);
 	Widget_Text_drawNumber(Data_CityInfo.ratingFavor, '@', " ", baseOffsetX + 60 + width, baseOffsetY + 44, FONT_NORMAL_BLACK);

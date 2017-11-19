@@ -32,7 +32,7 @@ extern struct _Data_Settings {
 	int _resolutionId;
 	int _gameSpeed;
 	int _scrollSpeed;
-	uint8_t playerName[32];
+	uint8_t _playerName[32];
 	int __unused3[4];
 	int _lastAdvisor;
 	int _saveGameMissionId;

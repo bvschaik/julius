@@ -30,7 +30,7 @@ static void errlog(const char *msg)
 static void loadDefaultNames()
 {
     // TODO move out
-    strcpy((char*)Data_Settings.playerName, (char*)lang_get_string(9, 5));
+    scenario_set_player_name(lang_get_string(9, 5));
     strcpy(Data_FileList.selectedCity, (char*)lang_get_string(9, 6));
     strcpy(Data_FileList.lastLoadedCity, (char*)lang_get_string(9, 6));
     strcpy(Data_FileList.selectedScenario, (char*)lang_get_string(9, 7));
