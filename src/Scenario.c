@@ -87,10 +87,10 @@ void Scenario_initialize(const char *scenarioName)
 	Data_Settings.saveGameMissionId = saveMissionId;
 	Data_Settings.currentMissionId = curMissionId;
 
-	Data_CityInfo_Extra.startingFavor = difficulty_starting_favor();
+	Data_Settings.startingFavor = difficulty_starting_favor();
 	Data_Settings.personalSavingsLastMission = setting_personal_savings_for_mission(curMissionId);
 	
-	Data_CityInfo.ratingFavor = Data_CityInfo_Extra.startingFavor;
+	Data_CityInfo.ratingFavor = Data_Settings.startingFavor;
 	Data_CityInfo.personalSavings = Data_Settings.personalSavingsLastMission;
 	Data_CityInfo.playerRank = curMissionId;
 	Data_CityInfo.salaryRank = curMissionId;
