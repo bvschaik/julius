@@ -12,6 +12,7 @@
 #include "../Data/Grid.h"
 #include "../Data/Screen.h"
 #include "../Data/Settings.h"
+#include "../Data/State.h"
 
 #include "building/count.h"
 #include "building/model.h"
@@ -81,7 +82,7 @@ void UI_Warning_draw()
 		}
 		numWarnings++;
 		int topOffset = warnings[i].topOffset;
-		if (Data_Settings.gamePaused) {
+		if (Data_State.gamePaused) {
 			topOffset += 70;
 		}
 		int center = warnings[i].center;

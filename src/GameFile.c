@@ -808,7 +808,7 @@ static void setupFromSavedGame()
 
     UI_PlayerMessageList_resetScroll();
 
-	Data_Settings.gamePaused = 0;
+	Data_State.gamePaused = 0;
 }
 
 void GameFile_writeMissionSavedGameIfNeeded()

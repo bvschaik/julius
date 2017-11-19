@@ -38,6 +38,7 @@ enum {
 };
 
 extern struct _Data_State {
+    int gamePaused;
 	int sidebarCollapsed;
 	int undoReady;
 	int undoAvailable;

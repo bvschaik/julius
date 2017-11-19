@@ -1,10 +1,10 @@
+#include "Runner.h"
 
 #include "Animation.h"
 #include "GameFile.h"
 #include "GameTick.h"
 #include "UI/Window.h"
 
-#include "Data/Settings.h"
 #include "Data/State.h"
 
 #include "core/time.h"
@@ -31,7 +31,7 @@ static int getElapsedTicks()
 		gameSpeedIndex = 0;
 	}
 
-	if (Data_Settings.gamePaused) {
+	if (Data_State.gamePaused) {
 		return 0;
 	}
 	switch (UI_Window_getId()) {

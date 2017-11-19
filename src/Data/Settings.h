@@ -25,7 +25,7 @@
 extern struct _Data_Settings {
 	int _bpp;
 	int _fullscreen;
-	unsigned char gamePaused;
+	unsigned char _gamePaused;
 	unsigned char __unused1;
 	char _cddrive;
 	unsigned char _soundEffectsEnabled;
