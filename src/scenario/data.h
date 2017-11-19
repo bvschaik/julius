@@ -207,6 +207,14 @@ extern struct scenario_t {
         int meeting;
         int crops;
     } native_images;
+
+    struct { // used to be stored in the settings file
+        int campaign_rank;
+        int campaign_mission;
+        int is_custom;
+        int starting_favor;
+        int starting_personal_savings;
+    } settings;
 } scenario;
 
 #endif // SCENARIO_DATA_H

@@ -10,11 +10,18 @@ typedef enum {
 } scenario_climate;
 
 int scenario_is_custom();
+void scenario_set_custom(int custom);
 
 int scenario_campaign_rank();
+void scenario_set_campaign_rank(int rank);
+int scenario_campaign_mission();
+void scenario_set_campaign_mission(int mission);
 int scenario_is_tutorial_1();
 int scenario_is_tutorial_2();
 int scenario_is_tutorial_3();
+
+int scenario_starting_favor();
+int scenario_starting_personal_savings();
 
 int scenario_is_open_play();
 

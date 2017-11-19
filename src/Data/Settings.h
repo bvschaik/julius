@@ -35,12 +35,12 @@ extern struct _Data_Settings {
 	uint8_t playerName[32];
 	int __unused3[4];
 	int _lastAdvisor;
-	int saveGameMissionId;
+	int _saveGameMissionId;
 	int _mouseTooltips;
-	int startingFavor;
-	int personalSavingsLastMission;
-	int currentMissionId;
-	int isCustomScenario;
+	int _startingFavor;
+	int _personalSavingsLastMission;
+	int _currentMissionId;
+	int _isCustomScenario;
 	unsigned char _soundCityEnabled;
 	unsigned char _warningsEnabled;
 	unsigned char _monthlyAutosaveEnabled;

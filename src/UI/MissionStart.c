@@ -10,7 +10,6 @@
 #include "../Data/Constants.h"
 #include "../Data/FileList.h"
 #include "../Data/Screen.h"
-#include "../Data/Settings.h"
 #include "../Data/State.h"
 
 #include "core/lang.h"
@@ -166,13 +165,13 @@ void UI_MissionStart_Selection_handleMouse(const mouse *m)
 	}
 	if (m->left.went_up) {
 		if (isMouseHit(m, xPeaceful, yPeaceful, 44)) {
-			Data_Settings.saveGameMissionId = Constant_MissionIds[rank].peaceful;
+			scenario_set_campaign_mission(Constant_MissionIds[rank].peaceful);
 			data.choice = 1;
 			UI_Window_requestRefresh();
 			sound_speech_play_file("wavs/fanfare_nu1.wav");
 		}
 		if (isMouseHit(m, xMilitary, yMilitary, 44)) {
-			Data_Settings.saveGameMissionId = Constant_MissionIds[rank].military;
+			scenario_set_campaign_mission(Constant_MissionIds[rank].military);
 			data.choice = 2;
 			UI_Window_requestRefresh();
 			sound_speech_play_file("wavs/fanfare_nu5.wav");
@@ -195,7 +194,7 @@ void UI_MissionStart_Briefing_drawBackground()
 		}
 	}
 	
-	int textId = 200 + Data_Settings.saveGameMissionId;
+	int textId = 200 + scenario_campaign_mission();
 	int xOffset = Data_Screen.offset640x480.x + 16;
 	int yOffset = Data_Screen.offset640x480.y + 32;
 	

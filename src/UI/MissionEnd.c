@@ -59,7 +59,7 @@ void UI_MissionEnd_drawBackground()
 	if (scenario_is_custom()) {
 		Widget_GameText_drawMultiline(147, 20, xOffset + 32, yOffset + 64, 496, FONT_NORMAL_WHITE);
 	} else {
-		Widget_GameText_drawMultiline(147, Data_Settings.saveGameMissionId, xOffset + 32, yOffset + 64, 496, FONT_NORMAL_WHITE);
+		Widget_GameText_drawMultiline(147, scenario_campaign_mission(), xOffset + 32, yOffset + 64, 496, FONT_NORMAL_WHITE);
 	}
 	int width = Widget_GameText_draw(148, 0, xOffset + 40, yOffset + 180, FONT_NORMAL_BLACK);
 	Widget_Text_drawNumber(Data_CityInfo.ratingCulture, '@', " ",
@@ -98,10 +98,8 @@ void UI_MissionEnd_drawForeground()
 static void advanceToNextMission()
 {
     // TODO move out of UI code
-	Data_Settings.startingFavor = Data_CityInfo.ratingFavor;
-	Data_Settings.personalSavingsLastMission = Data_CityInfo.personalSavings;
-	setting_set_personal_savings_for_mission(Data_Settings.currentMissionId + 1, Data_CityInfo.personalSavings);
-	Data_Settings.currentMissionId++;
+	setting_set_personal_savings_for_mission(scenario_campaign_rank() + 1, Data_CityInfo.personalSavings);
+	scenario_set_campaign_rank(scenario_campaign_rank() + 1);
 
 	Data_CityInfo.victoryHasWonScenario = 0;
 	Data_CityInfo.victoryContinueMonths = 0;
@@ -114,10 +112,10 @@ static void advanceToNextMission()
 		UI_Window_goTo(Window_MainMenu);
 		if (!scenario_is_custom()) {
 			Settings_clearMissionSettings();
-			Data_Settings.currentMissionId = 2;
+			scenario_set_campaign_rank(2);
 		}
 	} else {
-		Data_Settings.saveGameMissionId = Constant_MissionIds[scenario_campaign_rank()].peaceful;
+		scenario_set_campaign_mission(Constant_MissionIds[scenario_campaign_rank()].peaceful);
 		UI_MissionStart_show();
 	}
 }

@@ -1,5 +1,7 @@
 #include "scenario.h"
 
+#include "game/difficulty.h"
+#include "game/settings.h"
 #include "scenario/data.h"
 
 struct scenario_t scenario;
@@ -523,3 +525,39 @@ void scenario_load_state(buffer *buf)
     buffer_skip(buf, 1);
 }
 
+void scenario_settings_init()
+{
+    scenario.settings.campaign_mission = 0;
+    scenario.settings.campaign_rank = 0;
+    scenario.settings.is_custom = 0;
+    scenario.settings.starting_favor = difficulty_starting_favor();
+    scenario.settings.starting_personal_savings = 0;
+}
+
+void scenario_settings_init_mission()
+{
+    scenario.settings.starting_favor = difficulty_starting_favor();
+    scenario.settings.starting_personal_savings = setting_personal_savings_for_mission(scenario.settings.campaign_rank);
+}
+
+void scenario_settings_save_state(buffer *part1, buffer *part2, buffer *part3)
+{
+    buffer_write_i32(part1, scenario.settings.campaign_mission);
+
+    buffer_write_i32(part2, scenario.settings.starting_favor);
+    buffer_write_i32(part2, scenario.settings.starting_personal_savings);
+    buffer_write_i32(part2, scenario.settings.campaign_rank);
+
+    buffer_write_i32(part3, scenario.settings.is_custom);
+}
+
+void scenario_settings_load_state(buffer *part1, buffer *part2, buffer *part3)
+{
+    scenario.settings.campaign_mission = buffer_read_i32(part1);
+
+    scenario.settings.starting_favor = buffer_read_i32(part2);
+    scenario.settings.starting_personal_savings = buffer_read_i32(part2);
+    scenario.settings.campaign_rank = buffer_read_i32(part2);
+
+    scenario.settings.is_custom = buffer_read_i32(part3);
+}

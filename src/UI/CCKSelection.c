@@ -61,7 +61,7 @@ static const dir_listing *scenarios;
 
 void UI_CCKSelection_init()
 {
-	Data_Settings.isCustomScenario = 2;
+	scenario_set_custom(2);
 	scenarios = dir_find_files_with_extension("map");
 	scrollPosition = 0;
 	focusButtonId = 0;

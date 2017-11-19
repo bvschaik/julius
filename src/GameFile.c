@@ -118,7 +118,7 @@ struct {
 
 
 typedef struct {
-    buffer *Data_Settings_saveGameMissionId;
+    buffer *scenario_campaign_mission;
     buffer *savegameFileVersion;
     buffer *Data_Grid_graphicIds;
     buffer *Data_Grid_edge;
@@ -172,11 +172,9 @@ typedef struct {
     buffer *message_delays;
     buffer *building_list_burning_totals;
     buffer *Data_Figure_Extra_createdSequence;
-    buffer *Data_Settings_startingFavor;
-    buffer *Data_Settings_personalSavingsLastMission;
-    buffer *Data_Settings_currentMissionId;
+    buffer *scenario_settings;
     buffer *invasion_warnings;
-    buffer *Data_Settings_isCustomScenario;
+    buffer *scenario_is_custom;
     buffer *city_sounds;
     buffer *Data_Buildings_Extra_highestBuildingIdInUse;
     buffer *figure_traders;
@@ -271,7 +269,7 @@ void init_savegame_data()
         return;
     }
     savegame_state *state = &savegame_data.state;
-    state->Data_Settings_saveGameMissionId = create_savegame_piece(4, 0);
+    state->scenario_campaign_mission = create_savegame_piece(4, 0);
     state->savegameFileVersion = create_savegame_piece(4, 0);
     state->Data_Grid_graphicIds = create_savegame_piece(52488, 1);
     state->Data_Grid_edge = create_savegame_piece(26244, 1);
@@ -325,11 +323,9 @@ void init_savegame_data()
     state->message_delays = create_savegame_piece(80, 0);
     state->building_list_burning_totals = create_savegame_piece(8, 0);
     state->Data_Figure_Extra_createdSequence = create_savegame_piece(4, 0);
-    state->Data_Settings_startingFavor = create_savegame_piece(4, 0);
-    state->Data_Settings_personalSavingsLastMission = create_savegame_piece(4, 0);
-    state->Data_Settings_currentMissionId = create_savegame_piece(4, 0);
+    state->scenario_settings = create_savegame_piece(12, 0);
     state->invasion_warnings = create_savegame_piece(3232, 1);
-    state->Data_Settings_isCustomScenario = create_savegame_piece(4, 0);
+    state->scenario_is_custom = create_savegame_piece(4, 0);
     state->city_sounds = create_savegame_piece(8960, 0);
     state->Data_Buildings_Extra_highestBuildingIdInUse = create_savegame_piece(4, 0);
     state->figure_traders = create_savegame_piece(4804, 0);
@@ -416,7 +412,10 @@ void scenario_deserialize(scenario_state *file)
 
 static void savegame_deserialize(savegame_state *state)
 {
-    read_all_from_buffer(state->Data_Settings_saveGameMissionId, &Data_Settings.saveGameMissionId);
+    scenario_settings_load_state(state->scenario_campaign_mission,
+                                 state->scenario_settings,
+                                 state->scenario_is_custom);
+
     read_all_from_buffer(state->savegameFileVersion, &savegameFileVersion);
     read_all_from_buffer(state->Data_Grid_graphicIds, &Data_Grid_graphicIds);
     read_all_from_buffer(state->Data_Grid_edge, &Data_Grid_edge);
@@ -481,10 +480,6 @@ static void savegame_deserialize(savegame_state *state)
                             state->population_messages);
 
     read_all_from_buffer(state->Data_Figure_Extra_createdSequence, &Data_Figure_Extra.createdSequence);
-    read_all_from_buffer(state->Data_Settings_startingFavor, &Data_Settings.startingFavor);
-    read_all_from_buffer(state->Data_Settings_personalSavingsLastMission, &Data_Settings.personalSavingsLastMission);
-    read_all_from_buffer(state->Data_Settings_currentMissionId, &Data_Settings.currentMissionId);
-    read_all_from_buffer(state->Data_Settings_isCustomScenario, &Data_Settings.isCustomScenario);
 
     sound_city_load_state(state->city_sounds);
 
@@ -539,7 +534,10 @@ static void savegame_deserialize(savegame_state *state)
 
 static void savegame_serialize(savegame_state *state)
 {
-    write_all_to_buffer(state->Data_Settings_saveGameMissionId, &Data_Settings.saveGameMissionId);
+    scenario_settings_save_state(state->scenario_campaign_mission,
+                                 state->scenario_settings,
+                                 state->scenario_is_custom);
+
     write_all_to_buffer(state->savegameFileVersion, &savegameFileVersion);
     write_all_to_buffer(state->Data_Grid_graphicIds, &Data_Grid_graphicIds);
     write_all_to_buffer(state->Data_Grid_edge, &Data_Grid_edge);
@@ -604,10 +602,6 @@ static void savegame_serialize(savegame_state *state)
                             state->population_messages);
 
     write_all_to_buffer(state->Data_Figure_Extra_createdSequence, &Data_Figure_Extra.createdSequence);
-    write_all_to_buffer(state->Data_Settings_startingFavor, &Data_Settings.startingFavor);
-    write_all_to_buffer(state->Data_Settings_personalSavingsLastMission, &Data_Settings.personalSavingsLastMission);
-    write_all_to_buffer(state->Data_Settings_currentMissionId, &Data_Settings.currentMissionId);
-    write_all_to_buffer(state->Data_Settings_isCustomScenario, &Data_Settings.isCustomScenario);
 
     sound_city_save_state(state->city_sounds);
 
@@ -762,7 +756,7 @@ static void load_empire_data(int is_custom_scenario, int empire_id)
 static void setupFromSavedGame()
 {
 	debug();
-	load_empire_data(Data_Settings.isCustomScenario, scenario_empire_id());
+	load_empire_data(scenario_is_custom(), scenario_empire_id());
 
 	scenario_map_init();
 
@@ -813,16 +807,16 @@ static void setupFromSavedGame()
 
 void GameFile_writeMissionSavedGameIfNeeded()
 {
-	int missionId = Data_Settings.currentMissionId;
-	if (missionId < 0) {
-		missionId = 0;
-	} else if (missionId > 11) {
-		missionId = 11;
+	int rank = scenario_campaign_rank();
+	if (rank < 0) {
+		rank = 0;
+	} else if (rank > 11) {
+		rank = 11;
 	}
 	if (!Data_CityInfo.missionSavedGameWritten) {
 		Data_CityInfo.missionSavedGameWritten = 1;
-		if (!file_exists(missionSavedGames[missionId])) {
-			GameFile_writeSavedGame(missionSavedGames[missionId]);
+		if (!file_exists(missionSavedGames[rank])) {
+			GameFile_writeSavedGame(missionSavedGames[rank]);
 		}
 	}
 }

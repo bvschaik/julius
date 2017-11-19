@@ -4,7 +4,6 @@
 #include "../Graphics.h"
 
 #include "../Data/Screen.h"
-#include "../Data/Settings.h"
 
 #include "core/time.h"
 #include "scenario/property.h"
@@ -83,6 +82,7 @@ void UI_Intermezzo_drawBackground()
 	int xOffset = (Data_Screen.width - 1024) / 2;
 	int yOffset = (Data_Screen.height - 768) / 2;
 
+    int mission = scenario_campaign_mission();
 	int graphicBase = image_group(GROUP_INTERMEZZO_BACKGROUND);
 	if (data.type == Intermezzo_MissionBriefing) {
 		sound_music_stop();
@@ -90,8 +90,8 @@ void UI_Intermezzo_drawBackground()
 		if (scenario_is_custom()) {
 			Graphics_drawImage(graphicBase + 1, xOffset, yOffset);
 		} else {
-			Graphics_drawImage(graphicBase + 1 + 2 * Data_Settings.saveGameMissionId, xOffset, yOffset);
-			sound_speech_play_file(soundFilesBriefing[Data_Settings.saveGameMissionId]);
+			Graphics_drawImage(graphicBase + 1 + 2 * mission, xOffset, yOffset);
+			sound_speech_play_file(soundFilesBriefing[mission]);
 		}
 		UI_Window_requestRefresh();
 	} else if (data.type == Intermezzo_Fired) {
@@ -102,8 +102,8 @@ void UI_Intermezzo_drawBackground()
 		if (scenario_is_custom()) {
 			Graphics_drawImage(graphicBase + 2, xOffset, yOffset);
 		} else {
-			Graphics_drawImage(graphicBase + 2 + 2 * Data_Settings.saveGameMissionId, xOffset, yOffset);
-			sound_speech_play_file(soundFilesWon[Data_Settings.saveGameMissionId]);
+			Graphics_drawImage(graphicBase + 2 + 2 * mission, xOffset, yOffset);
+			sound_speech_play_file(soundFilesWon[mission]);
 		}
 		UI_Window_requestRefresh();
 	}
