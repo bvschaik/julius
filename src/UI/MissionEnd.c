@@ -3,7 +3,6 @@
 
 #include "../CityInfo.h"
 #include "../Graphics.h"
-#include "../Settings.h"
 #include "../Widget.h"
 
 #include "../Data/CityInfo.h"
@@ -14,6 +13,7 @@
 #include "game/settings.h"
 #include "graphics/image.h"
 #include "scenario/property.h"
+#include "scenario/scenario.h"
 #include "sound/music.h"
 #include "sound/speech.h"
 
@@ -110,8 +110,9 @@ static void advanceToNextMission()
 	if (scenario_campaign_rank() >= 11 || scenario_is_custom()) {
 		UI_Window_goTo(Window_MainMenu);
 		if (!scenario_is_custom()) {
-			Settings_clearMissionSettings();
-			scenario_set_campaign_rank(2);
+            setting_clear_personal_savings();
+            scenario_settings_init();
+            scenario_set_campaign_rank(2);
 		}
 	} else {
 		scenario_set_campaign_mission(Constant_MissionIds[scenario_campaign_rank()].peaceful);

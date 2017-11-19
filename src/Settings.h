@@ -4,6 +4,4 @@
 void Settings_load();
 void Settings_save();
 
-void Settings_clearMissionSettings();
-
 #endif

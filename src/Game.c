@@ -10,6 +10,8 @@
 #include "Data/Constants.h"
 #include "Data/FileList.h"
 #include "Data/Settings.h"
+#include "Data/State.h"
+#include "UI/TopMenu.h"
 
 #include "building/model.h"
 #include "core/debug.h"
@@ -18,6 +20,7 @@
 #include "game/settings.h"
 #include "graphics/image.h"
 #include "scenario/property.h"
+#include "scenario/scenario.h"
 #include "sound/system.h"
 
 #include <string.h>
@@ -40,6 +43,10 @@ int Game_preInit()
 {
 	Settings_load();
 	settings_load();
+    scenario_settings_init();
+    Data_State.gamePaused = 0;
+    UI_TopMenu_initFromSettings(); // TODO eliminate need for this
+
 	if (!lang_load("c3.eng", "c3_mm.eng")) {
 		errlog("ERR: 'c3.eng' or 'c3_mm.eng' files not found or too large.");
 		return 0;

@@ -3,12 +3,13 @@
 #include "../Widget.h"
 #include "../Graphics.h"
 #include "../KeyboardInput.h"
-#include "../Settings.h"
 
 #include "../Data/KeyboardInput.h"
 #include "../Data/Screen.h"
 
+#include "game/settings.h"
 #include "scenario/property.h"
+#include "scenario/scenario.h"
 
 static void startMission(int param1, int param2);
 
@@ -18,7 +19,8 @@ static ImageButton imageButtonStartMission = {
 
 void UI_NewCareerDialog_init()
 {
-	Settings_clearMissionSettings();
+    setting_clear_personal_savings();
+    scenario_settings_init();
 }
 
 void UI_NewCareerDialog_drawBackground()

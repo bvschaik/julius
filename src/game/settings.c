@@ -59,10 +59,8 @@ static void load_default_settings()
     data.warnings = 1;
     data.gods_enabled = 1;
     data.victory_video = 0;
-    
-    for (int i = 0; i < MAX_PERSONAL_SAVINGS; i++) {
-        data.personal_savings[i] = 0;
-    }
+
+    setting_clear_personal_savings();
 }
 
 static void load_settings(buffer *buf)

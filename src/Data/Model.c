@@ -14,7 +14,6 @@
 #define DATA_INTERN 1
 #include "Grid.h"
 
-struct _Data_Settings Data_Settings;
 struct _Data_Settings_Map Data_Settings_Map;
 
 struct _Data_Screen Data_Screen;// = { 800, 600, {80, 60} };
