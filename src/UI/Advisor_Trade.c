@@ -279,7 +279,7 @@ void UI_ResourceSettingsDialog_drawForeground()
 				Widget_GameText_draw(54, 14, baseOffsetX + 98 + width, baseOffsetY + 172, FONT_NORMAL_BLACK);
 			}
 		}
-	} else if (selectedResourceId != Resource_Meat || !scenario_building_allowed(BUILDING_WHARF)) {
+	} else if (selectedResourceId != RESOURCE_MEAT || !scenario_building_allowed(BUILDING_WHARF)) {
 		// we cannot produce this good
 		Widget_GameText_draw(54, 25, baseOffsetX + 98, baseOffsetY + 172, FONT_NORMAL_BLACK);
 	}

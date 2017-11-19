@@ -7,6 +7,8 @@
 #include "Data/CityInfo.h"
 #include "Data/Grid.h"
 
+#include "game/resource.h"
+
 static const int cartResourceOffsetMultipleLoadsFood[] = {0, 0, 8, 16, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 static const int cartResourceOffsetMultipleLoadsNonFood[] = {0, 0, 0, 0, 0, 8, 0, 16, 24, 32, 40, 48, 56, 64, 72, 80};
 static const int cartResourceOffset8PlusLoadsFood[] = {0, 40, 48, 56, 0, 0, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -575,7 +577,8 @@ void FigureAction_warehouseman(int figureId)
 			} else if (f->loadsSoldOrCarrying == 1) {
 				setCartGraphic(f);
 			} else {
-				if (ResourceIsFood(f->resourceId)) {
+				if (f->resourceId == RESOURCE_WHEAT || f->resourceId == RESOURCE_VEGETABLES ||
+                    f->resourceId == RESOURCE_FRUIT || f->resourceId == RESOURCE_MEAT) {
 					f->cartGraphicId = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) +
 						cartResourceOffsetMultipleLoadsFood[f->resourceId];
 				} else {

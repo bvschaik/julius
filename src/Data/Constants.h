@@ -35,34 +35,6 @@ enum {
 };
 
 enum {
-	Resource_None = 0,
-	Resource_Wheat = 1,
-	Resource_Vegetables = 2,
-	Resource_Fruit = 3,
-	Resource_Olives = 4,
-	Resource_Vines = 5,
-	Resource_Meat = 6,
-	Resource_Wine = 7,
-	Resource_Oil = 8,
-	Resource_Iron = 9,
-	Resource_Timber = 10,
-	Resource_Clay = 11,
-	Resource_Marble = 12,
-	Resource_Weapons = 13,
-	Resource_Furniture = 14,
-	Resource_Pottery = 15,
-	Resource_Denarii = 16,
-	Resource_Troops = 17,
-	// helper constants
-	Resource_Min = 1,
-	Resource_Max = 16,
-	Resource_MinFood = 1,
-	Resource_MaxFood = 7,
-};
-
-#define ResourceIsFood(r) ((r) == Resource_Wheat || (r) == Resource_Vegetables || (r) == Resource_Fruit || (r) == Resource_Meat)
-
-enum {
 	Inventory_Wheat = 0,
 	Inventory_Vegetables = 1,
 	Inventory_Fruit = 2,

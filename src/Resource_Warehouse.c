@@ -257,7 +257,7 @@ int Resource_removeFromWarehouse(int buildingId, int resource, int amount)
 			Data_CityInfo.resourceStored[resource] -= b->loadsStored;
 			amount -= b->loadsStored;
 			b->loadsStored = 0;
-			b->subtype.warehouseResourceId = Resource_None;
+			b->subtype.warehouseResourceId = RESOURCE_NONE;
 		}
 		Resource_setWarehouseSpaceGraphic(buildingId, resource);
 	}
@@ -287,7 +287,7 @@ void Resource_removeFromWarehouseForMercury(int buildingId, int amount)
 			Data_CityInfo.resourceStored[resource] -= b->loadsStored;
 			amount -= b->loadsStored;
 			b->loadsStored = 0;
-			b->subtype.warehouseResourceId = Resource_None;
+			b->subtype.warehouseResourceId = RESOURCE_NONE;
 		}
 		Resource_setWarehouseSpaceGraphic(buildingId, resource);
 	}
@@ -353,7 +353,7 @@ void Resource_removeExportedResourceFromWarehouseSpace(int spaceId, int resource
 	Data_CityInfo.resourceStored[resourceId]--;
 	Data_Buildings[spaceId].loadsStored--;
 	if (Data_Buildings[spaceId].loadsStored <= 0) {
-		Data_Buildings[spaceId].subtype.warehouseResourceId = Resource_None;
+		Data_Buildings[spaceId].subtype.warehouseResourceId = RESOURCE_NONE;
 	}
 	
 	int price = trade_price_sell(resourceId);
@@ -372,7 +372,7 @@ static int determineGranaryAcceptFoods()
 	if (scenario_property_rome_supplies_wheat()) {
 		return 0;
 	}
-	for (int i = 0; i < Resource_MaxFood; i++) {
+	for (int i = 0; i < RESOURCE_MAX_FOOD; i++) {
 		granaryAcceptingResource[i] = 0;
 	}
 	int canAccept = 0;
@@ -382,10 +382,10 @@ static int determineGranaryAcceptFoods()
 			continue;
 		}
 		int pctWorkers = calc_percentage(b->numWorkers, model_get_building(b->type)->laborers);
-		if (pctWorkers >= 100 && b->data.storage.resourceStored[Resource_None] >= 1200) {
+		if (pctWorkers >= 100 && b->data.storage.resourceStored[RESOURCE_NONE] >= 1200) {
 			const building_storage *s = building_storage_get(b->storage_id);
 			if (!s->empty_all) {
-				for (int r = 0; r < Resource_MaxFood; r++) {
+				for (int r = 0; r < RESOURCE_MAX_FOOD; r++) {
 					if (s->resource_state[r] != BUILDING_STORAGE_STATE_NOT_ACCEPTING) {
 						granaryAcceptingResource[r]++;
 						canAccept = 1;
@@ -402,7 +402,7 @@ static int determineGranaryGetFoods()
 	if (scenario_property_rome_supplies_wheat()) {
 		return 0;
 	}
-	for (int i = 0; i < Resource_MaxFood; i++) {
+	for (int i = 0; i < RESOURCE_MAX_FOOD; i++) {
 		granaryGettingResource[i] = 0;
 	}
 	int canGet = 0;
@@ -412,10 +412,10 @@ static int determineGranaryGetFoods()
 			continue;
 		}
 		int pctWorkers = calc_percentage(b->numWorkers, model_get_building(b->type)->laborers);
-		if (pctWorkers >= 100 && b->data.storage.resourceStored[Resource_None] > 100) {
+		if (pctWorkers >= 100 && b->data.storage.resourceStored[RESOURCE_NONE] > 100) {
 			const building_storage *s = building_storage_get(b->storage_id);
 			if (!s->empty_all) {
-				for (int r = 0; r < Resource_MaxFood; r++) {
+				for (int r = 0; r < RESOURCE_MAX_FOOD; r++) {
 					if (s->resource_state[r] == BUILDING_STORAGE_STATE_GETTING) {
 						granaryGettingResource[r]++;
 						canGet = 1;
@@ -439,8 +439,8 @@ static int storesNonStockpiledFood(int spaceId, int *granaryResources)
 	if (Data_CityInfo.resourceStockpiled[resource]) {
 		return 0;
 	}
-	if (resource == Resource_Wheat || resource == Resource_Vegetables ||
-		resource == Resource_Fruit || resource == Resource_Meat) {
+	if (resource == RESOURCE_WHEAT || resource == RESOURCE_VEGETABLES ||
+		resource == RESOURCE_FRUIT || resource == RESOURCE_MEAT) {
 		if (granaryResources[resource] > 0) {
 			return 1;
 		}
@@ -459,7 +459,7 @@ int Resource_determineWarehouseWorkerTask(int buildingId, int *resource)
 	const building_storage *s = building_storage_get(b->storage_id);
 	int spaceId;
 	// get resources
-	for (int r = Resource_Min; r < Resource_Max; r++) {
+	for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
 		if (s->resource_state[r] != BUILDING_STORAGE_STATE_GETTING || Data_CityInfo.resourceStockpiled[r]) {
 			continue;
 		}
@@ -493,7 +493,7 @@ int Resource_determineWarehouseWorkerTask(int buildingId, int *resource)
 	}
 	// deliver weapons to barracks
 	if (building_count_active(BUILDING_BARRACKS) > 0 && Data_CityInfo.militaryLegionaryLegions > 0 &&
-		!Data_CityInfo.resourceStockpiled[Resource_Weapons]) {
+		!Data_CityInfo.resourceStockpiled[RESOURCE_WEAPONS]) {
 		int barracksId = Data_CityInfo.buildingBarracksBuildingId;
 		if (Data_Buildings[barracksId].loadsStored < 4 &&
 			b->roadNetworkId == Data_Buildings[barracksId].roadNetworkId) {
@@ -501,8 +501,8 @@ int Resource_determineWarehouseWorkerTask(int buildingId, int *resource)
 			for (int i = 0; i < 8; i++) {
 				spaceId = Data_Buildings[spaceId].nextPartBuildingId;
 				if (spaceId > 0 && Data_Buildings[spaceId].loadsStored > 0 &&
-					Data_Buildings[spaceId].subtype.warehouseResourceId == Resource_Weapons) {
-					return Resource_Weapons;
+					Data_Buildings[spaceId].subtype.warehouseResourceId == RESOURCE_WEAPONS) {
+					return RESOURCE_WEAPONS;
 				}
 			}
 		}
@@ -516,19 +516,19 @@ int Resource_determineWarehouseWorkerTask(int buildingId, int *resource)
 			if (!Data_CityInfo.resourceStockpiled[resource]) {
 				int workshopType;
 				switch (resource) {
-					case Resource_Olives:
+					case RESOURCE_OLIVES:
 						workshopType = WorkshopResource_OlivesToOil;
 						break;
-					case Resource_Vines:
+					case RESOURCE_VINES:
 						workshopType = WorkshopResource_VinesToWine;
 						break;
-					case Resource_Iron:
+					case RESOURCE_IRON:
 						workshopType = WorkshopResource_IronToWeapons;
 						break;
-					case Resource_Timber:
+					case RESOURCE_TIMBER:
 						workshopType = WorkshopResource_TimberToFurniture;
 						break;
-					case Resource_Clay:
+					case RESOURCE_CLAY:
 						workshopType = WorkshopResource_ClayToPottery;
 						break;
 					default:

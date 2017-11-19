@@ -1,5 +1,7 @@
 #include "CityBuildings_private.h"
 
+#include "game/resource.h"
+
 static void drawFootprintForWaterOverlay(int gridOffset, int xOffset, int yOffset);
 static void drawTopForWaterOverlay(int gridOffset, int xOffset, int yOffset);
 static void drawFootprintForNativeOverlay(int gridOffset, int xOffset, int yOffset);
@@ -232,19 +234,19 @@ void UI_CityBuildings_drawOverlayTopsFiguresAnimation(int overlay)
 							xGraphic + img->sprite_offset_x,
 							yGraphic + 60 + img->sprite_offset_y - img->height,
 							colorMask);
-						if (b->data.storage.resourceStored[Resource_None] < 2400) {
+						if (b->data.storage.resourceStored[RESOURCE_NONE] < 2400) {
 							Graphics_drawImageMasked(image_group(GROUP_BUILDING_GRANARY) + 2,
 								xGraphic + 33, yGraphic - 60, colorMask);
 						}
-						if (b->data.storage.resourceStored[Resource_None] < 1800) {
+						if (b->data.storage.resourceStored[RESOURCE_NONE] < 1800) {
 							Graphics_drawImageMasked(image_group(GROUP_BUILDING_GRANARY) + 3,
 								xGraphic + 56, yGraphic - 50, colorMask);
 						}
-						if (b->data.storage.resourceStored[Resource_None] < 1200) {
+						if (b->data.storage.resourceStored[RESOURCE_NONE] < 1200) {
 							Graphics_drawImageMasked(image_group(GROUP_BUILDING_GRANARY) + 4,
 								xGraphic + 91, yGraphic - 50, colorMask);
 						}
-						if (b->data.storage.resourceStored[Resource_None] < 600) {
+						if (b->data.storage.resourceStored[RESOURCE_NONE] < 600) {
 							Graphics_drawImageMasked(image_group(GROUP_BUILDING_GRANARY) + 5,
 								xGraphic + 117, yGraphic - 62, colorMask);
 						}
@@ -1379,18 +1381,18 @@ static void drawBuildingTopForProblemsOverlay(int gridOffset, int buildingId, in
 			xOffset + img->sprite_offset_x,
 			yOffset + img->sprite_offset_y - 30 -
 			(img->height - 90));
-		if (Data_Buildings[buildingId].data.storage.resourceStored[Resource_None] < 2400) {
+		if (Data_Buildings[buildingId].data.storage.resourceStored[RESOURCE_NONE] < 2400) {
 			Graphics_drawImage(image_group(GROUP_BUILDING_GRANARY) + 2,
 				xOffset + 32, yOffset - 61);
-			if (Data_Buildings[buildingId].data.storage.resourceStored[Resource_None] < 1800) {
+			if (Data_Buildings[buildingId].data.storage.resourceStored[RESOURCE_NONE] < 1800) {
 				Graphics_drawImage(image_group(GROUP_BUILDING_GRANARY) + 3,
 					xOffset + 56, yOffset - 51);
 			}
-			if (Data_Buildings[buildingId].data.storage.resourceStored[Resource_None] < 1200) {
+			if (Data_Buildings[buildingId].data.storage.resourceStored[RESOURCE_NONE] < 1200) {
 				Graphics_drawImage(image_group(GROUP_BUILDING_GRANARY) + 4,
 					xOffset + 91, yOffset - 51);
 			}
-			if (Data_Buildings[buildingId].data.storage.resourceStored[Resource_None] < 600) {
+			if (Data_Buildings[buildingId].data.storage.resourceStored[RESOURCE_NONE] < 600) {
 				Graphics_drawImage(image_group(GROUP_BUILDING_GRANARY) + 5,
 					xOffset + 118, yOffset - 61);
 			}

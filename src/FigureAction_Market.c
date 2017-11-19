@@ -4,6 +4,7 @@
 #include "Resource.h"
 
 #include "figure/type.h"
+#include "game/resource.h"
 
 static int createDeliveryBoy(int leaderId, struct Data_Figure *f)
 {
@@ -19,14 +20,14 @@ static int marketBuyerTakeFoodFromGranary(int figureId, int marketId, int granar
 	struct Data_Figure *f = &Data_Figures[figureId];
 	int resource;
 	switch (f->collectingItemId) {
-		case Inventory_Wheat: resource = Resource_Wheat; break;
-		case Inventory_Vegetables: resource = Resource_Vegetables; break;
-		case Inventory_Fruit: resource = Resource_Fruit; break;
-		case Inventory_Meat: resource = Resource_Meat; break;
+		case INVENTORY_WHEAT: resource = RESOURCE_WHEAT; break;
+		case INVENTORY_VEGETABLES: resource = RESOURCE_VEGETABLES; break;
+		case INVENTORY_FRUIT: resource = RESOURCE_FRUIT; break;
+		case INVENTORY_MEAT: resource = RESOURCE_MEAT; break;
 		default: return 0;
 	}
 	int marketUnits = Data_Buildings[marketId].data.market.inventory[f->collectingItemId];
-	int maxUnits = (f->collectingItemId == Inventory_Wheat ? 800 : 600) - marketUnits;
+	int maxUnits = (f->collectingItemId == INVENTORY_WHEAT ? 800 : 600) - marketUnits;
 	int granaryUnits = Data_Buildings[granaryId].data.storage.resourceStored[resource];
 	int numLoads;
 	if (granaryUnits >= 800) {
@@ -68,10 +69,10 @@ static int marketBuyerTakeResourceFromWarehouse(int figureId, int marketId, int 
 	struct Data_Figure *f = &Data_Figures[figureId];
 	int resource;
 	switch (f->collectingItemId) {
-		case Inventory_Pottery: resource = Resource_Pottery; break;
-		case Inventory_Furniture: resource = Resource_Furniture; break;
-		case Inventory_Oil: resource = Resource_Oil; break;
-		case Inventory_Wine: resource = Resource_Wine; break;
+		case INVENTORY_POTTERY: resource = RESOURCE_POTTERY; break;
+		case INVENTORY_FURNITURE: resource = RESOURCE_FURNITURE; break;
+		case INVENTORY_OIL: resource = RESOURCE_OIL; break;
+		case INVENTORY_WINE: resource = RESOURCE_WINE; break;
 		default: return 0;
 	}
 	int numLoads;

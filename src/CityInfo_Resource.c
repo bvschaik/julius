@@ -15,25 +15,25 @@
 
 void CityInfo_Resource_calculateAvailableResources()
 {
-	for (int i = 0; i < Resource_Max; i++) {
+	for (int i = 0; i < RESOURCE_MAX; i++) {
 		Data_CityInfo_Resource.availableResources[i] = 0;
 		Data_CityInfo_Resource.availableFoods[i] = 0;
 	}
 	Data_CityInfo_Resource.numAvailableResources = 0;
 	Data_CityInfo_Resource.numAvailableFoods = 0;
 
-	for (int i = Resource_Min; i < Resource_Max; i++) {
+	for (int i = RESOURCE_MIN; i < RESOURCE_MAX; i++) {
 		if (empire_can_produce_resource(i) || empire_can_import_resource(i) ||
-			(i == Resource_Meat && scenario_building_allowed(BUILDING_WHARF))) {
+			(i == RESOURCE_MEAT && scenario_building_allowed(BUILDING_WHARF))) {
 			Data_CityInfo_Resource.availableResources[Data_CityInfo_Resource.numAvailableResources++] = i;
 		}
 	}
-	for (int i = Resource_MinFood; i < Resource_MaxFood; i++) {
-		if (i == Resource_Olives || i == Resource_Vines) {
+	for (int i = RESOURCE_MIN_FOOD; i < RESOURCE_MAX_FOOD; i++) {
+		if (i == RESOURCE_OLIVES || i == RESOURCE_VINES) {
 			continue;
 		}
 		if (empire_can_produce_resource(i) || empire_can_import_resource(i) ||
-			(i == Resource_Meat && scenario_building_allowed(BUILDING_WHARF))) {
+			(i == RESOURCE_MEAT && scenario_building_allowed(BUILDING_WHARF))) {
 			Data_CityInfo_Resource.availableFoods[Data_CityInfo_Resource.numAvailableFoods++] = i;
 		}
 	}
@@ -41,7 +41,7 @@ void CityInfo_Resource_calculateAvailableResources()
 
 void CityInfo_Resource_calculateFood()
 {
-	for (int i = 0; i < Resource_MaxFood; i++) {
+	for (int i = 0; i < RESOURCE_MAX_FOOD; i++) {
 		Data_CityInfo.resourceGranaryFoodStored[i] = 0;
 	}
 	Data_CityInfo.foodInfoFoodStoredInGranaries = 0;
@@ -65,7 +65,7 @@ void CityInfo_Resource_calculateFood()
 				Data_CityInfo.foodInfoGranariesUnderstaffed++;
 			}
 			int amountStored = 0;
-			for (int r = Resource_MinFood; r < Resource_MaxFood; r++) {
+			for (int r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
 				amountStored += b->data.storage.resourceStored[r];
 			}
 			if (pctWorkers < 50) {
@@ -75,7 +75,7 @@ void CityInfo_Resource_calculateFood()
 				}
 			} else {
 				Data_CityInfo.foodInfoGranariesOperating++;
-				for (int r = 0; r < Resource_MaxFood; r++) {
+				for (int r = 0; r < RESOURCE_MAX_FOOD; r++) {
 					Data_CityInfo.resourceGranaryFoodStored[r] += b->data.storage.resourceStored[r];
 				}
 				if (amountStored > 400) {
@@ -84,7 +84,7 @@ void CityInfo_Resource_calculateFood()
 			}
 		}
 	}
-	for (int i = Resource_MinFood; i < Resource_MaxFood; i++) {
+	for (int i = RESOURCE_MIN_FOOD; i < RESOURCE_MAX_FOOD; i++) {
 		if (Data_CityInfo.resourceGranaryFoodStored[i]) {
 			Data_CityInfo.foodInfoFoodStoredInGranaries += Data_CityInfo.resourceGranaryFoodStored[i];
 			Data_CityInfo.foodInfoFoodTypesAvailable++;

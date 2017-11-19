@@ -48,7 +48,7 @@ int FigureAction_TradeCaravan_canBuy(int traderId, int warehouseId, int cityId)
 static int traderGetBuyResource(int warehouseId, int cityId)
 {
 	if (Data_Buildings[warehouseId].type != BUILDING_WAREHOUSE) {
-		return Resource_None;
+		return RESOURCE_NONE;
 	}
 	for (int i = 0; i < 8; i++) {
 		warehouseId = Data_Buildings[warehouseId].nextPartBuildingId;
@@ -62,7 +62,7 @@ static int traderGetBuyResource(int warehouseId, int cityId)
 			Data_CityInfo.resourceStored[resource]--;
 			Data_Buildings[warehouseId].loadsStored--;
 			if (Data_Buildings[warehouseId].loadsStored <= 0) {
-				Data_Buildings[warehouseId].subtype.warehouseResourceId = Resource_None;
+				Data_Buildings[warehouseId].subtype.warehouseResourceId = RESOURCE_NONE;
 			}
 			// update finances
 			int price = trade_price_sell(resource);
@@ -175,7 +175,7 @@ static int traderGetSellResource(int traderId, int warehouseId, int cityId)
 		}
 	}
 	// find another importable resource that can be added to this warehouse
-	for (int r = Resource_Min; r < Resource_Max; r++) {
+	for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
 		Data_CityInfo.tradeNextImportResourceCaravanBackup++;
 		if (Data_CityInfo.tradeNextImportResourceCaravanBackup > 15) {
 			Data_CityInfo.tradeNextImportResourceCaravanBackup = 1;

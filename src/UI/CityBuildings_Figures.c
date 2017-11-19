@@ -8,6 +8,7 @@
 #include "../Data/State.h"
 
 #include "figure/formation.h"
+#include "game/resource.h"
 #include "graphics/image.h"
 
 static int showOnOverlay(struct Data_Figure *f)
@@ -88,8 +89,8 @@ static int showOnOverlay(struct Data_Figure *f)
 				f->type == FIGURE_DELIVERY_BOY || f->type == FIGURE_FISHING_BOAT) {
 				return 1;
 			} else if (f->type == FIGURE_CART_PUSHER) {
-				return f->resourceId == Resource_Wheat || f->resourceId == Resource_Vegetables ||
-					f->resourceId == Resource_Fruit || f->resourceId == Resource_Meat;
+				return f->resourceId == RESOURCE_WHEAT || f->resourceId == RESOURCE_VEGETABLES ||
+					f->resourceId == RESOURCE_FRUIT || f->resourceId == RESOURCE_MEAT;
 			}
 			return 0;
 		case Overlay_Problems:

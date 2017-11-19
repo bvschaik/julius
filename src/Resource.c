@@ -15,7 +15,7 @@
 
 int Resource_getGraphicIdOffset(int resource, int type)
 {
-	if (resource == Resource_Meat && scenario_building_allowed(BUILDING_WHARF)) {
+	if (resource == RESOURCE_MEAT && scenario_building_allowed(BUILDING_WHARF)) {
 		switch (type) {
 			case 0: return 40;
 			case 1: return 648;
@@ -30,7 +30,7 @@ int Resource_getGraphicIdOffset(int resource, int type)
 
 void Resource_calculateWarehouseStocks()
 {
-	for (int i = 0; i < Resource_Max; i++) {
+	for (int i = 0; i < RESOURCE_MAX; i++) {
 		Data_CityInfo.resourceSpaceInWarehouses[i] = 0;
 		Data_CityInfo.resourceStored[i] = 0;
 	}
@@ -59,7 +59,7 @@ void Resource_calculateWarehouseStocks()
 				Data_CityInfo.resourceStored[resource] += loads;
 				Data_CityInfo.resourceSpaceInWarehouses[resource] += 4 - loads;
 			} else {
-				Data_CityInfo.resourceSpaceInWarehouses[Resource_None] += 4;
+				Data_CityInfo.resourceSpaceInWarehouses[RESOURCE_NONE] += 4;
 			}
 		}
 	}
@@ -99,11 +99,11 @@ int Resource_getWorkshopWithRoomForRawMaterial(
 	}
 	int outputType;
 	switch (resource) {
-		case Resource_Olives: outputType = WorkshopResource_OlivesToOil; break;
-		case Resource_Vines: outputType = WorkshopResource_VinesToWine; break;
-		case Resource_Iron: outputType = WorkshopResource_IronToWeapons; break;
-		case Resource_Timber: outputType = WorkshopResource_TimberToFurniture; break;
-		case Resource_Clay: outputType = WorkshopResource_ClayToPottery; break;
+		case RESOURCE_OLIVES: outputType = WorkshopResource_OlivesToOil; break;
+		case RESOURCE_VINES: outputType = WorkshopResource_VinesToWine; break;
+		case RESOURCE_IRON: outputType = WorkshopResource_IronToWeapons; break;
+		case RESOURCE_TIMBER: outputType = WorkshopResource_TimberToFurniture; break;
+		case RESOURCE_CLAY: outputType = WorkshopResource_ClayToPottery; break;
 		default: return 0;
 	}
 	int minDist = 10000;
@@ -141,11 +141,11 @@ int Resource_getWorkshopForRawMaterial(
 	}
 	int outputType;
 	switch (resource) {
-		case Resource_Olives: outputType = WorkshopResource_OlivesToOil; break;
-		case Resource_Vines: outputType = WorkshopResource_VinesToWine; break;
-		case Resource_Iron: outputType = WorkshopResource_IronToWeapons; break;
-		case Resource_Timber: outputType = WorkshopResource_TimberToFurniture; break;
-		case Resource_Clay: outputType = WorkshopResource_ClayToPottery; break;
+		case RESOURCE_OLIVES: outputType = WorkshopResource_OlivesToOil; break;
+		case RESOURCE_VINES: outputType = WorkshopResource_VinesToWine; break;
+		case RESOURCE_IRON: outputType = WorkshopResource_IronToWeapons; break;
+		case RESOURCE_TIMBER: outputType = WorkshopResource_TimberToFurniture; break;
+		case RESOURCE_CLAY: outputType = WorkshopResource_ClayToPottery; break;
 		default: return 0;
 	}
 	int minDist = 10000;
@@ -174,10 +174,10 @@ int Resource_getWorkshopForRawMaterial(
 
 int Resource_getBarracksForWeapon(int xUnused, int yUnused, int resource, int roadNetworkId, int *xDst, int *yDst)
 {
-	if (resource != Resource_Weapons) {
+	if (resource != RESOURCE_WEAPONS) {
 		return 0;
 	}
-	if (Data_CityInfo.resourceStockpiled[Resource_Weapons]) {
+	if (Data_CityInfo.resourceStockpiled[RESOURCE_WEAPONS]) {
 		return 0;
 	}
 	if (building_count_active(BUILDING_BARRACKS) <= 0) {

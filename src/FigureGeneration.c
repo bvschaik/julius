@@ -18,6 +18,7 @@
 #include "core/calc.h"
 #include "figure/type.h"
 #include "graphics/image.h"
+#include "game/resource.h"
 
 #define SET_LABOR_PROBLEM(b) if (b->housesCovered <= 0) b->showOnProblemOverlay = 2
 #define SPAWN_LABOR_SEEKER(t) if (b->housesCovered <= t) generateLaborSeeker(buildingId, b, xRoad, yRoad);
@@ -1055,10 +1056,10 @@ static void spawnFigureWharf(int buildingId, struct Data_Building *b)
 		if (b->figureSpawnDelay) {
 			b->figureSpawnDelay = 0;
 			b->data.other.fishingBoatHasFish = 0;
-			b->outputResourceId = Resource_Meat;
+			b->outputResourceId = RESOURCE_MEAT;
 			CREATE_FIGURE(FIGURE_CART_PUSHER, xRoad, yRoad, Dir_4_Bottom);
 			f->actionState = FigureActionState_20_CartpusherInitial;
-			f->resourceId = Resource_Meat;
+			f->resourceId = RESOURCE_MEAT;
 			f->buildingId = buildingId;
 			b->figureId = figureId;
 			f->waitTicks = 30;
