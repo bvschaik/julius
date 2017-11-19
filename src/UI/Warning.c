@@ -136,7 +136,7 @@ void UI_Warning_show(int warningId)
 			warnings[i].boxWidth = 460;
 		}
 		warnings[i].time = time_get_millis();
-		warnings[i].textLength = strlen(text);
+		warnings[i].textLength = strlen((const char*)text);
 		memset(warnings[i].text, 0, 100);
 		string_copy(text, warnings[i].text, warnings[i].textLength);
 		return;
