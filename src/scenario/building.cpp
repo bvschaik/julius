@@ -111,3 +111,18 @@ int scenario_building_allowed(int building_type)
     }
     return 1;
 }
+
+int scenario_building_image_native_hut()
+{
+    return Data_Scenario.nativeGraphics.hut;
+}
+
+int scenario_building_image_native_meeting()
+{
+    return Data_Scenario.nativeGraphics.meetingCenter;
+}
+
+int scenario_building_image_native_crops()
+{
+    return Data_Scenario.nativeGraphics.crops;
+}

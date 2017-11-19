@@ -7,13 +7,8 @@
 #include "terraingraphics.h"
 #include "ui/window.h"
 
-#include "data/building.hpp"
-#include "data/cityinfo.hpp"
-#include "data/constants.hpp"
-#include "data/event.hpp"
-#include "data/grid.hpp"
-#include "data/settings.hpp"
-#include "data/state.hpp"
+#include <data>
+#include <scenario>
 
 #include "building/properties.h"
 #include "graphics/image.h"
@@ -295,7 +290,7 @@ void Undo::updateAvailable()
     {
         return;
     }
-    if (data.timeout <= 0 || Data_Event.earthquake.state == SpecialEvent_InProgress)
+    if (data.timeout <= 0 || scenario_earthquake_is_in_progress())
     {
         Data_State.undoAvailable = 0;
         clearBuildingList();

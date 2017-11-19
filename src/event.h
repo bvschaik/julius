@@ -15,7 +15,6 @@ void Event_handleDistantBattle();
 
 void Event_handleRandomEvents();
 
-void Event_handleEarthquake();
 void Event_handleEmperorChange();
 void Event_handleGladiatorRevolt();
 

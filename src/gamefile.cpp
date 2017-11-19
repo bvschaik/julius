@@ -156,14 +156,7 @@ typedef struct
     buffer *culture_coverage;
     buffer *Data_Scenario;
     buffer *Data_Event_timeLimitMaxGameYear;
-    buffer *Data_Event_earthquake_gameYear;
-    buffer *Data_Event_earthquake_month;
-    buffer *Data_Event_earthquake_state;
-    buffer *Data_Event_earthquake_duration;
-    buffer *Data_Event_earthquake_maxDuration;
-    buffer *Data_Event_earthquake_maxDelay;
-    buffer *Data_Event_earthquake_delay;
-    buffer *Data_Event_earthquake_expand;
+    buffer *earthquake;
     buffer *Data_Event_emperorChange_state;
     buffer *messages;
     buffer *message_extra;
@@ -325,14 +318,7 @@ void init_savegame_data()
     state->culture_coverage = create_savegame_piece(60, 0);
     state->Data_Scenario = create_savegame_piece(1720, 0);
     state->Data_Event_timeLimitMaxGameYear = create_savegame_piece(4, 0);
-    state->Data_Event_earthquake_gameYear = create_savegame_piece(4, 0);
-    state->Data_Event_earthquake_month = create_savegame_piece(4, 0);
-    state->Data_Event_earthquake_state = create_savegame_piece(4, 0);
-    state->Data_Event_earthquake_duration = create_savegame_piece(4, 0);
-    state->Data_Event_earthquake_maxDuration = create_savegame_piece(4, 0);
-    state->Data_Event_earthquake_maxDelay = create_savegame_piece(4, 0);
-    state->Data_Event_earthquake_delay = create_savegame_piece(4, 0);
-    state->Data_Event_earthquake_expand = create_savegame_piece(32, 0);
+    state->earthquake = create_savegame_piece(60, 0);
     state->Data_Event_emperorChange_state = create_savegame_piece(4, 0);
     state->messages = create_savegame_piece(16000, 1);
     state->message_extra = create_savegame_piece(12, 0);
@@ -499,14 +485,9 @@ static void savegame_deserialize(savegame_state *state)
     city_culture_load_state(state->culture_coverage);
     read_all_from_buffer(state->Data_Scenario, &Data_Scenario);
     read_all_from_buffer(state->Data_Event_timeLimitMaxGameYear, &Data_Event.timeLimitMaxGameYear);
-    read_all_from_buffer(state->Data_Event_earthquake_gameYear, &Data_Event.earthquake.gameYear);
-    read_all_from_buffer(state->Data_Event_earthquake_month, &Data_Event.earthquake.month);
-    read_all_from_buffer(state->Data_Event_earthquake_state, &Data_Event.earthquake.state);
-    read_all_from_buffer(state->Data_Event_earthquake_duration, &Data_Event.earthquake.duration);
-    read_all_from_buffer(state->Data_Event_earthquake_maxDuration, &Data_Event.earthquake.maxDuration);
-    read_all_from_buffer(state->Data_Event_earthquake_maxDelay, &Data_Event.earthquake.maxDelay);
-    read_all_from_buffer(state->Data_Event_earthquake_delay, &Data_Event.earthquake.delay);
-    read_all_from_buffer(state->Data_Event_earthquake_expand, &Data_Event.earthquake.expand);
+
+    scenario_earthquake_load_state(state->earthquake);
+
     read_all_from_buffer(state->Data_Event_emperorChange_state, &Data_Event.emperorChange.state);
 
     city_message_load_state(state->messages, state->message_extra,
@@ -634,14 +615,9 @@ static void savegame_serialize(savegame_state *state)
     city_culture_save_state(state->culture_coverage);
     write_all_to_buffer(state->Data_Scenario, &Data_Scenario);
     write_all_to_buffer(state->Data_Event_timeLimitMaxGameYear, &Data_Event.timeLimitMaxGameYear);
-    write_all_to_buffer(state->Data_Event_earthquake_gameYear, &Data_Event.earthquake.gameYear);
-    write_all_to_buffer(state->Data_Event_earthquake_month, &Data_Event.earthquake.month);
-    write_all_to_buffer(state->Data_Event_earthquake_state, &Data_Event.earthquake.state);
-    write_all_to_buffer(state->Data_Event_earthquake_duration, &Data_Event.earthquake.duration);
-    write_all_to_buffer(state->Data_Event_earthquake_maxDuration, &Data_Event.earthquake.maxDuration);
-    write_all_to_buffer(state->Data_Event_earthquake_maxDelay, &Data_Event.earthquake.maxDelay);
-    write_all_to_buffer(state->Data_Event_earthquake_delay, &Data_Event.earthquake.delay);
-    write_all_to_buffer(state->Data_Event_earthquake_expand, &Data_Event.earthquake.expand);
+
+    scenario_earthquake_save_state(state->earthquake);
+
     write_all_to_buffer(state->Data_Event_emperorChange_state, &Data_Event.emperorChange.state);
     city_message_save_state(state->messages, state->message_extra,
                             state->message_counts, state->message_delays,

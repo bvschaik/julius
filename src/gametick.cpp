@@ -50,7 +50,7 @@ void GameTick_doTick()
     Undo::updateAvailable();
     GameTick_advance();
     FigureAction_handle();
-    Event_handleEarthquake();
+    scenario_earthquake_process();
     Event_handleGladiatorRevolt();
     Event_handleEmperorChange();
     CityInfo_Victory_check();

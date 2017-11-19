@@ -1,0 +1,11 @@
+#ifndef SCENARIO_DATA_H
+#define SCENARIO_DATA_H
+
+enum {
+    EVENT_NOT_STARTED = 0,
+    EVENT_IN_PROGRESS = 1,
+    EVENT_FINISHED = 2
+};
+
+
+#endif // SCENARIO_DATA_H
