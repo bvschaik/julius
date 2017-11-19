@@ -5,17 +5,14 @@
 #include "terrain.h"
 #include "game/tutorial.h"
 
-#include "data/building.hpp"
-#include "data/cityinfo.hpp"
-#include "data/constants.hpp"
-#include "data/grid.hpp"
-#include "data/scenario.hpp"
+#include <data>
+#include <scenario>
 
 #include "building/count.h"
 
 int Resource_getGraphicIdOffset(int resource, int type)
 {
-    if (resource == RESOURCE_MEAT && Data_Scenario.allowedBuildings.wharf)
+    if (resource == RESOURCE_MEAT && scenario_building_allowed(BUILDING_WHARF))
     {
         switch (type)
         {

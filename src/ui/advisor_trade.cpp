@@ -5,8 +5,8 @@
 #include "cityinfo.h"
 #include "resource.h"
 
-#include "data/cityinfo.hpp"
-#include "data/scenario.hpp"
+#include <data>
+#include <scenario>
 
 #include "building/count.h"
 #include "core/calc.h"
@@ -320,7 +320,7 @@ void UI_ResourceSettingsDialog_drawForeground()
             }
         }
     }
-    else if (selectedResourceId != RESOURCE_MEAT || !Data_Scenario.allowedBuildings.wharf)
+    else if (selectedResourceId != RESOURCE_MEAT || !scenario_building_allowed(BUILDING_WHARF))
     {
         // we cannot produce this good
         Widget_GameText_draw(54, 25, baseOffsetX + 98, baseOffsetY + 172, FONT_NORMAL_BLACK);

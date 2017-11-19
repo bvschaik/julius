@@ -8,6 +8,9 @@
 #include "scenario/criteria.h"
 #include "scenario.h"
 
+//check buildings availability
+#include "scenario/building.h"
+
 //climates and wheat supply flags
 #include "scenario/property.h"
 
