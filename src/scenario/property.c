@@ -16,17 +16,17 @@ int scenario_campaign_rank()
 
 int scenario_is_tutorial_1()
 {
-    return Data_Settings.isCustomScenario && Data_Settings.currentMissionId == 0;
+    return !Data_Settings.isCustomScenario && Data_Settings.currentMissionId == 0;
 }
 
 int scenario_is_tutorial_2()
 {
-    return Data_Settings.isCustomScenario && Data_Settings.currentMissionId == 1;
+    return !Data_Settings.isCustomScenario && Data_Settings.currentMissionId == 1;
 }
 
 int scenario_is_tutorial_3()
 {
-    return Data_Settings.isCustomScenario && Data_Settings.currentMissionId == 2;
+    return !Data_Settings.isCustomScenario && Data_Settings.currentMissionId == 2;
 }
 
 int scenario_is_open_play()
