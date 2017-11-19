@@ -1,18 +1,14 @@
 #include "window.h"
 
-#include "core/calc.h"
-#include "core/dir.h"
-#include "core/file.h"
-#include "core/string.h"
-#include "scenario/criteria.h"
 #include "sound/speech.h"
 
 #include "gamefile.h"
 #include "graphics.h"
-#include "scenario.h"
 
 #include <data>
+#include <core>
 #include <ui>
+#include <scenario>
 
 #include <string.h>
 
@@ -137,7 +133,7 @@ static void drawScenarioInfo()
                                baseOffsetX + 15, baseOffsetY + 40, 260, FONT_NORMAL_WHITE, 0);
     Widget_GameText_drawYear(Data_Scenario.startYear,
                              baseOffsetX + 90, baseOffsetY + 70, FONT_LARGE_BLACK);
-    Widget_GameText_drawCentered(44, 77 + Data_Scenario.climate,
+    Widget_GameText_drawCentered(44, 77 + scenario_property_climate(),
                                  baseOffsetX + 15, baseOffsetY + 130, 260, FONT_NORMAL_BLACK);
 
     // map size

@@ -1,12 +1,11 @@
 #include "buildinginfo.h"
 
-#include "window.h"
-
 #include "graphics.h"
 #include "resource.h"
 
 #include <data>
 #include <ui>
+#include <scenario>
 
 #include "building/storage.h"
 
@@ -133,7 +132,7 @@ void UI_BuildingInfo_drawGranary(BuildingInfoContext *c)
     {
         DRAW_DESC_AT(40, 69, 25);
     }
-    else if (Data_Scenario.romeSuppliesWheat)
+    else if (scenario_property_rome_supplies_wheat())
     {
         DRAW_DESC_AT(40, 98, 4);
     }

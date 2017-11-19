@@ -1004,7 +1004,7 @@ void Building_Industry_updateProduction()
 
 void Building_Industry_updateDoubleWheatProduction()
 {
-    if (Data_Scenario.climate == Climate_Northern)
+    if (scenario_property_climate() == CLIMATE_NORTHERN)
     {
         return;
     }
@@ -1138,7 +1138,7 @@ int Building_Market_getDestinationGranaryWarehouse(int marketId)
         }
         if (b->type == BUILDING_GRANARY)
         {
-            if (Data_Scenario.romeSuppliesWheat)
+            if (scenario_property_rome_supplies_wheat())
             {
                 continue;
             }

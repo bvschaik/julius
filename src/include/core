@@ -1,6 +1,9 @@
 #ifndef _JULIUS_INCLUDE_CORE_H_
 #define _JULIUS_INCLUDE_CORE_H_
 
-#include "core/time.hpp" 
+#include "core/time.h" 
+#include "core/dir.h"
+#include "core/calc.h"
+#include "core/file.h"
 
 #endif 

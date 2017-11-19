@@ -5,11 +5,8 @@
 #include "terrain.h"
 #include "game/tutorial.h"
 
-#include "data/building.hpp"
-#include "data/cityinfo.hpp"
-#include "data/constants.hpp"
-#include "data/grid.hpp"
-#include "data/scenario.hpp"
+#include <data>
+#include <scenario>
 
 #include "building/count.h"
 #include "building/model.h"
@@ -451,7 +448,7 @@ void Resource_removeExportedResourceFromWarehouseSpace(int spaceId, int resource
 
 static int determineGranaryAcceptFoods()
 {
-    if (Data_Scenario.romeSuppliesWheat)
+    if (scenario_property_rome_supplies_wheat())
     {
         return 0;
     }
@@ -489,7 +486,7 @@ static int determineGranaryAcceptFoods()
 
 static int determineGranaryGetFoods()
 {
-    if (Data_Scenario.romeSuppliesWheat)
+    if (scenario_property_rome_supplies_wheat())
     {
         return 0;
     }
@@ -679,7 +676,7 @@ int Resource_determineWarehouseWorkerTask(int buildingId, int *resource)
         }
     }
     // deliver food to accepting granary
-    if (determineGranaryAcceptFoods() && !Data_Scenario.romeSuppliesWheat)
+    if (determineGranaryAcceptFoods() && !scenario_property_rome_supplies_wheat())
     {
         spaceId = buildingId;
         for (int i = 0; i < 8; i++)

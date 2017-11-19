@@ -26,6 +26,7 @@
 #include <signal.h>
 
 #include <ui>
+#include <scenario>
 
 static struct
 {

@@ -6,5 +6,9 @@
 #include "scenario/request.h"
 #include "scenario/map.h"
 #include "scenario/criteria.h"
+#include "scenario.h"
+
+//climates and wheat supply flags
+#include "scenario/property.h"
 
 #endif

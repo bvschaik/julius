@@ -15,10 +15,9 @@
 
 #include <sound>
 #include <data>
+#include <scenario>
 
 #include "game/tutorial.h"
-#include "data/figure.hpp"
-#include "data/figure.hpp"
 #include "city/culture.h"
 #include "ui/allwindows.h"
 
@@ -862,7 +861,7 @@ static void setupFromSavedGame()
     Data_CityInfo.tutorial1FireMessageShown = 1;
     Data_CityInfo.tutorial3DiseaseMessageShown = 1;
 
-    image_load_climate(Data_Scenario.climate);
+    image_load_climate(scenario_property_climate());
     image_load_enemy(Data_Scenario.enemyId);
     empire_determine_distant_battle_city();
     TerrainGraphics_determineGardensFromGraphicIds();

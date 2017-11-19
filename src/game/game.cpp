@@ -9,6 +9,7 @@
 
 #include <sound>
 #include <data>
+#include <scenario>
 
 #include "building/model.h"
 #include "core/debug.h"
@@ -56,7 +57,7 @@ int Game::init()
         return 0;
     }
 
-    if (!image_load_climate(Climate_Central))
+    if (!image_load_climate(CLIMATE_CENTRAL))
     {
         errlog("ERR: unable to load main graphics");
         return 0;

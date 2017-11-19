@@ -7,9 +7,10 @@
 
 #include <data>
 #include <ui>
+#include <core>
+#include <scenario>
 
 #include "building/model.h"
-#include "core/time.h"
 
 static void drawMenuButtons();
 static int handleBuildSubmenu();
@@ -102,7 +103,7 @@ void UI_BuildingMenu_drawSidebarImage(int xOffset, int forceDraw)
         graphicId = graphicPanelWindows;
         break;
     case 1:
-        if (Data_Scenario.climate == Climate_Desert)
+        if (scenario_property_climate() == CLIMATE_DESERT)
         {
             graphicId = image_group(ID_Graphic_PanelWindowsDesert);
         }
@@ -112,7 +113,7 @@ void UI_BuildingMenu_drawSidebarImage(int xOffset, int forceDraw)
         }
         break;
     case 2:
-        if (Data_Scenario.climate == Climate_Desert)
+        if (scenario_property_climate() == CLIMATE_DESERT)
         {
             graphicId = image_group(ID_Graphic_PanelWindowsDesert) + 1;
         }
@@ -122,7 +123,7 @@ void UI_BuildingMenu_drawSidebarImage(int xOffset, int forceDraw)
         }
         break;
     case 3:
-        if (Data_Scenario.climate == Climate_Desert)
+        if (scenario_property_climate() == CLIMATE_DESERT)
         {
             graphicId = image_group(ID_Graphic_PanelWindowsDesert) + 2;
         }
@@ -150,7 +151,7 @@ void UI_BuildingMenu_drawSidebarImage(int xOffset, int forceDraw)
         graphicId = graphicPanelWindows + 7;
         break;
     case 10:
-        if (Data_Scenario.climate == Climate_Desert)
+        if (scenario_property_climate() == CLIMATE_DESERT)
         {
             graphicId = image_group(ID_Graphic_PanelWindowsDesert) + 3;
         }

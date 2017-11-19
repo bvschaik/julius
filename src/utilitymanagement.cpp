@@ -5,12 +5,8 @@
 #include "terrain.h"
 #include "terraingraphics.h"
 
-#include "data/building.hpp"
-#include "data/cityinfo.hpp"
-#include "data/constants.hpp"
-#include "data/grid.hpp"
-#include "data/scenario.hpp"
-#include "data/settings.hpp"
+#include <data>
+#include <scenario>
 
 #include "building/list.h"
 #include "graphics/image.h"
@@ -238,7 +234,7 @@ void UtilityManagement::updateReservoirFountain()
         {
             b->hasWaterAccess = 1;
             Terrain_setWithRadius(b->x, b->y, 1,
-                                  Data_Scenario.climate == Climate_Desert ? 3 : 4,
+                                  scenario_property_climate() == CLIMATE_DESERT ? 3 : 4,
                                   Terrain_FountainRange);
         }
         else

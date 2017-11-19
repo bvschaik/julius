@@ -286,17 +286,17 @@ void Figure_createFishingPoints()
 static void create_herd(int x, int y)
 {
     int herdType, numAnimals;
-    switch (Data_Scenario.climate)
+    switch (scenario_property_climate())
     {
-    case Climate_Central:
+    case CLIMATE_CENTRAL:
         herdType = FIGURE_SHEEP;
         numAnimals = 10;
         break;
-    case Climate_Northern:
+    case CLIMATE_NORTHERN:
         herdType = FIGURE_WOLF;
         numAnimals = 8;
         break;
-    case Climate_Desert:
+    case CLIMATE_DESERT:
         herdType = FIGURE_ZEBRA;
         numAnimals = 12;
         break;

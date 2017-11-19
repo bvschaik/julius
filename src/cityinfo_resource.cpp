@@ -3,10 +3,9 @@
 #include "terrain.h"
 #include "game/tutorial.h"
 
-#include "data/building.hpp"
-#include "data/cityinfo.hpp"
-#include "data/constants.hpp"
-#include "data/scenario.hpp"
+#include <data>
+#include <scenario>
+
 #include "empire/city.h"
 
 #include "building/model.h"
@@ -121,7 +120,7 @@ void CityInfo_Resource_calculateFood()
         Data_CityInfo.foodInfoFoodSupplyMonths =
             Data_CityInfo.foodInfoFoodStoredInGranaries > 0 ? 1 : 0;
     }
-    if (Data_Scenario.romeSuppliesWheat)
+    if (scenario_property_rome_supplies_wheat())
     {
         Data_CityInfo.foodInfoFoodTypesAvailable = 1;
         Data_CityInfo.foodInfoFoodSupplyMonths = 12;
@@ -131,7 +130,7 @@ void CityInfo_Resource_calculateFood()
 void CityInfo_Resource_calculateFoodAndSupplyRomeWheat()
 {
     CityInfo_Resource_calculateFood();
-    if (Data_Scenario.romeSuppliesWheat)
+    if (scenario_property_rome_supplies_wheat())
     {
         for (int i = 1; i < MAX_BUILDINGS; i++)
         {
@@ -161,7 +160,7 @@ void CityInfo_Resource_housesConsumeFood()
                 amountPerType /= numTypes;
             }
             b->data.house.numFoods = 0;
-            if (Data_Scenario.romeSuppliesWheat)
+            if (scenario_property_rome_supplies_wheat())
             {
                 Data_CityInfo.foodInfoFoodTypesEaten = 1;
                 Data_CityInfo.foodInfoFoodTypesAvailable = 1;

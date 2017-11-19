@@ -2,10 +2,8 @@
 
 #include "core/calc.h"
 
-#include "data/building.hpp"
-#include "data/cityinfo.hpp"
-#include "data/constants.hpp"
-#include "data/scenario.hpp"
+#include <data>
+#include <scenario>
 
 #include "building/model.h"
 #include "building/storage.h"
@@ -94,7 +92,7 @@ int Resource_getGranaryForStoringFood(
     int forceOnStockpile, int x, int y, int resource, int distanceFromEntry, int roadNetworkId,
     int *understaffed, int *xDst, int *yDst)
 {
-    if (Data_Scenario.romeSuppliesWheat)
+    if (scenario_property_rome_supplies_wheat())
     {
         return 0;
     }
@@ -154,7 +152,7 @@ int Resource_getGettingGranaryForStoringFood(
     int x, int y, int resource, int distanceFromEntry, int roadNetworkId,
     int *xDst, int *yDst)
 {
-    if (Data_Scenario.romeSuppliesWheat)
+    if (scenario_property_rome_supplies_wheat())
     {
         return 0;
     }
@@ -213,7 +211,7 @@ int Resource_getGranaryForGettingFood(int srcBuildingId, int *xDst, int *yDst)
     {
         return 0;
     }
-    if (Data_Scenario.romeSuppliesWheat)
+    if (scenario_property_rome_supplies_wheat())
     {
         return 0;
     }

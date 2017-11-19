@@ -7,6 +7,7 @@
 
 #include <data>
 #include <ui>
+#include <scenario>
 
 #include "building/count.h"
 #include "building/model.h"
@@ -208,7 +209,7 @@ void UI_Warning_checkFoodStocks(int buildingType)
 {
     if (!hasWarningAlready && buildingType == BUILDING_HOUSE_VACANT_LOT)
     {
-        if (Data_CityInfo.population >= 200 && !Data_Scenario.romeSuppliesWheat)
+        if (Data_CityInfo.population >= 200 && !scenario_property_climate())
         {
             if (calc_percentage(Data_CityInfo.foodInfoFoodStoredLastMonth,
                                 Data_CityInfo.foodInfoFoodConsumedLastMonth) <= 95)

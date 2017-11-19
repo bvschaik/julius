@@ -12,6 +12,7 @@
 
 #include <sound>
 #include <data>
+#include <scenario>
 
 #include "building/count.h"
 #include "core/calc.h"
@@ -544,7 +545,7 @@ void Event_handleRandomEvents()
             if (Data_CityInfo.tradeNumOpenLandRoutes > 0)
             {
                 Data_CityInfo.tradeLandProblemDuration = 48;
-                if (Data_Scenario.climate == Climate_Desert)
+                if (scenario_property_climate() == CLIMATE_DESERT)
                 {
                     city_message_post(1, MESSAGE_LAND_TRADE_DISRUPTED_SANDSTORMS, 0, 0);
                 }

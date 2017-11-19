@@ -15,6 +15,7 @@
 
 #include <sound>
 #include <data>
+#include <scenario>
 
 #include "core/random.h"
 #include "core/time.h"
@@ -57,7 +58,7 @@ void Security_Tick_updateBurningRuins()
             continue;
         }
         building_list_burning_add(i);
-        if (Data_Scenario.climate == Climate_Desert)
+        if (scenario_property_climate() == CLIMATE_DESERT)
         {
             if (b->fireDuration & 3)   // check spread every 4 ticks
             {
@@ -428,11 +429,11 @@ void Security_Tick_checkFireCollapse()
             {
                 b->fireRisk += 5;
             }
-            if (Data_Scenario.climate == Climate_Northern)
+            if (scenario_property_climate() == CLIMATE_NORTHERN)
             {
                 b->fireRisk = 0;
             }
-            if (Data_Scenario.climate == Climate_Desert)
+            if (scenario_property_climate() == CLIMATE_DESERT)
             {
                 b->fireRisk += 3;
             }

@@ -263,7 +263,7 @@ static void loadScenario(const char *scenarioName)
     scenario_price_change_init();
 
     SidebarMenu_enableBuildingMenuItemsAndButtons();
-    image_load_climate(Data_Scenario.climate);
+    image_load_climate(scenario_property_climate());
     image_load_enemy(Data_Scenario.enemyId);
 }
 
