@@ -1,7 +1,7 @@
 #ifndef SCENARIO_DATA_H
 #define SCENARIO_DATA_H
 
-#include "scenario/map.h"
+#include "map/point.h"
 
 #include <stdint.h>
 

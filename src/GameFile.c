@@ -40,6 +40,7 @@
 #include "game/time.h"
 #include "game/tutorial.h"
 #include "graphics/image.h"
+#include "map/bookmark.h"
 #include "scenario/criteria.h"
 #include "scenario/distant_battle.h"
 #include "scenario/earthquake.h"
@@ -205,7 +206,7 @@ typedef struct {
     buffer *Data_Debug_incorrectHousePositions;
     buffer *Data_Debug_unfixableHousePositions;
     buffer *Data_FileList_selectedScenario;
-    buffer *Data_CityInfo_Extra_bookmarks;
+    buffer *bookmarks;
     buffer *tutorial_part3;
     buffer *Data_CityInfo_Extra_entryPointFlag_gridOffset;
     buffer *Data_CityInfo_Extra_exitPointFlag_gridOffset;
@@ -356,7 +357,7 @@ void init_savegame_data()
     state->Data_Debug_incorrectHousePositions = create_savegame_piece(4, 0);
     state->Data_Debug_unfixableHousePositions = create_savegame_piece(4, 0);
     state->Data_FileList_selectedScenario = create_savegame_piece(65, 0);
-    state->Data_CityInfo_Extra_bookmarks = create_savegame_piece(32, 0);
+    state->bookmarks = create_savegame_piece(32, 0);
     state->tutorial_part3 = create_savegame_piece(4, 0);
     state->Data_CityInfo_Extra_entryPointFlag_gridOffset = create_savegame_piece(4, 0);
     state->Data_CityInfo_Extra_exitPointFlag_gridOffset = create_savegame_piece(4, 0);
@@ -513,7 +514,9 @@ static void savegame_deserialize(savegame_state *state)
     read_all_from_buffer(state->Data_Debug_incorrectHousePositions, &Data_Buildings_Extra.incorrectHousePositions);
     read_all_from_buffer(state->Data_Debug_unfixableHousePositions, &Data_Buildings_Extra.unfixableHousePositions);
     read_all_from_buffer(state->Data_FileList_selectedScenario, &Data_FileList.selectedScenario);
-    read_all_from_buffer(state->Data_CityInfo_Extra_bookmarks, &Data_CityInfo_Extra.bookmarks);
+
+    map_bookmark_load_state(state->bookmarks);
+
     read_all_from_buffer(state->Data_CityInfo_Extra_entryPointFlag_gridOffset, &Data_CityInfo_Extra.entryPointFlag.gridOffset);
     read_all_from_buffer(state->Data_CityInfo_Extra_exitPointFlag_gridOffset, &Data_CityInfo_Extra.exitPointFlag.gridOffset);
 
@@ -635,7 +638,9 @@ static void savegame_serialize(savegame_state *state)
     write_all_to_buffer(state->Data_Debug_incorrectHousePositions, &Data_Buildings_Extra.incorrectHousePositions);
     write_all_to_buffer(state->Data_Debug_unfixableHousePositions, &Data_Buildings_Extra.unfixableHousePositions);
     write_all_to_buffer(state->Data_FileList_selectedScenario, &Data_FileList.selectedScenario);
-    write_all_to_buffer(state->Data_CityInfo_Extra_bookmarks, &Data_CityInfo_Extra.bookmarks);
+
+    map_bookmark_save_state(state->bookmarks);
+
     write_all_to_buffer(state->Data_CityInfo_Extra_entryPointFlag_gridOffset, &Data_CityInfo_Extra.entryPointFlag.gridOffset);
     write_all_to_buffer(state->Data_CityInfo_Extra_exitPointFlag_gridOffset, &Data_CityInfo_Extra.exitPointFlag.gridOffset);
 

@@ -761,10 +761,6 @@ extern struct _Data_CityInfo_Extra {
 	struct {
 		int x;
 		int y;
-	} bookmarks[4];
-	struct {
-		int x;
-		int y;
 		int gridOffset;
 	} entryPointFlag;
 	struct {

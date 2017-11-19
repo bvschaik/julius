@@ -19,6 +19,7 @@
 #include "Data/State.h"
 
 #include "figure/formation.h"
+#include "map/bookmark.h"
 #include "scenario/invasion.h"
 
 #define ExitMilitaryCommand() \
@@ -284,26 +285,12 @@ void KeyboardHotkey_esc()
 	UI_PopupDialog_show(PopupDialog_Quit, confirmExit, 1);
 }
 
-static void setBookmark(int number)
-{
-	if (number >= 0 && number < 4) {
-		Data_CityInfo_Extra.bookmarks[number].x = Data_State.map.camera.x;
-		Data_CityInfo_Extra.bookmarks[number].y = Data_State.map.camera.y;
-	}
-}
-
 static void goToBookmark(int number)
 {
-	if (number >= 0 && number < 4) {
-		int x = Data_CityInfo_Extra.bookmarks[number].x;
-		int y = Data_CityInfo_Extra.bookmarks[number].y;
-		if (x > -1 && GridOffset(x, y) > -1) {
-			Data_State.map.camera.x = x;
-			Data_State.map.camera.y = y;
-			CityView_checkCameraBoundaries();
-			UI_Window_requestRefresh();
-		}
-	}
+    if (map_bookmark_go_to(number)) {
+        CityView_checkCameraBoundaries();
+        UI_Window_requestRefresh();
+    }
 }
 
 static void handleBookmark(int number)
@@ -311,7 +298,7 @@ static void handleBookmark(int number)
 	ExitMilitaryCommand();
 	if (UI_Window_getId() == Window_City) {
 		if (data.ctrlDown || data.shiftDown) {
-			setBookmark(number);
+			map_bookmark_save(number);
 		} else {
 			goToBookmark(number);
 		}

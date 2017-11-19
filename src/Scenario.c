@@ -39,6 +39,7 @@
 #include "game/time.h"
 #include "game/tutorial.h"
 #include "graphics/image.h"
+#include "map/bookmark.h"
 #include "scenario/criteria.h"
 #include "scenario/demand_change.h"
 #include "scenario/earthquake.h"
@@ -56,7 +57,6 @@
 #include <string.h>
 
 static int mapFileExists(const char *scenarioName);
-static void clearBookmarks();
 static void initCustomScenario(const char *scenarioName);
 static void loadScenario(const char *scenarioName);
 static void readScenarioAndInitGraphics();
@@ -70,7 +70,7 @@ void Scenario_initialize(const char *scenarioName)
 {
 	int mission = scenario_campaign_mission();
 	int rank = scenario_campaign_rank();
-	clearBookmarks();
+	map_bookmarks_clear();
 	if (scenario_is_custom()) {
 		if (!mapFileExists(scenarioName)) {
 			UI_Window_goTo(Window_City);
@@ -111,14 +111,6 @@ void Scenario_initialize(const char *scenarioName)
 
 	SidebarMenu_enableBuildingMenuItemsAndButtons();
 	city_message_init_scenario();
-}
-
-static void clearBookmarks()
-{
-	for (int i = 0; i < 4; i++) {
-		Data_CityInfo_Extra.bookmarks[i].x = -1;
-		Data_CityInfo_Extra.bookmarks[i].y = -1;
-	}
 }
 
 static int mapFileExists(const char *scenarioName)

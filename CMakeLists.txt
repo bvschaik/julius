@@ -51,6 +51,9 @@ set (GAME_FILES
     src/game/time.c
     src/game/tutorial.c
 )
+set (MAP_FILES
+    src/map/bookmark.c
+)
 set (SCENARIO_FILES
     src/scenario/building.c
     src/scenario/criteria.c
@@ -230,6 +233,7 @@ add_executable(julius
 	${EMPIRE_FILES}
 	${FIGURE_FILES}
 	${GAME_FILES}
+	${MAP_FILES}
 	${SCENARIO_FILES}
 	${GRAPHICS_FILES}
 	${SOUND_FILES}
