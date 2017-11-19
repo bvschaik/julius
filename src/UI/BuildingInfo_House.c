@@ -40,7 +40,7 @@ static void drawVacantLot(BuildingInfoContext *c)
 static void drawPopulationInfo(BuildingInfoContext *c, int yOffset)
 {
 	struct Data_Building *b = &Data_Buildings[c->buildingId];
-	Graphics_drawImage(image_group(ID_Graphic_ContextIcons) + 13, c->xOffset + 34, yOffset + 4);
+	Graphics_drawImage(image_group(GROUP_CONTEXT_ICONS) + 13, c->xOffset + 34, yOffset + 4);
 	int width = Widget_Text_drawNumber(b->housePopulation, '@', " ",
 		c->xOffset + 50, yOffset + 14, FONT_SMALL_BLACK);
 	width += Widget_GameText_draw(127, 20, c->xOffset + 50 + width, yOffset + 14, FONT_SMALL_BLACK);
@@ -110,7 +110,7 @@ void UI_BuildingInfo_drawHouse(BuildingInfoContext *c)
 	drawTaxInfo(c, c->yOffset + 194);
 	drawHappinessInfo(c, c->yOffset + 214);
 	
-	int resourceGraphic = image_group(ID_Graphic_ResourceIcons);
+	int resourceGraphic = image_group(GROUP_RESOURCE_ICONS);
 	// food inventory
 	if (model_get_house(b->subtype.houseLevel)->food_types) {
 		// wheat

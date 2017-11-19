@@ -30,7 +30,7 @@ void UI_Advisor_Entertainment_drawBackground(int *advisorHeight)
 
 	*advisorHeight = 23;
 	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
-	Graphics_drawImage(image_group(ID_Graphic_AdvisorIcons) + 8,
+	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 8,
 		baseOffsetX + 10, baseOffsetY + 10);
 
 	Widget_GameText_draw(58, 0, baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK);
@@ -157,7 +157,7 @@ static void drawFestivalBackground()
 	int baseOffsetY = Data_Screen.offset640x480.y;
 
 	Widget_Panel_drawInnerPanel(baseOffsetX + 48, baseOffsetY + 252, 34, 6);
-	Graphics_drawImage(image_group(ID_Graphic_PanelWindows) + 15,
+	Graphics_drawImage(image_group(GROUP_PANEL_WINDOWS) + 15,
 		baseOffsetX + 460, baseOffsetY + 255);
 	Widget_GameText_draw(58, 17, baseOffsetX + 52, baseOffsetY + 224, FONT_LARGE_BLACK);
 

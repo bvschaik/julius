@@ -56,7 +56,7 @@ void UI_Advisor_Labor_drawBackground(int *advisorHeight)
 
 	*advisorHeight = 26;
 	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
-	Graphics_drawImage(image_group(ID_Graphic_AdvisorIcons), baseOffsetX + 10, baseOffsetY + 10);
+	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS), baseOffsetX + 10, baseOffsetY + 10);
 	
 	Widget_GameText_draw(50, 0, baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK);
 	
@@ -123,7 +123,7 @@ void UI_Advisor_Labor_drawForeground()
 			560, 22, focus
 		);
 		if (Data_CityInfo.laborCategory[i].priority) {
-			Graphics_drawImage(image_group(ID_Graphic_LaborPriorityLock),
+			Graphics_drawImage(image_group(GROUP_LABOR_PRIORITY_LOCK),
 				baseOffsetX + 70, baseOffsetY + 80 + 25 * i);
 			Widget_Text_drawNumber(Data_CityInfo.laborCategory[i].priority, '@', " ",
 				baseOffsetX + 90, baseOffsetY + 82 + 25 * i, FONT_NORMAL_WHITE);

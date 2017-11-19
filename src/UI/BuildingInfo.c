@@ -607,7 +607,7 @@ void UI_BuildingInfo_drawEmploymentInfo(BuildingInfoContext *c, int yOffset)
 	if (!textId && b->housesCovered < 40) {
 		textId = 20; // poor access to employees
 	}
-	Graphics_drawImage(image_group(ID_Graphic_ContextIcons) + 14,
+	Graphics_drawImage(image_group(GROUP_CONTEXT_ICONS) + 14,
 		c->xOffset + 40, yOffset + 6);
 	if (textId) {
 		int width = Widget_GameText_drawNumberWithDescription(8, 12, b->numWorkers,

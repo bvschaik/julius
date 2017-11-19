@@ -47,9 +47,9 @@ static void fix_image_ids()
             break;
         }
     }
-    if (image_id > 0 && image_id != image_group(ID_Graphic_EmpireCity)) {
+    if (image_id > 0 && image_id != image_group(GROUP_EMPIRE_CITY)) {
         // empire map uses old version of graphics: increase every graphic id
-        int offset = image_group(ID_Graphic_EmpireCity) - image_id;
+        int offset = image_group(GROUP_EMPIRE_CITY) - image_id;
         for (int i = 0; i < MAX_OBJECTS; i++) {
             if (!objects[i].in_use) {
                 continue;
@@ -254,9 +254,9 @@ void empire_object_set_expanded(int object_id, int new_city_type)
 {
     objects[object_id].city_type = new_city_type;
     if (new_city_type == EMPIRE_CITY_TRADE) {
-        objects[object_id].obj.expanded.image_id = image_group(ID_Graphic_EmpireCityTrade);
+        objects[object_id].obj.expanded.image_id = image_group(GROUP_EMPIRE_CITY_TRADE);
     } else if (new_city_type == EMPIRE_CITY_DISTANT_ROMAN) {
-        objects[object_id].obj.expanded.image_id = image_group(ID_Graphic_EmpireCityDistantRoman);
+        objects[object_id].obj.expanded.image_id = image_group(GROUP_EMPIRE_CITY_DISTANT_ROMAN);
     }
 }
 

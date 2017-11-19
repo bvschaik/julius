@@ -140,7 +140,7 @@ static void drawBuildingFootprints()
 			}
 			int graphicId = Data_Grid_graphicIds[gridOffset];
 			if (Data_Grid_bitfields[gridOffset] & Bitfield_Overlay) {
-				graphicId = image_group(ID_Graphic_TerrainOverlay);
+				graphicId = image_group(GROUP_TERRAIN_OVERLAY);
 			}
 			switch (Data_Grid_bitfields[gridOffset] & Bitfield_Sizes) {
 				case Bitfield_Size1:
@@ -305,31 +305,31 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 				// workshops
 				if (b->type == BUILDING_WINE_WORKSHOP) {
 					if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
-						Graphics_drawImageMasked(image_group(ID_Graphic_WorkshopRawMaterial),
+						Graphics_drawImageMasked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL),
 							xGraphic + 45, yGraphic + 23, colorMask);
 					}
 				}
 				if (b->type == BUILDING_OIL_WORKSHOP) {
 					if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
-						Graphics_drawImageMasked(image_group(ID_Graphic_WorkshopRawMaterial) + 1,
+						Graphics_drawImageMasked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 1,
 							xGraphic + 35, yGraphic + 15, colorMask);
 					}
 				}
 				if (b->type == BUILDING_WEAPONS_WORKSHOP) {
 					if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
-						Graphics_drawImageMasked(image_group(ID_Graphic_WorkshopRawMaterial) + 3,
+						Graphics_drawImageMasked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 3,
 							xGraphic + 46, yGraphic + 24, colorMask);
 					}
 				}
 				if (b->type == BUILDING_FURNITURE_WORKSHOP) {
 					if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
-						Graphics_drawImageMasked(image_group(ID_Graphic_WorkshopRawMaterial) + 2,
+						Graphics_drawImageMasked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 2,
 							xGraphic + 48, yGraphic + 19, colorMask);
 					}
 				}
 				if (b->type == BUILDING_POTTERY_WORKSHOP) {
 					if (b->loadsStored >= 2 || b->data.industry.hasFullResource) {
-						Graphics_drawImageMasked(image_group(ID_Graphic_WorkshopRawMaterial) + 4,
+						Graphics_drawImageMasked(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 4,
 							xGraphic + 47, yGraphic + 24, colorMask);
 					}
 				}
@@ -361,7 +361,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 						int numDockers = Building_Dock_getNumIdleDockers(buildingId);
 						if (numDockers > 0) {
 							int graphicIdDock = Data_Grid_graphicIds[b->gridOffset];
-							int graphicIdDockers = image_group(ID_Graphic_Dockers);
+							int graphicIdDockers = image_group(GROUP_BUILDING_DOCK_DOCKERS);
 							if (graphicIdDock == image_group(GROUP_BUILDING_DOCK_1)) {
 								graphicIdDockers += 0;
 							} else if (graphicIdDock == image_group(GROUP_BUILDING_DOCK_2)) {
@@ -386,7 +386,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 						Graphics_drawImageMasked(image_group(GROUP_BUILDING_WAREHOUSE) + 17,
 							xGraphic - 4, yGraphic - 42, colorMask);
 						if (buildingId == Data_CityInfo.buildingTradeCenterBuildingId) {
-							Graphics_drawImageMasked(image_group(ID_Graphic_TradeCenterFlag),
+							Graphics_drawImageMasked(image_group(GROUP_BUILDING_TRADE_CENTER_FLAG),
 								xGraphic + 19, yGraphic - 56, colorMask);
 						}
 					}
@@ -413,7 +413,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 						}
 					}
 					if (b->type == BUILDING_BURNING_RUIN && b->ruinHasPlague) {
-						Graphics_drawImageMasked(image_group(ID_Graphic_PlagueSkull),
+						Graphics_drawImageMasked(image_group(GROUP_PLAGUE_SKULL),
 							xGraphic + 18, yGraphic - 32, colorMask);
 					}
 					int animationOffset = Animation_getIndexForCityBuilding(graphicId, gridOffset);
@@ -496,7 +496,7 @@ void UI_CityBuildings_drawBridge(int gridOffset, int x, int y)
 	if (Data_Grid_bitfields[gridOffset] & Bitfield_Deleted) {
 		colorMask = COLOR_MASK_RED;
 	}
-	int graphicId = image_group(ID_Graphic_Bridge);
+	int graphicId = image_group(GROUP_BUILDING_BRIDGE);
 	switch (Data_Grid_spriteOffsets[gridOffset]) {
 		case 1:
 			Graphics_drawImageMasked(graphicId + 5, x, y - 20, colorMask);

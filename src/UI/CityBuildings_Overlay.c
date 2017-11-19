@@ -337,7 +337,7 @@ static void drawFootprintForWaterOverlay(int gridOffset, int xOffset, int yOffse
 			drawBuildingFootprintForOverlay(buildingId, gridOffset, xOffset, yOffset, graphicOffset);
 		}
 	} else {
-		int graphicId = image_group(ID_Graphic_TerrainOverlay);
+		int graphicId = image_group(GROUP_TERRAIN_OVERLAY);
 		switch (terrain & (Terrain_ReservoirRange | Terrain_FountainRange)) {
 			case Terrain_ReservoirRange | Terrain_FountainRange:
 				graphicId += 27;
@@ -492,7 +492,7 @@ static void drawBuildingFootprintForOverlay(int buildingId, int gridOffset, int 
 	int origGraphicId = Data_Grid_graphicIds[gridOffset];
 	struct Data_Building *b = &Data_Buildings[buildingId];
 	if (b->size == 1) {
-		graphicId = image_group(ID_Graphic_TerrainOverlay);
+		graphicId = image_group(GROUP_TERRAIN_OVERLAY);
 		if (b->houseSize) {
 			graphicId += 4;
 		}
@@ -592,7 +592,7 @@ static void drawBuildingFootprintForOverlay(int buildingId, int gridOffset, int 
 		if (drawOrig) {
 			DRAWFOOT_SIZE2(Data_Grid_graphicIds[gridOffset], xOffset, yOffset);
 		} else {
-			int graphicBase = image_group(ID_Graphic_TerrainOverlay) + graphicOffset;
+			int graphicBase = image_group(GROUP_TERRAIN_OVERLAY) + graphicOffset;
 			if (b->houseSize) {
 				graphicBase += 4;
 			}
@@ -696,7 +696,7 @@ static void drawBuildingFootprintForOverlay(int buildingId, int gridOffset, int 
 				}
 			}
 			if (draw) {
-				int graphicBase = image_group(ID_Graphic_TerrainOverlay) + graphicOffset;
+				int graphicBase = image_group(GROUP_TERRAIN_OVERLAY) + graphicOffset;
 				if (b->houseSize) {
 					graphicBase += 4;
 				}
@@ -710,7 +710,7 @@ static void drawBuildingFootprintForOverlay(int buildingId, int gridOffset, int 
 			}
 		}
 	} else if (b->size == 4) {
-		int graphicBase = image_group(ID_Graphic_TerrainOverlay) + graphicOffset;
+		int graphicBase = image_group(GROUP_TERRAIN_OVERLAY) + graphicOffset;
 		if (b->houseSize) {
 			graphicBase += 4;
 		}
@@ -769,7 +769,7 @@ static void drawBuildingFootprintForOverlay(int buildingId, int gridOffset, int 
 		if (drawOrig) {
 			DRAWFOOT_SIZE5(Data_Grid_graphicIds[gridOffset], xOffset, yOffset);
 		} else {
-			int graphicBase = image_group(ID_Graphic_TerrainOverlay) + graphicOffset;
+			int graphicBase = image_group(GROUP_TERRAIN_OVERLAY) + graphicOffset;
 			if (b->houseSize) {
 				graphicBase += 4;
 			}
@@ -1422,7 +1422,7 @@ static void drawBuildingTopForProblemsOverlay(int gridOffset, int buildingId, in
 
 static void drawOverlayColumn(int height, int xOffset, int yOffset, int isRed)
 {
-	int graphicId = image_group(ID_Graphic_OverlayColumn);
+	int graphicId = image_group(GROUP_OVERLAY_COLUMN);
 	if (isRed) {
 		graphicId += 9;
 	}

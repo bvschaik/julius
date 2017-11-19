@@ -26,7 +26,7 @@ void UI_Advisor_Population_drawBackground(int *advisorHeight)
 
 	*advisorHeight = 27;
 	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
-	Graphics_drawImage(image_group(ID_Graphic_AdvisorIcons) + 5, baseOffsetX + 10, baseOffsetY + 10);
+	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 5, baseOffsetX + 10, baseOffsetY + 10);
 
 	// Title: depends on big graph shown
 	if (Data_CityInfo_Extra.populationGraphOrder < 2) {
@@ -37,7 +37,7 @@ void UI_Advisor_Population_drawBackground(int *advisorHeight)
 		Widget_GameText_draw(55, 2, baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK);
 	}
 
-	Graphics_drawImage(image_group(ID_Graphic_PanelWindows) + 14, baseOffsetX + 56, baseOffsetY + 60);
+	Graphics_drawImage(image_group(GROUP_PANEL_WINDOWS) + 14, baseOffsetX + 56, baseOffsetY + 60);
 	
 	int bigText, topText, botText;
 	void (*bigGraph)(int, int, int);
@@ -262,19 +262,19 @@ static void drawHistoryGraph(int fullSize, int x, int y)
 			if (val > 0) {
 				switch (maxMonths) {
 					case 20:
-						Graphics_drawImage(image_group(ID_Graphic_PopulationGraphBar),
+						Graphics_drawImage(image_group(GROUP_POPULATION_GRAPH_BAR),
 							x + 20 * m, y + 200 - val);
 						break;
 					case 40:
-						Graphics_drawImage(image_group(ID_Graphic_PopulationGraphBar) + 1,
+						Graphics_drawImage(image_group(GROUP_POPULATION_GRAPH_BAR) + 1,
 							x + 10 * m, y + 200 - val);
 						break;
 					case 100:
-						Graphics_drawImage(image_group(ID_Graphic_PopulationGraphBar) + 2,
+						Graphics_drawImage(image_group(GROUP_POPULATION_GRAPH_BAR) + 2,
 							x + 4 * m, y + 200 - val);
 						break;
 					case 200:
-						Graphics_drawImage(image_group(ID_Graphic_PopulationGraphBar) + 3,
+						Graphics_drawImage(image_group(GROUP_POPULATION_GRAPH_BAR) + 3,
 							x + 2 * m, y + 200 - val);
 						break;
 					default:
@@ -336,7 +336,7 @@ static void drawCensusGraph(int fullSize, int x, int y)
 				val = pop >> yShift;
 			}
 			if (val > 0) {
-				Graphics_drawImage(image_group(ID_Graphic_PopulationGraphBar) + 2,
+				Graphics_drawImage(image_group(GROUP_POPULATION_GRAPH_BAR) + 2,
 					x + 4 * i, y + 200 - val);
 			}
 		}
@@ -388,7 +388,7 @@ static void drawSocietyGraph(int fullSize, int x, int y)
 				val = pop >> yShift;
 			}
 			if (val > 0) {
-				Graphics_drawImage(image_group(ID_Graphic_PopulationGraphBar),
+				Graphics_drawImage(image_group(GROUP_POPULATION_GRAPH_BAR),
 					x + 20 * i, y + 200 - val);
 			}
 		}

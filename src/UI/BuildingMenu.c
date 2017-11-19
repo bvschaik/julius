@@ -86,10 +86,10 @@ void UI_BuildingMenu_drawSidebarImage(int xOffset, int forceDraw)
 		return;
 	}
 	if (!Data_State.selectedBuilding.type) {
-		Graphics_drawImage(image_group(ID_Graphic_PanelWindows) + 12, xOffset, 239);
+		Graphics_drawImage(image_group(GROUP_PANEL_WINDOWS) + 12, xOffset, 239);
 		return;
 	}
-	int graphicPanelWindows = image_group(ID_Graphic_PanelWindows);
+	int graphicPanelWindows = image_group(GROUP_PANEL_WINDOWS);
 	int graphicId;
 	switch (menu.selectedSubmenu) {
 		default:
@@ -98,21 +98,21 @@ void UI_BuildingMenu_drawSidebarImage(int xOffset, int forceDraw)
 			break;
 		case 1:
 			if (scenario_property_climate() == CLIMATE_DESERT) {
-				graphicId = image_group(ID_Graphic_PanelWindowsDesert);
+				graphicId = image_group(GROUP_PANEL_WINDOWS_DESERT);
 			} else {
 				graphicId = graphicPanelWindows + 11;
 			}
 			break;
 		case 2:
 			if (scenario_property_climate() == CLIMATE_DESERT) {
-				graphicId = image_group(ID_Graphic_PanelWindowsDesert) + 1;
+				graphicId = image_group(GROUP_PANEL_WINDOWS_DESERT) + 1;
 			} else {
 				graphicId = graphicPanelWindows + 10;
 			}
 			break;
 		case 3:
 			if (scenario_property_climate() == CLIMATE_DESERT) {
-				graphicId = image_group(ID_Graphic_PanelWindowsDesert) + 2;
+				graphicId = image_group(GROUP_PANEL_WINDOWS_DESERT) + 2;
 			} else {
 				graphicId = graphicPanelWindows + 3;
 			}
@@ -137,7 +137,7 @@ void UI_BuildingMenu_drawSidebarImage(int xOffset, int forceDraw)
 			break;
 		case 10:
 			if (scenario_property_climate() == CLIMATE_DESERT) {
-				graphicId = image_group(ID_Graphic_PanelWindowsDesert) + 3;
+				graphicId = image_group(GROUP_PANEL_WINDOWS_DESERT) + 3;
 			} else {
 				graphicId = graphicPanelWindows + 8;
 			}

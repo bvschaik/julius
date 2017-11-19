@@ -26,7 +26,7 @@ void UI_Advisor_Financial_drawBackground(int *advisorHeight)
 
 	*advisorHeight = 26;
 	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
-	Graphics_drawImage(image_group(ID_Graphic_AdvisorIcons) + 10, baseOffsetX + 10, baseOffsetY + 10);
+	Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 10, baseOffsetX + 10, baseOffsetY + 10);
 
 	Widget_GameText_draw(60, 0, baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK);
 	Widget_Panel_drawInnerPanel(baseOffsetX + 64, baseOffsetY + 48, 34, 5);

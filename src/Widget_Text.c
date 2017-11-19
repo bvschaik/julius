@@ -677,7 +677,7 @@ static int drawRichText(const uint8_t *str, int xOffset, int yOffset,
 							while (c >= '0' && c <= '9') {
 								c = *(str++);
 							}
-							graphicId += image_group(ID_Graphic_MessageImages) - 1;
+							graphicId += image_group(GROUP_MESSAGE_IMAGES) - 1;
 							graphicHeightLines = image_get(graphicId)->height / 16 + 2;
 							if (line > 0) {
 								linesBeforeGraphic = 1;
@@ -873,7 +873,7 @@ void Widget_RichText_drawScrollbarDot()
 		if (data.isDraggingScroll) {
 			offset = data.scrollPositionDrag;
 		}
-		Graphics_drawImage(image_group(ID_Graphic_PanelButton) + 39,
+		Graphics_drawImage(image_group(GROUP_PANEL_BUTTON) + 39,
 			data.xText + 16 * data.textWidthBlocks + 6, data.yText + offset + 26);
 	}
 }

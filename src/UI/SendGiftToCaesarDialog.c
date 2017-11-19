@@ -41,7 +41,7 @@ void UI_SendGiftToCaesarDialog_drawBackground()
 	int baseOffsetY = Data_Screen.offset640x480.y;
 
 	Widget_Panel_drawOuterPanel(baseOffsetX + 96, baseOffsetY + 144, 30, 15);
-	Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + 16,
+	Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + 16,
 		baseOffsetX + 128, baseOffsetY + 160);
 	Widget_GameText_drawCentered(52, 69,
 		baseOffsetX + 128, baseOffsetY + 160, 432, FONT_LARGE_BLACK);

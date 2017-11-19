@@ -144,7 +144,7 @@ static int drawFigure(int xView, int yView, int gridOffset)
 static void drawTile(int xView, int yView, int gridOffset)
 {
 	if (gridOffset < 0) {
-		Graphics_drawImage(image_group(ID_Graphic_MinimapBlack), xView, yView);
+		Graphics_drawImage(image_group(GROUP_MINIMAP_BLACK), xView, yView);
 		return;
 	}
 
@@ -165,11 +165,11 @@ static void drawTile(int xView, int yView, int gridOffset)
 			int graphicId;
 			int buildingId = Data_Grid_buildingIds[gridOffset];
 			if (Data_Buildings[buildingId].houseSize) {
-				graphicId = image_group(ID_Graphic_MinimapHouse);
+				graphicId = image_group(GROUP_MINIMAP_HOUSE);
 			} else if (Data_Buildings[buildingId].type == BUILDING_RESERVOIR) {
-				graphicId = image_group(ID_Graphic_MinimapAqueduct) - 1;
+				graphicId = image_group(GROUP_MINIMAP_AQUEDUCT) - 1;
 			} else {
-				graphicId = image_group(ID_Graphic_MinimapBuilding);
+				graphicId = image_group(GROUP_MINIMAP_BUILDING);
 			}
 			switch (Data_Grid_bitfields[gridOffset] & Bitfield_Sizes) {
 				case 0:
@@ -188,25 +188,25 @@ static void drawTile(int xView, int yView, int gridOffset)
 		int rand = Data_Grid_random[gridOffset];
 		int graphicId;
 		if (terrain & Terrain_Water) {
-			graphicId = image_group(ID_Graphic_MinimapWater) + (rand & 3);
+			graphicId = image_group(GROUP_MINIMAP_WATER) + (rand & 3);
 		} else if (terrain & Terrain_Scrub) {
-			graphicId = image_group(ID_Graphic_MinimapTree) + (rand & 3);
+			graphicId = image_group(GROUP_MINIMAP_TREE) + (rand & 3);
 		} else if (terrain & Terrain_Tree) {
-			graphicId = image_group(ID_Graphic_MinimapTree) + (rand & 3);
+			graphicId = image_group(GROUP_MINIMAP_TREE) + (rand & 3);
 		} else if (terrain & Terrain_Rock) {
-			graphicId = image_group(ID_Graphic_MinimapRock) + (rand & 3);
+			graphicId = image_group(GROUP_MINIMAP_ROCK) + (rand & 3);
 		} else if (terrain & Terrain_Elevation) {
-			graphicId = image_group(ID_Graphic_MinimapRock) + (rand & 3);
+			graphicId = image_group(GROUP_MINIMAP_ROCK) + (rand & 3);
 		} else if (terrain & Terrain_Road) {
-			graphicId = image_group(ID_Graphic_MinimapRoad);
+			graphicId = image_group(GROUP_MINIMAP_ROAD);
 		} else if (terrain & Terrain_Aqueduct) {
-			graphicId = image_group(ID_Graphic_MinimapAqueduct);
+			graphicId = image_group(GROUP_MINIMAP_AQUEDUCT);
 		} else if (terrain & Terrain_Wall) {
-			graphicId = image_group(ID_Graphic_MinimapWall);
+			graphicId = image_group(GROUP_MINIMAP_WALL);
 		} else if (terrain & Terrain_Meadow) {
-			graphicId = image_group(ID_Graphic_MinimapMeadow) + (rand & 3);
+			graphicId = image_group(GROUP_MINIMAP_MEADOW) + (rand & 3);
 		} else {
-			graphicId = image_group(ID_Graphic_MinimapEmptyLand) + (rand & 7);
+			graphicId = image_group(GROUP_MINIMAP_EMPTY_LAND) + (rand & 7);
 		}
 		Graphics_drawImage(graphicId, xView, yView);
 	}

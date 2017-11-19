@@ -351,7 +351,7 @@ const color_t *image_data(int id)
 {
     if (!data.main[id].draw.is_external) {
         return &data.main_data[data.main[id].draw.offset];
-    } else if (id == image_group(ID_Graphic_EmpireMap)) {
+    } else if (id == image_group(GROUP_EMPIRE_MAP)) {
         return data.empire_data;
     } else {
         return load_external_data(id);

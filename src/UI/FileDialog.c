@@ -129,7 +129,7 @@ static void drawScrollbarDot()
 			pct = calc_percentage(scrollPosition, savedGames->num_files - 12);
 		}
 		int yOffset = calc_adjust_with_percentage(130, pct);
-		Graphics_drawImage(image_group(ID_Graphic_PanelButton) + 39,
+		Graphics_drawImage(image_group(GROUP_PANEL_BUTTON) + 39,
 			Data_Screen.offset640x480.x + 472,
 			Data_Screen.offset640x480.y + 145 + yOffset);
 	}

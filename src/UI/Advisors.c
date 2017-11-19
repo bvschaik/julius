@@ -187,10 +187,10 @@ void UI_Advisors_drawForeground()
 
 void UI_Advisor_drawGeneralBackground()
 {
-	Graphics_drawFullScreenImage(image_group(ID_Graphic_AdvisorBackground));
+	Graphics_drawFullScreenImage(image_group(GROUP_ADVISOR_BACKGROUND));
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
-	Graphics_drawImage(image_group(ID_Graphic_PanelWindows) + 13,
+	Graphics_drawImage(image_group(GROUP_PANEL_WINDOWS) + 13,
 		baseOffsetX, baseOffsetY + 432
 	);
 
@@ -199,7 +199,7 @@ void UI_Advisor_drawGeneralBackground()
 		if (currentAdvisor && i == currentAdvisor - 1) {
 			selectedOffset = 13;
 		}
-		Graphics_drawImage(image_group(ID_Graphic_AdvisorIcons) + i + selectedOffset,
+		Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + i + selectedOffset,
 			baseOffsetX + 48 * i + 12, baseOffsetY + 441
 		);
 	}

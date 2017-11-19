@@ -183,12 +183,12 @@ static void drawDialogNormal()
 	if (msg->image1.id) {
 		int graphicId, graphicX, graphicY;
 		if (data.textId) {
-			graphicId = image_group(ID_Graphic_MessageImages) + msg->image1.id - 1;
+			graphicId = image_group(GROUP_MESSAGE_IMAGES) + msg->image1.id - 1;
             graphicX = msg->image1.x;
             graphicY = msg->image1.y;
 		} else { // message id = 0 ==> about, fixed image position
 			graphicX = graphicY = 16;
-			graphicId = image_group(ID_Graphic_BigPeople);
+			graphicId = image_group(GROUP_BIG_PEOPLE);
 		}
 		Graphics_drawImage(graphicId, data.x + graphicX, data.y + graphicY);
 		if (data.y + graphicY + image_get(graphicId)->height + 8 > data.yText) {
@@ -196,7 +196,7 @@ static void drawDialogNormal()
 		}
 	}
 	if (msg->image2.id) {
-		int graphicId = image_group(ID_Graphic_MessageImages) + msg->image2.id - 1;
+		int graphicId = image_group(GROUP_MESSAGE_IMAGES) + msg->image2.id - 1;
 		Graphics_drawImage(graphicId, data.x + msg->image2.x, data.y + msg->image2.y);
 		if (data.y + msg->image2.y + image_get(graphicId)->height + 8 > data.yText) {
 			data.yText = data.y + msg->image2.y + image_get(graphicId)->height + 8;
@@ -273,7 +273,7 @@ static void drawDialogVideo()
 		Widget_Text_drawNumber(request->amount,
 			'@', " ", data.x + 8, data.y + 384, FONT_NORMAL_WHITE);
 		Graphics_drawImage(
-			image_group(ID_Graphic_ResourceIcons) + request->resource + Resource_getGraphicIdOffset(request->resource, 3),
+			image_group(GROUP_RESOURCE_ICONS) + request->resource + Resource_getGraphicIdOffset(request->resource, 3),
 			data.x + 70, data.y + 379);
 		Widget_GameText_draw(23, request->resource, data.x + 100, data.y + 384, FONT_NORMAL_WHITE);
 		if (request->state == REQUEST_STATE_NORMAL || request->state == REQUEST_STATE_OVERDUE) {
@@ -337,7 +337,7 @@ static void drawPlayerMessageContent(const lang_message *msg)
 			break;
 
 		case MESSAGE_TYPE_TRADE_CHANGE:
-			graphicId = image_group(ID_Graphic_ResourceIcons) + playerMessage.param2;
+			graphicId = image_group(GROUP_RESOURCE_ICONS) + playerMessage.param2;
 			graphicId += Resource_getGraphicIdOffset(playerMessage.param2, 3);
 			Graphics_drawImage(graphicId, data.x + 64, data.yText + 40);
 			Widget_GameText_draw(21, empire_city_get(playerMessage.param1)->name_id,
@@ -348,7 +348,7 @@ static void drawPlayerMessageContent(const lang_message *msg)
 			break;
 
 		case MESSAGE_TYPE_PRICE_CHANGE:
-			graphicId = image_group(ID_Graphic_ResourceIcons) + playerMessage.param2;
+			graphicId = image_group(GROUP_RESOURCE_ICONS) + playerMessage.param2;
 			graphicId += Resource_getGraphicIdOffset(playerMessage.param2, 3);
 			Graphics_drawImage(graphicId, data.x + 64, data.yText + 40);
 			Widget_Text_drawMoney(playerMessage.param1,
@@ -368,7 +368,7 @@ static void drawPlayerMessageContent(const lang_message *msg)
 		int yOffset = data.yText + 86 + lines * 16;
 		Widget_Text_drawNumber(request->amount,
 			'@', " ", data.xText + 8, yOffset, FONT_NORMAL_WHITE);
-		graphicId = image_group(ID_Graphic_ResourceIcons) + request->resource;
+		graphicId = image_group(GROUP_RESOURCE_ICONS) + request->resource;
 		graphicId += Resource_getGraphicIdOffset(request->resource, 3);
 		Graphics_drawImage(graphicId, data.xText + 70, yOffset - 5);
 		Widget_GameText_draw(23, request->resource,

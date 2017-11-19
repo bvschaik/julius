@@ -578,7 +578,7 @@ static void drawBuildingGhostBridge()
 		int yOffset;
 	} tiles[40];
 	int numTiles = 0;
-	int graphicBase = image_group(ID_Graphic_Bridge);
+	int graphicBase = image_group(GROUP_BUILDING_BRIDGE);
 	int graphicId, xOffset, yOffset;
 	int xAdd, yAdd;
 	switch (dir) {
@@ -1091,5 +1091,5 @@ static void drawBuildingGhostRoad()
 
 static void drawFlatTile(int xOffset, int yOffset, color_t mask)
 {
-	Graphics_drawImageBlend(image_group(ID_Graphic_FlatTile), xOffset, yOffset, mask);
+	Graphics_drawImageBlend(image_group(GROUP_TERRAIN_FLAT_TILE), xOffset, yOffset, mask);
 }
