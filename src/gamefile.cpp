@@ -862,7 +862,7 @@ static void setupFromSavedGame()
     Data_CityInfo.tutorial3DiseaseMessageShown = 1;
 
     image_load_climate(scenario_property_climate());
-    image_load_enemy(Data_Scenario.enemyId);
+    image_load_enemy(scenario_property_enemy());
     empire_determine_distant_battle_city();
     TerrainGraphics_determineGardensFromGraphicIds();
 

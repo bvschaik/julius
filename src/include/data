@@ -1,7 +1,6 @@
 #ifndef _JULIUS_INCLUDE_DATA_H_
 #define _JULIUS_INCLUDE_DATA_H_
 
-#include "data/alldata.hpp"
 #include "data/scenario.hpp"
 #include "data/settings.hpp"
 #include "data/screen.hpp"

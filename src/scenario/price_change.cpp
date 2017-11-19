@@ -5,7 +5,8 @@
 #include "empire/trade_prices.h"
 #include "game/time.h"
 
-#include "data/scenario.hpp"
+#include <data>
+#include <scenario>
 
 #define MAX_PRICE_CHANGES 20
 
@@ -29,7 +30,7 @@ void scenario_price_change_process()
         {
             continue;
         }
-        if (game_time_year() != Data_Scenario.priceChanges.year[i] + Data_Scenario.startYear ||
+        if (game_time_year() != Data_Scenario.priceChanges.year[i] + scenario_property_start_year() ||
                 game_time_month() != Data_Scenario.priceChanges.month[i])
         {
             continue;

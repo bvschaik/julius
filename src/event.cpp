@@ -64,7 +64,7 @@ void Event_handleDistantBattle()
     for (int i = 0; i < MAX_EVENTS; i++)
     {
         if (Data_Scenario.invasions.type[i] == InvasionType_DistantBattle &&
-                game_time_year() == Data_Scenario.invasions.year[i] + Data_Scenario.startYear &&
+                game_time_year() == Data_Scenario.invasions.year[i] + scenario_property_start_year() &&
                 game_time_month() == Data_Scenario.invasions_month[i] &&
                 Data_Scenario.distantBattleTravelMonthsEnemy > 4 &&
                 Data_Scenario.distantBattleTravelMonthsRoman > 4 &&

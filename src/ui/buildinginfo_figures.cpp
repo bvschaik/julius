@@ -9,6 +9,7 @@
 
 #include <data>
 #include <ui>
+#include <scenario>
 
 #include "empire/city.h"
 #include "figure/formation.h"
@@ -289,7 +290,7 @@ static void drawFigureInfoEnemy(BuildingInfoContext *c, int figureId)
 
     Widget_GameText_draw(65, Data_Figures[figureId].name,
                          c->xOffset + 90, c->yOffset + 108, FONT_LARGE_BROWN);
-    Widget_GameText_draw(37, Data_Scenario.enemyId + 20,
+    Widget_GameText_draw(37, scenario_property_enemy() + 20,
                          c->xOffset + 92, c->yOffset + 149, FONT_SMALL_BLACK);
 }
 

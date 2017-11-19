@@ -9,7 +9,6 @@
 #include "core/time.h"
 #include "runner.h"
 #include "screen.h"
-#include "data/alldata.hpp"
 #include "cursor.h"
 #include "keyboardinput.h"
 #include "keyboardhotkey.h"
@@ -27,6 +26,7 @@
 
 #include <ui>
 #include <scenario>
+#include <data>
 
 static struct
 {

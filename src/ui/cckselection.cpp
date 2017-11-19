@@ -124,14 +124,14 @@ static void drawScenarioInfo()
     int baseOffsetX = Data_Screen.offset640x480.x + 320;
     int baseOffsetY = Data_Screen.offset640x480.y + 20;
 
-    Graphics_drawImage(image_group(ID_Graphic_ScenarioImage) + Data_Scenario.imageId,
+    Graphics_drawImage(image_group(ID_Graphic_ScenarioImage) + scenario_image_id(),
                        Data_Screen.offset640x480.x + 78, Data_Screen.offset640x480.y + 36);
 
     Widget::Text::drawCentered(Data_FileList.selectedScenario,
                                baseOffsetX + 15, baseOffsetY + 5, 260, FONT_LARGE_BLACK, 0);
-    Widget::Text::drawCentered(Data_Scenario.briefDescription,
+    Widget::Text::drawCentered(scenario_brief_description(),
                                baseOffsetX + 15, baseOffsetY + 40, 260, FONT_NORMAL_WHITE, 0);
-    Widget_GameText_drawYear(Data_Scenario.startYear,
+    Widget_GameText_drawYear(scenario_property_start_year(),
                              baseOffsetX + 90, baseOffsetY + 70, FONT_LARGE_BLACK);
     Widget_GameText_drawCentered(44, 77 + scenario_property_climate(),
                                  baseOffsetX + 15, baseOffsetY + 130, 260, FONT_NORMAL_BLACK);
@@ -194,11 +194,11 @@ static void drawScenarioInfo()
     Widget_GameText_drawCentered(44, textId,
                                  baseOffsetX + 15, baseOffsetY + 170, 260, FONT_NORMAL_BLACK);
 
-    Widget_GameText_drawCentered(32, 11 + Data_Scenario.playerRank,
+    Widget_GameText_drawCentered(32, 11 + scenario_property_player_rank(),
                                  baseOffsetX + 15, baseOffsetY + 190, 260, FONT_NORMAL_BLACK);
     if (scenario_is_open_play())
     {
-        Widget_GameText_drawMultiline(145, Data_Scenario.openPlayScenarioId,
+        Widget_GameText_drawMultiline(145, scenario_open_play_id(),
                                       baseOffsetX + 25, baseOffsetY + 250, 260, FONT_NORMAL_BLACK);
     }
     else

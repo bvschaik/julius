@@ -7,9 +7,10 @@
 #include "empire/object.h"
 #include "empire/trade_route.h"
 #include "game/time.h"
+#include "city/message.h"
 
 #include <data>
-#include "city/message.h"
+#include <scenario>
 
 enum
 {
@@ -242,7 +243,7 @@ void empire_handle_expand_event()
     {
         return;
     }
-    if (game_time_year() < Data_Scenario.empireExpansionYear + Data_Scenario.startYear)
+    if (game_time_year() < Data_Scenario.empireExpansionYear + scenario_property_start_year())
     {
         return;
     }

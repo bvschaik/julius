@@ -2,6 +2,7 @@
 
 #include <ui>
 #include <data>
+#include <scenario>
 
 #include "city/message.h"
 #include "game/settings.h"

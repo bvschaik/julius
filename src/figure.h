@@ -8,7 +8,7 @@ void Figure_delete(int figureId);
 void Figure_createDustCloud(int x, int y, int size);
 void Figure_createFishingPoints();
 void Figure_createHerds();
-void Figure_createFlotsam(int xEntry, int yEntry, int hasWater);
+void Figure_createFlotsam();
 int Figure_createMissile(int buildingId, int x, int y, int xDst, int yDst, int type);
 
 int Figure_createSoldierFromBarracks(int buildingId, int x, int y);

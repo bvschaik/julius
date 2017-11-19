@@ -1,8 +1,8 @@
-#include "alldata.hpp"
-
 #define DATA_INTERN 1
 #include "data/grid.hpp"
 #include "empire/object.h"
+
+#include <data>
 
 _Data_Scenario Data_Scenario;
 

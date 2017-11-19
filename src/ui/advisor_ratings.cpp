@@ -2,7 +2,7 @@
 
 #include "window.h"
 
-#include "scenario/criteria.h"
+#include <scenario>
 
 static void drawRatingColumn(int xOffset, int yOffset, int value, int hasReached);
 static void buttonRating(int param1, int param2);

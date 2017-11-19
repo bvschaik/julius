@@ -7,6 +7,7 @@
 #include "game/time.h"
 
 #include <data>
+#include <scenario>
 
 #define MAX_DEMAND_CHANGES 20
 
@@ -30,7 +31,7 @@ void scenario_demand_change_process()
         {
             continue;
         }
-        if (game_time_year() != Data_Scenario.demandChanges.year[i] + Data_Scenario.startYear ||
+        if (game_time_year() != Data_Scenario.demandChanges.year[i] + scenario_property_start_year() ||
                 game_time_month() != Data_Scenario.demandChanges.month[i])
         {
             continue;

@@ -322,9 +322,9 @@ void Figure_createHerds()
     scenario_map_foreach_herd_point(create_herd);
 }
 
-void Figure_createFlotsam(int xEntry, int yEntry, int hasWater)
+void Figure_createFlotsam()
 {
-    if (!hasWater || !scenario_map_has_flotsam())
+    if (!scenario_map_has_river_entry() || !scenario_map_has_river_exit() || !scenario_map_has_flotsam())
     {
         return;
     }
@@ -337,9 +337,10 @@ void Figure_createFlotsam(int xEntry, int yEntry, int hasWater)
     }
     const int resourceIds[] = {3, 1, 3, 2, 1, 3, 2, 3, 2, 1, 3, 3, 2, 3, 3, 3, 1, 2, 0, 1};
     const int waitTicks[] = {10, 50, 100, 130, 200, 250, 400, 430, 500, 600, 70, 750, 820, 830, 900, 980, 1010, 1030, 1200, 1300};
+    map_point river_entry = scenario_map_river_entry();
     for (int i = 0; i < 20; i++)
     {
-        int figureId = Figure_create(FIGURE_FLOTSAM, xEntry, yEntry, 0);
+        int figureId = Figure_create(FIGURE_FLOTSAM,  river_entry.x, river_entry.y, 0);
         struct Data_Figure *f = &Data_Figures[figureId];
         f->actionState = FigureActionState_128_FlotsamCreated;
         f->resourceId = resourceIds[i];

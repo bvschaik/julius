@@ -89,8 +89,8 @@ void Scenario_initialize(const char *scenarioName)
     if (Data_Settings.isCustomScenario)
     {
         Data_CityInfo.personalSavings = 0;
-        Data_CityInfo.playerRank = Data_Scenario.playerRank;
-        Data_CityInfo.salaryRank = Data_Scenario.playerRank;
+        Data_CityInfo.playerRank = scenario_property_player_rank();
+        Data_CityInfo.salaryRank = scenario_property_player_rank();
     }
     if (Data_CityInfo.salaryRank > 10)
     {
@@ -173,38 +173,30 @@ static void loadScenario(const char *scenarioName)
     }
     Figure_createFishingPoints();
     Figure_createHerds();
-    Figure_createFlotsam(Data_Scenario.riverEntryPoint.x, Data_Scenario.riverEntryPoint.y, hasWaterEntry);
+    Figure_createFlotsam();
 
     Routing_determineLandCitizen();
     Routing_determineLandNonCitizen();
     Routing_determineWater();
     Routing_determineWalls();
 
-    if (Data_Scenario.entryPoint.x == -1 || Data_Scenario.entryPoint.y == -1)
-    {
-        Data_Scenario.entryPoint.x = Data_Settings_Map.width - 1;
-        Data_Scenario.entryPoint.y = Data_Settings_Map.height / 2;
-    }
+    scenario_map_init_entry_exit();
+
     map_point entry_point = scenario_map_entry();
     Data_CityInfo.entryPointX = entry_point.x;
     Data_CityInfo.entryPointY = entry_point.y;
     Data_CityInfo.entryPointGridOffset = GridOffset(Data_CityInfo.entryPointX, Data_CityInfo.entryPointY);
 
-    if (Data_Scenario.exitPoint.x == -1 || Data_Scenario.exitPoint.y == -1)
-    {
-        Data_Scenario.exitPoint.x = Data_Scenario.entryPoint.x;
-        Data_Scenario.exitPoint.y = Data_Scenario.entryPoint.y;
-    }
     Data_CityInfo.exitPointX = Data_Scenario.exitPoint.x;
     Data_CityInfo.exitPointY = Data_Scenario.exitPoint.y;
     Data_CityInfo.exitPointGridOffset = GridOffset(Data_CityInfo.exitPointX, Data_CityInfo.exitPointY);
     Data_CityInfo.treasury = difficulty_adjust_money(Data_Scenario.startFunds);
     Data_CityInfo.financeBalanceLastYear = Data_CityInfo.treasury;
-    game_time_init(Data_Scenario.startYear);
+    game_time_init(scenario_property_start_year());
 
     // set up events
     // earthquake
-    Data_Event.earthquake.gameYear = Data_Scenario.startYear + Data_Scenario.earthquakeYear;
+    Data_Event.earthquake.gameYear = scenario_property_start_year() + Data_Scenario.earthquakeYear;
     Data_Event.earthquake.month = 2 + (random_byte() & 7);
     switch (Data_Scenario.earthquakeSeverity)
     {
@@ -232,26 +224,26 @@ static void loadScenario(const char *scenarioName)
         Data_Event.earthquake.expand[i].y = Data_Scenario.earthquakePoint.y;
     }
     // gladiator revolt
-    Data_Event.gladiatorRevolt.gameYear = Data_Scenario.startYear + Data_Scenario.gladiatorRevolt.year;
+    Data_Event.gladiatorRevolt.gameYear = scenario_property_start_year() + Data_Scenario.gladiatorRevolt.year;
     Data_Event.gladiatorRevolt.month = 3 + (random_byte() & 3);
     Data_Event.gladiatorRevolt.endMonth = 3 + Data_Event.gladiatorRevolt.month;
     Data_Event.gladiatorRevolt.state = SpecialEvent_NotStarted;
     // emperor change
-    Data_Event.emperorChange.gameYear = Data_Scenario.startYear + Data_Scenario.emperorChange.year;
+    Data_Event.emperorChange.gameYear = scenario_property_start_year() + Data_Scenario.emperorChange.year;
     Data_Event.emperorChange.month = 1 + (random_byte() & 7);
     Data_Event.emperorChange.state = 0;
     // time limit
     if (scenario_criteria_time_limit_enabled())
     {
-        Data_Event.timeLimitMaxGameYear = Data_Scenario.startYear + Data_Scenario.winCriteria.timeLimitYears;
+        Data_Event.timeLimitMaxGameYear = scenario_property_start_year() + Data_Scenario.winCriteria.timeLimitYears;
     }
     else if (scenario_criteria_survival_enabled())
     {
-        Data_Event.timeLimitMaxGameYear = Data_Scenario.startYear + Data_Scenario.winCriteria.survivalYears;
+        Data_Event.timeLimitMaxGameYear = scenario_property_start_year() + Data_Scenario.winCriteria.survivalYears;
     }
     else
     {
-        Data_Event.timeLimitMaxGameYear = 1000000 + Data_Scenario.startYear;
+        Data_Event.timeLimitMaxGameYear = 1000000 + scenario_property_start_year();
     }
 
     empire_init_scenario();
@@ -264,7 +256,7 @@ static void loadScenario(const char *scenarioName)
 
     SidebarMenu_enableBuildingMenuItemsAndButtons();
     image_load_climate(scenario_property_climate());
-    image_load_enemy(Data_Scenario.enemyId);
+    image_load_enemy(scenario_property_enemy());
 }
 
 static void readScenarioAndInitGraphics()

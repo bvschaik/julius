@@ -2,11 +2,6 @@
 
 #include "data/scenario.hpp"
 
-int scenario_is_open_play()
-{
-    return Data_Scenario.isOpenPlay;
-}
-
 int scenario_criteria_population_enabled()
 {
     return Data_Scenario.winCriteria_populationEnabled;

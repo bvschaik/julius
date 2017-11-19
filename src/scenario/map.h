@@ -13,6 +13,8 @@ enum
     MAX_FISH=8
 };
 
+void scenario_map_init_entry_exit();
+
 map_point scenario_map_entry();
 
 map_point scenario_map_exit();

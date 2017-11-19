@@ -140,7 +140,7 @@ void Event_handleInvasions()
                 }
             }
         }
-        if (game_time_year() >= Data_Scenario.startYear + Data_Scenario.invasions.year[warning->invasionId] &&
+        if (game_time_year() >= scenario_property_start_year() + Data_Scenario.invasions.year[warning->invasionId] &&
                 game_time_month() >= Data_Scenario.invasions_month[warning->invasionId])
         {
             // invasion attack time has passed
@@ -153,14 +153,14 @@ void Event_handleInvasions()
             if (Data_Scenario.invasions.type[warning->invasionId] == InvasionType_EnemyArmy)
             {
                 int gridOffset = startInvasion(
-                                     enemyIdToEnemyType[Data_Scenario.enemyId],
+                                     enemyIdToEnemyType[scenario_property_enemy()],
                                      Data_Scenario.invasions.amount[warning->invasionId],
                                      Data_Scenario.invasions.from[warning->invasionId],
                                      Data_Scenario.invasions.attackType[warning->invasionId],
                                      warning->invasionId);
                 if (gridOffset > 0)
                 {
-                    if (enemyIdToEnemyType[Data_Scenario.enemyId] > 4)
+                    if (enemyIdToEnemyType[scenario_property_enemy()] > 4)
                     {
                         city_message_post(1, MESSAGE_ENEMY_ARMY_ATTACK, Data_Event.lastInternalInvasionId, gridOffset);
                     }
@@ -190,7 +190,7 @@ void Event_handleInvasions()
     {
         if (Data_Scenario.invasions.type[i] == InvasionType_LocalUprising)
         {
-            if (game_time_year() == Data_Scenario.startYear + Data_Scenario.invasions.year[i] &&
+            if (game_time_year() == scenario_property_start_year() + Data_Scenario.invasions.year[i] &&
                     game_time_month() == Data_Scenario.invasions_month[i])
             {
                 int gridOffset = startInvasion(
@@ -229,10 +229,10 @@ int Event_startInvasionLocalUprisingFromMars()
 
 void Event_startInvasionFromCheat()
 {
-    int gridOffset = startInvasion(enemyIdToEnemyType[Data_Scenario.enemyId], 150, 8, FORMATION_ATTACK_FOOD_CHAIN, 23);
+    int gridOffset = startInvasion(enemyIdToEnemyType[scenario_property_enemy()], 150, 8, FORMATION_ATTACK_FOOD_CHAIN, 23);
     if (gridOffset)
     {
-        if (enemyIdToEnemyType[Data_Scenario.enemyId] > 4)
+        if (enemyIdToEnemyType[scenario_property_enemy()] > 4)
         {
             city_message_post(1, MESSAGE_ENEMY_ARMY_ATTACK, Data_Event.lastInternalInvasionId, gridOffset);
         }

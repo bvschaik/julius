@@ -7,6 +7,8 @@
 #include "game/tutorial.h"
 
 #include <data>
+#include <scenario>
+
 #include "cityinfo.h"
 #include "resource.h"
 
@@ -96,7 +98,7 @@ void scenario_request_process()
             else
             {
                 // request is not visible
-                int year = Data_Scenario.startYear;
+                int year = scenario_property_start_year();
                 if (!Tutorial::adjust_request_year(&year))
                 {
                     return;
