@@ -3,12 +3,12 @@
 #include "SidebarMenu.h"
 
 #include "Data/CityInfo.h"
-#include "Data/Settings.h"
 
 #include "city/message.h"
 #include "game/resource.h"
 #include "game/time.h"
 #include "scenario/criteria.h"
+#include "scenario/property.h"
 
 struct {
     struct {
@@ -32,11 +32,11 @@ struct {
 void tutorial_init()
 {
     int tut1 = 1, tut2 = 1, tut3 = 1;
-    if (IsTutorial1()) {
+    if (scenario_is_tutorial_1()) {
         tut1 = tut2 = 0;
-    } else if (IsTutorial2()) {
+    } else if (scenario_is_tutorial_2()) {
         tut2 = 0;
-    } else if (IsTutorial3()) {
+    } else if (scenario_is_tutorial_3()) {
         tut3 = 0;
     }
 
@@ -58,9 +58,9 @@ void tutorial_init()
 
 tutorial_availability tutorial_advisor_empire_availability()
 {
-    if (IsTutorial1()) {
+    if (scenario_is_tutorial_1()) {
         return NOT_AVAILABLE;
-    } else if (IsTutorial2() && !data.tutorial2.population_250_reached) {
+    } else if (scenario_is_tutorial_2() && !data.tutorial2.population_250_reached) {
         return NOT_AVAILABLE_YET;
     } else {
         return AVAILABLE;
@@ -69,7 +69,7 @@ tutorial_availability tutorial_advisor_empire_availability()
 
 tutorial_build_buttons tutorial_get_build_buttons()
 {
-    if (IsTutorial1()) {
+    if (scenario_is_tutorial_1()) {
         if (!data.tutorial1.fire && !data.tutorial1.crime) {
             return TUT1_BUILD_START;
         } else if (!data.tutorial1.collapse) {
@@ -77,7 +77,7 @@ tutorial_build_buttons tutorial_get_build_buttons()
         } else if (!data.tutorial1.senate_built) {
             return TUT1_BUILD_AFTER_COLLAPSE;
         }
-    } else if (IsTutorial2()) {
+    } else if (scenario_is_tutorial_2()) {
         if (!data.tutorial2.granary_built) {
             return TUT2_BUILD_START;
         } else if (!data.tutorial2.population_250_reached) {
@@ -93,13 +93,13 @@ tutorial_build_buttons tutorial_get_build_buttons()
 
 int tutorial_get_population_cap(int current_cap)
 {
-    if (IsTutorial1()) {
+    if (scenario_is_tutorial_1()) {
         if (!data.tutorial1.fire ||
             !data.tutorial1.collapse ||
             !data.tutorial1.senate_built) {
             return 80;
         }
-    } else if (IsTutorial2()) {
+    } else if (scenario_is_tutorial_2()) {
         if (!data.tutorial2.granary_built) {
             return 150;
         } else if (!data.tutorial2.pottery_made) {
@@ -111,7 +111,7 @@ int tutorial_get_population_cap(int current_cap)
 
 int tutorial_get_immediate_goal_text()
 {
-    if (IsTutorial1()) {
+    if (scenario_is_tutorial_1()) {
         if (!data.tutorial1.fire && !data.tutorial1.crime) {
             return 17;
         } else if (!data.tutorial1.collapse) {
@@ -121,7 +121,7 @@ int tutorial_get_immediate_goal_text()
         } else {
             return 20;
         }
-    } else if (IsTutorial2()) {
+    } else if (scenario_is_tutorial_2()) {
         if (!data.tutorial2.granary_built) {
             return 21;
         } else if (!data.tutorial2.population_250_reached) {
@@ -139,7 +139,7 @@ int tutorial_get_immediate_goal_text()
 
 int tutorial_adjust_request_year(int *year)
 {
-    if (IsTutorial2()) {
+    if (scenario_is_tutorial_2()) {
         if (!data.tutorial2.pottery_made) {
             return 0;
         }
@@ -264,7 +264,7 @@ void tutorial_on_day_tick()
 
 void tutorial_on_month_tick()
 {
-    if (IsTutorial3()) {
+    if (scenario_is_tutorial_3()) {
         if (game_time_month() == 5) {
             city_message_post_with_message_delay(MESSAGE_CAT_TUTORIAL3, 1, MESSAGE_TUTORIAL_HUNGER_HALTS_IMMIGRANTS, 1200);
         }

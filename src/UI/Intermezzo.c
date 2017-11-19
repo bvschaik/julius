@@ -7,6 +7,7 @@
 #include "../Data/Settings.h"
 
 #include "core/time.h"
+#include "scenario/property.h"
 #include "sound/music.h"
 #include "sound/speech.h"
 
@@ -86,7 +87,7 @@ void UI_Intermezzo_drawBackground()
 	if (data.type == Intermezzo_MissionBriefing) {
 		sound_music_stop();
 		sound_speech_stop();
-		if (Data_Settings.isCustomScenario) {
+		if (scenario_is_custom()) {
 			Graphics_drawImage(graphicBase + 1, xOffset, yOffset);
 		} else {
 			Graphics_drawImage(graphicBase + 1 + 2 * Data_Settings.saveGameMissionId, xOffset, yOffset);
@@ -98,7 +99,7 @@ void UI_Intermezzo_drawBackground()
 	} else if (data.type == Intermezzo_Won) {
 		sound_music_stop();
 		sound_speech_stop();
-		if (Data_Settings.isCustomScenario) {
+		if (scenario_is_custom()) {
 			Graphics_drawImage(graphicBase + 2, xOffset, yOffset);
 		} else {
 			Graphics_drawImage(graphicBase + 2 + 2 * Data_Settings.saveGameMissionId, xOffset, yOffset);

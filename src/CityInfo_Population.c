@@ -6,7 +6,6 @@
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
-#include "Data/Settings.h"
 
 #include "building/model.h"
 #include "city/message.h"
@@ -14,6 +13,7 @@
 #include "core/random.h"
 #include "game/difficulty.h"
 #include "game/tutorial.h"
+#include "scenario/property.h"
 
 static void addPeopleToCensus(int numPeople);
 static void removePeopleFromCensus(int numPeople);
@@ -355,7 +355,7 @@ void CityInfo_Population_calculateMigrationSentiment()
 
 void CityInfo_Population_updateHealthRate()
 {
-	if (Data_CityInfo.population < 200 || IsTutorial1() || IsTutorial2()) {
+	if (Data_CityInfo.population < 200 || scenario_is_tutorial_1() || scenario_is_tutorial_2()) {
 		Data_CityInfo.healthRate = 50;
 		Data_CityInfo.healthRateTarget = 50;
 		return;

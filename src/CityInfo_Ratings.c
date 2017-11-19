@@ -165,7 +165,7 @@ static void updateFavorRating(int isYearlyUpdate)
 		Data_CityInfo.ratingFavorSalaryPenalty = 0;
 		Data_CityInfo.ratingFavorMilestonePenalty = 0;
 		Data_CityInfo.ratingFavorIgnoredRequestPenalty = 0;
-		if (!IsTutorial1() && !IsTutorial2()) {
+		if (!scenario_is_tutorial_1() && !scenario_is_tutorial_2()) {
 			Data_CityInfo.ratingFavor -= 2;
 		}
 		// tribute penalty

@@ -14,6 +14,7 @@
 
 #include "game/settings.h"
 #include "graphics/image.h"
+#include "scenario/property.h"
 #include "sound/music.h"
 #include "sound/speech.h"
 
@@ -55,7 +56,7 @@ void UI_MissionEnd_drawBackground()
 	
 	Widget_Panel_drawInnerPanel(xOffset + 16, yOffset + 56, 32, 7);
 
-	if (Data_Settings.isCustomScenario) {
+	if (scenario_is_custom()) {
 		Widget_GameText_drawMultiline(147, 20, xOffset + 32, yOffset + 64, 496, FONT_NORMAL_WHITE);
 	} else {
 		Widget_GameText_drawMultiline(147, Data_Settings.saveGameMissionId, xOffset + 32, yOffset + 64, 496, FONT_NORMAL_WHITE);
@@ -109,14 +110,14 @@ static void advanceToNextMission()
 	Data_State.undoAvailable = 0;
 	Data_State.currentOverlay = 0;
 
-	if (Data_Settings.currentMissionId >= 11 || Data_Settings.isCustomScenario) {
+	if (scenario_campaign_rank() >= 11 || scenario_is_custom()) {
 		UI_Window_goTo(Window_MainMenu);
-		if (!Data_Settings.isCustomScenario) {
+		if (!scenario_is_custom()) {
 			Settings_clearMissionSettings();
 			Data_Settings.currentMissionId = 2;
 		}
 	} else {
-		Data_Settings.saveGameMissionId = Constant_MissionIds[Data_Settings.currentMissionId].peaceful;
+		Data_Settings.saveGameMissionId = Constant_MissionIds[scenario_campaign_rank()].peaceful;
 		UI_MissionStart_show();
 	}
 }
@@ -144,7 +145,7 @@ void UI_VictoryDialog_drawBackground()
 	int yOffset = Data_Screen.offset640x480.y + 128;
 
 	Widget_Panel_drawOuterPanel(xOffset, yOffset, 34, 15);
-	if (Data_Settings.currentMissionId < 10 || Data_Settings.isCustomScenario) {
+	if (scenario_campaign_rank() < 10 || scenario_is_custom()) {
 		Widget_GameText_drawCentered(62, 0, xOffset, yOffset + 16, 544, FONT_LARGE_BLACK);
 		Widget_GameText_drawCentered(62, 2, xOffset, yOffset + 47, 544, FONT_NORMAL_BLACK);
 		Widget_GameText_drawCentered(32, Data_CityInfo.playerRank + 1, xOffset, yOffset + 66, 544, FONT_LARGE_BLACK);
@@ -161,14 +162,14 @@ void UI_VictoryDialog_drawForeground()
 
 	if (Data_State.winState == WinState_Win) {
 		Widget_Panel_drawLargeLabelButton(xOffset + 32, yOffset + 112, 30, focusButtonId == 1);
-		if (Data_Settings.currentMissionId < 10 || Data_Settings.isCustomScenario) {
+		if (scenario_campaign_rank() < 10 || scenario_is_custom()) {
 			Widget_GameText_drawCentered(62, 3,
 				xOffset + 32, yOffset + 118, 480, FONT_NORMAL_GREEN);
 		} else {
 			Widget_GameText_drawCentered(62, 27,
 				xOffset + 32, yOffset + 118, 480, FONT_NORMAL_GREEN);
 		}
-		if (Data_Settings.currentMissionId >= 2 || Data_Settings.isCustomScenario) {
+		if (scenario_campaign_rank() >= 2 || scenario_is_custom()) {
 			// Continue for 2/5 years
 			Widget_Panel_drawLargeLabelButton(xOffset + 32, yOffset + 144, 30, focusButtonId == 2);
 			Widget_GameText_drawCentered(62, 4, xOffset + 32, yOffset + 150, 480, FONT_NORMAL_GREEN);
@@ -189,7 +190,7 @@ void UI_VictoryDialog_handleMouse(const mouse *m)
 	int yOffset = Data_Screen.offset640x480.y + 128;
 
 	int numButtons;
-	if (Data_Settings.currentMissionId >= 2 || Data_Settings.isCustomScenario) {
+	if (scenario_campaign_rank() >= 2 || scenario_is_custom()) {
 		numButtons = 3;
 	} else {
 		numButtons = 1;
@@ -231,7 +232,7 @@ static void firedAccept(int param1, int param2)
 	Data_CityInfo.victoryContinueMonths = 0;
 	Data_CityInfo.victoryContinueMonthsChosen = 0;
 	Data_State.undoAvailable = 0;
-	if (Data_Settings.isCustomScenario) {
+	if (scenario_is_custom()) {
 		UI_Window_goTo(Window_MainMenu);
 	} else {
 		UI_MissionStart_show();

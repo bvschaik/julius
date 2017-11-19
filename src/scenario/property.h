@@ -9,6 +9,13 @@ typedef enum {
     CLIMATE_DESERT = 2
 } scenario_climate;
 
+int scenario_is_custom();
+
+int scenario_campaign_rank();
+int scenario_is_tutorial_1();
+int scenario_is_tutorial_2();
+int scenario_is_tutorial_3();
+
 int scenario_is_open_play();
 
 int scenario_open_play_id();

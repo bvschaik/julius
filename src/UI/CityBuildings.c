@@ -653,7 +653,7 @@ static int isLegionClick()
 
 static void buildStart()
 {
-	if (Data_Settings_Map.current.gridOffset /*&& !Data_Settings.gamePaused*/) { // TODO FIXME
+	if (Data_Settings_Map.current.gridOffset /*&& !Data_State.gamePaused*/) { // TODO FIXME
 		Data_State.selectedBuilding.xEnd = Data_State.selectedBuilding.xStart = Data_Settings_Map.current.x;
 		Data_State.selectedBuilding.yEnd = Data_State.selectedBuilding.yStart = Data_Settings_Map.current.y;
 		Data_State.selectedBuilding.gridOffsetStart = Data_Settings_Map.current.gridOffset;

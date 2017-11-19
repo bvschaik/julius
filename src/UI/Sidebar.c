@@ -24,6 +24,7 @@
 #include "core/time.h"
 #include "graphics/image.h"
 #include "game/tutorial.h"
+#include "scenario/property.h"
 #include "sound/effect.h"
 
 #define SIDEBAR_BORDER ((Data_Screen.width + 20) % 60)
@@ -381,7 +382,7 @@ static void buttonEmpire(int param1, int param2)
 }
 static void buttonMissionBriefing(int param1, int param2)
 {
-	if (!Data_Settings.isCustomScenario) {
+	if (!scenario_is_custom()) {
 		UI_Intermezzo_show(Intermezzo_MissionBriefing, Window_MissionBriefingReview, 1000);
 	}
 }

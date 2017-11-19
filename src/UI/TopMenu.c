@@ -12,12 +12,12 @@
 #include "../Data/CityInfo.h"
 #include "../Data/FileList.h"
 #include "../Data/Screen.h"
-#include "../Data/Settings.h"
 #include "../Data/State.h"
 
 #include "game/settings.h"
 #include "game/time.h"
 #include "graphics/image.h"
+#include "scenario/property.h"
 
 static void refreshSidebarButtons();
 
@@ -327,7 +327,7 @@ static void menuFile_replayMap(int param)
 {
 	clearState();
 	Data_State.selectedBuilding.type = 0;
-	if (Data_Settings.isCustomScenario) {
+	if (scenario_is_custom()) {
 		Scenario_initialize(Data_FileList.selectedScenario);
 		UI_Window_goTo(Window_City);
 	} else {

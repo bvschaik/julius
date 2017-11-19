@@ -512,8 +512,6 @@ void mainLoop()
 						SDL_SetWindowSize(SDL.window, width, height);
 						SDL_SetWindowFullscreen(SDL.window, 0);
 						setting_set_display(0, width, height);
-						//createSurface(Data_Settings.windowedWidth, Data_Settings.windowedHeight, 0);
-						//UI_Window_requestRefresh();
 					}
 					break;
 				

@@ -2,6 +2,33 @@
 
 #include "scenario/data.h"
 
+#include "Data/Settings.h"
+
+int scenario_is_custom()
+{
+    return Data_Settings.isCustomScenario;
+}
+
+int scenario_campaign_rank()
+{
+    return Data_Settings.currentMissionId;
+}
+
+int scenario_is_tutorial_1()
+{
+    return Data_Settings.isCustomScenario && Data_Settings.currentMissionId == 0;
+}
+
+int scenario_is_tutorial_2()
+{
+    return Data_Settings.isCustomScenario && Data_Settings.currentMissionId == 1;
+}
+
+int scenario_is_tutorial_3()
+{
+    return Data_Settings.isCustomScenario && Data_Settings.currentMissionId == 2;
+}
+
 int scenario_is_open_play()
 {
     return scenario.is_open_play;

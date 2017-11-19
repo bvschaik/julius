@@ -6,7 +6,6 @@
 
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
-#include "Data/Settings.h"
 
 #include "building/count.h"
 #include "city/culture.h"
@@ -15,6 +14,7 @@
 #include "core/random.h"
 #include "game/settings.h"
 #include "game/time.h"
+#include "scenario/property.h"
 #include "scenario/invasion.h"
 
 #define MAX_GODS 5
@@ -143,7 +143,7 @@ static void updateGodMoods()
 		} else if (Data_CityInfo.godHappiness[i] > Data_CityInfo.godTargetHappiness[i]) {
 			Data_CityInfo.godHappiness[i]--;
 		}
-		if (IsTutorial1()) {
+		if (scenario_is_tutorial_1()) {
 			if (Data_CityInfo.godHappiness[i] < 50) {
 				Data_CityInfo.godHappiness[i] = 50;
 			}
@@ -205,7 +205,7 @@ static void updateGodMoods()
 			performSmallCurse(god);
 		} else if (Data_CityInfo.godWrathBolts[god] >= 50 &&
 				Data_CityInfo.godMonthsSinceFestival[god] > 3) {
-			if (Data_Settings.currentMissionId < 4 && !Data_Settings.isCustomScenario) {
+			if (scenario_campaign_rank() < 4 && !scenario_is_custom()) {
 				// no large curses in early scenarios
 				Data_CityInfo.godSmallCurseDone[god] = 0;
 				return;
