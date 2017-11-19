@@ -201,6 +201,8 @@ void UI_MissionStart_Briefing_drawBackground()
 	
 	Widget_Panel_drawOuterPanel(xOffset, yOffset, 38, 27);
 	Widget_Text_draw(lang_get_message(textId)->title.text, xOffset + 16, yOffset + 16, FONT_LARGE_BLACK, 0);
+	Widget_Text_draw(lang_get_message(textId)->subtitle.text, xOffset + 16, yOffset + 46, FONT_NORMAL_BLACK, 0);
+
 	Widget_GameText_draw(62, 7, xOffset + 360, yOffset + 401, FONT_NORMAL_BLACK);
 	if (UI_Window_getId() == Window_MissionBriefingInitial && campaignHasChoice[scenario_campaign_rank()]) {
 		Widget_GameText_draw(13, 4, xOffset + 50, yOffset + 403, FONT_NORMAL_BLACK);
