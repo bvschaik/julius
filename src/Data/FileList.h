@@ -6,7 +6,6 @@
 
 extern struct _Data_FileList {
 	char selectedScenario[FILENAME_LENGTH];
-	char selectedCity[FILENAME_LENGTH];
 	char selectedPlayer[FILENAME_LENGTH];
 	char lastLoadedCity[FILENAME_LENGTH];
 } Data_FileList;
