@@ -17,6 +17,16 @@ void string_copy(const uint8_t *src, uint8_t *dst, int maxlength)
     *dst = 0;
 }
 
+int string_length(const uint8_t *str)
+{
+    int length = 0;
+    while (*str) {
+        length++;
+        str++;
+    }
+    return length;
+}
+
 const char *string_to_ascii(const uint8_t *str)
 {
     return (const char*) str;

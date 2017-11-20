@@ -1,6 +1,18 @@
 #include "loki/loki.h"
 #include "building/model.h"
 
+#include <stdint.h>
+
+int string_length(const uint8_t *str)
+{
+    int length = 0;
+    while (*str) {
+        length++;
+        str++;
+    }
+    return length;
+}
+
 CREATE_MOCK3(int, io_read_file_into_buffer, const char*, void*, int)
 CREATE_MOCK1(int, string_to_int, const char *)
 CREATE_VMOCK3(debug_log, const char*, const char*, int)

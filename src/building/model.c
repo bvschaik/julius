@@ -28,16 +28,6 @@ static int strings_equal(const uint8_t *a, const uint8_t *b, size_t len)
     return 1;
 }
 
-static size_t string_length(const uint8_t *str)
-{
-    size_t len = 0;
-    while (*str) {
-        len++;
-        str++;
-    }
-    return len;
-}
-
 static int index_of_string(const uint8_t *haystack, const uint8_t *needle, int haystack_length)
 {
     size_t needle_length = string_length(needle);

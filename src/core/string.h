@@ -17,6 +17,13 @@
 void string_copy(const uint8_t *src, uint8_t *dst, int maxlength);
 
 /**
+ * Determines the length of the string
+ * @param str String
+ * @return Length of the string
+ */
+int string_length(const uint8_t *str);
+
+/**
  * Converts a string to ascii
  * @param str Source
  * @return 'Ascii' string (the same, but cast to keep the compiler happy)
