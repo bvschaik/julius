@@ -199,9 +199,11 @@ static void buttonOkCancel(int isOk, int param2)
 	}
 	if (dialogType == FileDialogType_Load) {
 		GameFile_loadSavedGame(saved_game);
+        keyboard_stop_capture();
 		UI_Window_goTo(Window_City);
 	} else if (dialogType == FileDialogType_Save) {
 		GameFile_writeSavedGame(saved_game);
+        keyboard_stop_capture();
 		UI_Window_goTo(Window_City);
 	} else if (dialogType == FileDialogType_Delete) {
 		if (GameFile_deleteSavedGame(saved_game)) {

@@ -52,6 +52,7 @@ void UI_NewCareerDialog_drawForeground()
 void UI_NewCareerDialog_handleMouse(const mouse *m)
 {
 	if (m->right.went_up) {
+        keyboard_stop_capture();
 		UI_Window_goTo(Window_MainMenu);
 	}
 
@@ -67,6 +68,7 @@ void UI_NewCareerDialog_handleMouse(const mouse *m)
 
 static void startMission(int param1, int param2)
 {
+    keyboard_stop_capture();
     scenario_set_player_name(player_name);
 	UI_MissionStart_show();
 }
