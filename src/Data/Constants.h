@@ -52,14 +52,6 @@ enum {
 };
 
 enum {
-	WorkshopResource_OlivesToOil = 1,
-	WorkshopResource_VinesToWine = 2,
-	WorkshopResource_IronToWeapons = 3,
-	WorkshopResource_TimberToFurniture = 4,
-	WorkshopResource_ClayToPottery = 5
-};
-
-enum {
 	LaborCategory_IndustryCommerce = 0,
 	LaborCategory_FoodProduction = 1,
 	LaborCategory_Engineering = 2,

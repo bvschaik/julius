@@ -52,4 +52,12 @@ typedef enum {
     INVENTORY_MAX = 8
 } inventory_type;
 
+typedef enum {
+    WORKSHOP_OLIVES_TO_OIL = 1,
+    WORKSHOP_VINES_TO_WINE = 2,
+    WORKSHOP_IRON_TO_WEAPONS = 3,
+    WORKSHOP_TIMBER_TO_FURNITURE = 4,
+    WORKSHOP_CLAY_TO_POTTERY = 5
+} workshop_type;
+
 #endif // GAME_RESOURCE_H

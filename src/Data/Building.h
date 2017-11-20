@@ -38,7 +38,7 @@ extern struct Data_Building {
 	union {
 		short houseLevel;
 		short warehouseResourceId;
-		short workshopResource;
+		short workshopType;
 		short orientation;
 		short fortFigureType;
 		short nativeMeetingCenterId;

@@ -130,23 +130,23 @@ int Building_create(int type, int x, int y)
 			break;
 		case BUILDING_WINE_WORKSHOP:
 			b->outputResourceId = RESOURCE_WINE;
-			b->subtype.workshopResource = WorkshopResource_VinesToWine;
+			b->subtype.workshopType = WORKSHOP_VINES_TO_WINE;
 			break;
 		case BUILDING_OIL_WORKSHOP:
 			b->outputResourceId = RESOURCE_OIL;
-			b->subtype.workshopResource = WorkshopResource_OlivesToOil;
+			b->subtype.workshopType = WORKSHOP_OLIVES_TO_OIL;
 			break;
 		case BUILDING_WEAPONS_WORKSHOP:
 			b->outputResourceId = RESOURCE_WEAPONS;
-			b->subtype.workshopResource = WorkshopResource_IronToWeapons;
+			b->subtype.workshopType = WORKSHOP_IRON_TO_WEAPONS;
 			break;
 		case BUILDING_FURNITURE_WORKSHOP:
 			b->outputResourceId = RESOURCE_FURNITURE;
-			b->subtype.workshopResource = WorkshopResource_TimberToFurniture;
+			b->subtype.workshopType = WORKSHOP_TIMBER_TO_FURNITURE;
 			break;
 		case BUILDING_POTTERY_WORKSHOP:
 			b->outputResourceId = RESOURCE_POTTERY;
-			b->subtype.workshopResource = WorkshopResource_ClayToPottery;
+			b->subtype.workshopType = WORKSHOP_CLAY_TO_POTTERY;
 			break;
 		default:
 			b->outputResourceId = RESOURCE_NONE;
@@ -749,7 +749,7 @@ void Building_Industry_updateProduction()
 		if (b->housesCovered <= 0 || b->numWorkers <= 0) {
 			continue;
 		}
-		if (b->subtype.workshopResource && !b->loadsStored) {
+		if (b->subtype.workshopType && !b->loadsStored) {
 			continue;
 		}
 		if (b->data.industry.curseDaysLeft) {
@@ -766,7 +766,7 @@ void Building_Industry_updateProduction()
 			if (b->data.industry.blessingDaysLeft && BuildingIsFarm(b->type)) {
 				b->data.industry.progress += b->numWorkers;
 			}
-			int maxProgress = b->subtype.workshopResource ? 400 : 200;
+			int maxProgress = b->subtype.workshopType ? 400 : 200;
 			if (b->data.industry.progress > maxProgress) {
 				b->data.industry.progress = maxProgress;
 			}
@@ -839,7 +839,7 @@ void Building_Industry_blessFarmsFromCeres()
 
 int Building_Industry_hasProducedResource(int buildingId)
 {
-	int target = Data_Buildings[buildingId].subtype.workshopResource ? 400 : 200;
+	int target = Data_Buildings[buildingId].subtype.workshopType ? 400 : 200;
 	return Data_Buildings[buildingId].data.industry.progress >= target;
 }
 
@@ -847,7 +847,7 @@ void Building_Industry_startNewProduction(int buildingId)
 {
 	struct Data_Building *b = &Data_Buildings[buildingId];
 	b->data.industry.progress = 0;
-	if (b->subtype.workshopResource) {
+	if (b->subtype.workshopType) {
 		if (b->loadsStored) {
 			if (b->loadsStored > 1) {
 				b->data.industry.hasFullResource = 1;

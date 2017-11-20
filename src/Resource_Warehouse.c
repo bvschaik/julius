@@ -517,19 +517,19 @@ int Resource_determineWarehouseWorkerTask(int buildingId, int *resource)
 				int workshopType;
 				switch (resource) {
 					case RESOURCE_OLIVES:
-						workshopType = WorkshopResource_OlivesToOil;
+						workshopType = WORKSHOP_OLIVES_TO_OIL;
 						break;
 					case RESOURCE_VINES:
-						workshopType = WorkshopResource_VinesToWine;
+						workshopType = WORKSHOP_VINES_TO_WINE;
 						break;
 					case RESOURCE_IRON:
-						workshopType = WorkshopResource_IronToWeapons;
+						workshopType = WORKSHOP_IRON_TO_WEAPONS;
 						break;
 					case RESOURCE_TIMBER:
-						workshopType = WorkshopResource_TimberToFurniture;
+						workshopType = WORKSHOP_TIMBER_TO_FURNITURE;
 						break;
 					case RESOURCE_CLAY:
-						workshopType = WorkshopResource_ClayToPottery;
+						workshopType = WORKSHOP_CLAY_TO_POTTERY;
 						break;
 					default:
 						workshopType = 0;
