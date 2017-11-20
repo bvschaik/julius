@@ -9,8 +9,8 @@
 
 #include <stdint.h>
 
-void Widget_Text_captureCursor();
-void Widget_Text_drawCursor(int xOffset, int yOffset);
+void Widget_Text_captureCursor(int cursor_position);
+void Widget_Text_drawCursor(int xOffset, int yOffset, int isInsert);
 
 int Widget_Text_draw(const uint8_t *str, int x, int y, font_t font, color_t color);
 

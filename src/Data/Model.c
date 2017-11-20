@@ -1,7 +1,6 @@
 #include "Screen.h"
 #include "Buttons.h"
 #include "CityInfo.h"
-#include "KeyboardInput.h"
 #include "State.h"
 #include "Figure.h"
 #include "Building.h"
@@ -18,8 +17,6 @@ struct _Data_Screen Data_Screen;// = { 800, 600, {80, 60} };
 struct _Data_CityInfo Data_CityInfo;
 struct _Data_CityInfo_Extra Data_CityInfo_Extra;
 struct _Data_CityInfo_Resource Data_CityInfo_Resource;
-
-struct Data_KeyboardInput Data_KeyboardInput;
 
 struct _Data_State Data_State;
 

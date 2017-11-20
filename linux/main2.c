@@ -10,8 +10,8 @@
 #include "../src/Runner.h"
 #include "../src/Screen.h"
 #include "../src/Cursor.h"
-#include "../src/KeyboardInput.h"
 #include "../src/KeyboardHotkey.h"
+#include "../src/input/keyboard.h"
 #include "../src/Widget.h" // debug
 #include "../src/Graphics.h" // debug
 #include "../src/System.h"
@@ -235,39 +235,39 @@ void handleKey(SDL_KeyboardEvent *event)
 	switch (event->keysym.sym) {
 		case SDLK_RETURN:
 		case SDLK_KP_ENTER:
-			KeyboardInput_return();
+			keyboard_return();
 			break;
 		case SDLK_BACKSPACE:
-			KeyboardInput_backspace();
+			keyboard_backspace();
 			break;
 		case SDLK_DELETE:
-			KeyboardInput_delete();
+			keyboard_delete();
 			break;
 		case SDLK_INSERT:
-			KeyboardInput_insert();
+			keyboard_insert();
 			break;
 		case SDLK_LEFT:
-			KeyboardInput_left();
+			keyboard_left();
 			KeyboardHotkey_left();
 			break;
 		case SDLK_RIGHT:
-			KeyboardInput_right();
+			keyboard_right();
 			KeyboardHotkey_right();
 			break;
 		case SDLK_UP:
-			KeyboardInput_left();
+			keyboard_left();
 			KeyboardHotkey_up();
 			break;
 		case SDLK_DOWN:
-			KeyboardInput_right();
+			keyboard_right();
 			KeyboardHotkey_down();
 			break;
 		case SDLK_HOME:
-			KeyboardInput_home();
+			keyboard_home();
 			KeyboardHotkey_home();
 			break;
 		case SDLK_END:
-			KeyboardInput_end();
+			keyboard_end();
 			KeyboardHotkey_end();
 			break;
 		case SDLK_ESCAPE:
@@ -328,7 +328,7 @@ static void handleKeyUp(SDL_KeyboardEvent *event)
 void handleText(SDL_TextInputEvent *event)
 {
 	if (event->text[0] && !event->text[1]) {
-		KeyboardInput_character(event->text[0]);
+		keyboard_character(event->text[0]);
 	}
 }
 

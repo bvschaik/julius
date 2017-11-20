@@ -1,17 +1,14 @@
 #include "Loader.h"
 
 #include "CityView.h"
-#include "KeyboardInput.h"
 #include "Terrain.h"
 #include "UI/Warning.h"
 
-#include "Data/KeyboardInput.h"
 #include "Data/FileList.h"
 #include "Data/Screen.h"
 #include "Data/State.h"
 
 #include "core/random.h"
-#include "scenario/data.h" // FIXME dirty hack to get to player_name
 
 void Loader_GameState_init()
 {
@@ -30,10 +27,6 @@ void Loader_GameState_init()
 	CityView_checkCameraBoundaries();
 
 	random_generate_pool();
-
-	Data_KeyboardInput.current = 0;
-	KeyboardInput_initTextField(1, scenario.settings.player_name, 25, 200, 0, FONT_NORMAL_WHITE);
-	KeyboardInput_initTextField(2, (uint8_t*)Data_FileList.selectedCity, 64, 280, 1, FONT_NORMAL_WHITE);
 
 	UI_Warning_clearAll();
 }

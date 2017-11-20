@@ -51,6 +51,9 @@ set (GAME_FILES
     src/game/time.c
     src/game/tutorial.c
 )
+set (INPUT_FILES
+    src/input/keyboard.c
+)
 set (MAP_FILES
     src/map/bookmark.c
 )
@@ -138,7 +141,6 @@ add_executable(julius
 	src/HouseEvolution.c
 	src/HousePopulation.c
 	src/KeyboardHotkey.c
-	src/KeyboardInput.c
 	src/Loader.c
 	src/Natives.c
 	src/Resource.c
@@ -233,6 +235,7 @@ add_executable(julius
 	${EMPIRE_FILES}
 	${FIGURE_FILES}
 	${GAME_FILES}
+	${INPUT_FILES}
 	${MAP_FILES}
 	${SCENARIO_FILES}
 	${GRAPHICS_FILES}

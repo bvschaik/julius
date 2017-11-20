@@ -1,7 +1,5 @@
 #include "Widget.h"
 
-#include "Data/KeyboardInput.h"
-
 #include "core/calc.h"
 #include "Graphics.h"
 #include "UI/Window.h"
@@ -36,6 +34,7 @@ static struct {
 	int capture;
 	int seen;
 	int position;
+    int cursor_position;
 	int width;
 	int visible;
 	time_millis updated;
@@ -45,15 +44,16 @@ static struct {
 
 static int drawCharacter(font_t font, unsigned int c, int x, int y, int lineHeight, color_t color);
 
-void Widget_Text_captureCursor()
+void Widget_Text_captureCursor(int cursor_position)
 {
 	inputCursor.capture = 1;
 	inputCursor.seen = 0;
 	inputCursor.position = 0;
 	inputCursor.width = 0;
+    inputCursor.cursor_position = cursor_position;
 }
 
-void Widget_Text_drawCursor(int xOffset, int yOffset)
+void Widget_Text_drawCursor(int xOffset, int yOffset, int isInsert)
 {
 	inputCursor.capture = 0;
 	time_millis curr = time_get_millis();
@@ -66,7 +66,7 @@ void Widget_Text_drawCursor(int xOffset, int yOffset)
 		inputCursor.updated = curr;
 	}
 	if (inputCursor.visible) {
-		if (Data_KeyboardInput.isInsert) {
+		if (isInsert) {
 			Graphics_drawLine(
 				xOffset + inputCursor.xOffset - 3, yOffset + inputCursor.yOffset - 3,
 				xOffset + inputCursor.xOffset + 1, yOffset + inputCursor.yOffset - 3,
@@ -257,8 +257,7 @@ int Widget_Text_draw(const uint8_t *str, int x, int y, font_t font, color_t colo
 			} else {
 				width = letterSpacing + drawCharacter(font, c, currentX, y, lineHeight, color);
 			}
-			if (inputCursor.capture &&
-				inputCursor.position == Data_KeyboardInput.lines[Data_KeyboardInput.current].cursorPosition) {
+			if (inputCursor.capture && inputCursor.position == inputCursor.cursor_position) {
 				if (!inputCursor.seen) {
 					inputCursor.width = width;
 					inputCursor.xOffset = currentX - x;

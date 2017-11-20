@@ -13,7 +13,8 @@
 #include "Warning.h"
 
 #include "../Cursor.h"
-#include "../KeyboardInput.h"
+
+#include "input/keyboard.h"
 #include "graphics/mouse.h"
 
 struct Window {
@@ -83,6 +84,7 @@ WindowId UI_Window_getId()
 
 void UI_Window_goTo(WindowId windowId)
 {
+    keyboard_stop_capture();
 	previousWindow = currentWindow;
 	currentWindow = windowId;
 	windows[currentWindow].init();
@@ -113,7 +115,7 @@ void UI_Window_refresh(int force)
 		refreshRequested = 0;
 	}
 	windows[currentWindow].drawForeground();
-	KeyboardInput_initInput(0);
+
     const mouse *m = mouse_get();
 	windows[currentWindow].handleMouse(m);
 	UI_Tooltip_handle(m, windows[currentWindow].getTooltip);

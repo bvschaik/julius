@@ -5,17 +5,15 @@
 #include "core/dir.h"
 #include "core/file.h"
 #include "core/string.h"
+#include "core/time.h"
+#include "input/keyboard.h"
 
 #include "../GameFile.h"
 #include "../Graphics.h"
-#include "../KeyboardInput.h"
 #include "../Widget.h"
 
 #include "../Data/FileList.h"
-#include "../Data/KeyboardInput.h"
 #include "../Data/Screen.h"
-
-#include "core/time.h"
 
 #include <string.h>
 
@@ -62,13 +60,10 @@ void UI_FileDialog_show(int type)
 
 	savedGames = dir_find_files_with_extension("sav");
 
-	strcpy(Data_FileList.selectedCity, Data_FileList.lastLoadedCity);
-	Data_KeyboardInput.accepted = 0;
-	KeyboardInput_initInput(2);
-	KeyboardInput_home();
-	KeyboardInput_end();
-
 	UI_Window_goTo(Window_FileDialog);
+
+    strcpy(Data_FileList.selectedCity, Data_FileList.lastLoadedCity);
+    keyboard_start_capture(Data_FileList.selectedCity, 64, 0, 280, FONT_NORMAL_WHITE);
 }
 
 void UI_FileDialog_drawBackground()
@@ -87,7 +82,7 @@ void UI_FileDialog_drawForeground()
 	Widget_Panel_drawInnerPanel(baseOffsetX + 144, baseOffsetY + 80, 20, 2);
 	Widget_Panel_drawInnerPanel(baseOffsetX + 144, baseOffsetY + 120, 20, 13);
 
-	// title
+    // title
 	if (messageNotExistTimeUntil && time_get_millis() < messageNotExistTimeUntil) {
 		Widget_GameText_drawCentered(43, 2,
 			baseOffsetX + 160, baseOffsetY + 50, 304, FONT_LARGE_BLACK);
@@ -111,9 +106,9 @@ void UI_FileDialog_drawForeground()
 	}
 
 	Widget_Button_drawImageButtons(baseOffsetX, baseOffsetY, imageButtons, 4);
-	Widget_Text_captureCursor();
+	Widget_Text_captureCursor(keyboard_cursor_position());
 	Widget_Text_draw(string_from_ascii(Data_FileList.selectedCity), baseOffsetX + 160, baseOffsetY + 90, FONT_NORMAL_WHITE, 0);
-	Widget_Text_drawCursor(baseOffsetX + 160, baseOffsetY + 91);
+	Widget_Text_drawCursor(baseOffsetX + 160, baseOffsetY + 91, keyboard_is_insert());
 	drawScrollbarDot();
 }
 
@@ -143,12 +138,10 @@ void UI_FileDialog_handleMouse(const mouse *m)
 		buttonScroll(0, 3);
 	}
 
-	KeyboardInput_initInput(2);
-	if (Data_KeyboardInput.accepted) {
-		Data_KeyboardInput.accepted = 0;
-		buttonOkCancel(1, 0);
-		return;
-	}
+    if (keyboard_input_is_accepted()) {
+        buttonOkCancel(1, 0);
+        return;
+    }
 
 	if (m->right.went_down) {
 		UI_Window_goBack();
@@ -248,9 +241,7 @@ static void buttonSelectItem(int index, int param2)
 		memset(Data_FileList.selectedCity, 0, FILENAME_LENGTH);
 		strcpy(Data_FileList.selectedCity, savedGames->files[scrollPosition + index]);
 		file_remove_extension(Data_FileList.selectedCity);
-		KeyboardInput_initInput(2);
-		KeyboardInput_home();
-		KeyboardInput_end();
+		keyboard_refresh();
 		messageNotExistTimeUntil = 0;
 	}
 }
