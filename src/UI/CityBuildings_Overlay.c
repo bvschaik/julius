@@ -1157,7 +1157,7 @@ static void drawBuildingTopForFoodStocksOverlay(int gridOffset, int buildingId, 
 				if (model_get_house(b->subtype.houseLevel)->food_types) {
 					int pop = b->housePopulation;
 					int stocks = 0;
-					for (int i = Inventory_MinFood; i <= Inventory_MaxFood; i++) {
+					for (int i = INVENTORY_MIN_FOOD; i <= INVENTORY_MAX_FOOD; i++) { // TODO <= ?
 						stocks += b->data.house.inventory[i];
 					}
 					int pctStocks = calc_percentage(stocks, pop);

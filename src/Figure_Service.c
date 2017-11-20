@@ -4,13 +4,14 @@
 #include "FigureAction.h"
 
 #include "Data/Building.h"
-#include "Data/Constants.h"
 #include "Data/Grid.h"
 #include "Data/Figure.h"
 #include "Data/State.h"
 
 #include "building/model.h"
+#include "city/culture.h"
 #include "figure/type.h"
+#include "game/resource.h"
 
 #define FOR_XY_RADIUS \
 	int xMin = x - 2;\
@@ -143,14 +144,14 @@ static int provideMarketGoods(int marketBuildingId, int x, int y)
 			}
 			int maxFoodStocks = 4 * house->houseMaxPopulationSeen;
 			int foodTypesStoredMax = 0;
-			for (int i = Inventory_MinFood; i < Inventory_MaxFood; i++) {
+			for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
 				if (house->data.house.inventory[i] >= maxFoodStocks) {
 					foodTypesStoredMax++;
 				}
 			}
 			const model_house *model = model_get_house(level);
 			if (model->food_types > foodTypesStoredMax) {
-				for (int i = Inventory_MinFood; i < Inventory_MaxFood; i++) {
+				for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
 					if (house->data.house.inventory[i] >= maxFoodStocks) {
 						continue;
 					}
@@ -167,53 +168,53 @@ static int provideMarketGoods(int marketBuildingId, int x, int y)
 			}
 			if (model->pottery) {
 				market->data.market.potteryDemand = 10;
-				int potteryWanted = 8 * model->pottery - house->data.house.inventory[Inventory_Pottery];
-				if (market->data.market.inventory[Inventory_Pottery] > 0 && potteryWanted > 0) {
-					if (potteryWanted <= market->data.market.inventory[Inventory_Pottery]) {
-						house->data.house.inventory[Inventory_Pottery] += potteryWanted;
-						market->data.market.inventory[Inventory_Pottery] -= potteryWanted;
+				int potteryWanted = 8 * model->pottery - house->data.house.inventory[INVENTORY_POTTERY];
+				if (market->data.market.inventory[INVENTORY_POTTERY] > 0 && potteryWanted > 0) {
+					if (potteryWanted <= market->data.market.inventory[INVENTORY_POTTERY]) {
+						house->data.house.inventory[INVENTORY_POTTERY] += potteryWanted;
+						market->data.market.inventory[INVENTORY_POTTERY] -= potteryWanted;
 					} else {
-						house->data.house.inventory[Inventory_Pottery] += market->data.market.inventory[Inventory_Pottery];
-						market->data.market.inventory[Inventory_Pottery] = 0;
+						house->data.house.inventory[INVENTORY_POTTERY] += market->data.market.inventory[INVENTORY_POTTERY];
+						market->data.market.inventory[INVENTORY_POTTERY] = 0;
 					}
 				}
 			}
 			if (model->furniture) {
 				market->data.market.furnitureDemand = 10;
-				int furnitureWanted = 4 * model->furniture - house->data.house.inventory[Inventory_Furniture];
-				if (market->data.market.inventory[Inventory_Furniture] > 0 && furnitureWanted > 0) {
-					if (furnitureWanted <= market->data.market.inventory[Inventory_Furniture]) {
-						house->data.house.inventory[Inventory_Furniture] += furnitureWanted;
-						market->data.market.inventory[Inventory_Furniture] -= furnitureWanted;
+				int furnitureWanted = 4 * model->furniture - house->data.house.inventory[INVENTORY_FURNITURE];
+				if (market->data.market.inventory[INVENTORY_FURNITURE] > 0 && furnitureWanted > 0) {
+					if (furnitureWanted <= market->data.market.inventory[INVENTORY_FURNITURE]) {
+						house->data.house.inventory[INVENTORY_FURNITURE] += furnitureWanted;
+						market->data.market.inventory[INVENTORY_FURNITURE] -= furnitureWanted;
 					} else {
-						house->data.house.inventory[Inventory_Furniture] += market->data.market.inventory[Inventory_Furniture];
-						market->data.market.inventory[Inventory_Furniture] = 0;
+						house->data.house.inventory[INVENTORY_FURNITURE] += market->data.market.inventory[INVENTORY_FURNITURE];
+						market->data.market.inventory[INVENTORY_FURNITURE] = 0;
 					}
 				}
 			}
 			if (model->oil) {
 				market->data.market.oilDemand = 10;
-				int oilWanted = 4 * model->oil - house->data.house.inventory[Inventory_Oil];
-				if (market->data.market.inventory[Inventory_Oil] > 0 && oilWanted > 0) {
-					if (oilWanted <= market->data.market.inventory[Inventory_Oil]) {
-						house->data.house.inventory[Inventory_Oil] += oilWanted;
-						market->data.market.inventory[Inventory_Oil] -= oilWanted;
+				int oilWanted = 4 * model->oil - house->data.house.inventory[INVENTORY_OIL];
+				if (market->data.market.inventory[INVENTORY_OIL] > 0 && oilWanted > 0) {
+					if (oilWanted <= market->data.market.inventory[INVENTORY_OIL]) {
+						house->data.house.inventory[INVENTORY_OIL] += oilWanted;
+						market->data.market.inventory[INVENTORY_OIL] -= oilWanted;
 					} else {
-						house->data.house.inventory[Inventory_Oil] += market->data.market.inventory[Inventory_Oil];
-						market->data.market.inventory[Inventory_Oil] = 0;
+						house->data.house.inventory[INVENTORY_OIL] += market->data.market.inventory[INVENTORY_OIL];
+						market->data.market.inventory[INVENTORY_OIL] = 0;
 					}
 				}
 			}
 			if (model->wine) {
 				market->data.market.wineDemand = 10;
-				int wineWanted = 4 * model->wine - house->data.house.inventory[Inventory_Wine];
-				if (market->data.market.inventory[Inventory_Wine] > 0 && wineWanted > 0) {
-					if (wineWanted <= market->data.market.inventory[Inventory_Wine]) {
-						house->data.house.inventory[Inventory_Wine] += wineWanted;
-						market->data.market.inventory[Inventory_Wine] -= wineWanted;
+				int wineWanted = 4 * model->wine - house->data.house.inventory[INVENTORY_WINE];
+				if (market->data.market.inventory[INVENTORY_WINE] > 0 && wineWanted > 0) {
+					if (wineWanted <= market->data.market.inventory[INVENTORY_WINE]) {
+						house->data.house.inventory[INVENTORY_WINE] += wineWanted;
+						market->data.market.inventory[INVENTORY_WINE] -= wineWanted;
 					} else {
-						house->data.house.inventory[Inventory_Wine] += market->data.market.inventory[Inventory_Wine];
-						market->data.market.inventory[Inventory_Wine] = 0;
+						house->data.house.inventory[INVENTORY_WINE] += market->data.market.inventory[INVENTORY_WINE];
+						market->data.market.inventory[INVENTORY_WINE] = 0;
 					}
 				}
 			}
@@ -240,19 +241,19 @@ static int provideReligionCoverage(int x, int y, int god)
 	FOR_XY_RADIUS {
 		if (Data_Buildings[buildingId].houseSize && Data_Buildings[buildingId].housePopulation > 0) {
 			switch (god) {
-				case God_Ceres:
+				case GOD_CERES:
 					Data_Buildings[buildingId].data.house.templeCeres = 96;
 					break;
-				case God_Neptune:
+				case GOD_NEPTUNE:
 					Data_Buildings[buildingId].data.house.templeNeptune = 96;
 					break;
-				case God_Mercury:
+				case GOD_MERCURY:
 					Data_Buildings[buildingId].data.house.templeMercury = 96;
 					break;
-				case God_Mars:
+				case GOD_MARS:
 					Data_Buildings[buildingId].data.house.templeMars = 96;
 					break;
-				case God_Venus:
+				case GOD_VENUS:
 					Data_Buildings[buildingId].data.house.templeVenus = 96;
 					break;
 			}
@@ -433,23 +434,23 @@ int Figure_provideServiceCoverage(int figureId)
 			switch (Data_Buildings[Data_Figures[figureId].buildingId].type) {
 				case BUILDING_SMALL_TEMPLE_CERES:
 				case BUILDING_LARGE_TEMPLE_CERES:
-					numHousesServiced = provideReligionCoverage(x, y, God_Ceres);
+					numHousesServiced = provideReligionCoverage(x, y, GOD_CERES);
 					break;
 				case BUILDING_SMALL_TEMPLE_NEPTUNE:
 				case BUILDING_LARGE_TEMPLE_NEPTUNE:
-					numHousesServiced = provideReligionCoverage(x, y, God_Neptune);
+					numHousesServiced = provideReligionCoverage(x, y, GOD_NEPTUNE);
 					break;
 				case BUILDING_SMALL_TEMPLE_MERCURY:
 				case BUILDING_LARGE_TEMPLE_MERCURY:
-					numHousesServiced = provideReligionCoverage(x, y, God_Mercury);
+					numHousesServiced = provideReligionCoverage(x, y, GOD_MERCURY);
 					break;
 				case BUILDING_SMALL_TEMPLE_MARS:
 				case BUILDING_LARGE_TEMPLE_MARS:
-					numHousesServiced = provideReligionCoverage(x, y, God_Mars);
+					numHousesServiced = provideReligionCoverage(x, y, GOD_MARS);
 					break;
 				case BUILDING_SMALL_TEMPLE_VENUS:
 				case BUILDING_LARGE_TEMPLE_VENUS:
-					numHousesServiced = provideReligionCoverage(x, y, God_Venus);
+					numHousesServiced = provideReligionCoverage(x, y, GOD_VENUS);
 					break;
 				default:
 					break;

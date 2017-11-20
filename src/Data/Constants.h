@@ -35,23 +35,6 @@ enum {
 };
 
 enum {
-	Inventory_Wheat = 0,
-	Inventory_Vegetables = 1,
-	Inventory_Fruit = 2,
-	Inventory_Meat = 3,
-	Inventory_Wine = 4,
-	Inventory_Oil = 5,
-	Inventory_Furniture = 6,
-	Inventory_Pottery = 7,
-	// helper constants
-	Inventory_MinFood = 0,
-	Inventory_MaxFood = 4,
-	Inventory_MinGood = 4,
-	Inventory_MaxGood = 8,
-	Inventory_Max = 8
-};
-
-enum {
 	LaborCategory_IndustryCommerce = 0,
 	LaborCategory_FoodProduction = 1,
 	LaborCategory_Engineering = 2,
@@ -76,14 +59,6 @@ enum {
 	EmigrationCause_HighTaxes = 3,
 	EmigrationCause_LowWages = 4,
 	EmigrationCause_ManyTents = 5,
-};
-
-enum {
-	God_Ceres = 0,
-	God_Neptune = 1,
-	God_Mercury = 2,
-	God_Mars = 3,
-	God_Venus = 4
 };
 
 enum {

@@ -1025,7 +1025,7 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 				c->textId = 104;
 			} else {
 				int stocksPresent = 0;
-				for (int i = Inventory_MinFood; i <= Inventory_MaxFood; i++) {
+				for (int i = INVENTORY_MIN_FOOD; i <= INVENTORY_MAX_FOOD; i++) { // TODO <= ?
 					stocksPresent += b->data.house.inventory[i];
 				}
 				int stocksPerPop = calc_percentage(stocksPresent, b->housePopulation);

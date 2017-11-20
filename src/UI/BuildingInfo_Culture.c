@@ -2,7 +2,6 @@
 #include "../Graphics.h"
 #include "../Widget.h"
 #include "../Data/Building.h"
-#include "../Data/Constants.h"
 
 #include "graphics/image.h"
 

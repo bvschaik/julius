@@ -1,7 +1,6 @@
 #include "SidebarMenu.h"
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
-#include "Data/Constants.h"
 #include "UI/Sidebar.h"
 
 #include "empire/city.h"

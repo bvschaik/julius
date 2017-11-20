@@ -1,6 +1,5 @@
 #include "CityInfo.h"
 #include "Data/CityInfo.h"
-#include "Data/Constants.h"
 #include "Data/Building.h"
 #include "Data/Figure.h"
 

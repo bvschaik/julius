@@ -3,8 +3,6 @@
 #include "Figure.h"
 #include "Formation.h"
 
-#include "Data/Constants.h"
-
 #include "figure/formation.h"
 #include "figure/properties.h"
 #include "game/difficulty.h"

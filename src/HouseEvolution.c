@@ -5,10 +5,10 @@
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
-#include "Data/Constants.h"
 
 #include "building/model.h"
 #include "city/culture.h"
+#include "game/resource.h"
 #include "game/time.h"
 
 static int checkEvolveDesirability(int buildingId);
@@ -425,7 +425,7 @@ static int hasRequiredGoodsAndServices(int buildingId, int forUpgrade)
 	// food types
 	int foodtypesRequired = model->food_types;
 	int foodtypesAvailable = 0;
-	for (int i = Inventory_MinFood; i < Inventory_MaxFood; i++) {
+	for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
 		if (b->data.house.inventory[i]) {
 			foodtypesAvailable++;
 		}
@@ -435,17 +435,17 @@ static int hasRequiredGoodsAndServices(int buildingId, int forUpgrade)
 		return 0;
 	}
 	// goods
-	if (b->data.house.inventory[Inventory_Pottery] < model->pottery) {
+	if (b->data.house.inventory[INVENTORY_POTTERY] < model->pottery) {
 		return 0;
 	}
-	if (b->data.house.inventory[Inventory_Oil] < model->oil) {
+	if (b->data.house.inventory[INVENTORY_OIL] < model->oil) {
 		return 0;
 	}
-	if (b->data.house.inventory[Inventory_Furniture] < model->furniture) {
+	if (b->data.house.inventory[INVENTORY_FURNITURE] < model->furniture) {
 		return 0;
 	}
 	int wine = model->wine;
-	if (wine && b->data.house.inventory[Inventory_Wine] <= 0) {
+	if (wine && b->data.house.inventory[INVENTORY_WINE] <= 0) {
 		return 0;
 	}
 	if (wine >= 2 && Data_CityInfo.resourceWineTypesAvailable < 2) {
@@ -465,31 +465,31 @@ static void consumeResources(int buildingId)
 	int wine = model->wine;
 
 	if (pottery > 0) {
-		if (pottery > b->data.house.inventory[Inventory_Pottery]) {
-			b->data.house.inventory[Inventory_Pottery] = 0;
+		if (pottery > b->data.house.inventory[INVENTORY_POTTERY]) {
+			b->data.house.inventory[INVENTORY_POTTERY] = 0;
 		} else {
-			b->data.house.inventory[Inventory_Pottery] -= pottery;
+			b->data.house.inventory[INVENTORY_POTTERY] -= pottery;
 		}
 	}
 	if (furniture > 0) {
-		if (furniture > b->data.house.inventory[Inventory_Furniture]) {
-			b->data.house.inventory[Inventory_Furniture] = 0;
+		if (furniture > b->data.house.inventory[INVENTORY_FURNITURE]) {
+			b->data.house.inventory[INVENTORY_FURNITURE] = 0;
 		} else {
-			b->data.house.inventory[Inventory_Furniture] -= furniture;
+			b->data.house.inventory[INVENTORY_FURNITURE] -= furniture;
 		}
 	}
 	if (oil > 0) {
-		if (oil > b->data.house.inventory[Inventory_Oil]) {
-			b->data.house.inventory[Inventory_Oil] = 0;
+		if (oil > b->data.house.inventory[INVENTORY_OIL]) {
+			b->data.house.inventory[INVENTORY_OIL] = 0;
 		} else {
-			b->data.house.inventory[Inventory_Oil] -= oil;
+			b->data.house.inventory[INVENTORY_OIL] -= oil;
 		}
 	}
 	if (wine > 0) {
-		if (wine > b->data.house.inventory[Inventory_Wine]) {
-			b->data.house.inventory[Inventory_Wine] = 0;
+		if (wine > b->data.house.inventory[INVENTORY_WINE]) {
+			b->data.house.inventory[INVENTORY_WINE] = 0;
 		} else {
-			b->data.house.inventory[Inventory_Wine] -= wine;
+			b->data.house.inventory[INVENTORY_WINE] -= wine;
 		}
 	}
 }
@@ -670,7 +670,7 @@ void HouseEvolution_determineEvolveText(int buildingId, int hasBadDesirabilityBu
 	// food types
 	int foodtypesRequired = model->food;
 	int foodtypesAvailable = 0;
-	for (int i = Inventory_MinFood; i < Inventory_MaxFood; i++) {
+	for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
 		if (b->data.house.inventory[i]) {
 			foodtypesAvailable++;
 		}
@@ -712,7 +712,7 @@ void HouseEvolution_determineEvolveText(int buildingId, int hasBadDesirabilityBu
 		return;
 	}
 	// pottery
-	if (b->data.house.inventory[Inventory_Pottery] < model->pottery) {
+	if (b->data.house.inventory[INVENTORY_POTTERY] < model->pottery) {
 		b->data.house.evolveTextId = 19;
 		return;
 	}
@@ -748,18 +748,18 @@ void HouseEvolution_determineEvolveText(int buildingId, int hasBadDesirabilityBu
 		return;
 	}
 	// oil
-	if (b->data.house.inventory[Inventory_Oil] < model->oil) {
+	if (b->data.house.inventory[INVENTORY_OIL] < model->oil) {
 		b->data.house.evolveTextId = 27;
 		return;
 	}
 	// furniture
-	if (b->data.house.inventory[Inventory_Furniture] < model->furniture) {
+	if (b->data.house.inventory[INVENTORY_FURNITURE] < model->furniture) {
 		b->data.house.evolveTextId = 28;
 		return;
 	}
 	// wine
 	int wine = model->wine;
-	if (b->data.house.inventory[Inventory_Wine] < wine) {
+	if (b->data.house.inventory[INVENTORY_WINE] < wine) {
 		b->data.house.evolveTextId = 29;
 		return;
 	}
@@ -851,7 +851,7 @@ void HouseEvolution_determineEvolveText(int buildingId, int hasBadDesirabilityBu
 		return;
 	}
 	// pottery
-	if (b->data.house.inventory[Inventory_Pottery] < model->pottery) {
+	if (b->data.house.inventory[INVENTORY_POTTERY] < model->pottery) {
 		b->data.house.evolveTextId = 49;
 		return;
 	}
@@ -887,18 +887,18 @@ void HouseEvolution_determineEvolveText(int buildingId, int hasBadDesirabilityBu
 		return;
 	}
 	// oil
-	if (b->data.house.inventory[Inventory_Oil] < model->oil) {
+	if (b->data.house.inventory[INVENTORY_OIL] < model->oil) {
 		b->data.house.evolveTextId = 57;
 		return;
 	}
 	// furniture
-	if (b->data.house.inventory[Inventory_Furniture] < model->furniture) {
+	if (b->data.house.inventory[INVENTORY_FURNITURE] < model->furniture) {
 		b->data.house.evolveTextId = 58;
 		return;
 	}
 	// wine
 	wine = model->wine;
-	if (b->data.house.inventory[Inventory_Wine] < wine) {
+	if (b->data.house.inventory[INVENTORY_WINE] < wine) {
 		b->data.house.evolveTextId = 59;
 		return;
 	}
