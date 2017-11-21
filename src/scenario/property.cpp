@@ -27,6 +27,16 @@ int scenario_property_rome_supplies_wheat()
     return Data_Scenario.romeSuppliesWheat;
 }
 
+int scenario_initial_funds()
+{
+    return Data_Scenario.startFunds;
+}
+
+int scenario_rescue_loan()
+{
+    return Data_Scenario.rescueLoan;
+}
+
 int scenario_property_enemy()
 {
     return Data_Scenario.enemyId;

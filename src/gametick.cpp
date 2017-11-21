@@ -72,7 +72,8 @@ void GameTick_advance()
         UI_Sidebar_requestMinimapRefresh();
         break;
     case 4:
-        Event_Caesar_update();
+        CityInfo_Finance_updateDebtState();
+        scenario_invasion_process_caesar();
         break;
     case 5:
         Formation_Tick_updateAll(0);
@@ -213,7 +214,7 @@ static void advanceMonth()
     CityInfo_Finance_handleMonthChange();
     CityInfo_Resource_housesConsumeFood();
     Event_handleDistantBattle();
-    Event_handleInvasions();
+    scenario_invasion_process();
     scenario_request_process();
     scenario_demand_change_process();
     scenario_price_change_process();

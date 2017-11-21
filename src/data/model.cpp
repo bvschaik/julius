@@ -6,8 +6,6 @@
 
 _Data_Scenario Data_Scenario;
 
-struct _Data_Event Data_Event = {0};
-
 struct _Data_Settings Data_Settings;
 struct _Data_Settings_Map Data_Settings_Map;
 
@@ -29,8 +27,6 @@ struct Data_Building Data_Buildings[MAX_BUILDINGS];
 struct _Data_Buildings_Extra Data_Buildings_Extra;
 
 struct Data_CityView Data_CityView;
-
-struct Data_InvasionWarning Data_InvasionWarnings[MAX_INVASION_WARNINGS];
 
 struct _Data_FileList Data_FileList;
 

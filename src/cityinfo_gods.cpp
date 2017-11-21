@@ -6,9 +6,8 @@
 #include "formation.h"
 #include "city/message.h"
 
-#include "data/cityinfo.hpp"
-#include "data/constants.hpp"
-#include "data/settings.hpp"
+#include <data>
+#include <scenario>
 
 #include "building/count.h"
 #include "core/calc.h"
@@ -73,7 +72,7 @@ static void performSmallCurse(int god)
         Building_Mercury_removeResources(0);
         break;
     case God_Mars:
-        if (Event_startInvasionLocalUprisingFromMars())
+        if (scenario_invasion_start_from_mars())
         {
             city_message_post(1, MESSAGE_MARS_IS_UPSET, 0, 0);
         }
@@ -122,7 +121,7 @@ static int performLargeCurse(int god)
         if (Formation_marsCurseFort())
         {
             city_message_post(1, MESSAGE_WRATH_OF_MARS, 0, 0);
-            Event_startInvasionLocalUprisingFromMars();
+            scenario_invasion_start_from_mars();
         }
         else
         {

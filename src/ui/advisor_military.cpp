@@ -7,6 +7,7 @@
 
 #include <data>
 #include <ui>
+#include <scenario>
 
 #include "figure/formation.h"
 
@@ -68,7 +69,7 @@ void UI_Advisor_Military_drawBackground(int *advisorHeight)
     {
         enemy_text_id = 11;
     }
-    else if (Event_existsUpcomingInvasion())
+    else if (scenario_invasion_exists_upcoming())
     {
         enemy_text_id = 9;
     }

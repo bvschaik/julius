@@ -179,7 +179,7 @@ void UI_Advisor_Chief_drawBackground(int *advisorHeight)
     {
         Widget_GameText_draw(61, 75, baseOffsetX + 240, baseOffsetY + 166, FONT_NORMAL_RED);
     }
-    else if (Event_existsUpcomingInvasion())
+    else if (scenario_invasion_exists_upcoming())
     {
         Widget_GameText_draw(61, 74, baseOffsetX + 240, baseOffsetY + 166, FONT_NORMAL_RED);
     }

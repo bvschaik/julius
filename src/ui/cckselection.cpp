@@ -138,7 +138,7 @@ static void drawScenarioInfo()
 
     // map size
     int textId;
-    switch (Data_Scenario.mapSizeX)
+    switch (scenario_map_size())
     {
     case 40:
         textId = 121;
@@ -163,14 +163,7 @@ static void drawScenarioInfo()
                                  baseOffsetX + 15, baseOffsetY + 150, 260, FONT_NORMAL_BLACK);
 
     // military
-    int numInvasions = 0;
-    for (int i = 0; i < 20; i++)
-    {
-        if (Data_Scenario.invasions.type[i])
-        {
-            numInvasions++;
-        }
-    }
+    int numInvasions = scenario_invasion_count();
     if (numInvasions <= 0)
     {
         textId = 112;

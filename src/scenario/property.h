@@ -3,7 +3,8 @@
 
 #include <stdint.h>
 
-typedef enum {
+typedef enum
+{
     CLIMATE_CENTRAL = 0,
     CLIMATE_NORTHERN = 1,
     CLIMATE_DESERT = 2
@@ -26,5 +27,9 @@ int scenario_property_player_rank();
 int scenario_image_id();
 
 const uint8_t *scenario_brief_description();
+
+int scenario_initial_funds();
+
+int scenario_rescue_loan();
 
 #endif // SCENARIO_PROPERTY_H

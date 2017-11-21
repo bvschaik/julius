@@ -190,7 +190,7 @@ static void loadScenario(const char *scenarioName)
     Data_CityInfo.exitPointX = Data_Scenario.exitPoint.x;
     Data_CityInfo.exitPointY = Data_Scenario.exitPoint.y;
     Data_CityInfo.exitPointGridOffset = GridOffset(Data_CityInfo.exitPointX, Data_CityInfo.exitPointY);
-    Data_CityInfo.treasury = difficulty_adjust_money(Data_Scenario.startFunds);
+    Data_CityInfo.treasury = difficulty_adjust_money(scenario_initial_funds());
     Data_CityInfo.financeBalanceLastYear = Data_CityInfo.treasury;
     game_time_init(scenario_property_start_year());
 
@@ -205,7 +205,7 @@ static void loadScenario(const char *scenarioName)
 
     empire_init_scenario();
     traders_clear();
-    Event_initInvasions();
+    scenario_invasion_init();
     empire_determine_distant_battle_city();
     scenario_request_init();
     scenario_demand_change_init();
@@ -224,7 +224,7 @@ static void readScenarioAndInitGraphics()
     GameFile_loadScenario(Data_FileList.selectedScenario);
     file_remove_extension(Data_FileList.selectedScenario);
 
-    Data_Settings_Map.width = Data_Scenario.mapSizeX;
+    Data_Settings_Map.width = scenario_map_size();
     Data_Settings_Map.height = Data_Scenario.mapSizeY;
     Data_Settings_Map.gridStartOffset = Data_Scenario.gridFirstElement;
     Data_Settings_Map.gridBorderSize = Data_Scenario.gridBorderSize;

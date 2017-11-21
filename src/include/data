@@ -11,11 +11,9 @@
 #include "data/figure.hpp"
 #include "data/building.hpp"
 #include "data/cityview.hpp"
-#include "data/invasion.hpp"
 #include "data/filelist.hpp"
 #include "data/routes.hpp"
 #include "data/constants.hpp"
-#include "data/event.hpp"
 #include "data/grid.hpp"
 
 #endif

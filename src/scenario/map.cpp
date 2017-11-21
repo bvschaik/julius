@@ -7,7 +7,7 @@ void scenario_map_init_entry_exit()
 {
     if (Data_Scenario.entryPoint.x == -1 || Data_Scenario.entryPoint.y == -1)
     {
-        Data_Scenario.entryPoint.x = Data_Scenario.mapSizeX - 1;
+        Data_Scenario.entryPoint.x = scenario_map_size() - 1;
         Data_Scenario.entryPoint.y = Data_Scenario.mapSizeY / 2;
     }
     if (Data_Scenario.exitPoint.x == -1 || Data_Scenario.exitPoint.y == -1)
@@ -20,6 +20,11 @@ void scenario_map_init_entry_exit()
 int scenario_map_has_river_entry()
 {
     return Data_Scenario.riverEntryPoint.x != -1 && Data_Scenario.riverEntryPoint.y != -1;
+}
+
+int scenario_map_size()
+{
+    return Data_Scenario.mapSizeX;
 }
 
 map_point scenario_map_river_entry()

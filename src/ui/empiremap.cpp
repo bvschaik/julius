@@ -15,6 +15,7 @@
 #include <ui>
 #include <data>
 #include <empire>
+#include <scenario>
 
 #include "graphics/image.h"
 
@@ -83,6 +84,11 @@ void UI_Empire_init()
         data.selectedCity = 0;
     }
     data.focusButtonId = 0;
+}
+
+static void draw_invasion_warning(int x, int y, int image_id)
+{
+    Graphics_drawImage(image_id, data.xDrawOffset + x, data.yDrawOffset + y);
 }
 
 void UI_Empire_drawBackground()
@@ -525,15 +531,7 @@ static void drawEmpireMap()
 
     empire_object_foreach(drawEmpireObject);
 
-    for (int i = 0; i < 101; i++)
-    {
-        if (Data_InvasionWarnings[i].inUse && Data_InvasionWarnings[i].handled)
-        {
-            Graphics_drawImage(Data_InvasionWarnings[i].empireGraphicId,
-                               data.xDrawOffset+ Data_InvasionWarnings[i].empireX,
-                               data.yDrawOffset+ Data_InvasionWarnings[i].empireY);
-        }
-    }
+    scenario_invasion_foreach_warning(draw_invasion_warning);
     Graphics_resetClipRectangle();
 }
 
