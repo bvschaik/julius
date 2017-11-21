@@ -1,7 +1,13 @@
 #ifndef CityInfo_H
 #define CityInfo_H
 
-void CityInfo_init();
+//another realization for namespace alternate
+extern struct _CityInfo
+{
+    void (*init)();
+} CityInfo;
+
+//void CityInfo_init();
 void CityInfo_initGameTime();
 
 void CityInfo_Imperial_calculateGiftCosts();
