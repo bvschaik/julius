@@ -10,6 +10,7 @@
 #include "scenario/data.h"
 #include "scenario/gladiator_revolt.h"
 #include "scenario/earthquake.h"
+#include "scenario/emperor_change.h"
 
 //check buildings availability
 #include "scenario/building.h"

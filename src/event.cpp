@@ -289,23 +289,6 @@ static void setDistantBattleCityForeign()
     }
 }
 
-void Event_handleEmperorChange()
-{
-    if (!Data_Scenario.emperorChange.enabled)
-    {
-        return;
-    }
-    if (Data_Event.emperorChange.state == 0)
-    {
-        if (game_time_year() == Data_Event.emperorChange.gameYear &&
-                game_time_month() == Data_Event.emperorChange.month)
-        {
-            Data_Event.emperorChange.state = 1; // done
-            city_message_post(1, MESSAGE_EMPEROR_CHANGE, 0, 0);
-        }
-    }
-}
-
 void Event_handleRandomEvents()
 {
     int event = randomEventProbability[random_byte()];

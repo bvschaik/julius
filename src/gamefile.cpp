@@ -146,8 +146,7 @@ typedef struct
     buffer *building_count_culture1;
     buffer *Data_CityInfo_Extra_populationGraphOrder;
     buffer *Data_CityInfo_Extra_unknownOrder;
-    buffer *Data_Event_emperorChange_gameYear;
-    buffer *Data_Event_emperorChange_month;
+    buffer *emperor_change_time;
     buffer *empire;
     buffer *empire_cities;
     buffer *building_count_industry;
@@ -155,9 +154,9 @@ typedef struct
     buffer *figure_names;
     buffer *culture_coverage;
     buffer *Data_Scenario;
-    buffer *Data_Event_timeLimitMaxGameYear;
+    buffer *max_game_year;
     buffer *earthquake;
-    buffer *Data_Event_emperorChange_state;
+    buffer *emperor_change_state;
     buffer *messages;
     buffer *message_extra;
     buffer *population_messages;
@@ -211,7 +210,7 @@ typedef struct
 struct
 {
     int num_pieces;
-    file_piece pieces[300];
+    file_piece pieces[100];
     savegame_state state;
 } savegame_data;
 
@@ -305,8 +304,7 @@ void init_savegame_data()
     state->building_count_culture1 = create_savegame_piece(132, 0);
     state->Data_CityInfo_Extra_populationGraphOrder = create_savegame_piece(4, 0);
     state->Data_CityInfo_Extra_unknownOrder = create_savegame_piece(4, 0);
-    state->Data_Event_emperorChange_gameYear = create_savegame_piece(4, 0);
-    state->Data_Event_emperorChange_month = create_savegame_piece(4, 0);
+    state->emperor_change_time = create_savegame_piece(8, 0);
     state->empire = create_savegame_piece(12, 0);
     state->empire_cities = create_savegame_piece(2706, 1);
     state->building_count_industry = create_savegame_piece(128, 0);
@@ -314,9 +312,9 @@ void init_savegame_data()
     state->figure_names = create_savegame_piece(84, 0);
     state->culture_coverage = create_savegame_piece(60, 0);
     state->Data_Scenario = create_savegame_piece(1720, 0);
-    state->Data_Event_timeLimitMaxGameYear = create_savegame_piece(4, 0);
+    state->max_game_year = create_savegame_piece(4, 0);
     state->earthquake = create_savegame_piece(60, 0);
-    state->Data_Event_emperorChange_state = create_savegame_piece(4, 0);
+    state->emperor_change_state = create_savegame_piece(4, 0);
     state->messages = create_savegame_piece(16000, 1);
     state->message_extra = create_savegame_piece(12, 0);
     state->population_messages = create_savegame_piece(10, 0);
@@ -468,8 +466,8 @@ static void savegame_deserialize(savegame_state *state)
 
     read_all_from_buffer(state->Data_CityInfo_Extra_populationGraphOrder, &Data_CityInfo_Extra.populationGraphOrder);
     read_all_from_buffer(state->Data_CityInfo_Extra_unknownOrder, &Data_CityInfo_Extra.unknownOrder);
-    read_all_from_buffer(state->Data_Event_emperorChange_gameYear, &Data_Event.emperorChange.gameYear);
-    read_all_from_buffer(state->Data_Event_emperorChange_month, &Data_Event.emperorChange.month);
+
+    scenario_emperor_change_load_state(state->emperor_change_time, state->emperor_change_state);
 
     empire_load_state(state->empire);
     empire_city_load_state(state->empire_cities);
@@ -478,11 +476,9 @@ static void savegame_deserialize(savegame_state *state)
 
     city_culture_load_state(state->culture_coverage);
     read_all_from_buffer(state->Data_Scenario, &Data_Scenario);
-    read_all_from_buffer(state->Data_Event_timeLimitMaxGameYear, &Data_Event.timeLimitMaxGameYear);
+    scenario_criteria_load_state(state->max_game_year);
 
     scenario_earthquake_load_state(state->earthquake);
-
-    read_all_from_buffer(state->Data_Event_emperorChange_state, &Data_Event.emperorChange.state);
 
     city_message_load_state(state->messages, state->message_extra,
                             state->message_counts, state->message_delays,
@@ -596,8 +592,9 @@ static void savegame_serialize(savegame_state *state)
 
     write_all_to_buffer(state->Data_CityInfo_Extra_populationGraphOrder, &Data_CityInfo_Extra.populationGraphOrder);
     write_all_to_buffer(state->Data_CityInfo_Extra_unknownOrder, &Data_CityInfo_Extra.unknownOrder);
-    write_all_to_buffer(state->Data_Event_emperorChange_gameYear, &Data_Event.emperorChange.gameYear);
-    write_all_to_buffer(state->Data_Event_emperorChange_month, &Data_Event.emperorChange.month);
+
+    scenario_emperor_change_save_state(state->emperor_change_time, state->emperor_change_state);
+
     empire_save_state(state->empire);
     empire_city_save_state(state->empire_cities);
     trade_prices_save_state(state->trade_prices);
@@ -605,11 +602,10 @@ static void savegame_serialize(savegame_state *state)
 
     city_culture_save_state(state->culture_coverage);
     write_all_to_buffer(state->Data_Scenario, &Data_Scenario);
-    write_all_to_buffer(state->Data_Event_timeLimitMaxGameYear, &Data_Event.timeLimitMaxGameYear);
+    scenario_criteria_save_state(state->max_game_year);
 
     scenario_earthquake_save_state(state->earthquake);
 
-    write_all_to_buffer(state->Data_Event_emperorChange_state, &Data_Event.emperorChange.state);
     city_message_save_state(state->messages, state->message_extra,
                             state->message_counts, state->message_delays,
                             state->population_messages);

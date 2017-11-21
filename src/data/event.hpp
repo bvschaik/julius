@@ -13,13 +13,6 @@ enum
 extern struct _Data_Event
 {
     short lastInternalInvasionId;
-    int timeLimitMaxGameYear;
-    struct
-    {
-        int gameYear;
-        int month;
-        int state;
-    } emperorChange;
 } Data_Event;
 
 #endif

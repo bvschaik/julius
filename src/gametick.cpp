@@ -52,7 +52,7 @@ void GameTick_doTick()
     FigureAction_handle();
     scenario_earthquake_process();
     scenario_gladiator_revolt_process();
-    Event_handleEmperorChange();
+    scenario_emperor_change_process();
     CityInfo_Victory_check();
 }
 

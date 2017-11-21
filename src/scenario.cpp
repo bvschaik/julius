@@ -200,22 +200,8 @@ static void loadScenario(const char *scenarioName)
     // gladiator revolt
     scenario_gladiator_revolt_init();
     // emperor change
-    Data_Event.emperorChange.gameYear = scenario_property_start_year() + Data_Scenario.emperorChange.year;
-    Data_Event.emperorChange.month = 1 + (random_byte() & 7);
-    Data_Event.emperorChange.state = 0;
-    // time limit
-    if (scenario_criteria_time_limit_enabled())
-    {
-        Data_Event.timeLimitMaxGameYear = scenario_property_start_year() + Data_Scenario.winCriteria.timeLimitYears;
-    }
-    else if (scenario_criteria_survival_enabled())
-    {
-        Data_Event.timeLimitMaxGameYear = scenario_property_start_year() + Data_Scenario.winCriteria.survivalYears;
-    }
-    else
-    {
-        Data_Event.timeLimitMaxGameYear = 1000000 + scenario_property_start_year();
-    }
+    scenario_emperor_change_init();
+    scenario_criteria_init_max_year();
 
     empire_init_scenario();
     traders_clear();
