@@ -1,6 +1,7 @@
 #include "routing.h"
 
 #include "Data/Grid.h"
+#include "Data/Routes.h"
 #include "../Routing.h"
 
 int map_routing_distance(int grid_offset)
@@ -34,3 +35,18 @@ int map_routing_noncitizen_terrain(int grid_offset)
     return Data_Grid_routingLandNonCitizen[grid_offset];
 }
 
+void map_routing_save_state(buffer *buf)
+{
+    buffer_write_i32(buf, 0); // unused counter
+    buffer_write_i32(buf, Data_Routes.enemyRoutesCalculated);
+    buffer_write_i32(buf, Data_Routes.totalRoutesCalculated);
+    buffer_write_i32(buf, 0); // unused counter
+}
+
+void map_routing_load_state(buffer *buf)
+{
+    buffer_skip(buf, 4); // unused counter
+    Data_Routes.enemyRoutesCalculated = buffer_read_i32(buf);
+    Data_Routes.totalRoutesCalculated = buffer_read_i32(buf);
+    buffer_skip(buf, 4); // unused counter
+}

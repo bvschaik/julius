@@ -14,7 +14,6 @@
 #include "Data/CityInfo.h"
 #include "Data/FileList.h"
 #include "Data/Grid.h"
-#include "Data/Routes.h"
 #include "Data/State.h"
 #include "Data/Figure.h"
 #include "UI/AllWindows.h" // TODO: try to eliminate this
@@ -42,6 +41,7 @@
 #include "game/tutorial.h"
 #include "graphics/image.h"
 #include "map/bookmark.h"
+#include "map/routing.h"
 #include "scenario/criteria.h"
 #include "scenario/distant_battle.h"
 #include "scenario/earthquake.h"
@@ -193,10 +193,7 @@ typedef struct {
     buffer *trade_route_traded;
     buffer *Data_Buildings_Extra_barracksTowerSentryRequested;
     buffer *Data_Buildings_Extra_createdSequence;
-    buffer *Data_Routes_unknown1RoutesCalculated;
-    buffer *Data_Routes_enemyRoutesCalculated;
-    buffer *Data_Routes_totalRoutesCalculated;
-    buffer *Data_Routes_unknown2RoutesCalculated;
+    buffer *routing_counters;
     buffer *building_count_culture3;
     buffer *enemy_armies;
     buffer *Data_CityInfo_Extra_entryPointFlag_x;
@@ -344,10 +341,7 @@ void init_savegame_data()
     state->trade_route_traded = create_savegame_piece(1280, 1);
     state->Data_Buildings_Extra_barracksTowerSentryRequested = create_savegame_piece(4, 0);
     state->Data_Buildings_Extra_createdSequence = create_savegame_piece(4, 0);
-    state->Data_Routes_unknown1RoutesCalculated = create_savegame_piece(4, 0); //state->unk_634474 = create_savegame_piece(4, 0); not referenced
-    state->Data_Routes_enemyRoutesCalculated = create_savegame_piece(4, 0);
-    state->Data_Routes_totalRoutesCalculated = create_savegame_piece(4, 0);
-    state->Data_Routes_unknown2RoutesCalculated = create_savegame_piece(4, 0); //state->unk_634470 = create_savegame_piece(4, 0); not referenced
+    state->routing_counters = create_savegame_piece(16, 0);
     state->building_count_culture3 = create_savegame_piece(40, 0);
     state->enemy_armies = create_savegame_piece(900, 0);
     state->Data_CityInfo_Extra_entryPointFlag_x = create_savegame_piece(4, 0);
@@ -497,11 +491,8 @@ static void savegame_deserialize(savegame_state *state)
     
     read_all_from_buffer(state->Data_Buildings_Extra_barracksTowerSentryRequested, &Data_Buildings_Extra.barracksTowerSentryRequested);
     read_all_from_buffer(state->Data_Buildings_Extra_createdSequence, &Data_Buildings_Extra.createdSequence);
-    read_all_from_buffer(state->Data_Routes_unknown1RoutesCalculated, &Data_Routes.unknown1RoutesCalculated); //read_all_from_buffer(state->unk_634474, &unk_634474); not referenced
-    read_all_from_buffer(state->Data_Routes_enemyRoutesCalculated, &Data_Routes.enemyRoutesCalculated);
-    read_all_from_buffer(state->Data_Routes_totalRoutesCalculated, &Data_Routes.totalRoutesCalculated);
-    read_all_from_buffer(state->Data_Routes_unknown2RoutesCalculated, &Data_Routes.unknown2RoutesCalculated); //read_all_from_buffer(state->unk_634470, &unk_634470); not referenced
-    
+
+    map_routing_load_state(state->routing_counters);
     enemy_armies_load_state(state->enemy_armies, state->enemy_army_totals);
 
     read_all_from_buffer(state->Data_CityInfo_Extra_entryPointFlag_x, &Data_CityInfo_Extra.entryPointFlag.x);
@@ -620,11 +611,8 @@ static void savegame_serialize(savegame_state *state)
 
     write_all_to_buffer(state->Data_Buildings_Extra_barracksTowerSentryRequested, &Data_Buildings_Extra.barracksTowerSentryRequested);
     write_all_to_buffer(state->Data_Buildings_Extra_createdSequence, &Data_Buildings_Extra.createdSequence);
-    write_all_to_buffer(state->Data_Routes_unknown1RoutesCalculated, &Data_Routes.unknown1RoutesCalculated); //write_all_to_buffer(state->unk_634474, &unk_634474); not referenced
-    write_all_to_buffer(state->Data_Routes_enemyRoutesCalculated, &Data_Routes.enemyRoutesCalculated);
-    write_all_to_buffer(state->Data_Routes_totalRoutesCalculated, &Data_Routes.totalRoutesCalculated);
-    write_all_to_buffer(state->Data_Routes_unknown2RoutesCalculated, &Data_Routes.unknown2RoutesCalculated); //write_all_to_buffer(state->unk_634470, &unk_634470); not referenced
-    
+
+    map_routing_save_state(state->routing_counters);
     enemy_armies_save_state(state->enemy_armies, state->enemy_army_totals);
 
     write_all_to_buffer(state->Data_CityInfo_Extra_entryPointFlag_x, &Data_CityInfo_Extra.entryPointFlag.x);
