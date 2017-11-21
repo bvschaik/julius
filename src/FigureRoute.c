@@ -52,11 +52,11 @@ void FigureRoute_add(int figureId)
 	if (f->isBoat) {
 		if (f->isBoat == 2) { // flotsam
 			Routing_getDistanceWaterFlotsam(f->x, f->y);
-			pathLength = Routing_getPathOnWater(pathId, f->x, f->y,
+			pathLength = Routing_getPathOnWater(Data_Routes.directionPaths[pathId], f->x, f->y,
 				f->destinationX, f->destinationY, 1);
 		} else {
 			Routing_getDistanceWaterBoat(f->x, f->y);
-			pathLength = Routing_getPathOnWater(pathId, f->x, f->y,
+			pathLength = Routing_getPathOnWater(Data_Routes.directionPaths[pathId], f->x, f->y,
 				f->destinationX, f->destinationY, 0);
 		}
 	} else {
@@ -102,15 +102,15 @@ void FigureRoute_add(int figureId)
 		}
 		if (canTravel) {
 			if (f->terrainUsage == FigureTerrainUsage_Walls) {
-				pathLength = Routing_getPath(4, pathId, f->x, f->y,
-					f->destinationX, f->destinationY);
+				pathLength = Routing_getPath(Data_Routes.directionPaths[pathId], f->x, f->y,
+					f->destinationX, f->destinationY, 4);
 				if (pathLength <= 0) {
-					pathLength = Routing_getPath(8, pathId, f->x, f->y,
-						f->destinationX, f->destinationY);
+					pathLength = Routing_getPath(Data_Routes.directionPaths[pathId], f->x, f->y,
+						f->destinationX, f->destinationY, 8);
 				}
 			} else {
-				pathLength = Routing_getPath(8, pathId, f->x, f->y,
-					f->destinationX, f->destinationY);
+				pathLength = Routing_getPath(Data_Routes.directionPaths[pathId], f->x, f->y,
+					f->destinationX, f->destinationY, 8);
 			}
 		} else { // cannot travel
 			pathLength = 0;

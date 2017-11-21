@@ -1,6 +1,8 @@
 #ifndef ROUTING_H
 #define ROUTING_H
 
+#include <stdint.h>
+
 enum {
 	Routing_Citizen_0_Road = 0,
 	Routing_Citizen_2_PassableTerrain = 2,
@@ -44,7 +46,7 @@ int Routing_canTravelOverWalls(int xSrc, int ySrc, int xDst, int yDst);
 int Routing_canTravelOverLandNonCitizen(int xSrc, int ySrc, int xDst, int yDst, int onlyThroughBuildingId, int maxTiles);
 int Routing_canTravelThroughEverythingNonCitizen(int xSrc, int ySrc, int xDst, int yDst);
 
-int Routing_getPath(int numDirections, int routingPathId, int xSrc, int ySrc, int xDst, int yDst);
+int Routing_getPath(uint8_t *path, int xSrc, int ySrc, int xDst, int yDst, int numDirections);
 
 int Routing_canPlaceRoadUnderAqueduct(int gridOffset);
 int Routing_getAqueductGraphicOffsetWithRoad(int gridOffset);
@@ -68,7 +70,7 @@ int Routing_getDirectionForMissile(int xSrc, int ySrc, int xDst, int yDst);
 
 void Routing_getDistanceWaterBoat(int x, int y);
 void Routing_getDistanceWaterFlotsam(int x, int y);
-int Routing_getPathOnWater(int routingPathId, int xSrc, int ySrc, int xDst, int yDst, int isFlotsam);
+int Routing_getPathOnWater(uint8_t *path, int xSrc, int ySrc, int xDst, int yDst, int isFlotsam);
 
 int Routing_getClosestXYWithinRange(int numDirections, int xSrc, int ySrc, int xDst, int yDst, int range, int *xOut, int *yOut);
 

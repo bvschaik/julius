@@ -1172,7 +1172,7 @@ void Routing_getDistanceWaterFlotsam(int x, int y)
 	routeQueueDir8(sourceGridOffset, callbackGetDistanceWaterFlotsam);
 }
 
-int Routing_getPath(int numDirections, int routingPathId, int xSrc, int ySrc, int xDst, int yDst)
+int Routing_getPath(uint8_t *path, int xSrc, int ySrc, int xDst, int yDst, int numDirections)
 {
 	int dstGridOffset = GridOffset(xDst, yDst);
 	int distance = Data_Grid_routingDistance[dstGridOffset];
@@ -1218,7 +1218,7 @@ int Routing_getPath(int numDirections, int routingPathId, int xSrc, int ySrc, in
 		}
 	}
 	for (int i = 0; i < numTiles; i++) {
-		Data_Routes.directionPaths[routingPathId][i] = directionPath[numTiles - i - 1];
+		path[i] = directionPath[numTiles - i - 1];
 	}
 	return numTiles;
 }
@@ -1276,7 +1276,7 @@ int Routing_getClosestXYWithinRange(int numDirections, int xSrc, int ySrc, int x
 	return 0;
 }
 
-int Routing_getPathOnWater(int routingPathId, int xSrc, int ySrc, int xDst, int yDst, int isFlotsam)
+int Routing_getPathOnWater(uint8_t *path, int xSrc, int ySrc, int xDst, int yDst, int isFlotsam)
 {
 	int rand = random_byte() & 3;
 	int dstGridOffset = GridOffset(xDst, yDst);
@@ -1325,7 +1325,7 @@ int Routing_getPathOnWater(int routingPathId, int xSrc, int ySrc, int xDst, int 
 		}
 	}
 	for (int i = 0; i < numTiles; i++) {
-		Data_Routes.directionPaths[routingPathId][i] = directionPath[numTiles - i - 1];
+		path[i] = directionPath[numTiles - i - 1];
 	}
 	return numTiles;
 }
