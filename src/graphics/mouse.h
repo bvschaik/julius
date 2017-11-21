@@ -27,7 +27,7 @@ typedef enum
 /**
  * Mouse state
  */
-typedef struct
+struct mouse
 {
     int x; /**< Global position X */
     int y; /**< Global position Y */
@@ -35,7 +35,7 @@ typedef struct
     mouse_button left; /**< Left mouse button */
     mouse_button right; /**< Right mouse button */
     int is_inside_window; /**< Whether the mouse is in the window */
-} mouse;
+} ;
 
 #ifdef __cplusplus
 extern "C" {

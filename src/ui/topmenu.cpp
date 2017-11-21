@@ -132,7 +132,7 @@ void UI_TopMenu_initFromSettings()
 void UI_TopMenu_drawBackground()
 {
     refreshSidebarButtons();
-    Widget_Menu_drawMenuBar(menu, 4);
+    Widget::Menu::drawMenuBar(menu, 4);
 
     int width;
     color_t treasureColor = COLOR_WHITE;
@@ -234,7 +234,7 @@ void UI_TopMenu_drawForeground()
         return;
     }
     UI_City_drawCity();
-    Widget_Menu_drawSubMenu(&menu[openSubMenu-1], focusSubMenuId);
+    Widget::Menu::drawSubMenu(&menu[openSubMenu-1], focusSubMenuId);
 }
 
 static void clearState()
@@ -252,12 +252,12 @@ static int handleMouseSubmenu(const mouse *m)
         UI_Window_goBack();
         return 1;
     }
-    int menuId = Widget_Menu_handleMenuBar(m, menu, 4, &focusMenuId);
+    int menuId = Widget::Menu::handleMenuBar(m, menu, 4, &focusMenuId);
     if (menuId && menuId != openSubMenu)
     {
         openSubMenu = menuId;
     }
-    if (!Widget_Menu_handleMenuItem(m, &menu[openSubMenu-1], &focusSubMenuId))
+    if (!Widget::Menu::handleMenuItem(m, &menu[openSubMenu-1], &focusSubMenuId))
     {
         if (m->left.went_down)
         {
@@ -313,7 +313,7 @@ static int handleTopMenuRightClick(int type)
 
 static int handleMouseMenu(const mouse *m)
 {
-    int menuId = Widget_Menu_handleMenuBar(m, menu, 4, &focusMenuId);
+    int menuId = Widget::Menu::handleMenuBar(m, menu, 4, &focusMenuId);
     if (menuId && m->left.went_down)
     {
         openSubMenu = menuId;

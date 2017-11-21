@@ -94,10 +94,4 @@ int Widget_Button_handleCustomButtons(int xOffset, int yOffset, CustomButton *bu
 
 void Widget_Button_doNothing(int param1, int param2);
 
-void Widget_Menu_drawMenuBar(MenuBarItem *items, int numItems);
-void Widget_Menu_drawSubMenu(MenuBarItem *menu, int focusSubMenu);
-
-int Widget_Menu_handleMenuBar(const mouse *m, MenuBarItem *items, int numItems, int *focusMenuId);
-int Widget_Menu_handleMenuItem(const mouse *m, MenuBarItem *menu, int *focusSubMenuId);
-
 #endif

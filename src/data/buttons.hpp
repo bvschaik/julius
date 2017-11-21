@@ -71,7 +71,7 @@ typedef struct
     int parameter;
 } MenuItem;
 
-typedef struct
+struct MenuBarItem
 {
     short xStart;
     short xEnd;
@@ -79,6 +79,6 @@ typedef struct
     short textGroup;
     MenuItem *items;
     int numItems;
-} MenuBarItem;
+} ;
 
 #endif
