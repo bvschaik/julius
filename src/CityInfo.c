@@ -8,6 +8,14 @@
 
 #include <string.h>
 
+//another realization for namespace alternate
+void CityInfo_init();
+
+struct _CityInfo CityInfo =
+{
+    CityInfo_init
+};
+
 void CityInfo_init()
 {
 	memset(&Data_CityInfo, 0, sizeof(struct _Data_CityInfo));
