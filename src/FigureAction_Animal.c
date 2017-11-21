@@ -7,6 +7,7 @@
 
 #include "core/random.h"
 #include "figure/formation.h"
+#include "figure/route.h"
 
 static const int seagullOffsetsX[] = {0, 0, -2, 1, 2, -3, 4, -2};
 static const int seagullOffsetsY[] = {0, -2, 0, 2, 0, 1, -3, 4};
@@ -99,7 +100,7 @@ void FigureAction_sheep(int figureId)
 				f->actionState = FigureActionState_196_HerdAnimalAtRest;
 				f->waitTicks = figureId & 0x1f;
 			} else if (f->direction == DirFigure_9_Reroute) {
-				FigureRoute_remove(figureId);
+				figure_route_remove(figureId);
 			}
 			break;
 	}
@@ -153,7 +154,7 @@ void FigureAction_wolf(int figureId)
 				f->actionState = FigureActionState_196_HerdAnimalAtRest;
 				f->waitTicks = figureId & 0x1f;
 			} else if (f->direction == DirFigure_9_Reroute) {
-				FigureRoute_remove(figureId);
+				figure_route_remove(figureId);
 			}
 			break;
 		case FigureActionState_199_WolfAttacking:
@@ -166,14 +167,14 @@ void FigureAction_wolf(int figureId)
 					f->targetFigureId = targetId;
 					Data_Figures[targetId].targetedByFigureId = figureId;
 					f->targetFigureCreatedSequence = Data_Figures[targetId].createdSequence;
-					FigureRoute_remove(figureId);
+					figure_route_remove(figureId);
 				} else {
 					f->direction = f->previousTileDirection;
 					f->actionState = FigureActionState_196_HerdAnimalAtRest;
 					f->waitTicks = figureId & 0x1f;
 				}
 			} else if (f->direction == DirFigure_9_Reroute) {
-				FigureRoute_remove(figureId);
+				figure_route_remove(figureId);
 			} else if (f->direction == DirFigure_10_Lost) {
 				f->direction = f->previousTileDirection;
 				f->actionState = FigureActionState_196_HerdAnimalAtRest;
@@ -229,7 +230,7 @@ void FigureAction_zebra(int figureId)
 				f->actionState = FigureActionState_196_HerdAnimalAtRest;
 				f->waitTicks = figureId & 0x1f;
 			} else if (f->direction == DirFigure_9_Reroute) {
-				FigureRoute_remove(figureId);
+				figure_route_remove(figureId);
 			}
 			break;
 	}

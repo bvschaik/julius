@@ -1,6 +1,5 @@
 #include "Formation.h"
 
-#include "core/calc.h"
 #include "Figure.h"
 #include "FigureMovement.h"
 #include "Routing.h"
@@ -14,9 +13,11 @@
 #include "Data/State.h"
 
 #include "building/model.h"
+#include "core/calc.h"
 #include "figure/enemy_army.h"
 #include "figure/formation.h"
 #include "figure/properties.h"
+#include "figure/route.h"
 #include "scenario/distant_battle.h"
 #include "sound/effect.h"
 
@@ -110,7 +111,7 @@ void Formation_legionMoveTo(int formationId, int x, int y)
         if (formation_legion_prepare_to_move(m->id)) {
             f->alternativeLocationIndex = 0;
             f->actionState = FigureActionState_83_SoldierGoingToStandard;
-            FigureRoute_remove(figureId);
+            figure_route_remove(figureId);
         }
 	}
 }
@@ -136,7 +137,7 @@ void Formation_legionReturnHome(int formationId)
 		}
         if (formation_legion_prepare_to_move(m->id)) {
             f->actionState = FigureActionState_81_SoldierGoingToFort;
-            FigureRoute_remove(figureId);
+            figure_route_remove(figureId);
         }
 	}
 }

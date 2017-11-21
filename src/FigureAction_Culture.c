@@ -1,8 +1,9 @@
 #include "FigureAction_private.h"
 
 #include "Building.h"
-#include "Figure.h"
 #include "Terrain.h"
+
+#include "figure/route.h"
 
 static void FigureAction_cultureCommon(int figureId, int numTicks)
 {
@@ -27,7 +28,7 @@ static void FigureAction_cultureCommon(int figureId, int numTicks)
 					f->actionState = FigureActionState_126_RoamerReturning;
 					f->destinationX = x;
 					f->destinationY = y;
-					FigureRoute_remove(figureId);
+					figure_route_remove(figureId);
 					f->roamLength = 0;
 				} else {
 					f->state = FigureState_Dead;

@@ -1,14 +1,13 @@
 #include "FigureAction_private.h"
 
 #include "Building.h"
-#include "Figure.h"
-#include "FigureMovement.h"
 #include "Formation.h"
 
 #include "Data/CityInfo.h"
 #include "Data/Grid.h"
 
 #include "city/message.h"
+#include "figure/route.h"
 
 static const int criminalOffsets[] = {
 	0, 0, 1, 2, 3, 4, 5, 6, 7, 7, 6, 5, 4, 3, 2, 1
@@ -89,7 +88,7 @@ void FigureAction_rioter(int figureId)
 					f->destinationX = xTile;
 					f->destinationY = yTile;
 					f->destinationBuildingId = buildingId;
-					FigureRoute_remove(figureId);
+					figure_route_remove(figureId);
 				} else {
 					f->state = FigureState_Dead;
 				}
@@ -105,13 +104,13 @@ void FigureAction_rioter(int figureId)
 					f->destinationX = xTile;
 					f->destinationY = yTile;
 					f->destinationBuildingId = buildingId;
-					FigureRoute_remove(figureId);
+					figure_route_remove(figureId);
 				} else {
 					f->state = FigureState_Dead;
 				}
 			} else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
 				f->actionState = FigureActionState_120_RioterCreated;
-				FigureRoute_remove(figureId);
+				figure_route_remove(figureId);
 			} else if (f->direction == DirFigure_11_Attack) {
 				if (f->graphicOffset > 12) {
 					f->graphicOffset = 0;

@@ -1,12 +1,12 @@
 #include "FigureAction_private.h"
 
-#include "core/calc.h"
-#include "Figure.h"
 #include "Terrain.h"
 
 #include "Data/Grid.h"
 
 #include "building/list.h"
+#include "core/calc.h"
+#include "figure/route.h"
 #include "figure/type.h"
 #include "scenario/gladiator_revolt.h"
 
@@ -155,7 +155,7 @@ void FigureAction_entertainer(int figureId)
 			f->actionState == FigureActionState_94_EntertainerRoaming ||
 			f->actionState == FigureActionState_95_EntertainerReturning) {
 			f->type = FIGURE_ENEMY54_GLADIATOR;
-			FigureRoute_remove(figureId);
+			figure_route_remove(figureId);
 			f->roamLength = 0;
 			f->actionState = FigureActionState_158_NativeCreated;
 			return;
@@ -234,7 +234,7 @@ void FigureAction_entertainer(int figureId)
 				updateShowsAtDestination(f);
 				f->state = FigureState_Dead;
 			} else if (f->direction == DirFigure_9_Reroute) {
-				FigureRoute_remove(figureId);
+				figure_route_remove(figureId);
 			} else if (f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
 			}

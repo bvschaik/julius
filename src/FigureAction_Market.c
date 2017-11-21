@@ -3,6 +3,7 @@
 #include "Figure.h"
 #include "Resource.h"
 
+#include "figure/route.h"
 #include "figure/type.h"
 #include "game/resource.h"
 
@@ -132,7 +133,7 @@ void FigureAction_marketBuyer(int figureId)
 				f->actionState = FigureActionState_146_MarketBuyerReturning;
 				f->destinationX = f->sourceX;
 				f->destinationY = f->sourceY;
-				FigureRoute_remove(figureId);
+				figure_route_remove(figureId);
 			}
 			break;
 		case FigureActionState_146_MarketBuyerReturning:
@@ -140,7 +141,7 @@ void FigureAction_marketBuyer(int figureId)
 			if (f->direction == DirFigure_8_AtDestination || f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
 			} else if (f->direction == DirFigure_9_Reroute) {
-				FigureRoute_remove(figureId);
+				figure_route_remove(figureId);
 			}
 			break;
 	}

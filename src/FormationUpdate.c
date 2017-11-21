@@ -18,6 +18,7 @@
 #include "core/random.h"
 #include "figure/enemy_army.h"
 #include "figure/formation.h"
+#include "figure/route.h"
 #include "sound/effect.h"
 
 static const int enemyAttackBuildingPriority[4][24] = {
@@ -184,7 +185,7 @@ static void tickUpdateLegions()
 					f->actionState != FigureActionState_149_Corpse &&
 					f->actionState != FigureActionState_148_Fleeing) {
 					f->actionState = FigureActionState_148_Fleeing;
-					FigureRoute_remove(m->figures[n]);
+					figure_route_remove(m->figures[n]);
 				}
 			}
 		} else if (m->layout == FORMATION_MOP_UP) {
@@ -596,7 +597,7 @@ static void update_enemy_formation(const formation *m, void *data)
                 f->actionState != FigureActionState_149_Corpse &&
                 f->actionState != FigureActionState_148_Fleeing) {
                 f->actionState = FigureActionState_148_Fleeing;
-                FigureRoute_remove(m->figures[n]);
+                figure_route_remove(m->figures[n]);
             }
         }
         return;
@@ -717,7 +718,7 @@ static void moveAnimals(const formation *m, int attackingAnimals)
 				f->targetFigureId = targetId;
 				Data_Figures[targetId].targetedByFigureId = figureId;
 				f->targetFigureCreatedSequence = Data_Figures[targetId].createdSequence;
-				FigureRoute_remove(figureId);
+				figure_route_remove(figureId);
 			} else {
 				f->actionState = FigureActionState_196_HerdAnimalAtRest;
 			}

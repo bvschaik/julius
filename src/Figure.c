@@ -17,6 +17,7 @@
 #include "empire/city.h"
 #include "figure/formation.h"
 #include "figure/name.h"
+#include "figure/route.h"
 #include "figure/trader.h"
 #include "scenario/map.h"
 #include "scenario/property.h"
@@ -119,7 +120,7 @@ void Figure_delete(int figureId)
 	if (f->immigrantBuildingId) {
 		Data_Buildings[f->buildingId].immigrantFigureId = 0;
 	}
-	FigureRoute_remove(figureId);
+	figure_route_remove(figureId);
 	Figure_removeFromTileList(figureId);
 	memset(f, 0, sizeof(struct Data_Figure));
 }

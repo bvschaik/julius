@@ -1,7 +1,5 @@
 #include "FigureAction_private.h"
 
-#include "Figure.h"
-
 #include "Resource.h"
 #include "Terrain.h"
 #include "Trader.h"
@@ -15,6 +13,7 @@
 #include "empire/empire.h"
 #include "empire/trade_prices.h"
 #include "empire/trade_route.h"
+#include "figure/route.h"
 #include "figure/trader.h"
 #include "figure/type.h"
 #include "scenario/map.h"
@@ -251,7 +250,7 @@ void FigureAction_tradeCaravan(int figureId)
 					f->actionState = FigureActionState_102_TradeCaravanTrading;
 					break;
 				case DirFigure_9_Reroute:
-					FigureRoute_remove(figureId);
+					figure_route_remove(figureId);
 					break;
 				case DirFigure_10_Lost:
 					f->state = FigureState_Dead;
@@ -305,7 +304,7 @@ void FigureAction_tradeCaravan(int figureId)
 					f->state = FigureState_Dead;
 					break;
 				case DirFigure_9_Reroute:
-					FigureRoute_remove(figureId);
+					figure_route_remove(figureId);
 					break;
 				case DirFigure_10_Lost:
 					f->state = FigureState_Dead;
@@ -368,7 +367,7 @@ void FigureAction_nativeTrader(int figureId)
 			if (f->direction == DirFigure_8_AtDestination) {
 				f->actionState = FigureActionState_163_NativeTraderAtWarehouse;
 			} else if (f->direction == DirFigure_9_Reroute) {
-				FigureRoute_remove(figureId);
+				figure_route_remove(figureId);
 			} else if (f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
 				f->isGhost = 1;
@@ -382,7 +381,7 @@ void FigureAction_nativeTrader(int figureId)
 			if (f->direction == DirFigure_8_AtDestination || f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
 			} else if (f->direction == DirFigure_9_Reroute) {
-				FigureRoute_remove(figureId);
+				figure_route_remove(figureId);
 			}
 			break;
 		case FigureActionState_162_NativeTraderCreated:
@@ -525,7 +524,7 @@ void FigureAction_tradeShip(int figureId)
 			if (f->direction == DirFigure_8_AtDestination) {
 				f->actionState = FigureActionState_112_TradeShipMoored;
 			} else if (f->direction == DirFigure_9_Reroute) {
-				FigureRoute_remove(figureId);
+				figure_route_remove(figureId);
 			} else if (f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
 				if (!city_message_get_category_count(MESSAGE_CAT_BLOCKED_DOCK)) {
@@ -574,7 +573,7 @@ void FigureAction_tradeShip(int figureId)
 			if (f->direction == DirFigure_8_AtDestination) {
 				f->actionState = FigureActionState_114_TradeShipAnchored;
 			} else if (f->direction == DirFigure_9_Reroute) {
-				FigureRoute_remove(figureId);
+				figure_route_remove(figureId);
 			} else if (f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
 			}
@@ -606,7 +605,7 @@ void FigureAction_tradeShip(int figureId)
 				f->actionState = FigureActionState_110_TradeShipCreated;
 				f->state = FigureState_Dead;
 			} else if (f->direction == DirFigure_9_Reroute) {
-				FigureRoute_remove(figureId);
+				figure_route_remove(figureId);
 			} else if (f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
 			}

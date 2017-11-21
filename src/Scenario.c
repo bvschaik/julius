@@ -33,6 +33,7 @@
 #include "figure/enemy_army.h"
 #include "figure/formation.h"
 #include "figure/name.h"
+#include "figure/route.h"
 #include "figure/trader.h"
 #include "game/difficulty.h"
 #include "game/settings.h"
@@ -141,7 +142,7 @@ static void initCustomScenario(const char *scenarioName)
 	enemy_armies_clear();
 	figure_name_init();
     formations_clear();
-	FigureRoute_clearList();
+	figure_route_clear_all();
 	CityInfo_initGameTime();
 
 	loadScenario(scenarioName);

@@ -9,6 +9,7 @@
 #include "core/calc.h"
 #include "figure/enemy_army.h"
 #include "figure/properties.h"
+#include "figure/route.h"
 #include "figure/type.h"
 #include "sound/effect.h"
 
@@ -193,7 +194,7 @@ void FigureAction_towerSentry(int figureId)
 					f->actionState = FigureActionState_171_TowerSentryPatrolling;
 					f->destinationX = xTile;
 					f->destinationY = yTile;
-					FigureRoute_remove(figureId);
+					figure_route_remove(figureId);
 				}
 			}
 			break;
@@ -203,7 +204,7 @@ void FigureAction_towerSentry(int figureId)
 				f->actionState = FigureActionState_173_TowerSentryReturning;
 				f->destinationX = f->sourceX;
 				f->destinationY = f->sourceY;
-				FigureRoute_remove(figureId);
+				figure_route_remove(figureId);
 			} else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
 				f->actionState = FigureActionState_170_TowerSentryAtRest;
 			}
@@ -221,7 +222,7 @@ void FigureAction_towerSentry(int figureId)
 					f->actionState = FigureActionState_173_TowerSentryReturning;
 					f->destinationX = f->sourceX;
 					f->destinationY = f->sourceY;
-					FigureRoute_remove(figureId);
+					figure_route_remove(figureId);
 				}
 			}
 			break;
@@ -245,7 +246,7 @@ void FigureAction_towerSentry(int figureId)
 				f->gridOffset = GridOffset(f->x, f->y);
 				Figure_addToTileList(figureId);
 				f->actionState = FigureActionState_170_TowerSentryAtRest;
-				FigureRoute_remove(figureId);
+				figure_route_remove(figureId);
 			} else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
 			}
@@ -285,7 +286,7 @@ void FigureAction_TowerSentry_reroute()
 		// tower sentry got off wall due to rotation
 		int xTile, yTile;
 		if (Terrain_getWallTileWithinRadius(f->x, f->y, 2, &xTile, &yTile)) {
-			FigureRoute_remove(i);
+			figure_route_remove(i);
 			f->progressOnTile = 0;
 			Figure_removeFromTileList(i);
 			f->previousTileX = f->x = xTile;
@@ -306,7 +307,7 @@ void FigureAction_TowerSentry_reroute()
 			f->gridOffset = GridOffset(f->x, f->y);
 			Figure_addToTileList(i);
 			f->actionState = FigureActionState_170_TowerSentryAtRest;
-			FigureRoute_remove(i);
+			figure_route_remove(i);
 		}
 	}
 }

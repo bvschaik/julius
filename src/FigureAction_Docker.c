@@ -1,11 +1,11 @@
 #include "FigureAction_private.h"
 
-#include "Figure.h"
 #include "Resource.h"
 #include "Trader.h"
 
 #include "Data/CityInfo.h"
 
+#include "figure/route.h"
 #include "figure/trader.h"
 #include "figure/type.h"
 
@@ -191,7 +191,7 @@ void FigureAction_docker(int figureId)
 			if (f->direction == DirFigure_8_AtDestination) {
 				f->actionState = FigureActionState_139_DockerImportAtWarehouse;
 			} else if (f->direction == DirFigure_9_Reroute) {
-				FigureRoute_remove(figureId);
+				figure_route_remove(figureId);
 			} else if (f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
 			}
@@ -205,7 +205,7 @@ void FigureAction_docker(int figureId)
 			if (f->direction == DirFigure_8_AtDestination) {
 				f->actionState = FigureActionState_140_DockerExportAtWarehouse;
 			} else if (f->direction == DirFigure_9_Reroute) {
-				FigureRoute_remove(figureId);
+				figure_route_remove(figureId);
 			} else if (f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
 			}
@@ -220,7 +220,7 @@ void FigureAction_docker(int figureId)
 				f->actionState = FigureActionState_134_DockerExportQueue;
 				f->waitTicks = 0;
 			} else if (f->direction == DirFigure_9_Reroute) {
-				FigureRoute_remove(figureId);
+				figure_route_remove(figureId);
 			} else if (f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
 			}
@@ -234,7 +234,7 @@ void FigureAction_docker(int figureId)
 			if (f->direction == DirFigure_8_AtDestination) {
 				f->actionState = FigureActionState_132_DockerIdling;
 			} else if (f->direction == DirFigure_9_Reroute) {
-				FigureRoute_remove(figureId);
+				figure_route_remove(figureId);
 			} else if (f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
 			}

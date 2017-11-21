@@ -1,11 +1,11 @@
 #include "FigureAction_private.h"
 
-#include "Figure.h"
 #include "Terrain.h"
 
 #include "Data/CityInfo.h"
 
 #include "figure/formation.h"
+#include "figure/route.h"
 
 void FigureAction_indigenousNative(int figureId)
 {
@@ -63,7 +63,7 @@ void FigureAction_indigenousNative(int figureId)
 					f->destinationY = m->destination_y;
 					f->destinationBuildingId = m->destination_building_id;
 				}
-				FigureRoute_remove(figureId);
+				figure_route_remove(figureId);
 			}
 			break;
 		case FigureActionState_159_NativeAttacking:

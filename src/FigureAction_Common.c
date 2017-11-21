@@ -5,6 +5,7 @@
 
 #include "figure/formation.h"
 #include "figure/properties.h"
+#include "figure/route.h"
 #include "game/difficulty.h"
 #include "sound/effect.h"
 
@@ -99,7 +100,7 @@ static void resumeActivityAfterAttack(int figureId, struct Data_Figure *f)
 	f->opponentId = 0;
 	f->attackerId1 = 0;
 	f->attackerId2 = 0;
-	FigureRoute_remove(figureId);
+	figure_route_remove(figureId);
 }
 
 static void hitOpponent(int figureId, struct Data_Figure *f)

@@ -9,6 +9,7 @@
 #include "city/message.h"
 #include "core/calc.h"
 #include "core/random.h"
+#include "figure/route.h"
 #include "scenario/map.h"
 
 static const int flotsamType0[] = {0, 1, 2, 3, 4, 4, 4, 3, 2, 1, 0, 0};
@@ -39,7 +40,7 @@ void FigureAction_fishingBoat(int figureId)
 			f->destinationY = yTile;
 			f->sourceX = xTile;
 			f->sourceY = yTile;
-			FigureRoute_remove(figureId);
+			figure_route_remove(figureId);
 		} else {
 			f->state = FigureState_Dead;
 		}
@@ -64,7 +65,7 @@ void FigureAction_fishingBoat(int figureId)
 					f->destinationY = yTile;
 					f->sourceX = xTile;
 					f->sourceY = yTile;
-					FigureRoute_remove(figureId);
+					figure_route_remove(figureId);
 				}
 			}
 			break;
@@ -74,7 +75,7 @@ void FigureAction_fishingBoat(int figureId)
 			if (f->direction == DirFigure_8_AtDestination) {
 				int xTile, yTile;
 				if (Terrain_Water_findAlternativeTileForFishingBoat(figureId, &xTile, &yTile)) {
-					FigureRoute_remove(figureId);
+					figure_route_remove(figureId);
 					f->destinationX = xTile;
 					f->destinationY = yTile;
 					f->direction = f->previousTileDirection;
@@ -95,7 +96,7 @@ void FigureAction_fishingBoat(int figureId)
 				f->actionState = FigureActionState_195_FishingBoatReturningWithFish;
 				f->destinationX = f->sourceX;
 				f->destinationY = f->sourceY;
-				FigureRoute_remove(figureId);
+				figure_route_remove(figureId);
 			}
 			break;
 		case FigureActionState_193_FishingBoatSailingToWharf:
@@ -105,7 +106,7 @@ void FigureAction_fishingBoat(int figureId)
 				f->actionState = FigureActionState_194_FishingBoatAtWharf;
 				f->waitTicks = 0;
 			} else if (f->direction == DirFigure_9_Reroute) {
-				FigureRoute_remove(figureId);
+				figure_route_remove(figureId);
 			} else if (f->direction == DirFigure_10_Lost) {
 				// cannot reach grounds
 				city_message_post_with_message_delay(MESSAGE_CAT_FISHING_BLOCKED, 1, MESSAGE_FISHING_BOAT_BLOCKED, 12);
@@ -128,7 +129,7 @@ void FigureAction_fishingBoat(int figureId)
 						f->actionState = FigureActionState_191_FishingBoatGoingToFish;
 						f->destinationX = xTile;
 						f->destinationY = yTile;
-						FigureRoute_remove(figureId);
+						figure_route_remove(figureId);
 					}
 				}
 			}
@@ -143,7 +144,7 @@ void FigureAction_fishingBoat(int figureId)
 				b->figureSpawnDelay = 1;
 				b->data.other.fishingBoatHasFish++;
 			} else if (f->direction == DirFigure_9_Reroute) {
-				FigureRoute_remove(figureId);
+				figure_route_remove(figureId);
 			} else if (f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
 			}

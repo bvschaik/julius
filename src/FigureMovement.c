@@ -14,6 +14,7 @@
 #include "Data/State.h"
 #include "Data/Figure.h"
 
+#include "figure/route.h"
 #include "game/time.h"
 
 static void FigureMovement_walkTicksInternal(int figureId, int numTicks, int roamingEnabled);
@@ -333,9 +334,9 @@ static void figureSetNextRouteTileDirection(int figureId, struct Data_Figure *f)
 {
 	if (f->routingPathId > 0) {
 		if (f->routingPathCurrentTile < f->routingPathLength) {
-			f->direction = Data_Routes.directionPaths[f->routingPathId][f->routingPathCurrentTile];
+			f->direction = figure_route_get_direction(f->routingPathId, f->routingPathCurrentTile);
 		} else {
-			FigureRoute_remove(figureId);
+			figure_route_remove(figureId);
 			f->direction = DirFigure_8_AtDestination;
 		}
 	} else { // should be at destination
@@ -427,7 +428,7 @@ static void FigureMovement_walkTicksInternal(int figureId, int numTicks, int roa
 			Figure_provideServiceCoverage(figureId);
 			f->progressOnTile = 15;
 			if (f->routingPathId <= 0) {
-				FigureRoute_add(figureId);
+				figure_route_add(figureId);
 			}
 			figureSetNextRouteTileDirection(figureId, f);
 			figureAdvanceRouteTile(f, roamingEnabled);

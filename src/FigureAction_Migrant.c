@@ -2,13 +2,13 @@
 
 #include "BuildingHouse.h"
 #include "CityInfo.h"
-#include "Figure.h"
 #include "HousePopulation.h"
 #include "Terrain.h"
 
 #include "Data/CityInfo.h"
 
 #include "building/model.h"
+#include "figure/route.h"
 
 static void updateDirectionAndGraphic(int figureId, struct Data_Figure *f)
 {
@@ -75,7 +75,7 @@ void FigureAction_immigrant(int figureId)
 					f->roamLength = 0;
 					break;
 				case DirFigure_9_Reroute:
-					FigureRoute_remove(figureId);
+					figure_route_remove(figureId);
 					break;
 				case DirFigure_10_Lost:
 					b->immigrantFigureId = 0;
@@ -259,7 +259,7 @@ void FigureAction_homeless(int figureId)
 			if (f->direction == DirFigure_8_AtDestination || f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
 			} else if (f->direction == DirFigure_9_Reroute) {
-				FigureRoute_remove(figureId);
+				figure_route_remove(figureId);
 			}
 			f->waitTicks++;
 			if (f->waitTicks > 30) {
@@ -275,7 +275,7 @@ void FigureAction_homeless(int figureId)
 						f->destinationX = xRoad;
 						f->destinationY = yRoad;
 						f->roamLength = 0;
-						FigureRoute_remove(figureId);
+						figure_route_remove(figureId);
 					}
 				}
 			}

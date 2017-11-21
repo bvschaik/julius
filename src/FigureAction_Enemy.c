@@ -9,6 +9,7 @@
 
 #include "figure/formation.h"
 #include "figure/properties.h"
+#include "figure/route.h"
 #include "scenario/gladiator_revolt.h"
 #include "sound/effect.h"
 #include "sound/speech.h"
@@ -17,7 +18,7 @@ static void enemyInitial(int figureId, struct Data_Figure *f, const formation *m
 {
 	Figure_updatePositionInTileList(figureId);
 	f->graphicOffset = 0;
-	FigureRoute_remove(figureId);
+	figure_route_remove(figureId);
 	f->waitTicks--;
 	if (f->waitTicks <= 0) {
 		if (f->isGhost && f->indexInFormation == 0) {
@@ -98,7 +99,7 @@ static void enemyMarching(int figureId, struct Data_Figure *f, const formation *
 			return;
 		}
 		f->destinationBuildingId = m->destination_building_id;
-		FigureRoute_remove(figureId);
+		figure_route_remove(figureId);
 	}
 	FigureMovement_walkTicks(figureId, f->speedMultiplier);
 	if (f->direction == DirFigure_8_AtDestination ||
@@ -141,7 +142,7 @@ static void enemyFighting(int figureId, struct Data_Figure *f, const formation *
 			f->targetFigureId = targetId;
 			f->targetFigureCreatedSequence = Data_Figures[targetId].createdSequence;
 			Data_Figures[targetId].targetedByFigureId = figureId;
-			FigureRoute_remove(figureId);
+			figure_route_remove(figureId);
 		}
 	}
 	if (targetId > 0) {
@@ -149,7 +150,7 @@ static void enemyFighting(int figureId, struct Data_Figure *f, const formation *
 		if (f->direction == DirFigure_8_AtDestination) {
 			f->destinationX = Data_Figures[f->targetFigureId].x;
 			f->destinationY = Data_Figures[f->targetFigureId].y;
-			FigureRoute_remove(figureId);
+			figure_route_remove(figureId);
 		} else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
 			f->actionState = FigureActionState_151_EnemyInitial;
 			f->targetFigureId = 0;
@@ -606,7 +607,7 @@ void FigureAction_enemy54_Gladiator(int figureId)
 					f->destinationX = xTile;
 					f->destinationY = yTile;
 					f->destinationBuildingId = buildingId;
-					FigureRoute_remove(figureId);
+					figure_route_remove(figureId);
 				} else {
 					f->state = FigureState_Dead;
 				}
