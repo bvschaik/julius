@@ -12,7 +12,6 @@
 
 static void setSize(int width, int height)
 {
-	Data_Screen.format = 565;
 	Data_Screen.width = width;
 	Data_Screen.height = height;
 	Data_Screen.offset640x480.x = (Data_Screen.width - 640) / 2;

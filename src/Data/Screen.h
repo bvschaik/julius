@@ -9,9 +9,7 @@ extern struct _Data_Screen {
 	struct {
 		int x, y;
 	} offset640x480;
-	int format; // 555, 565, ...
 	void *drawBuffer; //[800*600];
-	int scanlineBytes;
 } Data_Screen;
 
 #endif
