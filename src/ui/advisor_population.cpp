@@ -16,8 +16,8 @@ static void buttonGraph(int param1, int param2);
 
 static CustomButton graphButtons[] =
 {
-    {503,  61, 607, 116, CustomButton_Immediate, buttonGraph, Widget_Button_doNothing, 0, 0},
-    {503, 161, 607, 216, CustomButton_Immediate, buttonGraph, Widget_Button_doNothing, 1, 0},
+    {503,  61, 607, 116, CustomButton_Immediate, buttonGraph, Widget::Button::doNothing, 0, 0},
+    {503, 161, 607, 216, CustomButton_Immediate, buttonGraph, Widget::Button::doNothing, 1, 0},
 };
 
 static int focusButtonId;
@@ -244,7 +244,7 @@ void UI_Advisor_Population_drawForeground()
 
 void UI_Advisor_Population_handleMouse()
 {
-    Widget_Button_handleCustomButtons(
+    Widget::Button::handleCustomButtons(
         Data_Screen.offset640x480.x, Data_Screen.offset640x480.y,
         graphButtons, 2, &focusButtonId);
 }

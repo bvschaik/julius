@@ -11,7 +11,7 @@ static void buttonHoldFestival(int param1, int param2);
 
 static CustomButton holdFestivalButtons[] =
 {
-    {102, 280, 402, 300, CustomButton_Immediate, buttonHoldFestival, Widget_Button_doNothing, 0, 0},
+    {102, 280, 402, 300, CustomButton_Immediate, buttonHoldFestival, Widget::Button::doNothing, 0, 0},
 };
 
 static int focusButtonId;
@@ -251,7 +251,7 @@ void UI_Advisor_Entertainment_drawForeground()
 
 void UI_Advisor_Entertainment_handleMouse()
 {
-    Widget_Button_handleCustomButtons(
+    Widget::Button::handleCustomButtons(
         Data_Screen.offset640x480.x, Data_Screen.offset640x480.y,
         holdFestivalButtons, 1, &focusButtonId);
 }

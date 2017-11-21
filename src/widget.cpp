@@ -8,6 +8,7 @@
 #include "ui/window.h"
 
 #include "uicore/widget_text.h"
+#include "uicore/widget_button.h"
 
 #include "core/lang.h"
 #include "core/string.h"
@@ -274,11 +275,11 @@ static int drawRichTextCharacter(font_t font, unsigned int c, int x, int y, colo
 
 static ImageButton imageButtonScrollUp =
 {
-    0, 0, 39, 26, ImageButton_Scroll, 96, 8, Widget_RichText_scroll, Widget_Button_doNothing, 0, 1, 1
+    0, 0, 39, 26, ImageButton_Scroll, 96, 8, Widget_RichText_scroll, Widget::Button::doNothing, 0, 1, 1
 };
 static ImageButton imageButtonScrollDown =
 {
-    0, 0, 39, 26, ImageButton_Scroll, 96, 12, Widget_RichText_scroll, Widget_Button_doNothing, 1, 1, 1
+    0, 0, 39, 26, ImageButton_Scroll, 96, 12, Widget_RichText_scroll, Widget::Button::doNothing, 1, 1, 1
 };
 
 static struct RichTextLink
@@ -683,11 +684,11 @@ void Widget_RichText_drawScrollbar()
 {
     if (data.maxScrollPosition)
     {
-        Widget_Button_drawImageButtons(
+        Widget::Button::drawImageButtons(
             data.xText + 16 * data.textWidthBlocks - 1,
             data.yText,
             &imageButtonScrollUp, 1);
-        Widget_Button_drawImageButtons(
+        Widget::Button::drawImageButtons(
             data.xText + 16 * data.textWidthBlocks - 1,
             data.yText + 16 * data.textHeightBlocks - 26,
             &imageButtonScrollDown, 1);
@@ -790,14 +791,14 @@ int Widget_RichText_handleScrollbar(const mouse *m)
         Widget_RichText_scroll(0, 3);
     }
 
-    if (Widget_Button_handleImageButtons(
+    if (Widget::Button::handleImageButtons(
                 data.xText + 16 * data.textWidthBlocks - 1,
                 data.yText,
                 &imageButtonScrollUp, 1, 0))
     {
         return 1;
     }
-    if (Widget_Button_handleImageButtons(
+    if (Widget::Button::handleImageButtons(
                 data.xText + 16 * data.textWidthBlocks - 1,
                 data.yText + 16 * data.textHeightBlocks - 26,
                 &imageButtonScrollDown, 1, 0))

@@ -17,24 +17,24 @@ static void buttonHelp(int param1, int param2);
 
 static ImageButton helpButton =
 {
-    11, -7, 27, 27, ImageButton_Normal, 134, 0, buttonHelp, Widget_Button_doNothing, 0, 0, 1
+    11, -7, 27, 27, ImageButton_Normal, 134, 0, buttonHelp, Widget::Button::doNothing, 0, 0, 1
 };
 
 static CustomButton advisorButtons[] =
 {
-    {12, 1, 52, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, 1, 0},
-    {60, 1, 100, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, 2, 0},
-    {108, 1, 148, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, 3, 0},
-    {156, 1, 196, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, 4, 0},
-    {204, 1, 244, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, 5, 0},
-    {252, 1, 292, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, 6, 0},
-    {300, 1, 340, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, 7, 0},
-    {348, 1, 388, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, 8, 0},
-    {396, 1, 436, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, 9, 0},
-    {444, 1, 484, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, 10, 0},
-    {492, 1, 532, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, 11, 0},
-    {540, 1, 580, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, 12, 0},
-    {588, 1, 624, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget_Button_doNothing, 0, 0},
+    {12, 1, 52, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget::Button::doNothing, 1, 0},
+    {60, 1, 100, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget::Button::doNothing, 2, 0},
+    {108, 1, 148, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget::Button::doNothing, 3, 0},
+    {156, 1, 196, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget::Button::doNothing, 4, 0},
+    {204, 1, 244, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget::Button::doNothing, 5, 0},
+    {252, 1, 292, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget::Button::doNothing, 6, 0},
+    {300, 1, 340, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget::Button::doNothing, 7, 0},
+    {348, 1, 388, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget::Button::doNothing, 8, 0},
+    {396, 1, 436, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget::Button::doNothing, 9, 0},
+    {444, 1, 484, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget::Button::doNothing, 10, 0},
+    {492, 1, 532, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget::Button::doNothing, 11, 0},
+    {540, 1, 580, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget::Button::doNothing, 12, 0},
+    {588, 1, 624, 41, CustomButton_Immediate, buttonChangeAdvisor, Widget::Button::doNothing, 0, 0},
 };
 
 static const int advisorToMessageTextId[] =
@@ -161,7 +161,7 @@ void UI_Advisors_drawBackground()
 
 void UI_Advisors_drawForeground()
 {
-    Widget_Button_drawImageButtons(Data_Screen.offset640x480.x,
+    Widget::Button::drawImageButtons(Data_Screen.offset640x480.x,
                                    Data_Screen.offset640x480.y + 16 * (advisorHeight - 2),
                                    &helpButton, 1);
 
@@ -220,12 +220,12 @@ void UI_Advisors_handleMouse(const mouse *m)
 {
     int baseOffsetX = Data_Screen.offset640x480.x;
     int baseOffsetY = Data_Screen.offset640x480.y;
-    if (Widget_Button_handleCustomButtons(baseOffsetX, baseOffsetY + 440, advisorButtons, 13, &focusButtonId))
+    if (Widget::Button::handleCustomButtons(baseOffsetX, baseOffsetY + 440, advisorButtons, 13, &focusButtonId))
     {
         return;
     }
     int buttonId;
-    Widget_Button_handleImageButtons(baseOffsetX, baseOffsetY + 16 * (advisorHeight - 2), &helpButton, 1, &buttonId);
+    Widget::Button::handleImageButtons(baseOffsetX, baseOffsetY + 16 * (advisorHeight - 2), &helpButton, 1, &buttonId);
     if (buttonId)
     {
         focusButtonId = -1;

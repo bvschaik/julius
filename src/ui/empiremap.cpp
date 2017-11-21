@@ -40,25 +40,25 @@ static void confirmOpenTrade(int accepted);
 
 static ImageButton imageButtonHelp[] =
 {
-    {0, 0, 27, 27, ImageButton_Normal, 134, 0, buttonHelp, Widget_Button_doNothing, 0, 0, 1}
+    {0, 0, 27, 27, ImageButton_Normal, 134, 0, buttonHelp, Widget::Button::doNothing, 0, 0, 1}
 };
 static ImageButton imageButtonReturnToCity[] =
 {
-    {0, 0, 24, 24, ImageButton_Normal, 134, 4, buttonReturnToCity, Widget_Button_doNothing, 0, 0, 1}
+    {0, 0, 24, 24, ImageButton_Normal, 134, 4, buttonReturnToCity, Widget::Button::doNothing, 0, 0, 1}
 };
 static ImageButton imageButtonAdvisor[] =
 {
-    {-4, 0, 24, 24, ImageButton_Normal, 199, 12, buttonAdvisor, Widget_Button_doNothing, 5, 0, 1}
+    {-4, 0, 24, 24, ImageButton_Normal, 199, 12, buttonAdvisor, Widget::Button::doNothing, 5, 0, 1}
 };
 static CustomButton customButtonOpenTrade[] =
 {
-    {50, 68, 450, 91, CustomButton_Immediate, buttonOpenTrade, Widget_Button_doNothing, 0, 0}
+    {50, 68, 450, 91, CustomButton_Immediate, buttonOpenTrade, Widget::Button::doNothing, 0, 0}
 };
 
 static ImageButton imageButtonsTradeOpened[] =
 {
-    {92, 248, 28, 28, ImageButton_Normal, 199, 12, buttonAdvisor, Widget_Button_doNothing, 5, 0, 1},
-    {522, 252, 24, 24, ImageButton_Normal, 134, 4, buttonEmpireMap, Widget_Button_doNothing, 0, 0, 1},
+    {92, 248, 28, 28, ImageButton_Normal, 199, 12, buttonAdvisor, Widget::Button::doNothing, 5, 0, 1},
+    {522, 252, 24, 24, ImageButton_Normal, 134, 4, buttonEmpireMap, Widget::Button::doNothing, 0, 0, 1},
 };
 
 static struct
@@ -428,9 +428,9 @@ static void drawPanelInfoCityName(const empire_city *city)
 
 static void drawPanelButtons(const empire_city *city)
 {
-    Widget_Button_drawImageButtons(data.xMin + 20, data.yMax - 44, imageButtonHelp, 1);
-    Widget_Button_drawImageButtons(data.xMax - 44, data.yMax - 44, imageButtonReturnToCity, 1);
-    Widget_Button_drawImageButtons(data.xMax - 44, data.yMax - 100, imageButtonAdvisor, 1);
+    Widget::Button::drawImageButtons(data.xMin + 20, data.yMax - 44, imageButtonHelp, 1);
+    Widget::Button::drawImageButtons(data.xMax - 44, data.yMax - 44, imageButtonReturnToCity, 1);
+    Widget::Button::drawImageButtons(data.xMax - 44, data.yMax - 100, imageButtonAdvisor, 1);
     if (city)
     {
         if (city->type == EMPIRE_CITY_TRADE && !city->is_open)
@@ -557,17 +557,17 @@ void UI_Empire_handleMouse(const mouse *m)
     empire_scroll_map(Scroll_getDirection(m));
     data.focusButtonId = 0;
     int buttonId;
-    Widget_Button_handleImageButtons(data.xMin + 20, data.yMax - 44, imageButtonHelp, 1, &buttonId);
+    Widget::Button::handleImageButtons(data.xMin + 20, data.yMax - 44, imageButtonHelp, 1, &buttonId);
     if (buttonId)
     {
         data.focusButtonId = 1;
     }
-    Widget_Button_handleImageButtons(data.xMax - 44, data.yMax - 44, imageButtonReturnToCity, 1, &buttonId);
+    Widget::Button::handleImageButtons(data.xMax - 44, data.yMax - 44, imageButtonReturnToCity, 1, &buttonId);
     if (buttonId)
     {
         data.focusButtonId = 2;
     }
-    Widget_Button_handleImageButtons(data.xMax - 44, data.yMax - 100, imageButtonAdvisor, 1, &buttonId);
+    Widget::Button::handleImageButtons(data.xMax - 44, data.yMax - 100, imageButtonAdvisor, 1, &buttonId);
     if (buttonId)
     {
         data.focusButtonId = 3;
@@ -591,7 +591,7 @@ void UI_Empire_handleMouse(const mouse *m)
             const empire_city *city = empire_city_get(data.selectedCity);
             if (city->type == EMPIRE_CITY_TRADE && !city->is_open)
             {
-                Widget_Button_handleCustomButtons((data.xMin + data.xMax - 500) / 2, data.yMax - 105, customButtonOpenTrade, 1, &data.selectedButton);
+                Widget::Button::handleCustomButtons((data.xMin + data.xMax - 500) / 2, data.yMax - 105, customButtonOpenTrade, 1, &data.selectedButton);
             }
         }
     }
@@ -753,14 +753,14 @@ void UI_TradeOpenedDialog_drawBackground()
 
 void UI_TradeOpenedDialog_drawForeground()
 {
-    Widget_Button_drawImageButtons(
+    Widget::Button::drawImageButtons(
         Data_Screen.offset640x480.x, Data_Screen.offset640x480.y,
         imageButtonsTradeOpened, 2);
 }
 
 void UI_TradeOpenedDialog_handleMouse(const mouse *m)
 {
-    Widget_Button_handleImageButtons(
+    Widget::Button::handleImageButtons(
         Data_Screen.offset640x480.x, Data_Screen.offset640x480.y,
         imageButtonsTradeOpened, 2, 0);
 }

@@ -18,13 +18,13 @@ static void firedAccept(int param1, int param2);
 
 static CustomButton victoryButtons[] =
 {
-    {32, 112, 416, 132, CustomButton_OnMouseUp, victoryAccept, Widget_Button_doNothing, 0, 0},
-    {32, 144, 416, 164, CustomButton_Immediate, victoryContinueGoverning, Widget_Button_doNothing, 1, 0},
-    {32, 176, 416, 196, CustomButton_Immediate, victoryContinueGoverning, Widget_Button_doNothing, 2, 0},
+    {32, 112, 416, 132, CustomButton_OnMouseUp, victoryAccept, Widget::Button::doNothing, 0, 0},
+    {32, 144, 416, 164, CustomButton_Immediate, victoryContinueGoverning, Widget::Button::doNothing, 1, 0},
+    {32, 176, 416, 196, CustomButton_Immediate, victoryContinueGoverning, Widget::Button::doNothing, 2, 0},
 };
 static CustomButton firedButtons[] =
 {
-    {64, 208, 384, 228, CustomButton_Immediate, firedAccept, Widget_Button_doNothing, 0, 0},
+    {64, 208, 384, 228, CustomButton_Immediate, firedAccept, Widget::Button::doNothing, 0, 0},
 };
 
 static int focusButtonId = 0;
@@ -143,7 +143,7 @@ void UI_MissionEnd_handleMouse(const mouse *m)
         int xOffset = Data_Screen.offset640x480.x + 48;
         int yOffset = Data_Screen.offset640x480.y + 128;
 
-        Widget_Button_handleCustomButtons(xOffset, yOffset - 112,
+        Widget::Button::handleCustomButtons(xOffset, yOffset - 112,
                                           firedButtons, 1, &focusButtonId);
     }
 }
@@ -217,7 +217,7 @@ void UI_VictoryDialog_handleMouse(const mouse *m)
     {
         numButtons = 1;
     }
-    Widget_Button_handleCustomButtons(xOffset, yOffset, victoryButtons, numButtons, &focusButtonId);
+    Widget::Button::handleCustomButtons(xOffset, yOffset, victoryButtons, numButtons, &focusButtonId);
 }
 
 static void victoryAccept(int param1, int param2)

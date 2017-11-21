@@ -38,13 +38,13 @@ static const int figureTypeToBigPeopleGraphicId[] =
 
 static CustomButton figureButtons[] =
 {
-    {26, 46, 76, 96, CustomButton_Immediate, selectFigure, Widget_Button_doNothing, 0, 0},
-    {86, 46, 136, 96, CustomButton_Immediate, selectFigure, Widget_Button_doNothing, 1, 0},
-    {146, 46, 196, 96, CustomButton_Immediate, selectFigure, Widget_Button_doNothing, 2, 0},
-    {206, 46, 256, 96, CustomButton_Immediate, selectFigure, Widget_Button_doNothing, 3, 0},
-    {266, 46, 316, 96, CustomButton_Immediate, selectFigure, Widget_Button_doNothing, 4, 0},
-    {326, 46, 376, 96, CustomButton_Immediate, selectFigure, Widget_Button_doNothing, 5, 0},
-    {386, 46, 436, 96, CustomButton_Immediate, selectFigure, Widget_Button_doNothing, 6, 0},
+    {26, 46, 76, 96, CustomButton_Immediate, selectFigure, Widget::Button::doNothing, 0, 0},
+    {86, 46, 136, 96, CustomButton_Immediate, selectFigure, Widget::Button::doNothing, 1, 0},
+    {146, 46, 196, 96, CustomButton_Immediate, selectFigure, Widget::Button::doNothing, 2, 0},
+    {206, 46, 256, 96, CustomButton_Immediate, selectFigure, Widget::Button::doNothing, 3, 0},
+    {266, 46, 316, 96, CustomButton_Immediate, selectFigure, Widget::Button::doNothing, 4, 0},
+    {326, 46, 376, 96, CustomButton_Immediate, selectFigure, Widget::Button::doNothing, 5, 0},
+    {386, 46, 436, 96, CustomButton_Immediate, selectFigure, Widget::Button::doNothing, 6, 0},
 };
 
 static color_t figureImages[7][48*48];
@@ -529,7 +529,7 @@ void UI_BuildingInfo_playFigurePhrase(BuildingInfoContext *c)
 void UI_BuildingInfo_handleMouseFigureList(BuildingInfoContext *c)
 {
     contextForCallback = c;
-    Widget_Button_handleCustomButtons(c->xOffset, c->yOffset,
+    Widget::Button::handleCustomButtons(c->xOffset, c->yOffset,
                                       figureButtons, c->figure.count, &focusButtonId);
     contextForCallback = 0;
 }

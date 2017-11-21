@@ -11,7 +11,7 @@ static void startMission(int param1, int param2);
 
 static ImageButton imageButtonStartMission =
 {
-    0, 0, 27, 27, ImageButton_Normal, 92, 56, startMission, Widget_Button_doNothing, 1, 0, 1
+    0, 0, 27, 27, ImageButton_Normal, 92, 56, startMission, Widget::Button::doNothing, 1, 0, 1
 };
 
 void UI_NewCareerDialog_init()
@@ -38,7 +38,7 @@ void UI_NewCareerDialog_drawForeground()
     Widget::Text::draw(Data_Settings.playerName, xOffset + 176, yOffset + 216, FONT_NORMAL_WHITE, 0);
     Widget::Text::drawCursor(xOffset + 176, yOffset + 217);
 
-    Widget_Button_drawImageButtons(xOffset + 464, yOffset + 249, &imageButtonStartMission, 1);
+    Widget::Button::drawImageButtons(xOffset + 464, yOffset + 249, &imageButtonStartMission, 1);
 }
 
 void UI_NewCareerDialog_handleMouse(const mouse *m)
@@ -52,7 +52,7 @@ void UI_NewCareerDialog_handleMouse(const mouse *m)
 
     int xOffset = Data_Screen.offset640x480.x;
     int yOffset = Data_Screen.offset640x480.y;
-    if (Widget_Button_handleImageButtons(xOffset + 464, yOffset + 249, &imageButtonStartMission, 1, 0))
+    if (Widget::Button::handleImageButtons(xOffset + 464, yOffset + 249, &imageButtonStartMission, 1, 0))
     {
         return;
     }

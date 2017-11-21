@@ -10,7 +10,7 @@ enum
     ImageButton_Build = 2
 };
 
-typedef struct
+struct ImageButton
 {
     short xOffset;
     short yOffset;
@@ -28,7 +28,7 @@ typedef struct
     char pressed;
     char focused;
     time_millis pressedSince;
-} ImageButton;
+};
 
 enum
 {
@@ -36,7 +36,7 @@ enum
     CustomButton_OnMouseUp = 3,
 };
 
-typedef struct
+struct CustomButton
 {
     short xStart;
     short yStart;
@@ -47,9 +47,9 @@ typedef struct
     void (*rightClickHandler)(int param1, int param2);
     int parameter1;
     int parameter2;
-} CustomButton;
+};
 
-typedef struct
+struct ArrowButton
 {
     short xOffset;
     short yOffset;
@@ -61,7 +61,7 @@ typedef struct
     // state
     char pressed;
     char repeats;
-} ArrowButton;
+} ;
 
 typedef struct
 {

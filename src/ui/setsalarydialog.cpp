@@ -12,18 +12,18 @@ static void buttonSetSalary(int param1, int param2);
 
 static CustomButton buttons[] =
 {
-    {240, 395, 400, 415, CustomButton_Immediate, buttonCancel, Widget_Button_doNothing, 0, 0},
-    {144, 85, 432, 105, CustomButton_Immediate, buttonSetSalary, Widget_Button_doNothing, 0, 0},
-    {144, 105, 432, 125, CustomButton_Immediate, buttonSetSalary, Widget_Button_doNothing, 1, 0},
-    {144, 125, 432, 145, CustomButton_Immediate, buttonSetSalary, Widget_Button_doNothing, 2, 0},
-    {144, 145, 432, 165, CustomButton_Immediate, buttonSetSalary, Widget_Button_doNothing, 3, 0},
-    {144, 165, 432, 185, CustomButton_Immediate, buttonSetSalary, Widget_Button_doNothing, 4, 0},
-    {144, 185, 432, 205, CustomButton_Immediate, buttonSetSalary, Widget_Button_doNothing, 5, 0},
-    {144, 205, 432, 225, CustomButton_Immediate, buttonSetSalary, Widget_Button_doNothing, 6, 0},
-    {144, 225, 432, 245, CustomButton_Immediate, buttonSetSalary, Widget_Button_doNothing, 7, 0},
-    {144, 245, 432, 265, CustomButton_Immediate, buttonSetSalary, Widget_Button_doNothing, 8, 0},
-    {144, 265, 432, 285, CustomButton_Immediate, buttonSetSalary, Widget_Button_doNothing, 9, 0},
-    {144, 285, 432, 305, CustomButton_Immediate, buttonSetSalary, Widget_Button_doNothing, 10, 0},
+    {240, 395, 400, 415, CustomButton_Immediate, buttonCancel, Widget::Button::doNothing, 0, 0},
+    {144, 85, 432, 105, CustomButton_Immediate, buttonSetSalary, Widget::Button::doNothing, 0, 0},
+    {144, 105, 432, 125, CustomButton_Immediate, buttonSetSalary, Widget::Button::doNothing, 1, 0},
+    {144, 125, 432, 145, CustomButton_Immediate, buttonSetSalary, Widget::Button::doNothing, 2, 0},
+    {144, 145, 432, 165, CustomButton_Immediate, buttonSetSalary, Widget::Button::doNothing, 3, 0},
+    {144, 165, 432, 185, CustomButton_Immediate, buttonSetSalary, Widget::Button::doNothing, 4, 0},
+    {144, 185, 432, 205, CustomButton_Immediate, buttonSetSalary, Widget::Button::doNothing, 5, 0},
+    {144, 205, 432, 225, CustomButton_Immediate, buttonSetSalary, Widget::Button::doNothing, 6, 0},
+    {144, 225, 432, 245, CustomButton_Immediate, buttonSetSalary, Widget::Button::doNothing, 7, 0},
+    {144, 245, 432, 265, CustomButton_Immediate, buttonSetSalary, Widget::Button::doNothing, 8, 0},
+    {144, 265, 432, 285, CustomButton_Immediate, buttonSetSalary, Widget::Button::doNothing, 9, 0},
+    {144, 285, 432, 305, CustomButton_Immediate, buttonSetSalary, Widget::Button::doNothing, 10, 0},
 };
 
 static int focusButtonId;
@@ -89,7 +89,7 @@ void UI_SetSalaryDialog_handleMouse(const mouse *m)
     {
         int offsetX = Data_Screen.offset640x480.x;
         int offsetY = Data_Screen.offset640x480.y;
-        Widget_Button_handleCustomButtons(offsetX, offsetY,
+        Widget::Button::handleCustomButtons(offsetX, offsetY,
                                           buttons, 12, &focusButtonId);
     }
 }

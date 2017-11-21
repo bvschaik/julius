@@ -16,16 +16,16 @@ static void buttonLayout(int param1, int param2);
 
 static CustomButton layoutButtons[] =
 {
-    {19, 139, 103, 223, CustomButton_Immediate, buttonLayout, Widget_Button_doNothing, 0, 0},
-    {104, 139, 188, 223, CustomButton_Immediate, buttonLayout, Widget_Button_doNothing, 1, 0},
-    {189, 139, 273, 223, CustomButton_Immediate, buttonLayout, Widget_Button_doNothing, 2, 0},
-    {274, 139, 358, 223, CustomButton_Immediate, buttonLayout, Widget_Button_doNothing, 3, 0},
-    {359, 139, 443, 223, CustomButton_Immediate, buttonLayout, Widget_Button_doNothing, 4, 0}
+    {19, 139, 103, 223, CustomButton_Immediate, buttonLayout, Widget::Button::doNothing, 0, 0},
+    {104, 139, 188, 223, CustomButton_Immediate, buttonLayout, Widget::Button::doNothing, 1, 0},
+    {189, 139, 273, 223, CustomButton_Immediate, buttonLayout, Widget::Button::doNothing, 2, 0},
+    {274, 139, 358, 223, CustomButton_Immediate, buttonLayout, Widget::Button::doNothing, 3, 0},
+    {359, 139, 443, 223, CustomButton_Immediate, buttonLayout, Widget::Button::doNothing, 4, 0}
 };
 
 static CustomButton returnButtons[] =
 {
-    {0, 0, 288, 32, CustomButton_Immediate, buttonReturnToFort, Widget_Button_doNothing, 0, 0},
+    {0, 0, 288, 32, CustomButton_Immediate, buttonReturnToFort, Widget::Button::doNothing, 0, 0},
 };
 
 static int focusButtonId;
@@ -555,7 +555,7 @@ void UI_BuildingInfo_drawLegionInfoForeground(BuildingInfoContext *c)
 void UI_BuildingInfo_handleMouseLegionInfo(BuildingInfoContext *c)
 {
     contextForCallback = c;
-    if (Widget_Button_handleCustomButtons(
+    if (Widget::Button::handleCustomButtons(
                 c->xOffset, c->yOffset, layoutButtons, 5, &focusButtonId))
     {
         if (formation_get(c->formationId)->figure_type == FIGURE_FORT_LEGIONARY)
@@ -568,7 +568,7 @@ void UI_BuildingInfo_handleMouseLegionInfo(BuildingInfoContext *c)
     }
     else
     {
-        Widget_Button_handleCustomButtons(
+        Widget::Button::handleCustomButtons(
             c->xOffset + 16 * (c->widthBlocks - 18) / 2,
             c->yOffset + 16 * c->heightBlocks - 48,
             returnButtons, 1, &returnButtonId);

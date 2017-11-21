@@ -25,14 +25,14 @@ static void confirmSendGoods(int accepted);
 
 static CustomButton imperialButtons[] =
 {
-    {320, 367, 570, 387, CustomButton_Immediate, buttonDonateToCity, Widget_Button_doNothing, 0, 0},
-    {70, 393, 570, 413, CustomButton_Immediate, buttonSetSalary, Widget_Button_doNothing, 0, 0},
-    {320, 341, 570, 361, CustomButton_Immediate, buttonGiftToCaesar, Widget_Button_doNothing, 0, 0},
-    {38, 96, 598, 136, CustomButton_Immediate, buttonRequest, Widget_Button_doNothing, 0, 0},
-    {38, 138, 598, 178, CustomButton_Immediate, buttonRequest, Widget_Button_doNothing, 1, 0},
-    {38, 180, 598, 220, CustomButton_Immediate, buttonRequest, Widget_Button_doNothing, 2, 0},
-    {38, 222, 598, 262, CustomButton_Immediate, buttonRequest, Widget_Button_doNothing, 3, 0},
-    {38, 264, 598, 304, CustomButton_Immediate, buttonRequest, Widget_Button_doNothing, 4, 0},
+    {320, 367, 570, 387, CustomButton_Immediate, buttonDonateToCity, Widget::Button::doNothing, 0, 0},
+    {70, 393, 570, 413, CustomButton_Immediate, buttonSetSalary, Widget::Button::doNothing, 0, 0},
+    {320, 341, 570, 361, CustomButton_Immediate, buttonGiftToCaesar, Widget::Button::doNothing, 0, 0},
+    {38, 96, 598, 136, CustomButton_Immediate, buttonRequest, Widget::Button::doNothing, 0, 0},
+    {38, 138, 598, 178, CustomButton_Immediate, buttonRequest, Widget::Button::doNothing, 1, 0},
+    {38, 180, 598, 220, CustomButton_Immediate, buttonRequest, Widget::Button::doNothing, 2, 0},
+    {38, 222, 598, 262, CustomButton_Immediate, buttonRequest, Widget::Button::doNothing, 3, 0},
+    {38, 264, 598, 304, CustomButton_Immediate, buttonRequest, Widget::Button::doNothing, 4, 0},
 };
 
 static int focusButtonId;
@@ -263,7 +263,7 @@ void UI_Advisor_Imperial_handleMouse()
 {
     int offsetX = Data_Screen.offset640x480.x;
     int offsetY = Data_Screen.offset640x480.y;
-    Widget_Button_handleCustomButtons(offsetX, offsetY,
+    Widget::Button::handleCustomButtons(offsetX, offsetY,
                                       imperialButtons, 8, &focusButtonId);
 }
 

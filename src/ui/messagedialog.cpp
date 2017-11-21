@@ -35,47 +35,47 @@ static void buttonGoToProblem(int param1, int param2);
 
 static ImageButton imageButtonBack =
 {
-    0, 0, 31, 20, ImageButton_Normal, 90, 8, buttonBack, Widget_Button_doNothing, 0, 0, 1
+    0, 0, 31, 20, ImageButton_Normal, 90, 8, buttonBack, Widget::Button::doNothing, 0, 0, 1
 };
 static ImageButton imageButtonClose =
 {
-    0, 0, 24, 24, ImageButton_Normal, 134, 4, buttonClose, Widget_Button_doNothing, 0, 0, 1
+    0, 0, 24, 24, ImageButton_Normal, 134, 4, buttonClose, Widget::Button::doNothing, 0, 0, 1
 };
 static ImageButton imageButtonGoToProblem =
 {
-    0, 0, 27, 27, ImageButton_Normal, 92, 52, buttonGoToProblem, Widget_Button_doNothing, 1, 0, 1
+    0, 0, 27, 27, ImageButton_Normal, 92, 52, buttonGoToProblem, Widget::Button::doNothing, 1, 0, 1
 };
 static ImageButton imageButtonHelp =
 {
-    0, 0, 18, 27, ImageButton_Normal, 134, 0, buttonHelp, Widget_Button_doNothing, 1, 0, 1
+    0, 0, 18, 27, ImageButton_Normal, 134, 0, buttonHelp, Widget::Button::doNothing, 1, 0, 1
 };
 static ImageButton imageButtonLabor =
 {
-    0, 0, 27, 27, ImageButton_Normal, 199, 0, buttonAdvisor, Widget_Button_doNothing, Advisor_Labor, 0, 1
+    0, 0, 27, 27, ImageButton_Normal, 199, 0, buttonAdvisor, Widget::Button::doNothing, Advisor_Labor, 0, 1
 };
 static ImageButton imageButtonTrade =
 {
-    0, 0, 27, 27, ImageButton_Normal, 199, 12, buttonAdvisor, Widget_Button_doNothing, Advisor_Trade, 0, 1
+    0, 0, 27, 27, ImageButton_Normal, 199, 12, buttonAdvisor, Widget::Button::doNothing, Advisor_Trade, 0, 1
 };
 static ImageButton imageButtonPopulation =
 {
-    0, 0, 27, 27, ImageButton_Normal, 199, 15, buttonAdvisor, Widget_Button_doNothing, Advisor_Population, 0, 1
+    0, 0, 27, 27, ImageButton_Normal, 199, 15, buttonAdvisor, Widget::Button::doNothing, Advisor_Population, 0, 1
 };
 static ImageButton imageButtonImperial =
 {
-    0, 0, 27, 27, ImageButton_Normal, 199, 6, buttonAdvisor, Widget_Button_doNothing, Advisor_Imperial, 0, 1
+    0, 0, 27, 27, ImageButton_Normal, 199, 6, buttonAdvisor, Widget::Button::doNothing, Advisor_Imperial, 0, 1
 };
 static ImageButton imageButtonMilitary =
 {
-    0, 0, 27, 27, ImageButton_Normal, 199, 3, buttonAdvisor, Widget_Button_doNothing, Advisor_Military, 0, 1
+    0, 0, 27, 27, ImageButton_Normal, 199, 3, buttonAdvisor, Widget::Button::doNothing, Advisor_Military, 0, 1
 };
 static ImageButton imageButtonHealth =
 {
-    0, 0, 27, 27, ImageButton_Normal, 199, 18, buttonAdvisor, Widget_Button_doNothing, Advisor_Health, 0, 1
+    0, 0, 27, 27, ImageButton_Normal, 199, 18, buttonAdvisor, Widget::Button::doNothing, Advisor_Health, 0, 1
 };
 static ImageButton imageButtonReligion =
 {
-    0, 0, 27, 27, ImageButton_Normal, 199, 27, buttonAdvisor, Widget_Button_doNothing, Advisor_Religion, 0, 1
+    0, 0, 27, 27, ImageButton_Normal, 199, 27, buttonAdvisor, Widget::Button::doNothing, Advisor_Religion, 0, 1
 };
 
 static struct
@@ -464,8 +464,8 @@ static ImageButton *getAdvisorButton()
 static void drawForegroundVideo()
 {
     Video_draw(data.x + 8, data.y + 8);
-    Widget_Button_drawImageButtons(data.x + 16, data.y + 408, getAdvisorButton(), 1);
-    Widget_Button_drawImageButtons(data.x + 372, data.y + 410, &imageButtonClose, 1);
+    Widget::Button::drawImageButtons(data.x + 16, data.y + 408, getAdvisorButton(), 1);
+    Widget::Button::drawImageButtons(data.x + 372, data.y + 410, &imageButtonClose, 1);
 }
 
 static void drawForegroundNoVideo()
@@ -474,7 +474,7 @@ static void drawForegroundNoVideo()
 
     if (msg->type == TYPE_MANUAL && data.numHistory > 0)
     {
-        Widget_Button_drawImageButtons(
+        Widget::Button::drawImageButtons(
             data.x + 16, data.y + 16 * msg->height_blocks - 36,
             &imageButtonBack, 1);
         Widget_GameText_draw(12, 0,
@@ -483,15 +483,15 @@ static void drawForegroundNoVideo()
 
     if (msg->type == TYPE_MESSAGE)
     {
-        Widget_Button_drawImageButtons(data.x + 16, data.y + 16 * msg->height_blocks - 40,
+        Widget::Button::drawImageButtons(data.x + 16, data.y + 16 * msg->height_blocks - 40,
                                        getAdvisorButton(), 1);
         if (msg->message_type == MESSAGE_TYPE_DISASTER || msg->message_type == MESSAGE_TYPE_INVASION)
         {
-            Widget_Button_drawImageButtons(
+            Widget::Button::drawImageButtons(
                 data.x + 64, data.yText + 36, &imageButtonGoToProblem, 1);
         }
     }
-    Widget_Button_drawImageButtons(
+    Widget::Button::drawImageButtons(
         data.x + 16 * msg->width_blocks - 38,
         data.y + 16 * msg->height_blocks - 36,
         &imageButtonClose, 1);
@@ -522,11 +522,11 @@ void UI_MessageDialog_handleMouse(const mouse *m)
     }
     if (data.showVideo)
     {
-        if (Widget_Button_handleImageButtons(data.x + 16, data.y + 408, getAdvisorButton(), 1, 0))
+        if (Widget::Button::handleImageButtons(data.x + 16, data.y + 408, getAdvisorButton(), 1, 0))
         {
             return;
         }
-        if (Widget_Button_handleImageButtons(data.x + 372, data.y + 410, &imageButtonClose, 1, 0))
+        if (Widget::Button::handleImageButtons(data.x + 372, data.y + 410, &imageButtonClose, 1, 0))
         {
             return;
         }
@@ -535,28 +535,28 @@ void UI_MessageDialog_handleMouse(const mouse *m)
     // no video
     const lang_message *msg = lang_get_message(data.textId);
 
-    if (msg->type == TYPE_MANUAL && Widget_Button_handleImageButtons(
+    if (msg->type == TYPE_MANUAL && Widget::Button::handleImageButtons(
                 data.x + 16, data.y + 16 * msg->height_blocks - 36, &imageButtonBack, 1, 0))
     {
         return;
     }
     if (msg->type == TYPE_MESSAGE)
     {
-        if (Widget_Button_handleImageButtons(data.x + 16, data.y + 16 * msg->height_blocks - 40,
+        if (Widget::Button::handleImageButtons(data.x + 16, data.y + 16 * msg->height_blocks - 40,
                                              getAdvisorButton(), 1, 0))
         {
             return;
         }
         if (msg->message_type == MESSAGE_TYPE_DISASTER || msg->message_type == MESSAGE_TYPE_INVASION)
         {
-            if (Widget_Button_handleImageButtons(data.x + 64, data.yText + 36, &imageButtonGoToProblem, 1, 0))
+            if (Widget::Button::handleImageButtons(data.x + 64, data.yText + 36, &imageButtonGoToProblem, 1, 0))
             {
                 return;
             }
         }
     }
 
-    if (Widget_Button_handleImageButtons(
+    if (Widget::Button::handleImageButtons(
                 data.x + 16 * msg->width_blocks - 38,
                 data.y + 16 * msg->height_blocks - 36,
                 &imageButtonClose, 1, 0))

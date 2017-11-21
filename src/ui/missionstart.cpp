@@ -52,11 +52,11 @@ static const int goalOffsetsY[] = {95, 95, 117, 117, 73, 135};
 
 static ImageButton imageButtonStartMission =
 {
-    0, 0, 27, 27, ImageButton_Normal, 92, 56, startMission, Widget_Button_doNothing, 1, 0, 1
+    0, 0, 27, 27, ImageButton_Normal, 92, 56, startMission, Widget::Button::doNothing, 1, 0, 1
 };
 static ImageButton imageButtonBackToSelection =
 {
-    0, 0, 31, 20, ImageButton_Normal, 90, 8, briefingBack, Widget_Button_doNothing, 0, 0, 1
+    0, 0, 31, 20, ImageButton_Normal, 90, 8, briefingBack, Widget::Button::doNothing, 0, 0, 1
 };
 
 static int focusButton = 0;
@@ -126,7 +126,7 @@ void UI_MissionStart_Selection_drawForeground()
 
     if (data.choice > 0)
     {
-        Widget_Button_drawImageButtons(xOffset + 580, yOffset + 410, &imageButtonStartMission, 1);
+        Widget::Button::drawImageButtons(xOffset + 580, yOffset + 410, &imageButtonStartMission, 1);
     }
 
     int missionId = Data_Settings.currentMissionId;
@@ -178,7 +178,7 @@ void UI_MissionStart_Selection_handleMouse(const mouse *m)
     }
     if (data.choice > 0)
     {
-        if (Widget_Button_handleImageButtons(xOffset + 580, yOffset + 410, &imageButtonStartMission, 1, 0))
+        if (Widget::Button::handleImageButtons(xOffset + 580, yOffset + 410, &imageButtonStartMission, 1, 0))
         {
             return;
         }
@@ -312,10 +312,10 @@ void UI_MissionStart_BriefingInitial_drawForeground()
     int yOffset = Data_Screen.offset640x480.y + 32;
 
     Widget_RichText_drawScrollbar();
-    Widget_Button_drawImageButtons(xOffset + 500, yOffset + 394, &imageButtonStartMission, 1);
+    Widget::Button::drawImageButtons(xOffset + 500, yOffset + 394, &imageButtonStartMission, 1);
     if (Data_Settings.currentMissionId >= 2)
     {
-        Widget_Button_drawImageButtons(xOffset + 10, yOffset + 396, &imageButtonBackToSelection, 1);
+        Widget::Button::drawImageButtons(xOffset + 10, yOffset + 396, &imageButtonBackToSelection, 1);
     }
 }
 
@@ -325,7 +325,7 @@ void UI_MissionStart_BriefingReview_drawForeground()
     int yOffset = Data_Screen.offset640x480.y + 32;
 
     Widget_RichText_drawScrollbar();
-    Widget_Button_drawImageButtons(xOffset + 500, yOffset + 394, &imageButtonStartMission, 1);
+    Widget::Button::drawImageButtons(xOffset + 500, yOffset + 394, &imageButtonStartMission, 1);
 }
 
 void UI_MissionStart_BriefingInitial_handleMouse(const mouse *m)
@@ -333,13 +333,13 @@ void UI_MissionStart_BriefingInitial_handleMouse(const mouse *m)
     int xOffset = Data_Screen.offset640x480.x + 16;
     int yOffset = Data_Screen.offset640x480.y + 32;
 
-    if (Widget_Button_handleImageButtons(xOffset + 500, yOffset + 394, &imageButtonStartMission, 1, 0))
+    if (Widget::Button::handleImageButtons(xOffset + 500, yOffset + 394, &imageButtonStartMission, 1, 0))
     {
         return;
     }
     if (Data_Settings.currentMissionId >= 2)
     {
-        if (Widget_Button_handleImageButtons(xOffset + 10, yOffset + 396, &imageButtonBackToSelection, 1, 0))
+        if (Widget::Button::handleImageButtons(xOffset + 10, yOffset + 396, &imageButtonBackToSelection, 1, 0))
         {
             return;
         }
@@ -352,7 +352,7 @@ void UI_MissionStart_BriefingReview_handleMouse(const mouse *m)
     int xOffset = Data_Screen.offset640x480.x + 16;
     int yOffset = Data_Screen.offset640x480.y + 32;
 
-    if (Widget_Button_handleImageButtons(xOffset + 500, yOffset + 394, &imageButtonStartMission, 1, 0))
+    if (Widget::Button::handleImageButtons(xOffset + 500, yOffset + 394, &imageButtonStartMission, 1, 0))
     {
         return;
     }

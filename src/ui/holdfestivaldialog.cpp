@@ -19,22 +19,22 @@ static void buttonHoldFestival(int param1, int param2);
 
 static ImageButton imageButtonsBottom[] =
 {
-    {58, 316, 27, 27, ImageButton_Normal, 134, 0, buttonHelp, Widget_Button_doNothing, 0, 0, 1},
-    {558, 319, 24, 24, ImageButton_Normal, 134, 4, buttonClose, Widget_Button_doNothing, 0, 0, 1},
-    {358, 317, 34, 34, ImageButton_Normal, 96, 0, buttonHoldFestival, Widget_Button_doNothing, 1, 0, 1},
-    {400, 317, 34, 34, ImageButton_Normal, 96, 4, buttonClose, Widget_Button_doNothing, 0, 0, 1},
+    {58, 316, 27, 27, ImageButton_Normal, 134, 0, buttonHelp, Widget::Button::doNothing, 0, 0, 1},
+    {558, 319, 24, 24, ImageButton_Normal, 134, 4, buttonClose, Widget::Button::doNothing, 0, 0, 1},
+    {358, 317, 34, 34, ImageButton_Normal, 96, 0, buttonHoldFestival, Widget::Button::doNothing, 1, 0, 1},
+    {400, 317, 34, 34, ImageButton_Normal, 96, 4, buttonClose, Widget::Button::doNothing, 0, 0, 1},
 };
 
 static CustomButton buttonsGodsSize[] =
 {
-    {70, 96, 150, 186, CustomButton_Immediate, buttonGod, Widget_Button_doNothing, 0, 0},
-    {170, 96, 250, 186, CustomButton_Immediate, buttonGod, Widget_Button_doNothing, 1, 0},
-    {270, 96, 350, 186, CustomButton_Immediate, buttonGod, Widget_Button_doNothing, 2, 0},
-    {370, 96, 450, 186, CustomButton_Immediate, buttonGod, Widget_Button_doNothing, 3, 0},
-    {470, 96, 550, 186, CustomButton_Immediate, buttonGod, Widget_Button_doNothing, 4, 0},
-    {102, 216, 532, 242, CustomButton_Immediate, buttonSize, Widget_Button_doNothing, 1, 0},
-    {102, 246, 532, 272, CustomButton_Immediate, buttonSize, Widget_Button_doNothing, 2, 0},
-    {102, 276, 532, 302, CustomButton_Immediate, buttonSize, Widget_Button_doNothing, 3, 0},
+    {70, 96, 150, 186, CustomButton_Immediate, buttonGod, Widget::Button::doNothing, 0, 0},
+    {170, 96, 250, 186, CustomButton_Immediate, buttonGod, Widget::Button::doNothing, 1, 0},
+    {270, 96, 350, 186, CustomButton_Immediate, buttonGod, Widget::Button::doNothing, 2, 0},
+    {370, 96, 450, 186, CustomButton_Immediate, buttonGod, Widget::Button::doNothing, 3, 0},
+    {470, 96, 550, 186, CustomButton_Immediate, buttonGod, Widget::Button::doNothing, 4, 0},
+    {102, 216, 532, 242, CustomButton_Immediate, buttonSize, Widget::Button::doNothing, 1, 0},
+    {102, 246, 532, 272, CustomButton_Immediate, buttonSize, Widget::Button::doNothing, 2, 0},
+    {102, 276, 532, 302, CustomButton_Immediate, buttonSize, Widget::Button::doNothing, 3, 0},
 };
 
 static int focusButtonId;
@@ -74,7 +74,7 @@ void UI_HoldFestivalDialog_drawBackground()
 void UI_HoldFestivalDialog_drawForeground()
 {
     drawButtons();
-    Widget_Button_drawImageButtons(
+    Widget::Button::drawImageButtons(
         Data_Screen.offset640x480.x, Data_Screen.offset640x480.y,
         imageButtonsBottom, 4);
 }
@@ -140,8 +140,8 @@ void UI_HoldFestivalDialog_handleMouse(const mouse *m)
     int baseOffsetX = Data_Screen.offset640x480.x;
     int baseOffsetY = Data_Screen.offset640x480.y;
 
-    Widget_Button_handleImageButtons(baseOffsetX, baseOffsetY, imageButtonsBottom, 4, &focusImageButtonId);
-    Widget_Button_handleCustomButtons(baseOffsetX, baseOffsetY, buttonsGodsSize, 8, &focusButtonId);
+    Widget::Button::handleImageButtons(baseOffsetX, baseOffsetY, imageButtonsBottom, 4, &focusImageButtonId);
+    Widget::Button::handleCustomButtons(baseOffsetX, baseOffsetY, buttonsGodsSize, 8, &focusButtonId);
     if (focusImageButtonId)
     {
         focusButtonId = 0;

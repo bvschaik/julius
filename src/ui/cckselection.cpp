@@ -22,28 +22,28 @@ static void buttonStartScenario(int param1, int param2);
 
 static ImageButton imageButtons[] =
 {
-    {276, 210, 34, 34, ImageButton_Normal, 96, 8, buttonScroll, Widget_Button_doNothing, 0, 1, 1},
-    {276, 440, 34, 34, ImageButton_Normal, 96, 12, buttonScroll, Widget_Button_doNothing, 1, 1, 1},
-    {600, 440, 27, 27, ImageButton_Normal, 92, 56, buttonStartScenario, Widget_Button_doNothing, 1, 0, 1},
+    {276, 210, 34, 34, ImageButton_Normal, 96, 8, buttonScroll, Widget::Button::doNothing, 0, 1, 1},
+    {276, 440, 34, 34, ImageButton_Normal, 96, 12, buttonScroll, Widget::Button::doNothing, 1, 1, 1},
+    {600, 440, 27, 27, ImageButton_Normal, 92, 56, buttonStartScenario, Widget::Button::doNothing, 1, 0, 1},
 };
 
 static CustomButton customButtons[] =
 {
-    {28, 220, 280, 236, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 0, 0},
-    {28, 236, 280, 252, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 1, 0},
-    {28, 252, 280, 268, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 2, 0},
-    {28, 268, 280, 284, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 3, 0},
-    {28, 284, 280, 300, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 4, 0},
-    {28, 300, 280, 316, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 5, 0},
-    {28, 316, 280, 332, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 6, 0},
-    {28, 332, 280, 348, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 7, 0},
-    {28, 348, 280, 364, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 8, 0},
-    {28, 364, 280, 380, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 9, 0},
-    {28, 380, 280, 396, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 10, 0},
-    {28, 396, 280, 412, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 11, 0},
-    {28, 412, 280, 428, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 12, 0},
-    {28, 428, 280, 444, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 13, 0},
-    {28, 444, 280, 460, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 14, 0},
+    {28, 220, 280, 236, CustomButton_Immediate, buttonSelectItem, Widget::Button::doNothing, 0, 0},
+    {28, 236, 280, 252, CustomButton_Immediate, buttonSelectItem, Widget::Button::doNothing, 1, 0},
+    {28, 252, 280, 268, CustomButton_Immediate, buttonSelectItem, Widget::Button::doNothing, 2, 0},
+    {28, 268, 280, 284, CustomButton_Immediate, buttonSelectItem, Widget::Button::doNothing, 3, 0},
+    {28, 284, 280, 300, CustomButton_Immediate, buttonSelectItem, Widget::Button::doNothing, 4, 0},
+    {28, 300, 280, 316, CustomButton_Immediate, buttonSelectItem, Widget::Button::doNothing, 5, 0},
+    {28, 316, 280, 332, CustomButton_Immediate, buttonSelectItem, Widget::Button::doNothing, 6, 0},
+    {28, 332, 280, 348, CustomButton_Immediate, buttonSelectItem, Widget::Button::doNothing, 7, 0},
+    {28, 348, 280, 364, CustomButton_Immediate, buttonSelectItem, Widget::Button::doNothing, 8, 0},
+    {28, 364, 280, 380, CustomButton_Immediate, buttonSelectItem, Widget::Button::doNothing, 9, 0},
+    {28, 380, 280, 396, CustomButton_Immediate, buttonSelectItem, Widget::Button::doNothing, 10, 0},
+    {28, 396, 280, 412, CustomButton_Immediate, buttonSelectItem, Widget::Button::doNothing, 11, 0},
+    {28, 412, 280, 428, CustomButton_Immediate, buttonSelectItem, Widget::Button::doNothing, 12, 0},
+    {28, 428, 280, 444, CustomButton_Immediate, buttonSelectItem, Widget::Button::doNothing, 13, 0},
+    {28, 444, 280, 460, CustomButton_Immediate, buttonSelectItem, Widget::Button::doNothing, 14, 0},
 };
 
 static int scrollPosition;
@@ -261,7 +261,7 @@ static void drawScenarioInfo()
 
 void UI_CCKSelection_drawForeground()
 {
-    Widget_Button_drawImageButtons(Data_Screen.offset640x480.x, Data_Screen.offset640x480.y, imageButtons, 3);
+    Widget::Button::drawImageButtons(Data_Screen.offset640x480.x, Data_Screen.offset640x480.y, imageButtons, 3);
     drawScenarioList();
 }
 
@@ -279,12 +279,12 @@ void UI_CCKSelection_handleMouse(const mouse *m)
     {
         return;
     }
-    if (Widget_Button_handleImageButtons(
+    if (Widget::Button::handleImageButtons(
                 Data_Screen.offset640x480.x, Data_Screen.offset640x480.y, imageButtons, 3, 0))
     {
         return;
     }
-    Widget_Button_handleCustomButtons(
+    Widget::Button::handleCustomButtons(
         Data_Screen.offset640x480.x, Data_Screen.offset640x480.y,
         customButtons, 15, &focusButtonId);
 }

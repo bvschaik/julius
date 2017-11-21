@@ -16,24 +16,24 @@ static void buttonEmpireService(int param1, int param2);
 
 static CustomButton fortCustomButtons[] =
 {
-    {400, 83, 430, 113, CustomButton_Immediate, buttonGoToLegion, Widget_Button_doNothing, 1, 0},
-    {480, 83, 510, 113, CustomButton_Immediate, buttonReturnToFort, Widget_Button_doNothing, 1, 0},
-    {560, 83, 590, 113, CustomButton_Immediate, buttonEmpireService, Widget_Button_doNothing, 1, 0},
-    {400, 127, 430, 157, CustomButton_Immediate, buttonGoToLegion, Widget_Button_doNothing, 2, 0},
-    {480, 127, 510, 157, CustomButton_Immediate, buttonReturnToFort, Widget_Button_doNothing, 2, 0},
-    {560, 127, 590, 157, CustomButton_Immediate, buttonEmpireService, Widget_Button_doNothing, 2, 0},
-    {400, 171, 430, 201, CustomButton_Immediate, buttonGoToLegion, Widget_Button_doNothing, 3, 0},
-    {480, 171, 510, 201, CustomButton_Immediate, buttonReturnToFort, Widget_Button_doNothing, 3, 0},
-    {560, 171, 590, 201, CustomButton_Immediate, buttonEmpireService, Widget_Button_doNothing, 3, 0},
-    {400, 215, 430, 245, CustomButton_Immediate, buttonGoToLegion, Widget_Button_doNothing, 4, 0},
-    {480, 215, 510, 245, CustomButton_Immediate, buttonReturnToFort, Widget_Button_doNothing, 4, 0},
-    {560, 215, 590, 245, CustomButton_Immediate, buttonEmpireService, Widget_Button_doNothing, 4, 0},
-    {400, 259, 430, 289, CustomButton_Immediate, buttonGoToLegion, Widget_Button_doNothing, 5, 0},
-    {480, 259, 510, 289, CustomButton_Immediate, buttonReturnToFort, Widget_Button_doNothing, 5, 0},
-    {560, 259, 590, 289, CustomButton_Immediate, buttonEmpireService, Widget_Button_doNothing, 5, 0},
-    {400, 303, 430, 333, CustomButton_Immediate, buttonGoToLegion, Widget_Button_doNothing, 6, 0},
-    {480, 303, 510, 333, CustomButton_Immediate, buttonReturnToFort, Widget_Button_doNothing, 6, 0},
-    {560, 303, 590, 333, CustomButton_Immediate, buttonEmpireService, Widget_Button_doNothing, 6, 0},
+    {400, 83, 430, 113, CustomButton_Immediate, buttonGoToLegion, Widget::Button::doNothing, 1, 0},
+    {480, 83, 510, 113, CustomButton_Immediate, buttonReturnToFort, Widget::Button::doNothing, 1, 0},
+    {560, 83, 590, 113, CustomButton_Immediate, buttonEmpireService, Widget::Button::doNothing, 1, 0},
+    {400, 127, 430, 157, CustomButton_Immediate, buttonGoToLegion, Widget::Button::doNothing, 2, 0},
+    {480, 127, 510, 157, CustomButton_Immediate, buttonReturnToFort, Widget::Button::doNothing, 2, 0},
+    {560, 127, 590, 157, CustomButton_Immediate, buttonEmpireService, Widget::Button::doNothing, 2, 0},
+    {400, 171, 430, 201, CustomButton_Immediate, buttonGoToLegion, Widget::Button::doNothing, 3, 0},
+    {480, 171, 510, 201, CustomButton_Immediate, buttonReturnToFort, Widget::Button::doNothing, 3, 0},
+    {560, 171, 590, 201, CustomButton_Immediate, buttonEmpireService, Widget::Button::doNothing, 3, 0},
+    {400, 215, 430, 245, CustomButton_Immediate, buttonGoToLegion, Widget::Button::doNothing, 4, 0},
+    {480, 215, 510, 245, CustomButton_Immediate, buttonReturnToFort, Widget::Button::doNothing, 4, 0},
+    {560, 215, 590, 245, CustomButton_Immediate, buttonEmpireService, Widget::Button::doNothing, 4, 0},
+    {400, 259, 430, 289, CustomButton_Immediate, buttonGoToLegion, Widget::Button::doNothing, 5, 0},
+    {480, 259, 510, 289, CustomButton_Immediate, buttonReturnToFort, Widget::Button::doNothing, 5, 0},
+    {560, 259, 590, 289, CustomButton_Immediate, buttonEmpireService, Widget::Button::doNothing, 5, 0},
+    {400, 303, 430, 333, CustomButton_Immediate, buttonGoToLegion, Widget::Button::doNothing, 6, 0},
+    {480, 303, 510, 333, CustomButton_Immediate, buttonReturnToFort, Widget::Button::doNothing, 6, 0},
+    {560, 303, 590, 333, CustomButton_Immediate, buttonEmpireService, Widget::Button::doNothing, 6, 0},
 };
 
 static int focusButtonId;
@@ -199,7 +199,7 @@ void UI_Advisor_Military_handleMouse()
     int baseOffsetX = Data_Screen.offset640x480.x;
     int baseOffsetY = Data_Screen.offset640x480.y;
 
-    Widget_Button_handleCustomButtons(baseOffsetX, baseOffsetY, fortCustomButtons, 3 * numLegions, &focusButtonId);
+    Widget::Button::handleCustomButtons(baseOffsetX, baseOffsetY, fortCustomButtons, 3 * numLegions, &focusButtonId);
 }
 
 static void buttonGoToLegion(int legionId, int param2)

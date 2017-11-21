@@ -12,15 +12,15 @@ static void buttonPriority(int param1, int param2);
 static void buttonSetPriority(int param1, int param2);
 
 static CustomButton categoryButtons[] = {
-	{40, 77, 600, 99, CustomButton_Immediate, buttonPriority, Widget_Button_doNothing, 0, 0},
-	{40, 102, 600, 124, CustomButton_Immediate, buttonPriority, Widget_Button_doNothing, 1, 0},
-	{40, 127, 600, 149, CustomButton_Immediate, buttonPriority, Widget_Button_doNothing, 2, 0},
-	{40, 152, 600, 174, CustomButton_Immediate, buttonPriority, Widget_Button_doNothing, 3, 0},
-	{40, 177, 600, 199, CustomButton_Immediate, buttonPriority, Widget_Button_doNothing, 4, 0},
-	{40, 202, 600, 224, CustomButton_Immediate, buttonPriority, Widget_Button_doNothing, 5, 0},
-	{40, 227, 600, 249, CustomButton_Immediate, buttonPriority, Widget_Button_doNothing, 6, 0},
-	{40, 252, 600, 274, CustomButton_Immediate, buttonPriority, Widget_Button_doNothing, 7, 0},
-	{40, 277, 600, 299, CustomButton_Immediate, buttonPriority, Widget_Button_doNothing, 8, 0},
+	{40, 77, 600, 99, CustomButton_Immediate, buttonPriority, Widget::Button::doNothing, 0, 0},
+	{40, 102, 600, 124, CustomButton_Immediate, buttonPriority, Widget::Button::doNothing, 1, 0},
+	{40, 127, 600, 149, CustomButton_Immediate, buttonPriority, Widget::Button::doNothing, 2, 0},
+	{40, 152, 600, 174, CustomButton_Immediate, buttonPriority, Widget::Button::doNothing, 3, 0},
+	{40, 177, 600, 199, CustomButton_Immediate, buttonPriority, Widget::Button::doNothing, 4, 0},
+	{40, 202, 600, 224, CustomButton_Immediate, buttonPriority, Widget::Button::doNothing, 5, 0},
+	{40, 227, 600, 249, CustomButton_Immediate, buttonPriority, Widget::Button::doNothing, 6, 0},
+	{40, 252, 600, 274, CustomButton_Immediate, buttonPriority, Widget::Button::doNothing, 7, 0},
+	{40, 277, 600, 299, CustomButton_Immediate, buttonPriority, Widget::Button::doNothing, 8, 0},
 };
 
 static ArrowButton wageButtons[] = {
@@ -37,16 +37,16 @@ static int priorityMaxItems;
 static int priorityFocusButtonId;
 
 static CustomButton priorityButtons[] = {
-	{180, 256, 460, 281, CustomButton_Immediate, buttonSetPriority, Widget_Button_doNothing, 0, 0}, // no prio
-	{178, 221, 205, 248, CustomButton_Immediate, buttonSetPriority, Widget_Button_doNothing, 1, 0},
-	{210, 221, 237, 248, CustomButton_Immediate, buttonSetPriority, Widget_Button_doNothing, 2, 0},
-	{242, 221, 269, 248, CustomButton_Immediate, buttonSetPriority, Widget_Button_doNothing, 3, 0},
-	{274, 221, 301, 248, CustomButton_Immediate, buttonSetPriority, Widget_Button_doNothing, 4, 0},
-	{306, 221, 333, 248, CustomButton_Immediate, buttonSetPriority, Widget_Button_doNothing, 5, 0},
-	{338, 221, 365, 248, CustomButton_Immediate, buttonSetPriority, Widget_Button_doNothing, 6, 0},
-	{370, 221, 397, 248, CustomButton_Immediate, buttonSetPriority, Widget_Button_doNothing, 7, 0},
-	{402, 221, 429, 248, CustomButton_Immediate, buttonSetPriority, Widget_Button_doNothing, 8, 0},
-	{434, 221, 461, 248, CustomButton_Immediate, buttonSetPriority, Widget_Button_doNothing, 9, 0},
+	{180, 256, 460, 281, CustomButton_Immediate, buttonSetPriority, Widget::Button::doNothing, 0, 0}, // no prio
+	{178, 221, 205, 248, CustomButton_Immediate, buttonSetPriority, Widget::Button::doNothing, 1, 0},
+	{210, 221, 237, 248, CustomButton_Immediate, buttonSetPriority, Widget::Button::doNothing, 2, 0},
+	{242, 221, 269, 248, CustomButton_Immediate, buttonSetPriority, Widget::Button::doNothing, 3, 0},
+	{274, 221, 301, 248, CustomButton_Immediate, buttonSetPriority, Widget::Button::doNothing, 4, 0},
+	{306, 221, 333, 248, CustomButton_Immediate, buttonSetPriority, Widget::Button::doNothing, 5, 0},
+	{338, 221, 365, 248, CustomButton_Immediate, buttonSetPriority, Widget::Button::doNothing, 6, 0},
+	{370, 221, 397, 248, CustomButton_Immediate, buttonSetPriority, Widget::Button::doNothing, 7, 0},
+	{402, 221, 429, 248, CustomButton_Immediate, buttonSetPriority, Widget::Button::doNothing, 8, 0},
+	{434, 221, 461, 248, CustomButton_Immediate, buttonSetPriority, Widget::Button::doNothing, 9, 0},
 };
 
 void UI_Advisor_Labor_drawBackground(int *advisorHeight)
@@ -111,7 +111,7 @@ void UI_Advisor_Labor_drawForeground()
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;
 
-	Widget_Button_drawArrowButtons(
+	Widget::Button::drawArrowButtons(
 		baseOffsetX, baseOffsetY, wageButtons, 2);
 
 	Widget_Panel_drawInnerPanel(baseOffsetX + 32, baseOffsetY + 70, 36, 15);
@@ -145,8 +145,8 @@ void UI_Advisor_Labor_handleMouse()
 {
 	int offsetX = Data_Screen.offset640x480.x;
 	int offsetY = Data_Screen.offset640x480.y;
-	if (!Widget_Button_handleCustomButtons(offsetX, offsetY, categoryButtons, 9, &focusButtonId)) {
-		arrowButtonFocus = Widget_Button_handleArrowButtons(offsetX, offsetY, wageButtons, 2);
+	if (!Widget::Button::handleCustomButtons(offsetX, offsetY, categoryButtons, 9, &focusButtonId)) {
+		arrowButtonFocus = Widget::Button::handleArrowButtons(offsetX, offsetY, wageButtons, 2);
 	}
 }
 
@@ -241,7 +241,7 @@ void UI_LaborPriorityDialog_handleMouse(const mouse *m)
 	} else {
 		int offsetX = Data_Screen.offset640x480.x;
 		int offsetY = Data_Screen.offset640x480.y;
-		Widget_Button_handleCustomButtons(offsetX, offsetY, priorityButtons, 1 + priorityMaxItems, &priorityFocusButtonId);
+		Widget::Button::handleCustomButtons(offsetX, offsetY, priorityButtons, 1 + priorityMaxItems, &priorityFocusButtonId);
 	}
 }
 

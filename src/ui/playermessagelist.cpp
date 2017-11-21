@@ -21,19 +21,19 @@ static void handleMouseScrollbar(const mouse *m);
 
 static ImageButton imageButtonHelp =
 {
-    0, 0, 27, 27, ImageButton_Normal, 134, 0, buttonHelp, Widget_Button_doNothing, 0, 0, 1
+    0, 0, 27, 27, ImageButton_Normal, 134, 0, buttonHelp, Widget::Button::doNothing, 0, 0, 1
 };
 static ImageButton imageButtonClose =
 {
-    0, 0, 24, 24, ImageButton_Normal, 134, 4, buttonClose, Widget_Button_doNothing, 0, 0, 1
+    0, 0, 24, 24, ImageButton_Normal, 134, 4, buttonClose, Widget::Button::doNothing, 0, 0, 1
 };
 static ImageButton imageButtonScrollUp =
 {
-    0, 0, 39, 26, ImageButton_Scroll, 96, 8, buttonScroll, Widget_Button_doNothing, 0, 1, 1
+    0, 0, 39, 26, ImageButton_Scroll, 96, 8, buttonScroll, Widget::Button::doNothing, 0, 1, 1
 };
 static ImageButton imageButtonScrollDown =
 {
-    0, 0, 39, 26, ImageButton_Scroll, 96, 12, buttonScroll, Widget_Button_doNothing, 1, 1, 1
+    0, 0, 39, 26, ImageButton_Scroll, 96, 12, buttonScroll, Widget::Button::doNothing, 1, 1, 1
 };
 static CustomButton customButtonsMessages[] =
 {
@@ -132,10 +132,10 @@ void UI_PlayerMessageList_drawBackground()
 
 void UI_PlayerMessageList_drawForeground()
 {
-    Widget_Button_drawImageButtons(
+    Widget::Button::drawImageButtons(
         data.x + 16, data.y + 16 * data.heightBlocks - 42,
         &imageButtonHelp, 1);
-    Widget_Button_drawImageButtons(
+    Widget::Button::drawImageButtons(
         data.x + 16 * data.widthBlocks - 38, data.y + 16 * data.heightBlocks - 36,
         &imageButtonClose, 1);
 
@@ -181,10 +181,10 @@ void UI_PlayerMessageList_drawForeground()
     }
     if (data.maxScrollPosition > 0)
     {
-        Widget_Button_drawImageButtons(
+        Widget::Button::drawImageButtons(
             data.xText + 16 * data.textWidthBlocks, data.yText,
             &imageButtonScrollUp, 1);
-        Widget_Button_drawImageButtons(
+        Widget::Button::drawImageButtons(
             data.xText + 16 * data.textWidthBlocks, data.yText + 16 * data.textHeightBlocks - 26,
             &imageButtonScrollDown, 1);
         int pctScrolled;
@@ -221,26 +221,26 @@ void UI_PlayerMessageList_handleMouse(const mouse *m)
         buttonScroll(0, 3);
     }
     int buttonId;
-    Widget_Button_handleImageButtons(data.x + 16, data.y + 16 * data.heightBlocks - 42, &imageButtonHelp, 1, &buttonId);
+    Widget::Button::handleImageButtons(data.x + 16, data.y + 16 * data.heightBlocks - 42, &imageButtonHelp, 1, &buttonId);
     if (buttonId)
     {
         focusButtonId = 11;
         return;
     }
-    Widget_Button_handleImageButtons(data.x + 16 * data.widthBlocks - 38,
+    Widget::Button::handleImageButtons(data.x + 16 * data.widthBlocks - 38,
                                      data.y + 16 * data.heightBlocks - 36, &imageButtonClose, 1, &buttonId);
     if (buttonId)
     {
         focusButtonId = 12;
         return;
     }
-    Widget_Button_handleImageButtons(data.xText + 16 * data.textWidthBlocks, data.yText, &imageButtonScrollUp, 1, &buttonId);
+    Widget::Button::handleImageButtons(data.xText + 16 * data.textWidthBlocks, data.yText, &imageButtonScrollUp, 1, &buttonId);
     if (buttonId)
     {
         focusButtonId = 13;
         return;
     }
-    Widget_Button_handleImageButtons(data.xText + 16 * data.textWidthBlocks,
+    Widget::Button::handleImageButtons(data.xText + 16 * data.textWidthBlocks,
                                      data.yText + 16 * data.textHeightBlocks - 26, &imageButtonScrollDown, 1, &buttonId);
     if (buttonId)
     {
@@ -248,7 +248,7 @@ void UI_PlayerMessageList_handleMouse(const mouse *m)
         return;
     }
     int oldFocusButtonId = focusButtonId;
-    if (Widget_Button_handleCustomButtons(
+    if (Widget::Button::handleCustomButtons(
                 data.xText, data.yText + 4, customButtonsMessages, 10, &focusButtonId))
     {
         if (oldFocusButtonId != focusButtonId)

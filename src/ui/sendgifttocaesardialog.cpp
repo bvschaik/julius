@@ -14,11 +14,11 @@ static void buttonCancel(int param1, int param2);
 
 static CustomButton buttons[] =
 {
-    {208, 213, 528, 233, CustomButton_Immediate, buttonSetGift, Widget_Button_doNothing, 1, 0},
-    {208, 233, 528, 253, CustomButton_Immediate, buttonSetGift, Widget_Button_doNothing, 2, 0},
-    {208, 253, 528, 273, CustomButton_Immediate, buttonSetGift, Widget_Button_doNothing, 3, 0},
-    {128, 336, 368, 356, CustomButton_Immediate, buttonSendGift, Widget_Button_doNothing, 0, 0},
-    {400, 336, 560, 356, CustomButton_Immediate, buttonCancel, Widget_Button_doNothing, 0, 0},
+    {208, 213, 528, 233, CustomButton_Immediate, buttonSetGift, Widget::Button::doNothing, 1, 0},
+    {208, 233, 528, 253, CustomButton_Immediate, buttonSetGift, Widget::Button::doNothing, 2, 0},
+    {208, 253, 528, 273, CustomButton_Immediate, buttonSetGift, Widget::Button::doNothing, 3, 0},
+    {128, 336, 368, 356, CustomButton_Immediate, buttonSendGift, Widget::Button::doNothing, 0, 0},
+    {400, 336, 560, 356, CustomButton_Immediate, buttonCancel, Widget::Button::doNothing, 0, 0},
 };
 
 static int focusButtonId;
@@ -123,7 +123,7 @@ void UI_SendGiftToCaesarDialog_handleMouse(const mouse *m)
     {
         int offsetX = Data_Screen.offset640x480.x;
         int offsetY = Data_Screen.offset640x480.y;
-        Widget_Button_handleCustomButtons(offsetX, offsetY,
+        Widget::Button::handleCustomButtons(offsetX, offsetY,
                                           buttons, 5, &focusButtonId);
     }
 }

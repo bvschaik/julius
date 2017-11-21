@@ -15,8 +15,8 @@ static void arrowButtonScroll(int param1, int param2);
 
 static CustomButton buttons[] =
 {
-    {144, 232, 336, 252, CustomButton_Immediate, buttonOk, Widget_Button_doNothing, 1, 0},
-    {144, 262, 336, 282, CustomButton_Immediate, buttonCancel, Widget_Button_doNothing, 1, 0},
+    {144, 232, 336, 252, CustomButton_Immediate, buttonOk, Widget::Button::doNothing, 1, 0},
+    {144, 262, 336, 282, CustomButton_Immediate, buttonCancel, Widget::Button::doNothing, 1, 0},
 };
 
 static ArrowButton arrowButtons[] =
@@ -88,7 +88,7 @@ void UI_SpeedOptions_drawForeground()
         FONT_NORMAL_PLAIN
     );
 
-    Widget_Button_drawArrowButtons(
+    Widget::Button::drawArrowButtons(
         baseOffsetX + 128, baseOffsetY + 40,
         arrowButtons, 4
     );
@@ -105,10 +105,10 @@ void UI_SpeedOptions_handleMouse(const mouse *m)
     {
         int baseOffsetX = Data_Screen.offset640x480.x;
         int baseOffsetY = Data_Screen.offset640x480.y;
-        if (!Widget_Button_handleCustomButtons(
+        if (!Widget::Button::handleCustomButtons(
                     baseOffsetX, baseOffsetY, buttons, 2, &focusButtonId))
         {
-            Widget_Button_handleArrowButtons(
+            Widget::Button::handleArrowButtons(
                 baseOffsetX + 128, baseOffsetY + 40, arrowButtons, 4);
         }
     }

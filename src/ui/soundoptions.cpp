@@ -19,12 +19,12 @@ static void arrowButtonCity(int param1, int param2);
 
 static CustomButton buttons[] =
 {
-    {64, 162, 288, 182, CustomButton_Immediate, buttonToggle, Widget_Button_doNothing, SOUND_MUSIC, 0},
-    {64, 192, 288, 212, CustomButton_Immediate, buttonToggle, Widget_Button_doNothing, SOUND_SPEECH, 0},
-    {64, 222, 288, 242, CustomButton_Immediate, buttonToggle, Widget_Button_doNothing, SOUND_EFFECTS, 0},
-    {64, 252, 288, 272, CustomButton_Immediate, buttonToggle, Widget_Button_doNothing, SOUND_CITY, 0},
-    {144, 296, 336, 316, CustomButton_Immediate, buttonOk, Widget_Button_doNothing, 1, 0},
-    {144, 296, 336, 346, CustomButton_Immediate, buttonCancel, Widget_Button_doNothing, 1, 0},
+    {64, 162, 288, 182, CustomButton_Immediate, buttonToggle, Widget::Button::doNothing, SOUND_MUSIC, 0},
+    {64, 192, 288, 212, CustomButton_Immediate, buttonToggle, Widget::Button::doNothing, SOUND_SPEECH, 0},
+    {64, 222, 288, 242, CustomButton_Immediate, buttonToggle, Widget::Button::doNothing, SOUND_EFFECTS, 0},
+    {64, 252, 288, 272, CustomButton_Immediate, buttonToggle, Widget::Button::doNothing, SOUND_CITY, 0},
+    {144, 296, 336, 316, CustomButton_Immediate, buttonOk, Widget::Button::doNothing, 1, 0},
+    {144, 296, 336, 346, CustomButton_Immediate, buttonCancel, Widget::Button::doNothing, 1, 0},
 };
 
 static ArrowButton arrowButtons[] =
@@ -152,7 +152,7 @@ void UI_SoundOptions_drawForeground()
                                  FONT_NORMAL_PLAIN
                                 );
 
-    Widget_Button_drawArrowButtons(
+    Widget::Button::drawArrowButtons(
         baseOffsetX + 208, baseOffsetY + 60,
         arrowButtons, 8
     );
@@ -169,10 +169,10 @@ void UI_SoundOptions_handleMouse(const mouse *m)
     {
         int baseOffsetX = Data_Screen.offset640x480.x;
         int baseOffsetY = Data_Screen.offset640x480.y;
-        if (!Widget_Button_handleCustomButtons(
+        if (!Widget::Button::handleCustomButtons(
                     baseOffsetX, baseOffsetY, buttons, 6, &focusButtonId))
         {
-            Widget_Button_handleArrowButtons(
+            Widget::Button::handleArrowButtons(
                 baseOffsetX + 208, baseOffsetY + 60, arrowButtons, 8);
         }
     }

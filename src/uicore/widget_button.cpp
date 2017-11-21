@@ -1,4 +1,4 @@
-#include "widget.h"
+#include "widget_button.h"
 #include "graphics.h"
 
 #include "core/time.h"
@@ -6,6 +6,7 @@
 #include "graphics/mouse.h"
 
 #include <sound>
+#include <widget.h>
 
 #define PRESSED_EFFECT_MILLIS 100
 #define PRESSED_REPEAT_INITIAL_MILLIS 300
@@ -15,11 +16,11 @@ static int getArrowButton(const mouse *m, int xOffset, int yOffset, ArrowButton 
 static int getCustomButton(const mouse *m, int xOffset, int yOffset, CustomButton *buttons, int numButtons);
 
 
-void Widget_Button_doNothing(int param1, int param2)
+void Widget::Button::doNothing(int param1, int param2)
 {
 }
 
-void Widget_Button_drawArrowButtons(int xOffset, int yOffset, ArrowButton *buttons, int numButtons)
+void Widget::Button::drawArrowButtons(int xOffset, int yOffset, ArrowButton *buttons, int numButtons)
 {
     for (int i = 0; i < numButtons; i++)
     {
@@ -34,7 +35,7 @@ void Widget_Button_drawArrowButtons(int xOffset, int yOffset, ArrowButton *butto
     }
 }
 
-int Widget_Button_handleArrowButtons(int xOffset, int yOffset, ArrowButton *buttons, int numButtons)
+int Widget::Button::handleArrowButtons(int xOffset, int yOffset, ArrowButton *buttons, int numButtons)
 {
     static int lastTime = 0;
 
@@ -119,7 +120,7 @@ static int getArrowButton(const mouse *m, int xOffset, int yOffset, ArrowButton 
     return 0;
 }
 
-int Widget_Button_handleCustomButtons(int xOffset, int yOffset, CustomButton *buttons, int numButtons, int *focusButtonId)
+int Widget::Button::handleCustomButtons(int xOffset, int yOffset, CustomButton *buttons, int numButtons, int *focusButtonId)
 {
     const mouse *m = mouse_get();
     int buttonId = getCustomButton(m, xOffset, yOffset, buttons, numButtons);
@@ -220,7 +221,7 @@ static void imageButtonRemovePressedEffectBuild(ImageButton *buttons, int numBut
     }
 }
 
-void Widget_Button_drawImageButtons(int xOffset, int yOffset, ImageButton *buttons, int numButtons)
+void Widget::Button::drawImageButtons(int xOffset, int yOffset, ImageButton *buttons, int numButtons)
 {
     imageButtonFadePressedEffect(buttons, numButtons);
     for (int i = 0; i < numButtons; i++)
@@ -246,7 +247,7 @@ void Widget_Button_drawImageButtons(int xOffset, int yOffset, ImageButton *butto
     }
 }
 
-int Widget_Button_handleImageButtons(int xOffset, int yOffset, ImageButton *buttons, int numButtons, int *focusButtonId)
+int Widget::Button::handleImageButtons(int xOffset, int yOffset, ImageButton *buttons, int numButtons, int *focusButtonId)
 {
     const mouse *m = mouse_get();
     imageButtonFadePressedEffect(buttons, numButtons);

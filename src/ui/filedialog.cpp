@@ -24,25 +24,25 @@ static void buttonSelectItem(int index, int numLines);
 
 static ImageButton imageButtons[] =
 {
-    {344, 335, 34, 34, ImageButton_Normal, 96, 0, buttonOkCancel, Widget_Button_doNothing, 1, 0, 1},
-    {392, 335, 34, 34, ImageButton_Normal, 96, 4, buttonOkCancel, Widget_Button_doNothing, 0, 0, 1},
-    {464, 120, 34, 34, ImageButton_Scroll, 96, 8, buttonScroll, Widget_Button_doNothing, 0, 1, 1},
-    {464, 300, 34, 34, ImageButton_Scroll, 96, 12, buttonScroll, Widget_Button_doNothing, 1, 1, 1},
+    {344, 335, 34, 34, ImageButton_Normal, 96, 0, buttonOkCancel, Widget::Button::doNothing, 1, 0, 1},
+    {392, 335, 34, 34, ImageButton_Normal, 96, 4, buttonOkCancel, Widget::Button::doNothing, 0, 0, 1},
+    {464, 120, 34, 34, ImageButton_Scroll, 96, 8, buttonScroll, Widget::Button::doNothing, 0, 1, 1},
+    {464, 300, 34, 34, ImageButton_Scroll, 96, 12, buttonScroll, Widget::Button::doNothing, 1, 1, 1},
 };
 static CustomButton customButtons[] =
 {
-    {160, 128, 448, 144, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 0, 0},
-    {160, 144, 448, 160, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 1, 0},
-    {160, 160, 448, 176, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 2, 0},
-    {160, 176, 448, 192, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 3, 0},
-    {160, 192, 448, 208, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 4, 0},
-    {160, 208, 448, 224, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 5, 0},
-    {160, 224, 448, 240, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 6, 0},
-    {160, 240, 448, 256, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 7, 0},
-    {160, 256, 448, 272, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 8, 0},
-    {160, 272, 448, 288, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 9, 0},
-    {160, 288, 448, 304, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 10, 0},
-    {160, 304, 448, 320, CustomButton_Immediate, buttonSelectItem, Widget_Button_doNothing, 11, 0},
+    {160, 128, 448, 144, CustomButton_Immediate, buttonSelectItem, Widget::Button::doNothing, 0, 0},
+    {160, 144, 448, 160, CustomButton_Immediate, buttonSelectItem, Widget::Button::doNothing, 1, 0},
+    {160, 160, 448, 176, CustomButton_Immediate, buttonSelectItem, Widget::Button::doNothing, 2, 0},
+    {160, 176, 448, 192, CustomButton_Immediate, buttonSelectItem, Widget::Button::doNothing, 3, 0},
+    {160, 192, 448, 208, CustomButton_Immediate, buttonSelectItem, Widget::Button::doNothing, 4, 0},
+    {160, 208, 448, 224, CustomButton_Immediate, buttonSelectItem, Widget::Button::doNothing, 5, 0},
+    {160, 224, 448, 240, CustomButton_Immediate, buttonSelectItem, Widget::Button::doNothing, 6, 0},
+    {160, 240, 448, 256, CustomButton_Immediate, buttonSelectItem, Widget::Button::doNothing, 7, 0},
+    {160, 256, 448, 272, CustomButton_Immediate, buttonSelectItem, Widget::Button::doNothing, 8, 0},
+    {160, 272, 448, 288, CustomButton_Immediate, buttonSelectItem, Widget::Button::doNothing, 9, 0},
+    {160, 288, 448, 304, CustomButton_Immediate, buttonSelectItem, Widget::Button::doNothing, 10, 0},
+    {160, 304, 448, 320, CustomButton_Immediate, buttonSelectItem, Widget::Button::doNothing, 11, 0},
 };
 
 #define NOT_EXIST_MESSAGE_TIMEOUT 500
@@ -116,7 +116,7 @@ void UI_FileDialog_drawForeground()
         Widget::Text::draw(file, baseOffsetX + 160, baseOffsetY + 130 + 16 * i, font, 0);
     }
 
-    Widget_Button_drawImageButtons(baseOffsetX, baseOffsetY, imageButtons, 4);
+    Widget::Button::drawImageButtons(baseOffsetX, baseOffsetY, imageButtons, 4);
     Widget::Text::captureCursor();
     Widget::Text::draw(Data_FileList.selectedCity, baseOffsetX + 160, baseOffsetY + 90, FONT_NORMAL_WHITE, 0);
     Widget::Text::drawCursor(baseOffsetX + 160, baseOffsetY + 91);
@@ -173,9 +173,9 @@ void UI_FileDialog_handleMouse(const mouse *m)
     }
     int xOffset = Data_Screen.offset640x480.x;
     int yOffset = Data_Screen.offset640x480.y;
-    if (!Widget_Button_handleCustomButtons(xOffset, yOffset, customButtons, 12, &focusButtonId))
+    if (!Widget::Button::handleCustomButtons(xOffset, yOffset, customButtons, 12, &focusButtonId))
     {
-        if (!Widget_Button_handleImageButtons(xOffset, yOffset, imageButtons, 4, 0))
+        if (!Widget::Button::handleImageButtons(xOffset, yOffset, imageButtons, 4, 0))
         {
             handleScrollbarClick(m);
         }

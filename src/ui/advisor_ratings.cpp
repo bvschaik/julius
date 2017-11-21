@@ -9,10 +9,10 @@ static void buttonRating(int param1, int param2);
 
 static CustomButton ratingButtons[] =
 {
-    { 80, 286, 190, 352, CustomButton_Immediate, buttonRating, Widget_Button_doNothing, 1, 0},
-    {200, 286, 310, 352, CustomButton_Immediate, buttonRating, Widget_Button_doNothing, 2, 0},
-    {320, 286, 430, 352, CustomButton_Immediate, buttonRating, Widget_Button_doNothing, 3, 0},
-    {440, 286, 550, 352, CustomButton_Immediate, buttonRating, Widget_Button_doNothing, 4, 0},
+    { 80, 286, 190, 352, CustomButton_Immediate, buttonRating, Widget::Button::doNothing, 1, 0},
+    {200, 286, 310, 352, CustomButton_Immediate, buttonRating, Widget::Button::doNothing, 2, 0},
+    {320, 286, 430, 352, CustomButton_Immediate, buttonRating, Widget::Button::doNothing, 3, 0},
+    {440, 286, 550, 352, CustomButton_Immediate, buttonRating, Widget::Button::doNothing, 4, 0},
 };
 
 static int focusButtonId;
@@ -240,7 +240,7 @@ void UI_Advisor_Ratings_drawForeground()
 
 void UI_Advisor_Ratings_handleMouse()
 {
-    Widget_Button_handleCustomButtons(
+    Widget::Button::handleCustomButtons(
         Data_Screen.offset640x480.x, Data_Screen.offset640x480.y,
         ratingButtons, 4, &focusButtonId);
 }

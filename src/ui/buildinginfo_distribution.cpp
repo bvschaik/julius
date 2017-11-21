@@ -15,37 +15,37 @@ static void warehouseOrders(int index, int param2);
 
 static CustomButton gotoOrdersButtons[] =
 {
-    {0, 0, 304, 20, CustomButton_Immediate, UI_BuildingInfo_showStorageOrders, Widget_Button_doNothing, 0, 0}
+    {0, 0, 304, 20, CustomButton_Immediate, UI_BuildingInfo_showStorageOrders, Widget::Button::doNothing, 0, 0}
 };
 
 static CustomButton ordersResourceButtons[] =
 {
-    {0, 0, 210, 22, CustomButton_Immediate, toggleResourceState, Widget_Button_doNothing, 1, 0},
-    {0, 22, 210, 44, CustomButton_Immediate, toggleResourceState, Widget_Button_doNothing, 2, 0},
-    {0, 44, 210, 66, CustomButton_Immediate, toggleResourceState, Widget_Button_doNothing, 3, 0},
-    {0, 66, 210, 88, CustomButton_Immediate, toggleResourceState, Widget_Button_doNothing, 4, 0},
-    {0, 88, 210, 110, CustomButton_Immediate, toggleResourceState, Widget_Button_doNothing, 5, 0},
-    {0, 110, 210, 132, CustomButton_Immediate, toggleResourceState, Widget_Button_doNothing, 6, 0},
-    {0, 132, 210, 154, CustomButton_Immediate, toggleResourceState, Widget_Button_doNothing, 7, 0},
-    {0, 154, 210, 176, CustomButton_Immediate, toggleResourceState, Widget_Button_doNothing, 8, 0},
-    {0, 176, 210, 198, CustomButton_Immediate, toggleResourceState, Widget_Button_doNothing, 9, 0},
-    {0, 198, 210, 220, CustomButton_Immediate, toggleResourceState, Widget_Button_doNothing, 10, 0},
-    {0, 220, 210, 242, CustomButton_Immediate, toggleResourceState, Widget_Button_doNothing, 11, 0},
-    {0, 242, 210, 264, CustomButton_Immediate, toggleResourceState, Widget_Button_doNothing, 12, 0},
-    {0, 264, 210, 286, CustomButton_Immediate, toggleResourceState, Widget_Button_doNothing, 13, 0},
-    {0, 286, 210, 308, CustomButton_Immediate, toggleResourceState, Widget_Button_doNothing, 14, 0},
-    {0, 308, 210, 330, CustomButton_Immediate, toggleResourceState, Widget_Button_doNothing, 15, 0},
+    {0, 0, 210, 22, CustomButton_Immediate, toggleResourceState, Widget::Button::doNothing, 1, 0},
+    {0, 22, 210, 44, CustomButton_Immediate, toggleResourceState, Widget::Button::doNothing, 2, 0},
+    {0, 44, 210, 66, CustomButton_Immediate, toggleResourceState, Widget::Button::doNothing, 3, 0},
+    {0, 66, 210, 88, CustomButton_Immediate, toggleResourceState, Widget::Button::doNothing, 4, 0},
+    {0, 88, 210, 110, CustomButton_Immediate, toggleResourceState, Widget::Button::doNothing, 5, 0},
+    {0, 110, 210, 132, CustomButton_Immediate, toggleResourceState, Widget::Button::doNothing, 6, 0},
+    {0, 132, 210, 154, CustomButton_Immediate, toggleResourceState, Widget::Button::doNothing, 7, 0},
+    {0, 154, 210, 176, CustomButton_Immediate, toggleResourceState, Widget::Button::doNothing, 8, 0},
+    {0, 176, 210, 198, CustomButton_Immediate, toggleResourceState, Widget::Button::doNothing, 9, 0},
+    {0, 198, 210, 220, CustomButton_Immediate, toggleResourceState, Widget::Button::doNothing, 10, 0},
+    {0, 220, 210, 242, CustomButton_Immediate, toggleResourceState, Widget::Button::doNothing, 11, 0},
+    {0, 242, 210, 264, CustomButton_Immediate, toggleResourceState, Widget::Button::doNothing, 12, 0},
+    {0, 264, 210, 286, CustomButton_Immediate, toggleResourceState, Widget::Button::doNothing, 13, 0},
+    {0, 286, 210, 308, CustomButton_Immediate, toggleResourceState, Widget::Button::doNothing, 14, 0},
+    {0, 308, 210, 330, CustomButton_Immediate, toggleResourceState, Widget::Button::doNothing, 15, 0},
 };
 
 static CustomButton granaryOrderButtons[] =
 {
-    {0, 0, 304, 20, CustomButton_Immediate, granaryOrders, Widget_Button_doNothing, 0, 0},
+    {0, 0, 304, 20, CustomButton_Immediate, granaryOrders, Widget::Button::doNothing, 0, 0},
 };
 
 static CustomButton warehouseOrderButtons[] =
 {
-    {0, 0, 304, 20, CustomButton_Immediate, warehouseOrders, Widget_Button_doNothing, 0, 0},
-    {0, -22, 304, 20, CustomButton_Immediate, warehouseOrders, Widget_Button_doNothing, 1, 0},
+    {0, 0, 304, 20, CustomButton_Immediate, warehouseOrders, Widget::Button::doNothing, 0, 0},
+    {0, -22, 304, 20, CustomButton_Immediate, warehouseOrders, Widget::Button::doNothing, 1, 0},
 };
 
 static int focusButtonId = 0;
@@ -205,7 +205,7 @@ void UI_BuildingInfo_drawGranaryForeground(BuildingInfoContext *c)
 
 void UI_BuildingInfo_handleMouseGranary(BuildingInfoContext *c)
 {
-    Widget_Button_handleCustomButtons(
+    Widget::Button::handleCustomButtons(
         c->xOffset + 80, c->yOffset + 16 * c->heightBlocks - 34,
         gotoOrdersButtons, 1, &focusButtonId);
 }
@@ -271,13 +271,13 @@ void UI_BuildingInfo_drawGranaryOrdersForeground(BuildingInfoContext *c)
 void UI_BuildingInfo_handleMouseGranaryOrders(BuildingInfoContext *c)
 {
     buildingId = c->buildingId;
-    if (Widget_Button_handleCustomButtons(c->xOffset + 180, 78,
+    if (Widget::Button::handleCustomButtons(c->xOffset + 180, 78,
                                           ordersResourceButtons, Data_CityInfo_Resource.numAvailableFoods,
                                           &resourceFocusButtonId))
     {
         return;
     }
-    Widget_Button_handleCustomButtons(c->xOffset + 80, 436,
+    Widget::Button::handleCustomButtons(c->xOffset + 80, 436,
                                       granaryOrderButtons, 1, &ordersFocusButtonId);
 }
 
@@ -370,7 +370,7 @@ void UI_BuildingInfo_drawWarehouseForeground(BuildingInfoContext *c)
 
 void UI_BuildingInfo_handleMouseWarehouse(BuildingInfoContext *c)
 {
-    Widget_Button_handleCustomButtons(
+    Widget::Button::handleCustomButtons(
         c->xOffset + 80, c->yOffset + 16 * c->heightBlocks - 34,
         gotoOrdersButtons, 1, &focusButtonId);
 }
@@ -444,13 +444,13 @@ void UI_BuildingInfo_drawWarehouseOrdersForeground(BuildingInfoContext *c)
 void UI_BuildingInfo_handleMouseWarehouseOrders(BuildingInfoContext *c)
 {
     buildingId = c->buildingId;
-    if (Widget_Button_handleCustomButtons(c->xOffset + 180, 78,
+    if (Widget::Button::handleCustomButtons(c->xOffset + 180, 78,
                                           ordersResourceButtons, Data_CityInfo_Resource.numAvailableResources,
                                           &resourceFocusButtonId))
     {
         return;
     }
-    Widget_Button_handleCustomButtons(c->xOffset + 80, 436,
+    Widget::Button::handleCustomButtons(c->xOffset + 80, 436,
                                       warehouseOrderButtons, 2, &ordersFocusButtonId);
 }
 

@@ -48,58 +48,58 @@ static void buttonRotate(int param1, int param2);
 
 static ImageButton buttonOverlaysCollapseSidebar[] =
 {
-    {127, 5, 31, 20, ImageButton_Normal, 90, 0, buttonCollapseExpand, Widget_Button_doNothing, 0, 0, 1},
+    {127, 5, 31, 20, ImageButton_Normal, 90, 0, buttonCollapseExpand, Widget::Button::doNothing, 0, 0, 1},
     {4, 3, 117, 31, ImageButton_Normal, 93, 0, buttonOverlay, buttonHelp, 0, 0, 1}
 };
 
 static ImageButton buttonExpandSidebar[] =
 {
-    {6, 4, 31, 20, ImageButton_Normal, 90, 4, buttonCollapseExpand, Widget_Button_doNothing, 0, 0, 1}
+    {6, 4, 31, 20, ImageButton_Normal, 90, 4, buttonCollapseExpand, Widget::Button::doNothing, 0, 0, 1}
 };
 
 static ImageButton buttonBuildCollapsed[] =
 {
-    {2, 32, 39, 26, ImageButton_Normal, 92, 0, buttonBuild, Widget_Button_doNothing, 0, 0, 1},
-    {2, 67, 39, 26, ImageButton_Normal, 92, 8, buttonBuild, Widget_Button_doNothing, 1, 0, 1},
-    {2, 102, 39, 26, ImageButton_Normal, 92, 12, buttonBuild, Widget_Button_doNothing, 2, 0, 1},
-    {2, 137, 39, 26, ImageButton_Build, 92, 4, buttonBuild, Widget_Button_doNothing, 3, 0, 1},
-    {2, 172, 39, 26, ImageButton_Build, 92, 40, buttonBuild, Widget_Button_doNothing, 4, 0, 1},
-    {2, 207, 39, 26, ImageButton_Build, 92, 28, buttonBuild, Widget_Button_doNothing, 5, 0, 1},
-    {2, 242, 39, 26, ImageButton_Build, 92, 24, buttonBuild, Widget_Button_doNothing, 6, 0, 1},
-    {2, 277, 39, 26, ImageButton_Build, 92, 20, buttonBuild, Widget_Button_doNothing, 7, 0, 1},
-    {2, 312, 39, 26, ImageButton_Build, 92, 16, buttonBuild, Widget_Button_doNothing, 8, 0, 1},
-    {2, 347, 39, 26, ImageButton_Build, 92, 44, buttonBuild, Widget_Button_doNothing, 9, 0, 1},
-    {2, 382, 39, 26, ImageButton_Build, 92, 36, buttonBuild, Widget_Button_doNothing, 10, 0, 1},
-    {2, 417, 39, 26, ImageButton_Build, 92, 32, buttonBuild, Widget_Button_doNothing, 11, 0, 1},
+    {2, 32, 39, 26, ImageButton_Normal, 92, 0, buttonBuild, Widget::Button::doNothing, 0, 0, 1},
+    {2, 67, 39, 26, ImageButton_Normal, 92, 8, buttonBuild, Widget::Button::doNothing, 1, 0, 1},
+    {2, 102, 39, 26, ImageButton_Normal, 92, 12, buttonBuild, Widget::Button::doNothing, 2, 0, 1},
+    {2, 137, 39, 26, ImageButton_Build, 92, 4, buttonBuild, Widget::Button::doNothing, 3, 0, 1},
+    {2, 172, 39, 26, ImageButton_Build, 92, 40, buttonBuild, Widget::Button::doNothing, 4, 0, 1},
+    {2, 207, 39, 26, ImageButton_Build, 92, 28, buttonBuild, Widget::Button::doNothing, 5, 0, 1},
+    {2, 242, 39, 26, ImageButton_Build, 92, 24, buttonBuild, Widget::Button::doNothing, 6, 0, 1},
+    {2, 277, 39, 26, ImageButton_Build, 92, 20, buttonBuild, Widget::Button::doNothing, 7, 0, 1},
+    {2, 312, 39, 26, ImageButton_Build, 92, 16, buttonBuild, Widget::Button::doNothing, 8, 0, 1},
+    {2, 347, 39, 26, ImageButton_Build, 92, 44, buttonBuild, Widget::Button::doNothing, 9, 0, 1},
+    {2, 382, 39, 26, ImageButton_Build, 92, 36, buttonBuild, Widget::Button::doNothing, 10, 0, 1},
+    {2, 417, 39, 26, ImageButton_Build, 92, 32, buttonBuild, Widget::Button::doNothing, 11, 0, 1},
 };
 
 static ImageButton buttonBuildExpanded[] =
 {
-    {13, 277, 39, 26, ImageButton_Normal, 92, 0, buttonBuild, Widget_Button_doNothing, 0, 0, 1},
-    {63, 277, 39, 26, ImageButton_Normal, 92, 8, buttonBuild, Widget_Button_doNothing, 1, 0, 1},
-    {113, 277, 39, 26, ImageButton_Normal, 92, 12, buttonBuild, Widget_Button_doNothing, 2, 0, 1},
-    {13, 313, 39, 26, ImageButton_Build, 92, 4, buttonBuild, Widget_Button_doNothing, 3, 0, 1},
-    {63, 313, 39, 26, ImageButton_Build, 92, 40, buttonBuild, Widget_Button_doNothing, 4, 0, 1},
-    {113, 313, 39, 26, ImageButton_Build, 92, 28, buttonBuild, Widget_Button_doNothing, 5, 0, 1},
-    {13, 349, 39, 26, ImageButton_Build, 92, 24, buttonBuild, Widget_Button_doNothing, 6, 0, 1},
-    {63, 349, 39, 26, ImageButton_Build, 92, 20, buttonBuild, Widget_Button_doNothing, 7, 0, 1},
-    {113, 349, 39, 26, ImageButton_Build, 92, 16, buttonBuild, Widget_Button_doNothing, 8, 0, 1},
-    {13, 385, 39, 26, ImageButton_Build, 92, 44, buttonBuild, Widget_Button_doNothing, 9, 0, 1},
-    {63, 385, 39, 26, ImageButton_Build, 92, 36, buttonBuild, Widget_Button_doNothing, 10, 0, 1},
-    {113, 385, 39, 26, ImageButton_Build, 92, 32, buttonBuild, Widget_Button_doNothing, 11, 0, 1},
-    {13, 421, 39, 26, ImageButton_Normal, 92, 48, buttonUndo, Widget_Button_doNothing, 0, 0, 1},
+    {13, 277, 39, 26, ImageButton_Normal, 92, 0, buttonBuild, Widget::Button::doNothing, 0, 0, 1},
+    {63, 277, 39, 26, ImageButton_Normal, 92, 8, buttonBuild, Widget::Button::doNothing, 1, 0, 1},
+    {113, 277, 39, 26, ImageButton_Normal, 92, 12, buttonBuild, Widget::Button::doNothing, 2, 0, 1},
+    {13, 313, 39, 26, ImageButton_Build, 92, 4, buttonBuild, Widget::Button::doNothing, 3, 0, 1},
+    {63, 313, 39, 26, ImageButton_Build, 92, 40, buttonBuild, Widget::Button::doNothing, 4, 0, 1},
+    {113, 313, 39, 26, ImageButton_Build, 92, 28, buttonBuild, Widget::Button::doNothing, 5, 0, 1},
+    {13, 349, 39, 26, ImageButton_Build, 92, 24, buttonBuild, Widget::Button::doNothing, 6, 0, 1},
+    {63, 349, 39, 26, ImageButton_Build, 92, 20, buttonBuild, Widget::Button::doNothing, 7, 0, 1},
+    {113, 349, 39, 26, ImageButton_Build, 92, 16, buttonBuild, Widget::Button::doNothing, 8, 0, 1},
+    {13, 385, 39, 26, ImageButton_Build, 92, 44, buttonBuild, Widget::Button::doNothing, 9, 0, 1},
+    {63, 385, 39, 26, ImageButton_Build, 92, 36, buttonBuild, Widget::Button::doNothing, 10, 0, 1},
+    {113, 385, 39, 26, ImageButton_Build, 92, 32, buttonBuild, Widget::Button::doNothing, 11, 0, 1},
+    {13, 421, 39, 26, ImageButton_Normal, 92, 48, buttonUndo, Widget::Button::doNothing, 0, 0, 1},
     {63, 421, 39, 26, ImageButton_Normal, 90, 18, buttonMessages, buttonHelp, 0, 0, 1},
-    {113, 421, 39, 26, ImageButton_Build, 90, 22, buttonGoToProblem, Widget_Button_doNothing, 0, 0, 1},
+    {113, 421, 39, 26, ImageButton_Build, 90, 22, buttonGoToProblem, Widget::Button::doNothing, 0, 0, 1},
 };
 
 static ImageButton buttonTopExpanded[] =
 {
-    {7, 155, 71, 23, ImageButton_Normal, 13, 0, buttonAdvisors, Widget_Button_doNothing, 0, 0, 1},
+    {7, 155, 71, 23, ImageButton_Normal, 13, 0, buttonAdvisors, Widget::Button::doNothing, 0, 0, 1},
     {84, 155, 71, 23, ImageButton_Normal, 13, 3, buttonEmpire, buttonHelp, 0, 0, 1},
-    {7, 184, 33, 22, ImageButton_Normal, 89, 0, buttonMissionBriefing, Widget_Button_doNothing, 0, 0, 1},
-    {46, 184, 33, 22, ImageButton_Normal, 89, 3, buttonRotateNorth, Widget_Button_doNothing, 0, 0, 1},
-    {84, 184, 33, 22, ImageButton_Normal, 89, 6, buttonRotate, Widget_Button_doNothing, 0, 0, 1},
-    {123, 184, 33, 22, ImageButton_Normal, 89, 9, buttonRotate, Widget_Button_doNothing, 1, 0, 1},
+    {7, 184, 33, 22, ImageButton_Normal, 89, 0, buttonMissionBriefing, Widget::Button::doNothing, 0, 0, 1},
+    {46, 184, 33, 22, ImageButton_Normal, 89, 3, buttonRotateNorth, Widget::Button::doNothing, 0, 0, 1},
+    {84, 184, 33, 22, ImageButton_Normal, 89, 6, buttonRotate, Widget::Button::doNothing, 0, 0, 1},
+    {123, 184, 33, 22, ImageButton_Normal, 89, 9, buttonRotate, Widget::Button::doNothing, 1, 0, 1},
 };
 
 static int minimapRedrawRequested = 0;
@@ -248,15 +248,15 @@ static void drawButtons()
     if (Data_State.sidebarCollapsed)
     {
         int xOffset = Data_Screen.width - SIDEBAR_BORDER - 42;
-        Widget_Button_drawImageButtons(xOffset, 24, buttonExpandSidebar, 1);
-        Widget_Button_drawImageButtons(xOffset, 24, buttonBuildCollapsed, 12);
+        Widget::Button::drawImageButtons(xOffset, 24, buttonExpandSidebar, 1);
+        Widget::Button::drawImageButtons(xOffset, 24, buttonBuildCollapsed, 12);
     }
     else
     {
         int xOffset = XOFFSET_EXPANDED;
-        Widget_Button_drawImageButtons(xOffset, 24, buttonOverlaysCollapseSidebar, 2);
-        Widget_Button_drawImageButtons(xOffset, 24, buttonBuildExpanded, 15);
-        Widget_Button_drawImageButtons(xOffset, 24, buttonTopExpanded, 6);
+        Widget::Button::drawImageButtons(xOffset, 24, buttonOverlaysCollapseSidebar, 2);
+        Widget::Button::drawImageButtons(xOffset, 24, buttonBuildExpanded, 15);
+        Widget::Button::drawImageButtons(xOffset, 24, buttonTopExpanded, 6);
     }
 }
 
@@ -297,12 +297,12 @@ int UI_Sidebar_handleMouse(const mouse *m)
     if (Data_State.sidebarCollapsed)
     {
         int xOffset = Data_Screen.width - SIDEBAR_BORDER - 42;
-        Widget_Button_handleImageButtons(xOffset, 24, buttonExpandSidebar, 1, &buttonId);
+        Widget::Button::handleImageButtons(xOffset, 24, buttonExpandSidebar, 1, &buttonId);
         if (buttonId)
         {
             data.focusButtonForTooltip = 12;
         }
-        Widget_Button_handleImageButtons(xOffset, 24, buttonBuildCollapsed, 12, &buttonId);
+        Widget::Button::handleImageButtons(xOffset, 24, buttonBuildCollapsed, 12, &buttonId);
         if (buttonId)
         {
             data.focusButtonForTooltip = buttonId + 19;
@@ -315,17 +315,17 @@ int UI_Sidebar_handleMouse(const mouse *m)
             return 1;
         }
         int xOffset = XOFFSET_EXPANDED;
-        Widget_Button_handleImageButtons(xOffset, 24, buttonOverlaysCollapseSidebar, 2, &buttonId);
+        Widget::Button::handleImageButtons(xOffset, 24, buttonOverlaysCollapseSidebar, 2, &buttonId);
         if (buttonId)
         {
             data.focusButtonForTooltip = buttonId + 9;
         }
-        Widget_Button_handleImageButtons(xOffset, 24, buttonBuildExpanded, 15, &buttonId);
+        Widget::Button::handleImageButtons(xOffset, 24, buttonBuildExpanded, 15, &buttonId);
         if (buttonId)
         {
             data.focusButtonForTooltip = buttonId + 19;
         }
-        Widget_Button_handleImageButtons(xOffset, 24, buttonTopExpanded, 6, &buttonId);
+        Widget::Button::handleImageButtons(xOffset, 24, buttonTopExpanded, 6, &buttonId);
         if (buttonId)
         {
             data.focusButtonForTooltip = buttonId + 39;
@@ -339,12 +339,12 @@ void UI_Sidebar_handleMouseBuildButtons(const mouse *m)
     if (Data_State.sidebarCollapsed)
     {
         int xOffset = Data_Screen.width - SIDEBAR_BORDER - 42;
-        Widget_Button_handleImageButtons(xOffset, 24, buttonBuildCollapsed, 12, 0);
+        Widget::Button::handleImageButtons(xOffset, 24, buttonBuildCollapsed, 12, 0);
     }
     else
     {
         int xOffset = XOFFSET_EXPANDED;
-        Widget_Button_handleImageButtons(xOffset, 24, buttonBuildExpanded, 15, 0);
+        Widget::Button::handleImageButtons(xOffset, 24, buttonBuildExpanded, 15, 0);
     }
 }
 
@@ -523,8 +523,8 @@ void UI_SlidingSidebar_drawForeground()
     // draw collapsed sidebar
     int xOffsetCollapsed = Data_Screen.width - SIDEBAR_BORDER - 42;
     Graphics_drawImage(graphicBase, xOffsetCollapsed, 24);
-    Widget_Button_drawImageButtons(xOffsetCollapsed, 24, buttonExpandSidebar, 1);
-    Widget_Button_drawImageButtons(xOffsetCollapsed, 24, buttonBuildCollapsed, 12);
+    Widget::Button::drawImageButtons(xOffsetCollapsed, 24, buttonExpandSidebar, 1);
+    Widget::Button::drawImageButtons(xOffsetCollapsed, 24, buttonBuildCollapsed, 12);
 
     // draw expanded sidebar on top of it
     int xOffsetExpanded = XOFFSET_EXPANDED;
@@ -537,9 +537,9 @@ void UI_SlidingSidebar_drawForeground()
         xOffsetExpanded += progressToOffset[data.progress];
     }
     Graphics_drawImage(graphicBase + 1, xOffsetExpanded, 24);
-    Widget_Button_drawImageButtons(xOffsetExpanded, 24, buttonOverlaysCollapseSidebar, 2);
-    Widget_Button_drawImageButtons(xOffsetExpanded, 24, buttonBuildExpanded, 15);
-    Widget_Button_drawImageButtons(xOffsetExpanded, 24, buttonTopExpanded, 6);
+    Widget::Button::drawImageButtons(xOffsetExpanded, 24, buttonOverlaysCollapseSidebar, 2);
+    Widget::Button::drawImageButtons(xOffsetExpanded, 24, buttonBuildExpanded, 15);
+    Widget::Button::drawImageButtons(xOffsetExpanded, 24, buttonTopExpanded, 6);
 
     // black out minimap
     Graphics_fillRect(xOffsetExpanded + 8, 59, 145, 111, COLOR_BLACK);

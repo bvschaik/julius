@@ -27,13 +27,13 @@ static void buttonAdvisor(int param1, int param2);
 
 static ImageButton imageButtonsHelpExit[] =
 {
-    {14, 0, 27, 27, ImageButton_Normal, 134, 0, buttonHelp, Widget_Button_doNothing, 0, 0, 1},
-    {424, 3, 24, 24, ImageButton_Normal, 134, 4, buttonExit, Widget_Button_doNothing, 0, 0, 1}
+    {14, 0, 27, 27, ImageButton_Normal, 134, 0, buttonHelp, Widget::Button::doNothing, 0, 0, 1},
+    {424, 3, 24, 24, ImageButton_Normal, 134, 4, buttonExit, Widget::Button::doNothing, 0, 0, 1}
 };
 
 static ImageButton imageButtonsAdvisor[] =
 {
-    {350, -38, 28, 28, ImageButton_Normal, 199, 9, buttonAdvisor, Widget_Button_doNothing, Advisor_Ratings, 0, 1}
+    {350, -38, 28, 28, ImageButton_Normal, 199, 9, buttonAdvisor, Widget::Button::doNothing, Advisor_Ratings, 0, 1}
 };
 
 static BuildingInfoContext context;
@@ -729,18 +729,18 @@ void UI_BuildingInfo_drawForeground()
     // general buttons
     if (context.storageShowSpecialOrders)
     {
-        Widget_Button_drawImageButtons(context.xOffset, 432,
+        Widget::Button::drawImageButtons(context.xOffset, 432,
                                        imageButtonsHelpExit, 2);
     }
     else
     {
-        Widget_Button_drawImageButtons(
+        Widget::Button::drawImageButtons(
             context.xOffset, context.yOffset + 16 * context.heightBlocks - 40,
             imageButtonsHelpExit, 2);
     }
     if (context.advisor)
     {
-        Widget_Button_drawImageButtons(
+        Widget::Button::drawImageButtons(
             context.xOffset, context.yOffset + 16 * context.heightBlocks - 40,
             imageButtonsAdvisor, 1);
     }
@@ -756,18 +756,18 @@ void UI_BuildingInfo_handleMouse(const mouse *m)
     // general buttons
     if (context.storageShowSpecialOrders)
     {
-        Widget_Button_handleImageButtons(context.xOffset, 432,
+        Widget::Button::handleImageButtons(context.xOffset, 432,
                                          imageButtonsHelpExit, 2, &focusImageButtonId);
     }
     else
     {
-        Widget_Button_handleImageButtons(
+        Widget::Button::handleImageButtons(
             context.xOffset, context.yOffset + 16 * context.heightBlocks - 40,
             imageButtonsHelpExit, 2, &focusImageButtonId);
     }
     if (context.advisor)
     {
-        Widget_Button_handleImageButtons(
+        Widget::Button::handleImageButtons(
             context.xOffset, context.yOffset + 16 * context.heightBlocks - 40,
             imageButtonsAdvisor, 1, 0);
     }

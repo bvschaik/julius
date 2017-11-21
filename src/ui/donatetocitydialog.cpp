@@ -19,13 +19,13 @@ static void arrowButtonAmount(int isDown, int param2);
 
 static CustomButton buttons[] =
 {
-    {336, 283, 496, 303, CustomButton_Immediate, buttonCancel, Widget_Button_doNothing, 0, 0},
-    {144, 283, 304, 303, CustomButton_Immediate, buttonDonate, Widget_Button_doNothing, 0, 0},
-    {128, 216, 192, 236, CustomButton_Immediate, buttonSetAmount, Widget_Button_doNothing, 0, 0},
-    {208, 216, 272, 236, CustomButton_Immediate, buttonSetAmount, Widget_Button_doNothing, 1, 0},
-    {288, 216, 352, 236, CustomButton_Immediate, buttonSetAmount, Widget_Button_doNothing, 2, 0},
-    {368, 216, 432, 236, CustomButton_Immediate, buttonSetAmount, Widget_Button_doNothing, 3, 0},
-    {448, 216, 512, 236, CustomButton_Immediate, buttonSetAmount, Widget_Button_doNothing, 4, 0},
+    {336, 283, 496, 303, CustomButton_Immediate, buttonCancel, Widget::Button::doNothing, 0, 0},
+    {144, 283, 304, 303, CustomButton_Immediate, buttonDonate, Widget::Button::doNothing, 0, 0},
+    {128, 216, 192, 236, CustomButton_Immediate, buttonSetAmount, Widget::Button::doNothing, 0, 0},
+    {208, 216, 272, 236, CustomButton_Immediate, buttonSetAmount, Widget::Button::doNothing, 1, 0},
+    {288, 216, 352, 236, CustomButton_Immediate, buttonSetAmount, Widget::Button::doNothing, 2, 0},
+    {368, 216, 432, 236, CustomButton_Immediate, buttonSetAmount, Widget::Button::doNothing, 3, 0},
+    {448, 216, 512, 236, CustomButton_Immediate, buttonSetAmount, Widget::Button::doNothing, 4, 0},
 };
 
 static ArrowButton arrowButtons[] =
@@ -90,7 +90,7 @@ void UI_DonateToCityDialog_drawForeground()
     Widget_Panel_drawButtonBorder(baseOffsetX + 336, baseOffsetY + 283, 160, 20, focusButtonId == 1);
     Widget_Panel_drawButtonBorder(baseOffsetX + 144, baseOffsetY + 283, 160, 20, focusButtonId == 2);
 
-    Widget_Button_drawArrowButtons(baseOffsetX, baseOffsetY, arrowButtons, 2);
+    Widget::Button::drawArrowButtons(baseOffsetX, baseOffsetY, arrowButtons, 2);
 }
 
 void UI_DonateToCityDialog_handleMouse(const mouse *m)
@@ -104,9 +104,9 @@ void UI_DonateToCityDialog_handleMouse(const mouse *m)
     {
         int offsetX = Data_Screen.offset640x480.x;
         int offsetY = Data_Screen.offset640x480.y;
-        if (!Widget_Button_handleCustomButtons(offsetX, offsetY, buttons, 7, &focusButtonId))
+        if (!Widget::Button::handleCustomButtons(offsetX, offsetY, buttons, 7, &focusButtonId))
         {
-            arrowButtonFocus = Widget_Button_handleArrowButtons(offsetX, offsetY, arrowButtons, 2);
+            arrowButtonFocus = Widget::Button::handleArrowButtons(offsetX, offsetY, arrowButtons, 2);
         }
     }
 }
