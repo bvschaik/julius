@@ -51,7 +51,7 @@ void GameTick_doTick()
     GameTick_advance();
     FigureAction_handle();
     scenario_earthquake_process();
-    Event_handleGladiatorRevolt();
+    scenario_gladiator_revolt_process();
     Event_handleEmperorChange();
     CityInfo_Victory_check();
 }

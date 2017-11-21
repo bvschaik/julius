@@ -8,7 +8,7 @@
 #include "scenario/criteria.h"
 #include "scenario.h"
 #include "scenario/data.h"
-
+#include "scenario/gladiator_revolt.h"
 #include "scenario/earthquake.h"
 
 //check buildings availability

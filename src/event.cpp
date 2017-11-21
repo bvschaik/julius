@@ -289,38 +289,6 @@ static void setDistantBattleCityForeign()
     }
 }
 
-void Event_handleGladiatorRevolt()
-{
-    if (!Data_Scenario.gladiatorRevolt.enabled)
-    {
-        return;
-    }
-    if (Data_Event.gladiatorRevolt.state == SpecialEvent_NotStarted)
-    {
-        if (game_time_year() == Data_Event.gladiatorRevolt.gameYear &&
-                game_time_month() == Data_Event.gladiatorRevolt.month)
-        {
-            if (building_count_active(BUILDING_GLADIATOR_SCHOOL) > 0)
-            {
-                Data_Event.gladiatorRevolt.state = SpecialEvent_InProgress;
-                city_message_post(1, MESSAGE_GLADIATOR_REVOLT, 0, 0);
-            }
-            else
-            {
-                Data_Event.gladiatorRevolt.state = SpecialEvent_Finished;
-            }
-        }
-    }
-    else if (Data_Event.gladiatorRevolt.state == SpecialEvent_InProgress)
-    {
-        if (Data_Event.gladiatorRevolt.endMonth == game_time_month())
-        {
-            Data_Event.gladiatorRevolt.state = SpecialEvent_Finished;
-            city_message_post(1, MESSAGE_GLADIATOR_REVOLT_FINISHED, 0, 0);
-        }
-    }
-}
-
 void Event_handleEmperorChange()
 {
     if (!Data_Scenario.emperorChange.enabled)

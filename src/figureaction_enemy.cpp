@@ -6,6 +6,7 @@
 
 #include <sound>
 #include <data>
+#include <scenario>
 
 #include "figure/formation.h"
 #include "figure/properties.h"
@@ -743,7 +744,7 @@ void FigureAction_enemy54_Gladiator(int figureId)
     f->terrainUsage = FigureTerrainUsage_Any;
     f->useCrossCountry = 0;
     FigureActionIncreaseGraphicOffset(f, 12);
-    if (Data_Event.gladiatorRevolt.state == SpecialEvent_Finished)
+    if (scenario_gladiator_revolt_is_finished())
     {
         // end of gladiator revolt: kill gladiators
         if (f->actionState != FigureActionState_149_Corpse)
