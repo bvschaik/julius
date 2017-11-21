@@ -15,6 +15,7 @@
 
 #include "core/calc.h"
 #include "graphics/image.h"
+#include "map/routing.h"
 #include "scenario/map.h"
 
 static const int tilesAroundBuildingGridOffsets[][20] = {
@@ -562,7 +563,7 @@ static int getReachableRoadWithinRadius(int x, int y, int size, int radius, int 
 {
 	FOR_XY_RADIUS {
 		if (Data_Grid_terrain[gridOffset] & Terrain_Road) {
-			if (Data_Grid_routingDistance[gridOffset] > 0) {
+			if (map_routing_distance(gridOffset) > 0) {
 				if (xTile && yTile) {
 					STORE_XY_RADIUS(xTile, yTile);
 				}
@@ -589,7 +590,7 @@ int Terrain_getRoadToLargestRoadNetwork(int x, int y, int size, int *xTile, int 
 	int minIndex = 12;
 	int minGridOffset = -1;
 	FOR_XY_ADJACENT {
-		if (Data_Grid_terrain[gridOffset] & Terrain_Road && Data_Grid_routingDistance[gridOffset] > 0) {
+		if (Data_Grid_terrain[gridOffset] & Terrain_Road && map_routing_distance(gridOffset) > 0) {
 			int index = 11;
 			for (int n = 0; n < 10; n++) {
 				if (Data_CityInfo.largestRoadNetworks[n].id == Data_Grid_roadNetworks[gridOffset]) {
@@ -611,7 +612,7 @@ int Terrain_getRoadToLargestRoadNetwork(int x, int y, int size, int *xTile, int 
 	int minDist = 100000;
 	minGridOffset = -1;
 	FOR_XY_ADJACENT {
-		int dist = Data_Grid_routingDistance[gridOffset];
+		int dist = map_routing_distance(gridOffset);
 		if (dist > 0 && dist < minDist) {
 			minDist = dist;
 			minGridOffset = gridOffset;
@@ -634,7 +635,7 @@ int Terrain_getRoadToLargestRoadNetworkHippodrome(int x, int y, int size, int *x
 	for (int xOffset = 0; xOffset <= 10; xOffset += 5) {
 		x = xBase + xOffset;
 		FOR_XY_ADJACENT {
-			if (Data_Grid_terrain[gridOffset] & Terrain_Road && Data_Grid_routingDistance[gridOffset] > 0) {
+			if (Data_Grid_terrain[gridOffset] & Terrain_Road && map_routing_distance(gridOffset) > 0) {
 				int index = 11;
 				for (int n = 0; n < 10; n++) {
 					if (Data_CityInfo.largestRoadNetworks[n].id == Data_Grid_roadNetworks[gridOffset]) {
@@ -659,7 +660,7 @@ int Terrain_getRoadToLargestRoadNetworkHippodrome(int x, int y, int size, int *x
 	for (int xOffset = 0; xOffset <= 10; xOffset += 5) {
 		x = xBase + xOffset;
 		FOR_XY_ADJACENT {
-			int dist = Data_Grid_routingDistance[gridOffset];
+			int dist = map_routing_distance(gridOffset);
 			if (dist > 0 && dist < minDist) {
 				minDist = dist;
 				minGridOffset = gridOffset;
@@ -684,7 +685,7 @@ static int getRoadTileForAqueduct(int gridOffset, int gateOrientation)
 				isRoad = 1;
 			}
 		} else if (type == BUILDING_GRANARY) {
-			if (Data_Grid_routingLandCitizen[gridOffset] == Routing_Citizen_0_Road) {
+			if (map_routing_citizen_is_road(gridOffset)) {
 				isRoad = 1;
 			}
 		}
@@ -715,7 +716,7 @@ static int getAdjacentRoadTileForRoaming(int gridOffset)
 		if (type == BUILDING_GATEHOUSE) {
 			isRoad = 0;
 		} else if (type == BUILDING_GRANARY) {
-			if (Data_Grid_routingLandCitizen[gridOffset] == Routing_Citizen_0_Road) {
+			if (map_routing_citizen_is_road(gridOffset)) {
 				isRoad = 1;
 			}
 		}
@@ -816,7 +817,7 @@ int Terrain_isAdjacentToOpenWater(int x, int y, int size)
 {
 	FOR_XY_ADJACENT {
 		if ((Data_Grid_terrain[gridOffset] & Terrain_Water) &&
-			Routing_getCalculatedDistance(gridOffset)) {
+			map_routing_distance(gridOffset)) {
 			return 1;
 		}
 	} END_FOR_XY_ADJACENT;
@@ -1313,7 +1314,7 @@ static int getWallTileWithinRadius(int x, int y, int radius, int *xTile, int *yT
 {
 	int size = 1;
 	FOR_XY_RADIUS {
-		if (Data_Grid_routingWalls[gridOffset] == Routing_Wall_0_Passable) {
+		if (map_routing_is_wall_passable(gridOffset)) {
 			*xTile = xx;
 			*yTile = yy;
 			return 1;

@@ -19,6 +19,7 @@
 #include "figure/enemy_army.h"
 #include "figure/formation.h"
 #include "figure/route.h"
+#include "map/routing.h"
 #include "sound/effect.h"
 
 static const int enemyAttackBuildingPriority[4][24] = {
@@ -271,7 +272,7 @@ static int getHighestRomanSoldierConcentration(int x, int y, int radius, int *xT
 	for (int yy = yMin; yy <= yMax; yy++) {
 		for (int xx = xMin; xx <= xMax; xx++) {
 			int gridOffset = GridOffset(xx, yy);
-			if (Data_Grid_routingDistance[gridOffset] > 0 &&
+			if (map_routing_distance(gridOffset) > 0 &&
 				Data_Grid_romanSoldierConcentration[gridOffset] > maxValue) {
 				maxValue = Data_Grid_romanSoldierConcentration[gridOffset];
 				maxX = xx;

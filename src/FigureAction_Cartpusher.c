@@ -8,6 +8,7 @@
 
 #include "figure/route.h"
 #include "game/resource.h"
+#include "map/routing.h"
 
 static const int cartResourceOffsetMultipleLoadsFood[] = {0, 0, 8, 16, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 static const int cartResourceOffsetMultipleLoadsNonFood[] = {0, 0, 0, 0, 0, 8, 0, 16, 24, 32, 40, 48, 56, 64, 72, 80};
@@ -134,6 +135,15 @@ static void updateGraphic(int figureId, struct Data_Figure *f)
 	}
 }
 
+static void reroute_cartpusher(int figure_id, struct Data_Figure *f)
+{
+    figure_route_remove(figure_id);
+    if (!map_routing_citizen_is_passable_terrain(f->gridOffset)) {
+        f->actionState = FigureActionState_20_CartpusherInitial;
+    }
+    f->waitTicks = 0;
+}
+
 void FigureAction_cartpusher(int figureId)
 {
 	struct Data_Figure *f = &Data_Figures[figureId];
@@ -153,8 +163,7 @@ void FigureAction_cartpusher(int figureId)
 			break;
 		case FigureActionState_20_CartpusherInitial:
 			setCartGraphic(f);
-			if (Data_Grid_routingLandCitizen[f->gridOffset] < Routing_Citizen_0_Road ||
-				Data_Grid_routingLandCitizen[f->gridOffset] > Routing_Citizen_2_PassableTerrain) {
+			if (!map_routing_citizen_is_passable(f->gridOffset)) {
 				f->state = FigureState_Dead;
 			}
 			if (!BuildingIsInUse(buildingId) || b->figureId != figureId) {
@@ -172,11 +181,7 @@ void FigureAction_cartpusher(int figureId)
 			if (f->direction == DirFigure_8_AtDestination) {
 				f->actionState = FigureActionState_24_CartpusherAtWarehouse;
 			} else if (f->direction == DirFigure_9_Reroute) {
-				figure_route_remove(figureId);
-				if (Data_Grid_routingLandCitizen[f->gridOffset] != Routing_Citizen_2_PassableTerrain) {
-					f->actionState = FigureActionState_20_CartpusherInitial;
-				}
-				f->waitTicks = 0;
+				reroute_cartpusher(figureId, f);
 			} else if (f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
 			}
@@ -190,11 +195,7 @@ void FigureAction_cartpusher(int figureId)
 			if (f->direction == DirFigure_8_AtDestination) {
 				f->actionState = FigureActionState_25_CartpusherAtGranary;
 			} else if (f->direction == DirFigure_9_Reroute) {
-				figure_route_remove(figureId);
-				if (Data_Grid_routingLandCitizen[f->gridOffset] != Routing_Citizen_2_PassableTerrain) {
-					f->actionState = FigureActionState_20_CartpusherInitial;
-				}
-				f->waitTicks = 0;
+				reroute_cartpusher(figureId, f);
 			} else if (f->direction == DirFigure_10_Lost) {
 				f->actionState = FigureActionState_20_CartpusherInitial;
 				f->waitTicks = 0;
@@ -209,11 +210,7 @@ void FigureAction_cartpusher(int figureId)
 			if (f->direction == DirFigure_8_AtDestination) {
 				f->actionState = FigureActionState_26_CartpusherAtWorkshop;
 			} else if (f->direction == DirFigure_9_Reroute) {
-				figure_route_remove(figureId);
-				if (Data_Grid_routingLandCitizen[f->gridOffset] != Routing_Citizen_2_PassableTerrain) {
-					f->actionState = FigureActionState_20_CartpusherInitial;
-				}
-				f->waitTicks = 0;
+				reroute_cartpusher(figureId, f);
 			} else if (f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
 			}

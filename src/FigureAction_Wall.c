@@ -11,6 +11,7 @@
 #include "figure/properties.h"
 #include "figure/route.h"
 #include "figure/type.h"
+#include "map/routing.h"
 #include "sound/effect.h"
 
 static int ballistaFiringOffsets[] = {
@@ -280,7 +281,7 @@ void FigureAction_TowerSentry_reroute()
 {
 	for (int i = 1; i < MAX_FIGURES; i++) {
 		struct Data_Figure *f = &Data_Figures[i];
-		if (f->type != FIGURE_TOWER_SENTRY || Data_Grid_routingWalls[f->gridOffset] == 0) {
+		if (f->type != FIGURE_TOWER_SENTRY || map_routing_is_wall_passable(f->gridOffset)) {
 			continue;
 		}
 		// tower sentry got off wall due to rotation

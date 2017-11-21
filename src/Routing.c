@@ -4,7 +4,6 @@
 #include "TerrainGraphics.h"
 
 #include "Data/Building.h"
-#include "Data/CityInfo.h"
 #include "Data/Constants.h"
 #include "Data/Grid.h"
 #include "Data/Routes.h"
@@ -507,11 +506,6 @@ void Routing_getDistance(int x, int y)
 	int sourceOffset = GridOffset(x, y);
 	++Data_Routes.totalRoutesCalculated;
 	routeQueue(sourceOffset, -1, callbackGetDistance);
-}
-
-int Routing_getCalculatedDistance(int gridOffset)
-{
-	return Data_Grid_routingDistance[gridOffset];
 }
 
 static int callbackDeleteClosestWallOrAqueduct(int nextOffset, int dist)

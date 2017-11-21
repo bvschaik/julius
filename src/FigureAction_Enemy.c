@@ -10,6 +10,7 @@
 #include "figure/formation.h"
 #include "figure/properties.h"
 #include "figure/route.h"
+#include "map/routing.h"
 #include "scenario/gladiator_revolt.h"
 #include "sound/effect.h"
 #include "sound/speech.h"
@@ -718,7 +719,7 @@ int FigureAction_HerdEnemy_moveFormationTo(int formationId, int x, int y, int *x
 						canMove = 0;
 						break;
 					}
-					if (Data_Grid_routingDistance[gridOffset] <= 0) {
+					if (map_routing_distance(gridOffset) <= 0) {
 						canMove = 0;
 						break;
 					}

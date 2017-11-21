@@ -16,6 +16,7 @@
 
 #include "figure/route.h"
 #include "game/time.h"
+#include "map/routing.h"
 
 static void FigureMovement_walkTicksInternal(int figureId, int numTicks, int roamingEnabled);
 
@@ -359,7 +360,7 @@ static void figureAdvanceRouteTile(struct Data_Figure *f, int roamingEnabled)
 			f->direction = DirFigure_9_Reroute;
 		}
 	} else if (f->terrainUsage == FigureTerrainUsage_Enemy) {
-		int groundType = Data_Grid_routingLandNonCitizen[targetGridOffset];
+		int groundType = map_routing_noncitizen_terrain(targetGridOffset);
 		if (groundType < Routing_NonCitizen_0_Passable) {
 			f->direction = DirFigure_9_Reroute;
 		} else if (groundType > Routing_NonCitizen_0_Passable && groundType != Routing_NonCitizen_5_Fort) {
@@ -390,7 +391,7 @@ static void figureAdvanceRouteTile(struct Data_Figure *f, int roamingEnabled)
 			}
 		}
 	} else if (f->terrainUsage == FigureTerrainUsage_Walls) {
-		if (Data_Grid_routingWalls[targetGridOffset] < Routing_Wall_0_Passable) {
+		if (!map_routing_is_wall_passable(targetGridOffset)) {
 			f->direction = DirFigure_9_Reroute;
 		}
 	} else if (targetTerrain & (Terrain_Road | Terrain_AccessRamp)) {

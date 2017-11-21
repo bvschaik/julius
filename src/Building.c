@@ -25,6 +25,7 @@
 #include "building/storage.h"
 #include "city/message.h"
 #include "graphics/image.h"
+#include "map/routing.h"
 #include "scenario/map.h"
 #include "scenario/property.h"
 #include "sound/effect.h"
@@ -641,12 +642,12 @@ void Building_GameTick_checkAccessToRome()
 					}
 					b->state = BuildingState_Undo;
 				}
-			} else if (Data_Grid_routingDistance[GridOffset(xRoad, yRoad)]) {
+			} else if (map_routing_distance(GridOffset(xRoad, yRoad))) {
 				// reachable from rome
-				b->distanceFromEntry = Data_Grid_routingDistance[GridOffset(xRoad, yRoad)];
+				b->distanceFromEntry = map_routing_distance(GridOffset(xRoad, yRoad));
 				b->houseUnreachableTicks = 0;
 			} else if (Terrain_getClosestReachableRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
-				b->distanceFromEntry = Data_Grid_routingDistance[GridOffset(xRoad, yRoad)];
+				b->distanceFromEntry = map_routing_distance(GridOffset(xRoad, yRoad));
 				b->houseUnreachableTicks = 0;
 			} else {
 				// no reachable road in radius
@@ -668,7 +669,7 @@ void Building_GameTick_checkAccessToRome()
 			int roadGridOffset = Terrain_getRoadToLargestRoadNetwork(b->x, b->y, 3, &xRoad, &yRoad);
 			if (roadGridOffset >= 0) {
 				b->roadNetworkId = Data_Grid_roadNetworks[roadGridOffset];
-				b->distanceFromEntry = Data_Grid_routingDistance[roadGridOffset];
+				b->distanceFromEntry = map_routing_distance(roadGridOffset);
 				b->roadAccessX = xRoad;
 				b->roadAccessY = yRoad;
 			}
@@ -684,7 +685,7 @@ void Building_GameTick_checkAccessToRome()
 			int roadGridOffset = Terrain_getRoadToLargestRoadNetworkHippodrome(b->x, b->y, 5, &xRoad, &yRoad);
 			if (roadGridOffset >= 0) {
 				b->roadNetworkId = Data_Grid_roadNetworks[roadGridOffset];
-				b->distanceFromEntry = Data_Grid_routingDistance[roadGridOffset];
+				b->distanceFromEntry = map_routing_distance(roadGridOffset);
 				b->roadAccessX = xRoad;
 				b->roadAccessY = yRoad;
 			}
@@ -693,13 +694,13 @@ void Building_GameTick_checkAccessToRome()
 			int roadGridOffset = Terrain_getRoadToLargestRoadNetwork(b->x, b->y, b->size, &xRoad, &yRoad);
 			if (roadGridOffset >= 0) {
 				b->roadNetworkId = Data_Grid_roadNetworks[roadGridOffset];
-				b->distanceFromEntry = Data_Grid_routingDistance[roadGridOffset];
+				b->distanceFromEntry = map_routing_distance(roadGridOffset);
 				b->roadAccessX = xRoad;
 				b->roadAccessY = yRoad;
 			}
 		}
 	}
-	if (!Data_Grid_routingDistance[Data_CityInfo.exitPointGridOffset]) {
+	if (!map_routing_distance(Data_CityInfo.exitPointGridOffset)) {
 		// no route through city
 		if (Data_CityInfo.population <= 0) {
 			return;
@@ -723,7 +724,7 @@ void Building_GameTick_checkAccessToRome()
 			Routing_determineLandNonCitizen();
 			Routing_determineWalls();
 			
-			if (Data_Grid_routingDistance[Data_CityInfo.exitPointGridOffset]) {
+			if (map_routing_distance(Data_CityInfo.exitPointGridOffset)) {
 				city_message_post(1, MESSAGE_ROAD_TO_ROME_OBSTRUCTED, 0, 0);
 				Data_State.undoAvailable = 0;
 				return;
