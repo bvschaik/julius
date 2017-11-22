@@ -1,6 +1,5 @@
 #include "Routing.h"
 
-#include "Grid.h"
 #include "TerrainGraphics.h"
 
 #include "Data/Building.h"
@@ -13,8 +12,7 @@
 #include "core/calc.h"
 #include "core/random.h"
 #include "graphics/image.h"
-
-#include <string.h>
+#include "map/grid.h"
 
 #define MAX_QUEUE 26244
 
@@ -31,7 +29,7 @@ static struct {
 
 static int directionPath[500];
 
-static char tmpGrid[GRID_SIZE * GRID_SIZE];
+static int8_t tmpGrid[GRID_SIZE * GRID_SIZE];
 
 static void setDistAndEnqueue(int nextOffset, int dist)
 {
@@ -42,7 +40,7 @@ static void setDistAndEnqueue(int nextOffset, int dist)
 
 static void routeQueue(int source, int dest, void (*callback)(int nextOffset, int dist))
 {
-	Grid_clearShortGrid(Data_Grid_routingDistance);
+	map_grid_clear_u16(Data_Grid_routingDistance);
 	Data_Grid_routingDistance[source] = 1;
 	queue.items[0] = source;
 	queue.head = 0;
@@ -73,7 +71,7 @@ static void routeQueue(int source, int dest, void (*callback)(int nextOffset, in
 
 static void routeQueueWhileTrue(int source, int (*callback)(int nextOffset, int dist))
 {
-	Grid_clearShortGrid(Data_Grid_routingDistance);
+	map_grid_clear_u16(Data_Grid_routingDistance);
 	Data_Grid_routingDistance[source] = 1;
 	queue.items[0] = source;
 	queue.head = 0;
@@ -103,7 +101,7 @@ static void routeQueueWhileTrue(int source, int (*callback)(int nextOffset, int 
 
 static void routeQueueMax(int source, int dest, int maxTiles, void (*callback)(int, int))
 {
-	Grid_clearShortGrid(Data_Grid_routingDistance);
+	map_grid_clear_u16(Data_Grid_routingDistance);
 	Data_Grid_routingDistance[source] = 1;
 	queue.items[0] = source;
 	queue.head = 0;
@@ -136,8 +134,8 @@ static void routeQueueMax(int source, int dest, int maxTiles, void (*callback)(i
 
 static void routeQueueBoat(int source, void (*callback)(int, int))
 {
-	Grid_clearShortGrid(Data_Grid_routingDistance);
-	Grid_clearByteGrid(tmpGrid);
+	map_grid_clear_u16(Data_Grid_routingDistance);
+	map_grid_clear_i8(tmpGrid);
 	Data_Grid_routingDistance[source] = 1;
 	queue.items[0] = source;
 	queue.head = 0;
@@ -175,7 +173,7 @@ static void routeQueueBoat(int source, void (*callback)(int, int))
 
 static void routeQueueDir8(int source, void (*callback)(int, int))
 {
-	Grid_clearShortGrid(Data_Grid_routingDistance);
+	map_grid_clear_u16(Data_Grid_routingDistance);
 	Data_Grid_routingDistance[source] = 1;
 	queue.items[0] = source;
 	queue.head = 0;
@@ -223,7 +221,7 @@ static void routeQueueDir8(int source, void (*callback)(int, int))
 
 void Routing_determineLandCitizen()
 {
-	memset(Data_Grid_routingLandCitizen, -1, GRID_SIZE * GRID_SIZE);
+	map_grid_init_i8(Data_Grid_routingLandCitizen, -1);
 	int gridOffset = Data_State.map.gridStartOffset;
 	for (int y = 0; y < Data_State.map.height; y++, gridOffset += Data_State.map.gridBorderSize) {
 		for (int x = 0; x < Data_State.map.width; x++, gridOffset++) {
@@ -325,7 +323,7 @@ void Routing_determineLandCitizen()
 
 void Routing_determineLandNonCitizen()
 {
-	memset(Data_Grid_routingLandNonCitizen, -1, GRID_SIZE * GRID_SIZE);
+	map_grid_init_i8(Data_Grid_routingLandNonCitizen, -1);
 	int gridOffset = Data_State.map.gridStartOffset;
 	for (int y = 0; y < Data_State.map.height; y++, gridOffset += Data_State.map.gridBorderSize) {
 		for (int x = 0; x < Data_State.map.width; x++, gridOffset++) {
@@ -380,7 +378,7 @@ void Routing_determineLandNonCitizen()
 
 void Routing_determineWater()
 {
-	memset(Data_Grid_routingWater, -1, GRID_SIZE * GRID_SIZE);
+	map_grid_init_i8(Data_Grid_routingWater, -1);
 	int gridOffset = Data_State.map.gridStartOffset;
 	for (int y = 0; y < Data_State.map.height; y++, gridOffset += Data_State.map.gridBorderSize) {
 		for (int x = 0; x < Data_State.map.width; x++, gridOffset++) {
@@ -418,7 +416,7 @@ void Routing_determineWater()
 
 void Routing_determineWalls()
 {
-	memset(Data_Grid_routingWalls, -1, GRID_SIZE * GRID_SIZE);
+	map_grid_init_i8(Data_Grid_routingWalls, -1);
 	int gridOffset = Data_State.map.gridStartOffset;
 	for (int y = 0; y < Data_State.map.height; y++, gridOffset += Data_State.map.gridBorderSize) {
 		for (int x = 0; x < Data_State.map.width; x++, gridOffset++) {

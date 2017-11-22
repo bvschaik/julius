@@ -57,6 +57,7 @@ set (INPUT_FILES
 )
 set (MAP_FILES
     src/map/bookmark.c
+    src/map/grid.c
     src/map/routing.c
 )
 set (SCENARIO_FILES
@@ -138,7 +139,6 @@ add_executable(julius
 	src/GameTick.c
 	src/Graphics.c
 	src/Graphics_Footprint.c
-	src/Grid.c
 	src/HouseEvolution.c
 	src/HousePopulation.c
 	src/KeyboardHotkey.c

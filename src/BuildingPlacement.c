@@ -5,7 +5,6 @@
 #include "CityInfo.h"
 #include "Figure.h"
 #include "Formation.h"
-#include "Grid.h"
 #include "HousePopulation.h"
 #include "Resource.h"
 #include "Routing.h"
@@ -33,6 +32,7 @@
 #include "core/random.h"
 #include "figure/formation.h"
 #include "graphics/image.h"
+#include "map/grid.h"
 
 #define BOUND_REGION() \
 	if (xStart < xEnd) {\
@@ -737,8 +737,8 @@ static void clearRegionConfirmed(int measureOnly, int xStart, int yStart, int xE
 {
 	itemsPlaced = 0;
 	Undo_restoreBuildings();
-	Grid_copyShortGrid(Data_Grid_Undo_terrain, Data_Grid_terrain);
-	Grid_copyByteGrid(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
+	map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
+	map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
 	Undo_restoreTerrainGraphics();
 
 	int xMin, xMax, yMin, yMax;
@@ -914,8 +914,8 @@ static void clearRegion(int measureOnly, int xStart, int yStart, int xEnd, int y
 
 static void placeRoad(int measureOnly, int xStart, int yStart, int xEnd, int yEnd)
 {
-	Grid_copyShortGrid(Data_Grid_Undo_terrain, Data_Grid_terrain);
-	Grid_copyByteGrid(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
+	map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
+	map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
 	Undo_restoreTerrainGraphics();
 
 	itemsPlaced = 0;
@@ -941,8 +941,8 @@ static void placeRoad(int measureOnly, int xStart, int yStart, int xEnd, int yEn
 
 static void placeWall(int measureOnly, int xStart, int yStart, int xEnd, int yEnd)
 {
-	Grid_copyShortGrid(Data_Grid_Undo_terrain, Data_Grid_terrain);
-	Grid_copyByteGrid(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
+	map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
+	map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
 	Undo_restoreTerrainGraphics();
 
 	itemsPlaced = 0;
@@ -971,10 +971,10 @@ static void placePlaza(int measureOnly, int xStart, int yStart, int xEnd, int yE
 {
 	int xMin, yMin, xMax, yMax;
 	BOUND_REGION();
-	Grid_copyShortGrid(Data_Grid_Undo_terrain, Data_Grid_terrain);
-	Grid_copyByteGrid(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
-	Grid_copyByteGrid(Data_Grid_Undo_bitfields, Data_Grid_bitfields);
-	Grid_copyByteGrid(Data_Grid_Undo_edge, Data_Grid_edge);
+	map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
+	map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
+	map_grid_copy_u8(Data_Grid_Undo_bitfields, Data_Grid_bitfields);
+	map_grid_copy_u8(Data_Grid_Undo_edge, Data_Grid_edge);
 	Undo_restoreTerrainGraphics();
 	
 	itemsPlaced = 0;
@@ -1003,10 +1003,10 @@ static void placeGarden(int xStart, int yStart, int xEnd, int yEnd)
 	int xMin, yMin, xMax, yMax;
 	BOUND_REGION();
 	
-	Grid_copyShortGrid(Data_Grid_Undo_terrain, Data_Grid_terrain);
-	Grid_copyByteGrid(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
-	Grid_copyByteGrid(Data_Grid_Undo_bitfields, Data_Grid_bitfields);
-	Grid_copyByteGrid(Data_Grid_Undo_edge, Data_Grid_edge);
+	map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
+	map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
+	map_grid_copy_u8(Data_Grid_Undo_bitfields, Data_Grid_bitfields);
+	map_grid_copy_u8(Data_Grid_Undo_edge, Data_Grid_edge);
 	Undo_restoreTerrainGraphics();
 
 	itemsPlaced = 0;
@@ -1024,8 +1024,8 @@ static void placeGarden(int xStart, int yStart, int xEnd, int yEnd)
 
 static int placeAqueduct(int measureOnly, int xStart, int yStart, int xEnd, int yEnd, int *cost)
 {
-	Grid_copyShortGrid(Data_Grid_Undo_terrain, Data_Grid_terrain);
-	Grid_copyByteGrid(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
+	map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
+	map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
 	Undo_restoreTerrainGraphics();
 	int itemCost = model_get_building(BUILDING_AQUEDUCT)->cost;
 	*cost = 0;
@@ -1064,8 +1064,8 @@ static int placeReservoirAndAqueducts(int measureOnly, int xStart, int yStart, i
 	info->placeReservoirAtStart = PlaceReservoir_No;
 	info->placeReservoirAtEnd = PlaceReservoir_No;
 
-	Grid_copyShortGrid(Data_Grid_Undo_terrain, Data_Grid_terrain);
-	Grid_copyByteGrid(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
+	map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
+	map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
 	Undo_restoreTerrainGraphics();
 
 	int distance = calc_maximum_distance(xStart, yStart, xEnd, yEnd);
@@ -1159,7 +1159,7 @@ void BuildingPlacement_update(int xStart, int yStart, int xEnd, int yEnd, int ty
 		Data_State.selectedBuilding.cost = 0;
 		return;
 	}
-	Grid_andByteGrid(Data_Grid_bitfields, Bitfield_NoOverlayAndDeleted);
+	map_grid_and_u8(Data_Grid_bitfields, Bitfield_NoOverlayAndDeleted);
 	int currentCost = model_get_building(type)->cost;
 
 	if (type == BUILDING_CLEAR_LAND) {
@@ -1252,35 +1252,35 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
 		return;
 	}
 	if (Data_CityInfo.treasury <= MIN_TREASURY) {
-		Grid_andByteGrid(Data_Grid_bitfields, Bitfield_NoOverlayAndDeleted);
+		map_grid_and_u8(Data_Grid_bitfields, Bitfield_NoOverlayAndDeleted);
 		UI_Warning_show(Warning_OutOfMoney);
 		return;
 	}
 	if (type >= BUILDING_LARGE_TEMPLE_CERES && type <= BUILDING_LARGE_TEMPLE_VENUS && Data_CityInfo.resourceStored[RESOURCE_MARBLE] < 2) {
-		Grid_andByteGrid(Data_Grid_bitfields, Bitfield_NoOverlayAndDeleted);
+		map_grid_and_u8(Data_Grid_bitfields, Bitfield_NoOverlayAndDeleted);
 		UI_Warning_show(Warning_MarbleNeededLargeTemple);
 		return;
 	}
 	if (type == BUILDING_ORACLE && Data_CityInfo.resourceStored[RESOURCE_MARBLE] < 2) {
-		Grid_andByteGrid(Data_Grid_bitfields, Bitfield_NoOverlayAndDeleted);
+		map_grid_and_u8(Data_Grid_bitfields, Bitfield_NoOverlayAndDeleted);
 		UI_Warning_show(Warning_MarbleNeededOracle);
 		return;
 	}
 	if (type != BUILDING_CLEAR_LAND && Figure_hasNearbyEnemy(xStart, yStart, xEnd, yEnd)) {
 		if (type == BUILDING_WALL || type == BUILDING_ROAD || type == BUILDING_AQUEDUCT) {
-			Grid_copyShortGrid(Data_Grid_Undo_terrain, Data_Grid_terrain);
-			Grid_copyByteGrid(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
+			map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
+			map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
 			Undo_restoreTerrainGraphics();
 		} else if (type == BUILDING_PLAZA || type == BUILDING_GARDENS) {
-			Grid_copyShortGrid(Data_Grid_Undo_terrain, Data_Grid_terrain);
-			Grid_copyByteGrid(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
-			Grid_copyByteGrid(Data_Grid_Undo_bitfields, Data_Grid_bitfields);
-			Grid_copyByteGrid(Data_Grid_Undo_edge, Data_Grid_edge);
+			map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
+			map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
+			map_grid_copy_u8(Data_Grid_Undo_bitfields, Data_Grid_bitfields);
+			map_grid_copy_u8(Data_Grid_Undo_edge, Data_Grid_edge);
 			Undo_restoreTerrainGraphics();
 		} else if (type == BUILDING_LOW_BRIDGE || type == BUILDING_SHIP_BRIDGE) {
 			TerrainBridge_resetLength();
 		} else {
-			Grid_andByteGrid(Data_Grid_bitfields, Bitfield_NoOverlayAndDeleted);
+			map_grid_and_u8(Data_Grid_bitfields, Bitfield_NoOverlayAndDeleted);
 		}
 		UI_Warning_show(Warning_EnemyNearby);
 		return;

@@ -2,7 +2,6 @@
 
 #include "Figure.h"
 #include "FigureAction.h"
-#include "Grid.h"
 #include "Routing.h"
 #include "TerrainGraphics.h"
 
@@ -19,6 +18,7 @@
 #include "figure/enemy_army.h"
 #include "figure/formation.h"
 #include "figure/route.h"
+#include "map/grid.h"
 #include "map/routing.h"
 #include "sound/effect.h"
 
@@ -232,7 +232,7 @@ static void addRomanSoldierConcentration(int x, int y, int radius, int amount)
 
 static void calculateRomanSoldierConcentration()
 {
-	Grid_clearUByteGrid(Data_Grid_romanSoldierConcentration);
+	map_grid_clear_u8(Data_Grid_romanSoldierConcentration);
 	for (int i = 1; i <= MAX_LEGIONS; i++) {
 		const formation *m = formation_get(i);
 		if (m->in_use != 1 || !m->is_legion) {

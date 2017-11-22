@@ -1,6 +1,5 @@
 #include "Desirability.h"
 
-#include "Grid.h"
 #include "Terrain.h"
 
 #include "Data/Building.h"
@@ -9,13 +8,14 @@
 #include "Data/State.h"
 
 #include "building/model.h"
+#include "map/grid.h"
 
 static void updateBuildings();
 static void updateTerrain();
 
 void Desirability_update()
 {
-	Grid_clearByteGrid(Data_Grid_desirability);
+	map_grid_clear_i8(Data_Grid_desirability);
 	updateBuildings();
 	updateTerrain();
 }

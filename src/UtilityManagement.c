@@ -1,6 +1,5 @@
 #include "UtilityManagement.h"
 
-#include "Grid.h"
 #include "Routing.h"
 #include "Terrain.h"
 #include "TerrainGraphics.h"
@@ -12,6 +11,7 @@
 
 #include "building/list.h"
 #include "graphics/image.h"
+#include "map/grid.h"
 #include "map/routing.h"
 #include "scenario/property.h"
 
@@ -123,7 +123,7 @@ static void fillAqueductsFromOffset(int gridOffset)
 
 void UtilityManagement_updateReservoirFountain()
 {
-	Grid_andShortGrid(Data_Grid_terrain, ~(Terrain_FountainRange | Terrain_ReservoirRange));
+	map_grid_and_u16(Data_Grid_terrain, ~(Terrain_FountainRange | Terrain_ReservoirRange));
 	// reservoirs
 	setAllAqueductsToNoWater();
 	building_list_large_clear(1);
@@ -245,7 +245,7 @@ void UtilityManagement_determineRoadNetworks()
 		Data_CityInfo.largestRoadNetworks[i].id = 0;
 		Data_CityInfo.largestRoadNetworks[i].size = 0;
 	}
-	Grid_clearUByteGrid(Data_Grid_roadNetworks);
+	map_grid_clear_u8(Data_Grid_roadNetworks);
 	int roadNetworkId = 1;
 	int gridOffset = Data_State.map.gridStartOffset;
 	for (int y = 0; y < Data_State.map.height; y++, gridOffset += Data_State.map.gridBorderSize) {

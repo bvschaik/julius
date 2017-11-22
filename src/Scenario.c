@@ -8,7 +8,6 @@
 #include "Figure.h"
 #include "Formation.h"
 #include "GameFile.h"
-#include "Grid.h"
 #include "Loader.h"
 #include "Natives.h"
 #include "Routing.h"
@@ -41,6 +40,7 @@
 #include "game/tutorial.h"
 #include "graphics/image.h"
 #include "map/bookmark.h"
+#include "map/grid.h"
 #include "scenario/criteria.h"
 #include "scenario/demand_change.h"
 #include "scenario/earthquake.h"
@@ -238,21 +238,21 @@ static void readScenarioAndInitGraphics()
 
 static void initGrids()
 {
-	Grid_clearShortGrid(Data_Grid_graphicIds);
-	Grid_clearUByteGrid(Data_Grid_edge);
-	Grid_clearShortGrid(Data_Grid_buildingIds);
-	Grid_clearShortGrid(Data_Grid_terrain);
-	Grid_clearUByteGrid(Data_Grid_aqueducts);
-	Grid_clearShortGrid(Data_Grid_figureIds);
-	Grid_clearUByteGrid(Data_Grid_bitfields);
-	Grid_clearUByteGrid(Data_Grid_spriteOffsets);
-	Grid_clearUByteGrid(Data_Grid_random);
-	Grid_clearByteGrid(Data_Grid_desirability);
-	Grid_clearUByteGrid(Data_Grid_elevation);
-	Grid_clearUByteGrid(Data_Grid_buildingDamage);
-	Grid_clearUByteGrid(Data_Grid_rubbleBuildingType);
-	Grid_clearUByteGrid(Data_Grid_romanSoldierConcentration);
-	Grid_clearUByteGrid(Data_Grid_roadNetworks);
+	map_grid_clear_u16(Data_Grid_graphicIds);
+	map_grid_clear_u8(Data_Grid_edge);
+	map_grid_clear_u16(Data_Grid_buildingIds);
+	map_grid_clear_u16(Data_Grid_terrain);
+	map_grid_clear_u8(Data_Grid_aqueducts);
+	map_grid_clear_u16(Data_Grid_figureIds);
+	map_grid_clear_u8(Data_Grid_bitfields);
+	map_grid_clear_u8(Data_Grid_spriteOffsets);
+	map_grid_clear_u8(Data_Grid_random);
+	map_grid_clear_i8(Data_Grid_desirability);
+	map_grid_clear_u8(Data_Grid_elevation);
+	map_grid_clear_u8(Data_Grid_buildingDamage);
+	map_grid_clear_u8(Data_Grid_rubbleBuildingType);
+	map_grid_clear_u8(Data_Grid_romanSoldierConcentration);
+	map_grid_clear_u8(Data_Grid_roadNetworks);
 
 	TerrainGraphicsContext_init();
 	initGridTerrain();
