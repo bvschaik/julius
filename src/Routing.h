@@ -62,11 +62,6 @@ typedef enum {
 
 int Routing_placeRoutedBuilding(int xSrc, int ySrc, int xDst, int yDst, RoutedBuilding type, int *items);
 
-int Routing_getGeneralDirection(int xSrc, int ySrc, int xDst, int yDst);
-
-int Routing_getDirectionForMissileShooter(int xSrc, int ySrc, int xDst, int yDst);
-int Routing_getDirectionForMissile(int xSrc, int ySrc, int xDst, int yDst);
-
 void Routing_getDistanceWaterBoat(int x, int y);
 void Routing_getDistanceWaterFlotsam(int x, int y);
 int Routing_getPathOnWater(uint8_t *path, int xSrc, int ySrc, int xDst, int yDst, int isFlotsam);

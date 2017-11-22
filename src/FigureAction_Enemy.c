@@ -7,6 +7,7 @@
 #include "Data/CityInfo.h"
 #include "Data/Grid.h"
 
+#include "core/calc.h"
 #include "figure/formation.h"
 #include "figure/properties.h"
 #include "figure/route.h"
@@ -37,7 +38,7 @@ static void enemyInitial(int figureId, struct Data_Figure *f, const formation *m
 		} else {
 			f->destinationX = m->destination_x + f->formationPositionX;
 			f->destinationY = m->destination_y + f->formationPositionY;
-			if (Routing_getGeneralDirection(f->x, f->y, f->destinationX, f->destinationY) < 8) {
+			if (calc_general_direction(f->x, f->y, f->destinationX, f->destinationY) < 8) {
 				f->actionState = FigureActionState_153_EnemyMarching;
 			}
 		}
@@ -51,7 +52,7 @@ static void enemyInitial(int figureId, struct Data_Figure *f, const formation *m
 			f->waitTicksMissile = 0;
 			if (FigureAction_CombatEnemy_getMissileTarget(figureId, 10, Data_CityInfo.numSoldiersInCity < 4, &xTile, &yTile)) {
 				f->attackGraphicOffset = 1;
-				f->direction = Routing_getDirectionForMissileShooter(f->x, f->y, xTile, yTile);
+				f->direction = calc_missile_shooter_direction(f->x, f->y, xTile, yTile);
 			} else {
 				f->attackGraphicOffset = 0;
 			}
@@ -95,7 +96,7 @@ static void enemyMarching(int figureId, struct Data_Figure *f, const formation *
 		f->waitTicks = 50;
 		f->destinationX = m->destination_x + f->formationPositionX;
 		f->destinationY = m->destination_y + f->formationPositionY;
-		if (Routing_getGeneralDirection(f->x, f->y, f->destinationX, f->destinationY) == DirFigure_8_AtDestination) {
+		if (calc_general_direction(f->x, f->y, f->destinationX, f->destinationY) == DIR_FIGURE_AT_DESTINATION) {
 			f->actionState = FigureActionState_151_EnemyInitial;
 			return;
 		}
@@ -103,9 +104,9 @@ static void enemyMarching(int figureId, struct Data_Figure *f, const formation *
 		figure_route_remove(figureId);
 	}
 	FigureMovement_walkTicks(figureId, f->speedMultiplier);
-	if (f->direction == DirFigure_8_AtDestination ||
-		f->direction == DirFigure_9_Reroute ||
-		f->direction == DirFigure_10_Lost) {
+	if (f->direction == DIR_FIGURE_AT_DESTINATION ||
+		f->direction == DIR_FIGURE_REROUTE ||
+		f->direction == DIR_FIGURE_LOST) {
 		f->actionState = FigureActionState_151_EnemyInitial;
 	}
 }

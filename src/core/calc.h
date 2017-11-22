@@ -4,15 +4,19 @@
 #include <stdint.h>
 
 typedef enum {
-    DIR_0_TOP,
-    DIR_1_TOP_RIGHT,
-    DIR_2_RIGHT,
-    DIR_3_BOTTOM_RIGHT,
-    DIR_4_BOTTOM,
-    DIR_5_BOTTOM_LEFT,
-    DIR_6_LEFT,
-    DIR_7_TOP_LEFT,
-    DIR_8_NONE,
+    DIR_0_TOP = 0,
+    DIR_1_TOP_RIGHT = 1,
+    DIR_2_RIGHT = 2,
+    DIR_3_BOTTOM_RIGHT = 3,
+    DIR_4_BOTTOM = 4,
+    DIR_5_BOTTOM_LEFT = 5,
+    DIR_6_LEFT = 6,
+    DIR_7_TOP_LEFT = 7,
+    DIR_8_NONE = 8,
+    DIR_FIGURE_AT_DESTINATION = 8,
+    DIR_FIGURE_REROUTE = 9,
+    DIR_FIGURE_LOST = 10,
+    DIR_FIGURE_ATTACK = 11,
 } direction;
 
 /**
@@ -63,6 +67,26 @@ int calc_minimum_distance(int x1, int y1, int x2, int y2);
  * @return Direction
  */
 direction calc_general_direction(int x_from, int y_from, int x_to, int y_to);
+
+/**
+ * Gets the direction for a missile shooter
+ * @param x_from Source X
+ * @param y_from Source Y
+ * @param x_to Destination X
+ * @param y_to Destination Y
+ * @return Direction
+ */
+direction calc_missile_shooter_direction(int x_from, int y_from, int x_to, int y_to);
+
+/**
+ * Gets the direction for a missile
+ * @param x_from Source X
+ * @param y_from Source Y
+ * @param x_to Destination X
+ * @param y_to Destination Y
+ * @return Direction, number between 0 and 15
+ */
+int calc_missile_direction(int x_from, int y_from, int x_to, int y_to);
 
 /**
  * Make sure value is between min and max (inclusive)

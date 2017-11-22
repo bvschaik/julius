@@ -1,7 +1,6 @@
 #include "FigureAction_private.h"
 
 #include "Figure.h"
-#include "Routing.h"
 #include "Terrain.h"
 
 #include "Data/Grid.h"
@@ -82,7 +81,7 @@ void FigureAction_ballista(int figureId)
 			if (f->waitTicksMissile > figure_properties_for_type(f->type)->missile_delay) {
 				int xTile, yTile;
 				if (FigureAction_CombatSoldier_getMissileTarget(figureId, 15, &xTile, &yTile)) {
-					f->direction = Routing_getDirectionForMissileShooter(f->x, f->y, xTile, yTile);
+					f->direction = calc_missile_shooter_direction(f->x, f->y, xTile, yTile);
 					f->waitTicksMissile = 0;
 					Figure_createMissile(figureId, f->x, f->y, xTile, yTile, FIGURE_BOLT);
 					sound_effect_play(SOUND_EFFECT_BALLISTA_SHOOT);
@@ -216,7 +215,7 @@ void FigureAction_towerSentry(int figureId)
 			if (f->waitTicksMissile > figure_properties_for_type(f->type)->missile_delay) {
 				int xTile, yTile;
 				if (FigureAction_CombatSoldier_getMissileTarget(figureId, 10, &xTile, &yTile)) {
-					f->direction = Routing_getDirectionForMissileShooter(f->x, f->y, xTile, yTile);
+					f->direction = calc_missile_shooter_direction(f->x, f->y, xTile, yTile);
 					f->waitTicksMissile = 0;
 					Figure_createMissile(figureId, f->x, f->y, xTile, yTile, FIGURE_JAVELIN);
 				} else {

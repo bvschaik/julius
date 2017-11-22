@@ -1,11 +1,11 @@
 #include "FigureAction_private.h"
 
 #include "Figure.h"
-#include "Routing.h"
 
 #include "Data/CityInfo.h"
 #include "Data/Grid.h"
 
+#include "core/calc.h"
 #include "figure/formation.h"
 #include "figure/properties.h"
 #include "figure/route.h"
@@ -87,7 +87,7 @@ static void javelinLaunchMissile(int figureId, struct Data_Figure *f)
 		f->waitTicksMissile = 0;
 		if (FigureAction_CombatSoldier_getMissileTarget(figureId, 10, &xTile, &yTile)) {
 			f->attackGraphicOffset = 1;
-			f->direction = Routing_getDirectionForMissileShooter(f->x, f->y, xTile, yTile);
+			f->direction = calc_missile_shooter_direction(f->x, f->y, xTile, yTile);
 		} else {
 			f->attackGraphicOffset = 0;
 		}

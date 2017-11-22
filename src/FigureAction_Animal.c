@@ -1,10 +1,10 @@
 #include "FigureAction_private.h"
 
 #include "Figure.h"
-#include "Routing.h"
 
 #include "Data/CityInfo.h"
 
+#include "core/calc.h"
 #include "core/random.h"
 #include "figure/formation.h"
 #include "figure/route.h"
@@ -320,7 +320,7 @@ void FigureAction_hippodromeHorse(int figureId)
 			}
 			break;
 		case FigureActionState_201_HippodromeMiniHorseRacing:
-			f->direction = Routing_getGeneralDirection(f->x, f->y, f->destinationX, f->destinationY);
+			f->direction = calc_general_direction(f->x, f->y, f->destinationX, f->destinationY);
 			if (f->direction == DirFigure_8_AtDestination) {
 				f->waitTicksMissile++;
 				if (f->waitTicksMissile >= 22) {
@@ -343,7 +343,7 @@ void FigureAction_hippodromeHorse(int figureId)
 					}
 				}
 				setDestinationHippodromeHorse(figureId, f, HippodromeHorse_Racing);
-				f->direction = Routing_getGeneralDirection(f->x, f->y, f->destinationX, f->destinationY);
+				f->direction = calc_general_direction(f->x, f->y, f->destinationX, f->destinationY);
 				FigureMovement_crossCountrySetDirection(figureId,
 					f->crossCountryX, f->crossCountryY, 15 * f->destinationX, 15 * f->destinationY, 0);
 			}
@@ -354,7 +354,7 @@ void FigureAction_hippodromeHorse(int figureId)
 		case FigureActionState_202_HippodromeMiniHorseDone:
 			if (!f->waitTicks) {
 				setDestinationHippodromeHorse(figureId, f, HippodromeHorse_Finished);
-				f->direction = Routing_getGeneralDirection(f->x, f->y, f->destinationX, f->destinationY);
+				f->direction = calc_general_direction(f->x, f->y, f->destinationX, f->destinationY);
 				FigureMovement_crossCountrySetDirection(figureId,
 					f->crossCountryX, f->crossCountryY, 15 * f->destinationX, 15 * f->destinationY, 0);
 			}

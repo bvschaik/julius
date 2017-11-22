@@ -1,6 +1,5 @@
 #include "FigureAction_private.h"
 
-#include "Routing.h"
 #include "Security.h"
 #include "Terrain.h"
 
@@ -282,7 +281,7 @@ static void prefectExtinguishFire(int figureId, struct Data_Figure *f)
 	} else {
 		f->waitTicks = 1;
 	}
-	f->attackDirection = Routing_getGeneralDirection(f->x, f->y, burn->x, burn->y);
+	f->attackDirection = calc_general_direction(f->x, f->y, burn->x, burn->y);
 	if (f->attackDirection >= 8) {
 		f->attackDirection = 0;
 	}

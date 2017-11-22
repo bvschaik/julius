@@ -13,6 +13,7 @@
 #include "Data/State.h"
 #include "Data/Figure.h"
 
+#include "core/calc.h"
 #include "figure/route.h"
 #include "game/time.h"
 #include "map/routing.h"
@@ -182,7 +183,7 @@ void FigureMovement_initRoaming(int figureId)
 static void roamSetDirection(struct Data_Figure *f)
 {
 	int gridOffset = GridOffset(f->x, f->y);
-	int direction = Routing_getGeneralDirection(f->x, f->y, f->destinationX, f->destinationY);
+	int direction = calc_general_direction(f->x, f->y, f->destinationX, f->destinationY);
 	if (direction >= 8) {
 		direction = 0;
 	}
@@ -340,7 +341,7 @@ static void figureSetNextRouteTileDirection(int figureId, struct Data_Figure *f)
 			f->direction = DirFigure_8_AtDestination;
 		}
 	} else { // should be at destination
-		f->direction = Routing_getGeneralDirection(f->x, f->y, f->destinationX, f->destinationY);
+		f->direction = calc_general_direction(f->x, f->y, f->destinationX, f->destinationY);
 		if (f->direction != DirFigure_8_AtDestination) {
 			f->direction = DirFigure_10_Lost;
 		}
@@ -462,7 +463,7 @@ void FigureMovement_followTicks(int figureId, int leaderFigureId, int numTicks)
 			FigureMovement_advanceTick(f);
 		} else {
 			f->progressOnTile = 15;
-			f->direction = Routing_getGeneralDirection(f->x, f->y,
+			f->direction = calc_general_direction(f->x, f->y,
 				Data_Figures[leaderFigureId].previousTileX,
 				Data_Figures[leaderFigureId].previousTileY);
 			if (f->direction >= 8) {
@@ -506,9 +507,9 @@ void FigureMovement_crossCountrySetDirection(int figureId, int xSrc, int ySrc, i
 		f->ccDeltaXY = 0;
 	}
 	if (isMissile) {
-		f->direction = Routing_getDirectionForMissile(xSrc, ySrc, xDst, yDst);
+		f->direction = calc_missile_direction(xSrc, ySrc, xDst, yDst);
 	} else {
-		f->direction = Routing_getGeneralDirection(xSrc, ySrc, xDst, yDst);
+		f->direction = calc_general_direction(xSrc, ySrc, xDst, yDst);
 		if (f->ccDeltaY > 2 * f->ccDeltaX) {
 			switch (f->direction) {
 				case Dir_1_TopRight: case Dir_7_TopLeft: f->direction = Dir_0_Top; break;

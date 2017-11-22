@@ -897,7 +897,7 @@ int Routing_placeRoutedBuilding(int xSrc, int ySrc, int xDst, int yDst, RoutedBu
 				*items += 1;
 				break;
 		}
-		int direction = Routing_getGeneralDirection(xDst, yDst, xSrc, ySrc);
+		int direction = calc_general_direction(xDst, yDst, xSrc, ySrc);
 		if (direction == Dir_8_None) {
 			return 1; // destination reached
 		}
@@ -916,172 +916,6 @@ int Routing_placeRoutedBuilding(int xSrc, int ySrc, int xDst, int yDst, RoutedBu
 		}
 		if (!routed) {
 			return 0;
-		}
-	}
-}
-
-int Routing_getGeneralDirection(int xSrc, int ySrc, int xDst, int yDst)
-{
-	if (xSrc < xDst) {
-		if (ySrc > yDst) {
-			return Dir_1_TopRight;
-		} else if (ySrc == yDst) {
-			return Dir_2_Right;
-		} else if (ySrc < yDst) {
-			return Dir_3_BottomRight;
-		}
-	} else if (xSrc == xDst) {
-		if (ySrc > yDst) {
-			return Dir_0_Top;
-		} else if (ySrc < yDst) {
-			return Dir_4_Bottom;
-		}
-	} else if (xSrc > xDst) {
-		if (ySrc > yDst) {
-			return Dir_7_TopLeft;
-		} else if (ySrc == yDst) {
-			return Dir_6_Left;
-		} else if (ySrc < yDst) {
-			return Dir_5_BottomLeft;
-		}
-	}
-	return Dir_8_None;
-}
-
-int Routing_getDirectionForMissileShooter(int xSrc, int ySrc, int xDst, int yDst)
-{
-	int dx = xSrc > xDst ? xSrc - xDst : xDst - xSrc;
-	int dy = ySrc > yDst ? ySrc - yDst : yDst - ySrc;
-	int percentage;
-	if (dx > dy) {
-		percentage = calc_percentage(dx, dy);
-	} else if (dx == dy) {
-		percentage = 100;
-	} else {
-		percentage = -calc_percentage(dy, dx);
-	}
-	if (xSrc == xDst) {
-		if (ySrc < yDst) {
-			return 4;
-		} else {
-			return 0;
-		}
-	} else if (xSrc > xDst) {
-		if (ySrc == yDst) {
-			return 6;
-		} else if (ySrc > yDst) {
-			if (percentage >= 400) {
-				return 6;
-			} else if (percentage > -400) {
-				return 7;
-			} else {
-				return 0;
-			}
-		} else {
-			if (percentage >= 400) {
-				return 6;
-			} else if (percentage > -400) {
-				return 5;
-			} else {
-				return 4;
-			}
-		}
-	} else { // xSrc < xDst
-		if (ySrc == yDst) {
-			return 2;
-		} else if (ySrc > yDst) {
-			if (percentage >= 400) {
-				return 2;
-			} else if (percentage > -400) {
-				return 1;
-			} else {
-				return 0;
-			}
-		} else {
-			if (percentage >= 400) {
-				return 2;
-			} else if (percentage > -400) {
-				return 3;
-			} else {
-				return 4;
-			}
-		}
-	}
-}
-
-int Routing_getDirectionForMissile(int xSrc, int ySrc, int xDst, int yDst)
-{
-	int dx = xSrc > xDst ? xSrc - xDst : xDst - xSrc;
-	int dy = ySrc > yDst ? ySrc - yDst : yDst - ySrc;
-	int percentage;
-	if (dx > dy) {
-		percentage = calc_percentage(dx, dy);
-	} else if (dx == dy) {
-		percentage = 100;
-	} else {
-		percentage = -calc_percentage(dy, dx);
-	}
-	if (xSrc == xDst) {
-		if (ySrc < yDst) {
-			return 8;
-		} else {
-			return 0;
-		}
-	} else if (xSrc > xDst) {
-		if (ySrc == yDst) {
-			return 12;
-		} else if (ySrc > yDst) {
-			if (percentage >= 500) {
-				return 12;
-			} else if (percentage >= 200) {
-				return 13;
-			} else if (percentage > -200) {
-				return 14;
-			} else if (percentage > -500) {
-				return 15;
-			} else {
-				return 0;
-			}
-		} else {
-			if (percentage >= 500) {
-				return 12;
-			} else if (percentage >= 200) {
-				return 11;
-			} else if (percentage > -200) {
-				return 10;
-			} else if (percentage > -500) {
-				return 9;
-			} else {
-				return 8;
-			}
-		}
-	} else { // xSrc < xDst
-		if (ySrc == yDst) {
-			return 4;
-		} else if (ySrc > yDst) {
-			if (percentage >= 500) {
-				return 4;
-			} else if (percentage >= 200) {
-				return 3;
-			} else if (percentage > -200) {
-				return 2;
-			} else if (percentage > -500) {
-				return 1;
-			} else {
-				return 0;
-			}
-		} else {
-			if (percentage >= 500) {
-				return 4;
-			} else if (percentage >= 200) {
-				return 5;
-			} else if (percentage > -200) {
-				return 6;
-			} else if (percentage > -500) {
-				return 7;
-			} else {
-				return 8;
-			}
 		}
 	}
 }
@@ -1182,7 +1016,7 @@ int Routing_getPath(uint8_t *path, int xSrc, int ySrc, int xDst, int yDst, int n
 	while (distance > 1) {
 		distance = Data_Grid_routingDistance[gridOffset];
 		int direction = -1;
-		int generalDirection = Routing_getGeneralDirection(x, y, xSrc, ySrc);
+		int generalDirection = calc_general_direction(x, y, xSrc, ySrc);
 		for (int d = 0; d < 8; d += step) {
 			if (d != lastDirection) {
 				int nextOffset = gridOffset + Constant_DirectionGridOffsets[d];
@@ -1238,7 +1072,7 @@ int Routing_getClosestXYWithinRange(int numDirections, int xSrc, int ySrc, int x
 			return 1;
 		}
 		int direction = -1;
-		int generalDirection = Routing_getGeneralDirection(x, y, xSrc, ySrc);
+		int generalDirection = calc_general_direction(x, y, xSrc, ySrc);
 		for (int d = 0; d < 8; d += step) {
 			if (d != lastDirection) {
 				int nextOffset = gridOffset + Constant_DirectionGridOffsets[d];
