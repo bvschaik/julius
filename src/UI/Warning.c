@@ -56,7 +56,6 @@ static struct {
 	short center;
 	short topOffset;
 	short inUse;
-	short textLength;
 	short boxWidth;
 	time_millis time;
 	uint8_t text[100];
@@ -135,9 +134,8 @@ void UI_Warning_show(int warningId)
 			warnings[i].boxWidth = 460;
 		}
 		warnings[i].time = time_get_millis();
-		warnings[i].textLength = strlen((const char*)text);
 		memset(warnings[i].text, 0, 100);
-		string_copy(text, warnings[i].text, warnings[i].textLength);
+		string_copy(text, warnings[i].text, 100);
 		return;
 	}
 }
