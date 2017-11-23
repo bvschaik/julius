@@ -58,6 +58,7 @@ set (INPUT_FILES
 set (MAP_FILES
     src/map/bookmark.c
     src/map/grid.c
+    src/map/ring.c
     src/map/routing.c
 )
 set (SCENARIO_FILES

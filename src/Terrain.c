@@ -15,6 +15,7 @@
 
 #include "core/calc.h"
 #include "graphics/image.h"
+#include "map/ring.h"
 #include "map/routing.h"
 #include "scenario/map.h"
 
@@ -34,17 +35,6 @@ static const int tileEdgeSizeOffsets[5][5] = {
 	{24, 25, 26, 27, 28},
 	{32, 33, 34, 35, 36},
 };
-
-struct RingTile {
-	int x;
-	int y;
-	int gridOffset;
-} ringTiles[1080];
-
-// ringIndex[SIZE][DIST]
-int ringIndex[6][7];
-
-#define RING_SIZE(s,d) (4 * ((s) - 1) + 8 * (d))
 
 #define FOR_XY_ADJACENT \
 	{int baseOffset = GridOffset(x, y);\
@@ -966,50 +956,6 @@ int Terrain_hasBuildingOnNativeLand(int x, int y, int size, int radius)
 	return 0;
 }
 
-void Terrain_initDistanceRing()
-{
-	int index = 0;
-	int x, y;
-	for (int s = 1; s <= 5; s++) {
-		for (int d = 1; d <= 6; d++) {
-			ringIndex[s][d] = index;
-			// top row, from x=0
-			for (y = -d, x = 0; x < s + d; x++, index++) {
-				ringTiles[index].x = x;
-				ringTiles[index].y = y;
-			}
-			// right row down
-			for (x = s + d - 1, y = -d + 1; y < s + d; y++, index++) {
-				ringTiles[index].x = x;
-				ringTiles[index].y = y;
-			}
-			// bottom row to the left
-			for (y = s + d - 1, x = s + d - 2; x >= -d; x--, index++) {
-				ringTiles[index].x = x;
-				ringTiles[index].y = y;
-			}
-			// exception (bug in game): size 4 distance 2, left corner is off by x+1, y-1
-			if (s == 4 && d == 2) {
-				ringTiles[index-1].x += 1;
-				ringTiles[index-1].y -= 1;
-			}
-			// left row up
-			for (x = -d, y = s + d - 2; y >= -d; y--, index++) {
-				ringTiles[index].x = x;
-				ringTiles[index].y = y;
-			}
-			// top row up to x=0
-			for (y = -d, x = -d + 1; x < 0; x++, index++) {
-				ringTiles[index].x = x;
-				ringTiles[index].y = y;
-			}
-		}
-	}
-	for (int i = 0; i < index; i++) {
-		ringTiles[i].gridOffset = DELTA(ringTiles[i].x, ringTiles[i].y);
-	}
-}
-
 static int isInsideMapForRing(int x, int y)
 {
 	return x >= -1 && x <= Data_State.map.width &&
@@ -1018,12 +964,13 @@ static int isInsideMapForRing(int x, int y)
 
 int Terrain_isAllRockAndTreesAtDistanceRing(int x, int y, int distance)
 {
-	int start = ringIndex[1][distance];
-	int end = start + RING_SIZE(1,distance);
+	int start = map_ring_start(1, distance);
+	int end = map_ring_end(1, distance);
 	int baseOffset = GridOffset(x, y);
 	for (int i = start; i < end; i++) {
-		if (isInsideMapForRing(x + ringTiles[i].x, y + ringTiles[i].y)) {
-			int terrain = Data_Grid_terrain[baseOffset + ringTiles[i].gridOffset];
+        const ring_tile *tile = map_ring_tile(i);
+		if (isInsideMapForRing(x + tile->x, y + tile->y)) {
+			int terrain = Data_Grid_terrain[baseOffset + tile->grid_offset];
 			if (!(terrain & Terrain_Rock) || !(terrain & Terrain_Tree)) {
 				return 0;
 			}
@@ -1034,12 +981,13 @@ int Terrain_isAllRockAndTreesAtDistanceRing(int x, int y, int distance)
 
 int Terrain_isAllMeadowAtDistanceRing(int x, int y, int distance)
 {
-	int start = ringIndex[1][distance];
-	int end = start + RING_SIZE(1,distance);
+	int start = map_ring_start(1, distance);
+	int end = map_ring_end(1, distance);
 	int baseOffset = GridOffset(x, y);
 	for (int i = start; i < end; i++) {
-		if (isInsideMapForRing(x + ringTiles[i].x, y + ringTiles[i].y)) {
-			int terrain = Data_Grid_terrain[baseOffset + ringTiles[i].gridOffset];
+        const ring_tile *tile = map_ring_tile(i);
+		if (isInsideMapForRing(x + tile->x, y + tile->y)) {
+			int terrain = Data_Grid_terrain[baseOffset + tile->grid_offset];
 			if (!(terrain & Terrain_Meadow)) {
 				return 0;
 			}
@@ -1057,21 +1005,23 @@ static void addDesirabilityDistanceRing(int x, int y, int size, int distance, in
 	if (y - distance < -1 || y + distance + size - 1 > Data_State.map.height) {
 		isPartiallyOutsideMap = 1;
 	}
-	int start = ringIndex[size][distance];
-	int end = start + RING_SIZE(size,distance);
+	int start = map_ring_start(size, distance);
+	int end = map_ring_end(size, distance);
 	int baseOffset = GridOffset(x, y);
 
 	if (isPartiallyOutsideMap) {
 		for (int i = start; i < end; i++) {
-			if (isInsideMapForRing(x + ringTiles[i].x, y + ringTiles[i].y)) {
-				Data_Grid_desirability[baseOffset + ringTiles[i].gridOffset] += desirability;
+            const ring_tile *tile = map_ring_tile(i);
+			if (isInsideMapForRing(x + tile->x, y + tile->y)) {
+				Data_Grid_desirability[baseOffset + tile->grid_offset] += desirability;
 				Data_Grid_desirability[baseOffset] = calc_bound(Data_Grid_desirability[baseOffset], -100, 100); // BUG: bounding on wrong tile
 			}
 		}
 	} else {
 		for (int i = start; i < end; i++) {
-			Data_Grid_desirability[baseOffset + ringTiles[i].gridOffset] =
-                calc_bound(Data_Grid_desirability[baseOffset + ringTiles[i].gridOffset] + desirability, -100, 100);
+            const ring_tile *tile = map_ring_tile(i);
+			Data_Grid_desirability[baseOffset + tile->grid_offset] =
+                calc_bound(Data_Grid_desirability[baseOffset + tile->grid_offset] + desirability, -100, 100);
 		}
 	}
 }

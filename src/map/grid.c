@@ -10,6 +10,11 @@ int map_grid_offset(int x, int y)
     return GridOffset(x, y);
 }
 
+int map_grid_delta(int x, int y)
+{
+    return y * GRID_SIZE + x;
+}
+
 void map_grid_clear_i8(int8_t *grid)
 {
     memset(grid, 0, GRID_SIZE * GRID_SIZE * sizeof(int8_t));

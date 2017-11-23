@@ -9,11 +9,12 @@
 #include "Data/State.h"
 
 #include "core/random.h"
+#include "map/ring.h"
 
 void Loader_GameState_init()
 {
 	Data_State.winState = WinState_None;
-	Terrain_initDistanceRing();
+	map_ring_init();
 
 	Data_State.map.orientation = 0;
 	CityView_calculateLookup();
