@@ -16,5 +16,6 @@ enum
     INVASION_TYPE_DISTANT_BATTLE = 4,
 };
 
+#define MAX_INVASIONS 20
 
 #endif // SCENARIO_DATA_H

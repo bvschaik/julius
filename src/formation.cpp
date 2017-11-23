@@ -8,6 +8,7 @@
 
 #include <sound>
 #include <data>
+#include <scenario>
 
 #include "building/model.h"
 #include "figure/enemy_army.h"
@@ -434,7 +435,7 @@ void Formation_dispatchLegionsToDistantBattle()
     formation_foreach_legion(dispatch_soldiers, &numLegions);
     if (numLegions > 0)
     {
-        Data_CityInfo.distantBattleRomanMonthsToTravel = Data_Scenario.distantBattleTravelMonthsRoman;
+        Data_CityInfo.distantBattleRomanMonthsToTravel = scenario_distant_battle_roman_travel_months();
     }
 }
 

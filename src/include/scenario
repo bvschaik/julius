@@ -12,6 +12,7 @@
 #include "scenario/earthquake.h"
 #include "scenario/emperor_change.h"
 #include "scenario/invasion.h"
+#include "scenario/distant_battle.h"
 
 //check buildings availability
 #include "scenario/building.h"

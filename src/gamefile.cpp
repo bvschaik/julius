@@ -207,12 +207,20 @@ typedef struct
     buffer *Data_CityInfo_Extra_exitPointFlag_gridOffset;
     buffer *endMarker;
 } savegame_state;
+
 struct
 {
     int num_pieces;
     file_piece pieces[100];
     savegame_state state;
 } savegame_data;
+
+static void load_empire_data(int is_custom_scenario, int empire_id)
+{
+    empire_load(is_custom_scenario, empire_id);
+    scenario_distant_battle_set_roman_travel_months();
+    scenario_distant_battle_set_enemy_travel_months();
+}
 
 void init_file_piece(file_piece *piece, int size, int compressed)
 {
@@ -777,9 +785,7 @@ static void debug()
 static void setupFromSavedGame()
 {
     debug();
-    empire_load(Data_Settings.isCustomScenario, Data_Scenario.empireId);
-    Event_calculateDistantBattleRomanTravelTime();
-    Event_calculateDistantBattleEnemyTravelTime();
+    load_empire_data(Data_Settings.isCustomScenario, Data_Scenario.empireId);
 
     Data_Settings_Map.width = scenario_map_size();
     Data_Settings_Map.height = Data_Scenario.mapSizeY;
@@ -901,9 +907,7 @@ int GameFile_loadScenario(const char *filename)
     scenario_deserialize(&scenario_data.state);
 
     trade_prices_reset();
-    empire_load(1, Data_Scenario.empireId);
-    Event_calculateDistantBattleRomanTravelTime();
-    Event_calculateDistantBattleEnemyTravelTime();
+    load_empire_data(1, Data_Scenario.empireId);
     return 0;
 }
 

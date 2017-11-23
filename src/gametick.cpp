@@ -213,7 +213,7 @@ static void advanceMonth()
     Event_handleRandomEvents();
     CityInfo_Finance_handleMonthChange();
     CityInfo_Resource_housesConsumeFood();
-    Event_handleDistantBattle();
+    scenario_distant_battle_process();
     scenario_invasion_process();
     scenario_request_process();
     scenario_demand_change_process();
