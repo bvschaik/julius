@@ -44,7 +44,7 @@ void UI_SendGiftToCaesarDialog_drawBackground()
     int baseOffsetX = Data_Screen.offset640x480.x;
     int baseOffsetY = Data_Screen.offset640x480.y;
 
-    Widget_Panel_drawOuterPanel(baseOffsetX + 96, baseOffsetY + 144, 30, 15);
+    Widget::Panel::drawOuterPanel(baseOffsetX + 96, baseOffsetY + 144, 30, 15);
     Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + 16,
                        baseOffsetX + 128, baseOffsetY + 160);
     Widget_GameText_drawCentered(52, 69,
@@ -64,7 +64,7 @@ void UI_SendGiftToCaesarDialog_drawForeground()
     int baseOffsetX = Data_Screen.offset640x480.x;
     int baseOffsetY = Data_Screen.offset640x480.y;
 
-    Widget_Panel_drawInnerPanel(baseOffsetX + 112, baseOffsetY + 208, 28, 5); // BUGFIX red/white letters overlapping
+    Widget::Panel::drawInnerPanel(baseOffsetX + 112, baseOffsetY + 208, 28, 5); // BUGFIX red/white letters overlapping
 
     if (Data_CityInfo.giftCost_modest <= Data_CityInfo.personalSavings)
     {
@@ -106,10 +106,10 @@ void UI_SendGiftToCaesarDialog_drawForeground()
     {
         Widget_GameText_drawCentered(52, 66 + Data_CityInfo.giftSizeSelected,
                                      baseOffsetX + 128, baseOffsetY + 341, 240, FONT_NORMAL_BLACK);
-        Widget_Panel_drawButtonBorder(
+        Widget::Panel::drawButtonBorder(
             baseOffsetX + 128, baseOffsetY + 336, 240, 20, focusButtonId == 4);
     }
-    Widget_Panel_drawButtonBorder(
+    Widget::Panel::drawButtonBorder(
         baseOffsetX + 400, baseOffsetY + 336, 160, 20, focusButtonId == 5);
 }
 

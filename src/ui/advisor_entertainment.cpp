@@ -30,7 +30,7 @@ void UI_Advisor_Entertainment_drawBackground(int *advisorHeight)
     int baseOffsetY = Data_Screen.offset640x480.y;
 
     *advisorHeight = 23;
-    Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
+    Widget::Panel::drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
     Graphics_drawImage(image_group(ID_Graphic_AdvisorIcons) + 8,
                        baseOffsetX + 10, baseOffsetY + 10);
 
@@ -41,7 +41,7 @@ void UI_Advisor_Entertainment_drawBackground(int *advisorHeight)
     Widget_GameText_draw(58, 3, baseOffsetX + 340, baseOffsetY + 46, FONT_SMALL_PLAIN);
     Widget_GameText_draw(58, 4, baseOffsetX + 480, baseOffsetY + 46, FONT_SMALL_PLAIN);
 
-    Widget_Panel_drawInnerPanel(baseOffsetX + 32, baseOffsetY + 60, 36, 5);
+    Widget::Panel::drawInnerPanel(baseOffsetX + 32, baseOffsetY + 60, 36, 5);
 
     // theaters
     Widget_GameText_drawNumberWithDescription(8, 34, building_count_total(BUILDING_THEATER),
@@ -182,7 +182,7 @@ static void drawFestivalBackground()
     int baseOffsetX = Data_Screen.offset640x480.x;
     int baseOffsetY = Data_Screen.offset640x480.y;
 
-    Widget_Panel_drawInnerPanel(baseOffsetX + 48, baseOffsetY + 252, 34, 6);
+    Widget::Panel::drawInnerPanel(baseOffsetX + 48, baseOffsetY + 252, 34, 6);
     Graphics_drawImage(image_group(ID_Graphic_PanelWindows) + 15,
                        baseOffsetX + 460, baseOffsetY + 255);
     Widget_GameText_draw(58, 17, baseOffsetX + 52, baseOffsetY + 224, FONT_LARGE_BLACK);
@@ -243,7 +243,7 @@ void UI_Advisor_Entertainment_drawForeground()
 {
     if (!Data_CityInfo.plannedFestivalSize)
     {
-        Widget_Panel_drawButtonBorder(
+        Widget::Panel::drawButtonBorder(
             Data_Screen.offset640x480.x + 102, Data_Screen.offset640x480.y + 280,
             300, 20, focusButtonId == 1);
     }

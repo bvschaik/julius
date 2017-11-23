@@ -1,9 +1,9 @@
 #include "buildinginfo.h"
 #include "graphics.h"
-#include "widget.h"
 
 #include <data>
 #include <sound>
+#include <ui>
 
 #include "graphics/image.h"
 
@@ -11,7 +11,7 @@ static void drawInfo(BuildingInfoContext *c, int helpId, const char *soundFile, 
 {
     c->helpId = helpId;
     PLAY_SOUND(soundFile);
-    Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
+    Widget::Panel::drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
     Widget_GameText_drawCentered(groupId, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 
     if (!c->hasRoadAccess)
@@ -26,7 +26,7 @@ static void drawInfo(BuildingInfoContext *c, int helpId, const char *soundFile, 
     {
         DRAW_DESC(groupId, 3);
     }
-    Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
+    Widget::Panel::drawInnerPanel(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
     UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 142);
 }
 
@@ -44,7 +44,7 @@ void UI_BuildingInfo_drawBathhouse(BuildingInfoContext *c)
 {
     c->helpId = 64;
     PLAY_SOUND("wavs/baths.wav");
-    Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
+    Widget::Panel::drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
     Widget_GameText_drawCentered(83, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 
     if (!Data_Buildings[c->buildingId].hasWaterAccess)
@@ -63,7 +63,7 @@ void UI_BuildingInfo_drawBathhouse(BuildingInfoContext *c)
     {
         DRAW_DESC(83, 3);
     }
-    Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
+    Widget::Panel::drawInnerPanel(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
     UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 142);
 }
 
@@ -91,9 +91,9 @@ static void drawTemple(BuildingInfoContext *c, const char *soundFile, int groupI
 {
     c->helpId = 67;
     PLAY_SOUND(soundFile);
-    Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
+    Widget::Panel::drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
     Widget_GameText_drawCentered(groupId, 0, c->xOffset, c->yOffset + 12, 16 * c->widthBlocks, FONT_LARGE_BLACK);
-    Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 56, c->widthBlocks - 2, 4);
+    Widget::Panel::drawInnerPanel(c->xOffset + 16, c->yOffset + 56, c->widthBlocks - 2, 4);
     UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 62);
     if (c->hasRoadAccess)
     {
@@ -137,7 +137,7 @@ void UI_BuildingInfo_drawOracle(BuildingInfoContext *c)
 {
     c->helpId = 67;
     PLAY_SOUND("wavs/oracle.wav");
-    Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
+    Widget::Panel::drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
     Widget_GameText_drawCentered(110, 0, c->xOffset, c->yOffset + 12, 16 * c->widthBlocks, FONT_LARGE_BLACK);
     Widget_GameText_drawCentered(13, 1,
                                  c->xOffset, c->yOffset + 16 * c->heightBlocks - 24,

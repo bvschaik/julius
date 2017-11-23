@@ -24,7 +24,7 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
     int width, hasReached;
 
     *advisorHeight = 27;
-    Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
+    Widget::Panel::drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
     Graphics_drawImage(image_group(ID_Graphic_AdvisorIcons) + 3,
                        baseOffsetX + 10, baseOffsetY + 10);
     width = Widget_GameText_draw(53, 0,
@@ -46,7 +46,7 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
                        baseOffsetX + 60, baseOffsetY + 48);
 
     // culture
-    Widget_Panel_drawButtonBorder(baseOffsetX + 80, baseOffsetY + 286,
+    Widget::Panel::drawButtonBorder(baseOffsetX + 80, baseOffsetY + 286,
                                   110, 66, focusButtonId == 1);
     Widget_GameText_drawCentered(53, 1, baseOffsetX + 80, baseOffsetY + 294,
                                  110, FONT_NORMAL_BLACK);
@@ -69,7 +69,7 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
     drawRatingColumn(baseOffsetX + 110, baseOffsetY + 274, Data_CityInfo.ratingCulture, hasReached);
 
     // prosperity
-    Widget_Panel_drawButtonBorder(baseOffsetX + 200, baseOffsetY + 286,
+    Widget::Panel::drawButtonBorder(baseOffsetX + 200, baseOffsetY + 286,
                                   110, 66, focusButtonId == 2);
     Widget_GameText_drawCentered(53, 2, baseOffsetX + 200, baseOffsetY + 294,
                                  110, FONT_NORMAL_BLACK);
@@ -92,7 +92,7 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
     drawRatingColumn(baseOffsetX + 230, baseOffsetY + 274, Data_CityInfo.ratingProsperity, hasReached);
 
     // peace
-    Widget_Panel_drawButtonBorder(baseOffsetX + 320, baseOffsetY + 286,
+    Widget::Panel::drawButtonBorder(baseOffsetX + 320, baseOffsetY + 286,
                                   110, 66, focusButtonId == 3);
     Widget_GameText_drawCentered(53, 3, baseOffsetX + 320, baseOffsetY + 294,
                                  110, FONT_NORMAL_BLACK);
@@ -115,7 +115,7 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
     drawRatingColumn(baseOffsetX + 350, baseOffsetY + 274, Data_CityInfo.ratingPeace, hasReached);
 
     // favor
-    Widget_Panel_drawButtonBorder(baseOffsetX + 440, baseOffsetY + 286,
+    Widget::Panel::drawButtonBorder(baseOffsetX + 440, baseOffsetY + 286,
                                   110, 66, focusButtonId == 4);
     Widget_GameText_drawCentered(53, 4, baseOffsetX + 440, baseOffsetY + 294,
                                  110, FONT_NORMAL_BLACK);
@@ -138,7 +138,7 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
     drawRatingColumn(baseOffsetX + 470, baseOffsetY + 274, Data_CityInfo.ratingFavor, hasReached);
 
     // bottom info box
-    Widget_Panel_drawInnerPanel(baseOffsetX + 64, baseOffsetY + 356, 32, 4);
+    Widget::Panel::drawInnerPanel(baseOffsetX + 64, baseOffsetY + 356, 32, 4);
     switch (Data_CityInfo.ratingAdvisorSelection)
     {
     case 1:
@@ -225,16 +225,16 @@ void UI_Advisor_Ratings_drawForeground()
     int baseOffsetY = Data_Screen.offset640x480.y;
 
     // culture
-    Widget_Panel_drawButtonBorder(baseOffsetX + 80, baseOffsetY + 286,
+    Widget::Panel::drawButtonBorder(baseOffsetX + 80, baseOffsetY + 286,
                                   110, 66, focusButtonId == 1);
     // prosperity
-    Widget_Panel_drawButtonBorder(baseOffsetX + 200, baseOffsetY + 286,
+    Widget::Panel::drawButtonBorder(baseOffsetX + 200, baseOffsetY + 286,
                                   110, 66, focusButtonId == 2);
     // peace
-    Widget_Panel_drawButtonBorder(baseOffsetX + 320, baseOffsetY + 286,
+    Widget::Panel::drawButtonBorder(baseOffsetX + 320, baseOffsetY + 286,
                                   110, 66, focusButtonId == 3);
     // favor
-    Widget_Panel_drawButtonBorder(baseOffsetX + 440, baseOffsetY + 286,
+    Widget::Panel::drawButtonBorder(baseOffsetX + 440, baseOffsetY + 286,
                                   110, 66, focusButtonId == 4);
 }
 

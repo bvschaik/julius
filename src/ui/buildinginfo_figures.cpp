@@ -431,7 +431,7 @@ static void drawFigureInfoNormal(BuildingInfoContext *c, int figureId)
 
 static void drawFigureInfo(BuildingInfoContext *c, int figureId)
 {
-    Widget_Panel_drawButtonBorder(c->xOffset + 24, c->yOffset + 102, 16 * (c->widthBlocks - 3), 122, 0);
+    Widget::Panel::drawButtonBorder(c->xOffset + 24, c->yOffset + 102, 16 * (c->widthBlocks - 3), 122, 0);
 
     int type = Data_Figures[figureId].type;
     if (type == FIGURE_TRADE_CARAVAN || type == FIGURE_TRADE_CARAVAN_DONKEY || type == FIGURE_TRADE_SHIP)
@@ -463,7 +463,7 @@ static void drawFigureInfo(BuildingInfoContext *c, int figureId)
 
 void UI_BuildingInfo_drawFigureList(BuildingInfoContext *c)
 {
-    Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 40,
+    Widget::Panel::drawInnerPanel(c->xOffset + 16, c->yOffset + 40,
                                 c->widthBlocks - 2, 12);
     if (c->figure.count <= 0)
     {
@@ -474,7 +474,7 @@ void UI_BuildingInfo_drawFigureList(BuildingInfoContext *c)
     {
         for (int i = 0; i < c->figure.count; i++)
         {
-            Widget_Panel_drawButtonBorder(
+            Widget::Panel::drawButtonBorder(
                 c->xOffset + 60 * i + 25, c->yOffset + 45,
                 52, 52, i == c->figure.selectedIndex);
             Graphics_loadFromBuffer(

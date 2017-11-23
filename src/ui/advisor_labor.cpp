@@ -55,7 +55,7 @@ void UI_Advisor_Labor_drawBackground(int *advisorHeight)
 	int baseOffsetY = Data_Screen.offset640x480.y;
 
 	*advisorHeight = 26;
-	Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
+	Widget::Panel::drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
 	Graphics_drawImage(image_group(ID_Graphic_AdvisorIcons), baseOffsetX + 10, baseOffsetY + 10);
 	
 	Widget_GameText_draw(50, 0, baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK);
@@ -82,7 +82,7 @@ void UI_Advisor_Labor_drawBackground(int *advisorHeight)
 		baseOffsetX + 50 + width, baseOffsetY + 320, FONT_NORMAL_BLACK
 	);
 	
-	Widget_Panel_drawInnerPanel(baseOffsetX + 64, baseOffsetY + 350, 32, 2);
+	Widget::Panel::drawInnerPanel(baseOffsetX + 64, baseOffsetY + 350, 32, 2);
 	Widget_GameText_draw(50, 14, baseOffsetX + 70, baseOffsetY + 359, FONT_NORMAL_WHITE);
 	
 	width = Widget::Text::drawNumber(Data_CityInfo.wages, '@', " ",
@@ -114,11 +114,11 @@ void UI_Advisor_Labor_drawForeground()
 	Widget::Button::drawArrowButtons(
 		baseOffsetX, baseOffsetY, wageButtons, 2);
 
-	Widget_Panel_drawInnerPanel(baseOffsetX + 32, baseOffsetY + 70, 36, 15);
+	Widget::Panel::drawInnerPanel(baseOffsetX + 32, baseOffsetY + 70, 36, 15);
 
 	for (int i = 0; i < 9; i++) {
 		int focus = i == focusButtonId - 1;
-		Widget_Panel_drawButtonBorder(
+		Widget::Panel::drawButtonBorder(
 			baseOffsetX + 40, baseOffsetY + 77 + 25 * i,
 			560, 22, focus
 		);
@@ -199,7 +199,7 @@ void UI_LaborPriorityDialog_drawBackground()
 	UI_Advisor_Labor_drawBackground(&dummy);
 	UI_Advisor_Labor_drawForeground();
 
-	Widget_Panel_drawOuterPanel(baseOffsetX + 160, baseOffsetY + 176, 20, 9);
+	Widget::Panel::drawOuterPanel(baseOffsetX + 160, baseOffsetY + 176, 20, 9);
 	Widget_GameText_drawCentered(50, 25, baseOffsetX + 160, baseOffsetY + 185, 320, FONT_LARGE_BLACK);
 	for (int i = 0; i < 9; i++) {
 		Graphics_drawRect(baseOffsetX + 178 + 32 * i, baseOffsetY + 221, 27, 27, COLOR_BLACK);

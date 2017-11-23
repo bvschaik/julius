@@ -57,7 +57,7 @@ void UI_BuildingInfo_drawMarket(BuildingInfoContext *c)
 {
     c->helpId = 2;
     PLAY_SOUND("wavs/market.wav");
-    Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
+    Widget::Panel::drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
     Widget_GameText_drawCentered(97, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
     struct Data_Building *b = &Data_Buildings[c->buildingId];
     if (!c->hasRoadAccess)
@@ -117,7 +117,7 @@ void UI_BuildingInfo_drawMarket(BuildingInfoContext *c)
         Widget::Text::drawNumber(b->data.market.inventory[Inventory_Wine], '@', " ",
                                  c->xOffset + 394, c->yOffset + 110, FONT_NORMAL_BLACK);
     }
-    Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
+    Widget::Panel::drawInnerPanel(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
     UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 142);
 }
 
@@ -125,7 +125,7 @@ void UI_BuildingInfo_drawGranary(BuildingInfoContext *c)
 {
     c->helpId = 3;
     PLAY_SOUND("wavs/granary.wav");
-    Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
+    Widget::Panel::drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
     Widget_GameText_drawCentered(98, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
     struct Data_Building *b = &Data_Buildings[c->buildingId];
     if (!c->hasRoadAccess)
@@ -189,13 +189,13 @@ void UI_BuildingInfo_drawGranary(BuildingInfoContext *c)
         Widget_GameText_draw(23, RESOURCE_MEAT,
                              c->xOffset + 274 + width, c->yOffset + 99, FONT_NORMAL_BLACK);
     }
-    Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
+    Widget::Panel::drawInnerPanel(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
     UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 142);
 }
 
 void UI_BuildingInfo_drawGranaryForeground(BuildingInfoContext *c)
 {
-    Widget_Panel_drawButtonBorder(
+    Widget::Panel::drawButtonBorder(
         c->xOffset + 80, c->yOffset + 16 * c->heightBlocks - 34,
         16 * (c->widthBlocks - 10), 20, focusButtonId == 1 ? 1 : 0);
     Widget_GameText_drawCentered(98, 5,
@@ -213,15 +213,15 @@ void UI_BuildingInfo_handleMouseGranary(BuildingInfoContext *c)
 void UI_BuildingInfo_drawGranaryOrders(BuildingInfoContext *c)
 {
     c->helpId = 3;
-    Widget_Panel_drawOuterPanel(c->xOffset, 32, 29, 28);
+    Widget::Panel::drawOuterPanel(c->xOffset, 32, 29, 28);
     Widget_GameText_drawCentered(98, 6,
                                  c->xOffset, 42, 16 * c->widthBlocks, FONT_LARGE_BLACK);
-    Widget_Panel_drawInnerPanel(c->xOffset + 16, 74, c->widthBlocks - 2, 21);
+    Widget::Panel::drawInnerPanel(c->xOffset + 16, 74, c->widthBlocks - 2, 21);
 }
 
 void UI_BuildingInfo_drawGranaryOrdersForeground(BuildingInfoContext *c)
 {
-    Widget_Panel_drawButtonBorder(
+    Widget::Panel::drawButtonBorder(
         c->xOffset + 80, 436, 16 * (c->widthBlocks - 10), 20,
         ordersFocusButtonId == 1 ? 1 : 0);
     const building_storage *storage = building_storage_get(Data_Buildings[c->buildingId].storage_id);
@@ -247,8 +247,8 @@ void UI_BuildingInfo_drawGranaryOrdersForeground(BuildingInfoContext *c)
         Graphics_drawImage(graphicId, c->xOffset + 408, 78 + 22 * i);
         Widget_GameText_draw(23, resourceId,
                              c->xOffset + 72, 82 + 22 * i, FONT_NORMAL_WHITE);
-        Widget_Panel_drawButtonBorder(c->xOffset + 180, 78 + 22 * i, 210, 22,
-                                      resourceFocusButtonId == i + 1);
+        Widget::Panel::drawButtonBorder(c->xOffset + 180, 78 + 22 * i, 210, 22,
+                                        resourceFocusButtonId == i + 1);
 
         int state = storage->resource_state[resourceId];
         if (state == BUILDING_STORAGE_STATE_ACCEPTING)
@@ -272,20 +272,20 @@ void UI_BuildingInfo_handleMouseGranaryOrders(BuildingInfoContext *c)
 {
     buildingId = c->buildingId;
     if (Widget::Button::handleCustomButtons(c->xOffset + 180, 78,
-                                          ordersResourceButtons, Data_CityInfo_Resource.numAvailableFoods,
-                                          &resourceFocusButtonId))
+                                            ordersResourceButtons, Data_CityInfo_Resource.numAvailableFoods,
+                                            &resourceFocusButtonId))
     {
         return;
     }
     Widget::Button::handleCustomButtons(c->xOffset + 80, 436,
-                                      granaryOrderButtons, 1, &ordersFocusButtonId);
+                                        granaryOrderButtons, 1, &ordersFocusButtonId);
 }
 
 void UI_BuildingInfo_drawWarehouse(BuildingInfoContext *c)
 {
     c->helpId = 4;
     PLAY_SOUND("wavs/warehouse.wav");
-    Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
+    Widget::Panel::drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
     Widget_GameText_drawCentered(99, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
     struct Data_Building *b = &Data_Buildings[c->buildingId];
     if (!c->hasRoadAccess)
@@ -322,7 +322,7 @@ void UI_BuildingInfo_drawWarehouse(BuildingInfoContext *c)
                                  x + 24 + width, y + 7, FONT_SMALL_PLAIN);
         }
     }
-    Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 168, c->widthBlocks - 2, 5);
+    Widget::Panel::drawInnerPanel(c->xOffset + 16, c->yOffset + 168, c->widthBlocks - 2, 5);
     UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 173);
     // cartpusher state
     int cartpusher = b->figureId;
@@ -360,7 +360,7 @@ void UI_BuildingInfo_drawWarehouse(BuildingInfoContext *c)
 
 void UI_BuildingInfo_drawWarehouseForeground(BuildingInfoContext *c)
 {
-    Widget_Panel_drawButtonBorder(
+    Widget::Panel::drawButtonBorder(
         c->xOffset + 80, c->yOffset + 16 * c->heightBlocks - 34,
         16 * (c->widthBlocks - 10), 20, focusButtonId == 1 ? 1 : 0);
     Widget_GameText_drawCentered(99, 2,
@@ -378,15 +378,15 @@ void UI_BuildingInfo_handleMouseWarehouse(BuildingInfoContext *c)
 void UI_BuildingInfo_drawWarehouseOrders(BuildingInfoContext *c)
 {
     c->helpId = 4;
-    Widget_Panel_drawOuterPanel(c->xOffset, 32, 29, 28);
+    Widget::Panel::drawOuterPanel(c->xOffset, 32, 29, 28);
     Widget_GameText_drawCentered(99, 3,
                                  c->xOffset, 42, 16 * c->widthBlocks, FONT_LARGE_BLACK);
-    Widget_Panel_drawInnerPanel(c->xOffset + 16, 74, c->widthBlocks - 2, 21);
+    Widget::Panel::drawInnerPanel(c->xOffset + 16, 74, c->widthBlocks - 2, 21);
 }
 
 void UI_BuildingInfo_drawWarehouseOrdersForeground(BuildingInfoContext *c)
 {
-    Widget_Panel_drawButtonBorder(
+    Widget::Panel::drawButtonBorder(
         c->xOffset + 80, 436, 16 * (c->widthBlocks - 10), 20,
         ordersFocusButtonId == 1 ? 1 : 0);
     const building_storage *storage = building_storage_get(Data_Buildings[c->buildingId].storage_id);
@@ -404,7 +404,7 @@ void UI_BuildingInfo_drawWarehouseOrdersForeground(BuildingInfoContext *c)
     }
 
     // trade center
-    Widget_Panel_drawButtonBorder(
+    Widget::Panel::drawButtonBorder(
         c->xOffset + 80, 414, 16 * (c->widthBlocks - 10), 20,
         ordersFocusButtonId == 2 ? 1 : 0);
     int isTradeCenter = c->buildingId == Data_CityInfo.buildingTradeCenterBuildingId;
@@ -420,8 +420,8 @@ void UI_BuildingInfo_drawWarehouseOrdersForeground(BuildingInfoContext *c)
         Graphics_drawImage(graphicId, c->xOffset + 408, 78 + 22 * i);
         Widget_GameText_draw(23, resourceId,
                              c->xOffset + 72, 82 + 22 * i, FONT_NORMAL_WHITE);
-        Widget_Panel_drawButtonBorder(c->xOffset + 180, 78 + 22 * i, 210, 22,
-                                      resourceFocusButtonId == i + 1);
+        Widget::Panel::drawButtonBorder(c->xOffset + 180, 78 + 22 * i, 210, 22,
+                                        resourceFocusButtonId == i + 1);
 
         int state = storage->resource_state[resourceId];
         if (state == BUILDING_STORAGE_STATE_ACCEPTING)
@@ -445,13 +445,13 @@ void UI_BuildingInfo_handleMouseWarehouseOrders(BuildingInfoContext *c)
 {
     buildingId = c->buildingId;
     if (Widget::Button::handleCustomButtons(c->xOffset + 180, 78,
-                                          ordersResourceButtons, Data_CityInfo_Resource.numAvailableResources,
-                                          &resourceFocusButtonId))
+                                            ordersResourceButtons, Data_CityInfo_Resource.numAvailableResources,
+                                            &resourceFocusButtonId))
     {
         return;
     }
     Widget::Button::handleCustomButtons(c->xOffset + 80, 436,
-                                      warehouseOrderButtons, 2, &ordersFocusButtonId);
+                                        warehouseOrderButtons, 2, &ordersFocusButtonId);
 }
 
 static void toggleResourceState(int index, int param2)

@@ -25,7 +25,7 @@ void UI_DifficultyOptions_drawForeground()
     int baseOffsetX = Data_Screen.offset640x480.x;
     int baseOffsetY = Data_Screen.offset640x480.y;
 
-    Widget_Panel_drawOuterPanel(
+    Widget::Panel::drawOuterPanel(
         baseOffsetX + 48, baseOffsetY + 80,
         24, 12
     );

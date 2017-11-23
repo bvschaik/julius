@@ -47,14 +47,14 @@ void UI_HoldFestivalDialog_drawBackground()
     int baseOffsetX = Data_Screen.offset640x480.x;
     int baseOffsetY = Data_Screen.offset640x480.y;
 
-    Widget_Panel_drawOuterPanel(baseOffsetX + 48, baseOffsetY + 48, 34, 20);
+    Widget::Panel::drawOuterPanel(baseOffsetX + 48, baseOffsetY + 48, 34, 20);
     Widget_GameText_drawCentered(58, 25 + Data_CityInfo.festivalGod,
                                  baseOffsetX + 48, baseOffsetY + 60, 544, FONT_LARGE_BLACK);
     for (int god = 0; god < 5; god++)
     {
         if (god == Data_CityInfo.festivalGod)
         {
-            Widget_Panel_drawButtonBorder(
+            Widget::Panel::drawButtonBorder(
                 baseOffsetX + 100 * god + 66,
                 baseOffsetY + 92, 90, 100, 1);
             Graphics_drawImage(image_group(ID_Graphic_PanelWindows) + god + 21,
@@ -86,7 +86,7 @@ static void drawButtons()
     int baseOffsetY = Data_Screen.offset640x480.y;
 
     // small festival
-    Widget_Panel_drawButtonBorder(
+    Widget::Panel::drawButtonBorder(
         baseOffsetX + 102, baseOffsetY + 216,
         430, 26, focusButtonId == 6);
     width = Widget_GameText_draw(58, 31,
@@ -95,7 +95,7 @@ static void drawButtons()
             baseOffsetX + 110 + width, baseOffsetY + 224, FONT_NORMAL_BLACK);
 
     // large festival
-    Widget_Panel_drawButtonBorder(
+    Widget::Panel::drawButtonBorder(
         baseOffsetX + 102, baseOffsetY + 246,
         430, 26, focusButtonId == 7);
     width = Widget_GameText_draw(58, 32,
@@ -104,7 +104,7 @@ static void drawButtons()
             baseOffsetX + 110 + width, baseOffsetY + 254, FONT_NORMAL_BLACK);
 
     // grand festival
-    Widget_Panel_drawButtonBorder(
+    Widget::Panel::drawButtonBorder(
         baseOffsetX + 102, baseOffsetY + 276,
         430, 26, focusButtonId == 8);
     width = Widget_GameText_draw(58, 33,

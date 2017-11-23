@@ -2,14 +2,16 @@
 #include "graphics.h"
 #include <sound>
 #include "terrain.h"
-#include "widget.h"
+
+#include <ui>
+
 #include "data/building.hpp"
 
 void UI_BuildingInfo_drawAqueduct(BuildingInfoContext *c)
 {
     c->helpId = 60;
     PLAY_SOUND("wavs/aquaduct.wav");
-    Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
+    Widget::Panel::drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
     Widget_GameText_drawCentered(141, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
     if (c->aqueductHasWater)
     {
@@ -29,7 +31,7 @@ void UI_BuildingInfo_drawReservoir(BuildingInfoContext *c)
 {
     c->helpId = 59;
     PLAY_SOUND("wavs/resevoir.wav");
-    Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
+    Widget::Panel::drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
     Widget_GameText_drawCentered(107, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
     Widget_GameText_drawCentered(13, 1,
                                  c->xOffset, c->yOffset + 16 * c->heightBlocks - 24,
@@ -52,7 +54,7 @@ void UI_BuildingInfo_drawFountain(BuildingInfoContext *c)
 {
     c->helpId = 61;
     PLAY_SOUND("wavs/fountain.wav");
-    Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
+    Widget::Panel::drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
     Widget_GameText_drawCentered(108, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
     int textId;
     if (Data_Buildings[c->buildingId].hasWaterAccess)
@@ -83,7 +85,7 @@ void UI_BuildingInfo_drawWell(BuildingInfoContext *c)
 {
     c->helpId = 62;
     PLAY_SOUND("wavs/well.wav");
-    Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
+    Widget::Panel::drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
     Widget_GameText_drawCentered(109, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
     int fountainAccess = Terrain_allHousesWithinWellRadiusHaveFountain(c->buildingId, 2);
     int textId = 0;

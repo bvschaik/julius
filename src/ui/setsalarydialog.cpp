@@ -39,13 +39,13 @@ void UI_SetSalaryDialog_drawForeground()
     int baseOffsetX = Data_Screen.offset640x480.x;
     int baseOffsetY = Data_Screen.offset640x480.y;
 
-    Widget_Panel_drawOuterPanel(baseOffsetX + 128, baseOffsetY + 32, 24, 25);
+    Widget::Panel::drawOuterPanel(baseOffsetX + 128, baseOffsetY + 32, 24, 25);
     Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + 16,
                        baseOffsetX + 144, baseOffsetY + 48);
     Widget_GameText_drawCentered(52, 15,
                                  baseOffsetX + 144, baseOffsetY + 48, 368, FONT_LARGE_BLACK);
 
-    Widget_Panel_drawInnerPanel(baseOffsetX + 144, baseOffsetY + 80, 22, 15);
+    Widget::Panel::drawInnerPanel(baseOffsetX + 144, baseOffsetY + 80, 22, 15);
 
     for (int rank = 0; rank < 11; rank++)
     {
@@ -74,7 +74,7 @@ void UI_SetSalaryDialog_drawForeground()
         Widget_GameText_drawMultiline(52, 77,
                                       baseOffsetX + 152, baseOffsetY + 336, 336, FONT_NORMAL_BLACK);
     }
-    Widget_Panel_drawButtonBorder(baseOffsetX + 240, baseOffsetY + 395,
+    Widget::Panel::drawButtonBorder(baseOffsetX + 240, baseOffsetY + 395,
                                   160, 20, focusButtonId == 1);
     Widget_GameText_drawCentered(13, 4, baseOffsetX + 176, baseOffsetY + 400, 288, FONT_NORMAL_BLACK);
 }

@@ -375,7 +375,7 @@ static void drawPanelInfoCity(const empire_object *object)
             }
             goodOffset += 32;
         }
-        Widget_Panel_drawButtonBorder(xOffset + 50, yOffset + 68, 400, 20, data.selectedButton);
+        Widget::Panel::drawButtonBorder(xOffset + 50, yOffset + 68, 400, 20, data.selectedButton);
         goodOffset = Widget_GameText_drawNumberWithDescription(8, 0, city->cost_to_open,
                      xOffset + 60, yOffset + 73, FONT_NORMAL_GREEN);
         Widget_GameText_draw(47, 6, xOffset + goodOffset + 60, yOffset + 73, FONT_NORMAL_GREEN);
@@ -441,7 +441,7 @@ static void drawPanelButtons(const empire_city *city)
     {
         if (city->type == EMPIRE_CITY_TRADE && !city->is_open)
         {
-            Widget_Panel_drawButtonBorder((data.xMin + data.xMax - 500) / 2 + 50, data.yMax - 40, 400, 20, data.selectedButton);
+            Widget::Panel::drawButtonBorder((data.xMin + data.xMax - 500) / 2 + 50, data.yMax - 40, 400, 20, data.selectedButton);
         }
     }
 }
@@ -735,7 +735,7 @@ void UI_TradeOpenedDialog_drawBackground()
 {
     int xOffset = Data_Screen.offset640x480.x;
     int yOffset = Data_Screen.offset640x480.y;
-    Widget_Panel_drawOuterPanel(xOffset + 80, yOffset + 64, 30, 14);
+    Widget::Panel::drawOuterPanel(xOffset + 80, yOffset + 64, 30, 14);
     Widget_GameText_drawCentered(142, 0, xOffset + 80, yOffset + 80, 480, FONT_LARGE_BLACK);
     if (empire_city_get(data.selectedCity)->is_sea_trade)
     {

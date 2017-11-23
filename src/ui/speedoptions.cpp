@@ -43,16 +43,16 @@ void UI_SpeedOptions_drawForeground()
     int baseOffsetX = Data_Screen.offset640x480.x;
     int baseOffsetY = Data_Screen.offset640x480.y;
 
-    Widget_Panel_drawOuterPanel(
+    Widget::Panel::drawOuterPanel(
         baseOffsetX + 96, baseOffsetY + 80,
         18, 14
     );
 
-    Widget_Panel_drawSmallLabelButton(
+    Widget::Panel::drawSmallLabelButton(
         baseOffsetX + 144, baseOffsetY + 232,
         12, focusButtonId == 1 ? 1 : 2
     );
-    Widget_Panel_drawSmallLabelButton(
+    Widget::Panel::drawSmallLabelButton(
         baseOffsetX + 144, baseOffsetY + 262,
         12, focusButtonId == 2 ? 1 : 2
     );

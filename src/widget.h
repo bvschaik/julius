@@ -65,18 +65,4 @@ int Widget_RichText_getScrollPosition();
 int Widget_RichText_handleScrollbar(const mouse *m);
 int Widget_RichText_init(const char *str, int xText, int yText, int widthBlocks, int heightBlocks, int adjustWidthOnNoScroll);
 
-void Widget_Panel_drawOuterPanel(int xOffset, int yOffset, int widthInBlocks, int heightInBlocks);
-
-void Widget_Panel_drawUnborderedPanel(int xOffset, int yOffset, int widthInBlocks, int heightInBlocks);
-
-void Widget_Panel_drawInnerPanel(int xOffset, int yOffset, int widthInBlocks, int heightInBlocks);
-
-void Widget_Panel_drawInnerPanelBottom(int xOffset, int yOffset, int widthInBlocks);
-
-void Widget_Panel_drawButtonBorder(int xOffset, int yOffset, int widthInPixels, int heightInPixels, int hasFocus);
-
-void Widget_Panel_drawSmallLabelButton(int xOffset, int yOffset, int widthInBlocks, int type);
-
-void Widget_Panel_drawLargeLabelButton(int xOffset, int yOffset, int widthInBlocks, int type);
-
 #endif

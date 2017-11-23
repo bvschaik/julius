@@ -59,32 +59,32 @@ void UI_SoundOptions_drawForeground()
     int baseOffsetX = Data_Screen.offset640x480.x;
     int baseOffsetY = Data_Screen.offset640x480.y;
 
-    Widget_Panel_drawOuterPanel(
+    Widget::Panel::drawOuterPanel(
         baseOffsetX + 48, baseOffsetY + 80,
         24, 18
     );
 
-    Widget_Panel_drawSmallLabelButton(
+    Widget::Panel::drawSmallLabelButton(
         baseOffsetX + 64, baseOffsetY + 162,
         14, focusButtonId == 1 ? 1 : 2
     );
-    Widget_Panel_drawSmallLabelButton(
+    Widget::Panel::drawSmallLabelButton(
         baseOffsetX + 64, baseOffsetY + 192,
         14, focusButtonId == 2 ? 1 : 2
     );
-    Widget_Panel_drawSmallLabelButton(
+    Widget::Panel::drawSmallLabelButton(
         baseOffsetX + 64, baseOffsetY + 222,
         14, focusButtonId == 3 ? 1 : 2
     );
-    Widget_Panel_drawSmallLabelButton(
+    Widget::Panel::drawSmallLabelButton(
         baseOffsetX + 64, baseOffsetY + 252,
         14, focusButtonId == 4 ? 1 : 2
     );
-    Widget_Panel_drawSmallLabelButton(
+    Widget::Panel::drawSmallLabelButton(
         baseOffsetX + 144, baseOffsetY + 296,
         12, focusButtonId == 5 ? 1 : 2
     );
-    Widget_Panel_drawSmallLabelButton(
+    Widget::Panel::drawSmallLabelButton(
         baseOffsetX + 144, baseOffsetY + 326,
         12, focusButtonId == 6 ? 1 : 2
     );

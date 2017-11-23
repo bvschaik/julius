@@ -28,7 +28,7 @@ void UI_Advisor_Population_drawBackground(int *advisorHeight)
     int baseOffsetY = Data_Screen.offset640x480.y;
 
     *advisorHeight = 27;
-    Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
+    Widget::Panel::drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
     Graphics_drawImage(image_group(ID_Graphic_AdvisorIcons) + 5, baseOffsetX + 10, baseOffsetY + 10);
 
     // Title: depends on big graph shown
@@ -114,7 +114,7 @@ void UI_Advisor_Population_drawBackground(int *advisorHeight)
     botGraph(0, baseOffsetX + 505, baseOffsetY + 163);
 
     // food/migration info panel
-    Widget_Panel_drawInnerPanel(baseOffsetX + 48, baseOffsetY + 336, 34, 5);
+    Widget::Panel::drawInnerPanel(baseOffsetX + 48, baseOffsetY + 336, 34, 5);
     int graphicId = image_group(ID_Graphic_Bullet);
     int width;
     Graphics_drawImage(graphicId, baseOffsetX + 56, baseOffsetY + 344);
@@ -227,18 +227,18 @@ void UI_Advisor_Population_drawForeground()
 
     if (focusButtonId == 0)
     {
-        Widget_Panel_drawButtonBorder(baseOffsetX + 501, baseOffsetY + 60, 106, 57, 0);
-        Widget_Panel_drawButtonBorder(baseOffsetX + 501, baseOffsetY + 160, 106, 57, 0);
+        Widget::Panel::drawButtonBorder(baseOffsetX + 501, baseOffsetY + 60, 106, 57, 0);
+        Widget::Panel::drawButtonBorder(baseOffsetX + 501, baseOffsetY + 160, 106, 57, 0);
     }
     else if (focusButtonId == 1)
     {
-        Widget_Panel_drawButtonBorder(baseOffsetX + 501, baseOffsetY + 60, 106, 57, 1);
-        Widget_Panel_drawButtonBorder(baseOffsetX + 501, baseOffsetY + 160, 106, 57, 0);
+        Widget::Panel::drawButtonBorder(baseOffsetX + 501, baseOffsetY + 60, 106, 57, 1);
+        Widget::Panel::drawButtonBorder(baseOffsetX + 501, baseOffsetY + 160, 106, 57, 0);
     }
     else if (focusButtonId == 2)
     {
-        Widget_Panel_drawButtonBorder(baseOffsetX + 501, baseOffsetY + 60, 106, 57, 0);
-        Widget_Panel_drawButtonBorder(baseOffsetX + 501, baseOffsetY + 160, 106, 57, 1);
+        Widget::Panel::drawButtonBorder(baseOffsetX + 501, baseOffsetY + 60, 106, 57, 0);
+        Widget::Panel::drawButtonBorder(baseOffsetX + 501, baseOffsetY + 160, 106, 57, 1);
     }
 }
 

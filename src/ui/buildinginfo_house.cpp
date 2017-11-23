@@ -16,7 +16,7 @@
 static void drawVacantLot(BuildingInfoContext *c)
 {
     UI_BuildingInfo_drawFigureImagesLocal(c);
-    Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset,
+    Widget::Panel::drawOuterPanel(c->xOffset, c->yOffset,
                                 c->widthBlocks, c->heightBlocks);
     Widget_GameText_drawCentered(128, 0, c->xOffset, c->yOffset + 8,
                                  16 * c->widthBlocks, FONT_LARGE_BLACK);
@@ -121,9 +121,9 @@ void UI_BuildingInfo_drawHouse(BuildingInfoContext *c)
         return;
     }
     int level = b->type - 10;
-    Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
+    Widget::Panel::drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
     Widget_GameText_drawCentered(29, level, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
-    Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 148, c->widthBlocks - 2, 10);
+    Widget::Panel::drawInnerPanel(c->xOffset + 16, c->yOffset + 148, c->widthBlocks - 2, 10);
 
     drawPopulationInfo(c, c->yOffset + 154);
     drawTaxInfo(c, c->yOffset + 194);

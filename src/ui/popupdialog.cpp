@@ -42,7 +42,7 @@ void UI_PopupDialog_drawBackground()
 {
     int xOffset = Data_Screen.offset640x480.x + 80;
     int yOffset = Data_Screen.offset640x480.y + 80;
-    Widget_Panel_drawOuterPanel(xOffset, yOffset, 30, 10);
+    Widget::Panel::drawOuterPanel(xOffset, yOffset, 30, 10);
     Widget_GameText_drawCentered(GROUP, data.msgId, xOffset, yOffset + 20, 480, FONT_LARGE_BLACK);
     if (Widget_GameText_getWidth(GROUP, data.msgId + 1, FONT_NORMAL_BLACK) >= 420)
     {

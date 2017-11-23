@@ -82,9 +82,9 @@ void UI_FileDialog_drawForeground()
     int baseOffsetX = Data_Screen.offset640x480.x;
     int baseOffsetY = Data_Screen.offset640x480.y;
 
-    Widget_Panel_drawOuterPanel(baseOffsetX + 128, baseOffsetY + 40, 24, 21);
-    Widget_Panel_drawInnerPanel(baseOffsetX + 144, baseOffsetY + 80, 20, 2);
-    Widget_Panel_drawInnerPanel(baseOffsetX + 144, baseOffsetY + 120, 20, 13);
+    Widget::Panel::drawOuterPanel(baseOffsetX + 128, baseOffsetY + 40, 24, 21);
+    Widget::Panel::drawInnerPanel(baseOffsetX + 144, baseOffsetY + 80, 20, 2);
+    Widget::Panel::drawInnerPanel(baseOffsetX + 144, baseOffsetY + 120, 20, 13);
 
     // title
     if (messageNotExistTimeUntil && time_get_millis() < messageNotExistTimeUntil)

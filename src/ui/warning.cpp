@@ -87,7 +87,7 @@ void UI_Warning_draw()
             topOffset += 70;
         }
         int center = warnings[i].center;
-        Widget_Panel_drawSmallLabelButton(
+        Widget::Panel::drawSmallLabelButton(
             center - warnings[i].boxWidth / 2 + 1, topOffset,
             warnings[i].boxWidth / 16 + 1, 1);
         if (warnings[i].boxWidth < 460)

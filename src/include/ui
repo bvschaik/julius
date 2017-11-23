@@ -16,5 +16,6 @@
 #include "uicore/widget_text.h"
 #include "uicore/widget_menu.h"
 #include "uicore/widget_button.h"
+#include "uicore/widget_panel.h"
 
 #endif //_JULIUS_INCLUDE_UI_H_

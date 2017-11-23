@@ -186,7 +186,7 @@ static void drawMenuButtons()
     for (int i = 0; i < menu.numItems; i++)
     {
         itemIndex = SidebarMenu_getNextBuildingItemIndex(menu.selectedSubmenu, itemIndex);
-        Widget_Panel_drawSmallLabelButton(xOffset - 266, menu.yOffset + 110 + 24 * i,
+        Widget::Panel::drawSmallLabelButton(xOffset - 266, menu.yOffset + 110 + 24 * i,
                                           16, buildMenuFocusButtonId == i + 1 ? 1 : 2);
         int buildingType = SidebarMenu_getBuildingType(menu.selectedSubmenu, itemIndex);
         Widget_GameText_drawCentered(28, buildingType,

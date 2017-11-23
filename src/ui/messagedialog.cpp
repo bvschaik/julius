@@ -184,7 +184,7 @@ static void drawDialogNormal()
     }
     int someOffset = (msg->type == TYPE_MANUAL) ? 48 : 32;
     data.xText = data.x + 16;
-    Widget_Panel_drawOuterPanel(data.x, data.y, msg->width_blocks, msg->height_blocks);
+    Widget::Panel::drawOuterPanel(data.x, data.y, msg->width_blocks, msg->height_blocks);
     // title
     if (msg->title.x)
     {
@@ -252,7 +252,7 @@ static void drawDialogNormal()
                            data.xText, data.yText, msg->width_blocks - 4, data.textHeightBlocks, 1);
 
     // content!
-    Widget_Panel_drawInnerPanel(data.xText, data.yText, data.textWidthBlocks, data.textHeightBlocks);
+    Widget::Panel::drawInnerPanel(data.xText, data.yText, data.textWidthBlocks, data.textHeightBlocks);
     Graphics_setClipRectangle(data.xText + 3, data.yText + 3,
                               16 * data.textWidthBlocks - 6, 16 * data.textHeightBlocks - 6);
     Widget_RichText_clearLinks();
@@ -282,11 +282,11 @@ static void drawDialogVideo()
         UI_City_drawBackground();
         UI_City_drawForeground();
     }
-    Widget_Panel_drawOuterPanel(data.x, data.y, 26, 28);
+    Widget::Panel::drawOuterPanel(data.x, data.y, 26, 28);
     Graphics_drawRect(data.x + 7, data.y + 7, 402, 294, COLOR_BLACK);
     Widget_RichText_clearLinks();
 
-    Widget_Panel_drawInnerPanel(data.x + 8, data.y + 308, 25, 6);
+    Widget::Panel::drawInnerPanel(data.x + 8, data.y + 308, 25, 6);
     Widget::Text::drawCentered(msg->title.text,
                                data.x + 8, data.y + 414, 400, FONT_NORMAL_BLACK, 0);
 

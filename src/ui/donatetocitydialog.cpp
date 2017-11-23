@@ -52,13 +52,13 @@ void UI_DonateToCityDialog_drawBackground()
     int baseOffsetX = Data_Screen.offset640x480.x;
     int baseOffsetY = Data_Screen.offset640x480.y;
 
-    Widget_Panel_drawOuterPanel(baseOffsetX + 64, baseOffsetY + 160, 32, 10);
+    Widget::Panel::drawOuterPanel(baseOffsetX + 64, baseOffsetY + 160, 32, 10);
     Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + RESOURCE_DENARII,
                        baseOffsetX + 96, baseOffsetY + 176);
     Widget_GameText_drawCentered(52, 16,
                                  baseOffsetX + 80, baseOffsetY + 176, 496, FONT_LARGE_BLACK);
 
-    Widget_Panel_drawInnerPanel(baseOffsetX + 112, baseOffsetY + 208, 26, 4);
+    Widget::Panel::drawInnerPanel(baseOffsetX + 112, baseOffsetY + 208, 26, 4);
 
     Widget::Text::drawNumberCentered(0, baseOffsetX + 124, baseOffsetY + 221, 64, FONT_NORMAL_WHITE);
     Widget::Text::drawNumberCentered(500, baseOffsetX + 204, baseOffsetY + 221, 64, FONT_NORMAL_WHITE);
@@ -81,14 +81,14 @@ void UI_DonateToCityDialog_drawForeground()
     int baseOffsetX = Data_Screen.offset640x480.x;
     int baseOffsetY = Data_Screen.offset640x480.y;
 
-    Widget_Panel_drawButtonBorder(baseOffsetX + 128, baseOffsetY + 216, 64, 20, focusButtonId == 3);
-    Widget_Panel_drawButtonBorder(baseOffsetX + 208, baseOffsetY + 216, 64, 20, focusButtonId == 4);
-    Widget_Panel_drawButtonBorder(baseOffsetX + 288, baseOffsetY + 216, 64, 20, focusButtonId == 5);
-    Widget_Panel_drawButtonBorder(baseOffsetX + 368, baseOffsetY + 216, 64, 20, focusButtonId == 6);
-    Widget_Panel_drawButtonBorder(baseOffsetX + 448, baseOffsetY + 216, 64, 20, focusButtonId == 7);
+    Widget::Panel::drawButtonBorder(baseOffsetX + 128, baseOffsetY + 216, 64, 20, focusButtonId == 3);
+    Widget::Panel::drawButtonBorder(baseOffsetX + 208, baseOffsetY + 216, 64, 20, focusButtonId == 4);
+    Widget::Panel::drawButtonBorder(baseOffsetX + 288, baseOffsetY + 216, 64, 20, focusButtonId == 5);
+    Widget::Panel::drawButtonBorder(baseOffsetX + 368, baseOffsetY + 216, 64, 20, focusButtonId == 6);
+    Widget::Panel::drawButtonBorder(baseOffsetX + 448, baseOffsetY + 216, 64, 20, focusButtonId == 7);
 
-    Widget_Panel_drawButtonBorder(baseOffsetX + 336, baseOffsetY + 283, 160, 20, focusButtonId == 1);
-    Widget_Panel_drawButtonBorder(baseOffsetX + 144, baseOffsetY + 283, 160, 20, focusButtonId == 2);
+    Widget::Panel::drawButtonBorder(baseOffsetX + 336, baseOffsetY + 283, 160, 20, focusButtonId == 1);
+    Widget::Panel::drawButtonBorder(baseOffsetX + 144, baseOffsetY + 283, 160, 20, focusButtonId == 2);
 
     Widget::Button::drawArrowButtons(baseOffsetX, baseOffsetY, arrowButtons, 2);
 }

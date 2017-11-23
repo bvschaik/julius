@@ -45,7 +45,7 @@ void UI_Advisor_Military_drawBackground(int *advisorHeight)
     int baseOffsetY = Data_Screen.offset640x480.y;
 
     *advisorHeight = 26;
-    Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
+    Widget::Panel::drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
     Graphics_drawImage(image_group(ID_Graphic_AdvisorIcons) + 1, baseOffsetX + 10, baseOffsetY + 10);
     Widget_GameText_draw(51, 0, baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK);
 
@@ -118,7 +118,7 @@ void UI_Advisor_Military_drawBackground(int *advisorHeight)
         Widget_GameText_draw(51, distant_battle_text_id, baseOffsetX + 120, baseOffsetY + 388, FONT_NORMAL_BLACK);
     }
 
-    Widget_Panel_drawInnerPanel(baseOffsetX + 32, baseOffsetY + 70, 36, 17);
+    Widget::Panel::drawInnerPanel(baseOffsetX + 32, baseOffsetY + 70, 36, 17);
     if (numLegions <= 0)
     {
         Widget_GameText_drawMultiline(51, 16, baseOffsetX + 64, baseOffsetY + 200, 496, FONT_NORMAL_GREEN);
@@ -129,7 +129,7 @@ void UI_Advisor_Military_drawBackground(int *advisorHeight)
     {
         int formationId = formation_for_legion(i + 1);
         const formation *m = formation_get(formationId);
-        Widget_Panel_drawButtonBorder(baseOffsetX + 38, baseOffsetY + 77 + 44 * i, 560, 40, 0);
+        Widget::Panel::drawButtonBorder(baseOffsetX + 38, baseOffsetY + 77 + 44 * i, 560, 40, 0);
         Graphics_drawImage(image_group(ID_Graphic_FortStandardIcons) + m->legion_id,
                            baseOffsetX + 48, baseOffsetY + 82 + 44 * i);
         Widget_GameText_draw(138, m->legion_id,
@@ -152,10 +152,10 @@ void UI_Advisor_Military_drawBackground(int *advisorHeight)
                                      baseOffsetX + 240, baseOffsetY + 91 + 44 * i, 150, FONT_NORMAL_GREEN);
 
         int graphicId = image_group(ID_Graphic_FortIcons);
-        Widget_Panel_drawButtonBorder(baseOffsetX + 400, baseOffsetY + 83 + 44 * i, 30, 30, 0);
+        Widget::Panel::drawButtonBorder(baseOffsetX + 400, baseOffsetY + 83 + 44 * i, 30, 30, 0);
         Graphics_drawImage(graphicId, baseOffsetX + 403, baseOffsetY + 86 + 44 * i);
 
-        Widget_Panel_drawButtonBorder(baseOffsetX + 480, baseOffsetY + 83 + 44 * i, 30, 30, 0);
+        Widget::Panel::drawButtonBorder(baseOffsetX + 480, baseOffsetY + 83 + 44 * i, 30, 30, 0);
         if (m->is_at_fort)
         {
             Graphics_drawImage(graphicId + 2, baseOffsetX + 483, baseOffsetY + 86 + 44 * i);
@@ -165,7 +165,7 @@ void UI_Advisor_Military_drawBackground(int *advisorHeight)
             Graphics_drawImage(graphicId + 1, baseOffsetX + 483, baseOffsetY + 86 + 44 * i);
         }
 
-        Widget_Panel_drawButtonBorder(baseOffsetX + 560, baseOffsetY + 83 + 44 * i, 30, 30, 0);
+        Widget::Panel::drawButtonBorder(baseOffsetX + 560, baseOffsetY + 83 + 44 * i, 30, 30, 0);
         if (m->empire_service)
         {
             Graphics_drawImage(graphicId + 3, baseOffsetX + 563, baseOffsetY + 86 + 44 * i);
@@ -185,12 +185,12 @@ void UI_Advisor_Military_drawForeground()
     numLegions = formation_get_num_legions();
     for (int i = 0; i < numLegions; i++)
     {
-        Widget_Panel_drawButtonBorder(baseOffsetX + 400, baseOffsetY + 83 + 44 * i, 30, 30,
-                                      focusButtonId == 3 * i + 1);
-        Widget_Panel_drawButtonBorder(baseOffsetX + 480, baseOffsetY + 83 + 44 * i, 30, 30,
-                                      focusButtonId == 3 * i + 2);
-        Widget_Panel_drawButtonBorder(baseOffsetX + 560, baseOffsetY + 83 + 44 * i, 30, 30,
-                                      focusButtonId == 3 * i + 3);
+        Widget::Panel::drawButtonBorder(baseOffsetX + 400, baseOffsetY + 83 + 44 * i, 30, 30,
+                                        focusButtonId == 3 * i + 1);
+        Widget::Panel::drawButtonBorder(baseOffsetX + 480, baseOffsetY + 83 + 44 * i, 30, 30,
+                                        focusButtonId == 3 * i + 2);
+        Widget::Panel::drawButtonBorder(baseOffsetX + 560, baseOffsetY + 83 + 44 * i, 30, 30,
+                                        focusButtonId == 3 * i + 3);
     }
 }
 

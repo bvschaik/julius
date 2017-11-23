@@ -1,7 +1,8 @@
 #include "widget_menu.h"
 #include "graphics.h"
 #include "data/constants.hpp"
-#include "widget.h"
+
+#include <ui>
 
 int getMenuItem(const mouse *m, MenuBarItem *menu)
 {
@@ -49,8 +50,8 @@ void Widget::Menu::drawMenuBar(MenuBarItem *items, int numItems)
 
 void Widget::Menu::drawSubMenu(MenuBarItem *menu, int focusSubMenu)
 {
-    Widget_Panel_drawUnborderedPanel(menu->xStart, menu->yStart + 18,
-                                     10, (20 + 20 * menu->numItems) / 16);
+    Widget::Panel::drawUnborderedPanel(menu->xStart, menu->yStart + 18,
+                                       10, (20 + 20 * menu->numItems) / 16);
     for (int i = 0; i < menu->numItems; i++)
     {
         MenuItem *sub = &menu->items[i];

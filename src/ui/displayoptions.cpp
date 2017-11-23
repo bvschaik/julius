@@ -30,28 +30,28 @@ void UI_DisplayOptions_drawForeground()
 {
     int baseOffsetX = Data_Screen.offset640x480.x;
     int baseOffsetY = Data_Screen.offset640x480.y;
-    Widget_Panel_drawOuterPanel(
+    Widget::Panel::drawOuterPanel(
         baseOffsetX + 96, baseOffsetY + 80,
         18, 12
     );
 
-    Widget_Panel_drawSmallLabelButton(
+    Widget::Panel::drawSmallLabelButton(
         baseOffsetX + 128, baseOffsetY + 136,
         14, focusButtonId == 1 ? 1 : 2
     );
-    Widget_Panel_drawSmallLabelButton(
+    Widget::Panel::drawSmallLabelButton(
         baseOffsetX + 128, baseOffsetY + 160,
         14, focusButtonId == 2 ? 1 : 2
     );
-    Widget_Panel_drawSmallLabelButton(
+    Widget::Panel::drawSmallLabelButton(
         baseOffsetX + 128, baseOffsetY + 184,
         14, focusButtonId == 3 ? 1 : 2
     );
-    Widget_Panel_drawSmallLabelButton(
+    Widget::Panel::drawSmallLabelButton(
         baseOffsetX + 128, baseOffsetY + 208,
         14, focusButtonId == 4 ? 1 : 2
     );
-    Widget_Panel_drawSmallLabelButton(
+    Widget::Panel::drawSmallLabelButton(
         baseOffsetX + 128, baseOffsetY + 232,
         14, focusButtonId == 5 ? 1 : 2
     );

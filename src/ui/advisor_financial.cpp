@@ -28,12 +28,12 @@ void UI_Advisor_Financial_drawBackground(int *advisorHeight)
     int baseOffsetY = Data_Screen.offset640x480.y;
 
     *advisorHeight = 26;
-    Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
+    Widget::Panel::drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
     Graphics_drawImage(image_group(ID_Graphic_AdvisorIcons) + 10, baseOffsetX + 10, baseOffsetY + 10);
 
     Widget_GameText_draw(60, 0, baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK);
-    Widget_Panel_drawInnerPanel(baseOffsetX + 64, baseOffsetY + 48, 34, 5);
-    //Widget_Panel_drawInnerPanelBottom(baseOffsetX + 64, baseOffsetY + 104, 34);
+    Widget::Panel::drawInnerPanel(baseOffsetX + 64, baseOffsetY + 48, 34, 5);
+    //Widget::Panel::drawInnerPanelBottom(baseOffsetX + 64, baseOffsetY + 104, 34);
 
     int width;
     if (Data_CityInfo.treasury < 0)

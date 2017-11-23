@@ -13,7 +13,7 @@ static void drawFarm(BuildingInfoContext *c, int helpId, const char *soundFile, 
     c->helpId = helpId;
     PLAY_SOUND(soundFile);
 
-    Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
+    Widget::Panel::drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
     Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + resourceId,
                        c->xOffset + 10, c->yOffset + 10);
     Widget_GameText_drawCentered(groupId, 0, c->xOffset, c->yOffset + 10,
@@ -62,7 +62,7 @@ static void drawFarm(BuildingInfoContext *c, int helpId, const char *soundFile, 
         DRAW_DESC_AT(70, groupId, 10);
     }
 
-    Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
+    Widget::Panel::drawInnerPanel(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
     UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 142);
     Widget_GameText_drawMultiline(groupId, 1,
                                   c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 113,
@@ -104,7 +104,7 @@ static void drawRawMaterial(BuildingInfoContext *c, int helpId, const char *soun
     c->helpId = helpId;
     PLAY_SOUND(soundFile);
 
-    Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
+    Widget::Panel::drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
     Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + resourceId,
                        c->xOffset + 10, c->yOffset + 10);
     Widget_GameText_drawCentered(groupId, 0, c->xOffset, c->yOffset + 10,
@@ -149,7 +149,7 @@ static void drawRawMaterial(BuildingInfoContext *c, int helpId, const char *soun
         DRAW_DESC_AT(70, groupId, 10);
     }
 
-    Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
+    Widget::Panel::drawInnerPanel(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
     UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 142);
     Widget_GameText_drawMultiline(groupId, 1,
                                   c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 113,
@@ -181,7 +181,7 @@ static void drawWorkshop(BuildingInfoContext *c, int helpId, const char *soundFi
     c->helpId = helpId;
     PLAY_SOUND(soundFile);
 
-    Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
+    Widget::Panel::drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
     Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + resourceId,
                        c->xOffset + 10, c->yOffset + 10);
     Widget_GameText_drawCentered(groupId, 0, c->xOffset, c->yOffset + 10,
@@ -245,7 +245,7 @@ static void drawWorkshop(BuildingInfoContext *c, int helpId, const char *soundFi
         DRAW_DESC_AT(86, groupId, 10);
     }
 
-    Widget_Panel_drawInnerPanel(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
+    Widget::Panel::drawInnerPanel(c->xOffset + 16, c->yOffset + 136, c->widthBlocks - 2, 4);
     UI_BuildingInfo_drawEmploymentInfo(c, c->yOffset + 142);
 }
 

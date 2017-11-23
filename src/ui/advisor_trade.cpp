@@ -78,7 +78,7 @@ void UI_Advisor_Trade_drawBackground(int *advisorHeight)
     int baseOffsetY = Data_Screen.offset640x480.y;
 
     *advisorHeight = 27;
-    Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
+    Widget::Panel::drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
     Graphics_drawImage(image_group(ID_Graphic_AdvisorIcons) + 4,
                        baseOffsetX + 10, baseOffsetY + 10);
 
@@ -92,7 +92,7 @@ void UI_Advisor_Trade_drawForeground()
     int baseOffsetX = Data_Screen.offset640x480.x;
     int baseOffsetY = Data_Screen.offset640x480.y;
 
-    Widget_Panel_drawInnerPanel(baseOffsetX + 32, baseOffsetY + 52, 36, 21);
+    Widget::Panel::drawInnerPanel(baseOffsetX + 32, baseOffsetY + 52, 36, 21);
     for (int i = 0; i < Data_CityInfo_Resource.numAvailableResources; i++)
     {
         int offsetY = baseOffsetY + 22 * i;
@@ -105,7 +105,7 @@ void UI_Advisor_Trade_drawForeground()
 
         if (focusButtonId - 3 == i)
         {
-            Widget_Panel_drawButtonBorder(baseOffsetX + 80, offsetY + 54, 480, 24, 1);
+            Widget::Panel::drawButtonBorder(baseOffsetX + 80, offsetY + 54, 480, 24, 1);
         }
         Widget_GameText_draw(23, resource, baseOffsetX + 88, offsetY + 61, FONT_NORMAL_WHITE);
         Widget::Text::drawNumberCentered(Data_CityInfo.resourceStored[resource],
@@ -130,10 +130,10 @@ void UI_Advisor_Trade_drawForeground()
         }
     }
 
-    Widget_Panel_drawButtonBorder(baseOffsetX + 398, baseOffsetY + 396, 200, 24, focusButtonId == 1);
+    Widget::Panel::drawButtonBorder(baseOffsetX + 398, baseOffsetY + 396, 200, 24, focusButtonId == 1);
     Widget_GameText_drawCentered(54, 2, baseOffsetX + 400, baseOffsetY + 402, 200, FONT_NORMAL_BLACK);
 
-    Widget_Panel_drawButtonBorder(baseOffsetX + 98, baseOffsetY + 396, 200, 24, focusButtonId == 2);
+    Widget::Panel::drawButtonBorder(baseOffsetX + 98, baseOffsetY + 396, 200, 24, focusButtonId == 2);
     Widget_GameText_drawCentered(54, 30, baseOffsetX + 100, baseOffsetY + 402, 200, FONT_NORMAL_BLACK);
 }
 
@@ -189,7 +189,7 @@ void UI_TradePricesDialog_drawBackground()
     int baseOffsetY = Data_Screen.offset640x480.y;
 
     Graphics_shadeRect(baseOffsetX + 33, baseOffsetY + 53, 574, 334, 0);
-    Widget_Panel_drawOuterPanel(baseOffsetX + 16, baseOffsetY + 144, 38, 11);
+    Widget::Panel::drawOuterPanel(baseOffsetX + 16, baseOffsetY + 144, 38, 11);
     Widget_GameText_draw(54, 21, baseOffsetX + 26, baseOffsetY + 153, FONT_LARGE_BLACK);
     Widget_GameText_draw(54, 22, baseOffsetX + 26, baseOffsetY + 228, FONT_NORMAL_BLACK);
     Widget_GameText_draw(54, 23, baseOffsetX + 26, baseOffsetY + 253, FONT_NORMAL_BLACK);
@@ -255,7 +255,7 @@ void UI_ResourceSettingsDialog_drawForeground()
     int baseOffsetX = Data_Screen.offset640x480.x;
     int baseOffsetY = Data_Screen.offset640x480.y;
 
-    Widget_Panel_drawOuterPanel(baseOffsetX + 48, baseOffsetY + 128, 34, 15);
+    Widget::Panel::drawOuterPanel(baseOffsetX + 48, baseOffsetY + 128, 34, 15);
     int graphicOffset = selectedResourceId + Resource_getGraphicIdOffset(selectedResourceId, 3);
     Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + graphicOffset,
                        baseOffsetX + 58, baseOffsetY + 136);
@@ -346,7 +346,7 @@ void UI_ResourceSettingsDialog_drawForeground()
     }
     else
     {
-        Widget_Panel_drawButtonBorder(baseOffsetX + 98, baseOffsetY + 212, 432, 30,
+        Widget::Panel::drawButtonBorder(baseOffsetX + 98, baseOffsetY + 212, 432, 30,
                                       resourceFocusButtonId == 2);
         switch (Data_CityInfo.resourceTradeStatus[selectedResourceId])
         {
@@ -374,7 +374,7 @@ void UI_ResourceSettingsDialog_drawForeground()
 
     if (building_count_industry_total(selectedResourceId) > 0)
     {
-        Widget_Panel_drawButtonBorder(baseOffsetX + 98, baseOffsetY + 250, 432, 30,
+        Widget::Panel::drawButtonBorder(baseOffsetX + 98, baseOffsetY + 250, 432, 30,
                                       resourceFocusButtonId == 1);
         if (Data_CityInfo.resourceIndustryMothballed[selectedResourceId])
         {
@@ -386,7 +386,7 @@ void UI_ResourceSettingsDialog_drawForeground()
         }
     }
 
-    Widget_Panel_drawButtonBorder(baseOffsetX + 98, baseOffsetY + 288, 432, 50,
+    Widget::Panel::drawButtonBorder(baseOffsetX + 98, baseOffsetY + 288, 432, 50,
                                   resourceFocusButtonId == 3);
     if (Data_CityInfo.resourceStockpiled[selectedResourceId])
     {

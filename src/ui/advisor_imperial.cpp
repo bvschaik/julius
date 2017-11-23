@@ -46,7 +46,7 @@ void draw_request(int index, const scenario_request *request)
     int baseOffsetX = Data_Screen.offset640x480.x;
     int baseOffsetY = Data_Screen.offset640x480.y;
 
-    Widget_Panel_drawButtonBorder(baseOffsetX + 38, baseOffsetY + 96 + 42 * index, 560, 40, 0);
+    Widget::Panel::drawButtonBorder(baseOffsetX + 38, baseOffsetY + 96 + 42 * index, 560, 40, 0);
     Widget::Text::drawNumber(request->amount, '@', " ",
                              baseOffsetX + 40, baseOffsetY + 102 + 42 * index, FONT_NORMAL_WHITE);
     int resourceOffset = request->resource +
@@ -107,7 +107,7 @@ void UI_Advisor_Imperial_drawBackground(int *advisorHeight)
     int baseOffsetY = Data_Screen.offset640x480.y;
 
     *advisorHeight = 27;
-    Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
+    Widget::Panel::drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
     Graphics_drawImage(image_group(ID_Graphic_AdvisorIcons) + 2, baseOffsetX + 10, baseOffsetY + 10);
 
     Widget::Text::draw(Data_Settings.playerName, baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK, 0);
@@ -118,13 +118,13 @@ void UI_Advisor_Imperial_drawBackground(int *advisorHeight)
     Widget_GameText_drawMultiline(52, Data_CityInfo.ratingFavor / 5 + 22,
                                   baseOffsetX + 60, baseOffsetY + 60, 544, FONT_NORMAL_BLACK);
 
-    Widget_Panel_drawInnerPanel(baseOffsetX + 32, baseOffsetY + 90, 36, 14);
+    Widget::Panel::drawInnerPanel(baseOffsetX + 32, baseOffsetY + 90, 36, 14);
 
     int numRequests = 0;
     if (Data_CityInfo.distantBattleMonthsToBattle > 0 && Data_CityInfo.distantBattleRomanMonthsToTravel <= 0)
     {
         // can send to distant battle
-        Widget_Panel_drawButtonBorder(baseOffsetX + 38, baseOffsetY + 96, 560, 40, 0);
+        Widget::Panel::drawButtonBorder(baseOffsetX + 38, baseOffsetY + 96, 560, 40, 0);
         Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + RESOURCE_WEAPONS,
                            baseOffsetX + 50, baseOffsetY + 106);
         width = Widget_GameText_draw(52, 72, baseOffsetX + 80, baseOffsetY + 102, FONT_NORMAL_WHITE);
@@ -160,7 +160,7 @@ void UI_Advisor_Imperial_drawForeground()
     int baseOffsetX = Data_Screen.offset640x480.x;
     int baseOffsetY = Data_Screen.offset640x480.y;
 
-    Widget_Panel_drawInnerPanel(baseOffsetX + 64, baseOffsetY + 324, 32, 6);
+    Widget::Panel::drawInnerPanel(baseOffsetX + 64, baseOffsetY + 324, 32, 6);
 
     Widget_GameText_draw(32, Data_CityInfo.playerRank,
                          baseOffsetX + 72, baseOffsetY + 338, FONT_LARGE_BROWN);
@@ -170,47 +170,47 @@ void UI_Advisor_Imperial_drawForeground()
     Widget::Text::drawMoney(Data_CityInfo.personalSavings,
                             baseOffsetX + 80 + width, baseOffsetY + 372, FONT_NORMAL_WHITE);
 
-    Widget_Panel_drawButtonBorder(baseOffsetX + 320, baseOffsetY + 367,
-                                  250, 20, focusButtonId == 1);
+    Widget::Panel::drawButtonBorder(baseOffsetX + 320, baseOffsetY + 367,
+                                    250, 20, focusButtonId == 1);
     Widget_GameText_drawCentered(52, 2, baseOffsetX + 320, baseOffsetY + 372, 250, FONT_NORMAL_WHITE);
 
-    Widget_Panel_drawButtonBorder(baseOffsetX + 70, baseOffsetY + 393,
-                                  500, 20, focusButtonId == 2);
+    Widget::Panel::drawButtonBorder(baseOffsetX + 70, baseOffsetY + 393,
+                                    500, 20, focusButtonId == 2);
     width = Widget_GameText_draw(52, Data_CityInfo.salaryRank + 4,
                                  baseOffsetX + 120, baseOffsetY + 398, FONT_NORMAL_WHITE);
     width += Widget::Text::drawNumber(Data_CityInfo.salaryAmount, '@', " ",
                                       baseOffsetX + 120 + width, baseOffsetY + 398, FONT_NORMAL_WHITE);
     Widget_GameText_draw(52, 3, baseOffsetX + 120 + width, baseOffsetY + 398, FONT_NORMAL_WHITE);
 
-    Widget_Panel_drawButtonBorder(baseOffsetX + 320, baseOffsetY + 341,
-                                  250, 20, focusButtonId == 3);
+    Widget::Panel::drawButtonBorder(baseOffsetX + 320, baseOffsetY + 341,
+                                    250, 20, focusButtonId == 3);
     Widget_GameText_drawCentered(52, 49, baseOffsetX + 320, baseOffsetY + 346, 250, FONT_NORMAL_WHITE);
 
     // Request buttons
     if (getRequestStatus(0))
     {
-        Widget_Panel_drawButtonBorder(baseOffsetX + 38, baseOffsetY + 96,
-                                      560, 40, focusButtonId == 4);
+        Widget::Panel::drawButtonBorder(baseOffsetX + 38, baseOffsetY + 96,
+                                        560, 40, focusButtonId == 4);
     }
     if (getRequestStatus(1))
     {
-        Widget_Panel_drawButtonBorder(baseOffsetX + 38, baseOffsetY + 138,
-                                      560, 40, focusButtonId == 5);
+        Widget::Panel::drawButtonBorder(baseOffsetX + 38, baseOffsetY + 138,
+                                        560, 40, focusButtonId == 5);
     }
     if (getRequestStatus(2))
     {
-        Widget_Panel_drawButtonBorder(baseOffsetX + 38, baseOffsetY + 180,
-                                      560, 40, focusButtonId == 6);
+        Widget::Panel::drawButtonBorder(baseOffsetX + 38, baseOffsetY + 180,
+                                        560, 40, focusButtonId == 6);
     }
     if (getRequestStatus(3))
     {
-        Widget_Panel_drawButtonBorder(baseOffsetX + 38, baseOffsetY + 222,
-                                      560, 40, focusButtonId == 7);
+        Widget::Panel::drawButtonBorder(baseOffsetX + 38, baseOffsetY + 222,
+                                        560, 40, focusButtonId == 7);
     }
     if (getRequestStatus(4))
     {
-        Widget_Panel_drawButtonBorder(baseOffsetX + 38, baseOffsetY + 264,
-                                      560, 40, focusButtonId == 8);
+        Widget::Panel::drawButtonBorder(baseOffsetX + 38, baseOffsetY + 264,
+                                        560, 40, focusButtonId == 8);
     }
 }
 

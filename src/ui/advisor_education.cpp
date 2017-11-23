@@ -9,7 +9,7 @@ void UI_Advisor_Education_drawBackground(int *advisorHeight)
     int baseOffsetY = Data_Screen.offset640x480.y;
 
     *advisorHeight = 16;
-    Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
+    Widget::Panel::drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
     Graphics_drawImage(image_group(ID_Graphic_AdvisorIcons) + 7, baseOffsetX + 10, baseOffsetY + 10);
     Widget_GameText_draw(57, 0, baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK);
 
@@ -38,7 +38,7 @@ void UI_Advisor_Education_drawBackground(int *advisorHeight)
     Widget_GameText_draw(57, 5, baseOffsetX + 290, baseOffsetY + 86, FONT_SMALL_PLAIN);
     Widget_GameText_draw(57, 6, baseOffsetX + 478, baseOffsetY + 86, FONT_SMALL_PLAIN);
 
-    Widget_Panel_drawInnerPanel(baseOffsetX + 32, baseOffsetY + 100, 36, 4);
+    Widget::Panel::drawInnerPanel(baseOffsetX + 32, baseOffsetY + 100, 36, 4);
 
     // schools
     Widget_GameText_drawNumberWithDescription(

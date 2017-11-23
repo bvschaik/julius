@@ -11,11 +11,11 @@ void UI_Advisor_Chief_drawBackground(int *advisorHeight)
     int width;
 
     *advisorHeight = 23;
-    Widget_Panel_drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
+    Widget::Panel::drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
     Graphics_drawImage(image_group(ID_Graphic_AdvisorIcons) + 11, baseOffsetX + 10, baseOffsetY + 10);
 
     Widget_GameText_draw(61, 0, baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK);
-    Widget_Panel_drawInnerPanel(baseOffsetX + 32, baseOffsetY + 60, 36, 16);
+    Widget::Panel::drawInnerPanel(baseOffsetX + 32, baseOffsetY + 60, 36, 16);
 
     // workers
     Graphics_drawImage(image_group(ID_Graphic_Bullet), baseOffsetX + 40, baseOffsetY + 67);
