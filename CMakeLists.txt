@@ -57,6 +57,7 @@ set (INPUT_FILES
 )
 set (MAP_FILES
     src/map/bookmark.c
+    src/map/desirability.c
     src/map/grid.c
     src/map/ring.c
     src/map/routing.c
@@ -108,7 +109,6 @@ add_executable(julius
 	src/CityInfo_Victory.c
 	src/CityView.c
 	src/Cursor.c
-	src/Desirability.c
 	src/Figure.c
 	src/FigureAction.c
 	src/FigureAction_Animal.c

@@ -11,6 +11,7 @@
 
 #include "building/list.h"
 #include "graphics/image.h"
+#include "map/desirability.h"
 #include "map/grid.h"
 #include "map/routing.h"
 #include "scenario/property.h"
@@ -172,7 +173,7 @@ void UtilityManagement_updateReservoirFountain()
 		if (!BuildingIsInUse(i) || b->type != BUILDING_FOUNTAIN) {
 			continue;
 		}
-		int des = Data_Grid_desirability[b->gridOffset];
+		int des = map_desirability_get(b->gridOffset);
 		int graphicId;
 		if (des > 60) {
 			graphicId = image_group(GROUP_BUILDING_FOUNTAIN_4);

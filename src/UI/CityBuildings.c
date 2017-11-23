@@ -18,6 +18,7 @@
 #include "figure/formation.h"
 #include "game/resource.h"
 #include "game/settings.h"
+#include "map/desirability.h"
 #include "sound/city.h"
 #include "sound/speech.h"
 #include "sound/effect.h"
@@ -1040,15 +1041,17 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 				}
 			}
 			break;
-		case Overlay_Desirability:
-			if (Data_Grid_desirability[gridOffset] < 0) {
+		case Overlay_Desirability: {
+			int desirability = map_desirability_get(gridOffset);
+			if (desirability < 0) {
 				c->textId = 91;
-			} else if (Data_Grid_desirability[gridOffset] == 0) {
+			} else if (desirability == 0) {
 				c->textId = 92;
 			} else {
 				c->textId = 93;
 			}
 			break;
+		}
 		default:
 			return;
 	}

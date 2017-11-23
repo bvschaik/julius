@@ -956,12 +956,6 @@ int Terrain_hasBuildingOnNativeLand(int x, int y, int size, int radius)
 	return 0;
 }
 
-static int isInsideMapForRing(int x, int y)
-{
-	return x >= -1 && x <= Data_State.map.width &&
-		y >= -1 && y <= Data_State.map.height;
-}
-
 int Terrain_isAllRockAndTreesAtDistanceRing(int x, int y, int distance)
 {
 	int start = map_ring_start(1, distance);
@@ -969,7 +963,7 @@ int Terrain_isAllRockAndTreesAtDistanceRing(int x, int y, int distance)
 	int baseOffset = GridOffset(x, y);
 	for (int i = start; i < end; i++) {
         const ring_tile *tile = map_ring_tile(i);
-		if (isInsideMapForRing(x + tile->x, y + tile->y)) {
+		if (map_ring_is_inside_map(x + tile->x, y + tile->y)) {
 			int terrain = Data_Grid_terrain[baseOffset + tile->grid_offset];
 			if (!(terrain & Terrain_Rock) || !(terrain & Terrain_Tree)) {
 				return 0;
@@ -986,7 +980,7 @@ int Terrain_isAllMeadowAtDistanceRing(int x, int y, int distance)
 	int baseOffset = GridOffset(x, y);
 	for (int i = start; i < end; i++) {
         const ring_tile *tile = map_ring_tile(i);
-		if (isInsideMapForRing(x + tile->x, y + tile->y)) {
+		if (map_ring_is_inside_map(x + tile->x, y + tile->y)) {
 			int terrain = Data_Grid_terrain[baseOffset + tile->grid_offset];
 			if (!(terrain & Terrain_Meadow)) {
 				return 0;
@@ -994,55 +988,6 @@ int Terrain_isAllMeadowAtDistanceRing(int x, int y, int distance)
 		}
 	}
 	return 1;
-}
-
-static void addDesirabilityDistanceRing(int x, int y, int size, int distance, int desirability)
-{
-	int isPartiallyOutsideMap = 0;
-	if (x - distance < -1 || x + distance + size - 1 > Data_State.map.width) {
-		isPartiallyOutsideMap = 1;
-	}
-	if (y - distance < -1 || y + distance + size - 1 > Data_State.map.height) {
-		isPartiallyOutsideMap = 1;
-	}
-	int start = map_ring_start(size, distance);
-	int end = map_ring_end(size, distance);
-	int baseOffset = GridOffset(x, y);
-
-	if (isPartiallyOutsideMap) {
-		for (int i = start; i < end; i++) {
-            const ring_tile *tile = map_ring_tile(i);
-			if (isInsideMapForRing(x + tile->x, y + tile->y)) {
-				Data_Grid_desirability[baseOffset + tile->grid_offset] += desirability;
-				Data_Grid_desirability[baseOffset] = calc_bound(Data_Grid_desirability[baseOffset], -100, 100); // BUG: bounding on wrong tile
-			}
-		}
-	} else {
-		for (int i = start; i < end; i++) {
-            const ring_tile *tile = map_ring_tile(i);
-			Data_Grid_desirability[baseOffset + tile->grid_offset] =
-                calc_bound(Data_Grid_desirability[baseOffset + tile->grid_offset] + desirability, -100, 100);
-		}
-	}
-}
-
-void Terrain_addDesirability(int x, int y, int size, int desBase, int desStep, int desStepSize, int desRange)
-{
-	if (size > 0) {
-		if (desRange > 6) desRange = 6;
-		int tilesWithinStep = 0;
-		int distance = 1;
-		while (desRange > 0) {
-			addDesirabilityDistanceRing(x, y, size, distance, desBase);
-			distance++;
-			desRange--;
-			tilesWithinStep++;
-			if (tilesWithinStep >= desStep) {
-				desBase += desStepSize;
-				tilesWithinStep = 0;
-			}
-		}
-	}
 }
 
 int Terrain_countTerrainTypeDirectlyAdjacentTo(int gridOffset, int terrainMask)

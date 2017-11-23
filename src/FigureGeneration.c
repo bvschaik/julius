@@ -19,6 +19,7 @@
 #include "figure/type.h"
 #include "graphics/image.h"
 #include "game/resource.h"
+#include "map/desirability.h"
 
 #define SET_LABOR_PROBLEM(b) if (b->housesCovered <= 0) b->showOnProblemOverlay = 2
 #define SPAWN_LABOR_SEEKER(t) if (b->housesCovered <= t) generateLaborSeeker(buildingId, b, xRoad, yRoad);
@@ -549,7 +550,7 @@ static void setMarketGraphic(int buildingId, struct Data_Building *b)
 	if (!BuildingIsInUse(buildingId)) {
 		return;
 	}
-	if (Data_Grid_desirability[b->gridOffset] <= 30) {
+	if (map_desirability_get(b->gridOffset) <= 30) {
 		Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size,
 			image_group(GROUP_BUILDING_MARKET), Terrain_Building);
 	} else {
@@ -635,7 +636,7 @@ static void setBathhouseGraphic(int buildingId, struct Data_Building *b)
 		b->hasWaterAccess = 0;
 	}
 	if (b->hasWaterAccess && b->numWorkers) {
-		if (Data_Grid_desirability[b->gridOffset] <= 30) {
+		if (map_desirability_get(b->gridOffset) <= 30) {
 			Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size,
 				image_group(GROUP_BUILDING_BATHHOUSE_WATER), Terrain_Building);
 		} else {
@@ -643,7 +644,7 @@ static void setBathhouseGraphic(int buildingId, struct Data_Building *b)
 				image_group(GROUP_BUILDING_BATHHOUSE_FANCY_WATER), Terrain_Building);
 		}
 	} else {
-		if (Data_Grid_desirability[b->gridOffset] <= 30) {
+		if (map_desirability_get(b->gridOffset) <= 30) {
 			Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size,
 				image_group(GROUP_BUILDING_BATHHOUSE_NO_WATER), Terrain_Building);
 		} else {
@@ -956,7 +957,7 @@ static void setSenateGraphic(int buildingId, struct Data_Building *b)
 	if (!BuildingIsInUse(buildingId)) {
 		return;
 	}
-	if (Data_Grid_desirability[b->gridOffset] <= 30) {
+	if (map_desirability_get(b->gridOffset) <= 30) {
 		Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size,
 			image_group(GROUP_BUILDING_SENATE), Terrain_Building);
 	} else {

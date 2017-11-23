@@ -41,6 +41,7 @@
 #include "game/tutorial.h"
 #include "graphics/image.h"
 #include "map/bookmark.h"
+#include "map/desirability.h"
 #include "map/routing.h"
 #include "scenario/criteria.h"
 #include "scenario/distant_battle.h"
@@ -129,7 +130,7 @@ typedef struct {
     buffer *Data_Grid_bitfields;
     buffer *Data_Grid_spriteOffsets;
     buffer *Data_Grid_random;
-    buffer *Data_Grid_desirability;
+    buffer *map_desirability;
     buffer *Data_Grid_elevation;
     buffer *Data_Grid_buildingDamage;
     buffer *Data_Grid_Undo_aqueducts;
@@ -277,7 +278,7 @@ void init_savegame_data()
     state->Data_Grid_bitfields = create_savegame_piece(26244, 1);
     state->Data_Grid_spriteOffsets = create_savegame_piece(26244, 1);
     state->Data_Grid_random = create_savegame_piece(26244, 0);
-    state->Data_Grid_desirability = create_savegame_piece(26244, 1);
+    state->map_desirability = create_savegame_piece(26244, 1);
     state->Data_Grid_elevation = create_savegame_piece(26244, 1);
     state->Data_Grid_buildingDamage = create_savegame_piece(26244, 1);
     state->Data_Grid_Undo_aqueducts = create_savegame_piece(26244, 1);
@@ -421,7 +422,9 @@ static void savegame_deserialize(savegame_state *state)
     read_all_from_buffer(state->Data_Grid_bitfields, &Data_Grid_bitfields);
     read_all_from_buffer(state->Data_Grid_spriteOffsets, &Data_Grid_spriteOffsets);
     read_all_from_buffer(state->Data_Grid_random, &Data_Grid_random);
-    read_all_from_buffer(state->Data_Grid_desirability, &Data_Grid_desirability);
+
+    map_desirability_load_state(state->map_desirability);
+
     read_all_from_buffer(state->Data_Grid_elevation, &Data_Grid_elevation);
     read_all_from_buffer(state->Data_Grid_buildingDamage, &Data_Grid_buildingDamage);
     read_all_from_buffer(state->Data_Grid_Undo_aqueducts, &Data_Grid_Undo_aqueducts);
@@ -541,7 +544,9 @@ static void savegame_serialize(savegame_state *state)
     write_all_to_buffer(state->Data_Grid_bitfields, &Data_Grid_bitfields);
     write_all_to_buffer(state->Data_Grid_spriteOffsets, &Data_Grid_spriteOffsets);
     write_all_to_buffer(state->Data_Grid_random, &Data_Grid_random);
-    write_all_to_buffer(state->Data_Grid_desirability, &Data_Grid_desirability);
+
+    map_desirability_save_state(state->map_desirability);
+
     write_all_to_buffer(state->Data_Grid_elevation, &Data_Grid_elevation);
     write_all_to_buffer(state->Data_Grid_buildingDamage, &Data_Grid_buildingDamage);
     write_all_to_buffer(state->Data_Grid_Undo_aqueducts, &Data_Grid_Undo_aqueducts);

@@ -65,7 +65,7 @@ void UI_FileDialog_show(int type)
 	UI_Window_goTo(Window_FileDialog);
 
     strcpy(saved_game, Data_FileList.lastLoadedCity);
-    keyboard_start_capture(saved_game, 64, 0, 280, FONT_NORMAL_WHITE);
+    keyboard_start_capture((uint8_t*) saved_game, 64, 0, 280, FONT_NORMAL_WHITE);
 }
 
 void UI_FileDialog_drawBackground()

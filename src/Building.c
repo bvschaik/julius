@@ -25,6 +25,7 @@
 #include "building/storage.h"
 #include "city/message.h"
 #include "graphics/image.h"
+#include "map/desirability.h"
 #include "map/routing.h"
 #include "scenario/map.h"
 #include "scenario/property.h"
@@ -472,20 +473,7 @@ void Building_setDesirability()
 			continue;
 		}
 		struct Data_Building *b = &Data_Buildings[i];
-		if (b->size == 1) {
-			b->desirability = Data_Grid_desirability[b->gridOffset];
-		} else {
-			int maxDes = -9999;
-			for (int y = 0; y < b->size; y++) {
-				for (int x = 0; x < b->size; x++) {
-					int gridOffset = GridOffset(b->x + x, b->y + y);
-					if (Data_Grid_desirability[gridOffset] > maxDes) {
-						maxDes = Data_Grid_desirability[gridOffset];
-					}
-				}
-			}
-			b->desirability = maxDes;
-		}
+		b->desirability = map_desirability_get_max(b->x, b->y, b->size);
 		if (b->isAdjacentToWater) {
 			b->desirability += 10;
 		}

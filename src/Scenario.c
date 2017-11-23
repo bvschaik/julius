@@ -40,6 +40,7 @@
 #include "game/tutorial.h"
 #include "graphics/image.h"
 #include "map/bookmark.h"
+#include "map/desirability.h"
 #include "map/grid.h"
 #include "scenario/criteria.h"
 #include "scenario/demand_change.h"
@@ -247,7 +248,7 @@ static void initGrids()
 	map_grid_clear_u8(Data_Grid_bitfields);
 	map_grid_clear_u8(Data_Grid_spriteOffsets);
 	map_grid_clear_u8(Data_Grid_random);
-	map_grid_clear_i8(Data_Grid_desirability);
+	map_desirability_clear();
 	map_grid_clear_u8(Data_Grid_elevation);
 	map_grid_clear_u8(Data_Grid_buildingDamage);
 	map_grid_clear_u8(Data_Grid_rubbleBuildingType);

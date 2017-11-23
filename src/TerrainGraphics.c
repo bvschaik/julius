@@ -7,6 +7,7 @@
 #include "Data/Constants.h"
 
 #include "graphics/image.h"
+#include "map/desirability.h"
 
 static void TerrainGraphics_setTileRubble(int x, int y);
 static void TerrainGraphics_updateTileMeadow(int x, int y);
@@ -35,10 +36,11 @@ static int isAllTerrainInArea(int x, int y, int size, int terrain)
 
 int TerrainGraphics_isPavedRoadTile(int gridOffset)
 {
-	if (Data_Grid_desirability[gridOffset] > 4) {
+	int desirability = map_desirability_get(gridOffset);
+	if (desirability > 4) {
 		return 1;
 	}
-	if (Data_Grid_desirability[gridOffset] > 0 && Data_Grid_terrain[gridOffset] & Terrain_FountainRange) {
+	if (desirability > 0 && Data_Grid_terrain[gridOffset] & Terrain_FountainRange) {
 		return 1;
 	}
 	return 0;
@@ -1190,11 +1192,12 @@ int TerrainGraphics_getFreeTileForHerd(int x, int y, int allowNegDes, int *xTile
 			if (Data_Grid_romanSoldierConcentration[gridOffset]) {
 				return 0;
 			}
+			int desirability = map_desirability_get(gridOffset);
 			if (allowNegDes) {
-				if (Data_Grid_desirability[gridOffset] > 1) {
+				if (desirability > 1) {
 					return 0;
 				}
-			} else if (Data_Grid_desirability[gridOffset]) {
+			} else if (desirability) {
 				return 0;
 			}
 			tileFound = 1;

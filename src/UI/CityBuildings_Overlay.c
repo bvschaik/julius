@@ -1,6 +1,7 @@
 #include "CityBuildings_private.h"
 
 #include "game/resource.h"
+#include "map/desirability.h"
 
 static void drawFootprintForWaterOverlay(int gridOffset, int xOffset, int yOffset);
 static void drawTopForWaterOverlay(int gridOffset, int xOffset, int yOffset);
@@ -836,8 +837,8 @@ static void drawBuildingFootprintForDesirabilityOverlay(int gridOffset, int xOff
 		// display empty land/grass
 		int graphicId = image_group(GROUP_TERRAIN_GRASS_1) + (Data_Grid_random[gridOffset] & 7);
 		DRAWFOOT_SIZE1(graphicId, xOffset, yOffset);
-	} else if ((terrain & Terrain_Building) || Data_Grid_desirability[gridOffset]) {
-		int des = Data_Grid_desirability[gridOffset];
+	} else if ((terrain & Terrain_Building) || map_desirability_get(gridOffset)) {
+		int des = map_desirability_get(gridOffset);
 		int offset = 0;
 		if (des < -10) {
 			offset = 0;
@@ -894,8 +895,8 @@ static void drawBuildingTopForDesirabilityOverlay(int gridOffset, int xOffset, i
 		}
 	} else if (terrain & (Terrain_Wall | Terrain_Aqueduct)) {
 		// grass, no top needed
-	} else if ((terrain & Terrain_Building) || Data_Grid_desirability[gridOffset]) {
-		int des = Data_Grid_desirability[gridOffset];
+	} else if ((terrain & Terrain_Building) || map_desirability_get(gridOffset)) {
+		int des = map_desirability_get(gridOffset);
 		int offset;
 		if (des < -10) {
 			offset = 0;

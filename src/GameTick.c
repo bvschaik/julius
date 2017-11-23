@@ -2,7 +2,6 @@
 
 #include "Building.h"
 #include "CityInfo.h"
-#include "Desirability.h"
 #include "Figure.h"
 #include "FigureAction.h"
 #include "Formation.h"
@@ -32,6 +31,7 @@
 #include "game/settings.h"
 #include "game/time.h"
 #include "game/tutorial.h"
+#include "map/desirability.h"
 #include "scenario/demand_change.h"
 #include "scenario/distant_battle.h"
 #include "scenario/earthquake.h"
@@ -98,7 +98,7 @@ void GameTick_advance()
 		case 34: CityInfo_Tick_distributeTreasuryOverForumsAndSenates(); break;
 		case 35: HouseEvolution_Tick_decayCultureService(); break;
 		case 36: HouseEvolution_Tick_calculateCultureServiceAggregates(); break;
-		case 37: Desirability_update(); break;
+		case 37: map_desirability_update(); break;
 		case 38: Building_setDesirability(); break;
 		case 39: HouseEvolution_Tick_evolveAndConsumeResources(); break;
 		case 40: Building_GameTick_updateState(); break;
