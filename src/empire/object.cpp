@@ -9,8 +9,8 @@
 #include "graphics/image.h"
 #include "game/resource.h"
 
-#include "data/constants.hpp"
-#include "data/scenario.hpp"
+#include <data>
+#include <scenario>
 
 #define HEADER_SIZE 1280
 #define DATA_SIZE 12800
@@ -268,7 +268,7 @@ int empire_object_get_closest(int x, int y)
     {
         const empire_object *obj = &objects[i].obj;
         int obj_x, obj_y;
-        if (Data_Scenario.empireHasExpanded)
+        if (scenario_empire_is_expanded)
         {
             obj_x = obj->expanded.x;
             obj_y = obj->expanded.y;

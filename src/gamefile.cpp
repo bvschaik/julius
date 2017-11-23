@@ -784,7 +784,7 @@ static void debug()
 static void setupFromSavedGame()
 {
     debug();
-    load_empire_data(Data_Settings.isCustomScenario, Data_Scenario.empireId);
+    load_empire_data(Data_Settings.isCustomScenario, scenario_empire_id());
 
     Data_Settings_Map.width = scenario_map_size();
     Data_Settings_Map.height = Data_Scenario.mapSizeY;
@@ -906,7 +906,7 @@ int GameFile_loadScenario(const char *filename)
     scenario_deserialize(&scenario_data.state);
 
     trade_prices_reset();
-    load_empire_data(1, Data_Scenario.empireId);
+    load_empire_data(1, scenario_empire_id());
     return 0;
 }
 

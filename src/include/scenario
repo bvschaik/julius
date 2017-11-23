@@ -14,6 +14,7 @@
 #include "scenario/invasion.h"
 #include "scenario/distant_battle.h"
 #include "scenario/random_event.h"
+#include "scenario/empire.h"
 
 //check buildings availability
 #include "scenario/building.h"

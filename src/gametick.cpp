@@ -246,7 +246,7 @@ static void advanceMonth()
 
 static void advanceYear()
 {
-    empire_handle_expand_event();
+    scenario_empire_process_expansion();
     Data_State.undoAvailable = 0;
     game_time_advance_year();
     CityInfo_Population_requestYearlyUpdate();

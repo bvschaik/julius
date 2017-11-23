@@ -456,7 +456,7 @@ static void drawEmpireObject(const empire_object *obj)
         }
     }
     int x, y, image_id;
-    if (Data_Scenario.empireHasExpanded)
+    if (scenario_empire_is_expanded)
     {
         x = obj->expanded.x;
         y = obj->expanded.y;
