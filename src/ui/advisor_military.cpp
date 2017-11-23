@@ -2,7 +2,6 @@
 #include "window.h"
 
 #include "cityview.h"
-#include "event.h"
 #include "formation.h"
 
 #include <data>

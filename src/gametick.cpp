@@ -3,7 +3,6 @@
 #include "building.h"
 #include "cityinfo.h"
 #include "desirability.h"
-#include "event.h"
 #include "figure.h"
 #include "figureaction.h"
 #include "formation.h"
@@ -210,7 +209,7 @@ static void advanceMonth()
     Data_CityInfo.monthsSinceFestival++;
 
     CityInfo_Population_updateHealthRate();
-    Event_handleRandomEvents();
+    scenario_random_event_process();
     CityInfo_Finance_handleMonthChange();
     CityInfo_Resource_housesConsumeFood();
     scenario_distant_battle_process();

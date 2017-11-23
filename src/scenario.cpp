@@ -6,7 +6,6 @@
 #include "cityinfo.h"
 #include "cityview.h"
 #include "empire/empire.h"
-#include "event.h"
 #include "figure.h"
 #include "formation.h"
 #include "gamefile.h"

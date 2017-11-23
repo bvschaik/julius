@@ -1,7 +1,6 @@
 #include "keyboardhotkey.h"
 
 #include "cityview.h"
-#include "event.h"
 #include "graphics.h"
 #include "system.h"
 #include "video.h"

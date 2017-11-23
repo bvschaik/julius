@@ -3,7 +3,6 @@
 #include "window.h"
 
 #include "cityinfo.h"
-#include "event.h"
 #include "formation.h"
 #include "resource.h"
 
@@ -264,7 +263,7 @@ void UI_Advisor_Imperial_handleMouse()
     int offsetX = Data_Screen.offset640x480.x;
     int offsetY = Data_Screen.offset640x480.y;
     Widget::Button::handleCustomButtons(offsetX, offsetY,
-                                      imperialButtons, 8, &focusButtonId);
+                                        imperialButtons, 8, &focusButtonId);
 }
 
 static void buttonDonateToCity(int param1, int param2)
