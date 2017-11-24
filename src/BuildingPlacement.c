@@ -10,7 +10,6 @@
 #include "Routing.h"
 #include "SidebarMenu.h"
 #include "Terrain.h"
-#include "TerrainBridge.h"
 #include "TerrainGraphics.h"
 #include "Undo.h"
 
@@ -32,6 +31,7 @@
 #include "core/random.h"
 #include "figure/formation.h"
 #include "graphics/image.h"
+#include "map/bridge.h"
 #include "map/grid.h"
 
 #define BOUND_REGION() \
@@ -818,10 +818,10 @@ static void clearRegionConfirmed(int measureOnly, int xStart, int yStart, int xE
 					Data_Grid_aqueducts[gridOffset - 1] = 4;
 				}
 			} else if (terrain & Terrain_Water) {
-				if (!measureOnly && TerrainBridge_countFiguresOnBridge(gridOffset) > 0) {
+				if (!measureOnly && map_bridge_count_figures(gridOffset) > 0) {
 					UI_Warning_show(Warning_PeopleOnBridge);
 				} else if (confirm.bridgeConfirmed == 1) {
-					TerrainBridge_removeFromSpriteGrid(gridOffset, measureOnly);
+					map_bridge_remove(gridOffset, measureOnly);
 					itemsPlaced++;
 				}
 			} else if (terrain) {
@@ -1178,7 +1178,7 @@ void BuildingPlacement_update(int xStart, int yStart, int xEnd, int yEnd, int ty
 		placeGarden(xStart, yStart, xEnd, yEnd);
 		if (itemsPlaced >= 0) currentCost *= itemsPlaced;
 	} else if (type == BUILDING_LOW_BRIDGE || type == BUILDING_SHIP_BRIDGE) {
-		int length = TerrainBridge_getLength();
+		int length = map_bridge_building_length();
 		if (length > 1) currentCost *= length;
 	} else if (type == BUILDING_AQUEDUCT) {
 		placeAqueduct(1, xStart, yStart, xEnd, yEnd, &currentCost);
@@ -1278,7 +1278,7 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
 			map_grid_copy_u8(Data_Grid_Undo_edge, Data_Grid_edge);
 			Undo_restoreTerrainGraphics();
 		} else if (type == BUILDING_LOW_BRIDGE || type == BUILDING_SHIP_BRIDGE) {
-			TerrainBridge_resetLength();
+			map_bridge_reset_building_length();
 		} else {
 			map_grid_and_u8(Data_Grid_bitfields, Bitfield_NoOverlayAndDeleted);
 		}
@@ -1305,14 +1305,14 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
 		Routing_determineLandCitizen();
 		Routing_determineLandNonCitizen();
 	} else if (type == BUILDING_LOW_BRIDGE) {
-		int length = TerrainBridge_addToSpriteGrid(xEnd, yEnd, 0);
+		int length = map_bridge_add(xEnd, yEnd, 0);
 		if (length <= 1) {
 			UI_Warning_show(Warning_ShoreNeeded);
 			return;
 		}
 		placementCost *= length;
 	} else if (type == BUILDING_SHIP_BRIDGE) {
-		int length = TerrainBridge_addToSpriteGrid(xEnd, yEnd, 1);
+		int length = map_bridge_add(xEnd, yEnd, 1);
 		if (length <= 1) {
 			UI_Warning_show(Warning_ShoreNeeded);
 			return;

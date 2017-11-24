@@ -57,6 +57,7 @@ set (INPUT_FILES
 )
 set (MAP_FILES
     src/map/bookmark.c
+    src/map/bridge.c
     src/map/desirability.c
     src/map/grid.c
     src/map/ring.c
@@ -156,7 +157,6 @@ add_executable(julius
 	src/Security.c
 	src/SidebarMenu.c
 	src/Terrain.c
-	src/TerrainBridge.c
 	src/TerrainGraphics.c
 	src/TerrainGraphics_Context.c
 	src/TerrainWater.c

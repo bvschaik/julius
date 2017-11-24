@@ -3,13 +3,13 @@
 #include "../BuildingPlacement.h"
 #include "../Routing.h"
 #include "../Terrain.h"
-#include "../TerrainBridge.h"
 #include "../TerrainGraphics.h"
 
 #include "building/count.h"
 #include "building/properties.h"
 #include "core/time.h"
 #include "figure/formation.h"
+#include "map/bridge.h"
 
 static void drawBuildingGhostDraggableReservoir();
 static void drawBuildingGhostAqueduct();
@@ -522,7 +522,7 @@ static void drawBuildingGhostBathhouse()
 static void drawBuildingGhostBridge()
 {
 	int length, direction;
-	int endGridOffset = TerrainBridge_determineLengthAndDirection(
+	int endGridOffset = map_bridge_calculate_length_direction(
 		Data_State.map.current.x, Data_State.map.current.y,
 		Data_State.selectedBuilding.type == BUILDING_LOW_BRIDGE ? 0 : 1,
 		&length, &direction);

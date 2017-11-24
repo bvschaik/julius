@@ -4,7 +4,6 @@
 #include "Building.h"
 #include "FigureAction.h"
 #include "Routing.h"
-#include "TerrainBridge.h"
 #include "TerrainGraphics.h"
 
 #include "Data/Building.h"
@@ -15,6 +14,7 @@
 
 #include "core/calc.h"
 #include "graphics/image.h"
+#include "map/bridge.h"
 #include "map/ring.h"
 #include "map/routing.h"
 #include "scenario/map.h"
@@ -1251,7 +1251,7 @@ void Terrain_rotateMap(int ccw)
 	TerrainGraphics_updateRegionAqueduct(0, 0, Data_State.map.width - 1, Data_State.map.height - 1, 0);
 
 	Building_determineGraphicIdsForOrientedBuildings();
-	TerrainBridge_updateSpriteIdsOnMapRotate(ccw);
+	map_bridge_update_after_rotate(ccw);
 	Routing_determineWalls();
 
 	FigureAction_TowerSentry_reroute();
