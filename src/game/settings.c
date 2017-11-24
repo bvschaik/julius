@@ -237,12 +237,22 @@ int setting_game_speed()
 
 void setting_increase_game_speed()
 {
-    data.game_speed = calc_bound(data.game_speed + 10, 10, 100);
+    if (data.game_speed >= 100) {
+        if (data.game_speed < 500) {
+            data.game_speed += 100;
+        }
+    } else {
+        data.game_speed = calc_bound(data.game_speed + 10, 10, 100);
+    }
 }
 
 void setting_decrease_game_speed()
 {
-    data.game_speed = calc_bound(data.game_speed - 10, 10, 100);
+    if (data.game_speed > 100) {
+        data.game_speed -= 100;
+    } else {
+        data.game_speed = calc_bound(data.game_speed - 10, 10, 100);
+    }
 }
 
 int setting_scroll_speed()

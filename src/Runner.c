@@ -25,9 +25,11 @@ static int getElapsedTicks()
 		diff = 10000;
 	}
 	int gameSpeedIndex = (100 - setting_game_speed()) / 10;
+	int ticks_per_frame = 1;
 	if (gameSpeedIndex >= 10) {
 		return 0;
 	} else if (gameSpeedIndex < 0) {
+        ticks_per_frame = setting_game_speed() / 100;
 		gameSpeedIndex = 0;
 	}
 
@@ -53,8 +55,7 @@ static int getElapsedTicks()
 		return 0;
 	}
 	lastUpdate = now;
-    // run twice as fast on 100% speed
-	return gameSpeedIndex == 0 ? 2 : 1;
+	return ticks_per_frame;
 }
 
 void Runner_run()
