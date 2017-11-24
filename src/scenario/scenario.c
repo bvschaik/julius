@@ -11,8 +11,7 @@ void scenario_save_state(buffer *buf)
     buffer_write_i16(buf, scenario.start_year);
     buffer_write_i16(buf, 0);
     buffer_write_i16(buf, scenario.empire.id);
-    buffer_write_i32(buf, 0);
-    buffer_write_i32(buf, 0);
+    buffer_skip(buf, 8);
     
     // requests
     for (int i = 0; i < MAX_REQUESTS; i++) {
@@ -58,9 +57,7 @@ void scenario_save_state(buffer *buf)
     buffer_write_i32(buf, scenario.map.grid_border_size);
     
     buffer_write_raw(buf, scenario.brief_description, 64);
-    for (int i = 0; i < 522; i++) {
-        buffer_write_u8(buf, 0);
-    }
+    buffer_skip(buf, 522);
     
     for (int i = 0; i < MAX_REQUESTS; i++) {
         buffer_write_u8(buf, scenario.requests[i].can_comply_dialog_shown);
@@ -154,14 +151,14 @@ void scenario_save_state(buffer *buf)
     buffer_write_i32(buf, scenario.rome_supplies_wheat);
     
     // allowed buildings
-    buffer_write_i16(buf, 0);
+    buffer_write_i16(buf, 1);
     buffer_write_i16(buf, scenario.allowed_buildings.farms);
     buffer_write_i16(buf, scenario.allowed_buildings.raw_materials);
     buffer_write_i16(buf, scenario.allowed_buildings.workshops);
     buffer_write_i16(buf, scenario.allowed_buildings.road);
     buffer_write_i16(buf, scenario.allowed_buildings.wall);
     buffer_write_i16(buf, scenario.allowed_buildings.aqueduct);
-    buffer_write_i16(buf, 0);
+    buffer_write_i16(buf, 1);
     buffer_write_i16(buf, scenario.allowed_buildings.amphitheater);
     buffer_write_i16(buf, scenario.allowed_buildings.theater);
     buffer_write_i16(buf, scenario.allowed_buildings.hippodrome);
@@ -189,7 +186,7 @@ void scenario_save_state(buffer *buf)
     buffer_write_i16(buf, scenario.allowed_buildings.market);
     buffer_write_i16(buf, scenario.allowed_buildings.granary);
     buffer_write_i16(buf, scenario.allowed_buildings.warehouse);
-    buffer_write_i16(buf, 0);
+    buffer_write_i16(buf, 1);
     buffer_write_i16(buf, scenario.allowed_buildings.dock);
     buffer_write_i16(buf, scenario.allowed_buildings.wharf);
     buffer_write_i16(buf, scenario.allowed_buildings.governor_home);
@@ -203,7 +200,7 @@ void scenario_save_state(buffer *buf)
     buffer_write_i16(buf, scenario.allowed_buildings.barracks);
     buffer_write_i16(buf, scenario.allowed_buildings.military_academy);
     buffer_write_i16(buf, scenario.allowed_buildings.distribution_center);
-    buffer_write_i16(buf, 0);
+    buffer_write_i16(buf, 1);
     
     // win criteria
     buffer_write_i32(buf, scenario.win_criteria.culture.goal);
@@ -316,7 +313,7 @@ void scenario_load_state(buffer *buf)
     scenario.map.grid_start = buffer_read_i32(buf);
     scenario.map.grid_border_size = buffer_read_i32(buf);
     
-    buffer_write_raw(buf, scenario.brief_description, 64);
+    buffer_read_raw(buf, scenario.brief_description, 64);
     buffer_skip(buf, 522);
     
     for (int i = 0; i < MAX_REQUESTS; i++) {
