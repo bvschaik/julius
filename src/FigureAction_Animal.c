@@ -9,8 +9,8 @@
 #include "figure/formation.h"
 #include "figure/route.h"
 
-static const int seagullOffsetsX[] = {0, 0, -2, 1, 2, -3, 4, -2};
-static const int seagullOffsetsY[] = {0, -2, 0, 2, 0, 1, -3, 4};
+static const int seagullOffsetsX[] = {0, 0, -2, 1, 2, -3, 4, -2, 0};
+static const int seagullOffsetsY[] = {0, -2, 0, 2, 0, 1, -3, 4, 0};
 
 static const int hippodromeHorseDestinationX1[] = {
 	2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2
