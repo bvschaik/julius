@@ -48,6 +48,7 @@ int game_time_advance_tick()
 
 int game_time_advance_day()
 {
+    data.total_days++;
     if (++data.day >= 16) {
         data.day = 0;
         return 1;
