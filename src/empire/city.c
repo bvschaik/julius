@@ -285,7 +285,7 @@ void empire_city_save_state(buffer *buf)
             buffer_write_u8(buf, city->sells_resource[r]);
         }
         buffer_write_i16(buf, city->cost_to_open);
-        buffer_write_i16(buf, 10);
+        buffer_skip(buf, 2);
         buffer_write_i16(buf, city->trader_entry_delay);
         buffer_write_i16(buf, 0);
         buffer_write_i16(buf, city->empire_object_id);
