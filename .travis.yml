@@ -4,23 +4,25 @@ language: cpp
 
 matrix:
   include:
-    - compiler: gcc
-      os: linux
+    - os: linux
+      compiler: gcc
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
+            - george-edison55-precise-backports
           packages:
             - g++-4.9
       env:
         CXX_COMPILER=g++-4.9
         C_COMPILER=gcc-4.9
-    - compiler: gcc
-      os: linux
+    - os: linux
+      compiler: gcc
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
+            - george-edison55-precise-backports
           packages:
             - g++-5
       env:
@@ -32,28 +34,42 @@ matrix:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.6
+            - llvm-toolchain-precise-3.8
+            - george-edison55-precise-backports
           packages:
             - clang-3.6
       env:
           CXX_COMPILER=clang++-3.6
           C_COMPILER=clang-3.6
-    - compiler: clang
-      os: linux
+    - os: linux
+      compiler: clang
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise-3.7
+            - george-edison55-precise-backports
           packages:
             - clang-3.7
       env:
         CXX_COMPILER=clang++-3.7
         C_COMPILER=clang-3.7
+     - os: linux
+       compiler: clang
+       addons:
+         apt:
+           sources:
+             - ubuntu-toolchain-r-test
+             - llvm-toolchain-precise-3.8
+             - george-edison55-precise-backports
+           packages:
+             - clang-3.8
+       env:
+         CXX_COMPILER=clang++-3.8
+         C_COMPILER=clang-3.8
 
 before_install:
 # Get build dependencies
-- sudo add-apt-repository --yes ppa:ubuntu-toolchain-r/test
 - sudo apt-get -qq update
 - sudo apt-get install -qq cmake build-essential libasound2-dev libxxf86vm-dev
 - export CXX=$CXX_COMPILER
