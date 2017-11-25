@@ -38,6 +38,7 @@ file(GLOB CITY_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/city/*.*)
 file(GLOB SOUND_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/sound/*.*)
 file(GLOB DATA_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/data/*.*)
 file(GLOB SCENARIO_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/scenario/*.*)
+file(GLOB CI_FILES ${CMAKE_CURRENT_SOURCE_DIR}/.travis.yml)
 
 if (BUILD_SDL2STATIC)
   set(SDL2STATIC_NAME "sdl2")
@@ -67,6 +68,7 @@ add_executable(${PROJECT_NAME}
   ${SMK_FILES}
   ${INCLUDE_FILES}
   ${SCENARIO_FILES}
+  ${CI_FILES}
 )
 
 #include(FindPkgConfig)

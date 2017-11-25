@@ -1,0 +1,65 @@
+sudo: required
+dist: precise
+language: cpp
+
+matrix:
+  include:
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-4.9
+      env: 
+        CXX_COMPILER=g++-4.9
+        C_COMPILER=gcc-4.9
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-5
+      env: 
+          CXX_COMPILER=g++-5
+          C_COMPILER=gcc-5
+    - compiler: clang
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.6
+          packages:
+            - clang-3.6
+      env: 
+          CXX_COMPILER=clang++-3.6
+          C_COMPILER=clang-3.6
+    - compiler: clang
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.7
+          packages:
+            - clang-3.7
+      env: 
+        CXX_COMPILER=clang++-3.7
+        C_COMPILER=clang-3.7
+      
+before_install:
+# Get build dependencies
+- sudo add-apt-repository --yes ppa:ubuntu-toolchain-r/test
+- sudo apt-get -qq update
+- sudo apt-get install -qq cmake build-essential libasound2-dev libxxf86vm-dev
+- export CXX=$CXX_COMPILER
+- export CC=$C_COMPILER
+#- sudo apt-get install -qq gcc-multilib g++-multilib
+install:
+# Create unix makefiles
+- mkdir build
+- cd build
+- cmake -DCMAKE_BUILD_TYPE=Release ../
+script:
+# Build game
+- make -j4
