@@ -4,6 +4,7 @@
 #include "core/direction.h"
 #include "graphics/image.h"
 #include "map/grid.h"
+#include "map/routing_data.h"
 
 #include "Data/Building.h"
 #include "Data/Grid.h"
@@ -285,5 +286,65 @@ void map_routing_update_walls()
                 Data_Grid_routingWalls[grid_offset] = Routing_Wall_m1_Blocked;
             }
         }
+    }
+}
+
+void map_routing_block(int x, int y, int size)
+{
+    if (IsOutsideMap(x, y, size)) {
+        return;
+    }
+    for (int dy = 0; dy < size; dy++) {
+        for (int dx = 0; dx < size; dx++) {
+            Data_Grid_routingDistance[map_grid_offset(x+dx, y+dy)] = 0;
+        }
+    }
+}
+
+int map_routing_is_wall_passable(int grid_offset)
+{
+    return Data_Grid_routingWalls[grid_offset] == 0;
+}
+
+int map_routing_citizen_is_passable(int grid_offset)
+{
+    return Data_Grid_routingLandCitizen[grid_offset] == Routing_Citizen_0_Road ||
+        Data_Grid_routingLandCitizen[grid_offset] == Routing_Citizen_2_PassableTerrain;
+}
+
+int map_routing_citizen_is_road(int grid_offset)
+{
+    return Data_Grid_routingLandCitizen[grid_offset] == Routing_Citizen_0_Road;
+}
+
+int map_routing_citizen_is_passable_terrain(int grid_offset)
+{
+    return Data_Grid_routingLandCitizen[grid_offset] == Routing_Citizen_2_PassableTerrain;
+}
+
+int map_routing_noncitizen_is_passable(int grid_offset)
+{
+    return Data_Grid_routingLandNonCitizen[grid_offset] >= Routing_NonCitizen_0_Passable;
+}
+
+int map_routing_is_destroyable(int grid_offset)
+{
+    return Data_Grid_routingLandNonCitizen[grid_offset] > Routing_NonCitizen_0_Passable &&
+        Data_Grid_routingLandNonCitizen[grid_offset] != Routing_NonCitizen_5_Fort;
+}
+
+int map_routing_get_destroyable(int grid_offset)
+{
+    switch (Data_Grid_routingLandNonCitizen[grid_offset]) {
+        case Routing_NonCitizen_1_Building:
+            return DESTROYABLE_BUILDING;
+        case Routing_NonCitizen_2_Clearable:
+            return DESTROYABLE_AQUEDUCT_GARDEN;
+        case Routing_NonCitizen_3_Wall:
+            return DESTROYABLE_WALL;
+        case Routing_NonCitizen_4_Gatehouse:
+            return DESTROYABLE_GATEHOUSE;
+        default:
+            return DESTROYABLE_NONE;
     }
 }

@@ -16,7 +16,7 @@
 #include "core/calc.h"
 #include "figure/route.h"
 #include "game/time.h"
-#include "map/routing.h"
+#include "map/routing_terrain.h"
 
 static void FigureMovement_walkTicksInternal(int figureId, int numTicks, int roamingEnabled);
 
@@ -360,27 +360,28 @@ static void figureAdvanceRouteTile(struct Data_Figure *f, int roamingEnabled)
 			f->direction = DirFigure_9_Reroute;
 		}
 	} else if (f->terrainUsage == FigureTerrainUsage_Enemy) {
-		int groundType = map_routing_noncitizen_terrain(targetGridOffset);
-		if (groundType < Routing_NonCitizen_0_Passable) {
+		if (!map_routing_noncitizen_is_passable(targetGridOffset)) {
 			f->direction = DirFigure_9_Reroute;
-		} else if (groundType > Routing_NonCitizen_0_Passable && groundType != Routing_NonCitizen_5_Fort) {
+		} else if (map_routing_is_destroyable(targetGridOffset)) {
 			int causeDamage = 1;
 			int maxDamage = 0;
-			switch (groundType) {
-				case Routing_NonCitizen_1_Building:
+			switch (map_routing_get_destroyable(targetGridOffset)) {
+				case DESTROYABLE_BUILDING:
 					maxDamage = 10;
 					break;
-				case Routing_NonCitizen_2_Clearable:
+				case DESTROYABLE_AQUEDUCT_GARDEN:
 					if (Data_Grid_terrain[targetGridOffset] & Terrain_GardenAccessRampRubble) {
 						causeDamage = 0;
 					} else {
 						maxDamage = 10;
 					}
 					break;
-				case Routing_NonCitizen_3_Wall:
+				case DESTROYABLE_WALL:
 					maxDamage = 200;
 					break;
-				default: maxDamage = 150; break;
+				case DESTROYABLE_GATEHOUSE:
+                    maxDamage = 150;
+                    break;
 			}
 			if (causeDamage) {
 				f->attackDirection = f->direction;

@@ -10,7 +10,7 @@
 #include "figure/properties.h"
 #include "figure/route.h"
 #include "figure/type.h"
-#include "map/routing.h"
+#include "map/routing_terrain.h"
 #include "sound/effect.h"
 
 static int ballistaFiringOffsets[] = {

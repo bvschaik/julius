@@ -2,12 +2,12 @@
 
 #include "map/grid.h"
 #include "map/road_aqueduct.h"
+#include "map/routing_data.h"
 
 #include "Data/Building.h"
 #include "Data/Figure.h"
 #include "Data/Grid.h"
 #include "Data/Routes.h"
-#include "../Routing.h"
 
 #define MAX_QUEUE GRID_SIZE * GRID_SIZE
 #define GUARD 50000
@@ -486,32 +486,6 @@ int map_routing_noncitizen_can_travel_through_everything(int src_x, int src_y, i
 int map_routing_distance(int grid_offset)
 {
     return Data_Grid_routingDistance[grid_offset];
-}
-
-int map_routing_is_wall_passable(int grid_offset)
-{
-    return Data_Grid_routingWalls[grid_offset] == 0;
-}
-
-int map_routing_citizen_is_passable(int grid_offset)
-{
-    return Data_Grid_routingLandCitizen[grid_offset] == Routing_Citizen_0_Road ||
-        Data_Grid_routingLandCitizen[grid_offset] == Routing_Citizen_2_PassableTerrain;
-}
-
-int map_routing_citizen_is_road(int grid_offset)
-{
-    return Data_Grid_routingLandCitizen[grid_offset] == Routing_Citizen_0_Road;
-}
-
-int map_routing_citizen_is_passable_terrain(int grid_offset)
-{
-    return Data_Grid_routingLandCitizen[grid_offset] == Routing_Citizen_2_PassableTerrain;
-}
-
-int map_routing_noncitizen_terrain(int grid_offset)
-{
-    return Data_Grid_routingLandNonCitizen[grid_offset];
 }
 
 void map_routing_save_state(buffer *buf)

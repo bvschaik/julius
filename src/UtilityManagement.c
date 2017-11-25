@@ -12,7 +12,7 @@
 #include "graphics/image.h"
 #include "map/desirability.h"
 #include "map/grid.h"
-#include "map/routing.h"
+#include "map/routing_terrain.h"
 #include "scenario/property.h"
 
 #include <string.h>

@@ -911,6 +911,68 @@ static void clearRegion(int measureOnly, int xStart, int yStart, int xEnd, int y
 	}
 }
 
+static int placeRoutedBuilding(int xSrc, int ySrc, int xDst, int yDst, routed_building_type type, int *items)
+{
+    static const int directionIndices[8][4] = {
+        {0, 2, 6, 4},
+        {0, 2, 6, 4},
+        {2, 4, 0, 6},
+        {2, 4, 0, 6},
+        {4, 6, 2, 0},
+        {4, 6, 2, 0},
+        {6, 0, 4, 2},
+        {6, 0, 4, 2}
+    };
+    *items = 0;
+    int gridOffset = GridOffset(xDst, yDst);
+    int guard = 0;
+    // reverse routing
+    while (1) {
+        if (++guard >= 400) {
+            return 0;
+        }
+        int distance = map_routing_distance(gridOffset);
+        if (distance <= 0) {
+            return 0;
+        }
+        switch (type) {
+            default:
+            case ROUTED_BUILDING_ROAD:
+                *items += TerrainGraphics_setTileRoad(xDst, yDst);
+                break;
+            case ROUTED_BUILDING_WALL:
+                *items += TerrainGraphics_setTileWall(xDst, yDst);
+                break;
+            case ROUTED_BUILDING_AQUEDUCT:
+                *items += TerrainGraphics_setTileAqueductTerrain(xDst, yDst);
+                break;
+            case ROUTED_BUILDING_AQUEDUCT_WITHOUT_GRAPHIC:
+                *items += 1;
+                break;
+        }
+        int direction = calc_general_direction(xDst, yDst, xSrc, ySrc);
+        if (direction == Dir_8_None) {
+            return 1; // destination reached
+        }
+        int routed = 0;
+        for (int i = 0; i < 4; i++) {
+            int index = directionIndices[direction][i];
+            int newGridOffset = gridOffset + Constant_DirectionGridOffsets[index];
+            int newDist = map_routing_distance(newGridOffset);
+            if (newDist > 0 && newDist < distance) {
+                gridOffset = newGridOffset;
+                xDst = GridOffsetToX(gridOffset);
+                yDst = GridOffsetToY(gridOffset);
+                routed = 1;
+                break;
+            }
+        }
+        if (!routed) {
+            return 0;
+        }
+    }
+}
+
 static void placeRoad(int measureOnly, int xStart, int yStart, int xEnd, int yEnd)
 {
 	map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
@@ -929,7 +991,7 @@ static void placeRoad(int measureOnly, int xStart, int yStart, int xEnd, int yEn
 	}
 	
 	if (map_routing_calculate_distances_for_building(ROUTED_BUILDING_ROAD, xStart, yStart) &&
-		Routing_placeRoutedBuilding(xStart, yStart, xEnd, yEnd, RoutedBUILDING_ROAD, &itemsPlaced)) {
+		    placeRoutedBuilding(xStart, yStart, xEnd, yEnd, ROUTED_BUILDING_ROAD, &itemsPlaced)) {
 		if (!measureOnly) {
 			map_routing_update_land();
 			UI_Window_requestRefresh();
@@ -954,7 +1016,7 @@ static void placeWall(int measureOnly, int xStart, int yStart, int xEnd, int yEn
 		return;
 	}
 	map_routing_calculate_distances_for_building(ROUTED_BUILDING_WALL, xStart, yStart);
-	if (Routing_placeRoutedBuilding(xStart, yStart, xEnd, yEnd, RoutedBUILDING_WALL, &itemsPlaced)) {
+	if (placeRoutedBuilding(xStart, yStart, xEnd, yEnd, ROUTED_BUILDING_WALL, &itemsPlaced)) {
 		if (!measureOnly) {
 			map_routing_update_land();
 			map_routing_update_walls();
@@ -1049,7 +1111,7 @@ static int placeAqueduct(int measureOnly, int xStart, int yStart, int xEnd, int 
 		return 0;
 	}
 	int numItems;
-	Routing_placeRoutedBuilding(xStart, yStart, xEnd, yEnd, RoutedBuilding_Aqueduct, &numItems);
+	placeRoutedBuilding(xStart, yStart, xEnd, yEnd, ROUTED_BUILDING_AQUEDUCT, &numItems);
 	*cost = itemCost * numItems;
 	return 1;
 }
@@ -1098,11 +1160,11 @@ static int placeReservoirAndAqueducts(int measureOnly, int xStart, int yStart, i
 		return 0;
 	}
 	if (info->placeReservoirAtStart != PlaceReservoir_No) {
-		Routing_block(xStart - 1, yStart - 1, 3);
+		map_routing_block(xStart - 1, yStart - 1, 3);
 		Terrain_updateToPlaceBuildingToOverlay(3, xStart - 1, yStart - 1, Terrain_All, 1);
 	}
 	if (info->placeReservoirAtEnd != PlaceReservoir_No) {
-		Routing_block(xEnd - 1, yEnd - 1, 3);
+		map_routing_block(xEnd - 1, yEnd - 1, 3);
 		Terrain_updateToPlaceBuildingToOverlay(3, xEnd - 1, yEnd - 1, Terrain_All, 1);
 	}
 	const int aqueductOffsetsX[] = {0, 2, 0, -2};
@@ -1116,9 +1178,9 @@ static int placeReservoirAndAqueducts(int measureOnly, int xStart, int yStart, i
 			int dxEnd = aqueductOffsetsX[dirEnd];
 			int dyEnd = aqueductOffsetsY[dirEnd];
 			int dist;
-			if (Routing_placeRoutedBuilding(
+			if (placeRoutedBuilding(
 					xStart + dxStart, yStart + dyStart, xEnd + dxEnd, yEnd + dyEnd,
-					RoutedBuilding_AqueductWithoutGraphic, &dist)) {
+					ROUTED_BUILDING_AQUEDUCT_WITHOUT_GRAPHIC, &dist)) {
 				if (dist && dist < minDist) {
 					minDist = dist;
 					minDirStart = dirStart;
@@ -1135,8 +1197,8 @@ static int placeReservoirAndAqueducts(int measureOnly, int xStart, int yStart, i
 	int xAqEnd = aqueductOffsetsX[minDirEnd];
 	int yAqEnd = aqueductOffsetsY[minDirEnd];
 	int aqItems;
-	Routing_placeRoutedBuilding(xStart + xAqStart, yStart + yAqStart,
-		xEnd + xAqEnd, yEnd + yAqEnd, RoutedBuilding_Aqueduct, &aqItems);
+	placeRoutedBuilding(xStart + xAqStart, yStart + yAqStart,
+		xEnd + xAqEnd, yEnd + yAqEnd, ROUTED_BUILDING_AQUEDUCT, &aqItems);
 	if (info->placeReservoirAtStart == PlaceReservoir_Yes) {
 		info->cost += model_get_building(BUILDING_RESERVOIR)->cost;
 	}

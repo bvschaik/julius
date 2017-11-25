@@ -16,68 +16,6 @@
 
 static int directionPath[500];
 
-int Routing_placeRoutedBuilding(int xSrc, int ySrc, int xDst, int yDst, RoutedBuilding type, int *items)
-{
-	static const int directionIndices[8][4] = {
-		{0, 2, 6, 4},
-		{0, 2, 6, 4},
-		{2, 4, 0, 6},
-		{2, 4, 0, 6},
-		{4, 6, 2, 0},
-		{4, 6, 2, 0},
-		{6, 0, 4, 2},
-		{6, 0, 4, 2}
-	};
-	*items = 0;
-	int gridOffset = GridOffset(xDst, yDst);
-	int guard = 0;
-	// reverse routing
-	while (1) {
-		if (++guard >= 400) {
-			return 0;
-		}
-		int distance = Data_Grid_routingDistance[gridOffset];
-		if (distance <= 0) {
-			return 0;
-		}
-		switch (type) {
-			default:
-			case RoutedBUILDING_ROAD:
-				*items += TerrainGraphics_setTileRoad(xDst, yDst);
-				break;
-			case RoutedBUILDING_WALL:
-				*items += TerrainGraphics_setTileWall(xDst, yDst);
-				break;
-			case RoutedBuilding_Aqueduct:
-				*items += TerrainGraphics_setTileAqueductTerrain(xDst, yDst);
-				break;
-			case RoutedBuilding_AqueductWithoutGraphic:
-				*items += 1;
-				break;
-		}
-		int direction = calc_general_direction(xDst, yDst, xSrc, ySrc);
-		if (direction == Dir_8_None) {
-			return 1; // destination reached
-		}
-		int routed = 0;
-		for (int i = 0; i < 4; i++) {
-			int index = directionIndices[direction][i];
-			int newGridOffset = gridOffset + Constant_DirectionGridOffsets[index];
-			int newDist = Data_Grid_routingDistance[newGridOffset];
-			if (newDist > 0 && newDist < distance) {
-				gridOffset = newGridOffset;
-				xDst = GridOffsetToX(gridOffset);
-				yDst = GridOffsetToY(gridOffset);
-				routed = 1;
-				break;
-			}
-		}
-		if (!routed) {
-			return 0;
-		}
-	}
-}
-
 static void updateXYGridOffsetForDirection(int direction, int *x, int *y, int *gridOffset)
 {
 	switch (direction) {
@@ -276,16 +214,4 @@ int Routing_getPathOnWater(uint8_t *path, int xSrc, int ySrc, int xDst, int yDst
 		path[i] = directionPath[numTiles - i - 1];
 	}
 	return numTiles;
-}
-
-void Routing_block(int x, int y, int size)
-{
-	if (IsOutsideMap(x, y, size)) {
-		return;
-	}
-	for (int dy = 0; dy < size; dy++) {
-		for (int dx = 0; dx < size; dx++) {
-			Data_Grid_routingDistance[GridOffset(x+dx, y+dy)] = 0;
-		}
-	}
 }
