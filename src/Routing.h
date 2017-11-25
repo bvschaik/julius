@@ -28,13 +28,6 @@ enum {
 	Routing_Wall_m1_Blocked = -1,
 };
 
-void Routing_determineLandCitizen();
-void Routing_determineLandNonCitizen();
-void Routing_determineWater();
-void Routing_determineWalls();
-
-void Routing_clearLandTypeCitizen();
-
 void Routing_getDistance(int x, int y);
 
 void Routing_deleteClosestWallOrAqueduct(int x, int y);

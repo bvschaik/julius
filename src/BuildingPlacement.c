@@ -33,6 +33,7 @@
 #include "graphics/image.h"
 #include "map/bridge.h"
 #include "map/grid.h"
+#include "map/routing_terrain.h"
 
 #define BOUND_REGION() \
 	if (xStart < xEnd) {\
@@ -540,9 +541,8 @@ static void addToTerrain(int type, int buildingId, int x, int y, int size,
 			}
 			break;
 	}
-	Routing_determineLandCitizen();
-	Routing_determineLandNonCitizen();
-	Routing_determineWalls();
+	map_routing_update_land();
+	map_routing_update_walls();
 }
 
 static int placeBuilding(int type, int x, int y)
@@ -727,8 +727,7 @@ static void placeHouses(int measureOnly, int xStart, int yStart, int xEnd, int y
 		if (needsRoadWarning) {
 			UI_Warning_show(Warning_HouseTooFarFromRoad);
 		}
-		Routing_determineLandCitizen();
-		Routing_determineLandNonCitizen();
+		map_routing_update_land();
 		UI_Window_requestRefresh();
 	}
 }
@@ -844,10 +843,9 @@ static void clearRegionConfirmed(int measureOnly, int xStart, int yStart, int xE
 	TerrainGraphics_updateRegionPlazas(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
 	TerrainGraphics_updateAreaWalls(xMin, yMin, radius);
 	if (!measureOnly) {
-		Routing_determineLandCitizen();
-		Routing_determineLandNonCitizen();
-		Routing_determineWalls();
-		Routing_determineWater();
+		map_routing_update_land();
+		map_routing_update_walls();
+		map_routing_update_water();
 		UI_Window_requestRefresh();
 	}
 }
@@ -932,8 +930,7 @@ static void placeRoad(int measureOnly, int xStart, int yStart, int xEnd, int yEn
 	if (Routing_getDistanceForBuildingRoadOrAqueduct(xStart, yStart, 0) &&
 		Routing_placeRoutedBuilding(xStart, yStart, xEnd, yEnd, RoutedBUILDING_ROAD, &itemsPlaced)) {
 		if (!measureOnly) {
-			Routing_determineLandCitizen();
-			Routing_determineLandNonCitizen();
+			map_routing_update_land();
 			UI_Window_requestRefresh();
 		}
 	}
@@ -959,9 +956,8 @@ static void placeWall(int measureOnly, int xStart, int yStart, int xEnd, int yEn
 	if (Routing_getDistanceForBuildingWall(xStart, yStart) &&
 		Routing_placeRoutedBuilding(xStart, yStart, xEnd, yEnd, RoutedBUILDING_WALL, &itemsPlaced)) {
 		if (!measureOnly) {
-			Routing_determineLandCitizen();
-			Routing_determineLandNonCitizen();
-			Routing_determineWalls();
+			map_routing_update_land();
+			map_routing_update_walls();
 			UI_Window_requestRefresh();
 		}
 	}
@@ -1302,8 +1298,7 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
 	} else if (type == BUILDING_GARDENS) {
 		placeGarden(xStart, yStart, xEnd, yEnd);
 		placementCost *= itemsPlaced;
-		Routing_determineLandCitizen();
-		Routing_determineLandNonCitizen();
+		map_routing_update_land();
 	} else if (type == BUILDING_LOW_BRIDGE) {
 		int length = map_bridge_add(xEnd, yEnd, 0);
 		if (length <= 1) {
@@ -1326,8 +1321,7 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
 		}
 		placementCost = cost;
 		TerrainGraphics_updateRegionAqueduct(0, 0, Data_State.map.width - 1, Data_State.map.height - 1, 0);
-		Routing_determineLandCitizen();
-		Routing_determineLandNonCitizen();
+		map_routing_update_land();
 	} else if (type == BUILDING_DRAGGABLE_RESERVOIR) {
 		struct ReservoirInfo info;
 		if (!placeReservoirAndAqueducts(0, xStart, yStart, xEnd, yEnd, &info)) {
@@ -1351,8 +1345,7 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
 		}
 		placementCost = info.cost;
 		TerrainGraphics_updateRegionAqueduct(0, 0, Data_State.map.width - 1, Data_State.map.height - 1, 0);
-		Routing_determineLandCitizen();
-		Routing_determineLandNonCitizen();
+		map_routing_update_land();
 	} else if (type == BUILDING_HOUSE_VACANT_LOT) {
 		placeHouses(0, xStart, yStart, xEnd, yEnd);
 		placementCost *= itemsPlaced;

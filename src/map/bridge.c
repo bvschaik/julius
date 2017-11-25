@@ -1,12 +1,12 @@
 #include "bridge.h"
 
 #include "map/grid.h"
+#include "map/routing_terrain.h"
 
 #include "Data/Constants.h"
 #include "Data/Grid.h"
 #include "Data/State.h"
 #include "../Terrain.h"
-#include "../Routing.h"
 
 static struct {
     int end_grid_offset;
@@ -179,9 +179,8 @@ int map_bridge_add(int x, int y, int is_ship_bridge)
         grid_offset += bridge.direction_grid_delta;
     }
 
-    Routing_determineLandCitizen();
-    Routing_determineLandNonCitizen();
-    Routing_determineWater();
+    map_routing_update_land();
+    map_routing_update_water();
 
     return bridge.length;
 }

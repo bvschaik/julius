@@ -5,7 +5,6 @@
 #include "Figure.h"
 #include "Loader.h"
 #include "Resource.h"
-#include "Routing.h"
 #include "SidebarMenu.h"
 #include "TerrainGraphics.h"
 #include "UtilityManagement.h"
@@ -43,6 +42,7 @@
 #include "map/bookmark.h"
 #include "map/desirability.h"
 #include "map/routing.h"
+#include "map/routing_terrain.h"
 #include "scenario/criteria.h"
 #include "scenario/distant_battle.h"
 #include "scenario/earthquake.h"
@@ -764,11 +764,7 @@ static void setupFromSavedGame()
 	CityView_calculateLookup();
 	CityView_checkCameraBoundaries();
 
-	Routing_clearLandTypeCitizen();
-	Routing_determineLandCitizen();
-	Routing_determineLandNonCitizen();
-	Routing_determineWater();
-	Routing_determineWalls();
+	map_routing_update_all();
 
 	Building_determineGraphicIdsForOrientedBuildings();
 	figure_route_clean();

@@ -1,7 +1,6 @@
 #include "Undo.h"
 
 #include "Resource.h"
-#include "Routing.h"
 #include "Terrain.h"
 #include "TerrainGraphics.h"
 #include "UI/Window.h"
@@ -15,6 +14,7 @@
 #include "game/resource.h"
 #include "graphics/image.h"
 #include "map/grid.h"
+#include "map/routing_terrain.h"
 #include "scenario/earthquake.h"
 
 #include <string.h>
@@ -227,9 +227,8 @@ void Undo_perform()
 			}
 		}
 	}
-	Routing_determineLandCitizen();
-	Routing_determineLandNonCitizen();
-	Routing_determineWalls();
+	map_routing_update_land();
+	map_routing_update_walls();
 	data.numBuildings = 0;
 }
 

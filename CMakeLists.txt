@@ -62,6 +62,7 @@ set (MAP_FILES
     src/map/grid.c
     src/map/ring.c
     src/map/routing.c
+    src/map/routing_terrain.c
 )
 set (SCENARIO_FILES
     src/scenario/building.c

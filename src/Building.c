@@ -27,6 +27,7 @@
 #include "graphics/image.h"
 #include "map/desirability.h"
 #include "map/routing.h"
+#include "map/routing_terrain.h"
 #include "scenario/map.h"
 #include "scenario/property.h"
 #include "sound/effect.h"
@@ -242,8 +243,7 @@ void Building_GameTick_updateState()
 		TerrainGraphics_updateAllWalls();
 	}
 	if (landRecalc) {
-		Routing_determineLandCitizen();
-		Routing_determineLandNonCitizen();
+		map_routing_update_land();
 	}
 }
 
@@ -329,7 +329,7 @@ void Building_collapseOnFire(int buildingId, int hasPlague)
 		ruin->ruinHasPlague = hasPlague;
 	}
 	if (watersideBuilding) {
-		Routing_determineWater();
+		map_routing_update_water();
 	}
 }
 
@@ -390,8 +390,7 @@ void Building_collapseLastPlaced()
 		Figure_createDustCloud(Data_Buildings[buildingId].x, Data_Buildings[buildingId].y,
 			Data_Buildings[buildingId].size);
 		Building_collapseLinked(buildingId, 0);
-		Routing_determineLandCitizen();
-		Routing_determineLandNonCitizen();
+		map_routing_update_land();
 	}
 }
 
@@ -406,8 +405,7 @@ int Building_collapseFirstOfType(int buildingType)
 			TerrainGraphics_setBuildingAreaRubble(i, Data_Buildings[i].x, Data_Buildings[i].y,
 				Data_Buildings[i].size);
 			sound_effect_play(SOUND_EFFECT_EXPLOSION);
-			Routing_determineLandCitizen();
-			Routing_determineLandNonCitizen();
+			map_routing_update_land();
 			return gridOffset;
 		}
 	}
@@ -461,9 +459,8 @@ void Building_destroyByEnemy(int x, int y, int gridOffset)
 	FigureAction_TowerSentry_reroute();
 	TerrainGraphics_updateAreaWalls(x, y, 3);
 	TerrainGraphics_updateRegionAqueduct(x - 2, y - 2, x + 2, y + 2, 0);
-	Routing_determineLandCitizen();
-	Routing_determineLandNonCitizen();
-	Routing_determineWalls();
+	map_routing_update_land();
+	map_routing_update_walls();
 }
 
 void Building_setDesirability()
@@ -708,9 +705,8 @@ void Building_GameTick_checkAccessToRome()
 			TerrainGraphics_updateRegionMeadow(0, 0,
 				Data_State.map.width - 1, Data_State.map.height - 1);
 			
-			Routing_determineLandCitizen();
-			Routing_determineLandNonCitizen();
-			Routing_determineWalls();
+			map_routing_update_land();
+			map_routing_update_walls();
 			
 			if (map_routing_distance(Data_CityInfo.exitPointGridOffset)) {
 				city_message_post(1, MESSAGE_ROAD_TO_ROME_OBSTRUCTED, 0, 0);
@@ -1188,8 +1184,7 @@ void Building_Mercury_removeResources(int bigCurse)
 		Building_collapseOnFire(maxBuildingId, 0);
 		Building_collapseLinked(maxBuildingId, 1);
 		sound_effect_play(SOUND_EFFECT_EXPLOSION);
-		Routing_determineLandCitizen();
-		Routing_determineLandNonCitizen();
+		map_routing_update_land();
 	} else {
 		if (b->type == BUILDING_WAREHOUSE) {
 			Resource_removeFromWarehouseForMercury(maxBuildingId, 16);

@@ -6,7 +6,6 @@
 #include "Figure.h"
 #include "FigureAction.h"
 #include "Formation.h"
-#include "Routing.h"
 #include "SidebarMenu.h"
 #include "Terrain.h"
 #include "TerrainGraphics.h"
@@ -23,6 +22,7 @@
 #include "core/random.h"
 #include "figure/type.h"
 #include "game/tutorial.h"
+#include "map/routing_terrain.h"
 #include "scenario/property.h"
 #include "sound/effect.h"
 
@@ -101,8 +101,7 @@ void Security_Tick_updateBurningRuins()
 		}
 	}
 	if (recalculateTerrain) {
-		Routing_determineLandCitizen();
-		Routing_determineLandNonCitizen();
+		map_routing_update_land();
 	}
 }
 
@@ -356,7 +355,6 @@ void Security_Tick_checkFireCollapse()
 	}
 	
 	if (recalculateTerrain) {
-		Routing_determineLandCitizen();
-		Routing_determineLandNonCitizen();
+		map_routing_update_land();
 	}
 }

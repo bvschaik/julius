@@ -10,7 +10,6 @@
 #include "HousePopulation.h"
 #include "Natives.h"
 #include "Resource.h"
-#include "Routing.h"
 #include "Security.h"
 #include "SidebarMenu.h"
 #include "TerrainGraphics.h"
@@ -32,6 +31,7 @@
 #include "game/time.h"
 #include "game/tutorial.h"
 #include "map/desirability.h"
+#include "map/routing_terrain.h"
 #include "scenario/demand_change.h"
 #include "scenario/distant_battle.h"
 #include "scenario/earthquake.h"
@@ -145,7 +145,7 @@ static void advanceMonth()
 
 	TerrainGraphics_updateAllRoads();
 	TerrainGraphics_updateRegionWater(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
-	Routing_determineLandCitizen();
+	map_routing_update_land_citizen();
 	city_message_sort_and_compact();
 
 	if (game_time_advance_month()) {

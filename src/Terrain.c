@@ -3,7 +3,6 @@
 
 #include "Building.h"
 #include "FigureAction.h"
-#include "Routing.h"
 #include "TerrainGraphics.h"
 
 #include "Data/Building.h"
@@ -17,6 +16,7 @@
 #include "map/bridge.h"
 #include "map/ring.h"
 #include "map/routing.h"
+#include "map/routing_terrain.h"
 #include "scenario/map.h"
 
 static const int tilesAroundBuildingGridOffsets[][20] = {
@@ -1252,7 +1252,7 @@ void Terrain_rotateMap(int ccw)
 
 	Building_determineGraphicIdsForOrientedBuildings();
 	map_bridge_update_after_rotate(ccw);
-	Routing_determineWalls();
+	map_routing_update_walls();
 
 	FigureAction_TowerSentry_reroute();
 	FigureAction_HippodromeHorse_reroute();

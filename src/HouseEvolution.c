@@ -1,6 +1,5 @@
 #include "BuildingHouse.h"
 
-#include "Routing.h"
 #include "TerrainGraphics.h"
 
 #include "Data/Building.h"
@@ -10,6 +9,7 @@
 #include "city/culture.h"
 #include "game/resource.h"
 #include "game/time.h"
+#include "map/routing_terrain.h"
 
 static int checkEvolveDesirability(int buildingId);
 static int hasRequiredGoodsAndServices(int buildingId, int forUpgrade);
@@ -303,8 +303,7 @@ void HouseEvolution_Tick_evolveAndConsumeResources()
 		}
 	}
 	if (hasExpanded) {
-		Routing_determineLandCitizen();
-		Routing_determineLandNonCitizen();
+		map_routing_update_land();
 	}
 }
 

@@ -10,7 +10,6 @@
 #include "GameFile.h"
 #include "Loader.h"
 #include "Natives.h"
-#include "Routing.h"
 #include "SidebarMenu.h"
 #include "Terrain.h"
 #include "TerrainGraphics.h"
@@ -42,6 +41,7 @@
 #include "map/bookmark.h"
 #include "map/desirability.h"
 #include "map/grid.h"
+#include "map/routing_terrain.h"
 #include "scenario/criteria.h"
 #include "scenario/demand_change.h"
 #include "scenario/earthquake.h"
@@ -163,10 +163,9 @@ static void loadScenario(const char *scenarioName)
 	Figure_createHerds();
 	Figure_createFlotsam();
 
-	Routing_determineLandCitizen();
-	Routing_determineLandNonCitizen();
-	Routing_determineWater();
-	Routing_determineWalls();
+	map_routing_update_land();
+	map_routing_update_water();
+	map_routing_update_walls();
 
 	scenario_map_init_entry_exit();
 
@@ -230,11 +229,7 @@ static void readScenarioAndInitGraphics()
 
 	CityView_checkCameraBoundaries();
 
-	Routing_clearLandTypeCitizen();
-	Routing_determineLandCitizen();
-	Routing_determineLandNonCitizen();
-	Routing_determineWater();
-	Routing_determineWalls();
+	map_routing_update_all();
 }
 
 static void initGrids()
