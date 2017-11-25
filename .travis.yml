@@ -15,6 +15,7 @@ matrix:
             - g++-4.9
             - cmake
             - cmake-data
+            - libsdl2-mixer-dev
       env:
         CXX_COMPILER=g++-4.9
         C_COMPILER=gcc-4.9
@@ -29,6 +30,7 @@ matrix:
             - g++-5
             - cmake
             - cmake-data
+            - libsdl2-mixer-dev
       env:
           CXX_COMPILER=g++-5
           C_COMPILER=gcc-5
@@ -44,6 +46,7 @@ matrix:
             - clang-3.6
             - cmake
             - cmake-data
+            - libsdl2-mixer-dev
       env:
           CXX_COMPILER=clang++-3.6
           C_COMPILER=clang-3.6
@@ -59,6 +62,7 @@ matrix:
             - clang-3.7
             - cmake
             - cmake-data
+            - libsdl2-mixer-dev
       env:
         CXX_COMPILER=clang++-3.7
         C_COMPILER=clang-3.7
@@ -74,6 +78,7 @@ matrix:
             - clang-3.8
             - cmake
             - cmake-data
+            - libsdl2-mixer-dev
       env:
         CXX_COMPILER=clang++-3.8
         C_COMPILER=clang-3.8
