@@ -1,7 +1,6 @@
 #include "buildinginfo.h"
 
 #include "citybuildings.h"
-#include "window.h"
 #include "cityview.h"
 #include "figure.h"
 #include "graphics.h"
@@ -10,6 +9,7 @@
 #include <data>
 #include <ui>
 #include <scenario>
+#include <game>
 
 #include "empire/city.h"
 #include "figure/formation.h"
@@ -464,7 +464,7 @@ static void drawFigureInfo(BuildingInfoContext *c, int figureId)
 void UI_BuildingInfo_drawFigureList(BuildingInfoContext *c)
 {
     Widget::Panel::drawInnerPanel(c->xOffset + 16, c->yOffset + 40,
-                                c->widthBlocks - 2, 12);
+                                  c->widthBlocks - 2, 12);
     if (c->figure.count <= 0)
     {
         Widget_GameText_drawCentered(70, 0, c->xOffset, c->yOffset + 120,
@@ -530,7 +530,7 @@ void UI_BuildingInfo_handleMouseFigureList(BuildingInfoContext *c)
 {
     contextForCallback = c;
     Widget::Button::handleCustomButtons(c->xOffset, c->yOffset,
-                                      figureButtons, c->figure.count, &focusButtonId);
+                                        figureButtons, c->figure.count, &focusButtonId);
     contextForCallback = 0;
 }
 

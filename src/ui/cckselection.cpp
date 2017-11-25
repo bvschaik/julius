@@ -9,6 +9,7 @@
 #include <core>
 #include <ui>
 #include <scenario>
+#include <game>
 
 #include <string.h>
 
@@ -75,7 +76,7 @@ void UI_CCKSelection_drawBackground()
 static void drawScenarioList()
 {
     Widget::Panel::drawInnerPanel(Data_Screen.offset640x480.x + 16,
-                                Data_Screen.offset640x480.y + 210, 16, 16);
+                                  Data_Screen.offset640x480.y + 210, 16, 16);
     for (int i = 0; i < 15; i++)
     {
         font_t font = FONT_NORMAL_GREEN;

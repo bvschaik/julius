@@ -4,12 +4,13 @@
 #include "core/calc.h"
 #include "grid.h"
 #include "terrain.h"
+#include "building/list.h"
+#include "graphics/image.h"
 
 #include <data>
 #include <scenario>
+#include <game>
 
-#include "building/list.h"
-#include "graphics/image.h"
 
 static void determineMeetingCenter();
 

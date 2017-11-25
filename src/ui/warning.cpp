@@ -1,6 +1,3 @@
-#include "warning.h"
-#include "window.h"
-
 #include "core/calc.h"
 #include "graphics.h"
 #include "terrain.h"
@@ -8,6 +5,7 @@
 #include <data>
 #include <ui>
 #include <scenario>
+#include <game>
 
 #include "building/count.h"
 #include "building/model.h"
@@ -15,7 +13,6 @@
 #include "core/string.h"
 #include "core/time.h"
 #include "empire/city.h"
-#include "game/settings.h"
 #include "graphics/image.h"
 
 #include <string.h>

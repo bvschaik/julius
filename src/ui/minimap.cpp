@@ -5,6 +5,7 @@
 
 #include <data>
 #include <scenario>
+#include <game>
 
 #include "figure/type.h"
 #include "graphics/image.h"

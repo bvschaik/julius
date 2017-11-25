@@ -3,10 +3,10 @@
 #include "building.h"
 #include "core/calc.h"
 #include "terrain.h"
-#include "game/tutorial.h"
 
 #include <data>
 #include <scenario>
+#include <game>
 
 #include "building/count.h"
 #include "building/model.h"

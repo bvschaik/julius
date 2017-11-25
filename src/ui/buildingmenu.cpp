@@ -1,14 +1,10 @@
-#include "allwindows.h"
-
-#include "sidebar.h"
-#include "window.h"
 #include "graphics.h"
-#include "sidebarmenu.h"
 
 #include <data>
 #include <ui>
 #include <core>
 #include <scenario>
+#include <game>
 
 #include "building/model.h"
 
@@ -187,7 +183,7 @@ static void drawMenuButtons()
     {
         itemIndex = SidebarMenu_getNextBuildingItemIndex(menu.selectedSubmenu, itemIndex);
         Widget::Panel::drawSmallLabelButton(xOffset - 266, menu.yOffset + 110 + 24 * i,
-                                          16, buildMenuFocusButtonId == i + 1 ? 1 : 2);
+                                            16, buildMenuFocusButtonId == i + 1 ? 1 : 2);
         int buildingType = SidebarMenu_getBuildingType(menu.selectedSubmenu, itemIndex);
         Widget_GameText_drawCentered(28, buildingType,
                                      xOffset - 266, menu.yOffset + 113 + 24 * i, 176, FONT_NORMAL_GREEN);

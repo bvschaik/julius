@@ -1,6 +1,3 @@
-#include "messagedialog.h"
-#include "window.h"
-#include "allwindows.h"
 #include "advisors.h"
 
 #include "cityview.h"
@@ -11,6 +8,7 @@
 
 #include <data>
 #include <ui>
+#include <game>
 
 #include "city/message.h"
 #include "core/calc.h"
@@ -484,7 +482,7 @@ static void drawForegroundNoVideo()
     if (msg->type == TYPE_MESSAGE)
     {
         Widget::Button::drawImageButtons(data.x + 16, data.y + 16 * msg->height_blocks - 40,
-                                       getAdvisorButton(), 1);
+                                         getAdvisorButton(), 1);
         if (msg->message_type == MESSAGE_TYPE_DISASTER || msg->message_type == MESSAGE_TYPE_INVASION)
         {
             Widget::Button::drawImageButtons(
@@ -543,7 +541,7 @@ void UI_MessageDialog_handleMouse(const mouse *m)
     if (msg->type == TYPE_MESSAGE)
     {
         if (Widget::Button::handleImageButtons(data.x + 16, data.y + 16 * msg->height_blocks - 40,
-                                             getAdvisorButton(), 1, 0))
+                                               getAdvisorButton(), 1, 0))
         {
             return;
         }

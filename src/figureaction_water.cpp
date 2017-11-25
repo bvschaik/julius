@@ -6,6 +6,7 @@
 
 #include <data>
 #include <scenario>
+#include <game>
 
 #include "city/message.h"
 #include "building/model.h"

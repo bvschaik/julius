@@ -3,15 +3,11 @@
 
 #include "graphics.h"
 
-#include "data/building.hpp"
-#include "data/constants.hpp"
-#include "data/figure.hpp"
-#include "data/settings.hpp"
-#include "data/state.hpp"
+#include <data>
+#include <game>
 
 #include "figure/formation.h"
 #include "graphics/image.h"
-#include "game/resource.h"
 
 static int showOnOverlay(struct Data_Figure *f)
 {

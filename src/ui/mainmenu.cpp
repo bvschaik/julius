@@ -1,12 +1,9 @@
-#include "allwindows.h"
-#include "filedialog.h"
-#include "popupdialog.h"
-
 #include "graphics.h"
 #include "system.h"
 
 #include <data>
 #include <ui>
+#include <game>
 
 #include "graphics/image.h"
 

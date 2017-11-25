@@ -4,13 +4,14 @@
 #include "window.h"
 #include "messagedialog.h"
 #include "warning.h"
-#include "game/tutorial.h"
 
 #include "cityinfo.h"
 #include "formation.h"
 #include "city/culture.h"
 
 #include "data/settings.hpp"
+
+#include <game>
 
 static void buttonChangeAdvisor(int param1, int param2);
 static void buttonHelp(int param1, int param2);
@@ -162,8 +163,8 @@ void UI_Advisors_drawBackground()
 void UI_Advisors_drawForeground()
 {
     Widget::Button::drawImageButtons(Data_Screen.offset640x480.x,
-                                   Data_Screen.offset640x480.y + 16 * (advisorHeight - 2),
-                                   &helpButton, 1);
+                                     Data_Screen.offset640x480.y + 16 * (advisorHeight - 2),
+                                     &helpButton, 1);
 
     switch (currentAdvisor)
     {

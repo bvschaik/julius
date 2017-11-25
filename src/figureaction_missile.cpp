@@ -4,6 +4,7 @@
 #include "formation.h"
 
 #include <sound>
+#include <game>
 
 #include "figure/formation.h"
 #include "figure/properties.h"

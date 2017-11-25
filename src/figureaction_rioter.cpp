@@ -9,6 +9,8 @@
 #include "data/grid.hpp"
 #include "city/message.h"
 
+#include <game>
+
 #include "core/time.h"
 
 static const int criminalOffsets[] =

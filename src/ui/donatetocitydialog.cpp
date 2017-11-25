@@ -1,16 +1,12 @@
-#include "allwindows.h"
-#include "window.h"
-#include "widget.h"
 #include "graphics.h"
 #include "cityinfo.h"
 #include "advisors_private.h"
-#include "data/cityinfo.hpp"
-#include "data/screen.hpp"
-#include "game/resource.h"
 
 #include "core/calc.h"
 
 #include <ui>
+#include <data>
+#include <game>
 
 static void buttonSetAmount(int param1, int param2);
 static void buttonDonate(int param1, int param2);

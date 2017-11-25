@@ -7,6 +7,7 @@
 
 #include <data>
 #include <scenario>
+#include <game>
 
 #include "building/list.h"
 #include "graphics/image.h"

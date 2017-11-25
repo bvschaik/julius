@@ -6,6 +6,7 @@
 
 #include <data>
 #include <scenario>
+#include <game>
 
 #include "building/list.h"
 #include "figure/type.h"

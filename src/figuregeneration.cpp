@@ -9,11 +9,8 @@
 #include "terrain.h"
 #include "terraingraphics.h"
 
-#include "data/building.hpp"
-#include "data/cityinfo.hpp"
-#include "data/constants.hpp"
-#include "data/grid.hpp"
-#include "data/figure.hpp"
+#include <data>
+#include <game>
 
 #include "building/model.h"
 #include "figure/type.h"

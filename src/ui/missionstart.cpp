@@ -8,9 +8,9 @@
 #include <data>
 #include <sound>
 #include <ui>
+#include <game>
 
 #include "core/lang.h"
-#include "game/tutorial.h"
 #include "scenario/criteria.h"
 
 static void startMission(int param1, int param2);

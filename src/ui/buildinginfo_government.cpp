@@ -2,10 +2,9 @@
 
 #include "graphics.h"
 
-#include "game/resource.h"
-
 #include <data>
 #include <ui>
+#include <game>
 
 void UI_BuildingInfo_drawForum(BuildingInfoContext *c)
 {

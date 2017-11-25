@@ -7,8 +7,8 @@
 #include "graphics.h"
 #include "ui/window.h"
 
-#include "uicore/widget_text.h"
-#include "uicore/widget_button.h"
+#include <ui>
+#include <game>
 
 #include "core/lang.h"
 #include "core/string.h"

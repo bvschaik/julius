@@ -5,7 +5,8 @@
 #include "core/file.h"
 #include "core/io.h"
 
-#include "data/constants.hpp"
+#include <data>
+#include <game>
 
 #include <stdlib.h>
 #include <string.h>

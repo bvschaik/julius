@@ -7,6 +7,7 @@
 
 #include <data>
 #include <scenario>
+#include <game>
 
 #include "building/storage.h"
 #include "empire/city.h"

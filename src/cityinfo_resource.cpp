@@ -136,7 +136,7 @@ void CityInfo_Resource_calculateFoodAndSupplyRomeWheat()
         {
             if (BuildingIsInUse(i) && Data_Buildings[i].type == BUILDING_MARKET)
             {
-                Data_Buildings[i].data.market.inventory[Inventory_Wheat] = 200;
+                Data_Buildings[i].data.market.inventory[INVENTORY_WHEAT] = 200;
             }
         }
     }
@@ -164,12 +164,12 @@ void CityInfo_Resource_housesConsumeFood()
             {
                 Data_CityInfo.foodInfoFoodTypesEaten = 1;
                 Data_CityInfo.foodInfoFoodTypesAvailable = 1;
-                b->data.house.inventory[Inventory_Wheat] = amountPerType;
+                b->data.house.inventory[INVENTORY_WHEAT] = amountPerType;
                 b->data.house.numFoods = 1;
             }
             else if (numTypes > 0)
             {
-                for (int t = Inventory_MinFood; t < Inventory_MaxFood && b->data.house.numFoods < numTypes; t++)
+                for (int t = INVENTORY_MIN_FOOD; t < INVENTORY_MAX_FOOD && b->data.house.numFoods < numTypes; t++)
                 {
                     if (b->data.house.inventory[t] >= amountPerType)
                     {

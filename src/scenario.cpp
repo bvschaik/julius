@@ -19,12 +19,12 @@
 #include "terraingraphics.h"
 
 #include "ui/window.h"
-#include "game/tutorial.h"
 #include "building/storage.h"
 
 #include <sound>
 #include <data>
 #include <scenario>
+#include <game>
 
 #include "core/file.h"
 #include "core/io.h"
@@ -33,9 +33,6 @@
 #include "figure/formation.h"
 #include "figure/name.h"
 #include "figure/trader.h"
-#include "game/difficulty.h"
-#include "game/settings.h"
-#include "game/time.h"
 #include "graphics/image.h"
 
 #include <string.h>

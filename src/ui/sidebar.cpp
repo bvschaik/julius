@@ -1,12 +1,5 @@
 #include "sidebar.h"
 
-#include "allwindows.h"
-#include "advisors.h"
-#include "messagedialog.h"
-#include "minimap.h"
-#include "warning.h"
-#include "window.h"
-
 #include "cityview.h"
 #include "graphics.h"
 #include "city/message.h"
@@ -14,11 +7,10 @@
 #include "terrain.h"
 #include "undo.h"
 
-#include "game/tutorial.h"
-
 #include <sound>
 #include <data>
 #include <ui>
+#include <game>
 
 #include "core/time.h"
 #include "graphics/image.h"

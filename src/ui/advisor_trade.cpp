@@ -1,12 +1,11 @@
 #include "advisors_private.h"
-#include "tooltip.h"
-#include "window.h"
-#include "messagedialog.h"
 #include "cityinfo.h"
 #include "resource.h"
 
 #include <data>
 #include <scenario>
+#include <game>
+#include <ui>
 
 #include "building/count.h"
 #include "core/calc.h"
@@ -143,7 +142,7 @@ void UI_Advisor_Trade_handleMouse()
     int baseOffsetY = Data_Screen.offset640x480.y;
 
     Widget::Button::handleCustomButtons(baseOffsetX, baseOffsetY,
-                                      resourceButtons, Data_CityInfo_Resource.numAvailableResources + 2, &focusButtonId);
+                                        resourceButtons, Data_CityInfo_Resource.numAvailableResources + 2, &focusButtonId);
 }
 
 static void buttonPrices(int param1, int param2)
@@ -347,7 +346,7 @@ void UI_ResourceSettingsDialog_drawForeground()
     else
     {
         Widget::Panel::drawButtonBorder(baseOffsetX + 98, baseOffsetY + 212, 432, 30,
-                                      resourceFocusButtonId == 2);
+                                        resourceFocusButtonId == 2);
         switch (Data_CityInfo.resourceTradeStatus[selectedResourceId])
         {
         case TradeStatus_None:
@@ -375,7 +374,7 @@ void UI_ResourceSettingsDialog_drawForeground()
     if (building_count_industry_total(selectedResourceId) > 0)
     {
         Widget::Panel::drawButtonBorder(baseOffsetX + 98, baseOffsetY + 250, 432, 30,
-                                      resourceFocusButtonId == 1);
+                                        resourceFocusButtonId == 1);
         if (Data_CityInfo.resourceIndustryMothballed[selectedResourceId])
         {
             Widget_GameText_drawCentered(54, 17, baseOffsetX + 114, baseOffsetY + 259, 400, FONT_NORMAL_BLACK);
@@ -387,7 +386,7 @@ void UI_ResourceSettingsDialog_drawForeground()
     }
 
     Widget::Panel::drawButtonBorder(baseOffsetX + 98, baseOffsetY + 288, 432, 50,
-                                  resourceFocusButtonId == 3);
+                                    resourceFocusButtonId == 3);
     if (Data_CityInfo.resourceStockpiled[selectedResourceId])
     {
         Widget_GameText_drawCentered(54, 26, baseOffsetX + 114, baseOffsetY + 296, 400, FONT_NORMAL_BLACK);
@@ -427,7 +426,7 @@ void UI_ResourceSettingsDialog_handleMouse(const mouse *m)
     else
     {
         Widget::Button::handleCustomButtons(baseOffsetX, baseOffsetY,
-                                          resourceCustomButtons, 3, &resourceFocusButtonId);
+                                            resourceCustomButtons, 3, &resourceFocusButtonId);
     }
 }
 

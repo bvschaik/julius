@@ -4,6 +4,7 @@
 #include <data>
 #include <sound>
 #include <ui>
+#include <game>
 
 #include "graphics/image.h"
 

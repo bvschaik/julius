@@ -1,12 +1,10 @@
-#include "allwindows.h"
-#include "window.h"
-#include "messagedialog.h"
 #include "core/calc.h"
 #include "graphics.h"
 #include "city/message.h"
 
 #include <data>
 #include <ui>
+#include <game>
 
 #include "core/lang.h"
 #include "graphics/image.h"
@@ -228,7 +226,7 @@ void UI_PlayerMessageList_handleMouse(const mouse *m)
         return;
     }
     Widget::Button::handleImageButtons(data.x + 16 * data.widthBlocks - 38,
-                                     data.y + 16 * data.heightBlocks - 36, &imageButtonClose, 1, &buttonId);
+                                       data.y + 16 * data.heightBlocks - 36, &imageButtonClose, 1, &buttonId);
     if (buttonId)
     {
         focusButtonId = 12;
@@ -241,7 +239,7 @@ void UI_PlayerMessageList_handleMouse(const mouse *m)
         return;
     }
     Widget::Button::handleImageButtons(data.xText + 16 * data.textWidthBlocks,
-                                     data.yText + 16 * data.textHeightBlocks - 26, &imageButtonScrollDown, 1, &buttonId);
+                                       data.yText + 16 * data.textHeightBlocks - 26, &imageButtonScrollDown, 1, &buttonId);
     if (buttonId)
     {
         focusButtonId = 13;

@@ -11,6 +11,8 @@
 #include "empire/city.h"
 #include "scenario/request.h"
 
+#include <game>
+
 static void buttonDonateToCity(int param1, int param2);
 static void buttonSetSalary(int param1, int param2);
 static void buttonGiftToCaesar(int param1, int param2);

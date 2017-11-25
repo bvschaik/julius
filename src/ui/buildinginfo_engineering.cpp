@@ -3,8 +3,8 @@
 #include "core/calc.h"
 #include "graphics.h"
 #include "resource.h"
-#include "game/resource.h"
 
+#include <game>
 #include <data>
 #include <ui>
 

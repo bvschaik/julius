@@ -8,16 +8,16 @@
 #include <sound>
 #include <data>
 #include <ui>
+#include <game>
 
 #include "building/model.h"
 #include "graphics/image.h"
-#include "game/resource.h"
 
 static void drawVacantLot(BuildingInfoContext *c)
 {
     UI_BuildingInfo_drawFigureImagesLocal(c);
     Widget::Panel::drawOuterPanel(c->xOffset, c->yOffset,
-                                c->widthBlocks, c->heightBlocks);
+                                  c->widthBlocks, c->heightBlocks);
     Widget_GameText_drawCentered(128, 0, c->xOffset, c->yOffset + 8,
                                  16 * c->widthBlocks, FONT_LARGE_BLACK);
     Widget_GameText_drawCentered(13, 1, c->xOffset, c->yOffset + 16 * c->heightBlocks - 22,
@@ -136,23 +136,23 @@ void UI_BuildingInfo_drawHouse(BuildingInfoContext *c)
         // wheat
         Graphics_drawImage(resourceGraphic + RESOURCE_WHEAT,
                            c->xOffset + 32, c->yOffset + 234);
-        Widget::Text::drawNumber(b->data.house.inventory[Inventory_Wheat], '@', " ",
+        Widget::Text::drawNumber(b->data.house.inventory[INVENTORY_WHEAT], '@', " ",
                                  c->xOffset + 64, c->yOffset + 238, FONT_SMALL_BLACK);
         // vegetables
         Graphics_drawImage(resourceGraphic + RESOURCE_VEGETABLES,
                            c->xOffset + 142, c->yOffset + 234);
-        Widget::Text::drawNumber(b->data.house.inventory[Inventory_Vegetables], '@', " ",
+        Widget::Text::drawNumber(b->data.house.inventory[INVENTORY_VEGETABLES], '@', " ",
                                  c->xOffset + 174, c->yOffset + 238, FONT_SMALL_BLACK);
         // fruit
         Graphics_drawImage(resourceGraphic + RESOURCE_FRUIT,
                            c->xOffset + 252, c->yOffset + 234);
-        Widget::Text::drawNumber(b->data.house.inventory[Inventory_Fruit], '@', " ",
+        Widget::Text::drawNumber(b->data.house.inventory[INVENTORY_FRUIT], '@', " ",
                                  c->xOffset + 284, c->yOffset + 238, FONT_SMALL_BLACK);
         // meat/fish
         Graphics_drawImage(resourceGraphic + RESOURCE_MEAT +
                            Resource_getGraphicIdOffset(RESOURCE_MEAT, 3),
                            c->xOffset + 362, c->yOffset + 234);
-        Widget::Text::drawNumber(b->data.house.inventory[Inventory_Meat], '@', " ",
+        Widget::Text::drawNumber(b->data.house.inventory[INVENTORY_MEAT], '@', " ",
                                  c->xOffset + 394, c->yOffset + 238, FONT_SMALL_BLACK);
     }
     else
@@ -165,22 +165,22 @@ void UI_BuildingInfo_drawHouse(BuildingInfoContext *c)
     // pottery
     Graphics_drawImage(resourceGraphic + RESOURCE_POTTERY,
                        c->xOffset + 32, c->yOffset + 274);
-    Widget::Text::drawNumber(b->data.house.inventory[Inventory_Pottery], '@', " ",
+    Widget::Text::drawNumber(b->data.house.inventory[INVENTORY_POTTERY], '@', " ",
                              c->xOffset + 64, c->yOffset + 278, FONT_SMALL_BLACK);
     // furniture
     Graphics_drawImage(resourceGraphic + RESOURCE_FURNITURE,
                        c->xOffset + 142, c->yOffset + 274);
-    Widget::Text::drawNumber(b->data.house.inventory[Inventory_Furniture], '@', " ",
+    Widget::Text::drawNumber(b->data.house.inventory[INVENTORY_FURNITURE], '@', " ",
                              c->xOffset + 174, c->yOffset + 278, FONT_SMALL_BLACK);
     // oil
     Graphics_drawImage(resourceGraphic + RESOURCE_OIL,
                        c->xOffset + 252, c->yOffset + 274);
-    Widget::Text::drawNumber(b->data.house.inventory[Inventory_Oil], '@', " ",
+    Widget::Text::drawNumber(b->data.house.inventory[INVENTORY_OIL], '@', " ",
                              c->xOffset + 284, c->yOffset + 278, FONT_SMALL_BLACK);
     // wine
     Graphics_drawImage(resourceGraphic + RESOURCE_WINE,
                        c->xOffset + 362, c->yOffset + 274);
-    Widget::Text::drawNumber(b->data.house.inventory[Inventory_Wine], '@', " ",
+    Widget::Text::drawNumber(b->data.house.inventory[INVENTORY_WINE], '@', " ",
                              c->xOffset + 394, c->yOffset + 278, FONT_SMALL_BLACK);
 
     if (b->data.house.evolveTextId == 62)

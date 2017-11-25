@@ -1,10 +1,5 @@
 #include "buildinginfo.h"
 
-#include "allwindows.h"
-#include "advisors.h"
-#include "messagedialog.h"
-#include "window.h"
-
 #include "building.h"
 #include "core/calc.h"
 #include "cityinfo.h"
@@ -17,6 +12,7 @@
 
 #include <ui>
 #include <data>
+#include <game>
 
 #include "building/model.h"
 #include "figure/formation.h"
@@ -730,7 +726,7 @@ void UI_BuildingInfo_drawForeground()
     if (context.storageShowSpecialOrders)
     {
         Widget::Button::drawImageButtons(context.xOffset, 432,
-                                       imageButtonsHelpExit, 2);
+                                         imageButtonsHelpExit, 2);
     }
     else
     {
@@ -757,7 +753,7 @@ void UI_BuildingInfo_handleMouse(const mouse *m)
     if (context.storageShowSpecialOrders)
     {
         Widget::Button::handleImageButtons(context.xOffset, 432,
-                                         imageButtonsHelpExit, 2, &focusImageButtonId);
+                                           imageButtonsHelpExit, 2, &focusImageButtonId);
     }
     else
     {

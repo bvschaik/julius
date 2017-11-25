@@ -6,6 +6,7 @@
 
 #include <sound>
 #include <data>
+#include <game>
 
 #include "core/calc.h"
 #include "figure/enemy_army.h"

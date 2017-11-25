@@ -1,8 +1,7 @@
 #include "advisors_private.h"
-#include "window.h"
 
-#include "game/time.h"
-
+#include <game>
+#include <ui>
 #include <scenario>
 
 static void drawHistoryGraph(int fullSize, int x, int y);

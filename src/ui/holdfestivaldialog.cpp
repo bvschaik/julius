@@ -1,14 +1,12 @@
-#include "allwindows.h"
-#include "window.h"
-#include "messagedialog.h"
-#include "widget.h"
 #include "graphics.h"
 #include "cityinfo.h"
 #include "resource.h"
 #include "advisors_private.h"
 #include "data/cityinfo.hpp"
-#include "game/resource.h"
 #include "data/screen.hpp"
+
+#include <ui>
+#include <game>
 
 static void drawButtons();
 static void buttonGod(int param1, int param2);

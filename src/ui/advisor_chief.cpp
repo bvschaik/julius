@@ -2,6 +2,7 @@
 #include "core/calc.h"
 
 #include <scenario>
+#include <game>
 
 void UI_Advisor_Chief_drawBackground(int *advisorHeight)
 {

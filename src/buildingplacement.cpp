@@ -15,17 +15,9 @@
 #include "terraingraphics.h"
 #include "undo.h"
 
-#include "ui/popupdialog.h"
-#include "ui/warning.h"
-#include "ui/window.h"
-
-#include "data/building.hpp"
-#include "data/cityinfo.hpp"
-#include "data/constants.hpp"
-#include "data/grid.hpp"
-#include "data/settings.hpp"
-#include "data/state.hpp"
-#include "data/figure.hpp"
+#include <ui>
+#include <data>
+#include <game>
 
 #include "building/count.h"
 #include "building/model.h"

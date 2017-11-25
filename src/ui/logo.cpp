@@ -1,10 +1,10 @@
-#include "allwindows.h"
 
 #include "graphics.h"
-#include "widget.h"
 
 #include <data>
 #include <sound>
+#include <game>
+#include <ui>
 
 #include "graphics/image.h"
 

@@ -9,6 +9,7 @@
 
 #include <data>
 #include <scenario>
+#include <game>
 
 #include "core/calc.h"
 #include "graphics/image.h"

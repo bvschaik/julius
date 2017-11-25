@@ -1,10 +1,10 @@
 #include "advisors_private.h"
-#include "window.h"
 #include "cityinfo.h"
 
 #include "core/calc.h"
 
 #include <ui>
+#include <game>
 
 #define VAL(val,x,y) Widget::Text::drawNumber(val, '@', " ", baseOffsetX + x, baseOffsetY + y, FONT_NORMAL_BLACK)
 #define ROW(tgr,tid,y,valLy,valTy) \

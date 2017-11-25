@@ -1,12 +1,10 @@
-#include "allwindows.h"
-
-#include "window.h"
 #include "graphics.h"
 #include "cityinfo.h"
 #include "advisors_private.h"
 
 #include <data>
 #include <ui>
+#include <game>
 
 static void buttonSetGift(int param1, int param2);
 static void buttonSendGift(int param1, int param2);
@@ -124,7 +122,7 @@ void UI_SendGiftToCaesarDialog_handleMouse(const mouse *m)
         int offsetX = Data_Screen.offset640x480.x;
         int offsetY = Data_Screen.offset640x480.y;
         Widget::Button::handleCustomButtons(offsetX, offsetY,
-                                          buttons, 5, &focusButtonId);
+                                            buttons, 5, &focusButtonId);
     }
 }
 

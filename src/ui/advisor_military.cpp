@@ -1,5 +1,4 @@
 #include "advisors_private.h"
-#include "window.h"
 
 #include "cityview.h"
 #include "formation.h"
@@ -7,6 +6,7 @@
 #include <data>
 #include <ui>
 #include <scenario>
+#include <game>
 
 #include "figure/formation.h"
 

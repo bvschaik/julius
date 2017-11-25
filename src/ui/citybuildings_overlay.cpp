@@ -1,5 +1,6 @@
 #include "citybuildings_private.h"
-#include "game/resource.h"
+
+#include <game>
 
 static void drawFootprintForWaterOverlay(int gridOffset, int xOffset, int yOffset);
 static void drawTopForWaterOverlay(int gridOffset, int xOffset, int yOffset);
@@ -1470,7 +1471,7 @@ static void drawBuildingTopForFoodStocksOverlay(int gridOffset, int buildingId, 
             {
                 int pop = b->housePopulation;
                 int stocks = 0;
-                for (int i = Inventory_MinFood; i <= Inventory_MaxFood; i++)
+                for (int i = INVENTORY_MIN_FOOD; i <= INVENTORY_MAX_FOOD; i++)
                 {
                     stocks += b->data.house.inventory[i];
                 }

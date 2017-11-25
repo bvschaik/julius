@@ -1,10 +1,9 @@
-#include "allwindows.h"
-#include "window.h"
-
 #include "graphics.h"
 
 #include <data>
 #include <sound>
+#include <game>
+#include <ui>
 
 #include "core/time.h"
 

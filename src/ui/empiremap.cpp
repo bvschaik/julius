@@ -1,9 +1,3 @@
-#include "window.h"
-#include "allwindows.h"
-#include "advisors.h"
-#include "popupdialog.h"
-#include "messagedialog.h"
-
 #include "animation.h"
 #include "core/calc.h"
 #include "cityinfo.h"
@@ -16,6 +10,7 @@
 #include <data>
 #include <empire>
 #include <scenario>
+#include <game>
 
 #include "graphics/image.h"
 

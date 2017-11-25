@@ -5,6 +5,8 @@
 #include "graphics.h"
 #include "data/keyboardinput.hpp"
 
+#include <game>
+
 void Widget::Text::captureCursor()
 {
     inputCursor.capture = 1;

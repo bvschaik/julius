@@ -11,6 +11,8 @@
 #include "core/time.h"
 #include "figure/formation.h"
 
+#include <game>
+
 static void drawBuildingGhostDraggableReservoir();
 static void drawBuildingGhostAqueduct();
 static void drawBuildingGhostFountain();

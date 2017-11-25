@@ -3,6 +3,8 @@
 #include "building/count.h"
 #include "city/culture.h"
 
+#include <game>
+
 void UI_Advisor_Health_drawBackground(int *advisorHeight)
 {
     int baseOffsetX = Data_Screen.offset640x480.x;

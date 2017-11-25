@@ -2,6 +2,7 @@
 
 #include "window.h"
 
+#include <game>
 #include <scenario>
 
 static void drawRatingColumn(int xOffset, int yOffset, int value, int hasReached);
@@ -47,7 +48,7 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
 
     // culture
     Widget::Panel::drawButtonBorder(baseOffsetX + 80, baseOffsetY + 286,
-                                  110, 66, focusButtonId == 1);
+                                    110, 66, focusButtonId == 1);
     Widget_GameText_drawCentered(53, 1, baseOffsetX + 80, baseOffsetY + 294,
                                  110, FONT_NORMAL_BLACK);
     Widget::Text::drawNumberCentered(Data_CityInfo.ratingCulture,
@@ -70,7 +71,7 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
 
     // prosperity
     Widget::Panel::drawButtonBorder(baseOffsetX + 200, baseOffsetY + 286,
-                                  110, 66, focusButtonId == 2);
+                                    110, 66, focusButtonId == 2);
     Widget_GameText_drawCentered(53, 2, baseOffsetX + 200, baseOffsetY + 294,
                                  110, FONT_NORMAL_BLACK);
     Widget::Text::drawNumberCentered(Data_CityInfo.ratingProsperity,
@@ -93,7 +94,7 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
 
     // peace
     Widget::Panel::drawButtonBorder(baseOffsetX + 320, baseOffsetY + 286,
-                                  110, 66, focusButtonId == 3);
+                                    110, 66, focusButtonId == 3);
     Widget_GameText_drawCentered(53, 3, baseOffsetX + 320, baseOffsetY + 294,
                                  110, FONT_NORMAL_BLACK);
     Widget::Text::drawNumberCentered(Data_CityInfo.ratingPeace,
@@ -116,7 +117,7 @@ void UI_Advisor_Ratings_drawBackground(int *advisorHeight)
 
     // favor
     Widget::Panel::drawButtonBorder(baseOffsetX + 440, baseOffsetY + 286,
-                                  110, 66, focusButtonId == 4);
+                                    110, 66, focusButtonId == 4);
     Widget_GameText_drawCentered(53, 4, baseOffsetX + 440, baseOffsetY + 294,
                                  110, FONT_NORMAL_BLACK);
     Widget::Text::drawNumberCentered(Data_CityInfo.ratingFavor,
@@ -226,16 +227,16 @@ void UI_Advisor_Ratings_drawForeground()
 
     // culture
     Widget::Panel::drawButtonBorder(baseOffsetX + 80, baseOffsetY + 286,
-                                  110, 66, focusButtonId == 1);
+                                    110, 66, focusButtonId == 1);
     // prosperity
     Widget::Panel::drawButtonBorder(baseOffsetX + 200, baseOffsetY + 286,
-                                  110, 66, focusButtonId == 2);
+                                    110, 66, focusButtonId == 2);
     // peace
     Widget::Panel::drawButtonBorder(baseOffsetX + 320, baseOffsetY + 286,
-                                  110, 66, focusButtonId == 3);
+                                    110, 66, focusButtonId == 3);
     // favor
     Widget::Panel::drawButtonBorder(baseOffsetX + 440, baseOffsetY + 286,
-                                  110, 66, focusButtonId == 4);
+                                    110, 66, focusButtonId == 4);
 }
 
 void UI_Advisor_Ratings_handleMouse()

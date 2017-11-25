@@ -1,11 +1,9 @@
-#include "widget.h"
 #include "data/constants.hpp"
-
 #include "graphics.h"
-
 #include "graphics/image.h"
 
 #include <ui>
+#include <game>
 
 void Widget::Panel::drawOuterPanel(int xOffset, int yOffset, int widthInBlocks, int heightInBlocks)
 {

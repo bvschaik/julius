@@ -1,19 +1,12 @@
-#include "topmenu.h"
-#include "window.h"
-#include "allwindows.h"
 #include "advisors.h"
-#include "filedialog.h"
-#include "messagedialog.h"
-#include "popupdialog.h"
 #include "graphics.h"
 #include "scenario.h"
 #include "system.h"
 
 #include <data>
 #include <ui>
+#include <game>
 
-#include "game/settings.h"
-#include "game/time.h"
 #include "graphics/image.h"
 
 static void refreshSidebarButtons();

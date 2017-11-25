@@ -1,9 +1,9 @@
-#include "allwindows.h"
 
 #include "graphics.h"
 
 #include <data>
 #include <ui>
+#include <game>
 
 #include "core/time.h"
 
@@ -78,7 +78,7 @@ void UI_OverlayMenu_drawForeground()
     for (int i = 0; i < 8; i++)
     {
         Widget::Panel::drawSmallLabelButton(xOffset - 170, 74 + 24 * i,
-                                          10, menuFocusButtonId == i + 1 ? 1 : 2);
+                                            10, menuFocusButtonId == i + 1 ? 1 : 2);
         Widget_GameText_drawCentered(14, menuIdToOverlayId[i],
                                      xOffset - 170, 77 + 24 * i, 160, FONT_NORMAL_GREEN);
     }

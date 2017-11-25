@@ -1,6 +1,3 @@
-#include "filedialog.h"
-#include "window.h"
-
 #include "core/calc.h"
 #include "core/dir.h"
 #include "core/file.h"
@@ -11,6 +8,7 @@
 
 #include <data>
 #include <ui>
+#include <game>
 
 #include "core/time.h"
 

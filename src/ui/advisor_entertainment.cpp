@@ -1,9 +1,11 @@
-#include "window.h"
 #include "advisors_private.h"
 #include "cityinfo.h"
 
 #include "building/count.h"
-#include "city/culture.h"
+
+#include <ui>
+#include <city>
+#include <game>
 
 static void drawFestivalBackground();
 

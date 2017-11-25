@@ -1,11 +1,9 @@
-#include "allwindows.h"
-#include "window.h"
 #include "advisors_private.h"
 #include "cityinfo.h"
 
-#include "data/constants.hpp"
-
 #include <ui>
+#include <data>
+#include <game>
 
 static void buttonCancel(int param1, int param2);
 static void buttonSetSalary(int param1, int param2);
@@ -75,7 +73,7 @@ void UI_SetSalaryDialog_drawForeground()
                                       baseOffsetX + 152, baseOffsetY + 336, 336, FONT_NORMAL_BLACK);
     }
     Widget::Panel::drawButtonBorder(baseOffsetX + 240, baseOffsetY + 395,
-                                  160, 20, focusButtonId == 1);
+                                    160, 20, focusButtonId == 1);
     Widget_GameText_drawCentered(13, 4, baseOffsetX + 176, baseOffsetY + 400, 288, FONT_NORMAL_BLACK);
 }
 
@@ -90,7 +88,7 @@ void UI_SetSalaryDialog_handleMouse(const mouse *m)
         int offsetX = Data_Screen.offset640x480.x;
         int offsetY = Data_Screen.offset640x480.y;
         Widget::Button::handleCustomButtons(offsetX, offsetY,
-                                          buttons, 12, &focusButtonId);
+                                            buttons, 12, &focusButtonId);
     }
 }
 

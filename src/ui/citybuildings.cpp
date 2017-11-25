@@ -1,9 +1,4 @@
 #include "citybuildings_private.h"
-
-#include "minimap.h"
-#include "warning.h"
-#include "window.h"
-
 #include "building.h"
 #include "buildingplacement.h"
 #include "cityview.h"
@@ -15,11 +10,10 @@
 #include "building/model.h"
 #include "core/time.h"
 #include "figure/formation.h"
-#include "game/settings.h"
-#include "game/resource.h"
 
 #include <ui>
 #include <sound>
+#include <game>
 
 static void drawBuildingFootprints();
 static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_CityPixelCoordinate *coord);
@@ -1372,7 +1366,7 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
         else
         {
             int stocksPresent = 0;
-            for (int i = Inventory_MinFood; i <= Inventory_MaxFood; i++)
+            for (int i = INVENTORY_MIN_FOOD; i <= INVENTORY_MAX_FOOD; i++)
             {
                 stocksPresent += b->data.house.inventory[i];
             }

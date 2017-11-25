@@ -7,8 +7,8 @@
 #include "empire/trade_route.h"
 #include "empire/type.h"
 #include "graphics/image.h"
-#include "game/resource.h"
 
+#include <game>
 #include <data>
 #include <scenario>
 

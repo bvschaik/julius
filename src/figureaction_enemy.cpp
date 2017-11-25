@@ -7,6 +7,7 @@
 #include <sound>
 #include <data>
 #include <scenario>
+#include <game>
 
 #include "figure/formation.h"
 #include "figure/properties.h"

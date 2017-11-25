@@ -3,8 +3,8 @@
 #include "figure.h"
 #include "routing.h"
 
-#include "data/cityinfo.hpp"
-#include "data/grid.hpp"
+#include <data>
+#include <game>
 
 #include "figure/formation.h"
 #include "figure/properties.h"

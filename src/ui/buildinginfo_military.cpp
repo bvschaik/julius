@@ -5,6 +5,7 @@
 
 #include <sound>
 #include <data>
+#include <game>
 #include <ui>
 
 #include "building/count.h"
