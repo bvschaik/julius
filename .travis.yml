@@ -11,7 +11,6 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
             - george-edison55-precise-backports
-            - ppa:zoogie/sdl2-snapshots
           packages:
             - g++-4.9
             - cmake
@@ -26,7 +25,6 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
             - george-edison55-precise-backports
-            - ppa:zoogie/sdl2-snapshots
           packages:
             - g++-5
             - cmake
@@ -42,7 +40,6 @@ matrix:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise-3.8
             - george-edison55-precise-backports
-            - ppa:zoogie/sdl2-snapshots
           packages:
             - clang-3.6
             - cmake
@@ -58,7 +55,6 @@ matrix:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise-3.7
             - george-edison55-precise-backports
-            - ppa:zoogie/sdl2-snapshots
           packages:
             - clang-3.7
             - cmake
@@ -74,7 +70,6 @@ matrix:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise-3.8
             - george-edison55-precise-backports
-            - ppa:zoogie/sdl2-snapshots
           packages:
             - clang-3.8
             - cmake
@@ -86,7 +81,7 @@ matrix:
 before_install:
 # Get build dependencies
 - sudo apt-get -qq update
-- sudo apt-get install -qq build-essential libsdl2-mixer-dev libasound2-dev libxxf86vm-dev
+- sudo apt-get install -qq build-essential libasound2-dev libxxf86vm-dev
 - export CXX=$CXX_COMPILER
 - export CC=$C_COMPILER
 #- sudo apt-get install -qq gcc-multilib g++-multilib
