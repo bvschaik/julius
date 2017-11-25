@@ -13,9 +13,9 @@ void scenario_price_change_init()
     for (int i = 0; i < MAX_PRICE_CHANGES; i++)
     {
         random_generate_next();
-        if (Data_Scenario.priceChanges.year[i])
+        if (scenario.price_changes[i].year)
         {
-            Data_Scenario.priceChanges.month[i] = (random_byte() & 7) + 2;
+            scenario.price_changes[i].month = (random_byte() & 7) + 2;
         }
     }
 }
@@ -24,18 +24,18 @@ void scenario_price_change_process()
 {
     for (int i = 0; i < MAX_PRICE_CHANGES; i++)
     {
-        if (!Data_Scenario.priceChanges.year[i])
+        if (!scenario.price_changes[i].year)
         {
             continue;
         }
-        if (game_time_year() != Data_Scenario.priceChanges.year[i] + scenario_property_start_year() ||
-                game_time_month() != Data_Scenario.priceChanges.month[i])
+        if (game_time_year() != scenario.price_changes[i].year + scenario_property_start_year() ||
+                game_time_month() != scenario.price_changes[i].month)
         {
             continue;
         }
-        int amount = Data_Scenario.priceChanges.amount[i];
-        int resource = Data_Scenario.priceChanges.resourceId[i];
-        if (Data_Scenario.priceChanges.isRise[i])
+        int amount = scenario.price_changes[i].amount;
+        int resource = scenario.price_changes[i].resource;
+        if (scenario.price_changes[i].is_rise)
         {
             if (trade_price_change(resource, amount))
             {

@@ -1,6 +1,5 @@
 #include "advisors_private.h"
 #include "core/calc.h"
-#include "data/scenario.hpp"
 
 #include <scenario>
 

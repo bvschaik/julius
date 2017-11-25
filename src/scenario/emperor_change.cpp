@@ -4,7 +4,7 @@
 #include "core/random.h"
 #include "game/time.h"
 
-#include "data/scenario.hpp"
+#include <scenario>
 
 static struct
 {
@@ -15,14 +15,14 @@ static struct
 
 void scenario_emperor_change_init()
 {
-    data.game_year = Data_Scenario.startYear + Data_Scenario.emperorChange.year;
+    data.game_year = scenario.start_year + scenario.emperor_change.year;
     data.month = 1 + (random_byte() & 7);
     data.state = 0;
 }
 
 void scenario_emperor_change_process()
 {
-    if (!Data_Scenario.emperorChange.enabled)
+    if (!scenario.emperor_change.enabled)
     {
         return;
     }

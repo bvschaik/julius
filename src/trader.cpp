@@ -115,7 +115,7 @@ static int generateTrader(int cityId, empire_city *city)
     {
         // generate ship
         if (Data_CityInfo.numWorkingDocks > 0 &&
-                (Data_Scenario.riverEntryPoint.x != -1 || Data_Scenario.riverEntryPoint.y != -1) &&
+                (scenario.river_entry_point.x != -1 || scenario.river_entry_point.y != -1) &&
                 !Data_CityInfo.tradeSeaProblemDuration)
         {
             map_point river_entry = scenario_map_river_entry();

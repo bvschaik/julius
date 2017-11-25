@@ -4,8 +4,6 @@
 
 #include <data>
 
-_Data_Scenario Data_Scenario;
-
 struct _Data_Settings Data_Settings;
 struct _Data_Settings_Map Data_Settings_Map;
 

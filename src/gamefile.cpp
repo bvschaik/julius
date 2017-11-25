@@ -152,7 +152,7 @@ typedef struct
     buffer *trade_prices;
     buffer *figure_names;
     buffer *culture_coverage;
-    buffer *Data_Scenario;
+    buffer *scenario;
     buffer *max_game_year;
     buffer *earthquake;
     buffer *emperor_change_state;
@@ -318,7 +318,7 @@ void init_savegame_data()
     state->trade_prices = create_savegame_piece(128, 0);
     state->figure_names = create_savegame_piece(84, 0);
     state->culture_coverage = create_savegame_piece(60, 0);
-    state->Data_Scenario = create_savegame_piece(1720, 0);
+    state->scenario = create_savegame_piece(1720, 0);
     state->max_game_year = create_savegame_piece(4, 0);
     state->earthquake = create_savegame_piece(60, 0);
     state->emperor_change_state = create_savegame_piece(4, 0);
@@ -406,7 +406,7 @@ void scenario_deserialize(scenario_state *file)
 
     random_load_state(file->random_iv);
 
-    read_all_from_buffer(file->scenario, &Data_Scenario);
+    scenario_load_state(file->scenario);
 
     // check if all buffers are empty
     for (int i = 0; i < scenario_data.num_pieces; i++)
@@ -482,7 +482,7 @@ static void savegame_deserialize(savegame_state *state)
     figure_name_load_state(state->figure_names);
 
     city_culture_load_state(state->culture_coverage);
-    read_all_from_buffer(state->Data_Scenario, &Data_Scenario);
+    scenario_load_state(state->scenario);
     scenario_criteria_load_state(state->max_game_year);
 
     scenario_earthquake_load_state(state->earthquake);
@@ -610,7 +610,7 @@ static void savegame_serialize(savegame_state *state)
     figure_name_save_state(state->figure_names);
 
     city_culture_save_state(state->culture_coverage);
-    write_all_to_buffer(state->Data_Scenario, &Data_Scenario);
+    scenario_save_state(state->scenario);
     scenario_criteria_save_state(state->max_game_year);
 
     scenario_earthquake_save_state(state->earthquake);

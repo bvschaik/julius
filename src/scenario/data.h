@@ -34,7 +34,7 @@ struct win_criteria_t
     int goal;
 };
 
-extern struct scenario_t
+struct scenario_t
 {
     int start_year;
     int climate;
@@ -45,7 +45,7 @@ extern struct scenario_t
 
     int rome_supplies_wheat;
     int image_id;
-    uint8_t brief_description[64];
+    char brief_description[64];
     int enemy_id;
     int is_open_play;
     int open_play_scenario_id;
@@ -54,7 +54,7 @@ extern struct scenario_t
     {
         struct win_criteria_t population;
         struct win_criteria_t culture;
-        struct win_criteria_t properity;
+        struct win_criteria_t prosperity;
         struct win_criteria_t peace;
         struct win_criteria_t favor;
         struct
@@ -225,7 +225,8 @@ extern struct scenario_t
         int meeting;
         int crops;
     } native_images;
-} scenario;
+};
 
+extern scenario_t scenario;
 
 #endif // SCENARIO_DATA_H

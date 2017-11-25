@@ -2,11 +2,12 @@
 #include "data/building.hpp"
 #include "data/cityinfo.hpp"
 #include "data/constants.hpp"
-#include "data/scenario.hpp"
 #include "data/settings.hpp"
 #include "game/tutorial.h"
 #include "empire/city.h"
 #include "ui/sidebar.h"
+
+#include <scenario>
 
 #define MAX_BUILDINGITEMS 30
 static int menuBuildingType[MAX_BUILDINGITEMS][MAX_BUILDINGITEMS] =
@@ -67,7 +68,7 @@ static int menuBuildingType[MAX_BUILDINGITEMS][MAX_BUILDINGITEMS] =
 static int menuEnabled[MAX_BUILDINGITEMS][MAX_BUILDINGITEMS];
 
 #define ENABLE_HOUSE() if (buildingType >= BUILDING_HOUSE_VACANT_LOT && buildingType <= BUILDING_HOUSE_LUXURY_PALACE) menuEnabled[sub][item] = 1
-#define ENABLE_IF(b,a) if (buildingType == b && Data_Scenario.allowedBuildings.a) menuEnabled[sub][item] = 1
+#define ENABLE_IF(b,a) if (buildingType == b && scenario.allowed_buildings.a) menuEnabled[sub][item] = 1
 #define ENABLE(b) if (buildingType == b) menuEnabled[sub][item] = 1
 #define DISABLE_RAW(b,r) if (buildingType == b && !empire_can_produce_resource(r)) menuEnabled[sub][item] = 0
 #define DISABLE_FINISHED(b,r) if (buildingType == b && !empire_can_produce_resource_potentially(r)) menuEnabled[sub][item] = 0
@@ -90,8 +91,8 @@ static void enableNormal(int sub, int item, int buildingType)
     ENABLE_IF(BUILDING_BATHHOUSE, bathhouse);
     ENABLE_IF(BUILDING_DOCTOR, doctor);
     ENABLE_IF(BUILDING_HOSPITAL, hospital);
-    ENABLE_IF(BUILDING_MENU_SMALL_TEMPLES, smallTemples);
-    ENABLE_IF(BUILDING_MENU_LARGE_TEMPLES, largeTemples);
+    ENABLE_IF(BUILDING_MENU_SMALL_TEMPLES, small_temples);
+    ENABLE_IF(BUILDING_MENU_LARGE_TEMPLES, large_temples);
     ENABLE_IF(BUILDING_ORACLE, oracle);
     ENABLE_IF(BUILDING_SCHOOL, school);
     ENABLE_IF(BUILDING_ACADEMY, academy);
@@ -100,22 +101,22 @@ static void enableNormal(int sub, int item, int buildingType)
     ENABLE_IF(BUILDING_AMPHITHEATER, amphitheater);
     ENABLE_IF(BUILDING_COLOSSEUM, colosseum);
     ENABLE_IF(BUILDING_HIPPODROME, hippodrome);
-    ENABLE_IF(BUILDING_GLADIATOR_SCHOOL, gladiatorSchool);
-    ENABLE_IF(BUILDING_LION_HOUSE, lionHouse);
-    ENABLE_IF(BUILDING_ACTOR_COLONY, actorColony);
-    ENABLE_IF(BUILDING_CHARIOT_MAKER, chariotMaker);
+    ENABLE_IF(BUILDING_GLADIATOR_SCHOOL, gladiator_school);
+    ENABLE_IF(BUILDING_LION_HOUSE, lion_house);
+    ENABLE_IF(BUILDING_ACTOR_COLONY, actor_colony);
+    ENABLE_IF(BUILDING_CHARIOT_MAKER, chariot_maker);
     ENABLE_IF(BUILDING_FORUM, forum);
     ENABLE_IF(BUILDING_SENATE_UPGRADED, senate);
-    ENABLE_IF(BUILDING_GOVERNORS_HOUSE, governorHome);
-    ENABLE_IF(BUILDING_GOVERNORS_VILLA, governorHome);
-    ENABLE_IF(BUILDING_GOVERNORS_PALACE, governorHome);
+    ENABLE_IF(BUILDING_GOVERNORS_HOUSE, governor_home);
+    ENABLE_IF(BUILDING_GOVERNORS_VILLA, governor_home);
+    ENABLE_IF(BUILDING_GOVERNORS_PALACE, governor_home);
     ENABLE_IF(BUILDING_SMALL_STATUE, statues);
     ENABLE_IF(BUILDING_MEDIUM_STATUE, statues);
     ENABLE_IF(BUILDING_LARGE_STATUE, statues);
     ENABLE_IF(BUILDING_GARDENS, gardens);
     ENABLE_IF(BUILDING_PLAZA, plaza);
-    ENABLE_IF(BUILDING_ENGINEERS_POST, engineersPost);
-    ENABLE_IF(BUILDING_MISSION_POST, missionPost);
+    ENABLE_IF(BUILDING_ENGINEERS_POST, engineers_post);
+    ENABLE_IF(BUILDING_MISSION_POST, mission_post);
     ENABLE_IF(BUILDING_SHIPYARD, wharf);
     ENABLE_IF(BUILDING_WHARF, wharf);
     ENABLE_IF(BUILDING_DOCK, dock);
@@ -124,11 +125,11 @@ static void enableNormal(int sub, int item, int buildingType)
     ENABLE_IF(BUILDING_GATEHOUSE, gatehouse);
     ENABLE_IF(BUILDING_PREFECTURE, prefecture);
     ENABLE_IF(BUILDING_FORT, fort);
-    ENABLE_IF(BUILDING_MILITARY_ACADEMY, militaryAcademy);
+    ENABLE_IF(BUILDING_MILITARY_ACADEMY, military_academy);
     ENABLE_IF(BUILDING_BARRACKS, barracks);
-    ENABLE_IF(BUILDING_DISTRIBUTION_CENTER_UNUSED, distributionCenter);
+    ENABLE_IF(BUILDING_DISTRIBUTION_CENTER_UNUSED, distribution_center);
     ENABLE_IF(BUILDING_MENU_FARMS, farms);
-    ENABLE_IF(BUILDING_MENU_RAW_MATERIALS, rawMaterials);
+    ENABLE_IF(BUILDING_MENU_RAW_MATERIALS, raw_materials);
     ENABLE_IF(BUILDING_MENU_WORKSHOPS, workshops);
     ENABLE_IF(BUILDING_MARKET, market);
     ENABLE_IF(BUILDING_GRANARY, granary);
@@ -162,7 +163,7 @@ static void enableTutorial1AfterFire(int sub, int item, int buildingType)
 static void enableTutorial1AfterCollapse(int sub, int item, int buildingType)
 {
     enableTutorial1AfterFire(sub, item, buildingType);
-    ENABLE_IF(BUILDING_ENGINEERS_POST, engineersPost);
+    ENABLE_IF(BUILDING_ENGINEERS_POST, engineers_post);
     ENABLE_IF(BUILDING_SENATE_UPGRADED, senate);
 }
 
@@ -173,12 +174,12 @@ static void enableTutorial2Start(int sub, int item, int buildingType)
     ENABLE_IF(BUILDING_WELL, well);
     ENABLE_IF(BUILDING_ROAD, road);
     ENABLE_IF(BUILDING_PREFECTURE, prefecture);
-    ENABLE_IF(BUILDING_ENGINEERS_POST, engineersPost);
+    ENABLE_IF(BUILDING_ENGINEERS_POST, engineers_post);
     ENABLE_IF(BUILDING_SENATE_UPGRADED, senate);
     ENABLE_IF(BUILDING_MARKET, market);
     ENABLE_IF(BUILDING_GRANARY, granary);
     ENABLE_IF(BUILDING_MENU_FARMS, farms);
-    ENABLE_IF(BUILDING_MENU_SMALL_TEMPLES, smallTemples);
+    ENABLE_IF(BUILDING_MENU_SMALL_TEMPLES, small_temples);
 }
 
 static void enableTutorial2UpTo250(int sub, int item, int buildingType)
@@ -193,7 +194,7 @@ static void enableTutorial2UpTo450(int sub, int item, int buildingType)
 {
     enableTutorial2UpTo250(sub, item, buildingType);
     ENABLE_IF(BUILDING_GARDENS, gardens);
-    ENABLE_IF(BUILDING_ACTOR_COLONY, actorColony);
+    ENABLE_IF(BUILDING_ACTOR_COLONY, actor_colony);
     ENABLE_IF(BUILDING_THEATER, theater);
     ENABLE_IF(BUILDING_BATHHOUSE, bathhouse);
     ENABLE_IF(BUILDING_SCHOOL, school);
@@ -202,12 +203,12 @@ static void enableTutorial2UpTo450(int sub, int item, int buildingType)
 static void enableTutorial2After450(int sub, int item, int buildingType)
 {
     enableTutorial2UpTo450(sub, item, buildingType);
-    ENABLE_IF(BUILDING_MENU_RAW_MATERIALS, rawMaterials);
+    ENABLE_IF(BUILDING_MENU_RAW_MATERIALS, raw_materials);
     ENABLE_IF(BUILDING_MENU_WORKSHOPS, workshops);
     ENABLE_IF(BUILDING_WAREHOUSE, warehouse);
     ENABLE_IF(BUILDING_FORUM, forum);
     ENABLE_IF(BUILDING_AMPHITHEATER, amphitheater);
-    ENABLE_IF(BUILDING_GLADIATOR_SCHOOL, gladiatorSchool);
+    ENABLE_IF(BUILDING_GLADIATOR_SCHOOL, gladiator_school);
 }
 
 static void disableResources(int sub, int item, int buildingType)

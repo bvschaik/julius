@@ -9,6 +9,7 @@
 #include "scenario/data.h"
 
 #include <data>
+#include <scenario>
 
 #include "cityinfo.h"
 #include "formation.h"
@@ -16,18 +17,18 @@
 
 int scenario_distant_battle_roman_travel_months()
 {
-    return Data_Scenario.distantBattleTravelMonthsRoman;
+    return scenario.empire.distant_battle_roman_travel_months;
 }
 
 void scenario_distant_battle_set_roman_travel_months()
 {
-    Data_Scenario.distantBattleTravelMonthsRoman =
+    scenario.empire.distant_battle_roman_travel_months =
         empire_object_init_distant_battle_travel_months(EMPIRE_OBJECT_ROMAN_ARMY);
 }
 
 void scenario_distant_battle_set_enemy_travel_months()
 {
-    Data_Scenario.distantBattleTravelMonthsEnemy =
+    scenario.empire.distant_battle_enemy_travel_months =
         empire_object_init_distant_battle_travel_months(EMPIRE_OBJECT_ENEMY_ARMY);
 }
 
@@ -49,10 +50,10 @@ static void set_city_foreign()
 
 static void update_time_traveled()
 {
-    if (Data_CityInfo.distantBattleMonthsToBattle < Data_Scenario.distantBattleTravelMonthsEnemy)
+    if (Data_CityInfo.distantBattleMonthsToBattle < scenario.empire.distant_battle_enemy_travel_months)
     {
         Data_CityInfo.distantBattleEnemyMonthsTraveled =
-            Data_Scenario.distantBattleTravelMonthsEnemy - Data_CityInfo.distantBattleMonthsToBattle + 1;
+            scenario.empire.distant_battle_enemy_travel_months - Data_CityInfo.distantBattleMonthsToBattle + 1;
     }
     else
     {
@@ -60,8 +61,8 @@ static void update_time_traveled()
     }
     if (Data_CityInfo.distantBattleRomanMonthsToTravel >= 1)
     {
-        if (Data_Scenario.distantBattleTravelMonthsRoman - Data_CityInfo.distantBattleRomanMonthsTraveled >
-                Data_Scenario.distantBattleTravelMonthsEnemy - Data_CityInfo.distantBattleEnemyMonthsTraveled)
+        if (scenario.empire.distant_battle_roman_travel_months - Data_CityInfo.distantBattleRomanMonthsTraveled >
+                scenario.empire.distant_battle_enemy_travel_months - Data_CityInfo.distantBattleEnemyMonthsTraveled)
         {
             Data_CityInfo.distantBattleRomanMonthsToTravel -= 2;
         }
@@ -74,14 +75,14 @@ static void update_time_traveled()
             Data_CityInfo.distantBattleRomanMonthsToTravel = 1;
         }
         Data_CityInfo.distantBattleRomanMonthsTraveled =
-            Data_Scenario.distantBattleTravelMonthsRoman - Data_CityInfo.distantBattleRomanMonthsToTravel + 1;
+            scenario.empire.distant_battle_roman_travel_months - Data_CityInfo.distantBattleRomanMonthsToTravel + 1;
         if (Data_CityInfo.distantBattleRomanMonthsTraveled < 1)
         {
             Data_CityInfo.distantBattleRomanMonthsTraveled = 1;
         }
-        if (Data_CityInfo.distantBattleRomanMonthsTraveled > Data_Scenario.distantBattleTravelMonthsRoman)
+        if (Data_CityInfo.distantBattleRomanMonthsTraveled > scenario.empire.distant_battle_roman_travel_months)
         {
-            Data_CityInfo.distantBattleRomanMonthsTraveled = Data_Scenario.distantBattleTravelMonthsRoman;
+            Data_CityInfo.distantBattleRomanMonthsTraveled = scenario.empire.distant_battle_roman_travel_months;
         }
     }
 }
@@ -212,11 +213,11 @@ void scenario_distant_battle_process()
 {
     for (int i = 0; i < MAX_INVASIONS; i++)
     {
-        if (Data_Scenario.invasions.type[i] == INVASION_TYPE_DISTANT_BATTLE &&
-                game_time_year() == Data_Scenario.invasions.year[i] + Data_Scenario.startYear &&
-                game_time_month() == Data_Scenario.invasions_month[i] &&
-                Data_Scenario.distantBattleTravelMonthsEnemy > 4 &&
-                Data_Scenario.distantBattleTravelMonthsRoman > 4 &&
+        if (scenario.invasions[i].type == INVASION_TYPE_DISTANT_BATTLE &&
+                game_time_year() == scenario.invasions[i].year + scenario.start_year &&
+                game_time_month() == scenario.invasions[i].month &&
+                scenario.empire.distant_battle_enemy_travel_months > 4 &&
+                scenario.empire.distant_battle_roman_travel_months > 4 &&
                 Data_CityInfo.distantBattleMonthsToBattle <= 0 &&
                 Data_CityInfo.distantBattleRomanMonthsToReturn <= 0 &&
                 Data_CityInfo.distantBattleRomanMonthsToTravel <= 0 &&
@@ -227,7 +228,7 @@ void scenario_distant_battle_process()
             Data_CityInfo.distantBattleEnemyMonthsTraveled = 1;
             Data_CityInfo.distantBattleRomanMonthsTraveled = 1;
             Data_CityInfo.distantBattleMonthsToBattle = 24;
-            Data_CityInfo.distantBattleEnemyStrength = Data_Scenario.invasions.amount[i];
+            Data_CityInfo.distantBattleEnemyStrength = scenario.invasions[i].amount;
             Data_CityInfo.distantBattleTotalCount++;
             Data_CityInfo.distantBattleRomanMonthsToReturn = 0;
             Data_CityInfo.distantBattleRomanMonthsToTravel = 0;

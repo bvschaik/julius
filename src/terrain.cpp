@@ -1452,7 +1452,7 @@ void Terrain_updateEntryExitFlags(int remove)
     }
     int exitOrientation;
     map_point exit_point = scenario_map_exit();
-    if (Data_Scenario.exitPoint.x == 0)
+    if (scenario.exit_point.x == 0)
     {
         exitOrientation = Dir_2_Right;
     }

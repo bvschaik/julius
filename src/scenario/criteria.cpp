@@ -1,78 +1,78 @@
 #include "criteria.h"
 
 #include <core>
-#include "data/scenario.hpp"
+#include <scenario>
 
 static int max_game_year;
 
 int scenario_criteria_population_enabled()
 {
-    return Data_Scenario.winCriteria_populationEnabled;
+    return scenario.win_criteria.population.enabled;
 }
 
 int scenario_criteria_population()
 {
-    return Data_Scenario.winCriteria_population;
+    return scenario.win_criteria.population.goal;
 }
 
 int scenario_criteria_culture_enabled()
 {
-    return Data_Scenario.winCriteria.cultureEnabled;
+    return scenario.win_criteria.culture.enabled;
 }
 
 int scenario_criteria_culture()
 {
-    return Data_Scenario.winCriteria.culture;
+    return scenario.win_criteria.culture.goal;
 }
 
 int scenario_criteria_prosperity_enabled()
 {
-    return Data_Scenario.winCriteria.prosperityEnabled;
+    return scenario.win_criteria.prosperity.enabled;
 }
 
 int scenario_criteria_prosperity()
 {
-    return Data_Scenario.winCriteria.prosperity;
+    return scenario.win_criteria.prosperity.goal;
 }
 
 int scenario_criteria_peace_enabled()
 {
-    return Data_Scenario.winCriteria.peaceEnabled;
+    return scenario.win_criteria.peace.enabled;
 }
 
 int scenario_criteria_peace()
 {
-    return Data_Scenario.winCriteria.peace;
+    return scenario.win_criteria.peace.goal;
 }
 
 int scenario_criteria_favor_enabled()
 {
-    return Data_Scenario.winCriteria.favorEnabled;
+    return scenario.win_criteria.favor.enabled;
 }
 
 int scenario_criteria_favor()
 {
-    return Data_Scenario.winCriteria.favor;
+    return scenario.win_criteria.favor.goal;
 }
 
 int scenario_criteria_time_limit_enabled()
 {
-    return Data_Scenario.winCriteria.timeLimitYearsEnabled;
+    return scenario.win_criteria.time_limit.enabled;
 }
 
 int scenario_criteria_time_limit_years()
 {
-    return Data_Scenario.winCriteria.timeLimitYears;
+    return scenario.win_criteria.time_limit.years;
 }
 
 int scenario_criteria_survival_enabled()
 {
-    return Data_Scenario.winCriteria.survivalYearsEnabled;
+    return scenario.win_criteria.survival_time.enabled;
 }
 
 int scenario_criteria_survival_years()
 {
-    return Data_Scenario.winCriteria.survivalYears;
+    return scenario.win_criteria.survival_time.years;
 }
 
 int scenario_criteria_milestone_year(int percentage)
@@ -80,28 +80,28 @@ int scenario_criteria_milestone_year(int percentage)
     switch (percentage)
     {
     case 25:
-        return Data_Scenario.startYear + Data_Scenario.milestone25;
+        return scenario.start_year + scenario.win_criteria.milestone25_year;
     case 50:
-        return Data_Scenario.startYear + Data_Scenario.milestone50;
+        return scenario.start_year + scenario.win_criteria.milestone50_year;
     case 75:
-        return Data_Scenario.startYear + Data_Scenario.milestone75;
+        return scenario.start_year + scenario.win_criteria.milestone75_year;
     }
     return 0;
 }
 
 void scenario_criteria_init_max_year()
 {
-    if (Data_Scenario.winCriteria.timeLimitYearsEnabled)
+    if (scenario.win_criteria.time_limit.enabled)
     {
-        max_game_year = Data_Scenario.startYear + Data_Scenario.winCriteria.timeLimitYears;
+        max_game_year = scenario.start_year + scenario.win_criteria.time_limit.years;
     }
-    else if (Data_Scenario.winCriteria.survivalYearsEnabled)
+    else if (scenario.win_criteria.survival_time.years)
     {
-        max_game_year = Data_Scenario.startYear + Data_Scenario.winCriteria.survivalYears;
+        max_game_year = scenario.start_year + scenario.win_criteria.survival_time.years;
     }
     else
     {
-        max_game_year = 1000000 + Data_Scenario.startYear;
+        max_game_year = 1000000 + scenario.start_year;
     }
 }
 
