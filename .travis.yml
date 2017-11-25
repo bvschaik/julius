@@ -61,7 +61,7 @@ before_install:
 #- sudo apt-get install -qq gcc-multilib g++-multilib
 install:
 # Create unix makefiles
-- rm libs/sdl2
+- rm -rf libs/sdl2
 - git clone https://github.com/spurious/SDL-mirror libs/sdl2
 - mkdir build
 - cd build
