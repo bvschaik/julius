@@ -1,7 +1,7 @@
 #ifndef UI_MESSAGEDIALOG_H
 #define UI_MESSAGEDIALOG_H
 
-#include "graphics/mouse.h"
+#include "input/mouse.h"
 
 enum {
 	MessageDialog_About = 0,

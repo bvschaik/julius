@@ -1,7 +1,7 @@
 #ifndef UI_TOOLTIP_H
 #define UI_TOOLTIP_H
 
-#include "graphics/mouse.h"
+#include "input/mouse.h"
 
 enum {
 	TooltipType_None = 0,

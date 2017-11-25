@@ -2,7 +2,7 @@
 #define UI_BUILDINGINFO_H
 
 #include "Tooltip.h"
-#include "graphics/mouse.h"
+#include "input/mouse.h"
 #include "sound/speech.h"
 
 #define PLAY_SOUND(f) \

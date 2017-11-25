@@ -8,7 +8,7 @@
 
 #include "game/settings.h"
 
-#include "graphics/mouse.h"
+#include "input/mouse.h"
 
 static void buttonFullscreen(int param1, int param2);
 static void buttonSetResolution(int param1, int param2);

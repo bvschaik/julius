@@ -3,7 +3,7 @@
 
 #include "Tooltip.h"
 
-#include "graphics/mouse.h"
+#include "input/mouse.h"
 
 struct UI_CityPixelCoordinate {
 	int x;

@@ -24,7 +24,7 @@
 
 #include "core/lang.h"
 #include "game/settings.h"
-#include "graphics/mouse.h"
+#include "input/mouse.h"
 
 #include <execinfo.h>
 #include <signal.h>

@@ -4,7 +4,7 @@
 #include "Tooltip.h"
 #include "Window.h"
 
-#include "graphics/mouse.h"
+#include "input/mouse.h"
 
 void UI_Logo_init();
 void UI_Logo_drawBackground();

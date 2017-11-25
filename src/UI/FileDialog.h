@@ -1,7 +1,7 @@
 #ifndef UI_FILEDIALOG_H
 #define UI_FILEDIALOG_H
 
-#include "graphics/mouse.h"
+#include "input/mouse.h"
 
 enum {
 	FileDialogType_Save = 0,

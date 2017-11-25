@@ -5,7 +5,7 @@
 
 #include "graphics/color.h"
 #include "graphics/font.h"
-#include "graphics/mouse.h"
+#include "input/mouse.h"
 
 #include <stdint.h>
 

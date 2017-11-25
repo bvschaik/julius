@@ -1,6 +1,6 @@
 #include "loki/loki.h"
 
-#include "graphics/mouse.h"
+#include "input/mouse.h"
 
 NO_MOCKS()
 

@@ -1,4 +1,4 @@
-#include "graphics/mouse.h"
+#include "input/mouse.h"
 
 static mouse data;
 

@@ -3,7 +3,7 @@
 
 #include "Window.h"
 
-#include "graphics/mouse.h"
+#include "input/mouse.h"
 
 void UI_VideoIntermezzo_show(const char* filename, int width, int height, WindowId nextWindowId);
 

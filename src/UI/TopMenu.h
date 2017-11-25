@@ -3,7 +3,7 @@
 
 #include "Tooltip.h"
 
-#include "graphics/mouse.h"
+#include "input/mouse.h"
 
 void UI_TopMenu_initFromSettings();
 void UI_TopMenu_drawBackground();

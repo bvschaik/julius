@@ -54,6 +54,7 @@ set (GAME_FILES
 )
 set (INPUT_FILES
     src/input/keyboard.c
+    src/input/mouse.c
     src/input/scroll.c
 )
 set (MAP_FILES
@@ -86,7 +87,6 @@ set (SCENARIO_FILES
 )
 set (GRAPHICS_FILES
     src/graphics/image.c
-    src/graphics/mouse.c
 )
 set (SOUND_FILES
     src/sound/city.c

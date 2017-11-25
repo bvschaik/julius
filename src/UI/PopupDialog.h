@@ -1,7 +1,7 @@
 #ifndef UI_POPUPDIALOG_H
 #define UI_POPUPDIALOG_H
 
-#include "graphics/mouse.h"
+#include "input/mouse.h"
 
 enum {
 	PopupDialog_Quit = 0,

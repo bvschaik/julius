@@ -3,7 +3,7 @@
 
 #include "core/time.h"
 #include "graphics/image.h"
-#include "graphics/mouse.h"
+#include "input/mouse.h"
 #include "sound/effect.h"
 
 #define PRESSED_EFFECT_MILLIS 100

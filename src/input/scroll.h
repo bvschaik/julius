@@ -1,7 +1,7 @@
 #ifndef INPUT_SCROLL_H
 #define INPUT_SCROLL_H
 
-#include "graphics/mouse.h"
+#include "input/mouse.h"
 
 int scroll_in_progress();
 

@@ -20,7 +20,7 @@
 #include "core/lang.h"
 #include "empire/city.h"
 #include "graphics/image.h"
-#include "graphics/mouse.h"
+#include "input/mouse.h"
 #include "scenario/property.h"
 #include "scenario/request.h"
 

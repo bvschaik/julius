@@ -6,7 +6,7 @@
 
 #include "game/settings.h"
 
-#include "graphics/mouse.h"
+#include "input/mouse.h"
 
 static void arrowButtonDifficulty(int param1, int param2);
 static void arrowButtonGods(int param1, int param2);
