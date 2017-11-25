@@ -1,6 +1,7 @@
 #include "map.h"
 
 #include "data/scenario.hpp"
+#include "data/settings.hpp"
 #include "core/calc.h"
 
 void scenario_map_init_entry_exit()
@@ -25,6 +26,14 @@ int scenario_map_has_river_entry()
 int scenario_map_size()
 {
     return Data_Scenario.mapSizeX;
+}
+
+void scenario_map_init()
+{
+    Data_Settings_Map.width = Data_Scenario.mapSizeX;
+    Data_Settings_Map.height = Data_Scenario.mapSizeY;
+    Data_Settings_Map.gridStartOffset = Data_Scenario.gridFirstElement;
+    Data_Settings_Map.gridBorderSize = Data_Scenario.gridBorderSize;
 }
 
 map_point scenario_map_river_entry()

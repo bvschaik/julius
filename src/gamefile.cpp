@@ -786,10 +786,7 @@ static void setupFromSavedGame()
     debug();
     load_empire_data(Data_Settings.isCustomScenario, scenario_empire_id());
 
-    Data_Settings_Map.width = scenario_map_size();
-    Data_Settings_Map.height = Data_Scenario.mapSizeY;
-    Data_Settings_Map.gridStartOffset = Data_Scenario.gridFirstElement;
-    Data_Settings_Map.gridBorderSize = Data_Scenario.gridBorderSize;
+    scenario_map_init();
 
     if (Data_Settings_Map.orientation >= 0 && Data_Settings_Map.orientation <= 6)
     {

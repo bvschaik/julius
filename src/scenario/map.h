@@ -31,6 +31,8 @@ map_point scenario_map_river_exit();
 
 int scenario_map_size();
 
+void scenario_map_init();
+
 void scenario_map_foreach_herd_point(void (*callback)(int x, int y));
 
 void scenario_map_foreach_fishing_point(void (*callback)(int x, int y));
