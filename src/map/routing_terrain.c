@@ -10,7 +10,7 @@
 #include "Data/State.h"
 #include "../Routing.h"
 
-static void map_routing_update_land_non_citizen();
+static void map_routing_update_land_noncitizen();
 
 void map_routing_update_all()
 {
@@ -22,7 +22,7 @@ void map_routing_update_all()
 void map_routing_update_land()
 {
     map_routing_update_land_citizen();
-    map_routing_update_land_non_citizen();
+    map_routing_update_land_noncitizen();
 }
 
 static int get_land_type_citizen_building(int grid_offset)
@@ -135,7 +135,7 @@ void map_routing_update_land_citizen()
     }
 }
 
-static int get_land_type_non_citizen(int grid_offset)
+static int get_land_type_noncitizen(int grid_offset)
 {
     int type = Routing_NonCitizen_1_Building;
     switch (Data_Buildings[Data_Grid_buildingIds[grid_offset]].type) {
@@ -167,7 +167,7 @@ static int get_land_type_non_citizen(int grid_offset)
     return type;
 }
 
-void map_routing_update_land_non_citizen()
+static void map_routing_update_land_noncitizen()
 {
     map_grid_init_i8(Data_Grid_routingLandNonCitizen, -1);
     int grid_offset = Data_State.map.gridStartOffset;
@@ -181,7 +181,7 @@ void map_routing_update_land_non_citizen()
             } else if (terrain & (Terrain_Garden | Terrain_AccessRamp | Terrain_Rubble)) {
                 Data_Grid_routingLandNonCitizen[grid_offset] = Routing_NonCitizen_2_Clearable;
             } else if (terrain & Terrain_Building) {
-                Data_Grid_routingLandNonCitizen[grid_offset] = get_land_type_non_citizen(grid_offset);
+                Data_Grid_routingLandNonCitizen[grid_offset] = get_land_type_noncitizen(grid_offset);
             } else if (Data_Grid_terrain[grid_offset] & Terrain_Aqueduct) {
                 Data_Grid_routingLandNonCitizen[grid_offset] = Routing_NonCitizen_2_Clearable;
             } else if (Data_Grid_terrain[grid_offset] & Terrain_Wall) {

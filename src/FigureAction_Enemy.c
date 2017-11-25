@@ -2,7 +2,6 @@
 
 #include "Figure.h"
 #include "Formation.h"
-#include "Routing.h"
 
 #include "Data/CityInfo.h"
 #include "Data/Grid.h"
@@ -700,7 +699,7 @@ int FigureAction_HerdEnemy_moveFormationTo(int formationId, int x, int y, int *x
 			FigureActionFormationLayoutPositionX(m->layout, i),
 			FigureActionFormationLayoutPositionY(m->layout, i)) - baseOffset;
 	}
-	Routing_canTravelOverLandNonCitizen(x, y, -1, -1, 0, 600);
+	map_routing_noncitizen_can_travel_over_land(x, y, -1, -1, 0, 600);
 	for (int r = 0; r <= 10; r++) {
 		int xMin = x - r;
 		int yMin = y - r;

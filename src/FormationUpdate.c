@@ -389,9 +389,9 @@ static void setEnemyTargetBuilding(const formation *m)
 
 static void enemyApproachTarget(const formation *m)
 {
-	if (Routing_canTravelOverLandNonCitizen(m->x_home, m->y_home,
+	if (map_routing_noncitizen_can_travel_over_land(m->x_home, m->y_home,
 			m->destination_x, m->destination_y, m->destination_building_id, 400) ||
-		Routing_canTravelThroughEverythingNonCitizen(m->x_home, m->y_home,
+		map_routing_noncitizen_can_travel_through_everything(m->x_home, m->y_home,
 			m->destination_x, m->destination_y)) {
 		int xTile, yTile;
 		if (Routing_getClosestXYWithinRange(8, m->x_home, m->y_home,
@@ -612,7 +612,7 @@ static void update_enemy_formation(const formation *m, void *data)
         army->home_y = m->y_home;
         army->layout = m->layout;
         *romanDistance = 0;
-        Routing_canTravelOverLandNonCitizen(m->x_home, m->y_home, -2, -2, 100000, 300);
+        map_routing_noncitizen_can_travel_over_land(m->x_home, m->y_home, -2, -2, 100000, 300);
         int xTile, yTile;
         if (getHighestRomanSoldierConcentration(m->x_home, m->y_home, 16, &xTile, &yTile)) {
             *romanDistance = 1;

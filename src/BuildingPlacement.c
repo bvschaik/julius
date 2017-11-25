@@ -33,6 +33,7 @@
 #include "graphics/image.h"
 #include "map/bridge.h"
 #include "map/grid.h"
+#include "map/routing.h"
 #include "map/routing_terrain.h"
 
 #define BOUND_REGION() \
@@ -927,7 +928,7 @@ static void placeRoad(int measureOnly, int xStart, int yStart, int xEnd, int yEn
 		return;
 	}
 	
-	if (Routing_getDistanceForBuildingRoadOrAqueduct(xStart, yStart, 0) &&
+	if (map_routing_calculate_distances_for_building(ROUTED_BUILDING_ROAD, xStart, yStart) &&
 		Routing_placeRoutedBuilding(xStart, yStart, xEnd, yEnd, RoutedBUILDING_ROAD, &itemsPlaced)) {
 		if (!measureOnly) {
 			map_routing_update_land();
@@ -952,9 +953,8 @@ static void placeWall(int measureOnly, int xStart, int yStart, int xEnd, int yEn
 	if (Data_Grid_terrain[endOffset] & forbiddenTerrainMask) {
 		return;
 	}
-	
-	if (Routing_getDistanceForBuildingWall(xStart, yStart) &&
-		Routing_placeRoutedBuilding(xStart, yStart, xEnd, yEnd, RoutedBUILDING_WALL, &itemsPlaced)) {
+	map_routing_calculate_distances_for_building(ROUTED_BUILDING_WALL, xStart, yStart);
+	if (Routing_placeRoutedBuilding(xStart, yStart, xEnd, yEnd, RoutedBUILDING_WALL, &itemsPlaced)) {
 		if (!measureOnly) {
 			map_routing_update_land();
 			map_routing_update_walls();
@@ -1045,7 +1045,7 @@ static int placeAqueduct(int measureOnly, int xStart, int yStart, int xEnd, int 
 	if (blocked) {
 		return 0;
 	}
-	if (!Routing_getDistanceForBuildingRoadOrAqueduct(xStart, yStart, 1)) {
+	if (!map_routing_calculate_distances_for_building(ROUTED_BUILDING_AQUEDUCT, xStart, yStart)) {
 		return 0;
 	}
 	int numItems;
@@ -1094,7 +1094,7 @@ static int placeReservoirAndAqueducts(int measureOnly, int xStart, int yStart, i
 		info->cost = model_get_building(BUILDING_RESERVOIR)->cost;
 		return 1;
 	}
-	if (!Routing_getDistanceForBuildingRoadOrAqueduct(xStart, yStart, 1)) {
+	if (!map_routing_calculate_distances_for_building(ROUTED_BUILDING_AQUEDUCT, xStart, yStart)) {
 		return 0;
 	}
 	if (info->placeReservoirAtStart != PlaceReservoir_No) {

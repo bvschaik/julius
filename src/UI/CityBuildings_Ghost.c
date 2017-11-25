@@ -1,7 +1,6 @@
 #include "CityBuildings_private.h"
 
 #include "../BuildingPlacement.h"
-#include "../Routing.h"
 #include "../Terrain.h"
 #include "../TerrainGraphics.h"
 
@@ -10,6 +9,7 @@
 #include "core/time.h"
 #include "figure/formation.h"
 #include "map/bridge.h"
+#include "map/road_aqueduct.h"
 
 static void drawBuildingGhostDraggableReservoir();
 static void drawBuildingGhostAqueduct();
@@ -1064,8 +1064,8 @@ static void drawBuildingGhostRoad()
 	int graphicId;
 	if (Data_Grid_terrain[gridOffset] & Terrain_Aqueduct) {
 		graphicId = image_group(GROUP_BUILDING_AQUEDUCT);
-		if (Routing_canPlaceRoadUnderAqueduct(gridOffset)) {
-			graphicId += Routing_getAqueductGraphicOffsetWithRoad(gridOffset);
+		if (map_can_place_road_under_aqueduct(gridOffset)) {
+			graphicId += map_get_aqueduct_with_road_image(gridOffset);
 		} else {
 			tileObstructed = 1;
 		}

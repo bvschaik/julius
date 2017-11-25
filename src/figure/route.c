@@ -1,5 +1,7 @@
 #include "route.h"
 
+#include "map/routing.h"
+
 #include "Data/Figure.h"
 #include "Routing.h"
 
@@ -58,11 +60,11 @@ void figure_route_add(int figure_id)
     int path_length;
     if (f->isBoat) {
         if (f->isBoat == 2) { // flotsam
-            Routing_getDistanceWaterFlotsam(f->x, f->y);
+            map_routing_calculate_distances_water_flotsam(f->x, f->y);
             path_length = Routing_getPathOnWater(data.direction_paths[path_id], f->x, f->y,
                 f->destinationX, f->destinationY, 1);
         } else {
-            Routing_getDistanceWaterBoat(f->x, f->y);
+            map_routing_calculate_distances_water_boat(f->x, f->y);
             path_length = Routing_getPathOnWater(data.direction_paths[path_id], f->x, f->y,
                 f->destinationX, f->destinationY, 0);
         }
@@ -71,39 +73,39 @@ void figure_route_add(int figure_id)
         int can_travel;
         switch (f->terrainUsage) {
             case FigureTerrainUsage_Enemy:
-                can_travel = Routing_canTravelOverLandNonCitizen(f->x, f->y,
+                can_travel = map_routing_noncitizen_can_travel_over_land(f->x, f->y,
                     f->destinationX, f->destinationY, f->destinationBuildingId, 5000);
                 if (!can_travel) {
-                    can_travel = Routing_canTravelOverLandNonCitizen(f->x, f->y,
+                    can_travel = map_routing_noncitizen_can_travel_over_land(f->x, f->y,
                         f->destinationX, f->destinationY, 0, 25000);
                     if (!can_travel) {
-                        can_travel = Routing_canTravelThroughEverythingNonCitizen(
+                        can_travel = map_routing_noncitizen_can_travel_through_everything(
                             f->x, f->y, f->destinationX, f->destinationY);
                     }
                 }
                 break;
             case FigureTerrainUsage_Walls:
-                can_travel = Routing_canTravelOverWalls(f->x, f->y,
+                can_travel = map_routing_can_travel_over_walls(f->x, f->y,
                     f->destinationX, f->destinationY);
                 break;
             case FigureTerrainUsage_Animal:
-                can_travel = Routing_canTravelOverLandNonCitizen(f->x, f->y,
+                can_travel = map_routing_noncitizen_can_travel_over_land(f->x, f->y,
                     f->destinationX, f->destinationY, -1, 5000);
                 break;
             case FigureTerrainUsage_PreferRoads:
-                can_travel = Routing_canTravelOverRoadGardenCitizen(f->x, f->y,
+                can_travel = map_routing_citizen_can_travel_over_road_garden(f->x, f->y,
                     f->destinationX, f->destinationY);
                 if (!can_travel) {
-                    can_travel = Routing_canTravelOverLandCitizen(f->x, f->y,
+                    can_travel = map_routing_citizen_can_travel_over_land(f->x, f->y,
                         f->destinationX, f->destinationY);
                 }
                 break;
             case FigureTerrainUsage_Roads:
-                can_travel = Routing_canTravelOverRoadGardenCitizen(f->x, f->y,
+                can_travel = map_routing_citizen_can_travel_over_road_garden(f->x, f->y,
                     f->destinationX, f->destinationY);
                 break;
             default:
-                can_travel = Routing_canTravelOverLandCitizen(f->x, f->y,
+                can_travel = map_routing_citizen_can_travel_over_land(f->x, f->y,
                     f->destinationX, f->destinationY);
                 break;
         }

@@ -2,7 +2,6 @@
 
 #include "Figure.h"
 #include "FigureMovement.h"
-#include "Routing.h"
 #include "UI/Warning.h"
 
 #include "Data/Building.h"
@@ -88,7 +87,7 @@ int Formation_getFormationForBuilding(int gridOffset)
 void Formation_legionMoveTo(int formationId, int x, int y)
 {
 	const formation *m = formation_get(formationId);
-	Routing_getDistance(m->x_home, m->y_home);
+	map_routing_calculate_distances(m->x_home, m->y_home);
 	if (map_routing_distance(GridOffset(x, y)) <= 0) {
 		return; // unable to route there
 	}
@@ -120,7 +119,7 @@ void Formation_legionMoveTo(int formationId, int x, int y)
 void Formation_legionReturnHome(int formationId)
 {
 	const formation *m = formation_get(formationId);
-	Routing_getDistance(m->x_home, m->y_home);
+	map_routing_calculate_distances(m->x_home, m->y_home);
 	if (map_routing_distance(GridOffset(m->x, m->y)) <= 0) {
 		return; // unable to route home
 	}

@@ -8,7 +8,6 @@
 #include "../BuildingPlacement.h"
 #include "../CityView.h"
 #include "../Formation.h"
-#include "../Routing.h"
 #include "../Scroll.h"
 #include "../Undo.h"
 #include "../Widget.h"
@@ -19,6 +18,7 @@
 #include "game/resource.h"
 #include "game/settings.h"
 #include "map/desirability.h"
+#include "map/routing.h"
 #include "sound/city.h"
 #include "sound/speech.h"
 #include "sound/effect.h"
@@ -663,18 +663,17 @@ static void buildStart()
 			Data_State.selectedBuilding.placementInProgress = 1;
 			switch (Data_State.selectedBuilding.type) {
 				case BUILDING_ROAD:
-					Routing_getDistanceForBuildingRoadOrAqueduct(
-						Data_State.selectedBuilding.xStart,
-						Data_State.selectedBuilding.yStart, 0);
+					map_routing_calculate_distances_for_building(ROUTED_BUILDING_ROAD,
+						Data_State.selectedBuilding.xStart, Data_State.selectedBuilding.yStart);
 					break;
 				case BUILDING_AQUEDUCT:
 				case BUILDING_DRAGGABLE_RESERVOIR:
-					Routing_getDistanceForBuildingRoadOrAqueduct(
+					map_routing_calculate_distances_for_building(ROUTED_BUILDING_AQUEDUCT,
 						Data_State.selectedBuilding.xStart,
-						Data_State.selectedBuilding.yStart, 1);
+						Data_State.selectedBuilding.yStart);
 					break;
 				case BUILDING_WALL:
-					Routing_getDistanceForBuildingWall(
+					map_routing_calculate_distances_for_building(ROUTED_BUILDING_WALL,
 						Data_State.selectedBuilding.xStart,
 						Data_State.selectedBuilding.yStart);
 					break;

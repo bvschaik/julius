@@ -8,7 +8,6 @@
 #include "Formation.h"
 #include "HousePopulation.h"
 #include "Resource.h"
-#include "Routing.h"
 #include "Terrain.h"
 #include "TerrainGraphics.h"
 #include "Undo.h"
@@ -606,7 +605,7 @@ void Building_determineGraphicIdsForOrientedBuildings()
 
 void Building_GameTick_checkAccessToRome()
 {
-	Routing_getDistance(Data_CityInfo.entryPointX, Data_CityInfo.entryPointY);
+	map_routing_calculate_distances(Data_CityInfo.entryPointX, Data_CityInfo.entryPointY);
 	int problemGridOffset = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		if (!BuildingIsInUse(i)) {
@@ -691,11 +690,11 @@ void Building_GameTick_checkAccessToRome()
 			return;
 		}
 		for (int i = 0; i < 15; i++) {
-			Routing_deleteClosestWallOrAqueduct(
+			map_routing_delete_first_wall_or_aqueduct(
 				Data_CityInfo.entryPointX, Data_CityInfo.entryPointY);
-			Routing_deleteClosestWallOrAqueduct(
+			map_routing_delete_first_wall_or_aqueduct(
 				Data_CityInfo.exitPointX, Data_CityInfo.exitPointY);
-			Routing_getDistance(Data_CityInfo.entryPointX, Data_CityInfo.entryPointY);
+			map_routing_calculate_distances(Data_CityInfo.entryPointX, Data_CityInfo.entryPointY);
 
 			TerrainGraphics_updateAllWalls();
 			TerrainGraphics_updateRegionAqueduct(0, 0,
@@ -1123,7 +1122,7 @@ int Building_Dock_getNumIdleDockers(int buildingId)
 void Building_Dock_updateOpenWaterAccess()
 {
     map_point river_entry = scenario_map_river_entry();
-	Routing_getDistanceWaterBoat(river_entry.x, river_entry.y);
+	map_routing_calculate_distances_water_boat(river_entry.x, river_entry.y);
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
 		if (BuildingIsInUse(i) && !b->houseSize && b->type == BUILDING_DOCK) {
@@ -1139,7 +1138,7 @@ void Building_Dock_updateOpenWaterAccess()
 int Building_Dock_isConnectedToOpenWater(int x, int y)
 {
     map_point river_entry = scenario_map_river_entry();
-	Routing_getDistanceWaterBoat(river_entry.x, river_entry.y);
+	map_routing_calculate_distances_water_boat(river_entry.x, river_entry.y);
 	if (Terrain_isAdjacentToOpenWater(x, y, 3)) {
 		return 1;
 	} else {

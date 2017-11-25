@@ -61,6 +61,7 @@ set (MAP_FILES
     src/map/desirability.c
     src/map/grid.c
     src/map/ring.c
+    src/map/road_aqueduct.c
     src/map/routing.c
     src/map/routing_terrain.c
 )
