@@ -9,7 +9,6 @@
 #include "../CityInfo.h"
 #include "../Graphics.h"
 #include "../Resource.h"
-#include "../Scroll.h"
 #include "../SidebarMenu.h"
 #include "../Widget.h"
 
@@ -23,6 +22,7 @@
 #include "empire/trade_route.h"
 #include "empire/type.h"
 #include "graphics/image.h"
+#include "input/scroll.h"
 #include "scenario/empire.h"
 #include "scenario/invasion.h"
 
@@ -489,7 +489,7 @@ static void determineSelectedObject(const mouse *m)
 
 void UI_Empire_handleMouse(const mouse *m)
 {
-	empire_scroll_map(Scroll_getDirection(m));
+	empire_scroll_map(scroll_get_direction(m));
 	data.focusButtonId = 0;
 	int buttonId;
 	Widget_Button_handleImageButtons(data.xMin + 20, data.yMax - 44, imageButtonHelp, 1, &buttonId);

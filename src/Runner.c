@@ -9,6 +9,7 @@
 
 #include "core/time.h"
 #include "game/settings.h"
+#include "input/scroll.h"
 #include "sound/city.h"
 
 static const time_millis millisPerTickPerSpeed[] = {
@@ -48,7 +49,7 @@ static int getElapsedTicks()
 	if (Data_State.selectedBuilding.placementInProgress) {
 		return 0;
 	}
-	if (Data_State.isScrollingMap) {
+	if (scroll_in_progress()) {
 		return 0;
 	}
 	if (diff < millisPerTickPerSpeed[gameSpeedIndex] + 2) {

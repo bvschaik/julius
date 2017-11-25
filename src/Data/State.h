@@ -82,16 +82,9 @@ extern struct _Data_State {
 		int reservoirOffsetY;
 	} selectedBuilding;
 	int selectedLegionFormationId;
-	int isScrollingMap;
 	int winState;
 	int forceWinCheat;
 	int missionBriefingShown;
-	struct {
-		int left;
-		int right;
-		int up;
-		int down;
-	} arrowKey;
     struct {
         struct {
             int x;

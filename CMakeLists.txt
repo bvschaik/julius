@@ -54,6 +54,7 @@ set (GAME_FILES
 )
 set (INPUT_FILES
     src/input/keyboard.c
+    src/input/scroll.c
 )
 set (MAP_FILES
     src/map/bookmark.c
@@ -155,7 +156,6 @@ add_executable(julius
 	src/Runner.c
 	src/Scenario.c
 	src/Screen.c
-	src/Scroll.c
 	src/Security.c
 	src/SidebarMenu.c
 	src/Terrain.c

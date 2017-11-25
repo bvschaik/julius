@@ -8,7 +8,6 @@
 #include "../BuildingPlacement.h"
 #include "../CityView.h"
 #include "../Formation.h"
-#include "../Scroll.h"
 #include "../Undo.h"
 #include "../Widget.h"
 
@@ -17,6 +16,7 @@
 #include "figure/formation.h"
 #include "game/resource.h"
 #include "game/settings.h"
+#include "input/scroll.h"
 #include "map/desirability.h"
 #include "map/routing.h"
 #include "sound/city.h"
@@ -65,7 +65,7 @@ void UI_CityBuildings_drawBuildingCost()
 	if (!Data_State.map.current.gridOffset) {
 		return;
 	}
-	if (Data_State.isScrollingMap) {
+	if (scroll_in_progress()) {
 		return;
 	}
 	if (!Data_State.selectedBuilding.cost) {
@@ -716,7 +716,7 @@ static void buildEnd()
 
 void UI_CityBuildings_handleMouse(const mouse *m)
 {
-	UI_CityBuildings_scrollMap(Scroll_getDirection(m));
+	UI_CityBuildings_scrollMap(scroll_get_direction(m));
 	updateCityViewCoords(m);
 	Data_State.selectedBuilding.drawAsOverlay = 0;
 	if (m->left.went_down) {
@@ -1087,7 +1087,7 @@ void UI_CityBuildings_handleMouseMilitary(const mouse *m)
 	if (!Data_State.sidebarCollapsed && UI_Minimap_handleClick(m)) {
 		return;
 	}
-	UI_CityBuildings_scrollMap(Scroll_getDirection(m));
+	UI_CityBuildings_scrollMap(scroll_get_direction(m));
 	if (m->right.went_up) {
 		UI_Warning_clearAll();
 		UI_Window_goTo(Window_City);
