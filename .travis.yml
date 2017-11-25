@@ -4,8 +4,8 @@ language: cpp
 
 matrix:
   include:
-    - os: linux
-      compiler: gcc
+    - compiler: gcc
+      os: linux
       addons:
         apt:
           sources:
@@ -16,8 +16,8 @@ matrix:
       env:
         CXX_COMPILER=g++-4.9
         C_COMPILER=gcc-4.9
-    - os: linux
-      compiler: gcc
+    - compiler: gcc      
+      os: linux
       addons:
         apt:
           sources:
@@ -41,8 +41,8 @@ matrix:
       env:
           CXX_COMPILER=clang++-3.6
           C_COMPILER=clang-3.6
-    - os: linux
-      compiler: clang
+    - compiler: clang
+      os: linux      
       addons:
         apt:
           sources:
@@ -54,19 +54,19 @@ matrix:
       env:
         CXX_COMPILER=clang++-3.7
         C_COMPILER=clang-3.7
-     - os: linux
-       compiler: clang
-       addons:
-         apt:
-           sources:
-             - ubuntu-toolchain-r-test
-             - llvm-toolchain-precise-3.8
-             - george-edison55-precise-backports
-           packages:
-             - clang-3.8
-       env:
-         CXX_COMPILER=clang++-3.8
-         C_COMPILER=clang-3.8
+    - compiler: clang
+      os: linux       
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.8
+            - george-edison55-precise-backports
+          packages:
+            - clang-3.8
+      env:
+        CXX_COMPILER=clang++-3.8
+        C_COMPILER=clang-3.8
 
 before_install:
 # Get build dependencies
