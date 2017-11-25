@@ -6,7 +6,6 @@
 #include "Building.h"
 #include "CityView.h"
 #include "FileList.h"
-#include "Routes.h"
 #include "Constants.h"
 
 #define DATA_INTERN 1
@@ -29,8 +28,6 @@ struct _Data_Buildings_Extra Data_Buildings_Extra;
 struct Data_CityView Data_CityView;
 
 struct _Data_FileList Data_FileList;
-
-struct _Data_Routes Data_Routes;
 
 const int Constant_SalaryForRank[11] = {0, 2, 5, 8, 12, 20, 30, 40, 60, 80, 100};
 
