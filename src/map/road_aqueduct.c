@@ -1,8 +1,8 @@
 #include "road_aqueduct.h"
 
+#include "core/direction.h"
 #include "graphics/image.h"
 
-#include "Data/Constants.h"
 #include "Data/Grid.h"
 #include "Data/State.h"
 
@@ -30,7 +30,7 @@ int map_can_place_road_under_aqueduct(int gridOffset)
         default: // not a straight aqueduct
             return 0;
     }
-    if (Data_State.map.orientation == Dir_6_Left || Data_State.map.orientation == Dir_2_Right) {
+    if (Data_State.map.orientation == DIR_6_LEFT || Data_State.map.orientation == DIR_2_RIGHT) {
         checkRoadY = !checkRoadY;
     }
     if (checkRoadY) {
@@ -62,7 +62,7 @@ int map_can_place_aqueduct_on_road(int gridOffset)
         return 0;
     }
     int checkRoadY = graphic == 0 || graphic == 49;
-    if (Data_State.map.orientation == Dir_6_Left || Data_State.map.orientation == Dir_2_Right) {
+    if (Data_State.map.orientation == DIR_6_LEFT || Data_State.map.orientation == DIR_2_RIGHT) {
         checkRoadY = !checkRoadY;
     }
     if (checkRoadY) {

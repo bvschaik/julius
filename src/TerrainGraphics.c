@@ -4,8 +4,8 @@
 #include "Terrain_private.h"
 
 #include "Data/Building.h"
-#include "Data/Constants.h"
 
+#include "core/direction.h"
 #include "graphics/image.h"
 #include "map/desirability.h"
 
@@ -287,10 +287,10 @@ static int getAccessRampGraphicOffset(int x, int y)
 		return -1;
 	}
 	switch (Data_State.map.orientation) {
-		case Dir_0_Top: break;
-		case Dir_6_Left: graphicOffset += 1; break;
-		case Dir_4_Bottom: graphicOffset += 2; break;
-		case Dir_2_Right: graphicOffset += 3; break;
+		case DIR_0_TOP: break;
+		case DIR_6_LEFT: graphicOffset += 1; break;
+		case DIR_4_BOTTOM: graphicOffset += 2; break;
+		case DIR_2_RIGHT: graphicOffset += 3; break;
 	}
 	if (graphicOffset >= 4) {
 		graphicOffset -= 4;
@@ -596,10 +596,10 @@ void TerrainGraphics_setBuildingFarm(int buildingId, int x, int y, int cropGraph
 	// farmhouse
 	int leftmostX, leftmostY;
 	switch (Data_State.map.orientation) {
-		case Dir_0_Top: leftmostX = 0; leftmostY = 1; break;
-		case Dir_2_Right: leftmostX = 0; leftmostY = 0; break;
-		case Dir_4_Bottom: leftmostX = 1; leftmostY = 0; break;
-		case Dir_6_Left: leftmostX = 1; leftmostY = 1; break;
+		case DIR_0_TOP: leftmostX = 0; leftmostY = 1; break;
+		case DIR_2_RIGHT: leftmostX = 0; leftmostY = 0; break;
+		case DIR_4_BOTTOM: leftmostX = 1; leftmostY = 0; break;
+		case DIR_6_LEFT: leftmostX = 1; leftmostY = 1; break;
 		default: return;
 	}
 	for (int dy = 0; dy < 2; dy++) {
@@ -765,7 +765,7 @@ static int getGatehouseBuildingId(int gridOffset)
 static int getGatehousePosition(int gridOffset, int direction, int buildingId)
 {
 	int result = 0;
-	if (direction == Dir_0_Top) {
+	if (direction == DIR_0_TOP) {
 		if (Data_Grid_terrain[gridOffset + DELTA(1, -1)] & Terrain_Gatehouse &&
 				Data_Grid_buildingIds[gridOffset + DELTA(1, -1)] == buildingId) {
 			result = 1;
@@ -799,7 +799,7 @@ static int getGatehousePosition(int gridOffset, int direction, int buildingId)
 				result = 0;
 			}
 		}
-	} else if (direction == Dir_6_Left) {
+	} else if (direction == DIR_6_LEFT) {
 		if (Data_Grid_terrain[gridOffset + DELTA(-1, 1)] & Terrain_Gatehouse &&
 				Data_Grid_buildingIds[gridOffset + DELTA(-1, 1)] == buildingId) {
 			result = 1;
@@ -833,7 +833,7 @@ static int getGatehousePosition(int gridOffset, int direction, int buildingId)
 				result = 0;
 			}
 		}
-	} else if (direction == Dir_4_Bottom) {
+	} else if (direction == DIR_4_BOTTOM) {
 		if (Data_Grid_terrain[gridOffset + DELTA(1, 1)] & Terrain_Gatehouse &&
 				Data_Grid_buildingIds[gridOffset + DELTA(1, 1)] == buildingId) {
 			result = 1;
@@ -867,7 +867,7 @@ static int getGatehousePosition(int gridOffset, int direction, int buildingId)
 				result = 0;
 			}
 		}
-	} else if (direction == Dir_2_Right) {
+	} else if (direction == DIR_2_RIGHT) {
 		if (Data_Grid_terrain[gridOffset + DELTA(1, 1)] & Terrain_Gatehouse &&
 				Data_Grid_buildingIds[gridOffset + DELTA(1, 1)] == buildingId) {
 			result = 1;
@@ -912,9 +912,9 @@ static void setWallGatehouseGraphicManually(int gridOffset)
 	int buildingIdDown = getGatehouseBuildingId(gridOffset + DELTA(0, 1));
 	int buildingIdRight = getGatehouseBuildingId(gridOffset + DELTA(1, 0));
 	int graphicOffset = 0;
-	if (Data_State.map.orientation == Dir_0_Top) {
+	if (Data_State.map.orientation == DIR_0_TOP) {
 		if (buildingIdUp && !buildingIdLeft) {
-			int pos = getGatehousePosition(gridOffset, Dir_0_Top, buildingIdUp);
+			int pos = getGatehousePosition(gridOffset, DIR_0_TOP, buildingIdUp);
 			if (pos > 0) {
 				if (pos <= 2) {
 					graphicOffset = 29;
@@ -925,7 +925,7 @@ static void setWallGatehouseGraphicManually(int gridOffset)
 				}
 			}
 		} else if (buildingIdLeft && !buildingIdUp) {
-			int pos = getGatehousePosition(gridOffset, Dir_6_Left, buildingIdLeft);
+			int pos = getGatehousePosition(gridOffset, DIR_6_LEFT, buildingIdLeft);
 			if (pos > 0) {
 				if (pos <= 2) {
 					graphicOffset = 30;
@@ -936,9 +936,9 @@ static void setWallGatehouseGraphicManually(int gridOffset)
 				}
 			}
 		}
-	} else if (Data_State.map.orientation == Dir_2_Right) {
+	} else if (Data_State.map.orientation == DIR_2_RIGHT) {
 		if (buildingIdUp && !buildingIdRight) {
-			int pos = getGatehousePosition(gridOffset, Dir_0_Top, buildingIdUp);
+			int pos = getGatehousePosition(gridOffset, DIR_0_TOP, buildingIdUp);
 			if (pos > 0) {
 				if (pos == 1) {
 					graphicOffset = 32;
@@ -949,7 +949,7 @@ static void setWallGatehouseGraphicManually(int gridOffset)
 				}
 			}
 		} else if (buildingIdRight && !buildingIdUp) {
-			int pos = getGatehousePosition(gridOffset, Dir_2_Right, buildingIdRight);
+			int pos = getGatehousePosition(gridOffset, DIR_2_RIGHT, buildingIdRight);
 			if (pos > 0) {
 				if (pos <= 2) {
 					graphicOffset = 29;
@@ -960,9 +960,9 @@ static void setWallGatehouseGraphicManually(int gridOffset)
 				}
 			}
 		}
-	} else if (Data_State.map.orientation == Dir_4_Bottom) {
+	} else if (Data_State.map.orientation == DIR_4_BOTTOM) {
 		if (buildingIdDown && !buildingIdRight) {
-			int pos = getGatehousePosition(gridOffset, Dir_4_Bottom, buildingIdDown);
+			int pos = getGatehousePosition(gridOffset, DIR_4_BOTTOM, buildingIdDown);
 			if (pos > 0) {
 				if (pos == 1) {
 					graphicOffset = 31;
@@ -973,7 +973,7 @@ static void setWallGatehouseGraphicManually(int gridOffset)
 				}
 			}
 		} else if (buildingIdRight && !buildingIdDown) {
-			int pos = getGatehousePosition(gridOffset, Dir_2_Right, buildingIdRight);
+			int pos = getGatehousePosition(gridOffset, DIR_2_RIGHT, buildingIdRight);
 			if (pos > 0) {
 				if (pos == 1) {
 					graphicOffset = 32;
@@ -984,9 +984,9 @@ static void setWallGatehouseGraphicManually(int gridOffset)
 				}
 			}
 		}
-	} else if (Data_State.map.orientation == Dir_6_Left) {
+	} else if (Data_State.map.orientation == DIR_6_LEFT) {
 		if (buildingIdDown && !buildingIdLeft) {
-			int pos = getGatehousePosition(gridOffset, Dir_4_Bottom, buildingIdDown);
+			int pos = getGatehousePosition(gridOffset, DIR_4_BOTTOM, buildingIdDown);
 			if (pos > 0) {
 				if (pos <= 2) {
 					graphicOffset = 30;
@@ -997,7 +997,7 @@ static void setWallGatehouseGraphicManually(int gridOffset)
 				}
 			}
 		} else if (buildingIdLeft && !buildingIdDown) {
-			int pos = getGatehousePosition(gridOffset, Dir_6_Left, buildingIdLeft);
+			int pos = getGatehousePosition(gridOffset, DIR_6_LEFT, buildingIdLeft);
 			if (pos > 0) {
 				if (pos == 1) {
 					graphicOffset = 31;

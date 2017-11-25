@@ -250,7 +250,7 @@ static void setDestinationHippodromeHorse(int figureId, struct Data_Figure *f, i
 	struct Data_Building *b = &Data_Buildings[f->buildingId];
 	if (state == HippodromeHorse_Created) {
 		Figure_removeFromTileList(figureId);
-		if (Data_State.map.orientation == Dir_0_Top || Data_State.map.orientation == Dir_6_Left) {
+		if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_6_LEFT) {
 			f->destinationX = b->x + hippodromeHorseDestinationX1[f->waitTicksMissile];
 			f->destinationY = b->y + hippodromeHorseDestinationY1[f->waitTicksMissile];
 		} else {
@@ -267,7 +267,7 @@ static void setDestinationHippodromeHorse(int figureId, struct Data_Figure *f, i
 		f->gridOffset = GridOffset(f->x, f->y);
 		Figure_addToTileList(figureId);
 	} else if (state == HippodromeHorse_Racing) {
-		if (Data_State.map.orientation == Dir_0_Top || Data_State.map.orientation == Dir_6_Left) {
+		if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_6_LEFT) {
 			f->destinationX = b->x + hippodromeHorseDestinationX1[f->waitTicksMissile];
 			f->destinationY = b->y + hippodromeHorseDestinationY1[f->waitTicksMissile];
 		} else {
@@ -275,7 +275,7 @@ static void setDestinationHippodromeHorse(int figureId, struct Data_Figure *f, i
 			f->destinationY = b->y + hippodromeHorseDestinationY2[f->waitTicksMissile];
 		}
 	} else if (state == HippodromeHorse_Finished) {
-		if (Data_State.map.orientation == Dir_0_Top || Data_State.map.orientation == Dir_6_Left) {
+		if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_6_LEFT) {
 			if (f->resourceId) {
 				f->destinationX = b->x + 1;
 				f->destinationY = b->y + 2;

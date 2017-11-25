@@ -12,7 +12,6 @@
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
-#include "Data/Constants.h"
 #include "Data/Grid.h"
 #include "Data/State.h"
 #include "Data/Figure.h"
@@ -22,6 +21,7 @@
 #include "core/random.h"
 #include "figure/type.h"
 #include "game/tutorial.h"
+#include "map/grid.h"
 #include "map/routing_terrain.h"
 #include "scenario/property.h"
 #include "sound/effect.h"
@@ -76,21 +76,21 @@ void Security_Tick_updateBurningRuins()
 		if (dir2 > 7) dir2 = 0;
 		
 		int gridOffset = b->gridOffset;
-		int nextBuildingId = Data_Grid_buildingIds[gridOffset + Constant_DirectionGridOffsets[burningRuinSpreadDirection]];
+		int nextBuildingId = Data_Grid_buildingIds[gridOffset + map_grid_direction_delta(burningRuinSpreadDirection)];
 		if (nextBuildingId && !Data_Buildings[nextBuildingId].fireProof) {
 			Building_collapseOnFire(nextBuildingId, 0);
 			Building_collapseLinked(nextBuildingId, 1);
 			sound_effect_play(SOUND_EFFECT_EXPLOSION);
 			recalculateTerrain = 1;
 		} else {
-			nextBuildingId = Data_Grid_buildingIds[gridOffset + Constant_DirectionGridOffsets[dir1]];
+			nextBuildingId = Data_Grid_buildingIds[gridOffset + map_grid_direction_delta(dir1)];
 			if (nextBuildingId && !Data_Buildings[nextBuildingId].fireProof) {
 				Building_collapseOnFire(nextBuildingId, 0);
 				Building_collapseLinked(nextBuildingId, 1);
 				sound_effect_play(SOUND_EFFECT_EXPLOSION);
 				recalculateTerrain = 1;
 			} else {
-				nextBuildingId = Data_Grid_buildingIds[gridOffset + Constant_DirectionGridOffsets[dir2]];
+				nextBuildingId = Data_Grid_buildingIds[gridOffset + map_grid_direction_delta(dir2)];
 				if (nextBuildingId && !Data_Buildings[nextBuildingId].fireProof) {
 					Building_collapseOnFire(nextBuildingId, 0);
 					Building_collapseLinked(nextBuildingId, 1);

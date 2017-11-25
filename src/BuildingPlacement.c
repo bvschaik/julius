@@ -18,7 +18,6 @@
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
-#include "Data/Constants.h"
 #include "Data/Grid.h"
 #include "Data/State.h"
 #include "Data/Figure.h"
@@ -27,6 +26,7 @@
 #include "building/model.h"
 #include "building/properties.h"
 #include "building/storage.h"
+#include "core/direction.h"
 #include "core/random.h"
 #include "figure/formation.h"
 #include "graphics/image.h"
@@ -112,7 +112,7 @@ static void addToTerrainHippodrome(int type, int buildingId, int x, int y, int s
 	Data_CityInfo.buildingHippodromePlaced = 1;
 
 	struct Data_Building *part1 = &Data_Buildings[buildingId];
-	if (Data_State.map.orientation == Dir_0_Top || Data_State.map.orientation == Dir_4_Bottom) {
+	if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_4_BOTTOM) {
 		part1->subtype.orientation = 0;
 	} else {
 		part1->subtype.orientation = 3;
@@ -120,10 +120,10 @@ static void addToTerrainHippodrome(int type, int buildingId, int x, int y, int s
 	part1->prevPartBuildingId = 0;
 	int graphicId;
 	switch (Data_State.map.orientation) {
-		case Dir_0_Top:    graphicId = graphicId2; break;
-		case Dir_2_Right:  graphicId = graphicId1 + 4; break;
-		case Dir_4_Bottom: graphicId = graphicId2 + 4; break;
-		case Dir_6_Left:   graphicId = graphicId1; break;
+		case DIR_0_TOP:    graphicId = graphicId2; break;
+		case DIR_2_RIGHT:  graphicId = graphicId1 + 4; break;
+		case DIR_4_BOTTOM: graphicId = graphicId2 + 4; break;
+		case DIR_6_LEFT:   graphicId = graphicId1; break;
 		default: return;
 	}
 	Terrain_addBuildingToGrids(buildingId, x, y, size, graphicId, Terrain_Building);
@@ -131,7 +131,7 @@ static void addToTerrainHippodrome(int type, int buildingId, int x, int y, int s
 	int part2Id = Building_create(BUILDING_HIPPODROME, x + 5, y);
 	struct Data_Building *part2 = &Data_Buildings[part2Id];
 	Undo_addBuildingToList(part2Id);
-	if (Data_State.map.orientation == Dir_0_Top || Data_State.map.orientation == Dir_4_Bottom) {
+	if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_4_BOTTOM) {
 		part2->subtype.orientation = 1;
 	} else {
 		part2->subtype.orientation = 4;
@@ -140,15 +140,15 @@ static void addToTerrainHippodrome(int type, int buildingId, int x, int y, int s
 	part1->nextPartBuildingId = part2Id;
 	part2->nextPartBuildingId = 0;
 	switch (Data_State.map.orientation) {
-		case Dir_0_Top: case Dir_4_Bottom: graphicId = graphicId2 + 2; break;
-		case Dir_2_Right: case Dir_6_Left: graphicId = graphicId1 + 2; break;
+		case DIR_0_TOP: case DIR_4_BOTTOM: graphicId = graphicId2 + 2; break;
+		case DIR_2_RIGHT: case DIR_6_LEFT: graphicId = graphicId1 + 2; break;
 	}
 	Terrain_addBuildingToGrids(part2Id, x + 5, y, size, graphicId, Terrain_Building);
 
 	int part3Id = Building_create(BUILDING_HIPPODROME, x + 10, y);
 	struct Data_Building *part3 = &Data_Buildings[part3Id];
 	Undo_addBuildingToList(part3Id);
-	if (Data_State.map.orientation == Dir_0_Top || Data_State.map.orientation == Dir_4_Bottom) {
+	if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_4_BOTTOM) {
 		part3->subtype.orientation = 2;
 	} else {
 		part3->subtype.orientation = 5;
@@ -157,10 +157,10 @@ static void addToTerrainHippodrome(int type, int buildingId, int x, int y, int s
 	part2->nextPartBuildingId = part3Id;
 	part3->nextPartBuildingId = 0;
 	switch (Data_State.map.orientation) {
-		case Dir_0_Top: graphicId = graphicId2 + 4; break;
-		case Dir_2_Right: graphicId = graphicId1; break;
-		case Dir_4_Bottom: graphicId = graphicId2; break;
-		case Dir_6_Left: graphicId = graphicId1 + 4; break;
+		case DIR_0_TOP: graphicId = graphicId2 + 4; break;
+		case DIR_2_RIGHT: graphicId = graphicId1; break;
+		case DIR_4_BOTTOM: graphicId = graphicId2; break;
+		case DIR_6_LEFT: graphicId = graphicId1 + 4; break;
 	}
 	Terrain_addBuildingToGrids(part3Id, x + 10, y, size, graphicId, Terrain_Building);
 }
@@ -564,9 +564,9 @@ static int placeBuilding(int type, int x, int y)
 		buildingOrientation = Terrain_getOrientationTriumphalArch(x, y);
 	}
 	switch (Data_State.map.orientation) {
-		case Dir_2_Right: x = x - size + 1; break;
-		case Dir_4_Bottom: x = x - size + 1; y = y - size + 1; break;
-		case Dir_6_Left: y = y - size + 1; break;
+		case DIR_2_RIGHT: x = x - size + 1; break;
+		case DIR_4_BOTTOM: x = x - size + 1; y = y - size + 1; break;
+		case DIR_6_LEFT: y = y - size + 1; break;
 	}
 	// extra checks
 	if (type == BUILDING_GATEHOUSE) {
@@ -950,13 +950,13 @@ static int placeRoutedBuilding(int xSrc, int ySrc, int xDst, int yDst, routed_bu
                 break;
         }
         int direction = calc_general_direction(xDst, yDst, xSrc, ySrc);
-        if (direction == Dir_8_None) {
+        if (direction == DIR_8_NONE) {
             return 1; // destination reached
         }
         int routed = 0;
         for (int i = 0; i < 4; i++) {
             int index = directionIndices[direction][i];
-            int newGridOffset = gridOffset + Constant_DirectionGridOffsets[index];
+            int newGridOffset = gridOffset + map_grid_direction_delta(index);
             int newDist = map_routing_distance(newGridOffset);
             if (newDist > 0 && newDist < distance) {
                 gridOffset = newGridOffset;

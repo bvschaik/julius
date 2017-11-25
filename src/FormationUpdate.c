@@ -6,7 +6,6 @@
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
-#include "Data/Constants.h"
 #include "Data/Grid.h"
 #include "Data/Figure.h"
 #include "Data/State.h"
@@ -669,14 +668,14 @@ static int getHerdRoamingDestination(int formationId, int allowNegativeDesirabil
 	for (int i = 0; i < 4; i++) {
 		int xTarget, yTarget;
 		switch (targetDirection) {
-			case Dir_0_Top:         xTarget = x; yTarget = y - distance; break;
-			case Dir_1_TopRight:    xTarget = x + distance; yTarget = y - distance; break;
-			case Dir_2_Right:       xTarget = x + distance; yTarget = y; break;
-			case Dir_3_BottomRight: xTarget = x + distance; yTarget = y + distance; break;
-			case Dir_4_Bottom:      xTarget = x; yTarget = y + distance; break;
-			case Dir_5_BottomLeft:  xTarget = x - distance; yTarget = y + distance; break;
-			case Dir_6_Left:        xTarget = x - distance; yTarget = y; break;
-			case Dir_7_TopLeft:     xTarget = x - distance; yTarget = y - distance; break;
+			case DIR_0_TOP:         xTarget = x; yTarget = y - distance; break;
+			case DIR_1_TOP_RIGHT:   xTarget = x + distance; yTarget = y - distance; break;
+			case DIR_2_RIGHT:       xTarget = x + distance; yTarget = y; break;
+			case DIR_3_BOTTOM_RIGHT:xTarget = x + distance; yTarget = y + distance; break;
+			case DIR_4_BOTTOM:      xTarget = x; yTarget = y + distance; break;
+			case DIR_5_BOTTOM_LEFT: xTarget = x - distance; yTarget = y + distance; break;
+			case DIR_6_LEFT:        xTarget = x - distance; yTarget = y; break;
+			case DIR_7_TOP_LEFT:    xTarget = x - distance; yTarget = y - distance; break;
 			default: continue;
 		}
 		if (xTarget <= 0) {
@@ -734,7 +733,7 @@ static void update_herd_formation(const formation *m)
     if (formation_can_spawn_wolf(m->id)) {
         // spawn new wolf
         if (!(Data_Grid_terrain[GridOffset(m->x, m->y)] & Terrain_d73f)) {
-            int wolfId = Figure_create(m->figure_type, m->x, m->y, Dir_0_Top);
+            int wolfId = Figure_create(m->figure_type, m->x, m->y, DIR_0_TOP);
             Data_Figures[wolfId].actionState = FigureActionState_196_HerdAnimalAtRest;
             Data_Figures[wolfId].formationId = m->id;
             Data_Figures[wolfId].waitTicks = wolfId & 0x1f;

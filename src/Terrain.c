@@ -7,7 +7,6 @@
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
-#include "Data/Constants.h"
 #include "Data/Grid.h"
 #include "Data/State.h"
 
@@ -74,18 +73,18 @@ void Terrain_addBuildingToGrids(int buildingId, int x, int y, int size, int grap
 	}
 	int xLeftmost, yLeftmost;
 	switch (Data_State.map.orientation) {
-		case Dir_0_Top:
+		case DIR_0_TOP:
 			xLeftmost = 0;
 			yLeftmost = size - 1;
 			break;
-		case Dir_2_Right:
+		case DIR_2_RIGHT:
 			xLeftmost = yLeftmost = 0;
 			break;
-		case Dir_4_Bottom:
+		case DIR_4_BOTTOM:
 			xLeftmost = size - 1;
 			yLeftmost = 0;
 			break;
-		case Dir_6_Left:
+		case DIR_6_LEFT:
 			xLeftmost = yLeftmost = size - 1;
 			break;
 		default:
@@ -370,9 +369,9 @@ int Terrain_hasRoadAccessGranary(int x, int y, int *roadX, int *roadY)
 int Terrain_getOrientationGatehouse(int x, int y)
 {
 	switch (Data_State.map.orientation) {
-		case Dir_2_Right: x--; break;
-		case Dir_4_Bottom: x--; y--; break;
-		case Dir_6_Left: y--; break;
+		case DIR_2_RIGHT: x--; break;
+		case DIR_4_BOTTOM: x--; y--; break;
+		case DIR_6_LEFT: y--; break;
 	}
 	int gridOffset = GridOffset(x, y);
 	int numRoadTilesWithin = 0;
@@ -460,9 +459,9 @@ int Terrain_getOrientationGatehouse(int x, int y)
 int Terrain_getOrientationTriumphalArch(int x, int y)
 {
 	switch (Data_State.map.orientation) {
-		case Dir_2_Right: x -= 2; break;
-		case Dir_4_Bottom: x -= 2; y -= 2; break;
-		case Dir_6_Left: y -= 2; break;
+		case DIR_2_RIGHT: x -= 2; break;
+		case DIR_4_BOTTOM: x -= 2; y -= 2; break;
+		case DIR_6_LEFT: y -= 2; break;
 	}
 	int numRoadTilesTopBottom = 0;
 	int numRoadTilesLeftRight = 0;
@@ -1056,26 +1055,26 @@ void Terrain_updateEntryExitFlags(int remove)
 	int entryOrientation;
     map_point entry_point = scenario_map_entry();
 	if (entry_point.x == 0) {
-		entryOrientation = Dir_2_Right;
+		entryOrientation = DIR_2_RIGHT;
 	} else if (entry_point.x == Data_State.map.width - 1) {
-		entryOrientation = Dir_6_Left;
+		entryOrientation = DIR_6_LEFT;
 	} else if (entry_point.y == 0) {
-		entryOrientation = Dir_0_Top;
+		entryOrientation = DIR_0_TOP;
 	} else if (entry_point.y == Data_State.map.height - 1) {
-		entryOrientation = Dir_4_Bottom;
+		entryOrientation = DIR_4_BOTTOM;
 	} else {
 		entryOrientation = -1;
 	}
 	int exitOrientation;
     map_point exit_point = scenario_map_exit();
 	if (exit_point.x == 0) {
-		exitOrientation = Dir_2_Right;
+		exitOrientation = DIR_2_RIGHT;
 	} else if (exit_point.x == Data_State.map.width - 1) {
-		exitOrientation = Dir_6_Left;
+		exitOrientation = DIR_6_LEFT;
 	} else if (exit_point.y == 0) {
-		exitOrientation = Dir_0_Top;
+		exitOrientation = DIR_0_TOP;
 	} else if (exit_point.y == Data_State.map.height - 1) {
-		exitOrientation = Dir_4_Bottom;
+		exitOrientation = DIR_4_BOTTOM;
 	} else {
 		exitOrientation = -1;
 	}

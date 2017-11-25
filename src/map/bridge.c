@@ -1,9 +1,9 @@
 #include "bridge.h"
 
+#include "core/direction.h"
 #include "map/grid.h"
 #include "map/routing_terrain.h"
 
-#include "Data/Constants.h"
 #include "Data/Grid.h"
 #include "Data/State.h"
 #include "../Terrain.h"
@@ -45,16 +45,16 @@ int map_bridge_calculate_length_direction(int x, int y, int is_ship_bridge, int 
     }
     if (!(Data_Grid_terrain[map_grid_offset(x, y-1)] & Terrain_Water)) {
         bridge.direction_grid_delta = map_grid_delta(0, 1);
-        bridge.direction = Dir_4_Bottom;
+        bridge.direction = DIR_4_BOTTOM;
     } else if (!(Data_Grid_terrain[map_grid_offset(x+1, y)] & Terrain_Water)) {
         bridge.direction_grid_delta = map_grid_delta(-1, 0);
-        bridge.direction = Dir_6_Left;
+        bridge.direction = DIR_6_LEFT;
     } else if (!(Data_Grid_terrain[map_grid_offset(x, y+1)] & Terrain_Water)) {
         bridge.direction_grid_delta = map_grid_delta(0, -1);
-        bridge.direction = Dir_0_Top;
+        bridge.direction = DIR_0_TOP;
     } else if (!(Data_Grid_terrain[map_grid_offset(x-1, y)] & Terrain_Water)) {
         bridge.direction_grid_delta = map_grid_delta(1, 0);
-        bridge.direction = Dir_2_Right;
+        bridge.direction = DIR_2_RIGHT;
     } else {
         return 0;
     }

@@ -15,7 +15,6 @@
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
-#include "Data/Constants.h"
 #include "Data/Grid.h"
 #include "Data/State.h"
 #include "Data/Figure.h"
@@ -23,6 +22,7 @@
 #include "building/properties.h"
 #include "building/storage.h"
 #include "city/message.h"
+#include "core/direction.h"
 #include "graphics/image.h"
 #include "map/desirability.h"
 #include "map/routing.h"
@@ -501,7 +501,7 @@ void Building_decayHousesCovered()
 void Building_determineGraphicIdsForOrientedBuildings()
 {
 	int mapOrientation = Data_State.map.orientation;
-	int mapOrientationIsTopOrBottom = mapOrientation == Dir_0_Top || mapOrientation == Dir_4_Bottom;
+	int mapOrientationIsTopOrBottom = mapOrientation == DIR_0_TOP || mapOrientation == DIR_4_BOTTOM;
 	int graphicOffset;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
@@ -547,28 +547,28 @@ void Building_determineGraphicIdsForOrientedBuildings()
 				Terrain_addRoadsForTriumphalArch(b->x, b->y, b->subtype.orientation);
 				break;
 			case BUILDING_HIPPODROME:
-				if (mapOrientation == Dir_0_Top) {
+				if (mapOrientation == DIR_0_TOP) {
 					graphicId = image_group(GROUP_BUILDING_HIPPODROME_2);
 					switch (b->subtype.orientation) {
 						case 0: case 3: graphicId += 0; break;
 						case 1: case 4: graphicId += 2; break;
 						case 2: case 5: graphicId += 4; break;
 					}
-				} else if (mapOrientation == Dir_4_Bottom) {
+				} else if (mapOrientation == DIR_4_BOTTOM) {
 					graphicId = image_group(GROUP_BUILDING_HIPPODROME_2);
 					switch (b->subtype.orientation) {
 						case 0: case 3: graphicId += 4; break;
 						case 1: case 4: graphicId += 2; break;
 						case 2: case 5: graphicId += 0; break;
 					}
-				} else if (mapOrientation == Dir_6_Left) {
+				} else if (mapOrientation == DIR_6_LEFT) {
 					graphicId = image_group(GROUP_BUILDING_HIPPODROME_1);
 					switch (b->subtype.orientation) {
 						case 0: case 3: graphicId += 0; break;
 						case 1: case 4: graphicId += 2; break;
 						case 2: case 5: graphicId += 4; break;
 					}
-				} else { // Dir_2_Right
+				} else { // DIR_2_RIGHT
 					graphicId = image_group(GROUP_BUILDING_HIPPODROME_1);
 					switch (b->subtype.orientation) {
 						case 0: case 3: graphicId += 4; break;

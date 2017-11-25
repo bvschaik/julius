@@ -10,8 +10,6 @@
 #include "game/resource.h"
 #include "scenario/empire.h"
 
-#include "Data/Constants.h"
-
 #define HEADER_SIZE 1280
 #define DATA_SIZE 12800
 

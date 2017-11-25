@@ -33,7 +33,6 @@ struct _Data_FileList Data_FileList;
 struct _Data_Routes Data_Routes;
 
 const int Constant_SalaryForRank[11] = {0, 2, 5, 8, 12, 20, 30, 40, 60, 80, 100};
-const int Constant_DirectionGridOffsets[8] = {-162, -161, 1, 163, 162, 161, -1, -163};
 
 const struct MissionId Constant_MissionIds[12] = {
 	{0, 0},

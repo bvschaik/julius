@@ -2,10 +2,10 @@
 
 #include "core/time.h"
 
-#include "Data/Constants.h"
 #include "Data/Screen.h"
 #include "Data/State.h"
 
+#include "core/direction.h"
 #include "game/settings.h"
 
 #define SCROLL_BORDER 5
@@ -34,7 +34,7 @@ static int shouldScrollMap(const mouse *m)
 
 int Scroll_getDirection(const mouse *m) {
 	if (!shouldScrollMap(m)) {
-		return Dir_8_None;
+		return DIR_8_NONE;
 	}
 	Data_State.isScrollingMap = 0;
 	int top = 0;
@@ -82,24 +82,24 @@ int Scroll_getDirection(const mouse *m) {
 
 	// two sides
 	if (left && top) {
-		return Dir_7_TopLeft;
+		return DIR_7_TOP_LEFT;
 	} else if (left && bottom) {
-		return Dir_5_BottomLeft;
+		return DIR_5_BOTTOM_LEFT;
 	} else if (right && top) {
-		return Dir_1_TopRight;
+		return DIR_1_TOP_RIGHT;
 	} else if (right && bottom) {
-		return Dir_3_BottomRight;
+		return DIR_3_BOTTOM_RIGHT;
 	}
 	// one side
 	if (left) {
-		return Dir_6_Left;
+		return DIR_6_LEFT;
 	} else if (right) {
-		return Dir_2_Right;
+		return DIR_2_RIGHT;
 	} else if (top) {
-		return Dir_0_Top;
+		return DIR_0_TOP;
 	} else if (bottom) {
-		return Dir_4_Bottom;
+		return DIR_4_BOTTOM;
 	}
 	// none of them
-	return Dir_8_None;
+	return DIR_8_NONE;
 }

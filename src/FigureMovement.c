@@ -15,6 +15,7 @@
 #include "core/calc.h"
 #include "figure/route.h"
 #include "game/time.h"
+#include "map/grid.h"
 #include "map/routing_terrain.h"
 
 static void FigureMovement_walkTicksInternal(int figureId, int numTicks, int roamingEnabled);
@@ -189,7 +190,7 @@ static void roamSetDirection(struct Data_Figure *f)
 	int roadOffsetDir1 = 0;
 	int roadDir1 = 0;
 	for (int i = 0, dir = direction; i < 8; i++) {
-		if (dir % 2 == 0 && Data_Grid_terrain[gridOffset + Constant_DirectionGridOffsets[dir]] & Terrain_Road) {
+		if (dir % 2 == 0 && Data_Grid_terrain[gridOffset + map_grid_direction_delta(dir)] & Terrain_Road) {
 			roadDir1 = dir;
 			break;
 		}
@@ -200,7 +201,7 @@ static void roamSetDirection(struct Data_Figure *f)
 	int roadOffsetDir2 = 0;
 	int roadDir2 = 0;
 	for (int i = 0, dir = direction; i < 8; i++) {
-		if (dir % 2 == 0 && Data_Grid_terrain[gridOffset + Constant_DirectionGridOffsets[dir]] & Terrain_Road) {
+		if (dir % 2 == 0 && Data_Grid_terrain[gridOffset + map_grid_direction_delta(dir)] & Terrain_Road) {
 			roadDir2 = dir;
 			break;
 		}
@@ -352,7 +353,7 @@ static void figureAdvanceRouteTile(struct Data_Figure *f, int roamingEnabled)
 	if (f->direction >= 8) {
 		return;
 	}
-	int targetGridOffset = f->gridOffset + Constant_DirectionGridOffsets[f->direction];
+	int targetGridOffset = f->gridOffset + map_grid_direction_delta(f->direction);
 	int targetTerrain = Data_Grid_terrain[targetGridOffset] & Terrain_c75f;
 	if (f->isBoat) {
 		if (!(targetTerrain & Terrain_Water)) {

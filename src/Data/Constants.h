@@ -106,7 +106,6 @@ enum {
 0x13: Judaeans
 */
 extern const int Constant_SalaryForRank[11];
-extern const int Constant_DirectionGridOffsets[8];
 
 struct MissionId {
 	int peaceful;
