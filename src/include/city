@@ -1,0 +1,7 @@
+#ifndef _JULIUS_INCLUDE_CITY_H_
+#define _JULIUS_INCLUDE_CITY_H_
+
+#include "city/culture.h"
+#include "city/message.h"
+
+#endif

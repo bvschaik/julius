@@ -1,0 +1,13 @@
+#ifndef _JULIUS_INCLUDE_GAME_H_
+#define _JULIUS_INCLUDE_GAME_H_
+
+#include "game/resource.h"
+#include "game/image_group.h"
+#include "game/time.h"
+#include "game/settings.h"
+#include "game/game.h"
+#include "game/tutorial.h"
+#include "game/game_settings.h"
+#include "game/difficulty.h"
+
+#endif
