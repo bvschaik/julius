@@ -63,6 +63,7 @@ set (MAP_FILES
     src/map/ring.c
     src/map/road_aqueduct.c
     src/map/routing.c
+    src/map/routing_path.c
     src/map/routing_terrain.c
 )
 set (SCENARIO_FILES
@@ -151,7 +152,6 @@ add_executable(julius
 	src/Resource.c
 	src/Resource_Granary.c
 	src/Resource_Warehouse.c
-	src/Routing.c
 	src/Runner.c
 	src/Scenario.c
 	src/Screen.c

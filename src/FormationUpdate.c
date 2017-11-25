@@ -2,7 +2,6 @@
 
 #include "Figure.h"
 #include "FigureAction.h"
-#include "Routing.h"
 #include "TerrainGraphics.h"
 
 #include "Data/Building.h"
@@ -20,6 +19,7 @@
 #include "figure/route.h"
 #include "map/grid.h"
 #include "map/routing.h"
+#include "map/routing_path.h"
 #include "sound/effect.h"
 
 static const int enemyAttackBuildingPriority[4][24] = {
@@ -394,8 +394,8 @@ static void enemyApproachTarget(const formation *m)
 		map_routing_noncitizen_can_travel_through_everything(m->x_home, m->y_home,
 			m->destination_x, m->destination_y)) {
 		int xTile, yTile;
-		if (Routing_getClosestXYWithinRange(8, m->x_home, m->y_home,
-				m->destination_x, m->destination_y, 20, &xTile, &yTile)) {
+		if (map_routing_get_closest_tile_within_range(m->x_home, m->y_home,
+				m->destination_x, m->destination_y, 8, 20, &xTile, &yTile)) {
             formation_set_destination(m->id, xTile, yTile);
 		}
 	}

@@ -9,6 +9,8 @@ int map_grid_offset(int x, int y);
 
 int map_grid_delta(int x, int y);
 
+int map_grid_direction_delta(int direction);
+
 void map_grid_clear_u8(uint8_t *grid);
 
 void map_grid_clear_i8(int8_t *grid);

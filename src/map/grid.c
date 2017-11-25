@@ -5,6 +5,8 @@
 #include "Data/Grid.h"
 #include "Data/State.h"
 
+static const int DIRECTION_DELTA[] = {-162, -161, 1, 163, 162, 161, -1, -163};
+
 int map_grid_offset(int x, int y)
 {
     return GridOffset(x, y);
@@ -13,6 +15,15 @@ int map_grid_offset(int x, int y)
 int map_grid_delta(int x, int y)
 {
     return y * GRID_SIZE + x;
+}
+
+int map_grid_direction_delta(int direction)
+{
+    if (direction >= 0 && direction < 8) {
+        return DIRECTION_DELTA[direction];
+    } else {
+        return 0;
+    }
 }
 
 void map_grid_clear_i8(int8_t *grid)

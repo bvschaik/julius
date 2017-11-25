@@ -7,7 +7,6 @@
 #include "Formation.h"
 #include "HousePopulation.h"
 #include "Resource.h"
-#include "Routing.h"
 #include "SidebarMenu.h"
 #include "Terrain.h"
 #include "TerrainGraphics.h"

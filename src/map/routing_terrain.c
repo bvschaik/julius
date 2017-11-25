@@ -9,7 +9,6 @@
 #include "Data/Building.h"
 #include "Data/Grid.h"
 #include "Data/State.h"
-#include "../Routing.h"
 
 static void map_routing_update_land_noncitizen();
 
