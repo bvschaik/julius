@@ -254,7 +254,7 @@ void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)
     const formation *m = formation_get(c->formationId);
     c->helpId = 87;
     Widget::Panel::drawOuterPanel(c->xOffset, c->yOffset,
-                                c->widthBlocks, c->heightBlocks);
+                                  c->widthBlocks, c->heightBlocks);
     Widget_GameText_drawCentered(138, m->legion_id,
                                  c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 
@@ -415,55 +415,55 @@ void UI_BuildingInfo_drawLegionInfoForeground(BuildingInfoContext *c)
         }
         else if (m->figure_type == FIGURE_FORT_LEGIONARY)
         {
-            if (i == 0 && m->layout == 5)
+            if (i == 0 && m->layout == FORMATION_COLUMN)
             {
                 hasFocus = 1;
             }
-            else if (i == 1 && m->layout == 0)
+            else if (i == 1 && m->layout == FORMATION_TORTOISE)
             {
                 hasFocus = 1;
             }
-            else if (i == 2 && m->layout == 1)
+            else if (i == 2 && m->layout == FORMATION_DOUBLE_LINE_1)
             {
                 hasFocus = 1;
             }
-            else if (i == 3 && m->layout == 2)
+            else if (i == 3 && m->layout == FORMATION_DOUBLE_LINE_2)
             {
                 hasFocus = 1;
             }
-            else if (i == 4 && m->layout == 6)
+            else if (i == 4 && m->layout == FORMATION_MOP_UP)
             {
                 hasFocus = 1;
             }
         }
         else     // mounted/javelin
         {
-            if (i == 0 && m->layout == 3)
+            if (i == 0 && m->layout == FORMATION_SINGLE_LINE_1)
             {
                 hasFocus = 1;
             }
-            else if (i == 1 && m->layout == 4)
+            else if (i == 1 && m->layout == FORMATION_SINGLE_LINE_2)
             {
                 hasFocus = 1;
             }
-            else if (i == 2 && m->layout == 1)
+            else if (i == 2 && m->layout == FORMATION_DOUBLE_LINE_1)
             {
                 hasFocus = 1;
             }
-            else if (i == 3 && m->layout == 2)
+            else if (i == 3 && m->layout == FORMATION_DOUBLE_LINE_2)
             {
                 hasFocus = 1;
             }
-            else if (i == 4 && m->layout == 6)
+            else if (i == 4 && m->layout == FORMATION_MOP_UP)
             {
                 hasFocus = 0;
             }
         }
         Widget::Panel::drawButtonBorder(c->xOffset + 19 + 85 * i,
-                                      c->yOffset + 139, 84, 84, hasFocus);
+                                        c->yOffset + 139, 84, 84, hasFocus);
     }
     Widget::Panel::drawInnerPanel(c->xOffset + 16, c->yOffset + 230,
-                                c->widthBlocks - 2, 4);
+                                  c->widthBlocks - 2, 4);
 
     int titleId;
     int textId;
@@ -614,10 +614,10 @@ static void buttonLayout(int index, int param2)
         switch (index)
         {
         case 0:
-            new_layout = FORMATION_TORTOISE;
+            new_layout = FORMATION_COLUMN;
             break;
         case 1:
-            new_layout = FORMATION_COLUMN;
+            new_layout = FORMATION_TORTOISE;
             break;
         case 2:
             new_layout = FORMATION_DOUBLE_LINE_1;
