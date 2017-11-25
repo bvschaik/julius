@@ -5,26 +5,29 @@ language: cpp
 matrix:
   include:
     - compiler: gcc
+      os: linux
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
           packages:
             - g++-4.9
-      env: 
+      env:
         CXX_COMPILER=g++-4.9
         C_COMPILER=gcc-4.9
     - compiler: gcc
+      os: linux
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
           packages:
             - g++-5
-      env: 
+      env:
           CXX_COMPILER=g++-5
           C_COMPILER=gcc-5
     - compiler: clang
+      os: linux
       addons:
         apt:
           sources:
@@ -32,10 +35,11 @@ matrix:
             - llvm-toolchain-precise-3.6
           packages:
             - clang-3.6
-      env: 
+      env:
           CXX_COMPILER=clang++-3.6
           C_COMPILER=clang-3.6
     - compiler: clang
+      os: linux
       addons:
         apt:
           sources:
@@ -43,10 +47,10 @@ matrix:
             - llvm-toolchain-precise-3.7
           packages:
             - clang-3.7
-      env: 
+      env:
         CXX_COMPILER=clang++-3.7
         C_COMPILER=clang-3.7
-      
+
 before_install:
 # Get build dependencies
 - sudo add-apt-repository --yes ppa:ubuntu-toolchain-r/test
