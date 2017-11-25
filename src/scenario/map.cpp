@@ -55,7 +55,7 @@ map_point scenario_map_river_exit()
 
 void scenario_map_foreach_herd_point(void (*callback)(int x, int y))
 {
-    for (int i = 0; i < MAX_HERDS; i++)
+    for (int i = 0; i < MAX_HERD_POINTS; i++)
     {
         if (Data_Scenario.herdPoints.x[i] > 0)
         {
@@ -66,7 +66,7 @@ void scenario_map_foreach_herd_point(void (*callback)(int x, int y))
 
 void scenario_map_foreach_fishing_point(void (*callback)(int x, int y))
 {
-    for (int i = 0; i < MAX_FISH; i++)
+    for (int i = 0; i < MAX_FISH_POINTS; i++)
     {
         if (Data_Scenario.fishingPoints.x[i] > 0)
         {
@@ -78,7 +78,7 @@ void scenario_map_foreach_fishing_point(void (*callback)(int x, int y))
 int scenario_map_closest_fishing_point(int x, int y, int *fish_x, int *fish_y)
 {
     int numFishingSpots = 0;
-    for (int i = 0; i < MAX_FISH; i++)
+    for (int i = 0; i < MAX_FISH_POINTS; i++)
     {
         if (Data_Scenario.fishingPoints.x[i] > 0)
         {
@@ -91,7 +91,7 @@ int scenario_map_closest_fishing_point(int x, int y, int *fish_x, int *fish_y)
     }
     int minDist = 10000;
     int minFishId = 0;
-    for (int i = 0; i < MAX_FISH; i++)
+    for (int i = 0; i < MAX_FISH_POINTS; i++)
     {
         if (Data_Scenario.fishingPoints.x[i] > 0)
         {

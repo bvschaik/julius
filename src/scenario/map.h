@@ -9,8 +9,8 @@ typedef struct
 
 enum
 {
-    MAX_HERDS=4,
-    MAX_FISH=8
+    MAX_HERD_POINTS=4,
+    MAX_FISH_POINTS=8
 };
 
 void scenario_map_init_entry_exit();

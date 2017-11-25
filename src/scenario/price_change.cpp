@@ -8,8 +8,6 @@
 #include <data>
 #include <scenario>
 
-#define MAX_PRICE_CHANGES 20
-
 void scenario_price_change_init()
 {
     for (int i = 0; i < MAX_PRICE_CHANGES; i++)

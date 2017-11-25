@@ -12,8 +12,6 @@
 #include "cityinfo.h"
 #include "resource.h"
 
-#define MAX_REQUESTS 20
-
 void scenario_request_init()
 {
     for (int i = 0; i < MAX_REQUESTS; i++)
