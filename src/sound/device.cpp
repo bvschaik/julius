@@ -3,6 +3,7 @@
 #include "SDL_mixer.h"
 
 #include <stdio.h>
+#include <string.h>
 
 #define AUDIO_RATE 22050
 #define AUDIO_FORMAT AUDIO_S16MSB

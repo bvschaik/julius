@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 2.6)
 project(julius)
 
 option(BUILD_SDL2STATIC "Static sdl2" ON)
+option(BUILD_SDL2MIXERSTATIC "Static sdl2-mixer" ON)
 
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/cmake/")
 
@@ -51,6 +52,17 @@ else()
   include_directories(${SDL2_INCLUDE_DIR})
 endif()
 
+if (BUILD_SDL2MIXERSTATIC)
+  set(SDL2MIXERSTATIC_NAME "sdl2-mixer")
+  set(SDL2MIXERSTATIC_HOME "${LIBS_SOURCE_DIR}/${SDL2MIXERSTATIC_NAME}" )
+  set(SDL2MIXERSTATIC_INCLUDE_DIR "${SDL2MIXERSTATIC_HOME}")
+  set(SDL2MIXERSTATIC_LIBRARY "${CMAKE_BINARY_DIR}/libs/sdl2-mixer")
+  add_subdirectory(${SDL2MIXERSTATIC_HOME})
+else()
+  find_package(SDL2_mixer REQUIRED)
+  include_directories(${SDL2_MIXER_INCLUDE_DIR})
+endif()
+
 add_executable(${PROJECT_NAME}
   ${APP_FILES}
   ${DATA_FILES}
@@ -71,26 +83,27 @@ add_executable(${PROJECT_NAME}
   ${CI_FILES}
 )
 
-#include(FindPkgConfig)
-#pkg_search_module(SDL2 REQUIRED sdl2)
-#pkg_search_module(SDL2_MIXER REQUIRED SDL2_mixer)
-
-find_package(SDL2_mixer REQUIRED)
-
-include_directories(${SDL2_MIXER_INCLUDE_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/include)
 
 if (BUILD_SDL2STATIC)
-  include_directories(${SDL2MINI_INCLUDE_DIR})
-  link_directories(${SDL2STATIC_LIBRARY})
+  include_directories(${SDL2MIXERSTATIC_INCLUDE_DIR})
+  link_directories(${SDL2MIXERSTATIC_LIBRARY})
   target_link_libraries(${PROJECT_NAME} "SDL2")
 else()
   target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY})
 endif()
 
+if (BUILD_SDL2MIXERSTATIC)
+  include_directories(${SDL2STATIC_INCLUDE_DIR})
+  link_directories(${SDL2STATIC_LIBRARY})
+  target_link_libraries(${PROJECT_NAME} "mixer")
+else()
+  target_link_libraries(${PROJECT_NAME} ${SDL2_MIXER_LIBRARY})
+endif()
+
 #set(LIBS ${LIBS} ${SDL_LIBRARY})
 #link_libraries(${LIBS})
-target_link_libraries (julius ${SDL2_MIXER_LIBRARY})
+target_link_libraries (julius)
 
 include_directories(src)
 
