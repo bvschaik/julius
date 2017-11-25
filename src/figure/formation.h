@@ -7,14 +7,16 @@
 #define MAX_LEGIONS 6
 #define MAX_FORMATION_FIGURES 16
 
-enum {
+enum
+{
     LEGION_RECRUIT_NONE = 0,
     LEGION_RECRUIT_MOUNTED = 1,
     LEGION_RECRUIT_JAVELIN = 2,
     LEGION_RECRUIT_LEGIONARY = 3
 };
 
-enum {
+enum
+{
     FORMATION_ATTACK_FOOD_CHAIN= 0,
     FORMATION_ATTACK_GOLD_STORES = 1,
     FORMATION_ATTACK_BEST_BUILDINGS = 2,
@@ -22,13 +24,14 @@ enum {
     FORMATION_ATTACK_RANDOM = 4
 };
 
-enum {
-    FORMATION_TORTOISE = 0,
+enum
+{
+    FORMATION_COLUMN = 0,
     FORMATION_DOUBLE_LINE_1 = 1,
     FORMATION_DOUBLE_LINE_2 = 2,
     FORMATION_SINGLE_LINE_1 = 3,
     FORMATION_SINGLE_LINE_2 = 4,
-    FORMATION_COLUMN = 5,
+    FORMATION_TORTOISE = 5,
     FORMATION_MOP_UP = 6,
     FORMATION_AT_REST = 7,
     FORMATION_ENEMY8 = 8,
@@ -37,7 +40,8 @@ enum {
     FORMATION_ENEMY12 = 12,
 };
 
-typedef struct {
+typedef struct
+{
     int duration_halt;
     int duration_advance;
     int duration_regroup;
@@ -46,7 +50,8 @@ typedef struct {
 /**
  * Formation data
  */
-typedef struct {
+typedef struct
+{
     int id; /**< ID of the formation */
     int faction_id; /**< 1 = player, 0 = everyone else */
 
@@ -63,7 +68,7 @@ typedef struct {
     int months_from_home;
     int months_low_morale;
     int months_very_low_morale;
-    
+
     /* Figures */
     int figure_type; /**< Type of figure in this formation */
     int num_figures; /**< Current number of figures in the formation */
@@ -71,7 +76,7 @@ typedef struct {
     int figures[MAX_FORMATION_FIGURES]; /**< Figure IDs */
     int total_damage; /**< Total damage of all figures added */
     int max_total_damage; /**< Maximum total damage of all figures added */
-    
+
     /* Position */
     int x;
     int y;
@@ -84,7 +89,7 @@ typedef struct {
     int destination_x;
     int destination_y;
     int destination_building_id;
-    
+
     /* Movement */
     int wait_ticks;
     int is_halted;
@@ -101,7 +106,7 @@ typedef struct {
     int has_military_training; /**< Flag to indicate this legion has had military training */
     int legion_recruit_type; /**< Recruit type: none if this legion is fully occupied */
     int is_at_fort; /**< Flag to indicate this legion is resting at the fort */
-    
+
     /* Enemy-related */
     int enemy_type;
     int enemy_legion_index;
@@ -109,12 +114,13 @@ typedef struct {
     int invasion_id;
     int invasion_sequence;
     formation_state enemy_state;
-    
+
     /* Herd-related */
     int herd_direction;
     int herd_wolf_spawn_delay;
-    
-    struct {
+
+    struct
+    {
         int layout;
         int x_home;
         int y_home;

@@ -419,7 +419,7 @@ void UI_BuildingInfo_drawLegionInfoForeground(BuildingInfoContext *c)
             {
                 hasFocus = 1;
             }
-            else if (i == 1 && m->layout == FORMATION_TORTOISE)
+            else if (i == 1 && m->layout == FORMATION_COLUMN)
             {
                 hasFocus = 1;
             }
@@ -555,10 +555,10 @@ void UI_BuildingInfo_drawLegionInfoForeground(BuildingInfoContext *c)
 void UI_BuildingInfo_handleMouseLegionInfo(BuildingInfoContext *c)
 {
     contextForCallback = c;
-    if (Widget::Button::handleCustomButtons(
-                c->xOffset, c->yOffset, layoutButtons, 5, &focusButtonId))
+    int handled = Widget::Button::handleCustomButtons(c->xOffset, c->yOffset, layoutButtons, 5, &focusButtonId);
+    if (formation_get(c->formationId)->figure_type == FIGURE_FORT_LEGIONARY)
     {
-        if (formation_get(c->formationId)->figure_type == FIGURE_FORT_LEGIONARY)
+        if (focusButtonId == 1 || (focusButtonId == 2 && c->formationTypes == 3))
         {
             if (focusButtonId == 1 || (focusButtonId == 2 && c->formationTypes == 3))
             {
@@ -566,7 +566,7 @@ void UI_BuildingInfo_handleMouseLegionInfo(BuildingInfoContext *c)
             }
         }
     }
-    else
+    if (!handled)
     {
         Widget::Button::handleCustomButtons(
             c->xOffset + 16 * (c->widthBlocks - 18) / 2,
@@ -574,6 +574,7 @@ void UI_BuildingInfo_handleMouseLegionInfo(BuildingInfoContext *c)
             returnButtons, 1, &returnButtonId);
     }
     contextForCallback = 0;
+
 }
 
 int UI_BuildingInfo_getTooltipLegionInfo(BuildingInfoContext *c)
@@ -614,10 +615,10 @@ static void buttonLayout(int index, int param2)
         switch (index)
         {
         case 0:
-            new_layout = FORMATION_COLUMN;
+            new_layout = FORMATION_TORTOISE;
             break;
         case 1:
-            new_layout = FORMATION_TORTOISE;
+            new_layout = FORMATION_COLUMN;
             break;
         case 2:
             new_layout = FORMATION_DOUBLE_LINE_1;

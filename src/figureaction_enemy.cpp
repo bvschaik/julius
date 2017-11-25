@@ -861,7 +861,7 @@ void FigureAction_enemyCaesarLegionary(int figureId)
                        FigureActionCorpseGraphicOffset(f) + 152;
         break;
     case FigureActionState_84_SoldierAtStandard:
-        if (m->is_halted && m->layout == FORMATION_TORTOISE && m->missile_attack_timeout)
+        if (m->is_halted && m->layout == FORMATION_COLUMN && m->missile_attack_timeout)
         {
             f->graphicId = image_group(ID_Graphic_Figure_FortLegionary) + dir + 144;
         }

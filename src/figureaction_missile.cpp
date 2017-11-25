@@ -60,7 +60,7 @@ void FigureAction_arrow(int figureId)
         {
             damageInflicted = 0;
         }
-        if (targetType == FIGURE_FORT_LEGIONARY && m->is_halted && m->layout == FORMATION_TORTOISE)
+        if (targetType == FIGURE_FORT_LEGIONARY && m->is_halted && m->layout == m->layout == FORMATION_COLUMN)
         {
             damageInflicted = 1;
         }
@@ -115,7 +115,7 @@ void FigureAction_spear(int figureId)
         {
             damageInflicted = 0;
         }
-        if (targetType == FIGURE_FORT_LEGIONARY && m->is_halted && m->layout == FORMATION_TORTOISE)
+        if (targetType == FIGURE_FORT_LEGIONARY && m->is_halted && m->layout == FORMATION_COLUMN)
         {
             damageInflicted = 1;
         }
@@ -171,7 +171,7 @@ void FigureAction_javelin(int figureId)
             damageInflicted = 0;
         }
         if (targetType == FIGURE_ENEMY_CAESAR_LEGIONARY &&
-                m->is_halted && m->layout == FORMATION_TORTOISE)
+                m->is_halted && m->layout == FORMATION_COLUMN)
         {
             damageInflicted = 1;
         }

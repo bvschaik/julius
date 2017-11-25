@@ -158,7 +158,7 @@ static void hitOpponent(int figureId, struct Data_Figure *f)
         {
             opponentDefense -= 4; // opponent not attacking in coordinated formation
         }
-        else if (opponentFormation->layout == FORMATION_TORTOISE)
+        else if (opponentFormation->layout == FORMATION_COLUMN)
         {
             opponentDefense += 7;
         }
