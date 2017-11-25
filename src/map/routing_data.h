@@ -2,28 +2,28 @@
 #define MAP_ROUTING_DATA_H
 
 enum {
-    Routing_Citizen_0_Road = 0,
-    Routing_Citizen_2_PassableTerrain = 2,
-    Routing_Citizen_4_ClearTerrain = 4,
-    Routing_Citizen_m1_Blocked = -1,
-    Routing_Citizen_m3_Aqueduct = -3,
-    Routing_Citizen_m4_ReservoirConnector = -4,
+    CITIZEN_0_ROAD = 0,
+    CITIZEN_2_PASSABLE_TERRAIN = 2,
+    CITIZEN_4_CLEAR_TERRAIN = 4,
+    CITIZEN_N1_BLOCKED = -1,
+    CITIZEN_N3_AQUEDUCT = -3,
+    CITIZEN_N4_RESERVOIR_CONNECTOR = -4,
     
-    Routing_NonCitizen_0_Passable = 0,
-    Routing_NonCitizen_1_Building = 1,
-    Routing_NonCitizen_2_Clearable = 2,
-    Routing_NonCitizen_3_Wall = 3,
-    Routing_NonCitizen_4_Gatehouse = 4,
-    Routing_NonCitizen_5_Fort = 5,
-    Routing_NonCitizen_m1_Blocked = -1,
+    NONCITIZEN_0_PASSABLE = 0,
+    NONCITIZEN_1_BUILDING = 1,
+    NONCITIZEN_2_CLEARABLE = 2,
+    NONCITIZEN_3_WALL = 3,
+    NONCITIZEN_4_GATEHOUSE = 4,
+    NONCITIZEN_5_FORT = 5,
+    NONCITIZEN_N1_BLOCKED = -1,
     
-    Routing_Water_0_Passable = 0,
-    Routing_Water_m1_Blocked = -1,
-    Routing_Water_m2_MapEdge = -2,
-    Routing_Water_m3_LowBridge = -3,
+    WATER_0_PASSABLE = 0,
+    WATER_N1_BLOCKED = -1,
+    WATER_N2_MAP_EDGE = -2,
+    WATER_N3_LOW_BRIDGE = -3,
     
-    Routing_Wall_0_Passable = 0,
-    Routing_Wall_m1_Blocked = -1,
+    WALL_0_PASSABLE = 0,
+    WALL_N1_BLOCKED = -1,
 };
 
 

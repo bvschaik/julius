@@ -121,7 +121,7 @@ static void route_queue_boat(int source, void (*callback)(int, int))
         if (++tiles > GUARD) {
             break;
         }
-        int drag = Data_Grid_routingWater[offset] == Routing_Water_m2_MapEdge ? 4 : 0;
+        int drag = Data_Grid_routingWater[offset] == WATER_N2_MAP_EDGE ? 4 : 0;
         if (drag && grid.water_drag[offset]++ < drag) {
             queue.items[queue.tail++] = offset;
             if (queue.tail >= MAX_QUEUE) {
@@ -166,7 +166,7 @@ static void route_queue_dir8(int source, void (*callback)(int, int))
 
 static void callback_calc_distance(int next_offset, int dist)
 {
-    if (Data_Grid_routingLandCitizen[next_offset] >= Routing_Citizen_0_Road) {
+    if (Data_Grid_routingLandCitizen[next_offset] >= CITIZEN_0_ROAD) {
         enqueue(next_offset, dist);
     }
 }
@@ -179,10 +179,10 @@ void map_routing_calculate_distances(int x, int y)
 
 static void callback_calc_distance_water_boat(int next_offset, int dist)
 {
-    if (Data_Grid_routingWater[next_offset] != Routing_Water_m1_Blocked &&
-        Data_Grid_routingWater[next_offset] != Routing_Water_m3_LowBridge) {
+    if (Data_Grid_routingWater[next_offset] != WATER_N1_BLOCKED &&
+        Data_Grid_routingWater[next_offset] != WATER_N3_LOW_BRIDGE) {
         enqueue(next_offset, dist);
-        if (Data_Grid_routingWater[next_offset] == Routing_Water_m2_MapEdge) {
+        if (Data_Grid_routingWater[next_offset] == WATER_N2_MAP_EDGE) {
             Data_Grid_routingDistance[next_offset] += 4;
         }
     }
@@ -191,7 +191,7 @@ static void callback_calc_distance_water_boat(int next_offset, int dist)
 void map_routing_calculate_distances_water_boat(int x, int y)
 {
     int grid_offset = map_grid_offset(x, y);
-    if (Data_Grid_routingWater[grid_offset] == Routing_Water_m1_Blocked) {
+    if (Data_Grid_routingWater[grid_offset] == WATER_N1_BLOCKED) {
         map_grid_clear_u16(Data_Grid_routingDistance);
     } else {
         route_queue_boat(grid_offset, callback_calc_distance_water_boat);
@@ -200,7 +200,7 @@ void map_routing_calculate_distances_water_boat(int x, int y)
 
 static void callback_calc_distance_water_flotsam(int next_offset, int dist)
 {
-    if (Data_Grid_routingWater[next_offset] != Routing_Water_m1_Blocked) {
+    if (Data_Grid_routingWater[next_offset] != WATER_N1_BLOCKED) {
         enqueue(next_offset, dist);
     }
 }
@@ -208,7 +208,7 @@ static void callback_calc_distance_water_flotsam(int next_offset, int dist)
 void map_routing_calculate_distances_water_flotsam(int x, int y)
 {
     int grid_offset = map_grid_offset(x, y);
-    if (Data_Grid_routingWater[grid_offset] == Routing_Water_m1_Blocked) {
+    if (Data_Grid_routingWater[grid_offset] == WATER_N1_BLOCKED) {
         map_grid_clear_u16(Data_Grid_routingDistance);
     } else {
         route_queue_dir8(grid_offset, callback_calc_distance_water_flotsam);
@@ -217,7 +217,7 @@ void map_routing_calculate_distances_water_flotsam(int x, int y)
 
 static void callback_calc_distance_build_wall(int next_offset, int dist)
 {
-    if (Data_Grid_routingLandCitizen[next_offset] == Routing_Citizen_4_ClearTerrain) {
+    if (Data_Grid_routingLandCitizen[next_offset] == CITIZEN_4_CLEAR_TERRAIN) {
         enqueue(next_offset, dist);
     }
 }
@@ -226,14 +226,14 @@ static void callback_calc_distance_build_road(int next_offset, int dist)
 {
     int blocked = 0;
     switch (Data_Grid_routingLandCitizen[next_offset]) {
-        case Routing_Citizen_m3_Aqueduct:
+        case CITIZEN_N3_AQUEDUCT:
             if (!map_can_place_road_under_aqueduct(next_offset)) {
                 Data_Grid_routingDistance[next_offset] = -1;
                 blocked = 1;
             }
             break;
-        case Routing_Citizen_2_PassableTerrain: // rubble, garden, access ramp
-        case Routing_Citizen_m1_Blocked: // non-empty land
+        case CITIZEN_2_PASSABLE_TERRAIN: // rubble, garden, access ramp
+        case CITIZEN_N1_BLOCKED: // non-empty land
             blocked = 1;
             break;
         default:
@@ -251,14 +251,14 @@ static void callback_calc_distance_build_aqueduct(int next_offset, int dist)
 {
     int blocked = 0;
     switch (Data_Grid_routingLandCitizen[next_offset]) {
-        case Routing_Citizen_m3_Aqueduct:
-        case Routing_Citizen_2_PassableTerrain: // rubble, garden, access ramp
-        case Routing_Citizen_m1_Blocked: // non-empty land
+        case CITIZEN_N3_AQUEDUCT:
+        case CITIZEN_2_PASSABLE_TERRAIN: // rubble, garden, access ramp
+        case CITIZEN_N1_BLOCKED: // non-empty land
             blocked = 1;
             break;
         default:
             if (Data_Grid_terrain[next_offset] & Terrain_Building) {
-                if (Data_Grid_routingLandCitizen[next_offset] != Routing_Citizen_m4_ReservoirConnector) {
+                if (Data_Grid_routingLandCitizen[next_offset] != CITIZEN_N4_RESERVOIR_CONNECTOR) {
                     blocked = 1;
                 }
             }
@@ -275,7 +275,7 @@ static void callback_calc_distance_build_aqueduct(int next_offset, int dist)
 
 static int map_can_place_initial_road_or_aqueduct(int gridOffset, int isAqueduct)
 {
-    if (Data_Grid_routingLandCitizen[gridOffset] == Routing_Citizen_m1_Blocked) {
+    if (Data_Grid_routingLandCitizen[gridOffset] == CITIZEN_N1_BLOCKED) {
         // not open land, can only if:
         // - aqueduct should be placed, and:
         // - land is a reservoir building OR an aqueduct
@@ -291,10 +291,10 @@ static int map_can_place_initial_road_or_aqueduct(int gridOffset, int isAqueduct
             }
         }
         return 0;
-    } else if (Data_Grid_routingLandCitizen[gridOffset] == Routing_Citizen_2_PassableTerrain) {
+    } else if (Data_Grid_routingLandCitizen[gridOffset] == CITIZEN_2_PASSABLE_TERRAIN) {
         // rubble, access ramp, garden
         return 0;
-    } else if (Data_Grid_routingLandCitizen[gridOffset] == Routing_Citizen_m3_Aqueduct) {
+    } else if (Data_Grid_routingLandCitizen[gridOffset] == CITIZEN_N3_AQUEDUCT) {
         if (isAqueduct) {
             return 0;
         }
@@ -332,7 +332,7 @@ int map_routing_calculate_distances_for_building(routed_building_type type, int 
 
 static int callback_delete_wall_aqueduct(int next_offset, int dist)
 {
-    if (Data_Grid_routingLandCitizen[next_offset] < Routing_Citizen_0_Road) {
+    if (Data_Grid_routingLandCitizen[next_offset] < CITIZEN_0_ROAD) {
         if (Data_Grid_terrain[next_offset] & (Terrain_Aqueduct | Terrain_Wall)) {
             Data_Grid_terrain[next_offset] &= Terrain_2e80;
             return 1;
@@ -397,8 +397,8 @@ int map_routing_citizen_can_travel_over_land(int src_x, int src_y, int dst_x, in
 
 static void callback_travel_citizen_road_garden(int next_offset, int dist)
 {
-    if (Data_Grid_routingLandCitizen[next_offset] >= Routing_Citizen_0_Road &&
-        Data_Grid_routingLandCitizen[next_offset] <= Routing_Citizen_2_PassableTerrain) {
+    if (Data_Grid_routingLandCitizen[next_offset] >= CITIZEN_0_ROAD &&
+        Data_Grid_routingLandCitizen[next_offset] <= CITIZEN_2_PASSABLE_TERRAIN) {
         enqueue(next_offset, dist);
     }
 }
@@ -414,7 +414,7 @@ int map_routing_citizen_can_travel_over_road_garden(int src_x, int src_y, int ds
 
 static void callback_travel_walls(int next_offset, int dist)
 {
-    if (Data_Grid_routingWalls[next_offset] >= Routing_Wall_0_Passable &&
+    if (Data_Grid_routingWalls[next_offset] >= WALL_0_PASSABLE &&
         Data_Grid_routingWalls[next_offset] <= 2) {
         enqueue(next_offset, dist);
     }
@@ -432,9 +432,9 @@ int map_routing_can_travel_over_walls(int src_x, int src_y, int dst_x, int dst_y
 static void callback_travel_noncitizen_land_through_building(int next_offset, int dist)
 {
     if (!has_fighting_enemy(next_offset)) {
-        if (Data_Grid_routingLandNonCitizen[next_offset] == Routing_NonCitizen_0_Passable ||
-            Data_Grid_routingLandNonCitizen[next_offset] == Routing_NonCitizen_2_Clearable ||
-            (Data_Grid_routingLandNonCitizen[next_offset] == Routing_NonCitizen_1_Building &&
+        if (Data_Grid_routingLandNonCitizen[next_offset] == NONCITIZEN_0_PASSABLE ||
+            Data_Grid_routingLandNonCitizen[next_offset] == NONCITIZEN_2_CLEARABLE ||
+            (Data_Grid_routingLandNonCitizen[next_offset] == NONCITIZEN_1_BUILDING &&
                 Data_Grid_buildingIds[next_offset] == state.throughBuildingId)) {
             enqueue(next_offset, dist);
         }
@@ -444,8 +444,8 @@ static void callback_travel_noncitizen_land_through_building(int next_offset, in
 static void callback_travel_noncitizen_land(int next_offset, int dist)
 {
     if (!has_fighting_enemy(next_offset)) {
-        if (Data_Grid_routingLandNonCitizen[next_offset] >= Routing_NonCitizen_0_Passable &&
-            Data_Grid_routingLandNonCitizen[next_offset] < Routing_NonCitizen_5_Fort) {
+        if (Data_Grid_routingLandNonCitizen[next_offset] >= NONCITIZEN_0_PASSABLE &&
+            Data_Grid_routingLandNonCitizen[next_offset] < NONCITIZEN_5_FORT) {
             enqueue(next_offset, dist);
         }
     }
@@ -468,7 +468,7 @@ int map_routing_noncitizen_can_travel_over_land(int src_x, int src_y, int dst_x,
 
 static void callback_travel_noncitizen_through_everything(int next_offset, int dist)
 {
-    if (Data_Grid_routingLandNonCitizen[next_offset] >= Routing_NonCitizen_0_Passable) {
+    if (Data_Grid_routingLandNonCitizen[next_offset] >= NONCITIZEN_0_PASSABLE) {
         enqueue(next_offset, dist);
     }
 }
