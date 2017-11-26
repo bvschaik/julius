@@ -6,27 +6,27 @@
 #include "housepopulation.h"
 #include "terrain.h"
 
-#include "data/cityinfo.hpp"
 #include "building/model.h"
 
 #include <game>
+#include <data>
 
 static void updateDirectionAndGraphic(int figureId, struct Data_Figure *f)
 {
     int dir = FigureActionDirection(f);
     if (f->actionState == FigureActionState_149_Corpse)
     {
-        f->graphicId = image_group(ID_Graphic_Figure_Migrant) +
+        f->graphicId = image_group(GROUP_FIGURE_MIGRANT) +
                        FigureActionCorpseGraphicOffset(f) + 96;
     }
     else
     {
-        f->graphicId = image_group(ID_Graphic_Figure_Migrant) +
+        f->graphicId = image_group(GROUP_FIGURE_MIGRANT) +
                        dir + 8 * f->graphicOffset;
     }
     if (f->actionState == FigureActionState_2_ImmigrantArriving)
     {
-        f->cartGraphicId = image_group(ID_Graphic_Figure_MigrantCart) + dir;
+        f->cartGraphicId = image_group(GROUP_FIGURE_MIGRANT_CART) + dir;
         int cartDir = (dir + 4) % 8;
         FigureAction_Common_setCartOffset(figureId, cartDir);
     }
@@ -328,12 +328,12 @@ void FigureAction_homeless(int figureId)
     }
     if (f->actionState == FigureActionState_149_Corpse)
     {
-        f->graphicId = image_group(ID_Graphic_Figure_Homeless) +
+        f->graphicId = image_group(GROUP_FIGURE_HOMELESS) +
                        FigureActionCorpseGraphicOffset(f) + 96;
     }
     else
     {
-        f->graphicId = image_group(ID_Graphic_Figure_Homeless) +
+        f->graphicId = image_group(GROUP_FIGURE_HOMELESS) +
                        FigureActionDirection(f) + 8 * f->graphicOffset;
     }
 }

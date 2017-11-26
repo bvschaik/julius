@@ -5,6 +5,7 @@
 
 #include <sound>
 #include <game>
+#include <data>
 
 #include "figure/formation.h"
 #include "figure/properties.h"
@@ -27,12 +28,12 @@ void FigureAction_explosionCloud(int figureId)
     FigureMovement_crossCountryWalkTicks(figureId, f->speedMultiplier);
     if (f->progressOnTile < 48)
     {
-        f->graphicId = image_group(ID_Graphic_Figure_Explosion) +
+        f->graphicId = image_group(GROUP_FIGURE_EXPLOSION) +
                        cloudGraphicOffsets[f->progressOnTile / 2];
     }
     else
     {
-        f->graphicId = image_group(ID_Graphic_Figure_Explosion) + 7;
+        f->graphicId = image_group(GROUP_FIGURE_EXPLOSION) + 7;
     }
 }
 
@@ -88,7 +89,7 @@ void FigureAction_arrow(int figureId)
         f->state = FigureState_Dead;
     }
     int dir = (16 + f->direction - 2 * Data_Settings_Map.orientation) % 16;
-    f->graphicId = image_group(ID_Graphic_Figure_Missile) + 16 + dir;
+    f->graphicId = image_group(GROUP_FIGURE_MISSILE) + 16 + dir;
 }
 
 void FigureAction_spear(int figureId)
@@ -143,7 +144,7 @@ void FigureAction_spear(int figureId)
         f->state = FigureState_Dead;
     }
     int dir = (16 + f->direction - 2 * Data_Settings_Map.orientation) % 16;
-    f->graphicId = image_group(ID_Graphic_Figure_Missile) + dir;
+    f->graphicId = image_group(GROUP_FIGURE_MISSILE) + dir;
 }
 
 void FigureAction_javelin(int figureId)
@@ -199,7 +200,7 @@ void FigureAction_javelin(int figureId)
         f->state = FigureState_Dead;
     }
     int dir = (16 + f->direction - 2 * Data_Settings_Map.orientation) % 16;
-    f->graphicId = image_group(ID_Graphic_Figure_Missile) + dir;
+    f->graphicId = image_group(GROUP_FIGURE_MISSILE) + dir;
 }
 
 void FigureAction_bolt(int figureId)
@@ -248,5 +249,5 @@ void FigureAction_bolt(int figureId)
         sound_effect_play(SOUND_EFFECT_BALLISTA_HIT_GROUND);
     }
     int dir = (16 + f->direction - 2 * Data_Settings_Map.orientation) % 16;
-    f->graphicId = image_group(ID_Graphic_Figure_Missile) + 32 + dir;
+    f->graphicId = image_group(GROUP_FIGURE_MISSILE) + 32 + dir;
 }

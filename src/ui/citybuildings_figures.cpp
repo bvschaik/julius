@@ -442,7 +442,7 @@ void UI_CityBuildings_drawFigure(int figureId, int xOffset, int yOffset, int sel
                 Graphics_drawImage(f->cartGraphicId,
                                    xOffset, yOffset - image_get(f->cartGraphicId)->height);
                 // top icon
-                int iconGraphicId = image_group(ID_Graphic_FortStandardIcons) + f->formationId - 1;
+                int iconGraphicId = image_group(GROUP_BUILDING_FORTStandardIcons) + f->formationId - 1;
                 Graphics_drawImage(iconGraphicId,
                                    xOffset, yOffset - image_get(iconGraphicId)->height - image_get(f->cartGraphicId)->height);
             }

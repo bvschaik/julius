@@ -19,7 +19,7 @@ void Natives_init()
     int image_hut = scenario_building_image_native_hut();
     int image_meeting = scenario_building_image_native_meeting();
     int image_crops = scenario_building_image_native_crops();
-    int nativeGraphic = image_group(ID_Graphic_NativeBuilding);
+    int nativeGraphic = image_group(GROUP_BUILDING_NATIVE);
     int gridOffset = Data_Settings_Map.gridStartOffset;
     for (int y = 0; y < Data_Settings_Map.height; y++, gridOffset += Data_Settings_Map.gridBorderSize)
     {
@@ -50,7 +50,7 @@ void Natives_init()
             else if (Data_Grid_graphicIds[gridOffset] == image_crops)
             {
                 buildingType = BUILDING_NATIVE_CROPS;
-                Data_Grid_graphicIds[gridOffset] = image_group(ID_Graphic_FarmCrops) + randomBit;
+                Data_Grid_graphicIds[gridOffset] = image_group(GROUP_BUILDING_FARM_CROPS) + randomBit;
             }
             else     //unknown building
             {

@@ -187,11 +187,11 @@ void FigureAction_fishingBoat(int figureId)
 
     if (f->actionState == FigureActionState_192_FishingBoatFishing)
     {
-        f->graphicId = image_group(ID_Graphic_Figure_Ship) + dir + 16;
+        f->graphicId = image_group(GROUP_FIGURE_SHIP) + dir + 16;
     }
     else
     {
-        f->graphicId = image_group(ID_Graphic_Figure_Ship) + dir + 8;
+        f->graphicId = image_group(GROUP_FIGURE_SHIP) + dir + 8;
     }
 }
 
@@ -282,25 +282,25 @@ void FigureAction_flotsam(int figureId)
         FigureActionIncreaseGraphicOffset(f, 12);
         if (f->minMaxSeen)
         {
-            f->graphicId = image_group(ID_Graphic_Figure_FlotsamSheep) +
+            f->graphicId = image_group(GROUP_FIGURE_FLOTSAM_SHEEP) +
                            flotsamType0[f->graphicOffset];
         }
         else
         {
-            f->graphicId = image_group(ID_Graphic_Figure_Flotsam0) +
+            f->graphicId = image_group(GROUP_FIGURE_FLOTSAM_0) +
                            flotsamType0[f->graphicOffset];
         }
     }
     else if (f->resourceId == 1)
     {
         FigureActionIncreaseGraphicOffset(f, 24);
-        f->graphicId = image_group(ID_Graphic_Figure_Flotsam1) +
+        f->graphicId = image_group(GROUP_FIGURE_FLOTSAM_1) +
                        flotsamType12[f->graphicOffset];
     }
     else if (f->resourceId == 2)
     {
         FigureActionIncreaseGraphicOffset(f, 24);
-        f->graphicId = image_group(ID_Graphic_Figure_Flotsam2) +
+        f->graphicId = image_group(GROUP_FIGURE_FLOTSAM_2) +
                        flotsamType12[f->graphicOffset];
     }
     else if (f->resourceId == 3)
@@ -312,7 +312,7 @@ void FigureAction_flotsam(int figureId)
         }
         else
         {
-            f->graphicId = image_group(ID_Graphic_Figure_Flotsam3) +
+            f->graphicId = image_group(GROUP_FIGURE_FLOTSAM_3) +
                            flotsamType3[f->graphicOffset];
         }
     }
@@ -345,5 +345,5 @@ void FigureAction_shipwreck(int figureId)
     {
         f->state = FigureState_Dead;
     }
-    f->graphicId = image_group(ID_Graphic_Figure_Shipwreck) + f->graphicOffset / 16;
+    f->graphicId = image_group(GROUP_FIGURE_SHIPWRECK) + f->graphicOffset / 16;
 }

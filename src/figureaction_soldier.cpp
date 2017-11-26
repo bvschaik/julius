@@ -60,38 +60,38 @@ void FigureAction_militaryStandard(int figureId)
     f->crossCountryY = 15 * f->y + 7;
     Figure_addToTileList(figureId);
 
-    f->graphicId = image_group(ID_Graphic_FortStandardPole) + 20 - m->morale / 5;
+    f->graphicId = image_group(GROUP_BUILDING_FORTStandardPole) + 20 - m->morale / 5;
     if (m->figure_type == FIGURE_FORT_LEGIONARY)
     {
         if (m->is_halted)
         {
-            f->cartGraphicId = image_group(ID_Graphic_FortFlags) + 8;
+            f->cartGraphicId = image_group(GROUP_BUILDING_FORTFlags) + 8;
         }
         else
         {
-            f->cartGraphicId = image_group(ID_Graphic_FortFlags) + f->graphicOffset / 2;
+            f->cartGraphicId = image_group(GROUP_BUILDING_FORTFlags) + f->graphicOffset / 2;
         }
     }
     else if (m->figure_type == FIGURE_FORT_MOUNTED)
     {
         if (m->is_halted)
         {
-            f->cartGraphicId = image_group(ID_Graphic_FortFlags) + 26;
+            f->cartGraphicId = image_group(GROUP_BUILDING_FORTFlags) + 26;
         }
         else
         {
-            f->cartGraphicId = image_group(ID_Graphic_FortFlags) + 18 + f->graphicOffset / 2;
+            f->cartGraphicId = image_group(GROUP_BUILDING_FORTFlags) + 18 + f->graphicOffset / 2;
         }
     }
     else
     {
         if (m->is_halted)
         {
-            f->cartGraphicId = image_group(ID_Graphic_FortFlags) + 17;
+            f->cartGraphicId = image_group(GROUP_BUILDING_FORTFlags) + 17;
         }
         else
         {
-            f->cartGraphicId = image_group(ID_Graphic_FortFlags) + 9 + f->graphicOffset / 2;
+            f->cartGraphicId = image_group(GROUP_BUILDING_FORTFlags) + 9 + f->graphicOffset / 2;
         }
     }
 }
@@ -170,7 +170,7 @@ static int soldierFindMopUpTarget(int figureId, struct Data_Figure *f)
 
 static void updateSoldierGraphicJavelin(struct Data_Figure *f, int dir)
 {
-    int graphicId = image_group(ID_Graphic_Figure_FortJavelin);
+    int graphicId = image_group(GROUP_BUILDING_FORT_JAVELIN);
     if (f->actionState == FigureActionState_150_Attack)
     {
         if (f->attackGraphicOffset < 12)
@@ -199,7 +199,7 @@ static void updateSoldierGraphicJavelin(struct Data_Figure *f, int dir)
 
 static void updateSoldierGraphicMounted(struct Data_Figure *f, int dir)
 {
-    int graphicId = image_group(ID_Graphic_Figure_FortMounted);
+    int graphicId = image_group(GROUP_FIGURE_FORT_MOUNTED);
     if (f->actionState == FigureActionState_150_Attack)
     {
         if (f->attackGraphicOffset < 12)
@@ -223,7 +223,7 @@ static void updateSoldierGraphicMounted(struct Data_Figure *f, int dir)
 
 static void updateSoldierGraphicLegionary(struct Data_Figure *f, const formation *m, int dir)
 {
-    int graphicId = image_group(ID_Graphic_Figure_FortLegionary);
+    int graphicId = image_group(GROUP_BUILDING_FORT_LEGIONARY);
     if (f->actionState == FigureActionState_150_Attack)
     {
         if (f->attackGraphicOffset < 12)

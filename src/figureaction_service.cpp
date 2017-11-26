@@ -106,7 +106,7 @@ void FigureAction_taxCollector(int figureId)
         }
         break;
     }
-    FigureActionUpdateGraphic(f, image_group(ID_Graphic_Figure_TaxCollector));
+    FigureActionUpdateGraphic(f, image_group(GROUP_FIGURE_TAX_COLLECTOR));
 }
 
 void FigureAction_engineer(int figureId)
@@ -201,7 +201,7 @@ void FigureAction_engineer(int figureId)
         }
         break;
     }
-    FigureActionUpdateGraphic(f, image_group(ID_Graphic_Figure_Engineer));
+    FigureActionUpdateGraphic(f, image_group(GROUP_FIGURE_ENGINEER));
 }
 
 static int prefectGetNearestEnemy(int x, int y, int *distance)
@@ -546,30 +546,30 @@ void FigureAction_prefect(int figureId)
     switch (f->actionState)
     {
     case FigureActionState_74_PrefectGoingToFire:
-        f->graphicId = image_group(ID_Graphic_Figure_PrefectWithBucket) +
+        f->graphicId = image_group(GROUP_FIGURE_PREFECT_WITH_BUCKET) +
                        dir + 8 * f->graphicOffset;
         break;
     case FigureActionState_75_PrefectAtFire:
-        f->graphicId = image_group(ID_Graphic_Figure_PrefectWithBucket) +
+        f->graphicId = image_group(GROUP_FIGURE_PREFECT_WITH_BUCKET) +
                        dir + 96 + 8 * (f->graphicOffset / 2);
         break;
     case FigureActionState_150_Attack:
         if (f->attackGraphicOffset >= 12)
         {
-            f->graphicId = image_group(ID_Graphic_Figure_Prefect) +
+            f->graphicId = image_group(GROUP_FIGURE_PREFECT) +
                            104 + dir + 8 * ((f->attackGraphicOffset - 12) / 2);
         }
         else
         {
-            f->graphicId = image_group(ID_Graphic_Figure_Prefect) + 104 + dir;
+            f->graphicId = image_group(GROUP_FIGURE_PREFECT) + 104 + dir;
         }
         break;
     case FigureActionState_149_Corpse:
-        f->graphicId = image_group(ID_Graphic_Figure_Prefect) +
+        f->graphicId = image_group(GROUP_FIGURE_PREFECT) +
                        96 + FigureActionCorpseGraphicOffset(f);
         break;
     default:
-        f->graphicId = image_group(ID_Graphic_Figure_Prefect) +
+        f->graphicId = image_group(GROUP_FIGURE_PREFECT) +
                        dir + 8 * f->graphicOffset;
         break;
     }

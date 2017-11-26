@@ -113,7 +113,7 @@ void UI_Advisor_Population_drawBackground(int *advisorHeight)
 
     // food/migration info panel
     Widget::Panel::drawInnerPanel(baseOffsetX + 48, baseOffsetY + 336, 34, 5);
-    int graphicId = image_group(ID_Graphic_Bullet);
+    int graphicId = image_group(GROUP_BULLET);
     int width;
     Graphics_drawImage(graphicId, baseOffsetX + 56, baseOffsetY + 344);
     Graphics_drawImage(graphicId, baseOffsetX + 56, baseOffsetY + 362);

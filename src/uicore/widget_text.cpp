@@ -1,11 +1,10 @@
 #include "widget_text.h"
 
-#include "data/constants.hpp"
 #include "graphics/image.h"
 #include "graphics.h"
-#include "data/keyboardinput.hpp"
 
 #include <game>
+#include <data>
 
 void Widget::Text::captureCursor()
 {
@@ -43,7 +42,7 @@ int Widget::Text::getWidth(const uint8_t *str, font_t font)
 
     int maxlen = 10000;
     int width = 0;
-    int graphicBase = image_group(ID_Graphic_Font);
+    int graphicBase = image_group(GROUP_FONT);
     while (*str && maxlen > 0)
     {
         if (*str == ' ')

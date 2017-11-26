@@ -13,7 +13,7 @@ static const int cartResourceOffset8PlusLoadsFood[] = {0, 40, 48, 56, 0, 0, 64, 
 
 static void setCartGraphic(struct Data_Figure *f)
 {
-    f->cartGraphicId = image_group(ID_Graphic_Figure_CartpusherCart) +
+    f->cartGraphicId = image_group(GROUP_FIGURE_CARTPUSHER_CART) +
                        8 * f->resourceId + Resource_getGraphicIdOffset(f->resourceId, 1);
 }
 
@@ -127,13 +127,13 @@ static void updateGraphic(int figureId, struct Data_Figure *f)
 
     if (f->actionState == FigureActionState_149_Corpse)
     {
-        f->graphicId = image_group(ID_Graphic_Figure_Cartpusher) +
+        f->graphicId = image_group(GROUP_FIGURE_CARTPUSHER) +
                        FigureActionCorpseGraphicOffset(f) + 96;
         f->cartGraphicId = 0;
     }
     else
     {
-        f->graphicId = image_group(ID_Graphic_Figure_Cartpusher) + dir + 8 * f->graphicOffset;
+        f->graphicId = image_group(GROUP_FIGURE_CARTPUSHER) + dir + 8 * f->graphicOffset;
     }
     if (f->cartGraphicId)
     {
@@ -305,7 +305,7 @@ void FigureAction_cartpusher(int figureId)
         f->graphicOffset = 0;
         break;
     case FigureActionState_27_CartpusherReturning:
-        f->cartGraphicId = image_group(ID_Graphic_Figure_CartpusherCart);
+        f->cartGraphicId = image_group(GROUP_FIGURE_CARTPUSHER_CART);
         FigureMovement_walkTicks(figureId, 1);
         if (f->direction == DirFigure_8_AtDestination)
         {
@@ -515,7 +515,7 @@ void FigureAction_warehouseman(int figureId)
     case FigureActionState_51_WarehousemanDeliveringResource:
         if (f->loadsSoldOrCarrying == 1)
         {
-            f->cartGraphicId = image_group(ID_Graphic_Figure_CartpusherCartMultipleFood) +
+            f->cartGraphicId = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) +
                                8 * f->resourceId - 8 + Resource_getGraphicIdOffset(f->resourceId, 2);
         }
         else
@@ -566,7 +566,7 @@ void FigureAction_warehouseman(int figureId)
         f->graphicOffset = 0;
         break;
     case FigureActionState_53_WarehousemanReturningEmpty:
-        f->cartGraphicId = image_group(ID_Graphic_Figure_CartpusherCart); // empty
+        f->cartGraphicId = image_group(GROUP_FIGURE_CARTPUSHER_CART); // empty
         FigureMovement_walkTicks(figureId, 1);
         if (f->direction == DirFigure_8_AtDestination || f->direction == DirFigure_10_Lost)
         {
@@ -578,7 +578,7 @@ void FigureAction_warehouseman(int figureId)
         }
         break;
     case FigureActionState_54_WarehousemanGettingFood:
-        f->cartGraphicId = image_group(ID_Graphic_Figure_CartpusherCart); // empty
+        f->cartGraphicId = image_group(GROUP_FIGURE_CARTPUSHER_CART); // empty
         FigureMovement_walkTicks(figureId, 1);
         if (f->direction == DirFigure_8_AtDestination)
         {
@@ -613,7 +613,7 @@ void FigureAction_warehouseman(int figureId)
         // update graphic
         if (f->loadsSoldOrCarrying <= 0)
         {
-            f->cartGraphicId = image_group(ID_Graphic_Figure_CartpusherCart); // empty
+            f->cartGraphicId = image_group(GROUP_FIGURE_CARTPUSHER_CART); // empty
         }
         else if (f->loadsSoldOrCarrying == 1)
         {
@@ -623,12 +623,12 @@ void FigureAction_warehouseman(int figureId)
         {
             if (f->loadsSoldOrCarrying >= 8)
             {
-                f->cartGraphicId = image_group(ID_Graphic_Figure_CartpusherCartMultipleFood) +
+                f->cartGraphicId = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) +
                                    cartResourceOffset8PlusLoadsFood[f->resourceId];
             }
             else
             {
-                f->cartGraphicId = image_group(ID_Graphic_Figure_CartpusherCartMultipleFood) +
+                f->cartGraphicId = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) +
                                    cartResourceOffsetMultipleLoadsFood[f->resourceId];
             }
             f->cartGraphicId += Resource_getGraphicIdOffset(f->resourceId, 2);
@@ -653,7 +653,7 @@ void FigureAction_warehouseman(int figureId)
         break;
     case FigureActionState_57_WarehousemanGettingResource:
         f->terrainUsage = FigureTerrainUsage_PreferRoads;
-        f->cartGraphicId = image_group(ID_Graphic_Figure_CartpusherCart); // empty
+        f->cartGraphicId = image_group(GROUP_FIGURE_CARTPUSHER_CART); // empty
         FigureMovement_walkTicks(figureId, 1);
         if (f->direction == DirFigure_8_AtDestination)
         {
@@ -692,7 +692,7 @@ void FigureAction_warehouseman(int figureId)
         // update graphic
         if (f->loadsSoldOrCarrying <= 0)
         {
-            f->cartGraphicId = image_group(ID_Graphic_Figure_CartpusherCart); // empty
+            f->cartGraphicId = image_group(GROUP_FIGURE_CARTPUSHER_CART); // empty
         }
         else if (f->loadsSoldOrCarrying == 1)
         {
@@ -702,12 +702,12 @@ void FigureAction_warehouseman(int figureId)
         {
             if (ResourceIsFood(f->resourceId))
             {
-                f->cartGraphicId = image_group(ID_Graphic_Figure_CartpusherCartMultipleFood) +
+                f->cartGraphicId = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) +
                                    cartResourceOffsetMultipleLoadsFood[f->resourceId];
             }
             else
             {
-                f->cartGraphicId = image_group(ID_Graphic_Figure_CartpusherCartMultipleResource) +
+                f->cartGraphicId = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_RESOURCE) +
                                    cartResourceOffsetMultipleLoadsNonFood[f->resourceId];
             }
             f->cartGraphicId += Resource_getGraphicIdOffset(f->resourceId, 2);

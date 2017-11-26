@@ -719,12 +719,12 @@ static void setMarketGraphic(int buildingId, struct Data_Building *b)
     if (Data_Grid_desirability[b->gridOffset] <= 30)
     {
         Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size,
-                                   image_group(ID_Graphic_Market), Terrain_Building);
+                                   image_group(GROUP_BUILDING_MARKET), Terrain_Building);
     }
     else
     {
         Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size,
-                                   image_group(ID_Graphic_MarketFancy), Terrain_Building);
+                                   image_group(GROUP_BUILDING_MARKET_FANCY), Terrain_Building);
     }
 }
 
@@ -835,12 +835,12 @@ static void setBathhouseGraphic(int buildingId, struct Data_Building *b)
         if (Data_Grid_desirability[b->gridOffset] <= 30)
         {
             Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size,
-                                       image_group(ID_Graphic_BathhouseWater), Terrain_Building);
+                                       image_group(GROUP_BUILDING_BATHHOUSE_WATER), Terrain_Building);
         }
         else
         {
             Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size,
-                                       image_group(ID_Graphic_BathhouseFancyWater), Terrain_Building);
+                                       image_group(GROUP_BUILDING_BATHHOUSE_FANCY_WATER), Terrain_Building);
         }
     }
     else
@@ -848,12 +848,12 @@ static void setBathhouseGraphic(int buildingId, struct Data_Building *b)
         if (Data_Grid_desirability[b->gridOffset] <= 30)
         {
             Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size,
-                                       image_group(ID_Graphic_BathhouseNoWater), Terrain_Building);
+                                       image_group(GROUP_BUILDING_BATHHOUSE_NO_WATER), Terrain_Building);
         }
         else
         {
             Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size,
-                                       image_group(ID_Graphic_BathhouseFancyNoWater), Terrain_Building);
+                                       image_group(GROUP_BUILDING_BATHHOUSE_FANCY_NO_WATER), Terrain_Building);
         }
     }
 }
@@ -1272,12 +1272,12 @@ static void setSenateGraphic(int buildingId, struct Data_Building *b)
     if (Data_Grid_desirability[b->gridOffset] <= 30)
     {
         Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size,
-                                   image_group(ID_Graphic_Senate), Terrain_Building);
+                                   image_group(GROUP_BUILDING_SENATE), Terrain_Building);
     }
     else
     {
         Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size,
-                                   image_group(ID_Graphic_SenateFancy), Terrain_Building);
+                                   image_group(GROUP_BUILDING_SENATE_FANCY), Terrain_Building);
     }
 }
 
@@ -1523,7 +1523,7 @@ static void spawnFigureDock(int buildingId, struct Data_Building *b)
 static void spawnFigureNativeHut(int buildingId, struct Data_Building *b)
 {
     Data_Grid_graphicIds[b->gridOffset] =
-        image_group(ID_Graphic_NativeBuilding) + (Data_Grid_random[b->gridOffset] & 1);
+        image_group(GROUP_BUILDING_NATIVE) + (Data_Grid_random[b->gridOffset] & 1);
     EXIT_IF_FIGURE(FIGURE_INDIGENOUS_NATIVE);
     int xOut, yOut;
     if (b->subtype.nativeMeetingCenterId > 0 && Terrain_getAdjacentRoadOrClearLand(b->x, b->y, b->size, &xOut, &yOut))
@@ -1543,7 +1543,7 @@ static void spawnFigureNativeHut(int buildingId, struct Data_Building *b)
 static void spawnFigureNativeMeeting(int buildingId, struct Data_Building *b)
 {
     Terrain_addBuildingToGrids(buildingId, b->x, b->y, 2,
-                               image_group(ID_Graphic_NativeBuilding) + 2, Terrain_Building);
+                               image_group(GROUP_BUILDING_NATIVE) + 2, Terrain_Building);
     if (Data_CityInfo.nativeMissionPostOperational > 0 &&
             !buildingHasFigureOfType(buildingId, FIGURE_NATIVE_TRADER, 0))
     {

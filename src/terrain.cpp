@@ -220,7 +220,7 @@ void Terrain_removeBuildingFromGrids(int buildingId, int x, int y)
             else
             {
                 Data_Grid_graphicIds[gridOffset] =
-                    image_group(ID_Graphic_TerrainUglyGrass) +
+                    image_group(GROUP_TERRAIN_UGLY_GRASS) +
                     (Data_Grid_random[gridOffset] & 7);
                 Data_Grid_terrain[gridOffset] &= Terrain_2e80;
             }

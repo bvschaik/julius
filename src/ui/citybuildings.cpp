@@ -14,6 +14,7 @@
 #include <ui>
 #include <sound>
 #include <game>
+#include <data>
 
 static void drawBuildingFootprints();
 static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_CityPixelCoordinate *coord);
@@ -109,7 +110,7 @@ void UI_CityBuildings_drawForegroundForFigure(int x, int y, int figureId, struct
 
 static void drawBuildingFootprints()
 {
-    int graphicIdWaterFirst = image_group(ID_Graphic_TerrainWater);
+    int graphicIdWaterFirst = image_group(GROUP_TERRAIN_WATER);
     int graphicIdWaterLast = 5 + graphicIdWaterFirst;
 
     FOREACH_XY_VIEW
@@ -123,7 +124,7 @@ static void drawBuildingFootprints()
         if (gridOffset < 0)
         {
             // Outside map: draw black tile
-            Graphics_drawIsometricFootprint(image_group(ID_Graphic_TerrainBlack),
+            Graphics_drawIsometricFootprint(image_group(GROUP_TERRAIN_BLACK),
             xGraphic, yGraphic, 0);
         }
         else if (Data_Grid_edge[gridOffset] & Edge_LeftmostTile)
@@ -230,7 +231,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
                 if (b->type == BUILDING_SENATE_UPGRADED)
                 {
                     // rating flags
-                    graphicId = image_group(ID_Graphic_Senate);
+                    graphicId = image_group(GROUP_BUILDING_SENATE);
                     Graphics_drawImageMasked(graphicId + 1, xGraphic + 138,
                                              yGraphic + 44 - Data_CityInfo.ratingCulture / 2, colorMask);
                     Graphics_drawImageMasked(graphicId + 2, xGraphic + 168,
@@ -240,7 +241,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
                     Graphics_drawImageMasked(graphicId + 4, xGraphic + 228,
                                              yGraphic + 19 - Data_CityInfo.ratingFavor / 2, colorMask);
                     // unemployed
-                    graphicId = image_group(ID_Graphic_Figure_Homeless);
+                    graphicId = image_group(GROUP_FIGURE_HOMELESS);
                     if (Data_CityInfo.unemploymentPercentageForSenate > 0)
                     {
                         Graphics_drawImageMasked(graphicId + 108,
@@ -269,12 +270,12 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
                 }
                 if (b->type == BUILDING_AMPHITHEATER && b->numWorkers > 0)
                 {
-                    Graphics_drawImageMasked(image_group(ID_Graphic_AmphitheaterShow),
+                    Graphics_drawImageMasked(image_group(GROUP_BUILDING_AMPHITHEATER_SHOW),
                                              xGraphic + 36, yGraphic - 47, colorMask);
                 }
                 if (b->type == BUILDING_THEATER && b->numWorkers > 0)
                 {
-                    Graphics_drawImageMasked(image_group(ID_Graphic_TheaterShow),
+                    Graphics_drawImageMasked(image_group(GROUP_BUILDING_THEATER_SHOW),
                                              xGraphic + 34, yGraphic - 22, colorMask);
                 }
                 if (b->type == BUILDING_HIPPODROME &&
@@ -288,22 +289,22 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
                         {
                         case Dir_0_Top:
                             Graphics_drawImageMasked(
-                                image_group(ID_Graphic_Hippodrome2) + 6,
+                                image_group(GROUP_BUILDING_HIPPODROME_2) + 6,
                                 xGraphic + 147, yGraphic - 72, colorMask);
                             break;
                         case Dir_2_Right:
                             Graphics_drawImageMasked(
-                                image_group(ID_Graphic_Hippodrome1) + 8,
+                                image_group(GROUP_BUILDING_HIPPODROME_1) + 8,
                                 xGraphic + 58, yGraphic - 79, colorMask);
                             break;
                         case Dir_4_Bottom:
                             Graphics_drawImageMasked(
-                                image_group(ID_Graphic_Hippodrome2) + 8,
+                                image_group(GROUP_BUILDING_HIPPODROME_2) + 8,
                                 xGraphic + 119, yGraphic - 80, colorMask);
                             break;
                         case Dir_6_Left:
                             Graphics_drawImageMasked(
-                                image_group(ID_Graphic_Hippodrome1) + 6,
+                                image_group(GROUP_BUILDING_HIPPODROME_1) + 6,
                                 xGraphic, yGraphic - 72, colorMask);
                         }
                     }
@@ -314,13 +315,13 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
                         case Dir_0_Top:
                         case Dir_4_Bottom:
                             Graphics_drawImageMasked(
-                                image_group(ID_Graphic_Hippodrome2) + 7,
+                                image_group(GROUP_BUILDING_HIPPODROME_2) + 7,
                                 xGraphic + 122, yGraphic - 79, colorMask);
                             break;
                         case Dir_2_Right:
                         case Dir_6_Left:
                             Graphics_drawImageMasked(
-                                image_group(ID_Graphic_Hippodrome1) + 7,
+                                image_group(GROUP_BUILDING_HIPPODROME_1) + 7,
                                 xGraphic, yGraphic - 80, colorMask);
                         }
                     }
@@ -330,29 +331,29 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
                         {
                         case Dir_0_Top:
                             Graphics_drawImageMasked(
-                                image_group(ID_Graphic_Hippodrome2) + 8,
+                                image_group(GROUP_BUILDING_HIPPODROME_2) + 8,
                                 xGraphic + 119, yGraphic - 80, colorMask);
                             break;
                         case Dir_2_Right:
                             Graphics_drawImageMasked(
-                                image_group(ID_Graphic_Hippodrome1) + 6,
+                                image_group(GROUP_BUILDING_HIPPODROME_1) + 6,
                                 xGraphic, yGraphic - 72, colorMask);
                             break;
                         case Dir_4_Bottom:
                             Graphics_drawImageMasked(
-                                image_group(ID_Graphic_Hippodrome2) + 6,
+                                image_group(GROUP_BUILDING_HIPPODROME_2) + 6,
                                 xGraphic + 147, yGraphic - 72, colorMask);
                             break;
                         case Dir_6_Left:
                             Graphics_drawImageMasked(
-                                image_group(ID_Graphic_Hippodrome1) + 8,
+                                image_group(GROUP_BUILDING_HIPPODROME_1) + 8,
                                 xGraphic + 58, yGraphic - 79, colorMask);
                         }
                     }
                 }
                 if (b->type == BUILDING_COLOSSEUM && b->numWorkers > 0)
                 {
-                    Graphics_drawImageMasked(image_group(ID_Graphic_ColosseumShow),
+                    Graphics_drawImageMasked(image_group(GROUP_BUILDING_COLOSSEUM_SHOW),
                                              xGraphic + 70, yGraphic - 90, colorMask);
                 }
                 // workshops
@@ -432,15 +433,15 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
                         {
                             int graphicIdDock = Data_Grid_graphicIds[b->gridOffset];
                             int graphicIdDockers = image_group(ID_Graphic_Dockers);
-                            if (graphicIdDock == image_group(ID_Graphic_Dock1))
+                            if (graphicIdDock == image_group(GROUP_BUILDING_DOCK_1))
                             {
                                 graphicIdDockers += 0;
                             }
-                            else if (graphicIdDock == image_group(ID_Graphic_Dock2))
+                            else if (graphicIdDock == image_group(GROUP_BUILDING_DOCK_2))
                             {
                                 graphicIdDockers += 3;
                             }
-                            else if (graphicIdDock == image_group(ID_Graphic_Dock3))
+                            else if (graphicIdDock == image_group(GROUP_BUILDING_DOCK_3))
                             {
                                 graphicIdDockers += 6;
                             }
@@ -464,7 +465,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
                     }
                     if (b->type == BUILDING_WAREHOUSE)
                     {
-                        Graphics_drawImageMasked(image_group(ID_Graphic_Warehouse) + 17,
+                        Graphics_drawImageMasked(image_group(GROUP_BUILDING_WAREHOUSE) + 17,
                                                  xGraphic - 4, yGraphic - 42, colorMask);
                         if (buildingId == Data_CityInfo.buildingTradeCenterBuildingId)
                         {
@@ -474,28 +475,28 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
                     }
                     if (b->type == BUILDING_GRANARY)
                     {
-                        Graphics_drawImageMasked(image_group(ID_Graphic_Granary) + 1,
+                        Graphics_drawImageMasked(image_group(GROUP_BUILDING_GRANARY) + 1,
                                                  xGraphic + img->sprite_offset_x,
                                                  yGraphic + 60 + img->sprite_offset_y - img->height,
                                                  colorMask);
                         if (b->data.storage.resourceStored[RESOURCE_NONE] < 2400)
                         {
-                            Graphics_drawImageMasked(image_group(ID_Graphic_Granary) + 2,
+                            Graphics_drawImageMasked(image_group(GROUP_BUILDING_GRANARY) + 2,
                                                      xGraphic + 33, yGraphic - 60, colorMask);
                         }
                         if (b->data.storage.resourceStored[RESOURCE_NONE] < 1800)
                         {
-                            Graphics_drawImageMasked(image_group(ID_Graphic_Granary) + 3,
+                            Graphics_drawImageMasked(image_group(GROUP_BUILDING_GRANARY) + 3,
                                                      xGraphic + 56, yGraphic - 50, colorMask);
                         }
                         if (b->data.storage.resourceStored[RESOURCE_NONE] < 1200)
                         {
-                            Graphics_drawImageMasked(image_group(ID_Graphic_Granary) + 4,
+                            Graphics_drawImageMasked(image_group(GROUP_BUILDING_GRANARY) + 4,
                                                      xGraphic + 91, yGraphic - 50, colorMask);
                         }
                         if (b->data.storage.resourceStored[RESOURCE_NONE] < 600)
                         {
-                            Graphics_drawImageMasked(image_group(ID_Graphic_Granary) + 5,
+                            Graphics_drawImageMasked(image_group(GROUP_BUILDING_GRANARY) + 5,
                                                      xGraphic + 117, yGraphic - 62, colorMask);
                         }
                     }
@@ -569,7 +570,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
                     }
                     if (offset)
                     {
-                        Graphics_drawImage(image_group(ID_Graphic_Fort) + offset,
+                        Graphics_drawImage(image_group(GROUP_BUILDING_FORT) + offset,
                                            xGraphic + 81, yGraphic + 5);
                     }
                 }
@@ -583,7 +584,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
                         (Data_Settings_Map.orientation == Dir_6_Left && xy == 1))
                 {
                     int buildingId = Data_Grid_buildingIds[gridOffset];
-                    int graphicId = image_group(ID_Graphic_Gatehouse);
+                    int graphicId = image_group(GROUP_BULIDING_GATEHOUSE);
                     if (Data_Buildings[buildingId].subtype.orientation == 1)
                     {
                         if (Data_Settings_Map.orientation == Dir_0_Top || Data_Settings_Map.orientation == Dir_4_Bottom)

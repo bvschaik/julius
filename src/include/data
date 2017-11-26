@@ -15,4 +15,6 @@
 #include "data/constants.hpp"
 #include "data/grid.hpp"
 
+#include "graphics/image_group.h"
+
 #endif

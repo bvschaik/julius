@@ -5,11 +5,10 @@
 #include "figuremovement.h"
 #include "formation.h"
 
-#include "data/cityinfo.hpp"
-#include "data/grid.hpp"
 #include "city/message.h"
 
 #include <game>
+#include <data>
 
 #include "core/time.h"
 
@@ -36,12 +35,12 @@ void FigureAction_protestor(int figureId)
     }
     if (f->actionState == FigureActionState_149_Corpse)
     {
-        f->graphicId = image_group(ID_Graphic_Figure_Criminal) +
+        f->graphicId = image_group(GROUP_FIGURE_CRIMINAL) +
                        FigureActionCorpseGraphicOffset(f) + 96;
     }
     else
     {
-        f->graphicId = image_group(ID_Graphic_Figure_Criminal) +
+        f->graphicId = image_group(GROUP_FIGURE_CRIMINAL) +
                        criminalOffsets[f->graphicOffset / 4] + 104;
     }
 }
@@ -64,12 +63,12 @@ void FigureAction_criminal(int figureId)
     }
     if (f->actionState == FigureActionState_149_Corpse)
     {
-        f->graphicId = image_group(ID_Graphic_Figure_Criminal) +
+        f->graphicId = image_group(GROUP_FIGURE_CRIMINAL) +
                        FigureActionCorpseGraphicOffset(f) + 96;
     }
     else
     {
-        f->graphicId = image_group(ID_Graphic_Figure_Criminal) +
+        f->graphicId = image_group(GROUP_FIGURE_CRIMINAL) +
                        criminalOffsets[f->graphicOffset / 2] + 104;
     }
 }
@@ -165,22 +164,22 @@ void FigureAction_rioter(int figureId)
 
     if (f->actionState == FigureActionState_149_Corpse)
     {
-        f->graphicId = image_group(ID_Graphic_Figure_Criminal) +
+        f->graphicId = image_group(GROUP_FIGURE_CRIMINAL) +
                        96 + FigureActionCorpseGraphicOffset(f);
     }
     else if (f->direction == DirFigure_11_Attack)
     {
-        f->graphicId = image_group(ID_Graphic_Figure_Criminal) +
+        f->graphicId = image_group(GROUP_FIGURE_CRIMINAL) +
                        104 + criminalOffsets[f->graphicOffset];
     }
     else if (f->actionState == FigureActionState_121_RioterMoving)
     {
-        f->graphicId = image_group(ID_Graphic_Figure_Criminal) +
+        f->graphicId = image_group(GROUP_FIGURE_CRIMINAL) +
                        dir + 8 * f->graphicOffset;
     }
     else
     {
-        f->graphicId = image_group(ID_Graphic_Figure_Criminal) +
+        f->graphicId = image_group(GROUP_FIGURE_CRIMINAL) +
                        104 + criminalOffsets[f->graphicOffset / 2];
     }
 }

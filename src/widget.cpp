@@ -9,6 +9,7 @@
 
 #include <ui>
 #include <game>
+#include <data>
 
 #include "core/lang.h"
 #include "core/string.h"
@@ -82,7 +83,7 @@ static int getCharacterWidth(unsigned char c, font_t font)
     {
         return 0;
     }
-    int graphicId = image_group(ID_Graphic_Font) + font + graphicOffset - 1;
+    int graphicId = image_group(GROUP_FONT) + font + graphicOffset - 1;
     return 1 + image_get(graphicId)->width;
 }
 
@@ -134,7 +135,7 @@ int drawCharacter(font_t font, unsigned int c, int x, int y, int lineHeight, col
         return 0;
     }
 
-    int graphicId = image_group(ID_Graphic_Font) + font + graphicOffset - 1;
+    int graphicId = image_group(GROUP_FONT) + font + graphicOffset - 1;
     int height = image_get(graphicId)->height - lineHeight;
     if (height < 0)
     {
@@ -663,7 +664,7 @@ static int drawRichTextCharacter(font_t font, unsigned int c, int x, int y, colo
         return 0;
     }
 
-    int graphicId = image_group(ID_Graphic_Font) + font + graphicOffset - 1;
+    int graphicId = image_group(GROUP_FONT) + font + graphicOffset - 1;
     int height = image_get(graphicId)->height - 11;
     if (height < 0)
     {

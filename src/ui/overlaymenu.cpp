@@ -84,7 +84,7 @@ void UI_OverlayMenu_drawForeground()
     }
     if (selectedSubmenu > 0)
     {
-        Graphics_drawImage(image_group(ID_Graphic_Bullet),
+        Graphics_drawImage(image_group(GROUP_BULLET),
                            xOffset - 185, 80 + 24 * selectedMenu);
         for (int i = 0; i < numSubmenuItems; i++)
         {

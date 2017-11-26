@@ -4,10 +4,11 @@
 
 #include <ui>
 #include <game>
+#include <data>
 
 void Widget::Panel::drawOuterPanel(int xOffset, int yOffset, int widthInBlocks, int heightInBlocks)
 {
-    int graphicBase = image_group(ID_Graphic_DialogBackground);
+    int graphicBase = image_group(GRAPHIC_DIALOGBACKGROUND);
     int graphicId;
     int graphicY = 0;
     int yAdd = 0;
@@ -83,7 +84,7 @@ void Widget::Panel::drawOuterPanel(int xOffset, int yOffset, int widthInBlocks, 
 
 void Widget::Panel::drawUnborderedPanel(int xOffset, int yOffset, int widthInBlocks, int heightInBlocks)
 {
-    int graphicBase = image_group(ID_Graphic_DialogBackground);
+    int graphicBase = image_group(GRAPHIC_DIALOGBACKGROUND);
     int graphicY = 0;
     for (int y = 0; y < heightInBlocks; y++)
     {
