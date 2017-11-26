@@ -2,8 +2,9 @@
 
 #include "core/direction.h"
 #include "graphics/image.h"
+#include "map/grid.h"
+#include "map/routing.h"
 
-#include "Data/Grid.h"
 #include "Data/State.h"
 
 int map_can_place_road_under_aqueduct(int gridOffset)
@@ -34,21 +35,25 @@ int map_can_place_road_under_aqueduct(int gridOffset)
         checkRoadY = !checkRoadY;
     }
     if (checkRoadY) {
-        if ((Data_Grid_terrain[gridOffset - 162] & Terrain_Road) ||
-            Data_Grid_routingDistance[gridOffset - 162] > 0) {
+        int dy_up = map_grid_delta(0, -1);
+        int dy_down = map_grid_delta(0, 1);
+        if ((Data_Grid_terrain[gridOffset + dy_up] & Terrain_Road) ||
+            map_routing_distance(gridOffset + dy_up) > 0) {
             return 0;
         }
-        if ((Data_Grid_terrain[gridOffset + 162] & Terrain_Road) ||
-            Data_Grid_routingDistance[gridOffset + 162] > 0) {
+        if ((Data_Grid_terrain[gridOffset + dy_down] & Terrain_Road) ||
+            map_routing_distance(gridOffset + dy_down) > 0) {
             return 0;
         }
     } else {
-        if ((Data_Grid_terrain[gridOffset - 1] & Terrain_Road) ||
-            Data_Grid_routingDistance[gridOffset - 1] > 0) {
+        int dx_left = map_grid_delta(-1, 0);
+        int dx_right = map_grid_delta(1, 0);
+        if ((Data_Grid_terrain[gridOffset + dx_left] & Terrain_Road) ||
+            map_routing_distance(gridOffset + dx_left) > 0) {
             return 0;
         }
-        if ((Data_Grid_terrain[gridOffset + 1] & Terrain_Road) ||
-            Data_Grid_routingDistance[gridOffset + 1] > 0) {
+        if ((Data_Grid_terrain[gridOffset + dx_right] & Terrain_Road) ||
+            map_routing_distance(gridOffset + dx_right) > 0) {
             return 0;
         }
     }
@@ -66,13 +71,13 @@ int map_can_place_aqueduct_on_road(int gridOffset)
         checkRoadY = !checkRoadY;
     }
     if (checkRoadY) {
-        if (Data_Grid_routingDistance[gridOffset - 162] > 0 ||
-            Data_Grid_routingDistance[gridOffset + 162] > 0) {
+        if (map_routing_distance(gridOffset + map_grid_delta(0, -1)) > 0 ||
+            map_routing_distance(gridOffset + map_grid_delta(0, 1)) > 0) {
             return 0;
         }
     } else {
-        if (Data_Grid_routingDistance[gridOffset - 1] > 0 ||
-            Data_Grid_routingDistance[gridOffset + 1] > 0) {
+        if (map_routing_distance(gridOffset + map_grid_delta(-1, 0)) > 0 ||
+            map_routing_distance(gridOffset + map_grid_delta(1, 0)) > 0) {
             return 0;
         }
     }

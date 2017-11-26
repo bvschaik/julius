@@ -2,7 +2,6 @@
 
 #include <string.h>
 
-#include "Data/Grid.h"
 #include "Data/State.h"
 
 static const int DIRECTION_DELTA[] = {-162, -161, 1, 163, 162, 161, -1, -163};

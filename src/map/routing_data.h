@@ -1,6 +1,8 @@
 #ifndef MAP_ROUTING_DATA_H
 #define MAP_ROUTING_DATA_H
 
+#include "map/grid.h"
+
 enum {
     CITIZEN_0_ROAD = 0,
     CITIZEN_2_PASSABLE_TERRAIN = 2,
@@ -26,5 +28,10 @@ enum {
     WALL_N1_BLOCKED = -1,
 };
 
+extern grid_i8 terrain_land_citizen;
+extern grid_i8 terrain_land_noncitizen;
+extern grid_i8 terrain_water;
+extern grid_i8 terrain_walls;
+extern grid_u16 routing_distance;
 
 #endif // MAP_ROUTING_DATA_H

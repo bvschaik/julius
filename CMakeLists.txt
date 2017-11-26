@@ -66,6 +66,7 @@ set (MAP_FILES
     src/map/road_aqueduct.c
     src/map/road_network.c
     src/map/routing.c
+    src/map/routing_data.c
     src/map/routing_path.c
     src/map/routing_terrain.c
 )

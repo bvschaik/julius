@@ -3,8 +3,7 @@
 #include "core/calc.h"
 #include "core/random.h"
 #include "map/grid.h"
-
-#include "Data/Grid.h"
+#include "map/routing_data.h"
 
 #define MAX_PATH 500
 
@@ -48,7 +47,7 @@ static void adjust_tile_in_direction(int direction, int *x, int *y, int *grid_of
 int map_routing_get_path(uint8_t *path, int src_x, int src_y, int dst_x, int dst_y, int num_directions)
 {
     int dstGridOffset = map_grid_offset(dst_x, dst_y);
-    int distance = Data_Grid_routingDistance[dstGridOffset];
+    int distance = routing_distance.items[dstGridOffset];
     if (distance <= 0 || distance >= 998) {
         return 0;
     }
@@ -61,13 +60,13 @@ int map_routing_get_path(uint8_t *path, int src_x, int src_y, int dst_x, int dst
     int step = num_directions == 8 ? 1 : 2;
 
     while (distance > 1) {
-        distance = Data_Grid_routingDistance[gridOffset];
+        distance = routing_distance.items[gridOffset];
         int direction = -1;
         int generalDirection = calc_general_direction(x, y, src_x, src_y);
         for (int d = 0; d < 8; d += step) {
             if (d != lastDirection) {
                 int nextOffset = gridOffset + map_grid_direction_delta(d);
-                int nextDistance = Data_Grid_routingDistance[nextOffset];
+                int nextDistance = routing_distance.items[nextOffset];
                 if (nextDistance) {
                     if (nextDistance < distance) {
                         distance = nextDistance;
@@ -99,7 +98,7 @@ int map_routing_get_path(uint8_t *path, int src_x, int src_y, int dst_x, int dst
 int map_routing_get_closest_tile_within_range(int src_x, int src_y, int dst_x, int dst_y, int num_directions, int range, int *out_x, int *out_y)
 {
     int dstGridOffset = map_grid_offset(dst_x, dst_y);
-    int distance = Data_Grid_routingDistance[dstGridOffset];
+    int distance = routing_distance.items[dstGridOffset];
     if (distance <= 0 || distance >= 998) {
         return 0;
     }
@@ -112,7 +111,7 @@ int map_routing_get_closest_tile_within_range(int src_x, int src_y, int dst_x, i
     int step = num_directions == 8 ? 1 : 2;
 
     while (distance > 1) {
-        distance = Data_Grid_routingDistance[gridOffset];
+        distance = routing_distance.items[gridOffset];
         *out_x = x;
         *out_y = y;
         if (distance <= range) {
@@ -123,7 +122,7 @@ int map_routing_get_closest_tile_within_range(int src_x, int src_y, int dst_x, i
         for (int d = 0; d < 8; d += step) {
             if (d != lastDirection) {
                 int nextOffset = gridOffset + map_grid_direction_delta(d);
-                int nextDistance = Data_Grid_routingDistance[nextOffset];
+                int nextDistance = routing_distance.items[nextOffset];
                 if (nextDistance) {
                     if (nextDistance < distance) {
                         distance = nextDistance;
@@ -153,7 +152,7 @@ int map_routing_get_path_on_water(uint8_t *path, int src_x, int src_y, int dst_x
 {
     int rand = random_byte() & 3;
     int dstGridOffset = map_grid_offset(dst_x, dst_y);
-    int distance = Data_Grid_routingDistance[dstGridOffset];
+    int distance = routing_distance.items[dstGridOffset];
     if (distance <= 0 || distance >= 998) {
         return 0;
     }
@@ -165,7 +164,7 @@ int map_routing_get_path_on_water(uint8_t *path, int src_x, int src_y, int dst_x
     int gridOffset = dstGridOffset;
     while (distance > 1) {
         int currentRand = rand;
-        distance = Data_Grid_routingDistance[gridOffset];
+        distance = routing_distance.items[gridOffset];
         if (is_flotsam) {
             currentRand = Data_Grid_random[gridOffset] & 3;
         }
@@ -173,7 +172,7 @@ int map_routing_get_path_on_water(uint8_t *path, int src_x, int src_y, int dst_x
         for (int d = 0; d < 8; d++) {
             if (d != lastDirection) {
                 int nextOffset = gridOffset + map_grid_direction_delta(d);
-                int nextDistance = Data_Grid_routingDistance[nextOffset];
+                int nextDistance = routing_distance.items[nextOffset];
                 if (nextDistance) {
                     if (nextDistance < distance) {
                         distance = nextDistance;

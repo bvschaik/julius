@@ -11,6 +11,14 @@ typedef struct {
     uint8_t items[GRID_SIZE * GRID_SIZE];
 } grid_u8;
 
+typedef struct {
+    int8_t items[GRID_SIZE * GRID_SIZE];
+} grid_i8;
+
+typedef struct {
+    uint16_t items[GRID_SIZE * GRID_SIZE];
+} grid_u16;
+
 int map_grid_offset(int x, int y);
 
 int map_grid_delta(int x, int y);

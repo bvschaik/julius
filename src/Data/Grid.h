@@ -58,12 +58,6 @@ EXTERN Int8_Grid(Data_Grid_desirability);
 EXTERN UInt8_Grid(Data_Grid_buildingDamage);
 EXTERN UInt8_Grid(Data_Grid_rubbleBuildingType);
 
-EXTERN Int8_Grid(Data_Grid_routingLandCitizen);
-EXTERN Int8_Grid(Data_Grid_routingLandNonCitizen);
-EXTERN Int8_Grid(Data_Grid_routingWater);
-EXTERN Int8_Grid(Data_Grid_routingWalls);
-EXTERN UInt16_Grid(Data_Grid_routingDistance);
-
 EXTERN UInt8_Grid(Data_Grid_romanSoldierConcentration);
 
 // undo
