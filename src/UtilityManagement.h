@@ -4,6 +4,4 @@
 void UtilityManagement_updateHouseWaterAccess();
 void UtilityManagement_updateReservoirFountain();
 
-void UtilityManagement_determineRoadNetworks();
-
 #endif

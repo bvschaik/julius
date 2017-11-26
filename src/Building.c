@@ -25,6 +25,7 @@
 #include "core/direction.h"
 #include "graphics/image.h"
 #include "map/desirability.h"
+#include "map/road_network.h"
 #include "map/routing.h"
 #include "map/routing_terrain.h"
 #include "scenario/map.h"
@@ -652,7 +653,7 @@ void Building_GameTick_checkAccessToRome()
 			b->distanceFromEntry = 0;
 			int roadGridOffset = Terrain_getRoadToLargestRoadNetwork(b->x, b->y, 3, &xRoad, &yRoad);
 			if (roadGridOffset >= 0) {
-				b->roadNetworkId = Data_Grid_roadNetworks[roadGridOffset];
+				b->roadNetworkId = map_road_network_get(roadGridOffset);
 				b->distanceFromEntry = map_routing_distance(roadGridOffset);
 				b->roadAccessX = xRoad;
 				b->roadAccessY = yRoad;
@@ -668,7 +669,7 @@ void Building_GameTick_checkAccessToRome()
 			b->distanceFromEntry = 0;
 			int roadGridOffset = Terrain_getRoadToLargestRoadNetworkHippodrome(b->x, b->y, 5, &xRoad, &yRoad);
 			if (roadGridOffset >= 0) {
-				b->roadNetworkId = Data_Grid_roadNetworks[roadGridOffset];
+				b->roadNetworkId = map_road_network_get(roadGridOffset);
 				b->distanceFromEntry = map_routing_distance(roadGridOffset);
 				b->roadAccessX = xRoad;
 				b->roadAccessY = yRoad;
@@ -677,7 +678,7 @@ void Building_GameTick_checkAccessToRome()
 			b->distanceFromEntry = 0;
 			int roadGridOffset = Terrain_getRoadToLargestRoadNetwork(b->x, b->y, b->size, &xRoad, &yRoad);
 			if (roadGridOffset >= 0) {
-				b->roadNetworkId = Data_Grid_roadNetworks[roadGridOffset];
+				b->roadNetworkId = map_road_network_get(roadGridOffset);
 				b->distanceFromEntry = map_routing_distance(roadGridOffset);
 				b->roadAccessX = xRoad;
 				b->roadAccessY = yRoad;

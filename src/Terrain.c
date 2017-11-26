@@ -14,6 +14,7 @@
 #include "graphics/image.h"
 #include "map/bridge.h"
 #include "map/ring.h"
+#include "map/road_network.h"
 #include "map/routing.h"
 #include "map/routing_terrain.h"
 #include "scenario/map.h"
@@ -247,7 +248,7 @@ int Terrain_hasRoadAccess(int x, int y, int size, int *roadX, int *roadY)
 			if (Data_Grid_terrain[gridOffset] & Terrain_Road) {
 				int roadIndex = 11;
 				for (int n = 0; n < 10; n++) {
-					if (Data_CityInfo.largestRoadNetworks[n].id == Data_Grid_roadNetworks[gridOffset]) {
+					if (Data_CityInfo.largestRoadNetworks[n].id == map_road_network_get(gridOffset)) {
 						roadIndex = n;
 						break;
 					}
@@ -280,7 +281,7 @@ int Terrain_hasRoadAccessHippodrome(int x, int y, int *roadX, int *roadY)
 			if (Data_Grid_terrain[gridOffset] & Terrain_Road) {
 				int roadIndex = 11;
 				for (int n = 0; n < 10; n++) {
-					if (Data_CityInfo.largestRoadNetworks[n].id == Data_Grid_roadNetworks[gridOffset]) {
+					if (Data_CityInfo.largestRoadNetworks[n].id == map_road_network_get(gridOffset)) {
 						roadIndex = n;
 						break;
 					}
@@ -299,7 +300,7 @@ int Terrain_hasRoadAccessHippodrome(int x, int y, int *roadX, int *roadY)
 			if (Data_Grid_terrain[gridOffset] & Terrain_Road) {
 				int roadIndex = 11;
 				for (int n = 0; n < 10; n++) {
-					if (Data_CityInfo.largestRoadNetworks[n].id == Data_Grid_roadNetworks[gridOffset]) {
+					if (Data_CityInfo.largestRoadNetworks[n].id == map_road_network_get(gridOffset)) {
 						roadIndex = n;
 						break;
 					}
@@ -318,7 +319,7 @@ int Terrain_hasRoadAccessHippodrome(int x, int y, int *roadX, int *roadY)
 			if (Data_Grid_terrain[gridOffset] & Terrain_Road) {
 				int roadIndex = 11;
 				for (int n = 0; n < 10; n++) {
-					if (Data_CityInfo.largestRoadNetworks[n].id == Data_Grid_roadNetworks[gridOffset]) {
+					if (Data_CityInfo.largestRoadNetworks[n].id == map_road_network_get(gridOffset)) {
 						roadIndex = n;
 						break;
 					}
@@ -582,7 +583,7 @@ int Terrain_getRoadToLargestRoadNetwork(int x, int y, int size, int *xTile, int 
 		if (Data_Grid_terrain[gridOffset] & Terrain_Road && map_routing_distance(gridOffset) > 0) {
 			int index = 11;
 			for (int n = 0; n < 10; n++) {
-				if (Data_CityInfo.largestRoadNetworks[n].id == Data_Grid_roadNetworks[gridOffset]) {
+				if (Data_CityInfo.largestRoadNetworks[n].id == map_road_network_get(gridOffset)) {
 					index = n;
 					break;
 				}
@@ -627,7 +628,7 @@ int Terrain_getRoadToLargestRoadNetworkHippodrome(int x, int y, int size, int *x
 			if (Data_Grid_terrain[gridOffset] & Terrain_Road && map_routing_distance(gridOffset) > 0) {
 				int index = 11;
 				for (int n = 0; n < 10; n++) {
-					if (Data_CityInfo.largestRoadNetworks[n].id == Data_Grid_roadNetworks[gridOffset]) {
+					if (Data_CityInfo.largestRoadNetworks[n].id == map_road_network_get(gridOffset)) {
 						index = n;
 						break;
 					}

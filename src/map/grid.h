@@ -5,6 +5,12 @@
 
 #include <stdint.h>
 
+#include "Data/Grid.h"
+
+typedef struct {
+    uint8_t items[GRID_SIZE * GRID_SIZE];
+} grid_u8;
+
 int map_grid_offset(int x, int y);
 
 int map_grid_delta(int x, int y);

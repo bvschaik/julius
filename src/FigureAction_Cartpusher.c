@@ -7,6 +7,7 @@
 
 #include "figure/route.h"
 #include "game/resource.h"
+#include "map/road_network.h"
 #include "map/routing_terrain.h"
 
 static const int cartResourceOffsetMultipleLoadsFood[] = {0, 0, 8, 16, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -148,7 +149,7 @@ void FigureAction_cartpusher(int figureId)
 	struct Data_Figure *f = &Data_Figures[figureId];
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
-	int roadNetworkId = Data_Grid_roadNetworks[f->gridOffset];
+	int roadNetworkId = map_road_network_get(f->gridOffset);
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	int buildingId = f->buildingId;
 	struct Data_Building *b = &Data_Buildings[buildingId];
@@ -406,7 +407,7 @@ void FigureAction_warehouseman(int figureId)
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
-	int roadNetworkId = Data_Grid_roadNetworks[f->gridOffset];
+	int roadNetworkId = map_road_network_get(f->gridOffset);
 	
 	switch (f->actionState) {
 		case FigureActionState_150_Attack:

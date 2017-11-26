@@ -41,6 +41,7 @@
 #include "graphics/image.h"
 #include "map/bookmark.h"
 #include "map/desirability.h"
+#include "map/road_network.h"
 #include "map/routing.h"
 #include "map/routing_terrain.h"
 #include "scenario/criteria.h"
@@ -768,7 +769,7 @@ static void setupFromSavedGame()
 
 	Building_determineGraphicIdsForOrientedBuildings();
 	figure_route_clean();
-	UtilityManagement_determineRoadNetworks();
+	map_road_network_update();
 	Building_GameTick_checkAccessToRome();
 	Resource_gatherGranaryGettingInfo();
 	SidebarMenu_enableBuildingMenuItemsAndButtons();

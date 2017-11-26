@@ -65,7 +65,6 @@ EXTERN Int8_Grid(Data_Grid_routingWalls);
 EXTERN UInt16_Grid(Data_Grid_routingDistance);
 
 EXTERN UInt8_Grid(Data_Grid_romanSoldierConcentration);
-EXTERN UInt8_Grid(Data_Grid_roadNetworks);
 
 // undo
 EXTERN UInt16_Grid(Data_Grid_Undo_graphicIds);
