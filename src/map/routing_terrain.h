@@ -7,8 +7,6 @@ void map_routing_update_land_citizen();
 void map_routing_update_water();
 void map_routing_update_walls();
 
-void map_routing_block(int x, int y, int size);
-
 int map_routing_is_wall_passable(int grid_offset);
 
 int map_routing_citizen_is_passable(int grid_offset);

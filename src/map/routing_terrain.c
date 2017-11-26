@@ -287,18 +287,6 @@ void map_routing_update_walls()
     }
 }
 
-void map_routing_block(int x, int y, int size)
-{
-    if (IsOutsideMap(x, y, size)) {
-        return;
-    }
-    for (int dy = 0; dy < size; dy++) {
-        for (int dx = 0; dx < size; dx++) {
-            routing_distance.items[map_grid_offset(x+dx, y+dy)] = 0;
-        }
-    }
-}
-
 int map_routing_is_wall_passable(int grid_offset)
 {
     return terrain_walls.items[grid_offset] == 0;

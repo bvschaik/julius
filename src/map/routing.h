@@ -27,6 +27,8 @@ int map_routing_can_travel_over_walls(int src_x, int src_y, int dst_x, int dst_y
 int map_routing_noncitizen_can_travel_over_land(int src_x, int src_y, int dst_x, int dst_y, int onlyThroughBuildingId, int maxTiles);
 int map_routing_noncitizen_can_travel_through_everything(int src_x, int src_y, int dst_x, int dst_y);
 
+void map_routing_block(int x, int y, int size);
+
 void map_routing_save_state(buffer *buf);
 
 void map_routing_load_state(buffer *buf);

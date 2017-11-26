@@ -6,11 +6,14 @@
 
 #include "Data/Building.h"
 #include "Data/Figure.h"
+#include "Data/State.h"
 
 #define MAX_QUEUE GRID_SIZE * GRID_SIZE
 #define GUARD 50000
 
 static const int ROUTE_OFFSETS[] = {-162, 1, 162, -1, -161, 163, 161, -163};
+
+static grid_u16 routing_distance;
 
 static struct {
     int total_routes_calculated;
@@ -23,13 +26,10 @@ static struct {
 	int items[MAX_QUEUE];
 } queue;
 
-static struct {
-    uint8_t water_drag[GRID_SIZE * GRID_SIZE];
-} grid;
+static grid_u8 water_drag;
 
 static struct {
     int throughBuildingId;
-    int isAqueduct;
 } state;
 
 static void enqueue(int next_offset, int dist)
@@ -115,7 +115,7 @@ static void route_queue_max(int source, int dest, int max_tiles, void (*callback
 static void route_queue_boat(int source, void (*callback)(int, int))
 {
     map_grid_clear_u16(routing_distance.items);
-    map_grid_clear_u8(grid.water_drag);
+    map_grid_clear_u8(water_drag.items);
     queue.head = queue.tail = 0;
     enqueue(source, 1);
     int tiles = 0;
@@ -125,7 +125,7 @@ static void route_queue_boat(int source, void (*callback)(int, int))
             break;
         }
         int drag = terrain_water.items[offset] == WATER_N2_MAP_EDGE ? 4 : 0;
-        if (drag && grid.water_drag[offset]++ < drag) {
+        if (drag && water_drag.items[offset]++ < drag) {
             queue.items[queue.tail++] = offset;
             if (queue.tail >= MAX_QUEUE) {
                 queue.tail = 0;
@@ -195,7 +195,6 @@ void map_routing_calculate_distances_water_boat(int x, int y)
 {
     int grid_offset = map_grid_offset(x, y);
     if (terrain_water.items[grid_offset] == WATER_N1_BLOCKED) {
-        map_grid_clear_u16(routing_distance.items);
     } else {
         route_queue_boat(grid_offset, callback_calc_distance_water_boat);
     }
@@ -485,6 +484,17 @@ int map_routing_noncitizen_can_travel_through_everything(int src_x, int src_y, i
     return routing_distance.items[destOffset] != 0;
 }
 
+void map_routing_block(int x, int y, int size)
+{
+    if (IsOutsideMap(x, y, size)) {
+        return;
+    }
+    for (int dy = 0; dy < size; dy++) {
+        for (int dx = 0; dx < size; dx++) {
+            routing_distance.items[map_grid_offset(x+dx, y+dy)] = 0;
+        }
+    }
+}
 
 int map_routing_distance(int grid_offset)
 {

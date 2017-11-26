@@ -32,6 +32,5 @@ extern grid_i8 terrain_land_citizen;
 extern grid_i8 terrain_land_noncitizen;
 extern grid_i8 terrain_water;
 extern grid_i8 terrain_walls;
-extern grid_u16 routing_distance;
 
 #endif // MAP_ROUTING_DATA_H
