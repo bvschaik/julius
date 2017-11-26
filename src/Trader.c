@@ -118,7 +118,7 @@ static int generateTrader(int cityId, empire_city *city)
 	return 0;
 }
 
-int canGenerateTraderForCity(int city_id, empire_city *city)
+static int canGenerateTraderForCity(int city_id, empire_city *city)
 {
     if (city->is_sea_trade) {
         if (Data_CityInfo.numWorkingDocks <= 0) {

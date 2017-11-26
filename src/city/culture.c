@@ -6,7 +6,7 @@
 #include "Data/CityInfo.h"
 #include "CityInfo.h"
 
-struct {
+static struct {
     int theater;
     int amphitheater;
     int colosseum;

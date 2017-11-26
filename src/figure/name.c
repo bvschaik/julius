@@ -57,7 +57,7 @@ void figure_name_init()
     data.enemy_warship = init_name();
 }
 
-int get_next(int32_t *field, int offset, int max)
+static int get_next_name(int32_t *field, int offset, int max)
 {
     int name = offset + *field;
     *field = *field + 1;
@@ -71,46 +71,46 @@ int figure_name_get(figure_type type, enemy_type enemy)
 {
     switch (type) {
     case FIGURE_TAX_COLLECTOR:
-        return get_next(&data.tax_collector, 132, 32);
+        return get_next_name(&data.tax_collector, 132, 32);
 
     case FIGURE_ENGINEER:
-        return get_next(&data.engineer, 165, 32);
+        return get_next_name(&data.engineer, 165, 32);
 
     case FIGURE_PREFECT:
     case FIGURE_TOWER_SENTRY:
-        return get_next(&data.prefect, 198, 32);
+        return get_next_name(&data.prefect, 198, 32);
 
     case FIGURE_ACTOR:
-        return get_next(&data.actor, 330, 32);
+        return get_next_name(&data.actor, 330, 32);
 
     case FIGURE_GLADIATOR:
-        return get_next(&data.gladiator, 363, 32);
+        return get_next_name(&data.gladiator, 363, 32);
 
     case FIGURE_LION_TAMER:
-        return get_next(&data.lion_tamer, 396, 16);
+        return get_next_name(&data.lion_tamer, 396, 16);
 
     case FIGURE_CHARIOTEER:
-        return get_next(&data.charioteer, 413, 16);
+        return get_next_name(&data.charioteer, 413, 16);
 
     case FIGURE_TRADE_CARAVAN:
     case FIGURE_TRADE_CARAVAN_DONKEY:
-        return get_next(&data.trader, 562, 16);
+        return get_next_name(&data.trader, 562, 16);
 
     case FIGURE_TRADE_SHIP:
     case FIGURE_FISHING_BOAT:
-        return get_next(&data.ship, 579, 16);
+        return get_next_name(&data.ship, 579, 16);
 
     case FIGURE_MARKET_TRADER:
     case FIGURE_MARKET_BUYER:
     case FIGURE_BATHHOUSE_WORKER:
-        return get_next(&data.citizen_female, 99, 32);
+        return get_next_name(&data.citizen_female, 99, 32);
 
     case FIGURE_SCHOOL_CHILD:
     case FIGURE_DELIVERY_BOY:
     case FIGURE_BARBER:
     case FIGURE_WORKER:
     default:
-        return get_next(&data.citizen_male, 1, 64);
+        return get_next_name(&data.citizen_male, 1, 64);
 
     case FIGURE_PRIEST:
     case FIGURE_TEACHER:
@@ -119,23 +119,23 @@ int figure_name_get(figure_type type, enemy_type enemy)
     case FIGURE_DOCTOR:
     case FIGURE_SURGEON:
     case FIGURE_PATRICIAN:
-        return get_next(&data.patrician, 66, 32);
+        return get_next_name(&data.patrician, 66, 32);
 
     case FIGURE_FORT_JAVELIN:
     case FIGURE_ENEMY55_JAVELIN:
-        return get_next(&data.javelin_thrower, 231, 32);
+        return get_next_name(&data.javelin_thrower, 231, 32);
 
     case FIGURE_FORT_MOUNTED:
     case FIGURE_ENEMY56_MOUNTED:
-        return get_next(&data.cavalry, 264, 32);
+        return get_next_name(&data.cavalry, 264, 32);
 
     case FIGURE_FORT_LEGIONARY:
     case FIGURE_ENEMY_CAESAR_LEGIONARY:
-        return get_next(&data.legionary, 297, 32);
+        return get_next_name(&data.legionary, 297, 32);
 
     case FIGURE_INDIGENOUS_NATIVE:
     case FIGURE_NATIVE_TRADER:
-        return get_next(&data.barbarian, 430, 32);
+        return get_next_name(&data.barbarian, 430, 32);
 
     case FIGURE_ENEMY43_SPEAR:
     case FIGURE_ENEMY44_SWORD:
@@ -150,21 +150,21 @@ int figure_name_get(figure_type type, enemy_type enemy)
     case FIGURE_ENEMY53_AXE:
         switch (enemy) {
         case ENEMY_8_GREEK:
-            return get_next(&data.enemy_greek, 463, 32);
+            return get_next_name(&data.enemy_greek, 463, 32);
 
         case ENEMY_9_EGYPTIAN:
-            return get_next(&data.enemy_egyptian, 496, 32);
+            return get_next_name(&data.enemy_egyptian, 496, 32);
 
         case ENEMY_1_NUMIDIAN:
         case ENEMY_5_PERGAMUM:
         case ENEMY_10_CARTHAGINIAN:
-            return get_next(&data.enemy_arabian, 529, 32);
+            return get_next_name(&data.enemy_arabian, 529, 32);
 
         case ENEMY_7_ETRUSCAN:
-            return get_next(&data.prefect, 198, 32);
+            return get_next_name(&data.prefect, 198, 32);
 
         default:
-            return get_next(&data.barbarian, 430, 32);
+            return get_next_name(&data.barbarian, 430, 32);
         }
 
     case FIGURE_EXPLOSION:

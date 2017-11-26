@@ -112,7 +112,7 @@ typedef struct {
     buffer *scenario;
 } scenario_state;
 
-struct {
+static struct {
     int num_pieces;
     file_piece pieces[9];
     scenario_state state;
@@ -212,34 +212,34 @@ typedef struct {
     buffer *Data_CityInfo_Extra_exitPointFlag_gridOffset;
     buffer *endMarker;
 } savegame_state;
-struct {
+static struct {
     int num_pieces;
     file_piece pieces[100];
     savegame_state state;
 } savegame_data;
 
-void init_file_piece(file_piece *piece, int size, int compressed)
+static void init_file_piece(file_piece *piece, int size, int compressed)
 {
     piece->compressed = compressed;
     void *data = malloc(size);
     buffer_init(&piece->buf, data, size);
 }
 
-buffer *create_scenario_piece(int size)
+static buffer *create_scenario_piece(int size)
 {
     file_piece *piece = &scenario_data.pieces[scenario_data.num_pieces++];
     init_file_piece(piece, size, 0);
     return &piece->buf;
 }
 
-buffer *create_savegame_piece(int size, int compressed)
+static buffer *create_savegame_piece(int size, int compressed)
 {
     file_piece *piece = &savegame_data.pieces[savegame_data.num_pieces++];
     init_file_piece(piece, size, compressed);
     return &piece->buf;
 }
 
-void init_scenario_data()
+static void init_scenario_data()
 {
     if (scenario_data.num_pieces > 0) {
         for (int i = 0; i < scenario_data.num_pieces; i++) {
@@ -259,7 +259,7 @@ void init_scenario_data()
     state->scenario = create_scenario_piece(1720);
 }
 
-void init_savegame_data()
+static void init_savegame_data()
 {
     if (savegame_data.num_pieces > 0) {
         for (int i = 0; i < savegame_data.num_pieces; i++) {
@@ -361,25 +361,17 @@ void init_savegame_data()
     state->endMarker = create_savegame_piece(284, 0); // 71x 4-bytes emptiness
 }
 
-void init_all()
-{
-    if (!savegame_data.num_pieces) {
-        init_scenario_data();
-        init_savegame_data();
-    }
-}
-
-void read_all_from_buffer(buffer *buf, void *data)
+static void read_all_from_buffer(buffer *buf, void *data)
 {
     buffer_read_raw(buf, data, buf->size);
 }
 
-void write_all_to_buffer(buffer *buf, void *data)
+static void write_all_to_buffer(buffer *buf, void *data)
 {
     buffer_write_raw(buf, data, buf->size);
 }
 
-void scenario_deserialize(scenario_state *file)
+static void scenario_deserialize(scenario_state *file)
 {
     read_all_from_buffer(file->graphic_ids, &Data_Grid_graphicIds);
     read_all_from_buffer(file->edge, &Data_Grid_edge);

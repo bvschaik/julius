@@ -131,7 +131,7 @@ static int loadSmkAudio(const char *filename)
 	return 1;
 }
 
-int loadSmk(const char *filename)
+static int loadSmk(const char *filename)
 {
 	const char *path = dir_get_case_corrected_file(filename);
 	if (!path) {

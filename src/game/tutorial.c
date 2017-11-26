@@ -10,7 +10,7 @@
 #include "scenario/criteria.h"
 #include "scenario/property.h"
 
-struct {
+static struct {
     struct {
         int fire;
         int crime;

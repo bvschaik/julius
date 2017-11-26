@@ -36,7 +36,7 @@ static CustomButton imperialButtons[] = {
 static int focusButtonId;
 static int selectedRequestId;
 
-void draw_request(int index, const scenario_request *request)
+static void draw_request(int index, const scenario_request *request)
 {
     if (index >= 5) {
         return;
