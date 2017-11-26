@@ -156,12 +156,12 @@ void UI_PlayerMessageList_drawForeground()
         }
         if (msg->is_read)
         {
-            Graphics_drawImage(image_group(ID_Graphic_MessageIcon) + 15 + graphicOffset,
+            Graphics_drawImage(image_group(GROUP_MESSAGE_ICON) + 15 + graphicOffset,
                                data.xText + 12, data.yText + 6 + 20 * i);
         }
         else
         {
-            Graphics_drawImage(image_group(ID_Graphic_MessageIcon) + 14 + graphicOffset,
+            Graphics_drawImage(image_group(GROUP_MESSAGE_ICON) + 14 + graphicOffset,
                                data.xText + 12, data.yText + 6 + 20 * i);
         }
         font_t font = FONT_NORMAL_WHITE;
@@ -203,7 +203,7 @@ void UI_PlayerMessageList_drawForeground()
         {
             dotOffset = data.scrollPositionDrag;
         }
-        Graphics_drawImage(image_group(ID_Graphic_PanelButton) + 39,
+        Graphics_drawImage(image_group(GROUP_PANEL_BUTTON) + 39,
                            data.xText + 9 + 16 * data.textWidthBlocks, data.yText + 26 + dotOffset);
     }
 }

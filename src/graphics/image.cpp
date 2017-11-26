@@ -391,7 +391,7 @@ const color_t *image_data(int id)
     {
         return &data.main_data[data.main[id].draw.offset];
     }
-    else if (id == image_group(ID_Graphic_EmpireMap))
+    else if (id == image_group(GROUP_EMPIRE_MAP))
     {
         return data.empire_data;
     }

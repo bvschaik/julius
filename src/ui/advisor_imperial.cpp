@@ -53,7 +53,7 @@ void draw_request(int index, const scenario_request *request)
                              baseOffsetX + 40, baseOffsetY + 102 + 42 * index, FONT_NORMAL_WHITE);
     int resourceOffset = request->resource +
                          Resource_getGraphicIdOffset(request->resource, 3);
-    Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + resourceOffset,
+    Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + resourceOffset,
                        baseOffsetX + 110, baseOffsetY + 100 + 42 * index);
     Widget_GameText_draw(23, request->resource,
                          baseOffsetX + 150, baseOffsetY + 102 + 42 * index, FONT_NORMAL_WHITE);
@@ -110,7 +110,7 @@ void UI_Advisor_Imperial_drawBackground(int *advisorHeight)
 
     *advisorHeight = 27;
     Widget::Panel::drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
-    Graphics_drawImage(image_group(ID_Graphic_AdvisorIcons) + 2, baseOffsetX + 10, baseOffsetY + 10);
+    Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 2, baseOffsetX + 10, baseOffsetY + 10);
 
     Widget::Text::draw(Data_Settings.playerName, baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK, 0);
 
@@ -127,7 +127,7 @@ void UI_Advisor_Imperial_drawBackground(int *advisorHeight)
     {
         // can send to distant battle
         Widget::Panel::drawButtonBorder(baseOffsetX + 38, baseOffsetY + 96, 560, 40, 0);
-        Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + RESOURCE_WEAPONS,
+        Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WEAPONS,
                            baseOffsetX + 50, baseOffsetY + 106);
         width = Widget_GameText_draw(52, 72, baseOffsetX + 80, baseOffsetY + 102, FONT_NORMAL_WHITE);
         Widget_GameText_draw(21, empire_city_get(Data_CityInfo.distantBattleCityId)->name_id,

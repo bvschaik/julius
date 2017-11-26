@@ -26,7 +26,7 @@ void UI_Advisor_Religion_drawBackground(int *advisorHeight)
                                      );
     }
 
-    Graphics_drawImage(image_group(ID_Graphic_AdvisorIcons) + 9, baseOffsetX + 10, baseOffsetY + 10);
+    Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 9, baseOffsetX + 10, baseOffsetY + 10);
 
     Widget_GameText_draw(59, 0, baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK);
 
@@ -41,7 +41,7 @@ void UI_Advisor_Religion_drawBackground(int *advisorHeight)
 
     Widget::Panel::drawInnerPanel(baseOffsetX + 32, baseOffsetY + 60, 36, 8);
 
-    int graphicIdBolt = image_group(ID_Graphic_GodBolt);
+    int graphicIdBolt = image_group(GROUP_GOD_BOLT);
     int width;
 
     // Ceres

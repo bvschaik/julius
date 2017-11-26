@@ -196,7 +196,7 @@ void UI_TopMenu_drawBackgroundIfNecessary()
 static void refreshSidebarButtons()
 {
     int blockWidth = 24;
-    int graphicBase = image_group(ID_Graphic_TopMenuSidebar);
+    int graphicBase = image_group(GROUP_TOP_MENU_SIDEBAR);
     for (int i = 0; i * blockWidth < Data_Screen.width; i++)
     {
         Graphics_drawImage(graphicBase + i % 8, i * blockWidth, 0);

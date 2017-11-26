@@ -49,7 +49,7 @@ void UI_DonateToCityDialog_drawBackground()
     int baseOffsetY = Data_Screen.offset640x480.y;
 
     Widget::Panel::drawOuterPanel(baseOffsetX + 64, baseOffsetY + 160, 32, 10);
-    Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + RESOURCE_DENARII,
+    Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_DENARII,
                        baseOffsetX + 96, baseOffsetY + 176);
     Widget_GameText_drawCentered(52, 16,
                                  baseOffsetX + 80, baseOffsetY + 176, 496, FONT_LARGE_BLACK);

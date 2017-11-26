@@ -177,7 +177,7 @@ static void drawNumberOfMessages()
 
 static void drawSidebar()
 {
-    int graphicBase = image_group(ID_Graphic_SidePanel);
+    int graphicBase = image_group(GROUP_SIDE_PANEL);
     int xOffsetPanel = Data_Screen.width - SIDEBAR_BORDER;
     if (Data_State.sidebarCollapsed)
     {
@@ -217,7 +217,7 @@ static void drawFillerBorders()
     int borderRightWidth = SIDEBAR_BORDER;
     if (borderRightWidth)
     {
-        int graphicId = image_group(ID_Graphic_TopMenuSidebar) + 13;
+        int graphicId = image_group(GROUP_TOP_MENU_SIDEBAR) + 13;
         if (borderRightWidth > 24)
         {
             // larger border
@@ -511,7 +511,7 @@ void UI_SlidingSidebar_drawForeground()
         Data_Screen.width - SIDEBAR_BORDER - 162, 24,
         162, Data_Screen.height - 24 - BOTTOM_BORDER);
 
-    int graphicBase = image_group(ID_Graphic_SidePanel);
+    int graphicBase = image_group(GROUP_SIDE_PANEL);
     // draw collapsed sidebar
     int xOffsetCollapsed = Data_Screen.width - SIDEBAR_BORDER - 42;
     Graphics_drawImage(graphicBase, xOffsetCollapsed, 24);

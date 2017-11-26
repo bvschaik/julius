@@ -1492,7 +1492,7 @@ void Terrain_updateEntryExitFlags(int remove)
         Data_CityInfo_Extra.entryPointFlag.gridOffset = gridOffsetFlag;
         Data_Grid_terrain[gridOffsetFlag] |= Terrain_Rock;
         int orientation = (Data_Settings_Map.orientation + entryOrientation) % 8;
-        Data_Grid_graphicIds[gridOffsetFlag] = image_group(ID_Graphic_EntryExitFlag) + orientation / 2;
+        Data_Grid_graphicIds[gridOffsetFlag] = image_group(GROUP_TERRAIN_ENTRY_EXIT_FLAGS) + orientation / 2;
     }
     if (exitOrientation >= 0)
     {
@@ -1513,7 +1513,7 @@ void Terrain_updateEntryExitFlags(int remove)
         Data_CityInfo_Extra.exitPointFlag.gridOffset = gridOffsetFlag;
         Data_Grid_terrain[gridOffsetFlag] |= Terrain_Rock;
         int orientation = (Data_Settings_Map.orientation + exitOrientation) % 8;
-        Data_Grid_graphicIds[gridOffsetFlag] = image_group(ID_Graphic_EntryExitFlag) + 4 + orientation / 2;
+        Data_Grid_graphicIds[gridOffsetFlag] = image_group(GROUP_TERRAIN_ENTRY_EXIT_FLAGS) + 4 + orientation / 2;
     }
 }
 

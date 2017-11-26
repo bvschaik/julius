@@ -78,7 +78,7 @@ void UI_Advisor_Trade_drawBackground(int *advisorHeight)
 
     *advisorHeight = 27;
     Widget::Panel::drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
-    Graphics_drawImage(image_group(ID_Graphic_AdvisorIcons) + 4,
+    Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 4,
                        baseOffsetX + 10, baseOffsetY + 10);
 
     Widget_GameText_draw(54, 0, baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK);
@@ -97,9 +97,9 @@ void UI_Advisor_Trade_drawForeground()
         int offsetY = baseOffsetY + 22 * i;
         int resource = Data_CityInfo_Resource.availableResources[i];
         int graphicOffset = resource + Resource_getGraphicIdOffset(resource, 3);
-        Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + graphicOffset,
+        Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + graphicOffset,
                            baseOffsetX + 48, offsetY + 54);
-        Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + graphicOffset,
+        Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + graphicOffset,
                            baseOffsetX + 568, offsetY + 54);
 
         if (focusButtonId - 3 == i)
@@ -195,7 +195,7 @@ void UI_TradePricesDialog_drawBackground()
     for (int i = 1; i < 16; i++)
     {
         int graphicOffset = i + Resource_getGraphicIdOffset(i, 3);
-        Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + graphicOffset,
+        Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + graphicOffset,
                            baseOffsetX + 126 + 30 * i, baseOffsetY + 194);
         Widget::Text::drawNumberCentered(trade_price_buy(i),
                                          baseOffsetX + 120 + 30 * i, baseOffsetY + 229, 30, FONT_SMALL_PLAIN);
@@ -256,7 +256,7 @@ void UI_ResourceSettingsDialog_drawForeground()
 
     Widget::Panel::drawOuterPanel(baseOffsetX + 48, baseOffsetY + 128, 34, 15);
     int graphicOffset = selectedResourceId + Resource_getGraphicIdOffset(selectedResourceId, 3);
-    Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + graphicOffset,
+    Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + graphicOffset,
                        baseOffsetX + 58, baseOffsetY + 136);
 
     Widget_GameText_draw(23, selectedResourceId, baseOffsetX + 92, baseOffsetY + 137, FONT_LARGE_BLACK);

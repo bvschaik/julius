@@ -111,7 +111,7 @@ void Widget::Panel::drawUnborderedPanel(int xOffset, int yOffset, int widthInBlo
 
 void Widget::Panel::drawInnerPanel(int xOffset, int yOffset, int widthInBlocks, int heightInBlocks)
 {
-    int graphicBase = image_group(ID_Graphic_SunkenTextboxBackground);
+    int graphicBase = image_group(GROUP_SUNKEN_TEXTBOX_BACKGROUND);
     int graphicId;
     int graphicY = 0;
     int yAdd = 0;
@@ -187,7 +187,7 @@ void Widget::Panel::drawInnerPanel(int xOffset, int yOffset, int widthInBlocks, 
 
 void Widget::Panel::drawInnerPanelBottom(int xOffset, int yOffset, int widthInBlocks)
 {
-    int graphicBase = image_group(ID_Graphic_SunkenTextboxBackground);
+    int graphicBase = image_group(GROUP_SUNKEN_TEXTBOX_BACKGROUND);
     int graphicId;
     int graphicX = 0;
     for (int x = 0; x < widthInBlocks; x++)
@@ -230,7 +230,7 @@ void Widget::Panel::drawButtonBorder(int xOffset, int yOffset, int widthInPixels
     int lastBlockPixelOffsetX = 16 * widthInBlocks - widthInPixels;
     int lastBlockPixelOffsetY = 16 * heightInBlocks - heightInPixels;
 
-    int graphicBase = image_group(ID_Graphic_BorderedButton);
+    int graphicBase = image_group(GROUP_BORDERED_BUTTON);
     if (hasFocus)
     {
         graphicBase += 8;
@@ -291,7 +291,7 @@ void Widget::Panel::drawButtonBorder(int xOffset, int yOffset, int widthInPixels
 
 void Widget::Panel::drawLargeLabelButton(int xOffset, int yOffset, int widthInBlocks, int type)
 {
-    int graphicBase = image_group(ID_Graphic_PanelButton);
+    int graphicBase = image_group(GROUP_PANEL_BUTTON);
     for (int i = 0; i < widthInBlocks; i++)
     {
         int graphicId;
@@ -313,7 +313,7 @@ void Widget::Panel::drawLargeLabelButton(int xOffset, int yOffset, int widthInBl
 
 void Widget::Panel::drawSmallLabelButton(int xOffset, int yOffset, int widthInBlocks, int type)
 {
-    int graphicBase = image_group(ID_Graphic_PanelButton);
+    int graphicBase = image_group(GROUP_PANEL_BUTTON);
     for (int i = 0; i < widthInBlocks; i++)
     {
         int graphicId;

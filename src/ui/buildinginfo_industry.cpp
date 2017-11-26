@@ -14,7 +14,7 @@ static void drawFarm(BuildingInfoContext *c, int helpId, const char *soundFile, 
     PLAY_SOUND(soundFile);
 
     Widget::Panel::drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-    Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + resourceId,
+    Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + resourceId,
                        c->xOffset + 10, c->yOffset + 10);
     Widget_GameText_drawCentered(groupId, 0, c->xOffset, c->yOffset + 10,
                                  16 * c->widthBlocks, FONT_LARGE_BLACK);
@@ -105,7 +105,7 @@ static void drawRawMaterial(BuildingInfoContext *c, int helpId, const char *soun
     PLAY_SOUND(soundFile);
 
     Widget::Panel::drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-    Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + resourceId,
+    Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + resourceId,
                        c->xOffset + 10, c->yOffset + 10);
     Widget_GameText_drawCentered(groupId, 0, c->xOffset, c->yOffset + 10,
                                  16 * c->widthBlocks, FONT_LARGE_BLACK);
@@ -182,7 +182,7 @@ static void drawWorkshop(BuildingInfoContext *c, int helpId, const char *soundFi
     PLAY_SOUND(soundFile);
 
     Widget::Panel::drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
-    Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + resourceId,
+    Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + resourceId,
                        c->xOffset + 10, c->yOffset + 10);
     Widget_GameText_drawCentered(groupId, 0, c->xOffset, c->yOffset + 10,
                                  16 * c->widthBlocks, FONT_LARGE_BLACK);
@@ -193,7 +193,7 @@ static void drawWorkshop(BuildingInfoContext *c, int helpId, const char *soundFi
                                           c->xOffset + 32 + width, c->yOffset + 40, FONT_NORMAL_BLACK);
     Widget_GameText_draw(groupId, 3, c->xOffset + 32 + width, c->yOffset + 40, FONT_NORMAL_BLACK);
 
-    Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) + inputResourceId,
+    Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + inputResourceId,
                        c->xOffset + 32, c->yOffset + 56);
     width = Widget_GameText_draw(groupId, 12, c->xOffset + 60, c->yOffset + 60, FONT_NORMAL_BLACK);
     if (Data_Buildings[c->buildingId].loadsStored < 1)

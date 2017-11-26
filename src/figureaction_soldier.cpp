@@ -60,38 +60,38 @@ void FigureAction_militaryStandard(int figureId)
     f->crossCountryY = 15 * f->y + 7;
     Figure_addToTileList(figureId);
 
-    f->graphicId = image_group(GROUP_BUILDING_FORTStandardPole) + 20 - m->morale / 5;
+    f->graphicId = image_group(GROUP_FIGURE_FORT_STANDARD_POLE) + 20 - m->morale / 5;
     if (m->figure_type == FIGURE_FORT_LEGIONARY)
     {
         if (m->is_halted)
         {
-            f->cartGraphicId = image_group(GROUP_BUILDING_FORTFlags) + 8;
+            f->cartGraphicId = image_group(GROUP_FIGURE_FORT_FLAGS) + 8;
         }
         else
         {
-            f->cartGraphicId = image_group(GROUP_BUILDING_FORTFlags) + f->graphicOffset / 2;
+            f->cartGraphicId = image_group(GROUP_FIGURE_FORT_FLAGS) + f->graphicOffset / 2;
         }
     }
     else if (m->figure_type == FIGURE_FORT_MOUNTED)
     {
         if (m->is_halted)
         {
-            f->cartGraphicId = image_group(GROUP_BUILDING_FORTFlags) + 26;
+            f->cartGraphicId = image_group(GROUP_FIGURE_FORT_FLAGS) + 26;
         }
         else
         {
-            f->cartGraphicId = image_group(GROUP_BUILDING_FORTFlags) + 18 + f->graphicOffset / 2;
+            f->cartGraphicId = image_group(GROUP_FIGURE_FORT_FLAGS) + 18 + f->graphicOffset / 2;
         }
     }
     else
     {
         if (m->is_halted)
         {
-            f->cartGraphicId = image_group(GROUP_BUILDING_FORTFlags) + 17;
+            f->cartGraphicId = image_group(GROUP_FIGURE_FORT_FLAGS) + 17;
         }
         else
         {
-            f->cartGraphicId = image_group(GROUP_BUILDING_FORTFlags) + 9 + f->graphicOffset / 2;
+            f->cartGraphicId = image_group(GROUP_FIGURE_FORT_FLAGS) + 9 + f->graphicOffset / 2;
         }
     }
 }

@@ -864,7 +864,7 @@ void UI_BuildingInfo_drawEmploymentInfo(BuildingInfoContext *c, int yOffset)
     {
         textId = 20; // poor access to employees
     }
-    Graphics_drawImage(image_group(ID_Graphic_ContextIcons) + 14,
+    Graphics_drawImage(image_group(GROUP_CONTEXT_ICONS) + 14,
                        c->xOffset + 40, yOffset + 6);
     if (textId)
     {

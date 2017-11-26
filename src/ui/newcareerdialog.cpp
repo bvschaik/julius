@@ -20,7 +20,7 @@ void UI_NewCareerDialog_init()
 void UI_NewCareerDialog_drawBackground()
 {
     Graphics_clearScreen();
-    Graphics_drawImage(image_group(ID_Graphic_MainMenuBackground),
+    Graphics_drawImage(image_group(GROUP_MAIN_MENU_BACKGROUND),
                        Data_Screen.offset640x480.x, Data_Screen.offset640x480.y);
 }
 

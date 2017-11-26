@@ -12,7 +12,7 @@ void UI_Advisor_Chief_drawBackground(int *advisorHeight)
 
     *advisorHeight = 23;
     Widget::Panel::drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
-    Graphics_drawImage(image_group(ID_Graphic_AdvisorIcons) + 11, baseOffsetX + 10, baseOffsetY + 10);
+    Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 11, baseOffsetX + 10, baseOffsetY + 10);
 
     Widget_GameText_draw(61, 0, baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK);
     Widget::Panel::drawInnerPanel(baseOffsetX + 32, baseOffsetY + 60, 36, 16);

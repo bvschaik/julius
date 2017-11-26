@@ -12,7 +12,7 @@ void UI_Advisor_Education_drawBackground(int *advisorHeight)
 
     *advisorHeight = 16;
     Widget::Panel::drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
-    Graphics_drawImage(image_group(ID_Graphic_AdvisorIcons) + 7, baseOffsetX + 10, baseOffsetY + 10);
+    Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 7, baseOffsetX + 10, baseOffsetY + 10);
     Widget_GameText_draw(57, 0, baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK);
 
     // x population, y school age, z academy age

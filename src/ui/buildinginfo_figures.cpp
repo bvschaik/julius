@@ -34,7 +34,7 @@ static const int figureTypeToBigPeopleGraphicId[] =
     70, 55, 51, 47, 91, 16, 17
 };
 
-#define BigPeopleGraphic(t) (image_group(ID_Graphic_BigPeople) + figureTypeToBigPeopleGraphicId[t] - 1)
+#define BigPeopleGraphic(t) (image_group(GROUP_BIG_PEOPLE) + figureTypeToBigPeopleGraphicId[t] - 1)
 
 static CustomButton figureButtons[] =
 {
@@ -153,7 +153,7 @@ static void drawFigureInfoTrade(BuildingInfoContext *c, int figureId)
             {
                 width += Widget::Text::drawNumber(trader_bought_resources(traderId, r),
                                                   '@', " ", c->xOffset + 40 + width, c->yOffset + 170, FONT_SMALL_BLACK);
-                int graphicId = image_group(ID_Graphic_ResourceIcons) + r + Resource_getGraphicIdOffset(r, 3);
+                int graphicId = image_group(GROUP_RESOURCE_ICONS) + r + Resource_getGraphicIdOffset(r, 3);
                 Graphics_drawImage(graphicId, c->xOffset + 40 + width, c->yOffset + 167);
                 width += 25;
             }
@@ -166,7 +166,7 @@ static void drawFigureInfoTrade(BuildingInfoContext *c, int figureId)
             {
                 width += Widget::Text::drawNumber(trader_sold_resources(traderId, r),
                                                   '@', " ", c->xOffset + 40 + width, c->yOffset + 200, FONT_SMALL_BLACK);
-                int graphicId = image_group(ID_Graphic_ResourceIcons) + r + Resource_getGraphicIdOffset(r, 3);
+                int graphicId = image_group(GROUP_RESOURCE_ICONS) + r + Resource_getGraphicIdOffset(r, 3);
                 Graphics_drawImage(graphicId, c->xOffset + 40 + width, c->yOffset + 197);
                 width += 25;
             }
@@ -180,7 +180,7 @@ static void drawFigureInfoTrade(BuildingInfoContext *c, int figureId)
         {
             if (city->buys_resource[r])
             {
-                int graphicId = image_group(ID_Graphic_ResourceIcons) + r + Resource_getGraphicIdOffset(r, 3);
+                int graphicId = image_group(GROUP_RESOURCE_ICONS) + r + Resource_getGraphicIdOffset(r, 3);
                 Graphics_drawImage(graphicId, c->xOffset + 40 + width, c->yOffset + 167);
                 width += 25;
             }
@@ -191,7 +191,7 @@ static void drawFigureInfoTrade(BuildingInfoContext *c, int figureId)
         {
             if (city->sells_resource[r])
             {
-                int graphicId = image_group(ID_Graphic_ResourceIcons) + r + Resource_getGraphicIdOffset(r, 3);
+                int graphicId = image_group(GROUP_RESOURCE_ICONS) + r + Resource_getGraphicIdOffset(r, 3);
                 Graphics_drawImage(graphicId, c->xOffset + 40 + width, c->yOffset + 197);
                 width += 25;
             }
@@ -285,7 +285,7 @@ static void drawFigureInfoEnemy(BuildingInfoContext *c, int figureId)
         }
         break;
     }
-    Graphics_drawImage(image_group(ID_Graphic_BigPeople) + graphicId - 1,
+    Graphics_drawImage(image_group(GROUP_BIG_PEOPLE) + graphicId - 1,
                        c->xOffset + 28, c->yOffset + 112);
 
     Widget_GameText_draw(65, Data_Figures[figureId].name,
@@ -317,7 +317,7 @@ static void drawFigureInfoCartpusher(BuildingInfoContext *c, int figureId)
             Data_Figures[figureId].resourceId)
     {
         int resource = Data_Figures[figureId].resourceId;
-        Graphics_drawImage(image_group(ID_Graphic_ResourceIcons) +
+        Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) +
                            resource + Resource_getGraphicIdOffset(resource, 3),
                            c->xOffset + 92 + width, c->yOffset + 135);
     }
@@ -388,7 +388,7 @@ static void drawFigureInfoMarketBuyer(BuildingInfoContext *c, int figureId)
                                       c->xOffset + 90 + width, c->yOffset + 139, FONT_SMALL_BLACK);
         int resourceId = collectingItemIdToResourceId(f->collectingItemId);
         Graphics_drawImage(
-            image_group(ID_Graphic_ResourceIcons) + resourceId + Resource_getGraphicIdOffset(resourceId, 3),
+            image_group(GROUP_RESOURCE_ICONS) + resourceId + Resource_getGraphicIdOffset(resourceId, 3),
             c->xOffset + 90 + width, c->yOffset + 135);
     }
     else if (f->actionState == FigureActionState_146_MarketBuyerReturning)
@@ -397,7 +397,7 @@ static void drawFigureInfoMarketBuyer(BuildingInfoContext *c, int figureId)
                                       c->xOffset + 90 + width, c->yOffset + 139, FONT_SMALL_BLACK);
         int resourceId = collectingItemIdToResourceId(f->collectingItemId);
         Graphics_drawImage(
-            image_group(ID_Graphic_ResourceIcons) + resourceId + Resource_getGraphicIdOffset(resourceId, 3),
+            image_group(GROUP_RESOURCE_ICONS) + resourceId + Resource_getGraphicIdOffset(resourceId, 3),
             c->xOffset + 90 + width, c->yOffset + 135);
     }
     if (c->figure.phraseId >= 0)
@@ -413,7 +413,7 @@ static void drawFigureInfoNormal(BuildingInfoContext *c, int figureId)
     if (Data_Figures[figureId].actionState == FigureActionState_74_PrefectGoingToFire ||
             Data_Figures[figureId].actionState == FigureActionState_75_PrefectAtFire)
     {
-        graphicId = image_group(ID_Graphic_BigPeople) + 18;
+        graphicId = image_group(GROUP_BIG_PEOPLE) + 18;
     }
     Graphics_drawImage(graphicId, c->xOffset + 28, c->yOffset + 112);
 
