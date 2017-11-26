@@ -54,7 +54,6 @@ EXTERN UInt8_Grid(Data_Grid_random);
 EXTERN UInt8_Grid(Data_Grid_elevation);
 EXTERN UInt8_Grid(Data_Grid_aqueducts);
 EXTERN UInt8_Grid(Data_Grid_spriteOffsets);
-EXTERN Int8_Grid(Data_Grid_desirability);
 EXTERN UInt8_Grid(Data_Grid_buildingDamage);
 EXTERN UInt8_Grid(Data_Grid_rubbleBuildingType);
 

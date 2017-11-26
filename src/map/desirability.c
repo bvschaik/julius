@@ -10,9 +10,11 @@
 #include "Data/State.h"
 #include "Terrain.h"
 
+static grid_i8 desirability_grid;
+
 void map_desirability_clear()
 {
-    map_grid_clear_i8(Data_Grid_desirability);
+    map_grid_clear_i8(desirability_grid.items);
 }
 
 static void add_desirability_at_distance(int x, int y, int size, int distance, int desirability)
@@ -32,15 +34,15 @@ static void add_desirability_at_distance(int x, int y, int size, int distance, i
         for (int i = start; i < end; i++) {
             const ring_tile *tile = map_ring_tile(i);
             if (map_ring_is_inside_map(x + tile->x, y + tile->y)) {
-                Data_Grid_desirability[base_offset + tile->grid_offset] += desirability;
-                Data_Grid_desirability[base_offset] = calc_bound(Data_Grid_desirability[base_offset], -100, 100); // BUG: bounding on wrong tile
+                desirability_grid.items[base_offset + tile->grid_offset] += desirability;
+                desirability_grid.items[base_offset] = calc_bound(desirability_grid.items[base_offset], -100, 100); // BUG: bounding on wrong tile
             }
         }
     } else {
         for (int i = start; i < end; i++) {
             const ring_tile *tile = map_ring_tile(i);
-            Data_Grid_desirability[base_offset + tile->grid_offset] =
-                calc_bound(Data_Grid_desirability[base_offset + tile->grid_offset] + desirability, -100, 100);
+            desirability_grid.items[base_offset + tile->grid_offset] =
+                calc_bound(desirability_grid.items[base_offset + tile->grid_offset] + desirability, -100, 100);
         }
     }
 }
@@ -127,20 +129,20 @@ void map_desirability_update()
 
 int map_desirability_get(int grid_offset)
 {
-    return Data_Grid_desirability[grid_offset];
+    return desirability_grid.items[grid_offset];
 }
 
 int map_desirability_get_max(int x, int y, int size)
 {
     if (size == 1) {
-        return Data_Grid_desirability[map_grid_offset(x, y)];
+        return desirability_grid.items[map_grid_offset(x, y)];
     }
     int max = -9999;
     for (int dy = 0; dy < size; dy++) {
         for (int dx = 0; dx < size; dx++) {
             int grid_offset = map_grid_offset(x + dx, y + dy);
-            if (Data_Grid_desirability[grid_offset] > max) {
-                max = Data_Grid_desirability[grid_offset];
+            if (desirability_grid.items[grid_offset] > max) {
+                max = desirability_grid.items[grid_offset];
             }
         }
     }
@@ -149,10 +151,10 @@ int map_desirability_get_max(int x, int y, int size)
 
 void map_desirability_save_state(buffer *buf)
 {
-    map_grid_save_state_i8(Data_Grid_desirability, buf);
+    map_grid_save_state_i8(desirability_grid.items, buf);
 }
 
 void map_desirability_load_state(buffer *buf)
 {
-    map_grid_load_state_i8(Data_Grid_desirability, buf);
+    map_grid_load_state_i8(desirability_grid.items, buf);
 }
