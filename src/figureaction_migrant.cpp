@@ -102,7 +102,7 @@ void FigureAction_immigrant(int figureId)
         if (FigureMovement_crossCountryWalkTicks(figureId, 1) == 1)
         {
             f->state = FigureState_Dead;
-            int maxPeople = model_get_house(b->subtype.houseLevel)->max_people;
+            int maxPeople = model_get_house((house_level)b->subtype.houseLevel)->max_people;
             if (b->houseIsMerged)
             {
                 maxPeople *= 4;
@@ -268,7 +268,7 @@ void FigureAction_homeless(int figureId)
             struct Data_Building *b = &Data_Buildings[f->immigrantBuildingId];
             if (f->immigrantBuildingId && BuildingIsHouse(b->type))
             {
-                int maxPeople = model_get_house(b->subtype.houseLevel)->max_people;
+                int maxPeople = model_get_house((house_level)b->subtype.houseLevel)->max_people;
                 if (b->houseIsMerged)
                 {
                     maxPeople *= 4;

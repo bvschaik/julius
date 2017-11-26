@@ -170,7 +170,7 @@ static int provideMarketGoods(int marketBuildingId, int x, int y)
                     foodTypesStoredMax++;
                 }
             }
-            const model_house *model = model_get_house(level);
+            const model_house *model = model_get_house((house_level)level);
             if (model->food_types > foodTypesStoredMax)
             {
                 for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++)
@@ -448,7 +448,7 @@ static int provideTaxCollectorCoverage(int x, int y, unsigned char *maxTaxMultip
     {
         if (Data_Buildings[buildingId].houseSize && Data_Buildings[buildingId].housePopulation > 0)
         {
-            int taxMultiplier = model_get_house(Data_Buildings[buildingId].subtype.houseLevel)->tax_multiplier;
+            int taxMultiplier = model_get_house((house_level)Data_Buildings[buildingId].subtype.houseLevel)->tax_multiplier;
             if (taxMultiplier > *maxTaxMultiplier)
             {
                 *maxTaxMultiplier = taxMultiplier;

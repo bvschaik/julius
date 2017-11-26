@@ -59,7 +59,7 @@ int Figure_create(int figureType, int x, int y, char direction)
     f->crossCountryY = 15 * y;
     f->progressOnTile = 15;
     f->phraseSequenceCity = f->phraseSequenceExact = random_byte() & 3;
-    f->name = figure_name_get(figureType, 0);
+    f->name = figure_name_get((figure_type)figureType, ENEMY_0_BARBARIAN);
     Figure_addToTileList(id);
     if (figureType == FIGURE_TRADE_CARAVAN || figureType == FIGURE_TRADE_SHIP)
     {

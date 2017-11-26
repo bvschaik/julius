@@ -93,7 +93,7 @@ static void drawTooltip(struct TooltipContext *c)
 
 static void drawButtonTooltip(struct TooltipContext *c)
 {
-    const uint8_t *text = lang_get_string(c->textGroup, c->textId);
+    const char *text = lang_get_string(c->textGroup, c->textId);
     Widget_RichText_setFonts(FONT_SMALL_PLAIN, FONT_SMALL_PLAIN);
 
     int width = 200;
@@ -184,10 +184,10 @@ static void drawButtonTooltip(struct TooltipContext *c)
                                 width - 5, lines, COLOR_TOOLTIP);
 }
 
-static uint8_t tmpString[1000];
+static char tmpString[1000];
 static void drawOverlayTooltip(struct TooltipContext *c)
 {
-    const uint8_t *text = lang_get_string(c->textGroup, c->textId);
+    const char *text = lang_get_string(c->textGroup, c->textId);
     if (c->hasNumericPrefix)
     {
         int offset = string_from_int(tmpString, c->numericPrefix, 0);

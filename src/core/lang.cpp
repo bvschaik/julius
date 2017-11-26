@@ -18,8 +18,10 @@
 
 #define BUFFER_SIZE 400000
 
-static struct {
-    struct {
+static struct
+{
+    struct
+    {
         int32_t offset;
         int32_t in_use;
     } text_entries[MAX_TEXT_ENTRIES];
@@ -32,7 +34,8 @@ static struct {
 static void parse_text(buffer *buf)
 {
     buffer_skip(buf, 28); // header
-    for (int i = 0; i < MAX_TEXT_ENTRIES; i++) {
+    for (int i = 0; i < MAX_TEXT_ENTRIES; i++)
+    {
         data.text_entries[i].offset = buffer_read_i32(buf);
         data.text_entries[i].in_use = buffer_read_i32(buf);
     }
@@ -43,7 +46,8 @@ static int load_text(const char *filename, uint8_t *data)
 {
     buffer buf;
     int filesize = io_read_file_into_buffer(filename, data, BUFFER_SIZE);
-    if (filesize < MIN_TEXT_SIZE || filesize > MAX_TEXT_SIZE) {
+    if (filesize < MIN_TEXT_SIZE || filesize > MAX_TEXT_SIZE)
+    {
         return 0;
     }
     buffer_init(&buf, data, filesize);
@@ -51,21 +55,23 @@ static int load_text(const char *filename, uint8_t *data)
     return 1;
 }
 
-static uint8_t *get_message_text(int32_t offset)
+static char *get_message_text(int32_t offset)
 {
-    if (!offset) {
+    if (!offset)
+    {
         return 0;
     }
-    return &data.message_data[offset];
+    return (char*)&data.message_data[offset];
 }
 
 static void parse_message(buffer *buf)
 {
     buffer_skip(buf, 24); // header
-    for (int i = 0; i < MAX_MESSAGE_ENTRIES; i++) {
+    for (int i = 0; i < MAX_MESSAGE_ENTRIES; i++)
+    {
         lang_message *m = &data.message_entries[i];
-        m->type = buffer_read_i16(buf);
-        m->message_type = buffer_read_i16(buf);
+        m->type = (lang_type)buffer_read_i16(buf);
+        m->message_type = (lang_message_type)buffer_read_i16(buf);
         buffer_skip(buf, 2);
         m->x = buffer_read_i16(buf);
         m->y = buffer_read_i16(buf);
@@ -86,7 +92,7 @@ static void parse_message(buffer *buf)
         m->video.y = buffer_read_i16(buf);
         buffer_skip(buf, 14);
         m->urgent = buffer_read_i32(buf);
-        
+
         m->video.text = get_message_text(buffer_read_i32(buf));
         buffer_skip(buf, 4);
         m->title.text = get_message_text(buffer_read_i32(buf));
@@ -100,7 +106,8 @@ static int load_message(const char *filename, uint8_t *data)
 {
     buffer buf;
     int filesize = io_read_file_into_buffer(filename, data, BUFFER_SIZE);
-    if (filesize < MIN_MESSAGE_SIZE || filesize > MAX_MESSAGE_SIZE) {
+    if (filesize < MIN_MESSAGE_SIZE || filesize > MAX_MESSAGE_SIZE)
+    {
         return 0;
     }
     buffer_init(&buf, data, filesize);
@@ -111,7 +118,8 @@ static int load_message(const char *filename, uint8_t *data)
 int lang_load(const char *text_filename, const char *message_filename)
 {
     uint8_t *data = (uint8_t *) malloc(BUFFER_SIZE);
-    if (!data) {
+    if (!data)
+    {
         return 0;
     }
     int result = load_text(text_filename, data) && load_message(message_filename, data);
@@ -119,18 +127,21 @@ int lang_load(const char *text_filename, const char *message_filename)
     return result;
 }
 
-const uint8_t *lang_get_string(int group, int index)
+const char *lang_get_string(int group, int index)
 {
-    const uint8_t *str = &data.text_data[data.text_entries[group].offset];
+    const char *str = (const char*)&data.text_data[data.text_entries[group].offset];
     uint8_t prev = 0;
-    while (index > 0) {
-        if (!*str && (prev >= ' ' || prev == 0)) {
+    while (index > 0)
+    {
+        if (!*str && (prev >= ' ' || prev == 0))
+        {
             --index;
         }
         prev = *str;
         ++str;
     }
-    while (*str < ' ') { // skip non-printables
+    while (*str < ' ')   // skip non-printables
+    {
         ++str;
     }
     return str;
@@ -140,4 +151,3 @@ const lang_message *lang_get_message(int id)
 {
     return &data.message_entries[id];
 }
-

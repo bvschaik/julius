@@ -149,9 +149,9 @@ static void drawFigureInfoTrade(BuildingInfoContext *c, int figureId)
         width = Widget_GameText_draw(129, 4, c->xOffset + 40, c->yOffset + 170, FONT_SMALL_BLACK);
         for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++)
         {
-            if (trader_bought_resources(traderId, r))
+            if (trader_bought_resources(traderId, (resource_type)r))
             {
-                width += Widget::Text::drawNumber(trader_bought_resources(traderId, r),
+                width += Widget::Text::drawNumber(trader_bought_resources(traderId, (resource_type)r),
                                                   '@', " ", c->xOffset + 40 + width, c->yOffset + 170, FONT_SMALL_BLACK);
                 int graphicId = image_group(GROUP_RESOURCE_ICONS) + r + Resource_getGraphicIdOffset(r, 3);
                 Graphics_drawImage(graphicId, c->xOffset + 40 + width, c->yOffset + 167);
@@ -162,9 +162,9 @@ static void drawFigureInfoTrade(BuildingInfoContext *c, int figureId)
         width = Widget_GameText_draw(129, 5, c->xOffset + 40, c->yOffset + 200, FONT_SMALL_BLACK);
         for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++)
         {
-            if (trader_sold_resources(traderId, r))
+            if (trader_sold_resources(traderId, (resource_type)r))
             {
-                width += Widget::Text::drawNumber(trader_sold_resources(traderId, r),
+                width += Widget::Text::drawNumber(trader_sold_resources(traderId, (resource_type)r),
                                                   '@', " ", c->xOffset + 40 + width, c->yOffset + 200, FONT_SMALL_BLACK);
                 int graphicId = image_group(GROUP_RESOURCE_ICONS) + r + Resource_getGraphicIdOffset(r, 3);
                 Graphics_drawImage(graphicId, c->xOffset + 40 + width, c->yOffset + 197);

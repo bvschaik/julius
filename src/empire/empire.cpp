@@ -141,7 +141,7 @@ void empire_select_object(int x, int y)
 int empire_can_export_resource_to_city(int city_id, int resource)
 {
     empire_city *city = empire_city_get(city_id);
-    if (city_id && trade_route_limit_reached(city->route_id, resource))
+    if (city_id && trade_route_limit_reached(city->route_id, (resource_type)resource))
     {
         // quota reached
         return 0;
@@ -172,7 +172,7 @@ int empire_can_import_resource_from_city(int city_id, int resource)
     {
         return 0;
     }
-    if (trade_route_limit_reached(city->route_id, resource))
+    if (trade_route_limit_reached(city->route_id, (resource_type)resource))
     {
         return 0;
     }
@@ -232,7 +232,7 @@ int empire_can_import_resource_from_city(int city_id, int resource)
     }
     if (finished_good)
     {
-        max_in_stock = 2 + 2 * building_count_industry_active(finished_good);
+        max_in_stock = 2 + 2 * building_count_industry_active((resource_type)finished_good);
     }
     return in_stock < max_in_stock ? 1 : 0;
 }

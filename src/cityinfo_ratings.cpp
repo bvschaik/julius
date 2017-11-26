@@ -608,7 +608,7 @@ static void calculateMaxProsperity()
     {
         if (Data_Buildings[i].state && Data_Buildings[i].houseSize)
         {
-            points += model_get_house(Data_Buildings[i].subtype.houseLevel)->prosperity;
+            points += model_get_house((house_level)Data_Buildings[i].subtype.houseLevel)->prosperity;
             houses++;
         }
     }

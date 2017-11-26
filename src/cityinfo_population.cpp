@@ -270,7 +270,7 @@ void CityInfo_Population_calculateSentiment()
         housesCalculated++;
         int sentimentContributionFood = 0;
         int sentimentContributionTents = 0;
-        if (!model_get_house(b->subtype.houseLevel)->food_types)
+        if (!model_get_house((house_level)b->subtype.houseLevel)->food_types)
         {
             // tents
             b->houseDaysWithoutFood = 0;

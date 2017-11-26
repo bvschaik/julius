@@ -54,7 +54,7 @@ static int index_of_string(const uint8_t *haystack, const uint8_t *needle, int h
     return 0;
 }
 
-static int index_of(const uint8_t *haystack, uint8_t needle, int haystack_length)
+static int index_of(const char *haystack, char needle, int haystack_length)
 {
     for (int i = 0; i < haystack_length; i++)
     {
@@ -66,7 +66,7 @@ static int index_of(const uint8_t *haystack, uint8_t needle, int haystack_length
     return 0;
 }
 
-static const uint8_t *skip_non_digits(const uint8_t *str)
+static const char *skip_non_digits(const char *str)
 {
     int safeguard = 0;
     while (1)
@@ -85,7 +85,7 @@ static const uint8_t *skip_non_digits(const uint8_t *str)
 }
 
 
-static const uint8_t *get_value(const uint8_t *ptr, int filesize, int *value)
+static const uint8_t *get_value(const char *ptr, int filesize, int *value)
 {
     ptr = skip_non_digits(ptr);
     *value = string_to_int(ptr);

@@ -4,7 +4,7 @@
 
 void buffer_init(buffer *buffer, void *data, int size)
 {
-    buffer->data = data;
+    buffer->data = (uint8_t*)data;
     buffer->size = size;
     buffer->index = 0;
     buffer->overflow = 0;

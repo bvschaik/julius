@@ -185,7 +185,7 @@ void empire_object_init_cities()
                 amount = 0;
                 break;
             }
-            trade_route_init(routeId, resource, amount);
+            trade_route_init(routeId, (resource_type)resource, amount);
         }
         city->trader_entry_delay = 4;
         city->trader_figure_ids[0] = 0;

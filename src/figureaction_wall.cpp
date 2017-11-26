@@ -92,13 +92,13 @@ void FigureAction_ballista(int figureId)
             if (FigureAction_CombatSoldier_getMissileTarget(figureId, 15, &xTile, &yTile))
             {
                 f->actionState = FigureActionState_181_BallistaFiring;
-                f->waitTicksMissile = figure_properties_for_type(f->type)->missile_delay;
+                f->waitTicksMissile = figure_properties_for_type((figure_type)f->type)->missile_delay;
             }
         }
         break;
     case FigureActionState_181_BallistaFiring:
         f->waitTicksMissile++;
-        if (f->waitTicksMissile > figure_properties_for_type(f->type)->missile_delay)
+        if (f->waitTicksMissile > figure_properties_for_type((figure_type)f->type)->missile_delay)
         {
             int xTile, yTile;
             if (FigureAction_CombatSoldier_getMissileTarget(figureId, 15, &xTile, &yTile))
@@ -272,7 +272,7 @@ void FigureAction_towerSentry(int figureId)
     case FigureActionState_172_TowerSentryFiring:
         FigureMovement_walkTicksTowerSentry(figureId, 1);
         f->waitTicksMissile++;
-        if (f->waitTicksMissile > figure_properties_for_type(f->type)->missile_delay)
+        if (f->waitTicksMissile > figure_properties_for_type((figure_type)f->type)->missile_delay)
         {
             int xTile, yTile;
             if (FigureAction_CombatSoldier_getMissileTarget(figureId, 10, &xTile, &yTile))

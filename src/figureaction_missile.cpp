@@ -52,10 +52,10 @@ void FigureAction_arrow(int figureId)
     {
         int targetType = Data_Figures[targetId].type;
         int formationId = Data_Figures[targetId].formationId;
-        const figure_properties *target_props = figure_properties_for_type(targetType);
+        const figure_properties *target_props = figure_properties_for_type((figure_type)targetType);
         int maxDamage = target_props->max_damage;
         int damageInflicted =
-            figure_properties_for_type(f->type)->missile_attack_value -
+            figure_properties_for_type((figure_type)f->type)->missile_attack_value -
             target_props->missile_defense_value;
         const formation *m = formation_get(formationId);
         if (damageInflicted < 0)
@@ -107,10 +107,10 @@ void FigureAction_spear(int figureId)
     {
         int targetType = Data_Figures[targetId].type;
         int formationId = Data_Figures[targetId].formationId;
-        const figure_properties *target_props = figure_properties_for_type(targetType);
+        const figure_properties *target_props = figure_properties_for_type((figure_type)targetType);
         int maxDamage = target_props->max_damage;
         int damageInflicted =
-            figure_properties_for_type(f->type)->missile_attack_value -
+            figure_properties_for_type((figure_type)f->type)->missile_attack_value -
             target_props->missile_defense_value;
         const formation *m = formation_get(formationId);
         if (damageInflicted < 0)
@@ -162,10 +162,10 @@ void FigureAction_javelin(int figureId)
     {
         int targetType = Data_Figures[targetId].type;
         int formationId = Data_Figures[targetId].formationId;
-        const figure_properties *target_props = figure_properties_for_type(targetType);
+        const figure_properties *target_props = figure_properties_for_type((figure_type)targetType);
         int maxDamage = target_props->max_damage;
         int damageInflicted =
-            figure_properties_for_type(f->type)->missile_attack_value -
+            figure_properties_for_type((figure_type)f->type)->missile_attack_value -
             target_props->missile_defense_value;
         const formation *m = formation_get(formationId);
         if (damageInflicted < 0)
@@ -218,10 +218,10 @@ void FigureAction_bolt(int figureId)
     {
         int targetType = Data_Figures[targetId].type;
         int formationId = Data_Figures[targetId].formationId;
-        const figure_properties *target_props = figure_properties_for_type(targetType);
+        const figure_properties *target_props = figure_properties_for_type((figure_type)targetType);
         int maxDamage = target_props->max_damage;
         int damageInflicted =
-            figure_properties_for_type(f->type)->missile_attack_value -
+            figure_properties_for_type((figure_type)f->type)->missile_attack_value -
             target_props->missile_defense_value;
         if (damageInflicted < 0)
         {

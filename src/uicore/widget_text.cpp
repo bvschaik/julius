@@ -14,7 +14,7 @@ void Widget::Text::captureCursor()
     inputCursor.width = 0;
 }
 
-int Widget::Text::getWidth(const uint8_t *str, font_t font)
+int Widget::Text::getWidth(const char *str, font_t font)
 {
     int spaceWidth;
     int letterSpacing;
@@ -275,42 +275,42 @@ int Widget::Text::draw(const char *str, int x, int y, font_t font, color_t color
 
 int Widget::Text::drawNumber(int value, char prefix, const char *postfix, int xOffset, int yOffset, font_t font)
 {
-    uint8_t str[100];
+    char str[100];
     numberToString(str, value, prefix, postfix);
     return Widget::Text::draw(str, xOffset, yOffset, font, 0);
 }
 
 int Widget::Text::drawNumberColored(int value, char prefix, const char *postfix, int xOffset, int yOffset, font_t font, color_t color)
 {
-    uint8_t str[100];
+    char str[100];
     numberToString(str, value, prefix, postfix);
     return Widget::Text::draw(str, xOffset, yOffset, font, color);
 }
 
 int Widget::Text::drawMoney(int value, int xOffset, int yOffset, font_t font)
 {
-    uint8_t str[100];
+    char str[100];
     numberToString(str, value, '@', " Dn");
     return Widget::Text::draw(str, xOffset, yOffset, font, 0);
 }
 
 int Widget::Text::drawPercentage(int value, int xOffset, int yOffset, font_t font)
 {
-    uint8_t str[100];
+    char str[100];
     numberToString(str, value, '@', "%");
     return Widget::Text::draw(str, xOffset, yOffset, font, 0);
 }
 
 void Widget::Text::drawNumberCentered(int value, int xOffset, int yOffset, int boxWidth, font_t font)
 {
-    uint8_t str[100];
+    char str[100];
     numberToString(str, value, '@', " ");
     Widget::Text::drawCentered(str, xOffset, yOffset, boxWidth, font, 0);
 }
 
 void Widget::Text::drawNumberCenteredColored(int value, int xOffset, int yOffset, int boxWidth, font_t font, color_t color)
 {
-    uint8_t str[100];
+    char str[100];
     numberToString(str, value, '@', " ");
     Widget::Text::drawCentered(str, xOffset, yOffset, boxWidth, font, color);
 }

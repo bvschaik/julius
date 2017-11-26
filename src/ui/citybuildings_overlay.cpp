@@ -1468,7 +1468,7 @@ static void drawBuildingTopForFoodStocksOverlay(int gridOffset, int buildingId, 
         if (Data_Buildings[buildingId].houseSize)
         {
             struct Data_Building *b = &Data_Buildings[buildingId];
-            if (model_get_house(b->subtype.houseLevel)->food_types)
+            if (model_get_house((house_level)b->subtype.houseLevel)->food_types)
             {
                 int pop = b->housePopulation;
                 int stocks = 0;

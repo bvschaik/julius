@@ -603,7 +603,7 @@ static int placeBuilding(int type, int x, int y)
     {
         terrainMask = ~Terrain_Wall;
     }
-    int size = building_properties_for_type(type)->size;
+    int size = building_properties_for_type((building_type)type)->size;
     if (type == BUILDING_WAREHOUSE)
     {
         size = 3;
@@ -1381,7 +1381,7 @@ void BuildingPlacement_update(int xStart, int yStart, int xEnd, int yEnd, int ty
         return;
     }
     Grid_andByteGrid(Data_Grid_bitfields, Bitfield_NoOverlayAndDeleted);
-    int currentCost = model_get_building(type)->cost;
+    int currentCost = model_get_building((building_type)type)->cost;
 
     if (type == BUILDING_CLEAR_LAND)
     {
@@ -1508,7 +1508,7 @@ void BuildingPlacement_update(int xStart, int yStart, int xEnd, int yEnd, int ty
                 !(type == BUILDING_BARRACKS && building_count_total(BUILDING_BARRACKS) > 0) &&
                 !(type == BUILDING_DISTRIBUTION_CENTER_UNUSED && Data_CityInfo.buildingDistributionCenterPlaced))
         {
-            int size = building_properties_for_type(type)->size;
+            int size = building_properties_for_type((building_type)type)->size;
             Terrain_updateToPlaceBuildingToOverlay(size, xEnd, yEnd, Terrain_All, 0);
         }
     }
@@ -1568,7 +1568,7 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
         return;
     }
 
-    int placementCost = model_get_building(type)->cost;
+    int placementCost = model_get_building((building_type)type)->cost;
     if (type == BUILDING_CLEAR_LAND)
     {
         clearRegion(0, xStart, yStart, xEnd, yEnd);

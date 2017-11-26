@@ -240,7 +240,7 @@ static void drawPanelInfoCity(const empire_object *object)
             int graphicId = good + image_group(GROUP_EMPIRE_RESOURCES);
             int resourceOffset = Resource_getGraphicIdOffset(good, 3);
             Graphics_drawImage(graphicId + resourceOffset, xOffset + 100 * goodOffset + 121, yOffset + 22);
-            int tradeMax = trade_route_limit(city->route_id, good);
+            int tradeMax = trade_route_limit(city->route_id, (resource_type)good);
             switch (tradeMax)
             {
             case 15:
@@ -256,7 +256,7 @@ static void drawPanelInfoCity(const empire_object *object)
                                    xOffset + 100 * goodOffset + 133, yOffset + 20);
                 break;
             }
-            int tradeNow = trade_route_traded(city->route_id, good);
+            int tradeNow = trade_route_traded(city->route_id, (resource_type)good);
             if (tradeNow > tradeMax)
             {
                 tradeMax = tradeNow;
@@ -282,7 +282,7 @@ static void drawPanelInfoCity(const empire_object *object)
             int graphicId = good + image_group(GROUP_EMPIRE_RESOURCES);
             int resourceOffset = Resource_getGraphicIdOffset(good, 3);
             Graphics_drawImage(graphicId + resourceOffset, xOffset + 100 * goodOffset + 121, yOffset + 52);
-            int tradeMax = trade_route_limit(city->route_id, good);
+            int tradeMax = trade_route_limit(city->route_id, (resource_type)good);
             switch (tradeMax)
             {
             case 15:
@@ -298,7 +298,7 @@ static void drawPanelInfoCity(const empire_object *object)
                                    xOffset + 100 * goodOffset + 133, yOffset + 50);
                 break;
             }
-            int tradeNow = trade_route_traded(city->route_id, good);
+            int tradeNow = trade_route_traded(city->route_id, (resource_type)good);
             if (tradeNow > tradeMax)
             {
                 tradeMax = tradeNow;
@@ -325,7 +325,7 @@ static void drawPanelInfoCity(const empire_object *object)
             int graphicId = good + image_group(GROUP_EMPIRE_RESOURCES);
             int resourceOffset = Resource_getGraphicIdOffset(good, 3);
             Graphics_drawImage(graphicId + resourceOffset, xOffset + goodOffset + 61, yOffset + 34);
-            switch (trade_route_limit(city->route_id, good))
+            switch (trade_route_limit(city->route_id, (resource_type)good))
             {
             case 15:
                 Graphics_drawImage(image_group(GROUP_TRADE_AMOUNT),
@@ -345,7 +345,7 @@ static void drawPanelInfoCity(const empire_object *object)
         goodOffset += Widget_GameText_draw(47, 4, xOffset + goodOffset + 100, yOffset + 42, FONT_NORMAL_GREEN);
         for (int good = 1; good <= 15; good++)
         {
-            if (!empire_object_city_buys_resource(object->id, good))
+            if (!empire_object_city_buys_resource(object->id, (resource_type)good))
             {
                 continue;
             }
@@ -353,7 +353,7 @@ static void drawPanelInfoCity(const empire_object *object)
             int graphicId = good + image_group(GROUP_EMPIRE_RESOURCES);
             int resourceOffset = Resource_getGraphicIdOffset(good, 3);
             Graphics_drawImage(graphicId + resourceOffset, xOffset + goodOffset + 110, yOffset + 34);
-            switch (trade_route_limit(city->route_id, good))
+            switch (trade_route_limit(city->route_id, (resource_type)good))
             {
             case 15:
                 Graphics_drawImage(image_group(GROUP_TRADE_AMOUNT),

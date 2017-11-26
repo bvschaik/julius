@@ -25,7 +25,7 @@ static void updateBuildings()
     {
         if (BuildingIsInUse(i))
         {
-            const model_building *model = model_get_building(Data_Buildings[i].type);
+            const model_building *model = model_get_building((building_type)Data_Buildings[i].type);
             Terrain_addDesirability(
                 Data_Buildings[i].x, Data_Buildings[i].y,
                 Data_Buildings[i].size,
@@ -63,7 +63,7 @@ static void updateTerrain()
                     Data_Grid_bitfields[gridOffset] &= ~Bitfield_PlazaOrEarthquake;
                     continue;
                 }
-                const model_building *model = model_get_building(type);
+                const model_building *model = model_get_building((building_type)type);
                 Terrain_addDesirability(x, y, 1,
                                         model->desirability_value,
                                         model->desirability_step,

@@ -11,7 +11,7 @@ enum
     CursorPosition_AtMax = 2,
 };
 
-static void moveLeft(uint8_t *start, uint8_t *end)
+static void moveLeft(char *start, char *end)
 {
     while (start < end)
     {
@@ -21,7 +21,7 @@ static void moveLeft(uint8_t *start, uint8_t *end)
     *start = 0;
 }
 
-static void moveRight(uint8_t *start, uint8_t *end)
+static void moveRight(char *start, char *end)
 {
     end[1] = 0;
     while (end > start)
@@ -100,7 +100,7 @@ static void addCharacter(char value)
     }
 }
 
-void KeyboardInput_initTextField(int inputId, uint8_t *text, int maxLength,
+void KeyboardInput_initTextField(int inputId, char *text, int maxLength,
                                  int textboxWidth, int allowPunctuation, font_t font)
 {
     Data_KeyboardInput.lines[inputId].font = font;

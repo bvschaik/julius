@@ -101,7 +101,7 @@ void building_storage_cycle_resource_state(int storage_id, resource_type resourc
     {
         state = BUILDING_STORAGE_STATE_ACCEPTING;
     }
-    data.storages[storage_id].storage.resource_state[resource_id] = state;
+    data.storages[storage_id].storage.resource_state[resource_id] = (building_storage_state)state;
 }
 
 void building_storage_save_state(buffer *buf)
@@ -133,7 +133,7 @@ void building_storage_load_state(buffer *buf)
         data.storages[i].storage.empty_all = buffer_read_u8(buf);
         for (int r = 0; r < RESOURCE_MAX; r++)
         {
-            data.storages[i].storage.resource_state[r] = buffer_read_u8(buf);
+            data.storages[i].storage.resource_state[r] = (building_storage_state)buffer_read_u8(buf);
         }
         buffer_skip(buf, 6); // unused resource states
     }

@@ -67,7 +67,7 @@ int Building_create(int type, int x, int y)
     }
 
     struct Data_Building *b = &Data_Buildings[buildingId];
-    const building_properties *props = building_properties_for_type(type);
+    const building_properties *props = building_properties_for_type((building_type)type);
 
     b->state = BuildingState_Created;
     b->ciid = 1;

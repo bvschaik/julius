@@ -119,8 +119,8 @@ static void hitOpponent(int figureId, struct Data_Figure *f)
     struct Data_Figure *opponent = &Data_Figures[f->opponentId];
     const formation *opponentFormation = formation_get(opponent->formationId);
 
-    const figure_properties *props = figure_properties_for_type(f->type);
-    const figure_properties *opponent_props = figure_properties_for_type(opponent->type);
+    const figure_properties *props = figure_properties_for_type((figure_type)f->type);
+    const figure_properties *opponent_props = figure_properties_for_type((figure_type)opponent->type);
     int cat = opponent_props->category;
     if (cat == FIGURE_CATEGORY_CITIZEN || cat == FIGURE_CATEGORY_CRIMINAL)
     {

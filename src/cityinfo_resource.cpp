@@ -68,7 +68,7 @@ void CityInfo_Resource_calculateFood()
         {
             b->hasRoadAccess = 1;
             int pctWorkers = calc_percentage(
-                                 b->numWorkers, model_get_building(b->type)->laborers);
+                                 b->numWorkers, model_get_building((building_type)b->type)->laborers);
             if (pctWorkers < 100)
             {
                 Data_CityInfo.foodInfoGranariesUnderstaffed++;
@@ -153,7 +153,7 @@ void CityInfo_Resource_housesConsumeFood()
         struct Data_Building *b = &Data_Buildings[i];
         if (BuildingIsInUse(i) && b->houseSize)
         {
-            int numTypes = model_get_house(b->subtype.houseLevel)->food_types;
+            int numTypes = model_get_house((house_level)b->subtype.houseLevel)->food_types;
             int amountPerType = calc_adjust_with_percentage(b->housePopulation, 50);
             if (numTypes > 1)
             {

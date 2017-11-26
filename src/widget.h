@@ -23,10 +23,10 @@ struct _InputCursor
 
 extern _InputCursor inputCursor;
 extern const int map_charToFontGraphic[];
-extern uint8_t tmpLine[200];
+extern char tmpLine[200];
 
 int getWordWidth(const unsigned char *str, font_t font, int *outNumChars);
-void numberToString(uint8_t *str, int value, char prefix, const char *postfix);
+void numberToString(char *str, int value, char prefix, const char *postfix);
 int drawCharacter(font_t font, unsigned int c, int x, int y, int lineHeight, color_t color);
 
 int Widget_GameText_draw(int group, int number, int xOffset, int yOffset, font_t font);
@@ -51,7 +51,7 @@ void Widget_RichText_setFonts(font_t normalFont, font_t linkFont);
 // returns total number of lines
 int Widget_RichText_draw(const char *text, int xOffset, int yOffset,
                          int boxWidthPixels, int boxHeightLines, int measureOnly);
-int Widget_RichText_drawColored(const uint8_t *str, int xOffset, int yOffset,
+int Widget_RichText_drawColored(const char *str, int xOffset, int yOffset,
                                 int boxWidth, int heightLines, color_t color);
 int Widget_RichText_getClickedLink(const mouse *m);
 void Widget_RichText_clearLinks();

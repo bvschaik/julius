@@ -119,7 +119,7 @@ void CityInfo_Labor_calculateWorkersNeededPerCategory()
             continue;
         }
         Data_CityInfo.laborCategory[category].workersNeeded +=
-            model_get_building(Data_Buildings[i].type)->laborers;
+            model_get_building((building_type)Data_Buildings[i].type)->laborers;
         Data_CityInfo.laborCategory[category].totalHousesCovered +=
             Data_Buildings[i].housesCovered;
         Data_CityInfo.laborCategory[category].buildings++;
@@ -312,7 +312,7 @@ static void allocateWorkersToBuildings()
         }
         if (b->percentageHousesCovered > 0)
         {
-            int requiredWorkers = model_get_building(b->type)->laborers;
+            int requiredWorkers = model_get_building((building_type)b->type)->laborers;
             if (categoryWorkersNeeded[cat])
             {
                 int numWorkers = calc_adjust_with_percentage(
@@ -365,7 +365,7 @@ static void allocateWorkersToBuildings()
         }
         if (b->percentageHousesCovered > 0 && categoryWorkersNeeded[cat])
         {
-            int requiredWorkers = model_get_building(b->type)->laborers;
+            int requiredWorkers = model_get_building((building_type)b->type)->laborers;
             if (b->numWorkers < requiredWorkers)
             {
                 int needed = requiredWorkers - b->numWorkers;
@@ -440,7 +440,7 @@ static void allocateWorkersToWater()
             else
             {
                 Data_Buildings[buildingId].numWorkers =
-                    model_get_building(Data_Buildings[buildingId].type)->laborers;
+                    model_get_building((building_type)Data_Buildings[buildingId].type)->laborers;
             }
         }
     }

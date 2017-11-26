@@ -138,7 +138,7 @@ void FigureAction_fishingBoat(int figureId)
         break;
     case FigureActionState_194_FishingBoatAtWharf:
     {
-        int pctWorkers = calc_percentage(b->numWorkers, model_get_building(b->type)->laborers);
+        int pctWorkers = calc_percentage(b->numWorkers, model_get_building((building_type)b->type)->laborers);
         int maxWaitTicks = 5 * (102 - pctWorkers);
         if (b->data.other.fishingBoatHasFish > 0)
         {

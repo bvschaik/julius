@@ -14,13 +14,13 @@
  * @param dst Destination string
  * @param maxlength Maximum length of the destination string
  */
-void string_copy(const uint8_t *src, uint8_t *dst, int maxlength);
+void string_copy(const char *src, char *dst, int maxlength);
 
 /**
  * Converts the string to integer
  * @return integer
  */
-int string_to_int(const uint8_t *str);
+int string_to_int(const char *str);
 
 /**
  * Converts integer to string
@@ -29,7 +29,7 @@ int string_to_int(const uint8_t *str);
  * @param force_plus_sign Force plus sign in front of positive value
  * @return Total number of characters written to dst
  */
-int string_from_int(uint8_t *dst, int value, int force_plus_sign);
+int string_from_int(char *dst, int value, int force_plus_sign);
 
 /**
  * Compares the two strings case insensitively, used exclusively for filenames

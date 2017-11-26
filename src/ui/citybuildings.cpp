@@ -1360,7 +1360,7 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
         {
             return;
         }
-        if (!model_get_house(b->subtype.houseLevel)->food_types)
+        if (!model_get_house((house_level)b->subtype.houseLevel)->food_types)
         {
             c->textId = 104;
         }

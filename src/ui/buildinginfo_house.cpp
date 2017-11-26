@@ -131,7 +131,7 @@ void UI_BuildingInfo_drawHouse(BuildingInfoContext *c)
 
     int resourceGraphic = image_group(GROUP_RESOURCE_ICONS);
     // food inventory
-    if (model_get_house(b->subtype.houseLevel)->food_types)
+    if (model_get_house((house_level)b->subtype.houseLevel)->food_types)
     {
         // wheat
         Graphics_drawImage(resourceGraphic + RESOURCE_WHEAT,
@@ -189,7 +189,7 @@ void UI_BuildingInfo_drawHouse(BuildingInfoContext *c)
                                          c->xOffset + 32, c->yOffset + 60, FONT_NORMAL_BLACK);
         width += Widget_GameText_drawColored(41, Data_Buildings[c->worstDesirabilityBuildingId].type,
                                              c->xOffset + 32 + width, c->yOffset + 60, FONT_NORMAL_PLAIN, COLOR_RED);
-        Widget::Text::draw((uint8_t*)")", c->xOffset + 32 + width, c->yOffset + 60, FONT_NORMAL_BLACK, 0);
+        Widget::Text::draw(")", c->xOffset + 32 + width, c->yOffset + 60, FONT_NORMAL_BLACK, 0);
         Widget_GameText_drawMultiline(127, 41 + b->data.house.evolveTextId,
                                       c->xOffset + 32, c->yOffset + 76, 16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
     }
@@ -228,12 +228,12 @@ void UI_BuildingInfo_houseDetermineWorstDesirabilityBuilding(BuildingInfoContext
             }
             if (!b->houseSize || b->type < Data_Buildings[c->buildingId].type)
             {
-                int des = model_get_building(b->type)->desirability_value;
+                int des = model_get_building((building_type)b->type)->desirability_value;
                 if (des < 0)
                 {
                     // simplified desirability calculation
-                    int stepSize = model_get_building(b->type)->desirability_step_size;
-                    int range = model_get_building(b->type)->desirability_range;
+                    int stepSize = model_get_building((building_type)b->type)->desirability_step_size;
+                    int range = model_get_building((building_type)b->type)->desirability_range;
                     int dist = calc_maximum_distance(x, y,
                                                      Data_Buildings[c->buildingId].x, Data_Buildings[c->buildingId].y);
                     if (dist <= range)

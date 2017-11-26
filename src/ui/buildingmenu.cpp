@@ -191,7 +191,7 @@ static void drawMenuButtons()
         {
             buildingType = BUILDING_RESERVOIR;
         }
-        int cost = model_get_building(buildingType)->cost;
+        int cost = model_get_building((building_type)buildingType)->cost;
         if (buildingType == BUILDING_FORT)
         {
             cost = 0;

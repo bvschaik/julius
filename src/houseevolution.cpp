@@ -376,7 +376,7 @@ void HouseEvolution_Tick_evolveAndConsumeResources()
 static int checkEvolveDesirability(int buildingId)
 {
     int level = Data_Buildings[buildingId].subtype.houseLevel;
-    const model_house *model = model_get_house(level);
+    const model_house *model = model_get_house((house_level)level);
     int evolveDes = model->evolve_desirability;
     if (level >= HOUSE_LUXURY_PALACE)
     {
@@ -408,7 +408,7 @@ static int hasRequiredGoodsAndServices(int buildingId, int forUpgrade)
     {
         ++level;
     }
-    const model_house *model = model_get_house(level);
+    const model_house *model = model_get_house((house_level)level);
     // water
     int water = model->water;
     if (!b->hasWaterAccess)
@@ -569,7 +569,7 @@ static int hasRequiredGoodsAndServices(int buildingId, int forUpgrade)
 static void consumeResources(int buildingId)
 {
     struct Data_Building *b = &Data_Buildings[buildingId];
-    const model_house *model = model_get_house(b->subtype.houseLevel);
+    const model_house *model = model_get_house((house_level)b->subtype.houseLevel);
     int pottery = model->pottery;
     int furniture = model->furniture;
     int oil = model->oil;
@@ -784,7 +784,7 @@ void HouseEvolution_determineEvolveText(int buildingId, int hasBadDesirabilityBu
 
     // this house will devolve soon because...
 
-    const model_house *model = model_get_house(level);
+    const model_house *model = model_get_house((house_level)level);
     // desirability
     if (b->desirability <= model->devolve_desirability)
     {
@@ -990,7 +990,7 @@ void HouseEvolution_determineEvolveText(int buildingId, int hasBadDesirabilityBu
         }
         return;
     }
-    model = model_get_house(++level);
+    model = model_get_house((house_level)(++level));
     // water
     water = model->water;
     if (water == 1 && !b->hasWaterAccess && !b->hasWellAccess)

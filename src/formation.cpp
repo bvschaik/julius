@@ -27,7 +27,7 @@ int Formation_createLegion(int buildingId)
     Formation_calculateLegionTotals();
 
     struct Data_Building *b = &Data_Buildings[buildingId];
-    int formation_id = formation_create_legion(buildingId, b->x, b->y, b->subtype.fortFigureType);
+    int formation_id = formation_create_legion(buildingId, b->x, b->y, (figure_type)b->subtype.fortFigureType);
     if (!formation_id)
     {
         return 0;
@@ -336,7 +336,7 @@ void Formation_calculateFigures()
         int index = formation_add_figure(formationId, i,
                                          Data_Figures[i].formationAtRest != 1,
                                          Data_Figures[i].damage,
-                                         figure_properties_for_type(figtype)->max_damage
+                                         figure_properties_for_type((figure_type)figtype)->max_damage
                                         );
         Data_Figures[i].indexInFormation = index;
     }

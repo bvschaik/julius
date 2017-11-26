@@ -92,7 +92,7 @@ int lang_load(const char *text_filename, const char *message_filename);
  * @param index Index within the group
  * @return String
  */
-const uint8_t *lang_get_string(int group, int index);
+const char *lang_get_string(int group, int index);
 
 /**
  * Gets the message for the specified ID

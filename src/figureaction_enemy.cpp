@@ -56,7 +56,7 @@ static void enemyInitial(int figureId, struct Data_Figure *f, const formation *m
         // missile throwers
         f->waitTicksMissile++;
         int xTile, yTile;
-        if (f->waitTicksMissile > figure_properties_for_type(f->type)->missile_delay)
+        if (f->waitTicksMissile > figure_properties_for_type((figure_type)f->type)->missile_delay)
         {
             f->waitTicksMissile = 0;
             if (FigureAction_CombatEnemy_getMissileTarget(figureId, 10, Data_CityInfo.numSoldiersInCity < 4, &xTile, &yTile))

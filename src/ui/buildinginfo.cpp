@@ -836,7 +836,7 @@ void UI_BuildingInfo_drawEmploymentInfo(BuildingInfoContext *c, int yOffset)
 {
     struct Data_Building *b = &Data_Buildings[c->buildingId];
     int textId;
-    if (b->numWorkers >= model_get_building(b->type)->laborers)
+    if (b->numWorkers >= model_get_building((building_type)b->type)->laborers)
     {
         textId = 0;
     }
@@ -870,7 +870,7 @@ void UI_BuildingInfo_drawEmploymentInfo(BuildingInfoContext *c, int yOffset)
     {
         int width = Widget_GameText_drawNumberWithDescription(8, 12, b->numWorkers,
                     c->xOffset + 60, yOffset + 10, FONT_SMALL_BLACK);
-        width += Widget::Text::drawNumber(model_get_building(b->type)->laborers, '(', "",
+        width += Widget::Text::drawNumber(model_get_building((building_type)b->type)->laborers, '(', "",
                                           c->xOffset + 70 + width, yOffset + 10, FONT_SMALL_BLACK);
         Widget_GameText_draw(69, 0, c->xOffset + 70 + width, yOffset + 10, FONT_SMALL_BLACK);
         Widget_GameText_draw(69, textId, c->xOffset + 70, yOffset + 26, FONT_SMALL_BLACK);
@@ -879,7 +879,7 @@ void UI_BuildingInfo_drawEmploymentInfo(BuildingInfoContext *c, int yOffset)
     {
         int width = Widget_GameText_drawNumberWithDescription(8, 12, b->numWorkers,
                     c->xOffset + 60, yOffset + 16, FONT_SMALL_BLACK);
-        width += Widget::Text::drawNumber(model_get_building(b->type)->laborers, '(', "",
+        width += Widget::Text::drawNumber(model_get_building((building_type)b->type)->laborers, '(', "",
                                           c->xOffset + 70 + width, yOffset + 16, FONT_SMALL_BLACK);
         Widget_GameText_draw(69, 0, c->xOffset + 70 + width, yOffset + 16, FONT_SMALL_BLACK);
     }

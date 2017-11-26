@@ -117,7 +117,7 @@ int Resource_getGranaryForStoringFood(
         {
             continue;
         }
-        int pctWorkers = calc_percentage(b->numWorkers, model_get_building(b->type)->laborers);
+        int pctWorkers = calc_percentage(b->numWorkers, model_get_building((building_type)b->type)->laborers);
         if (pctWorkers < 100)
         {
             if (understaffed)
@@ -177,7 +177,7 @@ int Resource_getGettingGranaryForStoringFood(
         {
             continue;
         }
-        int pctWorkers = calc_percentage(b->numWorkers, model_get_building(b->type)->laborers);
+        int pctWorkers = calc_percentage(b->numWorkers, model_get_building((building_type)b->type)->laborers);
         if (pctWorkers < 100)
         {
             continue;
@@ -374,7 +374,7 @@ int Resource_removeFromGranary(int buildingId, int resource, int amount)
 int Resource_determineGranaryWorkerTask(int buildingId)
 {
     struct Data_Building *b = &Data_Buildings[buildingId];
-    int pctWorkers = calc_percentage(b->numWorkers, model_get_building(b->type)->laborers);
+    int pctWorkers = calc_percentage(b->numWorkers, model_get_building((building_type)b->type)->laborers);
     if (pctWorkers < 50)
     {
         return -1;

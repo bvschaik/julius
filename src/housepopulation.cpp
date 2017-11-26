@@ -45,7 +45,7 @@ void HousePopulation_updateRoom()
         b->housePopulationRoom = 0;
         if (b->distanceFromEntry > 0)
         {
-            int maxPop = model_get_house(b->subtype.houseLevel)->max_people;
+            int maxPop = model_get_house((house_level)b->subtype.houseLevel)->max_people;
             if (b->houseIsMerged)
             {
                 maxPop *= 4;
@@ -359,7 +359,7 @@ int HousePopulation_addPeople(int amount)
         if (BuildingIsInUse(buildingId) && b->houseSize && b->distanceFromEntry > 0 && b->housePopulation > 0)
         {
             Data_CityInfo.populationLastTargetHouseAdd = buildingId;
-            int maxPeople = model_get_house(b->subtype.houseLevel)->max_people;
+            int maxPeople = model_get_house((house_level)b->subtype.houseLevel)->max_people;
             if (b->houseIsMerged)
             {
                 maxPeople *= 4;

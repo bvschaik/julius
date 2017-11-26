@@ -316,7 +316,7 @@ void FigureAction_docker(int figureId)
             if (Trader_tryImportResource(f->destinationBuildingId, f->resourceId, tradeCityId))
             {
                 int traderId = Data_Figures[b->data.other.boatFigureId].traderId;
-                trader_record_sold_resource(traderId, f->resourceId);
+                trader_record_sold_resource(traderId, (resource_type)f->resourceId);
                 f->actionState = FigureActionState_138_DockerImportReturning;
                 f->waitTicks = 0;
                 f->destinationX = f->sourceX;
@@ -355,7 +355,7 @@ void FigureAction_docker(int figureId)
             if (Trader_tryExportResource(f->destinationBuildingId, f->resourceId, tradeCityId))
             {
                 int traderId = Data_Figures[b->data.other.boatFigureId].traderId;
-                trader_record_bought_resource(traderId, f->resourceId);
+                trader_record_bought_resource(traderId, (resource_type)f->resourceId);
                 f->actionState = FigureActionState_137_DockerExportReturning;
             }
             else

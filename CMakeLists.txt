@@ -177,7 +177,7 @@ if(UNIX AND NOT APPLE)
   else()
     #release options strip bin
     message("App: building in release mode")
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s -fno-permissive")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s")
   endif()
 
   # Check for C++11 suport

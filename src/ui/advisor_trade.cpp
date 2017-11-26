@@ -197,9 +197,9 @@ void UI_TradePricesDialog_drawBackground()
         int graphicOffset = i + Resource_getGraphicIdOffset(i, 3);
         Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + graphicOffset,
                            baseOffsetX + 126 + 30 * i, baseOffsetY + 194);
-        Widget::Text::drawNumberCentered(trade_price_buy(i),
+        Widget::Text::drawNumberCentered(trade_price_buy((resource_type)i),
                                          baseOffsetX + 120 + 30 * i, baseOffsetY + 229, 30, FONT_SMALL_PLAIN);
-        Widget::Text::drawNumberCentered(trade_price_sell(i),
+        Widget::Text::drawNumberCentered(trade_price_sell((resource_type)i),
                                          baseOffsetX + 120 + 30 * i, baseOffsetY + 254, 30, FONT_SMALL_PLAIN);
     }
     Widget_GameText_drawCentered(13, 1, baseOffsetX + 16, baseOffsetY + 296, 608, FONT_NORMAL_BLACK);

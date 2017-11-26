@@ -118,7 +118,7 @@ static void collectMonthlyTaxes()
         int isPatrician = Data_Buildings[i].subtype.houseLevel >= HOUSE_SMALL_VILLA;
         int population = Data_Buildings[i].housePopulation;
         int trm = difficulty_adjust_money(
-                      model_get_house(Data_Buildings[i].subtype.houseLevel)->tax_multiplier);
+                      model_get_house((house_level)Data_Buildings[i].subtype.houseLevel)->tax_multiplier);
         Data_CityInfo.populationPerLevel[Data_Buildings[i].subtype.houseLevel] += population;
 
         int tax = population * trm;
@@ -402,7 +402,7 @@ void CityInfo_Finance_calculateEstimatedTaxes()
         {
             int isPatrician = Data_Buildings[i].subtype.houseLevel >= HOUSE_SMALL_VILLA;
             int trm = difficulty_adjust_money(
-                          model_get_house(Data_Buildings[i].subtype.houseLevel)->tax_multiplier);
+                          model_get_house((house_level)Data_Buildings[i].subtype.houseLevel)->tax_multiplier);
             if (isPatrician)
             {
                 Data_CityInfo.monthlyCollectedTaxFromPatricians += Data_Buildings[i].housePopulation * trm;

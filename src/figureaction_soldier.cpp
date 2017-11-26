@@ -100,7 +100,7 @@ static void javelinLaunchMissile(int figureId, struct Data_Figure *f)
 {
     int xTile, yTile;
     f->waitTicksMissile++;
-    if (f->waitTicksMissile > figure_properties_for_type(f->type)->missile_delay)
+    if (f->waitTicksMissile > figure_properties_for_type((figure_type)f->type)->missile_delay)
     {
         f->waitTicksMissile = 0;
         if (FigureAction_CombatSoldier_getMissileTarget(figureId, 10, &xTile, &yTile))

@@ -27,7 +27,7 @@ static int generateTrader(int cityId, empire_city *city)
         if (city->buys_resource[r] || city->sells_resource[r])
         {
             ++numResources;
-            switch (trade_route_limit(city->route_id, r))
+            switch (trade_route_limit(city->route_id, (resource_type)r))
             {
             case 15:
                 maxTradersOnMap += 1;
@@ -531,7 +531,7 @@ int Trader_tryImportResource(int buildingId, int resourceId, int cityId)
                 Data_Buildings[spaceId].loadsStored < 4 &&
                 Data_Buildings[spaceId].subtype.warehouseResourceId == resourceId)
         {
-            trade_route_increase_traded(routeId, resourceId);
+            trade_route_increase_traded(routeId, (resource_type)resourceId);
             Resource_addImportedResourceToWarehouseSpace(spaceId, resourceId);
             return 1;
         }
@@ -543,7 +543,7 @@ int Trader_tryImportResource(int buildingId, int resourceId, int cityId)
         spaceId = Data_Buildings[spaceId].nextPartBuildingId;
         if (spaceId > 0 && Data_Buildings[spaceId].subtype.warehouseResourceId == RESOURCE_NONE)
         {
-            trade_route_increase_traded(routeId, resourceId);
+            trade_route_increase_traded(routeId, (resource_type)resourceId);
             Resource_addImportedResourceToWarehouseSpace(spaceId, resourceId);
             return 1;
         }
@@ -567,8 +567,8 @@ int Trader_tryExportResource(int buildingId, int resourceId, int cityId)
             if (Data_Buildings[spaceId].loadsStored &&
                     Data_Buildings[spaceId].subtype.warehouseResourceId == resourceId)
             {
-                trade_route_increase_traded(empire_city_get_route_id(cityId), resourceId);
-                Resource_removeExportedResourceFromWarehouseSpace(spaceId, resourceId);
+                trade_route_increase_traded(empire_city_get_route_id(cityId), (resource_type)resourceId);
+                Resource_removeExportedResourceFromWarehouseSpace(spaceId, (resource_type)resourceId);
                 return 1;
             }
         }

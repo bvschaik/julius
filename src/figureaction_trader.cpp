@@ -74,7 +74,7 @@ static int traderGetBuyResource(int warehouseId, int cityId)
                 Data_Buildings[warehouseId].subtype.warehouseResourceId = RESOURCE_NONE;
             }
             // update finances
-            int price = trade_price_sell(resource);
+            int price = trade_price_sell((resource_type)resource);
             Data_CityInfo.treasury += price;
             Data_CityInfo.financeExportsThisYear += price;
             if (Data_CityInfo.godBlessingNeptuneDoubleTrade)
@@ -322,8 +322,8 @@ void FigureAction_tradeCaravan(int figureId)
                 int resource = traderGetBuyResource(f->destinationBuildingId, f->empireCityId);
                 if (resource)
                 {
-                    trade_route_increase_traded(empire_city_get_route_id(f->empireCityId), resource);
-                    trader_record_bought_resource(f->traderId, resource);
+                    trade_route_increase_traded(empire_city_get_route_id(f->empireCityId), (resource_type)resource);
+                    trader_record_bought_resource(f->traderId, (resource_type)resource);
                     f->traderAmountBought++;
                 }
                 else
@@ -340,8 +340,8 @@ void FigureAction_tradeCaravan(int figureId)
                 int resource = traderGetSellResource(figureId, f->destinationBuildingId, f->empireCityId);
                 if (resource)
                 {
-                    trade_route_increase_traded(empire_city_get_route_id(f->empireCityId), resource);
-                    trader_record_sold_resource(f->traderId, resource);
+                    trade_route_increase_traded(empire_city_get_route_id(f->empireCityId), (resource_type)resource);
+                    trader_record_sold_resource(f->traderId, (resource_type)resource);
                     f->loadsSoldOrCarrying++;
                 }
                 else
@@ -500,7 +500,7 @@ void FigureAction_nativeTrader(int figureId)
             if (FigureAction_TradeCaravan_canBuy(figureId, f->destinationBuildingId, 0))
             {
                 int resource = traderGetBuyResource(f->destinationBuildingId, 0);
-                trader_record_bought_resource(f->traderId, resource);
+                trader_record_bought_resource(f->traderId, (resource_type)resource);
                 f->traderAmountBought += 3;
             }
             else

@@ -52,7 +52,7 @@ int scenario_image_id()
     return scenario.image_id;
 }
 
-const uint8_t *scenario_brief_description()
+const char *scenario_brief_description()
 {
     return scenario.brief_description;
 }

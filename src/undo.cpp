@@ -198,7 +198,7 @@ static void placeBuildingOnTerrain(int buildingId)
     }
     else
     {
-        int size = building_properties_for_type(b->type)->size;
+        int size = building_properties_for_type((building_type)b->type)->size;
         Terrain_addBuildingToGrids(buildingId, b->x, b->y, size, 0, 0);
         if (b->type == BUILDING_WHARF)
         {

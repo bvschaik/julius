@@ -54,7 +54,7 @@ static struct
     short textLength;
     short boxWidth;
     time_millis time;
-    uint8_t text[100];
+    char text[100];
 } warnings[5];
 
 static int numWarnings;
@@ -120,7 +120,7 @@ void UI_Warning_show(int warningId)
             continue;
         }
         warnings[i].inUse = 1;
-        const uint8_t *text;
+        const char *text;
         if (warningId == Warning_Orientation)
         {
             text = lang_get_string(17, Data_Settings_Map.orientation);
@@ -310,7 +310,7 @@ static void checkWorkers(int buildingType)
 {
     if (!hasWarningAlready && buildingType != BUILDING_WELL)
     {
-        if (model_get_building(buildingType)->laborers > 0 &&
+        if (model_get_building((building_type)buildingType)->laborers > 0 &&
                 Data_CityInfo.workersNeeded >= 10)
         {
             UI_Warning_show(Warning_WorkersNeeded);

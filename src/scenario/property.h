@@ -26,7 +26,7 @@ int scenario_property_player_rank();
 
 int scenario_image_id();
 
-const uint8_t *scenario_brief_description();
+const char *scenario_brief_description();
 
 int scenario_initial_funds();
 

@@ -125,7 +125,7 @@ int Resource_getWarehouseForStoringResource(
         }
         int pctWorkers = calc_percentage(
                              Data_Buildings[dstBuildingId].numWorkers,
-                             model_get_building(Data_Buildings[dstBuildingId].type)->laborers);
+                             model_get_building((building_type)Data_Buildings[dstBuildingId].type)->laborers);
         if (pctWorkers < 100)
         {
             if (understaffed)
@@ -417,7 +417,7 @@ void Resource_addImportedResourceToWarehouseSpace(int spaceId, int resourceId)
     Data_Buildings[spaceId].loadsStored++;
     Data_Buildings[spaceId].subtype.warehouseResourceId = resourceId;
 
-    int price = trade_price_buy(resourceId);
+    int price = trade_price_buy((resource_type)resourceId);
     Data_CityInfo.treasury -= price;
     Data_CityInfo.financeImportsThisYear += price;
 
@@ -434,7 +434,7 @@ void Resource_removeExportedResourceFromWarehouseSpace(int spaceId, int resource
         Data_Buildings[spaceId].subtype.warehouseResourceId = RESOURCE_NONE;
     }
 
-    int price = trade_price_sell(resourceId);
+    int price = trade_price_sell((resource_type)resourceId);
     Data_CityInfo.treasury += price;
     Data_CityInfo.financeExportsThisYear += price;
     if (Data_CityInfo.godBlessingNeptuneDoubleTrade)
@@ -464,7 +464,7 @@ static int determineGranaryAcceptFoods()
         {
             continue;
         }
-        int pctWorkers = calc_percentage(b->numWorkers, model_get_building(b->type)->laborers);
+        int pctWorkers = calc_percentage(b->numWorkers, model_get_building((building_type)b->type)->laborers);
         if (pctWorkers >= 100 && b->data.storage.resourceStored[RESOURCE_NONE] >= 1200)
         {
             const building_storage *s = building_storage_get(b->storage_id);
@@ -502,7 +502,7 @@ static int determineGranaryGetFoods()
         {
             continue;
         }
-        int pctWorkers = calc_percentage(b->numWorkers, model_get_building(b->type)->laborers);
+        int pctWorkers = calc_percentage(b->numWorkers, model_get_building((building_type)b->type)->laborers);
         if (pctWorkers >= 100 && b->data.storage.resourceStored[RESOURCE_NONE] > 100)
         {
             const building_storage *s = building_storage_get(b->storage_id);
@@ -552,7 +552,7 @@ static int storesNonStockpiledFood(int spaceId, int *granaryResources)
 int Resource_determineWarehouseWorkerTask(int buildingId, int *resource)
 {
     struct Data_Building *b = &Data_Buildings[buildingId];
-    int pctWorkers = calc_percentage(b->numWorkers, model_get_building(b->type)->laborers);
+    int pctWorkers = calc_percentage(b->numWorkers, model_get_building((building_type)b->type)->laborers);
     if (pctWorkers < 50)
     {
         return -1;
