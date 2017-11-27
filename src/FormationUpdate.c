@@ -22,7 +22,7 @@
 #include "map/soldier_strength.h"
 #include "sound/effect.h"
 
-static const int enemyAttackBuildingPriority[4][24] = {
+static const int enemyAttackBuildingPriority[4][100] = {
 	{
 		BUILDING_GRANARY, BUILDING_WAREHOUSE, BUILDING_MARKET,
 		BUILDING_WHEAT_FARM, BUILDING_VEGETABLE_FARM, BUILDING_FRUIT_FARM,
@@ -46,7 +46,7 @@ static const int enemyAttackBuildingPriority[4][24] = {
 		BUILDING_HOUSE_LARGE_TENT, BUILDING_HOUSE_SMALL_TENT, 0
 	},
 	{
-		BUILDING_MILITARY_ACADEMY, BUILDING_BARRACKS, 0
+		BUILDING_MILITARY_ACADEMY, BUILDING_PREFECTURE, 0
 	}
 };
 
@@ -287,7 +287,7 @@ static void setEnemyTargetBuilding(const formation *m)
 		if (!BuildingIsInUse(i) || map_soldier_strength_get(b->gridOffset)) {
 			continue;
 		}
-		for (int n = 0; n < 24 && n <= bestTypeIndex && enemyAttackBuildingPriority[attack][n]; n++) {
+		for (int n = 0; n < 100 && n <= bestTypeIndex && enemyAttackBuildingPriority[attack][n]; n++) {
 			if (b->type == enemyAttackBuildingPriority[attack][n]) {
 				int distance = calc_maximum_distance(m->x_home, m->y_home, b->x, b->y);
 				if (n < bestTypeIndex) {
@@ -325,15 +325,14 @@ static void setEnemyTargetBuilding(const formation *m)
 			}
 		}
 	}
-	if (buildingId <= 0) {
-		return;
-	}
-	struct Data_Building *b = &Data_Buildings[buildingId];
-	if (b->type == BUILDING_WAREHOUSE) {
-        formation_set_destination_building(m->id, b->x + 1, b->y, buildingId + 1);
-	} else {
-        formation_set_destination_building(m->id, b->x, b->y, buildingId);
-	}
+    if (buildingId > 0) {
+        struct Data_Building *b = &Data_Buildings[buildingId];
+        if (b->type == BUILDING_WAREHOUSE) {
+            formation_set_destination_building(m->id, b->x + 1, b->y, buildingId + 1);
+        } else {
+            formation_set_destination_building(m->id, b->x, b->y, buildingId);
+        }
+    }
 }
 
 static void enemyApproachTarget(const formation *m)
