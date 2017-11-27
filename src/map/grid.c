@@ -25,6 +25,22 @@ int map_grid_direction_delta(int direction)
     }
 }
 
+void map_grid_bound_area(int *x_min, int *y_min, int *x_max, int *y_max)
+{
+    if (*x_min < 0) {
+        *x_min = 0;
+    }
+    if (*y_min < 0) {
+        *y_min = 0;
+    }
+    if (*x_max >= Data_State.map.width) {
+        *x_max = Data_State.map.width - 1;
+    }
+    if (*y_max >= Data_State.map.height) {
+        *y_max = Data_State.map.height - 1;
+    }
+}
+
 void map_grid_clear_i8(int8_t *grid)
 {
     memset(grid, 0, GRID_SIZE * GRID_SIZE * sizeof(int8_t));

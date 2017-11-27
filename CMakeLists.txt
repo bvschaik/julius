@@ -69,6 +69,7 @@ set (MAP_FILES
     src/map/routing_data.c
     src/map/routing_path.c
     src/map/routing_terrain.c
+    src/map/soldier_strength.c
 )
 set (SCENARIO_FILES
     src/scenario/building.c

@@ -43,6 +43,7 @@
 #include "map/grid.h"
 #include "map/road_network.h"
 #include "map/routing_terrain.h"
+#include "map/soldier_strength.h"
 #include "scenario/criteria.h"
 #include "scenario/demand_change.h"
 #include "scenario/earthquake.h"
@@ -248,7 +249,7 @@ static void initGrids()
 	map_grid_clear_u8(Data_Grid_elevation);
 	map_grid_clear_u8(Data_Grid_buildingDamage);
 	map_grid_clear_u8(Data_Grid_rubbleBuildingType);
-	map_grid_clear_u8(Data_Grid_romanSoldierConcentration);
+	map_soldier_strength_clear();
 	map_road_network_clear();
 
 	TerrainGraphicsContext_init();

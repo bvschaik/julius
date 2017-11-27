@@ -19,6 +19,7 @@
 #include "map/grid.h"
 #include "map/routing.h"
 #include "map/routing_path.h"
+#include "map/soldier_strength.h"
 #include "sound/effect.h"
 
 static const int enemyAttackBuildingPriority[4][24] = {
@@ -207,84 +208,33 @@ static void tickUpdateLegions()
 	}
 }
 
-static void addRomanSoldierConcentration(int x, int y, int radius, int amount)
-{
-	int xMin = x - radius;
-	int yMin = y - radius;
-	int xMax = x + radius;
-	int yMax = y + radius;
-	Bound2ToMap(xMin, yMin, xMax, yMax);
-
-	for (int yy = yMin; yy <= yMax; yy++) {
-		for (int xx = xMin; xx <= xMax; xx++) {
-			int gridOffset = GridOffset(xx, yy);
-			Data_Grid_romanSoldierConcentration[gridOffset] += amount;
-			if (Data_Grid_figureIds[gridOffset] > 0) {
-				int type = Data_Figures[Data_Grid_figureIds[gridOffset]].type;
-				if (FigureIsLegion(type)) {
-					Data_Grid_romanSoldierConcentration[gridOffset] += 2;
-				}
-			}
-		}
-	}
-}
-
 static void calculateRomanSoldierConcentration()
 {
-	map_grid_clear_u8(Data_Grid_romanSoldierConcentration);
+	map_soldier_strength_clear();
 	for (int i = 1; i <= MAX_LEGIONS; i++) {
 		const formation *m = formation_get(i);
 		if (m->in_use != 1 || !m->is_legion) {
 			continue;
 		}
 		if (m->num_figures > 0) {
-			addRomanSoldierConcentration(m->x_home, m->y_home, 7, 1);
+			map_soldier_strength_add(m->x_home, m->y_home, 7, 1);
 		}
 		if (m->num_figures > 3) {
-			addRomanSoldierConcentration(m->x_home, m->y_home, 6, 1);
+			map_soldier_strength_add(m->x_home, m->y_home, 6, 1);
 		}
 		if (m->num_figures > 6) {
-			addRomanSoldierConcentration(m->x_home, m->y_home, 5, 1);
+			map_soldier_strength_add(m->x_home, m->y_home, 5, 1);
 		}
 		if (m->num_figures > 9) {
-			addRomanSoldierConcentration(m->x_home, m->y_home, 4, 1);
+			map_soldier_strength_add(m->x_home, m->y_home, 4, 1);
 		}
 		if (m->num_figures > 12) {
-			addRomanSoldierConcentration(m->x_home, m->y_home, 3, 1);
+			map_soldier_strength_add(m->x_home, m->y_home, 3, 1);
 		}
 		if (m->num_figures > 15) {
-			addRomanSoldierConcentration(m->x_home, m->y_home, 2, 1);
+			map_soldier_strength_add(m->x_home, m->y_home, 2, 1);
 		}
 	}
-}
-
-static int getHighestRomanSoldierConcentration(int x, int y, int radius, int *xTile, int *yTile)
-{
-	int xMin = x - radius;
-	int yMin = y - radius;
-	int xMax = x + radius;
-	int yMax = y + radius;
-	Bound2ToMap(xMin, yMin, xMax, yMax);
-
-	int maxValue = 0;
-	int maxX, maxY;
-	for (int yy = yMin; yy <= yMax; yy++) {
-		for (int xx = xMin; xx <= xMax; xx++) {
-			int gridOffset = GridOffset(xx, yy);
-			if (map_routing_distance(gridOffset) > 0 &&
-				Data_Grid_romanSoldierConcentration[gridOffset] > maxValue) {
-				maxValue = Data_Grid_romanSoldierConcentration[gridOffset];
-				maxX = xx;
-				maxY = yy;
-			}
-		}
-	}
-	if (maxValue > 0) {
-		*xTile = maxX;
-		*yTile = maxY;
-		return 1;
-	}
-	return 0;
 }
 
 static void setNativeTargetBuilding(int formationId)
@@ -334,7 +284,7 @@ static void setEnemyTargetBuilding(const formation *m)
 	int minDistance = 10000;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		struct Data_Building *b = &Data_Buildings[i];
-		if (!BuildingIsInUse(i) || Data_Grid_romanSoldierConcentration[b->gridOffset]) {
+		if (!BuildingIsInUse(i) || map_soldier_strength_get(b->gridOffset)) {
 			continue;
 		}
 		for (int n = 0; n < 24 && n <= bestTypeIndex && enemyAttackBuildingPriority[attack][n]; n++) {
@@ -356,7 +306,7 @@ static void setEnemyTargetBuilding(const formation *m)
 		// no target buildings left: take rioter attack priority
 		for (int i = 1; i < MAX_BUILDINGS; i++) {
 			struct Data_Building *b = &Data_Buildings[i];
-			if (!BuildingIsInUse(i) || Data_Grid_romanSoldierConcentration[b->gridOffset]) {
+			if (!BuildingIsInUse(i) || map_soldier_strength_get(b->gridOffset)) {
 				continue;
 			}
 			for (int n = 0; n < 100 && n <= bestTypeIndex && rioterAttackBuildingPriority[n]; n++) {
@@ -613,9 +563,9 @@ static void update_enemy_formation(const formation *m, void *data)
         *romanDistance = 0;
         map_routing_noncitizen_can_travel_over_land(m->x_home, m->y_home, -2, -2, 100000, 300);
         int xTile, yTile;
-        if (getHighestRomanSoldierConcentration(m->x_home, m->y_home, 16, &xTile, &yTile)) {
+        if (map_soldier_strength_get_max(m->x_home, m->y_home, 16, &xTile, &yTile)) {
             *romanDistance = 1;
-        } else if (getHighestRomanSoldierConcentration(m->x_home, m->y_home, 32, &xTile, &yTile)) {
+        } else if (map_soldier_strength_get_max(m->x_home, m->y_home, 32, &xTile, &yTile)) {
             *romanDistance = 2;
         }
         if (army->ignore_roman_soldiers) {

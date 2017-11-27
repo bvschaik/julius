@@ -8,6 +8,7 @@
 #include "core/direction.h"
 #include "graphics/image.h"
 #include "map/desirability.h"
+#include "map/soldier_strength.h"
 
 static void TerrainGraphics_setTileRubble(int x, int y);
 static void TerrainGraphics_updateTileMeadow(int x, int y);
@@ -1189,7 +1190,7 @@ int TerrainGraphics_getFreeTileForHerd(int x, int y, int allowNegDes, int *xTile
 	BOUND_REGION();
 	FOREACH_REGION({
 		if (!(Data_Grid_terrain[gridOffset] & disallowedTerrain)) {
-			if (Data_Grid_romanSoldierConcentration[gridOffset]) {
+			if (map_soldier_strength_get(gridOffset)) {
 				return 0;
 			}
 			int desirability = map_desirability_get(gridOffset);

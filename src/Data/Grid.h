@@ -57,8 +57,6 @@ EXTERN UInt8_Grid(Data_Grid_spriteOffsets);
 EXTERN UInt8_Grid(Data_Grid_buildingDamage);
 EXTERN UInt8_Grid(Data_Grid_rubbleBuildingType);
 
-EXTERN UInt8_Grid(Data_Grid_romanSoldierConcentration);
-
 // undo
 EXTERN UInt16_Grid(Data_Grid_Undo_graphicIds);
 EXTERN UInt16_Grid(Data_Grid_Undo_terrain);
