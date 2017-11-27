@@ -30,7 +30,6 @@ void Figure_clearList()
 	for (int i = 0; i < MAX_FIGURES; i++) {
 		memset(&Data_Figures[i], 0, sizeof(struct Data_Figure));
 	}
-	Data_Figure_Extra.highestFigureIdEver = 0;
 }
 
 int Figure_create(int figureType, int x, int y, char direction)
@@ -64,9 +63,6 @@ int Figure_create(int figureType, int x, int y, char direction)
 	Figure_addToTileList(id);
 	if (figureType == FIGURE_TRADE_CARAVAN || figureType == FIGURE_TRADE_SHIP) {
 		f->traderId = trader_create();
-	}
-	if (id > Data_Figure_Extra.highestFigureIdEver) {
-		Data_Figure_Extra.highestFigureIdEver = id;
 	}
 	return id;
 }

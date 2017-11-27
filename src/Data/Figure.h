@@ -248,7 +248,6 @@ extern struct Data_Figure {
 } Data_Figures[MAX_FIGURES];
 
 extern struct _Data_Figure_Extra {
-	int highestFigureIdEver;
 	int createdSequence;
 } Data_Figure_Extra;
 
