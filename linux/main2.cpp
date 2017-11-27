@@ -3,7 +3,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <unistd.h>
+
 
 #include "ui/window.h"
 #include "core/time.h"
@@ -20,9 +20,12 @@
 #include "core/lang.h"
 #include "game/settings.h"
 #include "graphics/mouse.h"
+#include "debug/stacktrace.hpp"
 
+#ifndef WIN32
 #include <execinfo.h>
-#include <signal.h>
+#include <unistd.h>
+#endif
 
 #include <ui>
 #include <scenario>
@@ -53,20 +56,6 @@ enum
     UserEventFullscreen = 3,
     UserEventWindowed = 4,
 };
-
-void handler(int sig)
-{
-    void *array[100];
-    size_t size;
-
-    // get void*'s for all entries on the stack
-    size = backtrace(array, 100);
-
-    // print out all the frames to stderr
-    fprintf(stderr, "Error: signal %d:\n", sig);
-    backtrace_symbols_fd(array, size, STDERR_FILENO);
-    exit(1);
-}
 
 void assert(const char *msg, int expected, int actual)
 {
@@ -192,7 +181,8 @@ int runAutopilot(const char *savedGameToLoad, const char *savedGameToWrite, int 
 {
     autopilot = 1;
     printf("Running autopilot: %s --> %s in %d ticks\n", savedGameToLoad, savedGameToWrite, ticksToRun);
-    signal(SIGSEGV, handler);
+
+    CrashHandler::install();
 
     // C3 setup
     chdir("../data");
@@ -636,7 +626,9 @@ void initSdl()
 int runPerformance(const char *savedGameToLoad, int ticksToRun)
 {
     printf("Running performance test on %s for %d ticks\n", savedGameToLoad, ticksToRun);
-    signal(SIGSEGV, handler);
+
+    CrashHandler::install();
+
     initSdl();
     chdir("../data");
 
@@ -690,7 +682,8 @@ int main(int argc, char **argv)
     {
         return runPerformance(argv[1], atoi(argv[2]));
     }
-    signal(SIGSEGV, handler);
+
+    CrashHandler::install();
 
     sanityCheck();
 

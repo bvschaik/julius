@@ -24,7 +24,7 @@ include_directories(${VORBIS_LIBRARY_PATH})
 include_directories(${SDL2STATIC_INCLUDE_DIR})
 
 if(WIN32 OR APPLE)
-include_directories(${XCOMPILE_SOURCE_DIR}/xcompile)
+include_directories(${PROJECT_SOURCE_DIR}/xcompile)
 endif()
 
 if(UNIX AND NOT APPLE AND X32_BUILD)
