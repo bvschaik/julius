@@ -20,7 +20,8 @@ static void updateDirectionAndGraphic(int figureId, struct Data_Figure *f)
 		f->graphicId = image_group(GROUP_FIGURE_MIGRANT) +
 			dir + 8 * f->graphicOffset;
 	}
-	if (f->actionState == FigureActionState_2_ImmigrantArriving) {
+	if (f->actionState == FigureActionState_2_ImmigrantArriving ||
+        f->actionState == FigureActionState_6_EmigrantLeaving) {
 		f->cartGraphicId = image_group(GROUP_FIGURE_MIGRANT_CART) + dir;
 		int cartDir = (dir + 4) % 8;
 		FigureAction_Common_setCartOffset(figureId, cartDir);
