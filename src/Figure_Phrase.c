@@ -5,8 +5,8 @@
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
-#include "Data/Figure.h"
 
+#include "figure/figure.h"
 #include "figure/trader.h"
 #include "figure/type.h"
 #include "sound/effect.h"
@@ -258,7 +258,7 @@ int Figure_determinePhrase(int figureId)
 		return 0;
 	}
 
-	struct Data_Figure *f = &Data_Figures[figureId];
+	struct Data_Figure *f = figure_get(figureId);
 	int phraseId = f->phraseId = 0;
 
 	if (FigureIsEnemyOrNative(f->type)) {
@@ -536,8 +536,9 @@ static void playFigureSoundFile(int figureSoundId, int phraseId)
 int Figure_playPhrase(int figureId)
 {
 	if (figureId > 0) {
-		int figureSoundId = figureTypeToSoundType[Data_Figures[figureId].type];
-		playFigureSoundFile(figureSoundId, Data_Figures[figureId].phraseId);
+        struct Data_Figure *f = figure_get(figureId);
+		int figureSoundId = figureTypeToSoundType[f->type];
+		playFigureSoundFile(figureSoundId, f->phraseId);
 		return figureSoundId;
 	} else {
 		return 0;

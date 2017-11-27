@@ -17,12 +17,12 @@
 #include "Data/CityInfo.h"
 #include "Data/Grid.h"
 #include "Data/State.h"
-#include "Data/Figure.h"
 
 #include "building/properties.h"
 #include "building/storage.h"
 #include "city/message.h"
 #include "core/direction.h"
+#include "figure/figure.h"
 #include "graphics/image.h"
 #include "map/desirability.h"
 #include "map/road_network.h"
@@ -1110,7 +1110,7 @@ int Building_Dock_getNumIdleDockers(int buildingId)
 	int numIdle = 0;
 	for (int i = 0; i < 3; i++) {
 		if (b->data.other.dockFigureIds[i]) {
-			struct Data_Figure *f = &Data_Figures[b->data.other.dockFigureIds[i]];
+			struct Data_Figure *f = figure_get(b->data.other.dockFigureIds[i]);
 			if (f->actionState == FigureActionState_132_DockerIdling ||
 				f->actionState == FigureActionState_133_DockerImportQueue) {
 				numIdle++;

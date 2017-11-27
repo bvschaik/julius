@@ -20,7 +20,6 @@
 #include "Data/CityInfo.h"
 #include "Data/Grid.h"
 #include "Data/State.h"
-#include "Data/Figure.h"
 
 #include "building/count.h"
 #include "building/model.h"

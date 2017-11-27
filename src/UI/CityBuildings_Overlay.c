@@ -1,5 +1,6 @@
 #include "CityBuildings_private.h"
 
+#include "figure/figure.h"
 #include "game/resource.h"
 #include "map/desirability.h"
 
@@ -100,10 +101,11 @@ void UI_CityBuildings_drawOverlayTopsFiguresAnimation(int overlay)
 		FOREACH_X_VIEW {
 			int figureId = Data_Grid_figureIds[gridOffset];
 			while (figureId) {
-				if (!Data_Figures[figureId].isGhost) {
+			    struct Data_Figure *fig = figure_get(figureId);
+				if (!fig->isGhost) {
 					UI_CityBuildings_drawFigure(figureId, xGraphic, yGraphic, 9999, 0);
 				}
-				figureId = Data_Figures[figureId].nextFigureIdOnSameTile;
+				figureId = fig->nextFigureIdOnSameTile;
 			}
 		} END_FOREACH_X_VIEW;
 		// draw animation
@@ -1325,6 +1327,16 @@ static void drawBuildingTopForTaxIncomeOverlay(int gridOffset, int buildingId, i
 	}
 }
 
+static int is_problem_cartpusher(int figure_id)
+{
+    if (figure_id) {
+        struct Data_Figure *fig = figure_get(figure_id);
+        return fig->actionState == FigureActionState_20_CartpusherInitial && fig->minMaxSeen;
+    } else {
+        return 0;
+    }
+}
+
 static void drawBuildingTopForProblemsOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
 	if (Data_Buildings[buildingId].houseSize) {
@@ -1336,17 +1348,11 @@ static void drawBuildingTopForProblemsOverlay(int gridOffset, int buildingId, in
 			Data_Buildings[buildingId].showOnProblemOverlay = 1;
 		}
 	} else if (type >= BUILDING_WHEAT_FARM && type <= BUILDING_CLAY_PIT) {
-		int figureId = Data_Buildings[buildingId].figureId;
-		if (figureId &&
-			Data_Figures[figureId].actionState == FigureActionState_20_CartpusherInitial &&
-			Data_Figures[figureId].minMaxSeen) {
+		if (is_problem_cartpusher(Data_Buildings[buildingId].figureId)) {
 			Data_Buildings[buildingId].showOnProblemOverlay = 1;
 		}
 	} else if (BuildingIsWorkshop(type)) {
-		int figureId = Data_Buildings[buildingId].figureId;
-		if (figureId &&
-			Data_Figures[figureId].actionState == FigureActionState_20_CartpusherInitial &&
-			Data_Figures[figureId].minMaxSeen) {
+		if (is_problem_cartpusher(Data_Buildings[buildingId].figureId)) {
 			Data_Buildings[buildingId].showOnProblemOverlay = 1;
 		} else if (Data_Buildings[buildingId].loadsStored <= 0) {
 			Data_Buildings[buildingId].showOnProblemOverlay = 1;

@@ -1,9 +1,9 @@
 #include "CityInfo.h"
 #include "Data/CityInfo.h"
 #include "Data/Building.h"
-#include "Data/Figure.h"
 
 #include "building/count.h"
+#include "figure/figure.h"
 
 void CityInfo_Tick_countBuildingTypes()
 {
@@ -153,8 +153,8 @@ void CityInfo_Tick_countBuildingTypes()
 				break;
 		}
 		if (Data_Buildings[i].immigrantFigureId) {
-			int immigrantId = Data_Buildings[i].immigrantFigureId;
-			if (Data_Figures[immigrantId].state != FigureState_Alive || Data_Figures[immigrantId].destinationBuildingId != i) {
+			struct Data_Figure *f = figure_get(Data_Buildings[i].immigrantFigureId);
+			if (f->state != FigureState_Alive || f->destinationBuildingId != i) {
 				Data_Buildings[i].immigrantFigureId = 0;
 			}
 		}

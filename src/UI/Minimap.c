@@ -4,10 +4,10 @@
 #include "../Graphics.h"
 #include "../Data/Building.h"
 #include "../Data/CityView.h"
-#include "../Data/Figure.h"
 #include "../Data/Grid.h"
 #include "../Data/State.h"
 
+#include "figure/figure.h"
 #include "figure/type.h"
 #include "graphics/image.h"
 #include "scenario/property.h"
@@ -109,7 +109,8 @@ static int drawFigure(int xView, int yView, int gridOffset)
 
 	int figureId = Data_Grid_figureIds[gridOffset];
 	while (figureId > 0) {
-		int type = Data_Figures[figureId].type;
+	    struct Data_Figure *fig = figure_get(figureId);
+		int type = fig->type;
 		if (FigureIsLegion(type)) {
 			hasFigure = 1;
 			color = soldierColor;
@@ -121,7 +122,7 @@ static int drawFigure(int xView, int yView, int gridOffset)
 			break;
 		}
 		if (type == FIGURE_INDIGENOUS_NATIVE &&
-			Data_Figures[figureId].actionState == FigureActionState_159_NativeAttacking) {
+			fig->actionState == FigureActionState_159_NativeAttacking) {
 			hasFigure = 1;
 			color = enemyColor;
 			break;
@@ -131,7 +132,7 @@ static int drawFigure(int xView, int yView, int gridOffset)
 			color = COLOR_BLACK;
 			break;
 		}
-		figureId = Data_Figures[figureId].nextFigureIdOnSameTile;
+		figureId = fig->nextFigureIdOnSameTile;
 	}
 	if (hasFigure) {
 		Graphics_drawLine(xView, yView, xView+1, yView, color);

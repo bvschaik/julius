@@ -7,11 +7,11 @@
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
-#include "Data/Figure.h"
 
 #include "building/list.h"
 #include "building/model.h"
 #include "city/message.h"
+#include "figure/figure.h"
 #include "figure/type.h"
 
 static void calculateWorkers();
@@ -167,7 +167,7 @@ static void createImmigrants(int numPeople)
 	for (int i = 0; i < total_houses; i++) {
 		int buildingId = houses[i];
 		if (Data_Buildings[buildingId].immigrantFigureId &&
-			Data_Figures[Data_Buildings[buildingId].immigrantFigureId].state != FigureState_Alive) {
+			figure_get(Data_Buildings[buildingId].immigrantFigureId)->state != FigureState_Alive) {
 			Data_Buildings[buildingId].immigrantFigureId = 0;
 		}
 	}
@@ -239,12 +239,12 @@ static void createImmigrantForBuilding(int buildingId, int numPeople)
 {
 	int figureId = Figure_create(FIGURE_IMMIGRANT,
 		Data_CityInfo.entryPointX, Data_CityInfo.entryPointY, 0);
-	Data_Figures[figureId].actionState = FigureActionState_1_ImmigrantCreated;
-	Data_Figures[figureId].immigrantBuildingId = buildingId;
+    struct Data_Figure *f = figure_get(figureId);
+	f->actionState = FigureActionState_1_ImmigrantCreated;
+	f->immigrantBuildingId = buildingId;
 	Data_Buildings[buildingId].immigrantFigureId = figureId;
-	Data_Figures[figureId].waitTicks =
-		10 + (Data_Buildings[buildingId].houseGenerationDelay & 0x7f);
-	Data_Figures[figureId].migrantNumPeople = numPeople;
+	f->waitTicks = 10 + (Data_Buildings[buildingId].houseGenerationDelay & 0x7f);
+	f->migrantNumPeople = numPeople;
 }
 
 static void createEmigrantForBuilding(int buildingId, int numPeople)
@@ -258,9 +258,10 @@ static void createEmigrantForBuilding(int buildingId, int numPeople)
 	}
 	int figureId = Figure_create(FIGURE_EMIGRANT,
 		Data_Buildings[buildingId].x, Data_Buildings[buildingId].y, 0);
-	Data_Figures[figureId].actionState = FigureActionState_4_EmigrantCreated;
-	Data_Figures[figureId].waitTicks = 0;
-	Data_Figures[figureId].migrantNumPeople = numPeople;
+    struct Data_Figure *f = figure_get(figureId);
+	f->actionState = FigureActionState_4_EmigrantCreated;
+	f->waitTicks = 0;
+	f->migrantNumPeople = numPeople;
 }
 
 int HousePopulation_getClosestHouseWithRoom(int x, int y)
@@ -365,9 +366,10 @@ int HousePopulation_calculatePeoplePerType()
 void HousePopulation_createHomeless(int x, int y, int numPeople)
 {
 	int figureId = Figure_create(FIGURE_HOMELESS, x, y, 0);
-	Data_Figures[figureId].actionState = FigureActionState_7_HomelessCreated;
-	Data_Figures[figureId].waitTicks = 0;
-	Data_Figures[figureId].migrantNumPeople = numPeople;
+    struct Data_Figure *f = figure_get(figureId);
+	f->actionState = FigureActionState_7_HomelessCreated;
+	f->waitTicks = 0;
+	f->migrantNumPeople = numPeople;
 	CityInfo_Population_removePeopleHomeless(numPeople);
 }
 

@@ -1,11 +1,11 @@
 #include "routing.h"
 
+#include "figure/figure.h"
 #include "map/grid.h"
 #include "map/road_aqueduct.h"
 #include "map/routing_data.h"
 
 #include "Data/Building.h"
-#include "Data/Figure.h"
 #include "Data/State.h"
 
 #define MAX_QUEUE GRID_SIZE * GRID_SIZE
@@ -356,11 +356,11 @@ static int has_fighting_friendly(int grid_offset)
     int figure_id = Data_Grid_figureIds[grid_offset];
     if (figure_id > 0) {
         while (figure_id) {
-            if (Data_Figures[figure_id].isFriendly &&
-                Data_Figures[figure_id].actionState == FigureActionState_150_Attack) {
+            struct Data_Figure *f = figure_get(figure_id);
+            if (f->isFriendly && f->actionState == FigureActionState_150_Attack) {
                 return 1;
             }
-            figure_id = Data_Figures[figure_id].nextFigureIdOnSameTile;
+            figure_id = f->nextFigureIdOnSameTile;
         }
     }
     return 0;
@@ -371,11 +371,11 @@ static int has_fighting_enemy(int grid_offset)
     int figure_id = Data_Grid_figureIds[grid_offset];
     if (figure_id > 0) {
         while (figure_id) {
-            if (!Data_Figures[figure_id].isFriendly &&
-                Data_Figures[figure_id].actionState == FigureActionState_150_Attack) {
+            struct Data_Figure *f = figure_get(figure_id);
+            if (!f->isFriendly && f->actionState == FigureActionState_150_Attack) {
                 return 1;
             }
-            figure_id = Data_Figures[figure_id].nextFigureIdOnSameTile;
+            figure_id = f->nextFigureIdOnSameTile;
         }
     }
     return 0;

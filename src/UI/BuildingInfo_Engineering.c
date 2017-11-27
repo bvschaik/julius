@@ -1,6 +1,7 @@
 #include "BuildingInfo.h"
 
 #include "core/calc.h"
+#include "figure/figure.h"
 #include "game/resource.h"
 
 #include "../Graphics.h"
@@ -9,7 +10,6 @@
 
 #include "../Data/Building.h"
 #include "../Data/CityInfo.h"
-#include "../Data/Figure.h"
 
 void UI_BuildingInfo_drawEngineersPost(BuildingInfoContext *c)
 {
@@ -137,7 +137,7 @@ void UI_BuildingInfo_drawWharf(BuildingInfoContext *c)
 	} else {
 		int boatId = b->data.other.boatFigureId;
 		int textId;
-		switch (Data_Figures[boatId].actionState) {
+		switch (figure_get(boatId)->actionState) {
 			case FigureActionState_191_FishingBoatGoingToFish: textId = 3; break;
 			case FigureActionState_192_FishingBoatFishing: textId = 4; break;
 			case FigureActionState_193_FishingBoatSailingToWharf: textId = 5; break;

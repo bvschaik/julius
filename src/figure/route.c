@@ -1,9 +1,8 @@
 #include "route.h"
 
+#include "figure/figure.h"
 #include "map/routing.h"
 #include "map/routing_path.h"
-
-#include "Data/Figure.h"
 
 #include <stdint.h>
 
@@ -30,7 +29,8 @@ void figure_route_clean()
     for (int i = 0; i < MAX_ROUTES; i++) {
         int figure_id = data.figure_ids[i];
         if (figure_id > 0 && figure_id < MAX_FIGURES) {
-            if (Data_Figures[figure_id].state != FigureState_Alive || Data_Figures[figure_id].routingPathId != i) {
+            struct Data_Figure *f = figure_get(figure_id);
+            if (f->state != FigureState_Alive || f->routingPathId != i) {
                 data.figure_ids[i] = 0;
             }
         }
@@ -49,7 +49,7 @@ static int get_first_available()
 
 void figure_route_add(int figure_id)
 {
-    struct Data_Figure *f = &Data_Figures[figure_id];
+    struct Data_Figure *f = figure_get(figure_id);
     f->routingPathId = 0;
     f->routingPathCurrentTile = 0;
     f->routingPathLength = 0;
@@ -134,12 +134,12 @@ void figure_route_add(int figure_id)
 
 void figure_route_remove(int figure_id)
 {
-    int path = Data_Figures[figure_id].routingPathId;
-    if (path > 0) {
-        if (data.figure_ids[path] == figure_id) {
-            data.figure_ids[path] = 0;
+    struct Data_Figure *f = figure_get(figure_id);
+    if (f->routingPathId > 0) {
+        if (data.figure_ids[f->routingPathId] == figure_id) {
+            data.figure_ids[f->routingPathId] = 0;
         }
-        Data_Figures[figure_id].routingPathId = 0;
+        f->routingPathId = 0;
     }
 }
 

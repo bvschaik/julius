@@ -4,6 +4,7 @@
 #include "core/calc.h"
 #include "core/random.h"
 #include "empire/object.h"
+#include "figure/figure.h"
 #include "figure/formation.h"
 #include "figure/name.h"
 #include "game/difficulty.h"
@@ -16,7 +17,6 @@
 
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
-#include "Data/Figure.h"
 #include "Data/Grid.h"
 #include "Data/State.h"
 #include "../Building.h"
@@ -284,12 +284,13 @@ static int start_invasion(int enemy_type, int amount, int invasion_point, int at
             }
             for (int fig = 0; fig < soldiers_per_formation[type][i]; fig++) {
                 int figureId = Figure_create(figure_type, x, y, orientation);
-                Data_Figures[figureId].isFriendly = 0;
-                Data_Figures[figureId].actionState = FigureActionState_151_EnemyInitial;
-                Data_Figures[figureId].waitTicks = 200 * seq + 10 * fig + 10;
-                Data_Figures[figureId].formationId = formation_id;
-                Data_Figures[figureId].name = figure_name_get(figure_type, enemy_type);
-                Data_Figures[figureId].isGhost = 1;
+                struct Data_Figure *f = figure_get(figureId);
+                f->isFriendly = 0;
+                f->actionState = FigureActionState_151_EnemyInitial;
+                f->waitTicks = 200 * seq + 10 * fig + 10;
+                f->formationId = formation_id;
+                f->name = figure_name_get(figure_type, enemy_type);
+                f->isGhost = 1;
             }
             seq++;
         }

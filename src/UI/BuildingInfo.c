@@ -20,12 +20,12 @@
 #include "../Data/CityInfo.h"
 #include "../Data/CityView.h"
 #include "../Data/Constants.h"
-#include "../Data/Figure.h"
 #include "../Data/Grid.h"
 #include "../Data/Screen.h"
 #include "../Data/State.h"
 
 #include "building/model.h"
+#include "figure/figure.h"
 #include "figure/formation.h"
 
 static void buttonHelp(int param1, int param2);
@@ -257,9 +257,10 @@ void UI_BuildingInfo_init()
 	for (int i = 0; i < 9 && context.figure.count < 7; i++) {
 		int figureId = Data_Grid_figureIds[gridOffset + figureOffsets[i]];
 		while (figureId > 0 && context.figure.count < 7) {
-			if (Data_Figures[figureId].state != FigureState_Dead &&
-				Data_Figures[figureId].actionState != FigureActionState_149_Corpse) {
-				switch (Data_Figures[figureId].type) {
+            struct Data_Figure *figure = figure_get(figureId);
+			if (figure->state != FigureState_Dead &&
+				figure->actionState != FigureActionState_149_Corpse) {
+				switch (figure->type) {
 					case FIGURE_NONE:
 					case FIGURE_EXPLOSION:
 					case FIGURE_MAP_FLAG:
@@ -279,7 +280,7 @@ void UI_BuildingInfo_init()
 						break;
 				}
 			}
-			figureId = Data_Figures[figureId].nextFigureIdOnSameTile;
+			figureId = figure->nextFigureIdOnSameTile;
 		}
 	}
 	// check for legion figures
@@ -288,10 +289,11 @@ void UI_BuildingInfo_init()
 		if (figureId <= 0) {
 			continue;
 		}
-		int type = Data_Figures[figureId].type;
+        struct Data_Figure *f = figure_get(figureId);
+		int type = f->type;
 		if (type == FIGURE_FORT_STANDARD || FigureIsLegion(type)) {
 			context.type = BuildingInfoType_Legion;
-			context.formationId = Data_Figures[figureId].formationId;
+			context.formationId = f->formationId;
             const formation *m = formation_get(context.formationId);
 			if (m->figure_type != FIGURE_FORT_LEGIONARY) {
 				context.formationTypes = 5;

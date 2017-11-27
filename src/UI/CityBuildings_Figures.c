@@ -4,9 +4,9 @@
 #include "../Graphics.h"
 
 #include "../Data/Building.h"
-#include "../Data/Figure.h"
 #include "../Data/State.h"
 
+#include "figure/figure.h"
 #include "figure/formation.h"
 #include "game/resource.h"
 #include "graphics/image.h"
@@ -257,7 +257,7 @@ static int tileProgressToPixelOffsetY(int direction, int progress)
 
 void UI_CityBuildings_drawFigure(int figureId, int xOffset, int yOffset, int selectedFigureId, struct UI_CityPixelCoordinate *coord)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
+	struct Data_Figure *f = figure_get(figureId);
 
 	// determining x/y offset on tile
 	int xTileOffset = 0;

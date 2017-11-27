@@ -8,8 +8,6 @@
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 
-#include "Data/Figure.h"
-
 #include "building/count.h"
 #include "building/storage.h"
 #include "city/message.h"
@@ -17,6 +15,7 @@
 #include "empire/empire.h"
 #include "empire/trade_prices.h"
 #include "empire/trade_route.h"
+#include "figure/figure.h"
 #include "figure/type.h"
 #include "scenario/map.h"
 
@@ -86,10 +85,11 @@ static int generateTrader(int cityId, empire_city *city)
 			!Data_CityInfo.tradeSeaProblemDuration) {
             map_point river_entry = scenario_map_river_entry();
 			int shipId = Figure_create(FIGURE_TRADE_SHIP, river_entry.x, river_entry.y, 0);
+            struct Data_Figure *ship = figure_get(shipId);
 			city->trader_figure_ids[index] = shipId;
-			Data_Figures[shipId].empireCityId = cityId;
-			Data_Figures[shipId].actionState = FigureActionState_110_TradeShipCreated;
-			Data_Figures[shipId].waitTicks = 10;
+			ship->empireCityId = cityId;
+			ship->actionState = FigureActionState_110_TradeShipCreated;
+			ship->waitTicks = 10;
 			return 1;
 		}
 	} else {
@@ -98,20 +98,23 @@ static int generateTrader(int cityId, empire_city *city)
 			// caravan head
 			int caravanId = Figure_create(FIGURE_TRADE_CARAVAN,
 				Data_CityInfo.entryPointX, Data_CityInfo.entryPointY, 0);
+            struct Data_Figure *caravan = figure_get(caravanId);
 			city->trader_figure_ids[index] = caravanId;
-			Data_Figures[caravanId].empireCityId = cityId;
-			Data_Figures[caravanId].actionState = FigureActionState_100_TradeCaravanCreated;
-			Data_Figures[caravanId].waitTicks = 10;
+			caravan->empireCityId = cityId;
+			caravan->actionState = FigureActionState_100_TradeCaravanCreated;
+			caravan->waitTicks = 10;
 			// donkey 1
-			int donkey1 = Figure_create(FIGURE_TRADE_CARAVAN_DONKEY,
+			int donkey1_id = Figure_create(FIGURE_TRADE_CARAVAN_DONKEY,
 				Data_CityInfo.entryPointX, Data_CityInfo.entryPointY, 0);
-			Data_Figures[donkey1].actionState = FigureActionState_100_TradeCaravanCreated;
-			Data_Figures[donkey1].inFrontFigureId = caravanId;
+            struct Data_Figure *donkey1 = figure_get(donkey1_id);
+			donkey1->actionState = FigureActionState_100_TradeCaravanCreated;
+			donkey1->inFrontFigureId = caravanId;
 			// donkey 2
-			int donkey2 = Figure_create(FIGURE_TRADE_CARAVAN_DONKEY,
+			int donkey2_id = Figure_create(FIGURE_TRADE_CARAVAN_DONKEY,
 				Data_CityInfo.entryPointX, Data_CityInfo.entryPointY, 0);
-			Data_Figures[donkey2].actionState = FigureActionState_100_TradeCaravanCreated;
-			Data_Figures[donkey2].inFrontFigureId = donkey1;
+            struct Data_Figure *donkey2 = figure_get(donkey2_id);
+			donkey2->actionState = FigureActionState_100_TradeCaravanCreated;
+			donkey2->inFrontFigureId = donkey1_id;
 			return 1;
 		}
 	}
@@ -162,13 +165,14 @@ void Trader_tick()
 
 int Trader_getClosestWarehouseForTradeCaravan(int figureId, int x, int y, int cityId, int distanceFromEntry, int *warehouseX, int *warehouseY)
 {
+    struct Data_Figure *figure = figure_get(figureId);
 	int exportable[RESOURCE_MAX];
 	int importable[RESOURCE_MAX];
 	exportable[RESOURCE_NONE] = 0;
 	importable[RESOURCE_NONE] = 0;
 	for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
 		exportable[r] = empire_can_export_resource_to_city(cityId, r);
-		if (Data_Figures[figureId].traderAmountBought >= 8) {
+		if (figure->traderAmountBought >= 8) {
 			exportable[r] = 0;
 		}
 		if (cityId) {
@@ -176,7 +180,7 @@ int Trader_getClosestWarehouseForTradeCaravan(int figureId, int x, int y, int ci
 		} else { // exclude own city (id=0), shouldn't happen, but still..
 			importable[r] = 0;
 		}
-		if (Data_Figures[figureId].loadsSoldOrCarrying >= 8) {
+		if (figure->loadsSoldOrCarrying >= 8) {
 			importable[r] = 0;
 		}
 	}

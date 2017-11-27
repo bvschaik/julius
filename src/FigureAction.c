@@ -2,6 +2,7 @@
 
 #include "Figure.h"
 #include "Data/CityInfo.h"
+#include "figure/figure.h"
 
 static void (*figureActionCallbacks[])(int figureId) = {
 	FigureAction_nobody, //0
@@ -99,13 +100,14 @@ void FigureAction_handle()
 		Data_CityInfo.riotersOrAttackingNativesInCity--;
 	}
 	for (int i = 1; i < MAX_FIGURES; i++) {
-		struct Data_Figure *f = &Data_Figures[i];
+		struct Data_Figure *f = figure_get(i);
 		if (f->state) {
 			if (f->targetedByFigureId) {
-				if (Data_Figures[f->targetedByFigureId].state != FigureState_Alive) {
+                struct Data_Figure *attacker = figure_get(f->targetedByFigureId);
+				if (attacker->state != FigureState_Alive) {
 					f->targetedByFigureId = 0;
 				}
-				if (Data_Figures[f->targetedByFigureId].targetFigureId != i) {
+				if (attacker->targetFigureId != i) {
 					f->targetedByFigureId = 0;
 				}
 			}

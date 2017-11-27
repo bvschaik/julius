@@ -14,11 +14,11 @@
 #include "Data/CityInfo.h"
 #include "Data/Grid.h"
 #include "Data/State.h"
-#include "Data/Figure.h"
 
 #include "building/list.h"
 #include "city/message.h"
 #include "core/random.h"
+#include "figure/figure.h"
 #include "figure/type.h"
 #include "game/tutorial.h"
 #include "map/grid.h"
@@ -162,7 +162,7 @@ static void generateRioter(int buildingId)
 	int targetBuildingId = Formation_Rioter_getTargetBuilding(&targetX, &targetY);
 	for (int i = 0; i < peopleInMob; i++) {
 		int figureId = Figure_create(FIGURE_RIOTER, xRoad, yRoad, 4);
-		struct Data_Figure *f = &Data_Figures[figureId];
+		struct Data_Figure *f = figure_get(figureId);
 		f->actionState = FigureActionState_120_RioterCreated;
 		f->roamLength = 0;
 		f->waitTicks = 10 + 4 * i;
@@ -192,14 +192,15 @@ static void generateMugger(int buildingId)
 		int xRoad, yRoad;
 		if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
 			int figureId = Figure_create(FIGURE_CRIMINAL, xRoad, yRoad, 4);
-			Data_Figures[figureId].waitTicks = 10 + (b->houseGenerationDelay & 0xf);
+            struct Data_Figure *f = figure_get(figureId);
+			f->waitTicks = 10 + (b->houseGenerationDelay & 0xf);
 			Data_CityInfo.ratingPeaceNumCriminalsThisYear++;
 			if (Data_CityInfo.financeTaxesThisYear > 20) {
 				int moneyStolen = Data_CityInfo.financeTaxesThisYear / 4;
 				if (moneyStolen > 400) {
 					moneyStolen = 400 - random_byte() / 2;
 				}
-				city_message_post(1, MESSAGE_THEFT, moneyStolen, Data_Figures[figureId].gridOffset);
+				city_message_post(1, MESSAGE_THEFT, moneyStolen, f->gridOffset);
 				Data_CityInfo.financeStolenThisYear += moneyStolen;
 				Data_CityInfo.treasury -= moneyStolen;
 				Data_CityInfo.financeSundriesThisYear += moneyStolen;
@@ -217,7 +218,7 @@ static void generateProtester(int buildingId)
 		int xRoad, yRoad;
 		if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
 			int figureId = Figure_create(FIGURE_PROTESTER, xRoad, yRoad, 4);
-			Data_Figures[figureId].waitTicks = 10 + (b->houseGenerationDelay & 0xf);
+			figure_get(figureId)->waitTicks = 10 + (b->houseGenerationDelay & 0xf);
 			Data_CityInfo.ratingPeaceNumCriminalsThisYear++;
 		}
 	}

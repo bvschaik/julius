@@ -8,7 +8,6 @@
 #include "../Data/Building.h"
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
-#include "../Data/Figure.h"
 #include "../Data/State.h"
 
 #include "building/count.h"

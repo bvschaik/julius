@@ -2,11 +2,11 @@
 #include "Terrain_private.h"
 
 #include "core/calc.h"
+#include "figure/figure.h"
 #include "scenario/map.h"
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
-#include "Data/Figure.h"
 
 void Terrain_addWatersideBuildingToGrids(int buildingId, int x, int y, int size, int graphicId)
 {
@@ -218,23 +218,21 @@ int Terrain_Water_getWharfTileForNewFishingBoat(int figureId, int *xTile, int *y
 
 int Terrain_Water_getNearestFishTile(int figureId, int *xTile, int *yTile)
 {
-    return scenario_map_closest_fishing_point(
-        Data_Figures[figureId].x, Data_Figures[figureId].y, xTile, yTile);
+    struct Data_Figure *f = figure_get(figureId);
+    return scenario_map_closest_fishing_point(f->x, f->y, xTile, yTile);
 }
 
 int Terrain_Water_findAlternativeTileForFishingBoat(int figureId, int *xTile, int *yTile)
 {
-	int gridOffset = Data_Figures[figureId].gridOffset;
-	if (Data_Grid_figureIds[gridOffset] == figureId) {
+    struct Data_Figure *f = figure_get(figureId);
+	if (Data_Grid_figureIds[f->gridOffset] == figureId) {
 		return 0;
 	}
 	for (int radius = 1; radius <= 5; radius++) {
-		int wx = Data_Figures[figureId].x;
-		int wy = Data_Figures[figureId].y;
-		int xMin = wx - radius;
-		int yMin = wy - radius;
-		int xMax = wx + radius;
-		int yMax = wy + radius;
+		int xMin = f->x - radius;
+		int yMin = f->y - radius;
+		int xMax = f->x + radius;
+		int yMax = f->y + radius;
 		BOUND_REGION();
 		FOREACH_REGION({
 			if (!Data_Grid_figureIds[gridOffset] && Data_Grid_terrain[gridOffset] & Terrain_Water) {
@@ -249,17 +247,15 @@ int Terrain_Water_findAlternativeTileForFishingBoat(int figureId, int *xTile, in
 
 int Terrain_Water_findOpenWaterForShipwreck(int figureId, int *xTile, int *yTile)
 {
-	int gridOffset = Data_Figures[figureId].gridOffset;
-	if (Data_Grid_terrain[gridOffset] & Terrain_Water && Data_Grid_figureIds[gridOffset] == figureId) {
+    struct Data_Figure *f = figure_get(figureId);
+	if (Data_Grid_terrain[f->gridOffset] & Terrain_Water && Data_Grid_figureIds[f->gridOffset] == figureId) {
 		return 0;
 	}
 	for (int radius = 1; radius <= 5; radius++) {
-		int wx = Data_Figures[figureId].x;
-		int wy = Data_Figures[figureId].y;
-		int xMin = wx - radius;
-		int yMin = wy - radius;
-		int xMax = wx + radius;
-		int yMax = wy + radius;
+		int xMin = f->x - radius;
+		int yMin = f->y - radius;
+		int xMax = f->x + radius;
+		int yMax = f->y + radius;
 		BOUND_REGION();
 		FOREACH_REGION({
 			if (!Data_Grid_figureIds[gridOffset] || Data_Grid_figureIds[gridOffset] == figureId) {

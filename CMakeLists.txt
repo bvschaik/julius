@@ -40,6 +40,7 @@ set (EMPIRE_FILES
 )
 set (FIGURE_FILES
     src/figure/enemy_army.c
+    src/figure/figure.c
     src/figure/formation.c
     src/figure/name.c
     src/figure/properties.c

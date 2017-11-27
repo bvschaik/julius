@@ -4,7 +4,6 @@
 #include "../CityView.h"
 #include "../Formation.h"
 
-#include "../Data/Figure.h"
 #include "../Data/State.h"
 
 #include "figure/formation.h"

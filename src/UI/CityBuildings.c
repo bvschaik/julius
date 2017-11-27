@@ -13,6 +13,7 @@
 
 #include "building/model.h"
 #include "core/time.h"
+#include "figure/figure.h"
 #include "figure/formation.h"
 #include "game/resource.h"
 #include "game/settings.h"
@@ -341,10 +342,11 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 		FOREACH_X_VIEW {
 			int figureId = Data_Grid_figureIds[gridOffset];
 			while (figureId) {
-				if (!Data_Figures[figureId].isGhost) {
+                struct Data_Figure *f = figure_get(figureId);
+				if (!f->isGhost) {
 					UI_CityBuildings_drawFigure(figureId, xGraphic, yGraphic, selectedFigureId, coord);
 				}
-				figureId = Data_Figures[figureId].nextFigureIdOnSameTile;
+				figureId = f->nextFigureIdOnSameTile;
 			}
 		} END_FOREACH_X_VIEW;
 		// draw animation
@@ -550,14 +552,17 @@ static void drawHippodromeAndElevatedFigures(int selectedFigureId)
 {
 	FOREACH_Y_VIEW {
 		FOREACH_X_VIEW {
-			for (int figureId = Data_Grid_figureIds[gridOffset]; figureId > 0; figureId = Data_Figures[figureId].nextFigureIdOnSameTile) {
-				if (Data_Figures[figureId].useCrossCountry && !Data_Figures[figureId].isGhost) {
-					UI_CityBuildings_drawFigure(figureId, xGraphic, yGraphic, selectedFigureId, 0);
-				}
-				if (Data_Figures[figureId].heightAdjustedTicks) {
-					UI_CityBuildings_drawFigure(figureId, xGraphic, yGraphic, selectedFigureId, 0);
-				}
-			}
+            int figureId = Data_Grid_figureIds[gridOffset];
+            while (figureId > 0) {
+                struct Data_Figure *f = figure_get(figureId);
+                if (f->useCrossCountry && !f->isGhost) {
+                    UI_CityBuildings_drawFigure(figureId, xGraphic, yGraphic, selectedFigureId, 0);
+                }
+                if (f->heightAdjustedTicks) {
+                    UI_CityBuildings_drawFigure(figureId, xGraphic, yGraphic, selectedFigureId, 0);
+                }
+                figureId = f->nextFigureIdOnSameTile;
+            }
 		} END_FOREACH_X_VIEW;
 		FOREACH_X_VIEW {
 			if (!Data_State.currentOverlay) {

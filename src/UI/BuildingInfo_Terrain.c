@@ -2,8 +2,7 @@
 
 #include "../Widget.h"
 
-#include "../Data/Figure.h"
-
+#include "figure/figure.h"
 #include "figure/type.h"
 
 void UI_BuildingInfo_drawNoPeople(BuildingInfoContext *c)
@@ -45,7 +44,8 @@ void UI_BuildingInfo_drawTerrain(BuildingInfoContext *c)
 			}
 		}
 		if (c->figure.count > 0 && c->figure.figureIds[c->figure.selectedIndex]) {
-			if (Data_Figures[c->figure.figureIds[c->figure.selectedIndex]].type < FIGURE_SHIPWRECK) {
+            struct Data_Figure *f = figure_get(c->figure.figureIds[c->figure.selectedIndex]);
+			if (f->type < FIGURE_SHIPWRECK) {
 				c->helpId = 42;
 			} else {
 				c->helpId = 330;
