@@ -1238,7 +1238,7 @@ void Terrain_rotateMap(int ccw)
 	TerrainGraphics_updateRegionElevation(0, 0, Data_State.map.width - 2, Data_State.map.height - 2);
 	TerrainGraphics_updateRegionWater(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
 	TerrainGraphics_updateRegionEarthquake(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
-	TerrainGraphics_updateAllRoads();
+	TerrainGraphics_updateAllRocks();
 	TerrainGraphics_updateAllGardens();
 
 	Terrain_updateEntryExitFlags(0);
