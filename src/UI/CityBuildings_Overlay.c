@@ -433,17 +433,16 @@ static void drawFootprintForNativeOverlay(int gridOffset, int xOffset, int yOffs
 		drawBuildingFootprintForOverlay(Data_Grid_buildingIds[gridOffset],
 		gridOffset, xOffset, yOffset, 0);
 	} else {
-		int graphicId = image_group(GROUP_TERRAIN_DESIRABILITY);
 		if (Data_Grid_edge[gridOffset] & Edge_NativeLand) {
-			DRAWTOP_SIZE1(graphicId + 1, xOffset, yOffset);
+			DRAWFOOT_SIZE1(image_group(GROUP_TERRAIN_DESIRABILITY) + 1, xOffset, yOffset);
 		} else {
-			// kan alleen maar road/meadow/gatehouse zijn
+			// can only be road/meadow/gatehouse = max size 2
 			switch (Data_Grid_bitfields[gridOffset] & Bitfield_Sizes) {
 				case Bitfield_Size1:
-					DRAWFOOT_SIZE1(graphicId, xOffset, yOffset);
+					DRAWFOOT_SIZE1(Data_Grid_graphicIds[gridOffset], xOffset, yOffset);
 					break;
 				case Bitfield_Size2:
-					DRAWFOOT_SIZE2(graphicId, xOffset, yOffset);
+					DRAWFOOT_SIZE2(Data_Grid_graphicIds[gridOffset], xOffset, yOffset);
 					break;
 			}
 		}
