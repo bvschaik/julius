@@ -12,6 +12,7 @@
 #include "core/calc.h"
 #include "graphics/image.h"
 #include "map/grid.h"
+#include "map/random.h"
 #include "scenario/building.h"
 
 static void determineMeetingCenter();
@@ -29,7 +30,7 @@ void Natives_init()
 				continue;
 			}
 			
-			int randomBit = Data_Grid_random[gridOffset] & 1;
+			int randomBit = map_random_get(gridOffset) & 1;
 			int buildingType;
 			if (Data_Grid_graphicIds[gridOffset] == image_hut) {
 				buildingType = BUILDING_NATIVE_HUT;

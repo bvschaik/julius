@@ -3,6 +3,7 @@
 #include "figure/figure.h"
 #include "game/resource.h"
 #include "map/desirability.h"
+#include "map/random.h"
 
 static void drawFootprintForWaterOverlay(int gridOffset, int xOffset, int yOffset);
 static void drawTopForWaterOverlay(int gridOffset, int xOffset, int yOffset);
@@ -55,7 +56,7 @@ void UI_CityBuildings_drawOverlayFootprints()
 				drawFootprintForNativeOverlay(gridOffset, xGraphic, yGraphic);
 			} else if (terrain & (Terrain_Aqueduct | Terrain_Wall)) {
 				// display grass
-				int graphicId = image_group(GROUP_TERRAIN_GRASS_1) + (Data_Grid_random[gridOffset] & 7);
+				int graphicId = image_group(GROUP_TERRAIN_GRASS_1) + (map_random_get(gridOffset) & 7);
 				DRAWFOOT_SIZE1(graphicId, xGraphic, yGraphic);
 			} else if ((terrain & Terrain_Road) && !(terrain & Terrain_Building)) {
 				int graphicId = Data_Grid_graphicIds[gridOffset];
@@ -312,7 +313,7 @@ static void drawFootprintForWaterOverlay(int gridOffset, int xOffset, int yOffse
 		}
 	} else if (terrain & Terrain_Wall) {
 		// display grass
-		int graphicId = image_group(GROUP_TERRAIN_GRASS_1) + (Data_Grid_random[gridOffset] & 7);
+		int graphicId = image_group(GROUP_TERRAIN_GRASS_1) + (map_random_get(gridOffset) & 7);
 		DRAWFOOT_SIZE1(graphicId, xOffset, yOffset);
 	} else if (terrain & Terrain_Building) {
 		int buildingId = Data_Grid_buildingIds[gridOffset];
@@ -426,7 +427,7 @@ static void drawFootprintForNativeOverlay(int gridOffset, int xOffset, int yOffs
 		}
 	} else if (terrain & (Terrain_Wall | Terrain_Aqueduct)) {
 		// display grass
-		int graphicId = image_group(GROUP_TERRAIN_GRASS_1) + (Data_Grid_random[gridOffset] & 7);
+		int graphicId = image_group(GROUP_TERRAIN_GRASS_1) + (map_random_get(gridOffset) & 7);
 		DRAWFOOT_SIZE1(graphicId, xOffset, yOffset);
 	} else if (terrain & Terrain_Building) {
 		drawBuildingFootprintForOverlay(Data_Grid_buildingIds[gridOffset],
@@ -837,7 +838,7 @@ static void drawBuildingFootprintForDesirabilityOverlay(int gridOffset, int xOff
 		}
 	} else if (terrain & (Terrain_Wall | Terrain_Aqueduct)) {
 		// display empty land/grass
-		int graphicId = image_group(GROUP_TERRAIN_GRASS_1) + (Data_Grid_random[gridOffset] & 7);
+		int graphicId = image_group(GROUP_TERRAIN_GRASS_1) + (map_random_get(gridOffset) & 7);
 		DRAWFOOT_SIZE1(graphicId, xOffset, yOffset);
 	} else if ((terrain & Terrain_Building) || map_desirability_get(gridOffset)) {
 		int des = map_desirability_get(gridOffset);

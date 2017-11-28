@@ -41,6 +41,7 @@
 #include "map/bookmark.h"
 #include "map/desirability.h"
 #include "map/grid.h"
+#include "map/random.h"
 #include "map/road_network.h"
 #include "map/routing_terrain.h"
 #include "map/soldier_strength.h"
@@ -67,7 +68,6 @@ static void readScenarioAndInitGraphics();
 
 static void initGrids();
 static void initGridTerrain();
-static void initGridRandom();
 static void initGridGraphicIds();
 
 void Scenario_initialize(const char *scenarioName)
@@ -244,7 +244,7 @@ static void initGrids()
 	map_grid_clear_u16(Data_Grid_figureIds);
 	map_grid_clear_u8(Data_Grid_bitfields);
 	map_grid_clear_u8(Data_Grid_spriteOffsets);
-	map_grid_clear_u8(Data_Grid_random);
+	map_random_clear();
 	map_desirability_clear();
 	map_grid_clear_u8(Data_Grid_elevation);
 	map_grid_clear_u8(Data_Grid_buildingDamage);
@@ -254,7 +254,7 @@ static void initGrids()
 
 	TerrainGraphicsContext_init();
 	initGridTerrain();
-	initGridRandom();
+	map_random_init();
 	initGridGraphicIds();
 }
 
@@ -275,25 +275,15 @@ static void initGridTerrain()
 	}
 }
 
-static void initGridRandom()
-{
-	int gridOffset = 0;
-	for (int y = 0; y < Data_State.map.height; y++) {
-		for (int x = 0; x < Data_State.map.width; x++, gridOffset++) {
-			random_generate_next();
-			Data_Grid_random[gridOffset] = random_short();
-		}
-	}
-}
-
 static void initGridGraphicIds()
 {
 	int gridOffset = Data_State.map.gridStartOffset;
 	int graphicId = image_group(GROUP_TERRAIN_UGLY_GRASS);
 	for (int y = 0; y < Data_State.map.height; y++, gridOffset += Data_State.map.gridBorderSize) {
 		for (int x = 0; x < Data_State.map.width; x++, gridOffset++) {
-			Data_Grid_graphicIds[gridOffset] = graphicId + (Data_Grid_random[gridOffset] & 7);
-			if (Data_Grid_random[gridOffset] & 1) {
+		    int random = map_random_get(gridOffset);
+			Data_Grid_graphicIds[gridOffset] = graphicId + (random & 7);
+			if (random & 1) {
 				Data_Grid_bitfields[gridOffset] |= Bitfield_AlternateTerrain;
 			}
 		}

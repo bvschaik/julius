@@ -25,6 +25,7 @@
 #include "figure/figure.h"
 #include "graphics/image.h"
 #include "map/desirability.h"
+#include "map/random.h"
 #include "map/road_network.h"
 #include "map/routing.h"
 #include "map/routing_terrain.h"
@@ -163,7 +164,7 @@ int Building_create(int type, int x, int y)
 	b->x = x;
 	b->y = y;
 	b->gridOffset = GridOffset(x, y);
-	b->houseGenerationDelay = Data_Grid_random[b->gridOffset] & 0x7f;
+	b->houseGenerationDelay = map_random_get(b->gridOffset) & 0x7f;
 	b->figureRoamDirection = b->houseGenerationDelay & 6;
 	b->fireProof = props->fire_proof;
 	b->isAdjacentToWater = Terrain_isAdjacentToWater(x, y, b->size);
@@ -300,7 +301,7 @@ void Building_collapseOnFire(int buildingId, int hasPlague)
 		if (wasTent) {
 			graphicId = image_group(GROUP_TERRAIN_RUBBLE_TENT);
 		} else {
-			int random = Data_Grid_random[b->gridOffset] & 3;
+			int random = map_random_get(b->gridOffset) & 3;
 			graphicId = image_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9 * random;
 		}
 		Terrain_addBuildingToGrids(buildingId, b->x, b->y, 1, graphicId, Terrain_Building);
@@ -319,7 +320,7 @@ void Building_collapseOnFire(int buildingId, int hasPlague)
 		if (wasTent) {
 			graphicId = image_group(GROUP_TERRAIN_RUBBLE_TENT);
 		} else {
-			int random = Data_Grid_random[ruin->gridOffset] & 3;
+			int random = map_random_get(ruin->gridOffset) & 3;
 			graphicId = image_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9 * random;
 		}
 		Terrain_addBuildingToGrids(ruinId, ruin->x, ruin->y, 1, graphicId, Terrain_Building);

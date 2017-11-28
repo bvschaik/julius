@@ -4,6 +4,7 @@
 #include "core/direction.h"
 #include "graphics/image.h"
 #include "map/grid.h"
+#include "map/random.h"
 #include "map/routing_data.h"
 
 #include "Data/Building.h"
@@ -117,7 +118,7 @@ void map_routing_update_land_citizen()
                     // shouldn't happen
                     terrain_land_noncitizen.items[grid_offset] = CITIZEN_4_CLEAR_TERRAIN; // BUG: should be citizen grid?
                     Data_Grid_terrain[grid_offset] &= ~Terrain_Building;
-                    Data_Grid_graphicIds[grid_offset] = (Data_Grid_random[grid_offset] & 7) + image_group(GROUP_TERRAIN_GRASS_1);
+                    Data_Grid_graphicIds[grid_offset] = (map_random_get(grid_offset) & 7) + image_group(GROUP_TERRAIN_GRASS_1);
                     Data_Grid_edge[grid_offset] = Edge_LeftmostTile;
                     Data_Grid_bitfields[grid_offset] &= 0xf0; // remove sizes
                     continue;

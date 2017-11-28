@@ -9,6 +9,7 @@
 
 #include "game/resource.h"
 #include "graphics/image.h"
+#include "map/random.h"
 
 #define CREATE_HOUSE_TILE(tt, xx,yy)\
 	{\
@@ -20,7 +21,7 @@
 		}\
 		bNew->distanceFromEntry = 0;\
 		Terrain_addBuildingToGrids(newBuildingId, bNew->x, bNew->y, 1,\
-				graphicId + (Data_Grid_random[bNew->gridOffset] & 1), Terrain_Building);\
+				graphicId + (map_random_get(bNew->gridOffset) & 1), Terrain_Building);\
 	}
 
 
@@ -173,7 +174,7 @@ void BuildingHouse_checkMerge(int buildingId)
 	if (b->houseIsMerged) {
 		return;
 	}
-	if ((Data_Grid_random[b->gridOffset] & 7) >= 5) {
+	if ((map_random_get(b->gridOffset) & 7) >= 5) {
 		return;
 	}
 	int numHouseTiles = 0;
@@ -254,7 +255,7 @@ void BuildingHouse_expandToLargeInsula(int buildingId)
 	for (int i = 0; i < INVENTORY_MAX; i++) {
 		b->data.house.inventory[i] += mergeData.inventory[i];
 	}
-	int graphicId = Houseimage_group(b->subtype.houseLevel) + (Data_Grid_random[b->gridOffset] & 1);
+	int graphicId = Houseimage_group(b->subtype.houseLevel) + (map_random_get(b->gridOffset) & 1);
 	Terrain_removeBuildingFromGrids(buildingId, b->x, b->y);
 	b->x = mergeData.x;
 	b->y = mergeData.y;
@@ -352,7 +353,7 @@ static void splitMerged(int buildingId)
 
 	int graphicId = Houseimage_group(b->subtype.houseLevel);
 	Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size,
-		graphicId + (Data_Grid_random[b->gridOffset] & 1), Terrain_Building);
+		graphicId + (map_random_get(b->gridOffset) & 1), Terrain_Building);
 	
 	// the other tiles (new buildings)
 	CREATE_HOUSE_TILE(b->type, b->x + 1, b->y);
@@ -387,7 +388,7 @@ static void splitSize2(int buildingId)
 
 	int graphicId = Houseimage_group(b->subtype.houseLevel);
 	Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size,
-		graphicId + (Data_Grid_random[b->gridOffset] & 1), Terrain_Building);
+		graphicId + (map_random_get(b->gridOffset) & 1), Terrain_Building);
 
 	// the other tiles (new buildings)
 	CREATE_HOUSE_TILE(b->type, b->x + 1, b->y);
@@ -422,7 +423,7 @@ static void splitSize3(int buildingId)
 
 	int graphicId = Houseimage_group(b->subtype.houseLevel);
 	Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size,
-		graphicId + (Data_Grid_random[b->gridOffset] & 1), Terrain_Building);
+		graphicId + (map_random_get(b->gridOffset) & 1), Terrain_Building);
 
 	// the other tiles (new buildings)
 	CREATE_HOUSE_TILE(BUILDING_HOUSE_MEDIUM_INSULA, b->x, b->y + 1);
@@ -465,7 +466,7 @@ void BuildingHouse_devolveFromLargeVilla(int buildingId)
 
 	int graphicId = Houseimage_group(b->subtype.houseLevel);
 	Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size,
-		graphicId + (Data_Grid_random[b->gridOffset] & 1), Terrain_Building);
+		graphicId + (map_random_get(b->gridOffset) & 1), Terrain_Building);
 
 	// the other tiles (new buildings)
 	graphicId = Houseimage_group(HOUSE_MEDIUM_INSULA);
@@ -528,7 +529,7 @@ void BuildingHouse_changeTo(int buildingId, int buildingType)
 		}
 	} else {
 		graphicId += houseGraphicOffset[b->subtype.houseLevel];
-		graphicId += Data_Grid_random[b->gridOffset] & (houseGraphicNumTypes[b->subtype.houseLevel] - 1);
+		graphicId += map_random_get(b->gridOffset) & (houseGraphicNumTypes[b->subtype.houseLevel] - 1);
 	}
 	Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size, graphicId, Terrain_Building);
 }

@@ -15,6 +15,7 @@
 #include "core/calc.h"
 #include "figure/route.h"
 #include "game/time.h"
+#include "map/random.h"
 #include "map/grid.h"
 #include "map/routing_terrain.h"
 
@@ -304,7 +305,7 @@ void FigureMovement_roamTicks(int figureId, int numTicks)
 					if (f->direction < 0) f->direction = 6;
 				} while (dir++ < 4);
 			} else { // > 2 road tiles
-				f->direction = (f->roamRandomCounter + Data_Grid_random[f->gridOffset]) & 6;
+				f->direction = (f->roamRandomCounter + map_random_get(f->gridOffset)) & 6;
 				if (!roadTiles[f->direction] || f->direction == cameFromDirection) {
 					f->roamTicksUntilNextTurn--;
 					if (f->roamTicksUntilNextTurn <= 0) {

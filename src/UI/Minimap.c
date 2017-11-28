@@ -10,6 +10,7 @@
 #include "figure/figure.h"
 #include "figure/type.h"
 #include "graphics/image.h"
+#include "map/random.h"
 #include "scenario/property.h"
 
 #define FOREACH_XY_VIEW(block)\
@@ -186,7 +187,7 @@ static void drawTile(int xView, int yView, int gridOffset)
 			}
 		}
 	} else {
-		int rand = Data_Grid_random[gridOffset];
+		int rand = map_random_get(gridOffset);
 		int graphicId;
 		if (terrain & Terrain_Water) {
 			graphicId = image_group(GROUP_MINIMAP_WATER) + (rand & 3);

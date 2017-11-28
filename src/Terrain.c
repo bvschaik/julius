@@ -13,6 +13,7 @@
 #include "core/calc.h"
 #include "graphics/image.h"
 #include "map/bridge.h"
+#include "map/random.h"
 #include "map/ring.h"
 #include "map/road_network.h"
 #include "map/routing.h"
@@ -173,7 +174,7 @@ void Terrain_removeBuildingFromGrids(int buildingId, int x, int y)
 			} else {
 				Data_Grid_graphicIds[gridOffset] =
 					image_group(GROUP_TERRAIN_UGLY_GRASS) +
-					(Data_Grid_random[gridOffset] & 7);
+					(map_random_get(gridOffset) & 7);
 				Data_Grid_terrain[gridOffset] &= Terrain_2e80;
 			}
 		}

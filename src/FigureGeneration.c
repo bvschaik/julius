@@ -20,6 +20,7 @@
 #include "graphics/image.h"
 #include "game/resource.h"
 #include "map/desirability.h"
+#include "map/random.h"
 
 #define SET_LABOR_PROBLEM(b) if (b->housesCovered <= 0) b->showOnProblemOverlay = 2
 #define SPAWN_LABOR_SEEKER(t) if (b->housesCovered <= t) generateLaborSeeker(buildingId, b, xRoad, yRoad);
@@ -1153,7 +1154,7 @@ static void spawnFigureDock(int buildingId, struct Data_Building *b)
 static void spawnFigureNativeHut(int buildingId, struct Data_Building *b)
 {
 	Data_Grid_graphicIds[b->gridOffset] =
-		image_group(GROUP_BUILDING_NATIVE) + (Data_Grid_random[b->gridOffset] & 1);
+		image_group(GROUP_BUILDING_NATIVE) + (map_random_get(b->gridOffset) & 1);
 	EXIT_IF_FIGURE(FIGURE_INDIGENOUS_NATIVE);
 	int xOut, yOut;
 	if (b->subtype.nativeMeetingCenterId > 0 && Terrain_getAdjacentRoadOrClearLand(b->x, b->y, b->size, &xOut, &yOut)) {

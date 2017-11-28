@@ -50,7 +50,6 @@ EXTERN UInt16_Grid(Data_Grid_terrain);
 
 EXTERN UInt8_Grid(Data_Grid_edge);
 EXTERN UInt8_Grid(Data_Grid_bitfields);
-EXTERN UInt8_Grid(Data_Grid_random);
 EXTERN UInt8_Grid(Data_Grid_elevation);
 EXTERN UInt8_Grid(Data_Grid_aqueducts);
 EXTERN UInt8_Grid(Data_Grid_spriteOffsets);

@@ -3,6 +3,7 @@
 #include "core/calc.h"
 #include "core/random.h"
 #include "map/grid.h"
+#include "map/random.h"
 #include "map/routing.h"
 
 #define MAX_PATH 500
@@ -166,7 +167,7 @@ int map_routing_get_path_on_water(uint8_t *path, int src_x, int src_y, int dst_x
         int currentRand = rand;
         distance = map_routing_distance(gridOffset);
         if (is_flotsam) {
-            currentRand = Data_Grid_random[gridOffset] & 3;
+            currentRand = map_random_get(gridOffset) & 3;
         }
         int direction = -1;
         for (int d = 0; d < 8; d++) {

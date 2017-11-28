@@ -22,6 +22,7 @@
 #include "figure/type.h"
 #include "game/tutorial.h"
 #include "map/grid.h"
+#include "map/random.h"
 #include "map/routing_terrain.h"
 #include "scenario/property.h"
 #include "sound/effect.h"
@@ -313,7 +314,7 @@ void Security_Tick_checkFireCollapse()
 		if (b->type == BUILDING_HIPPODROME && b->prevPartBuildingId) {
 			continue;
 		}
-		int randomBuilding = (i + Data_Grid_random[b->gridOffset]) & 7;
+		int randomBuilding = (i + map_random_get(b->gridOffset)) & 7;
 		// damage
 		b->damageRisk += (randomBuilding == randomGlobal) ? 3 : 1;
 		if (tutorial_extra_damage_risk()) {

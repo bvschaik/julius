@@ -41,6 +41,7 @@
 #include "graphics/image.h"
 #include "map/bookmark.h"
 #include "map/desirability.h"
+#include "map/random.h"
 #include "map/road_network.h"
 #include "map/routing.h"
 #include "map/routing_terrain.h"
@@ -130,7 +131,7 @@ typedef struct {
     buffer *Data_Grid_figureIds;
     buffer *Data_Grid_bitfields;
     buffer *Data_Grid_spriteOffsets;
-    buffer *Data_Grid_random;
+    buffer *random;
     buffer *map_desirability;
     buffer *Data_Grid_elevation;
     buffer *Data_Grid_buildingDamage;
@@ -278,7 +279,7 @@ static void init_savegame_data()
     state->Data_Grid_figureIds = create_savegame_piece(52488, 1);
     state->Data_Grid_bitfields = create_savegame_piece(26244, 1);
     state->Data_Grid_spriteOffsets = create_savegame_piece(26244, 1);
-    state->Data_Grid_random = create_savegame_piece(26244, 0);
+    state->random = create_savegame_piece(26244, 0);
     state->map_desirability = create_savegame_piece(26244, 1);
     state->Data_Grid_elevation = create_savegame_piece(26244, 1);
     state->Data_Grid_buildingDamage = create_savegame_piece(26244, 1);
@@ -377,7 +378,9 @@ static void scenario_deserialize(scenario_state *file)
     read_all_from_buffer(file->edge, &Data_Grid_edge);
     read_all_from_buffer(file->terrain, &Data_Grid_terrain);
     read_all_from_buffer(file->bitfields, &Data_Grid_bitfields);
-    read_all_from_buffer(file->random, &Data_Grid_random);
+
+    map_random_load_state(file->random);
+
     read_all_from_buffer(file->elevation, &Data_Grid_elevation);
     
     Data_State.map.camera.x = buffer_read_i32(file->camera);
@@ -414,7 +417,8 @@ static void savegame_deserialize(savegame_state *state)
     read_all_from_buffer(state->Data_Grid_figureIds, &Data_Grid_figureIds);
     read_all_from_buffer(state->Data_Grid_bitfields, &Data_Grid_bitfields);
     read_all_from_buffer(state->Data_Grid_spriteOffsets, &Data_Grid_spriteOffsets);
-    read_all_from_buffer(state->Data_Grid_random, &Data_Grid_random);
+
+    map_random_load_state(state->random);
 
     map_desirability_load_state(state->map_desirability);
 
@@ -536,8 +540,8 @@ static void savegame_serialize(savegame_state *state)
     write_all_to_buffer(state->Data_Grid_figureIds, &Data_Grid_figureIds);
     write_all_to_buffer(state->Data_Grid_bitfields, &Data_Grid_bitfields);
     write_all_to_buffer(state->Data_Grid_spriteOffsets, &Data_Grid_spriteOffsets);
-    write_all_to_buffer(state->Data_Grid_random, &Data_Grid_random);
 
+    map_random_save_state(state->random);
     map_desirability_save_state(state->map_desirability);
 
     write_all_to_buffer(state->Data_Grid_elevation, &Data_Grid_elevation);
