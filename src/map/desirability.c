@@ -3,6 +3,7 @@
 #include "building/model.h"
 #include "core/calc.h"
 #include "map/grid.h"
+#include "map/property.h"
 #include "map/ring.h"
 
 #include "Data/Building.h"
@@ -88,7 +89,7 @@ static void update_terrain()
 	for (int y = 0; y < Data_State.map.height; y++, grid_offset += Data_State.map.gridBorderSize) {
 		for (int x = 0; x < Data_State.map.width; x++, grid_offset++) {
 			int terrain = Data_Grid_terrain[grid_offset];
-			if (Data_Grid_bitfields[grid_offset] & Bitfield_PlazaOrEarthquake) {
+			if (map_property_is_plaza_or_earthquake(grid_offset)) {
 				int type;
 				if (terrain & Terrain_Road) {
 					type = BUILDING_PLAZA;
@@ -97,7 +98,7 @@ static void update_terrain()
 					type = BUILDING_HOUSE_VACANT_LOT;
 				} else {
 					// invalid plaza/earthquake flag
-					Data_Grid_bitfields[grid_offset] &= ~Bitfield_PlazaOrEarthquake;
+					map_property_clear_plaza_or_earthquake(grid_offset);
 					continue;
 				}
 				const model_building *model = model_get_building(type);

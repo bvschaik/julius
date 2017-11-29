@@ -121,7 +121,7 @@ void map_routing_update_land_citizen()
                     Data_Grid_terrain[grid_offset] &= ~Terrain_Building;
                     Data_Grid_graphicIds[grid_offset] = (map_random_get(grid_offset) & 7) + image_group(GROUP_TERRAIN_GRASS_1);
                     map_property_mark_draw_tile(grid_offset);
-                    Data_Grid_bitfields[grid_offset] &= 0xf0; // remove sizes
+                    map_property_set_multi_tile_size(grid_offset, 1);
                     continue;
                 }
                 terrain_land_citizen.items[grid_offset] = get_land_type_citizen_building(grid_offset);

@@ -100,15 +100,8 @@ void Terrain_addBuildingToGrids(int buildingId, int x, int y, int size, int grap
 			Data_Grid_terrain[gridOffset] &= Terrain_2e80;
 			Data_Grid_terrain[gridOffset] |= terrain;
 			Data_Grid_buildingIds[gridOffset] = buildingId;
-			Data_Grid_bitfields[gridOffset] &= Bitfield_NoOverlay;
-			Data_Grid_bitfields[gridOffset] &= Bitfield_NoSizes;
-			switch (size) {
-				case 1: Data_Grid_bitfields[gridOffset] |= Bitfield_Size1; break;
-				case 2: Data_Grid_bitfields[gridOffset] |= Bitfield_Size2; break;
-				case 3: Data_Grid_bitfields[gridOffset] |= Bitfield_Size3; break;
-				case 4: Data_Grid_bitfields[gridOffset] |= Bitfield_Size4; break;
-				case 5: Data_Grid_bitfields[gridOffset] |= Bitfield_Size5; break;
-			}
+			map_property_clear_constructing(gridOffset);
+			map_property_set_multi_tile_size(gridOffset, size);
 			Data_Grid_graphicIds[gridOffset] = graphicId;
 			map_property_set_multi_tile_xy(gridOffset, dx, dy,
 			    dx == xLeftmost && dy == yLeftmost);
@@ -119,14 +112,7 @@ void Terrain_addBuildingToGrids(int buildingId, int x, int y, int size, int grap
 static int getNorthTileGridOffset(int x, int y, int *size)
 {
 	int gridOffset = GridOffset(x, y);
-	switch (Data_Grid_bitfields[gridOffset] & Bitfield_Sizes) {
-		default:
-		case Bitfield_Size1: *size = 1; break;
-		case Bitfield_Size2: *size = 2; break;
-		case Bitfield_Size3: *size = 3; break;
-		case Bitfield_Size4: *size = 4; break;
-		case Bitfield_Size5: *size = 5; break;
-	}
+	*size = map_property_multi_tile_size(gridOffset);
 	for (int i = 0; i < *size && map_property_multi_tile_x(gridOffset); i++) {
 		gridOffset += map_grid_delta(-1, 0);
 	}
@@ -160,8 +146,8 @@ void Terrain_removeBuildingFromGrids(int buildingId, int x, int y)
 			if (buildingId && Data_Buildings[buildingId].type != BUILDING_BURNING_RUIN) {
 				Data_Grid_rubbleBuildingType[gridOffset] = Data_Buildings[buildingId].type;
 			}
-			Data_Grid_bitfields[gridOffset] &= Bitfield_NoOverlay;
-			Data_Grid_bitfields[gridOffset] &= Bitfield_NoSizes;
+			map_property_clear_constructing(gridOffset);
+			map_property_set_multi_tile_size(gridOffset, 1);
 			map_property_clear_multi_tile_xy(gridOffset);
 			map_property_mark_draw_tile(gridOffset);
 			Data_Grid_aqueducts[gridOffset] = 0;
@@ -1160,12 +1146,12 @@ void Terrain_updateToPlaceBuildingToOverlay(int size, int x, int y, int terrainM
 			}
 		}
 	}
-	// mark as overlay
-	Data_State.selectedBuilding.drawAsOverlay = 1;
+	// mark as being constructed
+	Data_State.selectedBuilding.drawAsConstructing = 1;
 	for (int dy = 0; dy < size; dy++) {
 		for (int dx = 0; dx < size; dx++) {
 			int gridOffset = GridOffset(x + dx, y + dy);
-			Data_Grid_bitfields[gridOffset] |= Bitfield_Overlay;
+			map_property_mark_constructing(gridOffset);
 		}
 	}
 }
@@ -1175,27 +1161,15 @@ static void determineLeftmostTile()
 	for (int y = 0; y < Data_State.map.height; y++) {
 		for (int x = 0; x < Data_State.map.width; x++) {
 			int gridOffset = GridOffset(x, y);
-			int sizeCode = Data_Grid_bitfields[gridOffset] & Bitfield_Sizes;
-			if (sizeCode == Bitfield_Size1) {
+			int size = map_property_multi_tile_size(gridOffset);
+			if (size == 1) {
 				map_property_mark_draw_tile(gridOffset);
 				continue;
 			}
 			map_property_clear_draw_tile(gridOffset);
-			int size;
-			if (sizeCode == Bitfield_Size2) {
-				size = 1;
-			} else if (sizeCode == Bitfield_Size3) {
-				size = 2;
-			} else if (sizeCode == Bitfield_Size4) {
-				size = 3;
-			} else if (sizeCode == Bitfield_Size5) {
-				size = 4;
-			} else {
-				continue;
-			}
 			int orientation = Data_State.map.orientation;
-			int dx = orientation == DIR_4_BOTTOM || orientation == DIR_6_LEFT ? size : 0;
-			int dy = orientation == DIR_0_TOP || orientation == DIR_6_LEFT ? size : 0;
+			int dx = orientation == DIR_4_BOTTOM || orientation == DIR_6_LEFT ? size - 1 : 0;
+			int dy = orientation == DIR_0_TOP || orientation == DIR_6_LEFT ? size - 1 : 0;
 			if (map_property_is_multi_tile_xy(gridOffset, dx, dy)) {
 				map_property_mark_draw_tile(gridOffset);
 			}

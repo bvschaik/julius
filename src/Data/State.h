@@ -76,7 +76,7 @@ extern struct _Data_State {
 		int meadowRequired;
 		int roadRequired;
 		time_millis roadLastUpdate;
-		int drawAsOverlay;
+		int drawAsConstructing;
 		int cost;
 		int reservoirOffsetX;
 		int reservoirOffsetY;

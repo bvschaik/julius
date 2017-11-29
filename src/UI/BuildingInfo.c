@@ -27,6 +27,7 @@
 #include "building/model.h"
 #include "figure/figure.h"
 #include "figure/formation.h"
+#include "map/property.h"
 
 static void buttonHelp(int param1, int param2);
 static void buttonExit(int param1, int param2);
@@ -153,7 +154,7 @@ void UI_BuildingInfo_init()
 		} else {
 			context.terrainType = 10;
 		}
-	} else if (Data_Grid_bitfields[gridOffset] & Bitfield_PlazaOrEarthquake) {
+	} else if (map_property_is_plaza_or_earthquake(gridOffset)) {
 		if (Data_Grid_terrain[gridOffset] & Terrain_Road) {
 			context.terrainType = 13;
 		}

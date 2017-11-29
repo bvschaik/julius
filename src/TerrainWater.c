@@ -34,7 +34,6 @@ void Terrain_addWatersideBuildingToGrids(int buildingId, int x, int y, int size,
 		default:
 			return;
 	}
-	int sizeMask = (size == 3) ? Bitfield_Size3 : Bitfield_Size2;
 	for (int dy = 0; dy < size; dy++) {
 		for (int dx = 0; dx < size; dx++) {
 			int gridOffset = GridOffset(x + dx, y + dy);
@@ -44,8 +43,8 @@ void Terrain_addWatersideBuildingToGrids(int buildingId, int x, int y, int size,
 				Data_Grid_terrain[gridOffset] |= Terrain_Building;
 			}
 			Data_Grid_buildingIds[gridOffset] = buildingId;
-			Data_Grid_bitfields[gridOffset] &= Bitfield_NoOverlay;
-			Data_Grid_bitfields[gridOffset] |= sizeMask;
+			map_property_clear_constructing(gridOffset);
+			map_property_set_multi_tile_size(gridOffset, size);
 			Data_Grid_graphicIds[gridOffset] = graphicId;
 			map_property_set_multi_tile_xy(gridOffset, dx, dy,
 			    dx == xLeftmost && dy == yLeftmost);

@@ -174,16 +174,16 @@ static void drawTile(int xView, int yView, int gridOffset)
 			} else {
 				graphicId = image_group(GROUP_MINIMAP_BUILDING);
 			}
-			switch (Data_Grid_bitfields[gridOffset] & Bitfield_Sizes) {
-				case 0:
-					Graphics_drawImage(graphicId, xView, yView); break;
+			switch (map_property_multi_tile_size(gridOffset)) {
 				case 1:
-					Graphics_drawImage(graphicId + 1, xView, yView - 1); break;
+					Graphics_drawImage(graphicId, xView, yView); break;
 				case 2:
+					Graphics_drawImage(graphicId + 1, xView, yView - 1); break;
+				case 3:
 					Graphics_drawImage(graphicId + 2, xView, yView - 2); break;
 				case 4:
 					Graphics_drawImage(graphicId + 3, xView, yView - 3); break;
-				case 8:
+				case 5:
 					Graphics_drawImage(graphicId + 4, xView, yView - 4); break;
 			}
 		}

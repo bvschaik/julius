@@ -35,6 +35,50 @@ static void drawBuildingTopForTaxIncomeOverlay(int gridOffset, int buildingId, i
 static void drawBuildingTopForProblemsOverlay(int gridOffset, int buildingId, int xOffset, int yOffset);
 static void drawOverlayColumn(int height, int xOffset, int yOffset, int isRed);
 
+static void draw_foot_with_size(int grid_offset, int image_x, int image_y)
+{
+    int image_id = Data_Grid_graphicIds[grid_offset];
+    switch (map_property_multi_tile_size(grid_offset)) {
+        case 1:
+            DRAWFOOT_SIZE1(image_id, image_x, image_y);
+            break;
+        case 2:
+            DRAWFOOT_SIZE2(image_id, image_x, image_y);
+            break;
+        case 3:
+            DRAWFOOT_SIZE3(image_id, image_x, image_y);
+            break;
+        case 4:
+            DRAWFOOT_SIZE4(image_id, image_x, image_y);
+            break;
+        case 5:
+            DRAWFOOT_SIZE5(image_id, image_x, image_y);
+            break;
+    }
+}
+
+static void draw_top_with_size(int grid_offset, int image_x, int image_y)
+{
+    int image_id = Data_Grid_graphicIds[grid_offset];
+    switch (map_property_multi_tile_size(grid_offset)) {
+        case 1:
+            DRAWTOP_SIZE1(image_id, image_x, image_y);
+            break;
+        case 2:
+            DRAWTOP_SIZE2(image_id, image_x, image_y);
+            break;
+        case 3:
+            DRAWTOP_SIZE3(image_id, image_x, image_y);
+            break;
+        case 4:
+            DRAWTOP_SIZE4(image_id, image_x, image_y);
+            break;
+        case 5:
+            DRAWTOP_SIZE5(image_id, image_x, image_y);
+            break;
+    }
+}
+
 void UI_CityBuildings_drawOverlayFootprints()
 {
 	FOREACH_XY_VIEW {
@@ -60,37 +104,12 @@ void UI_CityBuildings_drawOverlayFootprints()
 				int graphicId = image_group(GROUP_TERRAIN_GRASS_1) + (map_random_get(gridOffset) & 7);
 				DRAWFOOT_SIZE1(graphicId, xGraphic, yGraphic);
 			} else if ((terrain & Terrain_Road) && !(terrain & Terrain_Building)) {
-				int graphicId = Data_Grid_graphicIds[gridOffset];
-				switch (Data_Grid_bitfields[gridOffset] & Bitfield_Sizes) {
-					case Bitfield_Size1:
-						DRAWFOOT_SIZE1(graphicId, xGraphic, yGraphic);
-						break;
-					case Bitfield_Size2:
-						DRAWFOOT_SIZE2(graphicId, xGraphic, yGraphic);
-						break;
-				}
+				draw_foot_with_size(gridOffset, xGraphic, yGraphic);
 			} else if (terrain & Terrain_Building) {
 				drawBuildingFootprintForOverlay(Data_Grid_buildingIds[gridOffset],
 					gridOffset, xGraphic, yGraphic, 0);
 			} else {
-				int graphicId = Data_Grid_graphicIds[gridOffset];
-				switch (Data_Grid_bitfields[gridOffset] & Bitfield_Sizes) {
-					case Bitfield_Size1:
-						DRAWFOOT_SIZE1(graphicId, xGraphic, yGraphic);
-						break;
-					case Bitfield_Size2:
-						DRAWFOOT_SIZE2(graphicId, xGraphic, yGraphic);
-						break;
-					case Bitfield_Size3:
-						DRAWFOOT_SIZE3(graphicId, xGraphic, yGraphic);
-						break;
-					case Bitfield_Size4:
-						DRAWFOOT_SIZE4(graphicId, xGraphic, yGraphic);
-						break;
-					case Bitfield_Size5:
-						DRAWFOOT_SIZE5(graphicId, xGraphic, yGraphic);
-						break;
-				}
+				draw_foot_with_size(gridOffset, xGraphic, yGraphic);
 			}
 		}
 	} END_FOREACH_XY_VIEW;
@@ -186,14 +205,7 @@ void UI_CityBuildings_drawOverlayTopsFiguresAnimation(int overlay)
 						}
 					} else if (!(Data_Grid_terrain[gridOffset] & Terrain_Building)) {
 						// terrain
-						int graphicId = Data_Grid_graphicIds[gridOffset];
-						switch (Data_Grid_bitfields[gridOffset] & Bitfield_Sizes) {
-							case 0: DRAWTOP_SIZE1(graphicId, xGraphic, yGraphic); break;
-							case 1: DRAWTOP_SIZE2(graphicId, xGraphic, yGraphic); break;
-							case 2: DRAWTOP_SIZE3(graphicId, xGraphic, yGraphic); break;
-							case 4: DRAWTOP_SIZE4(graphicId, xGraphic, yGraphic); break;
-							case 8: DRAWTOP_SIZE5(graphicId, xGraphic, yGraphic); break;
-						}
+						draw_top_with_size(gridOffset, xGraphic, yGraphic);
 					}
 				}
 			}
@@ -262,12 +274,12 @@ void UI_CityBuildings_drawOverlayTopsFiguresAnimation(int overlay)
 								animationOffset = img->num_animation_sprites;
 							}
 							int ydiff = 0;
-							switch (Data_Grid_bitfields[gridOffset] & Bitfield_Sizes) {
-								case 0: ydiff = 30; break;
-								case 1: ydiff = 45; break;
-								case 2: ydiff = 60; break;
+							switch (map_property_multi_tile_size(gridOffset)) {
+								case 1: ydiff = 30; break;
+								case 2: ydiff = 45; break;
+								case 3: ydiff = 60; break;
 								case 4: ydiff = 75; break;
-								case 8: ydiff = 90; break;
+								case 5: ydiff = 90; break;
 							}
 							Graphics_drawImageMasked(graphicId + animationOffset,
 								xGraphic + img->sprite_offset_x,
@@ -293,24 +305,7 @@ static void drawFootprintForWaterOverlay(int gridOffset, int xOffset, int yOffse
 			drawBuildingFootprintForOverlay(Data_Grid_buildingIds[gridOffset],
 				gridOffset, xOffset, yOffset, 0);
 		} else {
-			int graphicId = Data_Grid_graphicIds[gridOffset];
-			switch (Data_Grid_bitfields[gridOffset] & Bitfield_Sizes) {
-				case Bitfield_Size1:
-					DRAWFOOT_SIZE1(graphicId, xOffset, yOffset);
-					break;
-				case Bitfield_Size2:
-					DRAWFOOT_SIZE2(graphicId, xOffset, yOffset);
-					break;
-				case Bitfield_Size3:
-					DRAWFOOT_SIZE3(graphicId, xOffset, yOffset);
-					break;
-				case Bitfield_Size4:
-					DRAWFOOT_SIZE4(graphicId, xOffset, yOffset);
-					break;
-				case Bitfield_Size5:
-					DRAWFOOT_SIZE5(graphicId, xOffset, yOffset);
-					break;
-			}
+			draw_foot_with_size(gridOffset, xOffset, yOffset);
 		}
 	} else if (terrain & Terrain_Wall) {
 		// display grass
@@ -368,24 +363,7 @@ static void drawTopForWaterOverlay(int gridOffset, int xOffset, int yOffset)
 	int terrain = Data_Grid_terrain[gridOffset];
 	if (terrain & WATER_TERRAIN) {
 		if (!(terrain & Terrain_Building)) {
-			int graphicId = Data_Grid_graphicIds[gridOffset];
-			switch (Data_Grid_bitfields[gridOffset] & Bitfield_Sizes) {
-				case Bitfield_Size1:
-					DRAWTOP_SIZE1(graphicId, xOffset, yOffset);
-					break;
-				case Bitfield_Size2:
-					DRAWTOP_SIZE2(graphicId, xOffset, yOffset);
-					break;
-				case Bitfield_Size3:
-					DRAWTOP_SIZE3(graphicId, xOffset, yOffset);
-					break;
-				case Bitfield_Size4:
-					DRAWTOP_SIZE4(graphicId, xOffset, yOffset);
-					break;
-				case Bitfield_Size5:
-					DRAWTOP_SIZE5(graphicId, xOffset, yOffset);
-					break;
-			}
+			draw_top_with_size(gridOffset, xOffset, yOffset);
 		}
 	} else if (Data_Grid_buildingIds[gridOffset]) {
 		int buildingId = Data_Grid_buildingIds[gridOffset];
@@ -407,24 +385,7 @@ static void drawFootprintForNativeOverlay(int gridOffset, int xOffset, int yOffs
 			drawBuildingFootprintForOverlay(Data_Grid_buildingIds[gridOffset],
 				gridOffset, xOffset, yOffset, 0);
 		} else {
-			int graphicId = Data_Grid_graphicIds[gridOffset];
-			switch (Data_Grid_bitfields[gridOffset] & Bitfield_Sizes) {
-				case Bitfield_Size1:
-					DRAWFOOT_SIZE1(graphicId, xOffset, yOffset);
-					break;
-				case Bitfield_Size2:
-					DRAWFOOT_SIZE2(graphicId, xOffset, yOffset);
-					break;
-				case Bitfield_Size3:
-					DRAWFOOT_SIZE3(graphicId, xOffset, yOffset);
-					break;
-				case Bitfield_Size4:
-					DRAWFOOT_SIZE4(graphicId, xOffset, yOffset);
-					break;
-				case Bitfield_Size5:
-					DRAWFOOT_SIZE5(graphicId, xOffset, yOffset);
-					break;
-			}
+			draw_foot_with_size(gridOffset, xOffset, yOffset);
 		}
 	} else if (terrain & (Terrain_Wall | Terrain_Aqueduct)) {
 		// display grass
@@ -437,15 +398,7 @@ static void drawFootprintForNativeOverlay(int gridOffset, int xOffset, int yOffs
 		if (map_property_is_native_land(gridOffset)) {
 			DRAWFOOT_SIZE1(image_group(GROUP_TERRAIN_DESIRABILITY) + 1, xOffset, yOffset);
 		} else {
-			// can only be road/meadow/gatehouse = max size 2
-			switch (Data_Grid_bitfields[gridOffset] & Bitfield_Sizes) {
-				case Bitfield_Size1:
-					DRAWFOOT_SIZE1(Data_Grid_graphicIds[gridOffset], xOffset, yOffset);
-					break;
-				case Bitfield_Size2:
-					DRAWFOOT_SIZE2(Data_Grid_graphicIds[gridOffset], xOffset, yOffset);
-					break;
-			}
+			draw_foot_with_size(gridOffset, xOffset, yOffset);
 		}
 	}
 }
@@ -455,24 +408,7 @@ static void drawTopForNativeOverlay(int gridOffset, int xOffset, int yOffset)
 	int terrain = Data_Grid_terrain[gridOffset];
 	if (terrain & NATIVE_NATURAL_TERRAIN) {
 		if (!(terrain & Terrain_Building)) {
-			int graphicId = Data_Grid_graphicIds[gridOffset];
-			switch (Data_Grid_bitfields[gridOffset] & Bitfield_Sizes) {
-				case Bitfield_Size1:
-					DRAWTOP_SIZE1(graphicId, xOffset, yOffset);
-					break;
-				case Bitfield_Size2:
-					DRAWTOP_SIZE2(graphicId, xOffset, yOffset);
-					break;
-				case Bitfield_Size3:
-					DRAWTOP_SIZE3(graphicId, xOffset, yOffset);
-					break;
-				case Bitfield_Size4:
-					DRAWTOP_SIZE4(graphicId, xOffset, yOffset);
-					break;
-				case Bitfield_Size5:
-					DRAWTOP_SIZE5(graphicId, xOffset, yOffset);
-					break;
-			}
+			draw_top_with_size(gridOffset, xOffset, yOffset);
 		}
 	} else if (Data_Grid_buildingIds[gridOffset]) {
 		int graphicId = Data_Grid_graphicIds[gridOffset];
@@ -844,24 +780,7 @@ static void drawBuildingFootprintForDesirabilityOverlay(int gridOffset, int xOff
 	if ((terrain & Terrain_NaturalElements) && !(terrain & Terrain_Building)) {
 		// display normal tile
 		if (map_property_is_draw_tile(gridOffset)) {
-			int graphicId = Data_Grid_graphicIds[gridOffset];
-			switch (Data_Grid_bitfields[gridOffset] & Bitfield_Sizes) {
-				case Bitfield_Size1:
-					DRAWFOOT_SIZE1(graphicId, xOffset, yOffset);
-					break;
-				case Bitfield_Size2:
-					DRAWFOOT_SIZE2(graphicId, xOffset, yOffset);
-					break;
-				case Bitfield_Size3:
-					DRAWFOOT_SIZE3(graphicId, xOffset, yOffset);
-					break;
-				case Bitfield_Size4:
-					DRAWFOOT_SIZE4(graphicId, xOffset, yOffset);
-					break;
-				case Bitfield_Size5:
-					DRAWFOOT_SIZE5(graphicId, xOffset, yOffset);
-					break;
-			}
+			draw_foot_with_size(gridOffset, xOffset, yOffset);
 		}
 	} else if (terrain & (Terrain_Wall | Terrain_Aqueduct)) {
 		// display empty land/grass
@@ -904,24 +823,7 @@ static void drawBuildingTopForDesirabilityOverlay(int gridOffset, int xOffset, i
 	if ((terrain & Terrain_NaturalElements) && !(terrain & Terrain_Building)) {
 		// display normal tile
 		if (map_property_is_draw_tile(gridOffset)) {
-			int graphicId = Data_Grid_graphicIds[gridOffset];
-			switch (Data_Grid_bitfields[gridOffset] & Bitfield_Sizes) {
-				case Bitfield_Size1:
-					DRAWTOP_SIZE1(graphicId, xOffset, yOffset);
-					break;
-				case Bitfield_Size2:
-					DRAWTOP_SIZE2(graphicId, xOffset, yOffset);
-					break;
-				case Bitfield_Size3:
-					DRAWTOP_SIZE3(graphicId, xOffset, yOffset);
-					break;
-				case Bitfield_Size4:
-					DRAWTOP_SIZE4(graphicId, xOffset, yOffset);
-					break;
-				case Bitfield_Size5:
-					DRAWTOP_SIZE5(graphicId, xOffset, yOffset);
-					break;
-			}
+			draw_top_with_size(gridOffset, xOffset, yOffset);
 		}
 	} else if (terrain & (Terrain_Wall | Terrain_Aqueduct)) {
 		// grass, no top needed
@@ -1415,24 +1317,7 @@ static void drawBuildingTopForProblemsOverlay(int gridOffset, int buildingId, in
 		Graphics_drawImage(image_group(GROUP_BUILDING_WAREHOUSE) + 17, xOffset - 4, yOffset - 42);
 	}
 
-	int graphicId = Data_Grid_graphicIds[gridOffset];
-	switch (Data_Grid_bitfields[gridOffset] & Bitfield_Sizes) {
-		case Bitfield_Size1:
-			DRAWTOP_SIZE1(graphicId, xOffset, yOffset);
-			break;
-		case Bitfield_Size2:
-			DRAWTOP_SIZE2(graphicId, xOffset, yOffset);
-			break;
-		case Bitfield_Size3:
-			DRAWTOP_SIZE3(graphicId, xOffset, yOffset);
-			break;
-		case Bitfield_Size4:
-			DRAWTOP_SIZE4(graphicId, xOffset, yOffset);
-			break;
-		case Bitfield_Size5:
-			DRAWTOP_SIZE5(graphicId, xOffset, yOffset);
-			break;
-	}
+	draw_top_with_size(gridOffset, xOffset, yOffset);
 }
 
 static void drawOverlayColumn(int height, int xOffset, int yOffset, int isRed)

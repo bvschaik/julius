@@ -143,11 +143,11 @@ static void drawBuildingFootprints()
 				sound_city_mark_building_view(0, 2);
 			}
 			int graphicId = Data_Grid_graphicIds[gridOffset];
-			if (Data_Grid_bitfields[gridOffset] & Bitfield_Overlay) {
+			if (map_property_is_constructing(gridOffset)) {
 				graphicId = image_group(GROUP_TERRAIN_OVERLAY);
 			}
-			switch (Data_Grid_bitfields[gridOffset] & Bitfield_Sizes) {
-				case Bitfield_Size1:
+			switch (map_property_multi_tile_size(gridOffset)) {
+				case 1:
 					if (advanceWaterAnimation &&
 						graphicId >= graphicIdWaterFirst &&
 						graphicId <= graphicIdWaterLast) {
@@ -159,16 +159,16 @@ static void drawBuildingFootprints()
 					}
 					Graphics_drawIsometricFootprint(graphicId, xGraphic, yGraphic, colorMask);
 					break;
-				case Bitfield_Size2:
+				case 2:
 					Graphics_drawIsometricFootprint(graphicId, xGraphic + 30, yGraphic - 15, colorMask);
 					break;
-				case Bitfield_Size3:
+				case 3:
 					Graphics_drawIsometricFootprint(graphicId, xGraphic + 60, yGraphic - 30, colorMask);
 					break;
-				case Bitfield_Size4:
+				case 4:
 					Graphics_drawIsometricFootprint(graphicId, xGraphic + 90, yGraphic - 45, colorMask);
 					break;
-				case Bitfield_Size5:
+				case 5:
 					Graphics_drawIsometricFootprint(graphicId, xGraphic + 120, yGraphic - 60, colorMask);
 					break;
 			}
@@ -187,12 +187,12 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 				if (buildingId && Data_Buildings[buildingId].isDeleted) {
 					colorMask = COLOR_MASK_RED;
 				}
-				switch (Data_Grid_bitfields[gridOffset] & Bitfield_Sizes) {
-					case Bitfield_Size1: DRAWTOP_SIZE1_C(graphicId, xGraphic, yGraphic, colorMask); break;
-					case Bitfield_Size2: DRAWTOP_SIZE2_C(graphicId, xGraphic, yGraphic, colorMask); break;
-					case Bitfield_Size3: DRAWTOP_SIZE3_C(graphicId, xGraphic, yGraphic, colorMask); break;
-					case Bitfield_Size4: DRAWTOP_SIZE4_C(graphicId, xGraphic, yGraphic, colorMask); break;
-					case Bitfield_Size5: DRAWTOP_SIZE5_C(graphicId, xGraphic, yGraphic, colorMask); break;
+				switch (map_property_multi_tile_size(gridOffset)) {
+					case 1: DRAWTOP_SIZE1_C(graphicId, xGraphic, yGraphic, colorMask); break;
+					case 2: DRAWTOP_SIZE2_C(graphicId, xGraphic, yGraphic, colorMask); break;
+					case 3: DRAWTOP_SIZE3_C(graphicId, xGraphic, yGraphic, colorMask); break;
+					case 4: DRAWTOP_SIZE4_C(graphicId, xGraphic, yGraphic, colorMask); break;
+					case 5: DRAWTOP_SIZE5_C(graphicId, xGraphic, yGraphic, colorMask); break;
 				}
 				// specific buildings
 				struct Data_Building *b = &Data_Buildings[buildingId];
@@ -431,12 +431,12 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 								xGraphic + 77, yGraphic - 49, colorMask);
 						} else {
 							int ydiff = 0;
-							switch (Data_Grid_bitfields[gridOffset] & Bitfield_Sizes) {
-								case 0: ydiff = 30; break;
-								case 1: ydiff = 45; break;
-								case 2: ydiff = 60; break;
+							switch (map_property_multi_tile_size(gridOffset)) {
+								case 1: ydiff = 30; break;
+								case 2: ydiff = 45; break;
+								case 3: ydiff = 60; break;
 								case 4: ydiff = 75; break;
-								case 8: ydiff = 90; break;
+								case 5: ydiff = 90; break;
 							}
 							Graphics_drawImageMasked(graphicId + animationOffset,
 								xGraphic + img->sprite_offset_x,
@@ -498,7 +498,7 @@ void UI_CityBuildings_drawBridge(int gridOffset, int x, int y)
 		return;
 	}
 	color_t colorMask = 0;
-	if (Data_Grid_bitfields[gridOffset] & Bitfield_Deleted) {
+	if (map_property_is_deleted(gridOffset)) {
 		colorMask = COLOR_MASK_RED;
 	}
 	int graphicId = image_group(GROUP_BUILDING_BRIDGE);
@@ -572,28 +572,28 @@ static void drawHippodromeAndElevatedFigures(int selectedFigureId)
 				if (img->num_animation_sprites &&
 					map_property_is_draw_tile(gridOffset) &&
 					Data_Buildings[Data_Grid_buildingIds[gridOffset]].type == BUILDING_HIPPODROME) {
-					switch (Data_Grid_bitfields[gridOffset] & Bitfield_Sizes) {
-						case Bitfield_Size1:
+					switch (map_property_multi_tile_size(gridOffset)) {
+						case 1:
 							Graphics_drawImage(graphicId + 1,
 								xGraphic + img->sprite_offset_x,
 								yGraphic + img->sprite_offset_y - img->height + 30);
 							break;
-						case Bitfield_Size2:
+						case 2:
 							Graphics_drawImage(graphicId + 1,
 								xGraphic + img->sprite_offset_x,
 								yGraphic + img->sprite_offset_y - img->height + 45);
 							break;
-						case Bitfield_Size3:
+						case 3:
 							Graphics_drawImage(graphicId + 1,
 								xGraphic + img->sprite_offset_x,
 								yGraphic + img->sprite_offset_y - img->height + 60);
 							break;
-						case Bitfield_Size4:
+						case 4:
 							Graphics_drawImage(graphicId + 1,
 								xGraphic + img->sprite_offset_x,
 								yGraphic + img->sprite_offset_y - img->height + 75);
 							break;
-						case Bitfield_Size5:
+						case 5:
 							Graphics_drawImage(graphicId + 1,
 								xGraphic + img->sprite_offset_x,
 								yGraphic + img->sprite_offset_y - img->height + 90);
@@ -724,7 +724,7 @@ void UI_CityBuildings_handleMouse(const mouse *m)
 {
 	UI_CityBuildings_scrollMap(scroll_get_direction(m));
 	updateCityViewCoords(m);
-	Data_State.selectedBuilding.drawAsOverlay = 0;
+	Data_State.selectedBuilding.drawAsConstructing = 0;
 	if (m->left.went_down) {
 		if (!isLegionClick()) {
 			buildStart();

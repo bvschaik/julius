@@ -41,6 +41,7 @@
 #include "map/bookmark.h"
 #include "map/desirability.h"
 #include "map/grid.h"
+#include "map/property.h"
 #include "map/random.h"
 #include "map/road_network.h"
 #include "map/routing_terrain.h"
@@ -284,7 +285,7 @@ static void initGridGraphicIds()
 		    int random = map_random_get(gridOffset);
 			Data_Grid_graphicIds[gridOffset] = graphicId + (random & 7);
 			if (random & 1) {
-				Data_Grid_bitfields[gridOffset] |= Bitfield_AlternateTerrain;
+				map_property_set_alternate_terrain(gridOffset);
 			}
 		}
 	}

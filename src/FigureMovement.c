@@ -17,6 +17,7 @@
 #include "game/time.h"
 #include "map/random.h"
 #include "map/grid.h"
+#include "map/property.h"
 #include "map/routing_terrain.h"
 
 static void FigureMovement_walkTicksInternal(int figureId, int numTicks, int roamingEnabled);
@@ -644,7 +645,7 @@ int FigureMovement_canLaunchCrossCountryMissile(int xSrc, int ySrc, int xDst, in
 			if (Data_Grid_terrain[gridOffset] & (Terrain_Wall | Terrain_Gatehouse | Terrain_Tree)) {
 				break;
 			}
-			if (Data_Grid_terrain[gridOffset] & Terrain_Building && Data_Grid_bitfields[gridOffset] & Bitfield_Sizes) {
+			if (Data_Grid_terrain[gridOffset] & Terrain_Building && map_property_multi_tile_size(gridOffset) > 1) {
 				break;
 			}
 		}

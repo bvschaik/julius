@@ -75,7 +75,7 @@ void UI_CityBuildings_drawSelectedBuildingGhost()
 	if (!Data_State.map.current.gridOffset || Data_CityView.isScrolling) {
 		return;
 	}
-	if (Data_State.selectedBuilding.drawAsOverlay || Data_State.selectedBuilding.type <= 0) {
+	if (Data_State.selectedBuilding.drawAsConstructing || Data_State.selectedBuilding.type <= 0) {
 		return;
 	}
 	switch (Data_State.selectedBuilding.type) {

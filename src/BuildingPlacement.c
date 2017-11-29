@@ -706,7 +706,7 @@ static void placeHouses(int measureOnly, int xStart, int yStart, int xEnd, int y
 				continue;
 			}
 			if (measureOnly) {
-				Data_Grid_bitfields[gridOffset] |= Bitfield_Overlay;
+				map_property_mark_constructing(gridOffset);
 				itemsPlaced++;
 			} else {
 				int buildingId = Building_create(BUILDING_HOUSE_VACANT_LOT, x, y);
@@ -1041,12 +1041,12 @@ static void placePlaza(int measureOnly, int xStart, int yStart, int xEnd, int yE
 			int terrain = Data_Grid_terrain[gridOffset];
 			if (terrain & Terrain_Road &&
 				!(terrain & (Terrain_Water | Terrain_Building | Terrain_Aqueduct))) {
-				if (!(Data_Grid_bitfields[gridOffset] & Bitfield_PlazaOrEarthquake)) {
+				if (!map_property_is_plaza_or_earthquake(gridOffset)) {
 					itemsPlaced++;
 				}
 				Data_Grid_graphicIds[gridOffset] = 0;
-				Data_Grid_bitfields[gridOffset] |= Bitfield_PlazaOrEarthquake;
-				Data_Grid_bitfields[gridOffset] &= Bitfield_NoSizes;
+				map_property_mark_plaza_or_earthquake(gridOffset);
+				map_property_set_multi_tile_size(gridOffset, 1);
 				map_property_mark_draw_tile(gridOffset);
 			}
 		}
@@ -1087,17 +1087,17 @@ static int placeAqueduct(int measureOnly, int xStart, int yStart, int xEnd, int 
 	int itemCost = model_get_building(BUILDING_AQUEDUCT)->cost;
 	*cost = 0;
 	int blocked = 0;
-	int gridOffset = GridOffset(xStart, yStart);
+	int gridOffset = map_grid_offset(xStart, yStart);
 	if (Data_Grid_terrain[gridOffset] & Terrain_Road) {
-		if (Data_Grid_bitfields[gridOffset] & Bitfield_PlazaOrEarthquake) {
+		if (map_property_is_plaza_or_earthquake(gridOffset)) {
 			blocked = 1;
 		}
 	} else if (Data_Grid_terrain[gridOffset] & Terrain_NotClear) {
 		blocked = 1;
 	}
-	gridOffset = GridOffset(xEnd, yEnd);
+	gridOffset = map_grid_offset(xEnd, yEnd);
 	if (Data_Grid_terrain[gridOffset] & Terrain_Road) {
-		if (Data_Grid_bitfields[gridOffset] & Bitfield_PlazaOrEarthquake) {
+		if (map_property_is_plaza_or_earthquake(gridOffset)) {
 			blocked = 1;
 		}
 	} else if (Data_Grid_terrain[gridOffset] & Terrain_NotClear) {
@@ -1245,7 +1245,7 @@ void BuildingPlacement_update(int xStart, int yStart, int xEnd, int yEnd, int ty
 		placeReservoirAndAqueducts(1, xStart, yStart, xEnd, yEnd, &info);
 		currentCost = info.cost;
 		TerrainGraphics_updateRegionAqueduct(0, 0, Data_State.map.width - 1, Data_State.map.height - 1, 1);
-		Data_State.selectedBuilding.drawAsOverlay = 0;
+		Data_State.selectedBuilding.drawAsConstructing = 0;
 	} else if (type == BUILDING_HOUSE_VACANT_LOT) {
 		placeHouses(1, xStart, yStart, xEnd, yEnd);
 		if (itemsPlaced >= 0) currentCost *= itemsPlaced;
@@ -1275,11 +1275,11 @@ void BuildingPlacement_update(int xStart, int yStart, int xEnd, int yEnd, int ty
 		}
 	} else if (type == BUILDING_SHIPYARD || type == BUILDING_WHARF) {
 		if (!Terrain_determineOrientationWatersideSize2(xEnd, yEnd, 1, 0, 0)) {
-			Data_State.selectedBuilding.drawAsOverlay = 1;
+			Data_State.selectedBuilding.drawAsConstructing = 1;
 		}
 	} else if (type == BUILDING_DOCK) {
 		if (!Terrain_determineOrientationWatersideSize3(xEnd, yEnd, 1, 0, 0)) {
-			Data_State.selectedBuilding.drawAsOverlay = 1;
+			Data_State.selectedBuilding.drawAsConstructing = 1;
 		}
 	} else if (Data_State.selectedBuilding.meadowRequired) {
 		Terrain_existsTileWithinRadiusWithType(xEnd, yEnd, 3, 1, Terrain_Meadow);

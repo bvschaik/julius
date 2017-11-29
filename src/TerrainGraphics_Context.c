@@ -350,7 +350,7 @@ const TerrainGraphic *TerrainGraphicsContext_getEarthquake(int gridOffset)
 	for (int i = 0; i < MAX_TILES; i++) {
 		int offset = gridOffset + contextTileOffsets[i];
 		tiles[i] = ((Data_Grid_terrain[offset] & Terrain_Rock) &&
-			(Data_Grid_bitfields[offset] & Bitfield_PlazaOrEarthquake)) ? 1 : 0;
+			map_property_is_plaza_or_earthquake(gridOffset)) ? 1 : 0;
 	}
 	return TerrainGraphicsContext_getGraphic(TerrainGraphicsContext_Earthquake, tiles);
 }
@@ -448,7 +448,7 @@ const TerrainGraphic *TerrainGraphicsContext_getAqueduct(int gridOffset, int inc
 	setTerrainReservoir(gridOffset, 6, Edge_X2Y1, tiles);
 	if (includeOverlay) {
 		for (int i = 0; i < MAX_TILES; i += 2) {
-			if (Data_Grid_bitfields[gridOffset + contextTileOffsets[i]] & Bitfield_Overlay) {
+			if (map_property_is_constructing(gridOffset + contextTileOffsets[i])) {
 				tiles[i] = 1;
 			}
 		}

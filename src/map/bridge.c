@@ -2,6 +2,7 @@
 
 #include "core/direction.h"
 #include "map/grid.h"
+#include "map/property.h"
 #include "map/routing_terrain.h"
 
 #include "Data/Grid.h"
@@ -244,7 +245,7 @@ void map_bridge_remove(int grid_offset, int mark_deleted)
     }
 
     if (mark_deleted) {
-        Data_Grid_bitfields[grid_offset] |= Bitfield_Deleted;
+        map_property_mark_deleted(grid_offset);
     } else {
         Data_Grid_spriteOffsets[grid_offset] = 0;
         Data_Grid_terrain[grid_offset] &= ~Terrain_Road;
@@ -253,7 +254,7 @@ void map_bridge_remove(int grid_offset, int mark_deleted)
             Data_Grid_spriteOffsets[grid_offset + offset_up]) {
         grid_offset += offset_up;
         if (mark_deleted) {
-            Data_Grid_bitfields[grid_offset] |= Bitfield_Deleted;
+            map_property_mark_deleted(grid_offset);
         } else {
             Data_Grid_spriteOffsets[grid_offset] = 0;
             Data_Grid_terrain[grid_offset] &= ~Terrain_Road;
@@ -281,11 +282,11 @@ int map_bridge_count_figures(int grid_offset)
     if (Data_Grid_figureIds[grid_offset]) {
         figures = 1;
     }
-    Data_Grid_bitfields[grid_offset] &= Bitfield_NoDeleted;
+    map_property_clear_deleted(grid_offset);
     while ((Data_Grid_terrain[grid_offset + offset_up] & Terrain_Water) &&
             Data_Grid_spriteOffsets[grid_offset + offset_up]) {
         grid_offset += offset_up;
-        Data_Grid_bitfields[grid_offset] &= Bitfield_NoDeleted;
+        map_property_clear_deleted(grid_offset);
         if (Data_Grid_figureIds[grid_offset]) {
             figures++;
         }
