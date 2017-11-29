@@ -238,12 +238,11 @@ static void readScenarioAndInitGraphics()
 static void initGrids()
 {
 	map_grid_clear_u16(Data_Grid_graphicIds);
-	map_grid_clear_u8(Data_Grid_edge);
 	map_grid_clear_u16(Data_Grid_buildingIds);
 	map_grid_clear_u16(Data_Grid_terrain);
 	map_grid_clear_u8(Data_Grid_aqueducts);
 	map_grid_clear_u16(Data_Grid_figureIds);
-	map_grid_clear_u8(Data_Grid_bitfields);
+	map_property_clear();
 	map_grid_clear_u8(Data_Grid_spriteOffsets);
 	map_random_clear();
 	map_desirability_clear();

@@ -48,8 +48,6 @@ EXTERN UInt16_Grid(Data_Grid_buildingIds);
 EXTERN UInt16_Grid(Data_Grid_figureIds);
 EXTERN UInt16_Grid(Data_Grid_terrain);
 
-EXTERN UInt8_Grid(Data_Grid_edge);
-EXTERN UInt8_Grid(Data_Grid_bitfields);
 EXTERN UInt8_Grid(Data_Grid_elevation);
 EXTERN UInt8_Grid(Data_Grid_aqueducts);
 EXTERN UInt8_Grid(Data_Grid_spriteOffsets);
@@ -60,44 +58,6 @@ EXTERN UInt8_Grid(Data_Grid_rubbleBuildingType);
 EXTERN UInt16_Grid(Data_Grid_Undo_graphicIds);
 EXTERN UInt16_Grid(Data_Grid_Undo_terrain);
 EXTERN UInt8_Grid(Data_Grid_Undo_aqueducts);
-EXTERN UInt8_Grid(Data_Grid_Undo_bitfields);
-EXTERN UInt8_Grid(Data_Grid_Undo_edge);
 EXTERN UInt8_Grid(Data_Grid_Undo_spriteOffsets);
-
-enum {
-	Bitfield_Size1 = 0x00,
-	Bitfield_Size2 = 0x01,
-	Bitfield_Size3 = 0x02,
-	Bitfield_Size4 = 0x04,
-	Bitfield_Size5 = 0x08,
-	Bitfield_Sizes = 0x0f,
-	Bitfield_NoSizes = 0xf0,
-	Bitfield_Overlay = 0x10,
-	Bitfield_NoOverlay = 0xef,
-	Bitfield_AlternateTerrain = 0x20,
-	Bitfield_Deleted = 0x40,
-	Bitfield_NoDeleted = 0xbf,
-	Bitfield_PlazaOrEarthquake = 0x80,
-	Bitfield_NoPlaza = 0x7f,
-	Bitfield_NoOverlayAndDeleted = 0xaf,
-	Edge_MaskX = 0x7,
-	Edge_MaskY = 0x38,
-	Edge_MaskXY = 0x3f,
-	Edge_X0Y0 = 0,
-	Edge_X1Y0 = 1,
-	Edge_X2Y0 = 2,
-	Edge_X0Y1 = 8,
-	Edge_X1Y1 = 9,
-	Edge_X2Y1 = 10,
-	Edge_X0Y2 = 16,
-	Edge_X1Y2 = 17,
-	Edge_X2Y2 = 18,
-	Edge_LeftmostTile = 0x40,
-	Edge_NoLeftmostTile = 0xbf,
-	Edge_NativeLand = 0x80,
-	Edge_NoNativeLand = 0x7f,
-};
-
-#define EdgeXY(x,y) (8 * (y) + (x))
 
 #endif

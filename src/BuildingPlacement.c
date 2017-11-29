@@ -1030,8 +1030,7 @@ static void placePlaza(int measureOnly, int xStart, int yStart, int xEnd, int yE
 	BOUND_REGION();
 	map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
 	map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
-	map_grid_copy_u8(Data_Grid_Undo_bitfields, Data_Grid_bitfields);
-	map_grid_copy_u8(Data_Grid_Undo_edge, Data_Grid_edge);
+	map_property_restore();
 	Undo_restoreTerrainGraphics();
 	
 	itemsPlaced = 0;
@@ -1062,8 +1061,7 @@ static void placeGarden(int xStart, int yStart, int xEnd, int yEnd)
 	
 	map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
 	map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
-	map_grid_copy_u8(Data_Grid_Undo_bitfields, Data_Grid_bitfields);
-	map_grid_copy_u8(Data_Grid_Undo_edge, Data_Grid_edge);
+	map_property_restore();
 	Undo_restoreTerrainGraphics();
 
 	itemsPlaced = 0;
@@ -1216,7 +1214,7 @@ void BuildingPlacement_update(int xStart, int yStart, int xEnd, int yEnd, int ty
 		Data_State.selectedBuilding.cost = 0;
 		return;
 	}
-	map_grid_and_u8(Data_Grid_bitfields, Bitfield_NoOverlayAndDeleted);
+	map_property_clear_constructing_and_deleted();
 	int currentCost = model_get_building(type)->cost;
 
 	if (type == BUILDING_CLEAR_LAND) {
@@ -1309,17 +1307,17 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
 		return;
 	}
 	if (Data_CityInfo.treasury <= MIN_TREASURY) {
-		map_grid_and_u8(Data_Grid_bitfields, Bitfield_NoOverlayAndDeleted);
+		map_property_clear_constructing_and_deleted();
 		UI_Warning_show(Warning_OutOfMoney);
 		return;
 	}
 	if (type >= BUILDING_LARGE_TEMPLE_CERES && type <= BUILDING_LARGE_TEMPLE_VENUS && Data_CityInfo.resourceStored[RESOURCE_MARBLE] < 2) {
-		map_grid_and_u8(Data_Grid_bitfields, Bitfield_NoOverlayAndDeleted);
+		map_property_clear_constructing_and_deleted();
 		UI_Warning_show(Warning_MarbleNeededLargeTemple);
 		return;
 	}
 	if (type == BUILDING_ORACLE && Data_CityInfo.resourceStored[RESOURCE_MARBLE] < 2) {
-		map_grid_and_u8(Data_Grid_bitfields, Bitfield_NoOverlayAndDeleted);
+		map_property_clear_constructing_and_deleted();
 		UI_Warning_show(Warning_MarbleNeededOracle);
 		return;
 	}
@@ -1331,13 +1329,12 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
 		} else if (type == BUILDING_PLAZA || type == BUILDING_GARDENS) {
 			map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
 			map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
-			map_grid_copy_u8(Data_Grid_Undo_bitfields, Data_Grid_bitfields);
-			map_grid_copy_u8(Data_Grid_Undo_edge, Data_Grid_edge);
+			map_property_restore();
 			Undo_restoreTerrainGraphics();
 		} else if (type == BUILDING_LOW_BRIDGE || type == BUILDING_SHIP_BRIDGE) {
 			map_bridge_reset_building_length();
 		} else {
-			map_grid_and_u8(Data_Grid_bitfields, Bitfield_NoOverlayAndDeleted);
+			map_property_clear_constructing_and_deleted();
 		}
 		UI_Warning_show(Warning_EnemyNearby);
 		return;
