@@ -31,6 +31,7 @@
 #include "graphics/image.h"
 #include "map/bridge.h"
 #include "map/grid.h"
+#include "map/property.h"
 #include "map/routing.h"
 #include "map/routing_terrain.h"
 
@@ -1046,7 +1047,7 @@ static void placePlaza(int measureOnly, int xStart, int yStart, int xEnd, int yE
 				Data_Grid_graphicIds[gridOffset] = 0;
 				Data_Grid_bitfields[gridOffset] |= Bitfield_PlazaOrEarthquake;
 				Data_Grid_bitfields[gridOffset] &= Bitfield_NoSizes;
-				Data_Grid_edge[gridOffset] |= Edge_LeftmostTile;
+				map_property_mark_draw_tile(gridOffset);
 			}
 		}
 	}

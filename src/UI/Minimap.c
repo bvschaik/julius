@@ -10,6 +10,7 @@
 #include "figure/figure.h"
 #include "figure/type.h"
 #include "graphics/image.h"
+#include "map/property.h"
 #include "map/random.h"
 #include "scenario/property.h"
 
@@ -163,7 +164,7 @@ static void drawTile(int xView, int yView, int gridOffset)
 	}
 
 	if (terrain & Terrain_Building) {
-		if (Data_Grid_edge[gridOffset] & Edge_LeftmostTile) {
+		if (map_property_is_draw_tile(gridOffset)) {
 			int graphicId;
 			int buildingId = Data_Grid_buildingIds[gridOffset];
 			if (Data_Buildings[buildingId].houseSize) {

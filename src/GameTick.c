@@ -53,7 +53,9 @@ static void advanceYear();
 
 void GameTick_doTick()
 {
-	printf("TICK %d.%d.%d\n", game_time_month(), game_time_day(), game_time_tick());
+    if (game_time_tick() == 0) {
+        printf("TICK %d.%d.%d.%d\n", game_time_year(), game_time_month(), game_time_day(), game_time_tick());
+    }
 	random_generate_next();
 	Undo_updateAvailable();
 	GameTick_advance();

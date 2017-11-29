@@ -4,6 +4,8 @@
 #include "Data/Grid.h"
 #include "Data/State.h"
 
+#include "map/property.h"
+
 #define MAX_TILES 8
 
 struct TerrainGraphicsContext {
@@ -418,7 +420,7 @@ static void setTerrainReservoir(int gridOffset, int index, int edgeMask, int til
 	if (Data_Grid_terrain[offset] & Terrain_Building) {
 		int buildingId = Data_Grid_buildingIds[offset];
 		if (Data_Buildings[buildingId].type == BUILDING_RESERVOIR &&
-			(Data_Grid_edge[offset] & Edge_MaskXY) == edgeMask) {
+			map_property_multi_tile_xy(offset) == edgeMask) {
 			tiles[index] = 1;
 		}
 	}

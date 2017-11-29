@@ -12,6 +12,7 @@
 #include "core/calc.h"
 #include "graphics/image.h"
 #include "map/grid.h"
+#include "map/property.h"
 #include "map/random.h"
 #include "scenario/building.h"
 
@@ -114,7 +115,7 @@ static void determineMeetingCenter()
 
 void Natives_checkLand()
 {
-	map_grid_and_u8(Data_Grid_edge, Edge_NoNativeLand);
+	map_property_clear_all_native_land();
 	if (Data_CityInfo.nativeAttackDuration) {
 		Data_CityInfo.nativeAttackDuration--;
 	}

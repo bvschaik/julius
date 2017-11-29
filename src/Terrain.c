@@ -13,6 +13,8 @@
 #include "core/calc.h"
 #include "graphics/image.h"
 #include "map/bridge.h"
+#include "map/grid.h"
+#include "map/property.h"
 #include "map/random.h"
 #include "map/ring.h"
 #include "map/road_network.h"
@@ -108,10 +110,8 @@ void Terrain_addBuildingToGrids(int buildingId, int x, int y, int size, int grap
 				case 5: Data_Grid_bitfields[gridOffset] |= Bitfield_Size5; break;
 			}
 			Data_Grid_graphicIds[gridOffset] = graphicId;
-			Data_Grid_edge[gridOffset] = tileEdgeSizeOffsets[dy][dx];
-			if (dx == xLeftmost && dy == yLeftmost) {
-				Data_Grid_edge[gridOffset] |= Edge_LeftmostTile;
-			}
+			map_property_set_multi_tile_xy(gridOffset, dx, dy,
+			    dx == xLeftmost && dy == yLeftmost);
 		}
 	}
 }
@@ -127,11 +127,11 @@ static int getNorthTileGridOffset(int x, int y, int *size)
 		case Bitfield_Size4: *size = 4; break;
 		case Bitfield_Size5: *size = 5; break;
 	}
-	for (int i = 0; i < *size && (Data_Grid_edge[gridOffset] & Edge_MaskX); i++) {
-		gridOffset--;
+	for (int i = 0; i < *size && map_property_multi_tile_x(gridOffset); i++) {
+		gridOffset += map_grid_delta(-1, 0);
 	}
-	for (int i = 0; i < *size && (Data_Grid_edge[gridOffset] & Edge_MaskY); i++) {
-		gridOffset -= GRID_SIZE;
+	for (int i = 0; i < *size && map_property_multi_tile_y(gridOffset); i++) {
+		gridOffset += map_grid_delta(0, -1);
 	}
 	return gridOffset;
 }
@@ -162,8 +162,8 @@ void Terrain_removeBuildingFromGrids(int buildingId, int x, int y)
 			}
 			Data_Grid_bitfields[gridOffset] &= Bitfield_NoOverlay;
 			Data_Grid_bitfields[gridOffset] &= Bitfield_NoSizes;
-			Data_Grid_edge[gridOffset] &= Edge_NativeLand;
-			Data_Grid_edge[gridOffset] |= Edge_LeftmostTile;
+			map_property_clear_multi_tile_xy(gridOffset);
+			map_property_mark_draw_tile(gridOffset);
 			Data_Grid_aqueducts[gridOffset] = 0;
 			Data_Grid_buildingIds[gridOffset] = 0;
 			Data_Grid_buildingDamage[gridOffset] = 0;
@@ -936,7 +936,7 @@ int Terrain_isReservoir(int gridOffset)
 void Terrain_markNativeLand(int x, int y, int size, int radius)
 {
 	FOR_XY_RADIUS {
-		Data_Grid_edge[gridOffset] |= Edge_NativeLand;
+		map_property_mark_native_land(gridOffset);
 	} END_FOR_XY_RADIUS;
 }
 
@@ -1176,31 +1176,28 @@ static void determineLeftmostTile()
 		for (int x = 0; x < Data_State.map.width; x++) {
 			int gridOffset = GridOffset(x, y);
 			int sizeCode = Data_Grid_bitfields[gridOffset] & Bitfield_Sizes;
-			int xy = Data_Grid_edge[gridOffset] & Edge_MaskXY;
 			if (sizeCode == Bitfield_Size1) {
-				Data_Grid_edge[gridOffset] |= Edge_LeftmostTile;
+				map_property_mark_draw_tile(gridOffset);
 				continue;
 			}
-			Data_Grid_edge[gridOffset] &= Edge_NoLeftmostTile;
-			int max;
+			map_property_clear_draw_tile(gridOffset);
+			int size;
 			if (sizeCode == Bitfield_Size2) {
-				max = 1;
+				size = 1;
 			} else if (sizeCode == Bitfield_Size3) {
-				max = 2;
+				size = 2;
 			} else if (sizeCode == Bitfield_Size4) {
-				max = 3;
+				size = 3;
 			} else if (sizeCode == Bitfield_Size5) {
-				max = 4;
+				size = 4;
 			} else {
 				continue;
 			}
-			int leftmost[4] = {
-				EdgeXY(0, max), EdgeXY(0, 0),
-				EdgeXY(max, 0), EdgeXY(max, max)
-			};
-			int orientationIndex = Data_State.map.orientation / 2;
-			if (xy == leftmost[orientationIndex]) {
-				Data_Grid_edge[gridOffset] |= Edge_LeftmostTile;
+			int orientation = Data_State.map.orientation;
+			int dx = orientation == DIR_4_BOTTOM || orientation == DIR_6_LEFT ? size : 0;
+			int dy = orientation == DIR_0_TOP || orientation == DIR_6_LEFT ? size : 0;
+			if (map_property_is_multi_tile_xy(gridOffset, dx, dy)) {
+				map_property_mark_draw_tile(gridOffset);
 			}
 		}
 	}

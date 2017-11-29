@@ -12,6 +12,7 @@
 #include "graphics/image.h"
 #include "map/desirability.h"
 #include "map/grid.h"
+#include "map/property.h"
 #include "map/routing_terrain.h"
 #include "scenario/property.h"
 
@@ -89,7 +90,7 @@ static void fillAqueductsFromOffset(int gridOffset)
 			int buildingId = Data_Grid_buildingIds[newOffset];
 			if (buildingId && Data_Buildings[buildingId].type == BUILDING_RESERVOIR) {
 				// check if aqueduct connects to reservoir --> doesn't connect to corner
-				int xy = Data_Grid_edge[newOffset] & Edge_MaskXY;
+				int xy = map_property_multi_tile_xy(newOffset);
 				if (xy != Edge_X0Y0 && xy != Edge_X2Y0 && xy != Edge_X0Y2 && xy != Edge_X2Y2) {
 					if (!Data_Buildings[buildingId].hasWaterAccess) {
 						Data_Buildings[buildingId].hasWaterAccess = 2;

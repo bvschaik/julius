@@ -3,6 +3,7 @@
 #include "figure/figure.h"
 #include "game/resource.h"
 #include "map/desirability.h"
+#include "map/property.h"
 #include "map/random.h"
 
 static void drawFootprintForWaterOverlay(int gridOffset, int xOffset, int yOffset);
@@ -48,7 +49,7 @@ void UI_CityBuildings_drawOverlayFootprints()
 				xGraphic, yGraphic);
 		} else if (Data_State.currentOverlay == Overlay_Desirability) {
 			drawBuildingFootprintForDesirabilityOverlay(gridOffset, xGraphic, yGraphic);
-		} else if (Data_Grid_edge[gridOffset] & Edge_LeftmostTile) {
+		} else if (map_property_is_draw_tile(gridOffset)) {
 			int terrain = Data_Grid_terrain[gridOffset];
 			if (Data_State.currentOverlay == Overlay_Water) {
 				drawFootprintForWaterOverlay(gridOffset, xGraphic, yGraphic);
@@ -113,7 +114,7 @@ void UI_CityBuildings_drawOverlayTopsFiguresAnimation(int overlay)
 		FOREACH_X_VIEW {
 			if (overlay == Overlay_Desirability) {
 				drawBuildingTopForDesirabilityOverlay(gridOffset, xGraphic, yGraphic);
-			} else if (Data_Grid_edge[gridOffset] & Edge_LeftmostTile) {
+			} else if (map_property_is_draw_tile(gridOffset)) {
 				if (overlay == Overlay_Water) {
 					drawTopForWaterOverlay(gridOffset, xGraphic, yGraphic);
 				} else if (overlay == Overlay_Native) {
@@ -229,7 +230,7 @@ void UI_CityBuildings_drawOverlayTopsFiguresAnimation(int overlay)
 			int graphicId = Data_Grid_graphicIds[gridOffset];
 			const image *img = image_get(graphicId);
 			if (img->num_animation_sprites && draw) {
-				if (Data_Grid_edge[gridOffset] & Edge_LeftmostTile) {
+				if (map_property_is_draw_tile(gridOffset)) {
 					int buildingId = Data_Grid_buildingIds[gridOffset];
 					struct Data_Building *b = &Data_Buildings[buildingId];
 					int colorMask = 0;
@@ -433,7 +434,7 @@ static void drawFootprintForNativeOverlay(int gridOffset, int xOffset, int yOffs
 		drawBuildingFootprintForOverlay(Data_Grid_buildingIds[gridOffset],
 		gridOffset, xOffset, yOffset, 0);
 	} else {
-		if (Data_Grid_edge[gridOffset] & Edge_NativeLand) {
+		if (map_property_is_native_land(gridOffset)) {
 			DRAWFOOT_SIZE1(image_group(GROUP_TERRAIN_DESIRABILITY) + 1, xOffset, yOffset);
 		} else {
 			// can only be road/meadow/gatehouse = max size 2
@@ -485,6 +486,49 @@ static void drawTopForNativeOverlay(int gridOffset, int xOffset, int yOffset)
 				break;
 		}
 	}
+}
+
+static int is_drawable_farmhouse(int grid_offset, int map_orientation)
+{
+    if (!map_property_is_draw_tile(grid_offset)) {
+        return 0;
+    }
+    int xy = map_property_multi_tile_xy(grid_offset);
+    if (map_orientation == DIR_0_TOP && xy == Edge_X0Y1) {
+        return 1;
+    }
+    if (map_orientation == DIR_2_RIGHT && xy == Edge_X0Y0) {
+        return 1;
+    }
+    if (map_orientation == DIR_4_BOTTOM && xy == Edge_X1Y0) {
+        return 1;
+    }
+    if (map_orientation == DIR_2_RIGHT && xy == Edge_X1Y1) {
+        return 1;
+    }
+    return 0;
+}
+
+static int is_drawable_farm_corner(int grid_offset, int map_orientation)
+{
+    if (!map_property_is_draw_tile(grid_offset)) {
+        return 0;
+    }
+
+    int xy = map_property_multi_tile_xy(grid_offset);
+    if (map_orientation == DIR_0_TOP && xy == Edge_X0Y2) {
+        return 1;
+    }
+    if (map_orientation == DIR_2_RIGHT && xy == Edge_X0Y0) {
+        return 1;
+    }
+    if (map_orientation == DIR_4_BOTTOM && xy == Edge_X2Y0) {
+        return 1;
+    }
+    if (map_orientation == DIR_2_RIGHT && xy == Edge_X2Y2) {
+        return 1;
+    }
+    return 0;
 }
 
 static void drawBuildingFootprintForOverlay(int buildingId, int gridOffset, int xOffset, int yOffset, int graphicOffset)
@@ -668,23 +712,13 @@ static void drawBuildingFootprintForOverlay(int buildingId, int gridOffset, int 
 				}
 				break;
 		}
-		// farms have apparently multiple tiles with 0x40
+		// farms have multiple drawable tiles: the farmhouse and 5 fields
 		if (drawOrig) {
 			if (b->type >= BUILDING_WHEAT_FARM && b->type <= BUILDING_PIG_FARM) {
-				int isField = 0;
-				int edge = Data_Grid_edge[gridOffset];
-				if ((Data_State.map.orientation == Dir_0_Top && edge != 0x48) ||
-					(Data_State.map.orientation == Dir_2_Right && edge != 0x40) ||
-					(Data_State.map.orientation == Dir_4_Bottom && edge != 0x41) ||
-					(Data_State.map.orientation == Dir_6_Left && edge != 0x49)) {
-					isField = 1;
-				}
-				if (isField) {
-					if (edge & Edge_LeftmostTile) {
-						DRAWFOOT_SIZE1(Data_Grid_graphicIds[gridOffset], xOffset, yOffset);
-					}
-				} else { // farmhouse
+				if (is_drawable_farmhouse(gridOffset, Data_State.map.orientation)) {
 					DRAWFOOT_SIZE2(Data_Grid_graphicIds[gridOffset], xOffset, yOffset);
+				} else if (map_property_is_draw_tile(gridOffset)) {
+					DRAWFOOT_SIZE1(Data_Grid_graphicIds[gridOffset], xOffset, yOffset);
 				}
 			} else {
 				DRAWFOOT_SIZE3(Data_Grid_graphicIds[gridOffset], xOffset, yOffset);
@@ -692,13 +726,7 @@ static void drawBuildingFootprintForOverlay(int buildingId, int gridOffset, int 
 		} else {
 			int draw = 1;
 			if (b->type >= BUILDING_WHEAT_FARM && b->type <= BUILDING_PIG_FARM) {
-				int edge = Data_Grid_edge[gridOffset];
-				if ((Data_State.map.orientation == Dir_0_Top && edge != 0x50) ||
-					(Data_State.map.orientation == Dir_2_Right && edge != 0x40) ||
-					(Data_State.map.orientation == Dir_4_Bottom && edge != 0x42) ||
-					(Data_State.map.orientation == Dir_6_Left && edge != 0x52)) {
-					draw = 0;
-				}
+			    draw = is_drawable_farm_corner(gridOffset, Data_State.map.orientation);
 			}
 			if (draw) {
 				int graphicBase = image_group(GROUP_TERRAIN_OVERLAY) + graphicOffset;
@@ -815,7 +843,7 @@ static void drawBuildingFootprintForDesirabilityOverlay(int gridOffset, int xOff
 	int terrain = Data_Grid_terrain[gridOffset];
 	if ((terrain & Terrain_NaturalElements) && !(terrain & Terrain_Building)) {
 		// display normal tile
-		if (Data_Grid_edge[gridOffset] & Edge_LeftmostTile) {
+		if (map_property_is_draw_tile(gridOffset)) {
 			int graphicId = Data_Grid_graphicIds[gridOffset];
 			switch (Data_Grid_bitfields[gridOffset] & Bitfield_Sizes) {
 				case Bitfield_Size1:
@@ -875,7 +903,7 @@ static void drawBuildingTopForDesirabilityOverlay(int gridOffset, int xOffset, i
 	// enum const: Terrain_NaturalElements = 0x1677
 	if ((terrain & Terrain_NaturalElements) && !(terrain & Terrain_Building)) {
 		// display normal tile
-		if (Data_Grid_edge[gridOffset] & Edge_LeftmostTile) {
+		if (map_property_is_draw_tile(gridOffset)) {
 			int graphicId = Data_Grid_graphicIds[gridOffset];
 			switch (Data_Grid_bitfields[gridOffset] & Bitfield_Sizes) {
 				case Bitfield_Size1:
@@ -938,13 +966,7 @@ static void drawBuildingTopForFireOverlay(int gridOffset, int buildingId, int xO
 		int draw = 1;
 		if (Data_Buildings[buildingId].type >= BUILDING_WHEAT_FARM &&
 			Data_Buildings[buildingId].type <= BUILDING_PIG_FARM) {
-			int edge = Data_Grid_edge[gridOffset];
-			if ((Data_State.map.orientation == Dir_0_Top && edge != 0x50) ||
-				(Data_State.map.orientation == Dir_2_Right && edge != 0x40) ||
-				(Data_State.map.orientation == Dir_4_Bottom && edge != 0x42) ||
-				(Data_State.map.orientation == Dir_6_Left && edge != 0x52)) {
-				draw = 0;
-			}
+			draw = is_drawable_farm_corner(gridOffset, Data_State.map.orientation);
 		}
 		if (draw) {
 			drawOverlayColumn(
@@ -963,13 +985,7 @@ static void drawBuildingTopForDamageOverlay(int gridOffset, int buildingId, int 
 		int draw = 1;
 		if (Data_Buildings[buildingId].type >= BUILDING_WHEAT_FARM &&
 			Data_Buildings[buildingId].type <= BUILDING_PIG_FARM) {
-			int edge = Data_Grid_edge[gridOffset];
-			if ((Data_State.map.orientation == Dir_0_Top && edge != 0x50) ||
-				(Data_State.map.orientation == Dir_2_Right && edge != 0x40) ||
-				(Data_State.map.orientation == Dir_4_Bottom && edge != 0x42) ||
-				(Data_State.map.orientation == Dir_6_Left && edge != 0x52)) {
-				draw = 0;
-			}
+			draw = is_drawable_farm_corner(gridOffset, Data_State.map.orientation);
 		}
 		if (draw) {
 			drawOverlayColumn(
@@ -1364,20 +1380,10 @@ static void drawBuildingTopForProblemsOverlay(int gridOffset, int buildingId, in
 	}
 
 	if (type >= BUILDING_WHEAT_FARM && type <= BUILDING_PIG_FARM) {
-		int isField = 0;
-		int edge = Data_Grid_edge[gridOffset];
-		if ((Data_State.map.orientation == Dir_0_Top && edge != 0x48) ||
-			(Data_State.map.orientation == Dir_2_Right && edge != 0x40) ||
-			(Data_State.map.orientation == Dir_4_Bottom && edge != 0x41) ||
-			(Data_State.map.orientation == Dir_6_Left && edge != 0x49)) {
-			isField = 1;
-		}
-		if (isField) {
-			if (edge & Edge_LeftmostTile) {
-				DRAWTOP_SIZE1(Data_Grid_graphicIds[gridOffset], xOffset, yOffset);
-			}
-		} else { // farmhouse
+		if (is_drawable_farmhouse(gridOffset, Data_State.map.orientation)) {
 			DRAWTOP_SIZE2(Data_Grid_graphicIds[gridOffset], xOffset, yOffset);
+		} else if (map_property_is_draw_tile(gridOffset)) {
+            DRAWTOP_SIZE1(Data_Grid_graphicIds[gridOffset], xOffset, yOffset);
 		}
 		return;
 	}

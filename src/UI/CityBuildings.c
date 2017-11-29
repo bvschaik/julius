@@ -19,6 +19,7 @@
 #include "game/settings.h"
 #include "input/scroll.h"
 #include "map/desirability.h"
+#include "map/property.h"
 #include "map/routing.h"
 #include "sound/city.h"
 #include "sound/speech.h"
@@ -121,7 +122,7 @@ static void drawBuildingFootprints()
 			// Outside map: draw black tile
 			Graphics_drawIsometricFootprint(image_group(GROUP_TERRAIN_BLACK),
 				xGraphic, yGraphic, 0);
-		} else if (Data_Grid_edge[gridOffset] & Edge_LeftmostTile) {
+		} else if (map_property_is_draw_tile(gridOffset)) {
 			// Valid gridOffset and leftmost tile -> draw
 			int buildingId = Data_Grid_buildingIds[gridOffset];
 			color_t colorMask = 0;
@@ -179,7 +180,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 {
 	FOREACH_Y_VIEW {
 		FOREACH_X_VIEW {
-			if (Data_Grid_edge[gridOffset] & Edge_LeftmostTile) {
+			if (map_property_is_draw_tile(gridOffset)) {
 				int buildingId = Data_Grid_buildingIds[gridOffset];
 				int graphicId = Data_Grid_graphicIds[gridOffset];
 				color_t colorMask = 0;
@@ -354,7 +355,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 			int graphicId = Data_Grid_graphicIds[gridOffset];
 			const image *img = image_get(graphicId);
 			if (img->num_animation_sprites) {
-				if (Data_Grid_edge[gridOffset] & Edge_LeftmostTile) {
+				if (map_property_is_draw_tile(gridOffset)) {
 					int buildingId = Data_Grid_buildingIds[gridOffset];
 					struct Data_Building *b = &Data_Buildings[buildingId];
 					int colorMask = 0;
@@ -447,7 +448,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 			} else if (Data_Grid_spriteOffsets[gridOffset]) {
 				UI_CityBuildings_drawBridge(gridOffset, xGraphic, yGraphic);
 			} else if (Data_Buildings[Data_Grid_buildingIds[gridOffset]].type == BUILDING_FORT) {
-				if (Data_Grid_edge[gridOffset] & Edge_LeftmostTile) {
+				if (map_property_is_draw_tile(gridOffset)) {
 					int buildingId = Data_Grid_buildingIds[gridOffset];
 					int offset = 0;
 					switch (Data_Buildings[buildingId].subtype.fortFigureType) {
@@ -461,11 +462,11 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 					}
 				}
 			} else if (Data_Buildings[Data_Grid_buildingIds[gridOffset]].type == BUILDING_GATEHOUSE) {
-				int xy = Data_Grid_edge[gridOffset] & Edge_MaskXY;
-				if ((Data_State.map.orientation == Dir_0_Top && xy == 9) ||
-					(Data_State.map.orientation == Dir_2_Right && xy == 8) ||
-					(Data_State.map.orientation == Dir_4_Bottom && xy == 0) ||
-					(Data_State.map.orientation == Dir_6_Left && xy == 1)) {
+				int xy = map_property_multi_tile_xy(gridOffset);
+				if ((Data_State.map.orientation == Dir_0_Top && xy == Edge_X1Y1) ||
+					(Data_State.map.orientation == Dir_2_Right && xy == Edge_X0Y1) ||
+					(Data_State.map.orientation == Dir_4_Bottom && xy == Edge_X0Y0) ||
+					(Data_State.map.orientation == Dir_6_Left && xy == Edge_X1Y0)) {
 					int buildingId = Data_Grid_buildingIds[gridOffset];
 					int graphicId = image_group(GROUP_BULIDING_GATEHOUSE);
 					if (Data_Buildings[buildingId].subtype.orientation == 1) {
@@ -569,7 +570,7 @@ static void drawHippodromeAndElevatedFigures(int selectedFigureId)
 				int graphicId = Data_Grid_graphicIds[gridOffset];
 				const image *img = image_get(graphicId);
 				if (img->num_animation_sprites &&
-					Data_Grid_edge[gridOffset] & Edge_LeftmostTile &&
+					map_property_is_draw_tile(gridOffset) &&
 					Data_Buildings[Data_Grid_buildingIds[gridOffset]].type == BUILDING_HIPPODROME) {
 					switch (Data_Grid_bitfields[gridOffset] & Bitfield_Sizes) {
 						case Bitfield_Size1:

@@ -63,6 +63,7 @@ set (MAP_FILES
     src/map/bridge.c
     src/map/desirability.c
     src/map/grid.c
+    src/map/property.c
     src/map/random.c
     src/map/ring.c
     src/map/road_aqueduct.c

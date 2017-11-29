@@ -186,7 +186,7 @@ void scenario_save_state(buffer *buf)
     buffer_write_i16(buf, scenario.allowed_buildings.market);
     buffer_write_i16(buf, scenario.allowed_buildings.granary);
     buffer_write_i16(buf, scenario.allowed_buildings.warehouse);
-    buffer_write_i16(buf, 1);
+    buffer_skip(buf, 2);
     buffer_write_i16(buf, scenario.allowed_buildings.dock);
     buffer_write_i16(buf, scenario.allowed_buildings.wharf);
     buffer_write_i16(buf, scenario.allowed_buildings.governor_home);
@@ -200,7 +200,7 @@ void scenario_save_state(buffer *buf)
     buffer_write_i16(buf, scenario.allowed_buildings.barracks);
     buffer_write_i16(buf, scenario.allowed_buildings.military_academy);
     buffer_write_i16(buf, scenario.allowed_buildings.distribution_center);
-    buffer_write_i16(buf, 1);
+    buffer_skip(buf, 2);
     
     // win criteria
     buffer_write_i32(buf, scenario.win_criteria.culture.goal);

@@ -4,6 +4,7 @@
 #include "core/direction.h"
 #include "graphics/image.h"
 #include "map/grid.h"
+#include "map/property.h"
 #include "map/random.h"
 #include "map/routing_data.h"
 
@@ -39,7 +40,7 @@ static int get_land_type_citizen_building(int grid_offset)
             break;
         case BUILDING_TRIUMPHAL_ARCH:
             if (Data_Buildings[building_id].subtype.orientation == 3) {
-                switch (Data_Grid_edge[grid_offset] & Edge_MaskXY) {
+                switch (map_property_multi_tile_xy(grid_offset)) {
                     case Edge_X0Y1:
                     case Edge_X1Y1:
                     case Edge_X2Y1:
@@ -47,7 +48,7 @@ static int get_land_type_citizen_building(int grid_offset)
                         break;
                 }
             } else {
-                switch (Data_Grid_edge[grid_offset] & Edge_MaskXY) {
+                switch (map_property_multi_tile_xy(grid_offset)) {
                     case Edge_X1Y0:
                     case Edge_X1Y1:
                     case Edge_X1Y2:
@@ -57,7 +58,7 @@ static int get_land_type_citizen_building(int grid_offset)
             }
             break;
         case BUILDING_GRANARY:
-            switch (Data_Grid_edge[grid_offset] & Edge_MaskXY) {
+            switch (map_property_multi_tile_xy(grid_offset)) {
                 case Edge_X1Y0:
                 case Edge_X0Y1:
                 case Edge_X1Y1:
@@ -68,7 +69,7 @@ static int get_land_type_citizen_building(int grid_offset)
             }
             break;
         case BUILDING_RESERVOIR:
-            switch (Data_Grid_edge[grid_offset] & Edge_MaskXY) {
+            switch (map_property_multi_tile_xy(grid_offset)) {
                 case Edge_X1Y0:
                 case Edge_X0Y1:
                 case Edge_X2Y1:
@@ -119,7 +120,7 @@ void map_routing_update_land_citizen()
                     terrain_land_noncitizen.items[grid_offset] = CITIZEN_4_CLEAR_TERRAIN; // BUG: should be citizen grid?
                     Data_Grid_terrain[grid_offset] &= ~Terrain_Building;
                     Data_Grid_graphicIds[grid_offset] = (map_random_get(grid_offset) & 7) + image_group(GROUP_TERRAIN_GRASS_1);
-                    Data_Grid_edge[grid_offset] = Edge_LeftmostTile;
+                    map_property_mark_draw_tile(grid_offset);
                     Data_Grid_bitfields[grid_offset] &= 0xf0; // remove sizes
                     continue;
                 }
@@ -153,7 +154,7 @@ static int get_land_type_noncitizen(int grid_offset)
             type = NONCITIZEN_5_FORT;
             break;
         case BUILDING_GRANARY:
-            switch (Data_Grid_edge[grid_offset] & Edge_MaskXY) {
+            switch (map_property_multi_tile_xy(grid_offset)) {
                 case Edge_X1Y0:
                 case Edge_X0Y1:
                 case Edge_X1Y1:
