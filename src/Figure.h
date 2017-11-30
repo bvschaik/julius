@@ -3,14 +3,13 @@
 
 #include "figure/figure.h"
 
-int Figure_create(int figureType, int x, int y, char direction);
 void Figure_delete(int figureId);
 
 void Figure_createDustCloud(int x, int y, int size);
 void Figure_createFishingPoints();
 void Figure_createHerds();
 void Figure_createFlotsam();
-int Figure_createMissile(int buildingId, int x, int y, int xDst, int yDst, int type);
+void Figure_createMissile(int buildingId, int x, int y, int xDst, int yDst, int type);
 
 int Figure_createSoldierFromBarracks(int buildingId, int x, int y);
 int Figure_createTowerSentryFromBarracks(int buildingId, int x, int y);

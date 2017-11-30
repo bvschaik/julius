@@ -106,7 +106,7 @@ static void resumeActivityAfterAttack(figure *f)
 static void hitOpponent(figure *f)
 {
 	const formation *m = formation_get(f->formationId);
-	struct Data_Figure *opponent = &Data_Figures[f->opponentId];
+	figure *opponent = figure_get(f->opponentId);
 	const formation *opponentFormation = formation_get(opponent->formationId);
 	
 	const figure_properties *props = figure_properties_for_type(f->type);

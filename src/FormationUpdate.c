@@ -681,10 +681,10 @@ static void update_herd_formation(const formation *m)
     if (formation_can_spawn_wolf(m->id)) {
         // spawn new wolf
         if (!(Data_Grid_terrain[GridOffset(m->x, m->y)] & Terrain_d73f)) {
-            int wolfId = Figure_create(m->figure_type, m->x, m->y, DIR_0_TOP);
-            Data_Figures[wolfId].actionState = FigureActionState_196_HerdAnimalAtRest;
-            Data_Figures[wolfId].formationId = m->id;
-            Data_Figures[wolfId].waitTicks = wolfId & 0x1f;
+            figure *wolf = figure_create(m->figure_type, m->x, m->y, DIR_0_TOP);
+            wolf->actionState = FigureActionState_196_HerdAnimalAtRest;
+            wolf->formationId = m->id;
+            wolf->waitTicks = wolf->id & 0x1f;
         }
     }
     int attackingAnimals = 0;

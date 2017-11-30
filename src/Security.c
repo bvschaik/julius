@@ -162,8 +162,7 @@ static void generateRioter(int buildingId)
 	int targetX, targetY;
 	int targetBuildingId = Formation_Rioter_getTargetBuilding(&targetX, &targetY);
 	for (int i = 0; i < peopleInMob; i++) {
-		int figureId = Figure_create(FIGURE_RIOTER, xRoad, yRoad, 4);
-		struct Data_Figure *f = figure_get(figureId);
+		figure *f = figure_create(FIGURE_RIOTER, xRoad, yRoad, DIR_4_BOTTOM);
 		f->actionState = FigureActionState_120_RioterCreated;
 		f->roamLength = 0;
 		f->waitTicks = 10 + 4 * i;
@@ -192,8 +191,7 @@ static void generateMugger(int buildingId)
 		b->houseCriminalActive = 2;
 		int xRoad, yRoad;
 		if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
-			int figureId = Figure_create(FIGURE_CRIMINAL, xRoad, yRoad, 4);
-            struct Data_Figure *f = figure_get(figureId);
+			figure *f = figure_create(FIGURE_CRIMINAL, xRoad, yRoad, DIR_4_BOTTOM);
 			f->waitTicks = 10 + (b->houseGenerationDelay & 0xf);
 			Data_CityInfo.ratingPeaceNumCriminalsThisYear++;
 			if (Data_CityInfo.financeTaxesThisYear > 20) {
@@ -218,8 +216,8 @@ static void generateProtester(int buildingId)
 		b->houseCriminalActive = 1;
 		int xRoad, yRoad;
 		if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
-			int figureId = Figure_create(FIGURE_PROTESTER, xRoad, yRoad, 4);
-			figure_get(figureId)->waitTicks = 10 + (b->houseGenerationDelay & 0xf);
+			figure *f = figure_create(FIGURE_PROTESTER, xRoad, yRoad, DIR_4_BOTTOM);
+			f->waitTicks = 10 + (b->houseGenerationDelay & 0xf);
 			Data_CityInfo.ratingPeaceNumCriminalsThisYear++;
 		}
 	}

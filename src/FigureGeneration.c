@@ -27,11 +27,10 @@
 #define EXIT_IF_FIGURE(t) if (buildingHasFigureOfType(buildingId, t, 0)) return;
 #define EXIT_IF_FIGURES(t1,t2) if (buildingHasFigureOfType(buildingId, t1, t2)) return;
 
-#define WORKER_PERCENTAGE(b) calc_percentage(b->numWorkers, model_get_building(b->type)->laborers)
-
-#define CREATE_FIGURE(t,x,y,d) \
-	int figureId = Figure_create(t, x, y, d);\
-	struct Data_Figure *f = &Data_Figures[figureId];
+static int worker_percentage(struct Data_Building *b)
+{
+    return calc_percentage(b->numWorkers, model_get_building(b->type)->laborers);
+}
 
 static void generateLaborSeeker(int buildingId, struct Data_Building *b, int x, int y)
 {
@@ -39,12 +38,12 @@ static void generateLaborSeeker(int buildingId, struct Data_Building *b, int x, 
 		return;
 	}
 	if (b->figureId2) {
-		struct Data_Figure *f = &Data_Figures[b->figureId2];
+		figure *f = figure_get(b->figureId2);
 		if (!f->state || f->type != FIGURE_LABOR_SEEKER || f->buildingId != buildingId) {
 			b->figureId2 = 0;
 		}
 	} else {
-		CREATE_FIGURE(FIGURE_LABOR_SEEKER, x, y, Dir_0_Top);
+		figure *f = figure_create(FIGURE_LABOR_SEEKER, x, y, DIR_0_TOP);
 		f->actionState = FigureActionState_125_Roaming;
 		f->buildingId = buildingId;
 		b->figureId2 = f->id;
@@ -58,7 +57,7 @@ static int buildingHasFigureOfType(int buildingId, int type1, int type2)
 	if (figureId <= 0) {
 		return 0;
 	}
-	struct Data_Figure *f = &Data_Figures[figureId];
+	figure *f = figure_get(figureId);
 	if (f->state && f->buildingId == buildingId && (f->type == type1 || f->type == type2)) {
 		return 1;
 	} else {
@@ -75,7 +74,7 @@ static void spawnFigurePatrician(int buildingId, struct Data_Building *b, int *p
 		if (b->figureSpawnDelay > 40 && !*patricianSpawned) {
 			*patricianSpawned = 1;
 			b->figureSpawnDelay = 0;
-			CREATE_FIGURE(FIGURE_PATRICIAN, xRoad, yRoad, Dir_4_Bottom);
+			figure *f = figure_create(FIGURE_PATRICIAN, xRoad, yRoad, DIR_4_BOTTOM);
 			f->actionState = FigureActionState_125_Roaming;
 			f->buildingId = buildingId;
 			FigureMovement_initRoaming(f);
@@ -101,13 +100,13 @@ static void spawnFigureWarehouse(int buildingId, struct Data_Building *b)
 		int resource;
 		int task = Resource_determineWarehouseWorkerTask(buildingId, &resource);
 		if (task >= 0) {
-			CREATE_FIGURE(FIGURE_WAREHOUSEMAN, xRoad, yRoad, Dir_4_Bottom);
+			figure *f = figure_create(FIGURE_WAREHOUSEMAN, xRoad, yRoad, DIR_4_BOTTOM);
 			f->actionState = FigureActionState_50_WarehousemanCreated;
 			f->resourceId = task;
 			if (task == StorageFigureTask_Getting) {
 				f->collectingItemId = resource;
 			}
-			b->figureId = figureId;
+			b->figureId = f->id;
 			f->buildingId = buildingId;
 		}
 	}
@@ -122,10 +121,10 @@ static void spawnFigureGranary(int buildingId, struct Data_Building *b)
 		EXIT_IF_FIGURE(FIGURE_WAREHOUSEMAN);
 		int task = Resource_determineGranaryWorkerTask(buildingId);
 		if (task >= 0) {
-			CREATE_FIGURE(FIGURE_WAREHOUSEMAN, xRoad, yRoad, Dir_4_Bottom);
+			figure *f = figure_create(FIGURE_WAREHOUSEMAN, xRoad, yRoad, DIR_4_BOTTOM);
 			f->actionState = FigureActionState_50_WarehousemanCreated;
 			f->resourceId = task;
-			b->figureId = figureId;
+			b->figureId = f->id;
 			f->buildingId = buildingId;
 		}
 	}
@@ -141,8 +140,8 @@ static void spawnFigureTower(int buildingId, struct Data_Building *b)
 			return;
 		}
 		if (!b->figureId4 && b->figureId) { // has sentry but no ballista -> create
-			CREATE_FIGURE(FIGURE_BALLISTA, b->x, b->y, Dir_0_Top);
-			b->figureId4 = figureId;
+			figure *f = figure_create(FIGURE_BALLISTA, b->x, b->y, DIR_0_TOP);
+			b->figureId4 = f->id;
 			f->buildingId = buildingId;
 			f->actionState = FigureActionState_180_BallistaCreated;
 		}
@@ -160,7 +159,7 @@ static void spawnFigureEngineersPost(int buildingId, struct Data_Building *b)
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(100);
-		int pctWorkers = WORKER_PERCENTAGE(b);
+		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
 		if (pctWorkers >= 100) {
 			spawnDelay = 0;
@@ -178,10 +177,10 @@ static void spawnFigureEngineersPost(int buildingId, struct Data_Building *b)
 		b->figureSpawnDelay++;
 		if (b->figureSpawnDelay > spawnDelay) {
 			b->figureSpawnDelay = 0;
-			CREATE_FIGURE(FIGURE_ENGINEER, xRoad, yRoad, Dir_0_Top);
+			figure *f = figure_create(FIGURE_ENGINEER, xRoad, yRoad, DIR_0_TOP);
 			f->actionState = FigureActionState_60_EngineerCreated;
 			f->buildingId = buildingId;
-			b->figureId = figureId;
+			b->figureId = f->id;
 		}
 	}
 }
@@ -193,7 +192,7 @@ static void spawnFigurePrefecture(int buildingId, struct Data_Building *b)
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(100);
-		int pctWorkers = WORKER_PERCENTAGE(b);
+		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
 		if (pctWorkers >= 100) {
 			spawnDelay = 0;
@@ -211,10 +210,10 @@ static void spawnFigurePrefecture(int buildingId, struct Data_Building *b)
 		b->figureSpawnDelay++;
 		if (b->figureSpawnDelay > spawnDelay) {
 			b->figureSpawnDelay = 0;
-			CREATE_FIGURE(FIGURE_PREFECT, xRoad, yRoad, Dir_0_Top);
+			figure *f = figure_create(FIGURE_PREFECT, xRoad, yRoad, DIR_0_TOP);
 			f->actionState = FigureActionState_70_PrefectCreated;
 			f->buildingId = buildingId;
-			b->figureId = figureId;
+			b->figureId = f->id;
 		}
 	}
 }
@@ -225,7 +224,7 @@ static void spawnFigureActorColony(int buildingId, struct Data_Building *b)
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(50);
-		int pctWorkers = WORKER_PERCENTAGE(b);
+		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
 		if (pctWorkers >= 100) {
 			spawnDelay = 3;
@@ -243,10 +242,10 @@ static void spawnFigureActorColony(int buildingId, struct Data_Building *b)
 		b->figureSpawnDelay++;
 		if (b->figureSpawnDelay > spawnDelay) {
 			b->figureSpawnDelay = 0;
-			CREATE_FIGURE(FIGURE_ACTOR, xRoad, yRoad, Dir_0_Top);
+			figure *f = figure_create(FIGURE_ACTOR, xRoad, yRoad, DIR_0_TOP);
 			f->actionState = FigureActionState_90_EntertainerAtSchoolCreated;
 			f->buildingId = buildingId;
-			b->figureId = figureId;
+			b->figureId = f->id;
 		}
 	}
 }
@@ -257,7 +256,7 @@ static void spawnFigureGladiatorSchool(int buildingId, struct Data_Building *b)
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(50);
-		int pctWorkers = WORKER_PERCENTAGE(b);
+		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
 		if (pctWorkers >= 100) {
 			spawnDelay = 3;
@@ -275,10 +274,10 @@ static void spawnFigureGladiatorSchool(int buildingId, struct Data_Building *b)
 		b->figureSpawnDelay++;
 		if (b->figureSpawnDelay > spawnDelay) {
 			b->figureSpawnDelay = 0;
-			CREATE_FIGURE(FIGURE_GLADIATOR, xRoad, yRoad, Dir_0_Top);
+			figure *f = figure_create(FIGURE_GLADIATOR, xRoad, yRoad, DIR_0_TOP);
 			f->actionState = FigureActionState_90_EntertainerAtSchoolCreated;
 			f->buildingId = buildingId;
-			b->figureId = figureId;
+			b->figureId = f->id;
 		}
 	}
 }
@@ -289,7 +288,7 @@ static void spawnFigureLionHouse(int buildingId, struct Data_Building *b)
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(50);
-		int pctWorkers = WORKER_PERCENTAGE(b);
+		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
 		if (pctWorkers >= 100) {
 			spawnDelay = 5;
@@ -307,10 +306,10 @@ static void spawnFigureLionHouse(int buildingId, struct Data_Building *b)
 		b->figureSpawnDelay++;
 		if (b->figureSpawnDelay > spawnDelay) {
 			b->figureSpawnDelay = 0;
-			CREATE_FIGURE(FIGURE_LION_TAMER, xRoad, yRoad, Dir_0_Top);
+			figure *f = figure_create(FIGURE_LION_TAMER, xRoad, yRoad, DIR_0_TOP);
 			f->actionState = FigureActionState_90_EntertainerAtSchoolCreated;
 			f->buildingId = buildingId;
-			b->figureId = figureId;
+			b->figureId = f->id;
 		}
 	}
 }
@@ -321,7 +320,7 @@ static void spawnFigureChariotMaker(int buildingId, struct Data_Building *b)
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(50);
-		int pctWorkers = WORKER_PERCENTAGE(b);
+		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
 		if (pctWorkers >= 100) {
 			spawnDelay = 7;
@@ -339,10 +338,10 @@ static void spawnFigureChariotMaker(int buildingId, struct Data_Building *b)
 		b->figureSpawnDelay++;
 		if (b->figureSpawnDelay > spawnDelay) {
 			b->figureSpawnDelay = 0;
-			CREATE_FIGURE(FIGURE_CHARIOTEER, xRoad, yRoad, Dir_0_Top);
+			figure *f = figure_create(FIGURE_CHARIOTEER, xRoad, yRoad, DIR_0_TOP);
 			f->actionState = FigureActionState_90_EntertainerAtSchoolCreated;
 			f->buildingId = buildingId;
-			b->figureId = figureId;
+			b->figureId = f->id;
 		}
 	}
 }
@@ -357,7 +356,7 @@ static void spawnFigureAmphitheater(int buildingId, struct Data_Building *b)
 			(b->data.entertainment.days1 <= 0 && b->data.entertainment.days2 <= 0)) {
 			generateLaborSeeker(buildingId, b, xRoad, yRoad);
 		}
-		int pctWorkers = WORKER_PERCENTAGE(b);
+		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
 		if (pctWorkers >= 100) {
 			spawnDelay = 3;
@@ -375,16 +374,15 @@ static void spawnFigureAmphitheater(int buildingId, struct Data_Building *b)
 		b->figureSpawnDelay++;
 		if (b->figureSpawnDelay > spawnDelay) {
 			b->figureSpawnDelay = 0;
-			int figureId;
+			figure *f;
 			if (b->data.entertainment.days1 > 0) {
-				figureId = Figure_create(FIGURE_GLADIATOR, xRoad, yRoad, Dir_0_Top);
+				f = figure_create(FIGURE_GLADIATOR, xRoad, yRoad, DIR_0_TOP);
 			} else {
-				figureId = Figure_create(FIGURE_ACTOR, xRoad, yRoad, Dir_0_Top);
+				f = figure_create(FIGURE_ACTOR, xRoad, yRoad, DIR_0_TOP);
 			}
-			struct Data_Figure *f = &Data_Figures[figureId];
 			f->actionState = FigureActionState_94_EntertainerRoaming;
 			f->buildingId = buildingId;
-			b->figureId = figureId;
+			b->figureId = f->id;
 			FigureMovement_initRoaming(f);
 		}
 	}
@@ -399,7 +397,7 @@ static void spawnFigureTheater(int buildingId, struct Data_Building *b)
 		if (b->housesCovered <= 50 || b->data.entertainment.days1 <= 0) {
 			generateLaborSeeker(buildingId, b, xRoad, yRoad);
 		}
-		int pctWorkers = WORKER_PERCENTAGE(b);
+		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
 		if (pctWorkers >= 100) {
 			spawnDelay = 3;
@@ -417,10 +415,10 @@ static void spawnFigureTheater(int buildingId, struct Data_Building *b)
 		b->figureSpawnDelay++;
 		if (b->figureSpawnDelay > spawnDelay) {
 			b->figureSpawnDelay = 0;
-			CREATE_FIGURE(FIGURE_ACTOR, xRoad, yRoad, Dir_0_Top);
+			figure *f = figure_create(FIGURE_ACTOR, xRoad, yRoad, DIR_0_TOP);
 			f->actionState = FigureActionState_94_EntertainerRoaming;
 			f->buildingId = buildingId;
-			b->figureId = figureId;
+			b->figureId = f->id;
 			FigureMovement_initRoaming(f);
 		}
 	}
@@ -445,7 +443,7 @@ static void spawnFigureHippodrome(int buildingId, struct Data_Building *b)
 		if (b->housesCovered <= 50 || b->data.entertainment.days1 <= 0) {
 			generateLaborSeeker(buildingId, b, xRoad, yRoad);
 		}
-		int pctWorkers = WORKER_PERCENTAGE(b);
+		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
 		if (pctWorkers >= 100) {
 			spawnDelay = 7;
@@ -463,29 +461,26 @@ static void spawnFigureHippodrome(int buildingId, struct Data_Building *b)
 		b->figureSpawnDelay++;
 		if (b->figureSpawnDelay > spawnDelay) {
 			b->figureSpawnDelay = 0;
-			{
-				CREATE_FIGURE(FIGURE_CHARIOTEER, xRoad, yRoad, Dir_0_Top);
-				f->actionState = FigureActionState_94_EntertainerRoaming;
-				f->buildingId = buildingId;
-				b->figureId = figureId;
-				FigureMovement_initRoaming(f);
-			}
+			figure *f = figure_create(FIGURE_CHARIOTEER, xRoad, yRoad, DIR_0_TOP);
+			f->actionState = FigureActionState_94_EntertainerRoaming;
+			f->buildingId = buildingId;
+			b->figureId = f->id;
+			FigureMovement_initRoaming(f);
+
 			if (!Data_CityInfo.entertainmentHippodromeHasShow) {
 				// create mini-horses
-				{
-					CREATE_FIGURE(FIGURE_HIPPODROME_HORSES, b->x + 2, b->y + 1, Dir_2_Right);
-					f->actionState = FigureActionState_200_HippodromeMiniHorseCreated;
-					f->buildingId = buildingId;
-					f->resourceId = 0;
-					f->speedMultiplier = 3;
-				}
-				{
-					CREATE_FIGURE(FIGURE_HIPPODROME_HORSES, b->x + 2, b->y + 2, Dir_2_Right);
-					f->actionState = FigureActionState_200_HippodromeMiniHorseCreated;
-					f->buildingId = buildingId;
-					f->resourceId = 1;
-					f->speedMultiplier = 2;
-				}
+				figure *horse1 = figure_create(FIGURE_HIPPODROME_HORSES, b->x + 2, b->y + 1, Dir_2_Right);
+				horse1->actionState = FigureActionState_200_HippodromeMiniHorseCreated;
+				horse1->buildingId = buildingId;
+				horse1->resourceId = 0;
+				horse1->speedMultiplier = 3;
+
+				figure *horse2 = figure_create(FIGURE_HIPPODROME_HORSES, b->x + 2, b->y + 2, Dir_2_Right);
+				horse2->actionState = FigureActionState_200_HippodromeMiniHorseCreated;
+				horse2->buildingId = buildingId;
+				horse2->resourceId = 1;
+				horse2->speedMultiplier = 2;
+
 				if (b->data.entertainment.days1 > 0) {
 					if (!Data_CityInfo.messageShownHippodrome) {
 						Data_CityInfo.messageShownHippodrome = 1;
@@ -507,7 +502,7 @@ static void spawnFigureColosseum(int buildingId, struct Data_Building *b)
 			(b->data.entertainment.days1 <= 0 && b->data.entertainment.days2 <= 0)) {
 			generateLaborSeeker(buildingId, b, xRoad, yRoad);
 		}
-		int pctWorkers = WORKER_PERCENTAGE(b);
+		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
 		if (pctWorkers >= 100) {
 			spawnDelay = 6;
@@ -525,16 +520,15 @@ static void spawnFigureColosseum(int buildingId, struct Data_Building *b)
 		b->figureSpawnDelay++;
 		if (b->figureSpawnDelay > spawnDelay) {
 			b->figureSpawnDelay = 0;
-			int figureId;
+			figure *f;
 			if (b->data.entertainment.days1 > 0) {
-				figureId = Figure_create(FIGURE_LION_TAMER, xRoad, yRoad, Dir_0_Top);
+				f = figure_create(FIGURE_LION_TAMER, xRoad, yRoad, DIR_0_TOP);
 			} else {
-				figureId = Figure_create(FIGURE_GLADIATOR, xRoad, yRoad, Dir_0_Top);
+				f = figure_create(FIGURE_GLADIATOR, xRoad, yRoad, DIR_0_TOP);
 			}
-			struct Data_Figure *f = &Data_Figures[figureId];
 			f->actionState = FigureActionState_94_EntertainerRoaming;
 			f->buildingId = buildingId;
-			b->figureId = figureId;
+			b->figureId = f->id;
 			FigureMovement_initRoaming(f);
 			if (b->data.entertainment.days1 > 0 || b->data.entertainment.days2 > 0) {
 				if (!Data_CityInfo.messageShownColosseum) {
@@ -567,7 +561,7 @@ static void spawnFigureMarket(int buildingId, struct Data_Building *b)
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(50);
-		int pctWorkers = WORKER_PERCENTAGE(b);
+		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
 		if (pctWorkers >= 100) {
 			spawnDelay = 2;
@@ -589,15 +583,15 @@ static void spawnFigureMarket(int buildingId, struct Data_Building *b)
 				return;
 			}
 			b->figureSpawnDelay = 0;
-			CREATE_FIGURE(FIGURE_MARKET_TRADER, xRoad, yRoad, Dir_0_Top);
+			figure *f = figure_create(FIGURE_MARKET_TRADER, xRoad, yRoad, DIR_0_TOP);
 			f->actionState = FigureActionState_125_Roaming;
 			f->buildingId = buildingId;
-			b->figureId = figureId;
+			b->figureId = f->id;
 			FigureMovement_initRoaming(f);
 		}
 		// market buyer or labor seeker
 		if (b->figureId2) {
-			struct Data_Figure *f = &Data_Figures[b->figureId2];
+			figure *f = figure_get(b->figureId2);
 			if (f->state != FigureState_Alive || (f->type != FIGURE_MARKET_BUYER && f->type != FIGURE_LABOR_SEEKER)) {
 				b->figureId2 = 0;
 			}
@@ -605,10 +599,10 @@ static void spawnFigureMarket(int buildingId, struct Data_Building *b)
 			Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad);
 			int dstBuildingId = Building_Market_getDestinationGranaryWarehouse(buildingId);
 			if (dstBuildingId > 0) {
-				CREATE_FIGURE(FIGURE_MARKET_BUYER, xRoad, yRoad, Dir_0_Top);
+				figure *f = figure_create(FIGURE_MARKET_BUYER, xRoad, yRoad, DIR_0_TOP);
 				f->actionState = FigureActionState_145_MarketBuyerGoingToStorage;
 				f->buildingId = buildingId;
-				b->figureId2 = figureId;
+				b->figureId2 = f->id;
 				f->destinationBuildingId = dstBuildingId;
 				f->collectingItemId = b->data.market.fetchInventoryId;
 				struct Data_Building *bDst = &Data_Buildings[dstBuildingId];
@@ -666,7 +660,7 @@ static void spawnFigureBathhouse(int buildingId, struct Data_Building *b)
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad) && b->hasWaterAccess) {
 		SPAWN_LABOR_SEEKER(50);
-		int pctWorkers = WORKER_PERCENTAGE(b);
+		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
 		if (pctWorkers >= 100) {
 			spawnDelay = 3;
@@ -684,10 +678,10 @@ static void spawnFigureBathhouse(int buildingId, struct Data_Building *b)
 		b->figureSpawnDelay++;
 		if (b->figureSpawnDelay > spawnDelay) {
 			b->figureSpawnDelay = 0;
-			CREATE_FIGURE(FIGURE_BATHHOUSE_WORKER, xRoad, yRoad, Dir_0_Top);
+			figure *f = figure_create(FIGURE_BATHHOUSE_WORKER, xRoad, yRoad, DIR_0_TOP);
 			f->actionState = FigureActionState_125_Roaming;
 			f->buildingId = buildingId;
-			b->figureId = figureId;
+			b->figureId = f->id;
 			FigureMovement_initRoaming(f);
 		}
 	}
@@ -700,7 +694,7 @@ static void spawnFigureSchool(int buildingId, struct Data_Building *b)
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(50);
-		int pctWorkers = WORKER_PERCENTAGE(b);
+		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
 		if (pctWorkers >= 100) {
 			spawnDelay = 3;
@@ -718,31 +712,27 @@ static void spawnFigureSchool(int buildingId, struct Data_Building *b)
 		b->figureSpawnDelay++;
 		if (b->figureSpawnDelay > spawnDelay) {
 			b->figureSpawnDelay = 0;
-			{
-				CREATE_FIGURE(FIGURE_SCHOOL_CHILD, xRoad, yRoad, Dir_0_Top);
-				f->actionState = FigureActionState_125_Roaming;
-				f->buildingId = buildingId;
-				b->figureId = figureId;
-				FigureMovement_initRoaming(f);
-			}
-			{
-				CREATE_FIGURE(FIGURE_SCHOOL_CHILD, xRoad, yRoad, Dir_0_Top);
-				f->actionState = FigureActionState_125_Roaming;
-				f->buildingId = buildingId;
-				FigureMovement_initRoaming(f);
-			}
-			{
-				CREATE_FIGURE(FIGURE_SCHOOL_CHILD, xRoad, yRoad, Dir_0_Top);
-				f->actionState = FigureActionState_125_Roaming;
-				f->buildingId = buildingId;
-				FigureMovement_initRoaming(f);
-			}
-			{
-				CREATE_FIGURE(FIGURE_SCHOOL_CHILD, xRoad, yRoad, Dir_0_Top);
-				f->actionState = FigureActionState_125_Roaming;
-				f->buildingId = buildingId;
-				FigureMovement_initRoaming(f);
-			}
+
+			figure *child1 = figure_create(FIGURE_SCHOOL_CHILD, xRoad, yRoad, DIR_0_TOP);
+			child1->actionState = FigureActionState_125_Roaming;
+			child1->buildingId = buildingId;
+			b->figureId = child1->id;
+			FigureMovement_initRoaming(child1);
+
+			figure *child2 = figure_create(FIGURE_SCHOOL_CHILD, xRoad, yRoad, DIR_0_TOP);
+			child2->actionState = FigureActionState_125_Roaming;
+			child2->buildingId = buildingId;
+			FigureMovement_initRoaming(child2);
+
+			figure *child3 = figure_create(FIGURE_SCHOOL_CHILD, xRoad, yRoad, DIR_0_TOP);
+			child3->actionState = FigureActionState_125_Roaming;
+			child3->buildingId = buildingId;
+			FigureMovement_initRoaming(child3);
+
+			figure *child4 = figure_create(FIGURE_SCHOOL_CHILD, xRoad, yRoad, DIR_0_TOP);
+			child4->actionState = FigureActionState_125_Roaming;
+			child4->buildingId = buildingId;
+			FigureMovement_initRoaming(child4);
 		}
 	}
 }
@@ -754,7 +744,7 @@ static void spawnFigureLibrary(int buildingId, struct Data_Building *b)
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(50);
-		int pctWorkers = WORKER_PERCENTAGE(b);
+		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
 		if (pctWorkers >= 100) {
 			spawnDelay = 3;
@@ -772,10 +762,10 @@ static void spawnFigureLibrary(int buildingId, struct Data_Building *b)
 		b->figureSpawnDelay++;
 		if (b->figureSpawnDelay > spawnDelay) {
 			b->figureSpawnDelay = 0;
-			CREATE_FIGURE(FIGURE_LIBRARIAN, xRoad, yRoad, Dir_0_Top);
+			figure *f = figure_create(FIGURE_LIBRARIAN, xRoad, yRoad, DIR_0_TOP);
 			f->actionState = FigureActionState_125_Roaming;
 			f->buildingId = buildingId;
-			b->figureId = figureId;
+			b->figureId = f->id;
 			FigureMovement_initRoaming(f);
 		}
 	}
@@ -788,7 +778,7 @@ static void spawnFigureAcademy(int buildingId, struct Data_Building *b)
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(50);
-		int pctWorkers = WORKER_PERCENTAGE(b);
+		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
 		if (pctWorkers >= 100) {
 			spawnDelay = 3;
@@ -806,10 +796,10 @@ static void spawnFigureAcademy(int buildingId, struct Data_Building *b)
 		b->figureSpawnDelay++;
 		if (b->figureSpawnDelay > spawnDelay) {
 			b->figureSpawnDelay = 0;
-			CREATE_FIGURE(FIGURE_TEACHER, xRoad, yRoad, Dir_0_Top);
+			figure *f = figure_create(FIGURE_TEACHER, xRoad, yRoad, DIR_0_TOP);
 			f->actionState = FigureActionState_125_Roaming;
 			f->buildingId = buildingId;
-			b->figureId = figureId;
+			b->figureId = f->id;
 			FigureMovement_initRoaming(f);
 		}
 	}
@@ -822,7 +812,7 @@ static void spawnFigureBarber(int buildingId, struct Data_Building *b)
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(50);
-		int pctWorkers = WORKER_PERCENTAGE(b);
+		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
 		if (pctWorkers >= 100) {
 			spawnDelay = 3;
@@ -840,10 +830,10 @@ static void spawnFigureBarber(int buildingId, struct Data_Building *b)
 		b->figureSpawnDelay++;
 		if (b->figureSpawnDelay > spawnDelay) {
 			b->figureSpawnDelay = 0;
-			CREATE_FIGURE(FIGURE_BARBER, xRoad, yRoad, Dir_0_Top);
+			figure *f = figure_create(FIGURE_BARBER, xRoad, yRoad, DIR_0_TOP);
 			f->actionState = FigureActionState_125_Roaming;
 			f->buildingId = buildingId;
-			b->figureId = figureId;
+			b->figureId = f->id;
 			FigureMovement_initRoaming(f);
 		}
 	}
@@ -856,7 +846,7 @@ static void spawnFigureDoctor(int buildingId, struct Data_Building *b)
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(50);
-		int pctWorkers = WORKER_PERCENTAGE(b);
+		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
 		if (pctWorkers >= 100) {
 			spawnDelay = 3;
@@ -874,10 +864,10 @@ static void spawnFigureDoctor(int buildingId, struct Data_Building *b)
 		b->figureSpawnDelay++;
 		if (b->figureSpawnDelay > spawnDelay) {
 			b->figureSpawnDelay = 0;
-			CREATE_FIGURE(FIGURE_DOCTOR, xRoad, yRoad, Dir_0_Top);
+			figure *f = figure_create(FIGURE_DOCTOR, xRoad, yRoad, DIR_0_TOP);
 			f->actionState = FigureActionState_125_Roaming;
 			f->buildingId = buildingId;
-			b->figureId = figureId;
+			b->figureId = f->id;
 			FigureMovement_initRoaming(f);
 		}
 	}
@@ -890,7 +880,7 @@ static void spawnFigureHospital(int buildingId, struct Data_Building *b)
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(50);
-		int pctWorkers = WORKER_PERCENTAGE(b);
+		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
 		if (pctWorkers >= 100) {
 			spawnDelay = 3;
@@ -908,10 +898,10 @@ static void spawnFigureHospital(int buildingId, struct Data_Building *b)
 		b->figureSpawnDelay++;
 		if (b->figureSpawnDelay > spawnDelay) {
 			b->figureSpawnDelay = 0;
-			CREATE_FIGURE(FIGURE_SURGEON, xRoad, yRoad, Dir_0_Top);
+			figure *f = figure_create(FIGURE_SURGEON, xRoad, yRoad, DIR_0_TOP);
 			f->actionState = FigureActionState_125_Roaming;
 			f->buildingId = buildingId;
-			b->figureId = figureId;
+			b->figureId = f->id;
 			FigureMovement_initRoaming(f);
 		}
 	}
@@ -924,7 +914,7 @@ static void spawnFigureTemple(int buildingId, struct Data_Building *b)
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(50);
-		int pctWorkers = WORKER_PERCENTAGE(b);
+		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
 		if (model_get_building(b->type)->laborers <= 0) {
 			spawnDelay = 7;
@@ -944,10 +934,10 @@ static void spawnFigureTemple(int buildingId, struct Data_Building *b)
 		b->figureSpawnDelay++;
 		if (b->figureSpawnDelay > spawnDelay) {
 			b->figureSpawnDelay = 0;
-			CREATE_FIGURE(FIGURE_PRIEST, xRoad, yRoad, Dir_0_Top);
+			figure *f = figure_create(FIGURE_PRIEST, xRoad, yRoad, DIR_0_TOP);
 			f->actionState = FigureActionState_125_Roaming;
 			f->buildingId = buildingId;
-			b->figureId = figureId;
+			b->figureId = f->id;
 			FigureMovement_initRoaming(f);
 		}
 	}
@@ -977,7 +967,7 @@ static void spawnFigureSenateForum(int buildingId, struct Data_Building *b)
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(50);
-		int pctWorkers = WORKER_PERCENTAGE(b);
+		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
 		if (pctWorkers >= 100) {
 			spawnDelay = 0;
@@ -995,10 +985,10 @@ static void spawnFigureSenateForum(int buildingId, struct Data_Building *b)
 		b->figureSpawnDelay++;
 		if (b->figureSpawnDelay > spawnDelay) {
 			b->figureSpawnDelay = 0;
-			CREATE_FIGURE(FIGURE_TAX_COLLECTOR, xRoad, yRoad, Dir_0_Top);
+			figure *f = figure_create(FIGURE_TAX_COLLECTOR, xRoad, yRoad, DIR_0_TOP);
 			f->actionState = FigureActionState_40_TaxCollectorCreated;
 			f->buildingId = buildingId;
-			b->figureId = figureId;
+			b->figureId = f->id;
 		}
 	}
 }
@@ -1013,10 +1003,10 @@ static void spawnFigureMissionPost(int buildingId, struct Data_Building *b)
 			b->figureSpawnDelay++;
 			if (b->figureSpawnDelay > 1) {
 				b->figureSpawnDelay = 0;
-				CREATE_FIGURE(FIGURE_MISSIONARY, xRoad, yRoad, Dir_0_Top);
+				figure *f = figure_create(FIGURE_MISSIONARY, xRoad, yRoad, DIR_0_TOP);
 				f->actionState = FigureActionState_125_Roaming;
 				f->buildingId = buildingId;
-				b->figureId = figureId;
+				b->figureId = f->id;
 				FigureMovement_initRoaming(f);
 			}
 		}
@@ -1032,11 +1022,11 @@ static void spawnFigureIndustry(int buildingId, struct Data_Building *b)
 		EXIT_IF_FIGURE(FIGURE_CART_PUSHER);
 		if (Building_Industry_hasProducedResource(buildingId)) {
 			Building_Industry_startNewProduction(buildingId);
-			CREATE_FIGURE(FIGURE_CART_PUSHER, xRoad, yRoad, Dir_4_Bottom);
+			figure *f = figure_create(FIGURE_CART_PUSHER, xRoad, yRoad, DIR_4_BOTTOM);
 			f->actionState = FigureActionState_20_CartpusherInitial;
 			f->resourceId = b->outputResourceId;
 			f->buildingId = buildingId;
-			b->figureId = figureId;
+			b->figureId = f->id;
 			f->waitTicks = 30;
 		}
 	}
@@ -1046,7 +1036,7 @@ static void spawnFigureWharf(int buildingId, struct Data_Building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	if (b->data.other.boatFigureId) {
-		struct Data_Figure *f = &Data_Figures[b->data.other.boatFigureId];
+		figure *f = figure_get(b->data.other.boatFigureId);
 		if (f->state != FigureState_Alive || f->type != FIGURE_FISHING_BOAT) {
 			b->data.other.boatFigureId = 0;
 		}
@@ -1059,11 +1049,11 @@ static void spawnFigureWharf(int buildingId, struct Data_Building *b)
 			b->figureSpawnDelay = 0;
 			b->data.other.fishingBoatHasFish = 0;
 			b->outputResourceId = RESOURCE_MEAT;
-			CREATE_FIGURE(FIGURE_CART_PUSHER, xRoad, yRoad, Dir_4_Bottom);
+			figure *f = figure_create(FIGURE_CART_PUSHER, xRoad, yRoad, DIR_4_BOTTOM);
 			f->actionState = FigureActionState_20_CartpusherInitial;
 			f->resourceId = RESOURCE_MEAT;
 			f->buildingId = buildingId;
-			b->figureId = figureId;
+			b->figureId = f->id;
 			f->waitTicks = 30;
 		}
 	}
@@ -1076,7 +1066,7 @@ static void spawnFigureShipyard(int buildingId, struct Data_Building *b)
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(50);
 		EXIT_IF_FIGURE(FIGURE_FISHING_BOAT);
-		int pctWorkers = WORKER_PERCENTAGE(b);
+		int pctWorkers = worker_percentage(b);
 		if (pctWorkers >= 100) {
 			b->data.industry.progress += 10;
 		} else if (pctWorkers >= 75) {
@@ -1092,10 +1082,10 @@ static void spawnFigureShipyard(int buildingId, struct Data_Building *b)
 			b->data.industry.progress = 0;
 			int xBoat, yBoat;
 			if (Terrain_canSpawnFishingBoatInWater(b->x, b->y, b->size, &xBoat, &yBoat)) {
-				CREATE_FIGURE(FIGURE_FISHING_BOAT, xBoat, yBoat, Dir_0_Top);
+				figure *f = figure_create(FIGURE_FISHING_BOAT, xBoat, yBoat, DIR_0_TOP);
 				f->actionState = FigureActionState_190_FishingBoatCreated;
 				f->buildingId = buildingId;
-				b->figureId = figureId;
+				b->figureId = f->id;
 			}
 		}
 	}
@@ -1107,7 +1097,7 @@ static void spawnFigureDock(int buildingId, struct Data_Building *b)
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(50);
-		int pctWorkers = WORKER_PERCENTAGE(b);
+		int pctWorkers = worker_percentage(b);
 		int maxDockers;
 		if (pctWorkers >= 75) {
 			maxDockers = 3;
@@ -1122,7 +1112,7 @@ static void spawnFigureDock(int buildingId, struct Data_Building *b)
 		int existingDockers = 0;
 		for (int i = 0; i < 3; i++) {
 			if (b->data.other.dockFigureIds[i]) {
-				if (Data_Figures[b->data.other.dockFigureIds[i]].type == FIGURE_DOCKMAN) {
+				if (figure_get(b->data.other.dockFigureIds[i])->type == FIGURE_DOCKMAN) {
 					existingDockers++;
 				} else {
 					b->data.other.dockFigureIds[i] = 0;
@@ -1133,17 +1123,17 @@ static void spawnFigureDock(int buildingId, struct Data_Building *b)
 			// too many dockers, kill one of them
 			for (int i = 2; i >= 0; i--) {
 				if (b->data.other.dockFigureIds[i]) {
-					Data_Figures[b->data.other.dockFigureIds[i]].state = FigureState_Dead;
+					figure_get(b->data.other.dockFigureIds[i])->state = FigureState_Dead;
 					break;
 				}
 			}
 		} else if (existingDockers < maxDockers) {
-			CREATE_FIGURE(FIGURE_DOCKMAN, xRoad, yRoad, Dir_4_Bottom);
+			figure *f = figure_create(FIGURE_DOCKMAN, xRoad, yRoad, DIR_4_BOTTOM);
 			f->actionState = FigureActionState_132_DockerIdling;
 			f->buildingId = buildingId;
 			for (int i = 0; i < 3; i++) {
 				if (!b->data.other.dockFigureIds[i]) {
-					b->data.other.dockFigureIds[i] = figureId;
+					b->data.other.dockFigureIds[i] = f->id;
 					break;
 				}
 			}
@@ -1161,10 +1151,10 @@ static void spawnFigureNativeHut(int buildingId, struct Data_Building *b)
 		b->figureSpawnDelay++;
 		if (b->figureSpawnDelay > 4) {
 			b->figureSpawnDelay = 0;
-			CREATE_FIGURE(FIGURE_INDIGENOUS_NATIVE, xOut, yOut, Dir_0_Top);
+			figure *f = figure_create(FIGURE_INDIGENOUS_NATIVE, xOut, yOut, DIR_0_TOP);
 			f->actionState = FigureActionState_158_NativeCreated;
 			f->buildingId = buildingId;
-			b->figureId = figureId;
+			b->figureId = f->id;
 		}
 	}
 }
@@ -1180,10 +1170,10 @@ static void spawnFigureNativeMeeting(int buildingId, struct Data_Building *b)
 			b->figureSpawnDelay++;
 			if (b->figureSpawnDelay > 8) {
 				b->figureSpawnDelay = 0;
-				CREATE_FIGURE(FIGURE_NATIVE_TRADER, xOut, yOut, Dir_0_Top);
+				figure *f = figure_create(FIGURE_NATIVE_TRADER, xOut, yOut, DIR_0_TOP);
 				f->actionState = FigureActionState_162_NativeTraderCreated;
 				f->buildingId = buildingId;
-				b->figureId = figureId;
+				b->figureId = f->id;
 			}
 		}
 	}
@@ -1195,7 +1185,7 @@ static void spawnFigureBarracks(int buildingId, struct Data_Building *b)
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(100);
-		int pctWorkers = WORKER_PERCENTAGE(b);
+		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
 		if (pctWorkers >= 100) {
 			spawnDelay = 8;

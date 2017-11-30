@@ -15,7 +15,7 @@ static int dockerDeliverImportResource(figure *f, int buildingId)
 	if (!shipId) {
 		return 0;
 	}
-	struct Data_Figure *ship = &Data_Figures[shipId];
+	figure *ship = figure_get(shipId);
 	if (ship->actionState != FigureActionState_112_TradeShipMoored || ship->loadsSoldOrCarrying <= 0) {
 		return 0;
 	}
@@ -50,7 +50,7 @@ static int dockerGetExportResource(figure *f, int buildingId)
 	if (!shipId) {
 		return 0;
 	}
-	struct Data_Figure *ship = &Data_Figures[shipId];
+	figure *ship = figure_get(shipId);
 	if (ship->actionState != FigureActionState_112_TradeShipMoored || ship->traderAmountBought >= 12) {
 		return 0;
 	}
@@ -100,7 +100,7 @@ void FigureAction_docker(figure *f)
 		b->data.other.dockNumShips--;
 	}
 	if (b->data.other.boatFigureId) {
-		struct Data_Figure *ship = &Data_Figures[b->data.other.boatFigureId];
+		figure *ship = figure_get(b->data.other.boatFigureId);
 		if (ship->state != FigureState_Alive || ship->type != FIGURE_TRADE_SHIP) {
 			b->data.other.boatFigureId = 0;
 		} else if (trader_has_traded_max(ship->traderId)) {

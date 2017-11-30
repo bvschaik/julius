@@ -334,7 +334,7 @@ void FigureAction_tradeCaravanDonkey(figure *f)
 		} else if (leader->type != FIGURE_TRADE_CARAVAN && leader->type != FIGURE_TRADE_CARAVAN_DONKEY) {
 			f->state = FigureState_Dead;
 		} else {
-			FigureMovement_followTicks(f, f->inFrontFigureId, 1);
+			FigureMovement_followTicks(f, 1);
 		}
 	}
 

@@ -26,41 +26,6 @@
 
 #include <string.h>
 
-int Figure_create(int figureType, int x, int y, char direction)
-{
-	int id = 0;
-	for (int i = 1; i < MAX_FIGURES; i++) {
-		if (!Data_Figures[i].state) {
-			id = i;
-			break;
-		}
-	}
-	if (!id) {
-		return 0;
-	}
-	struct Data_Figure *f = &Data_Figures[id];
-	f->state = FigureState_Alive;
-	f->ciid = 1;
-	f->type = figureType;
-	f->useCrossCountry = 0;
-	f->isFriendly = 1;
-	f->createdSequence = Data_Figure_Extra.createdSequence++;
-	f->direction = direction;
-	f->sourceX = f->destinationX = f->previousTileX = f->x = x;
-	f->sourceY = f->destinationY = f->previousTileY = f->y = y;
-	f->gridOffset = GridOffset(x, y);
-	f->crossCountryX = 15 * x;
-	f->crossCountryY = 15 * y;
-	f->progressOnTile = 15;
-	f->phraseSequenceCity = f->phraseSequenceExact = random_byte() & 3;
-	f->name = figure_name_get(figureType, 0);
-	Figure_addToTileList(id);
-	if (figureType == FIGURE_TRADE_CARAVAN || figureType == FIGURE_TRADE_SHIP) {
-		f->traderId = trader_create();
-	}
-	return id;
-}
-
 void Figure_delete(int figureId)
 {
 	struct Data_Figure *f = &Data_Figures[figureId];
@@ -195,10 +160,9 @@ void Figure_createDustCloud(int x, int y, int size)
 	int tileOffset = dustCloudTileOffsets[size];
 	int ccOffset = dustCloudCCOffsets[size];
 	for (int i = 0; i < 16; i++) {
-		int figureId = Figure_create(FIGURE_EXPLOSION,
-			x + tileOffset, y + tileOffset, 0);
-		if (figureId) {
-			struct Data_Figure *f = &Data_Figures[figureId];
+		figure *f = figure_create(FIGURE_EXPLOSION,
+			x + tileOffset, y + tileOffset, DIR_0_TOP);
+		if (f->id) {
 			f->crossCountryX += ccOffset;
 			f->crossCountryY += ccOffset;
 			f->destinationX += dustCloudDirectionX[i];
@@ -213,11 +177,10 @@ void Figure_createDustCloud(int x, int y, int size)
 	sound_effect_play(SOUND_EFFECT_EXPLOSION);
 }
 
-int Figure_createMissile(int buildingId, int x, int y, int xDst, int yDst, int type)
+void Figure_createMissile(int buildingId, int x, int y, int xDst, int yDst, int type)
 {
-	int figureId = Figure_create(type, x, y, 0);
-	if (figureId) {
-		struct Data_Figure *f = &Data_Figures[figureId];
+	figure *f = figure_create(type, x, y, DIR_0_TOP);
+	if (f->id) {
 		f->missileDamage = (type == FIGURE_BOLT) ? 60 : 10;
 		f->buildingId = buildingId;
 		f->destinationX = xDst;
@@ -226,14 +189,12 @@ int Figure_createMissile(int buildingId, int x, int y, int xDst, int yDst, int t
 			f, f->crossCountryX, f->crossCountryY,
 			15 * xDst, 15 * yDst, 1);
 	}
-	return figureId;
 }
 
 static void create_fishing_point(int x, int y)
 {
     random_generate_next();
-    int fishId = Figure_create(FIGURE_FISH_GULLS, x, y, 0);
-    figure *fish = figure_get(fishId);
+    figure *fish = figure_create(FIGURE_FISH_GULLS, x, y, DIR_0_TOP);
     fish->graphicOffset = random_byte() & 0x1f;
     fish->progressOnTile = random_byte() & 7;
     FigureMovement_crossCountrySetDirection(fish,
@@ -248,21 +209,32 @@ void Figure_createFishingPoints()
 
 static void create_herd(int x, int y)
 {
-    int herdType, numAnimals;
+    figure_type herd_type;
+    int numAnimals;
     switch (scenario_property_climate()) {
-        case CLIMATE_CENTRAL: herdType = FIGURE_SHEEP; numAnimals = 10; break;
-        case CLIMATE_NORTHERN: herdType = FIGURE_WOLF; numAnimals = 8; break;
-        case CLIMATE_DESERT: herdType = FIGURE_ZEBRA; numAnimals = 12; break;
-        default: return;
+        case CLIMATE_CENTRAL:
+            herd_type = FIGURE_SHEEP;
+            numAnimals = 10;
+            break;
+        case CLIMATE_NORTHERN:
+            herd_type = FIGURE_WOLF;
+            numAnimals = 8;
+            break;
+        case CLIMATE_DESERT:
+            herd_type = FIGURE_ZEBRA;
+            numAnimals = 12;
+            break;
+        default:
+            return;
     }
-    int formationId = formation_create_herd(herdType, x, y, numAnimals);
+    int formationId = formation_create_herd(herd_type, x, y, numAnimals);
     if (formationId > 0) {
         for (int fig = 0; fig < numAnimals; fig++) {
             random_generate_next();
-            int figureId = Figure_create(herdType, x, y, 0);
-            Data_Figures[figureId].actionState = FigureActionState_196_HerdAnimalAtRest;
-            Data_Figures[figureId].formationId = formationId;
-            Data_Figures[figureId].waitTicks = figureId & 0x1f;
+            figure *f = figure_create(herd_type, x, y, DIR_0_TOP);
+            f->actionState = FigureActionState_196_HerdAnimalAtRest;
+            f->formationId = formationId;
+            f->waitTicks = f->id & 0x1f;
         }
     }
 }
@@ -286,8 +258,7 @@ void Figure_createFlotsam()
 	const int waitTicks[] = {10, 50, 100, 130, 200, 250, 400, 430, 500, 600, 70, 750, 820, 830, 900, 980, 1010, 1030, 1200, 1300};
 	map_point river_entry = scenario_map_river_entry();
 	for (int i = 0; i < 20; i++) {
-		int figureId = Figure_create(FIGURE_FLOTSAM, river_entry.x, river_entry.y, 0);
-		struct Data_Figure *f = &Data_Figures[figureId];
+		figure *f = figure_create(FIGURE_FLOTSAM, river_entry.x, river_entry.y, DIR_0_TOP);
 		f->actionState = FigureActionState_128_FlotsamCreated;
 		f->resourceId = resourceIds[i];
 		f->waitTicks = waitTicks[i];
@@ -328,8 +299,7 @@ int Figure_createSoldierFromBarracks(int buildingId, int x, int y)
     formation_foreach_legion(get_closest_fort_needing_soldiers, &state);
 	if (state.formation_id > 0) {
 		const formation *m = formation_get(state.formation_id);
-		int figureId = Figure_create(m->figure_type, x, y, 0);
-		struct Data_Figure *f = &Data_Figures[figureId];
+		figure *f = figure_create(m->figure_type, x, y, DIR_0_TOP);
 		f->formationId = state.formation_id;
 		f->formationAtRest = 1;
 		if (m->figure_type == FIGURE_FORT_LEGIONARY) {
@@ -375,8 +345,7 @@ int Figure_createTowerSentryFromBarracks(int buildingId, int x, int y)
 		return 0;
 	}
 	struct Data_Building *tower = &Data_Buildings[towerId];
-	int figureId = Figure_create(FIGURE_TOWER_SENTRY, x, y, 0);
-	struct Data_Figure *f = &Data_Figures[figureId];
+	figure *f = figure_create(FIGURE_TOWER_SENTRY, x, y, DIR_0_TOP);
 	f->actionState = FigureActionState_174_TowerSentryGoingToTower;
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(tower->x, tower->y, tower->size, &xRoad, &yRoad)) {
@@ -385,7 +354,7 @@ int Figure_createTowerSentryFromBarracks(int buildingId, int x, int y)
 	} else {
 		f->state = FigureState_Dead;
 	}
-	tower->figureId = figureId;
+	tower->figureId = f->id;
 	f->buildingId = towerId;
 	return 1;
 }

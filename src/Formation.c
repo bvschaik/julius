@@ -36,10 +36,10 @@ int Formation_createLegion(int buildingId)
     if (!formation_id) {
         return 0;
     }
-	int standardId = Figure_create(FIGURE_FORT_STANDARD, 0, 0, 0);
-	Data_Figures[standardId].buildingId = buildingId;
-	Data_Figures[standardId].formationId = formation_id;
-    formation_set_standard(formation_id, standardId);
+	figure *standard = figure_create(FIGURE_FORT_STANDARD, 0, 0, 0);
+	standard->buildingId = buildingId;
+	standard->formationId = formation_id;
+    formation_set_standard(formation_id, standard->id);
 
 	return formation_id;
 }

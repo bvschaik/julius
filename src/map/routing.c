@@ -356,7 +356,7 @@ static int has_fighting_friendly(int grid_offset)
     int figure_id = Data_Grid_figureIds[grid_offset];
     if (figure_id > 0) {
         while (figure_id) {
-            struct Data_Figure *f = figure_get(figure_id);
+            figure *f = figure_get(figure_id);
             if (f->isFriendly && f->actionState == FigureActionState_150_Attack) {
                 return 1;
             }
@@ -371,7 +371,7 @@ static int has_fighting_enemy(int grid_offset)
     int figure_id = Data_Grid_figureIds[grid_offset];
     if (figure_id > 0) {
         while (figure_id) {
-            struct Data_Figure *f = figure_get(figure_id);
+            const figure *f = figure_get(figure_id);
             if (!f->isFriendly && f->actionState == FigureActionState_150_Attack) {
                 return 1;
             }

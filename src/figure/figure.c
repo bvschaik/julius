@@ -1,10 +1,52 @@
 #include "figure/figure.h"
 
+#include "core/random.h"
+#include "figure/name.h"
+#include "figure/trader.h"
+#include "map/grid.h"
+
+#include "../Figure.h"
+
 #include <string.h>
 
-struct Data_Figure *figure_get(int id)
+figure *figure_get(int id)
 {
     return &Data_Figures[id];
+}
+
+figure *figure_create(figure_type type, int x, int y, direction dir)
+{
+    int id = 0;
+    for (int i = 1; i < MAX_FIGURES; i++) {
+        if (!Data_Figures[i].state) {
+            id = i;
+            break;
+        }
+    }
+    if (!id) {
+        return &Data_Figures[0];
+    }
+    struct Data_Figure *f = &Data_Figures[id];
+    f->state = FigureState_Alive;
+    f->ciid = 1;
+    f->type = type;
+    f->useCrossCountry = 0;
+    f->isFriendly = 1;
+    f->createdSequence = Data_Figure_Extra.createdSequence++;
+    f->direction = dir;
+    f->sourceX = f->destinationX = f->previousTileX = f->x = x;
+    f->sourceY = f->destinationY = f->previousTileY = f->y = y;
+    f->gridOffset = map_grid_offset(x, y);
+    f->crossCountryX = 15 * x;
+    f->crossCountryY = 15 * y;
+    f->progressOnTile = 15;
+    f->phraseSequenceCity = f->phraseSequenceExact = random_byte() & 3;
+    f->name = figure_name_get(type, 0);
+    Figure_addToTileList(id);
+    if (type == FIGURE_TRADE_CARAVAN || type == FIGURE_TRADE_SHIP) {
+        f->traderId = trader_create();
+    }
+    return f;
 }
 
 void figure_init_scenario()
@@ -15,7 +57,7 @@ void figure_init_scenario()
     }
 }
 
-static void figure_save(buffer *buf, struct Data_Figure *f)
+static void figure_save(buffer *buf, const figure *f)
 {
     buffer_write_u8(buf, f->alternativeLocationIndex);
     buffer_write_u8(buf, f->graphicOffset);
@@ -115,7 +157,7 @@ static void figure_save(buffer *buf, struct Data_Figure *f)
     buffer_write_i16(buf, f->opponentId);
 }
 
-static void figure_load(buffer *buf, struct Data_Figure *f)
+static void figure_load(buffer *buf, figure *f)
 {
     f->alternativeLocationIndex = buffer_read_u8(buf);
     f->graphicOffset = buffer_read_u8(buf);

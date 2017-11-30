@@ -9,11 +9,11 @@
 
 static int createDeliveryBoy(int leaderId, struct Data_Figure *f)
 {
-	int boy = Figure_create(FIGURE_DELIVERY_BOY, f->x, f->y, 0);
-	Data_Figures[boy].inFrontFigureId = leaderId;
-	Data_Figures[boy].collectingItemId = f->collectingItemId;
-	Data_Figures[boy].buildingId = f->buildingId;
-	return boy;
+	figure *boy = figure_create(FIGURE_DELIVERY_BOY, f->x, f->y, 0);
+	boy->inFrontFigureId = leaderId;
+	boy->collectingItemId = f->collectingItemId;
+	boy->buildingId = f->buildingId;
+	return boy->id;
 }
 
 static int marketBuyerTakeFoodFromGranary(figure *f, int marketId, int granaryId)
@@ -158,7 +158,7 @@ void FigureAction_deliveryBoy(figure *f)
 	} else {
 		if (leader->state == FigureState_Alive) {
 			if (leader->type == FIGURE_MARKET_BUYER || leader->type == FIGURE_DELIVERY_BOY) {
-				FigureMovement_followTicks(f, f->inFrontFigureId, 1);
+				FigureMovement_followTicks(f, 1);
 			} else {
 				f->state = FigureState_Dead;
 			}

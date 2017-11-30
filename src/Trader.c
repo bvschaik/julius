@@ -1,6 +1,5 @@
 #include "Trader.h"
 
-#include "Figure.h"
 #include "Resource.h"
 #include "Terrain.h"
 
@@ -84,9 +83,8 @@ static int generateTrader(int cityId, empire_city *city)
 		if (Data_CityInfo.numWorkingDocks > 0 && scenario_map_has_river_entry() &&
 			!Data_CityInfo.tradeSeaProblemDuration) {
             map_point river_entry = scenario_map_river_entry();
-			int shipId = Figure_create(FIGURE_TRADE_SHIP, river_entry.x, river_entry.y, 0);
-            struct Data_Figure *ship = figure_get(shipId);
-			city->trader_figure_ids[index] = shipId;
+			figure *ship = figure_create(FIGURE_TRADE_SHIP, river_entry.x, river_entry.y, DIR_0_TOP);
+			city->trader_figure_ids[index] = ship->id;
 			ship->empireCityId = cityId;
 			ship->actionState = FigureActionState_110_TradeShipCreated;
 			ship->waitTicks = 10;
@@ -96,25 +94,22 @@ static int generateTrader(int cityId, empire_city *city)
 		// generate caravan and donkeys
 		if (!Data_CityInfo.tradeLandProblemDuration) {
 			// caravan head
-			int caravanId = Figure_create(FIGURE_TRADE_CARAVAN,
-				Data_CityInfo.entryPointX, Data_CityInfo.entryPointY, 0);
-            struct Data_Figure *caravan = figure_get(caravanId);
-			city->trader_figure_ids[index] = caravanId;
+			figure *caravan = figure_create(FIGURE_TRADE_CARAVAN,
+				Data_CityInfo.entryPointX, Data_CityInfo.entryPointY, DIR_0_TOP);
+			city->trader_figure_ids[index] = caravan->id;
 			caravan->empireCityId = cityId;
 			caravan->actionState = FigureActionState_100_TradeCaravanCreated;
 			caravan->waitTicks = 10;
 			// donkey 1
-			int donkey1_id = Figure_create(FIGURE_TRADE_CARAVAN_DONKEY,
-				Data_CityInfo.entryPointX, Data_CityInfo.entryPointY, 0);
-            struct Data_Figure *donkey1 = figure_get(donkey1_id);
+			figure *donkey1 = figure_create(FIGURE_TRADE_CARAVAN_DONKEY,
+				Data_CityInfo.entryPointX, Data_CityInfo.entryPointY, DIR_0_TOP);
 			donkey1->actionState = FigureActionState_100_TradeCaravanCreated;
-			donkey1->inFrontFigureId = caravanId;
+			donkey1->inFrontFigureId = caravan->id;
 			// donkey 2
-			int donkey2_id = Figure_create(FIGURE_TRADE_CARAVAN_DONKEY,
-				Data_CityInfo.entryPointX, Data_CityInfo.entryPointY, 0);
-            struct Data_Figure *donkey2 = figure_get(donkey2_id);
+			figure *donkey2 = figure_create(FIGURE_TRADE_CARAVAN_DONKEY,
+				Data_CityInfo.entryPointX, Data_CityInfo.entryPointY, DIR_0_TOP);
 			donkey2->actionState = FigureActionState_100_TradeCaravanCreated;
-			donkey2->inFrontFigureId = donkey1_id;
+			donkey2->inFrontFigureId = donkey1->id;
 			return 1;
 		}
 	}

@@ -9,7 +9,7 @@ void FigureMovement_roamTicks(figure *f, int numTicks);
 
 void FigureMovement_walkTicks(figure *f, int numTicks);
 
-void FigureMovement_followTicks(figure *f, int leaderFigureId, int numTicks);
+void FigureMovement_followTicks(figure *f, int numTicks);
 
 void FigureMovement_walkTicksTowerSentry(figure *f, int numTicks);
 

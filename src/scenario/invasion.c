@@ -21,7 +21,6 @@
 #include "Data/State.h"
 #include "../Building.h"
 #include "CityInfo.h"
-#include "Figure.h"
 
 #define MAX_INVASION_WARNINGS 101
 
@@ -283,8 +282,7 @@ static int start_invasion(int enemy_type, int amount, int invasion_point, int at
                 continue;
             }
             for (int fig = 0; fig < soldiers_per_formation[type][i]; fig++) {
-                int figureId = Figure_create(figure_type, x, y, orientation);
-                struct Data_Figure *f = figure_get(figureId);
+                figure *f = figure_create(figure_type, x, y, orientation);
                 f->isFriendly = 0;
                 f->actionState = FigureActionState_151_EnemyInitial;
                 f->waitTicks = 200 * seq + 10 * fig + 10;

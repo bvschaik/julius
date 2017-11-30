@@ -450,8 +450,9 @@ void FigureMovement_walkTicks(figure *f, int numTicks)
 	FigureMovement_walkTicksInternal(f, numTicks, 0);
 }
 
-void FigureMovement_followTicks(figure *f, int leaderFigureId, int numTicks)
+void FigureMovement_followTicks(figure *f, int numTicks)
 {
+    const figure *leader = figure_get(f->inFrontFigureId);
 	if (f->x == f->sourceX && f->y == f->sourceY) {
 		f->isGhost = 1;
 	}
@@ -463,8 +464,7 @@ void FigureMovement_followTicks(figure *f, int leaderFigureId, int numTicks)
 		} else {
 			f->progressOnTile = 15;
 			f->direction = calc_general_direction(f->x, f->y,
-				Data_Figures[leaderFigureId].previousTileX,
-				Data_Figures[leaderFigureId].previousTileY);
+				leader->previousTileX, leader->previousTileY);
 			if (f->direction >= 8) {
 				break;
 			}
@@ -614,7 +614,7 @@ int FigureMovement_crossCountryWalkTicks(figure *f, int numTicks)
 int FigureMovement_canLaunchCrossCountryMissile(int xSrc, int ySrc, int xDst, int yDst)
 {
 	int height = 0;
-	struct Data_Figure *f = &Data_Figures[0];
+	figure *f = figure_get(0); // abuse unused figure 0 as scratch
 	f->crossCountryX = 15 * xSrc;
 	f->crossCountryY = 15 * ySrc;
 	if (Data_Grid_terrain[GridOffset(xSrc, ySrc)] & Terrain_WallOrGatehouse) {
@@ -634,7 +634,7 @@ int FigureMovement_canLaunchCrossCountryMissile(int xSrc, int ySrc, int xDst, in
 		if (height) {
 			height--;
 		} else {
-			int gridOffset = GridOffset(f->x, f->y);
+			int gridOffset = map_grid_offset(f->x, f->y);
 			if (Data_Grid_terrain[gridOffset] & (Terrain_Wall | Terrain_Gatehouse | Terrain_Tree)) {
 				break;
 			}
