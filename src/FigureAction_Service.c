@@ -41,7 +41,7 @@ void FigureAction_taxCollector(int figureId)
 				int xRoad, yRoad;
 				if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
 					f->actionState = FigureActionState_41_TaxCollectorEnteringExiting;
-					FigureAction_Common_setCrossCountryDestination(figureId, f, xRoad, yRoad);
+					FigureAction_Common_setCrossCountryDestination(f, xRoad, yRoad);
 					f->roamLength = 0;
 				} else {
 					f->state = FigureState_Dead;
@@ -81,7 +81,7 @@ void FigureAction_taxCollector(int figureId)
 			FigureMovement_walkTicks(figureId, 1);
 			if (f->direction == DirFigure_8_AtDestination) {
 				f->actionState = FigureActionState_41_TaxCollectorEnteringExiting;
-				FigureAction_Common_setCrossCountryDestination(figureId, f, b->x, b->y);
+				FigureAction_Common_setCrossCountryDestination(f, b->x, b->y);
 				f->roamLength = 0;
 			} else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
@@ -119,7 +119,7 @@ void FigureAction_engineer(int figureId)
 				int xRoad, yRoad;
 				if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
 					f->actionState = FigureActionState_61_EngineerEnteringExiting;
-					FigureAction_Common_setCrossCountryDestination(figureId, f, xRoad, yRoad);
+					FigureAction_Common_setCrossCountryDestination(f, xRoad, yRoad);
 					f->roamLength = 0;
 				} else {
 					f->state = FigureState_Dead;
@@ -159,7 +159,7 @@ void FigureAction_engineer(int figureId)
 			FigureMovement_walkTicks(figureId, 1);
 			if (f->direction == DirFigure_8_AtDestination) {
 				f->actionState = FigureActionState_61_EngineerEnteringExiting;
-				FigureAction_Common_setCrossCountryDestination(figureId, f, b->x, b->y);
+				FigureAction_Common_setCrossCountryDestination(f, b->x, b->y);
 				f->roamLength = 0;
 			} else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
@@ -347,7 +347,7 @@ void FigureAction_prefect(int figureId)
 				int xRoad, yRoad;
 				if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
 					f->actionState = FigureActionState_71_PrefectEnteringExiting;
-					FigureAction_Common_setCrossCountryDestination(figureId, f, xRoad, yRoad);
+					FigureAction_Common_setCrossCountryDestination(f, xRoad, yRoad);
 					f->roamLength = 0;
 				} else {
 					f->state = FigureState_Dead;
@@ -388,7 +388,7 @@ void FigureAction_prefect(int figureId)
 			FigureMovement_walkTicks(figureId, 1);
 			if (f->direction == DirFigure_8_AtDestination) {
 				f->actionState = FigureActionState_71_PrefectEnteringExiting;
-				FigureAction_Common_setCrossCountryDestination(figureId, f, b->x, b->y);
+				FigureAction_Common_setCrossCountryDestination(f, b->x, b->y);
 				f->roamLength = 0;
 			} else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;

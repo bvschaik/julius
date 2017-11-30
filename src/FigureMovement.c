@@ -249,7 +249,7 @@ void FigureMovement_roamTicks(int figureId, int numTicks)
 			f->progressOnTile = 15;
 			f->roamRandomCounter++;
 			int cameFromDirection = (f->previousTileDirection + 4) % 8;
-			if (Figure_provideServiceCoverage(figureId)) {
+			if (Figure_provideServiceCoverage(f)) {
 				return;
 			}
 			int roadTiles[8];
@@ -429,7 +429,7 @@ static void FigureMovement_walkTicksInternal(int figureId, int numTicks, int roa
 		if (f->progressOnTile < 15) {
 			FigureMovement_advanceTick(f);
 		} else {
-			Figure_provideServiceCoverage(figureId);
+			Figure_provideServiceCoverage(f);
 			f->progressOnTile = 15;
 			if (f->routingPathId <= 0) {
 				figure_route_add(figureId);
@@ -494,10 +494,9 @@ void FigureMovement_walkTicksTowerSentry(int figureId, int numTicks)
 	}
 }
 
-void FigureMovement_crossCountrySetDirection(int figureId, int xSrc, int ySrc, int xDst, int yDst, int isMissile)
+void FigureMovement_crossCountrySetDirection(figure *f, int xSrc, int ySrc, int xDst, int yDst, int isMissile)
 {
 	// all x/y are in 1/15th of a tile
-	struct Data_Figure *f = &Data_Figures[figureId];
 	f->ccDestinationX = xDst;
 	f->ccDestinationY = yDst;
 	f->ccDeltaX = (xSrc > xDst) ? (xSrc - xDst) : (xDst - xSrc);
@@ -627,7 +626,7 @@ int FigureMovement_canLaunchCrossCountryMissile(int xSrc, int ySrc, int xDst, in
 	if (Data_Grid_terrain[GridOffset(xSrc, ySrc)] & Terrain_WallOrGatehouse) {
 		height = 6;
 	}
-	FigureMovement_crossCountrySetDirection(0, 15 * xSrc, 15 * ySrc, 15 * xDst, 15 * yDst, 0);
+	FigureMovement_crossCountrySetDirection(f, 15 * xSrc, 15 * ySrc, 15 * xDst, 15 * yDst, 0);
 
 	for (int guard = 0; guard < 1000; guard++) {
 		for (int i = 0; i < 8; i++) {

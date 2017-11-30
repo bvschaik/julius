@@ -11,7 +11,7 @@ void figure_route_add(int figure_id);
 
 void figure_route_remove(int figure_id);
 
-int figure_route_get_direction(int path_id, int tile);
+int figure_route_get_direction(int path_id, int index);
 
 void figure_route_save_state(buffer *figures, buffer *paths);
 

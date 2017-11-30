@@ -144,9 +144,8 @@ void FigureAction_rioter(int figureId)
 	}
 }
 
-int FigureAction_Rioter_collapseBuilding(int figureId)
+int FigureAction_Rioter_collapseBuilding(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	for (int dir = 0; dir < 8; dir += 2) {
 		int gridOffset = f->gridOffset + map_grid_direction_delta(dir);
 		if (!Data_Grid_buildingIds[gridOffset]) {

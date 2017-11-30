@@ -149,6 +149,8 @@ enum {
 };
 
 extern struct Data_Figure {
+    int id;
+
 	unsigned char alternativeLocationIndex;
 	unsigned char graphicOffset;
 	unsigned char isEnemyGraphic;
@@ -246,6 +248,8 @@ extern struct Data_Figure {
 	short attackerId2;
 	short opponentId; // 7e
 } Data_Figures[MAX_FIGURES];
+
+typedef struct Data_Figure figure;
 
 extern struct _Data_Figure_Extra {
 	int createdSequence;

@@ -53,7 +53,7 @@ void FigureAction_seagulls(int figureId)
 		if (f->progressOnTile > 8) {
 			f->progressOnTile = 0;
 		}
-		FigureAction_Common_setCrossCountryDestination(figureId, f,
+		FigureAction_Common_setCrossCountryDestination(f,
 			f->sourceX + seagullOffsetsX[f->progressOnTile],
 			f->sourceY + seagullOffsetsY[f->progressOnTile]);
 	}
@@ -344,7 +344,7 @@ void FigureAction_hippodromeHorse(int figureId)
 				}
 				setDestinationHippodromeHorse(figureId, f, HippodromeHorse_Racing);
 				f->direction = calc_general_direction(f->x, f->y, f->destinationX, f->destinationY);
-				FigureMovement_crossCountrySetDirection(figureId,
+				FigureMovement_crossCountrySetDirection(f,
 					f->crossCountryX, f->crossCountryY, 15 * f->destinationX, 15 * f->destinationY, 0);
 			}
 			if (f->actionState != FigureActionState_202_HippodromeMiniHorseDone) {
@@ -355,7 +355,7 @@ void FigureAction_hippodromeHorse(int figureId)
 			if (!f->waitTicks) {
 				setDestinationHippodromeHorse(figureId, f, HippodromeHorse_Finished);
 				f->direction = calc_general_direction(f->x, f->y, f->destinationX, f->destinationY);
-				FigureMovement_crossCountrySetDirection(figureId,
+				FigureMovement_crossCountrySetDirection(f,
 					f->crossCountryX, f->crossCountryY, 15 * f->destinationX, 15 * f->destinationY, 0);
 			}
 			if (f->direction != DirFigure_8_AtDestination) {

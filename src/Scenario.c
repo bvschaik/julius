@@ -29,6 +29,7 @@
 #include "core/random.h"
 #include "empire/empire.h"
 #include "figure/enemy_army.h"
+#include "figure/figure.h"
 #include "figure/formation.h"
 #include "figure/name.h"
 #include "figure/route.h"
@@ -142,7 +143,7 @@ static void initCustomScenario(const char *scenarioName)
 	SidebarMenu_enableAllBuildingMenuItems();
 	Building_clearList();
 	building_storage_clear_all();
-	Figure_clearList();
+	figure_init_scenario();
 	enemy_armies_clear();
 	figure_name_init();
     formations_clear();

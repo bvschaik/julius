@@ -211,11 +211,11 @@ void FigureAction_Common_setCartOffset(int figureId, int direction)
 	Data_Figures[figureId].yOffsetCart = cartOffsetsY[direction];
 }
 
-void FigureAction_Common_setCrossCountryDestination(int figureId, struct Data_Figure *f, int xDst, int yDst)
+void FigureAction_Common_setCrossCountryDestination(figure *f, int xDst, int yDst)
 {
 	f->destinationX = xDst;
 	f->destinationY = yDst;
 	FigureMovement_crossCountrySetDirection(
-		figureId, f->crossCountryX, f->crossCountryY,
+		f, f->crossCountryX, f->crossCountryY,
 		15 * xDst, 15 * yDst, 0);
 }

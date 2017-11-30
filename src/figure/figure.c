@@ -1,8 +1,18 @@
 #include "figure/figure.h"
 
+#include <string.h>
+
 struct Data_Figure *figure_get(int id)
 {
     return &Data_Figures[id];
+}
+
+void figure_init_scenario()
+{
+    for (int i = 0; i < MAX_FIGURES; i++) {
+        memset(&Data_Figures[i], 0, sizeof(figure));
+        Data_Figures[i].id = i;
+    }
 }
 
 static void figure_save(buffer *buf, struct Data_Figure *f)
@@ -220,5 +230,6 @@ void figure_load_state(buffer *list, buffer *seq)
 
     for (int i = 0; i < MAX_FIGURES; i++) {
         figure_load(list, &Data_Figures[i]);
+        Data_Figures[i].id = i;
     }
 }

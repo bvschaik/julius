@@ -15,6 +15,7 @@
 #include "core/calc.h"
 #include "core/random.h"
 #include "empire/city.h"
+#include "figure/figure.h"
 #include "figure/formation.h"
 #include "figure/name.h"
 #include "figure/route.h"
@@ -24,13 +25,6 @@
 #include "sound/effect.h"
 
 #include <string.h>
-
-void Figure_clearList()
-{
-	for (int i = 0; i < MAX_FIGURES; i++) {
-		memset(&Data_Figures[i], 0, sizeof(struct Data_Figure));
-	}
-}
 
 int Figure_create(int figureType, int x, int y, char direction)
 {
@@ -119,6 +113,7 @@ void Figure_delete(int figureId)
 	figure_route_remove(figureId);
 	Figure_removeFromTileList(figureId);
 	memset(f, 0, sizeof(struct Data_Figure));
+    f->id = figureId;
 }
 
 void Figure_addToTileList(int figureId)
@@ -208,7 +203,7 @@ void Figure_createDustCloud(int x, int y, int size)
 			f->crossCountryY += ccOffset;
 			f->destinationX += dustCloudDirectionX[i];
 			f->destinationY += dustCloudDirectionY[i];
-			FigureMovement_crossCountrySetDirection(figureId,
+			FigureMovement_crossCountrySetDirection(f,
 				f->crossCountryX, f->crossCountryY,
 				15 * f->destinationX + ccOffset,
 				15 * f->destinationY + ccOffset, 0);
@@ -228,7 +223,7 @@ int Figure_createMissile(int buildingId, int x, int y, int xDst, int yDst, int t
 		f->destinationX = xDst;
 		f->destinationY = yDst;
 		FigureMovement_crossCountrySetDirection(
-			figureId, f->crossCountryX, f->crossCountryY,
+			f, f->crossCountryX, f->crossCountryY,
 			15 * xDst, 15 * yDst, 1);
 	}
 	return figureId;
@@ -238,11 +233,12 @@ static void create_fishing_point(int x, int y)
 {
     random_generate_next();
     int fishId = Figure_create(FIGURE_FISH_GULLS, x, y, 0);
-    Data_Figures[fishId].graphicOffset = random_byte() & 0x1f;
-    Data_Figures[fishId].progressOnTile = random_byte() & 7;
-    FigureMovement_crossCountrySetDirection(fishId,
-        Data_Figures[fishId].crossCountryX, Data_Figures[fishId].crossCountryY,
-        15 * Data_Figures[fishId].destinationX, 15 * Data_Figures[fishId].destinationY, 0);
+    figure *fish = figure_get(fishId);
+    fish->graphicOffset = random_byte() & 0x1f;
+    fish->progressOnTile = random_byte() & 7;
+    FigureMovement_crossCountrySetDirection(fish,
+        fish->crossCountryX, fish->crossCountryY,
+        15 * fish->destinationX, 15 * fish->destinationY, 0);
 }
 
 void Figure_createFishingPoints()

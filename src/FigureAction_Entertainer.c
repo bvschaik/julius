@@ -180,7 +180,7 @@ void FigureAction_entertainer(int figureId)
 				int xRoad, yRoad;
 				if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
 					f->actionState = FigureActionState_91_EntertainerExitingSchool;
-					FigureAction_Common_setCrossCountryDestination(figureId, f, xRoad, yRoad);
+					FigureAction_Common_setCrossCountryDestination(f, xRoad, yRoad);
 					f->roamLength = 0;
 				} else {
 					f->state = FigureState_Dead;

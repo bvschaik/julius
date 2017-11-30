@@ -1,7 +1,8 @@
 #ifndef FIGURE_H
 #define FIGURE_H
 
-void Figure_clearList();
+#include "figure/figure.h"
+
 int Figure_create(int figureType, int x, int y, char direction);
 void Figure_delete(int figureId);
 
@@ -29,7 +30,7 @@ int Figure_playPhrase(int figureId);
 void Figure_playDieSound(int figureType);
 void Figure_playHitSound(int figureType);
 
-int Figure_provideServiceCoverage(int figureId);
+int Figure_provideServiceCoverage(figure *f);
 
 void FigureGeneration_generateFiguresForBuildings();
 

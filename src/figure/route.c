@@ -143,9 +143,9 @@ void figure_route_remove(int figure_id)
     }
 }
 
-int figure_route_get_direction(int path_id, int tile)
+int figure_route_get_direction(int path_id, int index)
 {
-    return data.direction_paths[path_id][tile];
+    return data.direction_paths[path_id][index];
 }
 
 void figure_route_save_state(buffer *figures, buffer *paths)

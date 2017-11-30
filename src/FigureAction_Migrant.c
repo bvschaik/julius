@@ -72,7 +72,7 @@ void FigureAction_immigrant(int figureId)
 			switch (f->direction) {
 				case DirFigure_8_AtDestination:
 					f->actionState = FigureActionState_3_ImmigrantEnteringHouse;
-					FigureAction_Common_setCrossCountryDestination(figureId, f, b->x, b->y);
+					FigureAction_Common_setCrossCountryDestination(f, b->x, b->y);
 					f->roamLength = 0;
 					break;
 				case DirFigure_9_Reroute:
@@ -142,7 +142,7 @@ void FigureAction_emigrant(int figureId)
 					f->state = FigureState_Dead;
 				}
 				f->actionState = FigureActionState_5_EmigrantExitingHouse;
-				FigureAction_Common_setCrossCountryDestination(figureId, f, xRoad, yRoad);
+				FigureAction_Common_setCrossCountryDestination(f, xRoad, yRoad);
 				f->roamLength = 0;
 			}
 			break;
@@ -221,7 +221,7 @@ void FigureAction_homeless(int figureId)
 				f->state = FigureState_Dead;
 			} else if (f->direction == DirFigure_8_AtDestination) {
 				f->actionState = FigureActionState_9_HomelessEnteringHouse;
-				FigureAction_Common_setCrossCountryDestination(figureId, f,
+				FigureAction_Common_setCrossCountryDestination(f,
 					Data_Buildings[f->immigrantBuildingId].x,
 					Data_Buildings[f->immigrantBuildingId].y);
 				f->roamLength = 0;

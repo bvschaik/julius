@@ -5,7 +5,9 @@
 
 #include "Data/Figure.h"
 
-struct Data_Figure *figure_get(int id);
+figure *figure_get(int id);
+
+void figure_init_scenario();
 
 void figure_save_state(buffer *list, buffer *seq);
 
