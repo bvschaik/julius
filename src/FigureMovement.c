@@ -10,7 +10,6 @@
 #include "Data/Constants.h"
 #include "Data/Grid.h"
 #include "Data/State.h"
-#include "Data/Figure.h"
 
 #include "core/calc.h"
 #include "figure/route.h"

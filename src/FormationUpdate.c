@@ -7,7 +7,6 @@
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Grid.h"
-#include "Data/Figure.h"
 #include "Data/State.h"
 
 #include "city/message.h"

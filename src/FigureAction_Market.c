@@ -152,7 +152,7 @@ void FigureAction_deliveryBoy(figure *f)
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	
-	struct Data_Figure *leader = &Data_Figures[f->inFrontFigureId];
+	figure *leader = figure_get(f->inFrontFigureId);
 	if (f->inFrontFigureId <= 0 || leader->actionState == FigureActionState_149_Corpse) {
 		f->state = FigureState_Dead;
 	} else {

@@ -1,7 +1,7 @@
 #ifndef FIGUREACTION_H
 #define FIGUREACTION_H
 
-#include "Data/Figure.h"
+#include "figure/figure.h"
 
 enum {
 	TradeShipState_None = 0,

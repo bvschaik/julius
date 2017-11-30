@@ -1,7 +1,7 @@
 #ifndef FIGUREMOVEMENT_H
 #define FIGUREMOVEMENT_H
 
-#include "Data/Figure.h"
+#include "figure/figure.h"
 
 void FigureMovement_initRoaming(figure *f);
 

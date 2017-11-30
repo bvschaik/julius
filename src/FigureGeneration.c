@@ -11,7 +11,6 @@
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 #include "Data/Grid.h"
-#include "Data/Figure.h"
 
 #include "building/model.h"
 #include "city/message.h"

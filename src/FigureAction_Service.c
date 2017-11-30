@@ -221,13 +221,14 @@ static int prefectGoFightEnemy(figure *f)
 	int distance;
 	int enemyId = prefectGetNearestEnemy(f->x, f->y, &distance);
 	if (enemyId > 0 && distance <= 30) {
+        figure *enemy = figure_get(enemyId);
 		f->waitTicksNextTarget = 0;
 		f->actionState = FigureActionState_76_PrefectGoingToEnemy;
-		f->destinationX = Data_Figures[enemyId].x;
-		f->destinationY = Data_Figures[enemyId].y;
+		f->destinationX = enemy->x;
+		f->destinationY = enemy->y;
 		f->targetFigureId = enemyId;
-		Data_Figures[enemyId].targetedByFigureId = f->x;
-		f->targetFigureCreatedSequence = Data_Figures[enemyId].createdSequence;
+		enemy->targetedByFigureId = f->id;
+		f->targetFigureCreatedSequence = enemy->createdSequence;
 		figure_route_remove(f);
 		return 1;
 	}
