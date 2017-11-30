@@ -221,10 +221,10 @@ void FigureAction_tradeCaravan(int figureId)
 	f->cartGraphicId = 0;
 	switch (f->actionState) {
 		case FigureActionState_150_Attack:
-			FigureAction_Common_handleAttack(figureId);
+			FigureAction_Common_handleAttack(f);
 			break;
 		case FigureActionState_149_Corpse:
-			FigureAction_Common_handleCorpse(figureId);
+			FigureAction_Common_handleCorpse(f);
 			break;
 		case FigureActionState_100_TradeCaravanCreated:
 			f->isGhost = 1;
@@ -357,10 +357,10 @@ void FigureAction_nativeTrader(int figureId)
 	f->cartGraphicId = 0;
 	switch (f->actionState) {
 		case FigureActionState_150_Attack:
-			FigureAction_Common_handleAttack(figureId);
+			FigureAction_Common_handleAttack(f);
 			break;
 		case FigureActionState_149_Corpse:
-			FigureAction_Common_handleCorpse(figureId);
+			FigureAction_Common_handleCorpse(f);
 			break;
 		case FigureActionState_160_NativeTraderGoingToWarehouse:
 			FigureMovement_walkTicks(f, 1);
@@ -447,20 +447,20 @@ void FigureAction_nativeTrader(int figureId)
 	}
 }
 
-static int tradeShipLostQueue(int figureId)
+static int tradeShipLostQueue(const figure *f)
 {
-	int buildingId = Data_Figures[figureId].destinationBuildingId;
+	int buildingId = f->destinationBuildingId;
 	struct Data_Building *b = &Data_Buildings[buildingId];
 	if (BuildingIsInUse(buildingId) && b->type == BUILDING_DOCK &&
-		b->numWorkers > 0 && b->data.other.boatFigureId == figureId) {
+		b->numWorkers > 0 && b->data.other.boatFigureId == f->id) {
 		return 0;
 	}
 	return 1;
 }
 
-static int tradeShipDoneTrading(int figureId)
+static int tradeShipDoneTrading(figure *f)
 {
-	int buildingId = Data_Figures[figureId].destinationBuildingId;
+	int buildingId = f->destinationBuildingId;
 	struct Data_Building *b = &Data_Buildings[buildingId];
 	if (BuildingIsInUse(buildingId) && b->type == BUILDING_DOCK && b->numWorkers > 0) {
 		for (int i = 0; i < 3; i++) {
@@ -470,9 +470,9 @@ static int tradeShipDoneTrading(int figureId)
 				return 0;
 			}
 		}
-		Data_Figures[figureId].tradeShipFailedDockAttempts++;
-		if (Data_Figures[figureId].tradeShipFailedDockAttempts >= 10) {
-			Data_Figures[figureId].tradeShipFailedDockAttempts = 11;
+		f->tradeShipFailedDockAttempts++;
+		if (f->tradeShipFailedDockAttempts >= 10) {
+			f->tradeShipFailedDockAttempts = 11;
 			return 1;
 		}
 		return 0;
@@ -489,10 +489,10 @@ void FigureAction_tradeShip(int figureId)
 	f->cartGraphicId = 0;
 	switch (f->actionState) {
 		case FigureActionState_150_Attack:
-			FigureAction_Common_handleAttack(figureId);
+			FigureAction_Common_handleAttack(f);
 			break;
 		case FigureActionState_149_Corpse:
-			FigureAction_Common_handleCorpse(figureId);
+			FigureAction_Common_handleCorpse(f);
 			break;
 		case FigureActionState_110_TradeShipCreated:
 			f->loadsSoldOrCarrying = 12;
@@ -541,14 +541,14 @@ void FigureAction_tradeShip(int figureId)
 			}
 			break;
 		case FigureActionState_112_TradeShipMoored:
-			if (tradeShipLostQueue(figureId)) {
+			if (tradeShipLostQueue(f)) {
 				f->tradeShipFailedDockAttempts = 0;
 				f->actionState = FigureActionState_115_TradeShipLeaving;
 				f->waitTicks = 0;
                 map_point river_entry = scenario_map_river_entry();
 				f->destinationX = river_entry.x;
 				f->destinationY = river_entry.y;
-			} else if (tradeShipDoneTrading(figureId)) {
+			} else if (tradeShipDoneTrading(f)) {
 				f->tradeShipFailedDockAttempts = 0;
 				f->actionState = FigureActionState_115_TradeShipLeaving;
 				f->waitTicks = 0;

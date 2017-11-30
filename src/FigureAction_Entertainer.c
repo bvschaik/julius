@@ -165,11 +165,11 @@ void FigureAction_entertainer(int figureId)
 	int speedFactor = f->type == FIGURE_CHARIOTEER ? 2 : 1;
 	switch (f->actionState) {
 		case FigureActionState_150_Attack:
-			FigureAction_Common_handleAttack(figureId);
+			FigureAction_Common_handleAttack(f);
 			FigureActionIncreaseGraphicOffset(f, 32);
 			break;
 		case FigureActionState_149_Corpse:
-			FigureAction_Common_handleCorpse(figureId);
+			FigureAction_Common_handleCorpse(f);
 			break;
 		case FigureActionState_90_EntertainerAtSchoolCreated:
 			f->isGhost = 1;

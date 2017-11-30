@@ -115,10 +115,10 @@ void FigureAction_docker(int figureId)
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	switch (f->actionState) {
 		case FigureActionState_150_Attack:
-			FigureAction_Common_handleAttack(figureId);
+			FigureAction_Common_handleAttack(f);
 			break;
 		case FigureActionState_149_Corpse:
-			FigureAction_Common_handleCorpse(figureId);
+			FigureAction_Common_handleCorpse(f);
 			break;
 		case FigureActionState_132_DockerIdling:
 			f->resourceId = 0;

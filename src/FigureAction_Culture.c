@@ -10,10 +10,10 @@ static void FigureAction_cultureCommon(int figureId, int numTicks)
 	struct Data_Figure *f = &Data_Figures[figureId];
 	switch (f->actionState) {
 		case FigureActionState_150_Attack:
-			FigureAction_Common_handleAttack(figureId);
+			FigureAction_Common_handleAttack(f);
 			break;
 		case FigureActionState_149_Corpse:
-			FigureAction_Common_handleCorpse(figureId);
+			FigureAction_Common_handleCorpse(f);
 			break;
 		case FigureActionState_125_Roaming:
 			f->isGhost = 0;
@@ -85,10 +85,10 @@ void FigureAction_schoolChild(int figureId)
 	FigureActionIncreaseGraphicOffset(f, 12);
 	switch (f->actionState) {
 		case FigureActionState_150_Attack:
-			FigureAction_Common_handleAttack(figureId);
+			FigureAction_Common_handleAttack(f);
 			break;
 		case FigureActionState_149_Corpse:
-			FigureAction_Common_handleCorpse(figureId);
+			FigureAction_Common_handleCorpse(f);
 			break;
 		case FigureActionState_125_Roaming:
 			f->isGhost = 0;

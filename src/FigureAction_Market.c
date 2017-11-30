@@ -16,9 +16,8 @@ static int createDeliveryBoy(int leaderId, struct Data_Figure *f)
 	return boy;
 }
 
-static int marketBuyerTakeFoodFromGranary(int figureId, int marketId, int granaryId)
+static int marketBuyerTakeFoodFromGranary(figure *f, int marketId, int granaryId)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	int resource;
 	switch (f->collectingItemId) {
 		case INVENTORY_WHEAT: resource = RESOURCE_WHEAT; break;
@@ -58,16 +57,15 @@ static int marketBuyerTakeFoodFromGranary(int figureId, int marketId, int granar
 	}
 	Resource_removeFromGranary(granaryId, resource, 100 * numLoads);
 	// create delivery boys
-	int previousBoy = figureId;
+	int previousBoy = f->id;
 	for (int i = 0; i < numLoads; i++) {
 		previousBoy = createDeliveryBoy(previousBoy, f);
 	}
 	return 1;
 }
 
-static int marketBuyerTakeResourceFromWarehouse(int figureId, int marketId, int warehouseId)
+static int marketBuyerTakeResourceFromWarehouse(figure *f, int marketId, int warehouseId)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	int resource;
 	switch (f->collectingItemId) {
 		case INVENTORY_POTTERY: resource = RESOURCE_POTTERY; break;
@@ -89,7 +87,7 @@ static int marketBuyerTakeResourceFromWarehouse(int figureId, int marketId, int 
 	Resource_removeFromWarehouse(warehouseId, resource, numLoads);
 	
 	// create delivery boys
-	int boy1 = createDeliveryBoy(figureId, f);
+	int boy1 = createDeliveryBoy(f->id, f);
 	if (numLoads > 1) {
 		createDeliveryBoy(boy1, f);
 	}
@@ -109,20 +107,20 @@ void FigureAction_marketBuyer(int figureId)
 	FigureActionIncreaseGraphicOffset(f, 12);
 	switch (f->actionState) {
 		case FigureActionState_150_Attack:
-			FigureAction_Common_handleAttack(figureId);
+			FigureAction_Common_handleAttack(f);
 			break;
 		case FigureActionState_149_Corpse:
-			FigureAction_Common_handleCorpse(figureId);
+			FigureAction_Common_handleCorpse(f);
 			break;
 		case FigureActionState_145_MarketBuyerGoingToStorage:
 			FigureMovement_walkTicks(f, 1);
 			if (f->direction == DirFigure_8_AtDestination) {
 				if (f->collectingItemId > 3) {
-					if (!marketBuyerTakeResourceFromWarehouse(figureId, f->buildingId, f->destinationBuildingId)) {
+					if (!marketBuyerTakeResourceFromWarehouse(f, f->buildingId, f->destinationBuildingId)) {
 						f->state = FigureState_Dead;
 					}
 				} else {
-					if (!marketBuyerTakeFoodFromGranary(figureId, f->buildingId, f->destinationBuildingId)) {
+					if (!marketBuyerTakeFoodFromGranary(f, f->buildingId, f->destinationBuildingId)) {
 						f->state = FigureState_Dead;
 					}
 				}

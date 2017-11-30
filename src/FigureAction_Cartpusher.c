@@ -156,10 +156,10 @@ void FigureAction_cartpusher(int figureId)
 	
 	switch (f->actionState) {
 		case FigureActionState_150_Attack:
-			FigureAction_Common_handleAttack(figureId);
+			FigureAction_Common_handleAttack(f);
 			break;
 		case FigureActionState_149_Corpse:
-			FigureAction_Common_handleCorpse(figureId);
+			FigureAction_Common_handleCorpse(f);
 			break;
 		case FigureActionState_20_CartpusherInitial:
 			setCartGraphic(f);
@@ -411,10 +411,10 @@ void FigureAction_warehouseman(int figureId)
 	
 	switch (f->actionState) {
 		case FigureActionState_150_Attack:
-			FigureAction_Common_handleAttack(figureId);
+			FigureAction_Common_handleAttack(f);
 			break;
 		case FigureActionState_149_Corpse:
-			FigureAction_Common_handleCorpse(figureId);
+			FigureAction_Common_handleCorpse(f);
 			break;
 		case FigureActionState_50_WarehousemanCreated:
 			if (!BuildingIsInUse(f->buildingId) ||

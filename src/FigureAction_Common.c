@@ -65,15 +65,15 @@ const int figureActionFormationLayoutPositionY[13][16] = {
 static const int cartOffsetsX[] = {13, 18, 12, 0, -13, -18, -13, 0};
 static const int cartOffsetsY[] = {-7, -1, 7, 11, 6, -1, -7, -12};
 
-void FigureAction_Common_handleCorpse(int figureId)
+void FigureAction_Common_handleCorpse(figure *f)
 {
-	if (Data_Figures[figureId].waitTicks < 0) {
-		Data_Figures[figureId].waitTicks = 0;
+	if (f->waitTicks < 0) {
+		f->waitTicks = 0;
 	}
-	Data_Figures[figureId].waitTicks++;
-	if (Data_Figures[figureId].waitTicks >= 128) {
-		Data_Figures[figureId].waitTicks = 127;
-		Data_Figures[figureId].state = FigureState_Dead;
+	f->waitTicks++;
+	if (f->waitTicks >= 128) {
+		f->waitTicks = 127;
+		f->state = FigureState_Dead;
 	}
 }
 
@@ -163,10 +163,8 @@ static void hitOpponent(figure *f)
 	}
 }
 
-void FigureAction_Common_handleAttack(int figureId)
+void FigureAction_Common_handleAttack(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
-	
 	if (f->progressOnTile <= 5) {
 		f->progressOnTile++;
 		FigureMovement_advanceTick(f);

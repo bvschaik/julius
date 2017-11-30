@@ -110,7 +110,7 @@ static void enemyMarching(figure *f, const formation *m)
 	}
 }
 
-static void enemyFighting(int figureId, struct Data_Figure *f, const formation *m)
+static void enemyFighting(figure *f, const formation *m)
 {
 	if (!m->recent_fight) {
 		f->actionState = FigureActionState_151_EnemyInitial;
@@ -142,7 +142,7 @@ static void enemyFighting(int figureId, struct Data_Figure *f, const formation *
 			f->destinationY = Data_Figures[targetId].y;
 			f->targetFigureId = targetId;
 			f->targetFigureCreatedSequence = Data_Figures[targetId].createdSequence;
-			Data_Figures[targetId].targetedByFigureId = figureId;
+			Data_Figures[targetId].targetedByFigureId = f->id;
 			figure_route_remove(f);
 		}
 	}
@@ -162,7 +162,7 @@ static void enemyFighting(int figureId, struct Data_Figure *f, const formation *
 	}
 }
 
-static void FigureAction_enemyCommon(int figureId, struct Data_Figure *f)
+static void FigureAction_enemyCommon(figure *f)
 {
 	const formation *m = formation_get(f->formationId);
 	Data_CityInfo.numEnemiesInCity++;
@@ -172,10 +172,10 @@ static void FigureAction_enemyCommon(int figureId, struct Data_Figure *f)
 
 	switch (f->actionState) {
 		case FigureActionState_150_Attack:
-			FigureAction_Common_handleAttack(figureId);
+			FigureAction_Common_handleAttack(f);
 			break;
 		case FigureActionState_149_Corpse:
-			FigureAction_Common_handleCorpse(figureId);
+			FigureAction_Common_handleCorpse(f);
 			break;
 		case FigureActionState_148_Fleeing:
 			f->destinationX = f->sourceX;
@@ -191,13 +191,13 @@ static void FigureAction_enemyCommon(int figureId, struct Data_Figure *f)
 			enemyInitial(f, m);
 			break;
 		case FigureActionState_152_EnemyWaiting:
-			Figure_updatePositionInTileList(figureId);
+			Figure_updatePositionInTileList(f->id);
 			break;
 		case FigureActionState_153_EnemyMarching:
 			enemyMarching(f, m);
 			break;
 		case FigureActionState_154_EnemyFighting:
-			enemyFighting(figureId, f, m);
+			enemyFighting(f, m);
 			break;
 	}
 }
@@ -237,7 +237,7 @@ void FigureAction_enemy43_Spear(int figureId)
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	f->speedMultiplier = 1;
-	FigureAction_enemyCommon(figureId, f);
+	FigureAction_enemyCommon(f);
 	
 	int dir = getDirectionMissile(f, m);
 	
@@ -276,7 +276,7 @@ void FigureAction_enemy44_Sword(int figureId)
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	f->speedMultiplier = 1;
-	FigureAction_enemyCommon(figureId, f);
+	FigureAction_enemyCommon(f);
 	
 	int dir = getDirection(f);
 	
@@ -312,7 +312,7 @@ void FigureAction_enemy45_Sword(int figureId)
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	f->speedMultiplier = 1;
-	FigureAction_enemyCommon(figureId, f);
+	FigureAction_enemyCommon(f);
 	
 	int dir = getDirection(f);
 	
@@ -348,7 +348,7 @@ void FigureAction_enemy46_Camel(int figureId)
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	f->speedMultiplier = 1;
-	FigureAction_enemyCommon(figureId, f);
+	FigureAction_enemyCommon(f);
 	
 	int dir = getDirectionMissile(f, m);
 	
@@ -373,7 +373,7 @@ void FigureAction_enemy47_Elephant(int figureId)
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	f->speedMultiplier = 1;
-	FigureAction_enemyCommon(figureId, f);
+	FigureAction_enemyCommon(f);
 	
 	int dir = getDirection(f);
 	
@@ -394,7 +394,7 @@ void FigureAction_enemy48_Chariot(int figureId)
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	f->speedMultiplier = 3;
-	FigureAction_enemyCommon(figureId, f);
+	FigureAction_enemyCommon(f);
 	
 	int dir = getDirection(f);
 	
@@ -416,7 +416,7 @@ void FigureAction_enemy49_FastSword(int figureId)
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	f->speedMultiplier = 2;
-	FigureAction_enemyCommon(figureId, f);
+	FigureAction_enemyCommon(f);
 	
 	int dir = getDirection(f);
 	
@@ -460,7 +460,7 @@ void FigureAction_enemy50_Sword(int figureId)
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	f->speedMultiplier = 1;
-	FigureAction_enemyCommon(figureId, f);
+	FigureAction_enemyCommon(f);
 	
 	int dir = getDirection(f);
 	
@@ -491,7 +491,7 @@ void FigureAction_enemy51_Spear(int figureId)
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	f->speedMultiplier = 2;
-	FigureAction_enemyCommon(figureId, f);
+	FigureAction_enemyCommon(f);
 	
 	int dir = getDirectionMissile(f, m);
 	
@@ -524,7 +524,7 @@ void FigureAction_enemy52_MountedArcher(int figureId)
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	f->speedMultiplier = 3;
-	FigureAction_enemyCommon(figureId, f);
+	FigureAction_enemyCommon(f);
 	
 	int dir = getDirectionMissile(f, m);
 	
@@ -550,7 +550,7 @@ void FigureAction_enemy53_Axe(int figureId)
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	f->speedMultiplier = 1;
-	FigureAction_enemyCommon(figureId, f);
+	FigureAction_enemyCommon(f);
 	
 	int dir = getDirection(f);
 	
@@ -590,11 +590,11 @@ void FigureAction_enemy54_Gladiator(int figureId)
 	}
 	switch (f->actionState) {
 		case FigureActionState_150_Attack:
-			FigureAction_Common_handleAttack(figureId);
+			FigureAction_Common_handleAttack(f);
 			FigureActionIncreaseGraphicOffset(f, 16);
 			break;
 		case FigureActionState_149_Corpse:
-			FigureAction_Common_handleCorpse(figureId);
+			FigureAction_Common_handleCorpse(f);
 			break;
 		case FigureActionState_158_NativeCreated:
 			f->graphicOffset = 0;
@@ -652,7 +652,7 @@ void FigureAction_enemyCaesarLegionary(int figureId)
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	f->speedMultiplier = 1;
-	FigureAction_enemyCommon(figureId, f);
+	FigureAction_enemyCommon(f);
 	
 	int dir = getDirection(f);
 	

@@ -23,8 +23,8 @@ void FigureAction_HippodromeHorse_reroute();
 
 int FigureAction_HerdEnemy_moveFormationTo(int formationId, int x, int y, int *xTile, int *yTile);
 
-void FigureAction_Common_handleCorpse(int figureId);
-void FigureAction_Common_handleAttack(int figureId);
+void FigureAction_Common_handleCorpse(figure *f);
+void FigureAction_Common_handleAttack(figure *f);
 void FigureAction_Common_setCartOffset(figure *f, int direction);
 void FigureAction_Common_setCrossCountryDestination(figure *f, int xDst, int yDst);
 
