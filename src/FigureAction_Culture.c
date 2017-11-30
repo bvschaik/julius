@@ -28,16 +28,16 @@ static void FigureAction_cultureCommon(int figureId, int numTicks)
 					f->actionState = FigureActionState_126_RoamerReturning;
 					f->destinationX = x;
 					f->destinationY = y;
-					figure_route_remove(figureId);
+					figure_route_remove(f);
 					f->roamLength = 0;
 				} else {
 					f->state = FigureState_Dead;
 				}
 			}
-			FigureMovement_roamTicks(figureId, numTicks);
+			FigureMovement_roamTicks(f, numTicks);
 			break;
 		case FigureActionState_126_RoamerReturning:
-			FigureMovement_walkTicks(figureId, numTicks);
+			FigureMovement_walkTicks(f, numTicks);
 			if (f->direction == DirFigure_8_AtDestination ||
 				f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
@@ -96,7 +96,7 @@ void FigureAction_schoolChild(int figureId)
 			if (f->roamLength >= f->maxRoamLength) {
 				f->state = FigureState_Dead;
 			}
-			FigureMovement_roamTicks(figureId, 2);
+			FigureMovement_roamTicks(f, 2);
 			break;
 	}
 	if (f->actionState == FigureActionState_149_Corpse) {

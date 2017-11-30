@@ -15,11 +15,11 @@
 #include "sound/effect.h"
 #include "sound/speech.h"
 
-static void enemyInitial(int figureId, struct Data_Figure *f, const formation *m)
+static void enemyInitial(figure *f, const formation *m)
 {
-	Figure_updatePositionInTileList(figureId);
+	Figure_updatePositionInTileList(f->id);
 	f->graphicOffset = 0;
-	figure_route_remove(figureId);
+	figure_route_remove(f);
 	f->waitTicks--;
 	if (f->waitTicks <= 0) {
 		if (f->isGhost && f->indexInFormation == 0) {
@@ -49,7 +49,7 @@ static void enemyInitial(int figureId, struct Data_Figure *f, const formation *m
 		int xTile, yTile;
 		if (f->waitTicksMissile > figure_properties_for_type(f->type)->missile_delay) {
 			f->waitTicksMissile = 0;
-			if (FigureAction_CombatEnemy_getMissileTarget(figureId, 10, Data_CityInfo.numSoldiersInCity < 4, &xTile, &yTile)) {
+			if (FigureAction_CombatEnemy_getMissileTarget(f->id, 10, Data_CityInfo.numSoldiersInCity < 4, &xTile, &yTile)) {
 				f->attackGraphicOffset = 1;
 				f->direction = calc_missile_shooter_direction(f->x, f->y, xTile, yTile);
 			} else {
@@ -70,7 +70,7 @@ static void enemyInitial(int figureId, struct Data_Figure *f, const formation *m
 					break;
 			}
 			if (f->attackGraphicOffset == 1) {
-				Figure_createMissile(figureId, f->x, f->y, xTile, yTile, missileType);
+				Figure_createMissile(f->id, f->x, f->y, xTile, yTile, missileType);
 				formation_record_missile_fired(m->id);
 			}
 			if (missileType == FIGURE_ARROW) {
@@ -88,7 +88,7 @@ static void enemyInitial(int figureId, struct Data_Figure *f, const formation *m
 	}
 }
 
-static void enemyMarching(int figureId, struct Data_Figure *f, const formation *m)
+static void enemyMarching(figure *f, const formation *m)
 {
 	f->waitTicks--;
 	if (f->waitTicks <= 0) {
@@ -100,9 +100,9 @@ static void enemyMarching(int figureId, struct Data_Figure *f, const formation *
 			return;
 		}
 		f->destinationBuildingId = m->destination_building_id;
-		figure_route_remove(figureId);
+		figure_route_remove(f);
 	}
-	FigureMovement_walkTicks(figureId, f->speedMultiplier);
+	FigureMovement_walkTicks(f, f->speedMultiplier);
 	if (f->direction == DIR_FIGURE_AT_DESTINATION ||
 		f->direction == DIR_FIGURE_REROUTE ||
 		f->direction == DIR_FIGURE_LOST) {
@@ -143,15 +143,15 @@ static void enemyFighting(int figureId, struct Data_Figure *f, const formation *
 			f->targetFigureId = targetId;
 			f->targetFigureCreatedSequence = Data_Figures[targetId].createdSequence;
 			Data_Figures[targetId].targetedByFigureId = figureId;
-			figure_route_remove(figureId);
+			figure_route_remove(f);
 		}
 	}
 	if (targetId > 0) {
-		FigureMovement_walkTicks(figureId, f->speedMultiplier);
+		FigureMovement_walkTicks(f, f->speedMultiplier);
 		if (f->direction == DirFigure_8_AtDestination) {
 			f->destinationX = Data_Figures[f->targetFigureId].x;
 			f->destinationY = Data_Figures[f->targetFigureId].y;
-			figure_route_remove(figureId);
+			figure_route_remove(f);
 		} else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
 			f->actionState = FigureActionState_151_EnemyInitial;
 			f->targetFigureId = 0;
@@ -180,7 +180,7 @@ static void FigureAction_enemyCommon(int figureId, struct Data_Figure *f)
 		case FigureActionState_148_Fleeing:
 			f->destinationX = f->sourceX;
 			f->destinationY = f->sourceY;
-			FigureMovement_walkTicks(figureId, f->speedMultiplier);
+			FigureMovement_walkTicks(f, f->speedMultiplier);
 			if (f->direction == DirFigure_8_AtDestination ||
 				f->direction == DirFigure_9_Reroute ||
 				f->direction == DirFigure_10_Lost) {
@@ -188,13 +188,13 @@ static void FigureAction_enemyCommon(int figureId, struct Data_Figure *f)
 			}
 			break;
 		case FigureActionState_151_EnemyInitial:
-			enemyInitial(figureId, f, m);
+			enemyInitial(f, m);
 			break;
 		case FigureActionState_152_EnemyWaiting:
 			Figure_updatePositionInTileList(figureId);
 			break;
 		case FigureActionState_153_EnemyMarching:
-			enemyMarching(figureId, f, m);
+			enemyMarching(f, m);
 			break;
 		case FigureActionState_154_EnemyFighting:
 			enemyFighting(figureId, f, m);
@@ -608,7 +608,7 @@ void FigureAction_enemy54_Gladiator(int figureId)
 					f->destinationX = xTile;
 					f->destinationY = yTile;
 					f->destinationBuildingId = buildingId;
-					figure_route_remove(figureId);
+					figure_route_remove(f);
 				} else {
 					f->state = FigureState_Dead;
 				}
@@ -617,7 +617,7 @@ void FigureAction_enemy54_Gladiator(int figureId)
 		case FigureActionState_159_NativeAttacking:
 			Data_CityInfo.numAttackingNativesInCity = 10;
 			f->terrainUsage = FigureTerrainUsage_Enemy;
-			FigureMovement_walkTicks(figureId, 1);
+			FigureMovement_walkTicks(f, 1);
 			if (f->direction == DirFigure_8_AtDestination ||
 				f->direction == DirFigure_9_Reroute ||
 				f->direction == DirFigure_10_Lost) {

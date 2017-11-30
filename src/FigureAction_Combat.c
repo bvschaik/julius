@@ -208,9 +208,8 @@ int FigureAction_CombatEnemy_getMissileTarget(int enemyId, int maxDistance, int 
 }
 
 
-void FigureAction_Combat_attackFigure(int figureId, int opponentId)
+void FigureAction_Combat_attackFigure(figure *f, int opponentId)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	int figureCategory = figure_properties_for_type(f->type)->category;
 	if (figureCategory <= FIGURE_CATEGORY_INACTIVE || figureCategory >= FIGURE_CATEGORY_CRIMINAL ||
 			f->actionState == FigureActionState_150_Attack) {
@@ -221,7 +220,7 @@ void FigureAction_Combat_attackFigure(int figureId, int opponentId)
 		if (++guard >= MAX_FIGURES || opponentId <= 0) {
 			break;
 		}
-		if (opponentId == figureId) {
+		if (opponentId == f->id) {
 			opponentId = Data_Figures[opponentId].nextFigureIdOnSameTile;
 			continue;
 		}
@@ -278,11 +277,11 @@ void FigureAction_Combat_attackFigure(int figureId, int opponentId)
 				opponent->attackDirection = (f->attackDirection + 4) % 8;
 			}
 			if (opponent->numAttackers == 0) {
-				opponent->attackerId1 = figureId;
-				opponent->opponentId = figureId;
+				opponent->attackerId1 = f->id;
+				opponent->opponentId = f->id;
 				opponent->numAttackers = 1;
 			} else if (opponent->numAttackers == 1) {
-				opponent->attackerId2 = figureId;
+				opponent->attackerId2 = f->id;
 				opponent->numAttackers = 2;
 			}
 			return;

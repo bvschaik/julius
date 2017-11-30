@@ -51,13 +51,13 @@ void FigureAction_taxCollector(int figureId)
 		case FigureActionState_41_TaxCollectorEnteringExiting:
 			f->useCrossCountry = 1;
 			f->isGhost = 1;
-			if (FigureMovement_crossCountryWalkTicks(figureId, 1) == 1) {
+			if (FigureMovement_crossCountryWalkTicks(f, 1) == 1) {
 				if (Data_Grid_buildingIds[f->gridOffset] == f->buildingId) {
 					// returned to own building
 					f->state = FigureState_Dead;
 				} else {
 					f->actionState = FigureActionState_42_TaxCollectorRoaming;
-					FigureMovement_initRoaming(figureId);
+					FigureMovement_initRoaming(f);
 					f->roamLength = 0;
 				}
 			}
@@ -75,10 +75,10 @@ void FigureAction_taxCollector(int figureId)
 					f->state = FigureState_Dead;
 				}
 			}
-			FigureMovement_roamTicks(figureId, 1);
+			FigureMovement_roamTicks(f, 1);
 			break;
 		case FigureActionState_43_TaxCollectorReturning:
-			FigureMovement_walkTicks(figureId, 1);
+			FigureMovement_walkTicks(f, 1);
 			if (f->direction == DirFigure_8_AtDestination) {
 				f->actionState = FigureActionState_41_TaxCollectorEnteringExiting;
 				FigureAction_Common_setCrossCountryDestination(f, b->x, b->y);
@@ -129,13 +129,13 @@ void FigureAction_engineer(int figureId)
 		case FigureActionState_61_EngineerEnteringExiting:
 			f->useCrossCountry = 1;
 			f->isGhost = 1;
-			if (FigureMovement_crossCountryWalkTicks(figureId, 1) == 1) {
+			if (FigureMovement_crossCountryWalkTicks(f, 1) == 1) {
 				if (Data_Grid_buildingIds[f->gridOffset] == f->buildingId) {
 					// returned to own building
 					f->state = FigureState_Dead;
 				} else {
 					f->actionState = FigureActionState_62_EngineerRoaming;
-					FigureMovement_initRoaming(figureId);
+					FigureMovement_initRoaming(f);
 					f->roamLength = 0;
 				}
 			}
@@ -153,10 +153,10 @@ void FigureAction_engineer(int figureId)
 					f->state = FigureState_Dead;
 				}
 			}
-			FigureMovement_roamTicks(figureId, 1);
+			FigureMovement_roamTicks(f, 1);
 			break;
 		case FigureActionState_63_EngineerReturning:
-			FigureMovement_walkTicks(figureId, 1);
+			FigureMovement_walkTicks(f, 1);
 			if (f->direction == DirFigure_8_AtDestination) {
 				f->actionState = FigureActionState_61_EngineerEnteringExiting;
 				FigureAction_Common_setCrossCountryDestination(f, b->x, b->y);
@@ -199,7 +199,7 @@ static int prefectGetNearestEnemy(int x, int y, int *distance)
 	return minEnemyId;
 }
 
-static int prefectGoFightEnemy(int figureId, struct Data_Figure *f)
+static int prefectGoFightEnemy(figure *f)
 {
 	if (Data_CityInfo.riotersOrAttackingNativesInCity <= 0 && enemy_army_total_enemy_formations() <= 0) {
 		return 0;
@@ -228,15 +228,15 @@ static int prefectGoFightEnemy(int figureId, struct Data_Figure *f)
 		f->destinationX = Data_Figures[enemyId].x;
 		f->destinationY = Data_Figures[enemyId].y;
 		f->targetFigureId = enemyId;
-		Data_Figures[enemyId].targetedByFigureId = figureId;
+		Data_Figures[enemyId].targetedByFigureId = f->x;
 		f->targetFigureCreatedSequence = Data_Figures[enemyId].createdSequence;
-		figure_route_remove(figureId);
+		figure_route_remove(f);
 		return 1;
 	}
 	return 0;
 }
 
-static int prefectGoFightFire(int figureId, struct Data_Figure *f)
+static int prefectGoFightFire(figure *f)
 {
 	if (building_list_burning_size() <= 0) {
 		return 0;
@@ -264,14 +264,14 @@ static int prefectGoFightFire(int figureId, struct Data_Figure *f)
 		f->destinationX = Data_Buildings[ruinId].roadAccessX;
 		f->destinationY = Data_Buildings[ruinId].roadAccessY;
 		f->destinationBuildingId = ruinId;
-		figure_route_remove(figureId);
-		Data_Buildings[ruinId].figureId4 = figureId;
+		figure_route_remove(f);
+		Data_Buildings[ruinId].figureId4 = f->id;
 		return 1;
 	}
 	return 0;
 }
 
-static void prefectExtinguishFire(int figureId, struct Data_Figure *f)
+static void prefectExtinguishFire(figure *f)
 {
 	struct Data_Building *burn = &Data_Buildings[f->destinationBuildingId];
 	int distance = calc_maximum_distance(f->x, f->y, burn->x, burn->y);
@@ -288,14 +288,14 @@ static void prefectExtinguishFire(int figureId, struct Data_Figure *f)
 	f->waitTicks--;
 	if (f->waitTicks <= 0) {
 		f->waitTicksMissile = 20;
-		if (!prefectGoFightFire(figureId, f)) {
+		if (!prefectGoFightFire(f)) {
 			struct Data_Building *b = &Data_Buildings[f->buildingId];
 			int xRoad, yRoad;
 			if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
 				f->actionState = FigureActionState_73_PrefectReturning;
 				f->destinationX = xRoad;
 				f->destinationY = yRoad;
-				figure_route_remove(figureId);
+				figure_route_remove(f);
 			} else {
 				f->state = FigureState_Dead;
 			}
@@ -303,12 +303,12 @@ static void prefectExtinguishFire(int figureId, struct Data_Figure *f)
 	}
 }
 
-static int prefectTargetIsAlive(struct Data_Figure *f)
+static int prefectTargetIsAlive(figure *f)
 {
 	if (f->targetFigureId <= 0) {
 		return 0;
 	}
-	struct Data_Figure *fTarget = &Data_Figures[f->targetFigureId];
+	figure *fTarget = &Data_Figures[f->targetFigureId];
 	if (!FigureIsDead(f->targetFigureId) && fTarget->createdSequence == f->targetFigureCreatedSequence) {
 		return 1;
 	}
@@ -329,8 +329,8 @@ void FigureAction_prefect(int figureId)
 	FigureActionIncreaseGraphicOffset(f, 12);
 	
 	// special actions
-	if (!prefectGoFightEnemy(figureId, f)) {
-		prefectGoFightFire(figureId, f);
+	if (!prefectGoFightEnemy(f)) {
+		prefectGoFightFire(f);
 	}
 	switch (f->actionState) {
 		case FigureActionState_150_Attack:
@@ -357,13 +357,13 @@ void FigureAction_prefect(int figureId)
 		case FigureActionState_71_PrefectEnteringExiting:
 			f->useCrossCountry = 1;
 			f->isGhost = 1;
-			if (FigureMovement_crossCountryWalkTicks(figureId, 1) == 1) {
+			if (FigureMovement_crossCountryWalkTicks(f, 1) == 1) {
 				if (Data_Grid_buildingIds[f->gridOffset] == f->buildingId) {
 					// returned to own building
 					f->state = FigureState_Dead;
 				} else {
 					f->actionState = FigureActionState_72_PrefectRoaming;
-					FigureMovement_initRoaming(figureId);
+					FigureMovement_initRoaming(f);
 					f->roamLength = 0;
 				}
 			}
@@ -377,15 +377,15 @@ void FigureAction_prefect(int figureId)
 					f->actionState = FigureActionState_73_PrefectReturning;
 					f->destinationX = xRoad;
 					f->destinationY = yRoad;
-					figure_route_remove(figureId);
+					figure_route_remove(f);
 				} else {
 					f->state = FigureState_Dead;
 				}
 			}
-			FigureMovement_roamTicks(figureId, 1);
+			FigureMovement_roamTicks(f, 1);
 			break;
 		case FigureActionState_73_PrefectReturning:
-			FigureMovement_walkTicks(figureId, 1);
+			FigureMovement_walkTicks(f, 1);
 			if (f->direction == DirFigure_8_AtDestination) {
 				f->actionState = FigureActionState_71_PrefectEnteringExiting;
 				FigureAction_Common_setCrossCountryDestination(f, b->x, b->y);
@@ -396,10 +396,10 @@ void FigureAction_prefect(int figureId)
 			break;
 		case FigureActionState_74_PrefectGoingToFire:
 			f->terrainUsage = FigureTerrainUsage_Any;
-			FigureMovement_walkTicks(figureId, 1);
+			FigureMovement_walkTicks(f, 1);
 			if (f->direction == DirFigure_8_AtDestination) {
 				f->actionState = FigureActionState_75_PrefectAtFire;
-				figure_route_remove(figureId);
+				figure_route_remove(f);
 				f->roamLength = 0;
 				f->waitTicks = 50;
 			} else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
@@ -407,7 +407,7 @@ void FigureAction_prefect(int figureId)
 			}
 			break;
 		case FigureActionState_75_PrefectAtFire:
-			prefectExtinguishFire(figureId, f);
+			prefectExtinguishFire(f);
 			break;
 		case FigureActionState_76_PrefectGoingToEnemy:
 			f->terrainUsage = FigureTerrainUsage_Any;
@@ -417,17 +417,17 @@ void FigureAction_prefect(int figureId)
 					f->actionState = FigureActionState_73_PrefectReturning;
 					f->destinationX = xRoad;
 					f->destinationY = yRoad;
-					figure_route_remove(figureId);
+					figure_route_remove(f);
 					f->roamLength = 0;
 				} else {
 					f->state = FigureState_Dead;
 				}
 			}
-			FigureMovement_walkTicks(figureId, 1);
+			FigureMovement_walkTicks(f, 1);
 			if (f->direction == DirFigure_8_AtDestination) {
 				f->destinationX = Data_Figures[f->targetFigureId].x;
 				f->destinationY = Data_Figures[f->targetFigureId].y;
-				figure_route_remove(figureId);
+				figure_route_remove(f);
 			} else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
 			}

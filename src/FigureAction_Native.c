@@ -26,7 +26,7 @@ void FigureAction_indigenousNative(int figureId)
 			FigureAction_Common_handleCorpse(figureId);
 			break;
 		case FigureActionState_156_NativeGoingToMeetingCenter:
-			FigureMovement_walkTicks(figureId, 1);
+			FigureMovement_walkTicks(f, 1);
 			if (f->direction == DirFigure_8_AtDestination) {
 				f->actionState = FigureActionState_157_NativeReturningFromMeetingCenter;
 				f->destinationX = f->sourceX;
@@ -36,7 +36,7 @@ void FigureAction_indigenousNative(int figureId)
 			}
 			break;
 		case FigureActionState_157_NativeReturningFromMeetingCenter:
-			FigureMovement_walkTicks(figureId, 1);
+			FigureMovement_walkTicks(f, 1);
 			if (f->direction == DirFigure_8_AtDestination ||
 				f->direction == DirFigure_9_Reroute ||
 				f->direction == DirFigure_10_Lost) {
@@ -63,14 +63,14 @@ void FigureAction_indigenousNative(int figureId)
 					f->destinationY = m->destination_y;
 					f->destinationBuildingId = m->destination_building_id;
 				}
-				figure_route_remove(figureId);
+				figure_route_remove(f);
 			}
 			break;
 		case FigureActionState_159_NativeAttacking:
 			Data_CityInfo.riotersOrAttackingNativesInCity = 10;
 			Data_CityInfo.numAttackingNativesInCity++;
 			f->terrainUsage = FigureTerrainUsage_Enemy;
-			FigureMovement_walkTicks(figureId, 1);
+			FigureMovement_walkTicks(f, 1);
 			if (f->direction == DirFigure_8_AtDestination ||
 				f->direction == DirFigure_9_Reroute ||
 				f->direction == DirFigure_10_Lost) {

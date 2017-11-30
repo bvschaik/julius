@@ -20,7 +20,7 @@ void FigureAction_explosionCloud(int figureId)
 	if (f->progressOnTile > 44) {
 		f->state = FigureState_Dead;
 	}
-	FigureMovement_crossCountryWalkTicks(figureId, f->speedMultiplier);
+	FigureMovement_crossCountryWalkTicks(f, f->speedMultiplier);
 	if (f->progressOnTile < 48) {
 		f->graphicId = image_group(GROUP_FIGURE_EXPLOSION) +
 			cloudGraphicOffsets[f->progressOnTile / 2];
@@ -37,7 +37,7 @@ void FigureAction_arrow(int figureId)
 	if (f->progressOnTile > 120) {
 		f->state = FigureState_Dead;
 	}
-	int shouldDie = FigureMovement_crossCountryWalkTicks(figureId, 4);
+	int shouldDie = FigureMovement_crossCountryWalkTicks(f, 4);
 	int targetId = Figure_getCitizenOnSameTile(figureId);
 	if (targetId) {
 		int targetType = Data_Figures[targetId].type;
@@ -83,7 +83,7 @@ void FigureAction_spear(int figureId)
 	if (f->progressOnTile > 120) {
 		f->state = FigureState_Dead;
 	}
-	int shouldDie = FigureMovement_crossCountryWalkTicks(figureId, 4);
+	int shouldDie = FigureMovement_crossCountryWalkTicks(f, 4);
 	int targetId = Figure_getCitizenOnSameTile(figureId);
 	if (targetId) {
 		int targetType = Data_Figures[targetId].type;
@@ -129,7 +129,7 @@ void FigureAction_javelin(int figureId)
 	if (f->progressOnTile > 120) {
 		f->state = FigureState_Dead;
 	}
-	int shouldDie = FigureMovement_crossCountryWalkTicks(figureId, 4);
+	int shouldDie = FigureMovement_crossCountryWalkTicks(f, 4);
 	int targetId = Figure_getNonCitizenOnSameTile(figureId);
 	if (targetId) {
 		int targetType = Data_Figures[targetId].type;
@@ -176,7 +176,7 @@ void FigureAction_bolt(int figureId)
 	if (f->progressOnTile > 120) {
 		f->state = FigureState_Dead;
 	}
-	int shouldDie = FigureMovement_crossCountryWalkTicks(figureId, 4);
+	int shouldDie = FigureMovement_crossCountryWalkTicks(f, 4);
 	int targetId = Figure_getNonCitizenOnSameTile(figureId);
 	if (targetId) {
 		int targetType = Data_Figures[targetId].type;

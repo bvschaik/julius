@@ -110,7 +110,7 @@ void Figure_delete(int figureId)
 	if (f->immigrantBuildingId) {
 		Data_Buildings[f->buildingId].immigrantFigureId = 0;
 	}
-	figure_route_remove(figureId);
+	figure_route_remove(f);
 	Figure_removeFromTileList(figureId);
 	memset(f, 0, sizeof(struct Data_Figure));
     f->id = figureId;

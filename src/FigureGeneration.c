@@ -47,8 +47,8 @@ static void generateLaborSeeker(int buildingId, struct Data_Building *b, int x, 
 		CREATE_FIGURE(FIGURE_LABOR_SEEKER, x, y, Dir_0_Top);
 		f->actionState = FigureActionState_125_Roaming;
 		f->buildingId = buildingId;
-		b->figureId2 = figureId;
-		FigureMovement_initRoaming(figureId);
+		b->figureId2 = f->id;
+		FigureMovement_initRoaming(f);
 	}
 }
 
@@ -78,7 +78,7 @@ static void spawnFigurePatrician(int buildingId, struct Data_Building *b, int *p
 			CREATE_FIGURE(FIGURE_PATRICIAN, xRoad, yRoad, Dir_4_Bottom);
 			f->actionState = FigureActionState_125_Roaming;
 			f->buildingId = buildingId;
-			FigureMovement_initRoaming(figureId);
+			FigureMovement_initRoaming(f);
 		}
 	}
 }
@@ -385,7 +385,7 @@ static void spawnFigureAmphitheater(int buildingId, struct Data_Building *b)
 			f->actionState = FigureActionState_94_EntertainerRoaming;
 			f->buildingId = buildingId;
 			b->figureId = figureId;
-			FigureMovement_initRoaming(figureId);
+			FigureMovement_initRoaming(f);
 		}
 	}
 }
@@ -421,7 +421,7 @@ static void spawnFigureTheater(int buildingId, struct Data_Building *b)
 			f->actionState = FigureActionState_94_EntertainerRoaming;
 			f->buildingId = buildingId;
 			b->figureId = figureId;
-			FigureMovement_initRoaming(figureId);
+			FigureMovement_initRoaming(f);
 		}
 	}
 }
@@ -468,7 +468,7 @@ static void spawnFigureHippodrome(int buildingId, struct Data_Building *b)
 				f->actionState = FigureActionState_94_EntertainerRoaming;
 				f->buildingId = buildingId;
 				b->figureId = figureId;
-				FigureMovement_initRoaming(figureId);
+				FigureMovement_initRoaming(f);
 			}
 			if (!Data_CityInfo.entertainmentHippodromeHasShow) {
 				// create mini-horses
@@ -535,7 +535,7 @@ static void spawnFigureColosseum(int buildingId, struct Data_Building *b)
 			f->actionState = FigureActionState_94_EntertainerRoaming;
 			f->buildingId = buildingId;
 			b->figureId = figureId;
-			FigureMovement_initRoaming(figureId);
+			FigureMovement_initRoaming(f);
 			if (b->data.entertainment.days1 > 0 || b->data.entertainment.days2 > 0) {
 				if (!Data_CityInfo.messageShownColosseum) {
 					Data_CityInfo.messageShownColosseum = 1;
@@ -593,7 +593,7 @@ static void spawnFigureMarket(int buildingId, struct Data_Building *b)
 			f->actionState = FigureActionState_125_Roaming;
 			f->buildingId = buildingId;
 			b->figureId = figureId;
-			FigureMovement_initRoaming(figureId);
+			FigureMovement_initRoaming(f);
 		}
 		// market buyer or labor seeker
 		if (b->figureId2) {
@@ -688,7 +688,7 @@ static void spawnFigureBathhouse(int buildingId, struct Data_Building *b)
 			f->actionState = FigureActionState_125_Roaming;
 			f->buildingId = buildingId;
 			b->figureId = figureId;
-			FigureMovement_initRoaming(figureId);
+			FigureMovement_initRoaming(f);
 		}
 	}
 }
@@ -723,25 +723,25 @@ static void spawnFigureSchool(int buildingId, struct Data_Building *b)
 				f->actionState = FigureActionState_125_Roaming;
 				f->buildingId = buildingId;
 				b->figureId = figureId;
-				FigureMovement_initRoaming(figureId);
+				FigureMovement_initRoaming(f);
 			}
 			{
 				CREATE_FIGURE(FIGURE_SCHOOL_CHILD, xRoad, yRoad, Dir_0_Top);
 				f->actionState = FigureActionState_125_Roaming;
 				f->buildingId = buildingId;
-				FigureMovement_initRoaming(figureId);
+				FigureMovement_initRoaming(f);
 			}
 			{
 				CREATE_FIGURE(FIGURE_SCHOOL_CHILD, xRoad, yRoad, Dir_0_Top);
 				f->actionState = FigureActionState_125_Roaming;
 				f->buildingId = buildingId;
-				FigureMovement_initRoaming(figureId);
+				FigureMovement_initRoaming(f);
 			}
 			{
 				CREATE_FIGURE(FIGURE_SCHOOL_CHILD, xRoad, yRoad, Dir_0_Top);
 				f->actionState = FigureActionState_125_Roaming;
 				f->buildingId = buildingId;
-				FigureMovement_initRoaming(figureId);
+				FigureMovement_initRoaming(f);
 			}
 		}
 	}
@@ -776,7 +776,7 @@ static void spawnFigureLibrary(int buildingId, struct Data_Building *b)
 			f->actionState = FigureActionState_125_Roaming;
 			f->buildingId = buildingId;
 			b->figureId = figureId;
-			FigureMovement_initRoaming(figureId);
+			FigureMovement_initRoaming(f);
 		}
 	}
 }
@@ -810,7 +810,7 @@ static void spawnFigureAcademy(int buildingId, struct Data_Building *b)
 			f->actionState = FigureActionState_125_Roaming;
 			f->buildingId = buildingId;
 			b->figureId = figureId;
-			FigureMovement_initRoaming(figureId);
+			FigureMovement_initRoaming(f);
 		}
 	}
 }
@@ -844,7 +844,7 @@ static void spawnFigureBarber(int buildingId, struct Data_Building *b)
 			f->actionState = FigureActionState_125_Roaming;
 			f->buildingId = buildingId;
 			b->figureId = figureId;
-			FigureMovement_initRoaming(figureId);
+			FigureMovement_initRoaming(f);
 		}
 	}
 }
@@ -878,7 +878,7 @@ static void spawnFigureDoctor(int buildingId, struct Data_Building *b)
 			f->actionState = FigureActionState_125_Roaming;
 			f->buildingId = buildingId;
 			b->figureId = figureId;
-			FigureMovement_initRoaming(figureId);
+			FigureMovement_initRoaming(f);
 		}
 	}
 }
@@ -912,7 +912,7 @@ static void spawnFigureHospital(int buildingId, struct Data_Building *b)
 			f->actionState = FigureActionState_125_Roaming;
 			f->buildingId = buildingId;
 			b->figureId = figureId;
-			FigureMovement_initRoaming(figureId);
+			FigureMovement_initRoaming(f);
 		}
 	}
 }
@@ -948,7 +948,7 @@ static void spawnFigureTemple(int buildingId, struct Data_Building *b)
 			f->actionState = FigureActionState_125_Roaming;
 			f->buildingId = buildingId;
 			b->figureId = figureId;
-			FigureMovement_initRoaming(figureId);
+			FigureMovement_initRoaming(f);
 		}
 	}
 }
@@ -1017,7 +1017,7 @@ static void spawnFigureMissionPost(int buildingId, struct Data_Building *b)
 				f->actionState = FigureActionState_125_Roaming;
 				f->buildingId = buildingId;
 				b->figureId = figureId;
-				FigureMovement_initRoaming(figureId);
+				FigureMovement_initRoaming(f);
 			}
 		}
 	}

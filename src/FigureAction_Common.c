@@ -93,17 +93,17 @@ static int attackIsSameDirection(int dir1, int dir2)
 	return 0;
 }
 
-static void resumeActivityAfterAttack(int figureId, struct Data_Figure *f)
+static void resumeActivityAfterAttack(figure *f)
 {
 	f->numAttackers = 0;
 	f->actionState = f->actionStateBeforeAttack;
 	f->opponentId = 0;
 	f->attackerId1 = 0;
 	f->attackerId2 = 0;
-	figure_route_remove(figureId);
+	figure_route_remove(f);
 }
 
-static void hitOpponent(int figureId, struct Data_Figure *f)
+static void hitOpponent(figure *f)
 {
 	const formation *m = formation_get(f->formationId);
 	struct Data_Figure *opponent = &Data_Figures[f->opponentId];
@@ -124,7 +124,7 @@ static void hitOpponent(int figureId, struct Data_Figure *f)
 	if (f->type == FIGURE_WOLF) {
 	    figureAttack = difficulty_adjust_wolf_attack(figureAttack);
 	}
-	if (opponent->opponentId != figureId && m->figure_type != FIGURE_FORT_LEGIONARY &&
+	if (opponent->opponentId != f->id && m->figure_type != FIGURE_FORT_LEGIONARY &&
 			attackIsSameDirection(f->attackDirection, opponent->attackDirection)) {
 		figureAttack += 4; // attack opponent on the (exposed) back
 		sound_effect_play(SOUND_EFFECT_SWORD_SWING);
@@ -172,13 +172,13 @@ void FigureAction_Common_handleAttack(int figureId)
 		FigureMovement_advanceTick(f);
 	}
 	if (f->numAttackers == 0) {
-		resumeActivityAfterAttack(figureId, f);
+		resumeActivityAfterAttack(f);
 		return;
 	}
 	if (f->numAttackers == 1) {
 		int targetId = f->opponentId;
 		if (FigureIsDead(targetId)) {
-			resumeActivityAfterAttack(figureId, f);
+			resumeActivityAfterAttack(f);
 			return;
 		}
 	} else if (f->numAttackers == 2) {
@@ -191,7 +191,7 @@ void FigureAction_Common_handleAttack(int figureId)
 			}
 			targetId = f->opponentId;
 			if (FigureIsDead(targetId)) {
-				resumeActivityAfterAttack(figureId, f);
+				resumeActivityAfterAttack(f);
 				return;
 			}
 			f->numAttackers = 1;
@@ -201,14 +201,14 @@ void FigureAction_Common_handleAttack(int figureId)
 	}
 	f->attackGraphicOffset++;
 	if (f->attackGraphicOffset >= 24) {
-		hitOpponent(figureId, f);
+		hitOpponent(f);
 	}
 }
 
-void FigureAction_Common_setCartOffset(int figureId, int direction)
+void FigureAction_Common_setCartOffset(figure *f, int direction)
 {
-	Data_Figures[figureId].xOffsetCart = cartOffsetsX[direction];
-	Data_Figures[figureId].yOffsetCart = cartOffsetsY[direction];
+	f->xOffsetCart = cartOffsetsX[direction];
+	f->yOffsetCart = cartOffsetsY[direction];
 }
 
 void FigureAction_Common_setCrossCountryDestination(figure *f, int xDst, int yDst)

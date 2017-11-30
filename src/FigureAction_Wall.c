@@ -100,7 +100,7 @@ void FigureAction_ballista(int figureId)
 	}
 }
 
-static void towerSentryPickTarget(int figureId, struct Data_Figure *f)
+static void towerSentryPickTarget(figure *f)
 {
 	if (enemy_army_total_enemy_formations() <= 0) {
 		return;
@@ -116,7 +116,7 @@ static void towerSentryPickTarget(int figureId, struct Data_Figure *f)
 	if (f->waitTicksNextTarget >= 40) {
 		f->waitTicksNextTarget = 0;
 		int xTile, yTile;
-		if (FigureAction_CombatSoldier_getMissileTarget(figureId, 10, &xTile, &yTile)) {
+		if (FigureAction_CombatSoldier_getMissileTarget(f->id, 10, &xTile, &yTile)) {
 			f->actionState = FigureActionState_172_TowerSentryFiring;
 			f->destinationX = f->x;
 			f->destinationY = f->y;
@@ -176,7 +176,7 @@ void FigureAction_towerSentry(int figureId)
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);
 	
-	towerSentryPickTarget(figureId, f);
+	towerSentryPickTarget(f);
 	switch (f->actionState) {
 		case FigureActionState_150_Attack:
 			FigureAction_Common_handleAttack(figureId);
@@ -194,23 +194,23 @@ void FigureAction_towerSentry(int figureId)
 					f->actionState = FigureActionState_171_TowerSentryPatrolling;
 					f->destinationX = xTile;
 					f->destinationY = yTile;
-					figure_route_remove(figureId);
+					figure_route_remove(f);
 				}
 			}
 			break;
 		case FigureActionState_171_TowerSentryPatrolling:
-			FigureMovement_walkTicks(figureId, 1);
+			FigureMovement_walkTicks(f, 1);
 			if (f->direction == DirFigure_8_AtDestination) {
 				f->actionState = FigureActionState_173_TowerSentryReturning;
 				f->destinationX = f->sourceX;
 				f->destinationY = f->sourceY;
-				figure_route_remove(figureId);
+				figure_route_remove(f);
 			} else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
 				f->actionState = FigureActionState_170_TowerSentryAtRest;
 			}
 			break;
 		case FigureActionState_172_TowerSentryFiring:
-			FigureMovement_walkTicksTowerSentry(figureId, 1);
+			FigureMovement_walkTicksTowerSentry(f, 1);
 			f->waitTicksMissile++;
 			if (f->waitTicksMissile > figure_properties_for_type(f->type)->missile_delay) {
 				int xTile, yTile;
@@ -222,12 +222,12 @@ void FigureAction_towerSentry(int figureId)
 					f->actionState = FigureActionState_173_TowerSentryReturning;
 					f->destinationX = f->sourceX;
 					f->destinationY = f->sourceY;
-					figure_route_remove(figureId);
+					figure_route_remove(f);
 				}
 			}
 			break;
 		case FigureActionState_173_TowerSentryReturning:
-			FigureMovement_walkTicks(figureId, 1);
+			FigureMovement_walkTicks(f, 1);
 			if (f->direction == DirFigure_8_AtDestination) {
 				f->actionState = FigureActionState_170_TowerSentryAtRest;
 			} else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
@@ -238,7 +238,7 @@ void FigureAction_towerSentry(int figureId)
 			f->terrainUsage = FigureTerrainUsage_Roads;
 			f->isGhost = 0;
 			f->heightAdjustedTicks = 0;
-			FigureMovement_walkTicks(figureId, 1);
+			FigureMovement_walkTicks(f, 1);
 			if (f->direction == DirFigure_8_AtDestination) {
 				Figure_removeFromTileList(figureId);
 				f->sourceX = f->x = b->x;
@@ -246,7 +246,7 @@ void FigureAction_towerSentry(int figureId)
 				f->gridOffset = GridOffset(f->x, f->y);
 				Figure_addToTileList(figureId);
 				f->actionState = FigureActionState_170_TowerSentryAtRest;
-				figure_route_remove(figureId);
+				figure_route_remove(f);
 			} else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
 			}
@@ -286,7 +286,7 @@ void FigureAction_TowerSentry_reroute()
 		// tower sentry got off wall due to rotation
 		int xTile, yTile;
 		if (Terrain_getWallTileWithinRadius(f->x, f->y, 2, &xTile, &yTile)) {
-			figure_route_remove(i);
+			figure_route_remove(f);
 			f->progressOnTile = 0;
 			Figure_removeFromTileList(i);
 			f->previousTileX = f->x = xTile;
@@ -307,7 +307,7 @@ void FigureAction_TowerSentry_reroute()
 			f->gridOffset = GridOffset(f->x, f->y);
 			Figure_addToTileList(i);
 			f->actionState = FigureActionState_170_TowerSentryAtRest;
-			figure_route_remove(i);
+			figure_route_remove(f);
 		}
 	}
 }

@@ -2,14 +2,15 @@
 #define FIGURE_ROUTE_H
 
 #include "core/buffer.h"
+#include "figure/figure.h"
 
 void figure_route_clear_all();
 
 void figure_route_clean();
 
-void figure_route_add(int figure_id);
+void figure_route_add(figure *f);
 
-void figure_route_remove(int figure_id);
+void figure_route_remove(figure *f);
 
 int figure_route_get_direction(int path_id, int index);
 

@@ -110,7 +110,7 @@ void Formation_legionMoveTo(int formationId, int x, int y)
         if (formation_legion_prepare_to_move(m->id)) {
             f->alternativeLocationIndex = 0;
             f->actionState = FigureActionState_83_SoldierGoingToStandard;
-            figure_route_remove(figureId);
+            figure_route_remove(f);
         }
 	}
 }
@@ -136,7 +136,7 @@ void Formation_legionReturnHome(int formationId)
 		}
         if (formation_legion_prepare_to_move(m->id)) {
             f->actionState = FigureActionState_81_SoldierGoingToFort;
-            figure_route_remove(figureId);
+            figure_route_remove(f);
         }
 	}
 }

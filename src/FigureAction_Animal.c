@@ -48,7 +48,7 @@ void FigureAction_seagulls(int figureId)
 	f->terrainUsage = FigureTerrainUsage_Any;
 	f->isGhost = 0;
 	f->useCrossCountry = 1;
-	if (!(f->graphicOffset & 3) && FigureMovement_crossCountryWalkTicks(figureId, 1)) {
+	if (!(f->graphicOffset & 3) && FigureMovement_crossCountryWalkTicks(f, 1)) {
 		f->progressOnTile++;
 		if (f->progressOnTile > 8) {
 			f->progressOnTile = 0;
@@ -94,13 +94,13 @@ void FigureAction_sheep(int figureId)
 			}
 			break;
 		case FigureActionState_197_HerdAnimalMoving:
-			FigureMovement_walkTicks(figureId, 1);
+			FigureMovement_walkTicks(f, 1);
 			if (f->direction == DirFigure_8_AtDestination || f->direction == DirFigure_10_Lost) {
 				f->direction = f->previousTileDirection;
 				f->actionState = FigureActionState_196_HerdAnimalAtRest;
 				f->waitTicks = figureId & 0x1f;
 			} else if (f->direction == DirFigure_9_Reroute) {
-				figure_route_remove(figureId);
+				figure_route_remove(f);
 			}
 			break;
 	}
@@ -148,17 +148,17 @@ void FigureAction_wolf(int figureId)
 			}
 			break;
 		case FigureActionState_197_HerdAnimalMoving:
-			FigureMovement_walkTicks(figureId, 2);
+			FigureMovement_walkTicks(f, 2);
 			if (f->direction == DirFigure_8_AtDestination || f->direction == DirFigure_10_Lost) {
 				f->direction = f->previousTileDirection;
 				f->actionState = FigureActionState_196_HerdAnimalAtRest;
 				f->waitTicks = figureId & 0x1f;
 			} else if (f->direction == DirFigure_9_Reroute) {
-				figure_route_remove(figureId);
+				figure_route_remove(f);
 			}
 			break;
 		case FigureActionState_199_WolfAttacking:
-			FigureMovement_walkTicks(figureId, 2);
+			FigureMovement_walkTicks(f, 2);
 			if (f->direction == DirFigure_8_AtDestination) {
 				int targetId = FigureAction_CombatWolf_getTarget(f->x, f->y, 6);
 				if (targetId) {
@@ -167,14 +167,14 @@ void FigureAction_wolf(int figureId)
 					f->targetFigureId = targetId;
 					Data_Figures[targetId].targetedByFigureId = figureId;
 					f->targetFigureCreatedSequence = Data_Figures[targetId].createdSequence;
-					figure_route_remove(figureId);
+					figure_route_remove(f);
 				} else {
 					f->direction = f->previousTileDirection;
 					f->actionState = FigureActionState_196_HerdAnimalAtRest;
 					f->waitTicks = figureId & 0x1f;
 				}
 			} else if (f->direction == DirFigure_9_Reroute) {
-				figure_route_remove(figureId);
+				figure_route_remove(f);
 			} else if (f->direction == DirFigure_10_Lost) {
 				f->direction = f->previousTileDirection;
 				f->actionState = FigureActionState_196_HerdAnimalAtRest;
@@ -224,13 +224,13 @@ void FigureAction_zebra(int figureId)
 			}
 			break;
 		case FigureActionState_197_HerdAnimalMoving:
-			FigureMovement_walkTicks(figureId, 2);
+			FigureMovement_walkTicks(f, 2);
 			if (f->direction == DirFigure_8_AtDestination || f->direction == DirFigure_10_Lost) {
 				f->direction = f->previousTileDirection;
 				f->actionState = FigureActionState_196_HerdAnimalAtRest;
 				f->waitTicks = figureId & 0x1f;
 			} else if (f->direction == DirFigure_9_Reroute) {
-				figure_route_remove(figureId);
+				figure_route_remove(f);
 			}
 			break;
 	}
@@ -245,11 +245,11 @@ void FigureAction_zebra(int figureId)
 	}
 }
 
-static void setDestinationHippodromeHorse(int figureId, struct Data_Figure *f, int state)
+static void setDestinationHippodromeHorse(figure *f, int state)
 {
 	struct Data_Building *b = &Data_Buildings[f->buildingId];
 	if (state == HippodromeHorse_Created) {
-		Figure_removeFromTileList(figureId);
+		Figure_removeFromTileList(f->id);
 		if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_6_LEFT) {
 			f->destinationX = b->x + hippodromeHorseDestinationX1[f->waitTicksMissile];
 			f->destinationY = b->y + hippodromeHorseDestinationY1[f->waitTicksMissile];
@@ -265,7 +265,7 @@ static void setDestinationHippodromeHorse(int figureId, struct Data_Figure *f, i
 		f->crossCountryX = 15 * f->x;
 		f->crossCountryY = 15 * f->y;
 		f->gridOffset = GridOffset(f->x, f->y);
-		Figure_addToTileList(figureId);
+		Figure_addToTileList(f->id);
 	} else if (state == HippodromeHorse_Racing) {
 		if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_6_LEFT) {
 			f->destinationX = b->x + hippodromeHorseDestinationX1[f->waitTicksMissile];
@@ -307,7 +307,7 @@ void FigureAction_hippodromeHorse(int figureId)
 		case FigureActionState_200_HippodromeMiniHorseCreated:
 			f->graphicOffset = 0;
 			f->waitTicksMissile = 0;
-			setDestinationHippodromeHorse(figureId, f, HippodromeHorse_Created);
+			setDestinationHippodromeHorse(f, HippodromeHorse_Created);
 			f->waitTicks++;
 			if (f->waitTicks > 60 && f->resourceId == 0) {
 				f->actionState = FigureActionState_201_HippodromeMiniHorseRacing;
@@ -342,24 +342,24 @@ void FigureAction_hippodromeHorse(int figureId)
 						f->speedMultiplier = 4;
 					}
 				}
-				setDestinationHippodromeHorse(figureId, f, HippodromeHorse_Racing);
+				setDestinationHippodromeHorse(f, HippodromeHorse_Racing);
 				f->direction = calc_general_direction(f->x, f->y, f->destinationX, f->destinationY);
 				FigureMovement_crossCountrySetDirection(f,
 					f->crossCountryX, f->crossCountryY, 15 * f->destinationX, 15 * f->destinationY, 0);
 			}
 			if (f->actionState != FigureActionState_202_HippodromeMiniHorseDone) {
-				FigureMovement_crossCountryWalkTicks(figureId, f->speedMultiplier);
+				FigureMovement_crossCountryWalkTicks(f, f->speedMultiplier);
 			}
 			break;
 		case FigureActionState_202_HippodromeMiniHorseDone:
 			if (!f->waitTicks) {
-				setDestinationHippodromeHorse(figureId, f, HippodromeHorse_Finished);
+				setDestinationHippodromeHorse(f, HippodromeHorse_Finished);
 				f->direction = calc_general_direction(f->x, f->y, f->destinationX, f->destinationY);
 				FigureMovement_crossCountrySetDirection(f,
 					f->crossCountryX, f->crossCountryY, 15 * f->destinationX, 15 * f->destinationY, 0);
 			}
 			if (f->direction != DirFigure_8_AtDestination) {
-				FigureMovement_crossCountryWalkTicks(figureId, 1);
+				FigureMovement_crossCountryWalkTicks(f, 1);
 			}
 			f->waitTicks++;
 			if (f->waitTicks > 30) {
@@ -383,7 +383,7 @@ void FigureAction_hippodromeHorse(int figureId)
 		f->cartGraphicId = image_group(GROUP_FIGURE_HIPPODROME_CART_2) + dir;
 	}
 	int cartDir = (dir + 4) % 8;
-	FigureAction_Common_setCartOffset(figureId, cartDir);
+	FigureAction_Common_setCartOffset(f, cartDir);
 }
 
 void FigureAction_HippodromeHorse_reroute()
@@ -395,7 +395,7 @@ void FigureAction_HippodromeHorse_reroute()
 		struct Data_Figure *f = &Data_Figures[i];
 		if (f->state == FigureState_Alive && f->type == FIGURE_HIPPODROME_HORSES) {
 			f->waitTicksMissile = 0;
-			setDestinationHippodromeHorse(i, f, HippodromeHorse_Created);
+			setDestinationHippodromeHorse(f, HippodromeHorse_Created);
 		}
 	}
 }

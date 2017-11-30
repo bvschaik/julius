@@ -187,11 +187,11 @@ void FigureAction_docker(int figureId)
 			break;
 		case FigureActionState_135_DockerImportGoingToWarehouse:
 			setCartGraphic(f);
-			FigureMovement_walkTicks(figureId, 1);
+			FigureMovement_walkTicks(f, 1);
 			if (f->direction == DirFigure_8_AtDestination) {
 				f->actionState = FigureActionState_139_DockerImportAtWarehouse;
 			} else if (f->direction == DirFigure_9_Reroute) {
-				figure_route_remove(figureId);
+				figure_route_remove(f);
 			} else if (f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
 			}
@@ -201,11 +201,11 @@ void FigureAction_docker(int figureId)
 			break;
 		case FigureActionState_136_DockerExportGoingToWarehouse:
 			f->cartGraphicId = image_group(GROUP_FIGURE_CARTPUSHER_CART); // empty
-			FigureMovement_walkTicks(figureId, 1);
+			FigureMovement_walkTicks(f, 1);
 			if (f->direction == DirFigure_8_AtDestination) {
 				f->actionState = FigureActionState_140_DockerExportAtWarehouse;
 			} else if (f->direction == DirFigure_9_Reroute) {
-				figure_route_remove(figureId);
+				figure_route_remove(f);
 			} else if (f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
 			}
@@ -215,12 +215,12 @@ void FigureAction_docker(int figureId)
 			break;
 		case FigureActionState_137_DockerExportReturning:
 			setCartGraphic(f);
-			FigureMovement_walkTicks(figureId, 1);
+			FigureMovement_walkTicks(f, 1);
 			if (f->direction == DirFigure_8_AtDestination) {
 				f->actionState = FigureActionState_134_DockerExportQueue;
 				f->waitTicks = 0;
 			} else if (f->direction == DirFigure_9_Reroute) {
-				figure_route_remove(figureId);
+				figure_route_remove(f);
 			} else if (f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
 			}
@@ -230,11 +230,11 @@ void FigureAction_docker(int figureId)
 			break;
 		case FigureActionState_138_DockerImportReturning:
 			setCartGraphic(f);
-			FigureMovement_walkTicks(figureId, 1);
+			FigureMovement_walkTicks(f, 1);
 			if (f->direction == DirFigure_8_AtDestination) {
 				f->actionState = FigureActionState_132_DockerIdling;
 			} else if (f->direction == DirFigure_9_Reroute) {
-				figure_route_remove(figureId);
+				figure_route_remove(f);
 			} else if (f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
 			}
@@ -305,7 +305,7 @@ void FigureAction_docker(int figureId)
 	}
 	if (f->cartGraphicId) {
 		f->cartGraphicId += dir;
-		FigureAction_Common_setCartOffset(figureId, dir);
+		FigureAction_Common_setCartOffset(f, dir);
 	} else {
 		f->graphicId = 0;
 	}

@@ -186,7 +186,7 @@ static void tickUpdateLegions()
 					f->actionState != FigureActionState_149_Corpse &&
 					f->actionState != FigureActionState_148_Fleeing) {
 					f->actionState = FigureActionState_148_Fleeing;
-					figure_route_remove(m->figures[n]);
+					figure_route_remove(f);
 				}
 			}
 		} else if (m->layout == FORMATION_MOP_UP) {
@@ -546,7 +546,7 @@ static void update_enemy_formation(const formation *m, void *data)
                 f->actionState != FigureActionState_149_Corpse &&
                 f->actionState != FigureActionState_148_Fleeing) {
                 f->actionState = FigureActionState_148_Fleeing;
-                figure_route_remove(m->figures[n]);
+                figure_route_remove(f);
             }
         }
         return;
@@ -651,8 +651,7 @@ static void moveAnimals(const formation *m, int attackingAnimals)
 {
 	for (int i = 0; i < MAX_FORMATION_FIGURES; i++) {
 		if (m->figures[i] <= 0) continue;
-		int figureId = m->figures[i];
-		struct Data_Figure *f = &Data_Figures[figureId];
+		struct Data_Figure *f = &Data_Figures[m->figures[i]];
 		if (f->actionState == FigureActionState_149_Corpse ||
 			f->actionState == FigureActionState_150_Attack) {
 			continue;
@@ -665,9 +664,9 @@ static void moveAnimals(const formation *m, int attackingAnimals)
 				f->destinationX = Data_Figures[targetId].x;
 				f->destinationY = Data_Figures[targetId].y;
 				f->targetFigureId = targetId;
-				Data_Figures[targetId].targetedByFigureId = figureId;
+				Data_Figures[targetId].targetedByFigureId = f->id;
 				f->targetFigureCreatedSequence = Data_Figures[targetId].createdSequence;
-				figure_route_remove(figureId);
+				figure_route_remove(f);
 			} else {
 				f->actionState = FigureActionState_196_HerdAnimalAtRest;
 			}

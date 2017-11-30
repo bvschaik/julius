@@ -3,21 +3,21 @@
 
 #include "Data/Figure.h"
 
-void FigureMovement_initRoaming(int figureId);
+void FigureMovement_initRoaming(figure *f);
 
-void FigureMovement_roamTicks(int figureId, int numTicks);
+void FigureMovement_roamTicks(figure *f, int numTicks);
 
-void FigureMovement_walkTicks(int figureId, int numTicks);
+void FigureMovement_walkTicks(figure *f, int numTicks);
 
-void FigureMovement_followTicks(int figureId, int leaderFigureId, int numTicks);
+void FigureMovement_followTicks(figure *f, int leaderFigureId, int numTicks);
 
-void FigureMovement_walkTicksTowerSentry(int figureId, int numTicks);
+void FigureMovement_walkTicksTowerSentry(figure *f, int numTicks);
 
 void FigureMovement_crossCountrySetDirection(figure *f, int xSrc, int ySrc, int xDst, int yDst, int isProjectile);
-int FigureMovement_crossCountryWalkTicks(int figureId, int numTicks);
+int FigureMovement_crossCountryWalkTicks(figure *f, int numTicks);
 
 int FigureMovement_canLaunchCrossCountryMissile(int xSrc, int ySrc, int xDst, int yDst);
 
-void FigureMovement_advanceTick(struct Data_Figure *f);
+void FigureMovement_advanceTick(figure *f);
 
 #endif

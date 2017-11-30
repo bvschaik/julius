@@ -47,9 +47,8 @@ static int get_first_available()
     return 0;
 }
 
-void figure_route_add(int figure_id)
+void figure_route_add(figure *f)
 {
-    struct Data_Figure *f = figure_get(figure_id);
     f->routingPathId = 0;
     f->routingPathCurrentTile = 0;
     f->routingPathLength = 0;
@@ -126,17 +125,16 @@ void figure_route_add(int figure_id)
         }
     }
     if (path_length) {
-        data.figure_ids[path_id] = figure_id;
+        data.figure_ids[path_id] = f->id;
         f->routingPathId = path_id;
         f->routingPathLength = path_length;
     }
 }
 
-void figure_route_remove(int figure_id)
+void figure_route_remove(figure *f)
 {
-    struct Data_Figure *f = figure_get(figure_id);
     if (f->routingPathId > 0) {
-        if (data.figure_ids[f->routingPathId] == figure_id) {
+        if (data.figure_ids[f->routingPathId] == f->id) {
             data.figure_ids[f->routingPathId] = 0;
         }
         f->routingPathId = 0;

@@ -115,7 +115,7 @@ void FigureAction_marketBuyer(int figureId)
 			FigureAction_Common_handleCorpse(figureId);
 			break;
 		case FigureActionState_145_MarketBuyerGoingToStorage:
-			FigureMovement_walkTicks(figureId, 1);
+			FigureMovement_walkTicks(f, 1);
 			if (f->direction == DirFigure_8_AtDestination) {
 				if (f->collectingItemId > 3) {
 					if (!marketBuyerTakeResourceFromWarehouse(figureId, f->buildingId, f->destinationBuildingId)) {
@@ -133,15 +133,15 @@ void FigureAction_marketBuyer(int figureId)
 				f->actionState = FigureActionState_146_MarketBuyerReturning;
 				f->destinationX = f->sourceX;
 				f->destinationY = f->sourceY;
-				figure_route_remove(figureId);
+				figure_route_remove(f);
 			}
 			break;
 		case FigureActionState_146_MarketBuyerReturning:
-			FigureMovement_walkTicks(figureId, 1);
+			FigureMovement_walkTicks(f, 1);
 			if (f->direction == DirFigure_8_AtDestination || f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
 			} else if (f->direction == DirFigure_9_Reroute) {
-				figure_route_remove(figureId);
+				figure_route_remove(f);
 			}
 			break;
 	}
@@ -162,7 +162,7 @@ void FigureAction_deliveryBoy(int figureId)
 	} else {
 		if (leader->state == FigureState_Alive) {
 			if (leader->type == FIGURE_MARKET_BUYER || leader->type == FIGURE_DELIVERY_BOY) {
-				FigureMovement_followTicks(figureId, f->inFrontFigureId, 1);
+				FigureMovement_followTicks(f, f->inFrontFigureId, 1);
 			} else {
 				f->state = FigureState_Dead;
 			}

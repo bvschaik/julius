@@ -163,16 +163,15 @@ void Trader_tick()
 	empire_city_foreach_open_until(canGenerateTraderForCity);
 }
 
-int Trader_getClosestWarehouseForTradeCaravan(int figureId, int x, int y, int cityId, int distanceFromEntry, int *warehouseX, int *warehouseY)
+int Trader_getClosestWarehouseForTradeCaravan(const figure *f, int x, int y, int cityId, int distanceFromEntry, int *warehouseX, int *warehouseY)
 {
-    struct Data_Figure *figure = figure_get(figureId);
 	int exportable[RESOURCE_MAX];
 	int importable[RESOURCE_MAX];
 	exportable[RESOURCE_NONE] = 0;
 	importable[RESOURCE_NONE] = 0;
 	for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
 		exportable[r] = empire_can_export_resource_to_city(cityId, r);
-		if (figure->traderAmountBought >= 8) {
+		if (f->traderAmountBought >= 8) {
 			exportable[r] = 0;
 		}
 		if (cityId) {
@@ -180,7 +179,7 @@ int Trader_getClosestWarehouseForTradeCaravan(int figureId, int x, int y, int ci
 		} else { // exclude own city (id=0), shouldn't happen, but still..
 			importable[r] = 0;
 		}
-		if (figure->loadsSoldOrCarrying >= 8) {
+		if (f->loadsSoldOrCarrying >= 8) {
 			importable[r] = 0;
 		}
 	}

@@ -90,7 +90,7 @@ static void updateShowsAtDestination(struct Data_Figure *f)
 	}
 }
 
-static void updateGraphic(int figureId, struct Data_Figure *f)
+static void updateGraphic(figure *f)
 {
 	int dir = f->direction < 8 ? f->direction : f->previousTileDirection;
 	FigureActionNormalizeDirection(dir);
@@ -134,7 +134,7 @@ static void updateGraphic(int figureId, struct Data_Figure *f)
 	}
 	if (f->cartGraphicId) {
 		f->cartGraphicId += dir + 8 * f->graphicOffset;
-		FigureAction_Common_setCartOffset(figureId, dir);
+		FigureAction_Common_setCartOffset(f, dir);
 	}
 }
 
@@ -156,7 +156,7 @@ void FigureAction_entertainer(int figureId)
 			f->actionState == FigureActionState_94_EntertainerRoaming ||
 			f->actionState == FigureActionState_95_EntertainerReturning) {
 			f->type = FIGURE_ENEMY54_GLADIATOR;
-			figure_route_remove(figureId);
+			figure_route_remove(f);
 			f->roamLength = 0;
 			f->actionState = FigureActionState_158_NativeCreated;
 			return;
@@ -190,7 +190,7 @@ void FigureAction_entertainer(int figureId)
 		case FigureActionState_91_EntertainerExitingSchool:
 			f->useCrossCountry = 1;
 			f->isGhost = 1;
-			if (FigureMovement_crossCountryWalkTicks(figureId, 1) == 1) {
+			if (FigureMovement_crossCountryWalkTicks(f, 1) == 1) {
 				int dstBuildingId = 0;
 				switch (f->type) {
 					case FIGURE_ACTOR:
@@ -230,12 +230,12 @@ void FigureAction_entertainer(int figureId)
 			if (f->roamLength >= 3200) {
 				f->state = FigureState_Dead;
 			}
-			FigureMovement_walkTicks(figureId, speedFactor);
+			FigureMovement_walkTicks(f, speedFactor);
 			if (f->direction == DirFigure_8_AtDestination) {
 				updateShowsAtDestination(f);
 				f->state = FigureState_Dead;
 			} else if (f->direction == DirFigure_9_Reroute) {
-				figure_route_remove(figureId);
+				figure_route_remove(f);
 			} else if (f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
 			}
@@ -253,15 +253,15 @@ void FigureAction_entertainer(int figureId)
 					f->state = FigureState_Dead;
 				}
 			}
-			FigureMovement_roamTicks(figureId, speedFactor);
+			FigureMovement_roamTicks(f, speedFactor);
 			break;
 		case FigureActionState_95_EntertainerReturning:
-			FigureMovement_walkTicks(figureId, speedFactor);
+			FigureMovement_walkTicks(f, speedFactor);
 			if (f->direction == DirFigure_8_AtDestination ||
 				f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
 			}
 			break;
 	}
-	updateGraphic(figureId, f);
+	updateGraphic(f);
 }

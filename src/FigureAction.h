@@ -25,7 +25,7 @@ int FigureAction_HerdEnemy_moveFormationTo(int formationId, int x, int y, int *x
 
 void FigureAction_Common_handleCorpse(int figureId);
 void FigureAction_Common_handleAttack(int figureId);
-void FigureAction_Common_setCartOffset(int figureId, int direction);
+void FigureAction_Common_setCartOffset(figure *f, int direction);
 void FigureAction_Common_setCrossCountryDestination(figure *f, int xDst, int yDst);
 
 int FigureAction_CombatSoldier_getMissileTarget(int figureId, int maxDistance, int *xTile, int *yTile);
@@ -34,7 +34,7 @@ int FigureAction_CombatWolf_getTarget(int x, int y, int maxDistance);
 int FigureAction_CombatEnemy_getTarget(int x, int y);
 int FigureAction_CombatEnemy_getMissileTarget(int enemyId, int maxDistance, int attackCitizens, int *xTile, int *yTile);
 
-void FigureAction_Combat_attackFigure(int figureId, int targetfigureId);
+void FigureAction_Combat_attackFigure(figure *f, int opponentId);
 
 // figure action callbacks
 void FigureAction_nobody(int figureId);
