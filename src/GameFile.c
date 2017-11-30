@@ -32,6 +32,7 @@
 #include "empire/trade_prices.h"
 #include "empire/trade_route.h"
 #include "figure/enemy_army.h"
+#include "figure/figure.h"
 #include "figure/formation.h"
 #include "figure/name.h"
 #include "figure/route.h"
@@ -138,7 +139,7 @@ typedef struct {
     buffer *Data_Grid_buildingDamage;
     buffer *Data_Grid_Undo_aqueducts;
     buffer *Data_Grid_Undo_spriteOffsets;
-    buffer *Data_Figures;
+    buffer *figures;
     buffer *route_figures;
     buffer *route_paths;
     buffer *formations;
@@ -175,7 +176,7 @@ typedef struct {
     buffer *message_counts;
     buffer *message_delays;
     buffer *building_list_burning_totals;
-    buffer *Data_Figure_Extra_createdSequence;
+    buffer *figure_sequence;
     buffer *scenario_settings;
     buffer *invasion_warnings;
     buffer *scenario_is_custom;
@@ -286,7 +287,7 @@ static void init_savegame_data()
     state->Data_Grid_buildingDamage = create_savegame_piece(26244, 1);
     state->Data_Grid_Undo_aqueducts = create_savegame_piece(26244, 1);
     state->Data_Grid_Undo_spriteOffsets = create_savegame_piece(26244, 1);
-    state->Data_Figures = create_savegame_piece(128000, 1);
+    state->figures = create_savegame_piece(128000, 1);
     state->route_figures = create_savegame_piece(1200, 1);
     state->route_paths = create_savegame_piece(300000, 1);
     state->formations = create_savegame_piece(6400, 1);
@@ -323,7 +324,7 @@ static void init_savegame_data()
     state->message_counts = create_savegame_piece(80, 0);
     state->message_delays = create_savegame_piece(80, 0);
     state->building_list_burning_totals = create_savegame_piece(8, 0);
-    state->Data_Figure_Extra_createdSequence = create_savegame_piece(4, 0);
+    state->figure_sequence = create_savegame_piece(4, 0);
     state->scenario_settings = create_savegame_piece(12, 0);
     state->invasion_warnings = create_savegame_piece(3232, 1);
     state->scenario_is_custom = create_savegame_piece(4, 0);
@@ -425,8 +426,8 @@ static void savegame_deserialize(savegame_state *state)
     read_all_from_buffer(state->Data_Grid_buildingDamage, &Data_Grid_buildingDamage);
     read_all_from_buffer(state->Data_Grid_Undo_aqueducts, &Data_Grid_Undo_aqueducts);
     read_all_from_buffer(state->Data_Grid_Undo_spriteOffsets, &Data_Grid_Undo_spriteOffsets);
-    read_all_from_buffer(state->Data_Figures, &Data_Figures);
 
+    figure_load_state(state->figures, state->figure_sequence);
     figure_route_load_state(state->route_figures, state->route_paths);
     formations_load_state(state->formations, state->formation_totals);
     
@@ -470,9 +471,6 @@ static void savegame_deserialize(savegame_state *state)
     city_message_load_state(state->messages, state->message_extra,
                             state->message_counts, state->message_delays,
                             state->population_messages);
-
-    read_all_from_buffer(state->Data_Figure_Extra_createdSequence, &Data_Figure_Extra.createdSequence);
-
     sound_city_load_state(state->city_sounds);
 
     read_all_from_buffer(state->Data_Buildings_Extra_highestBuildingIdInUse, &Data_Buildings_Extra.highestBuildingIdInUse);
@@ -546,8 +544,8 @@ static void savegame_serialize(savegame_state *state)
     write_all_to_buffer(state->Data_Grid_buildingDamage, &Data_Grid_buildingDamage);
     write_all_to_buffer(state->Data_Grid_Undo_aqueducts, &Data_Grid_Undo_aqueducts);
     write_all_to_buffer(state->Data_Grid_Undo_spriteOffsets, &Data_Grid_Undo_spriteOffsets);
-    write_all_to_buffer(state->Data_Figures, &Data_Figures);
 
+    figure_save_state(state->figures, state->figure_sequence);
     figure_route_save_state(state->route_figures, state->route_paths);
     formations_save_state(state->formations, state->formation_totals);
     
@@ -591,9 +589,6 @@ static void savegame_serialize(savegame_state *state)
     city_message_save_state(state->messages, state->message_extra,
                             state->message_counts, state->message_delays,
                             state->population_messages);
-
-    write_all_to_buffer(state->Data_Figure_Extra_createdSequence, &Data_Figure_Extra.createdSequence);
-
     sound_city_save_state(state->city_sounds);
 
     write_all_to_buffer(state->Data_Buildings_Extra_highestBuildingIdInUse, &Data_Buildings_Extra.highestBuildingIdInUse);
