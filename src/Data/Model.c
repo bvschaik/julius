@@ -20,7 +20,6 @@ struct _Data_CityInfo_Resource Data_CityInfo_Resource;
 struct _Data_State Data_State;
 
 struct Data_Figure Data_Figures[MAX_FIGURES];
-struct _Data_Figure_Extra Data_Figure_Extra;
 
 struct Data_Building Data_Buildings[MAX_BUILDINGS];
 struct _Data_Buildings_Extra Data_Buildings_Extra;

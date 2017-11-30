@@ -9,6 +9,10 @@
 
 #include <string.h>
 
+static struct {
+    int created_sequence;
+} data = {0};
+
 figure *figure_get(int id)
 {
     return &Data_Figures[id];
@@ -32,7 +36,7 @@ figure *figure_create(figure_type type, int x, int y, direction dir)
     f->type = type;
     f->useCrossCountry = 0;
     f->isFriendly = 1;
-    f->createdSequence = Data_Figure_Extra.createdSequence++;
+    f->createdSequence = data.created_sequence++;
     f->direction = dir;
     f->sourceX = f->destinationX = f->previousTileX = f->x = x;
     f->sourceY = f->destinationY = f->previousTileY = f->y = y;
@@ -259,7 +263,7 @@ static void figure_load(buffer *buf, figure *f)
 
 void figure_save_state(buffer *list, buffer *seq)
 {
-    buffer_write_i32(seq, Data_Figure_Extra.createdSequence);
+    buffer_write_i32(seq, data.created_sequence);
 
     for (int i = 0; i < MAX_FIGURES; i++) {
         figure_save(list, &Data_Figures[i]);
@@ -268,7 +272,7 @@ void figure_save_state(buffer *list, buffer *seq)
 
 void figure_load_state(buffer *list, buffer *seq)
 {
-    Data_Figure_Extra.createdSequence = buffer_read_i32(seq);
+    data.created_sequence = buffer_read_i32(seq);
 
     for (int i = 0; i < MAX_FIGURES; i++) {
         figure_load(list, &Data_Figures[i]);

@@ -251,8 +251,4 @@ extern struct Data_Figure {
 
 typedef struct Data_Figure figure;
 
-extern struct _Data_Figure_Extra {
-	int createdSequence;
-} Data_Figure_Extra;
-
 #endif
