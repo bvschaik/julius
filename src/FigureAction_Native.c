@@ -7,14 +7,13 @@
 #include "figure/formation.h"
 #include "figure/route.h"
 
-void FigureAction_indigenousNative(int figureId)
+void FigureAction_indigenousNative(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	struct Data_Building *b = &Data_Buildings[f->buildingId];
 	f->terrainUsage = FigureTerrainUsage_Any;
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 800;
-	if (!BuildingIsInUse(f->buildingId) || b->figureId != figureId) {
+	if (!BuildingIsInUse(f->buildingId) || b->figureId != f->id) {
 		f->state = FigureState_Dead;
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);
@@ -46,7 +45,7 @@ void FigureAction_indigenousNative(int figureId)
 		case FigureActionState_158_NativeCreated:
 			f->graphicOffset = 0;
 			f->waitTicks++;
-			if (f->waitTicks > 10 + (figureId & 3)) {
+			if (f->waitTicks > 10 + (f->id & 3)) {
 				f->waitTicks = 0;
 				if (Data_CityInfo.nativeAttackDuration == 0) {
 					int xTile, yTile;

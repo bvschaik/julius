@@ -230,9 +230,8 @@ static int getDirectionMissile(struct Data_Figure *f, const formation *m)
 	return dir;
 }
 
-void FigureAction_enemy43_Spear(int figureId)
+void FigureAction_enemy43_Spear(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	const formation *m = formation_get(f->formationId);
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
@@ -269,9 +268,8 @@ void FigureAction_enemy43_Spear(int figureId)
 	}
 }
 
-void FigureAction_enemy44_Sword(int figureId)
+void FigureAction_enemy44_Sword(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	const formation *m = formation_get(f->formationId);
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
@@ -305,9 +303,8 @@ void FigureAction_enemy44_Sword(int figureId)
 	}
 }
 
-void FigureAction_enemy45_Sword(int figureId)
+void FigureAction_enemy45_Sword(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	const formation *m = formation_get(f->formationId);
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
@@ -341,9 +338,8 @@ void FigureAction_enemy45_Sword(int figureId)
 	}
 }
 
-void FigureAction_enemy46_Camel(int figureId)
+void FigureAction_enemy46_Camel(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	const formation *m = formation_get(f->formationId);
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
@@ -367,9 +363,8 @@ void FigureAction_enemy46_Camel(int figureId)
 	}
 }
 
-void FigureAction_enemy47_Elephant(int figureId)
+void FigureAction_enemy47_Elephant(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	f->speedMultiplier = 1;
@@ -388,9 +383,8 @@ void FigureAction_enemy47_Elephant(int figureId)
 	}
 }
 
-void FigureAction_enemy48_Chariot(int figureId)
+void FigureAction_enemy48_Chariot(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	f->speedMultiplier = 3;
@@ -409,9 +403,8 @@ void FigureAction_enemy48_Chariot(int figureId)
 	}
 }
 
-void FigureAction_enemy49_FastSword(int figureId)
+void FigureAction_enemy49_FastSword(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	const formation *m = formation_get(f->formationId);
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
@@ -453,9 +446,8 @@ void FigureAction_enemy49_FastSword(int figureId)
 	}
 }
 
-void FigureAction_enemy50_Sword(int figureId)
+void FigureAction_enemy50_Sword(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	const formation *m = formation_get(f->formationId);
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
@@ -484,9 +476,8 @@ void FigureAction_enemy50_Sword(int figureId)
 	}
 }
 
-void FigureAction_enemy51_Spear(int figureId)
+void FigureAction_enemy51_Spear(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	const formation *m = formation_get(f->formationId);
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
@@ -517,9 +508,8 @@ void FigureAction_enemy51_Spear(int figureId)
 	}
 }
 
-void FigureAction_enemy52_MountedArcher(int figureId)
+void FigureAction_enemy52_MountedArcher(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	const formation *m = formation_get(f->formationId);
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
@@ -543,9 +533,8 @@ void FigureAction_enemy52_MountedArcher(int figureId)
 	}
 }
 
-void FigureAction_enemy53_Axe(int figureId)
+void FigureAction_enemy53_Axe(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	const formation *m = formation_get(f->formationId);
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
@@ -574,9 +563,8 @@ void FigureAction_enemy53_Axe(int figureId)
 	}
 }
 
-void FigureAction_enemy54_Gladiator(int figureId)
+void FigureAction_enemy54_Gladiator(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	f->terrainUsage = FigureTerrainUsage_Any;
 	f->useCrossCountry = 0;
 	FigureActionIncreaseGraphicOffset(f, 12);
@@ -599,7 +587,7 @@ void FigureAction_enemy54_Gladiator(int figureId)
 		case FigureActionState_158_NativeCreated:
 			f->graphicOffset = 0;
 			f->waitTicks++;
-			if (f->waitTicks > 10 + (figureId & 3)) {
+			if (f->waitTicks > 10 + (f->id & 3)) {
 				f->waitTicks = 0;
 				f->actionState = FigureActionState_159_NativeAttacking;
 				int xTile, yTile;
@@ -644,9 +632,8 @@ void FigureAction_enemy54_Gladiator(int figureId)
 	}
 }
 
-void FigureAction_enemyCaesarLegionary(int figureId)
+void FigureAction_enemyCaesarLegionary(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	const formation *m = formation_get(f->formationId);
 	Data_CityInfo.numImperialSoldiersInCity++;
 	FigureActionIncreaseGraphicOffset(f, 12);

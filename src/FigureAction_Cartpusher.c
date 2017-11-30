@@ -144,9 +144,8 @@ static void reroute_cartpusher(figure *f)
     f->waitTicks = 0;
 }
 
-void FigureAction_cartpusher(int figureId)
+void FigureAction_cartpusher(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	int roadNetworkId = map_road_network_get(f->gridOffset);
@@ -166,7 +165,7 @@ void FigureAction_cartpusher(int figureId)
 			if (!map_routing_citizen_is_passable(f->gridOffset)) {
 				f->state = FigureState_Dead;
 			}
-			if (!BuildingIsInUse(buildingId) || b->figureId != figureId) {
+			if (!BuildingIsInUse(buildingId) || b->figureId != f->id) {
 				f->state = FigureState_Dead;
 			}
 			f->waitTicks++;
@@ -401,9 +400,8 @@ static void determineWarehousemanDestination(figure *f, int roadNetworkId)
 	f->state = FigureState_Dead;
 }
 
-void FigureAction_warehouseman(int figureId)
+void FigureAction_warehouseman(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
@@ -418,7 +416,7 @@ void FigureAction_warehouseman(int figureId)
 			break;
 		case FigureActionState_50_WarehousemanCreated:
 			if (!BuildingIsInUse(f->buildingId) ||
-				Data_Buildings[f->buildingId].figureId != figureId) {
+				Data_Buildings[f->buildingId].figureId != f->id) {
 				f->state = FigureState_Dead;
 			}
 			f->waitTicks++;

@@ -28,15 +28,14 @@ static void updateDirectionAndGraphic(figure *f)
 	}
 }
 
-void FigureAction_immigrant(int figureId)
+void FigureAction_immigrant(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	int buildingId = f->immigrantBuildingId;
 	struct Data_Building *b = &Data_Buildings[buildingId];
 	
 	f->terrainUsage = FigureTerrainUsage_Any;
 	f->cartGraphicId = 0;
-	if (!BuildingIsInUse(buildingId) || b->immigrantFigureId != figureId || !b->houseSize) {
+	if (!BuildingIsInUse(buildingId) || b->immigrantFigureId != f->id || !b->houseSize) {
 		f->state = FigureState_Dead;
 		return;
 	}
@@ -116,10 +115,8 @@ void FigureAction_immigrant(int figureId)
 	updateDirectionAndGraphic(f);
 }
 
-void FigureAction_emigrant(int figureId)
+void FigureAction_emigrant(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
-	
 	f->terrainUsage = FigureTerrainUsage_Any;
 	f->cartGraphicId = 0;
 	
@@ -172,10 +169,8 @@ void FigureAction_emigrant(int figureId)
 	updateDirectionAndGraphic(f);
 }
 
-void FigureAction_homeless(int figureId)
+void FigureAction_homeless(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
-	
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->terrainUsage = FigureTerrainUsage_PreferRoads;
 	
@@ -195,7 +190,7 @@ void FigureAction_homeless(int figureId)
 					struct Data_Building *b = &Data_Buildings[buildingId];
 					int xRoad, yRoad;
 					if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
-						b->immigrantFigureId = figureId;
+						b->immigrantFigureId = f->id;
 						f->immigrantBuildingId = buildingId;
 						f->actionState = FigureActionState_8_HomelessGoingToHouse;
 						f->destinationX = xRoad;
@@ -270,7 +265,7 @@ void FigureAction_homeless(int figureId)
 					struct Data_Building *b = &Data_Buildings[buildingId];
 					int xRoad, yRoad;
 					if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
-						b->immigrantFigureId = figureId;
+						b->immigrantFigureId = f->id;
 						f->immigrantBuildingId = buildingId;
 						f->actionState = FigureActionState_8_HomelessGoingToHouse;
 						f->destinationX = xRoad;

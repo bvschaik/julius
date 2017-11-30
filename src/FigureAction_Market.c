@@ -94,14 +94,13 @@ static int marketBuyerTakeResourceFromWarehouse(figure *f, int marketId, int war
 	return 1;
 }
 
-void FigureAction_marketBuyer(int figureId)
+void FigureAction_marketBuyer(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 800;
 	
-	if (!BuildingIsInUse(f->buildingId) || Data_Buildings[f->buildingId].figureId2 != figureId) {
+	if (!BuildingIsInUse(f->buildingId) || Data_Buildings[f->buildingId].figureId2 != f->id) {
 		f->state = FigureState_Dead;
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);
@@ -146,9 +145,8 @@ void FigureAction_marketBuyer(int figureId)
 	FigureActionUpdateGraphic(f, image_group(GROUP_FIGURE_MARKET_LADY));
 }
 
-void FigureAction_deliveryBoy(int figureId)
+void FigureAction_deliveryBoy(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	f->isGhost = 0;
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	FigureActionIncreaseGraphicOffset(f, 12);

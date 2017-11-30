@@ -35,9 +35,8 @@ static int towerSentryFiringOffsets[] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
 
-void FigureAction_ballista(int figureId)
+void FigureAction_ballista(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	struct Data_Building *b = &Data_Buildings[f->buildingId];
 	f->terrainUsage = FigureTerrainUsage_Walls;
 	f->useCrossCountry = 0;
@@ -45,13 +44,13 @@ void FigureAction_ballista(int figureId)
 	f->heightAdjustedTicks = 10;
 	f->currentHeight = 45;
 	
-	if (!BuildingIsInUse(f->buildingId) || b->figureId4 != figureId) {
+	if (!BuildingIsInUse(f->buildingId) || b->figureId4 != f->id) {
 		f->state = FigureState_Dead;
 	}
 	if (b->numWorkers <= 0 || b->figureId <= 0) {
 		f->state = FigureState_Dead;
 	}
-	Figure_removeFromTileList(figureId);
+	Figure_removeFromTileList(f->id);
 	switch (Data_State.map.orientation) {
 		case Dir_0_Top: f->x = b->x; f->y = b->y; break;
 		case Dir_2_Right: f->x = b->x + 1; f->y = b->y; break;
@@ -59,7 +58,7 @@ void FigureAction_ballista(int figureId)
 		case Dir_6_Left: f->x = b->x; f->y = b->y + 1; break;
 	}
 	f->gridOffset = GridOffset(f->x, f->y);
-	Figure_addToTileList(figureId);
+	Figure_addToTileList(f->id);
 
 	switch (f->actionState) {
 		case FigureActionState_149_Corpse:
@@ -70,7 +69,7 @@ void FigureAction_ballista(int figureId)
 			if (f->waitTicks > 20) {
 				f->waitTicks = 0;
 				int xTile, yTile;
-				if (FigureAction_CombatSoldier_getMissileTarget(figureId, 15, &xTile, &yTile)) {
+				if (FigureAction_CombatSoldier_getMissileTarget(f->id, 15, &xTile, &yTile)) {
 					f->actionState = FigureActionState_181_BallistaFiring;
 					f->waitTicksMissile = figure_properties_for_type(f->type)->missile_delay;
 				}
@@ -80,10 +79,10 @@ void FigureAction_ballista(int figureId)
 			f->waitTicksMissile++;
 			if (f->waitTicksMissile > figure_properties_for_type(f->type)->missile_delay) {
 				int xTile, yTile;
-				if (FigureAction_CombatSoldier_getMissileTarget(figureId, 15, &xTile, &yTile)) {
+				if (FigureAction_CombatSoldier_getMissileTarget(f->id, 15, &xTile, &yTile)) {
 					f->direction = calc_missile_shooter_direction(f->x, f->y, xTile, yTile);
 					f->waitTicksMissile = 0;
-					Figure_createMissile(figureId, f->x, f->y, xTile, yTile, FIGURE_BOLT);
+					Figure_createMissile(f->id, f->x, f->y, xTile, yTile, FIGURE_BOLT);
 					sound_effect_play(SOUND_EFFECT_BALLISTA_SHOOT);
 				} else {
 					f->actionState = FigureActionState_180_BallistaCreated;
@@ -162,16 +161,15 @@ static int towerSentryInitPatrol(struct Data_Building *b, int *xTile, int *yTile
 	return 0;
 }
 
-void FigureAction_towerSentry(int figureId)
+void FigureAction_towerSentry(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	struct Data_Building *b = &Data_Buildings[f->buildingId];
 	f->terrainUsage = FigureTerrainUsage_Walls;
 	f->useCrossCountry = 0;
 	f->isGhost = 1;
 	f->heightAdjustedTicks = 10;
 	f->maxRoamLength = 800;
-	if (!BuildingIsInUse(f->buildingId) || b->figureId != figureId) {
+	if (!BuildingIsInUse(f->buildingId) || b->figureId != f->id) {
 		f->state = FigureState_Dead;
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);
@@ -214,10 +212,10 @@ void FigureAction_towerSentry(int figureId)
 			f->waitTicksMissile++;
 			if (f->waitTicksMissile > figure_properties_for_type(f->type)->missile_delay) {
 				int xTile, yTile;
-				if (FigureAction_CombatSoldier_getMissileTarget(figureId, 10, &xTile, &yTile)) {
+				if (FigureAction_CombatSoldier_getMissileTarget(f->id, 10, &xTile, &yTile)) {
 					f->direction = calc_missile_shooter_direction(f->x, f->y, xTile, yTile);
 					f->waitTicksMissile = 0;
-					Figure_createMissile(figureId, f->x, f->y, xTile, yTile, FIGURE_JAVELIN);
+					Figure_createMissile(f->id, f->x, f->y, xTile, yTile, FIGURE_JAVELIN);
 				} else {
 					f->actionState = FigureActionState_173_TowerSentryReturning;
 					f->destinationX = f->sourceX;
@@ -240,11 +238,11 @@ void FigureAction_towerSentry(int figureId)
 			f->heightAdjustedTicks = 0;
 			FigureMovement_walkTicks(f, 1);
 			if (f->direction == DirFigure_8_AtDestination) {
-				Figure_removeFromTileList(figureId);
+				Figure_removeFromTileList(f->id);
 				f->sourceX = f->x = b->x;
 				f->sourceY = f->y = b->y;
 				f->gridOffset = GridOffset(f->x, f->y);
-				Figure_addToTileList(figureId);
+				Figure_addToTileList(f->id);
 				f->actionState = FigureActionState_170_TowerSentryAtRest;
 				figure_route_remove(f);
 			} else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {

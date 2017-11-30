@@ -12,9 +12,8 @@ static const int cloudGraphicOffsets[] = {
 	2, 2, 2, 2, 3, 3, 3, 4, 4, 5, 6, 7
 };
 
-void FigureAction_explosionCloud(int figureId)
+void FigureAction_explosionCloud(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	f->useCrossCountry = 1;
 	f->progressOnTile++;
 	if (f->progressOnTile > 44) {
@@ -29,16 +28,15 @@ void FigureAction_explosionCloud(int figureId)
 	}
 }
 
-void FigureAction_arrow(int figureId)
+void FigureAction_arrow(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	f->useCrossCountry = 1;
 	f->progressOnTile++;
 	if (f->progressOnTile > 120) {
 		f->state = FigureState_Dead;
 	}
 	int shouldDie = FigureMovement_crossCountryWalkTicks(f, 4);
-	int targetId = Figure_getCitizenOnSameTile(figureId);
+	int targetId = Figure_getCitizenOnSameTile(f->id);
 	if (targetId) {
 		int targetType = Data_Figures[targetId].type;
 		int formationId = Data_Figures[targetId].formationId;
@@ -75,16 +73,15 @@ void FigureAction_arrow(int figureId)
 	f->graphicId = image_group(GROUP_FIGURE_MISSILE) + 16 + dir;
 }
 
-void FigureAction_spear(int figureId)
+void FigureAction_spear(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	f->useCrossCountry = 1;
 	f->progressOnTile++;
 	if (f->progressOnTile > 120) {
 		f->state = FigureState_Dead;
 	}
 	int shouldDie = FigureMovement_crossCountryWalkTicks(f, 4);
-	int targetId = Figure_getCitizenOnSameTile(figureId);
+	int targetId = Figure_getCitizenOnSameTile(f->id);
 	if (targetId) {
 		int targetType = Data_Figures[targetId].type;
 		int formationId = Data_Figures[targetId].formationId;
@@ -121,16 +118,15 @@ void FigureAction_spear(int figureId)
 	f->graphicId = image_group(GROUP_FIGURE_MISSILE) + dir;
 }
 
-void FigureAction_javelin(int figureId)
+void FigureAction_javelin(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	f->useCrossCountry = 1;
 	f->progressOnTile++;
 	if (f->progressOnTile > 120) {
 		f->state = FigureState_Dead;
 	}
 	int shouldDie = FigureMovement_crossCountryWalkTicks(f, 4);
-	int targetId = Figure_getNonCitizenOnSameTile(figureId);
+	int targetId = Figure_getNonCitizenOnSameTile(f->id);
 	if (targetId) {
 		int targetType = Data_Figures[targetId].type;
 		int formationId = Data_Figures[targetId].formationId;
@@ -168,16 +164,15 @@ void FigureAction_javelin(int figureId)
 	f->graphicId = image_group(GROUP_FIGURE_MISSILE) + dir;
 }
 
-void FigureAction_bolt(int figureId)
+void FigureAction_bolt(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	f->useCrossCountry = 1;
 	f->progressOnTile++;
 	if (f->progressOnTile > 120) {
 		f->state = FigureState_Dead;
 	}
 	int shouldDie = FigureMovement_crossCountryWalkTicks(f, 4);
-	int targetId = Figure_getNonCitizenOnSameTile(figureId);
+	int targetId = Figure_getNonCitizenOnSameTile(f->id);
 	if (targetId) {
 		int targetType = Data_Figures[targetId].type;
 		int formationId = Data_Figures[targetId].formationId;

@@ -136,7 +136,7 @@ int FigureAction_TradeCaravan_canSell(int traderId, int warehouseId, int cityId)
 	return 0;
 }
 
-static int traderGetSellResource(int traderId, int warehouseId, int cityId)
+static int traderGetSellResource(int warehouseId, int cityId)
 {
 	if (Data_Buildings[warehouseId].type != BUILDING_WAREHOUSE) {
 		return 0;
@@ -212,9 +212,8 @@ static void goToNextWarehouse(figure *f, int xSrc, int ySrc, int distToEntry)
 	}
 }
 
-void FigureAction_tradeCaravan(int figureId)
+void FigureAction_tradeCaravan(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	f->isGhost = 0;
 	f->terrainUsage = FigureTerrainUsage_PreferRoads;
 	FigureActionIncreaseGraphicOffset(f, 12);
@@ -266,7 +265,7 @@ void FigureAction_tradeCaravan(int figureId)
 			if (f->waitTicks > 10) {
 				f->waitTicks = 0;
 				int moveOn = 0;
-				if (FigureAction_TradeCaravan_canBuy(figureId, f->destinationBuildingId, f->empireCityId)) {
+				if (FigureAction_TradeCaravan_canBuy(f->id, f->destinationBuildingId, f->empireCityId)) {
 					int resource = traderGetBuyResource(f->destinationBuildingId, f->empireCityId);
 					if (resource) {
 						trade_route_increase_traded(empire_city_get_route_id(f->empireCityId), resource);
@@ -278,8 +277,8 @@ void FigureAction_tradeCaravan(int figureId)
 				} else {
 					moveOn++;
 				}
-				if (FigureAction_TradeCaravan_canSell(figureId, f->destinationBuildingId, f->empireCityId)) {
-					int resource = traderGetSellResource(figureId, f->destinationBuildingId, f->empireCityId);
+				if (FigureAction_TradeCaravan_canSell(f->id, f->destinationBuildingId, f->empireCityId)) {
+					int resource = traderGetSellResource(f->destinationBuildingId, f->empireCityId);
 					if (resource) {
 						trade_route_increase_traded(empire_city_get_route_id(f->empireCityId), resource);
 						trader_record_sold_resource(f->traderId, resource);
@@ -317,9 +316,8 @@ void FigureAction_tradeCaravan(int figureId)
 	f->graphicId = image_group(GROUP_FIGURE_TRADE_CARAVAN) + dir + 8 * f->graphicOffset;
 }
 
-void FigureAction_tradeCaravanDonkey(int figureId)
+void FigureAction_tradeCaravanDonkey(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	f->isGhost = 0;
 	f->terrainUsage = FigureTerrainUsage_PreferRoads;
 	FigureActionIncreaseGraphicOffset(f, 12);
@@ -348,9 +346,8 @@ void FigureAction_tradeCaravanDonkey(int figureId)
 	f->graphicId = image_group(GROUP_FIGURE_TRADE_CARAVAN) + dir + 8 * f->graphicOffset;
 }
 
-void FigureAction_nativeTrader(int figureId)
+void FigureAction_nativeTrader(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	f->isGhost = 0;
 	f->terrainUsage = FigureTerrainUsage_Any;
 	FigureActionIncreaseGraphicOffset(f, 12);
@@ -406,7 +403,7 @@ void FigureAction_nativeTrader(int figureId)
 			f->waitTicks++;
 			if (f->waitTicks > 10) {
 				f->waitTicks = 0;
-				if (FigureAction_TradeCaravan_canBuy(figureId, f->destinationBuildingId, 0)) {
+				if (FigureAction_TradeCaravan_canBuy(f->id, f->destinationBuildingId, 0)) {
 					int resource = traderGetBuyResource(f->destinationBuildingId, 0);
 					trader_record_bought_resource(f->traderId, resource);
 					f->traderAmountBought += 3;
@@ -480,9 +477,8 @@ static int tradeShipDoneTrading(figure *f)
 	return 1;
 }
 
-void FigureAction_tradeShip(int figureId)
+void FigureAction_tradeShip(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	f->isGhost = 0;
 	f->isBoat = 1;
 	FigureActionIncreaseGraphicOffset(f, 12);
@@ -502,7 +498,7 @@ void FigureAction_tradeShip(int figureId)
 			if (f->waitTicks > 20) {
 				f->waitTicks = 0;
 				int xTile, yTile;
-				int dockId = Terrain_Water_getFreeDockDestination(figureId, &xTile, &yTile);
+				int dockId = Terrain_Water_getFreeDockDestination(f->id, &xTile, &yTile);
 				if (dockId) {
 					f->destinationBuildingId = dockId;
 					f->actionState = FigureActionState_111_TradeShipGoingToDock;
@@ -582,13 +578,13 @@ void FigureAction_tradeShip(int figureId)
 			f->waitTicks++;
 			if (f->waitTicks > 40) {
 				int xTile, yTile;
-				int dockId = Terrain_Water_getFreeDockDestination(figureId, &xTile, &yTile);
+				int dockId = Terrain_Water_getFreeDockDestination(f->id, &xTile, &yTile);
 				if (dockId) {
 					f->destinationBuildingId = dockId;
 					f->actionState = FigureActionState_111_TradeShipGoingToDock;
 					f->destinationX = xTile;
 					f->destinationY = yTile;
-				} else if (Data_Grid_figureIds[f->gridOffset] != figureId &&
+				} else if (Data_Grid_figureIds[f->gridOffset] != f->id &&
 					Terrain_Water_getQueueDockDestination(&xTile, &yTile)) {
 					f->actionState = FigureActionState_113_TradeShipGoingToDockQueue;
 					f->destinationX = xTile;

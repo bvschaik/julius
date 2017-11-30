@@ -138,9 +138,8 @@ static void updateGraphic(figure *f)
 	}
 }
 
-void FigureAction_entertainer(int figureId)
+void FigureAction_entertainer(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	struct Data_Building *b = &Data_Buildings[f->buildingId];
 	f->cartGraphicId = image_group(GROUP_FIGURE_CARTPUSHER_CART);
 	f->terrainUsage = FigureTerrainUsage_Roads;

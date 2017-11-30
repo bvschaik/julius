@@ -14,9 +14,8 @@ static const int criminalOffsets[] = {
 	0, 0, 1, 2, 3, 4, 5, 6, 7, 7, 6, 5, 4, 3, 2, 1
 };
 
-void FigureAction_protestor(int figureId)
+void FigureAction_protestor(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	FigureActionIncreaseGraphicOffset(f, 64);
 	f->cartGraphicId = 0;
@@ -37,9 +36,8 @@ void FigureAction_protestor(int figureId)
 	}
 }
 
-void FigureAction_criminal(int figureId)
+void FigureAction_criminal(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	FigureActionIncreaseGraphicOffset(f, 32);
 	f->cartGraphicId = 0;
@@ -60,9 +58,8 @@ void FigureAction_criminal(int figureId)
 	}
 }
 
-void FigureAction_rioter(int figureId)
+void FigureAction_rioter(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	Data_CityInfo.numRiotersInCity++;
 	if (!f->targetedByFigureId) {
 		Data_CityInfo.riotersOrAttackingNativesInCity = 10;

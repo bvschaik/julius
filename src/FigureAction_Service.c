@@ -13,15 +13,14 @@
 #include "figure/type.h"
 #include "sound/effect.h"
 
-void FigureAction_taxCollector(int figureId)
+void FigureAction_taxCollector(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	struct Data_Building *b = &Data_Buildings[f->buildingId];
 	
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 512;
-	if (!BuildingIsInUse(f->buildingId) || b->figureId != figureId) {
+	if (!BuildingIsInUse(f->buildingId) || b->figureId != f->id) {
 		f->state = FigureState_Dead;
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);
@@ -91,15 +90,14 @@ void FigureAction_taxCollector(int figureId)
 	FigureActionUpdateGraphic(f, image_group(GROUP_FIGURE_TAX_COLLECTOR));
 }
 
-void FigureAction_engineer(int figureId)
+void FigureAction_engineer(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	struct Data_Building *b = &Data_Buildings[f->buildingId];
 	
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 640;
-	if (!BuildingIsInUse(f->buildingId) || b->figureId != figureId) {
+	if (!BuildingIsInUse(f->buildingId) || b->figureId != f->id) {
 		f->state = FigureState_Dead;
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);
@@ -315,15 +313,14 @@ static int prefectTargetIsAlive(figure *f)
 	return 0;
 }
 
-void FigureAction_prefect(int figureId)
+void FigureAction_prefect(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	struct Data_Building *b = &Data_Buildings[f->buildingId];
 	
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 640;
-	if (!BuildingIsInUse(f->buildingId) || b->figureId != figureId) {
+	if (!BuildingIsInUse(f->buildingId) || b->figureId != f->id) {
 		f->state = FigureState_Dead;
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);
@@ -472,14 +469,13 @@ void FigureAction_prefect(int figureId)
 	}
 }
 
-void FigureAction_worker(int figureId)
+void FigureAction_worker(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 384;
 	if (!BuildingIsInUse(f->buildingId) ||
-		Data_Buildings[f->buildingId].figureId != figureId) {
+		Data_Buildings[f->buildingId].figureId != f->id) {
 		f->state = FigureState_Dead;
 	}
 }

@@ -9,7 +9,7 @@
 #include "figure/trader.h"
 #include "figure/type.h"
 
-static int dockerDeliverImportResource(int figureId, int buildingId)
+static int dockerDeliverImportResource(figure *f, int buildingId)
 {
 	int shipId = Data_Buildings[buildingId].data.other.boatFigureId;
 	if (!shipId) {
@@ -19,7 +19,6 @@ static int dockerDeliverImportResource(int figureId, int buildingId)
 	if (ship->actionState != FigureActionState_112_TradeShipMoored || ship->loadsSoldOrCarrying <= 0) {
 		return 0;
 	}
-	struct Data_Figure *f = &Data_Figures[figureId];
 	int x, y;
 	if (Data_CityInfo.buildingTradeCenterBuildingId) {
 		int tcId = Data_CityInfo.buildingTradeCenterBuildingId;
@@ -45,7 +44,7 @@ static int dockerDeliverImportResource(int figureId, int buildingId)
 	return 1;
 }
 
-static int dockerGetExportResource(int figureId, int buildingId)
+static int dockerGetExportResource(figure *f, int buildingId)
 {
 	int shipId = Data_Buildings[buildingId].data.other.boatFigureId;
 	if (!shipId) {
@@ -55,7 +54,6 @@ static int dockerGetExportResource(int figureId, int buildingId)
 	if (ship->actionState != FigureActionState_112_TradeShipMoored || ship->traderAmountBought >= 12) {
 		return 0;
 	}
-	struct Data_Figure *f = &Data_Figures[figureId];
 	int x, y;
 	if (Data_CityInfo.buildingTradeCenterBuildingId) {
 		int tcId = Data_CityInfo.buildingTradeCenterBuildingId;
@@ -87,9 +85,8 @@ static void setCartGraphic(struct Data_Figure *f)
 	f->cartGraphicId += Resource_getGraphicIdOffset(f->resourceId, 1);
 }
 
-void FigureAction_docker(int figureId)
+void FigureAction_docker(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	struct Data_Building *b = &Data_Buildings[f->buildingId];
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
@@ -123,8 +120,8 @@ void FigureAction_docker(int figureId)
 		case FigureActionState_132_DockerIdling:
 			f->resourceId = 0;
 			f->cartGraphicId = 0;
-			if (!dockerDeliverImportResource(figureId, f->buildingId)) {
-				dockerGetExportResource(figureId, f->buildingId);
+			if (!dockerDeliverImportResource(f, f->buildingId)) {
+				dockerGetExportResource(f, f->buildingId);
 			}
 			f->graphicOffset = 0;
 			break;
@@ -132,10 +129,10 @@ void FigureAction_docker(int figureId)
 			f->cartGraphicId = 0;
 			f->graphicOffset = 0;
 			if (b->data.other.dockQueuedDockerId <= 0) {
-				b->data.other.dockQueuedDockerId = figureId;
+				b->data.other.dockQueuedDockerId = f->id;
 				f->waitTicks = 0;
 			}
-			if (b->data.other.dockQueuedDockerId == figureId) {
+			if (b->data.other.dockQueuedDockerId == f->id) {
 				b->data.other.dockNumShips = 120;
 				f->waitTicks++;
 				if (f->waitTicks >= 80) {
@@ -164,10 +161,10 @@ void FigureAction_docker(int figureId)
 		case FigureActionState_134_DockerExportQueue:
 			setCartGraphic(f);
 			if (b->data.other.dockQueuedDockerId <= 0) {
-				b->data.other.dockQueuedDockerId = figureId;
+				b->data.other.dockQueuedDockerId = f->id;
 				f->waitTicks = 0;
 			}
-			if (b->data.other.dockQueuedDockerId == figureId) {
+			if (b->data.other.dockQueuedDockerId == f->id) {
 				b->data.other.dockNumShips = 120;
 				f->waitTicks++;
 				if (f->waitTicks >= 80) {
@@ -257,7 +254,7 @@ void FigureAction_docker(int figureId)
 					f->destinationX = f->sourceX;
 					f->destinationY = f->sourceY;
 					f->resourceId = 0;
-					dockerGetExportResource(figureId, f->buildingId);
+					dockerGetExportResource(f, f->buildingId);
 				} else {
 					f->actionState = FigureActionState_138_DockerImportReturning;
 					f->destinationX = f->sourceX;
@@ -286,7 +283,7 @@ void FigureAction_docker(int figureId)
 					trader_record_bought_resource(traderId, f->resourceId);
 					f->actionState = FigureActionState_137_DockerExportReturning;
 				} else {
-					dockerGetExportResource(figureId, f->buildingId);
+					dockerGetExportResource(f, f->buildingId);
 				}
 			}
 			f->graphicOffset = 0;

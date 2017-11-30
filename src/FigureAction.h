@@ -37,84 +37,84 @@ int FigureAction_CombatEnemy_getMissileTarget(int enemyId, int maxDistance, int 
 void FigureAction_Combat_attackFigure(figure *f, int opponentId);
 
 // figure action callbacks
-void FigureAction_nobody(int figureId);
+void FigureAction_nobody(figure *f);
 // migrant
-void FigureAction_immigrant(int figureId);
-void FigureAction_emigrant(int figureId);
-void FigureAction_homeless(int figureId);
+void FigureAction_immigrant(figure *f);
+void FigureAction_emigrant(figure *f);
+void FigureAction_homeless(figure *f);
 // cartpusher
-void FigureAction_cartpusher(int figureId);
-void FigureAction_warehouseman(int figureId);
+void FigureAction_cartpusher(figure *f);
+void FigureAction_warehouseman(figure *f);
 // docker
-void FigureAction_docker(int figureId);
+void FigureAction_docker(figure *f);
 // service
-void FigureAction_taxCollector(int figureId);
-void FigureAction_engineer(int figureId);
-void FigureAction_prefect(int figureId);
-void FigureAction_worker(int figureId);
+void FigureAction_taxCollector(figure *f);
+void FigureAction_engineer(figure *f);
+void FigureAction_prefect(figure *f);
+void FigureAction_worker(figure *f);
 // culture/entertainer
-void FigureAction_entertainer(int figureId);
-void FigureAction_priest(int figureId);
-void FigureAction_schoolChild(int figureId);
-void FigureAction_teacher(int figureId);
-void FigureAction_librarian(int figureId);
-void FigureAction_barber(int figureId);
-void FigureAction_bathhouseWorker(int figureId);
-void FigureAction_doctor(int figureId);
-void FigureAction_surgeon(int figureId);
-void FigureAction_missionary(int figureId);
-void FigureAction_patrician(int figureId);
-void FigureAction_laborSeeker(int figureId);
-void FigureAction_marketTrader(int figureId);
+void FigureAction_entertainer(figure *f);
+void FigureAction_priest(figure *f);
+void FigureAction_schoolChild(figure *f);
+void FigureAction_teacher(figure *f);
+void FigureAction_librarian(figure *f);
+void FigureAction_barber(figure *f);
+void FigureAction_bathhouseWorker(figure *f);
+void FigureAction_doctor(figure *f);
+void FigureAction_surgeon(figure *f);
+void FigureAction_missionary(figure *f);
+void FigureAction_patrician(figure *f);
+void FigureAction_laborSeeker(figure *f);
+void FigureAction_marketTrader(figure *f);
 // market
-void FigureAction_marketBuyer(int figureId);
-void FigureAction_deliveryBoy(int figureId);
+void FigureAction_marketBuyer(figure *f);
+void FigureAction_deliveryBoy(figure *f);
 // trader
-void FigureAction_tradeCaravan(int figureId);
-void FigureAction_tradeCaravanDonkey(int figureId);
-void FigureAction_tradeShip(int figureId);
-void FigureAction_nativeTrader(int figureId);
+void FigureAction_tradeCaravan(figure *f);
+void FigureAction_tradeCaravanDonkey(figure *f);
+void FigureAction_tradeShip(figure *f);
+void FigureAction_nativeTrader(figure *f);
 // native
-void FigureAction_indigenousNative(int figureId);
+void FigureAction_indigenousNative(figure *f);
 // soldier
-void FigureAction_soldier(int figureId);
-void FigureAction_militaryStandard(int figureId);
+void FigureAction_soldier(figure *f);
+void FigureAction_militaryStandard(figure *f);
 // missile
-void FigureAction_explosionCloud(int figureId);
-void FigureAction_arrow(int figureId);
-void FigureAction_spear(int figureId);
-void FigureAction_javelin(int figureId);
-void FigureAction_bolt(int figureId);
+void FigureAction_explosionCloud(figure *f);
+void FigureAction_arrow(figure *f);
+void FigureAction_spear(figure *f);
+void FigureAction_javelin(figure *f);
+void FigureAction_bolt(figure *f);
 // rioter
-void FigureAction_protestor(int figureId);
-void FigureAction_criminal(int figureId);
-void FigureAction_rioter(int figureId);
+void FigureAction_protestor(figure *f);
+void FigureAction_criminal(figure *f);
+void FigureAction_rioter(figure *f);
 // water
-void FigureAction_fishingBoat(int figureId);
-void FigureAction_flotsam(int figureId);
-void FigureAction_shipwreck(int figureId);
+void FigureAction_fishingBoat(figure *f);
+void FigureAction_flotsam(figure *f);
+void FigureAction_shipwreck(figure *f);
 // wall
-void FigureAction_ballista(int figureId);
-void FigureAction_towerSentry(int figureId);
+void FigureAction_ballista(figure *f);
+void FigureAction_towerSentry(figure *f);
 // enemy
-void FigureAction_enemy43_Spear(int figureId);
-void FigureAction_enemy44_Sword(int figureId);
-void FigureAction_enemy45_Sword(int figureId);
-void FigureAction_enemy46_Camel(int figureId);
-void FigureAction_enemy47_Elephant(int figureId);
-void FigureAction_enemy48_Chariot(int figureId);
-void FigureAction_enemy49_FastSword(int figureId);
-void FigureAction_enemy50_Sword(int figureId);
-void FigureAction_enemy51_Spear(int figureId);
-void FigureAction_enemy52_MountedArcher(int figureId);
-void FigureAction_enemy53_Axe(int figureId);
-void FigureAction_enemy54_Gladiator(int figureId);
-void FigureAction_enemyCaesarLegionary(int figureId);
+void FigureAction_enemy43_Spear(figure *f);
+void FigureAction_enemy44_Sword(figure *f);
+void FigureAction_enemy45_Sword(figure *f);
+void FigureAction_enemy46_Camel(figure *f);
+void FigureAction_enemy47_Elephant(figure *f);
+void FigureAction_enemy48_Chariot(figure *f);
+void FigureAction_enemy49_FastSword(figure *f);
+void FigureAction_enemy50_Sword(figure *f);
+void FigureAction_enemy51_Spear(figure *f);
+void FigureAction_enemy52_MountedArcher(figure *f);
+void FigureAction_enemy53_Axe(figure *f);
+void FigureAction_enemy54_Gladiator(figure *f);
+void FigureAction_enemyCaesarLegionary(figure *f);
 // animal
-void FigureAction_seagulls(int figureId);
-void FigureAction_sheep(int figureId);
-void FigureAction_wolf(int figureId);
-void FigureAction_zebra(int figureId);
-void FigureAction_hippodromeHorse(int figureId);
+void FigureAction_seagulls(figure *f);
+void FigureAction_sheep(figure *f);
+void FigureAction_wolf(figure *f);
+void FigureAction_zebra(figure *f);
+void FigureAction_hippodromeHorse(figure *f);
 
 #endif

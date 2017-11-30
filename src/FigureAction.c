@@ -4,7 +4,7 @@
 #include "Data/CityInfo.h"
 #include "figure/figure.h"
 
-static void (*figureActionCallbacks[])(int figureId) = {
+static void (*figureActionCallbacks[])(figure *f) = {
 	FigureAction_nobody, //0
 	FigureAction_immigrant,
 	FigureAction_emigrant,
@@ -111,7 +111,7 @@ void FigureAction_handle()
 					f->targetedByFigureId = 0;
 				}
 			}
-			figureActionCallbacks[f->type](i);
+			figureActionCallbacks[f->type](f);
 			if (f->state == FigureState_Dead) {
 				Figure_delete(i);
 			}
@@ -119,6 +119,6 @@ void FigureAction_handle()
 	}
 }
 
-void FigureAction_nobody(int figureId)
+void FigureAction_nobody(figure *f)
 {
 }

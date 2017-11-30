@@ -5,9 +5,8 @@
 
 #include "figure/route.h"
 
-static void FigureAction_cultureCommon(int figureId, int numTicks)
+static void FigureAction_cultureCommon(figure *f, int numTicks)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	switch (f->actionState) {
 		case FigureActionState_150_Attack:
 			FigureAction_Common_handleAttack(f);
@@ -46,18 +45,17 @@ static void FigureAction_cultureCommon(int figureId, int numTicks)
 	}
 }
 
-static void FigureAction_culture(int figureId, int graphicCategory)
+static void FigureAction_culture(figure *f, int graphicCategory)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 384;
 	int buildingId = f->buildingId;
-	if (!BuildingIsInUse(buildingId) || Data_Buildings[buildingId].figureId != figureId) {
+	if (!BuildingIsInUse(buildingId) || Data_Buildings[buildingId].figureId != f->id) {
 		f->state = FigureState_Dead;
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);
-	FigureAction_cultureCommon(figureId, 1);
+	FigureAction_cultureCommon(f, 1);
 	if (f->actionState == FigureActionState_149_Corpse) {
 		f->graphicId = image_group(graphicCategory) +
 			FigureActionCorpseGraphicOffset(f) + 96;
@@ -67,14 +65,13 @@ static void FigureAction_culture(int figureId, int graphicCategory)
 	}
 }
 
-void FigureAction_priest(int figureId)
+void FigureAction_priest(figure *f)
 {
-	FigureAction_culture(figureId, GROUP_FIGURE_PRIEST);
+	FigureAction_culture(f, GROUP_FIGURE_PRIEST);
 }
 
-void FigureAction_schoolChild(int figureId)
+void FigureAction_schoolChild(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 96;
@@ -108,54 +105,52 @@ void FigureAction_schoolChild(int figureId)
 	}
 }
 
-void FigureAction_teacher(int figureId)
+void FigureAction_teacher(figure *f)
 {
-	FigureAction_culture(figureId, GROUP_FIGURE_TEACHER_LIBRARIAN);
+	FigureAction_culture(f, GROUP_FIGURE_TEACHER_LIBRARIAN);
 }
 
-void FigureAction_librarian(int figureId)
+void FigureAction_librarian(figure *f)
 {
-	FigureAction_culture(figureId, GROUP_FIGURE_TEACHER_LIBRARIAN);
+	FigureAction_culture(f, GROUP_FIGURE_TEACHER_LIBRARIAN);
 }
 
-void FigureAction_barber(int figureId)
+void FigureAction_barber(figure *f)
 {
-	FigureAction_culture(figureId, GROUP_FIGURE_BARBER);
+	FigureAction_culture(f, GROUP_FIGURE_BARBER);
 }
 
-void FigureAction_bathhouseWorker(int figureId)
+void FigureAction_bathhouseWorker(figure *f)
 {
-	FigureAction_culture(figureId, GROUP_FIGURE_BATHHOUSE_WORKER);
+	FigureAction_culture(f, GROUP_FIGURE_BATHHOUSE_WORKER);
 }
 
-void FigureAction_doctor(int figureId)
+void FigureAction_doctor(figure *f)
 {
-	FigureAction_culture(figureId, GROUP_FIGURE_DOCTOR_SURGEON);
+	FigureAction_culture(f, GROUP_FIGURE_DOCTOR_SURGEON);
 }
 
-void FigureAction_surgeon(int figureId)
+void FigureAction_surgeon(figure *f)
 {
-	FigureAction_culture(figureId, GROUP_FIGURE_DOCTOR_SURGEON);
+	FigureAction_culture(f, GROUP_FIGURE_DOCTOR_SURGEON);
 }
 
-void FigureAction_missionary(int figureId)
+void FigureAction_missionary(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 192;
 	int buildingId = f->buildingId;
-	if (!BuildingIsInUse(buildingId) || Data_Buildings[buildingId].figureId != figureId) {
+	if (!BuildingIsInUse(buildingId) || Data_Buildings[buildingId].figureId != f->id) {
 		f->state = FigureState_Dead;
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);
-	FigureAction_cultureCommon(figureId, 1);
+	FigureAction_cultureCommon(f, 1);
 	FigureActionUpdateGraphic(f, image_group(GROUP_FIGURE_MISSIONARY));
 }
 
-void FigureAction_patrician(int figureId)
+void FigureAction_patrician(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 128;
@@ -163,33 +158,31 @@ void FigureAction_patrician(int figureId)
 		f->state = FigureState_Dead;
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);
-	FigureAction_cultureCommon(figureId, 1);
+	FigureAction_cultureCommon(f, 1);
 	FigureActionUpdateGraphic(f, image_group(GROUP_FIGURE_PATRICIAN));
 }
 
-void FigureAction_laborSeeker(int figureId)
+void FigureAction_laborSeeker(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 384;
 	int buildingId = f->buildingId;
-	if (!BuildingIsInUse(buildingId) || Data_Buildings[buildingId].figureId2 != figureId) {
+	if (!BuildingIsInUse(buildingId) || Data_Buildings[buildingId].figureId2 != f->id) {
 		f->state = FigureState_Dead;
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);
-	FigureAction_cultureCommon(figureId, 1);
+	FigureAction_cultureCommon(f, 1);
 	FigureActionUpdateGraphic(f, image_group(GROUP_FIGURE_LABOR_SEEKER));
 }
 
-void FigureAction_marketTrader(int figureId)
+void FigureAction_marketTrader(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 384;
 	
-	if (!BuildingIsInUse(f->buildingId) || Data_Buildings[f->buildingId].figureId != figureId) {
+	if (!BuildingIsInUse(f->buildingId) || Data_Buildings[f->buildingId].figureId != f->id) {
 		f->state = FigureState_Dead;
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);
@@ -201,7 +194,7 @@ void FigureAction_marketTrader(int figureId)
 			f->roamLength = f->maxRoamLength;
 		}
 	}
-	FigureAction_cultureCommon(figureId, 1);
+	FigureAction_cultureCommon(f, 1);
 	FigureActionUpdateGraphic(f, image_group(GROUP_FIGURE_MARKET_LADY));
 }
 

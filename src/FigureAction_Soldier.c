@@ -38,14 +38,13 @@ static const struct {
 	{-6, -4}, {-6, -5}, {-6, -6}, {-5, -6}, {-4, -6}, {-3, -6}, {-2, -6}, {-1, -6},
 };
 
-void FigureAction_militaryStandard(int figureId)
+void FigureAction_militaryStandard(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	const formation *m = formation_get(f->formationId);
 
 	f->terrainUsage = FigureTerrainUsage_Any;
 	FigureActionIncreaseGraphicOffset(f, 16);
-	Figure_removeFromTileList(figureId);
+	Figure_removeFromTileList(f->id);
 	if (m->is_at_fort) {
 		f->x = m->x;
 		f->y = m->y;
@@ -56,7 +55,7 @@ void FigureAction_militaryStandard(int figureId)
 	f->gridOffset = GridOffset(f->x, f->y);
 	f->crossCountryX = 15 * f->x + 7;
 	f->crossCountryY = 15 * f->y + 7;
-	Figure_addToTileList(figureId);
+	Figure_addToTileList(f->id);
 
 	f->graphicId = image_group(GROUP_FIGURE_FORT_STANDARD_POLE) + 20 - m->morale / 5;
 	if (m->figure_type == FIGURE_FORT_LEGIONARY) {
@@ -220,9 +219,8 @@ static void updateSoldierGraphic(figure *f, const formation *m)
 	}
 }
 
-void FigureAction_soldier(int figureId)
+void FigureAction_soldier(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	const formation *m = formation_get(f->formationId);
 	Data_CityInfo.numSoldiersInCity++;
 	f->terrainUsage = FigureTerrainUsage_Any;
@@ -254,7 +252,7 @@ void FigureAction_soldier(int figureId)
 			FigureAction_Common_handleCorpse(f);
 			break;
 		case FigureActionState_80_SoldierAtRest:
-			Figure_updatePositionInTileList(figureId);
+			Figure_updatePositionInTileList(f->id);
 			f->waitTicks = 0;
 			f->formationAtRest = 1;
 			f->graphicOffset = 0;
@@ -315,7 +313,7 @@ void FigureAction_soldier(int figureId)
 		case FigureActionState_84_SoldierAtStandard:
 			f->formationAtRest = 0;
 			f->graphicOffset = 0;
-			Figure_updatePositionInTileList(figureId);
+			Figure_updatePositionInTileList(f->id);
 			f->destinationX = m->standard_x + FigureActionFormationLayoutPositionX(m->layout, f->indexInFormation);
 			f->destinationY = m->standard_y + FigureActionFormationLayoutPositionY(m->layout, f->indexInFormation);
 			if (f->alternativeLocationIndex) {
