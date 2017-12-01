@@ -154,7 +154,7 @@ static void tickDecreaseLegionDamage()
 
 static void update_direction(const formation *m, void *data)
 {
-    formation_update_direction(m->id, Data_Figures[m->figures[0]].direction);
+    formation_update_direction(m->id, figure_get(m->figures[0])->direction);
 }
 static void tickUpdateDirection()
 {
@@ -173,14 +173,14 @@ static void tickUpdateLegions()
 			formation_clear_monthly_counters(m->id);
 		}
 		for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {
-			if (Data_Figures[m->figures[n]].actionState == FigureActionState_150_Attack) {
+			if (figure_get(m->figures[n])->actionState == FigureActionState_150_Attack) {
                 formation_record_fight(m->id);
 			}
 		}
 		if (formation_has_low_morale(m->id)) {
 			// flee back to fort
 			for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {
-				struct Data_Figure *f = &Data_Figures[m->figures[n]];
+				figure *f = figure_get(m->figures[n]);
 				if (f->actionState != FigureActionState_150_Attack &&
 					f->actionState != FigureActionState_149_Corpse &&
 					f->actionState != FigureActionState_148_Fleeing) {
@@ -193,12 +193,13 @@ static void tickUpdateLegions()
 				Data_CityInfo.numRiotersInCity +
 				Data_CityInfo.numAttackingNativesInCity > 0) {
 				for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {
-					struct Data_Figure *f = &Data_Figures[m->figures[n]];
-					if (m->figures[n] != 0 &&
-						f->actionState != FigureActionState_150_Attack &&
-						f->actionState != FigureActionState_149_Corpse) {
-						f->actionState = FigureActionState_86_SoldierMoppingUp;
-					}
+                    if (m->figures[n] != 0) {
+                        figure *f = figure_get(m->figures[n]);
+                        if (f->actionState != FigureActionState_150_Attack &&
+                            f->actionState != FigureActionState_149_Corpse) {
+                            f->actionState = FigureActionState_86_SoldierMoppingUp;
+                        }
+                    }
 				}
 			} else {
 				formation_restore_layout(m->id);
@@ -377,7 +378,7 @@ static void setFormationFiguresToEnemyInitial(int formationId)
 	const formation *m = formation_get(formationId);
 	for (int i = 0; i < MAX_FORMATION_FIGURES; i++) {
 		if (m->figures[i] > 0) {
-			struct Data_Figure *f = &Data_Figures[m->figures[i]];
+			figure *f = figure_get(m->figures[i]);
 			if (f->actionState != FigureActionState_149_Corpse &&
 				f->actionState != FigureActionState_150_Attack) {
 				f->actionState = FigureActionState_151_EnemyInitial;
@@ -530,9 +531,9 @@ static void update_enemy_formation(const formation *m, void *data)
         formation_clear_monthly_counters(m->id);
     }
     for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {
-        int figureId = m->figures[n];
-        if (Data_Figures[figureId].actionState == FigureActionState_150_Attack) {
-            int opponentId = Data_Figures[figureId].opponentId;
+        figure *f = figure_get(m->figures[n]);
+        if (f->actionState == FigureActionState_150_Attack) {
+            int opponentId = f->opponentId;
             if (!FigureIsDead(opponentId) && FigureIsLegion(Data_Figures[opponentId].type)) {
                 formation_record_fight(m->id);
             }
@@ -540,7 +541,7 @@ static void update_enemy_formation(const formation *m, void *data)
     }
     if (formation_has_low_morale(m->id)) {
         for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {
-            struct Data_Figure *f = &Data_Figures[m->figures[n]];
+            figure *f = figure_get(m->figures[n]);
             if (f->actionState != FigureActionState_150_Attack &&
                 f->actionState != FigureActionState_149_Corpse &&
                 f->actionState != FigureActionState_148_Fleeing) {
@@ -550,8 +551,11 @@ static void update_enemy_formation(const formation *m, void *data)
         }
         return;
     }
-    if (m->figures[0] && Data_Figures[m->figures[0]].state == FigureState_Alive) {
-        formation_set_home(m->id, Data_Figures[m->figures[0]].x, Data_Figures[m->figures[0]].y);
+    if (m->figures[0]) {
+        figure *f = figure_get(m->figures[0]);
+        if (f->state == FigureState_Alive) {
+            formation_set_home(m->id, f->x, f->y);
+        }
     }
     if (!army->formation_id) {
         army->formation_id = m->id;
@@ -650,7 +654,7 @@ static void moveAnimals(const formation *m, int attackingAnimals)
 {
 	for (int i = 0; i < MAX_FORMATION_FIGURES; i++) {
 		if (m->figures[i] <= 0) continue;
-		struct Data_Figure *f = &Data_Figures[m->figures[i]];
+		figure *f = figure_get(m->figures[i]);
 		if (f->actionState == FigureActionState_149_Corpse ||
 			f->actionState == FigureActionState_150_Attack) {
 			continue;
@@ -659,12 +663,13 @@ static void moveAnimals(const formation *m, int attackingAnimals)
 		if (attackingAnimals) {
 			int targetId = FigureAction_CombatWolf_getTarget(f->x, f->y, 6);
 			if (targetId) {
+                figure *target = figure_get(targetId);
 				f->actionState = FigureActionState_199_WolfAttacking;
-				f->destinationX = Data_Figures[targetId].x;
-				f->destinationY = Data_Figures[targetId].y;
+				f->destinationX = target->x;
+				f->destinationY = target->y;
 				f->targetFigureId = targetId;
-				Data_Figures[targetId].targetedByFigureId = f->id;
-				f->targetFigureCreatedSequence = Data_Figures[targetId].createdSequence;
+				target->targetedByFigureId = f->id;
+				f->targetFigureCreatedSequence = target->createdSequence;
 				figure_route_remove(f);
 			} else {
 				f->actionState = FigureActionState_196_HerdAnimalAtRest;
@@ -689,15 +694,18 @@ static void update_herd_formation(const formation *m)
     int attackingAnimals = 0;
     for (int fig = 0; fig < MAX_FORMATION_FIGURES; fig++) {
         int figureId = m->figures[fig];
-        if (figureId > 0 && Data_Figures[figureId].actionState == FigureActionState_150_Attack) {
+        if (figureId > 0 && figure_get(figureId)->actionState == FigureActionState_150_Attack) {
             attackingAnimals++;
         }
     }
     if (m->missile_attack_timeout) {
         attackingAnimals = 1;
     }
-    if (m->figures[0] && Data_Figures[m->figures[0]].state == FigureState_Alive) {
-        formation_set_home(m->id, Data_Figures[m->figures[0]].x, Data_Figures[m->figures[0]].y);
+    if (m->figures[0]) {
+        figure *f = figure_get(m->figures[0]);
+        if (f->state == FigureState_Alive) {
+            formation_set_home(m->id, f->x, f->y);
+        }
     }
     int roamDistance;
     int roamDelay;
