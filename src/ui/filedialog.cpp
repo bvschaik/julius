@@ -20,6 +20,8 @@ static void buttonOkCancel(int isOk, int param2);
 static void buttonScroll(int isDown, int numLines);
 static void buttonSelectItem(int index, int numLines);
 
+static char saved_game[FILENAME_LENGTH];
+
 static ImageButton imageButtons[] =
 {
     {344, 335, 34, 34, ImageButton_Normal, 96, 0, buttonOkCancel, Widget::Button::doNothing, 1, 0, 1},
@@ -61,8 +63,8 @@ void UI_FileDialog_show(int type)
 
     UI_Window_goTo(Window_FileDialog);
 
-    strcpy(Data_FileList.selectedCity, Data_FileList.lastLoadedCity);
-    keyboard_start_capture(Data_FileList.selectedCity, 64, 0, 280, FONT_NORMAL_WHITE);
+    strcpy(saved_game, Data_FileList.lastLoadedCity);
+    keyboard_start_capture(saved_game, 64, 0, 280, FONT_NORMAL_WHITE);
 }
 
 void UI_FileDialog_drawBackground()
@@ -113,7 +115,7 @@ void UI_FileDialog_drawForeground()
 
     Widget::Button::drawImageButtons(baseOffsetX, baseOffsetY, imageButtons, 4);
     Widget::Text::captureCursor(keyboard_cursor_position());
-    Widget::Text::draw(Data_FileList.selectedCity, baseOffsetX + 160, baseOffsetY + 90, FONT_NORMAL_WHITE, 0);
+    Widget::Text::draw(saved_game, baseOffsetX + 160, baseOffsetY + 90, FONT_NORMAL_WHITE, 0);
     Widget::Text::drawCursor(baseOffsetX + 160, baseOffsetY + 91, keyboard_is_insert());
     drawScrollbarDot();
 }
@@ -211,28 +213,30 @@ static void buttonOkCancel(int isOk, int param2)
         return;
     }
 
-    file_remove_extension(Data_FileList.selectedCity);
-    file_append_extension(Data_FileList.selectedCity, "sav");
+    file_remove_extension(saved_game);
+    file_append_extension(saved_game, "sav");
 
-    if (dialogType != FileDialogType_Save && !file_exists(Data_FileList.selectedCity))
+    if (dialogType != FileDialogType_Save && !file_exists(saved_game))
     {
-        file_remove_extension(Data_FileList.selectedCity);
+        file_remove_extension(saved_game);
         messageNotExistTimeUntil = time_get_millis() + NOT_EXIST_MESSAGE_TIMEOUT;
         return;
     }
     if (dialogType == FileDialogType_Load)
     {
-        GameFile_loadSavedGame(Data_FileList.selectedCity);
+        GameFile_loadSavedGame(saved_game);
+        keyboard_stop_capture();
         UI_Window_goTo(Window_City);
     }
     else if (dialogType == FileDialogType_Save)
     {
-        GameFile_writeSavedGame(Data_FileList.selectedCity);
+        GameFile_writeSavedGame(saved_game);
+        keyboard_stop_capture();
         UI_Window_goTo(Window_City);
     }
     else if (dialogType == FileDialogType_Delete)
     {
-        if (GameFile_deleteSavedGame(Data_FileList.selectedCity))
+        if (GameFile_deleteSavedGame(saved_game))
         {
             dir_find_files_with_extension("sav");
             if (scrollPosition + 12 >= savedGames->num_files)
@@ -246,8 +250,8 @@ static void buttonOkCancel(int isOk, int param2)
         }
     }
 
-    file_remove_extension(Data_FileList.selectedCity);
-    strcpy(Data_FileList.lastLoadedCity, Data_FileList.selectedCity);
+    file_remove_extension(saved_game);
+    strcpy(Data_FileList.lastLoadedCity, saved_game);
 }
 
 static void buttonScroll(int isDown, int numLines)
@@ -278,9 +282,9 @@ static void buttonSelectItem(int index, int param2)
 {
     if (index < savedGames->num_files)
     {
-        memset(Data_FileList.selectedCity, 0, FILENAME_LENGTH);
-        strcpy(Data_FileList.selectedCity, savedGames->files[scrollPosition + index]);
-        file_remove_extension(Data_FileList.selectedCity);
+        memset(saved_game, 0, FILENAME_LENGTH);
+        strcpy(saved_game, savedGames->files[scrollPosition + index]);
+        file_remove_extension(saved_game);
         keyboard_refresh();
         messageNotExistTimeUntil = 0;
     }

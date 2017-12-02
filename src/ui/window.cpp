@@ -91,7 +91,6 @@ WindowId UI_Window_getId()
 
 void UI_Window_goTo(WindowId windowId)
 {
-    keyboard_stop_capture();
     previousWindow = currentWindow;
     currentWindow = windowId;
     windows[currentWindow].init();
