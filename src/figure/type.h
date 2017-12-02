@@ -6,6 +6,11 @@
  * Figure types.
  */
 
+#define FigureIsEnemyOrNative(t) ((t) >= FIGURE_INDIGENOUS_NATIVE && (t) <= FIGURE_NATIVE_TRADER)
+#define FigureIsEnemy(t) ((t) >= FIGURE_ENEMY43_SPEAR && (t) <= FIGURE_ENEMY_CAESAR_LEGIONARY)
+#define FigureIsLegion(t) ((t) >= FIGURE_FORT_JAVELIN && (t) <= FIGURE_FORT_LEGIONARY)
+#define FigureIsHerd(t) ((t) >= FIGURE_SHEEP && (t) <= FIGURE_ZEBRA)
+
 /**
  * Figure types
  */
@@ -100,5 +105,18 @@ typedef enum {
     ENEMY_11_CAESAR = 11
 } enemy_type;
 
+enum {
+    FigureState_Alive = 1,
+    FigureState_Dead = 2
+};
+
+enum {
+    FigureTerrainUsage_Any = 0,
+    FigureTerrainUsage_Roads = 1,
+    FigureTerrainUsage_Enemy = 2,
+    FigureTerrainUsage_PreferRoads = 3,
+    FigureTerrainUsage_Walls = 4,
+    FigureTerrainUsage_Animal = 5,
+};
 
 #endif // FIGURE_TYPE_H

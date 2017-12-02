@@ -1,8 +1,6 @@
 #include "Screen.h"
-#include "Buttons.h"
 #include "CityInfo.h"
 #include "State.h"
-#include "Figure.h"
 #include "Building.h"
 #include "CityView.h"
 #include "FileList.h"
