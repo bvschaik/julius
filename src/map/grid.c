@@ -8,7 +8,7 @@ static const int DIRECTION_DELTA[] = {-162, -161, 1, 163, 162, 161, -1, -163};
 
 int map_grid_offset(int x, int y)
 {
-    return GridOffset(x, y);
+    return Data_State.map.gridStartOffset + x + y * GRID_SIZE;
 }
 
 int map_grid_offset_to_x(int grid_offset)

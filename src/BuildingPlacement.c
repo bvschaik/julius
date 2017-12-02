@@ -496,7 +496,7 @@ static void addToTerrain(int type, int buildingId, int x, int y, int size,
 				Data_CityInfo.buildingSenateBuildingId = buildingId;
 				Data_CityInfo.buildingSenateX = x;
 				Data_CityInfo.buildingSenateY = y;
-				Data_CityInfo.buildingSenateGridOffset = GridOffset(x, y);
+				Data_CityInfo.buildingSenateGridOffset = map_grid_offset(x, y);
 			}
 			break;
 		case BUILDING_BARRACKS:
@@ -505,7 +505,7 @@ static void addToTerrain(int type, int buildingId, int x, int y, int size,
 				Data_CityInfo.buildingBarracksBuildingId = buildingId;
 				Data_CityInfo.buildingBarracksX = x;
 				Data_CityInfo.buildingBarracksY = y;
-				Data_CityInfo.buildingBarracksGridOffset = GridOffset(x, y);
+				Data_CityInfo.buildingBarracksGridOffset = map_grid_offset(x, y);
 			}
 			break;
 		case BUILDING_WAREHOUSE:
@@ -537,7 +537,7 @@ static void addToTerrain(int type, int buildingId, int x, int y, int size,
 				Data_CityInfo.buildingDistributionCenterBuildingId = buildingId;
 				Data_CityInfo.buildingDistributionCenterX = x;
 				Data_CityInfo.buildingDistributionCenterY = y;
-				Data_CityInfo.buildingDistributionCenterGridOffset = GridOffset(x, y);
+				Data_CityInfo.buildingDistributionCenterGridOffset = map_grid_offset(x, y);
 			}
 			break;
 	}
@@ -701,7 +701,7 @@ static void placeHouses(int measureOnly, int xStart, int yStart, int xEnd, int y
 	Undo_restoreBuildings();
 	for (int y = yMin; y <= yMax; y++) {
 		for (int x = xMin; x <= xMax; x++) {
-			int gridOffset = GridOffset(x,y);
+			int gridOffset = map_grid_offset(x,y);
 			if (Data_Grid_terrain[gridOffset] & Terrain_NotClear) {
 				continue;
 			}
@@ -745,7 +745,7 @@ static void clearRegionConfirmed(int measureOnly, int xStart, int yStart, int xE
 
 	for (int y = yMin; y <= yMax; y++) {
 		for (int x = xMin; x <= xMax; x++) {
-			int gridOffset = GridOffset(x,y);
+			int gridOffset = map_grid_offset(x,y);
 			if (Data_Grid_terrain[gridOffset] & (Terrain_Rock | Terrain_Elevation)) {
 				continue;
 			}
@@ -884,7 +884,7 @@ static void clearRegion(int measureOnly, int xStart, int yStart, int xEnd, int y
 	int askConfirmFort = 0;
 	for (int y = yMin; y <= yMax; y++) {
 		for (int x = xMin; x <= xMax; x++) {
-			int gridOffset = GridOffset(x,y);
+			int gridOffset = map_grid_offset(x,y);
 			int buildingId = Data_Grid_buildingIds[gridOffset];
 			if (buildingId) {
 				if (Data_Buildings[buildingId].type == BUILDING_FORT ||
@@ -923,7 +923,7 @@ static int placeRoutedBuilding(int xSrc, int ySrc, int xDst, int yDst, routed_bu
         {6, 0, 4, 2}
     };
     *items = 0;
-    int gridOffset = GridOffset(xDst, yDst);
+    int gridOffset = map_grid_offset(xDst, yDst);
     int guard = 0;
     // reverse routing
     while (1) {
@@ -960,8 +960,8 @@ static int placeRoutedBuilding(int xSrc, int ySrc, int xDst, int yDst, routed_bu
             int newDist = map_routing_distance(newGridOffset);
             if (newDist > 0 && newDist < distance) {
                 gridOffset = newGridOffset;
-                xDst = GridOffsetToX(gridOffset);
-                yDst = GridOffsetToY(gridOffset);
+                xDst = map_grid_offset_to_x(gridOffset);
+                yDst = map_grid_offset_to_y(gridOffset);
                 routed = 1;
                 break;
             }
@@ -979,8 +979,8 @@ static void placeRoad(int measureOnly, int xStart, int yStart, int xEnd, int yEn
 	Undo_restoreTerrainGraphics();
 
 	itemsPlaced = 0;
-	int startOffset = GridOffset(xStart, yStart);
-	int endOffset = GridOffset(xEnd, yEnd);
+	int startOffset = map_grid_offset(xStart, yStart);
+	int endOffset = map_grid_offset(xEnd, yEnd);
 	int forbiddenTerrainMask = Terrain_Building | Terrain_Wall | Terrain_1237;
 	if (Data_Grid_terrain[startOffset] & forbiddenTerrainMask) {
 		return;
@@ -1005,8 +1005,8 @@ static void placeWall(int measureOnly, int xStart, int yStart, int xEnd, int yEn
 	Undo_restoreTerrainGraphics();
 
 	itemsPlaced = 0;
-	int startOffset = GridOffset(xStart, yStart);
-	int endOffset = GridOffset(xEnd, yEnd);
+	int startOffset = map_grid_offset(xStart, yStart);
+	int endOffset = map_grid_offset(xEnd, yEnd);
 	int forbiddenTerrainMask = Terrain_127f | Terrain_Aqueduct | Terrain_AccessRamp;
 	if (Data_Grid_terrain[startOffset] & forbiddenTerrainMask) {
 		return;
@@ -1036,7 +1036,7 @@ static void placePlaza(int measureOnly, int xStart, int yStart, int xEnd, int yE
 	itemsPlaced = 0;
 	for (int y = yMin; y <= yMax; y++) {
 		for (int x = xMin; x <= xMax; x++) {
-			int gridOffset = GridOffset(x, y);
+			int gridOffset = map_grid_offset(x, y);
 			int terrain = Data_Grid_terrain[gridOffset];
 			if (terrain & Terrain_Road &&
 				!(terrain & (Terrain_Water | Terrain_Building | Terrain_Aqueduct))) {
@@ -1067,7 +1067,7 @@ static void placeGarden(int xStart, int yStart, int xEnd, int yEnd)
 	itemsPlaced = 0;
 	for (int y = yMin; y <= yMax; y++) {
 		for (int x = xMin; x <= xMax; x++) {
-			int gridOffset = GridOffset(x,y);
+			int gridOffset = map_grid_offset(x,y);
 			if (!(Data_Grid_terrain[gridOffset] & Terrain_NotClear)) {
 				itemsPlaced++;
 				Data_Grid_terrain[gridOffset] |= Terrain_Garden;
@@ -1128,7 +1128,7 @@ static int placeReservoirAndAqueducts(int measureOnly, int xStart, int yStart, i
 		distance = 0;
 	}
 	if (distance > 0) {
-		if (Terrain_isReservoir(GridOffset(xStart - 1, yStart - 1))) {
+		if (Terrain_isReservoir(map_grid_offset(xStart - 1, yStart - 1))) {
 			info->placeReservoirAtStart = PlaceReservoir_Exists;
 		} else if (Terrain_isClear(xStart - 1, yStart - 1, 3, Terrain_All, 0)) {
 			info->placeReservoirAtStart = PlaceReservoir_Yes;
@@ -1136,7 +1136,7 @@ static int placeReservoirAndAqueducts(int measureOnly, int xStart, int yStart, i
 			info->placeReservoirAtStart = PlaceReservoir_Blocked;
 		}
 	}
-	if (Terrain_isReservoir(GridOffset(xEnd - 1, yEnd - 1))) {
+	if (Terrain_isReservoir(map_grid_offset(xEnd - 1, yEnd - 1))) {
 		info->placeReservoirAtEnd = PlaceReservoir_Exists;
 	} else if (Terrain_isClear(xEnd - 1, yEnd - 1, 3, Terrain_All, 0)) {
 		info->placeReservoirAtEnd = PlaceReservoir_Yes;
@@ -1390,13 +1390,13 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
 			int reservoirId = Building_create(BUILDING_RESERVOIR, xStart - 1, yStart - 1);
 			Undo_addBuildingToList(reservoirId);
 			Terrain_addBuildingToGrids(reservoirId, xStart-1, yStart-1, 3, image_group(GROUP_BUILDING_RESERVOIR), Terrain_Building);
-			Data_Grid_aqueducts[GridOffset(xStart-1, yStart-1)] = 0;
+			Data_Grid_aqueducts[map_grid_offset(xStart-1, yStart-1)] = 0;
 		}
 		if (info.placeReservoirAtEnd == PlaceReservoir_Yes) {
 			int reservoirId = Building_create(BUILDING_RESERVOIR, xEnd - 1, yEnd - 1);
 			Undo_addBuildingToList(reservoirId);
 			Terrain_addBuildingToGrids(reservoirId, xEnd-1, yEnd-1, 3, image_group(GROUP_BUILDING_RESERVOIR), Terrain_Building);
-			Data_Grid_aqueducts[GridOffset(xEnd-1, yEnd-1)] = 0;
+			Data_Grid_aqueducts[map_grid_offset(xEnd-1, yEnd-1)] = 0;
 			if (!Terrain_existsTileWithinAreaWithType(xStart - 2, yStart - 2, 5, Terrain_Water) && info.placeReservoirAtStart == PlaceReservoir_No) {
 				UI_Warning_checkReservoirWater(BUILDING_RESERVOIR);
 			}

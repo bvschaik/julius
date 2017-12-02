@@ -52,7 +52,7 @@ void FigureAction_militaryStandard(figure *f)
 		f->x = m->standard_x;
 		f->y = m->standard_y;
 	}
-	f->gridOffset = GridOffset(f->x, f->y);
+	f->gridOffset = map_grid_offset(f->x, f->y);
 	f->crossCountryX = 15 * f->x + 7;
 	f->crossCountryY = 15 * f->y + 7;
 	map_figure_add(f);
@@ -266,7 +266,7 @@ void FigureAction_soldier(figure *f)
 			f->formationAtRest = 1;
 			f->destinationX = f->formationPositionX;
 			f->destinationY = f->formationPositionY;
-			f->destinationGridOffsetSoldier = GridOffset(f->destinationX, f->destinationY);
+			f->destinationGridOffsetSoldier = map_grid_offset(f->destinationX, f->destinationY);
 			FigureMovement_walkTicks(f, speedFactor);
 			if (f->direction == DirFigure_8_AtDestination) {
 				f->actionState = FigureActionState_80_SoldierAtRest;
@@ -295,7 +295,7 @@ void FigureAction_soldier(figure *f)
 				f->destinationX += soldierAlternativePoints[f->alternativeLocationIndex].x;
 				f->destinationY += soldierAlternativePoints[f->alternativeLocationIndex].y;
 			}
-			f->destinationGridOffsetSoldier = GridOffset(f->destinationX, f->destinationY);
+			f->destinationGridOffsetSoldier = map_grid_offset(f->destinationX, f->destinationY);
 			FigureMovement_walkTicks(f, speedFactor);
 			if (f->direction == DirFigure_8_AtDestination) {
 				f->actionState = FigureActionState_84_SoldierAtStandard;
@@ -382,7 +382,7 @@ void FigureAction_soldier(figure *f)
 			f->formationAtRest = 1;
 			f->destinationX = f->formationPositionX;
 			f->destinationY = f->formationPositionY;
-			f->destinationGridOffsetSoldier = GridOffset(f->destinationX, f->destinationY);
+			f->destinationGridOffsetSoldier = map_grid_offset(f->destinationX, f->destinationY);
 			FigureMovement_walkTicks(f, speedFactor);
 			if (f->direction == DirFigure_8_AtDestination) {
 				f->actionState = FigureActionState_80_SoldierAtRest;

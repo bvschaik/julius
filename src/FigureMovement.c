@@ -182,7 +182,7 @@ void FigureMovement_initRoaming(figure *f)
 
 static void roamSetDirection(figure *f)
 {
-	int gridOffset = GridOffset(f->x, f->y);
+	int gridOffset = map_grid_offset(f->x, f->y);
 	int direction = calc_general_direction(f->x, f->y, f->destinationX, f->destinationY);
 	if (direction >= 8) {
 		direction = 0;
@@ -600,7 +600,7 @@ int FigureMovement_crossCountryWalkTicks(figure *f, int numTicks)
 	}
 	f->x = f->crossCountryX / 15;
 	f->y = f->crossCountryY / 15;
-	f->gridOffset = GridOffset(f->x, f->y);
+	f->gridOffset = map_grid_offset(f->x, f->y);
 	if (Data_Grid_terrain[f->gridOffset] & Terrain_Building) {
 		f->inBuildingWaitTicks = 8;
 	} else if (f->inBuildingWaitTicks) {
@@ -616,7 +616,7 @@ int FigureMovement_canLaunchCrossCountryMissile(int xSrc, int ySrc, int xDst, in
 	figure *f = figure_get(0); // abuse unused figure 0 as scratch
 	f->crossCountryX = 15 * xSrc;
 	f->crossCountryY = 15 * ySrc;
-	if (Data_Grid_terrain[GridOffset(xSrc, ySrc)] & Terrain_WallOrGatehouse) {
+	if (Data_Grid_terrain[map_grid_offset(xSrc, ySrc)] & Terrain_WallOrGatehouse) {
 		height = 6;
 	}
 	FigureMovement_crossCountrySetDirection(f, 15 * xSrc, 15 * ySrc, 15 * xDst, 15 * yDst, 0);

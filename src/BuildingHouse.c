@@ -4,11 +4,11 @@
 #include "Terrain.h"
 
 #include "Data/Building.h"
-#include "Data/Grid.h"
 #include "Data/State.h"
 
 #include "game/resource.h"
 #include "graphics/image.h"
+#include "map/grid.h"
 #include "map/random.h"
 
 #define CREATE_HOUSE_TILE(tt, xx,yy)\
@@ -148,17 +148,17 @@ void BuildingHouse_checkForCorruption(int buildingId)
 {
 	struct Data_Building *b = &Data_Buildings[buildingId];
 	int houseGridOffset = b->gridOffset;
-	int calcGridOffset = GridOffset(b->x, b->y);
+	int calcGridOffset = map_grid_offset(b->x, b->y);
 	b->data.house.noSpaceToExpand = 0;
 	if (houseGridOffset != calcGridOffset || Data_Grid_buildingIds[houseGridOffset] != buildingId) {
 		++Data_Buildings_Extra.incorrectHousePositions;
 		for (int y = 0; y < Data_State.map.height; y++) {
 			for (int x = 0; x < Data_State.map.width; x++) {
-				int gridOffset = GridOffset(x, y);
+				int gridOffset = map_grid_offset(x, y);
 				if (Data_Grid_buildingIds[gridOffset] == buildingId) {
 					b->gridOffset = gridOffset;
-					b->x = GridOffsetToX(gridOffset);
-					b->y = GridOffsetToY(gridOffset);
+					b->x = map_grid_offset_to_x(gridOffset);
+					b->y = map_grid_offset_to_y(gridOffset);
 					return;
 				}
 			}
@@ -201,7 +201,7 @@ void BuildingHouse_checkMerge(int buildingId)
 
 static void split(int buildingId, int numTiles)
 {
-	int gridOffset = GridOffset(mergeData.x, mergeData.y);
+	int gridOffset = map_grid_offset(mergeData.x, mergeData.y);
 	for (int i = 0; i < numTiles; i++) {
 		int tileOffset = gridOffset + tileGridOffsets[i];
 		if (Data_Grid_terrain[tileOffset] & Terrain_Building) {
@@ -225,7 +225,7 @@ static void prepareForMerge(int buildingId, int numTiles)
 		mergeData.inventory[i] = 0;
 	}
 	mergeData.population = 0;
-	int gridOffset = GridOffset(mergeData.x, mergeData.y);
+	int gridOffset = map_grid_offset(mergeData.x, mergeData.y);
 	for (int i = 0; i < numTiles; i++) {
 		int tileOffset = gridOffset + tileGridOffsets[i];
 		if (Data_Grid_terrain[tileOffset] & Terrain_Building) {
@@ -259,7 +259,7 @@ void BuildingHouse_expandToLargeInsula(int buildingId)
 	Terrain_removeBuildingFromGrids(buildingId, b->x, b->y);
 	b->x = mergeData.x;
 	b->y = mergeData.y;
-	b->gridOffset = GridOffset(b->x, b->y);
+	b->gridOffset = map_grid_offset(b->x, b->y);
 	Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size, graphicId, Terrain_Building);
 }
 
@@ -280,7 +280,7 @@ void BuildingHouse_expandToLargeVilla(int buildingId)
 	Terrain_removeBuildingFromGrids(buildingId, b->x, b->y);
 	b->x = mergeData.x;
 	b->y = mergeData.y;
-	b->gridOffset = GridOffset(b->x, b->y);
+	b->gridOffset = map_grid_offset(b->x, b->y);
 	Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size, graphicId, Terrain_Building);
 }
 
@@ -301,7 +301,7 @@ void BuildingHouse_expandToLargePalace(int buildingId)
 	Terrain_removeBuildingFromGrids(buildingId, b->x, b->y);
 	b->x = mergeData.x;
 	b->y = mergeData.y;
-	b->gridOffset = GridOffset(b->x, b->y);
+	b->gridOffset = map_grid_offset(b->x, b->y);
 	Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size, graphicId, Terrain_Building);
 }
 
@@ -323,7 +323,7 @@ static void merge(int buildingId)
 	Terrain_removeBuildingFromGrids(buildingId, b->x, b->y);
 	b->x = mergeData.x;
 	b->y = mergeData.y;
-	b->gridOffset = GridOffset(b->x, b->y);
+	b->gridOffset = map_grid_offset(b->x, b->y);
 	b->houseIsMerged = 1;
 	Terrain_addBuildingToGrids(buildingId, b->x, b->y, 2, graphicId, Terrain_Building);
 }

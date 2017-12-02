@@ -4,6 +4,7 @@
 #include "core/calc.h"
 #include "core/random.h"
 #include "game/time.h"
+#include "map/grid.h"
 #include "map/routing_terrain.h"
 #include "scenario/data.h"
 #include "sound/effect.h"
@@ -68,7 +69,7 @@ void scenario_earthquake_init()
 
 static int canAdvanceEarthquakeToTile(int x, int y)
 {
-    int terrain = Data_Grid_terrain[GridOffset(x, y)];
+    int terrain = Data_Grid_terrain[map_grid_offset(x, y)];
     if (terrain & (Terrain_Elevation | Terrain_Rock | Terrain_Water)) {
         return 0;
     } else {
@@ -78,7 +79,7 @@ static int canAdvanceEarthquakeToTile(int x, int y)
 
 static void advanceEarthquakeToTile(int x, int y)
 {
-    int gridOffset = GridOffset(x, y);
+    int gridOffset = map_grid_offset(x, y);
     int buildingId = Data_Grid_buildingIds[gridOffset];
     if (buildingId) {
         Building_collapseOnFire(buildingId, 0);
@@ -112,7 +113,7 @@ void scenario_earthquake_process()
             data.delay = 0;
             advanceEarthquakeToTile(data.expand[0].x, data.expand[0].y);
             city_message_post(1, MESSAGE_EARTHQUAKE, 0,
-                GridOffset(data.expand[0].x, data.expand[0].y));
+                map_grid_offset(data.expand[0].x, data.expand[0].y));
         }
     } else if (data.state == EVENT_IN_PROGRESS) {
         data.delay++;

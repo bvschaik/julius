@@ -3,9 +3,6 @@
 
 #include "core/time.h"
 
-#define GridOffset(x,y) (Data_State.map.gridStartOffset + (x) + (y) * 162)
-#define GridOffsetToX(g) (((g) - Data_State.map.gridStartOffset) % 162)
-#define GridOffsetToY(g) (((g) - Data_State.map.gridStartOffset) / 162)
 #define IsInsideMap(x,y) ((x) >= 0 && (x) < Data_State.map.width && (y) >= 0 && (y) < Data_State.map.height)
 #define IsOutsideMap(x,y,s) (x) < 0 || (x) + (s) > Data_State.map.width || (y) < 0 || (y) + (s) > Data_State.map.height
 

@@ -20,6 +20,7 @@
 #include "input/scroll.h"
 #include "map/desirability.h"
 #include "map/figure.h"
+#include "map/grid.h"
 #include "map/property.h"
 #include "map/routing.h"
 #include "sound/city.h"
@@ -650,7 +651,7 @@ static int isLegionClick()
 {
 	if (Data_State.map.current.gridOffset) {
 		int formationId = Formation_getLegionFormationAtGridOffset(
-			GridOffset(Data_State.map.current.x, Data_State.map.current.y));
+			map_grid_offset(Data_State.map.current.x, Data_State.map.current.y));
 		if (formationId > 0 && !formation_get(formationId)->in_distant_battle) {
 			Data_State.selectedLegionFormationId = formationId;
 			UI_Window_goTo(Window_CityMilitary);
@@ -1077,7 +1078,7 @@ static void militaryMapClick()
 		return;
 	}
 	int otherFormationId = Formation_getFormationForBuilding(
-		GridOffset(Data_State.map.current.x, Data_State.map.current.y));
+		map_grid_offset(Data_State.map.current.x, Data_State.map.current.y));
 	if (otherFormationId && otherFormationId == formationId) {
 		Formation_legionReturnHome(formationId);
 	} else {

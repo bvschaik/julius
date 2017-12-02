@@ -37,7 +37,7 @@ void Terrain_addWatersideBuildingToGrids(int buildingId, int x, int y, int size,
 	}
 	for (int dy = 0; dy < size; dy++) {
 		for (int dx = 0; dx < size; dx++) {
-			int gridOffset = GridOffset(x + dx, y + dy);
+			int gridOffset = map_grid_offset(x + dx, y + dy);
 			Data_Grid_terrain[gridOffset] |= Terrain_Building;
 			if (!(Data_Grid_terrain[gridOffset] & Terrain_Water)) {
 				Data_Grid_terrain[gridOffset] &= Terrain_2e80;
@@ -68,7 +68,7 @@ int Terrain_determineOrientationWatersideSize2(int x, int y, int adjustXY,
 		return 999;
 	}
 
-	int baseOffset = GridOffset(x, y);
+	int baseOffset = map_grid_offset(x, y);
 	int tileOffsets[] = {0, 1, 162, 163};
 	const int shouldBeWater[4][4] = {{1, 1, 0, 0}, {0, 1, 0, 1}, {0, 0, 1, 1}, {1, 0, 1, 0}};
 	for (int dir = 0; dir < 4; dir++) {
@@ -136,7 +136,7 @@ int Terrain_determineOrientationWatersideSize3(int x, int y, int adjustXY,
 		return 999;
 	}
 
-	int baseOffset = GridOffset(x, y);
+	int baseOffset = map_grid_offset(x, y);
 	int tileOffsets[] = {0, 1, 2, 162, 163, 164, 324, 325, 326};
 	int shouldBeWater[4][9] = {
 		{1, 1, 1, 0, 0, 0, 0, 0, 0},
@@ -259,10 +259,10 @@ int Terrain_Water_findOpenWaterForShipwreck(int figureId, int *xTile, int *yTile
 		FOREACH_REGION({
 			if (!map_has_figure_at(gridOffset) || map_figure_at(gridOffset) == figureId) {
 				if (Data_Grid_terrain[gridOffset] & Terrain_Water &&
-					Data_Grid_terrain[GridOffset(xx, yy - 2)] & Terrain_Water &&
-					Data_Grid_terrain[GridOffset(xx, yy + 2)] & Terrain_Water &&
-					Data_Grid_terrain[GridOffset(xx - 2, yy)] & Terrain_Water &&
-					Data_Grid_terrain[GridOffset(xx + 2, yy)] & Terrain_Water) {
+					Data_Grid_terrain[map_grid_offset(xx, yy - 2)] & Terrain_Water &&
+					Data_Grid_terrain[map_grid_offset(xx, yy + 2)] & Terrain_Water &&
+					Data_Grid_terrain[map_grid_offset(xx - 2, yy)] & Terrain_Water &&
+					Data_Grid_terrain[map_grid_offset(xx + 2, yy)] & Terrain_Water) {
 					*xTile = xx;
 					*yTile = yy;
 					return 1;
@@ -320,7 +320,7 @@ int Terrain_Water_getQueueDockDestination(int* xTile, int* yTile)
 			case 2: *xTile += 2; *yTile += 4; break;
 			default: *xTile -= 2; *yTile += 2; break;
 		}
-		if (!map_has_figure_at(GridOffset(*xTile, *yTile))) {
+		if (!map_has_figure_at(map_grid_offset(*xTile, *yTile))) {
 			return dockId;
 		}
 	}
@@ -336,7 +336,7 @@ int Terrain_Water_getQueueDockDestination(int* xTile, int* yTile)
 			case 2: *xTile += 2; *yTile += 5; break;
 			default: *xTile -= 3; *yTile += 2; break;
 		}
-		if (!map_has_figure_at(GridOffset(*xTile, *yTile))) {
+		if (!map_has_figure_at(map_grid_offset(*xTile, *yTile))) {
 			return dockId;
 		}
 	}

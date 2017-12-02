@@ -6,12 +6,13 @@
 #include "core/calc.h"
 #include "figure/route.h"
 #include "figure/type.h"
+#include "map/grid.h"
 #include "map/road_network.h"
 #include "scenario/gladiator_revolt.h"
 
 static int determineDestination(int x, int y, int btype1, int btype2)
 {
-	int roadNetwork = map_road_network_get(GridOffset(x,y));
+	int roadNetwork = map_road_network_get(map_grid_offset(x,y));
 
     building_list_small_clear();
 	

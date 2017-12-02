@@ -21,6 +21,7 @@
 #include "figure/formation.h"
 #include "input/scroll.h"
 #include "map/bookmark.h"
+#include "map/grid.h"
 #include "scenario/invasion.h"
 
 #define ExitMilitaryCommand() \
@@ -117,7 +118,7 @@ static void cycleLegion()
 		}
 		if (currentLegionId > 0) {
 			const formation *m = formation_get(currentLegionId);
-			CityView_goToGridOffset(GridOffset(m->x_home, m->y_home));
+			CityView_goToGridOffset(map_grid_offset(m->x_home, m->y_home));
 			UI_Window_requestRefresh();
 		}
 	}

@@ -25,7 +25,7 @@ static int isAllTerrainInArea(int x, int y, int size, int terrain)
 	}
 	for (int dy = 0; dy < size; dy++) {
 		for (int dx = 0; dx < size; dx++) {
-			int gridOffset = GridOffset(x + dx, y + dy);
+			int gridOffset = map_grid_offset(x + dx, y + dy);
 			if ((Data_Grid_terrain[gridOffset] & Terrain_NotClear) != terrain) {
 				return 0;
 			}
@@ -254,7 +254,7 @@ static int getAccessRampGraphicOffset(int x, int y)
 		{0, 1, 162, 163, -162, -161},
 		{1, 163, 0, 162, 2, 164},
 	};
-	int baseOffset = GridOffset(x, y);
+	int baseOffset = map_grid_offset(x, y);
 	int graphicOffset = -1;
 	for (int dir = 0; dir < 4; dir++) {
 		int rightTiles = 0;
@@ -553,7 +553,7 @@ void TerrainGraphics_setBuildingAreaRubble(int buildingId, int x, int y, int siz
 	}
 	for (int dy = 0; dy < size; dy++) {
 		for (int dx = 0; dx < size; dx++) {
-			int gridOffset = GridOffset(x + dx, y + dy);
+			int gridOffset = map_grid_offset(x + dx, y + dy);
 			if (Data_Grid_buildingIds[gridOffset] != buildingId) {
 				continue;
 			}
@@ -582,7 +582,7 @@ void TerrainGraphics_setBuildingAreaRubble(int buildingId, int x, int y, int siz
 
 static void setFarmCropTile(int buildingId, int x, int y, int dx, int dy, int cropGraphicId, int growth)
 {
-	int gridOffset = GridOffset(x + dx, y + dy);
+	int gridOffset = map_grid_offset(x + dx, y + dy);
 	Data_Grid_terrain[gridOffset] &= Terrain_2e80;
 	Data_Grid_terrain[gridOffset] |= Terrain_Building;
 	Data_Grid_buildingIds[gridOffset] = buildingId;
@@ -607,7 +607,7 @@ void TerrainGraphics_setBuildingFarm(int buildingId, int x, int y, int cropGraph
 	}
 	for (int dy = 0; dy < 2; dy++) {
 		for (int dx = 0; dx < 2; dx++) {
-			int gridOffset = GridOffset(x + dx, y + dy);
+			int gridOffset = map_grid_offset(x + dx, y + dy);
 			Data_Grid_terrain[gridOffset] &= Terrain_2e80;
 			Data_Grid_terrain[gridOffset] |= Terrain_Building;
 			Data_Grid_buildingIds[gridOffset] = buildingId;
@@ -663,7 +663,7 @@ void TerrainGraphics_updateNativeCropProgress(int buildingId)
 
 void TerrainGraphics_setTileWater(int x, int y)
 {
-	Data_Grid_terrain[GridOffset(x, y)] |= Terrain_Water;
+	Data_Grid_terrain[map_grid_offset(x, y)] |= Terrain_Water;
 	int xMin = x - 1;
 	int xMax = x + 1;
 	int yMin = y - 1;
@@ -701,7 +701,7 @@ void TerrainGraphics_setTileWater(int x, int y)
 void TerrainGraphics_setTileEarthquake(int x, int y)
 {
 	// earthquake: terrain = rock && bitfields = plaza
-	int gridOffset = GridOffset(x, y);
+	int gridOffset = map_grid_offset(x, y);
 	Data_Grid_terrain[gridOffset] |= Terrain_Rock;
 	map_property_mark_plaza_or_earthquake(gridOffset);
 	
@@ -729,7 +729,7 @@ void TerrainGraphics_setTileEarthquake(int x, int y)
 
 int TerrainGraphics_setTileRoad(int x, int y)
 {
-	int gridOffset = GridOffset(x, y);
+	int gridOffset = map_grid_offset(x, y);
 	int tilesSet = 0;
 	if (!(Data_Grid_terrain[gridOffset] & Terrain_Road)) {
 		tilesSet = 1;
@@ -1044,7 +1044,7 @@ static void setWallGraphic(int gridOffset)
 
 int TerrainGraphics_setTileWall(int x, int y)
 {
-	int gridOffset = GridOffset(x, y);
+	int gridOffset = map_grid_offset(x, y);
 	int tilesSet = 0;
 	if (!(Data_Grid_terrain[gridOffset] & Terrain_Wall)) {
 		tilesSet = 1;
@@ -1065,7 +1065,7 @@ int TerrainGraphics_setTileWall(int x, int y)
 
 int TerrainGraphics_setTileAqueduct(int x, int y, int forceNoWater)
 {
-	int gridOffset = GridOffset(x, y);
+	int gridOffset = map_grid_offset(x, y);
 	int tilesSet = 0;
 	if (Data_Grid_aqueducts[gridOffset] <= 15 && !(Data_Grid_terrain[gridOffset] & Terrain_Building)) {
 		tilesSet = 1;
@@ -1085,7 +1085,7 @@ int TerrainGraphics_setTileAqueduct(int x, int y, int forceNoWater)
 
 int TerrainGraphics_setTileAqueductTerrain(int x, int y)
 {
-	int gridOffset = GridOffset(x,y);
+	int gridOffset = map_grid_offset(x,y);
 	Data_Grid_terrain[gridOffset] |= Terrain_Aqueduct;
 	map_property_clear_constructing(gridOffset);
 	return 1;
@@ -1093,7 +1093,7 @@ int TerrainGraphics_setTileAqueductTerrain(int x, int y)
 
 static void TerrainGraphics_setTileRubble(int x, int y)
 {
-	int gridOffset = GridOffset(x, y);
+	int gridOffset = map_grid_offset(x, y);
 	Data_Grid_graphicIds[gridOffset] =
 		image_group(GROUP_TERRAIN_RUBBLE) + (map_random_get(gridOffset) & 7);
 	map_property_set_multi_tile_size(gridOffset, 1);
@@ -1138,7 +1138,7 @@ static void TerrainGraphics_updateAreaEmptyLand(int x, int y, int size, int grap
 	int index = 0;
 	for (int dy = 0; dy < size; dy++) {
 		for (int dx = 0; dx < size; dx++) {
-			int gridOffset = GridOffset(x + dx, y + dy);
+			int gridOffset = map_grid_offset(x + dx, y + dy);
 			Data_Grid_terrain[gridOffset] &= Terrain_2e80;
 			Data_Grid_buildingIds[gridOffset] = 0;
 			map_property_clear_constructing(gridOffset);

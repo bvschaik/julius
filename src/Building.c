@@ -25,6 +25,7 @@
 #include "figure/figure.h"
 #include "graphics/image.h"
 #include "map/desirability.h"
+#include "map/grid.h"
 #include "map/random.h"
 #include "map/road_network.h"
 #include "map/routing.h"
@@ -163,7 +164,7 @@ int Building_create(int type, int x, int y)
 	
 	b->x = x;
 	b->y = y;
-	b->gridOffset = GridOffset(x, y);
+	b->gridOffset = map_grid_offset(x, y);
 	b->houseGenerationDelay = map_random_get(b->gridOffset) & 0x7f;
 	b->figureRoamDirection = b->houseGenerationDelay & 6;
 	b->fireProof = props->fire_proof;
@@ -311,7 +312,7 @@ void Building_collapseOnFire(int buildingId, int hasPlague)
 	for (int tile = 1; tile < numTiles; tile++) {
 		int x = xTiles[tile] + b->x;
 		int y = yTiles[tile] + b->y;
-		if (Data_Grid_terrain[GridOffset(x, y)] & Terrain_Water) {
+		if (Data_Grid_terrain[map_grid_offset(x, y)] & Terrain_Water) {
 			continue;
 		}
 		int ruinId = Building_create(BUILDING_BURNING_RUIN, x, y);
@@ -417,8 +418,8 @@ void Building_increaseDamageByEnemy(int gridOffset, int maxDamage)
 {
 	Data_Grid_buildingDamage[gridOffset]++;
 	if (Data_Grid_buildingDamage[gridOffset] > maxDamage) {
-		Building_destroyByEnemy(GridOffsetToX(gridOffset),
-			GridOffsetToY(gridOffset), gridOffset);
+		Building_destroyByEnemy(map_grid_offset_to_x(gridOffset),
+			map_grid_offset_to_y(gridOffset), gridOffset);
 	}
 }
 
@@ -628,12 +629,12 @@ void Building_GameTick_checkAccessToRome()
 					}
 					b->state = BuildingState_Undo;
 				}
-			} else if (map_routing_distance(GridOffset(xRoad, yRoad))) {
+			} else if (map_routing_distance(map_grid_offset(xRoad, yRoad))) {
 				// reachable from rome
-				b->distanceFromEntry = map_routing_distance(GridOffset(xRoad, yRoad));
+				b->distanceFromEntry = map_routing_distance(map_grid_offset(xRoad, yRoad));
 				b->houseUnreachableTicks = 0;
 			} else if (Terrain_getClosestReachableRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
-				b->distanceFromEntry = map_routing_distance(GridOffset(xRoad, yRoad));
+				b->distanceFromEntry = map_routing_distance(map_grid_offset(xRoad, yRoad));
 				b->houseUnreachableTicks = 0;
 			} else {
 				// no reachable road in radius

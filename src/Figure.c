@@ -19,6 +19,7 @@
 #include "figure/route.h"
 #include "figure/trader.h"
 #include "map/figure.h"
+#include "map/grid.h"
 #include "scenario/map.h"
 #include "scenario/property.h"
 #include "sound/effect.h"
@@ -253,7 +254,7 @@ int Figure_createSoldierFromBarracks(int buildingId, int x, int y)
 				f->actionState = FigureActionState_85_SoldierGoingToMilitaryAcademy;
 				f->destinationX = xRoad;
 				f->destinationY = yRoad;
-				f->destinationGridOffsetSoldier = GridOffset(f->destinationX, f->destinationY);
+				f->destinationGridOffsetSoldier = map_grid_offset(f->destinationX, f->destinationY);
 			} else {
 				f->actionState = FigureActionState_81_SoldierGoingToFort;
 			}

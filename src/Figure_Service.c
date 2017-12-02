@@ -19,7 +19,7 @@
 	int xMax = x + 2;\
 	int yMax = y + 2;\
 	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);\
-	int gridOffset = GridOffset(xMin, yMin);\
+	int gridOffset = map_grid_offset(xMin, yMin);\
 	for (int yy = yMin; yy <= yMax; yy++) {\
 		for (int xx = xMin; xx <= xMax; xx++) {\
 			int buildingId = Data_Grid_buildingIds[gridOffset];\
@@ -342,7 +342,7 @@ static int provideMissionaryCoverage(int x, int y)
 	int xMax = x + 4;
 	int yMax = y + 4;
 	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
-	int gridOffset = GridOffset(xMin, yMin);
+	int gridOffset = map_grid_offset(xMin, yMin);
 	for (int yy = yMin; yy <= yMax; yy++) {
 		for (int xx = xMin; xx <= xMax; xx++) {
 			int buildingId = Data_Grid_buildingIds[gridOffset];

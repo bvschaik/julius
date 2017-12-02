@@ -134,7 +134,7 @@ void Undo_restoreTerrainGraphics()
 {
 	for (int y = 0; y < Data_State.map.height; y++) {
 		for (int x = 0; x < Data_State.map.width; x++) {
-			int gridOffset = GridOffset(x, y);
+			int gridOffset = map_grid_offset(x, y);
 			if (!Data_Grid_buildingIds[gridOffset]) {
 				Data_Grid_graphicIds[gridOffset] = Data_Grid_Undo_graphicIds[gridOffset];
 			}

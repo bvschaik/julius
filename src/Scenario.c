@@ -179,11 +179,11 @@ static void loadScenario(const char *scenarioName)
 
 	Data_CityInfo.entryPointX = entry.x;
 	Data_CityInfo.entryPointY = entry.y;
-	Data_CityInfo.entryPointGridOffset = GridOffset(Data_CityInfo.entryPointX, Data_CityInfo.entryPointY);
+	Data_CityInfo.entryPointGridOffset = map_grid_offset(Data_CityInfo.entryPointX, Data_CityInfo.entryPointY);
 
 	Data_CityInfo.exitPointX = exit.x;
 	Data_CityInfo.exitPointY = exit.y;
-	Data_CityInfo.exitPointGridOffset = GridOffset(Data_CityInfo.exitPointX, Data_CityInfo.exitPointY);
+	Data_CityInfo.exitPointGridOffset = map_grid_offset(Data_CityInfo.exitPointX, Data_CityInfo.exitPointY);
 
 	Data_CityInfo.treasury = difficulty_adjust_money(scenario_initial_funds());
 	Data_CityInfo.financeBalanceLastYear = Data_CityInfo.treasury;

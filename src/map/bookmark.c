@@ -1,5 +1,6 @@
 #include "bookmark.h"
 
+#include "map/grid.h"
 #include "map/point.h"
 
 #include "Data/State.h"
@@ -29,7 +30,7 @@ int map_bookmark_go_to(int number)
     if (number >= 0 && number < MAX_BOOKMARKS) {
         int x = bookmarks[number].x;
         int y = bookmarks[number].y;
-        if (x > -1 && GridOffset(x, y) > -1) {
+        if (x > -1 && map_grid_offset(x, y) > -1) {
             Data_State.map.camera.x = x;
             Data_State.map.camera.y = y;
             return 1;

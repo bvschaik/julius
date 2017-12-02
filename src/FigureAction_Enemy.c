@@ -680,13 +680,13 @@ void FigureAction_enemyCaesarLegionary(figure *f)
 int FigureAction_HerdEnemy_moveFormationTo(int formationId, int x, int y, int *xTile, int *yTile)
 {
 	const formation *m = formation_get(formationId);
-	int baseOffset = GridOffset(
+	int baseOffset = map_grid_offset(
 		FigureActionFormationLayoutPositionX(m->layout, 0),
 		FigureActionFormationLayoutPositionY(m->layout, 0));
 	int figureOffsets[50];
 	figureOffsets[0] = 0;
 	for (int i = 1; i < m->num_figures; i++) {
-		figureOffsets[i] = GridOffset(
+		figureOffsets[i] = map_grid_offset(
 			FigureActionFormationLayoutPositionX(m->layout, i),
 			FigureActionFormationLayoutPositionY(m->layout, i)) - baseOffset;
 	}
@@ -701,7 +701,7 @@ int FigureAction_HerdEnemy_moveFormationTo(int formationId, int x, int y, int *x
 			for (int xx = xMin; xx <= xMax; xx++) {
 				int canMove = 1;
 				for (int fig = 0; fig < m->num_figures; fig++) {
-					int gridOffset = GridOffset(xx, yy) + figureOffsets[fig];
+					int gridOffset = map_grid_offset(xx, yy) + figureOffsets[fig];
                     if (gridOffset < 0 || gridOffset >= GRID_SIZE * GRID_SIZE) {
                         canMove = 0;
                         break;

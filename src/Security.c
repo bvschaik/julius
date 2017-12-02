@@ -179,7 +179,7 @@ static void generateRioter(int buildingId)
 	CityInfo_Population_changeHappiness(20);
     tutorial_on_crime();
     city_message_apply_sound_interval(MESSAGE_CAT_RIOT);
-	city_message_post_with_popup_delay(MESSAGE_CAT_RIOT, MESSAGE_RIOT, b->type, GridOffset(xRoad, yRoad));
+	city_message_post_with_popup_delay(MESSAGE_CAT_RIOT, MESSAGE_RIOT, b->type, map_grid_offset(xRoad, yRoad));
 }
 
 static void generateMugger(int buildingId)

@@ -16,7 +16,7 @@
 	}}
 
 #define FOREACH_REGION(block) \
-	{int gridOffset = GridOffset(xMin, yMin);\
+	{int gridOffset = map_grid_offset(xMin, yMin);\
 	for (int yy = yMin; yy <= yMax; yy++) {\
 		for (int xx = xMin; xx <= xMax; xx++) {\
 			block;\

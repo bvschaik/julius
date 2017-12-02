@@ -16,6 +16,7 @@
 #include "figure/properties.h"
 #include "figure/route.h"
 #include "map/figure.h"
+#include "map/grid.h"
 #include "map/routing.h"
 #include "scenario/distant_battle.h"
 #include "sound/effect.h"
@@ -87,7 +88,7 @@ void Formation_legionMoveTo(int formationId, int x, int y)
 {
 	const formation *m = formation_get(formationId);
 	map_routing_calculate_distances(m->x_home, m->y_home);
-	if (map_routing_distance(GridOffset(x, y)) <= 0) {
+	if (map_routing_distance(map_grid_offset(x, y)) <= 0) {
 		return; // unable to route there
 	}
 	if (x == m->x_home && y == m->y_home) {
@@ -118,7 +119,7 @@ void Formation_legionReturnHome(int formationId)
 {
 	const formation *m = formation_get(formationId);
 	map_routing_calculate_distances(m->x_home, m->y_home);
-	if (map_routing_distance(GridOffset(m->x, m->y)) <= 0) {
+	if (map_routing_distance(map_grid_offset(m->x, m->y)) <= 0) {
 		return; // unable to route home
 	}
 	if (m->cursed_by_mars) {
@@ -322,7 +323,7 @@ int Formation_getInvasionGridOffset(int invasionSeq)
     if (formationId) {
         const formation *m = formation_get(formationId);
         if (m->x_home > 0 || m->y_home > 0) {
-            return GridOffset(m->x_home, m->y_home);
+            return map_grid_offset(m->x_home, m->y_home);
         }
     }
     return 0;

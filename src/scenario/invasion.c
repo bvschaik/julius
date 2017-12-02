@@ -9,6 +9,7 @@
 #include "figure/name.h"
 #include "game/difficulty.h"
 #include "game/time.h"
+#include "map/grid.h"
 #include "scenario/data.h"
 #include "scenario/map.h"
 #include "scenario/property.h"
@@ -18,7 +19,6 @@
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 #include "Data/Grid.h"
-#include "Data/State.h"
 #include "../Building.h"
 #include "CityInfo.h"
 
@@ -254,7 +254,7 @@ static int start_invasion(int enemy_type, int amount, int invasion_point, int at
         orientation = DIR_4_BOTTOM;
     }
     // check terrain
-    int grid_offset = GridOffset(x, y);
+    int grid_offset = map_grid_offset(x, y);
     int terrain = Data_Grid_terrain[grid_offset];
     if (terrain & (Terrain_Elevation | Terrain_Rock | Terrain_Tree)) {
         return -1;

@@ -10,6 +10,7 @@
 #include "core/calc.h"
 #include "core/random.h"
 #include "figure/route.h"
+#include "map/grid.h"
 #include "map/figure.h"
 #include "scenario/map.h"
 
@@ -219,7 +220,7 @@ void FigureAction_flotsam(figure *f)
 			map_point river_entry = scenario_map_river_entry();
 			f->x = river_entry.x;
 			f->y = river_entry.y;
-			f->gridOffset = GridOffset(f->x, f->y);
+			f->gridOffset = map_grid_offset(f->x, f->y);
 			f->crossCountryX = 15 * f->x;
 			f->crossCountryY = 15 * f->y;
 			break;
@@ -264,7 +265,7 @@ void FigureAction_shipwreck(figure *f)
 		if (Terrain_Water_findOpenWaterForShipwreck(f->id, &xTile, &yTile)) {
 			f->x = xTile;
 			f->y = yTile;
-			f->gridOffset = GridOffset(f->x, f->y);
+			f->gridOffset = map_grid_offset(f->x, f->y);
 			f->crossCountryX = 15 * f->x + 7;
 			f->crossCountryY = 15 * f->y + 7;
 		}

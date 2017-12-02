@@ -59,7 +59,7 @@ void FigureAction_ballista(figure *f)
 		case Dir_4_Bottom: f->x = b->x + 1; f->y = b->y + 1; break;
 		case Dir_6_Left: f->x = b->x; f->y = b->y + 1; break;
 	}
-	f->gridOffset = GridOffset(f->x, f->y);
+	f->gridOffset = map_grid_offset(f->x, f->y);
 	map_figure_add(f);
 
 	switch (f->actionState) {
@@ -243,7 +243,7 @@ void FigureAction_towerSentry(figure *f)
 				map_figure_delete(f);
 				f->sourceX = f->x = b->x;
 				f->sourceY = f->y = b->y;
-				f->gridOffset = GridOffset(f->x, f->y);
+				f->gridOffset = map_grid_offset(f->x, f->y);
 				map_figure_add(f);
 				f->actionState = FigureActionState_170_TowerSentryAtRest;
 				figure_route_remove(f);
@@ -293,7 +293,7 @@ void FigureAction_TowerSentry_reroute()
 			f->previousTileY = f->y = yTile;
 			f->crossCountryX = 15 * xTile;
 			f->crossCountryY = 15 * yTile;
-			f->gridOffset = GridOffset(xTile, yTile);
+			f->gridOffset = map_grid_offset(xTile, yTile);
 			map_figure_add(f);
 			f->actionState = FigureActionState_173_TowerSentryReturning;
 			f->destinationX = f->sourceX;
@@ -304,7 +304,7 @@ void FigureAction_TowerSentry_reroute()
 			struct Data_Building *b = &Data_Buildings[f->buildingId];
 			f->sourceX = f->x = b->x;
 			f->sourceY = f->y = b->y;
-			f->gridOffset = GridOffset(f->x, f->y);
+			f->gridOffset = map_grid_offset(f->x, f->y);
 			map_figure_add(f);
 			f->actionState = FigureActionState_170_TowerSentryAtRest;
 			figure_route_remove(f);

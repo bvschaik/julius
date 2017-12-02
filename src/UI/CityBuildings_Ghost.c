@@ -10,6 +10,7 @@
 #include "figure/formation.h"
 #include "map/bridge.h"
 #include "map/figure.h"
+#include "map/grid.h"
 #include "map/road_aqueduct.h"
 
 static void drawBuildingGhostDraggableReservoir();
@@ -343,7 +344,7 @@ static void drawBuildingGhostDraggableReservoir()
 			placementObstructed = 1;
 		}
 	} else {
-		int gridOffset = GridOffset(Data_State.map.current.x - 1, Data_State.map.current.y - 1);
+		int gridOffset = map_grid_offset(Data_State.map.current.x - 1, Data_State.map.current.y - 1);
 		if (Terrain_isReservoir(gridOffset)) {
 			placementObstructed = 0;
 		} else if (!Terrain_isClear(
@@ -402,7 +403,7 @@ static void drawBuildingGhostAqueduct()
 			placementObstructed = 1;
 		}
 	} else {
-		int gridOffset = GridOffset(Data_State.map.current.x, Data_State.map.current.y);
+		int gridOffset = map_grid_offset(Data_State.map.current.x, Data_State.map.current.y);
 		if (Data_Grid_terrain[gridOffset] & Terrain_Road) {
 			placementObstructed = Terrain_getAdjacentRoadTilesForAqueduct(gridOffset) == 2 ? 0 : 1;
 		} else if (Data_Grid_terrain[gridOffset] & Terrain_NotClear) {

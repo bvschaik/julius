@@ -190,7 +190,7 @@ void UI_BuildingInfo_houseDetermineWorstDesirabilityBuilding(BuildingInfoContext
 
 	for (int y = yMin; y <= yMax; y++) {
 		for (int x = xMin; x <= xMax; x++) {
-			int buildingId = Data_Grid_buildingIds[GridOffset(x, y)];
+			int buildingId = Data_Grid_buildingIds[map_grid_offset(x, y)];
 			if (buildingId <= 0) {
 				continue;
 			}

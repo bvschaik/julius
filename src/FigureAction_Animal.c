@@ -9,6 +9,7 @@
 #include "figure/formation.h"
 #include "figure/route.h"
 #include "map/figure.h"
+#include "map/grid.h"
 
 static const int seagullOffsetsX[] = {0, 0, -2, 1, 2, -3, 4, -2, 0};
 static const int seagullOffsetsY[] = {0, -2, 0, 2, 0, 1, -3, 4, 0};
@@ -262,7 +263,7 @@ static void setDestinationHippodromeHorse(figure *f, int state)
 		f->y = f->destinationY;
 		f->crossCountryX = 15 * f->x;
 		f->crossCountryY = 15 * f->y;
-		f->gridOffset = GridOffset(f->x, f->y);
+		f->gridOffset = map_grid_offset(f->x, f->y);
 		map_figure_add(f);
 	} else if (state == HippodromeHorse_Racing) {
 		if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_6_LEFT) {
