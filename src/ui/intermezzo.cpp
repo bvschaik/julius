@@ -83,6 +83,7 @@ void UI_Intermezzo_drawBackground()
     int xOffset = (Data_Screen.width - 1024) / 2;
     int yOffset = (Data_Screen.height - 768) / 2;
 
+    int mission = scenario_campaign_mission();
     int graphicBase = image_group(GROUP_INTERMEZZO_BACKGROUND);
     if (data.type == Intermezzo_MissionBriefing)
     {
@@ -94,8 +95,8 @@ void UI_Intermezzo_drawBackground()
         }
         else
         {
-            Graphics_drawImage(graphicBase + 1 + 2 * Data_Settings.saveGameMissionId, xOffset, yOffset);
-            sound_speech_play_file(soundFilesBriefing[Data_Settings.saveGameMissionId]);
+            Graphics_drawImage(graphicBase + 1 + 2 * mission, xOffset, yOffset);
+            sound_speech_play_file(soundFilesBriefing[mission]);
         }
         UI_Window_requestRefresh();
     }
@@ -113,8 +114,8 @@ void UI_Intermezzo_drawBackground()
         }
         else
         {
-            Graphics_drawImage(graphicBase + 2 + 2 * Data_Settings.saveGameMissionId, xOffset, yOffset);
-            sound_speech_play_file(soundFilesWon[Data_Settings.saveGameMissionId]);
+            Graphics_drawImage(graphicBase + 2 + 2 * mission, xOffset, yOffset);
+            sound_speech_play_file(soundFilesWon[mission]);
         }
         UI_Window_requestRefresh();
     }

@@ -4,29 +4,28 @@
 #include "cityview.h"
 #include "figure.h"
 #include "loader.h"
-#include "city/message.h"
 #include "resource.h"
 #include "routing.h"
 #include "sidebarmenu.h"
 #include "terraingraphics.h"
 #include "utilitymanagement.h"
-#include "empire/city.h"
 
-#include <sound>
 #include <data>
+#include <ui>
 #include <scenario>
-
-#include "game/tutorial.h"
-#include "city/culture.h"
-#include "ui/allwindows.h"
 
 #include "building/count.h"
 #include "building/list.h"
+#include "building/storage.h"
+#include "city/culture.h"
+#include "city/message.h"
 #include "core/buffer.h"
 #include "core/file.h"
 #include "core/io.h"
 #include "core/random.h"
 #include "core/zip.h"
+#include "empire/city.h"
+#include "empire/empire.h"
 #include "empire/trade_prices.h"
 #include "empire/trade_route.h"
 #include "figure/enemy_army.h"
@@ -34,10 +33,10 @@
 #include "figure/name.h"
 #include "figure/trader.h"
 #include "game/time.h"
+#include "game/tutorial.h"
 #include "graphics/image.h"
-#include "building/storage.h"
-#include "empire/empire.h"
-#include "city/message.h"
+#include "sound/city.h"
+#include "sound/music.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -109,7 +108,7 @@ struct
 
 typedef struct
 {
-    buffer *Data_Settings_saveGameMissionId;
+    buffer *scenario_campaign_mission;
     buffer *savegameFileVersion;
     buffer *Data_Grid_graphicIds;
     buffer *Data_Grid_edge;
@@ -138,7 +137,7 @@ typedef struct
     buffer *Data_Settings_Map_orientation;
     buffer *game_time;
     buffer *Data_Buildings_Extra_highestBuildingIdEver;
-    buffer *Data_Buildings_Extra_maxConnectsEver;
+    buffer *Data_Debug_maxConnectsEver;
     buffer *random_iv;
     buffer *Data_Settings_Map_camera_x;
     buffer *Data_Settings_Map_camera_y;
@@ -163,11 +162,9 @@ typedef struct
     buffer *message_delays;
     buffer *building_list_burning_totals;
     buffer *Data_Figure_Extra_createdSequence;
-    buffer *Data_Settings_startingFavor;
-    buffer *Data_Settings_personalSavingsLastMission;
-    buffer *Data_Settings_currentMissionId;
+    buffer *scenario_settings;
     buffer *invasion_warnings;
-    buffer *Data_Settings_isCustomScenario;
+    buffer *scenario_is_custom;
     buffer *city_sounds;
     buffer *Data_Buildings_Extra_highestBuildingIdInUse;
     buffer *figure_traders;
@@ -197,8 +194,8 @@ typedef struct
     buffer *Data_CityInfo_Extra_exitPointFlag_x;
     buffer *Data_CityInfo_Extra_exitPointFlag_y;
     buffer *last_invasion_id;
-    buffer *Data_Buildings_Extra_incorrectHousePositions;
-    buffer *Data_Buildings_Extra_unfixableHousePositions;
+    buffer *Data_Debug_incorrectHousePositions;
+    buffer *Data_Debug_unfixableHousePositions;
     buffer *Data_FileList_selectedScenario;
     buffer *Data_CityInfo_Extra_bookmarks;
     buffer *tutorial_part3;
@@ -206,20 +203,12 @@ typedef struct
     buffer *Data_CityInfo_Extra_exitPointFlag_gridOffset;
     buffer *endMarker;
 } savegame_state;
-
 struct
 {
     int num_pieces;
     file_piece pieces[100];
     savegame_state state;
 } savegame_data;
-
-static void load_empire_data(int is_custom_scenario, int empire_id)
-{
-    empire_load(is_custom_scenario, empire_id);
-    scenario_distant_battle_set_roman_travel_months();
-    scenario_distant_battle_set_enemy_travel_months();
-}
 
 void init_file_piece(file_piece *piece, int size, int compressed)
 {
@@ -275,7 +264,7 @@ void init_savegame_data()
         return;
     }
     savegame_state *state = &savegame_data.state;
-    state->Data_Settings_saveGameMissionId = create_savegame_piece(4, 0);
+    state->scenario_campaign_mission = create_savegame_piece(4, 0);
     state->savegameFileVersion = create_savegame_piece(4, 0);
     state->Data_Grid_graphicIds = create_savegame_piece(52488, 1);
     state->Data_Grid_edge = create_savegame_piece(26244, 1);
@@ -304,7 +293,7 @@ void init_savegame_data()
     state->Data_Settings_Map_orientation = create_savegame_piece(4, 0);
     state->game_time = create_savegame_piece(20, 0);
     state->Data_Buildings_Extra_highestBuildingIdEver = create_savegame_piece(4, 0);
-    state->Data_Buildings_Extra_maxConnectsEver = create_savegame_piece(4, 0);
+    state->Data_Debug_maxConnectsEver = create_savegame_piece(4, 0);
     state->random_iv = create_savegame_piece(8, 0);
     state->Data_Settings_Map_camera_x = create_savegame_piece(4, 0);
     state->Data_Settings_Map_camera_y = create_savegame_piece(4, 0);
@@ -329,11 +318,9 @@ void init_savegame_data()
     state->message_delays = create_savegame_piece(80, 0);
     state->building_list_burning_totals = create_savegame_piece(8, 0);
     state->Data_Figure_Extra_createdSequence = create_savegame_piece(4, 0);
-    state->Data_Settings_startingFavor = create_savegame_piece(4, 0);
-    state->Data_Settings_personalSavingsLastMission = create_savegame_piece(4, 0);
-    state->Data_Settings_currentMissionId = create_savegame_piece(4, 0);
+    state->scenario_settings = create_savegame_piece(12, 0);
     state->invasion_warnings = create_savegame_piece(3232, 1);
-    state->Data_Settings_isCustomScenario = create_savegame_piece(4, 0);
+    state->scenario_is_custom = create_savegame_piece(4, 0);
     state->city_sounds = create_savegame_piece(8960, 0);
     state->Data_Buildings_Extra_highestBuildingIdInUse = create_savegame_piece(4, 0);
     state->figure_traders = create_savegame_piece(4804, 0);
@@ -363,8 +350,8 @@ void init_savegame_data()
     state->Data_CityInfo_Extra_exitPointFlag_x = create_savegame_piece(4, 0);
     state->Data_CityInfo_Extra_exitPointFlag_y = create_savegame_piece(4, 0);
     state->last_invasion_id = create_savegame_piece(2, 0);
-    state->Data_Buildings_Extra_incorrectHousePositions = create_savegame_piece(4, 0);
-    state->Data_Buildings_Extra_unfixableHousePositions = create_savegame_piece(4, 0);
+    state->Data_Debug_incorrectHousePositions = create_savegame_piece(4, 0);
+    state->Data_Debug_unfixableHousePositions = create_savegame_piece(4, 0);
     state->Data_FileList_selectedScenario = create_savegame_piece(65, 0);
     state->Data_CityInfo_Extra_bookmarks = create_savegame_piece(32, 0);
     state->tutorial_part3 = create_savegame_piece(4, 0);
@@ -425,7 +412,10 @@ void scenario_deserialize(scenario_state *file)
 
 static void savegame_deserialize(savegame_state *state)
 {
-    read_all_from_buffer(state->Data_Settings_saveGameMissionId, &Data_Settings.saveGameMissionId);
+    scenario_settings_load_state(state->scenario_campaign_mission,
+                                 state->scenario_settings,
+                                 state->scenario_is_custom);
+
     read_all_from_buffer(state->savegameFileVersion, &savegameFileVersion);
     read_all_from_buffer(state->Data_Grid_graphicIds, &Data_Grid_graphicIds);
     read_all_from_buffer(state->Data_Grid_edge, &Data_Grid_edge);
@@ -457,7 +447,7 @@ static void savegame_deserialize(savegame_state *state)
     game_time_load_state(state->game_time);
 
     read_all_from_buffer(state->Data_Buildings_Extra_highestBuildingIdEver, &Data_Buildings_Extra.highestBuildingIdEver);
-    read_all_from_buffer(state->Data_Buildings_Extra_maxConnectsEver, &Data_Buildings_Extra.maxConnectsEver);
+    read_all_from_buffer(state->Data_Debug_maxConnectsEver, &Data_Buildings_Extra.maxConnectsEver);
 
     random_load_state(state->random_iv);
 
@@ -480,23 +470,16 @@ static void savegame_deserialize(savegame_state *state)
     empire_city_load_state(state->empire_cities);
     trade_prices_load_state(state->trade_prices);
     figure_name_load_state(state->figure_names);
-
     city_culture_load_state(state->culture_coverage);
+
     scenario_load_state(state->scenario);
     scenario_criteria_load_state(state->max_game_year);
-
     scenario_earthquake_load_state(state->earthquake);
-
     city_message_load_state(state->messages, state->message_extra,
                             state->message_counts, state->message_delays,
                             state->population_messages);
 
     read_all_from_buffer(state->Data_Figure_Extra_createdSequence, &Data_Figure_Extra.createdSequence);
-    read_all_from_buffer(state->Data_Settings_startingFavor, &Data_Settings.startingFavor);
-    read_all_from_buffer(state->Data_Settings_personalSavingsLastMission, &Data_Settings.personalSavingsLastMission);
-    read_all_from_buffer(state->Data_Settings_currentMissionId, &Data_Settings.currentMissionId);
-
-    read_all_from_buffer(state->Data_Settings_isCustomScenario, &Data_Settings.isCustomScenario);
 
     sound_city_load_state(state->city_sounds);
 
@@ -510,9 +493,7 @@ static void savegame_deserialize(savegame_state *state)
     Tutorial::load_state(state->tutorial_part1, state->tutorial_part2, state->tutorial_part3);
 
     building_storage_load_state(state->building_storages);
-
     scenario_gladiator_revolt_load_state(state->gladiator_revolt);
-
     trade_routes_load_state(state->trade_route_limit, state->trade_route_traded);
 
     read_all_from_buffer(state->Data_Buildings_Extra_barracksTowerSentryRequested, &Data_Buildings_Extra.barracksTowerSentryRequested);
@@ -531,8 +512,8 @@ static void savegame_deserialize(savegame_state *state)
 
     scenario_invasion_load_state(state->last_invasion_id, state->invasion_warnings);
 
-    read_all_from_buffer(state->Data_Buildings_Extra_incorrectHousePositions, &Data_Buildings_Extra.incorrectHousePositions);
-    read_all_from_buffer(state->Data_Buildings_Extra_unfixableHousePositions, &Data_Buildings_Extra.unfixableHousePositions);
+    read_all_from_buffer(state->Data_Debug_incorrectHousePositions, &Data_Buildings_Extra.incorrectHousePositions);
+    read_all_from_buffer(state->Data_Debug_unfixableHousePositions, &Data_Buildings_Extra.unfixableHousePositions);
     read_all_from_buffer(state->Data_FileList_selectedScenario, &Data_FileList.selectedScenario);
     read_all_from_buffer(state->Data_CityInfo_Extra_bookmarks, &Data_CityInfo_Extra.bookmarks);
     read_all_from_buffer(state->Data_CityInfo_Extra_entryPointFlag_gridOffset, &Data_CityInfo_Extra.entryPointFlag.gridOffset);
@@ -548,12 +529,19 @@ static void savegame_deserialize(savegame_state *state)
         {
             printf("ERR: buffer %d not empty: %d of %d bytes used\n", i, buf->index, buf->size);
         }
+        else if (buf->overflow)
+        {
+            printf("ERR: buffer %d overflowed\n", i);
+        }
     }
 }
 
 static void savegame_serialize(savegame_state *state)
 {
-    write_all_to_buffer(state->Data_Settings_saveGameMissionId, &Data_Settings.saveGameMissionId);
+    scenario_settings_save_state(state->scenario_campaign_mission,
+                                 state->scenario_settings,
+                                 state->scenario_is_custom);
+
     write_all_to_buffer(state->savegameFileVersion, &savegameFileVersion);
     write_all_to_buffer(state->Data_Grid_graphicIds, &Data_Grid_graphicIds);
     write_all_to_buffer(state->Data_Grid_edge, &Data_Grid_edge);
@@ -585,7 +573,7 @@ static void savegame_serialize(savegame_state *state)
     game_time_save_state(state->game_time);
 
     write_all_to_buffer(state->Data_Buildings_Extra_highestBuildingIdEver, &Data_Buildings_Extra.highestBuildingIdEver);
-    write_all_to_buffer(state->Data_Buildings_Extra_maxConnectsEver, &Data_Buildings_Extra.maxConnectsEver);
+    write_all_to_buffer(state->Data_Debug_maxConnectsEver, &Data_Buildings_Extra.maxConnectsEver);
 
     random_save_state(state->random_iv);
 
@@ -603,27 +591,21 @@ static void savegame_serialize(savegame_state *state)
     write_all_to_buffer(state->Data_CityInfo_Extra_unknownOrder, &Data_CityInfo_Extra.unknownOrder);
 
     scenario_emperor_change_save_state(state->emperor_change_time, state->emperor_change_state);
-
     empire_save_state(state->empire);
     empire_city_save_state(state->empire_cities);
     trade_prices_save_state(state->trade_prices);
     figure_name_save_state(state->figure_names);
-
     city_culture_save_state(state->culture_coverage);
+
     scenario_save_state(state->scenario);
+
     scenario_criteria_save_state(state->max_game_year);
-
     scenario_earthquake_save_state(state->earthquake);
-
     city_message_save_state(state->messages, state->message_extra,
                             state->message_counts, state->message_delays,
                             state->population_messages);
-    write_all_to_buffer(state->Data_Figure_Extra_createdSequence, &Data_Figure_Extra.createdSequence);
-    write_all_to_buffer(state->Data_Settings_startingFavor, &Data_Settings.startingFavor);
-    write_all_to_buffer(state->Data_Settings_personalSavingsLastMission, &Data_Settings.personalSavingsLastMission);
-    write_all_to_buffer(state->Data_Settings_currentMissionId, &Data_Settings.currentMissionId);
 
-    write_all_to_buffer(state->Data_Settings_isCustomScenario, &Data_Settings.isCustomScenario);
+    write_all_to_buffer(state->Data_Figure_Extra_createdSequence, &Data_Figure_Extra.createdSequence);
 
     sound_city_save_state(state->city_sounds);
 
@@ -637,7 +619,6 @@ static void savegame_serialize(savegame_state *state)
     Tutorial::save_state(state->tutorial_part1, state->tutorial_part2, state->tutorial_part3);
 
     building_storage_save_state(state->building_storages);
-
     scenario_gladiator_revolt_save_state(state->gladiator_revolt);
     trade_routes_save_state(state->trade_route_limit, state->trade_route_traded);
 
@@ -657,8 +638,8 @@ static void savegame_serialize(savegame_state *state)
 
     scenario_invasion_save_state(state->last_invasion_id, state->invasion_warnings);
 
-    write_all_to_buffer(state->Data_Buildings_Extra_incorrectHousePositions, &Data_Buildings_Extra.incorrectHousePositions);
-    write_all_to_buffer(state->Data_Buildings_Extra_unfixableHousePositions, &Data_Buildings_Extra.unfixableHousePositions);
+    write_all_to_buffer(state->Data_Debug_incorrectHousePositions, &Data_Buildings_Extra.incorrectHousePositions);
+    write_all_to_buffer(state->Data_Debug_unfixableHousePositions, &Data_Buildings_Extra.unfixableHousePositions);
     write_all_to_buffer(state->Data_FileList_selectedScenario, &Data_FileList.selectedScenario);
     write_all_to_buffer(state->Data_CityInfo_Extra_bookmarks, &Data_CityInfo_Extra.bookmarks);
     write_all_to_buffer(state->Data_CityInfo_Extra_entryPointFlag_gridOffset, &Data_CityInfo_Extra.entryPointFlag.gridOffset);
@@ -673,6 +654,10 @@ static void savegame_serialize(savegame_state *state)
         if (buf->index != buf->size)
         {
             printf("ERR: buffer %d not empty: %d of %d bytes used\n", i, buf->index, buf->size);
+        }
+        else if (buf->overflow)
+        {
+            printf("ERR: buffer %d overflowed\n", i);
         }
     }
 }
@@ -716,6 +701,7 @@ static void savegame_write_to_file(FILE *fp)
 
 int GameFile_loadSavedGame(const char *filename)
 {
+    printf("Loading saved game: %s\n", filename);
     init_savegame_data();
     FILE *fp = fopen(filename, "rb");
     if (!fp)
@@ -781,10 +767,17 @@ static void debug()
     }*/
 }
 
+static void load_empire_data(int is_custom_scenario, int empire_id)
+{
+    empire_load(is_custom_scenario, empire_id);
+    scenario_distant_battle_set_roman_travel_months();
+    scenario_distant_battle_set_enemy_travel_months();
+}
+
 static void setupFromSavedGame()
 {
     debug();
-    load_empire_data(Data_Settings.isCustomScenario, scenario_empire_id());
+    load_empire_data(scenario_is_custom(), scenario_empire_id());
 
     scenario_map_init();
 

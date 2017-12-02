@@ -69,14 +69,15 @@ public:
 
     static void registerWriter(Type type, std::string param);
     static void registerWriter(const std::string& name, LogWriter& writer);
+
+    ~Logger();
 private:
     Logger();
-    ~Logger();
 
-    static void _print(LogWriter::Severity s,const std::string& text);
+    static void _print(LogWriter::Severity s, std::string text);
 
-    static void write(LogWriter::Severity s, const std::string& message, bool newline = true);
-    static void write(const std::string& message, bool newline=true);
+    static void write(LogWriter::Severity s, std::string message, bool newline = true);
+    static void write(std::string message, bool newline=true);
 };
 
 #endif //__JULIUS_LOGGER_H_INCLUDED__

@@ -34,14 +34,11 @@
 #include <SDL_system.h>
 #endif
 
-namespace
+struct
 {
-typedef std::map<std::string,LogWriter*> Writers;
-typedef StringArray Filters;
-
-Filters filters;
-Writers writers;
-}
+    StringArray filters;
+    std::map<std::string,LogWriter*> writers;
+} ilog;
 
 const char* LogWriter::severity(LogWriter::Severity s)
 {
@@ -132,26 +129,27 @@ public:
 };
 
 
-void Logger::_print(LogWriter::Severity s,const std::string& str )
+void Logger::_print(LogWriter::Severity s,std::string str )
 {
     write(s,str);
 }
 
-void Logger::write(LogWriter::Severity s, const std::__cxx11::string &message, bool newline)
+void Logger::write(LogWriter::Severity s, std::string message, bool newline)
 {
     write(LogWriter::severity(s) + message, newline);
 }
 
-void Logger::write(const std::__cxx11::string &message, bool newline)
+void Logger::write(std::string message, bool newline)
 {
     // Check for filter pass
-    for (auto& filter : filters)
+    for (int i=0; i < ilog.filters.size(); i++)
     {
-        if (message.compare(0, filter.length(), filter) == 0)
+        auto filter = ilog.filters[i];
+        if (message.compare(0, filter.size(), filter) == 0)
             return;
     }
 
-    for( auto& item : writers )
+    for( auto& item : ilog.writers )
     {
         if (item.second)
         {
@@ -174,17 +172,17 @@ void Logger::addFilter(const std::string& text)
     if (hasFilter(text))
         return;
 
-    filters.addIfValid(text);
+    ilog.filters.addIfValid(text);
 }
 
 void Logger::addFilter(LogWriter::Severity s)
 {
-    filters.addIfValid(LogWriter::severity(s));
+    ilog.filters.addIfValid(LogWriter::severity(s));
 }
 
 bool Logger::hasFilter(const std::string& text)
 {
-    for( auto& filter : filters)
+    for( auto& filter : ilog.filters)
     {
         if (filter == text) return true;
     }
@@ -193,7 +191,7 @@ bool Logger::hasFilter(const std::string& text)
 
 void Logger::removeFilter(const std::string& text)
 {
-    filters.remove(text);
+    ilog.filters.remove(text);
 }
 
 void Logger::registerWriter(Logger::Type type, std::string param )
@@ -224,6 +222,6 @@ void Logger::registerWriter(const std::string& name, LogWriter& writer)
 {
     if(writer.isActive())
     {
-        writers[ name ] = &writer;
+        ilog.writers[ name ] = &writer;
     }
 }

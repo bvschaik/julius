@@ -3,6 +3,7 @@
 #include <ui>
 #include <data>
 #include <game>
+#include <scenario>
 
 #include "core/io.h"
 
@@ -24,9 +25,5 @@ void Settings_save()
 void Settings_clearMissionSettings()
 {
     setting_clear_personal_savings();
-    Data_Settings.startingFavor = difficulty_starting_favor();
-    Data_Settings.personalSavingsLastMission = 0;
-    Data_Settings.currentMissionId = 0;
-    Data_Settings.isCustomScenario = 0;
-    Data_Settings.saveGameMissionId = 0;
+    scenario_settings_init();
 }

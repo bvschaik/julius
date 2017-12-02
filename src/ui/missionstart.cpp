@@ -185,14 +185,14 @@ void UI_MissionStart_Selection_handleMouse(const mouse *m)
     {
         if (isMouseHit(m, xPeaceful, yPeaceful, 44))
         {
-            Data_Settings.saveGameMissionId = Constant_MissionIds[rank].peaceful;
+            scenario_set_campaign_mission(Constant_MissionIds[rank].peaceful);
             data.choice = 1;
             UI_Window_requestRefresh();
             sound_speech_play_file("wavs/fanfare_nu1.wav");
         }
         if (isMouseHit(m, xMilitary, yMilitary, 44))
         {
-            Data_Settings.saveGameMissionId = Constant_MissionIds[rank].military;
+            scenario_set_campaign_mission(Constant_MissionIds[rank].military);
             data.choice = 2;
             UI_Window_requestRefresh();
             sound_speech_play_file("wavs/fanfare_nu5.wav");
@@ -217,12 +217,14 @@ void UI_MissionStart_Briefing_drawBackground()
         }
     }
 
-    int textId = 200 + Data_Settings.saveGameMissionId;
+    int textId = 200 + scenario_campaign_mission();
     int xOffset = Data_Screen.offset640x480.x + 16;
     int yOffset = Data_Screen.offset640x480.y + 32;
 
     Widget::Panel::drawOuterPanel(xOffset, yOffset, 38, 27);
     Widget::Text::draw(lang_get_message(textId)->title.text, xOffset + 16, yOffset + 16, FONT_LARGE_BLACK, 0);
+    Widget::Text::draw(lang_get_message(textId)->subtitle.text, xOffset + 16, yOffset + 46, FONT_NORMAL_BLACK, 0);
+
     Widget_GameText_draw(62, 7, xOffset + 360, yOffset + 401, FONT_NORMAL_BLACK);
     if (UI_Window_getId() == Window_MissionBriefingInitial && campaignHasChoice[scenario_campaign_rank()])
     {

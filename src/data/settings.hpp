@@ -19,69 +19,65 @@
 	if ((xMax) >= Data_Settings_Map.width) (xMax) = Data_Settings_Map.width - 1;\
 	if ((yMax) >= Data_Settings_Map.height) (yMax) = Data_Settings_Map.height - 1;
 
-extern struct _Data_Settings
-{
-    int _bpp;
-    int _fullscreen;
-    unsigned char _gamePaused;
-    unsigned char __unused1;
-    char _cddrive;
-    unsigned char _soundEffectsEnabled;
-    unsigned char _soundMusicEnabled;
-    unsigned char _soundSpeechEnabled;
-    short __unused2;
-    int _resolutionId;
-    int _gameSpeed;
-    int _scrollSpeed;
-    char playerName[32];
-    int __unused3[4];
-    int _lastAdvisor;
-    int saveGameMissionId;
-    int _mouseTooltips;
-    int startingFavor;
-    int personalSavingsLastMission;
-    int currentMissionId;
-    int isCustomScenario;
-    unsigned char _soundCityEnabled;
-    unsigned char _warningsEnabled;
-    unsigned char _monthlyAutosaveEnabled;
-    unsigned char _autoclearEnabled;
-    int _soundEffectsPercentage;
-    int _soundMusicPercentage;
-    int _soundSpeechPercentage;
-    int _soundCityPercentage;
-    int __unused4;
-    int _ram;
-    int _windowedWidth; // addition
-    int _windowedHeight; // addition
-    int _maxConfirmedResolution;
-    int __unused6;
-    int _personalSavingsPerMission[100];
-    int _lastVictoryVideoPlayed;
-    int _difficulty;
-    int _godsEnabled;
+extern struct _Data_Settings {
+	int _bpp;
+	int _fullscreen;
+	unsigned char _gamePaused;
+	unsigned char __unused1;
+	char _cddrive;
+	unsigned char _soundEffectsEnabled;
+	unsigned char _soundMusicEnabled;
+	unsigned char _soundSpeechEnabled;
+	short __unused2;
+	int _resolutionId;
+	int _gameSpeed;
+	int _scrollSpeed;
+	uint8_t playerName[32];
+	int __unused3[4];
+	int _lastAdvisor;
+	int _saveGameMissionId;
+	int _mouseTooltips;
+	int _startingFavor;
+	int _personalSavingsLastMission;
+	int _currentMissionId;
+	int _isCustomScenario;
+	unsigned char _soundCityEnabled;
+	unsigned char _warningsEnabled;
+	unsigned char _monthlyAutosaveEnabled;
+	unsigned char _autoclearEnabled;
+	int _soundEffectsPercentage;
+	int _soundMusicPercentage;
+	int _soundSpeechPercentage;
+	int _soundCityPercentage;
+	int __unused4;
+	int _ram;
+	int _windowedWidth; // addition
+	int _windowedHeight; // addition
+	int _maxConfirmedResolution;
+	int __unused6;
+	int _personalSavingsPerMission[100];
+	int _lastVictoryVideoPlayed;
+	int _difficulty;
+	int _godsEnabled;
 } Data_Settings;
 
-extern struct _Data_Settings_Map
-{
-    int mapsId;
-    struct
-    {
-        int x;
-        int y;
-    } camera;
-    struct
-    {
-        int gridOffset;
-        int x;
-        int y;
-    } current;
-    int width;
-    int height;
-    int gridStartOffset;
-    int gridBorderSize;
-    int orientation;
-    int __unknown2;
+extern struct _Data_Settings_Map {
+	int mapsId;
+	struct {
+		int x;
+		int y;
+	} camera;
+	struct {
+		int gridOffset;
+		int x;
+		int y;
+	} current;
+	int width;
+	int height;
+	int gridStartOffset;
+	int gridBorderSize;
+	int orientation;
+	int __unknown2;
 } Data_Settings_Map;
 
 #endif

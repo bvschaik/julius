@@ -8,12 +8,12 @@
 #include "figure/name.h"
 #include "game/difficulty.h"
 #include "game/time.h"
-#include "scenario/data.h"
-#include "scenario/map.h"
 
 #include <string.h>
 
 #include <data>
+#include <scenario>
+
 #include "building.h"
 #include "cityinfo.h"
 #include "figure.h"
@@ -461,11 +461,12 @@ void scenario_invasion_process()
 
 int scenario_invasion_start_from_mars()
 {
-    if (Data_Settings.saveGameMissionId < 0 || Data_Settings.saveGameMissionId > 19)
+    int mission = scenario_campaign_mission();
+    if (mission < 0 || mission > 19)
     {
         return 0;
     }
-    int amount = LOCAL_UPRISING_NUM_ENEMIES[Data_Settings.saveGameMissionId];
+    int amount = LOCAL_UPRISING_NUM_ENEMIES[mission];
     if (amount <= 0)
     {
         return 0;

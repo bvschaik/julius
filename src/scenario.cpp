@@ -51,8 +51,8 @@ static void initGridGraphicIds();
 
 void Scenario_initialize(const char *scenarioName)
 {
-    int saveMissionId = Data_Settings.saveGameMissionId;
-    int curMissionId = Data_Settings.currentMissionId;
+    int mission = scenario_campaign_mission();
+    int rank = scenario_campaign_rank();
     clearBookmarks();
     if (scenario_is_custom())
     {
@@ -65,23 +65,26 @@ void Scenario_initialize(const char *scenarioName)
     }
     else
     {
-        if (!GameFile_loadSavedGameFromMissionPack(saveMissionId))
+        if (!GameFile_loadSavedGameFromMissionPack(mission))
         {
             UI_Window_goTo(Window_City);
             return;
         }
         Data_CityInfo.treasury = difficulty_adjust_money(Data_CityInfo.treasury);
     }
-    Data_Settings.saveGameMissionId = saveMissionId;
-    Data_Settings.currentMissionId = curMissionId;
+    scenario_set_campaign_mission(mission);
+    scenario_set_campaign_rank(rank);
 
-    Data_Settings.startingFavor = difficulty_starting_favor();
-    Data_Settings.personalSavingsLastMission = setting_personal_savings_for_mission(curMissionId);
+    if (scenario_is_tutorial_1())
+        setting_set_personal_savings_for_mission(0, 0);
 
-    Data_CityInfo.ratingFavor = Data_Settings.startingFavor;
-    Data_CityInfo.personalSavings = Data_Settings.personalSavingsLastMission;
-    Data_CityInfo.playerRank = curMissionId;
-    Data_CityInfo.salaryRank = curMissionId;
+    scenario_settings_init_mission();
+
+    Data_CityInfo.ratingFavor = scenario_starting_favor();
+    Data_CityInfo.personalSavings = scenario_starting_personal_savings();
+    Data_CityInfo.playerRank = rank;
+    Data_CityInfo.salaryRank = rank;
+
     if (scenario_is_custom())
     {
         Data_CityInfo.personalSavings = 0;
@@ -95,13 +98,6 @@ void Scenario_initialize(const char *scenarioName)
     Data_CityInfo.salaryAmount = Constant_SalaryForRank[Data_CityInfo.salaryRank];
 
     Tutorial::init();
-
-    if (scenario_is_tutorial_1())
-    {
-        setting_set_personal_savings_for_mission(0, 0);
-        Data_Settings.personalSavingsLastMission = 0;
-        Data_CityInfo.personalSavings = 0;
-    }
 
     SidebarMenu_enableBuildingMenuItemsAndButtons();
     city_message_init_scenario();

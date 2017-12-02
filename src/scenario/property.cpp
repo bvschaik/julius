@@ -60,25 +60,55 @@ const char *scenario_brief_description()
 
 int scenario_is_custom()
 {
-    return Data_Settings.isCustomScenario;
+    return scenario.settings.is_custom;
+}
+
+void scenario_set_custom(int custom)
+{
+    scenario.settings.is_custom = custom;
 }
 
 int scenario_campaign_rank()
 {
-    return Data_Settings.currentMissionId;
+    return scenario.settings.campaign_rank;
+}
+
+void scenario_set_campaign_rank(int rank)
+{
+    scenario.settings.campaign_rank = rank;
+}
+
+int scenario_campaign_mission()
+{
+    return scenario.settings.campaign_mission;
+}
+
+void scenario_set_campaign_mission(int mission)
+{
+    scenario.settings.campaign_mission = mission;
 }
 
 int scenario_is_tutorial_1()
 {
-    return !Data_Settings.isCustomScenario && Data_Settings.currentMissionId == 0;
+    return !scenario.settings.is_custom && scenario.settings.campaign_rank == 0;
 }
 
 int scenario_is_tutorial_2()
 {
-    return !Data_Settings.isCustomScenario && Data_Settings.currentMissionId == 1;
+    return !scenario.settings.is_custom && scenario.settings.campaign_rank == 1;
 }
 
 int scenario_is_tutorial_3()
 {
-    return !Data_Settings.isCustomScenario && Data_Settings.currentMissionId == 2;
+    return !scenario.settings.is_custom && scenario.settings.campaign_rank == 2;
+}
+
+int scenario_starting_favor()
+{
+    return scenario.settings.starting_favor;
+}
+
+int scenario_starting_personal_savings()
+{
+    return scenario.settings.starting_personal_savings;
 }

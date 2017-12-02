@@ -161,7 +161,7 @@ void settings_save()
     buffer_write_i32(buf, data.scroll_speed);
     buffer_skip(buf, 32); //uint8_t playerName[32];
     buffer_skip(buf, 16);
-    buffer_skip(buf, 4); //int lastAdvisor;
+    buffer_write_i32(buf, data.last_advisor);
     buffer_skip(buf, 4); //int saveGameMissionId;
     buffer_write_i32(buf, data.tooltips);
     buffer_skip(buf, 4); //int startingFavor;
