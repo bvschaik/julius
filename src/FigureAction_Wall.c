@@ -70,7 +70,7 @@ void FigureAction_ballista(figure *f)
 			if (f->waitTicks > 20) {
 				f->waitTicks = 0;
 				int xTile, yTile;
-				if (FigureAction_CombatSoldier_getMissileTarget(f->id, 15, &xTile, &yTile)) {
+				if (FigureAction_CombatSoldier_getMissileTarget(f, 15, &xTile, &yTile)) {
 					f->actionState = FigureActionState_181_BallistaFiring;
 					f->waitTicksMissile = figure_properties_for_type(f->type)->missile_delay;
 				}
@@ -80,7 +80,7 @@ void FigureAction_ballista(figure *f)
 			f->waitTicksMissile++;
 			if (f->waitTicksMissile > figure_properties_for_type(f->type)->missile_delay) {
 				int xTile, yTile;
-				if (FigureAction_CombatSoldier_getMissileTarget(f->id, 15, &xTile, &yTile)) {
+				if (FigureAction_CombatSoldier_getMissileTarget(f, 15, &xTile, &yTile)) {
 					f->direction = calc_missile_shooter_direction(f->x, f->y, xTile, yTile);
 					f->waitTicksMissile = 0;
 					Figure_createMissile(f->id, f->x, f->y, xTile, yTile, FIGURE_BOLT);
@@ -116,7 +116,7 @@ static void towerSentryPickTarget(figure *f)
 	if (f->waitTicksNextTarget >= 40) {
 		f->waitTicksNextTarget = 0;
 		int xTile, yTile;
-		if (FigureAction_CombatSoldier_getMissileTarget(f->id, 10, &xTile, &yTile)) {
+		if (FigureAction_CombatSoldier_getMissileTarget(f, 10, &xTile, &yTile)) {
 			f->actionState = FigureActionState_172_TowerSentryFiring;
 			f->destinationX = f->x;
 			f->destinationY = f->y;
@@ -213,7 +213,7 @@ void FigureAction_towerSentry(figure *f)
 			f->waitTicksMissile++;
 			if (f->waitTicksMissile > figure_properties_for_type(f->type)->missile_delay) {
 				int xTile, yTile;
-				if (FigureAction_CombatSoldier_getMissileTarget(f->id, 10, &xTile, &yTile)) {
+				if (FigureAction_CombatSoldier_getMissileTarget(f, 10, &xTile, &yTile)) {
 					f->direction = calc_missile_shooter_direction(f->x, f->y, xTile, yTile);
 					f->waitTicksMissile = 0;
 					Figure_createMissile(f->id, f->x, f->y, xTile, yTile, FIGURE_JAVELIN);
@@ -278,7 +278,7 @@ void FigureAction_towerSentry(figure *f)
 void FigureAction_TowerSentry_reroute()
 {
 	for (int i = 1; i < MAX_FIGURES; i++) {
-		struct Data_Figure *f = &Data_Figures[i];
+		figure *f = figure_get(i);
 		if (f->type != FIGURE_TOWER_SENTRY || map_routing_is_wall_passable(f->gridOffset)) {
 			continue;
 		}

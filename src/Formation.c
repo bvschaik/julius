@@ -50,7 +50,7 @@ void Formation_deleteFortAndBanner(int formationId)
         const formation *m = formation_get(formationId);
         if (m->in_use) {
             if (m->standard_figure_id) {
-                Figure_delete(m->standard_figure_id);
+                Figure_delete(figure_get(m->standard_figure_id));
             }
             formation_clear(formationId);
             Formation_calculateLegionTotals();
@@ -269,7 +269,7 @@ void Formation_calculateFigures()
 {
     formation_clear_figures();
 	for (int i = 1; i < MAX_FIGURES; i++) {
-        figure *f = &Data_Figures[i];
+        figure *f = figure_get(i);
 		if (f->state != FigureState_Alive) {
 			continue;
 		}

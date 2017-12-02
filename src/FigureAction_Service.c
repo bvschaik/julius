@@ -172,7 +172,7 @@ static int prefectGetNearestEnemy(int x, int y, int *distance)
 	int minEnemyId = 0;
 	int minDist = 10000;
 	for (int i = 1; i < MAX_FIGURES; i++) {
-		struct Data_Figure *f = &Data_Figures[i];
+		figure *f = figure_get(i);
 		if (f->state != FigureState_Alive || f->targetedByFigureId) {
 			continue;
 		}

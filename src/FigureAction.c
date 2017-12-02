@@ -100,7 +100,7 @@ void FigureAction_handle()
 		Data_CityInfo.riotersOrAttackingNativesInCity--;
 	}
 	for (int i = 1; i < MAX_FIGURES; i++) {
-		struct Data_Figure *f = figure_get(i);
+		figure *f = figure_get(i);
 		if (f->state) {
 			if (f->targetedByFigureId) {
                 struct Data_Figure *attacker = figure_get(f->targetedByFigureId);
@@ -113,7 +113,7 @@ void FigureAction_handle()
 			}
 			figureActionCallbacks[f->type](f);
 			if (f->state == FigureState_Dead) {
-				Figure_delete(i);
+				Figure_delete(f);
 			}
 		}
 	}

@@ -15,7 +15,7 @@ int FigureAction_CombatSoldier_getTarget(int x, int y, int maxDistance)
 		if (FigureIsDead(i)) {
 			continue;
 		}
-		struct Data_Figure *f = &Data_Figures[i];
+		figure *f = figure_get(i);
 		if (FigureIsEnemy(f->type) || f->type == FIGURE_RIOTER ||
 			(f->type == FIGURE_INDIGENOUS_NATIVE && f->actionState == FigureActionState_159_NativeAttacking)) {
 			int distance = calc_maximum_distance(x, y, f->x, f->y);
@@ -37,7 +37,7 @@ int FigureAction_CombatSoldier_getTarget(int x, int y, int maxDistance)
 		if (FigureIsDead(i)) {
 			continue;
 		}
-		struct Data_Figure *f = &Data_Figures[i];
+		figure *f = figure_get(i);
 		if (FigureIsEnemy(f->type) || f->type == FIGURE_RIOTER ||
 			(f->type == FIGURE_INDIGENOUS_NATIVE && f->actionState == FigureActionState_159_NativeAttacking)) {
 			return i;
@@ -46,31 +46,31 @@ int FigureAction_CombatSoldier_getTarget(int x, int y, int maxDistance)
 	return 0;
 }
 
-int FigureAction_CombatSoldier_getMissileTarget(int soldierId, int maxDistance, int *xTile, int *yTile)
+int FigureAction_CombatSoldier_getMissileTarget(figure *shooter, int maxDistance, int *xTile, int *yTile)
 {
-	int x = Data_Figures[soldierId].x;
-	int y = Data_Figures[soldierId].y;
+	int x = shooter->x;
+	int y = shooter->y;
 	
-	int minFigureId = 0;
 	int minDistance = maxDistance;
+    figure *minFigure = 0;
 	for (int i = 1; i < MAX_FIGURES; i++) {
 		if (FigureIsDead(i)) {
 			continue;
 		}
-		struct Data_Figure *f = &Data_Figures[i];
+		figure *f = figure_get(i);
 		if (FigureIsEnemy(f->type) || FigureIsHerd(f->type) ||
 			(f->type == FIGURE_INDIGENOUS_NATIVE && f->actionState == FigureActionState_159_NativeAttacking)) {
 			int distance = calc_maximum_distance(x, y, f->x, f->y);
 			if (distance < minDistance && FigureMovement_canLaunchCrossCountryMissile(x, y, f->x, f->y)) {
 				minDistance = distance;
-				minFigureId = i;
+				minFigure = f;
 			}
 		}
 	}
-	if (minFigureId) {
-		*xTile = Data_Figures[minFigureId].x;
-		*yTile = Data_Figures[minFigureId].y;
-		return minFigureId;
+	if (minFigure) {
+		*xTile = minFigure->x;
+		*yTile = minFigure->y;
+		return minFigure->id;
 	}
 	return 0;
 }
@@ -80,7 +80,7 @@ int FigureAction_CombatWolf_getTarget(int x, int y, int maxDistance)
 	int minFigureId = 0;
 	int minDistance = 10000;
 	for (int i = 1; i < MAX_FIGURES; i++) {
-		struct Data_Figure *f = &Data_Figures[i];
+		figure *f = figure_get(i);
 		if (FigureIsDead(i) || !f->type) {
 			continue;
 		}
@@ -131,7 +131,7 @@ int FigureAction_CombatEnemy_getTarget(int x, int y)
 		if (FigureIsDead(i)) {
 			continue;
 		}
-		struct Data_Figure *f = &Data_Figures[i];
+		figure *f = figure_get(i);
 		if (!f->targetedByFigureId && FigureIsLegion(f->type)) {
 			int distance = calc_maximum_distance(x, y, f->x, f->y);
 			if (distance < minDistance) {
@@ -148,22 +148,22 @@ int FigureAction_CombatEnemy_getTarget(int x, int y)
 		if (FigureIsDead(i)) {
 			continue;
 		}
-		if (FigureIsLegion(Data_Figures[i].type)) {
+		if (FigureIsLegion(figure_get(i)->type)) {
 			return i;
 		}
 	}
 	return 0;
 }
 
-int FigureAction_CombatEnemy_getMissileTarget(int enemyId, int maxDistance, int attackCitizens, int *xTile, int *yTile)
+int FigureAction_CombatEnemy_getMissileTarget(figure *enemy, int maxDistance, int attackCitizens, int *xTile, int *yTile)
 {
-	int x = Data_Figures[enemyId].x;
-	int y = Data_Figures[enemyId].y;
+	int x = enemy->x;
+	int y = enemy->y;
 	
-	int minFigureId = 0;
+	figure *minFigure = 0;
 	int minDistance = maxDistance;
 	for (int i = 1; i < MAX_FIGURES; i++) {
-		struct Data_Figure *f = &Data_Figures[i];
+		figure *f = figure_get(i);
 		if (FigureIsDead(i) || !f->type) {
 			continue;
 		}
@@ -197,13 +197,13 @@ int FigureAction_CombatEnemy_getMissileTarget(int enemyId, int maxDistance, int 
 		}
 		if (distance < minDistance && FigureMovement_canLaunchCrossCountryMissile(x, y, f->x, f->y)) {
 			minDistance = distance;
-			minFigureId = i;
+			minFigure = f;
 		}
 	}
-	if (minFigureId) {
-		*xTile = Data_Figures[minFigureId].x;
-		*yTile = Data_Figures[minFigureId].y;
-		return minFigureId;
+	if (minFigure) {
+		*xTile = minFigure->x;
+		*yTile = minFigure->y;
+		return minFigure->id;
 	}
 	return 0;
 }
@@ -222,11 +222,12 @@ void FigureAction_Combat_attackFigureAt(figure *f, int grid_offset)
 		if (++guard >= MAX_FIGURES || opponentId <= 0) {
 			break;
 		}
+		figure *opponent = figure_get(opponentId);
 		if (opponentId == f->id) {
-			opponentId = Data_Figures[opponentId].nextFigureIdOnSameTile;
+			opponentId = opponent->nextFigureIdOnSameTile;
 			continue;
 		}
-		struct Data_Figure *opponent = &Data_Figures[opponentId];
+		
 		int opponentCategory = figure_properties_for_type(opponent->type)->category;
 		int attack = 0;
 		if (opponent->state != FigureState_Alive) {

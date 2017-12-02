@@ -140,7 +140,7 @@ static const int layoutOrientationLegionIndexOffsets[13][4][40] = {
 static void tickDecreaseLegionDamage()
 {
 	for (int i = 1; i < MAX_FIGURES; i++) {
-		struct Data_Figure *f = &Data_Figures[i];
+		figure *f = figure_get(i);
 		if (f->state == FigureState_Alive && FigureIsLegion(f->type)) {
 			if (f->actionState == FigureActionState_80_SoldierAtRest) {
 				if (f->damage) {
@@ -356,7 +356,7 @@ static void marsKillEnemies()
 	int toKill = Data_CityInfo.godBlessingMarsEnemiesToKill;
 	int gridOffset = 0;
 	for (int i = 1; i < MAX_FIGURES && toKill > 0; i++) {
-		struct Data_Figure *f = &Data_Figures[i];
+		figure *f = figure_get(i);
 		if (f->state != FigureState_Alive) {
 			continue;
 		}

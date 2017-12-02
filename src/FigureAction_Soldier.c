@@ -85,7 +85,7 @@ static void javelinLaunchMissile(figure *f)
 	f->waitTicksMissile++;
 	if (f->waitTicksMissile > figure_properties_for_type(f->type)->missile_delay) {
 		f->waitTicksMissile = 0;
-		if (FigureAction_CombatSoldier_getMissileTarget(f->id, 10, &xTile, &yTile)) {
+		if (FigureAction_CombatSoldier_getMissileTarget(f, 10, &xTile, &yTile)) {
 			f->attackGraphicOffset = 1;
 			f->direction = calc_missile_shooter_direction(f->x, f->y, xTile, yTile);
 		} else {

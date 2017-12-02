@@ -389,7 +389,7 @@ void FigureAction_HippodromeHorse_reroute()
 		return;
 	}
 	for (int i = 1; i < MAX_FIGURES; i++) {
-		struct Data_Figure *f = &Data_Figures[i];
+		figure *f = figure_get(i);
 		if (f->state == FigureState_Alive && f->type == FIGURE_HIPPODROME_HORSES) {
 			f->waitTicksMissile = 0;
 			setDestinationHippodromeHorse(f, HippodromeHorse_Created);

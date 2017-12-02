@@ -50,7 +50,7 @@ static void enemyInitial(figure *f, const formation *m)
 		int xTile, yTile;
 		if (f->waitTicksMissile > figure_properties_for_type(f->type)->missile_delay) {
 			f->waitTicksMissile = 0;
-			if (FigureAction_CombatEnemy_getMissileTarget(f->id, 10, Data_CityInfo.numSoldiersInCity < 4, &xTile, &yTile)) {
+			if (FigureAction_CombatEnemy_getMissileTarget(f, 10, Data_CityInfo.numSoldiersInCity < 4, &xTile, &yTile)) {
 				f->attackGraphicOffset = 1;
 				f->direction = calc_missile_shooter_direction(f->x, f->y, xTile, yTile);
 			} else {

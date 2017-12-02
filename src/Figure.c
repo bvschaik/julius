@@ -25,9 +25,8 @@
 
 #include <string.h>
 
-void Figure_delete(int figureId)
+void Figure_delete(figure *f)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
 	switch (f->type) {
 		case FIGURE_LABOR_SEEKER:
 		case FIGURE_MARKET_BUYER:
@@ -40,7 +39,7 @@ void Figure_delete(int figureId)
 			break;
 		case FIGURE_DOCKMAN:
 			for (int i = 0; i < 3; i++) {
-				if (Data_Buildings[f->buildingId].data.other.dockFigureIds[i] == figureId) {
+				if (Data_Buildings[f->buildingId].data.other.dockFigureIds[i] == f->id) {
 					Data_Buildings[f->buildingId].data.other.dockFigureIds[i] = 0;
 				}
 			}
@@ -69,14 +68,16 @@ void Figure_delete(int figureId)
 			break;
 	}
 	if (f->empireCityId) {
-		empire_city_remove_trader(f->empireCityId, figureId);
+		empire_city_remove_trader(f->empireCityId, f->id);
 	}
 	if (f->immigrantBuildingId) {
 		Data_Buildings[f->buildingId].immigrantFigureId = 0;
 	}
 	figure_route_remove(f);
 	map_figure_delete(f);
-	memset(f, 0, sizeof(struct Data_Figure));
+
+    int figureId = f->id;
+    memset(f, 0, sizeof(struct Data_Figure));
     f->id = figureId;
 }
 
@@ -186,8 +187,9 @@ void Figure_createFlotsam()
 		return;
 	}
 	for (int i = 1; i < MAX_FIGURES; i++) {
-		if (Data_Figures[i].state && Data_Figures[i].type == FIGURE_FLOTSAM) {
-			Figure_delete(i);
+        figure *f = figure_get(i);
+		if (f->state && f->type == FIGURE_FLOTSAM) {
+			Figure_delete(f);
 		}
 	}
 	const int resourceIds[] = {3, 1, 3, 2, 1, 3, 2, 3, 2, 1, 3, 3, 2, 3, 3, 3, 1, 2, 0, 1};
@@ -298,9 +300,10 @@ int Figure_createTowerSentryFromBarracks(int buildingId, int x, int y)
 void Figure_killTowerSentriesAt(int x, int y)
 {
 	for (int i = 0; i < MAX_FIGURES; i++) {
-		if (!FigureIsDead(i) && Data_Figures[i].type == FIGURE_TOWER_SENTRY) {
-			if (calc_maximum_distance(Data_Figures[i].x, Data_Figures[i].y, x, y) <= 1) {
-				Data_Figures[i].state = FigureState_Dead;
+        figure *f = figure_get(i);
+		if (!FigureIsDead(i) && f->type == FIGURE_TOWER_SENTRY) {
+			if (calc_maximum_distance(f->x, f->y, x, y) <= 1) {
+				f->state = FigureState_Dead;
 			}
 		}
 	}
@@ -309,7 +312,7 @@ void Figure_killTowerSentriesAt(int x, int y)
 void Figure_sinkAllShips()
 {
 	for (int i = 1; i < MAX_FIGURES; i++) {
-		struct Data_Figure *f = &Data_Figures[i];
+		figure *f = figure_get(i);
 		if (f->state != FigureState_Alive) {
 			continue;
 		}
@@ -341,7 +344,7 @@ static int is_citizen(figure *f)
 
 int Figure_getCitizenOnSameTile(int figureId)
 {
-    return map_figure_foreach_until(Data_Figures[figureId].gridOffset, is_citizen);
+    return map_figure_foreach_until(figure_get(figureId)->gridOffset, is_citizen);
 }
 
 static int is_non_citizen(figure *f)
@@ -363,13 +366,13 @@ static int is_non_citizen(figure *f)
 
 int Figure_getNonCitizenOnSameTile(int figureId)
 {
-    return map_figure_foreach_until(Data_Figures[figureId].gridOffset, is_non_citizen);
+    return map_figure_foreach_until(figure_get(figureId)->gridOffset, is_non_citizen);
 }
 
 int Figure_hasNearbyEnemy(int xStart, int yStart, int xEnd, int yEnd)
 {
 	for (int i = 1; i < MAX_FIGURES; i++) {
-		struct Data_Figure *f = &Data_Figures[i];
+		figure *f = figure_get(i);
 		if (f->state != FigureState_Alive || !FigureIsEnemy(f->type)) {
 			continue;
 		}
