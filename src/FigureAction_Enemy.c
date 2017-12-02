@@ -61,10 +61,10 @@ static void enemyInitial(figure *f, const formation *m)
 		if (f->attackGraphicOffset) {
 			int missileType;
 			switch (m->enemy_type) {
-				case EnemyType_4_Goth:
-				case EnemyType_5_Pergamum:
-				case EnemyType_9_Egyptian:
-				case EnemyType_10_Carthaginian:
+				case ENEMY_4_GOTH:
+				case ENEMY_5_PERGAMUM:
+				case ENEMY_9_EGYPTIAN:
+				case ENEMY_10_CARTHAGINIAN:
 					missileType = FIGURE_ARROW;
 					break;
 				default:
@@ -247,10 +247,10 @@ void FigureAction_enemy43_Spear(figure *f)
 	f->isEnemyGraphic = 1;
 	
 	switch (m->enemy_type) {
-		case EnemyType_5_Pergamum:
-		case EnemyType_6_Seleucid:
-		case EnemyType_7_Etruscan:
-		case EnemyType_8_Greek:
+		case ENEMY_5_PERGAMUM:
+		case ENEMY_6_SELEUCID:
+		case ENEMY_7_ETRUSCAN:
+		case ENEMY_8_GREEK:
 			break;
 		default:
 			return;
@@ -285,9 +285,9 @@ void FigureAction_enemy44_Sword(figure *f)
 	f->isEnemyGraphic = 1;
 	
 	switch (m->enemy_type) {
-		case EnemyType_5_Pergamum:
-		case EnemyType_6_Seleucid:
-		case EnemyType_9_Egyptian:
+		case ENEMY_5_PERGAMUM:
+		case ENEMY_6_SELEUCID:
+		case ENEMY_9_EGYPTIAN:
 			break;
 		default:
 			return;
@@ -320,9 +320,9 @@ void FigureAction_enemy45_Sword(figure *f)
 	f->isEnemyGraphic = 1;
 	
 	switch (m->enemy_type) {
-		case EnemyType_7_Etruscan:
-		case EnemyType_8_Greek:
-		case EnemyType_10_Carthaginian:
+		case ENEMY_7_ETRUSCAN:
+		case ENEMY_8_GREEK:
+		case ENEMY_10_CARTHAGINIAN:
 			break;
 		default:
 			return;
@@ -420,15 +420,15 @@ void FigureAction_enemy49_FastSword(figure *f)
 	f->isEnemyGraphic = 1;
 	
 	int attackId, corpseId, normalId;
-	if (m->enemy_type == EnemyType_0_Barbarian) {
+	if (m->enemy_type == ENEMY_0_BARBARIAN) {
 		attackId = 393;
 		corpseId = 441;
 		normalId = 297;
-	} else if (m->enemy_type == EnemyType_1_Numidian) {
+	} else if (m->enemy_type == ENEMY_1_NUMIDIAN) {
 		attackId = 593;
 		corpseId = 641;
 		normalId = 449;
-	} else if (m->enemy_type == EnemyType_4_Goth) {
+	} else if (m->enemy_type == ENEMY_4_GOTH) {
 		attackId = 545;
 		corpseId = 593;
 		normalId = 449;
@@ -462,7 +462,7 @@ void FigureAction_enemy50_Sword(figure *f)
 	
 	f->isEnemyGraphic = 1;
 	
-	if (m->enemy_type != EnemyType_2_Gaul && m->enemy_type != EnemyType_3_Celt) {
+	if (m->enemy_type != ENEMY_2_GAUL && m->enemy_type != ENEMY_3_CELT) {
 		return;
 	}
 	if (f->actionState == FigureActionState_150_Attack) {
@@ -492,7 +492,7 @@ void FigureAction_enemy51_Spear(figure *f)
 	
 	f->isEnemyGraphic = 1;
 	
-	if (m->enemy_type != EnemyType_1_Numidian) {
+	if (m->enemy_type != ENEMY_1_NUMIDIAN) {
 		return;
 	}
 	if (f->actionState == FigureActionState_150_Attack) {
@@ -549,7 +549,7 @@ void FigureAction_enemy53_Axe(figure *f)
 	
 	f->isEnemyGraphic = 1;
 	
-	if (m->enemy_type != EnemyType_2_Gaul) {
+	if (m->enemy_type != ENEMY_2_GAUL) {
 		return;
 	}
 	if (f->actionState == FigureActionState_150_Attack) {

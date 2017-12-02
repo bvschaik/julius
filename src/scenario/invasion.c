@@ -17,8 +17,6 @@
 #include <string.h>
 
 #include "Data/CityInfo.h"
-#include "Data/Constants.h"
-#include "Data/Grid.h"
 #include "../Building.h"
 #include "CityInfo.h"
 
@@ -205,7 +203,7 @@ static int start_invasion(int enemy_type, int amount, int invasion_point, int at
     determine_formations(num_type3, &formations_per_type[2], soldiers_per_formation[2]);
 
     // determine invasion point
-    if (enemy_type == EnemyType_11_Caesar) {
+    if (enemy_type == ENEMY_11_CAESAR) {
         map_point entry_point = scenario_map_entry();
         x = entry_point.x;
         y = entry_point.y;
@@ -345,7 +343,7 @@ void scenario_invasion_process()
             }
             if (scenario.invasions[warning->invasion_id].type == INVASION_TYPE_CAESAR) {
                 int grid_offset = start_invasion(
-                    EnemyType_11_Caesar,
+                    ENEMY_11_CAESAR,
                     scenario.invasions[warning->invasion_id].amount,
                     scenario.invasions[warning->invasion_id].from,
                     scenario.invasions[warning->invasion_id].attack_type,
@@ -362,7 +360,7 @@ void scenario_invasion_process()
             if (game_time_year() == scenario.start_year + scenario.invasions[i].year &&
                 game_time_month() == scenario.invasions[i].month) {
                 int grid_offset = start_invasion(
-                    EnemyType_0_Barbarian,
+                    ENEMY_0_BARBARIAN,
                     scenario.invasions[i].amount,
                     scenario.invasions[i].from,
                     scenario.invasions[i].attack_type,
@@ -385,7 +383,7 @@ int scenario_invasion_start_from_mars()
     if (amount <= 0) {
         return 0;
     }
-    int grid_offset = start_invasion(EnemyType_0_Barbarian, amount, 8, FORMATION_ATTACK_FOOD_CHAIN, 23);
+    int grid_offset = start_invasion(ENEMY_0_BARBARIAN, amount, 8, FORMATION_ATTACK_FOOD_CHAIN, 23);
     if (grid_offset) {
         city_message_post(1, MESSAGE_LOCAL_UPRISING_MARS, data.last_internal_invasion_id, grid_offset);
     }
@@ -471,7 +469,7 @@ void scenario_invasion_process_caesar()
                 size = 144;
             }
             int invasion_id = start_invasion(
-                EnemyType_11_Caesar, size, 0, FORMATION_ATTACK_BEST_BUILDINGS, 24);
+                ENEMY_11_CAESAR, size, 0, FORMATION_ATTACK_BEST_BUILDINGS, 24);
             if (invasion_id > 0) {
                 Data_CityInfo.caesarInvasionCount++;
                 Data_CityInfo.caesarInvasionDurationDayCountdown = 192;

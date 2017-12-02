@@ -52,43 +52,6 @@ enum {
 	Festival_Grand = 3
 };
 
-enum {
-	EnemyType_0_Barbarian = 0,
-	EnemyType_1_Numidian = 1,
-	EnemyType_2_Gaul = 2,
-	EnemyType_3_Celt = 3,
-	EnemyType_4_Goth = 4,
-	EnemyType_5_Pergamum = 5,
-	EnemyType_6_Seleucid = 6,
-	EnemyType_7_Etruscan = 7,
-	EnemyType_8_Greek = 8,
-	EnemyType_9_Egyptian = 9,
-	EnemyType_10_Carthaginian = 10,
-	EnemyType_11_Caesar = 11
-};
-
-/*
-0x00: Barbarians
-0x01: Etruscans
-0x02: Samnites
-0x03: Carthaginians
-0x04: Macedonians
-0x05: Graeci
-0x06: Egyptians
-0x07: Pergamum
-0x08: Seleucids
-0x09: Picts
-0x0A: Celts
-0x0B: Britons
-0x0C: Gauls
-0x0D: Helvetii
-0x0E: Goths
-0x0F: Visigoths
-0x10: Huns
-0x11: Iberians
-0x12: Numidians
-0x13: Judaeans
-*/
 extern const int Constant_SalaryForRank[11];
 
 struct MissionId {

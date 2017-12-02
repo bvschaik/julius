@@ -7,7 +7,6 @@
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
-#include "Data/Constants.h"
 
 #include "core/calc.h"
 #include "figure/route.h"
