@@ -138,19 +138,21 @@ static void enemyFighting(figure *f, const formation *m)
 	if (targetId <= 0) {
 		targetId = FigureAction_CombatEnemy_getTarget(f->x, f->y);
 		if (targetId) {
-			f->destinationX = Data_Figures[targetId].x;
-			f->destinationY = Data_Figures[targetId].y;
+            figure *target = figure_get(targetId);
+			f->destinationX = target->x;
+			f->destinationY = target->y;
 			f->targetFigureId = targetId;
-			f->targetFigureCreatedSequence = Data_Figures[targetId].createdSequence;
-			Data_Figures[targetId].targetedByFigureId = f->id;
+			f->targetFigureCreatedSequence = target->createdSequence;
+			target->targetedByFigureId = f->id;
 			figure_route_remove(f);
 		}
 	}
 	if (targetId > 0) {
 		FigureMovement_walkTicks(f, f->speedMultiplier);
 		if (f->direction == DirFigure_8_AtDestination) {
-			f->destinationX = Data_Figures[f->targetFigureId].x;
-			f->destinationY = Data_Figures[f->targetFigureId].y;
+            figure *target = figure_get(f->targetFigureId);
+			f->destinationX = target->x;
+			f->destinationY = target->y;
 			figure_route_remove(f);
 		} else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
 			f->actionState = FigureActionState_151_EnemyInitial;
@@ -711,7 +713,7 @@ int FigureAction_HerdEnemy_moveFormationTo(int formationId, int x, int y, int *x
 						break;
 					}
 					if (Data_Grid_figureIds[gridOffset] &&
-						Data_Figures[Data_Grid_figureIds[gridOffset]].formationId != formationId) {
+						figure_get(Data_Grid_figureIds[gridOffset])->formationId != formationId) {
 						canMove = 0;
 						break;
 					}

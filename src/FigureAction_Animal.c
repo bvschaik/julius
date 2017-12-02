@@ -159,11 +159,12 @@ void FigureAction_wolf(figure *f)
 			if (f->direction == DirFigure_8_AtDestination) {
 				int targetId = FigureAction_CombatWolf_getTarget(f->x, f->y, 6);
 				if (targetId) {
-					f->destinationX = Data_Figures[targetId].x;
-					f->destinationY = Data_Figures[targetId].y;
+                    figure *target = figure_get(targetId);
+					f->destinationX = target->x;
+					f->destinationY = target->y;
 					f->targetFigureId = targetId;
-					Data_Figures[targetId].targetedByFigureId = f->id;
-					f->targetFigureCreatedSequence = Data_Figures[targetId].createdSequence;
+					target->targetedByFigureId = f->id;
+					f->targetFigureCreatedSequence = target->createdSequence;
 					figure_route_remove(f);
 				} else {
 					f->direction = f->previousTileDirection;

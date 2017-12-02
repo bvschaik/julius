@@ -123,12 +123,12 @@ static int soldierFindMopUpTarget(figure *f)
 	if (targetId <= 0) {
 		targetId = FigureAction_CombatSoldier_getTarget(f->x, f->y, 20);
 		if (targetId) {
-			struct Data_Figure *fTarget = &Data_Figures[targetId];
-			f->destinationX = fTarget->x;
-			f->destinationY = fTarget->y;
+			figure *target = figure_get(targetId);
+			f->destinationX = target->x;
+			f->destinationY = target->y;
 			f->targetFigureId = targetId;
-			fTarget->targetedByFigureId = f->id;
-			f->targetFigureCreatedSequence = fTarget->createdSequence;
+			target->targetedByFigureId = f->id;
+			f->targetFigureCreatedSequence = target->createdSequence;
 		} else {
 			f->actionState = FigureActionState_84_SoldierAtStandard;
 			f->graphicOffset = 0;
@@ -351,8 +351,9 @@ void FigureAction_soldier(figure *f)
 			if (soldierFindMopUpTarget(f)) {
 				FigureMovement_walkTicks(f, speedFactor);
 				if (f->direction == DirFigure_8_AtDestination) {
-					f->destinationX = Data_Figures[f->targetFigureId].x;
-					f->destinationY = Data_Figures[f->targetFigureId].y;
+                    figure *target = figure_get(f->targetFigureId);
+					f->destinationX = target->x;
+					f->destinationY = target->y;
 					figure_route_remove(f);
 				} else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
 					f->actionState = FigureActionState_84_SoldierAtStandard;

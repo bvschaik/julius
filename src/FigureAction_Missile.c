@@ -38,8 +38,9 @@ void FigureAction_arrow(figure *f)
 	int shouldDie = FigureMovement_crossCountryWalkTicks(f, 4);
 	int targetId = Figure_getCitizenOnSameTile(f->id);
 	if (targetId) {
-		int targetType = Data_Figures[targetId].type;
-		int formationId = Data_Figures[targetId].formationId;
+        figure *target = figure_get(targetId);
+		int targetType = target->type;
+		int formationId = target->formationId;
         const figure_properties *target_props = figure_properties_for_type(targetType);
         int maxDamage = target_props->max_damage;
         int damageInflicted =
@@ -52,18 +53,19 @@ void FigureAction_arrow(figure *f)
 		if (targetType == FIGURE_FORT_LEGIONARY && m->is_halted && m->layout == FORMATION_COLUMN) {
 			damageInflicted = 1;
 		}
-		int targetDamage = damageInflicted + Data_Figures[targetId].damage;
+		int targetDamage = damageInflicted + target->damage;
 		if (targetDamage <= maxDamage) {
-			Data_Figures[targetId].damage = targetDamage;
+			target->damage = targetDamage;
 		} else { // kill target
-			Data_Figures[targetId].damage = maxDamage + 1;
-			Data_Figures[targetId].actionState = FigureActionState_149_Corpse;
-			Data_Figures[targetId].waitTicks = 0;
+			target->damage = maxDamage + 1;
+			target->actionState = FigureActionState_149_Corpse;
+			target->waitTicks = 0;
 			Figure_playDieSound(targetType);
 			Formation_updateAfterDeath(formationId);
 		}
 		f->state = FigureState_Dead;
-		int arrowFormation = Data_Figures[f->buildingId].formationId;
+        // for missiles: building_id contains the figure who shot it
+		int arrowFormation = figure_get(f->buildingId)->formationId;
         formation_record_missile_attack(formationId, arrowFormation);
 		sound_effect_play(SOUND_EFFECT_ARROW_HIT);
 	} else if (shouldDie) {
@@ -83,8 +85,9 @@ void FigureAction_spear(figure *f)
 	int shouldDie = FigureMovement_crossCountryWalkTicks(f, 4);
 	int targetId = Figure_getCitizenOnSameTile(f->id);
 	if (targetId) {
-		int targetType = Data_Figures[targetId].type;
-		int formationId = Data_Figures[targetId].formationId;
+        figure *target = figure_get(targetId);
+		int targetType = target->type;
+		int formationId = target->formationId;
         const figure_properties *target_props = figure_properties_for_type(targetType);
         int maxDamage = target_props->max_damage;
         int damageInflicted =
@@ -97,17 +100,18 @@ void FigureAction_spear(figure *f)
 		if (targetType == FIGURE_FORT_LEGIONARY && m->is_halted && m->layout == FORMATION_COLUMN) {
 			damageInflicted = 1;
 		}
-		int targetDamage = damageInflicted + Data_Figures[targetId].damage;
+		int targetDamage = damageInflicted + target->damage;
 		if (targetDamage <= maxDamage) {
-			Data_Figures[targetId].damage = targetDamage;
+			target->damage = targetDamage;
 		} else { // kill target
-			Data_Figures[targetId].damage = maxDamage + 1;
-			Data_Figures[targetId].actionState = FigureActionState_149_Corpse;
-			Data_Figures[targetId].waitTicks = 0;
+			target->damage = maxDamage + 1;
+			target->actionState = FigureActionState_149_Corpse;
+			target->waitTicks = 0;
 			Figure_playDieSound(targetType);
 			Formation_updateAfterDeath(formationId);
 		}
-		int arrowFormation = Data_Figures[f->buildingId].formationId;
+        // for missiles: building_id contains the figure who shot it
+		int arrowFormation = figure_get(f->buildingId)->formationId;
 		formation_record_missile_attack(formationId, arrowFormation);
 		sound_effect_play(SOUND_EFFECT_JAVELIN);
 		f->state = FigureState_Dead;
@@ -128,8 +132,9 @@ void FigureAction_javelin(figure *f)
 	int shouldDie = FigureMovement_crossCountryWalkTicks(f, 4);
 	int targetId = Figure_getNonCitizenOnSameTile(f->id);
 	if (targetId) {
-		int targetType = Data_Figures[targetId].type;
-		int formationId = Data_Figures[targetId].formationId;
+        figure *target = figure_get(targetId);
+		int targetType = target->type;
+		int formationId = target->formationId;
         const figure_properties *target_props = figure_properties_for_type(targetType);
         int maxDamage = target_props->max_damage;
         int damageInflicted =
@@ -143,17 +148,18 @@ void FigureAction_javelin(figure *f)
 			m->is_halted && m->layout == FORMATION_COLUMN) {
 			damageInflicted = 1;
 		}
-		int targetDamage = damageInflicted + Data_Figures[targetId].damage;
+		int targetDamage = damageInflicted + target->damage;
 		if (targetDamage <= maxDamage) {
-			Data_Figures[targetId].damage = targetDamage;
+			target->damage = targetDamage;
 		} else { // kill target
-			Data_Figures[targetId].damage = maxDamage + 1;
-			Data_Figures[targetId].actionState = FigureActionState_149_Corpse;
-			Data_Figures[targetId].waitTicks = 0;
+			target->damage = maxDamage + 1;
+			target->actionState = FigureActionState_149_Corpse;
+			target->waitTicks = 0;
 			Figure_playDieSound(targetType);
 			Formation_updateAfterDeath(formationId);
 		}
-		int javelinFormation = Data_Figures[f->buildingId].formationId;
+        // for missiles: building_id contains the figure who shot it
+		int javelinFormation = figure_get(f->buildingId)->formationId;
 		formation_record_missile_attack(formationId, javelinFormation);
 		sound_effect_play(SOUND_EFFECT_JAVELIN);
 		f->state = FigureState_Dead;
@@ -174,8 +180,9 @@ void FigureAction_bolt(figure *f)
 	int shouldDie = FigureMovement_crossCountryWalkTicks(f, 4);
 	int targetId = Figure_getNonCitizenOnSameTile(f->id);
 	if (targetId) {
-		int targetType = Data_Figures[targetId].type;
-		int formationId = Data_Figures[targetId].formationId;
+        figure *target = figure_get(targetId);
+		int targetType = target->type;
+		int formationId = target->formationId;
         const figure_properties *target_props = figure_properties_for_type(targetType);
         int maxDamage = target_props->max_damage;
         int damageInflicted =
@@ -184,13 +191,13 @@ void FigureAction_bolt(figure *f)
 		if (damageInflicted < 0) {
 			damageInflicted = 0;
 		}
-		int targetDamage = damageInflicted + Data_Figures[targetId].damage;
+		int targetDamage = damageInflicted + target->damage;
 		if (targetDamage <= maxDamage) {
-			Data_Figures[targetId].damage = targetDamage;
+			target->damage = targetDamage;
 		} else { // kill target
-			Data_Figures[targetId].damage = maxDamage + 1;
-			Data_Figures[targetId].actionState = FigureActionState_149_Corpse;
-			Data_Figures[targetId].waitTicks = 0;
+			target->damage = maxDamage + 1;
+			target->actionState = FigureActionState_149_Corpse;
+			target->waitTicks = 0;
 			Figure_playDieSound(targetType);
 			Formation_updateAfterDeath(formationId);
 		}

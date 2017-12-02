@@ -82,10 +82,10 @@ void Figure_delete(int figureId)
 
 void Figure_addToTileList(int figureId)
 {
-	if (Data_Figures[figureId].gridOffset < 0) {
+    figure *f = figure_get(figureId);
+	if (f->gridOffset < 0) {
 		return;
 	}
-	struct Data_Figure *f = &Data_Figures[figureId];
 	f->numPreviousFiguresOnSameTile = 0;
 
 	int next = Data_Grid_figureIds[f->gridOffset];
@@ -106,7 +106,7 @@ void Figure_addToTileList(int figureId)
 
 void Figure_updatePositionInTileList(int figureId)
 {
-	struct Data_Figure *f = &Data_Figures[figureId];
+	figure *f = figure_get(figureId);
 	f->numPreviousFiguresOnSameTile = 0;
 	
 	int next = Data_Grid_figureIds[f->gridOffset];
@@ -124,10 +124,10 @@ void Figure_updatePositionInTileList(int figureId)
 
 void Figure_removeFromTileList(int figureId)
 {
-	if (Data_Figures[figureId].gridOffset < 0) {
+    figure *f = figure_get(figureId);
+	if (f->gridOffset < 0) {
 		return;
 	}
-	struct Data_Figure *f = &Data_Figures[figureId];
 
 	int cur = Data_Grid_figureIds[f->gridOffset];
 	if (cur) {

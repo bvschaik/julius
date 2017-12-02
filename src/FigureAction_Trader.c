@@ -31,7 +31,7 @@ int FigureAction_TradeCaravan_canBuy(int traderId, int warehouseId, int cityId)
 	if (Data_Buildings[warehouseId].type != BUILDING_WAREHOUSE) {
 		return 0;
 	}
-	if (Data_Figures[traderId].traderAmountBought >= 8) {
+	if (figure_get(traderId)->traderAmountBought >= 8) {
 		return 0;
 	}
 	for (int i = 0; i < 8; i++) {
@@ -84,7 +84,7 @@ int FigureAction_TradeCaravan_canSell(int traderId, int warehouseId, int cityId)
 	if (Data_Buildings[warehouseId].type != BUILDING_WAREHOUSE) {
 		return 0;
 	}
-	if (Data_Figures[traderId].loadsSoldOrCarrying >= 8) {
+	if (figure_get(traderId)->loadsSoldOrCarrying >= 8) {
 		return 0;
 	}
 	const building_storage *s = building_storage_get(Data_Buildings[warehouseId].storage_id);
@@ -323,7 +323,7 @@ void FigureAction_tradeCaravanDonkey(figure *f)
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 
-	struct Data_Figure *leader = &Data_Figures[f->inFrontFigureId];
+	figure *leader = figure_get(f->inFrontFigureId);
 	if (f->inFrontFigureId <= 0) {
 		f->state = FigureState_Dead;
 	} else {
@@ -461,11 +461,12 @@ static int tradeShipDoneTrading(figure *f)
 	struct Data_Building *b = &Data_Buildings[buildingId];
 	if (BuildingIsInUse(buildingId) && b->type == BUILDING_DOCK && b->numWorkers > 0) {
 		for (int i = 0; i < 3; i++) {
-			int dockerId = b->data.other.dockFigureIds[i];
-			if (dockerId && Data_Figures[dockerId].state == FigureState_Alive &&
-				Data_Figures[dockerId].actionState != FigureActionState_132_DockerIdling) {
-				return 0;
-			}
+            if (b->data.other.dockFigureIds[i]) {
+                figure *docker = figure_get(b->data.other.dockFigureIds[i]);
+                if (docker->state == FigureState_Alive && docker->actionState != FigureActionState_132_DockerIdling) {
+                    return 0;
+                }
+            }
 		}
 		f->tradeShipFailedDockAttempts++;
 		if (f->tradeShipFailedDockAttempts >= 10) {
@@ -614,13 +615,13 @@ void FigureAction_tradeShip(figure *f)
 
 int FigureAction_TradeShip_isBuyingOrSelling(int figureId)
 {
-	int buildingId = Data_Figures[figureId].destinationBuildingId;
+	int buildingId = figure_get(figureId)->destinationBuildingId;
 	struct Data_Building *b = &Data_Buildings[buildingId];
 	if (!BuildingIsInUse(buildingId) || b->type != BUILDING_DOCK) {
 		return TradeShipState_Buying;
 	}
 	for (int i = 0; i < 3; i++) {
-		struct Data_Figure *f = &Data_Figures[b->data.other.dockFigureIds[i]];
+		figure *f = figure_get(b->data.other.dockFigureIds[i]);
 		if (!b->data.other.dockFigureIds[i] || f->state != FigureState_Alive) {
 			continue;
 		}

@@ -307,8 +307,8 @@ static int prefectTargetIsAlive(figure *f)
 	if (f->targetFigureId <= 0) {
 		return 0;
 	}
-	figure *fTarget = &Data_Figures[f->targetFigureId];
-	if (!FigureIsDead(f->targetFigureId) && fTarget->createdSequence == f->targetFigureCreatedSequence) {
+	figure *target = figure_get(f->targetFigureId);
+	if (!FigureIsDead(f->targetFigureId) && target->createdSequence == f->targetFigureCreatedSequence) {
 		return 1;
 	}
 	return 0;
@@ -423,8 +423,9 @@ void FigureAction_prefect(figure *f)
 			}
 			FigureMovement_walkTicks(f, 1);
 			if (f->direction == DirFigure_8_AtDestination) {
-				f->destinationX = Data_Figures[f->targetFigureId].x;
-				f->destinationY = Data_Figures[f->targetFigureId].y;
+                figure *target = figure_get(f->targetFigureId);
+				f->destinationX = target->x;
+				f->destinationY = target->y;
 				figure_route_remove(f);
 			} else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
