@@ -44,17 +44,9 @@ static void checkTimberAccess(int buildingType);
 static void checkClayAccess(int buildingType);
 static void checkWeaponsAccess(int buildingType);
 
-static struct {
-	int center;
-	int top;
-} offsets[] = {
-	{300, 30}, {300, 55}, {300, 80}, {300, 105}, {300, 130}
-};
+static const int TOP_OFFSETS[] = {30, 55, 80, 105, 130};
 
 static struct {
-	short warningId;
-	short center;
-	short topOffset;
 	short inUse;
 	short boxWidth;
 	time_millis time;
@@ -73,17 +65,17 @@ void UI_Warning_draw()
 		return;
 	}
 
+	int center = (Data_Screen.width - 180) / 2;
 	numWarnings = 0;
 	for (int i = 0; i < 5; i++) {
 		if (!warnings[i].inUse) {
 			continue;
 		}
 		numWarnings++;
-		int topOffset = warnings[i].topOffset;
+		int topOffset = TOP_OFFSETS[i];
 		if (Data_State.gamePaused) {
 			topOffset += 70;
 		}
-		int center = warnings[i].center;
 		Widget_Panel_drawSmallLabelButton(
 			center - warnings[i].boxWidth / 2 + 1, topOffset,
 			warnings[i].boxWidth / 16 + 1, 1);
@@ -122,7 +114,6 @@ void UI_Warning_show(int warningId)
 			text = lang_get_string(19, warningId - 2);
 		}
 		hasWarningAlready = 1;
-		warnings[i].warningId = warningId;
 		int width = Widget_Text_getWidth(text, FONT_NORMAL_BLACK);
 		if (width <= 100) {
 			warnings[i].boxWidth = 200;
@@ -148,8 +139,6 @@ int UI_Warning_hasWarnings()
 void UI_Warning_clearAll()
 {
 	for (int i = 0; i < 5; i++) {
-		warnings[i].center = offsets[i].center = (Data_Screen.width - 180) / 2;
-		warnings[i].topOffset = offsets[i].top;
 		warnings[i].inUse = 0;
 	}
 }

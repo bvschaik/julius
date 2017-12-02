@@ -641,7 +641,7 @@ static int handleRightClickAllowBuildingInfo()
 	if (!Data_State.map.current.gridOffset) {
 		allow = 0;
 	}
-	if (UI_Warning_hasWarnings()) {
+	if (allow && UI_Warning_hasWarnings()) {
 		UI_Warning_clearAll();
 		allow = 0;
 	}
