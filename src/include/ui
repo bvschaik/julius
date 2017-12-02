@@ -17,6 +17,7 @@
 #include "ui/filedialog.h"
 #include "sidebarmenu.h"
 #include "widget.h"
+#include "ui/topmenu.h"
 #include "uicore/widget_text.h"
 #include "uicore/widget_text.h"
 #include "uicore/widget_menu.h"

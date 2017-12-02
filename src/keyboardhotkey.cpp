@@ -69,13 +69,13 @@ static void togglePause()
     ExitMilitaryCommand();
     if (UI_Window_getId() == Window_City)
     {
-        if (Data_Settings.gamePaused)
+        if (Data_State.gamePaused)
         {
-            Data_Settings.gamePaused = 0;
+            Data_State.gamePaused = 0;
         }
         else
         {
-            Data_Settings.gamePaused = 1;
+            Data_State.gamePaused = 1;
         }
         UI_Warning_clearAll();
     }

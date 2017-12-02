@@ -79,7 +79,7 @@ void UI_Warning_draw()
         }
         numWarnings++;
         int topOffset = warnings[i].topOffset;
-        if (Data_Settings.gamePaused)
+        if (Data_State.gamePaused)
         {
             topOffset += 70;
         }

@@ -35,7 +35,7 @@ static int getElapsedTicks()
         gameSpeedIndex = 0;
     }
 
-    if (Data_Settings.gamePaused)
+    if (Data_State.gamePaused)
     {
         return 0;
     }

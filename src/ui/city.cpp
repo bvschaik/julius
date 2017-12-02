@@ -83,7 +83,7 @@ void UI_City_drawPausedAndTimeLeft()
         int width = Widget_GameText_draw(6, 3, 6, 29, FONT_NORMAL_BLACK);
         Widget::Text::drawNumber(totalMonths, '@', " ", 6 + width, 29, FONT_NORMAL_BLACK);
     }
-    if (Data_Settings.gamePaused)
+    if (Data_State.gamePaused)
     {
         int width = Data_CityView.widthInPixels;
         Widget::Panel::drawOuterPanel((width - 448) / 2, 40, 28, 3);

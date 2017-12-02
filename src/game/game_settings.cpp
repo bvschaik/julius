@@ -1,18 +1,17 @@
 #include "game_settings.h"
 
-#include "ui/topmenu.h"
-#include "data/settings.hpp"
+#include <ui>
+#include <data>
+#include <game>
 
 #include "core/io.h"
-#include "game/difficulty.h"
-#include "game/settings.h"
 
 void Settings_load()
 {
     io_read_file_into_buffer("c3map.inf", &Data_Settings_Map, 48);
     Settings_clearMissionSettings();
     io_read_file_into_buffer("c3.inf", &Data_Settings, 560);
-    Data_Settings.gamePaused = 0;
+    Data_State.gamePaused = 0;
     UI_TopMenu_initFromSettings();
 }
 

@@ -33,21 +33,6 @@ matrix:
           CXX_COMPILER=g++-5
           C_COMPILER=gcc-5
     - compiler: clang
-      os: linux
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.8
-            - george-edison55-precise-backports
-          packages:
-            - clang-3.6
-            - cmake
-            - cmake-data
-      env:
-          CXX_COMPILER=clang++-3.6
-          C_COMPILER=clang-3.6
-    - compiler: clang
       os: linux      
       addons:
         apt:
