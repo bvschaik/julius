@@ -3,6 +3,7 @@
 #include "figure/figure.h"
 #include "game/resource.h"
 #include "map/desirability.h"
+#include "map/figure.h"
 #include "map/property.h"
 #include "map/random.h"
 
@@ -120,7 +121,7 @@ void UI_CityBuildings_drawOverlayTopsFiguresAnimation(int overlay)
 	FOREACH_Y_VIEW {
 		// draw figures
 		FOREACH_X_VIEW {
-			int figureId = Data_Grid_figureIds[gridOffset];
+			int figureId = map_figure_at(gridOffset);
 			while (figureId) {
 			    struct Data_Figure *fig = figure_get(figureId);
 				if (!fig->isGhost) {

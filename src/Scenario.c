@@ -41,6 +41,7 @@
 #include "graphics/image.h"
 #include "map/bookmark.h"
 #include "map/desirability.h"
+#include "map/figure.h"
 #include "map/grid.h"
 #include "map/property.h"
 #include "map/random.h"
@@ -242,7 +243,7 @@ static void initGrids()
 	map_grid_clear_u16(Data_Grid_buildingIds);
 	map_grid_clear_u16(Data_Grid_terrain);
 	map_grid_clear_u8(Data_Grid_aqueducts);
-	map_grid_clear_u16(Data_Grid_figureIds);
+	map_figure_clear();
 	map_property_clear();
 	map_grid_clear_u8(Data_Grid_spriteOffsets);
 	map_random_clear();

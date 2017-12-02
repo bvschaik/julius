@@ -27,6 +27,7 @@
 #include "building/model.h"
 #include "figure/figure.h"
 #include "figure/formation.h"
+#include "map/figure.h"
 #include "map/property.h"
 
 static void buttonHelp(int param1, int param2);
@@ -256,7 +257,7 @@ void UI_BuildingInfo_init()
 	}
 	static const int figureOffsets[] = {0, -162, 162, 1, -1, -163, -161, 161, 163};
 	for (int i = 0; i < 9 && context.figure.count < 7; i++) {
-		int figureId = Data_Grid_figureIds[gridOffset + figureOffsets[i]];
+		int figureId = map_figure_at(gridOffset + figureOffsets[i]);
 		while (figureId > 0 && context.figure.count < 7) {
             struct Data_Figure *figure = figure_get(figureId);
 			if (figure->state != FigureState_Dead &&

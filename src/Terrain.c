@@ -13,6 +13,7 @@
 #include "core/calc.h"
 #include "graphics/image.h"
 #include "map/bridge.h"
+#include "map/figure.h"
 #include "map/grid.h"
 #include "map/property.h"
 #include "map/random.h"
@@ -745,7 +746,7 @@ int Terrain_isClear(int x, int y, int size, int disallowedTerrain, int graphicSe
 			int gridOffset = GridOffset(x + dx, y + dy);
 			if (Data_Grid_terrain[gridOffset] & Terrain_NotClear & disallowedTerrain) {
 				return 0;
-			} else if (Data_Grid_figureIds[gridOffset]) {
+			} else if (map_has_figure_at(gridOffset)) {
 				return 0;
 			} else if (graphicSet && Data_Grid_graphicIds[gridOffset] != 0) {
 				return 0;
@@ -1141,7 +1142,7 @@ void Terrain_updateToPlaceBuildingToOverlay(int size, int x, int y, int terrainM
 		for (int dx = 0; dx < size; dx++) {
 			int gridOffset = GridOffset(x + dx, y + dy);
 			if ((terrainMask & Data_Grid_terrain[gridOffset] & Terrain_NotClear) ||
-				Data_Grid_figureIds[gridOffset]) {
+				map_has_figure_at(gridOffset)) {
 				return;
 			}
 		}

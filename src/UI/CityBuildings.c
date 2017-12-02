@@ -19,6 +19,7 @@
 #include "game/settings.h"
 #include "input/scroll.h"
 #include "map/desirability.h"
+#include "map/figure.h"
 #include "map/property.h"
 #include "map/routing.h"
 #include "sound/city.h"
@@ -341,7 +342,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 		} END_FOREACH_X_VIEW;
 		// draw figures
 		FOREACH_X_VIEW {
-			int figureId = Data_Grid_figureIds[gridOffset];
+			int figureId = map_figure_at(gridOffset);
 			while (figureId) {
                 struct Data_Figure *f = figure_get(figureId);
 				if (!f->isGhost) {
@@ -553,7 +554,7 @@ static void drawHippodromeAndElevatedFigures(int selectedFigureId)
 {
 	FOREACH_Y_VIEW {
 		FOREACH_X_VIEW {
-            int figureId = Data_Grid_figureIds[gridOffset];
+            int figureId = map_figure_at(gridOffset);
             while (figureId > 0) {
                 struct Data_Figure *f = figure_get(figureId);
                 if (f->useCrossCountry && !f->isGhost) {

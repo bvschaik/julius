@@ -34,7 +34,7 @@ int FigureAction_CombatWolf_getTarget(int x, int y, int maxDistance);
 int FigureAction_CombatEnemy_getTarget(int x, int y);
 int FigureAction_CombatEnemy_getMissileTarget(int enemyId, int maxDistance, int attackCitizens, int *xTile, int *yTile);
 
-void FigureAction_Combat_attackFigure(figure *f, int opponentId);
+void FigureAction_Combat_attackFigureAt(figure *f, int grid_offset);
 
 // figure action callbacks
 void FigureAction_nobody(figure *f);

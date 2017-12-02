@@ -1,6 +1,7 @@
 #include "routing.h"
 
 #include "figure/figure.h"
+#include "map/figure.h"
 #include "map/grid.h"
 #include "map/road_aqueduct.h"
 #include "map/routing_data.h"
@@ -353,7 +354,7 @@ void map_routing_delete_first_wall_or_aqueduct(int x, int y)
 
 static int has_fighting_friendly(int grid_offset)
 {
-    int figure_id = Data_Grid_figureIds[grid_offset];
+    int figure_id = map_figure_at(grid_offset);
     if (figure_id > 0) {
         while (figure_id) {
             figure *f = figure_get(figure_id);
@@ -368,7 +369,7 @@ static int has_fighting_friendly(int grid_offset)
 
 static int has_fighting_enemy(int grid_offset)
 {
-    int figure_id = Data_Grid_figureIds[grid_offset];
+    int figure_id = map_figure_at(grid_offset);
     if (figure_id > 0) {
         while (figure_id) {
             const figure *f = figure_get(figure_id);

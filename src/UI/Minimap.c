@@ -10,6 +10,7 @@
 #include "figure/figure.h"
 #include "figure/type.h"
 #include "graphics/image.h"
+#include "map/figure.h"
 #include "map/property.h"
 #include "map/random.h"
 #include "scenario/property.h"
@@ -109,9 +110,9 @@ static int drawFigure(int xView, int yView, int gridOffset)
 	color_t color = COLOR_BLACK;
 	int hasFigure = 0;
 
-	int figureId = Data_Grid_figureIds[gridOffset];
+	int figureId = map_figure_at(gridOffset);
 	while (figureId > 0) {
-	    struct Data_Figure *fig = figure_get(figureId);
+	    figure *fig = figure_get(figureId);
 		int type = fig->type;
 		if (FigureIsLegion(type)) {
 			hasFigure = 1;

@@ -5,7 +5,6 @@
 #include "Trader.h"
 
 #include "Data/CityInfo.h"
-#include "Data/Grid.h"
 
 #include "building/storage.h"
 #include "city/message.h"
@@ -16,6 +15,7 @@
 #include "figure/route.h"
 #include "figure/trader.h"
 #include "figure/type.h"
+#include "map/figure.h"
 #include "scenario/map.h"
 
 static void advanceTradeNextImportResourceCaravan()
@@ -585,7 +585,7 @@ void FigureAction_tradeShip(figure *f)
 					f->actionState = FigureActionState_111_TradeShipGoingToDock;
 					f->destinationX = xTile;
 					f->destinationY = yTile;
-				} else if (Data_Grid_figureIds[f->gridOffset] != f->id &&
+				} else if (map_figure_at(f->gridOffset) != f->id &&
 					Terrain_Water_getQueueDockDestination(&xTile, &yTile)) {
 					f->actionState = FigureActionState_113_TradeShipGoingToDockQueue;
 					f->destinationX = xTile;

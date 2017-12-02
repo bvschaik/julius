@@ -10,6 +10,7 @@
 #include "figure/formation.h"
 #include "figure/properties.h"
 #include "figure/route.h"
+#include "map/figure.h"
 #include "map/routing.h"
 #include "scenario/gladiator_revolt.h"
 #include "sound/effect.h"
@@ -712,8 +713,8 @@ int FigureAction_HerdEnemy_moveFormationTo(int formationId, int x, int y, int *x
 						canMove = 0;
 						break;
 					}
-					if (Data_Grid_figureIds[gridOffset] &&
-						figure_get(Data_Grid_figureIds[gridOffset])->formationId != formationId) {
+					if (map_has_figure_at(gridOffset) &&
+						figure_get(map_figure_at(gridOffset))->formationId != formationId) {
 						canMove = 0;
 						break;
 					}

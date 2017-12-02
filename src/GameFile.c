@@ -41,6 +41,7 @@
 #include "graphics/image.h"
 #include "map/bookmark.h"
 #include "map/desirability.h"
+#include "map/figure.h"
 #include "map/property.h"
 #include "map/random.h"
 #include "map/road_network.h"
@@ -129,7 +130,7 @@ typedef struct {
     buffer *Data_Grid_buildingIds;
     buffer *Data_Grid_terrain;
     buffer *Data_Grid_aqueducts;
-    buffer *Data_Grid_figureIds;
+    buffer *figure_grid;
     buffer *bitfields_grid;
     buffer *Data_Grid_spriteOffsets;
     buffer *random;
@@ -277,7 +278,7 @@ static void init_savegame_data()
     state->Data_Grid_buildingIds = create_savegame_piece(52488, 1);
     state->Data_Grid_terrain = create_savegame_piece(52488, 1);
     state->Data_Grid_aqueducts = create_savegame_piece(26244, 1);
-    state->Data_Grid_figureIds = create_savegame_piece(52488, 1);
+    state->figure_grid = create_savegame_piece(52488, 1);
     state->bitfields_grid = create_savegame_piece(26244, 1);
     state->Data_Grid_spriteOffsets = create_savegame_piece(26244, 1);
     state->random = create_savegame_piece(26244, 0);
@@ -413,7 +414,9 @@ static void savegame_deserialize(savegame_state *state)
     read_all_from_buffer(state->Data_Grid_buildingIds, &Data_Grid_buildingIds);
     read_all_from_buffer(state->Data_Grid_terrain, &Data_Grid_terrain);
     read_all_from_buffer(state->Data_Grid_aqueducts, &Data_Grid_aqueducts);
-    read_all_from_buffer(state->Data_Grid_figureIds, &Data_Grid_figureIds);
+
+    map_figure_load_state(state->figure_grid);
+
     read_all_from_buffer(state->Data_Grid_spriteOffsets, &Data_Grid_spriteOffsets);
 
     map_property_load_state(state->bitfields_grid, state->edge_grid);
@@ -532,7 +535,9 @@ static void savegame_serialize(savegame_state *state)
     write_all_to_buffer(state->Data_Grid_buildingIds, &Data_Grid_buildingIds);
     write_all_to_buffer(state->Data_Grid_terrain, &Data_Grid_terrain);
     write_all_to_buffer(state->Data_Grid_aqueducts, &Data_Grid_aqueducts);
-    write_all_to_buffer(state->Data_Grid_figureIds, &Data_Grid_figureIds);
+
+    map_figure_save_state(state->figure_grid);
+
     write_all_to_buffer(state->Data_Grid_spriteOffsets, &Data_Grid_spriteOffsets);
 
     map_property_save_state(state->bitfields_grid, state->edge_grid);

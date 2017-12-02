@@ -1,6 +1,7 @@
 #include "bridge.h"
 
 #include "core/direction.h"
+#include "map/figure.h"
 #include "map/grid.h"
 #include "map/property.h"
 #include "map/routing_terrain.h"
@@ -279,7 +280,7 @@ int map_bridge_count_figures(int grid_offset)
     }
 
     int figures = 0;
-    if (Data_Grid_figureIds[grid_offset]) {
+    if (map_has_figure_at(grid_offset)) {
         figures = 1;
     }
     map_property_clear_deleted(grid_offset);
@@ -287,7 +288,7 @@ int map_bridge_count_figures(int grid_offset)
             Data_Grid_spriteOffsets[grid_offset + offset_up]) {
         grid_offset += offset_up;
         map_property_clear_deleted(grid_offset);
-        if (Data_Grid_figureIds[grid_offset]) {
+        if (map_has_figure_at(grid_offset)) {
             figures++;
         }
     }

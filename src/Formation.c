@@ -15,6 +15,7 @@
 #include "figure/formation.h"
 #include "figure/properties.h"
 #include "figure/route.h"
+#include "map/figure.h"
 #include "map/routing.h"
 #include "scenario/distant_battle.h"
 #include "sound/effect.h"
@@ -59,7 +60,7 @@ void Formation_deleteFortAndBanner(int formationId)
 
 int Formation_getLegionFormationAtGridOffset(int gridOffset)
 {
-    figure *f = figure_get(Data_Grid_figureIds[gridOffset]);
+    figure *f = figure_get(map_figure_at(gridOffset));
     while (f->id && f->id != f->nextFigureIdOnSameTile) {
         if (FigureIsLegion(f->type) || f->type == FIGURE_FORT_STANDARD) {
             return f->formationId;

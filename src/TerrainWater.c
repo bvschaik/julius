@@ -3,6 +3,7 @@
 
 #include "core/calc.h"
 #include "figure/figure.h"
+#include "map/figure.h"
 #include "map/property.h"
 #include "scenario/map.h"
 
@@ -216,14 +217,14 @@ int Terrain_Water_getWharfTileForNewFishingBoat(int figureId, int *xTile, int *y
 
 int Terrain_Water_getNearestFishTile(int figureId, int *xTile, int *yTile)
 {
-    struct Data_Figure *f = figure_get(figureId);
+    figure *f = figure_get(figureId);
     return scenario_map_closest_fishing_point(f->x, f->y, xTile, yTile);
 }
 
 int Terrain_Water_findAlternativeTileForFishingBoat(int figureId, int *xTile, int *yTile)
 {
-    struct Data_Figure *f = figure_get(figureId);
-	if (Data_Grid_figureIds[f->gridOffset] == figureId) {
+    figure *f = figure_get(figureId);
+	if (map_figure_at(f->gridOffset) == figureId) {
 		return 0;
 	}
 	for (int radius = 1; radius <= 5; radius++) {
@@ -233,7 +234,7 @@ int Terrain_Water_findAlternativeTileForFishingBoat(int figureId, int *xTile, in
 		int yMax = f->y + radius;
 		BOUND_REGION();
 		FOREACH_REGION({
-			if (!Data_Grid_figureIds[gridOffset] && Data_Grid_terrain[gridOffset] & Terrain_Water) {
+			if (!map_has_figure_at(gridOffset) && Data_Grid_terrain[gridOffset] & Terrain_Water) {
 				*xTile = xx;
 				*yTile = yy;
 				return 1;
@@ -245,8 +246,8 @@ int Terrain_Water_findAlternativeTileForFishingBoat(int figureId, int *xTile, in
 
 int Terrain_Water_findOpenWaterForShipwreck(int figureId, int *xTile, int *yTile)
 {
-    struct Data_Figure *f = figure_get(figureId);
-	if (Data_Grid_terrain[f->gridOffset] & Terrain_Water && Data_Grid_figureIds[f->gridOffset] == figureId) {
+    figure *f = figure_get(figureId);
+	if (Data_Grid_terrain[f->gridOffset] & Terrain_Water && map_figure_at(f->gridOffset) == figureId) {
 		return 0;
 	}
 	for (int radius = 1; radius <= 5; radius++) {
@@ -256,7 +257,7 @@ int Terrain_Water_findOpenWaterForShipwreck(int figureId, int *xTile, int *yTile
 		int yMax = f->y + radius;
 		BOUND_REGION();
 		FOREACH_REGION({
-			if (!Data_Grid_figureIds[gridOffset] || Data_Grid_figureIds[gridOffset] == figureId) {
+			if (!map_has_figure_at(gridOffset) || map_figure_at(gridOffset) == figureId) {
 				if (Data_Grid_terrain[gridOffset] & Terrain_Water &&
 					Data_Grid_terrain[GridOffset(xx, yy - 2)] & Terrain_Water &&
 					Data_Grid_terrain[GridOffset(xx, yy + 2)] & Terrain_Water &&
@@ -319,7 +320,7 @@ int Terrain_Water_getQueueDockDestination(int* xTile, int* yTile)
 			case 2: *xTile += 2; *yTile += 4; break;
 			default: *xTile -= 2; *yTile += 2; break;
 		}
-		if (!Data_Grid_figureIds[GridOffset(*xTile, *yTile)]) {
+		if (!map_has_figure_at(GridOffset(*xTile, *yTile))) {
 			return dockId;
 		}
 	}
@@ -335,7 +336,7 @@ int Terrain_Water_getQueueDockDestination(int* xTile, int* yTile)
 			case 2: *xTile += 2; *yTile += 5; break;
 			default: *xTile -= 3; *yTile += 2; break;
 		}
-		if (!Data_Grid_figureIds[GridOffset(*xTile, *yTile)]) {
+		if (!map_has_figure_at(GridOffset(*xTile, *yTile))) {
 			return dockId;
 		}
 	}

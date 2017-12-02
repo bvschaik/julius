@@ -108,8 +108,8 @@ static void legionaryAttackAdjacentEnemy(figure *f)
 {
 	int gridOffset = f->gridOffset;
 	for (int i = 0; i < 8 && f->actionState != FigureActionState_150_Attack; i++) {
-		FigureAction_Combat_attackFigure(f,
-			Data_Grid_figureIds[gridOffset + map_grid_direction_delta(i)]);
+		FigureAction_Combat_attackFigureAt(f,
+			gridOffset + map_grid_direction_delta(i));
 	}
 }
 

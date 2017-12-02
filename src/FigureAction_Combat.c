@@ -5,6 +5,7 @@
 
 #include "figure/properties.h"
 #include "figure/type.h"
+#include "map/figure.h"
 
 int FigureAction_CombatSoldier_getTarget(int x, int y, int maxDistance)
 {
@@ -208,7 +209,7 @@ int FigureAction_CombatEnemy_getMissileTarget(int enemyId, int maxDistance, int 
 }
 
 
-void FigureAction_Combat_attackFigure(figure *f, int opponentId)
+void FigureAction_Combat_attackFigureAt(figure *f, int grid_offset)
 {
 	int figureCategory = figure_properties_for_type(f->type)->category;
 	if (figureCategory <= FIGURE_CATEGORY_INACTIVE || figureCategory >= FIGURE_CATEGORY_CRIMINAL ||
@@ -216,6 +217,7 @@ void FigureAction_Combat_attackFigure(figure *f, int opponentId)
 		return;
 	}
 	int guard = 0;
+    int opponentId = map_figure_at(grid_offset);
 	while (1) {
 		if (++guard >= MAX_FIGURES || opponentId <= 0) {
 			break;

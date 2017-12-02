@@ -62,6 +62,7 @@ set (MAP_FILES
     src/map/bookmark.c
     src/map/bridge.c
     src/map/desirability.c
+    src/map/figure.c
     src/map/grid.c
     src/map/property.c
     src/map/random.c

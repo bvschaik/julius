@@ -2,6 +2,7 @@
 
 #include "figure/figure.h"
 #include "figure/type.h"
+#include "map/figure.h"
 #include "map/grid.h"
 #include "map/routing.h"
 
@@ -24,8 +25,8 @@ void map_soldier_strength_add(int x, int y, int radius, int amount)
         for (int xx = x_min; xx <= x_max; xx++) {
             int grid_offset = map_grid_offset(xx, yy);
             strength.items[grid_offset] += amount;
-            if (Data_Grid_figureIds[grid_offset] > 0) {
-                int type = figure_get(Data_Grid_figureIds[grid_offset])->type;
+            if (map_has_figure_at(grid_offset)) {
+                int type = figure_get(map_figure_at(grid_offset))->type;
                 if (FigureIsLegion(type)) {
                     strength.items[grid_offset] += 2;
                 }

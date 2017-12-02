@@ -8,7 +8,6 @@
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
-#include "Data/Grid.h"
 #include "Data/State.h"
 
 #include "core/calc.h"
@@ -145,7 +144,7 @@ static void figureMoveToNextTile(figure *f)
 	} else {
 		f->isOnRoad = 0;
 	}
-	FigureAction_Combat_attackFigure(f, Data_Grid_figureIds[f->gridOffset]);
+	FigureAction_Combat_attackFigureAt(f, f->gridOffset);
 	f->previousTileX = oldX;
 	f->previousTileY = oldY;
 }
