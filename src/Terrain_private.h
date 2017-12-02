@@ -5,8 +5,6 @@
 #include "Data/State.h"
 #include "map/grid.h"
 
-#define DELTA(x, y) ((y) * GRID_SIZE + (x))
-
 #define FOREACH_ALL(block) \
 	{int gridOffset = Data_State.map.gridStartOffset;\
 	for (int y = 0; y < Data_State.map.height; y++, gridOffset += Data_State.map.gridBorderSize) {\
