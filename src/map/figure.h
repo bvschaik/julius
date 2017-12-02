@@ -2,6 +2,7 @@
 #define MAP_FIGURE_H
 
 #include "core/buffer.h"
+#include "figure/figure.h"
 
 /**
  * Returns the first figure at the given offset
@@ -16,6 +17,12 @@ int map_figure_at(int grid_offset);
  * @return True if there is a figure, otherwise false
  */
 int map_has_figure_at(int grid_offset);
+
+void map_figure_add(figure *f);
+
+void map_figure_update(figure *f);
+
+void map_figure_delete(figure *f);
 
 /**
  * Clears the map

@@ -14,10 +14,6 @@ void Figure_createMissile(int buildingId, int x, int y, int xDst, int yDst, int 
 int Figure_createSoldierFromBarracks(int buildingId, int x, int y);
 int Figure_createTowerSentryFromBarracks(int buildingId, int x, int y);
 
-void Figure_addToTileList(int figureId);
-void Figure_updatePositionInTileList(int figureId);
-void Figure_removeFromTileList(int figureId);
-
 void Figure_killTowerSentriesAt(int x, int y);
 void Figure_sinkAllShips();
 int Figure_getCitizenOnSameTile(int figureId);

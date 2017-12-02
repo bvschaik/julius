@@ -10,6 +10,7 @@
 #include "figure/properties.h"
 #include "figure/route.h"
 #include "figure/type.h"
+#include "map/figure.h"
 #include "map/routing_terrain.h"
 #include "sound/effect.h"
 
@@ -50,7 +51,7 @@ void FigureAction_ballista(figure *f)
 	if (b->numWorkers <= 0 || b->figureId <= 0) {
 		f->state = FigureState_Dead;
 	}
-	Figure_removeFromTileList(f->id);
+	map_figure_delete(f);
 	switch (Data_State.map.orientation) {
 		case Dir_0_Top: f->x = b->x; f->y = b->y; break;
 		case Dir_2_Right: f->x = b->x + 1; f->y = b->y; break;
@@ -58,7 +59,7 @@ void FigureAction_ballista(figure *f)
 		case Dir_6_Left: f->x = b->x; f->y = b->y + 1; break;
 	}
 	f->gridOffset = GridOffset(f->x, f->y);
-	Figure_addToTileList(f->id);
+	map_figure_add(f);
 
 	switch (f->actionState) {
 		case FigureActionState_149_Corpse:
@@ -238,11 +239,11 @@ void FigureAction_towerSentry(figure *f)
 			f->heightAdjustedTicks = 0;
 			FigureMovement_walkTicks(f, 1);
 			if (f->direction == DirFigure_8_AtDestination) {
-				Figure_removeFromTileList(f->id);
+				map_figure_delete(f);
 				f->sourceX = f->x = b->x;
 				f->sourceY = f->y = b->y;
 				f->gridOffset = GridOffset(f->x, f->y);
-				Figure_addToTileList(f->id);
+				map_figure_add(f);
 				f->actionState = FigureActionState_170_TowerSentryAtRest;
 				figure_route_remove(f);
 			} else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
@@ -286,24 +287,24 @@ void FigureAction_TowerSentry_reroute()
 		if (Terrain_getWallTileWithinRadius(f->x, f->y, 2, &xTile, &yTile)) {
 			figure_route_remove(f);
 			f->progressOnTile = 0;
-			Figure_removeFromTileList(i);
+			map_figure_delete(f);
 			f->previousTileX = f->x = xTile;
 			f->previousTileY = f->y = yTile;
 			f->crossCountryX = 15 * xTile;
 			f->crossCountryY = 15 * yTile;
 			f->gridOffset = GridOffset(xTile, yTile);
-			Figure_addToTileList(i);
+			map_figure_add(f);
 			f->actionState = FigureActionState_173_TowerSentryReturning;
 			f->destinationX = f->sourceX;
 			f->destinationY = f->sourceY;
 		} else {
 			// Teleport back to tower
-			Figure_removeFromTileList(i);
+			map_figure_delete(f);
 			struct Data_Building *b = &Data_Buildings[f->buildingId];
 			f->sourceX = f->x = b->x;
 			f->sourceY = f->y = b->y;
 			f->gridOffset = GridOffset(f->x, f->y);
-			Figure_addToTileList(i);
+			map_figure_add(f);
 			f->actionState = FigureActionState_170_TowerSentryAtRest;
 			figure_route_remove(f);
 		}

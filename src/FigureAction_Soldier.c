@@ -8,6 +8,7 @@
 #include "figure/formation.h"
 #include "figure/properties.h"
 #include "figure/route.h"
+#include "map/figure.h"
 #include "map/grid.h"
 
 static const struct {
@@ -43,7 +44,7 @@ void FigureAction_militaryStandard(figure *f)
 
 	f->terrainUsage = FigureTerrainUsage_Any;
 	FigureActionIncreaseGraphicOffset(f, 16);
-	Figure_removeFromTileList(f->id);
+	map_figure_delete(f);
 	if (m->is_at_fort) {
 		f->x = m->x;
 		f->y = m->y;
@@ -54,7 +55,7 @@ void FigureAction_militaryStandard(figure *f)
 	f->gridOffset = GridOffset(f->x, f->y);
 	f->crossCountryX = 15 * f->x + 7;
 	f->crossCountryY = 15 * f->y + 7;
-	Figure_addToTileList(f->id);
+	map_figure_add(f);
 
 	f->graphicId = image_group(GROUP_FIGURE_FORT_STANDARD_POLE) + 20 - m->morale / 5;
 	if (m->figure_type == FIGURE_FORT_LEGIONARY) {
@@ -251,7 +252,7 @@ void FigureAction_soldier(figure *f)
 			FigureAction_Common_handleCorpse(f);
 			break;
 		case FigureActionState_80_SoldierAtRest:
-			Figure_updatePositionInTileList(f->id);
+			map_figure_update(f);
 			f->waitTicks = 0;
 			f->formationAtRest = 1;
 			f->graphicOffset = 0;
@@ -312,7 +313,7 @@ void FigureAction_soldier(figure *f)
 		case FigureActionState_84_SoldierAtStandard:
 			f->formationAtRest = 0;
 			f->graphicOffset = 0;
-			Figure_updatePositionInTileList(f->id);
+			map_figure_update(f);
 			f->destinationX = m->standard_x + FigureActionFormationLayoutPositionX(m->layout, f->indexInFormation);
 			f->destinationY = m->standard_y + FigureActionFormationLayoutPositionY(m->layout, f->indexInFormation);
 			if (f->alternativeLocationIndex) {

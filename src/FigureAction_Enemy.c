@@ -18,7 +18,7 @@
 
 static void enemyInitial(figure *f, const formation *m)
 {
-	Figure_updatePositionInTileList(f->id);
+	map_figure_update(f);
 	f->graphicOffset = 0;
 	figure_route_remove(f);
 	f->waitTicks--;
@@ -194,7 +194,7 @@ static void FigureAction_enemyCommon(figure *f)
 			enemyInitial(f, m);
 			break;
 		case FigureActionState_152_EnemyWaiting:
-			Figure_updatePositionInTileList(f->id);
+			map_figure_update(f);
 			break;
 		case FigureActionState_153_EnemyMarching:
 			enemyMarching(f, m);

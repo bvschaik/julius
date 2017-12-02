@@ -3,6 +3,7 @@
 #include "core/random.h"
 #include "figure/name.h"
 #include "figure/trader.h"
+#include "map/figure.h"
 #include "map/grid.h"
 
 #include "../Figure.h"
@@ -46,7 +47,7 @@ figure *figure_create(figure_type type, int x, int y, direction dir)
     f->progressOnTile = 15;
     f->phraseSequenceCity = f->phraseSequenceExact = random_byte() & 3;
     f->name = figure_name_get(type, 0);
-    Figure_addToTileList(id);
+    map_figure_add(f);
     if (type == FIGURE_TRADE_CARAVAN || type == FIGURE_TRADE_SHIP) {
         f->traderId = trader_create();
     }

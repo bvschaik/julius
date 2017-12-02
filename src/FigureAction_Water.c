@@ -10,6 +10,7 @@
 #include "core/calc.h"
 #include "core/random.h"
 #include "figure/route.h"
+#include "map/figure.h"
 #include "scenario/map.h"
 
 static const int flotsamType0[] = {0, 1, 2, 3, 4, 4, 4, 3, 2, 1, 0, 0};
@@ -214,7 +215,7 @@ void FigureAction_flotsam(figure *f)
 			} else {
 				f->waitTicks = 300 + random_byte();
 			}
-			Figure_removeFromTileList(f->id);
+			map_figure_delete(f);
 			map_point river_entry = scenario_map_river_entry();
 			f->x = river_entry.x;
 			f->y = river_entry.y;
@@ -258,7 +259,7 @@ void FigureAction_shipwreck(figure *f)
 	f->isBoat = 1;
 	FigureActionIncreaseGraphicOffset(f, 128);
 	if (f->waitTicks < 1000) {
-		Figure_removeFromTileList(f->id);
+		map_figure_delete(f);
 		int xTile, yTile;
 		if (Terrain_Water_findOpenWaterForShipwreck(f->id, &xTile, &yTile)) {
 			f->x = xTile;
@@ -267,7 +268,7 @@ void FigureAction_shipwreck(figure *f)
 			f->crossCountryX = 15 * f->x + 7;
 			f->crossCountryY = 15 * f->y + 7;
 		}
-		Figure_addToTileList(f->id);
+		map_figure_add(f);
 		f->waitTicks = 1000;
 	}
 	f->waitTicks++;

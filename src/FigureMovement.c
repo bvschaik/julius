@@ -13,9 +13,10 @@
 #include "core/calc.h"
 #include "figure/route.h"
 #include "game/time.h"
-#include "map/random.h"
+#include "map/figure.h"
 #include "map/grid.h"
 #include "map/property.h"
+#include "map/random.h"
 #include "map/routing_terrain.h"
 
 static void FigureMovement_walkTicksInternal(figure *f, int numTicks, int roamingEnabled);
@@ -98,7 +99,7 @@ static void figureMoveToNextTile(figure *f)
 {
 	int oldX = f->x;
 	int oldY = f->y;
-	Figure_removeFromTileList(f->id);
+	map_figure_delete(f);
 	switch (f->direction) {
 		default:
 			return;
@@ -135,7 +136,7 @@ static void figureMoveToNextTile(figure *f)
 			f->gridOffset -= 163;
 			break;
 	}
-	Figure_addToTileList(f->id);
+	map_figure_add(f);
 	if (Data_Grid_terrain[f->gridOffset] & Terrain_Road) {
 		f->isOnRoad = 1;
 		if (Data_Grid_terrain[f->gridOffset] & Terrain_Water) { // bridge
@@ -582,7 +583,7 @@ static void crossCountryAdvance(figure *f)
 
 int FigureMovement_crossCountryWalkTicks(figure *f, int numTicks)
 {
-	Figure_removeFromTileList(f->id);
+	map_figure_delete(f);
 	int isAtDestination = 0;
 	while (numTicks > 0) {
 		numTicks--;
@@ -605,7 +606,7 @@ int FigureMovement_crossCountryWalkTicks(figure *f, int numTicks)
 	} else if (f->inBuildingWaitTicks) {
 		f->inBuildingWaitTicks--;
 	}
-	Figure_addToTileList(f->id);
+	map_figure_add(f);
 	return isAtDestination;
 }
 

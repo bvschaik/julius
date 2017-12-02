@@ -8,6 +8,7 @@
 #include "core/random.h"
 #include "figure/formation.h"
 #include "figure/route.h"
+#include "map/figure.h"
 
 static const int seagullOffsetsX[] = {0, 0, -2, 1, 2, -3, 4, -2, 0};
 static const int seagullOffsetsY[] = {0, -2, 0, 2, 0, 1, -3, 4, 0};
@@ -246,7 +247,7 @@ static void setDestinationHippodromeHorse(figure *f, int state)
 {
 	struct Data_Building *b = &Data_Buildings[f->buildingId];
 	if (state == HippodromeHorse_Created) {
-		Figure_removeFromTileList(f->id);
+		map_figure_delete(f);
 		if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_6_LEFT) {
 			f->destinationX = b->x + hippodromeHorseDestinationX1[f->waitTicksMissile];
 			f->destinationY = b->y + hippodromeHorseDestinationY1[f->waitTicksMissile];
@@ -262,7 +263,7 @@ static void setDestinationHippodromeHorse(figure *f, int state)
 		f->crossCountryX = 15 * f->x;
 		f->crossCountryY = 15 * f->y;
 		f->gridOffset = GridOffset(f->x, f->y);
-		Figure_addToTileList(f->id);
+		map_figure_add(f);
 	} else if (state == HippodromeHorse_Racing) {
 		if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_6_LEFT) {
 			f->destinationX = b->x + hippodromeHorseDestinationX1[f->waitTicksMissile];

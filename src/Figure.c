@@ -8,7 +8,6 @@
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
-#include "Data/Grid.h"
 #include "Data/State.h"
 
 #include "core/calc.h"
@@ -19,6 +18,7 @@
 #include "figure/name.h"
 #include "figure/route.h"
 #include "figure/trader.h"
+#include "map/figure.h"
 #include "scenario/map.h"
 #include "scenario/property.h"
 #include "sound/effect.h"
@@ -75,72 +75,9 @@ void Figure_delete(int figureId)
 		Data_Buildings[f->buildingId].immigrantFigureId = 0;
 	}
 	figure_route_remove(f);
-	Figure_removeFromTileList(figureId);
+	map_figure_delete(f);
 	memset(f, 0, sizeof(struct Data_Figure));
     f->id = figureId;
-}
-
-void Figure_addToTileList(int figureId)
-{
-    figure *f = figure_get(figureId);
-	if (f->gridOffset < 0) {
-		return;
-	}
-	f->numPreviousFiguresOnSameTile = 0;
-
-	int next = Data_Grid_figureIds[f->gridOffset];
-	if (next) {
-		f->numPreviousFiguresOnSameTile++;
-		while (Data_Figures[next].nextFigureIdOnSameTile) {
-			next = Data_Figures[next].nextFigureIdOnSameTile;
-			f->numPreviousFiguresOnSameTile++;
-		}
-		if (f->numPreviousFiguresOnSameTile > 20) {
-			f->numPreviousFiguresOnSameTile = 20;
-		}
-		Data_Figures[next].nextFigureIdOnSameTile = figureId;
-	} else {
-		Data_Grid_figureIds[f->gridOffset] = figureId;
-	}
-}
-
-void Figure_updatePositionInTileList(int figureId)
-{
-	figure *f = figure_get(figureId);
-	f->numPreviousFiguresOnSameTile = 0;
-	
-	int next = Data_Grid_figureIds[f->gridOffset];
-	while (next) {
-		if (next == figureId) {
-			return;
-		}
-		f->numPreviousFiguresOnSameTile++;
-		next = Data_Figures[next].nextFigureIdOnSameTile;
-	}
-	if (f->numPreviousFiguresOnSameTile > 20) {
-		f->numPreviousFiguresOnSameTile = 20;
-	}
-}
-
-void Figure_removeFromTileList(int figureId)
-{
-    figure *f = figure_get(figureId);
-	if (f->gridOffset < 0) {
-		return;
-	}
-
-	int cur = Data_Grid_figureIds[f->gridOffset];
-	if (cur) {
-		if (cur == figureId) {
-			Data_Grid_figureIds[f->gridOffset] = f->nextFigureIdOnSameTile;
-		} else {
-			while (cur && Data_Figures[cur].nextFigureIdOnSameTile != figureId) {
-				cur = Data_Figures[cur].nextFigureIdOnSameTile;
-			}
-			Data_Figures[cur].nextFigureIdOnSameTile = f->nextFigureIdOnSameTile;
-		}
-		f->nextFigureIdOnSameTile = 0;
-	}
 }
 
 static const int dustCloudTileOffsets[] = {0, 0, 0, 1, 1, 2};
@@ -393,7 +330,7 @@ void Figure_sinkAllShips()
 
 int Figure_getCitizenOnSameTile(int figureId)
 {
-	for (int w = Data_Grid_figureIds[Data_Figures[figureId].gridOffset];
+	for (int w = map_figure_at(Data_Figures[figureId].gridOffset);
 		w > 0; w = Data_Figures[w].nextFigureIdOnSameTile) {
 		if (Data_Figures[w].actionState != FigureActionState_149_Corpse) {
 			int type = Data_Figures[w].type;
@@ -408,7 +345,7 @@ int Figure_getCitizenOnSameTile(int figureId)
 
 int Figure_getNonCitizenOnSameTile(int figureId)
 {
-	for (int w = Data_Grid_figureIds[Data_Figures[figureId].gridOffset];
+	for (int w = map_figure_at(Data_Figures[figureId].gridOffset);
 		w > 0; w = Data_Figures[w].nextFigureIdOnSameTile) {
 		if (Data_Figures[w].actionState != FigureActionState_149_Corpse) {
 			int type = Data_Figures[w].type;
