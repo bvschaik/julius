@@ -116,7 +116,7 @@ static void legionaryAttackAdjacentEnemy(figure *f)
 static int soldierFindMopUpTarget(figure *f)
 {
 	int targetId = f->targetFigureId;
-	if (FigureIsDead(targetId)) {
+	if (figure_is_dead(figure_get(targetId))) {
 		f->targetFigureId = 0;
 		targetId = 0;
 	}

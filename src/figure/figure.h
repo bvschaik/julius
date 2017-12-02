@@ -19,6 +19,8 @@ figure *figure_get(int id);
  */
 figure *figure_create(figure_type type, int x, int y, direction dir);
 
+int figure_is_dead(figure *f);
+
 void figure_init_scenario();
 
 void figure_save_state(buffer *list, buffer *seq);

@@ -533,7 +533,7 @@ static void update_enemy_formation(const formation *m, void *data)
         figure *f = figure_get(m->figures[n]);
         if (f->actionState == FigureActionState_150_Attack) {
             figure *opponent = figure_get(f->opponentId);
-            if (!FigureIsDead(f->opponentId) && FigureIsLegion(opponent->type)) {
+            if (!figure_is_dead(opponent) && FigureIsLegion(opponent->type)) {
                 formation_record_fight(m->id);
             }
         }

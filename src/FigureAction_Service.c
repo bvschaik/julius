@@ -308,7 +308,7 @@ static int prefectTargetIsAlive(figure *f)
 		return 0;
 	}
 	figure *target = figure_get(f->targetFigureId);
-	if (!FigureIsDead(f->targetFigureId) && target->createdSequence == f->targetFigureCreatedSequence) {
+	if (!figure_is_dead(target) && target->createdSequence == f->targetFigureCreatedSequence) {
 		return 1;
 	}
 	return 0;

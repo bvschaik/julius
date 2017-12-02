@@ -8,8 +8,6 @@
 #define FigureIsLegion(t) ((t) >= FIGURE_FORT_JAVELIN && (t) <= FIGURE_FORT_LEGIONARY)
 #define FigureIsHerd(t) ((t) >= FIGURE_SHEEP && (t) <= FIGURE_ZEBRA)
 
-#define FigureIsDead(f) (Data_Figures[f].state != FigureState_Alive || Data_Figures[f].actionState == FigureActionState_149_Corpse)
-
 enum {
 	FigureState_Alive = 1,
 	FigureState_Dead = 2

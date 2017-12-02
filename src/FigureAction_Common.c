@@ -174,26 +174,24 @@ void FigureAction_Common_handleAttack(figure *f)
 		return;
 	}
 	if (f->numAttackers == 1) {
-		int targetId = f->opponentId;
-		if (FigureIsDead(targetId)) {
+		figure *target = figure_get(f->opponentId);
+		if (figure_is_dead(target)) {
 			resumeActivityAfterAttack(f);
 			return;
 		}
 	} else if (f->numAttackers == 2) {
-		int targetId = f->opponentId;
-		if (FigureIsDead(targetId)) {
-			if (targetId == f->attackerId1) {
+		if (figure_is_dead(figure_get(f->opponentId))) {
+			if (f->opponentId == f->attackerId1) {
 				f->opponentId = f->attackerId2;
-			} else if (targetId == f->attackerId2) {
+			} else if (f->opponentId == f->attackerId2) {
 				f->opponentId = f->attackerId1;
 			}
-			targetId = f->opponentId;
-			if (FigureIsDead(targetId)) {
+			if (figure_is_dead(figure_get(f->opponentId))) {
 				resumeActivityAfterAttack(f);
 				return;
 			}
 			f->numAttackers = 1;
-			f->attackerId1 = targetId;
+			f->attackerId1 = f->opponentId;
 			f->attackerId2 = 0;
 		}
 	}

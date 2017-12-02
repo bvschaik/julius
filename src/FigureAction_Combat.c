@@ -12,10 +12,10 @@ int FigureAction_CombatSoldier_getTarget(int x, int y, int maxDistance)
 	int minFigureId = 0;
 	int minDistance = 10000;
 	for (int i = 1; i < MAX_FIGURES; i++) {
-		if (FigureIsDead(i)) {
+        figure *f = figure_get(i);
+		if (figure_is_dead(f)) {
 			continue;
 		}
-		figure *f = figure_get(i);
 		if (FigureIsEnemy(f->type) || f->type == FIGURE_RIOTER ||
 			(f->type == FIGURE_INDIGENOUS_NATIVE && f->actionState == FigureActionState_159_NativeAttacking)) {
 			int distance = calc_maximum_distance(x, y, f->x, f->y);
@@ -34,10 +34,10 @@ int FigureAction_CombatSoldier_getTarget(int x, int y, int maxDistance)
 		return minFigureId;
 	}
 	for (int i = 1; i < MAX_FIGURES; i++) {
-		if (FigureIsDead(i)) {
+        figure *f = figure_get(i);
+		if (figure_is_dead(f)) {
 			continue;
 		}
-		figure *f = figure_get(i);
 		if (FigureIsEnemy(f->type) || f->type == FIGURE_RIOTER ||
 			(f->type == FIGURE_INDIGENOUS_NATIVE && f->actionState == FigureActionState_159_NativeAttacking)) {
 			return i;
@@ -54,10 +54,10 @@ int FigureAction_CombatSoldier_getMissileTarget(figure *shooter, int maxDistance
 	int minDistance = maxDistance;
     figure *minFigure = 0;
 	for (int i = 1; i < MAX_FIGURES; i++) {
-		if (FigureIsDead(i)) {
+        figure *f = figure_get(i);
+		if (figure_is_dead(f)) {
 			continue;
 		}
-		figure *f = figure_get(i);
 		if (FigureIsEnemy(f->type) || FigureIsHerd(f->type) ||
 			(f->type == FIGURE_INDIGENOUS_NATIVE && f->actionState == FigureActionState_159_NativeAttacking)) {
 			int distance = calc_maximum_distance(x, y, f->x, f->y);
@@ -81,7 +81,7 @@ int FigureAction_CombatWolf_getTarget(int x, int y, int maxDistance)
 	int minDistance = 10000;
 	for (int i = 1; i < MAX_FIGURES; i++) {
 		figure *f = figure_get(i);
-		if (FigureIsDead(i) || !f->type) {
+		if (figure_is_dead(f) || !f->type) {
 			continue;
 		}
 		switch (f->type) {
@@ -128,10 +128,10 @@ int FigureAction_CombatEnemy_getTarget(int x, int y)
 	int minFigureId = 0;
 	int minDistance = 10000;
 	for (int i = 1; i < MAX_FIGURES; i++) {
-		if (FigureIsDead(i)) {
+        figure *f = figure_get(i);
+		if (figure_is_dead(f)) {
 			continue;
 		}
-		figure *f = figure_get(i);
 		if (!f->targetedByFigureId && FigureIsLegion(f->type)) {
 			int distance = calc_maximum_distance(x, y, f->x, f->y);
 			if (distance < minDistance) {
@@ -145,10 +145,11 @@ int FigureAction_CombatEnemy_getTarget(int x, int y)
 	}
 	// no 'free' soldier found, take first one
 	for (int i = 1; i < MAX_FIGURES; i++) {
-		if (FigureIsDead(i)) {
+        figure *f = figure_get(i);
+		if (figure_is_dead(f)) {
 			continue;
 		}
-		if (FigureIsLegion(figure_get(i)->type)) {
+		if (FigureIsLegion(f->type)) {
 			return i;
 		}
 	}
@@ -164,7 +165,7 @@ int FigureAction_CombatEnemy_getMissileTarget(figure *enemy, int maxDistance, in
 	int minDistance = maxDistance;
 	for (int i = 1; i < MAX_FIGURES; i++) {
 		figure *f = figure_get(i);
-		if (FigureIsDead(i) || !f->type) {
+		if (figure_is_dead(f) || !f->type) {
 			continue;
 		}
 		switch (f->type) {

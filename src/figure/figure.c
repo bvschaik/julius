@@ -54,6 +54,11 @@ figure *figure_create(figure_type type, int x, int y, direction dir)
     return f;
 }
 
+int figure_is_dead(figure *f)
+{
+    return f->state != FigureState_Alive || f->actionState == FigureActionState_149_Corpse;
+}
+
 void figure_init_scenario()
 {
     for (int i = 0; i < MAX_FIGURES; i++) {
