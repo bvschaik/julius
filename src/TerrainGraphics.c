@@ -303,7 +303,7 @@ static int getAccessRampGraphicOffset(int x, int y)
 
 void TerrainGraphics_updateRegionElevation(int xMin, int yMin, int xMax, int yMax)
 {
-	BOUND_REGION();
+	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
 	FOREACH_REGION({
 		if (Data_Grid_terrain[gridOffset] & Terrain_AccessRamp) {
 			Data_Grid_graphicIds[gridOffset] = 0;
@@ -386,7 +386,7 @@ static int isTwoTileSquarePlaza(int gridOffset)
 
 void TerrainGraphics_updateRegionPlazas(int xMin, int yMin, int xMax, int yMax)
 {
-	BOUND_REGION();
+	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
 	// remove plazas below buildings
 	FOREACH_ALL({
 		if (Data_Grid_terrain[gridOffset] & Terrain_Road &&
@@ -431,7 +431,7 @@ void TerrainGraphics_updateRegionPlazas(int xMin, int yMin, int xMax, int yMax)
 
 void TerrainGraphics_updateRegionWater(int xMin, int yMin, int xMax, int yMax)
 {
-	BOUND_REGION();
+	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
 	FOREACH_REGION({
 		int terrain = Data_Grid_terrain[gridOffset];
 		if ((terrain & Terrain_Water) && !(terrain & Terrain_Building)) {
@@ -446,7 +446,7 @@ void TerrainGraphics_updateRegionAqueduct(int xMin, int yMin, int xMax, int yMax
 	xMax++;
 	yMin--;
 	yMax++;
-	BOUND_REGION();
+	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
 	FOREACH_REGION({
 		if (Data_Grid_terrain[gridOffset] & Terrain_Aqueduct && Data_Grid_aqueducts[gridOffset] <= 15) {
 			int waterOffset = Data_Grid_graphicIds[gridOffset] - image_group(GROUP_BUILDING_AQUEDUCT);
@@ -462,7 +462,7 @@ void TerrainGraphics_updateRegionAqueduct(int xMin, int yMin, int xMax, int yMax
 
 void TerrainGraphics_updateRegionEmptyLand(int xMin, int yMin, int xMax, int yMax)
 {
-	BOUND_REGION();
+	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
 	FOREACH_REGION({
 		if (!(Data_Grid_terrain[gridOffset] & Terrain_NotClear)) {
 			Data_Grid_graphicIds[gridOffset] = 0;
@@ -513,7 +513,7 @@ void TerrainGraphics_updateRegionMeadow(int xMin, int yMin, int xMax, int yMax)
 {
 	int forbiddenTerrain = Terrain_Aqueduct | Terrain_Elevation | Terrain_AccessRamp |
 			Terrain_Rubble | Terrain_Road | Terrain_Building | Terrain_Garden;
-	BOUND_REGION();
+	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
 	FOREACH_REGION({
 		int terrain = Data_Grid_terrain[gridOffset];
 		if ((terrain & Terrain_Meadow) && !(terrain & forbiddenTerrain)) {
@@ -524,7 +524,7 @@ void TerrainGraphics_updateRegionMeadow(int xMin, int yMin, int xMax, int yMax)
 
 void TerrainGraphics_updateRegionEarthquake(int xMin, int yMin, int xMax, int yMax)
 {
-	BOUND_REGION();
+	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
 	FOREACH_REGION({
 		if ((Data_Grid_terrain[gridOffset] & Terrain_Rock) &&
 			map_property_is_plaza_or_earthquake(gridOffset)) {
@@ -537,7 +537,7 @@ void TerrainGraphics_updateRegionRubble(int xMin, int yMin, int xMax, int yMax)
 {
 	int forbiddenTerrain = Terrain_Aqueduct | Terrain_Elevation | Terrain_AccessRamp |
 			Terrain_Road | Terrain_Building | Terrain_Garden;
-	BOUND_REGION();
+	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
 	FOREACH_REGION({
 		int terrain = Data_Grid_terrain[gridOffset];
 		if ((terrain & Terrain_Rubble) && !(terrain & forbiddenTerrain)) {
@@ -668,7 +668,7 @@ void TerrainGraphics_setTileWater(int x, int y)
 	int xMax = x + 1;
 	int yMin = y - 1;
 	int yMax = y + 1;
-	BOUND_REGION();
+	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
 	FOREACH_REGION({
 		if ((Data_Grid_terrain[gridOffset] & (Terrain_Water | Terrain_Building)) == Terrain_Water) {
 			const TerrainGraphic *g = TerrainGraphicsContext_getShore(gridOffset);
@@ -709,7 +709,7 @@ void TerrainGraphics_setTileEarthquake(int x, int y)
 	int yMin = y - 1;
 	int xMax = x + 1;
 	int yMax = y + 1;
-	BOUND_REGION();
+	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
 	FOREACH_REGION({
 		if ((Data_Grid_terrain[gridOffset] & Terrain_Rock) &&
 			map_property_is_plaza_or_earthquake(gridOffset)) {
@@ -741,7 +741,7 @@ int TerrainGraphics_setTileRoad(int x, int y)
 	int yMin = y - 1;
 	int xMax = x + 1;
 	int yMax = y + 1;
-	BOUND_REGION();
+	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
 	FOREACH_REGION({
 		int terrain = Data_Grid_terrain[gridOffset];
 		if (terrain & Terrain_Road && !(terrain & (Terrain_Water | Terrain_Building))) {
@@ -1056,7 +1056,7 @@ int TerrainGraphics_setTileWall(int x, int y)
 	int yMin = y - 1;
 	int xMax = x + 1;
 	int yMax = y + 1;
-	BOUND_REGION();
+	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
 	FOREACH_REGION({
 		setWallGraphic(gridOffset);
 	});
@@ -1111,7 +1111,7 @@ static void TerrainGraphics_updateTileMeadow(int x, int y)
 	int xMax = x + 1;
 	int yMax = y + 1;
 	int graphicId = image_group(GROUP_TERRAIN_MEADOW);
-	BOUND_REGION();
+	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
 	FOREACH_REGION({
 		int terrain = Data_Grid_terrain[gridOffset];
 		if ((terrain & Terrain_Meadow) && !(terrain & forbiddenTerrain)) {
@@ -1156,7 +1156,7 @@ void TerrainGraphics_updateAreaWalls(int x, int y, int size)
 	int yMin = y - 1;
 	int xMax = xMin + size - 1;
 	int yMax = yMin + size - 1;
-	BOUND_REGION();
+	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
 	FOREACH_REGION({
 		setWallGraphic(gridOffset);
 	});
@@ -1168,7 +1168,7 @@ void TerrainGraphics_updateAreaRoads(int x, int y, int size)
 	int yMin = y - 1;
 	int xMax = xMin + size - 1;
 	int yMax = yMin + size - 1;
-	BOUND_REGION();
+	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
 	FOREACH_REGION({
 		if (Data_Grid_terrain[gridOffset] & Terrain_Road) {
 			if (!(Data_Grid_terrain[gridOffset] & (Terrain_Water | Terrain_Building))) {
@@ -1187,7 +1187,7 @@ int TerrainGraphics_getFreeTileForHerd(int x, int y, int allowNegDes, int *xTile
 	unsigned short disallowedTerrain = ~(Terrain_AccessRamp | Terrain_Meadow);
 	int tileFound = 0;
 	int tileX = 0, tileY = 0;
-	BOUND_REGION();
+	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
 	FOREACH_REGION({
 		if (!(Data_Grid_terrain[gridOffset] & disallowedTerrain)) {
 			if (map_soldier_strength_get(gridOffset)) {

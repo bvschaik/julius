@@ -50,7 +50,7 @@
 		yMin = yEnd;\
 		yMax = yStart;\
 	}\
-	Bound2ToMap(xMin, yMin, xMax, yMax);
+	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
 
 struct ReservoirInfo {
 	int cost;

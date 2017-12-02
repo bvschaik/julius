@@ -232,7 +232,7 @@ int Terrain_Water_findAlternativeTileForFishingBoat(int figureId, int *xTile, in
 		int yMin = f->y - radius;
 		int xMax = f->x + radius;
 		int yMax = f->y + radius;
-		BOUND_REGION();
+		map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
 		FOREACH_REGION({
 			if (!map_has_figure_at(gridOffset) && Data_Grid_terrain[gridOffset] & Terrain_Water) {
 				*xTile = xx;
@@ -255,7 +255,7 @@ int Terrain_Water_findOpenWaterForShipwreck(int figureId, int *xTile, int *yTile
 		int yMin = f->y - radius;
 		int xMax = f->x + radius;
 		int yMax = f->y + radius;
-		BOUND_REGION();
+		map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
 		FOREACH_REGION({
 			if (!map_has_figure_at(gridOffset) || map_figure_at(gridOffset) == figureId) {
 				if (Data_Grid_terrain[gridOffset] & Terrain_Water &&

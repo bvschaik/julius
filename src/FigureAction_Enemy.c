@@ -11,6 +11,7 @@
 #include "figure/properties.h"
 #include "figure/route.h"
 #include "map/figure.h"
+#include "map/grid.h"
 #include "map/routing.h"
 #include "scenario/gladiator_revolt.h"
 #include "sound/effect.h"
@@ -695,7 +696,7 @@ int FigureAction_HerdEnemy_moveFormationTo(int formationId, int x, int y, int *x
 		int yMin = y - r;
 		int xMax = x + r;
 		int yMax = y + r;
-		Bound2ToMap(xMin, yMin, xMax, yMax);
+		map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
 		for (int yy = yMin; yy <= yMax; yy++) {
 			for (int xx = xMin; xx <= xMax; xx++) {
 				int canMove = 1;

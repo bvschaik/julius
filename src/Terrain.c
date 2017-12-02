@@ -57,7 +57,7 @@ static const int tileEdgeSizeOffsets[5][5] = {
 	int yMin = y - radius;\
 	int xMax = x + size + radius - 1;\
 	int yMax = y + size + radius - 1;\
-	Bound2ToMap(xMin, yMin, xMax, yMax);\
+	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);\
 	int gridOffset = GridOffset(xMin, yMin);\
 	for (int yy = yMin; yy <= yMax; yy++) {\
 		for (int xx = xMin; xx <= xMax; xx++) {

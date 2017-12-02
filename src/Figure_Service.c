@@ -11,13 +11,14 @@
 #include "city/culture.h"
 #include "figure/type.h"
 #include "game/resource.h"
+#include "map/grid.h"
 
 #define FOR_XY_RADIUS \
 	int xMin = x - 2;\
 	int yMin = y - 2;\
 	int xMax = x + 2;\
 	int yMax = y + 2;\
-	Bound2ToMap(xMin, yMin, xMax, yMax);\
+	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);\
 	int gridOffset = GridOffset(xMin, yMin);\
 	for (int yy = yMin; yy <= yMax; yy++) {\
 		for (int xx = xMin; xx <= xMax; xx++) {\
@@ -340,7 +341,7 @@ static int provideMissionaryCoverage(int x, int y)
 	int yMin = y - 4;
 	int xMax = x + 4;
 	int yMax = y + 4;
-	Bound2ToMap(xMin, yMin, xMax, yMax);
+	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
 	int gridOffset = GridOffset(xMin, yMin);
 	for (int yy = yMin; yy <= yMax; yy++) {
 		for (int xx = xMin; xx <= xMax; xx++) {

@@ -14,6 +14,7 @@
 #include "building/model.h"
 #include "game/resource.h"
 #include "graphics/image.h"
+#include "map/grid.h"
 
 static void drawVacantLot(BuildingInfoContext *c)
 {
@@ -185,7 +186,7 @@ void UI_BuildingInfo_houseDetermineWorstDesirabilityBuilding(BuildingInfoContext
 	int yMin = by - 6;
 	int xMax = bx + 6;
 	int yMax = by + 6;
-	Bound2ToMap(xMin, yMin, xMax, yMax);
+	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
 
 	for (int y = yMin; y <= yMax; y++) {
 		for (int x = xMin; x <= xMax; x++) {

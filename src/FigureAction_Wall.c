@@ -11,6 +11,7 @@
 #include "figure/route.h"
 #include "figure/type.h"
 #include "map/figure.h"
+#include "map/grid.h"
 #include "map/routing_terrain.h"
 #include "sound/effect.h"
 
@@ -135,7 +136,7 @@ static int towerSentryInitPatrol(struct Data_Building *b, int *xTile, int *yTile
 		case Dir_4_Bottom: y += 8; break;
 		case Dir_6_Left: x -= 8; break;
 	}
-	BoundToMap(x, y);
+	map_grid_bound(&x, &y);
 
 	if (Terrain_getWallTileWithinRadius(x, y, 6, xTile, yTile)) {
 		b->figureRoamDirection += 2;
@@ -154,7 +155,7 @@ static int towerSentryInitPatrol(struct Data_Building *b, int *xTile, int *yTile
 			case Dir_4_Bottom: y += 3; break;
 			case Dir_6_Left: x -= 3; break;
 		}
-		BoundToMap(x, y);
+		map_grid_bound(&x, &y);
 		if (Terrain_getWallTileWithinRadius(x, y, 6, xTile, yTile)) {
 			return 1;
 		}

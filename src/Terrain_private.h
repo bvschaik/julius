@@ -3,6 +3,7 @@
 
 #include "Data/Grid.h"
 #include "Data/State.h"
+#include "map/grid.h"
 
 #define DELTA(x, y) ((y) * GRID_SIZE + (x))
 
@@ -13,8 +14,6 @@
 			block;\
 		}\
 	}}
-
-#define BOUND_REGION() Bound2ToMap(xMin, yMin, xMax, yMax);
 
 #define FOREACH_REGION(block) \
 	{int gridOffset = GridOffset(xMin, yMin);\

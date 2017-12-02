@@ -11,6 +11,16 @@ int map_grid_offset(int x, int y)
     return GridOffset(x, y);
 }
 
+int map_grid_offset_to_x(int grid_offset)
+{
+    return (grid_offset - Data_State.map.gridStartOffset) % GRID_SIZE;
+}
+
+int map_grid_offset_to_y(int grid_offset)
+{
+    return (grid_offset - Data_State.map.gridStartOffset) / GRID_SIZE;
+}
+
 int map_grid_delta(int x, int y)
 {
     return y * GRID_SIZE + x;
@@ -22,6 +32,22 @@ int map_grid_direction_delta(int direction)
         return DIRECTION_DELTA[direction];
     } else {
         return 0;
+    }
+}
+
+void map_grid_bound(int *x, int *y)
+{
+    if (*x < 0) {
+        *x = 0;
+    }
+    if (*y < 0) {
+        *y = 0;
+    }
+    if (*x >= Data_State.map.width) {
+        *x = Data_State.map.width - 1;
+    }
+    if (*y >= Data_State.map.height) {
+        *y = Data_State.map.height - 1;
     }
 }
 

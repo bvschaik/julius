@@ -21,9 +21,15 @@ typedef struct {
 
 int map_grid_offset(int x, int y);
 
+int map_grid_offset_to_x(int grid_offset);
+
+int map_grid_offset_to_y(int grid_offset);
+
 int map_grid_delta(int x, int y);
 
 int map_grid_direction_delta(int direction);
+
+void map_grid_bound(int *x, int *y);
 
 void map_grid_bound_area(int *x_min, int *y_min, int *x_max, int *y_max);
 

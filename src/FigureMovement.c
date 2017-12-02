@@ -170,7 +170,7 @@ void FigureMovement_initRoaming(figure *f)
 		case Dir_4_Bottom: y += 8; break;
 		case Dir_6_Left: x -= 8; break;
 	}
-	BoundToMap(x, y);
+	map_grid_bound(&x, &y);
 	int xRoad, yRoad;
 	if (Terrain_getClosestRoadWithinRadius(x, y, 1, 6, &xRoad, &yRoad)) {
 		f->destinationX = xRoad;
