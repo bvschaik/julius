@@ -81,7 +81,7 @@ static void setBounds(int xOffset, int yOffset, int widthTiles, int heightTiles)
     minimapRight = xOffset + 2 * widthTiles;
     minimapBottom = yOffset + heightTiles;
 
-    if ((Data_Settings_Map.width - widthTiles) / 2 > 0)
+    if ((Data_State.map.width - widthTiles) / 2 > 0)
     {
         if (Data_CityView.xInTiles < minimapAbsoluteX)
         {
@@ -92,7 +92,7 @@ static void setBounds(int xOffset, int yOffset, int widthTiles, int heightTiles)
             minimapAbsoluteX = Data_CityView.widthInTiles + Data_CityView.xInTiles - widthTiles;
         }
     }
-    if ((2 * Data_Settings_Map.height - heightTiles) / 2 > 0)
+    if ((2 * Data_State.map.height - heightTiles) / 2 > 0)
     {
         if (Data_CityView.yInTiles < minimapAbsoluteY)
         {

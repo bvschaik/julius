@@ -16,32 +16,32 @@ void UI_CityBuildings_scrollMap(int direction)
     switch (direction)
     {
     case Dir_0_Top:
-        Data_Settings_Map.camera.y -= dy;
+        Data_State.map.camera.y -= dy;
         break;
     case Dir_1_TopRight:
-        Data_Settings_Map.camera.x += dx;
-        Data_Settings_Map.camera.y -= dy;
+        Data_State.map.camera.x += dx;
+        Data_State.map.camera.y -= dy;
         break;
     case Dir_2_Right:
-        Data_Settings_Map.camera.x += dx;
+        Data_State.map.camera.x += dx;
         break;
     case Dir_3_BottomRight:
-        Data_Settings_Map.camera.x += dx;
-        Data_Settings_Map.camera.y += dy;
+        Data_State.map.camera.x += dx;
+        Data_State.map.camera.y += dy;
         break;
     case Dir_4_Bottom:
-        Data_Settings_Map.camera.y += dy;
+        Data_State.map.camera.y += dy;
         break;
     case Dir_5_BottomLeft:
-        Data_Settings_Map.camera.x -= dx;
-        Data_Settings_Map.camera.y += dy;
+        Data_State.map.camera.x -= dx;
+        Data_State.map.camera.y += dy;
         break;
     case Dir_6_Left:
-        Data_Settings_Map.camera.x -= dx;
+        Data_State.map.camera.x -= dx;
         break;
     case Dir_7_TopLeft:
-        Data_Settings_Map.camera.x -= dx;
-        Data_Settings_Map.camera.y -= dy;
+        Data_State.map.camera.x -= dx;
+        Data_State.map.camera.y -= dy;
         break;
     }
     sound_city_decay_views();

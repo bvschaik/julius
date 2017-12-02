@@ -304,7 +304,7 @@ static void setDestinationHippodromeHorse(int figureId, struct Data_Figure *f, i
     if (state == HippodromeHorse_Created)
     {
         Figure_removeFromTileList(figureId);
-        if (Data_Settings_Map.orientation == Dir_0_Top || Data_Settings_Map.orientation == Dir_6_Left)
+        if (Data_State.map.orientation == Dir_0_Top || Data_State.map.orientation == Dir_6_Left)
         {
             f->destinationX = b->x + hippodromeHorseDestinationX1[f->waitTicksMissile];
             f->destinationY = b->y + hippodromeHorseDestinationY1[f->waitTicksMissile];
@@ -327,7 +327,7 @@ static void setDestinationHippodromeHorse(int figureId, struct Data_Figure *f, i
     }
     else if (state == HippodromeHorse_Racing)
     {
-        if (Data_Settings_Map.orientation == Dir_0_Top || Data_Settings_Map.orientation == Dir_6_Left)
+        if (Data_State.map.orientation == Dir_0_Top || Data_State.map.orientation == Dir_6_Left)
         {
             f->destinationX = b->x + hippodromeHorseDestinationX1[f->waitTicksMissile];
             f->destinationY = b->y + hippodromeHorseDestinationY1[f->waitTicksMissile];
@@ -340,7 +340,7 @@ static void setDestinationHippodromeHorse(int figureId, struct Data_Figure *f, i
     }
     else if (state == HippodromeHorse_Finished)
     {
-        if (Data_Settings_Map.orientation == Dir_0_Top || Data_Settings_Map.orientation == Dir_6_Left)
+        if (Data_State.map.orientation == Dir_0_Top || Data_State.map.orientation == Dir_6_Left)
         {
             if (f->resourceId)
             {

@@ -130,7 +130,7 @@ static int getHeightId()
 
 void UI_BuildingInfo_init()
 {
-    int gridOffset = Data_Settings_Map.current.gridOffset;
+    int gridOffset = Data_State.map.current.gridOffset;
     int terrain = Data_Grid_terrain[gridOffset];
     context.canPlaySound = 1;
     context.storageShowSpecialOrders = 0;

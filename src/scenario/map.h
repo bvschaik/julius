@@ -1,11 +1,7 @@
 #ifndef SCENARIO_MAP_H
 #define SCENARIO_MAP_H
 
-typedef struct
-{
-    int x;
-    int y;
-} map_point;
+#include "map/map_point.h"
 
 enum
 {

@@ -8,6 +8,7 @@
 #include <data>
 #include <ui>
 #include <scenario>
+#include <game>
 
 #include "figure/formation.h"
 
@@ -321,28 +322,12 @@ void KeyboardHotkey_esc()
     UI_PopupDialog_show(PopupDialog_Quit, confirmExit, 1);
 }
 
-static void setBookmark(int number)
-{
-    if (number >= 0 && number < 4)
-    {
-        Data_CityInfo_Extra.bookmarks[number].x = Data_Settings_Map.camera.x;
-        Data_CityInfo_Extra.bookmarks[number].y = Data_Settings_Map.camera.y;
-    }
-}
-
 static void goToBookmark(int number)
 {
-    if (number >= 0 && number < 4)
+    if (map_bookmark_go_to(number))
     {
-        int x = Data_CityInfo_Extra.bookmarks[number].x;
-        int y = Data_CityInfo_Extra.bookmarks[number].y;
-        if (x > -1 && GridOffset(x, y) > -1)
-        {
-            Data_Settings_Map.camera.x = x;
-            Data_Settings_Map.camera.y = y;
-            CityView_checkCameraBoundaries();
-            UI_Window_requestRefresh();
-        }
+        CityView_checkCameraBoundaries();
+        UI_Window_requestRefresh();
     }
 }
 
@@ -353,7 +338,7 @@ static void handleBookmark(int number)
     {
         if (data.ctrlDown || data.shiftDown)
         {
-            setBookmark(number);
+            map_bookmark_save(number);
         }
         else
         {

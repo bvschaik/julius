@@ -1,11 +1,7 @@
 #define DATA_INTERN 1
-#include "data/grid.hpp"
 #include "empire/object.h"
 
 #include <data>
-
-struct _Data_Settings Data_Settings;
-struct _Data_Settings_Map Data_Settings_Map;
 
 struct _Data_Screen Data_Screen;// = { 800, 600, {80, 60} };
 
@@ -13,8 +9,6 @@ struct _Data_CityInfo Data_CityInfo;
 
 struct _Data_CityInfo_Extra Data_CityInfo_Extra;
 struct _Data_CityInfo_Resource Data_CityInfo_Resource;
-
-struct Data_KeyboardInput Data_KeyboardInput;
 
 struct _Data_State Data_State;
 

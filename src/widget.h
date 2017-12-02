@@ -14,6 +14,7 @@ struct _InputCursor
     int capture;
     int seen;
     int position;
+    int cursor_position;
     int width;
     int visible;
     time_millis updated;

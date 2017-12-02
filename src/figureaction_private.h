@@ -2,8 +2,8 @@
 #define FIGUREACTION_PRIVATE_H
 
 #define FigureActionIncreaseGraphicOffset(f, max) (f)->graphicOffset++; if ((f)->graphicOffset >= (max)) (f)->graphicOffset = 0;
-#define FigureActionDirection(f) ((8 + f->direction - Data_Settings_Map.orientation) % 8)
-#define FigureActionNormalizeDirection(d) ((d) = (8 + (d) - Data_Settings_Map.orientation) % 8)
+#define FigureActionDirection(f) ((8 + f->direction - Data_State.map.orientation) % 8)
+#define FigureActionNormalizeDirection(d) ((d) = (8 + (d) - Data_State.map.orientation) % 8)
 #define FigureActionCorpseGraphicOffset(f) figureActionCorpseGraphicOffsets[f->waitTicks / 2]
 #define FigureActionMissileLauncherGraphicOffset(f) figureActionMissileLauncherGraphicOffsets[f->attackGraphicOffset / 2]
 #define FigureActionFormationLayoutPositionX(layout, index) figureActionFormationLayoutPositionX[layout][index]
@@ -23,12 +23,8 @@ extern const int figureActionFormationLayoutPositionY[13][16];
 
 #include "figureaction.h"
 #include "figuremovement.h"
-
-#include "data/building.hpp"
-#include "data/constants.hpp"
-#include "data/settings.hpp"
-#include "data/figure.hpp"
-
 #include "graphics/image.h"
+
+#include <data>
 
 #endif

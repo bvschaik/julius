@@ -112,7 +112,8 @@ static void advanceToNextMission()
         UI_Window_goTo(Window_MainMenu);
         if (!scenario_is_custom())
         {
-            Settings_clearMissionSettings();
+            setting_clear_personal_savings();
+            scenario_settings_init();
             scenario_set_campaign_rank(2);
         }
     }

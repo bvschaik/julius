@@ -1,8 +1,6 @@
 #include "property.h"
 
 #include <scenario>
-#include <data/settings.hpp>
-
 #include <cstring>
 
 int scenario_is_open_play()

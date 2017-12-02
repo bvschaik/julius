@@ -1,13 +1,10 @@
 #include "sidebarmenu.h"
-#include "data/building.hpp"
-#include "data/cityinfo.hpp"
-#include "data/constants.hpp"
-#include "data/settings.hpp"
 #include "game/tutorial.h"
 #include "empire/city.h"
 #include "ui/sidebar.h"
 
 #include <scenario>
+#include <data>
 
 #define MAX_BUILDINGITEMS 30
 static int menuBuildingType[MAX_BUILDINGITEMS][MAX_BUILDINGITEMS] =

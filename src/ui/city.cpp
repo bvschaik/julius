@@ -46,7 +46,7 @@ void UI_City_drawForegroundMilitary()
 void UI_City_drawCity()
 {
     UI_CityBuildings_drawForeground(
-        Data_Settings_Map.camera.x, Data_Settings_Map.camera.y);
+        Data_State.map.camera.x, Data_State.map.camera.y);
 }
 
 void UI_City_drawPausedAndTimeLeft()

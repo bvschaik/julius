@@ -1,13 +1,11 @@
 #include "desirability.h"
 
 #include "grid.h"
+#include "building/model.h"
 #include "terrain.h"
 
-#include "data/building.hpp"
-#include "data/grid.hpp"
-#include "data/settings.hpp"
+#include <data>
 
-#include "building/model.h"
 
 static void updateBuildings();
 static void updateTerrain();
@@ -39,10 +37,10 @@ static void updateBuildings()
 
 static void updateTerrain()
 {
-    int gridOffset = Data_Settings_Map.gridStartOffset;
-    for (int y = 0; y < Data_Settings_Map.height; y++, gridOffset += Data_Settings_Map.gridBorderSize)
+    int gridOffset = Data_State.map.gridStartOffset;
+    for (int y = 0; y < Data_State.map.height; y++, gridOffset += Data_State.map.gridBorderSize)
     {
-        for (int x = 0; x < Data_Settings_Map.width; x++, gridOffset++)
+        for (int x = 0; x < Data_State.map.width; x++, gridOffset++)
         {
             int terrain = Data_Grid_terrain[gridOffset];
             if (Data_Grid_bitfields[gridOffset] & Bitfield_PlazaOrEarthquake)

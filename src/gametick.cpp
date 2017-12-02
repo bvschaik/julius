@@ -222,7 +222,7 @@ static void advanceMonth()
     city_message_decrease_delays();
 
     TerrainGraphics_updateAllRoads();
-    TerrainGraphics_updateRegionWater(0, 0, Data_Settings_Map.width - 1, Data_Settings_Map.height - 1);
+    TerrainGraphics_updateRegionWater(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
     Routing_determineLandCitizen();
     city_message_sort_and_compact();
 

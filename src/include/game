@@ -8,5 +8,6 @@
 #include "game/tutorial.h"
 #include "game/game_settings.h"
 #include "game/difficulty.h"
+#include "map/bookmark.h"
 
 #endif

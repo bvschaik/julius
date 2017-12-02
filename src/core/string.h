@@ -2,6 +2,7 @@
 #define CORE_STRING_H
 
 #include <stdint.h>
+#include <cstring>
 
 /**
  * @file

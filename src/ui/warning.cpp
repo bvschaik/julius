@@ -123,7 +123,7 @@ void UI_Warning_show(int warningId)
         const char *text;
         if (warningId == Warning_Orientation)
         {
-            text = lang_get_string(17, Data_Settings_Map.orientation);
+            text = lang_get_string(17, Data_State.map.orientation);
         }
         else
         {
@@ -277,7 +277,7 @@ static void checkWater(int buildingType, int x, int y)
     {
         if (buildingType == BUILDING_FOUNTAIN || buildingType == BUILDING_BATHHOUSE)
         {
-            int gridOffset = Data_Settings_Map.gridStartOffset + GRID_SIZE * y + x;
+            int gridOffset = Data_State.map.gridStartOffset + GRID_SIZE * y + x;
             int hasWater = 0;
             if (Data_Grid_terrain[gridOffset] & Terrain_ReservoirRange)
             {

@@ -1,11 +1,10 @@
 #ifndef _JULIUS_INCLUDE_DATA_H_
 #define _JULIUS_INCLUDE_DATA_H_
 
-#include "data/settings.hpp"
+#include "data/state.hpp"
 #include "data/screen.hpp"
 #include "data/buttons.hpp"
 #include "data/cityinfo.hpp"
-#include "data/keyboardinput.hpp"
 #include "data/state.hpp"
 #include "data/figure.hpp"
 #include "data/building.hpp"

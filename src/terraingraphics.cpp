@@ -386,7 +386,7 @@ static int getAccessRampGraphicOffset(int x, int y)
     {
         return -1;
     }
-    switch (Data_Settings_Map.orientation)
+    switch (Data_State.map.orientation)
     {
     case Dir_0_Top:
         break;
@@ -790,7 +790,7 @@ void TerrainGraphics_setBuildingFarm(int buildingId, int x, int y, int cropGraph
     }
     // farmhouse
     int leftmostX, leftmostY;
-    switch (Data_Settings_Map.orientation)
+    switch (Data_State.map.orientation)
     {
     case Dir_0_Top:
         leftmostX = 0;
@@ -1220,7 +1220,7 @@ static void setWallGatehouseGraphicManually(int gridOffset)
     int buildingIdDown = getGatehouseBuildingId(gridOffset + DELTA(0, 1));
     int buildingIdRight = getGatehouseBuildingId(gridOffset + DELTA(1, 0));
     int graphicOffset = 0;
-    if (Data_Settings_Map.orientation == Dir_0_Top)
+    if (Data_State.map.orientation == Dir_0_Top)
     {
         if (buildingIdUp && !buildingIdLeft)
         {
@@ -1261,7 +1261,7 @@ static void setWallGatehouseGraphicManually(int gridOffset)
             }
         }
     }
-    else if (Data_Settings_Map.orientation == Dir_2_Right)
+    else if (Data_State.map.orientation == Dir_2_Right)
     {
         if (buildingIdUp && !buildingIdRight)
         {
@@ -1302,7 +1302,7 @@ static void setWallGatehouseGraphicManually(int gridOffset)
             }
         }
     }
-    else if (Data_Settings_Map.orientation == Dir_4_Bottom)
+    else if (Data_State.map.orientation == Dir_4_Bottom)
     {
         if (buildingIdDown && !buildingIdRight)
         {
@@ -1343,7 +1343,7 @@ static void setWallGatehouseGraphicManually(int gridOffset)
             }
         }
     }
-    else if (Data_Settings_Map.orientation == Dir_6_Left)
+    else if (Data_State.map.orientation == Dir_6_Left)
     {
         if (buildingIdDown && !buildingIdLeft)
         {

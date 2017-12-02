@@ -56,10 +56,10 @@ void UtilityManagement::updateHouseWaterAccess()
 static void setAllAqueductsToNoWater()
 {
     int graphicId = image_group(GROUP_BUILDING_AQUEDUCT) + 15;
-    int gridOffset = Data_Settings_Map.gridStartOffset;
-    for (int y = 0; y < Data_Settings_Map.height; y++, gridOffset += Data_Settings_Map.gridBorderSize)
+    int gridOffset = Data_State.map.gridStartOffset;
+    for (int y = 0; y < Data_State.map.height; y++, gridOffset += Data_State.map.gridBorderSize)
     {
-        for (int x = 0; x < Data_Settings_Map.width; x++, gridOffset++)
+        for (int x = 0; x < Data_State.map.width; x++, gridOffset++)
         {
             if (Data_Grid_terrain[gridOffset] & Terrain_Aqueduct)
             {
@@ -314,10 +314,10 @@ void UtilityManagement::determineRoadNetworks()
     }
     Grid_clearUByteGrid(Data_Grid_roadNetworks);
     int roadNetworkId = 1;
-    int gridOffset = Data_Settings_Map.gridStartOffset;
-    for (int y = 0; y < Data_Settings_Map.height; y++, gridOffset += Data_Settings_Map.gridBorderSize)
+    int gridOffset = Data_State.map.gridStartOffset;
+    for (int y = 0; y < Data_State.map.height; y++, gridOffset += Data_State.map.gridBorderSize)
     {
-        for (int x = 0; x < Data_Settings_Map.width; x++, gridOffset++)
+        for (int x = 0; x < Data_State.map.width; x++, gridOffset++)
         {
             if (Data_Grid_terrain[gridOffset] & Terrain_Road && !Data_Grid_roadNetworks[gridOffset])
             {

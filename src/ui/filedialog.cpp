@@ -4,11 +4,11 @@
 
 #include "gamefile.h"
 #include "graphics.h"
-#include "keyboardinput.h"
 
 #include <data>
 #include <ui>
 #include <game>
+#include <input>
 
 #include "core/time.h"
 
@@ -59,13 +59,10 @@ void UI_FileDialog_show(int type)
 
     savedGames = dir_find_files_with_extension("sav");
 
-    strcpy(Data_FileList.selectedCity, Data_FileList.lastLoadedCity);
-    Data_KeyboardInput.accepted = 0;
-    KeyboardInput_initInput(2);
-    KeyboardInput_home();
-    KeyboardInput_end();
-
     UI_Window_goTo(Window_FileDialog);
+
+    strcpy(Data_FileList.selectedCity, Data_FileList.lastLoadedCity);
+    keyboard_start_capture(Data_FileList.selectedCity, 64, 0, 280, FONT_NORMAL_WHITE);
 }
 
 void UI_FileDialog_drawBackground()
@@ -115,9 +112,9 @@ void UI_FileDialog_drawForeground()
     }
 
     Widget::Button::drawImageButtons(baseOffsetX, baseOffsetY, imageButtons, 4);
-    Widget::Text::captureCursor();
+    Widget::Text::captureCursor(keyboard_cursor_position());
     Widget::Text::draw(Data_FileList.selectedCity, baseOffsetX + 160, baseOffsetY + 90, FONT_NORMAL_WHITE, 0);
-    Widget::Text::drawCursor(baseOffsetX + 160, baseOffsetY + 91);
+    Widget::Text::drawCursor(baseOffsetX + 160, baseOffsetY + 91, keyboard_is_insert());
     drawScrollbarDot();
 }
 
@@ -156,10 +153,8 @@ void UI_FileDialog_handleMouse(const mouse *m)
         buttonScroll(0, 3);
     }
 
-    KeyboardInput_initInput(2);
-    if (Data_KeyboardInput.accepted)
+    if (keyboard_input_is_accepted())
     {
-        Data_KeyboardInput.accepted = 0;
         buttonOkCancel(1, 0);
         return;
     }
@@ -286,9 +281,7 @@ static void buttonSelectItem(int index, int param2)
         memset(Data_FileList.selectedCity, 0, FILENAME_LENGTH);
         strcpy(Data_FileList.selectedCity, savedGames->files[scrollPosition + index]);
         file_remove_extension(Data_FileList.selectedCity);
-        KeyboardInput_initInput(2);
-        KeyboardInput_home();
-        KeyboardInput_end();
+        keyboard_refresh();
         messageNotExistTimeUntil = 0;
     }
 }

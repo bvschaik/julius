@@ -8,8 +8,8 @@ namespace Widget
 
 struct Text
 {
-    static void captureCursor();
-    static void drawCursor(int xOffset, int yOffset);
+    static void captureCursor(int cursor_position);
+    static void drawCursor(int xOffset, int yOffset, int isInsert);
     static int draw(const char *str, int x, int y, font_t font, color_t color);
     static void drawCentered(const char *str, int x, int y, int boxWidth, font_t font, color_t color);
     static int drawNumber(int value, char prefix, const char *postfix, int xOffset, int yOffset, font_t font);

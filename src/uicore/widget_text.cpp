@@ -6,12 +6,13 @@
 #include <game>
 #include <data>
 
-void Widget::Text::captureCursor()
+void Widget::Text::captureCursor(int cursor_position)
 {
     inputCursor.capture = 1;
     inputCursor.seen = 0;
     inputCursor.position = 0;
     inputCursor.width = 0;
+    inputCursor.cursor_position = cursor_position;
 }
 
 int Widget::Text::getWidth(const char *str, font_t font)
@@ -134,7 +135,7 @@ int Widget::Text::drawMultiline(const char *str, int xOffset, int yOffset, int b
     return y - yOffset;
 }
 
-void Widget::Text::drawCursor(int xOffset, int yOffset)
+void Widget::Text::drawCursor(int xOffset, int yOffset, int isInsert)
 {
     inputCursor.capture = 0;
     time_millis curr = time_get_millis();
@@ -151,7 +152,7 @@ void Widget::Text::drawCursor(int xOffset, int yOffset)
     }
     if (inputCursor.visible)
     {
-        if (Data_KeyboardInput.isInsert)
+        if (isInsert)
         {
             Graphics_drawLine(
                 xOffset + inputCursor.xOffset - 3, yOffset + inputCursor.yOffset - 3,
@@ -246,8 +247,7 @@ int Widget::Text::draw(const char *str, int x, int y, font_t font, color_t color
             {
                 width = letterSpacing + drawCharacter(font, c, currentX, y, lineHeight, color);
             }
-            if (inputCursor.capture &&
-                    inputCursor.position == Data_KeyboardInput.lines[Data_KeyboardInput.current].cursorPosition)
+            if (inputCursor.capture && inputCursor.position == inputCursor.cursor_position)
             {
                 if (!inputCursor.seen)
                 {

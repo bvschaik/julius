@@ -1,0 +1,6 @@
+#ifndef _JULIUS_INCLUDE_INPUT_H_
+#define _JULIUS_INCLUDE_INPUT_H_
+
+#include "input/keyboard.h"
+
+#endif //_JULIUS_INCLUDE_INPUT_H_

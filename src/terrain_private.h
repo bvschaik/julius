@@ -1,15 +1,14 @@
 #ifndef TERRAIN_PRIVATE_H
 #define TERRAIN_PRIVATE_H
 
-#include "data/grid.hpp"
-#include "data/settings.hpp"
+#include <data>
 
 #define DELTA(x, y) ((y) * GRID_SIZE + (x))
 
 #define FOREACH_ALL(block) \
-	{int gridOffset = Data_Settings_Map.gridStartOffset;\
-	for (int y = 0; y < Data_Settings_Map.height; y++, gridOffset += Data_Settings_Map.gridBorderSize) {\
-		for (int x = 0; x < Data_Settings_Map.width; x++, gridOffset++) {\
+	{int gridOffset = Data_State.map.gridStartOffset;\
+	for (int y = 0; y < Data_State.map.height; y++, gridOffset += Data_State.map.gridBorderSize) {\
+		for (int x = 0; x < Data_State.map.width; x++, gridOffset++) {\
 			block;\
 		}\
 	}}

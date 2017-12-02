@@ -20,10 +20,10 @@ void Natives_init()
     int image_meeting = scenario_building_image_native_meeting();
     int image_crops = scenario_building_image_native_crops();
     int nativeGraphic = image_group(GROUP_BUILDING_NATIVE);
-    int gridOffset = Data_Settings_Map.gridStartOffset;
-    for (int y = 0; y < Data_Settings_Map.height; y++, gridOffset += Data_Settings_Map.gridBorderSize)
+    int gridOffset = Data_State.map.gridStartOffset;
+    for (int y = 0; y < Data_State.map.height; y++, gridOffset += Data_State.map.gridBorderSize)
     {
-        for (int x = 0; x < Data_Settings_Map.width; x++, gridOffset++)
+        for (int x = 0; x < Data_State.map.width; x++, gridOffset++)
         {
             if (!(Data_Grid_terrain[gridOffset] & Terrain_Building) || Data_Grid_buildingIds[gridOffset])
             {

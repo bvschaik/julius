@@ -185,9 +185,9 @@ void BuildingHouse_checkForCorruption(int buildingId)
     if (houseGridOffset != calcGridOffset || Data_Grid_buildingIds[houseGridOffset] != buildingId)
     {
         ++Data_Buildings_Extra.incorrectHousePositions;
-        for (int y = 0; y < Data_Settings_Map.height; y++)
+        for (int y = 0; y < Data_State.map.height; y++)
         {
-            for (int x = 0; x < Data_Settings_Map.width; x++)
+            for (int x = 0; x < Data_State.map.width; x++)
             {
                 int gridOffset = GridOffset(x, y);
                 if (Data_Grid_buildingIds[gridOffset] == buildingId)

@@ -1,16 +1,11 @@
 #include "advisors_private.h"
 
-#include "allwindows.h"
-#include "window.h"
-#include "messagedialog.h"
-#include "warning.h"
-
 #include "cityinfo.h"
 #include "formation.h"
 #include "city/culture.h"
 
-#include "data/settings.hpp"
-
+#include <data>
+#include <ui>
 #include <game>
 
 static void buttonChangeAdvisor(int param1, int param2);

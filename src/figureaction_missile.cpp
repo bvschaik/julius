@@ -88,7 +88,7 @@ void FigureAction_arrow(int figureId)
     {
         f->state = FigureState_Dead;
     }
-    int dir = (16 + f->direction - 2 * Data_Settings_Map.orientation) % 16;
+    int dir = (16 + f->direction - 2 * Data_State.map.orientation) % 16;
     f->graphicId = image_group(GROUP_FIGURE_MISSILE) + 16 + dir;
 }
 
@@ -143,7 +143,7 @@ void FigureAction_spear(int figureId)
     {
         f->state = FigureState_Dead;
     }
-    int dir = (16 + f->direction - 2 * Data_Settings_Map.orientation) % 16;
+    int dir = (16 + f->direction - 2 * Data_State.map.orientation) % 16;
     f->graphicId = image_group(GROUP_FIGURE_MISSILE) + dir;
 }
 
@@ -199,7 +199,7 @@ void FigureAction_javelin(int figureId)
     {
         f->state = FigureState_Dead;
     }
-    int dir = (16 + f->direction - 2 * Data_Settings_Map.orientation) % 16;
+    int dir = (16 + f->direction - 2 * Data_State.map.orientation) % 16;
     f->graphicId = image_group(GROUP_FIGURE_MISSILE) + dir;
 }
 
@@ -248,6 +248,6 @@ void FigureAction_bolt(int figureId)
         f->state = FigureState_Dead;
         sound_effect_play(SOUND_EFFECT_BALLISTA_HIT_GROUND);
     }
-    int dir = (16 + f->direction - 2 * Data_Settings_Map.orientation) % 16;
+    int dir = (16 + f->direction - 2 * Data_State.map.orientation) % 16;
     f->graphicId = image_group(GROUP_FIGURE_MISSILE) + 32 + dir;
 }

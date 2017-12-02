@@ -6,11 +6,10 @@
 #include "formation.h"
 #include "resource.h"
 
-#include "data/settings.hpp"
-
 #include "empire/city.h"
 #include "scenario/request.h"
 
+#include <data>
 #include <game>
 #include <scenario>
 

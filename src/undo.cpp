@@ -148,9 +148,9 @@ void Undo::recordBuild(int cost)
 
 void Undo::restoreTerrainGraphics()
 {
-    for (int y = 0; y < Data_Settings_Map.height; y++)
+    for (int y = 0; y < Data_State.map.height; y++)
     {
-        for (int x = 0; x < Data_Settings_Map.width; x++)
+        for (int x = 0; x < Data_State.map.width; x++)
         {
             int gridOffset = GridOffset(x, y);
             if (!Data_Grid_buildingIds[gridOffset])

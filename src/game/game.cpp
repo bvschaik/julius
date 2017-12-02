@@ -5,11 +5,10 @@
 #include "system.h"
 #include "video.h"
 
-#include "ui/window.h"
-
 #include <sound>
 #include <data>
 #include <scenario>
+#include <ui>
 
 #include "building/model.h"
 #include "core/debug.h"
@@ -40,6 +39,11 @@ int Game::preInit()
 {
     Settings_load();
     settings_load();
+
+    scenario_settings_init();
+    Data_State.gamePaused = 0;
+    UI_TopMenu_initFromSettings(); // TODO eliminate need for this
+
     if (!lang_load("c3.eng", "c3_mm.eng"))
     {
         errlog("ERR: 'c3.eng' or 'c3_mm.eng' files not found or too large.");

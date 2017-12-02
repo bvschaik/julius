@@ -759,14 +759,9 @@ extern struct _Data_CityInfo
     char __unknown_4733;
 } Data_CityInfo;
 
-extern struct _Data_CityInfo_Extra
+struct _Data_CityInfo_Extra
 {
     int populationGraphOrder;
-    struct
-    {
-        int x;
-        int y;
-    } bookmarks[4];
     struct
     {
         int x;
@@ -783,7 +778,9 @@ extern struct _Data_CityInfo_Extra
     // not referenced, only used in saved game
     int unknownOrder;
     unsigned char unknownBytes[2];
-} Data_CityInfo_Extra;
+};
+
+extern _Data_CityInfo_Extra Data_CityInfo_Extra;
 
 extern struct _Data_CityInfo_Resource
 {

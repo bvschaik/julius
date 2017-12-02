@@ -488,21 +488,21 @@ void UI_BuildingInfo_drawFigureList(BuildingInfoContext *c)
 
 static void drawFigureInCity(int figureId, struct UI_CityPixelCoordinate *coord)
 {
-    int xCam = Data_Settings_Map.camera.x;
-    int yCam = Data_Settings_Map.camera.y;
+    int xCam = Data_State.map.camera.x;
+    int yCam = Data_State.map.camera.y;
 
     int gridOffset = Data_Figures[figureId].gridOffset;
     int x, y;
     CityView_gridOffsetToXYCoords(gridOffset, &x, &y);
-    Data_Settings_Map.camera.x = x - 2;
-    Data_Settings_Map.camera.y = y - 6;
+    Data_State.map.camera.x = x - 2;
+    Data_State.map.camera.y = y - 6;
     CityView_checkCameraBoundaries();
     UI_CityBuildings_drawForegroundForFigure(
-        Data_Settings_Map.camera.x, Data_Settings_Map.camera.y,
+        Data_State.map.camera.x, Data_State.map.camera.y,
         figureId, coord);
 
-    Data_Settings_Map.camera.x = xCam;
-    Data_Settings_Map.camera.y = yCam;
+    Data_State.map.camera.x = xCam;
+    Data_State.map.camera.y = yCam;
 }
 
 void UI_BuildingInfo_drawFigureImagesLocal(BuildingInfoContext *c)
@@ -515,7 +515,7 @@ void UI_BuildingInfo_drawFigureImagesLocal(BuildingInfoContext *c)
             drawFigureInCity(c->figure.figureIds[i], &coord);
             Graphics_saveToBuffer(coord.x, coord.y, 48, 48, figureImages[i]);
         }
-        UI_CityBuildings_drawForeground(Data_Settings_Map.camera.x, Data_Settings_Map.camera.y);
+        UI_CityBuildings_drawForeground(Data_State.map.camera.x, Data_State.map.camera.y);
     }
 }
 

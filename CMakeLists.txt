@@ -41,6 +41,8 @@ file(GLOB DATA_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/data/*.*)
 file(GLOB SCENARIO_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/scenario/*.*)
 file(GLOB DEBUG_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/debug/*.*)
 file(GLOB CI_FILES ${CMAKE_CURRENT_SOURCE_DIR}/.travis.yml)
+file(GLOB MAP_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/map/*.*)
+file(GLOB INPUT_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/input/*.*)
 
 if (BUILD_SDL2STATIC)
   set(SDL2STATIC_NAME "sdl2")
@@ -83,6 +85,8 @@ add_executable(${PROJECT_NAME}
   ${SCENARIO_FILES}
   ${CI_FILES}
   ${DEBUG_FILES}
+  ${MAP_FILES}
+  ${INPUT_FILES}
 )
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/include)
