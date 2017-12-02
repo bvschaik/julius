@@ -21,7 +21,7 @@ static void setRoadGraphic(int gridOffset);
 
 static int isAllTerrainInArea(int x, int y, int size, int terrain)
 {
-	if (IsOutsideMap(x, y, size)) {
+	if (!map_grid_is_inside(x, y, size)) {
 		return 0;
 	}
 	for (int dy = 0; dy < size; dy++) {
@@ -246,7 +246,7 @@ void TerrainGraphics_updateAllWalls()
 
 static int getAccessRampGraphicOffset(int x, int y)
 {
-	if (IsOutsideMap(x, y, 1)) {
+	if (!map_grid_is_inside(x, y, 1)) {
 		return -1;
 	}
 	static const int offsets[4][6] = {
@@ -549,7 +549,7 @@ void TerrainGraphics_updateRegionRubble(int xMin, int yMin, int xMax, int yMax)
 
 void TerrainGraphics_setBuildingAreaRubble(int buildingId, int x, int y, int size)
 {
-	if (IsOutsideMap(x, y, size)) {
+	if (!map_grid_is_inside(x, y, size)) {
 		return;
 	}
 	for (int dy = 0; dy < size; dy++) {
@@ -594,7 +594,7 @@ static void setFarmCropTile(int buildingId, int x, int y, int dx, int dy, int cr
 
 void TerrainGraphics_setBuildingFarm(int buildingId, int x, int y, int cropGraphicId, int progress)
 {
-	if (IsOutsideMap(x, y, 3)) {
+	if (!map_grid_is_inside(x, y, 3)) {
 		return;
 	}
 	// farmhouse
@@ -1133,7 +1133,7 @@ static void TerrainGraphics_updateTileMeadow(int x, int y)
 
 static void TerrainGraphics_updateAreaEmptyLand(int x, int y, int size, int graphicId)
 {
-	if (IsOutsideMap(x, y, size)) {
+	if (!map_grid_is_inside(x, y, size)) {
 		return;
 	}
 	int index = 0;

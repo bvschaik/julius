@@ -13,7 +13,7 @@
 
 void Terrain_addWatersideBuildingToGrids(int buildingId, int x, int y, int size, int graphicId)
 {
-	if (IsOutsideMap(x, y, size)) {
+	if (!map_grid_is_inside(x, y, size)) {
 		return;
 	}
 	int xLeftmost;
@@ -65,7 +65,7 @@ int Terrain_determineOrientationWatersideSize2(int x, int y, int adjustXY,
 			case DIR_4_BOTTOM: x--; y--; break;
 		}
 	}
-	if (IsOutsideMap(x, y, 2)) {
+	if (!map_grid_is_inside(x, y, 2)) {
 		return 999;
 	}
 
@@ -133,7 +133,7 @@ int Terrain_determineOrientationWatersideSize3(int x, int y, int adjustXY,
 			case DIR_4_BOTTOM: x -= 2; y -= 2; break;
 		}
 	}
-	if (IsOutsideMap(x, y, 3)) {
+	if (!map_grid_is_inside(x, y, 3)) {
 		return 999;
 	}
 

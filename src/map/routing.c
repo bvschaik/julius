@@ -7,7 +7,6 @@
 #include "map/routing_data.h"
 
 #include "Data/Building.h"
-#include "Data/State.h"
 
 #define MAX_QUEUE GRID_SIZE * GRID_SIZE
 #define GUARD 50000
@@ -477,7 +476,7 @@ int map_routing_noncitizen_can_travel_through_everything(int src_x, int src_y, i
 
 void map_routing_block(int x, int y, int size)
 {
-    if (IsOutsideMap(x, y, size)) {
+    if (!map_grid_is_inside(x, y, size)) {
         return;
     }
     for (int dy = 0; dy < size; dy++) {

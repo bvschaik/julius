@@ -33,6 +33,8 @@ void map_grid_bound(int *x, int *y);
 
 void map_grid_bound_area(int *x_min, int *y_min, int *x_max, int *y_max);
 
+int map_grid_is_inside(int x, int y, int size);
+
 void map_grid_clear_u8(uint8_t *grid);
 
 void map_grid_clear_i8(int8_t *grid);

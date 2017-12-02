@@ -67,6 +67,11 @@ void map_grid_bound_area(int *x_min, int *y_min, int *x_max, int *y_max)
     }
 }
 
+int map_grid_is_inside(int x, int y, int size)
+{
+    return x >= 0 && x + size <= Data_State.map.width && y >= 0 && y + size <= Data_State.map.height;
+}
+
 void map_grid_clear_i8(int8_t *grid)
 {
     memset(grid, 0, GRID_SIZE * GRID_SIZE * sizeof(int8_t));

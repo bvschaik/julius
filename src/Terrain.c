@@ -74,7 +74,7 @@ static const int tileEdgeSizeOffsets[5][5] = {
 
 void Terrain_addBuildingToGrids(int buildingId, int x, int y, int size, int graphicId, int terrain)
 {
-	if (IsOutsideMap(x, y, size)) {
+	if (!map_grid_is_inside(x, y, size)) {
 		return;
 	}
 	int xLeftmost, yLeftmost;
@@ -126,7 +126,7 @@ static int getNorthTileGridOffset(int x, int y, int *size)
 
 void Terrain_removeBuildingFromGrids(int buildingId, int x, int y)
 {
-	if (IsOutsideMap(x, y, 1)) {
+	if (!map_grid_is_inside(x, y, 1)) {
 		return;
 	}
 	int size;
@@ -739,7 +739,7 @@ int Terrain_getSurroundingRoadTilesForRoaming(int gridOffset, int *roadTiles)
 
 int Terrain_isClear(int x, int y, int size, int disallowedTerrain, int graphicSet)
 {
-	if (IsOutsideMap(x, y, size)) {
+	if (!map_grid_is_inside(x, y, size)) {
 		return 0;
 	}
 	for (int dy = 0; dy < size; dy++) {
@@ -833,7 +833,7 @@ int Terrain_existsTileWithinAreaWithType(int x, int y, int size, unsigned short 
 {
 	for (int yy = y; yy < y + size; yy++) {
 		for (int xx = x; xx < x + size; xx++) {
-			if (IsInsideMap(xx, yy) && (type & Data_Grid_terrain[map_grid_offset(xx, yy)])) {
+			if (map_grid_is_inside(xx, yy, 1) && (type & Data_Grid_terrain[map_grid_offset(xx, yy)])) {
 				return 1;
 			}
 		}
@@ -1113,7 +1113,7 @@ int Terrain_isClearToBuild(int size, int x, int y, int terrainMask)
 		case 4: x = x - size + 1; // fall-through
 		case 6: y = y - size + 1; break;
 	}
-	if (IsOutsideMap(x, y, size)) {
+	if (!map_grid_is_inside(x, y, size)) {
 		return 0;
 	}
 	for (int dy = 0; dy < size; dy++) {
@@ -1136,7 +1136,7 @@ void Terrain_updateToPlaceBuildingToOverlay(int size, int x, int y, int terrainM
 			case 6: y = y - size + 1; break;
 		}
 	}
-	if (IsOutsideMap(x, y, size)) {
+	if (!map_grid_is_inside(x, y, size)) {
 		return;
 	}
 	for (int dy = 0; dy < size; dy++) {

@@ -3,9 +3,6 @@
 
 #include "core/time.h"
 
-#define IsInsideMap(x,y) ((x) >= 0 && (x) < Data_State.map.width && (y) >= 0 && (y) < Data_State.map.height)
-#define IsOutsideMap(x,y,s) (x) < 0 || (x) + (s) > Data_State.map.width || (y) < 0 || (y) + (s) > Data_State.map.height
-
 enum {
 	Overlay_None = 0,
 	Overlay_Water = 2,
