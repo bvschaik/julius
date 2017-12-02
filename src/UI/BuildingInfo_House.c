@@ -8,8 +8,6 @@
 
 #include "../Data/Building.h"
 #include "../Data/CityInfo.h"
-#include "../Data/Grid.h"
-#include "../Data/State.h"
 
 #include "building/model.h"
 #include "game/resource.h"

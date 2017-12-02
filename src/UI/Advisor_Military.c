@@ -4,8 +4,6 @@
 #include "../CityView.h"
 #include "../Formation.h"
 
-#include "../Data/State.h"
-
 #include "figure/formation.h"
 #include "map/grid.h"
 #include "scenario/invasion.h"

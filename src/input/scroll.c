@@ -5,7 +5,6 @@
 #include "game/settings.h"
 
 #include "Data/Screen.h"
-#include "Data/State.h"
 
 #define SCROLL_BORDER 5
 

@@ -8,7 +8,6 @@
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
-#include "Data/State.h"
 
 #include "core/calc.h"
 #include "core/random.h"

@@ -5,7 +5,6 @@
 
 #include "Data/Building.h"
 #include "Data/Grid.h"
-#include "Data/State.h"
 
 #include "building/model.h"
 #include "city/culture.h"
