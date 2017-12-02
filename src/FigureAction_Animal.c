@@ -95,11 +95,11 @@ void FigureAction_sheep(figure *f)
 			break;
 		case FigureActionState_197_HerdAnimalMoving:
 			FigureMovement_walkTicks(f, 1);
-			if (f->direction == DirFigure_8_AtDestination || f->direction == DirFigure_10_Lost) {
+			if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST) {
 				f->direction = f->previousTileDirection;
 				f->actionState = FigureActionState_196_HerdAnimalAtRest;
 				f->waitTicks = f->id & 0x1f;
-			} else if (f->direction == DirFigure_9_Reroute) {
+			} else if (f->direction == DIR_FIGURE_REROUTE) {
 				figure_route_remove(f);
 			}
 			break;
@@ -148,17 +148,17 @@ void FigureAction_wolf(figure *f)
 			break;
 		case FigureActionState_197_HerdAnimalMoving:
 			FigureMovement_walkTicks(f, 2);
-			if (f->direction == DirFigure_8_AtDestination || f->direction == DirFigure_10_Lost) {
+			if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST) {
 				f->direction = f->previousTileDirection;
 				f->actionState = FigureActionState_196_HerdAnimalAtRest;
 				f->waitTicks = f->id & 0x1f;
-			} else if (f->direction == DirFigure_9_Reroute) {
+			} else if (f->direction == DIR_FIGURE_REROUTE) {
 				figure_route_remove(f);
 			}
 			break;
 		case FigureActionState_199_WolfAttacking:
 			FigureMovement_walkTicks(f, 2);
-			if (f->direction == DirFigure_8_AtDestination) {
+			if (f->direction == DIR_FIGURE_AT_DESTINATION) {
 				int targetId = FigureAction_CombatWolf_getTarget(f->x, f->y, 6);
 				if (targetId) {
                     figure *target = figure_get(targetId);
@@ -173,9 +173,9 @@ void FigureAction_wolf(figure *f)
 					f->actionState = FigureActionState_196_HerdAnimalAtRest;
 					f->waitTicks = f->id & 0x1f;
 				}
-			} else if (f->direction == DirFigure_9_Reroute) {
+			} else if (f->direction == DIR_FIGURE_REROUTE) {
 				figure_route_remove(f);
-			} else if (f->direction == DirFigure_10_Lost) {
+			} else if (f->direction == DIR_FIGURE_LOST) {
 				f->direction = f->previousTileDirection;
 				f->actionState = FigureActionState_196_HerdAnimalAtRest;
 				f->waitTicks = f->id & 0x1f;
@@ -224,11 +224,11 @@ void FigureAction_zebra(figure *f)
 			break;
 		case FigureActionState_197_HerdAnimalMoving:
 			FigureMovement_walkTicks(f, 2);
-			if (f->direction == DirFigure_8_AtDestination || f->direction == DirFigure_10_Lost) {
+			if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST) {
 				f->direction = f->previousTileDirection;
 				f->actionState = FigureActionState_196_HerdAnimalAtRest;
 				f->waitTicks = f->id & 0x1f;
-			} else if (f->direction == DirFigure_9_Reroute) {
+			} else if (f->direction == DIR_FIGURE_REROUTE) {
 				figure_route_remove(f);
 			}
 			break;
@@ -319,7 +319,7 @@ void FigureAction_hippodromeHorse(figure *f)
 			break;
 		case FigureActionState_201_HippodromeMiniHorseRacing:
 			f->direction = calc_general_direction(f->x, f->y, f->destinationX, f->destinationY);
-			if (f->direction == DirFigure_8_AtDestination) {
+			if (f->direction == DIR_FIGURE_AT_DESTINATION) {
 				f->waitTicksMissile++;
 				if (f->waitTicksMissile >= 22) {
 					f->waitTicksMissile = 0;
@@ -356,7 +356,7 @@ void FigureAction_hippodromeHorse(figure *f)
 				FigureMovement_crossCountrySetDirection(f,
 					f->crossCountryX, f->crossCountryY, 15 * f->destinationX, 15 * f->destinationY, 0);
 			}
-			if (f->direction != DirFigure_8_AtDestination) {
+			if (f->direction != DIR_FIGURE_AT_DESTINATION) {
 				FigureMovement_crossCountryWalkTicks(f, 1);
 			}
 			f->waitTicks++;

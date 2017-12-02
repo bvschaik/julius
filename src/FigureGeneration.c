@@ -468,13 +468,13 @@ static void spawnFigureHippodrome(int buildingId, struct Data_Building *b)
 
 			if (!Data_CityInfo.entertainmentHippodromeHasShow) {
 				// create mini-horses
-				figure *horse1 = figure_create(FIGURE_HIPPODROME_HORSES, b->x + 2, b->y + 1, Dir_2_Right);
+				figure *horse1 = figure_create(FIGURE_HIPPODROME_HORSES, b->x + 2, b->y + 1, DIR_2_RIGHT);
 				horse1->actionState = FigureActionState_200_HippodromeMiniHorseCreated;
 				horse1->buildingId = buildingId;
 				horse1->resourceId = 0;
 				horse1->speedMultiplier = 3;
 
-				figure *horse2 = figure_create(FIGURE_HIPPODROME_HORSES, b->x + 2, b->y + 2, Dir_2_Right);
+				figure *horse2 = figure_create(FIGURE_HIPPODROME_HORSES, b->x + 2, b->y + 2, DIR_2_RIGHT);
 				horse2->actionState = FigureActionState_200_HippodromeMiniHorseCreated;
 				horse2->buildingId = buildingId;
 				horse2->resourceId = 1;

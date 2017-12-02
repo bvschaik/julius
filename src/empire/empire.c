@@ -80,35 +80,35 @@ void empire_adjust_scroll(int *x_offset, int *y_offset)
 
 void empire_scroll_map(int direction)
 {
-    if (direction == Dir_8_None) {
+    if (direction == DIR_8_NONE) {
         return;
     }
     switch (direction) {
-        case Dir_0_Top:
+        case DIR_0_TOP:
             data.scroll_y -= 20;
             break;
-        case Dir_1_TopRight:
+        case DIR_1_TOP_RIGHT:
             data.scroll_x += 20;
             data.scroll_y -= 20;
             break;
-        case Dir_2_Right:
+        case DIR_2_RIGHT:
             data.scroll_x += 20;
             break;
-        case Dir_3_BottomRight:
+        case DIR_3_BOTTOM_RIGHT:
             data.scroll_x += 20;
             data.scroll_y += 20;
             break;
-        case Dir_4_Bottom:
+        case DIR_4_BOTTOM:
             data.scroll_y += 20;
             break;
-        case Dir_5_BottomLeft:
+        case DIR_5_BOTTOM_LEFT:
             data.scroll_x -= 20;
             data.scroll_y += 20;
             break;
-        case Dir_6_Left:
+        case DIR_6_LEFT:
             data.scroll_x -= 20;
             break;
-        case Dir_7_TopLeft:
+        case DIR_7_TOP_LEFT:
             data.scroll_x -= 20;
             data.scroll_y -= 20;
             break;

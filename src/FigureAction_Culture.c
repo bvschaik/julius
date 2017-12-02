@@ -37,8 +37,8 @@ static void FigureAction_cultureCommon(figure *f, int numTicks)
 			break;
 		case FigureActionState_126_RoamerReturning:
 			FigureMovement_walkTicks(f, numTicks);
-			if (f->direction == DirFigure_8_AtDestination ||
-				f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
+			if (f->direction == DIR_FIGURE_AT_DESTINATION ||
+				f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
 				f->state = FigureState_Dead;
 			}
 			break;

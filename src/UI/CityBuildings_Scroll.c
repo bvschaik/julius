@@ -2,44 +2,44 @@
 
 #include "../CityView.h"
 
-#include "../Data/Constants.h"
 #include "../Data/State.h"
 
+#include "core/direction.h"
 #include "sound/city.h"
 
 void UI_CityBuildings_scrollMap(int direction)
 {
-	if (direction == Dir_8_None) {
+	if (direction == DIR_8_NONE) {
 		return;
 	}
 	int dx = 1;
 	int dy = 2;
 	switch (direction) {
-		case Dir_0_Top:
+		case DIR_0_TOP:
 			Data_State.map.camera.y -= dy;
 			break;
-		case Dir_1_TopRight:
+		case DIR_1_TOP_RIGHT:
 			Data_State.map.camera.x += dx;
 			Data_State.map.camera.y -= dy;
 			break;
-		case Dir_2_Right:
+		case DIR_2_RIGHT:
 			Data_State.map.camera.x += dx;
 			break;
-		case Dir_3_BottomRight:
+		case DIR_3_BOTTOM_RIGHT:
 			Data_State.map.camera.x += dx;
 			Data_State.map.camera.y += dy;
 			break;
-		case Dir_4_Bottom:
+		case DIR_4_BOTTOM:
 			Data_State.map.camera.y += dy;
 			break;
-		case Dir_5_BottomLeft:
+		case DIR_5_BOTTOM_LEFT:
 			Data_State.map.camera.x -= dx;
 			Data_State.map.camera.y += dy;
 			break;
-		case Dir_6_Left:
+		case DIR_6_LEFT:
 			Data_State.map.camera.x -= dx;
 			break;
-		case Dir_7_TopLeft:
+		case DIR_7_TOP_LEFT:
 			Data_State.map.camera.x -= dx;
 			Data_State.map.camera.y -= dy;
 			break;

@@ -186,11 +186,11 @@ void FigureAction_docker(figure *f)
 		case FigureActionState_135_DockerImportGoingToWarehouse:
 			setCartGraphic(f);
 			FigureMovement_walkTicks(f, 1);
-			if (f->direction == DirFigure_8_AtDestination) {
+			if (f->direction == DIR_FIGURE_AT_DESTINATION) {
 				f->actionState = FigureActionState_139_DockerImportAtWarehouse;
-			} else if (f->direction == DirFigure_9_Reroute) {
+			} else if (f->direction == DIR_FIGURE_REROUTE) {
 				figure_route_remove(f);
-			} else if (f->direction == DirFigure_10_Lost) {
+			} else if (f->direction == DIR_FIGURE_LOST) {
 				f->state = FigureState_Dead;
 			}
 			if (!BuildingIsInUse(f->destinationBuildingId)) {
@@ -200,11 +200,11 @@ void FigureAction_docker(figure *f)
 		case FigureActionState_136_DockerExportGoingToWarehouse:
 			f->cartGraphicId = image_group(GROUP_FIGURE_CARTPUSHER_CART); // empty
 			FigureMovement_walkTicks(f, 1);
-			if (f->direction == DirFigure_8_AtDestination) {
+			if (f->direction == DIR_FIGURE_AT_DESTINATION) {
 				f->actionState = FigureActionState_140_DockerExportAtWarehouse;
-			} else if (f->direction == DirFigure_9_Reroute) {
+			} else if (f->direction == DIR_FIGURE_REROUTE) {
 				figure_route_remove(f);
-			} else if (f->direction == DirFigure_10_Lost) {
+			} else if (f->direction == DIR_FIGURE_LOST) {
 				f->state = FigureState_Dead;
 			}
 			if (!BuildingIsInUse(f->destinationBuildingId)) {
@@ -214,12 +214,12 @@ void FigureAction_docker(figure *f)
 		case FigureActionState_137_DockerExportReturning:
 			setCartGraphic(f);
 			FigureMovement_walkTicks(f, 1);
-			if (f->direction == DirFigure_8_AtDestination) {
+			if (f->direction == DIR_FIGURE_AT_DESTINATION) {
 				f->actionState = FigureActionState_134_DockerExportQueue;
 				f->waitTicks = 0;
-			} else if (f->direction == DirFigure_9_Reroute) {
+			} else if (f->direction == DIR_FIGURE_REROUTE) {
 				figure_route_remove(f);
-			} else if (f->direction == DirFigure_10_Lost) {
+			} else if (f->direction == DIR_FIGURE_LOST) {
 				f->state = FigureState_Dead;
 			}
 			if (!BuildingIsInUse(f->destinationBuildingId)) {
@@ -229,11 +229,11 @@ void FigureAction_docker(figure *f)
 		case FigureActionState_138_DockerImportReturning:
 			setCartGraphic(f);
 			FigureMovement_walkTicks(f, 1);
-			if (f->direction == DirFigure_8_AtDestination) {
+			if (f->direction == DIR_FIGURE_AT_DESTINATION) {
 				f->actionState = FigureActionState_132_DockerIdling;
-			} else if (f->direction == DirFigure_9_Reroute) {
+			} else if (f->direction == DIR_FIGURE_REROUTE) {
 				figure_route_remove(f);
-			} else if (f->direction == DirFigure_10_Lost) {
+			} else if (f->direction == DIR_FIGURE_LOST) {
 				f->state = FigureState_Dead;
 			}
 			break;

@@ -78,11 +78,11 @@ void FigureAction_taxCollector(figure *f)
 			break;
 		case FigureActionState_43_TaxCollectorReturning:
 			FigureMovement_walkTicks(f, 1);
-			if (f->direction == DirFigure_8_AtDestination) {
+			if (f->direction == DIR_FIGURE_AT_DESTINATION) {
 				f->actionState = FigureActionState_41_TaxCollectorEnteringExiting;
 				FigureAction_Common_setCrossCountryDestination(f, b->x, b->y);
 				f->roamLength = 0;
-			} else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
+			} else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
 				f->state = FigureState_Dead;
 			}
 			break;
@@ -155,11 +155,11 @@ void FigureAction_engineer(figure *f)
 			break;
 		case FigureActionState_63_EngineerReturning:
 			FigureMovement_walkTicks(f, 1);
-			if (f->direction == DirFigure_8_AtDestination) {
+			if (f->direction == DIR_FIGURE_AT_DESTINATION) {
 				f->actionState = FigureActionState_61_EngineerEnteringExiting;
 				FigureAction_Common_setCrossCountryDestination(f, b->x, b->y);
 				f->roamLength = 0;
-			} else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
+			} else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
 				f->state = FigureState_Dead;
 			}
 			break;
@@ -384,23 +384,23 @@ void FigureAction_prefect(figure *f)
 			break;
 		case FigureActionState_73_PrefectReturning:
 			FigureMovement_walkTicks(f, 1);
-			if (f->direction == DirFigure_8_AtDestination) {
+			if (f->direction == DIR_FIGURE_AT_DESTINATION) {
 				f->actionState = FigureActionState_71_PrefectEnteringExiting;
 				FigureAction_Common_setCrossCountryDestination(f, b->x, b->y);
 				f->roamLength = 0;
-			} else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
+			} else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
 				f->state = FigureState_Dead;
 			}
 			break;
 		case FigureActionState_74_PrefectGoingToFire:
 			f->terrainUsage = FigureTerrainUsage_Any;
 			FigureMovement_walkTicks(f, 1);
-			if (f->direction == DirFigure_8_AtDestination) {
+			if (f->direction == DIR_FIGURE_AT_DESTINATION) {
 				f->actionState = FigureActionState_75_PrefectAtFire;
 				figure_route_remove(f);
 				f->roamLength = 0;
 				f->waitTicks = 50;
-			} else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
+			} else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
 				f->state = FigureState_Dead;
 			}
 			break;
@@ -422,12 +422,12 @@ void FigureAction_prefect(figure *f)
 				}
 			}
 			FigureMovement_walkTicks(f, 1);
-			if (f->direction == DirFigure_8_AtDestination) {
+			if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 figure *target = figure_get(f->targetFigureId);
 				f->destinationX = target->x;
 				f->destinationY = target->y;
 				figure_route_remove(f);
-			} else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
+			} else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
 				f->state = FigureState_Dead;
 			}
 			break;

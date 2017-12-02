@@ -54,10 +54,10 @@ void FigureAction_ballista(figure *f)
 	}
 	map_figure_delete(f);
 	switch (Data_State.map.orientation) {
-		case Dir_0_Top: f->x = b->x; f->y = b->y; break;
-		case Dir_2_Right: f->x = b->x + 1; f->y = b->y; break;
-		case Dir_4_Bottom: f->x = b->x + 1; f->y = b->y + 1; break;
-		case Dir_6_Left: f->x = b->x; f->y = b->y + 1; break;
+		case DIR_0_TOP: f->x = b->x; f->y = b->y; break;
+		case DIR_2_RIGHT: f->x = b->x + 1; f->y = b->y; break;
+		case DIR_4_BOTTOM: f->x = b->x + 1; f->y = b->y + 1; break;
+		case DIR_6_LEFT: f->x = b->x; f->y = b->y + 1; break;
 	}
 	f->gridOffset = map_grid_offset(f->x, f->y);
 	map_figure_add(f);
@@ -131,10 +131,10 @@ static int towerSentryInitPatrol(struct Data_Building *b, int *xTile, int *yTile
 	int x = b->x;
 	int y = b->y;
 	switch (dir) {
-		case Dir_0_Top: y -= 8; break;
-		case Dir_2_Right: x += 8; break;
-		case Dir_4_Bottom: y += 8; break;
-		case Dir_6_Left: x -= 8; break;
+		case DIR_0_TOP: y -= 8; break;
+		case DIR_2_RIGHT: x += 8; break;
+		case DIR_4_BOTTOM: y += 8; break;
+		case DIR_6_LEFT: x -= 8; break;
 	}
 	map_grid_bound(&x, &y);
 
@@ -150,10 +150,10 @@ static int towerSentryInitPatrol(struct Data_Building *b, int *xTile, int *yTile
 		x = b->x;
 		y = b->y;
 		switch (dir) {
-			case Dir_0_Top: y -= 3; break;
-			case Dir_2_Right: x += 3; break;
-			case Dir_4_Bottom: y += 3; break;
-			case Dir_6_Left: x -= 3; break;
+			case DIR_0_TOP: y -= 3; break;
+			case DIR_2_RIGHT: x += 3; break;
+			case DIR_4_BOTTOM: y += 3; break;
+			case DIR_6_LEFT: x -= 3; break;
 		}
 		map_grid_bound(&x, &y);
 		if (Terrain_getWallTileWithinRadius(x, y, 6, xTile, yTile)) {
@@ -200,12 +200,12 @@ void FigureAction_towerSentry(figure *f)
 			break;
 		case FigureActionState_171_TowerSentryPatrolling:
 			FigureMovement_walkTicks(f, 1);
-			if (f->direction == DirFigure_8_AtDestination) {
+			if (f->direction == DIR_FIGURE_AT_DESTINATION) {
 				f->actionState = FigureActionState_173_TowerSentryReturning;
 				f->destinationX = f->sourceX;
 				f->destinationY = f->sourceY;
 				figure_route_remove(f);
-			} else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
+			} else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
 				f->actionState = FigureActionState_170_TowerSentryAtRest;
 			}
 			break;
@@ -228,9 +228,9 @@ void FigureAction_towerSentry(figure *f)
 			break;
 		case FigureActionState_173_TowerSentryReturning:
 			FigureMovement_walkTicks(f, 1);
-			if (f->direction == DirFigure_8_AtDestination) {
+			if (f->direction == DIR_FIGURE_AT_DESTINATION) {
 				f->actionState = FigureActionState_170_TowerSentryAtRest;
-			} else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
+			} else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
 				f->state = FigureState_Dead;
 			}
 			break;
@@ -239,7 +239,7 @@ void FigureAction_towerSentry(figure *f)
 			f->isGhost = 0;
 			f->heightAdjustedTicks = 0;
 			FigureMovement_walkTicks(f, 1);
-			if (f->direction == DirFigure_8_AtDestination) {
+			if (f->direction == DIR_FIGURE_AT_DESTINATION) {
 				map_figure_delete(f);
 				f->sourceX = f->x = b->x;
 				f->sourceY = f->y = b->y;
@@ -247,7 +247,7 @@ void FigureAction_towerSentry(figure *f)
 				map_figure_add(f);
 				f->actionState = FigureActionState_170_TowerSentryAtRest;
 				figure_route_remove(f);
-			} else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
+			} else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
 				f->state = FigureState_Dead;
 			}
 			break;

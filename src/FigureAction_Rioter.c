@@ -95,7 +95,7 @@ void FigureAction_rioter(figure *f)
 		case FigureActionState_121_RioterMoving:
 			FigureActionIncreaseGraphicOffset(f, 12);
 			FigureMovement_walkTicks(f, 1);
-			if (f->direction == DirFigure_8_AtDestination) {
+			if (f->direction == DIR_FIGURE_AT_DESTINATION) {
 				int xTile, yTile;
 				int buildingId = Formation_Rioter_getTargetBuilding(&xTile, &yTile);
 				if (buildingId) {
@@ -106,10 +106,10 @@ void FigureAction_rioter(figure *f)
 				} else {
 					f->state = FigureState_Dead;
 				}
-			} else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
+			} else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
 				f->actionState = FigureActionState_120_RioterCreated;
 				figure_route_remove(f);
-			} else if (f->direction == DirFigure_11_Attack) {
+			} else if (f->direction == DIR_FIGURE_ATTACK) {
 				if (f->graphicOffset > 12) {
 					f->graphicOffset = 0;
 				}
@@ -117,7 +117,7 @@ void FigureAction_rioter(figure *f)
 			break;
 	}
 	int dir;
-	if (f->direction == DirFigure_11_Attack) {
+	if (f->direction == DIR_FIGURE_ATTACK) {
 		dir = f->attackDirection;
 	} else if (f->direction < 8) {
 		dir = f->direction;
@@ -129,7 +129,7 @@ void FigureAction_rioter(figure *f)
 	if (f->actionState == FigureActionState_149_Corpse) {
 		f->graphicId = image_group(GROUP_FIGURE_CRIMINAL) +
 			96 + FigureActionCorpseGraphicOffset(f);
-	} else if (f->direction == DirFigure_11_Attack) {
+	} else if (f->direction == DIR_FIGURE_ATTACK) {
 		f->graphicId = image_group(GROUP_FIGURE_CRIMINAL) +
 			104 + criminalOffsets[f->graphicOffset];
 	} else if (f->actionState == FigureActionState_121_RioterMoving) {

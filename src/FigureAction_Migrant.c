@@ -69,15 +69,15 @@ void FigureAction_immigrant(figure *f)
 			f->isGhost = 0;
 			FigureMovement_walkTicks(f, 1);
 			switch (f->direction) {
-				case DirFigure_8_AtDestination:
+				case DIR_FIGURE_AT_DESTINATION:
 					f->actionState = FigureActionState_3_ImmigrantEnteringHouse;
 					FigureAction_Common_setCrossCountryDestination(f, b->x, b->y);
 					f->roamLength = 0;
 					break;
-				case DirFigure_9_Reroute:
+				case DIR_FIGURE_REROUTE:
 					figure_route_remove(f);
 					break;
-				case DirFigure_10_Lost:
+				case DIR_FIGURE_LOST:
 					b->immigrantFigureId = 0;
 					b->distanceFromEntry = 0;
 					f->state = FigureState_Dead;
@@ -159,9 +159,9 @@ void FigureAction_emigrant(figure *f)
 			f->useCrossCountry = 0;
 			f->isGhost = 0;
 			FigureMovement_walkTicks(f, 1);
-			if (f->direction == DirFigure_8_AtDestination ||
-				f->direction == DirFigure_9_Reroute ||
-				f->direction == DirFigure_10_Lost) {
+			if (f->direction == DIR_FIGURE_AT_DESTINATION ||
+				f->direction == DIR_FIGURE_REROUTE ||
+				f->direction == DIR_FIGURE_LOST) {
 				f->state = FigureState_Dead;
 			}
 			break;
@@ -211,10 +211,10 @@ void FigureAction_homeless(figure *f)
 		case FigureActionState_8_HomelessGoingToHouse:
 			f->isGhost = 0;
 			FigureMovement_walkTicks(f, 1);
-			if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
+			if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
 				Data_Buildings[f->immigrantBuildingId].immigrantFigureId = 0;
 				f->state = FigureState_Dead;
-			} else if (f->direction == DirFigure_8_AtDestination) {
+			} else if (f->direction == DIR_FIGURE_AT_DESTINATION) {
 				f->actionState = FigureActionState_9_HomelessEnteringHouse;
 				FigureAction_Common_setCrossCountryDestination(f,
 					Data_Buildings[f->immigrantBuildingId].x,
@@ -252,9 +252,9 @@ void FigureAction_homeless(figure *f)
 			break;
 		case FigureActionState_10_HomelessLeaving:
 			FigureMovement_walkTicks(f, 1);
-			if (f->direction == DirFigure_8_AtDestination || f->direction == DirFigure_10_Lost) {
+			if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST) {
 				f->state = FigureState_Dead;
-			} else if (f->direction == DirFigure_9_Reroute) {
+			} else if (f->direction == DIR_FIGURE_REROUTE) {
 				figure_route_remove(f);
 			}
 			f->waitTicks++;
