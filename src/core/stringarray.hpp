@@ -13,18 +13,35 @@
 // You should have received a copy of the GNU General Public License
 // along with Julius.  If not, see <http://www.gnu.org/licenses/>.
 //
-// Copyright 2012-2017 Dalerank, dalerankn8@gmail.com
+// Copyright 2012-2014 Dalerank, dalerankn8@gmail.com
 
-#ifndef __JULIUS_STACKTRACE_H_INCLUDED__
-#define __JULIUS_STACKTRACE_H_INCLUDED__
+#ifndef __JULIUS_STRINGARRAY_H_INCLUDED__
+#define __JULIUS_STRINGARRAY_H_INCLUDED__
 
-#include "core/platform.hpp"
+#include <string>
+#include "core/array.hpp"
 
-struct CrashHandler
+class StringArray : public Array<std::string>
 {
-    static void install();
-    static void uninstall();
-    static void printstack(bool show_message = true, unsigned int starting_frame = 0, unsigned int max_frames = 63 );
+public:
+    StringArray& addIfValid( const std::string& str )
+    {
+        if (!str.empty())
+            _data.push_back(str);
+
+        return *this;
+    }
+
+    bool operator ==(const StringArray& a) const
+    {
+        return _data == a._data;
+    }
+
+    inline StringArray& operator << (const std::string& a)
+    {
+        push_back(a);
+        return *this;
+    }
 };
 
-#endif //__JULIUS_STACKTRACE_H_INCLUDED__
+#endif //__JULIUS_STRINGARRAY_H_INCLUDED__

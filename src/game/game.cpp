@@ -19,6 +19,8 @@
 #include "graphics/image.h"
 
 #include <string.h>
+#include "game/app.hpp"
+#include "debug/logger.hpp"
 
 static void errlog(const char *msg)
 {
@@ -51,6 +53,9 @@ int Game::preInit()
 int Game::init()
 {
     System_initCursors();
+    Logger::registerWriter(Logger::consolelog, "");
+    Logger::registerWriter(Logger::filelog, app.workdir());
+
     if (!image_init())
     {
         errlog("ERR: unable to init graphics");

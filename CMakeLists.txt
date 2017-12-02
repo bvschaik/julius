@@ -41,6 +41,7 @@ file(GLOB DATA_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/data/*.*)
 file(GLOB SCENARIO_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/scenario/*.*)
 file(GLOB DEBUG_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/debug/*.*)
 file(GLOB CI_FILES ${CMAKE_CURRENT_SOURCE_DIR}/.travis.yml)
+file(GLOB CI_FILES ${CMAKE_CURRENT_SOURCE_DIR}/.travis.yml)
 
 if (BUILD_SDL2STATIC)
   set(SDL2STATIC_NAME "sdl2")
@@ -174,7 +175,7 @@ if(UNIX AND NOT APPLE)
   # set compiler options
   if(NOT CMAKE_BUILD_TYPE_RELEASE)
     message("App: building in debug mode")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-unused-value -g")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-unused-value -g -std=c++11")
     add_definitions(-DDEBUG)
   else()
     #release options strip bin

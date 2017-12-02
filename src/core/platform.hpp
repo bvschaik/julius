@@ -19,33 +19,33 @@
 #define __JULIUS_PLATFORM_H_INCLUDED__
 
 #if defined(__WIN32__) || defined(_WIN32)
-  #define JULIUS_PLATFORM_WIN
-  #define JULIUS_PLATFORM_WIN32
-  #define JULIUS_PLATFORM_NAME "win32"
+#define JULIUS_PLATFORM_WIN
+#define JULIUS_PLATFORM_WIN32
+#define JULIUS_PLATFORM_NAME "win32"
 #elif defined(WIN64) || defined(_WIN64)
-  #define JULIUS_PLATFORM_WIN
-  #define JULIUS_PLATFORM_WIN64
-  #define JULIUS_PLATFORM_NAME "win64"
+#define JULIUS_PLATFORM_WIN
+#define JULIUS_PLATFORM_WIN64
+#define JULIUS_PLATFORM_NAME "win64"
 #elif defined(__APPLE_CC__) || defined(__APPLE__) || defined(__APPLE_CPP__) || defined(__MACOS_CLASSIC__)
-  #define JULIUS_PLATFORM_UNIX
-  #define JULIUS_PLATFORM_MACOSX
-  #define JULIUS_PLATFORM_NAME "macosx"
+#define JULIUS_PLATFORM_UNIX
+#define JULIUS_PLATFORM_MACOSX
+#define JULIUS_PLATFORM_NAME "macosx"
 #elif defined(__FreeBSD__) || defined(__OpenBSD__)
-  #define JULIUS_PLATFORM_UNIX
-  #define JULIUS_PLATFORM_XBSD
-  #define JULIUS_PLATFORM_NAME "freebsd"
+#define JULIUS_PLATFORM_UNIX
+#define JULIUS_PLATFORM_XBSD
+#define JULIUS_PLATFORM_NAME "freebsd"
 #elif defined(__HAIKU__) || defined(HAIKU)
-  #define JULIUS_PLATFORM_BEOS
-  #define JULIUS_PLATFORM_HAIKU
-  #define JULIUS_PLATFORM_NAME "haiku"
+#define JULIUS_PLATFORM_BEOS
+#define JULIUS_PLATFORM_HAIKU
+#define JULIUS_PLATFORM_NAME "haiku"
 #elif defined(ANDROID)
-  #define JULIUS_PLATFORM_UNIX
-  #define JULIUS_PLATFORM_ANDROID
-  #define JULIUS_PLATFORM_NAME "android"
+#define JULIUS_PLATFORM_UNIX
+#define JULIUS_PLATFORM_ANDROID
+#define JULIUS_PLATFORM_NAME "android"
 #else
-  #define JULIUS_PLATFORM_UNIX
-  #define JULIUS_PLATFORM_LINUX
-  #define JULIUS_PLATFORM_NAME "linux"
+#define JULIUS_PLATFORM_UNIX
+#define JULIUS_PLATFORM_LINUX
+#define JULIUS_PLATFORM_NAME "linux"
 #endif
 
 #endif //__JULIUS_PLATFORM_H_INCLUDED__

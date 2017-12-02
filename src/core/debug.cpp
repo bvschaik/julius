@@ -1,15 +1,12 @@
 #include "core/debug.h"
 
-#include <stdio.h>
+#include "debug/logger.hpp"
 
 void debug_log(const char *msg, const char *param_str, int param_int)
 {
-    printf("%s", msg);
-    if (param_str) {
-        printf("  %s", param_str);
-    }
-    if (param_int) {
-        printf("  %d", param_int);
-    }
-    printf("\n");
+    Logger::debug(msg);
+    if (param_str)
+        Logger::debug(" %s", param_str);
+    if (param_int)
+        Logger::debug(" %d", param_int);
 }

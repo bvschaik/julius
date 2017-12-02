@@ -35,6 +35,9 @@ void settings_load();
 
 void settings_save();
 
+int setting_last_advisor();
+void setting_set_last_advisor(int advisor);
+
 void setting_window(int *width, int *height);
 void setting_set_display(int fullscreen, int width, int height);
 

@@ -38,7 +38,7 @@ extern struct _Data_Settings
     int _scrollSpeed;
     char playerName[32];
     int __unused3[4];
-    int lastAdvisor;
+    int _lastAdvisor;
     int saveGameMissionId;
     int _mouseTooltips;
     int startingFavor;

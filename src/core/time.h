@@ -8,10 +8,6 @@
 /**
  * Time in millisecond-precision. Use only for time difference calculations.
  */
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 typedef unsigned int time_millis;
 
 /**
@@ -26,9 +22,17 @@ time_millis time_get_millis();
  */
 void time_set_millis(time_millis millis);
 
+class Time
+{
+public:
+    int year;
+    unsigned int month;
+    unsigned int day;
+    unsigned int hour;
+    unsigned int minutes;
+    unsigned int seconds;
 
-#ifdef __cplusplus
-}
-#endif
+    static Time current();
+};
 
 #endif // CORE_TIME_H

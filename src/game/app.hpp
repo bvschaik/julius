@@ -15,16 +15,46 @@
 //
 // Copyright 2012-2017 Dalerank, dalerankn8@gmail.com
 
-#ifndef __JULIUS_STACKTRACE_H_INCLUDED__
-#define __JULIUS_STACKTRACE_H_INCLUDED__
 
+#ifndef __JULIUS_APP_H__
+#define __JULIUS_APP_H__
+
+#include <string>
 #include "core/platform.hpp"
 
-struct CrashHandler
+enum { platform_unknown,
+       platform_windows,
+       platform_win32,
+       platform_win64,
+       platform_unix,
+       platform_linux,
+       platform_macos,
+       platform_bsd,
+       platform_haiku,
+       platform_beos,
+       platform_android
+     };
+
+class Application
 {
-    static void install();
-    static void uninstall();
-    static void printstack(bool show_message = true, unsigned int starting_frame = 0, unsigned int max_frames = 63 );
+public:
+    std::string workdir();
+    void errordlg( std::string title, std::string text );
+
+    struct Platform
+    {
+        bool is(int type);
+        bool android();
+        bool linux();
+        bool unix();
+        bool mac();
+        bool windows();
+    } platform;
+
+private:
+    std::string _workdir;
 };
 
-#endif //__JULIUS_STACKTRACE_H_INCLUDED__
+extern Application app;
+
+#endif //__JULIUS_APP_H__
