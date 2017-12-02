@@ -259,7 +259,7 @@ void UI_BuildingInfo_init()
 	for (int i = 0; i < 9 && context.figure.count < 7; i++) {
 		int figureId = map_figure_at(gridOffset + figureOffsets[i]);
 		while (figureId > 0 && context.figure.count < 7) {
-            struct Data_Figure *figure = figure_get(figureId);
+            figure *figure = figure_get(figureId);
 			if (figure->state != FigureState_Dead &&
 				figure->actionState != FigureActionState_149_Corpse) {
 				switch (figure->type) {
@@ -291,7 +291,7 @@ void UI_BuildingInfo_init()
 		if (figureId <= 0) {
 			continue;
 		}
-        struct Data_Figure *f = figure_get(figureId);
+        figure *f = figure_get(figureId);
 		int type = f->type;
 		if (type == FIGURE_FORT_STANDARD || FigureIsLegion(type)) {
 			context.type = BuildingInfoType_Legion;

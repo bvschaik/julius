@@ -59,7 +59,7 @@ static int determineDestination(int x, int y, int btype1, int btype2)
 	return 0;
 }
 
-static void updateShowsAtDestination(struct Data_Figure *f)
+static void updateShowsAtDestination(figure *f)
 {
 	struct Data_Building *b = &Data_Buildings[f->destinationBuildingId];
 	switch (f->type) {

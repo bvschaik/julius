@@ -123,7 +123,7 @@ void UI_CityBuildings_drawOverlayTopsFiguresAnimation(int overlay)
 		FOREACH_X_VIEW {
 			int figureId = map_figure_at(gridOffset);
 			while (figureId) {
-			    struct Data_Figure *fig = figure_get(figureId);
+			    figure *fig = figure_get(figureId);
 				if (!fig->isGhost) {
 					UI_CityBuildings_drawFigure(figureId, xGraphic, yGraphic, 9999, 0);
 				}
@@ -1249,7 +1249,7 @@ static void drawBuildingTopForTaxIncomeOverlay(int gridOffset, int buildingId, i
 static int is_problem_cartpusher(int figure_id)
 {
     if (figure_id) {
-        struct Data_Figure *fig = figure_get(figure_id);
+        figure *fig = figure_get(figure_id);
         return fig->actionState == FigureActionState_20_CartpusherInitial && fig->minMaxSeen;
     } else {
         return 0;

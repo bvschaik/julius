@@ -7,7 +7,7 @@
 #include "figure/type.h"
 #include "game/resource.h"
 
-static int createDeliveryBoy(int leaderId, struct Data_Figure *f)
+static int createDeliveryBoy(int leaderId, figure *f)
 {
 	figure *boy = figure_create(FIGURE_DELIVERY_BOY, f->x, f->y, 0);
 	boy->inFrontFigureId = leaderId;

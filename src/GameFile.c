@@ -726,7 +726,7 @@ static void debug()
 		}
 	}
 	for (int i = 1; i < MAX_FIGURES; i++) {
-		struct Data_Figure *f = &Data_Figures[i];
+		figure *f = &Data_Figures[i];
 		if (f->state == FigureState_Alive) {
 			printf("Figure %d type %d as %d wt %d mt %d\n",
 				i, f->type, f->actionState, f->waitTicks, f->waitTicksMissile);

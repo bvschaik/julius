@@ -347,7 +347,7 @@ static void dispatch_soldiers(const formation *m, void *data)
     for (int fig = 0; fig < m->num_figures; fig++) {
         if (m->figures[fig] > 0) {
             figure *f = figure_get(m->figures[fig]);
-            if (f->state == FigureState_Alive && f->actionState != FigureActionState_149_Corpse) {
+            if (!figure_is_dead(f)) {
                 f->actionState = FigureActionState_87_SoldierGoingToDistantBattle;
             }
         }
@@ -373,7 +373,7 @@ static void return_soldiers(const formation *m, void *data)
     for (int fig = 0; fig < m->num_figures; fig++) {
         if (m->figures[fig] > 0) {
             figure *f = figure_get(m->figures[fig]);
-            if (f->state == FigureState_Alive && f->actionState != FigureActionState_149_Corpse) {
+            if (!figure_is_dead(f)) {
                 f->actionState = FigureActionState_88_SoldierReturningFromDistantBattle;
                 f->formationAtRest = 1;
             }
@@ -397,7 +397,7 @@ static void kill_soldiers(const formation *m, void *data)
     for (int fig = 0; fig < m->num_figures; fig++) {
         if (m->figures[fig] > 0) {
             figure *f = figure_get(m->figures[fig]);
-            if (f->state == FigureState_Alive && f->actionState != FigureActionState_149_Corpse) {
+            if (!figure_is_dead(f)) {
                 numSoldiersTotal++;
             }
         }
@@ -410,7 +410,7 @@ static void kill_soldiers(const formation *m, void *data)
     for (int fig = 0; fig < m->num_figures; fig++) {
         if (m->figures[fig] > 0) {
             figure *f = figure_get(m->figures[fig]);
-            if (f->state == FigureState_Alive && f->actionState != FigureActionState_149_Corpse) {
+            if (!figure_is_dead(f)) {
                 if (numSoldiersToKill) {
                     numSoldiersToKill--;
                     f->state = FigureState_Dead;

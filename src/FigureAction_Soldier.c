@@ -157,7 +157,7 @@ static void updateSoldierGraphicJavelin(figure *f, int dir)
 	}
 }
 
-static void updateSoldierGraphicMounted(struct Data_Figure *f, int dir)
+static void updateSoldierGraphicMounted(figure *f, int dir)
 {
 	int graphicId = image_group(GROUP_FIGURE_FORT_MOUNTED);
 	if (f->actionState == FigureActionState_150_Attack) {

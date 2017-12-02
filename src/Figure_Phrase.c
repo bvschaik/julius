@@ -258,7 +258,7 @@ int Figure_determinePhrase(int figureId)
 		return 0;
 	}
 
-	struct Data_Figure *f = figure_get(figureId);
+	figure *f = figure_get(figureId);
 	int phraseId = f->phraseId = 0;
 
 	if (FigureIsEnemyOrNative(f->type)) {
@@ -536,7 +536,7 @@ static void playFigureSoundFile(int figureSoundId, int phraseId)
 int Figure_playPhrase(int figureId)
 {
 	if (figureId > 0) {
-        struct Data_Figure *f = figure_get(figureId);
+        figure *f = figure_get(figureId);
 		int figureSoundId = figureTypeToSoundType[f->type];
 		playFigureSoundFile(figureSoundId, f->phraseId);
 		return figureSoundId;

@@ -6,32 +6,31 @@
 #include "map/figure.h"
 #include "map/grid.h"
 
-#include "../Figure.h"
-
 #include <string.h>
 
 static struct {
     int created_sequence;
+    figure figures[MAX_FIGURES];
 } data = {0};
 
 figure *figure_get(int id)
 {
-    return &Data_Figures[id];
+    return &data.figures[id];
 }
 
 figure *figure_create(figure_type type, int x, int y, direction dir)
 {
     int id = 0;
     for (int i = 1; i < MAX_FIGURES; i++) {
-        if (!Data_Figures[i].state) {
+        if (!data.figures[i].state) {
             id = i;
             break;
         }
     }
     if (!id) {
-        return &Data_Figures[0];
+        return &data.figures[0];
     }
-    struct Data_Figure *f = &Data_Figures[id];
+    figure *f = &data.figures[id];
     f->state = FigureState_Alive;
     f->ciid = 1;
     f->type = type;
@@ -62,8 +61,8 @@ int figure_is_dead(figure *f)
 void figure_init_scenario()
 {
     for (int i = 0; i < MAX_FIGURES; i++) {
-        memset(&Data_Figures[i], 0, sizeof(figure));
-        Data_Figures[i].id = i;
+        memset(&data.figures[i], 0, sizeof(figure));
+        data.figures[i].id = i;
     }
 }
 
@@ -272,7 +271,7 @@ void figure_save_state(buffer *list, buffer *seq)
     buffer_write_i32(seq, data.created_sequence);
 
     for (int i = 0; i < MAX_FIGURES; i++) {
-        figure_save(list, &Data_Figures[i]);
+        figure_save(list, &data.figures[i]);
     }
 }
 
@@ -281,7 +280,7 @@ void figure_load_state(buffer *list, buffer *seq)
     data.created_sequence = buffer_read_i32(seq);
 
     for (int i = 0; i < MAX_FIGURES; i++) {
-        figure_load(list, &Data_Figures[i]);
-        Data_Figures[i].id = i;
+        figure_load(list, &data.figures[i]);
+        data.figures[i].id = i;
     }
 }

@@ -44,7 +44,7 @@ void UI_BuildingInfo_drawTerrain(BuildingInfoContext *c)
 			}
 		}
 		if (c->figure.count > 0 && c->figure.figureIds[c->figure.selectedIndex]) {
-            struct Data_Figure *f = figure_get(c->figure.figureIds[c->figure.selectedIndex]);
+            figure *f = figure_get(c->figure.figureIds[c->figure.selectedIndex]);
 			if (f->type < FIGURE_SHIPWRECK) {
 				c->helpId = 42;
 			} else {

@@ -205,7 +205,7 @@ static void FigureAction_enemyCommon(figure *f)
 	}
 }
 
-static int getDirection(struct Data_Figure *f)
+static int getDirection(figure *f)
 {
 	int dir;
 	if (f->actionState == FigureActionState_150_Attack) {
@@ -219,7 +219,7 @@ static int getDirection(struct Data_Figure *f)
 	return dir;
 }
 
-static int getDirectionMissile(struct Data_Figure *f, const formation *m)
+static int getDirectionMissile(figure *f, const formation *m)
 {
 	int dir;
 	if (f->actionState == FigureActionState_150_Attack) {

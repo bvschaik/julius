@@ -11,7 +11,7 @@
 #include "game/resource.h"
 #include "graphics/image.h"
 
-static int showOnOverlay(struct Data_Figure *f)
+static int showOnOverlay(figure *f)
 {
 	switch (Data_State.currentOverlay) {
 		case Overlay_Water:
@@ -104,7 +104,7 @@ static int showOnOverlay(struct Data_Figure *f)
 	return 1;
 }
 
-static void drawFigureWithCart(struct Data_Figure *f, int xOffset, int yOffset)
+static void drawFigureWithCart(figure *f, int xOffset, int yOffset)
 {
 	if (f->yOffsetCart >= 0) {
 		Graphics_drawImage(f->graphicId, xOffset, yOffset);
@@ -115,7 +115,7 @@ static void drawFigureWithCart(struct Data_Figure *f, int xOffset, int yOffset)
 	}
 }
 
-static void drawHippodromeHorses(struct Data_Figure *f, int xOffset, int yOffset)
+static void drawHippodromeHorses(figure *f, int xOffset, int yOffset)
 {
 	int val = f->waitTicksMissile;
 	switch (Data_State.map.orientation) {
@@ -257,7 +257,7 @@ static int tileProgressToPixelOffsetY(int direction, int progress)
 
 void UI_CityBuildings_drawFigure(int figureId, int xOffset, int yOffset, int selectedFigureId, struct UI_CityPixelCoordinate *coord)
 {
-	struct Data_Figure *f = figure_get(figureId);
+	figure *f = figure_get(figureId);
 
 	// determining x/y offset on tile
 	int xTileOffset = 0;

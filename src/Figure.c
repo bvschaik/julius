@@ -77,7 +77,7 @@ void Figure_delete(figure *f)
 	map_figure_delete(f);
 
     int figureId = f->id;
-    memset(f, 0, sizeof(struct Data_Figure));
+    memset(f, 0, sizeof(figure));
     f->id = figureId;
 }
 

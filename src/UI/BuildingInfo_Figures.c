@@ -68,7 +68,7 @@ static int collectingItemIdToResourceId(int c)
 	}
 }
 
-static struct Data_Figure *get_head_of_caravan(struct Data_Figure *f)
+static figure *get_head_of_caravan(figure *f)
 {
     while (f->type == FIGURE_TRADE_CARAVAN_DONKEY) {
         f = figure_get(f->inFrontFigureId);
@@ -76,7 +76,7 @@ static struct Data_Figure *get_head_of_caravan(struct Data_Figure *f)
     return f;
 }
 
-static void drawFigureInfoTrade(BuildingInfoContext *c, struct Data_Figure *f)
+static void drawFigureInfoTrade(BuildingInfoContext *c, figure *f)
 {
 	f = get_head_of_caravan(f);
 	const empire_city *city = empire_city_get(f->empireCityId);
@@ -167,7 +167,7 @@ static void drawFigureInfoTrade(BuildingInfoContext *c, struct Data_Figure *f)
 	}
 }
 
-static void drawFigureInfoEnemy(BuildingInfoContext *c, struct Data_Figure *f)
+static void drawFigureInfoEnemy(BuildingInfoContext *c, figure *f)
 {
 	int graphicId = 8;
     int enemy_type = formation_get(f->formationId)->enemy_type;
@@ -222,7 +222,7 @@ static void drawFigureInfoEnemy(BuildingInfoContext *c, struct Data_Figure *f)
 		c->xOffset + 92, c->yOffset + 149, FONT_SMALL_BLACK);
 }
 
-static void drawFigureInfoBoatAnimal(BuildingInfoContext *c, struct Data_Figure *f)
+static void drawFigureInfoBoatAnimal(BuildingInfoContext *c, figure *f)
 {
 	Graphics_drawImage(BigPeopleGraphic(f->type),
 		c->xOffset + 28, c->yOffset + 112);
@@ -231,7 +231,7 @@ static void drawFigureInfoBoatAnimal(BuildingInfoContext *c, struct Data_Figure 
 		c->xOffset + 92, c->yOffset + 139, FONT_SMALL_BLACK);
 }
 
-static void drawFigureInfoCartpusher(BuildingInfoContext *c, struct Data_Figure *f)
+static void drawFigureInfoCartpusher(BuildingInfoContext *c, figure *f)
 {
 	Graphics_drawImage(BigPeopleGraphic(f->type),
 		c->xOffset + 28, c->yOffset + 112);
@@ -291,7 +291,7 @@ static void drawFigureInfoCartpusher(BuildingInfoContext *c, struct Data_Figure 
 	}
 }
 
-static void drawFigureInfoMarketBuyer(BuildingInfoContext *c, struct Data_Figure *f)
+static void drawFigureInfoMarketBuyer(BuildingInfoContext *c, figure *f)
 {
 	Graphics_drawImage(BigPeopleGraphic(f->type),
 		c->xOffset + 28, c->yOffset + 112);
@@ -322,7 +322,7 @@ static void drawFigureInfoMarketBuyer(BuildingInfoContext *c, struct Data_Figure
 	}
 }
 
-static void drawFigureInfoNormal(BuildingInfoContext *c, struct Data_Figure *f)
+static void drawFigureInfoNormal(BuildingInfoContext *c, figure *f)
 {
 	int graphicId = BigPeopleGraphic(f->type);
 	if (f->actionState == FigureActionState_74_PrefectGoingToFire ||
@@ -346,7 +346,7 @@ static void drawFigureInfo(BuildingInfoContext *c, int figureId)
 {
 	Widget_Panel_drawButtonBorder(c->xOffset + 24, c->yOffset + 102, 16 * (c->widthBlocks - 3), 122, 0);
 
-    struct Data_Figure *f = figure_get(figureId);
+    figure *f = figure_get(figureId);
 	int type = f->type;
 	if (type == FIGURE_TRADE_CARAVAN || type == FIGURE_TRADE_CARAVAN_DONKEY || type == FIGURE_TRADE_SHIP) {
 		drawFigureInfoTrade(c, f);

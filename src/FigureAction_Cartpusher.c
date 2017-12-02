@@ -13,13 +13,13 @@ static const int cartResourceOffsetMultipleLoadsFood[] = {0, 0, 8, 16, 0, 0, 24,
 static const int cartResourceOffsetMultipleLoadsNonFood[] = {0, 0, 0, 0, 0, 8, 0, 16, 24, 32, 40, 48, 56, 64, 72, 80};
 static const int cartResourceOffset8PlusLoadsFood[] = {0, 40, 48, 56, 0, 0, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-static void setCartGraphic(struct Data_Figure *f)
+static void setCartGraphic(figure *f)
 {
 	f->cartGraphicId = image_group(GROUP_FIGURE_CARTPUSHER_CART) +
 		8 * f->resourceId + Resource_getGraphicIdOffset(f->resourceId, 1);
 }
 
-static void setDestination(struct Data_Figure *f, int actionState, int buildingId, int xDst, int yDst)
+static void setDestination(figure *f, int actionState, int buildingId, int xDst, int yDst)
 {
 	f->destinationBuildingId = buildingId;
 	f->actionState = actionState;
@@ -28,7 +28,7 @@ static void setDestination(struct Data_Figure *f, int actionState, int buildingI
 	f->destinationY = yDst;
 }
 
-static void determineCartpusherDestination(struct Data_Figure *f, struct Data_Building *b, int roadNetworkId)
+static void determineCartpusherDestination(figure *f, struct Data_Building *b, int roadNetworkId)
 {
 	int xDst, yDst;
 	int understaffedStorages = 0;
@@ -81,7 +81,7 @@ static void determineCartpusherDestination(struct Data_Figure *f, struct Data_Bu
 	f->minMaxSeen = understaffedStorages ? 2 : 1;
 }
 
-static void determineCartpusherDestinationFood(struct Data_Figure *f, int roadNetworkId)
+static void determineCartpusherDestinationFood(figure *f, int roadNetworkId)
 {
 	struct Data_Building *b = &Data_Buildings[f->buildingId];
 	int xDst, yDst, dstBuildingId;
@@ -316,7 +316,7 @@ static void determineGranarymanDestination(figure *f, int roadNetworkId)
 	f->state = FigureState_Dead;
 }
 
-static void removeResourceFromWarehouse(struct Data_Figure *f)
+static void removeResourceFromWarehouse(figure *f)
 {
 	if (f->state != FigureState_Dead) {
 		int err = Resource_removeFromWarehouse(f->buildingId, f->resourceId, 1);

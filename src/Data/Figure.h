@@ -146,7 +146,7 @@ enum {
 	FigureTerrainUsage_Animal = 5,
 };
 
-extern struct Data_Figure {
+typedef struct {
     int id;
 
 	unsigned char alternativeLocationIndex;
@@ -245,8 +245,6 @@ extern struct Data_Figure {
 	short attackerId1;
 	short attackerId2;
 	short opponentId; // 7e
-} Data_Figures[MAX_FIGURES];
-
-typedef struct Data_Figure figure;
+} figure;
 
 #endif

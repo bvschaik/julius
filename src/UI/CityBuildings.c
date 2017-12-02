@@ -344,7 +344,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 		FOREACH_X_VIEW {
 			int figureId = map_figure_at(gridOffset);
 			while (figureId) {
-                struct Data_Figure *f = figure_get(figureId);
+                figure *f = figure_get(figureId);
 				if (!f->isGhost) {
 					UI_CityBuildings_drawFigure(figureId, xGraphic, yGraphic, selectedFigureId, coord);
 				}
@@ -556,7 +556,7 @@ static void drawHippodromeAndElevatedFigures(int selectedFigureId)
 		FOREACH_X_VIEW {
             int figureId = map_figure_at(gridOffset);
             while (figureId > 0) {
-                struct Data_Figure *f = figure_get(figureId);
+                figure *f = figure_get(figureId);
                 if (f->useCrossCountry && !f->isGhost) {
                     UI_CityBuildings_drawFigure(figureId, xGraphic, yGraphic, selectedFigureId, 0);
                 }

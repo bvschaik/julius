@@ -79,7 +79,7 @@ static int dockerGetExportResource(figure *f, int buildingId)
 	return 1;
 }
 
-static void setCartGraphic(struct Data_Figure *f)
+static void setCartGraphic(figure *f)
 {
 	f->cartGraphicId = image_group(GROUP_FIGURE_CARTPUSHER_CART) + 8 * f->resourceId;
 	f->cartGraphicId += Resource_getGraphicIdOffset(f->resourceId, 1);

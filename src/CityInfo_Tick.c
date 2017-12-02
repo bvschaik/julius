@@ -153,7 +153,7 @@ void CityInfo_Tick_countBuildingTypes()
 				break;
 		}
 		if (Data_Buildings[i].immigrantFigureId) {
-			struct Data_Figure *f = figure_get(Data_Buildings[i].immigrantFigureId);
+			figure *f = figure_get(Data_Buildings[i].immigrantFigureId);
 			if (f->state != FigureState_Alive || f->destinationBuildingId != i) {
 				Data_Buildings[i].immigrantFigureId = 0;
 			}

@@ -103,7 +103,7 @@ void FigureAction_handle()
 		figure *f = figure_get(i);
 		if (f->state) {
 			if (f->targetedByFigureId) {
-                struct Data_Figure *attacker = figure_get(f->targetedByFigureId);
+                figure *attacker = figure_get(f->targetedByFigureId);
 				if (attacker->state != FigureState_Alive) {
 					f->targetedByFigureId = 0;
 				}
