@@ -19,6 +19,8 @@ void map_grid_and_u16(uint16_t *grid, uint16_t mask);
 
 void map_grid_copy_u8(const uint8_t *src, uint8_t *dst);
 
+int map_grid_delta(int x, int y);
+
 void map_grid_copy_u16(const uint16_t *src, uint16_t *dst);
 
 #endif // MAP_GRID_H

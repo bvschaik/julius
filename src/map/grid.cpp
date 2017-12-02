@@ -30,6 +30,11 @@ void map_grid_init_i8(int8_t *grid, int8_t value)
     memset(grid, value, GRID_SIZE * GRID_SIZE * sizeof(int8_t));
 }
 
+int map_grid_delta(int x, int y)
+{
+    return y * GRID_SIZE + x;
+}
+
 void map_grid_and_u8(uint8_t *grid, uint8_t mask)
 {
     for (int i = 0; i < GRID_SIZE * GRID_SIZE; i++)

@@ -2,23 +2,6 @@
 
 #include <ctype.h>
 
-void string_copy(const char *src, char *dst, int maxlength)
-{
-    int length = 0;
-    while (length < maxlength && *src)
-    {
-        *dst = *src;
-        src++;
-        dst++;
-        length++;
-    }
-    if (length == maxlength)
-    {
-        dst--;
-    }
-    *dst = 0;
-}
-
 int string_to_int(const char *str)
 {
     static const int multipliers[] = {1, 10, 100, 1000, 10000, 100000, 1000000, 10000000};

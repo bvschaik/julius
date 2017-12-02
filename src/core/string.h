@@ -5,19 +5,6 @@
 #include <cstring>
 
 /**
- * @file
- * String conversion functions.
- */
-
-/**
- * Copies a string
- * @param str Source string
- * @param dst Destination string
- * @param maxlength Maximum length of the destination string
- */
-void string_copy(const char *src, char *dst, int maxlength);
-
-/**
  * Converts the string to integer
  * @return integer
  */

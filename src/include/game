@@ -13,5 +13,6 @@
 #include "map/routing.h"
 #include "map/grid.h"
 #include "core/calc.h"
+#include "map/ring.h"
 
 #endif

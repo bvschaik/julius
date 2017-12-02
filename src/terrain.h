@@ -6,9 +6,9 @@ void Terrain_removeBuildingFromGrids(int buildingId, int x, int y);
 
 void Terrain_addWatersideBuildingToGrids(int buildingId, int x, int y, int size, int graphicId);
 int Terrain_determineOrientationWatersideSize2(int x, int y, int adjustXY,
-	int *orientationAbsolute, int *orientationRelative);
+        int *orientationAbsolute, int *orientationRelative);
 int Terrain_determineOrientationWatersideSize3(int x, int y, int adjustXY,
-	int *orientationAbsolute, int *orientationRelative);
+        int *orientationAbsolute, int *orientationRelative);
 
 void Terrain_addRoadsForGatehouse(int x, int y, int orientation);
 void Terrain_addRoadsForTriumphalArch(int x, int y, int orientation);
@@ -57,7 +57,6 @@ int Terrain_hasBuildingOnNativeLand(int x, int y, int size, int radius);
 void Terrain_markBuildingsWithinWellRadius(int buildingId, int radius);
 int Terrain_isReservoir(int gridOffset);
 
-void Terrain_initDistanceRing();
 int Terrain_isAllRockAndTreesAtDistanceRing(int x, int y, int distance);
 int Terrain_isAllMeadowAtDistanceRing(int x, int y, int distance);
 void Terrain_addDesirability(int x, int y, int size, int desBase, int desStep, int desStepSize, int desRange);

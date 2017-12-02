@@ -7,12 +7,12 @@
 
 #include <data>
 #include <scenario>
-
+#include <game>
 
 void Loader_GameState_init()
 {
     Data_State.winState = WinState_None;
-    Terrain_initDistanceRing();
+    map_ring_init();
 
     Data_State.map.orientation = 0;
     CityView_calculateLookup();
