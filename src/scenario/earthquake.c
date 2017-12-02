@@ -4,6 +4,7 @@
 #include "core/calc.h"
 #include "core/random.h"
 #include "game/time.h"
+#include "map/building.h"
 #include "map/grid.h"
 #include "map/routing_terrain.h"
 #include "scenario/data.h"
@@ -80,7 +81,7 @@ static int canAdvanceEarthquakeToTile(int x, int y)
 static void advanceEarthquakeToTile(int x, int y)
 {
     int gridOffset = map_grid_offset(x, y);
-    int buildingId = Data_Grid_buildingIds[gridOffset];
+    int buildingId = map_building_at(gridOffset);
     if (buildingId) {
         Building_collapseOnFire(buildingId, 0);
         Building_collapseLinked(buildingId, 1);

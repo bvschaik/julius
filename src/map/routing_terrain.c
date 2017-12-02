@@ -3,6 +3,7 @@
 #include "building/type.h"
 #include "core/direction.h"
 #include "graphics/image.h"
+#include "map/building.h"
 #include "map/grid.h"
 #include "map/property.h"
 #include "map/random.h"
@@ -28,7 +29,7 @@ void map_routing_update_land()
 
 static int get_land_type_citizen_building(int grid_offset)
 {
-    int building_id = Data_Grid_buildingIds[grid_offset];
+    int building_id = map_building_at(grid_offset);
     int type = CITIZEN_N1_BLOCKED;
     switch (Data_Buildings[building_id].type) {
         case BUILDING_WAREHOUSE:
@@ -115,7 +116,7 @@ void map_routing_update_land_citizen()
             } else if (Data_Grid_terrain[grid_offset] & (Terrain_Rubble | Terrain_AccessRamp | Terrain_Garden)) {
                 terrain_land_citizen.items[grid_offset] = CITIZEN_2_PASSABLE_TERRAIN;
             } else if (Data_Grid_terrain[grid_offset] & (Terrain_Building | Terrain_Gatehouse)) {
-                if (!Data_Grid_buildingIds[grid_offset]) {
+                if (!map_building_at(grid_offset)) {
                     // shouldn't happen
                     terrain_land_noncitizen.items[grid_offset] = CITIZEN_4_CLEAR_TERRAIN; // BUG: should be citizen grid?
                     Data_Grid_terrain[grid_offset] &= ~Terrain_Building;
@@ -139,7 +140,7 @@ void map_routing_update_land_citizen()
 static int get_land_type_noncitizen(int grid_offset)
 {
     int type = NONCITIZEN_1_BUILDING;
-    switch (Data_Buildings[Data_Grid_buildingIds[grid_offset]].type) {
+    switch (Data_Buildings[map_building_at(grid_offset)].type) {
         case BUILDING_WAREHOUSE:
         case BUILDING_FORT_GROUND:
             type = NONCITIZEN_0_PASSABLE;

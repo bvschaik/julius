@@ -27,6 +27,7 @@
 #include "building/model.h"
 #include "figure/figure.h"
 #include "figure/formation.h"
+#include "map/building.h"
 #include "map/figure.h"
 #include "map/property.h"
 
@@ -141,7 +142,7 @@ void UI_BuildingInfo_init()
 	context.canPlaySound = 1;
 	context.storageShowSpecialOrders = 0;
 	context.advisor = 0;
-	context.buildingId = Data_Grid_buildingIds[gridOffset];
+	context.buildingId = map_building_at(gridOffset);
 	context.rubbleBuildingType = Data_Grid_rubbleBuildingType[gridOffset];
 	context.hasReservoirPipes = terrain & Terrain_ReservoirRange;
 	context.aqueductHasWater = Data_Grid_aqueducts[gridOffset];
@@ -149,7 +150,7 @@ void UI_BuildingInfo_init()
 	CityInfo_Resource_calculateAvailableResources();
 	context.type = BuildingInfoType_Terrain;
 	context.figure.drawn = 0;
-	if (!Data_Grid_buildingIds[gridOffset] && Data_Grid_spriteOffsets[gridOffset] > 0) {
+	if (!context.buildingId && Data_Grid_spriteOffsets[gridOffset] > 0) {
 		if (Data_Grid_terrain[gridOffset] & Terrain_Water) {
 			context.terrainType = 11;
 		} else {

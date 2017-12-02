@@ -7,6 +7,7 @@
 
 #include "city/message.h"
 #include "figure/route.h"
+#include "map/building.h"
 #include "map/grid.h"
 
 static const int criminalOffsets[] = {
@@ -144,10 +145,10 @@ int FigureAction_Rioter_collapseBuilding(figure *f)
 {
 	for (int dir = 0; dir < 8; dir += 2) {
 		int gridOffset = f->gridOffset + map_grid_direction_delta(dir);
-		if (!Data_Grid_buildingIds[gridOffset]) {
+		if (!map_building_at(gridOffset)) {
 			continue;
 		}
-		int buildingId = Data_Grid_buildingIds[gridOffset];
+		int buildingId = map_building_at(gridOffset);
 		struct Data_Building *b = &Data_Buildings[buildingId];
 		switch (b->type) {
 			case BUILDING_WAREHOUSE_SPACE:

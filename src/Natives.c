@@ -11,6 +11,7 @@
 #include "building/list.h"
 #include "core/calc.h"
 #include "graphics/image.h"
+#include "map/building.h"
 #include "map/grid.h"
 #include "map/property.h"
 #include "map/random.h"
@@ -27,7 +28,7 @@ void Natives_init()
 	int gridOffset = Data_State.map.gridStartOffset;
 	for (int y = 0; y < Data_State.map.height; y++, gridOffset += Data_State.map.gridBorderSize) {
 		for (int x = 0; x < Data_State.map.width; x++, gridOffset++) {
-			if (!(Data_Grid_terrain[gridOffset] & Terrain_Building) || Data_Grid_buildingIds[gridOffset]) {
+			if (!(Data_Grid_terrain[gridOffset] & Terrain_Building) || map_building_at(gridOffset)) {
 				continue;
 			}
 			
@@ -50,7 +51,7 @@ void Natives_init()
 				continue;
 			}
 			int buildingId = Building_create(buildingType, x, y);
-			Data_Grid_buildingIds[gridOffset] = buildingId;
+			map_building_set(gridOffset, buildingId);
 			struct Data_Building *b = &Data_Buildings[buildingId];
 			b->state = BuildingState_InUse;
 			switch (buildingType) {
@@ -59,9 +60,9 @@ void Natives_init()
 					break;
 				case BUILDING_NATIVE_MEETING:
 					b->sentiment.nativeAnger = 100;
-					Data_Grid_buildingIds[gridOffset + 1] = buildingId;
-					Data_Grid_buildingIds[gridOffset + 162] = buildingId;
-					Data_Grid_buildingIds[gridOffset + 163] = buildingId;
+					map_building_set(gridOffset + map_grid_delta(1, 0), buildingId);
+					map_building_set(gridOffset + map_grid_delta(0, 1), buildingId);
+					map_building_set(gridOffset + map_grid_delta(1, 1), buildingId);
 					Terrain_markNativeLand(b->x, b->y, 2, 6);
 					if (!Data_CityInfo.nativeMainMeetingCenterX) {
 						Data_CityInfo.nativeMainMeetingCenterX = b->x;

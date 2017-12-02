@@ -40,6 +40,7 @@
 #include "game/tutorial.h"
 #include "graphics/image.h"
 #include "map/bookmark.h"
+#include "map/building.h"
 #include "map/desirability.h"
 #include "map/figure.h"
 #include "map/grid.h"
@@ -240,7 +241,7 @@ static void readScenarioAndInitGraphics()
 static void initGrids()
 {
 	map_grid_clear_u16(Data_Grid_graphicIds);
-	map_grid_clear_u16(Data_Grid_buildingIds);
+	map_building_clear();
 	map_grid_clear_u16(Data_Grid_terrain);
 	map_grid_clear_u8(Data_Grid_aqueducts);
 	map_figure_clear();

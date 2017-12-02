@@ -12,6 +12,7 @@
 #include "building/model.h"
 #include "game/resource.h"
 #include "graphics/image.h"
+#include "map/building.h"
 #include "map/grid.h"
 
 static void drawVacantLot(BuildingInfoContext *c)
@@ -188,7 +189,7 @@ void UI_BuildingInfo_houseDetermineWorstDesirabilityBuilding(BuildingInfoContext
 
 	for (int y = yMin; y <= yMax; y++) {
 		for (int x = xMin; x <= xMax; x++) {
-			int buildingId = Data_Grid_buildingIds[map_grid_offset(x, y)];
+			int buildingId = map_building_at(map_grid_offset(x, y));
 			if (buildingId <= 0) {
 				continue;
 			}

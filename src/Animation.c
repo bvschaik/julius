@@ -7,6 +7,7 @@
 #include "core/calc.h"
 #include "core/time.h"
 #include "graphics/image.h"
+#include "map/building.h"
 
 #define MAX_ANIM_TIMERS 51
 
@@ -39,7 +40,7 @@ void Animation_updateTimers()
 
 int Animation_getIndexForCityBuilding(int graphicId, int gridOffset)
 {
-	int buildingId = Data_Grid_buildingIds[gridOffset];
+	int buildingId = map_building_at(gridOffset);
 	struct Data_Building *b = &Data_Buildings[buildingId];
 	if (b->type == BUILDING_FOUNTAIN && (b->numWorkers <= 0 || !b->hasWaterAccess)) {
 		return 0;

@@ -12,6 +12,7 @@
 #include "building/properties.h"
 #include "game/resource.h"
 #include "graphics/image.h"
+#include "map/building.h"
 #include "map/grid.h"
 #include "map/property.h"
 #include "map/routing_terrain.h"
@@ -135,7 +136,7 @@ void Undo_restoreTerrainGraphics()
 	for (int y = 0; y < Data_State.map.height; y++) {
 		for (int x = 0; x < Data_State.map.width; x++) {
 			int gridOffset = map_grid_offset(x, y);
-			if (!Data_Grid_buildingIds[gridOffset]) {
+			if (!map_building_at(gridOffset)) {
 				Data_Grid_graphicIds[gridOffset] = Data_Grid_Undo_graphicIds[gridOffset];
 			}
 		}

@@ -1,5 +1,6 @@
 #include "routing.h"
 
+#include "map/building.h"
 #include "map/figure.h"
 #include "map/grid.h"
 #include "map/road_aqueduct.h"
@@ -288,7 +289,7 @@ static int map_can_place_initial_road_or_aqueduct(int gridOffset, int isAqueduct
             return 1;
         }
         if (Data_Grid_terrain[gridOffset] & Terrain_Building) {
-            if (Data_Buildings[Data_Grid_buildingIds[gridOffset]].type == BUILDING_RESERVOIR) {
+            if (Data_Buildings[map_building_at(gridOffset)].type == BUILDING_RESERVOIR) {
                 return 1;
             }
         }
@@ -427,7 +428,7 @@ static void callback_travel_noncitizen_land_through_building(int next_offset, in
         if (terrain_land_noncitizen.items[next_offset] == NONCITIZEN_0_PASSABLE ||
             terrain_land_noncitizen.items[next_offset] == NONCITIZEN_2_CLEARABLE ||
             (terrain_land_noncitizen.items[next_offset] == NONCITIZEN_1_BUILDING &&
-                Data_Grid_buildingIds[next_offset] == state.throughBuildingId)) {
+                map_building_at(next_offset) == state.throughBuildingId)) {
             enqueue(next_offset, dist);
         }
     }

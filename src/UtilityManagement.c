@@ -10,6 +10,7 @@
 #include "building/list.h"
 #include "graphics/image.h"
 #include "map/desirability.h"
+#include "map/building.h"
 #include "map/grid.h"
 #include "map/property.h"
 #include "map/routing_terrain.h"
@@ -86,7 +87,7 @@ static void fillAqueductsFromOffset(int gridOffset)
 		nextOffset = -1;
 		for (int i = 0; i < 4; i++) {
 			int newOffset = gridOffset + adjacentOffsets[i];
-			int buildingId = Data_Grid_buildingIds[newOffset];
+			int buildingId = map_building_at(newOffset);
 			if (buildingId && Data_Buildings[buildingId].type == BUILDING_RESERVOIR) {
 				// check if aqueduct connects to reservoir --> doesn't connect to corner
 				int xy = map_property_multi_tile_xy(newOffset);

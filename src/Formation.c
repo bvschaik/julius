@@ -14,6 +14,7 @@
 #include "figure/formation.h"
 #include "figure/properties.h"
 #include "figure/route.h"
+#include "map/building.h"
 #include "map/figure.h"
 #include "map/grid.h"
 #include "map/routing.h"
@@ -73,7 +74,7 @@ int Formation_getLegionFormationAtGridOffset(int gridOffset)
 
 int Formation_getFormationForBuilding(int gridOffset)
 {
-	int buildingId = Data_Grid_buildingIds[gridOffset];
+	int buildingId = map_building_at(gridOffset);
 	if (buildingId > 0) {
 		struct Data_Building *b = &Data_Buildings[buildingId];
 		if (BuildingIsInUse(buildingId) && (b->type == BUILDING_FORT || b->type == BUILDING_FORT_GROUND)) {

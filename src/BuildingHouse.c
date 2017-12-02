@@ -8,6 +8,7 @@
 
 #include "game/resource.h"
 #include "graphics/image.h"
+#include "map/building.h"
 #include "map/grid.h"
 #include "map/random.h"
 
@@ -74,7 +75,7 @@ int BuildingHouse_canExpand(int buildingId, int numTiles)
 		for (int i = 0; i < numTiles; i++) {
 			int tileOffset = baseOffset + tileGridOffsets[i];
 			if (Data_Grid_terrain[tileOffset] & Terrain_Building) {
-				int tileBuildingId = Data_Grid_buildingIds[tileOffset];
+				int tileBuildingId = map_building_at(tileOffset);
 				if (tileBuildingId == buildingId) {
 					okTiles++;
 				} else if (BuildingIsInUse(tileBuildingId) && Data_Buildings[tileBuildingId].houseSize) {
@@ -99,7 +100,7 @@ int BuildingHouse_canExpand(int buildingId, int numTiles)
 			if ((Data_Grid_terrain[tileOffset] & Terrain_NotClear) == 0) {
 				okTiles++;
 			} else if (Data_Grid_terrain[tileOffset] & Terrain_Building) {
-				int tileBuildingId = Data_Grid_buildingIds[tileOffset];
+				int tileBuildingId = map_building_at(tileOffset);
 				if (tileBuildingId == buildingId) {
 					okTiles++;
 				} else if (BuildingIsInUse(tileBuildingId) && Data_Buildings[tileBuildingId].houseSize) {
@@ -124,7 +125,7 @@ int BuildingHouse_canExpand(int buildingId, int numTiles)
 			if ((Data_Grid_terrain[tileOffset] & Terrain_NotClear) == 0) {
 				okTiles++;
 			} else if (Data_Grid_terrain[tileOffset] & Terrain_Building) {
-				int tileBuildingId = Data_Grid_buildingIds[tileOffset];
+				int tileBuildingId = map_building_at(tileOffset);
 				if (tileBuildingId == buildingId) {
 					okTiles++;
 				} else if (BuildingIsInUse(tileBuildingId) && Data_Buildings[tileBuildingId].houseSize) {
@@ -152,12 +153,12 @@ void BuildingHouse_checkForCorruption(int buildingId)
 	int houseGridOffset = b->gridOffset;
 	int calcGridOffset = map_grid_offset(b->x, b->y);
 	b->data.house.noSpaceToExpand = 0;
-	if (houseGridOffset != calcGridOffset || Data_Grid_buildingIds[houseGridOffset] != buildingId) {
+	if (houseGridOffset != calcGridOffset || map_building_at(houseGridOffset) != buildingId) {
 		++Data_Buildings_Extra.incorrectHousePositions;
 		for (int y = 0; y < Data_State.map.height; y++) {
 			for (int x = 0; x < Data_State.map.width; x++) {
 				int gridOffset = map_grid_offset(x, y);
-				if (Data_Grid_buildingIds[gridOffset] == buildingId) {
+				if (map_building_at(gridOffset) == buildingId) {
 					b->gridOffset = gridOffset;
 					b->x = map_grid_offset_to_x(gridOffset);
 					b->y = map_grid_offset_to_y(gridOffset);
@@ -181,9 +182,9 @@ void BuildingHouse_checkMerge(int buildingId)
 	}
 	int numHouseTiles = 0;
 	for (int i = 0; i < 4; i++) {
-		int tileGridOffset = b->gridOffset + tileGridOffsets[i];
-		if (Data_Grid_terrain[tileGridOffset] & Terrain_Building) {
-			int tileBuildingId = Data_Grid_buildingIds[tileGridOffset];
+		int tileOffset = b->gridOffset + tileGridOffsets[i];
+		if (Data_Grid_terrain[tileOffset] & Terrain_Building) {
+			int tileBuildingId = map_building_at(tileOffset);
 			if (tileBuildingId == buildingId) {
 				numHouseTiles++;
 			} else if (BuildingIsInUse(tileBuildingId) &&
@@ -207,7 +208,7 @@ static void split(int buildingId, int numTiles)
 	for (int i = 0; i < numTiles; i++) {
 		int tileOffset = gridOffset + tileGridOffsets[i];
 		if (Data_Grid_terrain[tileOffset] & Terrain_Building) {
-			int tileBuildingId = Data_Grid_buildingIds[tileOffset];
+			int tileBuildingId = map_building_at(tileOffset);
 			if (tileBuildingId != buildingId && Data_Buildings[tileBuildingId].houseSize) {
 				if (Data_Buildings[tileBuildingId].houseIsMerged == 1) {
 					splitMerged(tileBuildingId);
@@ -231,7 +232,7 @@ static void prepareForMerge(int buildingId, int numTiles)
 	for (int i = 0; i < numTiles; i++) {
 		int tileOffset = gridOffset + tileGridOffsets[i];
 		if (Data_Grid_terrain[tileOffset] & Terrain_Building) {
-			int tileBuildingId = Data_Grid_buildingIds[tileOffset];
+			int tileBuildingId = map_building_at(tileOffset);
 			if (tileBuildingId != buildingId && Data_Buildings[tileBuildingId].houseSize) {
 				mergeData.population += Data_Buildings[tileBuildingId].housePopulation;
 				for (int i = 0; i < INVENTORY_MAX; i++) {

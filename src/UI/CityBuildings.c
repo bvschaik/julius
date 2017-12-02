@@ -18,6 +18,7 @@
 #include "game/resource.h"
 #include "game/settings.h"
 #include "input/scroll.h"
+#include "map/building.h"
 #include "map/desirability.h"
 #include "map/figure.h"
 #include "map/grid.h"
@@ -126,7 +127,7 @@ static void drawBuildingFootprints()
 				xGraphic, yGraphic, 0);
 		} else if (map_property_is_draw_tile(gridOffset)) {
 			// Valid gridOffset and leftmost tile -> draw
-			int buildingId = Data_Grid_buildingIds[gridOffset];
+			int buildingId = map_building_at(gridOffset);
 			color_t colorMask = 0;
 			if (buildingId) {
 				if (Data_Buildings[buildingId].isDeleted) {
@@ -183,7 +184,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 	FOREACH_Y_VIEW {
 		FOREACH_X_VIEW {
 			if (map_property_is_draw_tile(gridOffset)) {
-				int buildingId = Data_Grid_buildingIds[gridOffset];
+				int buildingId = map_building_at(gridOffset);
 				int graphicId = Data_Grid_graphicIds[gridOffset];
 				color_t colorMask = 0;
 				if (buildingId && Data_Buildings[buildingId].isDeleted) {
@@ -358,7 +359,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 			const image *img = image_get(graphicId);
 			if (img->num_animation_sprites) {
 				if (map_property_is_draw_tile(gridOffset)) {
-					int buildingId = Data_Grid_buildingIds[gridOffset];
+					int buildingId = map_building_at(gridOffset);
 					struct Data_Building *b = &Data_Buildings[buildingId];
 					int colorMask = 0;
 					if (buildingId && b->isDeleted) {
@@ -449,9 +450,9 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 				}
 			} else if (Data_Grid_spriteOffsets[gridOffset]) {
 				UI_CityBuildings_drawBridge(gridOffset, xGraphic, yGraphic);
-			} else if (Data_Buildings[Data_Grid_buildingIds[gridOffset]].type == BUILDING_FORT) {
+			} else if (Data_Buildings[map_building_at(gridOffset)].type == BUILDING_FORT) {
 				if (map_property_is_draw_tile(gridOffset)) {
-					int buildingId = Data_Grid_buildingIds[gridOffset];
+					int buildingId = map_building_at(gridOffset);
 					int offset = 0;
 					switch (Data_Buildings[buildingId].subtype.fortFigureType) {
 						case FIGURE_FORT_LEGIONARY: offset = 4; break;
@@ -463,13 +464,13 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 							xGraphic + 81, yGraphic + 5);
 					}
 				}
-			} else if (Data_Buildings[Data_Grid_buildingIds[gridOffset]].type == BUILDING_GATEHOUSE) {
+			} else if (Data_Buildings[map_building_at(gridOffset)].type == BUILDING_GATEHOUSE) {
 				int xy = map_property_multi_tile_xy(gridOffset);
 				if ((Data_State.map.orientation == Dir_0_Top && xy == Edge_X1Y1) ||
 					(Data_State.map.orientation == Dir_2_Right && xy == Edge_X0Y1) ||
 					(Data_State.map.orientation == Dir_4_Bottom && xy == Edge_X0Y0) ||
 					(Data_State.map.orientation == Dir_6_Left && xy == Edge_X1Y0)) {
-					int buildingId = Data_Grid_buildingIds[gridOffset];
+					int buildingId = map_building_at(gridOffset);
 					int graphicId = image_group(GROUP_BULIDING_GATEHOUSE);
 					if (Data_Buildings[buildingId].subtype.orientation == 1) {
 						if (Data_State.map.orientation == Dir_0_Top || Data_State.map.orientation == Dir_4_Bottom) {
@@ -573,7 +574,7 @@ static void drawHippodromeAndElevatedFigures(int selectedFigureId)
 				const image *img = image_get(graphicId);
 				if (img->num_animation_sprites &&
 					map_property_is_draw_tile(gridOffset) &&
-					Data_Buildings[Data_Grid_buildingIds[gridOffset]].type == BUILDING_HIPPODROME) {
+					Data_Buildings[map_building_at(gridOffset)].type == BUILDING_HIPPODROME) {
 					switch (map_property_multi_tile_size(gridOffset)) {
 						case 1:
 							Graphics_drawImage(graphicId + 1,
@@ -754,7 +755,7 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 		return;
 	}
 	int gridOffset = Data_State.map.current.gridOffset;
-	int buildingId = Data_Grid_buildingIds[gridOffset];
+	int buildingId = map_building_at(gridOffset);
 	int overlay = Data_State.currentOverlay;
 	// regular tooltips
 	if (overlay == Overlay_None && buildingId && Data_Buildings[buildingId].type == BUILDING_SENATE_UPGRADED) {

@@ -4,13 +4,13 @@
 #include "Terrain.h"
 
 #include "Data/CityInfo.h"
-#include "Data/Grid.h"
 
 #include "building/list.h"
 #include "core/calc.h"
 #include "figure/enemy_army.h"
 #include "figure/route.h"
 #include "figure/type.h"
+#include "map/building.h"
 #include "sound/effect.h"
 
 void FigureAction_taxCollector(figure *f)
@@ -51,7 +51,7 @@ void FigureAction_taxCollector(figure *f)
 			f->useCrossCountry = 1;
 			f->isGhost = 1;
 			if (FigureMovement_crossCountryWalkTicks(f, 1) == 1) {
-				if (Data_Grid_buildingIds[f->gridOffset] == f->buildingId) {
+				if (map_building_at(f->gridOffset) == f->buildingId) {
 					// returned to own building
 					f->state = FigureState_Dead;
 				} else {
@@ -128,7 +128,7 @@ void FigureAction_engineer(figure *f)
 			f->useCrossCountry = 1;
 			f->isGhost = 1;
 			if (FigureMovement_crossCountryWalkTicks(f, 1) == 1) {
-				if (Data_Grid_buildingIds[f->gridOffset] == f->buildingId) {
+				if (map_building_at(f->gridOffset) == f->buildingId) {
 					// returned to own building
 					f->state = FigureState_Dead;
 				} else {
@@ -356,7 +356,7 @@ void FigureAction_prefect(figure *f)
 			f->useCrossCountry = 1;
 			f->isGhost = 1;
 			if (FigureMovement_crossCountryWalkTicks(f, 1) == 1) {
-				if (Data_Grid_buildingIds[f->gridOffset] == f->buildingId) {
+				if (map_building_at(f->gridOffset) == f->buildingId) {
 					// returned to own building
 					f->state = FigureState_Dead;
 				} else {

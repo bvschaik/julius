@@ -12,6 +12,7 @@
 #include "core/calc.h"
 #include "figure/route.h"
 #include "game/time.h"
+#include "map/building.h"
 #include "map/figure.h"
 #include "map/grid.h"
 #include "map/property.h"
@@ -395,13 +396,13 @@ static void figureAdvanceRouteTile(figure *f, int roamingEnabled)
 		}
 	} else if (targetTerrain & (Terrain_Road | Terrain_AccessRamp)) {
 		if (roamingEnabled && targetTerrain & Terrain_Building) {
-			if (Data_Buildings[Data_Grid_buildingIds[targetGridOffset]].type == BUILDING_GATEHOUSE) {
+			if (Data_Buildings[map_building_at(targetGridOffset)].type == BUILDING_GATEHOUSE) {
 				// do not allow roaming through gatehouse
 				f->direction = DirFigure_9_Reroute;
 			}
 		}
 	} else if (targetTerrain & Terrain_Building) {
-		int type = Data_Buildings[Data_Grid_buildingIds[targetGridOffset]].type;
+		int type = Data_Buildings[map_building_at(targetGridOffset)].type;
 		switch (type) {
 			case BUILDING_WAREHOUSE:
 			case BUILDING_GRANARY:

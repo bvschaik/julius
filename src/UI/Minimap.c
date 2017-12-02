@@ -10,6 +10,7 @@
 #include "figure/figure.h"
 #include "figure/type.h"
 #include "graphics/image.h"
+#include "map/building.h"
 #include "map/figure.h"
 #include "map/property.h"
 #include "map/random.h"
@@ -161,7 +162,7 @@ static void drawTile(int xView, int yView, int gridOffset)
 	int terrain = Data_Grid_terrain[gridOffset];
 	// exception for fort ground: display as empty land
 	if (terrain & Terrain_Building) {
-		if (Data_Buildings[Data_Grid_buildingIds[gridOffset]].type == BUILDING_FORT_GROUND) {
+		if (Data_Buildings[map_building_at(gridOffset)].type == BUILDING_FORT_GROUND) {
 			terrain = 0;
 		}
 	}
@@ -169,7 +170,7 @@ static void drawTile(int xView, int yView, int gridOffset)
 	if (terrain & Terrain_Building) {
 		if (map_property_is_draw_tile(gridOffset)) {
 			int graphicId;
-			int buildingId = Data_Grid_buildingIds[gridOffset];
+			int buildingId = map_building_at(gridOffset);
 			if (Data_Buildings[buildingId].houseSize) {
 				graphicId = image_group(GROUP_MINIMAP_HOUSE);
 			} else if (Data_Buildings[buildingId].type == BUILDING_RESERVOIR) {

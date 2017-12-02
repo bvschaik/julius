@@ -24,6 +24,7 @@
 #include "core/direction.h"
 #include "figure/figure.h"
 #include "graphics/image.h"
+#include "map/building.h"
 #include "map/desirability.h"
 #include "map/grid.h"
 #include "map/random.h"
@@ -425,7 +426,7 @@ void Building_increaseDamageByEnemy(int gridOffset, int maxDamage)
 
 void Building_destroyByEnemy(int x, int y, int gridOffset)
 {
-	int buildingId = Data_Grid_buildingIds[gridOffset];
+	int buildingId = map_building_at(gridOffset);
 	if (buildingId > 0) {
 		struct Data_Building *b = &Data_Buildings[buildingId];
 		TerrainGraphics_setBuildingAreaRubble(buildingId, b->x, b->y, b->size);

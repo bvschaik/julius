@@ -10,6 +10,7 @@
 #include "city/culture.h"
 #include "figure/type.h"
 #include "game/resource.h"
+#include "map/building.h"
 #include "map/grid.h"
 
 #define FOR_XY_RADIUS \
@@ -21,7 +22,7 @@
 	int gridOffset = map_grid_offset(xMin, yMin);\
 	for (int yy = yMin; yy <= yMax; yy++) {\
 		for (int xx = xMin; xx <= xMax; xx++) {\
-			int buildingId = Data_Grid_buildingIds[gridOffset];\
+			int buildingId = map_building_at(gridOffset);\
 			if (buildingId) {
 
 #define END_FOR_XY_RADIUS \
@@ -344,7 +345,7 @@ static int provideMissionaryCoverage(int x, int y)
 	int gridOffset = map_grid_offset(xMin, yMin);
 	for (int yy = yMin; yy <= yMax; yy++) {
 		for (int xx = xMin; xx <= xMax; xx++) {
-			int buildingId = Data_Grid_buildingIds[gridOffset];
+			int buildingId = map_building_at(gridOffset);
 			if (buildingId) {
 				if (Data_Buildings[buildingId].type == BUILDING_NATIVE_HUT ||
 					Data_Buildings[buildingId].type == BUILDING_NATIVE_MEETING) {

@@ -30,6 +30,7 @@
 #include "figure/formation.h"
 #include "graphics/image.h"
 #include "map/bridge.h"
+#include "map/building.h"
 #include "map/grid.h"
 #include "map/property.h"
 #include "map/routing.h"
@@ -751,7 +752,7 @@ static void clearRegionConfirmed(int measureOnly, int xStart, int yStart, int xE
 			}
 			int terrain = Data_Grid_terrain[gridOffset] & Terrain_NotClear;
 			if (terrain & Terrain_Building) {
-				int buildingId = Data_Grid_buildingIds[gridOffset];
+				int buildingId = map_building_at(gridOffset);
 				if (!buildingId) {
 					continue;
 				}
@@ -885,7 +886,7 @@ static void clearRegion(int measureOnly, int xStart, int yStart, int xEnd, int y
 	for (int y = yMin; y <= yMax; y++) {
 		for (int x = xMin; x <= xMax; x++) {
 			int gridOffset = map_grid_offset(x,y);
-			int buildingId = Data_Grid_buildingIds[gridOffset];
+			int buildingId = map_building_at(gridOffset);
 			if (buildingId) {
 				if (Data_Buildings[buildingId].type == BUILDING_FORT ||
 					Data_Buildings[buildingId].type == BUILDING_FORT_GROUND) {

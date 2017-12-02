@@ -61,6 +61,7 @@ set (INPUT_FILES
 set (MAP_FILES
     src/map/bookmark.c
     src/map/bridge.c
+    src/map/building.c
     src/map/desirability.c
     src/map/figure.c
     src/map/grid.c

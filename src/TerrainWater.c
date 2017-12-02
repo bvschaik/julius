@@ -3,6 +3,7 @@
 
 #include "core/calc.h"
 #include "figure/figure.h"
+#include "map/building.h"
 #include "map/figure.h"
 #include "map/property.h"
 #include "scenario/map.h"
@@ -43,7 +44,7 @@ void Terrain_addWatersideBuildingToGrids(int buildingId, int x, int y, int size,
 				Data_Grid_terrain[gridOffset] &= Terrain_2e80;
 				Data_Grid_terrain[gridOffset] |= Terrain_Building;
 			}
-			Data_Grid_buildingIds[gridOffset] = buildingId;
+			map_building_set(gridOffset, buildingId);
 			map_property_clear_constructing(gridOffset);
 			map_property_set_multi_tile_size(gridOffset, size);
 			Data_Grid_graphicIds[gridOffset] = graphicId;

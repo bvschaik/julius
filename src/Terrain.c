@@ -13,6 +13,7 @@
 #include "core/calc.h"
 #include "graphics/image.h"
 #include "map/bridge.h"
+#include "map/building.h"
 #include "map/figure.h"
 #include "map/grid.h"
 #include "map/property.h"
@@ -100,7 +101,7 @@ void Terrain_addBuildingToGrids(int buildingId, int x, int y, int size, int grap
 			int gridOffset = map_grid_offset(x + dx, y + dy);
 			Data_Grid_terrain[gridOffset] &= Terrain_2e80;
 			Data_Grid_terrain[gridOffset] |= terrain;
-			Data_Grid_buildingIds[gridOffset] = buildingId;
+			map_building_set(gridOffset, buildingId);
 			map_property_clear_constructing(gridOffset);
 			map_property_set_multi_tile_size(gridOffset, size);
 			Data_Grid_graphicIds[gridOffset] = graphicId;
@@ -141,7 +142,7 @@ void Terrain_removeBuildingFromGrids(int buildingId, int x, int y)
 	for (int dy = 0; dy < size; dy++) {
 		for (int dx = 0; dx < size; dx++) {
 			int gridOffset = map_grid_offset(x + dx, y + dy);
-			if (buildingId && Data_Grid_buildingIds[gridOffset] != buildingId) {
+			if (buildingId && map_building_at(gridOffset) != buildingId) {
 				continue;
 			}
 			if (buildingId && Data_Buildings[buildingId].type != BUILDING_BURNING_RUIN) {
@@ -152,7 +153,7 @@ void Terrain_removeBuildingFromGrids(int buildingId, int x, int y)
 			map_property_clear_multi_tile_xy(gridOffset);
 			map_property_mark_draw_tile(gridOffset);
 			Data_Grid_aqueducts[gridOffset] = 0;
-			Data_Grid_buildingIds[gridOffset] = 0;
+			map_building_set(gridOffset, 0);
 			Data_Grid_buildingDamage[gridOffset] = 0;
 			Data_Grid_spriteOffsets[gridOffset] = 0;
 			if (Data_Grid_terrain[gridOffset] & Terrain_Water) {
@@ -232,7 +233,7 @@ int Terrain_hasRoadAccess(int x, int y, int size, int *roadX, int *roadY)
 	int minGridOffset = map_grid_offset(x, y);
 	FOR_XY_ADJACENT {
 		if (!(Data_Grid_terrain[gridOffset] & Terrain_Building) ||
-			Data_Buildings[Data_Grid_buildingIds[gridOffset]].type != BUILDING_GATEHOUSE) {
+			Data_Buildings[map_building_at(gridOffset)].type != BUILDING_GATEHOUSE) {
 			if (Data_Grid_terrain[gridOffset] & Terrain_Road) {
 				int roadIndex = 11;
 				for (int n = 0; n < 10; n++) {
@@ -265,7 +266,7 @@ int Terrain_hasRoadAccessHippodrome(int x, int y, int *roadX, int *roadY)
 	int minGridOffset = map_grid_offset(x, y);
 	FOR_XY_ADJACENT {
 		if (!(Data_Grid_terrain[gridOffset] & Terrain_Building) ||
-			Data_Buildings[Data_Grid_buildingIds[gridOffset]].type != BUILDING_GATEHOUSE) {
+			Data_Buildings[map_building_at(gridOffset)].type != BUILDING_GATEHOUSE) {
 			if (Data_Grid_terrain[gridOffset] & Terrain_Road) {
 				int roadIndex = 11;
 				for (int n = 0; n < 10; n++) {
@@ -284,7 +285,7 @@ int Terrain_hasRoadAccessHippodrome(int x, int y, int *roadX, int *roadY)
 	x += 5;
 	FOR_XY_ADJACENT {
 		if (!(Data_Grid_terrain[gridOffset] & Terrain_Building) ||
-			Data_Buildings[Data_Grid_buildingIds[gridOffset]].type != BUILDING_GATEHOUSE) {
+			Data_Buildings[map_building_at(gridOffset)].type != BUILDING_GATEHOUSE) {
 			if (Data_Grid_terrain[gridOffset] & Terrain_Road) {
 				int roadIndex = 11;
 				for (int n = 0; n < 10; n++) {
@@ -303,7 +304,7 @@ int Terrain_hasRoadAccessHippodrome(int x, int y, int *roadX, int *roadY)
 	x += 5;
 	FOR_XY_ADJACENT {
 		if (!(Data_Grid_terrain[gridOffset] & Terrain_Building) ||
-			Data_Buildings[Data_Grid_buildingIds[gridOffset]].type != BUILDING_GATEHOUSE) {
+			Data_Buildings[map_building_at(gridOffset)].type != BUILDING_GATEHOUSE) {
 			if (Data_Grid_terrain[gridOffset] & Terrain_Road) {
 				int roadIndex = 11;
 				for (int n = 0; n < 10; n++) {
@@ -657,9 +658,9 @@ static int getRoadTileForAqueduct(int gridOffset, int gateOrientation)
 {
 	int isRoad = (Data_Grid_terrain[gridOffset] & Terrain_Road) ? 1 : 0;
 	if (Data_Grid_terrain[gridOffset] & Terrain_Building) {
-		int type = Data_Buildings[Data_Grid_buildingIds[gridOffset]].type;
+		int type = Data_Buildings[map_building_at(gridOffset)].type;
 		if (type == BUILDING_GATEHOUSE) {
-			if (Data_Buildings[Data_Grid_buildingIds[gridOffset]].subtype.orientation == gateOrientation) {
+			if (Data_Buildings[map_building_at(gridOffset)].subtype.orientation == gateOrientation) {
 				isRoad = 1;
 			}
 		} else if (type == BUILDING_GRANARY) {
@@ -679,7 +680,7 @@ int Terrain_getAdjacentRoadTilesForAqueduct(int gridOffset)
 	roadTiles += getRoadTileForAqueduct(gridOffset + map_grid_delta(0, 1), 1);
 	roadTiles += getRoadTileForAqueduct(gridOffset + map_grid_delta(-1, 0), 2);
 	if (roadTiles == 4) {
-		if (Data_Buildings[Data_Grid_buildingIds[gridOffset]].type == BUILDING_GRANARY) {
+		if (Data_Buildings[map_building_at(gridOffset)].type == BUILDING_GRANARY) {
 			roadTiles = 2;
 		}
 	}
@@ -690,7 +691,7 @@ static int getAdjacentRoadTileForRoaming(int gridOffset)
 {
 	int isRoad = (Data_Grid_terrain[gridOffset] & (Terrain_Road | Terrain_AccessRamp)) ? 1 : 0;
 	if (Data_Grid_terrain[gridOffset] & Terrain_Building) {
-		int type = Data_Buildings[Data_Grid_buildingIds[gridOffset]].type;
+		int type = Data_Buildings[map_building_at(gridOffset)].type;
 		if (type == BUILDING_GATEHOUSE) {
 			isRoad = 0;
 		} else if (type == BUILDING_GRANARY) {
@@ -879,8 +880,8 @@ void Terrain_markBuildingsWithinWellRadius(int wellId, int radius)
 	int y = Data_Buildings[wellId].y;
 	int size = 1;
 	FOR_XY_RADIUS {
-		if (Data_Grid_buildingIds[gridOffset]) {
-			Data_Buildings[Data_Grid_buildingIds[gridOffset]].hasWellAccess = 1;
+		if (map_building_at(gridOffset)) {
+			Data_Buildings[map_building_at(gridOffset)].hasWellAccess = 1;
 		}
 	} END_FOR_XY_RADIUS;
 }
@@ -892,7 +893,7 @@ int Terrain_allHousesWithinWellRadiusHaveFountain(int wellId, int radius)
 	int y = Data_Buildings[wellId].y;
 	int size = 1;
 	FOR_XY_RADIUS {
-		int buildingId = Data_Grid_buildingIds[gridOffset];
+		int buildingId = map_building_at(gridOffset);
 		if (buildingId > 0 && Data_Buildings[buildingId].houseSize) {
 			numHouses++;
 			if (!(Data_Grid_terrain[gridOffset] & Terrain_FountainRange)) {
@@ -905,14 +906,14 @@ int Terrain_allHousesWithinWellRadiusHaveFountain(int wellId, int radius)
 
 int Terrain_isReservoir(int gridOffset)
 {
-	int buildingId = Data_Grid_buildingIds[gridOffset];
+	int buildingId = map_building_at(gridOffset);
 	if (!buildingId || Data_Buildings[buildingId].type != BUILDING_RESERVOIR) {
 		return 0;
 	}
 	for (int y = 0; y < 3; y++) {
 		for (int x = 0; x < 3; x++) {
 			int tileOffset = gridOffset + map_grid_delta(x, y);
-			if (Data_Grid_buildingIds[tileOffset] != buildingId) {
+			if (map_building_at(tileOffset) != buildingId) {
 				return 0;
 			}
 		}
@@ -930,7 +931,7 @@ void Terrain_markNativeLand(int x, int y, int size, int radius)
 int Terrain_hasBuildingOnNativeLand(int x, int y, int size, int radius)
 {
 	FOR_XY_RADIUS {
-		int buildingId = Data_Grid_buildingIds[gridOffset];
+		int buildingId = map_building_at(gridOffset);
 		if (buildingId > 0) {
 			int type = Data_Buildings[buildingId].type;
 			if (type != BUILDING_MISSION_POST &&
