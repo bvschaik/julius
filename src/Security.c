@@ -12,7 +12,6 @@
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
-#include "Data/Grid.h"
 #include "Data/State.h"
 
 #include "building/list.h"

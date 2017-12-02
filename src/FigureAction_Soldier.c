@@ -3,7 +3,6 @@
 #include "Figure.h"
 
 #include "Data/CityInfo.h"
-#include "Data/Grid.h"
 
 #include "core/calc.h"
 #include "figure/formation.h"

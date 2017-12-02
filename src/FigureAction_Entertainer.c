@@ -2,8 +2,6 @@
 
 #include "Terrain.h"
 
-#include "Data/Grid.h"
-
 #include "building/list.h"
 #include "core/calc.h"
 #include "figure/route.h"

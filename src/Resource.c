@@ -6,7 +6,6 @@
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
-#include "Data/Grid.h"
 
 #include "building/count.h"
 #include "game/tutorial.h"

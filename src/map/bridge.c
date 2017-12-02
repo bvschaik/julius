@@ -6,7 +6,6 @@
 #include "map/property.h"
 #include "map/routing_terrain.h"
 
-#include "Data/Grid.h"
 #include "Data/State.h"
 #include "../Terrain.h"
 

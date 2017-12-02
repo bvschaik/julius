@@ -2,8 +2,6 @@
 
 #include "map/grid.h"
 
-#include "Data/Grid.h"
-
 enum {
     Bitfield_Size1 = 0x00,
     Bitfield_Size2 = 0x01,

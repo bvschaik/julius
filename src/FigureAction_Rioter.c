@@ -4,7 +4,6 @@
 #include "Formation.h"
 
 #include "Data/CityInfo.h"
-#include "Data/Grid.h"
 
 #include "city/message.h"
 #include "figure/route.h"

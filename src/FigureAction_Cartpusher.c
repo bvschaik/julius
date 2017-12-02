@@ -3,7 +3,6 @@
 #include "Resource.h"
 
 #include "Data/CityInfo.h"
-#include "Data/Grid.h"
 
 #include "figure/route.h"
 #include "game/resource.h"
