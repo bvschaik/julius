@@ -143,7 +143,7 @@ void UI_BuildingInfo_init()
 	context.storageShowSpecialOrders = 0;
 	context.advisor = 0;
 	context.buildingId = map_building_at(gridOffset);
-	context.rubbleBuildingType = Data_Grid_rubbleBuildingType[gridOffset];
+	context.rubbleBuildingType = map_rubble_building_type(gridOffset);
 	context.hasReservoirPipes = terrain & Terrain_ReservoirRange;
 	context.aqueductHasWater = Data_Grid_aqueducts[gridOffset];
 

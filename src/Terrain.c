@@ -146,7 +146,7 @@ void Terrain_removeBuildingFromGrids(int buildingId, int x, int y)
 				continue;
 			}
 			if (buildingId && Data_Buildings[buildingId].type != BUILDING_BURNING_RUIN) {
-				Data_Grid_rubbleBuildingType[gridOffset] = Data_Buildings[buildingId].type;
+				map_set_rubble_building_type(gridOffset, Data_Buildings[buildingId].type);
 			}
 			map_property_clear_constructing(gridOffset);
 			map_property_set_multi_tile_size(gridOffset, 1);
@@ -154,7 +154,7 @@ void Terrain_removeBuildingFromGrids(int buildingId, int x, int y)
 			map_property_mark_draw_tile(gridOffset);
 			Data_Grid_aqueducts[gridOffset] = 0;
 			map_building_set(gridOffset, 0);
-			Data_Grid_buildingDamage[gridOffset] = 0;
+			map_building_damage_clear(gridOffset);
 			Data_Grid_spriteOffsets[gridOffset] = 0;
 			if (Data_Grid_terrain[gridOffset] & Terrain_Water) {
 				Data_Grid_terrain[gridOffset] &= Terrain_Water;

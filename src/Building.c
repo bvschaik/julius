@@ -417,8 +417,7 @@ int Building_collapseFirstOfType(int buildingType)
 
 void Building_increaseDamageByEnemy(int gridOffset, int maxDamage)
 {
-	Data_Grid_buildingDamage[gridOffset]++;
-	if (Data_Grid_buildingDamage[gridOffset] > maxDamage) {
+	if (map_building_damage_increase(gridOffset) > maxDamage) {
 		Building_destroyByEnemy(map_grid_offset_to_x(gridOffset),
 			map_grid_offset_to_y(gridOffset), gridOffset);
 	}

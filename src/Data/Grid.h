@@ -49,8 +49,6 @@ EXTERN UInt16_Grid(Data_Grid_terrain);
 EXTERN UInt8_Grid(Data_Grid_elevation);
 EXTERN UInt8_Grid(Data_Grid_aqueducts);
 EXTERN UInt8_Grid(Data_Grid_spriteOffsets);
-EXTERN UInt8_Grid(Data_Grid_buildingDamage);
-EXTERN UInt8_Grid(Data_Grid_rubbleBuildingType);
 
 // undo
 EXTERN UInt16_Grid(Data_Grid_Undo_graphicIds);

@@ -137,7 +137,7 @@ typedef struct {
     buffer *random;
     buffer *map_desirability;
     buffer *Data_Grid_elevation;
-    buffer *Data_Grid_buildingDamage;
+    buffer *building_damage_grid;
     buffer *Data_Grid_Undo_aqueducts;
     buffer *Data_Grid_Undo_spriteOffsets;
     buffer *figures;
@@ -285,7 +285,7 @@ static void init_savegame_data()
     state->random = create_savegame_piece(26244, 0);
     state->map_desirability = create_savegame_piece(26244, 1);
     state->Data_Grid_elevation = create_savegame_piece(26244, 1);
-    state->Data_Grid_buildingDamage = create_savegame_piece(26244, 1);
+    state->building_damage_grid = create_savegame_piece(26244, 1);
     state->Data_Grid_Undo_aqueducts = create_savegame_piece(26244, 1);
     state->Data_Grid_Undo_spriteOffsets = create_savegame_piece(26244, 1);
     state->figures = create_savegame_piece(128000, 1);
@@ -413,7 +413,7 @@ static void savegame_deserialize(savegame_state *state)
     read_all_from_buffer(state->savegameFileVersion, &savegameFileVersion);
     read_all_from_buffer(state->Data_Grid_graphicIds, &Data_Grid_graphicIds);
 
-    map_building_load_state(state->building_grid);
+    map_building_load_state(state->building_grid, state->building_damage_grid);
 
     read_all_from_buffer(state->Data_Grid_terrain, &Data_Grid_terrain);
     read_all_from_buffer(state->Data_Grid_aqueducts, &Data_Grid_aqueducts);
@@ -428,7 +428,6 @@ static void savegame_deserialize(savegame_state *state)
     map_desirability_load_state(state->map_desirability);
 
     read_all_from_buffer(state->Data_Grid_elevation, &Data_Grid_elevation);
-    read_all_from_buffer(state->Data_Grid_buildingDamage, &Data_Grid_buildingDamage);
     read_all_from_buffer(state->Data_Grid_Undo_aqueducts, &Data_Grid_Undo_aqueducts);
     read_all_from_buffer(state->Data_Grid_Undo_spriteOffsets, &Data_Grid_Undo_spriteOffsets);
 
@@ -536,7 +535,7 @@ static void savegame_serialize(savegame_state *state)
     write_all_to_buffer(state->savegameFileVersion, &savegameFileVersion);
     write_all_to_buffer(state->Data_Grid_graphicIds, &Data_Grid_graphicIds);
 
-    map_building_load_state(state->building_grid);
+    map_building_load_state(state->building_grid, state->building_damage_grid);
 
     write_all_to_buffer(state->Data_Grid_terrain, &Data_Grid_terrain);
     write_all_to_buffer(state->Data_Grid_aqueducts, &Data_Grid_aqueducts);
@@ -550,7 +549,6 @@ static void savegame_serialize(savegame_state *state)
     map_desirability_save_state(state->map_desirability);
 
     write_all_to_buffer(state->Data_Grid_elevation, &Data_Grid_elevation);
-    write_all_to_buffer(state->Data_Grid_buildingDamage, &Data_Grid_buildingDamage);
     write_all_to_buffer(state->Data_Grid_Undo_aqueducts, &Data_Grid_Undo_aqueducts);
     write_all_to_buffer(state->Data_Grid_Undo_spriteOffsets, &Data_Grid_Undo_spriteOffsets);
 

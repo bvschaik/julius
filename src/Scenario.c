@@ -250,8 +250,6 @@ static void initGrids()
 	map_random_clear();
 	map_desirability_clear();
 	map_grid_clear_u8(Data_Grid_elevation);
-	map_grid_clear_u8(Data_Grid_buildingDamage);
-	map_grid_clear_u8(Data_Grid_rubbleBuildingType);
 	map_soldier_strength_clear();
 	map_road_network_clear();
 

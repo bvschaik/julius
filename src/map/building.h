@@ -1,6 +1,7 @@
 #ifndef MAP_BUILDING_H
 #define MAP_BUILDING_H
 
+#include "building/type.h"
 #include "core/buffer.h"
 
 /**
@@ -13,12 +14,25 @@ int map_building_at(int grid_offset);
 void map_building_set(int grid_offset, int building_id);
 
 /**
- * Clears the map
+ * Increases building damage by 1
+ * @param grid_offset Map offset
+ * @return New damage amount
+ */
+int map_building_damage_increase(int grid_offset);
+
+void map_building_damage_clear(int grid_offset);
+
+int map_rubble_building_type(int grid_offset);
+
+void map_set_rubble_building_type(int grid_offset, building_type type);
+
+/**
+ * Clears the maps related to buildings
  */
 void map_building_clear();
 
-void map_building_save_state(buffer *buf);
+void map_building_save_state(buffer *buildings, buffer *damage);
 
-void map_building_load_state(buffer *buf);
+void map_building_load_state(buffer *buildings, buffer *damage);
 
 #endif // MAP_BUILDING_H
