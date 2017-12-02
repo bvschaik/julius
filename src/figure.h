@@ -31,11 +31,6 @@ void Figure_playHitSound(int figureType);
 
 int Figure_provideServiceCoverage(int figureId);
 
-void FigureRoute_clearList();
-void FigureRoute_clean();
-void FigureRoute_add(int figureId);
-void FigureRoute_remove(int figureId);
-
 void FigureGeneration_generateFiguresForBuildings();
 
 #endif

@@ -838,10 +838,10 @@ static void drawBuildingFootprintForOverlay(int buildingId, int gridOffset, int 
             {
                 int isField = 0;
                 int edge = Data_Grid_edge[gridOffset];
-                if ((Data_State.map.orientation == Dir_0_Top && edge != 0x48) ||
-                        (Data_State.map.orientation == Dir_2_Right && edge != 0x40) ||
-                        (Data_State.map.orientation == Dir_4_Bottom && edge != 0x41) ||
-                        (Data_State.map.orientation == Dir_6_Left && edge != 0x49))
+                if ((Data_State.map.orientation == DIR_0_TOP && edge != 0x48) ||
+                        (Data_State.map.orientation == DIR_2_RIGHT && edge != 0x40) ||
+                        (Data_State.map.orientation == DIR_4_BOTTOM && edge != 0x41) ||
+                        (Data_State.map.orientation == DIR_6_LEFT && edge != 0x49))
                 {
                     isField = 1;
                 }
@@ -868,10 +868,10 @@ static void drawBuildingFootprintForOverlay(int buildingId, int gridOffset, int 
             if (b->type >= BUILDING_WHEAT_FARM && b->type <= BUILDING_PIG_FARM)
             {
                 int edge = Data_Grid_edge[gridOffset];
-                if ((Data_State.map.orientation == Dir_0_Top && edge != 0x50) ||
-                        (Data_State.map.orientation == Dir_2_Right && edge != 0x40) ||
-                        (Data_State.map.orientation == Dir_4_Bottom && edge != 0x42) ||
-                        (Data_State.map.orientation == Dir_6_Left && edge != 0x52))
+                if ((Data_State.map.orientation == DIR_0_TOP && edge != 0x50) ||
+                        (Data_State.map.orientation == DIR_2_RIGHT && edge != 0x40) ||
+                        (Data_State.map.orientation == DIR_4_BOTTOM && edge != 0x42) ||
+                        (Data_State.map.orientation == DIR_6_LEFT && edge != 0x52))
                 {
                     draw = 0;
                 }
@@ -1202,10 +1202,10 @@ static void drawBuildingTopForFireOverlay(int gridOffset, int buildingId, int xO
                 Data_Buildings[buildingId].type <= BUILDING_PIG_FARM)
         {
             int edge = Data_Grid_edge[gridOffset];
-            if ((Data_State.map.orientation == Dir_0_Top && edge != 0x50) ||
-                    (Data_State.map.orientation == Dir_2_Right && edge != 0x40) ||
-                    (Data_State.map.orientation == Dir_4_Bottom && edge != 0x42) ||
-                    (Data_State.map.orientation == Dir_6_Left && edge != 0x52))
+            if ((Data_State.map.orientation == DIR_0_TOP && edge != 0x50) ||
+                    (Data_State.map.orientation == DIR_2_RIGHT && edge != 0x40) ||
+                    (Data_State.map.orientation == DIR_4_BOTTOM && edge != 0x42) ||
+                    (Data_State.map.orientation == DIR_6_LEFT && edge != 0x52))
             {
                 draw = 0;
             }
@@ -1233,10 +1233,10 @@ static void drawBuildingTopForDamageOverlay(int gridOffset, int buildingId, int 
                 Data_Buildings[buildingId].type <= BUILDING_PIG_FARM)
         {
             int edge = Data_Grid_edge[gridOffset];
-            if ((Data_State.map.orientation == Dir_0_Top && edge != 0x50) ||
-                    (Data_State.map.orientation == Dir_2_Right && edge != 0x40) ||
-                    (Data_State.map.orientation == Dir_4_Bottom && edge != 0x42) ||
-                    (Data_State.map.orientation == Dir_6_Left && edge != 0x52))
+            if ((Data_State.map.orientation == DIR_0_TOP && edge != 0x50) ||
+                    (Data_State.map.orientation == DIR_2_RIGHT && edge != 0x40) ||
+                    (Data_State.map.orientation == DIR_4_BOTTOM && edge != 0x42) ||
+                    (Data_State.map.orientation == DIR_6_LEFT && edge != 0x52))
             {
                 draw = 0;
             }
@@ -1472,7 +1472,7 @@ static void drawBuildingTopForFoodStocksOverlay(int gridOffset, int buildingId, 
             {
                 int pop = b->housePopulation;
                 int stocks = 0;
-                for (int i = INVENTORY_MIN_FOOD; i <= INVENTORY_MAX_FOOD; i++)
+                for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++)
                 {
                     stocks += b->data.house.inventory[i];
                 }
@@ -1731,10 +1731,10 @@ static void drawBuildingTopForProblemsOverlay(int gridOffset, int buildingId, in
     {
         int isField = 0;
         int edge = Data_Grid_edge[gridOffset];
-        if ((Data_State.map.orientation == Dir_0_Top && edge != 0x48) ||
-                (Data_State.map.orientation == Dir_2_Right && edge != 0x40) ||
-                (Data_State.map.orientation == Dir_4_Bottom && edge != 0x41) ||
-                (Data_State.map.orientation == Dir_6_Left && edge != 0x49))
+        if ((Data_State.map.orientation == DIR_0_TOP && edge != 0x48) ||
+                (Data_State.map.orientation == DIR_2_RIGHT && edge != 0x40) ||
+                (Data_State.map.orientation == DIR_4_BOTTOM && edge != 0x41) ||
+                (Data_State.map.orientation == DIR_6_LEFT && edge != 0x49))
         {
             isField = 1;
         }

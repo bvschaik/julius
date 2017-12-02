@@ -106,7 +106,7 @@ void Resource_calculateWorkshopStocks()
             {
                 room = 0;
             }
-            int workshopResource = b->subtype.workshopResource;
+            int workshopResource = b->subtype.workshopType;
             Data_CityInfo.resourceWorkshopRawMaterialSpace[workshopResource] += room;
             Data_CityInfo.resourceWorkshopRawMaterialStored[workshopResource] += b->loadsStored;
         }
@@ -125,19 +125,19 @@ int Resource_getWorkshopWithRoomForRawMaterial(
     switch (resource)
     {
     case RESOURCE_OLIVES:
-        outputType = WorkshopRESOURCE_OLIVESToOil;
+        outputType = WORKSHOP_OLIVES_TO_OIL;
         break;
     case RESOURCE_VINES:
-        outputType = WorkshopRESOURCE_VINESToWine;
+        outputType = WORKSHOP_VINES_TO_WINE;
         break;
     case RESOURCE_IRON:
-        outputType = WorkshopRESOURCE_IRONToWeapons;
+        outputType = WORKSHOP_IRON_TO_WEAPONS;
         break;
     case RESOURCE_TIMBER:
-        outputType = WorkshopRESOURCE_TIMBERToFurniture;
+        outputType = WORKSHOP_TIMBER_TO_FURNITURE;
         break;
     case RESOURCE_CLAY:
-        outputType = WorkshopRESOURCE_CLAYToPottery;
+        outputType = WORKSHOP_CLAY_TO_POTTERY;
         break;
     default:
         return 0;
@@ -155,7 +155,7 @@ int Resource_getWorkshopWithRoomForRawMaterial(
         {
             continue;
         }
-        if (b->subtype.workshopResource == outputType && b->roadNetworkId == roadNetworkId && b->loadsStored < 2)
+        if (b->subtype.workshopType == outputType && b->roadNetworkId == roadNetworkId && b->loadsStored < 2)
         {
             int dist = Resource_getDistance(b->x, b->y, x, y, distanceFromEntry, b->distanceFromEntry);
             if (b->loadsStored > 0)
@@ -186,19 +186,19 @@ int Resource_getWorkshopForRawMaterial(
     switch (resource)
     {
     case RESOURCE_OLIVES:
-        outputType = WorkshopRESOURCE_OLIVESToOil;
+        outputType = WORKSHOP_OLIVES_TO_OIL;
         break;
     case RESOURCE_VINES:
-        outputType = WorkshopRESOURCE_VINESToWine;
+        outputType = WORKSHOP_VINES_TO_WINE;
         break;
     case RESOURCE_IRON:
-        outputType = WorkshopRESOURCE_IRONToWeapons;
+        outputType = WORKSHOP_IRON_TO_WEAPONS;
         break;
     case RESOURCE_TIMBER:
-        outputType = WorkshopRESOURCE_TIMBERToFurniture;
+        outputType = WORKSHOP_TIMBER_TO_FURNITURE;
         break;
     case RESOURCE_CLAY:
-        outputType = WorkshopRESOURCE_CLAYToPottery;
+        outputType = WORKSHOP_CLAY_TO_POTTERY;
         break;
     default:
         return 0;
@@ -216,7 +216,7 @@ int Resource_getWorkshopForRawMaterial(
         {
             continue;
         }
-        if (b->subtype.workshopResource == outputType && b->roadNetworkId == roadNetworkId)
+        if (b->subtype.workshopType == outputType && b->roadNetworkId == roadNetworkId)
         {
             int dist = 10 * b->loadsStored +
                        Resource_getDistance(b->x, b->y, x, y, distanceFromEntry, b->distanceFromEntry);

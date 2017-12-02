@@ -8,6 +8,7 @@
 #include <data>
 #include <scenario>
 #include <game>
+#include <core>
 
 #include "building/storage.h"
 #include "empire/city.h"
@@ -295,13 +296,13 @@ void FigureAction_tradeCaravan(int figureId)
         FigureMovement_walkTicks(figureId, 1);
         switch (f->direction)
         {
-        case DirFigure_8_AtDestination:
+        case DIR_FIGURE_AT_DESTINATION:
             f->actionState = FigureActionState_102_TradeCaravanTrading;
             break;
-        case DirFigure_9_Reroute:
-            FigureRoute_remove(figureId);
+        case DIR_FIGURE_REROUTE:
+            figure_route_remove(figureId);
             break;
-        case DirFigure_10_Lost:
+        case DIR_FIGURE_LOST:
             f->state = FigureState_Dead;
             f->isGhost = 1;
             break;
@@ -364,14 +365,14 @@ void FigureAction_tradeCaravan(int figureId)
         FigureMovement_walkTicks(figureId, 1);
         switch (f->direction)
         {
-        case DirFigure_8_AtDestination:
+        case DIR_FIGURE_AT_DESTINATION:
             f->actionState = FigureActionState_100_TradeCaravanCreated;
             f->state = FigureState_Dead;
             break;
-        case DirFigure_9_Reroute:
-            FigureRoute_remove(figureId);
+        case DIR_FIGURE_REROUTE:
+            figure_route_remove(figureId);
             break;
-        case DirFigure_10_Lost:
+        case DIR_FIGURE_LOST:
             f->state = FigureState_Dead;
             break;
         }
@@ -441,15 +442,15 @@ void FigureAction_nativeTrader(int figureId)
         break;
     case FigureActionState_160_NativeTraderGoingToWarehouse:
         FigureMovement_walkTicks(figureId, 1);
-        if (f->direction == DirFigure_8_AtDestination)
+        if (f->direction == DIR_FIGURE_AT_DESTINATION)
         {
             f->actionState = FigureActionState_163_NativeTraderAtWarehouse;
         }
-        else if (f->direction == DirFigure_9_Reroute)
+        else if (f->direction == DIR_FIGURE_REROUTE)
         {
-            FigureRoute_remove(figureId);
+            figure_route_remove(figureId);
         }
-        else if (f->direction == DirFigure_10_Lost)
+        else if (f->direction == DIR_FIGURE_LOST)
         {
             f->state = FigureState_Dead;
             f->isGhost = 1;
@@ -461,13 +462,13 @@ void FigureAction_nativeTrader(int figureId)
         break;
     case FigureActionState_161_NativeTraderReturning:
         FigureMovement_walkTicks(figureId, 1);
-        if (f->direction == DirFigure_8_AtDestination || f->direction == DirFigure_10_Lost)
+        if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST)
         {
             f->state = FigureState_Dead;
         }
-        else if (f->direction == DirFigure_9_Reroute)
+        else if (f->direction == DIR_FIGURE_REROUTE)
         {
-            FigureRoute_remove(figureId);
+            figure_route_remove(figureId);
         }
         break;
     case FigureActionState_162_NativeTraderCreated:
@@ -634,15 +635,15 @@ void FigureAction_tradeShip(int figureId)
     case FigureActionState_111_TradeShipGoingToDock:
         FigureMovement_walkTicks(figureId, 1);
         f->heightAdjustedTicks = 0;
-        if (f->direction == DirFigure_8_AtDestination)
+        if (f->direction == DIR_FIGURE_AT_DESTINATION)
         {
             f->actionState = FigureActionState_112_TradeShipMoored;
         }
-        else if (f->direction == DirFigure_9_Reroute)
+        else if (f->direction == DIR_FIGURE_REROUTE)
         {
-            FigureRoute_remove(figureId);
+            figure_route_remove(figureId);
         }
-        else if (f->direction == DirFigure_10_Lost)
+        else if (f->direction == DIR_FIGURE_LOST)
         {
             f->state = FigureState_Dead;
             if (!city_message_get_category_count(MESSAGE_CAT_BLOCKED_DOCK))
@@ -684,16 +685,16 @@ void FigureAction_tradeShip(int figureId)
         switch (Data_Buildings[f->destinationBuildingId].data.other.dockOrientation)
         {
         case 0:
-            f->direction = Dir_2_Right;
+            f->direction = DIR_2_RIGHT;
             break;
         case 1:
-            f->direction = Dir_4_Bottom;
+            f->direction = DIR_4_BOTTOM;
             break;
         case 2:
-            f->direction = Dir_6_Left;
+            f->direction = DIR_6_LEFT;
             break;
         default:
-            f->direction = Dir_0_Top;
+            f->direction = DIR_0_TOP;
             break;
         }
         f->graphicOffset = 0;
@@ -702,15 +703,15 @@ void FigureAction_tradeShip(int figureId)
     case FigureActionState_113_TradeShipGoingToDockQueue:
         FigureMovement_walkTicks(figureId, 1);
         f->heightAdjustedTicks = 0;
-        if (f->direction == DirFigure_8_AtDestination)
+        if (f->direction == DIR_FIGURE_AT_DESTINATION)
         {
             f->actionState = FigureActionState_114_TradeShipAnchored;
         }
-        else if (f->direction == DirFigure_9_Reroute)
+        else if (f->direction == DIR_FIGURE_REROUTE)
         {
-            FigureRoute_remove(figureId);
+            figure_route_remove(figureId);
         }
-        else if (f->direction == DirFigure_10_Lost)
+        else if (f->direction == DIR_FIGURE_LOST)
         {
             f->state = FigureState_Dead;
         }
@@ -742,16 +743,16 @@ void FigureAction_tradeShip(int figureId)
     case FigureActionState_115_TradeShipLeaving:
         FigureMovement_walkTicks(figureId, 1);
         f->heightAdjustedTicks = 0;
-        if (f->direction == DirFigure_8_AtDestination)
+        if (f->direction == DIR_FIGURE_AT_DESTINATION)
         {
             f->actionState = FigureActionState_110_TradeShipCreated;
             f->state = FigureState_Dead;
         }
-        else if (f->direction == DirFigure_9_Reroute)
+        else if (f->direction == DIR_FIGURE_REROUTE)
         {
-            FigureRoute_remove(figureId);
+            figure_route_remove(figureId);
         }
-        else if (f->direction == DirFigure_10_Lost)
+        else if (f->direction == DIR_FIGURE_LOST)
         {
             f->state = FigureState_Dead;
         }

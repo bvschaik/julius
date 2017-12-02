@@ -106,7 +106,7 @@ static void javelinLaunchMissile(int figureId, struct Data_Figure *f)
         if (FigureAction_CombatSoldier_getMissileTarget(figureId, 10, &xTile, &yTile))
         {
             f->attackGraphicOffset = 1;
-            f->direction = Routing_getDirectionForMissileShooter(f->x, f->y, xTile, yTile);
+            f->direction = calc_missile_shooter_direction(f->x, f->y, xTile, yTile);
         }
         else
         {
@@ -163,7 +163,7 @@ static int soldierFindMopUpTarget(int figureId, struct Data_Figure *f)
             f->actionState = FigureActionState_84_SoldierAtStandard;
             f->graphicOffset = 0;
         }
-        FigureRoute_remove(figureId);
+        figure_route_remove(figureId);
     }
     return targetId;
 }
@@ -353,15 +353,15 @@ void FigureAction_soldier(int figureId)
         f->destinationY = f->formationPositionY;
         f->destinationGridOffsetSoldier = GridOffset(f->destinationX, f->destinationY);
         FigureMovement_walkTicks(figureId, speedFactor);
-        if (f->direction == DirFigure_8_AtDestination)
+        if (f->direction == DIR_FIGURE_AT_DESTINATION)
         {
             f->actionState = FigureActionState_80_SoldierAtRest;
         }
-        else if (f->direction == DirFigure_9_Reroute)
+        else if (f->direction == DIR_FIGURE_REROUTE)
         {
-            FigureRoute_remove(figureId);
+            figure_route_remove(figureId);
         }
-        else if (f->direction == DirFigure_10_Lost)
+        else if (f->direction == DIR_FIGURE_LOST)
         {
             f->state = FigureState_Dead;
         }
@@ -371,13 +371,13 @@ void FigureAction_soldier(int figureId)
         f->destinationX = f->sourceX;
         f->destinationY = f->sourceY;
         FigureMovement_walkTicks(figureId, speedFactor);
-        if (f->direction == DirFigure_8_AtDestination || f->direction == DirFigure_10_Lost)
+        if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST)
         {
             f->state = FigureState_Dead;
         }
-        else if (f->direction == DirFigure_9_Reroute)
+        else if (f->direction == DIR_FIGURE_REROUTE)
         {
-            FigureRoute_remove(figureId);
+            figure_route_remove(figureId);
         }
         break;
     case FigureActionState_83_SoldierGoingToStandard:
@@ -391,16 +391,16 @@ void FigureAction_soldier(int figureId)
         }
         f->destinationGridOffsetSoldier = GridOffset(f->destinationX, f->destinationY);
         FigureMovement_walkTicks(figureId, speedFactor);
-        if (f->direction == DirFigure_8_AtDestination)
+        if (f->direction == DIR_FIGURE_AT_DESTINATION)
         {
             f->actionState = FigureActionState_84_SoldierAtStandard;
             f->graphicOffset = 0;
         }
-        else if (f->direction == DirFigure_9_Reroute)
+        else if (f->direction == DIR_FIGURE_REROUTE)
         {
-            FigureRoute_remove(figureId);
+            figure_route_remove(figureId);
         }
-        else if (f->direction == DirFigure_10_Lost)
+        else if (f->direction == DIR_FIGURE_LOST)
         {
             f->alternativeLocationIndex++;
             if (f->alternativeLocationIndex > 168)
@@ -445,15 +445,15 @@ void FigureAction_soldier(int figureId)
         formation_legion_set_trained(m->id);
         f->formationAtRest = 1;
         FigureMovement_walkTicks(figureId, speedFactor);
-        if (f->direction == DirFigure_8_AtDestination)
+        if (f->direction == DIR_FIGURE_AT_DESTINATION)
         {
             f->actionState = FigureActionState_81_SoldierGoingToFort;
         }
-        else if (f->direction == DirFigure_9_Reroute)
+        else if (f->direction == DIR_FIGURE_REROUTE)
         {
-            FigureRoute_remove(figureId);
+            figure_route_remove(figureId);
         }
-        else if (f->direction == DirFigure_10_Lost)
+        else if (f->direction == DIR_FIGURE_LOST)
         {
             f->state = FigureState_Dead;
         }
@@ -463,13 +463,13 @@ void FigureAction_soldier(int figureId)
         if (soldierFindMopUpTarget(figureId, f))
         {
             FigureMovement_walkTicks(figureId, speedFactor);
-            if (f->direction == DirFigure_8_AtDestination)
+            if (f->direction == DIR_FIGURE_AT_DESTINATION)
             {
                 f->destinationX = Data_Figures[f->targetFigureId].x;
                 f->destinationY = Data_Figures[f->targetFigureId].y;
-                FigureRoute_remove(figureId);
+                figure_route_remove(figureId);
             }
-            else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost)
+            else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST)
             {
                 f->actionState = FigureActionState_84_SoldierAtStandard;
                 f->targetFigureId = 0;
@@ -482,16 +482,16 @@ void FigureAction_soldier(int figureId)
         f->destinationX = Data_CityInfo.exitPointX;
         f->destinationY = Data_CityInfo.exitPointY;
         FigureMovement_walkTicks(figureId, speedFactor);
-        if (f->direction == DirFigure_8_AtDestination)
+        if (f->direction == DIR_FIGURE_AT_DESTINATION)
         {
             f->actionState = FigureActionState_89_SoldierAtDistantBattle;
-            FigureRoute_remove(figureId);
+            figure_route_remove(figureId);
         }
-        else if (f->direction == DirFigure_9_Reroute)
+        else if (f->direction == DIR_FIGURE_REROUTE)
         {
-            FigureRoute_remove(figureId);
+            figure_route_remove(figureId);
         }
-        else if (f->direction == DirFigure_10_Lost)
+        else if (f->direction == DIR_FIGURE_LOST)
         {
             f->state = FigureState_Dead;
         }
@@ -504,15 +504,15 @@ void FigureAction_soldier(int figureId)
         f->destinationY = f->formationPositionY;
         f->destinationGridOffsetSoldier = GridOffset(f->destinationX, f->destinationY);
         FigureMovement_walkTicks(figureId, speedFactor);
-        if (f->direction == DirFigure_8_AtDestination)
+        if (f->direction == DIR_FIGURE_AT_DESTINATION)
         {
             f->actionState = FigureActionState_80_SoldierAtRest;
         }
-        else if (f->direction == DirFigure_9_Reroute)
+        else if (f->direction == DIR_FIGURE_REROUTE)
         {
-            FigureRoute_remove(figureId);
+            figure_route_remove(figureId);
         }
-        else if (f->direction == DirFigure_10_Lost)
+        else if (f->direction == DIR_FIGURE_LOST)
         {
             f->state = FigureState_Dead;
         }

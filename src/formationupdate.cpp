@@ -2,13 +2,13 @@
 
 #include "figure.h"
 #include "figureaction.h"
-#include "grid.h"
 #include "city/message.h"
 #include "routing.h"
 #include "terraingraphics.h"
 
 #include <sound>
 #include <data>
+#include <game>
 
 #include "core/calc.h"
 #include "core/random.h"
@@ -194,7 +194,7 @@ static void tickUpdateLegions()
                         f->actionState != FigureActionState_148_Fleeing)
                 {
                     f->actionState = FigureActionState_148_Fleeing;
-                    FigureRoute_remove(m->figures[n]);
+                    figure_route_remove(m->figures[n]);
                 }
             }
         }
@@ -251,7 +251,7 @@ static void addRomanSoldierConcentration(int x, int y, int radius, int amount)
 
 static void calculateRomanSoldierConcentration()
 {
-    Grid_clearUByteGrid(Data_Grid_romanSoldierConcentration);
+    map_grid_clear_u8(Data_Grid_romanSoldierConcentration);
     for (int i = 1; i <= MAX_LEGIONS; i++)
     {
         const formation *m = formation_get(i);
@@ -301,7 +301,7 @@ static int getHighestRomanSoldierConcentration(int x, int y, int radius, int *xT
         for (int xx = xMin; xx <= xMax; xx++)
         {
             int gridOffset = GridOffset(xx, yy);
-            if (Data_Grid_routingDistance[gridOffset] > 0 &&
+            if (map_routing_distance(gridOffset) > 0 &&
                     Data_Grid_romanSoldierConcentration[gridOffset] > maxValue)
             {
                 maxValue = Data_Grid_romanSoldierConcentration[gridOffset];
@@ -720,7 +720,7 @@ static void update_enemy_formation(const formation *m, void *data)
                     f->actionState != FigureActionState_148_Fleeing)
             {
                 f->actionState = FigureActionState_148_Fleeing;
-                FigureRoute_remove(m->figures[n]);
+                figure_route_remove(m->figures[n]);
             }
         }
         return;
@@ -807,35 +807,35 @@ static int getHerdRoamingDestination(int formationId, int allowNegativeDesirabil
         int xTarget, yTarget;
         switch (targetDirection)
         {
-        case Dir_0_Top:
+        case DIR_0_TOP:
             xTarget = x;
             yTarget = y - distance;
             break;
-        case Dir_1_TopRight:
+        case DIR_1_TOP_RIGHT:
             xTarget = x + distance;
             yTarget = y - distance;
             break;
-        case Dir_2_Right:
+        case DIR_2_RIGHT:
             xTarget = x + distance;
             yTarget = y;
             break;
-        case Dir_3_BottomRight:
+        case DIR_3_BOTTOM_RIGHT:
             xTarget = x + distance;
             yTarget = y + distance;
             break;
-        case Dir_4_Bottom:
+        case DIR_4_BOTTOM:
             xTarget = x;
             yTarget = y + distance;
             break;
-        case Dir_5_BottomLeft:
+        case DIR_5_BOTTOM_LEFT:
             xTarget = x - distance;
             yTarget = y + distance;
             break;
-        case Dir_6_Left:
+        case DIR_6_LEFT:
             xTarget = x - distance;
             yTarget = y;
             break;
-        case Dir_7_TopLeft:
+        case DIR_7_TOP_LEFT:
             xTarget = x - distance;
             yTarget = y - distance;
             break;
@@ -895,7 +895,7 @@ static void moveAnimals(const formation *m, int attackingAnimals)
                 f->targetFigureId = targetId;
                 Data_Figures[targetId].targetedByFigureId = figureId;
                 f->targetFigureCreatedSequence = Data_Figures[targetId].createdSequence;
-                FigureRoute_remove(figureId);
+                figure_route_remove(figureId);
             }
             else
             {
@@ -916,7 +916,7 @@ static void update_herd_formation(const formation *m)
         // spawn new wolf
         if (!(Data_Grid_terrain[GridOffset(m->x, m->y)] & Terrain_d73f))
         {
-            int wolfId = Figure_create(m->figure_type, m->x, m->y, Dir_0_Top);
+            int wolfId = Figure_create(m->figure_type, m->x, m->y, DIR_0_TOP);
             Data_Figures[wolfId].actionState = FigureActionState_196_HerdAnimalAtRest;
             Data_Figures[wolfId].formationId = m->id;
             Data_Figures[wolfId].waitTicks = wolfId & 0x1f;

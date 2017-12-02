@@ -1,6 +1,5 @@
 #include "undo.h"
 
-#include "grid.h"
 #include "resource.h"
 #include "routing.h"
 #include "terrain.h"
@@ -56,12 +55,12 @@ int Undo::recordBeforeBuild()
         }
     }
 
-    Grid_copyShortGrid(Data_Grid_graphicIds, Data_Grid_Undo_graphicIds);
-    Grid_copyShortGrid(Data_Grid_terrain, Data_Grid_Undo_terrain);
-    Grid_copyByteGrid(Data_Grid_aqueducts, Data_Grid_Undo_aqueducts);
-    Grid_copyByteGrid(Data_Grid_bitfields, Data_Grid_Undo_bitfields);
-    Grid_copyByteGrid(Data_Grid_edge, Data_Grid_Undo_edge);
-    Grid_copyByteGrid(Data_Grid_spriteOffsets, Data_Grid_Undo_spriteOffsets);
+    map_grid_copy_u16(Data_Grid_graphicIds, Data_Grid_Undo_graphicIds);
+    map_grid_copy_u16(Data_Grid_terrain, Data_Grid_Undo_terrain);
+    map_grid_copy_u8(Data_Grid_aqueducts, Data_Grid_Undo_aqueducts);
+    map_grid_copy_u8(Data_Grid_bitfields, Data_Grid_Undo_bitfields);
+    map_grid_copy_u8(Data_Grid_edge, Data_Grid_Undo_edge);
+    map_grid_copy_u8(Data_Grid_spriteOffsets, Data_Grid_Undo_spriteOffsets);
 
     return 1;
 }
@@ -229,41 +228,41 @@ void Undo::perform()
                 placeBuildingOnTerrain(buildingId);
             }
         }
-        Grid_copyShortGrid(Data_Grid_Undo_terrain, Data_Grid_terrain);
-        Grid_copyByteGrid(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
-        Grid_copyByteGrid(Data_Grid_Undo_spriteOffsets, Data_Grid_spriteOffsets);
-        Grid_copyShortGrid(Data_Grid_Undo_graphicIds, Data_Grid_graphicIds);
-        Grid_copyByteGrid(Data_Grid_Undo_bitfields, Data_Grid_bitfields);
-        Grid_copyByteGrid(Data_Grid_Undo_edge, Data_Grid_edge);
-        Grid_andByteGrid(Data_Grid_bitfields, Bitfield_NoOverlayAndDeleted);
+        map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
+        map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
+        map_grid_copy_u8(Data_Grid_Undo_spriteOffsets, Data_Grid_spriteOffsets);
+        map_grid_copy_u16(Data_Grid_Undo_graphicIds, Data_Grid_graphicIds);
+        map_grid_copy_u8(Data_Grid_Undo_bitfields, Data_Grid_bitfields);
+        map_grid_copy_u8(Data_Grid_Undo_edge, Data_Grid_edge);
+        map_grid_and_u8(Data_Grid_bitfields, Bitfield_NoOverlayAndDeleted);
     }
     else if (data.buildingType == BUILDING_AQUEDUCT || data.buildingType == BUILDING_ROAD ||
              data.buildingType == BUILDING_WALL)
     {
-        Grid_copyShortGrid(Data_Grid_Undo_terrain, Data_Grid_terrain);
-        Grid_copyByteGrid(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
+        map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
+        map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
         Undo::restoreTerrainGraphics();
     }
     else if (data.buildingType == BUILDING_LOW_BRIDGE || data.buildingType == BUILDING_SHIP_BRIDGE)
     {
-        Grid_copyShortGrid(Data_Grid_Undo_terrain, Data_Grid_terrain);
-        Grid_copyByteGrid(Data_Grid_Undo_spriteOffsets, Data_Grid_spriteOffsets);
+        map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
+        map_grid_copy_u8(Data_Grid_Undo_spriteOffsets, Data_Grid_spriteOffsets);
         Undo::restoreTerrainGraphics();
     }
     else if (data.buildingType == BUILDING_PLAZA || data.buildingType == BUILDING_GARDENS)
     {
-        Grid_copyShortGrid(Data_Grid_Undo_terrain, Data_Grid_terrain);
-        Grid_copyByteGrid(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
-        Grid_copyByteGrid(Data_Grid_Undo_bitfields, Data_Grid_bitfields);
-        Grid_copyByteGrid(Data_Grid_Undo_edge, Data_Grid_edge);
+        map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
+        map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
+        map_grid_copy_u8(Data_Grid_Undo_bitfields, Data_Grid_bitfields);
+        map_grid_copy_u8(Data_Grid_Undo_edge, Data_Grid_edge);
         Undo::restoreTerrainGraphics();
     }
     else if (data.numBuildings)
     {
         if (data.buildingType == BUILDING_DRAGGABLE_RESERVOIR)
         {
-            Grid_copyShortGrid(Data_Grid_Undo_terrain, Data_Grid_terrain);
-            Grid_copyByteGrid(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
+            map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
+            map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
             Undo::restoreTerrainGraphics();
         }
         for (int i = 0; i < data.numBuildings; i++)

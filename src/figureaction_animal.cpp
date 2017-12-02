@@ -2,11 +2,11 @@
 
 #include "figure.h"
 #include "routing.h"
-#include "core/random.h"
 #include "figure/formation.h"
 
 #include <game>
 #include <data>
+#include <core>
 
 static const int seagullOffsetsX[] = {0, 0, -2, 1, 2, -3, 4, -2};
 static const int seagullOffsetsY[] = {0, -2, 0, 2, 0, 1, -3, 4};
@@ -107,15 +107,15 @@ void FigureAction_sheep(int figureId)
         break;
     case FigureActionState_197_HerdAnimalMoving:
         FigureMovement_walkTicks(figureId, 1);
-        if (f->direction == DirFigure_8_AtDestination || f->direction == DirFigure_10_Lost)
+        if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST)
         {
             f->direction = f->previousTileDirection;
             f->actionState = FigureActionState_196_HerdAnimalAtRest;
             f->waitTicks = figureId & 0x1f;
         }
-        else if (f->direction == DirFigure_9_Reroute)
+        else if (f->direction == DIR_FIGURE_REROUTE)
         {
-            FigureRoute_remove(figureId);
+            figure_route_remove(figureId);
         }
         break;
     }
@@ -174,20 +174,20 @@ void FigureAction_wolf(int figureId)
         break;
     case FigureActionState_197_HerdAnimalMoving:
         FigureMovement_walkTicks(figureId, 2);
-        if (f->direction == DirFigure_8_AtDestination || f->direction == DirFigure_10_Lost)
+        if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST)
         {
             f->direction = f->previousTileDirection;
             f->actionState = FigureActionState_196_HerdAnimalAtRest;
             f->waitTicks = figureId & 0x1f;
         }
-        else if (f->direction == DirFigure_9_Reroute)
+        else if (f->direction == DIR_FIGURE_REROUTE)
         {
-            FigureRoute_remove(figureId);
+            figure_route_remove(figureId);
         }
         break;
     case FigureActionState_199_WolfAttacking:
         FigureMovement_walkTicks(figureId, 2);
-        if (f->direction == DirFigure_8_AtDestination)
+        if (f->direction == DIR_FIGURE_AT_DESTINATION)
         {
             int targetId = FigureAction_CombatWolf_getTarget(f->x, f->y, 6);
             if (targetId)
@@ -197,7 +197,7 @@ void FigureAction_wolf(int figureId)
                 f->targetFigureId = targetId;
                 Data_Figures[targetId].targetedByFigureId = figureId;
                 f->targetFigureCreatedSequence = Data_Figures[targetId].createdSequence;
-                FigureRoute_remove(figureId);
+                figure_route_remove(figureId);
             }
             else
             {
@@ -206,11 +206,11 @@ void FigureAction_wolf(int figureId)
                 f->waitTicks = figureId & 0x1f;
             }
         }
-        else if (f->direction == DirFigure_9_Reroute)
+        else if (f->direction == DIR_FIGURE_REROUTE)
         {
-            FigureRoute_remove(figureId);
+            figure_route_remove(figureId);
         }
-        else if (f->direction == DirFigure_10_Lost)
+        else if (f->direction == DIR_FIGURE_LOST)
         {
             f->direction = f->previousTileDirection;
             f->actionState = FigureActionState_196_HerdAnimalAtRest;
@@ -270,15 +270,15 @@ void FigureAction_zebra(int figureId)
         break;
     case FigureActionState_197_HerdAnimalMoving:
         FigureMovement_walkTicks(figureId, 2);
-        if (f->direction == DirFigure_8_AtDestination || f->direction == DirFigure_10_Lost)
+        if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST)
         {
             f->direction = f->previousTileDirection;
             f->actionState = FigureActionState_196_HerdAnimalAtRest;
             f->waitTicks = figureId & 0x1f;
         }
-        else if (f->direction == DirFigure_9_Reroute)
+        else if (f->direction == DIR_FIGURE_REROUTE)
         {
-            FigureRoute_remove(figureId);
+            figure_route_remove(figureId);
         }
         break;
     }
@@ -304,7 +304,7 @@ static void setDestinationHippodromeHorse(int figureId, struct Data_Figure *f, i
     if (state == HippodromeHorse_Created)
     {
         Figure_removeFromTileList(figureId);
-        if (Data_State.map.orientation == Dir_0_Top || Data_State.map.orientation == Dir_6_Left)
+        if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_6_LEFT)
         {
             f->destinationX = b->x + hippodromeHorseDestinationX1[f->waitTicksMissile];
             f->destinationY = b->y + hippodromeHorseDestinationY1[f->waitTicksMissile];
@@ -327,7 +327,7 @@ static void setDestinationHippodromeHorse(int figureId, struct Data_Figure *f, i
     }
     else if (state == HippodromeHorse_Racing)
     {
-        if (Data_State.map.orientation == Dir_0_Top || Data_State.map.orientation == Dir_6_Left)
+        if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_6_LEFT)
         {
             f->destinationX = b->x + hippodromeHorseDestinationX1[f->waitTicksMissile];
             f->destinationY = b->y + hippodromeHorseDestinationY1[f->waitTicksMissile];
@@ -340,7 +340,7 @@ static void setDestinationHippodromeHorse(int figureId, struct Data_Figure *f, i
     }
     else if (state == HippodromeHorse_Finished)
     {
-        if (Data_State.map.orientation == Dir_0_Top || Data_State.map.orientation == Dir_6_Left)
+        if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_6_LEFT)
         {
             if (f->resourceId)
             {
@@ -397,8 +397,8 @@ void FigureAction_hippodromeHorse(int figureId)
         }
         break;
     case FigureActionState_201_HippodromeMiniHorseRacing:
-        f->direction = Routing_getGeneralDirection(f->x, f->y, f->destinationX, f->destinationY);
-        if (f->direction == DirFigure_8_AtDestination)
+        f->direction = calc_general_direction(f->x, f->y, f->destinationX, f->destinationY);
+        if (f->direction == DIR_FIGURE_AT_DESTINATION)
         {
             f->waitTicksMissile++;
             if (f->waitTicksMissile >= 22)
@@ -431,7 +431,7 @@ void FigureAction_hippodromeHorse(int figureId)
                 }
             }
             setDestinationHippodromeHorse(figureId, f, HippodromeHorse_Racing);
-            f->direction = Routing_getGeneralDirection(f->x, f->y, f->destinationX, f->destinationY);
+            f->direction = calc_general_direction(f->x, f->y, f->destinationX, f->destinationY);
             FigureMovement_crossCountrySetDirection(figureId,
                                                     f->crossCountryX, f->crossCountryY, 15 * f->destinationX, 15 * f->destinationY, 0);
         }
@@ -444,11 +444,11 @@ void FigureAction_hippodromeHorse(int figureId)
         if (!f->waitTicks)
         {
             setDestinationHippodromeHorse(figureId, f, HippodromeHorse_Finished);
-            f->direction = Routing_getGeneralDirection(f->x, f->y, f->destinationX, f->destinationY);
+            f->direction = calc_general_direction(f->x, f->y, f->destinationX, f->destinationY);
             FigureMovement_crossCountrySetDirection(figureId,
                                                     f->crossCountryX, f->crossCountryY, 15 * f->destinationX, 15 * f->destinationY, 0);
         }
-        if (f->direction != DirFigure_8_AtDestination)
+        if (f->direction != DIR_FIGURE_AT_DESTINATION)
         {
             FigureMovement_crossCountryWalkTicks(figureId, 1);
         }

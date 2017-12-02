@@ -287,22 +287,22 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
                     {
                         switch (Data_State.map.orientation)
                         {
-                        case Dir_0_Top:
+                        case DIR_0_TOP:
                             Graphics_drawImageMasked(
                                 image_group(GROUP_BUILDING_HIPPODROME_2) + 6,
                                 xGraphic + 147, yGraphic - 72, colorMask);
                             break;
-                        case Dir_2_Right:
+                        case DIR_2_RIGHT:
                             Graphics_drawImageMasked(
                                 image_group(GROUP_BUILDING_HIPPODROME_1) + 8,
                                 xGraphic + 58, yGraphic - 79, colorMask);
                             break;
-                        case Dir_4_Bottom:
+                        case DIR_4_BOTTOM:
                             Graphics_drawImageMasked(
                                 image_group(GROUP_BUILDING_HIPPODROME_2) + 8,
                                 xGraphic + 119, yGraphic - 80, colorMask);
                             break;
-                        case Dir_6_Left:
+                        case DIR_6_LEFT:
                             Graphics_drawImageMasked(
                                 image_group(GROUP_BUILDING_HIPPODROME_1) + 6,
                                 xGraphic, yGraphic - 72, colorMask);
@@ -312,14 +312,14 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
                     {
                         switch (Data_State.map.orientation)
                         {
-                        case Dir_0_Top:
-                        case Dir_4_Bottom:
+                        case DIR_0_TOP:
+                        case DIR_4_BOTTOM:
                             Graphics_drawImageMasked(
                                 image_group(GROUP_BUILDING_HIPPODROME_2) + 7,
                                 xGraphic + 122, yGraphic - 79, colorMask);
                             break;
-                        case Dir_2_Right:
-                        case Dir_6_Left:
+                        case DIR_2_RIGHT:
+                        case DIR_6_LEFT:
                             Graphics_drawImageMasked(
                                 image_group(GROUP_BUILDING_HIPPODROME_1) + 7,
                                 xGraphic, yGraphic - 80, colorMask);
@@ -329,22 +329,22 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
                     {
                         switch (Data_State.map.orientation)
                         {
-                        case Dir_0_Top:
+                        case DIR_0_TOP:
                             Graphics_drawImageMasked(
                                 image_group(GROUP_BUILDING_HIPPODROME_2) + 8,
                                 xGraphic + 119, yGraphic - 80, colorMask);
                             break;
-                        case Dir_2_Right:
+                        case DIR_2_RIGHT:
                             Graphics_drawImageMasked(
                                 image_group(GROUP_BUILDING_HIPPODROME_1) + 6,
                                 xGraphic, yGraphic - 72, colorMask);
                             break;
-                        case Dir_4_Bottom:
+                        case DIR_4_BOTTOM:
                             Graphics_drawImageMasked(
                                 image_group(GROUP_BUILDING_HIPPODROME_2) + 6,
                                 xGraphic + 147, yGraphic - 72, colorMask);
                             break;
-                        case Dir_6_Left:
+                        case DIR_6_LEFT:
                             Graphics_drawImageMasked(
                                 image_group(GROUP_BUILDING_HIPPODROME_1) + 8,
                                 xGraphic + 58, yGraphic - 79, colorMask);
@@ -578,16 +578,16 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
             else if (Data_Buildings[Data_Grid_buildingIds[gridOffset]].type == BUILDING_GATEHOUSE)
             {
                 int xy = Data_Grid_edge[gridOffset] & Edge_MaskXY;
-                if ((Data_State.map.orientation == Dir_0_Top && xy == 9) ||
-                        (Data_State.map.orientation == Dir_2_Right && xy == 8) ||
-                        (Data_State.map.orientation == Dir_4_Bottom && xy == 0) ||
-                        (Data_State.map.orientation == Dir_6_Left && xy == 1))
+                if ((Data_State.map.orientation == DIR_0_TOP && xy == 9) ||
+                        (Data_State.map.orientation == DIR_2_RIGHT && xy == 8) ||
+                        (Data_State.map.orientation == DIR_4_BOTTOM && xy == 0) ||
+                        (Data_State.map.orientation == DIR_6_LEFT && xy == 1))
                 {
                     int buildingId = Data_Grid_buildingIds[gridOffset];
                     int graphicId = image_group(GROUP_BULIDING_GATEHOUSE);
                     if (Data_Buildings[buildingId].subtype.orientation == 1)
                     {
-                        if (Data_State.map.orientation == Dir_0_Top || Data_State.map.orientation == Dir_4_Bottom)
+                        if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_4_BOTTOM)
                         {
                             Graphics_drawImage(graphicId, xGraphic - 22, yGraphic - 80);
                         }
@@ -598,7 +598,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
                     }
                     else if (Data_Buildings[buildingId].subtype.orientation == 2)
                     {
-                        if (Data_State.map.orientation == Dir_0_Top || Data_State.map.orientation == Dir_4_Bottom)
+                        if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_4_BOTTOM)
                         {
                             Graphics_drawImage(graphicId + 1, xGraphic - 18, yGraphic - 81);
                         }
@@ -1367,7 +1367,7 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
         else
         {
             int stocksPresent = 0;
-            for (int i = INVENTORY_MIN_FOOD; i <= INVENTORY_MAX_FOOD; i++)
+            for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++)
             {
                 stocksPresent += b->data.house.inventory[i];
             }

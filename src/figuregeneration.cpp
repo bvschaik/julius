@@ -43,7 +43,7 @@ static void generateLaborSeeker(int buildingId, struct Data_Building *b, int x, 
     }
     else
     {
-        CREATE_FIGURE(FIGURE_LABOR_SEEKER, x, y, Dir_0_Top);
+        CREATE_FIGURE(FIGURE_LABOR_SEEKER, x, y, DIR_0_TOP);
         f->actionState = FigureActionState_125_Roaming;
         f->buildingId = buildingId;
         b->figureId2 = figureId;
@@ -80,7 +80,7 @@ static void spawnFigurePatrician(int buildingId, struct Data_Building *b, int *p
         {
             *patricianSpawned = 1;
             b->figureSpawnDelay = 0;
-            CREATE_FIGURE(FIGURE_PATRICIAN, xRoad, yRoad, Dir_4_Bottom);
+            CREATE_FIGURE(FIGURE_PATRICIAN, xRoad, yRoad, DIR_4_BOTTOM);
             f->actionState = FigureActionState_125_Roaming;
             f->buildingId = buildingId;
             FigureMovement_initRoaming(figureId);
@@ -110,7 +110,7 @@ static void spawnFigureWarehouse(int buildingId, struct Data_Building *b)
         int task = Resource_determineWarehouseWorkerTask(buildingId, &resource);
         if (task >= 0)
         {
-            CREATE_FIGURE(FIGURE_WAREHOUSEMAN, xRoad, yRoad, Dir_4_Bottom);
+            CREATE_FIGURE(FIGURE_WAREHOUSEMAN, xRoad, yRoad, DIR_4_BOTTOM);
             f->actionState = FigureActionState_50_WarehousemanCreated;
             f->resourceId = task;
             if (task == StorageFigureTask_Getting)
@@ -134,7 +134,7 @@ static void spawnFigureGranary(int buildingId, struct Data_Building *b)
         int task = Resource_determineGranaryWorkerTask(buildingId);
         if (task >= 0)
         {
-            CREATE_FIGURE(FIGURE_WAREHOUSEMAN, xRoad, yRoad, Dir_4_Bottom);
+            CREATE_FIGURE(FIGURE_WAREHOUSEMAN, xRoad, yRoad, DIR_4_BOTTOM);
             f->actionState = FigureActionState_50_WarehousemanCreated;
             f->resourceId = task;
             b->figureId = figureId;
@@ -156,7 +156,7 @@ static void spawnFigureTower(int buildingId, struct Data_Building *b)
         }
         if (!b->figureId4 && b->figureId)   // has sentry but no ballista -> create
         {
-            CREATE_FIGURE(FIGURE_BALLISTA, b->x, b->y, Dir_0_Top);
+            CREATE_FIGURE(FIGURE_BALLISTA, b->x, b->y, DIR_0_TOP);
             b->figureId4 = figureId;
             f->buildingId = buildingId;
             f->actionState = FigureActionState_180_BallistaCreated;
@@ -207,7 +207,7 @@ static void spawnFigureEngineersPost(int buildingId, struct Data_Building *b)
         if (b->figureSpawnDelay > spawnDelay)
         {
             b->figureSpawnDelay = 0;
-            CREATE_FIGURE(FIGURE_ENGINEER, xRoad, yRoad, Dir_0_Top);
+            CREATE_FIGURE(FIGURE_ENGINEER, xRoad, yRoad, DIR_0_TOP);
             f->actionState = FigureActionState_60_EngineerCreated;
             f->buildingId = buildingId;
             b->figureId = figureId;
@@ -253,7 +253,7 @@ static void spawnFigurePrefecture(int buildingId, struct Data_Building *b)
         if (b->figureSpawnDelay > spawnDelay)
         {
             b->figureSpawnDelay = 0;
-            CREATE_FIGURE(FIGURE_PREFECT, xRoad, yRoad, Dir_0_Top);
+            CREATE_FIGURE(FIGURE_PREFECT, xRoad, yRoad, DIR_0_TOP);
             f->actionState = FigureActionState_70_PrefectCreated;
             f->buildingId = buildingId;
             b->figureId = figureId;
@@ -298,7 +298,7 @@ static void spawnFigureActorColony(int buildingId, struct Data_Building *b)
         if (b->figureSpawnDelay > spawnDelay)
         {
             b->figureSpawnDelay = 0;
-            CREATE_FIGURE(FIGURE_ACTOR, xRoad, yRoad, Dir_0_Top);
+            CREATE_FIGURE(FIGURE_ACTOR, xRoad, yRoad, DIR_0_TOP);
             f->actionState = FigureActionState_90_EntertainerAtSchoolCreated;
             f->buildingId = buildingId;
             b->figureId = figureId;
@@ -343,7 +343,7 @@ static void spawnFigureGladiatorSchool(int buildingId, struct Data_Building *b)
         if (b->figureSpawnDelay > spawnDelay)
         {
             b->figureSpawnDelay = 0;
-            CREATE_FIGURE(FIGURE_GLADIATOR, xRoad, yRoad, Dir_0_Top);
+            CREATE_FIGURE(FIGURE_GLADIATOR, xRoad, yRoad, DIR_0_TOP);
             f->actionState = FigureActionState_90_EntertainerAtSchoolCreated;
             f->buildingId = buildingId;
             b->figureId = figureId;
@@ -388,7 +388,7 @@ static void spawnFigureLionHouse(int buildingId, struct Data_Building *b)
         if (b->figureSpawnDelay > spawnDelay)
         {
             b->figureSpawnDelay = 0;
-            CREATE_FIGURE(FIGURE_LION_TAMER, xRoad, yRoad, Dir_0_Top);
+            CREATE_FIGURE(FIGURE_LION_TAMER, xRoad, yRoad, DIR_0_TOP);
             f->actionState = FigureActionState_90_EntertainerAtSchoolCreated;
             f->buildingId = buildingId;
             b->figureId = figureId;
@@ -433,7 +433,7 @@ static void spawnFigureChariotMaker(int buildingId, struct Data_Building *b)
         if (b->figureSpawnDelay > spawnDelay)
         {
             b->figureSpawnDelay = 0;
-            CREATE_FIGURE(FIGURE_CHARIOTEER, xRoad, yRoad, Dir_0_Top);
+            CREATE_FIGURE(FIGURE_CHARIOTEER, xRoad, yRoad, DIR_0_TOP);
             f->actionState = FigureActionState_90_EntertainerAtSchoolCreated;
             f->buildingId = buildingId;
             b->figureId = figureId;
@@ -486,11 +486,11 @@ static void spawnFigureAmphitheater(int buildingId, struct Data_Building *b)
             int figureId;
             if (b->data.entertainment.days1 > 0)
             {
-                figureId = Figure_create(FIGURE_GLADIATOR, xRoad, yRoad, Dir_0_Top);
+                figureId = Figure_create(FIGURE_GLADIATOR, xRoad, yRoad, DIR_0_TOP);
             }
             else
             {
-                figureId = Figure_create(FIGURE_ACTOR, xRoad, yRoad, Dir_0_Top);
+                figureId = Figure_create(FIGURE_ACTOR, xRoad, yRoad, DIR_0_TOP);
             }
             struct Data_Figure *f = &Data_Figures[figureId];
             f->actionState = FigureActionState_94_EntertainerRoaming;
@@ -542,7 +542,7 @@ static void spawnFigureTheater(int buildingId, struct Data_Building *b)
         if (b->figureSpawnDelay > spawnDelay)
         {
             b->figureSpawnDelay = 0;
-            CREATE_FIGURE(FIGURE_ACTOR, xRoad, yRoad, Dir_0_Top);
+            CREATE_FIGURE(FIGURE_ACTOR, xRoad, yRoad, DIR_0_TOP);
             f->actionState = FigureActionState_94_EntertainerRoaming;
             f->buildingId = buildingId;
             b->figureId = figureId;
@@ -606,7 +606,7 @@ static void spawnFigureHippodrome(int buildingId, struct Data_Building *b)
         {
             b->figureSpawnDelay = 0;
             {
-                CREATE_FIGURE(FIGURE_CHARIOTEER, xRoad, yRoad, Dir_0_Top);
+                CREATE_FIGURE(FIGURE_CHARIOTEER, xRoad, yRoad, DIR_0_TOP);
                 f->actionState = FigureActionState_94_EntertainerRoaming;
                 f->buildingId = buildingId;
                 b->figureId = figureId;
@@ -616,14 +616,14 @@ static void spawnFigureHippodrome(int buildingId, struct Data_Building *b)
             {
                 // create mini-horses
                 {
-                    CREATE_FIGURE(FIGURE_HIPPODROME_HORSES, b->x + 2, b->y + 1, Dir_2_Right);
+                    CREATE_FIGURE(FIGURE_HIPPODROME_HORSES, b->x + 2, b->y + 1, DIR_2_RIGHT);
                     f->actionState = FigureActionState_200_HippodromeMiniHorseCreated;
                     f->buildingId = buildingId;
                     f->resourceId = 0;
                     f->speedMultiplier = 3;
                 }
                 {
-                    CREATE_FIGURE(FIGURE_HIPPODROME_HORSES, b->x + 2, b->y + 2, Dir_2_Right);
+                    CREATE_FIGURE(FIGURE_HIPPODROME_HORSES, b->x + 2, b->y + 2, DIR_2_RIGHT);
                     f->actionState = FigureActionState_200_HippodromeMiniHorseCreated;
                     f->buildingId = buildingId;
                     f->resourceId = 1;
@@ -687,11 +687,11 @@ static void spawnFigureColosseum(int buildingId, struct Data_Building *b)
             int figureId;
             if (b->data.entertainment.days1 > 0)
             {
-                figureId = Figure_create(FIGURE_LION_TAMER, xRoad, yRoad, Dir_0_Top);
+                figureId = Figure_create(FIGURE_LION_TAMER, xRoad, yRoad, DIR_0_TOP);
             }
             else
             {
-                figureId = Figure_create(FIGURE_GLADIATOR, xRoad, yRoad, Dir_0_Top);
+                figureId = Figure_create(FIGURE_GLADIATOR, xRoad, yRoad, DIR_0_TOP);
             }
             struct Data_Figure *f = &Data_Figures[figureId];
             f->actionState = FigureActionState_94_EntertainerRoaming;
@@ -771,7 +771,7 @@ static void spawnFigureMarket(int buildingId, struct Data_Building *b)
                 return;
             }
             b->figureSpawnDelay = 0;
-            CREATE_FIGURE(FIGURE_MARKET_TRADER, xRoad, yRoad, Dir_0_Top);
+            CREATE_FIGURE(FIGURE_MARKET_TRADER, xRoad, yRoad, DIR_0_TOP);
             f->actionState = FigureActionState_125_Roaming;
             f->buildingId = buildingId;
             b->figureId = figureId;
@@ -792,7 +792,7 @@ static void spawnFigureMarket(int buildingId, struct Data_Building *b)
             int dstBuildingId = Building_Market_getDestinationGranaryWarehouse(buildingId);
             if (dstBuildingId > 0)
             {
-                CREATE_FIGURE(FIGURE_MARKET_BUYER, xRoad, yRoad, Dir_0_Top);
+                CREATE_FIGURE(FIGURE_MARKET_BUYER, xRoad, yRoad, DIR_0_TOP);
                 f->actionState = FigureActionState_145_MarketBuyerGoingToStorage;
                 f->buildingId = buildingId;
                 b->figureId2 = figureId;
@@ -901,7 +901,7 @@ static void spawnFigureBathhouse(int buildingId, struct Data_Building *b)
         if (b->figureSpawnDelay > spawnDelay)
         {
             b->figureSpawnDelay = 0;
-            CREATE_FIGURE(FIGURE_BATHHOUSE_WORKER, xRoad, yRoad, Dir_0_Top);
+            CREATE_FIGURE(FIGURE_BATHHOUSE_WORKER, xRoad, yRoad, DIR_0_TOP);
             f->actionState = FigureActionState_125_Roaming;
             f->buildingId = buildingId;
             b->figureId = figureId;
@@ -949,26 +949,26 @@ static void spawnFigureSchool(int buildingId, struct Data_Building *b)
         {
             b->figureSpawnDelay = 0;
             {
-                CREATE_FIGURE(FIGURE_SCHOOL_CHILD, xRoad, yRoad, Dir_0_Top);
+                CREATE_FIGURE(FIGURE_SCHOOL_CHILD, xRoad, yRoad, DIR_0_TOP);
                 f->actionState = FigureActionState_125_Roaming;
                 f->buildingId = buildingId;
                 b->figureId = figureId;
                 FigureMovement_initRoaming(figureId);
             }
             {
-                CREATE_FIGURE(FIGURE_SCHOOL_CHILD, xRoad, yRoad, Dir_0_Top);
+                CREATE_FIGURE(FIGURE_SCHOOL_CHILD, xRoad, yRoad, DIR_0_TOP);
                 f->actionState = FigureActionState_125_Roaming;
                 f->buildingId = buildingId;
                 FigureMovement_initRoaming(figureId);
             }
             {
-                CREATE_FIGURE(FIGURE_SCHOOL_CHILD, xRoad, yRoad, Dir_0_Top);
+                CREATE_FIGURE(FIGURE_SCHOOL_CHILD, xRoad, yRoad, DIR_0_TOP);
                 f->actionState = FigureActionState_125_Roaming;
                 f->buildingId = buildingId;
                 FigureMovement_initRoaming(figureId);
             }
             {
-                CREATE_FIGURE(FIGURE_SCHOOL_CHILD, xRoad, yRoad, Dir_0_Top);
+                CREATE_FIGURE(FIGURE_SCHOOL_CHILD, xRoad, yRoad, DIR_0_TOP);
                 f->actionState = FigureActionState_125_Roaming;
                 f->buildingId = buildingId;
                 FigureMovement_initRoaming(figureId);
@@ -1015,7 +1015,7 @@ static void spawnFigureLibrary(int buildingId, struct Data_Building *b)
         if (b->figureSpawnDelay > spawnDelay)
         {
             b->figureSpawnDelay = 0;
-            CREATE_FIGURE(FIGURE_LIBRARIAN, xRoad, yRoad, Dir_0_Top);
+            CREATE_FIGURE(FIGURE_LIBRARIAN, xRoad, yRoad, DIR_0_TOP);
             f->actionState = FigureActionState_125_Roaming;
             f->buildingId = buildingId;
             b->figureId = figureId;
@@ -1062,7 +1062,7 @@ static void spawnFigureAcademy(int buildingId, struct Data_Building *b)
         if (b->figureSpawnDelay > spawnDelay)
         {
             b->figureSpawnDelay = 0;
-            CREATE_FIGURE(FIGURE_TEACHER, xRoad, yRoad, Dir_0_Top);
+            CREATE_FIGURE(FIGURE_TEACHER, xRoad, yRoad, DIR_0_TOP);
             f->actionState = FigureActionState_125_Roaming;
             f->buildingId = buildingId;
             b->figureId = figureId;
@@ -1109,7 +1109,7 @@ static void spawnFigureBarber(int buildingId, struct Data_Building *b)
         if (b->figureSpawnDelay > spawnDelay)
         {
             b->figureSpawnDelay = 0;
-            CREATE_FIGURE(FIGURE_BARBER, xRoad, yRoad, Dir_0_Top);
+            CREATE_FIGURE(FIGURE_BARBER, xRoad, yRoad, DIR_0_TOP);
             f->actionState = FigureActionState_125_Roaming;
             f->buildingId = buildingId;
             b->figureId = figureId;
@@ -1156,7 +1156,7 @@ static void spawnFigureDoctor(int buildingId, struct Data_Building *b)
         if (b->figureSpawnDelay > spawnDelay)
         {
             b->figureSpawnDelay = 0;
-            CREATE_FIGURE(FIGURE_DOCTOR, xRoad, yRoad, Dir_0_Top);
+            CREATE_FIGURE(FIGURE_DOCTOR, xRoad, yRoad, DIR_0_TOP);
             f->actionState = FigureActionState_125_Roaming;
             f->buildingId = buildingId;
             b->figureId = figureId;
@@ -1203,7 +1203,7 @@ static void spawnFigureHospital(int buildingId, struct Data_Building *b)
         if (b->figureSpawnDelay > spawnDelay)
         {
             b->figureSpawnDelay = 0;
-            CREATE_FIGURE(FIGURE_SURGEON, xRoad, yRoad, Dir_0_Top);
+            CREATE_FIGURE(FIGURE_SURGEON, xRoad, yRoad, DIR_0_TOP);
             f->actionState = FigureActionState_125_Roaming;
             f->buildingId = buildingId;
             b->figureId = figureId;
@@ -1254,7 +1254,7 @@ static void spawnFigureTemple(int buildingId, struct Data_Building *b)
         if (b->figureSpawnDelay > spawnDelay)
         {
             b->figureSpawnDelay = 0;
-            CREATE_FIGURE(FIGURE_PRIEST, xRoad, yRoad, Dir_0_Top);
+            CREATE_FIGURE(FIGURE_PRIEST, xRoad, yRoad, DIR_0_TOP);
             f->actionState = FigureActionState_125_Roaming;
             f->buildingId = buildingId;
             b->figureId = figureId;
@@ -1323,7 +1323,7 @@ static void spawnFigureSenateForum(int buildingId, struct Data_Building *b)
         if (b->figureSpawnDelay > spawnDelay)
         {
             b->figureSpawnDelay = 0;
-            CREATE_FIGURE(FIGURE_TAX_COLLECTOR, xRoad, yRoad, Dir_0_Top);
+            CREATE_FIGURE(FIGURE_TAX_COLLECTOR, xRoad, yRoad, DIR_0_TOP);
             f->actionState = FigureActionState_40_TaxCollectorCreated;
             f->buildingId = buildingId;
             b->figureId = figureId;
@@ -1344,7 +1344,7 @@ static void spawnFigureMissionPost(int buildingId, struct Data_Building *b)
             if (b->figureSpawnDelay > 1)
             {
                 b->figureSpawnDelay = 0;
-                CREATE_FIGURE(FIGURE_MISSIONARY, xRoad, yRoad, Dir_0_Top);
+                CREATE_FIGURE(FIGURE_MISSIONARY, xRoad, yRoad, DIR_0_TOP);
                 f->actionState = FigureActionState_125_Roaming;
                 f->buildingId = buildingId;
                 b->figureId = figureId;
@@ -1365,7 +1365,7 @@ static void spawnFigureIndustry(int buildingId, struct Data_Building *b)
         if (Building_Industry_hasProducedResource(buildingId))
         {
             Building_Industry_startNewProduction(buildingId);
-            CREATE_FIGURE(FIGURE_CART_PUSHER, xRoad, yRoad, Dir_4_Bottom);
+            CREATE_FIGURE(FIGURE_CART_PUSHER, xRoad, yRoad, DIR_4_BOTTOM);
             f->actionState = FigureActionState_20_CartpusherInitial;
             f->resourceId = b->outputResourceId;
             f->buildingId = buildingId;
@@ -1396,7 +1396,7 @@ static void spawnFigureWharf(int buildingId, struct Data_Building *b)
             b->figureSpawnDelay = 0;
             b->data.other.fishingBoatHasFish = 0;
             b->outputResourceId = RESOURCE_MEAT;
-            CREATE_FIGURE(FIGURE_CART_PUSHER, xRoad, yRoad, Dir_4_Bottom);
+            CREATE_FIGURE(FIGURE_CART_PUSHER, xRoad, yRoad, DIR_4_BOTTOM);
             f->actionState = FigureActionState_20_CartpusherInitial;
             f->resourceId = RESOURCE_MEAT;
             f->buildingId = buildingId;
@@ -1441,7 +1441,7 @@ static void spawnFigureShipyard(int buildingId, struct Data_Building *b)
             int xBoat, yBoat;
             if (Terrain_canSpawnFishingBoatInWater(b->x, b->y, b->size, &xBoat, &yBoat))
             {
-                CREATE_FIGURE(FIGURE_FISHING_BOAT, xBoat, yBoat, Dir_0_Top);
+                CREATE_FIGURE(FIGURE_FISHING_BOAT, xBoat, yBoat, DIR_0_TOP);
                 f->actionState = FigureActionState_190_FishingBoatCreated;
                 f->buildingId = buildingId;
                 b->figureId = figureId;
@@ -1505,7 +1505,7 @@ static void spawnFigureDock(int buildingId, struct Data_Building *b)
         }
         else if (existingDockers < maxDockers)
         {
-            CREATE_FIGURE(FIGURE_DOCKMAN, xRoad, yRoad, Dir_4_Bottom);
+            CREATE_FIGURE(FIGURE_DOCKMAN, xRoad, yRoad, DIR_4_BOTTOM);
             f->actionState = FigureActionState_132_DockerIdling;
             f->buildingId = buildingId;
             for (int i = 0; i < 3; i++)
@@ -1532,7 +1532,7 @@ static void spawnFigureNativeHut(int buildingId, struct Data_Building *b)
         if (b->figureSpawnDelay > 4)
         {
             b->figureSpawnDelay = 0;
-            CREATE_FIGURE(FIGURE_INDIGENOUS_NATIVE, xOut, yOut, Dir_0_Top);
+            CREATE_FIGURE(FIGURE_INDIGENOUS_NATIVE, xOut, yOut, DIR_0_TOP);
             f->actionState = FigureActionState_158_NativeCreated;
             f->buildingId = buildingId;
             b->figureId = figureId;
@@ -1554,7 +1554,7 @@ static void spawnFigureNativeMeeting(int buildingId, struct Data_Building *b)
             if (b->figureSpawnDelay > 8)
             {
                 b->figureSpawnDelay = 0;
-                CREATE_FIGURE(FIGURE_NATIVE_TRADER, xOut, yOut, Dir_0_Top);
+                CREATE_FIGURE(FIGURE_NATIVE_TRADER, xOut, yOut, DIR_0_TOP);
                 f->actionState = FigureActionState_162_NativeTraderCreated;
                 f->buildingId = buildingId;
                 b->figureId = figureId;

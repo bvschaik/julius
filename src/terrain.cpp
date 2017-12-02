@@ -8,11 +8,11 @@
 #include "terraingraphics.h"
 
 #include <data>
-#include <scenario>
-#include <game>
 
 #include "core/calc.h"
 #include "graphics/image.h"
+#include "map/routing.h"
+#include "scenario/map.h"
 
 static const int tilesAroundBuildingGridOffsets[][20] =
 {
@@ -85,18 +85,18 @@ void Terrain_addBuildingToGrids(int buildingId, int x, int y, int size, int grap
     int xLeftmost, yLeftmost;
     switch (Data_State.map.orientation)
     {
-    case Dir_0_Top:
+    case DIR_0_TOP:
         xLeftmost = 0;
         yLeftmost = size - 1;
         break;
-    case Dir_2_Right:
+    case DIR_2_RIGHT:
         xLeftmost = yLeftmost = 0;
         break;
-    case Dir_4_Bottom:
+    case DIR_4_BOTTOM:
         xLeftmost = size - 1;
         yLeftmost = 0;
         break;
-    case Dir_6_Left:
+    case DIR_6_LEFT:
         xLeftmost = yLeftmost = size - 1;
         break;
     default:
@@ -462,14 +462,14 @@ int Terrain_getOrientationGatehouse(int x, int y)
 {
     switch (Data_State.map.orientation)
     {
-    case Dir_2_Right:
+    case DIR_2_RIGHT:
         x--;
         break;
-    case Dir_4_Bottom:
+    case DIR_4_BOTTOM:
         x--;
         y--;
         break;
-    case Dir_6_Left:
+    case DIR_6_LEFT:
         y--;
         break;
     }
@@ -581,14 +581,14 @@ int Terrain_getOrientationTriumphalArch(int x, int y)
 {
     switch (Data_State.map.orientation)
     {
-    case Dir_2_Right:
+    case DIR_2_RIGHT:
         x -= 2;
         break;
-    case Dir_4_Bottom:
+    case DIR_4_BOTTOM:
         x -= 2;
         y -= 2;
         break;
-    case Dir_6_Left:
+    case DIR_6_LEFT:
         y -= 2;
         break;
     }
@@ -711,7 +711,7 @@ static int getReachableRoadWithinRadius(int x, int y, int size, int radius, int 
     {
         if (Data_Grid_terrain[gridOffset] & Terrain_Road)
         {
-            if (Data_Grid_routingDistance[gridOffset] > 0)
+            if (map_routing_distance(gridOffset) > 0)
             {
                 if (xTile && yTile)
                 {
@@ -743,7 +743,7 @@ int Terrain_getRoadToLargestRoadNetwork(int x, int y, int size, int *xTile, int 
     int minGridOffset = -1;
     FOR_XY_ADJACENT
     {
-        if (Data_Grid_terrain[gridOffset] & Terrain_Road && Data_Grid_routingDistance[gridOffset] > 0)
+        if (Data_Grid_terrain[gridOffset] & Terrain_Road && map_routing_distance(gridOffset) > 0)
         {
             int index = 11;
             for (int n = 0; n < 10; n++)
@@ -771,7 +771,7 @@ int Terrain_getRoadToLargestRoadNetwork(int x, int y, int size, int *xTile, int 
     minGridOffset = -1;
     FOR_XY_ADJACENT
     {
-        int dist = Data_Grid_routingDistance[gridOffset];
+        int dist = map_routing_distance(gridOffset);
         if (dist > 0 && dist < minDist)
         {
             minDist = dist;
@@ -798,7 +798,7 @@ int Terrain_getRoadToLargestRoadNetworkHippodrome(int x, int y, int size, int *x
         x = xBase + xOffset;
         FOR_XY_ADJACENT
         {
-            if (Data_Grid_terrain[gridOffset] & Terrain_Road && Data_Grid_routingDistance[gridOffset] > 0)
+            if (Data_Grid_terrain[gridOffset] & Terrain_Road && map_routing_distance(gridOffset) > 0)
             {
                 int index = 11;
                 for (int n = 0; n < 10; n++)
@@ -830,7 +830,7 @@ int Terrain_getRoadToLargestRoadNetworkHippodrome(int x, int y, int size, int *x
         x = xBase + xOffset;
         FOR_XY_ADJACENT
         {
-            int dist = Data_Grid_routingDistance[gridOffset];
+            int dist = map_routing_distance(gridOffset);
             if (dist > 0 && dist < minDist)
             {
                 minDist = dist;
@@ -862,7 +862,7 @@ static int getRoadTileForAqueduct(int gridOffset, int gateOrientation)
         }
         else if (type == BUILDING_GRANARY)
         {
-            if (Data_Grid_routingLandCitizen[gridOffset] == Routing_Citizen_0_Road)
+            if (map_routing_citizen_is_road(gridOffset))
             {
                 isRoad = 1;
             }
@@ -900,7 +900,7 @@ static int getAdjacentRoadTileForRoaming(int gridOffset)
         }
         else if (type == BUILDING_GRANARY)
         {
-            if (Data_Grid_routingLandCitizen[gridOffset] == Routing_Citizen_0_Road)
+            if (map_routing_citizen_is_road(gridOffset))
             {
                 isRoad = 1;
             }
@@ -1024,7 +1024,7 @@ int Terrain_isAdjacentToOpenWater(int x, int y, int size)
     FOR_XY_ADJACENT
     {
         if ((Data_Grid_terrain[gridOffset] & Terrain_Water) &&
-        Routing_getCalculatedDistance(gridOffset))
+        map_routing_distance(gridOffset))
         {
             return 1;
         }
@@ -1433,19 +1433,19 @@ void Terrain_updateEntryExitFlags(int remove)
     map_point entry_point = scenario_map_entry();
     if (entry_point.x == 0)
     {
-        entryOrientation = Dir_2_Right;
+        entryOrientation = DIR_2_RIGHT;
     }
     else if (entry_point.x == Data_State.map.width - 1)
     {
-        entryOrientation = Dir_6_Left;
+        entryOrientation = DIR_6_LEFT;
     }
     else if (entry_point.y == 0)
     {
-        entryOrientation = Dir_0_Top;
+        entryOrientation = DIR_0_TOP;
     }
     else if (entry_point.y == Data_State.map.height - 1)
     {
-        entryOrientation = Dir_4_Bottom;
+        entryOrientation = DIR_4_BOTTOM;
     }
     else
     {
@@ -1453,21 +1453,21 @@ void Terrain_updateEntryExitFlags(int remove)
     }
     int exitOrientation;
     map_point exit_point = scenario_map_exit();
-    if (scenario.exit_point.x == 0)
+    if (exit_point.x == 0)
     {
-        exitOrientation = Dir_2_Right;
+        exitOrientation = DIR_2_RIGHT;
     }
     else if (exit_point.x == Data_State.map.width - 1)
     {
-        exitOrientation = Dir_6_Left;
+        exitOrientation = DIR_6_LEFT;
     }
     else if (exit_point.y == 0)
     {
-        exitOrientation = Dir_0_Top;
+        exitOrientation = DIR_0_TOP;
     }
     else if (exit_point.y == Data_State.map.height - 1)
     {
-        exitOrientation = Dir_4_Bottom;
+        exitOrientation = DIR_4_BOTTOM;
     }
     else
     {
@@ -1647,7 +1647,7 @@ static int getWallTileWithinRadius(int x, int y, int radius, int *xTile, int *yT
     int size = 1;
     FOR_XY_RADIUS
     {
-        if (Data_Grid_routingWalls[gridOffset] == Routing_Wall_0_Passable)
+        if (map_routing_is_wall_passable(gridOffset))
         {
             *xTile = xx;
             *yTile = yy;

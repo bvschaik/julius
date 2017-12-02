@@ -7,6 +7,7 @@
 
 #include <game>
 #include <data>
+#include <core>
 
 static int createDeliveryBoy(int leaderId, struct Data_Figure *f)
 {
@@ -164,7 +165,7 @@ void FigureAction_marketBuyer(int figureId)
         break;
     case FigureActionState_145_MarketBuyerGoingToStorage:
         FigureMovement_walkTicks(figureId, 1);
-        if (f->direction == DirFigure_8_AtDestination)
+        if (f->direction == DIR_FIGURE_AT_DESTINATION)
         {
             if (f->collectingItemId > 3)
             {
@@ -184,23 +185,23 @@ void FigureAction_marketBuyer(int figureId)
             f->destinationX = f->sourceX;
             f->destinationY = f->sourceY;
         }
-        else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost)
+        else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST)
         {
             f->actionState = FigureActionState_146_MarketBuyerReturning;
             f->destinationX = f->sourceX;
             f->destinationY = f->sourceY;
-            FigureRoute_remove(figureId);
+            figure_route_remove(figureId);
         }
         break;
     case FigureActionState_146_MarketBuyerReturning:
         FigureMovement_walkTicks(figureId, 1);
-        if (f->direction == DirFigure_8_AtDestination || f->direction == DirFigure_10_Lost)
+        if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST)
         {
             f->state = FigureState_Dead;
         }
-        else if (f->direction == DirFigure_9_Reroute)
+        else if (f->direction == DIR_FIGURE_REROUTE)
         {
-            FigureRoute_remove(figureId);
+            figure_route_remove(figureId);
         }
         break;
     }

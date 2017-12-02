@@ -41,7 +41,7 @@ extern struct Data_Building
     {
         short houseLevel;
         short warehouseResourceId;
-        short workshopResource;
+        short workshopType;
         short orientation;
         short fortFigureType;
         short nativeMeetingCenterId;

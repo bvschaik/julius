@@ -3,7 +3,8 @@
 
 #include <stdint.h>
 
-typedef enum {
+typedef enum
+{
     DIR_0_TOP,
     DIR_1_TOP_RIGHT,
     DIR_2_RIGHT,
@@ -13,6 +14,10 @@ typedef enum {
     DIR_6_LEFT,
     DIR_7_TOP_LEFT,
     DIR_8_NONE,
+    DIR_FIGURE_AT_DESTINATION = 8,
+    DIR_FIGURE_REROUTE = 9,
+    DIR_FIGURE_LOST = 10,
+    DIR_FIGURE_ATTACK = 11,
 } direction;
 
 /**
@@ -72,5 +77,25 @@ direction calc_general_direction(int x_from, int y_from, int x_to, int y_to);
  * @return Value bounded to be between min and max
  */
 int32_t calc_bound(int32_t value, int32_t min, int32_t max);
+
+/**
+  * Gets the direction for a missile shooter
+  * @param x_from Source X
+  * @param y_from Source Y
+  * @param x_to Destination X
+  * @param y_to Destination Y
+  * @return Direction
+  */
+direction calc_missile_shooter_direction(int x_from, int y_from, int x_to, int y_to);
+
+/**
+  * Gets the direction for a missile
+  * @param x_from Source X
+  * @param y_from Source Y
+  * @param x_to Destination X
+  * @param y_to Destination Y
+  * @return Direction, number between 0 and 15
+  */
+int calc_missile_direction(int x_from, int y_from, int x_to, int y_to);
 
 #endif // CORE_CALC_H

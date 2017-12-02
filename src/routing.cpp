@@ -1,6 +1,5 @@
 #include "routing.h"
 
-#include "grid.h"
 #include "terraingraphics.h"
 
 #include <data>
@@ -29,7 +28,7 @@ static struct
 
 static int directionPath[500];
 
-static char tmpGrid[GRID_SIZE * GRID_SIZE];
+static uint8_t tmpGrid[GRID_SIZE * GRID_SIZE];
 
 static void setDistAndEnqueue(int nextOffset, int dist)
 {
@@ -40,7 +39,7 @@ static void setDistAndEnqueue(int nextOffset, int dist)
 
 static void routeQueue(int source, int dest, void (*callback)(int nextOffset, int dist))
 {
-    Grid_clearShortGrid(Data_Grid_routingDistance);
+    map_grid_clear_u16(Data_Grid_routingDistance);
     Data_Grid_routingDistance[source] = 1;
     queue.items[0] = source;
     queue.head = 0;
@@ -76,7 +75,7 @@ static void routeQueue(int source, int dest, void (*callback)(int nextOffset, in
 
 static void routeQueueWhileTrue(int source, int (*callback)(int nextOffset, int dist))
 {
-    Grid_clearShortGrid(Data_Grid_routingDistance);
+    map_grid_clear_u16(Data_Grid_routingDistance);
     Data_Grid_routingDistance[source] = 1;
     queue.items[0] = source;
     queue.head = 0;
@@ -111,7 +110,7 @@ static void routeQueueWhileTrue(int source, int (*callback)(int nextOffset, int 
 
 static void routeQueueMax(int source, int dest, int maxTiles, void (*callback)(int, int))
 {
-    Grid_clearShortGrid(Data_Grid_routingDistance);
+    map_grid_clear_u16(Data_Grid_routingDistance);
     Data_Grid_routingDistance[source] = 1;
     queue.items[0] = source;
     queue.head = 0;
@@ -149,8 +148,8 @@ static void routeQueueMax(int source, int dest, int maxTiles, void (*callback)(i
 
 static void routeQueueBoat(int source, void (*callback)(int, int))
 {
-    Grid_clearShortGrid(Data_Grid_routingDistance);
-    Grid_clearByteGrid(tmpGrid);
+    map_grid_clear_u16(Data_Grid_routingDistance);
+    map_grid_clear_i8(tmpGrid);
     Data_Grid_routingDistance[source] = 1;
     queue.items[0] = source;
     queue.head = 0;
@@ -196,7 +195,7 @@ static void routeQueueBoat(int source, void (*callback)(int, int))
 
 static void routeQueueDir8(int source, void (*callback)(int, int))
 {
-    Grid_clearShortGrid(Data_Grid_routingDistance);
+    map_grid_clear_u16(Data_Grid_routingDistance);
     Data_Grid_routingDistance[source] = 1;
     queue.items[0] = source;
     queue.head = 0;
@@ -253,7 +252,7 @@ static void routeQueueDir8(int source, void (*callback)(int, int))
 
 void Routing_determineLandCitizen()
 {
-    memset(Data_Grid_routingLandCitizen, -1, GRID_SIZE * GRID_SIZE);
+    map_grid_init_i8(Data_Grid_routingLandCitizen, -1);
     int gridOffset = Data_State.map.gridStartOffset;
     for (int y = 0; y < Data_State.map.height; y++, gridOffset += Data_State.map.gridBorderSize)
     {
@@ -392,7 +391,7 @@ void Routing_determineLandCitizen()
 
 void Routing_determineLandNonCitizen()
 {
-    memset(Data_Grid_routingLandNonCitizen, -1, GRID_SIZE * GRID_SIZE);
+    map_grid_init_i8(Data_Grid_routingLandNonCitizen, -1);
     int gridOffset = Data_State.map.gridStartOffset;
     for (int y = 0; y < Data_State.map.height; y++, gridOffset += Data_State.map.gridBorderSize)
     {
@@ -466,7 +465,7 @@ void Routing_determineLandNonCitizen()
 
 void Routing_determineWater()
 {
-    memset(Data_Grid_routingWater, -1, GRID_SIZE * GRID_SIZE);
+    map_grid_init_i8(Data_Grid_routingWater, -1);
     int gridOffset = Data_State.map.gridStartOffset;
     for (int y = 0; y < Data_State.map.height; y++, gridOffset += Data_State.map.gridBorderSize)
     {
@@ -516,7 +515,7 @@ void Routing_determineWater()
 
 void Routing_determineWalls()
 {
-    memset(Data_Grid_routingWalls, -1, GRID_SIZE * GRID_SIZE);
+    map_grid_init_i8(Data_Grid_routingWalls, -1);
     int gridOffset = Data_State.map.gridStartOffset;
     for (int y = 0; y < Data_State.map.height; y++, gridOffset += Data_State.map.gridBorderSize)
     {
@@ -527,7 +526,7 @@ void Routing_determineWalls()
                 int adjacent = 0;
                 switch (Data_State.map.orientation)
                 {
-                case Dir_0_Top:
+                case DIR_0_TOP:
                     if (Data_Grid_terrain[gridOffset + 162] & Terrain_WallOrGatehouse)
                     {
                         adjacent++;
@@ -541,7 +540,7 @@ void Routing_determineWalls()
                         adjacent++;
                     }
                     break;
-                case Dir_2_Right:
+                case DIR_2_RIGHT:
                     if (Data_Grid_terrain[gridOffset + 162] & Terrain_WallOrGatehouse)
                     {
                         adjacent++;
@@ -555,7 +554,7 @@ void Routing_determineWalls()
                         adjacent++;
                     }
                     break;
-                case Dir_4_Bottom:
+                case DIR_4_BOTTOM:
                     if (Data_Grid_terrain[gridOffset - 162] & Terrain_WallOrGatehouse)
                     {
                         adjacent++;
@@ -569,7 +568,7 @@ void Routing_determineWalls()
                         adjacent++;
                     }
                     break;
-                case Dir_6_Left:
+                case DIR_6_LEFT:
                     if (Data_Grid_terrain[gridOffset - 162] & Terrain_WallOrGatehouse)
                     {
                         adjacent++;
@@ -630,11 +629,6 @@ void Routing_getDistance(int x, int y)
     int sourceOffset = GridOffset(x, y);
     ++Data_Routes.totalRoutesCalculated;
     routeQueue(sourceOffset, -1, callbackGetDistance);
-}
-
-int Routing_getCalculatedDistance(int gridOffset)
-{
-    return Data_Grid_routingDistance[gridOffset];
 }
 
 static int callbackDeleteClosestWallOrAqueduct(int nextOffset, int dist)
@@ -846,7 +840,7 @@ int Routing_canPlaceRoadUnderAqueduct(int gridOffset)
     default: // not a straight aqueduct
         return 0;
     }
-    if (Data_State.map.orientation == Dir_6_Left || Data_State.map.orientation == Dir_2_Right)
+    if (Data_State.map.orientation == DIR_6_LEFT || Data_State.map.orientation == DIR_2_RIGHT)
     {
         checkRoadY = !checkRoadY;
     }
@@ -914,7 +908,7 @@ static int canPlaceAqueductOnRoad(int gridOffset)
         return 0;
     }
     int checkRoadY = graphic == 0 || graphic == 49;
-    if (Data_State.map.orientation == Dir_6_Left || Data_State.map.orientation == Dir_2_Right)
+    if (Data_State.map.orientation == DIR_6_LEFT || Data_State.map.orientation == DIR_2_RIGHT)
     {
         checkRoadY = !checkRoadY;
     }
@@ -1106,8 +1100,8 @@ int Routing_placeRoutedBuilding(int xSrc, int ySrc, int xDst, int yDst, RoutedBu
             *items += 1;
             break;
         }
-        int direction = Routing_getGeneralDirection(xDst, yDst, xSrc, ySrc);
-        if (direction == Dir_8_None)
+        int direction = calc_general_direction(xDst, yDst, xSrc, ySrc);
+        if (direction == DIR_8_NONE)
         {
             return 1; // destination reached
         }
@@ -1133,328 +1127,43 @@ int Routing_placeRoutedBuilding(int xSrc, int ySrc, int xDst, int yDst, RoutedBu
     }
 }
 
-int Routing_getGeneralDirection(int xSrc, int ySrc, int xDst, int yDst)
-{
-    if (xSrc < xDst)
-    {
-        if (ySrc > yDst)
-        {
-            return Dir_1_TopRight;
-        }
-        else if (ySrc == yDst)
-        {
-            return Dir_2_Right;
-        }
-        else if (ySrc < yDst)
-        {
-            return Dir_3_BottomRight;
-        }
-    }
-    else if (xSrc == xDst)
-    {
-        if (ySrc > yDst)
-        {
-            return Dir_0_Top;
-        }
-        else if (ySrc < yDst)
-        {
-            return Dir_4_Bottom;
-        }
-    }
-    else if (xSrc > xDst)
-    {
-        if (ySrc > yDst)
-        {
-            return Dir_7_TopLeft;
-        }
-        else if (ySrc == yDst)
-        {
-            return Dir_6_Left;
-        }
-        else if (ySrc < yDst)
-        {
-            return Dir_5_BottomLeft;
-        }
-    }
-    return Dir_8_None;
-}
-
-int Routing_getDirectionForMissileShooter(int xSrc, int ySrc, int xDst, int yDst)
-{
-    int dx = xSrc > xDst ? xSrc - xDst : xDst - xSrc;
-    int dy = ySrc > yDst ? ySrc - yDst : yDst - ySrc;
-    int percentage;
-    if (dx > dy)
-    {
-        percentage = calc_percentage(dx, dy);
-    }
-    else if (dx == dy)
-    {
-        percentage = 100;
-    }
-    else
-    {
-        percentage = -calc_percentage(dy, dx);
-    }
-    if (xSrc == xDst)
-    {
-        if (ySrc < yDst)
-        {
-            return 4;
-        }
-        else
-        {
-            return 0;
-        }
-    }
-    else if (xSrc > xDst)
-    {
-        if (ySrc == yDst)
-        {
-            return 6;
-        }
-        else if (ySrc > yDst)
-        {
-            if (percentage >= 400)
-            {
-                return 6;
-            }
-            else if (percentage > -400)
-            {
-                return 7;
-            }
-            else
-            {
-                return 0;
-            }
-        }
-        else
-        {
-            if (percentage >= 400)
-            {
-                return 6;
-            }
-            else if (percentage > -400)
-            {
-                return 5;
-            }
-            else
-            {
-                return 4;
-            }
-        }
-    }
-    else     // xSrc < xDst
-    {
-        if (ySrc == yDst)
-        {
-            return 2;
-        }
-        else if (ySrc > yDst)
-        {
-            if (percentage >= 400)
-            {
-                return 2;
-            }
-            else if (percentage > -400)
-            {
-                return 1;
-            }
-            else
-            {
-                return 0;
-            }
-        }
-        else
-        {
-            if (percentage >= 400)
-            {
-                return 2;
-            }
-            else if (percentage > -400)
-            {
-                return 3;
-            }
-            else
-            {
-                return 4;
-            }
-        }
-    }
-}
-
-int Routing_getDirectionForMissile(int xSrc, int ySrc, int xDst, int yDst)
-{
-    int dx = xSrc > xDst ? xSrc - xDst : xDst - xSrc;
-    int dy = ySrc > yDst ? ySrc - yDst : yDst - ySrc;
-    int percentage;
-    if (dx > dy)
-    {
-        percentage = calc_percentage(dx, dy);
-    }
-    else if (dx == dy)
-    {
-        percentage = 100;
-    }
-    else
-    {
-        percentage = -calc_percentage(dy, dx);
-    }
-    if (xSrc == xDst)
-    {
-        if (ySrc < yDst)
-        {
-            return 8;
-        }
-        else
-        {
-            return 0;
-        }
-    }
-    else if (xSrc > xDst)
-    {
-        if (ySrc == yDst)
-        {
-            return 12;
-        }
-        else if (ySrc > yDst)
-        {
-            if (percentage >= 500)
-            {
-                return 12;
-            }
-            else if (percentage >= 200)
-            {
-                return 13;
-            }
-            else if (percentage > -200)
-            {
-                return 14;
-            }
-            else if (percentage > -500)
-            {
-                return 15;
-            }
-            else
-            {
-                return 0;
-            }
-        }
-        else
-        {
-            if (percentage >= 500)
-            {
-                return 12;
-            }
-            else if (percentage >= 200)
-            {
-                return 11;
-            }
-            else if (percentage > -200)
-            {
-                return 10;
-            }
-            else if (percentage > -500)
-            {
-                return 9;
-            }
-            else
-            {
-                return 8;
-            }
-        }
-    }
-    else     // xSrc < xDst
-    {
-        if (ySrc == yDst)
-        {
-            return 4;
-        }
-        else if (ySrc > yDst)
-        {
-            if (percentage >= 500)
-            {
-                return 4;
-            }
-            else if (percentage >= 200)
-            {
-                return 3;
-            }
-            else if (percentage > -200)
-            {
-                return 2;
-            }
-            else if (percentage > -500)
-            {
-                return 1;
-            }
-            else
-            {
-                return 0;
-            }
-        }
-        else
-        {
-            if (percentage >= 500)
-            {
-                return 4;
-            }
-            else if (percentage >= 200)
-            {
-                return 5;
-            }
-            else if (percentage > -200)
-            {
-                return 6;
-            }
-            else if (percentage > -500)
-            {
-                return 7;
-            }
-            else
-            {
-                return 8;
-            }
-        }
-    }
-}
 
 static void updateXYGridOffsetForDirection(int direction, int *x, int *y, int *gridOffset)
 {
     switch (direction)
     {
-    case Dir_0_Top:
+    case DIR_0_TOP:
         --(*y);
         (*gridOffset) -= 162;
         break;
-    case Dir_1_TopRight:
+    case DIR_1_TOP_RIGHT:
         ++(*x);
         --(*y);
         (*gridOffset) -= 161;
         break;
-    case Dir_2_Right:
+    case DIR_2_RIGHT:
         ++(*x);
         ++(*gridOffset);
         break;
-    case Dir_3_BottomRight:
+    case DIR_3_BOTTOM_RIGHT:
         ++(*x);
         ++(*y);
         (*gridOffset) += 163;
         break;
-    case Dir_4_Bottom:
+    case DIR_4_BOTTOM:
         ++(*y);
         (*gridOffset) += 162;
         break;
-    case Dir_5_BottomLeft:
+    case DIR_5_BOTTOM_LEFT:
         --(*x);
         ++(*y);
         (*gridOffset) += 161;
         break;
-    case Dir_6_Left:
+    case DIR_6_LEFT:
         --(*x);
         --(*gridOffset);
         break;
-    case Dir_7_TopLeft:
+    case DIR_7_TOP_LEFT:
         --(*x);
         --(*y);
         (*gridOffset) -= 163;
@@ -1503,7 +1212,7 @@ void Routing_getDistanceWaterFlotsam(int x, int y)
     routeQueueDir8(sourceGridOffset, callbackGetDistanceWaterFlotsam);
 }
 
-int Routing_getPath(int numDirections, int routingPathId, int xSrc, int ySrc, int xDst, int yDst)
+int Routing_getPath(uint8_t *path, int xSrc, int ySrc, int xDst, int yDst, int numDirections)
 {
     int dstGridOffset = GridOffset(xDst, yDst);
     int distance = Data_Grid_routingDistance[dstGridOffset];
@@ -1523,7 +1232,7 @@ int Routing_getPath(int numDirections, int routingPathId, int xSrc, int ySrc, in
     {
         distance = Data_Grid_routingDistance[gridOffset];
         int direction = -1;
-        int generalDirection = Routing_getGeneralDirection(x, y, xSrc, ySrc);
+        int generalDirection = calc_general_direction(x, y, xSrc, ySrc);
         for (int d = 0; d < 8; d += step)
         {
             if (d != lastDirection)
@@ -1560,7 +1269,7 @@ int Routing_getPath(int numDirections, int routingPathId, int xSrc, int ySrc, in
     }
     for (int i = 0; i < numTiles; i++)
     {
-        Data_Routes.directionPaths[routingPathId][i] = directionPath[numTiles - i - 1];
+        path[i] = directionPath[numTiles - i - 1];
     }
     return numTiles;
 }
@@ -1591,7 +1300,7 @@ int Routing_getClosestXYWithinRange(int numDirections, int xSrc, int ySrc, int x
             return 1;
         }
         int direction = -1;
-        int generalDirection = Routing_getGeneralDirection(x, y, xSrc, ySrc);
+        int generalDirection = calc_general_direction(x, y, xSrc, ySrc);
         for (int d = 0; d < 8; d += step)
         {
             if (d != lastDirection)
@@ -1629,7 +1338,7 @@ int Routing_getClosestXYWithinRange(int numDirections, int xSrc, int ySrc, int x
     return 0;
 }
 
-int Routing_getPathOnWater(int routingPathId, int xSrc, int ySrc, int xDst, int yDst, int isFlotsam)
+int Routing_getPathOnWater(uint8_t *path, int xSrc, int ySrc, int xDst, int yDst, int isFlotsam)
 {
     int rand = random_byte() & 3;
     int dstGridOffset = GridOffset(xDst, yDst);
@@ -1690,7 +1399,7 @@ int Routing_getPathOnWater(int routingPathId, int xSrc, int ySrc, int xDst, int 
     }
     for (int i = 0; i < numTiles; i++)
     {
-        Data_Routes.directionPaths[routingPathId][i] = directionPath[numTiles - i - 1];
+        path[i] = directionPath[numTiles - i - 1];
     }
     return numTiles;
 }

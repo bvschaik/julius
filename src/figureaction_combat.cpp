@@ -331,12 +331,12 @@ void FigureAction_Combat_attackFigure(int figureId, int opponentId)
             f->attackGraphicOffset = 12;
             if (opponent->x != opponent->destinationX || opponent->y != opponent->destinationY)
             {
-                f->attackDirection = Routing_getGeneralDirection(f->previousTileX, f->previousTileY,
+                f->attackDirection = calc_general_direction(f->previousTileX, f->previousTileY,
                                      opponent->previousTileX, opponent->previousTileY);
             }
             else
             {
-                f->attackDirection = Routing_getGeneralDirection(f->previousTileX, f->previousTileY,
+                f->attackDirection = calc_general_direction(f->previousTileX, f->previousTileY,
                                      opponent->x, opponent->y);
             }
             if (f->attackDirection >= 8)

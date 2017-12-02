@@ -9,9 +9,9 @@
 #include <sound>
 #include <data>
 #include <scenario>
+#include <game>
 
 #include "empire/city.h"
-
 #include "core/calc.h"
 #include "core/random.h"
 #include "figure/formation.h"
@@ -128,7 +128,7 @@ void Figure_delete(int figureId)
     {
         Data_Buildings[f->buildingId].immigrantFigureId = 0;
     }
-    FigureRoute_remove(figureId);
+    figure_route_remove(figureId);
     Figure_removeFromTileList(figureId);
     memset(f, 0, sizeof(struct Data_Figure));
 }

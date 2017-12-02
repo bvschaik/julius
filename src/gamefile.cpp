@@ -125,8 +125,8 @@ typedef struct
     buffer *Data_Grid_Undo_aqueducts;
     buffer *Data_Grid_Undo_spriteOffsets;
     buffer *Data_Figures;
-    buffer *Data_Routes_figureIds;
-    buffer *Data_Routes_directionPaths;
+    buffer *route_figures;
+    buffer *route_paths;
     buffer *formations;
     buffer *formation_totals;
     buffer *Data_CityInfo;
@@ -183,10 +183,7 @@ typedef struct
     buffer *trade_route_traded;
     buffer *Data_Buildings_Extra_barracksTowerSentryRequested;
     buffer *Data_Buildings_Extra_createdSequence;
-    buffer *Data_Routes_unknown1RoutesCalculated;
-    buffer *Data_Routes_enemyRoutesCalculated;
-    buffer *Data_Routes_totalRoutesCalculated;
-    buffer *Data_Routes_unknown2RoutesCalculated;
+    buffer *routing_counters;
     buffer *building_count_culture3;
     buffer *enemy_armies;
     buffer *Data_CityInfo_Extra_entryPointFlag_x;
@@ -281,8 +278,8 @@ void init_savegame_data()
     state->Data_Grid_Undo_aqueducts = create_savegame_piece(26244, 1);
     state->Data_Grid_Undo_spriteOffsets = create_savegame_piece(26244, 1);
     state->Data_Figures = create_savegame_piece(128000, 1);
-    state->Data_Routes_figureIds = create_savegame_piece(1200, 1);
-    state->Data_Routes_directionPaths = create_savegame_piece(300000, 1);
+    state->route_figures = create_savegame_piece(1200, 1);
+    state->route_paths = create_savegame_piece(300000, 1);
     state->formations = create_savegame_piece(6400, 1);
     state->formation_totals = create_savegame_piece(12, 0);
     state->Data_CityInfo = create_savegame_piece(36136, 1);
@@ -339,10 +336,7 @@ void init_savegame_data()
     state->trade_route_traded = create_savegame_piece(1280, 1);
     state->Data_Buildings_Extra_barracksTowerSentryRequested = create_savegame_piece(4, 0);
     state->Data_Buildings_Extra_createdSequence = create_savegame_piece(4, 0);
-    state->Data_Routes_unknown1RoutesCalculated = create_savegame_piece(4, 0); //state->unk_634474 = create_savegame_piece(4, 0); not referenced
-    state->Data_Routes_enemyRoutesCalculated = create_savegame_piece(4, 0);
-    state->Data_Routes_totalRoutesCalculated = create_savegame_piece(4, 0);
-    state->Data_Routes_unknown2RoutesCalculated = create_savegame_piece(4, 0); //state->unk_634470 = create_savegame_piece(4, 0); not referenced
+    state->routing_counters = create_savegame_piece(16, 0); //state->unk_634474 = create_savegame_piece(4, 0); not referenced
     state->building_count_culture3 = create_savegame_piece(40, 0);
     state->enemy_armies = create_savegame_piece(900, 0);
     state->Data_CityInfo_Extra_entryPointFlag_x = create_savegame_piece(4, 0);
@@ -433,8 +427,8 @@ static void savegame_deserialize(savegame_state *state)
     read_all_from_buffer(state->Data_Grid_Undo_aqueducts, &Data_Grid_Undo_aqueducts);
     read_all_from_buffer(state->Data_Grid_Undo_spriteOffsets, &Data_Grid_Undo_spriteOffsets);
     read_all_from_buffer(state->Data_Figures, &Data_Figures);
-    read_all_from_buffer(state->Data_Routes_figureIds, &Data_Routes.figureIds);
-    read_all_from_buffer(state->Data_Routes_directionPaths, &Data_Routes.directionPaths);
+
+    figure_route_load_state(state->route_figures, state->route_paths);
 
     formations_load_state(state->formations, state->formation_totals);
 
@@ -499,10 +493,8 @@ static void savegame_deserialize(savegame_state *state)
 
     read_all_from_buffer(state->Data_Buildings_Extra_barracksTowerSentryRequested, &Data_Buildings_Extra.barracksTowerSentryRequested);
     read_all_from_buffer(state->Data_Buildings_Extra_createdSequence, &Data_Buildings_Extra.createdSequence);
-    read_all_from_buffer(state->Data_Routes_unknown1RoutesCalculated, &Data_Routes.unknown1RoutesCalculated); //read_all_from_buffer(state->unk_634474, &unk_634474); not referenced
-    read_all_from_buffer(state->Data_Routes_enemyRoutesCalculated, &Data_Routes.enemyRoutesCalculated);
-    read_all_from_buffer(state->Data_Routes_totalRoutesCalculated, &Data_Routes.totalRoutesCalculated);
-    read_all_from_buffer(state->Data_Routes_unknown2RoutesCalculated, &Data_Routes.unknown2RoutesCalculated); //read_all_from_buffer(state->unk_634470, &unk_634470); not referenced
+
+    map_routing_load_state(state->routing_counters);
 
     enemy_armies_load_state(state->enemy_armies, state->enemy_army_totals);
 
@@ -562,8 +554,8 @@ static void savegame_serialize(savegame_state *state)
     write_all_to_buffer(state->Data_Grid_Undo_aqueducts, &Data_Grid_Undo_aqueducts);
     write_all_to_buffer(state->Data_Grid_Undo_spriteOffsets, &Data_Grid_Undo_spriteOffsets);
     write_all_to_buffer(state->Data_Figures, &Data_Figures);
-    write_all_to_buffer(state->Data_Routes_figureIds, &Data_Routes.figureIds);
-    write_all_to_buffer(state->Data_Routes_directionPaths, &Data_Routes.directionPaths);
+
+    figure_route_save_state(state->route_figures, state->route_paths);
 
     formations_save_state(state->formations, state->formation_totals);
 
@@ -628,10 +620,8 @@ static void savegame_serialize(savegame_state *state)
 
     write_all_to_buffer(state->Data_Buildings_Extra_barracksTowerSentryRequested, &Data_Buildings_Extra.barracksTowerSentryRequested);
     write_all_to_buffer(state->Data_Buildings_Extra_createdSequence, &Data_Buildings_Extra.createdSequence);
-    write_all_to_buffer(state->Data_Routes_unknown1RoutesCalculated, &Data_Routes.unknown1RoutesCalculated); //write_all_to_buffer(state->unk_634474, &unk_634474); not referenced
-    write_all_to_buffer(state->Data_Routes_enemyRoutesCalculated, &Data_Routes.enemyRoutesCalculated);
-    write_all_to_buffer(state->Data_Routes_totalRoutesCalculated, &Data_Routes.totalRoutesCalculated);
-    write_all_to_buffer(state->Data_Routes_unknown2RoutesCalculated, &Data_Routes.unknown2RoutesCalculated); //write_all_to_buffer(state->unk_634470, &unk_634470); not referenced
+
+    map_routing_save_state(state->routing_counters);
 
     enemy_armies_save_state(state->enemy_armies, state->enemy_army_totals);
 
@@ -807,7 +797,7 @@ static void setupFromSavedGame()
     Routing_determineWalls();
 
     Building_determineGraphicIdsForOrientedBuildings();
-    FigureRoute_clean();
+    figure_route_clean();
     UtilityManagement::determineRoadNetworks();
     Building_GameTick_checkAccessToRome();
     Resource_gatherGranaryGettingInfo();

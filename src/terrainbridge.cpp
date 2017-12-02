@@ -4,6 +4,7 @@
 #include "terrain.h"
 
 #include <data>
+#include <game>
 
 struct TerrainBridge
 {
@@ -86,22 +87,22 @@ int TerrainBridge_determineLengthAndDirection(int x, int y, int isShipBridge, in
     if (!(Data_Grid_terrain[GridOffset(x, y-1)] & Terrain_Water))
     {
         bridge.directionGridOffset = 162;
-        bridge.direction = Dir_4_Bottom;
+        bridge.direction = DIR_4_BOTTOM;
     }
     else if (!(Data_Grid_terrain[GridOffset(x+1, y)] & Terrain_Water))
     {
         bridge.directionGridOffset = -1;
-        bridge.direction = Dir_6_Left;
+        bridge.direction = DIR_6_LEFT;
     }
     else if (!(Data_Grid_terrain[GridOffset(x, y+1)] & Terrain_Water))
     {
         bridge.directionGridOffset = -162;
-        bridge.direction = Dir_0_Top;
+        bridge.direction = DIR_0_TOP;
     }
     else if (!(Data_Grid_terrain[GridOffset(x-1, y)] & Terrain_Water))
     {
         bridge.directionGridOffset = 1;
-        bridge.direction = Dir_2_Right;
+        bridge.direction = DIR_2_RIGHT;
     }
     else
     {

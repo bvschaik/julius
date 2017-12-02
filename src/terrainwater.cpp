@@ -16,18 +16,18 @@ void Terrain_addWatersideBuildingToGrids(int buildingId, int x, int y, int size,
     int yLeftmost;
     switch (Data_State.map.orientation)
     {
-    case Dir_0_Top:
+    case DIR_0_TOP:
         xLeftmost = 0;
         yLeftmost = size - 1;
         break;
-    case Dir_2_Right:
+    case DIR_2_RIGHT:
         xLeftmost = yLeftmost = 0;
         break;
-    case Dir_4_Bottom:
+    case DIR_4_BOTTOM:
         xLeftmost = size - 1;
         yLeftmost = 0;
         break;
-    case Dir_6_Left:
+    case DIR_6_LEFT:
         xLeftmost = yLeftmost = size - 1;
         break;
     default:
@@ -65,15 +65,15 @@ int Terrain_determineOrientationWatersideSize2(int x, int y, int adjustXY,
     {
         switch (Data_State.map.orientation)
         {
-        case Dir_0_Top:
+        case DIR_0_TOP:
             break;
-        case Dir_2_Right:
+        case DIR_2_RIGHT:
             x--;
             break;
-        case Dir_6_Left:
+        case DIR_6_LEFT:
             y--;
             break;
-        case Dir_4_Bottom:
+        case DIR_4_BOTTOM:
             x--;
             y--;
             break;
@@ -159,15 +159,15 @@ int Terrain_determineOrientationWatersideSize3(int x, int y, int adjustXY,
     {
         switch (Data_State.map.orientation)
         {
-        case Dir_0_Top:
+        case DIR_0_TOP:
             break;
-        case Dir_2_Right:
+        case DIR_2_RIGHT:
             x -= 2;
             break;
-        case Dir_6_Left:
+        case DIR_6_LEFT:
             y -= 2;
             break;
-        case Dir_4_Bottom:
+        case DIR_4_BOTTOM:
             x -= 2;
             y -= 2;
             break;

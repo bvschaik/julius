@@ -3,6 +3,7 @@
 #include "ui/citybuildings.h"
 
 #include <data>
+#include <game>
 
 static void setViewport(int xOffset, int yOffset, int widthInTiles, int heightInTiles);
 
@@ -67,7 +68,7 @@ void CityView_calculateLookup()
     switch (Data_State.map.orientation)
     {
     default:
-    case Dir_0_Top:
+    case DIR_0_TOP:
         xViewStart = VIEW_X_MAX - 1;
         xViewSkip = -1;
         xViewStep = 1;
@@ -75,7 +76,7 @@ void CityView_calculateLookup()
         yViewSkip = 1;
         yViewStep = 1;
         break;
-    case Dir_2_Right:
+    case DIR_2_RIGHT:
         xViewStart = 1;
         xViewSkip = 1;
         xViewStep = 1;
@@ -83,7 +84,7 @@ void CityView_calculateLookup()
         yViewSkip = 1;
         yViewStep = -1;
         break;
-    case Dir_4_Bottom:
+    case DIR_4_BOTTOM:
         xViewStart = VIEW_X_MAX - 1;
         xViewSkip = 1;
         xViewStep = -1;
@@ -91,7 +92,7 @@ void CityView_calculateLookup()
         yViewSkip = -1;
         yViewStep = -1;
         break;
-    case Dir_6_Left:
+    case DIR_6_LEFT:
         xViewStart = VIEW_Y_MAX - 2;
         xViewSkip = -1;
         xViewStep = -1;
@@ -234,7 +235,7 @@ void CityView_rotateLeft()
     Data_State.map.orientation += 2;
     if (Data_State.map.orientation > 6)
     {
-        Data_State.map.orientation = Dir_0_Top;
+        Data_State.map.orientation = DIR_0_TOP;
     }
     CityView_calculateLookup();
     if (centerGridOffset >= 0)
@@ -243,8 +244,8 @@ void CityView_rotateLeft()
         CityView_gridOffsetToXYCoords(centerGridOffset, &x, &y);
         Data_State.map.camera.x = x - Data_CityView.widthInTiles / 2;
         Data_State.map.camera.y = y - Data_CityView.heightInTiles / 2;
-        if (Data_State.map.orientation == Dir_0_Top ||
-                Data_State.map.orientation == Dir_4_Bottom)
+        if (Data_State.map.orientation == DIR_0_TOP ||
+                Data_State.map.orientation == DIR_4_BOTTOM)
         {
             Data_State.map.camera.x++;
         }
@@ -260,7 +261,7 @@ void CityView_rotateRight()
     Data_State.map.orientation -= 2;
     if (Data_State.map.orientation < 0)
     {
-        Data_State.map.orientation = Dir_6_Left;
+        Data_State.map.orientation = DIR_6_LEFT;
     }
     CityView_calculateLookup();
     if (centerGridOffset >= 0)
@@ -269,8 +270,8 @@ void CityView_rotateRight()
         CityView_gridOffsetToXYCoords(centerGridOffset, &x, &y);
         Data_State.map.camera.x = x - Data_CityView.widthInTiles / 2;
         Data_State.map.camera.y = y - Data_CityView.heightInTiles / 2;
-        if (Data_State.map.orientation == Dir_0_Top ||
-                Data_State.map.orientation == Dir_4_Bottom)
+        if (Data_State.map.orientation == DIR_0_TOP ||
+                Data_State.map.orientation == DIR_4_BOTTOM)
         {
             Data_State.map.camera.y += 2;
         }

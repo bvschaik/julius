@@ -9,8 +9,7 @@
 
 #include <game>
 #include <data>
-
-#include "core/time.h"
+#include <core>
 
 static const int criminalOffsets[] =
 {
@@ -106,7 +105,7 @@ void FigureAction_rioter(int figureId)
                 f->destinationX = xTile;
                 f->destinationY = yTile;
                 f->destinationBuildingId = buildingId;
-                FigureRoute_remove(figureId);
+                figure_route_remove(figureId);
             }
             else
             {
@@ -117,7 +116,7 @@ void FigureAction_rioter(int figureId)
     case FigureActionState_121_RioterMoving:
         FigureActionIncreaseGraphicOffset(f, 12);
         FigureMovement_walkTicks(figureId, 1);
-        if (f->direction == DirFigure_8_AtDestination)
+        if (f->direction == DIR_FIGURE_AT_DESTINATION)
         {
             int xTile, yTile;
             int buildingId = Formation_Rioter_getTargetBuilding(&xTile, &yTile);
@@ -126,19 +125,19 @@ void FigureAction_rioter(int figureId)
                 f->destinationX = xTile;
                 f->destinationY = yTile;
                 f->destinationBuildingId = buildingId;
-                FigureRoute_remove(figureId);
+                figure_route_remove(figureId);
             }
             else
             {
                 f->state = FigureState_Dead;
             }
         }
-        else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost)
+        else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST)
         {
             f->actionState = FigureActionState_120_RioterCreated;
-            FigureRoute_remove(figureId);
+            figure_route_remove(figureId);
         }
-        else if (f->direction == DirFigure_11_Attack)
+        else if (f->direction == DIR_FIGURE_ATTACK)
         {
             if (f->graphicOffset > 12)
             {
@@ -148,7 +147,7 @@ void FigureAction_rioter(int figureId)
         break;
     }
     int dir;
-    if (f->direction == DirFigure_11_Attack)
+    if (f->direction == DIR_FIGURE_ATTACK)
     {
         dir = f->attackDirection;
     }
@@ -167,7 +166,7 @@ void FigureAction_rioter(int figureId)
         f->graphicId = image_group(GROUP_FIGURE_CRIMINAL) +
                        96 + FigureActionCorpseGraphicOffset(f);
     }
-    else if (f->direction == DirFigure_11_Attack)
+    else if (f->direction == DIR_FIGURE_ATTACK)
     {
         f->graphicId = image_group(GROUP_FIGURE_CRIMINAL) +
                        104 + criminalOffsets[f->graphicOffset];

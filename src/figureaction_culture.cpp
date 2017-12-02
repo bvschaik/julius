@@ -5,6 +5,7 @@
 #include "terrain.h"
 
 #include <game>
+#include <core>
 #include <data>
 
 static void FigureAction_cultureCommon(int figureId, int numTicks)
@@ -33,7 +34,7 @@ static void FigureAction_cultureCommon(int figureId, int numTicks)
                 f->actionState = FigureActionState_126_RoamerReturning;
                 f->destinationX = x;
                 f->destinationY = y;
-                FigureRoute_remove(figureId);
+                figure_route_remove(figureId);
                 f->roamLength = 0;
             }
             else
@@ -45,8 +46,8 @@ static void FigureAction_cultureCommon(int figureId, int numTicks)
         break;
     case FigureActionState_126_RoamerReturning:
         FigureMovement_walkTicks(figureId, numTicks);
-        if (f->direction == DirFigure_8_AtDestination ||
-                f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost)
+        if (f->direction == DIR_FIGURE_AT_DESTINATION ||
+                f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST)
         {
             f->state = FigureState_Dead;
         }

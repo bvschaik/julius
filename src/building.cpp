@@ -7,7 +7,6 @@
 #include "figureaction.h"
 #include "formation.h"
 #include "housepopulation.h"
-#include "city/message.h"
 #include "resource.h"
 #include "routing.h"
 #include "terrain.h"
@@ -15,14 +14,15 @@
 #include "undo.h"
 #include "ui/warning.h"
 
-#include <sound>
 #include <data>
-#include <scenario>
-#include <game>
-
 #include "building/properties.h"
 #include "building/storage.h"
+#include "city/message.h"
 #include "graphics/image.h"
+#include "map/routing.h"
+#include "scenario/map.h"
+#include "scenario/property.h"
+#include "sound/effect.h"
 
 #include <string.h>
 
@@ -67,7 +67,7 @@ int Building_create(int type, int x, int y)
     }
 
     struct Data_Building *b = &Data_Buildings[buildingId];
-    const building_properties *props = building_properties_for_type((building_type)type);
+    const building_properties *props = building_properties_for_type(type);
 
     b->state = BuildingState_Created;
     b->ciid = 1;
@@ -142,23 +142,23 @@ int Building_create(int type, int x, int y)
         break;
     case BUILDING_WINE_WORKSHOP:
         b->outputResourceId = RESOURCE_WINE;
-        b->subtype.workshopResource = WorkshopRESOURCE_VINESToWine;
+        b->subtype.workshopType = WORKSHOP_VINES_TO_WINE;
         break;
     case BUILDING_OIL_WORKSHOP:
         b->outputResourceId = RESOURCE_OIL;
-        b->subtype.workshopResource = WorkshopRESOURCE_OLIVESToOil;
+        b->subtype.workshopType = WORKSHOP_OLIVES_TO_OIL;
         break;
     case BUILDING_WEAPONS_WORKSHOP:
         b->outputResourceId = RESOURCE_WEAPONS;
-        b->subtype.workshopResource = WorkshopRESOURCE_IRONToWeapons;
+        b->subtype.workshopType = WORKSHOP_IRON_TO_WEAPONS;
         break;
     case BUILDING_FURNITURE_WORKSHOP:
         b->outputResourceId = RESOURCE_FURNITURE;
-        b->subtype.workshopResource = WorkshopRESOURCE_TIMBERToFurniture;
+        b->subtype.workshopType = WORKSHOP_TIMBER_TO_FURNITURE;
         break;
     case BUILDING_POTTERY_WORKSHOP:
         b->outputResourceId = RESOURCE_POTTERY;
-        b->subtype.workshopResource = WorkshopRESOURCE_CLAYToPottery;
+        b->subtype.workshopType = WORKSHOP_CLAY_TO_POTTERY;
         break;
     default:
         b->outputResourceId = RESOURCE_NONE;
@@ -617,7 +617,7 @@ void Building_decayHousesCovered()
 void Building_determineGraphicIdsForOrientedBuildings()
 {
     int mapOrientation = Data_State.map.orientation;
-    int mapOrientationIsTopOrBottom = mapOrientation == Dir_0_Top || mapOrientation == Dir_4_Bottom;
+    int mapOrientationIsTopOrBottom = mapOrientation == DIR_0_TOP || mapOrientation == DIR_4_BOTTOM;
     int graphicOffset;
     for (int i = 1; i < MAX_BUILDINGS; i++)
     {
@@ -684,7 +684,7 @@ void Building_determineGraphicIdsForOrientedBuildings()
             Terrain_addRoadsForTriumphalArch(b->x, b->y, b->subtype.orientation);
             break;
         case BUILDING_HIPPODROME:
-            if (mapOrientation == Dir_0_Top)
+            if (mapOrientation == DIR_0_TOP)
             {
                 graphicId = image_group(GROUP_BUILDING_HIPPODROME_2);
                 switch (b->subtype.orientation)
@@ -703,7 +703,7 @@ void Building_determineGraphicIdsForOrientedBuildings()
                     break;
                 }
             }
-            else if (mapOrientation == Dir_4_Bottom)
+            else if (mapOrientation == DIR_4_BOTTOM)
             {
                 graphicId = image_group(GROUP_BUILDING_HIPPODROME_2);
                 switch (b->subtype.orientation)
@@ -722,7 +722,7 @@ void Building_determineGraphicIdsForOrientedBuildings()
                     break;
                 }
             }
-            else if (mapOrientation == Dir_6_Left)
+            else if (mapOrientation == DIR_6_LEFT)
             {
                 graphicId = image_group(GROUP_BUILDING_HIPPODROME_1);
                 switch (b->subtype.orientation)
@@ -741,7 +741,7 @@ void Building_determineGraphicIdsForOrientedBuildings()
                     break;
                 }
             }
-            else     // Dir_2_Right
+            else     // DIR_2_RIGHT
             {
                 graphicId = image_group(GROUP_BUILDING_HIPPODROME_1);
                 switch (b->subtype.orientation)
@@ -826,15 +826,15 @@ void Building_GameTick_checkAccessToRome()
                     b->state = BuildingState_Undo;
                 }
             }
-            else if (Data_Grid_routingDistance[GridOffset(xRoad, yRoad)])
+            else if (map_routing_distance(GridOffset(xRoad, yRoad)))
             {
                 // reachable from rome
-                b->distanceFromEntry = Data_Grid_routingDistance[GridOffset(xRoad, yRoad)];
+                b->distanceFromEntry = map_routing_distance(GridOffset(xRoad, yRoad));
                 b->houseUnreachableTicks = 0;
             }
             else if (Terrain_getClosestReachableRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad))
             {
-                b->distanceFromEntry = Data_Grid_routingDistance[GridOffset(xRoad, yRoad)];
+                b->distanceFromEntry = map_routing_distance(GridOffset(xRoad, yRoad));
                 b->houseUnreachableTicks = 0;
             }
             else
@@ -864,7 +864,7 @@ void Building_GameTick_checkAccessToRome()
             if (roadGridOffset >= 0)
             {
                 b->roadNetworkId = Data_Grid_roadNetworks[roadGridOffset];
-                b->distanceFromEntry = Data_Grid_routingDistance[roadGridOffset];
+                b->distanceFromEntry = map_routing_distance(roadGridOffset);
                 b->roadAccessX = xRoad;
                 b->roadAccessY = yRoad;
             }
@@ -885,7 +885,7 @@ void Building_GameTick_checkAccessToRome()
             if (roadGridOffset >= 0)
             {
                 b->roadNetworkId = Data_Grid_roadNetworks[roadGridOffset];
-                b->distanceFromEntry = Data_Grid_routingDistance[roadGridOffset];
+                b->distanceFromEntry = map_routing_distance(roadGridOffset);
                 b->roadAccessX = xRoad;
                 b->roadAccessY = yRoad;
             }
@@ -897,13 +897,13 @@ void Building_GameTick_checkAccessToRome()
             if (roadGridOffset >= 0)
             {
                 b->roadNetworkId = Data_Grid_roadNetworks[roadGridOffset];
-                b->distanceFromEntry = Data_Grid_routingDistance[roadGridOffset];
+                b->distanceFromEntry = map_routing_distance(roadGridOffset);
                 b->roadAccessX = xRoad;
                 b->roadAccessY = yRoad;
             }
         }
     }
-    if (!Data_Grid_routingDistance[Data_CityInfo.exitPointGridOffset])
+    if (!map_routing_distance(Data_CityInfo.exitPointGridOffset))
     {
         // no route through city
         if (Data_CityInfo.population <= 0)
@@ -930,7 +930,7 @@ void Building_GameTick_checkAccessToRome()
             Routing_determineLandNonCitizen();
             Routing_determineWalls();
 
-            if (Data_Grid_routingDistance[Data_CityInfo.exitPointGridOffset])
+            if (map_routing_distance(Data_CityInfo.exitPointGridOffset))
             {
                 city_message_post(1, MESSAGE_ROAD_TO_ROME_OBSTRUCTED, 0, 0);
                 Data_State.undoAvailable = 0;
@@ -962,7 +962,7 @@ void Building_Industry_updateProduction()
         {
             continue;
         }
-        if (b->subtype.workshopResource && !b->loadsStored)
+        if (b->subtype.workshopType && !b->loadsStored)
         {
             continue;
         }
@@ -988,7 +988,7 @@ void Building_Industry_updateProduction()
             {
                 b->data.industry.progress += b->numWorkers;
             }
-            int maxProgress = b->subtype.workshopResource ? 400 : 200;
+            int maxProgress = b->subtype.workshopType ? 400 : 200;
             if (b->data.industry.progress > maxProgress)
             {
                 b->data.industry.progress = maxProgress;
@@ -1074,7 +1074,7 @@ void Building_Industry_blessFarmsFromCeres()
 
 int Building_Industry_hasProducedResource(int buildingId)
 {
-    int target = Data_Buildings[buildingId].subtype.workshopResource ? 400 : 200;
+    int target = Data_Buildings[buildingId].subtype.workshopType ? 400 : 200;
     return Data_Buildings[buildingId].data.industry.progress >= target;
 }
 
@@ -1082,7 +1082,7 @@ void Building_Industry_startNewProduction(int buildingId)
 {
     struct Data_Building *b = &Data_Buildings[buildingId];
     b->data.industry.progress = 0;
-    if (b->subtype.workshopResource)
+    if (b->subtype.workshopType)
     {
         if (b->loadsStored)
         {
@@ -1400,12 +1400,29 @@ int Building_Market_getDestinationGranaryWarehouse(int marketId)
     return resources[fetchInventoryId].buildingId;
 }
 
-int Building_Market_getMaxGoodsStock(int buildingId)
+int Building_Market_getMaxFoodStock(int buildingId)
 {
     int maxStock = 0;
     if (buildingId > 0 && Data_Buildings[buildingId].type == BUILDING_MARKET)
     {
         for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++)
+        {
+            int stock = Data_Buildings[buildingId].data.market.inventory[i];
+            if (stock > maxStock)
+            {
+                maxStock = stock;
+            }
+        }
+    }
+    return maxStock;
+}
+
+int Building_Market_getMaxGoodsStock(int buildingId)
+{
+    int maxStock = 0;
+    if (buildingId > 0 && Data_Buildings[buildingId].type == BUILDING_MARKET)
+    {
+        for (int i = INVENTORY_MIN_GOOD; i < INVENTORY_MAX_GOOD; i++)
         {
             int stock = Data_Buildings[buildingId].data.market.inventory[i];
             if (stock > maxStock)

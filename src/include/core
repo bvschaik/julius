@@ -6,5 +6,6 @@
 #include "core/calc.h"
 #include "core/buffer.h"
 #include "core/file.h"
+#include "core/random.h"
 
 #endif 

@@ -1,10 +1,12 @@
 #ifndef DATA_GRID_H
 #define DATA_GRID_H
-#include "data.hpp"
 
-#define Int8_Grid(x) char x[GRID_SIZE * GRID_SIZE]
-#define UInt8_Grid(x) unsigned char x[GRID_SIZE * GRID_SIZE]
-#define UInt16_Grid(x) unsigned short x[GRID_SIZE * GRID_SIZE]
+#include "data.hpp"
+#include <stdint.h>
+
+#define Int8_Grid(x) int8_t x[GRID_SIZE * GRID_SIZE]
+#define UInt8_Grid(x) uint8_t x[GRID_SIZE * GRID_SIZE]
+#define UInt16_Grid(x) uint16_t x[GRID_SIZE * GRID_SIZE]
 
 enum
 {

@@ -1,6 +1,5 @@
 #include "utilitymanagement.h"
 
-#include "grid.h"
 #include "routing.h"
 #include "terrain.h"
 #include "terraingraphics.h"
@@ -150,7 +149,7 @@ static void fillAqueductsFromOffset(int gridOffset)
 
 void UtilityManagement::updateReservoirFountain()
 {
-    Grid_andShortGrid(Data_Grid_terrain, ~(Terrain_FountainRange | Terrain_ReservoirRange));
+    map_grid_and_u16(Data_Grid_terrain, ~(Terrain_FountainRange | Terrain_ReservoirRange));
     // reservoirs
     setAllAqueductsToNoWater();
     building_list_large_clear(1);
@@ -263,12 +262,9 @@ static int markRoadNetwork(int gridOffset, unsigned char roadNetworkId)
         for (int i = 0; i < 4; i++)
         {
             int newOffset = gridOffset + adjacentOffsets[i];
-            if (Data_Grid_routingLandCitizen[newOffset] >= Routing_Citizen_0_Road &&
-                    Data_Grid_routingLandCitizen[newOffset] <= Routing_Citizen_2_PassableTerrain &&
-                    !Data_Grid_roadNetworks[newOffset])
+            if (map_routing_citizen_is_passable(newOffset) && !Data_Grid_roadNetworks[newOffset])
             {
-                if (Data_Grid_routingLandCitizen[newOffset] != Routing_Citizen_2_PassableTerrain ||
-                        Data_Grid_terrain[newOffset] & Terrain_AccessRamp)
+                if (map_routing_citizen_is_road(newOffset) || Data_Grid_terrain[newOffset] & Terrain_AccessRamp)
                 {
                     Data_Grid_roadNetworks[newOffset] = roadNetworkId;
                     size++;
@@ -312,7 +308,7 @@ void UtilityManagement::determineRoadNetworks()
         Data_CityInfo.largestRoadNetworks[i].id = 0;
         Data_CityInfo.largestRoadNetworks[i].size = 0;
     }
-    Grid_clearUByteGrid(Data_Grid_roadNetworks);
+    map_grid_clear_u8(Data_Grid_roadNetworks);
     int roadNetworkId = 1;
     int gridOffset = Data_State.map.gridStartOffset;
     for (int y = 0; y < Data_State.map.height; y++, gridOffset += Data_State.map.gridBorderSize)

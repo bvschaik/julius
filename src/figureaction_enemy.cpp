@@ -16,7 +16,7 @@ static void enemyInitial(int figureId, struct Data_Figure *f, const formation *m
 {
     Figure_updatePositionInTileList(figureId);
     f->graphicOffset = 0;
-    FigureRoute_remove(figureId);
+    figure_route_remove(figureId);
     f->waitTicks--;
     if (f->waitTicks <= 0)
     {
@@ -44,7 +44,7 @@ static void enemyInitial(int figureId, struct Data_Figure *f, const formation *m
         {
             f->destinationX = m->destination_x + f->formationPositionX;
             f->destinationY = m->destination_y + f->formationPositionY;
-            if (Routing_getGeneralDirection(f->x, f->y, f->destinationX, f->destinationY) < 8)
+            if (calc_general_direction(f->x, f->y, f->destinationX, f->destinationY) < 8)
             {
                 f->actionState = FigureActionState_153_EnemyMarching;
             }
@@ -62,7 +62,7 @@ static void enemyInitial(int figureId, struct Data_Figure *f, const formation *m
             if (FigureAction_CombatEnemy_getMissileTarget(figureId, 10, Data_CityInfo.numSoldiersInCity < 4, &xTile, &yTile))
             {
                 f->attackGraphicOffset = 1;
-                f->direction = Routing_getDirectionForMissileShooter(f->x, f->y, xTile, yTile);
+                f->direction = calc_missile_shooter_direction(f->x, f->y, xTile, yTile);
             }
             else
             {
@@ -115,18 +115,18 @@ static void enemyMarching(int figureId, struct Data_Figure *f, const formation *
         f->waitTicks = 50;
         f->destinationX = m->destination_x + f->formationPositionX;
         f->destinationY = m->destination_y + f->formationPositionY;
-        if (Routing_getGeneralDirection(f->x, f->y, f->destinationX, f->destinationY) == DirFigure_8_AtDestination)
+        if (calc_general_direction(f->x, f->y, f->destinationX, f->destinationY) == DIR_FIGURE_AT_DESTINATION)
         {
             f->actionState = FigureActionState_151_EnemyInitial;
             return;
         }
         f->destinationBuildingId = m->destination_building_id;
-        FigureRoute_remove(figureId);
+        figure_route_remove(figureId);
     }
     FigureMovement_walkTicks(figureId, f->speedMultiplier);
-    if (f->direction == DirFigure_8_AtDestination ||
-            f->direction == DirFigure_9_Reroute ||
-            f->direction == DirFigure_10_Lost)
+    if (f->direction == DIR_FIGURE_AT_DESTINATION ||
+            f->direction == DIR_FIGURE_REROUTE ||
+            f->direction == DIR_FIGURE_LOST)
     {
         f->actionState = FigureActionState_151_EnemyInitial;
     }
@@ -175,19 +175,19 @@ static void enemyFighting(int figureId, struct Data_Figure *f, const formation *
             f->targetFigureId = targetId;
             f->targetFigureCreatedSequence = Data_Figures[targetId].createdSequence;
             Data_Figures[targetId].targetedByFigureId = figureId;
-            FigureRoute_remove(figureId);
+            figure_route_remove(figureId);
         }
     }
     if (targetId > 0)
     {
         FigureMovement_walkTicks(figureId, f->speedMultiplier);
-        if (f->direction == DirFigure_8_AtDestination)
+        if (f->direction == DIR_FIGURE_AT_DESTINATION)
         {
             f->destinationX = Data_Figures[f->targetFigureId].x;
             f->destinationY = Data_Figures[f->targetFigureId].y;
-            FigureRoute_remove(figureId);
+            figure_route_remove(figureId);
         }
-        else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost)
+        else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST)
         {
             f->actionState = FigureActionState_151_EnemyInitial;
             f->targetFigureId = 0;
@@ -220,9 +220,9 @@ static void FigureAction_enemyCommon(int figureId, struct Data_Figure *f)
         f->destinationX = f->sourceX;
         f->destinationY = f->sourceY;
         FigureMovement_walkTicks(figureId, f->speedMultiplier);
-        if (f->direction == DirFigure_8_AtDestination ||
-                f->direction == DirFigure_9_Reroute ||
-                f->direction == DirFigure_10_Lost)
+        if (f->direction == DIR_FIGURE_AT_DESTINATION ||
+                f->direction == DIR_FIGURE_REROUTE ||
+                f->direction == DIR_FIGURE_LOST)
         {
             f->state = FigureState_Dead;
         }
@@ -322,7 +322,7 @@ void FigureAction_enemy43_Spear(int figureId)
     {
         f->graphicId = 793 + FigureActionCorpseGraphicOffset(f);
     }
-    else if (f->direction == DirFigure_11_Attack)
+    else if (f->direction == DIR_FIGURE_ATTACK)
     {
         f->graphicId = 745 + dir + 8 * (f->graphicOffset / 2);
     }
@@ -369,7 +369,7 @@ void FigureAction_enemy44_Sword(int figureId)
     {
         f->graphicId = 593 + FigureActionCorpseGraphicOffset(f);
     }
-    else if (f->direction == DirFigure_11_Attack)
+    else if (f->direction == DIR_FIGURE_ATTACK)
     {
         f->graphicId = 545 + dir + 8 * (f->graphicOffset / 2);
     }
@@ -416,7 +416,7 @@ void FigureAction_enemy45_Sword(int figureId)
     {
         f->graphicId = 593 + FigureActionCorpseGraphicOffset(f);
     }
-    else if (f->direction == DirFigure_11_Attack)
+    else if (f->direction == DIR_FIGURE_ATTACK)
     {
         f->graphicId = 545 + dir + 8 * (f->graphicOffset / 2);
     }
@@ -439,7 +439,7 @@ void FigureAction_enemy46_Camel(int figureId)
 
     f->isEnemyGraphic = 1;
 
-    if (f->direction == DirFigure_11_Attack)
+    if (f->direction == DIR_FIGURE_ATTACK)
     {
         f->graphicId = 601 + dir + 8 * f->graphicOffset;
     }
@@ -473,7 +473,7 @@ void FigureAction_enemy47_Elephant(int figureId)
 
     f->isEnemyGraphic = 1;
 
-    if (f->direction == DirFigure_11_Attack || f->actionState == FigureActionState_150_Attack)
+    if (f->direction == DIR_FIGURE_ATTACK || f->actionState == FigureActionState_150_Attack)
     {
         f->graphicId = 601 + dir + 8 * f->graphicOffset;
     }
@@ -499,7 +499,7 @@ void FigureAction_enemy48_Chariot(int figureId)
 
     f->isEnemyGraphic = 1;
 
-    if (f->direction == DirFigure_11_Attack || f->actionState == FigureActionState_150_Attack)
+    if (f->direction == DIR_FIGURE_ATTACK || f->actionState == FigureActionState_150_Attack)
     {
         f->graphicId = 697 + dir + 8 * (f->graphicOffset / 2);
     }
@@ -564,7 +564,7 @@ void FigureAction_enemy49_FastSword(int figureId)
     {
         f->graphicId = corpseId + FigureActionCorpseGraphicOffset(f);
     }
-    else if (f->direction == DirFigure_11_Attack)
+    else if (f->direction == DIR_FIGURE_ATTACK)
     {
         f->graphicId = attackId + dir + 8 * (f->graphicOffset / 2);
     }
@@ -606,7 +606,7 @@ void FigureAction_enemy50_Sword(int figureId)
     {
         f->graphicId = 593 + FigureActionCorpseGraphicOffset(f);
     }
-    else if (f->direction == DirFigure_11_Attack)
+    else if (f->direction == DIR_FIGURE_ATTACK)
     {
         f->graphicId = 545 + dir + 8 * (f->graphicOffset / 2);
     }
@@ -652,7 +652,7 @@ void FigureAction_enemy51_Spear(int figureId)
     {
         f->graphicId = 641 + FigureActionCorpseGraphicOffset(f);
     }
-    else if (f->direction == DirFigure_11_Attack)
+    else if (f->direction == DIR_FIGURE_ATTACK)
     {
         f->graphicId = 593 + dir + 8 * (f->graphicOffset / 2);
     }
@@ -675,7 +675,7 @@ void FigureAction_enemy52_MountedArcher(int figureId)
 
     f->isEnemyGraphic = 1;
 
-    if (f->direction == DirFigure_11_Attack)
+    if (f->direction == DIR_FIGURE_ATTACK)
     {
         f->graphicId = 601 + dir + 8 * f->graphicOffset;
     }
@@ -729,7 +729,7 @@ void FigureAction_enemy53_Axe(int figureId)
     {
         f->graphicId = 745 + FigureActionCorpseGraphicOffset(f);
     }
-    else if (f->direction == DirFigure_11_Attack)
+    else if (f->direction == DIR_FIGURE_ATTACK)
     {
         f->graphicId = 697 + dir + 8 * (f->graphicOffset / 2);
     }
@@ -778,7 +778,7 @@ void FigureAction_enemy54_Gladiator(int figureId)
                 f->destinationX = xTile;
                 f->destinationY = yTile;
                 f->destinationBuildingId = buildingId;
-                FigureRoute_remove(figureId);
+                figure_route_remove(figureId);
             }
             else
             {
@@ -790,16 +790,16 @@ void FigureAction_enemy54_Gladiator(int figureId)
         Data_CityInfo.numAttackingNativesInCity = 10;
         f->terrainUsage = FigureTerrainUsage_Enemy;
         FigureMovement_walkTicks(figureId, 1);
-        if (f->direction == DirFigure_8_AtDestination ||
-                f->direction == DirFigure_9_Reroute ||
-                f->direction == DirFigure_10_Lost)
+        if (f->direction == DIR_FIGURE_AT_DESTINATION ||
+                f->direction == DIR_FIGURE_REROUTE ||
+                f->direction == DIR_FIGURE_LOST)
         {
             f->actionState = FigureActionState_158_NativeCreated;
         }
         break;
     }
     int dir;
-    if (f->actionState == FigureActionState_150_Attack || f->direction == DirFigure_11_Attack)
+    if (f->actionState == FigureActionState_150_Attack || f->direction == DIR_FIGURE_ATTACK)
     {
         dir = f->attackDirection;
     }
@@ -813,7 +813,7 @@ void FigureAction_enemy54_Gladiator(int figureId)
     }
     FigureActionNormalizeDirection(dir);
 
-    if (f->actionState == FigureActionState_150_Attack || f->direction == DirFigure_11_Attack)
+    if (f->actionState == FigureActionState_150_Attack || f->direction == DIR_FIGURE_ATTACK)
     {
         f->graphicId = image_group(GROUP_FIGURE_GLADIATOR) + dir + 104 + 8 * (f->graphicOffset / 2);
     }
@@ -839,7 +839,7 @@ void FigureAction_enemyCaesarLegionary(int figureId)
 
     int dir = getDirection(f);
 
-    if (f->direction == DirFigure_11_Attack)
+    if (f->direction == DIR_FIGURE_ATTACK)
     {
         f->graphicId = image_group(GROUP_FIGURE_CAESAR_LEGIONARY) + dir +
                        8 * ((f->attackGraphicOffset - 12) / 2);
@@ -917,7 +917,7 @@ int FigureAction_HerdEnemy_moveFormationTo(int formationId, int x, int y, int *x
                         canMove = 0;
                         break;
                     }
-                    if (Data_Grid_routingDistance[gridOffset] <= 0)
+                    if (map_routing_distance(gridOffset) <= 0)
                     {
                         canMove = 0;
                         break;

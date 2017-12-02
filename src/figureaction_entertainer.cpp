@@ -202,7 +202,7 @@ void FigureAction_entertainer(int figureId)
                 f->actionState == FigureActionState_95_EntertainerReturning)
         {
             f->type = FIGURE_ENEMY54_GLADIATOR;
-            FigureRoute_remove(figureId);
+            figure_route_remove(figureId);
             f->roamLength = 0;
             f->actionState = FigureActionState_158_NativeCreated;
             return;
@@ -291,16 +291,16 @@ void FigureAction_entertainer(int figureId)
             f->state = FigureState_Dead;
         }
         FigureMovement_walkTicks(figureId, speedFactor);
-        if (f->direction == DirFigure_8_AtDestination)
+        if (f->direction == DIR_FIGURE_AT_DESTINATION)
         {
             updateShowsAtDestination(f);
             f->state = FigureState_Dead;
         }
-        else if (f->direction == DirFigure_9_Reroute)
+        else if (f->direction == DIR_FIGURE_REROUTE)
         {
-            FigureRoute_remove(figureId);
+            figure_route_remove(figureId);
         }
-        else if (f->direction == DirFigure_10_Lost)
+        else if (f->direction == DIR_FIGURE_LOST)
         {
             f->state = FigureState_Dead;
         }
@@ -326,8 +326,8 @@ void FigureAction_entertainer(int figureId)
         break;
     case FigureActionState_95_EntertainerReturning:
         FigureMovement_walkTicks(figureId, speedFactor);
-        if (f->direction == DirFigure_8_AtDestination ||
-                f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost)
+        if (f->direction == DIR_FIGURE_AT_DESTINATION ||
+                f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST)
         {
             f->state = FigureState_Dead;
         }

@@ -2,7 +2,6 @@
 
 #include "building.h"
 #include "core/calc.h"
-#include "grid.h"
 #include "terrain.h"
 #include "building/list.h"
 #include "graphics/image.h"
@@ -132,7 +131,7 @@ static void determineMeetingCenter()
 
 void Natives_checkLand()
 {
-    Grid_andByteGrid(Data_Grid_edge, Edge_NoNativeLand);
+    map_grid_and_u8(Data_Grid_edge, Edge_NoNativeLand);
     if (Data_CityInfo.nativeAttackDuration)
     {
         Data_CityInfo.nativeAttackDuration--;

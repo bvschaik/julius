@@ -58,19 +58,19 @@ void FigureAction_ballista(int figureId)
     Figure_removeFromTileList(figureId);
     switch (Data_State.map.orientation)
     {
-    case Dir_0_Top:
+    case DIR_0_TOP:
         f->x = b->x;
         f->y = b->y;
         break;
-    case Dir_2_Right:
+    case DIR_2_RIGHT:
         f->x = b->x + 1;
         f->y = b->y;
         break;
-    case Dir_4_Bottom:
+    case DIR_4_BOTTOM:
         f->x = b->x + 1;
         f->y = b->y + 1;
         break;
-    case Dir_6_Left:
+    case DIR_6_LEFT:
         f->x = b->x;
         f->y = b->y + 1;
         break;
@@ -103,7 +103,7 @@ void FigureAction_ballista(int figureId)
             int xTile, yTile;
             if (FigureAction_CombatSoldier_getMissileTarget(figureId, 15, &xTile, &yTile))
             {
-                f->direction = Routing_getDirectionForMissileShooter(f->x, f->y, xTile, yTile);
+                f->direction = calc_missile_shooter_direction(f->x, f->y, xTile, yTile);
                 f->waitTicksMissile = 0;
                 Figure_createMissile(figureId, f->x, f->y, xTile, yTile, FIGURE_BOLT);
                 sound_effect_play(SOUND_EFFECT_BALLISTA_SHOOT);
@@ -163,16 +163,16 @@ static int towerSentryInitPatrol(struct Data_Building *b, int *xTile, int *yTile
     int y = b->y;
     switch (dir)
     {
-    case Dir_0_Top:
+    case DIR_0_TOP:
         y -= 8;
         break;
-    case Dir_2_Right:
+    case DIR_2_RIGHT:
         x += 8;
         break;
-    case Dir_4_Bottom:
+    case DIR_4_BOTTOM:
         y += 8;
         break;
-    case Dir_6_Left:
+    case DIR_6_LEFT:
         x -= 8;
         break;
     }
@@ -193,16 +193,16 @@ static int towerSentryInitPatrol(struct Data_Building *b, int *xTile, int *yTile
         y = b->y;
         switch (dir)
         {
-        case Dir_0_Top:
+        case DIR_0_TOP:
             y -= 3;
             break;
-        case Dir_2_Right:
+        case DIR_2_RIGHT:
             x += 3;
             break;
-        case Dir_4_Bottom:
+        case DIR_4_BOTTOM:
             y += 3;
             break;
-        case Dir_6_Left:
+        case DIR_6_LEFT:
             x -= 3;
             break;
         }
@@ -251,20 +251,20 @@ void FigureAction_towerSentry(int figureId)
                 f->actionState = FigureActionState_171_TowerSentryPatrolling;
                 f->destinationX = xTile;
                 f->destinationY = yTile;
-                FigureRoute_remove(figureId);
+                figure_route_remove(figureId);
             }
         }
         break;
     case FigureActionState_171_TowerSentryPatrolling:
         FigureMovement_walkTicks(figureId, 1);
-        if (f->direction == DirFigure_8_AtDestination)
+        if (f->direction == DIR_FIGURE_AT_DESTINATION)
         {
             f->actionState = FigureActionState_173_TowerSentryReturning;
             f->destinationX = f->sourceX;
             f->destinationY = f->sourceY;
-            FigureRoute_remove(figureId);
+            figure_route_remove(figureId);
         }
-        else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost)
+        else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST)
         {
             f->actionState = FigureActionState_170_TowerSentryAtRest;
         }
@@ -277,7 +277,7 @@ void FigureAction_towerSentry(int figureId)
             int xTile, yTile;
             if (FigureAction_CombatSoldier_getMissileTarget(figureId, 10, &xTile, &yTile))
             {
-                f->direction = Routing_getDirectionForMissileShooter(f->x, f->y, xTile, yTile);
+                f->direction = calc_missile_shooter_direction(f->x, f->y, xTile, yTile);
                 f->waitTicksMissile = 0;
                 Figure_createMissile(figureId, f->x, f->y, xTile, yTile, FIGURE_JAVELIN);
             }
@@ -286,17 +286,17 @@ void FigureAction_towerSentry(int figureId)
                 f->actionState = FigureActionState_173_TowerSentryReturning;
                 f->destinationX = f->sourceX;
                 f->destinationY = f->sourceY;
-                FigureRoute_remove(figureId);
+                figure_route_remove(figureId);
             }
         }
         break;
     case FigureActionState_173_TowerSentryReturning:
         FigureMovement_walkTicks(figureId, 1);
-        if (f->direction == DirFigure_8_AtDestination)
+        if (f->direction == DIR_FIGURE_AT_DESTINATION)
         {
             f->actionState = FigureActionState_170_TowerSentryAtRest;
         }
-        else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost)
+        else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST)
         {
             f->state = FigureState_Dead;
         }
@@ -306,7 +306,7 @@ void FigureAction_towerSentry(int figureId)
         f->isGhost = 0;
         f->heightAdjustedTicks = 0;
         FigureMovement_walkTicks(figureId, 1);
-        if (f->direction == DirFigure_8_AtDestination)
+        if (f->direction == DIR_FIGURE_AT_DESTINATION)
         {
             Figure_removeFromTileList(figureId);
             f->sourceX = f->x = b->x;
@@ -314,9 +314,9 @@ void FigureAction_towerSentry(int figureId)
             f->gridOffset = GridOffset(f->x, f->y);
             Figure_addToTileList(figureId);
             f->actionState = FigureActionState_170_TowerSentryAtRest;
-            FigureRoute_remove(figureId);
+            figure_route_remove(figureId);
         }
-        else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost)
+        else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST)
         {
             f->state = FigureState_Dead;
         }
@@ -362,7 +362,7 @@ void FigureAction_TowerSentry_reroute()
     for (int i = 1; i < MAX_FIGURES; i++)
     {
         struct Data_Figure *f = &Data_Figures[i];
-        if (f->type != FIGURE_TOWER_SENTRY || Data_Grid_routingWalls[f->gridOffset] == 0)
+        if (f->type != FIGURE_TOWER_SENTRY || map_routing_is_wall_passable(f->gridOffset) == 0)
         {
             continue;
         }
@@ -370,7 +370,7 @@ void FigureAction_TowerSentry_reroute()
         int xTile, yTile;
         if (Terrain_getWallTileWithinRadius(f->x, f->y, 2, &xTile, &yTile))
         {
-            FigureRoute_remove(i);
+            figure_route_remove(i);
             f->progressOnTile = 0;
             Figure_removeFromTileList(i);
             f->previousTileX = f->x = xTile;
@@ -393,7 +393,7 @@ void FigureAction_TowerSentry_reroute()
             f->gridOffset = GridOffset(f->x, f->y);
             Figure_addToTileList(i);
             f->actionState = FigureActionState_170_TowerSentryAtRest;
-            FigureRoute_remove(i);
+            figure_route_remove(i);
         }
     }
 }

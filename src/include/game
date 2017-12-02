@@ -9,5 +9,9 @@
 #include "game/game_settings.h"
 #include "game/difficulty.h"
 #include "map/bookmark.h"
+#include "figure/route.h"
+#include "map/routing.h"
+#include "map/grid.h"
+#include "core/calc.h"
 
 #endif

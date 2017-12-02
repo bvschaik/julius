@@ -353,8 +353,8 @@ void UI_BuildingInfo_drawLegionInfo(BuildingInfoContext *c)
         };
         const int *offsets;
         int index = 0;
-        if (Data_State.map.orientation == Dir_6_Left ||
-                Data_State.map.orientation == Dir_2_Right)
+        if (Data_State.map.orientation == DIR_6_LEFT ||
+                Data_State.map.orientation == DIR_2_RIGHT)
         {
             index = 1;
         }

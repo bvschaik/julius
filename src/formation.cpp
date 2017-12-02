@@ -8,6 +8,7 @@
 
 #include <sound>
 #include <data>
+#include <game>
 #include <scenario>
 
 #include "building/model.h"
@@ -90,7 +91,7 @@ void Formation_legionMoveTo(int formationId, int x, int y)
 {
     const formation *m = formation_get(formationId);
     Routing_getDistance(m->x_home, m->y_home);
-    if (Data_Grid_routingDistance[GridOffset(x, y)] <= 0)
+    if (map_routing_distance(GridOffset(x, y)) <= 0)
     {
         return; // unable to route there
     }
@@ -120,7 +121,7 @@ void Formation_legionMoveTo(int formationId, int x, int y)
         {
             f->alternativeLocationIndex = 0;
             f->actionState = FigureActionState_83_SoldierGoingToStandard;
-            FigureRoute_remove(figureId);
+            figure_route_remove(figureId);
         }
     }
 }
@@ -129,7 +130,7 @@ void Formation_legionReturnHome(int formationId)
 {
     const formation *m = formation_get(formationId);
     Routing_getDistance(m->x_home, m->y_home);
-    if (Data_Grid_routingDistance[GridOffset(m->x, m->y)] <= 0)
+    if (map_routing_distance(GridOffset(m->x, m->y)) <= 0)
     {
         return; // unable to route home
     }
@@ -151,7 +152,7 @@ void Formation_legionReturnHome(int formationId)
         if (formation_legion_prepare_to_move(m->id))
         {
             f->actionState = FigureActionState_81_SoldierGoingToFort;
-            FigureRoute_remove(figureId);
+            figure_route_remove(figureId);
         }
     }
 }
@@ -270,7 +271,7 @@ static void update_legion_enemy_totals(const formation *m, void *data)
             for (int fig = 0; fig < m->num_figures; fig++)
             {
                 int figureId = m->figures[fig];
-                if (figureId && Data_Figures[figureId].direction != Dir_8_None)
+                if (figureId && Data_Figures[figureId].direction != DIR_8_NONE)
                 {
                     formation_set_halted(m->id, 0);
                 }

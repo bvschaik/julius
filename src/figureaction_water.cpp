@@ -46,7 +46,7 @@ void FigureAction_fishingBoat(int figureId)
             f->destinationY = yTile;
             f->sourceX = xTile;
             f->sourceY = yTile;
-            FigureRoute_remove(figureId);
+            figure_route_remove(figureId);
         }
         else
         {
@@ -76,19 +76,19 @@ void FigureAction_fishingBoat(int figureId)
                 f->destinationY = yTile;
                 f->sourceX = xTile;
                 f->sourceY = yTile;
-                FigureRoute_remove(figureId);
+                figure_route_remove(figureId);
             }
         }
         break;
     case FigureActionState_191_FishingBoatGoingToFish:
         FigureMovement_walkTicks(figureId, 1);
         f->heightAdjustedTicks = 0;
-        if (f->direction == DirFigure_8_AtDestination)
+        if (f->direction == DIR_FIGURE_AT_DESTINATION)
         {
             int xTile, yTile;
             if (Terrain_Water_findAlternativeTileForFishingBoat(figureId, &xTile, &yTile))
             {
-                FigureRoute_remove(figureId);
+                figure_route_remove(figureId);
                 f->destinationX = xTile;
                 f->destinationY = yTile;
                 f->direction = f->previousTileDirection;
@@ -99,7 +99,7 @@ void FigureAction_fishingBoat(int figureId)
                 f->waitTicks = 0;
             }
         }
-        else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost)
+        else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST)
         {
             f->actionState = FigureActionState_194_FishingBoatAtWharf;
             f->destinationX = f->sourceX;
@@ -114,22 +114,22 @@ void FigureAction_fishingBoat(int figureId)
             f->actionState = FigureActionState_195_FishingBoatReturningWithFish;
             f->destinationX = f->sourceX;
             f->destinationY = f->sourceY;
-            FigureRoute_remove(figureId);
+            figure_route_remove(figureId);
         }
         break;
     case FigureActionState_193_FishingBoatSailingToWharf:
         FigureMovement_walkTicks(figureId, 1);
         f->heightAdjustedTicks = 0;
-        if (f->direction == DirFigure_8_AtDestination)
+        if (f->direction == DIR_FIGURE_AT_DESTINATION)
         {
             f->actionState = FigureActionState_194_FishingBoatAtWharf;
             f->waitTicks = 0;
         }
-        else if (f->direction == DirFigure_9_Reroute)
+        else if (f->direction == DIR_FIGURE_REROUTE)
         {
-            FigureRoute_remove(figureId);
+            figure_route_remove(figureId);
         }
-        else if (f->direction == DirFigure_10_Lost)
+        else if (f->direction == DIR_FIGURE_LOST)
         {
             // cannot reach grounds
             city_message_post_with_message_delay(MESSAGE_CAT_FISHING_BLOCKED, 1, MESSAGE_FISHING_BOAT_BLOCKED, 12);
@@ -156,7 +156,7 @@ void FigureAction_fishingBoat(int figureId)
                     f->actionState = FigureActionState_191_FishingBoatGoingToFish;
                     f->destinationX = xTile;
                     f->destinationY = yTile;
-                    FigureRoute_remove(figureId);
+                    figure_route_remove(figureId);
                 }
             }
         }
@@ -165,18 +165,18 @@ void FigureAction_fishingBoat(int figureId)
     case FigureActionState_195_FishingBoatReturningWithFish:
         FigureMovement_walkTicks(figureId, 1);
         f->heightAdjustedTicks = 0;
-        if (f->direction == DirFigure_8_AtDestination)
+        if (f->direction == DIR_FIGURE_AT_DESTINATION)
         {
             f->actionState = FigureActionState_194_FishingBoatAtWharf;
             f->waitTicks = 0;
             b->figureSpawnDelay = 1;
             b->data.other.fishingBoatHasFish++;
         }
-        else if (f->direction == DirFigure_9_Reroute)
+        else if (f->direction == DIR_FIGURE_REROUTE)
         {
-            FigureRoute_remove(figureId);
+            figure_route_remove(figureId);
         }
-        else if (f->direction == DirFigure_10_Lost)
+        else if (f->direction == DIR_FIGURE_LOST)
         {
             f->state = FigureState_Dead;
         }
@@ -237,8 +237,8 @@ void FigureAction_flotsam(int figureId)
             FigureMovement_walkTicks(figureId, 1);
             f->isGhost = 0;
             f->heightAdjustedTicks = 0;
-            if (f->direction == DirFigure_8_AtDestination ||
-                    f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost)
+            if (f->direction == DIR_FIGURE_AT_DESTINATION ||
+                    f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST)
             {
                 f->actionState = FigureActionState_130_FlotsamLeftMap;
             }

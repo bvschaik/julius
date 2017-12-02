@@ -5,7 +5,6 @@
 #include "cityinfo.h"
 #include "figure.h"
 #include "formation.h"
-#include "grid.h"
 #include "housepopulation.h"
 #include "resource.h"
 #include "routing.h"
@@ -15,17 +14,17 @@
 #include "terraingraphics.h"
 #include "undo.h"
 
-#include <ui>
 #include <data>
-#include <game>
+#include <ui>
 
 #include "building/count.h"
 #include "building/model.h"
 #include "building/properties.h"
+#include "building/storage.h"
 #include "core/random.h"
 #include "figure/formation.h"
 #include "graphics/image.h"
-#include "building/storage.h"
+#include "map/grid.h"
 
 #define BOUND_REGION() \
 	if (xStart < xEnd) {\
@@ -110,7 +109,7 @@ static void addToTerrainHippodrome(int type, int buildingId, int x, int y, int s
     Data_CityInfo.buildingHippodromePlaced = 1;
 
     struct Data_Building *part1 = &Data_Buildings[buildingId];
-    if (Data_State.map.orientation == Dir_0_Top || Data_State.map.orientation == Dir_4_Bottom)
+    if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_4_BOTTOM)
     {
         part1->subtype.orientation = 0;
     }
@@ -122,16 +121,16 @@ static void addToTerrainHippodrome(int type, int buildingId, int x, int y, int s
     int graphicId;
     switch (Data_State.map.orientation)
     {
-    case Dir_0_Top:
+    case DIR_0_TOP:
         graphicId = graphicId2;
         break;
-    case Dir_2_Right:
+    case DIR_2_RIGHT:
         graphicId = graphicId1 + 4;
         break;
-    case Dir_4_Bottom:
+    case DIR_4_BOTTOM:
         graphicId = graphicId2 + 4;
         break;
-    case Dir_6_Left:
+    case DIR_6_LEFT:
         graphicId = graphicId1;
         break;
     default:
@@ -142,7 +141,7 @@ static void addToTerrainHippodrome(int type, int buildingId, int x, int y, int s
     int part2Id = Building_create(BUILDING_HIPPODROME, x + 5, y);
     struct Data_Building *part2 = &Data_Buildings[part2Id];
     Undo::addBuildingToList(part2Id);
-    if (Data_State.map.orientation == Dir_0_Top || Data_State.map.orientation == Dir_4_Bottom)
+    if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_4_BOTTOM)
     {
         part2->subtype.orientation = 1;
     }
@@ -155,12 +154,12 @@ static void addToTerrainHippodrome(int type, int buildingId, int x, int y, int s
     part2->nextPartBuildingId = 0;
     switch (Data_State.map.orientation)
     {
-    case Dir_0_Top:
-    case Dir_4_Bottom:
+    case DIR_0_TOP:
+    case DIR_4_BOTTOM:
         graphicId = graphicId2 + 2;
         break;
-    case Dir_2_Right:
-    case Dir_6_Left:
+    case DIR_2_RIGHT:
+    case DIR_6_LEFT:
         graphicId = graphicId1 + 2;
         break;
     }
@@ -169,7 +168,7 @@ static void addToTerrainHippodrome(int type, int buildingId, int x, int y, int s
     int part3Id = Building_create(BUILDING_HIPPODROME, x + 10, y);
     struct Data_Building *part3 = &Data_Buildings[part3Id];
     Undo::addBuildingToList(part3Id);
-    if (Data_State.map.orientation == Dir_0_Top || Data_State.map.orientation == Dir_4_Bottom)
+    if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_4_BOTTOM)
     {
         part3->subtype.orientation = 2;
     }
@@ -182,16 +181,16 @@ static void addToTerrainHippodrome(int type, int buildingId, int x, int y, int s
     part3->nextPartBuildingId = 0;
     switch (Data_State.map.orientation)
     {
-    case Dir_0_Top:
+    case DIR_0_TOP:
         graphicId = graphicId2 + 4;
         break;
-    case Dir_2_Right:
+    case DIR_2_RIGHT:
         graphicId = graphicId1;
         break;
-    case Dir_4_Bottom:
+    case DIR_4_BOTTOM:
         graphicId = graphicId2;
         break;
-    case Dir_6_Left:
+    case DIR_6_LEFT:
         graphicId = graphicId1 + 4;
         break;
     }
@@ -243,10 +242,10 @@ static void addToTerrain(int type, int buildingId, int x, int y, int size,
         Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_SHACK) + 2, Terrain_Building);
         break;
     case BUILDING_HOUSE_SMALL_HOVEL:
-        Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_SHACK), Terrain_Building);
+        Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_HOVEL), Terrain_Building);
         break;
     case BUILDING_HOUSE_LARGE_HOVEL:
-        Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_SHACK) + 2, Terrain_Building);
+        Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_HOVEL) + 2, Terrain_Building);
         break;
     case BUILDING_HOUSE_SMALL_CASA:
         Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_CASA), Terrain_Building);
@@ -603,7 +602,7 @@ static int placeBuilding(int type, int x, int y)
     {
         terrainMask = ~Terrain_Wall;
     }
-    int size = building_properties_for_type((building_type)type)->size;
+    int size = building_properties_for_type(type)->size;
     if (type == BUILDING_WAREHOUSE)
     {
         size = 3;
@@ -619,14 +618,14 @@ static int placeBuilding(int type, int x, int y)
     }
     switch (Data_State.map.orientation)
     {
-    case Dir_2_Right:
+    case DIR_2_RIGHT:
         x = x - size + 1;
         break;
-    case Dir_4_Bottom:
+    case DIR_4_BOTTOM:
         x = x - size + 1;
         y = y - size + 1;
         break;
-    case Dir_6_Left:
+    case DIR_6_LEFT:
         y = y - size + 1;
         break;
     }
@@ -856,8 +855,8 @@ static void clearRegionConfirmed(int measureOnly, int xStart, int yStart, int xE
 {
     itemsPlaced = 0;
     Undo::restoreBuildings();
-    Grid_copyShortGrid(Data_Grid_Undo_terrain, Data_Grid_terrain);
-    Grid_copyByteGrid(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
+    map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
+    map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
     Undo::restoreTerrainGraphics();
 
     int xMin, xMax, yMin, yMax;
@@ -1083,8 +1082,8 @@ static void clearRegion(int measureOnly, int xStart, int yStart, int xEnd, int y
 
 static void placeRoad(int measureOnly, int xStart, int yStart, int xEnd, int yEnd)
 {
-    Grid_copyShortGrid(Data_Grid_Undo_terrain, Data_Grid_terrain);
-    Grid_copyByteGrid(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
+    map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
+    map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
     Undo::restoreTerrainGraphics();
 
     itemsPlaced = 0;
@@ -1114,8 +1113,8 @@ static void placeRoad(int measureOnly, int xStart, int yStart, int xEnd, int yEn
 
 static void placeWall(int measureOnly, int xStart, int yStart, int xEnd, int yEnd)
 {
-    Grid_copyShortGrid(Data_Grid_Undo_terrain, Data_Grid_terrain);
-    Grid_copyByteGrid(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
+    map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
+    map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
     Undo::restoreTerrainGraphics();
 
     itemsPlaced = 0;
@@ -1148,10 +1147,10 @@ static void placePlaza(int measureOnly, int xStart, int yStart, int xEnd, int yE
 {
     int xMin, yMin, xMax, yMax;
     BOUND_REGION();
-    Grid_copyShortGrid(Data_Grid_Undo_terrain, Data_Grid_terrain);
-    Grid_copyByteGrid(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
-    Grid_copyByteGrid(Data_Grid_Undo_bitfields, Data_Grid_bitfields);
-    Grid_copyByteGrid(Data_Grid_Undo_edge, Data_Grid_edge);
+    map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
+    map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
+    map_grid_copy_u8(Data_Grid_Undo_bitfields, Data_Grid_bitfields);
+    map_grid_copy_u8(Data_Grid_Undo_edge, Data_Grid_edge);
     Undo::restoreTerrainGraphics();
 
     itemsPlaced = 0;
@@ -1184,10 +1183,10 @@ static void placeGarden(int xStart, int yStart, int xEnd, int yEnd)
     int xMin, yMin, xMax, yMax;
     BOUND_REGION();
 
-    Grid_copyShortGrid(Data_Grid_Undo_terrain, Data_Grid_terrain);
-    Grid_copyByteGrid(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
-    Grid_copyByteGrid(Data_Grid_Undo_bitfields, Data_Grid_bitfields);
-    Grid_copyByteGrid(Data_Grid_Undo_edge, Data_Grid_edge);
+    map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
+    map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
+    map_grid_copy_u8(Data_Grid_Undo_bitfields, Data_Grid_bitfields);
+    map_grid_copy_u8(Data_Grid_Undo_edge, Data_Grid_edge);
     Undo::restoreTerrainGraphics();
 
     itemsPlaced = 0;
@@ -1208,8 +1207,8 @@ static void placeGarden(int xStart, int yStart, int xEnd, int yEnd)
 
 static int placeAqueduct(int measureOnly, int xStart, int yStart, int xEnd, int yEnd, int *cost)
 {
-    Grid_copyShortGrid(Data_Grid_Undo_terrain, Data_Grid_terrain);
-    Grid_copyByteGrid(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
+    map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
+    map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
     Undo::restoreTerrainGraphics();
     int itemCost = model_get_building(BUILDING_AQUEDUCT)->cost;
     *cost = 0;
@@ -1258,8 +1257,8 @@ static int placeReservoirAndAqueducts(int measureOnly, int xStart, int yStart, i
     info->placeReservoirAtStart = PlaceReservoir_No;
     info->placeReservoirAtEnd = PlaceReservoir_No;
 
-    Grid_copyShortGrid(Data_Grid_Undo_terrain, Data_Grid_terrain);
-    Grid_copyByteGrid(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
+    map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
+    map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
     Undo::restoreTerrainGraphics();
 
     int distance = calc_maximum_distance(xStart, yStart, xEnd, yEnd);
@@ -1380,8 +1379,8 @@ void BuildingPlacement_update(int xStart, int yStart, int xEnd, int yEnd, int ty
         Data_State.selectedBuilding.cost = 0;
         return;
     }
-    Grid_andByteGrid(Data_Grid_bitfields, Bitfield_NoOverlayAndDeleted);
-    int currentCost = model_get_building((building_type)type)->cost;
+    map_grid_and_u8(Data_Grid_bitfields, Bitfield_NoOverlayAndDeleted);
+    int currentCost = model_get_building(type)->cost;
 
     if (type == BUILDING_CLEAR_LAND)
     {
@@ -1508,7 +1507,7 @@ void BuildingPlacement_update(int xStart, int yStart, int xEnd, int yEnd, int ty
                 !(type == BUILDING_BARRACKS && building_count_total(BUILDING_BARRACKS) > 0) &&
                 !(type == BUILDING_DISTRIBUTION_CENTER_UNUSED && Data_CityInfo.buildingDistributionCenterPlaced))
         {
-            int size = building_properties_for_type((building_type)type)->size;
+            int size = building_properties_for_type(type)->size;
             Terrain_updateToPlaceBuildingToOverlay(size, xEnd, yEnd, Terrain_All, 0);
         }
     }
@@ -1524,19 +1523,19 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
     }
     if (Data_CityInfo.treasury <= MIN_TREASURY)
     {
-        Grid_andByteGrid(Data_Grid_bitfields, Bitfield_NoOverlayAndDeleted);
+        map_grid_and_u8(Data_Grid_bitfields, Bitfield_NoOverlayAndDeleted);
         UI_Warning_show(Warning_OutOfMoney);
         return;
     }
     if (type >= BUILDING_LARGE_TEMPLE_CERES && type <= BUILDING_LARGE_TEMPLE_VENUS && Data_CityInfo.resourceStored[RESOURCE_MARBLE] < 2)
     {
-        Grid_andByteGrid(Data_Grid_bitfields, Bitfield_NoOverlayAndDeleted);
+        map_grid_and_u8(Data_Grid_bitfields, Bitfield_NoOverlayAndDeleted);
         UI_Warning_show(Warning_MarbleNeededLargeTemple);
         return;
     }
     if (type == BUILDING_ORACLE && Data_CityInfo.resourceStored[RESOURCE_MARBLE] < 2)
     {
-        Grid_andByteGrid(Data_Grid_bitfields, Bitfield_NoOverlayAndDeleted);
+        map_grid_and_u8(Data_Grid_bitfields, Bitfield_NoOverlayAndDeleted);
         UI_Warning_show(Warning_MarbleNeededOracle);
         return;
     }
@@ -1544,16 +1543,16 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
     {
         if (type == BUILDING_WALL || type == BUILDING_ROAD || type == BUILDING_AQUEDUCT)
         {
-            Grid_copyShortGrid(Data_Grid_Undo_terrain, Data_Grid_terrain);
-            Grid_copyByteGrid(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
+            map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
+            map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
             Undo::restoreTerrainGraphics();
         }
         else if (type == BUILDING_PLAZA || type == BUILDING_GARDENS)
         {
-            Grid_copyShortGrid(Data_Grid_Undo_terrain, Data_Grid_terrain);
-            Grid_copyByteGrid(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
-            Grid_copyByteGrid(Data_Grid_Undo_bitfields, Data_Grid_bitfields);
-            Grid_copyByteGrid(Data_Grid_Undo_edge, Data_Grid_edge);
+            map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
+            map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
+            map_grid_copy_u8(Data_Grid_Undo_bitfields, Data_Grid_bitfields);
+            map_grid_copy_u8(Data_Grid_Undo_edge, Data_Grid_edge);
             Undo::restoreTerrainGraphics();
         }
         else if (type == BUILDING_LOW_BRIDGE || type == BUILDING_SHIP_BRIDGE)
@@ -1562,13 +1561,13 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
         }
         else
         {
-            Grid_andByteGrid(Data_Grid_bitfields, Bitfield_NoOverlayAndDeleted);
+            map_grid_and_u8(Data_Grid_bitfields, Bitfield_NoOverlayAndDeleted);
         }
         UI_Warning_show(Warning_EnemyNearby);
         return;
     }
 
-    int placementCost = model_get_building((building_type)type)->cost;
+    int placementCost = model_get_building(type)->cost;
     if (type == BUILDING_CLEAR_LAND)
     {
         clearRegion(0, xStart, yStart, xEnd, yEnd);

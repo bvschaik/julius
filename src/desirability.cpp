@@ -1,10 +1,10 @@
 #include "desirability.h"
 
-#include "grid.h"
 #include "building/model.h"
 #include "terrain.h"
 
 #include <data>
+#include <game>
 
 
 static void updateBuildings();
@@ -12,7 +12,7 @@ static void updateTerrain();
 
 void Desirability_update()
 {
-    Grid_clearByteGrid(Data_Grid_desirability);
+    map_grid_clear_i8(Data_Grid_desirability);
     updateBuildings();
     updateTerrain();
 }

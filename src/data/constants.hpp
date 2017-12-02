@@ -21,32 +21,6 @@ enum
 
 enum
 {
-    Dir_0_Top = 0,
-    Dir_1_TopRight = 1,
-    Dir_2_Right = 2,
-    Dir_3_BottomRight = 3,
-    Dir_4_Bottom = 4,
-    Dir_5_BottomLeft = 5,
-    Dir_6_Left = 6,
-    Dir_7_TopLeft = 7,
-    Dir_8_None = 8,
-    DirFigure_8_AtDestination = 8,
-    DirFigure_9_Reroute = 9,
-    DirFigure_10_Lost = 10,
-    DirFigure_11_Attack = 11,
-};
-
-enum
-{
-    WorkshopRESOURCE_OLIVESToOil = 1,
-    WorkshopRESOURCE_VINESToWine = 2,
-    WorkshopRESOURCE_IRONToWeapons = 3,
-    WorkshopRESOURCE_TIMBERToFurniture = 4,
-    WorkshopRESOURCE_CLAYToPottery = 5
-};
-
-enum
-{
     LaborCategory_IndustryCommerce = 0,
     LaborCategory_FoodProduction = 1,
     LaborCategory_Engineering = 2,
