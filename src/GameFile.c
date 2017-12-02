@@ -40,6 +40,7 @@
 #include "game/tutorial.h"
 #include "graphics/image.h"
 #include "map/bookmark.h"
+#include "map/building.h"
 #include "map/desirability.h"
 #include "map/figure.h"
 #include "map/property.h"
@@ -127,7 +128,7 @@ typedef struct {
     buffer *savegameFileVersion;
     buffer *Data_Grid_graphicIds;
     buffer *edge_grid;
-    buffer *Data_Grid_buildingIds;
+    buffer *building_grid;
     buffer *Data_Grid_terrain;
     buffer *Data_Grid_aqueducts;
     buffer *figure_grid;
@@ -275,7 +276,7 @@ static void init_savegame_data()
     state->savegameFileVersion = create_savegame_piece(4, 0);
     state->Data_Grid_graphicIds = create_savegame_piece(52488, 1);
     state->edge_grid = create_savegame_piece(26244, 1);
-    state->Data_Grid_buildingIds = create_savegame_piece(52488, 1);
+    state->building_grid = create_savegame_piece(52488, 1);
     state->Data_Grid_terrain = create_savegame_piece(52488, 1);
     state->Data_Grid_aqueducts = create_savegame_piece(26244, 1);
     state->figure_grid = create_savegame_piece(52488, 1);
@@ -411,7 +412,9 @@ static void savegame_deserialize(savegame_state *state)
 
     read_all_from_buffer(state->savegameFileVersion, &savegameFileVersion);
     read_all_from_buffer(state->Data_Grid_graphicIds, &Data_Grid_graphicIds);
-    read_all_from_buffer(state->Data_Grid_buildingIds, &Data_Grid_buildingIds);
+
+    map_building_load_state(state->building_grid);
+
     read_all_from_buffer(state->Data_Grid_terrain, &Data_Grid_terrain);
     read_all_from_buffer(state->Data_Grid_aqueducts, &Data_Grid_aqueducts);
 
@@ -532,7 +535,9 @@ static void savegame_serialize(savegame_state *state)
 
     write_all_to_buffer(state->savegameFileVersion, &savegameFileVersion);
     write_all_to_buffer(state->Data_Grid_graphicIds, &Data_Grid_graphicIds);
-    write_all_to_buffer(state->Data_Grid_buildingIds, &Data_Grid_buildingIds);
+
+    map_building_load_state(state->building_grid);
+
     write_all_to_buffer(state->Data_Grid_terrain, &Data_Grid_terrain);
     write_all_to_buffer(state->Data_Grid_aqueducts, &Data_Grid_aqueducts);
 

@@ -44,7 +44,6 @@ enum {
 };
 
 EXTERN UInt16_Grid(Data_Grid_graphicIds);
-EXTERN UInt16_Grid(Data_Grid_buildingIds);
 EXTERN UInt16_Grid(Data_Grid_terrain);
 
 EXTERN UInt8_Grid(Data_Grid_elevation);
