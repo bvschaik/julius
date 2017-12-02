@@ -24,6 +24,8 @@ void map_figure_update(figure *f);
 
 void map_figure_delete(figure *f);
 
+int map_figure_foreach_until(int grid_offset, int (*callback)(figure *f));
+
 /**
  * Clears the map
  */

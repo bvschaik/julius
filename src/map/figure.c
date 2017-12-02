@@ -72,6 +72,22 @@ void map_figure_delete(figure *f)
     f->nextFigureIdOnSameTile = 0;
 }
 
+int map_figure_foreach_until(int grid_offset, int (*callback)(figure *f))
+{
+    if (figures.items[grid_offset] > 0) {
+        int figure_id = figures.items[grid_offset];
+        while (figure_id) {
+            figure *f = figure_get(figure_id);
+            int result = callback(f);
+            if (result) {
+                return result;
+            }
+            figure_id = f->nextFigureIdOnSameTile;
+        }
+    }
+    return 0;
+}
+
 void map_figure_clear()
 {
     map_grid_clear_u16(figures.items);

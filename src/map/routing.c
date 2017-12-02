@@ -1,6 +1,5 @@
 #include "routing.h"
 
-#include "figure/figure.h"
 #include "map/figure.h"
 #include "map/grid.h"
 #include "map/road_aqueduct.h"
@@ -352,34 +351,24 @@ void map_routing_delete_first_wall_or_aqueduct(int x, int y)
     route_queue_until(map_grid_offset(x, y), callback_delete_wall_aqueduct);
 }
 
+static int is_fighting_friendly(figure *f)
+{
+    return f->isFriendly && f->actionState == FigureActionState_150_Attack;
+}
+
 static int has_fighting_friendly(int grid_offset)
 {
-    int figure_id = map_figure_at(grid_offset);
-    if (figure_id > 0) {
-        while (figure_id) {
-            figure *f = figure_get(figure_id);
-            if (f->isFriendly && f->actionState == FigureActionState_150_Attack) {
-                return 1;
-            }
-            figure_id = f->nextFigureIdOnSameTile;
-        }
-    }
-    return 0;
+    return map_figure_foreach_until(grid_offset, is_fighting_friendly);
+}
+
+static int is_fighting_enemy(figure *f)
+{
+    return !f->isFriendly && f->actionState == FigureActionState_150_Attack;
 }
 
 static int has_fighting_enemy(int grid_offset)
 {
-    int figure_id = map_figure_at(grid_offset);
-    if (figure_id > 0) {
-        while (figure_id) {
-            const figure *f = figure_get(figure_id);
-            if (!f->isFriendly && f->actionState == FigureActionState_150_Attack) {
-                return 1;
-            }
-            figure_id = f->nextFigureIdOnSameTile;
-        }
-    }
-    return 0;
+    return map_figure_foreach_until(grid_offset, is_fighting_enemy);
 }
 
 static void callback_travel_citizen_land(int next_offset, int dist)

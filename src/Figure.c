@@ -328,39 +328,42 @@ void Figure_sinkAllShips()
 	}
 }
 
+static int is_citizen(figure *f)
+{
+    if (f->actionState != FigureActionState_149_Corpse) {
+        if (f->type && f->type != FIGURE_EXPLOSION && f->type != FIGURE_FORT_STANDARD &&
+            f->type != FIGURE_MAP_FLAG && f->type != FIGURE_FLOTSAM && f->type < FIGURE_INDIGENOUS_NATIVE) {
+            return f->id;
+        }
+    }
+    return 0;
+}
+
 int Figure_getCitizenOnSameTile(int figureId)
 {
-	for (int w = map_figure_at(Data_Figures[figureId].gridOffset);
-		w > 0; w = Data_Figures[w].nextFigureIdOnSameTile) {
-		if (Data_Figures[w].actionState != FigureActionState_149_Corpse) {
-			int type = Data_Figures[w].type;
-			if (type && type != FIGURE_EXPLOSION && type != FIGURE_FORT_STANDARD &&
-				type != FIGURE_MAP_FLAG && type != FIGURE_FLOTSAM && type < FIGURE_INDIGENOUS_NATIVE) {
-				return w;
-			}
-		}
-	}
-	return 0;
+    return map_figure_foreach_until(Data_Figures[figureId].gridOffset, is_citizen);
+}
+
+static int is_non_citizen(figure *f)
+{
+    if (f->actionState == FigureActionState_149_Corpse) {
+        return 0;
+    }
+    if (FigureIsEnemy(f->type)) {
+        return f->id;
+    }
+    if (f->type == FIGURE_INDIGENOUS_NATIVE && f->actionState == FigureActionState_159_NativeAttacking) {
+        return f->id;
+    }
+    if (f->type == FIGURE_WOLF || f->type == FIGURE_SHEEP || f->type == FIGURE_ZEBRA) {
+        return f->id;
+    }
+    return 0;
 }
 
 int Figure_getNonCitizenOnSameTile(int figureId)
 {
-	for (int w = map_figure_at(Data_Figures[figureId].gridOffset);
-		w > 0; w = Data_Figures[w].nextFigureIdOnSameTile) {
-		if (Data_Figures[w].actionState != FigureActionState_149_Corpse) {
-			int type = Data_Figures[w].type;
-			if (FigureIsEnemy(type)) {
-				return w;
-			}
-			if (type == FIGURE_INDIGENOUS_NATIVE && Data_Figures[w].actionState == FigureActionState_159_NativeAttacking) {
-				return w;
-			}
-			if (type == FIGURE_WOLF || type == FIGURE_SHEEP || type == FIGURE_ZEBRA) {
-				return w;
-			}
-		}
-	}
-	return 0;
+    return map_figure_foreach_until(Data_Figures[figureId].gridOffset, is_non_citizen);
 }
 
 int Figure_hasNearbyEnemy(int xStart, int yStart, int xEnd, int yEnd)

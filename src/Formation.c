@@ -58,16 +58,17 @@ void Formation_deleteFortAndBanner(int formationId)
     }
 }
 
-int Formation_getLegionFormationAtGridOffset(int gridOffset)
+static int is_legion(figure *f)
 {
-    figure *f = figure_get(map_figure_at(gridOffset));
-    while (f->id && f->id != f->nextFigureIdOnSameTile) {
-        if (FigureIsLegion(f->type) || f->type == FIGURE_FORT_STANDARD) {
-            return f->formationId;
-        }
-        f = figure_get(f->nextFigureIdOnSameTile);
+    if (FigureIsLegion(f->type) || f->type == FIGURE_FORT_STANDARD) {
+        return f->formationId;
     }
     return 0;
+}
+
+int Formation_getLegionFormationAtGridOffset(int gridOffset)
+{
+    return map_figure_foreach_until(gridOffset, is_legion);
 }
 
 int Formation_getFormationForBuilding(int gridOffset)

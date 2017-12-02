@@ -105,44 +105,46 @@ static void drawMinimap(int xOffset, int yOffset, int widthTiles, int heightTile
 	);
 }
 
+enum {
+    FIGURE_COLOR_NONE = 0,
+    FIGURE_COLOR_SOLDIER = 1,
+    FIGURE_COLOR_ENEMY = 2,
+    FIGURE_COLOR_WOLF = 3
+};
+
+static int has_figure_color(figure *f)
+{
+    int type = f->type;
+    if (FigureIsLegion(f->type)) {
+        return FIGURE_COLOR_SOLDIER;
+    }
+    if (FigureIsEnemy(f->type)) {
+        return FIGURE_COLOR_ENEMY;
+    }
+    if (f->type == FIGURE_INDIGENOUS_NATIVE &&
+        f->actionState == FigureActionState_159_NativeAttacking) {
+        return FIGURE_COLOR_ENEMY;
+    }
+    if (type == FIGURE_WOLF) {
+        return FIGURE_COLOR_WOLF;
+    }
+    return FIGURE_COLOR_NONE;
+}
+
 static int drawFigure(int xView, int yView, int gridOffset)
 {
-	color_t color = COLOR_BLACK;
-	int hasFigure = 0;
-
-	int figureId = map_figure_at(gridOffset);
-	while (figureId > 0) {
-	    figure *fig = figure_get(figureId);
-		int type = fig->type;
-		if (FigureIsLegion(type)) {
-			hasFigure = 1;
-			color = soldierColor;
-			break;
-		}
-		if (FigureIsEnemy(type)) {
-			hasFigure = 1;
-			color = enemyColor;
-			break;
-		}
-		if (type == FIGURE_INDIGENOUS_NATIVE &&
-			fig->actionState == FigureActionState_159_NativeAttacking) {
-			hasFigure = 1;
-			color = enemyColor;
-			break;
-		}
-		if (type == FIGURE_WOLF) {
-			hasFigure = 1;
-			color = COLOR_BLACK;
-			break;
-		}
-		figureId = fig->nextFigureIdOnSameTile;
-	}
-	if (hasFigure) {
-		Graphics_drawLine(xView, yView, xView+1, yView, color);
-		return 1;
-	} else {
-		return 0;
-	}
+    int color_type = map_figure_foreach_until(gridOffset, has_figure_color);
+    if (color_type == FIGURE_COLOR_NONE) {
+        return 0;
+    }
+    color_t color = COLOR_BLACK;
+    if (color_type == FIGURE_COLOR_SOLDIER) {
+        color = soldierColor;
+    } else if (color_type == FIGURE_COLOR_ENEMY) {
+        color = enemyColor;
+    }
+    Graphics_drawLine(xView, yView, xView+1, yView, color);
+    return 1;
 }
 
 static void drawTile(int xView, int yView, int gridOffset)
