@@ -9,6 +9,7 @@
 #include <data>
 #include <ui>
 #include <game>
+#include <scenario>
 
 #include "city/message.h"
 #include "core/calc.h"
@@ -302,7 +303,7 @@ static void drawDialogVideo()
     else
     {
         width += Widget_GameText_draw(63, 5, data.x + 90 + width, data.y + 312, FONT_NORMAL_WHITE);
-        Widget::Text::draw(Data_Settings.playerName, data.x + 90 + width, data.y + 312, FONT_NORMAL_WHITE, 0);
+        Widget::Text::draw(scenario_player_name(), data.x + 90 + width, data.y + 312, FONT_NORMAL_WHITE, 0);
     }
     data.textHeightBlocks = msg->height_blocks - 1 - (32 + data.yText - data.y) / 16;
     data.textWidthBlocks = msg->width_blocks - 4;
@@ -356,7 +357,7 @@ static void drawPlayerMessageContent(const lang_message *msg)
         {
             width += Widget_GameText_draw(63, 5,
                                           data.xText + width + 80, data.yText + 6, FONT_NORMAL_WHITE);
-            Widget::Text::draw(Data_Settings.playerName,
+            Widget::Text::draw(scenario_player_name(),
                                data.xText + width + 80, data.yText + 6, FONT_NORMAL_WHITE, 0);
         }
     }

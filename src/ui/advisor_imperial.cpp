@@ -12,6 +12,7 @@
 #include "scenario/request.h"
 
 #include <game>
+#include <scenario>
 
 static void buttonDonateToCity(int param1, int param2);
 static void buttonSetSalary(int param1, int param2);
@@ -112,7 +113,7 @@ void UI_Advisor_Imperial_drawBackground(int *advisorHeight)
     Widget::Panel::drawOuterPanel(baseOffsetX, baseOffsetY, 40, *advisorHeight);
     Graphics_drawImage(image_group(GROUP_ADVISOR_ICONS) + 2, baseOffsetX + 10, baseOffsetY + 10);
 
-    Widget::Text::draw(Data_Settings.playerName, baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK, 0);
+    Widget::Text::draw(scenario_player_name(), baseOffsetX + 60, baseOffsetY + 12, FONT_LARGE_BLACK, 0);
 
     int width = Widget_GameText_draw(52, 0, baseOffsetX + 60, baseOffsetY + 44, FONT_NORMAL_BLACK);
     Widget::Text::drawNumber(Data_CityInfo.ratingFavor, '@', " ", baseOffsetX + 60 + width, baseOffsetY + 44, FONT_NORMAL_BLACK);

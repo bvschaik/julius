@@ -57,7 +57,6 @@ struct GameFilePart
 static const int savegameVersion = 0x66;
 
 static int savegameFileVersion;
-static char playerNames[2][32];
 
 static char compressBuffer[COMPRESS_BUFFER_SIZE];
 
@@ -131,7 +130,7 @@ typedef struct
     buffer *formation_totals;
     buffer *Data_CityInfo;
     buffer *Data_CityInfo_Extra_unknownBytes;
-    buffer *playerNames;
+    buffer *player_name;
     buffer *Data_CityInfo_Extra_ciid;
     buffer *Data_Buildings;
     buffer *Data_Settings_Map_orientation;
@@ -287,7 +286,7 @@ void init_savegame_data()
     state->formation_totals = create_savegame_piece(12, 0);
     state->Data_CityInfo = create_savegame_piece(36136, 1);
     state->Data_CityInfo_Extra_unknownBytes = create_savegame_piece(2, 0);
-    state->playerNames = create_savegame_piece(64, 0);
+    state->player_name = create_savegame_piece(64, 0);
     state->Data_CityInfo_Extra_ciid = create_savegame_piece(4, 0);
     state->Data_Buildings = create_savegame_piece(256000, 1);
     state->Data_Settings_Map_orientation = create_savegame_piece(4, 0);
@@ -414,7 +413,8 @@ static void savegame_deserialize(savegame_state *state)
 {
     scenario_settings_load_state(state->scenario_campaign_mission,
                                  state->scenario_settings,
-                                 state->scenario_is_custom);
+                                 state->scenario_is_custom,
+                                 state->player_name);
 
     read_all_from_buffer(state->savegameFileVersion, &savegameFileVersion);
     read_all_from_buffer(state->Data_Grid_graphicIds, &Data_Grid_graphicIds);
@@ -439,7 +439,7 @@ static void savegame_deserialize(savegame_state *state)
 
     read_all_from_buffer(state->Data_CityInfo, &Data_CityInfo);
     read_all_from_buffer(state->Data_CityInfo_Extra_unknownBytes, &Data_CityInfo_Extra.unknownBytes);
-    read_all_from_buffer(state->playerNames, &playerNames);
+
     read_all_from_buffer(state->Data_CityInfo_Extra_ciid, &Data_CityInfo_Extra.ciid);
     read_all_from_buffer(state->Data_Buildings, &Data_Buildings);
     read_all_from_buffer(state->Data_Settings_Map_orientation, &Data_Settings_Map.orientation);
@@ -540,7 +540,8 @@ static void savegame_serialize(savegame_state *state)
 {
     scenario_settings_save_state(state->scenario_campaign_mission,
                                  state->scenario_settings,
-                                 state->scenario_is_custom);
+                                 state->scenario_is_custom,
+                                 state->player_name);
 
     write_all_to_buffer(state->savegameFileVersion, &savegameFileVersion);
     write_all_to_buffer(state->Data_Grid_graphicIds, &Data_Grid_graphicIds);
@@ -565,7 +566,7 @@ static void savegame_serialize(savegame_state *state)
 
     write_all_to_buffer(state->Data_CityInfo, &Data_CityInfo);
     write_all_to_buffer(state->Data_CityInfo_Extra_unknownBytes, &Data_CityInfo_Extra.unknownBytes);
-    write_all_to_buffer(state->playerNames, &playerNames);
+
     write_all_to_buffer(state->Data_CityInfo_Extra_ciid, &Data_CityInfo_Extra.ciid);
     write_all_to_buffer(state->Data_Buildings, &Data_Buildings);
     write_all_to_buffer(state->Data_Settings_Map_orientation, &Data_Settings_Map.orientation);
@@ -716,7 +717,7 @@ int GameFile_loadSavedGame(const char *filename)
 
     setupFromSavedGame();
     building_storage_reset_building_ids();
-    strcpy((char*)Data_Settings.playerName, playerNames[1]);
+
     return 1;
 }
 
@@ -855,7 +856,7 @@ int GameFile_writeSavedGame(const char *filename)
     init_savegame_data();
     printf("GameFile: Saving game to %s\n", filename);
     savegameFileVersion = savegameVersion;
-    strcpy(playerNames[1], (char*)Data_Settings.playerName);
+
     savegame_serialize(&savegame_data.state);
 
     FILE *fp = fopen(filename, "wb");

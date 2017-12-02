@@ -3,6 +3,8 @@
 #include <scenario>
 #include <data/settings.hpp>
 
+#include <cstring>
+
 int scenario_is_open_play()
 {
     return scenario.is_open_play;
@@ -111,4 +113,14 @@ int scenario_starting_favor()
 int scenario_starting_personal_savings()
 {
     return scenario.settings.starting_personal_savings;
+}
+
+const char *scenario_player_name()
+{
+    return scenario.settings.player_name;
+}
+
+void scenario_set_player_name(const char *name)
+{
+    std::strncpy(scenario.settings.player_name, name, MAX_PLAYER_NAME);
 }

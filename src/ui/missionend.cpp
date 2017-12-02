@@ -158,7 +158,7 @@ void UI_VictoryDialog_drawBackground()
     }
     else
     {
-        Widget::Text::drawCentered(Data_Settings.playerName, xOffset, yOffset + 16, 512, FONT_LARGE_BLACK, 0);
+        Widget::Text::drawCentered(scenario_player_name(), xOffset, yOffset + 16, 512, FONT_LARGE_BLACK, 0);
         Widget_GameText_drawMultiline(62, 26, xOffset + 16, yOffset + 47, 480, FONT_NORMAL_BLACK);
     }
 }

@@ -12,6 +12,7 @@
 #define MAX_HERD_POINTS 4
 #define MAX_FISH_POINTS_POINTS 8
 #define MAX_INVASION_POINTS 8
+#define MAX_PLAYER_NAME 32
 
 enum
 {
@@ -233,6 +234,7 @@ struct scenario_t
         int is_custom;
         int starting_favor;
         int starting_personal_savings;
+        char player_name[32];
     } settings;
 };
 

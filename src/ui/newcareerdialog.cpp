@@ -4,6 +4,7 @@
 #include <data>
 #include <ui>
 #include <game>
+#include <scenario>
 
 static void startMission(int param1, int param2);
 
@@ -33,7 +34,7 @@ void UI_NewCareerDialog_drawForeground()
     Widget_GameText_draw(13, 5, xOffset + 352, yOffset + 256, FONT_NORMAL_BLACK);
     Widget::Panel::drawInnerPanel(xOffset + 160, yOffset + 208, 20, 2);
     Widget::Text::captureCursor();
-    Widget::Text::draw(Data_Settings.playerName, xOffset + 176, yOffset + 216, FONT_NORMAL_WHITE, 0);
+    Widget::Text::draw(scenario_player_name(), xOffset + 176, yOffset + 216, FONT_NORMAL_WHITE, 0);
     Widget::Text::drawCursor(xOffset + 176, yOffset + 217);
 
     Widget::Button::drawImageButtons(xOffset + 464, yOffset + 249, &imageButtonStartMission, 1);

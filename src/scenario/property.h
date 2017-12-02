@@ -39,6 +39,9 @@ int scenario_is_tutorial_1();
 int scenario_is_tutorial_2();
 int scenario_is_tutorial_3();
 
+const char *scenario_player_name();
+void scenario_set_player_name(const char *name);
+
 void scenario_set_campaign_rank(int rank);
 int scenario_campaign_mission();
 void scenario_set_campaign_mission(int mission);
