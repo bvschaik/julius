@@ -838,21 +838,21 @@ static void setupFromSavedGame()
 
 void GameFile_writeMissionSavedGameIfNeeded()
 {
-    int missionId = Data_Settings.currentMissionId;
-    if (missionId < 0)
+    int rank = scenario_campaign_rank();
+    if (rank < 0)
     {
-        missionId = 0;
+        rank = 0;
     }
-    else if (missionId > 11)
+    else if (rank > 11)
     {
-        missionId = 11;
+        rank = 11;
     }
     if (!Data_CityInfo.missionSavedGameWritten)
     {
         Data_CityInfo.missionSavedGameWritten = 1;
-        if (!file_exists(missionSavedGames[missionId]))
+        if (!file_exists(missionSavedGames[rank]))
         {
-            GameFile_writeSavedGame(missionSavedGames[missionId]);
+            GameFile_writeSavedGame(missionSavedGames[rank]);
         }
     }
 }

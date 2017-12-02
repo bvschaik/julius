@@ -35,15 +35,15 @@ struct
 void Tutorial::init()
 {
     int tut1 = 1, tut2 = 1, tut3 = 1;
-    if (IsTutorial1())
+    if (scenario_is_tutorial_1())
     {
         tut1 = tut2 = 0;
     }
-    else if (IsTutorial2())
+    else if (scenario_is_tutorial_2())
     {
         tut2 = 0;
     }
-    else if (IsTutorial3())
+    else if (scenario_is_tutorial_3())
     {
         tut3 = 0;
     }
@@ -66,11 +66,11 @@ void Tutorial::init()
 
 tutorial_availability Tutorial::advisor_empire_availability()
 {
-    if (IsTutorial1())
+    if (scenario_is_tutorial_1())
     {
         return NOT_AVAILABLE;
     }
-    else if (IsTutorial2() && !data.tutorial2.population_250_reached)
+    else if (scenario_is_tutorial_2() && !data.tutorial2.population_250_reached)
     {
         return NOT_AVAILABLE_YET;
     }
@@ -82,7 +82,7 @@ tutorial_availability Tutorial::advisor_empire_availability()
 
 tutorial_build_buttons Tutorial::get_build_buttons()
 {
-    if (IsTutorial1())
+    if( scenario_is_tutorial_1())
     {
         if (!data.tutorial1.fire && !data.tutorial1.crime)
         {
@@ -97,7 +97,7 @@ tutorial_build_buttons Tutorial::get_build_buttons()
             return TUT1_BUILD_AFTER_COLLAPSE;
         }
     }
-    else if (IsTutorial2())
+    else if (scenario_is_tutorial_2())
     {
         if (!data.tutorial2.granary_built)
         {
@@ -121,7 +121,7 @@ tutorial_build_buttons Tutorial::get_build_buttons()
 
 int Tutorial::get_population_cap(int current_cap)
 {
-    if (IsTutorial1())
+    if (scenario_is_tutorial_1 ())
     {
         if (!data.tutorial1.fire ||
                 !data.tutorial1.collapse ||
@@ -130,7 +130,7 @@ int Tutorial::get_population_cap(int current_cap)
             return 80;
         }
     }
-    else if (IsTutorial2())
+    else if (scenario_is_tutorial_2())
     {
         if (!data.tutorial2.granary_built)
         {
@@ -146,7 +146,7 @@ int Tutorial::get_population_cap(int current_cap)
 
 int Tutorial::get_immediate_goal_text()
 {
-    if (IsTutorial1())
+    if (scenario_is_tutorial_1())
     {
         if (!data.tutorial1.fire && !data.tutorial1.crime)
         {
@@ -165,7 +165,7 @@ int Tutorial::get_immediate_goal_text()
             return 20;
         }
     }
-    else if (IsTutorial2())
+    else if (scenario_is_tutorial_2())
     {
         if (!data.tutorial2.granary_built)
         {
@@ -193,7 +193,7 @@ int Tutorial::get_immediate_goal_text()
 
 int Tutorial::adjust_request_year(int *year)
 {
-    if (IsTutorial2())
+    if (scenario_is_tutorial_2())
     {
         if (!data.tutorial2.pottery_made)
         {
@@ -335,7 +335,7 @@ void Tutorial::on_day_tick()
 
 void Tutorial::on_month_tick()
 {
-    if (IsTutorial3())
+    if (scenario_is_tutorial_3())
     {
         if (game_time_month() == 5)
         {

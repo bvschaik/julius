@@ -1,12 +1,10 @@
-#include "allwindows.h"
-#include "window.h"
-
 #include "cityinfo.h"
 #include "graphics.h"
 
 #include <sound>
 #include <data>
 #include <ui>
+#include <scenario>
 
 #include "game/game_settings.h"
 #include "game/settings.h"
@@ -53,7 +51,7 @@ void UI_MissionEnd_drawBackground()
 
     Widget::Panel::drawInnerPanel(xOffset + 16, yOffset + 56, 32, 7);
 
-    if (Data_Settings.isCustomScenario)
+    if (scenario_is_custom())
     {
         Widget_GameText_drawMultiline(147, 20, xOffset + 32, yOffset + 64, 496, FONT_NORMAL_WHITE);
     }
@@ -101,7 +99,7 @@ static void advanceToNextMission()
     // TODO move out of UI code
     Data_Settings.startingFavor = Data_CityInfo.ratingFavor;
     Data_Settings.personalSavingsLastMission = Data_CityInfo.personalSavings;
-    setting_set_personal_savings_for_mission(Data_Settings.currentMissionId + 1, Data_CityInfo.personalSavings);
+    setting_set_personal_savings_for_mission(scenario_campaign_rank() + 1, Data_CityInfo.personalSavings);
     Data_Settings.currentMissionId++;
 
     Data_CityInfo.victoryHasWonScenario = 0;
@@ -111,10 +109,10 @@ static void advanceToNextMission()
     Data_State.undoAvailable = 0;
     Data_State.currentOverlay = 0;
 
-    if (Data_Settings.currentMissionId >= 11 || Data_Settings.isCustomScenario)
+    if (scenario_campaign_rank() >= 11 || scenario_is_custom())
     {
         UI_Window_goTo(Window_MainMenu);
-        if (!Data_Settings.isCustomScenario)
+        if (!scenario_is_custom())
         {
             Settings_clearMissionSettings();
             Data_Settings.currentMissionId = 2;
@@ -122,7 +120,7 @@ static void advanceToNextMission()
     }
     else
     {
-        Data_Settings.saveGameMissionId = Constant_MissionIds[Data_Settings.currentMissionId].peaceful;
+        Data_Settings.saveGameMissionId = Constant_MissionIds[scenario_campaign_rank()].peaceful;
         UI_MissionStart_show();
     }
 }
@@ -154,7 +152,7 @@ void UI_VictoryDialog_drawBackground()
     int yOffset = Data_Screen.offset640x480.y + 128;
 
     Widget::Panel::drawOuterPanel(xOffset, yOffset, 34, 15);
-    if (Data_Settings.currentMissionId < 10 || Data_Settings.isCustomScenario)
+    if (scenario_campaign_rank() < 10 || scenario_is_custom())
     {
         Widget_GameText_drawCentered(62, 0, xOffset, yOffset + 16, 544, FONT_LARGE_BLACK);
         Widget_GameText_drawCentered(62, 2, xOffset, yOffset + 47, 544, FONT_NORMAL_BLACK);
@@ -175,7 +173,7 @@ void UI_VictoryDialog_drawForeground()
     if (Data_State.winState == WinState_Win)
     {
         Widget::Panel::drawLargeLabelButton(xOffset + 32, yOffset + 112, 30, focusButtonId == 1);
-        if (Data_Settings.currentMissionId < 10 || Data_Settings.isCustomScenario)
+        if (scenario_campaign_rank() < 10 || scenario_is_custom())
         {
             Widget_GameText_drawCentered(62, 3,
                                          xOffset + 32, yOffset + 118, 480, FONT_NORMAL_GREEN);
@@ -185,7 +183,7 @@ void UI_VictoryDialog_drawForeground()
             Widget_GameText_drawCentered(62, 27,
                                          xOffset + 32, yOffset + 118, 480, FONT_NORMAL_GREEN);
         }
-        if (Data_Settings.currentMissionId >= 2 || Data_Settings.isCustomScenario)
+        if (scenario_campaign_rank() >= 2 || scenario_is_custom())
         {
             // Continue for 2/5 years
             Widget::Panel::drawLargeLabelButton(xOffset + 32, yOffset + 144, 30, focusButtonId == 2);
@@ -209,7 +207,7 @@ void UI_VictoryDialog_handleMouse(const mouse *m)
     int yOffset = Data_Screen.offset640x480.y + 128;
 
     int numButtons;
-    if (Data_Settings.currentMissionId >= 2 || Data_Settings.isCustomScenario)
+    if (scenario_campaign_rank() >= 2 || scenario_is_custom())
     {
         numButtons = 3;
     }
@@ -257,7 +255,7 @@ static void firedAccept(int param1, int param2)
     Data_CityInfo.victoryContinueMonths = 0;
     Data_CityInfo.victoryContinueMonthsChosen = 0;
     Data_State.undoAvailable = 0;
-    if (Data_Settings.isCustomScenario)
+    if (scenario_is_custom())
     {
         UI_Window_goTo(Window_MainMenu);
     }

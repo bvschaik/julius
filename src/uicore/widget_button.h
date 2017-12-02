@@ -1,5 +1,5 @@
-#ifndef WIDGET_BUTTON_H
-#define WIDGET_BUTTON_H
+#ifndef __WIDGET_BUTTON_INCLUDE_H__
+#define __WIDGET_BUTTON_INCLUDE_H__
 
 struct ArrowButton;
 struct ImageButton;
@@ -20,4 +20,4 @@ struct Button
 
 }
 
-#endif
+#endif //__WIDGET_BUTTON_INCLUDE_H__

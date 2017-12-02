@@ -132,12 +132,12 @@ void CityInfo_Victory_check()
             {
                 mouse_reset_up_state();
 
-                if (IsTutorial1() || IsTutorial2())
+                if (scenario_is_tutorial_1() || scenario_is_tutorial_2())
                 {
                     // tutorials: immediately go to next mission
                     UI_Window_goTo(Window_VictoryIntermezzo);
                 }
-                else if (!Data_Settings.isCustomScenario && Data_Settings.currentMissionId >= 10)
+                else if (!scenario_is_custom() && scenario_campaign_rank() >= 10)
                 {
                     // Won game
                     UI_VideoIntermezzo_show("smk/win_game.smk", 400, 292, Window_VictoryIntermezzo);

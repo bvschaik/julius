@@ -1,6 +1,7 @@
 #include "property.h"
 
 #include <scenario>
+#include <data/settings.hpp>
 
 int scenario_is_open_play()
 {
@@ -55,4 +56,29 @@ int scenario_image_id()
 const char *scenario_brief_description()
 {
     return scenario.brief_description;
+}
+
+int scenario_is_custom()
+{
+    return Data_Settings.isCustomScenario;
+}
+
+int scenario_campaign_rank()
+{
+    return Data_Settings.currentMissionId;
+}
+
+int scenario_is_tutorial_1()
+{
+    return !Data_Settings.isCustomScenario && Data_Settings.currentMissionId == 0;
+}
+
+int scenario_is_tutorial_2()
+{
+    return !Data_Settings.isCustomScenario && Data_Settings.currentMissionId == 1;
+}
+
+int scenario_is_tutorial_3()
+{
+    return !Data_Settings.isCustomScenario && Data_Settings.currentMissionId == 2;
 }

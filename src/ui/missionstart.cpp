@@ -1,17 +1,15 @@
-
-#include "allwindows.h"
-#include "window.h"
-
 #include "graphics.h"
 #include "scenario.h"
 
 #include <data>
-#include <sound>
 #include <ui>
-#include <game>
 
 #include "core/lang.h"
+#include "game/tutorial.h"
 #include "scenario/criteria.h"
+#include "scenario/property.h"
+#include "sound/music.h"
+#include "sound/speech.h"
 
 static void startMission(int param1, int param2);
 static void briefingBack(int param1, int param2);
@@ -73,7 +71,7 @@ void UI_MissionStart_show()
     {
         select = 0;
     }
-    if (!campaignHasChoice[Data_Settings.currentMissionId])
+    if (!campaignHasChoice[scenario_campaign_rank()])
     {
         select = 0;
     }
@@ -93,16 +91,16 @@ void UI_MissionStart_Selection_drawBackground()
 {
     int xOffset = Data_Screen.offset640x480.x;
     int yOffset = Data_Screen.offset640x480.y;
-    int missionId = Data_Settings.currentMissionId;
+    int rank = scenario_campaign_rank();
 
     Graphics_drawFullScreenImage(image_group(GROUP_SELECT_MISSION_BACKGROUND));
     Graphics_drawImage(image_group(GROUP_SELECT_MISSION) +
-                       backgroundGraphicOffset[missionId],
+                       backgroundGraphicOffset[rank],
                        xOffset, yOffset);
-    Widget_GameText_draw(144, 1 + 3 * missionId, xOffset + 20, yOffset + 410, FONT_LARGE_BLACK);
+    Widget_GameText_draw(144, 1 + 3 * rank, xOffset + 20, yOffset + 410, FONT_LARGE_BLACK);
     if (data.choice)
     {
-        Widget_GameText_drawMultiline(144, 1 + 3 * missionId + data.choice,
+        Widget_GameText_drawMultiline(144, 1 + 3 * rank + data.choice,
                                       xOffset + 20, yOffset + 440, 560, FONT_NORMAL_BLACK);
     }
     else
@@ -129,12 +127,12 @@ void UI_MissionStart_Selection_drawForeground()
         Widget::Button::drawImageButtons(xOffset + 580, yOffset + 410, &imageButtonStartMission, 1);
     }
 
-    int missionId = Data_Settings.currentMissionId;
-    int xPeaceful = xOffset + campaignSelection[missionId].xPeaceful - 4;
-    int yPeaceful = yOffset + campaignSelection[missionId].yPeaceful - 4;
-    int xMilitary = xOffset + campaignSelection[missionId].xMilitary - 4;
-    int yMilitary = yOffset + campaignSelection[missionId].yMilitary - 4;
-    int graphicId = image_group(GROUP_SELECT_MISSIONButton);
+    int rank = scenario_campaign_rank();
+    int xPeaceful = xOffset + campaignSelection[rank].xPeaceful - 4;
+    int yPeaceful = yOffset + campaignSelection[rank].yPeaceful - 4;
+    int xMilitary = xOffset + campaignSelection[rank].xMilitary - 4;
+    int yMilitary = yOffset + campaignSelection[rank].yMilitary - 4;
+    int graphicId = image_group(GROUP_SELECT_MISSION_BUTTON);
     if (data.choice == 0)
     {
         Graphics_drawImage(focusButton == 1 ? graphicId + 1 : graphicId, xPeaceful, yPeaceful);
@@ -157,11 +155,11 @@ void UI_MissionStart_Selection_handleMouse(const mouse *m)
     int xOffset = Data_Screen.offset640x480.x;
     int yOffset = Data_Screen.offset640x480.y;
 
-    int missionId = Data_Settings.currentMissionId;
-    int xPeaceful = xOffset + campaignSelection[missionId].xPeaceful - 4;
-    int yPeaceful = yOffset + campaignSelection[missionId].yPeaceful - 4;
-    int xMilitary = xOffset + campaignSelection[missionId].xMilitary - 4;
-    int yMilitary = yOffset + campaignSelection[missionId].yMilitary - 4;
+    int rank = scenario_campaign_rank();
+    int xPeaceful = xOffset + campaignSelection[rank].xPeaceful - 4;
+    int yPeaceful = yOffset + campaignSelection[rank].yPeaceful - 4;
+    int xMilitary = xOffset + campaignSelection[rank].xMilitary - 4;
+    int yMilitary = yOffset + campaignSelection[rank].yMilitary - 4;
     focusButton = 0;
     if (isMouseHit(m, xPeaceful, yPeaceful, 44))
     {
@@ -187,14 +185,14 @@ void UI_MissionStart_Selection_handleMouse(const mouse *m)
     {
         if (isMouseHit(m, xPeaceful, yPeaceful, 44))
         {
-            Data_Settings.saveGameMissionId = Constant_MissionIds[missionId].peaceful;
+            Data_Settings.saveGameMissionId = Constant_MissionIds[rank].peaceful;
             data.choice = 1;
             UI_Window_requestRefresh();
             sound_speech_play_file("wavs/fanfare_nu1.wav");
         }
         if (isMouseHit(m, xMilitary, yMilitary, 44))
         {
-            Data_Settings.saveGameMissionId = Constant_MissionIds[missionId].military;
+            Data_Settings.saveGameMissionId = Constant_MissionIds[rank].military;
             data.choice = 2;
             UI_Window_requestRefresh();
             sound_speech_play_file("wavs/fanfare_nu5.wav");
@@ -226,7 +224,7 @@ void UI_MissionStart_Briefing_drawBackground()
     Widget::Panel::drawOuterPanel(xOffset, yOffset, 38, 27);
     Widget::Text::draw(lang_get_message(textId)->title.text, xOffset + 16, yOffset + 16, FONT_LARGE_BLACK, 0);
     Widget_GameText_draw(62, 7, xOffset + 360, yOffset + 401, FONT_NORMAL_BLACK);
-    if (UI_Window_getId() == Window_MissionBriefingInitial && Data_Settings.currentMissionId >= 2)
+    if (UI_Window_getId() == Window_MissionBriefingInitial && campaignHasChoice[scenario_campaign_rank()])
     {
         Widget_GameText_draw(13, 4, xOffset + 50, yOffset + 403, FONT_NORMAL_BLACK);
     }
@@ -313,7 +311,7 @@ void UI_MissionStart_BriefingInitial_drawForeground()
 
     Widget_RichText_drawScrollbar();
     Widget::Button::drawImageButtons(xOffset + 500, yOffset + 394, &imageButtonStartMission, 1);
-    if (Data_Settings.currentMissionId >= 2)
+    if (campaignHasChoice[scenario_campaign_rank()])
     {
         Widget::Button::drawImageButtons(xOffset + 10, yOffset + 396, &imageButtonBackToSelection, 1);
     }
@@ -337,7 +335,7 @@ void UI_MissionStart_BriefingInitial_handleMouse(const mouse *m)
     {
         return;
     }
-    if (Data_Settings.currentMissionId >= 2)
+    if (campaignHasChoice[scenario_campaign_rank()])
     {
         if (Widget::Button::handleImageButtons(xOffset + 10, yOffset + 396, &imageButtonBackToSelection, 1, 0))
         {

@@ -54,7 +54,7 @@ void Scenario_initialize(const char *scenarioName)
     int saveMissionId = Data_Settings.saveGameMissionId;
     int curMissionId = Data_Settings.currentMissionId;
     clearBookmarks();
-    if (Data_Settings.isCustomScenario)
+    if (scenario_is_custom())
     {
         if (!mapFileExists(scenarioName))
         {
@@ -75,14 +75,14 @@ void Scenario_initialize(const char *scenarioName)
     Data_Settings.saveGameMissionId = saveMissionId;
     Data_Settings.currentMissionId = curMissionId;
 
-    Data_CityInfo_Extra.startingFavor = difficulty_starting_favor();
+    Data_Settings.startingFavor = difficulty_starting_favor();
     Data_Settings.personalSavingsLastMission = setting_personal_savings_for_mission(curMissionId);
 
-    Data_CityInfo.ratingFavor = Data_CityInfo_Extra.startingFavor;
+    Data_CityInfo.ratingFavor = Data_Settings.startingFavor;
     Data_CityInfo.personalSavings = Data_Settings.personalSavingsLastMission;
     Data_CityInfo.playerRank = curMissionId;
     Data_CityInfo.salaryRank = curMissionId;
-    if (Data_Settings.isCustomScenario)
+    if (scenario_is_custom())
     {
         Data_CityInfo.personalSavings = 0;
         Data_CityInfo.playerRank = scenario_property_player_rank();
@@ -96,7 +96,7 @@ void Scenario_initialize(const char *scenarioName)
 
     Tutorial::init();
 
-    if (IsTutorial1())
+    if (scenario_is_tutorial_1())
     {
         setting_set_personal_savings_for_mission(0, 0);
         Data_Settings.personalSavingsLastMission = 0;

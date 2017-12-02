@@ -32,4 +32,11 @@ int scenario_initial_funds();
 
 int scenario_rescue_loan();
 
+int scenario_is_custom();
+
+int scenario_campaign_rank();
+int scenario_is_tutorial_1();
+int scenario_is_tutorial_2();
+int scenario_is_tutorial_3();
+
 #endif // SCENARIO_PROPERTY_H

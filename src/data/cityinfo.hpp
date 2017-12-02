@@ -762,8 +762,6 @@ extern struct _Data_CityInfo
 extern struct _Data_CityInfo_Extra
 {
     int populationGraphOrder;
-    int startingFavor;
-    int personalSavingsLastMission;
     struct
     {
         int x;

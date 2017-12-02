@@ -4,6 +4,7 @@
 #include <sound>
 #include <game>
 #include <ui>
+#include <scenario>
 
 #include "core/time.h"
 
@@ -87,7 +88,7 @@ void UI_Intermezzo_drawBackground()
     {
         sound_music_stop();
         sound_speech_stop();
-        if (Data_Settings.isCustomScenario)
+        if (scenario_is_custom())
         {
             Graphics_drawImage(graphicBase + 1, xOffset, yOffset);
         }
@@ -106,7 +107,7 @@ void UI_Intermezzo_drawBackground()
     {
         sound_music_stop();
         sound_speech_stop();
-        if (Data_Settings.isCustomScenario)
+        if (scenario_is_custom())
         {
             Graphics_drawImage(graphicBase + 2, xOffset, yOffset);
         }

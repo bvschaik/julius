@@ -555,8 +555,6 @@ void mainLoop()
                     SDL_SetWindowFullscreen(SDL.window, 0);
                     printf("User resize to %d x %d\n", *(int*)event.user.data1, *(int*)event.user.data2);
                     setting_set_display(0, *(int*)event.user.data1, *(int*)event.user.data2);
-                    //createSurface(*(int*)event.user.data1, *(int*)event.user.data2, 0);
-                    //UI_Window_requestRefresh();
                 }
                 else if (event.user.code == UserEventFullscreen)
                 {
@@ -568,8 +566,6 @@ void mainLoop()
                     SDL_SetWindowDisplayMode(SDL.window, &mode);
                     SDL_SetWindowFullscreen(SDL.window, SDL_WINDOW_FULLSCREEN);
                     setting_set_display(1, Desktop.width, Desktop.height);
-                    //createSurface(Desktop.width, Desktop.height, 1);
-                    //UI_Window_requestRefresh();
                 }
                 else if (event.user.code == UserEventWindowed)
                 {

@@ -288,7 +288,7 @@ void Security_Tick_generateCriminal()
     }
     if (minBuildingId)
     {
-        if (IsTutorial1() || IsTutorial2())
+        if (scenario_is_tutorial_2())
         {
             return;
         }

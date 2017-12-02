@@ -162,7 +162,7 @@ static void updateGodMoods()
         {
             Data_CityInfo.godHappiness[i]--;
         }
-        if (IsTutorial1())
+        if (scenario_is_tutorial_1())
         {
             if (Data_CityInfo.godHappiness[i] < 50)
             {
@@ -250,7 +250,7 @@ static void updateGodMoods()
         else if (Data_CityInfo.godWrathBolts[god] >= 50 &&
                  Data_CityInfo.godMonthsSinceFestival[god] > 3)
         {
-            if (Data_Settings.currentMissionId < 4 && !Data_Settings.isCustomScenario)
+            if (scenario_campaign_rank() < 4 && !scenario_is_custom())
             {
                 // no large curses in early scenarios
                 Data_CityInfo.godSmallCurseDone[god] = 0;

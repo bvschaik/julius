@@ -1,11 +1,11 @@
 #include "advisors.h"
 #include "graphics.h"
-#include "scenario.h"
 #include "system.h"
 
 #include <data>
 #include <ui>
 #include <game>
+#include <scenario>
 
 #include "graphics/image.h"
 
@@ -365,7 +365,7 @@ static void menuFile_replayMap(int param)
 {
     clearState();
     Data_State.selectedBuilding.type = 0;
-    if (Data_Settings.isCustomScenario)
+    if (scenario_is_custom())
     {
         Scenario_initialize(Data_FileList.selectedScenario);
         UI_Window_goTo(Window_City);

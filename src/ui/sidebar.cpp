@@ -3,7 +3,6 @@
 #include "cityview.h"
 #include "graphics.h"
 #include "city/message.h"
-#include "sidebarmenu.h"
 #include "terrain.h"
 #include "undo.h"
 
@@ -11,6 +10,7 @@
 #include <data>
 #include <ui>
 #include <game>
+#include <scenario>
 
 #include "core/time.h"
 #include "graphics/image.h"
@@ -422,7 +422,7 @@ static void buttonEmpire(int param1, int param2)
 
 static void buttonMissionBriefing(int param1, int param2)
 {
-    if (!Data_Settings.isCustomScenario)
+    if (!scenario_is_custom())
     {
         UI_Intermezzo_show(Intermezzo_MissionBriefing, Window_MissionBriefingReview, 1000);
     }

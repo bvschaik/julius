@@ -4,11 +4,10 @@
 #include "housepopulation.h"
 #include "city/message.h"
 
-#include "data/building.hpp"
-#include "data/cityinfo.hpp"
-#include "data/constants.hpp"
-#include "data/settings.hpp"
 #include "game/tutorial.h"
+
+#include <data>
+#include <scenario>
 
 #include "building/model.h"
 #include "core/calc.h"
@@ -475,7 +474,7 @@ void CityInfo_Population_calculateMigrationSentiment()
 
 void CityInfo_Population_updateHealthRate()
 {
-    if (Data_CityInfo.population < 200 || IsTutorial1() || IsTutorial2())
+    if (Data_CityInfo.population < 200 || scenario_is_tutorial_1() || scenario_is_tutorial_2())
     {
         Data_CityInfo.healthRate = 50;
         Data_CityInfo.healthRateTarget = 50;
