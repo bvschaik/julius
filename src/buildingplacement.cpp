@@ -1210,7 +1210,7 @@ static int placeAqueduct(int measureOnly, int xStart, int yStart, int xEnd, int 
     map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
     map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
     Undo::restoreTerrainGraphics();
-    int itemCost = model_get_building(BUILDING_AQUEDUCT)->cost;
+    int itemCost = model_get_building(BUILDING_AQUEDUCT).cost;
     *cost = 0;
     int blocked = 0;
     int gridOffset = GridOffset(xStart, yStart);
@@ -1303,7 +1303,7 @@ static int placeReservoirAndAqueducts(int measureOnly, int xStart, int yStart, i
     }
     if (!distance)
     {
-        info->cost = model_get_building(BUILDING_RESERVOIR)->cost;
+        info->cost = model_get_building(BUILDING_RESERVOIR).cost;
         return 1;
     }
     if (!Routing_getDistanceForBuildingRoadOrAqueduct(xStart, yStart, 1))
@@ -1359,15 +1359,15 @@ static int placeReservoirAndAqueducts(int measureOnly, int xStart, int yStart, i
                                 xEnd + xAqEnd, yEnd + yAqEnd, RoutedBuilding_Aqueduct, &aqItems);
     if (info->placeReservoirAtStart == PlaceReservoir_Yes)
     {
-        info->cost += model_get_building(BUILDING_RESERVOIR)->cost;
+        info->cost += model_get_building(BUILDING_RESERVOIR).cost;
     }
     if (info->placeReservoirAtEnd == PlaceReservoir_Yes)
     {
-        info->cost += model_get_building(BUILDING_RESERVOIR)->cost;
+        info->cost += model_get_building(BUILDING_RESERVOIR).cost;
     }
     if (aqItems)
     {
-        info->cost += aqItems * model_get_building(BUILDING_AQUEDUCT)->cost;
+        info->cost += aqItems * model_get_building(BUILDING_AQUEDUCT).cost;
     }
     return 1;
 }
@@ -1380,7 +1380,7 @@ void BuildingPlacement_update(int xStart, int yStart, int xEnd, int yEnd, int ty
         return;
     }
     map_grid_and_u8(Data_Grid_bitfields, Bitfield_NoOverlayAndDeleted);
-    int currentCost = model_get_building(type)->cost;
+    int currentCost = model_get_building(type).cost;
 
     if (type == BUILDING_CLEAR_LAND)
     {
@@ -1567,7 +1567,7 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
         return;
     }
 
-    int placementCost = model_get_building(type)->cost;
+    int placementCost = model_get_building(type).cost;
     if (type == BUILDING_CLEAR_LAND)
     {
         clearRegion(0, xStart, yStart, xEnd, yEnd);

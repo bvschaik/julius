@@ -68,7 +68,7 @@ void CityInfo_Resource_calculateFood()
         {
             b->hasRoadAccess = 1;
             int pctWorkers = calc_percentage(
-                                 b->numWorkers, model_get_building((building_type)b->type)->laborers);
+                                 b->numWorkers, model_get_building((building_type)b->type).laborers);
             if (pctWorkers < 100)
             {
                 Data_CityInfo.foodInfoGranariesUnderstaffed++;

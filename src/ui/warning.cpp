@@ -310,7 +310,7 @@ static void checkWorkers(int buildingType)
 {
     if (!hasWarningAlready && buildingType != BUILDING_WELL)
     {
-        if (model_get_building((building_type)buildingType)->laborers > 0 &&
+        if (model_get_building((building_type)buildingType).laborers > 0 &&
                 Data_CityInfo.workersNeeded >= 10)
         {
             UI_Warning_show(Warning_WorkersNeeded);

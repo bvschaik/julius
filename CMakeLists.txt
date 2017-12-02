@@ -178,7 +178,7 @@ if(UNIX AND NOT APPLE)
   # set compiler options
   if(NOT CMAKE_BUILD_TYPE_RELEASE)
     message("App: building in debug mode")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-unused-value -g -std=c++11")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-unused-value -g -std=c++17")
     add_definitions(-DDEBUG)
   else()
     #release options strip bin

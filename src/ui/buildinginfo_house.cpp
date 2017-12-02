@@ -228,12 +228,12 @@ void UI_BuildingInfo_houseDetermineWorstDesirabilityBuilding(BuildingInfoContext
             }
             if (!b->houseSize || b->type < Data_Buildings[c->buildingId].type)
             {
-                int des = model_get_building((building_type)b->type)->desirability_value;
+                int des = model_get_building((building_type)b->type).desirability_value;
                 if (des < 0)
                 {
                     // simplified desirability calculation
-                    int stepSize = model_get_building((building_type)b->type)->desirability_step_size;
-                    int range = model_get_building((building_type)b->type)->desirability_range;
+                    int stepSize = model_get_building((building_type)b->type).desirability_step_size;
+                    int range = model_get_building((building_type)b->type).desirability_range;
                     int dist = calc_maximum_distance(x, y,
                                                      Data_Buildings[c->buildingId].x, Data_Buildings[c->buildingId].y);
                     if (dist <= range)

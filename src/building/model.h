@@ -57,7 +57,7 @@ int model_load();
  * @param type Building type
  * @return Read-only model
  */
-const model_building *model_get_building(building_type type);
+const model_building &model_get_building(building_type type);
 
 /**
  * Gets the model for a house

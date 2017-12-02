@@ -68,7 +68,7 @@ int Animation::getIndexForCityBuilding(int graphicId, int gridOffset)
     {
         return 0;
     }
-    if (b->type == BUILDING_WAREHOUSE && b->numWorkers < model_get_building((building_type)b->type)->laborers)
+    if (b->type == BUILDING_WAREHOUSE && b->numWorkers < model_get_building((building_type)b->type).laborers)
     {
         return 0;
     }
@@ -100,7 +100,7 @@ int Animation::getIndexForCityBuilding(int graphicId, int gridOffset)
     {
         return 0;
     }
-    if (b->type == BUILDING_GRANARY && b->numWorkers < model_get_building((building_type)b->type)->laborers)
+    if (b->type == BUILDING_GRANARY && b->numWorkers < model_get_building((building_type)b->type).laborers)
     {
         return 0;
     }

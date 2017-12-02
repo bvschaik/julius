@@ -23,14 +23,14 @@ static void updateBuildings()
     {
         if (BuildingIsInUse(i))
         {
-            const model_building *model = model_get_building((building_type)Data_Buildings[i].type);
+            auto model = model_get_building((building_type)Data_Buildings[i].type);
             Terrain_addDesirability(
                 Data_Buildings[i].x, Data_Buildings[i].y,
                 Data_Buildings[i].size,
-                model->desirability_value,
-                model->desirability_step,
-                model->desirability_step_size,
-                model->desirability_range);
+                model.desirability_value,
+                model.desirability_step,
+                model.desirability_step_size,
+                model.desirability_range);
         }
     }
 }
@@ -61,21 +61,21 @@ static void updateTerrain()
                     Data_Grid_bitfields[gridOffset] &= ~Bitfield_PlazaOrEarthquake;
                     continue;
                 }
-                const model_building *model = model_get_building((building_type)type);
+                auto model = model_get_building((building_type)type);
                 Terrain_addDesirability(x, y, 1,
-                                        model->desirability_value,
-                                        model->desirability_step,
-                                        model->desirability_step_size,
-                                        model->desirability_range);
+                                        model.desirability_value,
+                                        model.desirability_step,
+                                        model.desirability_step_size,
+                                        model.desirability_range);
             }
             else if (terrain & Terrain_Garden)
             {
-                const model_building *model = model_get_building(BUILDING_GARDENS);
+                auto model = model_get_building(BUILDING_GARDENS);
                 Terrain_addDesirability(x, y, 1,
-                                        model->desirability_value,
-                                        model->desirability_step,
-                                        model->desirability_step_size,
-                                        model->desirability_range);
+                                        model.desirability_value,
+                                        model.desirability_step,
+                                        model.desirability_step_size,
+                                        model.desirability_range);
             }
             else if (terrain & Terrain_Rubble)
             {

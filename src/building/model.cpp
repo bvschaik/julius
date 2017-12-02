@@ -171,9 +171,9 @@ int model_load()
     return 1;
 }
 
-const model_building *model_get_building(building_type type)
+const model_building& model_get_building(building_type type)
 {
-    return &buildings[type];
+    return buildings[type];
 }
 
 const model_house *model_get_house(house_level level)

@@ -208,7 +208,7 @@ int Formation_getClosestMilitaryAcademy(int formationId)
     {
         if (BuildingIsInUse(i) &&
                 Data_Buildings[i].type == BUILDING_MILITARY_ACADEMY &&
-                Data_Buildings[i].numWorkers >= model_get_building(BUILDING_MILITARY_ACADEMY)->laborers)
+                Data_Buildings[i].numWorkers >= model_get_building(BUILDING_MILITARY_ACADEMY).laborers)
         {
             int dist = calc_maximum_distance(fortX, fortY, Data_Buildings[i].x, Data_Buildings[i].y);
             if (dist < minDistance)
