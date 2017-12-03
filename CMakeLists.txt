@@ -46,6 +46,7 @@ set (FIGURE_FILES
     src/figure/phrase.c
     src/figure/properties.c
     src/figure/route.c
+    src/figure/sound.c
     src/figure/trader.c
 )
 set (GAME_FILES
@@ -145,7 +146,6 @@ add_executable(julius
 	src/FigureAction_Water.c
 	src/FigureGeneration.c
 	src/FigureMovement.c
-	src/Figure_Phrase.c
 	src/Figure_Service.c
 	src/Formation.c
 	src/FormationUpdate.c
