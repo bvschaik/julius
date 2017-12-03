@@ -26,7 +26,7 @@ void scenario_emperor_change_process()
     if (data.state == 0) {
         if (game_time_year() == data.game_year && game_time_month() == data.month) {
             data.state = 1; // done
-            city_message_post(1, MESSAGE_EMPEROR_CHANGE, 0, 0);
+            game.messages.post(1, MESSAGE_EMPEROR_CHANGE, 0, 0);
         }
     }
 }

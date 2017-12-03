@@ -166,7 +166,7 @@ static void refresh_buttons()
 
 static void post_message(int message)
 {
-    city_message_post(1, message, 0, 0);
+    game.messages.post(1, message, 0, 0);
 }
 
 int tutorial_handle_fire()
@@ -266,7 +266,7 @@ void tutorial_on_month_tick()
 {
     if (scenario_is_tutorial_3()) {
         if (game_time_month() == 5) {
-            city_message_post_with_message_delay(MESSAGE_CAT_TUTORIAL3, 1, MESSAGE_TUTORIAL_HUNGER_HALTS_IMMIGRANTS, 1200);
+            game.messages.post_with_message_delay(MESSAGE_CAT_TUTORIAL3, 1, MESSAGE_TUTORIAL_HUNGER_HALTS_IMMIGRANTS, 1200);
         }
     }
 }

@@ -118,7 +118,7 @@ void Scenario_initialize(const char *scenarioName)
 	tutorial_init();
 
 	SidebarMenu_enableBuildingMenuItemsAndButtons();
-	city_message_init_scenario();
+	game.messages.init_scenario();
 }
 
 static int mapFileExists(const char *scenarioName)
@@ -137,7 +137,7 @@ static void initCustomScenario(const char *scenarioName)
 	Data_State.selectedBuilding.type = 0;
 	CityInfo_init();
 	Data_CityInfo_Extra.ciid = 1;
-	city_message_init_scenario();
+	game.messages.init_scenario();
 	Loader_GameState_init();
 	Animation_resetTimers();
 	sound_city_init();

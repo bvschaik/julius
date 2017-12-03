@@ -483,7 +483,7 @@ static void spawnFigureHippodrome(int buildingId, struct Data_Building *b)
 				if (b->data.entertainment.days1 > 0) {
 					if (!Data_CityInfo.messageShownHippodrome) {
 						Data_CityInfo.messageShownHippodrome = 1;
-						city_message_post(1, MESSAGE_WORKING_HIPPODROME, 0, 0);
+						game.messages.post(1, MESSAGE_WORKING_HIPPODROME, 0, 0);
 					}
 				}
 			}
@@ -532,7 +532,7 @@ static void spawnFigureColosseum(int buildingId, struct Data_Building *b)
 			if (b->data.entertainment.days1 > 0 || b->data.entertainment.days2 > 0) {
 				if (!Data_CityInfo.messageShownColosseum) {
 					Data_CityInfo.messageShownColosseum = 1;
-					city_message_post(1, MESSAGE_WORKING_COLOSSEUM, 0, 0);
+					game.messages.post(1, MESSAGE_WORKING_COLOSSEUM, 0, 0);
 				}
 			}
 		}

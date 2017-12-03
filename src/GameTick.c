@@ -144,12 +144,12 @@ static void advanceMonth()
 	scenario_price_change_process();
 	CityInfo_Victory_updateMonthsToGovern();
 	Formation_Tick_updateRestMorale();
-	city_message_decrease_delays();
+	game.messages.decrease_delays();
 
 	TerrainGraphics_updateAllRoads();
 	TerrainGraphics_updateRegionWater(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
 	map_routing_update_land_citizen();
-	city_message_sort_and_compact();
+	game.messages.sort_and_compact();
 
 	if (game_time_advance_month()) {
 		advanceYear();

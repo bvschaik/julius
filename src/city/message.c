@@ -16,6 +16,10 @@
 #define MAX_QUEUE 20
 #define MAX_MESSAGE_CATEGORIES 20
 
+void city_message_init_problem_areas();
+int city_message_get_text_id(city_message_type message_type);
+message_advisor city_message_get_advisor(city_message_type message_type);
+
 static struct {
     city_message messages[MAX_MESSAGES];
 
@@ -536,4 +540,35 @@ void city_message_load_state(buffer *messages, buffer *extra, buffer *counts, bu
     data.population_shown.pop15000 = buffer_read_u8(population);
     data.population_shown.pop20000 = buffer_read_u8(population);
     data.population_shown.pop25000 = buffer_read_u8(population);
+}
+
+_Game game;
+
+void initialize_city_messages_subs()
+{
+  game.messages.init_scenario = city_message_init_scenario;
+  game.messages.init_problem_areas = city_message_init_problem_areas;
+  game.messages.disable_sound_for_next_message = city_message_disable_sound_for_next_message;
+  game.messages.apply_sound_interval = city_message_apply_sound_interval;
+  game.messages.post = city_message_post;
+  game.messages.post_with_popup_delay = city_message_post_with_popup_delay;
+  game.messages.post_with_message_delay = city_message_post_with_message_delay;
+  game.messages.process_queue = city_message_process_queue;
+  game.messages.sort_and_compact = city_message_sort_and_compact;
+  game.messages.get_text_id = city_message_get_text_id;
+  game.messages.get_advisor = city_message_get_advisor;
+  game.messages.reset_category_count = city_message_reset_category_count;
+  game.messages.increase_category_count = city_message_increase_category_count;
+  game.messages.get_category_count = city_message_get_category_count;
+  game.messages.decrease_delays = city_message_decrease_delays;
+  game.messages.mark_population_shown = city_message_mark_population_shown;
+  game.messages.get = city_message_get;
+  game.messages.set_current = city_message_set_current;
+  game.messages.mark_read = city_message_mark_read;
+  game.messages.remove = city_message_delete;
+  game.messages.count = city_message_count;
+  game.messages.problem_area_count = city_message_problem_area_count;
+  game.messages.next_problem_area_grid_offset = city_message_next_problem_area_grid_offset;
+  game.messages.save_state = city_message_save_state;
+  game.messages.load_state = city_message_load_state;
 }

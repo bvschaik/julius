@@ -384,7 +384,7 @@ void Building_collapseLastPlaced()
 		}
 	}
 	if (buildingId) {
-		city_message_post(1, MESSAGE_ROAD_TO_ROME_BLOCKED, 0, Data_Buildings[buildingId].gridOffset);
+		game.messages.post(1, MESSAGE_ROAD_TO_ROME_BLOCKED, 0, Data_Buildings[buildingId].gridOffset);
 		Data_State.undoAvailable = 0;
 		Data_Buildings[buildingId].state = BuildingState_Rubble;
 		TerrainGraphics_setBuildingAreaRubble(buildingId,
@@ -711,7 +711,7 @@ void Building_GameTick_checkAccessToRome()
 			map_routing_update_walls();
 			
 			if (map_routing_distance(Data_CityInfo.exitPointGridOffset)) {
-				city_message_post(1, MESSAGE_ROAD_TO_ROME_OBSTRUCTED, 0, 0);
+				game.messages.post(1, MESSAGE_ROAD_TO_ROME_OBSTRUCTED, 0, 0);
 				Data_State.undoAvailable = 0;
 				return;
 			}
@@ -1181,8 +1181,8 @@ void Building_Mercury_removeResources(int bigCurse)
 	}
 	struct Data_Building *b = &Data_Buildings[maxBuildingId];
 	if (bigCurse == 1) {
-		city_message_disable_sound_for_next_message();
-		city_message_post(0, MESSAGE_FIRE, b->type, b->gridOffset);
+		game.messages.disable_sound_for_next_message();
+		game.messages.post(0, MESSAGE_FIRE, b->type, b->gridOffset);
 		Building_collapseOnFire(maxBuildingId, 0);
 		Building_collapseLinked(maxBuildingId, 1);
 		sound_effect_play(SOUND_EFFECT_EXPLOSION);

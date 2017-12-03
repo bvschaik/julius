@@ -341,16 +341,16 @@ void CityInfo_Finance_updateDebtState()
         
         Data_CityInfo.debtState = 1;
         Data_CityInfo.monthsInDebt = 0;
-        city_message_post(1, MESSAGE_CITY_IN_DEBT, 0, 0);
+        game.messages.post(1, MESSAGE_CITY_IN_DEBT, 0, 0);
         CityInfo_Ratings_reduceProsperityAfterBailout();
     } else if (Data_CityInfo.debtState == 1) {
         Data_CityInfo.debtState = 2;
         Data_CityInfo.monthsInDebt = 0;
-        city_message_post(1, MESSAGE_CITY_IN_DEBT_AGAIN, 0, 0);
+        game.messages.post(1, MESSAGE_CITY_IN_DEBT_AGAIN, 0, 0);
         CityInfo_Ratings_changeFavor(-5);
     } else if (Data_CityInfo.debtState == 2) {
         if (Data_CityInfo.monthsInDebt == -1) {
-            city_message_post(1, MESSAGE_CITY_IN_DEBT_AGAIN, 0, 0);
+            game.messages.post(1, MESSAGE_CITY_IN_DEBT_AGAIN, 0, 0);
             Data_CityInfo.monthsInDebt = 0;
         }
         if (game_time_day() == 0) {
@@ -360,13 +360,13 @@ void CityInfo_Finance_updateDebtState()
             Data_CityInfo.debtState = 3;
             Data_CityInfo.monthsInDebt = 0;
             if (!Data_CityInfo.numImperialSoldiersInCity) {
-                city_message_post(1, MESSAGE_CITY_STILL_IN_DEBT, 0, 0);
+                game.messages.post(1, MESSAGE_CITY_STILL_IN_DEBT, 0, 0);
                 CityInfo_Ratings_changeFavor(-10);
             }
         }
     } else if (Data_CityInfo.debtState == 3) {
         if (Data_CityInfo.monthsInDebt == -1) {
-            city_message_post(1, MESSAGE_CITY_STILL_IN_DEBT, 0, 0);
+            game.messages.post(1, MESSAGE_CITY_STILL_IN_DEBT, 0, 0);
             Data_CityInfo.monthsInDebt = 0;
         }
         if (game_time_day() == 0) {

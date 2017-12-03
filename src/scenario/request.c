@@ -33,10 +33,10 @@ void scenario_request_process()
             --scenario.requests[i].months_to_comply;
             if (scenario.requests[i].months_to_comply <= 0) {
                 if (state == REQUEST_STATE_DISPATCHED) {
-                    city_message_post(1, MESSAGE_REQUEST_RECEIVED, i, 0);
+                    game.messages.post(1, MESSAGE_REQUEST_RECEIVED, i, 0);
                     CityInfo_Ratings_changeFavor(scenario.requests[i].favor);
                 } else {
-                    city_message_post(1, MESSAGE_REQUEST_RECEIVED_LATE, i, 0);
+                    game.messages.post(1, MESSAGE_REQUEST_RECEIVED_LATE, i, 0);
                     CityInfo_Ratings_changeFavor(scenario.requests[i].favor / 2);
                 }
                 scenario.requests[i].state = REQUEST_STATE_RECEIVED;
@@ -49,9 +49,9 @@ void scenario_request_process()
                 if (state == REQUEST_STATE_NORMAL) {
                     if (scenario.requests[i].months_to_comply == 12) {
                         // reminder
-                        city_message_post(1, MESSAGE_REQUEST_REMINDER, i, 0);
+                        game.messages.post(1, MESSAGE_REQUEST_REMINDER, i, 0);
                     } else if (scenario.requests[i].months_to_comply <= 0) {
-                        city_message_post(1, MESSAGE_REQUEST_REFUSED, i, 0);
+                        game.messages.post(1, MESSAGE_REQUEST_REFUSED, i, 0);
                         scenario.requests[i].state = REQUEST_STATE_OVERDUE;
                         scenario.requests[i].months_to_comply = 24;
                         CityInfo_Ratings_changeFavor(-3);
@@ -59,7 +59,7 @@ void scenario_request_process()
                     }
                 } else if (state == REQUEST_STATE_OVERDUE) {
                     if (scenario.requests[i].months_to_comply <= 0) {
-                        city_message_post(1, MESSAGE_REQUEST_REFUSED_OVERDUE, i, 0);
+                        game.messages.post(1, MESSAGE_REQUEST_REFUSED_OVERDUE, i, 0);
                         scenario.requests[i].state = REQUEST_STATE_IGNORED;
                         scenario.requests[i].visible = 0;
                         CityInfo_Ratings_changeFavor(-5);
@@ -69,7 +69,7 @@ void scenario_request_process()
                 if (!scenario.requests[i].can_comply_dialog_shown &&
                     Data_CityInfo.resourceStored[scenario.requests[i].resource] >= scenario.requests[i].amount) {
                     scenario.requests[i].can_comply_dialog_shown = 1;
-                    city_message_post(1, MESSAGE_REQUEST_CAN_COMPLY, i, 0);
+                    game.messages.post(1, MESSAGE_REQUEST_CAN_COMPLY, i, 0);
                 }
             } else {
                 // request is not visible
@@ -84,11 +84,11 @@ void scenario_request_process()
                         scenario.requests[i].can_comply_dialog_shown = 1;
                     }
                     if (scenario.requests[i].resource == RESOURCE_DENARII) {
-                        city_message_post(1, MESSAGE_CAESAR_REQUESTS_MONEY, i, 0);
+                        game.messages.post(1, MESSAGE_CAESAR_REQUESTS_MONEY, i, 0);
                     } else if (scenario.requests[i].resource == RESOURCE_TROOPS) {
-                        city_message_post(1, MESSAGE_CAESAR_REQUESTS_ARMY, i, 0);
+                        game.messages.post(1, MESSAGE_CAESAR_REQUESTS_ARMY, i, 0);
                     } else {
-                        city_message_post(1, MESSAGE_CAESAR_REQUESTS_GOODS, i, 0);
+                        game.messages.post(1, MESSAGE_CAESAR_REQUESTS_GOODS, i, 0);
                     }
                 }
             }

@@ -32,7 +32,7 @@ void UI_City_drawForeground()
 	UI_City_drawPausedAndTimeLeft();
 	UI_CityBuildings_drawBuildingCost();
     if (UI_Window_getId() == Window_City) {
-        city_message_process_queue();
+        game.messages.process_queue();
     }
 }
 

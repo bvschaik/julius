@@ -4,7 +4,8 @@
 #include "core/buffer.h"
 
 
-typedef enum {
+typedef enum
+{
     MESSAGE_CAT_RIOT = 0,
     MESSAGE_CAT_FIRE = 1,
     MESSAGE_CAT_COLLAPSE = 2,
@@ -16,7 +17,8 @@ typedef enum {
     MESSAGE_CAT_FISHING_BLOCKED = 11,
 } message_category;
 
-typedef enum {
+typedef enum
+{
     MESSAGE_ADVISOR_NONE = 0,
     MESSAGE_ADVISOR_LABOR = 1,
     MESSAGE_ADVISOR_TRADE = 2,
@@ -27,7 +29,8 @@ typedef enum {
     MESSAGE_ADVISOR_RELIGION = 7,
 } message_advisor;
 
-typedef enum {
+typedef enum
+{
     MESSAGE_POPULATION_500 = 2,
     MESSAGE_POPULATION_1000 = 3,
     MESSAGE_POPULATION_2000 = 4,
@@ -146,7 +149,8 @@ typedef enum {
     MESSAGE_LOCAL_UPRISING_MARS = 121,
 } city_message_type;
 
-typedef struct {
+typedef struct
+{
     int sequence;
     int message_type;
     int year;
@@ -156,54 +160,40 @@ typedef struct {
     int is_read;
 } city_message;
 
-void city_message_init_scenario();
+typedef struct
+{
+    struct _Messages
+    {
+        void (*init_scenario)();
+        void (*init_problem_areas)();
+        void (*disable_sound_for_next_message)();
+        void (*apply_sound_interval)(message_category);
+        void (*post)(int, int, int, int);
+        void (*post_with_popup_delay)(message_category, int, int, short );
+        void (*post_with_message_delay)(message_category, int, int, int);
+        void (*process_queue)();
+        void (*sort_and_compact)();
+        int  (*get_text_id)(city_message_type);
+        message_advisor (*get_advisor)(city_message_type);
+        void (*reset_category_count)(message_category);
+        void (*increase_category_count)(message_category);
+        int (*get_category_count)(message_category);
+        void (*decrease_delays)();
+        int (*mark_population_shown)(int);
+        const city_message *(*get)(int);
+        int (*set_current)(int);
+        void (*mark_read)(int);
+        void (*remove)(int);
+        int (*count)();
+        int (*problem_area_count)();
+        int (*next_problem_area_grid_offset)();
+        void (*save_state)(buffer*, buffer*, buffer*, buffer*, buffer*);
+        void (*load_state)(buffer*, buffer*, buffer*, buffer*, buffer*);
+    } messages;
+} _Game;
 
-void city_message_init_problem_areas();
+extern _Game game;
 
-void city_message_disable_sound_for_next_message();
-
-void city_message_apply_sound_interval(message_category category);
-
-void city_message_post(int use_popup, int message_type, int param1, int param2);
-
-void city_message_post_with_popup_delay(message_category category, int message_type, int param1, short param2);
-
-void city_message_post_with_message_delay(message_category category, int use_popup, int message_type, int delay);
-
-void city_message_process_queue();
-
-void city_message_sort_and_compact();
-
-int city_message_get_text_id(city_message_type message_type);
-
-message_advisor city_message_get_advisor(city_message_type message_type);
-
-void city_message_reset_category_count(message_category category);
-
-void city_message_increase_category_count(message_category category);
-
-int city_message_get_category_count(message_category category);
-
-void city_message_decrease_delays();
-
-int city_message_mark_population_shown(int population);
-
-const city_message *city_message_get(int message_id);
-
-int city_message_set_current(int message_id);
-
-void city_message_mark_read(int message_id);
-
-void city_message_delete(int message_id);
-
-int city_message_count();
-
-int city_message_problem_area_count();
-
-int city_message_next_problem_area_grid_offset();
-
-void city_message_save_state(buffer *messages, buffer *extra, buffer *counts, buffer *delays, buffer *population);
-
-void city_message_load_state(buffer *messages, buffer *extra, buffer *counts, buffer *delays, buffer *population);
+void initialize_city_messages_subs();
 
 #endif // CITY_MESSAGE_H

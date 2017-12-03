@@ -20,6 +20,7 @@
 #include "scenario/property.h"
 #include "scenario/scenario.h"
 #include "sound/system.h"
+#include "city/message.h"
 
 #include <string.h>
 
@@ -38,6 +39,8 @@ static void loadDefaultNames()
 
 int Game_preInit()
 {
+  initialize_city_messages_subs();
+
     settings_load();
     scenario_settings_init();
     Data_State.gamePaused = 0;
