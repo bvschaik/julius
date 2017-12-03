@@ -2,18 +2,20 @@
 
 #include "figure.h"
 #include "figureaction.h"
-#include "city/message.h"
 #include "routing.h"
 #include "terraingraphics.h"
 
-#include <sound>
 #include <data>
-#include <game>
 
+#include "city/message.h"
 #include "core/calc.h"
 #include "core/random.h"
 #include "figure/enemy_army.h"
 #include "figure/formation.h"
+#include "figure/route.h"
+#include "map/grid.h"
+#include "map/routing.h"
+#include "sound/effect.h"
 
 static const int enemyAttackBuildingPriority[4][24] =
 {
@@ -446,9 +448,9 @@ static void setEnemyTargetBuilding(const formation *m)
 
 static void enemyApproachTarget(const formation *m)
 {
-    if (Routing_canTravelOverLandNonCitizen(m->x_home, m->y_home,
-                                            m->destination_x, m->destination_y, m->destination_building_id, 400) ||
-            Routing_canTravelThroughEverythingNonCitizen(m->x_home, m->y_home,
+    if (map_routing_noncitizen_can_travel_over_land(m->x_home, m->y_home,
+            m->destination_x, m->destination_y, m->destination_building_id, 400) ||
+            map_routing_noncitizen_can_travel_through_everything(m->x_home, m->y_home,
                     m->destination_x, m->destination_y))
     {
         int xTile, yTile;
@@ -736,7 +738,7 @@ static void update_enemy_formation(const formation *m, void *data)
         army->home_y = m->y_home;
         army->layout = m->layout;
         *romanDistance = 0;
-        Routing_canTravelOverLandNonCitizen(m->x_home, m->y_home, -2, -2, 100000, 300);
+        map_routing_noncitizen_can_travel_over_land(m->x_home, m->y_home, -2, -2, 100000, 300);
         int xTile, yTile;
         if (getHighestRomanSoldierConcentration(m->x_home, m->y_home, 16, &xTile, &yTile))
         {
@@ -811,7 +813,7 @@ static int getHerdRoamingDestination(int formationId, int allowNegativeDesirabil
             xTarget = x;
             yTarget = y - distance;
             break;
-        case DIR_1_TOP_RIGHT:
+        case DIR_1_TOPRIGHT:
             xTarget = x + distance;
             yTarget = y - distance;
             break;
@@ -819,7 +821,7 @@ static int getHerdRoamingDestination(int formationId, int allowNegativeDesirabil
             xTarget = x + distance;
             yTarget = y;
             break;
-        case DIR_3_BOTTOM_RIGHT:
+        case Dir_3_BottomRight:
             xTarget = x + distance;
             yTarget = y + distance;
             break;
@@ -827,7 +829,7 @@ static int getHerdRoamingDestination(int formationId, int allowNegativeDesirabil
             xTarget = x;
             yTarget = y + distance;
             break;
-        case DIR_5_BOTTOM_LEFT:
+        case Dir_5_BottomLeft:
             xTarget = x - distance;
             yTarget = y + distance;
             break;
@@ -835,7 +837,7 @@ static int getHerdRoamingDestination(int formationId, int allowNegativeDesirabil
             xTarget = x - distance;
             yTarget = y;
             break;
-        case DIR_7_TOP_LEFT:
+        case Dir_7_TopLeft:
             xTarget = x - distance;
             yTarget = y - distance;
             break;

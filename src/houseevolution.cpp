@@ -368,8 +368,7 @@ void HouseEvolution_Tick_evolveAndConsumeResources()
     }
     if (hasExpanded)
     {
-        Routing_determineLandCitizen();
-        Routing_determineLandNonCitizen();
+        map_routing_update_land();
     }
 }
 

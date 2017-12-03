@@ -2,15 +2,18 @@
 
 #include "figure.h"
 #include "formation.h"
-#include "routing.h"
 
-#include <sound>
 #include <data>
-#include <scenario>
 #include <game>
 
+#include "core/calc.h"
 #include "figure/formation.h"
 #include "figure/properties.h"
+#include "figure/route.h"
+#include "map/routing.h"
+#include "scenario/gladiator_revolt.h"
+#include "sound/effect.h"
+#include "sound/speech.h"
 
 static void enemyInitial(int figureId, struct Data_Figure *f, const formation *m)
 {
@@ -56,7 +59,7 @@ static void enemyInitial(int figureId, struct Data_Figure *f, const formation *m
         // missile throwers
         f->waitTicksMissile++;
         int xTile, yTile;
-        if (f->waitTicksMissile > figure_properties_for_type((figure_type)f->type)->missile_delay)
+        if (f->waitTicksMissile > figure_properties_for_type(f->type)->missile_delay)
         {
             f->waitTicksMissile = 0;
             if (FigureAction_CombatEnemy_getMissileTarget(figureId, 10, Data_CityInfo.numSoldiersInCity < 4, &xTile, &yTile))
@@ -181,13 +184,13 @@ static void enemyFighting(int figureId, struct Data_Figure *f, const formation *
     if (targetId > 0)
     {
         FigureMovement_walkTicks(figureId, f->speedMultiplier);
-        if (f->direction == DIR_FIGURE_AT_DESTINATION)
+        if (f->direction == DirFigure_8_AtDestination)
         {
             f->destinationX = Data_Figures[f->targetFigureId].x;
             f->destinationY = Data_Figures[f->targetFigureId].y;
             figure_route_remove(figureId);
         }
-        else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST)
+        else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost)
         {
             f->actionState = FigureActionState_151_EnemyInitial;
             f->targetFigureId = 0;
@@ -220,9 +223,9 @@ static void FigureAction_enemyCommon(int figureId, struct Data_Figure *f)
         f->destinationX = f->sourceX;
         f->destinationY = f->sourceY;
         FigureMovement_walkTicks(figureId, f->speedMultiplier);
-        if (f->direction == DIR_FIGURE_AT_DESTINATION ||
-                f->direction == DIR_FIGURE_REROUTE ||
-                f->direction == DIR_FIGURE_LOST)
+        if (f->direction == DirFigure_8_AtDestination ||
+                f->direction == DirFigure_9_Reroute ||
+                f->direction == DirFigure_10_Lost)
         {
             f->state = FigureState_Dead;
         }
@@ -322,7 +325,7 @@ void FigureAction_enemy43_Spear(int figureId)
     {
         f->graphicId = 793 + FigureActionCorpseGraphicOffset(f);
     }
-    else if (f->direction == DIR_FIGURE_ATTACK)
+    else if (f->direction == DirFigure_11_Attack)
     {
         f->graphicId = 745 + dir + 8 * (f->graphicOffset / 2);
     }
@@ -369,7 +372,7 @@ void FigureAction_enemy44_Sword(int figureId)
     {
         f->graphicId = 593 + FigureActionCorpseGraphicOffset(f);
     }
-    else if (f->direction == DIR_FIGURE_ATTACK)
+    else if (f->direction == DirFigure_11_Attack)
     {
         f->graphicId = 545 + dir + 8 * (f->graphicOffset / 2);
     }
@@ -416,7 +419,7 @@ void FigureAction_enemy45_Sword(int figureId)
     {
         f->graphicId = 593 + FigureActionCorpseGraphicOffset(f);
     }
-    else if (f->direction == DIR_FIGURE_ATTACK)
+    else if (f->direction == DirFigure_11_Attack)
     {
         f->graphicId = 545 + dir + 8 * (f->graphicOffset / 2);
     }
@@ -439,7 +442,7 @@ void FigureAction_enemy46_Camel(int figureId)
 
     f->isEnemyGraphic = 1;
 
-    if (f->direction == DIR_FIGURE_ATTACK)
+    if (f->direction == DirFigure_11_Attack)
     {
         f->graphicId = 601 + dir + 8 * f->graphicOffset;
     }
@@ -473,7 +476,7 @@ void FigureAction_enemy47_Elephant(int figureId)
 
     f->isEnemyGraphic = 1;
 
-    if (f->direction == DIR_FIGURE_ATTACK || f->actionState == FigureActionState_150_Attack)
+    if (f->direction == DirFigure_11_Attack || f->actionState == FigureActionState_150_Attack)
     {
         f->graphicId = 601 + dir + 8 * f->graphicOffset;
     }
@@ -499,7 +502,7 @@ void FigureAction_enemy48_Chariot(int figureId)
 
     f->isEnemyGraphic = 1;
 
-    if (f->direction == DIR_FIGURE_ATTACK || f->actionState == FigureActionState_150_Attack)
+    if (f->direction == DirFigure_11_Attack || f->actionState == FigureActionState_150_Attack)
     {
         f->graphicId = 697 + dir + 8 * (f->graphicOffset / 2);
     }
@@ -564,7 +567,7 @@ void FigureAction_enemy49_FastSword(int figureId)
     {
         f->graphicId = corpseId + FigureActionCorpseGraphicOffset(f);
     }
-    else if (f->direction == DIR_FIGURE_ATTACK)
+    else if (f->direction == DirFigure_11_Attack)
     {
         f->graphicId = attackId + dir + 8 * (f->graphicOffset / 2);
     }
@@ -606,7 +609,7 @@ void FigureAction_enemy50_Sword(int figureId)
     {
         f->graphicId = 593 + FigureActionCorpseGraphicOffset(f);
     }
-    else if (f->direction == DIR_FIGURE_ATTACK)
+    else if (f->direction == DirFigure_11_Attack)
     {
         f->graphicId = 545 + dir + 8 * (f->graphicOffset / 2);
     }
@@ -652,7 +655,7 @@ void FigureAction_enemy51_Spear(int figureId)
     {
         f->graphicId = 641 + FigureActionCorpseGraphicOffset(f);
     }
-    else if (f->direction == DIR_FIGURE_ATTACK)
+    else if (f->direction == DirFigure_11_Attack)
     {
         f->graphicId = 593 + dir + 8 * (f->graphicOffset / 2);
     }
@@ -675,7 +678,7 @@ void FigureAction_enemy52_MountedArcher(int figureId)
 
     f->isEnemyGraphic = 1;
 
-    if (f->direction == DIR_FIGURE_ATTACK)
+    if (f->direction == DirFigure_11_Attack)
     {
         f->graphicId = 601 + dir + 8 * f->graphicOffset;
     }
@@ -729,7 +732,7 @@ void FigureAction_enemy53_Axe(int figureId)
     {
         f->graphicId = 745 + FigureActionCorpseGraphicOffset(f);
     }
-    else if (f->direction == DIR_FIGURE_ATTACK)
+    else if (f->direction == DirFigure_11_Attack)
     {
         f->graphicId = 697 + dir + 8 * (f->graphicOffset / 2);
     }
@@ -790,16 +793,16 @@ void FigureAction_enemy54_Gladiator(int figureId)
         Data_CityInfo.numAttackingNativesInCity = 10;
         f->terrainUsage = FigureTerrainUsage_Enemy;
         FigureMovement_walkTicks(figureId, 1);
-        if (f->direction == DIR_FIGURE_AT_DESTINATION ||
-                f->direction == DIR_FIGURE_REROUTE ||
-                f->direction == DIR_FIGURE_LOST)
+        if (f->direction == DirFigure_8_AtDestination ||
+                f->direction == DirFigure_9_Reroute ||
+                f->direction == DirFigure_10_Lost)
         {
             f->actionState = FigureActionState_158_NativeCreated;
         }
         break;
     }
     int dir;
-    if (f->actionState == FigureActionState_150_Attack || f->direction == DIR_FIGURE_ATTACK)
+    if (f->actionState == FigureActionState_150_Attack || f->direction == DirFigure_11_Attack)
     {
         dir = f->attackDirection;
     }
@@ -813,7 +816,7 @@ void FigureAction_enemy54_Gladiator(int figureId)
     }
     FigureActionNormalizeDirection(dir);
 
-    if (f->actionState == FigureActionState_150_Attack || f->direction == DIR_FIGURE_ATTACK)
+    if (f->actionState == FigureActionState_150_Attack || f->direction == DirFigure_11_Attack)
     {
         f->graphicId = image_group(GROUP_FIGURE_GLADIATOR) + dir + 104 + 8 * (f->graphicOffset / 2);
     }
@@ -839,7 +842,7 @@ void FigureAction_enemyCaesarLegionary(int figureId)
 
     int dir = getDirection(f);
 
-    if (f->direction == DIR_FIGURE_ATTACK)
+    if (f->direction == DirFigure_11_Attack)
     {
         f->graphicId = image_group(GROUP_FIGURE_CAESAR_LEGIONARY) + dir +
                        8 * ((f->attackGraphicOffset - 12) / 2);
@@ -891,7 +894,7 @@ int FigureAction_HerdEnemy_moveFormationTo(int formationId, int x, int y, int *x
                                FigureActionFormationLayoutPositionX(m->layout, i),
                                FigureActionFormationLayoutPositionY(m->layout, i)) - baseOffset;
     }
-    Routing_canTravelOverLandNonCitizen(x, y, -1, -1, 0, 600);
+    map_routing_noncitizen_can_travel_over_land(x, y, -1, -1, 0, 600);
     for (int r = 0; r <= 10; r++)
     {
         int xMin = x - r;

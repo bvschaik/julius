@@ -8,8 +8,16 @@
 #include <data>
 #include <core>
 
-static const int seagullOffsetsX[] = {0, 0, -2, 1, 2, -3, 4, -2};
-static const int seagullOffsetsY[] = {0, -2, 0, 2, 0, 1, -3, 4};
+#include <array>
+
+map_point seagullOffsets[] =
+{
+    {0, 0}, {0, -2},
+    {-2, 0}, {1, 2},
+    {2, 0},  {-3, 1},
+    {4, -3},  {-2, 4},
+    {0, 0}
+};
 
 static const int hippodromeHorseDestinationX1[] =
 {
@@ -60,9 +68,10 @@ void FigureAction_seagulls(int figureId)
         {
             f->progressOnTile = 0;
         }
+        map_point p = seagullOffsets[f->progressOnTile];
         FigureAction_Common_setCrossCountryDestination(figureId, f,
-                f->sourceX + seagullOffsetsX[f->progressOnTile],
-                f->sourceY + seagullOffsetsY[f->progressOnTile]);
+                f->sourceX + p.x,
+                f->sourceY + p.y);
     }
     if (figureId & 1)
     {

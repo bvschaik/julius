@@ -1,33 +1,22 @@
 #ifndef MAP_ROUTING_H
 #define MAP_ROUTING_H
 
-struct buffer;
+#include "core/buffer.h"
 
-enum
-{
-    Routing_Citizen_0_Road = 0,
-    Routing_Citizen_2_PassableTerrain = 2,
-    Routing_Citizen_4_ClearTerrain = 4,
-    Routing_Citizen_m1_Blocked = -1,
-    Routing_Citizen_m3_Aqueduct = -3,
-    Routing_Citizen_m4_ReservoirConnector = -4,
+typedef enum {
+    ROUTED_BUILDING_ROAD = 0,
+    ROUTED_BUILDING_WALL = 1,
+    ROUTED_BUILDING_AQUEDUCT = 2,
+    ROUTED_BUILDING_AQUEDUCT_WITHOUT_GRAPHIC = 4,
+} routed_building_type;
 
-    Routing_NonCitizen_0_Passable = 0,
-    Routing_NonCitizen_1_Building = 1,
-    Routing_NonCitizen_2_Clearable = 2,
-    Routing_NonCitizen_3_Wall = 3,
-    Routing_NonCitizen_4_Gatehouse = 4,
-    Routing_NonCitizen_5_Fort = 5,
-    Routing_NonCitizen_m1_Blocked = -1,
+void map_routing_calculate_distances(int x, int y);
+void map_routing_calculate_distances_water_boat(int x, int y);
+void map_routing_calculate_distances_water_flotsam(int x, int y);
 
-    Routing_Water_0_Passable = 0,
-    Routing_Water_m1_Blocked = -1,
-    Routing_Water_m2_MapEdge = -2,
-    Routing_Water_m3_LowBridge = -3,
+int map_routing_calculate_distances_for_building(routed_building_type type, int x, int y);
 
-    Routing_Wall_0_Passable = 0,
-    Routing_Wall_m1_Blocked = -1,
-};
+void map_routing_delete_first_wall_or_aqueduct(int x, int y);
 
 int map_routing_distance(int grid_offset);
 
@@ -38,6 +27,13 @@ int map_routing_citizen_is_road(int grid_offset);
 int map_routing_citizen_is_passable_terrain(int grid_offset);
 
 int map_routing_noncitizen_terrain(int grid_offset);
+
+int map_routing_citizen_can_travel_over_land(int src_x, int src_y, int dst_x, int dst_y);
+int map_routing_citizen_can_travel_over_road_garden(int src_x, int src_y, int dst_x, int dst_y);
+int map_routing_can_travel_over_walls(int src_x, int src_y, int dst_x, int dst_y);
+
+int map_routing_noncitizen_can_travel_over_land(int src_x, int src_y, int dst_x, int dst_y, int onlyThroughBuildingId, int maxTiles);
+int map_routing_noncitizen_can_travel_through_everything(int src_x, int src_y, int dst_x, int dst_y);
 
 void map_routing_save_state(buffer *buf);
 

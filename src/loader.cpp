@@ -24,8 +24,7 @@ void Loader_GameState_init()
     {
         CityView_setViewportWithSidebar();
     }
-    Data_State.map.camera.x = 76;
-    Data_State.map.camera.y = 152;
+    Data_State.map.camera = { 76, 152 };
     CityView_checkCameraBoundaries();
 
     random_generate_pool();

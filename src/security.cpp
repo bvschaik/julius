@@ -10,12 +10,12 @@
 #include "sidebarmenu.h"
 #include "terrain.h"
 #include "terraingraphics.h"
-#include "game/tutorial.h"
 #include "city/message.h"
 
 #include <sound>
 #include <data>
 #include <scenario>
+#include <game>
 
 #include "core/random.h"
 #include "core/time.h"
@@ -115,8 +115,7 @@ void Security_Tick_updateBurningRuins()
     }
     if (recalculateTerrain)
     {
-        Routing_determineLandCitizen();
-        Routing_determineLandNonCitizen();
+        map_routing_update_land();
     }
 }
 
@@ -447,7 +446,6 @@ void Security_Tick_checkFireCollapse()
 
     if (recalculateTerrain)
     {
-        Routing_determineLandCitizen();
-        Routing_determineLandNonCitizen();
+        map_routing_update_land();
     }
 }

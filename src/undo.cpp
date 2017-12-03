@@ -278,9 +278,8 @@ void Undo::perform()
             }
         }
     }
-    Routing_determineLandCitizen();
-    Routing_determineLandNonCitizen();
-    Routing_determineWalls();
+    map_routing_update_land();
+    map_routing_update_walls();
     data.numBuildings = 0;
 }
 

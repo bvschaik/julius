@@ -3,11 +3,11 @@
 #include "city/message.h"
 #include "core/calc.h"
 #include "core/random.h"
-#include "game/time.h"
 #include "scenario/data.h"
 #include "sound/effect.h"
 
 #include <data>
+#include <game>
 
 #include "scenario/building.h"
 
@@ -103,9 +103,8 @@ static void advanceEarthquakeToTile(int x, int y)
     TerrainGraphics_updateAllRoads();
     TerrainGraphics_updateRegionPlazas(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
 
-    Routing_determineLandCitizen();
-    Routing_determineLandNonCitizen();
-    Routing_determineWalls();
+    map_routing_update_land();
+    map_routing_update_walls();
 
     Figure_createDustCloud(x, y, 1);
 }

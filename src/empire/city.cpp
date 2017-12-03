@@ -26,12 +26,12 @@ int empire_city_get_route_id(int city_id)
 
 int empire_can_import_resource(int resource)
 {
-    for (int i = 0; i < MAX_CITIES; i++)
+    for (auto& city : cities)
     {
-        if (cities[i].in_use &&
-                cities[i].type == EMPIRE_CITY_TRADE &&
-                cities[i].is_open &&
-                cities[i].sells_resource[resource] == 1)
+        if ( city.in_use &&
+                city.type == EMPIRE_CITY_TRADE &&
+                city.is_open &&
+                city.sells_resource[resource] == 1)
         {
             return 1;
         }
@@ -333,7 +333,7 @@ void empire_city_save_state(buffer *buf)
             buffer_write_u8(buf, city->sells_resource[r]);
         }
         buffer_write_i16(buf, city->cost_to_open);
-        buffer_write_i16(buf, 10);
+        buffer_skip(buf, 2);
         buffer_write_i16(buf, city->trader_entry_delay);
         buffer_write_i16(buf, 0);
         buffer_write_i16(buf, city->empire_object_id);

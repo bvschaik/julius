@@ -2,23 +2,7 @@
 #define CORE_CALC_H
 
 #include <stdint.h>
-
-typedef enum
-{
-    DIR_0_TOP,
-    DIR_1_TOP_RIGHT,
-    DIR_2_RIGHT,
-    DIR_3_BOTTOM_RIGHT,
-    DIR_4_BOTTOM,
-    DIR_5_BOTTOM_LEFT,
-    DIR_6_LEFT,
-    DIR_7_TOP_LEFT,
-    DIR_8_NONE,
-    DIR_FIGURE_AT_DESTINATION = 8,
-    DIR_FIGURE_REROUTE = 9,
-    DIR_FIGURE_LOST = 10,
-    DIR_FIGURE_ATTACK = 11,
-} direction;
+#include "direction.h"
 
 /**
  * @file

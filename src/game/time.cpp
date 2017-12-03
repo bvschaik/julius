@@ -1,6 +1,7 @@
 #include "time.h"
 
-static struct {
+static struct
+{
     int tick; // 50 ticks in a day
     int day; // 16 days in a month
     int month; // 12 months in a year
@@ -39,7 +40,8 @@ int game_time_year()
 
 int game_time_advance_tick()
 {
-    if (++data.tick >= 50) {
+    if (++data.tick >= 50)
+    {
         data.tick = 0;
         return 1;
     }
@@ -48,7 +50,9 @@ int game_time_advance_tick()
 
 int game_time_advance_day()
 {
-    if (++data.day >= 16) {
+    data.total_days++;
+    if (++data.day >= 16)
+    {
         data.day = 0;
         return 1;
     }
@@ -57,7 +61,8 @@ int game_time_advance_day()
 
 int game_time_advance_month()
 {
-    if (++data.month >= 12) {
+    if (++data.month >= 12)
+    {
         data.month = 0;
         return 1;
     }

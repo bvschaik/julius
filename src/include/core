@@ -7,5 +7,6 @@
 #include "core/buffer.h"
 #include "core/file.h"
 #include "core/random.h"
+#include "core/direction.h"
 
 #endif 

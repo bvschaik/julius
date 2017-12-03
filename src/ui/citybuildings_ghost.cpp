@@ -1,18 +1,15 @@
 #include "citybuildings_private.h"
 
 #include "buildingplacement.h"
-#include "routing.h"
 #include "terrain.h"
-#include "terrainbridge.h"
 #include "terraingraphics.h"
 
 #include "building/count.h"
 #include "building/properties.h"
 #include "core/time.h"
 #include "figure/formation.h"
-
-#include <game>
-#include <data>
+#include "map/bridge.h"
+#include "map/road_aqueduct.h"
 
 static void drawBuildingGhostDraggableReservoir();
 static void drawBuildingGhostAqueduct();
@@ -148,7 +145,7 @@ static void drawBuildingGhostDefault()
             Data_State.selectedBuilding.roadRequired = Data_State.selectedBuilding.roadRequired == 1 ? 2 : 1;
         }
     }
-    building_type type = (building_type)Data_State.selectedBuilding.type;
+    building_type type = Data_State.selectedBuilding.type;
     const building_properties *props = building_properties_for_type(type);
     int gridOffset = Data_State.map.current.gridOffset;
     int buildingSize = props->size;
@@ -664,7 +661,7 @@ static void drawBuildingGhostBathhouse()
 static void drawBuildingGhostBridge()
 {
     int length, direction;
-    int endGridOffset = TerrainBridge_determineLengthAndDirection(
+    int endGridOffset = map_bridge_calculate_length_direction(
                             Data_State.map.current.x, Data_State.map.current.y,
                             Data_State.selectedBuilding.type == BUILDING_LOW_BRIDGE ? 0 : 1,
                             &length, &direction);
@@ -1287,7 +1284,7 @@ static void drawBuildingGhostShipyardWharf()
     }
     else
     {
-        building_type type = (building_type)Data_State.selectedBuilding.type;
+        building_type type = Data_State.selectedBuilding.type;
         const building_properties *props = building_properties_for_type(type);
         int graphicId = image_group(props->image_group) + props->image_offset + dirRelative;
         int xOffset = Data_CityView.selectedTile.xOffsetInPixels;
@@ -1351,9 +1348,9 @@ static void drawBuildingGhostRoad()
     if (Data_Grid_terrain[gridOffset] & Terrain_Aqueduct)
     {
         graphicId = image_group(GROUP_BUILDING_AQUEDUCT);
-        if (Routing_canPlaceRoadUnderAqueduct(gridOffset))
+        if (map_can_place_road_under_aqueduct(gridOffset))
         {
-            graphicId += Routing_getAqueductGraphicOffsetWithRoad(gridOffset);
+            graphicId += map_get_aqueduct_with_road_image(gridOffset);
         }
         else
         {

@@ -1,9 +1,10 @@
 #ifndef MAP_POINT_H
 #define MAP_POINT_H
 
-typedef struct {
+struct map_point
+{
     int x;
     int y;
-} map_point;
+};
 
 #endif // MAP_POINT_H

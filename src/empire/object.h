@@ -48,4 +48,6 @@ int empire_object_city_sells_resource(int object_id, int resource);
 
 void empire_object_update_animation(int object_id, int new_animation_index);
 
+int empire_object_get_trade_amount_code(int index, int resource);
+
 #endif // EMPIRE_OBJECT_H

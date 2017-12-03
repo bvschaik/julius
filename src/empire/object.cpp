@@ -34,7 +34,6 @@ typedef struct
 
 static full_empire_object objects[MAX_OBJECTS];
 
-static int get_trade_amount_code(int index, int resource);
 static int is_sea_trade_route(int route_id);
 
 
@@ -167,7 +166,7 @@ void empire_object_init_cities()
             {
                 city->buys_resource[resource] = 1;
             }
-            int amountCode = get_trade_amount_code(i, resource);
+            int amountCode = empire_object_get_trade_amount_code(i, resource);
             int routeId = city->route_id;
             int amount;
             switch (amountCode)
@@ -344,7 +343,7 @@ static int is_trade_city(int index)
     return objects[index].city_type > EMPIRE_CITY_OURS && objects[index].city_type < EMPIRE_CITY_FUTURE_ROMAN;
 }
 
-static int get_trade_amount_code(int index, int resource)
+int empire_object_get_trade_amount_code(int index, int resource)
 {
     if (!is_trade_city(index))
     {

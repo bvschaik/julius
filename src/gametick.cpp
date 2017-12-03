@@ -29,12 +29,11 @@
 #include <sound>
 #include <data>
 #include <scenario>
+#include <game>
 
 #include "city/culture.h"
 
 #include "core/random.h"
-#include "game/settings.h"
-#include "game/time.h"
 
 #include <stdio.h>
 
@@ -223,7 +222,7 @@ static void advanceMonth()
 
     TerrainGraphics_updateAllRoads();
     TerrainGraphics_updateRegionWater(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
-    Routing_determineLandCitizen();
+    map_routing_update_land();
     city_message_sort_and_compact();
 
     if (game_time_advance_month())

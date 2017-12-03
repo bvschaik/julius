@@ -14,5 +14,9 @@
 #include "map/grid.h"
 #include "core/calc.h"
 #include "map/ring.h"
+#include "map/bridge.h"
+#include "map/map_point.h"
+#include "map/routing_terrain.h"
+#include "map/road_aqueduct.h"
 
 #endif

@@ -4,7 +4,6 @@
 #include "building.h"
 #include "figureaction.h"
 #include "routing.h"
-#include "terrainbridge.h"
 #include "terraingraphics.h"
 
 #include <data>
@@ -1630,8 +1629,8 @@ void Terrain_rotateMap(int ccw)
     TerrainGraphics_updateRegionAqueduct(0, 0, Data_State.map.width - 1, Data_State.map.height - 1, 0);
 
     Building_determineGraphicIdsForOrientedBuildings();
-    TerrainBridge_updateSpriteIdsOnMapRotate(ccw);
-    Routing_determineWalls();
+    map_bridge_update_after_rotate(ccw);
+    map_routing_update_walls();
 
     FigureAction_TowerSentry_reroute();
     FigureAction_HippodromeHorse_reroute();

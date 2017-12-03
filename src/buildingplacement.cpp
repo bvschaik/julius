@@ -8,14 +8,12 @@
 #include "housepopulation.h"
 #include "resource.h"
 #include "routing.h"
-#include "sidebarmenu.h"
 #include "terrain.h"
-#include "terrainbridge.h"
 #include "terraingraphics.h"
 #include "undo.h"
 
-#include <data>
 #include <ui>
+#include <data>
 
 #include "building/count.h"
 #include "building/model.h"
@@ -24,7 +22,10 @@
 #include "core/random.h"
 #include "figure/formation.h"
 #include "graphics/image.h"
+#include "map/bridge.h"
 #include "map/grid.h"
+#include "map/routing.h"
+#include "map/routing_terrain.h"
 
 #define BOUND_REGION() \
 	if (xStart < xEnd) {\
@@ -140,7 +141,7 @@ static void addToTerrainHippodrome(int type, int buildingId, int x, int y, int s
 
     int part2Id = Building_create(BUILDING_HIPPODROME, x + 5, y);
     struct Data_Building *part2 = &Data_Buildings[part2Id];
-    Undo::addBuildingToList(part2Id);
+    Undo_addBuildingToList(part2Id);
     if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_4_BOTTOM)
     {
         part2->subtype.orientation = 1;
@@ -167,7 +168,7 @@ static void addToTerrainHippodrome(int type, int buildingId, int x, int y, int s
 
     int part3Id = Building_create(BUILDING_HIPPODROME, x + 10, y);
     struct Data_Building *part3 = &Data_Buildings[part3Id];
-    Undo::addBuildingToList(part3Id);
+    Undo_addBuildingToList(part3Id);
     if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_4_BOTTOM)
     {
         part3->subtype.orientation = 2;
@@ -200,7 +201,7 @@ static void addToTerrainHippodrome(int type, int buildingId, int x, int y, int s
 static int addToTerrainWarehouseSpace(int x, int y, int prevId)
 {
     int buildingId = Building_create(BUILDING_WAREHOUSE_SPACE, x, y);
-    Undo::addBuildingToList(buildingId);
+    Undo_addBuildingToList(buildingId);
     Data_Buildings[buildingId].prevPartBuildingId = prevId;
     Data_Buildings[prevId].nextPartBuildingId = buildingId;
     Terrain_addBuildingToGrids(buildingId, x, y, 1,
@@ -586,9 +587,8 @@ static void addToTerrain(int type, int buildingId, int x, int y, int size,
         }
         break;
     }
-    Routing_determineLandCitizen();
-    Routing_determineLandNonCitizen();
-    Routing_determineWalls();
+    map_routing_update_land();
+    map_routing_update_walls();
 }
 
 static int placeBuilding(int type, int x, int y)
@@ -789,7 +789,7 @@ static int placeBuilding(int type, int x, int y)
     {
         buildingId = Building_create(type, x, y);
     }
-    Undo::addBuildingToList(buildingId);
+    Undo_addBuildingToList(buildingId);
     if (buildingId <= 0)
     {
         return 0;
@@ -806,7 +806,7 @@ static void placeHouses(int measureOnly, int xStart, int yStart, int xEnd, int y
 
     int needsRoadWarning = 0;
     itemsPlaced = 0;
-    Undo::restoreBuildings();
+    Undo_restoreBuildings();
     for (int y = yMin; y <= yMax; y++)
     {
         for (int x = xMin; x <= xMax; x++)
@@ -824,7 +824,7 @@ static void placeHouses(int measureOnly, int xStart, int yStart, int xEnd, int y
             else
             {
                 int buildingId = Building_create(BUILDING_HOUSE_VACANT_LOT, x, y);
-                Undo::addBuildingToList(buildingId);
+                Undo_addBuildingToList(buildingId);
                 if (buildingId > 0)
                 {
                     itemsPlaced++;
@@ -845,8 +845,7 @@ static void placeHouses(int measureOnly, int xStart, int yStart, int xEnd, int y
         {
             UI_Warning_show(Warning_HouseTooFarFromRoad);
         }
-        Routing_determineLandCitizen();
-        Routing_determineLandNonCitizen();
+        map_routing_update_land();
         UI_Window_requestRefresh();
     }
 }
@@ -854,10 +853,10 @@ static void placeHouses(int measureOnly, int xStart, int yStart, int xEnd, int y
 static void clearRegionConfirmed(int measureOnly, int xStart, int yStart, int xEnd, int yEnd)
 {
     itemsPlaced = 0;
-    Undo::restoreBuildings();
+    Undo_restoreBuildings();
     map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
     map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
-    Undo::restoreTerrainGraphics();
+    Undo_restoreTerrainGraphics();
 
     int xMin, xMax, yMin, yMax;
     BOUND_REGION();
@@ -909,7 +908,7 @@ static void clearRegionConfirmed(int measureOnly, int xStart, int yStart, int xE
                 if (b->state != BuildingState_DeletedByPlayer)
                 {
                     itemsPlaced++;
-                    Undo::addBuildingToList(buildingId);
+                    Undo_addBuildingToList(buildingId);
                 }
                 b->state = BuildingState_DeletedByPlayer;
                 b->isDeleted = 1;
@@ -921,7 +920,7 @@ static void clearRegionConfirmed(int measureOnly, int xStart, int yStart, int xE
                     {
                         break;
                     }
-                    Undo::addBuildingToList(spaceId);
+                    Undo_addBuildingToList(spaceId);
                     Data_Buildings[spaceId].state = BuildingState_DeletedByPlayer;
                 }
                 spaceId = buildingId;
@@ -932,7 +931,7 @@ static void clearRegionConfirmed(int measureOnly, int xStart, int yStart, int xE
                     {
                         break;
                     }
-                    Undo::addBuildingToList(spaceId);
+                    Undo_addBuildingToList(spaceId);
                     Data_Buildings[spaceId].state = BuildingState_DeletedByPlayer;
                 }
             }
@@ -960,13 +959,13 @@ static void clearRegionConfirmed(int measureOnly, int xStart, int yStart, int xE
             }
             else if (terrain & Terrain_Water)
             {
-                if (!measureOnly && TerrainBridge_countFiguresOnBridge(gridOffset) > 0)
+                if (!measureOnly && map_bridge_count_figures(gridOffset) > 0)
                 {
                     UI_Warning_show(Warning_PeopleOnBridge);
                 }
                 else if (confirm.bridgeConfirmed == 1)
                 {
-                    TerrainBridge_removeFromSpriteGrid(gridOffset, measureOnly);
+                    map_bridge_remove(gridOffset, measureOnly);
                     itemsPlaced++;
                 }
             }
@@ -995,10 +994,9 @@ static void clearRegionConfirmed(int measureOnly, int xStart, int yStart, int xE
     TerrainGraphics_updateAreaWalls(xMin, yMin, radius);
     if (!measureOnly)
     {
-        Routing_determineLandCitizen();
-        Routing_determineLandNonCitizen();
-        Routing_determineWalls();
-        Routing_determineWater();
+        map_routing_update_land();
+        map_routing_update_walls();
+        map_routing_update_water();
         UI_Window_requestRefresh();
     }
 }
@@ -1084,7 +1082,7 @@ static void placeRoad(int measureOnly, int xStart, int yStart, int xEnd, int yEn
 {
     map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
     map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
-    Undo::restoreTerrainGraphics();
+    Undo_restoreTerrainGraphics();
 
     itemsPlaced = 0;
     int startOffset = GridOffset(xStart, yStart);
@@ -1099,13 +1097,12 @@ static void placeRoad(int measureOnly, int xStart, int yStart, int xEnd, int yEn
         return;
     }
 
-    if (Routing_getDistanceForBuildingRoadOrAqueduct(xStart, yStart, 0) &&
+    if (map_routing_calculate_distances_for_building(ROUTED_BUILDING_ROAD, xStart, yStart) &&
             Routing_placeRoutedBuilding(xStart, yStart, xEnd, yEnd, RoutedBUILDING_ROAD, &itemsPlaced))
     {
         if (!measureOnly)
         {
-            Routing_determineLandCitizen();
-            Routing_determineLandNonCitizen();
+            map_routing_update_land();
             UI_Window_requestRefresh();
         }
     }
@@ -1115,7 +1112,7 @@ static void placeWall(int measureOnly, int xStart, int yStart, int xEnd, int yEn
 {
     map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
     map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
-    Undo::restoreTerrainGraphics();
+    Undo_restoreTerrainGraphics();
 
     itemsPlaced = 0;
     int startOffset = GridOffset(xStart, yStart);
@@ -1129,15 +1126,13 @@ static void placeWall(int measureOnly, int xStart, int yStart, int xEnd, int yEn
     {
         return;
     }
-
-    if (Routing_getDistanceForBuildingWall(xStart, yStart) &&
-            Routing_placeRoutedBuilding(xStart, yStart, xEnd, yEnd, RoutedBUILDING_WALL, &itemsPlaced))
+    map_routing_calculate_distances_for_building(ROUTED_BUILDING_WALL, xStart, yStart);
+    if (Routing_placeRoutedBuilding(xStart, yStart, xEnd, yEnd, RoutedBUILDING_WALL, &itemsPlaced))
     {
         if (!measureOnly)
         {
-            Routing_determineLandCitizen();
-            Routing_determineLandNonCitizen();
-            Routing_determineWalls();
+            map_routing_update_land();
+            map_routing_update_walls();
             UI_Window_requestRefresh();
         }
     }
@@ -1151,7 +1146,7 @@ static void placePlaza(int measureOnly, int xStart, int yStart, int xEnd, int yE
     map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
     map_grid_copy_u8(Data_Grid_Undo_bitfields, Data_Grid_bitfields);
     map_grid_copy_u8(Data_Grid_Undo_edge, Data_Grid_edge);
-    Undo::restoreTerrainGraphics();
+    Undo_restoreTerrainGraphics();
 
     itemsPlaced = 0;
     for (int y = yMin; y <= yMax; y++)
@@ -1187,7 +1182,7 @@ static void placeGarden(int xStart, int yStart, int xEnd, int yEnd)
     map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
     map_grid_copy_u8(Data_Grid_Undo_bitfields, Data_Grid_bitfields);
     map_grid_copy_u8(Data_Grid_Undo_edge, Data_Grid_edge);
-    Undo::restoreTerrainGraphics();
+    Undo_restoreTerrainGraphics();
 
     itemsPlaced = 0;
     for (int y = yMin; y <= yMax; y++)
@@ -1209,8 +1204,8 @@ static int placeAqueduct(int measureOnly, int xStart, int yStart, int xEnd, int 
 {
     map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
     map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
-    Undo::restoreTerrainGraphics();
-    int itemCost = model_get_building(BUILDING_AQUEDUCT).cost;
+    Undo_restoreTerrainGraphics();
+    int itemCost = model_get_building(BUILDING_AQUEDUCT)->cost;
     *cost = 0;
     int blocked = 0;
     int gridOffset = GridOffset(xStart, yStart);
@@ -1241,7 +1236,7 @@ static int placeAqueduct(int measureOnly, int xStart, int yStart, int xEnd, int 
     {
         return 0;
     }
-    if (!Routing_getDistanceForBuildingRoadOrAqueduct(xStart, yStart, 1))
+    if (!map_routing_calculate_distances_for_building(ROUTED_BUILDING_AQUEDUCT, xStart, yStart))
     {
         return 0;
     }
@@ -1259,7 +1254,7 @@ static int placeReservoirAndAqueducts(int measureOnly, int xStart, int yStart, i
 
     map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
     map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
-    Undo::restoreTerrainGraphics();
+    Undo_restoreTerrainGraphics();
 
     int distance = calc_maximum_distance(xStart, yStart, xEnd, yEnd);
     if (measureOnly && !Data_State.selectedBuilding.placementInProgress)
@@ -1303,10 +1298,10 @@ static int placeReservoirAndAqueducts(int measureOnly, int xStart, int yStart, i
     }
     if (!distance)
     {
-        info->cost = model_get_building(BUILDING_RESERVOIR).cost;
+        info->cost = model_get_building(BUILDING_RESERVOIR)->cost;
         return 1;
     }
-    if (!Routing_getDistanceForBuildingRoadOrAqueduct(xStart, yStart, 1))
+    if (!map_routing_calculate_distances_for_building(ROUTED_BUILDING_AQUEDUCT, xStart, yStart))
     {
         return 0;
     }
@@ -1359,15 +1354,15 @@ static int placeReservoirAndAqueducts(int measureOnly, int xStart, int yStart, i
                                 xEnd + xAqEnd, yEnd + yAqEnd, RoutedBuilding_Aqueduct, &aqItems);
     if (info->placeReservoirAtStart == PlaceReservoir_Yes)
     {
-        info->cost += model_get_building(BUILDING_RESERVOIR).cost;
+        info->cost += model_get_building(BUILDING_RESERVOIR)->cost;
     }
     if (info->placeReservoirAtEnd == PlaceReservoir_Yes)
     {
-        info->cost += model_get_building(BUILDING_RESERVOIR).cost;
+        info->cost += model_get_building(BUILDING_RESERVOIR)->cost;
     }
     if (aqItems)
     {
-        info->cost += aqItems * model_get_building(BUILDING_AQUEDUCT).cost;
+        info->cost += aqItems * model_get_building(BUILDING_AQUEDUCT)->cost;
     }
     return 1;
 }
@@ -1380,7 +1375,7 @@ void BuildingPlacement_update(int xStart, int yStart, int xEnd, int yEnd, int ty
         return;
     }
     map_grid_and_u8(Data_Grid_bitfields, Bitfield_NoOverlayAndDeleted);
-    int currentCost = model_get_building(type).cost;
+    int currentCost = model_get_building(type)->cost;
 
     if (type == BUILDING_CLEAR_LAND)
     {
@@ -1409,7 +1404,7 @@ void BuildingPlacement_update(int xStart, int yStart, int xEnd, int yEnd, int ty
     }
     else if (type == BUILDING_LOW_BRIDGE || type == BUILDING_SHIP_BRIDGE)
     {
-        int length = TerrainBridge_getLength();
+        int length = map_bridge_building_length();
         if (length > 1) currentCost *= length;
     }
     else if (type == BUILDING_AQUEDUCT)
@@ -1545,7 +1540,7 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
         {
             map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
             map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
-            Undo::restoreTerrainGraphics();
+            Undo_restoreTerrainGraphics();
         }
         else if (type == BUILDING_PLAZA || type == BUILDING_GARDENS)
         {
@@ -1553,11 +1548,11 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
             map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
             map_grid_copy_u8(Data_Grid_Undo_bitfields, Data_Grid_bitfields);
             map_grid_copy_u8(Data_Grid_Undo_edge, Data_Grid_edge);
-            Undo::restoreTerrainGraphics();
+            Undo_restoreTerrainGraphics();
         }
         else if (type == BUILDING_LOW_BRIDGE || type == BUILDING_SHIP_BRIDGE)
         {
-            TerrainBridge_resetLength();
+            map_bridge_reset_building_length();
         }
         else
         {
@@ -1567,7 +1562,7 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
         return;
     }
 
-    int placementCost = model_get_building(type).cost;
+    int placementCost = model_get_building(type)->cost;
     if (type == BUILDING_CLEAR_LAND)
     {
         clearRegion(0, xStart, yStart, xEnd, yEnd);
@@ -1592,12 +1587,11 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
     {
         placeGarden(xStart, yStart, xEnd, yEnd);
         placementCost *= itemsPlaced;
-        Routing_determineLandCitizen();
-        Routing_determineLandNonCitizen();
+        map_routing_update_land();
     }
     else if (type == BUILDING_LOW_BRIDGE)
     {
-        int length = TerrainBridge_addToSpriteGrid(xEnd, yEnd, 0);
+        int length = map_bridge_add(xEnd, yEnd, 0);
         if (length <= 1)
         {
             UI_Warning_show(Warning_ShoreNeeded);
@@ -1607,7 +1601,7 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
     }
     else if (type == BUILDING_SHIP_BRIDGE)
     {
-        int length = TerrainBridge_addToSpriteGrid(xEnd, yEnd, 1);
+        int length = map_bridge_add(xEnd, yEnd, 1);
         if (length <= 1)
         {
             UI_Warning_show(Warning_ShoreNeeded);
@@ -1625,8 +1619,7 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
         }
         placementCost = cost;
         TerrainGraphics_updateRegionAqueduct(0, 0, Data_State.map.width - 1, Data_State.map.height - 1, 0);
-        Routing_determineLandCitizen();
-        Routing_determineLandNonCitizen();
+        map_routing_update_land();
     }
     else if (type == BUILDING_DRAGGABLE_RESERVOIR)
     {
@@ -1639,14 +1632,14 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
         if (info.placeReservoirAtStart == PlaceReservoir_Yes)
         {
             int reservoirId = Building_create(BUILDING_RESERVOIR, xStart - 1, yStart - 1);
-            Undo::addBuildingToList(reservoirId);
+            Undo_addBuildingToList(reservoirId);
             Terrain_addBuildingToGrids(reservoirId, xStart-1, yStart-1, 3, image_group(GROUP_BUILDING_RESERVOIR), Terrain_Building);
             Data_Grid_aqueducts[GridOffset(xStart-1, yStart-1)] = 0;
         }
         if (info.placeReservoirAtEnd == PlaceReservoir_Yes)
         {
             int reservoirId = Building_create(BUILDING_RESERVOIR, xEnd - 1, yEnd - 1);
-            Undo::addBuildingToList(reservoirId);
+            Undo_addBuildingToList(reservoirId);
             Terrain_addBuildingToGrids(reservoirId, xEnd-1, yEnd-1, 3, image_group(GROUP_BUILDING_RESERVOIR), Terrain_Building);
             Data_Grid_aqueducts[GridOffset(xEnd-1, yEnd-1)] = 0;
             if (!Terrain_existsTileWithinAreaWithType(xStart - 2, yStart - 2, 5, Terrain_Water) && info.placeReservoirAtStart == PlaceReservoir_No)
@@ -1656,8 +1649,7 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
         }
         placementCost = info.cost;
         TerrainGraphics_updateRegionAqueduct(0, 0, Data_State.map.width - 1, Data_State.map.height - 1, 0);
-        Routing_determineLandCitizen();
-        Routing_determineLandNonCitizen();
+        map_routing_update_land();
     }
     else if (type == BUILDING_HOUSE_VACANT_LOT)
     {
@@ -1679,6 +1671,6 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
     CityInfo_Finance_spendOnConstruction(placementCost);
     if (type != BUILDING_TRIUMPHAL_ARCH)
     {
-        Undo::recordBuild(placementCost);
+        Undo_recordBuild(placementCost);
     }
 }

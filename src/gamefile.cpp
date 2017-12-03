@@ -790,11 +790,7 @@ static void setupFromSavedGame()
     CityView_calculateLookup();
     CityView_checkCameraBoundaries();
 
-    Routing_clearLandTypeCitizen();
-    Routing_determineLandCitizen();
-    Routing_determineLandNonCitizen();
-    Routing_determineWater();
-    Routing_determineWalls();
+    map_routing_update_all();
 
     Building_determineGraphicIdsForOrientedBuildings();
     figure_route_clean();

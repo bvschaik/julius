@@ -1,20 +1,20 @@
 #include "formation.h"
 
-#include "core/calc.h"
 #include "figure.h"
 #include "figuremovement.h"
-#include "routing.h"
 #include "ui/warning.h"
 
-#include <sound>
 #include <data>
-#include <game>
-#include <scenario>
 
 #include "building/model.h"
+#include "core/calc.h"
 #include "figure/enemy_army.h"
 #include "figure/formation.h"
 #include "figure/properties.h"
+#include "figure/route.h"
+#include "map/routing.h"
+#include "scenario/distant_battle.h"
+#include "sound/effect.h"
 
 #include <string.h>
 
@@ -28,7 +28,7 @@ int Formation_createLegion(int buildingId)
     Formation_calculateLegionTotals();
 
     struct Data_Building *b = &Data_Buildings[buildingId];
-    int formation_id = formation_create_legion(buildingId, b->x, b->y, (figure_type)b->subtype.fortFigureType);
+    int formation_id = formation_create_legion(buildingId, b->x, b->y, b->subtype.fortFigureType);
     if (!formation_id)
     {
         return 0;
@@ -90,7 +90,7 @@ int Formation_getFormationForBuilding(int gridOffset)
 void Formation_legionMoveTo(int formationId, int x, int y)
 {
     const formation *m = formation_get(formationId);
-    Routing_getDistance(m->x_home, m->y_home);
+    map_routing_calculate_distances(m->x_home, m->y_home);
     if (map_routing_distance(GridOffset(x, y)) <= 0)
     {
         return; // unable to route there
@@ -129,7 +129,7 @@ void Formation_legionMoveTo(int formationId, int x, int y)
 void Formation_legionReturnHome(int formationId)
 {
     const formation *m = formation_get(formationId);
-    Routing_getDistance(m->x_home, m->y_home);
+    map_routing_calculate_distances(m->x_home, m->y_home);
     if (map_routing_distance(GridOffset(m->x, m->y)) <= 0)
     {
         return; // unable to route home
@@ -271,7 +271,7 @@ static void update_legion_enemy_totals(const formation *m, void *data)
             for (int fig = 0; fig < m->num_figures; fig++)
             {
                 int figureId = m->figures[fig];
-                if (figureId && Data_Figures[figureId].direction != DIR_8_NONE)
+                if (figureId && Data_Figures[figureId].direction != Dir_8_None)
                 {
                     formation_set_halted(m->id, 0);
                 }
@@ -337,7 +337,7 @@ void Formation_calculateFigures()
         int index = formation_add_figure(formationId, i,
                                          Data_Figures[i].formationAtRest != 1,
                                          Data_Figures[i].damage,
-                                         figure_properties_for_type((figure_type)figtype)->max_damage
+                                         figure_properties_for_type(figtype)->max_damage
                                         );
         Data_Figures[i].indexInFormation = index;
     }

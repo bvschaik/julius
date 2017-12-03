@@ -1,20 +1,23 @@
 #include "citybuildings_private.h"
+
 #include "building.h"
 #include "buildingplacement.h"
 #include "cityview.h"
 #include "formation.h"
-#include "routing.h"
 #include "scroll.h"
 #include "undo.h"
+#include <ui>
 
 #include "building/model.h"
 #include "core/time.h"
 #include "figure/formation.h"
-
-#include <ui>
-#include <sound>
-#include <game>
-#include <data>
+#include "game/resource.h"
+#include "game/settings.h"
+#include "map/desirability.h"
+#include "map/routing.h"
+#include "sound/city.h"
+#include "sound/speech.h"
+#include "sound/effect.h"
 
 static void drawBuildingFootprints();
 static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_CityPixelCoordinate *coord);
@@ -142,13 +145,13 @@ static void drawBuildingFootprints()
                 {
                     sound_city_mark_building_view(buildingId, SOUND_DIRECTION_LEFT);
                 }
-                else if (x > Data_CityView.widthInTiles + SOUND_DIRECTION_RIGHT)
+                else if (x > Data_CityView.widthInTiles + 2)
                 {
-                    sound_city_mark_building_view(buildingId, SOUND_DIRECTION_CENTER);
+                    sound_city_mark_building_view(buildingId, SOUND_DIRECTION_RIGHT);
                 }
                 else
                 {
-                    sound_city_mark_building_view(buildingId, 2);
+                    sound_city_mark_building_view(buildingId, SOUND_DIRECTION_CENTER);
                 }
             }
             if (Data_Grid_terrain[gridOffset] & Terrain_Garden)
@@ -812,20 +815,19 @@ static void buildStart()
             switch (Data_State.selectedBuilding.type)
             {
             case BUILDING_ROAD:
-                Routing_getDistanceForBuildingRoadOrAqueduct(
-                    Data_State.selectedBuilding.xStart,
-                    Data_State.selectedBuilding.yStart, 0);
+                map_routing_calculate_distances_for_building(ROUTED_BUILDING_ROAD,
+                        Data_State.selectedBuilding.xStart, Data_State.selectedBuilding.yStart);
                 break;
             case BUILDING_AQUEDUCT:
             case BUILDING_DRAGGABLE_RESERVOIR:
-                Routing_getDistanceForBuildingRoadOrAqueduct(
-                    Data_State.selectedBuilding.xStart,
-                    Data_State.selectedBuilding.yStart, 1);
+                map_routing_calculate_distances_for_building(ROUTED_BUILDING_AQUEDUCT,
+                        Data_State.selectedBuilding.xStart,
+                        Data_State.selectedBuilding.yStart);
                 break;
             case BUILDING_WALL:
-                Routing_getDistanceForBuildingWall(
-                    Data_State.selectedBuilding.xStart,
-                    Data_State.selectedBuilding.yStart);
+                map_routing_calculate_distances_for_building(ROUTED_BUILDING_WALL,
+                        Data_State.selectedBuilding.xStart,
+                        Data_State.selectedBuilding.yStart);
                 break;
             }
         }
@@ -1360,7 +1362,7 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
         {
             return;
         }
-        if (!model_get_house((house_level)b->subtype.houseLevel)->food_types)
+        if (!model_get_house(b->subtype.houseLevel)->food_types)
         {
             c->textId = 104;
         }
@@ -1391,11 +1393,13 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
         }
         break;
     case Overlay_Desirability:
-        if (Data_Grid_desirability[gridOffset] < 0)
+    {
+        int desirability = map_desirability_get(gridOffset);
+        if (desirability < 0)
         {
             c->textId = 91;
         }
-        else if (Data_Grid_desirability[gridOffset] == 0)
+        else if (desirability == 0)
         {
             c->textId = 92;
         }
@@ -1404,6 +1408,7 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
             c->textId = 93;
         }
         break;
+    }
     default:
         return;
     }
