@@ -43,6 +43,7 @@ set (FIGURE_FILES
     src/figure/figure.c
     src/figure/formation.c
     src/figure/name.c
+    src/figure/phrase.c
     src/figure/properties.c
     src/figure/route.c
     src/figure/trader.c

@@ -21,7 +21,6 @@ int Figure_getNonCitizenOnSameTile(int figureId);
 int Figure_hasNearbyEnemy(int xStart, int yStart, int xEnd, int yEnd);
 
 int Figure_determinePhrase(int figureId);
-int Figure_playPhrase(int figureId);
 void Figure_playDieSound(int figureType);
 void Figure_playHitSound(int figureType);
 

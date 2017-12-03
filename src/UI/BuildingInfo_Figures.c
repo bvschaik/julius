@@ -15,6 +15,7 @@
 #include "empire/city.h"
 #include "figure/figure.h"
 #include "figure/formation.h"
+#include "figure/phrase.h"
 #include "figure/trader.h"
 #include "scenario/property.h"
 
@@ -419,8 +420,9 @@ void UI_BuildingInfo_drawFigureImagesLocal(BuildingInfoContext *c)
 void UI_BuildingInfo_playFigurePhrase(BuildingInfoContext *c)
 {
 	int figureId = c->figure.figureIds[c->figure.selectedIndex];
-	c->figure.soundId = Figure_playPhrase(figureId);
-	c->figure.phraseId = figure_get(figureId)->phraseId;
+    figure *f = figure_get(figureId);
+	c->figure.soundId = figure_phrase_play(f);
+	c->figure.phraseId = f->phraseId;
 }
 
 void UI_BuildingInfo_handleMouseFigureList(BuildingInfoContext *c)
