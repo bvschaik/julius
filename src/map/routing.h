@@ -3,7 +3,8 @@
 
 #include "core/buffer.h"
 
-typedef enum {
+typedef enum
+{
     ROUTED_BUILDING_ROAD = 0,
     ROUTED_BUILDING_WALL = 1,
     ROUTED_BUILDING_AQUEDUCT = 2,
@@ -20,13 +21,6 @@ void map_routing_delete_first_wall_or_aqueduct(int x, int y);
 
 int map_routing_distance(int grid_offset);
 
-int map_routing_is_wall_passable(int grid_offset);
-
-int map_routing_citizen_is_passable(int grid_offset);
-int map_routing_citizen_is_road(int grid_offset);
-int map_routing_citizen_is_passable_terrain(int grid_offset);
-
-int map_routing_noncitizen_terrain(int grid_offset);
 
 int map_routing_citizen_can_travel_over_land(int src_x, int src_y, int dst_x, int dst_y);
 int map_routing_citizen_can_travel_over_road_garden(int src_x, int src_y, int dst_x, int dst_y);

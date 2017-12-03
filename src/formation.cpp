@@ -5,6 +5,7 @@
 #include "ui/warning.h"
 
 #include <data>
+#include <game>
 
 #include "building/model.h"
 #include "core/calc.h"
@@ -271,7 +272,7 @@ static void update_legion_enemy_totals(const formation *m, void *data)
             for (int fig = 0; fig < m->num_figures; fig++)
             {
                 int figureId = m->figures[fig];
-                if (figureId && Data_Figures[figureId].direction != Dir_8_None)
+                if (figureId && Data_Figures[figureId].direction != DIR_8_NONE)
                 {
                     formation_set_halted(m->id, 0);
                 }

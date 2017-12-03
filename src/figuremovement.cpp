@@ -9,6 +9,11 @@
 #include <data>
 #include <game>
 
+#include "core/calc.h"
+#include "figure/route.h"
+#include "game/time.h"
+#include "map/routing_terrain.h"
+
 static void FigureMovement_walkTicksInternal(int figureId, int numTicks, int roamingEnabled);
 
 void FigureMovement_advanceTick(struct Data_Figure *f)
@@ -278,12 +283,12 @@ void FigureMovement_roamTicks(int figureId, int numTicks)
     if (f->roamChooseDestination == 0)
     {
         FigureMovement_walkTicksInternal(figureId, numTicks, 1);
-        if (f->direction == DIR_FIGURE_AT_DESTINATION)
+        if (f->direction == DirFigure_8_AtDestination)
         {
             f->roamChooseDestination = 1;
             f->roamLength = 0;
         }
-        else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST)
+        else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost)
         {
             f->roamChooseDestination = 1;
         }
@@ -438,15 +443,15 @@ static void figureSetNextRouteTileDirection(int figureId, struct Data_Figure *f)
         else
         {
             figure_route_remove(figureId);
-            f->direction = DIR_FIGURE_AT_DESTINATION;
+            f->direction = DirFigure_8_AtDestination;
         }
     }
     else     // should be at destination
     {
         f->direction = calc_general_direction(f->x, f->y, f->destinationX, f->destinationY);
-        if (f->direction != DIR_FIGURE_AT_DESTINATION)
+        if (f->direction != DirFigure_8_AtDestination)
         {
-            f->direction = DIR_FIGURE_LOST;
+            f->direction = DirFigure_10_Lost;
         }
     }
 }
@@ -463,26 +468,25 @@ static void figureAdvanceRouteTile(struct Data_Figure *f, int roamingEnabled)
     {
         if (!(targetTerrain & Terrain_Water))
         {
-            f->direction = DIR_FIGURE_REROUTE;
+            f->direction = DirFigure_9_Reroute;
         }
     }
     else if (f->terrainUsage == FigureTerrainUsage_Enemy)
     {
-        int groundType = map_routing_noncitizen_terrain(targetGridOffset);
-        if (groundType < Routing_NonCitizen_0_Passable)
+        if (!map_routing_noncitizen_is_passable(targetGridOffset))
         {
-            f->direction = DIR_FIGURE_REROUTE;
+            f->direction = DirFigure_9_Reroute;
         }
-        else if (groundType > Routing_NonCitizen_0_Passable && groundType != Routing_NonCitizen_5_Fort)
+        else if (map_routing_is_destroyable(targetGridOffset))
         {
             int causeDamage = 1;
             int maxDamage = 0;
-            switch (groundType)
+            switch (map_routing_get_destroyable(targetGridOffset))
             {
-            case Routing_NonCitizen_1_Building:
+            case DESTROYABLE_BUILDING:
                 maxDamage = 10;
                 break;
-            case Routing_NonCitizen_2_Clearable:
+            case DESTROYABLE_AQUEDUCT_GARDEN:
                 if (Data_Grid_terrain[targetGridOffset] & Terrain_GardenAccessRampRubble)
                 {
                     causeDamage = 0;
@@ -492,17 +496,17 @@ static void figureAdvanceRouteTile(struct Data_Figure *f, int roamingEnabled)
                     maxDamage = 10;
                 }
                 break;
-            case Routing_NonCitizen_3_Wall:
+            case DESTROYABLE_WALL:
                 maxDamage = 200;
                 break;
-            default:
+            case DESTROYABLE_GATEHOUSE:
                 maxDamage = 150;
                 break;
             }
             if (causeDamage)
             {
                 f->attackDirection = f->direction;
-                f->direction = DIR_FIGURE_ATTACK;
+                f->direction = DirFigure_11_Attack;
                 if (!(game_time_tick() & 3))
                 {
                     Building_increaseDamageByEnemy(targetGridOffset, maxDamage);
@@ -514,7 +518,7 @@ static void figureAdvanceRouteTile(struct Data_Figure *f, int roamingEnabled)
     {
         if (!map_routing_is_wall_passable(targetGridOffset))
         {
-            f->direction = DIR_FIGURE_REROUTE;
+            f->direction = DirFigure_9_Reroute;
         }
     }
     else if (targetTerrain & (Terrain_Road | Terrain_AccessRamp))
@@ -524,7 +528,7 @@ static void figureAdvanceRouteTile(struct Data_Figure *f, int roamingEnabled)
             if (Data_Buildings[Data_Grid_buildingIds[targetGridOffset]].type == BUILDING_GATEHOUSE)
             {
                 // do not allow roaming through gatehouse
-                f->direction = DIR_FIGURE_REROUTE;
+                f->direction = DirFigure_9_Reroute;
             }
         }
     }
@@ -539,12 +543,12 @@ static void figureAdvanceRouteTile(struct Data_Figure *f, int roamingEnabled)
         case BUILDING_FORT_GROUND:
             break; // OK to walk
         default:
-            f->direction = DIR_FIGURE_REROUTE;
+            f->direction = DirFigure_9_Reroute;
         }
     }
     else if (targetTerrain)
     {
-        f->direction = DIR_FIGURE_REROUTE;
+        f->direction = DirFigure_9_Reroute;
     }
 }
 
@@ -660,7 +664,7 @@ void FigureMovement_crossCountrySetDirection(int figureId, int xSrc, int ySrc, i
     }
     if (isMissile)
     {
-        f->direction = calc_missile_shooter_direction(xSrc, ySrc, xDst, yDst);
+        f->direction = calc_missile_direction(xSrc, ySrc, xDst, yDst);
     }
     else
     {

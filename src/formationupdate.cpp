@@ -6,6 +6,7 @@
 #include "terraingraphics.h"
 
 #include <data>
+#include <game>
 
 #include "city/message.h"
 #include "core/calc.h"
@@ -813,7 +814,7 @@ static int getHerdRoamingDestination(int formationId, int allowNegativeDesirabil
             xTarget = x;
             yTarget = y - distance;
             break;
-        case DIR_1_TOPRIGHT:
+        case DIR_1_TOP_RIGHT:
             xTarget = x + distance;
             yTarget = y - distance;
             break;
@@ -821,7 +822,7 @@ static int getHerdRoamingDestination(int formationId, int allowNegativeDesirabil
             xTarget = x + distance;
             yTarget = y;
             break;
-        case Dir_3_BottomRight:
+        case DIR_3_BOTTOM_RIGHT:
             xTarget = x + distance;
             yTarget = y + distance;
             break;
@@ -829,7 +830,7 @@ static int getHerdRoamingDestination(int formationId, int allowNegativeDesirabil
             xTarget = x;
             yTarget = y + distance;
             break;
-        case Dir_5_BottomLeft:
+        case DIR_5_BOTTOM_LEFT:
             xTarget = x - distance;
             yTarget = y + distance;
             break;
@@ -837,7 +838,7 @@ static int getHerdRoamingDestination(int formationId, int allowNegativeDesirabil
             xTarget = x - distance;
             yTarget = y;
             break;
-        case Dir_7_TopLeft:
+        case DIR_7_TOP_LEFT:
             xTarget = x - distance;
             yTarget = y - distance;
             break;
