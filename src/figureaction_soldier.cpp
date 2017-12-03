@@ -134,7 +134,7 @@ static void legionaryAttackAdjacentEnemy(int figureId, struct Data_Figure *f)
     for (int i = 0; i < 8 && f->actionState != FigureActionState_150_Attack; i++)
     {
         FigureAction_Combat_attackFigure(figureId,
-                                         Data_Grid_figureIds[gridOffset + Constant_DirectionGridOffsets[i]]);
+                                         Data_Grid_figureIds[gridOffset + map_grid_direction_delta(i)]);
     }
 }
 

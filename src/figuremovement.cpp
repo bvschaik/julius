@@ -242,7 +242,7 @@ static void roamSetDirection(struct Data_Figure *f)
     int roadDir1 = 0;
     for (int i = 0, dir = direction; i < 8; i++)
     {
-        if (dir % 2 == 0 && Data_Grid_terrain[gridOffset + Constant_DirectionGridOffsets[dir]] & Terrain_Road)
+        if (dir % 2 == 0 && Data_Grid_terrain[gridOffset + map_grid_direction_delta(dir)] & Terrain_Road)
         {
             roadDir1 = dir;
             break;
@@ -255,7 +255,7 @@ static void roamSetDirection(struct Data_Figure *f)
     int roadDir2 = 0;
     for (int i = 0, dir = direction; i < 8; i++)
     {
-        if (dir % 2 == 0 && Data_Grid_terrain[gridOffset + Constant_DirectionGridOffsets[dir]] & Terrain_Road)
+        if (dir % 2 == 0 && Data_Grid_terrain[gridOffset + map_grid_direction_delta(dir)] & Terrain_Road)
         {
             roadDir2 = dir;
             break;
@@ -462,7 +462,7 @@ static void figureAdvanceRouteTile(struct Data_Figure *f, int roamingEnabled)
     {
         return;
     }
-    int targetGridOffset = f->gridOffset + Constant_DirectionGridOffsets[f->direction];
+    int targetGridOffset = f->gridOffset + map_grid_direction_delta(f->direction);
     int targetTerrain = Data_Grid_terrain[targetGridOffset] & Terrain_c75f;
     if (f->isBoat)
     {

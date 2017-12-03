@@ -188,7 +188,7 @@ int FigureAction_Rioter_collapseBuilding(int figureId)
     struct Data_Figure *f = &Data_Figures[figureId];
     for (int dir = 0; dir < 8; dir += 2)
     {
-        int gridOffset = f->gridOffset + Constant_DirectionGridOffsets[dir];
+        int gridOffset = f->gridOffset + map_grid_direction_delta(dir);
         if (!Data_Grid_buildingIds[gridOffset])
         {
             continue;

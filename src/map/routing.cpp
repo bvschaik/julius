@@ -13,6 +13,12 @@ static const int ROUTE_OFFSETS[] = {-162, 1, 162, -1, -161, 163, 161, -163};
 
 static struct
 {
+    int total_routes_calculated;
+    int enemy_routes_calculated;
+} stats = {0, 0};
+
+static struct
+{
     int head;
     int tail;
     int items[MAX_QUEUE];
@@ -203,7 +209,7 @@ static void callback_calc_distance(int next_offset, int dist)
 
 void map_routing_calculate_distances(int x, int y)
 {
-    ++Data_Routes.totalRoutesCalculated;
+    ++stats.total_routes_calculated;
     route_queue(map_grid_offset(x, y), -1, callback_calc_distance);
 }
 
@@ -386,7 +392,7 @@ int map_routing_calculate_distances_for_building(routed_building_type type, int 
     {
         return 0;
     }
-    ++Data_Routes.totalRoutesCalculated;
+    ++stats.total_routes_calculated;
     if (type == ROUTED_BUILDING_ROAD)
     {
         route_queue(source_offset, -1, callback_calc_distance_build_road);
@@ -417,7 +423,7 @@ static int callback_delete_wall_aqueduct(int next_offset, int dist)
 
 void map_routing_delete_first_wall_or_aqueduct(int x, int y)
 {
-    ++Data_Routes.totalRoutesCalculated;
+    ++stats.total_routes_calculated;
     route_queue_until(map_grid_offset(x, y), callback_delete_wall_aqueduct);
 }
 
@@ -469,7 +475,7 @@ int map_routing_citizen_can_travel_over_land(int src_x, int src_y, int dst_x, in
 {
     int sourceOffset = map_grid_offset(src_x, src_y);
     int destOffset = map_grid_offset(dst_x, dst_y);
-    ++Data_Routes.totalRoutesCalculated;
+    ++stats.total_routes_calculated;
     route_queue(sourceOffset, destOffset, callback_travel_citizen_land);
     return Data_Grid_routingDistance[destOffset] != 0;
 }
@@ -487,7 +493,7 @@ int map_routing_citizen_can_travel_over_road_garden(int src_x, int src_y, int ds
 {
     int sourceOffset = map_grid_offset(src_x, src_y);
     int destOffset = map_grid_offset(dst_x, dst_y);
-    ++Data_Routes.totalRoutesCalculated;
+    ++stats.total_routes_calculated;
     route_queue(sourceOffset, destOffset, callback_travel_citizen_road_garden);
     return Data_Grid_routingDistance[destOffset] != 0;
 }
@@ -505,7 +511,7 @@ int map_routing_can_travel_over_walls(int src_x, int src_y, int dst_x, int dst_y
 {
     int sourceOffset = map_grid_offset(src_x, src_y);
     int destOffset = map_grid_offset(dst_x, dst_y);
-    ++Data_Routes.totalRoutesCalculated;
+    ++stats.total_routes_calculated;
     route_queue(sourceOffset, destOffset, callback_travel_walls);
     return Data_Grid_routingDistance[destOffset] != 0;
 }
@@ -540,8 +546,8 @@ int map_routing_noncitizen_can_travel_over_land(int src_x, int src_y, int dst_x,
 {
     int sourceOffset = map_grid_offset(src_x, src_y);
     int destOffset = map_grid_offset(dst_x, dst_y);
-    ++Data_Routes.totalRoutesCalculated;
-    ++Data_Routes.enemyRoutesCalculated;
+    ++stats.total_routes_calculated;
+    ++stats.enemy_routes_calculated;
     if (onlyThroughBuildingId)
     {
         state.throughBuildingId = onlyThroughBuildingId;
@@ -566,7 +572,7 @@ int map_routing_noncitizen_can_travel_through_everything(int src_x, int src_y, i
 {
     int sourceOffset = map_grid_offset(src_x, src_y);
     int destOffset = map_grid_offset(dst_x, dst_y);
-    ++Data_Routes.totalRoutesCalculated;
+    ++stats.total_routes_calculated;
     route_queue(sourceOffset, destOffset, callback_travel_noncitizen_through_everything);
     return Data_Grid_routingDistance[destOffset] != 0;
 }
@@ -574,15 +580,15 @@ int map_routing_noncitizen_can_travel_through_everything(int src_x, int src_y, i
 void map_routing_save_state(buffer *buf)
 {
     buffer_write_i32(buf, 0); // unused counter
-    buffer_write_i32(buf, Data_Routes.enemyRoutesCalculated);
-    buffer_write_i32(buf, Data_Routes.totalRoutesCalculated);
+    buffer_write_i32(buf, stats.enemy_routes_calculated);
+    buffer_write_i32(buf, stats.total_routes_calculated);
     buffer_write_i32(buf, 0); // unused counter
 }
 
 void map_routing_load_state(buffer *buf)
 {
     buffer_skip(buf, 4); // unused counter
-    Data_Routes.enemyRoutesCalculated = buffer_read_i32(buf);
-    Data_Routes.totalRoutesCalculated = buffer_read_i32(buf);
+    stats.enemy_routes_calculated = buffer_read_i32(buf);
+    stats.total_routes_calculated = buffer_read_i32(buf);
     buffer_skip(buf, 4); // unused counter
 }

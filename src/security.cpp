@@ -82,7 +82,7 @@ void Security_Tick_updateBurningRuins()
         if (dir2 > 7) dir2 = 0;
 
         int gridOffset = b->gridOffset;
-        int nextBuildingId = Data_Grid_buildingIds[gridOffset + Constant_DirectionGridOffsets[burningRuinSpreadDirection]];
+        int nextBuildingId = Data_Grid_buildingIds[gridOffset + map_grid_direction_delta(burningRuinSpreadDirection)];
         if (nextBuildingId && !Data_Buildings[nextBuildingId].fireProof)
         {
             Building_collapseOnFire(nextBuildingId, 0);
@@ -92,7 +92,7 @@ void Security_Tick_updateBurningRuins()
         }
         else
         {
-            nextBuildingId = Data_Grid_buildingIds[gridOffset + Constant_DirectionGridOffsets[dir1]];
+            nextBuildingId = Data_Grid_buildingIds[gridOffset + map_grid_direction_delta(dir1)];
             if (nextBuildingId && !Data_Buildings[nextBuildingId].fireProof)
             {
                 Building_collapseOnFire(nextBuildingId, 0);
@@ -102,7 +102,7 @@ void Security_Tick_updateBurningRuins()
             }
             else
             {
-                nextBuildingId = Data_Grid_buildingIds[gridOffset + Constant_DirectionGridOffsets[dir2]];
+                nextBuildingId = Data_Grid_buildingIds[gridOffset + map_grid_direction_delta(dir2)];
                 if (nextBuildingId && !Data_Buildings[nextBuildingId].fireProof)
                 {
                     Building_collapseOnFire(nextBuildingId, 0);

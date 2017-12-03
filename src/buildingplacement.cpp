@@ -1133,7 +1133,7 @@ static int placeRoutedBuilding(int xSrc, int ySrc, int xDst, int yDst, routed_bu
         for (int i = 0; i < 4; i++)
         {
             int index = directionIndices[direction][i];
-            int newGridOffset = gridOffset + Constant_DirectionGridOffsets[index];
+            int newGridOffset = gridOffset + map_grid_direction_delta(index);
             int newDist = map_routing_distance(newGridOffset);
             if (newDist > 0 && newDist < distance)
             {
