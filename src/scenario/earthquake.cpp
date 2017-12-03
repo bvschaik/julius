@@ -12,7 +12,7 @@
 #include "scenario/building.h"
 
 #include "figure.h"
-#include "routing.h"
+
 #include "terraingraphics.h"
 
 void Building_collapseOnFire(int buildingId, int hasPlague);

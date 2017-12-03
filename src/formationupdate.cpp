@@ -2,7 +2,7 @@
 
 #include "figure.h"
 #include "figureaction.h"
-#include "routing.h"
+
 #include "terraingraphics.h"
 
 #include <data>
@@ -455,8 +455,8 @@ static void enemyApproachTarget(const formation *m)
                     m->destination_x, m->destination_y))
     {
         int xTile, yTile;
-        if (Routing_getClosestXYWithinRange(8, m->x_home, m->y_home,
-                                            m->destination_x, m->destination_y, 20, &xTile, &yTile))
+        if (map_routing_get_closest_tile_within_range(m->x_home, m->y_home,
+                m->destination_x, m->destination_y, 8, 20, &xTile, &yTile))
         {
             formation_set_destination(m->id, xTile, yTile);
         }

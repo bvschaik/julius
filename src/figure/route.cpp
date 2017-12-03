@@ -3,7 +3,7 @@
 #include "map/routing.h"
 
 #include "data/figure.hpp"
-#include "routing.h"
+
 
 #include <stdint.h>
 
@@ -72,14 +72,14 @@ void figure_route_add(int figure_id)
         if (f->isBoat == 2)   // flotsam
         {
             map_routing_calculate_distances_water_flotsam(f->x, f->y);
-            path_length = Routing_getPathOnWater(data.direction_paths[path_id], f->x, f->y,
-                                                 f->destinationX, f->destinationY, 1);
+            path_length = map_routing_get_path_on_water(data.direction_paths[path_id], f->x, f->y,
+                          f->destinationX, f->destinationY, 1);
         }
         else
         {
             map_routing_calculate_distances_water_boat(f->x, f->y);
-            path_length = Routing_getPathOnWater(data.direction_paths[path_id], f->x, f->y,
-                                                 f->destinationX, f->destinationY, 0);
+            path_length = map_routing_get_path_on_water(data.direction_paths[path_id], f->x, f->y,
+                          f->destinationX, f->destinationY, 0);
         }
     }
     else
@@ -132,18 +132,18 @@ void figure_route_add(int figure_id)
         {
             if (f->terrainUsage == FigureTerrainUsage_Walls)
             {
-                path_length = Routing_getPath(data.direction_paths[path_id], f->x, f->y,
-                                              f->destinationX, f->destinationY, 4);
+                path_length = map_routing_get_path(data.direction_paths[path_id], f->x, f->y,
+                                                   f->destinationX, f->destinationY, 4);
                 if (path_length <= 0)
                 {
-                    path_length = Routing_getPath(data.direction_paths[path_id], f->x, f->y,
-                                                  f->destinationX, f->destinationY, 8);
+                    path_length = map_routing_get_path(data.direction_paths[path_id], f->x, f->y,
+                                                       f->destinationX, f->destinationY, 8);
                 }
             }
             else
             {
-                path_length = Routing_getPath(data.direction_paths[path_id], f->x, f->y,
-                                              f->destinationX, f->destinationY, 8);
+                path_length = map_routing_get_path(data.direction_paths[path_id], f->x, f->y,
+                                                   f->destinationX, f->destinationY, 8);
             }
         }
         else     // cannot travel

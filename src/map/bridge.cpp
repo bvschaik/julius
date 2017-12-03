@@ -6,7 +6,7 @@
 #include <game>
 
 #include "terrain.h"
-#include "routing.h"
+
 
 void map_routing_update_land();
 void map_routing_update_water();

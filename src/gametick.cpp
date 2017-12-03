@@ -11,7 +11,7 @@
 #include "housepopulation.h"
 #include "natives.h"
 #include "resource.h"
-#include "routing.h"
+
 #include "security.h"
 #include "sidebarmenu.h"
 #include "terraingraphics.h"

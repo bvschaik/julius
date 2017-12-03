@@ -5,7 +5,7 @@
 #include "figure.h"
 #include "loader.h"
 #include "resource.h"
-#include "routing.h"
+
 #include "sidebarmenu.h"
 #include "terraingraphics.h"
 #include "utilitymanagement.h"

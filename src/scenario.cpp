@@ -10,7 +10,6 @@
 #include "gamefile.h"
 #include "loader.h"
 #include "natives.h"
-#include "routing.h"
 #include "sidebarmenu.h"
 #include "terrain.h"
 #include "terraingraphics.h"

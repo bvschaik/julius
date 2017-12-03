@@ -6,7 +6,7 @@
 #include "figure.h"
 #include "figureaction.h"
 #include "formation.h"
-#include "routing.h"
+
 #include "sidebarmenu.h"
 #include "terrain.h"
 #include "terraingraphics.h"

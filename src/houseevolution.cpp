@@ -1,6 +1,5 @@
 #include "buildinghouse.h"
 
-#include "routing.h"
 #include "terraingraphics.h"
 #include "building/model.h"
 #include "city/culture.h"

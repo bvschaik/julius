@@ -23,4 +23,6 @@ int map_grid_delta(int x, int y);
 
 void map_grid_copy_u16(const uint16_t *src, uint16_t *dst);
 
+int map_grid_direction_delta(int direction);
+
 #endif // MAP_GRID_H

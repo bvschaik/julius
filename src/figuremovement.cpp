@@ -3,7 +3,7 @@
 #include "building.h"
 #include "figure.h"
 #include "figureaction.h"
-#include "routing.h"
+
 #include "terrain.h"
 
 #include <data>

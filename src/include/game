@@ -20,5 +20,6 @@
 #include "map/road_aqueduct.h"
 #include "map/routing_data.h"
 #include "core/direction.h"
+#include "map/routing_path.h"
 
 #endif

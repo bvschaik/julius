@@ -1,7 +1,7 @@
 #include "undo.h"
 
 #include "resource.h"
-#include "routing.h"
+
 #include "terrain.h"
 #include "terraingraphics.h"
 #include "ui/window.h"

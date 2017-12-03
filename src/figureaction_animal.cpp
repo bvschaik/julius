@@ -1,7 +1,7 @@
 #include "figureaction_private.h"
 
 #include "figure.h"
-#include "routing.h"
+
 #include "figure/formation.h"
 
 #include <game>
