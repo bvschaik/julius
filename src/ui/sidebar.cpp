@@ -15,6 +15,7 @@
 #include <game>
 
 #include "core/time.h"
+#include "input/scroll.h"
 #include "graphics/image.h"
 
 #define SIDEBAR_BORDER ((Data_Screen.width + 20) % 60)

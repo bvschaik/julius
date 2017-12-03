@@ -3,7 +3,7 @@
 #include "map/routing.h"
 
 #include "data/figure.hpp"
-
+#include <game>
 
 #include <stdint.h>
 

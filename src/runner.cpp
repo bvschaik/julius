@@ -8,6 +8,7 @@
 #include <data>
 
 #include "core/time.h"
+#include "input/scroll.h"
 #include "game/settings.h"
 
 static const time_millis millisPerTickPerSpeed[] =

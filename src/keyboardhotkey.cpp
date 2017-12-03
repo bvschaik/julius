@@ -11,6 +11,7 @@
 #include <game>
 
 #include "figure/formation.h"
+#include "input/scroll.h"
 
 #define ExitMilitaryCommand() \
 	if (UI_Window_getId() == Window_CityMilitary) {\

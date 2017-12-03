@@ -4,15 +4,16 @@
 #include "core/time.h"
 #include "game/settings.h"
 
-#include "Data/Screen.h"
-#include "Data/State.h"
+#include <data>
 
 #define SCROLL_BORDER 5
 
-static struct {
+static struct
+{
     int is_scrolling;
     time_millis last_scroll_time;
-    struct {
+    struct
+    {
         int up;
         int down;
         int left;
@@ -27,17 +28,21 @@ int scroll_in_progress()
 
 static int should_scroll(const mouse *m)
 {
-    if (!m->is_inside_window) {
+    if (!m->is_inside_window)
+    {
         return 0;
     }
     time_millis current_time = time_get_millis();
     int diff = current_time - data.last_scroll_time;
-    if (current_time < data.last_scroll_time) {
+    if (current_time < data.last_scroll_time)
+    {
         diff = 10000;
     }
     int scroll_delay = (100 - setting_scroll_speed()) / 10;
-    if (scroll_delay < 10) { // 0% = 10 = no scroll at all
-        if (diff >= 12 * scroll_delay + 2) {
+    if (scroll_delay < 10)   // 0% = 10 = no scroll at all
+    {
+        if (diff >= 12 * scroll_delay + 2)
+        {
             data.last_scroll_time = current_time;
             return 1;
         }
@@ -47,7 +52,8 @@ static int should_scroll(const mouse *m)
 
 int scroll_get_direction(const mouse *m)
 {
-    if (!should_scroll(m)) {
+    if (!should_scroll(m))
+    {
         return DIR_8_NONE;
     }
     data.is_scrolling = 0;
@@ -56,36 +62,44 @@ int scroll_get_direction(const mouse *m)
     int left = 0;
     int right = 0;
     // mouse near map edge
-    if (m->x < SCROLL_BORDER) {
+    if (m->x < SCROLL_BORDER)
+    {
         left = 1;
         data.is_scrolling = 1;
     }
-    if (m->x >= Data_Screen.width - SCROLL_BORDER) {
+    if (m->x >= Data_Screen.width - SCROLL_BORDER)
+    {
         right = 1;
         data.is_scrolling = 1;
     }
-    if (m->y < SCROLL_BORDER) {
+    if (m->y < SCROLL_BORDER)
+    {
         top = 1;
         data.is_scrolling = 1;
     }
-    if (m->y >= Data_Screen.height - SCROLL_BORDER) {
+    if (m->y >= Data_Screen.height - SCROLL_BORDER)
+    {
         bottom = 1;
         data.is_scrolling = 1;
     }
     // keyboard arrow keys
-    if (data.arrow_key.left) {
+    if (data.arrow_key.left)
+    {
         left = 1;
         data.is_scrolling = 1;
     }
-    if (data.arrow_key.right) {
+    if (data.arrow_key.right)
+    {
         right = 1;
         data.is_scrolling = 1;
     }
-    if (data.arrow_key.up) {
+    if (data.arrow_key.up)
+    {
         top = 1;
         data.is_scrolling = 1;
     }
-    if (data.arrow_key.down) {
+    if (data.arrow_key.down)
+    {
         bottom = 1;
         data.is_scrolling = 1;
     }
@@ -95,23 +109,37 @@ int scroll_get_direction(const mouse *m)
     data.arrow_key.down = 0;
 
     // two sides
-    if (left && top) {
+    if (left && top)
+    {
         return DIR_7_TOP_LEFT;
-    } else if (left && bottom) {
+    }
+    else if (left && bottom)
+    {
         return DIR_5_BOTTOM_LEFT;
-    } else if (right && top) {
+    }
+    else if (right && top)
+    {
         return DIR_1_TOP_RIGHT;
-    } else if (right && bottom) {
+    }
+    else if (right && bottom)
+    {
         return DIR_3_BOTTOM_RIGHT;
     }
     // one side
-    if (left) {
+    if (left)
+    {
         return DIR_6_LEFT;
-    } else if (right) {
+    }
+    else if (right)
+    {
         return DIR_2_RIGHT;
-    } else if (top) {
+    }
+    else if (top)
+    {
         return DIR_0_TOP;
-    } else if (bottom) {
+    }
+    else if (bottom)
+    {
         return DIR_4_BOTTOM;
     }
     // none of them

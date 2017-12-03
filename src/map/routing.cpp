@@ -1,10 +1,10 @@
-
+#include "routing.h"
 
 #include "map/grid.h"
 #include "map/road_aqueduct.h"
+#include "map/routing_data.h"
 
 #include <data>
-#include <game>
 
 #define MAX_QUEUE GRID_SIZE * GRID_SIZE
 #define GUARD 50000
@@ -575,6 +575,12 @@ int map_routing_noncitizen_can_travel_through_everything(int src_x, int src_y, i
     ++stats.total_routes_calculated;
     route_queue(sourceOffset, destOffset, callback_travel_noncitizen_through_everything);
     return Data_Grid_routingDistance[destOffset] != 0;
+}
+
+
+int map_routing_distance(int grid_offset)
+{
+    return Data_Grid_routingDistance[grid_offset];
 }
 
 void map_routing_save_state(buffer *buf)

@@ -7,7 +7,6 @@
 #include "map/routing_data.h"
 
 #include <data>
-#include "../routing.h"
 
 static void map_routing_update_land_noncitizen();
 

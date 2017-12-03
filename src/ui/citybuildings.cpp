@@ -4,7 +4,7 @@
 #include "buildingplacement.h"
 #include "cityview.h"
 #include "formation.h"
-#include "scroll.h"
+#include "input/scroll.h"
 #include "undo.h"
 #include <ui>
 
@@ -66,7 +66,7 @@ void UI_CityBuildings_drawBuildingCost()
     {
         return;
     }
-    if (Data_State.isScrollingMap)
+    if (scroll_in_progress())
     {
         return;
     }
@@ -872,7 +872,7 @@ static void buildEnd()
 
 void UI_CityBuildings_handleMouse(const mouse *m)
 {
-    UI_CityBuildings_scrollMap(Scroll_getDirection(m));
+    UI_CityBuildings_scrollMap(scroll_get_direction(m));
     updateCityViewCoords(m);
     Data_State.selectedBuilding.drawAsOverlay = 0;
     if (m->left.went_down)
@@ -1451,7 +1451,7 @@ void UI_CityBuildings_handleMouseMilitary(const mouse *m)
     {
         return;
     }
-    UI_CityBuildings_scrollMap(Scroll_getDirection(m));
+    UI_CityBuildings_scrollMap(scroll_get_direction(m));
     if (m->right.went_up)
     {
         UI_Warning_clearAll();

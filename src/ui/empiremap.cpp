@@ -3,7 +3,7 @@
 #include "cityinfo.h"
 #include "graphics.h"
 #include "resource.h"
-#include "scroll.h"
+#include "input/scroll.h"
 #include "sidebarmenu.h"
 
 #include <ui>
