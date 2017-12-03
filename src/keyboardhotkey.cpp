@@ -274,22 +274,22 @@ void KeyboardHotkey_character(int c)
 
 void KeyboardHotkey_left()
 {
-    Data_State.arrowKey.left = 1;
+    scroll_arrow_left();
 }
 
 void KeyboardHotkey_right()
 {
-    Data_State.arrowKey.right = 1;
+    scroll_arrow_right();
 }
 
 void KeyboardHotkey_up()
 {
-    Data_State.arrowKey.up = 1;
+    scroll_arrow_up();
 }
 
 void KeyboardHotkey_down()
 {
-    Data_State.arrowKey.down = 1;
+    scroll_arrow_down();
 }
 
 void KeyboardHotkey_home()

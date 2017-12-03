@@ -55,7 +55,7 @@ static int getElapsedTicks()
     {
         return 0;
     }
-    if (Data_State.isScrollingMap)
+    if (scroll_in_progress())
     {
         return 0;
     }

@@ -547,7 +547,7 @@ static void determineSelectedObject(const mouse *m)
 
 void UI_Empire_handleMouse(const mouse *m)
 {
-    empire_scroll_map(Scroll_getDirection(m));
+    empire_scroll_map(scroll_get_direction(m));
     data.focusButtonId = 0;
     int buttonId;
     Widget::Button::handleImageButtons(data.xMin + 20, data.yMax - 44, imageButtonHelp, 1, &buttonId);

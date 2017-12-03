@@ -273,7 +273,7 @@ void UI_Sidebar_drawMinimap(int force)
 {
     if (!Data_State.sidebarCollapsed)
     {
-        if (minimapRedrawRequested || Data_State.isScrollingMap || force)
+        if (minimapRedrawRequested || scroll_in_progress() || force)
         {
             int xOffset = XOFFSET_EXPANDED;
             UI_Minimap_draw(xOffset + 8, 59, 73, 111);
