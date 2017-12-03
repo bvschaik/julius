@@ -311,7 +311,7 @@ void UI_CityBuildings_drawFigure(int figureId, int xOffset, int yOffset, int sel
 			case FIGURE_CART_PUSHER:
 			case FIGURE_WAREHOUSEMAN:
 			case FIGURE_LION_TAMER:
-			case FIGURE_DOCKMAN:
+			case FIGURE_DOCKER:
 			case FIGURE_NATIVE_TRADER:
 			case FIGURE_IMMIGRANT:
 			case FIGURE_EMIGRANT:

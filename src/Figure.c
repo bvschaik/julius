@@ -37,7 +37,7 @@ void Figure_delete(figure *f)
 		case FIGURE_BALLISTA:
 			Data_Buildings[f->buildingId].figureId4 = 0;
 			break;
-		case FIGURE_DOCKMAN:
+		case FIGURE_DOCKER:
 			for (int i = 0; i < 3; i++) {
 				if (Data_Buildings[f->buildingId].data.other.dockFigureIds[i] == f->id) {
 					Data_Buildings[f->buildingId].data.other.dockFigureIds[i] = 0;

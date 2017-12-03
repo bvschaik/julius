@@ -450,7 +450,7 @@ static int soldier_phrase(figure *f)
     return 0;
 }
 
-static int dockman_phrase(figure *f)
+static int docker_phrase(figure *f)
 {
     if (f->actionState == FigureActionState_135_DockerImportGoingToWarehouse ||
         f->actionState == FigureActionState_136_DockerExportGoingToWarehouse) {
@@ -542,8 +542,8 @@ static int phrase_based_on_figure_state(figure *f)
         case FIGURE_FORT_MOUNTED:
         case FIGURE_FORT_LEGIONARY:
             return soldier_phrase(f);
-        case FIGURE_DOCKMAN:
-            return dockman_phrase(f);
+        case FIGURE_DOCKER:
+            return docker_phrase(f);
         case FIGURE_TRADE_CARAVAN:
             return trade_caravan_phrase(f);
         case FIGURE_TRADE_SHIP:

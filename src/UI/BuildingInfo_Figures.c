@@ -356,7 +356,7 @@ static void drawFigureInfo(BuildingInfoContext *c, int figureId)
 	} else if (type == FIGURE_FISHING_BOAT || type == FIGURE_SHIPWRECK ||
 			type == FIGURE_SHEEP || type == FIGURE_WOLF || type == FIGURE_ZEBRA) {
 		drawFigureInfoBoatAnimal(c, f);
-	} else if (type == FIGURE_CART_PUSHER || type == FIGURE_WAREHOUSEMAN || type == FIGURE_DOCKMAN) {
+	} else if (type == FIGURE_CART_PUSHER || type == FIGURE_WAREHOUSEMAN || type == FIGURE_DOCKER) {
 		drawFigureInfoCartpusher(c, f);
 	} else if (type == FIGURE_MARKET_BUYER) {
 		drawFigureInfoMarketBuyer(c, f);

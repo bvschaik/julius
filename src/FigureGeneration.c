@@ -1110,7 +1110,7 @@ static void spawnFigureDock(int buildingId, struct Data_Building *b)
 		int existingDockers = 0;
 		for (int i = 0; i < 3; i++) {
 			if (b->data.other.dockFigureIds[i]) {
-				if (figure_get(b->data.other.dockFigureIds[i])->type == FIGURE_DOCKMAN) {
+				if (figure_get(b->data.other.dockFigureIds[i])->type == FIGURE_DOCKER) {
 					existingDockers++;
 				} else {
 					b->data.other.dockFigureIds[i] = 0;
@@ -1126,7 +1126,7 @@ static void spawnFigureDock(int buildingId, struct Data_Building *b)
 				}
 			}
 		} else if (existingDockers < maxDockers) {
-			figure *f = figure_create(FIGURE_DOCKMAN, xRoad, yRoad, DIR_4_BOTTOM);
+			figure *f = figure_create(FIGURE_DOCKER, xRoad, yRoad, DIR_4_BOTTOM);
 			f->actionState = FigureActionState_132_DockerIdling;
 			f->buildingId = buildingId;
 			for (int i = 0; i < 3; i++) {
