@@ -64,7 +64,7 @@ static int focusButtonId;
 
 static void update_scroll_position()
 {
-    int totalMessages = city_message_count();
+    int totalMessages = game.messages.count();
     if (totalMessages <= 10) {
         data.scrollPosition = 0;
         data.maxScrollPosition = 0;
@@ -84,7 +84,7 @@ void UI_PlayerMessageList_resetScroll()
 
 void UI_PlayerMessageList_init()
 {
-    city_message_sort_and_compact();
+    game.messages.sort_and_compact();
     update_scroll_position();
 }
 
@@ -106,7 +106,7 @@ void UI_PlayerMessageList_drawBackground()
 	Widget_GameText_drawCentered(63, 0, data.x, data.y + 16, 16 * data.widthBlocks, FONT_LARGE_BLACK);
 	Widget_Panel_drawInnerPanel(data.xText, data.yText, data.textWidthBlocks, data.textHeightBlocks);
 
-	if (city_message_count() > 0) {
+	if (game.messages.count() > 0) {
 		Widget_GameText_draw(63, 2, data.xText + 42, data.yText - 12, FONT_SMALL_PLAIN);
 		Widget_GameText_draw(63, 3, data.xText + 180, data.yText - 12, FONT_SMALL_PLAIN);
 		Widget_GameText_drawMultiline(63, 4,
@@ -128,7 +128,7 @@ void UI_PlayerMessageList_drawForeground()
 		data.x + 16 * data.widthBlocks - 38, data.y + 16 * data.heightBlocks - 36,
 		&imageButtonClose, 1);
 
-    int totalMessages = city_message_count();
+	  int totalMessages = game.messages.count();
 	if (totalMessages <= 0) {
 		return;
 	}
@@ -136,8 +136,8 @@ void UI_PlayerMessageList_drawForeground()
 	int max = totalMessages < 10 ? totalMessages : 10;
 	int index = data.scrollPosition;
 	for (int i = 0; i < max; i++, index++) {
-        const city_message *msg = city_message_get(index);
-		int messageId = city_message_get_text_id(msg->message_type);
+		    const city_message *msg = game.messages.get(index);
+		int messageId = game.messages.get_text_id(msg->message_type);
 		int graphicOffset = 0;
 		if (lang_get_message(messageId)->message_type == MESSAGE_TYPE_DISASTER) {
 			graphicOffset = 2;
@@ -280,23 +280,23 @@ static void buttonClose(int param1, int param2)
 
 static void buttonMessage(int param1, int param2)
 {
-	int id = city_message_set_current(data.scrollPosition + param1);
-	if (id < city_message_count()) {
-        const city_message *msg = city_message_get(id);
-		city_message_mark_read(id);
+	int id = game.messages.set_current(data.scrollPosition + param1);
+	if (id < game.messages.count()) {
+		    const city_message *msg = game.messages.get(id);
+		game.messages.mark_read(id);
 		UI_MessageDialog_setPlayerMessage(
 			msg->year, msg->month, msg->param1, msg->param2,
-			city_message_get_advisor(msg->message_type),
+		  game.messages.get_advisor(msg->message_type),
 			0);
-		UI_MessageDialog_show(city_message_get_text_id(msg->message_type), 0);
+		UI_MessageDialog_show(game.messages.get_text_id(msg->message_type), 0);
 	}
 }
 
 static void buttonDelete(int param1, int param2)
 {
-	int id = city_message_set_current(data.scrollPosition + param1);
-	if (id < city_message_count()) {
-		city_message_delete(id);
+	int id = game.messages.set_current(data.scrollPosition + param1);
+	if (id < game.messages.count()) {
+		game.messages.remove(id);
 		update_scroll_position();
 		UI_Window_requestRefresh();
 	}

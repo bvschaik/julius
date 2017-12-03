@@ -179,8 +179,8 @@ static void generateRioter(int buildingId)
 	Data_CityInfo.riotCause = Data_CityInfo.populationEmigrationCause;
 	CityInfo_Population_changeHappiness(20);
     tutorial_on_crime();
-    city_message_apply_sound_interval(MESSAGE_CAT_RIOT);
-	city_message_post_with_popup_delay(MESSAGE_CAT_RIOT, MESSAGE_RIOT, b->type, map_grid_offset(xRoad, yRoad));
+    game.messages.apply_sound_interval(MESSAGE_CAT_RIOT);
+  game.messages.post_with_popup_delay(MESSAGE_CAT_RIOT, MESSAGE_RIOT, b->type, map_grid_offset(xRoad, yRoad));
 }
 
 static void generateMugger(int buildingId)
@@ -199,7 +199,7 @@ static void generateMugger(int buildingId)
 				if (moneyStolen > 400) {
 					moneyStolen = 400 - random_byte() / 2;
 				}
-				city_message_post(1, MESSAGE_THEFT, moneyStolen, f->gridOffset);
+				game.messages.post(1, MESSAGE_THEFT, moneyStolen, f->gridOffset);
 				Data_CityInfo.financeStolenThisYear += moneyStolen;
 				Data_CityInfo.treasury -= moneyStolen;
 				Data_CityInfo.financeSundriesThisYear += moneyStolen;
@@ -272,9 +272,9 @@ void Security_Tick_generateCriminal()
 
 static void collapseBuilding(int buildingId, struct Data_Building *b)
 {
-	city_message_apply_sound_interval(MESSAGE_CAT_COLLAPSE);
+	game.messages.apply_sound_interval(MESSAGE_CAT_COLLAPSE);
 	if (!tutorial_handle_collapse()) {
-		city_message_post_with_popup_delay(MESSAGE_CAT_COLLAPSE, MESSAGE_COLLAPSED_BUILDING, b->type, b->gridOffset);
+		game.messages.post_with_popup_delay(MESSAGE_CAT_COLLAPSE, MESSAGE_COLLAPSED_BUILDING, b->type, b->gridOffset);
 	}
 	
 	Data_State.undoAvailable = 0;
@@ -286,9 +286,9 @@ static void collapseBuilding(int buildingId, struct Data_Building *b)
 
 static void fireBuilding(int buildingId, struct Data_Building *b)
 {
-	city_message_apply_sound_interval(MESSAGE_CAT_FIRE);
+	game.messages.apply_sound_interval(MESSAGE_CAT_FIRE);
 	if (!tutorial_handle_fire()) {
-		city_message_post_with_popup_delay(MESSAGE_CAT_FIRE, MESSAGE_FIRE, b->type, b->gridOffset);
+		game.messages.post_with_popup_delay(MESSAGE_CAT_FIRE, MESSAGE_FIRE, b->type, b->gridOffset);
 	}
 	
 	Building_collapseOnFire(buildingId, 0);

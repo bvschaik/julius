@@ -30,11 +30,11 @@ void scenario_price_change_process()
         int resource = scenario.price_changes[i].resource;
         if (scenario.price_changes[i].is_rise) {
             if (trade_price_change(resource, amount)) {
-                city_message_post(1, MESSAGE_PRICE_INCREASED, amount, resource);
+                game.messages.post(1, MESSAGE_PRICE_INCREASED, amount, resource);
             }
         } else {
             if (trade_price_change(resource, -amount)) {
-                city_message_post(1, MESSAGE_PRICE_DECREASED, amount, resource);
+                game.messages.post(1, MESSAGE_PRICE_DECREASED, amount, resource);
             }
         }
     }

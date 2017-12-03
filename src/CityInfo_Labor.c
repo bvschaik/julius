@@ -128,7 +128,7 @@ void CityInfo_Labor_checkEmployment()
 	// workers needed message
 	if (!origNeeded && Data_CityInfo.workersNeeded > 0) {
 		if (game_time_year() >= scenario_property_start_year()) {
-			city_message_post_with_message_delay(MESSAGE_CAT_WORKERS_NEEDED, 0, MESSAGE_WORKERS_NEEDED, 6);
+			game.messages.post_with_message_delay(MESSAGE_CAT_WORKERS_NEEDED, 0, MESSAGE_WORKERS_NEEDED, 6);
 		}
 	}
 }

@@ -524,9 +524,9 @@ void FigureAction_tradeShip(figure *f)
 				figure_route_remove(f);
 			} else if (f->direction == DirFigure_10_Lost) {
 				f->state = FigureState_Dead;
-				if (!city_message_get_category_count(MESSAGE_CAT_BLOCKED_DOCK)) {
-					city_message_post(1, MESSAGE_NAVIGATION_IMPOSSIBLE, 0, 0);
-					city_message_increase_category_count(MESSAGE_CAT_BLOCKED_DOCK);
+				if (!game.messages.get_category_count(MESSAGE_CAT_BLOCKED_DOCK)) {
+					game.messages.post(1, MESSAGE_NAVIGATION_IMPOSSIBLE, 0, 0);
+					game.messages.increase_category_count(MESSAGE_CAT_BLOCKED_DOCK);
 				}
 			}
 			if (!BuildingIsInUse(f->destinationBuildingId)) {
@@ -562,7 +562,7 @@ void FigureAction_tradeShip(figure *f)
 				default:f->direction = Dir_0_Top; break;
 			}
 			f->graphicOffset = 0;
-			city_message_reset_category_count(MESSAGE_CAT_BLOCKED_DOCK);
+			game.messages.reset_category_count(MESSAGE_CAT_BLOCKED_DOCK);
 			break;
 		case FigureActionState_113_TradeShipGoingToDockQueue:
 			FigureMovement_walkTicks(f, 1);

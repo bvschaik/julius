@@ -91,7 +91,7 @@ void HousePopulation_updateMigration()
 			Data_CityInfo.populationEmigrationQueueSize = 0;
 			if (!Data_CityInfo.messageShownEmigration) {
 				Data_CityInfo.messageShownEmigration = 1;
-				city_message_post(1, MESSAGE_EMIGRATION, 0, 0);
+				game.messages.post(1, MESSAGE_EMIGRATION, 0, 0);
 			}
 		} else {
 			// queue them for next round
@@ -105,32 +105,32 @@ void HousePopulation_updateMigration()
 	CityInfo_Population_yearlyUpdate();
 	calculateWorkers();
 	// population messages
-	if (Data_CityInfo.population >= 500 && city_message_mark_population_shown(500)) {
-		city_message_post(1, MESSAGE_POPULATION_500, 0, 0);
+	if (Data_CityInfo.population >= 500 && game.messages.mark_population_shown(500)) {
+		game.messages.post(1, MESSAGE_POPULATION_500, 0, 0);
 	}
-	if (Data_CityInfo.population >= 1000 && city_message_mark_population_shown(1000)) {
-		city_message_post(1, MESSAGE_POPULATION_1000, 0, 0);
+	if (Data_CityInfo.population >= 1000 && game.messages.mark_population_shown(1000)) {
+		game.messages.post(1, MESSAGE_POPULATION_1000, 0, 0);
 	}
-	if (Data_CityInfo.population >= 2000 && city_message_mark_population_shown(2000)) {
-		city_message_post(1, MESSAGE_POPULATION_2000, 0, 0);
+	if (Data_CityInfo.population >= 2000 && game.messages.mark_population_shown(2000)) {
+		game.messages.post(1, MESSAGE_POPULATION_2000, 0, 0);
 	}
-	if (Data_CityInfo.population >= 3000 && city_message_mark_population_shown(3000)) {
-		city_message_post(1, MESSAGE_POPULATION_3000, 0, 0);
+	if (Data_CityInfo.population >= 3000 && game.messages.mark_population_shown(3000)) {
+		game.messages.post(1, MESSAGE_POPULATION_3000, 0, 0);
 	}
-	if (Data_CityInfo.population >= 5000 && city_message_mark_population_shown(5000)) {
-		city_message_post(1, MESSAGE_POPULATION_5000, 0, 0);
+	if (Data_CityInfo.population >= 5000 && game.messages.mark_population_shown(5000)) {
+		game.messages.post(1, MESSAGE_POPULATION_5000, 0, 0);
 	}
-	if (Data_CityInfo.population >= 10000 && city_message_mark_population_shown(10000)) {
-		city_message_post(1, MESSAGE_POPULATION_10000, 0, 0);
+	if (Data_CityInfo.population >= 10000 && game.messages.mark_population_shown(10000)) {
+		game.messages.post(1, MESSAGE_POPULATION_10000, 0, 0);
 	}
-	if (Data_CityInfo.population >= 15000 && city_message_mark_population_shown(15000)) {
-		city_message_post(1, MESSAGE_POPULATION_15000, 0, 0);
+	if (Data_CityInfo.population >= 15000 && game.messages.mark_population_shown(15000)) {
+		game.messages.post(1, MESSAGE_POPULATION_15000, 0, 0);
 	}
-	if (Data_CityInfo.population >= 20000 && city_message_mark_population_shown(20000)) {
-		city_message_post(1, MESSAGE_POPULATION_20000, 0, 0);
+	if (Data_CityInfo.population >= 20000 && game.messages.mark_population_shown(20000)) {
+		game.messages.post(1, MESSAGE_POPULATION_20000, 0, 0);
 	}
-	if (Data_CityInfo.population >= 25000 && city_message_mark_population_shown(25000)) {
-		city_message_post(1, MESSAGE_POPULATION_25000, 0, 0);
+	if (Data_CityInfo.population >= 25000 && game.messages.mark_population_shown(25000)) {
+		game.messages.post(1, MESSAGE_POPULATION_25000, 0, 0);
 	}
 }
 

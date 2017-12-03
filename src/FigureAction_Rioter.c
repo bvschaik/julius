@@ -161,9 +161,9 @@ int FigureAction_Rioter_collapseBuilding(figure *f)
 		if (b->houseSize && b->subtype.houseLevel < HOUSE_SMALL_CASA) {
 			continue;
 		}
-		city_message_apply_sound_interval(MESSAGE_CAT_RIOT_COLLAPSE);
-		city_message_post(0, MESSAGE_DESTROYED_BUILDING, b->type, f->gridOffset);
-		city_message_increase_category_count(MESSAGE_CAT_RIOT_COLLAPSE);
+		game.messages.apply_sound_interval(MESSAGE_CAT_RIOT_COLLAPSE);
+		game.messages.post(0, MESSAGE_DESTROYED_BUILDING, b->type, f->gridOffset);
+		game.messages.increase_category_count(MESSAGE_CAT_RIOT_COLLAPSE);
 		Building_collapseOnFire(buildingId, 0);
 		f->actionState = FigureActionState_120_RioterCreated;
 		f->waitTicks = 0;

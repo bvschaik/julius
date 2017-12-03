@@ -32,23 +32,23 @@ static void performBlessing(int god)
 {
 	switch (god) {
 		case GOD_CERES:
-			city_message_post(1, MESSAGE_BLESSING_FROM_CERES, 0, 0);
+			game.messages.post(1, MESSAGE_BLESSING_FROM_CERES, 0, 0);
 			Building_Industry_blessFarmsFromCeres();
 			break;
 		case GOD_NEPTUNE:
-			city_message_post(1, MESSAGE_BLESSING_FROM_NEPTUNE, 0, 0);
+			game.messages.post(1, MESSAGE_BLESSING_FROM_NEPTUNE, 0, 0);
 			Data_CityInfo.godBlessingNeptuneDoubleTrade = 1;
 			break;
 		case GOD_MERCURY:
-			city_message_post(1, MESSAGE_BLESSING_FROM_MERCURY, 0, 0);
+			game.messages.post(1, MESSAGE_BLESSING_FROM_MERCURY, 0, 0);
 			Building_Mercury_fillGranary();
 			break;
 		case GOD_MARS:
-			city_message_post(1, MESSAGE_BLESSING_FROM_MARS, 0, 0);
+			game.messages.post(1, MESSAGE_BLESSING_FROM_MARS, 0, 0);
 			Data_CityInfo.godBlessingMarsEnemiesToKill = 10;
 			break;
 		case GOD_VENUS:
-			city_message_post(1, MESSAGE_BLESSING_FROM_VENUS, 0, 0);
+			game.messages.post(1, MESSAGE_BLESSING_FROM_VENUS, 0, 0);
 			CityInfo_Population_changeHappiness(25);
 			break;
 	}
@@ -58,27 +58,27 @@ static void performSmallCurse(int god)
 {
 	switch (god) {
 		case GOD_CERES:
-			city_message_post(1, MESSAGE_CERES_IS_UPSET, 0, 0);
+			game.messages.post(1, MESSAGE_CERES_IS_UPSET, 0, 0);
 			Building_Industry_witherFarmCropsFromCeres(0);
 			break;
 		case GOD_NEPTUNE:
-			city_message_post(1, MESSAGE_NEPTUNE_IS_UPSET, 0, 0);
+			game.messages.post(1, MESSAGE_NEPTUNE_IS_UPSET, 0, 0);
 			Figure_sinkAllShips();
 			Data_CityInfo.godCurseNeptuneSankShips = 1;
 			break;
 		case GOD_MERCURY:
-			city_message_post(1, MESSAGE_MERCURY_IS_UPSET, 0, 0);
+			game.messages.post(1, MESSAGE_MERCURY_IS_UPSET, 0, 0);
 			Building_Mercury_removeResources(0);
 			break;
 		case GOD_MARS:
 			if (scenario_invasion_start_from_mars()) {
-				city_message_post(1, MESSAGE_MARS_IS_UPSET, 0, 0);
+				game.messages.post(1, MESSAGE_MARS_IS_UPSET, 0, 0);
 			} else {
-				city_message_post(1, MESSAGE_WRATH_OF_MARS_NO_MILITARY, 0, 0);
+				game.messages.post(1, MESSAGE_WRATH_OF_MARS_NO_MILITARY, 0, 0);
 			}
 			break;
 		case GOD_VENUS:
-			city_message_post(1, MESSAGE_VENUS_IS_UPSET, 0, 0);
+			game.messages.post(1, MESSAGE_VENUS_IS_UPSET, 0, 0);
 			CityInfo_Population_setMaxHappiness(50);
 			CityInfo_Population_changeHappiness(-5);
 			CityInfo_Population_changeHealthRate(-10);
@@ -91,34 +91,34 @@ static int performLargeCurse(int god)
 {
 	switch (god) {
 		case GOD_CERES:
-			city_message_post(1, MESSAGE_WRATH_OF_CERES, 0, 0);
+			game.messages.post(1, MESSAGE_WRATH_OF_CERES, 0, 0);
 			Building_Industry_witherFarmCropsFromCeres(1);
 			break;
 		case GOD_NEPTUNE:
 			if (Data_CityInfo.tradeNumOpenSeaRoutes <= 0) {
-				city_message_post(1, MESSAGE_WRATH_OF_NEPTUNE_NO_SEA_TRADE, 0, 0);
+				game.messages.post(1, MESSAGE_WRATH_OF_NEPTUNE_NO_SEA_TRADE, 0, 0);
 				return 0;
 			} else {
-				city_message_post(1, MESSAGE_WRATH_OF_NEPTUNE, 0, 0);
+				game.messages.post(1, MESSAGE_WRATH_OF_NEPTUNE, 0, 0);
 				Figure_sinkAllShips();
 				Data_CityInfo.godCurseNeptuneSankShips = 1;
 				Data_CityInfo.tradeSeaProblemDuration = 80;
 			}
 			break;
 		case GOD_MERCURY:
-			city_message_post(1, MESSAGE_WRATH_OF_MERCURY, 0, 0);
+			game.messages.post(1, MESSAGE_WRATH_OF_MERCURY, 0, 0);
 			Building_Mercury_removeResources(1);
 			break;
 		case GOD_MARS:
 			if (Formation_marsCurseFort()) {
-				city_message_post(1, MESSAGE_WRATH_OF_MARS, 0, 0);
+				game.messages.post(1, MESSAGE_WRATH_OF_MARS, 0, 0);
 				scenario_invasion_start_from_mars();
 			} else {
-				city_message_post(1, MESSAGE_WRATH_OF_MARS_NO_MILITARY, 0, 0);
+				game.messages.post(1, MESSAGE_WRATH_OF_MARS_NO_MILITARY, 0, 0);
 			}
 			break;
 		case GOD_VENUS:
-			city_message_post(1, MESSAGE_WRATH_OF_VENUS, 0, 0);
+			game.messages.post(1, MESSAGE_WRATH_OF_VENUS, 0, 0);
 			CityInfo_Population_setMaxHappiness(40);
 			CityInfo_Population_changeHappiness(-10);
 			if (Data_CityInfo.healthRate >= 80) {
@@ -229,9 +229,9 @@ static void updateGodMoods()
 	} else if (minHappiness < 30) {
 		Data_CityInfo.godAngryMessageDelay = 20;
 		if (minHappiness < 10) {
-			city_message_post(0, MESSAGE_GODS_WRATHFUL, 0, 0);
+			game.messages.post(0, MESSAGE_GODS_WRATHFUL, 0, 0);
 		} else {
-			city_message_post(0, MESSAGE_GODS_UNHAPPY, 0, 0);
+			game.messages.post(0, MESSAGE_GODS_UNHAPPY, 0, 0);
 		}
 	}
 }
@@ -398,9 +398,9 @@ void CityInfo_Gods_checkFestival()
 	Data_CityInfo.monthsSinceFestival = 1;
 	Data_CityInfo.godMonthsSinceFestival[Data_CityInfo.plannedFestivalGod] = 0;
 	switch (Data_CityInfo.plannedFestivalSize) {
-		case Festival_Small: city_message_post(1, MESSAGE_SMALL_FESTIVAL, 0, 0); break;
-		case Festival_Large: city_message_post(1, MESSAGE_LARGE_FESTIVAL, 0, 0); break;
-		case Festival_Grand: city_message_post(1, MESSAGE_GRAND_FESTIVAL, 0, 0); break;
+		case Festival_Small: game.messages.post(1, MESSAGE_SMALL_FESTIVAL, 0, 0); break;
+		case Festival_Large: game.messages.post(1, MESSAGE_LARGE_FESTIVAL, 0, 0); break;
+		case Festival_Grand: game.messages.post(1, MESSAGE_GRAND_FESTIVAL, 0, 0); break;
 	}
 	Data_CityInfo.plannedFestivalSize = Festival_None;
 	Data_CityInfo.plannedFestivalMonthsToGo = 0;

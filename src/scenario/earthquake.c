@@ -113,7 +113,7 @@ void scenario_earthquake_process()
             data.duration = 0;
             data.delay = 0;
             advanceEarthquakeToTile(data.expand[0].x, data.expand[0].y);
-            city_message_post(1, MESSAGE_EARTHQUAKE, 0,
+            game.messages.post(1, MESSAGE_EARTHQUAKE, 0,
                 map_grid_offset(data.expand[0].x, data.expand[0].y));
         }
     } else if (data.state == EVENT_IN_PROGRESS) {

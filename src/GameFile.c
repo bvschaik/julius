@@ -472,7 +472,7 @@ static void savegame_deserialize(savegame_state *state)
     scenario_load_state(state->scenario);
     scenario_criteria_load_state(state->max_game_year);
     scenario_earthquake_load_state(state->earthquake);
-    city_message_load_state(state->messages, state->message_extra,
+    game.messages.load_state(state->messages, state->message_extra,
                             state->message_counts, state->message_delays,
                             state->population_messages);
     sound_city_load_state(state->city_sounds);
@@ -593,7 +593,7 @@ static void savegame_serialize(savegame_state *state)
 
     scenario_criteria_save_state(state->max_game_year);
     scenario_earthquake_save_state(state->earthquake);
-    city_message_save_state(state->messages, state->message_extra,
+    game.messages.save_state(state->messages, state->message_extra,
                             state->message_counts, state->message_delays,
                             state->population_messages);
     sound_city_save_state(state->city_sounds);
@@ -769,7 +769,7 @@ static void setupFromSavedGame()
 	Building_GameTick_checkAccessToRome();
 	Resource_gatherGranaryGettingInfo();
 	SidebarMenu_enableBuildingMenuItemsAndButtons();
-	city_message_init_problem_areas();
+	game.messages.init_problem_areas();
 
 	sound_city_init();
 	sound_music_reset();

@@ -110,7 +110,7 @@ void FigureAction_fishingBoat(figure *f)
 				figure_route_remove(f);
 			} else if (f->direction == DirFigure_10_Lost) {
 				// cannot reach grounds
-				city_message_post_with_message_delay(MESSAGE_CAT_FISHING_BLOCKED, 1, MESSAGE_FISHING_BOAT_BLOCKED, 12);
+				game.messages.post_with_message_delay(MESSAGE_CAT_FISHING_BLOCKED, 1, MESSAGE_FISHING_BOAT_BLOCKED, 12);
 				f->state = FigureState_Dead;
 			}
 			break;

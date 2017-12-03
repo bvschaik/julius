@@ -121,7 +121,7 @@ static int canGenerateTraderForCity(int city_id, empire_city *city)
     if (city->is_sea_trade) {
         if (Data_CityInfo.numWorkingDocks <= 0) {
             // delay of 384 = 1 year
-            city_message_post_with_message_delay(MESSAGE_CAT_NO_WORKING_DOCK, 1, MESSAGE_NO_WORKING_DOCK, 384);
+            game.messages.post_with_message_delay(MESSAGE_CAT_NO_WORKING_DOCK, 1, MESSAGE_NO_WORKING_DOCK, 384);
             return 0;
         }
         if (!scenario_map_has_river_entry()) {
