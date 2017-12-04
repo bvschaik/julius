@@ -501,6 +501,15 @@ void Building_decayHousesCovered()
 	}
 }
 
+void Building_decayTaxCollectorAccess()
+{
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
+        if (BuildingIsInUse(i) && Data_Buildings[i].houseTaxCoverage) {
+            Data_Buildings[i].houseTaxCoverage--;
+        }
+    }
+}
+
 void Building_determineGraphicIdsForOrientedBuildings()
 {
 	int mapOrientation = Data_State.map.orientation;
