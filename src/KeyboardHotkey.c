@@ -18,6 +18,7 @@
 #include "Data/Constants.h"
 #include "Data/State.h"
 
+#include "city/finance.h"
 #include "figure/formation.h"
 #include "input/scroll.h"
 #include "map/bookmark.h"
@@ -145,11 +146,10 @@ static void cheatVictory()
 
 static void cheatMoney()
 {
-	if (data.isCheating && Data_CityInfo.treasury < 5000) {
-		Data_CityInfo.treasury += 1000;
-		Data_CityInfo.cheatedMoney += 1000;
-		UI_Window_requestRefresh();
-	}
+    if (data.isCheating) {
+        city_finance_process_cheat();
+        UI_Window_requestRefresh();
+    }
 }
 
 void KeyboardHotkey_character(int c)

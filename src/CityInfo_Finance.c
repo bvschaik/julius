@@ -4,6 +4,7 @@
 #include "Data/Building.h"
 
 #include "building/model.h"
+#include "city/finance.h"
 #include "city/message.h"
 #include "core/calc.h"
 #include "game/difficulty.h"
@@ -112,7 +113,7 @@ static void payMonthlyInterest()
 
 static void payMonthlySalary()
 {
-	if (Data_CityInfo.treasury > MIN_TREASURY) {
+	if (!city_finance_out_of_money()) {
 		Data_CityInfo.financeSalaryPaidThisYear += Data_CityInfo.salaryAmount;
 		Data_CityInfo.personalSavings += Data_CityInfo.salaryAmount;
 		Data_CityInfo.treasury -= Data_CityInfo.salaryAmount;
@@ -319,12 +320,6 @@ void CityInfo_Finance_updateSalary()
 	Data_CityInfo.financeSalaryThisYear = Data_CityInfo.financeSalaryPaidThisYear;
 }
 
-void CityInfo_Finance_spendOnConstruction(int amount)
-{
-	Data_CityInfo.treasury -= amount;
-	Data_CityInfo.financeConstructionThisYear += amount;
-}
-
 void CityInfo_Finance_updateDebtState()
 {
     if (Data_CityInfo.treasury >= 0) {
@@ -334,8 +329,7 @@ void CityInfo_Finance_updateDebtState()
     if (Data_CityInfo.debtState == 0) {
         // provide bailout
         int rescueLoan = difficulty_adjust_money(scenario_rescue_loan());
-        Data_CityInfo.treasury += rescueLoan;
-        Data_CityInfo.financeDonatedThisYear += rescueLoan;
+        city_finance_process_donation(rescueLoan);
         
         CityInfo_Finance_calculateTotals();
         

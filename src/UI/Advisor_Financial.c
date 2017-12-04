@@ -2,6 +2,7 @@
 #include "Window.h"
 #include "../CityInfo.h"
 
+#include "city/finance.h"
 #include "core/calc.h"
 
 #define VAL(val,x,y) Widget_Text_drawNumber(val, '@', " ", baseOffsetX + x, baseOffsetY + y, FONT_NORMAL_BLACK)
@@ -33,15 +34,16 @@ void UI_Advisor_Financial_drawBackground(int *advisorHeight)
 	//Widget_Panel_drawInnerPanelBottom(baseOffsetX + 64, baseOffsetY + 104, 34);
 
 	int width;
-	if (Data_CityInfo.treasury < 0) {
+    int treasury = city_finance_treasury();
+	if (treasury < 0) {
 		width = Widget_GameText_draw(60, 3, baseOffsetX + 70, baseOffsetY + 58, FONT_NORMAL_RED);
 		Widget_GameText_drawNumberWithDescription(8, 0,
-			-Data_CityInfo.treasury, baseOffsetX + 72 + width, baseOffsetY + 58, FONT_NORMAL_RED
+			-treasury, baseOffsetX + 72 + width, baseOffsetY + 58, FONT_NORMAL_RED
 		);
 	} else {
 		width = Widget_GameText_draw(60, 2, baseOffsetX + 70, baseOffsetY + 58, FONT_NORMAL_WHITE);
 		Widget_GameText_drawNumberWithDescription(8, 0,
-			Data_CityInfo.treasury, baseOffsetX + 72 + width, baseOffsetY + 58, FONT_NORMAL_WHITE
+			treasury, baseOffsetX + 72 + width, baseOffsetY + 58, FONT_NORMAL_WHITE
 		);
 	}
 

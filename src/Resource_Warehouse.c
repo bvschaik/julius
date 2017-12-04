@@ -11,6 +11,7 @@
 #include "building/count.h"
 #include "building/model.h"
 #include "building/storage.h"
+#include "city/finance.h"
 #include "empire/trade_prices.h"
 #include "graphics/image.h"
 #include "game/tutorial.h"
@@ -340,8 +341,7 @@ void Resource_addImportedResourceToWarehouseSpace(int spaceId, int resourceId)
 	Data_Buildings[spaceId].subtype.warehouseResourceId = resourceId;
 	
     int price = trade_price_buy(resourceId);
-	Data_CityInfo.treasury -= price;
-	Data_CityInfo.financeImportsThisYear += price;
+    city_finance_process_import(price);
 	
 	Resource_setWarehouseSpaceGraphic(spaceId, resourceId);
 }
@@ -356,12 +356,7 @@ void Resource_removeExportedResourceFromWarehouseSpace(int spaceId, int resource
 	}
 	
 	int price = trade_price_sell(resourceId);
-	Data_CityInfo.treasury += price;
-	Data_CityInfo.financeExportsThisYear += price;
-	if (Data_CityInfo.godBlessingNeptuneDoubleTrade) {
-		Data_CityInfo.treasury += price;
-		Data_CityInfo.financeExportsThisYear += price;
-	}
+    city_finance_process_export(price);
 	
 	Resource_setWarehouseSpaceGraphic(spaceId, resourceId);
 }

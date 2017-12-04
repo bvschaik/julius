@@ -3,6 +3,7 @@
 #include "Data/Building.h"
 
 #include "building/count.h"
+#include "city/finance.h"
 #include "figure/figure.h"
 
 void CityInfo_Tick_countBuildingTypes()
@@ -184,9 +185,10 @@ void CityInfo_Tick_distributeTreasuryOverForumsAndSenates()
 		2 * building_count_active(BUILDING_FORUM_UPGRADED);
 	int amountPerUnit;
 	int remainder;
-	if (Data_CityInfo.treasury > 0 && units > 0) {
-		amountPerUnit = Data_CityInfo.treasury / units;
-		remainder = Data_CityInfo.treasury - units * amountPerUnit;
+    int treasury = city_finance_treasury();
+	if (treasury > 0 && units > 0) {
+		amountPerUnit = treasury / units;
+		remainder = treasury - units * amountPerUnit;
 	} else {
 		amountPerUnit = 0;
 		remainder = 0;

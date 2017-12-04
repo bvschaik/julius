@@ -16,6 +16,7 @@
 #include "../Data/Constants.h"
 #include "../Data/Screen.h"
 
+#include "city/finance.h"
 #include "empire/city.h"
 #include "empire/empire.h"
 #include "empire/object.h"
@@ -626,7 +627,7 @@ static void confirmOpenTrade(int accepted)
 {
 	if (accepted) {
         empire_city *city = empire_city_get(data.selectedCity);
-		CityInfo_Finance_spendOnConstruction(city->cost_to_open);
+		city_finance_process_construction(city->cost_to_open);
 		city->is_open = 1;
 		SidebarMenu_enableBuildingMenuItemsAndButtons();
 		UI_Window_goTo(Window_TradeOpenedDialog);

@@ -6,6 +6,7 @@
 
 #include "building/count.h"
 #include "building/properties.h"
+#include "city/finance.h"
 #include "core/direction.h"
 #include "core/time.h"
 #include "figure/formation.h"
@@ -246,7 +247,7 @@ static void drawBuildingGhostDefault()
 	if (type == BUILDING_PLAZA && !(Data_Grid_terrain[gridOffset] & Terrain_Road)) {
 		placementObstructed = 1;
 	}
-	if (Data_CityInfo.treasury <= MIN_TREASURY) {
+	if (city_finance_out_of_money()) {
 		fullyObstructed = 1;
 		placementObstructed = 1;
 	}
@@ -354,7 +355,7 @@ static void drawBuildingGhostDraggableReservoir()
 			placementObstructed = 1;
 		}
 	}
-	if (Data_CityInfo.treasury <= MIN_TREASURY) {
+	if (city_finance_out_of_money()) {
 		placementObstructed = 1;
 	}
 	if (Data_State.selectedBuilding.placementInProgress) {
@@ -411,7 +412,7 @@ static void drawBuildingGhostAqueduct()
 			placementObstructed = 1;
 		}
 	}
-	if (Data_CityInfo.treasury <= MIN_TREASURY) {
+	if (city_finance_out_of_money()) {
 		placementObstructed = 1;
 	}
 	int xOffset = Data_CityView.selectedTile.xOffsetInPixels;
@@ -451,7 +452,7 @@ static void drawBuildingGhostFountain()
 	int yOffset = Data_CityView.selectedTile.yOffsetInPixels;
 
 	int graphicId = image_group(building_properties_for_type(BUILDING_FOUNTAIN)->image_group);
-	if (Data_CityInfo.treasury <= MIN_TREASURY) {
+	if (city_finance_out_of_money()) {
 		drawFlatTile(xOffset, yOffset, COLOR_MASK_RED);
 	} else {
 		Graphics_drawIsometricFootprint(graphicId, xOffset, yOffset, COLOR_MASK_GREEN);
@@ -480,7 +481,7 @@ static void drawBuildingGhostBathhouse()
 			placementObstructed = 1;
 		}
 	}
-	if (Data_CityInfo.treasury <= MIN_TREASURY) {
+	if (city_finance_out_of_money()) {
 		fullyObstructed = 1;
 		placementObstructed = 1;
 	}
@@ -540,7 +541,7 @@ static void drawBuildingGhostBridge()
 	} else if (!endGridOffset) {
 		obstructed = 1;
 	}
-	if (Data_CityInfo.treasury <= MIN_TREASURY) {
+	if (city_finance_out_of_money()) {
 		obstructed = 1;
 	}
 	if (obstructed) {
@@ -766,7 +767,7 @@ static void drawBuildingGhostFort()
 {
 	int fullyObstructed = 0;
 	int placementObstructed = 0;
-	if (formation_totals_get_num_legions() >= 6 || Data_CityInfo.treasury <= MIN_TREASURY) {
+	if (formation_totals_get_num_legions() >= 6 || city_finance_out_of_money()) {
 		fullyObstructed = 1;
 		placementObstructed = 1;
 	}
@@ -851,7 +852,7 @@ static void drawBuildingGhostHippodrome()
 {
 	int fullyObstructed = 0;
 	int placementObstructed = 0;
-	if (Data_CityInfo.buildingHippodromePlaced || Data_CityInfo.treasury <= MIN_TREASURY) {
+	if (Data_CityInfo.buildingHippodromePlaced || city_finance_out_of_money()) {
 		fullyObstructed = 1;
 		placementObstructed = 1;
 	}
@@ -1008,7 +1009,7 @@ static void drawBuildingGhostShipyardWharf()
 	int blockedTiles = Terrain_determineOrientationWatersideSize2(
 		Data_State.map.current.x, Data_State.map.current.y, 1,
 		&dirAbsolute, &dirRelative);
-	if (Data_CityInfo.treasury <= MIN_TREASURY) {
+	if (city_finance_out_of_money()) {
 		blockedTiles = 999;
 	}
 	if (blockedTiles) {
@@ -1034,7 +1035,7 @@ static void drawBuildingGhostDock()
 	int blockedTiles = Terrain_determineOrientationWatersideSize3(
 		Data_State.map.current.x, Data_State.map.current.y, 1,
 		&dirAbsolute, &dirRelative);
-	if (Data_CityInfo.treasury <= MIN_TREASURY) {
+	if (city_finance_out_of_money()) {
 		blockedTiles = 999;
 	}
 	if (blockedTiles) {
@@ -1081,7 +1082,7 @@ static void drawBuildingGhostRoad()
 			graphicId++;
 		}
 	}
-	if (Data_CityInfo.treasury <= MIN_TREASURY) {
+	if (city_finance_out_of_money()) {
 		tileObstructed = 1;
 	}
 	if (tileObstructed) {

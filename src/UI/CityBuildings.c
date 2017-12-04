@@ -12,6 +12,7 @@
 #include "../Widget.h"
 
 #include "building/model.h"
+#include "city/finance.h"
 #include "core/time.h"
 #include "figure/figure.h"
 #include "figure/formation.h"
@@ -80,7 +81,7 @@ void UI_CityBuildings_drawBuildingCost()
 		Data_CityView.xOffsetInPixels, Data_CityView.yOffsetInPixels,
 		Data_CityView.widthInPixels, Data_CityView.heightInPixels);
 	color_t color;
-	if (Data_State.selectedBuilding.cost <= Data_CityInfo.treasury) {
+	if (Data_State.selectedBuilding.cost <= city_finance_treasury()) {
 		color = COLOR_ORANGE;
 	} else {
 		color = COLOR_RED;

@@ -7,6 +7,7 @@
 #include "../Data/CityInfo.h"
 #include "../Data/Screen.h"
 
+#include "city/finance.h"
 #include "core/calc.h"
 #include "game/resource.h"
 
@@ -119,9 +120,8 @@ static void buttonSetAmount(int param1, int param2)
 
 static void buttonDonate(int param1, int param2)
 {
-	Data_CityInfo.treasury += Data_CityInfo.donateAmount;
-	Data_CityInfo.financeDonatedThisYear += Data_CityInfo.donateAmount;
-	Data_CityInfo.personalSavings -= Data_CityInfo.donateAmount;
+    city_finance_process_donation(Data_CityInfo.donateAmount);
+    Data_CityInfo.personalSavings -= Data_CityInfo.donateAmount;
 	CityInfo_Finance_calculateTotals();
 	UI_Window_goTo(Window_Advisors);
 }

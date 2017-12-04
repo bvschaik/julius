@@ -29,6 +29,7 @@ set (BUILDING_FILES
 )
 set (CITY_FILES
     src/city/culture.c
+    src/city/finance.c
     src/city/message.c
 )
 set (EMPIRE_FILES

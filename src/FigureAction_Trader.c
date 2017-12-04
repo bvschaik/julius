@@ -7,6 +7,7 @@
 #include "Data/CityInfo.h"
 
 #include "building/storage.h"
+#include "city/finance.h"
 #include "city/message.h"
 #include "empire/city.h"
 #include "empire/empire.h"
@@ -64,13 +65,8 @@ static int traderGetBuyResource(int warehouseId, int cityId)
 				Data_Buildings[warehouseId].subtype.warehouseResourceId = RESOURCE_NONE;
 			}
 			// update finances
-			int price = trade_price_sell(resource);
-			Data_CityInfo.treasury += price;
-			Data_CityInfo.financeExportsThisYear += price;
-			if (Data_CityInfo.godBlessingNeptuneDoubleTrade) {
-				Data_CityInfo.treasury += price;
-				Data_CityInfo.financeExportsThisYear += price;
-			}
+			city_finance_process_export(trade_price_sell(resource));
+
 			// update graphics
 			Resource_setWarehouseSpaceGraphic(warehouseId, resource);
 			return resource;

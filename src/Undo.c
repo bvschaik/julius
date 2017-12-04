@@ -10,6 +10,7 @@
 #include "Data/State.h"
 
 #include "building/properties.h"
+#include "city/finance.h"
 #include "game/resource.h"
 #include "graphics/image.h"
 #include "map/building.h"
@@ -178,8 +179,7 @@ void Undo_perform()
 		return;
 	}
 	Data_State.undoAvailable = 0;
-	Data_CityInfo.treasury += data.buildingCost;
-	Data_CityInfo.financeConstructionThisYear -= data.buildingCost;
+	city_finance_process_construction(-data.buildingCost);
 	if (data.buildingType == BUILDING_CLEAR_LAND) {
 		for (int i = 0; i < data.numBuildings; i++) {
 			if (data.buildingIndex[i]) {

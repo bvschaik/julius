@@ -15,6 +15,7 @@
 #include "Data/State.h"
 
 #include "building/list.h"
+#include "city/finance.h"
 #include "city/message.h"
 #include "core/random.h"
 #include "figure/figure.h"
@@ -200,9 +201,7 @@ static void generateMugger(int buildingId)
 					moneyStolen = 400 - random_byte() / 2;
 				}
 				city_message_post(1, MESSAGE_THEFT, moneyStolen, f->gridOffset);
-				Data_CityInfo.financeStolenThisYear += moneyStolen;
-				Data_CityInfo.treasury -= moneyStolen;
-				Data_CityInfo.financeSundriesThisYear += moneyStolen;
+                city_finance_process_stolen(moneyStolen);
 			}
 		}
 	}

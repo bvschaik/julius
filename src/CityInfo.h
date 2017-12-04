@@ -32,7 +32,6 @@ void CityInfo_Finance_updateSalary();
 
 void CityInfo_Finance_handleMonthChange();
 void CityInfo_Finance_handleYearChange();
-void CityInfo_Finance_spendOnConstruction(int amount);
 
 void CityInfo_Finance_updateDebtState();
 
