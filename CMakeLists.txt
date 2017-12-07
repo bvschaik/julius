@@ -3,7 +3,18 @@ project(julius)
 
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/cmake/")
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror=implicit-function-declaration -Werror=int-conversion -Werror=incompatible-pointer-types")
+if (CMAKE_COMPILER_IS_GNUCC)
+
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror=implicit-function-declaration")
+
+    if (CMAKE_C_COMPILER_VERSION VERSION_GREATER 4.9.0)
+        set (CMAKE_C_FLAGS "-Werror=incompatible-pointer-types -Werror=int-conversion ${CMAKE_C_FLAGS}")
+    else ()
+        set (CMAKE_C_STANDARD 99) # -std=gnu99
+        message(WARNING "WARNING: Old version GCC. Continue...")
+    endif ()
+endif ()
+
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
 #set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
 set(SMK_FILES src/Video/smacker.c src/Video/smk_bitstream.c src/Video/smk_hufftree.c)
