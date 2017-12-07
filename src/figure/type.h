@@ -6,7 +6,6 @@
  * Figure types.
  */
 
-#define FigureIsEnemyOrNative(t) ((t) >= FIGURE_INDIGENOUS_NATIVE && (t) <= FIGURE_NATIVE_TRADER)
 #define FigureIsEnemy(t) ((t) >= FIGURE_ENEMY43_SPEAR && (t) <= FIGURE_ENEMY_CAESAR_LEGIONARY)
 #define FigureIsLegion(t) ((t) >= FIGURE_FORT_JAVELIN && (t) <= FIGURE_FORT_LEGIONARY)
 #define FigureIsHerd(t) ((t) >= FIGURE_SHEEP && (t) <= FIGURE_ZEBRA)
@@ -53,7 +52,7 @@ typedef enum {
     FIGURE_WORKER = 35,
     FIGURE_MAP_FLAG = 36,
     FIGURE_FLOTSAM = 37,
-    FIGURE_DOCKMAN = 38,
+    FIGURE_DOCKER = 38,
     FIGURE_MARKET_BUYER = 39,
     FIGURE_PATRICIAN = 40,
     FIGURE_INDIGENOUS_NATIVE = 41,

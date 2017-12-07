@@ -5,6 +5,7 @@
 
 #include "figure/formation.h"
 #include "figure/properties.h"
+#include "figure/sound.h"
 #include "sound/effect.h"
 
 static const int cloudGraphicOffsets[] = {
@@ -60,7 +61,7 @@ void FigureAction_arrow(figure *f)
 			target->damage = maxDamage + 1;
 			target->actionState = FigureActionState_149_Corpse;
 			target->waitTicks = 0;
-			Figure_playDieSound(targetType);
+			figure_play_die_sound(targetType);
 			Formation_updateAfterDeath(formationId);
 		}
 		f->state = FigureState_Dead;
@@ -107,7 +108,7 @@ void FigureAction_spear(figure *f)
 			target->damage = maxDamage + 1;
 			target->actionState = FigureActionState_149_Corpse;
 			target->waitTicks = 0;
-			Figure_playDieSound(targetType);
+			figure_play_die_sound(targetType);
 			Formation_updateAfterDeath(formationId);
 		}
         // for missiles: building_id contains the figure who shot it
@@ -155,7 +156,7 @@ void FigureAction_javelin(figure *f)
 			target->damage = maxDamage + 1;
 			target->actionState = FigureActionState_149_Corpse;
 			target->waitTicks = 0;
-			Figure_playDieSound(targetType);
+			figure_play_die_sound(targetType);
 			Formation_updateAfterDeath(formationId);
 		}
         // for missiles: building_id contains the figure who shot it
@@ -198,7 +199,7 @@ void FigureAction_bolt(figure *f)
 			target->damage = maxDamage + 1;
 			target->actionState = FigureActionState_149_Corpse;
 			target->waitTicks = 0;
-			Figure_playDieSound(targetType);
+			figure_play_die_sound(targetType);
 			Formation_updateAfterDeath(formationId);
 		}
 		sound_effect_play(SOUND_EFFECT_BALLISTA_HIT_PERSON);

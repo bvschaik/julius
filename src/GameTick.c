@@ -109,7 +109,7 @@ void GameTick_advance()
 		case 44: Security_Tick_checkFireCollapse(); break;
 		case 45: Security_Tick_generateCriminal(); break;
 		case 46: Building_Industry_updateDoubleWheatProduction(); break;
-		case 48: CityInfo_Finance_decayTaxCollectorAccess(); break;
+		case 48: Building_decayTaxCollectorAccess(); break;
 		case 49: CityInfo_Culture_calculateEntertainment(); break;
 	}
 	if (game_time_advance_tick()) {

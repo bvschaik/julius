@@ -12,6 +12,7 @@
 #include "../Widget.h"
 
 #include "building/model.h"
+#include "city/finance.h"
 #include "core/time.h"
 #include "figure/figure.h"
 #include "figure/formation.h"
@@ -80,7 +81,7 @@ void UI_CityBuildings_drawBuildingCost()
 		Data_CityView.xOffsetInPixels, Data_CityView.yOffsetInPixels,
 		Data_CityView.widthInPixels, Data_CityView.heightInPixels);
 	color_t color;
-	if (Data_State.selectedBuilding.cost <= Data_CityInfo.treasury) {
+	if (Data_State.selectedBuilding.cost <= city_finance_treasury()) {
 		color = COLOR_ORANGE;
 	} else {
 		color = COLOR_RED;
@@ -247,58 +248,58 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 					int subtype = b->subtype.orientation;
 					if ((subtype == 0 || subtype == 3) && Data_CityInfo.population > 2000) {
 						switch (Data_State.map.orientation) {
-							case Dir_0_Top:
+							case DIR_0_TOP:
 								Graphics_drawImageMasked(
 									image_group(GROUP_BUILDING_HIPPODROME_2) + 6,
 									xGraphic + 147, yGraphic - 72, colorMask);
 								break;
-							case Dir_2_Right:
+							case DIR_2_RIGHT:
 								Graphics_drawImageMasked(
 									image_group(GROUP_BUILDING_HIPPODROME_1) + 8,
 									xGraphic + 58, yGraphic - 79, colorMask);
 								break;
-							case Dir_4_Bottom:
+							case DIR_4_BOTTOM:
 								Graphics_drawImageMasked(
 									image_group(GROUP_BUILDING_HIPPODROME_2) + 8,
 									xGraphic + 119, yGraphic - 80, colorMask);
 								break;
-							case Dir_6_Left:
+							case DIR_6_LEFT:
 								Graphics_drawImageMasked(
 									image_group(GROUP_BUILDING_HIPPODROME_1) + 6,
 									xGraphic, yGraphic - 72, colorMask);
 						}
 					} else if ((subtype == 1 || subtype == 4) && Data_CityInfo.population > 100) {
 						switch (Data_State.map.orientation) {
-							case Dir_0_Top:
-							case Dir_4_Bottom:
+							case DIR_0_TOP:
+							case DIR_4_BOTTOM:
 								Graphics_drawImageMasked(
 									image_group(GROUP_BUILDING_HIPPODROME_2) + 7,
 									xGraphic + 122, yGraphic - 79, colorMask);
 								break;
-							case Dir_2_Right:
-							case Dir_6_Left:
+							case DIR_2_RIGHT:
+							case DIR_6_LEFT:
 								Graphics_drawImageMasked(
 									image_group(GROUP_BUILDING_HIPPODROME_1) + 7,
 									xGraphic, yGraphic - 80, colorMask);
 						}
 					} else if ((subtype == 2 || subtype == 5) && Data_CityInfo.population > 1000) {
 						switch (Data_State.map.orientation) {
-							case Dir_0_Top:
+							case DIR_0_TOP:
 								Graphics_drawImageMasked(
 									image_group(GROUP_BUILDING_HIPPODROME_2) + 8,
 									xGraphic + 119, yGraphic - 80, colorMask);
 								break;
-							case Dir_2_Right:
+							case DIR_2_RIGHT:
 								Graphics_drawImageMasked(
 									image_group(GROUP_BUILDING_HIPPODROME_1) + 6,
 									xGraphic, yGraphic - 72, colorMask);
 								break;
-							case Dir_4_Bottom:
+							case DIR_4_BOTTOM:
 								Graphics_drawImageMasked(
 									image_group(GROUP_BUILDING_HIPPODROME_2) + 6,
 									xGraphic + 147, yGraphic - 72, colorMask);
 								break;
-							case Dir_6_Left:
+							case DIR_6_LEFT:
 								Graphics_drawImageMasked(
 									image_group(GROUP_BUILDING_HIPPODROME_1) + 8,
 									xGraphic + 58, yGraphic - 79, colorMask);
@@ -466,20 +467,20 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 				}
 			} else if (Data_Buildings[map_building_at(gridOffset)].type == BUILDING_GATEHOUSE) {
 				int xy = map_property_multi_tile_xy(gridOffset);
-				if ((Data_State.map.orientation == Dir_0_Top && xy == Edge_X1Y1) ||
-					(Data_State.map.orientation == Dir_2_Right && xy == Edge_X0Y1) ||
-					(Data_State.map.orientation == Dir_4_Bottom && xy == Edge_X0Y0) ||
-					(Data_State.map.orientation == Dir_6_Left && xy == Edge_X1Y0)) {
+				if ((Data_State.map.orientation == DIR_0_TOP && xy == Edge_X1Y1) ||
+					(Data_State.map.orientation == DIR_2_RIGHT && xy == Edge_X0Y1) ||
+					(Data_State.map.orientation == DIR_4_BOTTOM && xy == Edge_X0Y0) ||
+					(Data_State.map.orientation == DIR_6_LEFT && xy == Edge_X1Y0)) {
 					int buildingId = map_building_at(gridOffset);
 					int graphicId = image_group(GROUP_BULIDING_GATEHOUSE);
 					if (Data_Buildings[buildingId].subtype.orientation == 1) {
-						if (Data_State.map.orientation == Dir_0_Top || Data_State.map.orientation == Dir_4_Bottom) {
+						if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_4_BOTTOM) {
 							Graphics_drawImage(graphicId, xGraphic - 22, yGraphic - 80);
 						} else {
 							Graphics_drawImage(graphicId + 1, xGraphic - 18, yGraphic - 81);
 						}
 					} else if (Data_Buildings[buildingId].subtype.orientation == 2) {
-						if (Data_State.map.orientation == Dir_0_Top || Data_State.map.orientation == Dir_4_Bottom) {
+						if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_4_BOTTOM) {
 							Graphics_drawImage(graphicId + 1, xGraphic - 18, yGraphic - 81);
 						} else {
 							Graphics_drawImage(graphicId, xGraphic - 22, yGraphic - 80);
@@ -641,7 +642,7 @@ static int handleRightClickAllowBuildingInfo()
 	if (!Data_State.map.current.gridOffset) {
 		allow = 0;
 	}
-	if (UI_Warning_hasWarnings()) {
+	if (allow && UI_Warning_hasWarnings()) {
 		UI_Warning_clearAll();
 		allow = 0;
 	}

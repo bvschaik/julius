@@ -1,5 +1,6 @@
 #include "Advisors_private.h"
 
+#include "city/finance.h"
 #include "core/calc.h"
 #include "scenario/invasion.h"
 #include "scenario/property.h"
@@ -35,13 +36,14 @@ void UI_Advisor_Chief_drawBackground(int *advisorHeight)
 	// finance
 	Graphics_drawImage(image_group(GROUP_BULLET), baseOffsetX + 40, baseOffsetY + 87);
 	Widget_GameText_draw(61, 2, baseOffsetX + 60, baseOffsetY + 86, FONT_NORMAL_WHITE);
-	if (Data_CityInfo.treasury > Data_CityInfo.financeBalanceLastYear) {
+    int treasury = city_finance_treasury();
+	if (treasury > Data_CityInfo.financeBalanceLastYear) {
 		width = Widget_GameText_draw(61, 15, baseOffsetX + 240, baseOffsetY + 86, FONT_NORMAL_GREEN);
-		Widget_Text_drawMoney(Data_CityInfo.treasury - Data_CityInfo.financeBalanceLastYear,
+		Widget_Text_drawMoney(treasury - Data_CityInfo.financeBalanceLastYear,
 			baseOffsetX + 240 + width, baseOffsetY + 86, FONT_NORMAL_GREEN);
-	} else if (Data_CityInfo.treasury < Data_CityInfo.financeBalanceLastYear) {
+	} else if (treasury < Data_CityInfo.financeBalanceLastYear) {
 		width = Widget_GameText_draw(61, 16, baseOffsetX + 240, baseOffsetY + 86, FONT_NORMAL_RED);
-		Widget_Text_drawMoney(Data_CityInfo.financeBalanceLastYear - Data_CityInfo.treasury,
+		Widget_Text_drawMoney(Data_CityInfo.financeBalanceLastYear - treasury,
 			baseOffsetX + 240 + width, baseOffsetY + 86, FONT_NORMAL_RED);
 	} else {
 		Widget_GameText_draw(61, 17, baseOffsetX + 240, baseOffsetY + 86, FONT_NORMAL_GREEN);

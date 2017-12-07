@@ -25,6 +25,7 @@
 #include "building/model.h"
 #include "building/properties.h"
 #include "building/storage.h"
+#include "city/finance.h"
 #include "core/direction.h"
 #include "core/random.h"
 #include "figure/formation.h"
@@ -1211,7 +1212,7 @@ static int placeReservoirAndAqueducts(int measureOnly, int xStart, int yStart, i
 
 void BuildingPlacement_update(int xStart, int yStart, int xEnd, int yEnd, int type)
 {
-	if (!type || Data_CityInfo.treasury <= MIN_TREASURY) {
+	if (!type || city_finance_out_of_money()) {
 		Data_State.selectedBuilding.cost = 0;
 		return;
 	}
@@ -1307,7 +1308,7 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
 	if (!type) {
 		return;
 	}
-	if (Data_CityInfo.treasury <= MIN_TREASURY) {
+	if (city_finance_out_of_money()) {
 		map_property_clear_constructing_and_deleted();
 		UI_Warning_show(Warning_OutOfMoney);
 		return;
@@ -1417,7 +1418,7 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
 		Resource_removeFromCityWarehouses(RESOURCE_MARBLE, 2);
 	}
 	formation_move_herds_away(xEnd, yEnd);
-	CityInfo_Finance_spendOnConstruction(placementCost);
+	city_finance_process_construction(placementCost);
 	if (type != BUILDING_TRIUMPHAL_ARCH) {
 		Undo_recordBuild(placementCost);
 	}

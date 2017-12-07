@@ -73,7 +73,7 @@ void FigureAction_fishingBoat(figure *f)
 		case FigureActionState_191_FishingBoatGoingToFish:
 			FigureMovement_walkTicks(f, 1);
 			f->heightAdjustedTicks = 0;
-			if (f->direction == DirFigure_8_AtDestination) {
+			if (f->direction == DIR_FIGURE_AT_DESTINATION) {
 				int xTile, yTile;
 				if (Terrain_Water_findAlternativeTileForFishingBoat(f->id, &xTile, &yTile)) {
 					figure_route_remove(f);
@@ -84,7 +84,7 @@ void FigureAction_fishingBoat(figure *f)
 					f->actionState = FigureActionState_192_FishingBoatFishing;
 					f->waitTicks = 0;
 				}
-			} else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
+			} else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
 				f->actionState = FigureActionState_194_FishingBoatAtWharf;
 				f->destinationX = f->sourceX;
 				f->destinationY = f->sourceY;
@@ -103,12 +103,12 @@ void FigureAction_fishingBoat(figure *f)
 		case FigureActionState_193_FishingBoatSailingToWharf:
 			FigureMovement_walkTicks(f, 1);
 			f->heightAdjustedTicks = 0;
-			if (f->direction == DirFigure_8_AtDestination) {
+			if (f->direction == DIR_FIGURE_AT_DESTINATION) {
 				f->actionState = FigureActionState_194_FishingBoatAtWharf;
 				f->waitTicks = 0;
-			} else if (f->direction == DirFigure_9_Reroute) {
+			} else if (f->direction == DIR_FIGURE_REROUTE) {
 				figure_route_remove(f);
-			} else if (f->direction == DirFigure_10_Lost) {
+			} else if (f->direction == DIR_FIGURE_LOST) {
 				// cannot reach grounds
 				city_message_post_with_message_delay(MESSAGE_CAT_FISHING_BLOCKED, 1, MESSAGE_FISHING_BOAT_BLOCKED, 12);
 				f->state = FigureState_Dead;
@@ -139,14 +139,14 @@ void FigureAction_fishingBoat(figure *f)
 		case FigureActionState_195_FishingBoatReturningWithFish:
 			FigureMovement_walkTicks(f, 1);
 			f->heightAdjustedTicks = 0;
-			if (f->direction == DirFigure_8_AtDestination) {
+			if (f->direction == DIR_FIGURE_AT_DESTINATION) {
 				f->actionState = FigureActionState_194_FishingBoatAtWharf;
 				f->waitTicks = 0;
 				b->figureSpawnDelay = 1;
 				b->data.other.fishingBoatHasFish++;
-			} else if (f->direction == DirFigure_9_Reroute) {
+			} else if (f->direction == DIR_FIGURE_REROUTE) {
 				figure_route_remove(f);
-			} else if (f->direction == DirFigure_10_Lost) {
+			} else if (f->direction == DIR_FIGURE_LOST) {
 				f->state = FigureState_Dead;
 			}
 			break;
@@ -195,8 +195,8 @@ void FigureAction_flotsam(figure *f)
 				FigureMovement_walkTicks(f, 1);
 				f->isGhost = 0;
 				f->heightAdjustedTicks = 0;
-				if (f->direction == DirFigure_8_AtDestination ||
-					f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
+				if (f->direction == DIR_FIGURE_AT_DESTINATION ||
+					f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
 					f->actionState = FigureActionState_130_FlotsamLeftMap;
 				}
 			}

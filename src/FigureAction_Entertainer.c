@@ -229,12 +229,12 @@ void FigureAction_entertainer(figure *f)
 				f->state = FigureState_Dead;
 			}
 			FigureMovement_walkTicks(f, speedFactor);
-			if (f->direction == DirFigure_8_AtDestination) {
+			if (f->direction == DIR_FIGURE_AT_DESTINATION) {
 				updateShowsAtDestination(f);
 				f->state = FigureState_Dead;
-			} else if (f->direction == DirFigure_9_Reroute) {
+			} else if (f->direction == DIR_FIGURE_REROUTE) {
 				figure_route_remove(f);
-			} else if (f->direction == DirFigure_10_Lost) {
+			} else if (f->direction == DIR_FIGURE_LOST) {
 				f->state = FigureState_Dead;
 			}
 			break;
@@ -255,8 +255,8 @@ void FigureAction_entertainer(figure *f)
 			break;
 		case FigureActionState_95_EntertainerReturning:
 			FigureMovement_walkTicks(f, speedFactor);
-			if (f->direction == DirFigure_8_AtDestination ||
-				f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
+			if (f->direction == DIR_FIGURE_AT_DESTINATION ||
+				f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
 				f->state = FigureState_Dead;
 			}
 			break;

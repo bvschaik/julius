@@ -22,7 +22,6 @@ void CityInfo_Ratings_sendGiftToCaesar();
 void CityInfo_Ratings_changeFavor(int amount);
 void CityInfo_Ratings_setMaxFavor(int maxFavor);
 
-void CityInfo_Finance_decayTaxCollectorAccess();
 void CityInfo_Finance_calculateTotals();
 void CityInfo_Finance_calculateEstimatedWages();
 void CityInfo_Finance_calculateEstimatedTaxes();
@@ -32,7 +31,6 @@ void CityInfo_Finance_updateSalary();
 
 void CityInfo_Finance_handleMonthChange();
 void CityInfo_Finance_handleYearChange();
-void CityInfo_Finance_spendOnConstruction(int amount);
 
 void CityInfo_Finance_updateDebtState();
 

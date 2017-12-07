@@ -7,6 +7,7 @@
 #include "Data/CityInfo.h"
 
 #include "building/storage.h"
+#include "city/finance.h"
 #include "city/message.h"
 #include "empire/city.h"
 #include "empire/empire.h"
@@ -64,13 +65,8 @@ static int traderGetBuyResource(int warehouseId, int cityId)
 				Data_Buildings[warehouseId].subtype.warehouseResourceId = RESOURCE_NONE;
 			}
 			// update finances
-			int price = trade_price_sell(resource);
-			Data_CityInfo.treasury += price;
-			Data_CityInfo.financeExportsThisYear += price;
-			if (Data_CityInfo.godBlessingNeptuneDoubleTrade) {
-				Data_CityInfo.treasury += price;
-				Data_CityInfo.financeExportsThisYear += price;
-			}
+			city_finance_process_export(trade_price_sell(resource));
+
 			// update graphics
 			Resource_setWarehouseSpaceGraphic(warehouseId, resource);
 			return resource;
@@ -245,13 +241,13 @@ void FigureAction_tradeCaravan(figure *f)
 		case FigureActionState_101_TradeCaravanArriving:
 			FigureMovement_walkTicks(f, 1);
 			switch (f->direction) {
-				case DirFigure_8_AtDestination:
+				case DIR_FIGURE_AT_DESTINATION:
 					f->actionState = FigureActionState_102_TradeCaravanTrading;
 					break;
-				case DirFigure_9_Reroute:
+				case DIR_FIGURE_REROUTE:
 					figure_route_remove(f);
 					break;
-				case DirFigure_10_Lost:
+				case DIR_FIGURE_LOST:
 					f->state = FigureState_Dead;
 					f->isGhost = 1;
 					break;
@@ -298,14 +294,14 @@ void FigureAction_tradeCaravan(figure *f)
 		case FigureActionState_103_TradeCaravanLeaving:
 			FigureMovement_walkTicks(f, 1);
 			switch (f->direction) {
-				case DirFigure_8_AtDestination:
+				case DIR_FIGURE_AT_DESTINATION:
 					f->actionState = FigureActionState_100_TradeCaravanCreated;
 					f->state = FigureState_Dead;
 					break;
-				case DirFigure_9_Reroute:
+				case DIR_FIGURE_REROUTE:
 					figure_route_remove(f);
 					break;
-				case DirFigure_10_Lost:
+				case DIR_FIGURE_LOST:
 					f->state = FigureState_Dead;
 					break;
 			}
@@ -361,11 +357,11 @@ void FigureAction_nativeTrader(figure *f)
 			break;
 		case FigureActionState_160_NativeTraderGoingToWarehouse:
 			FigureMovement_walkTicks(f, 1);
-			if (f->direction == DirFigure_8_AtDestination) {
+			if (f->direction == DIR_FIGURE_AT_DESTINATION) {
 				f->actionState = FigureActionState_163_NativeTraderAtWarehouse;
-			} else if (f->direction == DirFigure_9_Reroute) {
+			} else if (f->direction == DIR_FIGURE_REROUTE) {
 				figure_route_remove(f);
-			} else if (f->direction == DirFigure_10_Lost) {
+			} else if (f->direction == DIR_FIGURE_LOST) {
 				f->state = FigureState_Dead;
 				f->isGhost = 1;
 			}
@@ -375,9 +371,9 @@ void FigureAction_nativeTrader(figure *f)
 			break;
 		case FigureActionState_161_NativeTraderReturning:
 			FigureMovement_walkTicks(f, 1);
-			if (f->direction == DirFigure_8_AtDestination || f->direction == DirFigure_10_Lost) {
+			if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST) {
 				f->state = FigureState_Dead;
-			} else if (f->direction == DirFigure_9_Reroute) {
+			} else if (f->direction == DIR_FIGURE_REROUTE) {
 				figure_route_remove(f);
 			}
 			break;
@@ -518,11 +514,11 @@ void FigureAction_tradeShip(figure *f)
 		case FigureActionState_111_TradeShipGoingToDock:
 			FigureMovement_walkTicks(f, 1);
 			f->heightAdjustedTicks = 0;
-			if (f->direction == DirFigure_8_AtDestination) {
+			if (f->direction == DIR_FIGURE_AT_DESTINATION) {
 				f->actionState = FigureActionState_112_TradeShipMoored;
-			} else if (f->direction == DirFigure_9_Reroute) {
+			} else if (f->direction == DIR_FIGURE_REROUTE) {
 				figure_route_remove(f);
-			} else if (f->direction == DirFigure_10_Lost) {
+			} else if (f->direction == DIR_FIGURE_LOST) {
 				f->state = FigureState_Dead;
 				if (!city_message_get_category_count(MESSAGE_CAT_BLOCKED_DOCK)) {
 					city_message_post(1, MESSAGE_NAVIGATION_IMPOSSIBLE, 0, 0);
@@ -556,10 +552,10 @@ void FigureAction_tradeShip(figure *f)
 				Data_Buildings[f->destinationBuildingId].data.other.dockNumShips = 0;
 			}
 			switch (Data_Buildings[f->destinationBuildingId].data.other.dockOrientation) {
-				case 0: f->direction = Dir_2_Right; break;
-				case 1: f->direction = Dir_4_Bottom; break;
-				case 2: f->direction = Dir_6_Left; break;
-				default:f->direction = Dir_0_Top; break;
+				case 0: f->direction = DIR_2_RIGHT; break;
+				case 1: f->direction = DIR_4_BOTTOM; break;
+				case 2: f->direction = DIR_6_LEFT; break;
+				default:f->direction = DIR_0_TOP; break;
 			}
 			f->graphicOffset = 0;
 			city_message_reset_category_count(MESSAGE_CAT_BLOCKED_DOCK);
@@ -567,11 +563,11 @@ void FigureAction_tradeShip(figure *f)
 		case FigureActionState_113_TradeShipGoingToDockQueue:
 			FigureMovement_walkTicks(f, 1);
 			f->heightAdjustedTicks = 0;
-			if (f->direction == DirFigure_8_AtDestination) {
+			if (f->direction == DIR_FIGURE_AT_DESTINATION) {
 				f->actionState = FigureActionState_114_TradeShipAnchored;
-			} else if (f->direction == DirFigure_9_Reroute) {
+			} else if (f->direction == DIR_FIGURE_REROUTE) {
 				figure_route_remove(f);
-			} else if (f->direction == DirFigure_10_Lost) {
+			} else if (f->direction == DIR_FIGURE_LOST) {
 				f->state = FigureState_Dead;
 			}
 			break;
@@ -598,12 +594,12 @@ void FigureAction_tradeShip(figure *f)
 		case FigureActionState_115_TradeShipLeaving:
 			FigureMovement_walkTicks(f, 1);
 			f->heightAdjustedTicks = 0;
-			if (f->direction == DirFigure_8_AtDestination) {
+			if (f->direction == DIR_FIGURE_AT_DESTINATION) {
 				f->actionState = FigureActionState_110_TradeShipCreated;
 				f->state = FigureState_Dead;
-			} else if (f->direction == DirFigure_9_Reroute) {
+			} else if (f->direction == DIR_FIGURE_REROUTE) {
 				figure_route_remove(f);
-			} else if (f->direction == DirFigure_10_Lost) {
+			} else if (f->direction == DIR_FIGURE_LOST) {
 				f->state = FigureState_Dead;
 			}
 			break;

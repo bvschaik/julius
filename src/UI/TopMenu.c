@@ -14,6 +14,7 @@
 #include "../Data/Screen.h"
 #include "../Data/State.h"
 
+#include "city/finance.h"
 #include "game/settings.h"
 #include "game/time.h"
 #include "graphics/image.h"
@@ -126,7 +127,8 @@ void UI_TopMenu_drawBackground()
 
 	int width;
 	color_t treasureColor = COLOR_WHITE;
-	if (Data_CityInfo.treasury < 0) {
+    int treasury = city_finance_treasury();
+	if (treasury < 0) {
 		treasureColor = COLOR_RED;
 	}
 	if (Data_Screen.width < 800) {
@@ -135,7 +137,7 @@ void UI_TopMenu_drawBackground()
 		offsetDate = 547;
 		
 		width = Widget_GameText_drawColored(6, 0, 350, 5, FONT_NORMAL_PLAIN, treasureColor);
-		Widget_Text_drawNumberColored(Data_CityInfo.treasury, '@', " ", 346 + width, 5, FONT_NORMAL_PLAIN, treasureColor);
+		Widget_Text_drawNumberColored(treasury, '@', " ", 346 + width, 5, FONT_NORMAL_PLAIN, treasureColor);
 
 		width = Widget_GameText_draw(6, 1, 458, 5, FONT_NORMAL_GREEN);
 		Widget_Text_drawNumber(Data_CityInfo.population, '@', " ", 450 + width, 5, FONT_NORMAL_GREEN);
@@ -148,7 +150,7 @@ void UI_TopMenu_drawBackground()
 		offsetDate = 652;
 		
 		width = Widget_GameText_drawColored(6, 0, 350, 5, FONT_NORMAL_PLAIN, treasureColor);
-		Widget_Text_drawNumberColored(Data_CityInfo.treasury, '@', " ", 346 + width, 5, FONT_NORMAL_PLAIN, treasureColor);
+		Widget_Text_drawNumberColored(treasury, '@', " ", 346 + width, 5, FONT_NORMAL_PLAIN, treasureColor);
 
 		width = Widget_GameText_drawColored(6, 1, 470, 5, FONT_NORMAL_PLAIN, COLOR_WHITE);
 		Widget_Text_drawNumberColored(Data_CityInfo.population, '@', " ", 466 + width, 5, FONT_NORMAL_PLAIN, COLOR_WHITE);
@@ -161,7 +163,7 @@ void UI_TopMenu_drawBackground()
 		offsetDate = 852;
 		
 		width = Widget_GameText_drawColored(6, 0, 495, 5, FONT_NORMAL_PLAIN, treasureColor);
-		Widget_Text_drawNumberColored(Data_CityInfo.treasury, '@', " ", 501 + width, 5, FONT_NORMAL_PLAIN, treasureColor);
+		Widget_Text_drawNumberColored(treasury, '@', " ", 501 + width, 5, FONT_NORMAL_PLAIN, treasureColor);
 
 		width = Widget_GameText_drawColored(6, 1, 645, 5, FONT_NORMAL_PLAIN, COLOR_WHITE);
 		Widget_Text_drawNumberColored(Data_CityInfo.population, '@', " ", 651 + width, 5, FONT_NORMAL_PLAIN, COLOR_WHITE);
@@ -169,14 +171,14 @@ void UI_TopMenu_drawBackground()
 		width = Widget_GameText_drawColored(25, game_time_month(), 850, 5, FONT_NORMAL_PLAIN, COLOR_YELLOW);
 		Widget_GameText_drawYearColored(game_time_year(), 850 + width, 5, FONT_NORMAL_PLAIN, COLOR_YELLOW);
 	}
-	drawn.treasury = Data_CityInfo.treasury;
+	drawn.treasury = treasury;
 	drawn.population = Data_CityInfo.population;
 	drawn.month = game_time_month();
 }
 
 void UI_TopMenu_drawBackgroundIfNecessary()
 {
-	if (drawn.treasury != Data_CityInfo.treasury ||
+	if (drawn.treasury != city_finance_treasury() ||
 		drawn.population != Data_CityInfo.population ||
 		drawn.month != game_time_month()) {
 		UI_TopMenu_drawBackground();

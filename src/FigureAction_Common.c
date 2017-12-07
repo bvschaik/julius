@@ -6,6 +6,7 @@
 #include "figure/formation.h"
 #include "figure/properties.h"
 #include "figure/route.h"
+#include "figure/sound.h"
 #include "game/difficulty.h"
 #include "sound/effect.h"
 
@@ -154,11 +155,11 @@ static void hitOpponent(figure *f)
 	}
 	opponent->damage += netAttack;
 	if (opponent->damage <= maxDamage) {
-		Figure_playHitSound(f->type);
+		figure_play_hit_sound(f->type);
 	} else {
 		opponent->actionState = FigureActionState_149_Corpse;
 		opponent->waitTicks = 0;
-		Figure_playDieSound(opponent->type);
+		figure_play_die_sound(opponent->type);
 		Formation_updateAfterDeath(opponent->formationId);
 	}
 }

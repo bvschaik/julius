@@ -6,6 +6,8 @@
 
 #include "building/count.h"
 #include "building/properties.h"
+#include "city/finance.h"
+#include "core/direction.h"
 #include "core/time.h"
 #include "figure/formation.h"
 #include "map/bridge.h"
@@ -142,19 +144,19 @@ static void drawBuildingGhostDefault()
 	int xStart = 0, yStart = 0;
 	// determine x and y offset
 	switch (Data_State.map.orientation) {
-		case Dir_0_Top:
+		case DIR_0_TOP:
 			xStart = Data_State.map.current.x;
 			yStart = Data_State.map.current.y;
 			break;
-		case Dir_2_Right:
+		case DIR_2_RIGHT:
 			xStart = Data_State.map.current.x - buildingSize + 1;
 			yStart = Data_State.map.current.y;
 			break;
-		case Dir_4_Bottom:
+		case DIR_4_BOTTOM:
 			xStart = Data_State.map.current.x - buildingSize + 1;
 			yStart = Data_State.map.current.y - buildingSize + 1;
 			break;
-		case Dir_6_Left:
+		case DIR_6_LEFT:
 			xStart = Data_State.map.current.x;
 			yStart = Data_State.map.current.y - buildingSize + 1;
 			break;
@@ -196,8 +198,8 @@ static void drawBuildingGhostDefault()
 		} else {
 			graphicOffset = Data_State.selectedBuilding.roadRequired == 2 ? 1 : 0;
 		}
-		if (Data_State.map.orientation == Dir_6_Left ||
-			Data_State.map.orientation == Dir_2_Right) {
+		if (Data_State.map.orientation == DIR_6_LEFT ||
+			Data_State.map.orientation == DIR_2_RIGHT) {
 			graphicOffset = 1 - graphicOffset;
 		}
 		graphicId += graphicOffset;
@@ -212,8 +214,8 @@ static void drawBuildingGhostDefault()
 		} else {
 			graphicOffset = Data_State.selectedBuilding.roadRequired == 2 ? 2 : 0;
 		}
-		if (Data_State.map.orientation == Dir_6_Left ||
-			Data_State.map.orientation == Dir_2_Right) {
+		if (Data_State.map.orientation == DIR_6_LEFT ||
+			Data_State.map.orientation == DIR_2_RIGHT) {
 			graphicOffset = 2 - graphicOffset;
 		}
 		graphicId += graphicOffset;
@@ -245,7 +247,7 @@ static void drawBuildingGhostDefault()
 	if (type == BUILDING_PLAZA && !(Data_Grid_terrain[gridOffset] & Terrain_Road)) {
 		placementObstructed = 1;
 	}
-	if (Data_CityInfo.treasury <= MIN_TREASURY) {
+	if (city_finance_out_of_money()) {
 		fullyObstructed = 1;
 		placementObstructed = 1;
 	}
@@ -353,7 +355,7 @@ static void drawBuildingGhostDraggableReservoir()
 			placementObstructed = 1;
 		}
 	}
-	if (Data_CityInfo.treasury <= MIN_TREASURY) {
+	if (city_finance_out_of_money()) {
 		placementObstructed = 1;
 	}
 	if (Data_State.selectedBuilding.placementInProgress) {
@@ -410,7 +412,7 @@ static void drawBuildingGhostAqueduct()
 			placementObstructed = 1;
 		}
 	}
-	if (Data_CityInfo.treasury <= MIN_TREASURY) {
+	if (city_finance_out_of_money()) {
 		placementObstructed = 1;
 	}
 	int xOffset = Data_CityView.selectedTile.xOffsetInPixels;
@@ -450,7 +452,7 @@ static void drawBuildingGhostFountain()
 	int yOffset = Data_CityView.selectedTile.yOffsetInPixels;
 
 	int graphicId = image_group(building_properties_for_type(BUILDING_FOUNTAIN)->image_group);
-	if (Data_CityInfo.treasury <= MIN_TREASURY) {
+	if (city_finance_out_of_money()) {
 		drawFlatTile(xOffset, yOffset, COLOR_MASK_RED);
 	} else {
 		Graphics_drawIsometricFootprint(graphicId, xOffset, yOffset, COLOR_MASK_GREEN);
@@ -479,7 +481,7 @@ static void drawBuildingGhostBathhouse()
 			placementObstructed = 1;
 		}
 	}
-	if (Data_CityInfo.treasury <= MIN_TREASURY) {
+	if (city_finance_out_of_money()) {
 		fullyObstructed = 1;
 		placementObstructed = 1;
 	}
@@ -539,7 +541,7 @@ static void drawBuildingGhostBridge()
 	} else if (!endGridOffset) {
 		obstructed = 1;
 	}
-	if (Data_CityInfo.treasury <= MIN_TREASURY) {
+	if (city_finance_out_of_money()) {
 		obstructed = 1;
 	}
 	if (obstructed) {
@@ -548,19 +550,19 @@ static void drawBuildingGhostBridge()
 		drawFlatTile(xOffset, yOffset, length > 0 ? COLOR_MASK_GREEN : COLOR_MASK_RED);
 		if (length > 1) {
 			switch (dir) {
-				case Dir_0_Top:
+				case DIR_0_TOP:
 					xOffset += 29 * (length - 1);
 					yOffset -= 15 * (length - 1);
 					break;
-				case Dir_2_Right:
+				case DIR_2_RIGHT:
 					xOffset += 29 * (length - 1);
 					yOffset += 15 * (length - 1);
 					break;
-				case Dir_4_Bottom:
+				case DIR_4_BOTTOM:
 					xOffset -= 29 * (length - 1);
 					yOffset += 15 * (length - 1);
 					break;
-				case Dir_6_Left:
+				case DIR_6_LEFT:
 					xOffset -= 29 * (length - 1);
 					yOffset -= 15 * (length - 1);
 					break;
@@ -584,30 +586,30 @@ static void drawBuildingGhostBridge()
 	int graphicId, xOffset, yOffset;
 	int xAdd, yAdd;
 	switch (dir) {
-		case Dir_0_Top: xAdd = 29; yAdd = -15; break;
-		case Dir_2_Right: xAdd = 29; yAdd = 15; break;
-		case Dir_4_Bottom: xAdd = -29; yAdd = 15; break;
-		case Dir_6_Left: xAdd = -29; yAdd = -15; break;
+		case DIR_0_TOP: xAdd = 29; yAdd = -15; break;
+		case DIR_2_RIGHT: xAdd = 29; yAdd = 15; break;
+		case DIR_4_BOTTOM: xAdd = -29; yAdd = 15; break;
+		case DIR_6_LEFT: xAdd = -29; yAdd = -15; break;
 		default: return;
 	}
 	if (Data_State.selectedBuilding.type == BUILDING_LOW_BRIDGE) {
 		switch (dir) {
-			case Dir_0_Top:
+			case DIR_0_TOP:
 				graphicId = graphicBase + 5;
 				xOffset = xOffsetBase;
 				yOffset = yOffsetBase - 20;
 				break;
-			case Dir_2_Right:
+			case DIR_2_RIGHT:
 				graphicId = graphicBase;
 				xOffset = xOffsetBase - 1;
 				yOffset = yOffsetBase - 8;
 				break;
-			case Dir_4_Bottom:
+			case DIR_4_BOTTOM:
 				graphicId = graphicBase + 3;
 				xOffset = xOffsetBase;
 				yOffset = yOffsetBase - 8;
 				break;
-			case Dir_6_Left:
+			case DIR_6_LEFT:
 				graphicId = graphicBase + 2;
 				xOffset = xOffsetBase + 7;
 				yOffset = yOffsetBase - 20;
@@ -622,22 +624,22 @@ static void drawBuildingGhostBridge()
 			yOffsetBase += yAdd;
 			if (i == length - 1) {
 				switch (dir) {
-					case Dir_0_Top:
+					case DIR_0_TOP:
 						graphicId = graphicBase + 3;
 						xOffset = xOffsetBase;
 						yOffset = yOffsetBase - 8;
 						break;
-					case Dir_2_Right:
+					case DIR_2_RIGHT:
 						graphicId = graphicBase + 2;
 						xOffset = xOffsetBase + 7;
 						yOffset = yOffsetBase - 20;
 						break;
-					case Dir_4_Bottom:
+					case DIR_4_BOTTOM:
 						graphicId = graphicBase + 5;
 						xOffset = xOffsetBase;
 						yOffset = yOffsetBase - 20;
 						break;
-					case Dir_6_Left:
+					case DIR_6_LEFT:
 						graphicId = graphicBase;
 						xOffset = xOffsetBase - 1;
 						yOffset = yOffsetBase - 8;
@@ -765,7 +767,7 @@ static void drawBuildingGhostFort()
 {
 	int fullyObstructed = 0;
 	int placementObstructed = 0;
-	if (formation_totals_get_num_legions() >= 6 || Data_CityInfo.treasury <= MIN_TREASURY) {
+	if (formation_totals_get_num_legions() >= 6 || city_finance_out_of_money()) {
 		fullyObstructed = 1;
 		placementObstructed = 1;
 	}
@@ -850,7 +852,7 @@ static void drawBuildingGhostHippodrome()
 {
 	int fullyObstructed = 0;
 	int placementObstructed = 0;
-	if (Data_CityInfo.buildingHippodromePlaced || Data_CityInfo.treasury <= MIN_TREASURY) {
+	if (Data_CityInfo.buildingHippodromePlaced || city_finance_out_of_money()) {
 		fullyObstructed = 1;
 		placementObstructed = 1;
 	}
@@ -1007,7 +1009,7 @@ static void drawBuildingGhostShipyardWharf()
 	int blockedTiles = Terrain_determineOrientationWatersideSize2(
 		Data_State.map.current.x, Data_State.map.current.y, 1,
 		&dirAbsolute, &dirRelative);
-	if (Data_CityInfo.treasury <= MIN_TREASURY) {
+	if (city_finance_out_of_money()) {
 		blockedTiles = 999;
 	}
 	if (blockedTiles) {
@@ -1033,7 +1035,7 @@ static void drawBuildingGhostDock()
 	int blockedTiles = Terrain_determineOrientationWatersideSize3(
 		Data_State.map.current.x, Data_State.map.current.y, 1,
 		&dirAbsolute, &dirRelative);
-	if (Data_CityInfo.treasury <= MIN_TREASURY) {
+	if (city_finance_out_of_money()) {
 		blockedTiles = 999;
 	}
 	if (blockedTiles) {
@@ -1080,7 +1082,7 @@ static void drawBuildingGhostRoad()
 			graphicId++;
 		}
 	}
-	if (Data_CityInfo.treasury <= MIN_TREASURY) {
+	if (city_finance_out_of_money()) {
 		tileObstructed = 1;
 	}
 	if (tileObstructed) {

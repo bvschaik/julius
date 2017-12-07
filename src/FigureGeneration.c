@@ -9,7 +9,6 @@
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
-#include "Data/Constants.h"
 #include "Data/Grid.h"
 
 #include "building/model.h"
@@ -468,13 +467,13 @@ static void spawnFigureHippodrome(int buildingId, struct Data_Building *b)
 
 			if (!Data_CityInfo.entertainmentHippodromeHasShow) {
 				// create mini-horses
-				figure *horse1 = figure_create(FIGURE_HIPPODROME_HORSES, b->x + 2, b->y + 1, Dir_2_Right);
+				figure *horse1 = figure_create(FIGURE_HIPPODROME_HORSES, b->x + 2, b->y + 1, DIR_2_RIGHT);
 				horse1->actionState = FigureActionState_200_HippodromeMiniHorseCreated;
 				horse1->buildingId = buildingId;
 				horse1->resourceId = 0;
 				horse1->speedMultiplier = 3;
 
-				figure *horse2 = figure_create(FIGURE_HIPPODROME_HORSES, b->x + 2, b->y + 2, Dir_2_Right);
+				figure *horse2 = figure_create(FIGURE_HIPPODROME_HORSES, b->x + 2, b->y + 2, DIR_2_RIGHT);
 				horse2->actionState = FigureActionState_200_HippodromeMiniHorseCreated;
 				horse2->buildingId = buildingId;
 				horse2->resourceId = 1;
@@ -1111,7 +1110,7 @@ static void spawnFigureDock(int buildingId, struct Data_Building *b)
 		int existingDockers = 0;
 		for (int i = 0; i < 3; i++) {
 			if (b->data.other.dockFigureIds[i]) {
-				if (figure_get(b->data.other.dockFigureIds[i])->type == FIGURE_DOCKMAN) {
+				if (figure_get(b->data.other.dockFigureIds[i])->type == FIGURE_DOCKER) {
 					existingDockers++;
 				} else {
 					b->data.other.dockFigureIds[i] = 0;
@@ -1127,7 +1126,7 @@ static void spawnFigureDock(int buildingId, struct Data_Building *b)
 				}
 			}
 		} else if (existingDockers < maxDockers) {
-			figure *f = figure_create(FIGURE_DOCKMAN, xRoad, yRoad, DIR_4_BOTTOM);
+			figure *f = figure_create(FIGURE_DOCKER, xRoad, yRoad, DIR_4_BOTTOM);
 			f->actionState = FigureActionState_132_DockerIdling;
 			f->buildingId = buildingId;
 			for (int i = 0; i < 3; i++) {

@@ -7,7 +7,6 @@
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
-#include "Data/Constants.h"
 
 #include "core/calc.h"
 #include "figure/route.h"
@@ -24,31 +23,31 @@ static void FigureMovement_walkTicksInternal(figure *f, int numTicks, int roamin
 void FigureMovement_advanceTick(figure *f)
 {
 	switch (f->direction) {
-		case Dir_0_Top:
+		case DIR_0_TOP:
 			f->crossCountryY--;
 			break;
-		case Dir_1_TopRight:
+		case DIR_1_TOP_RIGHT:
 			f->crossCountryX++;
 			f->crossCountryY--;
 			break;
-		case Dir_2_Right:
+		case DIR_2_RIGHT:
 			f->crossCountryX++;
 			break;
-		case Dir_3_BottomRight:
+		case DIR_3_BOTTOM_RIGHT:
 			f->crossCountryX++;
 			f->crossCountryY++;
 			break;
-		case Dir_4_Bottom:
+		case DIR_4_BOTTOM:
 			f->crossCountryY++;
 			break;
-		case Dir_5_BottomLeft:
+		case DIR_5_BOTTOM_LEFT:
 			f->crossCountryX--;
 			f->crossCountryY++;
 			break;
-		case Dir_6_Left:
+		case DIR_6_LEFT:
 			f->crossCountryX--;
 			break;
-		case Dir_7_TopLeft:
+		case DIR_7_TOP_LEFT:
 			f->crossCountryX--;
 			f->crossCountryY--;
 			break;
@@ -103,35 +102,35 @@ static void figureMoveToNextTile(figure *f)
 	switch (f->direction) {
 		default:
 			return;
-		case Dir_0_Top:
+		case DIR_0_TOP:
 			f->y--;
 			f->gridOffset -= 162;
 			break;
-		case Dir_1_TopRight:
+		case DIR_1_TOP_RIGHT:
 			f->x++; f->y--;
 			f->gridOffset -= 161;
 			break;
-		case Dir_2_Right:
+		case DIR_2_RIGHT:
 			f->x++;
 			f->gridOffset += 1;
 			break;
-		case Dir_3_BottomRight:
+		case DIR_3_BOTTOM_RIGHT:
 			f->x++; f->y++;
 			f->gridOffset += 163;
 			break;
-		case Dir_4_Bottom:
+		case DIR_4_BOTTOM:
 			f->y++;
 			f->gridOffset += 162;
 			break;
-		case Dir_5_BottomLeft:
+		case DIR_5_BOTTOM_LEFT:
 			f->x--; f->y++;
 			f->gridOffset += 161;
 			break;
-		case Dir_6_Left:
+		case DIR_6_LEFT:
 			f->x--;
 			f->gridOffset -= 1;
 			break;
-		case Dir_7_TopLeft:
+		case DIR_7_TOP_LEFT:
 			f->x--; f->y--;
 			f->gridOffset -= 163;
 			break;
@@ -165,10 +164,10 @@ void FigureMovement_initRoaming(figure *f)
 	int x = b->x;
 	int y = b->y;
 	switch (roamDir) {
-		case Dir_0_Top: y -= 8; break;
-		case Dir_2_Right: x += 8; break;
-		case Dir_4_Bottom: y += 8; break;
-		case Dir_6_Left: x -= 8; break;
+		case DIR_0_TOP: y -= 8; break;
+		case DIR_2_RIGHT: x += 8; break;
+		case DIR_4_BOTTOM: y += 8; break;
+		case DIR_6_LEFT: x -= 8; break;
 	}
 	map_grid_bound(&x, &y);
 	int xRoad, yRoad;
@@ -223,10 +222,10 @@ void FigureMovement_roamTicks(figure *f, int numTicks)
 {
 	if (f->roamChooseDestination == 0) {
 		FigureMovement_walkTicksInternal(f, numTicks, 1);
-		if (f->direction == DirFigure_8_AtDestination) {
+		if (f->direction == DIR_FIGURE_AT_DESTINATION) {
 			f->roamChooseDestination = 1;
 			f->roamLength = 0;
-		} else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
+		} else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
 			f->roamChooseDestination = 1;
 		}
 		if (f->roamChooseDestination) {
@@ -254,7 +253,7 @@ void FigureMovement_roamTicks(figure *f, int numTicks)
 			if (adjacentRoadTiles == 3 && Terrain_getSurroundingRoadTilesForRoaming(f->gridOffset, roadTiles) >= 5) {
 				// go in the straight direction of a double-wide road
 				adjacentRoadTiles = 2;
-				if (cameFromDirection == Dir_0_Top || cameFromDirection == Dir_4_Bottom) {
+				if (cameFromDirection == DIR_0_TOP || cameFromDirection == DIR_4_BOTTOM) {
 					if (roadTiles[0] && roadTiles[4]) {
 						roadTiles[2] = roadTiles[6] = 0;
 					} else {
@@ -271,7 +270,7 @@ void FigureMovement_roamTicks(figure *f, int numTicks)
 			if (adjacentRoadTiles == 4 && Terrain_getSurroundingRoadTilesForRoaming(f->gridOffset, roadTiles) >= 8) {
 				// go straight on when all surrounding tiles are road
 				adjacentRoadTiles = 2;
-				if (cameFromDirection == Dir_0_Top || cameFromDirection == Dir_4_Bottom) {
+				if (cameFromDirection == DIR_0_TOP || cameFromDirection == DIR_4_BOTTOM) {
 					roadTiles[2] = roadTiles[6] = 0;
 				} else {
 					roadTiles[0] = roadTiles[4] = 0;
@@ -337,12 +336,12 @@ static void figureSetNextRouteTileDirection(figure *f)
 			f->direction = figure_route_get_direction(f->routingPathId, f->routingPathCurrentTile);
 		} else {
 			figure_route_remove(f);
-			f->direction = DirFigure_8_AtDestination;
+			f->direction = DIR_FIGURE_AT_DESTINATION;
 		}
 	} else { // should be at destination
 		f->direction = calc_general_direction(f->x, f->y, f->destinationX, f->destinationY);
-		if (f->direction != DirFigure_8_AtDestination) {
-			f->direction = DirFigure_10_Lost;
+		if (f->direction != DIR_FIGURE_AT_DESTINATION) {
+			f->direction = DIR_FIGURE_LOST;
 		}
 	}
 }
@@ -356,11 +355,11 @@ static void figureAdvanceRouteTile(figure *f, int roamingEnabled)
 	int targetTerrain = Data_Grid_terrain[targetGridOffset] & Terrain_c75f;
 	if (f->isBoat) {
 		if (!(targetTerrain & Terrain_Water)) {
-			f->direction = DirFigure_9_Reroute;
+			f->direction = DIR_FIGURE_REROUTE;
 		}
 	} else if (f->terrainUsage == FigureTerrainUsage_Enemy) {
 		if (!map_routing_noncitizen_is_passable(targetGridOffset)) {
-			f->direction = DirFigure_9_Reroute;
+			f->direction = DIR_FIGURE_REROUTE;
 		} else if (map_routing_is_destroyable(targetGridOffset)) {
 			int causeDamage = 1;
 			int maxDamage = 0;
@@ -384,7 +383,7 @@ static void figureAdvanceRouteTile(figure *f, int roamingEnabled)
 			}
 			if (causeDamage) {
 				f->attackDirection = f->direction;
-				f->direction = DirFigure_11_Attack;
+				f->direction = DIR_FIGURE_ATTACK;
 				if (!(game_time_tick() & 3)) {
 					Building_increaseDamageByEnemy(targetGridOffset, maxDamage);
 				}
@@ -392,13 +391,13 @@ static void figureAdvanceRouteTile(figure *f, int roamingEnabled)
 		}
 	} else if (f->terrainUsage == FigureTerrainUsage_Walls) {
 		if (!map_routing_is_wall_passable(targetGridOffset)) {
-			f->direction = DirFigure_9_Reroute;
+			f->direction = DIR_FIGURE_REROUTE;
 		}
 	} else if (targetTerrain & (Terrain_Road | Terrain_AccessRamp)) {
 		if (roamingEnabled && targetTerrain & Terrain_Building) {
 			if (Data_Buildings[map_building_at(targetGridOffset)].type == BUILDING_GATEHOUSE) {
 				// do not allow roaming through gatehouse
-				f->direction = DirFigure_9_Reroute;
+				f->direction = DIR_FIGURE_REROUTE;
 			}
 		}
 	} else if (targetTerrain & Terrain_Building) {
@@ -410,10 +409,10 @@ static void figureAdvanceRouteTile(figure *f, int roamingEnabled)
 			case BUILDING_FORT_GROUND:
 				break; // OK to walk
 			default:
-				f->direction = DirFigure_9_Reroute;
+				f->direction = DIR_FIGURE_REROUTE;
 		}
 	} else if (targetTerrain) {
-		f->direction = DirFigure_9_Reroute;
+		f->direction = DIR_FIGURE_REROUTE;
 	}
 }
 
@@ -508,14 +507,14 @@ void FigureMovement_crossCountrySetDirection(figure *f, int xSrc, int ySrc, int 
 		f->direction = calc_general_direction(xSrc, ySrc, xDst, yDst);
 		if (f->ccDeltaY > 2 * f->ccDeltaX) {
 			switch (f->direction) {
-				case Dir_1_TopRight: case Dir_7_TopLeft: f->direction = Dir_0_Top; break;
-				case Dir_3_BottomRight: case Dir_5_BottomLeft: f->direction = Dir_4_Bottom; break;
+				case DIR_1_TOP_RIGHT: case DIR_7_TOP_LEFT: f->direction = DIR_0_TOP; break;
+				case DIR_3_BOTTOM_RIGHT: case DIR_5_BOTTOM_LEFT: f->direction = DIR_4_BOTTOM; break;
 			}
 		}
 		if (f->ccDeltaX > 2 * f->ccDeltaY) {
 			switch (f->direction) {
-				case Dir_1_TopRight: case Dir_3_BottomRight: f->direction = Dir_2_Right; break;
-				case Dir_5_BottomLeft: case Dir_7_TopLeft: f->direction = Dir_6_Left; break;
+				case DIR_1_TOP_RIGHT: case DIR_3_BOTTOM_RIGHT: f->direction = DIR_2_RIGHT; break;
+				case DIR_5_BOTTOM_LEFT: case DIR_7_TOP_LEFT: f->direction = DIR_6_LEFT; break;
 			}
 		}
 	}

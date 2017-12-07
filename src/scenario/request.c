@@ -1,5 +1,6 @@
 #include "request.h"
 
+#include "city/finance.h"
 #include "city/message.h"
 #include "core/random.h"
 #include "game/resource.h"
@@ -107,8 +108,7 @@ void scenario_request_dispatch(int id)
     scenario.requests[id].visible = 0;
     int amount = scenario.requests[id].amount;
     if (scenario.requests[id].resource == RESOURCE_DENARII) {
-        Data_CityInfo.treasury -= amount;
-        Data_CityInfo.financeSundriesThisYear += amount;
+        city_finance_process_sundry(amount);
     } else if (scenario.requests[id].resource == RESOURCE_TROOPS) {
         CityInfo_Population_removePeopleForTroopRequest(amount);
         Resource_removeFromCityWarehouses(RESOURCE_WEAPONS, amount);

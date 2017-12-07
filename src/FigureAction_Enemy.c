@@ -61,10 +61,10 @@ static void enemyInitial(figure *f, const formation *m)
 		if (f->attackGraphicOffset) {
 			int missileType;
 			switch (m->enemy_type) {
-				case EnemyType_4_Goth:
-				case EnemyType_5_Pergamum:
-				case EnemyType_9_Egyptian:
-				case EnemyType_10_Carthaginian:
+				case ENEMY_4_GOTH:
+				case ENEMY_5_PERGAMUM:
+				case ENEMY_9_EGYPTIAN:
+				case ENEMY_10_CARTHAGINIAN:
 					missileType = FIGURE_ARROW;
 					break;
 				default:
@@ -151,12 +151,12 @@ static void enemyFighting(figure *f, const formation *m)
 	}
 	if (targetId > 0) {
 		FigureMovement_walkTicks(f, f->speedMultiplier);
-		if (f->direction == DirFigure_8_AtDestination) {
+		if (f->direction == DIR_FIGURE_AT_DESTINATION) {
             figure *target = figure_get(f->targetFigureId);
 			f->destinationX = target->x;
 			f->destinationY = target->y;
 			figure_route_remove(f);
-		} else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
+		} else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
 			f->actionState = FigureActionState_151_EnemyInitial;
 			f->targetFigureId = 0;
 		}
@@ -185,9 +185,9 @@ static void FigureAction_enemyCommon(figure *f)
 			f->destinationX = f->sourceX;
 			f->destinationY = f->sourceY;
 			FigureMovement_walkTicks(f, f->speedMultiplier);
-			if (f->direction == DirFigure_8_AtDestination ||
-				f->direction == DirFigure_9_Reroute ||
-				f->direction == DirFigure_10_Lost) {
+			if (f->direction == DIR_FIGURE_AT_DESTINATION ||
+				f->direction == DIR_FIGURE_REROUTE ||
+				f->direction == DIR_FIGURE_LOST) {
 				f->state = FigureState_Dead;
 			}
 			break;
@@ -247,10 +247,10 @@ void FigureAction_enemy43_Spear(figure *f)
 	f->isEnemyGraphic = 1;
 	
 	switch (m->enemy_type) {
-		case EnemyType_5_Pergamum:
-		case EnemyType_6_Seleucid:
-		case EnemyType_7_Etruscan:
-		case EnemyType_8_Greek:
+		case ENEMY_5_PERGAMUM:
+		case ENEMY_6_SELEUCID:
+		case ENEMY_7_ETRUSCAN:
+		case ENEMY_8_GREEK:
 			break;
 		default:
 			return;
@@ -265,7 +265,7 @@ void FigureAction_enemy43_Spear(figure *f)
 		f->graphicId = 697 + dir + 8 * FigureActionMissileLauncherGraphicOffset(f);
 	} else if (f->actionState == FigureActionState_149_Corpse) {
 		f->graphicId = 793 + FigureActionCorpseGraphicOffset(f);
-	} else if (f->direction == DirFigure_11_Attack) {
+	} else if (f->direction == DIR_FIGURE_ATTACK) {
 		f->graphicId = 745 + dir + 8 * (f->graphicOffset / 2);
 	} else {
 		f->graphicId = 601 + dir + 8 * f->graphicOffset;
@@ -285,9 +285,9 @@ void FigureAction_enemy44_Sword(figure *f)
 	f->isEnemyGraphic = 1;
 	
 	switch (m->enemy_type) {
-		case EnemyType_5_Pergamum:
-		case EnemyType_6_Seleucid:
-		case EnemyType_9_Egyptian:
+		case ENEMY_5_PERGAMUM:
+		case ENEMY_6_SELEUCID:
+		case ENEMY_9_EGYPTIAN:
 			break;
 		default:
 			return;
@@ -300,7 +300,7 @@ void FigureAction_enemy44_Sword(figure *f)
 		}
 	} else if (f->actionState == FigureActionState_149_Corpse) {
 		f->graphicId = 593 + FigureActionCorpseGraphicOffset(f);
-	} else if (f->direction == DirFigure_11_Attack) {
+	} else if (f->direction == DIR_FIGURE_ATTACK) {
 		f->graphicId = 545 + dir + 8 * (f->graphicOffset / 2);
 	} else {
 		f->graphicId = 449 + dir + 8 * f->graphicOffset;
@@ -320,9 +320,9 @@ void FigureAction_enemy45_Sword(figure *f)
 	f->isEnemyGraphic = 1;
 	
 	switch (m->enemy_type) {
-		case EnemyType_7_Etruscan:
-		case EnemyType_8_Greek:
-		case EnemyType_10_Carthaginian:
+		case ENEMY_7_ETRUSCAN:
+		case ENEMY_8_GREEK:
+		case ENEMY_10_CARTHAGINIAN:
 			break;
 		default:
 			return;
@@ -335,7 +335,7 @@ void FigureAction_enemy45_Sword(figure *f)
 		}
 	} else if (f->actionState == FigureActionState_149_Corpse) {
 		f->graphicId = 593 + FigureActionCorpseGraphicOffset(f);
-	} else if (f->direction == DirFigure_11_Attack) {
+	} else if (f->direction == DIR_FIGURE_ATTACK) {
 		f->graphicId = 545 + dir + 8 * (f->graphicOffset / 2);
 	} else {
 		f->graphicId = 449 + dir + 8 * f->graphicOffset;
@@ -354,7 +354,7 @@ void FigureAction_enemy46_Camel(figure *f)
 	
 	f->isEnemyGraphic = 1;
 	
-	if (f->direction == DirFigure_11_Attack) {
+	if (f->direction == DIR_FIGURE_ATTACK) {
 		f->graphicId = 601 + dir + 8 * f->graphicOffset;
 	} else if (f->actionState == FigureActionState_150_Attack) {
 		f->graphicId = 601 + dir;
@@ -378,7 +378,7 @@ void FigureAction_enemy47_Elephant(figure *f)
 	
 	f->isEnemyGraphic = 1;
 	
-	if (f->direction == DirFigure_11_Attack || f->actionState == FigureActionState_150_Attack) {
+	if (f->direction == DIR_FIGURE_ATTACK || f->actionState == FigureActionState_150_Attack) {
 		f->graphicId = 601 + dir + 8 * f->graphicOffset;
 	} else if (f->actionState == FigureActionState_149_Corpse) {
 		f->graphicId = 705 + FigureActionCorpseGraphicOffset(f);
@@ -398,7 +398,7 @@ void FigureAction_enemy48_Chariot(figure *f)
 	
 	f->isEnemyGraphic = 1;
 	
-	if (f->direction == DirFigure_11_Attack || f->actionState == FigureActionState_150_Attack) {
+	if (f->direction == DIR_FIGURE_ATTACK || f->actionState == FigureActionState_150_Attack) {
 		f->graphicId = 697 + dir + 8 * (f->graphicOffset / 2);
 	} else if (f->actionState == FigureActionState_149_Corpse) {
 		f->graphicId = 745 + FigureActionCorpseGraphicOffset(f);
@@ -420,15 +420,15 @@ void FigureAction_enemy49_FastSword(figure *f)
 	f->isEnemyGraphic = 1;
 	
 	int attackId, corpseId, normalId;
-	if (m->enemy_type == EnemyType_0_Barbarian) {
+	if (m->enemy_type == ENEMY_0_BARBARIAN) {
 		attackId = 393;
 		corpseId = 441;
 		normalId = 297;
-	} else if (m->enemy_type == EnemyType_1_Numidian) {
+	} else if (m->enemy_type == ENEMY_1_NUMIDIAN) {
 		attackId = 593;
 		corpseId = 641;
 		normalId = 449;
-	} else if (m->enemy_type == EnemyType_4_Goth) {
+	} else if (m->enemy_type == ENEMY_4_GOTH) {
 		attackId = 545;
 		corpseId = 593;
 		normalId = 449;
@@ -443,7 +443,7 @@ void FigureAction_enemy49_FastSword(figure *f)
 		}
 	} else if (f->actionState == FigureActionState_149_Corpse) {
 		f->graphicId = corpseId + FigureActionCorpseGraphicOffset(f);
-	} else if (f->direction == DirFigure_11_Attack) {
+	} else if (f->direction == DIR_FIGURE_ATTACK) {
 		f->graphicId = attackId + dir + 8 * (f->graphicOffset / 2);
 	} else {
 		f->graphicId = normalId + dir + 8 * f->graphicOffset;
@@ -462,7 +462,7 @@ void FigureAction_enemy50_Sword(figure *f)
 	
 	f->isEnemyGraphic = 1;
 	
-	if (m->enemy_type != EnemyType_2_Gaul && m->enemy_type != EnemyType_3_Celt) {
+	if (m->enemy_type != ENEMY_2_GAUL && m->enemy_type != ENEMY_3_CELT) {
 		return;
 	}
 	if (f->actionState == FigureActionState_150_Attack) {
@@ -473,7 +473,7 @@ void FigureAction_enemy50_Sword(figure *f)
 		}
 	} else if (f->actionState == FigureActionState_149_Corpse) {
 		f->graphicId = 593 + FigureActionCorpseGraphicOffset(f);
-	} else if (f->direction == DirFigure_11_Attack) {
+	} else if (f->direction == DIR_FIGURE_ATTACK) {
 		f->graphicId = 545 + dir + 8 * (f->graphicOffset / 2);
 	} else {
 		f->graphicId = 449 + dir + 8 * f->graphicOffset;
@@ -492,7 +492,7 @@ void FigureAction_enemy51_Spear(figure *f)
 	
 	f->isEnemyGraphic = 1;
 	
-	if (m->enemy_type != EnemyType_1_Numidian) {
+	if (m->enemy_type != ENEMY_1_NUMIDIAN) {
 		return;
 	}
 	if (f->actionState == FigureActionState_150_Attack) {
@@ -505,7 +505,7 @@ void FigureAction_enemy51_Spear(figure *f)
 		f->graphicId = 545 + dir + 8 * FigureActionMissileLauncherGraphicOffset(f);
 	} else if (f->actionState == FigureActionState_149_Corpse) {
 		f->graphicId = 641 + FigureActionCorpseGraphicOffset(f);
-	} else if (f->direction == DirFigure_11_Attack) {
+	} else if (f->direction == DIR_FIGURE_ATTACK) {
 		f->graphicId = 593 + dir + 8 * (f->graphicOffset / 2);
 	} else {
 		f->graphicId = 449 + dir + 8 * f->graphicOffset;
@@ -524,7 +524,7 @@ void FigureAction_enemy52_MountedArcher(figure *f)
 	
 	f->isEnemyGraphic = 1;
 	
-	if (f->direction == DirFigure_11_Attack) {
+	if (f->direction == DIR_FIGURE_ATTACK) {
 		f->graphicId = 601 + dir + 8 * f->graphicOffset;
 	} else if (f->actionState == FigureActionState_150_Attack) {
 		f->graphicId = 601 + dir;
@@ -549,7 +549,7 @@ void FigureAction_enemy53_Axe(figure *f)
 	
 	f->isEnemyGraphic = 1;
 	
-	if (m->enemy_type != EnemyType_2_Gaul) {
+	if (m->enemy_type != ENEMY_2_GAUL) {
 		return;
 	}
 	if (f->actionState == FigureActionState_150_Attack) {
@@ -560,7 +560,7 @@ void FigureAction_enemy53_Axe(figure *f)
 		}
 	} else if (f->actionState == FigureActionState_149_Corpse) {
 		f->graphicId = 745 + FigureActionCorpseGraphicOffset(f);
-	} else if (f->direction == DirFigure_11_Attack) {
+	} else if (f->direction == DIR_FIGURE_ATTACK) {
 		f->graphicId = 697 + dir + 8 * (f->graphicOffset / 2);
 	} else {
 		f->graphicId = 601 + dir + 8 * f->graphicOffset;
@@ -610,15 +610,15 @@ void FigureAction_enemy54_Gladiator(figure *f)
 			Data_CityInfo.numAttackingNativesInCity = 10;
 			f->terrainUsage = FigureTerrainUsage_Enemy;
 			FigureMovement_walkTicks(f, 1);
-			if (f->direction == DirFigure_8_AtDestination ||
-				f->direction == DirFigure_9_Reroute ||
-				f->direction == DirFigure_10_Lost) {
+			if (f->direction == DIR_FIGURE_AT_DESTINATION ||
+				f->direction == DIR_FIGURE_REROUTE ||
+				f->direction == DIR_FIGURE_LOST) {
 				f->actionState = FigureActionState_158_NativeCreated;
 			}
 			break;
 	}
 	int dir;
-	if (f->actionState == FigureActionState_150_Attack || f->direction == DirFigure_11_Attack) {
+	if (f->actionState == FigureActionState_150_Attack || f->direction == DIR_FIGURE_ATTACK) {
 		dir = f->attackDirection;
 	} else if (f->direction < 8) {
 		dir = f->direction;
@@ -627,7 +627,7 @@ void FigureAction_enemy54_Gladiator(figure *f)
 	}
 	FigureActionNormalizeDirection(dir);
 
-	if (f->actionState == FigureActionState_150_Attack || f->direction == DirFigure_11_Attack) {
+	if (f->actionState == FigureActionState_150_Attack || f->direction == DIR_FIGURE_ATTACK) {
 		f->graphicId = image_group(GROUP_FIGURE_GLADIATOR) + dir + 104 + 8 * (f->graphicOffset / 2);
 	} else if (f->actionState == FigureActionState_149_Corpse) {
 		f->graphicId = image_group(GROUP_FIGURE_GLADIATOR) + 96 + FigureActionCorpseGraphicOffset(f);
@@ -647,7 +647,7 @@ void FigureAction_enemyCaesarLegionary(figure *f)
 	
 	int dir = getDirection(f);
 	
-	if (f->direction == DirFigure_11_Attack) {
+	if (f->direction == DIR_FIGURE_ATTACK) {
 		f->graphicId = image_group(GROUP_FIGURE_CAESAR_LEGIONARY) + dir +
 			8 * ((f->attackGraphicOffset - 12) / 2);
 	}

@@ -10,6 +10,7 @@
 #include "../Data/Screen.h"
 #include "../Data/State.h"
 
+#include "city/finance.h"
 #include "game/settings.h"
 #include "graphics/image.h"
 #include "scenario/property.h"
@@ -81,7 +82,7 @@ void UI_MissionEnd_drawBackground()
 		xOffset + 40 + width, yOffset + 220, FONT_NORMAL_BLACK);
 
 	width = Widget_GameText_draw(148, 5, xOffset + 300, yOffset + 220, FONT_NORMAL_BLACK);
-	Widget_Text_drawNumber(Data_CityInfo.treasury, '@', " ",
+	Widget_Text_drawNumber(city_finance_treasury(), '@', " ",
 		xOffset + 300 + width, yOffset + 220, FONT_NORMAL_BLACK);
 
 	Widget_GameText_drawCentered(13, 1, xOffset + 16, yOffset + 260, 512, FONT_NORMAL_BLACK);

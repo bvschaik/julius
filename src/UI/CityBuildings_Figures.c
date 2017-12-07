@@ -119,7 +119,7 @@ static void drawHippodromeHorses(figure *f, int xOffset, int yOffset)
 {
 	int val = f->waitTicksMissile;
 	switch (Data_State.map.orientation) {
-		case Dir_0_Top:
+		case DIR_0_TOP:
 			xOffset += 10;
 			if (val <= 10) {
 				yOffset -= 2;
@@ -137,7 +137,7 @@ static void drawHippodromeHorses(figure *f, int xOffset, int yOffset)
 				yOffset -= 2;
 			}
 			break;
-		case Dir_2_Right:
+		case DIR_2_RIGHT:
 			xOffset -= 10;
 			if (val <= 9) {
 				yOffset -= 12;
@@ -155,7 +155,7 @@ static void drawHippodromeHorses(figure *f, int xOffset, int yOffset)
 			} else {
 				yOffset -= 12;
 			}
-		case Dir_4_Bottom:
+		case DIR_4_BOTTOM:
 			xOffset += 20;
 			if (val <= 9) {
 				yOffset += 4;
@@ -175,7 +175,7 @@ static void drawHippodromeHorses(figure *f, int xOffset, int yOffset)
 				yOffset -= 2;
 			}
 			break;
-		case Dir_6_Left:
+		case DIR_6_LEFT:
 			xOffset -= 10;
 			if (val <= 9) {
 				yOffset -= 12;
@@ -200,24 +200,24 @@ static void drawHippodromeHorses(figure *f, int xOffset, int yOffset)
 static int tileOffsetToPixelOffsetX(int x, int y)
 {
 	int dir = Data_State.map.orientation;
-	if (dir == Dir_0_Top || dir == Dir_4_Bottom) {
+	if (dir == DIR_0_TOP || dir == DIR_4_BOTTOM) {
 		int base = 2 * x - 2 * y;
-		return dir == Dir_0_Top ? base : -base;
+		return dir == DIR_0_TOP ? base : -base;
 	} else {
 		int base = 2 * x + 2 * y;
-		return dir == Dir_2_Right ? base : -base;
+		return dir == DIR_2_RIGHT ? base : -base;
 	}
 }
 
 static int tileOffsetToPixelOffsetY(int x, int y)
 {
 	int dir = Data_State.map.orientation;
-	if (dir == Dir_0_Top || dir == Dir_4_Bottom) {
+	if (dir == DIR_0_TOP || dir == DIR_4_BOTTOM) {
 		int base = x + y;
-		return dir == Dir_0_Top ? base : -base;
+		return dir == DIR_0_TOP ? base : -base;
 	} else {
 		int base = x - y;
-		return dir == Dir_6_Left ? base : -base;
+		return dir == DIR_6_LEFT ? base : -base;
 	}
 }
 
@@ -311,7 +311,7 @@ void UI_CityBuildings_drawFigure(int figureId, int xOffset, int yOffset, int sel
 			case FIGURE_CART_PUSHER:
 			case FIGURE_WAREHOUSEMAN:
 			case FIGURE_LION_TAMER:
-			case FIGURE_DOCKMAN:
+			case FIGURE_DOCKER:
 			case FIGURE_NATIVE_TRADER:
 			case FIGURE_IMMIGRANT:
 			case FIGURE_EMIGRANT:

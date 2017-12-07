@@ -26,19 +26,19 @@ void FigureAction_indigenousNative(figure *f)
 			break;
 		case FigureActionState_156_NativeGoingToMeetingCenter:
 			FigureMovement_walkTicks(f, 1);
-			if (f->direction == DirFigure_8_AtDestination) {
+			if (f->direction == DIR_FIGURE_AT_DESTINATION) {
 				f->actionState = FigureActionState_157_NativeReturningFromMeetingCenter;
 				f->destinationX = f->sourceX;
 				f->destinationY = f->sourceY;
-			} else if (f->direction == DirFigure_9_Reroute || f->direction == DirFigure_10_Lost) {
+			} else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
 				f->state = FigureState_Dead;
 			}
 			break;
 		case FigureActionState_157_NativeReturningFromMeetingCenter:
 			FigureMovement_walkTicks(f, 1);
-			if (f->direction == DirFigure_8_AtDestination ||
-				f->direction == DirFigure_9_Reroute ||
-				f->direction == DirFigure_10_Lost) {
+			if (f->direction == DIR_FIGURE_AT_DESTINATION ||
+				f->direction == DIR_FIGURE_REROUTE ||
+				f->direction == DIR_FIGURE_LOST) {
 				f->state = FigureState_Dead;
 			}
 			break;
@@ -70,15 +70,15 @@ void FigureAction_indigenousNative(figure *f)
 			Data_CityInfo.numAttackingNativesInCity++;
 			f->terrainUsage = FigureTerrainUsage_Enemy;
 			FigureMovement_walkTicks(f, 1);
-			if (f->direction == DirFigure_8_AtDestination ||
-				f->direction == DirFigure_9_Reroute ||
-				f->direction == DirFigure_10_Lost) {
+			if (f->direction == DIR_FIGURE_AT_DESTINATION ||
+				f->direction == DIR_FIGURE_REROUTE ||
+				f->direction == DIR_FIGURE_LOST) {
 				f->actionState = FigureActionState_158_NativeCreated;
 			}
 			break;
 	}
 	int dir;
-	if (f->actionState == FigureActionState_150_Attack || f->direction == DirFigure_11_Attack) {
+	if (f->actionState == FigureActionState_150_Attack || f->direction == DIR_FIGURE_ATTACK) {
 		dir = f->attackDirection;
 	} else if (f->direction < 8) {
 		dir = f->direction;
@@ -96,7 +96,7 @@ void FigureAction_indigenousNative(figure *f)
 		}
 	} else if (f->actionState == FigureActionState_149_Corpse) {
 		f->graphicId = 441 + FigureActionCorpseGraphicOffset(f);
-	} else if (f->direction == DirFigure_11_Attack) {
+	} else if (f->direction == DIR_FIGURE_ATTACK) {
 		f->graphicId = 393 + dir + 8 * (f->graphicOffset / 2);
 	} else if (f->actionState == FigureActionState_159_NativeAttacking) {
 		f->graphicId = 297 + dir + 8 * f->graphicOffset;

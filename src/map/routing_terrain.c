@@ -236,34 +236,34 @@ void map_routing_update_water()
     }
 }
 
-static int is_gatehouse_tile(int grid_offset)
+static int is_wall_tile(int grid_offset)
 {
     return (Data_Grid_terrain[grid_offset] & Terrain_WallOrGatehouse) ? 1 : 0;
 }
 
-static int count_adjacent_gatehouse_tiles(int grid_offset)
+static int count_adjacent_wall_tiles(int grid_offset)
 {
     int adjacent = 0;
     switch (Data_State.map.orientation) {
         case DIR_0_TOP:
-            adjacent += is_gatehouse_tile(grid_offset + map_grid_delta(0, 1));
-            adjacent += is_gatehouse_tile(grid_offset + map_grid_delta(1, 1));
-            adjacent += is_gatehouse_tile(grid_offset + map_grid_delta(1, 0));
+            adjacent += is_wall_tile(grid_offset + map_grid_delta(0, 1));
+            adjacent += is_wall_tile(grid_offset + map_grid_delta(1, 1));
+            adjacent += is_wall_tile(grid_offset + map_grid_delta(1, 0));
             break;
         case DIR_2_RIGHT:
-            adjacent += is_gatehouse_tile(grid_offset + map_grid_delta(0, 1));
-            adjacent += is_gatehouse_tile(grid_offset + map_grid_delta(-1, 1));
-            adjacent += is_gatehouse_tile(grid_offset + map_grid_delta(-1, 0));
+            adjacent += is_wall_tile(grid_offset + map_grid_delta(0, 1));
+            adjacent += is_wall_tile(grid_offset + map_grid_delta(-1, 1));
+            adjacent += is_wall_tile(grid_offset + map_grid_delta(-1, 0));
             break;
         case DIR_4_BOTTOM:
-            adjacent += is_gatehouse_tile(grid_offset + map_grid_delta(0, -1));
-            adjacent += is_gatehouse_tile(grid_offset + map_grid_delta(-1, -1));
-            adjacent += is_gatehouse_tile(grid_offset + map_grid_delta(-1, 0));
+            adjacent += is_wall_tile(grid_offset + map_grid_delta(0, -1));
+            adjacent += is_wall_tile(grid_offset + map_grid_delta(-1, -1));
+            adjacent += is_wall_tile(grid_offset + map_grid_delta(-1, 0));
             break;
         case DIR_6_LEFT:
-            adjacent += is_gatehouse_tile(grid_offset + map_grid_delta(0, -1));
-            adjacent += is_gatehouse_tile(grid_offset + map_grid_delta(1, -1));
-            adjacent += is_gatehouse_tile(grid_offset + map_grid_delta(1, 0));
+            adjacent += is_wall_tile(grid_offset + map_grid_delta(0, -1));
+            adjacent += is_wall_tile(grid_offset + map_grid_delta(1, -1));
+            adjacent += is_wall_tile(grid_offset + map_grid_delta(1, 0));
             break;
     }
     return adjacent;
@@ -276,7 +276,7 @@ void map_routing_update_walls()
     for (int y = 0; y < Data_State.map.height; y++, grid_offset += Data_State.map.gridBorderSize) {
         for (int x = 0; x < Data_State.map.width; x++, grid_offset++) {
             if (Data_Grid_terrain[grid_offset] & Terrain_Wall) {
-                if (count_adjacent_gatehouse_tiles(grid_offset) == 3) {
+                if (count_adjacent_wall_tiles(grid_offset) == 3) {
                     terrain_walls.items[grid_offset] = WALL_0_PASSABLE;
                 } else {
                     terrain_walls.items[grid_offset] = WALL_N1_BLOCKED;
@@ -292,7 +292,7 @@ void map_routing_update_walls()
 
 int map_routing_is_wall_passable(int grid_offset)
 {
-    return terrain_walls.items[grid_offset] == 0;
+    return terrain_walls.items[grid_offset] == WALL_0_PASSABLE;
 }
 
 int map_routing_citizen_is_passable(int grid_offset)

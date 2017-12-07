@@ -6,9 +6,7 @@
 #include "Window.h"
 
 #include "../Building.h"
-#include "core/calc.h"
 #include "../CityInfo.h"
-#include "../Figure.h"
 #include "../Formation.h"
 #include "../Graphics.h"
 #include "../HouseEvolution.h"
@@ -25,8 +23,10 @@
 #include "../Data/State.h"
 
 #include "building/model.h"
+#include "core/calc.h"
 #include "figure/figure.h"
 #include "figure/formation.h"
+#include "figure/phrase.h"
 #include "map/building.h"
 #include "map/figure.h"
 #include "map/property.h"
@@ -279,7 +279,7 @@ void UI_BuildingInfo_init()
 						break;
 					default:
 						context.figure.figureIds[context.figure.count++] = figureId;
-						Figure_determinePhrase(figureId);
+						figure_phrase_determine(figure);
 						break;
 				}
 			}

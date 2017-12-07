@@ -15,6 +15,7 @@
 #include "empire/city.h"
 #include "figure/figure.h"
 #include "figure/formation.h"
+#include "figure/phrase.h"
 #include "figure/trader.h"
 #include "scenario/property.h"
 
@@ -174,42 +175,42 @@ static void drawFigureInfoEnemy(BuildingInfoContext *c, figure *f)
 	switch (f->type) {
 		case FIGURE_ENEMY43_SPEAR:
 			switch (enemy_type) {
-				case EnemyType_5_Pergamum: graphicId = 44; break;
-				case EnemyType_6_Seleucid: graphicId = 46; break;
-				case EnemyType_7_Etruscan: graphicId = 32; break;
-				case EnemyType_8_Greek: graphicId = 36; break;
+				case ENEMY_5_PERGAMUM: graphicId = 44; break;
+				case ENEMY_6_SELEUCID: graphicId = 46; break;
+				case ENEMY_7_ETRUSCAN: graphicId = 32; break;
+				case ENEMY_8_GREEK: graphicId = 36; break;
 			}
 			break;
 		case FIGURE_ENEMY44_SWORD:
 			switch (enemy_type) {
-				case EnemyType_5_Pergamum: graphicId = 45; break;
-				case EnemyType_6_Seleucid: graphicId = 47; break;
-				case EnemyType_9_Egyptian: graphicId = 29; break;
+				case ENEMY_5_PERGAMUM: graphicId = 45; break;
+				case ENEMY_6_SELEUCID: graphicId = 47; break;
+				case ENEMY_9_EGYPTIAN: graphicId = 29; break;
 			}
 			break;
 		case FIGURE_ENEMY45_SWORD:
 			switch (enemy_type) {
-				case EnemyType_7_Etruscan: graphicId = 31; break;
-				case EnemyType_8_Greek: graphicId = 37; break;
-				case EnemyType_10_Carthaginian: graphicId = 22; break;
+				case ENEMY_7_ETRUSCAN: graphicId = 31; break;
+				case ENEMY_8_GREEK: graphicId = 37; break;
+				case ENEMY_10_CARTHAGINIAN: graphicId = 22; break;
 			}
 			break;
 		case FIGURE_ENEMY49_FAST_SWORD:
 			switch (enemy_type) {
-				case EnemyType_0_Barbarian: graphicId = 21; break;
-				case EnemyType_1_Numidian: graphicId = 20; break;
-				case EnemyType_4_Goth: graphicId = 35; break;
+				case ENEMY_0_BARBARIAN: graphicId = 21; break;
+				case ENEMY_1_NUMIDIAN: graphicId = 20; break;
+				case ENEMY_4_GOTH: graphicId = 35; break;
 			}
 			break;
 		case FIGURE_ENEMY50_SWORD:
 			switch (enemy_type) {
-				case EnemyType_2_Gaul: graphicId = 40; break;
-				case EnemyType_3_Celt: graphicId = 24; break;
+				case ENEMY_2_GAUL: graphicId = 40; break;
+				case ENEMY_3_CELT: graphicId = 24; break;
 			}
 			break;
 		case FIGURE_ENEMY51_SPEAR:
 			switch (enemy_type) {
-				case EnemyType_1_Numidian: graphicId = 20; break;
+				case ENEMY_1_NUMIDIAN: graphicId = 20; break;
 			}
 			break;
 	}
@@ -355,7 +356,7 @@ static void drawFigureInfo(BuildingInfoContext *c, int figureId)
 	} else if (type == FIGURE_FISHING_BOAT || type == FIGURE_SHIPWRECK ||
 			type == FIGURE_SHEEP || type == FIGURE_WOLF || type == FIGURE_ZEBRA) {
 		drawFigureInfoBoatAnimal(c, f);
-	} else if (type == FIGURE_CART_PUSHER || type == FIGURE_WAREHOUSEMAN || type == FIGURE_DOCKMAN) {
+	} else if (type == FIGURE_CART_PUSHER || type == FIGURE_WAREHOUSEMAN || type == FIGURE_DOCKER) {
 		drawFigureInfoCartpusher(c, f);
 	} else if (type == FIGURE_MARKET_BUYER) {
 		drawFigureInfoMarketBuyer(c, f);
@@ -419,8 +420,9 @@ void UI_BuildingInfo_drawFigureImagesLocal(BuildingInfoContext *c)
 void UI_BuildingInfo_playFigurePhrase(BuildingInfoContext *c)
 {
 	int figureId = c->figure.figureIds[c->figure.selectedIndex];
-	c->figure.soundId = Figure_playPhrase(figureId);
-	c->figure.phraseId = figure_get(figureId)->phraseId;
+    figure *f = figure_get(figureId);
+	c->figure.soundId = figure_phrase_play(f);
+	c->figure.phraseId = f->phraseId;
 }
 
 void UI_BuildingInfo_handleMouseFigureList(BuildingInfoContext *c)

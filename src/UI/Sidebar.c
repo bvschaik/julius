@@ -20,6 +20,7 @@
 #include "../Data/State.h"
 
 #include "city/message.h"
+#include "core/direction.h"
 #include "core/time.h"
 #include "graphics/image.h"
 #include "game/tutorial.h"
@@ -390,17 +391,17 @@ static void buttonMissionBriefing(int param1, int param2)
 static void buttonRotateNorth(int param1, int param2)
 {
 	switch (Data_State.map.orientation) {
-		case Dir_0_Top: // already north
+		case DIR_0_TOP: // already north
 			return;
-		case Dir_2_Right:
+		case DIR_2_RIGHT:
 			CityView_rotateRight();
 			Terrain_rotateMap(1);
 			break;
-		case Dir_4_Bottom:
+		case DIR_4_BOTTOM:
 			CityView_rotateLeft();
 			Terrain_rotateMap(0);
 			// fallthrough
-		case Dir_6_Left:
+		case DIR_6_LEFT:
 			CityView_rotateLeft();
 			Terrain_rotateMap(0);
 			break;

@@ -6,6 +6,7 @@
 #include "../Formation.h"
 #include "../Resource.h"
 
+#include "city/finance.h"
 #include "empire/city.h"
 #include "game/resource.h"
 #include "scenario/property.h"
@@ -60,11 +61,12 @@ static void draw_request(int index, const scenario_request *request)
 
     if (request->resource == RESOURCE_DENARII) {
         // request for money
-        width = Widget_Text_drawNumber(Data_CityInfo.treasury, '@', " ",
+        int treasury = city_finance_treasury();
+        width = Widget_Text_drawNumber(treasury, '@', " ",
             baseOffsetX + 40, baseOffsetY + 120 + 42 * index, FONT_NORMAL_WHITE);
         width += Widget_GameText_draw(52, 44,
             baseOffsetX + 40 + width, baseOffsetY + 120 + 42 * index, FONT_NORMAL_WHITE);
-        if (Data_CityInfo.treasury < request->amount) {
+        if (treasury < request->amount) {
             Widget_GameText_draw(52, 48,
                 baseOffsetX + 80 + width, baseOffsetY + 120 + 42 * index, FONT_NORMAL_WHITE);
         } else {
@@ -209,7 +211,7 @@ static int getRequestStatus(int index)
     const scenario_request *request = scenario_request_get_visible(index - numRequests);
     if (request) {
         if (request->resource == RESOURCE_DENARII) {
-            if (Data_CityInfo.treasury <= request->amount) {
+            if (city_finance_treasury() <= request->amount) {
                 return -1;
             }
         } else {

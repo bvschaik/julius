@@ -535,7 +535,7 @@ static void savegame_serialize(savegame_state *state)
     write_all_to_buffer(state->savegameFileVersion, &savegameFileVersion);
     write_all_to_buffer(state->Data_Grid_graphicIds, &Data_Grid_graphicIds);
 
-    map_building_load_state(state->building_grid, state->building_damage_grid);
+    map_building_save_state(state->building_grid, state->building_damage_grid);
 
     write_all_to_buffer(state->Data_Grid_terrain, &Data_Grid_terrain);
     write_all_to_buffer(state->Data_Grid_aqueducts, &Data_Grid_aqueducts);

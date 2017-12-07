@@ -6,7 +6,6 @@
 
 #include "UI/Window.h"
 
-#include "Data/Constants.h"
 #include "Data/FileList.h"
 #include "Data/State.h"
 #include "UI/TopMenu.h"
@@ -15,6 +14,7 @@
 #include "core/debug.h"
 #include "core/lang.h"
 #include "core/random.h"
+#include "figure/type.h"
 #include "game/settings.h"
 #include "graphics/image.h"
 #include "scenario/property.h"
@@ -64,7 +64,7 @@ int Game_init()
 		errlog("ERR: unable to load main graphics");
 		return 0;
 	}
-	if (!image_load_enemy(EnemyType_0_Barbarian)) {
+	if (!image_load_enemy(ENEMY_0_BARBARIAN)) {
 		errlog("ERR: unable to load enemy graphics");
 		return 0;
 	}

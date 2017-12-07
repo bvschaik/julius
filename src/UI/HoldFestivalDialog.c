@@ -10,6 +10,7 @@
 #include "../Data/Constants.h"
 #include "../Data/Screen.h"
 
+#include "city/finance.h"
 #include "game/resource.h"
 
 static void drawButtons();
@@ -113,7 +114,7 @@ static void drawButtons()
 		baseOffsetX + 120 + width, baseOffsetY + 279);
 	
 	// greying out of buttons
-	if (Data_CityInfo.treasury <= MIN_TREASURY) {
+	if (city_finance_out_of_money()) {
 		Graphics_shadeRect(baseOffsetX + 104, baseOffsetY + 218, 426, 22, 0);
 		Graphics_shadeRect(baseOffsetX + 104, baseOffsetY + 248, 426, 22, 0);
 		Graphics_shadeRect(baseOffsetX + 104, baseOffsetY + 278, 426, 22, 0);
@@ -147,7 +148,7 @@ static void buttonGod(int god, int param2)
 
 static void buttonSize(int size, int param2)
 {
-	if (Data_CityInfo.treasury > MIN_TREASURY) {
+	if (!city_finance_out_of_money()) {
 		if (size != Festival_Grand || !Data_CityInfo.festivalNotEnoughWine) {
 			Data_CityInfo.festivalSize = size;
 			UI_Window_requestRefresh();
@@ -167,7 +168,7 @@ static void buttonClose(int param1, int param2)
 
 static void buttonHoldFestival(int param1, int param2)
 {
-	if (Data_CityInfo.treasury <= MIN_TREASURY) {
+	if (city_finance_out_of_money()) {
 		return;
 	}
 	Data_CityInfo.plannedFestivalGod = Data_CityInfo.festivalGod;
@@ -184,8 +185,7 @@ static void buttonHoldFestival(int param1, int param2)
 		cost = Data_CityInfo.festivalCostGrand;
 	}
 
-	Data_CityInfo.treasury -= cost;
-	Data_CityInfo.financeSundriesThisYear += cost;
+	city_finance_process_sundry(cost);
 
 	if (Data_CityInfo.festivalSize == Festival_Grand) {
 		Resource_removeFromCityWarehouses(RESOURCE_WINE, Data_CityInfo.festivalWineGrand);
