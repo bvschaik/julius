@@ -110,11 +110,6 @@ void UI_SpeedOptions_handleMouse(const mouse *m)
 	}
 }
 
-void UI_SpeedOptions_changeGameSpeed(int goDown)
-{
-	arrowButtonGame(goDown, 0);
-}
-
 static void buttonOk(int param1, int param2)
 {
 	UI_Window_goTo(Window_City);

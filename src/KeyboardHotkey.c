@@ -6,7 +6,6 @@
 #include "Video.h"
 
 #include "UI/Advisors.h"
-#include "UI/AllWindows.h"
 #include "UI/BuildingInfo.h"
 #include "UI/PopupDialog.h"
 #include "UI/Sidebar.h"
@@ -20,6 +19,7 @@
 #include "city/finance.h"
 #include "city/warning.h"
 #include "figure/formation.h"
+#include "game/settings.h"
 #include "input/scroll.h"
 #include "map/bookmark.h"
 #include "map/grid.h"
@@ -39,9 +39,13 @@ static struct {
 
 static void changeGameSpeed(int isDown)
 {
-	if (UI_Window_getId() == Window_City) {
-		UI_SpeedOptions_changeGameSpeed(isDown);
-	}
+    if (UI_Window_getId() == Window_City) {
+        if (isDown) {
+            setting_decrease_game_speed();
+        } else {
+            setting_increase_game_speed();
+        }
+    }
 }
 
 static void toggleOverlay()
