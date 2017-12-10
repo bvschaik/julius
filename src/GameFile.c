@@ -739,7 +739,7 @@ static void debug()
 
 static void load_empire_data(int is_custom_scenario, int empire_id)
 {
-    empire_load();
+    empire_load( is_custom_scenario, empire_id );
     scenario_distant_battle_set_roman_travel_months();
     scenario_distant_battle_set_enemy_travel_months();
 }
