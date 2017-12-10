@@ -122,11 +122,11 @@ int figure_name_get(figure_type type, enemy_type enemy)
         return get_next_name(&data.patrician, 66, 32);
 
     case FIGURE_FORT_JAVELIN:
-    case FIGURE_ENEMY55_JAVELIN:
+    case FIGURE_ENEMY_CAESAR_JAVELIN:
         return get_next_name(&data.javelin_thrower, 231, 32);
 
     case FIGURE_FORT_MOUNTED:
-    case FIGURE_ENEMY56_MOUNTED:
+    case FIGURE_ENEMY_CAESAR_MOUNTED:
         return get_next_name(&data.cavalry, 264, 32);
 
     case FIGURE_FORT_LEGIONARY:
