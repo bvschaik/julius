@@ -1,5 +1,5 @@
 .kdev4
 build
-data
+/data
 doc
 *.kdev4

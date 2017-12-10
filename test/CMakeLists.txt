@@ -41,3 +41,127 @@ foreach (testcase ${TESTS})
 endforeach (testcase)
 
 file(COPY data DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
+function(except_file var excluded_file)
+    set(list_var "")
+    foreach(f ${ARGN})
+        if(NOT ${f} MATCHES ".*${excluded_file}")
+            list(APPEND list_var ${f})
+        endif()
+    endforeach(f)
+    set(${var} "${list_var}" PARENT_SCOPE)
+endfunction(except_file)
+
+except_file(TEST_CORE_FILES "core/lang.c" ${CORE_FILES})
+except_file(TEST_BUILDING_FILES "building/model.c" ${BUILDING_FILES})
+except_file(TEST_GRAPHICS_FILES "graphics/image.c" ${GRAPHICS_FILES})
+
+add_executable(sav_test
+    sav/compare.c
+    sav/sav_compare.c
+    ${PROJECT_SOURCE_DIR}/src/core/zip.c
+    ${PROJECT_SOURCE_DIR}/src/core/debug.c
+)
+
+add_executable(autopilot
+    sav/sav_compare.c
+    sav/run.c
+    sav/dummy_image.c
+    sav/dummy_lang.c
+    sav/dummy_model.c
+    sav/dummy_sound_device.c
+    sav/dummy_system.c
+    sav/dummy_ui.c
+    sav/dummy_video.c
+    ${TEST_CORE_FILES}
+    ${TEST_BUILDING_FILES}
+    ${TEST_GRAPHICS_FILES}
+    ${CITY_FILES}
+    ${EMPIRE_FILES}
+    ${FIGURE_FILES}
+    ${GAME_FILES}
+    ${INPUT_FILES}
+    ${MAP_FILES}
+    ${SCENARIO_FILES}
+    ${SOUND_FILES}
+    ${PROJECT_SOURCE_DIR}/src/Animation.c
+    ${PROJECT_SOURCE_DIR}/src/Building.c
+    ${PROJECT_SOURCE_DIR}/src/BuildingHouse.c
+    ${PROJECT_SOURCE_DIR}/src/BuildingPlacement.c
+    ${PROJECT_SOURCE_DIR}/src/CityInfo.c
+    ${PROJECT_SOURCE_DIR}/src/CityInfo_Culture.c
+    ${PROJECT_SOURCE_DIR}/src/CityInfo_Finance.c
+    ${PROJECT_SOURCE_DIR}/src/CityInfo_Gods.c
+    ${PROJECT_SOURCE_DIR}/src/CityInfo_Labor.c
+    ${PROJECT_SOURCE_DIR}/src/CityInfo_Population.c
+    ${PROJECT_SOURCE_DIR}/src/CityInfo_Ratings.c
+    ${PROJECT_SOURCE_DIR}/src/CityInfo_Resource.c
+    ${PROJECT_SOURCE_DIR}/src/CityInfo_Tick.c
+    ${PROJECT_SOURCE_DIR}/src/CityInfo_Victory.c
+    ${PROJECT_SOURCE_DIR}/src/CityView.c
+    ${PROJECT_SOURCE_DIR}/src/Cursor.c
+    ${PROJECT_SOURCE_DIR}/src/Figure.c
+    ${PROJECT_SOURCE_DIR}/src/FigureAction.c
+    ${PROJECT_SOURCE_DIR}/src/FigureAction_Animal.c
+    ${PROJECT_SOURCE_DIR}/src/FigureAction_Cartpusher.c
+    ${PROJECT_SOURCE_DIR}/src/FigureAction_Combat.c
+    ${PROJECT_SOURCE_DIR}/src/FigureAction_Common.c
+    ${PROJECT_SOURCE_DIR}/src/FigureAction_Culture.c
+    ${PROJECT_SOURCE_DIR}/src/FigureAction_Docker.c
+    ${PROJECT_SOURCE_DIR}/src/FigureAction_Enemy.c
+    ${PROJECT_SOURCE_DIR}/src/FigureAction_Entertainer.c
+    ${PROJECT_SOURCE_DIR}/src/FigureAction_Market.c
+    ${PROJECT_SOURCE_DIR}/src/FigureAction_Migrant.c
+    ${PROJECT_SOURCE_DIR}/src/FigureAction_Missile.c
+    ${PROJECT_SOURCE_DIR}/src/FigureAction_Native.c
+    ${PROJECT_SOURCE_DIR}/src/FigureAction_Rioter.c
+    ${PROJECT_SOURCE_DIR}/src/FigureAction_Service.c
+    ${PROJECT_SOURCE_DIR}/src/FigureAction_Soldier.c
+    ${PROJECT_SOURCE_DIR}/src/FigureAction_Trader.c
+    ${PROJECT_SOURCE_DIR}/src/FigureAction_Wall.c
+    ${PROJECT_SOURCE_DIR}/src/FigureAction_Water.c
+    ${PROJECT_SOURCE_DIR}/src/FigureGeneration.c
+    ${PROJECT_SOURCE_DIR}/src/FigureMovement.c
+    ${PROJECT_SOURCE_DIR}/src/Figure_Service.c
+    ${PROJECT_SOURCE_DIR}/src/Formation.c
+    ${PROJECT_SOURCE_DIR}/src/FormationUpdate.c
+    ${PROJECT_SOURCE_DIR}/src/Game.c
+    ${PROJECT_SOURCE_DIR}/src/GameFile.c
+    ${PROJECT_SOURCE_DIR}/src/GameTick.c
+    ${PROJECT_SOURCE_DIR}/src/Graphics.c
+    ${PROJECT_SOURCE_DIR}/src/Graphics_Footprint.c
+    ${PROJECT_SOURCE_DIR}/src/HouseEvolution.c
+    ${PROJECT_SOURCE_DIR}/src/HousePopulation.c
+    ${PROJECT_SOURCE_DIR}/src/KeyboardHotkey.c
+    ${PROJECT_SOURCE_DIR}/src/Loader.c
+    ${PROJECT_SOURCE_DIR}/src/Natives.c
+    ${PROJECT_SOURCE_DIR}/src/Resource.c
+    ${PROJECT_SOURCE_DIR}/src/Resource_Granary.c
+    ${PROJECT_SOURCE_DIR}/src/Resource_Warehouse.c
+    ${PROJECT_SOURCE_DIR}/src/Runner.c
+    ${PROJECT_SOURCE_DIR}/src/Scenario.c
+    ${PROJECT_SOURCE_DIR}/src/Screen.c
+    ${PROJECT_SOURCE_DIR}/src/Security.c
+    ${PROJECT_SOURCE_DIR}/src/SidebarMenu.c
+    ${PROJECT_SOURCE_DIR}/src/Terrain.c
+    ${PROJECT_SOURCE_DIR}/src/TerrainGraphics.c
+    ${PROJECT_SOURCE_DIR}/src/TerrainGraphics_Context.c
+    ${PROJECT_SOURCE_DIR}/src/TerrainWater.c
+    ${PROJECT_SOURCE_DIR}/src/Trader.c
+    ${PROJECT_SOURCE_DIR}/src/Undo.c
+    ${PROJECT_SOURCE_DIR}/src/UtilityManagement.c
+    ${PROJECT_SOURCE_DIR}/src/Widget_Button.c
+    ${PROJECT_SOURCE_DIR}/src/Widget_Menu.c
+    ${PROJECT_SOURCE_DIR}/src/Widget_Panel.c
+    ${PROJECT_SOURCE_DIR}/src/Widget_Text.c
+    ${PROJECT_SOURCE_DIR}/src/Data/Model.c
+)
+
+function(add_integration_test name input_sav output_sav compare_sav ticks)
+    file(COPY data/sav/${input_sav} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+    file(COPY data/sav/${compare_sav} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+    add_test(NAME ${name} COMMAND autopilot ${input_sav} ${output_sav} ${compare_sav} ${ticks})
+endfunction(add_integration_test)
+
+add_integration_test(sav_tower tower.sav tower-end.sav tower2.sav 1785)
+
