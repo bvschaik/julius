@@ -70,7 +70,7 @@ void test_dir_find_files_txt()
 
     const dir_listing *list = dir_find_files_with_extension("whatever");
     
-    assert_eq(6, list->num_files);
+    assert_eq(5, list->num_files);
     
     assert_eq_string(".", list->files[0]);
     assert_eq_string("..", list->files[1]);
@@ -78,7 +78,7 @@ void test_dir_find_files_txt()
     assert_eq_string("my.txt", list->files[3]);
     assert_eq_string("nontxt.dat", list->files[4]);
 
-    verify_file_has_extension_times(6);
+    verify_file_has_extension_times(5);
     
     chdir("..");
 }
