@@ -151,14 +151,14 @@ void scenario_save_state(buffer *buf)
     buffer_write_i32(buf, scenario.rome_supplies_wheat);
     
     // allowed buildings
-    buffer_write_i16(buf, 1);
+    buffer_skip(buf, 2);
     buffer_write_i16(buf, scenario.allowed_buildings.farms);
     buffer_write_i16(buf, scenario.allowed_buildings.raw_materials);
     buffer_write_i16(buf, scenario.allowed_buildings.workshops);
     buffer_write_i16(buf, scenario.allowed_buildings.road);
     buffer_write_i16(buf, scenario.allowed_buildings.wall);
     buffer_write_i16(buf, scenario.allowed_buildings.aqueduct);
-    buffer_write_i16(buf, 1);
+    buffer_skip(buf, 2);
     buffer_write_i16(buf, scenario.allowed_buildings.amphitheater);
     buffer_write_i16(buf, scenario.allowed_buildings.theater);
     buffer_write_i16(buf, scenario.allowed_buildings.hippodrome);

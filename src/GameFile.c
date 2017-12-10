@@ -666,7 +666,6 @@ static void savegame_write_to_file(FILE *fp)
 {
     for (int i = 0; i < savegame_data.num_pieces; i++) {
         file_piece *piece = &savegame_data.pieces[i];
-        printf("Writing piece %d (size %d)\n", i, piece->buf.size);
         if (piece->compressed) {
             writeCompressedChunk(fp, piece->buf.data, piece->buf.size);
         } else {
