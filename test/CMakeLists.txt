@@ -130,5 +130,11 @@ function(add_integration_test name input_sav compare_sav ticks)
 endfunction(add_integration_test)
 
 add_integration_test(sav_tower tower.sav tower2.sav 1785)
-add_integration_test(sav_request request_start.sav request_orig.sav 908)
+add_integration_test(sav_request1 request_start.sav request_orig.sav 908)
 add_integration_test(sav_request2 request_start.sav request_orig2.sav 6556)
+
+# Caesar invasion plus ballista
+add_integration_test(sav_caesar1 kknight.sav kknight2.sav 686)
+add_integration_test(sav_caesar2 kknight.sav kknight3.sav 1087)
+add_integration_test(sav_caesar3 kknight.sav kknight4.sav 1287)
+add_integration_test(sav_caesar4 kknight.sav kknight5.sav 1494)
