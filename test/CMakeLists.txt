@@ -130,4 +130,5 @@ function(add_integration_test name input_sav compare_sav ticks)
 endfunction(add_integration_test)
 
 add_integration_test(sav_tower tower.sav tower2.sav 1785)
-
+add_integration_test(sav_request request_start.sav request_orig.sav 908)
+add_integration_test(sav_request2 request_start.sav request_orig2.sav 6556)
