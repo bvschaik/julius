@@ -3,7 +3,6 @@
 #include "AllWindows.h"
 #include "Window.h"
 #include "MessageDialog.h"
-#include "Warning.h"
 
 #include "../CityInfo.h"
 #include "../Formation.h"
@@ -11,6 +10,7 @@
 #include "../Data/Constants.h"
 
 #include "city/culture.h"
+#include "city/warning.h"
 #include "game/settings.h"
 #include "game/tutorial.h"
 
@@ -59,7 +59,7 @@ void UI_Advisors_goToFromMessage(int advisor)
             UI_MessageDialog_close();
             UI_Window_goTo(Window_City);
         }
-        UI_Warning_show(avail == NOT_AVAILABLE ? Warning_NotAvailable : Warning_NotAvailableYet);
+        city_warning_show(avail == NOT_AVAILABLE ? WARNING_NOT_AVAILABLE : WARNING_NOT_AVAILABLE_YET);
         return;
     }
 	currentAdvisor = advisor;
@@ -76,7 +76,7 @@ void UI_Advisors_goToFromSidepanel()
         UI_Advisors_init();
         UI_Window_goTo(Window_Advisors);
     } else {
-        UI_Warning_show(avail == NOT_AVAILABLE ? Warning_NotAvailable : Warning_NotAvailableYet);
+        city_warning_show(avail == NOT_AVAILABLE ? WARNING_NOT_AVAILABLE : WARNING_NOT_AVAILABLE_YET);
     }
 }
 

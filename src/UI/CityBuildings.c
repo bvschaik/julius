@@ -1,7 +1,6 @@
 #include "CityBuildings_private.h"
 
 #include "Minimap.h"
-#include "Warning.h"
 #include "Window.h"
 
 #include "../Building.h"
@@ -13,6 +12,7 @@
 
 #include "building/model.h"
 #include "city/finance.h"
+#include "city/warning.h"
 #include "core/time.h"
 #include "figure/figure.h"
 #include "figure/formation.h"
@@ -642,8 +642,8 @@ static int handleRightClickAllowBuildingInfo()
 	if (!Data_State.map.current.gridOffset) {
 		allow = 0;
 	}
-	if (allow && UI_Warning_hasWarnings()) {
-		UI_Warning_clearAll();
+	if (allow && city_has_warnings()) {
+		city_warning_clear_all();
 		allow = 0;
 	}
 	return allow;
@@ -1099,7 +1099,7 @@ void UI_CityBuildings_handleMouseMilitary(const mouse *m)
 	}
 	UI_CityBuildings_scrollMap(scroll_get_direction(m));
 	if (m->right.went_up) {
-		UI_Warning_clearAll();
+		city_warning_clear_all();
 		UI_Window_goTo(Window_City);
 	} else {
 		updateCityViewCoords(m);

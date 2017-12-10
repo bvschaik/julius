@@ -13,7 +13,6 @@
 #include "Undo.h"
 
 #include "UI/PopupDialog.h"
-#include "UI/Warning.h"
 #include "UI/Window.h"
 
 #include "Data/Building.h"
@@ -23,9 +22,11 @@
 
 #include "building/count.h"
 #include "building/model.h"
+#include "building/placement_warning.h"
 #include "building/properties.h"
 #include "building/storage.h"
 #include "city/finance.h"
+#include "city/warning.h"
 #include "core/direction.h"
 #include "core/random.h"
 #include "figure/formation.h"
@@ -573,7 +574,7 @@ static int placeBuilding(int type, int x, int y)
 	// extra checks
 	if (type == BUILDING_GATEHOUSE) {
 		if (!Terrain_isClear(x, y, size, terrainMask, 0)) {
-			UI_Warning_show(Warning_ClearLandNeeded);
+			city_warning_show(WARNING_CLEAR_LAND_NEEDED);
 			return 0;
 		}
 		if (!buildingOrientation) {
@@ -586,7 +587,7 @@ static int placeBuilding(int type, int x, int y)
 	}
 	if (type == BUILDING_TRIUMPHAL_ARCH) {
 		if (!Terrain_isClear(x, y, size, terrainMask, 0)) {
-			UI_Warning_show(Warning_ClearLandNeeded);
+			city_warning_show(WARNING_CLEAR_LAND_NEEDED);
 			return 0;
 		}
 		if (!buildingOrientation) {
@@ -601,81 +602,81 @@ static int placeBuilding(int type, int x, int y)
 	if (type == BUILDING_SHIPYARD || type == BUILDING_WHARF) {
 		if (Terrain_determineOrientationWatersideSize2(
 				x, y, 0, &watersideOrientationAbs, &watersideOrientationRel)) {
-			UI_Warning_show(Warning_ShoreNeeded);
+			city_warning_show(WARNING_SHORE_NEEDED);
 			return 0;
 		}
 	} else if (type == BUILDING_DOCK) {
 		if (Terrain_determineOrientationWatersideSize3(
 				x, y, 0, &watersideOrientationAbs, &watersideOrientationRel)) {
-			UI_Warning_show(Warning_ShoreNeeded);
+			city_warning_show(WARNING_SHORE_NEEDED);
 			return 0;
 		}
 		if (!Building_Dock_isConnectedToOpenWater(x, y)) {
-			UI_Warning_show(Warning_DockOpenWaterNeeded);
+			city_warning_show(WARNING_DOCK_OPEN_WATER_NEEDED);
 			return 0;
 		}
 	} else {
 		if (!Terrain_isClear(x, y, size, terrainMask, 0)) {
-			UI_Warning_show(Warning_ClearLandNeeded);
+			city_warning_show(WARNING_CLEAR_LAND_NEEDED);
 			return 0;
 		}
 		if (Data_State.selectedBuilding.meadowRequired) {
 			if (!Terrain_existsTileWithinRadiusWithType(x, y, 3, 1, Terrain_Meadow)) {
-				UI_Warning_show(Warning_MeadowNeeded);
+				city_warning_show(WARNING_MEADOW_NEEDED);
 				return 0;
 			}
 		} else if (Data_State.selectedBuilding.rockRequired) {
 			if (!Terrain_existsTileWithinRadiusWithType(x, y, 2, 1, Terrain_Rock)) {
-				UI_Warning_show(Warning_RockNeeded);
+				city_warning_show(WARNING_ROCK_NEEDED);
 				return 0;
 			}
 		} else if (Data_State.selectedBuilding.treesRequired) {
 			if (!Terrain_existsTileWithinRadiusWithType(x, y, 2, 1, Terrain_Scrub | Terrain_Tree)) {
-				UI_Warning_show(Warning_TreeNeeded);
+				city_warning_show(WARNING_TREE_NEEDED);
 				return 0;
 			}
 		} else if (Data_State.selectedBuilding.waterRequired) {
 			if (!Terrain_existsTileWithinRadiusWithType(x, y, 2, 3, Terrain_Water)) {
-				UI_Warning_show(Warning_WaterNeeded);
+				city_warning_show(WARNING_WATER_NEEDED);
 				return 0;
 			}
 		} else if (Data_State.selectedBuilding.wallRequired) {
 			if (!Terrain_allTilesWithinRadiusHaveType(x, y, 2, 0, Terrain_Wall)) {
-				UI_Warning_show(Warning_WallNeeded);
+				city_warning_show(WARNING_WALL_NEEDED);
 				return 0;
 			}
 		}
 	}
 	if (type == BUILDING_FORT_LEGIONARIES || type == BUILDING_FORT_JAVELIN || type == BUILDING_FORT_MOUNTED) {
 		if (!Terrain_isClear(x + 3, y - 1, 4, terrainMask, 0)) {
-			UI_Warning_show(Warning_ClearLandNeeded);
+			city_warning_show(WARNING_CLEAR_LAND_NEEDED);
 			return 0;
 		}
 		if (formation_totals_get_num_legions() >= 6) {
-			UI_Warning_show(Warning_MaxLegionsReached);
+			city_warning_show(WARNING_MAX_LEGIONS_REACHED);
 			return 0;
 		}
 	}
 	if (type == BUILDING_HIPPODROME) {
 		if (Data_CityInfo.buildingHippodromePlaced) {
-			UI_Warning_show(Warning_OneBuildingOfType);
+			city_warning_show(WARNING_ONE_BUILDING_OF_TYPE);
 			return 0;
 		}
 		if (!Terrain_isClear(x + 5, y, 5, terrainMask, 0) ||
 			!Terrain_isClear(x + 10, y, 5, terrainMask, 0)) {
-			UI_Warning_show(Warning_ClearLandNeeded);
+			city_warning_show(WARNING_CLEAR_LAND_NEEDED);
 			return 0;
 		}
 	}
 	if (type == BUILDING_SENATE_UPGRADED && Data_CityInfo.buildingSenatePlaced) {
-		UI_Warning_show(Warning_OneBuildingOfType);
+		city_warning_show(WARNING_ONE_BUILDING_OF_TYPE);
 		return 0;
 	}
 	if (type == BUILDING_BARRACKS && building_count_total(BUILDING_BARRACKS) > 0) {
-		UI_Warning_show(Warning_OneBuildingOfType);
+		city_warning_show(WARNING_ONE_BUILDING_OF_TYPE);
 		return 0;
 	}
-	UI_Warning_checkNewBuilding(type, x, y, size);
+	building_placement_warning_check_all(type, x, y, size);
 
 	// phew, checks done!
 	int buildingId;
@@ -725,9 +726,9 @@ static void placeHouses(int measureOnly, int xStart, int yStart, int xEnd, int y
 		}
 	}
 	if (!measureOnly) {
-		UI_Warning_checkFoodStocks(BUILDING_HOUSE_VACANT_LOT);
+		building_placement_warning_check_food_stocks(BUILDING_HOUSE_VACANT_LOT);
 		if (needsRoadWarning) {
-			UI_Warning_show(Warning_HouseTooFarFromRoad);
+			city_warning_show(WARNING_HOUSE_TOO_FAR_FROM_ROAD);
 		}
 		map_routing_update_land();
 		UI_Window_requestRefresh();
@@ -820,7 +821,7 @@ static void clearRegionConfirmed(int measureOnly, int xStart, int yStart, int xE
 				}
 			} else if (terrain & Terrain_Water) {
 				if (!measureOnly && map_bridge_count_figures(gridOffset) > 0) {
-					UI_Warning_show(Warning_PeopleOnBridge);
+					city_warning_show(WARNING_PEOPLE_ON_BRIDGE);
 				} else if (confirm.bridgeConfirmed == 1) {
 					map_bridge_remove(gridOffset, measureOnly);
 					itemsPlaced++;
@@ -1304,23 +1305,23 @@ void BuildingPlacement_update(int xStart, int yStart, int xEnd, int yEnd, int ty
 
 void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, int yEnd, int type)
 {
-	UI_Warning_clearHasWarningFlag();
+	building_placement_warning_reset();
 	if (!type) {
 		return;
 	}
 	if (city_finance_out_of_money()) {
 		map_property_clear_constructing_and_deleted();
-		UI_Warning_show(Warning_OutOfMoney);
+		city_warning_show(WARNING_OUT_OF_MONEY);
 		return;
 	}
 	if (type >= BUILDING_LARGE_TEMPLE_CERES && type <= BUILDING_LARGE_TEMPLE_VENUS && Data_CityInfo.resourceStored[RESOURCE_MARBLE] < 2) {
 		map_property_clear_constructing_and_deleted();
-		UI_Warning_show(Warning_MarbleNeededLargeTemple);
+		city_warning_show(WARNING_MARBLE_NEEDED_LARGE_TEMPLE);
 		return;
 	}
 	if (type == BUILDING_ORACLE && Data_CityInfo.resourceStored[RESOURCE_MARBLE] < 2) {
 		map_property_clear_constructing_and_deleted();
-		UI_Warning_show(Warning_MarbleNeededOracle);
+		city_warning_show(WARNING_MARBLE_NEEDED_ORACLE);
 		return;
 	}
 	if (type != BUILDING_CLEAR_LAND && Figure_hasNearbyEnemy(xStart, yStart, xEnd, yEnd)) {
@@ -1338,7 +1339,7 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
 		} else {
 			map_property_clear_constructing_and_deleted();
 		}
-		UI_Warning_show(Warning_EnemyNearby);
+		city_warning_show(WARNING_ENEMY_NEARBY);
 		return;
 	}
 
@@ -1362,21 +1363,21 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
 	} else if (type == BUILDING_LOW_BRIDGE) {
 		int length = map_bridge_add(xEnd, yEnd, 0);
 		if (length <= 1) {
-			UI_Warning_show(Warning_ShoreNeeded);
+			city_warning_show(WARNING_SHORE_NEEDED);
 			return;
 		}
 		placementCost *= length;
 	} else if (type == BUILDING_SHIP_BRIDGE) {
 		int length = map_bridge_add(xEnd, yEnd, 1);
 		if (length <= 1) {
-			UI_Warning_show(Warning_ShoreNeeded);
+			city_warning_show(WARNING_SHORE_NEEDED);
 			return;
 		}
 		placementCost *= length;
 	} else if (type == BUILDING_AQUEDUCT) {
 		int cost;
 		if (!placeAqueduct(0, xStart, yStart, xEnd, yEnd, &cost)) {
-			UI_Warning_show(Warning_ClearLandNeeded);
+			city_warning_show(WARNING_CLEAR_LAND_NEEDED);
 			return;
 		}
 		placementCost = cost;
@@ -1385,7 +1386,7 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
 	} else if (type == BUILDING_DRAGGABLE_RESERVOIR) {
 		struct ReservoirInfo info;
 		if (!placeReservoirAndAqueducts(0, xStart, yStart, xEnd, yEnd, &info)) {
-			UI_Warning_show(Warning_ClearLandNeeded);
+			city_warning_show(WARNING_CLEAR_LAND_NEEDED);
 			return;
 		}
 		if (info.placeReservoirAtStart == PlaceReservoir_Yes) {
@@ -1400,7 +1401,7 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
 			Terrain_addBuildingToGrids(reservoirId, xEnd-1, yEnd-1, 3, image_group(GROUP_BUILDING_RESERVOIR), Terrain_Building);
 			Data_Grid_aqueducts[map_grid_offset(xEnd-1, yEnd-1)] = 0;
 			if (!Terrain_existsTileWithinAreaWithType(xStart - 2, yStart - 2, 5, Terrain_Water) && info.placeReservoirAtStart == PlaceReservoir_No) {
-				UI_Warning_checkReservoirWater(BUILDING_RESERVOIR);
+				building_placement_warning_check_reservoir(BUILDING_RESERVOIR);
 			}
 		}
 		placementCost = info.cost;

@@ -10,7 +10,6 @@
 #include "UI/BuildingInfo.h"
 #include "UI/PopupDialog.h"
 #include "UI/Sidebar.h"
-#include "UI/Warning.h"
 #include "UI/Window.h"
 
 #include "Data/Building.h"
@@ -19,6 +18,7 @@
 #include "Data/State.h"
 
 #include "city/finance.h"
+#include "city/warning.h"
 #include "figure/formation.h"
 #include "input/scroll.h"
 #include "map/bookmark.h"
@@ -80,7 +80,7 @@ static void togglePause()
 		} else {
 			Data_State.gamePaused = 1;
 		}
-		UI_Warning_clearAll();
+		city_warning_clear_all();
 	}
 }
 

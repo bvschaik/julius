@@ -2,12 +2,12 @@
 
 #include "CityView.h"
 #include "Terrain.h"
-#include "UI/Warning.h"
 
 #include "Data/FileList.h"
 #include "Data/Screen.h"
 #include "Data/State.h"
 
+#include "city/warning.h"
 #include "core/random.h"
 #include "map/ring.h"
 
@@ -29,5 +29,5 @@ void Loader_GameState_init()
 
 	random_generate_pool();
 
-	UI_Warning_clearAll();
+	city_warning_clear_all();
 }

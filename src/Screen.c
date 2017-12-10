@@ -2,9 +2,9 @@
 
 #include "CityView.h"
 #include "Graphics.h"
-#include "UI/Warning.h"
 #include "Data/Screen.h"
 
+#include "city/warning.h"
 #include "graphics/color.h"
 
 #include <stdlib.h>
@@ -19,7 +19,7 @@ static void setSize(int width, int height)
 	Graphics_setClipRectangle(0, 0, width, height);
 	CityView_setViewport();
 	CityView_checkCameraBoundaries();
-	UI_Warning_clearAll();
+	city_warning_clear_all();
 }
 
 void Screen_setResolution(int width, int height)
