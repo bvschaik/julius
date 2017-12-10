@@ -13,11 +13,12 @@ function(except_file var excluded_file)
     set(${var} "${list_var}" PARENT_SCOPE)
 endfunction(except_file)
 
+# Replace some source files with stubs
 except_file(TEST_CORE_FILES "core/lang.c" ${CORE_FILES})
 except_file(TEST_BUILDING_FILES "building/model.c" ${BUILDING_FILES})
 except_file(TEST_GRAPHICS_FILES "graphics/image.c" ${GRAPHICS_FILES})
 
-add_executable(sav_test
+add_executable(compare
     sav/compare.c
     sav/sav_compare.c
     ${PROJECT_SOURCE_DIR}/src/core/zip.c
@@ -27,13 +28,13 @@ add_executable(sav_test
 add_executable(autopilot
     sav/sav_compare.c
     sav/run.c
-    sav/dummy_image.c
-    sav/dummy_lang.c
-    sav/dummy_model.c
-    sav/dummy_sound_device.c
-    sav/dummy_system.c
-    sav/dummy_ui.c
-    sav/dummy_video.c
+    stub/image.c
+    stub/lang.c
+    stub/model.c
+    stub/sound_device.c
+    stub/system.c
+    stub/ui.c
+    stub/video.c
     ${TEST_CORE_FILES}
     ${TEST_BUILDING_FILES}
     ${TEST_GRAPHICS_FILES}
@@ -118,11 +119,15 @@ add_executable(autopilot
     ${PROJECT_SOURCE_DIR}/src/Data/Model.c
 )
 
-function(add_integration_test name input_sav output_sav compare_sav ticks)
-    file(COPY data/sav/${input_sav} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-    file(COPY data/sav/${compare_sav} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY data/c3.emp DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY data/c32.emp DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
+function(add_integration_test name input_sav compare_sav ticks)
+    string(REPLACE ".sav" "-output.sav" output_sav ${input_sav})
+    file(COPY data/${input_sav} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+    file(COPY data/${compare_sav} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
     add_test(NAME ${name} COMMAND autopilot ${input_sav} ${output_sav} ${compare_sav} ${ticks})
 endfunction(add_integration_test)
 
-add_integration_test(sav_tower tower.sav tower-end.sav tower2.sav 1785)
+add_integration_test(sav_tower tower.sav tower2.sav 1785)
 
