@@ -94,7 +94,6 @@ add_executable(autopilot
     ${PROJECT_SOURCE_DIR}/src/Graphics_Footprint.c
     ${PROJECT_SOURCE_DIR}/src/HouseEvolution.c
     ${PROJECT_SOURCE_DIR}/src/HousePopulation.c
-    ${PROJECT_SOURCE_DIR}/src/KeyboardHotkey.c
     ${PROJECT_SOURCE_DIR}/src/Loader.c
     ${PROJECT_SOURCE_DIR}/src/Natives.c
     ${PROJECT_SOURCE_DIR}/src/Resource.c
