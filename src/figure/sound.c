@@ -51,8 +51,8 @@ void figure_play_die_sound(figure_type type)
         case FIGURE_ENEMY51_SPEAR:
         case FIGURE_ENEMY53_AXE:
         case FIGURE_ENEMY54_GLADIATOR:
-        case FIGURE_ENEMY55_JAVELIN:
-        case FIGURE_ENEMY56_MOUNTED:
+        case FIGURE_ENEMY_CAESAR_JAVELIN:
+        case FIGURE_ENEMY_CAESAR_MOUNTED:
         case FIGURE_ENEMY_CAESAR_LEGIONARY:
             is_soldier = 1;
             break;

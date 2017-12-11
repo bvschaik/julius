@@ -11,7 +11,6 @@
 #include "Terrain.h"
 #include "TerrainGraphics.h"
 #include "Undo.h"
-#include "UI/Warning.h"
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
@@ -21,6 +20,7 @@
 #include "building/properties.h"
 #include "building/storage.h"
 #include "city/message.h"
+#include "city/warning.h"
 #include "core/direction.h"
 #include "figure/figure.h"
 #include "graphics/image.h"
@@ -67,7 +67,7 @@ int Building_create(int type, int x, int y)
 		}
 	}
 	if (!buildingId) {
-		UI_Warning_show(Warning_DataLimitReached);
+		city_warning_show(WARNING_DATA_LIMIT_REACHED);
 		return 0;
 	}
 	
@@ -270,8 +270,8 @@ void Building_collapseOnFire(int buildingId, int hasPlague)
 	if (b->houseSize && b->housePopulation) {
 		CityInfo_Population_removePeopleHomeRemoved(b->housePopulation);
 	}
-	// FIXED wasTent was always false because houseSize was reset above it
-	int wasTent = b->houseSize && b->subtype.houseLevel <= HOUSE_LARGE_TENT;
+	// FIXME wasTent was always false because houseSize was reset above it
+	int wasTent = 0; //b->houseSize && b->subtype.houseLevel <= HOUSE_LARGE_TENT;
 	b->housePopulation = 0;
 	b->houseSize = 0;
 	b->outputResourceId = 0;
@@ -728,8 +728,8 @@ void Building_GameTick_checkAccessToRome()
 		Building_collapseLastPlaced();
 	} else if (problemGridOffset) {
 		// parts of city disconnected
-		UI_Warning_show(Warning_CityBoxedIn);
-		UI_Warning_show(Warning_CityBoxedInPeopleWillPerish);
+		city_warning_show(WARNING_CITY_BOXED_IN);
+		city_warning_show(WARNING_CITY_BOXED_IN_PEOPLE_WILL_PERISH);
 		CityView_goToGridOffset(problemGridOffset);
 	}
 }

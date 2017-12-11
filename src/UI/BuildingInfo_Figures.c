@@ -351,7 +351,7 @@ static void drawFigureInfo(BuildingInfoContext *c, int figureId)
 	int type = f->type;
 	if (type == FIGURE_TRADE_CARAVAN || type == FIGURE_TRADE_CARAVAN_DONKEY || type == FIGURE_TRADE_SHIP) {
 		drawFigureInfoTrade(c, f);
-	} else if (FigureIsEnemy(type)) {
+	} else if (type >= FIGURE_ENEMY43_SPEAR && type <= FIGURE_ENEMY53_AXE) {
 		drawFigureInfoEnemy(c, f);
 	} else if (type == FIGURE_FISHING_BOAT || type == FIGURE_SHIPWRECK ||
 			type == FIGURE_SHEEP || type == FIGURE_WOLF || type == FIGURE_ZEBRA) {

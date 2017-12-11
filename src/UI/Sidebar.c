@@ -4,7 +4,6 @@
 #include "Advisors.h"
 #include "MessageDialog.h"
 #include "Minimap.h"
-#include "Warning.h"
 #include "Window.h"
 
 #include "../CityView.h"
@@ -20,6 +19,7 @@
 #include "../Data/State.h"
 
 #include "city/message.h"
+#include "city/warning.h"
 #include "core/direction.h"
 #include "core/time.h"
 #include "graphics/image.h"
@@ -371,10 +371,10 @@ static void buttonEmpire(int param1, int param2)
 {
     switch (tutorial_advisor_empire_availability()) {
         case NOT_AVAILABLE:
-            UI_Warning_show(Warning_NotAvailable);
+            city_warning_show(WARNING_NOT_AVAILABLE);
             break;
         case NOT_AVAILABLE_YET:
-            UI_Warning_show(Warning_NotAvailableYet);
+            city_warning_show(WARNING_NOT_AVAILABLE_YET);
             break;
         case AVAILABLE:
             UI_Window_goTo(Window_Empire);
@@ -407,7 +407,7 @@ static void buttonRotateNorth(int param1, int param2)
 			break;
 	}
 	CityView_checkCameraBoundaries();
-	UI_Warning_show(Warning_Orientation);
+	city_warning_show(WARNING_ORIENTATION);
 	UI_Window_requestRefresh();
 }
 
@@ -420,7 +420,7 @@ static void buttonRotate(int clockWise, int param2)
 	}
 	Terrain_rotateMap(clockWise);
 	CityView_checkCameraBoundaries();
-	UI_Warning_show(Warning_Orientation);
+	city_warning_show(WARNING_ORIENTATION);
 	UI_Window_requestRefresh();
 }
 

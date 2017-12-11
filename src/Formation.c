@@ -2,13 +2,13 @@
 
 #include "Figure.h"
 #include "FigureMovement.h"
-#include "UI/Warning.h"
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Grid.h"
 
 #include "building/model.h"
+#include "city/warning.h"
 #include "core/calc.h"
 #include "figure/enemy_army.h"
 #include "figure/formation.h"
@@ -99,7 +99,7 @@ void Formation_legionMoveTo(int formationId, int x, int y)
 	}
 	formation_move_standard(m->id, x, y);
 	if (m->morale <= 20) {
-		UI_Warning_show(Warning_LegionMoraleTooLow);
+		city_warning_show(WARNING_LEGION_MORALE_TOO_LOW);
 	}
 	for (int i = 0; i < MAX_FORMATION_FIGURES && m->figures[i]; i++) {
 		figure *f = figure_get(m->figures[i]);

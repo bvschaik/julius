@@ -666,7 +666,6 @@ static void savegame_write_to_file(FILE *fp)
 {
     for (int i = 0; i < savegame_data.num_pieces; i++) {
         file_piece *piece = &savegame_data.pieces[i];
-        printf("Writing piece %d (size %d)\n", i, piece->buf.size);
         if (piece->compressed) {
             writeCompressedChunk(fp, piece->buf.data, piece->buf.size);
         } else {
@@ -739,7 +738,7 @@ static void debug()
 
 static void load_empire_data(int is_custom_scenario, int empire_id)
 {
-    empire_load( is_custom_scenario, empire_id );
+    empire_load(is_custom_scenario, empire_id);
     scenario_distant_battle_set_roman_travel_months();
     scenario_distant_battle_set_enemy_travel_months();
 }
