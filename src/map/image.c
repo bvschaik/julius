@@ -2,8 +2,6 @@
 
 #include "map/grid.h"
 
-#include "Data/Grid.h"
-
 static grid_u16 images;
 static grid_u16 images_backup;
 

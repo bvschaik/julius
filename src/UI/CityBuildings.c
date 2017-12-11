@@ -26,6 +26,7 @@
 #include "map/image.h"
 #include "map/property.h"
 #include "map/routing.h"
+#include "map/terrain.h"
 #include "sound/city.h"
 #include "sound/speech.h"
 #include "sound/effect.h"
@@ -143,8 +144,8 @@ static void drawBuildingFootprints()
 					sound_city_mark_building_view(buildingId, SOUND_DIRECTION_CENTER);
 				}
 			}
-			if (Data_Grid_terrain[gridOffset] & Terrain_Garden) {
-				Data_Buildings[0].type = Terrain_Garden;
+			if (map_terrain_is(gridOffset, TERRAIN_GARDEN)) {
+				Data_Buildings[0].type = BUILDING_GARDENS;
 				sound_city_mark_building_view(0, 2);
 			}
 			int graphicId = map_image_at(gridOffset);
@@ -495,11 +496,11 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 
 void UI_CityBuildings_drawBridge(int gridOffset, int x, int y)
 {
-	if (!(Data_Grid_terrain[gridOffset] & Terrain_Water)) {
+	if (!map_terrain_is(gridOffset, TERRAIN_WATER)) {
 		Data_Grid_spriteOffsets[gridOffset] = 0;
 		return;
 	}
-	if (Data_Grid_terrain[gridOffset] & Terrain_Building) {
+	if (map_terrain_is(gridOffset, TERRAIN_BUILDING)) {
 		return;
 	}
 	color_t colorMask = 0;
@@ -785,13 +786,13 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 	c->hasNumericPrefix = 0;
 	switch (overlay) {
 		case Overlay_Water:
-			if (Data_Grid_terrain[gridOffset] & Terrain_ReservoirRange) {
-				if (Data_Grid_terrain[gridOffset] & Terrain_FountainRange) {
+			if (map_terrain_is(gridOffset, TERRAIN_RESERVOIR_RANGE)) {
+				if (map_terrain_is(gridOffset, TERRAIN_FOUNTAIN_RANGE)) {
 					c->textId = 2;
 				} else {
 					c->textId = 1;
 				}
-			} else if (Data_Grid_terrain[gridOffset] & Terrain_FountainRange) {
+			} else if (map_terrain_is(gridOffset, TERRAIN_FOUNTAIN_RANGE)) {
 				c->textGroup = 66;
 				c->textId = 3;
 			} else {

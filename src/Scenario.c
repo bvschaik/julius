@@ -50,6 +50,7 @@
 #include "map/road_network.h"
 #include "map/routing_terrain.h"
 #include "map/soldier_strength.h"
+#include "map/terrain.h"
 #include "scenario/criteria.h"
 #include "scenario/demand_change.h"
 #include "scenario/earthquake.h"
@@ -243,7 +244,7 @@ static void initGrids()
 {
 	map_image_clear();
 	map_building_clear();
-	map_grid_clear_u16(Data_Grid_terrain);
+	map_terrain_clear();
 	map_grid_clear_u8(Data_Grid_aqueducts);
 	map_figure_clear();
 	map_property_clear();

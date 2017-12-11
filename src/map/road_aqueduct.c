@@ -5,12 +5,13 @@
 #include "map/grid.h"
 #include "map/image.h"
 #include "map/routing.h"
+#include "map/terrain.h"
 
 #include "Data/State.h"
 
-int map_can_place_road_under_aqueduct(int gridOffset)
+int map_can_place_road_under_aqueduct(int grid_offset)
 {
-    int graphic = map_image_at(gridOffset) - image_group(GROUP_BUILDING_AQUEDUCT);
+    int graphic = map_image_at(grid_offset) - image_group(GROUP_BUILDING_AQUEDUCT);
     int checkRoadY;
     switch (graphic) {
         case 0:
@@ -38,23 +39,23 @@ int map_can_place_road_under_aqueduct(int gridOffset)
     if (checkRoadY) {
         int dy_up = map_grid_delta(0, -1);
         int dy_down = map_grid_delta(0, 1);
-        if ((Data_Grid_terrain[gridOffset + dy_up] & Terrain_Road) ||
-            map_routing_distance(gridOffset + dy_up) > 0) {
+        if (map_terrain_is(grid_offset + dy_up, TERRAIN_ROAD) ||
+            map_routing_distance(grid_offset + dy_up) > 0) {
             return 0;
         }
-        if ((Data_Grid_terrain[gridOffset + dy_down] & Terrain_Road) ||
-            map_routing_distance(gridOffset + dy_down) > 0) {
+        if (map_terrain_is(grid_offset + dy_down, TERRAIN_ROAD) ||
+            map_routing_distance(grid_offset + dy_down) > 0) {
             return 0;
         }
     } else {
         int dx_left = map_grid_delta(-1, 0);
         int dx_right = map_grid_delta(1, 0);
-        if ((Data_Grid_terrain[gridOffset + dx_left] & Terrain_Road) ||
-            map_routing_distance(gridOffset + dx_left) > 0) {
+        if (map_terrain_is(grid_offset + dx_left, TERRAIN_ROAD) ||
+            map_routing_distance(grid_offset + dx_left) > 0) {
             return 0;
         }
-        if ((Data_Grid_terrain[gridOffset + dx_right] & Terrain_Road) ||
-            map_routing_distance(gridOffset + dx_right) > 0) {
+        if (map_terrain_is(grid_offset + dx_right, TERRAIN_ROAD) ||
+            map_routing_distance(grid_offset + dx_right) > 0) {
             return 0;
         }
     }

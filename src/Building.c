@@ -14,7 +14,6 @@
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
-#include "Data/Grid.h"
 #include "Data/State.h"
 
 #include "building/properties.h"
@@ -31,6 +30,7 @@
 #include "map/road_network.h"
 #include "map/routing.h"
 #include "map/routing_terrain.h"
+#include "map/terrain.h"
 #include "scenario/map.h"
 #include "scenario/property.h"
 #include "sound/effect.h"
@@ -289,7 +289,7 @@ void Building_collapseOnFire(int buildingId, int hasPlague)
 		numTiles = 0;
 	}
 	Terrain_removeBuildingFromGrids(buildingId, b->x, b->y);
-	if (Data_Grid_terrain[b->gridOffset] & Terrain_Water) {
+	if (map_terrain_is(b->gridOffset, TERRAIN_WATER)) {
 		b->state = BuildingState_DeletedByGame;
 	} else {
 		b->type = BUILDING_BURNING_RUIN;
@@ -313,7 +313,7 @@ void Building_collapseOnFire(int buildingId, int hasPlague)
 	for (int tile = 1; tile < numTiles; tile++) {
 		int x = xTiles[tile] + b->x;
 		int y = yTiles[tile] + b->y;
-		if (Data_Grid_terrain[map_grid_offset(x, y)] & Terrain_Water) {
+		if (map_terrain_is(map_grid_offset(x, y), TERRAIN_WATER)) {
 			continue;
 		}
 		int ruinId = Building_create(BUILDING_BURNING_RUIN, x, y);
@@ -453,7 +453,7 @@ void Building_destroyByEnemy(int x, int y, int gridOffset)
 			Building_collapseLinked(buildingId, 0);
 		}
 	} else {
-		if (Data_Grid_terrain[gridOffset] & Terrain_Wall) {
+		if (map_terrain_is(gridOffset, TERRAIN_WALL)) {
 			Figure_killTowerSentriesAt(x, y);
 		}
 		TerrainGraphics_setBuildingAreaRubble(0, x, y, 1);
