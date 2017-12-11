@@ -122,7 +122,7 @@ file(COPY data/c3.emp DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY data/c32.emp DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 function(add_integration_test name input_sav compare_sav ticks)
-    string(REPLACE ".sav" "-output.sav" output_sav ${input_sav})
+    string(REPLACE ".sav" "-actual.sav" output_sav ${compare_sav})
     file(COPY data/${input_sav} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
     file(COPY data/${compare_sav} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
     add_test(NAME ${name} COMMAND autopilot ${input_sav} ${output_sav} ${compare_sav} ${ticks})
