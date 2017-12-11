@@ -62,7 +62,7 @@ int map_soldier_strength_get_max(int x, int y, int radius, int *out_x, int *out_
     }
     if (max_value > 0) {
         *out_x = max_tile_x;
-        *out_x = max_tile_y;
+        *out_y = max_tile_y;
         return 1;
     }
     return 0;
