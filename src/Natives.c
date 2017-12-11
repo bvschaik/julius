@@ -13,6 +13,7 @@
 #include "graphics/image.h"
 #include "map/building.h"
 #include "map/grid.h"
+#include "map/image.h"
 #include "map/property.h"
 #include "map/random.h"
 #include "scenario/building.h"
@@ -34,18 +35,19 @@ void Natives_init()
 			
 			int randomBit = map_random_get(gridOffset) & 1;
 			int buildingType;
-			if (Data_Grid_graphicIds[gridOffset] == image_hut) {
+            int image_id = map_image_at(gridOffset);
+			if (image_id == image_hut) {
 				buildingType = BUILDING_NATIVE_HUT;
-				Data_Grid_graphicIds[gridOffset] = nativeGraphic;
-			} else if (Data_Grid_graphicIds[gridOffset] == image_hut + 1) {
+				map_image_set(gridOffset, nativeGraphic);
+			} else if (image_id == image_hut + 1) {
 				buildingType = BUILDING_NATIVE_HUT;
-				Data_Grid_graphicIds[gridOffset] = nativeGraphic + 1;
-			} else if (Data_Grid_graphicIds[gridOffset] == image_meeting) {
+				map_image_set(gridOffset, nativeGraphic + 1);
+			} else if (image_id == image_meeting) {
 				buildingType = BUILDING_NATIVE_MEETING;
-				Data_Grid_graphicIds[gridOffset] = nativeGraphic + 2;
-			} else if (Data_Grid_graphicIds[gridOffset] == image_crops) {
+				map_image_set(gridOffset, nativeGraphic + 2);
+			} else if (image_id == image_crops) {
 				buildingType = BUILDING_NATIVE_CROPS;
-				Data_Grid_graphicIds[gridOffset] = image_group(GROUP_BUILDING_FARM_CROPS) + randomBit;
+				map_image_set(gridOffset, image_group(GROUP_BUILDING_FARM_CROPS) + randomBit);
 			} else { //unknown building
 				Terrain_removeBuildingFromGrids(0, x, y);
 				continue;

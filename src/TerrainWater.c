@@ -5,6 +5,7 @@
 #include "figure/figure.h"
 #include "map/building.h"
 #include "map/figure.h"
+#include "map/image.h"
 #include "map/property.h"
 #include "scenario/map.h"
 
@@ -47,7 +48,7 @@ void Terrain_addWatersideBuildingToGrids(int buildingId, int x, int y, int size,
 			map_building_set(gridOffset, buildingId);
 			map_property_clear_constructing(gridOffset);
 			map_property_set_multi_tile_size(gridOffset, size);
-			Data_Grid_graphicIds[gridOffset] = graphicId;
+			map_image_set(gridOffset, graphicId);
 			map_property_set_multi_tile_xy(gridOffset, dx, dy,
 			    dx == xLeftmost && dy == yLeftmost);
 		}

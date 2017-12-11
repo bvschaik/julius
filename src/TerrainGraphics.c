@@ -9,6 +9,7 @@
 #include "graphics/image.h"
 #include "map/building.h"
 #include "map/desirability.h"
+#include "map/image.h"
 #include "map/property.h"
 #include "map/random.h"
 #include "map/soldier_strength.h"
@@ -30,7 +31,7 @@ static int isAllTerrainInArea(int x, int y, int size, int terrain)
 			if ((Data_Grid_terrain[gridOffset] & Terrain_NotClear) != terrain) {
 				return 0;
 			}
-			if (Data_Grid_graphicIds[gridOffset] != 0) {
+			if (map_image_at(gridOffset) != 0) {
 				return 0;
 			}
 		}
@@ -54,7 +55,7 @@ static void setRoadWithAqueductGraphic(int gridOffset)
 {
 	int graphicIdAqueduct = image_group(GROUP_BUILDING_AQUEDUCT);
 	int waterOffset;
-	if (Data_Grid_graphicIds[gridOffset] < graphicIdAqueduct + 15) {
+	if (map_image_at(gridOffset) < graphicIdAqueduct + 15) {
 		waterOffset = 0;
 	} else {
 		waterOffset = 15;
@@ -69,11 +70,9 @@ static void setRoadWithAqueductGraphic(int gridOffset)
 		}
 	}
 	if (TerrainGraphics_isPavedRoadTile(gridOffset)) {
-		Data_Grid_graphicIds[gridOffset] =
-			graphicIdAqueduct + waterOffset + groupOffset - 2;
+		map_image_set(gridOffset, graphicIdAqueduct + waterOffset + groupOffset - 2);
 	} else {
-		Data_Grid_graphicIds[gridOffset] =
-			graphicIdAqueduct + waterOffset + groupOffset + 6;
+		map_image_set(gridOffset, graphicIdAqueduct + waterOffset + groupOffset + 6);
 	}
 	map_property_set_multi_tile_size(gridOffset, 1);
 	map_property_mark_draw_tile(gridOffset);
@@ -90,12 +89,12 @@ static void setRoadGraphic(int gridOffset)
 	}
 	if (TerrainGraphics_isPavedRoadTile(gridOffset)) {
 		const struct TerrainGraphic *graphic = TerrainGraphicsContext_getPavedRoad(gridOffset);
-		Data_Grid_graphicIds[gridOffset] = image_group(GROUP_TERRAIN_ROAD) +
-			graphic->groupOffset + graphic->itemOffset;
+		map_image_set(gridOffset, image_group(GROUP_TERRAIN_ROAD) +
+			graphic->groupOffset + graphic->itemOffset);
 	} else {
 		const struct TerrainGraphic *graphic = TerrainGraphicsContext_getDirtRoad(gridOffset);
-		Data_Grid_graphicIds[gridOffset] = image_group(GROUP_TERRAIN_ROAD) +
-			graphic->groupOffset + graphic->itemOffset + 49;
+		map_image_set(gridOffset, image_group(GROUP_TERRAIN_ROAD) +
+			graphic->groupOffset + graphic->itemOffset + 49);
 	}
 	map_property_set_multi_tile_size(gridOffset, 1);
 	map_property_mark_draw_tile(gridOffset);
@@ -120,8 +119,8 @@ static void setTileAqueduct(int gridOffset, int waterOffset, int includeOverlay)
 			groupOffset += 6;
 		}
 	}
-	Data_Grid_graphicIds[gridOffset] = image_group(GROUP_BUILDING_AQUEDUCT) +
-		waterOffset + groupOffset + graphic->itemOffset;
+	map_image_set(gridOffset, image_group(GROUP_BUILDING_AQUEDUCT) +
+		waterOffset + groupOffset + graphic->itemOffset);
 	map_property_set_multi_tile_size(gridOffset, 1);
 	map_property_mark_draw_tile(gridOffset);
 	Data_Grid_aqueducts[gridOffset] = graphic->aqueductOffset;
@@ -132,7 +131,7 @@ void TerrainGraphics_updateAllRocks()
 	FOREACH_ALL({
 		int terrain = Data_Grid_terrain[gridOffset];
 		if ((terrain & Terrain_Rock) && !(terrain & (Terrain_ReservoirRange | Terrain_Elevation | Terrain_AccessRamp))) {
-			Data_Grid_graphicIds[gridOffset] = 0;
+			map_image_set(gridOffset, 0);
 			map_property_set_multi_tile_size(gridOffset, 1);
 			map_property_mark_draw_tile(gridOffset);
 		}
@@ -142,7 +141,7 @@ void TerrainGraphics_updateAllRocks()
 	FOREACH_ALL({
 		int terrain = Data_Grid_terrain[gridOffset];
 		if ((terrain & Terrain_Rock) && !(terrain & (Terrain_ReservoirRange | Terrain_Elevation | Terrain_AccessRamp))) {
-			if (!Data_Grid_graphicIds[gridOffset]) {
+			if (!map_image_at(gridOffset)) {
 				if (isAllTerrainInArea(x, y, 3, Terrain_Rock)) {
 					int graphicId = 12 + (map_random_get(gridOffset) & 1);
 					if (Terrain_existsTileWithinRadiusWithType(x, y, 3, 4, Terrain_Elevation)) {
@@ -166,7 +165,7 @@ void TerrainGraphics_updateAllRocks()
 					} else {
 						graphicId += graphicIdRock;
 					}
-					Data_Grid_graphicIds[gridOffset] = graphicId;
+					map_image_set(gridOffset, graphicId);
 				}
 			}
 		}
@@ -178,7 +177,7 @@ void TerrainGraphics_updateAllGardens()
 	FOREACH_ALL({
 		int terrain = Data_Grid_terrain[gridOffset];
 		if (terrain & Terrain_Garden && !(terrain & (Terrain_Elevation | Terrain_AccessRamp))) {
-			Data_Grid_graphicIds[gridOffset] = 0;
+			map_image_set(gridOffset, 0);
 			map_property_set_multi_tile_size(gridOffset, 1);
 			map_property_mark_draw_tile(gridOffset);
 		}
@@ -186,7 +185,7 @@ void TerrainGraphics_updateAllGardens()
 	FOREACH_ALL({
 		int terrain = Data_Grid_terrain[gridOffset];
 		if (terrain & Terrain_Garden && !(terrain & (Terrain_Elevation | Terrain_AccessRamp))) {
-			if (!Data_Grid_graphicIds[gridOffset]) {
+			if (!map_image_at(gridOffset)) {
 				int graphicId = image_group(GROUP_TERRAIN_GARDEN);
 				if (isAllTerrainInArea(x, y, 2, Terrain_Garden)) {
 					switch (map_random_get(gridOffset) & 3) {
@@ -206,7 +205,7 @@ void TerrainGraphics_updateAllGardens()
 							case 1: case 3: graphicId += 1; break;
 						}
 					}
-					Data_Grid_graphicIds[gridOffset] = graphicId;
+					map_image_set(gridOffset, graphicId);
 				}
 			}
 		}
@@ -217,8 +216,8 @@ void TerrainGraphics_determineGardensFromGraphicIds()
 {
 	int baseGraphicId = image_group(GROUP_TERRAIN_GARDEN);
 	FOREACH_ALL({
-		int graphicId = Data_Grid_graphicIds[gridOffset];
-		if (graphicId >= baseGraphicId && graphicId <= baseGraphicId + 6) {
+		int image_id = map_image_at(gridOffset);
+		if (image_id >= baseGraphicId && image_id <= baseGraphicId + 6) {
 			Data_Grid_terrain[gridOffset] |= Terrain_Garden;
 			map_property_clear_constructing(gridOffset);
 			Data_Grid_aqueducts[gridOffset] = 0;
@@ -307,12 +306,12 @@ void TerrainGraphics_updateRegionElevation(int xMin, int yMin, int xMax, int yMa
 	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
 	FOREACH_REGION({
 		if (Data_Grid_terrain[gridOffset] & Terrain_AccessRamp) {
-			Data_Grid_graphicIds[gridOffset] = 0;
+			map_image_set(gridOffset, 0);
 		}
 	});
 	FOREACH_REGION({
 		if ((Data_Grid_terrain[gridOffset] & Terrain_AccessRamp) &&
-			!Data_Grid_graphicIds[gridOffset]) {
+			!map_image_at(gridOffset)) {
 			int graphicOffset = getAccessRampGraphicOffset(xx, yy);
 			if (graphicOffset < 0) {
 				// invalid map: remove access ramp
@@ -323,8 +322,8 @@ void TerrainGraphics_updateRegionElevation(int xMin, int yMin, int xMax, int yMa
 					Data_Grid_terrain[gridOffset] |= Terrain_Elevation;
 				} else {
 					Data_Grid_terrain[gridOffset] &= ~Terrain_Elevation;
-					Data_Grid_graphicIds[gridOffset] =
-						image_group(GROUP_TERRAIN_GRASS_1) + (map_random_get(gridOffset) & 7);
+					map_image_set(gridOffset,
+						image_group(GROUP_TERRAIN_GRASS_1) + (map_random_get(gridOffset) & 7));
 				}
 			} else {
 				Terrain_addBuildingToGrids(0, xx, yy, 2,
@@ -340,28 +339,23 @@ void TerrainGraphics_updateRegionElevation(int xMin, int yMin, int xMax, int yMa
 				if (!(terrain & Terrain_Building)) {
 					map_property_set_multi_tile_xy(gridOffset, 0, 0, 1);
 					if (terrain & Terrain_Scrub) {
-						Data_Grid_graphicIds[gridOffset] =
-							image_group(GROUP_TERRAIN_SHRUB) + (map_random_get(gridOffset) & 7);
+						map_image_set(gridOffset, image_group(GROUP_TERRAIN_SHRUB) + (map_random_get(gridOffset) & 7));
 					} else if (terrain & Terrain_Tree) {
-						Data_Grid_graphicIds[gridOffset] =
-							image_group(GROUP_TERRAIN_TREE) + (map_random_get(gridOffset) & 7);
+						map_image_set(gridOffset, image_group(GROUP_TERRAIN_TREE) + (map_random_get(gridOffset) & 7));
 					} else if (terrain & Terrain_Road) {
 						TerrainGraphics_setTileRoad(xx, yy);
 					} else if (terrain & Terrain_Aqueduct) {
 						TerrainGraphics_setTileAqueduct(xx, yy, 0);
 					} else if (terrain & Terrain_Meadow) {
-						Data_Grid_graphicIds[gridOffset] =
-							image_group(GROUP_TERRAIN_MEADOW) + (map_random_get(gridOffset) & 3);
+						map_image_set(gridOffset, image_group(GROUP_TERRAIN_MEADOW) + (map_random_get(gridOffset) & 3));
 					} else {
-						Data_Grid_graphicIds[gridOffset] =
-							image_group(GROUP_TERRAIN_GRASS_1) + (map_random_get(gridOffset) & 7);
+						map_image_set(gridOffset, image_group(GROUP_TERRAIN_GRASS_1) + (map_random_get(gridOffset) & 7));
 					}
 				}
 			} else {
 				map_property_set_multi_tile_xy(gridOffset, 0, 0, 1);
 				Data_Grid_terrain[gridOffset] |= Terrain_Elevation;
-				Data_Grid_graphicIds[gridOffset] =
-					image_group(GROUP_TERRAIN_ELEVATION) + g->groupOffset + g->itemOffset;
+				map_image_set(gridOffset, image_group(GROUP_TERRAIN_ELEVATION) + g->groupOffset + g->itemOffset);
 			}
 		}
 	});
@@ -372,7 +366,7 @@ static int isTilePlaza(int gridOffset)
 	if ((Data_Grid_terrain[gridOffset] & Terrain_Road) &&
 		map_property_is_plaza_or_earthquake(gridOffset) &&
 		!(Data_Grid_terrain[gridOffset] & (Terrain_Water | Terrain_Building)) &&
-		!Data_Grid_graphicIds[gridOffset]) {
+		!map_image_at(gridOffset)) {
 		return 1;
 	}
 	return 0;
@@ -401,7 +395,7 @@ void TerrainGraphics_updateRegionPlazas(int xMin, int yMin, int xMax, int yMax)
 	FOREACH_ALL({
 		if (Data_Grid_terrain[gridOffset] & Terrain_Road &&
 			map_property_is_plaza_or_earthquake(gridOffset)) {
-			Data_Grid_graphicIds[gridOffset] = 0;
+			map_image_set(gridOffset, 0);
 			map_property_set_multi_tile_size(gridOffset, 1);
 			map_property_mark_draw_tile(gridOffset);
 		}
@@ -409,7 +403,7 @@ void TerrainGraphics_updateRegionPlazas(int xMin, int yMin, int xMax, int yMax)
 	FOREACH_REGION({
 		if (Data_Grid_terrain[gridOffset] & Terrain_Road &&
 			map_property_is_plaza_or_earthquake(gridOffset) &&
-			!Data_Grid_graphicIds[gridOffset]) {
+			!map_image_at(gridOffset)) {
 			int graphicId = image_group(GROUP_TERRAIN_PLAZA);
 			if (isTwoTileSquarePlaza(gridOffset)) {
 				if (map_random_get(gridOffset) & 1) {
@@ -424,7 +418,7 @@ void TerrainGraphics_updateRegionPlazas(int xMin, int yMin, int xMax, int yMax)
 					case 2: graphicId += 1; break;
 					case 1: graphicId += 2; break;
 				}
-				Data_Grid_graphicIds[gridOffset] = graphicId;
+				map_image_set(gridOffset, graphicId);
 			}
 		}
 	});
@@ -450,7 +444,7 @@ void TerrainGraphics_updateRegionAqueduct(int xMin, int yMin, int xMax, int yMax
 	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
 	FOREACH_REGION({
 		if (Data_Grid_terrain[gridOffset] & Terrain_Aqueduct && Data_Grid_aqueducts[gridOffset] <= 15) {
-			int waterOffset = Data_Grid_graphicIds[gridOffset] - image_group(GROUP_BUILDING_AQUEDUCT);
+			int waterOffset = map_image_at(gridOffset) - image_group(GROUP_BUILDING_AQUEDUCT);
 			if (waterOffset >= 0 && waterOffset < 15) {
 				waterOffset = 0;
 			} else {
@@ -466,14 +460,14 @@ void TerrainGraphics_updateRegionEmptyLand(int xMin, int yMin, int xMax, int yMa
 	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
 	FOREACH_REGION({
 		if (!(Data_Grid_terrain[gridOffset] & Terrain_NotClear)) {
-			Data_Grid_graphicIds[gridOffset] = 0;
+			map_image_set(gridOffset, 0);
 			map_property_set_multi_tile_size(gridOffset, 1);
 			map_property_mark_draw_tile(gridOffset);
 		}
 	});
 	FOREACH_REGION({
 		if (!(Data_Grid_terrain[gridOffset] & Terrain_NotClear) &&
-			!Data_Grid_graphicIds[gridOffset] &&
+			!map_image_at(gridOffset) &&
 			!(map_random_get(gridOffset) & 0xf0)) {
 			int graphicId;
 			if (map_property_is_alternate_terrain(gridOffset)) {
@@ -487,7 +481,7 @@ void TerrainGraphics_updateRegionEmptyLand(int xMin, int yMin, int xMax, int yMa
 	});
 	FOREACH_REGION({
 		if (!(Data_Grid_terrain[gridOffset] & Terrain_NotClear) &&
-			!Data_Grid_graphicIds[gridOffset]) {
+			!map_image_at(gridOffset)) {
 			int graphicId;
 			if (map_property_is_alternate_terrain(gridOffset)) {
 				graphicId = image_group(GROUP_TERRAIN_GRASS_2);
@@ -574,8 +568,7 @@ void TerrainGraphics_setBuildingAreaRubble(int buildingId, int x, int y, int siz
 			} else {
 				Data_Grid_terrain[gridOffset] &= Terrain_2e80;
 				Data_Grid_terrain[gridOffset] |= Terrain_Rubble;
-				Data_Grid_graphicIds[gridOffset] =
-					image_group(GROUP_TERRAIN_RUBBLE) + (map_random_get(gridOffset) & 7);
+				map_image_set(gridOffset, image_group(GROUP_TERRAIN_RUBBLE) + (map_random_get(gridOffset) & 7));
 			}
 		}
 	}
@@ -589,7 +582,7 @@ static void setFarmCropTile(int buildingId, int x, int y, int dx, int dy, int cr
 	map_building_set(gridOffset, buildingId);
 	map_property_clear_constructing(gridOffset);
 	map_property_set_multi_tile_xy(gridOffset, dx, dy, 1);
-	Data_Grid_graphicIds[gridOffset] = cropGraphicId + (growth < 4 ? growth : 4);
+	map_image_set(gridOffset, cropGraphicId + (growth < 4 ? growth : 4));
 }
 
 void TerrainGraphics_setBuildingFarm(int buildingId, int x, int y, int cropGraphicId, int progress)
@@ -614,7 +607,7 @@ void TerrainGraphics_setBuildingFarm(int buildingId, int x, int y, int cropGraph
 			map_building_set(gridOffset, buildingId);
 			map_property_clear_constructing(gridOffset);
 			map_property_set_multi_tile_size(gridOffset, 2);
-			Data_Grid_graphicIds[gridOffset] = image_group(GROUP_BUILDING_FARM_HOUSE);
+			map_image_set(gridOffset, image_group(GROUP_BUILDING_FARM_HOUSE));
 			map_property_set_multi_tile_xy(gridOffset, dx, dy,
 			    dx == leftmostX && dy == leftmostY);
 		}
@@ -659,7 +652,7 @@ void TerrainGraphics_updateNativeCropProgress(int buildingId)
 	if (b->data.industry.progress >= 5) {
 		b->data.industry.progress = 0;
 	}
-	Data_Grid_graphicIds[b->gridOffset] = image_group(GROUP_BUILDING_FARM_CROPS) + b->data.industry.progress;
+	map_image_set(b->gridOffset, image_group(GROUP_BUILDING_FARM_CROPS) + b->data.industry.progress);
 }
 
 void TerrainGraphics_setTileWater(int x, int y)
@@ -692,7 +685,7 @@ void TerrainGraphics_setTileWater(int x, int y)
 					case 53: graphicId = base + 15; break;
 				}
 			}
-			Data_Grid_graphicIds[gridOffset] = graphicId;
+			map_image_set(gridOffset, graphicId);
 			map_property_set_multi_tile_size(gridOffset, 1);
 			map_property_mark_draw_tile(gridOffset);
 		}
@@ -716,11 +709,11 @@ void TerrainGraphics_setTileEarthquake(int x, int y)
 			map_property_is_plaza_or_earthquake(gridOffset)) {
 			const TerrainGraphic *g = TerrainGraphicsContext_getEarthquake(gridOffset);
 			if (g->isValid) {
-				Data_Grid_graphicIds[gridOffset] =
+				map_image_set(gridOffset,
 					image_group(GROUP_TERRAIN_EARTHQUAKE) +
-					g->groupOffset + g->itemOffset;
+					g->groupOffset + g->itemOffset);
 			} else {
-				Data_Grid_graphicIds[gridOffset] = image_group(GROUP_TERRAIN_EARTHQUAKE);
+				map_image_set(gridOffset, image_group(GROUP_TERRAIN_EARTHQUAKE));
 			}
 			map_property_set_multi_tile_size(gridOffset, 1);
 			map_property_mark_draw_tile(gridOffset);
@@ -1012,7 +1005,7 @@ static void setWallGatehouseGraphicManually(int gridOffset)
 		}
 	}
 	if (graphicOffset) {
-		Data_Grid_graphicIds[gridOffset] = image_group(GROUP_BUILDING_WALL) + graphicOffset;
+		map_image_set(gridOffset, image_group(GROUP_BUILDING_WALL) + graphicOffset);
 	}
 }
 
@@ -1028,15 +1021,15 @@ static void setWallGraphic(int gridOffset)
 		return;
 	}
 	const TerrainGraphic *graphic = TerrainGraphicsContext_getWall(gridOffset);
-	Data_Grid_graphicIds[gridOffset] = image_group(GROUP_BUILDING_WALL) +
-		graphic->groupOffset + graphic->itemOffset;
+	map_image_set(gridOffset, image_group(GROUP_BUILDING_WALL) +
+		graphic->groupOffset + graphic->itemOffset);
 	map_property_set_multi_tile_size(gridOffset, 1);
 	map_property_mark_draw_tile(gridOffset);
 	if (isAdjacentToGatehouse(gridOffset)) {
 		graphic = TerrainGraphicsContext_getWallGatehouse(gridOffset);
 		if (graphic->isValid) {
-			Data_Grid_graphicIds[gridOffset] = image_group(GROUP_BUILDING_WALL) +
-				graphic->groupOffset + graphic->itemOffset;
+			map_image_set(gridOffset, image_group(GROUP_BUILDING_WALL) +
+				graphic->groupOffset + graphic->itemOffset);
 		} else {
 			setWallGatehouseGraphicManually(gridOffset);
 		}
@@ -1071,7 +1064,7 @@ int TerrainGraphics_setTileAqueduct(int x, int y, int forceNoWater)
 	if (Data_Grid_aqueducts[gridOffset] <= 15 && !(Data_Grid_terrain[gridOffset] & Terrain_Building)) {
 		tilesSet = 1;
 		int waterOffset;
-		if (Data_Grid_graphicIds[gridOffset] - image_group(GROUP_BUILDING_AQUEDUCT) >= 15) {
+		if (map_image_at(gridOffset) - image_group(GROUP_BUILDING_AQUEDUCT) >= 15) {
 			waterOffset = 15;
 		} else {
 			waterOffset = 0;
@@ -1095,8 +1088,7 @@ int TerrainGraphics_setTileAqueductTerrain(int x, int y)
 static void TerrainGraphics_setTileRubble(int x, int y)
 {
 	int gridOffset = map_grid_offset(x, y);
-	Data_Grid_graphicIds[gridOffset] =
-		image_group(GROUP_TERRAIN_RUBBLE) + (map_random_get(gridOffset) & 7);
+	map_image_set(gridOffset, image_group(GROUP_TERRAIN_RUBBLE) + (map_random_get(gridOffset) & 7));
 	map_property_set_multi_tile_size(gridOffset, 1);
 	map_property_mark_draw_tile(gridOffset);
 	Data_Grid_aqueducts[gridOffset] = 0;
@@ -1118,11 +1110,11 @@ static void TerrainGraphics_updateTileMeadow(int x, int y)
 		if ((terrain & Terrain_Meadow) && !(terrain & forbiddenTerrain)) {
 			int random = map_random_get(gridOffset) & 3;
 			if (Terrain_isAllMeadowAtDistanceRing(xx, yy, 2)) {
-				Data_Grid_graphicIds[gridOffset] = graphicId + random + 8;
+				map_image_set(gridOffset, graphicId + random + 8);
 			} else if (Terrain_isAllMeadowAtDistanceRing(xx, yy, 1)) {
-				Data_Grid_graphicIds[gridOffset] = graphicId + random + 4;
+				map_image_set(gridOffset, graphicId + random + 4);
 			} else {
-				Data_Grid_graphicIds[gridOffset] = graphicId + random;
+				map_image_set(gridOffset, graphicId + random);
 			}
 			map_property_set_multi_tile_size(gridOffset, 1);
 			map_property_mark_draw_tile(gridOffset);
@@ -1145,7 +1137,7 @@ static void TerrainGraphics_updateAreaEmptyLand(int x, int y, int size, int grap
 			map_property_clear_constructing(gridOffset);
 			map_property_set_multi_tile_size(gridOffset, 1);
 			map_property_mark_draw_tile(gridOffset);
-			Data_Grid_graphicIds[gridOffset] = graphicId + index;
+			map_image_set(gridOffset, graphicId + index);
 			index++;
 		}
 	}

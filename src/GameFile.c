@@ -43,6 +43,7 @@
 #include "map/building.h"
 #include "map/desirability.h"
 #include "map/figure.h"
+#include "map/image.h"
 #include "map/property.h"
 #include "map/random.h"
 #include "map/road_network.h"
@@ -126,7 +127,7 @@ static struct {
 typedef struct {
     buffer *scenario_campaign_mission;
     buffer *savegameFileVersion;
-    buffer *Data_Grid_graphicIds;
+    buffer *image_grid;
     buffer *edge_grid;
     buffer *building_grid;
     buffer *Data_Grid_terrain;
@@ -274,7 +275,7 @@ static void init_savegame_data()
     savegame_state *state = &savegame_data.state;
     state->scenario_campaign_mission = create_savegame_piece(4, 0);
     state->savegameFileVersion = create_savegame_piece(4, 0);
-    state->Data_Grid_graphicIds = create_savegame_piece(52488, 1);
+    state->image_grid = create_savegame_piece(52488, 1);
     state->edge_grid = create_savegame_piece(26244, 1);
     state->building_grid = create_savegame_piece(52488, 1);
     state->Data_Grid_terrain = create_savegame_piece(52488, 1);
@@ -377,7 +378,8 @@ static void write_all_to_buffer(buffer *buf, void *data)
 
 static void scenario_deserialize(scenario_state *file)
 {
-    read_all_from_buffer(file->graphic_ids, &Data_Grid_graphicIds);
+    map_image_load_state(file->graphic_ids);
+
     read_all_from_buffer(file->terrain, &Data_Grid_terrain);
 
     map_property_load_state(file->bitfields, file->edge);
@@ -411,8 +413,8 @@ static void savegame_deserialize(savegame_state *state)
                                  state->player_name);
 
     read_all_from_buffer(state->savegameFileVersion, &savegameFileVersion);
-    read_all_from_buffer(state->Data_Grid_graphicIds, &Data_Grid_graphicIds);
 
+    map_image_load_state(state->image_grid);
     map_building_load_state(state->building_grid, state->building_damage_grid);
 
     read_all_from_buffer(state->Data_Grid_terrain, &Data_Grid_terrain);
@@ -533,8 +535,8 @@ static void savegame_serialize(savegame_state *state)
                                  state->player_name);
 
     write_all_to_buffer(state->savegameFileVersion, &savegameFileVersion);
-    write_all_to_buffer(state->Data_Grid_graphicIds, &Data_Grid_graphicIds);
 
+    map_image_save_state(state->image_grid);
     map_building_save_state(state->building_grid, state->building_damage_grid);
 
     write_all_to_buffer(state->Data_Grid_terrain, &Data_Grid_terrain);

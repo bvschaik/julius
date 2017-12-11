@@ -34,6 +34,7 @@
 #include "map/bridge.h"
 #include "map/building.h"
 #include "map/grid.h"
+#include "map/image.h"
 #include "map/property.h"
 #include "map/routing.h"
 #include "map/routing_terrain.h"
@@ -1046,7 +1047,7 @@ static void placePlaza(int measureOnly, int xStart, int yStart, int xEnd, int yE
 				if (!map_property_is_plaza_or_earthquake(gridOffset)) {
 					itemsPlaced++;
 				}
-				Data_Grid_graphicIds[gridOffset] = 0;
+				map_image_set(gridOffset, 0);
 				map_property_mark_plaza_or_earthquake(gridOffset);
 				map_property_set_multi_tile_size(gridOffset, 1);
 				map_property_mark_draw_tile(gridOffset);

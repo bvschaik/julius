@@ -8,6 +8,7 @@
 #include "Data/State.h"
 
 #include "core/direction.h"
+#include "map/image.h"
 
 static void setViewport(int xOffset, int yOffset, int widthInTiles, int heightInTiles);
 
@@ -105,7 +106,7 @@ void CityView_calculateLookup()
 		int yView = yViewStart;
 		for (int x = 0; x < GRID_SIZE; x++) {
 			int gridOffset = x + GRID_SIZE * y;
-			if (Data_Grid_graphicIds[gridOffset] < 6) {
+			if (map_image_at(gridOffset) < 6) {
 				ViewToGridOffset(xView/2, yView) = -1;
 			} else {
 				ViewToGridOffset(xView/2, yView) = gridOffset;

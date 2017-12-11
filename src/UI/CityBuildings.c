@@ -23,6 +23,7 @@
 #include "map/desirability.h"
 #include "map/figure.h"
 #include "map/grid.h"
+#include "map/image.h"
 #include "map/property.h"
 #include "map/routing.h"
 #include "sound/city.h"
@@ -146,7 +147,7 @@ static void drawBuildingFootprints()
 				Data_Buildings[0].type = Terrain_Garden;
 				sound_city_mark_building_view(0, 2);
 			}
-			int graphicId = Data_Grid_graphicIds[gridOffset];
+			int graphicId = map_image_at(gridOffset);
 			if (map_property_is_constructing(gridOffset)) {
 				graphicId = image_group(GROUP_TERRAIN_OVERLAY);
 			}
@@ -159,7 +160,7 @@ static void drawBuildingFootprints()
 						if (graphicId > graphicIdWaterLast) {
 							graphicId = graphicIdWaterFirst;
 						}
-						Data_Grid_graphicIds[gridOffset] = graphicId;
+						map_image_set(gridOffset, graphicId);
 					}
 					Graphics_drawIsometricFootprint(graphicId, xGraphic, yGraphic, colorMask);
 					break;
@@ -186,7 +187,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 		FOREACH_X_VIEW {
 			if (map_property_is_draw_tile(gridOffset)) {
 				int buildingId = map_building_at(gridOffset);
-				int graphicId = Data_Grid_graphicIds[gridOffset];
+				int graphicId = map_image_at(gridOffset);
 				color_t colorMask = 0;
 				if (buildingId && Data_Buildings[buildingId].isDeleted) {
 					colorMask = COLOR_MASK_RED;
@@ -356,7 +357,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 		} END_FOREACH_X_VIEW;
 		// draw animation
 		FOREACH_X_VIEW {
-			int graphicId = Data_Grid_graphicIds[gridOffset];
+			int graphicId = map_image_at(gridOffset);
 			const image *img = image_get(graphicId);
 			if (img->num_animation_sprites) {
 				if (map_property_is_draw_tile(gridOffset)) {
@@ -369,7 +370,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 					if (b->type == BUILDING_DOCK) {
 						int numDockers = Building_Dock_getNumIdleDockers(buildingId);
 						if (numDockers > 0) {
-							int graphicIdDock = Data_Grid_graphicIds[b->gridOffset];
+							int graphicIdDock = map_image_at(b->gridOffset);
 							int graphicIdDockers = image_group(GROUP_BUILDING_DOCK_DOCKERS);
 							if (graphicIdDock == image_group(GROUP_BUILDING_DOCK_1)) {
 								graphicIdDockers += 0;
@@ -571,7 +572,7 @@ static void drawHippodromeAndElevatedFigures(int selectedFigureId)
 		} END_FOREACH_X_VIEW;
 		FOREACH_X_VIEW {
 			if (!Data_State.currentOverlay) {
-				int graphicId = Data_Grid_graphicIds[gridOffset];
+				int graphicId = map_image_at(gridOffset);
 				const image *img = image_get(graphicId);
 				if (img->num_animation_sprites &&
 					map_property_is_draw_tile(gridOffset) &&

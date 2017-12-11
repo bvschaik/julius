@@ -3,13 +3,14 @@
 #include "core/direction.h"
 #include "graphics/image.h"
 #include "map/grid.h"
+#include "map/image.h"
 #include "map/routing.h"
 
 #include "Data/State.h"
 
 int map_can_place_road_under_aqueduct(int gridOffset)
 {
-    int graphic = Data_Grid_graphicIds[gridOffset] - image_group(GROUP_BUILDING_AQUEDUCT);
+    int graphic = map_image_at(gridOffset) - image_group(GROUP_BUILDING_AQUEDUCT);
     int checkRoadY;
     switch (graphic) {
         case 0:
@@ -62,7 +63,7 @@ int map_can_place_road_under_aqueduct(int gridOffset)
 
 int map_can_place_aqueduct_on_road(int gridOffset)
 {
-    int graphic = Data_Grid_graphicIds[gridOffset] - image_group(GROUP_TERRAIN_ROAD);
+    int graphic = map_image_at(gridOffset) - image_group(GROUP_TERRAIN_ROAD);
     if (graphic != 0 && graphic != 1 && graphic != 49 && graphic != 50) {
         return 0;
     }
@@ -86,7 +87,7 @@ int map_can_place_aqueduct_on_road(int gridOffset)
 
 int map_get_aqueduct_with_road_image(int gridOffset)
 {
-    int graphic = Data_Grid_graphicIds[gridOffset] - image_group(GROUP_BUILDING_AQUEDUCT);
+    int graphic = map_image_at(gridOffset) - image_group(GROUP_BUILDING_AQUEDUCT);
     switch (graphic) {
         case 2:
             return 8;

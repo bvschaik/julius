@@ -5,6 +5,7 @@
 #include "graphics/image.h"
 #include "map/building.h"
 #include "map/grid.h"
+#include "map/image.h"
 #include "map/property.h"
 #include "map/random.h"
 #include "map/routing_data.h"
@@ -85,20 +86,20 @@ static int get_land_type_citizen_building(int grid_offset)
 
 static int get_land_type_citizen_aqueduct(int grid_offset)
 {
-    int graphicId = Data_Grid_graphicIds[grid_offset] - image_group(GROUP_BUILDING_AQUEDUCT);
-    if (graphicId <= 3) {
+    int image_id = map_image_at(grid_offset) - image_group(GROUP_BUILDING_AQUEDUCT);
+    if (image_id <= 3) {
         return CITIZEN_N3_AQUEDUCT;
-    } else if (graphicId <= 7) {
+    } else if (image_id <= 7) {
         return CITIZEN_N1_BLOCKED;
-    } else if (graphicId <= 9) {
+    } else if (image_id <= 9) {
         return CITIZEN_N3_AQUEDUCT;
-    } else if (graphicId <= 14) {
+    } else if (image_id <= 14) {
         return CITIZEN_N1_BLOCKED;
-    } else if (graphicId <= 18) {
+    } else if (image_id <= 18) {
         return CITIZEN_N3_AQUEDUCT;
-    } else if (graphicId <= 22) {
+    } else if (image_id <= 22) {
         return CITIZEN_N1_BLOCKED;
-    } else if (graphicId <= 24) {
+    } else if (image_id <= 24) {
         return CITIZEN_N3_AQUEDUCT;
     } else {
         return CITIZEN_N1_BLOCKED;
@@ -120,7 +121,7 @@ void map_routing_update_land_citizen()
                     // shouldn't happen
                     terrain_land_noncitizen.items[grid_offset] = CITIZEN_4_CLEAR_TERRAIN; // BUG: should be citizen grid?
                     Data_Grid_terrain[grid_offset] &= ~Terrain_Building;
-                    Data_Grid_graphicIds[grid_offset] = (map_random_get(grid_offset) & 7) + image_group(GROUP_TERRAIN_GRASS_1);
+                    map_image_set(grid_offset, (map_random_get(grid_offset) & 7) + image_group(GROUP_TERRAIN_GRASS_1));
                     map_property_mark_draw_tile(grid_offset);
                     map_property_set_multi_tile_size(grid_offset, 1);
                     continue;
