@@ -73,8 +73,6 @@ static void loadScenario(const char *scenarioName);
 static void readScenarioAndInitGraphics();
 
 static void initGrids();
-static void initGridTerrain();
-static void initGridGraphicIds();
 
 void Scenario_initialize(const char *scenarioName)
 {
@@ -256,39 +254,5 @@ static void initGrids()
 	map_road_network_clear();
 
 	TerrainGraphicsContext_init();
-	initGridTerrain();
 	map_random_init();
-	initGridGraphicIds();
-}
-
-static void initGridTerrain()
-{
-	int gridOffset = 0;
-	for (int y = 0; y < Data_State.map.height; y++) {
-		for (int x = 0; x < Data_State.map.width; x++, gridOffset++) {
-			if (x < (GRID_SIZE - Data_State.map.width) / 2 ||
-				x >= (GRID_SIZE - Data_State.map.width) / 2 + Data_State.map.width) {
-				Data_Grid_terrain[gridOffset] = Terrain_OutsideMap;
-			}
-			if (y < (GRID_SIZE - Data_State.map.height) / 2 ||
-				y >= (GRID_SIZE - Data_State.map.height) / 2 + Data_State.map.height) {
-				Data_Grid_terrain[gridOffset] = Terrain_OutsideMap;
-			}
-		}
-	}
-}
-
-static void initGridGraphicIds()
-{
-	int gridOffset = Data_State.map.gridStartOffset;
-	int graphicId = image_group(GROUP_TERRAIN_UGLY_GRASS);
-	for (int y = 0; y < Data_State.map.height; y++, gridOffset += Data_State.map.gridBorderSize) {
-		for (int x = 0; x < Data_State.map.width; x++, gridOffset++) {
-		    int random = map_random_get(gridOffset);
-			map_image_set(gridOffset, graphicId + (random & 7));
-			if (random & 1) {
-				map_property_set_alternate_terrain(gridOffset);
-			}
-		}
-	}
 }
