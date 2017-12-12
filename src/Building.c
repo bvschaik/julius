@@ -306,7 +306,7 @@ void Building_collapseOnFire(int buildingId, int hasPlague)
 			int random = map_random_get(b->gridOffset) & 3;
 			graphicId = image_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9 * random;
 		}
-		Terrain_addBuildingToGrids(buildingId, b->x, b->y, 1, graphicId, Terrain_Building);
+		Terrain_addBuildingToGrids(buildingId, b->x, b->y, 1, graphicId, TERRAIN_BUILDING);
 	}
 	static const int xTiles[] = {0, 1, 1, 0, 2, 2, 2, 1, 0, 3, 3, 3, 3, 2, 1, 0, 4, 4, 4, 4, 4, 3, 2, 1, 0, 5, 5, 5, 5, 5, 5, 4, 3, 2, 1, 0};
 	static const int yTiles[] = {0, 0, 1, 1, 0, 1, 2, 2, 2, 0, 1, 2, 3, 3, 3, 3, 0, 1, 2, 3, 4, 4, 4, 4, 4, 0, 1, 2, 3, 4, 5, 5, 5, 5, 5, 5};
@@ -325,7 +325,7 @@ void Building_collapseOnFire(int buildingId, int hasPlague)
 			int random = map_random_get(ruin->gridOffset) & 3;
 			graphicId = image_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9 * random;
 		}
-		Terrain_addBuildingToGrids(ruinId, ruin->x, ruin->y, 1, graphicId, Terrain_Building);
+		Terrain_addBuildingToGrids(ruinId, ruin->x, ruin->y, 1, graphicId, TERRAIN_BUILDING);
 		ruin->fireDuration = (ruin->houseGenerationDelay & 7) + 1;
 		ruin->figureId4 = 0;
 		ruin->fireProof = 1;
@@ -555,7 +555,7 @@ void Building_determineGraphicIdsForOrientedBuildings()
 					}
 				}
 				Terrain_addBuildingToGrids(i, b->x, b->y, b->size,
-					graphicId, Terrain_Building);
+					graphicId, TERRAIN_BUILDING);
 				Terrain_addRoadsForTriumphalArch(b->x, b->y, b->subtype.orientation);
 				break;
 			case BUILDING_HIPPODROME:
@@ -589,7 +589,7 @@ void Building_determineGraphicIdsForOrientedBuildings()
 					}
 				}
 				Terrain_addBuildingToGrids(i, b->x, b->y, b->size,
-					graphicId, Terrain_Building);
+					graphicId, TERRAIN_BUILDING);
 				break;
 			case BUILDING_SHIPYARD:
 				graphicOffset = (4 + b->data.other.dockOrientation - mapOrientation / 2) % 4;

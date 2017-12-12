@@ -29,7 +29,7 @@ static int isAllTerrainInArea(int x, int y, int size, int terrain)
 	for (int dy = 0; dy < size; dy++) {
 		for (int dx = 0; dx < size; dx++) {
 			int gridOffset = map_grid_offset(x + dx, y + dy);
-			if ((Data_Grid_terrain[gridOffset] & Terrain_NotClear) != terrain) {
+			if ((map_terrain_get(gridOffset) & TERRAIN_NOT_CLEAR) != terrain) {
 				return 0;
 			}
 			if (map_image_at(gridOffset) != 0) {
@@ -331,7 +331,7 @@ void TerrainGraphics_updateRegionElevation(int xMin, int yMin, int xMax, int yMa
 				gridOffset, Data_Grid_elevation[gridOffset]);
 			if (g->groupOffset == 44) {
 				map_terrain_remove(gridOffset, TERRAIN_ELEVATION);
-				int terrain = Data_Grid_terrain[gridOffset];
+				int terrain = map_terrain_get(gridOffset);
 				if (!(terrain & TERRAIN_BUILDING)) {
 					map_property_set_multi_tile_xy(gridOffset, 0, 0, 1);
 					if (terrain & TERRAIN_SCRUB) {
@@ -407,7 +407,7 @@ void TerrainGraphics_updateRegionPlazas(int xMin, int yMin, int xMax, int yMax)
 				} else {
 					graphicId += 6;
 				}
-				Terrain_addBuildingToGrids(0, xx, yy, 2, graphicId, Terrain_Road);
+				Terrain_addBuildingToGrids(0, xx, yy, 2, graphicId, TERRAIN_ROAD);
 			} else {
 				// single tile plaza
 				switch ((xx & 1) + (yy & 1)) {
@@ -454,14 +454,14 @@ void TerrainGraphics_updateRegionEmptyLand(int xMin, int yMin, int xMax, int yMa
 {
 	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
 	FOREACH_REGION({
-		if (!(Data_Grid_terrain[gridOffset] & Terrain_NotClear)) {
+		if (!map_terrain_is(gridOffset, TERRAIN_NOT_CLEAR)) {
 			map_image_set(gridOffset, 0);
 			map_property_set_multi_tile_size(gridOffset, 1);
 			map_property_mark_draw_tile(gridOffset);
 		}
 	});
 	FOREACH_REGION({
-		if (!(Data_Grid_terrain[gridOffset] & Terrain_NotClear) &&
+		if (!map_terrain_is(gridOffset, TERRAIN_NOT_CLEAR) &&
 			!map_image_at(gridOffset) &&
 			!(map_random_get(gridOffset) & 0xf0)) {
 			int graphicId;
@@ -475,7 +475,7 @@ void TerrainGraphics_updateRegionEmptyLand(int xMin, int yMin, int xMax, int yMa
 		}
 	});
 	FOREACH_REGION({
-		if (!(Data_Grid_terrain[gridOffset] & Terrain_NotClear) &&
+		if (!map_terrain_is(gridOffset, TERRAIN_NOT_CLEAR) &&
 			!map_image_at(gridOffset)) {
 			int graphicId;
 			if (map_property_is_alternate_terrain(gridOffset)) {
@@ -483,12 +483,12 @@ void TerrainGraphics_updateRegionEmptyLand(int xMin, int yMin, int xMax, int yMa
 			} else {
 				graphicId = image_group(GROUP_TERRAIN_GRASS_1);
 			}
-			if (Terrain_isClear(xx, yy, 4, Terrain_All, 1)) {
+			if (Terrain_isClear(xx, yy, 4, TERRAIN_ALL, 1)) {
 				TerrainGraphics_updateAreaEmptyLand(xx, yy, 4, graphicId + 42);
-			} else if (Terrain_isClear(xx, yy, 3, Terrain_All, 1)) {
+			} else if (Terrain_isClear(xx, yy, 3, TERRAIN_ALL, 1)) {
 				TerrainGraphics_updateAreaEmptyLand(xx, yy, 3,
 					graphicId + 24 + 9 * (map_random_get(gridOffset) & 1));
-			} else if (Terrain_isClear(xx, yy, 2, Terrain_All, 1)) {
+			} else if (Terrain_isClear(xx, yy, 2, TERRAIN_ALL, 1)) {
 				TerrainGraphics_updateAreaEmptyLand(xx, yy, 2,
 					graphicId + 8 + 4 * (map_random_get(gridOffset) & 3));
 			} else {
@@ -559,7 +559,7 @@ void TerrainGraphics_setBuildingAreaRubble(int buildingId, int x, int y, int siz
 				map_terrain_set(gridOffset, TERRAIN_WATER); // clear other flags
 				TerrainGraphics_setTileWater(x + dx, y + dy);
 			} else {
-				Data_Grid_terrain[gridOffset] &= Terrain_2e80;
+				map_terrain_remove(gridOffset, TERRAIN_CLEARABLE);
 				map_terrain_add(gridOffset, TERRAIN_RUBBLE);
 				map_image_set(gridOffset, image_group(GROUP_TERRAIN_RUBBLE) + (map_random_get(gridOffset) & 7));
 			}
@@ -570,7 +570,7 @@ void TerrainGraphics_setBuildingAreaRubble(int buildingId, int x, int y, int siz
 static void setFarmCropTile(int buildingId, int x, int y, int dx, int dy, int cropGraphicId, int growth)
 {
 	int gridOffset = map_grid_offset(x + dx, y + dy);
-	Data_Grid_terrain[gridOffset] &= Terrain_2e80;
+	map_terrain_remove(gridOffset, TERRAIN_CLEARABLE);
 	map_terrain_add(gridOffset, TERRAIN_BUILDING);
 	map_building_set(gridOffset, buildingId);
 	map_property_clear_constructing(gridOffset);
@@ -595,7 +595,7 @@ void TerrainGraphics_setBuildingFarm(int buildingId, int x, int y, int cropGraph
 	for (int dy = 0; dy < 2; dy++) {
 		for (int dx = 0; dx < 2; dx++) {
 			int gridOffset = map_grid_offset(x + dx, y + dy);
-			Data_Grid_terrain[gridOffset] &= Terrain_2e80;
+			map_terrain_remove(gridOffset, TERRAIN_CLEARABLE);
 			map_terrain_add(gridOffset, TERRAIN_BUILDING);
 			map_building_set(gridOffset, buildingId);
 			map_property_clear_constructing(gridOffset);
@@ -660,7 +660,7 @@ void TerrainGraphics_setTileWater(int x, int y)
 		if ((map_terrain_get(gridOffset) & (TERRAIN_WATER | TERRAIN_BUILDING)) == TERRAIN_WATER) {
 			const TerrainGraphic *g = TerrainGraphicsContext_getShore(gridOffset);
 			int graphicId = image_group(GROUP_TERRAIN_WATER) + g->groupOffset + g->itemOffset;
-			if (Terrain_existsTileWithinRadiusWithType(xx, yy, 1, 2, Terrain_Building)) {
+			if (Terrain_existsTileWithinRadiusWithType(xx, yy, 1, 2, TERRAIN_BUILDING)) {
 				// fortified shore
 				int base = image_group(GROUP_TERRAIN_WATER_SHORE);
 				switch (g->groupOffset) {
@@ -1124,7 +1124,7 @@ static void TerrainGraphics_updateAreaEmptyLand(int x, int y, int size, int grap
 	for (int dy = 0; dy < size; dy++) {
 		for (int dx = 0; dx < size; dx++) {
 			int gridOffset = map_grid_offset(x + dx, y + dy);
-			Data_Grid_terrain[gridOffset] &= Terrain_2e80;
+			map_terrain_remove(gridOffset, TERRAIN_CLEARABLE);
 			map_building_set(gridOffset, 0);
 			map_property_clear_constructing(gridOffset);
 			map_property_set_multi_tile_size(gridOffset, 1);

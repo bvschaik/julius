@@ -21,7 +21,13 @@ enum {
     TERRAIN_WALL = 0x4000,
     TERRAIN_GATEHOUSE = 0x8000,
     // combined
-    TERRAIN_WALL_OR_GATEHOUSE = TERRAIN_WALL | TERRAIN_GATEHOUSE
+    TERRAIN_WALL_OR_GATEHOUSE = TERRAIN_WALL | TERRAIN_GATEHOUSE,
+    TERRAIN_NOT_CLEAR = 0xd77f,
+    TERRAIN_CLEARABLE = 0xd17f,
+    TERRAIN_IMPASSABLE = 0xc75f,
+    TERRAIN_IMPASSABLE_ENEMY = 0x1237,
+    TERRAIN_IMPASSABLE_WOLF = 0xd73f,
+    TERRAIN_ALL = 0xffff
 };
 
 int map_terrain_is(int grid_offset, int terrain);
@@ -33,6 +39,8 @@ void map_terrain_set(int grid_offset, int terrain);
 void map_terrain_add(int grid_offset, int terrain);
 
 void map_terrain_remove(int grid_offset, int terrain);
+
+void map_terrain_remove_all(int terrain);
 
 void map_terrain_backup();
 

@@ -29,6 +29,11 @@ void map_terrain_remove(int grid_offset, int terrain)
     Data_Grid_terrain[grid_offset] &= ~terrain;
 }
 
+void map_terrain_remove_all(int terrain)
+{
+    map_grid_and_u16(Data_Grid_terrain, ~terrain);
+}
+
 void map_terrain_backup()
 {
     map_grid_copy_u16(Data_Grid_terrain, terrain_grid_backup.items);

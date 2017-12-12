@@ -99,7 +99,7 @@ int BuildingHouse_canExpand(int buildingId, int numTiles)
 		int okTiles = 0;
 		for (int i = 0; i < numTiles; i++) {
 			int tileOffset = baseOffset + tileGridOffsets[i];
-			if (!map_terrain_is(tileOffset, Terrain_NotClear)) {
+			if (!map_terrain_is(tileOffset, TERRAIN_NOT_CLEAR)) {
 				okTiles++;
 			} else if (map_terrain_is(tileOffset, TERRAIN_BUILDING)) {
 				int tileBuildingId = map_building_at(tileOffset);
@@ -124,7 +124,7 @@ int BuildingHouse_canExpand(int buildingId, int numTiles)
 		int okTiles = 0;
 		for (int i = 0; i < numTiles; i++) {
 			int tileOffset = baseOffset + tileGridOffsets[i];
-			if (!map_terrain_is(tileOffset, Terrain_NotClear)) {
+			if (!map_terrain_is(tileOffset, TERRAIN_NOT_CLEAR)) {
 				okTiles++;
 			} else if (map_terrain_is(tileOffset, TERRAIN_BUILDING)) {
 				int tileBuildingId = map_building_at(tileOffset);

@@ -353,9 +353,8 @@ static void figureAdvanceRouteTile(figure *f, int roamingEnabled)
 		return;
 	}
 	int targetGridOffset = f->gridOffset + map_grid_direction_delta(f->direction);
-	int targetTerrain = Data_Grid_terrain[targetGridOffset] & Terrain_c75f;
 	if (f->isBoat) {
-		if (!(targetTerrain & TERRAIN_WATER)) {
+		if (!map_terrain_is(targetGridOffset, TERRAIN_WATER)) {
 			f->direction = DIR_FIGURE_REROUTE;
 		}
 	} else if (f->terrainUsage == FigureTerrainUsage_Enemy) {
@@ -394,14 +393,14 @@ static void figureAdvanceRouteTile(figure *f, int roamingEnabled)
 		if (!map_routing_is_wall_passable(targetGridOffset)) {
 			f->direction = DIR_FIGURE_REROUTE;
 		}
-	} else if (targetTerrain & (TERRAIN_ROAD | TERRAIN_ACCESS_RAMP)) {
-		if (roamingEnabled && targetTerrain & TERRAIN_BUILDING) {
+	} else if (map_terrain_is(targetGridOffset, TERRAIN_ROAD | TERRAIN_ACCESS_RAMP)) {
+		if (roamingEnabled && map_terrain_is(targetGridOffset, TERRAIN_BUILDING)) {
 			if (Data_Buildings[map_building_at(targetGridOffset)].type == BUILDING_GATEHOUSE) {
 				// do not allow roaming through gatehouse
 				f->direction = DIR_FIGURE_REROUTE;
 			}
 		}
-	} else if (targetTerrain & TERRAIN_BUILDING) {
+	} else if (map_terrain_is(targetGridOffset, TERRAIN_BUILDING)) {
 		int type = Data_Buildings[map_building_at(targetGridOffset)].type;
 		switch (type) {
 			case BUILDING_WAREHOUSE:
@@ -412,7 +411,7 @@ static void figureAdvanceRouteTile(figure *f, int roamingEnabled)
 			default:
 				f->direction = DIR_FIGURE_REROUTE;
 		}
-	} else if (targetTerrain) {
+	} else if (map_terrain_is(targetGridOffset, TERRAIN_IMPASSABLE)) {
 		f->direction = DIR_FIGURE_REROUTE;
 	}
 }

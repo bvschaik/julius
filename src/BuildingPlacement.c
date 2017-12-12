@@ -551,7 +551,7 @@ static void addToTerrain(int type, int buildingId, int x, int y, int size,
 
 static int placeBuilding(int type, int x, int y)
 {
-	unsigned short terrainMask = Terrain_All;
+	unsigned short terrainMask = TERRAIN_ALL;
 	if (type == BUILDING_GATEHOUSE || type == BUILDING_TRIUMPHAL_ARCH) {
 		terrainMask = ~TERRAIN_ROAD;
 	} else if (type == BUILDING_TOWER) {
@@ -706,7 +706,7 @@ static void placeHouses(int measureOnly, int xStart, int yStart, int xEnd, int y
 	for (int y = yMin; y <= yMax; y++) {
 		for (int x = xMin; x <= xMax; x++) {
 			int gridOffset = map_grid_offset(x,y);
-			if (map_terrain_is(gridOffset, Terrain_NotClear)) {
+			if (map_terrain_is(gridOffset, TERRAIN_NOT_CLEAR)) {
 				continue;
 			}
 			if (measureOnly) {
@@ -719,7 +719,7 @@ static void placeHouses(int measureOnly, int xStart, int yStart, int xEnd, int y
 					itemsPlaced++;
 					Terrain_addBuildingToGrids(buildingId, x, y, 1,
 						image_group(GROUP_BUILDING_HOUSE_VACANT_LOT), TERRAIN_BUILDING);
-					if (!Terrain_existsTileWithinRadiusWithType(x, y, 1, 2, Terrain_Road)) {
+					if (!Terrain_existsTileWithinRadiusWithType(x, y, 1, 2, TERRAIN_ROAD)) {
 						needsRoadWarning = 1;
 					}
 				}
@@ -804,7 +804,7 @@ static void clearRegionConfirmed(int measureOnly, int xStart, int yStart, int xE
 					Data_Buildings[spaceId].state = BuildingState_DeletedByPlayer;
 				}
 			} else if (map_terrain_is(gridOffset, TERRAIN_AQUEDUCT)) {
-				Data_Grid_terrain[gridOffset] &= Terrain_2e80;
+				map_terrain_remove(gridOffset, TERRAIN_CLEARABLE);
 				Data_Grid_aqueducts[gridOffset] = 0;
 				itemsPlaced++;
 				if (Data_Grid_aqueducts[gridOffset - 162] == 5) {
@@ -826,8 +826,8 @@ static void clearRegionConfirmed(int measureOnly, int xStart, int yStart, int xE
 					map_bridge_remove(gridOffset, measureOnly);
 					itemsPlaced++;
 				}
-			} else if (map_terrain_is(gridOffset, Terrain_NotClear)) {
-				Data_Grid_terrain[gridOffset] &= Terrain_2e80;
+			} else if (map_terrain_is(gridOffset, TERRAIN_NOT_CLEAR)) {
+				map_terrain_remove(gridOffset, TERRAIN_CLEARABLE);
 				itemsPlaced++;
 			}
 		}
@@ -984,7 +984,10 @@ static void placeRoad(int measureOnly, int xStart, int yStart, int xEnd, int yEn
 	itemsPlaced = 0;
 	int startOffset = map_grid_offset(xStart, yStart);
 	int endOffset = map_grid_offset(xEnd, yEnd);
-	int forbiddenTerrainMask = TERRAIN_BUILDING | TERRAIN_WALL | Terrain_1237;
+	int forbiddenTerrainMask =
+        TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER |
+        TERRAIN_SCRUB | TERRAIN_GARDEN | TERRAIN_ELEVATION |
+        TERRAIN_RUBBLE | TERRAIN_BUILDING | TERRAIN_WALL;
 	if (map_terrain_is(startOffset, forbiddenTerrainMask)) {
 		return;
 	}
@@ -1010,7 +1013,10 @@ static void placeWall(int measureOnly, int xStart, int yStart, int xEnd, int yEn
 	itemsPlaced = 0;
 	int startOffset = map_grid_offset(xStart, yStart);
 	int endOffset = map_grid_offset(xEnd, yEnd);
-	int forbiddenTerrainMask = Terrain_127f | TERRAIN_AQUEDUCT | TERRAIN_ACCESS_RAMP;
+	int forbiddenTerrainMask =
+        TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_SCRUB |
+        TERRAIN_ROAD | TERRAIN_GARDEN | TERRAIN_ELEVATION |
+        TERRAIN_RUBBLE | TERRAIN_AQUEDUCT | TERRAIN_ACCESS_RAMP;
 	if (map_terrain_is(startOffset, forbiddenTerrainMask)) {
 		return;
 	}
@@ -1070,7 +1076,7 @@ static void placeGarden(int xStart, int yStart, int xEnd, int yEnd)
 	for (int y = yMin; y <= yMax; y++) {
 		for (int x = xMin; x <= xMax; x++) {
 			int gridOffset = map_grid_offset(x,y);
-			if (!(Data_Grid_terrain[gridOffset] & Terrain_NotClear)) {
+			if (!map_terrain_is(gridOffset, TERRAIN_NOT_CLEAR)) {
 				itemsPlaced++;
 				map_terrain_add(gridOffset, TERRAIN_GARDEN);
 			}
@@ -1092,7 +1098,7 @@ static int placeAqueduct(int measureOnly, int xStart, int yStart, int xEnd, int 
 		if (map_property_is_plaza_or_earthquake(gridOffset)) {
 			blocked = 1;
 		}
-	} else if (Data_Grid_terrain[gridOffset] & Terrain_NotClear) {
+	} else if (map_terrain_is(gridOffset, TERRAIN_NOT_CLEAR)) {
 		blocked = 1;
 	}
 	gridOffset = map_grid_offset(xEnd, yEnd);
@@ -1100,7 +1106,7 @@ static int placeAqueduct(int measureOnly, int xStart, int yStart, int xEnd, int 
 		if (map_property_is_plaza_or_earthquake(gridOffset)) {
 			blocked = 1;
 		}
-	} else if (Data_Grid_terrain[gridOffset] & Terrain_NotClear) {
+	} else if (map_terrain_is(gridOffset, TERRAIN_NOT_CLEAR)) {
 		blocked = 1;
 	}
 	if (blocked) {
@@ -1132,7 +1138,7 @@ static int placeReservoirAndAqueducts(int measureOnly, int xStart, int yStart, i
 	if (distance > 0) {
 		if (Terrain_isReservoir(map_grid_offset(xStart - 1, yStart - 1))) {
 			info->placeReservoirAtStart = PlaceReservoir_Exists;
-		} else if (Terrain_isClear(xStart - 1, yStart - 1, 3, Terrain_All, 0)) {
+		} else if (Terrain_isClear(xStart - 1, yStart - 1, 3, TERRAIN_ALL, 0)) {
 			info->placeReservoirAtStart = PlaceReservoir_Yes;
 		} else {
 			info->placeReservoirAtStart = PlaceReservoir_Blocked;
@@ -1140,7 +1146,7 @@ static int placeReservoirAndAqueducts(int measureOnly, int xStart, int yStart, i
 	}
 	if (Terrain_isReservoir(map_grid_offset(xEnd - 1, yEnd - 1))) {
 		info->placeReservoirAtEnd = PlaceReservoir_Exists;
-	} else if (Terrain_isClear(xEnd - 1, yEnd - 1, 3, Terrain_All, 0)) {
+	} else if (Terrain_isClear(xEnd - 1, yEnd - 1, 3, TERRAIN_ALL, 0)) {
 		info->placeReservoirAtEnd = PlaceReservoir_Yes;
 	} else {
 		info->placeReservoirAtEnd = PlaceReservoir_Blocked;
@@ -1160,11 +1166,11 @@ static int placeReservoirAndAqueducts(int measureOnly, int xStart, int yStart, i
 	}
 	if (info->placeReservoirAtStart != PlaceReservoir_No) {
 		map_routing_block(xStart - 1, yStart - 1, 3);
-		Terrain_updateToPlaceBuildingToOverlay(3, xStart - 1, yStart - 1, Terrain_All, 1);
+		Terrain_updateToPlaceBuildingToOverlay(3, xStart - 1, yStart - 1, TERRAIN_ALL, 1);
 	}
 	if (info->placeReservoirAtEnd != PlaceReservoir_No) {
 		map_routing_block(xEnd - 1, yEnd - 1, 3);
-		Terrain_updateToPlaceBuildingToOverlay(3, xEnd - 1, yEnd - 1, Terrain_All, 1);
+		Terrain_updateToPlaceBuildingToOverlay(3, xEnd - 1, yEnd - 1, TERRAIN_ALL, 1);
 	}
 	const int aqueductOffsetsX[] = {0, 2, 0, -2};
 	const int aqueductOffsetsY[] = {-2, 0, 2, 0};
@@ -1250,11 +1256,11 @@ void BuildingPlacement_update(int xStart, int yStart, int xEnd, int yEnd, int ty
 		placeHouses(1, xStart, yStart, xEnd, yEnd);
 		if (itemsPlaced >= 0) currentCost *= itemsPlaced;
 	} else if (type == BUILDING_GATEHOUSE) {
-		Terrain_updateToPlaceBuildingToOverlay(2, xEnd, yEnd, ~Terrain_Road, 0);
+		Terrain_updateToPlaceBuildingToOverlay(2, xEnd, yEnd, ~TERRAIN_ROAD, 0);
 	} else if (type == BUILDING_TRIUMPHAL_ARCH) {
-		Terrain_updateToPlaceBuildingToOverlay(3, xEnd, yEnd, ~Terrain_Road, 0);
+		Terrain_updateToPlaceBuildingToOverlay(3, xEnd, yEnd, ~TERRAIN_ROAD, 0);
 	} else if (type == BUILDING_WAREHOUSE) {
-		Terrain_updateToPlaceBuildingToOverlay(3, xEnd, yEnd, Terrain_All, 0);
+		Terrain_updateToPlaceBuildingToOverlay(3, xEnd, yEnd, TERRAIN_ALL, 0);
 	} else if (type == BUILDING_FORT_LEGIONARIES || type == BUILDING_FORT_JAVELIN || type == BUILDING_FORT_MOUNTED) {
 		if (formation_totals_get_num_legions() < 6) {
 			const int offsetsX[] = {3, 4, 4, 3};
@@ -1262,16 +1268,16 @@ void BuildingPlacement_update(int xStart, int yStart, int xEnd, int yEnd, int ty
 			int orientIndex = Data_State.map.orientation / 2;
 			int xOffset = offsetsX[orientIndex];
 			int yOffset = offsetsY[orientIndex];
-			if (Terrain_isClearToBuild(3, xEnd, yEnd, Terrain_All) &&
-				Terrain_isClearToBuild(4, xEnd + xOffset, yEnd + yOffset, Terrain_All)) {
-				Terrain_updateToPlaceBuildingToOverlay(3, xEnd, yEnd, Terrain_All, 0);
+			if (Terrain_isClearToBuild(3, xEnd, yEnd, TERRAIN_ALL) &&
+				Terrain_isClearToBuild(4, xEnd + xOffset, yEnd + yOffset, TERRAIN_ALL)) {
+				Terrain_updateToPlaceBuildingToOverlay(3, xEnd, yEnd, TERRAIN_ALL, 0);
 			}
 		}
 	} else if (type == BUILDING_HIPPODROME) {
-		if (Terrain_isClearToBuild(5, xEnd, yEnd, Terrain_All) &&
-			Terrain_isClearToBuild(5, xEnd + 5, yEnd, Terrain_All) &&
-			Terrain_isClearToBuild(5, xEnd + 10, yEnd, Terrain_All)) {
-			Terrain_updateToPlaceBuildingToOverlay(5, xEnd, yEnd, Terrain_All, 0);
+		if (Terrain_isClearToBuild(5, xEnd, yEnd, TERRAIN_ALL) &&
+			Terrain_isClearToBuild(5, xEnd + 5, yEnd, TERRAIN_ALL) &&
+			Terrain_isClearToBuild(5, xEnd + 10, yEnd, TERRAIN_ALL)) {
+			Terrain_updateToPlaceBuildingToOverlay(5, xEnd, yEnd, TERRAIN_ALL, 0);
 		}
 	} else if (type == BUILDING_SHIPYARD || type == BUILDING_WHARF) {
 		if (!Terrain_determineOrientationWatersideSize2(xEnd, yEnd, 1, 0, 0)) {
@@ -1296,7 +1302,7 @@ void BuildingPlacement_update(int xStart, int yStart, int xEnd, int yEnd, int ty
 			!(type == BUILDING_BARRACKS && building_count_total(BUILDING_BARRACKS) > 0) &&
 			!(type == BUILDING_DISTRIBUTION_CENTER_UNUSED && Data_CityInfo.buildingDistributionCenterPlaced)) {
 			int size = building_properties_for_type(type)->size;
-			Terrain_updateToPlaceBuildingToOverlay(size, xEnd, yEnd, Terrain_All, 0);
+			Terrain_updateToPlaceBuildingToOverlay(size, xEnd, yEnd, TERRAIN_ALL, 0);
 		}
 	}
 	Data_State.selectedBuilding.cost = currentCost;

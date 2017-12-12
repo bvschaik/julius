@@ -100,7 +100,7 @@ void Terrain_addBuildingToGrids(int buildingId, int x, int y, int size, int grap
 	for (int dy = 0; dy < size; dy++) {
 		for (int dx = 0; dx < size; dx++) {
 			int gridOffset = map_grid_offset(x + dx, y + dy);
-			Data_Grid_terrain[gridOffset] &= Terrain_2e80;
+			map_terrain_remove(gridOffset, TERRAIN_CLEARABLE);
 			map_terrain_add(gridOffset, terrain);
 			map_building_set(gridOffset, buildingId);
 			map_property_clear_constructing(gridOffset);
@@ -164,7 +164,7 @@ void Terrain_removeBuildingFromGrids(int buildingId, int x, int y)
 				map_image_set(gridOffset,
 					image_group(GROUP_TERRAIN_UGLY_GRASS) +
 					(map_random_get(gridOffset) & 7));
-				Data_Grid_terrain[gridOffset] &= Terrain_2e80;
+				map_terrain_remove(gridOffset, TERRAIN_CLEARABLE);
 			}
 		}
 	}
@@ -175,7 +175,7 @@ void Terrain_removeBuildingFromGrids(int buildingId, int x, int y)
 
 static void add_road(int grid_offset)
 {
-    if (!map_terrain_is(grid_offset, Terrain_NotClear)) {
+    if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
         map_terrain_add(grid_offset, TERRAIN_ROAD);
     }
 }
@@ -463,44 +463,49 @@ int Terrain_getOrientationTriumphalArch(int x, int y)
 
 	int gridOffset = map_grid_offset(x, y);
 	// check corner tiles
-	if (map_terrain_is(gridOffset, Terrain_NotClear)) {
+	if (map_terrain_is(gridOffset, TERRAIN_NOT_CLEAR)) {
 		numBlockedTiles++;
 	}
-	if (map_terrain_is(gridOffset + map_grid_delta(2, 0), Terrain_NotClear)) {
+	if (map_terrain_is(gridOffset + map_grid_delta(2, 0), TERRAIN_NOT_CLEAR)) {
 		numBlockedTiles++;
 	}
-	if (map_terrain_is(gridOffset + map_grid_delta(0, 2), Terrain_NotClear)) {
+	if (map_terrain_is(gridOffset + map_grid_delta(0, 2), TERRAIN_NOT_CLEAR)) {
 		numBlockedTiles++;
 	}
-	if (map_terrain_is(gridOffset + map_grid_delta(2, 2), Terrain_NotClear)) {
+	if (map_terrain_is(gridOffset + map_grid_delta(2, 2), TERRAIN_NOT_CLEAR)) {
 		numBlockedTiles++;
 	}
 	// road tiles top to bottom
-	if ((Data_Grid_terrain[gridOffset + map_grid_delta(1, 0)] & Terrain_NotClear) == Terrain_Road) {
+	int topOffset = gridOffset + map_grid_delta(1, 0);
+	if ((map_terrain_get(topOffset) & TERRAIN_NOT_CLEAR) == TERRAIN_ROAD) {
 		numRoadTilesTopBottom++;
-	} else if (Data_Grid_terrain[gridOffset + map_grid_delta(1, 0)] & Terrain_NotClear) {
+	} else if (map_terrain_is(topOffset, TERRAIN_NOT_CLEAR)) {
 		numBlockedTiles++;
 	}
-	if ((Data_Grid_terrain[gridOffset + map_grid_delta(1, 2)] & Terrain_NotClear) == Terrain_Road) {
+	int bottomOffset = gridOffset + map_grid_delta(1, 2);
+	if ((map_terrain_get(bottomOffset) & TERRAIN_NOT_CLEAR) == TERRAIN_ROAD) {
 		numRoadTilesTopBottom++;
-	} else if (Data_Grid_terrain[gridOffset + map_grid_delta(1, 2)] & Terrain_NotClear) {
+	} else if (map_terrain_is(bottomOffset, TERRAIN_NOT_CLEAR)) {
 		numBlockedTiles++;
 	}
 	// road tiles left to right
-	if ((Data_Grid_terrain[gridOffset + map_grid_delta(0, 1)] & Terrain_NotClear) == Terrain_Road) {
+	int leftOffset = gridOffset + map_grid_delta(0, 1);
+	if ((map_terrain_get(leftOffset) & TERRAIN_NOT_CLEAR) == TERRAIN_ROAD) {
 		numRoadTilesLeftRight++;
-	} else if (Data_Grid_terrain[gridOffset + map_grid_delta(0, 1)] & Terrain_NotClear) {
+	} else if (map_terrain_is(leftOffset, TERRAIN_NOT_CLEAR)) {
 		numBlockedTiles++;
 	}
-	if ((Data_Grid_terrain[gridOffset + map_grid_delta(2, 1)] & Terrain_NotClear) == Terrain_Road) {
+	int rightOffset = gridOffset + map_grid_delta(2, 1);
+	if ((map_terrain_get(rightOffset) & TERRAIN_NOT_CLEAR) == TERRAIN_ROAD) {
 		numRoadTilesLeftRight++;
-	} else if (Data_Grid_terrain[gridOffset + map_grid_delta(2, 1)] & Terrain_NotClear) {
+	} else if (map_terrain_is(rightOffset, TERRAIN_NOT_CLEAR)) {
 		numBlockedTiles++;
 	}
 	// center tile
-	if ((Data_Grid_terrain[gridOffset + map_grid_delta(2, 1)] & Terrain_NotClear) == Terrain_Road) {
+	int centerOffset = gridOffset + map_grid_delta(2, 1);
+	if ((map_terrain_get(centerOffset) & TERRAIN_NOT_CLEAR) == TERRAIN_ROAD) {
 		// do nothing
-	} else if (Data_Grid_terrain[gridOffset + map_grid_delta(2, 1)] & Terrain_NotClear) {
+	} else if (map_terrain_is(centerOffset, TERRAIN_NOT_CLEAR)) {
 		numBlockedTiles++;
 	}
 	// judgement time
@@ -754,7 +759,7 @@ int Terrain_isClear(int x, int y, int size, int disallowedTerrain, int graphicSe
 	for (int dy = 0; dy < size; dy++) {
 		for (int dx = 0; dx < size; dx++) {
 			int gridOffset = map_grid_offset(x + dx, y + dy);
-			if (Data_Grid_terrain[gridOffset] & Terrain_NotClear & disallowedTerrain) {
+			if (map_terrain_is(gridOffset, TERRAIN_NOT_CLEAR & disallowedTerrain)) {
 				return 0;
 			} else if (map_has_figure_at(gridOffset)) {
 				return 0;
@@ -816,7 +821,7 @@ int Terrain_getAdjacentRoadOrClearLand(int x, int y, int size, int *xTile, int *
 {
 	FOR_XY_ADJACENT {
 		if (map_terrain_is(gridOffset, TERRAIN_ROAD) ||
-			!(Data_Grid_terrain[gridOffset] & Terrain_NotClear)) {
+			!map_terrain_is(gridOffset, TERRAIN_NOT_CLEAR)) {
 			STORE_XY_ADJACENT(xTile, yTile);
 			return 1;
 		}
@@ -853,7 +858,7 @@ int Terrain_existsTileWithinAreaWithType(int x, int y, int size, unsigned short 
 int Terrain_existsTileWithinRadiusWithType(int x, int y, int size, int radius, unsigned short type)
 {
 	FOR_XY_RADIUS {
-		if (type & Data_Grid_terrain[gridOffset]) {
+		if (map_terrain_is(gridOffset, type)) {
 			return 1;
 		}
 	} END_FOR_XY_RADIUS;
@@ -863,7 +868,7 @@ int Terrain_existsTileWithinRadiusWithType(int x, int y, int size, int radius, u
 int Terrain_existsClearTileWithinRadius(int x, int y, int size, int radius, int exceptGridOffset, int *xTile, int *yTile)
 {
 	FOR_XY_RADIUS {
-		if (gridOffset != exceptGridOffset && !Data_Grid_terrain[gridOffset]) {
+		if (gridOffset != exceptGridOffset && !map_terrain_get(gridOffset)) {
 			STORE_XY_RADIUS(xTile, yTile);
 			return 1;
 		}
@@ -876,7 +881,7 @@ int Terrain_existsClearTileWithinRadius(int x, int y, int size, int radius, int 
 int Terrain_allTilesWithinRadiusHaveType(int x, int y, int size, int radius, unsigned short type)
 {
 	FOR_XY_RADIUS {
-		if (!(type & Data_Grid_terrain[gridOffset])) {
+		if (!map_terrain_is(gridOffset, type)) {
 			return 0;
 		}
 	} END_FOR_XY_RADIUS;
@@ -1126,7 +1131,7 @@ int Terrain_isClearToBuild(int size, int x, int y, int terrainMask)
 	for (int dy = 0; dy < size; dy++) {
 		for (int dx = 0; dx < size; dx++) {
 			int gridOffset = map_grid_offset(x + dx, y + dy);
-			if (terrainMask & Data_Grid_terrain[gridOffset] & Terrain_NotClear) {
+			if (map_terrain_is(gridOffset, terrainMask & TERRAIN_NOT_CLEAR)) {
 				return 0;
 			}
 		}
@@ -1149,7 +1154,7 @@ void Terrain_updateToPlaceBuildingToOverlay(int size, int x, int y, int terrainM
 	for (int dy = 0; dy < size; dy++) {
 		for (int dx = 0; dx < size; dx++) {
 			int gridOffset = map_grid_offset(x + dx, y + dy);
-			if ((terrainMask & Data_Grid_terrain[gridOffset] & Terrain_NotClear) ||
+			if (map_terrain_is(gridOffset, terrainMask & TERRAIN_NOT_CLEAR) ||
 				map_has_figure_at(gridOffset)) {
 				return;
 			}

@@ -684,7 +684,7 @@ static void update_herd_formation(const formation *m)
 {
     if (formation_can_spawn_wolf(m->id)) {
         // spawn new wolf
-        if (!map_terrain_is(map_grid_offset(m->x, m->y), Terrain_d73f)) {
+        if (!map_terrain_is(map_grid_offset(m->x, m->y), TERRAIN_IMPASSABLE_WOLF)) {
             figure *wolf = figure_create(m->figure_type, m->x, m->y, DIR_0_TOP);
             wolf->actionState = FigureActionState_196_HerdAnimalAtRest;
             wolf->formationId = m->id;

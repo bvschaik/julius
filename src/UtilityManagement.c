@@ -128,7 +128,7 @@ static void fillAqueductsFromOffset(int gridOffset)
 
 void UtilityManagement_updateReservoirFountain()
 {
-	map_grid_and_u16(Data_Grid_terrain, ~(TERRAIN_FOUNTAIN_RANGE | TERRAIN_RESERVOIR_RANGE));
+	map_terrain_remove_all(TERRAIN_FOUNTAIN_RANGE | TERRAIN_RESERVOIR_RANGE);
 	// reservoirs
 	setAllAqueductsToNoWater();
 	building_list_large_clear(1);

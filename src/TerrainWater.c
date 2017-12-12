@@ -43,7 +43,7 @@ void Terrain_addWatersideBuildingToGrids(int buildingId, int x, int y, int size,
 			int gridOffset = map_grid_offset(x + dx, y + dy);
 			map_terrain_add(gridOffset, TERRAIN_BUILDING);
 			if (!map_terrain_is(gridOffset, TERRAIN_WATER)) {
-				Data_Grid_terrain[gridOffset] &= Terrain_2e80;
+				map_terrain_remove(gridOffset, TERRAIN_CLEARABLE);
 				map_terrain_add(gridOffset, TERRAIN_BUILDING);
 			}
 			map_building_set(gridOffset, buildingId);
@@ -54,6 +54,14 @@ void Terrain_addWatersideBuildingToGrids(int buildingId, int x, int y, int size,
 			    dx == xLeftmost && dy == yLeftmost);
 		}
 	}
+}
+
+static int blocked_land_terrain()
+{
+    return
+        TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER |
+        TERRAIN_BUILDING | TERRAIN_SCRUB | TERRAIN_GARDEN |
+        TERRAIN_ROAD | TERRAIN_ELEVATION | TERRAIN_RUBBLE;
 }
 
 int Terrain_determineOrientationWatersideSize2(int x, int y, int adjustXY,
@@ -93,7 +101,7 @@ int Terrain_determineOrientationWatersideSize2(int x, int y, int adjustXY,
 					break;
 				}
 				okTiles++;
-				if (Data_Grid_terrain[gridOffset] & Terrain_127f) {
+				if (map_terrain_is(gridOffset, blocked_land_terrain())) {
 					blockedTiles++;
 				}
 			}
@@ -166,7 +174,7 @@ int Terrain_determineOrientationWatersideSize3(int x, int y, int adjustXY,
 					break;
 				}
 				okTiles++;
-				if (Data_Grid_terrain[gridOffset] & Terrain_127f) {
+				if (map_terrain_is(gridOffset, blocked_land_terrain())) {
 					blockedTiles++;
 				}
 			}

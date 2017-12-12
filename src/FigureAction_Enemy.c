@@ -706,7 +706,7 @@ int FigureAction_HerdEnemy_moveFormationTo(int formationId, int x, int y, int *x
                         canMove = 0;
                         break;
                     }
-					if (map_terrain_is(gridOffset, Terrain_1237)) {
+					if (map_terrain_is(gridOffset, TERRAIN_IMPASSABLE_ENEMY)) {
 						canMove = 0;
 						break;
 					}

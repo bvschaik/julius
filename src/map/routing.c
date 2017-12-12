@@ -337,7 +337,7 @@ static int callback_delete_wall_aqueduct(int next_offset, int dist)
 {
     if (terrain_land_citizen.items[next_offset] < CITIZEN_0_ROAD) {
         if (map_terrain_is(next_offset, TERRAIN_AQUEDUCT | TERRAIN_WALL)) {
-            Data_Grid_terrain[next_offset] &= Terrain_2e80;
+            map_terrain_remove(next_offset, TERRAIN_CLEARABLE);
             return 1;
         }
     } else {
