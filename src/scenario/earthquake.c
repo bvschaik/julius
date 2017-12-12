@@ -7,6 +7,7 @@
 #include "map/building.h"
 #include "map/grid.h"
 #include "map/routing_terrain.h"
+#include "map/terrain.h"
 #include "scenario/data.h"
 #include "sound/effect.h"
 
@@ -68,17 +69,16 @@ void scenario_earthquake_init()
     }
 }
 
-static int canAdvanceEarthquakeToTile(int x, int y)
+static int can_advance_earthquake_to_tile(int x, int y)
 {
-    int terrain = Data_Grid_terrain[map_grid_offset(x, y)];
-    if (terrain & (Terrain_Elevation | Terrain_Rock | Terrain_Water)) {
+    if (map_terrain_is(map_grid_offset(x, y), TERRAIN_ELEVATION | TERRAIN_ROCK | TERRAIN_WATER)) {
         return 0;
     } else {
         return 1;
     }
 }
 
-static void advanceEarthquakeToTile(int x, int y)
+static void advance_earthquake_to_tile(int x, int y)
 {
     int gridOffset = map_grid_offset(x, y);
     int buildingId = map_building_at(gridOffset);
@@ -112,7 +112,7 @@ void scenario_earthquake_process()
             data.state = EVENT_IN_PROGRESS;
             data.duration = 0;
             data.delay = 0;
-            advanceEarthquakeToTile(data.expand[0].x, data.expand[0].y);
+            advance_earthquake_to_tile(data.expand[0].x, data.expand[0].y);
             city_message_post(1, MESSAGE_EARTHQUAKE, 0,
                 map_grid_offset(data.expand[0].x, data.expand[0].y));
         }
@@ -146,10 +146,10 @@ void scenario_earthquake_process()
             }
             int x = calc_bound(data.expand[index].x + dx, 0, Data_State.map.width - 1);
             int y = calc_bound(data.expand[index].y + dy, 0, Data_State.map.height - 1);
-            if (canAdvanceEarthquakeToTile(x, y)) {
+            if (can_advance_earthquake_to_tile(x, y)) {
                 data.expand[index].x = x;
                 data.expand[index].y = y;
-                advanceEarthquakeToTile(x, y);
+                advance_earthquake_to_tile(x, y);
             }
         }
     }

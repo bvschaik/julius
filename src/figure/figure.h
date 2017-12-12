@@ -23,7 +23,7 @@ typedef struct {
     unsigned char useCrossCountry;
     unsigned char isFriendly;
     unsigned char state;
-    unsigned char ciid; // 0f
+    unsigned char faction_id; // 1 = city, 0 = enemy // 0f
     unsigned char actionStateBeforeAttack; // 10
     signed char direction;
     signed char previousTileDirection; // 12

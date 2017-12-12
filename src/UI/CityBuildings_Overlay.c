@@ -8,6 +8,7 @@
 #include "map/image.h"
 #include "map/property.h"
 #include "map/random.h"
+#include "map/terrain.h"
 
 static void drawFootprintForWaterOverlay(int gridOffset, int xOffset, int yOffset);
 static void drawTopForWaterOverlay(int gridOffset, int xOffset, int yOffset);
@@ -142,7 +143,7 @@ void UI_CityBuildings_drawOverlayTopsFiguresAnimation(int overlay)
 				} else if (overlay == Overlay_Native) {
 					drawTopForNativeOverlay(gridOffset, xGraphic, yGraphic);
 				} else if (!(Data_Grid_terrain[gridOffset] & 0x4140)) { // wall, aqueduct, road
-					if ((Data_Grid_terrain[gridOffset] & Terrain_Building) && map_building_at(gridOffset)) {
+					if (map_terrain_is(gridOffset, TERRAIN_BUILDING) && map_building_at(gridOffset)) {
 						int buildingId = map_building_at(gridOffset);
 						switch (overlay) {
 							case Overlay_Fire:
@@ -206,7 +207,7 @@ void UI_CityBuildings_drawOverlayTopsFiguresAnimation(int overlay)
 								drawBuildingTopForProblemsOverlay(gridOffset, buildingId, xGraphic, yGraphic);
 								break;
 						}
-					} else if (!(Data_Grid_terrain[gridOffset] & Terrain_Building)) {
+					} else if (!map_terrain_is(gridOffset, TERRAIN_BUILDING)) {
 						// terrain
 						draw_top_with_size(gridOffset, xGraphic, yGraphic);
 					}
@@ -291,7 +292,7 @@ void UI_CityBuildings_drawOverlayTopsFiguresAnimation(int overlay)
 						}
 					}
 				}
-			} else if (Data_Grid_spriteOffsets[gridOffset] && (Data_Grid_terrain[gridOffset] & Terrain_Water)) {
+			} else if (Data_Grid_spriteOffsets[gridOffset] && map_terrain_is(gridOffset, TERRAIN_WATER)) {
 				UI_CityBuildings_drawBridge(gridOffset, xGraphic, yGraphic);
 			}
 		} END_FOREACH_X_VIEW;

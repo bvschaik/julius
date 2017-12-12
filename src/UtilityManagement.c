@@ -15,6 +15,7 @@
 #include "map/image.h"
 #include "map/property.h"
 #include "map/routing_terrain.h"
+#include "map/terrain.h"
 #include "scenario/property.h"
 
 #include <string.h>
@@ -57,7 +58,7 @@ static void setAllAqueductsToNoWater()
 	int grid_offset = Data_State.map.gridStartOffset;
 	for (int y = 0; y < Data_State.map.height; y++, grid_offset += Data_State.map.gridBorderSize) {
 		for (int x = 0; x < Data_State.map.width; x++, grid_offset++) {
-			if (Data_Grid_terrain[grid_offset] & Terrain_Aqueduct) {
+			if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT)) {
 				Data_Grid_aqueducts[grid_offset] = 0;
 				int image_id = map_image_at(grid_offset);
 				if (image_id < image_without_water) {
@@ -70,7 +71,7 @@ static void setAllAqueductsToNoWater()
 
 static void fillAqueductsFromOffset(int gridOffset)
 {
-	if (!(Data_Grid_terrain[gridOffset] & Terrain_Aqueduct)) {
+	if (!map_terrain_is(gridOffset, TERRAIN_AQUEDUCT)) {
 		return;
 	}
 	memset(queue, 0, sizeof(queue));
@@ -99,7 +100,7 @@ static void fillAqueductsFromOffset(int gridOffset)
 						Data_Buildings[buildingId].hasWaterAccess = 2;
 					}
 				}
-			} else if (Data_Grid_terrain[newOffset] & Terrain_Aqueduct) {
+			} else if (map_terrain_is(newOffset, TERRAIN_AQUEDUCT)) {
 				if (!Data_Grid_aqueducts[newOffset]) {
 					if (nextOffset == -1) {
 						nextOffset = newOffset;
@@ -188,7 +189,7 @@ void UtilityManagement_updateReservoirFountain()
 			graphicId = image_group(GROUP_BUILDING_FOUNTAIN_1);
 		}
 		Terrain_addBuildingToGrids(i, b->x, b->y, 1, graphicId, Terrain_Building);
-		if ((Data_Grid_terrain[b->gridOffset] & Terrain_ReservoirRange) && b->numWorkers) {
+		if (map_terrain_is(b->gridOffset, TERRAIN_RESERVOIR_RANGE) && b->numWorkers) {
 			b->hasWaterAccess = 1;
 			Terrain_setWithRadius(b->x, b->y, 1,
 				scenario_property_climate() == CLIMATE_DESERT ? 3 : 4,

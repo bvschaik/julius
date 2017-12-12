@@ -2,6 +2,7 @@
 
 #include "map/grid.h"
 #include "map/routing_terrain.h"
+#include "map/terrain.h"
 
 #include "Data/CityInfo.h"
 #include "Data/State.h"
@@ -45,7 +46,7 @@ static int mark_road_network(int grid_offset, uint8_t network_id)
         for (int i = 0; i < 4; i++) {
             int new_offset = grid_offset + ADJACENT_OFFSETS[i];
             if (map_routing_citizen_is_passable(new_offset) && !network.items[new_offset]) {
-                if (map_routing_citizen_is_road(new_offset) || Data_Grid_terrain[new_offset] & Terrain_AccessRamp) {
+                if (map_routing_citizen_is_road(new_offset) || map_terrain_is(new_offset, TERRAIN_ACCESS_RAMP)) {
                     network.items[new_offset] = network_id;
                     size++;
                     if (next_offset == -1) {
@@ -105,7 +106,7 @@ void map_road_network_update()
     int grid_offset = Data_State.map.gridStartOffset;
     for (int y = 0; y < Data_State.map.height; y++, grid_offset += Data_State.map.gridBorderSize) {
         for (int x = 0; x < Data_State.map.width; x++, grid_offset++) {
-            if (Data_Grid_terrain[grid_offset] & Terrain_Road && !network.items[grid_offset]) {
+            if (map_terrain_is(grid_offset, TERRAIN_ROAD) && !network.items[grid_offset]) {
                 int size = mark_road_network(grid_offset, network_id);
                 record_in_largest_networks(network_id, size);
                 network_id++;

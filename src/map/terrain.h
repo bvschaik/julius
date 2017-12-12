@@ -24,6 +24,10 @@ enum {
 
 int map_terrain_is(int grid_offset, int terrain);
 
+void map_terrain_add(int grid_offset, int terrain);
+
+void map_terrain_remove(int grid_offset, int terrain);
+
 void map_terrain_backup();
 
 void map_terrain_restore();

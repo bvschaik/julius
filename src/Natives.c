@@ -16,6 +16,7 @@
 #include "map/image.h"
 #include "map/property.h"
 #include "map/random.h"
+#include "map/terrain.h"
 #include "scenario/building.h"
 
 static void determineMeetingCenter();
@@ -29,7 +30,7 @@ void Natives_init()
 	int gridOffset = Data_State.map.gridStartOffset;
 	for (int y = 0; y < Data_State.map.height; y++, gridOffset += Data_State.map.gridBorderSize) {
 		for (int x = 0; x < Data_State.map.width; x++, gridOffset++) {
-			if (!(Data_Grid_terrain[gridOffset] & Terrain_Building) || map_building_at(gridOffset)) {
+			if (!map_terrain_is(gridOffset, TERRAIN_BUILDING) || map_building_at(gridOffset)) {
 				continue;
 			}
 			

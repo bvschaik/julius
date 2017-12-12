@@ -281,6 +281,7 @@ static int start_invasion(int enemy_type, int amount, int invasion_point, int at
             }
             for (int fig = 0; fig < soldiers_per_formation[type][i]; fig++) {
                 figure *f = figure_create(figure_type, x, y, orientation);
+                f->faction_id = 0;
                 f->isFriendly = 0;
                 f->actionState = FigureActionState_151_EnemyInitial;
                 f->waitTicks = 200 * seq + 10 * fig + 10;

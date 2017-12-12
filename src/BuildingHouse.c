@@ -12,6 +12,7 @@
 #include "map/grid.h"
 #include "map/image.h"
 #include "map/random.h"
+#include "map/terrain.h"
 
 static void merge(int buildingId);
 static void prepareForMerge(int buildingId, int numTiles);
@@ -75,7 +76,7 @@ int BuildingHouse_canExpand(int buildingId, int numTiles)
 		int okTiles = 0;
 		for (int i = 0; i < numTiles; i++) {
 			int tileOffset = baseOffset + tileGridOffsets[i];
-			if (Data_Grid_terrain[tileOffset] & Terrain_Building) {
+			if (map_terrain_is(tileOffset, TERRAIN_BUILDING)) {
 				int tileBuildingId = map_building_at(tileOffset);
 				if (tileBuildingId == buildingId) {
 					okTiles++;
@@ -100,7 +101,7 @@ int BuildingHouse_canExpand(int buildingId, int numTiles)
 			int tileOffset = baseOffset + tileGridOffsets[i];
 			if ((Data_Grid_terrain[tileOffset] & Terrain_NotClear) == 0) {
 				okTiles++;
-			} else if (Data_Grid_terrain[tileOffset] & Terrain_Building) {
+			} else if (map_terrain_is(tileOffset, TERRAIN_BUILDING)) {
 				int tileBuildingId = map_building_at(tileOffset);
 				if (tileBuildingId == buildingId) {
 					okTiles++;
@@ -125,7 +126,7 @@ int BuildingHouse_canExpand(int buildingId, int numTiles)
 			int tileOffset = baseOffset + tileGridOffsets[i];
 			if ((Data_Grid_terrain[tileOffset] & Terrain_NotClear) == 0) {
 				okTiles++;
-			} else if (Data_Grid_terrain[tileOffset] & Terrain_Building) {
+			} else if (map_terrain_is(tileOffset, TERRAIN_BUILDING)) {
 				int tileBuildingId = map_building_at(tileOffset);
 				if (tileBuildingId == buildingId) {
 					okTiles++;
@@ -134,7 +135,7 @@ int BuildingHouse_canExpand(int buildingId, int numTiles)
 						okTiles++;
 					}
 				}
-			} else if (Data_Grid_terrain[tileOffset] & Terrain_Garden) {
+			} else if (map_terrain_is(tileOffset, TERRAIN_GARDEN)) {
 				okTiles++;
 			}
 		}
@@ -184,7 +185,7 @@ void BuildingHouse_checkMerge(int buildingId)
 	int numHouseTiles = 0;
 	for (int i = 0; i < 4; i++) {
 		int tileOffset = b->gridOffset + tileGridOffsets[i];
-		if (Data_Grid_terrain[tileOffset] & Terrain_Building) {
+		if (map_terrain_is(tileOffset, TERRAIN_BUILDING)) {
 			int tileBuildingId = map_building_at(tileOffset);
 			if (tileBuildingId == buildingId) {
 				numHouseTiles++;
@@ -208,7 +209,7 @@ static void split(int buildingId, int numTiles)
 	int gridOffset = map_grid_offset(mergeData.x, mergeData.y);
 	for (int i = 0; i < numTiles; i++) {
 		int tileOffset = gridOffset + tileGridOffsets[i];
-		if (Data_Grid_terrain[tileOffset] & Terrain_Building) {
+		if (map_terrain_is(tileOffset, TERRAIN_BUILDING)) {
 			int tileBuildingId = map_building_at(tileOffset);
 			if (tileBuildingId != buildingId && Data_Buildings[tileBuildingId].houseSize) {
 				if (Data_Buildings[tileBuildingId].houseIsMerged == 1) {
@@ -232,7 +233,7 @@ static void prepareForMerge(int buildingId, int numTiles)
 	int gridOffset = map_grid_offset(mergeData.x, mergeData.y);
 	for (int i = 0; i < numTiles; i++) {
 		int tileOffset = gridOffset + tileGridOffsets[i];
-		if (Data_Grid_terrain[tileOffset] & Terrain_Building) {
+		if (map_terrain_is(tileOffset, TERRAIN_BUILDING)) {
 			int tileBuildingId = map_building_at(tileOffset);
 			if (tileBuildingId != buildingId && Data_Buildings[tileBuildingId].houseSize) {
 				mergeData.population += Data_Buildings[tileBuildingId].housePopulation;

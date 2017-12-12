@@ -7,6 +7,7 @@
 #include "map/figure.h"
 #include "map/image.h"
 #include "map/property.h"
+#include "map/terrain.h"
 #include "scenario/map.h"
 
 #include "Data/Building.h"
@@ -41,7 +42,7 @@ void Terrain_addWatersideBuildingToGrids(int buildingId, int x, int y, int size,
 		for (int dx = 0; dx < size; dx++) {
 			int gridOffset = map_grid_offset(x + dx, y + dy);
 			Data_Grid_terrain[gridOffset] |= Terrain_Building;
-			if (!(Data_Grid_terrain[gridOffset] & Terrain_Water)) {
+			if (!map_terrain_is(gridOffset, TERRAIN_WATER)) {
 				Data_Grid_terrain[gridOffset] &= Terrain_2e80;
 				Data_Grid_terrain[gridOffset] |= Terrain_Building;
 			}
@@ -79,7 +80,7 @@ int Terrain_determineOrientationWatersideSize2(int x, int y, int adjustXY,
 		for (int i = 0; i < 4; i++) {
 			int gridOffset = baseOffset + tileOffsets[i];
 			if (shouldBeWater[dir][i]) {
-				if (!(Data_Grid_terrain[gridOffset] & Terrain_Water)) {
+				if (!map_terrain_is(gridOffset, TERRAIN_WATER)) {
 					break;
 				}
 				okTiles++;
@@ -88,7 +89,7 @@ int Terrain_determineOrientationWatersideSize2(int x, int y, int adjustXY,
 					blockedTiles++;
 				}
 			} else {
-				if (Data_Grid_terrain[gridOffset] & Terrain_Water) {
+				if (map_terrain_is(gridOffset, TERRAIN_WATER)) {
 					break;
 				}
 				okTiles++;
@@ -105,7 +106,7 @@ int Terrain_determineOrientationWatersideSize2(int x, int y, int adjustXY,
 			{324, 323, 161, -1, -163, -162},
 		};
 		for (int i = 0; i < 6; i++) {
-			if (!(Data_Grid_terrain[baseOffset + tilesToCheck[dir][i]] & Terrain_Water)) {
+			if (!map_terrain_is(baseOffset + tilesToCheck[dir][i], TERRAIN_WATER)) {
 				okTiles = 0;
 			}
 		}
@@ -152,7 +153,7 @@ int Terrain_determineOrientationWatersideSize3(int x, int y, int adjustXY,
 		for (int i = 0; i < 9; i++) {
 			int gridOffset = baseOffset + tileOffsets[i];
 			if (shouldBeWater[dir][i]) {
-				if (!(Data_Grid_terrain[gridOffset] & Terrain_Water)) {
+				if (!map_terrain_is(gridOffset, TERRAIN_WATER)) {
 					break;
 				}
 				okTiles++;
@@ -161,7 +162,7 @@ int Terrain_determineOrientationWatersideSize3(int x, int y, int adjustXY,
 					blockedTiles++;
 				}
 			} else {
-				if (Data_Grid_terrain[gridOffset] & Terrain_Water) {
+				if (map_terrain_is(gridOffset, TERRAIN_WATER)) {
 					break;
 				}
 				okTiles++;
@@ -173,7 +174,7 @@ int Terrain_determineOrientationWatersideSize3(int x, int y, int adjustXY,
 		// check two water tiles at the side
 		int tilesToCheck[4][2] = {{-1, 3}, {-160, 488}, {327, 323}, {-162, 486}};
 		for (int i = 0; i < 2; i++) {
-			if (!(Data_Grid_terrain[baseOffset + tilesToCheck[dir][i]] & Terrain_Water)) {
+			if (!map_terrain_is(baseOffset + tilesToCheck[dir][i], TERRAIN_WATER)) {
 				okTiles = 0;
 			}
 		}
@@ -236,7 +237,7 @@ int Terrain_Water_findAlternativeTileForFishingBoat(int figureId, int *xTile, in
 		int yMax = f->y + radius;
 		map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
 		FOREACH_REGION({
-			if (!map_has_figure_at(gridOffset) && Data_Grid_terrain[gridOffset] & Terrain_Water) {
+			if (!map_has_figure_at(gridOffset) && map_terrain_is(gridOffset, TERRAIN_WATER)) {
 				*xTile = xx;
 				*yTile = yy;
 				return 1;
@@ -249,7 +250,7 @@ int Terrain_Water_findAlternativeTileForFishingBoat(int figureId, int *xTile, in
 int Terrain_Water_findOpenWaterForShipwreck(int figureId, int *xTile, int *yTile)
 {
     figure *f = figure_get(figureId);
-	if (Data_Grid_terrain[f->gridOffset] & Terrain_Water && map_figure_at(f->gridOffset) == figureId) {
+	if (map_terrain_is(f->gridOffset, TERRAIN_WATER) && map_figure_at(f->gridOffset) == figureId) {
 		return 0;
 	}
 	for (int radius = 1; radius <= 5; radius++) {
@@ -260,11 +261,11 @@ int Terrain_Water_findOpenWaterForShipwreck(int figureId, int *xTile, int *yTile
 		map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
 		FOREACH_REGION({
 			if (!map_has_figure_at(gridOffset) || map_figure_at(gridOffset) == figureId) {
-				if (Data_Grid_terrain[gridOffset] & Terrain_Water &&
-					Data_Grid_terrain[map_grid_offset(xx, yy - 2)] & Terrain_Water &&
-					Data_Grid_terrain[map_grid_offset(xx, yy + 2)] & Terrain_Water &&
-					Data_Grid_terrain[map_grid_offset(xx - 2, yy)] & Terrain_Water &&
-					Data_Grid_terrain[map_grid_offset(xx + 2, yy)] & Terrain_Water) {
+				if (map_terrain_is(gridOffset, TERRAIN_WATER) &&
+					map_terrain_is(map_grid_offset(xx, yy - 2), TERRAIN_WATER) &&
+					map_terrain_is(map_grid_offset(xx, yy + 2), TERRAIN_WATER) &&
+					map_terrain_is(map_grid_offset(xx - 2, yy), TERRAIN_WATER) &&
+					map_terrain_is(map_grid_offset(xx + 2, yy), TERRAIN_WATER)) {
 					*xTile = xx;
 					*yTile = yy;
 					return 1;

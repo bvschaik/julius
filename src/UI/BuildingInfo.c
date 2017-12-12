@@ -30,6 +30,7 @@
 #include "map/building.h"
 #include "map/figure.h"
 #include "map/property.h"
+#include "map/terrain.h"
 
 static void buttonHelp(int param1, int param2);
 static void buttonExit(int param1, int param2);
@@ -138,34 +139,33 @@ static int getHeightId()
 void UI_BuildingInfo_init()
 {
 	int gridOffset = Data_State.map.current.gridOffset;
-	int terrain = Data_Grid_terrain[gridOffset];
 	context.canPlaySound = 1;
 	context.storageShowSpecialOrders = 0;
 	context.advisor = 0;
 	context.buildingId = map_building_at(gridOffset);
 	context.rubbleBuildingType = map_rubble_building_type(gridOffset);
-	context.hasReservoirPipes = terrain & Terrain_ReservoirRange;
+	context.hasReservoirPipes = map_terrain_is(gridOffset, TERRAIN_RESERVOIR_RANGE);
 	context.aqueductHasWater = Data_Grid_aqueducts[gridOffset];
 
 	CityInfo_Resource_calculateAvailableResources();
 	context.type = BuildingInfoType_Terrain;
 	context.figure.drawn = 0;
 	if (!context.buildingId && Data_Grid_spriteOffsets[gridOffset] > 0) {
-		if (Data_Grid_terrain[gridOffset] & Terrain_Water) {
+		if (map_terrain_is(gridOffset, TERRAIN_WATER)) {
 			context.terrainType = 11;
 		} else {
 			context.terrainType = 10;
 		}
 	} else if (map_property_is_plaza_or_earthquake(gridOffset)) {
-		if (Data_Grid_terrain[gridOffset] & Terrain_Road) {
+		if (map_terrain_is(gridOffset, TERRAIN_ROAD)) {
 			context.terrainType = 13;
 		}
-		if (Data_Grid_terrain[gridOffset] & Terrain_Rock) {
+		if (map_terrain_is(gridOffset, TERRAIN_ROCK)) {
 			context.terrainType = 5;
 		}
-	} else if (Data_Grid_terrain[gridOffset] & Terrain_Tree) {
+	} else if (map_terrain_is(gridOffset, TERRAIN_TREE)) {
 		context.terrainType = 1;
-	} else if (Data_Grid_terrain[gridOffset] & Terrain_Rock) {
+	} else if (map_terrain_is(gridOffset, TERRAIN_ROCK)) {
 		if (gridOffset == Data_CityInfo_Extra.entryPointFlag.gridOffset) {
 			context.terrainType = 14;
 		} else if (gridOffset == Data_CityInfo_Extra.exitPointFlag.gridOffset) {
@@ -175,17 +175,17 @@ void UI_BuildingInfo_init()
 		}
 	} else if ((Data_Grid_terrain[gridOffset] & (Terrain_Water|Terrain_Building)) == Terrain_Water) {
 		context.terrainType = 3;
-	} else if (Data_Grid_terrain[gridOffset] & Terrain_Scrub) {
+	} else if (map_terrain_is(gridOffset, TERRAIN_SCRUB)) {
 		context.terrainType = 4;
-	} else if (Data_Grid_terrain[gridOffset] & Terrain_Garden) {
+	} else if (map_terrain_is(gridOffset, TERRAIN_GARDEN)) {
 		context.terrainType = 12;
 	} else if ((Data_Grid_terrain[gridOffset] & (Terrain_Road|Terrain_Building)) == Terrain_Road) {
 		context.terrainType = 6;
-	} else if (Data_Grid_terrain[gridOffset] & Terrain_Aqueduct) {
+	} else if (map_terrain_is(gridOffset, TERRAIN_AQUEDUCT)) {
 		context.terrainType = 7;
-	} else if (Data_Grid_terrain[gridOffset] & Terrain_Rubble) {
+	} else if (map_terrain_is(gridOffset, TERRAIN_RUBBLE)) {
 		context.terrainType = 8;
-	} else if (Data_Grid_terrain[gridOffset] & Terrain_Wall) {
+	} else if (map_terrain_is(gridOffset, TERRAIN_WALL)) {
 		context.terrainType = 9;
 	} else if (!context.buildingId) {
 		context.terrainType = 10;

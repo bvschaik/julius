@@ -32,7 +32,7 @@ figure *figure_create(figure_type type, int x, int y, direction dir)
     }
     figure *f = &data.figures[id];
     f->state = FigureState_Alive;
-    f->ciid = 1;
+    f->faction_id = 1;
     f->type = type;
     f->useCrossCountry = 0;
     f->isFriendly = 1;
@@ -80,7 +80,7 @@ static void figure_save(buffer *buf, const figure *f)
     buffer_write_u8(buf, f->useCrossCountry);
     buffer_write_u8(buf, f->isFriendly);
     buffer_write_u8(buf, f->state);
-    buffer_write_u8(buf, f->ciid);
+    buffer_write_u8(buf, f->faction_id);
     buffer_write_u8(buf, f->actionStateBeforeAttack);
     buffer_write_i8(buf, f->direction);
     buffer_write_i8(buf, f->previousTileDirection);
@@ -180,7 +180,7 @@ static void figure_load(buffer *buf, figure *f)
     f->useCrossCountry = buffer_read_u8(buf);
     f->isFriendly = buffer_read_u8(buf);
     f->state = buffer_read_u8(buf);
-    f->ciid = buffer_read_u8(buf);
+    f->faction_id = buffer_read_u8(buf);
     f->actionStateBeforeAttack = buffer_read_u8(buf);
     f->direction = buffer_read_i8(buf);
     f->previousTileDirection = buffer_read_i8(buf);

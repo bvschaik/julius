@@ -7,6 +7,7 @@
 #include "core/calc.h"
 #include "empire/city.h"
 #include "map/grid.h"
+#include "map/terrain.h"
 #include "scenario/property.h"
 
 #include "Data/CityInfo.h"
@@ -64,14 +65,12 @@ static void checkWater(int buildingType, int x, int y)
         if (buildingType == BUILDING_FOUNTAIN || buildingType == BUILDING_BATHHOUSE) {
             int gridOffset = map_grid_offset(x, y);
             int hasWater = 0;
-            if (Data_Grid_terrain[gridOffset] & Terrain_ReservoirRange) {
+            if (map_terrain_is(gridOffset, TERRAIN_RESERVOIR_RANGE)) {
                 hasWater = 1;
             } else if (buildingType == BUILDING_BATHHOUSE) {
-                if (Data_Grid_terrain[gridOffset + 1] & Terrain_ReservoirRange) {
-                    hasWater = 1;
-                } else if (Data_Grid_terrain[gridOffset + GRID_SIZE] & Terrain_ReservoirRange) {
-                    hasWater = 1;
-                } else if (Data_Grid_terrain[gridOffset + GRID_SIZE + 1] & Terrain_ReservoirRange) {
+                if (map_terrain_is(gridOffset + map_grid_delta(1, 0), TERRAIN_RESERVOIR_RANGE) ||
+                    map_terrain_is(gridOffset + map_grid_delta(0, 1), TERRAIN_RESERVOIR_RANGE) ||
+                    map_terrain_is(gridOffset + map_grid_delta(1, 1), TERRAIN_RESERVOIR_RANGE)) {
                     hasWater = 1;
                 }
             }

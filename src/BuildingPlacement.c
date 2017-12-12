@@ -751,7 +751,7 @@ static void clearRegionConfirmed(int measureOnly, int xStart, int yStart, int xE
 	for (int y = yMin; y <= yMax; y++) {
 		for (int x = xMin; x <= xMax; x++) {
 			int gridOffset = map_grid_offset(x,y);
-			if (Data_Grid_terrain[gridOffset] & (Terrain_Rock | Terrain_Elevation)) {
+			if (map_terrain_is(gridOffset, TERRAIN_ROCK | TERRAIN_ELEVATION)) {
 				continue;
 			}
 			int terrain = Data_Grid_terrain[gridOffset] & Terrain_NotClear;
@@ -897,7 +897,7 @@ static void clearRegion(int measureOnly, int xStart, int yStart, int xEnd, int y
 					askConfirmFort = 1;
 				}
 			}
-			if (Data_Grid_spriteOffsets[gridOffset] && Data_Grid_terrain[gridOffset] & Terrain_Water) {
+			if (Data_Grid_spriteOffsets[gridOffset] && map_terrain_is(gridOffset, TERRAIN_WATER)) {
 				askConfirmBridge = 1;
 			}
 		}
@@ -1042,9 +1042,8 @@ static void placePlaza(int measureOnly, int xStart, int yStart, int xEnd, int yE
 	for (int y = yMin; y <= yMax; y++) {
 		for (int x = xMin; x <= xMax; x++) {
 			int gridOffset = map_grid_offset(x, y);
-			int terrain = Data_Grid_terrain[gridOffset];
-			if (terrain & Terrain_Road &&
-				!(terrain & (Terrain_Water | Terrain_Building | Terrain_Aqueduct))) {
+			if (map_terrain_is(gridOffset, TERRAIN_ROAD) &&
+				!map_terrain_is(gridOffset, TERRAIN_WATER | TERRAIN_BUILDING | TERRAIN_AQUEDUCT)) {
 				if (!map_property_is_plaza_or_earthquake(gridOffset)) {
 					itemsPlaced++;
 				}
@@ -1075,7 +1074,7 @@ static void placeGarden(int xStart, int yStart, int xEnd, int yEnd)
 			int gridOffset = map_grid_offset(x,y);
 			if (!(Data_Grid_terrain[gridOffset] & Terrain_NotClear)) {
 				itemsPlaced++;
-				Data_Grid_terrain[gridOffset] |= Terrain_Garden;
+				map_terrain_add(gridOffset, TERRAIN_GARDEN);
 			}
 		}
 	}
@@ -1091,7 +1090,7 @@ static int placeAqueduct(int measureOnly, int xStart, int yStart, int xEnd, int 
 	*cost = 0;
 	int blocked = 0;
 	int gridOffset = map_grid_offset(xStart, yStart);
-	if (Data_Grid_terrain[gridOffset] & Terrain_Road) {
+	if (map_terrain_is(gridOffset, TERRAIN_ROAD)) {
 		if (map_property_is_plaza_or_earthquake(gridOffset)) {
 			blocked = 1;
 		}
@@ -1099,7 +1098,7 @@ static int placeAqueduct(int measureOnly, int xStart, int yStart, int xEnd, int 
 		blocked = 1;
 	}
 	gridOffset = map_grid_offset(xEnd, yEnd);
-	if (Data_Grid_terrain[gridOffset] & Terrain_Road) {
+	if (map_terrain_is(gridOffset, TERRAIN_ROAD)) {
 		if (map_property_is_plaza_or_earthquake(gridOffset)) {
 			blocked = 1;
 		}

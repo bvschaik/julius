@@ -5,6 +5,7 @@
 #include "map/grid.h"
 #include "map/road_aqueduct.h"
 #include "map/routing_data.h"
+#include "map/terrain.h"
 
 #include "Data/Building.h"
 
@@ -239,7 +240,7 @@ static void callback_calc_distance_build_road(int next_offset, int dist)
             blocked = 1;
             break;
         default:
-            if (Data_Grid_terrain[next_offset] & Terrain_Building) {
+            if (map_terrain_is(next_offset, TERRAIN_BUILDING)) {
                 blocked = 1;
             }
             break;
@@ -259,14 +260,14 @@ static void callback_calc_distance_build_aqueduct(int next_offset, int dist)
             blocked = 1;
             break;
         default:
-            if (Data_Grid_terrain[next_offset] & Terrain_Building) {
+            if (map_terrain_is(next_offset, TERRAIN_BUILDING)) {
                 if (terrain_land_citizen.items[next_offset] != CITIZEN_N4_RESERVOIR_CONNECTOR) {
                     blocked = 1;
                 }
             }
             break;
     }
-    if (Data_Grid_terrain[next_offset] & Terrain_Road && !map_can_place_aqueduct_on_road(next_offset)) {
+    if (map_terrain_is(next_offset, TERRAIN_ROAD) && !map_can_place_aqueduct_on_road(next_offset)) {
         routing_distance.items[next_offset] = -1;
         blocked = 1;
     }
@@ -284,10 +285,10 @@ static int map_can_place_initial_road_or_aqueduct(int gridOffset, int isAqueduct
         if (!isAqueduct) {
             return 0;
         }
-        if (Data_Grid_terrain[gridOffset] & Terrain_Aqueduct) {
+        if (map_terrain_is(gridOffset, TERRAIN_AQUEDUCT)) {
             return 1;
         }
-        if (Data_Grid_terrain[gridOffset] & Terrain_Building) {
+        if (map_terrain_is(gridOffset, TERRAIN_BUILDING)) {
             if (Data_Buildings[map_building_at(gridOffset)].type == BUILDING_RESERVOIR) {
                 return 1;
             }
@@ -319,7 +320,7 @@ int map_routing_calculate_distances_for_building(routed_building_type type, int 
     if (!map_can_place_initial_road_or_aqueduct(source_offset, type != ROUTED_BUILDING_ROAD)) {
         return 0;
     }
-    if (Data_Grid_terrain[source_offset] & Terrain_Road &&
+    if (map_terrain_is(source_offset, TERRAIN_ROAD) &&
         type != ROUTED_BUILDING_ROAD && !map_can_place_aqueduct_on_road(source_offset)) {
         return 0;
     }

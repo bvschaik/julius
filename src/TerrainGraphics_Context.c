@@ -6,6 +6,7 @@
 
 #include "map/building.h"
 #include "map/property.h"
+#include "map/terrain.h"
 
 #define MAX_TILES 8
 
@@ -391,7 +392,7 @@ static void setTilesRoad(int gridOffset, int tiles[MAX_TILES])
 	getTerrainMatch(gridOffset, Terrain_Road, 1, 0, tiles);
 	for (int i = 0; i < MAX_TILES; i += 2) {
 		int offset = gridOffset + contextTileOffsets[i];
-		if (Data_Grid_terrain[offset] & Terrain_Gatehouse) {
+		if (map_terrain_is(offset, TERRAIN_GATEHOUSE)) {
 			int buildingId = map_building_at(offset);
 			if (Data_Buildings[buildingId].type == BUILDING_GATEHOUSE &&
 				Data_Buildings[buildingId].subtype.orientation == 1 + ((i / 2) & 1)) { // 1,2,1,2
@@ -418,7 +419,7 @@ const TerrainGraphic *TerrainGraphicsContext_getPavedRoad(int gridOffset)
 static void setTerrainReservoir(int gridOffset, int index, int edgeMask, int tiles[MAX_TILES])
 {
 	int offset = gridOffset + contextTileOffsets[index];
-	if (Data_Grid_terrain[offset] & Terrain_Building) {
+	if (map_terrain_is(offset, TERRAIN_BUILDING)) {
 		int buildingId = map_building_at(offset);
 		if (Data_Buildings[buildingId].type == BUILDING_RESERVOIR &&
 			map_property_multi_tile_xy(offset) == edgeMask) {
@@ -430,12 +431,12 @@ static void setTerrainReservoir(int gridOffset, int index, int edgeMask, int til
 const TerrainGraphic *TerrainGraphicsContext_getAqueduct(int gridOffset, int includeOverlay)
 {
 	int tiles[MAX_TILES] = {0,0,0,0,0,0,0,0};
-	int hasRoad = (Data_Grid_terrain[gridOffset] & Terrain_Road) ? 1 : 0;
+	int hasRoad = map_terrain_is(gridOffset, TERRAIN_ROAD) ? 1 : 0;
 	for (int i = 0; i < MAX_TILES; i += 2) {
 		int offset = gridOffset + contextTileOffsets[i];
-		if (Data_Grid_terrain[offset] & Terrain_Aqueduct) {
+		if (map_terrain_is(offset, TERRAIN_AQUEDUCT)) {
 			if (hasRoad) {
-				if (!(Data_Grid_terrain[offset] & Terrain_Road)) {
+				if (!map_terrain_is(offset, TERRAIN_ROAD)) {
 					tiles[i] = 1;
 				}
 			} else {
@@ -461,7 +462,7 @@ int TerrainGraphicsContext_getNumWaterTiles(int gridOffset)
 {
 	int amount = 0;
 	for (int i = 0; i < MAX_TILES; i++) {
-		if (Data_Grid_terrain[gridOffset + contextTileOffsets[i]] & Terrain_Water) {
+		if (map_terrain_is(gridOffset + contextTileOffsets[i], TERRAIN_WATER)) {
 			amount++;
 		}
 	}

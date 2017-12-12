@@ -14,6 +14,7 @@
 #include "map/figure.h"
 #include "map/grid.h"
 #include "map/road_aqueduct.h"
+#include "map/terrain.h"
 
 static void drawBuildingGhostDraggableReservoir();
 static void drawBuildingGhostAqueduct();
@@ -244,7 +245,7 @@ static void drawBuildingGhostDefault()
 			placementObstructed = 1;
 		}
 	}
-	if (type == BUILDING_PLAZA && !(Data_Grid_terrain[gridOffset] & Terrain_Road)) {
+	if (type == BUILDING_PLAZA && !map_terrain_is(gridOffset, TERRAIN_ROAD)) {
 		placementObstructed = 1;
 	}
 	if (city_finance_out_of_money()) {
@@ -406,7 +407,7 @@ static void drawBuildingGhostAqueduct()
 		}
 	} else {
 		int gridOffset = map_grid_offset(Data_State.map.current.x, Data_State.map.current.y);
-		if (Data_Grid_terrain[gridOffset] & Terrain_Road) {
+		if (map_terrain_is(gridOffset, TERRAIN_ROAD)) {
 			placementObstructed = Terrain_getAdjacentRoadTilesForAqueduct(gridOffset) == 2 ? 0 : 1;
 		} else if (Data_Grid_terrain[gridOffset] & Terrain_NotClear) {
 			placementObstructed = 1;
@@ -423,10 +424,10 @@ static void drawBuildingGhostAqueduct()
 		int gridOffset = Data_State.map.current.gridOffset;
 		int graphicId = image_group(GROUP_BUILDING_AQUEDUCT);
 		const struct TerrainGraphic *graphic = TerrainGraphicsContext_getAqueduct(gridOffset, 0);
-		if (Data_Grid_terrain[gridOffset] & Terrain_Road) {
+		if (map_terrain_is(gridOffset, TERRAIN_ROAD)) {
 			int groupOffset = graphic->groupOffset;
 			if (!graphic->aqueductOffset) {
-				if (Data_Grid_terrain[gridOffset - 162] & Terrain_Road) {
+				if (map_terrain_is(gridOffset - 162, TERRAIN_ROAD)) {
 					groupOffset = 3;
 				} else {
 					groupOffset = 2;
@@ -457,7 +458,7 @@ static void drawBuildingGhostFountain()
 	} else {
 		Graphics_drawIsometricFootprint(graphicId, xOffset, yOffset, COLOR_MASK_GREEN);
 		Graphics_drawIsometricTop(graphicId, xOffset, yOffset, COLOR_MASK_GREEN);
-		if (Data_Grid_terrain[gridOffset] & Terrain_ReservoirRange) {
+		if (map_terrain_is(gridOffset, TERRAIN_RESERVOIR_RANGE)) {
 			Graphics_drawImageMasked(graphicId + 1,
 				xOffset + image_get(graphicId)->sprite_offset_x,
 				yOffset + image_get(graphicId)->sprite_offset_y, COLOR_MASK_GREEN);
@@ -510,7 +511,7 @@ static void drawBuildingGhostBathhouse()
 		int hasWater = 0;
 		for (int i = 0; i < numTiles; i++) { // FIXED: was not accurate on rotated maps
 			int tileOffset = gridOffset + tileGridOffsets[orientationIndex][i];
-			if (Data_Grid_terrain[tileOffset] & Terrain_ReservoirRange) {
+			if (map_terrain_is(tileOffset, TERRAIN_RESERVOIR_RANGE)) {
 				hasWater = 1;
 			}
 		}
@@ -1066,7 +1067,7 @@ static void drawBuildingGhostRoad()
 	int yOffset = Data_CityView.selectedTile.yOffsetInPixels;
 	int gridOffset = Data_State.map.current.gridOffset;
 	int graphicId;
-	if (Data_Grid_terrain[gridOffset] & Terrain_Aqueduct) {
+	if (map_terrain_is(gridOffset, TERRAIN_AQUEDUCT)) {
 		graphicId = image_group(GROUP_BUILDING_AQUEDUCT);
 		if (map_can_place_road_under_aqueduct(gridOffset)) {
 			graphicId += map_get_aqueduct_with_road_image(gridOffset);

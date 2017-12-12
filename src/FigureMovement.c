@@ -17,6 +17,7 @@
 #include "map/property.h"
 #include "map/random.h"
 #include "map/routing_terrain.h"
+#include "map/terrain.h"
 
 static void FigureMovement_walkTicksInternal(figure *f, int numTicks, int roamingEnabled);
 
@@ -136,9 +137,9 @@ static void figureMoveToNextTile(figure *f)
 			break;
 	}
 	map_figure_add(f);
-	if (Data_Grid_terrain[f->gridOffset] & Terrain_Road) {
+	if (map_terrain_is(f->gridOffset, TERRAIN_ROAD)) {
 		f->isOnRoad = 1;
-		if (Data_Grid_terrain[f->gridOffset] & Terrain_Water) { // bridge
+		if (map_terrain_is(f->gridOffset, TERRAIN_WATER)) { // bridge
 			setTargetHeightBridge(f);
 		}
 	} else {
@@ -189,7 +190,7 @@ static void roamSetDirection(figure *f)
 	int roadOffsetDir1 = 0;
 	int roadDir1 = 0;
 	for (int i = 0, dir = direction; i < 8; i++) {
-		if (dir % 2 == 0 && Data_Grid_terrain[gridOffset + map_grid_direction_delta(dir)] & Terrain_Road) {
+		if (dir % 2 == 0 && map_terrain_is(gridOffset + map_grid_direction_delta(dir), TERRAIN_ROAD)) {
 			roadDir1 = dir;
 			break;
 		}
@@ -200,7 +201,7 @@ static void roamSetDirection(figure *f)
 	int roadOffsetDir2 = 0;
 	int roadDir2 = 0;
 	for (int i = 0, dir = direction; i < 8; i++) {
-		if (dir % 2 == 0 && Data_Grid_terrain[gridOffset + map_grid_direction_delta(dir)] & Terrain_Road) {
+		if (dir % 2 == 0 && map_terrain_is(gridOffset + map_grid_direction_delta(dir), TERRAIN_ROAD)) {
 			roadDir2 = dir;
 			break;
 		}
@@ -600,7 +601,7 @@ int FigureMovement_crossCountryWalkTicks(figure *f, int numTicks)
 	f->x = f->crossCountryX / 15;
 	f->y = f->crossCountryY / 15;
 	f->gridOffset = map_grid_offset(f->x, f->y);
-	if (Data_Grid_terrain[f->gridOffset] & Terrain_Building) {
+	if (map_terrain_is(f->gridOffset, TERRAIN_BUILDING)) {
 		f->inBuildingWaitTicks = 8;
 	} else if (f->inBuildingWaitTicks) {
 		f->inBuildingWaitTicks--;
@@ -633,10 +634,10 @@ int FigureMovement_canLaunchCrossCountryMissile(int xSrc, int ySrc, int xDst, in
 			height--;
 		} else {
 			int gridOffset = map_grid_offset(f->x, f->y);
-			if (Data_Grid_terrain[gridOffset] & (Terrain_Wall | Terrain_Gatehouse | Terrain_Tree)) {
+			if (map_terrain_is(gridOffset, TERRAIN_WALL | TERRAIN_GATEHOUSE | TERRAIN_TREE)) {
 				break;
 			}
-			if (Data_Grid_terrain[gridOffset] & Terrain_Building && map_property_multi_tile_size(gridOffset) > 1) {
+			if (map_terrain_is(gridOffset, TERRAIN_BUILDING) && map_property_multi_tile_size(gridOffset) > 1) {
 				break;
 			}
 		}
