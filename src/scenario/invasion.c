@@ -10,6 +10,7 @@
 #include "game/difficulty.h"
 #include "game/time.h"
 #include "map/grid.h"
+#include "map/terrain.h"
 #include "scenario/data.h"
 #include "scenario/map.h"
 #include "scenario/property.h"
@@ -253,15 +254,14 @@ static int start_invasion(int enemy_type, int amount, int invasion_point, int at
     }
     // check terrain
     int grid_offset = map_grid_offset(x, y);
-    int terrain = Data_Grid_terrain[grid_offset];
-    if (terrain & (Terrain_Elevation | Terrain_Rock | Terrain_Tree)) {
+    if (map_terrain_is(grid_offset, TERRAIN_ELEVATION | TERRAIN_ROCK | TERRAIN_TREE)) {
         return -1;
     }
-    if (terrain & Terrain_Water) {
-        if (!(terrain & Terrain_Road)) { // bridge
+    if (map_terrain_is(grid_offset, TERRAIN_WATER)) {
+        if (!map_terrain_is(grid_offset, TERRAIN_ROAD)) { // bridge
             return -1;
         }
-    } else if (terrain & (Terrain_Building | Terrain_Aqueduct | Terrain_Gatehouse | Terrain_Wall)) {
+    } else if (map_terrain_is(grid_offset, TERRAIN_BUILDING | TERRAIN_AQUEDUCT | TERRAIN_GATEHOUSE | TERRAIN_WALL)) {
         Building_destroyByEnemy(x, y, grid_offset);
     }
     // spawn the lot!

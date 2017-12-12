@@ -65,22 +65,22 @@ int map_bridge_calculate_length_direction(int x, int y, int is_ship_bridge, int 
     for (int i = 0; i < 40; i++) {
         grid_offset += bridge.direction_grid_delta;
         bridge.length++;
-        int nextTerrain = Data_Grid_terrain[grid_offset + bridge.direction_grid_delta];
-        if (nextTerrain & Terrain_Tree) {
+        int nextTerrain = map_terrain_get(grid_offset + bridge.direction_grid_delta);
+        if (nextTerrain & TERRAIN_TREE) {
             break;
         }
-        if (!(nextTerrain & Terrain_Water)) {
+        if (!(nextTerrain & TERRAIN_WATER)) {
             bridge.end_grid_offset = grid_offset;
-            if (Terrain_countTerrainTypeDirectlyAdjacentTo(grid_offset, Terrain_Water) != 3) {
+            if (Terrain_countTerrainTypeDirectlyAdjacentTo(grid_offset, TERRAIN_WATER) != 3) {
                 bridge.end_grid_offset = 0;
             }
             *length = bridge.length;
             return bridge.end_grid_offset;
         }
-        if (nextTerrain & Terrain_Road || nextTerrain & Terrain_Building) {
+        if (nextTerrain & TERRAIN_ROAD || nextTerrain & TERRAIN_BUILDING) {
             break;
         }
-        if (Terrain_countTerrainTypeDirectlyAdjacentTo(grid_offset, Terrain_Water) != 4) {
+        if (Terrain_countTerrainTypeDirectlyAdjacentTo(grid_offset, TERRAIN_WATER) != 4) {
             break;
         }
     }

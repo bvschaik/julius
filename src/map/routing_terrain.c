@@ -115,13 +115,13 @@ void map_routing_update_land_citizen()
         for (int x = 0; x < Data_State.map.width; x++, grid_offset++) {
             if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
                 terrain_land_citizen.items[grid_offset] = CITIZEN_0_ROAD;
-            } else if (Data_Grid_terrain[grid_offset] & (Terrain_Rubble | Terrain_AccessRamp | Terrain_Garden)) {
+            } else if (map_terrain_is(grid_offset, TERRAIN_RUBBLE | TERRAIN_ACCESS_RAMP | TERRAIN_GARDEN)) {
                 terrain_land_citizen.items[grid_offset] = CITIZEN_2_PASSABLE_TERRAIN;
-            } else if (Data_Grid_terrain[grid_offset] & (Terrain_Building | Terrain_Gatehouse)) {
+            } else if (map_terrain_is(grid_offset, TERRAIN_BUILDING | TERRAIN_GATEHOUSE)) {
                 if (!map_building_at(grid_offset)) {
                     // shouldn't happen
                     terrain_land_noncitizen.items[grid_offset] = CITIZEN_4_CLEAR_TERRAIN; // BUG: should be citizen grid?
-                    Data_Grid_terrain[grid_offset] &= ~Terrain_Building;
+                    map_terrain_remove(grid_offset, TERRAIN_BUILDING);
                     map_image_set(grid_offset, (map_random_get(grid_offset) & 7) + image_group(GROUP_TERRAIN_GRASS_1));
                     map_property_mark_draw_tile(grid_offset);
                     map_property_set_multi_tile_size(grid_offset, 1);
@@ -240,7 +240,7 @@ void map_routing_update_water()
 
 static int is_wall_tile(int grid_offset)
 {
-    return (Data_Grid_terrain[grid_offset] & Terrain_WallOrGatehouse) ? 1 : 0;
+    return map_terrain_is(grid_offset, TERRAIN_WALL_OR_GATEHOUSE) ? 1 : 0;
 }
 
 static int count_adjacent_wall_tiles(int grid_offset)

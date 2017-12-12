@@ -616,7 +616,7 @@ int FigureMovement_canLaunchCrossCountryMissile(int xSrc, int ySrc, int xDst, in
 	figure *f = figure_get(0); // abuse unused figure 0 as scratch
 	f->crossCountryX = 15 * xSrc;
 	f->crossCountryY = 15 * ySrc;
-	if (Data_Grid_terrain[map_grid_offset(xSrc, ySrc)] & Terrain_WallOrGatehouse) {
+	if (map_terrain_is(map_grid_offset(xSrc, ySrc), TERRAIN_WALL_OR_GATEHOUSE)) {
 		height = 6;
 	}
 	FigureMovement_crossCountrySetDirection(f, 15 * xSrc, 15 * ySrc, 15 * xDst, 15 * yDst, 0);

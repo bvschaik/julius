@@ -336,7 +336,7 @@ int map_routing_calculate_distances_for_building(routed_building_type type, int 
 static int callback_delete_wall_aqueduct(int next_offset, int dist)
 {
     if (terrain_land_citizen.items[next_offset] < CITIZEN_0_ROAD) {
-        if (Data_Grid_terrain[next_offset] & (Terrain_Aqueduct | Terrain_Wall)) {
+        if (map_terrain_is(next_offset, TERRAIN_AQUEDUCT | TERRAIN_WALL)) {
             Data_Grid_terrain[next_offset] &= Terrain_2e80;
             return 1;
         }

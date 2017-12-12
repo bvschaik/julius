@@ -102,7 +102,7 @@ void Terrain_addBuildingToGrids(int buildingId, int x, int y, int size, int grap
 		for (int dx = 0; dx < size; dx++) {
 			int gridOffset = map_grid_offset(x + dx, y + dy);
 			Data_Grid_terrain[gridOffset] &= Terrain_2e80;
-			Data_Grid_terrain[gridOffset] |= terrain;
+			map_terrain_add(gridOffset, terrain);
 			map_building_set(gridOffset, buildingId);
 			map_property_clear_constructing(gridOffset);
 			map_property_set_multi_tile_size(gridOffset, size);
@@ -135,7 +135,7 @@ void Terrain_removeBuildingFromGrids(int buildingId, int x, int y)
 	int baseGridOffset = getNorthTileGridOffset(x, y, &size);
 	x = map_grid_offset_to_x(baseGridOffset);
 	y = map_grid_offset_to_y(baseGridOffset);
-	if (Data_Grid_terrain[baseGridOffset] == Terrain_Rock) {
+	if (map_terrain_get(baseGridOffset) == TERRAIN_ROCK) {
 		return;
 	}
 	if (buildingId && BuildingIsFarm(Data_Buildings[buildingId].type)) {
@@ -159,7 +159,7 @@ void Terrain_removeBuildingFromGrids(int buildingId, int x, int y)
 			map_building_damage_clear(gridOffset);
 			Data_Grid_spriteOffsets[gridOffset] = 0;
 			if (map_terrain_is(gridOffset, TERRAIN_WATER)) {
-				Data_Grid_terrain[gridOffset] &= Terrain_Water;
+				map_terrain_set(gridOffset, TERRAIN_WATER); // clear other flags
 				TerrainGraphics_setTileWater(x + dx, y + dy);
 			} else {
 				map_image_set(gridOffset,
@@ -689,9 +689,14 @@ int Terrain_getAdjacentRoadTilesForAqueduct(int gridOffset)
 	return roadTiles;
 }
 
+static int terrain_is_road_like(int grid_offset)
+{
+    return map_terrain_is(grid_offset, TERRAIN_ROAD | TERRAIN_ACCESS_RAMP) ? 1 : 0;
+}
+
 static int getAdjacentRoadTileForRoaming(int gridOffset)
 {
-	int isRoad = (Data_Grid_terrain[gridOffset] & (Terrain_Road | Terrain_AccessRamp)) ? 1 : 0;
+	int isRoad = terrain_is_road_like(gridOffset);
 	if (map_terrain_is(gridOffset, TERRAIN_BUILDING)) {
 		int type = Data_Buildings[map_building_at(gridOffset)].type;
 		if (type == BUILDING_GATEHOUSE) {
@@ -719,10 +724,10 @@ int Terrain_getAdjacentRoadTilesForRoaming(int gridOffset, int *roadTiles)
 
 int Terrain_getSurroundingRoadTilesForRoaming(int gridOffset, int *roadTiles)
 {
-	roadTiles[1] = (Data_Grid_terrain[gridOffset + map_grid_delta(1, -1)] & (Terrain_Road | Terrain_AccessRamp)) ? 1 : 0;
-	roadTiles[3] = (Data_Grid_terrain[gridOffset + map_grid_delta(1, 1)] & (Terrain_Road | Terrain_AccessRamp)) ? 1 : 0;
-	roadTiles[5] = (Data_Grid_terrain[gridOffset + map_grid_delta(-1, 1)] & (Terrain_Road | Terrain_AccessRamp)) ? 1 : 0;
-	roadTiles[7] = (Data_Grid_terrain[gridOffset + map_grid_delta(-1, -1)] & (Terrain_Road | Terrain_AccessRamp)) ? 1 : 0;
+	roadTiles[1] = terrain_is_road_like(gridOffset + map_grid_delta(1, -1));
+	roadTiles[3] = terrain_is_road_like(gridOffset + map_grid_delta(1, 1));
+	roadTiles[5] = terrain_is_road_like(gridOffset + map_grid_delta(-1, 1));
+	roadTiles[7] = terrain_is_road_like(gridOffset + map_grid_delta(-1, -1));
 	
 	int maxStretch = 0;
 	int stretch = 0;
@@ -820,14 +825,14 @@ int Terrain_getAdjacentRoadOrClearLand(int x, int y, int size, int *xTile, int *
 void Terrain_setWithRadius(int x, int y, int size, int radius, unsigned short typeToAdd)
 {
 	FOR_XY_RADIUS {
-		Data_Grid_terrain[gridOffset] |= typeToAdd;
+		map_terrain_add(gridOffset, typeToAdd);
 	} END_FOR_XY_RADIUS;
 }
 
-void Terrain_clearWithRadius(int x, int y, int size, int radius, unsigned short typeToKeep)
+void Terrain_clearWithRadius(int x, int y, int size, int radius, unsigned short typeToClear)
 {
 	FOR_XY_RADIUS {
-		Data_Grid_terrain[gridOffset] &= typeToKeep;
+		map_terrain_remove(gridOffset, typeToClear);
 	} END_FOR_XY_RADIUS;
 }
 
@@ -835,7 +840,7 @@ int Terrain_existsTileWithinAreaWithType(int x, int y, int size, unsigned short 
 {
 	for (int yy = y; yy < y + size; yy++) {
 		for (int xx = x; xx < x + size; xx++) {
-			if (map_grid_is_inside(xx, yy, 1) && (type & Data_Grid_terrain[map_grid_offset(xx, yy)])) {
+			if (map_grid_is_inside(xx, yy, 1) && map_terrain_is(map_grid_offset(xx, yy), type)) {
 				return 1;
 			}
 		}
@@ -898,7 +903,7 @@ int Terrain_allHousesWithinWellRadiusHaveFountain(int wellId, int radius)
 		int buildingId = map_building_at(gridOffset);
 		if (buildingId > 0 && Data_Buildings[buildingId].houseSize) {
 			numHouses++;
-			if (!(Data_Grid_terrain[gridOffset] & Terrain_FountainRange)) {
+			if (!map_terrain_is(gridOffset, TERRAIN_FOUNTAIN_RANGE)) {
 				return 0;
 			}
 		}
@@ -955,8 +960,7 @@ int Terrain_isAllRockAndTreesAtDistanceRing(int x, int y, int distance)
 	for (int i = start; i < end; i++) {
         const ring_tile *tile = map_ring_tile(i);
 		if (map_ring_is_inside_map(x + tile->x, y + tile->y)) {
-			int terrain = Data_Grid_terrain[baseOffset + tile->grid_offset];
-			if (!(terrain & Terrain_Rock) || !(terrain & Terrain_Tree)) {
+			if (!map_terrain_is(baseOffset + tile->grid_offset, TERRAIN_ROCK | TERRAIN_TREE)) {
 				return 0;
 			}
 		}
@@ -972,8 +976,7 @@ int Terrain_isAllMeadowAtDistanceRing(int x, int y, int distance)
 	for (int i = start; i < end; i++) {
         const ring_tile *tile = map_ring_tile(i);
 		if (map_ring_is_inside_map(x + tile->x, y + tile->y)) {
-			int terrain = Data_Grid_terrain[baseOffset + tile->grid_offset];
-			if (!(terrain & Terrain_Meadow)) {
+			if (!map_terrain_is(baseOffset + tile->grid_offset, TERRAIN_MEADOW)) {
 				return 0;
 			}
 		}
@@ -984,16 +987,16 @@ int Terrain_isAllMeadowAtDistanceRing(int x, int y, int distance)
 int Terrain_countTerrainTypeDirectlyAdjacentTo(int gridOffset, int terrainMask)
 {
 	int count = 0;
-	if (Data_Grid_terrain[gridOffset + map_grid_delta(0, -1)] & terrainMask) {
+	if (map_terrain_is(gridOffset + map_grid_delta(0, -1), terrainMask)) {
 		count++;
 	}
-	if (Data_Grid_terrain[gridOffset + map_grid_delta(1, 0)] & terrainMask) {
+	if (map_terrain_is(gridOffset + map_grid_delta(1, 0), terrainMask)) {
 		count++;
 	}
-	if (Data_Grid_terrain[gridOffset + map_grid_delta(0, 1)] & terrainMask) {
+	if (map_terrain_is(gridOffset + map_grid_delta(0, 1), terrainMask)) {
 		count++;
 	}
-	if (Data_Grid_terrain[gridOffset + map_grid_delta(-1, 0)] & terrainMask) {
+	if (map_terrain_is(gridOffset + map_grid_delta(-1, 0), terrainMask)) {
 		count++;
 	}
 	return count;
@@ -1002,16 +1005,16 @@ int Terrain_countTerrainTypeDirectlyAdjacentTo(int gridOffset, int terrainMask)
 int Terrain_countTerrainTypeDiagonallyAdjacentTo(int gridOffset, int terrainMask)
 {
 	int count = 0;
-	if (Data_Grid_terrain[gridOffset + map_grid_delta(1, -1)] & terrainMask) {
+	if (map_terrain_is(gridOffset + map_grid_delta(1, -1), terrainMask)) {
 		count++;
 	}
-	if (Data_Grid_terrain[gridOffset + map_grid_delta(1, 1)] & terrainMask) {
+	if (map_terrain_is(gridOffset + map_grid_delta(1, 1), terrainMask)) {
 		count++;
 	}
-	if (Data_Grid_terrain[gridOffset + map_grid_delta(-1, 1)] & terrainMask) {
+	if (map_terrain_is(gridOffset + map_grid_delta(-1, 1), terrainMask)) {
 		count++;
 	}
-	if (Data_Grid_terrain[gridOffset + map_grid_delta(-1, -1)] & terrainMask) {
+	if (map_terrain_is(gridOffset + map_grid_delta(-1, -1), terrainMask)) {
 		count++;
 	}
 	return count;
@@ -1019,8 +1022,8 @@ int Terrain_countTerrainTypeDiagonallyAdjacentTo(int gridOffset, int terrainMask
 
 int Terrain_hasTerrainTypeSameYAdjacentTo(int gridOffset, int terrainMask)
 {
-	if (Data_Grid_terrain[gridOffset + map_grid_delta(-1, 0)] & terrainMask ||
-		Data_Grid_terrain[gridOffset + map_grid_delta(1, 0)] & terrainMask) {
+	if (map_terrain_is(gridOffset + map_grid_delta(-1, 0), terrainMask) ||
+		map_terrain_is(gridOffset + map_grid_delta(1, 0), terrainMask)) {
 		return 1;
 	}
 	return 0;
@@ -1028,8 +1031,8 @@ int Terrain_hasTerrainTypeSameYAdjacentTo(int gridOffset, int terrainMask)
 
 int Terrain_hasTerrainTypeSameXAdjacentTo(int gridOffset, int terrainMask)
 {
-	if (Data_Grid_terrain[gridOffset + map_grid_delta(0, -1)] & terrainMask ||
-		Data_Grid_terrain[gridOffset + map_grid_delta(0, 1)] & terrainMask) {
+	if (map_terrain_is(gridOffset + map_grid_delta(0, -1), terrainMask) ||
+		map_terrain_is(gridOffset + map_grid_delta(0, 1), terrainMask)) {
 		return 1;
 	}
 	return 0;
@@ -1039,9 +1042,9 @@ void Terrain_updateEntryExitFlags(int remove)
 {
 	if (remove) {
 		int gridOffsetEntry = map_grid_offset(Data_CityInfo_Extra.entryPointFlag.x, Data_CityInfo_Extra.entryPointFlag.y);
-		Data_Grid_terrain[gridOffsetEntry] &= ~Terrain_Rock;
+		map_terrain_remove(gridOffsetEntry, TERRAIN_ROCK);
 		int gridOffsetExit = map_grid_offset(Data_CityInfo_Extra.exitPointFlag.x, Data_CityInfo_Extra.exitPointFlag.y);
-		Data_Grid_terrain[gridOffsetExit] &= ~Terrain_Rock;
+		map_terrain_remove(gridOffsetExit, TERRAIN_ROCK);
 		return;
 	}
 	int entryOrientation;
@@ -1084,7 +1087,7 @@ void Terrain_updateEntryExitFlags(int remove)
 		Data_CityInfo_Extra.entryPointFlag.x = xTile;
 		Data_CityInfo_Extra.entryPointFlag.y = yTile;
 		Data_CityInfo_Extra.entryPointFlag.gridOffset = gridOffsetFlag;
-		Data_Grid_terrain[gridOffsetFlag] |= Terrain_Rock;
+		map_terrain_add(gridOffsetFlag, TERRAIN_ROCK);
 		int orientation = (Data_State.map.orientation + entryOrientation) % 8;
 		map_image_set(gridOffsetFlag, image_group(GROUP_TERRAIN_ENTRY_EXIT_FLAGS) + orientation / 2);
 	}
@@ -1102,7 +1105,7 @@ void Terrain_updateEntryExitFlags(int remove)
 		Data_CityInfo_Extra.exitPointFlag.x = xTile;
 		Data_CityInfo_Extra.exitPointFlag.y = yTile;
 		Data_CityInfo_Extra.exitPointFlag.gridOffset = gridOffsetFlag;
-		Data_Grid_terrain[gridOffsetFlag] |= Terrain_Rock;
+		map_terrain_add(gridOffsetFlag, TERRAIN_ROCK);
 		int orientation = (Data_State.map.orientation + exitOrientation) % 8;
 		map_image_set(gridOffsetFlag, image_group(GROUP_TERRAIN_ENTRY_EXIT_FLAGS) + 4 + orientation / 2);
 	}

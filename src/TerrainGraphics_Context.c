@@ -382,7 +382,7 @@ const TerrainGraphic *TerrainGraphicsContext_getWallGatehouse(int gridOffset)
 {
 	int tiles[MAX_TILES] = {0,0,0,0,0,0,0,0};
 	for (int i = 0; i < MAX_TILES; i += 2) {
-		tiles[i] = Data_Grid_terrain[gridOffset + contextTileOffsets[i]] & Terrain_WallOrGatehouse ? 1 : 0;
+		tiles[i] = map_terrain_is(gridOffset + contextTileOffsets[i], TERRAIN_WALL_OR_GATEHOUSE) ? 1 : 0;
 	}
 	return TerrainGraphicsContext_getGraphic(TerrainGraphicsContext_WallGatehouse, tiles);
 }

@@ -88,7 +88,7 @@ static void advance_earthquake_to_tile(int x, int y)
         sound_effect_play(SOUND_EFFECT_EXPLOSION);
         Data_Buildings[buildingId].state = BuildingState_DeletedByGame;
     }
-    Data_Grid_terrain[gridOffset] = 0;
+    map_terrain_set(gridOffset, 0);
     TerrainGraphics_setTileEarthquake(x, y);
     TerrainGraphics_updateAllGardens();
     TerrainGraphics_updateAllRoads();

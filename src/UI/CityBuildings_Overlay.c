@@ -318,7 +318,7 @@ static void drawFootprintForWaterOverlay(int gridOffset, int xOffset, int yOffse
 	} else if (terrain & Terrain_Building) {
 		int buildingId = map_building_at(gridOffset);
 		if (buildingId && Data_Buildings[buildingId].hasWellAccess == 1) {
-			terrain |= Terrain_FountainRange;
+			terrain |= TERRAIN_FOUNTAIN_RANGE;
 		}
 		if (Data_Buildings[buildingId].type == BUILDING_WELL || Data_Buildings[buildingId].type == BUILDING_FOUNTAIN) {
 			DRAWFOOT_SIZE1(map_image_at(gridOffset), xOffset, yOffset);
@@ -326,14 +326,14 @@ static void drawFootprintForWaterOverlay(int gridOffset, int xOffset, int yOffse
 			DRAWFOOT_SIZE3(map_image_at(gridOffset), xOffset, yOffset);
 		} else {
 			int graphicOffset;
-			switch (terrain & (Terrain_ReservoirRange | Terrain_FountainRange)) {
-				case Terrain_ReservoirRange | Terrain_FountainRange:
+			switch (terrain & (TERRAIN_RESERVOIR_RANGE | TERRAIN_FOUNTAIN_RANGE)) {
+				case TERRAIN_RESERVOIR_RANGE | TERRAIN_FOUNTAIN_RANGE:
 					graphicOffset = 24;
 					break;
-				case Terrain_ReservoirRange:
+				case TERRAIN_RESERVOIR_RANGE:
 					graphicOffset = 8;
 					break;
-				case Terrain_FountainRange:
+				case TERRAIN_FOUNTAIN_RANGE:
 					graphicOffset = 16;
 					break;
 				default:
@@ -344,14 +344,14 @@ static void drawFootprintForWaterOverlay(int gridOffset, int xOffset, int yOffse
 		}
 	} else {
 		int graphicId = image_group(GROUP_TERRAIN_OVERLAY);
-		switch (terrain & (Terrain_ReservoirRange | Terrain_FountainRange)) {
-			case Terrain_ReservoirRange | Terrain_FountainRange:
+		switch (terrain & (TERRAIN_RESERVOIR_RANGE | TERRAIN_FOUNTAIN_RANGE)) {
+			case TERRAIN_RESERVOIR_RANGE | TERRAIN_FOUNTAIN_RANGE:
 				graphicId += 27;
 				break;
-			case Terrain_ReservoirRange:
+			case TERRAIN_RESERVOIR_RANGE:
 				graphicId += 11;
 				break;
-			case Terrain_FountainRange:
+			case TERRAIN_FOUNTAIN_RANGE:
 				graphicId += 19;
 				break;
 			default:

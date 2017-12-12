@@ -39,7 +39,7 @@ void UtilityManagement_updateHouseWaterAccess()
 			Data_Buildings[i].hasWellAccess = 0;
 			if (Terrain_existsTileWithinAreaWithType(
 				Data_Buildings[i].x, Data_Buildings[i].y,
-				Data_Buildings[i].size, Terrain_FountainRange)) {
+				Data_Buildings[i].size, TERRAIN_FOUNTAIN_RANGE)) {
 				Data_Buildings[i].hasWaterAccess = 1;
 			}
 		}
@@ -128,7 +128,7 @@ static void fillAqueductsFromOffset(int gridOffset)
 
 void UtilityManagement_updateReservoirFountain()
 {
-	map_grid_and_u16(Data_Grid_terrain, ~(Terrain_FountainRange | Terrain_ReservoirRange));
+	map_grid_and_u16(Data_Grid_terrain, ~(TERRAIN_FOUNTAIN_RANGE | TERRAIN_RESERVOIR_RANGE));
 	// reservoirs
 	setAllAqueductsToNoWater();
 	building_list_large_clear(1);
@@ -137,7 +137,7 @@ void UtilityManagement_updateReservoirFountain()
 		if (BuildingIsInUse(i) && Data_Buildings[i].type == BUILDING_RESERVOIR) {
 			building_list_large_add(i);
 			if (Terrain_existsTileWithinAreaWithType(
-				Data_Buildings[i].x - 1, Data_Buildings[i].y - 1, 5, Terrain_Water)) {
+				Data_Buildings[i].x - 1, Data_Buildings[i].y - 1, 5, TERRAIN_WATER)) {
 				Data_Buildings[i].hasWaterAccess = 2;
 			} else {
 				Data_Buildings[i].hasWaterAccess = 0;
@@ -168,7 +168,7 @@ void UtilityManagement_updateReservoirFountain()
 		if (Data_Buildings[buildingId].hasWaterAccess) {
 			Terrain_setWithRadius(
 				Data_Buildings[buildingId].x, Data_Buildings[buildingId].y,
-				3, 10, Terrain_ReservoirRange);
+				3, 10, TERRAIN_RESERVOIR_RANGE);
 		}
 	}
 	// fountains
@@ -193,7 +193,7 @@ void UtilityManagement_updateReservoirFountain()
 			b->hasWaterAccess = 1;
 			Terrain_setWithRadius(b->x, b->y, 1,
 				scenario_property_climate() == CLIMATE_DESERT ? 3 : 4,
-				Terrain_FountainRange);
+				TERRAIN_FOUNTAIN_RANGE);
 		} else {
 			b->hasWaterAccess = 0;
 		}

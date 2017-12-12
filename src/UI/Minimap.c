@@ -4,7 +4,6 @@
 #include "../Graphics.h"
 #include "../Data/Building.h"
 #include "../Data/CityView.h"
-#include "../Data/Grid.h"
 #include "../Data/State.h"
 
 #include "figure/figure.h"
@@ -14,6 +13,7 @@
 #include "map/figure.h"
 #include "map/property.h"
 #include "map/random.h"
+#include "map/terrain.h"
 #include "scenario/property.h"
 
 #define FOREACH_XY_VIEW(block)\
@@ -159,15 +159,15 @@ static void drawTile(int xView, int yView, int gridOffset)
 		return;
 	}
 	
-	int terrain = Data_Grid_terrain[gridOffset];
+	int terrain = map_terrain_get(gridOffset);
 	// exception for fort ground: display as empty land
-	if (terrain & Terrain_Building) {
+	if (terrain & TERRAIN_BUILDING) {
 		if (Data_Buildings[map_building_at(gridOffset)].type == BUILDING_FORT_GROUND) {
 			terrain = 0;
 		}
 	}
 
-	if (terrain & Terrain_Building) {
+	if (terrain & TERRAIN_BUILDING) {
 		if (map_property_is_draw_tile(gridOffset)) {
 			int graphicId;
 			int buildingId = map_building_at(gridOffset);
@@ -194,23 +194,23 @@ static void drawTile(int xView, int yView, int gridOffset)
 	} else {
 		int rand = map_random_get(gridOffset);
 		int graphicId;
-		if (terrain & Terrain_Water) {
+		if (terrain & TERRAIN_WATER) {
 			graphicId = image_group(GROUP_MINIMAP_WATER) + (rand & 3);
-		} else if (terrain & Terrain_Scrub) {
+		} else if (terrain & TERRAIN_SCRUB) {
 			graphicId = image_group(GROUP_MINIMAP_TREE) + (rand & 3);
-		} else if (terrain & Terrain_Tree) {
+		} else if (terrain & TERRAIN_TREE) {
 			graphicId = image_group(GROUP_MINIMAP_TREE) + (rand & 3);
-		} else if (terrain & Terrain_Rock) {
+		} else if (terrain & TERRAIN_ROCK) {
 			graphicId = image_group(GROUP_MINIMAP_ROCK) + (rand & 3);
-		} else if (terrain & Terrain_Elevation) {
+		} else if (terrain & TERRAIN_ELEVATION) {
 			graphicId = image_group(GROUP_MINIMAP_ROCK) + (rand & 3);
-		} else if (terrain & Terrain_Road) {
+		} else if (terrain & TERRAIN_ROAD) {
 			graphicId = image_group(GROUP_MINIMAP_ROAD);
-		} else if (terrain & Terrain_Aqueduct) {
+		} else if (terrain & TERRAIN_AQUEDUCT) {
 			graphicId = image_group(GROUP_MINIMAP_AQUEDUCT);
-		} else if (terrain & Terrain_Wall) {
+		} else if (terrain & TERRAIN_WALL) {
 			graphicId = image_group(GROUP_MINIMAP_WALL);
-		} else if (terrain & Terrain_Meadow) {
+		} else if (terrain & TERRAIN_MEADOW) {
 			graphicId = image_group(GROUP_MINIMAP_MEADOW) + (rand & 3);
 		} else {
 			graphicId = image_group(GROUP_MINIMAP_EMPTY_LAND) + (rand & 7);

@@ -9,6 +9,16 @@ int map_terrain_is(int grid_offset, int terrain)
     return Data_Grid_terrain[grid_offset] & terrain;
 }
 
+int map_terrain_get(int grid_offset)
+{
+    return Data_Grid_terrain[grid_offset];
+}
+
+void map_terrain_set(int grid_offset, int terrain)
+{
+    Data_Grid_terrain[grid_offset] = terrain;
+}
+
 void map_terrain_add(int grid_offset, int terrain)
 {
     Data_Grid_terrain[grid_offset] |= terrain;

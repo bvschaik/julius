@@ -20,9 +20,15 @@ enum {
     TERRAIN_FOUNTAIN_RANGE = 0x2000,
     TERRAIN_WALL = 0x4000,
     TERRAIN_GATEHOUSE = 0x8000,
+    // combined
+    TERRAIN_WALL_OR_GATEHOUSE = TERRAIN_WALL | TERRAIN_GATEHOUSE
 };
 
 int map_terrain_is(int grid_offset, int terrain);
+
+int map_terrain_get(int grid_offset);
+
+void map_terrain_set(int grid_offset, int terrain);
 
 void map_terrain_add(int grid_offset, int terrain);
 

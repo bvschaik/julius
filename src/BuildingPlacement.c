@@ -467,14 +467,14 @@ static void addToTerrain(int type, int buildingId, int x, int y, int size,
 			break;
 		// defense
 		case BUILDING_TOWER:
-			Terrain_clearWithRadius(x, y, 2, 0, ~Terrain_Wall);
+			Terrain_clearWithRadius(x, y, 2, 0, TERRAIN_WALL);
 			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_TOWER),
-				Terrain_Building | Terrain_Gatehouse);
+				TERRAIN_BUILDING | TERRAIN_GATEHOUSE);
 			TerrainGraphics_updateAreaWalls(x, y, 5);
 			break;
 		case BUILDING_GATEHOUSE:
 			Terrain_addBuildingToGrids(buildingId, x, y, size,
-				image_group(GROUP_BUILDING_TOWER) + orientation, Terrain_Building | Terrain_Gatehouse);
+				image_group(GROUP_BUILDING_TOWER) + orientation, TERRAIN_BUILDING | TERRAIN_GATEHOUSE);
 			Data_Buildings[buildingId].subtype.orientation = orientation;
 			Building_determineGraphicIdsForOrientedBuildings();
 			Terrain_addRoadsForGatehouse(x, y, orientation);
@@ -484,7 +484,7 @@ static void addToTerrain(int type, int buildingId, int x, int y, int size,
 			break;
 		case BUILDING_TRIUMPHAL_ARCH:
 			Terrain_addBuildingToGrids(buildingId, x, y, size,
-				image_group(GROUP_BUILDING_TRIUMPHAL_ARCH) + orientation - 1, Terrain_Building);
+				image_group(GROUP_BUILDING_TRIUMPHAL_ARCH) + orientation - 1, TERRAIN_BUILDING);
 			Data_Buildings[buildingId].subtype.orientation = orientation;
 			Building_determineGraphicIdsForOrientedBuildings();
 			Terrain_addRoadsForTriumphalArch(x, y, orientation);
@@ -496,7 +496,7 @@ static void addToTerrain(int type, int buildingId, int x, int y, int size,
 			break;
 		case BUILDING_SENATE_UPGRADED:
 			Data_CityInfo.buildingSenatePlaced = 1;
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_SENATE), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_SENATE), TERRAIN_BUILDING);
 			if (!Data_CityInfo.buildingSenateGridOffset) {
 				Data_CityInfo.buildingSenateBuildingId = buildingId;
 				Data_CityInfo.buildingSenateX = x;
@@ -505,7 +505,7 @@ static void addToTerrain(int type, int buildingId, int x, int y, int size,
 			}
 			break;
 		case BUILDING_BARRACKS:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_BARRACKS), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_BARRACKS), TERRAIN_BUILDING);
 			if (!Data_CityInfo.buildingBarracksGridOffset) {
 				Data_CityInfo.buildingBarracksBuildingId = buildingId;
 				Data_CityInfo.buildingBarracksX = x;
@@ -527,13 +527,13 @@ static void addToTerrain(int type, int buildingId, int x, int y, int size,
 		// native buildings (unused, I think)
 		case BUILDING_NATIVE_HUT:
 			Terrain_addBuildingToGrids(buildingId, x, y, size,
-				image_group(GROUP_BUILDING_NATIVE) + (random_byte() & 1), Terrain_Building);
+				image_group(GROUP_BUILDING_NATIVE) + (random_byte() & 1), TERRAIN_BUILDING);
 			break;
 		case BUILDING_NATIVE_MEETING:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_NATIVE) + 2, Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_NATIVE) + 2, TERRAIN_BUILDING);
 			break;
 		case BUILDING_NATIVE_CROPS:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_FARM_CROPS), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_FARM_CROPS), TERRAIN_BUILDING);
 			break;
 		// distribution center (also unused)
 		case BUILDING_DISTRIBUTION_CENTER_UNUSED:
@@ -623,27 +623,27 @@ static int placeBuilding(int type, int x, int y)
 			return 0;
 		}
 		if (Data_State.selectedBuilding.meadowRequired) {
-			if (!Terrain_existsTileWithinRadiusWithType(x, y, 3, 1, Terrain_Meadow)) {
+			if (!Terrain_existsTileWithinRadiusWithType(x, y, 3, 1, TERRAIN_MEADOW)) {
 				city_warning_show(WARNING_MEADOW_NEEDED);
 				return 0;
 			}
 		} else if (Data_State.selectedBuilding.rockRequired) {
-			if (!Terrain_existsTileWithinRadiusWithType(x, y, 2, 1, Terrain_Rock)) {
+			if (!Terrain_existsTileWithinRadiusWithType(x, y, 2, 1, TERRAIN_ROCK)) {
 				city_warning_show(WARNING_ROCK_NEEDED);
 				return 0;
 			}
 		} else if (Data_State.selectedBuilding.treesRequired) {
-			if (!Terrain_existsTileWithinRadiusWithType(x, y, 2, 1, Terrain_Scrub | Terrain_Tree)) {
+			if (!Terrain_existsTileWithinRadiusWithType(x, y, 2, 1, TERRAIN_SCRUB | TERRAIN_TREE)) {
 				city_warning_show(WARNING_TREE_NEEDED);
 				return 0;
 			}
 		} else if (Data_State.selectedBuilding.waterRequired) {
-			if (!Terrain_existsTileWithinRadiusWithType(x, y, 2, 3, Terrain_Water)) {
+			if (!Terrain_existsTileWithinRadiusWithType(x, y, 2, 3, TERRAIN_WATER)) {
 				city_warning_show(WARNING_WATER_NEEDED);
 				return 0;
 			}
 		} else if (Data_State.selectedBuilding.wallRequired) {
-			if (!Terrain_allTilesWithinRadiusHaveType(x, y, 2, 0, Terrain_Wall)) {
+			if (!Terrain_allTilesWithinRadiusHaveType(x, y, 2, 0, TERRAIN_WALL)) {
 				city_warning_show(WARNING_WALL_NEEDED);
 				return 0;
 			}
@@ -1284,15 +1284,15 @@ void BuildingPlacement_update(int xStart, int yStart, int xEnd, int yEnd, int ty
 			Data_State.selectedBuilding.drawAsConstructing = 1;
 		}
 	} else if (Data_State.selectedBuilding.meadowRequired) {
-		Terrain_existsTileWithinRadiusWithType(xEnd, yEnd, 3, 1, Terrain_Meadow);
+		Terrain_existsTileWithinRadiusWithType(xEnd, yEnd, 3, 1, TERRAIN_MEADOW);
 	} else if (Data_State.selectedBuilding.rockRequired) {
-		Terrain_existsTileWithinRadiusWithType(xEnd, yEnd, 2, 1, Terrain_Rock);
+		Terrain_existsTileWithinRadiusWithType(xEnd, yEnd, 2, 1, TERRAIN_ROCK);
 	} else if (Data_State.selectedBuilding.treesRequired) {
-		Terrain_existsTileWithinRadiusWithType(xEnd, yEnd, 2, 1, Terrain_Tree | Terrain_Scrub);
+		Terrain_existsTileWithinRadiusWithType(xEnd, yEnd, 2, 1, TERRAIN_TREE | TERRAIN_SCRUB);
 	} else if (Data_State.selectedBuilding.waterRequired) {
-		Terrain_existsTileWithinRadiusWithType(xEnd, yEnd, 2, 3, Terrain_Water);
+		Terrain_existsTileWithinRadiusWithType(xEnd, yEnd, 2, 3, TERRAIN_WATER);
 	} else if (Data_State.selectedBuilding.wallRequired) {
-		Terrain_allTilesWithinRadiusHaveType(xEnd, yEnd, 2, 0, Terrain_Wall);
+		Terrain_allTilesWithinRadiusHaveType(xEnd, yEnd, 2, 0, TERRAIN_WALL);
 	} else {
 		if (!(type == BUILDING_SENATE_UPGRADED && Data_CityInfo.buildingSenatePlaced) &&
 			!(type == BUILDING_BARRACKS && building_count_total(BUILDING_BARRACKS) > 0) &&
