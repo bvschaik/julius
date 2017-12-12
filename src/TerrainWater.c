@@ -41,10 +41,10 @@ void Terrain_addWatersideBuildingToGrids(int buildingId, int x, int y, int size,
 	for (int dy = 0; dy < size; dy++) {
 		for (int dx = 0; dx < size; dx++) {
 			int gridOffset = map_grid_offset(x + dx, y + dy);
-			Data_Grid_terrain[gridOffset] |= Terrain_Building;
+			map_terrain_add(gridOffset, TERRAIN_BUILDING);
 			if (!map_terrain_is(gridOffset, TERRAIN_WATER)) {
 				Data_Grid_terrain[gridOffset] &= Terrain_2e80;
-				Data_Grid_terrain[gridOffset] |= Terrain_Building;
+				map_terrain_add(gridOffset, TERRAIN_BUILDING);
 			}
 			map_building_set(gridOffset, buildingId);
 			map_property_clear_constructing(gridOffset);
@@ -84,7 +84,7 @@ int Terrain_determineOrientationWatersideSize2(int x, int y, int adjustXY,
 					break;
 				}
 				okTiles++;
-				if (Data_Grid_terrain[gridOffset] & (Terrain_Rock | Terrain_Road)) {
+				if (map_terrain_is(gridOffset, TERRAIN_ROCK | TERRAIN_ROAD)) {
 					// bridge or map edge
 					blockedTiles++;
 				}
@@ -157,7 +157,7 @@ int Terrain_determineOrientationWatersideSize3(int x, int y, int adjustXY,
 					break;
 				}
 				okTiles++;
-				if (Data_Grid_terrain[gridOffset] & (Terrain_Rock | Terrain_Road)) {
+				if (map_terrain_is(gridOffset, TERRAIN_ROCK | TERRAIN_ROAD)) {
 					// bridge or map edge
 					blockedTiles++;
 				}

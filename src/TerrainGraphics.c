@@ -130,8 +130,7 @@ static void setTileAqueduct(int gridOffset, int waterOffset, int includeOverlay)
 void TerrainGraphics_updateAllRocks()
 {
 	FOREACH_ALL({
-		int terrain = Data_Grid_terrain[gridOffset];
-		if ((terrain & Terrain_Rock) && !(terrain & (Terrain_ReservoirRange | Terrain_Elevation | Terrain_AccessRamp))) {
+		if (map_terrain_is(gridOffset, TERRAIN_ROCK) && !map_terrain_is(gridOffset, TERRAIN_RESERVOIR_RANGE | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP)) {
 			map_image_set(gridOffset, 0);
 			map_property_set_multi_tile_size(gridOffset, 1);
 			map_property_mark_draw_tile(gridOffset);
@@ -140,8 +139,7 @@ void TerrainGraphics_updateAllRocks()
 	int graphicIdRock = image_group(GROUP_TERRAIN_ROCK);
 	int graphicIdElevation = image_group(GROUP_TERRAIN_ELEVATION_ROCK);
 	FOREACH_ALL({
-		int terrain = Data_Grid_terrain[gridOffset];
-		if ((terrain & Terrain_Rock) && !(terrain & (Terrain_ReservoirRange | Terrain_Elevation | Terrain_AccessRamp))) {
+		if (map_terrain_is(gridOffset, TERRAIN_ROCK) && !map_terrain_is(gridOffset, TERRAIN_RESERVOIR_RANGE | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP)) {
 			if (!map_image_at(gridOffset)) {
 				if (isAllTerrainInArea(x, y, 3, TERRAIN_ROCK)) {
 					int graphicId = 12 + (map_random_get(gridOffset) & 1);
@@ -158,10 +156,10 @@ void TerrainGraphics_updateAllRocks()
 					} else {
 						graphicId += graphicIdRock;
 					}
-					Terrain_addBuildingToGrids(0, x, y, 2, graphicId, Terrain_Rock);
+					Terrain_addBuildingToGrids(0, x, y, 2, graphicId, TERRAIN_ROCK);
 				} else {
 					int graphicId = map_random_get(gridOffset) & 7;
-					if (Terrain_existsTileWithinRadiusWithType(x, y, 1, 4, Terrain_Elevation)) {
+					if (Terrain_existsTileWithinRadiusWithType(x, y, 1, 4, TERRAIN_ELEVATION)) {
 						graphicId += graphicIdElevation;
 					} else {
 						graphicId += graphicIdRock;
@@ -176,25 +174,23 @@ void TerrainGraphics_updateAllRocks()
 void TerrainGraphics_updateAllGardens()
 {
 	FOREACH_ALL({
-		int terrain = Data_Grid_terrain[gridOffset];
-		if (terrain & Terrain_Garden && !(terrain & (Terrain_Elevation | Terrain_AccessRamp))) {
+		if (map_terrain_is(gridOffset, TERRAIN_GARDEN) && !map_terrain_is(gridOffset, TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP)) {
 			map_image_set(gridOffset, 0);
 			map_property_set_multi_tile_size(gridOffset, 1);
 			map_property_mark_draw_tile(gridOffset);
 		}
 	});
 	FOREACH_ALL({
-		int terrain = Data_Grid_terrain[gridOffset];
-		if (terrain & Terrain_Garden && !(terrain & (Terrain_Elevation | Terrain_AccessRamp))) {
+		if (map_terrain_is(gridOffset, TERRAIN_GARDEN) && !map_terrain_is(gridOffset, TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP)) {
 			if (!map_image_at(gridOffset)) {
 				int graphicId = image_group(GROUP_TERRAIN_GARDEN);
-				if (isAllTerrainInArea(x, y, 2, Terrain_Garden)) {
+				if (isAllTerrainInArea(x, y, 2, TERRAIN_GARDEN)) {
 					switch (map_random_get(gridOffset) & 3) {
 						case 0: case 1: graphicId += 6; break;
 						case 2: graphicId += 5; break;
 						case 3: graphicId += 4; break;
 					}
-					Terrain_addBuildingToGrids(0, x, y, 2, graphicId, Terrain_Garden);
+					Terrain_addBuildingToGrids(0, x, y, 2, graphicId, TERRAIN_GARDEN);
 				} else {
 					if (y & 1) {
 						switch (x & 3) {
@@ -219,7 +215,7 @@ void TerrainGraphics_determineGardensFromGraphicIds()
 	FOREACH_ALL({
 		int image_id = map_image_at(gridOffset);
 		if (image_id >= baseGraphicId && image_id <= baseGraphicId + 6) {
-			Data_Grid_terrain[gridOffset] |= Terrain_Garden;
+			map_terrain_add(gridOffset, TERRAIN_GARDEN);
 			map_property_clear_constructing(gridOffset);
 			Data_Grid_aqueducts[gridOffset] = 0;
 		}
@@ -230,7 +226,7 @@ void TerrainGraphics_updateAllRoads()
 {
 	FOREACH_ALL({
 		if (map_terrain_is(gridOffset, TERRAIN_ROAD)) {
-			if (!(Data_Grid_terrain[gridOffset] & (Terrain_Water | Terrain_Building))) {
+			if (!map_terrain_is(gridOffset, TERRAIN_WATER | TERRAIN_BUILDING)) {
 				setRoadGraphic(gridOffset);
 			}
 		}
@@ -263,17 +259,17 @@ static int getAccessRampGraphicOffset(int x, int y)
 		for (int i = 0; i < 6; i++) {
 			int gridOffset = baseOffset + offsets[dir][i];
 			if (i < 2) { // 2nd row
-				if (Data_Grid_terrain[gridOffset] & Terrain_Elevation) {
+				if (map_terrain_is(gridOffset, TERRAIN_ELEVATION)) {
 					rightTiles++;
 				}
 				height = Data_Grid_elevation[gridOffset];
 			} else if (i < 4) { // 1st row
-				if ((Data_Grid_terrain[gridOffset] & Terrain_AccessRamp) &&
+				if (map_terrain_is(gridOffset, TERRAIN_ACCESS_RAMP) &&
 					Data_Grid_elevation[gridOffset] < height) {
 					rightTiles++;
 				}
 			} else { // higher row beyond access ramp
-				if (Data_Grid_terrain[gridOffset] & Terrain_Elevation) {
+				if (map_terrain_is(gridOffset, TERRAIN_ELEVATION)) {
 					if (Data_Grid_elevation[gridOffset] != height) {
 						rightTiles++;
 					}
@@ -336,17 +332,17 @@ void TerrainGraphics_updateRegionElevation(int xMin, int yMin, int xMax, int yMa
 			if (g->groupOffset == 44) {
 				map_terrain_remove(gridOffset, TERRAIN_ELEVATION);
 				int terrain = Data_Grid_terrain[gridOffset];
-				if (!(terrain & Terrain_Building)) {
+				if (!(terrain & TERRAIN_BUILDING)) {
 					map_property_set_multi_tile_xy(gridOffset, 0, 0, 1);
-					if (terrain & Terrain_Scrub) {
+					if (terrain & TERRAIN_SCRUB) {
 						map_image_set(gridOffset, image_group(GROUP_TERRAIN_SHRUB) + (map_random_get(gridOffset) & 7));
-					} else if (terrain & Terrain_Tree) {
+					} else if (terrain & TERRAIN_TREE) {
 						map_image_set(gridOffset, image_group(GROUP_TERRAIN_TREE) + (map_random_get(gridOffset) & 7));
-					} else if (terrain & Terrain_Road) {
+					} else if (terrain & TERRAIN_ROAD) {
 						TerrainGraphics_setTileRoad(xx, yy);
-					} else if (terrain & Terrain_Aqueduct) {
+					} else if (terrain & TERRAIN_AQUEDUCT) {
 						TerrainGraphics_setTileAqueduct(xx, yy, 0);
-					} else if (terrain & Terrain_Meadow) {
+					} else if (terrain & TERRAIN_MEADOW) {
 						map_image_set(gridOffset, image_group(GROUP_TERRAIN_MEADOW) + (map_random_get(gridOffset) & 3));
 					} else {
 						map_image_set(gridOffset, image_group(GROUP_TERRAIN_GRASS_1) + (map_random_get(gridOffset) & 7));
@@ -428,8 +424,7 @@ void TerrainGraphics_updateRegionWater(int xMin, int yMin, int xMax, int yMax)
 {
 	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
 	FOREACH_REGION({
-		int terrain = Data_Grid_terrain[gridOffset];
-		if ((terrain & Terrain_Water) && !(terrain & Terrain_Building)) {
+		if (map_terrain_is(gridOffset, TERRAIN_WATER) && !map_terrain_is(gridOffset, TERRAIN_BUILDING)) {
 			TerrainGraphics_setTileWater(xx, yy);
 		}
 	});
@@ -506,12 +501,11 @@ void TerrainGraphics_updateRegionEmptyLand(int xMin, int yMin, int xMax, int yMa
 
 void TerrainGraphics_updateRegionMeadow(int xMin, int yMin, int xMax, int yMax)
 {
-	int forbiddenTerrain = Terrain_Aqueduct | Terrain_Elevation | Terrain_AccessRamp |
-			Terrain_Rubble | Terrain_Road | Terrain_Building | Terrain_Garden;
+	int forbiddenTerrain = TERRAIN_AQUEDUCT | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP |
+            TERRAIN_RUBBLE | TERRAIN_ROAD | TERRAIN_BUILDING | TERRAIN_GARDEN;
 	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
 	FOREACH_REGION({
-		int terrain = Data_Grid_terrain[gridOffset];
-		if ((terrain & Terrain_Meadow) && !(terrain & forbiddenTerrain)) {
+		if (map_terrain_is(gridOffset, TERRAIN_MEADOW) && !map_terrain_is(gridOffset, forbiddenTerrain)) {
 			TerrainGraphics_updateTileMeadow(xx, yy);
 		}
 	});
@@ -521,7 +515,7 @@ void TerrainGraphics_updateRegionEarthquake(int xMin, int yMin, int xMax, int yM
 {
 	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
 	FOREACH_REGION({
-		if ((Data_Grid_terrain[gridOffset] & Terrain_Rock) &&
+		if (map_terrain_is(gridOffset, TERRAIN_ROCK) &&
 			map_property_is_plaza_or_earthquake(gridOffset)) {
 			TerrainGraphics_setTileEarthquake(xx, yy);
 		}
@@ -530,12 +524,11 @@ void TerrainGraphics_updateRegionEarthquake(int xMin, int yMin, int xMax, int yM
 
 void TerrainGraphics_updateRegionRubble(int xMin, int yMin, int xMax, int yMax)
 {
-	int forbiddenTerrain = Terrain_Aqueduct | Terrain_Elevation | Terrain_AccessRamp |
-			Terrain_Road | Terrain_Building | Terrain_Garden;
+	int forbiddenTerrain = TERRAIN_AQUEDUCT | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP |
+            TERRAIN_ROAD | TERRAIN_BUILDING | TERRAIN_GARDEN;
 	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
 	FOREACH_REGION({
-		int terrain = Data_Grid_terrain[gridOffset];
-		if ((terrain & Terrain_Rubble) && !(terrain & forbiddenTerrain)) {
+		if (map_terrain_is(gridOffset, TERRAIN_RUBBLE) && !map_terrain_is(gridOffset, forbiddenTerrain)) {
 			TerrainGraphics_setTileRubble(xx, yy);
 		}
 	});
@@ -657,14 +650,14 @@ void TerrainGraphics_updateNativeCropProgress(int buildingId)
 
 void TerrainGraphics_setTileWater(int x, int y)
 {
-	Data_Grid_terrain[map_grid_offset(x, y)] |= Terrain_Water;
+	map_terrain_add(map_grid_offset(x, y), TERRAIN_WATER);
 	int xMin = x - 1;
 	int xMax = x + 1;
 	int yMin = y - 1;
 	int yMax = y + 1;
 	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
 	FOREACH_REGION({
-		if ((Data_Grid_terrain[gridOffset] & (Terrain_Water | Terrain_Building)) == Terrain_Water) {
+		if ((map_terrain_get(gridOffset) & (TERRAIN_WATER | TERRAIN_BUILDING)) == TERRAIN_WATER) {
 			const TerrainGraphic *g = TerrainGraphicsContext_getShore(gridOffset);
 			int graphicId = image_group(GROUP_TERRAIN_WATER) + g->groupOffset + g->itemOffset;
 			if (Terrain_existsTileWithinRadiusWithType(xx, yy, 1, 2, Terrain_Building)) {
@@ -696,7 +689,7 @@ void TerrainGraphics_setTileEarthquake(int x, int y)
 {
 	// earthquake: terrain = rock && bitfields = plaza
 	int gridOffset = map_grid_offset(x, y);
-	Data_Grid_terrain[gridOffset] |= Terrain_Rock;
+	map_terrain_add(gridOffset, TERRAIN_ROCK);
 	map_property_mark_plaza_or_earthquake(gridOffset);
 	
 	int xMin = x - 1;
@@ -705,7 +698,7 @@ void TerrainGraphics_setTileEarthquake(int x, int y)
 	int yMax = y + 1;
 	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
 	FOREACH_REGION({
-		if ((Data_Grid_terrain[gridOffset] & Terrain_Rock) &&
+		if (map_terrain_is(gridOffset, TERRAIN_ROCK) &&
 			map_property_is_plaza_or_earthquake(gridOffset)) {
 			const TerrainGraphic *g = TerrainGraphicsContext_getEarthquake(gridOffset);
 			if (g->isValid) {
@@ -737,9 +730,9 @@ int TerrainGraphics_setTileRoad(int x, int y)
 	int yMax = y + 1;
 	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
 	FOREACH_REGION({
-		int terrain = Data_Grid_terrain[gridOffset];
-		if (terrain & Terrain_Road && !(terrain & (Terrain_Water | Terrain_Building))) {
-			if (terrain & Terrain_Aqueduct) {
+		int terrain = map_terrain_get(gridOffset);
+		if (terrain & TERRAIN_ROAD && !(terrain & (TERRAIN_WATER | TERRAIN_BUILDING))) {
+			if (terrain & TERRAIN_AQUEDUCT) {
 				setRoadWithAqueductGraphic(gridOffset);
 			} else {
 				setRoadGraphic(gridOffset);
@@ -1011,7 +1004,7 @@ static void setWallGatehouseGraphicManually(int gridOffset)
 
 static int isAdjacentToGatehouse(int gridOffset)
 {
-	return Terrain_countTerrainTypeDirectlyAdjacentTo(gridOffset, Terrain_Gatehouse) > 0;
+	return Terrain_countTerrainTypeDirectlyAdjacentTo(gridOffset, TERRAIN_GATEHOUSE) > 0;
 }
 
 static void setWallGraphic(int gridOffset)
@@ -1043,7 +1036,7 @@ int TerrainGraphics_setTileWall(int x, int y)
 	if (!map_terrain_is(gridOffset, TERRAIN_WALL)) {
 		tilesSet = 1;
 	}
-	Data_Grid_terrain[gridOffset] = Terrain_Wall;
+	map_terrain_set(gridOffset, TERRAIN_WALL);
 	map_property_clear_constructing(gridOffset);
 
 	int xMin = x - 1;
@@ -1080,7 +1073,7 @@ int TerrainGraphics_setTileAqueduct(int x, int y, int forceNoWater)
 int TerrainGraphics_setTileAqueductTerrain(int x, int y)
 {
 	int gridOffset = map_grid_offset(x,y);
-	Data_Grid_terrain[gridOffset] |= Terrain_Aqueduct;
+	map_terrain_add(gridOffset, TERRAIN_AQUEDUCT);
 	map_property_clear_constructing(gridOffset);
 	return 1;
 }
@@ -1096,8 +1089,8 @@ static void TerrainGraphics_setTileRubble(int x, int y)
 
 static void TerrainGraphics_updateTileMeadow(int x, int y)
 {
-	int forbiddenTerrain = Terrain_Aqueduct | Terrain_Elevation | Terrain_AccessRamp |
-			Terrain_Rubble | Terrain_Road | Terrain_Building | Terrain_Garden;
+	int forbiddenTerrain = TERRAIN_AQUEDUCT | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP |
+            TERRAIN_RUBBLE | TERRAIN_ROAD | TERRAIN_BUILDING | TERRAIN_GARDEN;
 
 	int xMin = x - 1;
 	int yMin = y - 1;
@@ -1106,8 +1099,7 @@ static void TerrainGraphics_updateTileMeadow(int x, int y)
 	int graphicId = image_group(GROUP_TERRAIN_MEADOW);
 	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
 	FOREACH_REGION({
-		int terrain = Data_Grid_terrain[gridOffset];
-		if ((terrain & Terrain_Meadow) && !(terrain & forbiddenTerrain)) {
+		if (map_terrain_is(gridOffset, TERRAIN_MEADOW) && !map_terrain_is(gridOffset, forbiddenTerrain)) {
 			int random = map_random_get(gridOffset) & 3;
 			if (Terrain_isAllMeadowAtDistanceRing(xx, yy, 2)) {
 				map_image_set(gridOffset, graphicId + random + 8);
@@ -1164,7 +1156,7 @@ void TerrainGraphics_updateAreaRoads(int x, int y, int size)
 	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
 	FOREACH_REGION({
 		if (map_terrain_is(gridOffset, TERRAIN_ROAD)) {
-			if (!(Data_Grid_terrain[gridOffset] & (Terrain_Water | Terrain_Building))) {
+			if (!map_terrain_is(gridOffset, TERRAIN_WATER | TERRAIN_BUILDING)) {
 				setRoadGraphic(gridOffset);
 			}
 		}
@@ -1177,12 +1169,12 @@ int TerrainGraphics_getFreeTileForHerd(int x, int y, int allowNegDes, int *xTile
 	int xMax = x + 4;
 	int yMin = y - 4;
 	int yMax = y + 4;
-	unsigned short disallowedTerrain = ~(Terrain_AccessRamp | Terrain_Meadow);
+	unsigned short disallowedTerrain = ~(TERRAIN_ACCESS_RAMP | TERRAIN_MEADOW);
 	int tileFound = 0;
 	int tileX = 0, tileY = 0;
 	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
 	FOREACH_REGION({
-		if (!(Data_Grid_terrain[gridOffset] & disallowedTerrain)) {
+		if (!map_terrain_is(gridOffset, disallowedTerrain)) {
 			if (map_soldier_strength_get(gridOffset)) {
 				return 0;
 			}

@@ -1,7 +1,6 @@
 #ifndef TERRAIN_PRIVATE_H
 #define TERRAIN_PRIVATE_H
 
-#include "Data/Grid.h"
 #include "Data/State.h"
 #include "map/grid.h"
 

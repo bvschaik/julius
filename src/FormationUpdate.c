@@ -18,6 +18,7 @@
 #include "map/routing.h"
 #include "map/routing_path.h"
 #include "map/soldier_strength.h"
+#include "map/terrain.h"
 #include "sound/effect.h"
 
 static const int enemyAttackBuildingPriority[4][100] = {
@@ -683,7 +684,7 @@ static void update_herd_formation(const formation *m)
 {
     if (formation_can_spawn_wolf(m->id)) {
         // spawn new wolf
-        if (!(Data_Grid_terrain[map_grid_offset(m->x, m->y)] & Terrain_d73f)) {
+        if (!map_terrain_is(map_grid_offset(m->x, m->y), Terrain_d73f)) {
             figure *wolf = figure_create(m->figure_type, m->x, m->y, DIR_0_TOP);
             wolf->actionState = FigureActionState_196_HerdAnimalAtRest;
             wolf->formationId = m->id;

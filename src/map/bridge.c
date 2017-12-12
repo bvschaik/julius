@@ -35,14 +35,13 @@ int map_bridge_calculate_length_direction(int x, int y, int is_ship_bridge, int 
     bridge.length = *length = 0;
     bridge.direction = *direction = 0;
 
-    int terrain = Data_Grid_terrain[grid_offset];
-    if (!(terrain & Terrain_Water)) {
+    if (!map_terrain_is(grid_offset, TERRAIN_WATER)) {
         return 0;
     }
-    if (terrain & Terrain_Road || terrain & Terrain_Building) {
+    if (map_terrain_is(grid_offset, TERRAIN_ROAD | TERRAIN_BUILDING)) {
         return 0;
     }
-    if (Terrain_countTerrainTypeDirectlyAdjacentTo(grid_offset, Terrain_Water) != 3) {
+    if (Terrain_countTerrainTypeDirectlyAdjacentTo(grid_offset, TERRAIN_WATER) != 3) {
         return 0;
     }
     if (!map_terrain_is(map_grid_offset(x, y-1), TERRAIN_WATER)) {

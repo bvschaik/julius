@@ -3,8 +3,6 @@
 #include "Figure.h"
 #include "Terrain.h"
 
-#include "Data/Grid.h"
-
 #include "core/calc.h"
 #include "figure/enemy_army.h"
 #include "figure/properties.h"

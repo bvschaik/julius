@@ -7,7 +7,6 @@
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
-#include "Data/Grid.h"
 #include "Data/State.h"
 
 #include "core/calc.h"
@@ -174,9 +173,12 @@ void Terrain_removeBuildingFromGrids(int buildingId, int x, int y)
 	TerrainGraphics_updateRegionRubble(x, y, x + size, y + size);
 }
 
-#define ADD_ROAD(g) \
-	if (!(Data_Grid_terrain[g] & Terrain_NotClear)) \
-		map_terrain_add(g, TERRAIN_ROAD);
+static void add_road(int grid_offset)
+{
+    if (!map_terrain_is(grid_offset, Terrain_NotClear)) {
+        map_terrain_add(grid_offset, TERRAIN_ROAD);
+    }
+}
 
 void Terrain_addRoadsForGatehouse(int x, int y, int orientation)
 {
@@ -188,15 +190,15 @@ void Terrain_addRoadsForGatehouse(int x, int y, int orientation)
 
 	// free roads before/after gate
 	if (orientation == 1) {
-		ADD_ROAD(map_grid_offset(x, y-1));
-		ADD_ROAD(map_grid_offset(x+1, y-1));
-		ADD_ROAD(map_grid_offset(x, y+2));
-		ADD_ROAD(map_grid_offset(x+1, y+2));
+		add_road(map_grid_offset(x, y-1));
+		add_road(map_grid_offset(x+1, y-1));
+		add_road(map_grid_offset(x, y+2));
+		add_road(map_grid_offset(x+1, y+2));
 	} else if (orientation == 2) {
-		ADD_ROAD(map_grid_offset(x-1, y));
-		ADD_ROAD(map_grid_offset(x-1, y+1));
-		ADD_ROAD(map_grid_offset(x+2, y));
-		ADD_ROAD(map_grid_offset(x+2, y+1));
+		add_road(map_grid_offset(x-1, y));
+		add_road(map_grid_offset(x-1, y+1));
+		add_road(map_grid_offset(x+2, y));
+		add_road(map_grid_offset(x+2, y+1));
 	}
 }
 
@@ -461,16 +463,16 @@ int Terrain_getOrientationTriumphalArch(int x, int y)
 
 	int gridOffset = map_grid_offset(x, y);
 	// check corner tiles
-	if (Data_Grid_terrain[gridOffset] & Terrain_NotClear) {
+	if (map_terrain_is(gridOffset, Terrain_NotClear)) {
 		numBlockedTiles++;
 	}
-	if (Data_Grid_terrain[gridOffset + map_grid_delta(2, 0)] & Terrain_NotClear) {
+	if (map_terrain_is(gridOffset + map_grid_delta(2, 0), Terrain_NotClear)) {
 		numBlockedTiles++;
 	}
-	if (Data_Grid_terrain[gridOffset + map_grid_delta(0, 2)] & Terrain_NotClear) {
+	if (map_terrain_is(gridOffset + map_grid_delta(0, 2), Terrain_NotClear)) {
 		numBlockedTiles++;
 	}
-	if (Data_Grid_terrain[gridOffset + map_grid_delta(2, 2)] & Terrain_NotClear) {
+	if (map_terrain_is(gridOffset + map_grid_delta(2, 2), Terrain_NotClear)) {
 		numBlockedTiles++;
 	}
 	// road tiles top to bottom

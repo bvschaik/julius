@@ -164,27 +164,27 @@ static void drawBuildingGhostDefault()
 	}
 	// check if we can place building
 	if (Data_State.selectedBuilding.meadowRequired) {
-		if (!Terrain_existsTileWithinRadiusWithType(xStart, yStart, 3, 1, Terrain_Meadow)) {
+		if (!Terrain_existsTileWithinRadiusWithType(xStart, yStart, 3, 1, TERRAIN_MEADOW)) {
 			fullyObstructed = 1;
 			placementObstructed = 1;
 		}
 	} else if (Data_State.selectedBuilding.rockRequired) {
-		if (!Terrain_existsTileWithinRadiusWithType(xStart, yStart, 2, 1, Terrain_Rock)) {
+		if (!Terrain_existsTileWithinRadiusWithType(xStart, yStart, 2, 1, TERRAIN_ROCK)) {
 			fullyObstructed = 1;
 			placementObstructed = 1;
 		}
 	} else if (Data_State.selectedBuilding.treesRequired) {
-		if (!Terrain_existsTileWithinRadiusWithType(xStart, yStart, 2, 1, Terrain_Tree | Terrain_Scrub)) {
+		if (!Terrain_existsTileWithinRadiusWithType(xStart, yStart, 2, 1, TERRAIN_TREE | TERRAIN_SCRUB)) {
 			fullyObstructed = 1;
 			placementObstructed = 1;
 		}
 	} else if (Data_State.selectedBuilding.waterRequired) {
-		if (!Terrain_existsTileWithinRadiusWithType(xStart, yStart, 2, 3, Terrain_Water)) {
+		if (!Terrain_existsTileWithinRadiusWithType(xStart, yStart, 2, 3, TERRAIN_WATER)) {
 			fullyObstructed = 1;
 			placementObstructed = 1;
 		}
 	} else if (Data_State.selectedBuilding.wallRequired) {
-		if (!Terrain_existsTileWithinRadiusWithType(xStart, yStart, 2, 0, Terrain_Wall)) {
+		if (!Terrain_existsTileWithinRadiusWithType(xStart, yStart, 2, 0, TERRAIN_WALL)) {
 			fullyObstructed = 1;
 			placementObstructed = 1;
 		}
@@ -236,10 +236,10 @@ static void drawBuildingGhostDefault()
 		int tileOffset = gridOffset + tileGridOffsets[orientationIndex][i];
 		int terrain = Data_Grid_terrain[tileOffset] & Terrain_NotClear;
 		if (type == BUILDING_GATEHOUSE || type == BUILDING_TRIUMPHAL_ARCH || type == BUILDING_PLAZA) {
-			terrain &= ~Terrain_Road;
+			terrain &= ~TERRAIN_ROAD;
 		}
 		if (type == BUILDING_TOWER) {
-			terrain &= ~Terrain_Wall;
+			terrain &= ~TERRAIN_WALL;
 		}
 		if (terrain || map_has_figure_at(tileOffset)) {
 			placementObstructed = 1;
@@ -388,7 +388,7 @@ static void drawBuildingGhostDraggableReservoir()
 		Graphics_drawIsometricTop(graphicId, xOffsetBase, yOffsetBase, COLOR_MASK_GREEN);
 		if (Terrain_existsTileWithinAreaWithType(
 			Data_State.map.current.x - 2, Data_State.map.current.y - 2,
-			5, Terrain_Water)) {
+			5, TERRAIN_WATER)) {
 			const image *img = image_get(graphicId);
 			Graphics_drawImageMasked(graphicId + 1,
 				xOffsetBase - 58 + img->sprite_offset_x - 2,
@@ -784,13 +784,13 @@ static void drawBuildingGhostFort()
 
 	for (int i = 0; i < numTilesFort; i++) {
 		int tileOffset = gridOffsetFort + tileGridOffsets[orientationIndex][i];
-		if (Data_Grid_terrain[tileOffset] & Terrain_NotClear) {
+		if (map_terrain_is(tileOffset, Terrain_NotClear)) {
 			placementObstructed = 1;
 		}
 	}
 	for (int i = 0; i < numTilesGround; i++) {
 		int tileOffset = gridOffsetGround + tileGridOffsets[orientationIndex][i];
-		if (Data_Grid_terrain[tileOffset] & Terrain_NotClear) {
+		if (map_terrain_is(tileOffset, Terrain_NotClear)) {
 			placementObstructed = 1;
 		}
 	}
@@ -804,7 +804,7 @@ static void drawBuildingGhostFort()
 		for (int i = 0; i < numTilesFort; i++) {
 			int tileOffset = gridOffsetFort + tileGridOffsets[orientationIndex][i];
 			int tileObstructed = 0;
-			if (Data_Grid_terrain[tileOffset] & Terrain_NotClear) {
+			if (map_terrain_is(tileOffset, Terrain_NotClear)) {
 				tileObstructed = 1;
 			}
 			int xOffset = xOffsetBase + xViewOffsets[i];
@@ -818,7 +818,7 @@ static void drawBuildingGhostFort()
 		for (int i = 0; i < numTilesGround; i++) {
 			int tileOffset = gridOffsetGround + tileGridOffsets[orientationIndex][i];
 			int tileObstructed = 0;
-			if (Data_Grid_terrain[tileOffset] & Terrain_NotClear) {
+			if (map_terrain_is(tileOffset, Terrain_NotClear)) {
 				tileObstructed = 1;
 			}
 			int xOffset = xOffsetGround + xViewOffsets[i];
@@ -860,24 +860,24 @@ static void drawBuildingGhostHippodrome()
 	int numTiles = 25;
 	int orientationIndex = Data_State.map.orientation / 2;
 	int gridOffset1 = Data_State.map.current.gridOffset;
-	int gridOffset2 = gridOffset1 + 5;
-	int gridOffset3 = gridOffset1 + 10;
+	int gridOffset2 = gridOffset1 + map_grid_delta(5, 0);
+	int gridOffset3 = gridOffset1 + map_grid_delta(10, 0);
 
 	for (int i = 0; i < numTiles; i++) {
 		int tileOffset = gridOffset1 + tileGridOffsets[orientationIndex][i];
-		if (Data_Grid_terrain[tileOffset] & Terrain_NotClear) {
+		if (map_terrain_is(tileOffset, Terrain_NotClear)) {
 			placementObstructed = 1;
 		}
 	}
 	for (int i = 0; i < numTiles; i++) {
 		int tileOffset = gridOffset2 + tileGridOffsets[orientationIndex][i];
-		if (Data_Grid_terrain[tileOffset] & Terrain_NotClear) {
+		if (map_terrain_is(tileOffset, Terrain_NotClear)) {
 			placementObstructed = 1;
 		}
 	}
 	for (int i = 0; i < numTiles; i++) {
 		int tileOffset = gridOffset3 + tileGridOffsets[orientationIndex][i];
-		if (Data_Grid_terrain[tileOffset] & Terrain_NotClear) {
+		if (map_terrain_is(tileOffset, Terrain_NotClear)) {
 			placementObstructed = 1;
 		}
 	}
@@ -1074,7 +1074,7 @@ static void drawBuildingGhostRoad()
 		} else {
 			tileObstructed = 1;
 		}
-	} else if (Data_Grid_terrain[gridOffset] & Terrain_NotClear) {
+	} else if (map_terrain_is(gridOffset, Terrain_NotClear)) {
 		tileObstructed = 1;
 	} else {
 		graphicId = image_group(GROUP_TERRAIN_ROAD);

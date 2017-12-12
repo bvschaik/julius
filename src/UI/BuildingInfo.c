@@ -173,13 +173,13 @@ void UI_BuildingInfo_init()
 		} else {
 			context.terrainType = 2;
 		}
-	} else if ((Data_Grid_terrain[gridOffset] & (Terrain_Water|Terrain_Building)) == Terrain_Water) {
+	} else if ((map_terrain_get(gridOffset) & (TERRAIN_WATER|TERRAIN_BUILDING)) == TERRAIN_WATER) {
 		context.terrainType = 3;
 	} else if (map_terrain_is(gridOffset, TERRAIN_SCRUB)) {
 		context.terrainType = 4;
 	} else if (map_terrain_is(gridOffset, TERRAIN_GARDEN)) {
 		context.terrainType = 12;
-	} else if ((Data_Grid_terrain[gridOffset] & (Terrain_Road|Terrain_Building)) == Terrain_Road) {
+	} else if ((map_terrain_get(gridOffset) & (TERRAIN_ROAD|TERRAIN_BUILDING)) == TERRAIN_ROAD) {
 		context.terrainType = 6;
 	} else if (map_terrain_is(gridOffset, TERRAIN_AQUEDUCT)) {
 		context.terrainType = 7;

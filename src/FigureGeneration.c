@@ -9,7 +9,6 @@
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
-#include "Data/Grid.h"
 
 #include "building/model.h"
 #include "city/message.h"
@@ -20,6 +19,7 @@
 #include "map/desirability.h"
 #include "map/image.h"
 #include "map/random.h"
+#include "map/terrain.h"
 
 #define SET_LABOR_PROBLEM(b) if (b->housesCovered <= 0) b->showOnProblemOverlay = 2
 #define SPAWN_LABOR_SEEKER(t) if (b->housesCovered <= t) generateLaborSeeker(buildingId, b, xRoad, yRoad);
@@ -546,10 +546,10 @@ static void setMarketGraphic(int buildingId, struct Data_Building *b)
 	}
 	if (map_desirability_get(b->gridOffset) <= 30) {
 		Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size,
-			image_group(GROUP_BUILDING_MARKET), Terrain_Building);
+			image_group(GROUP_BUILDING_MARKET), TERRAIN_BUILDING);
 	} else {
 		Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size,
-			image_group(GROUP_BUILDING_MARKET_FANCY), Terrain_Building);
+			image_group(GROUP_BUILDING_MARKET_FANCY), TERRAIN_BUILDING);
 	}
 }
 
@@ -624,7 +624,7 @@ static void setBathhouseGraphic(int buildingId, struct Data_Building *b)
 	if (!BuildingIsInUse(buildingId)) {
 		return;
 	}
-	if (Terrain_existsTileWithinAreaWithType(b->x, b->y, b->size, Terrain_ReservoirRange)) {
+	if (Terrain_existsTileWithinAreaWithType(b->x, b->y, b->size, TERRAIN_RESERVOIR_RANGE)) {
 		b->hasWaterAccess = 1;
 	} else {
 		b->hasWaterAccess = 0;
@@ -632,18 +632,18 @@ static void setBathhouseGraphic(int buildingId, struct Data_Building *b)
 	if (b->hasWaterAccess && b->numWorkers) {
 		if (map_desirability_get(b->gridOffset) <= 30) {
 			Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size,
-				image_group(GROUP_BUILDING_BATHHOUSE_WATER), Terrain_Building);
+				image_group(GROUP_BUILDING_BATHHOUSE_WATER), TERRAIN_BUILDING);
 		} else {
 			Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size,
-				image_group(GROUP_BUILDING_BATHHOUSE_FANCY_WATER), Terrain_Building);
+				image_group(GROUP_BUILDING_BATHHOUSE_FANCY_WATER), TERRAIN_BUILDING);
 		}
 	} else {
 		if (map_desirability_get(b->gridOffset) <= 30) {
 			Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size,
-				image_group(GROUP_BUILDING_BATHHOUSE_NO_WATER), Terrain_Building);
+				image_group(GROUP_BUILDING_BATHHOUSE_NO_WATER), TERRAIN_BUILDING);
 		} else {
 			Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size,
-				image_group(GROUP_BUILDING_BATHHOUSE_FANCY_NO_WATER), Terrain_Building);
+				image_group(GROUP_BUILDING_BATHHOUSE_FANCY_NO_WATER), TERRAIN_BUILDING);
 		}
 	}
 }
@@ -949,10 +949,10 @@ static void setSenateGraphic(int buildingId, struct Data_Building *b)
 	}
 	if (map_desirability_get(b->gridOffset) <= 30) {
 		Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size,
-			image_group(GROUP_BUILDING_SENATE), Terrain_Building);
+			image_group(GROUP_BUILDING_SENATE), TERRAIN_BUILDING);
 	} else {
 		Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size,
-			image_group(GROUP_BUILDING_SENATE_FANCY), Terrain_Building);
+			image_group(GROUP_BUILDING_SENATE_FANCY), TERRAIN_BUILDING);
 	}
 }
 
@@ -1160,7 +1160,7 @@ static void spawnFigureNativeHut(int buildingId, struct Data_Building *b)
 static void spawnFigureNativeMeeting(int buildingId, struct Data_Building *b)
 {
 	Terrain_addBuildingToGrids(buildingId, b->x, b->y, 2,
-		image_group(GROUP_BUILDING_NATIVE) + 2, Terrain_Building);
+		image_group(GROUP_BUILDING_NATIVE) + 2, TERRAIN_BUILDING);
 	if (Data_CityInfo.nativeMissionPostOperational > 0 &&
 		!buildingHasFigureOfType(buildingId, FIGURE_NATIVE_TRADER, 0)) {
 		int xOut, yOut;

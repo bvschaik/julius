@@ -5,6 +5,7 @@
 #include "map/grid.h"
 #include "map/property.h"
 #include "map/ring.h"
+#include "map/terrain.h"
 
 #include "Data/Building.h"
 #include "Data/State.h"
@@ -87,12 +88,12 @@ static void update_terrain()
 	int grid_offset = Data_State.map.gridStartOffset;
 	for (int y = 0; y < Data_State.map.height; y++, grid_offset += Data_State.map.gridBorderSize) {
 		for (int x = 0; x < Data_State.map.width; x++, grid_offset++) {
-			int terrain = Data_Grid_terrain[grid_offset];
+			int terrain = map_terrain_get(grid_offset);
 			if (map_property_is_plaza_or_earthquake(grid_offset)) {
 				int type;
-				if (terrain & Terrain_Road) {
+				if (terrain & TERRAIN_ROAD) {
 					type = BUILDING_PLAZA;
-				} else if (terrain & Terrain_Rock) {
+				} else if (terrain & TERRAIN_ROCK) {
 					// earthquake fault line: slight negative
 					type = BUILDING_HOUSE_VACANT_LOT;
 				} else {
@@ -106,14 +107,14 @@ static void update_terrain()
                     model->desirability_step,
                     model->desirability_step_size,
                     model->desirability_range);
-			} else if (terrain & Terrain_Garden) {
+			} else if (terrain & TERRAIN_GARDEN) {
                 const model_building *model = model_get_building(BUILDING_GARDENS);
                 add_to_terrain(x, y, 1,
                     model->desirability_value,
                     model->desirability_step,
                     model->desirability_step_size,
                     model->desirability_range);
-			} else if (terrain & Terrain_Rubble) {
+			} else if (terrain & TERRAIN_RUBBLE) {
 				add_to_terrain(x, y, 1, -2, 1, 1, 2);
 			}
 		}

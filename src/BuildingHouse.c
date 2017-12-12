@@ -65,7 +65,7 @@ static void create_house_tile(building_type type, int x, int y, int image_id, in
     }
     bNew->distanceFromEntry = 0;
     Terrain_addBuildingToGrids(newBuildingId, bNew->x, bNew->y, 1,
-            image_id + (map_random_get(bNew->gridOffset) & 1), Terrain_Building);
+            image_id + (map_random_get(bNew->gridOffset) & 1), TERRAIN_BUILDING);
 }
 
 int BuildingHouse_canExpand(int buildingId, int numTiles)
@@ -99,7 +99,7 @@ int BuildingHouse_canExpand(int buildingId, int numTiles)
 		int okTiles = 0;
 		for (int i = 0; i < numTiles; i++) {
 			int tileOffset = baseOffset + tileGridOffsets[i];
-			if ((Data_Grid_terrain[tileOffset] & Terrain_NotClear) == 0) {
+			if (!map_terrain_is(tileOffset, Terrain_NotClear)) {
 				okTiles++;
 			} else if (map_terrain_is(tileOffset, TERRAIN_BUILDING)) {
 				int tileBuildingId = map_building_at(tileOffset);
@@ -124,7 +124,7 @@ int BuildingHouse_canExpand(int buildingId, int numTiles)
 		int okTiles = 0;
 		for (int i = 0; i < numTiles; i++) {
 			int tileOffset = baseOffset + tileGridOffsets[i];
-			if ((Data_Grid_terrain[tileOffset] & Terrain_NotClear) == 0) {
+			if (!map_terrain_is(tileOffset, Terrain_NotClear)) {
 				okTiles++;
 			} else if (map_terrain_is(tileOffset, TERRAIN_BUILDING)) {
 				int tileBuildingId = map_building_at(tileOffset);
@@ -265,7 +265,7 @@ void BuildingHouse_expandToLargeInsula(int buildingId)
 	b->x = mergeData.x;
 	b->y = mergeData.y;
 	b->gridOffset = map_grid_offset(b->x, b->y);
-	Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size, graphicId, Terrain_Building);
+	Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size, graphicId, TERRAIN_BUILDING);
 }
 
 void BuildingHouse_expandToLargeVilla(int buildingId)
@@ -286,7 +286,7 @@ void BuildingHouse_expandToLargeVilla(int buildingId)
 	b->x = mergeData.x;
 	b->y = mergeData.y;
 	b->gridOffset = map_grid_offset(b->x, b->y);
-	Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size, graphicId, Terrain_Building);
+	Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size, graphicId, TERRAIN_BUILDING);
 }
 
 void BuildingHouse_expandToLargePalace(int buildingId)
@@ -307,7 +307,7 @@ void BuildingHouse_expandToLargePalace(int buildingId)
 	b->x = mergeData.x;
 	b->y = mergeData.y;
 	b->gridOffset = map_grid_offset(b->x, b->y);
-	Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size, graphicId, Terrain_Building);
+	Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size, graphicId, TERRAIN_BUILDING);
 }
 
 static void merge(int buildingId)
@@ -330,7 +330,7 @@ static void merge(int buildingId)
 	b->y = mergeData.y;
 	b->gridOffset = map_grid_offset(b->x, b->y);
 	b->houseIsMerged = 1;
-	Terrain_addBuildingToGrids(buildingId, b->x, b->y, 2, graphicId, Terrain_Building);
+	Terrain_addBuildingToGrids(buildingId, b->x, b->y, 2, graphicId, TERRAIN_BUILDING);
 }
 
 static void splitMerged(int buildingId)
@@ -358,7 +358,7 @@ static void splitMerged(int buildingId)
 
 	int graphicId = house_image_group(b->subtype.houseLevel);
 	Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size,
-		graphicId + (map_random_get(b->gridOffset) & 1), Terrain_Building);
+		graphicId + (map_random_get(b->gridOffset) & 1), TERRAIN_BUILDING);
 	
 	// the other tiles (new buildings)
 	create_house_tile(b->type, b->x + 1, b->y, graphicId, populationPerTile, inventoryPerTile);
@@ -393,7 +393,7 @@ static void splitSize2(int buildingId)
 
 	int graphicId = house_image_group(b->subtype.houseLevel);
 	Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size,
-		graphicId + (map_random_get(b->gridOffset) & 1), Terrain_Building);
+		graphicId + (map_random_get(b->gridOffset) & 1), TERRAIN_BUILDING);
 
 	// the other tiles (new buildings)
 	create_house_tile(b->type, b->x + 1, b->y, graphicId, populationPerTile, inventoryPerTile);
@@ -428,7 +428,7 @@ static void splitSize3(int buildingId)
 
 	int graphicId = house_image_group(b->subtype.houseLevel);
 	Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size,
-		graphicId + (map_random_get(b->gridOffset) & 1), Terrain_Building);
+		graphicId + (map_random_get(b->gridOffset) & 1), TERRAIN_BUILDING);
 
 	// the other tiles (new buildings)
 	create_house_tile(BUILDING_HOUSE_MEDIUM_INSULA, b->x, b->y + 1, graphicId, populationPerTile, inventoryPerTile);
@@ -471,7 +471,7 @@ void BuildingHouse_devolveFromLargeVilla(int buildingId)
 
 	int graphicId = house_image_group(b->subtype.houseLevel);
 	Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size,
-		graphicId + (map_random_get(b->gridOffset) & 1), Terrain_Building);
+		graphicId + (map_random_get(b->gridOffset) & 1), TERRAIN_BUILDING);
 
 	// the other tiles (new buildings)
 	graphicId = house_image_group(HOUSE_MEDIUM_INSULA);
@@ -508,7 +508,7 @@ void BuildingHouse_devolveFromLargePalace(int buildingId)
 	b->distanceFromEntry = 0;
 
 	int graphicId = house_image_group(b->subtype.houseLevel);
-	Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size, graphicId, Terrain_Building);
+	Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size, graphicId, TERRAIN_BUILDING);
 
 	// the other tiles (new buildings)
 	graphicId = house_image_group(HOUSE_MEDIUM_INSULA);
@@ -536,7 +536,7 @@ void BuildingHouse_changeTo(int buildingId, int buildingType)
 		graphicId += houseGraphicOffset[b->subtype.houseLevel];
 		graphicId += map_random_get(b->gridOffset) & (houseGraphicNumTypes[b->subtype.houseLevel] - 1);
 	}
-	Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size, graphicId, Terrain_Building);
+	Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size, graphicId, TERRAIN_BUILDING);
 }
 
 void BuildingHouse_changeToVacantLot(int buildingId)
@@ -549,22 +549,22 @@ void BuildingHouse_changeToVacantLot(int buildingId)
 		Terrain_removeBuildingFromGrids(buildingId, b->x, b->y);
 		b->houseIsMerged = 0;
 		b->size = b->houseSize = 1;
-		Terrain_addBuildingToGrids(buildingId, b->x, b->y, 1, graphicId, Terrain_Building);
+		Terrain_addBuildingToGrids(buildingId, b->x, b->y, 1, graphicId, TERRAIN_BUILDING);
 
 		int b2 = Building_create(b->type, b->x + 1, b->y);
 		Data_Buildings[b2].housePopulation = 0;
 		Data_Buildings[b2].distanceFromEntry = 0;
-		Terrain_addBuildingToGrids(b2, b->x + 1, b->y, 1, graphicId, Terrain_Building);
+		Terrain_addBuildingToGrids(b2, b->x + 1, b->y, 1, graphicId, TERRAIN_BUILDING);
 
 		int b3 = Building_create(b->type, b->x, b->y + 1);
 		Data_Buildings[b3].housePopulation = 0;
 		Data_Buildings[b3].distanceFromEntry = 0;
-		Terrain_addBuildingToGrids(b3, b->x, b->y + 1, 1, graphicId, Terrain_Building);
+		Terrain_addBuildingToGrids(b3, b->x, b->y + 1, 1, graphicId, TERRAIN_BUILDING);
 
 		int b4 = Building_create(b->type, b->x + 1, b->y + 1);
 		Data_Buildings[b4].housePopulation = 0;
 		Data_Buildings[b4].distanceFromEntry = 0;
-		Terrain_addBuildingToGrids(b4, b->x + 1, b->y + 1, 1, graphicId, Terrain_Building);
+		Terrain_addBuildingToGrids(b4, b->x + 1, b->y + 1, 1, graphicId, TERRAIN_BUILDING);
 	} else {
 		map_image_set(b->gridOffset, graphicId);
 	}

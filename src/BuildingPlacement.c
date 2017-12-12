@@ -17,7 +17,6 @@
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
-#include "Data/Grid.h"
 #include "Data/State.h"
 
 #include "building/count.h"
@@ -84,7 +83,7 @@ static int itemsPlaced;
 static void addToTerrainFort(int type, int buildingId, int x, int y, int size)
 {
 	Data_Buildings[buildingId].prevPartBuildingId = 0;
-	Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_FORT), Terrain_Building);
+	Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_FORT), TERRAIN_BUILDING);
 	int formationId = Formation_createLegion(buildingId);
 	Data_Buildings[buildingId].formationId = formationId;
 	if (type == BUILDING_FORT_LEGIONARIES) {
@@ -107,7 +106,7 @@ static void addToTerrainFort(int type, int buildingId, int x, int y, int size)
 	Data_Buildings[buildingId].nextPartBuildingId = groundId;
 	Data_Buildings[groundId].nextPartBuildingId = 0;
 	Terrain_addBuildingToGrids(groundId, x + 3, y - 1, 4,
-		image_group(GROUP_BUILDING_FORT) + 1, Terrain_Building);
+		image_group(GROUP_BUILDING_FORT) + 1, TERRAIN_BUILDING);
 }
 
 static void addToTerrainHippodrome(int type, int buildingId, int x, int y, int size)
@@ -131,7 +130,7 @@ static void addToTerrainHippodrome(int type, int buildingId, int x, int y, int s
 		case DIR_6_LEFT:   graphicId = graphicId1; break;
 		default: return;
 	}
-	Terrain_addBuildingToGrids(buildingId, x, y, size, graphicId, Terrain_Building);
+	Terrain_addBuildingToGrids(buildingId, x, y, size, graphicId, TERRAIN_BUILDING);
 
 	int part2Id = Building_create(BUILDING_HIPPODROME, x + 5, y);
 	struct Data_Building *part2 = &Data_Buildings[part2Id];
@@ -148,7 +147,7 @@ static void addToTerrainHippodrome(int type, int buildingId, int x, int y, int s
 		case DIR_0_TOP: case DIR_4_BOTTOM: graphicId = graphicId2 + 2; break;
 		case DIR_2_RIGHT: case DIR_6_LEFT: graphicId = graphicId1 + 2; break;
 	}
-	Terrain_addBuildingToGrids(part2Id, x + 5, y, size, graphicId, Terrain_Building);
+	Terrain_addBuildingToGrids(part2Id, x + 5, y, size, graphicId, TERRAIN_BUILDING);
 
 	int part3Id = Building_create(BUILDING_HIPPODROME, x + 10, y);
 	struct Data_Building *part3 = &Data_Buildings[part3Id];
@@ -167,7 +166,7 @@ static void addToTerrainHippodrome(int type, int buildingId, int x, int y, int s
 		case DIR_4_BOTTOM: graphicId = graphicId2; break;
 		case DIR_6_LEFT: graphicId = graphicId1 + 4; break;
 	}
-	Terrain_addBuildingToGrids(part3Id, x + 10, y, size, graphicId, Terrain_Building);
+	Terrain_addBuildingToGrids(part3Id, x + 10, y, size, graphicId, TERRAIN_BUILDING);
 }
 
 static int addToTerrainWarehouseSpace(int x, int y, int prevId)
@@ -177,7 +176,7 @@ static int addToTerrainWarehouseSpace(int x, int y, int prevId)
 	Data_Buildings[buildingId].prevPartBuildingId = prevId;
 	Data_Buildings[prevId].nextPartBuildingId = buildingId;
 	Terrain_addBuildingToGrids(buildingId, x, y, 1,
-		image_group(GROUP_BUILDING_WAREHOUSE_STORAGE_EMPTY), Terrain_Building);
+		image_group(GROUP_BUILDING_WAREHOUSE_STORAGE_EMPTY), TERRAIN_BUILDING);
 	return buildingId;
 }
 
@@ -185,7 +184,7 @@ static void addToTerrainWarehouse(int type, int buildingId, int x, int y)
 {
 	Data_Buildings[buildingId].storage_id = building_storage_create();
 	Data_Buildings[buildingId].prevPartBuildingId = 0;
-	Terrain_addBuildingToGrids(buildingId, x, y, 1, image_group(GROUP_BUILDING_WAREHOUSE), Terrain_Building);
+	Terrain_addBuildingToGrids(buildingId, x, y, 1, image_group(GROUP_BUILDING_WAREHOUSE), TERRAIN_BUILDING);
 
 	int prev = buildingId;
 	prev = addToTerrainWarehouseSpace(x + 1, y, prev);
@@ -205,120 +204,120 @@ static void addToTerrain(int type, int buildingId, int x, int y, int size,
 	switch (type) {
 		// houses
 		case BUILDING_HOUSE_LARGE_TENT:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_TENT) + 2, Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_TENT) + 2, TERRAIN_BUILDING);
 			break;
 		case BUILDING_HOUSE_SMALL_SHACK:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_SHACK), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_SHACK), TERRAIN_BUILDING);
 			break;
 		case BUILDING_HOUSE_LARGE_SHACK:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_SHACK) + 2, Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_SHACK) + 2, TERRAIN_BUILDING);
 			break;
 		case BUILDING_HOUSE_SMALL_HOVEL:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_HOVEL), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_HOVEL), TERRAIN_BUILDING);
 			break;
 		case BUILDING_HOUSE_LARGE_HOVEL:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_HOVEL) + 2, Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_HOVEL) + 2, TERRAIN_BUILDING);
 			break;
 		case BUILDING_HOUSE_SMALL_CASA:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_CASA), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_CASA), TERRAIN_BUILDING);
 			break;
 		case BUILDING_HOUSE_LARGE_CASA:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_CASA) + 2, Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_CASA) + 2, TERRAIN_BUILDING);
 			break;
 		case BUILDING_HOUSE_SMALL_INSULA:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_INSULA_1), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_INSULA_1), TERRAIN_BUILDING);
 			break;
 		case BUILDING_HOUSE_MEDIUM_INSULA:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_INSULA_1) + 2, Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_INSULA_1) + 2, TERRAIN_BUILDING);
 			break;
 		case BUILDING_HOUSE_LARGE_INSULA:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_INSULA_2), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_INSULA_2), TERRAIN_BUILDING);
 			break;
 		case BUILDING_HOUSE_GRAND_INSULA:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_INSULA_2) + 2, Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_INSULA_2) + 2, TERRAIN_BUILDING);
 			break;
 		case BUILDING_HOUSE_SMALL_VILLA:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_VILLA_1), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_VILLA_1), TERRAIN_BUILDING);
 			break;
 		case BUILDING_HOUSE_MEDIUM_VILLA:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_VILLA_1) + 2, Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_VILLA_1) + 2, TERRAIN_BUILDING);
 			break;
 		case BUILDING_HOUSE_LARGE_VILLA:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_VILLA_2), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_VILLA_2), TERRAIN_BUILDING);
 			break;
 		case BUILDING_HOUSE_GRAND_VILLA:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_VILLA_2) + 1, Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_VILLA_2) + 1, TERRAIN_BUILDING);
 			break;
 		case BUILDING_HOUSE_SMALL_PALACE:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_PALACE_1), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_PALACE_1), TERRAIN_BUILDING);
 			break;
 		case BUILDING_HOUSE_MEDIUM_PALACE:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_PALACE_1) + 1, Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_PALACE_1) + 1, TERRAIN_BUILDING);
 			break;
 		case BUILDING_HOUSE_LARGE_PALACE:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_PALACE_2), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_PALACE_2), TERRAIN_BUILDING);
 			break;
 		case BUILDING_HOUSE_LUXURY_PALACE:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_PALACE_2) + 1, Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOUSE_PALACE_2) + 1, TERRAIN_BUILDING);
 			break;
 		// entertainment
 		case BUILDING_AMPHITHEATER:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_AMPHITHEATER), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_AMPHITHEATER), TERRAIN_BUILDING);
 			break;
 		case BUILDING_THEATER:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_THEATER), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_THEATER), TERRAIN_BUILDING);
 			break;
 		case BUILDING_COLOSSEUM:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_COLOSSEUM), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_COLOSSEUM), TERRAIN_BUILDING);
 			break;
 		case BUILDING_GLADIATOR_SCHOOL:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_GLADIATOR_SCHOOL), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_GLADIATOR_SCHOOL), TERRAIN_BUILDING);
 			break;
 		case BUILDING_LION_HOUSE:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_LION_HOUSE), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_LION_HOUSE), TERRAIN_BUILDING);
 			break;
 		case BUILDING_ACTOR_COLONY:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_ACTOR_COLONY), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_ACTOR_COLONY), TERRAIN_BUILDING);
 			break;
 		case BUILDING_CHARIOT_MAKER:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_CHARIOT_MAKER), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_CHARIOT_MAKER), TERRAIN_BUILDING);
 			break;
 		// statues
 		case BUILDING_SMALL_STATUE:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_STATUE), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_STATUE), TERRAIN_BUILDING);
 			break;
 		case BUILDING_MEDIUM_STATUE:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_STATUE) + 1, Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_STATUE) + 1, TERRAIN_BUILDING);
 			break;
 		case BUILDING_LARGE_STATUE:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_STATUE) + 2, Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_STATUE) + 2, TERRAIN_BUILDING);
 			break;
 		// health
 		case BUILDING_DOCTOR:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_DOCTOR), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_DOCTOR), TERRAIN_BUILDING);
 			break;
 		case BUILDING_HOSPITAL:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOSPITAL), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_HOSPITAL), TERRAIN_BUILDING);
 			break;
 		case BUILDING_BATHHOUSE:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_BATHHOUSE_NO_WATER), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_BATHHOUSE_NO_WATER), TERRAIN_BUILDING);
 			break;
 		case BUILDING_BARBER:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_BARBER), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_BARBER), TERRAIN_BUILDING);
 			break;
 		// education
 		case BUILDING_SCHOOL:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_SCHOOL), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_SCHOOL), TERRAIN_BUILDING);
 			break;
 		case BUILDING_ACADEMY:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_ACADEMY), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_ACADEMY), TERRAIN_BUILDING);
 			break;
 		case BUILDING_LIBRARY:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_LIBRARY), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_LIBRARY), TERRAIN_BUILDING);
 			break;
 		// security
 		case BUILDING_PREFECTURE:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_PREFECTURE), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_PREFECTURE), TERRAIN_BUILDING);
 			break;
 		// farms
 		case BUILDING_WHEAT_FARM:
@@ -341,104 +340,104 @@ static void addToTerrain(int type, int buildingId, int x, int y, int size,
 			break;
 		// industry
 		case BUILDING_MARBLE_QUARRY:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_MARBLE_QUARRY), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_MARBLE_QUARRY), TERRAIN_BUILDING);
 			break;
 		case BUILDING_IRON_MINE:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_IRON_MINE), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_IRON_MINE), TERRAIN_BUILDING);
 			break;
 		case BUILDING_TIMBER_YARD:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_TIMBER_YARD), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_TIMBER_YARD), TERRAIN_BUILDING);
 			break;
 		case BUILDING_CLAY_PIT:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_CLAY_PIT), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_CLAY_PIT), TERRAIN_BUILDING);
 			break;
 		// workshops
 		case BUILDING_WINE_WORKSHOP:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_WINE_WORKSHOP), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_WINE_WORKSHOP), TERRAIN_BUILDING);
 			break;
 		case BUILDING_OIL_WORKSHOP:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_OIL_WORKSHOP), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_OIL_WORKSHOP), TERRAIN_BUILDING);
 			break;
 		case BUILDING_WEAPONS_WORKSHOP:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_WEAPONS_WORKSHOP), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_WEAPONS_WORKSHOP), TERRAIN_BUILDING);
 			break;
 		case BUILDING_FURNITURE_WORKSHOP:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_FURNITURE_WORKSHOP), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_FURNITURE_WORKSHOP), TERRAIN_BUILDING);
 			break;
 		case BUILDING_POTTERY_WORKSHOP:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_POTTERY_WORKSHOP), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_POTTERY_WORKSHOP), TERRAIN_BUILDING);
 			break;
 		// distribution
 		case BUILDING_GRANARY:
 			Data_Buildings[buildingId].storage_id = building_storage_create();
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_GRANARY), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_GRANARY), TERRAIN_BUILDING);
 			break;
 		case BUILDING_MARKET:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_MARKET), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_MARKET), TERRAIN_BUILDING);
 			break;
 		// government
 		case BUILDING_GOVERNORS_HOUSE:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_GOVERNORS_HOUSE), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_GOVERNORS_HOUSE), TERRAIN_BUILDING);
 			break;
 		case BUILDING_GOVERNORS_VILLA:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_GOVERNORS_VILLA), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_GOVERNORS_VILLA), TERRAIN_BUILDING);
 			break;
 		case BUILDING_GOVERNORS_PALACE:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_GOVERNORS_PALACE), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_GOVERNORS_PALACE), TERRAIN_BUILDING);
 			break;
 		case BUILDING_MISSION_POST:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_MISSION_POST), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_MISSION_POST), TERRAIN_BUILDING);
 			break;
 		case BUILDING_ENGINEERS_POST:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_ENGINEERS_POST), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_ENGINEERS_POST), TERRAIN_BUILDING);
 			break;
 		case BUILDING_FORUM:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_FORUM), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_FORUM), TERRAIN_BUILDING);
 			break;
 		// water
 		case BUILDING_FOUNTAIN:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_FOUNTAIN_1), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_FOUNTAIN_1), TERRAIN_BUILDING);
 			break;
 		case BUILDING_WELL:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_WELL), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_WELL), TERRAIN_BUILDING);
 			break;
 		// military
 		case BUILDING_MILITARY_ACADEMY:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_MILITARY_ACADEMY), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_MILITARY_ACADEMY), TERRAIN_BUILDING);
 			break;
 		// religion
 		case BUILDING_SMALL_TEMPLE_CERES:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_TEMPLE_CERES), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_TEMPLE_CERES), TERRAIN_BUILDING);
 			break;
 		case BUILDING_SMALL_TEMPLE_NEPTUNE:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_TEMPLE_NEPTUNE), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_TEMPLE_NEPTUNE), TERRAIN_BUILDING);
 			break;
 		case BUILDING_SMALL_TEMPLE_MERCURY:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_TEMPLE_MERCURY), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_TEMPLE_MERCURY), TERRAIN_BUILDING);
 			break;
 		case BUILDING_SMALL_TEMPLE_MARS:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_TEMPLE_MARS), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_TEMPLE_MARS), TERRAIN_BUILDING);
 			break;
 		case BUILDING_SMALL_TEMPLE_VENUS:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_TEMPLE_VENUS), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_TEMPLE_VENUS), TERRAIN_BUILDING);
 			break;
 		case BUILDING_LARGE_TEMPLE_CERES:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_TEMPLE_CERES) + 1, Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_TEMPLE_CERES) + 1, TERRAIN_BUILDING);
 			break;
 		case BUILDING_LARGE_TEMPLE_NEPTUNE:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_TEMPLE_NEPTUNE) + 1, Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_TEMPLE_NEPTUNE) + 1, TERRAIN_BUILDING);
 			break;
 		case BUILDING_LARGE_TEMPLE_MERCURY:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_TEMPLE_MERCURY) + 1, Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_TEMPLE_MERCURY) + 1, TERRAIN_BUILDING);
 			break;
 		case BUILDING_LARGE_TEMPLE_MARS:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_TEMPLE_MARS) + 1, Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_TEMPLE_MARS) + 1, TERRAIN_BUILDING);
 			break;
 		case BUILDING_LARGE_TEMPLE_VENUS:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_TEMPLE_VENUS) + 1, Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_TEMPLE_VENUS) + 1, TERRAIN_BUILDING);
 			break;
 		case BUILDING_ORACLE:
-			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_ORACLE), Terrain_Building);
+			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_ORACLE), TERRAIN_BUILDING);
 			break;
 		// ships
 		case BUILDING_SHIPYARD:
@@ -554,9 +553,9 @@ static int placeBuilding(int type, int x, int y)
 {
 	unsigned short terrainMask = Terrain_All;
 	if (type == BUILDING_GATEHOUSE || type == BUILDING_TRIUMPHAL_ARCH) {
-		terrainMask = ~Terrain_Road;
+		terrainMask = ~TERRAIN_ROAD;
 	} else if (type == BUILDING_TOWER) {
-		terrainMask = ~Terrain_Wall;
+		terrainMask = ~TERRAIN_WALL;
 	}
 	int size = building_properties_for_type(type)->size;
 	if (type == BUILDING_WAREHOUSE) {
@@ -707,7 +706,7 @@ static void placeHouses(int measureOnly, int xStart, int yStart, int xEnd, int y
 	for (int y = yMin; y <= yMax; y++) {
 		for (int x = xMin; x <= xMax; x++) {
 			int gridOffset = map_grid_offset(x,y);
-			if (Data_Grid_terrain[gridOffset] & Terrain_NotClear) {
+			if (map_terrain_is(gridOffset, Terrain_NotClear)) {
 				continue;
 			}
 			if (measureOnly) {
@@ -719,7 +718,7 @@ static void placeHouses(int measureOnly, int xStart, int yStart, int xEnd, int y
 				if (buildingId > 0) {
 					itemsPlaced++;
 					Terrain_addBuildingToGrids(buildingId, x, y, 1,
-						image_group(GROUP_BUILDING_HOUSE_VACANT_LOT), Terrain_Building);
+						image_group(GROUP_BUILDING_HOUSE_VACANT_LOT), TERRAIN_BUILDING);
 					if (!Terrain_existsTileWithinRadiusWithType(x, y, 1, 2, Terrain_Road)) {
 						needsRoadWarning = 1;
 					}
@@ -754,8 +753,7 @@ static void clearRegionConfirmed(int measureOnly, int xStart, int yStart, int xE
 			if (map_terrain_is(gridOffset, TERRAIN_ROCK | TERRAIN_ELEVATION)) {
 				continue;
 			}
-			int terrain = Data_Grid_terrain[gridOffset] & Terrain_NotClear;
-			if (terrain & Terrain_Building) {
+			if (map_terrain_is(gridOffset, TERRAIN_BUILDING)) {
 				int buildingId = map_building_at(gridOffset);
 				if (!buildingId) {
 					continue;
@@ -805,7 +803,7 @@ static void clearRegionConfirmed(int measureOnly, int xStart, int yStart, int xE
 					Undo_addBuildingToList(spaceId);
 					Data_Buildings[spaceId].state = BuildingState_DeletedByPlayer;
 				}
-			} else if (terrain & Terrain_Aqueduct) {
+			} else if (map_terrain_is(gridOffset, TERRAIN_AQUEDUCT)) {
 				Data_Grid_terrain[gridOffset] &= Terrain_2e80;
 				Data_Grid_aqueducts[gridOffset] = 0;
 				itemsPlaced++;
@@ -821,14 +819,14 @@ static void clearRegionConfirmed(int measureOnly, int xStart, int yStart, int xE
 				if (Data_Grid_aqueducts[gridOffset - 1] == 6) {
 					Data_Grid_aqueducts[gridOffset - 1] = 4;
 				}
-			} else if (terrain & Terrain_Water) {
+			} else if (map_terrain_is(gridOffset, TERRAIN_WATER)) {
 				if (!measureOnly && map_bridge_count_figures(gridOffset) > 0) {
 					city_warning_show(WARNING_PEOPLE_ON_BRIDGE);
 				} else if (confirm.bridgeConfirmed == 1) {
 					map_bridge_remove(gridOffset, measureOnly);
 					itemsPlaced++;
 				}
-			} else if (terrain) {
+			} else if (map_terrain_is(gridOffset, Terrain_NotClear)) {
 				Data_Grid_terrain[gridOffset] &= Terrain_2e80;
 				itemsPlaced++;
 			}
@@ -986,11 +984,11 @@ static void placeRoad(int measureOnly, int xStart, int yStart, int xEnd, int yEn
 	itemsPlaced = 0;
 	int startOffset = map_grid_offset(xStart, yStart);
 	int endOffset = map_grid_offset(xEnd, yEnd);
-	int forbiddenTerrainMask = Terrain_Building | Terrain_Wall | Terrain_1237;
-	if (Data_Grid_terrain[startOffset] & forbiddenTerrainMask) {
+	int forbiddenTerrainMask = TERRAIN_BUILDING | TERRAIN_WALL | Terrain_1237;
+	if (map_terrain_is(startOffset, forbiddenTerrainMask)) {
 		return;
 	}
-	if (Data_Grid_terrain[endOffset] & forbiddenTerrainMask) {
+	if (map_terrain_is(endOffset, forbiddenTerrainMask)) {
 		return;
 	}
 	
@@ -1012,11 +1010,11 @@ static void placeWall(int measureOnly, int xStart, int yStart, int xEnd, int yEn
 	itemsPlaced = 0;
 	int startOffset = map_grid_offset(xStart, yStart);
 	int endOffset = map_grid_offset(xEnd, yEnd);
-	int forbiddenTerrainMask = Terrain_127f | Terrain_Aqueduct | Terrain_AccessRamp;
-	if (Data_Grid_terrain[startOffset] & forbiddenTerrainMask) {
+	int forbiddenTerrainMask = Terrain_127f | TERRAIN_AQUEDUCT | TERRAIN_ACCESS_RAMP;
+	if (map_terrain_is(startOffset, forbiddenTerrainMask)) {
 		return;
 	}
-	if (Data_Grid_terrain[endOffset] & forbiddenTerrainMask) {
+	if (map_terrain_is(endOffset, forbiddenTerrainMask)) {
 		return;
 	}
 	map_routing_calculate_distances_for_building(ROUTED_BUILDING_WALL, xStart, yStart);
@@ -1393,15 +1391,15 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
 		if (info.placeReservoirAtStart == PlaceReservoir_Yes) {
 			int reservoirId = Building_create(BUILDING_RESERVOIR, xStart - 1, yStart - 1);
 			Undo_addBuildingToList(reservoirId);
-			Terrain_addBuildingToGrids(reservoirId, xStart-1, yStart-1, 3, image_group(GROUP_BUILDING_RESERVOIR), Terrain_Building);
+			Terrain_addBuildingToGrids(reservoirId, xStart-1, yStart-1, 3, image_group(GROUP_BUILDING_RESERVOIR), TERRAIN_BUILDING);
 			Data_Grid_aqueducts[map_grid_offset(xStart-1, yStart-1)] = 0;
 		}
 		if (info.placeReservoirAtEnd == PlaceReservoir_Yes) {
 			int reservoirId = Building_create(BUILDING_RESERVOIR, xEnd - 1, yEnd - 1);
 			Undo_addBuildingToList(reservoirId);
-			Terrain_addBuildingToGrids(reservoirId, xEnd-1, yEnd-1, 3, image_group(GROUP_BUILDING_RESERVOIR), Terrain_Building);
+			Terrain_addBuildingToGrids(reservoirId, xEnd-1, yEnd-1, 3, image_group(GROUP_BUILDING_RESERVOIR), TERRAIN_BUILDING);
 			Data_Grid_aqueducts[map_grid_offset(xEnd-1, yEnd-1)] = 0;
-			if (!Terrain_existsTileWithinAreaWithType(xStart - 2, yStart - 2, 5, Terrain_Water) && info.placeReservoirAtStart == PlaceReservoir_No) {
+			if (!Terrain_existsTileWithinAreaWithType(xStart - 2, yStart - 2, 5, TERRAIN_WATER) && info.placeReservoirAtStart == PlaceReservoir_No) {
 				building_placement_warning_check_reservoir(BUILDING_RESERVOIR);
 			}
 		}

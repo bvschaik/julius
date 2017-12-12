@@ -4,7 +4,6 @@
 #include "Formation.h"
 
 #include "Data/CityInfo.h"
-#include "Data/Grid.h"
 
 #include "core/calc.h"
 #include "figure/formation.h"
@@ -13,6 +12,7 @@
 #include "map/figure.h"
 #include "map/grid.h"
 #include "map/routing.h"
+#include "map/terrain.h"
 #include "scenario/gladiator_revolt.h"
 #include "sound/effect.h"
 #include "sound/speech.h"
@@ -706,7 +706,7 @@ int FigureAction_HerdEnemy_moveFormationTo(int formationId, int x, int y, int *x
                         canMove = 0;
                         break;
                     }
-					if (Data_Grid_terrain[gridOffset] & Terrain_1237) {
+					if (map_terrain_is(gridOffset, Terrain_1237)) {
 						canMove = 0;
 						break;
 					}

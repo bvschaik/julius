@@ -188,7 +188,7 @@ void UtilityManagement_updateReservoirFountain()
 		} else {
 			graphicId = image_group(GROUP_BUILDING_FOUNTAIN_1);
 		}
-		Terrain_addBuildingToGrids(i, b->x, b->y, 1, graphicId, Terrain_Building);
+		Terrain_addBuildingToGrids(i, b->x, b->y, 1, graphicId, TERRAIN_BUILDING);
 		if (map_terrain_is(b->gridOffset, TERRAIN_RESERVOIR_RANGE) && b->numWorkers) {
 			b->hasWaterAccess = 1;
 			Terrain_setWithRadius(b->x, b->y, 1,

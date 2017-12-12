@@ -537,7 +537,7 @@ void Building_determineGraphicIdsForOrientedBuildings()
 					}
 				}
 				Terrain_addBuildingToGrids(i, b->x, b->y, b->size,
-					graphicId, Terrain_Gatehouse | Terrain_Building);
+					graphicId, TERRAIN_GATEHOUSE | TERRAIN_BUILDING);
 				Terrain_addRoadsForGatehouse(b->x, b->y, b->subtype.orientation);
 				break;
 			case BUILDING_TRIUMPHAL_ARCH:
