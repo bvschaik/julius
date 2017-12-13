@@ -5,6 +5,7 @@
 #include "map/desirability.h"
 #include "map/building.h"
 #include "map/figure.h"
+#include "map/image.h"
 #include "map/property.h"
 #include "map/random.h"
 
@@ -39,7 +40,7 @@ static void drawOverlayColumn(int height, int xOffset, int yOffset, int isRed);
 
 static void draw_foot_with_size(int grid_offset, int image_x, int image_y)
 {
-    int image_id = Data_Grid_graphicIds[grid_offset];
+    int image_id = map_image_at(grid_offset);
     switch (map_property_multi_tile_size(grid_offset)) {
         case 1:
             DRAWFOOT_SIZE1(image_id, image_x, image_y);
@@ -61,7 +62,7 @@ static void draw_foot_with_size(int grid_offset, int image_x, int image_y)
 
 static void draw_top_with_size(int grid_offset, int image_x, int image_y)
 {
-    int image_id = Data_Grid_graphicIds[grid_offset];
+    int image_id = map_image_at(grid_offset);
     switch (map_property_multi_tile_size(grid_offset)) {
         case 1:
             DRAWTOP_SIZE1(image_id, image_x, image_y);
@@ -241,7 +242,7 @@ void UI_CityBuildings_drawOverlayTopsFiguresAnimation(int overlay)
 				}
 			}
 
-			int graphicId = Data_Grid_graphicIds[gridOffset];
+			int graphicId = map_image_at(gridOffset);
 			const image *img = image_get(graphicId);
 			if (img->num_animation_sprites && draw) {
 				if (map_property_is_draw_tile(gridOffset)) {
@@ -319,9 +320,9 @@ static void drawFootprintForWaterOverlay(int gridOffset, int xOffset, int yOffse
 			terrain |= Terrain_FountainRange;
 		}
 		if (Data_Buildings[buildingId].type == BUILDING_WELL || Data_Buildings[buildingId].type == BUILDING_FOUNTAIN) {
-			DRAWFOOT_SIZE1(Data_Grid_graphicIds[gridOffset], xOffset, yOffset);
+			DRAWFOOT_SIZE1(map_image_at(gridOffset), xOffset, yOffset);
 		} else if (Data_Buildings[buildingId].type == BUILDING_RESERVOIR) {
-			DRAWFOOT_SIZE3(Data_Grid_graphicIds[gridOffset], xOffset, yOffset);
+			DRAWFOOT_SIZE3(map_image_at(gridOffset), xOffset, yOffset);
 		} else {
 			int graphicOffset;
 			switch (terrain & (Terrain_ReservoirRange | Terrain_FountainRange)) {
@@ -353,7 +354,7 @@ static void drawFootprintForWaterOverlay(int gridOffset, int xOffset, int yOffse
 				graphicId += 19;
 				break;
 			default:
-				graphicId = Data_Grid_graphicIds[gridOffset];
+				graphicId = map_image_at(gridOffset);
 				break;
 		}
 		DRAWFOOT_SIZE1(graphicId, xOffset, yOffset);
@@ -370,9 +371,9 @@ static void drawTopForWaterOverlay(int gridOffset, int xOffset, int yOffset)
 	} else if (map_building_at(gridOffset)) {
 		int buildingId = map_building_at(gridOffset);
 		if (Data_Buildings[buildingId].type == BUILDING_WELL || Data_Buildings[buildingId].type == BUILDING_FOUNTAIN) {
-			DRAWTOP_SIZE1(Data_Grid_graphicIds[gridOffset], xOffset, yOffset);
+			DRAWTOP_SIZE1(map_image_at(gridOffset), xOffset, yOffset);
 		} else if (Data_Buildings[buildingId].type == BUILDING_RESERVOIR) {
-			DRAWTOP_SIZE3(Data_Grid_graphicIds[gridOffset], xOffset, yOffset);
+			DRAWTOP_SIZE3(map_image_at(gridOffset), xOffset, yOffset);
 		}
 	}
 }
@@ -413,7 +414,7 @@ static void drawTopForNativeOverlay(int gridOffset, int xOffset, int yOffset)
 			draw_top_with_size(gridOffset, xOffset, yOffset);
 		}
 	} else if (map_building_at(gridOffset)) {
-		int graphicId = Data_Grid_graphicIds[gridOffset];
+		int graphicId = map_image_at(gridOffset);
 		switch (Data_Buildings[map_building_at(gridOffset)].type) {
 			case BUILDING_NATIVE_HUT:
 				DRAWTOP_SIZE1(graphicId, xOffset, yOffset);
@@ -476,7 +477,7 @@ static void drawBuildingFootprintForOverlay(int buildingId, int gridOffset, int 
 	}
 	
 	int graphicId;
-	int origGraphicId = Data_Grid_graphicIds[gridOffset];
+	int origGraphicId = map_image_at(gridOffset);
 	struct Data_Building *b = &Data_Buildings[buildingId];
 	if (b->size == 1) {
 		graphicId = image_group(GROUP_TERRAIN_OVERLAY);
@@ -577,7 +578,7 @@ static void drawBuildingFootprintForOverlay(int buildingId, int gridOffset, int 
 				break;
 		}
 		if (drawOrig) {
-			DRAWFOOT_SIZE2(Data_Grid_graphicIds[gridOffset], xOffset, yOffset);
+			DRAWFOOT_SIZE2(map_image_at(gridOffset), xOffset, yOffset);
 		} else {
 			int graphicBase = image_group(GROUP_TERRAIN_OVERLAY) + graphicOffset;
 			if (b->houseSize) {
@@ -654,12 +655,12 @@ static void drawBuildingFootprintForOverlay(int buildingId, int gridOffset, int 
 		if (drawOrig) {
 			if (b->type >= BUILDING_WHEAT_FARM && b->type <= BUILDING_PIG_FARM) {
 				if (is_drawable_farmhouse(gridOffset, Data_State.map.orientation)) {
-					DRAWFOOT_SIZE2(Data_Grid_graphicIds[gridOffset], xOffset, yOffset);
+					DRAWFOOT_SIZE2(map_image_at(gridOffset), xOffset, yOffset);
 				} else if (map_property_is_draw_tile(gridOffset)) {
-					DRAWFOOT_SIZE1(Data_Grid_graphicIds[gridOffset], xOffset, yOffset);
+					DRAWFOOT_SIZE1(map_image_at(gridOffset), xOffset, yOffset);
 				}
 			} else {
-				DRAWFOOT_SIZE3(Data_Grid_graphicIds[gridOffset], xOffset, yOffset);
+				DRAWFOOT_SIZE3(map_image_at(gridOffset), xOffset, yOffset);
 			}
 		} else {
 			int draw = 1;
@@ -738,7 +739,7 @@ static void drawBuildingFootprintForOverlay(int buildingId, int gridOffset, int 
 				break;
 		}
 		if (drawOrig) {
-			DRAWFOOT_SIZE5(Data_Grid_graphicIds[gridOffset], xOffset, yOffset);
+			DRAWFOOT_SIZE5(map_image_at(gridOffset), xOffset, yOffset);
 		} else {
 			int graphicBase = image_group(GROUP_TERRAIN_OVERLAY) + graphicOffset;
 			if (b->houseSize) {
@@ -814,7 +815,7 @@ static void drawBuildingFootprintForDesirabilityOverlay(int gridOffset, int xOff
 		}
 		DRAWFOOT_SIZE1(image_group(GROUP_TERRAIN_DESIRABILITY) + offset, xOffset, yOffset);
 	} else {
-		DRAWFOOT_SIZE1(Data_Grid_graphicIds[gridOffset], xOffset, yOffset);
+		DRAWFOOT_SIZE1(map_image_at(gridOffset), xOffset, yOffset);
 	}
 }
 
@@ -855,13 +856,13 @@ static void drawBuildingTopForDesirabilityOverlay(int gridOffset, int xOffset, i
 		}
 		DRAWTOP_SIZE1(image_group(GROUP_TERRAIN_DESIRABILITY) + offset, xOffset, yOffset);
 	} else {
-		DRAWTOP_SIZE1(Data_Grid_graphicIds[gridOffset], xOffset, yOffset);
+		DRAWTOP_SIZE1(map_image_at(gridOffset), xOffset, yOffset);
 	}
 }
 
 static void drawBuildingTopForFireOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	int graphicId = Data_Grid_graphicIds[gridOffset];
+	int graphicId = map_image_at(gridOffset);
 	if (Data_Buildings[buildingId].type == BUILDING_PREFECTURE) {
 		DRAWTOP_SIZE1(graphicId, xOffset, yOffset);
 	} else if (Data_Buildings[buildingId].type == BUILDING_BURNING_RUIN) {
@@ -882,7 +883,7 @@ static void drawBuildingTopForFireOverlay(int gridOffset, int buildingId, int xO
 
 static void drawBuildingTopForDamageOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	int graphicId = Data_Grid_graphicIds[gridOffset];
+	int graphicId = map_image_at(gridOffset);
 	if (Data_Buildings[buildingId].type == BUILDING_ENGINEERS_POST) {
 		DRAWTOP_SIZE1(graphicId, xOffset, yOffset);
 	} else if (Data_Buildings[buildingId].damageRisk > 0) {
@@ -901,7 +902,7 @@ static void drawBuildingTopForDamageOverlay(int gridOffset, int buildingId, int 
 
 static void drawBuildingTopForCrimeOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	int graphicId = Data_Grid_graphicIds[gridOffset];
+	int graphicId = map_image_at(gridOffset);
 	if (Data_Buildings[buildingId].type == BUILDING_PREFECTURE) {
 		DRAWTOP_SIZE1(graphicId, xOffset, yOffset);
 	} else if (Data_Buildings[buildingId].type == BUILDING_BURNING_RUIN) {
@@ -930,7 +931,7 @@ static void drawBuildingTopForCrimeOverlay(int gridOffset, int buildingId, int x
 
 static void drawBuildingTopForEntertainmentOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	int graphicId = Data_Grid_graphicIds[gridOffset];
+	int graphicId = map_image_at(gridOffset);
 	switch (Data_Buildings[buildingId].type) {
 		case BUILDING_THEATER:
 			DRAWTOP_SIZE2(graphicId, xOffset, yOffset);
@@ -960,7 +961,7 @@ static void drawBuildingTopForEntertainmentOverlay(int gridOffset, int buildingI
 
 static void drawBuildingTopForEducationOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	int graphicId = Data_Grid_graphicIds[gridOffset];
+	int graphicId = map_image_at(gridOffset);
 	switch (Data_Buildings[buildingId].type) {
 		case BUILDING_ACADEMY:
 			DRAWTOP_SIZE3(graphicId, xOffset, yOffset);
@@ -983,7 +984,7 @@ static void drawBuildingTopForEducationOverlay(int gridOffset, int buildingId, i
 
 static void drawBuildingTopForTheaterOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	int graphicId = Data_Grid_graphicIds[gridOffset];
+	int graphicId = map_image_at(gridOffset);
 	switch (Data_Buildings[buildingId].type) {
 		case BUILDING_ACTOR_COLONY:
 			DRAWTOP_SIZE3(graphicId, xOffset, yOffset);
@@ -1005,7 +1006,7 @@ static void drawBuildingTopForTheaterOverlay(int gridOffset, int buildingId, int
 
 static void drawBuildingTopForAmphitheaterOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	int graphicId = Data_Grid_graphicIds[gridOffset];
+	int graphicId = map_image_at(gridOffset);
 	switch (Data_Buildings[buildingId].type) {
 		case BUILDING_ACTOR_COLONY:
 		case BUILDING_GLADIATOR_SCHOOL:
@@ -1026,7 +1027,7 @@ static void drawBuildingTopForAmphitheaterOverlay(int gridOffset, int buildingId
 
 static void drawBuildingTopForColosseumOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	int graphicId = Data_Grid_graphicIds[gridOffset];
+	int graphicId = map_image_at(gridOffset);
 	switch (Data_Buildings[buildingId].type) {
 		case BUILDING_GLADIATOR_SCHOOL:
 		case BUILDING_LION_HOUSE:
@@ -1049,7 +1050,7 @@ static void drawBuildingTopForColosseumOverlay(int gridOffset, int buildingId, i
 
 static void drawBuildingTopForHippodromeOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	int graphicId = Data_Grid_graphicIds[gridOffset];
+	int graphicId = map_image_at(gridOffset);
 	if (Data_Buildings[buildingId].type == BUILDING_HIPPODROME) {
 		DRAWTOP_SIZE5(graphicId, xOffset, yOffset);
 	} else if (Data_Buildings[buildingId].type == BUILDING_CHARIOT_MAKER) {
@@ -1065,7 +1066,7 @@ static void drawBuildingTopForHippodromeOverlay(int gridOffset, int buildingId, 
 
 static void drawBuildingTopForFoodStocksOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	int graphicId = Data_Grid_graphicIds[gridOffset];
+	int graphicId = map_image_at(gridOffset);
 	switch (Data_Buildings[buildingId].type) {
 		case BUILDING_MARKET:
 		case BUILDING_WHARF:
@@ -1103,7 +1104,7 @@ static void drawBuildingTopForFoodStocksOverlay(int gridOffset, int buildingId, 
 
 static void drawBuildingTopForBathhouseOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	int graphicId = Data_Grid_graphicIds[gridOffset];
+	int graphicId = map_image_at(gridOffset);
 	if (Data_Buildings[buildingId].type == BUILDING_BATHHOUSE) {
 		DRAWTOP_SIZE2(graphicId, xOffset, yOffset);
 	} else if (Data_Buildings[buildingId].houseSize) {
@@ -1117,7 +1118,7 @@ static void drawBuildingTopForBathhouseOverlay(int gridOffset, int buildingId, i
 
 static void drawBuildingTopForReligionOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	int graphicId = Data_Grid_graphicIds[gridOffset];
+	int graphicId = map_image_at(gridOffset);
 	switch (Data_Buildings[buildingId].type) {
 		case BUILDING_ORACLE:
 		case BUILDING_SMALL_TEMPLE_CERES:
@@ -1148,7 +1149,7 @@ static void drawBuildingTopForReligionOverlay(int gridOffset, int buildingId, in
 
 static void drawBuildingTopForSchoolOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	int graphicId = Data_Grid_graphicIds[gridOffset];
+	int graphicId = map_image_at(gridOffset);
 	if (Data_Buildings[buildingId].type == BUILDING_SCHOOL) {
 		DRAWTOP_SIZE2(graphicId, xOffset, yOffset);
 	} else if (Data_Buildings[buildingId].houseSize) {
@@ -1162,7 +1163,7 @@ static void drawBuildingTopForSchoolOverlay(int gridOffset, int buildingId, int 
 
 static void drawBuildingTopForLibraryOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	int graphicId = Data_Grid_graphicIds[gridOffset];
+	int graphicId = map_image_at(gridOffset);
 	if (Data_Buildings[buildingId].type == BUILDING_LIBRARY) {
 		DRAWTOP_SIZE2(graphicId, xOffset, yOffset);
 	} else if (Data_Buildings[buildingId].houseSize) {
@@ -1176,7 +1177,7 @@ static void drawBuildingTopForLibraryOverlay(int gridOffset, int buildingId, int
 
 static void drawBuildingTopForAcademyOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	int graphicId = Data_Grid_graphicIds[gridOffset];
+	int graphicId = map_image_at(gridOffset);
 	if (Data_Buildings[buildingId].type == BUILDING_ACADEMY) {
 		DRAWTOP_SIZE3(graphicId, xOffset, yOffset);
 	} else if (Data_Buildings[buildingId].houseSize) {
@@ -1190,7 +1191,7 @@ static void drawBuildingTopForAcademyOverlay(int gridOffset, int buildingId, int
 
 static void drawBuildingTopForBarberOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	int graphicId = Data_Grid_graphicIds[gridOffset];
+	int graphicId = map_image_at(gridOffset);
 	if (Data_Buildings[buildingId].type == BUILDING_BARBER) {
 		DRAWTOP_SIZE1(graphicId, xOffset, yOffset);
 	} else if (Data_Buildings[buildingId].houseSize) {
@@ -1204,7 +1205,7 @@ static void drawBuildingTopForBarberOverlay(int gridOffset, int buildingId, int 
 
 static void drawBuildingTopForClinicsOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	int graphicId = Data_Grid_graphicIds[gridOffset];
+	int graphicId = map_image_at(gridOffset);
 	if (Data_Buildings[buildingId].type == BUILDING_DOCTOR) {
 		DRAWTOP_SIZE1(graphicId, xOffset, yOffset);
 	} else if (Data_Buildings[buildingId].houseSize) {
@@ -1218,7 +1219,7 @@ static void drawBuildingTopForClinicsOverlay(int gridOffset, int buildingId, int
 
 static void drawBuildingTopForHospitalOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	int graphicId = Data_Grid_graphicIds[gridOffset];
+	int graphicId = map_image_at(gridOffset);
 	if (Data_Buildings[buildingId].type == BUILDING_HOSPITAL) {
 		DRAWTOP_SIZE3(graphicId, xOffset, yOffset);
 	} else if (Data_Buildings[buildingId].houseSize) {
@@ -1232,7 +1233,7 @@ static void drawBuildingTopForHospitalOverlay(int gridOffset, int buildingId, in
 
 static void drawBuildingTopForTaxIncomeOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	int graphicId = Data_Grid_graphicIds[gridOffset];
+	int graphicId = map_image_at(gridOffset);
 	if (Data_Buildings[buildingId].type == BUILDING_SENATE_UPGRADED) {
 		DRAWTOP_SIZE5(graphicId, xOffset, yOffset);
 	} else if (Data_Buildings[buildingId].type == BUILDING_FORUM) {
@@ -1285,14 +1286,14 @@ static void drawBuildingTopForProblemsOverlay(int gridOffset, int buildingId, in
 
 	if (type >= BUILDING_WHEAT_FARM && type <= BUILDING_PIG_FARM) {
 		if (is_drawable_farmhouse(gridOffset, Data_State.map.orientation)) {
-			DRAWTOP_SIZE2(Data_Grid_graphicIds[gridOffset], xOffset, yOffset);
+			DRAWTOP_SIZE2(map_image_at(gridOffset), xOffset, yOffset);
 		} else if (map_property_is_draw_tile(gridOffset)) {
-            DRAWTOP_SIZE1(Data_Grid_graphicIds[gridOffset], xOffset, yOffset);
+            DRAWTOP_SIZE1(map_image_at(gridOffset), xOffset, yOffset);
 		}
 		return;
 	}
 	if (type == BUILDING_GRANARY) {
-		int graphicId = Data_Grid_graphicIds[gridOffset];
+		int graphicId = map_image_at(gridOffset);
 		const image *img = image_get(graphicId);
 		Graphics_drawImage(image_group(GROUP_BUILDING_GRANARY) + 1,
 			xOffset + img->sprite_offset_x,

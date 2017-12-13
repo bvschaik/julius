@@ -81,6 +81,7 @@ set (MAP_FILES
     ${PROJECT_SOURCE_DIR}/src/map/desirability.c
     ${PROJECT_SOURCE_DIR}/src/map/figure.c
     ${PROJECT_SOURCE_DIR}/src/map/grid.c
+    ${PROJECT_SOURCE_DIR}/src/map/image.c
     ${PROJECT_SOURCE_DIR}/src/map/property.c
     ${PROJECT_SOURCE_DIR}/src/map/random.c
     ${PROJECT_SOURCE_DIR}/src/map/ring.c
@@ -91,6 +92,7 @@ set (MAP_FILES
     ${PROJECT_SOURCE_DIR}/src/map/routing_path.c
     ${PROJECT_SOURCE_DIR}/src/map/routing_terrain.c
     ${PROJECT_SOURCE_DIR}/src/map/soldier_strength.c
+    ${PROJECT_SOURCE_DIR}/src/map/terrain.c
 )
 set (SCENARIO_FILES
     ${PROJECT_SOURCE_DIR}/src/scenario/building.c

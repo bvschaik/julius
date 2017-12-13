@@ -23,8 +23,10 @@
 #include "map/desirability.h"
 #include "map/figure.h"
 #include "map/grid.h"
+#include "map/image.h"
 #include "map/property.h"
 #include "map/routing.h"
+#include "map/terrain.h"
 #include "sound/city.h"
 #include "sound/speech.h"
 #include "sound/effect.h"
@@ -142,11 +144,11 @@ static void drawBuildingFootprints()
 					sound_city_mark_building_view(buildingId, SOUND_DIRECTION_CENTER);
 				}
 			}
-			if (Data_Grid_terrain[gridOffset] & Terrain_Garden) {
-				Data_Buildings[0].type = Terrain_Garden;
+			if (map_terrain_is(gridOffset, TERRAIN_GARDEN)) {
+				Data_Buildings[0].type = BUILDING_GARDENS;
 				sound_city_mark_building_view(0, 2);
 			}
-			int graphicId = Data_Grid_graphicIds[gridOffset];
+			int graphicId = map_image_at(gridOffset);
 			if (map_property_is_constructing(gridOffset)) {
 				graphicId = image_group(GROUP_TERRAIN_OVERLAY);
 			}
@@ -159,7 +161,7 @@ static void drawBuildingFootprints()
 						if (graphicId > graphicIdWaterLast) {
 							graphicId = graphicIdWaterFirst;
 						}
-						Data_Grid_graphicIds[gridOffset] = graphicId;
+						map_image_set(gridOffset, graphicId);
 					}
 					Graphics_drawIsometricFootprint(graphicId, xGraphic, yGraphic, colorMask);
 					break;
@@ -186,7 +188,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 		FOREACH_X_VIEW {
 			if (map_property_is_draw_tile(gridOffset)) {
 				int buildingId = map_building_at(gridOffset);
-				int graphicId = Data_Grid_graphicIds[gridOffset];
+				int graphicId = map_image_at(gridOffset);
 				color_t colorMask = 0;
 				if (buildingId && Data_Buildings[buildingId].isDeleted) {
 					colorMask = COLOR_MASK_RED;
@@ -356,7 +358,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 		} END_FOREACH_X_VIEW;
 		// draw animation
 		FOREACH_X_VIEW {
-			int graphicId = Data_Grid_graphicIds[gridOffset];
+			int graphicId = map_image_at(gridOffset);
 			const image *img = image_get(graphicId);
 			if (img->num_animation_sprites) {
 				if (map_property_is_draw_tile(gridOffset)) {
@@ -369,7 +371,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 					if (b->type == BUILDING_DOCK) {
 						int numDockers = Building_Dock_getNumIdleDockers(buildingId);
 						if (numDockers > 0) {
-							int graphicIdDock = Data_Grid_graphicIds[b->gridOffset];
+							int graphicIdDock = map_image_at(b->gridOffset);
 							int graphicIdDockers = image_group(GROUP_BUILDING_DOCK_DOCKERS);
 							if (graphicIdDock == image_group(GROUP_BUILDING_DOCK_1)) {
 								graphicIdDockers += 0;
@@ -494,11 +496,11 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 
 void UI_CityBuildings_drawBridge(int gridOffset, int x, int y)
 {
-	if (!(Data_Grid_terrain[gridOffset] & Terrain_Water)) {
+	if (!map_terrain_is(gridOffset, TERRAIN_WATER)) {
 		Data_Grid_spriteOffsets[gridOffset] = 0;
 		return;
 	}
-	if (Data_Grid_terrain[gridOffset] & Terrain_Building) {
+	if (map_terrain_is(gridOffset, TERRAIN_BUILDING)) {
 		return;
 	}
 	color_t colorMask = 0;
@@ -571,7 +573,7 @@ static void drawHippodromeAndElevatedFigures(int selectedFigureId)
 		} END_FOREACH_X_VIEW;
 		FOREACH_X_VIEW {
 			if (!Data_State.currentOverlay) {
-				int graphicId = Data_Grid_graphicIds[gridOffset];
+				int graphicId = map_image_at(gridOffset);
 				const image *img = image_get(graphicId);
 				if (img->num_animation_sprites &&
 					map_property_is_draw_tile(gridOffset) &&
@@ -784,13 +786,13 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 	c->hasNumericPrefix = 0;
 	switch (overlay) {
 		case Overlay_Water:
-			if (Data_Grid_terrain[gridOffset] & Terrain_ReservoirRange) {
-				if (Data_Grid_terrain[gridOffset] & Terrain_FountainRange) {
+			if (map_terrain_is(gridOffset, TERRAIN_RESERVOIR_RANGE)) {
+				if (map_terrain_is(gridOffset, TERRAIN_FOUNTAIN_RANGE)) {
 					c->textId = 2;
 				} else {
 					c->textId = 1;
 				}
-			} else if (Data_Grid_terrain[gridOffset] & Terrain_FountainRange) {
+			} else if (map_terrain_is(gridOffset, TERRAIN_FOUNTAIN_RANGE)) {
 				c->textGroup = 66;
 				c->textId = 3;
 			} else {

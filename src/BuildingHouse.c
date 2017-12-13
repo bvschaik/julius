@@ -10,6 +10,7 @@
 #include "graphics/image.h"
 #include "map/building.h"
 #include "map/grid.h"
+#include "map/image.h"
 #include "map/random.h"
 
 static void merge(int buildingId);
@@ -564,6 +565,6 @@ void BuildingHouse_changeToVacantLot(int buildingId)
 		Data_Buildings[b4].distanceFromEntry = 0;
 		Terrain_addBuildingToGrids(b4, b->x + 1, b->y + 1, 1, graphicId, Terrain_Building);
 	} else {
-		Data_Grid_graphicIds[b->gridOffset] = graphicId;
+		map_image_set(b->gridOffset, graphicId);
 	}
 }

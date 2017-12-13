@@ -12,6 +12,7 @@
 #include "map/desirability.h"
 #include "map/building.h"
 #include "map/grid.h"
+#include "map/image.h"
 #include "map/property.h"
 #include "map/routing_terrain.h"
 #include "scenario/property.h"
@@ -52,14 +53,15 @@ void UtilityManagement_updateHouseWaterAccess()
 
 static void setAllAqueductsToNoWater()
 {
-	int graphicId = image_group(GROUP_BUILDING_AQUEDUCT) + 15;
-	int gridOffset = Data_State.map.gridStartOffset;
-	for (int y = 0; y < Data_State.map.height; y++, gridOffset += Data_State.map.gridBorderSize) {
-		for (int x = 0; x < Data_State.map.width; x++, gridOffset++) {
-			if (Data_Grid_terrain[gridOffset] & Terrain_Aqueduct) {
-				Data_Grid_aqueducts[gridOffset] = 0;
-				if (Data_Grid_graphicIds[gridOffset] < graphicId) {
-					Data_Grid_graphicIds[gridOffset] += 15;
+	int image_without_water = image_group(GROUP_BUILDING_AQUEDUCT) + 15;
+	int grid_offset = Data_State.map.gridStartOffset;
+	for (int y = 0; y < Data_State.map.height; y++, grid_offset += Data_State.map.gridBorderSize) {
+		for (int x = 0; x < Data_State.map.width; x++, grid_offset++) {
+			if (Data_Grid_terrain[grid_offset] & Terrain_Aqueduct) {
+				Data_Grid_aqueducts[grid_offset] = 0;
+				int image_id = map_image_at(grid_offset);
+				if (image_id < image_without_water) {
+					map_image_set(grid_offset, image_id + 15);
 				}
 			}
 		}
@@ -75,14 +77,15 @@ static void fillAqueductsFromOffset(int gridOffset)
 	qHead = qTail = 0;
 	int guard = 0;
 	int nextOffset;
-	int graphicWithoutWater = image_group(GROUP_BUILDING_AQUEDUCT) + 15;
+	int image_without_water = image_group(GROUP_BUILDING_AQUEDUCT) + 15;
 	do {
 		if (++guard >= GRID_SIZE * GRID_SIZE) {
 			break;
 		}
 		Data_Grid_aqueducts[gridOffset] = 1;
-		if (Data_Grid_graphicIds[gridOffset] >= graphicWithoutWater) {
-			Data_Grid_graphicIds[gridOffset] -= 15;
+		int image_id = map_image_at(gridOffset);
+		if (image_id >= image_without_water) {
+			map_image_set(gridOffset, image_id - 15);
 		}
 		nextOffset = -1;
 		for (int i = 0; i < 4; i++) {

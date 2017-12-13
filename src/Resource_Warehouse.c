@@ -15,6 +15,7 @@
 #include "empire/trade_prices.h"
 #include "graphics/image.h"
 #include "game/tutorial.h"
+#include "map/image.h"
 #include "scenario/property.h"
 
 static int granaryGettingResource[7];
@@ -30,7 +31,7 @@ void Resource_setWarehouseSpaceGraphic(int spaceId, int resource)
 			4 * (resource - 1) + Resource_getGraphicIdOffset(resource, 0) +
 			Data_Buildings[spaceId].loadsStored - 1;
 	}
-	Data_Grid_graphicIds[Data_Buildings[spaceId].gridOffset] = graphicId;
+	map_image_set(Data_Buildings[spaceId].gridOffset, graphicId);
 }
 
 void Resource_addToCityWarehouses(int resource, int amount)

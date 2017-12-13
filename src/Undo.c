@@ -15,8 +15,10 @@
 #include "graphics/image.h"
 #include "map/building.h"
 #include "map/grid.h"
+#include "map/image.h"
 #include "map/property.h"
 #include "map/routing_terrain.h"
+#include "map/terrain.h"
 #include "scenario/earthquake.h"
 
 #include <string.h>
@@ -57,8 +59,8 @@ int Undo_recordBeforeBuild()
 		}
 	}
 
-	map_grid_copy_u16(Data_Grid_graphicIds, Data_Grid_Undo_graphicIds);
-	map_grid_copy_u16(Data_Grid_terrain, Data_Grid_Undo_terrain);
+	map_image_backup();
+	map_terrain_backup();
 	map_grid_copy_u8(Data_Grid_aqueducts, Data_Grid_Undo_aqueducts);
 	map_property_backup();
 	map_grid_copy_u8(Data_Grid_spriteOffsets, Data_Grid_Undo_spriteOffsets);
@@ -138,7 +140,7 @@ void Undo_restoreTerrainGraphics()
 		for (int x = 0; x < Data_State.map.width; x++) {
 			int gridOffset = map_grid_offset(x, y);
 			if (!map_building_at(gridOffset)) {
-				Data_Grid_graphicIds[gridOffset] = Data_Grid_Undo_graphicIds[gridOffset];
+				map_image_restore_at(gridOffset);
 			}
 		}
 	}
@@ -189,29 +191,29 @@ void Undo_perform()
 				placeBuildingOnTerrain(buildingId);
 			}
 		}
-		map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
+		map_terrain_restore();
 		map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
 		map_grid_copy_u8(Data_Grid_Undo_spriteOffsets, Data_Grid_spriteOffsets);
-		map_grid_copy_u16(Data_Grid_Undo_graphicIds, Data_Grid_graphicIds);
+		map_image_restore();
 		map_property_restore();
 		map_property_clear_constructing_and_deleted();
 	} else if (data.buildingType == BUILDING_AQUEDUCT || data.buildingType == BUILDING_ROAD ||
 			data.buildingType == BUILDING_WALL) {
-		map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
+		map_terrain_restore();
 		map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
 		Undo_restoreTerrainGraphics();
 	} else if (data.buildingType == BUILDING_LOW_BRIDGE || data.buildingType == BUILDING_SHIP_BRIDGE) {
-		map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
+		map_terrain_restore();
 		map_grid_copy_u8(Data_Grid_Undo_spriteOffsets, Data_Grid_spriteOffsets);
 		Undo_restoreTerrainGraphics();
 	} else if (data.buildingType == BUILDING_PLAZA || data.buildingType == BUILDING_GARDENS) {
-		map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
+		map_terrain_restore();
 		map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
 		map_property_restore();
 		Undo_restoreTerrainGraphics();
 	} else if (data.numBuildings) {
 		if (data.buildingType == BUILDING_DRAGGABLE_RESERVOIR) {
-			map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
+			map_terrain_restore();
 			map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
 			Undo_restoreTerrainGraphics();
 		}

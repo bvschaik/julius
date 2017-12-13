@@ -42,24 +42,8 @@ void UI_Sidebar_enableBuildingButtons()
 void UI_Sidebar_requestMinimapRefresh()
 {}
 
-void UI_Sidebar_rotateMap(int clockWise)
-{}
-
 void UI_PlayerMessageList_resetScroll()
 {}
 
 void UI_TopMenu_initFromSettings()
 {}
-
-int UI_Advisors_getId()
-{
-    return 0;
-}
-
-void UI_Advisors_goToFromMessage(int advisor)
-{}
-
-int UI_BuildingInfo_getBuildingType()
-{
-    return 0;
-}

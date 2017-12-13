@@ -43,7 +43,6 @@ enum {
 	Terrain_All = 0xffff
 };
 
-EXTERN UInt16_Grid(Data_Grid_graphicIds);
 EXTERN UInt16_Grid(Data_Grid_terrain);
 
 EXTERN UInt8_Grid(Data_Grid_elevation);
@@ -51,8 +50,6 @@ EXTERN UInt8_Grid(Data_Grid_aqueducts);
 EXTERN UInt8_Grid(Data_Grid_spriteOffsets);
 
 // undo
-EXTERN UInt16_Grid(Data_Grid_Undo_graphicIds);
-EXTERN UInt16_Grid(Data_Grid_Undo_terrain);
 EXTERN UInt8_Grid(Data_Grid_Undo_aqueducts);
 EXTERN UInt8_Grid(Data_Grid_Undo_spriteOffsets);
 

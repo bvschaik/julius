@@ -16,6 +16,7 @@
 #include "map/building.h"
 #include "map/figure.h"
 #include "map/grid.h"
+#include "map/image.h"
 #include "map/property.h"
 #include "map/random.h"
 #include "map/ring.h"
@@ -104,7 +105,7 @@ void Terrain_addBuildingToGrids(int buildingId, int x, int y, int size, int grap
 			map_building_set(gridOffset, buildingId);
 			map_property_clear_constructing(gridOffset);
 			map_property_set_multi_tile_size(gridOffset, size);
-			Data_Grid_graphicIds[gridOffset] = graphicId;
+			map_image_set(gridOffset, graphicId);
 			map_property_set_multi_tile_xy(gridOffset, dx, dy,
 			    dx == xLeftmost && dy == yLeftmost);
 		}
@@ -160,9 +161,9 @@ void Terrain_removeBuildingFromGrids(int buildingId, int x, int y)
 				Data_Grid_terrain[gridOffset] &= Terrain_Water;
 				TerrainGraphics_setTileWater(x + dx, y + dy);
 			} else {
-				Data_Grid_graphicIds[gridOffset] =
+				map_image_set(gridOffset,
 					image_group(GROUP_TERRAIN_UGLY_GRASS) +
-					(map_random_get(gridOffset) & 7);
+					(map_random_get(gridOffset) & 7));
 				Data_Grid_terrain[gridOffset] &= Terrain_2e80;
 			}
 		}
@@ -749,7 +750,7 @@ int Terrain_isClear(int x, int y, int size, int disallowedTerrain, int graphicSe
 				return 0;
 			} else if (map_has_figure_at(gridOffset)) {
 				return 0;
-			} else if (graphicSet && Data_Grid_graphicIds[gridOffset] != 0) {
+			} else if (graphicSet && map_image_at(gridOffset)) {
 				return 0;
 			}
 		}
@@ -1084,7 +1085,7 @@ void Terrain_updateEntryExitFlags(int remove)
 		Data_CityInfo_Extra.entryPointFlag.gridOffset = gridOffsetFlag;
 		Data_Grid_terrain[gridOffsetFlag] |= Terrain_Rock;
 		int orientation = (Data_State.map.orientation + entryOrientation) % 8;
-		Data_Grid_graphicIds[gridOffsetFlag] = image_group(GROUP_TERRAIN_ENTRY_EXIT_FLAGS) + orientation / 2;
+		map_image_set(gridOffsetFlag, image_group(GROUP_TERRAIN_ENTRY_EXIT_FLAGS) + orientation / 2);
 	}
 	if (exitOrientation >= 0) {
 		int gridOffset = map_grid_offset(exit_point.x, exit_point.y);
@@ -1102,7 +1103,7 @@ void Terrain_updateEntryExitFlags(int remove)
 		Data_CityInfo_Extra.exitPointFlag.gridOffset = gridOffsetFlag;
 		Data_Grid_terrain[gridOffsetFlag] |= Terrain_Rock;
 		int orientation = (Data_State.map.orientation + exitOrientation) % 8;
-		Data_Grid_graphicIds[gridOffsetFlag] = image_group(GROUP_TERRAIN_ENTRY_EXIT_FLAGS) + 4 + orientation / 2;
+		map_image_set(gridOffsetFlag, image_group(GROUP_TERRAIN_ENTRY_EXIT_FLAGS) + 4 + orientation / 2);
 	}
 }
 

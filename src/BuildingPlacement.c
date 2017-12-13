@@ -34,9 +34,11 @@
 #include "map/bridge.h"
 #include "map/building.h"
 #include "map/grid.h"
+#include "map/image.h"
 #include "map/property.h"
 #include "map/routing.h"
 #include "map/routing_terrain.h"
+#include "map/terrain.h"
 
 #define BOUND_REGION() \
 	if (xStart < xEnd) {\
@@ -739,7 +741,7 @@ static void clearRegionConfirmed(int measureOnly, int xStart, int yStart, int xE
 {
 	itemsPlaced = 0;
 	Undo_restoreBuildings();
-	map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
+	map_terrain_restore();
 	map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
 	Undo_restoreTerrainGraphics();
 
@@ -977,7 +979,7 @@ static int placeRoutedBuilding(int xSrc, int ySrc, int xDst, int yDst, routed_bu
 
 static void placeRoad(int measureOnly, int xStart, int yStart, int xEnd, int yEnd)
 {
-	map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
+	map_terrain_restore();
 	map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
 	Undo_restoreTerrainGraphics();
 
@@ -1003,7 +1005,7 @@ static void placeRoad(int measureOnly, int xStart, int yStart, int xEnd, int yEn
 
 static void placeWall(int measureOnly, int xStart, int yStart, int xEnd, int yEnd)
 {
-	map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
+	map_terrain_restore();
 	map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
 	Undo_restoreTerrainGraphics();
 
@@ -1031,7 +1033,7 @@ static void placePlaza(int measureOnly, int xStart, int yStart, int xEnd, int yE
 {
 	int xMin, yMin, xMax, yMax;
 	BOUND_REGION();
-	map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
+	map_terrain_restore();
 	map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
 	map_property_restore();
 	Undo_restoreTerrainGraphics();
@@ -1046,7 +1048,7 @@ static void placePlaza(int measureOnly, int xStart, int yStart, int xEnd, int yE
 				if (!map_property_is_plaza_or_earthquake(gridOffset)) {
 					itemsPlaced++;
 				}
-				Data_Grid_graphicIds[gridOffset] = 0;
+				map_image_set(gridOffset, 0);
 				map_property_mark_plaza_or_earthquake(gridOffset);
 				map_property_set_multi_tile_size(gridOffset, 1);
 				map_property_mark_draw_tile(gridOffset);
@@ -1062,7 +1064,7 @@ static void placeGarden(int xStart, int yStart, int xEnd, int yEnd)
 	int xMin, yMin, xMax, yMax;
 	BOUND_REGION();
 	
-	map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
+	map_terrain_restore();
 	map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
 	map_property_restore();
 	Undo_restoreTerrainGraphics();
@@ -1082,7 +1084,7 @@ static void placeGarden(int xStart, int yStart, int xEnd, int yEnd)
 
 static int placeAqueduct(int measureOnly, int xStart, int yStart, int xEnd, int yEnd, int *cost)
 {
-	map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
+	map_terrain_restore();
 	map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
 	Undo_restoreTerrainGraphics();
 	int itemCost = model_get_building(BUILDING_AQUEDUCT)->cost;
@@ -1122,7 +1124,7 @@ static int placeReservoirAndAqueducts(int measureOnly, int xStart, int yStart, i
 	info->placeReservoirAtStart = PlaceReservoir_No;
 	info->placeReservoirAtEnd = PlaceReservoir_No;
 
-	map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
+	map_terrain_restore();
 	map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
 	Undo_restoreTerrainGraphics();
 
@@ -1326,11 +1328,11 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
 	}
 	if (type != BUILDING_CLEAR_LAND && Figure_hasNearbyEnemy(xStart, yStart, xEnd, yEnd)) {
 		if (type == BUILDING_WALL || type == BUILDING_ROAD || type == BUILDING_AQUEDUCT) {
-			map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
+			map_terrain_restore();
 			map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
 			Undo_restoreTerrainGraphics();
 		} else if (type == BUILDING_PLAZA || type == BUILDING_GARDENS) {
-			map_grid_copy_u16(Data_Grid_Undo_terrain, Data_Grid_terrain);
+			map_terrain_restore();
 			map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
 			map_property_restore();
 			Undo_restoreTerrainGraphics();

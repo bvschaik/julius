@@ -44,11 +44,13 @@
 #include "map/desirability.h"
 #include "map/figure.h"
 #include "map/grid.h"
+#include "map/image.h"
 #include "map/property.h"
 #include "map/random.h"
 #include "map/road_network.h"
 #include "map/routing_terrain.h"
 #include "map/soldier_strength.h"
+#include "map/terrain.h"
 #include "scenario/criteria.h"
 #include "scenario/demand_change.h"
 #include "scenario/earthquake.h"
@@ -240,9 +242,9 @@ static void readScenarioAndInitGraphics()
 
 static void initGrids()
 {
-	map_grid_clear_u16(Data_Grid_graphicIds);
+	map_image_clear();
 	map_building_clear();
-	map_grid_clear_u16(Data_Grid_terrain);
+	map_terrain_clear();
 	map_grid_clear_u8(Data_Grid_aqueducts);
 	map_figure_clear();
 	map_property_clear();
@@ -283,7 +285,7 @@ static void initGridGraphicIds()
 	for (int y = 0; y < Data_State.map.height; y++, gridOffset += Data_State.map.gridBorderSize) {
 		for (int x = 0; x < Data_State.map.width; x++, gridOffset++) {
 		    int random = map_random_get(gridOffset);
-			Data_Grid_graphicIds[gridOffset] = graphicId + (random & 7);
+			map_image_set(gridOffset, graphicId + (random & 7));
 			if (random & 1) {
 				map_property_set_alternate_terrain(gridOffset);
 			}
