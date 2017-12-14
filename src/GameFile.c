@@ -62,6 +62,7 @@
 #include "sound/city.h"
 #include "sound/music.h"
 
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -810,16 +811,18 @@ void GameFile_writeMissionSavedGameIfNeeded()
 int GameFile_writeSavedGame(const char *filename)
 {
     init_savegame_data();
-	printf("GameFile: Saving game to %s\n", filename);
+	printf("GameFile: Saving game to %s... ", filename);
 	savegameFileVersion = savegameVersion;
     savegame_serialize(&savegame_data.state);
 
 	FILE *fp = fopen(filename, "wb");
 	if (!fp) {
+		printf("failed! ERROR: %s\n", strerror(errno));
 		return 0;
 	}
 	savegame_write_to_file(fp);
 	fclose(fp);
+	printf("successfull\n");
 	return 1;
 }
 
