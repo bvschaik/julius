@@ -734,6 +734,7 @@ void UI_CityBuildings_handleMouse(const mouse *m)
 	if (m->left.went_down) {
 		if (!isLegionClick()) {
 			buildStart();
+			buildMove();
 		}
 	} else if (m->left.is_down) {
 		buildMove();
