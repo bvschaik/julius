@@ -11,16 +11,16 @@
 
 int map_can_place_road_under_aqueduct(int grid_offset)
 {
-    int graphic = map_image_at(grid_offset) - image_group(GROUP_BUILDING_AQUEDUCT);
-    int checkRoadY;
-    switch (graphic) {
+    int image = map_image_at(grid_offset) - image_group(GROUP_BUILDING_AQUEDUCT);
+    int check_y;
+    switch (image) {
         case 0:
         case 2:
         case 8:
         case 15:
         case 17:
         case 23:
-            checkRoadY = 1;
+            check_y = 1;
             break;
         case 1:
         case 3:
@@ -28,15 +28,15 @@ int map_can_place_road_under_aqueduct(int grid_offset)
         case 16:
         case 18:
         case 24: case 25: case 26: case 27: case 28: case 29:
-            checkRoadY = 0;
+            check_y = 0;
             break;
         default: // not a straight aqueduct
             return 0;
     }
     if (Data_State.map.orientation == DIR_6_LEFT || Data_State.map.orientation == DIR_2_RIGHT) {
-        checkRoadY = !checkRoadY;
+        check_y = !check_y;
     }
-    if (checkRoadY) {
+    if (check_y) {
         int dy_up = map_grid_delta(0, -1);
         int dy_down = map_grid_delta(0, 1);
         if (map_terrain_is(grid_offset + dy_up, TERRAIN_ROAD) ||
@@ -62,34 +62,34 @@ int map_can_place_road_under_aqueduct(int grid_offset)
     return 1;
 }
 
-int map_can_place_aqueduct_on_road(int gridOffset)
+int map_can_place_aqueduct_on_road(int grid_offset)
 {
-    int graphic = map_image_at(gridOffset) - image_group(GROUP_TERRAIN_ROAD);
-    if (graphic != 0 && graphic != 1 && graphic != 49 && graphic != 50) {
+    int image = map_image_at(grid_offset) - image_group(GROUP_TERRAIN_ROAD);
+    if (image != 0 && image != 1 && image != 49 && image != 50) {
         return 0;
     }
-    int checkRoadY = graphic == 0 || graphic == 49;
+    int check_y = image == 0 || image == 49;
     if (Data_State.map.orientation == DIR_6_LEFT || Data_State.map.orientation == DIR_2_RIGHT) {
-        checkRoadY = !checkRoadY;
+        check_y = !check_y;
     }
-    if (checkRoadY) {
-        if (map_routing_distance(gridOffset + map_grid_delta(0, -1)) > 0 ||
-            map_routing_distance(gridOffset + map_grid_delta(0, 1)) > 0) {
+    if (check_y) {
+        if (map_routing_distance(grid_offset + map_grid_delta(0, -1)) > 0 ||
+            map_routing_distance(grid_offset + map_grid_delta(0, 1)) > 0) {
             return 0;
         }
     } else {
-        if (map_routing_distance(gridOffset + map_grid_delta(-1, 0)) > 0 ||
-            map_routing_distance(gridOffset + map_grid_delta(1, 0)) > 0) {
+        if (map_routing_distance(grid_offset + map_grid_delta(-1, 0)) > 0 ||
+            map_routing_distance(grid_offset + map_grid_delta(1, 0)) > 0) {
             return 0;
         }
     }
     return 1;
 }
 
-int map_get_aqueduct_with_road_image(int gridOffset)
+int map_get_aqueduct_with_road_image(int grid_offset)
 {
-    int graphic = map_image_at(gridOffset) - image_group(GROUP_BUILDING_AQUEDUCT);
-    switch (graphic) {
+    int image = map_image_at(grid_offset) - image_group(GROUP_BUILDING_AQUEDUCT);
+    switch (image) {
         case 2:
             return 8;
         case 3:
@@ -105,7 +105,7 @@ int map_get_aqueduct_with_road_image(int gridOffset)
         case 23:
         case 24:
             // unchanged
-            return graphic;
+            return image;
         default:
             // shouldn't happen
             return 8;
