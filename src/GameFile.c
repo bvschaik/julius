@@ -11,7 +11,6 @@
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
-#include "Data/FileList.h"
 #include "Data/Grid.h"
 #include "Data/State.h"
 #include "UI/AllWindows.h" // TODO: try to eliminate this

@@ -4,6 +4,7 @@
 #include "core/calc.h"
 #include "core/dir.h"
 #include "core/file.h"
+#include "core/lang.h"
 #include "core/string.h"
 #include "core/time.h"
 #include "input/keyboard.h"
@@ -12,7 +13,6 @@
 #include "../Graphics.h"
 #include "../Widget.h"
 
-#include "../Data/FileList.h"
 #include "../Data/Screen.h"
 
 #include <string.h>
@@ -52,10 +52,14 @@ static int focusButtonId;
 static int scrollPosition;
 static const dir_listing *savedGames;
 
-static char saved_game[FILENAME_LENGTH];
+static char saved_game[FILE_NAME_MAX];
+static char last_loaded_file[FILE_NAME_MAX] = "";
 
 void UI_FileDialog_show(int type)
 {
+    if (strlen(last_loaded_file) == 0) {
+        strncpy(last_loaded_file, string_to_ascii(lang_get_string(9, 6)), FILE_NAME_MAX);
+    }
 	dialogType = type;
 	messageNotExistTimeUntil = 0;
 	scrollPosition = 0;
@@ -64,7 +68,7 @@ void UI_FileDialog_show(int type)
 
 	UI_Window_goTo(Window_FileDialog);
 
-    strcpy(saved_game, Data_FileList.lastLoadedCity);
+    strncpy(saved_game, last_loaded_file, FILE_NAME_MAX);
     keyboard_start_capture((uint8_t*) saved_game, 64, 0, 280, FONT_NORMAL_WHITE);
 }
 
@@ -218,7 +222,7 @@ static void buttonOkCancel(int isOk, int param2)
 	}
 	
 	file_remove_extension(saved_game);
-	strcpy(Data_FileList.lastLoadedCity, saved_game);
+	strncpy(last_loaded_file, saved_game, FILE_NAME_MAX);
 }
 
 static void buttonScroll(int isDown, int numLines)
@@ -242,8 +246,7 @@ static void buttonScroll(int isDown, int numLines)
 static void buttonSelectItem(int index, int param2)
 {
 	if (index < savedGames->num_files) {
-		memset(saved_game, 0, FILENAME_LENGTH);
-		strcpy(saved_game, savedGames->files[scrollPosition + index]);
+		strncpy(saved_game, savedGames->files[scrollPosition + index], FILE_NAME_MAX);
 		file_remove_extension(saved_game);
 		keyboard_refresh();
 		messageNotExistTimeUntil = 0;

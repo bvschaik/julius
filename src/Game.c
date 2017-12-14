@@ -6,7 +6,6 @@
 
 #include "UI/Window.h"
 
-#include "Data/FileList.h"
 #include "Data/State.h"
 #include "UI/TopMenu.h"
 
@@ -32,8 +31,6 @@ static void loadDefaultNames()
 {
     // TODO move out
     scenario_set_player_name(lang_get_string(9, 5));
-    strcpy(Data_FileList.lastLoadedCity, (char*)lang_get_string(9, 6));
-    scenario_set_name(lang_get_string(9, 7));
 }
 
 int Game_preInit()

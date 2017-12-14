@@ -15,7 +15,6 @@
 #include "../Scenario.h"
 #include "../Widget.h"
 
-#include "../Data/FileList.h"
 #include "../Data/Screen.h"
 
 #include <string.h>
@@ -90,7 +89,7 @@ static void drawScenarioList()
 		} else if (!focusButtonId && selectedItem == i + scrollPosition) {
 			font = FONT_NORMAL_WHITE;
 		}
-		char file[FILENAME_LENGTH];
+		char file[FILE_NAME_MAX];
 		strcpy(file, scenarios->files[i + scrollPosition]);
 		file_remove_extension(file);
 		Widget_Text_draw(string_from_ascii(file), Data_Screen.offset640x480.x + 24,
