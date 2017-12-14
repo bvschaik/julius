@@ -14,6 +14,7 @@
 #include "../Data/Screen.h"
 #include "../Data/State.h"
 
+#include "core/string.h"
 #include "city/finance.h"
 #include "game/settings.h"
 #include "game/time.h"
@@ -330,7 +331,7 @@ static void menuFile_replayMap(int param)
 	clearState();
 	Data_State.selectedBuilding.type = 0;
 	if (scenario_is_custom()) {
-		Scenario_initialize(Data_FileList.selectedScenario);
+		Scenario_initialize(string_to_ascii(scenario_name()));
 		UI_Window_goTo(Window_City);
 	} else {
 		UI_Window_goTo(Window_MissionSelection);

@@ -33,7 +33,7 @@ static void loadDefaultNames()
     // TODO move out
     scenario_set_player_name(lang_get_string(9, 5));
     strcpy(Data_FileList.lastLoadedCity, (char*)lang_get_string(9, 6));
-    strcpy(Data_FileList.selectedScenario, (char*)lang_get_string(9, 7));
+    scenario_set_name(lang_get_string(9, 7));
 }
 
 int Game_preInit()

@@ -55,6 +55,7 @@ static CustomButton customButtons[] = {
 static int scrollPosition;
 static int focusButtonId;
 static int selectedItem;
+static char selectedScenario[FILE_NAME_MAX];
 
 static const dir_listing *scenarios;
 
@@ -123,7 +124,7 @@ static void drawScenarioInfo()
 	Graphics_drawImage(image_group(GROUP_SCENARIO_IMAGE) + scenario_image_id(),
 		Data_Screen.offset640x480.x + 78, Data_Screen.offset640x480.y + 36);
 
-	Widget_Text_drawCentered(string_from_ascii(Data_FileList.selectedScenario),
+	Widget_Text_drawCentered(string_from_ascii(selectedScenario),
 		baseOffsetX + 15, baseOffsetY + 5, 260, FONT_LARGE_BLACK, 0);
 	Widget_Text_drawCentered(scenario_brief_description(),
 		baseOffsetX + 15, baseOffsetY + 40, 260, FONT_NORMAL_WHITE, 0);
@@ -271,9 +272,9 @@ static void buttonSelectItem(int index, int param2)
 		return;
 	}
 	selectedItem = scrollPosition + index;
-	strcpy(Data_FileList.selectedScenario, scenarios->files[selectedItem]);
-	GameFile_loadScenario(Data_FileList.selectedScenario);
-	file_remove_extension(Data_FileList.selectedScenario);
+	strcpy(selectedScenario, scenarios->files[selectedItem]);
+	GameFile_loadScenario(selectedScenario);
+	file_remove_extension(selectedScenario);
 	UI_Window_requestRefresh();
 }
 
@@ -297,6 +298,6 @@ static void buttonScroll(int isDown, int numLines)
 static void buttonStartScenario(int param1, int param2)
 {
 	sound_speech_stop();
-	Scenario_initialize(Data_FileList.selectedScenario);
+	Scenario_initialize(selectedScenario);
 	UI_Window_goTo(Window_City);
 }

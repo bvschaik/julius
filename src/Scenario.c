@@ -26,6 +26,7 @@
 #include "core/file.h"
 #include "core/io.h"
 #include "core/random.h"
+#include "core/string.h"
 #include "empire/empire.h"
 #include "figure/enemy_army.h"
 #include "figure/figure.h"
@@ -69,7 +70,7 @@
 static int mapFileExists(const char *scenarioName);
 static void initCustomScenario(const char *scenarioName);
 static void loadScenario(const char *scenarioName);
-static void readScenarioAndInitGraphics();
+static void readScenarioAndInitGraphics(const char *scenarioName);
 
 static void initGrids();
 
@@ -161,8 +162,7 @@ static void initCustomScenario(const char *scenarioName)
 static void loadScenario(const char *scenarioName)
 {
 	Data_CityInfo_Extra.ciid = 1;
-	strcpy(Data_FileList.selectedScenario, scenarioName);
-	readScenarioAndInitGraphics();
+	readScenarioAndInitGraphics(scenarioName);
 
 	Figure_createFishingPoints();
 	Figure_createHerds();
@@ -207,14 +207,17 @@ static void loadScenario(const char *scenarioName)
 	image_load_enemy(scenario_property_enemy());
 }
 
-static void readScenarioAndInitGraphics()
+static void readScenarioAndInitGraphics(const char *scenarioName)
 {
+    char filename[FILE_NAME_MAX];
+    strncpy(filename, scenarioName, FILE_NAME_MAX);
 	initGrids();
-	file_remove_extension(Data_FileList.selectedScenario);
-	file_append_extension(Data_FileList.selectedScenario, "map");
-	GameFile_loadScenario(Data_FileList.selectedScenario);
-	file_remove_extension(Data_FileList.selectedScenario);
+	file_remove_extension(filename);
+	file_append_extension(filename, "map");
+	GameFile_loadScenario(filename);
+	file_remove_extension(filename);
 
+	scenario_set_name(string_from_ascii(filename));
 	scenario_map_init();
 
 	CityView_calculateLookup();

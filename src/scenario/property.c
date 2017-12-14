@@ -58,6 +58,16 @@ int scenario_starting_personal_savings()
     return scenario.settings.starting_personal_savings;
 }
 
+const uint8_t *scenario_name()
+{
+    return scenario.scenario_name;
+}
+
+void scenario_set_name(const uint8_t *name)
+{
+    string_copy(name, scenario.scenario_name, MAX_SCENARIO_NAME);
+}
+
 const uint8_t *scenario_player_name()
 {
     return scenario.settings.player_name;

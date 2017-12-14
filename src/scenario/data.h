@@ -15,6 +15,7 @@
 #define MAX_INVASION_POINTS 8
 
 #define MAX_PLAYER_NAME 32
+#define MAX_SCENARIO_NAME 65
 
 enum {
     EVENT_NOT_STARTED = 0,
@@ -35,6 +36,8 @@ struct win_criteria_t {
 };
 
 extern struct scenario_t {
+	uint8_t scenario_name[MAX_SCENARIO_NAME];
+
     int start_year;
     int climate;
     int player_rank;

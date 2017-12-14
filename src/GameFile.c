@@ -211,7 +211,7 @@ typedef struct {
     buffer *last_invasion_id;
     buffer *Data_Debug_incorrectHousePositions;
     buffer *Data_Debug_unfixableHousePositions;
-    buffer *Data_FileList_selectedScenario;
+    buffer *scenario_name;
     buffer *bookmarks;
     buffer *tutorial_part3;
     buffer *Data_CityInfo_Extra_entryPointFlag_gridOffset;
@@ -359,7 +359,7 @@ static void init_savegame_data()
     state->last_invasion_id = create_savegame_piece(2, 0);
     state->Data_Debug_incorrectHousePositions = create_savegame_piece(4, 0);
     state->Data_Debug_unfixableHousePositions = create_savegame_piece(4, 0);
-    state->Data_FileList_selectedScenario = create_savegame_piece(65, 0);
+    state->scenario_name = create_savegame_piece(65, 0);
     state->bookmarks = create_savegame_piece(32, 0);
     state->tutorial_part3 = create_savegame_piece(4, 0);
     state->Data_CityInfo_Extra_entryPointFlag_gridOffset = create_savegame_piece(4, 0);
@@ -409,7 +409,8 @@ static void savegame_deserialize(savegame_state *state)
     scenario_settings_load_state(state->scenario_campaign_mission,
                                  state->scenario_settings,
                                  state->scenario_is_custom,
-                                 state->player_name);
+                                 state->player_name,
+                                 state->scenario_name);
 
     read_all_from_buffer(state->savegameFileVersion, &savegameFileVersion);
 
@@ -506,7 +507,6 @@ static void savegame_deserialize(savegame_state *state)
 
     read_all_from_buffer(state->Data_Debug_incorrectHousePositions, &Data_Buildings_Extra.incorrectHousePositions);
     read_all_from_buffer(state->Data_Debug_unfixableHousePositions, &Data_Buildings_Extra.unfixableHousePositions);
-    read_all_from_buffer(state->Data_FileList_selectedScenario, &Data_FileList.selectedScenario);
 
     map_bookmark_load_state(state->bookmarks);
 
@@ -531,7 +531,8 @@ static void savegame_serialize(savegame_state *state)
     scenario_settings_save_state(state->scenario_campaign_mission,
                                  state->scenario_settings,
                                  state->scenario_is_custom,
-                                 state->player_name);
+                                 state->player_name,
+                                 state->scenario_name);
 
     write_all_to_buffer(state->savegameFileVersion, &savegameFileVersion);
 
@@ -627,7 +628,6 @@ static void savegame_serialize(savegame_state *state)
 
     write_all_to_buffer(state->Data_Debug_incorrectHousePositions, &Data_Buildings_Extra.incorrectHousePositions);
     write_all_to_buffer(state->Data_Debug_unfixableHousePositions, &Data_Buildings_Extra.unfixableHousePositions);
-    write_all_to_buffer(state->Data_FileList_selectedScenario, &Data_FileList.selectedScenario);
 
     map_bookmark_save_state(state->bookmarks);
 
