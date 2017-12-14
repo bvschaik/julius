@@ -87,6 +87,11 @@ void map_grid_clear_u16(uint16_t *grid)
     memset(grid, 0, GRID_SIZE * GRID_SIZE * sizeof(uint16_t));
 }
 
+void map_grid_clear_i16(int16_t *grid)
+{
+    memset(grid, 0, GRID_SIZE * GRID_SIZE * sizeof(int16_t));
+}
+
 void map_grid_init_i8(int8_t *grid, int8_t value)
 {
     memset(grid, value, GRID_SIZE * GRID_SIZE * sizeof(int8_t));

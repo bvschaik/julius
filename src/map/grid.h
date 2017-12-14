@@ -19,6 +19,10 @@ typedef struct {
     uint16_t items[GRID_SIZE * GRID_SIZE];
 } grid_u16;
 
+typedef struct {
+    int16_t items[GRID_SIZE * GRID_SIZE];
+} grid_i16;
+
 int map_grid_offset(int x, int y);
 
 int map_grid_offset_to_x(int grid_offset);
@@ -40,6 +44,8 @@ void map_grid_clear_u8(uint8_t *grid);
 void map_grid_clear_i8(int8_t *grid);
 
 void map_grid_clear_u16(uint16_t *grid);
+
+void map_grid_clear_i16(int16_t *grid);
 
 void map_grid_init_i8(int8_t *grid, int8_t value);
 

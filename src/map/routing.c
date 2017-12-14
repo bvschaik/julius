@@ -14,7 +14,7 @@
 
 static const int ROUTE_OFFSETS[] = {-162, 1, 162, -1, -161, 163, 161, -163};
 
-static grid_u16 routing_distance;
+static grid_i16 routing_distance;
 
 static struct {
     int total_routes_calculated;
@@ -33,6 +33,11 @@ static struct {
     int throughBuildingId;
 } state;
 
+static void clear_distances()
+{
+    map_grid_clear_i16(routing_distance.items);
+}
+
 static void enqueue(int next_offset, int dist)
 {
     routing_distance.items[next_offset] = dist;
@@ -50,7 +55,7 @@ static int valid_offset(int grid_offset)
 
 static void route_queue(int source, int dest, void (*callback)(int next_offset, int dist))
 {
-    map_grid_clear_u16(routing_distance.items);
+    clear_distances();
     queue.head = queue.tail = 0;
     enqueue(source, 1);
     while (queue.head != queue.tail) {
@@ -72,7 +77,7 @@ static void route_queue(int source, int dest, void (*callback)(int next_offset, 
 
 static void route_queue_until(int source, int (*callback)(int next_offset, int dist))
 {
-    map_grid_clear_u16(routing_distance.items);
+    clear_distances();
     queue.head = queue.tail = 0;
     enqueue(source, 1);
     while (queue.head != queue.tail) {
@@ -93,7 +98,7 @@ static void route_queue_until(int source, int (*callback)(int next_offset, int d
 
 static void route_queue_max(int source, int dest, int max_tiles, void (*callback)(int, int))
 {
-    map_grid_clear_u16(routing_distance.items);
+    clear_distances();
     queue.head = queue.tail = 0;
     enqueue(source, 1);
     int tiles = 0;
@@ -115,7 +120,7 @@ static void route_queue_max(int source, int dest, int max_tiles, void (*callback
 
 static void route_queue_boat(int source, void (*callback)(int, int))
 {
-    map_grid_clear_u16(routing_distance.items);
+    clear_distances();
     map_grid_clear_u8(water_drag.items);
     queue.head = queue.tail = 0;
     enqueue(source, 1);
@@ -147,7 +152,7 @@ static void route_queue_boat(int source, void (*callback)(int, int))
 
 static void route_queue_dir8(int source, void (*callback)(int, int))
 {
-    map_grid_clear_u16(routing_distance.items);
+    clear_distances();
     queue.head = queue.tail = 0;
     enqueue(source, 1);
     int tiles = 0;
@@ -196,6 +201,7 @@ void map_routing_calculate_distances_water_boat(int x, int y)
 {
     int grid_offset = map_grid_offset(x, y);
     if (terrain_water.items[grid_offset] == WATER_N1_BLOCKED) {
+        clear_distances();
     } else {
         route_queue_boat(grid_offset, callback_calc_distance_water_boat);
     }
@@ -212,7 +218,7 @@ void map_routing_calculate_distances_water_flotsam(int x, int y)
 {
     int grid_offset = map_grid_offset(x, y);
     if (terrain_water.items[grid_offset] == WATER_N1_BLOCKED) {
-        map_grid_clear_u16(routing_distance.items);
+        clear_distances();
     } else {
         route_queue_dir8(grid_offset, callback_calc_distance_water_flotsam);
     }
@@ -316,6 +322,7 @@ int map_routing_calculate_distances_for_building(routed_building_type type, int 
         route_queue(map_grid_offset(x, y), -1, callback_calc_distance_build_wall);
         return 1;
     }
+    clear_distances();
     int source_offset = map_grid_offset(x, y);
     if (!map_can_place_initial_road_or_aqueduct(source_offset, type != ROUTED_BUILDING_ROAD)) {
         return 0;
