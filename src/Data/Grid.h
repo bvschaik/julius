@@ -10,7 +10,6 @@ enum {
 	GRID_SIZE = 162,
 };
 
-EXTERN UInt8_Grid(Data_Grid_elevation);
 EXTERN UInt8_Grid(Data_Grid_aqueducts);
 EXTERN UInt8_Grid(Data_Grid_spriteOffsets);
 

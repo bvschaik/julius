@@ -41,6 +41,7 @@
 #include "map/bookmark.h"
 #include "map/building.h"
 #include "map/desirability.h"
+#include "map/elevation.h"
 #include "map/figure.h"
 #include "map/grid.h"
 #include "map/image.h"
@@ -250,7 +251,7 @@ static void initGrids()
 	map_grid_clear_u8(Data_Grid_spriteOffsets);
 	map_random_clear();
 	map_desirability_clear();
-	map_grid_clear_u8(Data_Grid_elevation);
+	map_elevation_clear();
 	map_soldier_strength_clear();
 	map_road_network_clear();
 

@@ -5,6 +5,7 @@
 #include "Data/State.h"
 
 #include "map/building.h"
+#include "map/elevation.h"
 #include "map/property.h"
 #include "map/terrain.h"
 
@@ -341,7 +342,7 @@ const TerrainGraphic *TerrainGraphicsContext_getElevation(int gridOffset, int he
 {
 	int tiles[MAX_TILES];
 	for (int i = 0; i < MAX_TILES; i++) {
-		tiles[i] = Data_Grid_elevation[gridOffset + contextTileOffsets[i]] >= height ? 1 : 0;
+		tiles[i] = map_elevation_at(gridOffset + contextTileOffsets[i]) >= height ? 1 : 0;
 	}
 	return TerrainGraphicsContext_getGraphic(TerrainGraphicsContext_Elevation, tiles);
 }

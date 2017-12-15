@@ -36,7 +36,7 @@ struct win_criteria_t {
 };
 
 extern struct scenario_t {
-	uint8_t scenario_name[MAX_SCENARIO_NAME];
+    uint8_t scenario_name[MAX_SCENARIO_NAME];
 
     int start_year;
     int climate;

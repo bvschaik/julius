@@ -9,6 +9,7 @@
 #include "graphics/image.h"
 #include "map/building.h"
 #include "map/desirability.h"
+#include "map/elevation.h"
 #include "map/image.h"
 #include "map/property.h"
 #include "map/random.h"
@@ -262,18 +263,18 @@ static int getAccessRampGraphicOffset(int x, int y)
 				if (map_terrain_is(gridOffset, TERRAIN_ELEVATION)) {
 					rightTiles++;
 				}
-				height = Data_Grid_elevation[gridOffset];
+				height = map_elevation_at(gridOffset);
 			} else if (i < 4) { // 1st row
 				if (map_terrain_is(gridOffset, TERRAIN_ACCESS_RAMP) &&
-					Data_Grid_elevation[gridOffset] < height) {
+					map_elevation_at(gridOffset) < height) {
 					rightTiles++;
 				}
 			} else { // higher row beyond access ramp
 				if (map_terrain_is(gridOffset, TERRAIN_ELEVATION)) {
-					if (Data_Grid_elevation[gridOffset] != height) {
+					if (map_elevation_at(gridOffset) != height) {
 						rightTiles++;
 					}
-				} else if (Data_Grid_elevation[gridOffset] >= height) {
+				} else if (map_elevation_at(gridOffset) >= height) {
 					rightTiles++;
 				}
 			}
@@ -314,7 +315,7 @@ void TerrainGraphics_updateRegionElevation(int xMin, int yMin, int xMax, int yMa
 				map_terrain_remove(gridOffset, TERRAIN_ACCESS_RAMP);
 				map_property_set_multi_tile_size(gridOffset, 1);
 				map_property_mark_draw_tile(gridOffset);
-				if (Data_Grid_elevation[gridOffset]) {
+				if (map_elevation_at(gridOffset)) {
 					map_terrain_add(gridOffset, TERRAIN_ELEVATION);
 				} else {
 					map_terrain_remove(gridOffset, TERRAIN_ELEVATION);
@@ -326,9 +327,9 @@ void TerrainGraphics_updateRegionElevation(int xMin, int yMin, int xMax, int yMa
 					image_group(GROUP_TERRAIN_ACCESS_RAMP) + graphicOffset, TERRAIN_ACCESS_RAMP);
 			}
 		}
-		if (Data_Grid_elevation[gridOffset] && !map_terrain_is(gridOffset, TERRAIN_ACCESS_RAMP)) {
+		if (map_elevation_at(gridOffset) && !map_terrain_is(gridOffset, TERRAIN_ACCESS_RAMP)) {
 			const TerrainGraphic *g = TerrainGraphicsContext_getElevation(
-				gridOffset, Data_Grid_elevation[gridOffset]);
+				gridOffset, map_elevation_at(gridOffset));
 			if (g->groupOffset == 44) {
 				map_terrain_remove(gridOffset, TERRAIN_ELEVATION);
 				int terrain = map_terrain_get(gridOffset);

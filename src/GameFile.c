@@ -41,6 +41,7 @@
 #include "map/bookmark.h"
 #include "map/building.h"
 #include "map/desirability.h"
+#include "map/elevation.h"
 #include "map/figure.h"
 #include "map/image.h"
 #include "map/property.h"
@@ -135,9 +136,9 @@ typedef struct {
     buffer *figure_grid;
     buffer *bitfields_grid;
     buffer *Data_Grid_spriteOffsets;
-    buffer *random;
-    buffer *map_desirability;
-    buffer *Data_Grid_elevation;
+    buffer *random_grid;
+    buffer *desirability_grid;
+    buffer *elevation_grid;
     buffer *building_damage_grid;
     buffer *Data_Grid_Undo_aqueducts;
     buffer *Data_Grid_Undo_spriteOffsets;
@@ -283,9 +284,9 @@ static void init_savegame_data()
     state->figure_grid = create_savegame_piece(52488, 1);
     state->bitfields_grid = create_savegame_piece(26244, 1);
     state->Data_Grid_spriteOffsets = create_savegame_piece(26244, 1);
-    state->random = create_savegame_piece(26244, 0);
-    state->map_desirability = create_savegame_piece(26244, 1);
-    state->Data_Grid_elevation = create_savegame_piece(26244, 1);
+    state->random_grid = create_savegame_piece(26244, 0);
+    state->desirability_grid = create_savegame_piece(26244, 1);
+    state->elevation_grid = create_savegame_piece(26244, 1);
     state->building_damage_grid = create_savegame_piece(26244, 1);
     state->Data_Grid_Undo_aqueducts = create_savegame_piece(26244, 1);
     state->Data_Grid_Undo_spriteOffsets = create_savegame_piece(26244, 1);
@@ -382,8 +383,7 @@ static void scenario_deserialize(scenario_state *file)
     map_terrain_load_state(file->terrain);
     map_property_load_state(file->bitfields, file->edge);
     map_random_load_state(file->random);
-
-    read_all_from_buffer(file->elevation, &Data_Grid_elevation);
+    map_elevation_load_state(file->elevation);
     
     Data_State.map.camera.x = buffer_read_i32(file->camera);
     Data_State.map.camera.y = buffer_read_i32(file->camera);
@@ -424,11 +424,10 @@ static void savegame_deserialize(savegame_state *state)
     read_all_from_buffer(state->Data_Grid_spriteOffsets, &Data_Grid_spriteOffsets);
 
     map_property_load_state(state->bitfields_grid, state->edge_grid);
-    map_random_load_state(state->random);
+    map_random_load_state(state->random_grid);
+    map_desirability_load_state(state->desirability_grid);
+    map_elevation_load_state(state->elevation_grid);
 
-    map_desirability_load_state(state->map_desirability);
-
-    read_all_from_buffer(state->Data_Grid_elevation, &Data_Grid_elevation);
     read_all_from_buffer(state->Data_Grid_Undo_aqueducts, &Data_Grid_Undo_aqueducts);
     read_all_from_buffer(state->Data_Grid_Undo_spriteOffsets, &Data_Grid_Undo_spriteOffsets);
 
@@ -546,10 +545,10 @@ static void savegame_serialize(savegame_state *state)
     write_all_to_buffer(state->Data_Grid_spriteOffsets, &Data_Grid_spriteOffsets);
 
     map_property_save_state(state->bitfields_grid, state->edge_grid);
-    map_random_save_state(state->random);
-    map_desirability_save_state(state->map_desirability);
+    map_random_save_state(state->random_grid);
+    map_desirability_save_state(state->desirability_grid);
+    map_elevation_save_state(state->elevation_grid);
 
-    write_all_to_buffer(state->Data_Grid_elevation, &Data_Grid_elevation);
     write_all_to_buffer(state->Data_Grid_Undo_aqueducts, &Data_Grid_Undo_aqueducts);
     write_all_to_buffer(state->Data_Grid_Undo_spriteOffsets, &Data_Grid_Undo_spriteOffsets);
 

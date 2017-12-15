@@ -25,6 +25,7 @@
 #include "graphics/image.h"
 #include "map/building.h"
 #include "map/desirability.h"
+#include "map/elevation.h"
 #include "map/grid.h"
 #include "map/random.h"
 #include "map/road_network.h"
@@ -476,7 +477,7 @@ void Building_setDesirability()
 		if (b->isAdjacentToWater) {
 			b->desirability += 10;
 		}
-		switch (Data_Grid_elevation[b->gridOffset]) {
+		switch (map_elevation_at(b->gridOffset)) {
 			case 0: break;
 			case 1: b->desirability += 10; break;
 			case 2: b->desirability += 12; break;
