@@ -15,7 +15,6 @@
 #include "TerrainGraphics.h"
 #include "Trader.h"
 #include "Undo.h"
-#include "UtilityManagement.h"
 #include "UI/AllWindows.h"
 #include "UI/Sidebar.h"
 #include "UI/Window.h"
@@ -33,6 +32,7 @@
 #include "map/desirability.h"
 #include "map/road_network.h"
 #include "map/routing_terrain.h"
+#include "map/water_supply.h"
 #include "scenario/demand_change.h"
 #include "scenario/distant_battle.h"
 #include "scenario/earthquake.h"
@@ -91,8 +91,8 @@ void GameTick_advance()
 		case 23: HousePopulation_updateMigration(); break;
 		case 24: HousePopulation_evictOvercrowded(); break;
 		case 25: CityInfo_Labor_update(); break;
-		case 27: UtilityManagement_updateReservoirFountain(); break;
-		case 28: UtilityManagement_updateHouseWaterAccess(); break;
+		case 27: map_water_supply_update_reservoir_fountain(); break;
+		case 28: map_water_supply_update_houses(); break;
 		case 29: Formation_Tick_updateAll(1); break;
 		case 30: UI_Sidebar_requestMinimapRefresh(); break;
 		case 31: FigureGeneration_generateFiguresForBuildings(); break;

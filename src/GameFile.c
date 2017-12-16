@@ -7,7 +7,6 @@
 #include "Resource.h"
 #include "SidebarMenu.h"
 #include "TerrainGraphics.h"
-#include "UtilityManagement.h"
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"

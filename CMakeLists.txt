@@ -31,7 +31,7 @@ set(CORE_FILES
     ${PROJECT_SOURCE_DIR}/src/core/time.c
     ${PROJECT_SOURCE_DIR}/src/core/zip.c
 )
-set (BUILDING_FILES
+set(BUILDING_FILES
     ${PROJECT_SOURCE_DIR}/src/building/count.c
     ${PROJECT_SOURCE_DIR}/src/building/list.c
     ${PROJECT_SOURCE_DIR}/src/building/model.c
@@ -39,20 +39,20 @@ set (BUILDING_FILES
     ${PROJECT_SOURCE_DIR}/src/building/properties.c
     ${PROJECT_SOURCE_DIR}/src/building/storage.c
 )
-set (CITY_FILES
+set(CITY_FILES
     ${PROJECT_SOURCE_DIR}/src/city/culture.c
     ${PROJECT_SOURCE_DIR}/src/city/finance.c
     ${PROJECT_SOURCE_DIR}/src/city/message.c
     ${PROJECT_SOURCE_DIR}/src/city/warning.c
 )
-set (EMPIRE_FILES
+set(EMPIRE_FILES
     ${PROJECT_SOURCE_DIR}/src/empire/city.c
     ${PROJECT_SOURCE_DIR}/src/empire/empire.c
     ${PROJECT_SOURCE_DIR}/src/empire/object.c
     ${PROJECT_SOURCE_DIR}/src/empire/trade_prices.c
     ${PROJECT_SOURCE_DIR}/src/empire/trade_route.c
 )
-set (FIGURE_FILES
+set(FIGURE_FILES
     ${PROJECT_SOURCE_DIR}/src/figure/enemy_army.c
     ${PROJECT_SOURCE_DIR}/src/figure/figure.c
     ${PROJECT_SOURCE_DIR}/src/figure/formation.c
@@ -63,18 +63,18 @@ set (FIGURE_FILES
     ${PROJECT_SOURCE_DIR}/src/figure/sound.c
     ${PROJECT_SOURCE_DIR}/src/figure/trader.c
 )
-set (GAME_FILES
+set(GAME_FILES
     ${PROJECT_SOURCE_DIR}/src/game/difficulty.c
     ${PROJECT_SOURCE_DIR}/src/game/settings.c
     ${PROJECT_SOURCE_DIR}/src/game/time.c
     ${PROJECT_SOURCE_DIR}/src/game/tutorial.c
 )
-set (INPUT_FILES
+set(INPUT_FILES
     ${PROJECT_SOURCE_DIR}/src/input/keyboard.c
     ${PROJECT_SOURCE_DIR}/src/input/mouse.c
     ${PROJECT_SOURCE_DIR}/src/input/scroll.c
 )
-set (MAP_FILES
+set(MAP_FILES
     ${PROJECT_SOURCE_DIR}/src/map/aqueduct.c
     ${PROJECT_SOURCE_DIR}/src/map/bookmark.c
     ${PROJECT_SOURCE_DIR}/src/map/bridge.c
@@ -96,8 +96,9 @@ set (MAP_FILES
     ${PROJECT_SOURCE_DIR}/src/map/soldier_strength.c
     ${PROJECT_SOURCE_DIR}/src/map/sprite.c
     ${PROJECT_SOURCE_DIR}/src/map/terrain.c
+    ${PROJECT_SOURCE_DIR}/src/map/water_supply.c
 )
-set (SCENARIO_FILES
+set(SCENARIO_FILES
     ${PROJECT_SOURCE_DIR}/src/scenario/building.c
     ${PROJECT_SOURCE_DIR}/src/scenario/criteria.c
     ${PROJECT_SOURCE_DIR}/src/scenario/demand_change.c
@@ -114,10 +115,10 @@ set (SCENARIO_FILES
     ${PROJECT_SOURCE_DIR}/src/scenario/request.c
     ${PROJECT_SOURCE_DIR}/src/scenario/scenario.c
 )
-set (GRAPHICS_FILES
+set(GRAPHICS_FILES
     ${PROJECT_SOURCE_DIR}/src/graphics/image.c
 )
-set (SOUND_FILES
+set(SOUND_FILES
     ${PROJECT_SOURCE_DIR}/src/sound/city.c
     ${PROJECT_SOURCE_DIR}/src/sound/effect.c
     ${PROJECT_SOURCE_DIR}/src/sound/music.c
@@ -192,7 +193,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/TerrainWater.c
 	${PROJECT_SOURCE_DIR}/src/Trader.c
 	${PROJECT_SOURCE_DIR}/src/Undo.c
-	${PROJECT_SOURCE_DIR}/src/UtilityManagement.c
 	${PROJECT_SOURCE_DIR}/src/Video.c
 	${PROJECT_SOURCE_DIR}/src/Widget_Button.c
 	${PROJECT_SOURCE_DIR}/src/Widget_Menu.c
