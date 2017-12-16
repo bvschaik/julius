@@ -75,10 +75,12 @@ set (INPUT_FILES
     ${PROJECT_SOURCE_DIR}/src/input/scroll.c
 )
 set (MAP_FILES
+    ${PROJECT_SOURCE_DIR}/src/map/aqueduct.c
     ${PROJECT_SOURCE_DIR}/src/map/bookmark.c
     ${PROJECT_SOURCE_DIR}/src/map/bridge.c
     ${PROJECT_SOURCE_DIR}/src/map/building.c
     ${PROJECT_SOURCE_DIR}/src/map/desirability.c
+    ${PROJECT_SOURCE_DIR}/src/map/elevation.c
     ${PROJECT_SOURCE_DIR}/src/map/figure.c
     ${PROJECT_SOURCE_DIR}/src/map/grid.c
     ${PROJECT_SOURCE_DIR}/src/map/image.c

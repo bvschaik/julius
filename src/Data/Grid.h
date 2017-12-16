@@ -14,7 +14,6 @@ EXTERN UInt8_Grid(Data_Grid_aqueducts);
 EXTERN UInt8_Grid(Data_Grid_spriteOffsets);
 
 // undo
-EXTERN UInt8_Grid(Data_Grid_Undo_aqueducts);
 EXTERN UInt8_Grid(Data_Grid_Undo_spriteOffsets);
 
 #endif

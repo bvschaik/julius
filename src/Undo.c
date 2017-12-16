@@ -13,6 +13,7 @@
 #include "city/finance.h"
 #include "game/resource.h"
 #include "graphics/image.h"
+#include "map/aqueduct.h"
 #include "map/building.h"
 #include "map/grid.h"
 #include "map/image.h"
@@ -61,7 +62,7 @@ int Undo_recordBeforeBuild()
 
 	map_image_backup();
 	map_terrain_backup();
-	map_grid_copy_u8(Data_Grid_aqueducts, Data_Grid_Undo_aqueducts);
+	map_aqueduct_backup();
 	map_property_backup();
 	map_grid_copy_u8(Data_Grid_spriteOffsets, Data_Grid_Undo_spriteOffsets);
 
@@ -192,7 +193,7 @@ void Undo_perform()
 			}
 		}
 		map_terrain_restore();
-		map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
+		map_aqueduct_restore();
 		map_grid_copy_u8(Data_Grid_Undo_spriteOffsets, Data_Grid_spriteOffsets);
 		map_image_restore();
 		map_property_restore();
@@ -200,7 +201,7 @@ void Undo_perform()
 	} else if (data.buildingType == BUILDING_AQUEDUCT || data.buildingType == BUILDING_ROAD ||
 			data.buildingType == BUILDING_WALL) {
 		map_terrain_restore();
-		map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
+		map_aqueduct_restore();
 		Undo_restoreTerrainGraphics();
 	} else if (data.buildingType == BUILDING_LOW_BRIDGE || data.buildingType == BUILDING_SHIP_BRIDGE) {
 		map_terrain_restore();
@@ -208,13 +209,13 @@ void Undo_perform()
 		Undo_restoreTerrainGraphics();
 	} else if (data.buildingType == BUILDING_PLAZA || data.buildingType == BUILDING_GARDENS) {
 		map_terrain_restore();
-		map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
+		map_aqueduct_restore();
 		map_property_restore();
 		Undo_restoreTerrainGraphics();
 	} else if (data.numBuildings) {
 		if (data.buildingType == BUILDING_DRAGGABLE_RESERVOIR) {
 			map_terrain_restore();
-			map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
+			map_aqueduct_restore();
 			Undo_restoreTerrainGraphics();
 		}
 		for (int i = 0; i < data.numBuildings; i++) {

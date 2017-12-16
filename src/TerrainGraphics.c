@@ -7,6 +7,7 @@
 
 #include "core/direction.h"
 #include "graphics/image.h"
+#include "map/aqueduct.h"
 #include "map/building.h"
 #include "map/desirability.h"
 #include "map/elevation.h"
@@ -439,7 +440,7 @@ void TerrainGraphics_updateRegionAqueduct(int xMin, int yMin, int xMax, int yMax
 	yMax++;
 	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
 	FOREACH_REGION({
-		if (map_terrain_is(gridOffset, TERRAIN_AQUEDUCT) && Data_Grid_aqueducts[gridOffset] <= 15) {
+		if (map_terrain_is(gridOffset, TERRAIN_AQUEDUCT) && map_aqueduct_at(gridOffset) <= 15) {
 			int waterOffset = map_image_at(gridOffset) - image_group(GROUP_BUILDING_AQUEDUCT);
 			if (waterOffset >= 0 && waterOffset < 15) {
 				waterOffset = 0;
@@ -1055,7 +1056,7 @@ int TerrainGraphics_setTileAqueduct(int x, int y, int forceNoWater)
 {
 	int gridOffset = map_grid_offset(x, y);
 	int tilesSet = 0;
-	if (Data_Grid_aqueducts[gridOffset] <= 15 && !map_terrain_is(gridOffset, TERRAIN_BUILDING)) {
+	if (map_aqueduct_at(gridOffset) <= 15 && !map_terrain_is(gridOffset, TERRAIN_BUILDING)) {
 		tilesSet = 1;
 		int waterOffset;
 		if (map_image_at(gridOffset) - image_group(GROUP_BUILDING_AQUEDUCT) >= 15) {

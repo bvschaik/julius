@@ -30,6 +30,7 @@
 #include "core/random.h"
 #include "figure/formation.h"
 #include "graphics/image.h"
+#include "map/aqueduct.h"
 #include "map/bridge.h"
 #include "map/building.h"
 #include "map/grid.h"
@@ -741,7 +742,7 @@ static void clearRegionConfirmed(int measureOnly, int xStart, int yStart, int xE
 	itemsPlaced = 0;
 	Undo_restoreBuildings();
 	map_terrain_restore();
-	map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
+	map_aqueduct_restore();
 	Undo_restoreTerrainGraphics();
 
 	int xMin, xMax, yMin, yMax;
@@ -805,20 +806,8 @@ static void clearRegionConfirmed(int measureOnly, int xStart, int yStart, int xE
 				}
 			} else if (map_terrain_is(gridOffset, TERRAIN_AQUEDUCT)) {
 				map_terrain_remove(gridOffset, TERRAIN_CLEARABLE);
-				Data_Grid_aqueducts[gridOffset] = 0;
 				itemsPlaced++;
-				if (Data_Grid_aqueducts[gridOffset - 162] == 5) {
-					Data_Grid_aqueducts[gridOffset - 162] = 1;
-				}
-				if (Data_Grid_aqueducts[gridOffset + 1] == 6) {
-					Data_Grid_aqueducts[gridOffset + 1] = 2;
-				}
-				if (Data_Grid_aqueducts[gridOffset + 162] == 5) {
-					Data_Grid_aqueducts[gridOffset + 162] = 3;
-				}
-				if (Data_Grid_aqueducts[gridOffset - 1] == 6) {
-					Data_Grid_aqueducts[gridOffset - 1] = 4;
-				}
+				map_aqueduct_remove(gridOffset);
 			} else if (map_terrain_is(gridOffset, TERRAIN_WATER)) {
 				if (!measureOnly && map_bridge_count_figures(gridOffset) > 0) {
 					city_warning_show(WARNING_PEOPLE_ON_BRIDGE);
@@ -978,7 +967,7 @@ static int placeRoutedBuilding(int xSrc, int ySrc, int xDst, int yDst, routed_bu
 static void placeRoad(int measureOnly, int xStart, int yStart, int xEnd, int yEnd)
 {
 	map_terrain_restore();
-	map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
+	map_aqueduct_restore();
 	Undo_restoreTerrainGraphics();
 
 	itemsPlaced = 0;
@@ -1007,7 +996,7 @@ static void placeRoad(int measureOnly, int xStart, int yStart, int xEnd, int yEn
 static void placeWall(int measureOnly, int xStart, int yStart, int xEnd, int yEnd)
 {
 	map_terrain_restore();
-	map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
+	map_aqueduct_restore();
 	Undo_restoreTerrainGraphics();
 
 	itemsPlaced = 0;
@@ -1038,7 +1027,7 @@ static void placePlaza(int measureOnly, int xStart, int yStart, int xEnd, int yE
 	int xMin, yMin, xMax, yMax;
 	BOUND_REGION();
 	map_terrain_restore();
-	map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
+	map_aqueduct_restore();
 	map_property_restore();
 	Undo_restoreTerrainGraphics();
 	
@@ -1068,7 +1057,7 @@ static void placeGarden(int xStart, int yStart, int xEnd, int yEnd)
 	BOUND_REGION();
 	
 	map_terrain_restore();
-	map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
+	map_aqueduct_restore();
 	map_property_restore();
 	Undo_restoreTerrainGraphics();
 
@@ -1088,7 +1077,7 @@ static void placeGarden(int xStart, int yStart, int xEnd, int yEnd)
 static int placeAqueduct(int measureOnly, int xStart, int yStart, int xEnd, int yEnd, int *cost)
 {
 	map_terrain_restore();
-	map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
+	map_aqueduct_restore();
 	Undo_restoreTerrainGraphics();
 	int itemCost = model_get_building(BUILDING_AQUEDUCT)->cost;
 	*cost = 0;
@@ -1128,7 +1117,7 @@ static int placeReservoirAndAqueducts(int measureOnly, int xStart, int yStart, i
 	info->placeReservoirAtEnd = PlaceReservoir_No;
 
 	map_terrain_restore();
-	map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
+	map_aqueduct_restore();
 	Undo_restoreTerrainGraphics();
 
 	int distance = calc_maximum_distance(xStart, yStart, xEnd, yEnd);
@@ -1332,11 +1321,11 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
 	if (type != BUILDING_CLEAR_LAND && Figure_hasNearbyEnemy(xStart, yStart, xEnd, yEnd)) {
 		if (type == BUILDING_WALL || type == BUILDING_ROAD || type == BUILDING_AQUEDUCT) {
 			map_terrain_restore();
-			map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
+			map_aqueduct_restore();
 			Undo_restoreTerrainGraphics();
 		} else if (type == BUILDING_PLAZA || type == BUILDING_GARDENS) {
 			map_terrain_restore();
-			map_grid_copy_u8(Data_Grid_Undo_aqueducts, Data_Grid_aqueducts);
+			map_aqueduct_restore();
 			map_property_restore();
 			Undo_restoreTerrainGraphics();
 		} else if (type == BUILDING_LOW_BRIDGE || type == BUILDING_SHIP_BRIDGE) {

@@ -38,6 +38,7 @@
 #include "game/time.h"
 #include "game/tutorial.h"
 #include "graphics/image.h"
+#include "map/aqueduct.h"
 #include "map/bookmark.h"
 #include "map/building.h"
 #include "map/desirability.h"
@@ -245,7 +246,7 @@ static void initGrids()
 	map_image_clear();
 	map_building_clear();
 	map_terrain_clear();
-	map_grid_clear_u8(Data_Grid_aqueducts);
+	map_aqueduct_clear();
 	map_figure_clear();
 	map_property_clear();
 	map_grid_clear_u8(Data_Grid_spriteOffsets);
