@@ -153,6 +153,8 @@ void CityInfo_Tick_countBuildingTypes()
 					++Data_CityInfo.numWorkingDocks;
 				}
 				break;
+            default:
+                continue;
 		}
 		if (b->immigrantFigureId) {
 			figure *f = figure_get(b->immigrantFigureId);
