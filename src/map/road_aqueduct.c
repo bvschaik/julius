@@ -91,11 +91,13 @@ int map_get_aqueduct_with_road_image(int grid_offset)
     int image = map_image_at(grid_offset) - image_group(GROUP_BUILDING_AQUEDUCT);
     switch (image) {
         case 2:
-        case 17:
             return 8;
+        case 17:
+            return 23;
         case 3:
-        case 18:
             return 9;
+        case 18:
+            return 24;
         case 0:
         case 1:
         case 8:
