@@ -27,8 +27,10 @@
 #include "figure/figure.h"
 #include "figure/formation.h"
 #include "figure/phrase.h"
+#include "map/aqueduct.h"
 #include "map/building.h"
 #include "map/figure.h"
+#include "map/image.h"
 #include "map/property.h"
 #include "map/terrain.h"
 
@@ -145,7 +147,7 @@ void UI_BuildingInfo_init()
 	context.buildingId = map_building_at(gridOffset);
 	context.rubbleBuildingType = map_rubble_building_type(gridOffset);
 	context.hasReservoirPipes = map_terrain_is(gridOffset, TERRAIN_RESERVOIR_RANGE);
-	context.aqueductHasWater = Data_Grid_aqueducts[gridOffset];
+	context.aqueductHasWater = map_aqueduct_at(gridOffset) && map_image_at(gridOffset) - image_group(GROUP_BUILDING_AQUEDUCT) < 15;
 
 	CityInfo_Resource_calculateAvailableResources();
 	context.type = BuildingInfoType_Terrain;
