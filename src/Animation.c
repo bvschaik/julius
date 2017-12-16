@@ -1,6 +1,5 @@
 #include "Animation.h"
 
-#include "Data/Grid.h"
 #include "Data/Building.h"
 
 #include "building/model.h"
@@ -8,6 +7,7 @@
 #include "core/time.h"
 #include "graphics/image.h"
 #include "map/building.h"
+#include "map/sprite.h"
 
 #define MAX_ANIM_TIMERS 51
 
@@ -63,11 +63,11 @@ int Animation_getIndexForCityBuilding(int graphicId, int gridOffset)
 		return 0;
 	}
 	if (b->type == BUILDING_DOCK && b->data.other.dockNumShips <= 0) {
-		Data_Grid_spriteOffsets[gridOffset] = 1;
+		map_sprite_animation_set(gridOffset, 1);
 		return 1;
 	}
 	if (b->type == BUILDING_MARBLE_QUARRY && b->numWorkers <= 0) {
-		Data_Grid_spriteOffsets[gridOffset] = 1;
+		map_sprite_animation_set(gridOffset, 1);
 		return 1;
 	} else if ((b->type == BUILDING_IRON_MINE || b->type == BUILDING_CLAY_PIT ||
 		b->type == BUILDING_TIMBER_YARD) && b->numWorkers <= 0) {
@@ -75,7 +75,7 @@ int Animation_getIndexForCityBuilding(int graphicId, int gridOffset)
 	}
 	if (b->type == BUILDING_GLADIATOR_SCHOOL) {
 		if (b->numWorkers <= 0) {
-			Data_Grid_spriteOffsets[gridOffset] = 1;
+			map_sprite_animation_set(gridOffset, 1);
 			return 1;
 		}
 	} else if (BuildingIsEntertainment(b->type) &&
@@ -88,7 +88,7 @@ int Animation_getIndexForCityBuilding(int graphicId, int gridOffset)
 
 	const image *img = image_get(graphicId);
 	if (!shouldUpdate[img->animation_speed_id]) {
-		return Data_Grid_spriteOffsets[gridOffset] & 0x7f;
+		return map_sprite_animation_at(gridOffset) & 0x7f;
 	}
 	// advance animation
 	int newSprite = 0;
@@ -105,30 +105,30 @@ int Animation_getIndexForCityBuilding(int graphicId, int gridOffset)
 		} else if (pctDone < 12) {
 			newSprite = 3;
 		} else if (pctDone < 96) {
-			if (Data_Grid_spriteOffsets[gridOffset] < 4) {
+			if (map_sprite_animation_at(gridOffset) < 4) {
 				newSprite = 4;
 			} else {
-				newSprite = Data_Grid_spriteOffsets[gridOffset] + 1;
+				newSprite = map_sprite_animation_at(gridOffset) + 1;
 				if (newSprite > 8) {
 					newSprite = 4;
 				}
 			}
 		} else {
 			// close to done
-			if (Data_Grid_spriteOffsets[gridOffset] < 9) {
+			if (map_sprite_animation_at(gridOffset) < 9) {
 				newSprite = 9;
 			} else {
-				newSprite = Data_Grid_spriteOffsets[gridOffset] + 1;
+				newSprite = map_sprite_animation_at(gridOffset) + 1;
 				if (newSprite > 12) {
 					newSprite = 12;
 				}
 			}
 		}
 	} else if (img->animation_can_reverse) {
-		if (Data_Grid_spriteOffsets[gridOffset] & 0x80) {
+		if (map_sprite_animation_at(gridOffset) & 0x80) {
 			isReverse = 1;
 		}
-		int currentSprite = Data_Grid_spriteOffsets[gridOffset] & 0x7f;
+		int currentSprite = map_sprite_animation_at(gridOffset) & 0x7f;
 		if (isReverse) {
 			newSprite = currentSprite - 1;
 			if (newSprite < 1) {
@@ -144,16 +144,13 @@ int Animation_getIndexForCityBuilding(int graphicId, int gridOffset)
 		}
 	} else {
 		// Absolutely normal case
-		newSprite = Data_Grid_spriteOffsets[gridOffset] + 1;
+		newSprite = map_sprite_animation_at(gridOffset) + 1;
 		if (newSprite > img->num_animation_sprites) {
 			newSprite = 1;
 		}
 	}
 
-	Data_Grid_spriteOffsets[gridOffset] = newSprite;
-	if (isReverse) {
-		Data_Grid_spriteOffsets[gridOffset] |= 0x80;
-	}
+	map_sprite_animation_set(gridOffset, isReverse ? newSprite | 0x80 : newSprite);
 	return newSprite;
 }
 

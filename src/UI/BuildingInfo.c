@@ -18,7 +18,6 @@
 #include "../Data/CityInfo.h"
 #include "../Data/CityView.h"
 #include "../Data/Constants.h"
-#include "../Data/Grid.h"
 #include "../Data/Screen.h"
 #include "../Data/State.h"
 
@@ -32,6 +31,7 @@
 #include "map/figure.h"
 #include "map/image.h"
 #include "map/property.h"
+#include "map/sprite.h"
 #include "map/terrain.h"
 
 static void buttonHelp(int param1, int param2);
@@ -152,7 +152,7 @@ void UI_BuildingInfo_init()
 	CityInfo_Resource_calculateAvailableResources();
 	context.type = BuildingInfoType_Terrain;
 	context.figure.drawn = 0;
-	if (!context.buildingId && Data_Grid_spriteOffsets[gridOffset] > 0) {
+	if (!context.buildingId && map_sprite_bridge_at(gridOffset) > 0) {
 		if (map_terrain_is(gridOffset, TERRAIN_WATER)) {
 			context.terrainType = 11;
 		} else {

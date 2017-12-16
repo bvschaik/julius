@@ -11,6 +11,7 @@
 
 #include "core/calc.h"
 #include "graphics/image.h"
+#include "map/aqueduct.h"
 #include "map/bridge.h"
 #include "map/building.h"
 #include "map/figure.h"
@@ -22,6 +23,7 @@
 #include "map/road_network.h"
 #include "map/routing.h"
 #include "map/routing_terrain.h"
+#include "map/sprite.h"
 #include "map/terrain.h"
 #include "scenario/map.h"
 
@@ -153,10 +155,10 @@ void Terrain_removeBuildingFromGrids(int buildingId, int x, int y)
 			map_property_set_multi_tile_size(gridOffset, 1);
 			map_property_clear_multi_tile_xy(gridOffset);
 			map_property_mark_draw_tile(gridOffset);
-			Data_Grid_aqueducts[gridOffset] = 0;
+			map_aqueduct_set(gridOffset, 0);
 			map_building_set(gridOffset, 0);
 			map_building_damage_clear(gridOffset);
-			Data_Grid_spriteOffsets[gridOffset] = 0;
+			map_sprite_clear_tile(gridOffset);
 			if (map_terrain_is(gridOffset, TERRAIN_WATER)) {
 				map_terrain_set(gridOffset, TERRAIN_WATER); // clear other flags
 				TerrainGraphics_setTileWater(x + dx, y + dy);

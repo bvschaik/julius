@@ -2,53 +2,65 @@
 
 #include "map/grid.h"
 
+/**
+ * The aqueduct grid is used in two ways:
+ * 1) to mark water/no water (0/1, see map/water_supply.c)
+ * 2) to store image IDs for the aqueduct (0-15)
+ * This leads to some strange results
+ */
+static grid_u8 aqueduct;
 static grid_u8 aqueduct_backup;
 
 int map_aqueduct_at(int grid_offset)
 {
-    return Data_Grid_aqueducts[grid_offset];
+    return aqueduct.items[grid_offset];
+}
+
+void map_aqueduct_set(int grid_offset, int value)
+{
+    aqueduct.items[grid_offset] = value;
 }
 
 void map_aqueduct_remove(int grid_offset)
 {
-    Data_Grid_aqueducts[grid_offset] = 0;
-    if (Data_Grid_aqueducts[grid_offset + map_grid_delta(0, -1)] == 5) {
-        Data_Grid_aqueducts[grid_offset + map_grid_delta(0, -1)] = 1;
+    aqueduct.items[grid_offset] = 0;
+    if (aqueduct.items[grid_offset + map_grid_delta(0, -1)] == 5) {
+        aqueduct.items[grid_offset + map_grid_delta(0, -1)] = 1;
     }
-    if (Data_Grid_aqueducts[grid_offset + map_grid_delta(1, 0)] == 6) {
-        Data_Grid_aqueducts[grid_offset + map_grid_delta(1, 0)] = 2;
+    if (aqueduct.items[grid_offset + map_grid_delta(1, 0)] == 6) {
+        aqueduct.items[grid_offset + map_grid_delta(1, 0)] = 2;
     }
-    if (Data_Grid_aqueducts[grid_offset + map_grid_delta(0, 1)] == 5) {
-        Data_Grid_aqueducts[grid_offset + map_grid_delta(0, 1)] = 3;
+    if (aqueduct.items[grid_offset + map_grid_delta(0, 1)] == 5) {
+        aqueduct.items[grid_offset + map_grid_delta(0, 1)] = 3;
     }
-    if (Data_Grid_aqueducts[grid_offset + map_grid_delta(-1, 0)] == 6) {
-        Data_Grid_aqueducts[grid_offset + map_grid_delta(-1, 0)] = 4;
+    if (aqueduct.items[grid_offset + map_grid_delta(-1, 0)] == 6) {
+        aqueduct.items[grid_offset + map_grid_delta(-1, 0)] = 4;
     }
 }
 
 void map_aqueduct_clear()
 {
-    map_grid_clear_u8(Data_Grid_aqueducts);
+    map_grid_clear_u8(aqueduct.items);
 }
 
 void map_aqueduct_backup()
 {
-    map_grid_copy_u8(Data_Grid_aqueducts, aqueduct_backup.items);
+    map_grid_copy_u8(aqueduct.items, aqueduct_backup.items);
 }
 
 void map_aqueduct_restore()
 {
-    map_grid_copy_u8(aqueduct_backup.items, Data_Grid_aqueducts);
+    map_grid_copy_u8(aqueduct_backup.items, aqueduct.items);
 }
 
 void map_aqueduct_save_state(buffer *buf, buffer *backup)
 {
-    map_grid_save_state_u8(Data_Grid_aqueducts, buf);
+    map_grid_save_state_u8(aqueduct.items, buf);
     map_grid_save_state_u8(aqueduct_backup.items, backup);
 }
 
 void map_aqueduct_load_state(buffer *buf, buffer *backup)
 {
-    map_grid_load_state_u8(Data_Grid_aqueducts, buf);
+    map_grid_load_state_u8(aqueduct.items, buf);
     map_grid_load_state_u8(aqueduct_backup.items, backup);
 }

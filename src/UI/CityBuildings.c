@@ -26,6 +26,7 @@
 #include "map/image.h"
 #include "map/property.h"
 #include "map/routing.h"
+#include "map/sprite.h"
 #include "map/terrain.h"
 #include "sound/city.h"
 #include "sound/speech.h"
@@ -451,7 +452,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 						}
 					}
 				}
-			} else if (Data_Grid_spriteOffsets[gridOffset]) {
+			} else if (map_sprite_bridge_at(gridOffset)) {
 				UI_CityBuildings_drawBridge(gridOffset, xGraphic, yGraphic);
 			} else if (Data_Buildings[map_building_at(gridOffset)].type == BUILDING_FORT) {
 				if (map_property_is_draw_tile(gridOffset)) {
@@ -497,7 +498,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 void UI_CityBuildings_drawBridge(int gridOffset, int x, int y)
 {
 	if (!map_terrain_is(gridOffset, TERRAIN_WATER)) {
-		Data_Grid_spriteOffsets[gridOffset] = 0;
+		map_sprite_clear_tile(gridOffset);
 		return;
 	}
 	if (map_terrain_is(gridOffset, TERRAIN_BUILDING)) {
@@ -508,7 +509,7 @@ void UI_CityBuildings_drawBridge(int gridOffset, int x, int y)
 		colorMask = COLOR_MASK_RED;
 	}
 	int graphicId = image_group(GROUP_BUILDING_BRIDGE);
-	switch (Data_Grid_spriteOffsets[gridOffset]) {
+	switch (map_sprite_bridge_at(gridOffset)) {
 		case 1:
 			Graphics_drawImageMasked(graphicId + 5, x, y - 20, colorMask);
 			break;

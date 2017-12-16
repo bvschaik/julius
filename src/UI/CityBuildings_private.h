@@ -7,7 +7,6 @@
 #include "../Data/CityInfo.h"
 #include "../Data/CityView.h"
 #include "../Data/Constants.h"
-#include "../Data/Grid.h"
 #include "../Data/State.h"
 
 #include "../Animation.h"

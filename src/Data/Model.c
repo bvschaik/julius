@@ -5,9 +5,6 @@
 #include "CityView.h"
 #include "Constants.h"
 
-#define DATA_INTERN 1
-#include "Grid.h"
-
 struct _Data_Screen Data_Screen;// = { 800, 600, {80, 60} };
 
 struct _Data_CityInfo Data_CityInfo;

@@ -5,7 +5,9 @@
 
 #include <stdint.h>
 
-#include "Data/Grid.h"
+enum {
+    GRID_SIZE = 162
+};
 
 typedef struct {
     uint8_t items[GRID_SIZE * GRID_SIZE];

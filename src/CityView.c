@@ -3,11 +3,11 @@
 #include "UI/CityBuildings.h"
 
 #include "Data/CityView.h"
-#include "Data/Grid.h"
 #include "Data/Screen.h"
 #include "Data/State.h"
 
 #include "core/direction.h"
+#include "map/grid.h"
 #include "map/image.h"
 
 static void setViewport(int xOffset, int yOffset, int widthInTiles, int heightInTiles);

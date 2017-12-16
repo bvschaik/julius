@@ -884,7 +884,7 @@ static void clearRegion(int measureOnly, int xStart, int yStart, int xEnd, int y
 					askConfirmFort = 1;
 				}
 			}
-			if (Data_Grid_spriteOffsets[gridOffset] && map_terrain_is(gridOffset, TERRAIN_WATER)) {
+			if (map_is_bridge(gridOffset)) {
 				askConfirmBridge = 1;
 			}
 		}
@@ -1387,13 +1387,13 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
 			int reservoirId = Building_create(BUILDING_RESERVOIR, xStart - 1, yStart - 1);
 			Undo_addBuildingToList(reservoirId);
 			Terrain_addBuildingToGrids(reservoirId, xStart-1, yStart-1, 3, image_group(GROUP_BUILDING_RESERVOIR), TERRAIN_BUILDING);
-			Data_Grid_aqueducts[map_grid_offset(xStart-1, yStart-1)] = 0;
+			map_aqueduct_set(map_grid_offset(xStart-1, yStart-1), 0);
 		}
 		if (info.placeReservoirAtEnd == PlaceReservoir_Yes) {
 			int reservoirId = Building_create(BUILDING_RESERVOIR, xEnd - 1, yEnd - 1);
 			Undo_addBuildingToList(reservoirId);
 			Terrain_addBuildingToGrids(reservoirId, xEnd-1, yEnd-1, 3, image_group(GROUP_BUILDING_RESERVOIR), TERRAIN_BUILDING);
-			Data_Grid_aqueducts[map_grid_offset(xEnd-1, yEnd-1)] = 0;
+			map_aqueduct_set(map_grid_offset(xEnd-1, yEnd-1), 0);
 			if (!Terrain_existsTileWithinAreaWithType(xStart - 2, yStart - 2, 5, TERRAIN_WATER) && info.placeReservoirAtStart == PlaceReservoir_No) {
 				building_placement_warning_check_reservoir(BUILDING_RESERVOIR);
 			}

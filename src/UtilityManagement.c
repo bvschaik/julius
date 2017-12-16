@@ -9,6 +9,7 @@
 
 #include "building/list.h"
 #include "graphics/image.h"
+#include "map/aqueduct.h"
 #include "map/desirability.h"
 #include "map/building.h"
 #include "map/grid.h"
@@ -59,7 +60,7 @@ static void setAllAqueductsToNoWater()
 	for (int y = 0; y < Data_State.map.height; y++, grid_offset += Data_State.map.gridBorderSize) {
 		for (int x = 0; x < Data_State.map.width; x++, grid_offset++) {
 			if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT)) {
-				Data_Grid_aqueducts[grid_offset] = 0;
+				map_aqueduct_set(grid_offset, 0);
 				int image_id = map_image_at(grid_offset);
 				if (image_id < image_without_water) {
 					map_image_set(grid_offset, image_id + 15);
@@ -83,7 +84,7 @@ static void fillAqueductsFromOffset(int gridOffset)
 		if (++guard >= GRID_SIZE * GRID_SIZE) {
 			break;
 		}
-		Data_Grid_aqueducts[gridOffset] = 1;
+		map_aqueduct_set(gridOffset, 1);
 		int image_id = map_image_at(gridOffset);
 		if (image_id >= image_without_water) {
 			map_image_set(gridOffset, image_id - 15);
@@ -101,7 +102,7 @@ static void fillAqueductsFromOffset(int gridOffset)
 					}
 				}
 			} else if (map_terrain_is(newOffset, TERRAIN_AQUEDUCT)) {
-				if (!Data_Grid_aqueducts[newOffset]) {
+				if (!map_aqueduct_at(newOffset)) {
 					if (nextOffset == -1) {
 						nextOffset = newOffset;
 					} else {

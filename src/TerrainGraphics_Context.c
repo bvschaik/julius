@@ -1,7 +1,6 @@
 #include "TerrainGraphics.h"
 
 #include "Data/Building.h"
-#include "Data/Grid.h"
 #include "Data/State.h"
 
 #include "map/building.h"

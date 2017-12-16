@@ -4,11 +4,11 @@
 #include "core/direction.h"
 #include "graphics/image.h"
 #include "map/building.h"
-#include "map/grid.h"
 #include "map/image.h"
 #include "map/property.h"
 #include "map/random.h"
 #include "map/routing_data.h"
+#include "map/sprite.h"
 #include "map/terrain.h"
 
 #include "Data/Building.h"
@@ -215,7 +215,7 @@ void map_routing_update_water()
             if (map_terrain_is(grid_offset, TERRAIN_WATER) && is_surrounded_by_water(grid_offset)) {
                 if (x > 0 && x < Data_State.map.width - 1 &&
                     y > 0 && y < Data_State.map.height - 1) {
-                    switch (Data_Grid_spriteOffsets[grid_offset]) {
+                    switch (map_sprite_bridge_at(grid_offset)) {
                         case 5:
                         case 6: // low bridge middle section
                             terrain_water.items[grid_offset] = WATER_N3_LOW_BRIDGE;

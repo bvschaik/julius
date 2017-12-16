@@ -19,6 +19,7 @@
 #include "map/image.h"
 #include "map/property.h"
 #include "map/routing_terrain.h"
+#include "map/sprite.h"
 #include "map/terrain.h"
 #include "scenario/earthquake.h"
 
@@ -64,7 +65,7 @@ int Undo_recordBeforeBuild()
 	map_terrain_backup();
 	map_aqueduct_backup();
 	map_property_backup();
-	map_grid_copy_u8(Data_Grid_spriteOffsets, Data_Grid_Undo_spriteOffsets);
+	map_sprite_backup();
 
 	return 1;
 }
@@ -194,7 +195,7 @@ void Undo_perform()
 		}
 		map_terrain_restore();
 		map_aqueduct_restore();
-		map_grid_copy_u8(Data_Grid_Undo_spriteOffsets, Data_Grid_spriteOffsets);
+		map_sprite_restore();
 		map_image_restore();
 		map_property_restore();
 		map_property_clear_constructing_and_deleted();
@@ -205,7 +206,7 @@ void Undo_perform()
 		Undo_restoreTerrainGraphics();
 	} else if (data.buildingType == BUILDING_LOW_BRIDGE || data.buildingType == BUILDING_SHIP_BRIDGE) {
 		map_terrain_restore();
-		map_grid_copy_u8(Data_Grid_Undo_spriteOffsets, Data_Grid_spriteOffsets);
+		map_sprite_restore();
 		Undo_restoreTerrainGraphics();
 	} else if (data.buildingType == BUILDING_PLAZA || data.buildingType == BUILDING_GARDENS) {
 		map_terrain_restore();

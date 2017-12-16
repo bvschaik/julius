@@ -22,4 +22,8 @@ void map_bridge_update_after_rotate(int counter_clockwise);
 
 int map_bridge_count_figures(int grid_offset);
 
+int map_is_bridge(int grid_offset);
+
+int map_bridge_height(int grid_offset);
+
 #endif // MAP_BRIDGE_H

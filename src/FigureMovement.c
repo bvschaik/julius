@@ -11,6 +11,7 @@
 #include "core/calc.h"
 #include "figure/route.h"
 #include "game/time.h"
+#include "map/bridge.h"
 #include "map/building.h"
 #include "map/figure.h"
 #include "map/grid.h"
@@ -78,21 +79,7 @@ void FigureMovement_advanceTick(figure *f)
 static void setTargetHeightBridge(figure *f)
 {
 	f->heightAdjustedTicks = 18;
-	if (Data_Grid_spriteOffsets[f->gridOffset] <= 6) {
-		// low bridge
-		switch (Data_Grid_spriteOffsets[f->gridOffset]) {
-			case 1: case 4: f->targetHeight = 10; break;
-			case 2: case 3: f->targetHeight = 16; break;
-			default: f->targetHeight = 20; break;
-		}
-	} else {
-		// ship bridge
-		switch (Data_Grid_spriteOffsets[f->gridOffset]) {
-			case 7: case 8: case 9: case 10: f->targetHeight = 14; break;
-			case 13: f->targetHeight = 30; break;
-			default: f->targetHeight = 36; break;
-		}
-	}
+	f->targetHeight = map_bridge_height(f->gridOffset);
 }
 
 static void figureMoveToNextTile(figure *f)

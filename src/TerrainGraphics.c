@@ -15,6 +15,7 @@
 #include "map/property.h"
 #include "map/random.h"
 #include "map/soldier_strength.h"
+#include "map/sprite.h"
 #include "map/terrain.h"
 
 static void TerrainGraphics_setTileRubble(int x, int y);
@@ -126,7 +127,7 @@ static void setTileAqueduct(int gridOffset, int waterOffset, int includeOverlay)
 		waterOffset + groupOffset + graphic->itemOffset);
 	map_property_set_multi_tile_size(gridOffset, 1);
 	map_property_mark_draw_tile(gridOffset);
-	Data_Grid_aqueducts[gridOffset] = graphic->aqueductOffset;
+	map_aqueduct_set(gridOffset, graphic->aqueductOffset);
 }
 
 void TerrainGraphics_updateAllRocks()
@@ -219,7 +220,7 @@ void TerrainGraphics_determineGardensFromGraphicIds()
 		if (image_id >= baseGraphicId && image_id <= baseGraphicId + 6) {
 			map_terrain_add(gridOffset, TERRAIN_GARDEN);
 			map_property_clear_constructing(gridOffset);
-			Data_Grid_aqueducts[gridOffset] = 0;
+			map_aqueduct_set(gridOffset, 0);
 		}
 	});
 }
@@ -552,10 +553,10 @@ void TerrainGraphics_setBuildingAreaRubble(int buildingId, int x, int y, int siz
 			}
 			map_property_clear_constructing(gridOffset);
 			map_property_set_multi_tile_size(gridOffset, 1);
-			Data_Grid_aqueducts[gridOffset] = 0;
+			map_aqueduct_set(gridOffset, 0);
 			map_building_set(gridOffset, 0);
 			map_building_damage_clear(gridOffset);
-			Data_Grid_spriteOffsets[gridOffset] = 0;
+			map_sprite_clear_tile(gridOffset);
 			map_property_set_multi_tile_xy(gridOffset, 0, 0, 1);
 			if (map_terrain_is(gridOffset, TERRAIN_WATER)) {
 				map_terrain_set(gridOffset, TERRAIN_WATER); // clear other flags
@@ -1086,7 +1087,7 @@ static void TerrainGraphics_setTileRubble(int x, int y)
 	map_image_set(gridOffset, image_group(GROUP_TERRAIN_RUBBLE) + (map_random_get(gridOffset) & 7));
 	map_property_set_multi_tile_size(gridOffset, 1);
 	map_property_mark_draw_tile(gridOffset);
-	Data_Grid_aqueducts[gridOffset] = 0;
+	map_aqueduct_set(gridOffset, 0);
 }
 
 static void TerrainGraphics_updateTileMeadow(int x, int y)
@@ -1112,7 +1113,7 @@ static void TerrainGraphics_updateTileMeadow(int x, int y)
 			}
 			map_property_set_multi_tile_size(gridOffset, 1);
 			map_property_mark_draw_tile(gridOffset);
-			Data_Grid_aqueducts[gridOffset] = 0;
+			map_aqueduct_set(gridOffset, 0);
 		}
 	});
 }

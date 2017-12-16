@@ -3,6 +3,7 @@
 #include "figure/figure.h"
 #include "game/resource.h"
 #include "map/desirability.h"
+#include "map/bridge.h"
 #include "map/building.h"
 #include "map/figure.h"
 #include "map/image.h"
@@ -292,7 +293,7 @@ void UI_CityBuildings_drawOverlayTopsFiguresAnimation(int overlay)
 						}
 					}
 				}
-			} else if (Data_Grid_spriteOffsets[gridOffset] && map_terrain_is(gridOffset, TERRAIN_WATER)) {
+			} else if (map_is_bridge(gridOffset)) {
 				UI_CityBuildings_drawBridge(gridOffset, xGraphic, yGraphic);
 			}
 		} END_FOREACH_X_VIEW;

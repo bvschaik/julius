@@ -94,6 +94,7 @@ set (MAP_FILES
     ${PROJECT_SOURCE_DIR}/src/map/routing_path.c
     ${PROJECT_SOURCE_DIR}/src/map/routing_terrain.c
     ${PROJECT_SOURCE_DIR}/src/map/soldier_strength.c
+    ${PROJECT_SOURCE_DIR}/src/map/sprite.c
     ${PROJECT_SOURCE_DIR}/src/map/terrain.c
 )
 set (SCENARIO_FILES

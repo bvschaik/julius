@@ -51,6 +51,7 @@
 #include "map/road_network.h"
 #include "map/routing_terrain.h"
 #include "map/soldier_strength.h"
+#include "map/sprite.h"
 #include "map/terrain.h"
 #include "scenario/criteria.h"
 #include "scenario/demand_change.h"
@@ -249,7 +250,7 @@ static void initGrids()
 	map_aqueduct_clear();
 	map_figure_clear();
 	map_property_clear();
-	map_grid_clear_u8(Data_Grid_spriteOffsets);
+	map_sprite_clear();
 	map_random_clear();
 	map_desirability_clear();
 	map_elevation_clear();
