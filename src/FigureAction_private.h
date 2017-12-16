@@ -2,7 +2,7 @@
 #define FIGUREACTION_PRIVATE_H
 
 #define FigureActionIncreaseGraphicOffset(f, max) (f)->graphicOffset++; if ((f)->graphicOffset >= (max)) (f)->graphicOffset = 0;
-#define FigureActionDirection(f) ((8 + f->direction - Data_State.map.orientation) % 8)
+#define FigureActionDirection(f) ((f->direction < Data_State.map.orientation ? 8 : 0) + f->direction - Data_State.map.orientation)
 #define FigureActionNormalizeDirection(d) ((d) = (8 + (d) - Data_State.map.orientation) % 8)
 #define FigureActionCorpseGraphicOffset(f) figureActionCorpseGraphicOffsets[f->waitTicks / 2]
 #define FigureActionMissileLauncherGraphicOffset(f) figureActionMissileLauncherGraphicOffsets[f->attackGraphicOffset / 2]
