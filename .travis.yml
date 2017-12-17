@@ -4,6 +4,16 @@ compiler:
   - gcc
   - clang
 
+install: true
+
+addons:
+  apt:
+    packages:
+    - libsdl2-2.0-0
+    - libsdl2-dev
+    - libsdl2-mixer-2.0-0
+    - libsdl2-mixer-dev
+
 before_script:
   - mkdir build
   - cd build
