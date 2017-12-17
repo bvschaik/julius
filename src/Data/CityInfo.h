@@ -366,8 +366,8 @@ extern struct _Data_CityInfo {
 	signed char soundHitSoldier;
 	signed char soundHitSpear;
 	signed char soundHitClub;
-	unsigned char soundMarchEnemy;
-	unsigned char soundMarchHorse;
+	signed char soundMarchEnemy;
+	signed char soundMarchHorse;
 	signed char soundHitElephant;
 	signed char soundHitAxe;
 	signed char soundHitWolf;

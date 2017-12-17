@@ -134,5 +134,12 @@ add_integration_test(sav_caesar2 kknight.sav kknight3.sav 1087)
 add_integration_test(sav_caesar3 kknight.sav kknight4.sav 1287)
 add_integration_test(sav_caesar4 kknight.sav kknight5.sav 1494)
 
+# Invasion
+add_integration_test(sav_invasion1 inv0.sav inv1.sav 1973)
+add_integration_test(sav_invasion2 inv0.sav inv2.sav 3521)
+add_integration_test(sav_invasion3 inv0.sav inv3.sav 5105)
+add_integration_test(sav_invasion4 inv0.sav inv4.sav 6777)
+add_integration_test(sav_invasion5 inv0.sav inv5.sav 8563)
+
 # Routing table full kills figures
 add_integration_test(sav_routing_full routing-full.sav routing-full-kill.sav 7)

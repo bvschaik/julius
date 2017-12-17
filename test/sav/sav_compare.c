@@ -1,6 +1,7 @@
 #include "../src/core/zip.h"
 
 #include <stdio.h>
+#include <string.h>
 
 #define SAVEGAME_PARTS 300
 #define COMPRESS_BUFFER_SIZE 600000
@@ -250,6 +251,16 @@ static char compress_buffer[COMPRESS_BUFFER_SIZE];
 static unsigned char file1_data[1300000];
 static unsigned char file2_data[1300000];
 
+static int index_of_part(const char *part_name)
+{
+    for (int i = 0; save_game_parts[i].length_in_bytes; i++) {
+        if (strcmp(part_name, save_game_parts[i].name) == 0) {
+            return i;
+        }
+    }
+    return -1;
+}
+
 static int read_compressed_chunk(FILE *fp, void *buffer, int bytes_to_read)
 {
     if (bytes_to_read > COMPRESS_BUFFER_SIZE) {
@@ -288,6 +299,21 @@ static int unpack(const char *filename, unsigned char *buffer)
     return offset;
 }
 
+static int is_exception_cityinfo(int global_offset, int part_offset)
+{
+    if (part_offset == 35160) {
+        // Bug fixed compared to C3: caesar invasion and barbarian invasion
+        // influence on peace rating are switched
+        if (file1_data[global_offset] == 7 && file2_data[global_offset] == 8) {
+            return 1;
+        }
+        if (file1_data[global_offset] == 8 && file2_data[global_offset] == 7) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
 static int is_exception(int index, int global_offset, int part_offset)
 {
     if (index == 2) { // Data_Grid_graphicIds
@@ -308,6 +334,9 @@ static int is_exception(int index, int global_offset, int part_offset)
     if (index == 15) { // Data_Grid_Undo_spriteOffsets
         return 1;
     }
+    if (index == index_of_part("Data_CityInfo")) {
+        return is_exception_cityinfo(global_offset, part_offset);
+    }
     return 0;
 }
 
@@ -318,7 +347,7 @@ static int compare_part(int index, int offset)
     for (int i = 0; i < length; i++) {
         if (file1_data[offset + i] != file2_data[offset + i] && !is_exception(index, offset + i, i)) {
             different = 1;
-            printf("Part %d [%s] ", index, save_game_parts[index].name);
+            printf("Part %d [%s] (%d) ", index, save_game_parts[index].name, i);
             if (save_game_parts[index].record_length) {
                 printf("record %d offset 0x%X", i / save_game_parts[index].record_length, i % save_game_parts[index].record_length);
             } else {
