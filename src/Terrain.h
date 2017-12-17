@@ -55,11 +55,9 @@ void Terrain_markNativeLand(int x, int y, int size, int radius);
 int Terrain_hasBuildingOnNativeLand(int x, int y, int size, int radius);
 
 void Terrain_markBuildingsWithinWellRadius(int buildingId, int radius);
-int Terrain_isReservoir(int gridOffset);
 
 int Terrain_isAllRockAndTreesAtDistanceRing(int x, int y, int distance);
 int Terrain_isAllMeadowAtDistanceRing(int x, int y, int distance);
-void Terrain_addDesirability(int x, int y, int size, int desBase, int desStep, int desStepSize, int desRange);
 
 int Terrain_countTerrainTypeDirectlyAdjacentTo(int gridOffset, int terrainMask);
 int Terrain_countTerrainTypeDiagonallyAdjacentTo(int gridOffset, int terrainMask);

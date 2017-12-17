@@ -11,7 +11,7 @@
 #include "map/terrain.h"
 #include "scenario/property.h"
 
-#include "Terrain.h"
+#include "../Terrain.h"
 
 #include "Data/Building.h"
 #include "Data/State.h"

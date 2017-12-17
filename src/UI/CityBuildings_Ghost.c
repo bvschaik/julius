@@ -11,6 +11,7 @@
 #include "core/time.h"
 #include "figure/formation.h"
 #include "map/bridge.h"
+#include "map/building.h"
 #include "map/figure.h"
 #include "map/grid.h"
 #include "map/road_aqueduct.h"
@@ -347,8 +348,7 @@ static void drawBuildingGhostDraggableReservoir()
 			placementObstructed = 1;
 		}
 	} else {
-		int gridOffset = map_grid_offset(Data_State.map.current.x - 1, Data_State.map.current.y - 1);
-		if (Terrain_isReservoir(gridOffset)) {
+		if (map_building_is_reservoir(Data_State.map.current.x - 1, Data_State.map.current.y - 1)) {
 			placementObstructed = 0;
 		} else if (!Terrain_isClear(
 				Data_State.map.current.x - 1, Data_State.map.current.y - 1,

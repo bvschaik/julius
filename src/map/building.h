@@ -35,4 +35,6 @@ void map_building_save_state(buffer *buildings, buffer *damage);
 
 void map_building_load_state(buffer *buildings, buffer *damage);
 
+int map_building_is_reservoir(int x, int y);
+
 #endif // MAP_BUILDING_H

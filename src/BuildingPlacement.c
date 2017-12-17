@@ -1125,7 +1125,7 @@ static int placeReservoirAndAqueducts(int measureOnly, int xStart, int yStart, i
 		distance = 0;
 	}
 	if (distance > 0) {
-		if (Terrain_isReservoir(map_grid_offset(xStart - 1, yStart - 1))) {
+		if (map_building_is_reservoir(xStart - 1, yStart - 1)) {
 			info->placeReservoirAtStart = PlaceReservoir_Exists;
 		} else if (Terrain_isClear(xStart - 1, yStart - 1, 3, TERRAIN_ALL, 0)) {
 			info->placeReservoirAtStart = PlaceReservoir_Yes;
@@ -1133,7 +1133,7 @@ static int placeReservoirAndAqueducts(int measureOnly, int xStart, int yStart, i
 			info->placeReservoirAtStart = PlaceReservoir_Blocked;
 		}
 	}
-	if (Terrain_isReservoir(map_grid_offset(xEnd - 1, yEnd - 1))) {
+	if (map_building_is_reservoir(xEnd - 1, yEnd - 1)) {
 		info->placeReservoirAtEnd = PlaceReservoir_Exists;
 	} else if (Terrain_isClear(xEnd - 1, yEnd - 1, 3, TERRAIN_ALL, 0)) {
 		info->placeReservoirAtEnd = PlaceReservoir_Yes;
