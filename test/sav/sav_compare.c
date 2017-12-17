@@ -251,6 +251,16 @@ static char compress_buffer[COMPRESS_BUFFER_SIZE];
 static unsigned char file1_data[1300000];
 static unsigned char file2_data[1300000];
 
+static unsigned int to_uint(unsigned char *buffer)
+{
+    return buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
+}
+
+static unsigned int to_ushort(unsigned char *buffer)
+{
+    return buffer[0] | (buffer[1] << 8);
+}
+
 static int index_of_part(const char *part_name)
 {
     for (int i = 0; save_game_parts[i].length_in_bytes; i++) {
@@ -299,6 +309,16 @@ static int unpack(const char *filename, unsigned char *buffer)
     return offset;
 }
 
+static int is_between(unsigned int value, unsigned int range_from, unsigned int range_to)
+{
+    return value >= range_from && value <= range_to;
+}
+
+static int both_between(unsigned int value1, unsigned int value2, unsigned int range_from, unsigned int range_to)
+{
+    return is_between(value1, range_from, range_to) && is_between(value2, range_from, range_to);
+}
+
 static int is_exception_cityinfo(int global_offset, int part_offset)
 {
     if (part_offset == 35160) {
@@ -314,15 +334,25 @@ static int is_exception_cityinfo(int global_offset, int part_offset)
     return 0;
 }
 
+static int is_exception_image_grid(int global_offset, int part_offset)
+{
+    unsigned int v1 = to_ushort(&file1_data[global_offset & ~1]);
+    unsigned int v2 = to_ushort(&file2_data[global_offset & ~1]);
+    // water: depends on animation timer
+    if (both_between(v1, v2, 364, 369)) {
+        return 1;
+    }
+    // burning tent: fix in julius to use its own graphic
+    if ((v1 == 734 && is_between(v2, 743, 770)) || (v2 == 734 && is_between(v1, 743, 770))) {
+        return 1;
+    }
+    return 0;
+}
+
 static int is_exception(int index, int global_offset, int part_offset)
 {
     if (index == 2) { // Data_Grid_graphicIds
-        unsigned char v1 = file1_data[global_offset];
-        unsigned char v2 = file2_data[global_offset];
-        // water: animation timer
-        if (v1 >= 108 && v1 <= 113 && v2 >= 108 && v2 <= 113) {
-            return 1;
-        }
+        return is_exception_image_grid(global_offset, part_offset);
     }
     if (index == 9) { // sprite offsets
         // don't care about sprite + building = animation
@@ -357,11 +387,6 @@ static int compare_part(int index, int offset)
         }
     }
     return different;
-}
-
-static unsigned int to_uint(unsigned char *buffer)
-{
-    return buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
 }
 
 static void print_game_time(unsigned char *data)

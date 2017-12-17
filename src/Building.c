@@ -271,8 +271,8 @@ void Building_collapseOnFire(int buildingId, int hasPlague)
 	if (b->houseSize && b->housePopulation) {
 		CityInfo_Population_removePeopleHomeRemoved(b->housePopulation);
 	}
-	// FIXME wasTent was always false because houseSize was reset above it
-	int wasTent = 0; //b->houseSize && b->subtype.houseLevel <= HOUSE_LARGE_TENT;
+	// FIXED wasTent was always false because houseSize was reset above it
+	int wasTent = b->houseSize && b->subtype.houseLevel <= HOUSE_LARGE_TENT;
 	b->housePopulation = 0;
 	b->houseSize = 0;
 	b->outputResourceId = 0;
