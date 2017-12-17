@@ -1,6 +1,7 @@
 #include "BuildingInfo.h"
 #include "../Widget.h"
-#include "../Data/Building.h"
+
+#include "building/building.h"
 
 void UI_BuildingInfo_drawAmphitheater(BuildingInfoContext *c)
 {
@@ -8,7 +9,7 @@ void UI_BuildingInfo_drawAmphitheater(BuildingInfoContext *c)
 	PLAY_SOUND("wavs/amphitheatre.wav");
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(71, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
-	struct Data_Building *b = &Data_Buildings[c->buildingId];
+	struct Data_Building *b = building_get(c->buildingId);
 	if (!c->hasRoadAccess) {
 		DRAW_DESC(69, 25);
 	} else if (b->numWorkers <= 0) {
@@ -49,7 +50,7 @@ void UI_BuildingInfo_drawTheater(BuildingInfoContext *c)
 	PLAY_SOUND("wavs/theatre.wav");
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(72, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
-	struct Data_Building *b = &Data_Buildings[c->buildingId];
+	struct Data_Building *b = building_get(c->buildingId);
 	if (!c->hasRoadAccess) {
 		DRAW_DESC(69, 25);
 	} else if (b->numWorkers <= 0) {
@@ -79,7 +80,7 @@ void UI_BuildingInfo_drawHippodrome(BuildingInfoContext *c)
 	PLAY_SOUND("wavs/hippodrome.wav");
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(73, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
-	struct Data_Building *b = &Data_Buildings[c->buildingId];
+	struct Data_Building *b = building_get(c->buildingId);
 	if (!c->hasRoadAccess) {
 		DRAW_DESC(69, 25);
 	} else if (b->numWorkers <= 0) {
@@ -107,7 +108,7 @@ void UI_BuildingInfo_drawColosseum(BuildingInfoContext *c)
 	PLAY_SOUND("wavs/colloseum.wav");
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(74, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
-	struct Data_Building *b = &Data_Buildings[c->buildingId];
+	struct Data_Building *b = building_get(c->buildingId);
 	if (!c->hasRoadAccess) {
 		DRAW_DESC(69, 25);
 	} else if (b->numWorkers <= 0) {

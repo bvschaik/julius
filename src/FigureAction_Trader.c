@@ -6,6 +6,7 @@
 
 #include "Data/CityInfo.h"
 
+#include "building/building.h"
 #include "building/storage.h"
 #include "city/finance.h"
 #include "city/message.h"
@@ -150,7 +151,7 @@ static int traderGetSellResource(int warehouseId, int cityId)
 	int spaceId = warehouseId;
 	for (int i = 0; i < 8; i++) {
 		spaceId = Data_Buildings[spaceId].nextPartBuildingId;
-		struct Data_Building *b = &Data_Buildings[spaceId];
+		struct Data_Building *b = building_get(spaceId);
 		if (spaceId > 0 && b->loadsStored > 0 && b->loadsStored < 4 &&
 			b->subtype.warehouseResourceId == resourceToImport) {
 			Resource_addImportedResourceToWarehouseSpace(spaceId, resourceToImport);
@@ -162,7 +163,7 @@ static int traderGetSellResource(int warehouseId, int cityId)
 	spaceId = warehouseId;
 	for (int i = 0; i < 8; i++) {
 		spaceId = Data_Buildings[spaceId].nextPartBuildingId;
-		struct Data_Building *b = &Data_Buildings[spaceId];
+		struct Data_Building *b = building_get(spaceId);
 		if (spaceId > 0 && !b->loadsStored) {
 			Resource_addImportedResourceToWarehouseSpace(spaceId, resourceToImport);
 			advanceTradeNextImportResourceCaravan();
@@ -180,7 +181,7 @@ static int traderGetSellResource(int warehouseId, int cityId)
 			spaceId = warehouseId;
 			for (int i = 0; i < 8; i++) {
 				spaceId = Data_Buildings[spaceId].nextPartBuildingId;
-				struct Data_Building *b = &Data_Buildings[spaceId];
+				struct Data_Building *b = building_get(spaceId);
 				if (spaceId > 0 && b->loadsStored < 4 && b->subtype.warehouseResourceId == resourceToImport) {
 					Resource_addImportedResourceToWarehouseSpace(spaceId, resourceToImport);
 					return resourceToImport;
@@ -443,7 +444,7 @@ void FigureAction_nativeTrader(figure *f)
 static int tradeShipLostQueue(const figure *f)
 {
 	int buildingId = f->destinationBuildingId;
-	struct Data_Building *b = &Data_Buildings[buildingId];
+	struct Data_Building *b = building_get(buildingId);
 	if (BuildingIsInUse(buildingId) && b->type == BUILDING_DOCK &&
 		b->numWorkers > 0 && b->data.other.boatFigureId == f->id) {
 		return 0;
@@ -454,7 +455,7 @@ static int tradeShipLostQueue(const figure *f)
 static int tradeShipDoneTrading(figure *f)
 {
 	int buildingId = f->destinationBuildingId;
-	struct Data_Building *b = &Data_Buildings[buildingId];
+	struct Data_Building *b = building_get(buildingId);
 	if (BuildingIsInUse(buildingId) && b->type == BUILDING_DOCK && b->numWorkers > 0) {
 		for (int i = 0; i < 3; i++) {
             if (b->data.other.dockFigureIds[i]) {
@@ -612,7 +613,7 @@ void FigureAction_tradeShip(figure *f)
 int FigureAction_TradeShip_isBuyingOrSelling(int figureId)
 {
 	int buildingId = figure_get(figureId)->destinationBuildingId;
-	struct Data_Building *b = &Data_Buildings[buildingId];
+	struct Data_Building *b = building_get(buildingId);
 	if (!BuildingIsInUse(buildingId) || b->type != BUILDING_DOCK) {
 		return TradeShipState_Buying;
 	}

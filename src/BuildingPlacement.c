@@ -1,7 +1,6 @@
 #include "BuildingPlacement.h"
 
 #include "Building.h"
-#include "core/calc.h"
 #include "CityInfo.h"
 #include "Figure.h"
 #include "Formation.h"
@@ -15,10 +14,10 @@
 #include "UI/PopupDialog.h"
 #include "UI/Window.h"
 
-#include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/State.h"
 
+#include "building/building.h"
 #include "building/count.h"
 #include "building/model.h"
 #include "building/placement_warning.h"
@@ -26,6 +25,7 @@
 #include "building/storage.h"
 #include "city/finance.h"
 #include "city/warning.h"
+#include "core/calc.h"
 #include "core/direction.h"
 #include "core/random.h"
 #include "figure/formation.h"
@@ -83,29 +83,31 @@ static int itemsPlaced;
 
 static void addToTerrainFort(int type, int buildingId, int x, int y, int size)
 {
-	Data_Buildings[buildingId].prevPartBuildingId = 0;
+    struct Data_Building *b = building_get(buildingId);
+	b->prevPartBuildingId = 0;
 	Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_FORT), TERRAIN_BUILDING);
 	int formationId = Formation_createLegion(buildingId);
-	Data_Buildings[buildingId].formationId = formationId;
+	b->formationId = formationId;
 	if (type == BUILDING_FORT_LEGIONARIES) {
-		Data_Buildings[buildingId].subtype.fortFigureType = FIGURE_FORT_LEGIONARY;
+		b->subtype.fortFigureType = FIGURE_FORT_LEGIONARY;
         formation_set_figure_type(formationId, FIGURE_FORT_LEGIONARY);
 	}
 	if (type == BUILDING_FORT_JAVELIN) {
-		Data_Buildings[buildingId].subtype.fortFigureType = FIGURE_FORT_JAVELIN;
+		b->subtype.fortFigureType = FIGURE_FORT_JAVELIN;
         formation_set_figure_type(formationId, FIGURE_FORT_JAVELIN);
 	}
 	if (type == BUILDING_FORT_MOUNTED) {
-		Data_Buildings[buildingId].subtype.fortFigureType = FIGURE_FORT_MOUNTED;
+		b->subtype.fortFigureType = FIGURE_FORT_MOUNTED;
         formation_set_figure_type(formationId, FIGURE_FORT_MOUNTED);
 	}
 	// create parade ground
 	int groundId = Building_create(BUILDING_FORT_GROUND, x + 3, y - 1);
+    struct Data_Building *ground = building_get(groundId);
 	Undo_addBuildingToList(groundId);
-	Data_Buildings[groundId].formationId = formationId;
-	Data_Buildings[groundId].prevPartBuildingId = buildingId;
-	Data_Buildings[buildingId].nextPartBuildingId = groundId;
-	Data_Buildings[groundId].nextPartBuildingId = 0;
+	ground->formationId = formationId;
+	ground->prevPartBuildingId = buildingId;
+	b->nextPartBuildingId = groundId;
+	ground->nextPartBuildingId = 0;
 	Terrain_addBuildingToGrids(groundId, x + 3, y - 1, 4,
 		image_group(GROUP_BUILDING_FORT) + 1, TERRAIN_BUILDING);
 }
@@ -116,7 +118,7 @@ static void addToTerrainHippodrome(int type, int buildingId, int x, int y, int s
 	int graphicId2 = image_group(GROUP_BUILDING_HIPPODROME_2);
 	Data_CityInfo.buildingHippodromePlaced = 1;
 
-	struct Data_Building *part1 = &Data_Buildings[buildingId];
+	struct Data_Building *part1 = building_get(buildingId);
 	if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_4_BOTTOM) {
 		part1->subtype.orientation = 0;
 	} else {
@@ -134,7 +136,7 @@ static void addToTerrainHippodrome(int type, int buildingId, int x, int y, int s
 	Terrain_addBuildingToGrids(buildingId, x, y, size, graphicId, TERRAIN_BUILDING);
 
 	int part2Id = Building_create(BUILDING_HIPPODROME, x + 5, y);
-	struct Data_Building *part2 = &Data_Buildings[part2Id];
+	struct Data_Building *part2 = building_get(part2Id);
 	Undo_addBuildingToList(part2Id);
 	if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_4_BOTTOM) {
 		part2->subtype.orientation = 1;
@@ -151,7 +153,7 @@ static void addToTerrainHippodrome(int type, int buildingId, int x, int y, int s
 	Terrain_addBuildingToGrids(part2Id, x + 5, y, size, graphicId, TERRAIN_BUILDING);
 
 	int part3Id = Building_create(BUILDING_HIPPODROME, x + 10, y);
-	struct Data_Building *part3 = &Data_Buildings[part3Id];
+	struct Data_Building *part3 = building_get(part3Id);
 	Undo_addBuildingToList(part3Id);
 	if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_4_BOTTOM) {
 		part3->subtype.orientation = 2;
@@ -173,9 +175,10 @@ static void addToTerrainHippodrome(int type, int buildingId, int x, int y, int s
 static int addToTerrainWarehouseSpace(int x, int y, int prevId)
 {
 	int buildingId = Building_create(BUILDING_WAREHOUSE_SPACE, x, y);
+    struct Data_Building *b = building_get(buildingId);
 	Undo_addBuildingToList(buildingId);
-	Data_Buildings[buildingId].prevPartBuildingId = prevId;
-	Data_Buildings[prevId].nextPartBuildingId = buildingId;
+	b->prevPartBuildingId = prevId;
+	building_get(prevId)->nextPartBuildingId = buildingId;
 	Terrain_addBuildingToGrids(buildingId, x, y, 1,
 		image_group(GROUP_BUILDING_WAREHOUSE_STORAGE_EMPTY), TERRAIN_BUILDING);
 	return buildingId;
@@ -183,8 +186,9 @@ static int addToTerrainWarehouseSpace(int x, int y, int prevId)
 
 static void addToTerrainWarehouse(int type, int buildingId, int x, int y)
 {
-	Data_Buildings[buildingId].storage_id = building_storage_create();
-	Data_Buildings[buildingId].prevPartBuildingId = 0;
+    struct Data_Building *b = building_get(buildingId);
+	b->storage_id = building_storage_create();
+	b->prevPartBuildingId = 0;
 	Terrain_addBuildingToGrids(buildingId, x, y, 1, image_group(GROUP_BUILDING_WAREHOUSE), TERRAIN_BUILDING);
 
 	int prev = buildingId;
@@ -196,7 +200,7 @@ static void addToTerrainWarehouse(int type, int buildingId, int x, int y)
 	prev = addToTerrainWarehouseSpace(x, y + 2, prev);
 	prev = addToTerrainWarehouseSpace(x + 1, y + 2, prev);
 	prev = addToTerrainWarehouseSpace(x + 2, y + 2, prev);
-	Data_Buildings[prev].nextPartBuildingId = 0;
+	building_get(prev)->nextPartBuildingId = 0;
 }
 
 static void addToTerrain(int type, int buildingId, int x, int y, int size,
@@ -775,7 +779,7 @@ static void clearRegionConfirmed(int measureOnly, int xStart, int yStart, int xE
 						Data_State.undoAvailable = 0;
 					}
 				}
-				struct Data_Building *b = &Data_Buildings[buildingId];
+				struct Data_Building *b = building_get(buildingId);
 				if (b->houseSize && b->housePopulation && !measureOnly) {
 					HousePopulation_createHomeless(b->x, b->y, b->housePopulation);
 					b->housePopulation = 0;

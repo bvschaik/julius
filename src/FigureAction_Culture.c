@@ -3,6 +3,7 @@
 #include "Building.h"
 #include "Terrain.h"
 
+#include "building/building.h"
 #include "figure/route.h"
 
 static void FigureAction_cultureCommon(figure *f, int numTicks)

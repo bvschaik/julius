@@ -5,6 +5,7 @@
 
 #include "Data/CityInfo.h"
 
+#include "building/building.h"
 #include "city/message.h"
 #include "figure/route.h"
 #include "map/building.h"
@@ -149,7 +150,7 @@ int FigureAction_Rioter_collapseBuilding(figure *f)
 			continue;
 		}
 		int buildingId = map_building_at(gridOffset);
-		struct Data_Building *b = &Data_Buildings[buildingId];
+		struct Data_Building *b = building_get(buildingId);
 		switch (b->type) {
 			case BUILDING_WAREHOUSE_SPACE:
 			case BUILDING_WAREHOUSE:

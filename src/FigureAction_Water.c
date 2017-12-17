@@ -5,6 +5,7 @@
 
 #include "Data/CityInfo.h"
 
+#include "building/building.h"
 #include "building/model.h"
 #include "city/message.h"
 #include "core/calc.h"
@@ -25,14 +26,14 @@ static const int flotsamType3[] = {
 
 void FigureAction_fishingBoat(figure *f)
 {
-	struct Data_Building *b = &Data_Buildings[f->buildingId];
+	struct Data_Building *b = building_get(f->buildingId);
 	if (!BuildingIsInUse(f->buildingId)) {
 		f->state = FigureState_Dead;
 	}
 	if (f->actionState != FigureActionState_190_FishingBoatCreated && b->data.other.boatFigureId != f->id) {
 		int xTile, yTile;
 		int buildingId = Terrain_Water_getWharfTileForNewFishingBoat(f->id, &xTile, &yTile);
-		b = &Data_Buildings[buildingId];
+		b = building_get(buildingId);
 		if (buildingId) {
 			f->buildingId = buildingId;
 			b->data.other.boatFigureId = f->id;
@@ -56,11 +57,11 @@ void FigureAction_fishingBoat(figure *f)
 			if (f->waitTicks >= 50) {
 				f->waitTicks = 0;
 				int xTile, yTile;
-				int buildingId = Terrain_Water_getWharfTileForNewFishingBoat(f->id, &xTile, &yTile);
-				if (buildingId) {
+				int wharfId = Terrain_Water_getWharfTileForNewFishingBoat(f->id, &xTile, &yTile);
+				if (wharfId) {
 					b->figureId = 0; // remove from original building
-					f->buildingId = buildingId;
-					Data_Buildings[buildingId].data.other.boatFigureId = f->id;
+					f->buildingId = wharfId;
+					building_get(wharfId)->data.other.boatFigureId = f->id;
 					f->actionState = FigureActionState_193_FishingBoatSailingToWharf;
 					f->destinationX = xTile;
 					f->destinationY = yTile;

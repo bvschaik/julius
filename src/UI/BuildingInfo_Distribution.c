@@ -6,9 +6,9 @@
 #include "../Resource.h"
 #include "../Widget.h"
 
-#include "../Data/Building.h"
 #include "../Data/CityInfo.h"
 
+#include "building/building.h"
 #include "building/storage.h"
 #include "figure/figure.h"
 #include "game/resource.h"
@@ -60,7 +60,7 @@ void UI_BuildingInfo_drawMarket(BuildingInfoContext *c)
 	PLAY_SOUND("wavs/market.wav");
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(97, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
-	struct Data_Building *b = &Data_Buildings[c->buildingId];
+	struct Data_Building *b = building_get(c->buildingId);
 	if (!c->hasRoadAccess) {
 		DRAW_DESC(69, 25);
 	} else if (b->numWorkers <= 0) {
@@ -120,7 +120,7 @@ void UI_BuildingInfo_drawGranary(BuildingInfoContext *c)
 	PLAY_SOUND("wavs/granary.wav");
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(98, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
-	struct Data_Building *b = &Data_Buildings[c->buildingId];
+	struct Data_Building *b = building_get(c->buildingId);
 	if (!c->hasRoadAccess) {
 		DRAW_DESC_AT(40, 69, 25);
 	} else if (scenario_property_rome_supplies_wheat()) {
@@ -211,7 +211,7 @@ void UI_BuildingInfo_drawGranaryOrdersForeground(BuildingInfoContext *c)
 	Widget_Panel_drawButtonBorder(
 		c->xOffset + 80, 436, 16 * (c->widthBlocks - 10), 20,
 		ordersFocusButtonId == 1 ? 1 : 0);
-	const building_storage *storage = building_storage_get(Data_Buildings[c->buildingId].storage_id);
+	const building_storage *storage = building_storage_get(building_get(c->buildingId)->storage_id);
 	if (storage->empty_all) {
 		Widget_GameText_drawCentered(98, 8, c->xOffset + 80, 440,
 			16 * (c->widthBlocks - 10), FONT_NORMAL_BLACK);
@@ -264,7 +264,7 @@ void UI_BuildingInfo_drawWarehouse(BuildingInfoContext *c)
 	PLAY_SOUND("wavs/warehouse.wav");
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(99, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
-	struct Data_Building *b = &Data_Buildings[c->buildingId];
+	struct Data_Building *b = building_get(c->buildingId);
 	if (!c->hasRoadAccess) {
 		DRAW_DESC(69, 25);
 	} else {
@@ -351,7 +351,7 @@ void UI_BuildingInfo_drawWarehouseOrdersForeground(BuildingInfoContext *c)
 	Widget_Panel_drawButtonBorder(
 		c->xOffset + 80, 436, 16 * (c->widthBlocks - 10), 20,
 		ordersFocusButtonId == 1 ? 1 : 0);
-	const building_storage *storage = building_storage_get(Data_Buildings[c->buildingId].storage_id);
+	const building_storage *storage = building_storage_get(building_get(c->buildingId)->storage_id);
 	if (storage->empty_all) {
 		Widget_GameText_drawCentered(99, 5, c->xOffset + 80, 440,
 			16 * (c->widthBlocks - 10), FONT_NORMAL_BLACK);
@@ -408,20 +408,20 @@ void UI_BuildingInfo_handleMouseWarehouseOrders(BuildingInfoContext *c)
 
 static void toggleResourceState(int index, int param2)
 {
-	int storageId = Data_Buildings[buildingId].storage_id;
+    struct Data_Building *b = building_get(buildingId);
 	int resourceId;
-	if (Data_Buildings[buildingId].type == BUILDING_WAREHOUSE) {
+	if (b->type == BUILDING_WAREHOUSE) {
 		resourceId = Data_CityInfo_Resource.availableResources[index-1];
 	} else {
 		resourceId = Data_CityInfo_Resource.availableFoods[index-1];
 	}
-	building_storage_cycle_resource_state(storageId, resourceId);
+	building_storage_cycle_resource_state(b->storage_id, resourceId);
 	UI_Window_requestRefresh();
 }
 
 static void granaryOrders(int index, int param2)
 {
-	int storageId = Data_Buildings[buildingId].storage_id;
+	int storageId = building_get(buildingId)->storage_id;
 	building_storage_toggle_empty_all(storageId);
 	UI_Window_requestRefresh();
 }
@@ -429,7 +429,7 @@ static void granaryOrders(int index, int param2)
 static void warehouseOrders(int index, int param2)
 {
 	if (index == 0) {
-		int storageId = Data_Buildings[buildingId].storage_id;
+		int storageId = building_get(buildingId)->storage_id;
 		building_storage_toggle_empty_all(storageId);
 	} else if (index == 1) {
 		Data_CityInfo.buildingTradeCenterBuildingId = buildingId;

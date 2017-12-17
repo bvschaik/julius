@@ -2,9 +2,9 @@
 #include "core/calc.h"
 #include "../Graphics.h"
 #include "../Widget.h"
-#include "../Data/Building.h"
 #include "../Data/CityInfo.h"
 
+#include "building/building.h"
 #include "game/resource.h"
 #include "graphics/image.h"
 
@@ -19,7 +19,8 @@ static void drawFarm(BuildingInfoContext *c, int helpId, const char *soundFile, 
 	Widget_GameText_drawCentered(groupId, 0, c->xOffset, c->yOffset + 10,
 		16 * c->widthBlocks, FONT_LARGE_BLACK);
 
-	int pctGrown = calc_percentage(Data_Buildings[c->buildingId].data.industry.progress, 200);
+    struct Data_Building *b = building_get(c->buildingId);
+	int pctGrown = calc_percentage(b->data.industry.progress, 200);
 	int width = Widget_GameText_draw(groupId, 2, c->xOffset + 32, c->yOffset + 44, FONT_NORMAL_BLACK);
 	width += Widget_Text_drawPercentage(pctGrown,
 		c->xOffset + 32 + width, c->yOffset + 44, FONT_NORMAL_BLACK);
@@ -29,9 +30,9 @@ static void drawFarm(BuildingInfoContext *c, int helpId, const char *soundFile, 
 		DRAW_DESC_AT(70, 69, 25);
 	} else if (Data_CityInfo.resourceIndustryMothballed[resourceId]) {
 		DRAW_DESC_AT(70, groupId, 4);
-	} else if (Data_Buildings[c->buildingId].data.industry.curseDaysLeft > 4) {
+	} else if (b->data.industry.curseDaysLeft > 4) {
 		DRAW_DESC_AT(70, groupId, 11);
-	} else if (Data_Buildings[c->buildingId].numWorkers <= 0) {
+	} else if (b->numWorkers <= 0) {
 		DRAW_DESC_AT(70, groupId, 5);
 	} else if (c->workerPercentage >= 100) {
 		DRAW_DESC_AT(70, groupId, 6);
@@ -93,7 +94,8 @@ static void drawRawMaterial(BuildingInfoContext *c, int helpId, const char *soun
 	Widget_GameText_drawCentered(groupId, 0, c->xOffset, c->yOffset + 10,
 		16 * c->widthBlocks, FONT_LARGE_BLACK);
 
-	int pctDone = calc_percentage(Data_Buildings[c->buildingId].data.industry.progress, 200);
+    struct Data_Building *b = building_get(c->buildingId);
+	int pctDone = calc_percentage(b->data.industry.progress, 200);
 	int width = Widget_GameText_draw(groupId, 2, c->xOffset + 32, c->yOffset + 44, FONT_NORMAL_BLACK);
 	width += Widget_Text_drawPercentage(pctDone,
 		c->xOffset + 32 + width, c->yOffset + 44, FONT_NORMAL_BLACK);
@@ -103,7 +105,7 @@ static void drawRawMaterial(BuildingInfoContext *c, int helpId, const char *soun
 		DRAW_DESC_AT(70, 69, 25);
 	} else if (Data_CityInfo.resourceIndustryMothballed[resourceId]) {
 		DRAW_DESC_AT(70, groupId, 4);
-	} else if (Data_Buildings[c->buildingId].numWorkers <= 0) {
+	} else if (b->numWorkers <= 0) {
 		DRAW_DESC_AT(70, groupId, 5);
 	} else if (c->workerPercentage >= 100) {
 		DRAW_DESC_AT(70, groupId, 6);
@@ -155,7 +157,8 @@ static void drawWorkshop(BuildingInfoContext *c, int helpId, const char *soundFi
 	Widget_GameText_drawCentered(groupId, 0, c->xOffset, c->yOffset + 10,
 		16 * c->widthBlocks, FONT_LARGE_BLACK);
 
-	int pctDone = calc_percentage(Data_Buildings[c->buildingId].data.industry.progress, 400);
+    struct Data_Building *b = building_get(c->buildingId);
+	int pctDone = calc_percentage(b->data.industry.progress, 400);
 	int width = Widget_GameText_draw(groupId, 2, c->xOffset + 32, c->yOffset + 40, FONT_NORMAL_BLACK);
 	width += Widget_Text_drawPercentage(pctDone,
 		c->xOffset + 32 + width, c->yOffset + 40, FONT_NORMAL_BLACK);
@@ -164,12 +167,11 @@ static void drawWorkshop(BuildingInfoContext *c, int helpId, const char *soundFi
 	Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + inputResourceId,
 		c->xOffset + 32, c->yOffset + 56);
 	width = Widget_GameText_draw(groupId, 12, c->xOffset + 60, c->yOffset + 60, FONT_NORMAL_BLACK);
-	if (Data_Buildings[c->buildingId].loadsStored < 1) {
+	if (b->loadsStored < 1) {
 		Widget_GameText_drawNumberWithDescription(8, 10, 0,
 			c->xOffset + 60 + width, c->yOffset + 60, FONT_NORMAL_BLACK);
 	} else {
-		Widget_GameText_drawNumberWithDescription(8, 10,
-			Data_Buildings[c->buildingId].loadsStored,
+		Widget_GameText_drawNumberWithDescription(8, 10, b->loadsStored,
 			c->xOffset + 60 + width, c->yOffset + 60, FONT_NORMAL_BLACK);
 	}
 
@@ -177,9 +179,9 @@ static void drawWorkshop(BuildingInfoContext *c, int helpId, const char *soundFi
 		DRAW_DESC_AT(86, 69, 25);
 	} else if (Data_CityInfo.resourceIndustryMothballed[resourceId]) {
 		DRAW_DESC_AT(86, groupId, 4);
-	} else if (Data_Buildings[c->buildingId].numWorkers <= 0) {
+	} else if (b->numWorkers <= 0) {
 		DRAW_DESC_AT(86, groupId, 5);
-	} else if (Data_Buildings[c->buildingId].loadsStored <= 0) {
+	} else if (b->loadsStored <= 0) {
 		DRAW_DESC_AT(86, groupId, 11);
 	} else if (c->workerPercentage >= 100) {
 		DRAW_DESC_AT(86, groupId, 6);

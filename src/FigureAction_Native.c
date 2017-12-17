@@ -4,12 +4,13 @@
 
 #include "Data/CityInfo.h"
 
+#include "building/building.h"
 #include "figure/formation.h"
 #include "figure/route.h"
 
 void FigureAction_indigenousNative(figure *f)
 {
-	struct Data_Building *b = &Data_Buildings[f->buildingId];
+	struct Data_Building *b = building_get(f->buildingId);
 	f->terrainUsage = FigureTerrainUsage_Any;
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 800;
@@ -49,7 +50,7 @@ void FigureAction_indigenousNative(figure *f)
 				f->waitTicks = 0;
 				if (Data_CityInfo.nativeAttackDuration == 0) {
 					int xTile, yTile;
-					struct Data_Building *meeting = &Data_Buildings[b->subtype.nativeMeetingCenterId];
+					struct Data_Building *meeting = building_get(b->subtype.nativeMeetingCenterId);
 					if (Terrain_getAdjacentRoadOrClearLand(meeting->x, meeting->y, meeting->size, &xTile, &yTile)) {
 						f->actionState = FigureActionState_156_NativeGoingToMeetingCenter;
 						f->destinationX = xTile;

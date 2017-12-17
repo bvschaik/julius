@@ -5,10 +5,10 @@
 #include "TerrainGraphics.h"
 #include "UI/Window.h"
 
-#include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/State.h"
 
+#include "building/building.h"
 #include "building/properties.h"
 #include "city/finance.h"
 #include "game/resource.h"
@@ -74,7 +74,7 @@ void Undo_restoreBuildings()
 {
 	for (int i = 0; i < data.numBuildings; i++) {
 		if (data.buildingIndex[i]) {
-			struct Data_Building *b = &Data_Buildings[data.buildingIndex[i]];
+			struct Data_Building *b = building_get(data.buildingIndex[i]);
 			if (b->state == BuildingState_DeletedByPlayer) {
 				b->state = BuildingState_InUse;
 			}
@@ -153,7 +153,7 @@ static void placeBuildingOnTerrain(int buildingId)
 	if (buildingId <= 0) {
 		return;
 	}
-	struct Data_Building *b = &Data_Buildings[buildingId];
+	struct Data_Building *b = building_get(buildingId);
 	if (BuildingIsFarm(b->type)) {
 		int graphicOffset;
 		switch (b->type) {
@@ -221,7 +221,7 @@ void Undo_perform()
 		}
 		for (int i = 0; i < data.numBuildings; i++) {
 			if (data.buildingIndex[i]) {
-				struct Data_Building *b = &Data_Buildings[data.buildingIndex[i]];
+				struct Data_Building *b = building_get(data.buildingIndex[i]);
 				if (b->type == BUILDING_ORACLE || (b->type >= BUILDING_LARGE_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS)) {
 					Resource_addToCityWarehouses(RESOURCE_MARBLE, 2);
 				}
@@ -274,7 +274,7 @@ void Undo_updateAvailable()
 	}
 	for (int i = 0; i < data.numBuildings; i++) {
 		if (data.buildingIndex[i]) {
-			struct Data_Building *b = &Data_Buildings[data.buildingIndex[i]];
+			struct Data_Building *b = building_get(data.buildingIndex[i]);
 			if (b->state == BuildingState_Undo ||
 				b->state == BuildingState_Rubble ||
 				b->state == BuildingState_DeletedByGame) {

@@ -4,6 +4,7 @@
 
 #include "Data/CityInfo.h"
 
+#include "building/building.h"
 #include "core/calc.h"
 #include "core/random.h"
 #include "figure/formation.h"
@@ -246,7 +247,7 @@ void FigureAction_zebra(figure *f)
 
 static void setDestinationHippodromeHorse(figure *f, int state)
 {
-	struct Data_Building *b = &Data_Buildings[f->buildingId];
+	struct Data_Building *b = building_get(f->buildingId);
 	if (state == HippodromeHorse_Created) {
 		map_figure_delete(f);
 		if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_6_LEFT) {

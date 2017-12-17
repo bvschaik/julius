@@ -4,6 +4,7 @@
 
 #include "Data/CityInfo.h"
 
+#include "building/building.h"
 #include "figure/route.h"
 #include "game/resource.h"
 #include "map/road_network.h"
@@ -83,7 +84,7 @@ static void determineCartpusherDestination(figure *f, struct Data_Building *b, i
 
 static void determineCartpusherDestinationFood(figure *f, int roadNetworkId)
 {
-	struct Data_Building *b = &Data_Buildings[f->buildingId];
+	struct Data_Building *b = building_get(f->buildingId);
 	int xDst, yDst, dstBuildingId;
 	// priority 1: accepting granary for food
 	dstBuildingId = Resource_getGranaryForStoringFood(0, f->x, f->y,
@@ -150,7 +151,7 @@ void FigureAction_cartpusher(figure *f)
 	int roadNetworkId = map_road_network_get(f->gridOffset);
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	int buildingId = f->buildingId;
-	struct Data_Building *b = &Data_Buildings[buildingId];
+	struct Data_Building *b = building_get(buildingId);
 	
 	switch (f->actionState) {
 		case FigureActionState_150_Attack:

@@ -10,6 +10,7 @@
 #include "../Undo.h"
 #include "../Widget.h"
 
+#include "building/building.h"
 #include "building/model.h"
 #include "city/finance.h"
 #include "city/warning.h"
@@ -202,7 +203,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 					case 5: DRAWTOP_SIZE5_C(graphicId, xGraphic, yGraphic, colorMask); break;
 				}
 				// specific buildings
-				struct Data_Building *b = &Data_Buildings[buildingId];
+				struct Data_Building *b = building_get(buildingId);
 				if (b->type == BUILDING_SENATE_UPGRADED) {
 					// rating flags
 					graphicId = image_group(GROUP_BUILDING_SENATE);
@@ -364,7 +365,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 			if (img->num_animation_sprites) {
 				if (map_property_is_draw_tile(gridOffset)) {
 					int buildingId = map_building_at(gridOffset);
-					struct Data_Building *b = &Data_Buildings[buildingId];
+					struct Data_Building *b = building_get(buildingId);
 					int colorMask = 0;
 					if (buildingId && b->isDeleted) {
 						colorMask = COLOR_MASK_RED;
@@ -776,7 +777,7 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 		overlay != Overlay_Water && overlay != Overlay_Fire &&
 		overlay != Overlay_Damage && overlay != Overlay_Native;
 	int overlayForbidsHouse = overlay == Overlay_Native;
-	struct Data_Building *b = &Data_Buildings[buildingId];
+	struct Data_Building *b = building_get(buildingId);
 	if (overlayRequiresHouse && !b->houseSize) {
 		return;
 	}

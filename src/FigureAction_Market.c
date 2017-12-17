@@ -3,6 +3,7 @@
 #include "Figure.h"
 #include "Resource.h"
 
+#include "building/building.h"
 #include "figure/route.h"
 #include "figure/type.h"
 #include "game/resource.h"

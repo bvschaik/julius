@@ -1,7 +1,7 @@
 #include "CityInfo.h"
 #include "Data/CityInfo.h"
-#include "Data/Building.h"
 
+#include "building/building.h"
 #include "building/count.h"
 #include "city/finance.h"
 #include "figure/figure.h"
@@ -18,7 +18,7 @@ void CityInfo_Tick_countBuildingTypes()
 	Data_CityInfo.numHospitalWorkers = 0;
 
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-        struct Data_Building *b = &Data_Buildings[i];
+        struct Data_Building *b = building_get(i);
 		if (!BuildingIsInUse(i) || b->houseSize) {
 			continue;
 		}
@@ -198,7 +198,7 @@ void CityInfo_Tick_distributeTreasuryOverForumsAndSenates()
 	}
 
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-        struct Data_Building *b = &Data_Buildings[i];
+        struct Data_Building *b = building_get(i);
 		if (!BuildingIsInUse(i) || b->houseSize) {
 			continue;
 		}

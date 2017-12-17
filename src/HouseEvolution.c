@@ -2,9 +2,9 @@
 
 #include "TerrainGraphics.h"
 
-#include "Data/Building.h"
 #include "Data/CityInfo.h"
 
+#include "building/building.h"
 #include "building/model.h"
 #include "city/culture.h"
 #include "game/resource.h"
@@ -333,7 +333,7 @@ static int checkEvolveDesirability(int buildingId)
 
 static int hasRequiredGoodsAndServices(int buildingId, int forUpgrade)
 {
-	struct Data_Building *b = &Data_Buildings[buildingId];
+	struct Data_Building *b = building_get(buildingId);
 	int level = b->subtype.houseLevel;
 	if (forUpgrade) {
 		++level;
@@ -459,7 +459,7 @@ static int hasRequiredGoodsAndServices(int buildingId, int forUpgrade)
 
 static void consumeResources(int buildingId)
 {
-	struct Data_Building *b = &Data_Buildings[buildingId];
+	struct Data_Building *b = building_get(buildingId);
     const model_house *model = model_get_house(b->subtype.houseLevel);
 	int pottery = model->pottery;
 	int furniture = model->furniture;
@@ -560,7 +560,7 @@ void HouseEvolution_Tick_calculateCultureServiceAggregates()
 		if (!BuildingIsInUse(i) || !Data_Buildings[i].houseSize) {
 			continue;
 		}
-		struct Data_Building *b = &Data_Buildings[i];
+		struct Data_Building *b = building_get(i);
 
 		b->data.house.entertainment = 0;
 		b->data.house.education = 0;
@@ -630,7 +630,7 @@ void HouseEvolution_Tick_calculateCultureServiceAggregates()
 
 void HouseEvolution_determineEvolveText(int buildingId, int hasBadDesirabilityBuilding)
 {
-	struct Data_Building *b = &Data_Buildings[buildingId];
+	struct Data_Building *b = building_get(buildingId);
 	int level = b->subtype.houseLevel;
 	
 	// this house will devolve soon because...

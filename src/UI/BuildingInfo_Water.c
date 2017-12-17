@@ -2,7 +2,8 @@
 #include "../Graphics.h"
 #include "../Terrain.h"
 #include "../Widget.h"
-#include "../Data/Building.h"
+
+#include "building/building.h"
 
 void UI_BuildingInfo_drawAqueduct(BuildingInfoContext *c)
 {
@@ -30,7 +31,7 @@ void UI_BuildingInfo_drawReservoir(BuildingInfoContext *c)
 	Widget_GameText_drawCentered(13, 1,
 		c->xOffset, c->yOffset + 16 * c->heightBlocks - 24,
 		16 * c->widthBlocks, FONT_NORMAL_BLACK);
-	if (Data_Buildings[c->buildingId].hasWaterAccess) {
+	if (building_get(c->buildingId)->hasWaterAccess) {
 		Widget_GameText_drawMultiline(107, 1,
 			c->xOffset + 32, c->yOffset + 16 * c->heightBlocks - 173,
 			16 * (c->widthBlocks - 4), FONT_NORMAL_BLACK);
@@ -48,8 +49,9 @@ void UI_BuildingInfo_drawFountain(BuildingInfoContext *c)
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(108, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	int textId;
-	if (Data_Buildings[c->buildingId].hasWaterAccess) {
-		if (Data_Buildings[c->buildingId].numWorkers > 0) {
+    struct Data_Building *b = building_get(c->buildingId);
+	if (b->hasWaterAccess) {
+		if (b->numWorkers > 0) {
 			textId = 1;
 		} else {
 			textId = 2;

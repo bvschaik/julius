@@ -5,6 +5,7 @@
 
 #include "Data/CityInfo.h"
 
+#include "building/building.h"
 #include "figure/route.h"
 #include "figure/trader.h"
 #include "figure/type.h"
@@ -87,7 +88,7 @@ static void setCartGraphic(figure *f)
 
 void FigureAction_docker(figure *f)
 {
-	struct Data_Building *b = &Data_Buildings[f->buildingId];
+	struct Data_Building *b = building_get(f->buildingId);
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	if (!BuildingIsInUse(f->buildingId)) {

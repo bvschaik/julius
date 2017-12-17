@@ -3,6 +3,7 @@
 #include "Figure.h"
 #include "Terrain.h"
 
+#include "building/building.h"
 #include "core/calc.h"
 #include "figure/enemy_army.h"
 #include "figure/properties.h"
@@ -38,7 +39,7 @@ static int towerSentryFiringOffsets[] = {
 
 void FigureAction_ballista(figure *f)
 {
-	struct Data_Building *b = &Data_Buildings[f->buildingId];
+	struct Data_Building *b = building_get(f->buildingId);
 	f->terrainUsage = FigureTerrainUsage_Walls;
 	f->useCrossCountry = 0;
 	f->isGhost = 1;
@@ -164,7 +165,7 @@ static int towerSentryInitPatrol(struct Data_Building *b, int *xTile, int *yTile
 
 void FigureAction_towerSentry(figure *f)
 {
-	struct Data_Building *b = &Data_Buildings[f->buildingId];
+	struct Data_Building *b = building_get(f->buildingId);
 	f->terrainUsage = FigureTerrainUsage_Walls;
 	f->useCrossCountry = 0;
 	f->isGhost = 1;
@@ -300,7 +301,7 @@ void FigureAction_TowerSentry_reroute()
 		} else {
 			// Teleport back to tower
 			map_figure_delete(f);
-			struct Data_Building *b = &Data_Buildings[f->buildingId];
+			struct Data_Building *b = building_get(f->buildingId);
 			f->sourceX = f->x = b->x;
 			f->sourceY = f->y = b->y;
 			f->gridOffset = map_grid_offset(f->x, f->y);

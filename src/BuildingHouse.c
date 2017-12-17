@@ -3,9 +3,9 @@
 #include "Building.h"
 #include "Terrain.h"
 
-#include "Data/Building.h"
 #include "Data/State.h"
 
+#include "building/building.h"
 #include "game/resource.h"
 #include "graphics/image.h"
 #include "map/building.h"
@@ -58,7 +58,7 @@ static int house_image_group(int level)
 static void create_house_tile(building_type type, int x, int y, int image_id, int population, int *inventory)
 {
     int newBuildingId = Building_create(type, x, y);
-    struct Data_Building *bNew = &Data_Buildings[newBuildingId];
+    struct Data_Building *bNew = building_get(newBuildingId);
     bNew->housePopulation = population;
     for (int i = 0; i < INVENTORY_MAX; i++) {
         bNew->data.house.inventory[i] = inventory[i];
@@ -151,7 +151,7 @@ int BuildingHouse_canExpand(int buildingId, int numTiles)
 
 void BuildingHouse_checkForCorruption(int buildingId)
 {
-	struct Data_Building *b = &Data_Buildings[buildingId];
+	struct Data_Building *b = building_get(buildingId);
 	int houseGridOffset = b->gridOffset;
 	int calcGridOffset = map_grid_offset(b->x, b->y);
 	b->data.house.noSpaceToExpand = 0;
@@ -175,7 +175,7 @@ void BuildingHouse_checkForCorruption(int buildingId)
 
 void BuildingHouse_checkMerge(int buildingId)
 {
-	struct Data_Building *b = &Data_Buildings[buildingId];
+	struct Data_Building *b = building_get(buildingId);
 	if (b->houseIsMerged) {
 		return;
 	}
@@ -252,7 +252,7 @@ void BuildingHouse_expandToLargeInsula(int buildingId)
 	split(buildingId, 4);
 	prepareForMerge(buildingId, 4);
 
-	struct Data_Building *b = &Data_Buildings[buildingId];
+	struct Data_Building *b = building_get(buildingId);
 	b->type = BUILDING_HOUSE_LARGE_INSULA;
 	b->subtype.houseLevel = HOUSE_LARGE_INSULA;
 	b->size = b->houseSize = 2;
@@ -273,7 +273,7 @@ void BuildingHouse_expandToLargeVilla(int buildingId)
 	split(buildingId, 9);
 	prepareForMerge(buildingId, 9);
 
-	struct Data_Building *b = &Data_Buildings[buildingId];
+	struct Data_Building *b = building_get(buildingId);
 	b->type = BUILDING_HOUSE_LARGE_VILLA;
 	b->subtype.houseLevel = HOUSE_LARGE_VILLA;
 	b->size = b->houseSize = 3;
@@ -294,7 +294,7 @@ void BuildingHouse_expandToLargePalace(int buildingId)
 	split(buildingId, 16);
 	prepareForMerge(buildingId, 16);
 
-	struct Data_Building *b = &Data_Buildings[buildingId];
+	struct Data_Building *b = building_get(buildingId);
 	b->type = BUILDING_HOUSE_LARGE_PALACE;
 	b->subtype.houseLevel = HOUSE_LARGE_PALACE;
 	b->size = b->houseSize = 4;
@@ -314,7 +314,7 @@ static void merge(int buildingId)
 {
 	prepareForMerge(buildingId, 4);
 
-	struct Data_Building *b = &Data_Buildings[buildingId];
+	struct Data_Building *b = building_get(buildingId);
 	b->size = b->houseSize = 2;
 	b->housePopulation += mergeData.population;
 	for (int i = 0; i < INVENTORY_MAX; i++) {
@@ -335,7 +335,7 @@ static void merge(int buildingId)
 
 static void splitMerged(int buildingId)
 {
-	struct Data_Building *b = &Data_Buildings[buildingId];
+	struct Data_Building *b = building_get(buildingId);
 	int inventoryPerTile[INVENTORY_MAX];
 	int inventoryRest[INVENTORY_MAX];
 	for (int i = 0; i < INVENTORY_MAX; i++) {
@@ -368,7 +368,7 @@ static void splitMerged(int buildingId)
 
 static void splitSize2(int buildingId)
 {
-	struct Data_Building *b = &Data_Buildings[buildingId];
+	struct Data_Building *b = building_get(buildingId);
 	int inventoryPerTile[INVENTORY_MAX];
 	int inventoryRest[INVENTORY_MAX];
 	for (int i = 0; i < INVENTORY_MAX; i++) {
@@ -403,7 +403,7 @@ static void splitSize2(int buildingId)
 
 static void splitSize3(int buildingId)
 {
-	struct Data_Building *b = &Data_Buildings[buildingId];
+	struct Data_Building *b = building_get(buildingId);
 	int inventoryPerTile[INVENTORY_MAX];
 	int inventoryRest[INVENTORY_MAX];
 	for (int i = 0; i < INVENTORY_MAX; i++) {
@@ -446,7 +446,7 @@ void BuildingHouse_devolveFromLargeInsula(int buildingId)
 
 void BuildingHouse_devolveFromLargeVilla(int buildingId)
 {
-	struct Data_Building *b = &Data_Buildings[buildingId];
+	struct Data_Building *b = building_get(buildingId);
 	int inventoryPerTile[INVENTORY_MAX];
 	int inventoryRest[INVENTORY_MAX];
 	for (int i = 0; i < INVENTORY_MAX; i++) {
@@ -484,7 +484,7 @@ void BuildingHouse_devolveFromLargeVilla(int buildingId)
 
 void BuildingHouse_devolveFromLargePalace(int buildingId)
 {
-	struct Data_Building *b = &Data_Buildings[buildingId];
+	struct Data_Building *b = building_get(buildingId);
 	int inventoryPerTile[INVENTORY_MAX];
 	int inventoryRest[INVENTORY_MAX];
 	for (int i = 0; i < INVENTORY_MAX; i++) {
@@ -523,7 +523,7 @@ void BuildingHouse_devolveFromLargePalace(int buildingId)
 
 void BuildingHouse_changeTo(int buildingId, int buildingType)
 {
-	struct Data_Building *b = &Data_Buildings[buildingId];
+	struct Data_Building *b = building_get(buildingId);
 	b->type = buildingType;
 	b->subtype.houseLevel = b->type - 10;
 	int graphicId = image_group(houseGraphicGroup[b->subtype.houseLevel]);
@@ -541,7 +541,7 @@ void BuildingHouse_changeTo(int buildingId, int buildingType)
 
 void BuildingHouse_changeToVacantLot(int buildingId)
 {
-	struct Data_Building *b = &Data_Buildings[buildingId];
+	struct Data_Building *b = building_get(buildingId);
 	b->type = BUILDING_HOUSE_VACANT_LOT;
 	b->subtype.houseLevel = b->type - 10;
 	int graphicId = image_group(GROUP_BUILDING_HOUSE_VACANT_LOT);

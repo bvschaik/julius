@@ -3,9 +3,9 @@
 #include "Figure.h"
 #include "FigureMovement.h"
 
-#include "Data/Building.h"
 #include "Data/CityInfo.h"
 
+#include "building/building.h"
 #include "building/model.h"
 #include "city/warning.h"
 #include "core/calc.h"
@@ -31,7 +31,7 @@ int Formation_createLegion(int buildingId)
 {
 	Formation_calculateLegionTotals();
 
-    struct Data_Building *b = &Data_Buildings[buildingId];
+    struct Data_Building *b = building_get(buildingId);
     int formation_id = formation_create_legion(buildingId, b->x, b->y, b->subtype.fortFigureType);
     if (!formation_id) {
         return 0;
@@ -75,7 +75,7 @@ int Formation_getFormationForBuilding(int gridOffset)
 {
 	int buildingId = map_building_at(gridOffset);
 	if (buildingId > 0) {
-		struct Data_Building *b = &Data_Buildings[buildingId];
+		struct Data_Building *b = building_get(buildingId);
 		if (BuildingIsInUse(buildingId) && (b->type == BUILDING_FORT || b->type == BUILDING_FORT_GROUND)) {
 			return b->formationId;
 		}
@@ -176,16 +176,14 @@ int Formation_anyLegionNeedsSoldiers()
 
 int Formation_getClosestMilitaryAcademy(int formationId)
 {
-	int fortId = formation_get(formationId)->building_id;
-	int fortX = Data_Buildings[fortId].x;
-	int fortY = Data_Buildings[fortId].y;
+	struct Data_Building *fort = building_get(formation_get(formationId)->building_id);
 	int minBuildingId = 0;
 	int minDistance = 10000;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (BuildingIsInUse(i) &&
-			Data_Buildings[i].type == BUILDING_MILITARY_ACADEMY &&
-			Data_Buildings[i].numWorkers >= model_get_building(BUILDING_MILITARY_ACADEMY)->laborers) {
-			int dist = calc_maximum_distance(fortX, fortY, Data_Buildings[i].x, Data_Buildings[i].y);
+        struct Data_Building *b = building_get(i);
+		if (BuildingIsInUse(i) && b->type == BUILDING_MILITARY_ACADEMY &&
+			b->numWorkers >= model_get_building(BUILDING_MILITARY_ACADEMY)->laborers) {
+			int dist = calc_maximum_distance(fort->x, fort->y, b->x, b->y);
 			if (dist < minDistance) {
 				minDistance = dist;
 				minBuildingId = i;
@@ -197,13 +195,14 @@ int Formation_getClosestMilitaryAcademy(int formationId)
 
 void Formation_setNewSoldierRequest(int buildingId)
 {
-    const formation *m = formation_get(Data_Buildings[buildingId].formationId);
+    struct Data_Building *b = building_get(buildingId);
+    const formation *m = formation_get(b->formationId);
 	formation_set_recruit_type(m->id, LEGION_RECRUIT_NONE);
 	if (!m->is_at_fort || m->cursed_by_mars || m->num_figures == m->max_figures) {
 		return;
 	}
 	if (m->num_figures < m->max_figures) {
-		int type = Data_Buildings[buildingId].subtype.fortFigureType;
+		int type = b->subtype.fortFigureType;
 		if (type == FIGURE_FORT_LEGIONARY) {
 			formation_set_recruit_type(m->id, LEGION_RECRUIT_LEGIONARY);
 		} else if (type == FIGURE_FORT_JAVELIN) {

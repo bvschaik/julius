@@ -706,7 +706,7 @@ static void debug()
 {/*
 	printf("TIME: y %d m %d d %d t %d\n", game_time_year(), game_time_month(), game_time_day(), game_time_tick());
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		struct Data_Building *b = &Data_Buildings[i];
+		struct Data_Building *b = building_get(i);
 		if (b->state != BuildingState_Unused || b->type) {
 			printf("Building %d type %d inUse %d x %d y %d emp %d w %d ls %d hc %d\n",
 				i, b->type, b->state, b->x, b->y, b->numWorkers, b->figureId, b->figureId2, b->housesCovered);

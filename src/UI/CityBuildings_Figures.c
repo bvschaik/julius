@@ -3,13 +3,23 @@
 
 #include "../Graphics.h"
 
-#include "../Data/Building.h"
 #include "../Data/State.h"
 
+#include "building/building.h"
 #include "figure/figure.h"
 #include "figure/formation.h"
 #include "game/resource.h"
 #include "graphics/image.h"
+
+static struct Data_Building *get_entertainment_building(const figure *f)
+{
+    if (f->actionState == FigureActionState_94_EntertainerRoaming ||
+        f->actionState == FigureActionState_95_EntertainerReturning) {
+        return building_get(f->buildingId);
+    } else {
+        return building_get(f->destinationBuildingId);
+    }
+}
 
 static int showOnOverlay(figure *f)
 {
@@ -36,32 +46,17 @@ static int showOnOverlay(figure *f)
 				f->type == FIGURE_TEACHER;
 		case Overlay_Theater:
 			if (f->type == FIGURE_ACTOR) {
-				if (f->actionState == FigureActionState_94_EntertainerRoaming ||
-					f->actionState == FigureActionState_95_EntertainerReturning) {
-					return Data_Buildings[f->buildingId].type == BUILDING_THEATER;
-				} else {
-					return Data_Buildings[f->destinationBuildingId].type == BUILDING_THEATER;
-				}
+				return get_entertainment_building(f)->type == BUILDING_THEATER;
 			}
 			return 0;
 		case Overlay_Amphitheater:
 			if (f->type == FIGURE_ACTOR || f->type == FIGURE_GLADIATOR) {
-				if (f->actionState == FigureActionState_94_EntertainerRoaming ||
-					f->actionState == FigureActionState_95_EntertainerReturning) {
-					return Data_Buildings[f->buildingId].type == BUILDING_AMPHITHEATER;
-				} else {
-					return Data_Buildings[f->destinationBuildingId].type == BUILDING_AMPHITHEATER;
-				}
+				return get_entertainment_building(f)->type == BUILDING_AMPHITHEATER;
 			}
 			return 0;
 		case Overlay_Colosseum:
 			if (f->type == FIGURE_GLADIATOR) {
-				if (f->actionState == FigureActionState_94_EntertainerRoaming ||
-					f->actionState == FigureActionState_95_EntertainerReturning) {
-					return Data_Buildings[f->buildingId].type == BUILDING_COLOSSEUM;
-				} else {
-					return Data_Buildings[f->destinationBuildingId].type == BUILDING_COLOSSEUM;
-				}
+				return get_entertainment_building(f)->type == BUILDING_COLOSSEUM;
 			} else if (f->type == FIGURE_LION_TAMER) {
 				return 1;
 			}
@@ -95,7 +90,7 @@ static int showOnOverlay(figure *f)
 			return 0;
 		case Overlay_Problems:
 			if (f->type == FIGURE_LABOR_SEEKER) {
-				return Data_Buildings[f->buildingId].showOnProblemOverlay;
+				return building_get(f->buildingId)->showOnProblemOverlay;
 			} else if (f->type == FIGURE_CART_PUSHER) {
 				return f->actionState == FigureActionState_20_CartpusherInitial || f->minMaxSeen;
 			}

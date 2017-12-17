@@ -1,8 +1,8 @@
 #include "CityInfo.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
-#include "Data/Building.h"
 
+#include "building/building.h"
 #include "building/model.h"
 #include "city/message.h"
 #include "core/calc.h"
@@ -46,19 +46,18 @@ static void setBuildingWorkerWeight();
 static void allocateWorkersToWater();
 static void allocateWorkersToBuildings();
 
-static int isIndustryDisabled(int buildingId) {
-	if (Data_Buildings[buildingId].type < BUILDING_WHEAT_FARM ||
-		Data_Buildings[buildingId].type > BUILDING_POTTERY_WORKSHOP) {
+static int isIndustryDisabled(struct Data_Building *b) {
+	if (b->type < BUILDING_WHEAT_FARM || b->type > BUILDING_POTTERY_WORKSHOP) {
 		return 0;
 	}
-	int resourceId = Data_Buildings[buildingId].outputResourceId;
+	int resourceId = b->outputResourceId;
 	if (Data_CityInfo.resourceIndustryMothballed[resourceId]) {
 		return 1;
 	}
 	return 0;
 }
 
-static int shouldHaveWorkers(int buildingId, int category, int checkAccess)
+static int shouldHaveWorkers(struct Data_Building *b, int category, int checkAccess)
 {
 	if (category < 0) {
 		return 0;
@@ -66,11 +65,11 @@ static int shouldHaveWorkers(int buildingId, int category, int checkAccess)
 
 	// exceptions: hippodrome 'other' tiles and disabled industries
 	if (category == LaborCategory_Entertainment) {
-		if (Data_Buildings[buildingId].type == BUILDING_HIPPODROME && Data_Buildings[buildingId].prevPartBuildingId) {
+		if (b->type == BUILDING_HIPPODROME && b->prevPartBuildingId) {
 			return 0;
 		}
 	} else if (category == LaborCategory_FoodProduction || category == LaborCategory_IndustryCommerce) {
-		if (isIndustryDisabled(buildingId)) {
+		if (isIndustryDisabled(b)) {
 			return 0;
 		}
 	}
@@ -79,7 +78,7 @@ static int shouldHaveWorkers(int buildingId, int category, int checkAccess)
 		return 1;
 	}
 	if (checkAccess) {
-		return Data_Buildings[buildingId].housesCovered > 0 ? 1 : 0;
+		return b->housesCovered > 0 ? 1 : 0;
 	}
 	return 1;
 }
@@ -93,18 +92,17 @@ void CityInfo_Labor_calculateWorkersNeededPerCategory()
 		Data_CityInfo.laborCategory[cat].workersNeeded = 0;
 	}
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
+        struct Data_Building *b = building_get(i);
 		if (!BuildingIsInUse(i)) {
 			continue;
 		}
-		int category = buildingTypeToLaborCategory[Data_Buildings[i].type];
-		Data_Buildings[i].laborCategory = category;
-		if (!shouldHaveWorkers(i, category, 1)) {
+		int category = buildingTypeToLaborCategory[b->type];
+		b->laborCategory = category;
+		if (!shouldHaveWorkers(b, category, 1)) {
 			continue;
 		}
-		Data_CityInfo.laborCategory[category].workersNeeded +=
-			model_get_building(Data_Buildings[i].type)->laborers;
-		Data_CityInfo.laborCategory[category].totalHousesCovered +=
-			Data_Buildings[i].housesCovered;
+		Data_CityInfo.laborCategory[category].workersNeeded += model_get_building(b->type)->laborers;
+		Data_CityInfo.laborCategory[category].totalHousesCovered += b->housesCovered;
 		Data_CityInfo.laborCategory[category].buildings++;
 	}
 }
@@ -214,17 +212,18 @@ static void setBuildingWorkerWeight()
 {
 	int waterPer10kPerBuilding = calc_percentage(100, Data_CityInfo.laborCategory[LaborCategory_Water].buildings);
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
+        struct Data_Building *b = building_get(i);
 		if (!BuildingIsInUse(i)) {
 			continue;
 		}
-		int cat = buildingTypeToLaborCategory[Data_Buildings[i].type];
+		int cat = buildingTypeToLaborCategory[b->type];
 		if (cat == LaborCategory_Water) {
-			Data_Buildings[i].percentageHousesCovered = waterPer10kPerBuilding;
+			b->percentageHousesCovered = waterPer10kPerBuilding;
 		} else if (cat >= 0) {
-			Data_Buildings[i].percentageHousesCovered = 0;
-			if (Data_Buildings[i].housesCovered) {
-				Data_Buildings[i].percentageHousesCovered =
-					calc_percentage(100 * Data_Buildings[i].housesCovered,
+			b->percentageHousesCovered = 0;
+			if (b->housesCovered) {
+				b->percentageHousesCovered =
+					calc_percentage(100 * b->housesCovered,
 						Data_CityInfo.laborCategory[cat].totalHousesCovered);
 			}
 		}
@@ -245,14 +244,14 @@ static void allocateWorkersToBuildings()
 		if (!BuildingIsInUse(i)) {
 			continue;
 		}
-		struct Data_Building *b = &Data_Buildings[i];
+		struct Data_Building *b = building_get(i);
 		int cat = buildingTypeToLaborCategory[b->type];
 		if (cat == LaborCategory_Water || cat < 0) {
 			// water is handled by allocateWorkersToWater()
 			continue;
 		}
 		b->numWorkers = 0;
-		if (!shouldHaveWorkers(i, cat, 0)) {
+		if (!shouldHaveWorkers(b, cat, 0)) {
 			continue;
 		}
 		if (b->percentageHousesCovered > 0) {
@@ -286,12 +285,12 @@ static void allocateWorkersToBuildings()
 		if (!BuildingIsInUse(i)) {
 			continue;
 		}
-		struct Data_Building *b = &Data_Buildings[i];
+		struct Data_Building *b = building_get(i);
 		int cat = buildingTypeToLaborCategory[b->type];
 		if (cat < 0 || cat == LaborCategory_Water || cat == LaborCategory_Military) {
 			continue;
 		}
-		if (!shouldHaveWorkers(i, cat, 0)) {
+		if (!shouldHaveWorkers(b, cat, 0)) {
 			continue;
 		}
 		if (b->percentageHousesCovered > 0 && categoryWorkersNeeded[cat]) {
@@ -334,24 +333,24 @@ static void allocateWorkersToWater()
 		if (buildingId >= 2000) {
 			buildingId = 1;
 		}
+		struct Data_Building *b = building_get(buildingId);
 		if (!BuildingIsInUse(buildingId) ||
-			buildingTypeToLaborCategory[Data_Buildings[buildingId].type] != LaborCategory_Water) {
+			buildingTypeToLaborCategory[b->type] != LaborCategory_Water) {
 			continue;
 		}
-		Data_Buildings[buildingId].numWorkers = 0;
-		if (Data_Buildings[buildingId].percentageHousesCovered > 0) {
+		b->numWorkers = 0;
+		if (b->percentageHousesCovered > 0) {
 			if (percentageNotFilled > 0) {
 				if (buildingsToSkip) {
 					--buildingsToSkip;
 				} else if (startBuildingId) {
-					Data_Buildings[buildingId].numWorkers = workersPerBuilding;
+					b->numWorkers = workersPerBuilding;
 				} else {
 					startBuildingId = buildingId;
-					Data_Buildings[buildingId].numWorkers = workersPerBuilding;
+					b->numWorkers = workersPerBuilding;
 				}
 			} else {
-				Data_Buildings[buildingId].numWorkers =
-					model_get_building(Data_Buildings[buildingId].type)->laborers;
+				b->numWorkers = model_get_building(b->type)->laborers;
 			}
 		}
 	}

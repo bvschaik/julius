@@ -14,13 +14,13 @@
 #include "../Terrain.h"
 #include "../Widget.h"
 
-#include "../Data/Building.h"
 #include "../Data/CityInfo.h"
 #include "../Data/CityView.h"
 #include "../Data/Constants.h"
 #include "../Data/Screen.h"
 #include "../Data/State.h"
 
+#include "building/building.h"
 #include "building/model.h"
 #include "core/calc.h"
 #include "figure/figure.h"
@@ -64,7 +64,7 @@ static int getHeightId()
 				return 0;
 		}
 	} else if (context.type == BuildingInfoType_Building) {
-		switch (Data_Buildings[context.buildingId].type) {
+		switch (building_get(context.buildingId)->type) {
 			case BUILDING_SMALL_TEMPLE_CERES:
 			case BUILDING_SMALL_TEMPLE_NEPTUNE:
 			case BUILDING_SMALL_TEMPLE_MERCURY:
@@ -192,16 +192,15 @@ void UI_BuildingInfo_init()
 	} else if (!context.buildingId) {
 		context.terrainType = 10;
 	} else {
+        struct Data_Building *b = building_get(context.buildingId);
 		context.type = BuildingInfoType_Building;
-		context.workerPercentage = calc_percentage(
-			Data_Buildings[context.buildingId].numWorkers,
-			model_get_building(Data_Buildings[context.buildingId].type)->laborers);
-		switch (Data_Buildings[context.buildingId].type) {
+		context.workerPercentage = calc_percentage(b->numWorkers, model_get_building(b->type)->laborers);
+		switch (b->type) {
 			case BUILDING_FORT_GROUND:
-				context.buildingId = Data_Buildings[context.buildingId].prevPartBuildingId;
+				context.buildingId = b->prevPartBuildingId;
 				// fallthrough
 			case BUILDING_FORT:
-				context.formationId = Data_Buildings[context.buildingId].formationId;
+				context.formationId = b->formationId;
 				break;
 			case BUILDING_WAREHOUSE_SPACE:
 			case BUILDING_HIPPODROME:
@@ -212,41 +211,32 @@ void UI_BuildingInfo_init()
 				context.barracksSoldiersRequested += Data_Buildings_Extra.barracksTowerSentryRequested;
 				break;
 			default:
-				if (Data_Buildings[context.buildingId].houseSize) {
+				if (b->houseSize) {
 					UI_BuildingInfo_houseDetermineWorstDesirabilityBuilding(&context);
 					HouseEvolution_determineEvolveText(context.buildingId, context.worstDesirabilityBuildingId);
 				}
 				break;
 		}
 		context.hasRoadAccess = 0;
-		switch (Data_Buildings[context.buildingId].type) {
+		switch (b->type) {
 			case BUILDING_GRANARY:
-				if (Terrain_hasRoadAccessGranary(
-					Data_Buildings[context.buildingId].x,
-					Data_Buildings[context.buildingId].y, 0, 0)) {
+				if (Terrain_hasRoadAccessGranary(b->x, b->y, 0, 0)) {
 					context.hasRoadAccess = 1;
 				}
 				break;
 			case BUILDING_HIPPODROME:
-				if (Terrain_hasRoadAccessHippodrome(
-					Data_Buildings[context.buildingId].x,
-					Data_Buildings[context.buildingId].y, 0, 0)) {
+				if (Terrain_hasRoadAccessHippodrome(b->x, b->y, 0, 0)) {
 					context.hasRoadAccess = 1;
 				}
 				break;
 			case BUILDING_WAREHOUSE:
-				if (Terrain_hasRoadAccess(
-					Data_Buildings[context.buildingId].x,
-					Data_Buildings[context.buildingId].y, 3, 0, 0)) {
+				if (Terrain_hasRoadAccess(b->x, b->y, 3, 0, 0)) {
 					context.hasRoadAccess = 1;
 				}
 				context.warehouseSpaceText = Resource_getWarehouseSpaceInfo(context.buildingId);
 				break;
 			default:
-				if (Terrain_hasRoadAccess(
-					Data_Buildings[context.buildingId].x,
-					Data_Buildings[context.buildingId].y,
-					Data_Buildings[context.buildingId].size, 0, 0)) {
+				if (Terrain_hasRoadAccess(b->x, b->y, b->size, 0, 0)) {
 					context.hasRoadAccess = 1;
 				}
 				break;
@@ -336,7 +326,7 @@ void UI_BuildingInfo_init()
 int UI_BuildingInfo_getBuildingType()
 {
 	if (context.type == BuildingInfoType_Building) {
-		return Data_Buildings[context.buildingId].type;
+		return building_get(context.buildingId)->type;
 	}
 	return BUILDING_WELL;
 }
@@ -350,7 +340,7 @@ void UI_BuildingInfo_drawBackground()
 	} else if (context.type == BuildingInfoType_Terrain) {
 		UI_BuildingInfo_drawTerrain(&context);
 	} else if (context.type == BuildingInfoType_Building) {
-		int btype = Data_Buildings[context.buildingId].type;
+		int btype = building_get(context.buildingId)->type;
 		if (BuildingIsHouse(btype)) {
 			UI_BuildingInfo_drawHouse(&context);
 		} else if (btype == BUILDING_WHEAT_FARM) {
@@ -495,7 +485,7 @@ void UI_BuildingInfo_drawForeground()
 {
 	// building-specific buttons
 	if (context.type == BuildingInfoType_Building) {
-		int btype = Data_Buildings[context.buildingId].type;
+		int btype = building_get(context.buildingId)->type;
 		if (btype == BUILDING_GRANARY) {
 			if (context.storageShowSpecialOrders) {
 				UI_BuildingInfo_drawGranaryOrdersForeground(&context);
@@ -557,7 +547,7 @@ void UI_BuildingInfo_handleMouse(const mouse *m)
 	} else if (context.figure.drawn) {
 		UI_BuildingInfo_handleMouseFigureList(&context);
 	} else if (context.type == BuildingInfoType_Building) {
-		int btype = Data_Buildings[context.buildingId].type;
+		int btype = building_get(context.buildingId)->type;
 		if (btype == BUILDING_GRANARY) {
 			if (context.storageShowSpecialOrders) {
 				UI_BuildingInfo_handleMouseGranaryOrders(&context);
@@ -596,7 +586,7 @@ void UI_BuildingInfo_showStorageOrders(int param1, int param2)
 
 void UI_BuildingInfo_drawEmploymentInfo(BuildingInfoContext *c, int yOffset)
 {
-	struct Data_Building *b = &Data_Buildings[c->buildingId];
+	struct Data_Building *b = building_get(c->buildingId);
 	int textId;
 	if (b->numWorkers >= model_get_building(b->type)->laborers) {
 		textId = 0;

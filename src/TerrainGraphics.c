@@ -3,8 +3,7 @@
 #include "Terrain.h"
 #include "Terrain_private.h"
 
-#include "Data/Building.h"
-
+#include "building/building.h"
 #include "core/direction.h"
 #include "graphics/image.h"
 #include "map/aqueduct.h"
@@ -643,7 +642,7 @@ void TerrainGraphics_setBuildingFarm(int buildingId, int x, int y, int cropGraph
 
 void TerrainGraphics_updateNativeCropProgress(int buildingId)
 {
-	struct Data_Building *b = &Data_Buildings[buildingId];
+	struct Data_Building *b = building_get(buildingId);
 	b->data.industry.progress++;
 	if (b->data.industry.progress >= 5) {
 		b->data.industry.progress = 0;

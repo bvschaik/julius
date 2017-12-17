@@ -7,9 +7,9 @@
 #include "Terrain.h"
 #include "TerrainGraphics.h"
 
-#include "Data/Building.h"
 #include "Data/CityInfo.h"
 
+#include "building/building.h"
 #include "building/model.h"
 #include "city/message.h"
 #include "core/calc.h"
@@ -604,7 +604,7 @@ static void spawnFigureMarket(int buildingId, struct Data_Building *b)
 				b->figureId2 = f->id;
 				f->destinationBuildingId = dstBuildingId;
 				f->collectingItemId = b->data.market.fetchInventoryId;
-				struct Data_Building *bDst = &Data_Buildings[dstBuildingId];
+				struct Data_Building *bDst = building_get(dstBuildingId);
 				if (Terrain_hasRoadAccess(bDst->x, bDst->y, bDst->size, &xRoad, &yRoad) ||
 					Terrain_hasRoadAccess(bDst->x, bDst->y, 3, &xRoad, &yRoad)) {
 					f->destinationX = xRoad;
@@ -1225,7 +1225,7 @@ void FigureGeneration_generateFiguresForBuildings()
 		Data_Buildings_Extra.barracksTowerSentryRequested--;
 	}
 	for (int i = 1; i <= Data_Buildings_Extra.highestBuildingIdInUse; i++) {
-		struct Data_Building *b = &Data_Buildings[i];
+		struct Data_Building *b = building_get(i);
 		if (!BuildingIsInUse(i)) {
 			continue;
 		}

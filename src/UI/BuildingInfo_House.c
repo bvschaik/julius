@@ -6,9 +6,9 @@
 #include "../Terrain.h"
 #include "../Widget.h"
 
-#include "../Data/Building.h"
 #include "../Data/CityInfo.h"
 
+#include "building/building.h"
 #include "building/model.h"
 #include "game/resource.h"
 #include "graphics/image.h"
@@ -27,9 +27,8 @@ static void drawVacantLot(BuildingInfoContext *c)
 	UI_BuildingInfo_drawFigureList(c);
 
 	int textId = 2;
-	if (Terrain_getClosestRoadWithinRadius(
-		Data_Buildings[c->buildingId].x,
-		Data_Buildings[c->buildingId].y, 1, 2, 0, 0)) {
+    struct Data_Building *b = building_get(c->buildingId);
+	if (Terrain_getClosestRoadWithinRadius(b->x, b->y, 1, 2, 0, 0)) {
 		textId = 1;
 	}
 	Widget_GameText_drawMultiline(128, textId,
@@ -39,7 +38,7 @@ static void drawVacantLot(BuildingInfoContext *c)
 
 static void drawPopulationInfo(BuildingInfoContext *c, int yOffset)
 {
-	struct Data_Building *b = &Data_Buildings[c->buildingId];
+	struct Data_Building *b = building_get(c->buildingId);
 	Graphics_drawImage(image_group(GROUP_CONTEXT_ICONS) + 13, c->xOffset + 34, yOffset + 4);
 	int width = Widget_Text_drawNumber(b->housePopulation, '@', " ",
 		c->xOffset + 50, yOffset + 14, FONT_SMALL_BLACK);
@@ -58,7 +57,7 @@ static void drawPopulationInfo(BuildingInfoContext *c, int yOffset)
 
 static void drawTaxInfo(BuildingInfoContext *c, int yOffset)
 {
-	struct Data_Building *b = &Data_Buildings[c->buildingId];
+	struct Data_Building *b = building_get(c->buildingId);
 	if (b->houseTaxCoverage) {
 		int pct = calc_adjust_with_percentage(b->taxIncomeOrStorage / 2, Data_CityInfo.taxPercentage);
 		int width = Widget_GameText_draw(127, 24, c->xOffset + 36, yOffset, FONT_SMALL_BLACK);
@@ -72,7 +71,7 @@ static void drawTaxInfo(BuildingInfoContext *c, int yOffset)
 
 static void drawHappinessInfo(BuildingInfoContext *c, int yOffset)
 {
-	int happiness = Data_Buildings[c->buildingId].sentiment.houseHappiness;
+	int happiness = building_get(c->buildingId)->sentiment.houseHappiness;
 	int textId;
 	if (happiness >= 50) {
 		textId = 26;
@@ -96,7 +95,7 @@ void UI_BuildingInfo_drawHouse(BuildingInfoContext *c)
 {
 	c->helpId = 56;
 	PLAY_SOUND("wavs/housing.wav");
-	struct Data_Building *b = &Data_Buildings[c->buildingId];
+	struct Data_Building *b = building_get(c->buildingId);
 	if (b->housePopulation <= 0) {
 		drawVacantLot(c);
 		return;
@@ -164,7 +163,7 @@ void UI_BuildingInfo_drawHouse(BuildingInfoContext *c)
 	if (b->data.house.evolveTextId == 62) {
 		int width = Widget_GameText_draw(127, 40 + b->data.house.evolveTextId,
 			c->xOffset + 32, c->yOffset + 60, FONT_NORMAL_BLACK);
-		width += Widget_GameText_drawColored(41, Data_Buildings[c->worstDesirabilityBuildingId].type,
+		width += Widget_GameText_drawColored(41, building_get(c->worstDesirabilityBuildingId)->type,
 			c->xOffset + 32 + width, c->yOffset + 60, FONT_NORMAL_PLAIN, COLOR_RED);
 		Widget_Text_draw((uint8_t*)")", c->xOffset + 32 + width, c->yOffset + 60, FONT_NORMAL_BLACK, 0);
 		Widget_GameText_drawMultiline(127, 41 + b->data.house.evolveTextId,
@@ -179,12 +178,11 @@ void UI_BuildingInfo_houseDetermineWorstDesirabilityBuilding(BuildingInfoContext
 {
 	int lowestDesirability = 0;
 	int lowestBuildingId = 0;
-	int bx = Data_Buildings[c->buildingId].x;
-	int by = Data_Buildings[c->buildingId].y;
-	int xMin = bx - 6;
-	int yMin = by - 6;
-	int xMax = bx + 6;
-	int yMax = by + 6;
+    struct Data_Building *cb = building_get(c->buildingId);
+	int xMin = cb->x - 6;
+	int yMin = cb->y - 6;
+	int xMax = cb->x + 6;
+	int yMax = cb->y + 6;
 	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
 
 	for (int y = yMin; y <= yMax; y++) {
@@ -193,18 +191,17 @@ void UI_BuildingInfo_houseDetermineWorstDesirabilityBuilding(BuildingInfoContext
 			if (buildingId <= 0) {
 				continue;
 			}
-			struct Data_Building *b = &Data_Buildings[buildingId];
+			struct Data_Building *b = building_get(buildingId);
 			if (!BuildingIsInUse(buildingId) || buildingId == c->buildingId) {
 				continue;
 			}
-			if (!b->houseSize || b->type < Data_Buildings[c->buildingId].type) {
+			if (!b->houseSize || b->type < cb->type) {
 				int des = model_get_building(b->type)->desirability_value;
 				if (des < 0) {
 					// simplified desirability calculation
 					int stepSize = model_get_building(b->type)->desirability_step_size;
 					int range = model_get_building(b->type)->desirability_range;
-					int dist = calc_maximum_distance(x, y,
-						Data_Buildings[c->buildingId].x, Data_Buildings[c->buildingId].y);
+					int dist = calc_maximum_distance(x, y, cb->x, cb->y);
 					if (dist <= range) {
 						while (--dist > 1) {
 							des += stepSize;

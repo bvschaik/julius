@@ -5,11 +5,11 @@
 #include "../Widget.h"
 #include "../UI/Window.h"
 
-#include "../Data/Building.h"
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
 #include "../Data/State.h"
 
+#include "building/building.h"
 #include "building/count.h"
 #include "core/calc.h"
 #include "figure/formation.h"
@@ -55,7 +55,7 @@ void UI_BuildingInfo_drawPrefect(BuildingInfoContext *c)
 		c->xOffset, c->yOffset + 16 * c->heightBlocks - 24,
 		16 * c->widthBlocks, FONT_NORMAL_BLACK);
 
-	struct Data_Building *b = &Data_Buildings[c->buildingId];
+	struct Data_Building *b = building_get(c->buildingId);
 	if (!c->hasRoadAccess) {
 		DRAW_DESC(69, 25);
 	} else if (b->numWorkers <= 0) {
@@ -120,11 +120,12 @@ void UI_BuildingInfo_drawTower(BuildingInfoContext *c)
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(91, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 
+    struct Data_Building *b = building_get(c->buildingId);
 	if (!c->hasRoadAccess) {
 		DRAW_DESC(69, 25);
-	} else if (Data_Buildings[c->buildingId].numWorkers <= 0) {
+	} else if (b->numWorkers <= 0) {
 		DRAW_DESC(91, 2);
-	} else if (Data_Buildings[c->buildingId].figureId) {
+	} else if (b->figureId) {
 		DRAW_DESC(91, 3);
 	} else {
 		DRAW_DESC(91, 4);
@@ -140,7 +141,7 @@ void UI_BuildingInfo_drawMilitaryAcademy(BuildingInfoContext *c)
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(135, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 
-	struct Data_Building *b = &Data_Buildings[c->buildingId];
+	struct Data_Building *b = building_get(c->buildingId);
 	if (!c->hasRoadAccess) {
 		DRAW_DESC(69, 25);
 	} else if (b->numWorkers <= 0) {
@@ -163,7 +164,7 @@ void UI_BuildingInfo_drawBarracks(BuildingInfoContext *c)
 	Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WEAPONS,
 		c->xOffset + 64, c->yOffset + 38);
 
-	struct Data_Building *b = &Data_Buildings[c->buildingId];
+	struct Data_Building *b = building_get(c->buildingId);
 	if (b->loadsStored < 1) {
 		Widget_GameText_drawNumberWithDescription(8, 10, 0,
 			c->xOffset + 92, c->yOffset + 44, FONT_NORMAL_BLACK);

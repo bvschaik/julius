@@ -1,8 +1,8 @@
 #include "CityInfo.h"
 
-#include "Data/Building.h"
 #include "Data/CityInfo.h"
 
+#include "building/building.h"
 #include "building/model.h"
 #include "city/culture.h"
 #include "core/calc.h"
@@ -430,8 +430,9 @@ static void calculateMaxProsperity()
 	int points = 0;
 	int houses = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].state && Data_Buildings[i].houseSize) {
-			points += model_get_house(Data_Buildings[i].subtype.houseLevel)->prosperity;
+        struct Data_Building *b = building_get(i);
+		if (b->state && b->houseSize) {
+			points += model_get_house(b->subtype.houseLevel)->prosperity;
 			houses++;
 		}
 	}

@@ -3,6 +3,7 @@
 #include "../Widget.h"
 #include "../Data/Building.h"
 
+#include "building/building.h"
 #include "graphics/image.h"
 
 static void drawInfo(BuildingInfoContext *c, int helpId, const char *soundFile, int groupId)
@@ -14,7 +15,7 @@ static void drawInfo(BuildingInfoContext *c, int helpId, const char *soundFile, 
 
 	if (!c->hasRoadAccess) {
 		DRAW_DESC(69, 25);
-	} else if (Data_Buildings[c->buildingId].numWorkers <= 0) {
+	} else if (building_get(c->buildingId)->numWorkers <= 0) {
 		DRAW_DESC(groupId, 2);
 	} else {
 		DRAW_DESC(groupId, 3);
@@ -40,11 +41,12 @@ void UI_BuildingInfo_drawBathhouse(BuildingInfoContext *c)
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(83, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 
-	if (!Data_Buildings[c->buildingId].hasWaterAccess) {
+    struct Data_Building *b = building_get(c->buildingId);
+	if (!b->hasWaterAccess) {
 		DRAW_DESC(83, 4);
 	} else if (!c->hasRoadAccess) {
 		DRAW_DESC(69, 25);
-	} else if (Data_Buildings[c->buildingId].numWorkers <= 0) {
+	} else if (b->numWorkers <= 0) {
 		DRAW_DESC(83, 2);
 	} else {
 		DRAW_DESC(83, 3);

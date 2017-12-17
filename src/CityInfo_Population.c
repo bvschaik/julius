@@ -3,10 +3,10 @@
 #include "Building.h"
 #include "HousePopulation.h"
 
-#include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 
+#include "building/building.h"
 #include "building/model.h"
 #include "city/message.h"
 #include "core/calc.h"
@@ -58,10 +58,10 @@ void CityInfo_Population_recordMonthlyPopulation()
 void CityInfo_Population_changeHappiness(int amount)
 {
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (BuildingIsInUse(i) && Data_Buildings[i].houseSize) {
-			Data_Buildings[i].sentiment.houseHappiness += amount;
-			Data_Buildings[i].sentiment.houseHappiness =
-                calc_bound(Data_Buildings[i].sentiment.houseHappiness, 0, 100);
+        struct Data_Building *b = building_get(i);
+		if (BuildingIsInUse(i) && b->houseSize) {
+			b->sentiment.houseHappiness += amount;
+			b->sentiment.houseHappiness = calc_bound(b->sentiment.houseHappiness, 0, 100);
 		}
 	}
 }
@@ -69,12 +69,12 @@ void CityInfo_Population_changeHappiness(int amount)
 void CityInfo_Population_setMaxHappiness(int max)
 {
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (BuildingIsInUse(i) && Data_Buildings[i].houseSize) {
-			if (Data_Buildings[i].sentiment.houseHappiness > max) {
-				Data_Buildings[i].sentiment.houseHappiness = max;
+        struct Data_Building *b = building_get(i);
+		if (BuildingIsInUse(i) && b->houseSize) {
+			if (b->sentiment.houseHappiness > max) {
+				b->sentiment.houseHappiness = max;
 			}
-			Data_Buildings[i].sentiment.houseHappiness =
-                calc_bound(Data_Buildings[i].sentiment.houseHappiness, 0, 100);
+			b->sentiment.houseHappiness = calc_bound(b->sentiment.houseHappiness, 0, 100);
 		}
 	}
 }
@@ -179,7 +179,7 @@ void CityInfo_Population_calculateSentiment()
 	int totalSentimentPenaltyTents = 0;
     int defaultSentiment = difficulty_sentiment();
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		struct Data_Building *b = &Data_Buildings[i];
+		struct Data_Building *b = building_get(i);
 		if (!BuildingIsInUse(i) || !b->houseSize) {
 			continue;
 		}
@@ -248,10 +248,10 @@ void CityInfo_Population_calculateSentiment()
 	int totalSentiment = 0;
 	int totalHouses = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (BuildingIsInUse(i) && Data_Buildings[i].houseSize &&
-			Data_Buildings[i].housePopulation) {
+        struct Data_Building *b = building_get(i);
+		if (BuildingIsInUse(i) && b->houseSize && b->housePopulation) {
 			totalHouses++;
-			totalSentiment += Data_Buildings[i].sentiment.houseHappiness;
+			totalSentiment += b->sentiment.houseHappiness;
 		}
 	}
 	if (totalHouses) {
@@ -363,7 +363,7 @@ void CityInfo_Population_updateHealthRate()
 	int totalPopulation = 0;
 	int healthyPopulation = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		struct Data_Building *b = &Data_Buildings[i];
+		struct Data_Building *b = building_get(i);
 		if (!BuildingIsInUse(i) || !b->houseSize || !b->housePopulation) {
 			continue;
 		}
@@ -434,7 +434,7 @@ static void healthCauseDisease(int totalPeople)
 	tutorial_on_disease();
 	// kill people who don't have access to a doctor
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		struct Data_Building *b = &Data_Buildings[i];
+		struct Data_Building *b = building_get(i);
 		if (BuildingIsInUse(i) && b->houseSize && b->housePopulation) {
 			if (!b->data.house.clinic) {
 				peopleToKill -= b->housePopulation;
@@ -447,7 +447,7 @@ static void healthCauseDisease(int totalPeople)
 	}
 	// kill people in tents
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		struct Data_Building *b = &Data_Buildings[i];
+		struct Data_Building *b = building_get(i);
 		if (BuildingIsInUse(i) && b->houseSize && b->housePopulation) {
 			if (b->subtype.houseLevel <= HOUSE_LARGE_TENT) {
 				peopleToKill -= b->housePopulation;
@@ -460,7 +460,7 @@ static void healthCauseDisease(int totalPeople)
 	}
 	// kill anyone
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		struct Data_Building *b = &Data_Buildings[i];
+		struct Data_Building *b = building_get(i);
 		if (BuildingIsInUse(i) && b->houseSize && b->housePopulation) {
 			peopleToKill -= b->housePopulation;
 			Building_collapseOnFire(i, 1);

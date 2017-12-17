@@ -1,15 +1,15 @@
 #include "HousePopulation.h"
 
 #include "BuildingHouse.h"
-#include "core/calc.h"
 #include "CityInfo.h"
 
-#include "Data/Building.h"
 #include "Data/CityInfo.h"
 
+#include "building/building.h"
 #include "building/list.h"
 #include "building/model.h"
 #include "city/message.h"
+#include "core/calc.h"
 #include "figure/figure.h"
 #include "figure/type.h"
 
@@ -23,7 +23,8 @@ static void fillBuildingListHouses()
 {
     building_list_large_clear(0);
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        if (BuildingIsInUse(i) && Data_Buildings[i].houseSize) {
+        struct Data_Building *b = building_get(i);
+        if (BuildingIsInUse(i) && b->houseSize) {
             building_list_large_add(i);
         }
     }
@@ -38,7 +39,7 @@ void HousePopulation_updateRoom()
     int total_houses = building_list_large_size();
     const int *houses = building_list_large_items();
 	for (int i = 0; i < total_houses; i++) {
-		struct Data_Building *b = &Data_Buildings[houses[i]];
+		struct Data_Building *b = building_get(houses[i]);
 		b->housePopulationRoom = 0;
 		if (b->distanceFromEntry > 0) {
 			int maxPop = model_get_house(b->subtype.houseLevel)->max_people;
@@ -141,12 +142,12 @@ static void calculateWorkers()
     int total_houses = building_list_large_size();
     const int *houses = building_list_large_items();
 	for (int i = 0; i < total_houses; i++) {
-		int buildingId = houses[i];
-		if (Data_Buildings[buildingId].housePopulation > 0) {
-			if (Data_Buildings[buildingId].subtype.houseLevel >= HOUSE_SMALL_VILLA) {
-				numPatricians += Data_Buildings[buildingId].housePopulation;
+		struct Data_Building *b = building_get(houses[i]);
+		if (b->housePopulation > 0) {
+			if (b->subtype.houseLevel >= HOUSE_SMALL_VILLA) {
+				numPatricians += b->housePopulation;
 			} else {
-				numPlebs += Data_Buildings[buildingId].housePopulation;
+				numPlebs += b->housePopulation;
 			}
 		}
 	}
@@ -164,16 +165,15 @@ static void createImmigrants(int numPeople)
 	int toImmigrate = numPeople;
 	// clean up any dead immigrants
 	for (int i = 0; i < total_houses; i++) {
-		int buildingId = houses[i];
-		if (Data_Buildings[buildingId].immigrantFigureId &&
-			figure_get(Data_Buildings[buildingId].immigrantFigureId)->state != FigureState_Alive) {
-			Data_Buildings[buildingId].immigrantFigureId = 0;
+		struct Data_Building *b = building_get(houses[i]);
+		if (b->immigrantFigureId && figure_get(b->immigrantFigureId)->state != FigureState_Alive) {
+			b->immigrantFigureId = 0;
 		}
 	}
 	// houses with plenty of room
 	for (int i = 0; i < total_houses && toImmigrate > 0; i++) {
 		int buildingId = houses[i];
-		struct Data_Building *b = &Data_Buildings[buildingId];
+		struct Data_Building *b = building_get(buildingId);
 		if (b->distanceFromEntry > 0 && b->housePopulationRoom >= 8 && !b->immigrantFigureId) {
 			if (toImmigrate <= 4) {
 				createImmigrantForBuilding(buildingId, toImmigrate);
@@ -187,7 +187,7 @@ static void createImmigrants(int numPeople)
 	// houses with less room
 	for (int i = 0; i < total_houses && toImmigrate > 0; i++) {
 		int buildingId = houses[i];
-		struct Data_Building *b = &Data_Buildings[buildingId];
+		struct Data_Building *b = building_get(buildingId);
 		if (b->distanceFromEntry > 0 && b->housePopulationRoom > 0 && !b->immigrantFigureId) {
 			if (toImmigrate <= b->housePopulationRoom) {
 				createImmigrantForBuilding(buildingId, toImmigrate);
@@ -213,13 +213,13 @@ static void createEmigrants(int numPeople)
 	for (int level = HOUSE_SMALL_TENT; level < HOUSE_LARGE_INSULA && toEmigrate > 0; level++) {
 		for (int i = 0; i < total_houses && toEmigrate > 0; i++) {
 			int buildingId = houses[i];
-			if (Data_Buildings[buildingId].housePopulation > 0 &&
-				Data_Buildings[buildingId].subtype.houseLevel == level) {
+            struct Data_Building *b = building_get(buildingId);
+			if (b->housePopulation > 0 && b->subtype.houseLevel == level) {
 				int currentPeople;
-				if (Data_Buildings[buildingId].housePopulation >= 4) {
+				if (b->housePopulation >= 4) {
 					currentPeople = 4;
 				} else {
-					currentPeople = Data_Buildings[buildingId].housePopulation;
+					currentPeople = b->housePopulation;
 				}
 				if (toEmigrate <= currentPeople) {
 					createEmigrantForBuilding(buildingId, toEmigrate);
@@ -247,15 +247,15 @@ static void createImmigrantForBuilding(int buildingId, int numPeople)
 
 static void createEmigrantForBuilding(int buildingId, int numPeople)
 {
+    struct Data_Building *b = building_get(buildingId);
 	CityInfo_Population_addPeople(-numPeople);
-	if (numPeople < Data_Buildings[buildingId].housePopulation) {
-		Data_Buildings[buildingId].housePopulation -= numPeople;
+	if (numPeople < b->housePopulation) {
+		b->housePopulation -= numPeople;
 	} else {
-		Data_Buildings[buildingId].housePopulation = 0;
+		b->housePopulation = 0;
 		BuildingHouse_changeToVacantLot(buildingId);
 	}
-	figure *f = figure_create(FIGURE_EMIGRANT,
-		Data_Buildings[buildingId].x, Data_Buildings[buildingId].y, DIR_0_TOP);
+	figure *f = figure_create(FIGURE_EMIGRANT, b->x, b->y, DIR_0_TOP);
 	f->actionState = FigureActionState_4_EmigrantCreated;
 	f->waitTicks = 0;
 	f->migrantNumPeople = numPeople;
@@ -266,7 +266,7 @@ int HousePopulation_getClosestHouseWithRoom(int x, int y)
 	int minDist = 1000;
 	int minBuildingId = 0;
 	for (int i = 1; i <= Data_Buildings_Extra.highestBuildingIdInUse; i++) {
-		struct Data_Building *b = &Data_Buildings[i];
+		struct Data_Building *b = building_get(i);
 		if (BuildingIsInUse(i) && b->houseSize && b->distanceFromEntry > 0 && b->housePopulationRoom > 0) {
 			if (!b->immigrantFigureId) {
 				int dist = calc_maximum_distance(x, y, b->x, b->y);
@@ -288,7 +288,7 @@ int HousePopulation_addPeople(int amount)
 		if (++buildingId >= MAX_BUILDINGS) {
 			buildingId = 1;
 		}
-		struct Data_Building *b = &Data_Buildings[buildingId];
+		struct Data_Building *b = building_get(buildingId);
 		if (BuildingIsInUse(buildingId) && b->houseSize && b->distanceFromEntry > 0 && b->housePopulation > 0) {
 			Data_CityInfo.populationLastTargetHouseAdd = buildingId;
 			int maxPeople = model_get_house(b->subtype.houseLevel)->max_people;
@@ -313,12 +313,12 @@ int HousePopulation_removePeople(int amount)
 		if (++buildingId >= MAX_BUILDINGS) {
 			buildingId = 1;
 		}
-		struct Data_Building *b = &Data_Buildings[buildingId];
+		struct Data_Building *b = building_get(buildingId);
 		if (BuildingIsInUse(buildingId) && b->houseSize) {
 			Data_CityInfo.populationLastTargetHouseRemove = buildingId;
 			if (b->housePopulation > 0) {
 				++removed;
-				--Data_Buildings[buildingId].housePopulation;
+				--b->housePopulation;
 			}
 		}
 	}
@@ -333,7 +333,7 @@ int HousePopulation_calculatePeoplePerType()
 	Data_CityInfo.populationPeopleInLargeInsulaAndAbove = 0;
 	int total = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		struct Data_Building *b = &Data_Buildings[i];
+		struct Data_Building *b = building_get(i);
 		if (b->state == BuildingState_Unused ||
 			b->state == BuildingState_Undo ||
 			b->state == BuildingState_DeletedByGame ||
@@ -375,7 +375,7 @@ void HousePopulation_evictOvercrowded()
     const int *items = building_list_large_items();
 	for (int i = 0; i < size; i++) {
 		int buildingId = items[i];
-		struct Data_Building *b = &Data_Buildings[buildingId];
+		struct Data_Building *b = building_get(buildingId);
 		if (b->housePopulationRoom < 0) {
 			int numPeopleToEvict = -b->housePopulationRoom;
 			HousePopulation_createHomeless(b->x, b->y, numPeopleToEvict);

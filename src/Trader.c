@@ -3,10 +3,10 @@
 #include "Resource.h"
 #include "Terrain.h"
 
-#include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 
+#include "building/building.h"
 #include "building/count.h"
 #include "building/storage.h"
 #include "city/message.h"
@@ -187,13 +187,14 @@ int Trader_getClosestWarehouseForTradeCaravan(const figure *f, int x, int y, int
 	int minDistance = 10000;
 	int minBuildingId = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (!BuildingIsInUse(i) || Data_Buildings[i].type != BUILDING_WAREHOUSE) {
+        struct Data_Building *b = building_get(i);
+		if (!BuildingIsInUse(i) || b->type != BUILDING_WAREHOUSE) {
 			continue;
 		}
-		if (!Data_Buildings[i].hasRoadAccess || Data_Buildings[i].distanceFromEntry <= 0) {
+		if (!b->hasRoadAccess || b->distanceFromEntry <= 0) {
 			continue;
 		}
-		const building_storage *s = building_storage_get(Data_Buildings[i].storage_id);
+		const building_storage *s = building_storage_get(b->storage_id);
 		int numImportsForWarehouse = 0;
 		for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
 			if (s->resource_state[r] != BUILDING_STORAGE_STATE_NOT_ACCEPTING && empire_can_import_resource_from_city(cityId, r)) {
@@ -230,9 +231,7 @@ int Trader_getClosestWarehouseForTradeCaravan(const figure *f, int x, int y, int
 			}
 		}
 		if (distancePenalty < 32) {
-			int distance = Resource_getDistance(
-				Data_Buildings[i].x, Data_Buildings[i].y, x, y,
-				distanceFromEntry, Data_Buildings[i].distanceFromEntry);
+			int distance = Resource_getDistance(b->x, b->y, x, y, distanceFromEntry, b->distanceFromEntry);
 			distance += distancePenalty;
 			if (distance < minDistance) {
 				minDistance = distance;
@@ -278,16 +277,17 @@ int Trader_getClosestWarehouseForImportDocker(int x, int y, int cityId, int dist
 	int minBuildingId = 0;
 	int resourceId = Data_CityInfo.tradeNextImportResourceDocker;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (!BuildingIsInUse(i) || Data_Buildings[i].type != BUILDING_WAREHOUSE) {
+        struct Data_Building *b = building_get(i);
+		if (!BuildingIsInUse(i) || b->type != BUILDING_WAREHOUSE) {
 			continue;
 		}
-		if (!Data_Buildings[i].hasRoadAccess || Data_Buildings[i].distanceFromEntry <= 0) {
+		if (!b->hasRoadAccess || b->distanceFromEntry <= 0) {
 			continue;
 		}
-		if (Data_Buildings[i].roadNetworkId != roadNetworkId) {
+		if (b->roadNetworkId != roadNetworkId) {
 			continue;
 		}
-		const building_storage *s = building_storage_get(Data_Buildings[i].storage_id);
+		const building_storage *s = building_storage_get(b->storage_id);
 		if (s->resource_state[resourceId] != BUILDING_STORAGE_STATE_NOT_ACCEPTING && !s->empty_all) {
 			int distancePenalty = 32;
 			int spaceId = i;
@@ -303,9 +303,7 @@ int Trader_getClosestWarehouseForImportDocker(int x, int y, int cityId, int dist
 				}
 			}
 			if (distancePenalty < 32) {
-				int distance = Resource_getDistance(
-					Data_Buildings[i].x, Data_Buildings[i].y, x, y,
-					distanceFromEntry, Data_Buildings[i].distanceFromEntry);
+				int distance = Resource_getDistance(b->x, b->y, x, y, distanceFromEntry, b->distanceFromEntry);
 				// prefer emptier warehouse
 				distance += distancePenalty;
 				if (distance < minDistance) {
@@ -354,13 +352,14 @@ int Trader_getClosestWarehouseForExportDocker(int x, int y, int cityId, int dist
 	int resourceId = Data_CityInfo.tradeNextExportResourceDocker;
 	
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (!BuildingIsInUse(i) || Data_Buildings[i].type != BUILDING_WAREHOUSE) {
+        struct Data_Building *b = building_get(i);
+		if (!BuildingIsInUse(i) || b->type != BUILDING_WAREHOUSE) {
 			continue;
 		}
-		if (!Data_Buildings[i].hasRoadAccess || Data_Buildings[i].distanceFromEntry <= 0) {
+		if (!b->hasRoadAccess || b->distanceFromEntry <= 0) {
 			continue;
 		}
-		if (Data_Buildings[i].roadNetworkId != roadNetworkId) {
+		if (b->roadNetworkId != roadNetworkId) {
 			continue;
 		}
 		int distancePenalty = 32;
@@ -374,9 +373,7 @@ int Trader_getClosestWarehouseForExportDocker(int x, int y, int cityId, int dist
 			}
 		}
 		if (distancePenalty < 32) {
-			int distance = Resource_getDistance(
-				Data_Buildings[i].x, Data_Buildings[i].y, x, y,
-				distanceFromEntry, Data_Buildings[i].distanceFromEntry);
+			int distance = Resource_getDistance(b->x, b->y, x, y, distanceFromEntry, b->distanceFromEntry);
 			// prefer fuller warehouse
 			distance += distancePenalty;
 			if (distance < minDistance) {

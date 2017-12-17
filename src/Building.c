@@ -1,6 +1,5 @@
 #include "Building.h"
 
-#include "core/calc.h"
 #include "CityInfo.h"
 #include "CityView.h"
 #include "Figure.h"
@@ -12,14 +11,15 @@
 #include "TerrainGraphics.h"
 #include "Undo.h"
 
-#include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/State.h"
 
+#include "building/building.h"
 #include "building/properties.h"
 #include "building/storage.h"
 #include "city/message.h"
 #include "city/warning.h"
+#include "core/calc.h"
 #include "core/direction.h"
 #include "figure/figure.h"
 #include "graphics/image.h"
@@ -72,7 +72,7 @@ int Building_create(int type, int x, int y)
 		return 0;
 	}
 	
-	struct Data_Building *b = &Data_Buildings[buildingId];
+	struct Data_Building *b = building_get(buildingId);
     const building_properties *props = building_properties_for_type(type);
 	
 	b->state = BuildingState_Created;
@@ -183,7 +183,7 @@ void Building_delete(int buildingId)
 
 void Building_deleteData(int buildingId)
 {
-	struct Data_Building *b = &Data_Buildings[buildingId];
+	struct Data_Building *b = building_get(buildingId);
 	if (b->storage_id) {
 		building_storage_delete(b->storage_id);
 	}
@@ -221,7 +221,7 @@ void Building_GameTick_updateState()
 	int landRecalc = 0;
 	int wallRecalc = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		struct Data_Building *b = &Data_Buildings[i];
+		struct Data_Building *b = building_get(i);
 		if (b->state == BuildingState_Created) {
 			b->state = BuildingState_InUse;
 		}
@@ -264,7 +264,7 @@ int Building_getMainBuildingId(int buildingId)
 
 void Building_collapseOnFire(int buildingId, int hasPlague)
 {
-	struct Data_Building *b = &Data_Buildings[buildingId];
+	struct Data_Building *b = building_get(buildingId);
 	Data_State.undoAvailable = 0;
 	b->fireRisk = 0;
 	b->damageRisk = 0;
@@ -428,7 +428,7 @@ void Building_destroyByEnemy(int x, int y, int gridOffset)
 {
 	int buildingId = map_building_at(gridOffset);
 	if (buildingId > 0) {
-		struct Data_Building *b = &Data_Buildings[buildingId];
+		struct Data_Building *b = building_get(buildingId);
 		TerrainGraphics_setBuildingAreaRubble(buildingId, b->x, b->y, b->size);
 		if (BuildingIsInUse(buildingId)) {
 			switch (b->type) {
@@ -472,7 +472,7 @@ void Building_setDesirability()
 		if (!BuildingIsInUse(i)) {
 			continue;
 		}
-		struct Data_Building *b = &Data_Buildings[i];
+		struct Data_Building *b = building_get(i);
 		b->desirability = map_desirability_get_max(b->x, b->y, b->size);
 		if (b->isAdjacentToWater) {
 			b->desirability += 10;
@@ -517,7 +517,7 @@ void Building_determineGraphicIdsForOrientedBuildings()
 	int mapOrientationIsTopOrBottom = mapOrientation == DIR_0_TOP || mapOrientation == DIR_4_BOTTOM;
 	int graphicOffset;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		struct Data_Building *b = &Data_Buildings[i];
+		struct Data_Building *b = building_get(i);
 		if (b->state == BuildingState_Unused) {
 			continue;
 		}
@@ -624,7 +624,7 @@ void Building_GameTick_checkAccessToRome()
 		if (!BuildingIsInUse(i)) {
 			continue;
 		}
-		struct Data_Building *b = &Data_Buildings[i];
+		struct Data_Building *b = building_get(i);
 		int xRoad, yRoad;
 		if (b->houseSize) {
 			if (!Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
@@ -738,7 +738,7 @@ void Building_GameTick_checkAccessToRome()
 void Building_Industry_updateProduction()
 {
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		struct Data_Building *b = &Data_Buildings[i];
+		struct Data_Building *b = building_get(i);
 		if (!BuildingIsInUse(i) || !b->outputResourceId) {
 			continue;
 		}
@@ -782,7 +782,7 @@ void Building_Industry_updateDoubleWheatProduction()
 		return;
 	}
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		struct Data_Building *b = &Data_Buildings[i];
+		struct Data_Building *b = building_get(i);
 		if (!BuildingIsInUse(i) || !b->outputResourceId) {
 			continue;
 		}
@@ -807,7 +807,7 @@ void Building_Industry_updateDoubleWheatProduction()
 void Building_Industry_witherFarmCropsFromCeres(int bigCurse)
 {
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		struct Data_Building *b = &Data_Buildings[i];
+		struct Data_Building *b = building_get(i);
 		if (BuildingIsInUse(i) && b->outputResourceId && BuildingIsFarm(b->type)) {
 			b->data.industry.progress = 0;
 			b->data.industry.blessingDaysLeft = 0;
@@ -822,7 +822,7 @@ void Building_Industry_witherFarmCropsFromCeres(int bigCurse)
 void Building_Industry_blessFarmsFromCeres()
 {
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		struct Data_Building *b = &Data_Buildings[i];
+		struct Data_Building *b = building_get(i);
 		if (BuildingIsInUse(i) && b->outputResourceId && BuildingIsFarm(b->type)) {
 			b->data.industry.progress = 200;
 			b->data.industry.curseDaysLeft = 0;
@@ -842,7 +842,7 @@ int Building_Industry_hasProducedResource(int buildingId)
 
 void Building_Industry_startNewProduction(int buildingId)
 {
-	struct Data_Building *b = &Data_Buildings[buildingId];
+	struct Data_Building *b = building_get(buildingId);
 	b->data.industry.progress = 0;
 	if (b->subtype.workshopType) {
 		if (b->loadsStored) {
@@ -876,7 +876,7 @@ int Building_Market_getDestinationGranaryWarehouse(int marketId)
 		if (!BuildingIsInUse(i)) {
 			continue;
 		}
-		struct Data_Building *b = &Data_Buildings[i];
+		struct Data_Building *b = building_get(i);
 		if (b->type != BUILDING_GRANARY && b->type != BUILDING_WAREHOUSE) {
 			continue;
 		}
@@ -1118,7 +1118,7 @@ int Building_Market_getMaxGoodsStock(int buildingId)
 
 int Building_Dock_getNumIdleDockers(int buildingId)
 {
-	struct Data_Building *b = &Data_Buildings[buildingId];
+	struct Data_Building *b = building_get(buildingId);
 	int numIdle = 0;
 	for (int i = 0; i < 3; i++) {
 		if (b->data.other.dockFigureIds[i]) {
@@ -1137,7 +1137,7 @@ void Building_Dock_updateOpenWaterAccess()
     map_point river_entry = scenario_map_river_entry();
 	map_routing_calculate_distances_water_boat(river_entry.x, river_entry.y);
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		struct Data_Building *b = &Data_Buildings[i];
+		struct Data_Building *b = building_get(i);
 		if (BuildingIsInUse(i) && !b->houseSize && b->type == BUILDING_DOCK) {
 			if (Terrain_isAdjacentToOpenWater(b->x, b->y, 3)) {
 				b->hasWaterAccess = 1;
@@ -1164,7 +1164,7 @@ void Building_Mercury_removeResources(int bigCurse)
 	int maxStored = 0;
 	int maxBuildingId = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		struct Data_Building *b = &Data_Buildings[i];
+		struct Data_Building *b = building_get(i);
 		if (!BuildingIsInUse(i)) {
 			continue;
 		}
@@ -1214,7 +1214,7 @@ void Building_Mercury_fillGranary()
 	int minStored = 10000;
 	int minBuildingId = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		struct Data_Building *b = &Data_Buildings[i];
+		struct Data_Building *b = building_get(i);
 		if (!BuildingIsInUse(i) || b->type != BUILDING_GRANARY) {
 			continue;
 		}

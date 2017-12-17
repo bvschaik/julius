@@ -132,7 +132,7 @@ static int provideHippodromeCoverage(int x, int y)
 static int provideMarketGoods(int marketBuildingId, int x, int y)
 {
 	int serviced = 0;
-	struct Data_Building *market = &Data_Buildings[marketBuildingId];
+	struct Data_Building *market = building_get(marketBuildingId);
 	FOR_XY_RADIUS {
 		if (b->houseSize && b->housePopulation > 0) {
 			serviced++;
@@ -439,7 +439,7 @@ int Figure_provideServiceCoverage(figure *f)
 			numHousesServiced = provideMissionaryCoverage(x, y);
 			break;
 		case FIGURE_PRIEST:
-			switch (Data_Buildings[f->buildingId].type) {
+			switch (building_get(f->buildingId)->type) {
 				case BUILDING_SMALL_TEMPLE_CERES:
 				case BUILDING_LARGE_TEMPLE_CERES:
 					numHousesServiced = provideReligionCoverage(x, y, GOD_CERES);

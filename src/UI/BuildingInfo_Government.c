@@ -3,8 +3,7 @@
 #include "../Graphics.h"
 #include "../Widget.h"
 
-#include "../Data/Building.h"
-
+#include "building/building.h"
 #include "game/resource.h"
 
 void UI_BuildingInfo_drawForum(BuildingInfoContext *c)
@@ -16,7 +15,7 @@ void UI_BuildingInfo_drawForum(BuildingInfoContext *c)
 	Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_DENARII,
 		c->xOffset + 16, c->yOffset + 36);
 
-	struct Data_Building *b = &Data_Buildings[c->buildingId];
+	struct Data_Building *b = building_get(c->buildingId);
 	int width = Widget_GameText_draw(106, 2,
 		c->xOffset + 44, c->yOffset + 43, FONT_NORMAL_BLACK);
 	Widget_GameText_drawNumberWithDescription(8, 0, b->taxIncomeOrStorage,
@@ -52,7 +51,7 @@ void UI_BuildingInfo_drawSenate(BuildingInfoContext *c)
 	Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_DENARII,
 		c->xOffset + 16, c->yOffset + 36);
 
-	struct Data_Building *b = &Data_Buildings[c->buildingId];
+	struct Data_Building *b = building_get(c->buildingId);
 	int width = Widget_GameText_draw(105, 2,
 		c->xOffset + 44, c->yOffset + 43, FONT_NORMAL_BLACK);
 	Widget_GameText_drawNumberWithDescription(8, 0, b->taxIncomeOrStorage,
