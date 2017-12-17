@@ -113,7 +113,7 @@ void FigureAction_handle()
 			}
 			figureActionCallbacks[f->type](f);
 			if (f->state == FigureState_Dead) {
-				Figure_delete(f);
+				figure_delete(f);
 			}
 		}
 	}

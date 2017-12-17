@@ -50,7 +50,7 @@ void Formation_deleteFortAndBanner(int formationId)
         const formation *m = formation_get(formationId);
         if (m->in_use) {
             if (m->standard_figure_id) {
-                Figure_delete(figure_get(m->standard_figure_id));
+                figure_delete(figure_get(m->standard_figure_id));
             }
             formation_clear(formationId);
             Formation_calculateLegionTotals();

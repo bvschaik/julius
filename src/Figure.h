@@ -3,8 +3,6 @@
 
 #include "figure/figure.h"
 
-void Figure_delete(figure *f);
-
 void Figure_createDustCloud(int x, int y, int size);
 void Figure_createFishingPoints();
 void Figure_createHerds();

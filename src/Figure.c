@@ -25,62 +25,6 @@
 
 #include <string.h>
 
-void Figure_delete(figure *f)
-{
-	switch (f->type) {
-		case FIGURE_LABOR_SEEKER:
-		case FIGURE_MARKET_BUYER:
-			if (f->buildingId) {
-				Data_Buildings[f->buildingId].figureId2 = 0;
-			}
-			break;
-		case FIGURE_BALLISTA:
-			Data_Buildings[f->buildingId].figureId4 = 0;
-			break;
-		case FIGURE_DOCKER:
-			for (int i = 0; i < 3; i++) {
-				if (Data_Buildings[f->buildingId].data.other.dockFigureIds[i] == f->id) {
-					Data_Buildings[f->buildingId].data.other.dockFigureIds[i] = 0;
-				}
-			}
-			break;
-		case FIGURE_ENEMY_CAESAR_LEGIONARY:
-			Data_CityInfo.caesarInvasionSoldiersDied++;
-			break;
-		case FIGURE_EXPLOSION:
-		case FIGURE_FORT_STANDARD:
-		case FIGURE_ARROW:
-		case FIGURE_JAVELIN:
-		case FIGURE_BOLT:
-		case FIGURE_SPEAR:
-		case FIGURE_FISH_GULLS:
-		case FIGURE_SHEEP:
-		case FIGURE_WOLF:
-		case FIGURE_ZEBRA:
-		case FIGURE_DELIVERY_BOY:
-		case FIGURE_PATRICIAN:
-			// nothing to do here
-			break;
-		default:
-			if (f->buildingId) {
-				Data_Buildings[f->buildingId].figureId = 0;
-			}
-			break;
-	}
-	if (f->empireCityId) {
-		empire_city_remove_trader(f->empireCityId, f->id);
-	}
-	if (f->immigrantBuildingId) {
-		Data_Buildings[f->buildingId].immigrantFigureId = 0;
-	}
-	figure_route_remove(f);
-	map_figure_delete(f);
-
-    int figureId = f->id;
-    memset(f, 0, sizeof(figure));
-    f->id = figureId;
-}
-
 static const int dustCloudTileOffsets[] = {0, 0, 0, 1, 1, 2};
 static const int dustCloudCCOffsets[] = {0, 7, 14, 7, 14, 7};
 static const int dustCloudDirectionX[] = {
@@ -189,7 +133,7 @@ void Figure_createFlotsam()
 	for (int i = 1; i < MAX_FIGURES; i++) {
         figure *f = figure_get(i);
 		if (f->state && f->type == FIGURE_FLOTSAM) {
-			Figure_delete(f);
+			figure_delete(f);
 		}
 	}
 	const int resourceIds[] = {3, 1, 3, 2, 1, 3, 2, 3, 2, 1, 3, 3, 2, 3, 3, 3, 1, 2, 0, 1};

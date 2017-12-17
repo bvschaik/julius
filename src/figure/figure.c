@@ -1,10 +1,15 @@
 #include "figure/figure.h"
 
 #include "core/random.h"
+#include "empire/city.h"
 #include "figure/name.h"
+#include "figure/route.h"
 #include "figure/trader.h"
 #include "map/figure.h"
 #include "map/grid.h"
+
+#include "Data/Building.h"
+#include "Data/CityInfo.h"
 
 #include <string.h>
 
@@ -51,6 +56,62 @@ figure *figure_create(figure_type type, int x, int y, direction dir)
         f->traderId = trader_create();
     }
     return f;
+}
+
+void figure_delete(figure *f)
+{
+    switch (f->type) {
+        case FIGURE_LABOR_SEEKER:
+        case FIGURE_MARKET_BUYER:
+            if (f->buildingId) {
+                Data_Buildings[f->buildingId].figureId2 = 0;
+            }
+            break;
+        case FIGURE_BALLISTA:
+            Data_Buildings[f->buildingId].figureId4 = 0;
+            break;
+        case FIGURE_DOCKER:
+            for (int i = 0; i < 3; i++) {
+                if (Data_Buildings[f->buildingId].data.other.dockFigureIds[i] == f->id) {
+                    Data_Buildings[f->buildingId].data.other.dockFigureIds[i] = 0;
+                }
+            }
+            break;
+        case FIGURE_ENEMY_CAESAR_LEGIONARY:
+            Data_CityInfo.caesarInvasionSoldiersDied++;
+            break;
+        case FIGURE_EXPLOSION:
+        case FIGURE_FORT_STANDARD:
+        case FIGURE_ARROW:
+        case FIGURE_JAVELIN:
+        case FIGURE_BOLT:
+        case FIGURE_SPEAR:
+        case FIGURE_FISH_GULLS:
+        case FIGURE_SHEEP:
+        case FIGURE_WOLF:
+        case FIGURE_ZEBRA:
+        case FIGURE_DELIVERY_BOY:
+        case FIGURE_PATRICIAN:
+            // nothing to do here
+            break;
+        default:
+            if (f->buildingId) {
+                Data_Buildings[f->buildingId].figureId = 0;
+            }
+            break;
+    }
+    if (f->empireCityId) {
+        empire_city_remove_trader(f->empireCityId, f->id);
+    }
+    if (f->immigrantBuildingId) {
+        Data_Buildings[f->buildingId].immigrantFigureId = 0;
+    }
+    figure_route_remove(f);
+    map_figure_delete(f);
+
+    int figureId = f->id;
+    memset(f, 0, sizeof(figure));
+    f->id = figureId;
 }
 
 int figure_is_dead(figure *f)
