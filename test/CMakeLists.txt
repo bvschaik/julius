@@ -17,6 +17,7 @@ endfunction(except_file)
 except_file(TEST_CORE_FILES "core/lang.c" ${CORE_FILES})
 except_file(TEST_BUILDING_FILES "building/model.c" ${BUILDING_FILES})
 except_file(TEST_GRAPHICS_FILES "graphics/image.c" ${GRAPHICS_FILES})
+except_file(TEST_INPUT_FILES "input/keyboard.c" ${INPUT_FILES})
 
 add_executable(compare
     sav/compare.c
@@ -42,7 +43,7 @@ add_executable(autopilot
     ${EMPIRE_FILES}
     ${FIGURE_FILES}
     ${GAME_FILES}
-    ${INPUT_FILES}
+    ${TEST_INPUT_FILES}
     ${MAP_FILES}
     ${SCENARIO_FILES}
     ${SOUND_FILES}
@@ -110,10 +111,6 @@ add_executable(autopilot
     ${PROJECT_SOURCE_DIR}/src/TerrainWater.c
     ${PROJECT_SOURCE_DIR}/src/Trader.c
     ${PROJECT_SOURCE_DIR}/src/Undo.c
-    ${PROJECT_SOURCE_DIR}/src/Widget_Button.c
-    ${PROJECT_SOURCE_DIR}/src/Widget_Menu.c
-    ${PROJECT_SOURCE_DIR}/src/Widget_Panel.c
-    ${PROJECT_SOURCE_DIR}/src/Widget_Text.c
     ${PROJECT_SOURCE_DIR}/src/Data/Model.c
 )
 
