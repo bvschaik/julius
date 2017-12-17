@@ -5,9 +5,9 @@
 #include "FigureAction.h"
 #include "Terrain.h"
 
-#include "Data/Building.h"
 #include "Data/CityInfo.h"
 
+#include "building/building.h"
 #include "core/calc.h"
 #include "figure/route.h"
 #include "game/time.h"
@@ -139,7 +139,7 @@ static void figureMoveToNextTile(figure *f)
 
 void FigureMovement_initRoaming(figure *f)
 {
-	struct Data_Building *b = &Data_Buildings[f->buildingId];
+	struct Data_Building *b = building_get(f->buildingId);
 	f->progressOnTile = 15;
 	f->roamChooseDestination = 0;
 	f->roamTicksUntilNextTurn = -1;
@@ -382,13 +382,13 @@ static void figureAdvanceRouteTile(figure *f, int roamingEnabled)
 		}
 	} else if (map_terrain_is(targetGridOffset, TERRAIN_ROAD | TERRAIN_ACCESS_RAMP)) {
 		if (roamingEnabled && map_terrain_is(targetGridOffset, TERRAIN_BUILDING)) {
-			if (Data_Buildings[map_building_at(targetGridOffset)].type == BUILDING_GATEHOUSE) {
+			if (building_get(map_building_at(targetGridOffset))->type == BUILDING_GATEHOUSE) {
 				// do not allow roaming through gatehouse
 				f->direction = DIR_FIGURE_REROUTE;
 			}
 		}
 	} else if (map_terrain_is(targetGridOffset, TERRAIN_BUILDING)) {
-		int type = Data_Buildings[map_building_at(targetGridOffset)].type;
+		int type = building_get(map_building_at(targetGridOffset))->type;
 		switch (type) {
 			case BUILDING_WAREHOUSE:
 			case BUILDING_GRANARY:

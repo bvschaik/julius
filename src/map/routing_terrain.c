@@ -1,5 +1,6 @@
 #include "routing_terrain.h"
 
+#include "building/building.h"
 #include "building/type.h"
 #include "core/direction.h"
 #include "graphics/image.h"
@@ -11,7 +12,6 @@
 #include "map/sprite.h"
 #include "map/terrain.h"
 
-#include "Data/Building.h"
 #include "Data/State.h"
 
 static void map_routing_update_land_noncitizen();
@@ -31,9 +31,9 @@ void map_routing_update_land()
 
 static int get_land_type_citizen_building(int grid_offset)
 {
-    int building_id = map_building_at(grid_offset);
+    struct Data_Building *b = building_get(map_building_at(grid_offset));
     int type = CITIZEN_N1_BLOCKED;
-    switch (Data_Buildings[building_id].type) {
+    switch (b->type) {
         case BUILDING_WAREHOUSE:
         case BUILDING_GATEHOUSE:
             type = CITIZEN_0_ROAD;
@@ -42,7 +42,7 @@ static int get_land_type_citizen_building(int grid_offset)
             type = CITIZEN_2_PASSABLE_TERRAIN;
             break;
         case BUILDING_TRIUMPHAL_ARCH:
-            if (Data_Buildings[building_id].subtype.orientation == 3) {
+            if (b->subtype.orientation == 3) {
                 switch (map_property_multi_tile_xy(grid_offset)) {
                     case Edge_X0Y1:
                     case Edge_X1Y1:
@@ -142,7 +142,7 @@ void map_routing_update_land_citizen()
 static int get_land_type_noncitizen(int grid_offset)
 {
     int type = NONCITIZEN_1_BUILDING;
-    switch (Data_Buildings[map_building_at(grid_offset)].type) {
+    switch (building_get(map_building_at(grid_offset))->type) {
         case BUILDING_WAREHOUSE:
         case BUILDING_FORT_GROUND:
             type = NONCITIZEN_0_PASSABLE;

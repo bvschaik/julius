@@ -1,11 +1,11 @@
 #include "city.h"
 
+#include "building/building.h"
 #include "core/time.h"
 #include "game/settings.h"
 #include "sound/channel.h"
 #include "sound/device.h"
 
-#include "Data/Building.h"
 #include "Data/CityInfo.h"
 
 #include <string.h>
@@ -204,10 +204,11 @@ void sound_city_set_volume(int percentage)
 
 void sound_city_mark_building_view(int building_id, int direction)
 {
-    if (Data_Buildings[building_id].state == BuildingState_Unused) {
+    struct Data_Building *b = building_get(building_id);
+    if (b->state == BuildingState_Unused) {
         return;
     }
-    int type = Data_Buildings[building_id].type;
+    int type = b->type;
     int channel = BUILDING_TYPE_TO_CHANNEL_ID[type];
     if (!channel) {
         return;
@@ -215,8 +216,7 @@ void sound_city_mark_building_view(int building_id, int direction)
     if (type == BUILDING_THEATER || type == BUILDING_AMPHITHEATER ||
         type == BUILDING_GLADIATOR_SCHOOL || type == BUILDING_HIPPODROME) {
         // entertainment is shut off when caesar invades
-        if (Data_Buildings[building_id].numWorkers <= 0 ||
-            Data_CityInfo.numImperialSoldiersInCity > 0) {
+        if (b->numWorkers <= 0 || Data_CityInfo.numImperialSoldiersInCity > 0) {
             return;
         }
     }

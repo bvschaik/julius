@@ -1,5 +1,6 @@
 #include "desirability.h"
 
+#include "building/building.h"
 #include "building/model.h"
 #include "core/calc.h"
 #include "map/grid.h"
@@ -7,7 +8,6 @@
 #include "map/ring.h"
 #include "map/terrain.h"
 
-#include "Data/Building.h"
 #include "Data/State.h"
 #include "../Terrain.h"
 
@@ -70,11 +70,11 @@ static void add_to_terrain(int x, int y, int size, int desirability, int step, i
 static void update_buildings()
 {
     for (int i = 1; i <= Data_Buildings_Extra.highestBuildingIdInUse; i++) {
+        struct Data_Building *b = building_get(i);
         if (BuildingIsInUse(i)) {
-            const model_building *model = model_get_building(Data_Buildings[i].type);
+            const model_building *model = model_get_building(b->type);
             add_to_terrain(
-                Data_Buildings[i].x, Data_Buildings[i].y,
-                Data_Buildings[i].size,
+                b->x, b->y, b->size,
                 model->desirability_value,
                 model->desirability_step,
                 model->desirability_step_size,

@@ -1,5 +1,6 @@
 #include "figure/figure.h"
 
+#include "building/building.h"
 #include "core/random.h"
 #include "empire/city.h"
 #include "figure/name.h"
@@ -8,7 +9,6 @@
 #include "map/figure.h"
 #include "map/grid.h"
 
-#include "Data/Building.h"
 #include "Data/CityInfo.h"
 
 #include <string.h>
@@ -60,20 +60,21 @@ figure *figure_create(figure_type type, int x, int y, direction dir)
 
 void figure_delete(figure *f)
 {
+    struct Data_Building *b = building_get(f->buildingId);
     switch (f->type) {
         case FIGURE_LABOR_SEEKER:
         case FIGURE_MARKET_BUYER:
             if (f->buildingId) {
-                Data_Buildings[f->buildingId].figureId2 = 0;
+                b->figureId2 = 0;
             }
             break;
         case FIGURE_BALLISTA:
-            Data_Buildings[f->buildingId].figureId4 = 0;
+            b->figureId4 = 0;
             break;
         case FIGURE_DOCKER:
             for (int i = 0; i < 3; i++) {
-                if (Data_Buildings[f->buildingId].data.other.dockFigureIds[i] == f->id) {
-                    Data_Buildings[f->buildingId].data.other.dockFigureIds[i] = 0;
+                if (b->data.other.dockFigureIds[i] == f->id) {
+                    b->data.other.dockFigureIds[i] = 0;
                 }
             }
             break;
@@ -96,7 +97,7 @@ void figure_delete(figure *f)
             break;
         default:
             if (f->buildingId) {
-                Data_Buildings[f->buildingId].figureId = 0;
+                b->figureId = 0;
             }
             break;
     }
@@ -104,7 +105,7 @@ void figure_delete(figure *f)
         empire_city_remove_trader(f->empireCityId, f->id);
     }
     if (f->immigrantBuildingId) {
-        Data_Buildings[f->buildingId].immigrantFigureId = 0;
+        b->immigrantFigureId = 0;
     }
     figure_route_remove(f);
     map_figure_delete(f);

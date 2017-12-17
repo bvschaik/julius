@@ -32,6 +32,7 @@ set(CORE_FILES
     ${PROJECT_SOURCE_DIR}/src/core/zip.c
 )
 set(BUILDING_FILES
+    ${PROJECT_SOURCE_DIR}/src/building/building.c
     ${PROJECT_SOURCE_DIR}/src/building/count.c
     ${PROJECT_SOURCE_DIR}/src/building/list.c
     ${PROJECT_SOURCE_DIR}/src/building/maintenance.c

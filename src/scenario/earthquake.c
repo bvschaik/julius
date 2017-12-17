@@ -1,5 +1,6 @@
 #include "earthquake.h"
 
+#include "building/building.h"
 #include "city/message.h"
 #include "core/calc.h"
 #include "core/random.h"
@@ -11,7 +12,6 @@
 #include "scenario/data.h"
 #include "sound/effect.h"
 
-#include "Data/Building.h"
 #include "Data/State.h"
 
 #include "../Building.h"
@@ -80,12 +80,12 @@ static int can_advance_earthquake_to_tile(int x, int y)
 static void advance_earthquake_to_tile(int x, int y)
 {
     int gridOffset = map_grid_offset(x, y);
-    int buildingId = map_building_at(gridOffset);
-    if (buildingId) {
-        Building_collapseOnFire(buildingId, 0);
-        Building_collapseLinked(buildingId, 1);
+    int building_id = map_building_at(gridOffset);
+    if (building_id) {
+        Building_collapseOnFire(building_id, 0);
+        Building_collapseLinked(building_id, 1);
         sound_effect_play(SOUND_EFFECT_EXPLOSION);
-        Data_Buildings[buildingId].state = BuildingState_DeletedByGame;
+        building_get(building_id)->state = BuildingState_DeletedByGame;
     }
     map_terrain_set(gridOffset, 0);
     TerrainGraphics_setTileEarthquake(x, y);

@@ -1,5 +1,6 @@
 #include "maintenance.h"
 
+#include "building/building.h"
 #include "building/list.h"
 #include "city/message.h"
 #include "core/calc.h"
@@ -12,7 +13,6 @@
 #include "scenario/property.h"
 #include "sound/effect.h"
 
-#include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/State.h"
 #include "../Building.h"
@@ -32,7 +32,7 @@ void building_maintenance_update_burning_ruins()
     int recalculate_terrain = 0;
     building_list_burning_clear();
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        struct Data_Building *b = &Data_Buildings[i];
+        struct Data_Building *b = building_get(i);
         if (!BuildingIsInUse(i) || b->type != BUILDING_BURNING_RUIN) {
             continue;
         }
@@ -70,21 +70,21 @@ void building_maintenance_update_burning_ruins()
         
         int grid_offset = b->gridOffset;
         int next_building_id = map_building_at(grid_offset + map_grid_direction_delta(fire_spread_direction));
-        if (next_building_id && !Data_Buildings[next_building_id].fireProof) {
+        if (next_building_id && !building_get(next_building_id)->fireProof) {
             Building_collapseOnFire(next_building_id, 0);
             Building_collapseLinked(next_building_id, 1);
             sound_effect_play(SOUND_EFFECT_EXPLOSION);
             recalculate_terrain = 1;
         } else {
             next_building_id = map_building_at(grid_offset + map_grid_direction_delta(dir1));
-            if (next_building_id && !Data_Buildings[next_building_id].fireProof) {
+            if (next_building_id && !building_get(next_building_id)->fireProof) {
                 Building_collapseOnFire(next_building_id, 0);
                 Building_collapseLinked(next_building_id, 1);
                 sound_effect_play(SOUND_EFFECT_EXPLOSION);
                 recalculate_terrain = 1;
             } else {
                 next_building_id = map_building_at(grid_offset + map_grid_direction_delta(dir2));
-                if (next_building_id && !Data_Buildings[next_building_id].fireProof) {
+                if (next_building_id && !building_get(next_building_id)->fireProof) {
                     Building_collapseOnFire(next_building_id, 0);
                     Building_collapseLinked(next_building_id, 1);
                     sound_effect_play(SOUND_EFFECT_EXPLOSION);
@@ -108,7 +108,7 @@ int building_maintenance_get_closest_burning_ruin(int x, int y, int *distance)
     int burning_size = building_list_burning_size();
     for (int i = 0; i < burning_size; i++) {
         int building_id = burning[i];
-        struct Data_Building *b = &Data_Buildings[building_id];
+        struct Data_Building *b = building_get(building_id);
         if (BuildingIsInUse(building_id) && b->type == BUILDING_BURNING_RUIN && !b->ruinHasPlague && b->distanceFromEntry) {
             int dist = calc_maximum_distance(x, y, b->x, b->y);
             if (b->figureId4) {
@@ -164,7 +164,7 @@ void building_maintenance_check_fire_collapse()
     int recalculate_terrain = 0;
     int random_global = random_byte() & 7;
     for (int i = 1; i <= Data_Buildings_Extra.highestBuildingIdInUse; i++) {
-        struct Data_Building *b = &Data_Buildings[i];
+        struct Data_Building *b = building_get(i);
         if (!BuildingIsInUse(i) || b->fireProof) {
             continue;
         }

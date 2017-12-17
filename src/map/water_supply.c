@@ -1,5 +1,6 @@
 #include "water_supply.h"
 
+#include "building/building.h"
 #include "building/list.h"
 #include "graphics/image.h"
 #include "map/aqueduct.h"
@@ -13,7 +14,6 @@
 
 #include "../Terrain.h"
 
-#include "Data/Building.h"
 #include "Data/State.h"
 
 #include <string.h>
@@ -32,7 +32,7 @@ void map_water_supply_update_houses()
 {
     building_list_small_clear();
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        struct Data_Building *b = &Data_Buildings[i];
+        struct Data_Building *b = building_get(i);
         if (!BuildingIsInUse(i)) {
             continue;
         }
@@ -93,7 +93,7 @@ static void fill_aqueducts_from_offset(int grid_offset)
         for (int i = 0; i < 4; i++) {
             int new_offset = grid_offset + ADJACENT_OFFSETS[i];
             int building_id = map_building_at(new_offset);
-            struct Data_Building *b = &Data_Buildings[building_id];
+            struct Data_Building *b = building_get(building_id);
             if (building_id && b->type == BUILDING_RESERVOIR) {
                 // check if aqueduct connects to reservoir --> doesn't connect to corner
                 int xy = map_property_multi_tile_xy(new_offset);
@@ -136,7 +136,7 @@ void map_water_supply_update_reservoir_fountain()
     building_list_large_clear(1);
     // mark reservoirs next to water
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        struct Data_Building *b = &Data_Buildings[i];
+        struct Data_Building *b = building_get(i);
         if (BuildingIsInUse(i) && b->type == BUILDING_RESERVOIR) {
             building_list_large_add(i);
             if (Terrain_existsTileWithinAreaWithType(b->x - 1, b->y - 1, 5, TERRAIN_WATER)) {
@@ -155,7 +155,7 @@ void map_water_supply_update_reservoir_fountain()
         changed = 0;
         for (int i = 0; i < total_reservoirs; i++) {
             int building_id = reservoirs[i];
-            struct Data_Building *b = &Data_Buildings[building_id];
+            struct Data_Building *b = building_get(building_id);
             if (b->hasWaterAccess == 2) {
                 b->hasWaterAccess = 1;
                 changed = 1;
@@ -167,14 +167,14 @@ void map_water_supply_update_reservoir_fountain()
     }
     // mark reservoir ranges
     for (int i = 0; i < total_reservoirs; i++) {
-        struct Data_Building *b = &Data_Buildings[reservoirs[i]];
+        struct Data_Building *b = building_get(reservoirs[i]);
         if (b->hasWaterAccess) {
             Terrain_setWithRadius(b->x, b->y, 3, 10, TERRAIN_RESERVOIR_RANGE);
         }
     }
     // fountains
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        struct Data_Building *b = &Data_Buildings[i];
+        struct Data_Building *b = building_get(i);
         if (!BuildingIsInUse(i) || b->type != BUILDING_FOUNTAIN) {
             continue;
         }

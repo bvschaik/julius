@@ -1,13 +1,12 @@
 #include "routing.h"
 
+#include "building/building.h"
 #include "map/building.h"
 #include "map/figure.h"
 #include "map/grid.h"
 #include "map/road_aqueduct.h"
 #include "map/routing_data.h"
 #include "map/terrain.h"
-
-#include "Data/Building.h"
 
 #define MAX_QUEUE GRID_SIZE * GRID_SIZE
 #define GUARD 50000
@@ -295,7 +294,7 @@ static int map_can_place_initial_road_or_aqueduct(int gridOffset, int isAqueduct
             return 1;
         }
         if (map_terrain_is(gridOffset, TERRAIN_BUILDING)) {
-            if (Data_Buildings[map_building_at(gridOffset)].type == BUILDING_RESERVOIR) {
+            if (building_get(map_building_at(gridOffset))->type == BUILDING_RESERVOIR) {
                 return 1;
             }
         }

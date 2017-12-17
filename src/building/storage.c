@@ -1,10 +1,9 @@
 #include "storage.h"
 
-#include <string.h>
-
-#include "Data/Building.h"
-
+#include "building/building.h"
 #include "building/type.h"
+
+#include <string.h>
 
 #define MAX_STORAGES 200
 
@@ -30,7 +29,7 @@ void building_storage_reset_building_ids()
     }
     
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        struct Data_Building *b = &Data_Buildings[i];
+        struct Data_Building *b = building_get(i);
         if (b->state == BuildingState_Unused) {
             continue;
         }

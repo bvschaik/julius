@@ -1,5 +1,6 @@
 #include "CityBuildings_private.h"
 
+#include "building/building.h"
 #include "figure/figure.h"
 #include "game/resource.h"
 #include "map/desirability.h"
@@ -218,7 +219,7 @@ void UI_CityBuildings_drawOverlayTopsFiguresAnimation(int overlay)
 		FOREACH_X_VIEW {
 			int draw = 0;
 			if (map_building_at(gridOffset)) {
-				int btype = Data_Buildings[map_building_at(gridOffset)].type;
+				int btype = building_get(map_building_at(gridOffset))->type;
 				switch (overlay) {
 					case Overlay_Fire:
 					case Overlay_Crime:
@@ -249,7 +250,7 @@ void UI_CityBuildings_drawOverlayTopsFiguresAnimation(int overlay)
 			if (img->num_animation_sprites && draw) {
 				if (map_property_is_draw_tile(gridOffset)) {
 					int buildingId = map_building_at(gridOffset);
-					struct Data_Building *b = &Data_Buildings[buildingId];
+					struct Data_Building *b = building_get(buildingId);
 					int colorMask = 0;
 					if (b->type == BUILDING_GRANARY) {
 						Graphics_drawImageMasked(image_group(GROUP_BUILDING_GRANARY) + 1,
@@ -376,10 +377,10 @@ static void drawTopForWaterOverlay(int gridOffset, int xOffset, int yOffset)
 			draw_top_with_size(gridOffset, xOffset, yOffset);
 		}
 	} else if (map_building_at(gridOffset)) {
-		int buildingId = map_building_at(gridOffset);
-		if (Data_Buildings[buildingId].type == BUILDING_WELL || Data_Buildings[buildingId].type == BUILDING_FOUNTAIN) {
+		struct Data_Building *b = building_get(map_building_at(gridOffset));
+		if (b->type == BUILDING_WELL || b->type == BUILDING_FOUNTAIN) {
 			DRAWTOP_SIZE1(map_image_at(gridOffset), xOffset, yOffset);
-		} else if (Data_Buildings[buildingId].type == BUILDING_RESERVOIR) {
+		} else if (b->type == BUILDING_RESERVOIR) {
 			DRAWTOP_SIZE3(map_image_at(gridOffset), xOffset, yOffset);
 		}
 	}
@@ -425,7 +426,7 @@ static void drawTopForNativeOverlay(int gridOffset, int xOffset, int yOffset)
 		}
 	} else if (map_building_at(gridOffset)) {
 		int graphicId = map_image_at(gridOffset);
-		switch (Data_Buildings[map_building_at(gridOffset)].type) {
+		switch (building_get(map_building_at(gridOffset))->type) {
 			case BUILDING_NATIVE_HUT:
 				DRAWTOP_SIZE1(graphicId, xOffset, yOffset);
 				break;
@@ -488,7 +489,7 @@ static void drawBuildingFootprintForOverlay(int buildingId, int gridOffset, int 
 	
 	int graphicId;
 	int origGraphicId = map_image_at(gridOffset);
-	struct Data_Building *b = &Data_Buildings[buildingId];
+	struct Data_Building *b = building_get(buildingId);
 	if (b->size == 1) {
 		graphicId = image_group(GROUP_TERRAIN_OVERLAY);
 		if (b->houseSize) {
@@ -877,53 +878,47 @@ static void drawBuildingTopForDesirabilityOverlay(int gridOffset, int xOffset, i
 
 static void drawBuildingTopForFireOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	int graphicId = map_image_at(gridOffset);
-	if (Data_Buildings[buildingId].type == BUILDING_PREFECTURE) {
-		DRAWTOP_SIZE1(graphicId, xOffset, yOffset);
-	} else if (Data_Buildings[buildingId].type == BUILDING_BURNING_RUIN) {
-		DRAWTOP_SIZE1(graphicId, xOffset, yOffset);
-	} else if (Data_Buildings[buildingId].fireRisk > 0) {
+	struct Data_Building *b = building_get(buildingId);
+	if (b->type == BUILDING_PREFECTURE) {
+		DRAWTOP_SIZE1(map_image_at(gridOffset), xOffset, yOffset);
+	} else if (b->type == BUILDING_BURNING_RUIN) {
+		DRAWTOP_SIZE1(map_image_at(gridOffset), xOffset, yOffset);
+	} else if (b->fireRisk > 0) {
 		int draw = 1;
-		if (Data_Buildings[buildingId].type >= BUILDING_WHEAT_FARM &&
-			Data_Buildings[buildingId].type <= BUILDING_PIG_FARM) {
+		if (b->type >= BUILDING_WHEAT_FARM && b->type <= BUILDING_PIG_FARM) {
 			draw = is_drawable_farm_corner(gridOffset, Data_State.map.orientation);
 		}
 		if (draw) {
-			drawOverlayColumn(
-				Data_Buildings[buildingId].fireRisk / 10,
-				xOffset, yOffset, 1);
+			drawOverlayColumn(b->fireRisk / 10, xOffset, yOffset, 1);
 		}
 	}
 }
 
 static void drawBuildingTopForDamageOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	int graphicId = map_image_at(gridOffset);
-	if (Data_Buildings[buildingId].type == BUILDING_ENGINEERS_POST) {
-		DRAWTOP_SIZE1(graphicId, xOffset, yOffset);
-	} else if (Data_Buildings[buildingId].damageRisk > 0) {
+	struct Data_Building *b = building_get(buildingId);
+	if (b->type == BUILDING_ENGINEERS_POST) {
+		DRAWTOP_SIZE1(map_image_at(gridOffset), xOffset, yOffset);
+	} else if (b->damageRisk > 0) {
 		int draw = 1;
-		if (Data_Buildings[buildingId].type >= BUILDING_WHEAT_FARM &&
-			Data_Buildings[buildingId].type <= BUILDING_PIG_FARM) {
+		if (b->type >= BUILDING_WHEAT_FARM && b->type <= BUILDING_PIG_FARM) {
 			draw = is_drawable_farm_corner(gridOffset, Data_State.map.orientation);
 		}
 		if (draw) {
-			drawOverlayColumn(
-				Data_Buildings[buildingId].damageRisk / 10,
-				xOffset, yOffset, 1);
+			drawOverlayColumn(b->damageRisk / 10, xOffset, yOffset, 1);
 		}
 	}
 }
 
 static void drawBuildingTopForCrimeOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	int graphicId = map_image_at(gridOffset);
-	if (Data_Buildings[buildingId].type == BUILDING_PREFECTURE) {
-		DRAWTOP_SIZE1(graphicId, xOffset, yOffset);
-	} else if (Data_Buildings[buildingId].type == BUILDING_BURNING_RUIN) {
-		DRAWTOP_SIZE1(graphicId, xOffset, yOffset);
-	} else if (Data_Buildings[buildingId].houseSize) {
-		int happiness = Data_Buildings[buildingId].sentiment.houseHappiness;
+	struct Data_Building *b = building_get(buildingId);
+	if (b->type == BUILDING_PREFECTURE) {
+		DRAWTOP_SIZE1(map_image_at(gridOffset), xOffset, yOffset);
+	} else if (b->type == BUILDING_BURNING_RUIN) {
+		DRAWTOP_SIZE1(map_image_at(gridOffset), xOffset, yOffset);
+	} else if (b->houseSize) {
+		int happiness = b->sentiment.houseHappiness;
 		if (happiness < 50) {
 			int colVal;
 			if (happiness <= 0) {
@@ -946,29 +941,25 @@ static void drawBuildingTopForCrimeOverlay(int gridOffset, int buildingId, int x
 
 static void drawBuildingTopForEntertainmentOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	int graphicId = map_image_at(gridOffset);
-	switch (Data_Buildings[buildingId].type) {
+	struct Data_Building *b = building_get(buildingId);
+	switch (b->type) {
 		case BUILDING_THEATER:
-			DRAWTOP_SIZE2(graphicId, xOffset, yOffset);
+			DRAWTOP_SIZE2(map_image_at(gridOffset), xOffset, yOffset);
 			break;
 		case BUILDING_ACTOR_COLONY:
 		case BUILDING_GLADIATOR_SCHOOL:
 		case BUILDING_LION_HOUSE:
 		case BUILDING_CHARIOT_MAKER:
 		case BUILDING_AMPHITHEATER:
-			DRAWTOP_SIZE3(graphicId, xOffset, yOffset);
+			DRAWTOP_SIZE3(map_image_at(gridOffset), xOffset, yOffset);
 			break;
 		case BUILDING_COLOSSEUM:
 		case BUILDING_HIPPODROME:
-			DRAWTOP_SIZE5(graphicId, xOffset, yOffset);
+			DRAWTOP_SIZE5(map_image_at(gridOffset), xOffset, yOffset);
 			break;
 		default:
-			if (Data_Buildings[buildingId].houseSize) {
-				if (Data_Buildings[buildingId].data.house.entertainment) {
-					drawOverlayColumn(
-						Data_Buildings[buildingId].data.house.entertainment / 10,
-						xOffset, yOffset, 0);
-				}
+			if (b->houseSize && b->data.house.entertainment) {
+				drawOverlayColumn(b->data.house.entertainment / 10, xOffset, yOffset, 0);
 			}
 			break;
 	}
@@ -976,22 +967,19 @@ static void drawBuildingTopForEntertainmentOverlay(int gridOffset, int buildingI
 
 static void drawBuildingTopForEducationOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	int graphicId = map_image_at(gridOffset);
-	switch (Data_Buildings[buildingId].type) {
+	struct Data_Building *b = building_get(buildingId);
+	switch (b->type) {
 		case BUILDING_ACADEMY:
-			DRAWTOP_SIZE3(graphicId, xOffset, yOffset);
+			DRAWTOP_SIZE3(map_image_at(gridOffset), xOffset, yOffset);
 			break;
 		case BUILDING_LIBRARY:
 		case BUILDING_SCHOOL:
-			DRAWTOP_SIZE2(graphicId, xOffset, yOffset);
+			DRAWTOP_SIZE2(map_image_at(gridOffset), xOffset, yOffset);
 			break;
 		default:
-			if (Data_Buildings[buildingId].houseSize) {
-				if (Data_Buildings[buildingId].data.house.education) {
-					drawOverlayColumn(
-						Data_Buildings[buildingId].data.house.education * 3 - 1,
-						xOffset, yOffset, 0);
-				}
+			if (b->houseSize && b->data.house.education) {
+				drawOverlayColumn(b->data.house.education * 3 - 1,
+					xOffset, yOffset, 0);
 			}
 			break;
 	}
@@ -999,21 +987,17 @@ static void drawBuildingTopForEducationOverlay(int gridOffset, int buildingId, i
 
 static void drawBuildingTopForTheaterOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	int graphicId = map_image_at(gridOffset);
-	switch (Data_Buildings[buildingId].type) {
+	struct Data_Building *b = building_get(buildingId);
+	switch (b->type) {
 		case BUILDING_ACTOR_COLONY:
-			DRAWTOP_SIZE3(graphicId, xOffset, yOffset);
+			DRAWTOP_SIZE3(map_image_at(gridOffset), xOffset, yOffset);
 			break;
 		case BUILDING_THEATER:
-			DRAWTOP_SIZE2(graphicId, xOffset, yOffset);
+			DRAWTOP_SIZE2(map_image_at(gridOffset), xOffset, yOffset);
 			break;
 		default:
-			if (Data_Buildings[buildingId].houseSize) {
-				if (Data_Buildings[buildingId].data.house.theater) {
-					drawOverlayColumn(
-						Data_Buildings[buildingId].data.house.theater / 10,
-						xOffset, yOffset, 0);
-				}
+			if (b->houseSize && b->data.house.theater) {
+				drawOverlayColumn(b->data.house.theater / 10, xOffset, yOffset, 0);
 			}
 			break;
 	}
@@ -1021,20 +1005,16 @@ static void drawBuildingTopForTheaterOverlay(int gridOffset, int buildingId, int
 
 static void drawBuildingTopForAmphitheaterOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	int graphicId = map_image_at(gridOffset);
-	switch (Data_Buildings[buildingId].type) {
+	struct Data_Building *b = building_get(buildingId);
+	switch (b->type) {
 		case BUILDING_ACTOR_COLONY:
 		case BUILDING_GLADIATOR_SCHOOL:
 		case BUILDING_AMPHITHEATER:
-			DRAWTOP_SIZE3(graphicId, xOffset, yOffset);
+			DRAWTOP_SIZE3(map_image_at(gridOffset), xOffset, yOffset);
 			break;
 		default:
-			if (Data_Buildings[buildingId].houseSize) {
-				if (Data_Buildings[buildingId].data.house.amphitheaterActor) {
-					drawOverlayColumn(
-						Data_Buildings[buildingId].data.house.amphitheaterActor / 10,
-						xOffset, yOffset, 0);
-				}
+			if (b->houseSize && b->data.house.amphitheaterActor) {
+				drawOverlayColumn(b->data.house.amphitheaterActor / 10, xOffset, yOffset, 0);
 			}
 			break;
 	}
@@ -1042,22 +1022,18 @@ static void drawBuildingTopForAmphitheaterOverlay(int gridOffset, int buildingId
 
 static void drawBuildingTopForColosseumOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	int graphicId = map_image_at(gridOffset);
-	switch (Data_Buildings[buildingId].type) {
+	struct Data_Building *b = building_get(buildingId);
+	switch (b->type) {
 		case BUILDING_GLADIATOR_SCHOOL:
 		case BUILDING_LION_HOUSE:
-			DRAWTOP_SIZE3(graphicId, xOffset, yOffset);
+			DRAWTOP_SIZE3(map_image_at(gridOffset), xOffset, yOffset);
 			break;
 		case BUILDING_COLOSSEUM:
-			DRAWTOP_SIZE5(graphicId, xOffset, yOffset);
+			DRAWTOP_SIZE5(map_image_at(gridOffset), xOffset, yOffset);
 			break;
 		default:
-			if (Data_Buildings[buildingId].houseSize) {
-				if (Data_Buildings[buildingId].data.house.colosseumGladiator) {
-					drawOverlayColumn(
-						Data_Buildings[buildingId].data.house.colosseumGladiator / 10,
-						xOffset, yOffset, 0);
-				}
+			if (b->houseSize && b->data.house.colosseumGladiator) {
+				drawOverlayColumn(b->data.house.colosseumGladiator / 10, xOffset, yOffset, 0);
 			}
 			break;
 	}
@@ -1065,34 +1041,29 @@ static void drawBuildingTopForColosseumOverlay(int gridOffset, int buildingId, i
 
 static void drawBuildingTopForHippodromeOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	int graphicId = map_image_at(gridOffset);
-	if (Data_Buildings[buildingId].type == BUILDING_HIPPODROME) {
-		DRAWTOP_SIZE5(graphicId, xOffset, yOffset);
-	} else if (Data_Buildings[buildingId].type == BUILDING_CHARIOT_MAKER) {
-		DRAWTOP_SIZE3(graphicId, xOffset, yOffset);
-	} else if (Data_Buildings[buildingId].houseSize) {
-		if (Data_Buildings[buildingId].data.house.hippodrome) {
-			drawOverlayColumn(
-				Data_Buildings[buildingId].data.house.hippodrome / 10,
-				xOffset, yOffset, 0);
-		}
+	struct Data_Building *b = building_get(buildingId);
+	if (b->type == BUILDING_HIPPODROME) {
+		DRAWTOP_SIZE5(map_image_at(gridOffset), xOffset, yOffset);
+	} else if (b->type == BUILDING_CHARIOT_MAKER) {
+		DRAWTOP_SIZE3(map_image_at(gridOffset), xOffset, yOffset);
+	} else if (b->houseSize && b->data.house.hippodrome) {
+		drawOverlayColumn(b->data.house.hippodrome / 10, xOffset, yOffset, 0);
 	}
 }
 
 static void drawBuildingTopForFoodStocksOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	int graphicId = map_image_at(gridOffset);
-	switch (Data_Buildings[buildingId].type) {
+	struct Data_Building *b = building_get(buildingId);
+	switch (b->type) {
 		case BUILDING_MARKET:
 		case BUILDING_WHARF:
-			DRAWTOP_SIZE2(graphicId, xOffset, yOffset);
+			DRAWTOP_SIZE2(map_image_at(gridOffset), xOffset, yOffset);
 			break;
 		case BUILDING_GRANARY:
-			DRAWTOP_SIZE3(graphicId, xOffset, yOffset);
+			DRAWTOP_SIZE3(map_image_at(gridOffset), xOffset, yOffset);
 			break;
 		default:
-			if (Data_Buildings[buildingId].houseSize) {
-				struct Data_Building *b = &Data_Buildings[buildingId];
+			if (b->houseSize) {
 				if (model_get_house(b->subtype.houseLevel)->food_types) {
 					int pop = b->housePopulation;
 					int stocks = 0;
@@ -1119,44 +1090,36 @@ static void drawBuildingTopForFoodStocksOverlay(int gridOffset, int buildingId, 
 
 static void drawBuildingTopForBathhouseOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	int graphicId = map_image_at(gridOffset);
-	if (Data_Buildings[buildingId].type == BUILDING_BATHHOUSE) {
-		DRAWTOP_SIZE2(graphicId, xOffset, yOffset);
-	} else if (Data_Buildings[buildingId].houseSize) {
-		if (Data_Buildings[buildingId].data.house.bathhouse) {
-			drawOverlayColumn(
-				Data_Buildings[buildingId].data.house.bathhouse / 10,
-				xOffset, yOffset, 0);
-		}
+	struct Data_Building *b = building_get(buildingId);
+	if (b->type == BUILDING_BATHHOUSE) {
+		DRAWTOP_SIZE2(map_image_at(gridOffset), xOffset, yOffset);
+	} else if (b->houseSize && b->data.house.bathhouse) {
+		drawOverlayColumn(b->data.house.bathhouse / 10, xOffset, yOffset, 0);
 	}
 }
 
 static void drawBuildingTopForReligionOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	int graphicId = map_image_at(gridOffset);
-	switch (Data_Buildings[buildingId].type) {
+	struct Data_Building *b = building_get(buildingId);
+	switch (b->type) {
 		case BUILDING_ORACLE:
 		case BUILDING_SMALL_TEMPLE_CERES:
 		case BUILDING_SMALL_TEMPLE_NEPTUNE:
 		case BUILDING_SMALL_TEMPLE_MERCURY:
 		case BUILDING_SMALL_TEMPLE_MARS:
 		case BUILDING_SMALL_TEMPLE_VENUS:
-			DRAWTOP_SIZE2(graphicId, xOffset, yOffset);
+			DRAWTOP_SIZE2(map_image_at(gridOffset), xOffset, yOffset);
 			break;
 		case BUILDING_LARGE_TEMPLE_CERES:
 		case BUILDING_LARGE_TEMPLE_NEPTUNE:
 		case BUILDING_LARGE_TEMPLE_MERCURY:
 		case BUILDING_LARGE_TEMPLE_MARS:
 		case BUILDING_LARGE_TEMPLE_VENUS:
-			DRAWTOP_SIZE3(graphicId, xOffset, yOffset);
+			DRAWTOP_SIZE3(map_image_at(gridOffset), xOffset, yOffset);
 			break;
 		default:
-			if (Data_Buildings[buildingId].houseSize) {
-				if (Data_Buildings[buildingId].data.house.numGods) {
-					drawOverlayColumn(
-						Data_Buildings[buildingId].data.house.numGods * 17 / 10,
-						xOffset, yOffset, 0);
-				}
+			if (b->houseSize && b->data.house.numGods) {
+				drawOverlayColumn(b->data.house.numGods * 17 / 10, xOffset, yOffset, 0);
 			}
 			break;
 	}
@@ -1164,99 +1127,73 @@ static void drawBuildingTopForReligionOverlay(int gridOffset, int buildingId, in
 
 static void drawBuildingTopForSchoolOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	int graphicId = map_image_at(gridOffset);
-	if (Data_Buildings[buildingId].type == BUILDING_SCHOOL) {
-		DRAWTOP_SIZE2(graphicId, xOffset, yOffset);
-	} else if (Data_Buildings[buildingId].houseSize) {
-		if (Data_Buildings[buildingId].data.house.school) {
-			drawOverlayColumn(
-				Data_Buildings[buildingId].data.house.school / 10,
-				xOffset, yOffset, 0);
-		}
+	struct Data_Building *b = building_get(buildingId);
+	if (b->type == BUILDING_SCHOOL) {
+		DRAWTOP_SIZE2(map_image_at(gridOffset), xOffset, yOffset);
+	} else if (b->houseSize && b->data.house.school) {
+		drawOverlayColumn(b->data.house.school / 10, xOffset, yOffset, 0);
 	}
 }
 
 static void drawBuildingTopForLibraryOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	int graphicId = map_image_at(gridOffset);
-	if (Data_Buildings[buildingId].type == BUILDING_LIBRARY) {
-		DRAWTOP_SIZE2(graphicId, xOffset, yOffset);
-	} else if (Data_Buildings[buildingId].houseSize) {
-		if (Data_Buildings[buildingId].data.house.library) {
-			drawOverlayColumn(
-				Data_Buildings[buildingId].data.house.library / 10,
-				xOffset, yOffset, 0);
-		}
+	struct Data_Building *b = building_get(buildingId);
+	if (b->type == BUILDING_LIBRARY) {
+		DRAWTOP_SIZE2(map_image_at(gridOffset), xOffset, yOffset);
+	} else if (b->houseSize && b->data.house.library) {
+		drawOverlayColumn(b->data.house.library / 10,xOffset, yOffset, 0);
 	}
 }
 
 static void drawBuildingTopForAcademyOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	int graphicId = map_image_at(gridOffset);
-	if (Data_Buildings[buildingId].type == BUILDING_ACADEMY) {
-		DRAWTOP_SIZE3(graphicId, xOffset, yOffset);
-	} else if (Data_Buildings[buildingId].houseSize) {
-		if (Data_Buildings[buildingId].data.house.academy) {
-			drawOverlayColumn(
-				Data_Buildings[buildingId].data.house.academy / 10,
-				xOffset, yOffset, 0);
-		}
+	struct Data_Building *b = building_get(buildingId);
+	if (b->type == BUILDING_ACADEMY) {
+		DRAWTOP_SIZE3(map_image_at(gridOffset), xOffset, yOffset);
+	} else if (b->houseSize && b->data.house.academy) {
+		drawOverlayColumn(b->data.house.academy / 10, xOffset, yOffset, 0);
 	}
 }
 
 static void drawBuildingTopForBarberOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	int graphicId = map_image_at(gridOffset);
-	if (Data_Buildings[buildingId].type == BUILDING_BARBER) {
-		DRAWTOP_SIZE1(graphicId, xOffset, yOffset);
-	} else if (Data_Buildings[buildingId].houseSize) {
-		if (Data_Buildings[buildingId].data.house.barber) {
-			drawOverlayColumn(
-				Data_Buildings[buildingId].data.house.barber / 10,
-				xOffset, yOffset, 0);
-		}
+	struct Data_Building *b = building_get(buildingId);
+	if (b->type == BUILDING_BARBER) {
+		DRAWTOP_SIZE1(map_image_at(gridOffset), xOffset, yOffset);
+	} else if (b->houseSize && b->data.house.barber) {
+		drawOverlayColumn(b->data.house.barber / 10, xOffset, yOffset, 0);
 	}
 }
 
 static void drawBuildingTopForClinicsOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	int graphicId = map_image_at(gridOffset);
-	if (Data_Buildings[buildingId].type == BUILDING_DOCTOR) {
-		DRAWTOP_SIZE1(graphicId, xOffset, yOffset);
-	} else if (Data_Buildings[buildingId].houseSize) {
-		if (Data_Buildings[buildingId].data.house.clinic) {
-			drawOverlayColumn(
-				Data_Buildings[buildingId].data.house.clinic / 10,
-				xOffset, yOffset, 0);
-		}
+	struct Data_Building *b = building_get(buildingId);
+	if (b->type == BUILDING_DOCTOR) {
+		DRAWTOP_SIZE1(map_image_at(gridOffset), xOffset, yOffset);
+	} else if (b->houseSize && b->data.house.clinic) {
+		drawOverlayColumn(b->data.house.clinic / 10, xOffset, yOffset, 0);
 	}
 }
 
 static void drawBuildingTopForHospitalOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	int graphicId = map_image_at(gridOffset);
-	if (Data_Buildings[buildingId].type == BUILDING_HOSPITAL) {
-		DRAWTOP_SIZE3(graphicId, xOffset, yOffset);
-	} else if (Data_Buildings[buildingId].houseSize) {
-		if (Data_Buildings[buildingId].data.house.hospital) {
-			drawOverlayColumn(
-				Data_Buildings[buildingId].data.house.hospital / 10,
-				xOffset, yOffset, 0);
-		}
+	struct Data_Building *b = building_get(buildingId);
+	if (b->type == BUILDING_HOSPITAL) {
+		DRAWTOP_SIZE3(map_image_at(gridOffset), xOffset, yOffset);
+	} else if (b->houseSize && b->data.house.hospital) {
+		drawOverlayColumn(b->data.house.hospital / 10, xOffset, yOffset, 0);
 	}
 }
 
 static void drawBuildingTopForTaxIncomeOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	int graphicId = map_image_at(gridOffset);
-	if (Data_Buildings[buildingId].type == BUILDING_SENATE_UPGRADED) {
-		DRAWTOP_SIZE5(graphicId, xOffset, yOffset);
-	} else if (Data_Buildings[buildingId].type == BUILDING_FORUM) {
-		DRAWTOP_SIZE2(graphicId, xOffset, yOffset);
-	} else if (Data_Buildings[buildingId].houseSize) {
-		int pct = calc_adjust_with_percentage(
-			Data_Buildings[buildingId].taxIncomeOrStorage / 2,
-			Data_CityInfo.taxPercentage);
+	struct Data_Building *b = building_get(buildingId);
+	if (b->type == BUILDING_SENATE_UPGRADED) {
+		DRAWTOP_SIZE5(map_image_at(gridOffset), xOffset, yOffset);
+	} else if (b->type == BUILDING_FORUM) {
+		DRAWTOP_SIZE2(map_image_at(gridOffset), xOffset, yOffset);
+	} else if (b->houseSize) {
+		int pct = calc_adjust_with_percentage(b->taxIncomeOrStorage / 2, Data_CityInfo.taxPercentage);
 		if (pct > 0) {
 			drawOverlayColumn(pct / 25, xOffset, yOffset, 0);
 		}
@@ -1275,27 +1212,28 @@ static int is_problem_cartpusher(int figure_id)
 
 static void drawBuildingTopForProblemsOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	if (Data_Buildings[buildingId].houseSize) {
+    struct Data_Building *b = building_get(buildingId);
+	if (b->houseSize) {
 		return;
 	}
-	int type = Data_Buildings[buildingId].type;
+	int type = b->type;
 	if (type == BUILDING_FOUNTAIN || type == BUILDING_BATHHOUSE) {
-		if (!Data_Buildings[buildingId].hasWaterAccess) {
-			Data_Buildings[buildingId].showOnProblemOverlay = 1;
+		if (!b->hasWaterAccess) {
+			b->showOnProblemOverlay = 1;
 		}
 	} else if (type >= BUILDING_WHEAT_FARM && type <= BUILDING_CLAY_PIT) {
-		if (is_problem_cartpusher(Data_Buildings[buildingId].figureId)) {
-			Data_Buildings[buildingId].showOnProblemOverlay = 1;
+		if (is_problem_cartpusher(b->figureId)) {
+			b->showOnProblemOverlay = 1;
 		}
 	} else if (BuildingIsWorkshop(type)) {
-		if (is_problem_cartpusher(Data_Buildings[buildingId].figureId)) {
-			Data_Buildings[buildingId].showOnProblemOverlay = 1;
-		} else if (Data_Buildings[buildingId].loadsStored <= 0) {
-			Data_Buildings[buildingId].showOnProblemOverlay = 1;
+		if (is_problem_cartpusher(b->figureId)) {
+			b->showOnProblemOverlay = 1;
+		} else if (b->loadsStored <= 0) {
+			b->showOnProblemOverlay = 1;
 		}
 	}
 
-	if (Data_Buildings[buildingId].showOnProblemOverlay <= 0) {
+	if (b->showOnProblemOverlay <= 0) {
 		return;
 	}
 
@@ -1308,24 +1246,23 @@ static void drawBuildingTopForProblemsOverlay(int gridOffset, int buildingId, in
 		return;
 	}
 	if (type == BUILDING_GRANARY) {
-		int graphicId = map_image_at(gridOffset);
-		const image *img = image_get(graphicId);
+		const image *img = image_get(map_image_at(gridOffset));
 		Graphics_drawImage(image_group(GROUP_BUILDING_GRANARY) + 1,
 			xOffset + img->sprite_offset_x,
 			yOffset + img->sprite_offset_y - 30 -
 			(img->height - 90));
-		if (Data_Buildings[buildingId].data.storage.resourceStored[RESOURCE_NONE] < 2400) {
+		if (b->data.storage.resourceStored[RESOURCE_NONE] < 2400) {
 			Graphics_drawImage(image_group(GROUP_BUILDING_GRANARY) + 2,
 				xOffset + 32, yOffset - 61);
-			if (Data_Buildings[buildingId].data.storage.resourceStored[RESOURCE_NONE] < 1800) {
+			if (b->data.storage.resourceStored[RESOURCE_NONE] < 1800) {
 				Graphics_drawImage(image_group(GROUP_BUILDING_GRANARY) + 3,
 					xOffset + 56, yOffset - 51);
 			}
-			if (Data_Buildings[buildingId].data.storage.resourceStored[RESOURCE_NONE] < 1200) {
+			if (b->data.storage.resourceStored[RESOURCE_NONE] < 1200) {
 				Graphics_drawImage(image_group(GROUP_BUILDING_GRANARY) + 4,
 					xOffset + 91, yOffset - 51);
 			}
-			if (Data_Buildings[buildingId].data.storage.resourceStored[RESOURCE_NONE] < 600) {
+			if (b->data.storage.resourceStored[RESOURCE_NONE] < 600) {
 				Graphics_drawImage(image_group(GROUP_BUILDING_GRANARY) + 5,
 					xOffset + 118, yOffset - 61);
 			}

@@ -1,7 +1,6 @@
 #include "Animation.h"
 
-#include "Data/Building.h"
-
+#include "building/building.h"
 #include "building/model.h"
 #include "core/calc.h"
 #include "core/time.h"
@@ -40,8 +39,7 @@ void Animation_updateTimers()
 
 int Animation_getIndexForCityBuilding(int graphicId, int gridOffset)
 {
-	int buildingId = map_building_at(gridOffset);
-	struct Data_Building *b = &Data_Buildings[buildingId];
+	struct Data_Building *b = building_get(map_building_at(gridOffset));
 	if (b->type == BUILDING_FOUNTAIN && (b->numWorkers <= 0 || !b->hasWaterAccess)) {
 		return 0;
 	}

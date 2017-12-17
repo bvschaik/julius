@@ -1,8 +1,8 @@
 #include "CityInfo.h"
 
 #include "Data/CityInfo.h"
-#include "Data/Building.h"
 
+#include "building/building.h"
 #include "building/model.h"
 #include "city/finance.h"
 #include "city/message.h"
@@ -26,18 +26,19 @@ static void collectMonthlyTaxes()
 		Data_CityInfo.populationPerLevel[i] = 0;
 	}
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (!BuildingIsInUse(i) || !Data_Buildings[i].houseSize) {
+        struct Data_Building *b = building_get(i);
+		if (!BuildingIsInUse(i) || !b->houseSize) {
 			continue;
 		}
 
-		int isPatrician = Data_Buildings[i].subtype.houseLevel >= HOUSE_SMALL_VILLA;
-		int population = Data_Buildings[i].housePopulation;
+		int isPatrician = b->subtype.houseLevel >= HOUSE_SMALL_VILLA;
+		int population = b->housePopulation;
 		int trm = difficulty_adjust_money(
-			model_get_house(Data_Buildings[i].subtype.houseLevel)->tax_multiplier);
-		Data_CityInfo.populationPerLevel[Data_Buildings[i].subtype.houseLevel] += population;
+			model_get_house(b->subtype.houseLevel)->tax_multiplier);
+		Data_CityInfo.populationPerLevel[b->subtype.houseLevel] += population;
 
 		int tax = population * trm;
-		if (Data_Buildings[i].houseTaxCoverage) {
+		if (b->houseTaxCoverage) {
 			if (isPatrician) {
 				Data_CityInfo.monthlyTaxedPatricians += population;
 				Data_CityInfo.monthlyCollectedTaxFromPatricians += tax;
@@ -45,7 +46,7 @@ static void collectMonthlyTaxes()
 				Data_CityInfo.monthlyTaxedPlebs += population;
 				Data_CityInfo.monthlyCollectedTaxFromPlebs += tax;
 			}
-			Data_Buildings[i].taxIncomeOrStorage += tax;
+			b->taxIncomeOrStorage += tax;
 		} else {
 			if (isPatrician) {
 				Data_CityInfo.monthlyUntaxedPatricians += population;
