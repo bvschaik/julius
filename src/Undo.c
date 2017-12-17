@@ -52,11 +52,12 @@ int Undo_recordBeforeBuild()
 	data.buildingType = Data_State.selectedBuilding.type;
 	clearBuildingList();
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].state == BuildingState_Undo) {
+        struct Data_Building *b = building_get(i);
+		if (b->state == BuildingState_Undo) {
 			Data_State.undoAvailable = 0;
 			return 0;
 		}
-		if (Data_Buildings[i].state == BuildingState_DeletedByPlayer) {
+		if (b->state == BuildingState_DeletedByPlayer) {
 			Data_State.undoAvailable = 0;
 		}
 	}
@@ -103,7 +104,7 @@ void Undo_addBuildingToList(int buildingId)
 		for (int i = 0; i < MAX_UNDO_BUILDINGS; i++) {
 			if (!data.buildingIndex[i]) {
 				data.numBuildings++;
-				memcpy(&data.buildings[i], &Data_Buildings[buildingId], sizeof(struct Data_Building));
+				memcpy(&data.buildings[i], building_get(buildingId), sizeof(struct Data_Building));
 				data.buildingIndex[i] = buildingId;
 				return;
 			}
@@ -188,7 +189,7 @@ void Undo_perform()
 		for (int i = 0; i < data.numBuildings; i++) {
 			if (data.buildingIndex[i]) {
 				int buildingId = data.buildingIndex[i];
-				memcpy(&Data_Buildings[buildingId], &data.buildings[i],
+				memcpy(building_get(buildingId), &data.buildings[i],
 					sizeof(struct Data_Building));
 				placeBuildingOnTerrain(buildingId);
 			}
@@ -264,7 +265,7 @@ void Undo_updateAvailable()
 	}
 	if (data.buildingType == BUILDING_HOUSE_VACANT_LOT) {
 		for (int i = 0; i < data.numBuildings; i++) {
-			if (data.buildingIndex[i] && Data_Buildings[data.buildingIndex[i]].housePopulation) {
+			if (data.buildingIndex[i] && building_get(data.buildingIndex[i])->housePopulation) {
 				// no undo on a new house where people moved in
 				Data_State.undoAvailable = 0;
 				UI_Window_requestRefresh();

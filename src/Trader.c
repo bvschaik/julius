@@ -242,12 +242,11 @@ int Trader_getClosestWarehouseForTradeCaravan(const figure *f, int x, int y, int
 	if (!minBuildingId) {
 		return 0;
 	}
-	if (Data_Buildings[minBuildingId].hasRoadAccess == 1) {
-		*warehouseX = Data_Buildings[minBuildingId].x;
-		*warehouseY = Data_Buildings[minBuildingId].y;
-	} else if (!Terrain_hasRoadAccess(
-			Data_Buildings[minBuildingId].x, Data_Buildings[minBuildingId].y, 3,
-			warehouseX, warehouseY)) {
+	struct Data_Building *min = building_get(minBuildingId);
+	if (min->hasRoadAccess == 1) {
+		*warehouseX = min->x;
+		*warehouseY = min->y;
+	} else if (!Terrain_hasRoadAccess(min->x, min->y, 3, warehouseX, warehouseY)) {
 		return 0;
 	}
 	return minBuildingId;
@@ -316,12 +315,11 @@ int Trader_getClosestWarehouseForImportDocker(int x, int y, int cityId, int dist
 	if (!minBuildingId) {
 		return 0;
 	}
-	if (Data_Buildings[minBuildingId].hasRoadAccess == 1) {
-		*warehouseX = Data_Buildings[minBuildingId].x;
-		*warehouseY = Data_Buildings[minBuildingId].y;
-	} else if (!Terrain_hasRoadAccess(
-			Data_Buildings[minBuildingId].x, Data_Buildings[minBuildingId].y, 3,
-			warehouseX, warehouseY)) {
+	struct Data_Building *min = building_get(minBuildingId);
+	if (min->hasRoadAccess == 1) {
+		*warehouseX = min->x;
+		*warehouseY = min->y;
+	} else if (!Terrain_hasRoadAccess(min->x, min->y, 3, warehouseX, warehouseY)) {
 		return 0;
 	}
 	return minBuildingId;
@@ -385,12 +383,11 @@ int Trader_getClosestWarehouseForExportDocker(int x, int y, int cityId, int dist
 	if (!minBuildingId) {
 		return 0;
 	}
-	if (Data_Buildings[minBuildingId].hasRoadAccess == 1) {
-		*warehouseX = Data_Buildings[minBuildingId].x;
-		*warehouseY = Data_Buildings[minBuildingId].y;
-	} else if (!Terrain_hasRoadAccess(
-			Data_Buildings[minBuildingId].x, Data_Buildings[minBuildingId].y, 3,
-			warehouseX, warehouseY)) {
+	struct Data_Building *min = building_get(minBuildingId);
+	if (min->hasRoadAccess == 1) {
+		*warehouseX = min->x;
+		*warehouseY = min->y;
+	} else if (!Terrain_hasRoadAccess(min->x, min->y, 3, warehouseX, warehouseY)) {
 		return 0;
 	}
 	return minBuildingId;

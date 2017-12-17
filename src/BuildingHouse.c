@@ -79,11 +79,11 @@ int BuildingHouse_canExpand(int buildingId, int numTiles)
 			int tileOffset = baseOffset + tileGridOffsets[i];
 			if (map_terrain_is(tileOffset, TERRAIN_BUILDING)) {
 				int tileBuildingId = map_building_at(tileOffset);
-                struct Data_Building *otherHouse = building_get(tileBuildingId);
+                struct Data_Building *other_house = building_get(tileBuildingId);
 				if (tileBuildingId == buildingId) {
 					okTiles++;
-				} else if (BuildingIsInUse(tileBuildingId) && otherHouse->houseSize) {
-					if (otherHouse->subtype.houseLevel <= house->subtype.houseLevel) {
+				} else if (BuildingIsInUse(tileBuildingId) && other_house->houseSize) {
+					if (other_house->subtype.houseLevel <= house->subtype.houseLevel) {
 						okTiles++;
 					}
 				}
@@ -105,10 +105,11 @@ int BuildingHouse_canExpand(int buildingId, int numTiles)
 				okTiles++;
 			} else if (map_terrain_is(tileOffset, TERRAIN_BUILDING)) {
 				int tileBuildingId = map_building_at(tileOffset);
+                struct Data_Building *other_house = building_get(tileBuildingId);
 				if (tileBuildingId == buildingId) {
 					okTiles++;
-				} else if (BuildingIsInUse(tileBuildingId) && Data_Buildings[tileBuildingId].houseSize) {
-					if (Data_Buildings[tileBuildingId].subtype.houseLevel <= house->subtype.houseLevel) {
+				} else if (BuildingIsInUse(tileBuildingId) && other_house->houseSize) {
+					if (other_house->subtype.houseLevel <= house->subtype.houseLevel) {
 						okTiles++;
 					}
 				}
@@ -130,10 +131,11 @@ int BuildingHouse_canExpand(int buildingId, int numTiles)
 				okTiles++;
 			} else if (map_terrain_is(tileOffset, TERRAIN_BUILDING)) {
 				int tileBuildingId = map_building_at(tileOffset);
+                struct Data_Building *other_house = building_get(tileBuildingId);
 				if (tileBuildingId == buildingId) {
 					okTiles++;
-				} else if (BuildingIsInUse(tileBuildingId) && Data_Buildings[tileBuildingId].houseSize) {
-					if (Data_Buildings[tileBuildingId].subtype.houseLevel <= house->subtype.houseLevel) {
+				} else if (BuildingIsInUse(tileBuildingId) && other_house->houseSize) {
+					if (other_house->subtype.houseLevel <= house->subtype.houseLevel) {
 						okTiles++;
 					}
 				}
@@ -189,12 +191,12 @@ void BuildingHouse_checkMerge(int buildingId)
 		int tileOffset = b->gridOffset + tileGridOffsets[i];
 		if (map_terrain_is(tileOffset, TERRAIN_BUILDING)) {
 			int tileBuildingId = map_building_at(tileOffset);
+            struct Data_Building *other_house = building_get(tileBuildingId);
 			if (tileBuildingId == buildingId) {
 				numHouseTiles++;
-			} else if (BuildingIsInUse(tileBuildingId) &&
-					Data_Buildings[tileBuildingId].houseSize &&
-					Data_Buildings[tileBuildingId].subtype.houseLevel == b->subtype.houseLevel &&
-					!Data_Buildings[tileBuildingId].houseIsMerged) {
+			} else if (BuildingIsInUse(tileBuildingId) && other_house->houseSize &&
+					other_house->subtype.houseLevel == b->subtype.houseLevel &&
+					!other_house->houseIsMerged) {
 				numHouseTiles++;
 			}
 		}
@@ -213,12 +215,13 @@ static void split(int buildingId, int numTiles)
 		int tileOffset = gridOffset + tileGridOffsets[i];
 		if (map_terrain_is(tileOffset, TERRAIN_BUILDING)) {
 			int tileBuildingId = map_building_at(tileOffset);
-			if (tileBuildingId != buildingId && Data_Buildings[tileBuildingId].houseSize) {
-				if (Data_Buildings[tileBuildingId].houseIsMerged == 1) {
+            struct Data_Building *other_house = building_get(tileBuildingId);
+			if (tileBuildingId != buildingId && other_house->houseSize) {
+				if (other_house->houseIsMerged == 1) {
 					splitMerged(tileBuildingId);
-				} else if (Data_Buildings[tileBuildingId].houseSize == 2) {
+				} else if (other_house->houseSize == 2) {
 					splitSize2(buildingId);
-				} else if (Data_Buildings[tileBuildingId].houseSize == 3) {
+				} else if (other_house->houseSize == 3) {
 					splitSize3(buildingId);
 				}
 			}

@@ -30,7 +30,8 @@ static void advanceTradeNextImportResourceCaravan()
 
 int FigureAction_TradeCaravan_canBuy(int traderId, int warehouseId, int cityId)
 {
-	if (Data_Buildings[warehouseId].type != BUILDING_WAREHOUSE) {
+    struct Data_Building *warehouse = building_get(warehouseId);
+	if (warehouse->type != BUILDING_WAREHOUSE) {
 		return 0;
 	}
 	if (figure_get(traderId)->traderAmountBought >= 8) {
@@ -56,14 +57,15 @@ static int traderGetBuyResource(int warehouseId, int cityId)
 		if (warehouseId <= 0) {
 			continue;
 		}
-		int resource = Data_Buildings[warehouseId].subtype.warehouseResourceId;
-		if (Data_Buildings[warehouseId].loadsStored > 0 && empire_can_export_resource_to_city(cityId, resource)) {
+		struct Data_Building *space = building_get(warehouseId);
+		int resource = space->subtype.warehouseResourceId;
+		if (space->loadsStored > 0 && empire_can_export_resource_to_city(cityId, resource)) {
 			// update stocks
 			Data_CityInfo.resourceSpaceInWarehouses[resource]++;
 			Data_CityInfo.resourceStored[resource]--;
-			Data_Buildings[warehouseId].loadsStored--;
-			if (Data_Buildings[warehouseId].loadsStored <= 0) {
-				Data_Buildings[warehouseId].subtype.warehouseResourceId = RESOURCE_NONE;
+			space->loadsStored--;
+			if (space->loadsStored <= 0) {
+				space->subtype.warehouseResourceId = RESOURCE_NONE;
 			}
 			// update finances
 			city_finance_process_export(trade_price_sell(resource));
@@ -78,13 +80,14 @@ static int traderGetBuyResource(int warehouseId, int cityId)
 
 int FigureAction_TradeCaravan_canSell(int traderId, int warehouseId, int cityId)
 {
-	if (Data_Buildings[warehouseId].type != BUILDING_WAREHOUSE) {
+    struct Data_Building *warehouse = building_get(warehouseId);
+	if (warehouse->type != BUILDING_WAREHOUSE) {
 		return 0;
 	}
 	if (figure_get(traderId)->loadsSoldOrCarrying >= 8) {
 		return 0;
 	}
-	const building_storage *s = building_storage_get(Data_Buildings[warehouseId].storage_id);
+	const building_storage *s = building_storage_get(warehouse->storage_id);
 	if (s->empty_all) {
 		return 0;
 	}
@@ -229,8 +232,9 @@ void FigureAction_tradeCaravan(figure *f)
 				f->waitTicks = 0;
 				int xBase, yBase;
 				if (Data_CityInfo.buildingTradeCenterBuildingId) {
-					xBase = Data_Buildings[Data_CityInfo.buildingTradeCenterBuildingId].x;
-					yBase = Data_Buildings[Data_CityInfo.buildingTradeCenterBuildingId].y;
+                    struct Data_Building *trade_center = building_get(Data_CityInfo.buildingTradeCenterBuildingId);
+					xBase = trade_center->x;
+					yBase = trade_center->y;
 				} else {
 					xBase = f->x;
 					yBase = f->y;
@@ -549,10 +553,11 @@ void FigureAction_tradeShip(figure *f)
                 map_point river_entry = scenario_map_river_entry();
 				f->destinationX = river_entry.x;
 				f->destinationY = river_entry.y;
-				Data_Buildings[f->destinationBuildingId].data.other.dockQueuedDockerId = 0;
-				Data_Buildings[f->destinationBuildingId].data.other.dockNumShips = 0;
+                struct Data_Building *dst = building_get(f->destinationBuildingId);
+				dst->data.other.dockQueuedDockerId = 0;
+				dst->data.other.dockNumShips = 0;
 			}
-			switch (Data_Buildings[f->destinationBuildingId].data.other.dockOrientation) {
+			switch (building_get(f->destinationBuildingId)->data.other.dockOrientation) {
 				case 0: f->direction = DIR_2_RIGHT; break;
 				case 1: f->direction = DIR_4_BOTTOM; break;
 				case 2: f->direction = DIR_6_LEFT; break;

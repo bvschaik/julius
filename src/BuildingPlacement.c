@@ -374,7 +374,7 @@ static void addToTerrain(int type, int buildingId, int x, int y, int size,
 			break;
 		// distribution
 		case BUILDING_GRANARY:
-			Data_Buildings[buildingId].storage_id = building_storage_create();
+			building_get(buildingId)->storage_id = building_storage_create();
 			Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_GRANARY), TERRAIN_BUILDING);
 			break;
 		case BUILDING_MARKET:
@@ -446,18 +446,18 @@ static void addToTerrain(int type, int buildingId, int x, int y, int size,
 			break;
 		// ships
 		case BUILDING_SHIPYARD:
-			Data_Buildings[buildingId].data.other.dockOrientation = watersideOrientationAbs;
+			building_get(buildingId)->data.other.dockOrientation = watersideOrientationAbs;
 			Terrain_addWatersideBuildingToGrids(buildingId, x, y, 2,
 				image_group(GROUP_BUILDING_SHIPYARD) + watersideOrientationRel);
 			break;
 		case BUILDING_WHARF:
-			Data_Buildings[buildingId].data.other.dockOrientation = watersideOrientationAbs;
+			building_get(buildingId)->data.other.dockOrientation = watersideOrientationAbs;
 			Terrain_addWatersideBuildingToGrids(buildingId, x, y, 2,
 				image_group(GROUP_BUILDING_WHARF) + watersideOrientationRel);
 			break;
 		case BUILDING_DOCK:
 			Data_CityInfo.numWorkingDocks++;
-			Data_Buildings[buildingId].data.other.dockOrientation = watersideOrientationAbs;
+			building_get(buildingId)->data.other.dockOrientation = watersideOrientationAbs;
 			{
 				int graphicId;
 				switch (watersideOrientationRel) {
@@ -479,7 +479,7 @@ static void addToTerrain(int type, int buildingId, int x, int y, int size,
 		case BUILDING_GATEHOUSE:
 			Terrain_addBuildingToGrids(buildingId, x, y, size,
 				image_group(GROUP_BUILDING_TOWER) + orientation, TERRAIN_BUILDING | TERRAIN_GATEHOUSE);
-			Data_Buildings[buildingId].subtype.orientation = orientation;
+			building_get(buildingId)->subtype.orientation = orientation;
 			Building_determineGraphicIdsForOrientedBuildings();
 			Terrain_addRoadsForGatehouse(x, y, orientation);
 			TerrainGraphics_updateAreaRoads(x, y, 5);
@@ -489,7 +489,7 @@ static void addToTerrain(int type, int buildingId, int x, int y, int size,
 		case BUILDING_TRIUMPHAL_ARCH:
 			Terrain_addBuildingToGrids(buildingId, x, y, size,
 				image_group(GROUP_BUILDING_TRIUMPHAL_ARCH) + orientation - 1, TERRAIN_BUILDING);
-			Data_Buildings[buildingId].subtype.orientation = orientation;
+			building_get(buildingId)->subtype.orientation = orientation;
 			Building_determineGraphicIdsForOrientedBuildings();
 			Terrain_addRoadsForTriumphalArch(x, y, orientation);
 			TerrainGraphics_updateAreaRoads(x, y, 5);
@@ -763,15 +763,15 @@ static void clearRegionConfirmed(int measureOnly, int xStart, int yStart, int xE
 				if (!buildingId) {
 					continue;
 				}
-				int type = Data_Buildings[buildingId].type;
-				if (type == BUILDING_BURNING_RUIN || type == BUILDING_NATIVE_CROPS ||
-					type == BUILDING_NATIVE_HUT || type == BUILDING_NATIVE_MEETING) {
+				struct Data_Building *b = building_get(buildingId);
+				if (b->type == BUILDING_BURNING_RUIN || b->type == BUILDING_NATIVE_CROPS ||
+					b->type == BUILDING_NATIVE_HUT || b->type == BUILDING_NATIVE_MEETING) {
 					continue;
 				}
-				if (Data_Buildings[buildingId].state == BuildingState_DeletedByPlayer) {
+				if (b->state == BuildingState_DeletedByPlayer) {
 					continue;
 				}
-				if (type == BUILDING_FORT_GROUND || type == BUILDING_FORT) {
+				if (b->type == BUILDING_FORT_GROUND || b->type == BUILDING_FORT) {
 					if (!measureOnly && confirm.fortConfirmed != 1) {
 						continue;
 					}
@@ -779,7 +779,6 @@ static void clearRegionConfirmed(int measureOnly, int xStart, int yStart, int xE
 						Data_State.undoAvailable = 0;
 					}
 				}
-				struct Data_Building *b = building_get(buildingId);
 				if (b->houseSize && b->housePopulation && !measureOnly) {
 					HousePopulation_createHomeless(b->x, b->y, b->housePopulation);
 					b->housePopulation = 0;
@@ -790,23 +789,25 @@ static void clearRegionConfirmed(int measureOnly, int xStart, int yStart, int xE
 				}
 				b->state = BuildingState_DeletedByPlayer;
 				b->isDeleted = 1;
-				int spaceId = buildingId;
+				struct Data_Building *space = building_get(buildingId);
 				for (int i = 0; i < 9; i++) {
-					spaceId = Data_Buildings[spaceId].prevPartBuildingId;
-					if (spaceId <= 0) {
+					if (space->prevPartBuildingId <= 0) {
 						break;
 					}
+					int spaceId = space->prevPartBuildingId;
+					space = building_get(spaceId);
 					Undo_addBuildingToList(spaceId);
-					Data_Buildings[spaceId].state = BuildingState_DeletedByPlayer;
+					space->state = BuildingState_DeletedByPlayer;
 				}
-				spaceId = buildingId;
+				space = building_get(buildingId);
 				for (int i = 0; i < 9; i++) {
-					spaceId = Data_Buildings[spaceId].nextPartBuildingId;
-					if (spaceId <= 0) {
+					if (space->nextPartBuildingId <= 0) {
 						break;
 					}
+					int spaceId = space->nextPartBuildingId;
+					space = building_get(spaceId);
 					Undo_addBuildingToList(spaceId);
-					Data_Buildings[spaceId].state = BuildingState_DeletedByPlayer;
+					space->state = BuildingState_DeletedByPlayer;
 				}
 			} else if (map_terrain_is(gridOffset, TERRAIN_AQUEDUCT)) {
 				map_terrain_remove(gridOffset, TERRAIN_CLEARABLE);
@@ -883,8 +884,8 @@ static void clearRegion(int measureOnly, int xStart, int yStart, int xEnd, int y
 			int gridOffset = map_grid_offset(x,y);
 			int buildingId = map_building_at(gridOffset);
 			if (buildingId) {
-				if (Data_Buildings[buildingId].type == BUILDING_FORT ||
-					Data_Buildings[buildingId].type == BUILDING_FORT_GROUND) {
+                struct Data_Building *b = building_get(buildingId);
+				if (b->type == BUILDING_FORT || b->type == BUILDING_FORT_GROUND) {
 					askConfirmFort = 1;
 				}
 			}

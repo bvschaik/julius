@@ -135,7 +135,7 @@ static void drawBuildingFootprints()
 			int buildingId = map_building_at(gridOffset);
 			color_t colorMask = 0;
 			if (buildingId) {
-				if (Data_Buildings[buildingId].isDeleted) {
+				if (building_get(buildingId)->isDeleted) {
 					colorMask = COLOR_MASK_RED;
 				}
 				if (x < 4) {
@@ -147,7 +147,7 @@ static void drawBuildingFootprints()
 				}
 			}
 			if (map_terrain_is(gridOffset, TERRAIN_GARDEN)) {
-				Data_Buildings[0].type = BUILDING_GARDENS;
+				building_get(0)->type = BUILDING_GARDENS;
 				sound_city_mark_building_view(0, 2);
 			}
 			int graphicId = map_image_at(gridOffset);
@@ -192,7 +192,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 				int buildingId = map_building_at(gridOffset);
 				int graphicId = map_image_at(gridOffset);
 				color_t colorMask = 0;
-				if (buildingId && Data_Buildings[buildingId].isDeleted) {
+				if (buildingId && building_get(buildingId)->isDeleted) {
 					colorMask = COLOR_MASK_RED;
 				}
 				switch (map_property_multi_tile_size(gridOffset)) {
@@ -247,7 +247,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 						xGraphic + 34, yGraphic - 22, colorMask);
 				}
 				if (b->type == BUILDING_HIPPODROME &&
-					Data_Buildings[Building_getMainBuildingId(buildingId)].numWorkers > 0 &&
+					building_get(Building_getMainBuildingId(buildingId))->numWorkers > 0 &&
 					Data_CityInfo.entertainmentHippodromeHasShow) {
 					int subtype = b->subtype.orientation;
 					if ((subtype == 0 || subtype == 3) && Data_CityInfo.population > 2000) {
@@ -361,7 +361,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 		// draw animation
 		FOREACH_X_VIEW {
 			int graphicId = map_image_at(gridOffset);
-			const image *img = image_get(graphicId);
+			const image *img = image_get(graphicId);{}
 			if (img->num_animation_sprites) {
 				if (map_property_is_draw_tile(gridOffset)) {
 					int buildingId = map_building_at(gridOffset);
@@ -455,7 +455,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 				}
 			} else if (map_sprite_bridge_at(gridOffset)) {
 				UI_CityBuildings_drawBridge(gridOffset, xGraphic, yGraphic);
-			} else if (Data_Buildings[map_building_at(gridOffset)].type == BUILDING_FORT) {
+			} else if (building_get(map_building_at(gridOffset))->type == BUILDING_FORT) {
 				if (map_property_is_draw_tile(gridOffset)) {
 					struct Data_Building *fort = building_get(map_building_at(gridOffset));
 					int offset = 0;
@@ -469,7 +469,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 							xGraphic + 81, yGraphic + 5);
 					}
 				}
-			} else if (Data_Buildings[map_building_at(gridOffset)].type == BUILDING_GATEHOUSE) {
+			} else if (building_get(map_building_at(gridOffset))->type == BUILDING_GATEHOUSE) {
 				int xy = map_property_multi_tile_xy(gridOffset);
 				if ((Data_State.map.orientation == DIR_0_TOP && xy == Edge_X1Y1) ||
 					(Data_State.map.orientation == DIR_2_RIGHT && xy == Edge_X0Y1) ||
@@ -579,7 +579,7 @@ static void drawHippodromeAndElevatedFigures(int selectedFigureId)
 				const image *img = image_get(graphicId);
 				if (img->num_animation_sprites &&
 					map_property_is_draw_tile(gridOffset) &&
-					Data_Buildings[map_building_at(gridOffset)].type == BUILDING_HIPPODROME) {
+					building_get(map_building_at(gridOffset))->type == BUILDING_HIPPODROME) {
 					switch (map_property_multi_tile_size(gridOffset)) {
 						case 1:
 							Graphics_drawImage(graphicId + 1,
@@ -764,7 +764,7 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 	int buildingId = map_building_at(gridOffset);
 	int overlay = Data_State.currentOverlay;
 	// regular tooltips
-	if (overlay == Overlay_None && buildingId && Data_Buildings[buildingId].type == BUILDING_SENATE_UPGRADED) {
+	if (overlay == Overlay_None && buildingId && building_get(buildingId)->type == BUILDING_SENATE_UPGRADED) {
 		c->type = TooltipType_Senate;
 		c->priority = TooltipPriority_High;
 		return;

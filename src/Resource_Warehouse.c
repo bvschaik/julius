@@ -174,8 +174,9 @@ int Resource_getWarehouseForGettingResource(int srcBuildingId, int resource, int
 		}
 	}
 	if (minBuildingId > 0) {
-		*xDst = Data_Buildings[minBuildingId].roadAccessX;
-		*yDst = Data_Buildings[minBuildingId].roadAccessY;
+        struct Data_Building *min = building_get(minBuildingId);
+		*xDst = min->roadAccessX;
+		*yDst = min->roadAccessY;
 		return minBuildingId;
 	} else {
 		return 0;
@@ -490,9 +491,9 @@ int Resource_determineWarehouseWorkerTask(int buildingId, int *resource)
 	// deliver weapons to barracks
 	if (building_count_active(BUILDING_BARRACKS) > 0 && Data_CityInfo.militaryLegionaryLegions > 0 &&
 		!Data_CityInfo.resourceStockpiled[RESOURCE_WEAPONS]) {
-		int barracksId = Data_CityInfo.buildingBarracksBuildingId;
-		if (Data_Buildings[barracksId].loadsStored < 4 &&
-			b->roadNetworkId == Data_Buildings[barracksId].roadNetworkId) {
+		struct Data_Building *barracks = building_get(Data_CityInfo.buildingBarracksBuildingId);
+		if (barracks->loadsStored < 4 &&
+			b->roadNetworkId == barracks->roadNetworkId) {
 			spaceId = buildingId;
 			for (int i = 0; i < 8; i++) {
 				spaceId = Data_Buildings[spaceId].nextPartBuildingId;

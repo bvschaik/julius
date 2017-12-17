@@ -27,9 +27,9 @@ static int marketBuyerTakeFoodFromGranary(figure *f, int marketId, int granaryId
 		case INVENTORY_MEAT: resource = RESOURCE_MEAT; break;
 		default: return 0;
 	}
-	int marketUnits = Data_Buildings[marketId].data.market.inventory[f->collectingItemId];
+	int marketUnits = building_get(marketId)->data.market.inventory[f->collectingItemId];
 	int maxUnits = (f->collectingItemId == INVENTORY_WHEAT ? 800 : 600) - marketUnits;
-	int granaryUnits = Data_Buildings[granaryId].data.storage.resourceStored[resource];
+	int granaryUnits = building_get(granaryId)->data.storage.resourceStored[resource];
 	int numLoads;
 	if (granaryUnits >= 800) {
 		numLoads = 8;
@@ -101,7 +101,7 @@ void FigureAction_marketBuyer(figure *f)
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 800;
 	
-	if (!BuildingIsInUse(f->buildingId) || Data_Buildings[f->buildingId].figureId2 != f->id) {
+	if (!BuildingIsInUse(f->buildingId) || building_get(f->buildingId)->figureId2 != f->id) {
 		f->state = FigureState_Dead;
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);
@@ -164,7 +164,7 @@ void FigureAction_deliveryBoy(figure *f)
 				f->state = FigureState_Dead;
 			}
 		} else { // leader arrived at market, drop resource at market
-			Data_Buildings[f->buildingId].data.market.inventory[f->collectingItemId] += 100;
+			building_get(f->buildingId)->data.market.inventory[f->collectingItemId] += 100;
 			f->state = FigureState_Dead;
 		}
 	}

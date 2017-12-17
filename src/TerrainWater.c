@@ -204,8 +204,9 @@ int Terrain_Water_getWharfTileForNewFishingBoat(int figureId, int *xTile, int *y
 {
 	int wharfId = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (BuildingIsInUse(i) && Data_Buildings[i].type == BUILDING_WHARF) {
-			int wharfBoatId = Data_Buildings[i].data.other.boatFigureId;
+        struct Data_Building *b = building_get(i);
+		if (BuildingIsInUse(i) && b->type == BUILDING_WHARF) {
+			int wharfBoatId = b->data.other.boatFigureId;
 			if (!wharfBoatId || wharfBoatId == figureId) {
 				wharfId = i;
 				break;
@@ -294,8 +295,8 @@ int Terrain_Water_getFreeDockDestination(int figureId, int *xTile, int *yTile)
 	for (int i = 0; i < 10; i++) {
 		dockId = Data_CityInfo.workingDockBuildingIds[i];
 		if (!dockId) continue;
-		if (!Data_Buildings[dockId].data.other.boatFigureId ||
-			Data_Buildings[dockId].data.other.boatFigureId == figureId) {
+        struct Data_Building *dock = building_get(dockId);
+		if (!dock->data.other.boatFigureId || dock->data.other.boatFigureId == figureId) {
 			break;
 		}
 	}
@@ -325,9 +326,10 @@ int Terrain_Water_getQueueDockDestination(int* xTile, int* yTile)
 	for (int i = 0; i < 10; i++) {
 		int dockId = Data_CityInfo.workingDockBuildingIds[i];
 		if (!dockId) continue;
-		*xTile = Data_Buildings[dockId].x;
-		*yTile = Data_Buildings[dockId].y;
-		switch (Data_Buildings[dockId].data.other.dockOrientation) {
+        struct Data_Building *dock = building_get(dockId);
+		*xTile = dock->x;
+		*yTile = dock->y;
+		switch (dock->data.other.dockOrientation) {
 			case 0: *xTile += 2; *yTile -= 2; break;
 			case 1: *xTile += 4; *yTile += 2; break;
 			case 2: *xTile += 2; *yTile += 4; break;
@@ -341,9 +343,10 @@ int Terrain_Water_getQueueDockDestination(int* xTile, int* yTile)
 	for (int i = 0; i < 10; i++) {
 		int dockId = Data_CityInfo.workingDockBuildingIds[i];
 		if (!dockId) continue;
-		*xTile = Data_Buildings[dockId].x;
-		*yTile = Data_Buildings[dockId].y;
-		switch (Data_Buildings[dockId].data.other.dockOrientation) {
+        struct Data_Building *dock = building_get(dockId);
+		*xTile = dock->x;
+		*yTile = dock->y;
+		switch (dock->data.other.dockOrientation) {
 			case 0: *xTile += 2; *yTile -= 3; break;
 			case 1: *xTile += 5; *yTile += 2; break;
 			case 2: *xTile += 2; *yTile += 5; break;

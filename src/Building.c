@@ -42,7 +42,7 @@ void Building_updateHighestIds()
 {
 	Data_Buildings_Extra.highestBuildingIdInUse = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].state != BuildingState_Unused) {
+		if (building_get(i)->state != BuildingState_Unused) {
 			Data_Buildings_Extra.highestBuildingIdInUse = i;
 		}
 	}
@@ -62,7 +62,7 @@ int Building_create(int type, int x, int y)
 {
 	int buildingId = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].state == BuildingState_Unused && !Undo_isBuildingInList(i)) {
+		if (building_get(i)->state == BuildingState_Unused && !Undo_isBuildingInList(i)) {
 			buildingId = i;
 			break;
 		}
@@ -254,10 +254,11 @@ void Building_GameTick_updateState()
 int Building_getMainBuildingId(int buildingId)
 {
 	for (int guard = 0; guard < 9; guard++) {
-		if (Data_Buildings[buildingId].prevPartBuildingId <= 0) {
+        struct Data_Building *b = building_get(buildingId);
+		if (b->prevPartBuildingId <= 0) {
 			return buildingId;
 		}
-		buildingId = Data_Buildings[buildingId].prevPartBuildingId;
+		buildingId = b->prevPartBuildingId;
 	}
 	return 0;
 }
@@ -318,7 +319,7 @@ void Building_collapseOnFire(int buildingId, int hasPlague)
 			continue;
 		}
 		int ruinId = Building_create(BUILDING_BURNING_RUIN, x, y);
-		struct Data_Building *ruin = &Data_Buildings[ruinId];
+		struct Data_Building *ruin = building_get(ruinId);
 		int graphicId;
 		if (wasTent) {
 			graphicId = image_group(GROUP_TERRAIN_RUBBLE_TENT);
@@ -339,35 +340,33 @@ void Building_collapseOnFire(int buildingId, int hasPlague)
 
 void Building_collapseLinked(int buildingId, int onFire)
 {
-	int spaceId = buildingId;
+	struct Data_Building *space = building_get(buildingId);
 	for (int i = 0; i < 9; i++) {
-		spaceId = Data_Buildings[spaceId].prevPartBuildingId;
-		if (spaceId <= 0) {
+		if (space->prevPartBuildingId <= 0) {
 			break;
 		}
+		int spaceId = space->prevPartBuildingId;
+		space = building_get(spaceId);
 		if (onFire) {
 			Building_collapseOnFire(spaceId, 0);
 		} else {
-			TerrainGraphics_setBuildingAreaRubble(spaceId,
-				Data_Buildings[spaceId].x, Data_Buildings[spaceId].y,
-				Data_Buildings[spaceId].size);
-			Data_Buildings[spaceId].state = BuildingState_Rubble;
+			TerrainGraphics_setBuildingAreaRubble(spaceId, space->x, space->y, space->size);
+			space->state = BuildingState_Rubble;
 		}
 	}
 
-	spaceId = buildingId;
+	space = building_get(buildingId);
 	for (int i = 0; i < 9; i++) {
-		spaceId = Data_Buildings[spaceId].nextPartBuildingId;
-		if (spaceId <= 0) {
+		if (space->nextPartBuildingId <= 0) {
 			break;
 		}
+		int spaceId = space->nextPartBuildingId;
+		space = building_get(spaceId);
 		if (onFire) {
 			Building_collapseOnFire(spaceId, 0);
 		} else {
-			TerrainGraphics_setBuildingAreaRubble(spaceId,
-				Data_Buildings[spaceId].x, Data_Buildings[spaceId].y,
-				Data_Buildings[spaceId].size);
-			Data_Buildings[spaceId].state = BuildingState_Rubble;
+			TerrainGraphics_setBuildingAreaRubble(spaceId, space->x, space->y, space->size);
+			space->state = BuildingState_Rubble;
 		}
 	}
 }
@@ -377,22 +376,21 @@ void Building_collapseLastPlaced()
 	int highestSequence = 0;
 	int buildingId = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].state == BuildingState_Created || Data_Buildings[i].state == BuildingState_InUse) {
-			if (Data_Buildings[i].createdSequence > highestSequence) {
-				highestSequence = Data_Buildings[i].createdSequence;
+        struct Data_Building *b = building_get(i);
+		if (b->state == BuildingState_Created || b->state == BuildingState_InUse) {
+			if (b->createdSequence > highestSequence) {
+				highestSequence = b->createdSequence;
 				buildingId = i;
 			}
 		}
 	}
 	if (buildingId) {
-		city_message_post(1, MESSAGE_ROAD_TO_ROME_BLOCKED, 0, Data_Buildings[buildingId].gridOffset);
+        struct Data_Building *b = building_get(buildingId);
+		city_message_post(1, MESSAGE_ROAD_TO_ROME_BLOCKED, 0, b->gridOffset);
 		Data_State.undoAvailable = 0;
-		Data_Buildings[buildingId].state = BuildingState_Rubble;
-		TerrainGraphics_setBuildingAreaRubble(buildingId,
-			Data_Buildings[buildingId].x, Data_Buildings[buildingId].y,
-			Data_Buildings[buildingId].size);
-		Figure_createDustCloud(Data_Buildings[buildingId].x, Data_Buildings[buildingId].y,
-			Data_Buildings[buildingId].size);
+		b->state = BuildingState_Rubble;
+		TerrainGraphics_setBuildingAreaRubble(buildingId, b->x, b->y, b->size);
+		Figure_createDustCloud(b->x, b->y, b->size);
 		Building_collapseLinked(buildingId, 0);
 		map_routing_update_land();
 	}
@@ -401,13 +399,13 @@ void Building_collapseLastPlaced()
 int Building_collapseFirstOfType(int buildingType)
 {
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (BuildingIsInUse(i) && Data_Buildings[i].type == buildingType) {
-			int gridOffset = Data_Buildings[i].gridOffset;
+        struct Data_Building *b = building_get(i);
+		if (BuildingIsInUse(i) && b->type == buildingType) {
+			int gridOffset = b->gridOffset;
 			Data_State.undoAvailable = 0;
-			Data_Buildings[i].state = BuildingState_Rubble;
+			b->state = BuildingState_Rubble;
 			
-			TerrainGraphics_setBuildingAreaRubble(i, Data_Buildings[i].x, Data_Buildings[i].y,
-				Data_Buildings[i].size);
+			TerrainGraphics_setBuildingAreaRubble(i, b->x, b->y, b->size);
 			sound_effect_play(SOUND_EFFECT_EXPLOSION);
 			map_routing_update_land();
 			return gridOffset;
@@ -491,12 +489,12 @@ void Building_setDesirability()
 void Building_decayHousesCovered()
 {
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (Data_Buildings[i].state != BuildingState_Unused &&
-			Data_Buildings[i].type != BUILDING_TOWER) {
-			if (Data_Buildings[i].housesCovered <= 1) {
-				Data_Buildings[i].housesCovered = 0;
+        struct Data_Building *b = building_get(i);
+		if (b->state != BuildingState_Unused && b->type != BUILDING_TOWER) {
+			if (b->housesCovered <= 1) {
+				b->housesCovered = 0;
 			} else {
-				Data_Buildings[i].housesCovered--;
+				b->housesCovered--;
 			}
 		}
 	}
@@ -505,8 +503,9 @@ void Building_decayHousesCovered()
 void Building_decayTaxCollectorAccess()
 {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        if (BuildingIsInUse(i) && Data_Buildings[i].houseTaxCoverage) {
-            Data_Buildings[i].houseTaxCoverage--;
+        struct Data_Building *b = building_get(i);
+        if (BuildingIsInUse(i) && b->houseTaxCoverage) {
+            b->houseTaxCoverage--;
         }
     }
 }
@@ -672,7 +671,7 @@ void Building_GameTick_checkAccessToRome()
 			}
 		} else if (b->type == BUILDING_WAREHOUSE_SPACE) {
 			b->distanceFromEntry = 0;
-			struct Data_Building *mainBuilding = &Data_Buildings[Building_getMainBuildingId(i)];
+			struct Data_Building *mainBuilding = building_get(Building_getMainBuildingId(i));
 			b->roadNetworkId = mainBuilding->roadNetworkId;
 			b->distanceFromEntry = mainBuilding->distanceFromEntry;
 			b->roadAccessX = mainBuilding->roadAccessX;
@@ -836,8 +835,9 @@ void Building_Industry_blessFarmsFromCeres()
 
 int Building_Industry_hasProducedResource(int buildingId)
 {
-	int target = Data_Buildings[buildingId].subtype.workshopType ? 400 : 200;
-	return Data_Buildings[buildingId].data.industry.progress >= target;
+    struct Data_Building *b = building_get(buildingId);
+	int target = b->subtype.workshopType ? 400 : 200;
+	return b->data.industry.progress >= target;
 }
 
 void Building_Industry_startNewProduction(int buildingId)
@@ -871,7 +871,7 @@ int Building_Market_getDestinationGranaryWarehouse(int marketId)
 		resources[i].numBuildings = 0;
 		resources[i].distance = 40;
 	}
-	struct Data_Building *market = &Data_Buildings[marketId];
+	struct Data_Building *market = building_get(marketId);
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		if (!BuildingIsInUse(i)) {
 			continue;
@@ -1090,10 +1090,11 @@ int Building_Market_getDestinationGranaryWarehouse(int marketId)
 
 int Building_Market_getMaxFoodStock(int buildingId)
 {
+    struct Data_Building *b = building_get(buildingId);
 	int maxStock = 0;
-	if (buildingId > 0 && Data_Buildings[buildingId].type == BUILDING_MARKET) {
+	if (buildingId > 0 && b->type == BUILDING_MARKET) {
 		for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
-			int stock = Data_Buildings[buildingId].data.market.inventory[i];
+			int stock = b->data.market.inventory[i];
 			if (stock > maxStock) {
 				maxStock = stock;
 			}
@@ -1104,10 +1105,11 @@ int Building_Market_getMaxFoodStock(int buildingId)
 
 int Building_Market_getMaxGoodsStock(int buildingId)
 {
+    struct Data_Building *b = building_get(buildingId);
 	int maxStock = 0;
-	if (buildingId > 0 && Data_Buildings[buildingId].type == BUILDING_MARKET) {
+	if (buildingId > 0 && b->type == BUILDING_MARKET) {
 		for (int i = INVENTORY_MIN_GOOD; i < INVENTORY_MAX_GOOD; i++) {
-			int stock = Data_Buildings[buildingId].data.market.inventory[i];
+			int stock = b->data.market.inventory[i];
 			if (stock > maxStock) {
 				maxStock = stock;
 			}
@@ -1189,7 +1191,7 @@ void Building_Mercury_removeResources(int bigCurse)
 	if (!maxBuildingId) {
 		return;
 	}
-	struct Data_Building *b = &Data_Buildings[maxBuildingId];
+	struct Data_Building *b = building_get(maxBuildingId);
 	if (bigCurse == 1) {
 		city_message_disable_sound_for_next_message();
 		city_message_post(0, MESSAGE_FIRE, b->type, b->gridOffset);

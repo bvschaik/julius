@@ -893,25 +893,27 @@ int Terrain_allTilesWithinRadiusHaveType(int x, int y, int size, int radius, uns
 
 void Terrain_markBuildingsWithinWellRadius(int wellId, int radius)
 {
-	int x = Data_Buildings[wellId].x;
-	int y = Data_Buildings[wellId].y;
+    struct Data_Building *well = building_get(wellId);
+	int x = well->x;
+	int y = well->y;
 	int size = 1;
 	FOR_XY_RADIUS {
 		if (map_building_at(gridOffset)) {
-			Data_Buildings[map_building_at(gridOffset)].hasWellAccess = 1;
+			building_get(map_building_at(gridOffset))->hasWellAccess = 1;
 		}
 	} END_FOR_XY_RADIUS;
 }
 
 int Terrain_allHousesWithinWellRadiusHaveFountain(int wellId, int radius)
 {
+    struct Data_Building *well = building_get(wellId);
 	int numHouses = 0;
-	int x = Data_Buildings[wellId].x;
-	int y = Data_Buildings[wellId].y;
+	int x = well->x;
+	int y = well->y;
 	int size = 1;
 	FOR_XY_RADIUS {
 		int buildingId = map_building_at(gridOffset);
-		if (buildingId > 0 && Data_Buildings[buildingId].houseSize) {
+		if (buildingId > 0 && building_get(buildingId)->houseSize) {
 			numHouses++;
 			if (!map_terrain_is(gridOffset, TERRAIN_FOUNTAIN_RANGE)) {
 				return 0;
@@ -933,7 +935,7 @@ int Terrain_hasBuildingOnNativeLand(int x, int y, int size, int radius)
 	FOR_XY_RADIUS {
 		int buildingId = map_building_at(gridOffset);
 		if (buildingId > 0) {
-			int type = Data_Buildings[buildingId].type;
+			int type = building_get(buildingId)->type;
 			if (type != BUILDING_MISSION_POST &&
 				type != BUILDING_NATIVE_HUT &&
 				type != BUILDING_NATIVE_MEETING &&
