@@ -125,8 +125,9 @@ int Resource_getWorkshopWithRoomForRawMaterial(
 			}
 		}
 	}
-	*xDst = Data_Buildings[minBuildingId].roadAccessX;
-	*yDst = Data_Buildings[minBuildingId].roadAccessY;
+	struct Data_Building *min = building_get(minBuildingId);
+	*xDst = min->roadAccessX;
+	*yDst = min->roadAccessY;
 	return minBuildingId;
 }
 
@@ -165,8 +166,9 @@ int Resource_getWorkshopForRawMaterial(
 			}
 		}
 	}
-	*xDst = Data_Buildings[minBuildingId].roadAccessX;
-	*yDst = Data_Buildings[minBuildingId].roadAccessY;
+	struct Data_Building *min = building_get(minBuildingId);
+	*xDst = min->roadAccessX;
+	*yDst = min->roadAccessY;
 	return minBuildingId;
 }
 
@@ -192,15 +194,16 @@ int Resource_getBarracksForWeapon(int xUnused, int yUnused, int resource, int ro
 
 void Resource_addRawMaterialToWorkshop(int buildingId)
 {
-	if (buildingId > 0 && BuildingIsWorkshop(Data_Buildings[buildingId].type)) {
-		Data_Buildings[buildingId].loadsStored++; // BUG: any raw material accepted
+    struct Data_Building *b = building_get(buildingId);
+	if (buildingId > 0 && BuildingIsWorkshop(b->type)) {
+		b->loadsStored++; // BUG: any raw material accepted
 	}
 }
 
 void Resource_addWeaponToBarracks(int buildingId)
 {
 	if (buildingId > 0) {
-		Data_Buildings[buildingId].loadsStored++;
+		building_get(buildingId)->loadsStored++;
 	}
 }
 

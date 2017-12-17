@@ -240,8 +240,9 @@ static void createImmigrantForBuilding(int buildingId, int numPeople)
 		Data_CityInfo.entryPointX, Data_CityInfo.entryPointY, DIR_0_TOP);
 	f->actionState = FigureActionState_1_ImmigrantCreated;
 	f->immigrantBuildingId = buildingId;
-	Data_Buildings[buildingId].immigrantFigureId = f->id;
-	f->waitTicks = 10 + (Data_Buildings[buildingId].houseGenerationDelay & 0x7f);
+    struct Data_Building *b = building_get(buildingId);
+	b->immigrantFigureId = f->id;
+	f->waitTicks = 10 + (b->houseGenerationDelay & 0x7f);
 	f->migrantNumPeople = numPeople;
 }
 

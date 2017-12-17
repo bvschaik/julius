@@ -119,8 +119,9 @@ int Resource_getGranaryForStoringFood(
 		}
 	}
 	// deliver to center of granary
-	*xDst = Data_Buildings[minBuildingId].x + 1;
-	*yDst = Data_Buildings[minBuildingId].y + 1;
+	struct Data_Building *min = building_get(minBuildingId);
+	*xDst = min->x + 1;
+	*yDst = min->y + 1;
 	return minBuildingId;
 }
 
@@ -164,8 +165,9 @@ int Resource_getGettingGranaryForStoringFood(
 			}
 		}
 	}
-	*xDst = Data_Buildings[minBuildingId].x + 1;
-	*yDst = Data_Buildings[minBuildingId].y + 1;
+	struct Data_Building *min = building_get(minBuildingId);
+	*xDst = min->x + 1;
+	*yDst = min->y + 1;
 	return minBuildingId;
 }
 
@@ -236,8 +238,9 @@ int Resource_getGranaryForGettingFood(int srcBuildingId, int *xDst, int *yDst)
 			}
 		}
 	}
-	*xDst = Data_Buildings[minBuildingId].x + 1;
-	*yDst = Data_Buildings[minBuildingId].y + 1;
+	struct Data_Building *min = building_get(minBuildingId);
+	*xDst = min->x + 1;
+	*yDst = min->y + 1;
 	return minBuildingId;
 }
 

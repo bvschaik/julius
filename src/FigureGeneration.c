@@ -52,7 +52,8 @@ static void generateLaborSeeker(int buildingId, struct Data_Building *b, int x, 
 
 static int buildingHasFigureOfType(int buildingId, int type1, int type2)
 {
-	int figureId = Data_Buildings[buildingId].figureId;
+    struct Data_Building *b = building_get(buildingId);
+	int figureId = b->figureId;
 	if (figureId <= 0) {
 		return 0;
 	}
@@ -60,7 +61,7 @@ static int buildingHasFigureOfType(int buildingId, int type1, int type2)
 	if (f->state && f->buildingId == buildingId && (f->type == type1 || f->type == type2)) {
 		return 1;
 	} else {
-		Data_Buildings[buildingId].figureId = 0;
+		b->figureId = 0;
 		return 0;
 	}
 }

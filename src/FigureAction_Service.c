@@ -260,13 +260,14 @@ static int prefectGoFightFire(figure *f)
 	int distance;
 	int ruinId = building_maintenance_get_closest_burning_ruin(f->x, f->y, &distance);
 	if (ruinId > 0 && distance <= 25) {
+        struct Data_Building *ruin = building_get(ruinId);
 		f->waitTicksMissile = 0;
 		f->actionState = FigureActionState_74_PrefectGoingToFire;
-		f->destinationX = Data_Buildings[ruinId].roadAccessX;
-		f->destinationY = Data_Buildings[ruinId].roadAccessY;
+		f->destinationX = ruin->roadAccessX;
+		f->destinationY = ruin->roadAccessY;
 		f->destinationBuildingId = ruinId;
 		figure_route_remove(f);
-		Data_Buildings[ruinId].figureId4 = f->id;
+		ruin->figureId4 = f->id;
 		return 1;
 	}
 	return 0;
@@ -478,8 +479,8 @@ void FigureAction_worker(figure *f)
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 384;
-	if (!BuildingIsInUse(f->buildingId) ||
-		Data_Buildings[f->buildingId].figureId != f->id) {
+    struct Data_Building *b = building_get(f->buildingId);
+	if (!BuildingIsInUse(f->buildingId) || b->figureId != f->id) {
 		f->state = FigureState_Dead;
 	}
 }

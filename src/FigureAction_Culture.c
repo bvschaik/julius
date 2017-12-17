@@ -20,11 +20,8 @@ static void FigureAction_cultureCommon(figure *f, int numTicks)
 			f->roamLength++;
 			if (f->roamLength >= f->maxRoamLength) {
 				int x, y;
-				if (Terrain_getClosestRoadWithinRadius(
-						Data_Buildings[f->buildingId].x,
-						Data_Buildings[f->buildingId].y,
-						Data_Buildings[f->buildingId].size,
-						2, &x, &y)) {
+                struct Data_Building *b = building_get(f->buildingId);
+				if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &x, &y)) {
 					f->actionState = FigureActionState_126_RoamerReturning;
 					f->destinationX = x;
 					f->destinationY = y;
@@ -51,8 +48,8 @@ static void FigureAction_culture(figure *f, int graphicCategory)
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 384;
-	int buildingId = f->buildingId;
-	if (!BuildingIsInUse(buildingId) || Data_Buildings[buildingId].figureId != f->id) {
+	struct Data_Building *b = building_get(f->buildingId);
+	if (!BuildingIsInUse(f->buildingId) || b->figureId != f->id) {
 		f->state = FigureState_Dead;
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);
@@ -76,8 +73,8 @@ void FigureAction_schoolChild(figure *f)
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 96;
-	int buildingId = f->buildingId;
-	if (!BuildingIsInUse(buildingId) || Data_Buildings[buildingId].type != BUILDING_SCHOOL) {
+	struct Data_Building *b = building_get(f->buildingId);
+	if (!BuildingIsInUse(f->buildingId) || b->type != BUILDING_SCHOOL) {
 		f->state = FigureState_Dead;
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);
@@ -141,8 +138,8 @@ void FigureAction_missionary(figure *f)
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 192;
-	int buildingId = f->buildingId;
-	if (!BuildingIsInUse(buildingId) || Data_Buildings[buildingId].figureId != f->id) {
+	struct Data_Building *b = building_get(f->buildingId);
+	if (!BuildingIsInUse(f->buildingId) || b->figureId != f->id) {
 		f->state = FigureState_Dead;
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);
@@ -168,8 +165,8 @@ void FigureAction_laborSeeker(figure *f)
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 384;
-	int buildingId = f->buildingId;
-	if (!BuildingIsInUse(buildingId) || Data_Buildings[buildingId].figureId2 != f->id) {
+	struct Data_Building *b = building_get(f->buildingId);
+	if (!BuildingIsInUse(f->buildingId) || b->figureId2 != f->id) {
 		f->state = FigureState_Dead;
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);
@@ -182,8 +179,8 @@ void FigureAction_marketTrader(figure *f)
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 384;
-	
-	if (!BuildingIsInUse(f->buildingId) || Data_Buildings[f->buildingId].figureId != f->id) {
+	struct Data_Building *b = building_get(f->buildingId);
+	if (!BuildingIsInUse(f->buildingId) || b->figureId != f->id) {
 		f->state = FigureState_Dead;
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);

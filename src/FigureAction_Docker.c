@@ -10,9 +10,9 @@
 #include "figure/trader.h"
 #include "figure/type.h"
 
-static int dockerDeliverImportResource(figure *f, int buildingId)
+static int dockerDeliverImportResource(figure *f, struct Data_Building *dock)
 {
-	int shipId = Data_Buildings[buildingId].data.other.boatFigureId;
+	int shipId = dock->data.other.boatFigureId;
 	if (!shipId) {
 		return 0;
 	}
@@ -22,16 +22,16 @@ static int dockerDeliverImportResource(figure *f, int buildingId)
 	}
 	int x, y;
 	if (Data_CityInfo.buildingTradeCenterBuildingId) {
-		int tcId = Data_CityInfo.buildingTradeCenterBuildingId;
-		x = Data_Buildings[tcId].x;
-		y = Data_Buildings[tcId].y;
+		struct Data_Building *trade_center = building_get(Data_CityInfo.buildingTradeCenterBuildingId);
+		x = trade_center->x;
+		y = trade_center->y;
 	} else {
 		x = f->x;
 		y = f->y;
 	}
 	int xTile, yTile;
 	int warehouseId = Trader_getClosestWarehouseForImportDocker(x, y, ship->empireCityId,
-		Data_Buildings[buildingId].distanceFromEntry, Data_Buildings[buildingId].roadNetworkId, &xTile, &yTile);
+		              dock->distanceFromEntry, dock->roadNetworkId, &xTile, &yTile);
 	if (!warehouseId) {
 		return 0;
 	}
@@ -45,9 +45,9 @@ static int dockerDeliverImportResource(figure *f, int buildingId)
 	return 1;
 }
 
-static int dockerGetExportResource(figure *f, int buildingId)
+static int dockerGetExportResource(figure *f, struct Data_Building *dock)
 {
-	int shipId = Data_Buildings[buildingId].data.other.boatFigureId;
+	int shipId = dock->data.other.boatFigureId;
 	if (!shipId) {
 		return 0;
 	}
@@ -57,16 +57,16 @@ static int dockerGetExportResource(figure *f, int buildingId)
 	}
 	int x, y;
 	if (Data_CityInfo.buildingTradeCenterBuildingId) {
-		int tcId = Data_CityInfo.buildingTradeCenterBuildingId;
-		x = Data_Buildings[tcId].x;
-		y = Data_Buildings[tcId].y;
+		struct Data_Building *trade_center = building_get(Data_CityInfo.buildingTradeCenterBuildingId);
+		x = trade_center->x;
+		y = trade_center->y;
 	} else {
 		x = f->x;
 		y = f->y;
 	}
 	int xTile, yTile;
 	int warehouseId = Trader_getClosestWarehouseForExportDocker(x, y, ship->empireCityId,
-		Data_Buildings[buildingId].distanceFromEntry, Data_Buildings[buildingId].roadNetworkId, &xTile, &yTile);
+		dock->distanceFromEntry, dock->roadNetworkId, &xTile, &yTile);
 	if (!warehouseId) {
 		return 0;
 	}
@@ -121,8 +121,8 @@ void FigureAction_docker(figure *f)
 		case FigureActionState_132_DockerIdling:
 			f->resourceId = 0;
 			f->cartGraphicId = 0;
-			if (!dockerDeliverImportResource(f, f->buildingId)) {
-				dockerGetExportResource(f, f->buildingId);
+			if (!dockerDeliverImportResource(f, b)) {
+				dockerGetExportResource(f, b);
 			}
 			f->graphicOffset = 0;
 			break;
@@ -256,7 +256,7 @@ void FigureAction_docker(figure *f)
 					f->destinationX = f->sourceX;
 					f->destinationY = f->sourceY;
 					f->resourceId = 0;
-					dockerGetExportResource(f, f->buildingId);
+					dockerGetExportResource(f, b);
 				} else {
 					f->actionState = FigureActionState_138_DockerImportReturning;
 					f->destinationX = f->sourceX;
@@ -285,7 +285,7 @@ void FigureAction_docker(figure *f)
 					trader_record_bought_resource(traderId, f->resourceId);
 					f->actionState = FigureActionState_137_DockerExportReturning;
 				} else {
-					dockerGetExportResource(f, f->buildingId);
+					dockerGetExportResource(f, b);
 				}
 			}
 			f->graphicOffset = 0;

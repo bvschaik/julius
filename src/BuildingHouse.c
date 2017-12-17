@@ -58,44 +58,46 @@ static int house_image_group(int level)
 static void create_house_tile(building_type type, int x, int y, int image_id, int population, int *inventory)
 {
     int newBuildingId = Building_create(type, x, y);
-    struct Data_Building *bNew = building_get(newBuildingId);
-    bNew->housePopulation = population;
+    struct Data_Building *b = building_get(newBuildingId);
+    b->housePopulation = population;
     for (int i = 0; i < INVENTORY_MAX; i++) {
-        bNew->data.house.inventory[i] = inventory[i];
+        b->data.house.inventory[i] = inventory[i];
     }
-    bNew->distanceFromEntry = 0;
-    Terrain_addBuildingToGrids(newBuildingId, bNew->x, bNew->y, 1,
-            image_id + (map_random_get(bNew->gridOffset) & 1), TERRAIN_BUILDING);
+    b->distanceFromEntry = 0;
+    Terrain_addBuildingToGrids(newBuildingId, b->x, b->y, 1,
+            image_id + (map_random_get(b->gridOffset) & 1), TERRAIN_BUILDING);
 }
 
 int BuildingHouse_canExpand(int buildingId, int numTiles)
 {
 	// merge with other houses
+    struct Data_Building *house = building_get(buildingId);
 	for (int dir = 0; dir < MAX_DIR; dir++) {
-		int baseOffset = directionGridOffsets[dir] + Data_Buildings[buildingId].gridOffset;
+		int baseOffset = directionGridOffsets[dir] + house->gridOffset;
 		int okTiles = 0;
 		for (int i = 0; i < numTiles; i++) {
 			int tileOffset = baseOffset + tileGridOffsets[i];
 			if (map_terrain_is(tileOffset, TERRAIN_BUILDING)) {
 				int tileBuildingId = map_building_at(tileOffset);
+                struct Data_Building *otherHouse = building_get(tileBuildingId);
 				if (tileBuildingId == buildingId) {
 					okTiles++;
-				} else if (BuildingIsInUse(tileBuildingId) && Data_Buildings[tileBuildingId].houseSize) {
-					if (Data_Buildings[tileBuildingId].subtype.houseLevel <= Data_Buildings[buildingId].subtype.houseLevel) {
+				} else if (BuildingIsInUse(tileBuildingId) && otherHouse->houseSize) {
+					if (otherHouse->subtype.houseLevel <= house->subtype.houseLevel) {
 						okTiles++;
 					}
 				}
 			}
 		}
 		if (okTiles == numTiles) {
-			mergeData.x = Data_Buildings[buildingId].x + directionOffsetX[dir];
-			mergeData.y = Data_Buildings[buildingId].y + directionOffsetY[dir];
+			mergeData.x = house->x + directionOffsetX[dir];
+			mergeData.y = house->y + directionOffsetY[dir];
 			return 1;
 		}
 	}
 	// merge with houses and empty terrain
 	for (int dir = 0; dir < MAX_DIR; dir++) {
-		int baseOffset = directionGridOffsets[dir] + Data_Buildings[buildingId].gridOffset;
+		int baseOffset = directionGridOffsets[dir] + house->gridOffset;
 		int okTiles = 0;
 		for (int i = 0; i < numTiles; i++) {
 			int tileOffset = baseOffset + tileGridOffsets[i];
@@ -106,21 +108,21 @@ int BuildingHouse_canExpand(int buildingId, int numTiles)
 				if (tileBuildingId == buildingId) {
 					okTiles++;
 				} else if (BuildingIsInUse(tileBuildingId) && Data_Buildings[tileBuildingId].houseSize) {
-					if (Data_Buildings[tileBuildingId].subtype.houseLevel <= Data_Buildings[buildingId].subtype.houseLevel) {
+					if (Data_Buildings[tileBuildingId].subtype.houseLevel <= house->subtype.houseLevel) {
 						okTiles++;
 					}
 				}
 			}
 		}
 		if (okTiles == numTiles) {
-			mergeData.x = Data_Buildings[buildingId].x + directionOffsetX[dir];
-			mergeData.y = Data_Buildings[buildingId].y + directionOffsetY[dir];
+			mergeData.x = house->x + directionOffsetX[dir];
+			mergeData.y = house->y + directionOffsetY[dir];
 			return 1;
 		}
 	}
 	// merge with houses, empty terrain and gardens
 	for (int dir = 0; dir < MAX_DIR; dir++) {
-		int baseOffset = directionGridOffsets[dir] + Data_Buildings[buildingId].gridOffset;
+		int baseOffset = directionGridOffsets[dir] + house->gridOffset;
 		int okTiles = 0;
 		for (int i = 0; i < numTiles; i++) {
 			int tileOffset = baseOffset + tileGridOffsets[i];
@@ -131,7 +133,7 @@ int BuildingHouse_canExpand(int buildingId, int numTiles)
 				if (tileBuildingId == buildingId) {
 					okTiles++;
 				} else if (BuildingIsInUse(tileBuildingId) && Data_Buildings[tileBuildingId].houseSize) {
-					if (Data_Buildings[tileBuildingId].subtype.houseLevel <= Data_Buildings[buildingId].subtype.houseLevel) {
+					if (Data_Buildings[tileBuildingId].subtype.houseLevel <= house->subtype.houseLevel) {
 						okTiles++;
 					}
 				}
@@ -140,12 +142,12 @@ int BuildingHouse_canExpand(int buildingId, int numTiles)
 			}
 		}
 		if (okTiles == numTiles) {
-			mergeData.x = Data_Buildings[buildingId].x + directionOffsetX[dir];
-			mergeData.y = Data_Buildings[buildingId].y + directionOffsetY[dir];
+			mergeData.x = house->x + directionOffsetX[dir];
+			mergeData.y = house->y + directionOffsetY[dir];
 			return 1;
 		}
 	}
-	Data_Buildings[buildingId].data.house.noSpaceToExpand = 1;
+	house->data.house.noSpaceToExpand = 1;
 	return 0;
 }
 
@@ -235,12 +237,13 @@ static void prepareForMerge(int buildingId, int numTiles)
 		int tileOffset = gridOffset + tileGridOffsets[i];
 		if (map_terrain_is(tileOffset, TERRAIN_BUILDING)) {
 			int tileBuildingId = map_building_at(tileOffset);
-			if (tileBuildingId != buildingId && Data_Buildings[tileBuildingId].houseSize) {
-				mergeData.population += Data_Buildings[tileBuildingId].housePopulation;
+            struct Data_Building *house = building_get(tileBuildingId);
+			if (tileBuildingId != buildingId && house->houseSize) {
+				mergeData.population += house->housePopulation;
 				for (int i = 0; i < INVENTORY_MAX; i++) {
-					mergeData.inventory[i] += Data_Buildings[tileBuildingId].data.house.inventory[i];
-					Data_Buildings[tileBuildingId].housePopulation = 0;
-					Data_Buildings[tileBuildingId].state = BuildingState_DeletedByGame;
+					mergeData.inventory[i] += house->data.house.inventory[i];
+					house->housePopulation = 0;
+					house->state = BuildingState_DeletedByGame;
 				}
 			}
 		}
@@ -539,33 +542,31 @@ void BuildingHouse_changeTo(int buildingId, int buildingType)
 	Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size, graphicId, TERRAIN_BUILDING);
 }
 
+static void create_vacant_lot(int x, int y, int image_id)
+{
+    int id = Building_create(BUILDING_HOUSE_VACANT_LOT, x, y);
+    struct Data_Building *b = building_get(id);
+    b->housePopulation = 0;
+    b->distanceFromEntry = 0;
+    Terrain_addBuildingToGrids(id, b->x + 1, b->y, 1, image_id, TERRAIN_BUILDING);
+}
+
 void BuildingHouse_changeToVacantLot(int buildingId)
 {
 	struct Data_Building *b = building_get(buildingId);
 	b->type = BUILDING_HOUSE_VACANT_LOT;
 	b->subtype.houseLevel = b->type - 10;
-	int graphicId = image_group(GROUP_BUILDING_HOUSE_VACANT_LOT);
+	int image_id = image_group(GROUP_BUILDING_HOUSE_VACANT_LOT);
 	if (b->houseIsMerged) {
 		Terrain_removeBuildingFromGrids(buildingId, b->x, b->y);
 		b->houseIsMerged = 0;
 		b->size = b->houseSize = 1;
-		Terrain_addBuildingToGrids(buildingId, b->x, b->y, 1, graphicId, TERRAIN_BUILDING);
+		Terrain_addBuildingToGrids(buildingId, b->x, b->y, 1, image_id, TERRAIN_BUILDING);
 
-		int b2 = Building_create(b->type, b->x + 1, b->y);
-		Data_Buildings[b2].housePopulation = 0;
-		Data_Buildings[b2].distanceFromEntry = 0;
-		Terrain_addBuildingToGrids(b2, b->x + 1, b->y, 1, graphicId, TERRAIN_BUILDING);
-
-		int b3 = Building_create(b->type, b->x, b->y + 1);
-		Data_Buildings[b3].housePopulation = 0;
-		Data_Buildings[b3].distanceFromEntry = 0;
-		Terrain_addBuildingToGrids(b3, b->x, b->y + 1, 1, graphicId, TERRAIN_BUILDING);
-
-		int b4 = Building_create(b->type, b->x + 1, b->y + 1);
-		Data_Buildings[b4].housePopulation = 0;
-		Data_Buildings[b4].distanceFromEntry = 0;
-		Terrain_addBuildingToGrids(b4, b->x + 1, b->y + 1, 1, graphicId, TERRAIN_BUILDING);
+        create_vacant_lot(b->x + 1, b->y, image_id);
+        create_vacant_lot(b->x, b->y + 1, image_id);
+        create_vacant_lot(b->x + 1, b->y + 1, image_id);
 	} else {
-		map_image_set(b->gridOffset, graphicId);
+		map_image_set(b->gridOffset, image_id);
 	}
 }

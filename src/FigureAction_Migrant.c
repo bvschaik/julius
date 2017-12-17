@@ -213,13 +213,12 @@ void FigureAction_homeless(figure *f)
 			f->isGhost = 0;
 			FigureMovement_walkTicks(f, 1);
 			if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
-				Data_Buildings[f->immigrantBuildingId].immigrantFigureId = 0;
+				building_get(f->immigrantBuildingId)->immigrantFigureId = 0;
 				f->state = FigureState_Dead;
 			} else if (f->direction == DIR_FIGURE_AT_DESTINATION) {
+                struct Data_Building *b = building_get(f->immigrantBuildingId);
 				f->actionState = FigureActionState_9_HomelessEnteringHouse;
-				FigureAction_Common_setCrossCountryDestination(f,
-					Data_Buildings[f->immigrantBuildingId].x,
-					Data_Buildings[f->immigrantBuildingId].y);
+				FigureAction_Common_setCrossCountryDestination(f, b->x, b->y);
 				f->roamLength = 0;
 			}
 			break;

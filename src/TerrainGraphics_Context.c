@@ -1,8 +1,8 @@
 #include "TerrainGraphics.h"
 
-#include "Data/Building.h"
 #include "Data/State.h"
 
+#include "building/building.h"
 #include "map/building.h"
 #include "map/elevation.h"
 #include "map/property.h"
@@ -393,9 +393,9 @@ static void setTilesRoad(int gridOffset, int tiles[MAX_TILES])
 	for (int i = 0; i < MAX_TILES; i += 2) {
 		int offset = gridOffset + contextTileOffsets[i];
 		if (map_terrain_is(offset, TERRAIN_GATEHOUSE)) {
-			int buildingId = map_building_at(offset);
-			if (Data_Buildings[buildingId].type == BUILDING_GATEHOUSE &&
-				Data_Buildings[buildingId].subtype.orientation == 1 + ((i / 2) & 1)) { // 1,2,1,2
+			struct Data_Building *b = building_get(map_building_at(offset));
+			if (b->type == BUILDING_GATEHOUSE &&
+				b->subtype.orientation == 1 + ((i / 2) & 1)) { // 1,2,1,2
 				tiles[i] = 1;
 			}
 		}
@@ -420,9 +420,8 @@ static void setTerrainReservoir(int gridOffset, int index, int edgeMask, int til
 {
 	int offset = gridOffset + contextTileOffsets[index];
 	if (map_terrain_is(offset, TERRAIN_BUILDING)) {
-		int buildingId = map_building_at(offset);
-		if (Data_Buildings[buildingId].type == BUILDING_RESERVOIR &&
-			map_property_multi_tile_xy(offset) == edgeMask) {
+		struct Data_Building *b = building_get(map_building_at(offset));
+		if (b->type == BUILDING_RESERVOIR && map_property_multi_tile_xy(offset) == edgeMask) {
 			tiles[index] = 1;
 		}
 	}

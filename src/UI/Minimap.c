@@ -2,10 +2,10 @@
 #include "Sidebar.h"
 #include "../CityView.h"
 #include "../Graphics.h"
-#include "../Data/Building.h"
 #include "../Data/CityView.h"
 #include "../Data/State.h"
 
+#include "building/building.h"
 #include "figure/figure.h"
 #include "figure/type.h"
 #include "graphics/image.h"
@@ -162,7 +162,7 @@ static void drawTile(int xView, int yView, int gridOffset)
 	int terrain = map_terrain_get(gridOffset);
 	// exception for fort ground: display as empty land
 	if (terrain & TERRAIN_BUILDING) {
-		if (Data_Buildings[map_building_at(gridOffset)].type == BUILDING_FORT_GROUND) {
+		if (building_get(map_building_at(gridOffset))->type == BUILDING_FORT_GROUND) {
 			terrain = 0;
 		}
 	}
@@ -170,10 +170,10 @@ static void drawTile(int xView, int yView, int gridOffset)
 	if (terrain & TERRAIN_BUILDING) {
 		if (map_property_is_draw_tile(gridOffset)) {
 			int graphicId;
-			int buildingId = map_building_at(gridOffset);
-			if (Data_Buildings[buildingId].houseSize) {
+			struct Data_Building *b = building_get(map_building_at(gridOffset));
+			if (b->houseSize) {
 				graphicId = image_group(GROUP_MINIMAP_HOUSE);
-			} else if (Data_Buildings[buildingId].type == BUILDING_RESERVOIR) {
+			} else if (b->type == BUILDING_RESERVOIR) {
 				graphicId = image_group(GROUP_MINIMAP_AQUEDUCT) - 1;
 			} else {
 				graphicId = image_group(GROUP_MINIMAP_BUILDING);

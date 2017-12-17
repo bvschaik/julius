@@ -8,10 +8,10 @@
 #include "../Resource.h"
 #include "../Widget.h"
 
-#include "../Data/Building.h"
 #include "../Data/Constants.h"
 #include "../Data/State.h"
 
+#include "building/building.h"
 #include "empire/city.h"
 #include "figure/figure.h"
 #include "figure/formation.h"
@@ -255,8 +255,8 @@ static void drawFigureInfoCartpusher(BuildingInfoContext *c, figure *f)
 	if (!f->buildingId) {
 		return;
 	}
-	int sourceBuildingId = f->buildingId;
-	int targetBuildingId = f->destinationBuildingId;
+	struct Data_Building *sourceBuilding = building_get(f->buildingId);
+	struct Data_Building *targetBuilding = building_get(f->destinationBuildingId);
 	int isReturning = 0;
 	switch (f->actionState) {
 		case FigureActionState_27_CartpusherReturning:
@@ -273,20 +273,20 @@ static void drawFigureInfoCartpusher(BuildingInfoContext *c, figure *f)
 		if (isReturning) {
 			width = Widget_GameText_draw(129, 16,
 				c->xOffset + 40, c->yOffset + 200, FONT_SMALL_BLACK);
-			width += Widget_GameText_draw(41, Data_Buildings[sourceBuildingId].type,
+			width += Widget_GameText_draw(41, sourceBuilding->type,
 				c->xOffset + 40 + width, c->yOffset + 200, FONT_SMALL_BLACK);
 			width += Widget_GameText_draw(129, 14,
 				c->xOffset + 40 + width, c->yOffset + 200, FONT_SMALL_BLACK);
-			width += Widget_GameText_draw(41, Data_Buildings[targetBuildingId].type,
+			width += Widget_GameText_draw(41, targetBuilding->type,
 				c->xOffset + 40 + width, c->yOffset + 200, FONT_SMALL_BLACK);
 		} else {
 			width = Widget_GameText_draw(129, 15,
 				c->xOffset + 40, c->yOffset + 200, FONT_SMALL_BLACK);
-			width += Widget_GameText_draw(41, Data_Buildings[targetBuildingId].type,
+			width += Widget_GameText_draw(41, targetBuilding->type,
 				c->xOffset + 40 + width, c->yOffset + 200, FONT_SMALL_BLACK);
 			width += Widget_GameText_draw(129, 14,
 				c->xOffset + 40 + width, c->yOffset + 200, FONT_SMALL_BLACK);
-			width += Widget_GameText_draw(41, Data_Buildings[sourceBuildingId].type,
+			width += Widget_GameText_draw(41, sourceBuilding->type,
 				c->xOffset + 40 + width, c->yOffset + 200, FONT_SMALL_BLACK);
 		}
 	}

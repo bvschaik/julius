@@ -541,14 +541,15 @@ void TerrainGraphics_setBuildingAreaRubble(int buildingId, int x, int y, int siz
 	if (!map_grid_is_inside(x, y, size)) {
 		return;
 	}
+	struct Data_Building *b = building_get(buildingId);
 	for (int dy = 0; dy < size; dy++) {
 		for (int dx = 0; dx < size; dx++) {
 			int gridOffset = map_grid_offset(x + dx, y + dy);
 			if (map_building_at(gridOffset) != buildingId) {
 				continue;
 			}
-			if (buildingId && Data_Buildings[map_building_at(gridOffset)].type != BUILDING_BURNING_RUIN) {
-				map_set_rubble_building_type(gridOffset, Data_Buildings[buildingId].type);
+			if (buildingId && building_get(map_building_at(gridOffset))->type != BUILDING_BURNING_RUIN) {
+				map_set_rubble_building_type(gridOffset, b->type);
 			}
 			map_property_clear_constructing(gridOffset);
 			map_property_set_multi_tile_size(gridOffset, 1);

@@ -285,10 +285,11 @@ static void determineGranarymanDestination(figure *f, int roadNetworkId)
 		}
 		return;
 	}
+	struct Data_Building *granary = building_get(f->buildingId);
 	// delivering resource
 	// priority 1: another granary
 	dstBuildingId = Resource_getGranaryForStoringFood(0, f->x, f->y,
-		f->resourceId, Data_Buildings[f->buildingId].distanceFromEntry,
+		f->resourceId, granary->distanceFromEntry,
 		roadNetworkId, 0, &xDst, &yDst);
 	if (dstBuildingId) {
 		setDestination(f, FigureActionState_51_WarehousemanDeliveringResource, dstBuildingId, xDst, yDst);
@@ -297,7 +298,7 @@ static void determineGranarymanDestination(figure *f, int roadNetworkId)
 	}
 	// priority 2: warehouse
 	dstBuildingId = Resource_getWarehouseForStoringResource(0, f->x, f->y,
-		f->resourceId, Data_Buildings[f->buildingId].distanceFromEntry,
+		f->resourceId, granary->distanceFromEntry,
 		roadNetworkId, 0, &xDst, &yDst);
 	if (dstBuildingId) {
 		setDestination(f, FigureActionState_51_WarehousemanDeliveringResource, dstBuildingId, xDst, yDst);
@@ -306,7 +307,7 @@ static void determineGranarymanDestination(figure *f, int roadNetworkId)
 	}
 	// priority 3: granary even though resource is on stockpile
 	dstBuildingId = Resource_getGranaryForStoringFood(1, f->x, f->y,
-		f->resourceId, Data_Buildings[f->buildingId].distanceFromEntry,
+		f->resourceId, granary->distanceFromEntry,
 		roadNetworkId, 0, &xDst, &yDst);
 	if (dstBuildingId) {
 		setDestination(f, FigureActionState_51_WarehousemanDeliveringResource, dstBuildingId, xDst, yDst);
@@ -343,6 +344,7 @@ static void determineWarehousemanDestination(figure *f, int roadNetworkId)
 		}
 		return;
 	}
+	struct Data_Building *warehouse = building_get(f->buildingId);
 	// delivering resource
 	// priority 1: weapons to barracks
 	dstBuildingId = Resource_getBarracksForWeapon(f->x, f->y, f->resourceId,
@@ -354,7 +356,7 @@ static void determineWarehousemanDestination(figure *f, int roadNetworkId)
 	}
 	// priority 2: raw materials to workshop
 	dstBuildingId = Resource_getWorkshopWithRoomForRawMaterial(f->x, f->y, f->resourceId,
-		Data_Buildings[f->buildingId].distanceFromEntry, roadNetworkId, &xDst, &yDst);
+		warehouse->distanceFromEntry, roadNetworkId, &xDst, &yDst);
 	if (dstBuildingId) {
 		setDestination(f, FigureActionState_51_WarehousemanDeliveringResource, dstBuildingId, xDst, yDst);
 		removeResourceFromWarehouse(f);
@@ -362,7 +364,7 @@ static void determineWarehousemanDestination(figure *f, int roadNetworkId)
 	}
 	// priority 3: food to granary
 	dstBuildingId = Resource_getGranaryForStoringFood(0, f->x, f->y, f->resourceId,
-		Data_Buildings[f->buildingId].distanceFromEntry, roadNetworkId, 0, &xDst, &yDst);
+		warehouse->distanceFromEntry, roadNetworkId, 0, &xDst, &yDst);
 	if (dstBuildingId) {
 		setDestination(f, FigureActionState_51_WarehousemanDeliveringResource, dstBuildingId, xDst, yDst);
 		removeResourceFromWarehouse(f);
@@ -370,7 +372,7 @@ static void determineWarehousemanDestination(figure *f, int roadNetworkId)
 	}
 	// priority 4: food to getting granary
 	dstBuildingId = Resource_getGettingGranaryForStoringFood(f->x, f->y, f->resourceId,
-		Data_Buildings[f->buildingId].distanceFromEntry, roadNetworkId, &xDst, &yDst);
+		warehouse->distanceFromEntry, roadNetworkId, &xDst, &yDst);
 	if (dstBuildingId) {
 		setDestination(f, FigureActionState_51_WarehousemanDeliveringResource, dstBuildingId, xDst, yDst);
 		removeResourceFromWarehouse(f);
@@ -378,7 +380,7 @@ static void determineWarehousemanDestination(figure *f, int roadNetworkId)
 	}
 	// priority 5: resource to other warehouse
 	dstBuildingId = Resource_getWarehouseForStoringResource(f->buildingId, f->x, f->y, f->resourceId,
-		Data_Buildings[f->buildingId].distanceFromEntry, roadNetworkId, 0, &xDst, &yDst);
+		warehouse->distanceFromEntry, roadNetworkId, 0, &xDst, &yDst);
 	if (dstBuildingId) {
 		if (dstBuildingId == f->buildingId) {
 			f->state = FigureState_Dead;
@@ -390,7 +392,7 @@ static void determineWarehousemanDestination(figure *f, int roadNetworkId)
 	}
 	// priority 6: raw material to well-stocked workshop
 	dstBuildingId = Resource_getWorkshopForRawMaterial(f->x, f->y, f->resourceId,
-		Data_Buildings[f->buildingId].distanceFromEntry, roadNetworkId, &xDst, &yDst);
+		warehouse->distanceFromEntry, roadNetworkId, &xDst, &yDst);
 	if (dstBuildingId) {
 		setDestination(f, FigureActionState_51_WarehousemanDeliveringResource, dstBuildingId, xDst, yDst);
 		removeResourceFromWarehouse(f);
@@ -415,13 +417,12 @@ void FigureAction_warehouseman(figure *f)
 			FigureAction_Common_handleCorpse(f);
 			break;
 		case FigureActionState_50_WarehousemanCreated:
-			if (!BuildingIsInUse(f->buildingId) ||
-				Data_Buildings[f->buildingId].figureId != f->id) {
+			if (!BuildingIsInUse(f->buildingId) || building_get(f->buildingId)->figureId != f->id) {
 				f->state = FigureState_Dead;
 			}
 			f->waitTicks++;
 			if (f->waitTicks > 2) {
-				if (Data_Buildings[f->buildingId].type == BUILDING_GRANARY) {
+				if (building_get(f->buildingId)->type == BUILDING_GRANARY) {
 					determineGranarymanDestination(f, roadNetworkId);
 				} else {
 					determineWarehousemanDestination(f, roadNetworkId);
@@ -449,7 +450,7 @@ void FigureAction_warehouseman(figure *f)
 			f->waitTicks++;
 			if (f->waitTicks > 4) {
 				int buildingId = f->destinationBuildingId;
-				switch (Data_Buildings[buildingId].type) {
+				switch (building_get(buildingId)->type) {
 					case BUILDING_GRANARY:
 						Resource_addToGranary(buildingId, f->resourceId, 0);
 						break;

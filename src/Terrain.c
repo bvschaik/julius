@@ -5,10 +5,10 @@
 #include "FigureAction.h"
 #include "TerrainGraphics.h"
 
-#include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/State.h"
 
+#include "building/building.h"
 #include "core/calc.h"
 #include "graphics/image.h"
 #include "map/aqueduct.h"
@@ -139,7 +139,8 @@ void Terrain_removeBuildingFromGrids(int buildingId, int x, int y)
 	if (map_terrain_get(baseGridOffset) == TERRAIN_ROCK) {
 		return;
 	}
-	if (buildingId && BuildingIsFarm(Data_Buildings[buildingId].type)) {
+	struct Data_Building *b = building_get(buildingId);
+	if (buildingId && BuildingIsFarm(b->type)) {
 		size = 3;
 	}
 	for (int dy = 0; dy < size; dy++) {
@@ -148,8 +149,8 @@ void Terrain_removeBuildingFromGrids(int buildingId, int x, int y)
 			if (buildingId && map_building_at(gridOffset) != buildingId) {
 				continue;
 			}
-			if (buildingId && Data_Buildings[buildingId].type != BUILDING_BURNING_RUIN) {
-				map_set_rubble_building_type(gridOffset, Data_Buildings[buildingId].type);
+			if (buildingId && b->type != BUILDING_BURNING_RUIN) {
+				map_set_rubble_building_type(gridOffset, b->type);
 			}
 			map_property_clear_constructing(gridOffset);
 			map_property_set_multi_tile_size(gridOffset, 1);
@@ -239,7 +240,7 @@ int Terrain_hasRoadAccess(int x, int y, int size, int *roadX, int *roadY)
 	int minGridOffset = map_grid_offset(x, y);
 	FOR_XY_ADJACENT {
 		if (!map_terrain_is(gridOffset, TERRAIN_BUILDING) ||
-			Data_Buildings[map_building_at(gridOffset)].type != BUILDING_GATEHOUSE) {
+			building_get(map_building_at(gridOffset))->type != BUILDING_GATEHOUSE) {
 			if (map_terrain_is(gridOffset, TERRAIN_ROAD)) {
 				int roadIndex = 11;
 				for (int n = 0; n < 10; n++) {
@@ -272,7 +273,7 @@ int Terrain_hasRoadAccessHippodrome(int x, int y, int *roadX, int *roadY)
 	int minGridOffset = map_grid_offset(x, y);
 	FOR_XY_ADJACENT {
 		if (!map_terrain_is(gridOffset, TERRAIN_BUILDING) ||
-			Data_Buildings[map_building_at(gridOffset)].type != BUILDING_GATEHOUSE) {
+			building_get(map_building_at(gridOffset))->type != BUILDING_GATEHOUSE) {
 			if (map_terrain_is(gridOffset, TERRAIN_ROAD)) {
 				int roadIndex = 11;
 				for (int n = 0; n < 10; n++) {
@@ -291,7 +292,7 @@ int Terrain_hasRoadAccessHippodrome(int x, int y, int *roadX, int *roadY)
 	x += 5;
 	FOR_XY_ADJACENT {
 		if (!map_terrain_is(gridOffset, TERRAIN_BUILDING) ||
-			Data_Buildings[map_building_at(gridOffset)].type != BUILDING_GATEHOUSE) {
+			building_get(map_building_at(gridOffset))->type != BUILDING_GATEHOUSE) {
 			if (map_terrain_is(gridOffset, TERRAIN_ROAD)) {
 				int roadIndex = 11;
 				for (int n = 0; n < 10; n++) {
@@ -310,7 +311,7 @@ int Terrain_hasRoadAccessHippodrome(int x, int y, int *roadX, int *roadY)
 	x += 5;
 	FOR_XY_ADJACENT {
 		if (!map_terrain_is(gridOffset, TERRAIN_BUILDING) ||
-			Data_Buildings[map_building_at(gridOffset)].type != BUILDING_GATEHOUSE) {
+			building_get(map_building_at(gridOffset))->type != BUILDING_GATEHOUSE) {
 			if (map_terrain_is(gridOffset, TERRAIN_ROAD)) {
 				int roadIndex = 11;
 				for (int n = 0; n < 10; n++) {
@@ -669,12 +670,12 @@ static int getRoadTileForAqueduct(int gridOffset, int gateOrientation)
 {
 	int isRoad = map_terrain_is(gridOffset, TERRAIN_ROAD) ? 1 : 0;
 	if (map_terrain_is(gridOffset, TERRAIN_BUILDING)) {
-		int type = Data_Buildings[map_building_at(gridOffset)].type;
-		if (type == BUILDING_GATEHOUSE) {
-			if (Data_Buildings[map_building_at(gridOffset)].subtype.orientation == gateOrientation) {
+		struct Data_Building *b = building_get(map_building_at(gridOffset));
+		if (b->type == BUILDING_GATEHOUSE) {
+			if (b->subtype.orientation == gateOrientation) {
 				isRoad = 1;
 			}
-		} else if (type == BUILDING_GRANARY) {
+		} else if (b->type == BUILDING_GRANARY) {
 			if (map_routing_citizen_is_road(gridOffset)) {
 				isRoad = 1;
 			}
@@ -691,7 +692,7 @@ int Terrain_getAdjacentRoadTilesForAqueduct(int gridOffset)
 	roadTiles += getRoadTileForAqueduct(gridOffset + map_grid_delta(0, 1), 1);
 	roadTiles += getRoadTileForAqueduct(gridOffset + map_grid_delta(-1, 0), 2);
 	if (roadTiles == 4) {
-		if (Data_Buildings[map_building_at(gridOffset)].type == BUILDING_GRANARY) {
+		if (building_get(map_building_at(gridOffset))->type == BUILDING_GRANARY) {
 			roadTiles = 2;
 		}
 	}
@@ -707,10 +708,10 @@ static int getAdjacentRoadTileForRoaming(int gridOffset)
 {
 	int isRoad = terrain_is_road_like(gridOffset);
 	if (map_terrain_is(gridOffset, TERRAIN_BUILDING)) {
-		int type = Data_Buildings[map_building_at(gridOffset)].type;
-		if (type == BUILDING_GATEHOUSE) {
+		struct Data_Building *b = building_get(map_building_at(gridOffset));
+		if (b->type == BUILDING_GATEHOUSE) {
 			isRoad = 0;
-		} else if (type == BUILDING_GRANARY) {
+		} else if (b->type == BUILDING_GRANARY) {
 			if (map_routing_citizen_is_road(gridOffset)) {
 				isRoad = 1;
 			}

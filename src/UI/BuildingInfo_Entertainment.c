@@ -150,7 +150,7 @@ static void drawEntertainmentSchool(BuildingInfoContext *c, int groupId, const c
 	Widget_GameText_drawCentered(groupId, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	if (!c->hasRoadAccess) {
 		DRAW_DESC(69, 25);
-	} else if (Data_Buildings[c->buildingId].numWorkers <= 0) {
+	} else if (building_get(c->buildingId)->numWorkers <= 0) {
 		DRAW_DESC(groupId, 7);
 	} else if (c->workerPercentage >= 100) {
 		DRAW_DESC(groupId, 2);

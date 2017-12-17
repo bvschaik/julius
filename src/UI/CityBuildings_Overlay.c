@@ -324,13 +324,14 @@ static void drawFootprintForWaterOverlay(int gridOffset, int xOffset, int yOffse
 		DRAWFOOT_SIZE1(graphicId, xOffset, yOffset);
 	} else if (map_terrain_is(gridOffset, TERRAIN_BUILDING)) {
 		int buildingId = map_building_at(gridOffset);
+        struct Data_Building *b = building_get(buildingId);
 		int terrain = map_terrain_get(gridOffset);
-		if (buildingId && Data_Buildings[buildingId].hasWellAccess == 1) {
+		if (buildingId && b->hasWellAccess == 1) {
 			terrain |= TERRAIN_FOUNTAIN_RANGE;
 		}
-		if (Data_Buildings[buildingId].type == BUILDING_WELL || Data_Buildings[buildingId].type == BUILDING_FOUNTAIN) {
+		if (b->type == BUILDING_WELL || b->type == BUILDING_FOUNTAIN) {
 			DRAWFOOT_SIZE1(map_image_at(gridOffset), xOffset, yOffset);
-		} else if (Data_Buildings[buildingId].type == BUILDING_RESERVOIR) {
+		} else if (b->type == BUILDING_RESERVOIR) {
 			DRAWFOOT_SIZE3(map_image_at(gridOffset), xOffset, yOffset);
 		} else {
 			int graphicOffset;

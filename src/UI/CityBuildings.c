@@ -457,9 +457,9 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 				UI_CityBuildings_drawBridge(gridOffset, xGraphic, yGraphic);
 			} else if (Data_Buildings[map_building_at(gridOffset)].type == BUILDING_FORT) {
 				if (map_property_is_draw_tile(gridOffset)) {
-					int buildingId = map_building_at(gridOffset);
+					struct Data_Building *fort = building_get(map_building_at(gridOffset));
 					int offset = 0;
-					switch (Data_Buildings[buildingId].subtype.fortFigureType) {
+					switch (fort->subtype.fortFigureType) {
 						case FIGURE_FORT_LEGIONARY: offset = 4; break;
 						case FIGURE_FORT_MOUNTED: offset = 3; break;
 						case FIGURE_FORT_JAVELIN: offset = 2; break;
@@ -475,15 +475,15 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 					(Data_State.map.orientation == DIR_2_RIGHT && xy == Edge_X0Y1) ||
 					(Data_State.map.orientation == DIR_4_BOTTOM && xy == Edge_X0Y0) ||
 					(Data_State.map.orientation == DIR_6_LEFT && xy == Edge_X1Y0)) {
-					int buildingId = map_building_at(gridOffset);
+					struct Data_Building *gate = building_get(map_building_at(gridOffset));
 					int graphicId = image_group(GROUP_BULIDING_GATEHOUSE);
-					if (Data_Buildings[buildingId].subtype.orientation == 1) {
+					if (gate->subtype.orientation == 1) {
 						if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_4_BOTTOM) {
 							Graphics_drawImage(graphicId, xGraphic - 22, yGraphic - 80);
 						} else {
 							Graphics_drawImage(graphicId + 1, xGraphic - 18, yGraphic - 81);
 						}
-					} else if (Data_Buildings[buildingId].subtype.orientation == 2) {
+					} else if (gate->subtype.orientation == 2) {
 						if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_4_BOTTOM) {
 							Graphics_drawImage(graphicId + 1, xGraphic - 18, yGraphic - 81);
 						} else {

@@ -1,6 +1,7 @@
 #include "Terrain.h"
 #include "Terrain_private.h"
 
+#include "building/building.h"
 #include "core/calc.h"
 #include "figure/figure.h"
 #include "map/building.h"
@@ -10,7 +11,6 @@
 #include "map/terrain.h"
 #include "scenario/map.h"
 
-#include "Data/Building.h"
 #include "Data/CityInfo.h"
 
 void Terrain_addWatersideBuildingToGrids(int buildingId, int x, int y, int size, int graphicId)
@@ -215,9 +215,10 @@ int Terrain_Water_getWharfTileForNewFishingBoat(int figureId, int *xTile, int *y
 	if (wharfId <= 0) {
 		return 0;
 	}
-	*xTile = Data_Buildings[wharfId].x;
-	*yTile = Data_Buildings[wharfId].y;
-	switch (Data_Buildings[wharfId].data.other.dockOrientation) {
+	struct Data_Building *wharf = building_get(wharfId);
+	*xTile = wharf->x;
+	*yTile = wharf->y;
+	switch (wharf->data.other.dockOrientation) {
 		case 0: *xTile += 1; *yTile -= 1; break;
 		case 1: *xTile += 2; *yTile += 1; break;
 		case 2: *xTile += 1; *yTile += 2; break;
@@ -302,15 +303,16 @@ int Terrain_Water_getFreeDockDestination(int figureId, int *xTile, int *yTile)
 	if (dockId <= 0) {
 		return 0;
 	}
-	*xTile = Data_Buildings[dockId].x;
-	*yTile = Data_Buildings[dockId].y;
-	switch (Data_Buildings[dockId].data.other.dockOrientation) {
+	struct Data_Building *dock = building_get(dockId);
+	*xTile = dock->x;
+	*yTile = dock->y;
+	switch (dock->data.other.dockOrientation) {
 		case 0: *xTile += 1; *yTile -= 1; break;
 		case 1: *xTile += 3; *yTile += 1; break;
 		case 2: *xTile += 1; *yTile += 3; break;
 		default: *xTile -= 1; *yTile += 1; break;
 	}
-	Data_Buildings[dockId].data.other.boatFigureId = figureId;
+	dock->data.other.boatFigureId = figureId;
 	return dockId;
 }
 

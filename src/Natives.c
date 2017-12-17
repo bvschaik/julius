@@ -105,12 +105,11 @@ static void determineMeetingCenter()
 			int minDist = 1000;
 			int minMeetingId = 0;
 			for (int n = 0; n < total_meetings; n++) {
-				int meetingId = meetings[n];
-				int dist = calc_maximum_distance(b->x, b->y,
-					Data_Buildings[meetingId].x, Data_Buildings[meetingId].y);
+				struct Data_Building *meeting = building_get(meetings[n]);
+				int dist = calc_maximum_distance(b->x, b->y, meeting->x, meeting->y);
 				if (dist < minDist) {
 					minDist = dist;
-					minMeetingId = meetingId;
+					minMeetingId = meetings[n];
 				}
 			}
 			b->subtype.nativeMeetingCenterId = minMeetingId;
