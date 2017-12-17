@@ -11,8 +11,8 @@
 #include "game/time.h"
 #include "map/routing_terrain.h"
 
-static int checkEvolveDesirability(int buildingId);
-static int hasRequiredGoodsAndServices(int buildingId, int forUpgrade);
+static int checkEvolveDesirability(struct Data_Building *b);
+static int hasRequiredGoodsAndServices(struct Data_Building *b, int forUpgrade);
 static void resetCityInfoServiceRequiredCounters();
 static void consumeResources(int buildingId);
 
@@ -22,41 +22,47 @@ enum {
 	Devolve = -1
 };
 
-static int check_requirements(int buildingId)
+static int check_requirements(struct Data_Building *b)
 {
-    int status = checkEvolveDesirability(buildingId);
-    if (!hasRequiredGoodsAndServices(buildingId, 0)) {
+    int status = checkEvolveDesirability(b);
+    if (!hasRequiredGoodsAndServices(b, 0)) {
         status = Devolve;
     } else if (status == Evolve) {
-        status = hasRequiredGoodsAndServices(buildingId, 1);
+        status = hasRequiredGoodsAndServices(b, 1);
     }
     return status;
 }
 
-#define CHECK_DEVOLVE_DELAY() \
-	if (status == Devolve && Data_Buildings[buildingId].data.house.devolveDelay < 2) {\
-		++Data_Buildings[buildingId].data.house.devolveDelay;\
-		return;\
-	}\
-	Data_Buildings[buildingId].data.house.devolveDelay = 0;
-
-static void evolveSmallTent(int buildingId, int *hasExpanded)
+static int has_devolve_delay(struct Data_Building *b, int status)
 {
-	if (Data_Buildings[buildingId].housePopulation > 0) {
+    if (status == Devolve && b->data.house.devolveDelay < 2) {
+        b->data.house.devolveDelay++;
+        return 1;
+    } else {
+        b->data.house.devolveDelay = 0;
+        return 0;
+    }
+}
+
+static void evolveSmallTent(int buildingId, struct Data_Building *b, int *hasExpanded)
+{
+	if (b->housePopulation > 0) {
 		BuildingHouse_checkMerge(buildingId);
-		int status = check_requirements(buildingId);
+		int status = check_requirements(b);
 		if (status == Evolve) {
 			BuildingHouse_changeTo(buildingId, BUILDING_HOUSE_LARGE_TENT);
 		}
 	}
 }
 
-static void evolveLargeTent(int buildingId, int *hasExpanded)
+static void evolveLargeTent(int buildingId, struct Data_Building *b, int *hasExpanded)
 {
-	if (Data_Buildings[buildingId].housePopulation > 0) {
+	if (b->housePopulation > 0) {
 		BuildingHouse_checkMerge(buildingId);
-		int status = check_requirements(buildingId);
-		CHECK_DEVOLVE_DELAY();
+		int status = check_requirements(b);
+        if (has_devolve_delay(b, status)) {
+            return;
+        }
 		if (status == Evolve) {
 			BuildingHouse_changeTo(buildingId, BUILDING_HOUSE_SMALL_SHACK);
 		} else if (status == Devolve) {
@@ -65,11 +71,13 @@ static void evolveLargeTent(int buildingId, int *hasExpanded)
 	}
 }
 
-static void evolveSmallShack(int buildingId, int *hasExpanded)
+static void evolveSmallShack(int buildingId, struct Data_Building *b, int *hasExpanded)
 {
 	BuildingHouse_checkMerge(buildingId);
-	int status = check_requirements(buildingId);
-	CHECK_DEVOLVE_DELAY();
+	int status = check_requirements(b);
+    if (has_devolve_delay(b, status)) {
+        return;
+    }
 	if (status == Evolve) {
 		BuildingHouse_changeTo(buildingId, BUILDING_HOUSE_LARGE_SHACK);
 	} else if (status == Devolve) {
@@ -77,11 +85,13 @@ static void evolveSmallShack(int buildingId, int *hasExpanded)
 	}
 }
 
-static void evolveLargeShack(int buildingId, int *hasExpanded)
+static void evolveLargeShack(int buildingId, struct Data_Building *b, int *hasExpanded)
 {
 	BuildingHouse_checkMerge(buildingId);
-	int status = check_requirements(buildingId);
-	CHECK_DEVOLVE_DELAY();
+	int status = check_requirements(b);
+    if (has_devolve_delay(b, status)) {
+        return;
+    }
 	if (status == Evolve) {
 		BuildingHouse_changeTo(buildingId, BUILDING_HOUSE_SMALL_HOVEL);
 	} else if (status == Devolve) {
@@ -89,11 +99,13 @@ static void evolveLargeShack(int buildingId, int *hasExpanded)
 	}
 }
 
-static void evolveSmallHovel(int buildingId, int *hasExpanded)
+static void evolveSmallHovel(int buildingId, struct Data_Building *b, int *hasExpanded)
 {
 	BuildingHouse_checkMerge(buildingId);
-	int status = check_requirements(buildingId);
-	CHECK_DEVOLVE_DELAY();
+	int status = check_requirements(b);
+    if (has_devolve_delay(b, status)) {
+        return;
+    }
 	if (status == Evolve) {
 		BuildingHouse_changeTo(buildingId, BUILDING_HOUSE_LARGE_HOVEL);
 	} else if (status == Devolve) {
@@ -101,11 +113,13 @@ static void evolveSmallHovel(int buildingId, int *hasExpanded)
 	}
 }
 
-static void evolveLargeHovel(int buildingId, int *hasExpanded)
+static void evolveLargeHovel(int buildingId, struct Data_Building *b, int *hasExpanded)
 {
 	BuildingHouse_checkMerge(buildingId);
-	int status = check_requirements(buildingId);
-	CHECK_DEVOLVE_DELAY();
+	int status = check_requirements(b);
+    if (has_devolve_delay(b, status)) {
+        return;
+    }
 	if (status == Evolve) {
 		BuildingHouse_changeTo(buildingId, BUILDING_HOUSE_SMALL_CASA);
 	} else if (status == Devolve) {
@@ -113,11 +127,13 @@ static void evolveLargeHovel(int buildingId, int *hasExpanded)
 	}
 }
 
-static void evolveSmallCasa(int buildingId, int *hasExpanded)
+static void evolveSmallCasa(int buildingId, struct Data_Building *b, int *hasExpanded)
 {
 	BuildingHouse_checkMerge(buildingId);
-	int status = check_requirements(buildingId);
-	CHECK_DEVOLVE_DELAY();
+	int status = check_requirements(b);
+    if (has_devolve_delay(b, status)) {
+        return;
+    }
 	if (status == Evolve) {
 		BuildingHouse_changeTo(buildingId, BUILDING_HOUSE_LARGE_CASA);
 	} else if (status == Devolve) {
@@ -125,11 +141,13 @@ static void evolveSmallCasa(int buildingId, int *hasExpanded)
 	}
 }
 
-static void evolveLargeCasa(int buildingId, int *hasExpanded)
+static void evolveLargeCasa(int buildingId, struct Data_Building *b, int *hasExpanded)
 {
 	BuildingHouse_checkMerge(buildingId);
-	int status = check_requirements(buildingId);
-	CHECK_DEVOLVE_DELAY();
+	int status = check_requirements(b);
+    if (has_devolve_delay(b, status)) {
+        return;
+    }
 	if (status == Evolve) {
 		BuildingHouse_changeTo(buildingId, BUILDING_HOUSE_SMALL_INSULA);
 	} else if (status == Devolve) {
@@ -137,11 +155,13 @@ static void evolveLargeCasa(int buildingId, int *hasExpanded)
 	}
 }
 
-static void evolveSmallInsula(int buildingId, int *hasExpanded)
+static void evolveSmallInsula(int buildingId, struct Data_Building *b, int *hasExpanded)
 {
 	BuildingHouse_checkMerge(buildingId);
-	int status = check_requirements(buildingId);
-	CHECK_DEVOLVE_DELAY();
+	int status = check_requirements(b);
+    if (has_devolve_delay(b, status)) {
+        return;
+    }
 	if (status == Evolve) {
 		BuildingHouse_changeTo(buildingId, BUILDING_HOUSE_MEDIUM_INSULA);
 	} else if (status == Devolve) {
@@ -149,14 +169,16 @@ static void evolveSmallInsula(int buildingId, int *hasExpanded)
 	}
 }
 
-static void evolveMediumInsula(int buildingId, int *hasExpanded)
+static void evolveMediumInsula(int buildingId, struct Data_Building *b, int *hasExpanded)
 {
 	BuildingHouse_checkMerge(buildingId);
-	int status = check_requirements(buildingId);
-	CHECK_DEVOLVE_DELAY();
+	int status = check_requirements(b);
+    if (has_devolve_delay(b, status)) {
+        return;
+    }
 	if (status == Evolve) {
 		if (BuildingHouse_canExpand(buildingId, 4)) {
-			Data_Buildings[buildingId].houseIsMerged = 0;
+			b->houseIsMerged = 0;
 			BuildingHouse_expandToLargeInsula(buildingId);
 			*hasExpanded = 1;
 			TerrainGraphics_updateAllGardens();
@@ -166,10 +188,12 @@ static void evolveMediumInsula(int buildingId, int *hasExpanded)
 	}
 }
 
-static void evolveLargeInsula(int buildingId, int *hasExpanded)
+static void evolveLargeInsula(int buildingId, struct Data_Building *b, int *hasExpanded)
 {
-	int status = check_requirements(buildingId);
-	CHECK_DEVOLVE_DELAY();
+	int status = check_requirements(b);
+    if (has_devolve_delay(b, status)) {
+        return;
+    }
 	if (status == Evolve) {
 		BuildingHouse_changeTo(buildingId, BUILDING_HOUSE_GRAND_INSULA);
 	} else if (status == Devolve) {
@@ -177,10 +201,12 @@ static void evolveLargeInsula(int buildingId, int *hasExpanded)
 	}
 }
 
-static void evolveGrandInsula(int buildingId, int *hasExpanded)
+static void evolveGrandInsula(int buildingId, struct Data_Building *b, int *hasExpanded)
 {
-	int status = check_requirements(buildingId);
-	CHECK_DEVOLVE_DELAY();
+	int status = check_requirements(b);
+    if (has_devolve_delay(b, status)) {
+        return;
+    }
 	if (status == Evolve) {
 		BuildingHouse_changeTo(buildingId, BUILDING_HOUSE_SMALL_VILLA);
 	} else if (status == Devolve) {
@@ -188,10 +214,12 @@ static void evolveGrandInsula(int buildingId, int *hasExpanded)
 	}
 }
 
-static void evolveSmallVilla(int buildingId, int *hasExpanded)
+static void evolveSmallVilla(int buildingId, struct Data_Building *b, int *hasExpanded)
 {
-	int status = check_requirements(buildingId);
-	CHECK_DEVOLVE_DELAY();
+	int status = check_requirements(b);
+    if (has_devolve_delay(b, status)) {
+        return;
+    }
 	if (status == Evolve) {
 		BuildingHouse_changeTo(buildingId, BUILDING_HOUSE_MEDIUM_VILLA);
 	} else if (status == Devolve) {
@@ -199,10 +227,12 @@ static void evolveSmallVilla(int buildingId, int *hasExpanded)
 	}
 }
 
-static void evolveMediumVilla(int buildingId, int *hasExpanded)
+static void evolveMediumVilla(int buildingId, struct Data_Building *b, int *hasExpanded)
 {
-	int status = check_requirements(buildingId);
-	CHECK_DEVOLVE_DELAY();
+	int status = check_requirements(b);
+    if (has_devolve_delay(b, status)) {
+        return;
+    }
 	if (status == Evolve) {
 		if (BuildingHouse_canExpand(buildingId, 9)) {
 			BuildingHouse_expandToLargeVilla(buildingId);
@@ -214,10 +244,12 @@ static void evolveMediumVilla(int buildingId, int *hasExpanded)
 	}
 }
 
-static void evolveLargeVilla(int buildingId, int *hasExpanded)
+static void evolveLargeVilla(int buildingId, struct Data_Building *b, int *hasExpanded)
 {
-	int status = check_requirements(buildingId);
-	CHECK_DEVOLVE_DELAY();
+	int status = check_requirements(b);
+    if (has_devolve_delay(b, status)) {
+        return;
+    }
 	if (status == Evolve) {
 		BuildingHouse_changeTo(buildingId, BUILDING_HOUSE_GRAND_VILLA);
 	} else if (status == Devolve) {
@@ -225,10 +257,12 @@ static void evolveLargeVilla(int buildingId, int *hasExpanded)
 	}
 }
 
-static void evolveGrandVilla(int buildingId, int *hasExpanded)
+static void evolveGrandVilla(int buildingId, struct Data_Building *b, int *hasExpanded)
 {
-	int status = check_requirements(buildingId);
-	CHECK_DEVOLVE_DELAY();
+	int status = check_requirements(b);
+    if (has_devolve_delay(b, status)) {
+        return;
+    }
 	if (status == Evolve) {
 		BuildingHouse_changeTo(buildingId, BUILDING_HOUSE_SMALL_PALACE);
 	} else if (status == Devolve) {
@@ -236,10 +270,12 @@ static void evolveGrandVilla(int buildingId, int *hasExpanded)
 	}
 }
 
-static void evolveSmallPalace(int buildingId, int *hasExpanded)
+static void evolveSmallPalace(int buildingId, struct Data_Building *b, int *hasExpanded)
 {
-	int status = check_requirements(buildingId);
-	CHECK_DEVOLVE_DELAY();
+	int status = check_requirements(b);
+    if (has_devolve_delay(b, status)) {
+        return;
+    }
 	if (status == Evolve) {
 		BuildingHouse_changeTo(buildingId, BUILDING_HOUSE_MEDIUM_PALACE);
 	} else if (status == Devolve) {
@@ -247,10 +283,12 @@ static void evolveSmallPalace(int buildingId, int *hasExpanded)
 	}
 }
 
-static void evolveMediumPalace(int buildingId, int *hasExpanded)
+static void evolveMediumPalace(int buildingId, struct Data_Building *b, int *hasExpanded)
 {
-	int status = check_requirements(buildingId);
-	CHECK_DEVOLVE_DELAY();
+	int status = check_requirements(b);
+    if (has_devolve_delay(b, status)) {
+        return;
+    }
 	if (status == Evolve) {
 		if (BuildingHouse_canExpand(buildingId, 16)) {
 			BuildingHouse_expandToLargePalace(buildingId);
@@ -262,10 +300,12 @@ static void evolveMediumPalace(int buildingId, int *hasExpanded)
 	}
 }
 
-static void evolveLargePalace(int buildingId, int *hasExpanded)
+static void evolveLargePalace(int buildingId, struct Data_Building *b, int *hasExpanded)
 {
-	int status = check_requirements(buildingId);
-	CHECK_DEVOLVE_DELAY();
+	int status = check_requirements(b);
+    if (has_devolve_delay(b, status)) {
+        return;
+    }
 	if (status == Evolve) {
 		BuildingHouse_changeTo(buildingId, BUILDING_HOUSE_LUXURY_PALACE);
 	} else if (status == Devolve) {
@@ -273,19 +313,21 @@ static void evolveLargePalace(int buildingId, int *hasExpanded)
 	}
 }
 
-static void evolveLuxuryPalace(int buildingId, int *hasExpanded)
+static void evolveLuxuryPalace(int buildingId, struct Data_Building *b, int *hasExpanded)
 {
-	int status = checkEvolveDesirability(buildingId);
-	if (!hasRequiredGoodsAndServices(buildingId, 0)) {
+	int status = checkEvolveDesirability(b);
+	if (!hasRequiredGoodsAndServices(b, 0)) {
 		status = Devolve;
 	}
-	CHECK_DEVOLVE_DELAY();
+    if (has_devolve_delay(b, status)) {
+        return;
+    }
 	if (status == Devolve) {
 		BuildingHouse_changeTo(buildingId, BUILDING_HOUSE_LARGE_PALACE);
 	}
 }
 
-static void (*const callbacks[])(int, int*) = {
+static void (*const callbacks[])(int, struct Data_Building *, int*) = {
 	evolveSmallTent, evolveLargeTent, evolveSmallShack, evolveLargeShack,
 	evolveSmallHovel, evolveLargeHovel, evolveSmallCasa, evolveLargeCasa,
 	evolveSmallInsula, evolveMediumInsula, evolveLargeInsula, evolveGrandInsula,
@@ -297,9 +339,10 @@ void HouseEvolution_Tick_evolveAndConsumeResources()
 	resetCityInfoServiceRequiredCounters();
 	int hasExpanded = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (BuildingIsInUse(i) && BuildingIsHouse(Data_Buildings[i].type)) {
+        struct Data_Building *b = building_get(i);
+		if (BuildingIsInUse(i) && BuildingIsHouse(b->type)) {
 			BuildingHouse_checkForCorruption(i);
-			(*callbacks[Data_Buildings[i].type - 10])(i, &hasExpanded);
+			(*callbacks[b->type - 10])(i, b, &hasExpanded);
 			if (game_time_day() == 0 || game_time_day() == 7) {
 				consumeResources(i);
 			}
@@ -310,15 +353,15 @@ void HouseEvolution_Tick_evolveAndConsumeResources()
 	}
 }
 
-static int checkEvolveDesirability(int buildingId)
+static int checkEvolveDesirability(struct Data_Building *b)
 {
-	int level = Data_Buildings[buildingId].subtype.houseLevel;
+	int level = b->subtype.houseLevel;
     const model_house *model = model_get_house(level);
 	int evolveDes = model->evolve_desirability;
 	if (level >= HOUSE_LUXURY_PALACE) {
 		evolveDes = 1000;
 	}
-	int currentDes = Data_Buildings[buildingId].desirability;
+	int currentDes = b->desirability;
 	int status;
 	if (currentDes <= model->devolve_desirability) {
 		status = Devolve;
@@ -327,13 +370,12 @@ static int checkEvolveDesirability(int buildingId)
 	} else {
 		status = None;
 	}
-	Data_Buildings[buildingId].data.house.evolveTextId = status; // BUG? -1 in an unsigned char?
+	b->data.house.evolveTextId = status; // BUG? -1 in an unsigned char?
 	return status;
 }
 
-static int hasRequiredGoodsAndServices(int buildingId, int forUpgrade)
+static int hasRequiredGoodsAndServices(struct Data_Building *b, int forUpgrade)
 {
-	struct Data_Building *b = building_get(buildingId);
 	int level = b->subtype.houseLevel;
 	if (forUpgrade) {
 		++level;
@@ -522,14 +564,15 @@ static void resetCityInfoServiceRequiredCounters()
 }
 
 #define DECAY(svc) \
-	if (Data_Buildings[i].data.house.svc > 0) \
-		--Data_Buildings[i].data.house.svc; \
-	else Data_Buildings[i].data.house.svc = 0
+	if (b->data.house.svc > 0) \
+		--b->data.house.svc; \
+	else b->data.house.svc = 0
 
 void HouseEvolution_Tick_decayCultureService()
 {
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (!BuildingIsInUse(i) || !Data_Buildings[i].houseSize) {
+        struct Data_Building *b = building_get(i);
+		if (!BuildingIsInUse(i) || !b->houseSize) {
 			continue;
 		}
 		DECAY(theater);
@@ -557,10 +600,10 @@ void HouseEvolution_Tick_calculateCultureServiceAggregates()
 {
     int baseEntertainment = city_culture_coverage_average_entertainment() / 5;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (!BuildingIsInUse(i) || !Data_Buildings[i].houseSize) {
+        struct Data_Building *b = building_get(i);
+		if (!BuildingIsInUse(i) || !b->houseSize) {
 			continue;
 		}
-		struct Data_Building *b = building_get(i);
 
 		b->data.house.entertainment = 0;
 		b->data.house.education = 0;
