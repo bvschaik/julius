@@ -6,6 +6,7 @@
 #include "Data/CityInfo.h"
 
 #include "building/list.h"
+#include "building/maintenance.h"
 #include "core/calc.h"
 #include "figure/enemy_army.h"
 #include "figure/route.h"
@@ -256,7 +257,7 @@ static int prefectGoFightFire(figure *f)
 		return 0;
 	}
 	int distance;
-	int ruinId = Security_Fire_getClosestBurningRuin(f->x, f->y, &distance);
+	int ruinId = building_maintenance_get_closest_burning_ruin(f->x, f->y, &distance);
 	if (ruinId > 0 && distance <= 25) {
 		f->waitTicksMissile = 0;
 		f->actionState = FigureActionState_74_PrefectGoingToFire;

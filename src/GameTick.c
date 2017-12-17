@@ -22,6 +22,7 @@
 #include "Data/CityInfo.h"
 #include "Data/State.h"
 
+#include "building/maintenance.h"
 #include "city/culture.h"
 #include "city/message.h"
 #include "core/random.h"
@@ -105,8 +106,8 @@ void GameTick_advance()
 		case 38: Building_setDesirability(); break;
 		case 39: HouseEvolution_Tick_evolveAndConsumeResources(); break;
 		case 40: Building_GameTick_updateState(); break;
-		case 43: Security_Tick_updateBurningRuins(); break;
-		case 44: Security_Tick_checkFireCollapse(); break;
+		case 43: building_maintenance_update_burning_ruins(); break;
+		case 44: building_maintenance_check_fire_collapse(); break;
 		case 45: Security_Tick_generateCriminal(); break;
 		case 46: Building_Industry_updateDoubleWheatProduction(); break;
 		case 48: Building_decayTaxCollectorAccess(); break;
@@ -173,7 +174,7 @@ static void advanceYear()
 	CityInfo_Population_requestYearlyUpdate();
 	CityInfo_Finance_handleYearChange();
 	empire_city_reset_yearly_trade_amounts();
-	Security_Tick_updateFireSpreadDirection();
+	building_maintenance_update_fire_direction();
 	CityInfo_Ratings_calculate(1);
 	Data_CityInfo.godBlessingNeptuneDoubleTrade = 0;
 }
