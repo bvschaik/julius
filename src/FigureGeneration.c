@@ -87,9 +87,9 @@ static void spawnFigureWarehouse(int buildingId, struct Data_Building *b)
 	SET_LABOR_PROBLEM(b);
 	int spaceId = buildingId;
 	for (int i = 0; i < 8; i++) {
-		spaceId = Data_Buildings[spaceId].nextPartBuildingId;
+		spaceId = building_get(spaceId)->nextPartBuildingId;
 		if (spaceId) {
-			Data_Buildings[spaceId].showOnProblemOverlay = b->showOnProblemOverlay;
+			building_get(spaceId)->showOnProblemOverlay = b->showOnProblemOverlay;
 		}
 	}
 	int xRoad, yRoad;
@@ -432,9 +432,9 @@ static void spawnFigureHippodrome(int buildingId, struct Data_Building *b)
 	}
 	int partId = buildingId;
 	for (int i = 0; i < 2; i++) {
-		partId = Data_Buildings[partId].nextPartBuildingId;
+		partId = building_get(partId)->nextPartBuildingId;
 		if (partId) {
-			Data_Buildings[partId].showOnProblemOverlay = b->showOnProblemOverlay;
+			building_get(partId)->showOnProblemOverlay = b->showOnProblemOverlay;
 		}
 	}
 	EXIT_IF_FIGURE(FIGURE_CHARIOTEER);

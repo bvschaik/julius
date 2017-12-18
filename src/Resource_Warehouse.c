@@ -156,10 +156,11 @@ int Resource_getWarehouseForGettingResource(int srcBuildingId, int resource, int
 		int spaceId = i;
 		const building_storage *s = building_storage_get(b->storage_id);
 		for (int t = 0; t < 8; t++) {
-			spaceId = Data_Buildings[spaceId].nextPartBuildingId;
-			if (spaceId > 0 && Data_Buildings[spaceId].loadsStored > 0) {
-				if (Data_Buildings[spaceId].subtype.warehouseResourceId == resource) {
-					loadsStored += Data_Buildings[spaceId].loadsStored;
+			spaceId = building_get(spaceId)->nextPartBuildingId;
+            struct Data_Building *sb = building_get(spaceId);
+			if (spaceId > 0 && sb->loadsStored > 0) {
+				if (sb->subtype.warehouseResourceId == resource) {
+					loadsStored += sb->loadsStored;
 				}
 			}
 		}
@@ -297,13 +298,13 @@ int Resource_getAmountStoredInWarehouse(int buildingId, int resource)
 {
 	int loads = 0;
 	for (int i = 0; i < 8; i++) {
-		buildingId = Data_Buildings[buildingId].nextPartBuildingId;
+		buildingId = building_get(buildingId)->nextPartBuildingId;
 		if (buildingId <= 0) {
 			return 0;
 		}
-		if (Data_Buildings[buildingId].subtype.warehouseResourceId &&
-			Data_Buildings[buildingId].subtype.warehouseResourceId == resource) {
-			loads += Data_Buildings[buildingId].loadsStored;
+		struct Data_Building *b = building_get(buildingId);
+		if (b->subtype.warehouseResourceId && b->subtype.warehouseResourceId == resource) {
+			loads += b->loadsStored;
 		}
 	}
 	return loads;
@@ -314,12 +315,13 @@ int Resource_getWarehouseSpaceInfo(int buildingId)
 	int totalLoads = 0;
 	int emptySpaces = 0;
 	for (int i = 0; i < 8; i++) {
-		buildingId = Data_Buildings[buildingId].nextPartBuildingId;
+		buildingId = building_get(buildingId)->nextPartBuildingId;
 		if (buildingId <= 0) {
 			return 0;
 		}
-		if (Data_Buildings[buildingId].subtype.warehouseResourceId) {
-			totalLoads += Data_Buildings[buildingId].loadsStored;
+		struct Data_Building *b = building_get(buildingId);
+		if (b->subtype.warehouseResourceId) {
+			totalLoads += b->loadsStored;
 		} else {
 			emptySpaces++;
 		}
@@ -463,23 +465,25 @@ int Resource_determineWarehouseWorkerTask(int buildingId, int *resource)
 		int loadsStored = 0;
 		spaceId = buildingId;
 		for (int i = 0; i < 8; i++) {
-			spaceId = Data_Buildings[spaceId].nextPartBuildingId;
-			if (spaceId > 0 && Data_Buildings[spaceId].loadsStored > 0) {
-				if (Data_Buildings[spaceId].subtype.warehouseResourceId == r) {
-					loadsStored += Data_Buildings[spaceId].loadsStored;
+			spaceId = building_get(spaceId)->nextPartBuildingId;
+            struct Data_Building *sb = building_get(spaceId);
+			if (spaceId > 0 && sb->loadsStored > 0) {
+				if (sb->subtype.warehouseResourceId == r) {
+					loadsStored += sb->loadsStored;
 				}
 			}
 		}
 		int room = 0;
 		spaceId = buildingId;
 		for (int i = 0; i < 8; i++) {
-			spaceId = Data_Buildings[spaceId].nextPartBuildingId;
+			spaceId = building_get(spaceId)->nextPartBuildingId;
+            struct Data_Building *sb = building_get(spaceId);
 			if (spaceId > 0) {
-				if (Data_Buildings[spaceId].loadsStored <= 0) {
+				if (sb->loadsStored <= 0) {
 					room += 4;
 				}
-				if (Data_Buildings[spaceId].subtype.warehouseResourceId == r) {
-					room += 4 - Data_Buildings[spaceId].loadsStored;
+				if (sb->subtype.warehouseResourceId == r) {
+					room += 4 - sb->loadsStored;
 				}
 			}
 		}
@@ -496,9 +500,10 @@ int Resource_determineWarehouseWorkerTask(int buildingId, int *resource)
 			b->roadNetworkId == barracks->roadNetworkId) {
 			spaceId = buildingId;
 			for (int i = 0; i < 8; i++) {
-				spaceId = Data_Buildings[spaceId].nextPartBuildingId;
-				if (spaceId > 0 && Data_Buildings[spaceId].loadsStored > 0 &&
-					Data_Buildings[spaceId].subtype.warehouseResourceId == RESOURCE_WEAPONS) {
+				spaceId = building_get(spaceId)->nextPartBuildingId;
+                struct Data_Building *sb = building_get(spaceId);
+				if (spaceId > 0 && sb->loadsStored > 0 &&
+					sb->subtype.warehouseResourceId == RESOURCE_WEAPONS) {
 					return RESOURCE_WEAPONS;
 				}
 			}
@@ -507,9 +512,10 @@ int Resource_determineWarehouseWorkerTask(int buildingId, int *resource)
 	// deliver raw materials to workshops
 	spaceId = buildingId;
 	for (int i = 0; i < 8; i++) {
-		spaceId = Data_Buildings[spaceId].nextPartBuildingId;
-		if (spaceId > 0 && Data_Buildings[spaceId].loadsStored > 0) {
-			int resource = Data_Buildings[spaceId].subtype.warehouseResourceId;
+		spaceId = building_get(spaceId)->nextPartBuildingId;
+        struct Data_Building *sb = building_get(spaceId);
+		if (spaceId > 0 && sb->loadsStored > 0) {
+			int resource = sb->subtype.warehouseResourceId;
 			if (!Data_CityInfo.resourceStockpiled[resource]) {
 				int workshopType;
 				switch (resource) {
@@ -543,9 +549,9 @@ int Resource_determineWarehouseWorkerTask(int buildingId, int *resource)
 	if (determineGranaryGetFoods()) {
 		spaceId = buildingId;
 		for (int i = 0; i < 8; i++) {
-			spaceId = Data_Buildings[spaceId].nextPartBuildingId;
+			spaceId = building_get(spaceId)->nextPartBuildingId;
 			if (storesNonStockpiledFood(spaceId, granaryGettingResource)) {
-				return Data_Buildings[spaceId].subtype.warehouseResourceId;
+				return building_get(spaceId)->subtype.warehouseResourceId;
 			}
 		}
 	}
@@ -553,9 +559,9 @@ int Resource_determineWarehouseWorkerTask(int buildingId, int *resource)
 	if (determineGranaryAcceptFoods() && !scenario_property_rome_supplies_wheat()) {
 		spaceId = buildingId;
 		for (int i = 0; i < 8; i++) {
-			spaceId = Data_Buildings[spaceId].nextPartBuildingId;
+			spaceId = building_get(spaceId)->nextPartBuildingId;
 			if (storesNonStockpiledFood(spaceId, granaryAcceptingResource)) {
-				return Data_Buildings[spaceId].subtype.warehouseResourceId;
+				return building_get(spaceId)->subtype.warehouseResourceId;
 			}
 		}
 	}
@@ -563,9 +569,10 @@ int Resource_determineWarehouseWorkerTask(int buildingId, int *resource)
 	if (s->empty_all) {
 		spaceId = buildingId;
 		for (int i = 0; i < 8; i++) {
-			spaceId = Data_Buildings[spaceId].nextPartBuildingId;
-			if (spaceId > 0 && Data_Buildings[spaceId].loadsStored > 0) {
-				return Data_Buildings[spaceId].subtype.warehouseResourceId;
+			spaceId = building_get(spaceId)->nextPartBuildingId;
+            struct Data_Building *sb = building_get(spaceId);
+			if (spaceId > 0 && sb->loadsStored > 0) {
+				return sb->subtype.warehouseResourceId;
 			}
 		}
 	}
