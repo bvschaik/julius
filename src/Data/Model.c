@@ -13,7 +13,6 @@ struct _Data_CityInfo_Resource Data_CityInfo_Resource;
 
 struct _Data_State Data_State;
 
-struct Data_Building Data_Buildings[MAX_BUILDINGS];
 struct _Data_Buildings_Extra Data_Buildings_Extra;
 
 struct Data_CityView Data_CityView;

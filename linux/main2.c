@@ -19,7 +19,6 @@
 
 // debug data:
 #include "../src/Data/CityInfo.h"
-#include "../src/Data/Building.h"
 #include "../src/Data/Screen.h"
 
 #include "core/lang.h"
@@ -75,7 +74,6 @@ void assert(const char *msg, int expected, int actual)
 void sanityCheck()
 {
 	assert("City info", 2*18068, sizeof(Data_CityInfo));
-	assert("Building object", 128, sizeof(struct Data_Building));
 }
 
 void System_exit()

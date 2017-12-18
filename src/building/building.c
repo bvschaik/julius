@@ -2,6 +2,8 @@
 
 #include <string.h>
 
+static building Data_Buildings[MAX_BUILDINGS];
+
 struct Data_Building *building_get(int id)
 {
     return &Data_Buildings[id];
