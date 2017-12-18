@@ -11,7 +11,7 @@
 #include "game/resource.h"
 #include "graphics/image.h"
 
-static struct Data_Building *get_entertainment_building(const figure *f)
+static building *get_entertainment_building(const figure *f)
 {
     if (f->actionState == FigureActionState_94_EntertainerRoaming ||
         f->actionState == FigureActionState_95_EntertainerReturning) {

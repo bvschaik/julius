@@ -22,7 +22,7 @@
 		for (int xx = xMin; xx <= xMax; xx++) {\
 			int building_id = map_building_at(gridOffset);\
 			if (building_id) {\
-                struct Data_Building *b = building_get(building_id);
+                building *b = building_get(building_id);
 
 #define END_FOR_XY_RADIUS \
 			}\
@@ -132,7 +132,7 @@ static int provideHippodromeCoverage(int x, int y)
 static int provideMarketGoods(int marketBuildingId, int x, int y)
 {
 	int serviced = 0;
-	struct Data_Building *market = building_get(marketBuildingId);
+	building *market = building_get(marketBuildingId);
 	FOR_XY_RADIUS {
 		if (b->houseSize && b->housePopulation > 0) {
 			serviced++;
@@ -345,7 +345,7 @@ static int provideMissionaryCoverage(int x, int y)
 		for (int xx = xMin; xx <= xMax; xx++) {
 			int buildingId = map_building_at(gridOffset);
 			if (buildingId) {
-                struct Data_Building *b = building_get(buildingId);
+                building *b = building_get(buildingId);
 				if (b->type == BUILDING_NATIVE_HUT || b->type == BUILDING_NATIVE_MEETING) {
 					b->sentiment.nativeAnger = 0;
 				}
@@ -385,7 +385,7 @@ static int provideTaxCollectorCoverage(int x, int y, unsigned char *maxTaxMultip
 	return serviced;
 }
 
-static struct Data_Building *get_entertainment_building(const figure *f)
+static building *get_entertainment_building(const figure *f)
 {
     if (f->actionState == FigureActionState_94_EntertainerRoaming ||
         f->actionState == FigureActionState_95_EntertainerReturning) {
@@ -400,7 +400,7 @@ int Figure_provideServiceCoverage(figure *f)
 	int numHousesServiced = 0;
 	int x = f->x;
 	int y = f->y;
-	struct Data_Building *b;
+	building *b;
 	switch (f->type) {
 		case FIGURE_PATRICIAN:
 			return 0;

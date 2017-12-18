@@ -18,7 +18,7 @@ void UI_BuildingInfo_drawEngineersPost(BuildingInfoContext *c)
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(104, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 
-	struct Data_Building *b = building_get(c->buildingId);
+	building *b = building_get(c->buildingId);
 
 	if (!c->hasRoadAccess) {
 		DRAW_DESC(69, 25);
@@ -54,7 +54,7 @@ void UI_BuildingInfo_drawShipyard(BuildingInfoContext *c)
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(100, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 
-	struct Data_Building *b = building_get(c->buildingId);
+	building *b = building_get(c->buildingId);
 
 	if (!c->hasRoadAccess) {
 		DRAW_DESC(69, 25);
@@ -88,7 +88,7 @@ void UI_BuildingInfo_drawDock(BuildingInfoContext *c)
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(101, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 
-	struct Data_Building *b = building_get(c->buildingId);
+	building *b = building_get(c->buildingId);
 
 	if (!c->hasRoadAccess) {
 		DRAW_DESC(69, 25);
@@ -128,7 +128,7 @@ void UI_BuildingInfo_drawWharf(BuildingInfoContext *c)
 		Resource_getGraphicIdOffset(RESOURCE_MEAT, 3),
 		c->xOffset + 10, c->yOffset + 10);
 
-	struct Data_Building *b = building_get(c->buildingId);
+	building *b = building_get(c->buildingId);
 
 	if (!c->hasRoadAccess) {
 		DRAW_DESC(69, 25);

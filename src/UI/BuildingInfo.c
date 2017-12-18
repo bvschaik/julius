@@ -192,7 +192,7 @@ void UI_BuildingInfo_init()
 	} else if (!context.buildingId) {
 		context.terrainType = 10;
 	} else {
-        struct Data_Building *b = building_get(context.buildingId);
+        building *b = building_get(context.buildingId);
 		context.type = BuildingInfoType_Building;
 		context.workerPercentage = calc_percentage(b->numWorkers, model_get_building(b->type)->laborers);
 		switch (b->type) {
@@ -586,7 +586,7 @@ void UI_BuildingInfo_showStorageOrders(int param1, int param2)
 
 void UI_BuildingInfo_drawEmploymentInfo(BuildingInfoContext *c, int yOffset)
 {
-	struct Data_Building *b = building_get(c->buildingId);
+	building *b = building_get(c->buildingId);
 	int textId;
 	if (b->numWorkers >= model_get_building(b->type)->laborers) {
 		textId = 0;

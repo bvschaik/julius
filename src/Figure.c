@@ -164,8 +164,8 @@ static void get_closest_fort_needing_soldiers(const formation *formation, void *
     if (formation->legion_recruit_type == LEGION_RECRUIT_LEGIONARY && !state->has_weapons) {
         return;
     }
-    struct Data_Building *b = building_get(state->building_id);
-    struct Data_Building *fort = building_get(formation->building_id);
+    building *b = building_get(state->building_id);
+    building *fort = building_get(formation->building_id);
     int dist = calc_maximum_distance(b->x, b->y, fort->x, fort->y);
     if (formation->legion_recruit_type > state->recruit_type ||
         (formation->legion_recruit_type == state->recruit_type && dist < state->min_distance)) {
@@ -177,7 +177,7 @@ static void get_closest_fort_needing_soldiers(const formation *formation, void *
 
 int Figure_createSoldierFromBarracks(int buildingId, int x, int y)
 {
-    struct Data_Building *b = building_get(buildingId);
+    building *b = building_get(buildingId);
     struct state state = {buildingId, b->loadsStored > 0, 0, 0, 10000};
     formation_foreach_legion(get_closest_fort_needing_soldiers, &state);
 	if (state.formation_id > 0) {
@@ -193,7 +193,7 @@ int Figure_createSoldierFromBarracks(int buildingId, int x, int y)
 		int academyId = Formation_getClosestMilitaryAcademy(state.formation_id);
 		if (academyId) {
 			int xRoad, yRoad;
-            struct Data_Building *academy = building_get(academyId);
+            building *academy = building_get(academyId);
 			if (Terrain_hasRoadAccess(academy->x, academy->y, academy->size, &xRoad, &yRoad)) {
 				f->actionState = FigureActionState_85_SoldierGoingToMilitaryAcademy;
 				f->destinationX = xRoad;
@@ -216,9 +216,9 @@ int Figure_createTowerSentryFromBarracks(int buildingId, int x, int y)
 		return 0;
 	}
 	int towerId = 0;
-    struct Data_Building *barracks = building_get(buildingId);
+    building *barracks = building_get(buildingId);
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		struct Data_Building *b = building_get(i);
+		building *b = building_get(i);
 		if (BuildingIsInUse(i) && b->type == BUILDING_TOWER && b->numWorkers > 0 &&
 			!b->figureId && b->roadNetworkId == barracks->roadNetworkId) {
 			towerId = i;
@@ -228,7 +228,7 @@ int Figure_createTowerSentryFromBarracks(int buildingId, int x, int y)
 	if (!towerId) {
 		return 0;
 	}
-	struct Data_Building *tower = building_get(towerId);
+	building *tower = building_get(towerId);
 	figure *f = figure_create(FIGURE_TOWER_SENTRY, x, y, DIR_0_TOP);
 	f->actionState = FigureActionState_174_TowerSentryGoingToTower;
 	int xRoad, yRoad;

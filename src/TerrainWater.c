@@ -204,7 +204,7 @@ int Terrain_Water_getWharfTileForNewFishingBoat(int figureId, int *xTile, int *y
 {
 	int wharfId = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-        struct Data_Building *b = building_get(i);
+        building *b = building_get(i);
 		if (BuildingIsInUse(i) && b->type == BUILDING_WHARF) {
 			int wharfBoatId = b->data.other.boatFigureId;
 			if (!wharfBoatId || wharfBoatId == figureId) {
@@ -216,7 +216,7 @@ int Terrain_Water_getWharfTileForNewFishingBoat(int figureId, int *xTile, int *y
 	if (wharfId <= 0) {
 		return 0;
 	}
-	struct Data_Building *wharf = building_get(wharfId);
+	building *wharf = building_get(wharfId);
 	*xTile = wharf->x;
 	*yTile = wharf->y;
 	switch (wharf->data.other.dockOrientation) {
@@ -295,7 +295,7 @@ int Terrain_Water_getFreeDockDestination(int figureId, int *xTile, int *yTile)
 	for (int i = 0; i < 10; i++) {
 		dockId = Data_CityInfo.workingDockBuildingIds[i];
 		if (!dockId) continue;
-        struct Data_Building *dock = building_get(dockId);
+        building *dock = building_get(dockId);
 		if (!dock->data.other.boatFigureId || dock->data.other.boatFigureId == figureId) {
 			break;
 		}
@@ -304,7 +304,7 @@ int Terrain_Water_getFreeDockDestination(int figureId, int *xTile, int *yTile)
 	if (dockId <= 0) {
 		return 0;
 	}
-	struct Data_Building *dock = building_get(dockId);
+	building *dock = building_get(dockId);
 	*xTile = dock->x;
 	*yTile = dock->y;
 	switch (dock->data.other.dockOrientation) {
@@ -326,7 +326,7 @@ int Terrain_Water_getQueueDockDestination(int* xTile, int* yTile)
 	for (int i = 0; i < 10; i++) {
 		int dockId = Data_CityInfo.workingDockBuildingIds[i];
 		if (!dockId) continue;
-        struct Data_Building *dock = building_get(dockId);
+        building *dock = building_get(dockId);
 		*xTile = dock->x;
 		*yTile = dock->y;
 		switch (dock->data.other.dockOrientation) {
@@ -343,7 +343,7 @@ int Terrain_Water_getQueueDockDestination(int* xTile, int* yTile)
 	for (int i = 0; i < 10; i++) {
 		int dockId = Data_CityInfo.workingDockBuildingIds[i];
 		if (!dockId) continue;
-        struct Data_Building *dock = building_get(dockId);
+        building *dock = building_get(dockId);
 		*xTile = dock->x;
 		*yTile = dock->y;
 		switch (dock->data.other.dockOrientation) {

@@ -32,7 +32,7 @@ static void updateDirectionAndGraphic(figure *f)
 void FigureAction_immigrant(figure *f)
 {
 	int buildingId = f->immigrantBuildingId;
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	
 	f->terrainUsage = FigureTerrainUsage_Any;
 	f->cartGraphicId = 0;
@@ -188,7 +188,7 @@ void FigureAction_homeless(figure *f)
 			if (f->waitTicks > 51) {
 				int buildingId = HousePopulation_getClosestHouseWithRoom(f->x, f->y);
 				if (buildingId) {
-					struct Data_Building *b = building_get(buildingId);
+					building *b = building_get(buildingId);
 					int xRoad, yRoad;
 					if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
 						b->immigrantFigureId = f->id;
@@ -216,7 +216,7 @@ void FigureAction_homeless(figure *f)
 				building_get(f->immigrantBuildingId)->immigrantFigureId = 0;
 				f->state = FigureState_Dead;
 			} else if (f->direction == DIR_FIGURE_AT_DESTINATION) {
-                struct Data_Building *b = building_get(f->immigrantBuildingId);
+                building *b = building_get(f->immigrantBuildingId);
 				f->actionState = FigureActionState_9_HomelessEnteringHouse;
 				FigureAction_Common_setCrossCountryDestination(f, b->x, b->y);
 				f->roamLength = 0;
@@ -227,7 +227,7 @@ void FigureAction_homeless(figure *f)
 			f->isGhost = 1;
 			if (FigureMovement_crossCountryWalkTicks(f, 1) == 1) {
 				f->state = FigureState_Dead;
-				struct Data_Building *b = building_get(f->immigrantBuildingId);
+				building *b = building_get(f->immigrantBuildingId);
 				if (f->immigrantBuildingId && BuildingIsHouse(b->type)) {
 					int maxPeople = model_get_house(b->subtype.houseLevel)->max_people;
 					if (b->houseIsMerged) {
@@ -262,7 +262,7 @@ void FigureAction_homeless(figure *f)
 				f->waitTicks = 0;
 				int buildingId = HousePopulation_getClosestHouseWithRoom(f->x, f->y);
 				if (buildingId > 0) {
-					struct Data_Building *b = building_get(buildingId);
+					building *b = building_get(buildingId);
 					int xRoad, yRoad;
 					if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
 						b->immigrantFigureId = f->id;

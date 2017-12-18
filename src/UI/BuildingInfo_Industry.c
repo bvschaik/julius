@@ -19,7 +19,7 @@ static void drawFarm(BuildingInfoContext *c, int helpId, const char *soundFile, 
 	Widget_GameText_drawCentered(groupId, 0, c->xOffset, c->yOffset + 10,
 		16 * c->widthBlocks, FONT_LARGE_BLACK);
 
-    struct Data_Building *b = building_get(c->buildingId);
+    building *b = building_get(c->buildingId);
 	int pctGrown = calc_percentage(b->data.industry.progress, 200);
 	int width = Widget_GameText_draw(groupId, 2, c->xOffset + 32, c->yOffset + 44, FONT_NORMAL_BLACK);
 	width += Widget_Text_drawPercentage(pctGrown,
@@ -94,7 +94,7 @@ static void drawRawMaterial(BuildingInfoContext *c, int helpId, const char *soun
 	Widget_GameText_drawCentered(groupId, 0, c->xOffset, c->yOffset + 10,
 		16 * c->widthBlocks, FONT_LARGE_BLACK);
 
-    struct Data_Building *b = building_get(c->buildingId);
+    building *b = building_get(c->buildingId);
 	int pctDone = calc_percentage(b->data.industry.progress, 200);
 	int width = Widget_GameText_draw(groupId, 2, c->xOffset + 32, c->yOffset + 44, FONT_NORMAL_BLACK);
 	width += Widget_Text_drawPercentage(pctDone,
@@ -157,7 +157,7 @@ static void drawWorkshop(BuildingInfoContext *c, int helpId, const char *soundFi
 	Widget_GameText_drawCentered(groupId, 0, c->xOffset, c->yOffset + 10,
 		16 * c->widthBlocks, FONT_LARGE_BLACK);
 
-    struct Data_Building *b = building_get(c->buildingId);
+    building *b = building_get(c->buildingId);
 	int pctDone = calc_percentage(b->data.industry.progress, 400);
 	int width = Widget_GameText_draw(groupId, 2, c->xOffset + 32, c->yOffset + 40, FONT_NORMAL_BLACK);
 	width += Widget_Text_drawPercentage(pctDone,

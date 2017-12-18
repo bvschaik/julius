@@ -32,14 +32,14 @@ static struct {
 	int buildingCost;
 	int numBuildings;
 	int buildingType;
-	struct Data_Building buildings[MAX_UNDO_BUILDINGS];
+	building buildings[MAX_UNDO_BUILDINGS];
 	short buildingIndex[MAX_UNDO_BUILDINGS];
 } data;
 
 static void clearBuildingList()
 {
 	data.numBuildings = 0;
-	memset(data.buildings, 0, MAX_UNDO_BUILDINGS * sizeof(struct Data_Building));
+	memset(data.buildings, 0, MAX_UNDO_BUILDINGS * sizeof(building));
 	memset(data.buildingIndex, 0, MAX_UNDO_BUILDINGS * sizeof(short));
 }
 
@@ -52,7 +52,7 @@ int Undo_recordBeforeBuild()
 	data.buildingType = Data_State.selectedBuilding.type;
 	clearBuildingList();
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-        struct Data_Building *b = building_get(i);
+        building *b = building_get(i);
 		if (b->state == BuildingState_Undo) {
 			Data_State.undoAvailable = 0;
 			return 0;
@@ -75,7 +75,7 @@ void Undo_restoreBuildings()
 {
 	for (int i = 0; i < data.numBuildings; i++) {
 		if (data.buildingIndex[i]) {
-			struct Data_Building *b = building_get(data.buildingIndex[i]);
+			building *b = building_get(data.buildingIndex[i]);
 			if (b->state == BuildingState_DeletedByPlayer) {
 				b->state = BuildingState_InUse;
 			}
@@ -104,7 +104,7 @@ void Undo_addBuildingToList(int buildingId)
 		for (int i = 0; i < MAX_UNDO_BUILDINGS; i++) {
 			if (!data.buildingIndex[i]) {
 				data.numBuildings++;
-				memcpy(&data.buildings[i], building_get(buildingId), sizeof(struct Data_Building));
+				memcpy(&data.buildings[i], building_get(buildingId), sizeof(building));
 				data.buildingIndex[i] = buildingId;
 				return;
 			}
@@ -154,7 +154,7 @@ static void placeBuildingOnTerrain(int buildingId)
 	if (buildingId <= 0) {
 		return;
 	}
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	if (BuildingIsFarm(b->type)) {
 		int graphicOffset;
 		switch (b->type) {
@@ -190,7 +190,7 @@ void Undo_perform()
 			if (data.buildingIndex[i]) {
 				int buildingId = data.buildingIndex[i];
 				memcpy(building_get(buildingId), &data.buildings[i],
-					sizeof(struct Data_Building));
+					sizeof(building));
 				placeBuildingOnTerrain(buildingId);
 			}
 		}
@@ -222,7 +222,7 @@ void Undo_perform()
 		}
 		for (int i = 0; i < data.numBuildings; i++) {
 			if (data.buildingIndex[i]) {
-				struct Data_Building *b = building_get(data.buildingIndex[i]);
+				building *b = building_get(data.buildingIndex[i]);
 				if (b->type == BUILDING_ORACLE || (b->type >= BUILDING_LARGE_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS)) {
 					Resource_addToCityWarehouses(RESOURCE_MARBLE, 2);
 				}
@@ -275,7 +275,7 @@ void Undo_updateAvailable()
 	}
 	for (int i = 0; i < data.numBuildings; i++) {
 		if (data.buildingIndex[i]) {
-			struct Data_Building *b = building_get(data.buildingIndex[i]);
+			building *b = building_get(data.buildingIndex[i]);
 			if (b->state == BuildingState_Undo ||
 				b->state == BuildingState_Rubble ||
 				b->state == BuildingState_DeletedByGame) {

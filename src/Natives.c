@@ -54,7 +54,7 @@ void Natives_init()
 			}
 			int buildingId = Building_create(buildingType, x, y);
 			map_building_set(gridOffset, buildingId);
-			struct Data_Building *b = building_get(buildingId);
+			building *b = building_get(buildingId);
 			b->state = BuildingState_InUse;
 			switch (buildingType) {
 				case BUILDING_NATIVE_CROPS:
@@ -88,7 +88,7 @@ static void determineMeetingCenter()
 	// gather list of meeting centers
 	building_list_small_clear();
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-        struct Data_Building *b = building_get(i);
+        building *b = building_get(i);
 		if (BuildingIsInUse(i) && b->type == BUILDING_NATIVE_MEETING) {
 			building_list_small_add(i);
 		}
@@ -100,12 +100,12 @@ static void determineMeetingCenter()
 	const int *meetings = building_list_small_items();
 	// determine closest meeting center for hut
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-        struct Data_Building *b = building_get(i);
+        building *b = building_get(i);
 		if (BuildingIsInUse(i) && b->type == BUILDING_NATIVE_HUT) {
 			int minDist = 1000;
 			int minMeetingId = 0;
 			for (int n = 0; n < total_meetings; n++) {
-				struct Data_Building *meeting = building_get(meetings[n]);
+				building *meeting = building_get(meetings[n]);
 				int dist = calc_maximum_distance(b->x, b->y, meeting->x, meeting->y);
 				if (dist < minDist) {
 					minDist = dist;
@@ -127,7 +127,7 @@ void Natives_checkLand()
 		if (!BuildingIsInUse(i)) {
 			continue;
 		}
-		struct Data_Building *b = building_get(i);
+		building *b = building_get(i);
 		int size, radius;
 		if (b->type == BUILDING_NATIVE_HUT) {
 			size = 1;

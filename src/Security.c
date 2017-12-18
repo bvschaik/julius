@@ -31,7 +31,7 @@
 static void generateRioter(int buildingId)
 {
 	int xRoad, yRoad;
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	if (!Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 4, &xRoad, &yRoad)) {
 		return;
 	}
@@ -77,7 +77,7 @@ static void generateRioter(int buildingId)
 static void generateMugger(int buildingId)
 {
 	Data_CityInfo.numCriminalsThisMonth++;
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	if (b->houseCriminalActive < 2) {
 		b->houseCriminalActive = 2;
 		int xRoad, yRoad;
@@ -100,7 +100,7 @@ static void generateMugger(int buildingId)
 static void generateProtester(int buildingId)
 {
 	Data_CityInfo.numProtestersThisMonth++;
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	if (b->houseCriminalActive < 1) {
 		b->houseCriminalActive = 1;
 		int xRoad, yRoad;
@@ -117,7 +117,7 @@ void Security_Tick_generateCriminal()
 	int minBuildingId = 0;
 	int minHappiness = 50;
 	for (int i = 1; i <= Data_Buildings_Extra.highestBuildingIdInUse; i++) {
-		struct Data_Building *b = building_get(i);
+		building *b = building_get(i);
 		if (BuildingIsInUse(i) && b->houseSize) {
 			if (b->sentiment.houseHappiness >= 50) {
 				b->houseCriminalActive = 0;

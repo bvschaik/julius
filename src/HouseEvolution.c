@@ -11,8 +11,8 @@
 #include "game/time.h"
 #include "map/routing_terrain.h"
 
-static int checkEvolveDesirability(struct Data_Building *b);
-static int hasRequiredGoodsAndServices(struct Data_Building *b, int forUpgrade);
+static int checkEvolveDesirability(building *b);
+static int hasRequiredGoodsAndServices(building *b, int forUpgrade);
 static void resetCityInfoServiceRequiredCounters();
 static void consumeResources(int buildingId);
 
@@ -22,7 +22,7 @@ enum {
 	Devolve = -1
 };
 
-static int check_requirements(struct Data_Building *b)
+static int check_requirements(building *b)
 {
     int status = checkEvolveDesirability(b);
     if (!hasRequiredGoodsAndServices(b, 0)) {
@@ -33,7 +33,7 @@ static int check_requirements(struct Data_Building *b)
     return status;
 }
 
-static int has_devolve_delay(struct Data_Building *b, int status)
+static int has_devolve_delay(building *b, int status)
 {
     if (status == Devolve && b->data.house.devolveDelay < 2) {
         b->data.house.devolveDelay++;
@@ -44,7 +44,7 @@ static int has_devolve_delay(struct Data_Building *b, int status)
     }
 }
 
-static void evolveSmallTent(int buildingId, struct Data_Building *b, int *hasExpanded)
+static void evolveSmallTent(int buildingId, building *b, int *hasExpanded)
 {
 	if (b->housePopulation > 0) {
 		BuildingHouse_checkMerge(buildingId);
@@ -55,7 +55,7 @@ static void evolveSmallTent(int buildingId, struct Data_Building *b, int *hasExp
 	}
 }
 
-static void evolveLargeTent(int buildingId, struct Data_Building *b, int *hasExpanded)
+static void evolveLargeTent(int buildingId, building *b, int *hasExpanded)
 {
 	if (b->housePopulation > 0) {
 		BuildingHouse_checkMerge(buildingId);
@@ -71,7 +71,7 @@ static void evolveLargeTent(int buildingId, struct Data_Building *b, int *hasExp
 	}
 }
 
-static void evolveSmallShack(int buildingId, struct Data_Building *b, int *hasExpanded)
+static void evolveSmallShack(int buildingId, building *b, int *hasExpanded)
 {
 	BuildingHouse_checkMerge(buildingId);
 	int status = check_requirements(b);
@@ -85,7 +85,7 @@ static void evolveSmallShack(int buildingId, struct Data_Building *b, int *hasEx
 	}
 }
 
-static void evolveLargeShack(int buildingId, struct Data_Building *b, int *hasExpanded)
+static void evolveLargeShack(int buildingId, building *b, int *hasExpanded)
 {
 	BuildingHouse_checkMerge(buildingId);
 	int status = check_requirements(b);
@@ -99,7 +99,7 @@ static void evolveLargeShack(int buildingId, struct Data_Building *b, int *hasEx
 	}
 }
 
-static void evolveSmallHovel(int buildingId, struct Data_Building *b, int *hasExpanded)
+static void evolveSmallHovel(int buildingId, building *b, int *hasExpanded)
 {
 	BuildingHouse_checkMerge(buildingId);
 	int status = check_requirements(b);
@@ -113,7 +113,7 @@ static void evolveSmallHovel(int buildingId, struct Data_Building *b, int *hasEx
 	}
 }
 
-static void evolveLargeHovel(int buildingId, struct Data_Building *b, int *hasExpanded)
+static void evolveLargeHovel(int buildingId, building *b, int *hasExpanded)
 {
 	BuildingHouse_checkMerge(buildingId);
 	int status = check_requirements(b);
@@ -127,7 +127,7 @@ static void evolveLargeHovel(int buildingId, struct Data_Building *b, int *hasEx
 	}
 }
 
-static void evolveSmallCasa(int buildingId, struct Data_Building *b, int *hasExpanded)
+static void evolveSmallCasa(int buildingId, building *b, int *hasExpanded)
 {
 	BuildingHouse_checkMerge(buildingId);
 	int status = check_requirements(b);
@@ -141,7 +141,7 @@ static void evolveSmallCasa(int buildingId, struct Data_Building *b, int *hasExp
 	}
 }
 
-static void evolveLargeCasa(int buildingId, struct Data_Building *b, int *hasExpanded)
+static void evolveLargeCasa(int buildingId, building *b, int *hasExpanded)
 {
 	BuildingHouse_checkMerge(buildingId);
 	int status = check_requirements(b);
@@ -155,7 +155,7 @@ static void evolveLargeCasa(int buildingId, struct Data_Building *b, int *hasExp
 	}
 }
 
-static void evolveSmallInsula(int buildingId, struct Data_Building *b, int *hasExpanded)
+static void evolveSmallInsula(int buildingId, building *b, int *hasExpanded)
 {
 	BuildingHouse_checkMerge(buildingId);
 	int status = check_requirements(b);
@@ -169,7 +169,7 @@ static void evolveSmallInsula(int buildingId, struct Data_Building *b, int *hasE
 	}
 }
 
-static void evolveMediumInsula(int buildingId, struct Data_Building *b, int *hasExpanded)
+static void evolveMediumInsula(int buildingId, building *b, int *hasExpanded)
 {
 	BuildingHouse_checkMerge(buildingId);
 	int status = check_requirements(b);
@@ -188,7 +188,7 @@ static void evolveMediumInsula(int buildingId, struct Data_Building *b, int *has
 	}
 }
 
-static void evolveLargeInsula(int buildingId, struct Data_Building *b, int *hasExpanded)
+static void evolveLargeInsula(int buildingId, building *b, int *hasExpanded)
 {
 	int status = check_requirements(b);
     if (has_devolve_delay(b, status)) {
@@ -201,7 +201,7 @@ static void evolveLargeInsula(int buildingId, struct Data_Building *b, int *hasE
 	}
 }
 
-static void evolveGrandInsula(int buildingId, struct Data_Building *b, int *hasExpanded)
+static void evolveGrandInsula(int buildingId, building *b, int *hasExpanded)
 {
 	int status = check_requirements(b);
     if (has_devolve_delay(b, status)) {
@@ -214,7 +214,7 @@ static void evolveGrandInsula(int buildingId, struct Data_Building *b, int *hasE
 	}
 }
 
-static void evolveSmallVilla(int buildingId, struct Data_Building *b, int *hasExpanded)
+static void evolveSmallVilla(int buildingId, building *b, int *hasExpanded)
 {
 	int status = check_requirements(b);
     if (has_devolve_delay(b, status)) {
@@ -227,7 +227,7 @@ static void evolveSmallVilla(int buildingId, struct Data_Building *b, int *hasEx
 	}
 }
 
-static void evolveMediumVilla(int buildingId, struct Data_Building *b, int *hasExpanded)
+static void evolveMediumVilla(int buildingId, building *b, int *hasExpanded)
 {
 	int status = check_requirements(b);
     if (has_devolve_delay(b, status)) {
@@ -244,7 +244,7 @@ static void evolveMediumVilla(int buildingId, struct Data_Building *b, int *hasE
 	}
 }
 
-static void evolveLargeVilla(int buildingId, struct Data_Building *b, int *hasExpanded)
+static void evolveLargeVilla(int buildingId, building *b, int *hasExpanded)
 {
 	int status = check_requirements(b);
     if (has_devolve_delay(b, status)) {
@@ -257,7 +257,7 @@ static void evolveLargeVilla(int buildingId, struct Data_Building *b, int *hasEx
 	}
 }
 
-static void evolveGrandVilla(int buildingId, struct Data_Building *b, int *hasExpanded)
+static void evolveGrandVilla(int buildingId, building *b, int *hasExpanded)
 {
 	int status = check_requirements(b);
     if (has_devolve_delay(b, status)) {
@@ -270,7 +270,7 @@ static void evolveGrandVilla(int buildingId, struct Data_Building *b, int *hasEx
 	}
 }
 
-static void evolveSmallPalace(int buildingId, struct Data_Building *b, int *hasExpanded)
+static void evolveSmallPalace(int buildingId, building *b, int *hasExpanded)
 {
 	int status = check_requirements(b);
     if (has_devolve_delay(b, status)) {
@@ -283,7 +283,7 @@ static void evolveSmallPalace(int buildingId, struct Data_Building *b, int *hasE
 	}
 }
 
-static void evolveMediumPalace(int buildingId, struct Data_Building *b, int *hasExpanded)
+static void evolveMediumPalace(int buildingId, building *b, int *hasExpanded)
 {
 	int status = check_requirements(b);
     if (has_devolve_delay(b, status)) {
@@ -300,7 +300,7 @@ static void evolveMediumPalace(int buildingId, struct Data_Building *b, int *has
 	}
 }
 
-static void evolveLargePalace(int buildingId, struct Data_Building *b, int *hasExpanded)
+static void evolveLargePalace(int buildingId, building *b, int *hasExpanded)
 {
 	int status = check_requirements(b);
     if (has_devolve_delay(b, status)) {
@@ -313,7 +313,7 @@ static void evolveLargePalace(int buildingId, struct Data_Building *b, int *hasE
 	}
 }
 
-static void evolveLuxuryPalace(int buildingId, struct Data_Building *b, int *hasExpanded)
+static void evolveLuxuryPalace(int buildingId, building *b, int *hasExpanded)
 {
 	int status = checkEvolveDesirability(b);
 	if (!hasRequiredGoodsAndServices(b, 0)) {
@@ -327,7 +327,7 @@ static void evolveLuxuryPalace(int buildingId, struct Data_Building *b, int *has
 	}
 }
 
-static void (*const callbacks[])(int, struct Data_Building *, int*) = {
+static void (*const callbacks[])(int, building *, int*) = {
 	evolveSmallTent, evolveLargeTent, evolveSmallShack, evolveLargeShack,
 	evolveSmallHovel, evolveLargeHovel, evolveSmallCasa, evolveLargeCasa,
 	evolveSmallInsula, evolveMediumInsula, evolveLargeInsula, evolveGrandInsula,
@@ -339,7 +339,7 @@ void HouseEvolution_Tick_evolveAndConsumeResources()
 	resetCityInfoServiceRequiredCounters();
 	int hasExpanded = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-        struct Data_Building *b = building_get(i);
+        building *b = building_get(i);
 		if (BuildingIsInUse(i) && BuildingIsHouse(b->type)) {
 			BuildingHouse_checkForCorruption(i);
 			(*callbacks[b->type - 10])(i, b, &hasExpanded);
@@ -353,7 +353,7 @@ void HouseEvolution_Tick_evolveAndConsumeResources()
 	}
 }
 
-static int checkEvolveDesirability(struct Data_Building *b)
+static int checkEvolveDesirability(building *b)
 {
 	int level = b->subtype.houseLevel;
     const model_house *model = model_get_house(level);
@@ -374,7 +374,7 @@ static int checkEvolveDesirability(struct Data_Building *b)
 	return status;
 }
 
-static int hasRequiredGoodsAndServices(struct Data_Building *b, int forUpgrade)
+static int hasRequiredGoodsAndServices(building *b, int forUpgrade)
 {
 	int level = b->subtype.houseLevel;
 	if (forUpgrade) {
@@ -501,7 +501,7 @@ static int hasRequiredGoodsAndServices(struct Data_Building *b, int forUpgrade)
 
 static void consumeResources(int buildingId)
 {
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
     const model_house *model = model_get_house(b->subtype.houseLevel);
 	int pottery = model->pottery;
 	int furniture = model->furniture;
@@ -571,7 +571,7 @@ static void resetCityInfoServiceRequiredCounters()
 void HouseEvolution_Tick_decayCultureService()
 {
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-        struct Data_Building *b = building_get(i);
+        building *b = building_get(i);
 		if (!BuildingIsInUse(i) || !b->houseSize) {
 			continue;
 		}
@@ -600,7 +600,7 @@ void HouseEvolution_Tick_calculateCultureServiceAggregates()
 {
     int baseEntertainment = city_culture_coverage_average_entertainment() / 5;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-        struct Data_Building *b = building_get(i);
+        building *b = building_get(i);
 		if (!BuildingIsInUse(i) || !b->houseSize) {
 			continue;
 		}
@@ -673,7 +673,7 @@ void HouseEvolution_Tick_calculateCultureServiceAggregates()
 
 void HouseEvolution_determineEvolveText(int buildingId, int hasBadDesirabilityBuilding)
 {
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	int level = b->subtype.houseLevel;
 	
 	// this house will devolve soon because...

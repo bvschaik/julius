@@ -39,7 +39,7 @@ void Animation_updateTimers()
 
 int Animation_getIndexForCityBuilding(int graphicId, int gridOffset)
 {
-	struct Data_Building *b = building_get(map_building_at(gridOffset));
+	building *b = building_get(map_building_at(gridOffset));
 	if (b->type == BUILDING_FOUNTAIN && (b->numWorkers <= 0 || !b->hasWaterAccess)) {
 		return 0;
 	}

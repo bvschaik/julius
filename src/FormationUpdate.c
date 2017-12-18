@@ -242,7 +242,7 @@ static void setNativeTargetBuilding(int formationId)
 	int minBuildingId = 0;
 	int minDistance = 10000;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-        struct Data_Building *b = building_get(i);
+        building *b = building_get(i);
 		if (!BuildingIsInUse(i)) {
 			continue;
 		}
@@ -267,7 +267,7 @@ static void setNativeTargetBuilding(int formationId)
 		}
 	}
 	if (minBuildingId > 0) {
-        struct Data_Building *b = building_get(minBuildingId);
+        building *b = building_get(minBuildingId);
         formation_set_destination_building(formationId, b->x, b->y, minBuildingId);
 	}
 }
@@ -282,7 +282,7 @@ static void setEnemyTargetBuilding(const formation *m)
 	int buildingId = 0;
 	int minDistance = 10000;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		struct Data_Building *b = building_get(i);
+		building *b = building_get(i);
 		if (!BuildingIsInUse(i) || map_soldier_strength_get(b->gridOffset)) {
 			continue;
 		}
@@ -304,7 +304,7 @@ static void setEnemyTargetBuilding(const formation *m)
 	if (buildingId <= 0) {
 		// no target buildings left: take rioter attack priority
 		for (int i = 1; i < MAX_BUILDINGS; i++) {
-			struct Data_Building *b = building_get(i);
+			building *b = building_get(i);
 			if (!BuildingIsInUse(i) || map_soldier_strength_get(b->gridOffset)) {
 				continue;
 			}
@@ -325,7 +325,7 @@ static void setEnemyTargetBuilding(const formation *m)
 		}
 	}
     if (buildingId > 0) {
-        struct Data_Building *b = building_get(buildingId);
+        building *b = building_get(buildingId);
         if (b->type == BUILDING_WAREHOUSE) {
             formation_set_destination_building(m->id, b->x + 1, b->y, buildingId + 1);
         } else {
@@ -783,7 +783,7 @@ int Formation_Rioter_getTargetBuilding(int *xTile, int *yTile)
 	int bestTypeIndex = 100;
 	int buildingId = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-        struct Data_Building *building = building_get(i);
+        building *building = building_get(i);
 		if (!BuildingIsInUse(i)) {
 			continue;
 		}
@@ -800,7 +800,7 @@ int Formation_Rioter_getTargetBuilding(int *xTile, int *yTile)
 	if (buildingId <= 0) {
 		return 0;
 	}
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	if (b->type == BUILDING_WAREHOUSE) {
 		*xTile = b->x + 1;
 		*yTile = b->y;

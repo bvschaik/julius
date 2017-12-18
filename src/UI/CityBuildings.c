@@ -203,7 +203,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 					case 5: DRAWTOP_SIZE5_C(graphicId, xGraphic, yGraphic, colorMask); break;
 				}
 				// specific buildings
-				struct Data_Building *b = building_get(buildingId);
+				building *b = building_get(buildingId);
 				if (b->type == BUILDING_SENATE_UPGRADED) {
 					// rating flags
 					graphicId = image_group(GROUP_BUILDING_SENATE);
@@ -365,7 +365,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 			if (img->num_animation_sprites) {
 				if (map_property_is_draw_tile(gridOffset)) {
 					int buildingId = map_building_at(gridOffset);
-					struct Data_Building *b = building_get(buildingId);
+					building *b = building_get(buildingId);
 					int colorMask = 0;
 					if (buildingId && b->isDeleted) {
 						colorMask = COLOR_MASK_RED;
@@ -457,7 +457,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 				UI_CityBuildings_drawBridge(gridOffset, xGraphic, yGraphic);
 			} else if (building_get(map_building_at(gridOffset))->type == BUILDING_FORT) {
 				if (map_property_is_draw_tile(gridOffset)) {
-					struct Data_Building *fort = building_get(map_building_at(gridOffset));
+					building *fort = building_get(map_building_at(gridOffset));
 					int offset = 0;
 					switch (fort->subtype.fortFigureType) {
 						case FIGURE_FORT_LEGIONARY: offset = 4; break;
@@ -475,7 +475,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 					(Data_State.map.orientation == DIR_2_RIGHT && xy == Edge_X0Y1) ||
 					(Data_State.map.orientation == DIR_4_BOTTOM && xy == Edge_X0Y0) ||
 					(Data_State.map.orientation == DIR_6_LEFT && xy == Edge_X1Y0)) {
-					struct Data_Building *gate = building_get(map_building_at(gridOffset));
+					building *gate = building_get(map_building_at(gridOffset));
 					int graphicId = image_group(GROUP_BULIDING_GATEHOUSE);
 					if (gate->subtype.orientation == 1) {
 						if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_4_BOTTOM) {
@@ -777,7 +777,7 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 		overlay != Overlay_Water && overlay != Overlay_Fire &&
 		overlay != Overlay_Damage && overlay != Overlay_Native;
 	int overlayForbidsHouse = overlay == Overlay_Native;
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	if (overlayRequiresHouse && !b->houseSize) {
 		return;
 	}

@@ -250,7 +250,7 @@ void UI_CityBuildings_drawOverlayTopsFiguresAnimation(int overlay)
 			if (img->num_animation_sprites && draw) {
 				if (map_property_is_draw_tile(gridOffset)) {
 					int buildingId = map_building_at(gridOffset);
-					struct Data_Building *b = building_get(buildingId);
+					building *b = building_get(buildingId);
 					int colorMask = 0;
 					if (b->type == BUILDING_GRANARY) {
 						Graphics_drawImageMasked(image_group(GROUP_BUILDING_GRANARY) + 1,
@@ -324,7 +324,7 @@ static void drawFootprintForWaterOverlay(int gridOffset, int xOffset, int yOffse
 		DRAWFOOT_SIZE1(graphicId, xOffset, yOffset);
 	} else if (map_terrain_is(gridOffset, TERRAIN_BUILDING)) {
 		int buildingId = map_building_at(gridOffset);
-        struct Data_Building *b = building_get(buildingId);
+        building *b = building_get(buildingId);
 		int terrain = map_terrain_get(gridOffset);
 		if (buildingId && b->hasWellAccess == 1) {
 			terrain |= TERRAIN_FOUNTAIN_RANGE;
@@ -378,7 +378,7 @@ static void drawTopForWaterOverlay(int gridOffset, int xOffset, int yOffset)
 			draw_top_with_size(gridOffset, xOffset, yOffset);
 		}
 	} else if (map_building_at(gridOffset)) {
-		struct Data_Building *b = building_get(map_building_at(gridOffset));
+		building *b = building_get(map_building_at(gridOffset));
 		if (b->type == BUILDING_WELL || b->type == BUILDING_FOUNTAIN) {
 			DRAWTOP_SIZE1(map_image_at(gridOffset), xOffset, yOffset);
 		} else if (b->type == BUILDING_RESERVOIR) {
@@ -490,7 +490,7 @@ static void drawBuildingFootprintForOverlay(int buildingId, int gridOffset, int 
 	
 	int graphicId;
 	int origGraphicId = map_image_at(gridOffset);
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	if (b->size == 1) {
 		graphicId = image_group(GROUP_TERRAIN_OVERLAY);
 		if (b->houseSize) {
@@ -879,7 +879,7 @@ static void drawBuildingTopForDesirabilityOverlay(int gridOffset, int xOffset, i
 
 static void drawBuildingTopForFireOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	if (b->type == BUILDING_PREFECTURE) {
 		DRAWTOP_SIZE1(map_image_at(gridOffset), xOffset, yOffset);
 	} else if (b->type == BUILDING_BURNING_RUIN) {
@@ -897,7 +897,7 @@ static void drawBuildingTopForFireOverlay(int gridOffset, int buildingId, int xO
 
 static void drawBuildingTopForDamageOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	if (b->type == BUILDING_ENGINEERS_POST) {
 		DRAWTOP_SIZE1(map_image_at(gridOffset), xOffset, yOffset);
 	} else if (b->damageRisk > 0) {
@@ -913,7 +913,7 @@ static void drawBuildingTopForDamageOverlay(int gridOffset, int buildingId, int 
 
 static void drawBuildingTopForCrimeOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	if (b->type == BUILDING_PREFECTURE) {
 		DRAWTOP_SIZE1(map_image_at(gridOffset), xOffset, yOffset);
 	} else if (b->type == BUILDING_BURNING_RUIN) {
@@ -942,7 +942,7 @@ static void drawBuildingTopForCrimeOverlay(int gridOffset, int buildingId, int x
 
 static void drawBuildingTopForEntertainmentOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	switch (b->type) {
 		case BUILDING_THEATER:
 			DRAWTOP_SIZE2(map_image_at(gridOffset), xOffset, yOffset);
@@ -968,7 +968,7 @@ static void drawBuildingTopForEntertainmentOverlay(int gridOffset, int buildingI
 
 static void drawBuildingTopForEducationOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	switch (b->type) {
 		case BUILDING_ACADEMY:
 			DRAWTOP_SIZE3(map_image_at(gridOffset), xOffset, yOffset);
@@ -988,7 +988,7 @@ static void drawBuildingTopForEducationOverlay(int gridOffset, int buildingId, i
 
 static void drawBuildingTopForTheaterOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	switch (b->type) {
 		case BUILDING_ACTOR_COLONY:
 			DRAWTOP_SIZE3(map_image_at(gridOffset), xOffset, yOffset);
@@ -1006,7 +1006,7 @@ static void drawBuildingTopForTheaterOverlay(int gridOffset, int buildingId, int
 
 static void drawBuildingTopForAmphitheaterOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	switch (b->type) {
 		case BUILDING_ACTOR_COLONY:
 		case BUILDING_GLADIATOR_SCHOOL:
@@ -1023,7 +1023,7 @@ static void drawBuildingTopForAmphitheaterOverlay(int gridOffset, int buildingId
 
 static void drawBuildingTopForColosseumOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	switch (b->type) {
 		case BUILDING_GLADIATOR_SCHOOL:
 		case BUILDING_LION_HOUSE:
@@ -1042,7 +1042,7 @@ static void drawBuildingTopForColosseumOverlay(int gridOffset, int buildingId, i
 
 static void drawBuildingTopForHippodromeOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	if (b->type == BUILDING_HIPPODROME) {
 		DRAWTOP_SIZE5(map_image_at(gridOffset), xOffset, yOffset);
 	} else if (b->type == BUILDING_CHARIOT_MAKER) {
@@ -1054,7 +1054,7 @@ static void drawBuildingTopForHippodromeOverlay(int gridOffset, int buildingId, 
 
 static void drawBuildingTopForFoodStocksOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	switch (b->type) {
 		case BUILDING_MARKET:
 		case BUILDING_WHARF:
@@ -1091,7 +1091,7 @@ static void drawBuildingTopForFoodStocksOverlay(int gridOffset, int buildingId, 
 
 static void drawBuildingTopForBathhouseOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	if (b->type == BUILDING_BATHHOUSE) {
 		DRAWTOP_SIZE2(map_image_at(gridOffset), xOffset, yOffset);
 	} else if (b->houseSize && b->data.house.bathhouse) {
@@ -1101,7 +1101,7 @@ static void drawBuildingTopForBathhouseOverlay(int gridOffset, int buildingId, i
 
 static void drawBuildingTopForReligionOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	switch (b->type) {
 		case BUILDING_ORACLE:
 		case BUILDING_SMALL_TEMPLE_CERES:
@@ -1128,7 +1128,7 @@ static void drawBuildingTopForReligionOverlay(int gridOffset, int buildingId, in
 
 static void drawBuildingTopForSchoolOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	if (b->type == BUILDING_SCHOOL) {
 		DRAWTOP_SIZE2(map_image_at(gridOffset), xOffset, yOffset);
 	} else if (b->houseSize && b->data.house.school) {
@@ -1138,7 +1138,7 @@ static void drawBuildingTopForSchoolOverlay(int gridOffset, int buildingId, int 
 
 static void drawBuildingTopForLibraryOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	if (b->type == BUILDING_LIBRARY) {
 		DRAWTOP_SIZE2(map_image_at(gridOffset), xOffset, yOffset);
 	} else if (b->houseSize && b->data.house.library) {
@@ -1148,7 +1148,7 @@ static void drawBuildingTopForLibraryOverlay(int gridOffset, int buildingId, int
 
 static void drawBuildingTopForAcademyOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	if (b->type == BUILDING_ACADEMY) {
 		DRAWTOP_SIZE3(map_image_at(gridOffset), xOffset, yOffset);
 	} else if (b->houseSize && b->data.house.academy) {
@@ -1158,7 +1158,7 @@ static void drawBuildingTopForAcademyOverlay(int gridOffset, int buildingId, int
 
 static void drawBuildingTopForBarberOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	if (b->type == BUILDING_BARBER) {
 		DRAWTOP_SIZE1(map_image_at(gridOffset), xOffset, yOffset);
 	} else if (b->houseSize && b->data.house.barber) {
@@ -1168,7 +1168,7 @@ static void drawBuildingTopForBarberOverlay(int gridOffset, int buildingId, int 
 
 static void drawBuildingTopForClinicsOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	if (b->type == BUILDING_DOCTOR) {
 		DRAWTOP_SIZE1(map_image_at(gridOffset), xOffset, yOffset);
 	} else if (b->houseSize && b->data.house.clinic) {
@@ -1178,7 +1178,7 @@ static void drawBuildingTopForClinicsOverlay(int gridOffset, int buildingId, int
 
 static void drawBuildingTopForHospitalOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	if (b->type == BUILDING_HOSPITAL) {
 		DRAWTOP_SIZE3(map_image_at(gridOffset), xOffset, yOffset);
 	} else if (b->houseSize && b->data.house.hospital) {
@@ -1188,7 +1188,7 @@ static void drawBuildingTopForHospitalOverlay(int gridOffset, int buildingId, in
 
 static void drawBuildingTopForTaxIncomeOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	if (b->type == BUILDING_SENATE_UPGRADED) {
 		DRAWTOP_SIZE5(map_image_at(gridOffset), xOffset, yOffset);
 	} else if (b->type == BUILDING_FORUM) {
@@ -1213,7 +1213,7 @@ static int is_problem_cartpusher(int figure_id)
 
 static void drawBuildingTopForProblemsOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
 {
-    struct Data_Building *b = building_get(buildingId);
+    building *b = building_get(buildingId);
 	if (b->houseSize) {
 		return;
 	}

@@ -26,7 +26,7 @@ static void collectMonthlyTaxes()
 		Data_CityInfo.populationPerLevel[i] = 0;
 	}
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-        struct Data_Building *b = building_get(i);
+        building *b = building_get(i);
 		if (!BuildingIsInUse(i) || !b->houseSize) {
 			continue;
 		}
@@ -192,7 +192,7 @@ void CityInfo_Finance_handleYearChange()
 	
 	// reset tax income in building list
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-        struct Data_Building *b = building_get(i);
+        building *b = building_get(i);
 		if (BuildingIsInUse(i) && b->houseSize) {
 			b->taxIncomeOrStorage = 0;
 		}
@@ -279,7 +279,7 @@ void CityInfo_Finance_calculateEstimatedTaxes()
 	Data_CityInfo.monthlyCollectedTaxFromPlebs = 0;
 	Data_CityInfo.monthlyCollectedTaxFromPatricians = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-        struct Data_Building *b = building_get(i);
+        building *b = building_get(i);
 		if (BuildingIsInUse(i) && b->houseSize && b->houseTaxCoverage) {
 			int isPatrician = b->subtype.houseLevel >= HOUSE_SMALL_VILLA;
 			int trm = difficulty_adjust_money(

@@ -49,7 +49,7 @@ void UI_BuildingInfo_drawFountain(BuildingInfoContext *c)
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(108, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	int textId;
-    struct Data_Building *b = building_get(c->buildingId);
+    building *b = building_get(c->buildingId);
 	if (b->hasWaterAccess) {
 		if (b->numWorkers > 0) {
 			textId = 1;

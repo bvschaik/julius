@@ -27,7 +27,7 @@ static void drawVacantLot(BuildingInfoContext *c)
 	UI_BuildingInfo_drawFigureList(c);
 
 	int textId = 2;
-    struct Data_Building *b = building_get(c->buildingId);
+    building *b = building_get(c->buildingId);
 	if (Terrain_getClosestRoadWithinRadius(b->x, b->y, 1, 2, 0, 0)) {
 		textId = 1;
 	}
@@ -38,7 +38,7 @@ static void drawVacantLot(BuildingInfoContext *c)
 
 static void drawPopulationInfo(BuildingInfoContext *c, int yOffset)
 {
-	struct Data_Building *b = building_get(c->buildingId);
+	building *b = building_get(c->buildingId);
 	Graphics_drawImage(image_group(GROUP_CONTEXT_ICONS) + 13, c->xOffset + 34, yOffset + 4);
 	int width = Widget_Text_drawNumber(b->housePopulation, '@', " ",
 		c->xOffset + 50, yOffset + 14, FONT_SMALL_BLACK);
@@ -57,7 +57,7 @@ static void drawPopulationInfo(BuildingInfoContext *c, int yOffset)
 
 static void drawTaxInfo(BuildingInfoContext *c, int yOffset)
 {
-	struct Data_Building *b = building_get(c->buildingId);
+	building *b = building_get(c->buildingId);
 	if (b->houseTaxCoverage) {
 		int pct = calc_adjust_with_percentage(b->taxIncomeOrStorage / 2, Data_CityInfo.taxPercentage);
 		int width = Widget_GameText_draw(127, 24, c->xOffset + 36, yOffset, FONT_SMALL_BLACK);
@@ -95,7 +95,7 @@ void UI_BuildingInfo_drawHouse(BuildingInfoContext *c)
 {
 	c->helpId = 56;
 	PLAY_SOUND("wavs/housing.wav");
-	struct Data_Building *b = building_get(c->buildingId);
+	building *b = building_get(c->buildingId);
 	if (b->housePopulation <= 0) {
 		drawVacantLot(c);
 		return;
@@ -178,7 +178,7 @@ void UI_BuildingInfo_houseDetermineWorstDesirabilityBuilding(BuildingInfoContext
 {
 	int lowestDesirability = 0;
 	int lowestBuildingId = 0;
-    struct Data_Building *cb = building_get(c->buildingId);
+    building *cb = building_get(c->buildingId);
 	int xMin = cb->x - 6;
 	int yMin = cb->y - 6;
 	int xMax = cb->x + 6;
@@ -191,7 +191,7 @@ void UI_BuildingInfo_houseDetermineWorstDesirabilityBuilding(BuildingInfoContext
 			if (buildingId <= 0) {
 				continue;
 			}
-			struct Data_Building *b = building_get(buildingId);
+			building *b = building_get(buildingId);
 			if (!BuildingIsInUse(buildingId) || buildingId == c->buildingId) {
 				continue;
 			}

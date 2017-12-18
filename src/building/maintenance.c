@@ -32,7 +32,7 @@ void building_maintenance_update_burning_ruins()
     int recalculate_terrain = 0;
     building_list_burning_clear();
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        struct Data_Building *b = building_get(i);
+        building *b = building_get(i);
         if (!BuildingIsInUse(i) || b->type != BUILDING_BURNING_RUIN) {
             continue;
         }
@@ -108,7 +108,7 @@ int building_maintenance_get_closest_burning_ruin(int x, int y, int *distance)
     int burning_size = building_list_burning_size();
     for (int i = 0; i < burning_size; i++) {
         int building_id = burning[i];
-        struct Data_Building *b = building_get(building_id);
+        building *b = building_get(building_id);
         if (BuildingIsInUse(building_id) && b->type == BUILDING_BURNING_RUIN && !b->ruinHasPlague && b->distanceFromEntry) {
             int dist = calc_maximum_distance(x, y, b->x, b->y);
             if (b->figureId4) {
@@ -129,7 +129,7 @@ int building_maintenance_get_closest_burning_ruin(int x, int y, int *distance)
     return min_free_building_id;
 }
 
-static void collapse_building(int building_id, struct Data_Building *b)
+static void collapse_building(int building_id, building *b)
 {
     city_message_apply_sound_interval(MESSAGE_CAT_COLLAPSE);
     if (!tutorial_handle_collapse()) {
@@ -143,7 +143,7 @@ static void collapse_building(int building_id, struct Data_Building *b)
     Building_collapseLinked(building_id, 0);
 }
 
-static void fire_building(int building_id, struct Data_Building *b)
+static void fire_building(int building_id, building *b)
 {
     city_message_apply_sound_interval(MESSAGE_CAT_FIRE);
     if (!tutorial_handle_fire()) {
@@ -164,7 +164,7 @@ void building_maintenance_check_fire_collapse()
     int recalculate_terrain = 0;
     int random_global = random_byte() & 7;
     for (int i = 1; i <= Data_Buildings_Extra.highestBuildingIdInUse; i++) {
-        struct Data_Building *b = building_get(i);
+        building *b = building_get(i);
         if (!BuildingIsInUse(i) || b->fireProof) {
             continue;
         }

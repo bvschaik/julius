@@ -46,7 +46,7 @@ static void setBuildingWorkerWeight();
 static void allocateWorkersToWater();
 static void allocateWorkersToBuildings();
 
-static int isIndustryDisabled(struct Data_Building *b) {
+static int isIndustryDisabled(building *b) {
 	if (b->type < BUILDING_WHEAT_FARM || b->type > BUILDING_POTTERY_WORKSHOP) {
 		return 0;
 	}
@@ -57,7 +57,7 @@ static int isIndustryDisabled(struct Data_Building *b) {
 	return 0;
 }
 
-static int shouldHaveWorkers(struct Data_Building *b, int category, int checkAccess)
+static int shouldHaveWorkers(building *b, int category, int checkAccess)
 {
 	if (category < 0) {
 		return 0;
@@ -92,7 +92,7 @@ void CityInfo_Labor_calculateWorkersNeededPerCategory()
 		Data_CityInfo.laborCategory[cat].workersNeeded = 0;
 	}
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-        struct Data_Building *b = building_get(i);
+        building *b = building_get(i);
 		if (!BuildingIsInUse(i)) {
 			continue;
 		}
@@ -212,7 +212,7 @@ static void setBuildingWorkerWeight()
 {
 	int waterPer10kPerBuilding = calc_percentage(100, Data_CityInfo.laborCategory[LaborCategory_Water].buildings);
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-        struct Data_Building *b = building_get(i);
+        building *b = building_get(i);
 		if (!BuildingIsInUse(i)) {
 			continue;
 		}
@@ -244,7 +244,7 @@ static void allocateWorkersToBuildings()
 		if (!BuildingIsInUse(i)) {
 			continue;
 		}
-		struct Data_Building *b = building_get(i);
+		building *b = building_get(i);
 		int cat = buildingTypeToLaborCategory[b->type];
 		if (cat == LaborCategory_Water || cat < 0) {
 			// water is handled by allocateWorkersToWater()
@@ -285,7 +285,7 @@ static void allocateWorkersToBuildings()
 		if (!BuildingIsInUse(i)) {
 			continue;
 		}
-		struct Data_Building *b = building_get(i);
+		building *b = building_get(i);
 		int cat = buildingTypeToLaborCategory[b->type];
 		if (cat < 0 || cat == LaborCategory_Water || cat == LaborCategory_Military) {
 			continue;
@@ -333,7 +333,7 @@ static void allocateWorkersToWater()
 		if (buildingId >= 2000) {
 			buildingId = 1;
 		}
-		struct Data_Building *b = building_get(buildingId);
+		building *b = building_get(buildingId);
 		if (!BuildingIsInUse(buildingId) ||
 			buildingTypeToLaborCategory[b->type] != LaborCategory_Water) {
 			continue;

@@ -98,7 +98,7 @@ void CityInfo_Culture_calculateEntertainment()
 
 	int numHouses = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		struct Data_Building *b = building_get(i);
+		building *b = building_get(i);
 		if (BuildingIsInUse(i) && b->houseSize) {
 			numHouses++;
 			Data_CityInfo.citywideAverageEntertainment += b->data.house.entertainment;
@@ -114,7 +114,7 @@ void CityInfo_Culture_calculateEntertainment()
 		Data_CityInfo.citywideAverageHealth /= numHouses;
 	}
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		struct Data_Building *b = building_get(i);
+		building *b = building_get(i);
 		if (!BuildingIsInUse(i)) {
 			continue;
 		}

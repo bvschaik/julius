@@ -70,7 +70,7 @@ static void add_to_terrain(int x, int y, int size, int desirability, int step, i
 static void update_buildings()
 {
     for (int i = 1; i <= Data_Buildings_Extra.highestBuildingIdInUse; i++) {
-        struct Data_Building *b = building_get(i);
+        building *b = building_get(i);
         if (BuildingIsInUse(i)) {
             const model_building *model = model_get_building(b->type);
             add_to_terrain(

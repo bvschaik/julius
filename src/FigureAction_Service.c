@@ -17,7 +17,7 @@
 
 void FigureAction_taxCollector(figure *f)
 {
-	struct Data_Building *b = building_get(f->buildingId);
+	building *b = building_get(f->buildingId);
 	
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	f->useCrossCountry = 0;
@@ -94,7 +94,7 @@ void FigureAction_taxCollector(figure *f)
 
 void FigureAction_engineer(figure *f)
 {
-	struct Data_Building *b = building_get(f->buildingId);
+	building *b = building_get(f->buildingId);
 	
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	f->useCrossCountry = 0;
@@ -260,7 +260,7 @@ static int prefectGoFightFire(figure *f)
 	int distance;
 	int ruinId = building_maintenance_get_closest_burning_ruin(f->x, f->y, &distance);
 	if (ruinId > 0 && distance <= 25) {
-        struct Data_Building *ruin = building_get(ruinId);
+        building *ruin = building_get(ruinId);
 		f->waitTicksMissile = 0;
 		f->actionState = FigureActionState_74_PrefectGoingToFire;
 		f->destinationX = ruin->roadAccessX;
@@ -275,7 +275,7 @@ static int prefectGoFightFire(figure *f)
 
 static void prefectExtinguishFire(figure *f)
 {
-	struct Data_Building *burn = building_get(f->destinationBuildingId);
+	building *burn = building_get(f->destinationBuildingId);
 	int distance = calc_maximum_distance(f->x, f->y, burn->x, burn->y);
 	if (BuildingIsInUse(f->destinationBuildingId) && burn->type == BUILDING_BURNING_RUIN && distance < 2) {
 		burn->fireDuration = 32;
@@ -291,7 +291,7 @@ static void prefectExtinguishFire(figure *f)
 	if (f->waitTicks <= 0) {
 		f->waitTicksMissile = 20;
 		if (!prefectGoFightFire(f)) {
-			struct Data_Building *b = building_get(f->buildingId);
+			building *b = building_get(f->buildingId);
 			int xRoad, yRoad;
 			if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
 				f->actionState = FigureActionState_73_PrefectReturning;
@@ -319,7 +319,7 @@ static int prefectTargetIsAlive(figure *f)
 
 void FigureAction_prefect(figure *f)
 {
-	struct Data_Building *b = building_get(f->buildingId);
+	building *b = building_get(f->buildingId);
 	
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	f->useCrossCountry = 0;
@@ -479,7 +479,7 @@ void FigureAction_worker(figure *f)
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 384;
-    struct Data_Building *b = building_get(f->buildingId);
+    building *b = building_get(f->buildingId);
 	if (!BuildingIsInUse(f->buildingId) || b->figureId != f->id) {
 		f->state = FigureState_Dead;
 	}

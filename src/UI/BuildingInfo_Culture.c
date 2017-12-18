@@ -40,7 +40,7 @@ void UI_BuildingInfo_drawBathhouse(BuildingInfoContext *c)
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(83, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 
-    struct Data_Building *b = building_get(c->buildingId);
+    building *b = building_get(c->buildingId);
 	if (!b->hasWaterAccess) {
 		DRAW_DESC(83, 4);
 	} else if (!c->hasRoadAccess) {

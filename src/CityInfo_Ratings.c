@@ -430,7 +430,7 @@ static void calculateMaxProsperity()
 	int points = 0;
 	int houses = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-        struct Data_Building *b = building_get(i);
+        building *b = building_get(i);
 		if (b->state && b->houseSize) {
 			points += model_get_house(b->subtype.houseLevel)->prosperity;
 			houses++;

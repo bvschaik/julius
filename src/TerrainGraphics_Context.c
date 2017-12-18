@@ -393,7 +393,7 @@ static void setTilesRoad(int gridOffset, int tiles[MAX_TILES])
 	for (int i = 0; i < MAX_TILES; i += 2) {
 		int offset = gridOffset + contextTileOffsets[i];
 		if (map_terrain_is(offset, TERRAIN_GATEHOUSE)) {
-			struct Data_Building *b = building_get(map_building_at(offset));
+			building *b = building_get(map_building_at(offset));
 			if (b->type == BUILDING_GATEHOUSE &&
 				b->subtype.orientation == 1 + ((i / 2) & 1)) { // 1,2,1,2
 				tiles[i] = 1;
@@ -420,7 +420,7 @@ static void setTerrainReservoir(int gridOffset, int index, int edgeMask, int til
 {
 	int offset = gridOffset + contextTileOffsets[index];
 	if (map_terrain_is(offset, TERRAIN_BUILDING)) {
-		struct Data_Building *b = building_get(map_building_at(offset));
+		building *b = building_get(map_building_at(offset));
 		if (b->type == BUILDING_RESERVOIR && map_property_multi_tile_xy(offset) == edgeMask) {
 			tiles[index] = 1;
 		}

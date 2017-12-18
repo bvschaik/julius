@@ -60,7 +60,7 @@ void UI_BuildingInfo_drawMarket(BuildingInfoContext *c)
 	PLAY_SOUND("wavs/market.wav");
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(97, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
-	struct Data_Building *b = building_get(c->buildingId);
+	building *b = building_get(c->buildingId);
 	if (!c->hasRoadAccess) {
 		DRAW_DESC(69, 25);
 	} else if (b->numWorkers <= 0) {
@@ -120,7 +120,7 @@ void UI_BuildingInfo_drawGranary(BuildingInfoContext *c)
 	PLAY_SOUND("wavs/granary.wav");
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(98, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
-	struct Data_Building *b = building_get(c->buildingId);
+	building *b = building_get(c->buildingId);
 	if (!c->hasRoadAccess) {
 		DRAW_DESC_AT(40, 69, 25);
 	} else if (scenario_property_rome_supplies_wheat()) {
@@ -264,7 +264,7 @@ void UI_BuildingInfo_drawWarehouse(BuildingInfoContext *c)
 	PLAY_SOUND("wavs/warehouse.wav");
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(99, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
-	struct Data_Building *b = building_get(c->buildingId);
+	building *b = building_get(c->buildingId);
 	if (!c->hasRoadAccess) {
 		DRAW_DESC(69, 25);
 	} else {
@@ -408,7 +408,7 @@ void UI_BuildingInfo_handleMouseWarehouseOrders(BuildingInfoContext *c)
 
 static void toggleResourceState(int index, int param2)
 {
-    struct Data_Building *b = building_get(buildingId);
+    building *b = building_get(buildingId);
 	int resourceId;
 	if (b->type == BUILDING_WAREHOUSE) {
 		resourceId = Data_CityInfo_Resource.availableResources[index-1];

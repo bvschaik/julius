@@ -139,7 +139,7 @@ static void figureMoveToNextTile(figure *f)
 
 void FigureMovement_initRoaming(figure *f)
 {
-	struct Data_Building *b = building_get(f->buildingId);
+	building *b = building_get(f->buildingId);
 	f->progressOnTile = 15;
 	f->roamChooseDestination = 0;
 	f->roamTicksUntilNextTurn = -1;

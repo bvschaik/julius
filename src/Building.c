@@ -72,7 +72,7 @@ int Building_create(int type, int x, int y)
 		return 0;
 	}
 	
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
     const building_properties *props = building_properties_for_type(type);
 	
 	b->state = BuildingState_Created;
@@ -183,7 +183,7 @@ void Building_delete(int buildingId)
 
 void Building_deleteData(int buildingId)
 {
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	if (b->storage_id) {
 		building_storage_delete(b->storage_id);
 	}
@@ -221,7 +221,7 @@ void Building_GameTick_updateState()
 	int landRecalc = 0;
 	int wallRecalc = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		struct Data_Building *b = building_get(i);
+		building *b = building_get(i);
 		if (b->state == BuildingState_Created) {
 			b->state = BuildingState_InUse;
 		}
@@ -254,7 +254,7 @@ void Building_GameTick_updateState()
 int Building_getMainBuildingId(int buildingId)
 {
 	for (int guard = 0; guard < 9; guard++) {
-        struct Data_Building *b = building_get(buildingId);
+        building *b = building_get(buildingId);
 		if (b->prevPartBuildingId <= 0) {
 			return buildingId;
 		}
@@ -265,7 +265,7 @@ int Building_getMainBuildingId(int buildingId)
 
 void Building_collapseOnFire(int buildingId, int hasPlague)
 {
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	Data_State.undoAvailable = 0;
 	b->fireRisk = 0;
 	b->damageRisk = 0;
@@ -319,7 +319,7 @@ void Building_collapseOnFire(int buildingId, int hasPlague)
 			continue;
 		}
 		int ruinId = Building_create(BUILDING_BURNING_RUIN, x, y);
-		struct Data_Building *ruin = building_get(ruinId);
+		building *ruin = building_get(ruinId);
 		int graphicId;
 		if (wasTent) {
 			graphicId = image_group(GROUP_TERRAIN_RUBBLE_TENT);
@@ -340,7 +340,7 @@ void Building_collapseOnFire(int buildingId, int hasPlague)
 
 void Building_collapseLinked(int buildingId, int onFire)
 {
-	struct Data_Building *space = building_get(buildingId);
+	building *space = building_get(buildingId);
 	for (int i = 0; i < 9; i++) {
 		if (space->prevPartBuildingId <= 0) {
 			break;
@@ -376,7 +376,7 @@ void Building_collapseLastPlaced()
 	int highestSequence = 0;
 	int buildingId = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-        struct Data_Building *b = building_get(i);
+        building *b = building_get(i);
 		if (b->state == BuildingState_Created || b->state == BuildingState_InUse) {
 			if (b->createdSequence > highestSequence) {
 				highestSequence = b->createdSequence;
@@ -385,7 +385,7 @@ void Building_collapseLastPlaced()
 		}
 	}
 	if (buildingId) {
-        struct Data_Building *b = building_get(buildingId);
+        building *b = building_get(buildingId);
 		city_message_post(1, MESSAGE_ROAD_TO_ROME_BLOCKED, 0, b->gridOffset);
 		Data_State.undoAvailable = 0;
 		b->state = BuildingState_Rubble;
@@ -399,7 +399,7 @@ void Building_collapseLastPlaced()
 int Building_collapseFirstOfType(int buildingType)
 {
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-        struct Data_Building *b = building_get(i);
+        building *b = building_get(i);
 		if (BuildingIsInUse(i) && b->type == buildingType) {
 			int gridOffset = b->gridOffset;
 			Data_State.undoAvailable = 0;
@@ -426,7 +426,7 @@ void Building_destroyByEnemy(int x, int y, int gridOffset)
 {
 	int buildingId = map_building_at(gridOffset);
 	if (buildingId > 0) {
-		struct Data_Building *b = building_get(buildingId);
+		building *b = building_get(buildingId);
 		TerrainGraphics_setBuildingAreaRubble(buildingId, b->x, b->y, b->size);
 		if (BuildingIsInUse(buildingId)) {
 			switch (b->type) {
@@ -470,7 +470,7 @@ void Building_setDesirability()
 		if (!BuildingIsInUse(i)) {
 			continue;
 		}
-		struct Data_Building *b = building_get(i);
+		building *b = building_get(i);
 		b->desirability = map_desirability_get_max(b->x, b->y, b->size);
 		if (b->isAdjacentToWater) {
 			b->desirability += 10;
@@ -489,7 +489,7 @@ void Building_setDesirability()
 void Building_decayHousesCovered()
 {
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-        struct Data_Building *b = building_get(i);
+        building *b = building_get(i);
 		if (b->state != BuildingState_Unused && b->type != BUILDING_TOWER) {
 			if (b->housesCovered <= 1) {
 				b->housesCovered = 0;
@@ -503,7 +503,7 @@ void Building_decayHousesCovered()
 void Building_decayTaxCollectorAccess()
 {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        struct Data_Building *b = building_get(i);
+        building *b = building_get(i);
         if (BuildingIsInUse(i) && b->houseTaxCoverage) {
             b->houseTaxCoverage--;
         }
@@ -516,7 +516,7 @@ void Building_determineGraphicIdsForOrientedBuildings()
 	int mapOrientationIsTopOrBottom = mapOrientation == DIR_0_TOP || mapOrientation == DIR_4_BOTTOM;
 	int graphicOffset;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		struct Data_Building *b = building_get(i);
+		building *b = building_get(i);
 		if (b->state == BuildingState_Unused) {
 			continue;
 		}
@@ -623,7 +623,7 @@ void Building_GameTick_checkAccessToRome()
 		if (!BuildingIsInUse(i)) {
 			continue;
 		}
-		struct Data_Building *b = building_get(i);
+		building *b = building_get(i);
 		int xRoad, yRoad;
 		if (b->houseSize) {
 			if (!Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
@@ -671,7 +671,7 @@ void Building_GameTick_checkAccessToRome()
 			}
 		} else if (b->type == BUILDING_WAREHOUSE_SPACE) {
 			b->distanceFromEntry = 0;
-			struct Data_Building *mainBuilding = building_get(Building_getMainBuildingId(i));
+			building *mainBuilding = building_get(Building_getMainBuildingId(i));
 			b->roadNetworkId = mainBuilding->roadNetworkId;
 			b->distanceFromEntry = mainBuilding->distanceFromEntry;
 			b->roadAccessX = mainBuilding->roadAccessX;
@@ -737,7 +737,7 @@ void Building_GameTick_checkAccessToRome()
 void Building_Industry_updateProduction()
 {
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		struct Data_Building *b = building_get(i);
+		building *b = building_get(i);
 		if (!BuildingIsInUse(i) || !b->outputResourceId) {
 			continue;
 		}
@@ -781,7 +781,7 @@ void Building_Industry_updateDoubleWheatProduction()
 		return;
 	}
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		struct Data_Building *b = building_get(i);
+		building *b = building_get(i);
 		if (!BuildingIsInUse(i) || !b->outputResourceId) {
 			continue;
 		}
@@ -806,7 +806,7 @@ void Building_Industry_updateDoubleWheatProduction()
 void Building_Industry_witherFarmCropsFromCeres(int bigCurse)
 {
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		struct Data_Building *b = building_get(i);
+		building *b = building_get(i);
 		if (BuildingIsInUse(i) && b->outputResourceId && BuildingIsFarm(b->type)) {
 			b->data.industry.progress = 0;
 			b->data.industry.blessingDaysLeft = 0;
@@ -821,7 +821,7 @@ void Building_Industry_witherFarmCropsFromCeres(int bigCurse)
 void Building_Industry_blessFarmsFromCeres()
 {
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		struct Data_Building *b = building_get(i);
+		building *b = building_get(i);
 		if (BuildingIsInUse(i) && b->outputResourceId && BuildingIsFarm(b->type)) {
 			b->data.industry.progress = 200;
 			b->data.industry.curseDaysLeft = 0;
@@ -835,14 +835,14 @@ void Building_Industry_blessFarmsFromCeres()
 
 int Building_Industry_hasProducedResource(int buildingId)
 {
-    struct Data_Building *b = building_get(buildingId);
+    building *b = building_get(buildingId);
 	int target = b->subtype.workshopType ? 400 : 200;
 	return b->data.industry.progress >= target;
 }
 
 void Building_Industry_startNewProduction(int buildingId)
 {
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	b->data.industry.progress = 0;
 	if (b->subtype.workshopType) {
 		if (b->loadsStored) {
@@ -871,12 +871,12 @@ int Building_Market_getDestinationGranaryWarehouse(int marketId)
 		resources[i].numBuildings = 0;
 		resources[i].distance = 40;
 	}
-	struct Data_Building *market = building_get(marketId);
+	building *market = building_get(marketId);
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		if (!BuildingIsInUse(i)) {
 			continue;
 		}
-		struct Data_Building *b = building_get(i);
+		building *b = building_get(i);
 		if (b->type != BUILDING_GRANARY && b->type != BUILDING_WAREHOUSE) {
 			continue;
 		}
@@ -1090,7 +1090,7 @@ int Building_Market_getDestinationGranaryWarehouse(int marketId)
 
 int Building_Market_getMaxFoodStock(int buildingId)
 {
-    struct Data_Building *b = building_get(buildingId);
+    building *b = building_get(buildingId);
 	int maxStock = 0;
 	if (buildingId > 0 && b->type == BUILDING_MARKET) {
 		for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
@@ -1105,7 +1105,7 @@ int Building_Market_getMaxFoodStock(int buildingId)
 
 int Building_Market_getMaxGoodsStock(int buildingId)
 {
-    struct Data_Building *b = building_get(buildingId);
+    building *b = building_get(buildingId);
 	int maxStock = 0;
 	if (buildingId > 0 && b->type == BUILDING_MARKET) {
 		for (int i = INVENTORY_MIN_GOOD; i < INVENTORY_MAX_GOOD; i++) {
@@ -1120,7 +1120,7 @@ int Building_Market_getMaxGoodsStock(int buildingId)
 
 int Building_Dock_getNumIdleDockers(int buildingId)
 {
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	int numIdle = 0;
 	for (int i = 0; i < 3; i++) {
 		if (b->data.other.dockFigureIds[i]) {
@@ -1139,7 +1139,7 @@ void Building_Dock_updateOpenWaterAccess()
     map_point river_entry = scenario_map_river_entry();
 	map_routing_calculate_distances_water_boat(river_entry.x, river_entry.y);
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		struct Data_Building *b = building_get(i);
+		building *b = building_get(i);
 		if (BuildingIsInUse(i) && !b->houseSize && b->type == BUILDING_DOCK) {
 			if (Terrain_isAdjacentToOpenWater(b->x, b->y, 3)) {
 				b->hasWaterAccess = 1;
@@ -1166,7 +1166,7 @@ void Building_Mercury_removeResources(int bigCurse)
 	int maxStored = 0;
 	int maxBuildingId = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		struct Data_Building *b = building_get(i);
+		building *b = building_get(i);
 		if (!BuildingIsInUse(i)) {
 			continue;
 		}
@@ -1191,7 +1191,7 @@ void Building_Mercury_removeResources(int bigCurse)
 	if (!maxBuildingId) {
 		return;
 	}
-	struct Data_Building *b = building_get(maxBuildingId);
+	building *b = building_get(maxBuildingId);
 	if (bigCurse == 1) {
 		city_message_disable_sound_for_next_message();
 		city_message_post(0, MESSAGE_FIRE, b->type, b->gridOffset);
@@ -1216,7 +1216,7 @@ void Building_Mercury_fillGranary()
 	int minStored = 10000;
 	int minBuildingId = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		struct Data_Building *b = building_get(i);
+		building *b = building_get(i);
 		if (!BuildingIsInUse(i) || b->type != BUILDING_GRANARY) {
 			continue;
 		}

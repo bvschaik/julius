@@ -41,7 +41,7 @@ void Resource_gatherGranaryGettingInfo()
 	nonGettingGranaries.totalStorageMeat = 0;
 
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		struct Data_Building *b = building_get(i);
+		building *b = building_get(i);
 		if (!BuildingIsInUse(i) || b->type != BUILDING_GRANARY) {
 			continue;
 		}
@@ -91,7 +91,7 @@ int Resource_getGranaryForStoringFood(
 	int minDist = 10000;
 	int minBuildingId = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		struct Data_Building *b = building_get(i);
+		building *b = building_get(i);
 		if (!BuildingIsInUse(i) || b->type != BUILDING_GRANARY) {
 			continue;
 		}
@@ -119,7 +119,7 @@ int Resource_getGranaryForStoringFood(
 		}
 	}
 	// deliver to center of granary
-	struct Data_Building *min = building_get(minBuildingId);
+	building *min = building_get(minBuildingId);
 	*xDst = min->x + 1;
 	*yDst = min->y + 1;
 	return minBuildingId;
@@ -141,7 +141,7 @@ int Resource_getGettingGranaryForStoringFood(
 	int minDist = 10000;
 	int minBuildingId = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		struct Data_Building *b = building_get(i);
+		building *b = building_get(i);
 		if (!BuildingIsInUse(i) || b->type != BUILDING_GRANARY) {
 			continue;
 		}
@@ -165,7 +165,7 @@ int Resource_getGettingGranaryForStoringFood(
 			}
 		}
 	}
-	struct Data_Building *min = building_get(minBuildingId);
+	building *min = building_get(minBuildingId);
 	*xDst = min->x + 1;
 	*yDst = min->y + 1;
 	return minBuildingId;
@@ -173,7 +173,7 @@ int Resource_getGettingGranaryForStoringFood(
 
 int Resource_getGranaryForGettingFood(int srcBuildingId, int *xDst, int *yDst)
 {
-	struct Data_Building *bSrc = building_get(srcBuildingId);
+	building *bSrc = building_get(srcBuildingId);
 	const building_storage *sSrc = building_storage_get(bSrc->storage_id);
 	if (sSrc->empty_all) {
 		return 0;
@@ -202,7 +202,7 @@ int Resource_getGranaryForGettingFood(int srcBuildingId, int *xDst, int *yDst)
 	int minBuildingId = 0;
 	for (int i = 0; i < nonGettingGranaries.numItems; i++) {
 		int buildingId = nonGettingGranaries.buildingIds[i];
-		struct Data_Building *b = building_get(buildingId);
+		building *b = building_get(buildingId);
 		if (b->roadNetworkId != bSrc->roadNetworkId) {
 			continue;
 		}
@@ -238,7 +238,7 @@ int Resource_getGranaryForGettingFood(int srcBuildingId, int *xDst, int *yDst)
 			}
 		}
 	}
-	struct Data_Building *min = building_get(minBuildingId);
+	building *min = building_get(minBuildingId);
 	*xDst = min->x + 1;
 	*yDst = min->y + 1;
 	return minBuildingId;
@@ -252,7 +252,7 @@ int Resource_getAmountStoredInGranary(int buildingId, int resource)
 	if (!isFood(resource)) {
 		return 0;
 	}
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	if (b->type != BUILDING_GRANARY) {
 		return 0;
 	}
@@ -267,7 +267,7 @@ int Resource_addToGranary(int buildingId, int resource, int countAsProduced)
 	if (!isFood(resource)) {
 		return 0;
 	}
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	if (b->type != BUILDING_GRANARY) {
 		return 0;
 	}
@@ -293,7 +293,7 @@ int Resource_removeFromGranary(int buildingId, int resource, int amount)
 		return 0;
 	}
 	int toRemove;
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	if (b->data.storage.resourceStored[resource] >= amount) {
 		Data_CityInfo.resourceGranaryFoodStored[resource] -= amount;
 		b->data.storage.resourceStored[resource] -= amount;
@@ -311,7 +311,7 @@ int Resource_removeFromGranary(int buildingId, int resource, int amount)
 
 int Resource_determineGranaryWorkerTask(int buildingId)
 {
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	int pctWorkers = calc_percentage(b->numWorkers, model_get_building(b->type)->laborers);
 	if (pctWorkers < 50) {
 		return -1;
@@ -346,9 +346,9 @@ int Resource_determineGranaryWorkerTask(int buildingId)
 
 int Resource_takeFoodFromGranaryForGettingDeliveryman(int dstBuildingId, int srcBuildingId, int *resource)
 {
-	struct Data_Building *bSrc = building_get(srcBuildingId);
+	building *bSrc = building_get(srcBuildingId);
 	const building_storage *sSrc = building_storage_get(bSrc->storage_id);
-	struct Data_Building *bDst = building_get(dstBuildingId);
+	building *bDst = building_get(dstBuildingId);
 	const building_storage *sDst = building_storage_get(bDst->storage_id);
 	
 	int maxAmount = 0;

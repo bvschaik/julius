@@ -33,7 +33,7 @@ void Resource_calculateWarehouseStocks()
 		Data_CityInfo.resourceStored[i] = 0;
 	}
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		struct Data_Building *b = building_get(i);
+		building *b = building_get(i);
 		if (BuildingIsInUse(i) && b->type == BUILDING_WAREHOUSE) {
 			b->hasRoadAccess = 0;
 			if (Terrain_hasRoadAccess(b->x, b->y, b->size, 0, 0)) {
@@ -44,11 +44,11 @@ void Resource_calculateWarehouseStocks()
 		}
 	}
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		struct Data_Building *b = building_get(i);
+		building *b = building_get(i);
 		if (!BuildingIsInUse(i) || b->type != BUILDING_WAREHOUSE_SPACE) {
 			continue;
 		}
-		struct Data_Building *warehouse = building_get(Building_getMainBuildingId(i));
+		building *warehouse = building_get(Building_getMainBuildingId(i));
 		if (warehouse->hasRoadAccess) {
 			b->hasRoadAccess = warehouse->hasRoadAccess;
 			if (b->subtype.warehouseResourceId) {
@@ -70,7 +70,7 @@ void Resource_calculateWorkshopStocks()
 		Data_CityInfo.resourceWorkshopRawMaterialSpace[i] = 0;
 	}
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		struct Data_Building *b = building_get(i);
+		building *b = building_get(i);
 		if (!BuildingIsInUse(i) || !BuildingIsWorkshop(b->type)) {
 			continue;
 		}
@@ -107,7 +107,7 @@ int Resource_getWorkshopWithRoomForRawMaterial(
 	int minDist = 10000;
 	int minBuildingId = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		struct Data_Building *b = building_get(i);
+		building *b = building_get(i);
 		if (!BuildingIsInUse(i) || !BuildingIsWorkshop(b->type)) {
 			continue;
 		}
@@ -125,7 +125,7 @@ int Resource_getWorkshopWithRoomForRawMaterial(
 			}
 		}
 	}
-	struct Data_Building *min = building_get(minBuildingId);
+	building *min = building_get(minBuildingId);
 	*xDst = min->roadAccessX;
 	*yDst = min->roadAccessY;
 	return minBuildingId;
@@ -150,7 +150,7 @@ int Resource_getWorkshopForRawMaterial(
 	int minDist = 10000;
 	int minBuildingId = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		struct Data_Building *b = building_get(i);
+		building *b = building_get(i);
 		if (!BuildingIsInUse(i) || !BuildingIsWorkshop(b->type)) {
 			continue;
 		}
@@ -166,7 +166,7 @@ int Resource_getWorkshopForRawMaterial(
 			}
 		}
 	}
-	struct Data_Building *min = building_get(minBuildingId);
+	building *min = building_get(minBuildingId);
 	*xDst = min->roadAccessX;
 	*yDst = min->roadAccessY;
 	return minBuildingId;
@@ -183,7 +183,7 @@ int Resource_getBarracksForWeapon(int xUnused, int yUnused, int resource, int ro
 	if (building_count_active(BUILDING_BARRACKS) <= 0) {
 		return 0;
 	}
-	struct Data_Building *b = building_get(Data_CityInfo.buildingBarracksBuildingId);
+	building *b = building_get(Data_CityInfo.buildingBarracksBuildingId);
 	if (b->loadsStored < 5 && Data_CityInfo.militaryLegionaryLegions > 0) {
 		if (Terrain_hasRoadAccess(b->x, b->y, b->size, xDst, yDst) && b->roadNetworkId == roadNetworkId) {
 			return Data_CityInfo.buildingBarracksBuildingId;
@@ -194,7 +194,7 @@ int Resource_getBarracksForWeapon(int xUnused, int yUnused, int resource, int ro
 
 void Resource_addRawMaterialToWorkshop(int buildingId)
 {
-    struct Data_Building *b = building_get(buildingId);
+    building *b = building_get(buildingId);
 	if (buildingId > 0 && BuildingIsWorkshop(b->type)) {
 		b->loadsStored++; // BUG: any raw material accepted
 	}

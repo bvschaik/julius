@@ -4,29 +4,29 @@
 
 static building Data_Buildings[MAX_BUILDINGS];
 
-struct Data_Building *building_get(int id)
+building *building_get(int id)
 {
     return &Data_Buildings[id];
 }
 
-void building_delete(struct Data_Building *b)
+void building_delete(building *b)
 {
-    memset(b, 0, sizeof(struct Data_Building));
+    memset(b, 0, sizeof(building));
 }
 
 void building_clear_all()
 {
     for (int i = 0; i < MAX_BUILDINGS; i++) {
-        memset(&Data_Buildings[i], 0, sizeof(struct Data_Building));
+        memset(&Data_Buildings[i], 0, sizeof(building));
     }
 }
 
-static void building_save(struct Data_Building *b, buffer *buf)
+static void building_save(building *b, buffer *buf)
 {
     buffer_write_raw(buf, b, 128);
 }
 
-static void building_load(struct Data_Building *b, buffer *buf)
+static void building_load(building *b, buffer *buf)
 {
     buffer_read_raw(buf, b, 128);
 }

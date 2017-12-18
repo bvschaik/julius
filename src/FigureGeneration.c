@@ -26,12 +26,12 @@
 #define EXIT_IF_FIGURE(t) if (buildingHasFigureOfType(buildingId, t, 0)) return;
 #define EXIT_IF_FIGURES(t1,t2) if (buildingHasFigureOfType(buildingId, t1, t2)) return;
 
-static int worker_percentage(struct Data_Building *b)
+static int worker_percentage(building *b)
 {
     return calc_percentage(b->numWorkers, model_get_building(b->type)->laborers);
 }
 
-static void generateLaborSeeker(int buildingId, struct Data_Building *b, int x, int y)
+static void generateLaborSeeker(int buildingId, building *b, int x, int y)
 {
 	if (Data_CityInfo.population <= 0) {
 		return;
@@ -52,7 +52,7 @@ static void generateLaborSeeker(int buildingId, struct Data_Building *b, int x, 
 
 static int buildingHasFigureOfType(int buildingId, int type1, int type2)
 {
-    struct Data_Building *b = building_get(buildingId);
+    building *b = building_get(buildingId);
 	int figureId = b->figureId;
 	if (figureId <= 0) {
 		return 0;
@@ -66,7 +66,7 @@ static int buildingHasFigureOfType(int buildingId, int type1, int type2)
 	}
 }
 
-static void spawnFigurePatrician(int buildingId, struct Data_Building *b, int *patricianSpawned)
+static void spawnFigurePatrician(int buildingId, building *b, int *patricianSpawned)
 {
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
@@ -82,7 +82,7 @@ static void spawnFigurePatrician(int buildingId, struct Data_Building *b, int *p
 	}
 }
 
-static void spawnFigureWarehouse(int buildingId, struct Data_Building *b)
+static void spawnFigureWarehouse(int buildingId, building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	int spaceId = buildingId;
@@ -112,7 +112,7 @@ static void spawnFigureWarehouse(int buildingId, struct Data_Building *b)
 	}
 }
 
-static void spawnFigureGranary(int buildingId, struct Data_Building *b)
+static void spawnFigureGranary(int buildingId, building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	int xRoad, yRoad;
@@ -130,7 +130,7 @@ static void spawnFigureGranary(int buildingId, struct Data_Building *b)
 	}
 }
 
-static void spawnFigureTower(int buildingId, struct Data_Building *b)
+static void spawnFigureTower(int buildingId, building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	int xRoad, yRoad;
@@ -152,7 +152,7 @@ static void spawnFigureTower(int buildingId, struct Data_Building *b)
 	}
 }
 
-static void spawnFigureEngineersPost(int buildingId, struct Data_Building *b)
+static void spawnFigureEngineersPost(int buildingId, building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	EXIT_IF_FIGURE(FIGURE_ENGINEER);
@@ -185,7 +185,7 @@ static void spawnFigureEngineersPost(int buildingId, struct Data_Building *b)
 	}
 }
 
-static void spawnFigurePrefecture(int buildingId, struct Data_Building *b)
+static void spawnFigurePrefecture(int buildingId, building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	EXIT_IF_FIGURE(FIGURE_PREFECT);
@@ -218,7 +218,7 @@ static void spawnFigurePrefecture(int buildingId, struct Data_Building *b)
 	}
 }
 
-static void spawnFigureActorColony(int buildingId, struct Data_Building *b)
+static void spawnFigureActorColony(int buildingId, building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	int xRoad, yRoad;
@@ -250,7 +250,7 @@ static void spawnFigureActorColony(int buildingId, struct Data_Building *b)
 	}
 }
 
-static void spawnFigureGladiatorSchool(int buildingId, struct Data_Building *b)
+static void spawnFigureGladiatorSchool(int buildingId, building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	int xRoad, yRoad;
@@ -282,7 +282,7 @@ static void spawnFigureGladiatorSchool(int buildingId, struct Data_Building *b)
 	}
 }
 
-static void spawnFigureLionHouse(int buildingId, struct Data_Building *b)
+static void spawnFigureLionHouse(int buildingId, building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	int xRoad, yRoad;
@@ -314,7 +314,7 @@ static void spawnFigureLionHouse(int buildingId, struct Data_Building *b)
 	}
 }
 
-static void spawnFigureChariotMaker(int buildingId, struct Data_Building *b)
+static void spawnFigureChariotMaker(int buildingId, building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	int xRoad, yRoad;
@@ -346,7 +346,7 @@ static void spawnFigureChariotMaker(int buildingId, struct Data_Building *b)
 	}
 }
 
-static void spawnFigureAmphitheater(int buildingId, struct Data_Building *b)
+static void spawnFigureAmphitheater(int buildingId, building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	EXIT_IF_FIGURES(FIGURE_ACTOR, FIGURE_GLADIATOR);
@@ -388,7 +388,7 @@ static void spawnFigureAmphitheater(int buildingId, struct Data_Building *b)
 	}
 }
 
-static void spawnFigureTheater(int buildingId, struct Data_Building *b)
+static void spawnFigureTheater(int buildingId, building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	EXIT_IF_FIGURE(FIGURE_ACTOR);
@@ -424,7 +424,7 @@ static void spawnFigureTheater(int buildingId, struct Data_Building *b)
 	}
 }
 
-static void spawnFigureHippodrome(int buildingId, struct Data_Building *b)
+static void spawnFigureHippodrome(int buildingId, building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	if (b->prevPartBuildingId) {
@@ -492,7 +492,7 @@ static void spawnFigureHippodrome(int buildingId, struct Data_Building *b)
 	}
 }
 
-static void spawnFigureColosseum(int buildingId, struct Data_Building *b)
+static void spawnFigureColosseum(int buildingId, building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	EXIT_IF_FIGURES(FIGURE_GLADIATOR, FIGURE_LION_TAMER);
@@ -540,7 +540,7 @@ static void spawnFigureColosseum(int buildingId, struct Data_Building *b)
 	}
 }
 
-static void setMarketGraphic(int buildingId, struct Data_Building *b)
+static void setMarketGraphic(int buildingId, building *b)
 {
 	if (!BuildingIsInUse(buildingId)) {
 		return;
@@ -554,7 +554,7 @@ static void setMarketGraphic(int buildingId, struct Data_Building *b)
 	}
 }
 
-static void spawnFigureMarket(int buildingId, struct Data_Building *b)
+static void spawnFigureMarket(int buildingId, building *b)
 {
 	setMarketGraphic(buildingId, b);
 	SET_LABOR_PROBLEM(b);
@@ -605,7 +605,7 @@ static void spawnFigureMarket(int buildingId, struct Data_Building *b)
 				b->figureId2 = f->id;
 				f->destinationBuildingId = dstBuildingId;
 				f->collectingItemId = b->data.market.fetchInventoryId;
-				struct Data_Building *bDst = building_get(dstBuildingId);
+				building *bDst = building_get(dstBuildingId);
 				if (Terrain_hasRoadAccess(bDst->x, bDst->y, bDst->size, &xRoad, &yRoad) ||
 					Terrain_hasRoadAccess(bDst->x, bDst->y, 3, &xRoad, &yRoad)) {
 					f->destinationX = xRoad;
@@ -620,7 +620,7 @@ static void spawnFigureMarket(int buildingId, struct Data_Building *b)
 	}
 }
 
-static void setBathhouseGraphic(int buildingId, struct Data_Building *b)
+static void setBathhouseGraphic(int buildingId, building *b)
 {
 	if (!BuildingIsInUse(buildingId)) {
 		return;
@@ -649,7 +649,7 @@ static void setBathhouseGraphic(int buildingId, struct Data_Building *b)
 	}
 }
 
-static void spawnFigureBathhouse(int buildingId, struct Data_Building *b)
+static void spawnFigureBathhouse(int buildingId, building *b)
 {
 	setBathhouseGraphic(buildingId, b);
 	SET_LABOR_PROBLEM(b);
@@ -687,7 +687,7 @@ static void spawnFigureBathhouse(int buildingId, struct Data_Building *b)
 	}
 }
 
-static void spawnFigureSchool(int buildingId, struct Data_Building *b)
+static void spawnFigureSchool(int buildingId, building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	EXIT_IF_FIGURE(FIGURE_SCHOOL_CHILD);
@@ -737,7 +737,7 @@ static void spawnFigureSchool(int buildingId, struct Data_Building *b)
 	}
 }
 
-static void spawnFigureLibrary(int buildingId, struct Data_Building *b)
+static void spawnFigureLibrary(int buildingId, building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	EXIT_IF_FIGURE(FIGURE_LIBRARIAN);
@@ -771,7 +771,7 @@ static void spawnFigureLibrary(int buildingId, struct Data_Building *b)
 	}
 }
 
-static void spawnFigureAcademy(int buildingId, struct Data_Building *b)
+static void spawnFigureAcademy(int buildingId, building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	EXIT_IF_FIGURE(FIGURE_TEACHER);
@@ -805,7 +805,7 @@ static void spawnFigureAcademy(int buildingId, struct Data_Building *b)
 	}
 }
 
-static void spawnFigureBarber(int buildingId, struct Data_Building *b)
+static void spawnFigureBarber(int buildingId, building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	EXIT_IF_FIGURE(FIGURE_BARBER);
@@ -839,7 +839,7 @@ static void spawnFigureBarber(int buildingId, struct Data_Building *b)
 	}
 }
 
-static void spawnFigureDoctor(int buildingId, struct Data_Building *b)
+static void spawnFigureDoctor(int buildingId, building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	EXIT_IF_FIGURE(FIGURE_DOCTOR);
@@ -873,7 +873,7 @@ static void spawnFigureDoctor(int buildingId, struct Data_Building *b)
 	}
 }
 
-static void spawnFigureHospital(int buildingId, struct Data_Building *b)
+static void spawnFigureHospital(int buildingId, building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	EXIT_IF_FIGURE(FIGURE_SURGEON);
@@ -907,7 +907,7 @@ static void spawnFigureHospital(int buildingId, struct Data_Building *b)
 	}
 }
 
-static void spawnFigureTemple(int buildingId, struct Data_Building *b)
+static void spawnFigureTemple(int buildingId, building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	EXIT_IF_FIGURE(FIGURE_PRIEST);
@@ -943,7 +943,7 @@ static void spawnFigureTemple(int buildingId, struct Data_Building *b)
 	}
 }
 
-static void setSenateGraphic(int buildingId, struct Data_Building *b)
+static void setSenateGraphic(int buildingId, building *b)
 {
 	if (!BuildingIsInUse(buildingId)) {
 		return;
@@ -957,7 +957,7 @@ static void setSenateGraphic(int buildingId, struct Data_Building *b)
 	}
 }
 
-static void spawnFigureSenateForum(int buildingId, struct Data_Building *b)
+static void spawnFigureSenateForum(int buildingId, building *b)
 {
 	if (b->type == BUILDING_SENATE_UPGRADED) {
 		setSenateGraphic(buildingId, b);
@@ -993,7 +993,7 @@ static void spawnFigureSenateForum(int buildingId, struct Data_Building *b)
 	}
 }
 
-static void spawnFigureMissionPost(int buildingId, struct Data_Building *b)
+static void spawnFigureMissionPost(int buildingId, building *b)
 {
 	EXIT_IF_FIGURE(FIGURE_MISSIONARY);
 	int xRoad, yRoad;
@@ -1013,7 +1013,7 @@ static void spawnFigureMissionPost(int buildingId, struct Data_Building *b)
 	}
 }
 
-static void spawnFigureIndustry(int buildingId, struct Data_Building *b)
+static void spawnFigureIndustry(int buildingId, building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	int xRoad, yRoad;
@@ -1032,7 +1032,7 @@ static void spawnFigureIndustry(int buildingId, struct Data_Building *b)
 	}
 }
 
-static void spawnFigureWharf(int buildingId, struct Data_Building *b)
+static void spawnFigureWharf(int buildingId, building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	if (b->data.other.boatFigureId) {
@@ -1059,7 +1059,7 @@ static void spawnFigureWharf(int buildingId, struct Data_Building *b)
 	}
 }
 
-static void spawnFigureShipyard(int buildingId, struct Data_Building *b)
+static void spawnFigureShipyard(int buildingId, building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	int xRoad, yRoad;
@@ -1091,7 +1091,7 @@ static void spawnFigureShipyard(int buildingId, struct Data_Building *b)
 	}
 }
 
-static void spawnFigureDock(int buildingId, struct Data_Building *b)
+static void spawnFigureDock(int buildingId, building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	int xRoad, yRoad;
@@ -1141,7 +1141,7 @@ static void spawnFigureDock(int buildingId, struct Data_Building *b)
 	}
 }
 
-static void spawnFigureNativeHut(int buildingId, struct Data_Building *b)
+static void spawnFigureNativeHut(int buildingId, building *b)
 {
 	map_image_set(b->gridOffset, image_group(GROUP_BUILDING_NATIVE) + (map_random_get(b->gridOffset) & 1));
 	EXIT_IF_FIGURE(FIGURE_INDIGENOUS_NATIVE);
@@ -1158,7 +1158,7 @@ static void spawnFigureNativeHut(int buildingId, struct Data_Building *b)
 	}
 }
 
-static void spawnFigureNativeMeeting(int buildingId, struct Data_Building *b)
+static void spawnFigureNativeMeeting(int buildingId, building *b)
 {
 	Terrain_addBuildingToGrids(buildingId, b->x, b->y, 2,
 		image_group(GROUP_BUILDING_NATIVE) + 2, TERRAIN_BUILDING);
@@ -1178,7 +1178,7 @@ static void spawnFigureNativeMeeting(int buildingId, struct Data_Building *b)
 	}
 }
 
-static void spawnFigureBarracks(int buildingId, struct Data_Building *b)
+static void spawnFigureBarracks(int buildingId, building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	int xRoad, yRoad;
@@ -1210,7 +1210,7 @@ static void spawnFigureBarracks(int buildingId, struct Data_Building *b)
 	}
 }
 
-static void spawnFigureMilitaryAcademy(int buildingId, struct Data_Building *b)
+static void spawnFigureMilitaryAcademy(int buildingId, building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	int xRoad, yRoad;
@@ -1226,7 +1226,7 @@ void FigureGeneration_generateFiguresForBuildings()
 		Data_Buildings_Extra.barracksTowerSentryRequested--;
 	}
 	for (int i = 1; i <= Data_Buildings_Extra.highestBuildingIdInUse; i++) {
-		struct Data_Building *b = building_get(i);
+		building *b = building_get(i);
 		if (!BuildingIsInUse(i)) {
 			continue;
 		}

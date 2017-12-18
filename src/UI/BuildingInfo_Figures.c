@@ -255,8 +255,8 @@ static void drawFigureInfoCartpusher(BuildingInfoContext *c, figure *f)
 	if (!f->buildingId) {
 		return;
 	}
-	struct Data_Building *sourceBuilding = building_get(f->buildingId);
-	struct Data_Building *targetBuilding = building_get(f->destinationBuildingId);
+	building *sourceBuilding = building_get(f->buildingId);
+	building *targetBuilding = building_get(f->destinationBuildingId);
 	int isReturning = 0;
 	switch (f->actionState) {
 		case FigureActionState_27_CartpusherReturning:

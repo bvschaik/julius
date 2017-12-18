@@ -29,7 +29,7 @@ static void setDestination(figure *f, int actionState, int buildingId, int xDst,
 	f->destinationY = yDst;
 }
 
-static void determineCartpusherDestination(figure *f, struct Data_Building *b, int roadNetworkId)
+static void determineCartpusherDestination(figure *f, building *b, int roadNetworkId)
 {
 	int xDst, yDst;
 	int understaffedStorages = 0;
@@ -84,7 +84,7 @@ static void determineCartpusherDestination(figure *f, struct Data_Building *b, i
 
 static void determineCartpusherDestinationFood(figure *f, int roadNetworkId)
 {
-	struct Data_Building *b = building_get(f->buildingId);
+	building *b = building_get(f->buildingId);
 	int xDst, yDst, dstBuildingId;
 	// priority 1: accepting granary for food
 	dstBuildingId = Resource_getGranaryForStoringFood(0, f->x, f->y,
@@ -151,7 +151,7 @@ void FigureAction_cartpusher(figure *f)
 	int roadNetworkId = map_road_network_get(f->gridOffset);
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	int buildingId = f->buildingId;
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	
 	switch (f->actionState) {
 		case FigureActionState_150_Attack:
@@ -285,7 +285,7 @@ static void determineGranarymanDestination(figure *f, int roadNetworkId)
 		}
 		return;
 	}
-	struct Data_Building *granary = building_get(f->buildingId);
+	building *granary = building_get(f->buildingId);
 	// delivering resource
 	// priority 1: another granary
 	dstBuildingId = Resource_getGranaryForStoringFood(0, f->x, f->y,
@@ -344,7 +344,7 @@ static void determineWarehousemanDestination(figure *f, int roadNetworkId)
 		}
 		return;
 	}
-	struct Data_Building *warehouse = building_get(f->buildingId);
+	building *warehouse = building_get(f->buildingId);
 	// delivering resource
 	// priority 1: weapons to barracks
 	dstBuildingId = Resource_getBarracksForWeapon(f->x, f->y, f->resourceId,

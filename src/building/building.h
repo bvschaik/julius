@@ -7,7 +7,7 @@
 
 #define MAX_BUILDINGS 2000
 
-typedef struct Data_Building {
+typedef struct {
     unsigned char state;
     unsigned char ciid;
     unsigned char __unknown_02;
@@ -178,9 +178,9 @@ typedef struct Data_Building {
     unsigned char showOnProblemOverlay;
 } building;
 
-struct Data_Building *building_get(int id);
+building *building_get(int id);
 
-void building_delete(struct Data_Building *b);
+void building_delete(building *b);
 
 void building_clear_all();
 

@@ -31,7 +31,7 @@ void map_routing_update_land()
 
 static int get_land_type_citizen_building(int grid_offset)
 {
-    struct Data_Building *b = building_get(map_building_at(grid_offset));
+    building *b = building_get(map_building_at(grid_offset));
     int type = CITIZEN_N1_BLOCKED;
     switch (b->type) {
         case BUILDING_WAREHOUSE:

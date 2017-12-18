@@ -187,7 +187,7 @@ int Trader_getClosestWarehouseForTradeCaravan(const figure *f, int x, int y, int
 	int minDistance = 10000;
 	int minBuildingId = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-        struct Data_Building *b = building_get(i);
+        building *b = building_get(i);
 		if (!BuildingIsInUse(i) || b->type != BUILDING_WAREHOUSE) {
 			continue;
 		}
@@ -205,7 +205,7 @@ int Trader_getClosestWarehouseForTradeCaravan(const figure *f, int x, int y, int
 		int spaceId = i;
 		for (int spaceCounter = 0; spaceCounter < 8; spaceCounter++) {
 			spaceId = building_get(spaceId)->nextPartBuildingId;
-            struct Data_Building *sb = building_get(spaceId);
+            building *sb = building_get(spaceId);
 			if (spaceId && exportable[sb->subtype.warehouseResourceId]) {
 				distancePenalty -= 4;
 			}
@@ -242,7 +242,7 @@ int Trader_getClosestWarehouseForTradeCaravan(const figure *f, int x, int y, int
 	if (!minBuildingId) {
 		return 0;
 	}
-	struct Data_Building *min = building_get(minBuildingId);
+	building *min = building_get(minBuildingId);
 	if (min->hasRoadAccess == 1) {
 		*warehouseX = min->x;
 		*warehouseY = min->y;
@@ -276,7 +276,7 @@ int Trader_getClosestWarehouseForImportDocker(int x, int y, int cityId, int dist
 	int minBuildingId = 0;
 	int resourceId = Data_CityInfo.tradeNextImportResourceDocker;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-        struct Data_Building *b = building_get(i);
+        building *b = building_get(i);
 		if (!BuildingIsInUse(i) || b->type != BUILDING_WAREHOUSE) {
 			continue;
 		}
@@ -292,7 +292,7 @@ int Trader_getClosestWarehouseForImportDocker(int x, int y, int cityId, int dist
 			int spaceId = i;
 			for (int spaceCounter = 0; spaceCounter < 8; spaceCounter++) {
 				spaceId = building_get(spaceId)->nextPartBuildingId;
-                struct Data_Building *sb = building_get(spaceId);
+                building *sb = building_get(spaceId);
 				if (spaceId && sb->subtype.warehouseResourceId == RESOURCE_NONE) {
 					distancePenalty -= 8;
 				}
@@ -314,7 +314,7 @@ int Trader_getClosestWarehouseForImportDocker(int x, int y, int cityId, int dist
 	if (!minBuildingId) {
 		return 0;
 	}
-	struct Data_Building *min = building_get(minBuildingId);
+	building *min = building_get(minBuildingId);
 	if (min->hasRoadAccess == 1) {
 		*warehouseX = min->x;
 		*warehouseY = min->y;
@@ -349,7 +349,7 @@ int Trader_getClosestWarehouseForExportDocker(int x, int y, int cityId, int dist
 	int resourceId = Data_CityInfo.tradeNextExportResourceDocker;
 	
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-        struct Data_Building *b = building_get(i);
+        building *b = building_get(i);
 		if (!BuildingIsInUse(i) || b->type != BUILDING_WAREHOUSE) {
 			continue;
 		}
@@ -363,7 +363,7 @@ int Trader_getClosestWarehouseForExportDocker(int x, int y, int cityId, int dist
 		int spaceId = i;
 		for (int s = 0; s < 8; s++) {
 			spaceId = building_get(spaceId)->nextPartBuildingId;
-            struct Data_Building *sb = building_get(spaceId);
+            building *sb = building_get(spaceId);
 			if (spaceId && sb->subtype.warehouseResourceId == resourceId && sb->loadsStored > 0) {
 				distancePenalty--;
 			}
@@ -381,7 +381,7 @@ int Trader_getClosestWarehouseForExportDocker(int x, int y, int cityId, int dist
 	if (!minBuildingId) {
 		return 0;
 	}
-	struct Data_Building *min = building_get(minBuildingId);
+	building *min = building_get(minBuildingId);
 	if (min->hasRoadAccess == 1) {
 		*warehouseX = min->x;
 		*warehouseY = min->y;
@@ -403,7 +403,7 @@ int Trader_tryImportResource(int buildingId, int resourceId, int cityId)
 	for (int i = 0; i < 8; i++) {
 		spaceId = building_get(spaceId)->nextPartBuildingId;
 		if (spaceId > 0) {
-            struct Data_Building *b = building_get(spaceId);
+            building *b = building_get(spaceId);
             if (b->loadsStored && b->loadsStored < 4 && b->subtype.warehouseResourceId == resourceId) {
                 trade_route_increase_traded(routeId, resourceId);
                 Resource_addImportedResourceToWarehouseSpace(spaceId, resourceId);
@@ -434,7 +434,7 @@ int Trader_tryExportResource(int buildingId, int resourceId, int cityId)
 	for (int i = 0; i < 8; i++) {
 		spaceId = building_get(spaceId)->nextPartBuildingId;
 		if (spaceId > 0) {
-            struct Data_Building *b = building_get(spaceId);
+            building *b = building_get(spaceId);
 			if (b->loadsStored && b->subtype.warehouseResourceId == resourceId) {
 				trade_route_increase_traded(empire_city_get_route_id(cityId), resourceId);
 				Resource_removeExportedResourceFromWarehouseSpace(spaceId, resourceId);

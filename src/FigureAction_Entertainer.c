@@ -18,7 +18,7 @@ static int determineDestination(int x, int y, int btype1, int btype2)
     building_list_small_clear();
 	
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		struct Data_Building *b = building_get(i);
+		building *b = building_get(i);
 		if (!BuildingIsInUse(i)) {
 			continue;
 		}
@@ -40,7 +40,7 @@ static int determineDestination(int x, int y, int btype1, int btype2)
 	int minBuildingId = 0;
 	int minDistance = 10000;
 	for (int i = 0; i < total_venues; i++) {
-		struct Data_Building *b = building_get(venues[i]);
+		building *b = building_get(venues[i]);
 		int daysLeft;
 		if (b->type == btype1) {
 			daysLeft = b->data.entertainment.days1;
@@ -63,7 +63,7 @@ static int determineDestination(int x, int y, int btype1, int btype2)
 
 static void updateShowsAtDestination(figure *f)
 {
-	struct Data_Building *b = building_get(f->destinationBuildingId);
+	building *b = building_get(f->destinationBuildingId);
 	switch (f->type) {
 		case FIGURE_ACTOR:
 			b->data.entertainment.play++;
@@ -140,7 +140,7 @@ static void updateGraphic(figure *f)
 
 void FigureAction_entertainer(figure *f)
 {
-	struct Data_Building *b = building_get(f->buildingId);
+	building *b = building_get(f->buildingId);
 	f->cartGraphicId = image_group(GROUP_FIGURE_CARTPUSHER_CART);
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	f->useCrossCountry = 0;
@@ -206,7 +206,7 @@ void FigureAction_entertainer(figure *f)
 						break;
 				}
 				if (dstBuildingId) {
-					struct Data_Building *bDst = building_get(dstBuildingId);
+					building *bDst = building_get(dstBuildingId);
 					int xRoad, yRoad;
 					if (Terrain_getClosestRoadWithinRadius(bDst->x, bDst->y, bDst->size, 2, &xRoad, &yRoad)) {
 						f->destinationBuildingId = dstBuildingId;

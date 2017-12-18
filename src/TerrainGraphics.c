@@ -541,7 +541,7 @@ void TerrainGraphics_setBuildingAreaRubble(int buildingId, int x, int y, int siz
 	if (!map_grid_is_inside(x, y, size)) {
 		return;
 	}
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	for (int dy = 0; dy < size; dy++) {
 		for (int dx = 0; dx < size; dx++) {
 			int gridOffset = map_grid_offset(x + dx, y + dy);
@@ -643,7 +643,7 @@ void TerrainGraphics_setBuildingFarm(int buildingId, int x, int y, int cropGraph
 
 void TerrainGraphics_updateNativeCropProgress(int buildingId)
 {
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	b->data.industry.progress++;
 	if (b->data.industry.progress >= 5) {
 		b->data.industry.progress = 0;

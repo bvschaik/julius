@@ -139,7 +139,7 @@ void Terrain_removeBuildingFromGrids(int buildingId, int x, int y)
 	if (map_terrain_get(baseGridOffset) == TERRAIN_ROCK) {
 		return;
 	}
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	if (buildingId && BuildingIsFarm(b->type)) {
 		size = 3;
 	}
@@ -670,7 +670,7 @@ static int getRoadTileForAqueduct(int gridOffset, int gateOrientation)
 {
 	int isRoad = map_terrain_is(gridOffset, TERRAIN_ROAD) ? 1 : 0;
 	if (map_terrain_is(gridOffset, TERRAIN_BUILDING)) {
-		struct Data_Building *b = building_get(map_building_at(gridOffset));
+		building *b = building_get(map_building_at(gridOffset));
 		if (b->type == BUILDING_GATEHOUSE) {
 			if (b->subtype.orientation == gateOrientation) {
 				isRoad = 1;
@@ -708,7 +708,7 @@ static int getAdjacentRoadTileForRoaming(int gridOffset)
 {
 	int isRoad = terrain_is_road_like(gridOffset);
 	if (map_terrain_is(gridOffset, TERRAIN_BUILDING)) {
-		struct Data_Building *b = building_get(map_building_at(gridOffset));
+		building *b = building_get(map_building_at(gridOffset));
 		if (b->type == BUILDING_GATEHOUSE) {
 			isRoad = 0;
 		} else if (b->type == BUILDING_GRANARY) {
@@ -893,7 +893,7 @@ int Terrain_allTilesWithinRadiusHaveType(int x, int y, int size, int radius, uns
 
 void Terrain_markBuildingsWithinWellRadius(int wellId, int radius)
 {
-    struct Data_Building *well = building_get(wellId);
+    building *well = building_get(wellId);
 	int x = well->x;
 	int y = well->y;
 	int size = 1;
@@ -906,7 +906,7 @@ void Terrain_markBuildingsWithinWellRadius(int wellId, int radius)
 
 int Terrain_allHousesWithinWellRadiusHaveFountain(int wellId, int radius)
 {
-    struct Data_Building *well = building_get(wellId);
+    building *well = building_get(wellId);
 	int numHouses = 0;
 	int x = well->x;
 	int y = well->y;

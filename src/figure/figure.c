@@ -60,7 +60,7 @@ figure *figure_create(figure_type type, int x, int y, direction dir)
 
 void figure_delete(figure *f)
 {
-    struct Data_Building *b = building_get(f->buildingId);
+    building *b = building_get(f->buildingId);
     switch (f->type) {
         case FIGURE_LABOR_SEEKER:
         case FIGURE_MARKET_BUYER:

@@ -58,7 +58,7 @@ static int house_image_group(int level)
 static void create_house_tile(building_type type, int x, int y, int image_id, int population, int *inventory)
 {
     int newBuildingId = Building_create(type, x, y);
-    struct Data_Building *b = building_get(newBuildingId);
+    building *b = building_get(newBuildingId);
     b->housePopulation = population;
     for (int i = 0; i < INVENTORY_MAX; i++) {
         b->data.house.inventory[i] = inventory[i];
@@ -71,7 +71,7 @@ static void create_house_tile(building_type type, int x, int y, int image_id, in
 int BuildingHouse_canExpand(int buildingId, int numTiles)
 {
 	// merge with other houses
-    struct Data_Building *house = building_get(buildingId);
+    building *house = building_get(buildingId);
 	for (int dir = 0; dir < MAX_DIR; dir++) {
 		int baseOffset = directionGridOffsets[dir] + house->gridOffset;
 		int okTiles = 0;
@@ -79,7 +79,7 @@ int BuildingHouse_canExpand(int buildingId, int numTiles)
 			int tileOffset = baseOffset + tileGridOffsets[i];
 			if (map_terrain_is(tileOffset, TERRAIN_BUILDING)) {
 				int tileBuildingId = map_building_at(tileOffset);
-                struct Data_Building *other_house = building_get(tileBuildingId);
+                building *other_house = building_get(tileBuildingId);
 				if (tileBuildingId == buildingId) {
 					okTiles++;
 				} else if (BuildingIsInUse(tileBuildingId) && other_house->houseSize) {
@@ -105,7 +105,7 @@ int BuildingHouse_canExpand(int buildingId, int numTiles)
 				okTiles++;
 			} else if (map_terrain_is(tileOffset, TERRAIN_BUILDING)) {
 				int tileBuildingId = map_building_at(tileOffset);
-                struct Data_Building *other_house = building_get(tileBuildingId);
+                building *other_house = building_get(tileBuildingId);
 				if (tileBuildingId == buildingId) {
 					okTiles++;
 				} else if (BuildingIsInUse(tileBuildingId) && other_house->houseSize) {
@@ -131,7 +131,7 @@ int BuildingHouse_canExpand(int buildingId, int numTiles)
 				okTiles++;
 			} else if (map_terrain_is(tileOffset, TERRAIN_BUILDING)) {
 				int tileBuildingId = map_building_at(tileOffset);
-                struct Data_Building *other_house = building_get(tileBuildingId);
+                building *other_house = building_get(tileBuildingId);
 				if (tileBuildingId == buildingId) {
 					okTiles++;
 				} else if (BuildingIsInUse(tileBuildingId) && other_house->houseSize) {
@@ -155,7 +155,7 @@ int BuildingHouse_canExpand(int buildingId, int numTiles)
 
 void BuildingHouse_checkForCorruption(int buildingId)
 {
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	int houseGridOffset = b->gridOffset;
 	int calcGridOffset = map_grid_offset(b->x, b->y);
 	b->data.house.noSpaceToExpand = 0;
@@ -179,7 +179,7 @@ void BuildingHouse_checkForCorruption(int buildingId)
 
 void BuildingHouse_checkMerge(int buildingId)
 {
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	if (b->houseIsMerged) {
 		return;
 	}
@@ -191,7 +191,7 @@ void BuildingHouse_checkMerge(int buildingId)
 		int tileOffset = b->gridOffset + tileGridOffsets[i];
 		if (map_terrain_is(tileOffset, TERRAIN_BUILDING)) {
 			int tileBuildingId = map_building_at(tileOffset);
-            struct Data_Building *other_house = building_get(tileBuildingId);
+            building *other_house = building_get(tileBuildingId);
 			if (tileBuildingId == buildingId) {
 				numHouseTiles++;
 			} else if (BuildingIsInUse(tileBuildingId) && other_house->houseSize &&
@@ -215,7 +215,7 @@ static void split(int buildingId, int numTiles)
 		int tileOffset = gridOffset + tileGridOffsets[i];
 		if (map_terrain_is(tileOffset, TERRAIN_BUILDING)) {
 			int tileBuildingId = map_building_at(tileOffset);
-            struct Data_Building *other_house = building_get(tileBuildingId);
+            building *other_house = building_get(tileBuildingId);
 			if (tileBuildingId != buildingId && other_house->houseSize) {
 				if (other_house->houseIsMerged == 1) {
 					splitMerged(tileBuildingId);
@@ -240,7 +240,7 @@ static void prepareForMerge(int buildingId, int numTiles)
 		int tileOffset = gridOffset + tileGridOffsets[i];
 		if (map_terrain_is(tileOffset, TERRAIN_BUILDING)) {
 			int tileBuildingId = map_building_at(tileOffset);
-            struct Data_Building *house = building_get(tileBuildingId);
+            building *house = building_get(tileBuildingId);
 			if (tileBuildingId != buildingId && house->houseSize) {
 				mergeData.population += house->housePopulation;
 				for (int i = 0; i < INVENTORY_MAX; i++) {
@@ -258,7 +258,7 @@ void BuildingHouse_expandToLargeInsula(int buildingId)
 	split(buildingId, 4);
 	prepareForMerge(buildingId, 4);
 
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	b->type = BUILDING_HOUSE_LARGE_INSULA;
 	b->subtype.houseLevel = HOUSE_LARGE_INSULA;
 	b->size = b->houseSize = 2;
@@ -279,7 +279,7 @@ void BuildingHouse_expandToLargeVilla(int buildingId)
 	split(buildingId, 9);
 	prepareForMerge(buildingId, 9);
 
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	b->type = BUILDING_HOUSE_LARGE_VILLA;
 	b->subtype.houseLevel = HOUSE_LARGE_VILLA;
 	b->size = b->houseSize = 3;
@@ -300,7 +300,7 @@ void BuildingHouse_expandToLargePalace(int buildingId)
 	split(buildingId, 16);
 	prepareForMerge(buildingId, 16);
 
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	b->type = BUILDING_HOUSE_LARGE_PALACE;
 	b->subtype.houseLevel = HOUSE_LARGE_PALACE;
 	b->size = b->houseSize = 4;
@@ -320,7 +320,7 @@ static void merge(int buildingId)
 {
 	prepareForMerge(buildingId, 4);
 
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	b->size = b->houseSize = 2;
 	b->housePopulation += mergeData.population;
 	for (int i = 0; i < INVENTORY_MAX; i++) {
@@ -341,7 +341,7 @@ static void merge(int buildingId)
 
 static void splitMerged(int buildingId)
 {
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	int inventoryPerTile[INVENTORY_MAX];
 	int inventoryRest[INVENTORY_MAX];
 	for (int i = 0; i < INVENTORY_MAX; i++) {
@@ -374,7 +374,7 @@ static void splitMerged(int buildingId)
 
 static void splitSize2(int buildingId)
 {
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	int inventoryPerTile[INVENTORY_MAX];
 	int inventoryRest[INVENTORY_MAX];
 	for (int i = 0; i < INVENTORY_MAX; i++) {
@@ -409,7 +409,7 @@ static void splitSize2(int buildingId)
 
 static void splitSize3(int buildingId)
 {
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	int inventoryPerTile[INVENTORY_MAX];
 	int inventoryRest[INVENTORY_MAX];
 	for (int i = 0; i < INVENTORY_MAX; i++) {
@@ -452,7 +452,7 @@ void BuildingHouse_devolveFromLargeInsula(int buildingId)
 
 void BuildingHouse_devolveFromLargeVilla(int buildingId)
 {
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	int inventoryPerTile[INVENTORY_MAX];
 	int inventoryRest[INVENTORY_MAX];
 	for (int i = 0; i < INVENTORY_MAX; i++) {
@@ -490,7 +490,7 @@ void BuildingHouse_devolveFromLargeVilla(int buildingId)
 
 void BuildingHouse_devolveFromLargePalace(int buildingId)
 {
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	int inventoryPerTile[INVENTORY_MAX];
 	int inventoryRest[INVENTORY_MAX];
 	for (int i = 0; i < INVENTORY_MAX; i++) {
@@ -529,7 +529,7 @@ void BuildingHouse_devolveFromLargePalace(int buildingId)
 
 void BuildingHouse_changeTo(int buildingId, int buildingType)
 {
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	b->type = buildingType;
 	b->subtype.houseLevel = b->type - 10;
 	int graphicId = image_group(houseGraphicGroup[b->subtype.houseLevel]);
@@ -548,7 +548,7 @@ void BuildingHouse_changeTo(int buildingId, int buildingType)
 static void create_vacant_lot(int x, int y, int image_id)
 {
     int id = Building_create(BUILDING_HOUSE_VACANT_LOT, x, y);
-    struct Data_Building *b = building_get(id);
+    building *b = building_get(id);
     b->housePopulation = 0;
     b->distanceFromEntry = 0;
     Terrain_addBuildingToGrids(id, b->x + 1, b->y, 1, image_id, TERRAIN_BUILDING);
@@ -556,7 +556,7 @@ static void create_vacant_lot(int x, int y, int image_id)
 
 void BuildingHouse_changeToVacantLot(int buildingId)
 {
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	b->type = BUILDING_HOUSE_VACANT_LOT;
 	b->subtype.houseLevel = b->type - 10;
 	int image_id = image_group(GROUP_BUILDING_HOUSE_VACANT_LOT);

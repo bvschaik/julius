@@ -204,7 +204,7 @@ void sound_city_set_volume(int percentage)
 
 void sound_city_mark_building_view(int building_id, int direction)
 {
-    struct Data_Building *b = building_get(building_id);
+    building *b = building_get(building_id);
     if (b->state == BuildingState_Unused) {
         return;
     }

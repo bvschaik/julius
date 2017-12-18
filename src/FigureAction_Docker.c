@@ -10,7 +10,7 @@
 #include "figure/trader.h"
 #include "figure/type.h"
 
-static int dockerDeliverImportResource(figure *f, struct Data_Building *dock)
+static int dockerDeliverImportResource(figure *f, building *dock)
 {
 	int shipId = dock->data.other.boatFigureId;
 	if (!shipId) {
@@ -22,7 +22,7 @@ static int dockerDeliverImportResource(figure *f, struct Data_Building *dock)
 	}
 	int x, y;
 	if (Data_CityInfo.buildingTradeCenterBuildingId) {
-		struct Data_Building *trade_center = building_get(Data_CityInfo.buildingTradeCenterBuildingId);
+		building *trade_center = building_get(Data_CityInfo.buildingTradeCenterBuildingId);
 		x = trade_center->x;
 		y = trade_center->y;
 	} else {
@@ -45,7 +45,7 @@ static int dockerDeliverImportResource(figure *f, struct Data_Building *dock)
 	return 1;
 }
 
-static int dockerGetExportResource(figure *f, struct Data_Building *dock)
+static int dockerGetExportResource(figure *f, building *dock)
 {
 	int shipId = dock->data.other.boatFigureId;
 	if (!shipId) {
@@ -57,7 +57,7 @@ static int dockerGetExportResource(figure *f, struct Data_Building *dock)
 	}
 	int x, y;
 	if (Data_CityInfo.buildingTradeCenterBuildingId) {
-		struct Data_Building *trade_center = building_get(Data_CityInfo.buildingTradeCenterBuildingId);
+		building *trade_center = building_get(Data_CityInfo.buildingTradeCenterBuildingId);
 		x = trade_center->x;
 		y = trade_center->y;
 	} else {
@@ -88,7 +88,7 @@ static void setCartGraphic(figure *f)
 
 void FigureAction_docker(figure *f)
 {
-	struct Data_Building *b = building_get(f->buildingId);
+	building *b = building_get(f->buildingId);
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
 	if (!BuildingIsInUse(f->buildingId)) {

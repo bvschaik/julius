@@ -20,7 +20,7 @@ static void FigureAction_cultureCommon(figure *f, int numTicks)
 			f->roamLength++;
 			if (f->roamLength >= f->maxRoamLength) {
 				int x, y;
-                struct Data_Building *b = building_get(f->buildingId);
+                building *b = building_get(f->buildingId);
 				if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &x, &y)) {
 					f->actionState = FigureActionState_126_RoamerReturning;
 					f->destinationX = x;
@@ -48,7 +48,7 @@ static void FigureAction_culture(figure *f, int graphicCategory)
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 384;
-	struct Data_Building *b = building_get(f->buildingId);
+	building *b = building_get(f->buildingId);
 	if (!BuildingIsInUse(f->buildingId) || b->figureId != f->id) {
 		f->state = FigureState_Dead;
 	}
@@ -73,7 +73,7 @@ void FigureAction_schoolChild(figure *f)
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 96;
-	struct Data_Building *b = building_get(f->buildingId);
+	building *b = building_get(f->buildingId);
 	if (!BuildingIsInUse(f->buildingId) || b->type != BUILDING_SCHOOL) {
 		f->state = FigureState_Dead;
 	}
@@ -138,7 +138,7 @@ void FigureAction_missionary(figure *f)
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 192;
-	struct Data_Building *b = building_get(f->buildingId);
+	building *b = building_get(f->buildingId);
 	if (!BuildingIsInUse(f->buildingId) || b->figureId != f->id) {
 		f->state = FigureState_Dead;
 	}
@@ -165,7 +165,7 @@ void FigureAction_laborSeeker(figure *f)
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 384;
-	struct Data_Building *b = building_get(f->buildingId);
+	building *b = building_get(f->buildingId);
 	if (!BuildingIsInUse(f->buildingId) || b->figureId2 != f->id) {
 		f->state = FigureState_Dead;
 	}
@@ -179,7 +179,7 @@ void FigureAction_marketTrader(figure *f)
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 384;
-	struct Data_Building *b = building_get(f->buildingId);
+	building *b = building_get(f->buildingId);
 	if (!BuildingIsInUse(f->buildingId) || b->figureId != f->id) {
 		f->state = FigureState_Dead;
 	}

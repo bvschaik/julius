@@ -23,7 +23,7 @@ static int granaryAcceptingResource[7];
 void Resource_setWarehouseSpaceGraphic(int spaceId, int resource)
 {
 	int image_id;
-    struct Data_Building *b = building_get(spaceId);
+    building *b = building_get(spaceId);
 	if (b->loadsStored <= 0) {
 		image_id = image_group(GROUP_BUILDING_WAREHOUSE_STORAGE_EMPTY);
 	} else {
@@ -42,7 +42,7 @@ void Resource_addToCityWarehouses(int resource, int amount)
 		if (buildingId >= MAX_BUILDINGS) {
 			buildingId = 1;
 		}
-		struct Data_Building *b = building_get(buildingId);
+		building *b = building_get(buildingId);
 		if (BuildingIsInUse(buildingId) && b->type == BUILDING_WAREHOUSE) {
 			Data_CityInfo.resourceLastTargetWarehouse = buildingId;
 			while (amount && Resource_addToWarehouse(buildingId, resource)) {
@@ -62,7 +62,7 @@ int Resource_removeFromCityWarehouses(int resource, int amount)
 		if (buildingId >= MAX_BUILDINGS) {
 			buildingId = 1;
 		}
-		struct Data_Building *b = building_get(buildingId);
+		building *b = building_get(buildingId);
 		if (BuildingIsInUse(buildingId) && b->type == BUILDING_WAREHOUSE) {
 			if (building_storage_get(b->storage_id)->resource_state[resource] != BUILDING_STORAGE_STATE_GETTING) {
 				Data_CityInfo.resourceLastTargetWarehouse = buildingId;
@@ -76,7 +76,7 @@ int Resource_removeFromCityWarehouses(int resource, int amount)
 		if (buildingId >= MAX_BUILDINGS) {
 			buildingId = 1;
 		}
-		struct Data_Building *b = building_get(buildingId);
+		building *b = building_get(buildingId);
 		if (BuildingIsInUse(buildingId) && b->type == BUILDING_WAREHOUSE) {
 			Data_CityInfo.resourceLastTargetWarehouse = buildingId;
 			amountLeft = Resource_removeFromWarehouse(buildingId, resource, amountLeft);
@@ -92,7 +92,7 @@ int Resource_getWarehouseForStoringResource(
 	int minDist = 10000;
 	int minBuildingId = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		struct Data_Building *b = building_get(i);
+		building *b = building_get(i);
 		if (!BuildingIsInUse(i) || b->type != BUILDING_WAREHOUSE_SPACE) {
 			continue;
 		}
@@ -103,7 +103,7 @@ int Resource_getWarehouseForStoringResource(
 		if (srcBuildingId == main_building_id) {
 			continue;
 		}
-		struct Data_Building *dst = building_get(main_building_id);
+		building *dst = building_get(main_building_id);
 		const building_storage *s = building_storage_get(dst->storage_id);
 		if (s->resource_state[resource] == BUILDING_STORAGE_STATE_NOT_ACCEPTING || s->empty_all) {
 			continue;
@@ -129,7 +129,7 @@ int Resource_getWarehouseForStoringResource(
 		}
 	}
 	int resultBuildingId = Building_getMainBuildingId(minBuildingId);
-	struct Data_Building *b = building_get(resultBuildingId);
+	building *b = building_get(resultBuildingId);
 	if (b->hasRoadAccess == 1) {
 		*xDst = b->x;
 		*yDst = b->y;
@@ -141,11 +141,11 @@ int Resource_getWarehouseForStoringResource(
 
 int Resource_getWarehouseForGettingResource(int srcBuildingId, int resource, int *xDst, int *yDst)
 {
-	struct Data_Building *bSrc = building_get(srcBuildingId);
+	building *bSrc = building_get(srcBuildingId);
 	int minDist = 10000;
 	int minBuildingId = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		struct Data_Building *b = building_get(i);
+		building *b = building_get(i);
 		if (!BuildingIsInUse(i) || b->type != BUILDING_WAREHOUSE) {
 			continue;
 		}
@@ -157,7 +157,7 @@ int Resource_getWarehouseForGettingResource(int srcBuildingId, int resource, int
 		const building_storage *s = building_storage_get(b->storage_id);
 		for (int t = 0; t < 8; t++) {
 			spaceId = building_get(spaceId)->nextPartBuildingId;
-            struct Data_Building *sb = building_get(spaceId);
+            building *sb = building_get(spaceId);
 			if (spaceId > 0 && sb->loadsStored > 0) {
 				if (sb->subtype.warehouseResourceId == resource) {
 					loadsStored += sb->loadsStored;
@@ -175,7 +175,7 @@ int Resource_getWarehouseForGettingResource(int srcBuildingId, int resource, int
 		}
 	}
 	if (minBuildingId > 0) {
-        struct Data_Building *min = building_get(minBuildingId);
+        building *min = building_get(minBuildingId);
 		*xDst = min->roadAccessX;
 		*yDst = min->roadAccessY;
 		return minBuildingId;
@@ -191,7 +191,7 @@ int Resource_addToWarehouse(int buildingId, int resource)
 	}
 	// check building itself
 	int findSpace = 0;
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	if (b->subtype.warehouseResourceId && b->subtype.warehouseResourceId != resource) {
 		findSpace = 1;
 	} else if (b->loadsStored >= 4) {
@@ -232,7 +232,7 @@ int Resource_addToWarehouse(int buildingId, int resource)
 int Resource_removeFromWarehouse(int buildingId, int resource, int amount)
 {
 	// returns amount still needing removal
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	if (b->type != BUILDING_WAREHOUSE) {
 		return amount;
 	}
@@ -267,7 +267,7 @@ int Resource_removeFromWarehouse(int buildingId, int resource, int amount)
 
 void Resource_removeFromWarehouseForMercury(int buildingId, int amount)
 {
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	if (b->type != BUILDING_WAREHOUSE) {
 		return;
 	}
@@ -302,7 +302,7 @@ int Resource_getAmountStoredInWarehouse(int buildingId, int resource)
 		if (buildingId <= 0) {
 			return 0;
 		}
-		struct Data_Building *b = building_get(buildingId);
+		building *b = building_get(buildingId);
 		if (b->subtype.warehouseResourceId && b->subtype.warehouseResourceId == resource) {
 			loads += b->loadsStored;
 		}
@@ -319,7 +319,7 @@ int Resource_getWarehouseSpaceInfo(int buildingId)
 		if (buildingId <= 0) {
 			return 0;
 		}
-		struct Data_Building *b = building_get(buildingId);
+		building *b = building_get(buildingId);
 		if (b->subtype.warehouseResourceId) {
 			totalLoads += b->loadsStored;
 		} else {
@@ -339,7 +339,7 @@ void Resource_addImportedResourceToWarehouseSpace(int spaceId, int resourceId)
 {
 	Data_CityInfo.resourceSpaceInWarehouses[resourceId]--;
 	Data_CityInfo.resourceStored[resourceId]++;
-    struct Data_Building *space = building_get(spaceId);
+    building *space = building_get(spaceId);
 	space->loadsStored++;
 	space->subtype.warehouseResourceId = resourceId;
 	
@@ -353,7 +353,7 @@ void Resource_removeExportedResourceFromWarehouseSpace(int spaceId, int resource
 {
 	Data_CityInfo.resourceSpaceInWarehouses[resourceId]++;
 	Data_CityInfo.resourceStored[resourceId]--;
-    struct Data_Building *space = building_get(spaceId);
+    building *space = building_get(spaceId);
 	space->loadsStored--;
 	if (space->loadsStored <= 0) {
 		space->subtype.warehouseResourceId = RESOURCE_NONE;
@@ -375,7 +375,7 @@ static int determineGranaryAcceptFoods()
 	}
 	int canAccept = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		struct Data_Building *b = building_get(i);
+		building *b = building_get(i);
 		if (!BuildingIsInUse(i) || b->type != BUILDING_GRANARY || !b->hasRoadAccess) {
 			continue;
 		}
@@ -405,7 +405,7 @@ static int determineGranaryGetFoods()
 	}
 	int canGet = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		struct Data_Building *b = building_get(i);
+		building *b = building_get(i);
 		if (!BuildingIsInUse(i) || b->type != BUILDING_GRANARY || !b->hasRoadAccess) {
 			continue;
 		}
@@ -430,7 +430,7 @@ static int storesNonStockpiledFood(int spaceId, int *granaryResources)
 	if (spaceId <= 0) {
 		return 0;
 	}
-	struct Data_Building *space = building_get(spaceId);
+	building *space = building_get(spaceId);
 	if (space->loadsStored <= 0) {
 		return 0;
 	}
@@ -450,7 +450,7 @@ static int storesNonStockpiledFood(int spaceId, int *granaryResources)
 // 0 = getting resource, >0 = resource to deliver
 int Resource_determineWarehouseWorkerTask(int buildingId, int *resource)
 {
-	struct Data_Building *b = building_get(buildingId);
+	building *b = building_get(buildingId);
 	int pctWorkers = calc_percentage(b->numWorkers, model_get_building(b->type)->laborers);
 	if (pctWorkers < 50) {
 		return -1;
@@ -466,7 +466,7 @@ int Resource_determineWarehouseWorkerTask(int buildingId, int *resource)
 		spaceId = buildingId;
 		for (int i = 0; i < 8; i++) {
 			spaceId = building_get(spaceId)->nextPartBuildingId;
-            struct Data_Building *sb = building_get(spaceId);
+            building *sb = building_get(spaceId);
 			if (spaceId > 0 && sb->loadsStored > 0) {
 				if (sb->subtype.warehouseResourceId == r) {
 					loadsStored += sb->loadsStored;
@@ -477,7 +477,7 @@ int Resource_determineWarehouseWorkerTask(int buildingId, int *resource)
 		spaceId = buildingId;
 		for (int i = 0; i < 8; i++) {
 			spaceId = building_get(spaceId)->nextPartBuildingId;
-            struct Data_Building *sb = building_get(spaceId);
+            building *sb = building_get(spaceId);
 			if (spaceId > 0) {
 				if (sb->loadsStored <= 0) {
 					room += 4;
@@ -495,13 +495,13 @@ int Resource_determineWarehouseWorkerTask(int buildingId, int *resource)
 	// deliver weapons to barracks
 	if (building_count_active(BUILDING_BARRACKS) > 0 && Data_CityInfo.militaryLegionaryLegions > 0 &&
 		!Data_CityInfo.resourceStockpiled[RESOURCE_WEAPONS]) {
-		struct Data_Building *barracks = building_get(Data_CityInfo.buildingBarracksBuildingId);
+		building *barracks = building_get(Data_CityInfo.buildingBarracksBuildingId);
 		if (barracks->loadsStored < 4 &&
 			b->roadNetworkId == barracks->roadNetworkId) {
 			spaceId = buildingId;
 			for (int i = 0; i < 8; i++) {
 				spaceId = building_get(spaceId)->nextPartBuildingId;
-                struct Data_Building *sb = building_get(spaceId);
+                building *sb = building_get(spaceId);
 				if (spaceId > 0 && sb->loadsStored > 0 &&
 					sb->subtype.warehouseResourceId == RESOURCE_WEAPONS) {
 					return RESOURCE_WEAPONS;
@@ -513,7 +513,7 @@ int Resource_determineWarehouseWorkerTask(int buildingId, int *resource)
 	spaceId = buildingId;
 	for (int i = 0; i < 8; i++) {
 		spaceId = building_get(spaceId)->nextPartBuildingId;
-        struct Data_Building *sb = building_get(spaceId);
+        building *sb = building_get(spaceId);
 		if (spaceId > 0 && sb->loadsStored > 0) {
 			int resource = sb->subtype.warehouseResourceId;
 			if (!Data_CityInfo.resourceStockpiled[resource]) {
@@ -570,7 +570,7 @@ int Resource_determineWarehouseWorkerTask(int buildingId, int *resource)
 		spaceId = buildingId;
 		for (int i = 0; i < 8; i++) {
 			spaceId = building_get(spaceId)->nextPartBuildingId;
-            struct Data_Building *sb = building_get(spaceId);
+            building *sb = building_get(spaceId);
 			if (spaceId > 0 && sb->loadsStored > 0) {
 				return sb->subtype.warehouseResourceId;
 			}

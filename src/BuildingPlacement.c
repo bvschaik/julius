@@ -83,7 +83,7 @@ static int itemsPlaced;
 
 static void addToTerrainFort(int type, int buildingId, int x, int y, int size)
 {
-    struct Data_Building *b = building_get(buildingId);
+    building *b = building_get(buildingId);
 	b->prevPartBuildingId = 0;
 	Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_FORT), TERRAIN_BUILDING);
 	int formationId = Formation_createLegion(buildingId);
@@ -102,7 +102,7 @@ static void addToTerrainFort(int type, int buildingId, int x, int y, int size)
 	}
 	// create parade ground
 	int groundId = Building_create(BUILDING_FORT_GROUND, x + 3, y - 1);
-    struct Data_Building *ground = building_get(groundId);
+    building *ground = building_get(groundId);
 	Undo_addBuildingToList(groundId);
 	ground->formationId = formationId;
 	ground->prevPartBuildingId = buildingId;
@@ -118,7 +118,7 @@ static void addToTerrainHippodrome(int type, int buildingId, int x, int y, int s
 	int graphicId2 = image_group(GROUP_BUILDING_HIPPODROME_2);
 	Data_CityInfo.buildingHippodromePlaced = 1;
 
-	struct Data_Building *part1 = building_get(buildingId);
+	building *part1 = building_get(buildingId);
 	if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_4_BOTTOM) {
 		part1->subtype.orientation = 0;
 	} else {
@@ -136,7 +136,7 @@ static void addToTerrainHippodrome(int type, int buildingId, int x, int y, int s
 	Terrain_addBuildingToGrids(buildingId, x, y, size, graphicId, TERRAIN_BUILDING);
 
 	int part2Id = Building_create(BUILDING_HIPPODROME, x + 5, y);
-	struct Data_Building *part2 = building_get(part2Id);
+	building *part2 = building_get(part2Id);
 	Undo_addBuildingToList(part2Id);
 	if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_4_BOTTOM) {
 		part2->subtype.orientation = 1;
@@ -153,7 +153,7 @@ static void addToTerrainHippodrome(int type, int buildingId, int x, int y, int s
 	Terrain_addBuildingToGrids(part2Id, x + 5, y, size, graphicId, TERRAIN_BUILDING);
 
 	int part3Id = Building_create(BUILDING_HIPPODROME, x + 10, y);
-	struct Data_Building *part3 = building_get(part3Id);
+	building *part3 = building_get(part3Id);
 	Undo_addBuildingToList(part3Id);
 	if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_4_BOTTOM) {
 		part3->subtype.orientation = 2;
@@ -175,7 +175,7 @@ static void addToTerrainHippodrome(int type, int buildingId, int x, int y, int s
 static int addToTerrainWarehouseSpace(int x, int y, int prevId)
 {
 	int buildingId = Building_create(BUILDING_WAREHOUSE_SPACE, x, y);
-    struct Data_Building *b = building_get(buildingId);
+    building *b = building_get(buildingId);
 	Undo_addBuildingToList(buildingId);
 	b->prevPartBuildingId = prevId;
 	building_get(prevId)->nextPartBuildingId = buildingId;
@@ -186,7 +186,7 @@ static int addToTerrainWarehouseSpace(int x, int y, int prevId)
 
 static void addToTerrainWarehouse(int type, int buildingId, int x, int y)
 {
-    struct Data_Building *b = building_get(buildingId);
+    building *b = building_get(buildingId);
 	b->storage_id = building_storage_create();
 	b->prevPartBuildingId = 0;
 	Terrain_addBuildingToGrids(buildingId, x, y, 1, image_group(GROUP_BUILDING_WAREHOUSE), TERRAIN_BUILDING);
@@ -763,7 +763,7 @@ static void clearRegionConfirmed(int measureOnly, int xStart, int yStart, int xE
 				if (!buildingId) {
 					continue;
 				}
-				struct Data_Building *b = building_get(buildingId);
+				building *b = building_get(buildingId);
 				if (b->type == BUILDING_BURNING_RUIN || b->type == BUILDING_NATIVE_CROPS ||
 					b->type == BUILDING_NATIVE_HUT || b->type == BUILDING_NATIVE_MEETING) {
 					continue;
@@ -789,7 +789,7 @@ static void clearRegionConfirmed(int measureOnly, int xStart, int yStart, int xE
 				}
 				b->state = BuildingState_DeletedByPlayer;
 				b->isDeleted = 1;
-				struct Data_Building *space = building_get(buildingId);
+				building *space = building_get(buildingId);
 				for (int i = 0; i < 9; i++) {
 					if (space->prevPartBuildingId <= 0) {
 						break;
@@ -884,7 +884,7 @@ static void clearRegion(int measureOnly, int xStart, int yStart, int xEnd, int y
 			int gridOffset = map_grid_offset(x,y);
 			int buildingId = map_building_at(gridOffset);
 			if (buildingId) {
-                struct Data_Building *b = building_get(buildingId);
+                building *b = building_get(buildingId);
 				if (b->type == BUILDING_FORT || b->type == BUILDING_FORT_GROUND) {
 					askConfirmFort = 1;
 				}

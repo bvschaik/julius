@@ -170,7 +170,7 @@ static void drawTile(int xView, int yView, int gridOffset)
 	if (terrain & TERRAIN_BUILDING) {
 		if (map_property_is_draw_tile(gridOffset)) {
 			int graphicId;
-			struct Data_Building *b = building_get(map_building_at(gridOffset));
+			building *b = building_get(map_building_at(gridOffset));
 			if (b->houseSize) {
 				graphicId = image_group(GROUP_MINIMAP_HOUSE);
 			} else if (b->type == BUILDING_RESERVOIR) {

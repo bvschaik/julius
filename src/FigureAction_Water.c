@@ -26,7 +26,7 @@ static const int flotsamType3[] = {
 
 void FigureAction_fishingBoat(figure *f)
 {
-	struct Data_Building *b = building_get(f->buildingId);
+	building *b = building_get(f->buildingId);
 	if (!BuildingIsInUse(f->buildingId)) {
 		f->state = FigureState_Dead;
 	}
