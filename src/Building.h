@@ -33,7 +33,7 @@ int Building_Market_getMaxFoodStock(int buildingId);
 int Building_Market_getMaxGoodsStock(int buildingId);
 int Building_Market_getDestinationGranaryWarehouse(building *market);
 
-int Building_Dock_getNumIdleDockers(int buildingId);
+int Building_Dock_getNumIdleDockers(building *dock);
 void Building_Dock_updateOpenWaterAccess();
 int Building_Dock_isConnectedToOpenWater(int x, int y);
 

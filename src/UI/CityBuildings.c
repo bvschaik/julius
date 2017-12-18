@@ -371,7 +371,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 						colorMask = COLOR_MASK_RED;
 					}
 					if (b->type == BUILDING_DOCK) {
-						int numDockers = Building_Dock_getNumIdleDockers(buildingId);
+						int numDockers = Building_Dock_getNumIdleDockers(b);
 						if (numDockers > 0) {
 							int graphicIdDock = map_image_at(b->gridOffset);
 							int graphicIdDockers = image_group(GROUP_BUILDING_DOCK_DOCKERS);

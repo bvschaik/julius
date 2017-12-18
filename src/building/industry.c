@@ -59,7 +59,7 @@ void building_industry_update_production()
             } else {
                 b->data.industry.progress += b->numWorkers;
             }
-            if (b->data.industry.blessingDaysLeft && BuildingIsFarm(b->type)) {
+            if (b->data.industry.blessingDaysLeft && building_is_farm(b->type)) {
                 b->data.industry.progress += b->numWorkers;
             }
             int max = max_progress(b);

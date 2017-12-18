@@ -9,6 +9,11 @@ building *building_get(int id)
     return &Data_Buildings[id];
 }
 
+building *building_next(building *b)
+{
+    return &Data_Buildings[b->nextPartBuildingId];
+}
+
 void building_delete(building *b)
 {
     int id = b->id;

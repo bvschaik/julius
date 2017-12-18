@@ -85,11 +85,11 @@ static void spawnFigurePatrician(building *b, int *patricianSpawned)
 static void spawnFigureWarehouse(building *b)
 {
 	SET_LABOR_PROBLEM(b);
-	int spaceId = b->id;
+	building *space = b;
 	for (int i = 0; i < 8; i++) {
-		spaceId = building_get(spaceId)->nextPartBuildingId;
-		if (spaceId) {
-			building_get(spaceId)->showOnProblemOverlay = b->showOnProblemOverlay;
+		space = building_next(space);
+		if (space->id) {
+			space->showOnProblemOverlay = b->showOnProblemOverlay;
 		}
 	}
 	int xRoad, yRoad;
@@ -98,7 +98,7 @@ static void spawnFigureWarehouse(building *b)
 		SPAWN_LABOR_SEEKER(100);
 		EXIT_IF_FIGURE(FIGURE_WAREHOUSEMAN);
 		int resource;
-		int task = Resource_determineWarehouseWorkerTask(b->id, &resource);
+		int task = Resource_determineWarehouseWorkerTask(b, &resource);
 		if (task >= 0) {
 			figure *f = figure_create(FIGURE_WAREHOUSEMAN, xRoad, yRoad, DIR_4_BOTTOM);
 			f->actionState = FigureActionState_50_WarehousemanCreated;
@@ -430,11 +430,11 @@ static void spawnFigureHippodrome(building *b)
 	if (b->prevPartBuildingId) {
 		return;
 	}
-	int partId = b->id;
+	building *part = b;
 	for (int i = 0; i < 2; i++) {
-		partId = building_get(partId)->nextPartBuildingId;
-		if (partId) {
-			building_get(partId)->showOnProblemOverlay = b->showOnProblemOverlay;
+		part = building_next(part);
+		if (part->id) {
+			part->showOnProblemOverlay = b->showOnProblemOverlay;
 		}
 	}
 	EXIT_IF_FIGURE(FIGURE_CHARIOTEER);

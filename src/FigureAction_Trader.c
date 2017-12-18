@@ -30,16 +30,17 @@ static void advanceTradeNextImportResourceCaravan()
 
 int FigureAction_TradeCaravan_canBuy(int traderId, int warehouseId, int cityId)
 {
-	if (building_get(warehouseId)->type != BUILDING_WAREHOUSE) {
+    building *warehouse = building_get(warehouseId);
+	if (warehouse->type != BUILDING_WAREHOUSE) {
 		return 0;
 	}
 	if (figure_get(traderId)->traderAmountBought >= 8) {
 		return 0;
 	}
+	building *space = warehouse;
 	for (int i = 0; i < 8; i++) {
-		warehouseId = building_get(warehouseId)->nextPartBuildingId;
-        building *space = building_get(warehouseId);
-		if (warehouseId > 0 && space->loadsStored > 0 &&
+		space = building_next(space);
+		if (space->id > 0 && space->loadsStored > 0 &&
 			empire_can_export_resource_to_city(cityId, space->subtype.warehouseResourceId)) {
 			return 1;
 		}
@@ -49,15 +50,16 @@ int FigureAction_TradeCaravan_canBuy(int traderId, int warehouseId, int cityId)
 
 static int traderGetBuyResource(int warehouseId, int cityId)
 {
-	if (building_get(warehouseId)->type != BUILDING_WAREHOUSE) {
+    building *warehouse = building_get(warehouseId);
+	if (warehouse->type != BUILDING_WAREHOUSE) {
 		return RESOURCE_NONE;
 	}
+	building *space = warehouse;
 	for (int i = 0; i < 8; i++) {
-		warehouseId = building_get(warehouseId)->nextPartBuildingId;
-		if (warehouseId <= 0) {
+		space = building_next(space);
+		if (space->id <= 0) {
 			continue;
 		}
-		building *space = building_get(warehouseId);
 		int resource = space->subtype.warehouseResourceId;
 		if (space->loadsStored > 0 && empire_can_export_resource_to_city(cityId, resource)) {
 			// update stocks
@@ -119,16 +121,15 @@ int FigureAction_TradeCaravan_canSell(int traderId, int warehouseId, int cityId)
 	if (canImport) {
 		// at least one resource can be imported and accepted by this warehouse
 		// check if warehouse can store any importable goods
-		int spaceId = warehouseId;
+		building *space = warehouse;
 		for (int spaceCounter = 0; spaceCounter < 8; spaceCounter++) {
-			spaceId = building_get(spaceId)->nextPartBuildingId;
-            building *b = building_get(spaceId);
-			if (spaceId > 0 && b->loadsStored < 4) {
-				if (!b->loadsStored) {
+			space = building_next(space);
+			if (space->id > 0 && space->loadsStored < 4) {
+				if (!space->loadsStored) {
 					// empty space
 					return 1;
 				}
-				if (empire_can_import_resource_from_city(cityId, b->subtype.warehouseResourceId)) {
+				if (empire_can_import_resource_from_city(cityId, space->subtype.warehouseResourceId)) {
 					return 1;
 				}
 			}
@@ -139,7 +140,8 @@ int FigureAction_TradeCaravan_canSell(int traderId, int warehouseId, int cityId)
 
 static int traderGetSellResource(int warehouseId, int cityId)
 {
-	if (building_get(warehouseId)->type != BUILDING_WAREHOUSE) {
+    building *warehouse = building_get(warehouseId);
+	if (warehouse->type != BUILDING_WAREHOUSE) {
 		return 0;
 	}
 	int imp = 1;
@@ -152,24 +154,22 @@ static int traderGetSellResource(int warehouseId, int cityId)
 	}
 	int resourceToImport = Data_CityInfo.tradeNextImportResourceCaravan;
 	// add to existing bay with room
-	int spaceId = warehouseId;
+	building *space = warehouse;
 	for (int i = 0; i < 8; i++) {
-		spaceId = building_get(spaceId)->nextPartBuildingId;
-		building *b = building_get(spaceId);
-		if (spaceId > 0 && b->loadsStored > 0 && b->loadsStored < 4 &&
-			b->subtype.warehouseResourceId == resourceToImport) {
-			Resource_addImportedResourceToWarehouseSpace(b, resourceToImport);
+		space = building_next(space);
+		if (space->id > 0 && space->loadsStored > 0 && space->loadsStored < 4 &&
+			space->subtype.warehouseResourceId == resourceToImport) {
+			Resource_addImportedResourceToWarehouseSpace(space, resourceToImport);
 			advanceTradeNextImportResourceCaravan();
 			return resourceToImport;
 		}
 	}
 	// add to empty bay
-	spaceId = warehouseId;
+	space = warehouse;
 	for (int i = 0; i < 8; i++) {
-		spaceId = building_get(spaceId)->nextPartBuildingId;
-		building *b = building_get(spaceId);
-		if (spaceId > 0 && !b->loadsStored) {
-			Resource_addImportedResourceToWarehouseSpace(b, resourceToImport);
+		space = building_next(space);
+		if (space->id > 0 && !space->loadsStored) {
+			Resource_addImportedResourceToWarehouseSpace(space, resourceToImport);
 			advanceTradeNextImportResourceCaravan();
 			return resourceToImport;
 		}
@@ -182,12 +182,11 @@ static int traderGetSellResource(int warehouseId, int cityId)
 		}
 		resourceToImport = Data_CityInfo.tradeNextImportResourceCaravanBackup;
 		if (empire_can_import_resource_from_city(cityId, resourceToImport)) {
-			spaceId = warehouseId;
+			space = warehouse;
 			for (int i = 0; i < 8; i++) {
-				spaceId = building_get(spaceId)->nextPartBuildingId;
-				building *b = building_get(spaceId);
-				if (spaceId > 0 && b->loadsStored < 4 && b->subtype.warehouseResourceId == resourceToImport) {
-					Resource_addImportedResourceToWarehouseSpace(b, resourceToImport);
+				space = building_next(space);
+				if (space->id > 0 && space->loadsStored < 4 && space->subtype.warehouseResourceId == resourceToImport) {
+					Resource_addImportedResourceToWarehouseSpace(space, resourceToImport);
 					return resourceToImport;
 				}
 			}

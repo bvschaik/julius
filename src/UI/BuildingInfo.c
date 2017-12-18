@@ -233,7 +233,7 @@ void UI_BuildingInfo_init()
 				if (Terrain_hasRoadAccess(b->x, b->y, 3, 0, 0)) {
 					context.hasRoadAccess = 1;
 				}
-				context.warehouseSpaceText = Resource_getWarehouseSpaceInfo(context.buildingId);
+				context.warehouseSpaceText = Resource_getWarehouseSpaceInfo(b);
 				break;
 			default:
 				if (Terrain_hasRoadAccess(b->x, b->y, b->size, 0, 0)) {

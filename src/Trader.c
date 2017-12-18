@@ -203,11 +203,10 @@ int Trader_getClosestWarehouseForTradeCaravan(const figure *f, int x, int y, int
 			}
 		}
 		int distancePenalty = 32;
-		int spaceId = i;
+		building *space = b;
 		for (int spaceCounter = 0; spaceCounter < 8; spaceCounter++) {
-			spaceId = building_get(spaceId)->nextPartBuildingId;
-            building *sb = building_get(spaceId);
-			if (spaceId && exportable[sb->subtype.warehouseResourceId]) {
+			space = building_next(space);
+			if (space->id && exportable[space->subtype.warehouseResourceId]) {
 				distancePenalty -= 4;
 			}
 			if (numImportable && numImportsForWarehouse && !s->empty_all) {
@@ -221,11 +220,11 @@ int Trader_getClosestWarehouseForTradeCaravan(const figure *f, int x, int y, int
 					}
 				}
 				if (s->resource_state[Data_CityInfo.tradeNextImportResourceCaravan] != BUILDING_STORAGE_STATE_NOT_ACCEPTING) {
-					if (sb->subtype.warehouseResourceId == RESOURCE_NONE) {
+					if (space->subtype.warehouseResourceId == RESOURCE_NONE) {
 						distancePenalty -= 16;
 					}
-					if (spaceId && importable[sb->subtype.warehouseResourceId] && sb->loadsStored < 4 &&
-						sb->subtype.warehouseResourceId == Data_CityInfo.tradeNextImportResourceCaravan) {
+					if (space->id && importable[space->subtype.warehouseResourceId] && space->loadsStored < 4 &&
+						space->subtype.warehouseResourceId == Data_CityInfo.tradeNextImportResourceCaravan) {
 						distancePenalty -= 8;
 					}
 				}
@@ -290,14 +289,13 @@ int Trader_getClosestWarehouseForImportDocker(int x, int y, int cityId, int dist
 		const building_storage *s = building_storage_get(b->storage_id);
 		if (s->resource_state[resourceId] != BUILDING_STORAGE_STATE_NOT_ACCEPTING && !s->empty_all) {
 			int distancePenalty = 32;
-			int spaceId = i;
+			building *space = b;
 			for (int spaceCounter = 0; spaceCounter < 8; spaceCounter++) {
-				spaceId = building_get(spaceId)->nextPartBuildingId;
-                building *sb = building_get(spaceId);
-				if (spaceId && sb->subtype.warehouseResourceId == RESOURCE_NONE) {
+				space = building_next(space);
+				if (space->id && space->subtype.warehouseResourceId == RESOURCE_NONE) {
 					distancePenalty -= 8;
 				}
-				if (spaceId && sb->subtype.warehouseResourceId == resourceId && sb->loadsStored < 4) {
+				if (space->id && space->subtype.warehouseResourceId == resourceId && space->loadsStored < 4) {
 					distancePenalty -= 4;
 				}
 			}
@@ -361,11 +359,10 @@ int Trader_getClosestWarehouseForExportDocker(int x, int y, int cityId, int dist
 			continue;
 		}
 		int distancePenalty = 32;
-		int spaceId = i;
+		building *space = b;
 		for (int s = 0; s < 8; s++) {
-			spaceId = building_get(spaceId)->nextPartBuildingId;
-            building *sb = building_get(spaceId);
-			if (spaceId && sb->subtype.warehouseResourceId == resourceId && sb->loadsStored > 0) {
+			space = building_next(space);
+			if (space->id && space->subtype.warehouseResourceId == resourceId && space->loadsStored > 0) {
 				distancePenalty--;
 			}
 		}
@@ -394,33 +391,32 @@ int Trader_getClosestWarehouseForExportDocker(int x, int y, int cityId, int dist
 
 int Trader_tryImportResource(int buildingId, int resourceId, int cityId)
 {
-	if (building_get(buildingId)->type != BUILDING_WAREHOUSE) {
+    building *warehouse = building_get(buildingId);
+	if (warehouse->type != BUILDING_WAREHOUSE) {
 		return 0;
 	}
 	
 	int routeId = empire_city_get_route_id(cityId);
 	// try existing storage bay with the same resource
-	int spaceId = buildingId;
+	building *space = warehouse;
 	for (int i = 0; i < 8; i++) {
-		spaceId = building_get(spaceId)->nextPartBuildingId;
-		if (spaceId > 0) {
-            building *b = building_get(spaceId);
-            if (b->loadsStored && b->loadsStored < 4 && b->subtype.warehouseResourceId == resourceId) {
+		space = building_next(space);
+		if (space->id > 0) {
+            if (space->loadsStored && space->loadsStored < 4 && space->subtype.warehouseResourceId == resourceId) {
                 trade_route_increase_traded(routeId, resourceId);
-                Resource_addImportedResourceToWarehouseSpace(b, resourceId);
+                Resource_addImportedResourceToWarehouseSpace(space, resourceId);
                 return 1;
             }
 		}
 	}
 	// try unused storage bay
-	spaceId = buildingId;
+	space = warehouse;
 	for (int i = 0; i < 8; i++) {
-		spaceId = building_get(spaceId)->nextPartBuildingId;
-		if (spaceId > 0) {
-            building *b = building_get(spaceId);
-            if (b->subtype.warehouseResourceId == RESOURCE_NONE) {
+		space = building_next(space);
+		if (space->id > 0) {
+            if (space->subtype.warehouseResourceId == RESOURCE_NONE) {
                 trade_route_increase_traded(routeId, resourceId);
-                Resource_addImportedResourceToWarehouseSpace(b, resourceId);
+                Resource_addImportedResourceToWarehouseSpace(space, resourceId);
                 return 1;
             }
 		}
@@ -430,18 +426,18 @@ int Trader_tryImportResource(int buildingId, int resourceId, int cityId)
 
 int Trader_tryExportResource(int buildingId, int resourceId, int cityId)
 {
-	if (building_get(buildingId)->type != BUILDING_WAREHOUSE) {
+    building *warehouse = building_get(buildingId);
+	if (warehouse->type != BUILDING_WAREHOUSE) {
 		return 0;
 	}
 	
-	int spaceId = buildingId;
+	building *space = warehouse;
 	for (int i = 0; i < 8; i++) {
-		spaceId = building_get(spaceId)->nextPartBuildingId;
-		if (spaceId > 0) {
-            building *b = building_get(spaceId);
-			if (b->loadsStored && b->subtype.warehouseResourceId == resourceId) {
+		space = building_next(space);
+		if (space->id > 0) {
+			if (space->loadsStored && space->subtype.warehouseResourceId == resourceId) {
 				trade_route_increase_traded(empire_city_get_route_id(cityId), resourceId);
-				Resource_removeExportedResourceFromWarehouseSpace(b, resourceId);
+				Resource_removeExportedResourceFromWarehouseSpace(space, resourceId);
 				return 1;
 			}
 		}

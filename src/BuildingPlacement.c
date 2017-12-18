@@ -801,12 +801,11 @@ static void clearRegionConfirmed(int measureOnly, int xStart, int yStart, int xE
 				}
 				space = building_get(buildingId);
 				for (int i = 0; i < 9; i++) {
-					if (space->nextPartBuildingId <= 0) {
+					space = building_next(space);
+					if (space->id <= 0) {
 						break;
 					}
-					int spaceId = space->nextPartBuildingId;
-					space = building_get(spaceId);
-					Undo_addBuildingToList(spaceId);
+					Undo_addBuildingToList(space->id);
 					space->state = BuildingState_DeletedByPlayer;
 				}
 			} else if (map_terrain_is(gridOffset, TERRAIN_AQUEDUCT)) {

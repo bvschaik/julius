@@ -357,15 +357,14 @@ void Building_collapseLinked(int buildingId, int onFire)
 
 	space = building_get(buildingId);
 	for (int i = 0; i < 9; i++) {
-		if (space->nextPartBuildingId <= 0) {
+        space = building_next(space);
+		if (space->id <= 0) {
 			break;
 		}
-		int spaceId = space->nextPartBuildingId;
-		space = building_get(spaceId);
 		if (onFire) {
-			Building_collapseOnFire(spaceId, 0);
+			Building_collapseOnFire(space->id, 0);
 		} else {
-			TerrainGraphics_setBuildingAreaRubble(spaceId, space->x, space->y, space->size);
+			TerrainGraphics_setBuildingAreaRubble(space->id, space->x, space->y, space->size);
 			space->state = BuildingState_Rubble;
 		}
 	}
@@ -992,13 +991,12 @@ int Building_Market_getMaxGoodsStock(int buildingId)
 	return maxStock;
 }
 
-int Building_Dock_getNumIdleDockers(int buildingId)
+int Building_Dock_getNumIdleDockers(building *dock)
 {
-	building *b = building_get(buildingId);
 	int numIdle = 0;
 	for (int i = 0; i < 3; i++) {
-		if (b->data.other.dockFigureIds[i]) {
-			figure *f = figure_get(b->data.other.dockFigureIds[i]);
+		if (dock->data.other.dockFigureIds[i]) {
+			figure *f = figure_get(dock->data.other.dockFigureIds[i]);
 			if (f->actionState == FigureActionState_132_DockerIdling ||
 				f->actionState == FigureActionState_133_DockerImportQueue) {
 				numIdle++;

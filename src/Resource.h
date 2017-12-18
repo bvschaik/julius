@@ -28,9 +28,9 @@ void Resource_removeExportedResourceFromWarehouseSpace(building *space, int reso
 
 int Resource_getAmountStoredInWarehouse(int buildingId, int resource);
 
-int Resource_getWarehouseSpaceInfo(int buildingId);
+int Resource_getWarehouseSpaceInfo(building *warehouse);
 
-int Resource_determineWarehouseWorkerTask(int buildingId, int *resource);
+int Resource_determineWarehouseWorkerTask(building *warehouse, int *resource);
 
 // granary functions
 void Resource_gatherGranaryGettingInfo();
