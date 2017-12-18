@@ -1,6 +1,7 @@
 #include "CityBuildings_private.h"
 
 #include "building/building.h"
+#include "building/industry.h"
 #include "figure/figure.h"
 #include "game/resource.h"
 #include "map/desirability.h"
@@ -1226,7 +1227,7 @@ static void drawBuildingTopForProblemsOverlay(int gridOffset, int buildingId, in
 		if (is_problem_cartpusher(b->figureId)) {
 			b->showOnProblemOverlay = 1;
 		}
-	} else if (BuildingIsWorkshop(type)) {
+	} else if (building_is_workshop(type)) {
 		if (is_problem_cartpusher(b->figureId)) {
 			b->showOnProblemOverlay = 1;
 		} else if (b->loadsStored <= 0) {

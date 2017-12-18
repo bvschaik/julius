@@ -17,7 +17,6 @@ enum {
 
 #define BuildingIsHouse(type) ((type) >= BUILDING_HOUSE_VACANT_LOT && (type) <= BUILDING_HOUSE_LUXURY_PALACE)
 #define BuildingIsFarm(type) ((type) >= BUILDING_WHEAT_FARM && (type) <= BUILDING_PIG_FARM)
-#define BuildingIsWorkshop(type) ((type) >= BUILDING_WINE_WORKSHOP && (type) <= BUILDING_POTTERY_WORKSHOP)
 #define BuildingIsEntertainment(type) ((type) >= BUILDING_THEATER && (type) <= BUILDING_CHARIOT_MAKER)
 
 #define BuildingIsInUse(b) ((b)->state == BuildingState_InUse)

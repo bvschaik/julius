@@ -5,6 +5,7 @@
 #include "Data/CityInfo.h"
 
 #include "building/building.h"
+#include "building/industry.h"
 #include "figure/route.h"
 #include "game/resource.h"
 #include "map/road_network.h"
@@ -54,7 +55,7 @@ static void determineCartpusherDestination(figure *f, building *b, int roadNetwo
 		return;
 	}
 	// priority 3: workshop for raw material
-	dstBuildingId = Resource_getWorkshopWithRoomForRawMaterial(f->x, f->y,
+	dstBuildingId = building_get_workshop_for_raw_material_with_room(f->x, f->y,
 		b->outputResourceId, b->distanceFromEntry, roadNetworkId, &xDst, &yDst);
 	if (dstBuildingId) {
 		setDestination(f, FigureActionState_23_CartpusherDeliveringToWorkshop, dstBuildingId, xDst, yDst);
@@ -246,7 +247,7 @@ void FigureAction_cartpusher(figure *f)
 		case FigureActionState_26_CartpusherAtWorkshop:
 			f->waitTicks++;
 			if (f->waitTicks > 5) {
-				Resource_addRawMaterialToWorkshop(f->destinationBuildingId);
+				building_workshop_add_raw_material(building_get(f->destinationBuildingId));
 				f->actionState = FigureActionState_27_CartpusherReturning;
 				f->waitTicks = 0;
 				f->destinationX = f->sourceX;
@@ -354,7 +355,7 @@ static void determineWarehousemanDestination(figure *f, int roadNetworkId)
 		return;
 	}
 	// priority 2: raw materials to workshop
-	dstBuildingId = Resource_getWorkshopWithRoomForRawMaterial(f->x, f->y, f->resourceId,
+	dstBuildingId = building_get_workshop_for_raw_material_with_room(f->x, f->y, f->resourceId,
 		warehouse->distanceFromEntry, roadNetworkId, &xDst, &yDst);
 	if (dstBuildingId) {
 		setDestination(f, FigureActionState_51_WarehousemanDeliveringResource, dstBuildingId, xDst, yDst);
@@ -390,7 +391,7 @@ static void determineWarehousemanDestination(figure *f, int roadNetworkId)
 		return;
 	}
 	// priority 6: raw material to well-stocked workshop
-	dstBuildingId = Resource_getWorkshopForRawMaterial(f->x, f->y, f->resourceId,
+	dstBuildingId = building_get_workshop_for_raw_material(f->x, f->y, f->resourceId,
 		warehouse->distanceFromEntry, roadNetworkId, &xDst, &yDst);
 	if (dstBuildingId) {
 		setDestination(f, FigureActionState_51_WarehousemanDeliveringResource, dstBuildingId, xDst, yDst);
@@ -451,7 +452,8 @@ void FigureAction_warehouseman(figure *f)
 			f->waitTicks++;
 			if (f->waitTicks > 4) {
 				int buildingId = f->destinationBuildingId;
-				switch (building_get(buildingId)->type) {
+                building *b = building_get(buildingId);
+				switch (b->type) {
 					case BUILDING_GRANARY:
 						Resource_addToGranary(buildingId, f->resourceId, 0);
 						break;
@@ -463,7 +465,7 @@ void FigureAction_warehouseman(figure *f)
 						Resource_addToWarehouse(buildingId, f->resourceId);
 						break;
 					default: // workshop
-						Resource_addRawMaterialToWorkshop(buildingId);
+						building_workshop_add_raw_material(b);
 						break;
 				}
 				// BUG: what if warehouse/granary is full and returns false?

@@ -1,6 +1,7 @@
 #include "Animation.h"
 
 #include "building/building.h"
+#include "building/industry.h"
 #include "building/model.h"
 #include "core/calc.h"
 #include "core/time.h"
@@ -46,7 +47,7 @@ int Animation_getIndexForCityBuilding(int graphicId, int gridOffset)
 	if (b->type == BUILDING_RESERVOIR && !b->hasWaterAccess) {
 		return 0;
 	}
-	if (BuildingIsWorkshop(b->type)) {
+	if (building_is_workshop(b->type)) {
 		if (b->loadsStored <= 0 || b->numWorkers <= 0) {
 			return 0;
 		}

@@ -116,9 +116,9 @@ int Resource_getWarehouseForStoringResource(
 		}
 		int dist;
 		if (b->subtype.warehouseResourceId == RESOURCE_NONE) { // empty warehouse space
-			dist = Resource_getDistance(b->x, b->y, x, y, distanceFromEntry, b->distanceFromEntry);
+			dist = calc_distance_with_penalty(b->x, b->y, x, y, distanceFromEntry, b->distanceFromEntry);
 		} else if (b->subtype.warehouseResourceId == resource && b->loadsStored < 4) {
-			dist = Resource_getDistance(b->x, b->y, x, y, distanceFromEntry, b->distanceFromEntry);
+			dist = calc_distance_with_penalty(b->x, b->y, x, y, distanceFromEntry, b->distanceFromEntry);
 		} else {
 			dist = 0;
 		}
@@ -164,7 +164,7 @@ int Resource_getWarehouseForGettingResource(int srcBuildingId, int resource, int
 			}
 		}
 		if (loadsStored > 0 && s->resource_state[resource] != BUILDING_STORAGE_STATE_GETTING) {
-			int dist = Resource_getDistance(b->x, b->y, bSrc->x, bSrc->y,
+			int dist = calc_distance_with_penalty(b->x, b->y, bSrc->x, bSrc->y,
 				bSrc->distanceFromEntry, b->distanceFromEntry);
 			dist -= 4 * loadsStored;
 			if (dist < minDist) {

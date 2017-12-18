@@ -10,6 +10,7 @@
 #include "Data/CityInfo.h"
 
 #include "building/building.h"
+#include "building/industry.h"
 #include "building/model.h"
 #include "city/message.h"
 #include "core/calc.h"
@@ -1019,8 +1020,8 @@ static void spawnFigureIndustry(building *b)
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(50);
 		EXIT_IF_FIGURE(FIGURE_CART_PUSHER);
-		if (Building_Industry_hasProducedResource(b)) {
-			Building_Industry_startNewProduction(b);
+		if (building_industry_has_produced_resource(b)) {
+			building_industry_start_new_production(b);
 			figure *f = figure_create(FIGURE_CART_PUSHER, xRoad, yRoad, DIR_4_BOTTOM);
 			f->actionState = FigureActionState_20_CartpusherInitial;
 			f->resourceId = b->outputResourceId;

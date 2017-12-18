@@ -22,6 +22,7 @@
 #include "Data/CityInfo.h"
 #include "Data/State.h"
 
+#include "building/industry.h"
 #include "building/maintenance.h"
 #include "city/culture.h"
 #include "city/message.h"
@@ -84,9 +85,9 @@ void GameTick_advance()
 		case 12: Building_decayHousesCovered(); break;
 		case 16: Resource_calculateWarehouseStocks(); break;
 		case 17: CityInfo_Resource_calculateFoodAndSupplyRomeWheat(); break;
-		case 18: Resource_calculateWorkshopStocks(); break;
+		case 18: building_calculate_workshop_stocks(); break;
 		case 19: Building_Dock_updateOpenWaterAccess(); break;
-		case 20: Building_Industry_updateProduction(); break;
+		case 20: building_industry_update_production(); break;
 		case 21: Building_GameTick_checkAccessToRome(); break;
 		case 22: HousePopulation_updateRoom(); break;
 		case 23: HousePopulation_updateMigration(); break;
@@ -109,7 +110,7 @@ void GameTick_advance()
 		case 43: building_maintenance_update_burning_ruins(); break;
 		case 44: building_maintenance_check_fire_collapse(); break;
 		case 45: Security_Tick_generateCriminal(); break;
-		case 46: Building_Industry_updateDoubleWheatProduction(); break;
+		case 46: building_industry_update_wheat_production(); break;
 		case 48: Building_decayTaxCollectorAccess(); break;
 		case 49: CityInfo_Culture_calculateEntertainment(); break;
 	}

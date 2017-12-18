@@ -8,6 +8,7 @@
 #include "Data/Constants.h"
 
 #include "building/count.h"
+#include "building/industry.h"
 #include "city/culture.h"
 #include "city/message.h"
 #include "core/calc.h"
@@ -33,7 +34,7 @@ static void performBlessing(int god)
 	switch (god) {
 		case GOD_CERES:
 			city_message_post(1, MESSAGE_BLESSING_FROM_CERES, 0, 0);
-			Building_Industry_blessFarmsFromCeres();
+			building_bless_farms();
 			break;
 		case GOD_NEPTUNE:
 			city_message_post(1, MESSAGE_BLESSING_FROM_NEPTUNE, 0, 0);
@@ -59,7 +60,7 @@ static void performSmallCurse(int god)
 	switch (god) {
 		case GOD_CERES:
 			city_message_post(1, MESSAGE_CERES_IS_UPSET, 0, 0);
-			Building_Industry_witherFarmCropsFromCeres(0);
+			building_curse_farms(0);
 			break;
 		case GOD_NEPTUNE:
 			city_message_post(1, MESSAGE_NEPTUNE_IS_UPSET, 0, 0);
@@ -92,7 +93,7 @@ static int performLargeCurse(int god)
 	switch (god) {
 		case GOD_CERES:
 			city_message_post(1, MESSAGE_WRATH_OF_CERES, 0, 0);
-			Building_Industry_witherFarmCropsFromCeres(1);
+			building_curse_farms(1);
 			break;
 		case GOD_NEPTUNE:
 			if (Data_CityInfo.tradeNumOpenSeaRoutes <= 0) {

@@ -10,6 +10,7 @@
 #include "building/count.h"
 #include "building/storage.h"
 #include "city/message.h"
+#include "core/calc.h"
 #include "empire/city.h"
 #include "empire/empire.h"
 #include "empire/trade_prices.h"
@@ -231,7 +232,7 @@ int Trader_getClosestWarehouseForTradeCaravan(const figure *f, int x, int y, int
 			}
 		}
 		if (distancePenalty < 32) {
-			int distance = Resource_getDistance(b->x, b->y, x, y, distanceFromEntry, b->distanceFromEntry);
+			int distance = calc_distance_with_penalty(b->x, b->y, x, y, distanceFromEntry, b->distanceFromEntry);
 			distance += distancePenalty;
 			if (distance < minDistance) {
 				minDistance = distance;
@@ -301,7 +302,7 @@ int Trader_getClosestWarehouseForImportDocker(int x, int y, int cityId, int dist
 				}
 			}
 			if (distancePenalty < 32) {
-				int distance = Resource_getDistance(b->x, b->y, x, y, distanceFromEntry, b->distanceFromEntry);
+				int distance = calc_distance_with_penalty(b->x, b->y, x, y, distanceFromEntry, b->distanceFromEntry);
 				// prefer emptier warehouse
 				distance += distancePenalty;
 				if (distance < minDistance) {
@@ -369,7 +370,7 @@ int Trader_getClosestWarehouseForExportDocker(int x, int y, int cityId, int dist
 			}
 		}
 		if (distancePenalty < 32) {
-			int distance = Resource_getDistance(b->x, b->y, x, y, distanceFromEntry, b->distanceFromEntry);
+			int distance = calc_distance_with_penalty(b->x, b->y, x, y, distanceFromEntry, b->distanceFromEntry);
 			// prefer fuller warehouse
 			distance += distancePenalty;
 			if (distance < minDistance) {

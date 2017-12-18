@@ -63,115 +63,6 @@ void Resource_calculateWarehouseStocks()
 	}
 }
 
-void Resource_calculateWorkshopStocks()
-{
-	for (int i = 0; i < 6; i++) {
-		Data_CityInfo.resourceWorkshopRawMaterialStored[i] = 0;
-		Data_CityInfo.resourceWorkshopRawMaterialSpace[i] = 0;
-	}
-	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		building *b = building_get(i);
-		if (!BuildingIsInUse(b) || !BuildingIsWorkshop(b->type)) {
-			continue;
-		}
-		b->hasRoadAccess = 0;
-		if (Terrain_hasRoadAccess(b->x, b->y, b->size, 0, 0)) {
-			b->hasRoadAccess = 1;
-			int room = 2 - b->loadsStored;
-			if (room < 0) {
-				room = 0;
-			}
-			int workshopResource = b->subtype.workshopType;
-			Data_CityInfo.resourceWorkshopRawMaterialSpace[workshopResource] += room;
-			Data_CityInfo.resourceWorkshopRawMaterialStored[workshopResource] += b->loadsStored;
-		}
-	}
-}
-
-int Resource_getWorkshopWithRoomForRawMaterial(
-	int x, int y, int resource, int distanceFromEntry, int roadNetworkId,
-	int *xDst, int *yDst)
-{
-	if (Data_CityInfo.resourceStockpiled[resource]) {
-		return 0;
-	}
-	int outputType;
-	switch (resource) {
-		case RESOURCE_OLIVES: outputType = WORKSHOP_OLIVES_TO_OIL; break;
-		case RESOURCE_VINES: outputType = WORKSHOP_VINES_TO_WINE; break;
-		case RESOURCE_IRON: outputType = WORKSHOP_IRON_TO_WEAPONS; break;
-		case RESOURCE_TIMBER: outputType = WORKSHOP_TIMBER_TO_FURNITURE; break;
-		case RESOURCE_CLAY: outputType = WORKSHOP_CLAY_TO_POTTERY; break;
-		default: return 0;
-	}
-	int minDist = 10000;
-	int minBuildingId = 0;
-	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		building *b = building_get(i);
-		if (!BuildingIsInUse(b) || !BuildingIsWorkshop(b->type)) {
-			continue;
-		}
-		if (!b->hasRoadAccess || b->distanceFromEntry <= 0) {
-			continue;
-		}
-		if (b->subtype.workshopType == outputType && b->roadNetworkId == roadNetworkId && b->loadsStored < 2) {
-			int dist = Resource_getDistance(b->x, b->y, x, y, distanceFromEntry, b->distanceFromEntry);
-			if (b->loadsStored > 0) {
-				dist += 20;
-			}
-			if (dist < minDist) {
-				minDist = dist;
-				minBuildingId = i;
-			}
-		}
-	}
-	building *min = building_get(minBuildingId);
-	*xDst = min->roadAccessX;
-	*yDst = min->roadAccessY;
-	return minBuildingId;
-}
-
-int Resource_getWorkshopForRawMaterial(
-	int x, int y, int resource, int distanceFromEntry, int roadNetworkId,
-	int *xDst, int *yDst)
-{
-	if (Data_CityInfo.resourceStockpiled[resource]) {
-		return 0;
-	}
-	int outputType;
-	switch (resource) {
-		case RESOURCE_OLIVES: outputType = WORKSHOP_OLIVES_TO_OIL; break;
-		case RESOURCE_VINES: outputType = WORKSHOP_VINES_TO_WINE; break;
-		case RESOURCE_IRON: outputType = WORKSHOP_IRON_TO_WEAPONS; break;
-		case RESOURCE_TIMBER: outputType = WORKSHOP_TIMBER_TO_FURNITURE; break;
-		case RESOURCE_CLAY: outputType = WORKSHOP_CLAY_TO_POTTERY; break;
-		default: return 0;
-	}
-	int minDist = 10000;
-	int minBuildingId = 0;
-	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		building *b = building_get(i);
-		if (!BuildingIsInUse(b) || !BuildingIsWorkshop(b->type)) {
-			continue;
-		}
-		if (!b->hasRoadAccess || b->distanceFromEntry <= 0) {
-			continue;
-		}
-		if (b->subtype.workshopType == outputType && b->roadNetworkId == roadNetworkId) {
-			int dist = 10 * b->loadsStored +
-				Resource_getDistance(b->x, b->y, x, y, distanceFromEntry, b->distanceFromEntry);
-			if (dist < minDist) {
-				minDist = dist;
-				minBuildingId = i;
-			}
-		}
-	}
-	building *min = building_get(minBuildingId);
-	*xDst = min->roadAccessX;
-	*yDst = min->roadAccessY;
-	return minBuildingId;
-}
-
 int Resource_getBarracksForWeapon(int xUnused, int yUnused, int resource, int roadNetworkId, int *xDst, int *yDst)
 {
 	if (resource != RESOURCE_WEAPONS) {
@@ -192,31 +83,9 @@ int Resource_getBarracksForWeapon(int xUnused, int yUnused, int resource, int ro
 	return 0;
 }
 
-void Resource_addRawMaterialToWorkshop(int buildingId)
-{
-    building *b = building_get(buildingId);
-	if (buildingId > 0 && BuildingIsWorkshop(b->type)) {
-		b->loadsStored++; // BUG: any raw material accepted
-	}
-}
-
 void Resource_addWeaponToBarracks(int buildingId)
 {
 	if (buildingId > 0) {
 		building_get(buildingId)->loadsStored++;
 	}
-}
-
-int Resource_getDistance(int x1, int y1, int x2, int y2, int distToEntry1, int distToEntry2)
-{
-	int diff;
-	if (distToEntry1 > distToEntry2) {
-		diff = distToEntry1 - distToEntry2;
-	} else {
-		diff = distToEntry2 - distToEntry1;
-	}
-	if (distToEntry1 == -1) {
-		diff = 0;
-	}
-	return diff + calc_maximum_distance(x1, y1, x2, y2);
 }

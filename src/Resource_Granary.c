@@ -111,7 +111,7 @@ int Resource_getGranaryForStoringFood(
 		}
 		if (b->data.storage.resourceStored[RESOURCE_NONE] >= 100) {
 			// there is room
-			int dist = Resource_getDistance(b->x + 1, b->y + 1, x, y, distanceFromEntry, b->distanceFromEntry);
+			int dist = calc_distance_with_penalty(b->x + 1, b->y + 1, x, y, distanceFromEntry, b->distanceFromEntry);
 			if (dist < minDist) {
 				minDist = dist;
 				minBuildingId = i;
@@ -158,7 +158,7 @@ int Resource_getGettingGranaryForStoringFood(
 		}
 		if (b->data.storage.resourceStored[RESOURCE_NONE] > 100) {
 			// there is room
-			int dist = Resource_getDistance(b->x + 1, b->y + 1, x, y, distanceFromEntry, b->distanceFromEntry);
+			int dist = calc_distance_with_penalty(b->x + 1, b->y + 1, x, y, distanceFromEntry, b->distanceFromEntry);
 			if (dist < minDist) {
 				minDist = dist;
 				minBuildingId = i;
@@ -225,7 +225,7 @@ int Resource_getGranaryForGettingFood(int srcBuildingId, int *xDst, int *yDst)
 			amountGettable += b->data.storage.resourceStored[RESOURCE_MEAT];
 		}
 		if (amountGettable > 0) {
-			int dist = Resource_getDistance(
+			int dist = calc_distance_with_penalty(
 				b->x + 1, b->y + 1,
 				bSrc->x + 1, bSrc->y + 1,
 				bSrc->distanceFromEntry, b->distanceFromEntry);

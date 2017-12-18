@@ -29,13 +29,6 @@ void Building_determineGraphicIdsForOrientedBuildings();
 
 void Building_GameTick_checkAccessToRome();
 
-void Building_Industry_updateProduction();
-void Building_Industry_updateDoubleWheatProduction();
-void Building_Industry_blessFarmsFromCeres();
-void Building_Industry_witherFarmCropsFromCeres(int bigCurse);
-int Building_Industry_hasProducedResource(building *b);
-void Building_Industry_startNewProduction(building *b);
-
 int Building_Market_getMaxFoodStock(int buildingId);
 int Building_Market_getMaxGoodsStock(int buildingId);
 int Building_Market_getDestinationGranaryWarehouse(building *market);

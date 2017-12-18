@@ -5,11 +5,8 @@
 
 // general functions
 void Resource_calculateWarehouseStocks();
-void Resource_calculateWorkshopStocks();
 
 int Resource_getGraphicIdOffset(int resource, int type);
-
-int Resource_getDistance(int x1, int y1, int x2, int y2, int distToEntry1, int distToEntry2);
 
 // warehouse functions
 void Resource_setWarehouseSpaceGraphic(building *space, int resource);
@@ -52,11 +49,9 @@ int Resource_determineGranaryWorkerTask(building *granary);
 int Resource_takeFoodFromGranaryForGettingDeliveryman(int dstBuildingId, int srcBuildingId, int *resource);
 
 // other functions
-int Resource_getWorkshopWithRoomForRawMaterial(int x, int y, int resource, int distanceFromEntry, int roadNetworkId, int *xDst, int *yDst);
 int Resource_getWorkshopForRawMaterial(int x, int y, int resource, int distanceFromEntry, int roadNetworkId, int *xDst, int *yDst);
 int Resource_getBarracksForWeapon(int xUnused, int yUnused, int resource, int roadNetworkId, int *xDst, int *yDst);
 
-void Resource_addRawMaterialToWorkshop(int buildingId);
 void Resource_addWeaponToBarracks(int buildingId);
 
 enum {
