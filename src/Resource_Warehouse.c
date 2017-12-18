@@ -20,18 +20,17 @@
 static int granaryGettingResource[7];
 static int granaryAcceptingResource[7];
 
-void Resource_setWarehouseSpaceGraphic(int spaceId, int resource)
+void Resource_setWarehouseSpaceGraphic(building *space, int resource)
 {
 	int image_id;
-    building *b = building_get(spaceId);
-	if (b->loadsStored <= 0) {
+	if (space->loadsStored <= 0) {
 		image_id = image_group(GROUP_BUILDING_WAREHOUSE_STORAGE_EMPTY);
 	} else {
 		image_id = image_group(GROUP_BUILDING_WAREHOUSE_STORAGE_FILLED) +
 			4 * (resource - 1) + Resource_getGraphicIdOffset(resource, 0) +
-			b->loadsStored - 1;
+			       space->loadsStored - 1;
 	}
-	map_image_set(b->gridOffset, image_id);
+	map_image_set(space->gridOffset, image_id);
 }
 
 void Resource_addToCityWarehouses(int resource, int amount)
@@ -225,7 +224,7 @@ int Resource_addToWarehouse(int buildingId, int resource)
 	b->subtype.warehouseResourceId = resource;
 	b->loadsStored++;
 	tutorial_on_add_to_warehouse();
-	Resource_setWarehouseSpaceGraphic(buildingId, resource);
+	Resource_setWarehouseSpaceGraphic(b, resource);
 	return 1;
 }
 
@@ -260,7 +259,7 @@ int Resource_removeFromWarehouse(int buildingId, int resource, int amount)
 			b->loadsStored = 0;
 			b->subtype.warehouseResourceId = RESOURCE_NONE;
 		}
-		Resource_setWarehouseSpaceGraphic(buildingId, resource);
+		Resource_setWarehouseSpaceGraphic(b, resource);
 	}
 	return amount;
 }
@@ -290,7 +289,7 @@ void Resource_removeFromWarehouseForMercury(int buildingId, int amount)
 			b->loadsStored = 0;
 			b->subtype.warehouseResourceId = RESOURCE_NONE;
 		}
-		Resource_setWarehouseSpaceGraphic(buildingId, resource);
+		Resource_setWarehouseSpaceGraphic(b, resource);
 	}
 }
 
@@ -335,25 +334,23 @@ int Resource_getWarehouseSpaceInfo(int buildingId)
 	}
 }
 
-void Resource_addImportedResourceToWarehouseSpace(int spaceId, int resourceId)
+void Resource_addImportedResourceToWarehouseSpace(building *space, int resourceId)
 {
 	Data_CityInfo.resourceSpaceInWarehouses[resourceId]--;
 	Data_CityInfo.resourceStored[resourceId]++;
-    building *space = building_get(spaceId);
 	space->loadsStored++;
 	space->subtype.warehouseResourceId = resourceId;
 	
     int price = trade_price_buy(resourceId);
     city_finance_process_import(price);
 	
-	Resource_setWarehouseSpaceGraphic(spaceId, resourceId);
+	Resource_setWarehouseSpaceGraphic(space, resourceId);
 }
 
-void Resource_removeExportedResourceFromWarehouseSpace(int spaceId, int resourceId)
+void Resource_removeExportedResourceFromWarehouseSpace(building *space, int resourceId)
 {
 	Data_CityInfo.resourceSpaceInWarehouses[resourceId]++;
 	Data_CityInfo.resourceStored[resourceId]--;
-    building *space = building_get(spaceId);
 	space->loadsStored--;
 	if (space->loadsStored <= 0) {
 		space->subtype.warehouseResourceId = RESOURCE_NONE;
@@ -362,7 +359,7 @@ void Resource_removeExportedResourceFromWarehouseSpace(int spaceId, int resource
 	int price = trade_price_sell(resourceId);
     city_finance_process_export(price);
 	
-	Resource_setWarehouseSpaceGraphic(spaceId, resourceId);
+	Resource_setWarehouseSpaceGraphic(space, resourceId);
 }
 
 static int determineGranaryAcceptFoods()

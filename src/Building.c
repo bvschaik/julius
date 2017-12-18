@@ -833,16 +833,14 @@ void Building_Industry_blessFarmsFromCeres()
 	}
 }
 
-int Building_Industry_hasProducedResource(int buildingId)
+int Building_Industry_hasProducedResource(building *b)
 {
-    building *b = building_get(buildingId);
 	int target = b->subtype.workshopType ? 400 : 200;
 	return b->data.industry.progress >= target;
 }
 
-void Building_Industry_startNewProduction(int buildingId)
+void Building_Industry_startNewProduction(building *b)
 {
-	building *b = building_get(buildingId);
 	b->data.industry.progress = 0;
 	if (b->subtype.workshopType) {
 		if (b->loadsStored) {
@@ -853,13 +851,13 @@ void Building_Industry_startNewProduction(int buildingId)
 		}
 	}
 	if (BuildingIsFarm(b->type)) {
-		TerrainGraphics_setBuildingFarm(buildingId, b->x, b->y,
+		TerrainGraphics_setBuildingFarm(b->id, b->x, b->y,
 			image_group(GROUP_BUILDING_FARM_CROPS) + 5 * (b->outputResourceId - 1),
 			b->data.industry.progress);
 	}
 }
 
-int Building_Market_getDestinationGranaryWarehouse(int marketId)
+int Building_Market_getDestinationGranaryWarehouse(building *market)
 {
 	struct {
 		int buildingId;
@@ -871,7 +869,6 @@ int Building_Market_getDestinationGranaryWarehouse(int marketId)
 		resources[i].numBuildings = 0;
 		resources[i].distance = 40;
 	}
-	building *market = building_get(marketId);
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
 		if (!BuildingIsInUse(b)) {
@@ -1177,7 +1174,7 @@ void Building_Mercury_removeResources(int bigCurse)
 			}
 		} else if (b->type == BUILDING_GRANARY) {
 			for (int r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
-				totalStored += Resource_getAmountStoredInGranary(i, r);
+				totalStored += Resource_getAmountStoredInGranary(b, r);
 			}
 			totalStored /= 100;
 		} else {
@@ -1222,7 +1219,7 @@ void Building_Mercury_fillGranary()
 		}
 		int totalStored = 0;
 		for (int r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
-			totalStored += Resource_getAmountStoredInGranary(i, r);
+			totalStored += Resource_getAmountStoredInGranary(b, r);
 		}
 		if (totalStored < minStored) {
 			minStored = totalStored;

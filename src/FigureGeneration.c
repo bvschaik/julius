@@ -22,43 +22,42 @@
 #include "map/terrain.h"
 
 #define SET_LABOR_PROBLEM(b) if (b->housesCovered <= 0) b->showOnProblemOverlay = 2
-#define SPAWN_LABOR_SEEKER(t) if (b->housesCovered <= t) generateLaborSeeker(buildingId, b, xRoad, yRoad);
-#define EXIT_IF_FIGURE(t) if (buildingHasFigureOfType(buildingId, t, 0)) return;
-#define EXIT_IF_FIGURES(t1,t2) if (buildingHasFigureOfType(buildingId, t1, t2)) return;
+#define SPAWN_LABOR_SEEKER(t) if (b->housesCovered <= t) generateLaborSeeker(b, xRoad, yRoad);
+#define EXIT_IF_FIGURE(t) if (buildingHasFigureOfType(b, t, 0)) return;
+#define EXIT_IF_FIGURES(t1,t2) if (buildingHasFigureOfType(b, t1, t2)) return;
 
 static int worker_percentage(building *b)
 {
     return calc_percentage(b->numWorkers, model_get_building(b->type)->laborers);
 }
 
-static void generateLaborSeeker(int buildingId, building *b, int x, int y)
+static void generateLaborSeeker(building *b, int x, int y)
 {
 	if (Data_CityInfo.population <= 0) {
 		return;
 	}
 	if (b->figureId2) {
 		figure *f = figure_get(b->figureId2);
-		if (!f->state || f->type != FIGURE_LABOR_SEEKER || f->buildingId != buildingId) {
+		if (!f->state || f->type != FIGURE_LABOR_SEEKER || f->buildingId != b->id) {
 			b->figureId2 = 0;
 		}
 	} else {
 		figure *f = figure_create(FIGURE_LABOR_SEEKER, x, y, DIR_0_TOP);
 		f->actionState = FigureActionState_125_Roaming;
-		f->buildingId = buildingId;
+		f->buildingId = b->id;
 		b->figureId2 = f->id;
 		FigureMovement_initRoaming(f);
 	}
 }
 
-static int buildingHasFigureOfType(int buildingId, int type1, int type2)
+static int buildingHasFigureOfType(building *b, int type1, int type2)
 {
-    building *b = building_get(buildingId);
 	int figureId = b->figureId;
 	if (figureId <= 0) {
 		return 0;
 	}
 	figure *f = figure_get(figureId);
-	if (f->state && f->buildingId == buildingId && (f->type == type1 || f->type == type2)) {
+	if (f->state && f->buildingId == b->id && (f->type == type1 || f->type == type2)) {
 		return 1;
 	} else {
 		b->figureId = 0;
@@ -66,7 +65,7 @@ static int buildingHasFigureOfType(int buildingId, int type1, int type2)
 	}
 }
 
-static void spawnFigurePatrician(int buildingId, building *b, int *patricianSpawned)
+static void spawnFigurePatrician(building *b, int *patricianSpawned)
 {
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
@@ -76,16 +75,16 @@ static void spawnFigurePatrician(int buildingId, building *b, int *patricianSpaw
 			b->figureSpawnDelay = 0;
 			figure *f = figure_create(FIGURE_PATRICIAN, xRoad, yRoad, DIR_4_BOTTOM);
 			f->actionState = FigureActionState_125_Roaming;
-			f->buildingId = buildingId;
+			f->buildingId = b->id;
 			FigureMovement_initRoaming(f);
 		}
 	}
 }
 
-static void spawnFigureWarehouse(int buildingId, building *b)
+static void spawnFigureWarehouse(building *b)
 {
 	SET_LABOR_PROBLEM(b);
-	int spaceId = buildingId;
+	int spaceId = b->id;
 	for (int i = 0; i < 8; i++) {
 		spaceId = building_get(spaceId)->nextPartBuildingId;
 		if (spaceId) {
@@ -98,7 +97,7 @@ static void spawnFigureWarehouse(int buildingId, building *b)
 		SPAWN_LABOR_SEEKER(100);
 		EXIT_IF_FIGURE(FIGURE_WAREHOUSEMAN);
 		int resource;
-		int task = Resource_determineWarehouseWorkerTask(buildingId, &resource);
+		int task = Resource_determineWarehouseWorkerTask(b->id, &resource);
 		if (task >= 0) {
 			figure *f = figure_create(FIGURE_WAREHOUSEMAN, xRoad, yRoad, DIR_4_BOTTOM);
 			f->actionState = FigureActionState_50_WarehousemanCreated;
@@ -107,30 +106,30 @@ static void spawnFigureWarehouse(int buildingId, building *b)
 				f->collectingItemId = resource;
 			}
 			b->figureId = f->id;
-			f->buildingId = buildingId;
+			f->buildingId = b->id;
 		}
 	}
 }
 
-static void spawnFigureGranary(int buildingId, building *b)
+static void spawnFigureGranary(building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccessGranary(b->x, b->y, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(100);
 		EXIT_IF_FIGURE(FIGURE_WAREHOUSEMAN);
-		int task = Resource_determineGranaryWorkerTask(buildingId);
+		int task = Resource_determineGranaryWorkerTask(b);
 		if (task >= 0) {
 			figure *f = figure_create(FIGURE_WAREHOUSEMAN, xRoad, yRoad, DIR_4_BOTTOM);
 			f->actionState = FigureActionState_50_WarehousemanCreated;
 			f->resourceId = task;
 			b->figureId = f->id;
-			f->buildingId = buildingId;
+			f->buildingId = b->id;
 		}
 	}
 }
 
-static void spawnFigureTower(int buildingId, building *b)
+static void spawnFigureTower(building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	int xRoad, yRoad;
@@ -142,17 +141,17 @@ static void spawnFigureTower(int buildingId, building *b)
 		if (!b->figureId4 && b->figureId) { // has sentry but no ballista -> create
 			figure *f = figure_create(FIGURE_BALLISTA, b->x, b->y, DIR_0_TOP);
 			b->figureId4 = f->id;
-			f->buildingId = buildingId;
+			f->buildingId = b->id;
 			f->actionState = FigureActionState_180_BallistaCreated;
 		}
-		buildingHasFigureOfType(buildingId, FIGURE_TOWER_SENTRY, 0);
+		buildingHasFigureOfType(b, FIGURE_TOWER_SENTRY, 0);
 		if (b->figureId <= 0) {
 			Data_Buildings_Extra.barracksTowerSentryRequested = 2;
 		}
 	}
 }
 
-static void spawnFigureEngineersPost(int buildingId, building *b)
+static void spawnFigureEngineersPost(building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	EXIT_IF_FIGURE(FIGURE_ENGINEER);
@@ -179,13 +178,13 @@ static void spawnFigureEngineersPost(int buildingId, building *b)
 			b->figureSpawnDelay = 0;
 			figure *f = figure_create(FIGURE_ENGINEER, xRoad, yRoad, DIR_0_TOP);
 			f->actionState = FigureActionState_60_EngineerCreated;
-			f->buildingId = buildingId;
+			f->buildingId = b->id;
 			b->figureId = f->id;
 		}
 	}
 }
 
-static void spawnFigurePrefecture(int buildingId, building *b)
+static void spawnFigurePrefecture(building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	EXIT_IF_FIGURE(FIGURE_PREFECT);
@@ -212,13 +211,13 @@ static void spawnFigurePrefecture(int buildingId, building *b)
 			b->figureSpawnDelay = 0;
 			figure *f = figure_create(FIGURE_PREFECT, xRoad, yRoad, DIR_0_TOP);
 			f->actionState = FigureActionState_70_PrefectCreated;
-			f->buildingId = buildingId;
+			f->buildingId = b->id;
 			b->figureId = f->id;
 		}
 	}
 }
 
-static void spawnFigureActorColony(int buildingId, building *b)
+static void spawnFigureActorColony(building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	int xRoad, yRoad;
@@ -244,13 +243,13 @@ static void spawnFigureActorColony(int buildingId, building *b)
 			b->figureSpawnDelay = 0;
 			figure *f = figure_create(FIGURE_ACTOR, xRoad, yRoad, DIR_0_TOP);
 			f->actionState = FigureActionState_90_EntertainerAtSchoolCreated;
-			f->buildingId = buildingId;
+			f->buildingId = b->id;
 			b->figureId = f->id;
 		}
 	}
 }
 
-static void spawnFigureGladiatorSchool(int buildingId, building *b)
+static void spawnFigureGladiatorSchool(building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	int xRoad, yRoad;
@@ -276,13 +275,13 @@ static void spawnFigureGladiatorSchool(int buildingId, building *b)
 			b->figureSpawnDelay = 0;
 			figure *f = figure_create(FIGURE_GLADIATOR, xRoad, yRoad, DIR_0_TOP);
 			f->actionState = FigureActionState_90_EntertainerAtSchoolCreated;
-			f->buildingId = buildingId;
+			f->buildingId = b->id;
 			b->figureId = f->id;
 		}
 	}
 }
 
-static void spawnFigureLionHouse(int buildingId, building *b)
+static void spawnFigureLionHouse(building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	int xRoad, yRoad;
@@ -308,13 +307,13 @@ static void spawnFigureLionHouse(int buildingId, building *b)
 			b->figureSpawnDelay = 0;
 			figure *f = figure_create(FIGURE_LION_TAMER, xRoad, yRoad, DIR_0_TOP);
 			f->actionState = FigureActionState_90_EntertainerAtSchoolCreated;
-			f->buildingId = buildingId;
+			f->buildingId = b->id;
 			b->figureId = f->id;
 		}
 	}
 }
 
-static void spawnFigureChariotMaker(int buildingId, building *b)
+static void spawnFigureChariotMaker(building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	int xRoad, yRoad;
@@ -340,13 +339,13 @@ static void spawnFigureChariotMaker(int buildingId, building *b)
 			b->figureSpawnDelay = 0;
 			figure *f = figure_create(FIGURE_CHARIOTEER, xRoad, yRoad, DIR_0_TOP);
 			f->actionState = FigureActionState_90_EntertainerAtSchoolCreated;
-			f->buildingId = buildingId;
+			f->buildingId = b->id;
 			b->figureId = f->id;
 		}
 	}
 }
 
-static void spawnFigureAmphitheater(int buildingId, building *b)
+static void spawnFigureAmphitheater(building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	EXIT_IF_FIGURES(FIGURE_ACTOR, FIGURE_GLADIATOR);
@@ -354,7 +353,7 @@ static void spawnFigureAmphitheater(int buildingId, building *b)
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		if (b->housesCovered <= 50 ||
 			(b->data.entertainment.days1 <= 0 && b->data.entertainment.days2 <= 0)) {
-			generateLaborSeeker(buildingId, b, xRoad, yRoad);
+			generateLaborSeeker(b, xRoad, yRoad);
 		}
 		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
@@ -381,21 +380,21 @@ static void spawnFigureAmphitheater(int buildingId, building *b)
 				f = figure_create(FIGURE_ACTOR, xRoad, yRoad, DIR_0_TOP);
 			}
 			f->actionState = FigureActionState_94_EntertainerRoaming;
-			f->buildingId = buildingId;
+			f->buildingId = b->id;
 			b->figureId = f->id;
 			FigureMovement_initRoaming(f);
 		}
 	}
 }
 
-static void spawnFigureTheater(int buildingId, building *b)
+static void spawnFigureTheater(building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	EXIT_IF_FIGURE(FIGURE_ACTOR);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		if (b->housesCovered <= 50 || b->data.entertainment.days1 <= 0) {
-			generateLaborSeeker(buildingId, b, xRoad, yRoad);
+			generateLaborSeeker(b, xRoad, yRoad);
 		}
 		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
@@ -417,20 +416,20 @@ static void spawnFigureTheater(int buildingId, building *b)
 			b->figureSpawnDelay = 0;
 			figure *f = figure_create(FIGURE_ACTOR, xRoad, yRoad, DIR_0_TOP);
 			f->actionState = FigureActionState_94_EntertainerRoaming;
-			f->buildingId = buildingId;
+			f->buildingId = b->id;
 			b->figureId = f->id;
 			FigureMovement_initRoaming(f);
 		}
 	}
 }
 
-static void spawnFigureHippodrome(int buildingId, building *b)
+static void spawnFigureHippodrome(building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	if (b->prevPartBuildingId) {
 		return;
 	}
-	int partId = buildingId;
+	int partId = b->id;
 	for (int i = 0; i < 2; i++) {
 		partId = building_get(partId)->nextPartBuildingId;
 		if (partId) {
@@ -441,7 +440,7 @@ static void spawnFigureHippodrome(int buildingId, building *b)
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccessHippodrome(b->x, b->y, &xRoad, &yRoad)) {
 		if (b->housesCovered <= 50 || b->data.entertainment.days1 <= 0) {
-			generateLaborSeeker(buildingId, b, xRoad, yRoad);
+			generateLaborSeeker(b, xRoad, yRoad);
 		}
 		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
@@ -463,7 +462,7 @@ static void spawnFigureHippodrome(int buildingId, building *b)
 			b->figureSpawnDelay = 0;
 			figure *f = figure_create(FIGURE_CHARIOTEER, xRoad, yRoad, DIR_0_TOP);
 			f->actionState = FigureActionState_94_EntertainerRoaming;
-			f->buildingId = buildingId;
+			f->buildingId = b->id;
 			b->figureId = f->id;
 			FigureMovement_initRoaming(f);
 
@@ -471,13 +470,13 @@ static void spawnFigureHippodrome(int buildingId, building *b)
 				// create mini-horses
 				figure *horse1 = figure_create(FIGURE_HIPPODROME_HORSES, b->x + 2, b->y + 1, DIR_2_RIGHT);
 				horse1->actionState = FigureActionState_200_HippodromeMiniHorseCreated;
-				horse1->buildingId = buildingId;
+				horse1->buildingId = b->id;
 				horse1->resourceId = 0;
 				horse1->speedMultiplier = 3;
 
 				figure *horse2 = figure_create(FIGURE_HIPPODROME_HORSES, b->x + 2, b->y + 2, DIR_2_RIGHT);
 				horse2->actionState = FigureActionState_200_HippodromeMiniHorseCreated;
-				horse2->buildingId = buildingId;
+				horse2->buildingId = b->id;
 				horse2->resourceId = 1;
 				horse2->speedMultiplier = 2;
 
@@ -492,7 +491,7 @@ static void spawnFigureHippodrome(int buildingId, building *b)
 	}
 }
 
-static void spawnFigureColosseum(int buildingId, building *b)
+static void spawnFigureColosseum(building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	EXIT_IF_FIGURES(FIGURE_GLADIATOR, FIGURE_LION_TAMER);
@@ -500,7 +499,7 @@ static void spawnFigureColosseum(int buildingId, building *b)
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		if (b->housesCovered <= 50 ||
 			(b->data.entertainment.days1 <= 0 && b->data.entertainment.days2 <= 0)) {
-			generateLaborSeeker(buildingId, b, xRoad, yRoad);
+			generateLaborSeeker(b, xRoad, yRoad);
 		}
 		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
@@ -527,7 +526,7 @@ static void spawnFigureColosseum(int buildingId, building *b)
 				f = figure_create(FIGURE_GLADIATOR, xRoad, yRoad, DIR_0_TOP);
 			}
 			f->actionState = FigureActionState_94_EntertainerRoaming;
-			f->buildingId = buildingId;
+			f->buildingId = b->id;
 			b->figureId = f->id;
 			FigureMovement_initRoaming(f);
 			if (b->data.entertainment.days1 > 0 || b->data.entertainment.days2 > 0) {
@@ -540,23 +539,23 @@ static void spawnFigureColosseum(int buildingId, building *b)
 	}
 }
 
-static void setMarketGraphic(int buildingId, building *b)
+static void setMarketGraphic(building *b)
 {
 	if (!BuildingIsInUse(b)) {
 		return;
 	}
 	if (map_desirability_get(b->gridOffset) <= 30) {
-		Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size,
+		Terrain_addBuildingToGrids(b->id, b->x, b->y, b->size,
 			image_group(GROUP_BUILDING_MARKET), TERRAIN_BUILDING);
 	} else {
-		Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size,
+		Terrain_addBuildingToGrids(b->id, b->x, b->y, b->size,
 			image_group(GROUP_BUILDING_MARKET_FANCY), TERRAIN_BUILDING);
 	}
 }
 
-static void spawnFigureMarket(int buildingId, building *b)
+static void spawnFigureMarket(building *b)
 {
-	setMarketGraphic(buildingId, b);
+	setMarketGraphic(b);
 	SET_LABOR_PROBLEM(b);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
@@ -577,7 +576,7 @@ static void spawnFigureMarket(int buildingId, building *b)
 			return;
 		}
 		// market trader
-		if (!buildingHasFigureOfType(buildingId, FIGURE_MARKET_TRADER, 0)) {
+		if (!buildingHasFigureOfType(b, FIGURE_MARKET_TRADER, 0)) {
 			b->figureSpawnDelay++;
 			if (b->figureSpawnDelay <= spawnDelay) {
 				return;
@@ -585,7 +584,7 @@ static void spawnFigureMarket(int buildingId, building *b)
 			b->figureSpawnDelay = 0;
 			figure *f = figure_create(FIGURE_MARKET_TRADER, xRoad, yRoad, DIR_0_TOP);
 			f->actionState = FigureActionState_125_Roaming;
-			f->buildingId = buildingId;
+			f->buildingId = b->id;
 			b->figureId = f->id;
 			FigureMovement_initRoaming(f);
 		}
@@ -597,11 +596,11 @@ static void spawnFigureMarket(int buildingId, building *b)
 			}
 		} else {
 			Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad);
-			int dstBuildingId = Building_Market_getDestinationGranaryWarehouse(buildingId);
+			int dstBuildingId = Building_Market_getDestinationGranaryWarehouse(b);
 			if (dstBuildingId > 0) {
 				figure *f = figure_create(FIGURE_MARKET_BUYER, xRoad, yRoad, DIR_0_TOP);
 				f->actionState = FigureActionState_145_MarketBuyerGoingToStorage;
-				f->buildingId = buildingId;
+				f->buildingId = b->id;
 				b->figureId2 = f->id;
 				f->destinationBuildingId = dstBuildingId;
 				f->collectingItemId = b->data.market.fetchInventoryId;
@@ -620,7 +619,7 @@ static void spawnFigureMarket(int buildingId, building *b)
 	}
 }
 
-static void setBathhouseGraphic(int buildingId, building *b)
+static void setBathhouseGraphic(building *b)
 {
 	if (!BuildingIsInUse(b)) {
 		return;
@@ -632,26 +631,26 @@ static void setBathhouseGraphic(int buildingId, building *b)
 	}
 	if (b->hasWaterAccess && b->numWorkers) {
 		if (map_desirability_get(b->gridOffset) <= 30) {
-			Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size,
+			Terrain_addBuildingToGrids(b->id, b->x, b->y, b->size,
 				image_group(GROUP_BUILDING_BATHHOUSE_WATER), TERRAIN_BUILDING);
 		} else {
-			Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size,
+			Terrain_addBuildingToGrids(b->id, b->x, b->y, b->size,
 				image_group(GROUP_BUILDING_BATHHOUSE_FANCY_WATER), TERRAIN_BUILDING);
 		}
 	} else {
 		if (map_desirability_get(b->gridOffset) <= 30) {
-			Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size,
+			Terrain_addBuildingToGrids(b->id, b->x, b->y, b->size,
 				image_group(GROUP_BUILDING_BATHHOUSE_NO_WATER), TERRAIN_BUILDING);
 		} else {
-			Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size,
+			Terrain_addBuildingToGrids(b->id, b->x, b->y, b->size,
 				image_group(GROUP_BUILDING_BATHHOUSE_FANCY_NO_WATER), TERRAIN_BUILDING);
 		}
 	}
 }
 
-static void spawnFigureBathhouse(int buildingId, building *b)
+static void spawnFigureBathhouse(building *b)
 {
-	setBathhouseGraphic(buildingId, b);
+	setBathhouseGraphic(b);
 	SET_LABOR_PROBLEM(b);
 	if (!b->hasWaterAccess) {
 		b->showOnProblemOverlay = 2;
@@ -680,14 +679,14 @@ static void spawnFigureBathhouse(int buildingId, building *b)
 			b->figureSpawnDelay = 0;
 			figure *f = figure_create(FIGURE_BATHHOUSE_WORKER, xRoad, yRoad, DIR_0_TOP);
 			f->actionState = FigureActionState_125_Roaming;
-			f->buildingId = buildingId;
+			f->buildingId = b->id;
 			b->figureId = f->id;
 			FigureMovement_initRoaming(f);
 		}
 	}
 }
 
-static void spawnFigureSchool(int buildingId, building *b)
+static void spawnFigureSchool(building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	EXIT_IF_FIGURE(FIGURE_SCHOOL_CHILD);
@@ -715,29 +714,29 @@ static void spawnFigureSchool(int buildingId, building *b)
 
 			figure *child1 = figure_create(FIGURE_SCHOOL_CHILD, xRoad, yRoad, DIR_0_TOP);
 			child1->actionState = FigureActionState_125_Roaming;
-			child1->buildingId = buildingId;
+			child1->buildingId = b->id;
 			b->figureId = child1->id;
 			FigureMovement_initRoaming(child1);
 
 			figure *child2 = figure_create(FIGURE_SCHOOL_CHILD, xRoad, yRoad, DIR_0_TOP);
 			child2->actionState = FigureActionState_125_Roaming;
-			child2->buildingId = buildingId;
+			child2->buildingId = b->id;
 			FigureMovement_initRoaming(child2);
 
 			figure *child3 = figure_create(FIGURE_SCHOOL_CHILD, xRoad, yRoad, DIR_0_TOP);
 			child3->actionState = FigureActionState_125_Roaming;
-			child3->buildingId = buildingId;
+			child3->buildingId = b->id;
 			FigureMovement_initRoaming(child3);
 
 			figure *child4 = figure_create(FIGURE_SCHOOL_CHILD, xRoad, yRoad, DIR_0_TOP);
 			child4->actionState = FigureActionState_125_Roaming;
-			child4->buildingId = buildingId;
+			child4->buildingId = b->id;
 			FigureMovement_initRoaming(child4);
 		}
 	}
 }
 
-static void spawnFigureLibrary(int buildingId, building *b)
+static void spawnFigureLibrary(building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	EXIT_IF_FIGURE(FIGURE_LIBRARIAN);
@@ -764,14 +763,14 @@ static void spawnFigureLibrary(int buildingId, building *b)
 			b->figureSpawnDelay = 0;
 			figure *f = figure_create(FIGURE_LIBRARIAN, xRoad, yRoad, DIR_0_TOP);
 			f->actionState = FigureActionState_125_Roaming;
-			f->buildingId = buildingId;
+			f->buildingId = b->id;
 			b->figureId = f->id;
 			FigureMovement_initRoaming(f);
 		}
 	}
 }
 
-static void spawnFigureAcademy(int buildingId, building *b)
+static void spawnFigureAcademy(building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	EXIT_IF_FIGURE(FIGURE_TEACHER);
@@ -798,14 +797,14 @@ static void spawnFigureAcademy(int buildingId, building *b)
 			b->figureSpawnDelay = 0;
 			figure *f = figure_create(FIGURE_TEACHER, xRoad, yRoad, DIR_0_TOP);
 			f->actionState = FigureActionState_125_Roaming;
-			f->buildingId = buildingId;
+			f->buildingId = b->id;
 			b->figureId = f->id;
 			FigureMovement_initRoaming(f);
 		}
 	}
 }
 
-static void spawnFigureBarber(int buildingId, building *b)
+static void spawnFigureBarber(building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	EXIT_IF_FIGURE(FIGURE_BARBER);
@@ -832,14 +831,14 @@ static void spawnFigureBarber(int buildingId, building *b)
 			b->figureSpawnDelay = 0;
 			figure *f = figure_create(FIGURE_BARBER, xRoad, yRoad, DIR_0_TOP);
 			f->actionState = FigureActionState_125_Roaming;
-			f->buildingId = buildingId;
+			f->buildingId = b->id;
 			b->figureId = f->id;
 			FigureMovement_initRoaming(f);
 		}
 	}
 }
 
-static void spawnFigureDoctor(int buildingId, building *b)
+static void spawnFigureDoctor(building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	EXIT_IF_FIGURE(FIGURE_DOCTOR);
@@ -866,14 +865,14 @@ static void spawnFigureDoctor(int buildingId, building *b)
 			b->figureSpawnDelay = 0;
 			figure *f = figure_create(FIGURE_DOCTOR, xRoad, yRoad, DIR_0_TOP);
 			f->actionState = FigureActionState_125_Roaming;
-			f->buildingId = buildingId;
+			f->buildingId = b->id;
 			b->figureId = f->id;
 			FigureMovement_initRoaming(f);
 		}
 	}
 }
 
-static void spawnFigureHospital(int buildingId, building *b)
+static void spawnFigureHospital(building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	EXIT_IF_FIGURE(FIGURE_SURGEON);
@@ -900,14 +899,14 @@ static void spawnFigureHospital(int buildingId, building *b)
 			b->figureSpawnDelay = 0;
 			figure *f = figure_create(FIGURE_SURGEON, xRoad, yRoad, DIR_0_TOP);
 			f->actionState = FigureActionState_125_Roaming;
-			f->buildingId = buildingId;
+			f->buildingId = b->id;
 			b->figureId = f->id;
 			FigureMovement_initRoaming(f);
 		}
 	}
 }
 
-static void spawnFigureTemple(int buildingId, building *b)
+static void spawnFigureTemple(building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	EXIT_IF_FIGURE(FIGURE_PRIEST);
@@ -936,31 +935,31 @@ static void spawnFigureTemple(int buildingId, building *b)
 			b->figureSpawnDelay = 0;
 			figure *f = figure_create(FIGURE_PRIEST, xRoad, yRoad, DIR_0_TOP);
 			f->actionState = FigureActionState_125_Roaming;
-			f->buildingId = buildingId;
+			f->buildingId = b->id;
 			b->figureId = f->id;
 			FigureMovement_initRoaming(f);
 		}
 	}
 }
 
-static void setSenateGraphic(int buildingId, building *b)
+static void setSenateGraphic(building *b)
 {
 	if (!BuildingIsInUse(b)) {
 		return;
 	}
 	if (map_desirability_get(b->gridOffset) <= 30) {
-		Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size,
+		Terrain_addBuildingToGrids(b->id, b->x, b->y, b->size,
 			image_group(GROUP_BUILDING_SENATE), TERRAIN_BUILDING);
 	} else {
-		Terrain_addBuildingToGrids(buildingId, b->x, b->y, b->size,
+		Terrain_addBuildingToGrids(b->id, b->x, b->y, b->size,
 			image_group(GROUP_BUILDING_SENATE_FANCY), TERRAIN_BUILDING);
 	}
 }
 
-static void spawnFigureSenateForum(int buildingId, building *b)
+static void spawnFigureSenateForum(building *b)
 {
 	if (b->type == BUILDING_SENATE_UPGRADED) {
-		setSenateGraphic(buildingId, b);
+		setSenateGraphic(b);
 	}
 	SET_LABOR_PROBLEM(b);
 	EXIT_IF_FIGURE(FIGURE_TAX_COLLECTOR);
@@ -987,13 +986,13 @@ static void spawnFigureSenateForum(int buildingId, building *b)
 			b->figureSpawnDelay = 0;
 			figure *f = figure_create(FIGURE_TAX_COLLECTOR, xRoad, yRoad, DIR_0_TOP);
 			f->actionState = FigureActionState_40_TaxCollectorCreated;
-			f->buildingId = buildingId;
+			f->buildingId = b->id;
 			b->figureId = f->id;
 		}
 	}
 }
 
-static void spawnFigureMissionPost(int buildingId, building *b)
+static void spawnFigureMissionPost(building *b)
 {
 	EXIT_IF_FIGURE(FIGURE_MISSIONARY);
 	int xRoad, yRoad;
@@ -1005,7 +1004,7 @@ static void spawnFigureMissionPost(int buildingId, building *b)
 				b->figureSpawnDelay = 0;
 				figure *f = figure_create(FIGURE_MISSIONARY, xRoad, yRoad, DIR_0_TOP);
 				f->actionState = FigureActionState_125_Roaming;
-				f->buildingId = buildingId;
+				f->buildingId = b->id;
 				b->figureId = f->id;
 				FigureMovement_initRoaming(f);
 			}
@@ -1013,26 +1012,26 @@ static void spawnFigureMissionPost(int buildingId, building *b)
 	}
 }
 
-static void spawnFigureIndustry(int buildingId, building *b)
+static void spawnFigureIndustry(building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		SPAWN_LABOR_SEEKER(50);
 		EXIT_IF_FIGURE(FIGURE_CART_PUSHER);
-		if (Building_Industry_hasProducedResource(buildingId)) {
-			Building_Industry_startNewProduction(buildingId);
+		if (Building_Industry_hasProducedResource(b)) {
+			Building_Industry_startNewProduction(b);
 			figure *f = figure_create(FIGURE_CART_PUSHER, xRoad, yRoad, DIR_4_BOTTOM);
 			f->actionState = FigureActionState_20_CartpusherInitial;
 			f->resourceId = b->outputResourceId;
-			f->buildingId = buildingId;
+			f->buildingId = b->id;
 			b->figureId = f->id;
 			f->waitTicks = 30;
 		}
 	}
 }
 
-static void spawnFigureWharf(int buildingId, building *b)
+static void spawnFigureWharf(building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	if (b->data.other.boatFigureId) {
@@ -1052,14 +1051,14 @@ static void spawnFigureWharf(int buildingId, building *b)
 			figure *f = figure_create(FIGURE_CART_PUSHER, xRoad, yRoad, DIR_4_BOTTOM);
 			f->actionState = FigureActionState_20_CartpusherInitial;
 			f->resourceId = RESOURCE_MEAT;
-			f->buildingId = buildingId;
+			f->buildingId = b->id;
 			b->figureId = f->id;
 			f->waitTicks = 30;
 		}
 	}
 }
 
-static void spawnFigureShipyard(int buildingId, building *b)
+static void spawnFigureShipyard(building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	int xRoad, yRoad;
@@ -1084,14 +1083,14 @@ static void spawnFigureShipyard(int buildingId, building *b)
 			if (Terrain_canSpawnFishingBoatInWater(b->x, b->y, b->size, &xBoat, &yBoat)) {
 				figure *f = figure_create(FIGURE_FISHING_BOAT, xBoat, yBoat, DIR_0_TOP);
 				f->actionState = FigureActionState_190_FishingBoatCreated;
-				f->buildingId = buildingId;
+				f->buildingId = b->id;
 				b->figureId = f->id;
 			}
 		}
 	}
 }
 
-static void spawnFigureDock(int buildingId, building *b)
+static void spawnFigureDock(building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	int xRoad, yRoad;
@@ -1130,7 +1129,7 @@ static void spawnFigureDock(int buildingId, building *b)
 		} else if (existingDockers < maxDockers) {
 			figure *f = figure_create(FIGURE_DOCKER, xRoad, yRoad, DIR_4_BOTTOM);
 			f->actionState = FigureActionState_132_DockerIdling;
-			f->buildingId = buildingId;
+			f->buildingId = b->id;
 			for (int i = 0; i < 3; i++) {
 				if (!b->data.other.dockFigureIds[i]) {
 					b->data.other.dockFigureIds[i] = f->id;
@@ -1141,7 +1140,7 @@ static void spawnFigureDock(int buildingId, building *b)
 	}
 }
 
-static void spawnFigureNativeHut(int buildingId, building *b)
+static void spawnFigureNativeHut(building *b)
 {
 	map_image_set(b->gridOffset, image_group(GROUP_BUILDING_NATIVE) + (map_random_get(b->gridOffset) & 1));
 	EXIT_IF_FIGURE(FIGURE_INDIGENOUS_NATIVE);
@@ -1152,33 +1151,33 @@ static void spawnFigureNativeHut(int buildingId, building *b)
 			b->figureSpawnDelay = 0;
 			figure *f = figure_create(FIGURE_INDIGENOUS_NATIVE, xOut, yOut, DIR_0_TOP);
 			f->actionState = FigureActionState_158_NativeCreated;
-			f->buildingId = buildingId;
+			f->buildingId = b->id;
 			b->figureId = f->id;
 		}
 	}
 }
 
-static void spawnFigureNativeMeeting(int buildingId, building *b)
+static void spawnFigureNativeMeeting(building *b)
 {
-	Terrain_addBuildingToGrids(buildingId, b->x, b->y, 2,
+	Terrain_addBuildingToGrids(b->id, b->x, b->y, 2,
 		image_group(GROUP_BUILDING_NATIVE) + 2, TERRAIN_BUILDING);
 	if (Data_CityInfo.nativeMissionPostOperational > 0 &&
-		!buildingHasFigureOfType(buildingId, FIGURE_NATIVE_TRADER, 0)) {
-		int xOut, yOut;
-		if (Terrain_getAdjacentRoadOrClearLand(b->x, b->y, b->size, &xOut, &yOut)) {
+		!buildingHasFigureOfType(b, FIGURE_NATIVE_TRADER, 0)) {
+        int xOut, yOut;
+        if (Terrain_getAdjacentRoadOrClearLand(b->x, b->y, b->size, &xOut, &yOut)) {
 			b->figureSpawnDelay++;
 			if (b->figureSpawnDelay > 8) {
 				b->figureSpawnDelay = 0;
 				figure *f = figure_create(FIGURE_NATIVE_TRADER, xOut, yOut, DIR_0_TOP);
 				f->actionState = FigureActionState_162_NativeTraderCreated;
-				f->buildingId = buildingId;
+				f->buildingId = b->id;
 				b->figureId = f->id;
 			}
 		}
 	}
 }
 
-static void spawnFigureBarracks(int buildingId, building *b)
+static void spawnFigureBarracks(building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	int xRoad, yRoad;
@@ -1203,14 +1202,14 @@ static void spawnFigureBarracks(int buildingId, building *b)
 		if (b->figureSpawnDelay > spawnDelay) {
 			b->figureSpawnDelay = 0;
 			Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad);
-			if (!Figure_createTowerSentryFromBarracks(buildingId, xRoad, yRoad)) {
-				Figure_createSoldierFromBarracks(buildingId, xRoad, yRoad);
+			if (!Figure_createTowerSentryFromBarracks(b, xRoad, yRoad)) {
+				Figure_createSoldierFromBarracks(b, xRoad, yRoad);
 			}
 		}
 	}
 }
 
-static void spawnFigureMilitaryAcademy(int buildingId, building *b)
+static void spawnFigureMilitaryAcademy(building *b)
 {
 	SET_LABOR_PROBLEM(b);
 	int xRoad, yRoad;
@@ -1236,108 +1235,108 @@ void FigureGeneration_generateFiguresForBuildings()
 		b->showOnProblemOverlay = 0;
 		// range of building types
 		if (b->type >= BUILDING_HOUSE_SMALL_VILLA && b->type <= BUILDING_HOUSE_LUXURY_PALACE) {
-			spawnFigurePatrician(i, b, &patricianGenerated);
+			spawnFigurePatrician(b, &patricianGenerated);
 		} else if (b->type >= BUILDING_WHEAT_FARM && b->type <= BUILDING_POTTERY_WORKSHOP) {
-			spawnFigureIndustry(i, b);
+			spawnFigureIndustry(b);
 		} else if (b->type >= BUILDING_SENATE && b->type <= BUILDING_FORUM_UPGRADED) {
-			spawnFigureSenateForum(i, b);
+			spawnFigureSenateForum(b);
 		} else if (b->type >= BUILDING_SMALL_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS) {
-			spawnFigureTemple(i, b);
+			spawnFigureTemple(b);
 		} else {
 			// single building type
 			switch (b->type) {
 				case BUILDING_WAREHOUSE:
-					spawnFigureWarehouse(i, b);
+					spawnFigureWarehouse(b);
 					break;
 				case BUILDING_GRANARY:
-					spawnFigureGranary(i, b);
+					spawnFigureGranary(b);
 					break;
 				case BUILDING_TOWER:
-					spawnFigureTower(i, b);
+					spawnFigureTower(b);
 					break;
 				case BUILDING_ENGINEERS_POST:
-					spawnFigureEngineersPost(i, b);
+					spawnFigureEngineersPost(b);
 					break;
 				case BUILDING_PREFECTURE:
-					spawnFigurePrefecture(i, b);
+					spawnFigurePrefecture(b);
 					break;
 				case BUILDING_ACTOR_COLONY:
-					spawnFigureActorColony(i, b);
+					spawnFigureActorColony(b);
 					break;
 				case BUILDING_GLADIATOR_SCHOOL:
-					spawnFigureGladiatorSchool(i, b);
+					spawnFigureGladiatorSchool(b);
 					break;
 				case BUILDING_LION_HOUSE:
-					spawnFigureLionHouse(i, b);
+					spawnFigureLionHouse(b);
 					break;
 				case BUILDING_CHARIOT_MAKER:
-					spawnFigureChariotMaker(i, b);
+					spawnFigureChariotMaker(b);
 					break;
 				case BUILDING_AMPHITHEATER:
-					spawnFigureAmphitheater(i, b);
+					spawnFigureAmphitheater(b);
 					break;
 				case BUILDING_THEATER:
-					spawnFigureTheater(i, b);
+					spawnFigureTheater(b);
 					break;
 				case BUILDING_HIPPODROME:
-					spawnFigureHippodrome(i, b);
+					spawnFigureHippodrome(b);
 					break;
 				case BUILDING_COLOSSEUM:
-					spawnFigureColosseum(i, b);
+					spawnFigureColosseum(b);
 					break;
 				case BUILDING_MARKET:
-					spawnFigureMarket(i, b);
+					spawnFigureMarket(b);
 					break;
 				case BUILDING_BATHHOUSE:
-					spawnFigureBathhouse(i, b);
+					spawnFigureBathhouse(b);
 					break;
 				case BUILDING_SCHOOL:
-					spawnFigureSchool(i, b);
+					spawnFigureSchool(b);
 					break;
 				case BUILDING_LIBRARY:
-					spawnFigureLibrary(i, b);
+					spawnFigureLibrary(b);
 					break;
 				case BUILDING_ACADEMY:
-					spawnFigureAcademy(i, b);
+					spawnFigureAcademy(b);
 					break;
 				case BUILDING_BARBER:
-					spawnFigureBarber(i, b);
+					spawnFigureBarber(b);
 					break;
 				case BUILDING_DOCTOR:
-					spawnFigureDoctor(i, b);
+					spawnFigureDoctor(b);
 					break;
 				case BUILDING_HOSPITAL:
-					spawnFigureHospital(i, b);
+					spawnFigureHospital(b);
 					break;
 				case BUILDING_MISSION_POST:
-					spawnFigureMissionPost(i, b);
+					spawnFigureMissionPost(b);
 					break;
 				case BUILDING_DOCK:
-					spawnFigureDock(i, b);
+					spawnFigureDock(b);
 					break;
 				case BUILDING_WHARF:
-					spawnFigureWharf(i, b);
+					spawnFigureWharf(b);
 					break;
 				case BUILDING_SHIPYARD:
-					spawnFigureShipyard(i, b);
+					spawnFigureShipyard(b);
 					break;
 				case BUILDING_NATIVE_HUT:
-					spawnFigureNativeHut(i, b);
+					spawnFigureNativeHut(b);
 					break;
 				case BUILDING_NATIVE_MEETING:
-					spawnFigureNativeMeeting(i, b);
+					spawnFigureNativeMeeting(b);
 					break;
 				case BUILDING_NATIVE_CROPS:
-					TerrainGraphics_updateNativeCropProgress(i);
+					TerrainGraphics_updateNativeCropProgress(b);
 					break;
 				case BUILDING_FORT:
-					Formation_setNewSoldierRequest(i);
+					Formation_setNewSoldierRequest(b);
 					break;
 				case BUILDING_BARRACKS:
-					spawnFigureBarracks(i, b);
+					spawnFigureBarracks(b);
 					break;
 				case BUILDING_MILITARY_ACADEMY:
-					spawnFigureMilitaryAcademy(i, b);
+					spawnFigureMilitaryAcademy(b);
 					break;
 			}
 		}

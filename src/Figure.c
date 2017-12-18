@@ -175,10 +175,9 @@ static void get_closest_fort_needing_soldiers(const formation *formation, void *
     }
 }
 
-int Figure_createSoldierFromBarracks(int buildingId, int x, int y)
+int Figure_createSoldierFromBarracks(building *barracks, int x, int y)
 {
-    building *b = building_get(buildingId);
-    struct state state = {buildingId, b->loadsStored > 0, 0, 0, 10000};
+    struct state state = {barracks->id, barracks->loadsStored > 0, 0, 0, 10000};
     formation_foreach_legion(get_closest_fort_needing_soldiers, &state);
 	if (state.formation_id > 0) {
 		const formation *m = formation_get(state.formation_id);
@@ -186,8 +185,8 @@ int Figure_createSoldierFromBarracks(int buildingId, int x, int y)
 		f->formationId = state.formation_id;
 		f->formationAtRest = 1;
 		if (m->figure_type == FIGURE_FORT_LEGIONARY) {
-			if (b->loadsStored > 0) {
-				b->loadsStored--;
+			if (barracks->loadsStored > 0) {
+				barracks->loadsStored--;
 			}
 		}
 		int academyId = Formation_getClosestMilitaryAcademy(state.formation_id);
@@ -210,13 +209,12 @@ int Figure_createSoldierFromBarracks(int buildingId, int x, int y)
 	return state.formation_id ? 1 : 0;
 }
 
-int Figure_createTowerSentryFromBarracks(int buildingId, int x, int y)
+int Figure_createTowerSentryFromBarracks(building *barracks, int x, int y)
 {
 	if (Data_Buildings_Extra.barracksTowerSentryRequested <= 0) {
 		return 0;
 	}
 	int towerId = 0;
-    building *barracks = building_get(buildingId);
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		building *b = building_get(i);
 		if (BuildingIsInUse(b) && b->type == BUILDING_TOWER && b->numWorkers > 0 &&

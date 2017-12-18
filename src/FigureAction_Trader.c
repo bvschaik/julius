@@ -71,7 +71,7 @@ static int traderGetBuyResource(int warehouseId, int cityId)
 			city_finance_process_export(trade_price_sell(resource));
 
 			// update graphics
-			Resource_setWarehouseSpaceGraphic(warehouseId, resource);
+			Resource_setWarehouseSpaceGraphic(space, resource);
 			return resource;
 		}
 	}
@@ -158,7 +158,7 @@ static int traderGetSellResource(int warehouseId, int cityId)
 		building *b = building_get(spaceId);
 		if (spaceId > 0 && b->loadsStored > 0 && b->loadsStored < 4 &&
 			b->subtype.warehouseResourceId == resourceToImport) {
-			Resource_addImportedResourceToWarehouseSpace(spaceId, resourceToImport);
+			Resource_addImportedResourceToWarehouseSpace(b, resourceToImport);
 			advanceTradeNextImportResourceCaravan();
 			return resourceToImport;
 		}
@@ -169,7 +169,7 @@ static int traderGetSellResource(int warehouseId, int cityId)
 		spaceId = building_get(spaceId)->nextPartBuildingId;
 		building *b = building_get(spaceId);
 		if (spaceId > 0 && !b->loadsStored) {
-			Resource_addImportedResourceToWarehouseSpace(spaceId, resourceToImport);
+			Resource_addImportedResourceToWarehouseSpace(b, resourceToImport);
 			advanceTradeNextImportResourceCaravan();
 			return resourceToImport;
 		}
@@ -187,7 +187,7 @@ static int traderGetSellResource(int warehouseId, int cityId)
 				spaceId = building_get(spaceId)->nextPartBuildingId;
 				building *b = building_get(spaceId);
 				if (spaceId > 0 && b->loadsStored < 4 && b->subtype.warehouseResourceId == resourceToImport) {
-					Resource_addImportedResourceToWarehouseSpace(spaceId, resourceToImport);
+					Resource_addImportedResourceToWarehouseSpace(b, resourceToImport);
 					return resourceToImport;
 				}
 			}

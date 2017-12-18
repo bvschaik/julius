@@ -1,9 +1,11 @@
 #ifndef FORMATION_H
 #define FORMATION_H
 
+#include "building/building.h"
+
 void Formation_clearInvasionInfo();
 
-int Formation_createLegion(int buildingId);
+int Formation_createLegion(building *fort);
 
 void Formation_deleteFortAndBanner(int formationId);
 
@@ -13,7 +15,7 @@ void Formation_legionMoveTo(int formationId, int x, int y);
 void Formation_calculateLegionTotals();
 int Formation_anyLegionNeedsSoldiers();
 int Formation_getClosestMilitaryAcademy(int formationId);
-void Formation_setNewSoldierRequest(int buildingId);
+void Formation_setNewSoldierRequest(building *fort);
 
 void Formation_updateAfterDeath(int formationId);
 

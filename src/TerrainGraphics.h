@@ -1,6 +1,8 @@
 #ifndef TERRAINGRAPHICS_H
 #define TERRAINGRAPHICS_H
 
+#include "building/building.h"
+
 void TerrainGraphics_updateAllRocks();
 void TerrainGraphics_updateAllGardens();
 void TerrainGraphics_determineGardensFromGraphicIds();
@@ -20,7 +22,7 @@ void TerrainGraphics_updateAreaRoads(int x, int y, int size);
 
 void TerrainGraphics_setBuildingAreaRubble(int buildingId, int x, int y, int size);
 void TerrainGraphics_setBuildingFarm(int buildingId, int x, int y, int cropGraphicId, int progress);
-void TerrainGraphics_updateNativeCropProgress(int buildingId);
+void TerrainGraphics_updateNativeCropProgress(building *b);
 
 void TerrainGraphics_setTileWater(int x, int y);
 void TerrainGraphics_setTileEarthquake(int x, int y);

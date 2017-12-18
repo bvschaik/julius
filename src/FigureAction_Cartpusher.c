@@ -150,8 +150,7 @@ void FigureAction_cartpusher(figure *f)
 	f->cartGraphicId = 0;
 	int roadNetworkId = map_road_network_get(f->gridOffset);
 	f->terrainUsage = FigureTerrainUsage_Roads;
-	int buildingId = f->buildingId;
-	building *b = building_get(buildingId);
+	building *b = building_get(f->buildingId);
 	
 	switch (f->actionState) {
 		case FigureActionState_150_Attack:

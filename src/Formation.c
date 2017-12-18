@@ -27,17 +27,16 @@ void Formation_clearInvasionInfo()
     enemy_armies_clear();
 }
 
-int Formation_createLegion(int buildingId)
+int Formation_createLegion(building *fort)
 {
 	Formation_calculateLegionTotals();
 
-    building *b = building_get(buildingId);
-    int formation_id = formation_create_legion(buildingId, b->x, b->y, b->subtype.fortFigureType);
+    int formation_id = formation_create_legion(fort->id, fort->x, fort->y, fort->subtype.fortFigureType);
     if (!formation_id) {
         return 0;
     }
 	figure *standard = figure_create(FIGURE_FORT_STANDARD, 0, 0, 0);
-	standard->buildingId = buildingId;
+	standard->buildingId = fort->id;
 	standard->formationId = formation_id;
     formation_set_standard(formation_id, standard->id);
 
@@ -193,16 +192,15 @@ int Formation_getClosestMilitaryAcademy(int formationId)
 	return minBuildingId;
 }
 
-void Formation_setNewSoldierRequest(int buildingId)
+void Formation_setNewSoldierRequest(building *fort)
 {
-    building *b = building_get(buildingId);
-    const formation *m = formation_get(b->formationId);
+    const formation *m = formation_get(fort->formationId);
 	formation_set_recruit_type(m->id, LEGION_RECRUIT_NONE);
 	if (!m->is_at_fort || m->cursed_by_mars || m->num_figures == m->max_figures) {
 		return;
 	}
 	if (m->num_figures < m->max_figures) {
-		int type = b->subtype.fortFigureType;
+		int type = fort->subtype.fortFigureType;
 		if (type == FIGURE_FORT_LEGIONARY) {
 			formation_set_recruit_type(m->id, LEGION_RECRUIT_LEGIONARY);
 		} else if (type == FIGURE_FORT_JAVELIN) {

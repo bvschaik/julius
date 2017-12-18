@@ -244,19 +244,15 @@ int Resource_getGranaryForGettingFood(int srcBuildingId, int *xDst, int *yDst)
 	return minBuildingId;
 }
 
-int Resource_getAmountStoredInGranary(int buildingId, int resource)
+int Resource_getAmountStoredInGranary(building *granary, int resource)
 {
-	if (buildingId <= 0) {
-		return 0;
-	}
 	if (!isFood(resource)) {
 		return 0;
 	}
-	building *b = building_get(buildingId);
-	if (b->type != BUILDING_GRANARY) {
+	if (granary->type != BUILDING_GRANARY) {
 		return 0;
 	}
-	return b->data.storage.resourceStored[resource];
+	return granary->data.storage.resourceStored[resource];
 }
 
 int Resource_addToGranary(int buildingId, int resource, int countAsProduced)
@@ -309,24 +305,23 @@ int Resource_removeFromGranary(int buildingId, int resource, int amount)
 	return toRemove;
 }
 
-int Resource_determineGranaryWorkerTask(int buildingId)
+int Resource_determineGranaryWorkerTask(building *granary)
 {
-	building *b = building_get(buildingId);
-	int pctWorkers = calc_percentage(b->numWorkers, model_get_building(b->type)->laborers);
+	int pctWorkers = calc_percentage(granary->numWorkers, model_get_building(granary->type)->laborers);
 	if (pctWorkers < 50) {
 		return -1;
 	}
-	const building_storage *s = building_storage_get(b->storage_id);
+	const building_storage *s = building_storage_get(granary->storage_id);
 	if (s->empty_all) {
 		// bring food to another granary
 		for (int i = RESOURCE_MIN_FOOD; i < RESOURCE_MAX_FOOD; i++) {
-			if (b->data.storage.resourceStored[i]) {
+			if (granary->data.storage.resourceStored[i]) {
 				return i;
 			}
 		}
 		return -1;
 	}
-	if (b->data.storage.resourceStored[RESOURCE_NONE] <= 0) {
+	if (granary->data.storage.resourceStored[RESOURCE_NONE] <= 0) {
 		return -1; // granary full, nothing to get
 	}
 	if (s->resource_state[RESOURCE_WHEAT] == BUILDING_STORAGE_STATE_GETTING && nonGettingGranaries.totalStorageWheat > 100) {

@@ -86,7 +86,7 @@ static void addToTerrainFort(int type, int buildingId, int x, int y, int size)
     building *b = building_get(buildingId);
 	b->prevPartBuildingId = 0;
 	Terrain_addBuildingToGrids(buildingId, x, y, size, image_group(GROUP_BUILDING_FORT), TERRAIN_BUILDING);
-	int formationId = Formation_createLegion(buildingId);
+	int formationId = Formation_createLegion(b);
 	b->formationId = formationId;
 	if (type == BUILDING_FORT_LEGIONARIES) {
 		b->subtype.fortFigureType = FIGURE_FORT_LEGIONARY;

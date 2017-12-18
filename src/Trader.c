@@ -406,7 +406,7 @@ int Trader_tryImportResource(int buildingId, int resourceId, int cityId)
             building *b = building_get(spaceId);
             if (b->loadsStored && b->loadsStored < 4 && b->subtype.warehouseResourceId == resourceId) {
                 trade_route_increase_traded(routeId, resourceId);
-                Resource_addImportedResourceToWarehouseSpace(spaceId, resourceId);
+                Resource_addImportedResourceToWarehouseSpace(b, resourceId);
                 return 1;
             }
 		}
@@ -415,10 +415,13 @@ int Trader_tryImportResource(int buildingId, int resourceId, int cityId)
 	spaceId = buildingId;
 	for (int i = 0; i < 8; i++) {
 		spaceId = building_get(spaceId)->nextPartBuildingId;
-		if (spaceId > 0 && building_get(spaceId)->subtype.warehouseResourceId == RESOURCE_NONE) {
-			trade_route_increase_traded(routeId, resourceId);
-			Resource_addImportedResourceToWarehouseSpace(spaceId, resourceId);
-			return 1;
+		if (spaceId > 0) {
+            building *b = building_get(spaceId);
+            if (b->subtype.warehouseResourceId == RESOURCE_NONE) {
+                trade_route_increase_traded(routeId, resourceId);
+                Resource_addImportedResourceToWarehouseSpace(b, resourceId);
+                return 1;
+            }
 		}
 	}
 	return 0;
@@ -437,7 +440,7 @@ int Trader_tryExportResource(int buildingId, int resourceId, int cityId)
             building *b = building_get(spaceId);
 			if (b->loadsStored && b->subtype.warehouseResourceId == resourceId) {
 				trade_route_increase_traded(empire_city_get_route_id(cityId), resourceId);
-				Resource_removeExportedResourceFromWarehouseSpace(spaceId, resourceId);
+				Resource_removeExportedResourceFromWarehouseSpace(b, resourceId);
 				return 1;
 			}
 		}

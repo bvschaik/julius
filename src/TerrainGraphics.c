@@ -641,9 +641,8 @@ void TerrainGraphics_setBuildingFarm(int buildingId, int x, int y, int cropGraph
 	setFarmCropTile(buildingId, x, y, 2, 0, cropGraphicId, growth);
 }
 
-void TerrainGraphics_updateNativeCropProgress(int buildingId)
+void TerrainGraphics_updateNativeCropProgress(building *b)
 {
-	building *b = building_get(buildingId);
 	b->data.industry.progress++;
 	if (b->data.industry.progress >= 5) {
 		b->data.industry.progress = 0;
