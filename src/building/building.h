@@ -176,6 +176,8 @@ typedef struct {
         char nativeAnger;
     } sentiment;
     unsigned char showOnProblemOverlay;
+
+    int id;
 } building;
 
 building *building_get(int id);

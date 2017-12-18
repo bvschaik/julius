@@ -18,6 +18,7 @@ void building_clear_all()
 {
     for (int i = 0; i < MAX_BUILDINGS; i++) {
         memset(&Data_Buildings[i], 0, sizeof(building));
+        Data_Buildings[i].id = i;
     }
 }
 
@@ -42,6 +43,6 @@ void building_load_state(buffer *buf)
 {
     for (int i = 0; i < MAX_BUILDINGS; i++) {
         building_load(&Data_Buildings[i], buf);
-        //Data_Buildings[i].id = i;
+        Data_Buildings[i].id = i;
     }
 }
