@@ -9,6 +9,17 @@ building *building_get(int id)
     return &Data_Buildings[id];
 }
 
+building *building_main(building *b)
+{
+    for (int guard = 0; guard < 9; guard++) {
+        if (b->prevPartBuildingId <= 0) {
+            return b;
+        }
+        b = &Data_Buildings[b->prevPartBuildingId];
+    }
+    return &Data_Buildings[0];
+}
+
 building *building_next(building *b)
 {
     return &Data_Buildings[b->nextPartBuildingId];

@@ -36,7 +36,7 @@ static int provideEngineerCoverage(int x, int y, int *maxDamageRiskSeen)
 	int serviced = 0;
 	FOR_XY_RADIUS {
 		if (b->type == BUILDING_HIPPODROME) {
-			b = building_get(Building_getMainBuildingId(building_id));
+			b = building_main(b);
 		}
 		if (b->damageRisk > *maxDamageRiskSeen) {
 			*maxDamageRiskSeen = b->damageRisk;
@@ -54,7 +54,7 @@ static int providePrefectFireCoverage(int x, int y)
 	int serviced = 0;
 	FOR_XY_RADIUS {
 		if (b->type == BUILDING_HIPPODROME) {
-			b = building_get(Building_getMainBuildingId(building_id));
+			b = building_main(b);
 		}
 		b->fireRisk = 0;
 		if (b->houseSize && b->housePopulation > 0) {

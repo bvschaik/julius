@@ -204,7 +204,7 @@ void UI_BuildingInfo_init()
 				break;
 			case BUILDING_WAREHOUSE_SPACE:
 			case BUILDING_HIPPODROME:
-				context.buildingId = Building_getMainBuildingId(context.buildingId);
+				context.buildingId = building_main(b)->id;
 				break;
 			case BUILDING_BARRACKS:
 				context.barracksSoldiersRequested = Formation_anyLegionNeedsSoldiers();

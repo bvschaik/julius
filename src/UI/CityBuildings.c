@@ -246,8 +246,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 					Graphics_drawImageMasked(image_group(GROUP_BUILDING_THEATER_SHOW),
 						xGraphic + 34, yGraphic - 22, colorMask);
 				}
-				if (b->type == BUILDING_HIPPODROME &&
-					building_get(Building_getMainBuildingId(buildingId))->numWorkers > 0 &&
+				if (b->type == BUILDING_HIPPODROME && building_main(b)->numWorkers > 0 &&
 					Data_CityInfo.entertainmentHippodromeHasShow) {
 					int subtype = b->subtype.orientation;
 					if ((subtype == 0 || subtype == 3) && Data_CityInfo.population > 2000) {

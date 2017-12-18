@@ -48,7 +48,7 @@ void Resource_calculateWarehouseStocks()
 		if (!BuildingIsInUse(b) || b->type != BUILDING_WAREHOUSE_SPACE) {
 			continue;
 		}
-		building *warehouse = building_get(Building_getMainBuildingId(i));
+		building *warehouse = building_main(b);
 		if (warehouse->hasRoadAccess) {
 			b->hasRoadAccess = warehouse->hasRoadAccess;
 			if (b->subtype.warehouseResourceId) {

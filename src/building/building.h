@@ -182,6 +182,8 @@ typedef struct {
 
 building *building_get(int id);
 
+building *building_main(building *b);
+
 building *building_next(building *b);
 
 void building_delete(building *b);

@@ -251,18 +251,6 @@ void Building_GameTick_updateState()
 	}
 }
 
-int Building_getMainBuildingId(int buildingId)
-{
-	for (int guard = 0; guard < 9; guard++) {
-        building *b = building_get(buildingId);
-		if (b->prevPartBuildingId <= 0) {
-			return buildingId;
-		}
-		buildingId = b->prevPartBuildingId;
-	}
-	return 0;
-}
-
 void Building_collapseOnFire(int buildingId, int hasPlague)
 {
 	building *b = building_get(buildingId);
@@ -670,7 +658,7 @@ void Building_GameTick_checkAccessToRome()
 			}
 		} else if (b->type == BUILDING_WAREHOUSE_SPACE) {
 			b->distanceFromEntry = 0;
-			building *mainBuilding = building_get(Building_getMainBuildingId(i));
+			building *mainBuilding = building_main(b);
 			b->roadNetworkId = mainBuilding->roadNetworkId;
 			b->distanceFromEntry = mainBuilding->distanceFromEntry;
 			b->roadAccessX = mainBuilding->roadAccessX;

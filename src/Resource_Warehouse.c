@@ -98,11 +98,10 @@ int Resource_getWarehouseForStoringResource(
 		if (!b->hasRoadAccess || b->distanceFromEntry <= 0 || b->roadNetworkId != roadNetworkId) {
 			continue;
 		}
-		int main_building_id = Building_getMainBuildingId(i);
-		if (srcBuildingId == main_building_id) {
+		building *dst = building_main(b);
+		if (srcBuildingId == dst->id) {
 			continue;
 		}
-		building *dst = building_get(main_building_id);
 		const building_storage *s = building_storage_get(dst->storage_id);
 		if (s->resource_state[resource] == BUILDING_STORAGE_STATE_NOT_ACCEPTING || s->empty_all) {
 			continue;
@@ -127,8 +126,7 @@ int Resource_getWarehouseForStoringResource(
 			minBuildingId = i;
 		}
 	}
-	int resultBuildingId = Building_getMainBuildingId(minBuildingId);
-	building *b = building_get(resultBuildingId);
+	building *b = building_main(building_get(minBuildingId));
 	if (b->hasRoadAccess == 1) {
 		*xDst = b->x;
 		*yDst = b->y;
@@ -199,8 +197,7 @@ int Resource_addToWarehouse(int buildingId, int resource)
 	}
 	if (findSpace) {
 		int spaceFound = 0;
-		buildingId = Building_getMainBuildingId(buildingId);
-		building *space = building_get(buildingId);
+		building *space = building_main(b);
 		for (int i = 0; i < 8; i++) {
 			space = building_next(space);
 			if (!space->id) {

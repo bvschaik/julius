@@ -12,8 +12,6 @@ void Building_deleteData(int buildingId);
 
 void Building_GameTick_updateState();
 
-int Building_getMainBuildingId(int buildingId);
-
 int Building_collapseFirstOfType(int buildingType);
 void Building_collapseLastPlaced();
 void Building_collapseOnFire(int buildingId, int hasPlague);
