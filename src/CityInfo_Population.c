@@ -59,7 +59,7 @@ void CityInfo_Population_changeHappiness(int amount)
 {
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-		if (BuildingIsInUse(i) && b->houseSize) {
+		if (BuildingIsInUse(b) && b->houseSize) {
 			b->sentiment.houseHappiness += amount;
 			b->sentiment.houseHappiness = calc_bound(b->sentiment.houseHappiness, 0, 100);
 		}
@@ -70,7 +70,7 @@ void CityInfo_Population_setMaxHappiness(int max)
 {
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-		if (BuildingIsInUse(i) && b->houseSize) {
+		if (BuildingIsInUse(b) && b->houseSize) {
 			if (b->sentiment.houseHappiness > max) {
 				b->sentiment.houseHappiness = max;
 			}
@@ -180,7 +180,7 @@ void CityInfo_Population_calculateSentiment()
     int defaultSentiment = difficulty_sentiment();
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		building *b = building_get(i);
-		if (!BuildingIsInUse(i) || !b->houseSize) {
+		if (!BuildingIsInUse(b) || !b->houseSize) {
 			continue;
 		}
 		if (!b->housePopulation) {
@@ -249,7 +249,7 @@ void CityInfo_Population_calculateSentiment()
 	int totalHouses = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-		if (BuildingIsInUse(i) && b->houseSize && b->housePopulation) {
+		if (BuildingIsInUse(b) && b->houseSize && b->housePopulation) {
 			totalHouses++;
 			totalSentiment += b->sentiment.houseHappiness;
 		}
@@ -364,7 +364,7 @@ void CityInfo_Population_updateHealthRate()
 	int healthyPopulation = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		building *b = building_get(i);
-		if (!BuildingIsInUse(i) || !b->houseSize || !b->housePopulation) {
+		if (!BuildingIsInUse(b) || !b->houseSize || !b->housePopulation) {
 			continue;
 		}
 		totalPopulation += b->housePopulation;
@@ -435,7 +435,7 @@ static void healthCauseDisease(int totalPeople)
 	// kill people who don't have access to a doctor
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		building *b = building_get(i);
-		if (BuildingIsInUse(i) && b->houseSize && b->housePopulation) {
+		if (BuildingIsInUse(b) && b->houseSize && b->housePopulation) {
 			if (!b->data.house.clinic) {
 				peopleToKill -= b->housePopulation;
 				Building_collapseOnFire(i, 1);
@@ -448,7 +448,7 @@ static void healthCauseDisease(int totalPeople)
 	// kill people in tents
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		building *b = building_get(i);
-		if (BuildingIsInUse(i) && b->houseSize && b->housePopulation) {
+		if (BuildingIsInUse(b) && b->houseSize && b->housePopulation) {
 			if (b->subtype.houseLevel <= HOUSE_LARGE_TENT) {
 				peopleToKill -= b->housePopulation;
 				Building_collapseOnFire(i, 1);
@@ -461,7 +461,7 @@ static void healthCauseDisease(int totalPeople)
 	// kill anyone
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		building *b = building_get(i);
-		if (BuildingIsInUse(i) && b->houseSize && b->housePopulation) {
+		if (BuildingIsInUse(b) && b->houseSize && b->housePopulation) {
 			peopleToKill -= b->housePopulation;
 			Building_collapseOnFire(i, 1);
 			if (peopleToKill <= 0) {

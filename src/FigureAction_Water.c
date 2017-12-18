@@ -27,7 +27,7 @@ static const int flotsamType3[] = {
 void FigureAction_fishingBoat(figure *f)
 {
 	building *b = building_get(f->buildingId);
-	if (!BuildingIsInUse(f->buildingId)) {
+	if (!BuildingIsInUse(b)) {
 		f->state = FigureState_Dead;
 	}
 	if (f->actionState != FigureActionState_190_FishingBoatCreated && b->data.other.boatFigureId != f->id) {

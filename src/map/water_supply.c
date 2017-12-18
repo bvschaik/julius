@@ -33,7 +33,7 @@ void map_water_supply_update_houses()
     building_list_small_clear();
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (!BuildingIsInUse(i)) {
+        if (!BuildingIsInUse(b)) {
             continue;
         }
         if (b->type == BUILDING_WELL) {
@@ -137,7 +137,7 @@ void map_water_supply_update_reservoir_fountain()
     // mark reservoirs next to water
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (BuildingIsInUse(i) && b->type == BUILDING_RESERVOIR) {
+        if (BuildingIsInUse(b) && b->type == BUILDING_RESERVOIR) {
             building_list_large_add(i);
             if (Terrain_existsTileWithinAreaWithType(b->x - 1, b->y - 1, 5, TERRAIN_WATER)) {
                 b->hasWaterAccess = 2;
@@ -175,7 +175,7 @@ void map_water_supply_update_reservoir_fountain()
     // fountains
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (!BuildingIsInUse(i) || b->type != BUILDING_FOUNTAIN) {
+        if (!BuildingIsInUse(b) || b->type != BUILDING_FOUNTAIN) {
             continue;
         }
         int des = map_desirability_get(b->gridOffset);

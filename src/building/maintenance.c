@@ -33,7 +33,7 @@ void building_maintenance_update_burning_ruins()
     building_list_burning_clear();
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (!BuildingIsInUse(i) || b->type != BUILDING_BURNING_RUIN) {
+        if (!BuildingIsInUse(b) || b->type != BUILDING_BURNING_RUIN) {
             continue;
         }
         if (b->fireDuration < 0) {
@@ -109,7 +109,7 @@ int building_maintenance_get_closest_burning_ruin(int x, int y, int *distance)
     for (int i = 0; i < burning_size; i++) {
         int building_id = burning[i];
         building *b = building_get(building_id);
-        if (BuildingIsInUse(building_id) && b->type == BUILDING_BURNING_RUIN && !b->ruinHasPlague && b->distanceFromEntry) {
+        if (BuildingIsInUse(b) && b->type == BUILDING_BURNING_RUIN && !b->ruinHasPlague && b->distanceFromEntry) {
             int dist = calc_maximum_distance(x, y, b->x, b->y);
             if (b->figureId4) {
                 if (dist < min_occupied_dist) {
@@ -165,7 +165,7 @@ void building_maintenance_check_fire_collapse()
     int random_global = random_byte() & 7;
     for (int i = 1; i <= Data_Buildings_Extra.highestBuildingIdInUse; i++) {
         building *b = building_get(i);
-        if (!BuildingIsInUse(i) || b->fireProof) {
+        if (!BuildingIsInUse(b) || b->fireProof) {
             continue;
         }
         if (b->type == BUILDING_HIPPODROME && b->prevPartBuildingId) {

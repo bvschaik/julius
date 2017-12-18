@@ -188,7 +188,7 @@ int Trader_getClosestWarehouseForTradeCaravan(const figure *f, int x, int y, int
 	int minBuildingId = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-		if (!BuildingIsInUse(i) || b->type != BUILDING_WAREHOUSE) {
+		if (!BuildingIsInUse(b) || b->type != BUILDING_WAREHOUSE) {
 			continue;
 		}
 		if (!b->hasRoadAccess || b->distanceFromEntry <= 0) {
@@ -277,7 +277,7 @@ int Trader_getClosestWarehouseForImportDocker(int x, int y, int cityId, int dist
 	int resourceId = Data_CityInfo.tradeNextImportResourceDocker;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-		if (!BuildingIsInUse(i) || b->type != BUILDING_WAREHOUSE) {
+		if (!BuildingIsInUse(b) || b->type != BUILDING_WAREHOUSE) {
 			continue;
 		}
 		if (!b->hasRoadAccess || b->distanceFromEntry <= 0) {
@@ -350,7 +350,7 @@ int Trader_getClosestWarehouseForExportDocker(int x, int y, int cityId, int dist
 	
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-		if (!BuildingIsInUse(i) || b->type != BUILDING_WAREHOUSE) {
+		if (!BuildingIsInUse(b) || b->type != BUILDING_WAREHOUSE) {
 			continue;
 		}
 		if (!b->hasRoadAccess || b->distanceFromEntry <= 0) {

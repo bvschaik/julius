@@ -99,7 +99,7 @@ void CityInfo_Culture_calculateEntertainment()
 	int numHouses = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		building *b = building_get(i);
-		if (BuildingIsInUse(i) && b->houseSize) {
+		if (BuildingIsInUse(b) && b->houseSize) {
 			numHouses++;
 			Data_CityInfo.citywideAverageEntertainment += b->data.house.entertainment;
 			Data_CityInfo.citywideAverageReligion += b->data.house.numGods;
@@ -115,7 +115,7 @@ void CityInfo_Culture_calculateEntertainment()
 	}
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		building *b = building_get(i);
-		if (!BuildingIsInUse(i)) {
+		if (!BuildingIsInUse(b)) {
 			continue;
 		}
 		switch (b->type) {

@@ -19,7 +19,7 @@ static int determineDestination(int x, int y, int btype1, int btype2)
 	
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		building *b = building_get(i);
-		if (!BuildingIsInUse(i)) {
+		if (!BuildingIsInUse(b)) {
 			continue;
 		}
 		if (b->type != btype1 && b->type != btype2) {

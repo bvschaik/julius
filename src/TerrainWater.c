@@ -205,7 +205,7 @@ int Terrain_Water_getWharfTileForNewFishingBoat(int figureId, int *xTile, int *y
 	int wharfId = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-		if (BuildingIsInUse(i) && b->type == BUILDING_WHARF) {
+		if (BuildingIsInUse(b) && b->type == BUILDING_WHARF) {
 			int wharfBoatId = b->data.other.boatFigureId;
 			if (!wharfBoatId || wharfBoatId == figureId) {
 				wharfId = i;

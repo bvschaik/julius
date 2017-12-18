@@ -81,7 +81,7 @@ int BuildingHouse_canExpand(building *b, int numTiles)
                 building *other_house = building_get(tileBuildingId);
 				if (tileBuildingId == b->id) {
 					okTiles++;
-				} else if (BuildingIsInUse(tileBuildingId) && other_house->houseSize) {
+				} else if (BuildingIsInUse(other_house) && other_house->houseSize) {
 					if (other_house->subtype.houseLevel <= b->subtype.houseLevel) {
 						okTiles++;
 					}
@@ -107,7 +107,7 @@ int BuildingHouse_canExpand(building *b, int numTiles)
                 building *other_house = building_get(tileBuildingId);
 				if (tileBuildingId == b->id) {
 					okTiles++;
-				} else if (BuildingIsInUse(tileBuildingId) && other_house->houseSize) {
+				} else if (BuildingIsInUse(other_house) && other_house->houseSize) {
 					if (other_house->subtype.houseLevel <= b->subtype.houseLevel) {
 						okTiles++;
 					}
@@ -133,7 +133,7 @@ int BuildingHouse_canExpand(building *b, int numTiles)
                 building *other_house = building_get(tileBuildingId);
 				if (tileBuildingId == b->id) {
 					okTiles++;
-				} else if (BuildingIsInUse(tileBuildingId) && other_house->houseSize) {
+				} else if (BuildingIsInUse(other_house) && other_house->houseSize) {
 					if (other_house->subtype.houseLevel <= b->subtype.houseLevel) {
 						okTiles++;
 					}
@@ -191,7 +191,7 @@ void BuildingHouse_checkMerge(building *b)
             building *other_house = building_get(tileBuildingId);
 			if (tileBuildingId == b->id) {
 				numHouseTiles++;
-			} else if (BuildingIsInUse(tileBuildingId) && other_house->houseSize &&
+			} else if (BuildingIsInUse(other_house) && other_house->houseSize &&
 					other_house->subtype.houseLevel == b->subtype.houseLevel &&
 					!other_house->houseIsMerged) {
 				numHouseTiles++;

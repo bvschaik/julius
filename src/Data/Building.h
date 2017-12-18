@@ -20,7 +20,7 @@ enum {
 #define BuildingIsWorkshop(type) ((type) >= BUILDING_WINE_WORKSHOP && (type) <= BUILDING_POTTERY_WORKSHOP)
 #define BuildingIsEntertainment(type) ((type) >= BUILDING_THEATER && (type) <= BUILDING_CHARIOT_MAKER)
 
-#define BuildingIsInUse(buildingId) (building_get(buildingId)->state == BuildingState_InUse)
+#define BuildingIsInUse(b) ((b)->state == BuildingState_InUse)
 
 extern struct _Data_Buildings_Extra {
 	int highestBuildingIdInUse;

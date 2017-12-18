@@ -34,7 +34,7 @@ void Resource_calculateWarehouseStocks()
 	}
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		building *b = building_get(i);
-		if (BuildingIsInUse(i) && b->type == BUILDING_WAREHOUSE) {
+		if (BuildingIsInUse(b) && b->type == BUILDING_WAREHOUSE) {
 			b->hasRoadAccess = 0;
 			if (Terrain_hasRoadAccess(b->x, b->y, b->size, 0, 0)) {
 				b->hasRoadAccess = 1;
@@ -45,7 +45,7 @@ void Resource_calculateWarehouseStocks()
 	}
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		building *b = building_get(i);
-		if (!BuildingIsInUse(i) || b->type != BUILDING_WAREHOUSE_SPACE) {
+		if (!BuildingIsInUse(b) || b->type != BUILDING_WAREHOUSE_SPACE) {
 			continue;
 		}
 		building *warehouse = building_get(Building_getMainBuildingId(i));
@@ -71,7 +71,7 @@ void Resource_calculateWorkshopStocks()
 	}
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		building *b = building_get(i);
-		if (!BuildingIsInUse(i) || !BuildingIsWorkshop(b->type)) {
+		if (!BuildingIsInUse(b) || !BuildingIsWorkshop(b->type)) {
 			continue;
 		}
 		b->hasRoadAccess = 0;
@@ -108,7 +108,7 @@ int Resource_getWorkshopWithRoomForRawMaterial(
 	int minBuildingId = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		building *b = building_get(i);
-		if (!BuildingIsInUse(i) || !BuildingIsWorkshop(b->type)) {
+		if (!BuildingIsInUse(b) || !BuildingIsWorkshop(b->type)) {
 			continue;
 		}
 		if (!b->hasRoadAccess || b->distanceFromEntry <= 0) {
@@ -151,7 +151,7 @@ int Resource_getWorkshopForRawMaterial(
 	int minBuildingId = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		building *b = building_get(i);
-		if (!BuildingIsInUse(i) || !BuildingIsWorkshop(b->type)) {
+		if (!BuildingIsInUse(b) || !BuildingIsWorkshop(b->type)) {
 			continue;
 		}
 		if (!b->hasRoadAccess || b->distanceFromEntry <= 0) {

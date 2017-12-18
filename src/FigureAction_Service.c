@@ -22,7 +22,7 @@ void FigureAction_taxCollector(figure *f)
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 512;
-	if (!BuildingIsInUse(f->buildingId) || b->figureId != f->id) {
+	if (!BuildingIsInUse(b) || b->figureId != f->id) {
 		f->state = FigureState_Dead;
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);
@@ -99,7 +99,7 @@ void FigureAction_engineer(figure *f)
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 640;
-	if (!BuildingIsInUse(f->buildingId) || b->figureId != f->id) {
+	if (!BuildingIsInUse(b) || b->figureId != f->id) {
 		f->state = FigureState_Dead;
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);
@@ -277,7 +277,7 @@ static void prefectExtinguishFire(figure *f)
 {
 	building *burn = building_get(f->destinationBuildingId);
 	int distance = calc_maximum_distance(f->x, f->y, burn->x, burn->y);
-	if (BuildingIsInUse(f->destinationBuildingId) && burn->type == BUILDING_BURNING_RUIN && distance < 2) {
+	if (BuildingIsInUse(burn) && burn->type == BUILDING_BURNING_RUIN && distance < 2) {
 		burn->fireDuration = 32;
 		sound_effect_play(SOUND_EFFECT_FIRE_SPLASH);
 	} else {
@@ -324,7 +324,7 @@ void FigureAction_prefect(figure *f)
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 640;
-	if (!BuildingIsInUse(f->buildingId) || b->figureId != f->id) {
+	if (!BuildingIsInUse(b) || b->figureId != f->id) {
 		f->state = FigureState_Dead;
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);
@@ -480,7 +480,7 @@ void FigureAction_worker(figure *f)
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 384;
     building *b = building_get(f->buildingId);
-	if (!BuildingIsInUse(f->buildingId) || b->figureId != f->id) {
+	if (!BuildingIsInUse(b) || b->figureId != f->id) {
 		f->state = FigureState_Dead;
 	}
 }

@@ -49,7 +49,7 @@ static void FigureAction_culture(figure *f, int graphicCategory)
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 384;
 	building *b = building_get(f->buildingId);
-	if (!BuildingIsInUse(f->buildingId) || b->figureId != f->id) {
+	if (!BuildingIsInUse(b) || b->figureId != f->id) {
 		f->state = FigureState_Dead;
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);
@@ -74,7 +74,7 @@ void FigureAction_schoolChild(figure *f)
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 96;
 	building *b = building_get(f->buildingId);
-	if (!BuildingIsInUse(f->buildingId) || b->type != BUILDING_SCHOOL) {
+	if (!BuildingIsInUse(b) || b->type != BUILDING_SCHOOL) {
 		f->state = FigureState_Dead;
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);
@@ -139,7 +139,7 @@ void FigureAction_missionary(figure *f)
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 192;
 	building *b = building_get(f->buildingId);
-	if (!BuildingIsInUse(f->buildingId) || b->figureId != f->id) {
+	if (!BuildingIsInUse(b) || b->figureId != f->id) {
 		f->state = FigureState_Dead;
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);
@@ -152,7 +152,7 @@ void FigureAction_patrician(figure *f)
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 128;
-	if (!BuildingIsInUse(f->buildingId)) {
+	if (!BuildingIsInUse(building_get(f->buildingId))) {
 		f->state = FigureState_Dead;
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);
@@ -166,7 +166,7 @@ void FigureAction_laborSeeker(figure *f)
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 384;
 	building *b = building_get(f->buildingId);
-	if (!BuildingIsInUse(f->buildingId) || b->figureId2 != f->id) {
+	if (!BuildingIsInUse(b) || b->figureId2 != f->id) {
 		f->state = FigureState_Dead;
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);
@@ -180,7 +180,7 @@ void FigureAction_marketTrader(figure *f)
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 384;
 	building *b = building_get(f->buildingId);
-	if (!BuildingIsInUse(f->buildingId) || b->figureId != f->id) {
+	if (!BuildingIsInUse(b) || b->figureId != f->id) {
 		f->state = FigureState_Dead;
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);

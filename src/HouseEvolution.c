@@ -340,7 +340,7 @@ void HouseEvolution_Tick_evolveAndConsumeResources()
 	int hasExpanded = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-		if (BuildingIsInUse(i) && BuildingIsHouse(b->type)) {
+		if (BuildingIsInUse(b) && BuildingIsHouse(b->type)) {
 			BuildingHouse_checkForCorruption(b);
 			(*callbacks[b->type - 10])(i, b, &hasExpanded);
 			if (game_time_day() == 0 || game_time_day() == 7) {
@@ -572,7 +572,7 @@ void HouseEvolution_Tick_decayCultureService()
 {
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-		if (!BuildingIsInUse(i) || !b->houseSize) {
+		if (!BuildingIsInUse(b) || !b->houseSize) {
 			continue;
 		}
 		DECAY(theater);
@@ -601,7 +601,7 @@ void HouseEvolution_Tick_calculateCultureServiceAggregates()
     int baseEntertainment = city_culture_coverage_average_entertainment() / 5;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-		if (!BuildingIsInUse(i) || !b->houseSize) {
+		if (!BuildingIsInUse(b) || !b->houseSize) {
 			continue;
 		}
 

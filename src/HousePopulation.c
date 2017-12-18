@@ -24,7 +24,7 @@ static void fillBuildingListHouses()
     building_list_large_clear(0);
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (BuildingIsInUse(i) && b->houseSize) {
+        if (BuildingIsInUse(b) && b->houseSize) {
             building_list_large_add(i);
         }
     }
@@ -268,7 +268,7 @@ int HousePopulation_getClosestHouseWithRoom(int x, int y)
 	int minBuildingId = 0;
 	for (int i = 1; i <= Data_Buildings_Extra.highestBuildingIdInUse; i++) {
 		building *b = building_get(i);
-		if (BuildingIsInUse(i) && b->houseSize && b->distanceFromEntry > 0 && b->housePopulationRoom > 0) {
+		if (BuildingIsInUse(b) && b->houseSize && b->distanceFromEntry > 0 && b->housePopulationRoom > 0) {
 			if (!b->immigrantFigureId) {
 				int dist = calc_maximum_distance(x, y, b->x, b->y);
 				if (dist < minDist) {
@@ -290,7 +290,7 @@ int HousePopulation_addPeople(int amount)
 			buildingId = 1;
 		}
 		building *b = building_get(buildingId);
-		if (BuildingIsInUse(buildingId) && b->houseSize && b->distanceFromEntry > 0 && b->housePopulation > 0) {
+		if (BuildingIsInUse(b) && b->houseSize && b->distanceFromEntry > 0 && b->housePopulation > 0) {
 			Data_CityInfo.populationLastTargetHouseAdd = buildingId;
 			int maxPeople = model_get_house(b->subtype.houseLevel)->max_people;
 			if (b->houseIsMerged) {
@@ -315,7 +315,7 @@ int HousePopulation_removePeople(int amount)
 			buildingId = 1;
 		}
 		building *b = building_get(buildingId);
-		if (BuildingIsInUse(buildingId) && b->houseSize) {
+		if (BuildingIsInUse(b) && b->houseSize) {
 			Data_CityInfo.populationLastTargetHouseRemove = buildingId;
 			if (b->housePopulation > 0) {
 				++removed;

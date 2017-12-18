@@ -36,7 +36,7 @@ void FigureAction_immigrant(figure *f)
 	
 	f->terrainUsage = FigureTerrainUsage_Any;
 	f->cartGraphicId = 0;
-	if (!BuildingIsInUse(buildingId) || b->immigrantFigureId != f->id || !b->houseSize) {
+	if (!BuildingIsInUse(b) || b->immigrantFigureId != f->id || !b->houseSize) {
 		f->state = FigureState_Dead;
 		return;
 	}

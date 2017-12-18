@@ -19,7 +19,7 @@ void CityInfo_Tick_countBuildingTypes()
 
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-		if (!BuildingIsInUse(i) || b->houseSize) {
+		if (!BuildingIsInUse(b) || b->houseSize) {
 			continue;
 		}
 		int isEntertainmentVenue = 0;
@@ -199,7 +199,7 @@ void CityInfo_Tick_distributeTreasuryOverForumsAndSenates()
 
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-		if (!BuildingIsInUse(i) || b->houseSize) {
+		if (!BuildingIsInUse(b) || b->houseSize) {
 			continue;
 		}
 		b->taxIncomeOrStorage = 0;

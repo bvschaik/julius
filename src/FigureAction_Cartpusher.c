@@ -165,7 +165,7 @@ void FigureAction_cartpusher(figure *f)
 			if (!map_routing_citizen_is_passable(f->gridOffset)) {
 				f->state = FigureState_Dead;
 			}
-			if (!BuildingIsInUse(buildingId) || b->figureId != f->id) {
+			if (!BuildingIsInUse(b) || b->figureId != f->id) {
 				f->state = FigureState_Dead;
 			}
 			f->waitTicks++;
@@ -184,7 +184,7 @@ void FigureAction_cartpusher(figure *f)
 			} else if (f->direction == DIR_FIGURE_LOST) {
 				f->state = FigureState_Dead;
 			}
-			if (!BuildingIsInUse(f->destinationBuildingId)) {
+			if (!BuildingIsInUse(building_get(f->destinationBuildingId))) {
 				f->state = FigureState_Dead;
 			}
 			break;
@@ -199,7 +199,7 @@ void FigureAction_cartpusher(figure *f)
 				f->actionState = FigureActionState_20_CartpusherInitial;
 				f->waitTicks = 0;
 			}
-			if (!BuildingIsInUse(f->destinationBuildingId)) {
+			if (!BuildingIsInUse(building_get(f->destinationBuildingId))) {
 				f->state = FigureState_Dead;
 			}
 			break;
@@ -416,8 +416,9 @@ void FigureAction_warehouseman(figure *f)
 		case FigureActionState_149_Corpse:
 			FigureAction_Common_handleCorpse(f);
 			break;
-		case FigureActionState_50_WarehousemanCreated:
-			if (!BuildingIsInUse(f->buildingId) || building_get(f->buildingId)->figureId != f->id) {
+		case FigureActionState_50_WarehousemanCreated: {
+            building *b = building_get(f->buildingId);
+			if (!BuildingIsInUse(b) || b->figureId != f->id) {
 				f->state = FigureState_Dead;
 			}
 			f->waitTicks++;
@@ -430,6 +431,7 @@ void FigureAction_warehouseman(figure *f)
 			}
 			f->graphicOffset = 0;
 			break;
+        }
 		case FigureActionState_51_WarehousemanDeliveringResource:
 			if (f->loadsSoldOrCarrying == 1) {
 				f->cartGraphicId = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) +

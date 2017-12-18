@@ -46,7 +46,7 @@ void FigureAction_ballista(figure *f)
 	f->heightAdjustedTicks = 10;
 	f->currentHeight = 45;
 	
-	if (!BuildingIsInUse(f->buildingId) || b->figureId4 != f->id) {
+	if (!BuildingIsInUse(b) || b->figureId4 != f->id) {
 		f->state = FigureState_Dead;
 	}
 	if (b->numWorkers <= 0 || b->figureId <= 0) {
@@ -171,7 +171,7 @@ void FigureAction_towerSentry(figure *f)
 	f->isGhost = 1;
 	f->heightAdjustedTicks = 10;
 	f->maxRoamLength = 800;
-	if (!BuildingIsInUse(f->buildingId) || b->figureId != f->id) {
+	if (!BuildingIsInUse(b) || b->figureId != f->id) {
 		f->state = FigureState_Dead;
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);

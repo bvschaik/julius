@@ -542,7 +542,7 @@ static void spawnFigureColosseum(int buildingId, building *b)
 
 static void setMarketGraphic(int buildingId, building *b)
 {
-	if (!BuildingIsInUse(buildingId)) {
+	if (!BuildingIsInUse(b)) {
 		return;
 	}
 	if (map_desirability_get(b->gridOffset) <= 30) {
@@ -622,7 +622,7 @@ static void spawnFigureMarket(int buildingId, building *b)
 
 static void setBathhouseGraphic(int buildingId, building *b)
 {
-	if (!BuildingIsInUse(buildingId)) {
+	if (!BuildingIsInUse(b)) {
 		return;
 	}
 	if (Terrain_existsTileWithinAreaWithType(b->x, b->y, b->size, TERRAIN_RESERVOIR_RANGE)) {
@@ -945,7 +945,7 @@ static void spawnFigureTemple(int buildingId, building *b)
 
 static void setSenateGraphic(int buildingId, building *b)
 {
-	if (!BuildingIsInUse(buildingId)) {
+	if (!BuildingIsInUse(b)) {
 		return;
 	}
 	if (map_desirability_get(b->gridOffset) <= 30) {
@@ -1227,7 +1227,7 @@ void FigureGeneration_generateFiguresForBuildings()
 	}
 	for (int i = 1; i <= Data_Buildings_Extra.highestBuildingIdInUse; i++) {
 		building *b = building_get(i);
-		if (!BuildingIsInUse(i)) {
+		if (!BuildingIsInUse(b)) {
 			continue;
 		}
 		if (b->type == BUILDING_WAREHOUSE_SPACE || (b->type == BUILDING_HIPPODROME && b->prevPartBuildingId)) {

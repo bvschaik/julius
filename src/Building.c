@@ -400,7 +400,7 @@ int Building_collapseFirstOfType(int buildingType)
 {
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-		if (BuildingIsInUse(i) && b->type == buildingType) {
+		if (BuildingIsInUse(b) && b->type == buildingType) {
 			int gridOffset = b->gridOffset;
 			Data_State.undoAvailable = 0;
 			b->state = BuildingState_Rubble;
@@ -428,7 +428,7 @@ void Building_destroyByEnemy(int x, int y, int gridOffset)
 	if (buildingId > 0) {
 		building *b = building_get(buildingId);
 		TerrainGraphics_setBuildingAreaRubble(buildingId, b->x, b->y, b->size);
-		if (BuildingIsInUse(buildingId)) {
+		if (BuildingIsInUse(b)) {
 			switch (b->type) {
 				case BUILDING_HOUSE_SMALL_TENT:
 				case BUILDING_HOUSE_LARGE_TENT:
@@ -467,10 +467,10 @@ void Building_destroyByEnemy(int x, int y, int gridOffset)
 void Building_setDesirability()
 {
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (!BuildingIsInUse(i)) {
+        building *b = building_get(i);
+		if (!BuildingIsInUse(b)) {
 			continue;
 		}
-		building *b = building_get(i);
 		b->desirability = map_desirability_get_max(b->x, b->y, b->size);
 		if (b->isAdjacentToWater) {
 			b->desirability += 10;
@@ -504,7 +504,7 @@ void Building_decayTaxCollectorAccess()
 {
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-        if (BuildingIsInUse(i) && b->houseTaxCoverage) {
+        if (BuildingIsInUse(b) && b->houseTaxCoverage) {
             b->houseTaxCoverage--;
         }
     }
@@ -620,10 +620,10 @@ void Building_GameTick_checkAccessToRome()
 	map_routing_calculate_distances(Data_CityInfo.entryPointX, Data_CityInfo.entryPointY);
 	int problemGridOffset = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (!BuildingIsInUse(i)) {
+        building *b = building_get(i);
+		if (!BuildingIsInUse(b)) {
 			continue;
 		}
-		building *b = building_get(i);
 		int xRoad, yRoad;
 		if (b->houseSize) {
 			if (!Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
@@ -738,7 +738,7 @@ void Building_Industry_updateProduction()
 {
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		building *b = building_get(i);
-		if (!BuildingIsInUse(i) || !b->outputResourceId) {
+		if (!BuildingIsInUse(b) || !b->outputResourceId) {
 			continue;
 		}
 		b->data.industry.hasFullResource = 0;
@@ -782,7 +782,7 @@ void Building_Industry_updateDoubleWheatProduction()
 	}
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		building *b = building_get(i);
-		if (!BuildingIsInUse(i) || !b->outputResourceId) {
+		if (!BuildingIsInUse(b) || !b->outputResourceId) {
 			continue;
 		}
 		if (b->housesCovered <= 0 || b->numWorkers <= 0) {
@@ -807,7 +807,7 @@ void Building_Industry_witherFarmCropsFromCeres(int bigCurse)
 {
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		building *b = building_get(i);
-		if (BuildingIsInUse(i) && b->outputResourceId && BuildingIsFarm(b->type)) {
+		if (BuildingIsInUse(b) && b->outputResourceId && BuildingIsFarm(b->type)) {
 			b->data.industry.progress = 0;
 			b->data.industry.blessingDaysLeft = 0;
 			b->data.industry.curseDaysLeft = bigCurse ? 48 : 4;
@@ -822,7 +822,7 @@ void Building_Industry_blessFarmsFromCeres()
 {
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		building *b = building_get(i);
-		if (BuildingIsInUse(i) && b->outputResourceId && BuildingIsFarm(b->type)) {
+		if (BuildingIsInUse(b) && b->outputResourceId && BuildingIsFarm(b->type)) {
 			b->data.industry.progress = 200;
 			b->data.industry.curseDaysLeft = 0;
 			b->data.industry.blessingDaysLeft = 16;
@@ -873,10 +873,10 @@ int Building_Market_getDestinationGranaryWarehouse(int marketId)
 	}
 	building *market = building_get(marketId);
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (!BuildingIsInUse(i)) {
+        building *b = building_get(i);
+		if (!BuildingIsInUse(b)) {
 			continue;
 		}
-		building *b = building_get(i);
 		if (b->type != BUILDING_GRANARY && b->type != BUILDING_WAREHOUSE) {
 			continue;
 		}
@@ -1140,7 +1140,7 @@ void Building_Dock_updateOpenWaterAccess()
 	map_routing_calculate_distances_water_boat(river_entry.x, river_entry.y);
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		building *b = building_get(i);
-		if (BuildingIsInUse(i) && !b->houseSize && b->type == BUILDING_DOCK) {
+		if (BuildingIsInUse(b) && !b->houseSize && b->type == BUILDING_DOCK) {
 			if (Terrain_isAdjacentToOpenWater(b->x, b->y, 3)) {
 				b->hasWaterAccess = 1;
 			} else {
@@ -1167,7 +1167,7 @@ void Building_Mercury_removeResources(int bigCurse)
 	int maxBuildingId = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		building *b = building_get(i);
-		if (!BuildingIsInUse(i)) {
+		if (!BuildingIsInUse(b)) {
 			continue;
 		}
 		int totalStored = 0;
@@ -1217,7 +1217,7 @@ void Building_Mercury_fillGranary()
 	int minBuildingId = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		building *b = building_get(i);
-		if (!BuildingIsInUse(i) || b->type != BUILDING_GRANARY) {
+		if (!BuildingIsInUse(b) || b->type != BUILDING_GRANARY) {
 			continue;
 		}
 		int totalStored = 0;

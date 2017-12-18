@@ -71,7 +71,7 @@ static void update_buildings()
 {
     for (int i = 1; i <= Data_Buildings_Extra.highestBuildingIdInUse; i++) {
         building *b = building_get(i);
-        if (BuildingIsInUse(i)) {
+        if (BuildingIsInUse(b)) {
             const model_building *model = model_get_building(b->type);
             add_to_terrain(
                 b->x, b->y, b->size,

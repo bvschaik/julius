@@ -91,7 +91,7 @@ void FigureAction_docker(figure *f)
 	building *b = building_get(f->buildingId);
 	FigureActionIncreaseGraphicOffset(f, 12);
 	f->cartGraphicId = 0;
-	if (!BuildingIsInUse(f->buildingId)) {
+	if (!BuildingIsInUse(b)) {
 		f->state = FigureState_Dead;
 	}
 	if (b->type != BUILDING_DOCK && b->type != BUILDING_WHARF) {
@@ -194,7 +194,7 @@ void FigureAction_docker(figure *f)
 			} else if (f->direction == DIR_FIGURE_LOST) {
 				f->state = FigureState_Dead;
 			}
-			if (!BuildingIsInUse(f->destinationBuildingId)) {
+			if (!BuildingIsInUse(building_get(f->destinationBuildingId))) {
 				f->state = FigureState_Dead;
 			}
 			break;
@@ -208,7 +208,7 @@ void FigureAction_docker(figure *f)
 			} else if (f->direction == DIR_FIGURE_LOST) {
 				f->state = FigureState_Dead;
 			}
-			if (!BuildingIsInUse(f->destinationBuildingId)) {
+			if (!BuildingIsInUse(building_get(f->destinationBuildingId))) {
 				f->state = FigureState_Dead;
 			}
 			break;
@@ -223,7 +223,7 @@ void FigureAction_docker(figure *f)
 			} else if (f->direction == DIR_FIGURE_LOST) {
 				f->state = FigureState_Dead;
 			}
-			if (!BuildingIsInUse(f->destinationBuildingId)) {
+			if (!BuildingIsInUse(building_get(f->destinationBuildingId))) {
 				f->state = FigureState_Dead;
 			}
 			break;

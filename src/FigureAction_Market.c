@@ -101,7 +101,8 @@ void FigureAction_marketBuyer(figure *f)
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 800;
 	
-	if (!BuildingIsInUse(f->buildingId) || building_get(f->buildingId)->figureId2 != f->id) {
+    building *b = building_get(f->buildingId);
+	if (!BuildingIsInUse(b) || b->figureId2 != f->id) {
 		f->state = FigureState_Dead;
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);

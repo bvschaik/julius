@@ -42,7 +42,7 @@ void Resource_gatherGranaryGettingInfo()
 
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		building *b = building_get(i);
-		if (!BuildingIsInUse(i) || b->type != BUILDING_GRANARY) {
+		if (!BuildingIsInUse(b) || b->type != BUILDING_GRANARY) {
 			continue;
 		}
 		if (!b->hasRoadAccess || b->distanceFromEntry <= 0) {
@@ -92,7 +92,7 @@ int Resource_getGranaryForStoringFood(
 	int minBuildingId = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		building *b = building_get(i);
-		if (!BuildingIsInUse(i) || b->type != BUILDING_GRANARY) {
+		if (!BuildingIsInUse(b) || b->type != BUILDING_GRANARY) {
 			continue;
 		}
 		if (!b->hasRoadAccess || b->distanceFromEntry <= 0 || b->roadNetworkId != roadNetworkId) {
@@ -142,7 +142,7 @@ int Resource_getGettingGranaryForStoringFood(
 	int minBuildingId = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		building *b = building_get(i);
-		if (!BuildingIsInUse(i) || b->type != BUILDING_GRANARY) {
+		if (!BuildingIsInUse(b) || b->type != BUILDING_GRANARY) {
 			continue;
 		}
 		if (!b->hasRoadAccess || b->distanceFromEntry <= 0 || b->roadNetworkId != roadNetworkId) {

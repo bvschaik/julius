@@ -76,7 +76,7 @@ int Formation_getFormationForBuilding(int gridOffset)
 	int buildingId = map_building_at(gridOffset);
 	if (buildingId > 0) {
 		building *b = building_get(buildingId);
-		if (BuildingIsInUse(buildingId) && (b->type == BUILDING_FORT || b->type == BUILDING_FORT_GROUND)) {
+		if (BuildingIsInUse(b) && (b->type == BUILDING_FORT || b->type == BUILDING_FORT_GROUND)) {
 			return b->formationId;
 		}
 	}
@@ -181,7 +181,7 @@ int Formation_getClosestMilitaryAcademy(int formationId)
 	int minDistance = 10000;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-		if (BuildingIsInUse(i) && b->type == BUILDING_MILITARY_ACADEMY &&
+		if (BuildingIsInUse(b) && b->type == BUILDING_MILITARY_ACADEMY &&
 			b->numWorkers >= model_get_building(BUILDING_MILITARY_ACADEMY)->laborers) {
 			int dist = calc_maximum_distance(fort->x, fort->y, b->x, b->y);
 			if (dist < minDistance) {

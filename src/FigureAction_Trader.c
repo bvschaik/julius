@@ -258,7 +258,7 @@ void FigureAction_tradeCaravan(figure *f)
 					f->isGhost = 1;
 					break;
 			}
-			if (!BuildingIsInUse(f->destinationBuildingId)) {
+			if (!BuildingIsInUse(building_get(f->destinationBuildingId))) {
 				f->state = FigureState_Dead;
 			}
 			break;
@@ -371,7 +371,7 @@ void FigureAction_nativeTrader(figure *f)
 				f->state = FigureState_Dead;
 				f->isGhost = 1;
 			}
-			if (!BuildingIsInUse(f->destinationBuildingId)) {
+			if (!BuildingIsInUse(building_get(f->destinationBuildingId))) {
 				f->state = FigureState_Dead;
 			}
 			break;
@@ -448,9 +448,8 @@ void FigureAction_nativeTrader(figure *f)
 
 static int tradeShipLostQueue(const figure *f)
 {
-	int buildingId = f->destinationBuildingId;
-	building *b = building_get(buildingId);
-	if (BuildingIsInUse(buildingId) && b->type == BUILDING_DOCK &&
+	building *b = building_get(f->destinationBuildingId);
+	if (BuildingIsInUse(b) && b->type == BUILDING_DOCK &&
 		b->numWorkers > 0 && b->data.other.boatFigureId == f->id) {
 		return 0;
 	}
@@ -459,9 +458,8 @@ static int tradeShipLostQueue(const figure *f)
 
 static int tradeShipDoneTrading(figure *f)
 {
-	int buildingId = f->destinationBuildingId;
-	building *b = building_get(buildingId);
-	if (BuildingIsInUse(buildingId) && b->type == BUILDING_DOCK && b->numWorkers > 0) {
+	building *b = building_get(f->destinationBuildingId);
+	if (BuildingIsInUse(b) && b->type == BUILDING_DOCK && b->numWorkers > 0) {
 		for (int i = 0; i < 3; i++) {
             if (b->data.other.dockFigureIds[i]) {
                 figure *docker = figure_get(b->data.other.dockFigureIds[i]);
@@ -531,7 +529,7 @@ void FigureAction_tradeShip(figure *f)
 					city_message_increase_category_count(MESSAGE_CAT_BLOCKED_DOCK);
 				}
 			}
-			if (!BuildingIsInUse(f->destinationBuildingId)) {
+			if (!BuildingIsInUse(building_get(f->destinationBuildingId))) {
 				f->actionState = FigureActionState_115_TradeShipLeaving;
 				f->waitTicks = 0;
                 map_point river_exit = scenario_map_river_exit();
@@ -618,9 +616,8 @@ void FigureAction_tradeShip(figure *f)
 
 int FigureAction_TradeShip_isBuyingOrSelling(int figureId)
 {
-	int buildingId = figure_get(figureId)->destinationBuildingId;
-	building *b = building_get(buildingId);
-	if (!BuildingIsInUse(buildingId) || b->type != BUILDING_DOCK) {
+	building *b = building_get(figure_get(figureId)->destinationBuildingId);
+	if (!BuildingIsInUse(b) || b->type != BUILDING_DOCK) {
 		return TradeShipState_Buying;
 	}
 	for (int i = 0; i < 3; i++) {

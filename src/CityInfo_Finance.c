@@ -27,7 +27,7 @@ static void collectMonthlyTaxes()
 	}
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-		if (!BuildingIsInUse(i) || !b->houseSize) {
+		if (!BuildingIsInUse(b) || !b->houseSize) {
 			continue;
 		}
 
@@ -193,7 +193,7 @@ void CityInfo_Finance_handleYearChange()
 	// reset tax income in building list
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-		if (BuildingIsInUse(i) && b->houseSize) {
+		if (BuildingIsInUse(b) && b->houseSize) {
 			b->taxIncomeOrStorage = 0;
 		}
 	}
@@ -280,7 +280,7 @@ void CityInfo_Finance_calculateEstimatedTaxes()
 	Data_CityInfo.monthlyCollectedTaxFromPatricians = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-		if (BuildingIsInUse(i) && b->houseSize && b->houseTaxCoverage) {
+		if (BuildingIsInUse(b) && b->houseSize && b->houseTaxCoverage) {
 			int isPatrician = b->subtype.houseLevel >= HOUSE_SMALL_VILLA;
 			int trm = difficulty_adjust_money(
 				model_get_house(b->subtype.houseLevel)->tax_multiplier);

@@ -93,7 +93,7 @@ void CityInfo_Labor_calculateWorkersNeededPerCategory()
 	}
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-		if (!BuildingIsInUse(i)) {
+		if (!BuildingIsInUse(b)) {
 			continue;
 		}
 		int category = buildingTypeToLaborCategory[b->type];
@@ -213,7 +213,7 @@ static void setBuildingWorkerWeight()
 	int waterPer10kPerBuilding = calc_percentage(100, Data_CityInfo.laborCategory[LaborCategory_Water].buildings);
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
-		if (!BuildingIsInUse(i)) {
+		if (!BuildingIsInUse(b)) {
 			continue;
 		}
 		int cat = buildingTypeToLaborCategory[b->type];
@@ -241,10 +241,10 @@ static void allocateWorkersToBuildings()
 			? 1 : 0;
 	}
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (!BuildingIsInUse(i)) {
+        building *b = building_get(i);
+		if (!BuildingIsInUse(b)) {
 			continue;
 		}
-		building *b = building_get(i);
 		int cat = buildingTypeToLaborCategory[b->type];
 		if (cat == LaborCategory_Water || cat < 0) {
 			// water is handled by allocateWorkersToWater()
@@ -282,10 +282,10 @@ static void allocateWorkersToBuildings()
 		}
 	}
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (!BuildingIsInUse(i)) {
+        building *b = building_get(i);
+		if (!BuildingIsInUse(b)) {
 			continue;
 		}
-		building *b = building_get(i);
 		int cat = buildingTypeToLaborCategory[b->type];
 		if (cat < 0 || cat == LaborCategory_Water || cat == LaborCategory_Military) {
 			continue;
@@ -334,8 +334,7 @@ static void allocateWorkersToWater()
 			buildingId = 1;
 		}
 		building *b = building_get(buildingId);
-		if (!BuildingIsInUse(buildingId) ||
-			buildingTypeToLaborCategory[b->type] != LaborCategory_Water) {
+		if (!BuildingIsInUse(b) || buildingTypeToLaborCategory[b->type] != LaborCategory_Water) {
 			continue;
 		}
 		b->numWorkers = 0;

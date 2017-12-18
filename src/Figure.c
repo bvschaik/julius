@@ -219,7 +219,7 @@ int Figure_createTowerSentryFromBarracks(int buildingId, int x, int y)
     building *barracks = building_get(buildingId);
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		building *b = building_get(i);
-		if (BuildingIsInUse(i) && b->type == BUILDING_TOWER && b->numWorkers > 0 &&
+		if (BuildingIsInUse(b) && b->type == BUILDING_TOWER && b->numWorkers > 0 &&
 			!b->figureId && b->roadNetworkId == barracks->roadNetworkId) {
 			towerId = i;
 			break;

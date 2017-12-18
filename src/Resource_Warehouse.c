@@ -43,7 +43,7 @@ void Resource_addToCityWarehouses(int resource, int amount)
 			buildingId = 1;
 		}
 		building *b = building_get(buildingId);
-		if (BuildingIsInUse(buildingId) && b->type == BUILDING_WAREHOUSE) {
+		if (BuildingIsInUse(b) && b->type == BUILDING_WAREHOUSE) {
 			Data_CityInfo.resourceLastTargetWarehouse = buildingId;
 			while (amount && Resource_addToWarehouse(buildingId, resource)) {
 				amount--;
@@ -63,7 +63,7 @@ int Resource_removeFromCityWarehouses(int resource, int amount)
 			buildingId = 1;
 		}
 		building *b = building_get(buildingId);
-		if (BuildingIsInUse(buildingId) && b->type == BUILDING_WAREHOUSE) {
+		if (BuildingIsInUse(b) && b->type == BUILDING_WAREHOUSE) {
 			if (building_storage_get(b->storage_id)->resource_state[resource] != BUILDING_STORAGE_STATE_GETTING) {
 				Data_CityInfo.resourceLastTargetWarehouse = buildingId;
 				amountLeft = Resource_removeFromWarehouse(buildingId, resource, amountLeft);
@@ -77,7 +77,7 @@ int Resource_removeFromCityWarehouses(int resource, int amount)
 			buildingId = 1;
 		}
 		building *b = building_get(buildingId);
-		if (BuildingIsInUse(buildingId) && b->type == BUILDING_WAREHOUSE) {
+		if (BuildingIsInUse(b) && b->type == BUILDING_WAREHOUSE) {
 			Data_CityInfo.resourceLastTargetWarehouse = buildingId;
 			amountLeft = Resource_removeFromWarehouse(buildingId, resource, amountLeft);
 		}
@@ -93,7 +93,7 @@ int Resource_getWarehouseForStoringResource(
 	int minBuildingId = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		building *b = building_get(i);
-		if (!BuildingIsInUse(i) || b->type != BUILDING_WAREHOUSE_SPACE) {
+		if (!BuildingIsInUse(b) || b->type != BUILDING_WAREHOUSE_SPACE) {
 			continue;
 		}
 		if (!b->hasRoadAccess || b->distanceFromEntry <= 0 || b->roadNetworkId != roadNetworkId) {
@@ -146,7 +146,7 @@ int Resource_getWarehouseForGettingResource(int srcBuildingId, int resource, int
 	int minBuildingId = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		building *b = building_get(i);
-		if (!BuildingIsInUse(i) || b->type != BUILDING_WAREHOUSE) {
+		if (!BuildingIsInUse(b) || b->type != BUILDING_WAREHOUSE) {
 			continue;
 		}
 		if (i == srcBuildingId) {
@@ -376,7 +376,7 @@ static int determineGranaryAcceptFoods()
 	int canAccept = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		building *b = building_get(i);
-		if (!BuildingIsInUse(i) || b->type != BUILDING_GRANARY || !b->hasRoadAccess) {
+		if (!BuildingIsInUse(b) || b->type != BUILDING_GRANARY || !b->hasRoadAccess) {
 			continue;
 		}
 		int pctWorkers = calc_percentage(b->numWorkers, model_get_building(b->type)->laborers);
@@ -406,7 +406,7 @@ static int determineGranaryGetFoods()
 	int canGet = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		building *b = building_get(i);
-		if (!BuildingIsInUse(i) || b->type != BUILDING_GRANARY || !b->hasRoadAccess) {
+		if (!BuildingIsInUse(b) || b->type != BUILDING_GRANARY || !b->hasRoadAccess) {
 			continue;
 		}
 		int pctWorkers = calc_percentage(b->numWorkers, model_get_building(b->type)->laborers);
