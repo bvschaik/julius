@@ -1,8 +1,8 @@
 #include "SidebarMenu.h"
-#include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "UI/Sidebar.h"
 
+#include "building/type.h"
 #include "empire/city.h"
 #include "game/tutorial.h"
 #include "scenario/building.h"

@@ -6,7 +6,6 @@
 #include "../SidebarMenu.h"
 #include "../Widget.h"
 
-#include "../Data/Building.h"
 #include "../Data/CityView.h"
 #include "../Data/State.h"
 

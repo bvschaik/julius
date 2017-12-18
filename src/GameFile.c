@@ -8,11 +8,11 @@
 #include "SidebarMenu.h"
 #include "TerrainGraphics.h"
 
-#include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/State.h"
 #include "UI/AllWindows.h" // TODO: try to eliminate this
 
+#include "building/building.h"
 #include "building/count.h"
 #include "building/list.h"
 #include "building/storage.h"
@@ -151,7 +151,7 @@ typedef struct {
     buffer *Data_CityInfo_Extra_unknownBytes;
     buffer *player_name;
     buffer *Data_CityInfo_Extra_ciid;
-    buffer *Data_Buildings;
+    buffer *buildings;
     buffer *Data_Settings_Map_orientation;
     buffer *game_time;
     buffer *Data_Buildings_Extra_highestBuildingIdEver;
@@ -299,7 +299,7 @@ static void init_savegame_data()
     state->Data_CityInfo_Extra_unknownBytes = create_savegame_piece(2, 0);
     state->player_name = create_savegame_piece(64, 0);
     state->Data_CityInfo_Extra_ciid = create_savegame_piece(4, 0);
-    state->Data_Buildings = create_savegame_piece(256000, 1);
+    state->buildings = create_savegame_piece(256000, 1);
     state->Data_Settings_Map_orientation = create_savegame_piece(4, 0);
     state->game_time = create_savegame_piece(20, 0);
     state->Data_Buildings_Extra_highestBuildingIdEver = create_savegame_piece(4, 0);
@@ -431,7 +431,9 @@ static void savegame_deserialize(savegame_state *state)
     read_all_from_buffer(state->Data_CityInfo, &Data_CityInfo);
     read_all_from_buffer(state->Data_CityInfo_Extra_unknownBytes, &Data_CityInfo_Extra.unknownBytes);
     read_all_from_buffer(state->Data_CityInfo_Extra_ciid, &Data_CityInfo_Extra.ciid);
-    read_all_from_buffer(state->Data_Buildings, &Data_Buildings);
+
+    building_load_state(state->buildings);
+
     read_all_from_buffer(state->Data_Settings_Map_orientation, &Data_State.map.orientation);
     
     game_time_load_state(state->game_time);
@@ -545,7 +547,9 @@ static void savegame_serialize(savegame_state *state)
     write_all_to_buffer(state->Data_CityInfo, &Data_CityInfo);
     write_all_to_buffer(state->Data_CityInfo_Extra_unknownBytes, &Data_CityInfo_Extra.unknownBytes);
     write_all_to_buffer(state->Data_CityInfo_Extra_ciid, &Data_CityInfo_Extra.ciid);
-    write_all_to_buffer(state->Data_Buildings, &Data_Buildings);
+
+    building_save_state(state->buildings);
+
     write_all_to_buffer(state->Data_Settings_Map_orientation, &Data_State.map.orientation);
     
     game_time_save_state(state->game_time);

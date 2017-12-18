@@ -4,7 +4,6 @@
 #include "building/type.h"
 
 #define MAX_BUILDINGS 2000
-#define MAX_STORAGES 200
 #define MAX_HOUSE_LEVELS 20
 
 enum {
@@ -22,7 +21,7 @@ enum {
 #define BuildingIsWorkshop(type) ((type) >= BUILDING_WINE_WORKSHOP && (type) <= BUILDING_POTTERY_WORKSHOP)
 #define BuildingIsEntertainment(type) ((type) >= BUILDING_THEATER && (type) <= BUILDING_CHARIOT_MAKER)
 
-#define BuildingIsInUse(buildingId) (Data_Buildings[buildingId].state == BuildingState_InUse)
+#define BuildingIsInUse(buildingId) (building_get(buildingId)->state == BuildingState_InUse)
 
 extern struct Data_Building {
 	unsigned char state;

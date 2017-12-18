@@ -11,11 +11,11 @@
 #include "UI/Sidebar.h"
 #include "UI/Window.h"
 
-#include "Data/Building.h"
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 #include "Data/State.h"
 
+#include "building/type.h"
 #include "city/finance.h"
 #include "city/warning.h"
 #include "figure/formation.h"

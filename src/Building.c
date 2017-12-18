@@ -53,7 +53,7 @@ void Building_updateHighestIds()
 
 void Building_clearList()
 {
-	memset(Data_Buildings, 0, MAX_BUILDINGS * sizeof(struct Data_Building));
+    building_clear_all();
 	Data_Buildings_Extra.highestBuildingIdEver = 0;
 	Data_Buildings_Extra.createdSequence = 0;
 }
@@ -178,7 +178,7 @@ int Building_create(int type, int x, int y)
 void Building_delete(int buildingId)
 {
 	Building_deleteData(buildingId);
-	memset(&Data_Buildings[buildingId], 0, sizeof(struct Data_Building));
+	building_delete(building_get(buildingId));
 }
 
 void Building_deleteData(int buildingId)
