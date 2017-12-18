@@ -31,8 +31,7 @@ static void updateDirectionAndGraphic(figure *f)
 
 void FigureAction_immigrant(figure *f)
 {
-	int buildingId = f->immigrantBuildingId;
-	building *b = building_get(buildingId);
+	building *b = building_get(f->immigrantBuildingId);
 	
 	f->terrainUsage = FigureTerrainUsage_Any;
 	f->cartGraphicId = 0;

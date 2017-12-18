@@ -148,7 +148,7 @@ static void drawBuildingFootprints()
 			}
 			if (map_terrain_is(gridOffset, TERRAIN_GARDEN)) {
 				building_get(0)->type = BUILDING_GARDENS;
-				sound_city_mark_building_view(0, 2);
+				sound_city_mark_building_view(0, SOUND_DIRECTION_CENTER);
 			}
 			int graphicId = map_image_at(gridOffset);
 			if (map_property_is_constructing(gridOffset)) {

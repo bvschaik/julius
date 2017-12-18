@@ -458,7 +458,7 @@ void FigureAction_warehouseman(figure *f)
 						Resource_addToGranary(buildingId, f->resourceId, 0);
 						break;
 					case BUILDING_BARRACKS:
-						Resource_addWeaponToBarracks(buildingId);
+						Resource_addWeaponToBarracks(b);
 						break;
 					case BUILDING_WAREHOUSE:
 					case BUILDING_WAREHOUSE_SPACE:

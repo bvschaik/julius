@@ -149,8 +149,7 @@ int FigureAction_Rioter_collapseBuilding(figure *f)
 		if (!map_building_at(gridOffset)) {
 			continue;
 		}
-		int buildingId = map_building_at(gridOffset);
-		building *b = building_get(buildingId);
+		building *b = building_get(map_building_at(gridOffset));
 		switch (b->type) {
 			case BUILDING_WAREHOUSE_SPACE:
 			case BUILDING_WAREHOUSE:
@@ -165,7 +164,7 @@ int FigureAction_Rioter_collapseBuilding(figure *f)
 		city_message_apply_sound_interval(MESSAGE_CAT_RIOT_COLLAPSE);
 		city_message_post(0, MESSAGE_DESTROYED_BUILDING, b->type, f->gridOffset);
 		city_message_increase_category_count(MESSAGE_CAT_RIOT_COLLAPSE);
-		Building_collapseOnFire(buildingId, 0);
+		Building_collapseOnFire(b->id, 0);
 		f->actionState = FigureActionState_120_RioterCreated;
 		f->waitTicks = 0;
 		f->direction = dir;

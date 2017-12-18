@@ -92,9 +92,8 @@ static void fill_aqueducts_from_offset(int grid_offset)
         next_offset = -1;
         for (int i = 0; i < 4; i++) {
             int new_offset = grid_offset + ADJACENT_OFFSETS[i];
-            int building_id = map_building_at(new_offset);
-            building *b = building_get(building_id);
-            if (building_id && b->type == BUILDING_RESERVOIR) {
+            building *b = building_get(map_building_at(new_offset));
+            if (b->id && b->type == BUILDING_RESERVOIR) {
                 // check if aqueduct connects to reservoir --> doesn't connect to corner
                 int xy = map_property_multi_tile_xy(new_offset);
                 if (xy != Edge_X0Y0 && xy != Edge_X2Y0 && xy != Edge_X0Y2 && xy != Edge_X2Y2) {
@@ -154,8 +153,7 @@ void map_water_supply_update_reservoir_fountain()
     while (changed == 1) {
         changed = 0;
         for (int i = 0; i < total_reservoirs; i++) {
-            int building_id = reservoirs[i];
-            building *b = building_get(building_id);
+            building *b = building_get(reservoirs[i]);
             if (b->hasWaterAccess == 2) {
                 b->hasWaterAccess = 1;
                 changed = 1;

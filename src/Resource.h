@@ -52,7 +52,7 @@ int Resource_takeFoodFromGranaryForGettingDeliveryman(int dstBuildingId, int src
 int Resource_getWorkshopForRawMaterial(int x, int y, int resource, int distanceFromEntry, int roadNetworkId, int *xDst, int *yDst);
 int Resource_getBarracksForWeapon(int xUnused, int yUnused, int resource, int roadNetworkId, int *xDst, int *yDst);
 
-void Resource_addWeaponToBarracks(int buildingId);
+void Resource_addWeaponToBarracks(building *barracks);
 
 enum {
 	StorageFigureTask_Getting = 0,

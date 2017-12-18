@@ -83,9 +83,9 @@ int Resource_getBarracksForWeapon(int xUnused, int yUnused, int resource, int ro
 	return 0;
 }
 
-void Resource_addWeaponToBarracks(int buildingId)
+void Resource_addWeaponToBarracks(building *barracks)
 {
-	if (buildingId > 0) {
-		building_get(buildingId)->loadsStored++;
+	if (barracks->id > 0) {
+		barracks->loadsStored++;
 	}
 }
