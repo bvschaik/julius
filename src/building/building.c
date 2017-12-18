@@ -11,7 +11,9 @@ building *building_get(int id)
 
 void building_delete(building *b)
 {
+    int id = b->id;
     memset(b, 0, sizeof(building));
+    b->id = id;
 }
 
 void building_clear_all()

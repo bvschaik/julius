@@ -1,21 +1,23 @@
 #ifndef BuildingHouse_H
 #define BuildingHouse_H
 
-int BuildingHouse_canExpand(int buildingId, int tiles);
+#include "building/building.h"
 
-void BuildingHouse_checkForCorruption(int buildingId);
+int BuildingHouse_canExpand(building *b, int numTiles);
 
-void BuildingHouse_checkMerge(int buildingId);
+void BuildingHouse_checkForCorruption(building *b);
 
-void BuildingHouse_expandToLargeInsula(int buildingId);
-void BuildingHouse_expandToLargeVilla(int buildingId);
-void BuildingHouse_expandToLargePalace(int buildingId);
+void BuildingHouse_checkMerge(building *b);
 
-void BuildingHouse_devolveFromLargeInsula(int buildingId);
-void BuildingHouse_devolveFromLargeVilla(int buildingId);
-void BuildingHouse_devolveFromLargePalace(int buildingId);
+void BuildingHouse_expandToLargeInsula(building *b);
+void BuildingHouse_expandToLargeVilla(building *b);
+void BuildingHouse_expandToLargePalace(building *b);
 
-void BuildingHouse_changeTo(int buildingId, int buildingType);
-void BuildingHouse_changeToVacantLot(int buildingId);
+void BuildingHouse_devolveFromLargeInsula(building *b);
+void BuildingHouse_devolveFromLargeVilla(building *b);
+void BuildingHouse_devolveFromLargePalace(building *b);
+
+void BuildingHouse_changeTo(building *b, int buildingType);
+void BuildingHouse_changeToVacantLot(building *b);
 
 #endif

@@ -254,7 +254,7 @@ static void createEmigrantForBuilding(int buildingId, int numPeople)
 		b->housePopulation -= numPeople;
 	} else {
 		b->housePopulation = 0;
-		BuildingHouse_changeToVacantLot(buildingId);
+		BuildingHouse_changeToVacantLot(b);
 	}
 	figure *f = figure_create(FIGURE_EMIGRANT, b->x, b->y, DIR_0_TOP);
 	f->actionState = FigureActionState_4_EmigrantCreated;
