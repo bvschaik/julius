@@ -20,26 +20,26 @@ static void drawTopForNativeOverlay(int gridOffset, int xOffset, int yOffset);
 static void drawBuildingFootprintForOverlay(int buildingId, int gridOffset, int xOffset, int yOffset, int graphicOffset);
 static void drawBuildingFootprintForDesirabilityOverlay(int gridOffset, int xOffset, int yOffset);
 static void drawBuildingTopForDesirabilityOverlay(int gridOffset, int xOffset, int yOffset);
-static void drawBuildingTopForFireOverlay(int gridOffset, int buildingId, int xOffset, int yOffset);
-static void drawBuildingTopForDamageOverlay(int gridOffset, int buildingId, int xOffset, int yOffset);
-static void drawBuildingTopForCrimeOverlay(int gridOffset, int buildingId, int xOffset, int yOffset);
-static void drawBuildingTopForEntertainmentOverlay(int gridOffset, int buildingId, int xOffset, int yOffset);
-static void drawBuildingTopForEducationOverlay(int gridOffset, int buildingId, int xOffset, int yOffset);
-static void drawBuildingTopForTheaterOverlay(int gridOffset, int buildingId, int xOffset, int yOffset);
-static void drawBuildingTopForAmphitheaterOverlay(int gridOffset, int buildingId, int xOffset, int yOffset);
-static void drawBuildingTopForColosseumOverlay(int gridOffset, int buildingId, int xOffset, int yOffset);
-static void drawBuildingTopForHippodromeOverlay(int gridOffset, int buildingId, int xOffset, int yOffset);
-static void drawBuildingTopForFoodStocksOverlay(int gridOffset, int buildingId, int xOffset, int yOffset);
-static void drawBuildingTopForBathhouseOverlay(int gridOffset, int buildingId, int xOffset, int yOffset);
-static void drawBuildingTopForReligionOverlay(int gridOffset, int buildingId, int xOffset, int yOffset);
-static void drawBuildingTopForSchoolOverlay(int gridOffset, int buildingId, int xOffset, int yOffset);
-static void drawBuildingTopForLibraryOverlay(int gridOffset, int buildingId, int xOffset, int yOffset);
-static void drawBuildingTopForAcademyOverlay(int gridOffset, int buildingId, int xOffset, int yOffset);
-static void drawBuildingTopForBarberOverlay(int gridOffset, int buildingId, int xOffset, int yOffset);
-static void drawBuildingTopForClinicsOverlay(int gridOffset, int buildingId, int xOffset, int yOffset);
-static void drawBuildingTopForHospitalOverlay(int gridOffset, int buildingId, int xOffset, int yOffset);
-static void drawBuildingTopForTaxIncomeOverlay(int gridOffset, int buildingId, int xOffset, int yOffset);
-static void drawBuildingTopForProblemsOverlay(int gridOffset, int buildingId, int xOffset, int yOffset);
+static void drawBuildingTopForFireOverlay(int gridOffset, building *b, int xOffset, int yOffset);
+static void drawBuildingTopForDamageOverlay(int gridOffset, building *b, int xOffset, int yOffset);
+static void drawBuildingTopForCrimeOverlay(int gridOffset, building *b, int xOffset, int yOffset);
+static void drawBuildingTopForEntertainmentOverlay(int gridOffset, building *b, int xOffset, int yOffset);
+static void drawBuildingTopForEducationOverlay(int gridOffset, building *b, int xOffset, int yOffset);
+static void drawBuildingTopForTheaterOverlay(int gridOffset, building *b, int xOffset, int yOffset);
+static void drawBuildingTopForAmphitheaterOverlay(int gridOffset, building *b, int xOffset, int yOffset);
+static void drawBuildingTopForColosseumOverlay(int gridOffset, building *b, int xOffset, int yOffset);
+static void drawBuildingTopForHippodromeOverlay(int gridOffset, building *b, int xOffset, int yOffset);
+static void drawBuildingTopForFoodStocksOverlay(int gridOffset, building *b, int xOffset, int yOffset);
+static void drawBuildingTopForBathhouseOverlay(int gridOffset, building *b, int xOffset, int yOffset);
+static void drawBuildingTopForReligionOverlay(int gridOffset, building *b, int xOffset, int yOffset);
+static void drawBuildingTopForSchoolOverlay(int gridOffset, building *b, int xOffset, int yOffset);
+static void drawBuildingTopForLibraryOverlay(int gridOffset, building *b, int xOffset, int yOffset);
+static void drawBuildingTopForAcademyOverlay(int gridOffset, building *b, int xOffset, int yOffset);
+static void drawBuildingTopForBarberOverlay(int gridOffset, building *b, int xOffset, int yOffset);
+static void drawBuildingTopForClinicsOverlay(int gridOffset, building *b, int xOffset, int yOffset);
+static void drawBuildingTopForHospitalOverlay(int gridOffset, building *b, int xOffset, int yOffset);
+static void drawBuildingTopForTaxIncomeOverlay(int gridOffset, building *b, int xOffset, int yOffset);
+static void drawBuildingTopForProblemsOverlay(int gridOffset, building *b, int xOffset, int yOffset);
 static void drawOverlayColumn(int height, int xOffset, int yOffset, int isRed);
 
 static void draw_foot_with_size(int grid_offset, int image_x, int image_y)
@@ -147,67 +147,67 @@ void UI_CityBuildings_drawOverlayTopsFiguresAnimation(int overlay)
 					drawTopForNativeOverlay(gridOffset, xGraphic, yGraphic);
 				} else if (!map_terrain_is(gridOffset, TERRAIN_WALL | TERRAIN_AQUEDUCT | TERRAIN_ROAD)) {
 					if (map_terrain_is(gridOffset, TERRAIN_BUILDING) && map_building_at(gridOffset)) {
-						int buildingId = map_building_at(gridOffset);
+						building *b = building_get(map_building_at(gridOffset));
 						switch (overlay) {
 							case Overlay_Fire:
-								drawBuildingTopForFireOverlay(gridOffset, buildingId, xGraphic, yGraphic);
+								drawBuildingTopForFireOverlay(gridOffset, b, xGraphic, yGraphic);
 								break;
 							case Overlay_Damage:
-								drawBuildingTopForDamageOverlay(gridOffset, buildingId, xGraphic, yGraphic);
+								drawBuildingTopForDamageOverlay(gridOffset, b, xGraphic, yGraphic);
 								break;
 							case Overlay_Crime:
-								drawBuildingTopForCrimeOverlay(gridOffset, buildingId, xGraphic, yGraphic);
+								drawBuildingTopForCrimeOverlay(gridOffset, b, xGraphic, yGraphic);
 								break;
 							case Overlay_Entertainment:
-								drawBuildingTopForEntertainmentOverlay(gridOffset, buildingId, xGraphic, yGraphic);
+								drawBuildingTopForEntertainmentOverlay(gridOffset, b, xGraphic, yGraphic);
 								break;
 							case Overlay_Theater:
-								drawBuildingTopForTheaterOverlay(gridOffset, buildingId, xGraphic, yGraphic);
+								drawBuildingTopForTheaterOverlay(gridOffset, b, xGraphic, yGraphic);
 								break;
 							case Overlay_Amphitheater:
-								drawBuildingTopForAmphitheaterOverlay(gridOffset, buildingId, xGraphic, yGraphic);
+								drawBuildingTopForAmphitheaterOverlay(gridOffset, b, xGraphic, yGraphic);
 								break;
 							case Overlay_Colosseum:
-								drawBuildingTopForColosseumOverlay(gridOffset, buildingId, xGraphic, yGraphic);
+								drawBuildingTopForColosseumOverlay(gridOffset, b, xGraphic, yGraphic);
 								break;
 							case Overlay_Hippodrome:
-								drawBuildingTopForHippodromeOverlay(gridOffset, buildingId, xGraphic, yGraphic);
+								drawBuildingTopForHippodromeOverlay(gridOffset, b, xGraphic, yGraphic);
 								break;
 							case Overlay_Religion:
-								drawBuildingTopForReligionOverlay(gridOffset, buildingId, xGraphic, yGraphic);
+								drawBuildingTopForReligionOverlay(gridOffset, b, xGraphic, yGraphic);
 								break;
 							case Overlay_Education:
-								drawBuildingTopForEducationOverlay(gridOffset, buildingId, xGraphic, yGraphic);
+								drawBuildingTopForEducationOverlay(gridOffset, b, xGraphic, yGraphic);
 								break;
 							case Overlay_School:
-								drawBuildingTopForSchoolOverlay(gridOffset, buildingId, xGraphic, yGraphic);
+								drawBuildingTopForSchoolOverlay(gridOffset, b, xGraphic, yGraphic);
 								break;
 							case Overlay_Library:
-								drawBuildingTopForLibraryOverlay(gridOffset, buildingId, xGraphic, yGraphic);
+								drawBuildingTopForLibraryOverlay(gridOffset, b, xGraphic, yGraphic);
 								break;
 							case Overlay_Academy:
-								drawBuildingTopForAcademyOverlay(gridOffset, buildingId, xGraphic, yGraphic);
+								drawBuildingTopForAcademyOverlay(gridOffset, b, xGraphic, yGraphic);
 								break;
 							case Overlay_Barber:
-								drawBuildingTopForBarberOverlay(gridOffset, buildingId, xGraphic, yGraphic);
+								drawBuildingTopForBarberOverlay(gridOffset, b, xGraphic, yGraphic);
 								break;
 							case Overlay_Bathhouse:
-								drawBuildingTopForBathhouseOverlay(gridOffset, buildingId, xGraphic, yGraphic);
+								drawBuildingTopForBathhouseOverlay(gridOffset, b, xGraphic, yGraphic);
 								break;
 							case Overlay_Clinic:
-								drawBuildingTopForClinicsOverlay(gridOffset, buildingId, xGraphic, yGraphic);
+								drawBuildingTopForClinicsOverlay(gridOffset, b, xGraphic, yGraphic);
 								break;
 							case Overlay_Hospital:
-								drawBuildingTopForHospitalOverlay(gridOffset, buildingId, xGraphic, yGraphic);
+								drawBuildingTopForHospitalOverlay(gridOffset, b, xGraphic, yGraphic);
 								break;
 							case Overlay_FoodStocks:
-								drawBuildingTopForFoodStocksOverlay(gridOffset, buildingId, xGraphic, yGraphic);
+								drawBuildingTopForFoodStocksOverlay(gridOffset, b, xGraphic, yGraphic);
 								break;
 							case Overlay_TaxIncome:
-								drawBuildingTopForTaxIncomeOverlay(gridOffset, buildingId, xGraphic, yGraphic);
+								drawBuildingTopForTaxIncomeOverlay(gridOffset, b, xGraphic, yGraphic);
 								break;
 							case Overlay_Problems:
-								drawBuildingTopForProblemsOverlay(gridOffset, buildingId, xGraphic, yGraphic);
+								drawBuildingTopForProblemsOverlay(gridOffset, b, xGraphic, yGraphic);
 								break;
 						}
 					} else if (!map_terrain_is(gridOffset, TERRAIN_BUILDING)) {
@@ -250,8 +250,7 @@ void UI_CityBuildings_drawOverlayTopsFiguresAnimation(int overlay)
 			const image *img = image_get(graphicId);
 			if (img->num_animation_sprites && draw) {
 				if (map_property_is_draw_tile(gridOffset)) {
-					int buildingId = map_building_at(gridOffset);
-					building *b = building_get(buildingId);
+					building *b = building_get(map_building_at(gridOffset));
 					int colorMask = 0;
 					if (b->type == BUILDING_GRANARY) {
 						Graphics_drawImageMasked(image_group(GROUP_BUILDING_GRANARY) + 1,
@@ -324,10 +323,9 @@ static void drawFootprintForWaterOverlay(int gridOffset, int xOffset, int yOffse
 		int graphicId = image_group(GROUP_TERRAIN_GRASS_1) + (map_random_get(gridOffset) & 7);
 		DRAWFOOT_SIZE1(graphicId, xOffset, yOffset);
 	} else if (map_terrain_is(gridOffset, TERRAIN_BUILDING)) {
-		int buildingId = map_building_at(gridOffset);
-        building *b = building_get(buildingId);
+        building *b = building_get(map_building_at(gridOffset));
 		int terrain = map_terrain_get(gridOffset);
-		if (buildingId && b->hasWellAccess == 1) {
+		if (b->id && b->hasWellAccess == 1) {
 			terrain |= TERRAIN_FOUNTAIN_RANGE;
 		}
 		if (b->type == BUILDING_WELL || b->type == BUILDING_FOUNTAIN) {
@@ -350,7 +348,7 @@ static void drawFootprintForWaterOverlay(int gridOffset, int xOffset, int yOffse
 					graphicOffset = 0;
 					break;
 			}
-			drawBuildingFootprintForOverlay(buildingId, gridOffset, xOffset, yOffset, graphicOffset);
+			drawBuildingFootprintForOverlay(b->id, gridOffset, xOffset, yOffset, graphicOffset);
 		}
 	} else {
 		int graphicId = image_group(GROUP_TERRAIN_OVERLAY);
@@ -488,10 +486,9 @@ static void drawBuildingFootprintForOverlay(int buildingId, int gridOffset, int 
 	if (!buildingId) {
 		return;
 	}
-	
+	building *b = building_get(buildingId);
 	int graphicId;
 	int origGraphicId = map_image_at(gridOffset);
-	building *b = building_get(buildingId);
 	if (b->size == 1) {
 		graphicId = image_group(GROUP_TERRAIN_OVERLAY);
 		if (b->houseSize) {
@@ -878,9 +875,8 @@ static void drawBuildingTopForDesirabilityOverlay(int gridOffset, int xOffset, i
 	}
 }
 
-static void drawBuildingTopForFireOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
+static void drawBuildingTopForFireOverlay(int gridOffset, building *b, int xOffset, int yOffset)
 {
-	building *b = building_get(buildingId);
 	if (b->type == BUILDING_PREFECTURE) {
 		DRAWTOP_SIZE1(map_image_at(gridOffset), xOffset, yOffset);
 	} else if (b->type == BUILDING_BURNING_RUIN) {
@@ -896,9 +892,8 @@ static void drawBuildingTopForFireOverlay(int gridOffset, int buildingId, int xO
 	}
 }
 
-static void drawBuildingTopForDamageOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
+static void drawBuildingTopForDamageOverlay(int gridOffset, building *b, int xOffset, int yOffset)
 {
-	building *b = building_get(buildingId);
 	if (b->type == BUILDING_ENGINEERS_POST) {
 		DRAWTOP_SIZE1(map_image_at(gridOffset), xOffset, yOffset);
 	} else if (b->damageRisk > 0) {
@@ -912,9 +907,8 @@ static void drawBuildingTopForDamageOverlay(int gridOffset, int buildingId, int 
 	}
 }
 
-static void drawBuildingTopForCrimeOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
+static void drawBuildingTopForCrimeOverlay(int gridOffset, building *b, int xOffset, int yOffset)
 {
-	building *b = building_get(buildingId);
 	if (b->type == BUILDING_PREFECTURE) {
 		DRAWTOP_SIZE1(map_image_at(gridOffset), xOffset, yOffset);
 	} else if (b->type == BUILDING_BURNING_RUIN) {
@@ -941,9 +935,8 @@ static void drawBuildingTopForCrimeOverlay(int gridOffset, int buildingId, int x
 	}
 }
 
-static void drawBuildingTopForEntertainmentOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
+static void drawBuildingTopForEntertainmentOverlay(int gridOffset, building *b, int xOffset, int yOffset)
 {
-	building *b = building_get(buildingId);
 	switch (b->type) {
 		case BUILDING_THEATER:
 			DRAWTOP_SIZE2(map_image_at(gridOffset), xOffset, yOffset);
@@ -967,9 +960,8 @@ static void drawBuildingTopForEntertainmentOverlay(int gridOffset, int buildingI
 	}
 }
 
-static void drawBuildingTopForEducationOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
+static void drawBuildingTopForEducationOverlay(int gridOffset, building *b, int xOffset, int yOffset)
 {
-	building *b = building_get(buildingId);
 	switch (b->type) {
 		case BUILDING_ACADEMY:
 			DRAWTOP_SIZE3(map_image_at(gridOffset), xOffset, yOffset);
@@ -987,9 +979,8 @@ static void drawBuildingTopForEducationOverlay(int gridOffset, int buildingId, i
 	}
 }
 
-static void drawBuildingTopForTheaterOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
+static void drawBuildingTopForTheaterOverlay(int gridOffset, building *b, int xOffset, int yOffset)
 {
-	building *b = building_get(buildingId);
 	switch (b->type) {
 		case BUILDING_ACTOR_COLONY:
 			DRAWTOP_SIZE3(map_image_at(gridOffset), xOffset, yOffset);
@@ -1005,9 +996,8 @@ static void drawBuildingTopForTheaterOverlay(int gridOffset, int buildingId, int
 	}
 }
 
-static void drawBuildingTopForAmphitheaterOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
+static void drawBuildingTopForAmphitheaterOverlay(int gridOffset, building *b, int xOffset, int yOffset)
 {
-	building *b = building_get(buildingId);
 	switch (b->type) {
 		case BUILDING_ACTOR_COLONY:
 		case BUILDING_GLADIATOR_SCHOOL:
@@ -1022,9 +1012,8 @@ static void drawBuildingTopForAmphitheaterOverlay(int gridOffset, int buildingId
 	}
 }
 
-static void drawBuildingTopForColosseumOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
+static void drawBuildingTopForColosseumOverlay(int gridOffset, building *b, int xOffset, int yOffset)
 {
-	building *b = building_get(buildingId);
 	switch (b->type) {
 		case BUILDING_GLADIATOR_SCHOOL:
 		case BUILDING_LION_HOUSE:
@@ -1041,9 +1030,8 @@ static void drawBuildingTopForColosseumOverlay(int gridOffset, int buildingId, i
 	}
 }
 
-static void drawBuildingTopForHippodromeOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
+static void drawBuildingTopForHippodromeOverlay(int gridOffset, building *b, int xOffset, int yOffset)
 {
-	building *b = building_get(buildingId);
 	if (b->type == BUILDING_HIPPODROME) {
 		DRAWTOP_SIZE5(map_image_at(gridOffset), xOffset, yOffset);
 	} else if (b->type == BUILDING_CHARIOT_MAKER) {
@@ -1053,9 +1041,8 @@ static void drawBuildingTopForHippodromeOverlay(int gridOffset, int buildingId, 
 	}
 }
 
-static void drawBuildingTopForFoodStocksOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
+static void drawBuildingTopForFoodStocksOverlay(int gridOffset, building *b, int xOffset, int yOffset)
 {
-	building *b = building_get(buildingId);
 	switch (b->type) {
 		case BUILDING_MARKET:
 		case BUILDING_WHARF:
@@ -1090,9 +1077,8 @@ static void drawBuildingTopForFoodStocksOverlay(int gridOffset, int buildingId, 
 	}
 }
 
-static void drawBuildingTopForBathhouseOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
+static void drawBuildingTopForBathhouseOverlay(int gridOffset, building *b, int xOffset, int yOffset)
 {
-	building *b = building_get(buildingId);
 	if (b->type == BUILDING_BATHHOUSE) {
 		DRAWTOP_SIZE2(map_image_at(gridOffset), xOffset, yOffset);
 	} else if (b->houseSize && b->data.house.bathhouse) {
@@ -1100,9 +1086,8 @@ static void drawBuildingTopForBathhouseOverlay(int gridOffset, int buildingId, i
 	}
 }
 
-static void drawBuildingTopForReligionOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
+static void drawBuildingTopForReligionOverlay(int gridOffset, building *b, int xOffset, int yOffset)
 {
-	building *b = building_get(buildingId);
 	switch (b->type) {
 		case BUILDING_ORACLE:
 		case BUILDING_SMALL_TEMPLE_CERES:
@@ -1127,9 +1112,8 @@ static void drawBuildingTopForReligionOverlay(int gridOffset, int buildingId, in
 	}
 }
 
-static void drawBuildingTopForSchoolOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
+static void drawBuildingTopForSchoolOverlay(int gridOffset, building *b, int xOffset, int yOffset)
 {
-	building *b = building_get(buildingId);
 	if (b->type == BUILDING_SCHOOL) {
 		DRAWTOP_SIZE2(map_image_at(gridOffset), xOffset, yOffset);
 	} else if (b->houseSize && b->data.house.school) {
@@ -1137,9 +1121,8 @@ static void drawBuildingTopForSchoolOverlay(int gridOffset, int buildingId, int 
 	}
 }
 
-static void drawBuildingTopForLibraryOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
+static void drawBuildingTopForLibraryOverlay(int gridOffset, building *b, int xOffset, int yOffset)
 {
-	building *b = building_get(buildingId);
 	if (b->type == BUILDING_LIBRARY) {
 		DRAWTOP_SIZE2(map_image_at(gridOffset), xOffset, yOffset);
 	} else if (b->houseSize && b->data.house.library) {
@@ -1147,9 +1130,8 @@ static void drawBuildingTopForLibraryOverlay(int gridOffset, int buildingId, int
 	}
 }
 
-static void drawBuildingTopForAcademyOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
+static void drawBuildingTopForAcademyOverlay(int gridOffset, building *b, int xOffset, int yOffset)
 {
-	building *b = building_get(buildingId);
 	if (b->type == BUILDING_ACADEMY) {
 		DRAWTOP_SIZE3(map_image_at(gridOffset), xOffset, yOffset);
 	} else if (b->houseSize && b->data.house.academy) {
@@ -1157,9 +1139,8 @@ static void drawBuildingTopForAcademyOverlay(int gridOffset, int buildingId, int
 	}
 }
 
-static void drawBuildingTopForBarberOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
+static void drawBuildingTopForBarberOverlay(int gridOffset, building *b, int xOffset, int yOffset)
 {
-	building *b = building_get(buildingId);
 	if (b->type == BUILDING_BARBER) {
 		DRAWTOP_SIZE1(map_image_at(gridOffset), xOffset, yOffset);
 	} else if (b->houseSize && b->data.house.barber) {
@@ -1167,9 +1148,8 @@ static void drawBuildingTopForBarberOverlay(int gridOffset, int buildingId, int 
 	}
 }
 
-static void drawBuildingTopForClinicsOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
+static void drawBuildingTopForClinicsOverlay(int gridOffset, building *b, int xOffset, int yOffset)
 {
-	building *b = building_get(buildingId);
 	if (b->type == BUILDING_DOCTOR) {
 		DRAWTOP_SIZE1(map_image_at(gridOffset), xOffset, yOffset);
 	} else if (b->houseSize && b->data.house.clinic) {
@@ -1177,9 +1157,8 @@ static void drawBuildingTopForClinicsOverlay(int gridOffset, int buildingId, int
 	}
 }
 
-static void drawBuildingTopForHospitalOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
+static void drawBuildingTopForHospitalOverlay(int gridOffset, building *b, int xOffset, int yOffset)
 {
-	building *b = building_get(buildingId);
 	if (b->type == BUILDING_HOSPITAL) {
 		DRAWTOP_SIZE3(map_image_at(gridOffset), xOffset, yOffset);
 	} else if (b->houseSize && b->data.house.hospital) {
@@ -1187,9 +1166,8 @@ static void drawBuildingTopForHospitalOverlay(int gridOffset, int buildingId, in
 	}
 }
 
-static void drawBuildingTopForTaxIncomeOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
+static void drawBuildingTopForTaxIncomeOverlay(int gridOffset, building *b, int xOffset, int yOffset)
 {
-	building *b = building_get(buildingId);
 	if (b->type == BUILDING_SENATE_UPGRADED) {
 		DRAWTOP_SIZE5(map_image_at(gridOffset), xOffset, yOffset);
 	} else if (b->type == BUILDING_FORUM) {
@@ -1212,9 +1190,8 @@ static int is_problem_cartpusher(int figure_id)
     }
 }
 
-static void drawBuildingTopForProblemsOverlay(int gridOffset, int buildingId, int xOffset, int yOffset)
+static void drawBuildingTopForProblemsOverlay(int gridOffset, building *b, int xOffset, int yOffset)
 {
-    building *b = building_get(buildingId);
 	if (b->houseSize) {
 		return;
 	}

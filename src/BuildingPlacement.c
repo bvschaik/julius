@@ -169,15 +169,15 @@ static void addToTerrainHippodrome(int type, int buildingId, int x, int y, int s
 	Terrain_addBuildingToGrids(part3->id, x + 10, y, size, graphicId, TERRAIN_BUILDING);
 }
 
-static int addToTerrainWarehouseSpace(int x, int y, int prevId)
+static building *addToTerrainWarehouseSpace(int x, int y, building *prev)
 {
 	building *b = building_create(BUILDING_WAREHOUSE_SPACE, x, y);
 	Undo_addBuildingToList(b->id);
-	b->prevPartBuildingId = prevId;
-	building_get(prevId)->nextPartBuildingId = b->id;
+	b->prevPartBuildingId = prev->id;
+	prev->nextPartBuildingId = b->id;
 	Terrain_addBuildingToGrids(b->id, x, y, 1,
 		image_group(GROUP_BUILDING_WAREHOUSE_STORAGE_EMPTY), TERRAIN_BUILDING);
-	return b->id;
+	return b;
 }
 
 static void addToTerrainWarehouse(int type, int buildingId, int x, int y)
@@ -187,7 +187,7 @@ static void addToTerrainWarehouse(int type, int buildingId, int x, int y)
 	b->prevPartBuildingId = 0;
 	Terrain_addBuildingToGrids(buildingId, x, y, 1, image_group(GROUP_BUILDING_WAREHOUSE), TERRAIN_BUILDING);
 
-	int prev = buildingId;
+	building *prev = b;
 	prev = addToTerrainWarehouseSpace(x + 1, y, prev);
 	prev = addToTerrainWarehouseSpace(x + 2, y, prev);
 	prev = addToTerrainWarehouseSpace(x, y + 1, prev);
@@ -196,7 +196,7 @@ static void addToTerrainWarehouse(int type, int buildingId, int x, int y)
 	prev = addToTerrainWarehouseSpace(x, y + 2, prev);
 	prev = addToTerrainWarehouseSpace(x + 1, y + 2, prev);
 	prev = addToTerrainWarehouseSpace(x + 2, y + 2, prev);
-	building_get(prev)->nextPartBuildingId = 0;
+	prev->nextPartBuildingId = 0;
 }
 
 static void addToTerrain(int type, int buildingId, int x, int y, int size,
@@ -785,7 +785,7 @@ static void clearRegionConfirmed(int measureOnly, int xStart, int yStart, int xE
 				}
 				b->state = BuildingState_DeletedByPlayer;
 				b->isDeleted = 1;
-				building *space = building_get(buildingId);
+				building *space = b;
 				for (int i = 0; i < 9; i++) {
 					if (space->prevPartBuildingId <= 0) {
 						break;
@@ -795,7 +795,7 @@ static void clearRegionConfirmed(int measureOnly, int xStart, int yStart, int xE
 					Undo_addBuildingToList(spaceId);
 					space->state = BuildingState_DeletedByPlayer;
 				}
-				space = building_get(buildingId);
+				space = b;
 				for (int i = 0; i < 9; i++) {
 					space = building_next(space);
 					if (space->id <= 0) {

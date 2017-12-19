@@ -140,7 +140,7 @@ int Resource_getWarehouseForGettingResource(int srcBuildingId, int resource, int
 {
 	building *bSrc = building_get(srcBuildingId);
 	int minDist = 10000;
-	int minBuildingId = 0;
+	building *minBuilding = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		building *b = building_get(i);
 		if (!BuildingIsInUse(b) || b->type != BUILDING_WAREHOUSE) {
@@ -166,15 +166,14 @@ int Resource_getWarehouseForGettingResource(int srcBuildingId, int resource, int
 			dist -= 4 * loadsStored;
 			if (dist < minDist) {
 				minDist = dist;
-				minBuildingId = i;
+				minBuilding = b;
 			}
 		}
 	}
-	if (minBuildingId > 0) {
-        building *min = building_get(minBuildingId);
-		*xDst = min->roadAccessX;
-		*yDst = min->roadAccessY;
-		return minBuildingId;
+	if (minBuilding) {
+		*xDst = minBuilding->roadAccessX;
+		*yDst = minBuilding->roadAccessY;
+		return minBuilding->id;
 	} else {
 		return 0;
 	}

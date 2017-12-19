@@ -28,10 +28,9 @@
 #include "scenario/property.h"
 #include "sound/effect.h"
 
-static void generateRioter(int buildingId)
+static void generateRioter(building *b)
 {
 	int xRoad, yRoad;
-	building *b = building_get(buildingId);
 	if (!Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 4, &xRoad, &yRoad)) {
 		return;
 	}
@@ -65,7 +64,7 @@ static void generateRioter(int buildingId)
 			f->state = FigureState_Dead;
 		}
 	}
-	Building_collapseOnFire(buildingId, 0);
+	Building_collapseOnFire(b->id, 0);
 	Data_CityInfo.ratingPeaceNumRiotersThisYear++;
 	Data_CityInfo.riotCause = Data_CityInfo.populationEmigrationCause;
 	CityInfo_Population_changeHappiness(20);
@@ -74,10 +73,9 @@ static void generateRioter(int buildingId)
 	city_message_post_with_popup_delay(MESSAGE_CAT_RIOT, MESSAGE_RIOT, b->type, map_grid_offset(xRoad, yRoad));
 }
 
-static void generateMugger(int buildingId)
+static void generateMugger(building *b)
 {
 	Data_CityInfo.numCriminalsThisMonth++;
-	building *b = building_get(buildingId);
 	if (b->houseCriminalActive < 2) {
 		b->houseCriminalActive = 2;
 		int xRoad, yRoad;
@@ -97,10 +95,9 @@ static void generateMugger(int buildingId)
 	}
 }
 
-static void generateProtester(int buildingId)
+static void generateProtester(building *b)
 {
 	Data_CityInfo.numProtestersThisMonth++;
-	building *b = building_get(buildingId);
 	if (b->houseCriminalActive < 1) {
 		b->houseCriminalActive = 1;
 		int xRoad, yRoad;
@@ -114,7 +111,7 @@ static void generateProtester(int buildingId)
 
 void Security_Tick_generateCriminal()
 {
-	int minBuildingId = 0;
+	building *minBuilding = 0;
 	int minHappiness = 50;
 	for (int i = 1; i <= Data_Buildings_Extra.highestBuildingIdInUse; i++) {
 		building *b = building_get(i);
@@ -123,36 +120,36 @@ void Security_Tick_generateCriminal()
 				b->houseCriminalActive = 0;
 			} else if (b->sentiment.houseHappiness < minHappiness) {
 				minHappiness = b->sentiment.houseHappiness;
-				minBuildingId = i;
+				minBuilding = b;
 			}
 		}
 	}
-	if (minBuildingId) {
+	if (minBuilding) {
 		if (scenario_is_tutorial_1() || scenario_is_tutorial_2()) {
 			return;
 		}
 		if (Data_CityInfo.citySentiment < 30) {
 			if (random_byte() >= Data_CityInfo.citySentiment + 50) {
 				if (minHappiness <= 10) {
-					generateRioter(minBuildingId);
+					generateRioter(minBuilding);
 				} else if (minHappiness < 30) {
-					generateMugger(minBuildingId);
+					generateMugger(minBuilding);
 				} else if (minHappiness < 50) {
-					generateProtester(minBuildingId);
+					generateProtester(minBuilding);
 				}
 			}
 		} else if (Data_CityInfo.citySentiment < 60) {
 			if (random_byte() >= Data_CityInfo.citySentiment + 40) {
 				if (minHappiness < 30) {
-					generateMugger(minBuildingId);
+					generateMugger(minBuilding);
 				} else if (minHappiness < 50) {
-					generateProtester(minBuildingId);
+					generateProtester(minBuilding);
 				}
 			}
 		} else {
 			if (random_byte() >= Data_CityInfo.citySentiment + 20) {
 				if (minHappiness < 50) {
-					generateProtester(minBuildingId);
+					generateProtester(minBuilding);
 				}
 			}
 		}

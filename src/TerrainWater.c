@@ -202,21 +202,20 @@ int Terrain_determineOrientationWatersideSize3(int x, int y, int adjustXY,
 
 int Terrain_Water_getWharfTileForNewFishingBoat(int figureId, int *xTile, int *yTile)
 {
-	int wharfId = 0;
+	building *wharf = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
 		if (BuildingIsInUse(b) && b->type == BUILDING_WHARF) {
 			int wharfBoatId = b->data.other.boatFigureId;
 			if (!wharfBoatId || wharfBoatId == figureId) {
-				wharfId = i;
+				wharf = b;
 				break;
 			}
 		}
 	}
-	if (wharfId <= 0) {
+	if (!wharf) {
 		return 0;
 	}
-	building *wharf = building_get(wharfId);
 	*xTile = wharf->x;
 	*yTile = wharf->y;
 	switch (wharf->data.other.dockOrientation) {
@@ -225,7 +224,7 @@ int Terrain_Water_getWharfTileForNewFishingBoat(int figureId, int *xTile, int *y
 		case 2: *xTile += 1; *yTile += 2; break;
 		default: *xTile -= 1; *yTile += 1; break;
 	}
-	return wharfId;
+	return wharf->id;
 }
 
 int Terrain_Water_getNearestFishTile(int figureId, int *xTile, int *yTile)

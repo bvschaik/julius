@@ -451,18 +451,17 @@ void FigureAction_warehouseman(figure *f)
 		case FigureActionState_52_WarehousemanAtDeliveryBuilding:
 			f->waitTicks++;
 			if (f->waitTicks > 4) {
-				int buildingId = f->destinationBuildingId;
-                building *b = building_get(buildingId);
+                building *b = building_get(f->destinationBuildingId);
 				switch (b->type) {
 					case BUILDING_GRANARY:
-						Resource_addToGranary(buildingId, f->resourceId, 0);
+						Resource_addToGranary(b->id, f->resourceId, 0);
 						break;
 					case BUILDING_BARRACKS:
 						Resource_addWeaponToBarracks(b);
 						break;
 					case BUILDING_WAREHOUSE:
 					case BUILDING_WAREHOUSE_SPACE:
-						Resource_addToWarehouse(buildingId, f->resourceId);
+						Resource_addToWarehouse(b->id, f->resourceId);
 						break;
 					default: // workshop
 						building_workshop_add_raw_material(b);

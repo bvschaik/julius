@@ -781,33 +781,32 @@ void Formation_Tick_updateAll(int secondTime)
 int Formation_Rioter_getTargetBuilding(int *xTile, int *yTile)
 {
 	int bestTypeIndex = 100;
-	int buildingId = 0;
+	building *bestBuilding = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *building = building_get(i);
-		if (!BuildingIsInUse(building)) {
+        building *b = building_get(i);
+		if (!BuildingIsInUse(b)) {
 			continue;
 		}
-		for (int b = 0; b < 100 && b <= bestTypeIndex && rioterAttackBuildingPriority[b]; b++) {
-			if (building->type == rioterAttackBuildingPriority[b]) {
-				if (b < bestTypeIndex) {
-					bestTypeIndex = b;
-					buildingId = i;
+		for (int t = 0; t < 100 && t <= bestTypeIndex && rioterAttackBuildingPriority[t]; t++) {
+			if (b->type == rioterAttackBuildingPriority[t]) {
+				if (t < bestTypeIndex) {
+					bestTypeIndex = t;
+					bestBuilding = b;
 				}
 				break;
 			}
 		}
 	}
-	if (buildingId <= 0) {
+	if (bestBuilding <= 0) {
 		return 0;
 	}
-	building *b = building_get(buildingId);
-	if (b->type == BUILDING_WAREHOUSE) {
-		*xTile = b->x + 1;
-		*yTile = b->y;
-		return buildingId + 1;
+	if (bestBuilding->type == BUILDING_WAREHOUSE) {
+		*xTile = bestBuilding->x + 1;
+		*yTile = bestBuilding->y;
+		return bestBuilding->id + 1;
 	} else {
-		*xTile = b->x;
-		*yTile = b->y;
-		return buildingId;
+		*xTile = bestBuilding->x;
+		*yTile = bestBuilding->y;
+		return bestBuilding->id;
 	}
 }

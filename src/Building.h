@@ -6,8 +6,6 @@
 void Building_updateHighestIds();
 
 void Building_clearList();
-void Building_delete(int buildingId);
-void Building_deleteData(int buildingId);
 
 void Building_GameTick_updateState();
 

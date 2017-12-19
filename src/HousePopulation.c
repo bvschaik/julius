@@ -16,8 +16,8 @@
 static void calculateWorkers();
 static void createImmigrants(int numPeople);
 static void createEmigrants(int numPeople);
-static void createImmigrantForBuilding(int buildingId, int numPeople);
-static void createEmigrantForBuilding(int buildingId, int numPeople);
+static void createImmigrantForBuilding(building *b, int numPeople);
+static void createEmigrantForBuilding(building *b, int numPeople);
 
 static void fillBuildingListHouses()
 {
@@ -172,28 +172,26 @@ static void createImmigrants(int numPeople)
 	}
 	// houses with plenty of room
 	for (int i = 0; i < total_houses && toImmigrate > 0; i++) {
-		int buildingId = houses[i];
-		building *b = building_get(buildingId);
+		building *b = building_get(houses[i]);
 		if (b->distanceFromEntry > 0 && b->housePopulationRoom >= 8 && !b->immigrantFigureId) {
 			if (toImmigrate <= 4) {
-				createImmigrantForBuilding(buildingId, toImmigrate);
+				createImmigrantForBuilding(b, toImmigrate);
 				toImmigrate = 0;
 			} else {
-				createImmigrantForBuilding(buildingId, 4);
+				createImmigrantForBuilding(b, 4);
 				toImmigrate -= 4;
 			}
 		}
 	}
 	// houses with less room
 	for (int i = 0; i < total_houses && toImmigrate > 0; i++) {
-		int buildingId = houses[i];
-		building *b = building_get(buildingId);
+		building *b = building_get(houses[i]);
 		if (b->distanceFromEntry > 0 && b->housePopulationRoom > 0 && !b->immigrantFigureId) {
 			if (toImmigrate <= b->housePopulationRoom) {
-				createImmigrantForBuilding(buildingId, toImmigrate);
+				createImmigrantForBuilding(b, toImmigrate);
 				toImmigrate = 0;
 			} else {
-				createImmigrantForBuilding(buildingId, b->housePopulationRoom);
+				createImmigrantForBuilding(b, b->housePopulationRoom);
 				toImmigrate -= b->housePopulationRoom;
 			}
 		}
@@ -212,8 +210,7 @@ static void createEmigrants(int numPeople)
 	int toEmigrate = numPeople;
 	for (int level = HOUSE_SMALL_TENT; level < HOUSE_LARGE_INSULA && toEmigrate > 0; level++) {
 		for (int i = 0; i < total_houses && toEmigrate > 0; i++) {
-			int buildingId = houses[i];
-            building *b = building_get(buildingId);
+			building *b = building_get(houses[i]);
 			if (b->housePopulation > 0 && b->subtype.houseLevel == level) {
 				int currentPeople;
 				if (b->housePopulation >= 4) {
@@ -222,10 +219,10 @@ static void createEmigrants(int numPeople)
 					currentPeople = b->housePopulation;
 				}
 				if (toEmigrate <= currentPeople) {
-					createEmigrantForBuilding(buildingId, toEmigrate);
+					createEmigrantForBuilding(b, toEmigrate);
 					toEmigrate = 0;
 				} else {
-					createEmigrantForBuilding(buildingId, currentPeople);
+					createEmigrantForBuilding(b, currentPeople);
 					toEmigrate -= currentPeople;
 				}
 			}
@@ -234,21 +231,19 @@ static void createEmigrants(int numPeople)
 	Data_CityInfo.populationEmigratedToday += numPeople - toEmigrate;
 }
 
-static void createImmigrantForBuilding(int buildingId, int numPeople)
+static void createImmigrantForBuilding(building *b, int numPeople)
 {
 	figure *f = figure_create(FIGURE_IMMIGRANT,
 		Data_CityInfo.entryPointX, Data_CityInfo.entryPointY, DIR_0_TOP);
 	f->actionState = FigureActionState_1_ImmigrantCreated;
-	f->immigrantBuildingId = buildingId;
-    building *b = building_get(buildingId);
+	f->immigrantBuildingId = b->id;
 	b->immigrantFigureId = f->id;
 	f->waitTicks = 10 + (b->houseGenerationDelay & 0x7f);
 	f->migrantNumPeople = numPeople;
 }
 
-static void createEmigrantForBuilding(int buildingId, int numPeople)
+static void createEmigrantForBuilding(building *b, int numPeople)
 {
-    building *b = building_get(buildingId);
 	CityInfo_Population_addPeople(-numPeople);
 	if (numPeople < b->housePopulation) {
 		b->housePopulation -= numPeople;
@@ -375,8 +370,7 @@ void HousePopulation_evictOvercrowded()
     int size = building_list_large_size();
     const int *items = building_list_large_items();
 	for (int i = 0; i < size; i++) {
-		int buildingId = items[i];
-		building *b = building_get(buildingId);
+		building *b = building_get(items[i]);
 		if (b->housePopulationRoom < 0) {
 			int numPeopleToEvict = -b->housePopulationRoom;
 			HousePopulation_createHomeless(b->x, b->y, numPeopleToEvict);

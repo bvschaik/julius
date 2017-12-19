@@ -192,9 +192,10 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 		FOREACH_X_VIEW {
 			if (map_property_is_draw_tile(gridOffset)) {
 				int buildingId = map_building_at(gridOffset);
+				building *b = building_get(buildingId);
 				int graphicId = map_image_at(gridOffset);
 				color_t colorMask = 0;
-				if (buildingId && building_get(buildingId)->isDeleted) {
+				if (buildingId && b->isDeleted) {
 					colorMask = COLOR_MASK_RED;
 				}
 				switch (map_property_multi_tile_size(gridOffset)) {
@@ -205,7 +206,6 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 					case 5: DRAWTOP_SIZE5_C(graphicId, xGraphic, yGraphic, colorMask); break;
 				}
 				// specific buildings
-				building *b = building_get(buildingId);
 				if (b->type == BUILDING_SENATE_UPGRADED) {
 					// rating flags
 					graphicId = image_group(GROUP_BUILDING_SENATE);
@@ -399,7 +399,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 					if (b->type == BUILDING_WAREHOUSE) {
 						Graphics_drawImageMasked(image_group(GROUP_BUILDING_WAREHOUSE) + 17,
 							xGraphic - 4, yGraphic - 42, colorMask);
-						if (buildingId == Data_CityInfo.buildingTradeCenterBuildingId) {
+						if (b->id == Data_CityInfo.buildingTradeCenterBuildingId) {
 							Graphics_drawImageMasked(image_group(GROUP_BUILDING_TRADE_CENTER_FLAG),
 								xGraphic + 19, yGraphic - 56, colorMask);
 						}

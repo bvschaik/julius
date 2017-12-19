@@ -58,15 +58,8 @@ void Building_clearList()
 	Data_Buildings_Extra.createdSequence = 0;
 }
 
-void Building_delete(int buildingId)
+static void Building_deleteData(building *b)
 {
-	Building_deleteData(buildingId);
-	building_delete(building_get(buildingId));
-}
-
-void Building_deleteData(int buildingId)
-{
-	building *b = building_get(buildingId);
 	if (b->storage_id) {
 		building_storage_delete(b->storage_id);
 	}
@@ -99,6 +92,12 @@ void Building_deleteData(int buildingId)
 	}
 }
 
+static void Building_delete(building *b)
+{
+    Building_deleteData(b);
+    building_delete(b);
+}
+
 void Building_GameTick_updateState()
 {
 	int landRecalc = 0;
@@ -115,14 +114,14 @@ void Building_GameTick_updateState()
 				}
 				Terrain_removeBuildingFromGrids(i, b->x, b->y);
 				landRecalc = 1;
-				Building_delete(i);
+				Building_delete(b);
 			} else if (b->state == BuildingState_Rubble) {
 				if (b->houseSize) {
 					CityInfo_Population_removePeopleHomeRemoved(b->housePopulation);
 				}
-				Building_delete(i);
+				Building_delete(b);
 			} else if (b->state == BuildingState_DeletedByGame) {
-				Building_delete(i);
+				Building_delete(b);
 			}
 		}
 	}
@@ -149,7 +148,7 @@ void Building_collapseOnFire(int buildingId, int hasPlague)
 	b->houseSize = 0;
 	b->outputResourceId = 0;
 	b->distanceFromEntry = 0;
-	Building_deleteData(buildingId);
+	Building_deleteData(b);
 
 	int watersideBuilding = 0;
 	if (b->type == BUILDING_DOCK || b->type == BUILDING_WHARF || b->type == BUILDING_SHIPYARD) {
@@ -906,7 +905,7 @@ int Building_Dock_isConnectedToOpenWater(int x, int y)
 void Building_Mercury_removeResources(int bigCurse)
 {
 	int maxStored = 0;
-	int maxBuildingId = 0;
+	building *maxBuilding = 0;
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
 		building *b = building_get(i);
 		if (!BuildingIsInUse(b)) {
@@ -927,28 +926,27 @@ void Building_Mercury_removeResources(int bigCurse)
 		}
 		if (totalStored > maxStored) {
 			maxStored = totalStored;
-			maxBuildingId = i;
+			maxBuilding = b;
 		}
 	}
-	if (!maxBuildingId) {
+	if (!maxBuilding) {
 		return;
 	}
-	building *b = building_get(maxBuildingId);
 	if (bigCurse == 1) {
 		city_message_disable_sound_for_next_message();
-		city_message_post(0, MESSAGE_FIRE, b->type, b->gridOffset);
-		Building_collapseOnFire(maxBuildingId, 0);
-		Building_collapseLinked(maxBuildingId, 1);
+		city_message_post(0, MESSAGE_FIRE, maxBuilding->type, maxBuilding->gridOffset);
+		Building_collapseOnFire(maxBuilding->id, 0);
+		Building_collapseLinked(maxBuilding->id, 1);
 		sound_effect_play(SOUND_EFFECT_EXPLOSION);
 		map_routing_update_land();
 	} else {
-		if (b->type == BUILDING_WAREHOUSE) {
-			Resource_removeFromWarehouseForMercury(maxBuildingId, 16);
-		} else if (b->type == BUILDING_GRANARY) {
-			int amount = Resource_removeFromGranary(maxBuildingId, RESOURCE_WHEAT, 1600);
-			amount = Resource_removeFromGranary(maxBuildingId, RESOURCE_VEGETABLES, amount);
-			amount = Resource_removeFromGranary(maxBuildingId, RESOURCE_FRUIT, amount);
-			Resource_removeFromGranary(maxBuildingId, RESOURCE_MEAT, amount);
+		if (maxBuilding->type == BUILDING_WAREHOUSE) {
+			Resource_removeFromWarehouseForMercury(maxBuilding->id, 16);
+		} else if (maxBuilding->type == BUILDING_GRANARY) {
+			int amount = Resource_removeFromGranary(maxBuilding->id, RESOURCE_WHEAT, 1600);
+			amount = Resource_removeFromGranary(maxBuilding->id, RESOURCE_VEGETABLES, amount);
+			amount = Resource_removeFromGranary(maxBuilding->id, RESOURCE_FRUIT, amount);
+			Resource_removeFromGranary(maxBuilding->id, RESOURCE_MEAT, amount);
 		}
 	}
 }
