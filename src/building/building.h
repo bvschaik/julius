@@ -186,6 +186,8 @@ building *building_main(building *b);
 
 building *building_next(building *b);
 
+building *building_create(building_type type, int x, int y);
+
 void building_delete(building *b);
 
 void building_clear_all();

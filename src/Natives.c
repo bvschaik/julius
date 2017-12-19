@@ -1,6 +1,5 @@
 #include "Natives.h"
 
-#include "Building.h"
 #include "Terrain.h"
 
 #include "Data/CityInfo.h"
@@ -52,9 +51,8 @@ void Natives_init()
 				Terrain_removeBuildingFromGrids(0, x, y);
 				continue;
 			}
-			int buildingId = Building_create(buildingType, x, y);
-			map_building_set(gridOffset, buildingId);
-			building *b = building_get(buildingId);
+			building *b = building_create(buildingType, x, y);
+			map_building_set(gridOffset, b->id);
 			b->state = BuildingState_InUse;
 			switch (buildingType) {
 				case BUILDING_NATIVE_CROPS:
@@ -62,9 +60,9 @@ void Natives_init()
 					break;
 				case BUILDING_NATIVE_MEETING:
 					b->sentiment.nativeAnger = 100;
-					map_building_set(gridOffset + map_grid_delta(1, 0), buildingId);
-					map_building_set(gridOffset + map_grid_delta(0, 1), buildingId);
-					map_building_set(gridOffset + map_grid_delta(1, 1), buildingId);
+					map_building_set(gridOffset + map_grid_delta(1, 0), b->id);
+					map_building_set(gridOffset + map_grid_delta(0, 1), b->id);
+					map_building_set(gridOffset + map_grid_delta(1, 1), b->id);
 					Terrain_markNativeLand(b->x, b->y, 2, 6);
 					if (!Data_CityInfo.nativeMainMeetingCenterX) {
 						Data_CityInfo.nativeMainMeetingCenterX = b->x;

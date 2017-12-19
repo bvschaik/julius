@@ -58,123 +58,6 @@ void Building_clearList()
 	Data_Buildings_Extra.createdSequence = 0;
 }
 
-int Building_create(int type, int x, int y)
-{
-	int buildingId = 0;
-	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		if (building_get(i)->state == BuildingState_Unused && !Undo_isBuildingInList(i)) {
-			buildingId = i;
-			break;
-		}
-	}
-	if (!buildingId) {
-		city_warning_show(WARNING_DATA_LIMIT_REACHED);
-		return 0;
-	}
-	
-	building *b = building_get(buildingId);
-    const building_properties *props = building_properties_for_type(type);
-	
-	b->state = BuildingState_Created;
-	b->ciid = 1;
-	b->__unknown_02 = Data_CityInfo.__unknown_00a5; // TODO ??
-	b->type = type;
-	b->size = props->size;
-	b->createdSequence = Data_Buildings_Extra.createdSequence++;
-	b->sentiment.houseHappiness = 50;
-	b->distanceFromEntry = 0;
-	
-	// house size
-	b->houseSize = 0;
-	if (type >= BUILDING_HOUSE_SMALL_TENT && type <= BUILDING_HOUSE_MEDIUM_INSULA) {
-		b->houseSize = 1;
-	} else if (type >= BUILDING_HOUSE_LARGE_INSULA && type <= BUILDING_HOUSE_MEDIUM_VILLA) {
-		b->houseSize = 2;
-	} else if (type >= BUILDING_HOUSE_LARGE_VILLA && type <= BUILDING_HOUSE_MEDIUM_PALACE) {
-		b->houseSize = 3;
-	} else if (type >= BUILDING_HOUSE_LARGE_PALACE && type <= BUILDING_HOUSE_LUXURY_PALACE) {
-		b->houseSize = 4;
-	}
-	
-	// subtype
-	if (BuildingIsHouse(type)) {
-		b->subtype.houseLevel = type - 10;
-	} else {
-		b->subtype.houseLevel = 0;
-	}
-	
-	// input/output resources
-	switch (type) {
-		case BUILDING_WHEAT_FARM:
-			b->outputResourceId = RESOURCE_WHEAT;
-			break;
-		case BUILDING_VEGETABLE_FARM:
-			b->outputResourceId = RESOURCE_VEGETABLES;
-			break;
-		case BUILDING_FRUIT_FARM:
-			b->outputResourceId = RESOURCE_FRUIT;
-			break;
-		case BUILDING_OLIVE_FARM:
-			b->outputResourceId = RESOURCE_OLIVES;
-			break;
-		case BUILDING_VINES_FARM:
-			b->outputResourceId = RESOURCE_VINES;
-			break;
-		case BUILDING_PIG_FARM:
-			b->outputResourceId = RESOURCE_MEAT;
-			break;
-		case BUILDING_MARBLE_QUARRY:
-			b->outputResourceId = RESOURCE_MARBLE;
-			break;
-		case BUILDING_IRON_MINE:
-			b->outputResourceId = RESOURCE_IRON;
-			break;
-		case BUILDING_TIMBER_YARD:
-			b->outputResourceId = RESOURCE_TIMBER;
-			break;
-		case BUILDING_CLAY_PIT:
-			b->outputResourceId = RESOURCE_CLAY;
-			break;
-		case BUILDING_WINE_WORKSHOP:
-			b->outputResourceId = RESOURCE_WINE;
-			b->subtype.workshopType = WORKSHOP_VINES_TO_WINE;
-			break;
-		case BUILDING_OIL_WORKSHOP:
-			b->outputResourceId = RESOURCE_OIL;
-			b->subtype.workshopType = WORKSHOP_OLIVES_TO_OIL;
-			break;
-		case BUILDING_WEAPONS_WORKSHOP:
-			b->outputResourceId = RESOURCE_WEAPONS;
-			b->subtype.workshopType = WORKSHOP_IRON_TO_WEAPONS;
-			break;
-		case BUILDING_FURNITURE_WORKSHOP:
-			b->outputResourceId = RESOURCE_FURNITURE;
-			b->subtype.workshopType = WORKSHOP_TIMBER_TO_FURNITURE;
-			break;
-		case BUILDING_POTTERY_WORKSHOP:
-			b->outputResourceId = RESOURCE_POTTERY;
-			b->subtype.workshopType = WORKSHOP_CLAY_TO_POTTERY;
-			break;
-		default:
-			b->outputResourceId = RESOURCE_NONE;
-			break;
-	}
-	
-	if (type == BUILDING_GRANARY) {
-		b->data.storage.resourceStored[RESOURCE_NONE] = 2400;
-	}
-	
-	b->x = x;
-	b->y = y;
-	b->gridOffset = map_grid_offset(x, y);
-	b->houseGenerationDelay = map_random_get(b->gridOffset) & 0x7f;
-	b->figureRoamDirection = b->houseGenerationDelay & 6;
-	b->fireProof = props->fire_proof;
-	b->isAdjacentToWater = Terrain_isAdjacentToWater(x, y, b->size);
-
-	return buildingId;
-}
-
 void Building_delete(int buildingId)
 {
 	Building_deleteData(buildingId);
@@ -306,8 +189,7 @@ void Building_collapseOnFire(int buildingId, int hasPlague)
 		if (map_terrain_is(map_grid_offset(x, y), TERRAIN_WATER)) {
 			continue;
 		}
-		int ruinId = Building_create(BUILDING_BURNING_RUIN, x, y);
-		building *ruin = building_get(ruinId);
+		building *ruin = building_create(BUILDING_BURNING_RUIN, x, y);
 		int graphicId;
 		if (wasTent) {
 			graphicId = image_group(GROUP_TERRAIN_RUBBLE_TENT);
@@ -315,7 +197,7 @@ void Building_collapseOnFire(int buildingId, int hasPlague)
 			int random = map_random_get(ruin->gridOffset) & 3;
 			graphicId = image_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9 * random;
 		}
-		Terrain_addBuildingToGrids(ruinId, ruin->x, ruin->y, 1, graphicId, TERRAIN_BUILDING);
+		Terrain_addBuildingToGrids(ruin->id, ruin->x, ruin->y, 1, graphicId, TERRAIN_BUILDING);
 		ruin->fireDuration = (ruin->houseGenerationDelay & 7) + 1;
 		ruin->figureId4 = 0;
 		ruin->fireProof = 1;

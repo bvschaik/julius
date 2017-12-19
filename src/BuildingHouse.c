@@ -57,14 +57,13 @@ static int house_image_group(int level)
 
 static void create_house_tile(building_type type, int x, int y, int image_id, int population, int *inventory)
 {
-    int newBuildingId = Building_create(type, x, y);
-    building *b = building_get(newBuildingId);
+    building *b = building_create(type, x, y);
     b->housePopulation = population;
     for (int i = 0; i < INVENTORY_MAX; i++) {
         b->data.house.inventory[i] = inventory[i];
     }
     b->distanceFromEntry = 0;
-    Terrain_addBuildingToGrids(newBuildingId, b->x, b->y, 1,
+    Terrain_addBuildingToGrids(b->id, b->x, b->y, 1,
             image_id + (map_random_get(b->gridOffset) & 1), TERRAIN_BUILDING);
 }
 
@@ -534,11 +533,10 @@ void BuildingHouse_changeTo(building *b, int buildingType)
 
 static void create_vacant_lot(int x, int y, int image_id)
 {
-    int id = Building_create(BUILDING_HOUSE_VACANT_LOT, x, y);
-    building *b = building_get(id);
+    building *b = building_create(BUILDING_HOUSE_VACANT_LOT, x, y);
     b->housePopulation = 0;
     b->distanceFromEntry = 0;
-    Terrain_addBuildingToGrids(id, b->x + 1, b->y, 1, image_id, TERRAIN_BUILDING);
+    Terrain_addBuildingToGrids(b->id, b->x + 1, b->y, 1, image_id, TERRAIN_BUILDING);
 }
 
 void BuildingHouse_changeToVacantLot(building *b)

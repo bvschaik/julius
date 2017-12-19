@@ -101,14 +101,13 @@ static void addToTerrainFort(int type, int buildingId, int x, int y, int size)
         formation_set_figure_type(formationId, FIGURE_FORT_MOUNTED);
 	}
 	// create parade ground
-	int groundId = Building_create(BUILDING_FORT_GROUND, x + 3, y - 1);
-    building *ground = building_get(groundId);
-	Undo_addBuildingToList(groundId);
+	building *ground = building_create(BUILDING_FORT_GROUND, x + 3, y - 1);
+	Undo_addBuildingToList(ground->id);
 	ground->formationId = formationId;
 	ground->prevPartBuildingId = buildingId;
-	b->nextPartBuildingId = groundId;
+	b->nextPartBuildingId = ground->id;
 	ground->nextPartBuildingId = 0;
-	Terrain_addBuildingToGrids(groundId, x + 3, y - 1, 4,
+	Terrain_addBuildingToGrids(ground->id, x + 3, y - 1, 4,
 		image_group(GROUP_BUILDING_FORT) + 1, TERRAIN_BUILDING);
 }
 
@@ -135,33 +134,31 @@ static void addToTerrainHippodrome(int type, int buildingId, int x, int y, int s
 	}
 	Terrain_addBuildingToGrids(buildingId, x, y, size, graphicId, TERRAIN_BUILDING);
 
-	int part2Id = Building_create(BUILDING_HIPPODROME, x + 5, y);
-	building *part2 = building_get(part2Id);
-	Undo_addBuildingToList(part2Id);
+	building *part2 = building_create(BUILDING_HIPPODROME, x + 5, y);
+	Undo_addBuildingToList(part2->id);
 	if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_4_BOTTOM) {
 		part2->subtype.orientation = 1;
 	} else {
 		part2->subtype.orientation = 4;
 	}
 	part2->prevPartBuildingId = buildingId;
-	part1->nextPartBuildingId = part2Id;
+	part1->nextPartBuildingId = part2->id;
 	part2->nextPartBuildingId = 0;
 	switch (Data_State.map.orientation) {
 		case DIR_0_TOP: case DIR_4_BOTTOM: graphicId = graphicId2 + 2; break;
 		case DIR_2_RIGHT: case DIR_6_LEFT: graphicId = graphicId1 + 2; break;
 	}
-	Terrain_addBuildingToGrids(part2Id, x + 5, y, size, graphicId, TERRAIN_BUILDING);
+	Terrain_addBuildingToGrids(part2->id, x + 5, y, size, graphicId, TERRAIN_BUILDING);
 
-	int part3Id = Building_create(BUILDING_HIPPODROME, x + 10, y);
-	building *part3 = building_get(part3Id);
-	Undo_addBuildingToList(part3Id);
+	building *part3 = building_create(BUILDING_HIPPODROME, x + 10, y);
+	Undo_addBuildingToList(part3->id);
 	if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_4_BOTTOM) {
 		part3->subtype.orientation = 2;
 	} else {
 		part3->subtype.orientation = 5;
 	}
-	part3->prevPartBuildingId = part2Id;
-	part2->nextPartBuildingId = part3Id;
+	part3->prevPartBuildingId = part2->id;
+	part2->nextPartBuildingId = part3->id;
 	part3->nextPartBuildingId = 0;
 	switch (Data_State.map.orientation) {
 		case DIR_0_TOP: graphicId = graphicId2 + 4; break;
@@ -169,19 +166,18 @@ static void addToTerrainHippodrome(int type, int buildingId, int x, int y, int s
 		case DIR_4_BOTTOM: graphicId = graphicId2; break;
 		case DIR_6_LEFT: graphicId = graphicId1 + 4; break;
 	}
-	Terrain_addBuildingToGrids(part3Id, x + 10, y, size, graphicId, TERRAIN_BUILDING);
+	Terrain_addBuildingToGrids(part3->id, x + 10, y, size, graphicId, TERRAIN_BUILDING);
 }
 
 static int addToTerrainWarehouseSpace(int x, int y, int prevId)
 {
-	int buildingId = Building_create(BUILDING_WAREHOUSE_SPACE, x, y);
-    building *b = building_get(buildingId);
-	Undo_addBuildingToList(buildingId);
+	building *b = building_create(BUILDING_WAREHOUSE_SPACE, x, y);
+	Undo_addBuildingToList(b->id);
 	b->prevPartBuildingId = prevId;
-	building_get(prevId)->nextPartBuildingId = buildingId;
-	Terrain_addBuildingToGrids(buildingId, x, y, 1,
+	building_get(prevId)->nextPartBuildingId = b->id;
+	Terrain_addBuildingToGrids(b->id, x, y, 1,
 		image_group(GROUP_BUILDING_WAREHOUSE_STORAGE_EMPTY), TERRAIN_BUILDING);
-	return buildingId;
+	return b->id;
 }
 
 static void addToTerrainWarehouse(int type, int buildingId, int x, int y)
@@ -685,17 +681,17 @@ static int placeBuilding(int type, int x, int y)
 	building_placement_warning_check_all(type, x, y, size);
 
 	// phew, checks done!
-	int buildingId;
+	building *b;
 	if (type == BUILDING_FORT_LEGIONARIES || type == BUILDING_FORT_JAVELIN || type == BUILDING_FORT_MOUNTED) {
-		buildingId = Building_create(BUILDING_FORT, x, y);
+		b = building_create(BUILDING_FORT, x, y);
 	} else {
-		buildingId = Building_create(type, x, y);
+		b = building_create(type, x, y);
 	}
-	Undo_addBuildingToList(buildingId);
-	if (buildingId <= 0) {
+	Undo_addBuildingToList(b->id);
+	if (b->id <= 0) {
 		return 0;
 	}
-	addToTerrain(type, buildingId, x, y, size, buildingOrientation,
+	addToTerrain(type, b->id, x, y, size, buildingOrientation,
 		watersideOrientationAbs, watersideOrientationRel);
 	return 1;
 }
@@ -718,11 +714,11 @@ static void placeHouses(int measureOnly, int xStart, int yStart, int xEnd, int y
 				map_property_mark_constructing(gridOffset);
 				itemsPlaced++;
 			} else {
-				int buildingId = Building_create(BUILDING_HOUSE_VACANT_LOT, x, y);
-				Undo_addBuildingToList(buildingId);
-				if (buildingId > 0) {
+				building *b = building_create(BUILDING_HOUSE_VACANT_LOT, x, y);
+				Undo_addBuildingToList(b->id);
+				if (b->id > 0) {
 					itemsPlaced++;
-					Terrain_addBuildingToGrids(buildingId, x, y, 1,
+					Terrain_addBuildingToGrids(b->id, x, y, 1,
 						image_group(GROUP_BUILDING_HOUSE_VACANT_LOT), TERRAIN_BUILDING);
 					if (!Terrain_existsTileWithinRadiusWithType(x, y, 1, 2, TERRAIN_ROAD)) {
 						needsRoadWarning = 1;
@@ -1388,15 +1384,15 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
 			return;
 		}
 		if (info.placeReservoirAtStart == PlaceReservoir_Yes) {
-			int reservoirId = Building_create(BUILDING_RESERVOIR, xStart - 1, yStart - 1);
-			Undo_addBuildingToList(reservoirId);
-			Terrain_addBuildingToGrids(reservoirId, xStart-1, yStart-1, 3, image_group(GROUP_BUILDING_RESERVOIR), TERRAIN_BUILDING);
+			building *reservoir = building_create(BUILDING_RESERVOIR, xStart - 1, yStart - 1);
+			Undo_addBuildingToList(reservoir->id);
+			Terrain_addBuildingToGrids(reservoir->id, xStart-1, yStart-1, 3, image_group(GROUP_BUILDING_RESERVOIR), TERRAIN_BUILDING);
 			map_aqueduct_set(map_grid_offset(xStart-1, yStart-1), 0);
 		}
 		if (info.placeReservoirAtEnd == PlaceReservoir_Yes) {
-			int reservoirId = Building_create(BUILDING_RESERVOIR, xEnd - 1, yEnd - 1);
-			Undo_addBuildingToList(reservoirId);
-			Terrain_addBuildingToGrids(reservoirId, xEnd-1, yEnd-1, 3, image_group(GROUP_BUILDING_RESERVOIR), TERRAIN_BUILDING);
+			building *reservoir = building_create(BUILDING_RESERVOIR, xEnd - 1, yEnd - 1);
+			Undo_addBuildingToList(reservoir->id);
+			Terrain_addBuildingToGrids(reservoir->id, xEnd-1, yEnd-1, 3, image_group(GROUP_BUILDING_RESERVOIR), TERRAIN_BUILDING);
 			map_aqueduct_set(map_grid_offset(xEnd-1, yEnd-1), 0);
 			if (!Terrain_existsTileWithinAreaWithType(xStart - 2, yStart - 2, 5, TERRAIN_WATER) && info.placeReservoirAtStart == PlaceReservoir_No) {
 				building_placement_warning_check_reservoir(BUILDING_RESERVOIR);

@@ -6,7 +6,6 @@
 void Building_updateHighestIds();
 
 void Building_clearList();
-int Building_create(int type, int x, int y);
 void Building_delete(int buildingId);
 void Building_deleteData(int buildingId);
 
