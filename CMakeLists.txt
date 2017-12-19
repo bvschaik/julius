@@ -33,13 +33,13 @@ set(CORE_FILES
 )
 set(BUILDING_FILES
     ${PROJECT_SOURCE_DIR}/src/building/building.c
+    ${PROJECT_SOURCE_DIR}/src/building/construction_warning.c
     ${PROJECT_SOURCE_DIR}/src/building/count.c
     ${PROJECT_SOURCE_DIR}/src/building/figure.c
     ${PROJECT_SOURCE_DIR}/src/building/industry.c
     ${PROJECT_SOURCE_DIR}/src/building/list.c
     ${PROJECT_SOURCE_DIR}/src/building/maintenance.c
     ${PROJECT_SOURCE_DIR}/src/building/model.c
-    ${PROJECT_SOURCE_DIR}/src/building/placement_warning.c
     ${PROJECT_SOURCE_DIR}/src/building/properties.c
     ${PROJECT_SOURCE_DIR}/src/building/storage.c
 )

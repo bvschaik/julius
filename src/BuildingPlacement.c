@@ -18,9 +18,9 @@
 #include "Data/State.h"
 
 #include "building/building.h"
+#include "building/construction_warning.h"
 #include "building/count.h"
 #include "building/model.h"
-#include "building/placement_warning.h"
 #include "building/properties.h"
 #include "building/storage.h"
 #include "city/finance.h"
@@ -678,7 +678,7 @@ static int placeBuilding(int type, int x, int y)
 		city_warning_show(WARNING_ONE_BUILDING_OF_TYPE);
 		return 0;
 	}
-	building_placement_warning_check_all(type, x, y, size);
+	building_construction_warning_check_all(type, x, y, size);
 
 	// phew, checks done!
 	building *b;
@@ -728,7 +728,7 @@ static void placeHouses(int measureOnly, int xStart, int yStart, int xEnd, int y
 		}
 	}
 	if (!measureOnly) {
-		building_placement_warning_check_food_stocks(BUILDING_HOUSE_VACANT_LOT);
+		building_construction_warning_check_food_stocks(BUILDING_HOUSE_VACANT_LOT);
 		if (needsRoadWarning) {
 			city_warning_show(WARNING_HOUSE_TOO_FAR_FROM_ROAD);
 		}
@@ -1299,7 +1299,7 @@ void BuildingPlacement_update(int xStart, int yStart, int xEnd, int yEnd, int ty
 
 void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, int yEnd, int type)
 {
-	building_placement_warning_reset();
+	building_construction_warning_reset();
 	if (!type) {
 		return;
 	}
@@ -1395,7 +1395,7 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
 			Terrain_addBuildingToGrids(reservoir->id, xEnd-1, yEnd-1, 3, image_group(GROUP_BUILDING_RESERVOIR), TERRAIN_BUILDING);
 			map_aqueduct_set(map_grid_offset(xEnd-1, yEnd-1), 0);
 			if (!Terrain_existsTileWithinAreaWithType(xStart - 2, yStart - 2, 5, TERRAIN_WATER) && info.placeReservoirAtStart == PlaceReservoir_No) {
-				building_placement_warning_check_reservoir(BUILDING_RESERVOIR);
+				building_construction_warning_check_reservoir(BUILDING_RESERVOIR);
 			}
 		}
 		placementCost = info.cost;

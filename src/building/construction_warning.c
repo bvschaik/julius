@@ -1,4 +1,4 @@
-#include "placement_warning.h"
+#include "construction_warning.h"
 
 #include "building/count.h"
 #include "building/model.h"
@@ -16,7 +16,7 @@
 
 static int has_warning = 0;
 
-void building_placement_warning_reset()
+void building_construction_warning_reset()
 {
     has_warning = 0;
 }
@@ -257,9 +257,9 @@ static void checkClayAccess(int buildingType)
     }
 }
 
-void building_placement_warning_check_all(building_type type, int x, int y, int size)
+void building_construction_warning_check_all(building_type type, int x, int y, int size)
 {
-    building_placement_warning_check_food_stocks(type);
+    building_construction_warning_check_food_stocks(type);
     checkWorkers(type);
     checkMarket(type);
     checkActorAccess(type);
@@ -282,7 +282,7 @@ void building_placement_warning_check_all(building_type type, int x, int y, int 
     checkRoadAccess(type, x, y, size);
 }
 
-void building_placement_warning_check_food_stocks(building_type type)
+void building_construction_warning_check_food_stocks(building_type type)
 {
     if (!has_warning && type == BUILDING_HOUSE_VACANT_LOT) {
         if (Data_CityInfo.population >= 200 && !scenario_property_rome_supplies_wheat()) {
@@ -294,7 +294,7 @@ void building_placement_warning_check_food_stocks(building_type type)
     }
 }
 
-void building_placement_warning_check_reservoir(building_type type)
+void building_construction_warning_check_reservoir(building_type type)
 {
     if (!has_warning && type == BUILDING_RESERVOIR) {
         if (building_count_active(BUILDING_RESERVOIR)) {
