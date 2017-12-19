@@ -34,6 +34,7 @@ set(CORE_FILES
 set(BUILDING_FILES
     ${PROJECT_SOURCE_DIR}/src/building/building.c
     ${PROJECT_SOURCE_DIR}/src/building/count.c
+    ${PROJECT_SOURCE_DIR}/src/building/figure.c
     ${PROJECT_SOURCE_DIR}/src/building/industry.c
     ${PROJECT_SOURCE_DIR}/src/building/list.c
     ${PROJECT_SOURCE_DIR}/src/building/maintenance.c
@@ -167,7 +168,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/FigureAction_Trader.c
 	${PROJECT_SOURCE_DIR}/src/FigureAction_Wall.c
 	${PROJECT_SOURCE_DIR}/src/FigureAction_Water.c
-	${PROJECT_SOURCE_DIR}/src/FigureGeneration.c
 	${PROJECT_SOURCE_DIR}/src/FigureMovement.c
 	${PROJECT_SOURCE_DIR}/src/Figure_Service.c
 	${PROJECT_SOURCE_DIR}/src/Formation.c

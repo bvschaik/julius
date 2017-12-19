@@ -22,6 +22,7 @@
 #include "Data/CityInfo.h"
 #include "Data/State.h"
 
+#include "building/figure.h"
 #include "building/industry.h"
 #include "building/maintenance.h"
 #include "city/culture.h"
@@ -97,7 +98,7 @@ void GameTick_advance()
 		case 28: map_water_supply_update_houses(); break;
 		case 29: Formation_Tick_updateAll(1); break;
 		case 30: UI_Sidebar_requestMinimapRefresh(); break;
-		case 31: FigureGeneration_generateFiguresForBuildings(); break;
+		case 31: building_figure_generate(); break;
 		case 32: Trader_tick(); break;
 		case 33: CityInfo_Tick_countBuildingTypes(); city_culture_update_coverage(); break;
 		case 34: CityInfo_Tick_distributeTreasuryOverForumsAndSenates(); break;
