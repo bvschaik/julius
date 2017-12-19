@@ -22,36 +22,45 @@
 #include "map/random.h"
 #include "map/terrain.h"
 
-#define SET_LABOR_PROBLEM(b) if (b->housesCovered <= 0) b->showOnProblemOverlay = 2
-#define SPAWN_LABOR_SEEKER(t) if (b->housesCovered <= t) generateLaborSeeker(b, xRoad, yRoad);
-#define EXIT_IF_FIGURE(t) if (buildingHasFigureOfType(b, t, 0)) return;
-#define EXIT_IF_FIGURES(t1,t2) if (buildingHasFigureOfType(b, t1, t2)) return;
-
-static int worker_percentage(building *b)
+static int worker_percentage(const building *b)
 {
     return calc_percentage(b->numWorkers, model_get_building(b->type)->laborers);
 }
 
-static void generateLaborSeeker(building *b, int x, int y)
+static void check_labor_problem(building *b)
 {
-	if (Data_CityInfo.population <= 0) {
-		return;
-	}
-	if (b->figureId2) {
-		figure *f = figure_get(b->figureId2);
-		if (!f->state || f->type != FIGURE_LABOR_SEEKER || f->buildingId != b->id) {
-			b->figureId2 = 0;
-		}
-	} else {
-		figure *f = figure_create(FIGURE_LABOR_SEEKER, x, y, DIR_0_TOP);
-		f->actionState = FigureActionState_125_Roaming;
-		f->buildingId = b->id;
-		b->figureId2 = f->id;
-		FigureMovement_initRoaming(f);
-	}
+    if (b->housesCovered <= 0) {
+        b->showOnProblemOverlay = 2;
+    }
 }
 
-static int buildingHasFigureOfType(building *b, int type1, int type2)
+static void generate_labor_seeker(building *b, int x, int y)
+{
+    if (Data_CityInfo.population <= 0) {
+        return;
+    }
+    if (b->figureId2) {
+        figure *f = figure_get(b->figureId2);
+        if (!f->state || f->type != FIGURE_LABOR_SEEKER || f->buildingId != b->id) {
+            b->figureId2 = 0;
+        }
+    } else {
+        figure *f = figure_create(FIGURE_LABOR_SEEKER, x, y, DIR_0_TOP);
+        f->actionState = FigureActionState_125_Roaming;
+        f->buildingId = b->id;
+        b->figureId2 = f->id;
+        FigureMovement_initRoaming(f);
+    }
+}
+
+static void spawn_labor_seeker(building *b, int x, int y, int min_houses)
+{
+    if (b->housesCovered <= min_houses) {
+        generate_labor_seeker(b, x, y);
+    }
+}
+
+static int has_figure_of_types(building *b, figure_type type1, figure_type type2)
 {
 	int figureId = b->figureId;
 	if (figureId <= 0) {
@@ -64,6 +73,11 @@ static int buildingHasFigureOfType(building *b, int type1, int type2)
 		b->figureId = 0;
 		return 0;
 	}
+}
+
+static int has_figure_of_type(building *b, figure_type type)
+{
+    return has_figure_of_types(b, type, 0);
 }
 
 static void spawnFigurePatrician(building *b, int *patricianSpawned)
@@ -84,7 +98,7 @@ static void spawnFigurePatrician(building *b, int *patricianSpawned)
 
 static void spawnFigureWarehouse(building *b)
 {
-	SET_LABOR_PROBLEM(b);
+	check_labor_problem(b);
 	building *space = b;
 	for (int i = 0; i < 8; i++) {
 		space = building_next(space);
@@ -95,8 +109,10 @@ static void spawnFigureWarehouse(building *b)
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad) ||
 		Terrain_hasRoadAccess(b->x, b->y, 3, &xRoad, &yRoad)) {
-		SPAWN_LABOR_SEEKER(100);
-		EXIT_IF_FIGURE(FIGURE_WAREHOUSEMAN);
+		spawn_labor_seeker(b, xRoad, yRoad, 100);
+		if (has_figure_of_type(b, FIGURE_WAREHOUSEMAN)) {
+            return;
+        }
 		int resource;
 		int task = Resource_determineWarehouseWorkerTask(b, &resource);
 		if (task >= 0) {
@@ -114,11 +130,13 @@ static void spawnFigureWarehouse(building *b)
 
 static void spawnFigureGranary(building *b)
 {
-	SET_LABOR_PROBLEM(b);
+	check_labor_problem(b);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccessGranary(b->x, b->y, &xRoad, &yRoad)) {
-		SPAWN_LABOR_SEEKER(100);
-		EXIT_IF_FIGURE(FIGURE_WAREHOUSEMAN);
+		spawn_labor_seeker(b, xRoad, yRoad, 100);
+		if (has_figure_of_type(b, FIGURE_WAREHOUSEMAN)) {
+            return;
+        }
 		int task = Resource_determineGranaryWorkerTask(b);
 		if (task >= 0) {
 			figure *f = figure_create(FIGURE_WAREHOUSEMAN, xRoad, yRoad, DIR_4_BOTTOM);
@@ -132,10 +150,10 @@ static void spawnFigureGranary(building *b)
 
 static void spawnFigureTower(building *b)
 {
-	SET_LABOR_PROBLEM(b);
+	check_labor_problem(b);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
-		SPAWN_LABOR_SEEKER(50);
+		spawn_labor_seeker(b, xRoad, yRoad, 50);
 		if (b->numWorkers <= 0) {
 			return;
 		}
@@ -145,7 +163,7 @@ static void spawnFigureTower(building *b)
 			f->buildingId = b->id;
 			f->actionState = FigureActionState_180_BallistaCreated;
 		}
-		buildingHasFigureOfType(b, FIGURE_TOWER_SENTRY, 0);
+		has_figure_of_type(b, FIGURE_TOWER_SENTRY);
 		if (b->figureId <= 0) {
 			Data_Buildings_Extra.barracksTowerSentryRequested = 2;
 		}
@@ -154,11 +172,13 @@ static void spawnFigureTower(building *b)
 
 static void spawnFigureEngineersPost(building *b)
 {
-	SET_LABOR_PROBLEM(b);
-	EXIT_IF_FIGURE(FIGURE_ENGINEER);
+	check_labor_problem(b);
+	if (has_figure_of_type(b, FIGURE_ENGINEER)) {
+        return;
+    }
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
-		SPAWN_LABOR_SEEKER(100);
+		spawn_labor_seeker(b, xRoad, yRoad, 100);
 		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
 		if (pctWorkers >= 100) {
@@ -187,11 +207,13 @@ static void spawnFigureEngineersPost(building *b)
 
 static void spawnFigurePrefecture(building *b)
 {
-	SET_LABOR_PROBLEM(b);
-	EXIT_IF_FIGURE(FIGURE_PREFECT);
+	check_labor_problem(b);
+	if (has_figure_of_type(b, FIGURE_PREFECT)) {
+        return;
+    }
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
-		SPAWN_LABOR_SEEKER(100);
+		spawn_labor_seeker(b, xRoad, yRoad, 100);
 		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
 		if (pctWorkers >= 100) {
@@ -220,10 +242,10 @@ static void spawnFigurePrefecture(building *b)
 
 static void spawnFigureActorColony(building *b)
 {
-	SET_LABOR_PROBLEM(b);
+	check_labor_problem(b);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
-		SPAWN_LABOR_SEEKER(50);
+		spawn_labor_seeker(b, xRoad, yRoad, 50);
 		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
 		if (pctWorkers >= 100) {
@@ -252,10 +274,10 @@ static void spawnFigureActorColony(building *b)
 
 static void spawnFigureGladiatorSchool(building *b)
 {
-	SET_LABOR_PROBLEM(b);
+	check_labor_problem(b);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
-		SPAWN_LABOR_SEEKER(50);
+		spawn_labor_seeker(b, xRoad, yRoad, 50);
 		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
 		if (pctWorkers >= 100) {
@@ -284,10 +306,10 @@ static void spawnFigureGladiatorSchool(building *b)
 
 static void spawnFigureLionHouse(building *b)
 {
-	SET_LABOR_PROBLEM(b);
+	check_labor_problem(b);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
-		SPAWN_LABOR_SEEKER(50);
+		spawn_labor_seeker(b, xRoad, yRoad, 50);
 		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
 		if (pctWorkers >= 100) {
@@ -316,10 +338,10 @@ static void spawnFigureLionHouse(building *b)
 
 static void spawnFigureChariotMaker(building *b)
 {
-	SET_LABOR_PROBLEM(b);
+	check_labor_problem(b);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
-		SPAWN_LABOR_SEEKER(50);
+		spawn_labor_seeker(b, xRoad, yRoad, 50);
 		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
 		if (pctWorkers >= 100) {
@@ -348,13 +370,15 @@ static void spawnFigureChariotMaker(building *b)
 
 static void spawnFigureAmphitheater(building *b)
 {
-	SET_LABOR_PROBLEM(b);
-	EXIT_IF_FIGURES(FIGURE_ACTOR, FIGURE_GLADIATOR);
+	check_labor_problem(b);
+	if (has_figure_of_types(b, FIGURE_ACTOR, FIGURE_GLADIATOR)) {
+        return;
+    }
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		if (b->housesCovered <= 50 ||
 			(b->data.entertainment.days1 <= 0 && b->data.entertainment.days2 <= 0)) {
-			generateLaborSeeker(b, xRoad, yRoad);
+			generate_labor_seeker(b, xRoad, yRoad);
 		}
 		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
@@ -390,12 +414,14 @@ static void spawnFigureAmphitheater(building *b)
 
 static void spawnFigureTheater(building *b)
 {
-	SET_LABOR_PROBLEM(b);
-	EXIT_IF_FIGURE(FIGURE_ACTOR);
+	check_labor_problem(b);
+	if (has_figure_of_type(b, FIGURE_ACTOR)) {
+        return;
+    }
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		if (b->housesCovered <= 50 || b->data.entertainment.days1 <= 0) {
-			generateLaborSeeker(b, xRoad, yRoad);
+			generate_labor_seeker(b, xRoad, yRoad);
 		}
 		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
@@ -426,7 +452,7 @@ static void spawnFigureTheater(building *b)
 
 static void spawnFigureHippodrome(building *b)
 {
-	SET_LABOR_PROBLEM(b);
+	check_labor_problem(b);
 	if (b->prevPartBuildingId) {
 		return;
 	}
@@ -437,11 +463,13 @@ static void spawnFigureHippodrome(building *b)
 			part->showOnProblemOverlay = b->showOnProblemOverlay;
 		}
 	}
-	EXIT_IF_FIGURE(FIGURE_CHARIOTEER);
+	if (has_figure_of_type(b, FIGURE_CHARIOTEER)) {
+        return;
+    }
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccessHippodrome(b->x, b->y, &xRoad, &yRoad)) {
 		if (b->housesCovered <= 50 || b->data.entertainment.days1 <= 0) {
-			generateLaborSeeker(b, xRoad, yRoad);
+			generate_labor_seeker(b, xRoad, yRoad);
 		}
 		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
@@ -494,13 +522,15 @@ static void spawnFigureHippodrome(building *b)
 
 static void spawnFigureColosseum(building *b)
 {
-	SET_LABOR_PROBLEM(b);
-	EXIT_IF_FIGURES(FIGURE_GLADIATOR, FIGURE_LION_TAMER);
+	check_labor_problem(b);
+	if (has_figure_of_types(b, FIGURE_GLADIATOR, FIGURE_LION_TAMER)) {
+        return;
+    }
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		if (b->housesCovered <= 50 ||
 			(b->data.entertainment.days1 <= 0 && b->data.entertainment.days2 <= 0)) {
-			generateLaborSeeker(b, xRoad, yRoad);
+			generate_labor_seeker(b, xRoad, yRoad);
 		}
 		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
@@ -557,10 +587,10 @@ static void setMarketGraphic(building *b)
 static void spawnFigureMarket(building *b)
 {
 	setMarketGraphic(b);
-	SET_LABOR_PROBLEM(b);
+	check_labor_problem(b);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
-		SPAWN_LABOR_SEEKER(50);
+		spawn_labor_seeker(b, xRoad, yRoad, 50);
 		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
 		if (pctWorkers >= 100) {
@@ -577,7 +607,7 @@ static void spawnFigureMarket(building *b)
 			return;
 		}
 		// market trader
-		if (!buildingHasFigureOfType(b, FIGURE_MARKET_TRADER, 0)) {
+		if (!has_figure_of_type(b, FIGURE_MARKET_TRADER)) {
 			b->figureSpawnDelay++;
 			if (b->figureSpawnDelay <= spawnDelay) {
 				return;
@@ -644,7 +674,7 @@ static void setBathhouseGraphic(building *b)
 				image_group(GROUP_BUILDING_BATHHOUSE_NO_WATER), TERRAIN_BUILDING);
 		} else {
 			Terrain_addBuildingToGrids(b->id, b->x, b->y, b->size,
-				image_group(GROUP_BUILDING_BATHHOUSE_FANCY_NO_WATER), TERRAIN_BUILDING);
+                image_group(GROUP_BUILDING_BATHHOUSE_FANCY_NO_WATER), TERRAIN_BUILDING);
 		}
 	}
 }
@@ -652,14 +682,16 @@ static void setBathhouseGraphic(building *b)
 static void spawnFigureBathhouse(building *b)
 {
 	setBathhouseGraphic(b);
-	SET_LABOR_PROBLEM(b);
+	check_labor_problem(b);
 	if (!b->hasWaterAccess) {
 		b->showOnProblemOverlay = 2;
 	}
-	EXIT_IF_FIGURE(FIGURE_BATHHOUSE_WORKER);
+	if (has_figure_of_type(b, FIGURE_BATHHOUSE_WORKER)) {
+        return;
+    }
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad) && b->hasWaterAccess) {
-		SPAWN_LABOR_SEEKER(50);
+		spawn_labor_seeker(b, xRoad, yRoad, 50);
 		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
 		if (pctWorkers >= 100) {
@@ -689,11 +721,13 @@ static void spawnFigureBathhouse(building *b)
 
 static void spawnFigureSchool(building *b)
 {
-	SET_LABOR_PROBLEM(b);
-	EXIT_IF_FIGURE(FIGURE_SCHOOL_CHILD);
+	check_labor_problem(b);
+	if (has_figure_of_type(b, FIGURE_SCHOOL_CHILD)) {
+        return;
+    }
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
-		SPAWN_LABOR_SEEKER(50);
+		spawn_labor_seeker(b, xRoad, yRoad, 50);
 		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
 		if (pctWorkers >= 100) {
@@ -739,17 +773,18 @@ static void spawnFigureSchool(building *b)
 
 static void spawnFigureLibrary(building *b)
 {
-	SET_LABOR_PROBLEM(b);
-	EXIT_IF_FIGURE(FIGURE_LIBRARIAN);
+	check_labor_problem(b);
+	if (has_figure_of_type(b, FIGURE_LIBRARIAN)) {
+        return;
+    }
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
-		SPAWN_LABOR_SEEKER(50);
+		spawn_labor_seeker(b, xRoad, yRoad, 50);
 		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
 		if (pctWorkers >= 100) {
 			spawnDelay = 3;
 		} else if (pctWorkers >= 75) {
-			spawnDelay = 7;
 		} else if (pctWorkers >= 50) {
 			spawnDelay = 15;
 		} else if (pctWorkers >= 25) {
@@ -773,11 +808,13 @@ static void spawnFigureLibrary(building *b)
 
 static void spawnFigureAcademy(building *b)
 {
-	SET_LABOR_PROBLEM(b);
-	EXIT_IF_FIGURE(FIGURE_TEACHER);
+	check_labor_problem(b);
+	if (has_figure_of_type(b, FIGURE_TEACHER)) {
+        return;
+    }
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
-		SPAWN_LABOR_SEEKER(50);
+		spawn_labor_seeker(b, xRoad, yRoad, 50);
 		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
 		if (pctWorkers >= 100) {
@@ -807,11 +844,13 @@ static void spawnFigureAcademy(building *b)
 
 static void spawnFigureBarber(building *b)
 {
-	SET_LABOR_PROBLEM(b);
-	EXIT_IF_FIGURE(FIGURE_BARBER);
+	check_labor_problem(b);
+	if (has_figure_of_type(b, FIGURE_BARBER)) {
+        return;
+    }
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
-		SPAWN_LABOR_SEEKER(50);
+		spawn_labor_seeker(b, xRoad, yRoad, 50);
 		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
 		if (pctWorkers >= 100) {
@@ -841,11 +880,13 @@ static void spawnFigureBarber(building *b)
 
 static void spawnFigureDoctor(building *b)
 {
-	SET_LABOR_PROBLEM(b);
-	EXIT_IF_FIGURE(FIGURE_DOCTOR);
+	check_labor_problem(b);
+	if (has_figure_of_type(b, FIGURE_DOCTOR)) {
+        return;
+    }
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
-		SPAWN_LABOR_SEEKER(50);
+		spawn_labor_seeker(b, xRoad, yRoad, 50);
 		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
 		if (pctWorkers >= 100) {
@@ -875,11 +916,13 @@ static void spawnFigureDoctor(building *b)
 
 static void spawnFigureHospital(building *b)
 {
-	SET_LABOR_PROBLEM(b);
-	EXIT_IF_FIGURE(FIGURE_SURGEON);
+	check_labor_problem(b);
+	if (has_figure_of_type(b, FIGURE_SURGEON)) {
+        return;
+    }
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
-		SPAWN_LABOR_SEEKER(50);
+		spawn_labor_seeker(b, xRoad, yRoad, 50);
 		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
 		if (pctWorkers >= 100) {
@@ -909,11 +952,13 @@ static void spawnFigureHospital(building *b)
 
 static void spawnFigureTemple(building *b)
 {
-	SET_LABOR_PROBLEM(b);
-	EXIT_IF_FIGURE(FIGURE_PRIEST);
+	check_labor_problem(b);
+	if (has_figure_of_type(b, FIGURE_PRIEST)) {
+        return;
+    }
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
-		SPAWN_LABOR_SEEKER(50);
+		spawn_labor_seeker(b, xRoad, yRoad, 50);
 		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
 		if (model_get_building(b->type)->laborers <= 0) {
@@ -962,11 +1007,13 @@ static void spawnFigureSenateForum(building *b)
 	if (b->type == BUILDING_SENATE_UPGRADED) {
 		setSenateGraphic(b);
 	}
-	SET_LABOR_PROBLEM(b);
-	EXIT_IF_FIGURE(FIGURE_TAX_COLLECTOR);
+	check_labor_problem(b);
+	if (has_figure_of_type(b, FIGURE_TAX_COLLECTOR)) {
+        return;
+    }
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
-		SPAWN_LABOR_SEEKER(50);
+		spawn_labor_seeker(b, xRoad, yRoad, 50);
 		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
 		if (pctWorkers >= 100) {
@@ -995,7 +1042,9 @@ static void spawnFigureSenateForum(building *b)
 
 static void spawnFigureMissionPost(building *b)
 {
-	EXIT_IF_FIGURE(FIGURE_MISSIONARY);
+	if (has_figure_of_type(b, FIGURE_MISSIONARY)) {
+        return;
+    }
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
 		if (Data_CityInfo.population > 0) {
@@ -1015,11 +1064,13 @@ static void spawnFigureMissionPost(building *b)
 
 static void spawnFigureIndustry(building *b)
 {
-	SET_LABOR_PROBLEM(b);
+	check_labor_problem(b);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
-		SPAWN_LABOR_SEEKER(50);
-		EXIT_IF_FIGURE(FIGURE_CART_PUSHER);
+		spawn_labor_seeker(b, xRoad, yRoad, 50);
+		if (has_figure_of_type(b, FIGURE_CART_PUSHER)) {
+            return;
+        }
 		if (building_industry_has_produced_resource(b)) {
 			building_industry_start_new_production(b);
 			figure *f = figure_create(FIGURE_CART_PUSHER, xRoad, yRoad, DIR_4_BOTTOM);
@@ -1034,7 +1085,7 @@ static void spawnFigureIndustry(building *b)
 
 static void spawnFigureWharf(building *b)
 {
-	SET_LABOR_PROBLEM(b);
+	check_labor_problem(b);
 	if (b->data.other.boatFigureId) {
 		figure *f = figure_get(b->data.other.boatFigureId);
 		if (f->state != FigureState_Alive || f->type != FIGURE_FISHING_BOAT) {
@@ -1043,8 +1094,10 @@ static void spawnFigureWharf(building *b)
 	}
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
-		SPAWN_LABOR_SEEKER(50);
-		EXIT_IF_FIGURE(FIGURE_CART_PUSHER);
+		spawn_labor_seeker(b, xRoad, yRoad, 50);
+		if (has_figure_of_type(b, FIGURE_CART_PUSHER)) {
+            return;
+        }
 		if (b->figureSpawnDelay) {
 			b->figureSpawnDelay = 0;
 			b->data.other.fishingBoatHasFish = 0;
@@ -1061,11 +1114,13 @@ static void spawnFigureWharf(building *b)
 
 static void spawnFigureShipyard(building *b)
 {
-	SET_LABOR_PROBLEM(b);
+	check_labor_problem(b);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
-		SPAWN_LABOR_SEEKER(50);
-		EXIT_IF_FIGURE(FIGURE_FISHING_BOAT);
+		spawn_labor_seeker(b, xRoad, yRoad, 50);
+		if (has_figure_of_type(b, FIGURE_FISHING_BOAT)) {
+            return;
+        }
 		int pctWorkers = worker_percentage(b);
 		if (pctWorkers >= 100) {
 			b->data.industry.progress += 10;
@@ -1093,10 +1148,10 @@ static void spawnFigureShipyard(building *b)
 
 static void spawnFigureDock(building *b)
 {
-	SET_LABOR_PROBLEM(b);
+	check_labor_problem(b);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
-		SPAWN_LABOR_SEEKER(50);
+		spawn_labor_seeker(b, xRoad, yRoad, 50);
 		int pctWorkers = worker_percentage(b);
 		int maxDockers;
 		if (pctWorkers >= 75) {
@@ -1144,7 +1199,9 @@ static void spawnFigureDock(building *b)
 static void spawnFigureNativeHut(building *b)
 {
 	map_image_set(b->gridOffset, image_group(GROUP_BUILDING_NATIVE) + (map_random_get(b->gridOffset) & 1));
-	EXIT_IF_FIGURE(FIGURE_INDIGENOUS_NATIVE);
+	if (has_figure_of_type(b, FIGURE_INDIGENOUS_NATIVE)) {
+        return;
+    }
 	int xOut, yOut;
 	if (b->subtype.nativeMeetingCenterId > 0 && Terrain_getAdjacentRoadOrClearLand(b->x, b->y, b->size, &xOut, &yOut)) {
 		b->figureSpawnDelay++;
@@ -1163,7 +1220,7 @@ static void spawnFigureNativeMeeting(building *b)
 	Terrain_addBuildingToGrids(b->id, b->x, b->y, 2,
 		image_group(GROUP_BUILDING_NATIVE) + 2, TERRAIN_BUILDING);
 	if (Data_CityInfo.nativeMissionPostOperational > 0 &&
-		!buildingHasFigureOfType(b, FIGURE_NATIVE_TRADER, 0)) {
+		!has_figure_of_type(b, FIGURE_NATIVE_TRADER)) {
         int xOut, yOut;
         if (Terrain_getAdjacentRoadOrClearLand(b->x, b->y, b->size, &xOut, &yOut)) {
 			b->figureSpawnDelay++;
@@ -1180,10 +1237,10 @@ static void spawnFigureNativeMeeting(building *b)
 
 static void spawnFigureBarracks(building *b)
 {
-	SET_LABOR_PROBLEM(b);
+	check_labor_problem(b);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
-		SPAWN_LABOR_SEEKER(100);
+		spawn_labor_seeker(b, xRoad, yRoad, 100);
 		int pctWorkers = worker_percentage(b);
 		int spawnDelay;
 		if (pctWorkers >= 100) {
@@ -1212,10 +1269,10 @@ static void spawnFigureBarracks(building *b)
 
 static void spawnFigureMilitaryAcademy(building *b)
 {
-	SET_LABOR_PROBLEM(b);
+	check_labor_problem(b);
 	int xRoad, yRoad;
 	if (Terrain_hasRoadAccess(b->x, b->y, b->size, &xRoad, &yRoad)) {
-		SPAWN_LABOR_SEEKER(100);
+		spawn_labor_seeker(b, xRoad, yRoad, 100);
 	}
 }
 
