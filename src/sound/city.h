@@ -1,6 +1,7 @@
 #ifndef SOUND_CITY_H
 #define SOUND_CITY_H
 
+#include "building/building.h"
 #include "core/buffer.h"
 
 enum {
@@ -13,7 +14,7 @@ void sound_city_init();
 
 void sound_city_set_volume(int percentage);
 
-void sound_city_mark_building_view(int building_id, int direction);
+void sound_city_mark_building_view(building *b, int direction);
 
 void sound_city_decay_views();
 

@@ -135,20 +135,22 @@ static void drawBuildingFootprints()
 			int buildingId = map_building_at(gridOffset);
 			color_t colorMask = 0;
 			if (buildingId) {
-				if (building_get(buildingId)->isDeleted) {
+                building *b = building_get(buildingId);
+				if (b->isDeleted) {
 					colorMask = COLOR_MASK_RED;
 				}
 				if (x < 4) {
-					sound_city_mark_building_view(buildingId, SOUND_DIRECTION_LEFT);
+					sound_city_mark_building_view(b, SOUND_DIRECTION_LEFT);
 				} else if (x > Data_CityView.widthInTiles + 2) {
-					sound_city_mark_building_view(buildingId, SOUND_DIRECTION_RIGHT);
+					sound_city_mark_building_view(b, SOUND_DIRECTION_RIGHT);
 				} else {
-					sound_city_mark_building_view(buildingId, SOUND_DIRECTION_CENTER);
+					sound_city_mark_building_view(b, SOUND_DIRECTION_CENTER);
 				}
 			}
 			if (map_terrain_is(gridOffset, TERRAIN_GARDEN)) {
-				building_get(0)->type = BUILDING_GARDENS;
-				sound_city_mark_building_view(0, SOUND_DIRECTION_CENTER);
+                building *b = building_get(0); // abuse empty building
+				b->type = BUILDING_GARDENS;
+				sound_city_mark_building_view(b, SOUND_DIRECTION_CENTER);
 			}
 			int graphicId = map_image_at(gridOffset);
 			if (map_property_is_constructing(gridOffset)) {
