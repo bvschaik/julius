@@ -1,13 +1,14 @@
 #include "phrase.h"
 
+#include "building/building.h"
 #include "building/type.h"
+#include "building/market.h"
 #include "core/calc.h"
 #include "figure/trader.h"
 #include "sound/speech.h"
 
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
-#include "../Building.h"
 #include "FigureAction.h"
 
 #include <string.h>
@@ -311,7 +312,7 @@ static int tax_collector_phrase(figure *f)
 static int market_trader_phrase(figure *f)
 {
     if (f->actionState == FigureActionState_126_RoamerReturning) {
-        if (Building_Market_getMaxFoodStock(f->buildingId) <= 0) {
+        if (building_market_get_max_food_stock(building_get(f->buildingId)) <= 0) {
             return 9; // run out of goods
         }
     }

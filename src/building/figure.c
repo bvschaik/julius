@@ -1,6 +1,5 @@
 #include "building/figure.h"
 
-#include "Building.h"
 #include "../Figure.h"
 #include "FigureMovement.h"
 #include "Formation.h"
@@ -12,6 +11,7 @@
 
 #include "building/building.h"
 #include "building/industry.h"
+#include "building/market.h"
 #include "building/model.h"
 #include "city/message.h"
 #include "core/calc.h"
@@ -619,7 +619,7 @@ static void spawn_figure_market(building *b)
             }
         } else {
             Terrain_hasRoadAccess(b->x, b->y, b->size, &x_road, &y_road);
-            int dstBuildingId = Building_Market_getDestinationGranaryWarehouse(b);
+            int dstBuildingId = building_market_get_storage_destination(b);
             if (dstBuildingId > 0) {
                 figure *f = figure_create(FIGURE_MARKET_BUYER, x_road, y_road, DIR_0_TOP);
                 f->actionState = FigureActionState_145_MarketBuyerGoingToStorage;

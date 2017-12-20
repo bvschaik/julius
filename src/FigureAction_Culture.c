@@ -1,9 +1,9 @@
 #include "FigureAction_private.h"
 
-#include "Building.h"
 #include "Terrain.h"
 
 #include "building/building.h"
+#include "building/market.h"
 #include "figure/route.h"
 
 static void FigureAction_cultureCommon(figure *f, int numTicks)
@@ -179,15 +179,15 @@ void FigureAction_marketTrader(figure *f)
 	f->terrainUsage = FigureTerrainUsage_Roads;
 	f->useCrossCountry = 0;
 	f->maxRoamLength = 384;
-	building *b = building_get(f->buildingId);
-	if (!BuildingIsInUse(b) || b->figureId != f->id) {
+	building *market = building_get(f->buildingId);
+	if (!BuildingIsInUse(market) || market->figureId != f->id) {
 		f->state = FigureState_Dead;
 	}
 	FigureActionIncreaseGraphicOffset(f, 12);
 	if (f->actionState == FigureActionState_125_Roaming) {
 		// force return on out of stock
-		int stock = Building_Market_getMaxFoodStock(f->buildingId) +
-			Building_Market_getMaxGoodsStock(f->buildingId);
+		int stock = building_market_get_max_food_stock(market) +
+			building_market_get_max_goods_stock(market);
 		if (f->roamLength >= 96 && stock <= 0) {
 			f->roamLength = f->maxRoamLength;
 		}
