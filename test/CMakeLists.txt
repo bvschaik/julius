@@ -16,7 +16,6 @@ endfunction(except_file)
 # Replace some source files with stubs
 except_file(TEST_CORE_FILES "core/lang.c" ${CORE_FILES})
 except_file(TEST_BUILDING_FILES "building/model.c" ${BUILDING_FILES})
-except_file(TEST_GRAPHICS_FILES "graphics/image.c" ${GRAPHICS_FILES})
 except_file(TEST_INPUT_FILES "input/keyboard.c" ${INPUT_FILES})
 
 add_executable(compare
@@ -38,7 +37,6 @@ add_executable(autopilot
     stub/video.c
     ${TEST_CORE_FILES}
     ${TEST_BUILDING_FILES}
-    ${TEST_GRAPHICS_FILES}
     ${CITY_FILES}
     ${EMPIRE_FILES}
     ${FIGURE_FILES}
@@ -49,7 +47,6 @@ add_executable(autopilot
     ${SOUND_FILES}
     ${PROJECT_SOURCE_DIR}/src/Animation.c
     ${PROJECT_SOURCE_DIR}/src/Building.c
-    ${PROJECT_SOURCE_DIR}/src/BuildingHouse.c
     ${PROJECT_SOURCE_DIR}/src/BuildingPlacement.c
     ${PROJECT_SOURCE_DIR}/src/CityInfo.c
     ${PROJECT_SOURCE_DIR}/src/CityInfo_Culture.c
