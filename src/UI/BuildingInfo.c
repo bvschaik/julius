@@ -9,7 +9,6 @@
 #include "../CityInfo.h"
 #include "../Formation.h"
 #include "../Graphics.h"
-#include "../HouseEvolution.h"
 #include "../Resource.h"
 #include "../Terrain.h"
 #include "../Widget.h"
@@ -21,6 +20,7 @@
 #include "../Data/State.h"
 
 #include "building/building.h"
+#include "building/house_evolution.h"
 #include "building/model.h"
 #include "core/calc.h"
 #include "figure/figure.h"
@@ -213,7 +213,7 @@ void UI_BuildingInfo_init()
 			default:
 				if (b->houseSize) {
 					UI_BuildingInfo_houseDetermineWorstDesirabilityBuilding(&context);
-					HouseEvolution_determineEvolveText(context.buildingId, context.worstDesirabilityBuildingId);
+					building_house_determine_evolve_text(building_get(context.buildingId), context.worstDesirabilityBuildingId);
 				}
 				break;
 		}

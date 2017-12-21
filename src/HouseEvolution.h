@@ -7,6 +7,4 @@ void HouseEvolution_Tick_decayCultureService();
 
 void HouseEvolution_Tick_calculateCultureServiceAggregates();
 
-void HouseEvolution_determineEvolveText(int buildingId, int hasBadDesirabilityBuilding);
-
 #endif
