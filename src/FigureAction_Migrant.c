@@ -1,6 +1,5 @@
 #include "FigureAction_private.h"
 
-#include "BuildingHouse.h"
 #include "CityInfo.h"
 #include "HousePopulation.h"
 #include "Terrain.h"
@@ -8,6 +7,7 @@
 #include "Data/CityInfo.h"
 
 #include "building/building.h"
+#include "building/house.h"
 #include "building/model.h"
 #include "figure/route.h"
 
@@ -101,7 +101,7 @@ void FigureAction_immigrant(figure *f)
 					f->migrantNumPeople = room;
 				}
 				if (!b->housePopulation) {
-					BuildingHouse_changeTo(b, BUILDING_HOUSE_SMALL_TENT);
+					building_house_change_to(b, BUILDING_HOUSE_SMALL_TENT);
 				}
 				b->housePopulation += f->migrantNumPeople;
 				b->housePopulationRoom = maxPeople - b->housePopulation;
@@ -240,7 +240,7 @@ void FigureAction_homeless(figure *f)
 						f->migrantNumPeople = room;
 					}
 					if (!b->housePopulation) {
-						BuildingHouse_changeTo(b, BUILDING_HOUSE_SMALL_TENT);
+						building_house_change_to(b, BUILDING_HOUSE_SMALL_TENT);
 					}
 					b->housePopulation += f->migrantNumPeople;
 					b->housePopulationRoom = maxPeople - b->housePopulation;

@@ -1,11 +1,11 @@
 #include "HousePopulation.h"
 
-#include "BuildingHouse.h"
 #include "CityInfo.h"
 
 #include "Data/CityInfo.h"
 
 #include "building/building.h"
+#include "building/house.h"
 #include "building/list.h"
 #include "building/model.h"
 #include "city/message.h"
@@ -249,7 +249,7 @@ static void createEmigrantForBuilding(building *b, int numPeople)
 		b->housePopulation -= numPeople;
 	} else {
 		b->housePopulation = 0;
-		BuildingHouse_changeToVacantLot(b);
+		building_house_change_to_vacant_lot(b);
 	}
 	figure *f = figure_create(FIGURE_EMIGRANT, b->x, b->y, DIR_0_TOP);
 	f->actionState = FigureActionState_4_EmigrantCreated;
