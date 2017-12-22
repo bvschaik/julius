@@ -4,12 +4,6 @@
 void Terrain_addBuildingToGrids(int buildingId, int x, int y, int size, int graphicId, int terrain);
 void Terrain_removeBuildingFromGrids(int buildingId, int x, int y);
 
-void Terrain_addWatersideBuildingToGrids(int buildingId, int x, int y, int size, int graphicId);
-int Terrain_determineOrientationWatersideSize2(int x, int y, int adjustXY,
-	int *orientationAbsolute, int *orientationRelative);
-int Terrain_determineOrientationWatersideSize3(int x, int y, int adjustXY,
-	int *orientationAbsolute, int *orientationRelative);
-
 void Terrain_addRoadsForGatehouse(int x, int y, int orientation);
 void Terrain_addRoadsForTriumphalArch(int x, int y, int orientation);
 
@@ -62,10 +56,7 @@ void Terrain_updateToPlaceBuildingToOverlay(int size, int x, int y, int terrainM
 int Terrain_getWallTileWithinRadius(int x, int y, int radius, int *xTile, int *yTile);
 void Terrain_rotateMap(int direction);
 
-int Terrain_Water_findOpenWaterForShipwreck(int figureId, int* xTile, int* yTile);
 int Terrain_Water_getFreeDockDestination(int figureId, int *xTile, int *yTile);
 int Terrain_Water_getQueueDockDestination(int* xTile, int* yTile);
-int Terrain_Water_getWharfTileForNewFishingBoat(int figureId, int *xTile, int *yTile);
-int Terrain_Water_findAlternativeTileForFishingBoat(int figureId, int *xTile, int *yTile);
 
 #endif

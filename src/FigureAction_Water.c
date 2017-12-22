@@ -13,6 +13,7 @@
 #include "figure/route.h"
 #include "map/grid.h"
 #include "map/figure.h"
+#include "map/water.h"
 #include "scenario/map.h"
 
 static const int flotsamType0[] = {0, 1, 2, 3, 4, 4, 4, 3, 2, 1, 0, 0};
@@ -32,7 +33,7 @@ void FigureAction_fishingBoat(figure *f)
 	}
 	if (f->actionState != FigureActionState_190_FishingBoatCreated && b->data.other.boatFigureId != f->id) {
 		int xTile, yTile;
-		int buildingId = Terrain_Water_getWharfTileForNewFishingBoat(f->id, &xTile, &yTile);
+		int buildingId = map_water_get_wharf_for_new_fishing_boat(f, &xTile, &yTile);
 		b = building_get(buildingId);
 		if (buildingId) {
 			f->buildingId = buildingId;
@@ -57,7 +58,7 @@ void FigureAction_fishingBoat(figure *f)
 			if (f->waitTicks >= 50) {
 				f->waitTicks = 0;
 				int xTile, yTile;
-				int wharfId = Terrain_Water_getWharfTileForNewFishingBoat(f->id, &xTile, &yTile);
+				int wharfId = map_water_get_wharf_for_new_fishing_boat(f, &xTile, &yTile);
 				if (wharfId) {
 					b->figureId = 0; // remove from original building
 					f->buildingId = wharfId;
@@ -76,7 +77,7 @@ void FigureAction_fishingBoat(figure *f)
 			f->heightAdjustedTicks = 0;
 			if (f->direction == DIR_FIGURE_AT_DESTINATION) {
 				int xTile, yTile;
-				if (Terrain_Water_findAlternativeTileForFishingBoat(f->id, &xTile, &yTile)) {
+				if (map_water_find_alternative_fishing_boat_tile(f, &xTile, &yTile)) {
 					figure_route_remove(f);
 					f->destinationX = xTile;
 					f->destinationY = yTile;
@@ -263,7 +264,7 @@ void FigureAction_shipwreck(figure *f)
 	if (f->waitTicks < 1000) {
 		map_figure_delete(f);
 		int xTile, yTile;
-		if (Terrain_Water_findOpenWaterForShipwreck(f->id, &xTile, &yTile)) {
+		if (map_water_find_shipwreck_tile(f, &xTile, &yTile)) {
 			f->x = xTile;
 			f->y = yTile;
 			f->gridOffset = map_grid_offset(f->x, f->y);

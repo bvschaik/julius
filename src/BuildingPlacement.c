@@ -39,6 +39,7 @@
 #include "map/routing.h"
 #include "map/routing_terrain.h"
 #include "map/terrain.h"
+#include "map/water.h"
 
 #define BOUND_REGION() \
 	if (xStart < xEnd) {\
@@ -443,12 +444,12 @@ static void addToTerrain(int type, int buildingId, int x, int y, int size,
 		// ships
 		case BUILDING_SHIPYARD:
 			building_get(buildingId)->data.other.dockOrientation = watersideOrientationAbs;
-			Terrain_addWatersideBuildingToGrids(buildingId, x, y, 2,
+			map_water_add_building(buildingId, x, y, 2,
 				image_group(GROUP_BUILDING_SHIPYARD) + watersideOrientationRel);
 			break;
 		case BUILDING_WHARF:
 			building_get(buildingId)->data.other.dockOrientation = watersideOrientationAbs;
-			Terrain_addWatersideBuildingToGrids(buildingId, x, y, 2,
+			map_water_add_building(buildingId, x, y, 2,
 				image_group(GROUP_BUILDING_WHARF) + watersideOrientationRel);
 			break;
 		case BUILDING_DOCK:
@@ -462,7 +463,7 @@ static void addToTerrain(int type, int buildingId, int x, int y, int size,
 					case 2: graphicId = image_group(GROUP_BUILDING_DOCK_3); break;
 					default:graphicId = image_group(GROUP_BUILDING_DOCK_4); break;
 				}
-				Terrain_addWatersideBuildingToGrids(buildingId, x, y, size, graphicId);
+				map_water_add_building(buildingId, x, y, size, graphicId);
 			}
 			break;
 		// defense
@@ -602,13 +603,13 @@ static int placeBuilding(int type, int x, int y)
 	}
 	int watersideOrientationAbs, watersideOrientationRel;
 	if (type == BUILDING_SHIPYARD || type == BUILDING_WHARF) {
-		if (Terrain_determineOrientationWatersideSize2(
+		if (map_water_determine_orientation_size2(
 				x, y, 0, &watersideOrientationAbs, &watersideOrientationRel)) {
 			city_warning_show(WARNING_SHORE_NEEDED);
 			return 0;
 		}
 	} else if (type == BUILDING_DOCK) {
-		if (Terrain_determineOrientationWatersideSize3(
+		if (map_water_determine_orientation_size3(
 				x, y, 0, &watersideOrientationAbs, &watersideOrientationRel)) {
 			city_warning_show(WARNING_SHORE_NEEDED);
 			return 0;
@@ -1269,11 +1270,11 @@ void BuildingPlacement_update(int xStart, int yStart, int xEnd, int yEnd, int ty
 			Terrain_updateToPlaceBuildingToOverlay(5, xEnd, yEnd, TERRAIN_ALL, 0);
 		}
 	} else if (type == BUILDING_SHIPYARD || type == BUILDING_WHARF) {
-		if (!Terrain_determineOrientationWatersideSize2(xEnd, yEnd, 1, 0, 0)) {
+		if (!map_water_determine_orientation_size2(xEnd, yEnd, 1, 0, 0)) {
 			Data_State.selectedBuilding.drawAsConstructing = 1;
 		}
 	} else if (type == BUILDING_DOCK) {
-		if (!Terrain_determineOrientationWatersideSize3(xEnd, yEnd, 1, 0, 0)) {
+		if (!map_water_determine_orientation_size3(xEnd, yEnd, 1, 0, 0)) {
 			Data_State.selectedBuilding.drawAsConstructing = 1;
 		}
 	} else if (Data_State.selectedBuilding.meadowRequired) {

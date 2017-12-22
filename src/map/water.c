@@ -1,0 +1,279 @@
+#include "water.h"
+
+#include "building/building.h"
+#include "core/direction.h"
+#include "map/building.h"
+#include "map/figure.h"
+#include "map/grid.h"
+#include "map/image.h"
+#include "map/point.h"
+#include "map/property.h"
+#include "map/terrain.h"
+
+#include "Data/CityInfo.h"
+#include "Data/State.h"
+
+void map_water_add_building(int building_id, int x, int y, int size, int image_id)
+{
+    if (!map_grid_is_inside(x, y, size)) {
+        return;
+    }
+    map_point leftmost;
+    switch (Data_State.map.orientation) {
+        case DIR_0_TOP:
+            leftmost.x = 0;
+            leftmost.y = size - 1;
+            break;
+        case DIR_2_RIGHT:
+            leftmost.x = leftmost.y = 0;
+            break;
+        case DIR_4_BOTTOM:
+            leftmost.x = size - 1;
+            leftmost.y = 0;
+            break;
+        case DIR_6_LEFT:
+            leftmost.x = leftmost.y = size - 1;
+            break;
+        default:
+            return;
+    }
+    for (int dy = 0; dy < size; dy++) {
+        for (int dx = 0; dx < size; dx++) {
+            int grid_offset = map_grid_offset(x + dx, y + dy);
+            map_terrain_add(grid_offset, TERRAIN_BUILDING);
+            if (!map_terrain_is(grid_offset, TERRAIN_WATER)) {
+                map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
+                map_terrain_add(grid_offset, TERRAIN_BUILDING);
+            }
+            map_building_set(grid_offset, building_id);
+            map_property_clear_constructing(grid_offset);
+            map_property_set_multi_tile_size(grid_offset, size);
+            map_image_set(grid_offset, image_id);
+            map_property_set_multi_tile_xy(grid_offset, dx, dy,
+                dx == leftmost.x && dy == leftmost.y);
+        }
+    }
+}
+
+static int blocked_land_terrain()
+{
+    return
+        TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER |
+        TERRAIN_BUILDING | TERRAIN_SCRUB | TERRAIN_GARDEN |
+        TERRAIN_ROAD | TERRAIN_ELEVATION | TERRAIN_RUBBLE;
+}
+
+int map_water_determine_orientation_size2(int x, int y, int adjust_xy,
+                                          int *orientation_absolute, int *orientation_relative)
+{
+    if (adjust_xy == 1) {
+        switch (Data_State.map.orientation) {
+            case DIR_0_TOP: break;
+            case DIR_2_RIGHT: x--; break;
+            case DIR_6_LEFT: y--; break;
+            case DIR_4_BOTTOM: x--; y--; break;
+        }
+    }
+    if (!map_grid_is_inside(x, y, 2)) {
+        return 999;
+    }
+
+    int base_offset = map_grid_offset(x, y);
+    int tile_offsets[] = {0, 1, 162, 163};
+    const int should_be_water[4][4] = {{1, 1, 0, 0}, {0, 1, 0, 1}, {0, 0, 1, 1}, {1, 0, 1, 0}};
+    for (int dir = 0; dir < 4; dir++) {
+        int ok_tiles = 0;
+        int blocked_tiles = 0;
+        for (int i = 0; i < 4; i++) {
+            int grid_offset = base_offset + tile_offsets[i];
+            if (should_be_water[dir][i]) {
+                if (!map_terrain_is(grid_offset, TERRAIN_WATER)) {
+                    break;
+                }
+                ok_tiles++;
+                if (map_terrain_is(grid_offset, TERRAIN_ROCK | TERRAIN_ROAD)) {
+                    // bridge or map edge
+                    blocked_tiles++;
+                }
+            } else {
+                if (map_terrain_is(grid_offset, TERRAIN_WATER)) {
+                    break;
+                }
+                ok_tiles++;
+                if (map_terrain_is(grid_offset, blocked_land_terrain())) {
+                    blocked_tiles++;
+                }
+            }
+        }
+        // check six water tiles in front
+        const int tiles_to_check[4][6] = {
+            {-1, -163, -162, -161, -160, 2},
+            {-161, -160, 2, 164, 326, 325},
+            {164, 326, 325, 324, 323, 161},
+            {324, 323, 161, -1, -163, -162},
+        };
+        for (int i = 0; i < 6; i++) {
+            if (!map_terrain_is(base_offset + tiles_to_check[dir][i], TERRAIN_WATER)) {
+                ok_tiles = 0;
+            }
+        }
+        if (ok_tiles == 4) {
+            // water/land is OK in this orientation
+            if (orientation_absolute) {
+                *orientation_absolute = dir;
+            }
+            if (orientation_relative) {
+                *orientation_relative = (4 + dir - Data_State.map.orientation / 2) % 4;
+            }
+            return blocked_tiles;
+        }
+    }
+    return 999;
+}
+
+int map_water_determine_orientation_size3(int x, int y, int adjust_xy,
+                                          int *orientation_absolute, int *orientation_relative)
+{
+    if (adjust_xy == 1) {
+        switch (Data_State.map.orientation) {
+            case DIR_0_TOP: break;
+            case DIR_2_RIGHT: x -= 2; break;
+            case DIR_6_LEFT: y -= 2; break;
+            case DIR_4_BOTTOM: x -= 2; y -= 2; break;
+        }
+    }
+    if (!map_grid_is_inside(x, y, 3)) {
+        return 999;
+    }
+
+    int base_offset = map_grid_offset(x, y);
+    int tile_offsets[] = {0, 1, 2, 162, 163, 164, 324, 325, 326};
+    int should_be_water[4][9] = {
+        {1, 1, 1, 0, 0, 0, 0, 0, 0},
+        {0, 0, 1, 0, 0, 1, 0, 0, 1},
+        {0, 0, 0, 0, 0, 0, 1, 1, 1},
+        {1, 0, 0, 1, 0, 0, 1, 0, 0}
+    };
+    for (int dir = 0; dir < 4; dir++) {
+        int ok_tiles = 0;
+        int blocked_tiles = 0;
+        for (int i = 0; i < 9; i++) {
+            int grid_offset = base_offset + tile_offsets[i];
+            if (should_be_water[dir][i]) {
+                if (!map_terrain_is(grid_offset, TERRAIN_WATER)) {
+                    break;
+                }
+                ok_tiles++;
+                if (map_terrain_is(grid_offset, TERRAIN_ROCK | TERRAIN_ROAD)) {
+                    // bridge or map edge
+                    blocked_tiles++;
+                }
+            } else {
+                if (map_terrain_is(grid_offset, TERRAIN_WATER)) {
+                    break;
+                }
+                ok_tiles++;
+                if (map_terrain_is(grid_offset, blocked_land_terrain())) {
+                    blocked_tiles++;
+                }
+            }
+        }
+        // check two water tiles at the side
+        int tilesToCheck[4][2] = {{-1, 3}, {-160, 488}, {327, 323}, {-162, 486}};
+        for (int i = 0; i < 2; i++) {
+            if (!map_terrain_is(base_offset + tilesToCheck[dir][i], TERRAIN_WATER)) {
+                ok_tiles = 0;
+            }
+        }
+        if (ok_tiles == 9) {
+            // water/land is OK in this orientation
+            if (orientation_absolute) {
+                *orientation_absolute = dir;
+            }
+            if (orientation_relative) {
+                *orientation_relative = (4 + dir - Data_State.map.orientation / 2) % 4;
+            }
+            return blocked_tiles;
+        }
+    }
+    return 999;
+}
+
+int map_water_get_wharf_for_new_fishing_boat(figure *boat, int *x_tile, int *y_tile)
+{
+    building *wharf = 0;
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
+        building *b = building_get(i);
+        if (BuildingIsInUse(b) && b->type == BUILDING_WHARF) {
+            int wharf_boat_id = b->data.other.boatFigureId;
+            if (!wharf_boat_id || wharf_boat_id == boat->id) {
+                wharf = b;
+                break;
+            }
+        }
+    }
+    if (!wharf) {
+        return 0;
+    }
+    *x_tile = wharf->x;
+    *y_tile = wharf->y;
+    switch (wharf->data.other.dockOrientation) {
+        case 0: *x_tile += 1; *y_tile -= 1; break;
+        case 1: *x_tile += 2; *y_tile += 1; break;
+        case 2: *x_tile += 1; *y_tile += 2; break;
+        default: *x_tile -= 1; *y_tile += 1; break;
+    }
+    return wharf->id;
+}
+
+int map_water_find_alternative_fishing_boat_tile(figure *boat, int *x_tile, int *y_tile)
+{
+    if (map_figure_at(boat->gridOffset) == boat->id) {
+        return 0;
+    }
+    for (int radius = 1; radius <= 5; radius++) {
+        int x_min, y_min, x_max, y_max;
+        map_grid_get_area(boat->x, boat->y, 1, radius, &x_min, &y_min, &x_max, &y_max);
+
+        for (int yy = y_min; yy <= y_max; yy++) {
+            for (int xx = x_min; xx <= x_max; xx++) {
+                int grid_offset = map_grid_offset(xx, yy);
+                if (!map_has_figure_at(grid_offset) && map_terrain_is(grid_offset, TERRAIN_WATER)) {
+                    *x_tile = xx;
+                    *y_tile = yy;
+                    return 1;
+                }
+            }
+        }
+    }
+    return 0;
+}
+
+int map_water_find_shipwreck_tile(figure *wreck, int *x_tile, int *y_tile)
+{
+    if (map_terrain_is(wreck->gridOffset, TERRAIN_WATER) && map_figure_at(wreck->gridOffset) == wreck->id) {
+        return 0;
+    }
+    for (int radius = 1; radius <= 5; radius++) {
+        int x_min, y_min, x_max, y_max;
+        map_grid_get_area(wreck->x, wreck->y, 1, radius, &x_min, &y_min, &x_max, &y_max);
+
+        for (int yy = y_min; yy <= y_max; yy++) {
+            for (int xx = x_min; xx <= x_max; xx++) {
+                int grid_offset = map_grid_offset(xx, yy);
+                if (!map_has_figure_at(grid_offset) || map_figure_at(grid_offset) == wreck->id) {
+                    if (map_terrain_is(grid_offset, TERRAIN_WATER) &&
+                        map_terrain_is(map_grid_offset(xx, yy - 2), TERRAIN_WATER) &&
+                        map_terrain_is(map_grid_offset(xx, yy + 2), TERRAIN_WATER) &&
+                        map_terrain_is(map_grid_offset(xx - 2, yy), TERRAIN_WATER) &&
+                        map_terrain_is(map_grid_offset(xx + 2, yy), TERRAIN_WATER)) {
+                        *x_tile = xx;
+                        *y_tile = yy;
+                        return 1;
+                    }
+                }
+            }
+        }
+    }
+    return 0;
+}

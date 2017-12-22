@@ -103,6 +103,7 @@ set(MAP_FILES
     ${PROJECT_SOURCE_DIR}/src/map/soldier_strength.c
     ${PROJECT_SOURCE_DIR}/src/map/sprite.c
     ${PROJECT_SOURCE_DIR}/src/map/terrain.c
+    ${PROJECT_SOURCE_DIR}/src/map/water.c
     ${PROJECT_SOURCE_DIR}/src/map/water_supply.c
 )
 set(SCENARIO_FILES

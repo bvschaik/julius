@@ -17,6 +17,7 @@
 #include "map/grid.h"
 #include "map/road_aqueduct.h"
 #include "map/terrain.h"
+#include "map/water.h"
 
 static void drawBuildingGhostDraggableReservoir();
 static void drawBuildingGhostAqueduct();
@@ -1008,7 +1009,7 @@ static void drawBuildingGhostHippodrome()
 static void drawBuildingGhostShipyardWharf()
 {
 	int dirAbsolute, dirRelative;
-	int blockedTiles = Terrain_determineOrientationWatersideSize2(
+	int blockedTiles = map_water_determine_orientation_size2(
 		Data_State.map.current.x, Data_State.map.current.y, 1,
 		&dirAbsolute, &dirRelative);
 	if (city_finance_out_of_money()) {
@@ -1034,7 +1035,7 @@ static void drawBuildingGhostShipyardWharf()
 static void drawBuildingGhostDock()
 {
 	int dirAbsolute, dirRelative;
-	int blockedTiles = Terrain_determineOrientationWatersideSize3(
+	int blockedTiles = map_water_determine_orientation_size3(
 		Data_State.map.current.x, Data_State.map.current.y, 1,
 		&dirAbsolute, &dirRelative);
 	if (city_finance_out_of_money()) {
