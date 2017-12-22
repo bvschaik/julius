@@ -891,30 +891,6 @@ int Terrain_allHousesWithinWellRadiusHaveFountain(int wellId, int radius)
 	return numHouses ? 1 : 2;
 }
 
-void Terrain_markNativeLand(int x, int y, int size, int radius)
-{
-	FOR_XY_RADIUS {
-		map_property_mark_native_land(gridOffset);
-	} END_FOR_XY_RADIUS;
-}
-
-int Terrain_hasBuildingOnNativeLand(int x, int y, int size, int radius)
-{
-	FOR_XY_RADIUS {
-		int buildingId = map_building_at(gridOffset);
-		if (buildingId > 0) {
-			int type = building_get(buildingId)->type;
-			if (type != BUILDING_MISSION_POST &&
-				type != BUILDING_NATIVE_HUT &&
-				type != BUILDING_NATIVE_MEETING &&
-				type != BUILDING_NATIVE_CROPS) {
-				return 1;
-			}
-		}
-	} END_FOR_XY_RADIUS;
-	return 0;
-}
-
 void Terrain_updateEntryExitFlags(int remove)
 {
 	if (remove) {

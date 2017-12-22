@@ -8,7 +8,6 @@
 #include "GameFile.h"
 #include "HouseEvolution.h"
 #include "HousePopulation.h"
-#include "Natives.h"
 #include "Resource.h"
 #include "Security.h"
 #include "SidebarMenu.h"
@@ -35,6 +34,7 @@
 #include "game/time.h"
 #include "game/tutorial.h"
 #include "map/desirability.h"
+#include "map/natives.h"
 #include "map/road_network.h"
 #include "map/routing_terrain.h"
 #include "map/water_supply.h"
@@ -81,7 +81,7 @@ void GameTick_advance()
 		case 3: UI_Sidebar_requestMinimapRefresh(); break;
 		case 4: CityInfo_Finance_updateDebtState(); scenario_invasion_process_caesar(); break;
 		case 5: Formation_Tick_updateAll(0); break;
-		case 6: Natives_checkLand(); break;
+		case 6: map_natives_check_land(); break;
 		case 7: map_road_network_update(); break;
 		case 8: Resource_gatherGranaryGettingInfo(); break;
 		case 10: Building_updateHighestIds(); break;

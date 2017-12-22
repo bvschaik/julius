@@ -9,7 +9,6 @@
 #include "Formation.h"
 #include "GameFile.h"
 #include "Loader.h"
-#include "Natives.h"
 #include "SidebarMenu.h"
 #include "Terrain.h"
 #include "TerrainGraphics.h"
@@ -46,6 +45,7 @@
 #include "map/figure.h"
 #include "map/grid.h"
 #include "map/image.h"
+#include "map/natives.h"
 #include "map/property.h"
 #include "map/random.h"
 #include "map/road_network.h"
@@ -235,7 +235,7 @@ static void readScenarioAndInitGraphics(const char *scenarioName)
 	TerrainGraphics_updateAllWalls();
 	TerrainGraphics_updateRegionAqueduct(0, 0, Data_State.map.width - 1, Data_State.map.height - 1, 0);
 
-	Natives_init();
+	map_natives_init();
 
 	CityView_checkCameraBoundaries();
 

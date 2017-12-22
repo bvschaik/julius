@@ -95,6 +95,7 @@ set(MAP_FILES
     ${PROJECT_SOURCE_DIR}/src/map/figure.c
     ${PROJECT_SOURCE_DIR}/src/map/grid.c
     ${PROJECT_SOURCE_DIR}/src/map/image.c
+    ${PROJECT_SOURCE_DIR}/src/map/natives.c
     ${PROJECT_SOURCE_DIR}/src/map/property.c
     ${PROJECT_SOURCE_DIR}/src/map/random.c
     ${PROJECT_SOURCE_DIR}/src/map/ring.c
@@ -188,7 +189,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/HousePopulation.c
 	${PROJECT_SOURCE_DIR}/src/KeyboardHotkey.c
 	${PROJECT_SOURCE_DIR}/src/Loader.c
-	${PROJECT_SOURCE_DIR}/src/Natives.c
 	${PROJECT_SOURCE_DIR}/src/Resource_Granary.c
 	${PROJECT_SOURCE_DIR}/src/Runner.c
 	${PROJECT_SOURCE_DIR}/src/Scenario.c

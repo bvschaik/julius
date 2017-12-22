@@ -43,9 +43,6 @@ int Terrain_getSurroundingRoadTilesForRoaming(int gridOffset, int *roadTiles);
 
 int Terrain_getAdjacentRoadTilesForAqueduct(int gridOffset);
 
-void Terrain_markNativeLand(int x, int y, int size, int radius);
-int Terrain_hasBuildingOnNativeLand(int x, int y, int size, int radius);
-
 void Terrain_markBuildingsWithinWellRadius(int buildingId, int radius);
 
 void Terrain_updateEntryExitFlags(int remove);
