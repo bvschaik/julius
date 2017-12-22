@@ -1079,8 +1079,8 @@ static void drawBuildingGhostRoad()
 		tileObstructed = 1;
 	} else {
 		graphicId = image_group(GROUP_TERRAIN_ROAD);
-		if (!Terrain_hasTerrainTypeSameXAdjacentTo(gridOffset, TERRAIN_ROAD) &&
-			Terrain_hasTerrainTypeSameYAdjacentTo(gridOffset, TERRAIN_ROAD)) {
+		if (!map_terrain_has_adjacent_x_with_type(gridOffset, TERRAIN_ROAD) &&
+			map_terrain_has_adjacent_y_with_type(gridOffset, TERRAIN_ROAD)) {
 			graphicId++;
 		}
 	}

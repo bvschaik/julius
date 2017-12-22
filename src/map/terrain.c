@@ -35,6 +35,61 @@ void map_terrain_remove_all(int terrain)
     map_grid_and_u16(terrain_grid.items, ~terrain);
 }
 
+int map_terrain_count_directly_adjacent_with_type(int grid_offset, int terrain)
+{
+    int count = 0;
+    if (map_terrain_is(grid_offset + map_grid_delta(0, -1), terrain)) {
+        count++;
+    }
+    if (map_terrain_is(grid_offset + map_grid_delta(1, 0), terrain)) {
+        count++;
+    }
+    if (map_terrain_is(grid_offset + map_grid_delta(0, 1), terrain)) {
+        count++;
+    }
+    if (map_terrain_is(grid_offset + map_grid_delta(-1, 0), terrain)) {
+        count++;
+    }
+    return count;
+}
+
+int map_terrain_count_diagonally_adjacent_with_type(int grid_offset, int terrain)
+{
+    int count = 0;
+    if (map_terrain_is(grid_offset + map_grid_delta(1, -1), terrain)) {
+        count++;
+    }
+    if (map_terrain_is(grid_offset + map_grid_delta(1, 1), terrain)) {
+        count++;
+    }
+    if (map_terrain_is(grid_offset + map_grid_delta(-1, 1), terrain)) {
+        count++;
+    }
+    if (map_terrain_is(grid_offset + map_grid_delta(-1, -1), terrain)) {
+        count++;
+    }
+    return count;
+}
+
+int map_terrain_has_adjacent_x_with_type(int grid_offset, int terrain)
+{
+    if (map_terrain_is(grid_offset + map_grid_delta(0, -1), terrain) ||
+        map_terrain_is(grid_offset + map_grid_delta(0, 1), terrain)) {
+        return 1;
+    }
+    return 0;
+}
+
+int map_terrain_has_adjacent_y_with_type(int grid_offset, int terrain)
+{
+    if (map_terrain_is(grid_offset + map_grid_delta(-1, 0), terrain) ||
+        map_terrain_is(grid_offset + map_grid_delta(1, 0), terrain)) {
+        return 1;
+    }
+    return 0;
+}
+
+
 void map_terrain_backup()
 {
     map_grid_copy_u16(terrain_grid.items, terrain_grid_backup.items);

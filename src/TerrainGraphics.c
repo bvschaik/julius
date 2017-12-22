@@ -1006,7 +1006,7 @@ static void setWallGatehouseGraphicManually(int gridOffset)
 
 static int isAdjacentToGatehouse(int gridOffset)
 {
-	return Terrain_countTerrainTypeDirectlyAdjacentTo(gridOffset, TERRAIN_GATEHOUSE) > 0;
+	return map_terrain_count_directly_adjacent_with_type(gridOffset, TERRAIN_GATEHOUSE) > 0;
 }
 
 static void setWallGraphic(int gridOffset)

@@ -979,60 +979,6 @@ int Terrain_isAllMeadowAtDistanceRing(int x, int y, int distance)
 	return 1;
 }
 
-int Terrain_countTerrainTypeDirectlyAdjacentTo(int gridOffset, int terrainMask)
-{
-	int count = 0;
-	if (map_terrain_is(gridOffset + map_grid_delta(0, -1), terrainMask)) {
-		count++;
-	}
-	if (map_terrain_is(gridOffset + map_grid_delta(1, 0), terrainMask)) {
-		count++;
-	}
-	if (map_terrain_is(gridOffset + map_grid_delta(0, 1), terrainMask)) {
-		count++;
-	}
-	if (map_terrain_is(gridOffset + map_grid_delta(-1, 0), terrainMask)) {
-		count++;
-	}
-	return count;
-}
-
-int Terrain_countTerrainTypeDiagonallyAdjacentTo(int gridOffset, int terrainMask)
-{
-	int count = 0;
-	if (map_terrain_is(gridOffset + map_grid_delta(1, -1), terrainMask)) {
-		count++;
-	}
-	if (map_terrain_is(gridOffset + map_grid_delta(1, 1), terrainMask)) {
-		count++;
-	}
-	if (map_terrain_is(gridOffset + map_grid_delta(-1, 1), terrainMask)) {
-		count++;
-	}
-	if (map_terrain_is(gridOffset + map_grid_delta(-1, -1), terrainMask)) {
-		count++;
-	}
-	return count;
-}
-
-int Terrain_hasTerrainTypeSameYAdjacentTo(int gridOffset, int terrainMask)
-{
-	if (map_terrain_is(gridOffset + map_grid_delta(-1, 0), terrainMask) ||
-		map_terrain_is(gridOffset + map_grid_delta(1, 0), terrainMask)) {
-		return 1;
-	}
-	return 0;
-}
-
-int Terrain_hasTerrainTypeSameXAdjacentTo(int gridOffset, int terrainMask)
-{
-	if (map_terrain_is(gridOffset + map_grid_delta(0, -1), terrainMask) ||
-		map_terrain_is(gridOffset + map_grid_delta(0, 1), terrainMask)) {
-		return 1;
-	}
-	return 0;
-}
-
 void Terrain_updateEntryExitFlags(int remove)
 {
 	if (remove) {

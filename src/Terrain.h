@@ -59,11 +59,6 @@ void Terrain_markBuildingsWithinWellRadius(int buildingId, int radius);
 int Terrain_isAllRockAndTreesAtDistanceRing(int x, int y, int distance);
 int Terrain_isAllMeadowAtDistanceRing(int x, int y, int distance);
 
-int Terrain_countTerrainTypeDirectlyAdjacentTo(int gridOffset, int terrainMask);
-int Terrain_countTerrainTypeDiagonallyAdjacentTo(int gridOffset, int terrainMask);
-int Terrain_hasTerrainTypeSameYAdjacentTo(int gridOffset, int terrainMask);
-int Terrain_hasTerrainTypeSameXAdjacentTo(int gridOffset, int terrainMask);
-
 void Terrain_updateEntryExitFlags(int remove);
 
 int Terrain_isClearToBuild(int size, int x, int y, int terrainMask);

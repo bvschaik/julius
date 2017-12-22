@@ -9,7 +9,6 @@
 #include "map/terrain.h"
 
 #include "Data/State.h"
-#include "../Terrain.h"
 
 static struct {
     int end_grid_offset;
@@ -42,7 +41,7 @@ int map_bridge_calculate_length_direction(int x, int y, int is_ship_bridge, int 
     if (map_terrain_is(grid_offset, TERRAIN_ROAD | TERRAIN_BUILDING)) {
         return 0;
     }
-    if (Terrain_countTerrainTypeDirectlyAdjacentTo(grid_offset, TERRAIN_WATER) != 3) {
+    if (map_terrain_count_directly_adjacent_with_type(grid_offset, TERRAIN_WATER) != 3) {
         return 0;
     }
     if (!map_terrain_is(grid_offset + map_grid_delta(0, -1), TERRAIN_WATER)) {
@@ -71,7 +70,7 @@ int map_bridge_calculate_length_direction(int x, int y, int is_ship_bridge, int 
         }
         if (!map_terrain_is(next_offset, TERRAIN_WATER)) {
             bridge.end_grid_offset = grid_offset;
-            if (Terrain_countTerrainTypeDirectlyAdjacentTo(grid_offset, TERRAIN_WATER) != 3) {
+            if (map_terrain_count_directly_adjacent_with_type(grid_offset, TERRAIN_WATER) != 3) {
                 bridge.end_grid_offset = 0;
             }
             *length = bridge.length;
@@ -80,7 +79,7 @@ int map_bridge_calculate_length_direction(int x, int y, int is_ship_bridge, int 
         if (map_terrain_is(next_offset, TERRAIN_ROAD | TERRAIN_BUILDING)) {
             break;
         }
-        if (Terrain_countTerrainTypeDiagonallyAdjacentTo(grid_offset, TERRAIN_WATER) != 4) {
+        if (map_terrain_count_diagonally_adjacent_with_type(grid_offset, TERRAIN_WATER) != 4) {
             break;
         }
     }
