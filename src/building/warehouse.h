@@ -9,6 +9,12 @@ enum {
     WAREHOUSE_SOME_ROOM = 2
 };
 
+enum {
+    WAREHOUSE_TASK_NONE = -1,
+    WAREHOUSE_TASK_GETTING = 0,
+    WAREHOUSE_TASK_DELIVERING = 1
+};
+
 int building_warehouse_get_space_info(building *warehouse);
 
 int building_warehouse_get_amount(building *warehouse, int resource);
@@ -36,5 +42,7 @@ int building_warehouse_for_storing(int src_building_id, int x, int y, int resour
                                    int *x_dst, int *y_dst);
 
 int building_warehouse_for_getting(building *src, int resource, int *x_dst, int *y_dst);
+
+int building_warehouse_determine_warehouseman_task(building *warehouse, int *resource);
 
 #endif // BUILDING_WAREHOUSE_H

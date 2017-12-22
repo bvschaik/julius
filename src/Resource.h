@@ -3,9 +3,6 @@
 
 #include "building/building.h"
 
-// warehouse functions
-int Resource_determineWarehouseWorkerTask(building *warehouse, int *resource);
-
 // granary functions
 void Resource_gatherGranaryGettingInfo();
 
@@ -23,14 +20,8 @@ int Resource_determineGranaryWorkerTask(building *granary);
 int Resource_takeFoodFromGranaryForGettingDeliveryman(int dstBuildingId, int srcBuildingId, int *resource);
 
 // other functions
-int Resource_getWorkshopForRawMaterial(int x, int y, int resource, int distanceFromEntry, int roadNetworkId, int *xDst, int *yDst);
 int Resource_getBarracksForWeapon(int xUnused, int yUnused, int resource, int roadNetworkId, int *xDst, int *yDst);
 
 void Resource_addWeaponToBarracks(building *barracks);
-
-enum {
-	StorageFigureTask_Getting = 0,
-	StorageFigureTask_Delivering = 1,
-};
 
 #endif

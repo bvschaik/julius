@@ -13,6 +13,7 @@
 #include "building/industry.h"
 #include "building/market.h"
 #include "building/model.h"
+#include "building/warehouse.h"
 #include "city/message.h"
 #include "core/calc.h"
 #include "figure/figure.h"
@@ -143,13 +144,15 @@ static void spawn_figure_warehouse(building *b)
             return;
         }
         int resource;
-        int task = Resource_determineWarehouseWorkerTask(b, &resource);
-        if (task >= 0) {
+        int task = building_warehouse_determine_warehouseman_task(b, &resource);
+        if (task != WAREHOUSE_TASK_NONE) {
             figure *f = figure_create(FIGURE_WAREHOUSEMAN, x_road, y_road, DIR_4_BOTTOM);
             f->actionState = FigureActionState_50_WarehousemanCreated;
-            f->resourceId = task;
-            if (task == StorageFigureTask_Getting) {
+            if (task == WAREHOUSE_TASK_GETTING) {
+                f->resourceId = RESOURCE_NONE;
                 f->collectingItemId = resource;
+            } else {
+                f->resourceId = resource;
             }
             b->figureId = f->id;
             f->buildingId = b->id;

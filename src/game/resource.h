@@ -53,6 +53,7 @@ typedef enum {
 } inventory_type;
 
 typedef enum {
+    WORKSHOP_NONE = 0,
     WORKSHOP_OLIVES_TO_OIL = 1,
     WORKSHOP_VINES_TO_WINE = 2,
     WORKSHOP_IRON_TO_WEAPONS = 3,
