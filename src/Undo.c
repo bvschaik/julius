@@ -1,6 +1,5 @@
 #include "Undo.h"
 
-#include "Resource.h"
 #include "Terrain.h"
 #include "TerrainGraphics.h"
 #include "UI/Window.h"
@@ -10,6 +9,7 @@
 
 #include "building/building.h"
 #include "building/properties.h"
+#include "building/warehouse.h"
 #include "city/finance.h"
 #include "game/resource.h"
 #include "graphics/image.h"
@@ -224,7 +224,7 @@ void Undo_perform()
 			if (data.buildingIndex[i]) {
 				building *b = building_get(data.buildingIndex[i]);
 				if (b->type == BUILDING_ORACLE || (b->type >= BUILDING_LARGE_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS)) {
-					Resource_addToCityWarehouses(RESOURCE_MARBLE, 2);
+					building_warehouses_add_resource(RESOURCE_MARBLE, 2);
 				}
 				b->state = BuildingState_Undo;
 			}

@@ -129,7 +129,7 @@ void UI_BuildingInfo_drawHouse(BuildingInfoContext *c)
 			c->xOffset + 284, c->yOffset + 238, FONT_SMALL_BLACK);
 		// meat/fish
 		Graphics_drawImage(resourceGraphic + RESOURCE_MEAT +
-			Resource_getGraphicIdOffset(RESOURCE_MEAT, 3),
+			resource_image_offset(RESOURCE_MEAT, RESOURCE_IMAGE_ICON),
 			c->xOffset + 362, c->yOffset + 234);
 		Widget_Text_drawNumber(b->data.house.inventory[INVENTORY_MEAT], '@', " ",
 			c->xOffset + 394, c->yOffset + 238, FONT_SMALL_BLACK);

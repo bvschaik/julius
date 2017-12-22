@@ -83,7 +83,7 @@ static int dockerGetExportResource(figure *f, building *dock)
 static void setCartGraphic(figure *f)
 {
 	f->cartGraphicId = image_group(GROUP_FIGURE_CARTPUSHER_CART) + 8 * f->resourceId;
-	f->cartGraphicId += Resource_getGraphicIdOffset(f->resourceId, 1);
+	f->cartGraphicId += resource_image_offset(f->resourceId, RESOURCE_IMAGE_CART);
 }
 
 void FigureAction_docker(figure *f)

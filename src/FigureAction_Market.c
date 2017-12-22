@@ -4,6 +4,7 @@
 #include "Resource.h"
 
 #include "building/building.h"
+#include "building/warehouse.h"
 #include "figure/route.h"
 #include "figure/type.h"
 #include "game/resource.h"
@@ -75,6 +76,7 @@ static int marketBuyerTakeResourceFromWarehouse(figure *f, int marketId, int war
 		case INVENTORY_WINE: resource = RESOURCE_WINE; break;
 		default: return 0;
 	}
+	building *warehouse = building_get(warehouseId);
 	int numLoads;
 	int stored = Resource_getAmountStoredInWarehouse(warehouseId, resource);
 	if (stored < 2) {
@@ -85,7 +87,7 @@ static int marketBuyerTakeResourceFromWarehouse(figure *f, int marketId, int war
 	if (numLoads <= 0) {
 		return 0;
 	}
-	Resource_removeFromWarehouse(warehouseId, resource, numLoads);
+	building_warehouse_remove_resource(warehouse, resource, numLoads);
 	
 	// create delivery boys
 	int boy1 = createDeliveryBoy(f->id, f);

@@ -125,7 +125,7 @@ void UI_BuildingInfo_drawWharf(BuildingInfoContext *c)
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(102, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
 	Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_MEAT +
-		Resource_getGraphicIdOffset(RESOURCE_MEAT, 3),
+		resource_image_offset(RESOURCE_MEAT, RESOURCE_IMAGE_ICON),
 		c->xOffset + 10, c->yOffset + 10);
 
 	building *b = building_get(c->buildingId);

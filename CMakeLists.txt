@@ -46,6 +46,7 @@ set(BUILDING_FILES
     ${PROJECT_SOURCE_DIR}/src/building/model.c
     ${PROJECT_SOURCE_DIR}/src/building/properties.c
     ${PROJECT_SOURCE_DIR}/src/building/storage.c
+    ${PROJECT_SOURCE_DIR}/src/building/warehouse.c
 )
 set(CITY_FILES
     ${PROJECT_SOURCE_DIR}/src/city/culture.c
@@ -73,6 +74,7 @@ set(FIGURE_FILES
 )
 set(GAME_FILES
     ${PROJECT_SOURCE_DIR}/src/game/difficulty.c
+    ${PROJECT_SOURCE_DIR}/src/game/resource.c
     ${PROJECT_SOURCE_DIR}/src/game/settings.c
     ${PROJECT_SOURCE_DIR}/src/game/time.c
     ${PROJECT_SOURCE_DIR}/src/game/tutorial.c

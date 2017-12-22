@@ -83,7 +83,7 @@ void UI_BuildingInfo_drawMarket(BuildingInfoContext *c)
 			Widget_Text_drawNumber(b->data.market.inventory[INVENTORY_FRUIT], '@', " ",
 				c->xOffset + 284, c->yOffset + 70, FONT_NORMAL_BLACK);
 			Graphics_drawImage(graphicId + RESOURCE_MEAT +
-				Resource_getGraphicIdOffset(RESOURCE_MEAT, 3),
+				resource_image_offset(RESOURCE_MEAT, RESOURCE_IMAGE_ICON),
 				c->xOffset + 362, c->yOffset + 64);
 			Widget_Text_drawNumber(b->data.market.inventory[INVENTORY_MEAT], '@', " ",
 				c->xOffset + 394, c->yOffset + 70, FONT_NORMAL_BLACK);
@@ -168,7 +168,7 @@ void UI_BuildingInfo_drawGranary(BuildingInfoContext *c)
 			c->xOffset + 274 + width, c->yOffset + 75, FONT_NORMAL_BLACK);
 		// meat/fish
 		Graphics_drawImage(graphicId + RESOURCE_MEAT +
-			Resource_getGraphicIdOffset(RESOURCE_MEAT, 3),
+			resource_image_offset(RESOURCE_MEAT, RESOURCE_IMAGE_ICON),
 			c->xOffset + 240, c->yOffset + 92);
 		width = Widget_Text_drawNumber(
 			b->data.storage.resourceStored[RESOURCE_MEAT], '@', " ",
@@ -225,7 +225,7 @@ void UI_BuildingInfo_drawGranaryOrdersForeground(BuildingInfoContext *c)
 	for (int i = 0; i < Data_CityInfo_Resource.numAvailableFoods; i++) {
 		int resourceId = Data_CityInfo_Resource.availableFoods[i];
 		int graphicId = image_group(GROUP_RESOURCE_ICONS) + resourceId +
-			Resource_getGraphicIdOffset(resourceId, 3);
+			resource_image_offset(resourceId, RESOURCE_IMAGE_ICON);
 		Graphics_drawImage(graphicId, c->xOffset + 32, 78 + 22 * i);
 		Graphics_drawImage(graphicId, c->xOffset + 408, 78 + 22 * i);
 		Widget_GameText_draw(23, resourceId,
@@ -282,7 +282,7 @@ void UI_BuildingInfo_drawWarehouse(BuildingInfoContext *c)
 			}
 			int amount = Resource_getAmountStoredInWarehouse(c->buildingId, r);
 			int graphicId = image_group(GROUP_RESOURCE_ICONS) + r +
-				Resource_getGraphicIdOffset(r, 3);
+				resource_image_offset(r, RESOURCE_IMAGE_ICON);
 			Graphics_drawImage(graphicId, x, y);
 			int width = Widget_Text_drawNumber(amount, '@', " ",
 				x + 24, y + 7, FONT_SMALL_PLAIN);
@@ -297,7 +297,7 @@ void UI_BuildingInfo_drawWarehouse(BuildingInfoContext *c)
 	if (cartpusher && figure_get(cartpusher)->state == FigureState_Alive) {
 		int resource = figure_get(cartpusher)->resourceId;
 		Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + resource +
-			Resource_getGraphicIdOffset(resource, 3),
+			resource_image_offset(resource, RESOURCE_IMAGE_ICON),
 			c->xOffset + 32, c->yOffset + 220);
 		Widget_GameText_drawMultiline(99, 17,
 			c->xOffset + 64, c->yOffset + 223,
@@ -373,7 +373,7 @@ void UI_BuildingInfo_drawWarehouseOrdersForeground(BuildingInfoContext *c)
 	for (int i = 0; i < Data_CityInfo_Resource.numAvailableResources; i++) {
 		int resourceId = Data_CityInfo_Resource.availableResources[i];
 		int graphicId = image_group(GROUP_RESOURCE_ICONS) + resourceId +
-			Resource_getGraphicIdOffset(resourceId, 3);
+			resource_image_offset(resourceId, RESOURCE_IMAGE_ICON);
 		Graphics_drawImage(graphicId, c->xOffset + 32, 78 + 22 * i);
 		Graphics_drawImage(graphicId, c->xOffset + 408, 78 + 22 * i);
 		Widget_GameText_draw(23, resourceId,

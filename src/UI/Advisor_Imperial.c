@@ -49,7 +49,7 @@ static void draw_request(int index, const scenario_request *request)
     Widget_Text_drawNumber(request->amount, '@', " ",
         baseOffsetX + 40, baseOffsetY + 102 + 42 * index, FONT_NORMAL_WHITE);
     int resourceOffset = request->resource +
-        Resource_getGraphicIdOffset(request->resource, 3);
+        resource_image_offset(request->resource, RESOURCE_IMAGE_ICON);
     Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + resourceOffset,
         baseOffsetX + 110, baseOffsetY + 100 + 42 * index);
     Widget_GameText_draw(23, request->resource,

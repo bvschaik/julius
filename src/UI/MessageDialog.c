@@ -273,7 +273,7 @@ static void drawDialogVideo()
 		Widget_Text_drawNumber(request->amount,
 			'@', " ", data.x + 8, data.y + 384, FONT_NORMAL_WHITE);
 		Graphics_drawImage(
-			image_group(GROUP_RESOURCE_ICONS) + request->resource + Resource_getGraphicIdOffset(request->resource, 3),
+			image_group(GROUP_RESOURCE_ICONS) + request->resource + resource_image_offset(request->resource, RESOURCE_IMAGE_ICON),
 			data.x + 70, data.y + 379);
 		Widget_GameText_draw(23, request->resource, data.x + 100, data.y + 384, FONT_NORMAL_WHITE);
 		if (request->state == REQUEST_STATE_NORMAL || request->state == REQUEST_STATE_OVERDUE) {
@@ -338,7 +338,7 @@ static void drawPlayerMessageContent(const lang_message *msg)
 
 		case MESSAGE_TYPE_TRADE_CHANGE:
 			graphicId = image_group(GROUP_RESOURCE_ICONS) + playerMessage.param2;
-			graphicId += Resource_getGraphicIdOffset(playerMessage.param2, 3);
+			graphicId += resource_image_offset(playerMessage.param2, RESOURCE_IMAGE_ICON);
 			Graphics_drawImage(graphicId, data.x + 64, data.yText + 40);
 			Widget_GameText_draw(21, empire_city_get(playerMessage.param1)->name_id,
 				data.x + 100, data.yText + 44, FONT_NORMAL_WHITE);
@@ -349,7 +349,7 @@ static void drawPlayerMessageContent(const lang_message *msg)
 
 		case MESSAGE_TYPE_PRICE_CHANGE:
 			graphicId = image_group(GROUP_RESOURCE_ICONS) + playerMessage.param2;
-			graphicId += Resource_getGraphicIdOffset(playerMessage.param2, 3);
+			graphicId += resource_image_offset(playerMessage.param2, RESOURCE_IMAGE_ICON);
 			Graphics_drawImage(graphicId, data.x + 64, data.yText + 40);
 			Widget_Text_drawMoney(playerMessage.param1,
 				data.x + 100, data.yText + 44, FONT_NORMAL_WHITE);
@@ -369,7 +369,7 @@ static void drawPlayerMessageContent(const lang_message *msg)
 		Widget_Text_drawNumber(request->amount,
 			'@', " ", data.xText + 8, yOffset, FONT_NORMAL_WHITE);
 		graphicId = image_group(GROUP_RESOURCE_ICONS) + request->resource;
-		graphicId += Resource_getGraphicIdOffset(request->resource, 3);
+		graphicId += resource_image_offset(request->resource, RESOURCE_IMAGE_ICON);
 		Graphics_drawImage(graphicId, data.xText + 70, yOffset - 5);
 		Widget_GameText_draw(23, request->resource,
 			data.xText + 100, yOffset, FONT_NORMAL_WHITE);

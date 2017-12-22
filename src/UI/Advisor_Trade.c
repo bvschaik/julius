@@ -93,7 +93,7 @@ void UI_Advisor_Trade_drawForeground()
 	for (int i = 0; i < Data_CityInfo_Resource.numAvailableResources; i++) {
 		int offsetY = baseOffsetY + 22 * i;
 		int resource = Data_CityInfo_Resource.availableResources[i];
-		int graphicOffset = resource + Resource_getGraphicIdOffset(resource, 3);
+		int graphicOffset = resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
 		Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + graphicOffset,
 			baseOffsetX + 48, offsetY + 54);
 		Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + graphicOffset,
@@ -176,7 +176,7 @@ void UI_TradePricesDialog_drawBackground()
 	Widget_GameText_draw(54, 22, baseOffsetX + 26, baseOffsetY + 228, FONT_NORMAL_BLACK);
 	Widget_GameText_draw(54, 23, baseOffsetX + 26, baseOffsetY + 253, FONT_NORMAL_BLACK);
 	for (int i = 1; i < 16; i++) {
-		int graphicOffset = i + Resource_getGraphicIdOffset(i, 3);
+		int graphicOffset = i + resource_image_offset(i, RESOURCE_IMAGE_ICON);
 		Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + graphicOffset,
 			baseOffsetX + 126 + 30 * i, baseOffsetY + 194);
 		Widget_Text_drawNumberCentered(trade_price_buy(i),
@@ -233,7 +233,7 @@ void UI_ResourceSettingsDialog_drawForeground()
 	int baseOffsetY = Data_Screen.offset640x480.y;
 
 	Widget_Panel_drawOuterPanel(baseOffsetX + 48, baseOffsetY + 128, 34, 15);
-	int graphicOffset = selectedResourceId + Resource_getGraphicIdOffset(selectedResourceId, 3);
+	int graphicOffset = selectedResourceId + resource_image_offset(selectedResourceId, RESOURCE_IMAGE_ICON);
 	Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) + graphicOffset,
 			baseOffsetX + 58, baseOffsetY + 136);
 

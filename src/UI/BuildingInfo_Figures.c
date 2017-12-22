@@ -130,7 +130,7 @@ static void drawFigureInfoTrade(BuildingInfoContext *c, figure *f)
 			if (trader_bought_resources(traderId, r)) {
 				width += Widget_Text_drawNumber(trader_bought_resources(traderId, r),
 					'@', " ", c->xOffset + 40 + width, c->yOffset + 170, FONT_SMALL_BLACK);
-				int graphicId = image_group(GROUP_RESOURCE_ICONS) + r + Resource_getGraphicIdOffset(r, 3);
+				int graphicId = image_group(GROUP_RESOURCE_ICONS) + r + resource_image_offset(r, RESOURCE_IMAGE_ICON);
 				Graphics_drawImage(graphicId, c->xOffset + 40 + width, c->yOffset + 167);
 				width += 25;
 			}
@@ -141,7 +141,7 @@ static void drawFigureInfoTrade(BuildingInfoContext *c, figure *f)
 			if (trader_sold_resources(traderId, r)) {
 				width += Widget_Text_drawNumber(trader_sold_resources(traderId, r),
 					'@', " ", c->xOffset + 40 + width, c->yOffset + 200, FONT_SMALL_BLACK);
-				int graphicId = image_group(GROUP_RESOURCE_ICONS) + r + Resource_getGraphicIdOffset(r, 3);
+				int graphicId = image_group(GROUP_RESOURCE_ICONS) + r + resource_image_offset(r, RESOURCE_IMAGE_ICON);
 				Graphics_drawImage(graphicId, c->xOffset + 40 + width, c->yOffset + 197);
 				width += 25;
 			}
@@ -151,7 +151,7 @@ static void drawFigureInfoTrade(BuildingInfoContext *c, figure *f)
 		width = Widget_GameText_draw(129, 2, c->xOffset + 40, c->yOffset + 170, FONT_SMALL_BLACK);
 		for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
 			if (city->buys_resource[r]) {
-				int graphicId = image_group(GROUP_RESOURCE_ICONS) + r + Resource_getGraphicIdOffset(r, 3);
+				int graphicId = image_group(GROUP_RESOURCE_ICONS) + r + resource_image_offset(r, RESOURCE_IMAGE_ICON);
 				Graphics_drawImage(graphicId, c->xOffset + 40 + width, c->yOffset + 167);
 				width += 25;
 			}
@@ -160,7 +160,7 @@ static void drawFigureInfoTrade(BuildingInfoContext *c, figure *f)
 		width = Widget_GameText_draw(129, 3, c->xOffset + 40, c->yOffset + 200, FONT_SMALL_BLACK);
 		for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
 			if (city->sells_resource[r]) {
-				int graphicId = image_group(GROUP_RESOURCE_ICONS) + r + Resource_getGraphicIdOffset(r, 3);
+				int graphicId = image_group(GROUP_RESOURCE_ICONS) + r + resource_image_offset(r, RESOURCE_IMAGE_ICON);
 				Graphics_drawImage(graphicId, c->xOffset + 40 + width, c->yOffset + 197);
 				width += 25;
 			}
@@ -245,7 +245,7 @@ static void drawFigureInfoCartpusher(BuildingInfoContext *c, figure *f)
 	if (f->actionState != FigureActionState_132_DockerIdling && f->resourceId) {
 		int resource = f->resourceId;
 		Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) +
-			resource + Resource_getGraphicIdOffset(resource, 3),
+			resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON),
 			c->xOffset + 92 + width, c->yOffset + 135);
 	}
 	
@@ -307,14 +307,14 @@ static void drawFigureInfoMarketBuyer(BuildingInfoContext *c, figure *f)
 			c->xOffset + 90 + width, c->yOffset + 139, FONT_SMALL_BLACK);
 		int resourceId = collectingItemIdToResourceId(f->collectingItemId);
 		Graphics_drawImage(
-			image_group(GROUP_RESOURCE_ICONS) + resourceId + Resource_getGraphicIdOffset(resourceId, 3),
+			image_group(GROUP_RESOURCE_ICONS) + resourceId + resource_image_offset(resourceId, RESOURCE_IMAGE_ICON),
 			c->xOffset + 90 + width, c->yOffset + 135);
 	} else if (f->actionState == FigureActionState_146_MarketBuyerReturning) {
 		width += Widget_GameText_draw(129, 18,
 			c->xOffset + 90 + width, c->yOffset + 139, FONT_SMALL_BLACK);
 		int resourceId = collectingItemIdToResourceId(f->collectingItemId);
 		Graphics_drawImage(
-			image_group(GROUP_RESOURCE_ICONS) + resourceId + Resource_getGraphicIdOffset(resourceId, 3),
+			image_group(GROUP_RESOURCE_ICONS) + resourceId + resource_image_offset(resourceId, RESOURCE_IMAGE_ICON),
 			c->xOffset + 90 + width, c->yOffset + 135);
 	}
 	if (c->figure.phraseId >= 0) {

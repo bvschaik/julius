@@ -9,6 +9,7 @@
 #include "building/building.h"
 #include "building/dock.h"
 #include "building/storage.h"
+#include "building/warehouse.h"
 #include "city/finance.h"
 #include "city/message.h"
 #include "empire/city.h"
@@ -74,7 +75,7 @@ static int traderGetBuyResource(int warehouseId, int cityId)
 			city_finance_process_export(trade_price_sell(resource));
 
 			// update graphics
-			Resource_setWarehouseSpaceGraphic(space, resource);
+			building_warehouse_space_set_image(space, resource);
 			return resource;
 		}
 	}

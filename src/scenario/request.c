@@ -1,5 +1,6 @@
 #include "request.h"
 
+#include "building/warehouse.h"
 #include "city/finance.h"
 #include "city/message.h"
 #include "core/random.h"
@@ -111,9 +112,9 @@ void scenario_request_dispatch(int id)
         city_finance_process_sundry(amount);
     } else if (scenario.requests[id].resource == RESOURCE_TROOPS) {
         CityInfo_Population_removePeopleForTroopRequest(amount);
-        Resource_removeFromCityWarehouses(RESOURCE_WEAPONS, amount);
+        building_warehouses_remove_resource(RESOURCE_WEAPONS, amount);
     } else {
-        Resource_removeFromCityWarehouses(scenario.requests[id].resource, amount);
+        building_warehouses_remove_resource(scenario.requests[id].resource, amount);
     }
 }
 

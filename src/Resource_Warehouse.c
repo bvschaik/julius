@@ -9,6 +9,7 @@
 #include "building/count.h"
 #include "building/model.h"
 #include "building/storage.h"
+#include "building/warehouse.h"
 #include "city/finance.h"
 #include "core/calc.h"
 #include "empire/trade_prices.h"
@@ -19,70 +20,6 @@
 
 static int granaryGettingResource[7];
 static int granaryAcceptingResource[7];
-
-void Resource_setWarehouseSpaceGraphic(building *space, int resource)
-{
-	int image_id;
-	if (space->loadsStored <= 0) {
-		image_id = image_group(GROUP_BUILDING_WAREHOUSE_STORAGE_EMPTY);
-	} else {
-		image_id = image_group(GROUP_BUILDING_WAREHOUSE_STORAGE_FILLED) +
-			4 * (resource - 1) + Resource_getGraphicIdOffset(resource, 0) +
-			       space->loadsStored - 1;
-	}
-	map_image_set(space->gridOffset, image_id);
-}
-
-void Resource_addToCityWarehouses(int resource, int amount)
-{
-	int buildingId = Data_CityInfo.resourceLastTargetWarehouse;
-	for (int i = 1; i < MAX_BUILDINGS && amount > 0; i++) {
-		buildingId++;
-		if (buildingId >= MAX_BUILDINGS) {
-			buildingId = 1;
-		}
-		building *b = building_get(buildingId);
-		if (BuildingIsInUse(b) && b->type == BUILDING_WAREHOUSE) {
-			Data_CityInfo.resourceLastTargetWarehouse = buildingId;
-			while (amount && Resource_addToWarehouse(buildingId, resource)) {
-				amount--;
-			}
-		}
-	}
-}
-
-int Resource_removeFromCityWarehouses(int resource, int amount)
-{
-	int amountLeft = amount;
-	int buildingId = Data_CityInfo.resourceLastTargetWarehouse;
-	// first go for non-getting warehouses
-	for (int i = 1; i < MAX_BUILDINGS && amountLeft > 0; i++) {
-		buildingId++;
-		if (buildingId >= MAX_BUILDINGS) {
-			buildingId = 1;
-		}
-		building *b = building_get(buildingId);
-		if (BuildingIsInUse(b) && b->type == BUILDING_WAREHOUSE) {
-			if (building_storage_get(b->storage_id)->resource_state[resource] != BUILDING_STORAGE_STATE_GETTING) {
-				Data_CityInfo.resourceLastTargetWarehouse = buildingId;
-				amountLeft = Resource_removeFromWarehouse(buildingId, resource, amountLeft);
-			}
-		}
-	}
-	// if that doesn't work, take it anyway
-	for (int i = 1; i < MAX_BUILDINGS && amountLeft > 0; i++) {
-		buildingId++;
-		if (buildingId >= MAX_BUILDINGS) {
-			buildingId = 1;
-		}
-		building *b = building_get(buildingId);
-		if (BuildingIsInUse(b) && b->type == BUILDING_WAREHOUSE) {
-			Data_CityInfo.resourceLastTargetWarehouse = buildingId;
-			amountLeft = Resource_removeFromWarehouse(buildingId, resource, amountLeft);
-		}
-	}
-	return amount - amountLeft;
-}
 
 int Resource_getWarehouseForStoringResource(
 	int srcBuildingId, int x, int y, int resource, int distanceFromEntry, int roadNetworkId,
@@ -179,86 +116,6 @@ int Resource_getWarehouseForGettingResource(int srcBuildingId, int resource, int
 	}
 }
 
-int Resource_addToWarehouse(int buildingId, int resource)
-{
-	if (buildingId <= 0) {
-		return 0;
-	}
-	// check building itself
-	int findSpace = 0;
-	building *b = building_get(buildingId);
-	if (b->subtype.warehouseResourceId && b->subtype.warehouseResourceId != resource) {
-		findSpace = 1;
-	} else if (b->loadsStored >= 4) {
-		findSpace = 1;
-	} else if (b->type == BUILDING_WAREHOUSE) {
-		findSpace = 1;
-	}
-	if (findSpace) {
-		int spaceFound = 0;
-		building *space = building_main(b);
-		for (int i = 0; i < 8; i++) {
-			space = building_next(space);
-			if (!space->id) {
-				return 0;
-			}
-			if (!space->subtype.warehouseResourceId || space->subtype.warehouseResourceId == resource) {
-				if (space->loadsStored < 4) {
-					spaceFound = 1;
-                    b = space;
-					break;
-				}
-			}
-		}
-		if (!spaceFound) {
-			return 0;
-		}
-	}
-	Data_CityInfo.resourceSpaceInWarehouses[resource]--;
-	Data_CityInfo.resourceStored[resource]++;
-	b->subtype.warehouseResourceId = resource;
-	b->loadsStored++;
-	tutorial_on_add_to_warehouse();
-	Resource_setWarehouseSpaceGraphic(b, resource);
-	return 1;
-}
-
-int Resource_removeFromWarehouse(int buildingId, int resource, int amount)
-{
-	// returns amount still needing removal
-	building *warehouse = building_get(buildingId);
-	if (warehouse->type != BUILDING_WAREHOUSE) {
-		return amount;
-	}
-	building *space = warehouse;
-	for (int i = 0; i < 8; i++) {
-		if (amount <= 0) {
-			return 0;
-		}
-		space = building_next(space);
-		if (space->id <= 0) {
-			continue;
-		}
-		if (space->subtype.warehouseResourceId != resource || space->loadsStored <= 0) {
-			continue;
-		}
-		if (space->loadsStored > amount) {
-			Data_CityInfo.resourceSpaceInWarehouses[resource] += amount;
-			Data_CityInfo.resourceStored[resource] -= amount;
-			space->loadsStored -= amount;
-			amount = 0;
-		} else {
-			Data_CityInfo.resourceSpaceInWarehouses[resource] += space->loadsStored;
-			Data_CityInfo.resourceStored[resource] -= space->loadsStored;
-			amount -= space->loadsStored;
-			space->loadsStored = 0;
-			space->subtype.warehouseResourceId = RESOURCE_NONE;
-		}
-		Resource_setWarehouseSpaceGraphic(space, resource);
-	}
-	return amount;
-}
-
 void Resource_removeFromWarehouseForMercury(int buildingId, int amount)
 {
 	building *warehouse = building_get(buildingId);
@@ -284,7 +141,7 @@ void Resource_removeFromWarehouseForMercury(int buildingId, int amount)
 			space->loadsStored = 0;
 			space->subtype.warehouseResourceId = RESOURCE_NONE;
 		}
-		Resource_setWarehouseSpaceGraphic(space, resource);
+		building_warehouse_space_set_image(space, resource);
 	}
 }
 
@@ -339,7 +196,7 @@ void Resource_addImportedResourceToWarehouseSpace(building *space, int resourceI
     int price = trade_price_buy(resourceId);
     city_finance_process_import(price);
 	
-	Resource_setWarehouseSpaceGraphic(space, resourceId);
+	building_warehouse_space_set_image(space, resourceId);
 }
 
 void Resource_removeExportedResourceFromWarehouseSpace(building *space, int resourceId)
@@ -354,7 +211,7 @@ void Resource_removeExportedResourceFromWarehouseSpace(building *space, int reso
 	int price = trade_price_sell(resourceId);
     city_finance_process_export(price);
 	
-	Resource_setWarehouseSpaceGraphic(space, resourceId);
+	building_warehouse_space_set_image(space, resourceId);
 }
 
 static int determineGranaryAcceptFoods()

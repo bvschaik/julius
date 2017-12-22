@@ -26,6 +26,7 @@
 #include "building/figure.h"
 #include "building/industry.h"
 #include "building/maintenance.h"
+#include "building/warehouse.h"
 #include "city/culture.h"
 #include "city/message.h"
 #include "core/random.h"
@@ -85,7 +86,7 @@ void GameTick_advance()
 		case 8: Resource_gatherGranaryGettingInfo(); break;
 		case 10: Building_updateHighestIds(); break;
 		case 12: Building_decayHousesCovered(); break;
-		case 16: Resource_calculateWarehouseStocks(); break;
+		case 16: building_warehouses_calculate_stocks(); break;
 		case 17: CityInfo_Resource_calculateFoodAndSupplyRomeWheat(); break;
 		case 18: building_calculate_workshop_stocks(); break;
 		case 19: building_dock_update_open_water_access(); break;

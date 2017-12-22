@@ -216,7 +216,7 @@ static void drawPanelInfoCity(const empire_object *object)
 			}
 			Graphics_drawInsetRect(xOffset + 100 * goodOffset + 120, yOffset + 21, 26, 26);
 			int graphicId = good + image_group(GROUP_EMPIRE_RESOURCES);
-			int resourceOffset = Resource_getGraphicIdOffset(good, 3);
+			int resourceOffset = resource_image_offset(good, RESOURCE_IMAGE_ICON);
 			Graphics_drawImage(graphicId + resourceOffset, xOffset + 100 * goodOffset + 121, yOffset + 22);
 			int tradeMax = trade_route_limit(city->route_id, good);
 			switch (tradeMax) {
@@ -254,7 +254,7 @@ static void drawPanelInfoCity(const empire_object *object)
 			}
 			Graphics_drawInsetRect(xOffset + 100 * goodOffset + 120, yOffset + 51, 26, 26);
 			int graphicId = good + image_group(GROUP_EMPIRE_RESOURCES);
-			int resourceOffset = Resource_getGraphicIdOffset(good, 3);
+			int resourceOffset = resource_image_offset(good, RESOURCE_IMAGE_ICON);
 			Graphics_drawImage(graphicId + resourceOffset, xOffset + 100 * goodOffset + 121, yOffset + 52);
 			int tradeMax = trade_route_limit(city->route_id, good);
 			switch (tradeMax) {
@@ -291,7 +291,7 @@ static void drawPanelInfoCity(const empire_object *object)
 			}
 			Graphics_drawInsetRect(xOffset + goodOffset + 60, yOffset + 33, 26, 26);
 			int graphicId = good + image_group(GROUP_EMPIRE_RESOURCES);
-			int resourceOffset = Resource_getGraphicIdOffset(good, 3);
+			int resourceOffset = resource_image_offset(good, RESOURCE_IMAGE_ICON);
 			Graphics_drawImage(graphicId + resourceOffset, xOffset + goodOffset + 61, yOffset + 34);
 			switch (trade_route_limit(city->route_id, good)) {
 				case 15:
@@ -316,7 +316,7 @@ static void drawPanelInfoCity(const empire_object *object)
 			}
 			Graphics_drawInsetRect(xOffset + goodOffset + 110, yOffset + 33, 26, 26);
 			int graphicId = good + image_group(GROUP_EMPIRE_RESOURCES);
-			int resourceOffset = Resource_getGraphicIdOffset(good, 3);
+			int resourceOffset = resource_image_offset(good, RESOURCE_IMAGE_ICON);
 			Graphics_drawImage(graphicId + resourceOffset, xOffset + goodOffset + 110, yOffset + 34);
 			switch (trade_route_limit(city->route_id, good)) {
 				case 15:

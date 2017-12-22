@@ -24,6 +24,7 @@
 #include "building/model.h"
 #include "building/properties.h"
 #include "building/storage.h"
+#include "building/warehouse.h"
 #include "city/finance.h"
 #include "city/warning.h"
 #include "core/calc.h"
@@ -1412,7 +1413,7 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
 		}
 	}
 	if ((type >= BUILDING_LARGE_TEMPLE_CERES && type <= BUILDING_LARGE_TEMPLE_VENUS) || type == BUILDING_ORACLE) {
-		Resource_removeFromCityWarehouses(RESOURCE_MARBLE, 2);
+		building_warehouses_remove_resource(RESOURCE_MARBLE, 2);
 	}
 	formation_move_herds_away(xEnd, yEnd);
 	city_finance_process_construction(placementCost);

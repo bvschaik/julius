@@ -3,24 +3,12 @@
 
 #include "building/building.h"
 
-// general functions
-void Resource_calculateWarehouseStocks();
-
-int Resource_getGraphicIdOffset(int resource, int type);
-
 // warehouse functions
-void Resource_setWarehouseSpaceGraphic(building *space, int resource);
-
-void Resource_addToCityWarehouses(int resource, int amount);
-int Resource_removeFromCityWarehouses(int resource, int amount);
-
 int Resource_getWarehouseForStoringResource(
 	int srcBuildingId, int x, int y, int resource, int distanceFromEntry, int roadNetworkId,
 	int *understaffed, int *xDst, int *yDst);
 int Resource_getWarehouseForGettingResource(int srcBuildingId, int resource, int *xDst, int *yDst);
 
-int Resource_addToWarehouse(int buildingId, int resource);
-int Resource_removeFromWarehouse(int buildingId, int resource, int amountInLoads);
 void Resource_removeFromWarehouseForMercury(int buildingId, int amountInLoads);
 
 void Resource_addImportedResourceToWarehouseSpace(building *space, int resourceId);

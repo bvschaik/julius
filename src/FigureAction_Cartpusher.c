@@ -6,6 +6,7 @@
 
 #include "building/building.h"
 #include "building/industry.h"
+#include "building/warehouse.h"
 #include "figure/route.h"
 #include "game/resource.h"
 #include "map/road_network.h"
@@ -18,7 +19,7 @@ static const int cartResourceOffset8PlusLoadsFood[] = {0, 40, 48, 56, 0, 0, 64, 
 static void setCartGraphic(figure *f)
 {
 	f->cartGraphicId = image_group(GROUP_FIGURE_CARTPUSHER_CART) +
-		8 * f->resourceId + Resource_getGraphicIdOffset(f->resourceId, 1);
+		8 * f->resourceId + resource_image_offset(f->resourceId, RESOURCE_IMAGE_CART);
 }
 
 static void setDestination(figure *f, int actionState, int buildingId, int xDst, int yDst)
@@ -217,7 +218,7 @@ void FigureAction_cartpusher(figure *f)
 		case FigureActionState_24_CartpusherAtWarehouse:
 			f->waitTicks++;
 			if (f->waitTicks > 10) {
-				if (Resource_addToWarehouse(f->destinationBuildingId, f->resourceId)) {
+				if (building_warehouse_add_resource(building_get(f->destinationBuildingId), f->resourceId)) {
 					f->actionState = FigureActionState_27_CartpusherReturning;
 					f->waitTicks = 0;
 					f->destinationX = f->sourceX;
@@ -321,7 +322,7 @@ static void determineGranarymanDestination(figure *f, int roadNetworkId)
 static void removeResourceFromWarehouse(figure *f)
 {
 	if (f->state != FigureState_Dead) {
-		int err = Resource_removeFromWarehouse(f->buildingId, f->resourceId, 1);
+		int err = building_warehouse_remove_resource(building_get(f->buildingId), f->resourceId, 1);
 		if (err) {
 			f->state = FigureState_Dead;
 		}
@@ -435,7 +436,7 @@ void FigureAction_warehouseman(figure *f)
 		case FigureActionState_51_WarehousemanDeliveringResource:
 			if (f->loadsSoldOrCarrying == 1) {
 				f->cartGraphicId = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) +
-					8 * f->resourceId - 8 + Resource_getGraphicIdOffset(f->resourceId, 2);
+					8 * f->resourceId - 8 + resource_image_offset(f->resourceId, RESOURCE_IMAGE_FOOD_CART);
 			} else {
 				setCartGraphic(f);
 			}
@@ -461,7 +462,7 @@ void FigureAction_warehouseman(figure *f)
 						break;
 					case BUILDING_WAREHOUSE:
 					case BUILDING_WAREHOUSE_SPACE:
-						Resource_addToWarehouse(b->id, f->resourceId);
+						building_warehouse_add_resource(b, f->resourceId);
 						break;
 					default: // workshop
 						building_workshop_add_raw_material(b);
@@ -524,7 +525,7 @@ void FigureAction_warehouseman(figure *f)
 					f->cartGraphicId = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) +
 						cartResourceOffsetMultipleLoadsFood[f->resourceId];
 				}
-				f->cartGraphicId += Resource_getGraphicIdOffset(f->resourceId, 2);
+				f->cartGraphicId += resource_image_offset(f->resourceId, RESOURCE_IMAGE_FOOD_CART);
 			}
 			FigureMovement_walkTicks(f, 1);
 			if (f->direction == DIR_FIGURE_AT_DESTINATION) {
@@ -555,7 +556,8 @@ void FigureAction_warehouseman(figure *f)
 			f->waitTicks++;
 			if (f->waitTicks > 4) {
 				f->loadsSoldOrCarrying = 0;
-				while (f->loadsSoldOrCarrying < 4 && 0 == Resource_removeFromWarehouse(f->destinationBuildingId, f->collectingItemId, 1)) {
+				while (f->loadsSoldOrCarrying < 4 && 0 == building_warehouse_remove_resource(
+                    building_get(f->destinationBuildingId), f->collectingItemId, 1)) {
 					f->loadsSoldOrCarrying++;
 				}
 				f->resourceId = f->collectingItemId;
@@ -583,12 +585,12 @@ void FigureAction_warehouseman(figure *f)
 					f->cartGraphicId = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_RESOURCE) +
 						cartResourceOffsetMultipleLoadsNonFood[f->resourceId];
 				}
-				f->cartGraphicId += Resource_getGraphicIdOffset(f->resourceId, 2);
+				f->cartGraphicId += resource_image_offset(f->resourceId, RESOURCE_IMAGE_FOOD_CART);
 			}
 			FigureMovement_walkTicks(f, 1);
 			if (f->direction == DIR_FIGURE_AT_DESTINATION) {
 				for (int i = 0; i < f->loadsSoldOrCarrying; i++) {
-					Resource_addToWarehouse(f->buildingId, f->resourceId);
+					building_warehouse_add_resource(building_get(f->buildingId), f->resourceId);
 				}
 				f->state = FigureState_Dead;
 			} else if (f->direction == DIR_FIGURE_REROUTE) {

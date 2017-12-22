@@ -60,4 +60,13 @@ typedef enum {
     WORKSHOP_CLAY_TO_POTTERY = 5
 } workshop_type;
 
+typedef enum {
+    RESOURCE_IMAGE_STORAGE = 0,
+    RESOURCE_IMAGE_CART = 1,
+    RESOURCE_IMAGE_FOOD_CART = 2,
+    RESOURCE_IMAGE_ICON = 3
+} resource_image_type;
+
+int resource_image_offset(resource_type resource, resource_image_type type);
+
 #endif // GAME_RESOURCE_H

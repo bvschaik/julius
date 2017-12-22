@@ -4,12 +4,12 @@
 #include "../Widget.h"
 #include "../Graphics.h"
 #include "../CityInfo.h"
-#include "../Resource.h"
 #include "Advisors_private.h"
 #include "../Data/CityInfo.h"
 #include "../Data/Constants.h"
 #include "../Data/Screen.h"
 
+#include "building/warehouse.h"
 #include "city/finance.h"
 #include "game/resource.h"
 
@@ -188,7 +188,7 @@ static void buttonHoldFestival(int param1, int param2)
 	city_finance_process_sundry(cost);
 
 	if (Data_CityInfo.festivalSize == Festival_Grand) {
-		Resource_removeFromCityWarehouses(RESOURCE_WINE, Data_CityInfo.festivalWineGrand);
+		building_warehouses_remove_resource(RESOURCE_WINE, Data_CityInfo.festivalWineGrand);
 	}
 	UI_Window_goTo(Window_Advisors);
 }
