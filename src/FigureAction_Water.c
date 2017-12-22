@@ -127,7 +127,7 @@ void FigureAction_fishingBoat(figure *f)
 				if (f->waitTicks >= maxWaitTicks) {
 					f->waitTicks = 0;
 					int xTile, yTile;
-					if (Terrain_Water_getNearestFishTile(f->id, &xTile, &yTile)) {
+					if (scenario_map_closest_fishing_point(f->x, f->y, &xTile, &yTile)) {
 						f->actionState = FigureActionState_191_FishingBoatGoingToFish;
 						f->destinationX = xTile;
 						f->destinationY = yTile;

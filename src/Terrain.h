@@ -67,6 +67,5 @@ int Terrain_Water_getFreeDockDestination(int figureId, int *xTile, int *yTile);
 int Terrain_Water_getQueueDockDestination(int* xTile, int* yTile);
 int Terrain_Water_getWharfTileForNewFishingBoat(int figureId, int *xTile, int *yTile);
 int Terrain_Water_findAlternativeTileForFishingBoat(int figureId, int *xTile, int *yTile);
-int Terrain_Water_getNearestFishTile(int figureId, int *xTile, int *yTile);
 
 #endif

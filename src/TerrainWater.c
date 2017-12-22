@@ -227,12 +227,6 @@ int Terrain_Water_getWharfTileForNewFishingBoat(int figureId, int *xTile, int *y
 	return wharf->id;
 }
 
-int Terrain_Water_getNearestFishTile(int figureId, int *xTile, int *yTile)
-{
-    figure *f = figure_get(figureId);
-    return scenario_map_closest_fishing_point(f->x, f->y, xTile, yTile);
-}
-
 int Terrain_Water_findAlternativeTileForFishingBoat(int figureId, int *xTile, int *yTile)
 {
     figure *f = figure_get(figureId);
