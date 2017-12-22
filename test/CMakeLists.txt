@@ -95,7 +95,6 @@ add_executable(autopilot
     ${PROJECT_SOURCE_DIR}/src/Natives.c
     ${PROJECT_SOURCE_DIR}/src/Resource.c
     ${PROJECT_SOURCE_DIR}/src/Resource_Granary.c
-    ${PROJECT_SOURCE_DIR}/src/Resource_Warehouse.c
     ${PROJECT_SOURCE_DIR}/src/Runner.c
     ${PROJECT_SOURCE_DIR}/src/Scenario.c
     ${PROJECT_SOURCE_DIR}/src/Screen.c
@@ -104,7 +103,6 @@ add_executable(autopilot
     ${PROJECT_SOURCE_DIR}/src/Terrain.c
     ${PROJECT_SOURCE_DIR}/src/TerrainGraphics.c
     ${PROJECT_SOURCE_DIR}/src/TerrainGraphics_Context.c
-    ${PROJECT_SOURCE_DIR}/src/TerrainWater.c
     ${PROJECT_SOURCE_DIR}/src/Trader.c
     ${PROJECT_SOURCE_DIR}/src/Undo.c
     ${PROJECT_SOURCE_DIR}/src/Data/Model.c
