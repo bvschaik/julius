@@ -829,18 +829,6 @@ void Terrain_clearWithRadius(int x, int y, int size, int radius, unsigned short 
 	} END_FOR_XY_RADIUS;
 }
 
-int Terrain_existsTileWithinAreaWithType(int x, int y, int size, unsigned short type)
-{
-	for (int yy = y; yy < y + size; yy++) {
-		for (int xx = x; xx < x + size; xx++) {
-			if (map_grid_is_inside(xx, yy, 1) && map_terrain_is(map_grid_offset(xx, yy), type)) {
-				return 1;
-			}
-		}
-	}
-	return 0;
-}
-
 int Terrain_existsTileWithinRadiusWithType(int x, int y, int size, int radius, unsigned short type)
 {
 	FOR_XY_RADIUS {

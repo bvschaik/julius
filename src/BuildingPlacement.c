@@ -1394,7 +1394,7 @@ void BuildingPlacement_place(int orientation, int xStart, int yStart, int xEnd, 
 			Undo_addBuildingToList(reservoir->id);
 			Terrain_addBuildingToGrids(reservoir->id, xEnd-1, yEnd-1, 3, image_group(GROUP_BUILDING_RESERVOIR), TERRAIN_BUILDING);
 			map_aqueduct_set(map_grid_offset(xEnd-1, yEnd-1), 0);
-			if (!Terrain_existsTileWithinAreaWithType(xStart - 2, yStart - 2, 5, TERRAIN_WATER) && info.placeReservoirAtStart == PlaceReservoir_No) {
+			if (!map_terrain_exists_tile_in_area_with_type(xStart - 2, yStart - 2, 5, TERRAIN_WATER) && info.placeReservoirAtStart == PlaceReservoir_No) {
 				building_construction_warning_check_reservoir(BUILDING_RESERVOIR);
 			}
 		}

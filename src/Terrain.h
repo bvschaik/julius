@@ -34,8 +34,6 @@ int Terrain_getAdjacentRoadOrClearLand(int x, int y, int size, int *xTile, int *
 void Terrain_setWithRadius(int x, int y, int size, int radius, unsigned short typeToAdd);
 void Terrain_clearWithRadius(int x, int y, int size, int radius, unsigned short typeToKeep);
 
-int Terrain_existsTileWithinAreaWithType(int x, int y, int size, unsigned short type);
-
 int Terrain_existsTileWithinRadiusWithType(int x, int y, int size, int radius, unsigned short type);
 int Terrain_existsClearTileWithinRadius(int x, int y, int size, int radius, int exceptGridOffset, int *xTile, int *yTile);
 int Terrain_allTilesWithinRadiusHaveType(int x, int y, int size, int radius, unsigned short type);

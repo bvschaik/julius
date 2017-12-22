@@ -90,6 +90,18 @@ int map_terrain_has_adjacent_y_with_type(int grid_offset, int terrain)
     return 0;
 }
 
+int map_terrain_exists_tile_in_area_with_type(int x, int y, int size, int terrain)
+{
+    for (int yy = y; yy < y + size; yy++) {
+        for (int xx = x; xx < x + size; xx++) {
+            if (map_grid_is_inside(xx, yy, 1) && terrain_grid.items[map_grid_offset(xx, yy)] & terrain) {
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
 int map_terrain_has_only_meadow_in_ring(int x, int y, int distance)
 {
     int start = map_ring_start(1, distance);

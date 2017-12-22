@@ -41,7 +41,7 @@ void map_water_supply_update_houses()
         } else if (b->houseSize) {
             b->hasWaterAccess = 0;
             b->hasWellAccess = 0;
-            if (Terrain_existsTileWithinAreaWithType(
+            if (map_terrain_exists_tile_in_area_with_type(
                 b->x, b->y, b->size, TERRAIN_FOUNTAIN_RANGE)) {
                 b->hasWaterAccess = 1;
             }
@@ -138,7 +138,7 @@ void map_water_supply_update_reservoir_fountain()
         building *b = building_get(i);
         if (BuildingIsInUse(b) && b->type == BUILDING_RESERVOIR) {
             building_list_large_add(i);
-            if (Terrain_existsTileWithinAreaWithType(b->x - 1, b->y - 1, 5, TERRAIN_WATER)) {
+            if (map_terrain_exists_tile_in_area_with_type(b->x - 1, b->y - 1, 5, TERRAIN_WATER)) {
                 b->hasWaterAccess = 2;
             } else {
                 b->hasWaterAccess = 0;

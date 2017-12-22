@@ -647,7 +647,7 @@ static void set_bathhouse_graphic(building *b)
     if (!BuildingIsInUse(b)) {
         return;
     }
-    if (Terrain_existsTileWithinAreaWithType(b->x, b->y, b->size, TERRAIN_RESERVOIR_RANGE)) {
+    if (map_terrain_exists_tile_in_area_with_type(b->x, b->y, b->size, TERRAIN_RESERVOIR_RANGE)) {
         b->hasWaterAccess = 1;
     } else {
         b->hasWaterAccess = 0;

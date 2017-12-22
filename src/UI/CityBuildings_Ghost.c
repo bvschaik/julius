@@ -387,7 +387,7 @@ static void drawBuildingGhostDraggableReservoir()
 		int graphicId = image_group(GROUP_BUILDING_RESERVOIR);
 		Graphics_drawIsometricFootprint(graphicId, xOffsetBase, yOffsetBase, COLOR_MASK_GREEN);
 		Graphics_drawIsometricTop(graphicId, xOffsetBase, yOffsetBase, COLOR_MASK_GREEN);
-		if (Terrain_existsTileWithinAreaWithType(
+		if (map_terrain_exists_tile_in_area_with_type(
 			Data_State.map.current.x - 2, Data_State.map.current.y - 2,
 			5, TERRAIN_WATER)) {
 			const image *img = image_get(graphicId);
