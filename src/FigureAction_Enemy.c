@@ -692,13 +692,10 @@ int FigureAction_HerdEnemy_moveFormationTo(int formationId, int x, int y, int *x
 	}
 	map_routing_noncitizen_can_travel_over_land(x, y, -1, -1, 0, 600);
 	for (int r = 0; r <= 10; r++) {
-		int xMin = x - r;
-		int yMin = y - r;
-		int xMax = x + r;
-		int yMax = y + r;
-		map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
-		for (int yy = yMin; yy <= yMax; yy++) {
-			for (int xx = xMin; xx <= xMax; xx++) {
+        int x_min, y_min, x_max, y_max;
+        map_grid_get_area(x, y, 1, r, &x_min, &y_min, &x_max, &y_max);
+		for (int yy = y_min; yy <= y_max; yy++) {
+			for (int xx = x_min; xx <= x_max; xx++) {
 				int canMove = 1;
 				for (int fig = 0; fig < m->num_figures; fig++) {
 					int gridOffset = map_grid_offset(xx, yy) + figureOffsets[fig];

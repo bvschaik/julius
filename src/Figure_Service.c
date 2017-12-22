@@ -12,14 +12,11 @@
 #include "map/grid.h"
 
 #define FOR_XY_RADIUS \
-	int xMin = x - 2;\
-	int yMin = y - 2;\
-	int xMax = x + 2;\
-	int yMax = y + 2;\
-	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);\
-	int gridOffset = map_grid_offset(xMin, yMin);\
-	for (int yy = yMin; yy <= yMax; yy++) {\
-		for (int xx = xMin; xx <= xMax; xx++) {\
+	int x_min, y_min, x_max, y_max;\
+	map_grid_get_area(x, y, 1, 2, &x_min, &y_min, &x_max, &y_max);\
+	int gridOffset = map_grid_offset(x_min, y_min);\
+	for (int yy = y_min; yy <= y_max; yy++) {\
+		for (int xx = x_min; xx <= x_max; xx++) {\
 			int building_id = map_building_at(gridOffset);\
 			if (building_id) {\
                 building *b = building_get(building_id);
@@ -28,7 +25,7 @@
 			}\
 			++gridOffset;\
 		}\
-		gridOffset += 162 - (xMax - xMin + 1);\
+		gridOffset += 162 - (x_max - x_min + 1);\
 	}
 
 static int provideEngineerCoverage(int x, int y, int *maxDamageRiskSeen)
@@ -335,14 +332,11 @@ static int provideHospitalCoverage(int x, int y)
 
 static int provideMissionaryCoverage(int x, int y)
 {
-	int xMin = x - 4;
-	int yMin = y - 4;
-	int xMax = x + 4;
-	int yMax = y + 4;
-	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
-	int gridOffset = map_grid_offset(xMin, yMin);
-	for (int yy = yMin; yy <= yMax; yy++) {
-		for (int xx = xMin; xx <= xMax; xx++) {
+    int x_min, y_min, x_max, y_max;
+    map_grid_get_area(x, y, 1, 4, &x_min, &y_min, &x_max, &y_max);
+	int gridOffset = map_grid_offset(x_min, y_min);
+	for (int yy = y_min; yy <= y_max; yy++) {
+		for (int xx = x_min; xx <= x_max; xx++) {
 			int buildingId = map_building_at(gridOffset);
 			if (buildingId) {
                 building *b = building_get(buildingId);
@@ -352,7 +346,7 @@ static int provideMissionaryCoverage(int x, int y)
 			}
 			++gridOffset;
 		}
-		gridOffset += 162 - (xMax - xMin + 1);
+		gridOffset += 162 - (x_max - x_min + 1);
 	}
 	return 1;
 }

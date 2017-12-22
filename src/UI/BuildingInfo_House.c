@@ -179,14 +179,11 @@ void UI_BuildingInfo_houseDetermineWorstDesirabilityBuilding(BuildingInfoContext
 	int lowestDesirability = 0;
 	int lowestBuildingId = 0;
     building *cb = building_get(c->buildingId);
-	int xMin = cb->x - 6;
-	int yMin = cb->y - 6;
-	int xMax = cb->x + 6;
-	int yMax = cb->y + 6;
-	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
+    int x_min, y_min, x_max, y_max;
+    map_grid_get_area(cb->x, cb->y, 1, 6, &x_min, &y_min, &x_max, &y_max);
 
-	for (int y = yMin; y <= yMax; y++) {
-		for (int x = xMin; x <= xMax; x++) {
+	for (int y = y_min; y <= y_max; y++) {
+		for (int x = x_min; x <= x_max; x++) {
 			int buildingId = map_building_at(map_grid_offset(x, y));
 			if (buildingId <= 0) {
 				continue;

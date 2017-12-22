@@ -40,19 +40,16 @@
 	*(yTile) = y + (*tile_delta + 162) / 161 - 1;
 
 #define FOR_XY_RADIUS \
-	int xMin = x - radius;\
-	int yMin = y - radius;\
-	int xMax = x + size + radius - 1;\
-	int yMax = y + size + radius - 1;\
-	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);\
-	int gridOffset = map_grid_offset(xMin, yMin);\
-	for (int yy = yMin; yy <= yMax; yy++) {\
-		for (int xx = xMin; xx <= xMax; xx++) {
+	int x_min, y_min, x_max, y_max;\
+	map_grid_get_area(x, y, size, radius, &x_min, &y_min, &x_max, &y_max);\
+	int gridOffset = map_grid_offset(x_min, y_min);\
+	for (int yy = y_min; yy <= y_max; yy++) {\
+		for (int xx = x_min; xx <= x_max; xx++) {
 
 #define END_FOR_XY_RADIUS \
 			++gridOffset;\
 		}\
-		gridOffset += 162 - (xMax - xMin + 1);\
+		gridOffset += 162 - (x_max - x_min + 1);\
 	}
 
 #define STORE_XY_RADIUS(xTile,yTile) \
@@ -847,8 +844,8 @@ int Terrain_existsClearTileWithinRadius(int x, int y, int size, int radius, int 
 			return 1;
 		}
 	} END_FOR_XY_RADIUS;
-	*xTile = xMax;
-	*yTile = yMax;
+	*xTile = x_max;
+	*yTile = y_max;
 	return 0;
 }
 
