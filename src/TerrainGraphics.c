@@ -1103,9 +1103,9 @@ static void TerrainGraphics_updateTileMeadow(int x, int y)
 	FOREACH_REGION({
 		if (map_terrain_is(gridOffset, TERRAIN_MEADOW) && !map_terrain_is(gridOffset, forbiddenTerrain)) {
 			int random = map_random_get(gridOffset) & 3;
-			if (Terrain_isAllMeadowAtDistanceRing(xx, yy, 2)) {
+			if (map_terrain_has_only_meadow_in_ring(xx, yy, 2)) {
 				map_image_set(gridOffset, graphicId + random + 8);
-			} else if (Terrain_isAllMeadowAtDistanceRing(xx, yy, 1)) {
+			} else if (map_terrain_has_only_meadow_in_ring(xx, yy, 1)) {
 				map_image_set(gridOffset, graphicId + random + 4);
 			} else {
 				map_image_set(gridOffset, graphicId + random);

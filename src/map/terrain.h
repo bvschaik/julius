@@ -50,6 +50,7 @@ int map_terrain_has_adjacent_x_with_type(int grid_offset, int terrain);
 
 int map_terrain_has_adjacent_y_with_type(int grid_offset, int terrain);
 
+int map_terrain_has_only_meadow_in_ring(int x, int y, int distance);
 
 void map_terrain_backup();
 

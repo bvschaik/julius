@@ -27,34 +27,17 @@
 #include "map/terrain.h"
 #include "scenario/map.h"
 
-static const int tilesAroundBuildingGridOffsets[][20] = {
-	{0},
-	{-162, 1, 162, -1, 0},
-	{-162, -161, 2, 164, 325, 324, 161, -1, 0},
-	{-162, -161, -160, 3, 165, 327, 488, 487, 486, 323, 161, -1, 0},
-	{-162, -161, -160, -159, 4, 166, 328, 490, 651, 650, 649, 648, 485, 323, 161, -1, 0},
-	{-162, -161, -160, -159, -158, 5, 167, 329, 491, 653, 814, 813, 812, 811, 810, 647, 485, 323, 161, -1},
-};
-
-static const int tileEdgeSizeOffsets[5][5] = {
-	{0, 1, 2, 3, 4},
-	{8, 9, 10, 11, 12},
-	{16, 17, 18, 19, 20},
-	{24, 25, 26, 27, 28},
-	{32, 33, 34, 35, 36},
-};
-
 #define FOR_XY_ADJACENT \
 	{int baseOffset = map_grid_offset(x, y);\
-	for (int i = 0; i < 20; i++) {\
-		if (!tilesAroundBuildingGridOffsets[size][i]) break;\
-		int gridOffset = baseOffset + tilesAroundBuildingGridOffsets[size][i];
+	const int *tile_delta = map_adjacent_offsets(size);\
+	while (*tile_delta) {\
+		int gridOffset = baseOffset + *tile_delta;
 
-#define END_FOR_XY_ADJACENT }}
+#define END_FOR_XY_ADJACENT tile_delta++;}}
 
 #define STORE_XY_ADJACENT(xTile,yTile) \
-	*(xTile) = x + (tilesAroundBuildingGridOffsets[size][i] + 172) % 162 - 10;\
-	*(yTile) = y + (tilesAroundBuildingGridOffsets[size][i] + 162) / 161 - 1;
+	*(xTile) = x + (*tile_delta + 172) % 162 - 10;\
+	*(yTile) = y + (*tile_delta + 162) / 161 - 1;
 
 #define FOR_XY_RADIUS \
 	int xMin = x - radius;\
@@ -945,38 +928,6 @@ int Terrain_hasBuildingOnNativeLand(int x, int y, int size, int radius)
 		}
 	} END_FOR_XY_RADIUS;
 	return 0;
-}
-
-int Terrain_isAllRockAndTreesAtDistanceRing(int x, int y, int distance)
-{
-	int start = map_ring_start(1, distance);
-	int end = map_ring_end(1, distance);
-	int baseOffset = map_grid_offset(x, y);
-	for (int i = start; i < end; i++) {
-        const ring_tile *tile = map_ring_tile(i);
-		if (map_ring_is_inside_map(x + tile->x, y + tile->y)) {
-			if (!map_terrain_is(baseOffset + tile->grid_offset, TERRAIN_ROCK | TERRAIN_TREE)) {
-				return 0;
-			}
-		}
-	}
-	return 1;
-}
-
-int Terrain_isAllMeadowAtDistanceRing(int x, int y, int distance)
-{
-	int start = map_ring_start(1, distance);
-	int end = map_ring_end(1, distance);
-	int baseOffset = map_grid_offset(x, y);
-	for (int i = start; i < end; i++) {
-        const ring_tile *tile = map_ring_tile(i);
-		if (map_ring_is_inside_map(x + tile->x, y + tile->y)) {
-			if (!map_terrain_is(baseOffset + tile->grid_offset, TERRAIN_MEADOW)) {
-				return 0;
-			}
-		}
-	}
-	return 1;
 }
 
 void Terrain_updateEntryExitFlags(int remove)

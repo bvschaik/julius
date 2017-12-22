@@ -56,9 +56,6 @@ int Terrain_hasBuildingOnNativeLand(int x, int y, int size, int radius);
 
 void Terrain_markBuildingsWithinWellRadius(int buildingId, int radius);
 
-int Terrain_isAllRockAndTreesAtDistanceRing(int x, int y, int distance);
-int Terrain_isAllMeadowAtDistanceRing(int x, int y, int distance);
-
 void Terrain_updateEntryExitFlags(int remove);
 
 int Terrain_isClearToBuild(int size, int x, int y, int terrainMask);

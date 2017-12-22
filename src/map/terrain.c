@@ -1,6 +1,7 @@
 #include "terrain.h"
 
 #include "map/grid.h"
+#include "map/ring.h"
 
 static grid_u16 terrain_grid;
 static grid_u16 terrain_grid_backup;
@@ -87,6 +88,22 @@ int map_terrain_has_adjacent_y_with_type(int grid_offset, int terrain)
         return 1;
     }
     return 0;
+}
+
+int map_terrain_has_only_meadow_in_ring(int x, int y, int distance)
+{
+    int start = map_ring_start(1, distance);
+    int end = map_ring_end(1, distance);
+    int baseOffset = map_grid_offset(x, y);
+    for (int i = start; i < end; i++) {
+        const ring_tile *tile = map_ring_tile(i);
+        if (map_ring_is_inside_map(x + tile->x, y + tile->y)) {
+            if (!map_terrain_is(baseOffset + tile->grid_offset, TERRAIN_MEADOW)) {
+                return 0;
+            }
+        }
+    }
+    return 1;
 }
 
 
