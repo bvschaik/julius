@@ -20,6 +20,7 @@
 #include "building/building.h"
 #include "building/construction_warning.h"
 #include "building/count.h"
+#include "building/dock.h"
 #include "building/model.h"
 #include "building/properties.h"
 #include "building/storage.h"
@@ -614,7 +615,7 @@ static int placeBuilding(int type, int x, int y)
 			city_warning_show(WARNING_SHORE_NEEDED);
 			return 0;
 		}
-		if (!Building_Dock_isConnectedToOpenWater(x, y)) {
+		if (!building_dock_is_connected_to_open_water(x, y)) {
 			city_warning_show(WARNING_DOCK_OPEN_WATER_NEEDED);
 			return 0;
 		}

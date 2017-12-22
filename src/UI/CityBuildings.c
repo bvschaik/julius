@@ -11,6 +11,7 @@
 #include "../Widget.h"
 
 #include "building/building.h"
+#include "building/dock.h"
 #include "building/model.h"
 #include "city/finance.h"
 #include "city/warning.h"
@@ -372,7 +373,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 						colorMask = COLOR_MASK_RED;
 					}
 					if (b->type == BUILDING_DOCK) {
-						int numDockers = Building_Dock_getNumIdleDockers(b);
+						int numDockers = building_dock_count_idle_dockers(b);
 						if (numDockers > 0) {
 							int graphicIdDock = map_image_at(b->gridOffset);
 							int graphicIdDockers = image_group(GROUP_BUILDING_DOCK_DOCKERS);

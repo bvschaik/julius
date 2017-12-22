@@ -24,10 +24,6 @@ void Building_determineGraphicIdsForOrientedBuildings();
 
 void Building_GameTick_checkAccessToRome();
 
-int Building_Dock_getNumIdleDockers(building *dock);
-void Building_Dock_updateOpenWaterAccess();
-int Building_Dock_isConnectedToOpenWater(int x, int y);
-
 void Building_Mercury_removeResources(int bigCurse);
 void Building_Mercury_fillGranary();
 

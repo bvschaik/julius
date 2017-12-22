@@ -56,7 +56,4 @@ void Terrain_updateToPlaceBuildingToOverlay(int size, int x, int y, int terrainM
 int Terrain_getWallTileWithinRadius(int x, int y, int radius, int *xTile, int *yTile);
 void Terrain_rotateMap(int direction);
 
-int Terrain_Water_getFreeDockDestination(int figureId, int *xTile, int *yTile);
-int Terrain_Water_getQueueDockDestination(int* xTile, int* yTile);
-
 #endif

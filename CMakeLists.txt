@@ -35,6 +35,7 @@ set(BUILDING_FILES
     ${PROJECT_SOURCE_DIR}/src/building/building.c
     ${PROJECT_SOURCE_DIR}/src/building/construction_warning.c
     ${PROJECT_SOURCE_DIR}/src/building/count.c
+    ${PROJECT_SOURCE_DIR}/src/building/dock.c
     ${PROJECT_SOURCE_DIR}/src/building/figure.c
     ${PROJECT_SOURCE_DIR}/src/building/house.c
     ${PROJECT_SOURCE_DIR}/src/building/house_evolution.c
@@ -196,7 +197,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/Terrain.c
 	${PROJECT_SOURCE_DIR}/src/TerrainGraphics.c
 	${PROJECT_SOURCE_DIR}/src/TerrainGraphics_Context.c
-	${PROJECT_SOURCE_DIR}/src/TerrainWater.c
 	${PROJECT_SOURCE_DIR}/src/Trader.c
 	${PROJECT_SOURCE_DIR}/src/Undo.c
 	${PROJECT_SOURCE_DIR}/src/Video.c

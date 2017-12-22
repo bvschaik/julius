@@ -22,6 +22,7 @@
 #include "Data/CityInfo.h"
 #include "Data/State.h"
 
+#include "building/dock.h"
 #include "building/figure.h"
 #include "building/industry.h"
 #include "building/maintenance.h"
@@ -87,7 +88,7 @@ void GameTick_advance()
 		case 16: Resource_calculateWarehouseStocks(); break;
 		case 17: CityInfo_Resource_calculateFoodAndSupplyRomeWheat(); break;
 		case 18: building_calculate_workshop_stocks(); break;
-		case 19: Building_Dock_updateOpenWaterAccess(); break;
+		case 19: building_dock_update_open_water_access(); break;
 		case 20: building_industry_update_production(); break;
 		case 21: Building_GameTick_checkAccessToRome(); break;
 		case 22: HousePopulation_updateRoom(); break;

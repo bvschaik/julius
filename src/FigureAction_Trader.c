@@ -7,6 +7,7 @@
 #include "Data/CityInfo.h"
 
 #include "building/building.h"
+#include "building/dock.h"
 #include "building/storage.h"
 #include "city/finance.h"
 #include "city/message.h"
@@ -498,13 +499,13 @@ void FigureAction_tradeShip(figure *f)
 			if (f->waitTicks > 20) {
 				f->waitTicks = 0;
 				int xTile, yTile;
-				int dockId = Terrain_Water_getFreeDockDestination(f->id, &xTile, &yTile);
+				int dockId = building_dock_get_free_destination(f->id, &xTile, &yTile);
 				if (dockId) {
 					f->destinationBuildingId = dockId;
 					f->actionState = FigureActionState_111_TradeShipGoingToDock;
 					f->destinationX = xTile;
 					f->destinationY = yTile;
-				} else if (Terrain_Water_getQueueDockDestination(&xTile, &yTile)) {
+				} else if (building_dock_get_queue_destination(&xTile, &yTile)) {
 					f->actionState = FigureActionState_113_TradeShipGoingToDockQueue;
 					f->destinationX = xTile;
 					f->destinationY = yTile;
@@ -579,14 +580,14 @@ void FigureAction_tradeShip(figure *f)
 			f->waitTicks++;
 			if (f->waitTicks > 40) {
 				int xTile, yTile;
-				int dockId = Terrain_Water_getFreeDockDestination(f->id, &xTile, &yTile);
+				int dockId = building_dock_get_free_destination(f->id, &xTile, &yTile);
 				if (dockId) {
 					f->destinationBuildingId = dockId;
 					f->actionState = FigureActionState_111_TradeShipGoingToDock;
 					f->destinationX = xTile;
 					f->destinationY = yTile;
 				} else if (map_figure_at(f->gridOffset) != f->id &&
-					Terrain_Water_getQueueDockDestination(&xTile, &yTile)) {
+					building_dock_get_queue_destination(&xTile, &yTile)) {
 					f->actionState = FigureActionState_113_TradeShipGoingToDockQueue;
 					f->destinationX = xTile;
 					f->destinationY = yTile;

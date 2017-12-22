@@ -619,48 +619,6 @@ void Building_GameTick_checkAccessToRome()
 	}
 }
 
-int Building_Dock_getNumIdleDockers(building *dock)
-{
-	int numIdle = 0;
-	for (int i = 0; i < 3; i++) {
-		if (dock->data.other.dockFigureIds[i]) {
-			figure *f = figure_get(dock->data.other.dockFigureIds[i]);
-			if (f->actionState == FigureActionState_132_DockerIdling ||
-				f->actionState == FigureActionState_133_DockerImportQueue) {
-				numIdle++;
-			}
-		}
-	}
-	return numIdle;
-}
-
-void Building_Dock_updateOpenWaterAccess()
-{
-    map_point river_entry = scenario_map_river_entry();
-	map_routing_calculate_distances_water_boat(river_entry.x, river_entry.y);
-	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		building *b = building_get(i);
-		if (BuildingIsInUse(b) && !b->houseSize && b->type == BUILDING_DOCK) {
-			if (Terrain_isAdjacentToOpenWater(b->x, b->y, 3)) {
-				b->hasWaterAccess = 1;
-			} else {
-				b->hasWaterAccess = 0;
-			}
-		}
-	}
-}
-
-int Building_Dock_isConnectedToOpenWater(int x, int y)
-{
-    map_point river_entry = scenario_map_river_entry();
-	map_routing_calculate_distances_water_boat(river_entry.x, river_entry.y);
-	if (Terrain_isAdjacentToOpenWater(x, y, 3)) {
-		return 1;
-	} else {
-		return 0;
-	}
-}
-
 void Building_Mercury_removeResources(int bigCurse)
 {
 	int maxStored = 0;
