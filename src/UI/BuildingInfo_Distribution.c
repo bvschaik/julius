@@ -10,6 +10,7 @@
 
 #include "building/building.h"
 #include "building/storage.h"
+#include "building/warehouse.h"
 #include "figure/figure.h"
 #include "game/resource.h"
 #include "scenario/property.h"
@@ -280,7 +281,7 @@ void UI_BuildingInfo_drawWarehouse(BuildingInfoContext *c)
 				x = c->xOffset + 320;
 				y = c->yOffset + 24 * (r - 11) + 36;
 			}
-			int amount = Resource_getAmountStoredInWarehouse(c->buildingId, r);
+			int amount = building_warehouse_get_amount(b, r);
 			int graphicId = image_group(GROUP_RESOURCE_ICONS) + r +
 				resource_image_offset(r, RESOURCE_IMAGE_ICON);
 			Graphics_drawImage(graphicId, x, y);

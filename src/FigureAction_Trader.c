@@ -161,7 +161,7 @@ static int traderGetSellResource(int warehouseId, int cityId)
 		space = building_next(space);
 		if (space->id > 0 && space->loadsStored > 0 && space->loadsStored < 4 &&
 			space->subtype.warehouseResourceId == resourceToImport) {
-			Resource_addImportedResourceToWarehouseSpace(space, resourceToImport);
+			building_warehouse_space_add_import(space, resourceToImport);
 			advanceTradeNextImportResourceCaravan();
 			return resourceToImport;
 		}
@@ -171,7 +171,7 @@ static int traderGetSellResource(int warehouseId, int cityId)
 	for (int i = 0; i < 8; i++) {
 		space = building_next(space);
 		if (space->id > 0 && !space->loadsStored) {
-			Resource_addImportedResourceToWarehouseSpace(space, resourceToImport);
+			building_warehouse_space_add_import(space, resourceToImport);
 			advanceTradeNextImportResourceCaravan();
 			return resourceToImport;
 		}
@@ -188,7 +188,7 @@ static int traderGetSellResource(int warehouseId, int cityId)
 			for (int i = 0; i < 8; i++) {
 				space = building_next(space);
 				if (space->id > 0 && space->loadsStored < 4 && space->subtype.warehouseResourceId == resourceToImport) {
-					Resource_addImportedResourceToWarehouseSpace(space, resourceToImport);
+					building_warehouse_space_add_import(space, resourceToImport);
 					return resourceToImport;
 				}
 			}

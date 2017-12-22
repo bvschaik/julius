@@ -22,6 +22,7 @@
 #include "building/building.h"
 #include "building/house_evolution.h"
 #include "building/model.h"
+#include "building/warehouse.h"
 #include "core/calc.h"
 #include "figure/figure.h"
 #include "figure/formation.h"
@@ -233,7 +234,7 @@ void UI_BuildingInfo_init()
 				if (Terrain_hasRoadAccess(b->x, b->y, 3, 0, 0)) {
 					context.hasRoadAccess = 1;
 				}
-				context.warehouseSpaceText = Resource_getWarehouseSpaceInfo(b);
+				context.warehouseSpaceText = building_warehouse_get_space_info(b);
 				break;
 			default:
 				if (Terrain_hasRoadAccess(b->x, b->y, b->size, 0, 0)) {

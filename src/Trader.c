@@ -9,6 +9,7 @@
 #include "building/building.h"
 #include "building/count.h"
 #include "building/storage.h"
+#include "building/warehouse.h"
 #include "city/message.h"
 #include "core/calc.h"
 #include "empire/city.h"
@@ -404,7 +405,7 @@ int Trader_tryImportResource(int buildingId, int resourceId, int cityId)
 		if (space->id > 0) {
             if (space->loadsStored && space->loadsStored < 4 && space->subtype.warehouseResourceId == resourceId) {
                 trade_route_increase_traded(routeId, resourceId);
-                Resource_addImportedResourceToWarehouseSpace(space, resourceId);
+                building_warehouse_space_add_import(space, resourceId);
                 return 1;
             }
 		}
@@ -416,7 +417,7 @@ int Trader_tryImportResource(int buildingId, int resourceId, int cityId)
 		if (space->id > 0) {
             if (space->subtype.warehouseResourceId == RESOURCE_NONE) {
                 trade_route_increase_traded(routeId, resourceId);
-                Resource_addImportedResourceToWarehouseSpace(space, resourceId);
+                building_warehouse_space_add_import(space, resourceId);
                 return 1;
             }
 		}
@@ -437,7 +438,7 @@ int Trader_tryExportResource(int buildingId, int resourceId, int cityId)
 		if (space->id > 0) {
 			if (space->loadsStored && space->subtype.warehouseResourceId == resourceId) {
 				trade_route_increase_traded(empire_city_get_route_id(cityId), resourceId);
-				Resource_removeExportedResourceFromWarehouseSpace(space, resourceId);
+				building_warehouse_space_remove_export(space, resourceId);
 				return 1;
 			}
 		}

@@ -37,7 +37,7 @@ static void determineCartpusherDestination(figure *f, building *b, int roadNetwo
 	int understaffedStorages = 0;
 	
 	// priority 1: warehouse if resource is on stockpile
-	int dstBuildingId = Resource_getWarehouseForStoringResource(0, f->x, f->y,
+	int dstBuildingId = building_warehouse_for_storing(0, f->x, f->y,
 		b->outputResourceId, b->distanceFromEntry, roadNetworkId,
 		&understaffedStorages, &xDst, &yDst);
 	if (!Data_CityInfo.resourceStockpiled[b->outputResourceId]) {
@@ -63,7 +63,7 @@ static void determineCartpusherDestination(figure *f, building *b, int roadNetwo
 		return;
 	}
 	// priority 4: warehouse
-	dstBuildingId = Resource_getWarehouseForStoringResource(0, f->x, f->y,
+	dstBuildingId = building_warehouse_for_storing(0, f->x, f->y,
 		b->outputResourceId, b->distanceFromEntry, roadNetworkId,
 		&understaffedStorages, &xDst, &yDst);
 	if (dstBuildingId) {
@@ -97,7 +97,7 @@ static void determineCartpusherDestinationFood(figure *f, int roadNetworkId)
 		return;
 	}
 	// priority 2: warehouse
-	dstBuildingId = Resource_getWarehouseForStoringResource(0, f->x, f->y,
+	dstBuildingId = building_warehouse_for_storing(0, f->x, f->y,
 		b->outputResourceId, b->distanceFromEntry, roadNetworkId,
 		0, &xDst, &yDst);
 	if (dstBuildingId) {
@@ -298,7 +298,7 @@ static void determineGranarymanDestination(figure *f, int roadNetworkId)
 		return;
 	}
 	// priority 2: warehouse
-	dstBuildingId = Resource_getWarehouseForStoringResource(0, f->x, f->y,
+	dstBuildingId = building_warehouse_for_storing(0, f->x, f->y,
 		f->resourceId, granary->distanceFromEntry,
 		roadNetworkId, 0, &xDst, &yDst);
 	if (dstBuildingId) {
@@ -334,8 +334,8 @@ static void determineWarehousemanDestination(figure *f, int roadNetworkId)
 	int dstBuildingId, xDst, yDst;
 	if (!f->resourceId) {
 		// getting warehouseman
-		dstBuildingId = Resource_getWarehouseForGettingResource(
-			f->buildingId, f->collectingItemId, &xDst, &yDst);
+		dstBuildingId = building_warehouse_for_getting(
+			building_get(f->buildingId), f->collectingItemId, &xDst, &yDst);
 		if (dstBuildingId) {
 			f->loadsSoldOrCarrying = 0;
 			setDestination(f, FigureActionState_57_WarehousemanGettingResource, dstBuildingId, xDst, yDst);
@@ -380,7 +380,7 @@ static void determineWarehousemanDestination(figure *f, int roadNetworkId)
 		return;
 	}
 	// priority 5: resource to other warehouse
-	dstBuildingId = Resource_getWarehouseForStoringResource(f->buildingId, f->x, f->y, f->resourceId,
+	dstBuildingId = building_warehouse_for_storing(f->buildingId, f->x, f->y, f->resourceId,
 		warehouse->distanceFromEntry, roadNetworkId, 0, &xDst, &yDst);
 	if (dstBuildingId) {
 		if (dstBuildingId == f->buildingId) {

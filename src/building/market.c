@@ -1,5 +1,6 @@
 #include "market.h"
 
+#include "building/warehouse.h"
 #include "core/calc.h"
 #include "game/resource.h"
 #include "scenario/property.h"
@@ -52,10 +53,10 @@ static void update_food_resource(struct resource_data *data, resource_type resou
     }
 }
 
-static void update_good_resource(struct resource_data *data, resource_type resource, const building *b, int distance)
+static void update_good_resource(struct resource_data *data, resource_type resource, building *b, int distance)
 {
     if (!Data_CityInfo.resourceStockpiled[resource] &&
-        Resource_getAmountStoredInWarehouse(b->id, resource) > 0) {
+        building_warehouse_get_amount(b, resource) > 0) {
         data->num_buildings++;
         if (distance < data->distance) {
             data->distance = distance;

@@ -17,6 +17,7 @@
 #include "building/building.h"
 #include "building/properties.h"
 #include "building/storage.h"
+#include "building/warehouse.h"
 #include "city/message.h"
 #include "city/warning.h"
 #include "core/calc.h"
@@ -631,7 +632,7 @@ void Building_Mercury_removeResources(int bigCurse)
 		int totalStored = 0;
 		if (b->type == BUILDING_WAREHOUSE) {
 			for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
-				totalStored += Resource_getAmountStoredInWarehouse(i, r);
+				totalStored += building_warehouse_get_amount(b, r);
 			}
 		} else if (b->type == BUILDING_GRANARY) {
 			for (int r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
@@ -658,7 +659,7 @@ void Building_Mercury_removeResources(int bigCurse)
 		map_routing_update_land();
 	} else {
 		if (maxBuilding->type == BUILDING_WAREHOUSE) {
-			Resource_removeFromWarehouseForMercury(maxBuilding->id, 16);
+			building_warehouse_remove_resource_curse(maxBuilding, 16);
 		} else if (maxBuilding->type == BUILDING_GRANARY) {
 			int amount = Resource_removeFromGranary(maxBuilding->id, RESOURCE_WHEAT, 1600);
 			amount = Resource_removeFromGranary(maxBuilding->id, RESOURCE_VEGETABLES, amount);

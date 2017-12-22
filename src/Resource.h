@@ -4,20 +4,6 @@
 #include "building/building.h"
 
 // warehouse functions
-int Resource_getWarehouseForStoringResource(
-	int srcBuildingId, int x, int y, int resource, int distanceFromEntry, int roadNetworkId,
-	int *understaffed, int *xDst, int *yDst);
-int Resource_getWarehouseForGettingResource(int srcBuildingId, int resource, int *xDst, int *yDst);
-
-void Resource_removeFromWarehouseForMercury(int buildingId, int amountInLoads);
-
-void Resource_addImportedResourceToWarehouseSpace(building *space, int resourceId);
-void Resource_removeExportedResourceFromWarehouseSpace(building *space, int resourceId);
-
-int Resource_getAmountStoredInWarehouse(int buildingId, int resource);
-
-int Resource_getWarehouseSpaceInfo(building *warehouse);
-
 int Resource_determineWarehouseWorkerTask(building *warehouse, int *resource);
 
 // granary functions

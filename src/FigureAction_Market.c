@@ -78,7 +78,7 @@ static int marketBuyerTakeResourceFromWarehouse(figure *f, int marketId, int war
 	}
 	building *warehouse = building_get(warehouseId);
 	int numLoads;
-	int stored = Resource_getAmountStoredInWarehouse(warehouseId, resource);
+	int stored = building_warehouse_get_amount(warehouse, resource);
 	if (stored < 2) {
 		numLoads = stored;
 	} else {
