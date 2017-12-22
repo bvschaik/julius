@@ -17,3 +17,9 @@ int resource_image_offset(resource_type resource, resource_image_type type)
         return 0;
     }
 }
+
+int resource_is_food(resource_type resource)
+{
+    return resource == RESOURCE_WHEAT || resource == RESOURCE_VEGETABLES ||
+        resource == RESOURCE_FRUIT || resource == RESOURCE_MEAT;
+}

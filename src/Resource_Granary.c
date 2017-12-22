@@ -17,18 +17,6 @@ static struct {
 	int totalStorageMeat;
 } nonGettingGranaries;
 
-static int isFood(int resource) {
-	switch (resource) {
-		case RESOURCE_WHEAT:
-		case RESOURCE_VEGETABLES:
-		case RESOURCE_FRUIT:
-		case RESOURCE_MEAT:
-			return 1;
-		default:
-			return 0;
-	}
-}
-
 void Resource_gatherGranaryGettingInfo()
 {
 	nonGettingGranaries.numItems = 0;
@@ -82,7 +70,7 @@ int Resource_getGranaryForStoringFood(
 	if (scenario_property_rome_supplies_wheat()) {
 		return 0;
 	}
-	if (!isFood(resource)) {
+	if (!resource_is_food(resource)) {
 		return 0;
 	}
 	if (Data_CityInfo.resourceStockpiled[resource] && !forceOnStockpile) {
@@ -132,7 +120,7 @@ int Resource_getGettingGranaryForStoringFood(
 	if (scenario_property_rome_supplies_wheat()) {
 		return 0;
 	}
-	if (!isFood(resource)) {
+	if (!resource_is_food(resource)) {
 		return 0;
 	}
 	if (Data_CityInfo.resourceStockpiled[resource]) {
@@ -181,20 +169,14 @@ int Resource_getGranaryForGettingFood(int srcBuildingId, int *xDst, int *yDst)
 	if (scenario_property_rome_supplies_wheat()) {
 		return 0;
 	}
-	int numGetting = 0;
-	if (sSrc->resource_state[RESOURCE_WHEAT] == BUILDING_STORAGE_STATE_GETTING) {
-		numGetting++;
+	int is_getting = 0;
+	if (sSrc->resource_state[RESOURCE_WHEAT] == BUILDING_STORAGE_STATE_GETTING ||
+        sSrc->resource_state[RESOURCE_VEGETABLES] == BUILDING_STORAGE_STATE_GETTING ||
+        sSrc->resource_state[RESOURCE_FRUIT] == BUILDING_STORAGE_STATE_GETTING ||
+        sSrc->resource_state[RESOURCE_MEAT] == BUILDING_STORAGE_STATE_GETTING) {
+		is_getting = 1;
 	}
-	if (sSrc->resource_state[RESOURCE_VEGETABLES] == BUILDING_STORAGE_STATE_GETTING) {
-		numGetting++;
-	}
-	if (sSrc->resource_state[RESOURCE_FRUIT] == BUILDING_STORAGE_STATE_GETTING) {
-		numGetting++;
-	}
-	if (sSrc->resource_state[RESOURCE_MEAT] == BUILDING_STORAGE_STATE_GETTING) {
-		numGetting++;
-	}
-	if (numGetting <= 0) {
+	if (is_getting <= 0) {
 		return 0;
 	}
 
@@ -246,7 +228,7 @@ int Resource_getGranaryForGettingFood(int srcBuildingId, int *xDst, int *yDst)
 
 int Resource_getAmountStoredInGranary(building *granary, int resource)
 {
-	if (!isFood(resource)) {
+	if (!resource_is_food(resource)) {
 		return 0;
 	}
 	if (granary->type != BUILDING_GRANARY) {
@@ -260,7 +242,7 @@ int Resource_addToGranary(int buildingId, int resource, int countAsProduced)
 	if (buildingId <= 0) {
 		return 1;
 	}
-	if (!isFood(resource)) {
+	if (!resource_is_food(resource)) {
 		return 0;
 	}
 	building *b = building_get(buildingId);

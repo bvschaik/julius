@@ -84,8 +84,7 @@ static int showOnOverlay(figure *f)
 				f->type == FIGURE_DELIVERY_BOY || f->type == FIGURE_FISHING_BOAT) {
 				return 1;
 			} else if (f->type == FIGURE_CART_PUSHER) {
-				return f->resourceId == RESOURCE_WHEAT || f->resourceId == RESOURCE_VEGETABLES ||
-					f->resourceId == RESOURCE_FRUIT || f->resourceId == RESOURCE_MEAT;
+				return resource_is_food(f->resourceId);
 			}
 			return 0;
 		case Overlay_Problems:
