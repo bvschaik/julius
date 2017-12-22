@@ -32,6 +32,7 @@ set(CORE_FILES
     ${PROJECT_SOURCE_DIR}/src/core/zip.c
 )
 set(BUILDING_FILES
+    ${PROJECT_SOURCE_DIR}/src/building/barracks.c
     ${PROJECT_SOURCE_DIR}/src/building/building.c
     ${PROJECT_SOURCE_DIR}/src/building/construction_warning.c
     ${PROJECT_SOURCE_DIR}/src/building/count.c
@@ -188,7 +189,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/KeyboardHotkey.c
 	${PROJECT_SOURCE_DIR}/src/Loader.c
 	${PROJECT_SOURCE_DIR}/src/Natives.c
-	${PROJECT_SOURCE_DIR}/src/Resource.c
 	${PROJECT_SOURCE_DIR}/src/Resource_Granary.c
 	${PROJECT_SOURCE_DIR}/src/Runner.c
 	${PROJECT_SOURCE_DIR}/src/Scenario.c

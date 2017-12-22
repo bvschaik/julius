@@ -93,7 +93,6 @@ add_executable(autopilot
     ${PROJECT_SOURCE_DIR}/src/HousePopulation.c
     ${PROJECT_SOURCE_DIR}/src/Loader.c
     ${PROJECT_SOURCE_DIR}/src/Natives.c
-    ${PROJECT_SOURCE_DIR}/src/Resource.c
     ${PROJECT_SOURCE_DIR}/src/Resource_Granary.c
     ${PROJECT_SOURCE_DIR}/src/Runner.c
     ${PROJECT_SOURCE_DIR}/src/Scenario.c

@@ -1,6 +1,5 @@
 #include "building/figure.h"
 
-#include "../Figure.h"
 #include "FigureMovement.h"
 #include "Formation.h"
 #include "Resource.h"
@@ -9,6 +8,7 @@
 
 #include "Data/CityInfo.h"
 
+#include "building/barracks.h"
 #include "building/building.h"
 #include "building/industry.h"
 #include "building/market.h"
@@ -1147,8 +1147,8 @@ static void spawn_figure_barracks(building *b)
         if (b->figureSpawnDelay > spawn_delay) {
             b->figureSpawnDelay = 0;
             Terrain_hasRoadAccess(b->x, b->y, b->size, &x_road, &y_road);
-            if (!Figure_createTowerSentryFromBarracks(b, x_road, y_road)) {
-                Figure_createSoldierFromBarracks(b, x_road, y_road);
+            if (!building_barracks_create_tower_sentry(b, x_road, y_road)) {
+                building_barracks_create_soldier(b, x_road, y_road);
             }
         }
     }

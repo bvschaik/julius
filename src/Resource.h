@@ -19,9 +19,4 @@ int Resource_removeFromGranary(int buildingId, int resource, int amountInUnits);
 int Resource_determineGranaryWorkerTask(building *granary);
 int Resource_takeFoodFromGranaryForGettingDeliveryman(int dstBuildingId, int srcBuildingId, int *resource);
 
-// other functions
-int Resource_getBarracksForWeapon(int xUnused, int yUnused, int resource, int roadNetworkId, int *xDst, int *yDst);
-
-void Resource_addWeaponToBarracks(building *barracks);
-
 #endif

@@ -10,9 +10,6 @@ void Figure_createHerds();
 void Figure_createFlotsam();
 void Figure_createMissile(int buildingId, int x, int y, int xDst, int yDst, int type);
 
-int Figure_createSoldierFromBarracks(building *barracks, int x, int y);
-int Figure_createTowerSentryFromBarracks(building *barracks, int x, int y);
-
 void Figure_killTowerSentriesAt(int x, int y);
 void Figure_sinkAllShips();
 int Figure_getCitizenOnSameTile(int figureId);

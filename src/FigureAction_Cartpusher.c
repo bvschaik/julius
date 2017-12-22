@@ -4,6 +4,7 @@
 
 #include "Data/CityInfo.h"
 
+#include "building/barracks.h"
 #include "building/building.h"
 #include "building/industry.h"
 #include "building/warehouse.h"
@@ -348,8 +349,7 @@ static void determineWarehousemanDestination(figure *f, int roadNetworkId)
 	building *warehouse = building_get(f->buildingId);
 	// delivering resource
 	// priority 1: weapons to barracks
-	dstBuildingId = Resource_getBarracksForWeapon(f->x, f->y, f->resourceId,
-		roadNetworkId, &xDst, &yDst);
+	dstBuildingId = building_get_barracks_for_weapon(f->resourceId, roadNetworkId, &xDst, &yDst);
 	if (dstBuildingId) {
 		setDestination(f, FigureActionState_51_WarehousemanDeliveringResource, dstBuildingId, xDst, yDst);
 		removeResourceFromWarehouse(f);
@@ -458,7 +458,7 @@ void FigureAction_warehouseman(figure *f)
 						Resource_addToGranary(b->id, f->resourceId, 0);
 						break;
 					case BUILDING_BARRACKS:
-						Resource_addWeaponToBarracks(b);
+						building_barracks_add_weapon(b);
 						break;
 					case BUILDING_WAREHOUSE:
 					case BUILDING_WAREHOUSE_SPACE:
