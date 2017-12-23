@@ -4,7 +4,6 @@
 #include "CityView.h"
 #include "Figure.h"
 #include "Loader.h"
-#include "Resource.h"
 #include "SidebarMenu.h"
 #include "TerrainGraphics.h"
 
@@ -14,6 +13,7 @@
 
 #include "building/building.h"
 #include "building/count.h"
+#include "building/granary.h"
 #include "building/list.h"
 #include "building/storage.h"
 #include "city/culture.h"
@@ -755,7 +755,7 @@ static void setupFromSavedGame()
 	figure_route_clean();
 	map_road_network_update();
 	Building_GameTick_checkAccessToRome();
-	Resource_gatherGranaryGettingInfo();
+	building_granaries_calculate_stocks();
 	SidebarMenu_enableBuildingMenuItemsAndButtons();
 	city_message_init_problem_areas();
 

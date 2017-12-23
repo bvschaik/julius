@@ -277,9 +277,10 @@ void FigureAction_cartpusher(figure *f)
 static void determineGranarymanDestination(figure *f, int roadNetworkId)
 {
 	int dstBuildingId, xDst, yDst;
+	building *granary = building_get(f->buildingId);
 	if (!f->resourceId) {
 		// getting granaryman
-		dstBuildingId = Resource_getGranaryForGettingFood(f->buildingId, &xDst, &yDst);
+		dstBuildingId = building_granary_for_getting(granary, &xDst, &yDst);
 		if (dstBuildingId) {
 			f->loadsSoldOrCarrying = 0;
 			setDestination(f, FigureActionState_54_WarehousemanGettingFood, dstBuildingId, xDst, yDst);
@@ -288,7 +289,6 @@ static void determineGranarymanDestination(figure *f, int roadNetworkId)
 		}
 		return;
 	}
-	building *granary = building_get(f->buildingId);
 	// delivering resource
 	// priority 1: another granary
 	dstBuildingId = Resource_getGranaryForStoringFood(0, f->x, f->y,

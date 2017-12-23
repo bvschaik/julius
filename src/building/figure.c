@@ -10,6 +10,7 @@
 
 #include "building/barracks.h"
 #include "building/building.h"
+#include "building/granary.h"
 #include "building/industry.h"
 #include "building/market.h"
 #include "building/model.h"
@@ -144,7 +145,7 @@ static void spawn_figure_warehouse(building *b)
             return;
         }
         int resource;
-        int task = building_warehouse_determine_warehouseman_task(b, &resource);
+        int task = building_warehouse_determine_worker_task(b, &resource);
         if (task != WAREHOUSE_TASK_NONE) {
             figure *f = figure_create(FIGURE_WAREHOUSEMAN, x_road, y_road, DIR_4_BOTTOM);
             f->actionState = FigureActionState_50_WarehousemanCreated;
@@ -169,8 +170,8 @@ static void spawn_figure_granary(building *b)
         if (has_figure_of_type(b, FIGURE_WAREHOUSEMAN)) {
             return;
         }
-        int task = Resource_determineGranaryWorkerTask(b);
-        if (task >= 0) {
+        int task = building_granary_determine_worker_task(b);
+        if (task != GRANARY_TASK_NONE) {
             figure *f = figure_create(FIGURE_WAREHOUSEMAN, x_road, y_road, DIR_4_BOTTOM);
             f->actionState = FigureActionState_50_WarehousemanCreated;
             f->resourceId = task;

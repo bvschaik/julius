@@ -8,7 +8,6 @@
 #include "GameFile.h"
 #include "HouseEvolution.h"
 #include "HousePopulation.h"
-#include "Resource.h"
 #include "Security.h"
 #include "SidebarMenu.h"
 #include "TerrainGraphics.h"
@@ -23,6 +22,7 @@
 
 #include "building/dock.h"
 #include "building/figure.h"
+#include "building/granary.h"
 #include "building/industry.h"
 #include "building/maintenance.h"
 #include "building/warehouse.h"
@@ -83,7 +83,7 @@ void GameTick_advance()
 		case 5: Formation_Tick_updateAll(0); break;
 		case 6: map_natives_check_land(); break;
 		case 7: map_road_network_update(); break;
-		case 8: Resource_gatherGranaryGettingInfo(); break;
+		case 8: building_granaries_calculate_stocks(); break;
 		case 10: Building_updateHighestIds(); break;
 		case 12: Building_decayHousesCovered(); break;
 		case 16: building_warehouses_calculate_stocks(); break;
