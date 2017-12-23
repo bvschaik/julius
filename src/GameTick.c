@@ -20,6 +20,7 @@
 #include "Data/CityInfo.h"
 #include "Data/State.h"
 
+#include "building/count.h"
 #include "building/dock.h"
 #include "building/figure.h"
 #include "building/granary.h"
@@ -102,7 +103,7 @@ void GameTick_advance()
 		case 30: UI_Sidebar_requestMinimapRefresh(); break;
 		case 31: building_figure_generate(); break;
 		case 32: Trader_tick(); break;
-		case 33: CityInfo_Tick_countBuildingTypes(); city_culture_update_coverage(); break;
+		case 33: building_count_update(); city_culture_update_coverage(); break;
 		case 34: CityInfo_Tick_distributeTreasuryOverForumsAndSenates(); break;
 		case 35: HouseEvolution_Tick_decayCultureService(); break;
 		case 36: HouseEvolution_Tick_calculateCultureServiceAggregates(); break;

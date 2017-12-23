@@ -1,5 +1,10 @@
 #include "count.h"
 
+#include "building/building.h"
+#include "figure/figure.h"
+
+#include "Data/CityInfo.h"
+
 #include <string.h>
 
 struct record {
@@ -12,12 +17,12 @@ static struct {
     struct record industry[RESOURCE_MAX];
 } data;
 
-void building_count_clear()
+static void clear_counters()
 {
     memset(&data, 0, sizeof(data));
 }
 
-void building_count_increase(building_type type, int active)
+static void increase_count(building_type type, int active)
 {
     ++data.buildings[type].total;
     if (active) {
@@ -25,7 +30,7 @@ void building_count_increase(building_type type, int active)
     }
 }
 
-void building_count_industry_increase(resource_type resource, int active)
+static void increase_industry_count(resource_type resource, int active)
 {
     ++data.industry[resource].total;
     if (active) {
@@ -33,7 +38,7 @@ void building_count_industry_increase(resource_type resource, int active)
     }
 }
 
-void building_count_limit_hippodrome()
+static void limit_hippodrome()
 {
     if (data.buildings[BUILDING_HIPPODROME].total > 1) {
         data.buildings[BUILDING_HIPPODROME].total = 1;
@@ -41,6 +46,179 @@ void building_count_limit_hippodrome()
     if (data.buildings[BUILDING_HIPPODROME].active > 1) {
         data.buildings[BUILDING_HIPPODROME].active = 1;
     }
+}
+
+void building_count_update()
+{
+    clear_counters();
+    Data_CityInfo.numWorkingWharfs = 0;
+    Data_CityInfo.shipyardBoatsRequested = 0;
+    for (int i = 0; i < 8; i++) {
+        Data_CityInfo.workingDockBuildingIds[i] = 0;
+    }
+    Data_CityInfo.numWorkingDocks = 0;
+    Data_CityInfo.numHospitalWorkers = 0;
+
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
+        building *b = building_get(i);
+        if (!BuildingIsInUse(b) || b->houseSize) {
+            continue;
+        }
+        int is_entertainment_venue = 0;
+        int type = b->type;
+        switch (type) {
+            // SPECIAL TREATMENT
+            // entertainment venues
+            case BUILDING_THEATER:
+            case BUILDING_AMPHITHEATER:
+            case BUILDING_COLOSSEUM:
+            case BUILDING_HIPPODROME:
+                is_entertainment_venue = 1;
+                increase_count(type, b->numWorkers > 0);
+                break;
+
+            case BUILDING_BARRACKS:
+                Data_CityInfo.buildingBarracksBuildingId = i;
+                increase_count(type, b->numWorkers > 0);
+                break;
+
+            case BUILDING_HOSPITAL:
+                increase_count(type, b->numWorkers > 0);
+                Data_CityInfo.numHospitalWorkers += b->numWorkers;
+                break;
+            
+            // water
+            case BUILDING_RESERVOIR:
+            case BUILDING_FOUNTAIN:
+                increase_count(type, b->hasWaterAccess);
+                break;
+
+            // DEFAULT TREATMENT
+            // education
+            case BUILDING_SCHOOL:
+            case BUILDING_LIBRARY:
+            case BUILDING_ACADEMY:
+            // health
+            case BUILDING_BARBER:
+            case BUILDING_BATHHOUSE:
+            case BUILDING_DOCTOR:
+            // government
+            case BUILDING_FORUM:
+            case BUILDING_FORUM_UPGRADED:
+            case BUILDING_SENATE:
+            case BUILDING_SENATE_UPGRADED:
+            // entertainment schools
+            case BUILDING_ACTOR_COLONY:
+            case BUILDING_GLADIATOR_SCHOOL:
+            case BUILDING_LION_HOUSE:
+            case BUILDING_CHARIOT_MAKER:
+            // distribution
+            case BUILDING_MARKET:
+            // military
+            case BUILDING_MILITARY_ACADEMY:
+            // religion
+            case BUILDING_SMALL_TEMPLE_CERES:
+            case BUILDING_SMALL_TEMPLE_NEPTUNE:
+            case BUILDING_SMALL_TEMPLE_MERCURY:
+            case BUILDING_SMALL_TEMPLE_MARS:
+            case BUILDING_SMALL_TEMPLE_VENUS:
+            case BUILDING_LARGE_TEMPLE_CERES:
+            case BUILDING_LARGE_TEMPLE_NEPTUNE:
+            case BUILDING_LARGE_TEMPLE_MERCURY:
+            case BUILDING_LARGE_TEMPLE_MARS:
+            case BUILDING_LARGE_TEMPLE_VENUS:
+            case BUILDING_ORACLE:
+                increase_count(type, b->numWorkers > 0);
+                break;
+
+            // industry
+            case BUILDING_WHEAT_FARM:
+                increase_industry_count(RESOURCE_WHEAT, b->numWorkers > 0);
+                break;
+            case BUILDING_VEGETABLE_FARM:
+                increase_industry_count(RESOURCE_VEGETABLES, b->numWorkers > 0);
+                break;
+            case BUILDING_FRUIT_FARM:
+                increase_industry_count(RESOURCE_FRUIT, b->numWorkers > 0);
+                break;
+            case BUILDING_OLIVE_FARM:
+                increase_industry_count(RESOURCE_OLIVES, b->numWorkers > 0);
+                break;
+            case BUILDING_VINES_FARM:
+                increase_industry_count(RESOURCE_VINES, b->numWorkers > 0);
+                break;
+            case BUILDING_PIG_FARM:
+                increase_industry_count(RESOURCE_MEAT, b->numWorkers > 0);
+                break;
+            case BUILDING_MARBLE_QUARRY:
+                increase_industry_count(RESOURCE_MARBLE, b->numWorkers > 0);
+                break;
+            case BUILDING_IRON_MINE:
+                increase_industry_count(RESOURCE_IRON, b->numWorkers > 0);
+                break;
+            case BUILDING_TIMBER_YARD:
+                increase_industry_count(RESOURCE_TIMBER, b->numWorkers > 0);
+                break;
+            case BUILDING_CLAY_PIT:
+                increase_industry_count(RESOURCE_CLAY, b->numWorkers > 0);
+                break;
+            case BUILDING_WINE_WORKSHOP:
+                increase_industry_count(RESOURCE_WINE, b->numWorkers > 0);
+                break;
+            case BUILDING_OIL_WORKSHOP:
+                increase_industry_count(RESOURCE_OIL, b->numWorkers > 0);
+                break;
+            case BUILDING_WEAPONS_WORKSHOP:
+                increase_industry_count(RESOURCE_WEAPONS, b->numWorkers > 0);
+                break;
+            case BUILDING_FURNITURE_WORKSHOP:
+                increase_industry_count(RESOURCE_FURNITURE, b->numWorkers > 0);
+                break;
+            case BUILDING_POTTERY_WORKSHOP:
+                increase_industry_count(RESOURCE_POTTERY, b->numWorkers > 0);
+                break;
+
+            // water-side
+            case BUILDING_WHARF:
+                if (b->numWorkers > 0) {
+                    ++Data_CityInfo.numWorkingWharfs;
+                    if (!b->data.other.boatFigureId) {
+                        ++Data_CityInfo.shipyardBoatsRequested;
+                    }
+                }
+                break;
+            case BUILDING_DOCK:
+                if (b->numWorkers > 0 && b->hasWaterAccess) {
+                    if (Data_CityInfo.numWorkingDocks < 10) {
+                        Data_CityInfo.workingDockBuildingIds[Data_CityInfo.numWorkingDocks] = i;
+                    }
+                    ++Data_CityInfo.numWorkingDocks;
+                }
+                break;
+            default:
+                continue;
+        }
+        if (b->immigrantFigureId) {
+            figure *f = figure_get(b->immigrantFigureId);
+            if (f->state != FigureState_Alive || f->destinationBuildingId != i) {
+                b->immigrantFigureId = 0;
+            }
+        }
+        if (is_entertainment_venue) {
+            // update number of shows
+            int shows = 0;
+            if (b->data.entertainment.days1 > 0) {
+                --b->data.entertainment.days1;
+                ++shows;
+            }
+            if (b->data.entertainment.days2 > 0) {
+                --b->data.entertainment.days2;
+                ++shows;
+            }
+            b->data.entertainment.numShows = shows;
+        }
+    }
+    limit_hippodrome();
 }
 
 int building_count_active(building_type type)

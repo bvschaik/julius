@@ -71,7 +71,6 @@ void CityInfo_Culture_calculateEntertainment();
 void CityInfo_Victory_check();
 void CityInfo_Victory_updateMonthsToGovern();
 
-void CityInfo_Tick_countBuildingTypes();
 void CityInfo_Tick_distributeTreasuryOverForumsAndSenates();
 
 #endif
