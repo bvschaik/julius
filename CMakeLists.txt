@@ -190,7 +190,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/HousePopulation.c
 	${PROJECT_SOURCE_DIR}/src/KeyboardHotkey.c
 	${PROJECT_SOURCE_DIR}/src/Loader.c
-	${PROJECT_SOURCE_DIR}/src/Resource_Granary.c
 	${PROJECT_SOURCE_DIR}/src/Runner.c
 	${PROJECT_SOURCE_DIR}/src/Scenario.c
 	${PROJECT_SOURCE_DIR}/src/Screen.c

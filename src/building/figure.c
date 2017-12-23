@@ -2,7 +2,6 @@
 
 #include "FigureMovement.h"
 #include "Formation.h"
-#include "Resource.h"
 #include "Terrain.h"
 #include "TerrainGraphics.h"
 

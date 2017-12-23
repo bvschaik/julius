@@ -1,9 +1,5 @@
 #include "FigureAction_private.h"
 
-#include "Resource.h"
-
-#include "Data/CityInfo.h"
-
 #include "building/barracks.h"
 #include "building/building.h"
 #include "building/granary.h"
@@ -13,6 +9,8 @@
 #include "game/resource.h"
 #include "map/road_network.h"
 #include "map/routing_terrain.h"
+
+#include "Data/CityInfo.h"
 
 static const int cartResourceOffsetMultipleLoadsFood[] = {0, 0, 8, 16, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 static const int cartResourceOffsetMultipleLoadsNonFood[] = {0, 0, 0, 0, 0, 8, 0, 16, 24, 32, 40, 48, 56, 64, 72, 80};
@@ -50,8 +48,8 @@ static void determineCartpusherDestination(figure *f, building *b, int roadNetwo
 		return;
 	}
 	// priority 2: accepting granary for food
-	dstBuildingId = Resource_getGranaryForStoringFood(0, f->x, f->y,
-		b->outputResourceId, b->distanceFromEntry, roadNetworkId,
+	dstBuildingId = building_granary_for_storing(f->x, f->y,
+		b->outputResourceId, b->distanceFromEntry, roadNetworkId, 0,
 		&understaffedStorages, &xDst, &yDst);
 	if (dstBuildingId) {
 		setDestination(f, FigureActionState_22_CartpusherDeliveringToGranary, dstBuildingId, xDst, yDst);
@@ -73,8 +71,8 @@ static void determineCartpusherDestination(figure *f, building *b, int roadNetwo
 		return;
 	}
 	// priority 5: granary forced when on stockpile
-	dstBuildingId = Resource_getGranaryForStoringFood(1, f->x, f->y,
-		b->outputResourceId, b->distanceFromEntry, roadNetworkId,
+	dstBuildingId = building_granary_for_storing(f->x, f->y,
+		b->outputResourceId, b->distanceFromEntry, roadNetworkId, 1,
 		&understaffedStorages, &xDst, &yDst);
 	if (dstBuildingId) {
 		setDestination(f, FigureActionState_22_CartpusherDeliveringToGranary, dstBuildingId, xDst, yDst);
@@ -91,8 +89,8 @@ static void determineCartpusherDestinationFood(figure *f, int roadNetworkId)
 	building *b = building_get(f->buildingId);
 	int xDst, yDst, dstBuildingId;
 	// priority 1: accepting granary for food
-	dstBuildingId = Resource_getGranaryForStoringFood(0, f->x, f->y,
-		b->outputResourceId, b->distanceFromEntry, roadNetworkId,
+	dstBuildingId = building_granary_for_storing(f->x, f->y,
+		b->outputResourceId, b->distanceFromEntry, roadNetworkId, 0,
 		0, &xDst, &yDst);
 	if (dstBuildingId) {
 		setDestination(f, FigureActionState_22_CartpusherDeliveringToGranary, dstBuildingId, xDst, yDst);
@@ -107,8 +105,8 @@ static void determineCartpusherDestinationFood(figure *f, int roadNetworkId)
 		return;
 	}
 	// priority 3: granary
-	dstBuildingId = Resource_getGranaryForStoringFood(1, f->x, f->y,
-		b->outputResourceId, b->distanceFromEntry, roadNetworkId,
+	dstBuildingId = building_granary_for_storing(f->x, f->y,
+		b->outputResourceId, b->distanceFromEntry, roadNetworkId, 1,
 		0, &xDst, &yDst);
 	if (dstBuildingId) {
 		setDestination(f, FigureActionState_22_CartpusherDeliveringToGranary, dstBuildingId, xDst, yDst);
@@ -291,9 +289,9 @@ static void determineGranarymanDestination(figure *f, int roadNetworkId)
 	}
 	// delivering resource
 	// priority 1: another granary
-	dstBuildingId = Resource_getGranaryForStoringFood(0, f->x, f->y,
-		f->resourceId, granary->distanceFromEntry,
-		roadNetworkId, 0, &xDst, &yDst);
+	dstBuildingId = building_granary_for_storing(f->x, f->y,
+		f->resourceId, granary->distanceFromEntry, roadNetworkId, 0,
+		0, &xDst, &yDst);
 	if (dstBuildingId) {
 		setDestination(f, FigureActionState_51_WarehousemanDeliveringResource, dstBuildingId, xDst, yDst);
 		building_granary_remove_resource(granary, f->resourceId, 100);
@@ -309,9 +307,9 @@ static void determineGranarymanDestination(figure *f, int roadNetworkId)
 		return;
 	}
 	// priority 3: granary even though resource is on stockpile
-	dstBuildingId = Resource_getGranaryForStoringFood(1, f->x, f->y,
-		f->resourceId, granary->distanceFromEntry,
-		roadNetworkId, 0, &xDst, &yDst);
+	dstBuildingId = building_granary_for_storing(f->x, f->y,
+		f->resourceId, granary->distanceFromEntry, roadNetworkId, 1,
+		0, &xDst, &yDst);
 	if (dstBuildingId) {
 		setDestination(f, FigureActionState_51_WarehousemanDeliveringResource, dstBuildingId, xDst, yDst);
 		building_granary_remove_resource(granary, f->resourceId, 100);
@@ -365,15 +363,15 @@ static void determineWarehousemanDestination(figure *f, int roadNetworkId)
 		return;
 	}
 	// priority 3: food to granary
-	dstBuildingId = Resource_getGranaryForStoringFood(0, f->x, f->y, f->resourceId,
-		warehouse->distanceFromEntry, roadNetworkId, 0, &xDst, &yDst);
+	dstBuildingId = building_granary_for_storing(f->x, f->y, f->resourceId,
+		warehouse->distanceFromEntry, roadNetworkId, 0, 0, &xDst, &yDst);
 	if (dstBuildingId) {
 		setDestination(f, FigureActionState_51_WarehousemanDeliveringResource, dstBuildingId, xDst, yDst);
 		removeResourceFromWarehouse(f);
 		return;
 	}
 	// priority 4: food to getting granary
-	dstBuildingId = Resource_getGettingGranaryForStoringFood(f->x, f->y, f->resourceId,
+	dstBuildingId = building_getting_granary_for_storing(f->x, f->y, f->resourceId,
 		warehouse->distanceFromEntry, roadNetworkId, &xDst, &yDst);
 	if (dstBuildingId) {
 		setDestination(f, FigureActionState_51_WarehousemanDeliveringResource, dstBuildingId, xDst, yDst);
@@ -501,8 +499,8 @@ void FigureAction_warehouseman(figure *f)
 			f->waitTicks++;
 			if (f->waitTicks > 4) {
 				int resource;
-				f->loadsSoldOrCarrying = Resource_takeFoodFromGranaryForGettingDeliveryman(
-					f->buildingId, f->destinationBuildingId, &resource);
+				f->loadsSoldOrCarrying = building_granary_remove_for_getting_deliveryman(
+					building_get(f->destinationBuildingId), building_get(f->buildingId), &resource);
 				f->resourceId = resource;
 				f->actionState = FigureActionState_56_WarehousemanReturningWithFood;
 				f->waitTicks = 0;
