@@ -24,7 +24,4 @@ void Building_determineGraphicIdsForOrientedBuildings();
 
 void Building_GameTick_checkAccessToRome();
 
-void Building_Mercury_removeResources(int bigCurse);
-void Building_Mercury_fillGranary();
-
 #endif

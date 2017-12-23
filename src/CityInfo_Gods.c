@@ -8,6 +8,7 @@
 #include "Data/Constants.h"
 
 #include "building/count.h"
+#include "building/granary.h"
 #include "building/industry.h"
 #include "city/culture.h"
 #include "city/message.h"
@@ -42,7 +43,7 @@ static void performBlessing(int god)
 			break;
 		case GOD_MERCURY:
 			city_message_post(1, MESSAGE_BLESSING_FROM_MERCURY, 0, 0);
-			Building_Mercury_fillGranary();
+			building_granary_bless();
 			break;
 		case GOD_MARS:
 			city_message_post(1, MESSAGE_BLESSING_FROM_MARS, 0, 0);
@@ -69,7 +70,7 @@ static void performSmallCurse(int god)
 			break;
 		case GOD_MERCURY:
 			city_message_post(1, MESSAGE_MERCURY_IS_UPSET, 0, 0);
-			Building_Mercury_removeResources(0);
+			building_granary_warehouse_curse(0);
 			break;
 		case GOD_MARS:
 			if (scenario_invasion_start_from_mars()) {
@@ -108,7 +109,7 @@ static int performLargeCurse(int god)
 			break;
 		case GOD_MERCURY:
 			city_message_post(1, MESSAGE_WRATH_OF_MERCURY, 0, 0);
-			Building_Mercury_removeResources(1);
+			building_granary_warehouse_curse(1);
 			break;
 		case GOD_MARS:
 			if (Formation_marsCurseFort()) {

@@ -2,11 +2,16 @@
 
 #include "building/model.h"
 #include "building/storage.h"
+#include "building/warehouse.h"
+#include "city/message.h"
 #include "core/calc.h"
 #include "game/resource.h"
+#include "map/routing_terrain.h"
 #include "scenario/property.h"
+#include "sound/effect.h"
 
 #include "Data/CityInfo.h"
+#include "../Building.h"
 
 #define MAX_GRANARIES 100
 
@@ -362,4 +367,87 @@ int building_granary_for_getting(building *src, int *x_dst, int *y_dst)
     *x_dst = min->x + 1;
     *y_dst = min->y + 1;
     return min_building_id;
+}
+
+void building_granary_bless()
+{
+    int min_stored = 10000;
+    building *min_building = 0;
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
+        building *b = building_get(i);
+        if (!BuildingIsInUse(b) || b->type != BUILDING_GRANARY) {
+            continue;
+        }
+        int total_stored = 0;
+        for (int r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
+            total_stored += building_granary_get_amount(b, r);
+        }
+        if (total_stored < min_stored) {
+            min_stored = total_stored;
+            min_building = b;
+        }
+    }
+    if (min_building) {
+        for (int n = 0; n < 6; n++) {
+            building_granary_add_resource(min_building, RESOURCE_WHEAT, 0);
+        }
+        for (int n = 0; n < 6; n++) {
+            building_granary_add_resource(min_building, RESOURCE_VEGETABLES, 0);
+        }
+        for (int n = 0; n < 6; n++) {
+            building_granary_add_resource(min_building, RESOURCE_FRUIT, 0);
+        }
+        for (int n = 0; n < 6; n++) {
+            building_granary_add_resource(min_building, RESOURCE_MEAT, 0);
+        }
+    }
+}
+
+void building_granary_warehouse_curse(int big)
+{
+    int max_stored = 0;
+    building *max_building = 0;
+    for (int i = 1; i < MAX_BUILDINGS; i++) {
+        building *b = building_get(i);
+        if (!BuildingIsInUse(b)) {
+            continue;
+        }
+        int total_stored = 0;
+        if (b->type == BUILDING_WAREHOUSE) {
+            for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
+                total_stored += building_warehouse_get_amount(b, r);
+            }
+        } else if (b->type == BUILDING_GRANARY) {
+            for (int r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
+                total_stored += building_granary_get_amount(b, r);
+            }
+            total_stored /= 100;
+        } else {
+            continue;
+        }
+        if (total_stored > max_stored) {
+            max_stored = total_stored;
+            max_building = b;
+        }
+    }
+    if (!max_building) {
+        return;
+    }
+    if (big) {
+        city_message_disable_sound_for_next_message();
+        city_message_post(0, MESSAGE_FIRE, max_building->type, max_building->gridOffset);
+        Building_collapseOnFire(max_building->id, 0);
+        Building_collapseLinked(max_building->id, 1);
+        sound_effect_play(SOUND_EFFECT_EXPLOSION);
+        map_routing_update_land();
+    } else {
+        if (max_building->type == BUILDING_WAREHOUSE) {
+            building_warehouse_remove_resource_curse(max_building, 16);
+        } else if (max_building->type == BUILDING_GRANARY) {
+            int amount = building_granary_remove_resource(max_building, RESOURCE_WHEAT, 1600);
+            amount = building_granary_remove_resource(max_building, RESOURCE_VEGETABLES, amount);
+            amount = building_granary_remove_resource(max_building, RESOURCE_FRUIT, amount);
+            building_granary_remove_resource(max_building, RESOURCE_MEAT, amount);
+        }
+    }
 }

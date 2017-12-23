@@ -28,5 +28,8 @@ int building_getting_granary_for_storing(int x, int y, int resource, int distanc
 
 int building_granary_for_getting(building *src, int *x_dst, int *y_dst);
 
+void building_granary_bless();
+
+void building_granary_warehouse_curse(int big);
 
 #endif // BUILDING_GRANARY_H

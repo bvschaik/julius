@@ -8,21 +8,13 @@
 #include "HousePopulation.h"
 #include "Terrain.h"
 #include "TerrainGraphics.h"
-#include "Undo.h"
 
 #include "Data/CityInfo.h"
 #include "Data/State.h"
 
-#include "building/building.h"
-#include "building/granary.h"
-#include "building/properties.h"
 #include "building/storage.h"
-#include "building/warehouse.h"
 #include "city/message.h"
 #include "city/warning.h"
-#include "core/calc.h"
-#include "core/direction.h"
-#include "figure/figure.h"
 #include "graphics/image.h"
 #include "map/building.h"
 #include "map/desirability.h"
@@ -34,8 +26,6 @@
 #include "map/routing_terrain.h"
 #include "map/terrain.h"
 #include "map/water.h"
-#include "scenario/map.h"
-#include "scenario/property.h"
 #include "sound/effect.h"
 
 #include <string.h>
@@ -617,88 +607,5 @@ void Building_GameTick_checkAccessToRome()
 		city_warning_show(WARNING_CITY_BOXED_IN);
 		city_warning_show(WARNING_CITY_BOXED_IN_PEOPLE_WILL_PERISH);
 		CityView_goToGridOffset(problemGridOffset);
-	}
-}
-
-void Building_Mercury_removeResources(int bigCurse)
-{
-	int max_stored = 0;
-	building *max_building = 0;
-	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		building *b = building_get(i);
-		if (!BuildingIsInUse(b)) {
-			continue;
-		}
-		int total_stored = 0;
-		if (b->type == BUILDING_WAREHOUSE) {
-			for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
-				total_stored += building_warehouse_get_amount(b, r);
-			}
-		} else if (b->type == BUILDING_GRANARY) {
-			for (int r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
-				total_stored += building_granary_get_amount(b, r);
-			}
-			total_stored /= 100;
-		} else {
-			continue;
-		}
-		if (total_stored > max_stored) {
-			max_stored = total_stored;
-			max_building = b;
-		}
-	}
-	if (!max_building) {
-		return;
-	}
-	if (bigCurse == 1) {
-		city_message_disable_sound_for_next_message();
-		city_message_post(0, MESSAGE_FIRE, max_building->type, max_building->gridOffset);
-		Building_collapseOnFire(max_building->id, 0);
-		Building_collapseLinked(max_building->id, 1);
-		sound_effect_play(SOUND_EFFECT_EXPLOSION);
-		map_routing_update_land();
-	} else {
-		if (max_building->type == BUILDING_WAREHOUSE) {
-			building_warehouse_remove_resource_curse(max_building, 16);
-		} else if (max_building->type == BUILDING_GRANARY) {
-			int amount = building_granary_remove_resource(max_building, RESOURCE_WHEAT, 1600);
-			amount = building_granary_remove_resource(max_building, RESOURCE_VEGETABLES, amount);
-			amount = building_granary_remove_resource(max_building, RESOURCE_FRUIT, amount);
-			building_granary_remove_resource(max_building, RESOURCE_MEAT, amount);
-		}
-	}
-}
-
-void Building_Mercury_fillGranary()
-{
-	int min_stored = 10000;
-	building *min_building = 0;
-	for (int i = 1; i < MAX_BUILDINGS; i++) {
-		building *b = building_get(i);
-		if (!BuildingIsInUse(b) || b->type != BUILDING_GRANARY) {
-			continue;
-		}
-		int totalStored = 0;
-		for (int r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
-			totalStored += building_granary_get_amount(b, r);
-		}
-		if (totalStored < min_stored) {
-			min_stored = totalStored;
-			min_building = b;
-		}
-	}
-	if (min_building) {
-		for (int n = 0; n < 6; n++) {
-			building_granary_add_resource(min_building, RESOURCE_WHEAT, 0);
-		}
-		for (int n = 0; n < 6; n++) {
-			building_granary_add_resource(min_building, RESOURCE_VEGETABLES, 0);
-		}
-		for (int n = 0; n < 6; n++) {
-			building_granary_add_resource(min_building, RESOURCE_FRUIT, 0);
-		}
-		for (int n = 0; n < 6; n++) {
-			building_granary_add_resource(min_building, RESOURCE_MEAT, 0);
-		}
 	}
 }
