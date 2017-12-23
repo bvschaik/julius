@@ -3,6 +3,7 @@
 #include "Data/CityInfo.h"
 
 #include "building/building.h"
+#include "building/granary.h"
 #include "building/model.h"
 #include "building/storage.h"
 #include "core/calc.h"
@@ -226,67 +227,6 @@ int Resource_getGranaryForGettingFood(int srcBuildingId, int *xDst, int *yDst)
 	return minBuildingId;
 }
 
-int Resource_getAmountStoredInGranary(building *granary, int resource)
-{
-	if (!resource_is_food(resource)) {
-		return 0;
-	}
-	if (granary->type != BUILDING_GRANARY) {
-		return 0;
-	}
-	return granary->data.storage.resourceStored[resource];
-}
-
-int Resource_addToGranary(int buildingId, int resource, int countAsProduced)
-{
-	if (buildingId <= 0) {
-		return 1;
-	}
-	if (!resource_is_food(resource)) {
-		return 0;
-	}
-	building *b = building_get(buildingId);
-	if (b->type != BUILDING_GRANARY) {
-		return 0;
-	}
-	if (b->data.storage.resourceStored[RESOURCE_NONE] <= 0) {
-		return 0; // no space
-	}
-	if (countAsProduced) {
-		Data_CityInfo.foodInfoFoodStoredSoFarThisMonth += 100;
-	}
-	if (b->data.storage.resourceStored[RESOURCE_NONE] <= 100) {
-		b->data.storage.resourceStored[resource] += b->data.storage.resourceStored[RESOURCE_NONE];
-		b->data.storage.resourceStored[RESOURCE_NONE] = 0;
-	} else {
-		b->data.storage.resourceStored[resource] += 100;
-		b->data.storage.resourceStored[RESOURCE_NONE] -= 100;
-	}
-	return 1;
-}
-
-int Resource_removeFromGranary(int buildingId, int resource, int amount)
-{
-	if (amount <= 0) {
-		return 0;
-	}
-	int toRemove;
-	building *b = building_get(buildingId);
-	if (b->data.storage.resourceStored[resource] >= amount) {
-		Data_CityInfo.resourceGranaryFoodStored[resource] -= amount;
-		b->data.storage.resourceStored[resource] -= amount;
-		b->data.storage.resourceStored[RESOURCE_NONE] += amount;
-		toRemove = 0;
-	} else {
-		int removed = b->data.storage.resourceStored[resource];
-		Data_CityInfo.resourceGranaryFoodStored[resource] -= removed;
-		b->data.storage.resourceStored[resource] = 0;
-		b->data.storage.resourceStored[RESOURCE_NONE] += removed;
-		toRemove = amount - removed;
-	}
-	return toRemove;
-}
-
 int Resource_determineGranaryWorkerTask(building *granary)
 {
 	int pctWorkers = calc_percentage(granary->numWorkers, model_get_building(granary->type)->laborers);
@@ -365,7 +305,7 @@ int Resource_takeFoodFromGranaryForGettingDeliveryman(int dstBuildingId, int src
 	if (maxAmount > bDst->data.storage.resourceStored[RESOURCE_NONE]) {
 		maxAmount = bDst->data.storage.resourceStored[RESOURCE_NONE];
 	}
-	Resource_removeFromGranary(srcBuildingId, maxResource, maxAmount);
+	building_granary_remove_resource(bSrc, maxResource, maxAmount);
 	*resource = maxResource;
 	return maxAmount / 100;
 }

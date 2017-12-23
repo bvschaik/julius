@@ -6,6 +6,7 @@
 
 #include "building/barracks.h"
 #include "building/building.h"
+#include "building/granary.h"
 #include "building/industry.h"
 #include "building/warehouse.h"
 #include "figure/route.h"
@@ -235,7 +236,7 @@ void FigureAction_cartpusher(figure *f)
 		case FigureActionState_25_CartpusherAtGranary:
 			f->waitTicks++;
 			if (f->waitTicks > 5) {
-				if (Resource_addToGranary(f->destinationBuildingId, f->resourceId, 1)) {
+				if (building_granary_add_resource(building_get(f->destinationBuildingId), f->resourceId, 1)) {
 					f->actionState = FigureActionState_27_CartpusherReturning;
 					f->waitTicks = 0;
 					f->destinationX = f->sourceX;
@@ -295,7 +296,7 @@ static void determineGranarymanDestination(figure *f, int roadNetworkId)
 		roadNetworkId, 0, &xDst, &yDst);
 	if (dstBuildingId) {
 		setDestination(f, FigureActionState_51_WarehousemanDeliveringResource, dstBuildingId, xDst, yDst);
-		Resource_removeFromGranary(f->buildingId, f->resourceId, 100);
+		building_granary_remove_resource(granary, f->resourceId, 100);
 		return;
 	}
 	// priority 2: warehouse
@@ -304,7 +305,7 @@ static void determineGranarymanDestination(figure *f, int roadNetworkId)
 		roadNetworkId, 0, &xDst, &yDst);
 	if (dstBuildingId) {
 		setDestination(f, FigureActionState_51_WarehousemanDeliveringResource, dstBuildingId, xDst, yDst);
-		Resource_removeFromGranary(f->buildingId, f->resourceId, 100);
+		building_granary_remove_resource(granary, f->resourceId, 100);
 		return;
 	}
 	// priority 3: granary even though resource is on stockpile
@@ -313,7 +314,7 @@ static void determineGranarymanDestination(figure *f, int roadNetworkId)
 		roadNetworkId, 0, &xDst, &yDst);
 	if (dstBuildingId) {
 		setDestination(f, FigureActionState_51_WarehousemanDeliveringResource, dstBuildingId, xDst, yDst);
-		Resource_removeFromGranary(f->buildingId, f->resourceId, 100);
+		building_granary_remove_resource(granary, f->resourceId, 100);
 		return;
 	}
 	// nowhere to go to: kill figure
@@ -455,7 +456,7 @@ void FigureAction_warehouseman(figure *f)
                 building *b = building_get(f->destinationBuildingId);
 				switch (b->type) {
 					case BUILDING_GRANARY:
-						Resource_addToGranary(b->id, f->resourceId, 0);
+						building_granary_add_resource(b, f->resourceId, 0);
 						break;
 					case BUILDING_BARRACKS:
 						building_barracks_add_weapon(b);
@@ -530,7 +531,7 @@ void FigureAction_warehouseman(figure *f)
 			FigureMovement_walkTicks(f, 1);
 			if (f->direction == DIR_FIGURE_AT_DESTINATION) {
 				for (int i = 0; i < f->loadsSoldOrCarrying; i++) {
-					Resource_addToGranary(f->buildingId, f->resourceId, 0);
+					building_granary_add_resource(building_get(f->buildingId), f->resourceId, 0);
 				}
 				f->state = FigureState_Dead;
 			} else if (f->direction == DIR_FIGURE_REROUTE) {

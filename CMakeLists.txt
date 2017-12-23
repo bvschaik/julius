@@ -38,6 +38,7 @@ set(BUILDING_FILES
     ${PROJECT_SOURCE_DIR}/src/building/count.c
     ${PROJECT_SOURCE_DIR}/src/building/dock.c
     ${PROJECT_SOURCE_DIR}/src/building/figure.c
+    ${PROJECT_SOURCE_DIR}/src/building/granary.c
     ${PROJECT_SOURCE_DIR}/src/building/house.c
     ${PROJECT_SOURCE_DIR}/src/building/house_evolution.c
     ${PROJECT_SOURCE_DIR}/src/building/industry.c

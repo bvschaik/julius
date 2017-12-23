@@ -1,9 +1,9 @@
 #include "FigureAction_private.h"
 
 #include "Figure.h"
-#include "Resource.h"
 
 #include "building/building.h"
+#include "building/granary.h"
 #include "building/warehouse.h"
 #include "figure/route.h"
 #include "figure/type.h"
@@ -28,9 +28,10 @@ static int marketBuyerTakeFoodFromGranary(figure *f, int marketId, int granaryId
 		case INVENTORY_MEAT: resource = RESOURCE_MEAT; break;
 		default: return 0;
 	}
+	building *granary = building_get(granaryId);
 	int marketUnits = building_get(marketId)->data.market.inventory[f->collectingItemId];
 	int maxUnits = (f->collectingItemId == INVENTORY_WHEAT ? 800 : 600) - marketUnits;
-	int granaryUnits = building_get(granaryId)->data.storage.resourceStored[resource];
+	int granaryUnits = granary->data.storage.resourceStored[resource];
 	int numLoads;
 	if (granaryUnits >= 800) {
 		numLoads = 8;
@@ -57,7 +58,7 @@ static int marketBuyerTakeFoodFromGranary(figure *f, int marketId, int granaryId
 	if (numLoads <= 0) {
 		return 0;
 	}
-	Resource_removeFromGranary(granaryId, resource, 100 * numLoads);
+	building_granary_remove_resource(granary, resource, 100 * numLoads);
 	// create delivery boys
 	int previousBoy = f->id;
 	for (int i = 0; i < numLoads; i++) {
