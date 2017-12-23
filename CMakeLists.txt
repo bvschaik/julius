@@ -34,6 +34,9 @@ set(CORE_FILES
 set(BUILDING_FILES
     ${PROJECT_SOURCE_DIR}/src/building/barracks.c
     ${PROJECT_SOURCE_DIR}/src/building/building.c
+    ${PROJECT_SOURCE_DIR}/src/building/construction.c
+    ${PROJECT_SOURCE_DIR}/src/building/construction_building.c
+    ${PROJECT_SOURCE_DIR}/src/building/construction_clear.c
     ${PROJECT_SOURCE_DIR}/src/building/construction_warning.c
     ${PROJECT_SOURCE_DIR}/src/building/count.c
     ${PROJECT_SOURCE_DIR}/src/building/dock.c
@@ -144,7 +147,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/linux/SDLSoundDevice.c
 	${PROJECT_SOURCE_DIR}/src/Animation.c
 	${PROJECT_SOURCE_DIR}/src/Building.c
-	${PROJECT_SOURCE_DIR}/src/BuildingPlacement.c
 	${PROJECT_SOURCE_DIR}/src/CityInfo.c
 	${PROJECT_SOURCE_DIR}/src/CityInfo_Culture.c
 	${PROJECT_SOURCE_DIR}/src/CityInfo_Finance.c

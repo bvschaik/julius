@@ -4,13 +4,13 @@
 #include "Window.h"
 
 #include "../Building.h"
-#include "../BuildingPlacement.h"
 #include "../CityView.h"
 #include "../Formation.h"
 #include "../Undo.h"
 #include "../Widget.h"
 
 #include "building/building.h"
+#include "building/construction.h"
 #include "building/dock.h"
 #include "building/model.h"
 #include "city/finance.h"
@@ -707,7 +707,7 @@ static void buildMove()
 	Data_State.selectedBuilding.gridOffsetEnd = Data_State.map.current.gridOffset;
 	Data_State.selectedBuilding.xEnd = Data_State.map.current.x;
 	Data_State.selectedBuilding.yEnd = Data_State.map.current.y;
-	BuildingPlacement_update(
+	building_construction_update(
 		Data_State.selectedBuilding.xStart, Data_State.selectedBuilding.yStart,
 		Data_State.selectedBuilding.xEnd, Data_State.selectedBuilding.yEnd,
 		Data_State.selectedBuilding.type);
@@ -723,7 +723,7 @@ static void buildEnd()
 		if (Data_State.selectedBuilding.type > 0) {
 			sound_effect_play(SOUND_EFFECT_BUILD);
 		}
-		BuildingPlacement_place(Data_State.map.orientation,
+		building_construction_place(Data_State.map.orientation,
 			Data_State.selectedBuilding.xStart, Data_State.selectedBuilding.yStart,
 			Data_State.selectedBuilding.xEnd, Data_State.selectedBuilding.yEnd,
 			Data_State.selectedBuilding.type);

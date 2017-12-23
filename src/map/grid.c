@@ -77,6 +77,26 @@ void map_grid_get_area(int x, int y, int size, int radius,
     map_grid_bound_area(x_min, y_min, x_max, y_max);
 }
 
+void map_grid_start_end_to_area(int x_start, int y_start, int x_end, int y_end, int *x_min, int *y_min, int *x_max, int *y_max)
+{
+    if (x_start < x_end) {
+        *x_min = x_start;
+        *x_max = x_end;
+    } else {
+        *x_min = x_end;
+        *x_max = x_start;
+    }
+    if (y_start < y_end) {
+        *y_min = y_start;
+        *y_max = y_end;
+    } else {
+        *y_min = y_end;
+        *y_max = y_start;
+    }
+    map_grid_bound_area(x_min, y_min, x_max, y_max);
+
+}
+
 int map_grid_is_inside(int x, int y, int size)
 {
     return x >= 0 && x + size <= Data_State.map.width && y >= 0 && y + size <= Data_State.map.height;
