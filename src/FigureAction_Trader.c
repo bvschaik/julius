@@ -1,6 +1,5 @@
 #include "FigureAction_private.h"
 
-#include "Resource.h"
 #include "Terrain.h"
 #include "Trader.h"
 

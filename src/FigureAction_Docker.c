@@ -1,6 +1,5 @@
 #include "FigureAction_private.h"
 
-#include "Resource.h"
 #include "Trader.h"
 
 #include "Data/CityInfo.h"

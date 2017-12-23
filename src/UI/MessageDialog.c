@@ -6,7 +6,6 @@
 #include "../CityView.h"
 #include "../Formation.h"
 #include "../Graphics.h"
-#include "../Resource.h"
 #include "../Video.h"
 #include "../Widget.h"
 

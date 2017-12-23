@@ -1,6 +1,5 @@
 #include "Trader.h"
 
-#include "Resource.h"
 #include "Terrain.h"
 
 #include "Data/CityInfo.h"

@@ -6,7 +6,6 @@
 #include "game/resource.h"
 
 #include "../Graphics.h"
-#include "../Resource.h"
 #include "../Widget.h"
 
 #include "../Data/CityInfo.h"

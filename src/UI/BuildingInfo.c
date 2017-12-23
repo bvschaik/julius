@@ -9,7 +9,6 @@
 #include "../CityInfo.h"
 #include "../Formation.h"
 #include "../Graphics.h"
-#include "../Resource.h"
 #include "../Terrain.h"
 #include "../Widget.h"
 

@@ -4,7 +4,6 @@
 
 #include "../CityInfo.h"
 #include "../Formation.h"
-#include "../Resource.h"
 
 #include "city/finance.h"
 #include "empire/city.h"

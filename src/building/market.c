@@ -6,7 +6,6 @@
 #include "scenario/property.h"
 
 #include "Data/CityInfo.h"
-#include "../Resource.h"
 
 struct resource_data {
     int building_id;

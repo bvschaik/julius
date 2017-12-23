@@ -5,7 +5,6 @@
 #include "../CityView.h"
 #include "../Figure.h"
 #include "../Graphics.h"
-#include "../Resource.h"
 #include "../Widget.h"
 
 #include "../Data/Constants.h"

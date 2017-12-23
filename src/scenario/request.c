@@ -11,7 +11,6 @@
 
 #include "Data/CityInfo.h"
 #include "CityInfo.h"
-#include "Resource.h"
 
 void scenario_request_init()
 {

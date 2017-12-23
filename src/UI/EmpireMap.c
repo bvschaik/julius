@@ -8,7 +8,6 @@
 #include "core/calc.h"
 #include "../CityInfo.h"
 #include "../Graphics.h"
-#include "../Resource.h"
 #include "../SidebarMenu.h"
 #include "../Widget.h"
 
