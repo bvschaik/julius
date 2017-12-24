@@ -40,6 +40,7 @@ add_executable(autopilot
     ${CITY_FILES}
     ${EMPIRE_FILES}
     ${FIGURE_FILES}
+    ${FIGURETYPE_FILES}
     ${GAME_FILES}
     ${TEST_INPUT_FILES}
     ${MAP_FILES}

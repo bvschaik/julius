@@ -77,6 +77,9 @@ set(FIGURE_FILES
     ${PROJECT_SOURCE_DIR}/src/figure/sound.c
     ${PROJECT_SOURCE_DIR}/src/figure/trader.c
 )
+set(FIGURETYPE_FILES
+    ${PROJECT_SOURCE_DIR}/src/figuretype/animal.c
+)
 set(GAME_FILES
     ${PROJECT_SOURCE_DIR}/src/game/difficulty.c
     ${PROJECT_SOURCE_DIR}/src/game/resource.c
@@ -275,6 +278,7 @@ add_executable(julius
 	${CITY_FILES}
 	${EMPIRE_FILES}
 	${FIGURE_FILES}
+	${FIGURETYPE_FILES}
 	${GAME_FILES}
 	${INPUT_FILES}
 	${MAP_FILES}

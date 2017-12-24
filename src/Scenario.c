@@ -33,6 +33,7 @@
 #include "figure/name.h"
 #include "figure/route.h"
 #include "figure/trader.h"
+#include "figuretype/animal.h"
 #include "game/difficulty.h"
 #include "game/settings.h"
 #include "game/time.h"
@@ -167,8 +168,8 @@ static void loadScenario(const char *scenarioName)
 	Data_CityInfo_Extra.ciid = 1;
 	readScenarioAndInitGraphics(scenarioName);
 
-	Figure_createFishingPoints();
-	Figure_createHerds();
+	figure_create_fishing_points();
+	figure_create_herds();
 	Figure_createFlotsam();
 
 	map_routing_update_land();

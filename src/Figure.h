@@ -5,8 +5,6 @@
 #include "figure/figure.h"
 
 void Figure_createDustCloud(int x, int y, int size);
-void Figure_createFishingPoints();
-void Figure_createHerds();
 void Figure_createFlotsam();
 void Figure_createMissile(int buildingId, int x, int y, int xDst, int yDst, int type);
 

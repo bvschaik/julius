@@ -72,59 +72,6 @@ void Figure_createMissile(int buildingId, int x, int y, int xDst, int yDst, int 
 	}
 }
 
-static void create_fishing_point(int x, int y)
-{
-    random_generate_next();
-    figure *fish = figure_create(FIGURE_FISH_GULLS, x, y, DIR_0_TOP);
-    fish->graphicOffset = random_byte() & 0x1f;
-    fish->progressOnTile = random_byte() & 7;
-    FigureMovement_crossCountrySetDirection(fish,
-        fish->crossCountryX, fish->crossCountryY,
-        15 * fish->destinationX, 15 * fish->destinationY, 0);
-}
-
-void Figure_createFishingPoints()
-{
-    scenario_map_foreach_fishing_point(create_fishing_point);
-}
-
-static void create_herd(int x, int y)
-{
-    figure_type herd_type;
-    int numAnimals;
-    switch (scenario_property_climate()) {
-        case CLIMATE_CENTRAL:
-            herd_type = FIGURE_SHEEP;
-            numAnimals = 10;
-            break;
-        case CLIMATE_NORTHERN:
-            herd_type = FIGURE_WOLF;
-            numAnimals = 8;
-            break;
-        case CLIMATE_DESERT:
-            herd_type = FIGURE_ZEBRA;
-            numAnimals = 12;
-            break;
-        default:
-            return;
-    }
-    int formationId = formation_create_herd(herd_type, x, y, numAnimals);
-    if (formationId > 0) {
-        for (int fig = 0; fig < numAnimals; fig++) {
-            random_generate_next();
-            figure *f = figure_create(herd_type, x, y, DIR_0_TOP);
-            f->actionState = FigureActionState_196_HerdAnimalAtRest;
-            f->formationId = formationId;
-            f->waitTicks = f->id & 0x1f;
-        }
-    }
-}
-
-void Figure_createHerds()
-{
-    scenario_map_foreach_herd_point(create_herd);
-}
-
 void Figure_createFlotsam()
 {
     if (!scenario_map_has_river_entry() || !scenario_map_has_river_exit() || !scenario_map_has_flotsam()) {
