@@ -19,7 +19,6 @@ int FigureAction_TradeCaravan_canSell(int figureId, int buildingId, int empireCi
 int FigureAction_TradeShip_isBuyingOrSelling(int figureId);
 
 void FigureAction_TowerSentry_reroute();
-void FigureAction_HippodromeHorse_reroute();
 
 int FigureAction_HerdEnemy_moveFormationTo(int formationId, int x, int y, int *xTile, int *yTile);
 
@@ -37,7 +36,6 @@ int FigureAction_CombatEnemy_getMissileTarget(figure *enemy, int maxDistance, in
 void FigureAction_Combat_attackFigureAt(figure *f, int grid_offset);
 
 // figure action callbacks
-void FigureAction_nobody(figure *f);
 // migrant
 void FigureAction_immigrant(figure *f);
 void FigureAction_emigrant(figure *f);
@@ -111,10 +109,5 @@ void FigureAction_enemy53_Axe(figure *f);
 void FigureAction_enemy54_Gladiator(figure *f);
 void FigureAction_enemyCaesarLegionary(figure *f);
 // animal
-void FigureAction_seagulls(figure *f);
-void FigureAction_sheep(figure *f);
-void FigureAction_wolf(figure *f);
-void FigureAction_zebra(figure *f);
-void FigureAction_hippodromeHorse(figure *f);
 
 #endif

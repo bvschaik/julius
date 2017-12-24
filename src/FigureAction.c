@@ -3,6 +3,11 @@
 #include "Figure.h"
 #include "Data/CityInfo.h"
 #include "figure/figure.h"
+#include "figuretype/animal.h"
+
+static void FigureAction_nobody(figure *f)
+{
+}
 
 static void (*figureActionCallbacks[])(figure *f) = {
 	FigureAction_nobody, //0
@@ -70,14 +75,14 @@ static void (*figureActionCallbacks[])(figure *f) = {
 	FigureAction_ballista,
 	FigureAction_nobody,
 	FigureAction_missionary,
-	FigureAction_seagulls,
+	figure_seagulls_action,
 	FigureAction_deliveryBoy,
 	FigureAction_shipwreck,
-	FigureAction_sheep,
-	FigureAction_wolf,
-	FigureAction_zebra, //70
+	figure_sheep_action,
+	figure_wolf_action,
+	figure_zebra_action, //70
 	FigureAction_spear,
-	FigureAction_hippodromeHorse,
+	figure_hippodrome_horse_action,
 	FigureAction_nobody,
 	FigureAction_nobody,
 	FigureAction_nobody,
@@ -117,8 +122,4 @@ void FigureAction_handle()
 			}
 		}
 	}
-}
-
-void FigureAction_nobody(figure *f)
-{
 }
