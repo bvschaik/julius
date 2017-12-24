@@ -442,7 +442,7 @@ void FigureAction_nativeTrader(figure *f)
 		8 + 8 * f->resourceId; // BUGFIX should be within else statement?
 	if (f->cartGraphicId) {
 		f->cartGraphicId += dir;
-		FigureAction_Common_setCartOffset(f, dir);
+		figure_image_set_cart_offset(f, dir);
 	}
 }
 

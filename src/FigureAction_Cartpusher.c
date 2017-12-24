@@ -130,7 +130,7 @@ static void updateGraphic(figure *f)
 	}
 	if (f->cartGraphicId) {
 		f->cartGraphicId += dir;
-		FigureAction_Common_setCartOffset(f, dir);
+		figure_image_set_cart_offset(f, dir);
 		if (f->loadsSoldOrCarrying >= 8) {
 			f->yOffsetCart -= 40;
 		}

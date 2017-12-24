@@ -70,6 +70,7 @@ set(FIGURE_FILES
     ${PROJECT_SOURCE_DIR}/src/figure/enemy_army.c
     ${PROJECT_SOURCE_DIR}/src/figure/figure.c
     ${PROJECT_SOURCE_DIR}/src/figure/formation.c
+    ${PROJECT_SOURCE_DIR}/src/figure/formation_layout.c
     ${PROJECT_SOURCE_DIR}/src/figure/image.c
     ${PROJECT_SOURCE_DIR}/src/figure/name.c
     ${PROJECT_SOURCE_DIR}/src/figure/phrase.c
@@ -80,6 +81,7 @@ set(FIGURE_FILES
 )
 set(FIGURETYPE_FILES
     ${PROJECT_SOURCE_DIR}/src/figuretype/animal.c
+    ${PROJECT_SOURCE_DIR}/src/figuretype/migrant.c
 )
 set(GAME_FILES
     ${PROJECT_SOURCE_DIR}/src/game/difficulty.c
@@ -166,7 +168,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/Cursor.c
 	${PROJECT_SOURCE_DIR}/src/Figure.c
 	${PROJECT_SOURCE_DIR}/src/FigureAction.c
-	${PROJECT_SOURCE_DIR}/src/FigureAction_Animal.c
 	${PROJECT_SOURCE_DIR}/src/FigureAction_Cartpusher.c
 	${PROJECT_SOURCE_DIR}/src/FigureAction_Combat.c
 	${PROJECT_SOURCE_DIR}/src/FigureAction_Common.c
@@ -175,7 +176,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/FigureAction_Enemy.c
 	${PROJECT_SOURCE_DIR}/src/FigureAction_Entertainer.c
 	${PROJECT_SOURCE_DIR}/src/FigureAction_Market.c
-	${PROJECT_SOURCE_DIR}/src/FigureAction_Migrant.c
 	${PROJECT_SOURCE_DIR}/src/FigureAction_Missile.c
 	${PROJECT_SOURCE_DIR}/src/FigureAction_Native.c
 	${PROJECT_SOURCE_DIR}/src/FigureAction_Rioter.c

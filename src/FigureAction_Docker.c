@@ -303,7 +303,7 @@ void FigureAction_docker(figure *f)
 	}
 	if (f->cartGraphicId) {
 		f->cartGraphicId += dir;
-		FigureAction_Common_setCartOffset(f, dir);
+		figure_image_set_cart_offset(f, dir);
 	} else {
 		f->graphicId = 0;
 	}

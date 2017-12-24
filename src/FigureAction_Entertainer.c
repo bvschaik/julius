@@ -134,7 +134,7 @@ static void updateGraphic(figure *f)
 	}
 	if (f->cartGraphicId) {
 		f->cartGraphicId += dir + 8 * f->graphicOffset;
-		FigureAction_Common_setCartOffset(f, dir);
+		figure_image_set_cart_offset(f, dir);
 	}
 }
 

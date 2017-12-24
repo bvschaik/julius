@@ -62,7 +62,6 @@ add_executable(autopilot
     ${PROJECT_SOURCE_DIR}/src/Cursor.c
     ${PROJECT_SOURCE_DIR}/src/Figure.c
     ${PROJECT_SOURCE_DIR}/src/FigureAction.c
-    ${PROJECT_SOURCE_DIR}/src/FigureAction_Animal.c
     ${PROJECT_SOURCE_DIR}/src/FigureAction_Cartpusher.c
     ${PROJECT_SOURCE_DIR}/src/FigureAction_Combat.c
     ${PROJECT_SOURCE_DIR}/src/FigureAction_Common.c
@@ -71,7 +70,6 @@ add_executable(autopilot
     ${PROJECT_SOURCE_DIR}/src/FigureAction_Enemy.c
     ${PROJECT_SOURCE_DIR}/src/FigureAction_Entertainer.c
     ${PROJECT_SOURCE_DIR}/src/FigureAction_Market.c
-    ${PROJECT_SOURCE_DIR}/src/FigureAction_Migrant.c
     ${PROJECT_SOURCE_DIR}/src/FigureAction_Missile.c
     ${PROJECT_SOURCE_DIR}/src/FigureAction_Native.c
     ${PROJECT_SOURCE_DIR}/src/FigureAction_Rioter.c

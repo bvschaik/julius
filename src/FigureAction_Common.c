@@ -21,9 +21,6 @@ const int figureActionMissileLauncherGraphicOffsets[128] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
 
-static const int cartOffsetsX[] = {13, 18, 12, 0, -13, -18, -13, 0};
-static const int cartOffsetsY[] = {-7, -1, 7, 11, 6, -1, -7, -12};
-
 void FigureAction_Common_handleCorpse(figure *f)
 {
 	if (f->waitTicks < 0) {
@@ -158,12 +155,6 @@ void FigureAction_Common_handleAttack(figure *f)
 	if (f->attackGraphicOffset >= 24) {
 		hitOpponent(f);
 	}
-}
-
-void FigureAction_Common_setCartOffset(figure *f, int direction)
-{
-	f->xOffsetCart = cartOffsetsX[direction];
-	f->yOffsetCart = cartOffsetsY[direction];
 }
 
 void FigureAction_Common_setCrossCountryDestination(figure *f, int xDst, int yDst)

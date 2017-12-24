@@ -4,6 +4,7 @@
 #include "Data/CityInfo.h"
 #include "figure/figure.h"
 #include "figuretype/animal.h"
+#include "figuretype/migrant.h"
 
 static void FigureAction_nobody(figure *f)
 {
@@ -11,9 +12,9 @@ static void FigureAction_nobody(figure *f)
 
 static void (*figureActionCallbacks[])(figure *f) = {
 	FigureAction_nobody, //0
-	FigureAction_immigrant,
-	FigureAction_emigrant,
-	FigureAction_homeless,
+	figure_immigrant_action,
+	figure_emigrant_action,
+	figure_homeless_action,
 	FigureAction_cartpusher,
 	FigureAction_laborSeeker,
 	FigureAction_explosionCloud,

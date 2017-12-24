@@ -24,7 +24,6 @@ int FigureAction_HerdEnemy_moveFormationTo(int formationId, int x, int y, int *x
 
 void FigureAction_Common_handleCorpse(figure *f);
 void FigureAction_Common_handleAttack(figure *f);
-void FigureAction_Common_setCartOffset(figure *f, int direction);
 void FigureAction_Common_setCrossCountryDestination(figure *f, int xDst, int yDst);
 
 int FigureAction_CombatSoldier_getMissileTarget(figure *shooter, int maxDistance, int *xTile, int *yTile);
@@ -36,10 +35,6 @@ int FigureAction_CombatEnemy_getMissileTarget(figure *enemy, int maxDistance, in
 void FigureAction_Combat_attackFigureAt(figure *f, int grid_offset);
 
 // figure action callbacks
-// migrant
-void FigureAction_immigrant(figure *f);
-void FigureAction_emigrant(figure *f);
-void FigureAction_homeless(figure *f);
 // cartpusher
 void FigureAction_cartpusher(figure *f);
 void FigureAction_warehouseman(figure *f);

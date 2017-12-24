@@ -439,7 +439,7 @@ void figure_hippodrome_horse_action(figure *f)
         f->cartGraphicId = image_group(GROUP_FIGURE_HIPPODROME_CART_2) + dir;
     }
     int cart_dir = (dir + 4) % 8;
-    FigureAction_Common_setCartOffset(f, cart_dir);
+    figure_image_set_cart_offset(f, cart_dir);
 }
 
 void figure_hippodrome_horse_reroute()
