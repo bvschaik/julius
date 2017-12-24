@@ -1,5 +1,4 @@
 #include "Terrain.h"
-#include "Terrain_private.h"
 
 #include "Building.h"
 #include "FigureAction.h"
