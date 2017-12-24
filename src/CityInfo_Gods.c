@@ -1,7 +1,6 @@
 #include "CityInfo.h"
 
 #include "Building.h"
-#include "Figure.h"
 #include "Formation.h"
 
 #include "Data/CityInfo.h"
@@ -14,6 +13,7 @@
 #include "city/message.h"
 #include "core/calc.h"
 #include "core/random.h"
+#include "figuretype/water.h"
 #include "game/settings.h"
 #include "game/time.h"
 #include "scenario/property.h"
@@ -65,7 +65,7 @@ static void performSmallCurse(int god)
 			break;
 		case GOD_NEPTUNE:
 			city_message_post(1, MESSAGE_NEPTUNE_IS_UPSET, 0, 0);
-			Figure_sinkAllShips();
+			figure_sink_all_ships();
 			Data_CityInfo.godCurseNeptuneSankShips = 1;
 			break;
 		case GOD_MERCURY:
@@ -102,7 +102,7 @@ static int performLargeCurse(int god)
 				return 0;
 			} else {
 				city_message_post(1, MESSAGE_WRATH_OF_NEPTUNE, 0, 0);
-				Figure_sinkAllShips();
+				figure_sink_all_ships();
 				Data_CityInfo.godCurseNeptuneSankShips = 1;
 				Data_CityInfo.tradeSeaProblemDuration = 80;
 			}

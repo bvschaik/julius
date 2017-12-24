@@ -72,28 +72,6 @@ void Figure_createMissile(int buildingId, int x, int y, int xDst, int yDst, int 
 	}
 }
 
-void Figure_createFlotsam()
-{
-    if (!scenario_map_has_river_entry() || !scenario_map_has_river_exit() || !scenario_map_has_flotsam()) {
-		return;
-	}
-	for (int i = 1; i < MAX_FIGURES; i++) {
-        figure *f = figure_get(i);
-		if (f->state && f->type == FIGURE_FLOTSAM) {
-			figure_delete(f);
-		}
-	}
-	const int resourceIds[] = {3, 1, 3, 2, 1, 3, 2, 3, 2, 1, 3, 3, 2, 3, 3, 3, 1, 2, 0, 1};
-	const int waitTicks[] = {10, 50, 100, 130, 200, 250, 400, 430, 500, 600, 70, 750, 820, 830, 900, 980, 1010, 1030, 1200, 1300};
-	map_point river_entry = scenario_map_river_entry();
-	for (int i = 0; i < 20; i++) {
-		figure *f = figure_create(FIGURE_FLOTSAM, river_entry.x, river_entry.y, DIR_0_TOP);
-		f->actionState = FigureActionState_128_FlotsamCreated;
-		f->resourceId = resourceIds[i];
-		f->waitTicks = waitTicks[i];
-	}
-}
-
 void Figure_killTowerSentriesAt(int x, int y)
 {
 	for (int i = 0; i < MAX_FIGURES; i++) {
@@ -103,28 +81,6 @@ void Figure_killTowerSentriesAt(int x, int y)
 				f->state = FigureState_Dead;
 			}
 		}
-	}
-}
-
-void Figure_sinkAllShips()
-{
-	for (int i = 1; i < MAX_FIGURES; i++) {
-		figure *f = figure_get(i);
-		if (f->state != FigureState_Alive) {
-			continue;
-		}
-		int buildingId;
-		if (f->type == FIGURE_TRADE_SHIP) {
-			buildingId = f->destinationBuildingId;
-		} else if (f->type == FIGURE_FISHING_BOAT) {
-			buildingId = f->buildingId;
-		} else {
-			continue;
-		}
-		building_get(buildingId)->data.other.boatFigureId = 0;
-		f->buildingId = 0;
-		f->type = FIGURE_SHIPWRECK;
-		f->waitTicks = 0;
 	}
 }
 

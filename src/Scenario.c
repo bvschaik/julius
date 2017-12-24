@@ -34,6 +34,7 @@
 #include "figure/route.h"
 #include "figure/trader.h"
 #include "figuretype/animal.h"
+#include "figuretype/water.h"
 #include "game/difficulty.h"
 #include "game/settings.h"
 #include "game/time.h"
@@ -170,7 +171,7 @@ static void loadScenario(const char *scenarioName)
 
 	figure_create_fishing_points();
 	figure_create_herds();
-	Figure_createFlotsam();
+	figure_create_flotsam();
 
 	map_routing_update_land();
 	map_routing_update_water();

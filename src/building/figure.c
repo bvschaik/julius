@@ -1025,7 +1025,7 @@ static void spawn_figure_shipyard(building *b)
             int xBoat, yBoat;
             if (Terrain_canSpawnFishingBoatInWater(b->x, b->y, b->size, &xBoat, &yBoat)) {
                 figure *f = figure_create(FIGURE_FISHING_BOAT, xBoat, yBoat, DIR_0_TOP);
-                f->actionState = FigureActionState_190_FishingBoatCreated;
+                f->actionState = FIGURE_ACTION_190_FISHING_BOAT_CREATED;
                 f->buildingId = b->id;
                 b->figureId = f->id;
             }

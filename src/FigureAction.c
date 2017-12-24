@@ -6,6 +6,7 @@
 #include "figuretype/animal.h"
 #include "figuretype/entertainer.h"
 #include "figuretype/migrant.h"
+#include "figuretype/water.h"
 
 static void FigureAction_nobody(figure *f)
 {
@@ -37,7 +38,7 @@ static void (*figureActionCallbacks[])(figure *f) = {
 	FigureAction_protestor,
 	FigureAction_criminal,
 	FigureAction_rioter,
-	FigureAction_fishingBoat,
+	figure_fishing_boat_action,
 	FigureAction_marketTrader,
 	FigureAction_priest,
 	FigureAction_schoolChild,
@@ -49,7 +50,7 @@ static void (*figureActionCallbacks[])(figure *f) = {
 	FigureAction_surgeon,
 	FigureAction_worker,
 	FigureAction_nobody, // mapFlag: editor only
-	FigureAction_flotsam,
+	figure_flotsam_action,
 	FigureAction_docker,
 	FigureAction_marketBuyer,
 	FigureAction_patrician, //40
@@ -79,7 +80,7 @@ static void (*figureActionCallbacks[])(figure *f) = {
 	FigureAction_missionary,
 	figure_seagulls_action,
 	FigureAction_deliveryBoy,
-	FigureAction_shipwreck,
+	figure_shipwreck_action,
 	figure_sheep_action,
 	figure_wolf_action,
 	figure_zebra_action, //70

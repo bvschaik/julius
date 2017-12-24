@@ -81,10 +81,6 @@ void FigureAction_bolt(figure *f);
 void FigureAction_protestor(figure *f);
 void FigureAction_criminal(figure *f);
 void FigureAction_rioter(figure *f);
-// water
-void FigureAction_fishingBoat(figure *f);
-void FigureAction_flotsam(figure *f);
-void FigureAction_shipwreck(figure *f);
 // wall
 void FigureAction_ballista(figure *f);
 void FigureAction_towerSentry(figure *f);
@@ -102,6 +98,5 @@ void FigureAction_enemy52_MountedArcher(figure *f);
 void FigureAction_enemy53_Axe(figure *f);
 void FigureAction_enemy54_Gladiator(figure *f);
 void FigureAction_enemyCaesarLegionary(figure *f);
-// animal
 
 #endif

@@ -137,11 +137,11 @@ void UI_BuildingInfo_drawWharf(BuildingInfoContext *c)
 		int boatId = b->data.other.boatFigureId;
 		int textId;
 		switch (figure_get(boatId)->actionState) {
-			case FigureActionState_191_FishingBoatGoingToFish: textId = 3; break;
-			case FigureActionState_192_FishingBoatFishing: textId = 4; break;
-			case FigureActionState_193_FishingBoatSailingToWharf: textId = 5; break;
-			case FigureActionState_194_FishingBoatAtWharf: textId = 6; break;
-			case FigureActionState_195_FishingBoatReturningWithFish: textId = 7; break;
+			case FIGURE_ACTION_191_FISHING_BOAT_GOING_TO_FISH: textId = 3; break;
+			case FIGURE_ACTION_192_FISHING_BOAT_FISHING: textId = 4; break;
+			case FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF: textId = 5; break;
+			case FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF: textId = 6; break;
+			case FIGURE_ACTION_195_FISHING_BOAT_RETURNING_WITH_FISH: textId = 7; break;
 			default: textId = 8; break;
 		}
 		DRAW_DESC(102, textId);
