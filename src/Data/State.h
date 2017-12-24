@@ -47,10 +47,6 @@ extern struct _Data_State {
 	struct {
 		int type;
 		int placementInProgress;
-		int xStart;
-		int yStart;
-		int xEnd;
-		int yEnd;
 		int gridOffsetStart;
 		int gridOffsetEnd;
 		int wallRequired;

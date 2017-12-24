@@ -639,10 +639,7 @@ static int handleRightClickAllowBuildingInfo()
 	}
 	Data_State.selectedBuilding.type = 0;
 	Data_State.selectedBuilding.placementInProgress = 0;
-	Data_State.selectedBuilding.xStart = 0;
-	Data_State.selectedBuilding.yStart = 0;
-	Data_State.selectedBuilding.xEnd = 0;
-	Data_State.selectedBuilding.yEnd = 0;
+	building_construction_clear();
 	UI_Window_goTo(Window_City);
 
 	if (!Data_State.map.current.gridOffset) {
@@ -672,29 +669,8 @@ static int isLegionClick()
 static void buildStart()
 {
 	if (Data_State.map.current.gridOffset /*&& !Data_State.gamePaused*/) { // TODO FIXME
-		Data_State.selectedBuilding.xEnd = Data_State.selectedBuilding.xStart = Data_State.map.current.x;
-		Data_State.selectedBuilding.yEnd = Data_State.selectedBuilding.yStart = Data_State.map.current.y;
 		Data_State.selectedBuilding.gridOffsetStart = Data_State.map.current.gridOffset;
-		if (game_undo_start_build(Data_State.selectedBuilding.type)) {
-			Data_State.selectedBuilding.placementInProgress = 1;
-			switch (Data_State.selectedBuilding.type) {
-				case BUILDING_ROAD:
-					map_routing_calculate_distances_for_building(ROUTED_BUILDING_ROAD,
-						Data_State.selectedBuilding.xStart, Data_State.selectedBuilding.yStart);
-					break;
-				case BUILDING_AQUEDUCT:
-				case BUILDING_DRAGGABLE_RESERVOIR:
-					map_routing_calculate_distances_for_building(ROUTED_BUILDING_AQUEDUCT,
-						Data_State.selectedBuilding.xStart,
-						Data_State.selectedBuilding.yStart);
-					break;
-				case BUILDING_WALL:
-					map_routing_calculate_distances_for_building(ROUTED_BUILDING_WALL,
-						Data_State.selectedBuilding.xStart,
-						Data_State.selectedBuilding.yStart);
-					break;
-			}
-		}
+		building_construction_start(Data_State.map.current.x, Data_State.map.current.y);
 	}
 }
 
@@ -705,11 +681,7 @@ static void buildMove()
 		return;
 	}
 	Data_State.selectedBuilding.gridOffsetEnd = Data_State.map.current.gridOffset;
-	Data_State.selectedBuilding.xEnd = Data_State.map.current.x;
-	Data_State.selectedBuilding.yEnd = Data_State.map.current.y;
-	building_construction_update(
-		Data_State.selectedBuilding.xStart, Data_State.selectedBuilding.yStart,
-		Data_State.selectedBuilding.xEnd, Data_State.selectedBuilding.yEnd,
+	building_construction_update(Data_State.map.current.x, Data_State.map.current.y,
 		Data_State.selectedBuilding.type);
 }
 
@@ -724,8 +696,6 @@ static void buildEnd()
 			sound_effect_play(SOUND_EFFECT_BUILD);
 		}
 		building_construction_place(Data_State.map.orientation,
-			Data_State.selectedBuilding.xStart, Data_State.selectedBuilding.yStart,
-			Data_State.selectedBuilding.xEnd, Data_State.selectedBuilding.yEnd,
 			Data_State.selectedBuilding.type);
 	}
 }

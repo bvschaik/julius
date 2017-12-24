@@ -9,6 +9,7 @@
 #include "../Data/CityView.h"
 #include "../Data/State.h"
 
+#include "building/construction.h"
 #include "building/model.h"
 #include "core/time.h"
 #include "scenario/property.h"
@@ -231,10 +232,7 @@ static void buttonMenuItem(int item)
 	Data_State.map.current.gridOffset = 0;
 	
 	Data_State.selectedBuilding.placementInProgress = 0;
-	Data_State.selectedBuilding.xStart = 0;
-	Data_State.selectedBuilding.xEnd = 0;
-	Data_State.selectedBuilding.yStart = 0;
-	Data_State.selectedBuilding.yEnd = 0;
+	building_construction_clear();
 	
 	int type = Data_State.selectedBuilding.type = SidebarMenu_getBuildingType(menu.selectedSubmenu, item);
 	if (type == BUILDING_MENU_FARMS || type == BUILDING_MENU_RAW_MATERIALS ||
