@@ -49,7 +49,7 @@ static void generate_labor_seeker(building *b, int x, int y)
         }
     } else {
         figure *f = figure_create(FIGURE_LABOR_SEEKER, x, y, DIR_0_TOP);
-        f->actionState = FigureActionState_125_Roaming;
+        f->actionState = FIGURE_ACTION_125_ROAMING;
         f->buildingId = b->id;
         b->figureId2 = f->id;
         FigureMovement_initRoaming(f);
@@ -103,7 +103,7 @@ static int default_spawn_delay(building *b)
 static void create_roaming_figure(building *b, int x, int y, figure_type type)
 {
     figure *f = figure_create(type, x, y, DIR_0_TOP);
-    f->actionState = FigureActionState_125_Roaming;
+    f->actionState = FIGURE_ACTION_125_ROAMING;
     f->buildingId = b->id;
     b->figureId = f->id;
     FigureMovement_initRoaming(f);
@@ -117,7 +117,7 @@ static int spawn_patrician(building *b, int spawned)
         if (b->figureSpawnDelay > 40 && !spawned) {
             b->figureSpawnDelay = 0;
             figure *f = figure_create(FIGURE_PATRICIAN, x_road, y_road, DIR_4_BOTTOM);
-            f->actionState = FigureActionState_125_Roaming;
+            f->actionState = FIGURE_ACTION_125_ROAMING;
             f->buildingId = b->id;
             FigureMovement_initRoaming(f);
             return 1;
@@ -717,23 +717,23 @@ static void spawn_figure_school(building *b)
             b->figureSpawnDelay = 0;
 
             figure *child1 = figure_create(FIGURE_SCHOOL_CHILD, x_road, y_road, DIR_0_TOP);
-            child1->actionState = FigureActionState_125_Roaming;
+            child1->actionState = FIGURE_ACTION_125_ROAMING;
             child1->buildingId = b->id;
             b->figureId = child1->id;
             FigureMovement_initRoaming(child1);
 
             figure *child2 = figure_create(FIGURE_SCHOOL_CHILD, x_road, y_road, DIR_0_TOP);
-            child2->actionState = FigureActionState_125_Roaming;
+            child2->actionState = FIGURE_ACTION_125_ROAMING;
             child2->buildingId = b->id;
             FigureMovement_initRoaming(child2);
 
             figure *child3 = figure_create(FIGURE_SCHOOL_CHILD, x_road, y_road, DIR_0_TOP);
-            child3->actionState = FigureActionState_125_Roaming;
+            child3->actionState = FIGURE_ACTION_125_ROAMING;
             child3->buildingId = b->id;
             FigureMovement_initRoaming(child3);
 
             figure *child4 = figure_create(FIGURE_SCHOOL_CHILD, x_road, y_road, DIR_0_TOP);
-            child4->actionState = FigureActionState_125_Roaming;
+            child4->actionState = FIGURE_ACTION_125_ROAMING;
             child4->buildingId = b->id;
             FigureMovement_initRoaming(child4);
         }

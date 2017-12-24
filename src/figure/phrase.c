@@ -311,7 +311,7 @@ static int tax_collector_phrase(figure *f)
 
 static int market_trader_phrase(figure *f)
 {
-    if (f->actionState == FigureActionState_126_RoamerReturning) {
+    if (f->actionState == FIGURE_ACTION_126_ROAMER_RETURNING) {
         if (building_market_get_max_food_stock(building_get(f->buildingId)) <= 0) {
             return 9; // run out of goods
         }

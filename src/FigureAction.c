@@ -7,6 +7,7 @@
 #include "figuretype/entertainer.h"
 #include "figuretype/maintenance.h"
 #include "figuretype/migrant.h"
+#include "figuretype/service.h"
 #include "figuretype/wall.h"
 #include "figuretype/water.h"
 
@@ -20,7 +21,7 @@ static void (*figureActionCallbacks[])(figure *f) = {
 	figure_emigrant_action,
 	figure_homeless_action,
 	FigureAction_cartpusher,
-	FigureAction_laborSeeker,
+	figure_labor_seeker_action,
 	FigureAction_explosionCloud,
 	FigureAction_taxCollector,
 	figure_engineer_action,
@@ -41,21 +42,21 @@ static void (*figureActionCallbacks[])(figure *f) = {
 	FigureAction_criminal,
 	FigureAction_rioter,
 	figure_fishing_boat_action,
-	FigureAction_marketTrader,
-	FigureAction_priest,
-	FigureAction_schoolChild,
-	FigureAction_teacher,
-	FigureAction_librarian, //30
-	FigureAction_barber,
-	FigureAction_bathhouseWorker,
-	FigureAction_doctor,
-	FigureAction_surgeon,
+	figure_market_trader_action,
+	figure_priest_action,
+	figure_school_child_action,
+	figure_teacher_action,
+	figure_librarian_action, //30
+	figure_barber_action,
+	figure_bathhouse_worker_action,
+	figure_doctor_action,
+	figure_doctor_action,
 	figure_worker_action,
 	figure_nobody_action, // mapFlag: editor only
 	figure_flotsam_action,
 	FigureAction_docker,
 	FigureAction_marketBuyer,
-	FigureAction_patrician, //40
+	figure_patrician_action, //40
 	FigureAction_indigenousNative,
 	figure_tower_sentry_action,
 	FigureAction_enemy43_Spear,
@@ -79,7 +80,7 @@ static void (*figureActionCallbacks[])(figure *f) = {
 	FigureAction_bolt,
 	figure_ballista_action,
 	figure_nobody_action,
-	FigureAction_missionary,
+	figure_missionary_action,
 	figure_seagulls_action,
 	FigureAction_deliveryBoy,
 	figure_shipwreck_action,

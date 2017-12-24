@@ -40,19 +40,6 @@ void FigureAction_warehouseman(figure *f);
 void FigureAction_docker(figure *f);
 // service
 void FigureAction_taxCollector(figure *f);
-// culture/entertainer
-void FigureAction_priest(figure *f);
-void FigureAction_schoolChild(figure *f);
-void FigureAction_teacher(figure *f);
-void FigureAction_librarian(figure *f);
-void FigureAction_barber(figure *f);
-void FigureAction_bathhouseWorker(figure *f);
-void FigureAction_doctor(figure *f);
-void FigureAction_surgeon(figure *f);
-void FigureAction_missionary(figure *f);
-void FigureAction_patrician(figure *f);
-void FigureAction_laborSeeker(figure *f);
-void FigureAction_marketTrader(figure *f);
 // market
 void FigureAction_marketBuyer(figure *f);
 void FigureAction_deliveryBoy(figure *f);
