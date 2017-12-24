@@ -75,7 +75,6 @@ add_executable(autopilot
     ${PROJECT_SOURCE_DIR}/src/FigureAction_Service.c
     ${PROJECT_SOURCE_DIR}/src/FigureAction_Soldier.c
     ${PROJECT_SOURCE_DIR}/src/FigureAction_Trader.c
-    ${PROJECT_SOURCE_DIR}/src/FigureAction_Wall.c
     ${PROJECT_SOURCE_DIR}/src/FigureMovement.c
     ${PROJECT_SOURCE_DIR}/src/Figure_Service.c
     ${PROJECT_SOURCE_DIR}/src/Formation.c

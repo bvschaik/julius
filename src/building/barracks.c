@@ -119,7 +119,7 @@ int building_barracks_create_tower_sentry(building *barracks, int x, int y)
         return 0;
     }
     figure *f = figure_create(FIGURE_TOWER_SENTRY, x, y, DIR_0_TOP);
-    f->actionState = FigureActionState_174_TowerSentryGoingToTower;
+    f->actionState = FIGURE_ACTION_174_TOWER_SENTRY_GOING_TO_TOWER;
     int x_road, y_road;
     if (Terrain_hasRoadAccess(tower->x, tower->y, tower->size, &x_road, &y_road)) {
         f->destinationX = x_road;

@@ -15,6 +15,7 @@
 #include "building/storage.h"
 #include "city/message.h"
 #include "city/warning.h"
+#include "figuretype/wall.h"
 #include "game/undo.h"
 #include "graphics/image.h"
 #include "map/building.h"
@@ -314,11 +315,11 @@ void Building_destroyByEnemy(int x, int y, int gridOffset)
 		}
 	} else {
 		if (map_terrain_is(gridOffset, TERRAIN_WALL)) {
-			Figure_killTowerSentriesAt(x, y);
+			figure_kill_tower_sentries_at(x, y);
 		}
 		TerrainGraphics_setBuildingAreaRubble(0, x, y, 1);
 	}
-	FigureAction_TowerSentry_reroute();
+	figure_tower_sentry_reroute();
 	TerrainGraphics_updateAreaWalls(x, y, 3);
 	TerrainGraphics_updateRegionAqueduct(x - 2, y - 2, x + 2, y + 2, 0);
 	map_routing_update_land();

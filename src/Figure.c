@@ -72,18 +72,6 @@ void Figure_createMissile(int buildingId, int x, int y, int xDst, int yDst, int 
 	}
 }
 
-void Figure_killTowerSentriesAt(int x, int y)
-{
-	for (int i = 0; i < MAX_FIGURES; i++) {
-        figure *f = figure_get(i);
-		if (!figure_is_dead(f) && f->type == FIGURE_TOWER_SENTRY) {
-			if (calc_maximum_distance(f->x, f->y, x, y) <= 1) {
-				f->state = FigureState_Dead;
-			}
-		}
-	}
-}
-
 static int is_citizen(figure *f)
 {
     if (f->actionState != FigureActionState_149_Corpse) {

@@ -193,7 +193,7 @@ static void spawn_figure_tower(building *b)
             figure *f = figure_create(FIGURE_BALLISTA, b->x, b->y, DIR_0_TOP);
             b->figureId4 = f->id;
             f->buildingId = b->id;
-            f->actionState = FigureActionState_180_BallistaCreated;
+            f->actionState = FIGURE_ACTION_180_BALLISTA_CREATED;
         }
         has_figure_of_type(b, FIGURE_TOWER_SENTRY);
         if (b->figureId <= 0) {

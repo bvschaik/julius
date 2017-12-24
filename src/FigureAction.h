@@ -18,8 +18,6 @@ int FigureAction_TradeCaravan_canSell(int figureId, int buildingId, int empireCi
 
 int FigureAction_TradeShip_isBuyingOrSelling(int figureId);
 
-void FigureAction_TowerSentry_reroute();
-
 int FigureAction_HerdEnemy_moveFormationTo(int formationId, int x, int y, int *xTile, int *yTile);
 
 void FigureAction_Common_handleCorpse(figure *f);
@@ -81,9 +79,6 @@ void FigureAction_bolt(figure *f);
 void FigureAction_protestor(figure *f);
 void FigureAction_criminal(figure *f);
 void FigureAction_rioter(figure *f);
-// wall
-void FigureAction_ballista(figure *f);
-void FigureAction_towerSentry(figure *f);
 // enemy
 void FigureAction_enemy43_Spear(figure *f);
 void FigureAction_enemy44_Sword(figure *f);

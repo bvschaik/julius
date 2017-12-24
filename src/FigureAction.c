@@ -6,6 +6,7 @@
 #include "figuretype/animal.h"
 #include "figuretype/entertainer.h"
 #include "figuretype/migrant.h"
+#include "figuretype/wall.h"
 #include "figuretype/water.h"
 
 static void FigureAction_nobody(figure *f)
@@ -55,7 +56,7 @@ static void (*figureActionCallbacks[])(figure *f) = {
 	FigureAction_marketBuyer,
 	FigureAction_patrician, //40
 	FigureAction_indigenousNative,
-	FigureAction_towerSentry,
+	figure_tower_sentry_action,
 	FigureAction_enemy43_Spear,
 	FigureAction_enemy44_Sword,
 	FigureAction_enemy45_Sword,
@@ -75,7 +76,7 @@ static void (*figureActionCallbacks[])(figure *f) = {
 	FigureAction_arrow,
 	FigureAction_javelin, //60
 	FigureAction_bolt,
-	FigureAction_ballista,
+	figure_ballista_action,
 	FigureAction_nobody,
 	FigureAction_missionary,
 	figure_seagulls_action,

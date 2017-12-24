@@ -10,6 +10,7 @@
 #include "building/building.h"
 #include "core/calc.h"
 #include "figuretype/animal.h"
+#include "figuretype/wall.h"
 #include "game/undo.h"
 #include "graphics/image.h"
 #include "map/aqueduct.h"
@@ -1087,6 +1088,6 @@ void Terrain_rotateMap(int ccw)
 	map_bridge_update_after_rotate(ccw);
 	map_routing_update_walls();
 
-	FigureAction_TowerSentry_reroute();
+	figure_tower_sentry_reroute();
 	figure_hippodrome_horse_reroute();
 }

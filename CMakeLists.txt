@@ -83,6 +83,7 @@ set(FIGURETYPE_FILES
     ${PROJECT_SOURCE_DIR}/src/figuretype/animal.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/entertainer.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/migrant.c
+    ${PROJECT_SOURCE_DIR}/src/figuretype/wall.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/water.c
 )
 set(GAME_FILES
@@ -183,7 +184,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/FigureAction_Service.c
 	${PROJECT_SOURCE_DIR}/src/FigureAction_Soldier.c
 	${PROJECT_SOURCE_DIR}/src/FigureAction_Trader.c
-	${PROJECT_SOURCE_DIR}/src/FigureAction_Wall.c
 	${PROJECT_SOURCE_DIR}/src/FigureMovement.c
 	${PROJECT_SOURCE_DIR}/src/Figure_Service.c
 	${PROJECT_SOURCE_DIR}/src/Formation.c
