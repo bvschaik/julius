@@ -286,7 +286,7 @@ static void spawn_figure_actor_colony(building *b)
         if (b->figureSpawnDelay > spawn_delay) {
             b->figureSpawnDelay = 0;
             figure *f = figure_create(FIGURE_ACTOR, x_road, y_road, DIR_0_TOP);
-            f->actionState = FigureActionState_90_EntertainerAtSchoolCreated;
+            f->actionState = FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED;
             f->buildingId = b->id;
             b->figureId = f->id;
         }
@@ -307,7 +307,7 @@ static void spawn_figure_gladiator_school(building *b)
         if (b->figureSpawnDelay > spawn_delay) {
             b->figureSpawnDelay = 0;
             figure *f = figure_create(FIGURE_GLADIATOR, x_road, y_road, DIR_0_TOP);
-            f->actionState = FigureActionState_90_EntertainerAtSchoolCreated;
+            f->actionState = FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED;
             f->buildingId = b->id;
             b->figureId = f->id;
         }
@@ -339,7 +339,7 @@ static void spawn_figure_lion_house(building *b)
         if (b->figureSpawnDelay > spawn_delay) {
             b->figureSpawnDelay = 0;
             figure *f = figure_create(FIGURE_LION_TAMER, x_road, y_road, DIR_0_TOP);
-            f->actionState = FigureActionState_90_EntertainerAtSchoolCreated;
+            f->actionState = FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED;
             f->buildingId = b->id;
             b->figureId = f->id;
         }
@@ -371,7 +371,7 @@ static void spawn_figure_chariot_maker(building *b)
         if (b->figureSpawnDelay > spawn_delay) {
             b->figureSpawnDelay = 0;
             figure *f = figure_create(FIGURE_CHARIOTEER, x_road, y_road, DIR_0_TOP);
-            f->actionState = FigureActionState_90_EntertainerAtSchoolCreated;
+            f->actionState = FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED;
             f->buildingId = b->id;
             b->figureId = f->id;
         }
@@ -414,7 +414,7 @@ static void spawn_figure_amphitheater(building *b)
             } else {
                 f = figure_create(FIGURE_ACTOR, x_road, y_road, DIR_0_TOP);
             }
-            f->actionState = FigureActionState_94_EntertainerRoaming;
+            f->actionState = FIGURE_ACTION_94_ENTERTAINER_ROAMING;
             f->buildingId = b->id;
             b->figureId = f->id;
             FigureMovement_initRoaming(f);
@@ -441,7 +441,7 @@ static void spawn_figure_theater(building *b)
         if (b->figureSpawnDelay > spawn_delay) {
             b->figureSpawnDelay = 0;
             figure *f = figure_create(FIGURE_ACTOR, x_road, y_road, DIR_0_TOP);
-            f->actionState = FigureActionState_94_EntertainerRoaming;
+            f->actionState = FIGURE_ACTION_94_ENTERTAINER_ROAMING;
             f->buildingId = b->id;
             b->figureId = f->id;
             FigureMovement_initRoaming(f);
@@ -489,7 +489,7 @@ static void spawn_figure_hippodrome(building *b)
         if (b->figureSpawnDelay > spawn_delay) {
             b->figureSpawnDelay = 0;
             figure *f = figure_create(FIGURE_CHARIOTEER, x_road, y_road, DIR_0_TOP);
-            f->actionState = FigureActionState_94_EntertainerRoaming;
+            f->actionState = FIGURE_ACTION_94_ENTERTAINER_ROAMING;
             f->buildingId = b->id;
             b->figureId = f->id;
             FigureMovement_initRoaming(f);
@@ -555,7 +555,7 @@ static void spawn_figure_colosseum(building *b)
             } else {
                 f = figure_create(FIGURE_GLADIATOR, x_road, y_road, DIR_0_TOP);
             }
-            f->actionState = FigureActionState_94_EntertainerRoaming;
+            f->actionState = FIGURE_ACTION_94_ENTERTAINER_ROAMING;
             f->buildingId = b->id;
             b->figureId = f->id;
             FigureMovement_initRoaming(f);

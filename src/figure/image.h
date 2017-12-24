@@ -13,4 +13,6 @@ int figure_image_corpse_offset(figure *f);
 
 int figure_image_direction(figure *f);
 
+int figure_image_normalize_direction(int direction);
+
 #endif // FIGURE_IMAGE_H

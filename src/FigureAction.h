@@ -46,7 +46,6 @@ void FigureAction_engineer(figure *f);
 void FigureAction_prefect(figure *f);
 void FigureAction_worker(figure *f);
 // culture/entertainer
-void FigureAction_entertainer(figure *f);
 void FigureAction_priest(figure *f);
 void FigureAction_schoolChild(figure *f);
 void FigureAction_teacher(figure *f);

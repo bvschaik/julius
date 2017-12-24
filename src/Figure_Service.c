@@ -381,8 +381,8 @@ static int provideTaxCollectorCoverage(int x, int y, unsigned char *maxTaxMultip
 
 static building *get_entertainment_building(const figure *f)
 {
-    if (f->actionState == FigureActionState_94_EntertainerRoaming ||
-        f->actionState == FigureActionState_95_EntertainerReturning) {
+    if (f->actionState == FIGURE_ACTION_94_ENTERTAINER_ROAMING ||
+        f->actionState == FIGURE_ACTION_95_ENTERTAINER_RETURNING) {
         return building_get(f->buildingId);
     } else { // going to venue
         return building_get(f->destinationBuildingId);

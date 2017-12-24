@@ -52,3 +52,8 @@ int figure_image_direction(figure *f)
     }
     return dir;
 }
+
+int figure_image_normalize_direction(int direction)
+{
+    return (8 + direction - Data_State.map.orientation) % 8;
+}
