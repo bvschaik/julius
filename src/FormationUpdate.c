@@ -663,7 +663,7 @@ static void moveAnimals(const formation *m, int attackingAnimals)
 			int targetId = FigureAction_CombatWolf_getTarget(f->x, f->y, 6);
 			if (targetId) {
                 figure *target = figure_get(targetId);
-				f->actionState = FigureActionState_199_WolfAttacking;
+				f->actionState = FIGURE_ACTION_199_WOLF_ATTACKING;
 				f->destinationX = target->x;
 				f->destinationY = target->y;
 				f->targetFigureId = targetId;
@@ -671,10 +671,10 @@ static void moveAnimals(const formation *m, int attackingAnimals)
 				f->targetFigureCreatedSequence = target->createdSequence;
 				figure_route_remove(f);
 			} else {
-				f->actionState = FigureActionState_196_HerdAnimalAtRest;
+				f->actionState = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
 			}
 		} else {
-			f->actionState = FigureActionState_196_HerdAnimalAtRest;
+			f->actionState = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
 		}
 	}
 }
@@ -685,7 +685,7 @@ static void update_herd_formation(const formation *m)
         // spawn new wolf
         if (!map_terrain_is(map_grid_offset(m->x, m->y), TERRAIN_IMPASSABLE_WOLF)) {
             figure *wolf = figure_create(m->figure_type, m->x, m->y, DIR_0_TOP);
-            wolf->actionState = FigureActionState_196_HerdAnimalAtRest;
+            wolf->actionState = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
             wolf->formationId = m->id;
             wolf->waitTicks = wolf->id & 0x1f;
         }

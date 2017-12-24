@@ -235,7 +235,7 @@ static void createImmigrantForBuilding(building *b, int numPeople)
 {
 	figure *f = figure_create(FIGURE_IMMIGRANT,
 		Data_CityInfo.entryPointX, Data_CityInfo.entryPointY, DIR_0_TOP);
-	f->actionState = FigureActionState_1_ImmigrantCreated;
+	f->actionState = FIGURE_ACTION_1_IMMIGRANT_CREATED;
 	f->immigrantBuildingId = b->id;
 	b->immigrantFigureId = f->id;
 	f->waitTicks = 10 + (b->houseGenerationDelay & 0x7f);
@@ -252,7 +252,7 @@ static void createEmigrantForBuilding(building *b, int numPeople)
 		building_house_change_to_vacant_lot(b);
 	}
 	figure *f = figure_create(FIGURE_EMIGRANT, b->x, b->y, DIR_0_TOP);
-	f->actionState = FigureActionState_4_EmigrantCreated;
+	f->actionState = FIGURE_ACTION_4_EMIGRANT_CREATED;
 	f->waitTicks = 0;
 	f->migrantNumPeople = numPeople;
 }
@@ -359,7 +359,7 @@ int HousePopulation_calculatePeoplePerType()
 void HousePopulation_createHomeless(int x, int y, int numPeople)
 {
 	figure *f = figure_create(FIGURE_HOMELESS, x, y, DIR_0_TOP);
-	f->actionState = FigureActionState_7_HomelessCreated;
+	f->actionState = FIGURE_ACTION_7_HOMELESS_CREATED;
 	f->waitTicks = 0;
 	f->migrantNumPeople = numPeople;
 	CityInfo_Population_removePeopleHomeless(numPeople);
