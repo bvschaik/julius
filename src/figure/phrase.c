@@ -365,9 +365,9 @@ static int prefect_phrase(figure *f)
     if (++f->phraseSequenceExact >= 4) {
         f->phraseSequenceExact = 0;
     }
-    if (f->actionState == FigureActionState_74_PrefectGoingToFire) {
+    if (f->actionState == FIGURE_ACTION_74_PREFECT_GOING_TO_FIRE) {
         return 10;
-    } else if (f->actionState == FigureActionState_75_PrefectAtFire) {
+    } else if (f->actionState == FIGURE_ACTION_75_PREFECT_AT_FIRE) {
         return 11 + (f->phraseSequenceExact % 2);
     } else if (f->actionState == FigureActionState_150_Attack) {
         return 13 + f->phraseSequenceExact;

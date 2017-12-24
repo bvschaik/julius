@@ -5,16 +5,17 @@
 #include "figure/figure.h"
 #include "figuretype/animal.h"
 #include "figuretype/entertainer.h"
+#include "figuretype/maintenance.h"
 #include "figuretype/migrant.h"
 #include "figuretype/wall.h"
 #include "figuretype/water.h"
 
-static void FigureAction_nobody(figure *f)
+static void figure_nobody_action(figure *f)
 {
 }
 
 static void (*figureActionCallbacks[])(figure *f) = {
-	FigureAction_nobody, //0
+	figure_nobody_action, //0
 	figure_immigrant_action,
 	figure_emigrant_action,
 	figure_homeless_action,
@@ -22,9 +23,9 @@ static void (*figureActionCallbacks[])(figure *f) = {
 	FigureAction_laborSeeker,
 	FigureAction_explosionCloud,
 	FigureAction_taxCollector,
-	FigureAction_engineer,
+	figure_engineer_action,
 	FigureAction_warehouseman,
-	FigureAction_prefect, //10
+	figure_prefect_action, //10
 	FigureAction_soldier,
 	FigureAction_soldier,
 	FigureAction_soldier,
@@ -49,8 +50,8 @@ static void (*figureActionCallbacks[])(figure *f) = {
 	FigureAction_bathhouseWorker,
 	FigureAction_doctor,
 	FigureAction_surgeon,
-	FigureAction_worker,
-	FigureAction_nobody, // mapFlag: editor only
+	figure_worker_action,
+	figure_nobody_action, // mapFlag: editor only
 	figure_flotsam_action,
 	FigureAction_docker,
 	FigureAction_marketBuyer,
@@ -69,15 +70,15 @@ static void (*figureActionCallbacks[])(figure *f) = {
 	FigureAction_enemy52_MountedArcher,
 	FigureAction_enemy53_Axe,
 	FigureAction_enemy54_Gladiator,
-	FigureAction_nobody,
-	FigureAction_nobody,
+	figure_nobody_action,
+	figure_nobody_action,
 	FigureAction_enemyCaesarLegionary,
 	FigureAction_nativeTrader,
 	FigureAction_arrow,
 	FigureAction_javelin, //60
 	FigureAction_bolt,
 	figure_ballista_action,
-	FigureAction_nobody,
+	figure_nobody_action,
 	FigureAction_missionary,
 	figure_seagulls_action,
 	FigureAction_deliveryBoy,
@@ -87,13 +88,13 @@ static void (*figureActionCallbacks[])(figure *f) = {
 	figure_zebra_action, //70
 	FigureAction_spear,
 	figure_hippodrome_horse_action,
-	FigureAction_nobody,
-	FigureAction_nobody,
-	FigureAction_nobody,
-	FigureAction_nobody,
-	FigureAction_nobody,
-	FigureAction_nobody,
-	FigureAction_nobody
+	figure_nobody_action,
+	figure_nobody_action,
+	figure_nobody_action,
+	figure_nobody_action,
+	figure_nobody_action,
+	figure_nobody_action,
+	figure_nobody_action
 }; //80
 
 void FigureAction_handle()

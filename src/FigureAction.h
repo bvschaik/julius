@@ -40,9 +40,6 @@ void FigureAction_warehouseman(figure *f);
 void FigureAction_docker(figure *f);
 // service
 void FigureAction_taxCollector(figure *f);
-void FigureAction_engineer(figure *f);
-void FigureAction_prefect(figure *f);
-void FigureAction_worker(figure *f);
 // culture/entertainer
 void FigureAction_priest(figure *f);
 void FigureAction_schoolChild(figure *f);

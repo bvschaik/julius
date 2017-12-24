@@ -230,7 +230,7 @@ static void spawn_figure_engineers_post(building *b)
         if (b->figureSpawnDelay > spawn_delay) {
             b->figureSpawnDelay = 0;
             figure *f = figure_create(FIGURE_ENGINEER, x_road, y_road, DIR_0_TOP);
-            f->actionState = FigureActionState_60_EngineerCreated;
+            f->actionState = FIGURE_ACTION_60_ENGINEER_CREATED;
             f->buildingId = b->id;
             b->figureId = f->id;
         }
@@ -265,7 +265,7 @@ static void spawn_figure_prefecture(building *b)
         if (b->figureSpawnDelay > spawn_delay) {
             b->figureSpawnDelay = 0;
             figure *f = figure_create(FIGURE_PREFECT, x_road, y_road, DIR_0_TOP);
-            f->actionState = FigureActionState_70_PrefectCreated;
+            f->actionState = FIGURE_ACTION_70_PREFECT_CREATED;
             f->buildingId = b->id;
             b->figureId = f->id;
         }

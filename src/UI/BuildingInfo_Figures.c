@@ -325,8 +325,8 @@ static void drawFigureInfoMarketBuyer(BuildingInfoContext *c, figure *f)
 static void drawFigureInfoNormal(BuildingInfoContext *c, figure *f)
 {
 	int graphicId = BigPeopleGraphic(f->type);
-	if (f->actionState == FigureActionState_74_PrefectGoingToFire ||
-		f->actionState == FigureActionState_75_PrefectAtFire) {
+	if (f->actionState == FIGURE_ACTION_74_PREFECT_GOING_TO_FIRE ||
+		f->actionState == FIGURE_ACTION_75_PREFECT_AT_FIRE) {
 		graphicId = image_group(GROUP_BIG_PEOPLE) + 18;
 	}
 	Graphics_drawImage(graphicId, c->xOffset + 28, c->yOffset + 112);
