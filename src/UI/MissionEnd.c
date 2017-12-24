@@ -12,6 +12,7 @@
 
 #include "city/finance.h"
 #include "game/settings.h"
+#include "game/undo.h"
 #include "graphics/image.h"
 #include "scenario/property.h"
 #include "scenario/scenario.h"
@@ -105,7 +106,7 @@ static void advanceToNextMission()
 	Data_CityInfo.victoryContinueMonths = 0;
 	Data_CityInfo.victoryContinueMonthsChosen = 0;
 
-	Data_State.undoAvailable = 0;
+	game_undo_disable();
 	Data_State.currentOverlay = 0;
 
 	if (scenario_campaign_rank() >= 11 || scenario_is_custom()) {
@@ -230,7 +231,7 @@ static void firedAccept(int param1, int param2)
 	Data_CityInfo.victoryHasWonScenario = 0;
 	Data_CityInfo.victoryContinueMonths = 0;
 	Data_CityInfo.victoryContinueMonthsChosen = 0;
-	Data_State.undoAvailable = 0;
+	game_undo_disable();
 	if (scenario_is_custom()) {
 		UI_Window_goTo(Window_MainMenu);
 	} else {

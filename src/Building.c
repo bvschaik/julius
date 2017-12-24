@@ -15,6 +15,7 @@
 #include "building/storage.h"
 #include "city/message.h"
 #include "city/warning.h"
+#include "game/undo.h"
 #include "graphics/image.h"
 #include "map/building.h"
 #include "map/desirability.h"
@@ -128,7 +129,7 @@ void Building_GameTick_updateState()
 void Building_collapseOnFire(int buildingId, int hasPlague)
 {
 	building *b = building_get(buildingId);
-	Data_State.undoAvailable = 0;
+	game_undo_disable();
 	b->fireRisk = 0;
 	b->damageRisk = 0;
 	if (b->houseSize && b->housePopulation) {
@@ -247,7 +248,7 @@ void Building_collapseLastPlaced()
 	if (buildingId) {
         building *b = building_get(buildingId);
 		city_message_post(1, MESSAGE_ROAD_TO_ROME_BLOCKED, 0, b->gridOffset);
-		Data_State.undoAvailable = 0;
+		game_undo_disable();
 		b->state = BuildingState_Rubble;
 		TerrainGraphics_setBuildingAreaRubble(buildingId, b->x, b->y, b->size);
 		Figure_createDustCloud(b->x, b->y, b->size);
@@ -262,7 +263,7 @@ int Building_collapseFirstOfType(int buildingType)
         building *b = building_get(i);
 		if (BuildingIsInUse(b) && b->type == buildingType) {
 			int gridOffset = b->gridOffset;
-			Data_State.undoAvailable = 0;
+			game_undo_disable();
 			b->state = BuildingState_Rubble;
 			
 			TerrainGraphics_setBuildingAreaRubble(i, b->x, b->y, b->size);
@@ -597,7 +598,7 @@ void Building_GameTick_checkAccessToRome()
 			
 			if (map_routing_distance(Data_CityInfo.exitPointGridOffset)) {
 				city_message_post(1, MESSAGE_ROAD_TO_ROME_OBSTRUCTED, 0, 0);
-				Data_State.undoAvailable = 0;
+				game_undo_disable();
 				return;
 			}
 		}

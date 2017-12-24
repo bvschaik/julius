@@ -10,7 +10,6 @@
 #include "../Graphics.h"
 #include "../SidebarMenu.h"
 #include "../Terrain.h"
-#include "../Undo.h"
 #include "../Widget.h"
 
 #include "../Data/CityInfo.h"
@@ -24,6 +23,7 @@
 #include "core/time.h"
 #include "graphics/image.h"
 #include "game/tutorial.h"
+#include "game/undo.h"
 #include "input/scroll.h"
 #include "scenario/property.h"
 #include "sound/effect.h"
@@ -161,7 +161,7 @@ static void drawNumberOfMessages()
 {
 	if (UI_Window_getId() == Window_City && !Data_State.sidebarCollapsed) {
         int messages = city_message_count();
-		buttonBuildExpanded[12].enabled = Data_State.undoReady && Data_State.undoAvailable;
+		buttonBuildExpanded[12].enabled = game_can_undo();
 		buttonBuildExpanded[13].enabled = messages > 0;
 		buttonBuildExpanded[14].enabled = city_message_problem_area_count();
 		if (messages) {
@@ -224,7 +224,7 @@ static void drawFillerBorders()
 
 static void drawButtons()
 {
-	buttonBuildExpanded[12].enabled = Data_State.undoReady && Data_State.undoAvailable;
+	buttonBuildExpanded[12].enabled = game_can_undo();
 	if (Data_State.sidebarCollapsed) {
 		int xOffset = Data_Screen.width - SIDEBAR_BORDER - 42;
 		Widget_Button_drawImageButtons(xOffset, 24, buttonExpandSidebar, 1);
@@ -337,7 +337,7 @@ static void buttonBuild(int submenu, int param2)
 
 static void buttonUndo(int param1, int param2)
 {
-	Undo_perform();
+	game_undo_perform();
 	UI_Window_requestRefresh();
 }
 

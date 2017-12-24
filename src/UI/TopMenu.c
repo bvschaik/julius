@@ -17,6 +17,7 @@
 #include "city/finance.h"
 #include "game/settings.h"
 #include "game/time.h"
+#include "game/undo.h"
 #include "graphics/image.h"
 #include "scenario/property.h"
 
@@ -319,7 +320,7 @@ static void menuFile_newGame(int param)
 {
 	clearState();
 	Data_State.selectedBuilding.type = 0;
-	Data_State.undoAvailable = 0;
+	game_undo_disable();
 	Data_State.currentOverlay = 0;
 	Data_State.previousOverlay = 0;
 	UI_Window_goTo(Window_MainMenu);

@@ -10,6 +10,7 @@
 
 #include "building/building.h"
 #include "core/calc.h"
+#include "game/undo.h"
 #include "graphics/image.h"
 #include "map/aqueduct.h"
 #include "map/bridge.h"
@@ -1063,7 +1064,7 @@ int Terrain_getWallTileWithinRadius(int x, int y, int radius, int *xTile, int *y
 void Terrain_rotateMap(int ccw)
 {
 	Terrain_updateEntryExitFlags(1);
-	Data_State.undoAvailable = 0;
+	game_undo_disable();
 	determineLeftmostTile();
 
 	TerrainGraphics_updateRegionElevation(0, 0, Data_State.map.width - 2, Data_State.map.height - 2);

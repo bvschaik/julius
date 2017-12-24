@@ -9,6 +9,7 @@
 #include "city/warning.h"
 #include "core/random.h"
 #include "figure/formation.h"
+#include "game/undo.h"
 #include "graphics/image.h"
 #include "map/grid.h"
 #include "map/routing_terrain.h"
@@ -22,7 +23,6 @@
 #include "../SidebarMenu.h"
 #include "../Terrain.h"
 #include "../TerrainGraphics.h"
-#include "../Undo.h"
 
 static void add_fort(int type, building *b)
 {
@@ -43,7 +43,7 @@ static void add_fort(int type, building *b)
     }
     // create parade ground
     building *ground = building_create(BUILDING_FORT_GROUND, b->x + 3, b->y - 1);
-    Undo_addBuildingToList(ground->id);
+    game_undo_add_building(ground);
     ground->formationId = b->formationId;
     ground->prevPartBuildingId = b->id;
     b->nextPartBuildingId = ground->id;
@@ -76,7 +76,7 @@ static void add_hippodrome(building *b)
     Terrain_addBuildingToGrids(b->id, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
 
     building *part2 = building_create(BUILDING_HIPPODROME, b->x + 5, b->y);
-    Undo_addBuildingToList(part2->id);
+    game_undo_add_building(part2);
     if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_4_BOTTOM) {
         part2->subtype.orientation = 1;
     } else {
@@ -94,7 +94,7 @@ static void add_hippodrome(building *b)
     Terrain_addBuildingToGrids(part2->id, b->x + 5, b->y, b->size, image_id, TERRAIN_BUILDING);
 
     building *part3 = building_create(BUILDING_HIPPODROME, b->x + 10, b->y);
-    Undo_addBuildingToList(part3->id);
+    game_undo_add_building(part3);
     if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_4_BOTTOM) {
         part3->subtype.orientation = 2;
     } else {
@@ -119,7 +119,7 @@ static void add_hippodrome(building *b)
 static building *add_warehouse_space(int x, int y, building *prev)
 {
     building *b = building_create(BUILDING_WAREHOUSE_SPACE, x, y);
-    Undo_addBuildingToList(b->id);
+    game_undo_add_building(b);
     b->prevPartBuildingId = prev->id;
     prev->nextPartBuildingId = b->id;
     Terrain_addBuildingToGrids(b->id, x, y, 1,
@@ -634,7 +634,7 @@ int building_construction_place_building(building_type type, int x, int y)
     } else {
         b = building_create(type, x, y);
     }
-    Undo_addBuildingToList(b->id);
+    game_undo_add_building(b);
     if (b->id <= 0) {
         return 0;
     }

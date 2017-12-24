@@ -6,7 +6,6 @@
 #include "../Building.h"
 #include "../CityView.h"
 #include "../Formation.h"
-#include "../Undo.h"
 #include "../Widget.h"
 
 #include "building/building.h"
@@ -20,6 +19,7 @@
 #include "figure/formation.h"
 #include "game/resource.h"
 #include "game/settings.h"
+#include "game/undo.h"
 #include "input/scroll.h"
 #include "map/building.h"
 #include "map/desirability.h"
@@ -675,7 +675,7 @@ static void buildStart()
 		Data_State.selectedBuilding.xEnd = Data_State.selectedBuilding.xStart = Data_State.map.current.x;
 		Data_State.selectedBuilding.yEnd = Data_State.selectedBuilding.yStart = Data_State.map.current.y;
 		Data_State.selectedBuilding.gridOffsetStart = Data_State.map.current.gridOffset;
-		if (Undo_recordBeforeBuild()) {
+		if (game_undo_start_build(Data_State.selectedBuilding.type)) {
 			Data_State.selectedBuilding.placementInProgress = 1;
 			switch (Data_State.selectedBuilding.type) {
 				case BUILDING_ROAD:

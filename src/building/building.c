@@ -3,12 +3,12 @@
 #include "building/properties.h"
 #include "city/warning.h"
 #include "game/resource.h"
+#include "game/undo.h"
 #include "map/grid.h"
 #include "map/random.h"
 
 #include "Data/CityInfo.h"
 #include "Terrain.h"
-#include "Undo.h"
 
 #include <string.h>
 
@@ -39,7 +39,7 @@ building *building_create(building_type type, int x, int y)
 {
     building *b = 0;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
-        if (Data_Buildings[i].state == BuildingState_Unused && !Undo_isBuildingInList(i)) {
+        if (Data_Buildings[i].state == BuildingState_Unused && !game_undo_contains_building(i)) {
             b = &Data_Buildings[i];
             break;
         }

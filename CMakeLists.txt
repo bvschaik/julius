@@ -83,6 +83,7 @@ set(GAME_FILES
     ${PROJECT_SOURCE_DIR}/src/game/settings.c
     ${PROJECT_SOURCE_DIR}/src/game/time.c
     ${PROJECT_SOURCE_DIR}/src/game/tutorial.c
+    ${PROJECT_SOURCE_DIR}/src/game/undo.c
 )
 set(INPUT_FILES
     ${PROJECT_SOURCE_DIR}/src/input/keyboard.c
@@ -201,7 +202,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/TerrainGraphics.c
 	${PROJECT_SOURCE_DIR}/src/TerrainGraphics_Context.c
 	${PROJECT_SOURCE_DIR}/src/Trader.c
-	${PROJECT_SOURCE_DIR}/src/Undo.c
 	${PROJECT_SOURCE_DIR}/src/Video.c
 	${PROJECT_SOURCE_DIR}/src/Widget_Button.c
 	${PROJECT_SOURCE_DIR}/src/Widget_Menu.c

@@ -35,6 +35,7 @@
 #include "figure/trader.h"
 #include "game/time.h"
 #include "game/tutorial.h"
+#include "game/undo.h"
 #include "graphics/image.h"
 #include "map/aqueduct.h"
 #include "map/bookmark.h"
@@ -762,7 +763,7 @@ static void setupFromSavedGame()
 	sound_city_init();
 	sound_music_reset();
 
-	Data_State.undoAvailable = 0;
+	game_undo_disable();
 	Data_State.currentOverlay = 0;
 	Data_State.previousOverlay = 0;
 	Data_State.missionBriefingShown = 1;

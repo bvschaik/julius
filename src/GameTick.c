@@ -12,7 +12,6 @@
 #include "SidebarMenu.h"
 #include "TerrainGraphics.h"
 #include "Trader.h"
-#include "Undo.h"
 #include "UI/AllWindows.h"
 #include "UI/Sidebar.h"
 #include "UI/Window.h"
@@ -34,6 +33,7 @@
 #include "game/settings.h"
 #include "game/time.h"
 #include "game/tutorial.h"
+#include "game/undo.h"
 #include "map/desirability.h"
 #include "map/natives.h"
 #include "map/road_network.h"
@@ -63,7 +63,7 @@ void GameTick_doTick()
         printf("TICK %d.%d.%d.%d\n", game_time_year(), game_time_month(), game_time_day(), game_time_tick());
     }
 	random_generate_next();
-	Undo_updateAvailable();
+	game_undo_reduce_time_available();
 	GameTick_advance();
 	FigureAction_handle();
 	scenario_earthquake_process();
@@ -174,7 +174,7 @@ static void advanceMonth()
 static void advanceYear()
 {
 	scenario_empire_process_expansion();
-	Data_State.undoAvailable = 0;
+	game_undo_disable();
 	game_time_advance_year();
 	CityInfo_Population_requestYearlyUpdate();
 	CityInfo_Finance_handleYearChange();

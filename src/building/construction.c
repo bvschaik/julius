@@ -3,7 +3,6 @@
 #include "Figure.h"
 #include "Terrain.h"
 #include "TerrainGraphics.h"
-#include "Undo.h"
 #include "UI/Window.h"
 
 #include "Data/CityInfo.h"
@@ -21,6 +20,7 @@
 #include "city/warning.h"
 #include "core/calc.h"
 #include "figure/formation.h"
+#include "game/undo.h"
 #include "graphics/image.h"
 #include "map/aqueduct.h"
 #include "map/bridge.h"
@@ -55,7 +55,7 @@ static int place_houses(int measure_only, int x_start, int y_start, int x_end, i
 
     int needs_road_warning = 0;
     int items_placed = 0;
-    Undo_restoreBuildings();
+    game_undo_restore_building_state();
     for (int y = y_min; y <= y_max; y++) {
         for (int x = x_min; x <= x_max; x++) {
             int grid_offset = map_grid_offset(x,y);
@@ -67,7 +67,7 @@ static int place_houses(int measure_only, int x_start, int y_start, int x_end, i
                 items_placed++;
             } else {
                 building *b = building_create(BUILDING_HOUSE_VACANT_LOT, x, y);
-                Undo_addBuildingToList(b->id);
+                game_undo_add_building(b);
                 if (b->id > 0) {
                     items_placed++;
                     Terrain_addBuildingToGrids(b->id, x, y, 1,
@@ -154,9 +154,7 @@ static int place_routed_building(int x_start, int y_start, int x_end, int y_end,
 
 static int place_road(int measure_only, int x_start, int y_start, int x_end, int y_end)
 {
-    map_terrain_restore();
-    map_aqueduct_restore();
-    Undo_restoreTerrainGraphics();
+    game_undo_restore_map(0);
 
     int start_offset = map_grid_offset(x_start, y_start);
     int end_offset = map_grid_offset(x_end, y_end);
@@ -184,9 +182,7 @@ static int place_road(int measure_only, int x_start, int y_start, int x_end, int
 
 static int place_wall(int measure_only, int x_start, int y_start, int x_end, int y_end)
 {
-    map_terrain_restore();
-    map_aqueduct_restore();
-    Undo_restoreTerrainGraphics();
+    game_undo_restore_map(0);
 
     int start_offset = map_grid_offset(x_start, y_start);
     int end_offset = map_grid_offset(x_end, y_end);
@@ -215,10 +211,7 @@ static int place_plaza(int measure_only, int x_start, int y_start, int x_end, in
 {
     int x_min, y_min, x_max, y_max;
     map_grid_start_end_to_area(x_start, y_start, x_end, y_end, &x_min, &y_min, &x_max, &y_max);
-    map_terrain_restore();
-    map_aqueduct_restore();
-    map_property_restore();
-    Undo_restoreTerrainGraphics();
+    game_undo_restore_map(1);
     
     int items_placed = 0;
     for (int y = y_min; y <= y_max; y++) {
@@ -243,13 +236,10 @@ static int place_plaza(int measure_only, int x_start, int y_start, int x_end, in
 
 static int place_garden(int x_start, int y_start, int x_end, int y_end)
 {
+    game_undo_restore_map(1);
+
     int x_min, y_min, x_max, y_max;
     map_grid_start_end_to_area(x_start, y_start, x_end, y_end, &x_min, &y_min, &x_max, &y_max);
-    
-    map_terrain_restore();
-    map_aqueduct_restore();
-    map_property_restore();
-    Undo_restoreTerrainGraphics();
 
     int items_placed = 0;
     for (int y = y_min; y <= y_max; y++) {
@@ -267,9 +257,8 @@ static int place_garden(int x_start, int y_start, int x_end, int y_end)
 
 static int place_aqueduct(int measure_only, int x_start, int y_start, int x_end, int y_end, int *cost)
 {
-    map_terrain_restore();
-    map_aqueduct_restore();
-    Undo_restoreTerrainGraphics();
+    game_undo_restore_map(0);
+
     int item_cost = model_get_building(BUILDING_AQUEDUCT)->cost;
     *cost = 0;
     int blocked = 0;
@@ -307,9 +296,7 @@ static int place_reservoir_and_aqueducts(int measure_only, int x_start, int y_st
     info->place_reservoir_at_start = PlaceReservoir_No;
     info->place_reservoir_at_end = PlaceReservoir_No;
 
-    map_terrain_restore();
-    map_aqueduct_restore();
-    Undo_restoreTerrainGraphics();
+    game_undo_restore_map(0);
 
     int distance = calc_maximum_distance(x_start, y_start, x_end, y_end);
     if (measure_only && !Data_State.selectedBuilding.placementInProgress) {
@@ -511,14 +498,9 @@ void building_construction_place(int orientation, int x_start, int y_start, int 
     }
     if (type != BUILDING_CLEAR_LAND && Figure_hasNearbyEnemy(x_start, y_start, x_end, y_end)) {
         if (type == BUILDING_WALL || type == BUILDING_ROAD || type == BUILDING_AQUEDUCT) {
-            map_terrain_restore();
-            map_aqueduct_restore();
-            Undo_restoreTerrainGraphics();
+            game_undo_restore_map(0);
         } else if (type == BUILDING_PLAZA || type == BUILDING_GARDENS) {
-            map_terrain_restore();
-            map_aqueduct_restore();
-            map_property_restore();
-            Undo_restoreTerrainGraphics();
+            game_undo_restore_map(1);
         } else if (type == BUILDING_LOW_BRIDGE || type == BUILDING_SHIP_BRIDGE) {
             map_bridge_reset_building_length();
         } else {
@@ -577,13 +559,13 @@ void building_construction_place(int orientation, int x_start, int y_start, int 
         }
         if (info.place_reservoir_at_start == PlaceReservoir_Yes) {
             building *reservoir = building_create(BUILDING_RESERVOIR, x_start - 1, y_start - 1);
-            Undo_addBuildingToList(reservoir->id);
+            game_undo_add_building(reservoir);
             Terrain_addBuildingToGrids(reservoir->id, x_start-1, y_start-1, 3, image_group(GROUP_BUILDING_RESERVOIR), TERRAIN_BUILDING);
             map_aqueduct_set(map_grid_offset(x_start-1, y_start-1), 0);
         }
         if (info.place_reservoir_at_end == PlaceReservoir_Yes) {
             building *reservoir = building_create(BUILDING_RESERVOIR, x_end - 1, y_end - 1);
-            Undo_addBuildingToList(reservoir->id);
+            game_undo_add_building(reservoir);
             Terrain_addBuildingToGrids(reservoir->id, x_end-1, y_end-1, 3, image_group(GROUP_BUILDING_RESERVOIR), TERRAIN_BUILDING);
             map_aqueduct_set(map_grid_offset(x_end-1, y_end-1), 0);
             if (!map_terrain_exists_tile_in_area_with_type(x_start - 2, y_start - 2, 5, TERRAIN_WATER) && info.place_reservoir_at_start == PlaceReservoir_No) {
@@ -604,6 +586,6 @@ void building_construction_place(int orientation, int x_start, int y_start, int 
     formation_move_herds_away(x_end, y_end);
     city_finance_process_construction(placement_cost);
     if (type != BUILDING_TRIUMPHAL_ARCH) {
-        Undo_recordBuild(placement_cost);
+        game_undo_finish_build(placement_cost);
     }
 }

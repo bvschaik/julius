@@ -6,6 +6,7 @@
 #include "core/calc.h"
 #include "core/random.h"
 #include "game/tutorial.h"
+#include "game/undo.h"
 #include "map/building.h"
 #include "map/grid.h"
 #include "map/random.h"
@@ -41,7 +42,7 @@ void building_maintenance_update_burning_ruins()
         }
         b->fireDuration++;
         if (b->fireDuration > 32) {
-            Data_State.undoAvailable = 0;
+            game_undo_disable();
             b->state = BuildingState_Rubble;
             TerrainGraphics_setBuildingAreaRubble(i, b->x, b->y, b->size);
             recalculate_terrain = 1;
@@ -136,7 +137,7 @@ static void collapse_building(int building_id, building *b)
         city_message_post_with_popup_delay(MESSAGE_CAT_COLLAPSE, MESSAGE_COLLAPSED_BUILDING, b->type, b->gridOffset);
     }
     
-    Data_State.undoAvailable = 0;
+    game_undo_disable();
     b->state = BuildingState_Rubble;
     TerrainGraphics_setBuildingAreaRubble(building_id, b->x, b->y, b->size);
     Figure_createDustCloud(b->x, b->y, b->size);

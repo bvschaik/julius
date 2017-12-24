@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "city/warning.h"
+#include "game/undo.h"
 #include "map/aqueduct.h"
 #include "map/bridge.h"
 #include "map/building.h"
@@ -12,7 +13,6 @@
 #include "Data/State.h"
 #include "../HousePopulation.h"
 #include "../TerrainGraphics.h"
-#include "../Undo.h"
 #include "UI/PopupDialog.h"
 #include "UI/Window.h"
 
@@ -28,10 +28,8 @@ static struct {
 static int clear_land_confirmed(int measureOnly, int x_start, int y_start, int x_end, int y_end)
 {
     int items_placed = 0;
-    Undo_restoreBuildings();
-    map_terrain_restore();
-    map_aqueduct_restore();
-    Undo_restoreTerrainGraphics();
+    game_undo_restore_building_state();
+    game_undo_restore_map(0);
 
     int x_min, x_max, y_min, y_max;
     map_grid_start_end_to_area(x_start, y_start, x_end, y_end, &x_min, &y_min, &x_max, &y_max);
@@ -60,7 +58,7 @@ static int clear_land_confirmed(int measureOnly, int x_start, int y_start, int x
                         continue;
                     }
                     if (!measureOnly && confirm.fort_confirmed == 1) {
-                        Data_State.undoAvailable = 0;
+                        game_undo_disable();
                     }
                 }
                 if (b->houseSize && b->housePopulation && !measureOnly) {
@@ -69,7 +67,7 @@ static int clear_land_confirmed(int measureOnly, int x_start, int y_start, int x
                 }
                 if (b->state != BuildingState_DeletedByPlayer) {
                     items_placed++;
-                    Undo_addBuildingToList(buildingId);
+                    game_undo_add_building(b);
                 }
                 b->state = BuildingState_DeletedByPlayer;
                 b->isDeleted = 1;
@@ -78,9 +76,8 @@ static int clear_land_confirmed(int measureOnly, int x_start, int y_start, int x
                     if (space->prevPartBuildingId <= 0) {
                         break;
                     }
-                    int spaceId = space->prevPartBuildingId;
-                    space = building_get(spaceId);
-                    Undo_addBuildingToList(spaceId);
+                    space = building_get(space->prevPartBuildingId);
+                    game_undo_add_building(space);
                     space->state = BuildingState_DeletedByPlayer;
                 }
                 space = b;
@@ -89,7 +86,7 @@ static int clear_land_confirmed(int measureOnly, int x_start, int y_start, int x
                     if (space->id <= 0) {
                         break;
                     }
-                    Undo_addBuildingToList(space->id);
+                    game_undo_add_building(space);
                     space->state = BuildingState_DeletedByPlayer;
                 }
             } else if (map_terrain_is(gridOffset, TERRAIN_AQUEDUCT)) {
