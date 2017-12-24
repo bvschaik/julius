@@ -37,4 +37,6 @@ void figure_labor_seeker_action(figure *f);
 
 void figure_market_trader_action(figure *f);
 
+void figure_tax_collector_action(figure *f);
+
 #endif // FIGURETYPE_SERVICE_H

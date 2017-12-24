@@ -23,7 +23,7 @@ static void (*figureActionCallbacks[])(figure *f) = {
 	FigureAction_cartpusher,
 	figure_labor_seeker_action,
 	FigureAction_explosionCloud,
-	FigureAction_taxCollector,
+	figure_tax_collector_action,
 	figure_engineer_action,
 	FigureAction_warehouseman,
 	figure_prefect_action, //10

@@ -924,7 +924,7 @@ static void spawn_figure_senate_forum(building *b)
         if (b->figureSpawnDelay > spawn_delay) {
             b->figureSpawnDelay = 0;
             figure *f = figure_create(FIGURE_TAX_COLLECTOR, x_road, y_road, DIR_0_TOP);
-            f->actionState = FigureActionState_40_TaxCollectorCreated;
+            f->actionState = FIGURE_ACTION_40_TAX_COLLECTOR_CREATED;
             f->buildingId = b->id;
             b->figureId = f->id;
         }

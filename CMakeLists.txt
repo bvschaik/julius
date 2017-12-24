@@ -182,7 +182,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/FigureAction_Missile.c
 	${PROJECT_SOURCE_DIR}/src/FigureAction_Native.c
 	${PROJECT_SOURCE_DIR}/src/FigureAction_Rioter.c
-	${PROJECT_SOURCE_DIR}/src/FigureAction_Service.c
 	${PROJECT_SOURCE_DIR}/src/FigureAction_Soldier.c
 	${PROJECT_SOURCE_DIR}/src/FigureAction_Trader.c
 	${PROJECT_SOURCE_DIR}/src/FigureMovement.c

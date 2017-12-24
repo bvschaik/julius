@@ -38,8 +38,6 @@ void FigureAction_cartpusher(figure *f);
 void FigureAction_warehouseman(figure *f);
 // docker
 void FigureAction_docker(figure *f);
-// service
-void FigureAction_taxCollector(figure *f);
 // market
 void FigureAction_marketBuyer(figure *f);
 void FigureAction_deliveryBoy(figure *f);
