@@ -73,32 +73,32 @@ void UI_CityBuildings_drawForeground(int x, int y)
 
 void UI_CityBuildings_drawBuildingCost()
 {
-	if (!Data_State.map.current.gridOffset) {
+	if (!building_construction_in_progress()) {
 		return;
 	}
 	if (scroll_in_progress()) {
 		return;
 	}
-	if (!Data_State.selectedBuilding.cost) {
+	int cost = building_construction_cost();
+	if (!cost) {
 		return;
 	}
 	Graphics_setClipRectangle(
 		Data_CityView.xOffsetInPixels, Data_CityView.yOffsetInPixels,
 		Data_CityView.widthInPixels, Data_CityView.heightInPixels);
 	color_t color;
-	if (Data_State.selectedBuilding.cost <= city_finance_treasury()) {
+	if (cost <= city_finance_treasury()) {
 		color = COLOR_ORANGE;
 	} else {
 		color = COLOR_RED;
 	}
-	Widget_Text_drawNumberColored(Data_State.selectedBuilding.cost, '@', " ",
+	Widget_Text_drawNumberColored(cost, '@', " ",
 		Data_CityView.selectedTile.xOffsetInPixels + 58 + 1,
 		Data_CityView.selectedTile.yOffsetInPixels + 1, FONT_NORMAL_PLAIN, COLOR_BLACK);
-	Widget_Text_drawNumberColored(Data_State.selectedBuilding.cost, '@', " ",
+	Widget_Text_drawNumberColored(cost, '@', " ",
 		Data_CityView.selectedTile.xOffsetInPixels + 58,
 		Data_CityView.selectedTile.yOffsetInPixels, FONT_NORMAL_PLAIN, color);
 	Graphics_resetClipRectangle();
-	Data_State.selectedBuilding.cost = 0;
 }
 
 void UI_CityBuildings_drawForegroundForFigure(int x, int y, int figureId, struct UI_CityPixelCoordinate *coord)
@@ -634,12 +634,10 @@ static int handleRightClickAllowBuildingInfo()
 	if (UI_Window_getId() != Window_City) {
 		allow = 0;
 	}
-	if (Data_State.selectedBuilding.type) {
+	if (building_construction_type()) {
 		allow = 0;
 	}
-	Data_State.selectedBuilding.type = 0;
-	Data_State.selectedBuilding.placementInProgress = 0;
-	building_construction_clear();
+	building_construction_reset(BUILDING_NONE);
 	UI_Window_goTo(Window_City);
 
 	if (!Data_State.map.current.gridOffset) {
@@ -676,27 +674,24 @@ static void buildStart()
 
 static void buildMove()
 {
-	if (!Data_State.selectedBuilding.placementInProgress ||
+	if (!building_construction_in_progress() ||
 		!Data_State.map.current.gridOffset) {
 		return;
 	}
 	Data_State.selectedBuilding.gridOffsetEnd = Data_State.map.current.gridOffset;
-	building_construction_update(Data_State.map.current.x, Data_State.map.current.y,
-		Data_State.selectedBuilding.type);
+	building_construction_update(Data_State.map.current.x, Data_State.map.current.y);
 }
 
 static void buildEnd()
 {
-	if (Data_State.selectedBuilding.placementInProgress) {
-		Data_State.selectedBuilding.placementInProgress = 0;
+	if (building_construction_in_progress()) {
 		if (!Data_State.map.current.gridOffset) {
 			Data_State.map.current.gridOffset = Data_State.selectedBuilding.gridOffsetEnd;
 		}
-		if (Data_State.selectedBuilding.type > 0) {
+		if (building_construction_type() != BUILDING_NONE) {
 			sound_effect_play(SOUND_EFFECT_BUILD);
 		}
-		building_construction_place(Data_State.map.orientation,
-			Data_State.selectedBuilding.type);
+		building_construction_place(Data_State.map.orientation);
 	}
 }
 

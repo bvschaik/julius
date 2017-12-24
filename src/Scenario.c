@@ -19,6 +19,7 @@
 #include "Data/Constants.h"
 #include "Data/State.h"
 
+#include "building/construction.h"
 #include "building/storage.h"
 #include "city/message.h"
 #include "core/file.h"
@@ -136,7 +137,7 @@ static void initCustomScenario(const char *scenarioName)
 {
 	Data_State.winState = WinState_None;
 	Data_State.forceWinCheat = 0;
-	Data_State.selectedBuilding.type = 0;
+	building_construction_clear_type();
 	CityInfo_init();
 	Data_CityInfo_Extra.ciid = 1;
 	city_message_init_scenario();

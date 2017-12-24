@@ -1,6 +1,7 @@
 #include "construction_building.h"
 
 #include "building/building.h"
+#include "building/construction.h"
 #include "building/construction_warning.h"
 #include "building/count.h"
 #include "building/dock.h"
@@ -440,7 +441,7 @@ static void add_to_map(int type, building *b, int size,
             TerrainGraphics_updateRegionPlazas(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
             Data_CityInfo.triumphalArchesPlaced++;
             SidebarMenu_enableBuildingMenuItems();
-            Data_State.selectedBuilding.type = 0;
+            building_construction_clear_type();
             break;
         case BUILDING_SENATE_UPGRADED:
             Data_CityInfo.buildingSenatePlaced = 1;

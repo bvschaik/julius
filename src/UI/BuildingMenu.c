@@ -84,7 +84,7 @@ void UI_BuildingMenu_drawSidebarImage(int xOffset, int forceDraw)
 	if (Data_State.sidebarCollapsed && !forceDraw) {
 		return;
 	}
-	if (!Data_State.selectedBuilding.type) {
+	if (building_construction_type() == BUILDING_NONE) {
 		Graphics_drawImage(image_group(GROUP_PANEL_WINDOWS) + 12, xOffset, 239);
 		return;
 	}
@@ -230,11 +230,10 @@ static void buttonMenuItem(int item)
 	Data_State.selectedBuilding.gridOffsetStart = 0;
 
 	Data_State.map.current.gridOffset = 0;
-	
-	Data_State.selectedBuilding.placementInProgress = 0;
-	building_construction_clear();
-	
-	int type = Data_State.selectedBuilding.type = SidebarMenu_getBuildingType(menu.selectedSubmenu, item);
+
+	building_type type = SidebarMenu_getBuildingType(menu.selectedSubmenu, item);
+	building_construction_reset(type);
+
 	if (type == BUILDING_MENU_FARMS || type == BUILDING_MENU_RAW_MATERIALS ||
 		type == BUILDING_MENU_WORKSHOPS || type == BUILDING_FORT ||
 		type == BUILDING_MENU_SMALL_TEMPLES || type == BUILDING_MENU_LARGE_TEMPLES) {
@@ -257,10 +256,12 @@ static void buttonMenuItem(int item)
 			case BUILDING_FORT:
 				menu.selectedSubmenu = 24;
 				break;
+            default:
+                break;
 		}
 		menu.numItems = SidebarMenu_countBuildingMenuItems(menu.selectedSubmenu);
 		menu.yOffset = yMenuOffsets[menu.numItems];
-		Data_State.selectedBuilding.type = 0;
+		building_construction_clear_type();
 	} else {
 		switch (type) {
 			case BUILDING_WHEAT_FARM:
@@ -288,6 +289,8 @@ static void buttonMenuItem(int item)
 			case BUILDING_TOWER:
 				Data_State.selectedBuilding.wallRequired = 1;
 				break;
+            default:
+                break;
 		}
 		UI_Window_goTo(Window_City);
 	}

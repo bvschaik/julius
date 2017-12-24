@@ -13,6 +13,7 @@
 #include "../Data/Screen.h"
 #include "../Data/State.h"
 
+#include "building/construction.h"
 #include "core/string.h"
 #include "city/finance.h"
 #include "game/settings.h"
@@ -319,7 +320,7 @@ void UI_TopMenu_handleMouse(const mouse *m)
 static void menuFile_newGame(int param)
 {
 	clearState();
-	Data_State.selectedBuilding.type = 0;
+	building_construction_clear_type();
 	game_undo_disable();
 	Data_State.currentOverlay = 0;
 	Data_State.previousOverlay = 0;
@@ -329,7 +330,7 @@ static void menuFile_newGame(int param)
 static void menuFile_replayMap(int param)
 {
 	clearState();
-	Data_State.selectedBuilding.type = 0;
+	building_construction_clear_type();
 	if (scenario_is_custom()) {
 		Scenario_initialize(string_to_ascii(scenario_name()));
 		UI_Window_goTo(Window_City);
@@ -342,7 +343,7 @@ static void menuFile_replayMap(int param)
 static void menuFile_loadGame(int param)
 {
 	clearState();
-	Data_State.selectedBuilding.type = 0;
+	building_construction_clear_type();
 	UI_Window_goTo(Window_City);
 	UI_FileDialog_show(FileDialogType_Load);
 }

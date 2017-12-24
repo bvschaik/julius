@@ -3,12 +3,20 @@
 
 #include "building/type.h"
 
-void building_construction_clear();
+void building_construction_reset(building_type type);
+
+void building_construction_clear_type();
+
+building_type building_construction_type();
+
+int building_construction_cost();
+
+int building_construction_in_progress();
 
 void building_construction_start(int x, int y);
 
-void building_construction_update(int x, int y, building_type type);
+void building_construction_update(int x, int y);
 
-void building_construction_place(int orientation, building_type type);
+void building_construction_place(int orientation);
 
 #endif // BUILDING_CONSTRUCTION_H

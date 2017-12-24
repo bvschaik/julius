@@ -47,10 +47,13 @@ enum {
 };
 
 static struct {
+    building_type type;
+    int in_progress;
     int x_start;
     int y_start;
     int x_end;
     int y_end;
+    int cost;
 } data;
 
 static int last_items_cleared;
@@ -306,7 +309,7 @@ static int place_reservoir_and_aqueducts(int measure_only, int x_start, int y_st
     game_undo_restore_map(0);
 
     int distance = calc_maximum_distance(x_start, y_start, x_end, y_end);
-    if (measure_only && !Data_State.selectedBuilding.placementInProgress) {
+    if (measure_only && !data.in_progress) {
         distance = 0;
     }
     if (distance > 0) {
@@ -390,12 +393,35 @@ static int place_reservoir_and_aqueducts(int measure_only, int x_start, int y_st
     return 1;
 }
 
-void building_construction_clear()
+void building_construction_reset(building_type type)
 {
+    data.type = type;
+    data.in_progress = 0;
     data.x_start = 0;
     data.y_start = 0;
     data.x_end = 0;
     data.y_end = 0;
+}
+
+void building_construction_clear_type()
+{
+    data.cost = 0;
+    data.type = BUILDING_NONE;
+}
+
+building_type building_construction_type()
+{
+    return data.type;
+}
+
+int building_construction_cost()
+{
+    return data.cost;
+}
+
+int building_construction_in_progress()
+{
+    return data.in_progress;
 }
 
 void building_construction_start(int x, int y)
@@ -403,9 +429,9 @@ void building_construction_start(int x, int y)
     data.x_start = data.x_end = x;
     data.y_start = data.y_end = y;
 
-    if (game_undo_start_build(Data_State.selectedBuilding.type)) {
-        Data_State.selectedBuilding.placementInProgress = 1;
-        switch (Data_State.selectedBuilding.type) {
+    if (game_undo_start_build(data.type)) {
+        data.in_progress = 1;
+        switch (data.type) {
             case BUILDING_ROAD:
                 map_routing_calculate_distances_for_building(ROUTED_BUILDING_ROAD,
                     data.x_start, data.y_start);
@@ -419,16 +445,19 @@ void building_construction_start(int x, int y)
                 map_routing_calculate_distances_for_building(ROUTED_BUILDING_WALL,
                     data.x_start, data.y_start);
                 break;
+            default:
+                break;
         }
     }
 }
 
-void building_construction_update(int x, int y, building_type type)
+void building_construction_update(int x, int y)
 {
+    building_type type = data.type;
     data.x_end = x;
     data.y_end = y;
     if (!type || city_finance_out_of_money()) {
-        Data_State.selectedBuilding.cost = 0;
+        data.cost = 0;
         return;
     }
     map_property_clear_constructing_and_deleted();
@@ -514,15 +543,17 @@ void building_construction_update(int x, int y, building_type type)
             Terrain_updateToPlaceBuildingToOverlay(size, x, y, TERRAIN_ALL, 0);
         }
     }
-    Data_State.selectedBuilding.cost = current_cost;
+    data.cost = current_cost;
 }
 
-void building_construction_place(int orientation, building_type type)
+void building_construction_place(int orientation)
 {
+    data.in_progress = 0;
     int x_start = data.x_start;
     int y_start = data.y_start;
     int x_end = data.x_end;
     int y_end = data.y_end;
+    building_type type = data.type;
     building_construction_warning_reset();
     if (!type) {
         return;

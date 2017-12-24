@@ -10,7 +10,6 @@
 #include "TerrainGraphics.h"
 
 #include "Data/CityInfo.h"
-#include "Data/State.h"
 
 #include "building/building.h"
 #include "building/list.h"

@@ -23,10 +23,10 @@ static void drawBuildingGhostDraggableReservoir();
 static void drawBuildingGhostAqueduct();
 static void drawBuildingGhostFountain();
 static void drawBuildingGhostBathhouse();
-static void drawBuildingGhostBridge();
+static void drawBuildingGhostBridge(building_type type);
 static void drawBuildingGhostFort();
 static void drawBuildingGhostHippodrome();
-static void drawBuildingGhostShipyardWharf();
+static void drawBuildingGhostShipyardWharf(building_type type);
 static void drawBuildingGhostDock();
 static void drawBuildingGhostRoad();
 static void drawBuildingGhostDefault();
@@ -83,10 +83,11 @@ void UI_CityBuildings_drawSelectedBuildingGhost()
 	if (!Data_State.map.current.gridOffset || Data_CityView.isScrolling) {
 		return;
 	}
-	if (Data_State.selectedBuilding.drawAsConstructing || Data_State.selectedBuilding.type <= 0) {
+	building_type type = building_construction_type();
+	if (Data_State.selectedBuilding.drawAsConstructing || type == BUILDING_NONE) {
 		return;
 	}
-	switch (Data_State.selectedBuilding.type) {
+	switch (type) {
 		case BUILDING_DRAGGABLE_RESERVOIR:
 			drawBuildingGhostDraggableReservoir();
 			break;
@@ -101,7 +102,7 @@ void UI_CityBuildings_drawSelectedBuildingGhost()
 			break;
 		case BUILDING_LOW_BRIDGE:
 		case BUILDING_SHIP_BRIDGE:
-			drawBuildingGhostBridge();
+			drawBuildingGhostBridge(type);
 			break;
 		case BUILDING_FORT_LEGIONARIES:
 		case BUILDING_FORT_JAVELIN:
@@ -113,7 +114,7 @@ void UI_CityBuildings_drawSelectedBuildingGhost()
 			break;
 		case BUILDING_SHIPYARD:
 		case BUILDING_WHARF:
-			drawBuildingGhostShipyardWharf();
+			drawBuildingGhostShipyardWharf(type);
 			break;
 		case BUILDING_DOCK:
 			drawBuildingGhostDock();
@@ -137,7 +138,7 @@ static void drawBuildingGhostDefault()
 			Data_State.selectedBuilding.roadRequired = Data_State.selectedBuilding.roadRequired == 1 ? 2 : 1;
 		}
 	}
-	building_type type = Data_State.selectedBuilding.type;
+	building_type type = building_construction_type();
     const building_properties *props = building_properties_for_type(type);
 	int gridOffset = Data_State.map.current.gridOffset;
 	int buildingSize = props->size;
@@ -191,7 +192,7 @@ static void drawBuildingGhostDefault()
 			fullyObstructed = 1;
 			placementObstructed = 1;
 		}
-	} else if (Data_State.selectedBuilding.type == BUILDING_GATEHOUSE) {
+	} else if (type == BUILDING_GATEHOUSE) {
 		int orientation = Terrain_getOrientationGatehouse(
 			Data_State.map.current.x, Data_State.map.current.y);
 		int graphicOffset;
@@ -207,7 +208,7 @@ static void drawBuildingGhostDefault()
 			graphicOffset = 1 - graphicOffset;
 		}
 		graphicId += graphicOffset;
-	} else if (Data_State.selectedBuilding.type == BUILDING_TRIUMPHAL_ARCH) {
+	} else if (type == BUILDING_TRIUMPHAL_ARCH) {
 		int orientation = Terrain_getOrientationTriumphalArch(
 			Data_State.map.current.x, Data_State.map.current.y);
 		int graphicOffset;
@@ -224,11 +225,11 @@ static void drawBuildingGhostDefault()
 		}
 		graphicId += graphicOffset;
 	}
-	if (Data_State.selectedBuilding.type == BUILDING_SENATE_UPGRADED && Data_CityInfo.buildingSenatePlaced) {
+	if (type == BUILDING_SENATE_UPGRADED && Data_CityInfo.buildingSenatePlaced) {
 		fullyObstructed = 1;
 		placementObstructed = 1;
 	}
-	if (Data_State.selectedBuilding.type == BUILDING_BARRACKS && building_count_total(BUILDING_BARRACKS)) {
+	if (type == BUILDING_BARRACKS && building_count_total(BUILDING_BARRACKS)) {
 		fullyObstructed = 1;
 		placementObstructed = 1;
 	}
@@ -345,8 +346,8 @@ static void drawBuildingGhostDefault()
 static void drawBuildingGhostDraggableReservoir()
 {
 	int placementObstructed = 0;
-	if (Data_State.selectedBuilding.placementInProgress) {
-		if (!Data_State.selectedBuilding.cost) {
+	if (building_construction_in_progress()) {
+		if (!building_construction_cost()) {
 			placementObstructed = 1;
 		}
 	} else {
@@ -361,7 +362,7 @@ static void drawBuildingGhostDraggableReservoir()
 	if (city_finance_out_of_money()) {
 		placementObstructed = 1;
 	}
-	if (Data_State.selectedBuilding.placementInProgress) {
+	if (building_construction_in_progress()) {
 		int xOffsetBase = Data_State.selectedBuilding.reservoirOffsetX;
 		int yOffsetBase = Data_State.selectedBuilding.reservoirOffsetY - 30;
 		if (placementObstructed) {
@@ -403,8 +404,8 @@ static void drawBuildingGhostDraggableReservoir()
 static void drawBuildingGhostAqueduct()
 {
 	int placementObstructed = 0;
-	if (Data_State.selectedBuilding.placementInProgress) {
-		if (!Data_State.selectedBuilding.cost) {
+	if (building_construction_in_progress()) {
+		if (!building_construction_cost()) {
 			placementObstructed = 1;
 		}
 	} else {
@@ -526,12 +527,12 @@ static void drawBuildingGhostBathhouse()
 	}
 }
 
-static void drawBuildingGhostBridge()
+static void drawBuildingGhostBridge(building_type type)
 {
 	int length, direction;
 	int endGridOffset = map_bridge_calculate_length_direction(
 		Data_State.map.current.x, Data_State.map.current.y,
-		Data_State.selectedBuilding.type == BUILDING_LOW_BRIDGE ? 0 : 1,
+		type == BUILDING_LOW_BRIDGE ? 0 : 1,
 		&length, &direction);
 
 	int dir = direction - Data_State.map.orientation;
@@ -539,7 +540,7 @@ static void drawBuildingGhostBridge()
 		dir += 8;
 	}
 	int obstructed = 0;
-	if (Data_State.selectedBuilding.type == BUILDING_SHIP_BRIDGE && length < 5) {
+	if (type == BUILDING_SHIP_BRIDGE && length < 5) {
 		obstructed = 1;
 	} else if (!endGridOffset) {
 		obstructed = 1;
@@ -595,7 +596,7 @@ static void drawBuildingGhostBridge()
 		case DIR_6_LEFT: xAdd = -29; yAdd = -15; break;
 		default: return;
 	}
-	if (Data_State.selectedBuilding.type == BUILDING_LOW_BRIDGE) {
+	if (type == BUILDING_LOW_BRIDGE) {
 		switch (dir) {
 			case DIR_0_TOP:
 				graphicId = graphicBase + 5;
@@ -1006,7 +1007,7 @@ static void drawBuildingGhostHippodrome()
 	}
 }
 
-static void drawBuildingGhostShipyardWharf()
+static void drawBuildingGhostShipyardWharf(building_type type)
 {
 	int dirAbsolute, dirRelative;
 	int blockedTiles = map_water_determine_orientation_size2(
@@ -1022,7 +1023,6 @@ static void drawBuildingGhostShipyardWharf()
 			drawFlatTile(xOffset, yOffset, COLOR_MASK_RED);
 		}
 	} else {
-		building_type type = Data_State.selectedBuilding.type;
         const building_properties *props = building_properties_for_type(type);
 		int graphicId = image_group(props->image_group) + props->image_offset + dirRelative;
 		int xOffset = Data_CityView.selectedTile.xOffsetInPixels;

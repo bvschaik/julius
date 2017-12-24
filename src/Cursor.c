@@ -2,9 +2,8 @@
 
 #include "System.h"
 #include "UI/Window.h"
-#include "Data/State.h"
 
-#include "building/type.h"
+#include "building/construction.h"
 
 static const struct Cursor arrow = {
 	0, 0,
@@ -128,7 +127,7 @@ void Cursor_set()
 {
 	if (UI_Window_getId() == Window_CityMilitary) {
 		System_setCursor(Cursor_Sword);
-	} else if (UI_Window_getId() == Window_City && Data_State.selectedBuilding.type == BUILDING_CLEAR_LAND) {
+	} else if (UI_Window_getId() == Window_City && building_construction_type() == BUILDING_CLEAR_LAND) {
 		System_setCursor(Cursor_Shovel);
 	} else {
 		System_setCursor(Cursor_Arrow);

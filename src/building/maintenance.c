@@ -15,7 +15,6 @@
 #include "sound/effect.h"
 
 #include "Data/CityInfo.h"
-#include "Data/State.h"
 #include "../Building.h"
 #include "../Figure.h"
 #include "../TerrainGraphics.h"

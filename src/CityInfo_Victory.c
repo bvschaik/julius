@@ -7,6 +7,7 @@
 #include "Data/CityInfo.h"
 #include "Data/State.h"
 
+#include "building/construction.h"
 #include "city/message.h"
 #include "game/settings.h"
 #include "game/time.h"
@@ -89,7 +90,7 @@ void CityInfo_Victory_check()
 		Data_State.winState = WinState_Win;
 	}
 	if (Data_State.winState != WinState_None) {
-		Data_State.selectedBuilding.type = 0;
+		building_construction_clear_type();
 		if (Data_State.winState == WinState_Lose) {
 			if (Data_CityInfo.messageShownFired) {
 				UI_Intermezzo_show(Intermezzo_Fired, Window_MissionEnd, 1000);

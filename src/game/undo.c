@@ -199,7 +199,7 @@ void game_undo_perform()
     if (!game_can_undo()) {
         return;
     }
-    Data_State.undoAvailable = 0;
+    data.available = 0;
     city_finance_process_construction(-data.building_cost);
     if (data.type == BUILDING_CLEAR_LAND) {
         for (int i = 0; i < data.num_buildings; i++) {

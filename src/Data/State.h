@@ -40,13 +40,9 @@ enum {
 extern struct _Data_State {
     int gamePaused;
 	int sidebarCollapsed;
-	int undoReady;
-	int undoAvailable;
 	int currentOverlay;
 	int previousOverlay;
 	struct {
-		int type;
-		int placementInProgress;
 		int gridOffsetStart;
 		int gridOffsetEnd;
 		int wallRequired;
@@ -57,7 +53,6 @@ extern struct _Data_State {
 		int roadRequired;
 		time_millis roadLastUpdate;
 		int drawAsConstructing;
-		int cost;
 		int reservoirOffsetX;
 		int reservoirOffsetY;
 	} selectedBuilding;

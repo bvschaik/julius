@@ -7,6 +7,7 @@
 
 #include "Data/State.h"
 
+#include "building/construction.h"
 #include "core/time.h"
 #include "game/settings.h"
 #include "input/scroll.h"
@@ -46,7 +47,7 @@ static int getElapsedTicks()
 		case Window_OverlayMenu:
 			break;
 	}
-	if (Data_State.selectedBuilding.placementInProgress) {
+	if (building_construction_in_progress()) {
 		return 0;
 	}
 	if (scroll_in_progress()) {
