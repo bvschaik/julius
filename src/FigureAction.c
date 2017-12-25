@@ -7,6 +7,7 @@
 #include "figuretype/entertainer.h"
 #include "figuretype/maintenance.h"
 #include "figuretype/migrant.h"
+#include "figuretype/native.h"
 #include "figuretype/service.h"
 #include "figuretype/wall.h"
 #include "figuretype/water.h"
@@ -57,7 +58,7 @@ static void (*figureActionCallbacks[])(figure *f) = {
 	FigureAction_docker,
 	FigureAction_marketBuyer,
 	figure_patrician_action, //40
-	FigureAction_indigenousNative,
+	figure_indigenous_native_action,
 	figure_tower_sentry_action,
 	FigureAction_enemy43_Spear,
 	FigureAction_enemy44_Sword,

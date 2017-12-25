@@ -17,7 +17,7 @@ int FigureAction_CombatSoldier_getTarget(int x, int y, int maxDistance)
 			continue;
 		}
 		if (FigureIsEnemy(f->type) || f->type == FIGURE_RIOTER ||
-			(f->type == FIGURE_INDIGENOUS_NATIVE && f->actionState == FigureActionState_159_NativeAttacking)) {
+			(f->type == FIGURE_INDIGENOUS_NATIVE && f->actionState == FIGURE_ACTION_159_NATIVE_ATTACKING)) {
 			int distance = calc_maximum_distance(x, y, f->x, f->y);
 			if (distance <= maxDistance) {
 				if (f->targetedByFigureId) {
@@ -39,7 +39,7 @@ int FigureAction_CombatSoldier_getTarget(int x, int y, int maxDistance)
 			continue;
 		}
 		if (FigureIsEnemy(f->type) || f->type == FIGURE_RIOTER ||
-			(f->type == FIGURE_INDIGENOUS_NATIVE && f->actionState == FigureActionState_159_NativeAttacking)) {
+			(f->type == FIGURE_INDIGENOUS_NATIVE && f->actionState == FIGURE_ACTION_159_NATIVE_ATTACKING)) {
 			return i;
 		}
 	}
@@ -59,7 +59,7 @@ int FigureAction_CombatSoldier_getMissileTarget(figure *shooter, int maxDistance
 			continue;
 		}
 		if (FigureIsEnemy(f->type) || FigureIsHerd(f->type) ||
-			(f->type == FIGURE_INDIGENOUS_NATIVE && f->actionState == FigureActionState_159_NativeAttacking)) {
+			(f->type == FIGURE_INDIGENOUS_NATIVE && f->actionState == FIGURE_ACTION_159_NATIVE_ATTACKING)) {
 			int distance = calc_maximum_distance(x, y, f->x, f->y);
 			if (distance < minDistance && FigureMovement_canLaunchCrossCountryMissile(x, y, f->x, f->y)) {
 				minDistance = distance;
@@ -236,7 +236,7 @@ void FigureAction_Combat_attackFigureAt(figure *f, int grid_offset)
 		} else if (opponent->actionState == FigureActionState_149_Corpse) {
 			attack = 0;
 		} else if (figureCategory == FIGURE_CATEGORY_ARMED && opponentCategory == FIGURE_CATEGORY_NATIVE) {
-			if (opponent->actionState == FigureActionState_159_NativeAttacking) {
+			if (opponent->actionState == FIGURE_ACTION_159_NATIVE_ATTACKING) {
 				attack = 1;
 			}
 		} else if (figureCategory == FIGURE_CATEGORY_ARMED && opponentCategory == FIGURE_CATEGORY_CRIMINAL) {

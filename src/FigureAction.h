@@ -46,8 +46,6 @@ void FigureAction_tradeCaravan(figure *f);
 void FigureAction_tradeCaravanDonkey(figure *f);
 void FigureAction_tradeShip(figure *f);
 void FigureAction_nativeTrader(figure *f);
-// native
-void FigureAction_indigenousNative(figure *f);
 // soldier
 void FigureAction_soldier(figure *f);
 void FigureAction_militaryStandard(figure *f);

@@ -1095,7 +1095,7 @@ static void spawn_figure_native_hut(building *b)
         if (b->figureSpawnDelay > 4) {
             b->figureSpawnDelay = 0;
             figure *f = figure_create(FIGURE_INDIGENOUS_NATIVE, xOut, yOut, DIR_0_TOP);
-            f->actionState = FigureActionState_158_NativeCreated;
+            f->actionState = FIGURE_ACTION_158_NATIVE_CREATED;
             f->buildingId = b->id;
             b->figureId = f->id;
         }

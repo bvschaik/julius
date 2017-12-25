@@ -588,12 +588,12 @@ void FigureAction_enemy54_Gladiator(figure *f)
 		case FigureActionState_149_Corpse:
 			FigureAction_Common_handleCorpse(f);
 			break;
-		case FigureActionState_158_NativeCreated:
+		case FIGURE_ACTION_158_NATIVE_CREATED:
 			f->graphicOffset = 0;
 			f->waitTicks++;
 			if (f->waitTicks > 10 + (f->id & 3)) {
 				f->waitTicks = 0;
-				f->actionState = FigureActionState_159_NativeAttacking;
+				f->actionState = FIGURE_ACTION_159_NATIVE_ATTACKING;
 				int xTile, yTile;
 				int buildingId = Formation_Rioter_getTargetBuilding(&xTile, &yTile);
 				if (buildingId) {
@@ -606,14 +606,14 @@ void FigureAction_enemy54_Gladiator(figure *f)
 				}
 			}
 			break;
-		case FigureActionState_159_NativeAttacking:
+		case FIGURE_ACTION_159_NATIVE_ATTACKING:
 			Data_CityInfo.numAttackingNativesInCity = 10;
 			f->terrainUsage = FigureTerrainUsage_Enemy;
 			FigureMovement_walkTicks(f, 1);
 			if (f->direction == DIR_FIGURE_AT_DESTINATION ||
 				f->direction == DIR_FIGURE_REROUTE ||
 				f->direction == DIR_FIGURE_LOST) {
-				f->actionState = FigureActionState_158_NativeCreated;
+				f->actionState = FIGURE_ACTION_158_NATIVE_CREATED;
 			}
 			break;
 	}

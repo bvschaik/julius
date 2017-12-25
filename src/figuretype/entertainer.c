@@ -156,7 +156,7 @@ void figure_entertainer_action(figure *f)
             f->type = FIGURE_ENEMY54_GLADIATOR;
             figure_route_remove(f);
             f->roamLength = 0;
-            f->actionState = FigureActionState_158_NativeCreated;
+            f->actionState = FIGURE_ACTION_158_NATIVE_CREATED;
             return;
         }
     }

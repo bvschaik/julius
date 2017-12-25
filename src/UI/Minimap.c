@@ -123,7 +123,7 @@ static int has_figure_color(figure *f)
         return FIGURE_COLOR_ENEMY;
     }
     if (f->type == FIGURE_INDIGENOUS_NATIVE &&
-        f->actionState == FigureActionState_159_NativeAttacking) {
+        f->actionState == FIGURE_ACTION_159_NATIVE_ATTACKING) {
         return FIGURE_COLOR_ENEMY;
     }
     if (type == FIGURE_WOLF) {

@@ -96,7 +96,7 @@ static int is_non_citizen(figure *f)
     if (FigureIsEnemy(f->type)) {
         return f->id;
     }
-    if (f->type == FIGURE_INDIGENOUS_NATIVE && f->actionState == FigureActionState_159_NativeAttacking) {
+    if (f->type == FIGURE_INDIGENOUS_NATIVE && f->actionState == FIGURE_ACTION_159_NATIVE_ATTACKING) {
         return f->id;
     }
     if (f->type == FIGURE_WOLF || f->type == FIGURE_SHEEP || f->type == FIGURE_ZEBRA) {
