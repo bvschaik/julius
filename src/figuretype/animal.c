@@ -10,6 +10,7 @@
 #include "graphics/image.h"
 #include "map/figure.h"
 #include "map/grid.h"
+#include "map/point.h"
 #include "scenario/map.h"
 #include "scenario/property.h"
 
@@ -18,20 +19,17 @@
 #include "FigureAction.h"
 #include "FigureMovement.h"
 
-static const int SEAGULL_OFFSETS_X[] = {0, 0, -2, 1, 2, -3, 4, -2, 0};
-static const int SEAGULL_OFFSETS_Y[] = {0, -2, 0, 2, 0, 1, -3, 4, 0};
+static const map_point SEAGULL_OFFSETS[] = {
+    {0, 0}, {0, -2}, {-2, 0}, {1, 2}, {2, 0}, {-3, 1}, {4, -3}, {-2, 4}, {0, 0}
+};
 
-static const int HORSE_DESTINATION_X1[] = {
-    2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2
+static const map_point HORSE_DESTINATION_1[] = {
+    {2, 1}, {3, 1}, {4, 1}, {5, 1}, {6, 1}, {7, 1}, {8, 1}, {9, 1}, {10, 1}, {11, 1}, {12, 2},
+    {12, 3}, {11, 3}, {10, 3}, {9, 3}, {8, 3}, {7, 3}, {6, 3}, {5, 3}, {4, 3}, {3, 3}, {2, 2}
 };
-static const int HORSE_DESTINATION_Y1[] = {
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2
-};
-static const int HORSE_DESTINATION_X2[] = {
-    12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12
-};
-static const int HORSE_DESTINATION_Y2[] = {
-    3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2
+static const map_point HORSE_DESTINATION_2[] = {
+    {12, 3}, {11, 3}, {10, 3}, {9, 3}, {8, 3}, {7, 3}, {6, 3}, {5, 3}, {4, 3}, {3, 3}, {2, 2},
+    {2, 1}, {3, 1}, {4, 1}, {5, 1}, {6, 1}, {7, 1}, {8, 1}, {9, 1}, {10, 1}, {11, 1}, {12, 2}
 };
 
 static const int SHEEP_IMAGE_OFFSETS[] = {
@@ -115,8 +113,8 @@ void figure_seagulls_action(figure *f)
             f->progressOnTile = 0;
         }
         FigureAction_Common_setCrossCountryDestination(f,
-            f->sourceX + SEAGULL_OFFSETS_X[f->progressOnTile],
-            f->sourceY + SEAGULL_OFFSETS_Y[f->progressOnTile]);
+            f->sourceX + SEAGULL_OFFSETS[f->progressOnTile].x,
+            f->sourceY + SEAGULL_OFFSETS[f->progressOnTile].y);
     }
     if (f->id & 1) {
         figure_image_increase_offset(f, 54);
@@ -308,11 +306,11 @@ static void set_horse_destination(figure *f, int state)
     if (state == HORSE_CREATED) {
         map_figure_delete(f);
         if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_6_LEFT) {
-            f->destinationX = b->x + HORSE_DESTINATION_X1[f->waitTicksMissile];
-            f->destinationY = b->y + HORSE_DESTINATION_Y1[f->waitTicksMissile];
+            f->destinationX = b->x + HORSE_DESTINATION_1[f->waitTicksMissile].x;
+            f->destinationY = b->y + HORSE_DESTINATION_1[f->waitTicksMissile].y;
         } else {
-            f->destinationX = b->x + HORSE_DESTINATION_X2[f->waitTicksMissile];
-            f->destinationY = b->y + HORSE_DESTINATION_Y2[f->waitTicksMissile];
+            f->destinationX = b->x + HORSE_DESTINATION_2[f->waitTicksMissile].x;
+            f->destinationY = b->y + HORSE_DESTINATION_2[f->waitTicksMissile].y;
         }
         if (f->resourceId == 1) {
             f->destinationY++;
@@ -325,11 +323,11 @@ static void set_horse_destination(figure *f, int state)
         map_figure_add(f);
     } else if (state == HORSE_RACING) {
         if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_6_LEFT) {
-            f->destinationX = b->x + HORSE_DESTINATION_X1[f->waitTicksMissile];
-            f->destinationY = b->y + HORSE_DESTINATION_Y1[f->waitTicksMissile];
+            f->destinationX = b->x + HORSE_DESTINATION_1[f->waitTicksMissile].x;
+            f->destinationY = b->y + HORSE_DESTINATION_1[f->waitTicksMissile].y;
         } else {
-            f->destinationX = b->x + HORSE_DESTINATION_X2[f->waitTicksMissile];
-            f->destinationY = b->y + HORSE_DESTINATION_Y2[f->waitTicksMissile];
+            f->destinationX = b->x + HORSE_DESTINATION_2[f->waitTicksMissile].x;
+            f->destinationY = b->y + HORSE_DESTINATION_2[f->waitTicksMissile].y;
         }
     } else if (state == HORSE_FINISHED) {
         if (Data_State.map.orientation == DIR_0_TOP || Data_State.map.orientation == DIR_6_LEFT) {
