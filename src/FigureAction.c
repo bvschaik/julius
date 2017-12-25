@@ -4,6 +4,7 @@
 #include "Data/CityInfo.h"
 #include "figure/figure.h"
 #include "figuretype/animal.h"
+#include "figuretype/cartpusher.h"
 #include "figuretype/entertainer.h"
 #include "figuretype/maintenance.h"
 #include "figuretype/market.h"
@@ -22,12 +23,12 @@ static void (*figureActionCallbacks[])(figure *f) = {
 	figure_immigrant_action,
 	figure_emigrant_action,
 	figure_homeless_action,
-	FigureAction_cartpusher,
+	figure_cartpusher_action,
 	figure_labor_seeker_action,
 	FigureAction_explosionCloud,
 	figure_tax_collector_action,
 	figure_engineer_action,
-	FigureAction_warehouseman,
+	figure_warehouseman_action,
 	figure_prefect_action, //10
 	FigureAction_soldier,
 	FigureAction_soldier,

@@ -148,7 +148,7 @@ static void spawn_figure_warehouse(building *b)
         int task = building_warehouse_determine_worker_task(b, &resource);
         if (task != WAREHOUSE_TASK_NONE) {
             figure *f = figure_create(FIGURE_WAREHOUSEMAN, x_road, y_road, DIR_4_BOTTOM);
-            f->actionState = FigureActionState_50_WarehousemanCreated;
+            f->actionState = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
             if (task == WAREHOUSE_TASK_GETTING) {
                 f->resourceId = RESOURCE_NONE;
                 f->collectingItemId = resource;
@@ -173,7 +173,7 @@ static void spawn_figure_granary(building *b)
         int task = building_granary_determine_worker_task(b);
         if (task != GRANARY_TASK_NONE) {
             figure *f = figure_create(FIGURE_WAREHOUSEMAN, x_road, y_road, DIR_4_BOTTOM);
-            f->actionState = FigureActionState_50_WarehousemanCreated;
+            f->actionState = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
             f->resourceId = task;
             b->figureId = f->id;
             f->buildingId = b->id;
@@ -962,7 +962,7 @@ static void spawn_figure_industry(building *b)
         if (building_industry_has_produced_resource(b)) {
             building_industry_start_new_production(b);
             figure *f = figure_create(FIGURE_CART_PUSHER, x_road, y_road, DIR_4_BOTTOM);
-            f->actionState = FigureActionState_20_CartpusherInitial;
+            f->actionState = FIGURE_ACTION_20_CARTPUSHER_INITIAL;
             f->resourceId = b->outputResourceId;
             f->buildingId = b->id;
             b->figureId = f->id;
@@ -991,7 +991,7 @@ static void spawn_figure_wharf(building *b)
             b->data.other.fishingBoatHasFish = 0;
             b->outputResourceId = RESOURCE_MEAT;
             figure *f = figure_create(FIGURE_CART_PUSHER, x_road, y_road, DIR_4_BOTTOM);
-            f->actionState = FigureActionState_20_CartpusherInitial;
+            f->actionState = FIGURE_ACTION_20_CARTPUSHER_INITIAL;
             f->resourceId = RESOURCE_MEAT;
             f->buildingId = b->id;
             b->figureId = f->id;

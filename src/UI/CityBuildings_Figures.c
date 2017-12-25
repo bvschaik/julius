@@ -91,7 +91,7 @@ static int showOnOverlay(figure *f)
 			if (f->type == FIGURE_LABOR_SEEKER) {
 				return building_get(f->buildingId)->showOnProblemOverlay;
 			} else if (f->type == FIGURE_CART_PUSHER) {
-				return f->actionState == FigureActionState_20_CartpusherInitial || f->minMaxSeen;
+				return f->actionState == FIGURE_ACTION_20_CARTPUSHER_INITIAL || f->minMaxSeen;
 			}
 			return 0;
 	}

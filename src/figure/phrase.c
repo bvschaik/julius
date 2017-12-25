@@ -332,15 +332,15 @@ static int market_buyer_phrase(figure *f)
 
 static int cart_pusher_phrase(figure *f)
 {
-    if (f->actionState == FigureActionState_20_CartpusherInitial) {
+    if (f->actionState == FIGURE_ACTION_20_CARTPUSHER_INITIAL) {
         if (f->minMaxSeen == 2) {
             return 7;
         } else if (f->minMaxSeen == 1) {
             return 8;
         }
-    } else if (f->actionState == FigureActionState_21_CartpusherDeliveringToWarehouse ||
-            f->actionState == FigureActionState_22_CartpusherDeliveringToGranary ||
-            f->actionState == FigureActionState_23_CartpusherDeliveringToWorkshop) {
+    } else if (f->actionState == FIGURE_ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE ||
+            f->actionState == FIGURE_ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY ||
+            f->actionState == FIGURE_ACTION_23_CARTPUSHER_DELIVERING_TO_WORKSHOP) {
         if (calc_maximum_distance(
             f->destinationX, f->destinationY, f->sourceX, f->sourceY) >= 25) {
             return 9; // too far
@@ -351,7 +351,7 @@ static int cart_pusher_phrase(figure *f)
 
 static int warehouseman_phrase(figure *f)
 {
-    if (f->actionState == FigureActionState_51_WarehousemanDeliveringResource) {
+    if (f->actionState == FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE) {
         if (calc_maximum_distance(
             f->destinationX, f->destinationY, f->sourceX, f->sourceY) >= 25) {
             return 9; // too far

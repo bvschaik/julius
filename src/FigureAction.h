@@ -33,9 +33,6 @@ int FigureAction_CombatEnemy_getMissileTarget(figure *enemy, int maxDistance, in
 void FigureAction_Combat_attackFigureAt(figure *f, int grid_offset);
 
 // figure action callbacks
-// cartpusher
-void FigureAction_cartpusher(figure *f);
-void FigureAction_warehouseman(figure *f);
 // docker
 void FigureAction_docker(figure *f);
 // trader

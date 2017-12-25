@@ -258,10 +258,10 @@ static void drawFigureInfoCartpusher(BuildingInfoContext *c, figure *f)
 	building *targetBuilding = building_get(f->destinationBuildingId);
 	int isReturning = 0;
 	switch (f->actionState) {
-		case FigureActionState_27_CartpusherReturning:
-		case FigureActionState_53_WarehousemanReturningEmpty:
-		case FigureActionState_56_WarehousemanReturningWithFood:
-		case FigureActionState_59_WarehousemanReturningWithResource:
+		case FIGURE_ACTION_27_CARTPUSHER_RETURNING:
+		case FIGURE_ACTION_53_WAREHOUSEMAN_RETURNING_EMPTY:
+		case FIGURE_ACTION_56_WAREHOUSEMAN_RETURNING_WITH_FOOD:
+		case FIGURE_ACTION_59_WAREHOUSEMAN_RETURNING_WITH_RESOURCE:
 		case FigureActionState_134_DockerExportQueue:
 		case FigureActionState_137_DockerExportReturning:
 		case FigureActionState_138_DockerImportReturning:

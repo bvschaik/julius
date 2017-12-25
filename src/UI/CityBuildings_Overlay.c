@@ -1184,7 +1184,7 @@ static int is_problem_cartpusher(int figure_id)
 {
     if (figure_id) {
         figure *fig = figure_get(figure_id);
-        return fig->actionState == FigureActionState_20_CartpusherInitial && fig->minMaxSeen;
+        return fig->actionState == FIGURE_ACTION_20_CARTPUSHER_INITIAL && fig->minMaxSeen;
     } else {
         return 0;
     }

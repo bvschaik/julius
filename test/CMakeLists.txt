@@ -62,7 +62,6 @@ add_executable(autopilot
     ${PROJECT_SOURCE_DIR}/src/Cursor.c
     ${PROJECT_SOURCE_DIR}/src/Figure.c
     ${PROJECT_SOURCE_DIR}/src/FigureAction.c
-    ${PROJECT_SOURCE_DIR}/src/FigureAction_Cartpusher.c
     ${PROJECT_SOURCE_DIR}/src/FigureAction_Combat.c
     ${PROJECT_SOURCE_DIR}/src/FigureAction_Common.c
     ${PROJECT_SOURCE_DIR}/src/FigureAction_Docker.c
