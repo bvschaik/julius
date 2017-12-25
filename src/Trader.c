@@ -1,7 +1,5 @@
 #include "Trader.h"
 
-#include "Terrain.h"
-
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 
@@ -17,6 +15,7 @@
 #include "empire/trade_route.h"
 #include "figure/figure.h"
 #include "figure/type.h"
+#include "map/road_access.h"
 #include "scenario/map.h"
 
 #include <string.h>
@@ -246,7 +245,7 @@ int Trader_getClosestWarehouseForTradeCaravan(const figure *f, int x, int y, int
 	if (min->hasRoadAccess == 1) {
 		*warehouseX = min->x;
 		*warehouseY = min->y;
-	} else if (!Terrain_hasRoadAccess(min->x, min->y, 3, warehouseX, warehouseY)) {
+	} else if (!map_has_road_access(min->x, min->y, 3, warehouseX, warehouseY)) {
 		return 0;
 	}
 	return minBuildingId;
@@ -317,7 +316,7 @@ int Trader_getClosestWarehouseForImportDocker(int x, int y, int cityId, int dist
 	if (min->hasRoadAccess == 1) {
 		*warehouseX = min->x;
 		*warehouseY = min->y;
-	} else if (!Terrain_hasRoadAccess(min->x, min->y, 3, warehouseX, warehouseY)) {
+	} else if (!map_has_road_access(min->x, min->y, 3, warehouseX, warehouseY)) {
 		return 0;
 	}
 	return minBuildingId;
@@ -383,7 +382,7 @@ int Trader_getClosestWarehouseForExportDocker(int x, int y, int cityId, int dist
 	if (min->hasRoadAccess == 1) {
 		*warehouseX = min->x;
 		*warehouseY = min->y;
-	} else if (!Terrain_hasRoadAccess(min->x, min->y, 3, warehouseX, warehouseY)) {
+	} else if (!map_has_road_access(min->x, min->y, 3, warehouseX, warehouseY)) {
 		return 0;
 	}
 	return minBuildingId;

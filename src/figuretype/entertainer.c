@@ -7,12 +7,12 @@
 #include "figure/route.h"
 #include "graphics/image.h"
 #include "map/grid.h"
+#include "map/road_access.h"
 #include "map/road_network.h"
 #include "scenario/gladiator_revolt.h"
 
 #include "FigureAction.h"
 #include "FigureMovement.h"
-#include "Terrain.h"
 
 static int determine_destination(int x, int y, building_type type1, building_type type2)
 {
@@ -176,7 +176,7 @@ void figure_entertainer_action(figure *f)
             f->waitTicks--;
             if (f->waitTicks <= 0) {
                 int x_road, y_road;
-                if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
+                if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
                     f->actionState = FIGURE_ACTION_91_ENTERTAINER_EXITING_SCHOOL;
                     FigureAction_Common_setCrossCountryDestination(f, x_road, y_road);
                     f->roamLength = 0;
@@ -207,7 +207,7 @@ void figure_entertainer_action(figure *f)
                 if (dst_building_id) {
                     building *b_dst = building_get(dst_building_id);
                     int x_road, y_road;
-                    if (Terrain_getClosestRoadWithinRadius(b_dst->x, b_dst->y, b_dst->size, 2, &x_road, &y_road)) {
+                    if (map_closest_road_within_radius(b_dst->x, b_dst->y, b_dst->size, 2, &x_road, &y_road)) {
                         f->destinationBuildingId = dst_building_id;
                         f->actionState = FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE;
                         f->destinationX = x_road;
@@ -243,7 +243,7 @@ void figure_entertainer_action(figure *f)
             f->roamLength++;
             if (f->roamLength >= f->maxRoamLength) {
                 int x_road, y_road;
-                if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
+                if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
                     f->actionState = FIGURE_ACTION_95_ENTERTAINER_RETURNING;
                     f->destinationX = x_road;
                     f->destinationY = y_road;

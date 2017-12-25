@@ -23,6 +23,7 @@
 #include "map/elevation.h"
 #include "map/grid.h"
 #include "map/random.h"
+#include "map/road_access.h"
 #include "map/road_network.h"
 #include "map/routing.h"
 #include "map/routing_terrain.h"
@@ -504,7 +505,7 @@ void Building_GameTick_checkAccessToRome()
 		}
 		int xRoad, yRoad;
 		if (b->houseSize) {
-			if (!Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
+			if (!map_closest_road_within_radius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
 				// no road: eject people
 				b->distanceFromEntry = 0;
 				b->houseUnreachableTicks++;

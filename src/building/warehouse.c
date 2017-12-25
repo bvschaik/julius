@@ -11,10 +11,10 @@
 #include "game/tutorial.h"
 #include "graphics/image.h"
 #include "map/image.h"
+#include "map/road_access.h"
 #include "scenario/property.h"
 
 #include "Data/CityInfo.h"
-#include "../Terrain.h"
 
 int building_warehouse_get_space_info(building *warehouse)
 {
@@ -267,9 +267,9 @@ void building_warehouses_calculate_stocks()
         building *b = building_get(i);
         if (BuildingIsInUse(b) && b->type == BUILDING_WAREHOUSE) {
             b->hasRoadAccess = 0;
-            if (Terrain_hasRoadAccess(b->x, b->y, b->size, 0, 0)) {
+            if (map_has_road_access(b->x, b->y, b->size, 0, 0)) {
                 b->hasRoadAccess = 1;
-            } else if (Terrain_hasRoadAccess(b->x, b->y, 3, 0, 0)) {
+            } else if (map_has_road_access(b->x, b->y, 3, 0, 0)) {
                 b->hasRoadAccess = 2;
             }
         }
@@ -340,7 +340,7 @@ int building_warehouse_for_storing(int src_building_id, int x, int y, int resour
     if (b->hasRoadAccess == 1) {
         *x_dst = b->x;
         *y_dst = b->y;
-    } else if (!Terrain_hasRoadAccess(b->x, b->y, 3, x_dst, y_dst)) {
+    } else if (!map_has_road_access(b->x, b->y, 3, x_dst, y_dst)) {
         return 0;
     }
     return min_building_id;

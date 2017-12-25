@@ -7,6 +7,7 @@
 #include "core/calc.h"
 #include "empire/city.h"
 #include "map/grid.h"
+#include "map/road_access.h"
 #include "map/terrain.h"
 #include "scenario/property.h"
 
@@ -47,11 +48,11 @@ static void checkRoadAccess(int buildingType, int x, int y, int size)
     }
 
     int hasRoad = 0;
-    if (Terrain_hasRoadAccess(x, y, size, 0, 0)) {
+    if (map_has_road_access(x, y, size, 0, 0)) {
         hasRoad = 1;
-    } else if (buildingType == BUILDING_WAREHOUSE && Terrain_hasRoadAccess(x, y, size, 0, 0)) {
+    } else if (buildingType == BUILDING_WAREHOUSE && map_has_road_access(x, y, size, 0, 0)) {
         hasRoad = 1;
-    } else if (buildingType == BUILDING_HIPPODROME && Terrain_hasRoadAccessHippodrome(x, y, 0, 0)) {
+    } else if (buildingType == BUILDING_HIPPODROME && map_has_road_access_hippodrome(x, y, 0, 0)) {
         hasRoad = 1;
     }
     if (!hasRoad) {

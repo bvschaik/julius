@@ -9,12 +9,12 @@
 #include "figure/route.h"
 #include "graphics/image.h"
 #include "map/building.h"
+#include "map/road_access.h"
 #include "sound/effect.h"
 
 #include "Data/CityInfo.h"
 #include "FigureAction.h"
 #include "FigureMovement.h"
-#include "Terrain.h"
 
 void figure_engineer_action(figure *f)
 {
@@ -41,7 +41,7 @@ void figure_engineer_action(figure *f)
             f->waitTicks--;
             if (f->waitTicks <= 0) {
                 int x_road, y_road;
-                if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
+                if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
                     f->actionState = FIGURE_ACTION_61_ENGINEER_ENTERING_EXITING;
                     FigureAction_Common_setCrossCountryDestination(f, x_road, y_road);
                     f->roamLength = 0;
@@ -69,7 +69,7 @@ void figure_engineer_action(figure *f)
             f->roamLength++;
             if (f->roamLength >= f->maxRoamLength) {
                 int x_road, y_road;
-                if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
+                if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
                     f->actionState = FIGURE_ACTION_63_ENGINEER_RETURNING;
                     f->destinationX = x_road;
                     f->destinationY = y_road;
@@ -217,7 +217,7 @@ static void extinguish_fire(figure *f)
         if (!fight_fire(f)) {
             building *b = building_get(f->buildingId);
             int x_road, y_road;
-            if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
+            if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
                 f->actionState = FIGURE_ACTION_73_PREFECT_RETURNING;
                 f->destinationX = x_road;
                 f->destinationY = y_road;
@@ -270,7 +270,7 @@ void figure_prefect_action(figure *f)
             f->waitTicks--;
             if (f->waitTicks <= 0) {
                 int x_road, y_road;
-                if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
+                if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
                     f->actionState = FIGURE_ACTION_71_PREFECT_ENTERING_EXITING;
                     FigureAction_Common_setCrossCountryDestination(f, x_road, y_road);
                     f->roamLength = 0;
@@ -298,7 +298,7 @@ void figure_prefect_action(figure *f)
             f->roamLength++;
             if (f->roamLength >= f->maxRoamLength) {
                 int x_road, y_road;
-                if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
+                if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
                     f->actionState = FIGURE_ACTION_73_PREFECT_RETURNING;
                     f->destinationX = x_road;
                     f->destinationY = y_road;
@@ -338,7 +338,7 @@ void figure_prefect_action(figure *f)
             f->terrainUsage = FigureTerrainUsage_Any;
             if (!target_is_alive(f)) {
                 int x_road, y_road;
-                if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
+                if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
                     f->actionState = FIGURE_ACTION_73_PREFECT_RETURNING;
                     f->destinationX = x_road;
                     f->destinationY = y_road;

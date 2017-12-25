@@ -116,6 +116,7 @@ set(MAP_FILES
     ${PROJECT_SOURCE_DIR}/src/map/property.c
     ${PROJECT_SOURCE_DIR}/src/map/random.c
     ${PROJECT_SOURCE_DIR}/src/map/ring.c
+    ${PROJECT_SOURCE_DIR}/src/map/road_access.c
     ${PROJECT_SOURCE_DIR}/src/map/road_aqueduct.c
     ${PROJECT_SOURCE_DIR}/src/map/road_network.c
     ${PROJECT_SOURCE_DIR}/src/map/routing.c

@@ -3,7 +3,6 @@
 #include "FigureAction.h"
 #include "FigureMovement.h"
 #include "Formation.h"
-#include "Terrain.h"
 #include "Trader.h"
 
 #include "Data/CityInfo.h"

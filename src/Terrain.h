@@ -7,14 +7,8 @@ void Terrain_removeBuildingFromGrids(int buildingId, int x, int y);
 void Terrain_addRoadsForGatehouse(int x, int y, int orientation);
 void Terrain_addRoadsForTriumphalArch(int x, int y, int orientation);
 
-int Terrain_hasRoadAccess(int x, int y, int size, int *roadX, int *roadY);
-int Terrain_hasRoadAccessHippodrome(int x, int y, int *roadX, int *roadY);
-int Terrain_hasRoadAccessGranary(int x, int y, int *roadX, int *roadY);
-
 int Terrain_getOrientationGatehouse(int x, int y);
 int Terrain_getOrientationTriumphalArch(int x, int y);
-
-int Terrain_getClosestRoadWithinRadius(int x, int y, int size, int radius, int *xTile, int *yTile);
 
 int Terrain_isClear(int x, int y, int size, int disallowedTerrain, int graphicSet);
 
@@ -33,7 +27,6 @@ int Terrain_existsClearTileWithinRadius(int x, int y, int size, int radius, int 
 int Terrain_allTilesWithinRadiusHaveType(int x, int y, int size, int radius, unsigned short type);
 int Terrain_allHousesWithinWellRadiusHaveFountain(int buildingId, int radius);
 
-int Terrain_getClosestRoadWithinRadius(int x, int y, int size, int radius, int *xTile, int *yTile);
 int Terrain_getClosestReachableRoadWithinRadius(int x, int y, int size, int radius, int *xTile, int *yTile);
 int Terrain_getRoadToLargestRoadNetwork(int x, int y, int size, int *xTile, int *yTile);
 int Terrain_getRoadToLargestRoadNetworkHippodrome(int x, int y, int size, int *xTile, int *yTile);

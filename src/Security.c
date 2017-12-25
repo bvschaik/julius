@@ -6,7 +6,6 @@
 #include "FigureAction.h"
 #include "Formation.h"
 #include "SidebarMenu.h"
-#include "Terrain.h"
 #include "TerrainGraphics.h"
 
 #include "Data/CityInfo.h"
@@ -23,6 +22,7 @@
 #include "map/building.h"
 #include "map/grid.h"
 #include "map/random.h"
+#include "map/road_access.h"
 #include "map/routing_terrain.h"
 #include "scenario/property.h"
 #include "sound/effect.h"
@@ -30,7 +30,7 @@
 static void generateRioter(building *b)
 {
 	int xRoad, yRoad;
-	if (!Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 4, &xRoad, &yRoad)) {
+	if (!map_closest_road_within_radius(b->x, b->y, b->size, 4, &xRoad, &yRoad)) {
 		return;
 	}
 	Data_CityInfo.numCriminalsThisMonth++;
@@ -78,7 +78,7 @@ static void generateMugger(building *b)
 	if (b->houseCriminalActive < 2) {
 		b->houseCriminalActive = 2;
 		int xRoad, yRoad;
-		if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
+		if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
 			figure *f = figure_create(FIGURE_CRIMINAL, xRoad, yRoad, DIR_4_BOTTOM);
 			f->waitTicks = 10 + (b->houseGenerationDelay & 0xf);
 			Data_CityInfo.ratingPeaceNumCriminalsThisYear++;
@@ -100,7 +100,7 @@ static void generateProtester(building *b)
 	if (b->houseCriminalActive < 1) {
 		b->houseCriminalActive = 1;
 		int xRoad, yRoad;
-		if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
+		if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
 			figure *f = figure_create(FIGURE_PROTESTER, xRoad, yRoad, DIR_4_BOTTOM);
 			f->waitTicks = 10 + (b->houseGenerationDelay & 0xf);
 			Data_CityInfo.ratingPeaceNumCriminalsThisYear++;

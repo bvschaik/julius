@@ -1,7 +1,5 @@
 #include "CityInfo.h"
 
-#include "Terrain.h"
-
 #include "Data/CityInfo.h"
 
 #include "building/building.h"
@@ -9,6 +7,7 @@
 #include "core/calc.h"
 #include "empire/city.h"
 #include "game/tutorial.h"
+#include "map/road_access.h"
 #include "scenario/building.h"
 #include "scenario/property.h"
 
@@ -56,7 +55,7 @@ void CityInfo_Resource_calculateFood()
 			continue;
 		}
 		b->hasRoadAccess = 0;
-		if (Terrain_hasRoadAccessGranary(b->x, b->y, 0, 0)) {
+		if (map_has_road_access_granary(b->x, b->y, 0, 0)) {
 			b->hasRoadAccess = 1;
 			int pctWorkers = calc_percentage(
 				b->numWorkers, model_get_building(b->type)->laborers);

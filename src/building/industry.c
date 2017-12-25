@@ -3,10 +3,10 @@
 #include "core/calc.h"
 #include "game/resource.h"
 #include "graphics/image.h"
+#include "map/road_access.h"
 #include "scenario/property.h"
 
 #include "Data/CityInfo.h"
-#include "Terrain.h"
 #include "TerrainGraphics.h"
 
 #define MAX_PROGRESS_RAW 200
@@ -158,7 +158,7 @@ void building_calculate_workshop_stocks()
             continue;
         }
         b->hasRoadAccess = 0;
-        if (Terrain_hasRoadAccess(b->x, b->y, b->size, 0, 0)) {
+        if (map_has_road_access(b->x, b->y, b->size, 0, 0)) {
             b->hasRoadAccess = 1;
             int room = 2 - b->loadsStored;
             if (room < 0) {

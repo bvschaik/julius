@@ -6,10 +6,10 @@
 #include "figure/route.h"
 #include "graphics/image.h"
 #include "map/building.h"
+#include "map/road_access.h"
 
 #include "FigureAction.h"
 #include "FigureMovement.h"
-#include "Terrain.h"
 
 static void roamer_action(figure *f, int num_ticks)
 {
@@ -26,7 +26,7 @@ static void roamer_action(figure *f, int num_ticks)
             if (f->roamLength >= f->maxRoamLength) {
                 int x, y;
                 building *b = building_get(f->buildingId);
-                if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &x, &y)) {
+                if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x, &y)) {
                     f->actionState = FIGURE_ACTION_126_ROAMER_RETURNING;
                     f->destinationX = x;
                     f->destinationY = y;
@@ -209,7 +209,7 @@ void figure_tax_collector_action(figure *f)
             f->waitTicks--;
             if (f->waitTicks <= 0) {
                 int x_road, y_road;
-                if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
+                if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
                     f->actionState = FIGURE_ACTION_41_TAX_COLLECTOR_ENTERING_EXITING;
                     FigureAction_Common_setCrossCountryDestination(f, x_road, y_road);
                     f->roamLength = 0;
@@ -237,7 +237,7 @@ void figure_tax_collector_action(figure *f)
             f->roamLength++;
             if (f->roamLength >= f->maxRoamLength) {
                 int x_road, y_road;
-                if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
+                if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
                     f->actionState = FIGURE_ACTION_43_TAX_COLLECTOR_RETURNING;
                     f->destinationX = x_road;
                     f->destinationY = y_road;

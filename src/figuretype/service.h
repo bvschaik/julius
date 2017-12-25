@@ -3,18 +3,6 @@
 
 #include "figure/figure.h"
 
-#include "service.h"
-
-#include "building/building.h"
-#include "building/market.h"
-#include "figure/image.h"
-#include "figure/route.h"
-#include "graphics/image.h"
-
-#include "FigureAction.h"
-#include "FigureMovement.h"
-#include "Terrain.h"
-
 void figure_priest_action(figure *f);
 
 void figure_school_child_action(figure *f);

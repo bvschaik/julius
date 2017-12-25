@@ -7,10 +7,10 @@
 #include "figure/formation.h"
 #include "game/resource.h"
 #include "map/grid.h"
+#include "map/road_access.h"
 
 #include "Data/CityInfo.h"
 #include "../Formation.h"
-#include "../Terrain.h"
 
 int building_get_barracks_for_weapon(int resource, int road_network_id, int *x_dst, int *y_dst)
 {
@@ -25,7 +25,7 @@ int building_get_barracks_for_weapon(int resource, int road_network_id, int *x_d
     }
     building *b = building_get(Data_CityInfo.buildingBarracksBuildingId);
     if (b->loadsStored < 5 && Data_CityInfo.militaryLegionaryLegions > 0) {
-        if (Terrain_hasRoadAccess(b->x, b->y, b->size, x_dst, y_dst) && b->roadNetworkId == road_network_id) {
+        if (map_has_road_access(b->x, b->y, b->size, x_dst, y_dst) && b->roadNetworkId == road_network_id) {
             return Data_CityInfo.buildingBarracksBuildingId;
         }
     }
@@ -85,7 +85,7 @@ int building_barracks_create_soldier(building *barracks, int x, int y)
         if (academy_id) {
             int x_road, y_road;
             building *academy = building_get(academy_id);
-            if (Terrain_hasRoadAccess(academy->x, academy->y, academy->size, &x_road, &y_road)) {
+            if (map_has_road_access(academy->x, academy->y, academy->size, &x_road, &y_road)) {
                 f->actionState = FigureActionState_85_SoldierGoingToMilitaryAcademy;
                 f->destinationX = x_road;
                 f->destinationY = y_road;
@@ -121,7 +121,7 @@ int building_barracks_create_tower_sentry(building *barracks, int x, int y)
     figure *f = figure_create(FIGURE_TOWER_SENTRY, x, y, DIR_0_TOP);
     f->actionState = FIGURE_ACTION_174_TOWER_SENTRY_GOING_TO_TOWER;
     int x_road, y_road;
-    if (Terrain_hasRoadAccess(tower->x, tower->y, tower->size, &x_road, &y_road)) {
+    if (map_has_road_access(tower->x, tower->y, tower->size, &x_road, &y_road)) {
         f->destinationX = x_road;
         f->destinationY = y_road;
     } else {

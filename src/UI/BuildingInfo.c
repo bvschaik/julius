@@ -9,7 +9,6 @@
 #include "../CityInfo.h"
 #include "../Formation.h"
 #include "../Graphics.h"
-#include "../Terrain.h"
 #include "../Widget.h"
 
 #include "../Data/CityInfo.h"
@@ -31,6 +30,7 @@
 #include "map/figure.h"
 #include "map/image.h"
 #include "map/property.h"
+#include "map/road_access.h"
 #include "map/sprite.h"
 #include "map/terrain.h"
 
@@ -220,23 +220,23 @@ void UI_BuildingInfo_init()
 		context.hasRoadAccess = 0;
 		switch (b->type) {
 			case BUILDING_GRANARY:
-				if (Terrain_hasRoadAccessGranary(b->x, b->y, 0, 0)) {
+				if (map_has_road_access_granary(b->x, b->y, 0, 0)) {
 					context.hasRoadAccess = 1;
 				}
 				break;
 			case BUILDING_HIPPODROME:
-				if (Terrain_hasRoadAccessHippodrome(b->x, b->y, 0, 0)) {
+				if (map_has_road_access_hippodrome(b->x, b->y, 0, 0)) {
 					context.hasRoadAccess = 1;
 				}
 				break;
 			case BUILDING_WAREHOUSE:
-				if (Terrain_hasRoadAccess(b->x, b->y, 3, 0, 0)) {
+				if (map_has_road_access(b->x, b->y, 3, 0, 0)) {
 					context.hasRoadAccess = 1;
 				}
 				context.warehouseSpaceText = building_warehouse_get_space_info(b);
 				break;
 			default:
-				if (Terrain_hasRoadAccess(b->x, b->y, b->size, 0, 0)) {
+				if (map_has_road_access(b->x, b->y, b->size, 0, 0)) {
 					context.hasRoadAccess = 1;
 				}
 				break;

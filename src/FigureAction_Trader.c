@@ -1,6 +1,5 @@
 #include "FigureAction_private.h"
 
-#include "Terrain.h"
 #include "Trader.h"
 
 #include "Data/CityInfo.h"

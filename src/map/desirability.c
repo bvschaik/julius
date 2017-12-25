@@ -9,7 +9,6 @@
 #include "map/terrain.h"
 
 #include "Data/State.h"
-#include "../Terrain.h"
 
 static grid_i8 desirability_grid;
 

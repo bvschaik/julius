@@ -6,13 +6,13 @@
 #include "figure/image.h"
 #include "figure/route.h"
 #include "graphics/image.h"
+#include "map/road_access.h"
 
 #include "Data/CityInfo.h"
 #include "CityInfo.h"
 #include "FigureAction.h"
 #include "FigureMovement.h"
 #include "HousePopulation.h"
-#include "Terrain.h"
 
 static void update_direction_and_image(figure *f)
 {
@@ -51,7 +51,7 @@ void figure_immigrant_action(figure *f)
             f->waitTicks--;
             if (f->waitTicks <= 0) {
                 int xRoad, yRoad;
-                if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
+                if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
                     f->actionState = FIGURE_ACTION_2_IMMIGRANT_ARRIVING;
                     f->destinationX = xRoad;
                     f->destinationY = yRoad;
@@ -131,7 +131,7 @@ void figure_emigrant_action(figure *f)
             f->waitTicks++;
             if (f->waitTicks >= 5) {
                 int xRoad, yRoad;
-                if (!Terrain_getClosestRoadWithinRadius(f->x, f->y, 1, 5, &xRoad, &yRoad)) {
+                if (!map_closest_road_within_radius(f->x, f->y, 1, 5, &xRoad, &yRoad)) {
                     f->state = FigureState_Dead;
                 }
                 f->actionState = FIGURE_ACTION_5_EMIGRANT_EXITING_HOUSE;
@@ -185,7 +185,7 @@ void figure_homeless_action(figure *f)
                 if (buildingId) {
                     building *b = building_get(buildingId);
                     int xRoad, yRoad;
-                    if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
+                    if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
                         b->immigrantFigureId = f->id;
                         f->immigrantBuildingId = buildingId;
                         f->actionState = FIGURE_ACTION_8_HOMELESS_GOING_TO_HOUSE;
@@ -259,7 +259,7 @@ void figure_homeless_action(figure *f)
                 if (buildingId > 0) {
                     building *b = building_get(buildingId);
                     int xRoad, yRoad;
-                    if (Terrain_getClosestRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
+                    if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
                         b->immigrantFigureId = f->id;
                         f->immigrantBuildingId = buildingId;
                         f->actionState = FIGURE_ACTION_8_HOMELESS_GOING_TO_HOUSE;

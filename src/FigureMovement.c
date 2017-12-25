@@ -17,6 +17,7 @@
 #include "map/grid.h"
 #include "map/property.h"
 #include "map/random.h"
+#include "map/road_access.h"
 #include "map/routing_terrain.h"
 #include "map/terrain.h"
 
@@ -159,7 +160,7 @@ void FigureMovement_initRoaming(figure *f)
 	}
 	map_grid_bound(&x, &y);
 	int xRoad, yRoad;
-	if (Terrain_getClosestRoadWithinRadius(x, y, 1, 6, &xRoad, &yRoad)) {
+	if (map_closest_road_within_radius(x, y, 1, 6, &xRoad, &yRoad)) {
 		f->destinationX = xRoad;
 		f->destinationY = yRoad;
 	} else {

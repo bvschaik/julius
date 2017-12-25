@@ -2,7 +2,6 @@
 
 #include "core/calc.h"
 #include "../Graphics.h"
-#include "../Terrain.h"
 #include "../Widget.h"
 
 #include "../Data/CityInfo.h"
@@ -13,6 +12,7 @@
 #include "graphics/image.h"
 #include "map/building.h"
 #include "map/grid.h"
+#include "map/road_access.h"
 
 static void drawVacantLot(BuildingInfoContext *c)
 {
@@ -27,7 +27,7 @@ static void drawVacantLot(BuildingInfoContext *c)
 
 	int textId = 2;
     building *b = building_get(c->buildingId);
-	if (Terrain_getClosestRoadWithinRadius(b->x, b->y, 1, 2, 0, 0)) {
+	if (map_closest_road_within_radius(b->x, b->y, 1, 2, 0, 0)) {
 		textId = 1;
 	}
 	Widget_GameText_drawMultiline(128, textId,
