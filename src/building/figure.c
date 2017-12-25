@@ -626,7 +626,7 @@ static void spawn_figure_market(building *b)
             int dstBuildingId = building_market_get_storage_destination(b);
             if (dstBuildingId > 0) {
                 figure *f = figure_create(FIGURE_MARKET_BUYER, x_road, y_road, DIR_0_TOP);
-                f->actionState = FigureActionState_145_MarketBuyerGoingToStorage;
+                f->actionState = FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE;
                 f->buildingId = b->id;
                 b->figureId2 = f->id;
                 f->destinationBuildingId = dstBuildingId;
@@ -637,7 +637,7 @@ static void spawn_figure_market(building *b)
                     f->destinationX = x_road;
                     f->destinationY = y_road;
                 } else {
-                    f->actionState = FigureActionState_146_MarketBuyerReturning;
+                    f->actionState = FIGURE_ACTION_146_MARKET_BUYER_RETURNING;
                     f->destinationX = f->x;
                     f->destinationY = f->y;
                 }

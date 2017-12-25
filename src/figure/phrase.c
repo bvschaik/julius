@@ -321,9 +321,9 @@ static int market_trader_phrase(figure *f)
 
 static int market_buyer_phrase(figure *f)
 {
-    if (f->actionState == FigureActionState_145_MarketBuyerGoingToStorage) {
+    if (f->actionState == FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE) {
         return 7;
-    } else if (f->actionState == FigureActionState_146_MarketBuyerReturning) {
+    } else if (f->actionState == FIGURE_ACTION_146_MARKET_BUYER_RETURNING) {
         return 8;
     } else {
         return 0;

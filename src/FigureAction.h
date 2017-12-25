@@ -38,9 +38,6 @@ void FigureAction_cartpusher(figure *f);
 void FigureAction_warehouseman(figure *f);
 // docker
 void FigureAction_docker(figure *f);
-// market
-void FigureAction_marketBuyer(figure *f);
-void FigureAction_deliveryBoy(figure *f);
 // trader
 void FigureAction_tradeCaravan(figure *f);
 void FigureAction_tradeCaravanDonkey(figure *f);

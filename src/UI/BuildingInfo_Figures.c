@@ -301,14 +301,14 @@ static void drawFigureInfoMarketBuyer(BuildingInfoContext *c, figure *f)
 	int width = Widget_GameText_draw(64, f->type,
 		c->xOffset + 92, c->yOffset + 139, FONT_SMALL_BLACK);
 	
-	if (f->actionState == FigureActionState_145_MarketBuyerGoingToStorage) {
+	if (f->actionState == FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE) {
 		width += Widget_GameText_draw(129, 17,
 			c->xOffset + 90 + width, c->yOffset + 139, FONT_SMALL_BLACK);
 		int resourceId = collectingItemIdToResourceId(f->collectingItemId);
 		Graphics_drawImage(
 			image_group(GROUP_RESOURCE_ICONS) + resourceId + resource_image_offset(resourceId, RESOURCE_IMAGE_ICON),
 			c->xOffset + 90 + width, c->yOffset + 135);
-	} else if (f->actionState == FigureActionState_146_MarketBuyerReturning) {
+	} else if (f->actionState == FIGURE_ACTION_146_MARKET_BUYER_RETURNING) {
 		width += Widget_GameText_draw(129, 18,
 			c->xOffset + 90 + width, c->yOffset + 139, FONT_SMALL_BLACK);
 		int resourceId = collectingItemIdToResourceId(f->collectingItemId);

@@ -67,7 +67,6 @@ add_executable(autopilot
     ${PROJECT_SOURCE_DIR}/src/FigureAction_Common.c
     ${PROJECT_SOURCE_DIR}/src/FigureAction_Docker.c
     ${PROJECT_SOURCE_DIR}/src/FigureAction_Enemy.c
-    ${PROJECT_SOURCE_DIR}/src/FigureAction_Market.c
     ${PROJECT_SOURCE_DIR}/src/FigureAction_Missile.c
     ${PROJECT_SOURCE_DIR}/src/FigureAction_Rioter.c
     ${PROJECT_SOURCE_DIR}/src/FigureAction_Soldier.c

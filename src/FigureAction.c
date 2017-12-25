@@ -6,6 +6,7 @@
 #include "figuretype/animal.h"
 #include "figuretype/entertainer.h"
 #include "figuretype/maintenance.h"
+#include "figuretype/market.h"
 #include "figuretype/migrant.h"
 #include "figuretype/native.h"
 #include "figuretype/service.h"
@@ -56,7 +57,7 @@ static void (*figureActionCallbacks[])(figure *f) = {
 	figure_nobody_action, // mapFlag: editor only
 	figure_flotsam_action,
 	FigureAction_docker,
-	FigureAction_marketBuyer,
+	figure_market_buyer_action,
 	figure_patrician_action, //40
 	figure_indigenous_native_action,
 	figure_tower_sentry_action,
@@ -83,7 +84,7 @@ static void (*figureActionCallbacks[])(figure *f) = {
 	figure_nobody_action,
 	figure_missionary_action,
 	figure_seagulls_action,
-	FigureAction_deliveryBoy,
+	figure_delivery_boy_action,
 	figure_shipwreck_action,
 	figure_sheep_action,
 	figure_wolf_action,

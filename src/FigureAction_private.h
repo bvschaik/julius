@@ -4,8 +4,8 @@
 #include "figure/image.h"
 #include "figure/formation_layout.h"
 
-#define FigureActionIncreaseGraphicOffset(f, max) (f)->graphicOffset++; if ((f)->graphicOffset >= (max)) (f)->graphicOffset = 0;
-#define FigureActionDirection(f) ((f->direction < Data_State.map.orientation ? 8 : 0) + f->direction - Data_State.map.orientation)
+#define FigureActionIncreaseGraphicOffset(f, max) figure_image_increase_offset(f, max);
+#define FigureActionDirection(f) figure_image_direction(f)
 #define FigureActionNormalizeDirection(d) ((d) = (8 + (d) - Data_State.map.orientation) % 8)
 #define FigureActionCorpseGraphicOffset(f) figure_image_corpse_offset(f)
 #define FigureActionMissileLauncherGraphicOffset(f) figureActionMissileLauncherGraphicOffsets[f->attackGraphicOffset / 2]
