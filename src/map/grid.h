@@ -47,6 +47,9 @@ void map_grid_start_end_to_area(int x_start, int y_start, int x_end, int y_end,
 
 int map_grid_is_inside(int x, int y, int size);
 
+const int *map_grid_adjacent_offsets(int size);
+
+
 void map_grid_clear_u8(uint8_t *grid);
 
 void map_grid_clear_i8(int8_t *grid);

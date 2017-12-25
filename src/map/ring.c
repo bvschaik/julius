@@ -4,15 +4,6 @@
 
 #include "Data/State.h"
 
-static const int ADJACENT_OFFSETS[][21] = {
-    {0},
-    {-162, 1, 162, -1, 0},
-    {-162, -161, 2, 164, 325, 324, 161, -1, 0},
-    {-162, -161, -160, 3, 165, 327, 488, 487, 486, 323, 161, -1, 0},
-    {-162, -161, -160, -159, 4, 166, 328, 490, 651, 650, 649, 648, 485, 323, 161, -1, 0},
-    {-162, -161, -160, -159, -158, 5, 167, 329, 491, 653, 814, 813, 812, 811, 810, 647, 485, 323, 161, -1, 0},
-};
-
 static struct {
     ring_tile tiles[1080];
     int index[6][7];
@@ -81,9 +72,4 @@ int map_ring_is_inside_map(int x, int y)
 const ring_tile *map_ring_tile(int index)
 {
     return &data.tiles[index];
-}
-
-const int *map_adjacent_offsets(int size)
-{
-    return ADJACENT_OFFSETS[size];
 }

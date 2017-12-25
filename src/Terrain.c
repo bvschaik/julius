@@ -31,7 +31,7 @@
 
 #define FOR_XY_ADJACENT \
 	{int baseOffset = map_grid_offset(x, y);\
-	const int *tile_delta = map_adjacent_offsets(size);\
+	const int *tile_delta = map_grid_adjacent_offsets(size);\
 	while (*tile_delta) {\
 		int gridOffset = baseOffset + *tile_delta;
 

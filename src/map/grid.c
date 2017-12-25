@@ -6,6 +6,15 @@
 
 static const int DIRECTION_DELTA[] = {-162, -161, 1, 163, 162, 161, -1, -163};
 
+static const int ADJACENT_OFFSETS[][21] = {
+    {0},
+    {-162, 1, 162, -1, 0},
+    {-162, -161, 2, 164, 325, 324, 161, -1, 0},
+    {-162, -161, -160, 3, 165, 327, 488, 487, 486, 323, 161, -1, 0},
+    {-162, -161, -160, -159, 4, 166, 328, 490, 651, 650, 649, 648, 485, 323, 161, -1, 0},
+    {-162, -161, -160, -159, -158, 5, 167, 329, 491, 653, 814, 813, 812, 811, 810, 647, 485, 323, 161, -1, 0},
+};
+
 int map_grid_offset(int x, int y)
 {
     return Data_State.map.gridStartOffset + x + y * GRID_SIZE;
@@ -100,6 +109,11 @@ void map_grid_start_end_to_area(int x_start, int y_start, int x_end, int y_end, 
 int map_grid_is_inside(int x, int y, int size)
 {
     return x >= 0 && x + size <= Data_State.map.width && y >= 0 && y + size <= Data_State.map.height;
+}
+
+const int *map_grid_adjacent_offsets(int size)
+{
+    return ADJACENT_OFFSETS[size];
 }
 
 void map_grid_clear_i8(int8_t *grid)

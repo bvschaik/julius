@@ -17,6 +17,4 @@ int map_ring_is_inside_map(int x, int y);
 
 const ring_tile *map_ring_tile(int index);
 
-const int *map_adjacent_offsets(int size);
-
 #endif // MAP_RING_H
