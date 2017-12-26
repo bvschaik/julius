@@ -38,18 +38,18 @@ static const struct {
     int figureTypes[3];
     int formationLayout;
 } ENEMY_PROPERTIES[12] = {
-    {100, 0, 0, {49, 0, 0}, 8},
-    {40, 60, 0, {49, 51, 0}, 8},
-    {50, 50, 0, {50, 53, 0}, 8},
-    {80, 20, 0, {50, 48, 0}, 8},
-    {50, 50, 0, {49, 52, 0}, 8},
-    {30, 70, 0, {44, 43, 0}, 0},
-    {50, 50, 0, {44, 43, 0}, 10},
-    {50, 50, 0, {45, 43, 0}, 10},
-    {80, 20, 0, {45, 43, 0}, 10},
-    {80, 20, 0, {44, 46, 0}, 11},
-    {90, 10, 0, {45, 47, 0}, 11},
-    {100, 0, 0, {57, 0, 0}, 0}
+    {100, 0, 0, {FIGURE_ENEMY49_FAST_SWORD, 0, 0}, 8}, // barbarian
+    {40, 60, 0, {FIGURE_ENEMY49_FAST_SWORD, FIGURE_ENEMY51_SPEAR, 0}, 8}, // numidian
+    {50, 50, 0, {FIGURE_ENEMY50_SWORD, FIGURE_ENEMY53_AXE, 0}, 8}, // gaul
+    {80, 20, 0, {FIGURE_ENEMY50_SWORD, FIGURE_ENEMY48_CHARIOT, 0}, 8}, // celt
+    {50, 50, 0, {FIGURE_ENEMY49_FAST_SWORD, FIGURE_ENEMY52_MOUNTED_ARCHER, 0}, 8}, // goth
+    {30, 70, 0, {FIGURE_ENEMY44_SWORD, FIGURE_ENEMY43_SPEAR, 0}, 0}, // pergamum
+    {50, 50, 0, {FIGURE_ENEMY44_SWORD, FIGURE_ENEMY43_SPEAR, 0}, 10}, // seleucid
+    {50, 50, 0, {FIGURE_ENEMY45_SWORD, FIGURE_ENEMY43_SPEAR, 0}, 10}, // etruscan
+    {80, 20, 0, {FIGURE_ENEMY45_SWORD, FIGURE_ENEMY43_SPEAR, 0}, 10}, // greek
+    {80, 20, 0, {FIGURE_ENEMY44_SWORD, FIGURE_ENEMY46_CAMEL, 0}, 11}, // egyptian
+    {90, 10, 0, {FIGURE_ENEMY45_SWORD, FIGURE_ENEMY47_ELEPHANT, 0}, 11}, // carthaginian
+    {100, 0, 0, {FIGURE_ENEMY_CAESAR_LEGIONARY, 0, 0}, 0} // caesar
 };
 
 typedef struct {

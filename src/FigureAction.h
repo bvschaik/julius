@@ -19,20 +19,4 @@ int FigureAction_CombatEnemy_getMissileTarget(figure *enemy, int maxDistance, in
 
 void FigureAction_Combat_attackFigureAt(figure *f, int grid_offset);
 
-// figure action callbacks
-// enemy
-void FigureAction_enemy43_Spear(figure *f);
-void FigureAction_enemy44_Sword(figure *f);
-void FigureAction_enemy45_Sword(figure *f);
-void FigureAction_enemy46_Camel(figure *f);
-void FigureAction_enemy47_Elephant(figure *f);
-void FigureAction_enemy48_Chariot(figure *f);
-void FigureAction_enemy49_FastSword(figure *f);
-void FigureAction_enemy50_Sword(figure *f);
-void FigureAction_enemy51_Spear(figure *f);
-void FigureAction_enemy52_MountedArcher(figure *f);
-void FigureAction_enemy53_Axe(figure *f);
-void FigureAction_enemy54_Gladiator(figure *f);
-void FigureAction_enemyCaesarLegionary(figure *f);
-
 #endif

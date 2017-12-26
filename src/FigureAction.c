@@ -7,6 +7,7 @@
 #include "figuretype/cartpusher.h"
 #include "figuretype/crime.h"
 #include "figuretype/docker.h"
+#include "figuretype/enemy.h"
 #include "figuretype/entertainer.h"
 #include "figuretype/maintenance.h"
 #include "figuretype/market.h"
@@ -67,21 +68,21 @@ static void (*figureActionCallbacks[])(figure *f) = {
 	figure_patrician_action, //40
 	figure_indigenous_native_action,
 	figure_tower_sentry_action,
-	FigureAction_enemy43_Spear,
-	FigureAction_enemy44_Sword,
-	FigureAction_enemy45_Sword,
-	FigureAction_enemy46_Camel,
-	FigureAction_enemy47_Elephant,
-	FigureAction_enemy48_Chariot,
-	FigureAction_enemy49_FastSword,
-	FigureAction_enemy50_Sword, //50
-	FigureAction_enemy51_Spear,
-	FigureAction_enemy52_MountedArcher,
-	FigureAction_enemy53_Axe,
-	FigureAction_enemy54_Gladiator,
+	figure_enemy43_spear_action,
+	figure_enemy44_sword_action,
+	figure_enemy45_sword_action,
+	figure_enemy_camel_action,
+	figure_enemy_elephant_action,
+	figure_enemy_chariot_action,
+	figure_enemy49_fast_sword_action,
+	figure_enemy50_sword_action, //50
+	figure_enemy51_spear_action,
+	figure_enemy52_mounted_archer_action,
+	figure_enemy53_axe_action,
+	figure_enemy_gladiator_action,
 	figure_nobody_action,
 	figure_nobody_action,
-	FigureAction_enemyCaesarLegionary,
+	figure_enemy_caesar_legionary_action,
 	figure_native_trader_action,
 	figure_arrow_action,
 	figure_javelin_action, //60
