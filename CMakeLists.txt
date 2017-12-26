@@ -67,6 +67,7 @@ set(EMPIRE_FILES
     ${PROJECT_SOURCE_DIR}/src/empire/trade_route.c
 )
 set(FIGURE_FILES
+    ${PROJECT_SOURCE_DIR}/src/figure/action.c
     ${PROJECT_SOURCE_DIR}/src/figure/combat.c
     ${PROJECT_SOURCE_DIR}/src/figure/enemy_army.c
     ${PROJECT_SOURCE_DIR}/src/figure/figure.c
@@ -182,7 +183,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/CityInfo_Victory.c
 	${PROJECT_SOURCE_DIR}/src/CityView.c
 	${PROJECT_SOURCE_DIR}/src/Cursor.c
-	${PROJECT_SOURCE_DIR}/src/FigureAction.c
 	${PROJECT_SOURCE_DIR}/src/FigureMovement.c
 	${PROJECT_SOURCE_DIR}/src/Figure_Service.c
 	${PROJECT_SOURCE_DIR}/src/Formation.c

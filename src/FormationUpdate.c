@@ -1,6 +1,5 @@
 #include "Formation.h"
 
-#include "FigureAction.h"
 #include "TerrainGraphics.h"
 
 #include "Data/CityInfo.h"
@@ -389,6 +388,56 @@ static void setFormationFiguresToEnemyInitial(int formationId)
 	}
 }
 
+static int moveFormationTo(const formation *m, int x, int y, int *x_tile, int *y_tile)
+{
+    int baseOffset = map_grid_offset(
+        formation_layout_position_x(m->layout, 0),
+        formation_layout_position_y(m->layout, 0));
+    int figureOffsets[50];
+    figureOffsets[0] = 0;
+    for (int i = 1; i < m->num_figures; i++) {
+        figureOffsets[i] = map_grid_offset(
+            formation_layout_position_x(m->layout, i),
+            formation_layout_position_y(m->layout, i)) - baseOffset;
+    }
+    map_routing_noncitizen_can_travel_over_land(x, y, -1, -1, 0, 600);
+    for (int r = 0; r <= 10; r++) {
+        int x_min, y_min, x_max, y_max;
+        map_grid_get_area(x, y, 1, r, &x_min, &y_min, &x_max, &y_max);
+        for (int yy = y_min; yy <= y_max; yy++) {
+            for (int xx = x_min; xx <= x_max; xx++) {
+                int canMove = 1;
+                for (int fig = 0; fig < m->num_figures; fig++) {
+                    int gridOffset = map_grid_offset(xx, yy) + figureOffsets[fig];
+                    if (gridOffset < 0 || gridOffset >= GRID_SIZE * GRID_SIZE) {
+                        canMove = 0;
+                        break;
+                    }
+                    if (map_terrain_is(gridOffset, TERRAIN_IMPASSABLE_ENEMY)) {
+                        canMove = 0;
+                        break;
+                    }
+                    if (map_routing_distance(gridOffset) <= 0) {
+                        canMove = 0;
+                        break;
+                    }
+                    if (map_has_figure_at(gridOffset) &&
+                        figure_get(map_figure_at(gridOffset))->formationId != m->id) {
+                        canMove = 0;
+                        break;
+                    }
+                }
+                if (canMove) {
+                    *x_tile = xx;
+                    *y_tile = yy;
+                    return 1;
+                }
+            }
+        }
+    }
+    return 0;
+}
+
 static void updateEnemyMovement(const formation *m, int romanDistance)
 {
     const enemy_army *army = enemy_army_get(m->invasion_id);
@@ -499,7 +548,7 @@ static void updateEnemyMovement(const formation *m, int romanDistance)
 		int yOffset = layoutOrientationLegionIndexOffsets[layout][m->orientation / 2][2 * m->enemy_legion_index + 1] +
 			army->home_y;
 		int xTile, yTile;
-		if (FigureAction_HerdEnemy_moveFormationTo(m->id, xOffset, yOffset, &xTile, &yTile)) {
+		if (moveFormationTo(m, xOffset, yOffset, &xTile, &yTile)) {
 			formation_set_destination(m->id, xTile, yTile);
 		}
 	} else if (advance) {
@@ -509,7 +558,7 @@ static void updateEnemyMovement(const formation *m, int romanDistance)
 		int yOffset = layoutOrientationLegionIndexOffsets[layout][m->orientation / 2][2 * m->enemy_legion_index + 1] +
 			army->destination_y;
 		int xTile, yTile;
-		if (FigureAction_HerdEnemy_moveFormationTo(m->id, xOffset, yOffset, &xTile, &yTile)) {
+		if (moveFormationTo(m, xOffset, yOffset, &xTile, &yTile)) {
             formation_set_destination(m->id, xTile, yTile);
 		}
 	}
@@ -742,7 +791,7 @@ static void update_herd_formation(const formation *m)
             int xTile, yTile;
             if (getHerdRoamingDestination(m->id, allowNegativeDesirability, m->x_home, m->y_home, roamDistance, m->herd_direction, &xTile, &yTile)) {
                 formation_herd_clear_direction(m->id);
-                if (FigureAction_HerdEnemy_moveFormationTo(m->id, xTile, yTile, &xTile, &yTile)) {
+                if (moveFormationTo(m, xTile, yTile, &xTile, &yTile)) {
                     formation_set_destination(m->id, xTile, yTile);
                     if (m->figure_type == FIGURE_WOLF) {
                         Data_CityInfo.soundMarchWolf--;
@@ -811,55 +860,4 @@ int Formation_Rioter_getTargetBuilding(int *xTile, int *yTile)
 		*yTile = bestBuilding->y;
 		return bestBuilding->id;
 	}
-}
-
-int FigureAction_HerdEnemy_moveFormationTo(int formationId, int x, int y, int *x_tile, int *y_tile)
-{
-    const formation *m = formation_get(formationId);
-    int baseOffset = map_grid_offset(
-        formation_layout_position_x(m->layout, 0),
-        formation_layout_position_y(m->layout, 0));
-    int figureOffsets[50];
-    figureOffsets[0] = 0;
-    for (int i = 1; i < m->num_figures; i++) {
-        figureOffsets[i] = map_grid_offset(
-            formation_layout_position_x(m->layout, i),
-            formation_layout_position_y(m->layout, i)) - baseOffset;
-    }
-    map_routing_noncitizen_can_travel_over_land(x, y, -1, -1, 0, 600);
-    for (int r = 0; r <= 10; r++) {
-        int x_min, y_min, x_max, y_max;
-        map_grid_get_area(x, y, 1, r, &x_min, &y_min, &x_max, &y_max);
-        for (int yy = y_min; yy <= y_max; yy++) {
-            for (int xx = x_min; xx <= x_max; xx++) {
-                int canMove = 1;
-                for (int fig = 0; fig < m->num_figures; fig++) {
-                    int gridOffset = map_grid_offset(xx, yy) + figureOffsets[fig];
-                    if (gridOffset < 0 || gridOffset >= GRID_SIZE * GRID_SIZE) {
-                        canMove = 0;
-                        break;
-                    }
-                    if (map_terrain_is(gridOffset, TERRAIN_IMPASSABLE_ENEMY)) {
-                        canMove = 0;
-                        break;
-                    }
-                    if (map_routing_distance(gridOffset) <= 0) {
-                        canMove = 0;
-                        break;
-                    }
-                    if (map_has_figure_at(gridOffset) &&
-                        figure_get(map_figure_at(gridOffset))->formationId != formationId) {
-                        canMove = 0;
-                        break;
-                    }
-                }
-                if (canMove) {
-                    *x_tile = xx;
-                    *y_tile = yy;
-                    return 1;
-                }
-            }
-        }
-    }
-    return 0;
 }

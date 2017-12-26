@@ -2,7 +2,6 @@
 
 #include "CityInfo.h"
 #include "CityView.h"
-#include "FigureAction.h"
 #include "Formation.h"
 #include "HousePopulation.h"
 #include "Terrain.h"

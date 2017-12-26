@@ -15,7 +15,6 @@
 #include "sound/speech.h"
 
 #include "Data/CityInfo.h"
-#include "FigureAction.h"
 #include "FigureMovement.h"
 #include "../Formation.h"
 

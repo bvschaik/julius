@@ -2,7 +2,6 @@
 
 #include "Building.h"
 #include "CityInfo.h"
-#include "FigureAction.h"
 #include "Formation.h"
 #include "GameFile.h"
 #include "HouseEvolution.h"
@@ -28,6 +27,7 @@
 #include "city/message.h"
 #include "core/random.h"
 #include "empire/city.h"
+#include "figure/action.h"
 #include "figuretype/crime.h"
 #include "game/settings.h"
 #include "game/time.h"
@@ -64,7 +64,7 @@ void GameTick_doTick()
 	random_generate_next();
 	game_undo_reduce_time_available();
 	GameTick_advance();
-	FigureAction_handle();
+	figure_action_handle();
 	scenario_earthquake_process();
 	scenario_gladiator_revolt_process();
 	scenario_emperor_change_process();

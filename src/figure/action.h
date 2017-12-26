@@ -125,5 +125,6 @@ enum {
     FIGURE_ACTION_202_HIPPODROME_HORSE_DONE = 202,
 };
 
+void figure_action_handle();
 
 #endif // FIGURE_ACTION_H

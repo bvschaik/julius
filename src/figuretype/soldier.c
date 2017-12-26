@@ -14,7 +14,6 @@
 #include "map/point.h"
 
 #include "Data/CityInfo.h"
-#include "FigureAction.h"
 #include "FigureMovement.h"
 
 static const map_point ALTERNATIVE_POINTS[] = {{-1, -6},

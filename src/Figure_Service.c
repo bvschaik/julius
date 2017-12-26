@@ -1,7 +1,6 @@
 #include "Figure.h"
 
 #include "Building.h"
-#include "FigureAction.h"
 
 #include "building/building.h"
 #include "building/model.h"

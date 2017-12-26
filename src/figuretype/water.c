@@ -14,7 +14,6 @@
 #include "scenario/map.h"
 
 #include "Data/CityInfo.h"
-#include "FigureAction.h"
 #include "FigureMovement.h"
 
 static const int FLOTSAM_RESOURCE_IDS[] = {

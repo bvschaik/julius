@@ -2,7 +2,6 @@
 
 #include "Building.h"
 #include "Figure.h"
-#include "FigureAction.h"
 #include "Terrain.h"
 
 #include "Data/CityInfo.h"
