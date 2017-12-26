@@ -475,6 +475,15 @@ void FigureMovement_walkTicksTowerSentry(figure *f, int numTicks)
 	}
 }
 
+void FigureMovement_setCrossCountryDestination(figure *f, int x_dst, int y_dst)
+{
+    f->destinationX = x_dst;
+    f->destinationY = y_dst;
+    FigureMovement_crossCountrySetDirection(
+        f, f->crossCountryX, f->crossCountryY,
+        15 * x_dst, 15 * y_dst, 0);
+}
+
 void FigureMovement_crossCountrySetDirection(figure *f, int xSrc, int ySrc, int xDst, int yDst, int isMissile)
 {
 	// all x/y are in 1/15th of a tile

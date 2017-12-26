@@ -43,7 +43,7 @@ void figure_engineer_action(figure *f)
                 int x_road, y_road;
                 if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
                     f->actionState = FIGURE_ACTION_61_ENGINEER_ENTERING_EXITING;
-                    FigureAction_Common_setCrossCountryDestination(f, x_road, y_road);
+                    FigureMovement_setCrossCountryDestination(f, x_road, y_road);
                     f->roamLength = 0;
                 } else {
                     f->state = FigureState_Dead;
@@ -83,7 +83,7 @@ void figure_engineer_action(figure *f)
             FigureMovement_walkTicks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->actionState = FIGURE_ACTION_61_ENGINEER_ENTERING_EXITING;
-                FigureAction_Common_setCrossCountryDestination(f, b->x, b->y);
+                FigureMovement_setCrossCountryDestination(f, b->x, b->y);
                 f->roamLength = 0;
             } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
                 f->state = FigureState_Dead;
@@ -272,7 +272,7 @@ void figure_prefect_action(figure *f)
                 int x_road, y_road;
                 if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
                     f->actionState = FIGURE_ACTION_71_PREFECT_ENTERING_EXITING;
-                    FigureAction_Common_setCrossCountryDestination(f, x_road, y_road);
+                    FigureMovement_setCrossCountryDestination(f, x_road, y_road);
                     f->roamLength = 0;
                 } else {
                     f->state = FigureState_Dead;
@@ -313,7 +313,7 @@ void figure_prefect_action(figure *f)
             FigureMovement_walkTicks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->actionState = FIGURE_ACTION_71_PREFECT_ENTERING_EXITING;
-                FigureAction_Common_setCrossCountryDestination(f, b->x, b->y);
+                FigureMovement_setCrossCountryDestination(f, b->x, b->y);
                 f->roamLength = 0;
             } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
                 f->state = FigureState_Dead;

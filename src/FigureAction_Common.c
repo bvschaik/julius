@@ -145,12 +145,3 @@ void FigureAction_Common_handleAttack(figure *f)
 		hitOpponent(f);
 	}
 }
-
-void FigureAction_Common_setCrossCountryDestination(figure *f, int xDst, int yDst)
-{
-	f->destinationX = xDst;
-	f->destinationY = yDst;
-	FigureMovement_crossCountrySetDirection(
-		f, f->crossCountryX, f->crossCountryY,
-		15 * xDst, 15 * yDst, 0);
-}

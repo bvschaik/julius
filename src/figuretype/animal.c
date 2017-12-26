@@ -112,7 +112,7 @@ void figure_seagulls_action(figure *f)
         if (f->progressOnTile > 8) {
             f->progressOnTile = 0;
         }
-        FigureAction_Common_setCrossCountryDestination(f,
+        FigureMovement_setCrossCountryDestination(f,
             f->sourceX + SEAGULL_OFFSETS[f->progressOnTile].x,
             f->sourceY + SEAGULL_OFFSETS[f->progressOnTile].y);
     }

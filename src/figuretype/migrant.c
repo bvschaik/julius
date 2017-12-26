@@ -67,7 +67,7 @@ void figure_immigrant_action(figure *f)
             switch (f->direction) {
                 case DIR_FIGURE_AT_DESTINATION:
                     f->actionState = FIGURE_ACTION_3_IMMIGRANT_ENTERING_HOUSE;
-                    FigureAction_Common_setCrossCountryDestination(f, b->x, b->y);
+                    FigureMovement_setCrossCountryDestination(f, b->x, b->y);
                     f->roamLength = 0;
                     break;
                 case DIR_FIGURE_REROUTE:
@@ -135,7 +135,7 @@ void figure_emigrant_action(figure *f)
                     f->state = FigureState_Dead;
                 }
                 f->actionState = FIGURE_ACTION_5_EMIGRANT_EXITING_HOUSE;
-                FigureAction_Common_setCrossCountryDestination(f, xRoad, yRoad);
+                FigureMovement_setCrossCountryDestination(f, xRoad, yRoad);
                 f->roamLength = 0;
             }
             break;
@@ -213,7 +213,7 @@ void figure_homeless_action(figure *f)
             } else if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 building *b = building_get(f->immigrantBuildingId);
                 f->actionState = FIGURE_ACTION_9_HOMELESS_ENTERING_HOUSE;
-                FigureAction_Common_setCrossCountryDestination(f, b->x, b->y);
+                FigureMovement_setCrossCountryDestination(f, b->x, b->y);
                 f->roamLength = 0;
             }
             break;

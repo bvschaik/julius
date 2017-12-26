@@ -178,7 +178,7 @@ void figure_entertainer_action(figure *f)
                 int x_road, y_road;
                 if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
                     f->actionState = FIGURE_ACTION_91_ENTERTAINER_EXITING_SCHOOL;
-                    FigureAction_Common_setCrossCountryDestination(f, x_road, y_road);
+                    FigureMovement_setCrossCountryDestination(f, x_road, y_road);
                     f->roamLength = 0;
                 } else {
                     f->state = FigureState_Dead;

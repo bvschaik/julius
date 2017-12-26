@@ -9,7 +9,6 @@ int FigureAction_HerdEnemy_moveFormationTo(int formationId, int x, int y, int *x
 
 void FigureAction_Common_handleCorpse(figure *f);
 void FigureAction_Common_handleAttack(figure *f);
-void FigureAction_Common_setCrossCountryDestination(figure *f, int xDst, int yDst);
 
 int FigureAction_CombatSoldier_getMissileTarget(figure *shooter, int maxDistance, int *xTile, int *yTile);
 int FigureAction_CombatSoldier_getTarget(int x, int y, int maxDistance);
