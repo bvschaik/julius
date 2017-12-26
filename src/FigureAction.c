@@ -1,4 +1,4 @@
-#include "FigureAction_private.h"
+#include "FigureAction.h"
 
 #include "Data/CityInfo.h"
 

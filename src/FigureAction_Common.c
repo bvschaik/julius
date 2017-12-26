@@ -1,5 +1,6 @@
-#include "FigureAction_private.h"
+#include "FigureAction.h"
 
+#include "FigureMovement.h"
 #include "Formation.h"
 
 #include "figure/formation.h"
