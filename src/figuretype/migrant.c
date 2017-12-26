@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "building/house.h"
 #include "building/model.h"
+#include "figure/combat.h"
 #include "figure/image.h"
 #include "figure/route.h"
 #include "graphics/image.h"
@@ -10,7 +11,6 @@
 
 #include "Data/CityInfo.h"
 #include "CityInfo.h"
-#include "FigureAction.h"
 #include "FigureMovement.h"
 #include "HousePopulation.h"
 
@@ -40,10 +40,10 @@ void figure_immigrant_action(figure *f)
     
     switch (f->actionState) {
         case FIGURE_ACTION_150_ATTACK:
-            FigureAction_Common_handleAttack(f);
+            figure_combat_handle_attack(f);
             break;
         case FIGURE_ACTION_149_CORPSE:
-            FigureAction_Common_handleCorpse(f);
+            figure_combat_handle_corpse(f);
             break;
         case FIGURE_ACTION_1_IMMIGRANT_CREATED:
             f->isGhost = 1;
@@ -120,10 +120,10 @@ void figure_emigrant_action(figure *f)
     
     switch (f->actionState) {
         case FIGURE_ACTION_150_ATTACK:
-            FigureAction_Common_handleAttack(f);
+            figure_combat_handle_attack(f);
             break;
         case FIGURE_ACTION_149_CORPSE:
-            FigureAction_Common_handleCorpse(f);
+            figure_combat_handle_corpse(f);
             break;
         case FIGURE_ACTION_4_EMIGRANT_CREATED:
             f->isGhost = 1;
@@ -172,10 +172,10 @@ void figure_homeless_action(figure *f)
     
     switch (f->actionState) {
         case FIGURE_ACTION_150_ATTACK:
-            FigureAction_Common_handleAttack(f);
+            figure_combat_handle_attack(f);
             break;
         case FIGURE_ACTION_149_CORPSE:
-            FigureAction_Common_handleCorpse(f);
+            figure_combat_handle_corpse(f);
             break;
         case FIGURE_ACTION_7_HOMELESS_CREATED:
             f->graphicOffset = 0;

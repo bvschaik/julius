@@ -1,6 +1,7 @@
 #include "enemy.h"
 
 #include "core/calc.h"
+#include "figure/combat.h"
 #include "figure/formation.h"
 #include "figure/formation_layout.h"
 #include "figure/image.h"
@@ -52,7 +53,7 @@ static void enemy_initial(figure *f, const formation *m)
         int x_tile, y_tile;
         if (f->waitTicksMissile > figure_properties_for_type(f->type)->missile_delay) {
             f->waitTicksMissile = 0;
-            if (FigureAction_CombatEnemy_getMissileTarget(f, 10, Data_CityInfo.numSoldiersInCity < 4, &x_tile, &y_tile)) {
+            if (figure_combat_get_missile_target_for_enemy(f, 10, Data_CityInfo.numSoldiersInCity < 4, &x_tile, &y_tile)) {
                 f->attackGraphicOffset = 1;
                 f->direction = calc_missile_shooter_direction(f->x, f->y, x_tile, y_tile);
             } else {
@@ -139,7 +140,7 @@ static void enemy_fighting(figure *f, const formation *m)
         target_id = 0;
     }
     if (target_id <= 0) {
-        target_id = FigureAction_CombatEnemy_getTarget(f->x, f->y);
+        target_id = figure_combat_get_target_for_enemy(f->x, f->y);
         if (target_id) {
             figure *target = figure_get(target_id);
             f->destinationX = target->x;
@@ -176,10 +177,10 @@ static void enemy_action(figure *f, const formation *m)
 
     switch (f->actionState) {
         case FIGURE_ACTION_150_ATTACK:
-            FigureAction_Common_handleAttack(f);
+            figure_combat_handle_attack(f);
             break;
         case FIGURE_ACTION_149_CORPSE:
-            FigureAction_Common_handleCorpse(f);
+            figure_combat_handle_corpse(f);
             break;
         case FIGURE_ACTION_148_FLEEING:
             f->destinationX = f->sourceX;
@@ -580,11 +581,11 @@ void figure_enemy_gladiator_action(figure *f)
     }
     switch (f->actionState) {
         case FIGURE_ACTION_150_ATTACK:
-            FigureAction_Common_handleAttack(f);
+            figure_combat_handle_attack(f);
             figure_image_increase_offset(f, 16);
             break;
         case FIGURE_ACTION_149_CORPSE:
-            FigureAction_Common_handleCorpse(f);
+            figure_combat_handle_corpse(f);
             break;
         case FIGURE_ACTION_158_NATIVE_CREATED:
             f->graphicOffset = 0;

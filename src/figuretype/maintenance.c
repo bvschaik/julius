@@ -4,6 +4,7 @@
 #include "building/list.h"
 #include "building/maintenance.h"
 #include "core/calc.h"
+#include "figure/combat.h"
 #include "figure/enemy_army.h"
 #include "figure/image.h"
 #include "figure/route.h"
@@ -13,7 +14,6 @@
 #include "sound/effect.h"
 
 #include "Data/CityInfo.h"
-#include "FigureAction.h"
 #include "FigureMovement.h"
 
 void figure_engineer_action(figure *f)
@@ -30,10 +30,10 @@ void figure_engineer_action(figure *f)
     
     switch (f->actionState) {
         case FIGURE_ACTION_150_ATTACK:
-            FigureAction_Common_handleAttack(f);
+            figure_combat_handle_attack(f);
             break;
         case FIGURE_ACTION_149_CORPSE:
-            FigureAction_Common_handleCorpse(f);
+            figure_combat_handle_corpse(f);
             break;
         case FIGURE_ACTION_60_ENGINEER_CREATED:
             f->isGhost = 1;
@@ -259,10 +259,10 @@ void figure_prefect_action(figure *f)
     }
     switch (f->actionState) {
         case FIGURE_ACTION_150_ATTACK:
-            FigureAction_Common_handleAttack(f);
+            figure_combat_handle_attack(f);
             break;
         case FIGURE_ACTION_149_CORPSE:
-            FigureAction_Common_handleCorpse(f);
+            figure_combat_handle_corpse(f);
             break;
         case FIGURE_ACTION_70_PREFECT_CREATED:
             f->isGhost = 1;

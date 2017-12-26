@@ -2,23 +2,23 @@
 
 #include "building/building.h"
 #include "building/market.h"
+#include "figure/combat.h"
 #include "figure/image.h"
 #include "figure/route.h"
 #include "graphics/image.h"
 #include "map/building.h"
 #include "map/road_access.h"
 
-#include "FigureAction.h"
 #include "FigureMovement.h"
 
 static void roamer_action(figure *f, int num_ticks)
 {
     switch (f->actionState) {
         case FIGURE_ACTION_150_ATTACK:
-            FigureAction_Common_handleAttack(f);
+            figure_combat_handle_attack(f);
             break;
         case FIGURE_ACTION_149_CORPSE:
-            FigureAction_Common_handleCorpse(f);
+            figure_combat_handle_corpse(f);
             break;
         case FIGURE_ACTION_125_ROAMING:
             f->isGhost = 0;
@@ -79,10 +79,10 @@ void figure_school_child_action(figure *f)
     figure_image_increase_offset(f, 12);
     switch (f->actionState) {
         case FIGURE_ACTION_150_ATTACK:
-            FigureAction_Common_handleAttack(f);
+            figure_combat_handle_attack(f);
             break;
         case FIGURE_ACTION_149_CORPSE:
-            FigureAction_Common_handleCorpse(f);
+            figure_combat_handle_corpse(f);
             break;
         case FIGURE_ACTION_125_ROAMING:
             f->isGhost = 0;
@@ -198,10 +198,10 @@ void figure_tax_collector_action(figure *f)
     
     switch (f->actionState) {
         case FIGURE_ACTION_150_ATTACK:
-            FigureAction_Common_handleAttack(f);
+            figure_combat_handle_attack(f);
             break;
         case FIGURE_ACTION_149_CORPSE:
-            FigureAction_Common_handleCorpse(f);
+            figure_combat_handle_corpse(f);
             break;
         case FIGURE_ACTION_40_TAX_COLLECTOR_CREATED:
             f->isGhost = 1;

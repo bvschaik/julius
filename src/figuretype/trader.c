@@ -11,6 +11,7 @@
 #include "empire/empire.h"
 #include "empire/trade_prices.h"
 #include "empire/trade_route.h"
+#include "figure/combat.h"
 #include "figure/image.h"
 #include "figure/route.h"
 #include "figure/trader.h"
@@ -20,7 +21,6 @@
 #include "scenario/map.h"
 
 #include "Data/CityInfo.h"
-#include "FigureAction.h"
 #include "FigureMovement.h"
 
 static void advance_next_import_resource_caravan()
@@ -315,10 +315,10 @@ void figure_trade_caravan_action(figure *f)
     f->cartGraphicId = 0;
     switch (f->actionState) {
         case FIGURE_ACTION_150_ATTACK:
-            FigureAction_Common_handleAttack(f);
+            figure_combat_handle_attack(f);
             break;
         case FIGURE_ACTION_149_CORPSE:
-            FigureAction_Common_handleCorpse(f);
+            figure_combat_handle_corpse(f);
             break;
         case FIGURE_ACTION_100_TRADE_CARAVAN_CREATED:
             f->isGhost = 1;
@@ -448,10 +448,10 @@ void figure_native_trader_action(figure *f)
     f->cartGraphicId = 0;
     switch (f->actionState) {
         case FIGURE_ACTION_150_ATTACK:
-            FigureAction_Common_handleAttack(f);
+            figure_combat_handle_attack(f);
             break;
         case FIGURE_ACTION_149_CORPSE:
-            FigureAction_Common_handleCorpse(f);
+            figure_combat_handle_corpse(f);
             break;
         case FIGURE_ACTION_160_NATIVE_TRADER_GOING_TO_WAREHOUSE:
             FigureMovement_walkTicks(f, 1);
@@ -602,10 +602,10 @@ void figure_trade_ship_action(figure *f)
     f->cartGraphicId = 0;
     switch (f->actionState) {
         case FIGURE_ACTION_150_ATTACK:
-            FigureAction_Common_handleAttack(f);
+            figure_combat_handle_attack(f);
             break;
         case FIGURE_ACTION_149_CORPSE:
-            FigureAction_Common_handleCorpse(f);
+            figure_combat_handle_corpse(f);
             break;
         case FIGURE_ACTION_110_TRADE_SHIP_CREATED:
             f->loadsSoldOrCarrying = 12;

@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "core/calc.h"
+#include "figure/combat.h"
 #include "figure/enemy_army.h"
 #include "figure/image.h"
 #include "figure/properties.h"
@@ -15,7 +16,6 @@
 #include "sound/effect.h"
 
 #include "Data/State.h"
-#include "FigureAction.h"
 #include "FigureMovement.h"
 #include "Terrain.h"
 
@@ -75,7 +75,7 @@ void figure_ballista_action(figure *f)
             if (f->waitTicks > 20) {
                 f->waitTicks = 0;
                 int x_tile, y_tile;
-                if (FigureAction_CombatSoldier_getMissileTarget(f, 15, &x_tile, &y_tile)) {
+                if (figure_combat_get_missile_target_for_soldier(f, 15, &x_tile, &y_tile)) {
                     f->actionState = FIGURE_ACTION_181_BALLISTA_FIRING;
                     f->waitTicksMissile = figure_properties_for_type(f->type)->missile_delay;
                 }
@@ -85,7 +85,7 @@ void figure_ballista_action(figure *f)
             f->waitTicksMissile++;
             if (f->waitTicksMissile > figure_properties_for_type(f->type)->missile_delay) {
                 int x_tile, y_tile;
-                if (FigureAction_CombatSoldier_getMissileTarget(f, 15, &x_tile, &y_tile)) {
+                if (figure_combat_get_missile_target_for_soldier(f, 15, &x_tile, &y_tile)) {
                     f->direction = calc_missile_shooter_direction(f->x, f->y, x_tile, y_tile);
                     f->waitTicksMissile = 0;
                     figure_create_missile(f->id, f->x, f->y, x_tile, y_tile, FIGURE_BOLT);
@@ -121,7 +121,7 @@ static void tower_sentry_pick_target(figure *f)
     if (f->waitTicksNextTarget >= 40) {
         f->waitTicksNextTarget = 0;
         int x_tile, y_tile;
-        if (FigureAction_CombatSoldier_getMissileTarget(f, 10, &x_tile, &y_tile)) {
+        if (figure_combat_get_missile_target_for_soldier(f, 10, &x_tile, &y_tile)) {
             f->actionState = FIGURE_ACTION_172_TOWER_SENTRY_FIRING;
             f->destinationX = f->x;
             f->destinationY = f->y;
@@ -183,10 +183,10 @@ void figure_tower_sentry_action(figure *f)
     tower_sentry_pick_target(f);
     switch (f->actionState) {
         case FIGURE_ACTION_150_ATTACK:
-            FigureAction_Common_handleAttack(f);
+            figure_combat_handle_attack(f);
             break;
         case FIGURE_ACTION_149_CORPSE:
-            FigureAction_Common_handleCorpse(f);
+            figure_combat_handle_corpse(f);
             break;
         case FIGURE_ACTION_170_TOWER_SENTRY_AT_REST:
             f->graphicOffset = 0;
@@ -218,7 +218,7 @@ void figure_tower_sentry_action(figure *f)
             f->waitTicksMissile++;
             if (f->waitTicksMissile > figure_properties_for_type(f->type)->missile_delay) {
                 int x_tile, y_tile;
-                if (FigureAction_CombatSoldier_getMissileTarget(f, 10, &x_tile, &y_tile)) {
+                if (figure_combat_get_missile_target_for_soldier(f, 10, &x_tile, &y_tile)) {
                     f->direction = calc_missile_shooter_direction(f->x, f->y, x_tile, y_tile);
                     f->waitTicksMissile = 0;
                     figure_create_missile(f->id, f->x, f->y, x_tile, y_tile, FIGURE_JAVELIN);

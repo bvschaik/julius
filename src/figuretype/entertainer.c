@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "building/list.h"
 #include "core/calc.h"
+#include "figure/combat.h"
 #include "figure/image.h"
 #include "figure/route.h"
 #include "graphics/image.h"
@@ -11,7 +12,6 @@
 #include "map/road_network.h"
 #include "scenario/gladiator_revolt.h"
 
-#include "FigureAction.h"
 #include "FigureMovement.h"
 
 static int determine_destination(int x, int y, building_type type1, building_type type2)
@@ -163,11 +163,11 @@ void figure_entertainer_action(figure *f)
     int speed_factor = f->type == FIGURE_CHARIOTEER ? 2 : 1;
     switch (f->actionState) {
         case FIGURE_ACTION_150_ATTACK:
-            FigureAction_Common_handleAttack(f);
+            figure_combat_handle_attack(f);
             figure_image_increase_offset(f, 32);
             break;
         case FIGURE_ACTION_149_CORPSE:
-            FigureAction_Common_handleCorpse(f);
+            figure_combat_handle_corpse(f);
             break;
         case FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED:
             f->isGhost = 1;

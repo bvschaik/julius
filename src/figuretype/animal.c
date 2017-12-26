@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "core/calc.h"
 #include "core/random.h"
+#include "figure/combat.h"
 #include "figure/formation.h"
 #include "figure/formation_layout.h"
 #include "figure/image.h"
@@ -16,7 +17,6 @@
 
 #include "Data/CityInfo.h"
 #include "Data/State.h"
-#include "FigureAction.h"
 #include "FigureMovement.h"
 
 static const map_point SEAGULL_OFFSETS[] = {
@@ -136,10 +136,10 @@ void figure_sheep_action(figure *f)
 
     switch (f->actionState) {
         case FIGURE_ACTION_150_ATTACK:
-            FigureAction_Common_handleAttack(f);
+            figure_combat_handle_attack(f);
             break;
         case FIGURE_ACTION_149_CORPSE:
-            FigureAction_Common_handleCorpse(f);
+            figure_combat_handle_corpse(f);
             break;
         case FIGURE_ACTION_196_HERD_ANIMAL_AT_REST:
             f->waitTicks++;
@@ -189,10 +189,10 @@ void figure_wolf_action(figure *f)
 
     switch (f->actionState) {
         case FIGURE_ACTION_150_ATTACK:
-            FigureAction_Common_handleAttack(f);
+            figure_combat_handle_attack(f);
             break;
         case FIGURE_ACTION_149_CORPSE:
-            FigureAction_Common_handleCorpse(f);
+            figure_combat_handle_corpse(f);
             break;
         case FIGURE_ACTION_196_HERD_ANIMAL_AT_REST:
             f->waitTicks++;
@@ -217,7 +217,7 @@ void figure_wolf_action(figure *f)
         case FIGURE_ACTION_199_WOLF_ATTACKING:
             FigureMovement_walkTicks(f, 2);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
-                int target_id = FigureAction_CombatWolf_getTarget(f->x, f->y, 6);
+                int target_id = figure_combat_get_target_for_wolf(f->x, f->y, 6);
                 if (target_id) {
                     figure *target = figure_get(target_id);
                     f->destinationX = target->x;
@@ -264,10 +264,10 @@ void figure_zebra_action(figure *f)
 
     switch (f->actionState) {
         case FIGURE_ACTION_150_ATTACK:
-            FigureAction_Common_handleAttack(f);
+            figure_combat_handle_attack(f);
             break;
         case FIGURE_ACTION_149_CORPSE:
-            FigureAction_Common_handleCorpse(f);
+            figure_combat_handle_corpse(f);
             break;
         case FIGURE_ACTION_196_HERD_ANIMAL_AT_REST:
             f->waitTicks++;

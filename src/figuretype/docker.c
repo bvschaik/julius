@@ -7,6 +7,7 @@
 #include "empire/city.h"
 #include "empire/empire.h"
 #include "empire/trade_route.h"
+#include "figure/combat.h"
 #include "figure/image.h"
 #include "figure/route.h"
 #include "figure/trader.h"
@@ -15,7 +16,6 @@
 #include "map/road_access.h"
 
 #include "Data/CityInfo.h"
-#include "FigureAction.h"
 #include "FigureMovement.h"
 
 static int try_import_resource(int building_id, int resource, int city_id)
@@ -316,10 +316,10 @@ void figure_docker_action(figure *f)
     f->terrainUsage = FigureTerrainUsage_Roads;
     switch (f->actionState) {
         case FIGURE_ACTION_150_ATTACK:
-            FigureAction_Common_handleAttack(f);
+            figure_combat_handle_attack(f);
             break;
         case FIGURE_ACTION_149_CORPSE:
-            FigureAction_Common_handleCorpse(f);
+            figure_combat_handle_corpse(f);
             break;
         case FIGURE_ACTION_132_DOCKER_IDLING:
             f->resourceId = 0;

@@ -5,6 +5,7 @@
 #include "building/granary.h"
 #include "building/industry.h"
 #include "building/warehouse.h"
+#include "figure/combat.h"
 #include "figure/image.h"
 #include "figure/route.h"
 #include "game/resource.h"
@@ -13,7 +14,6 @@
 #include "map/routing_terrain.h"
 
 #include "Data/CityInfo.h"
-#include "FigureAction.h"
 #include "FigureMovement.h"
 
 static const int CART_OFFSET_MULTIPLE_LOADS_FOOD[] = {0, 0, 8, 16, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -159,10 +159,10 @@ void figure_cartpusher_action(figure *f)
     
     switch (f->actionState) {
         case FIGURE_ACTION_150_ATTACK:
-            FigureAction_Common_handleAttack(f);
+            figure_combat_handle_attack(f);
             break;
         case FIGURE_ACTION_149_CORPSE:
-            FigureAction_Common_handleCorpse(f);
+            figure_combat_handle_corpse(f);
             break;
         case FIGURE_ACTION_20_CARTPUSHER_INITIAL:
             set_cart_graphic(f);
@@ -414,10 +414,10 @@ void figure_warehouseman_action(figure *f)
     
     switch (f->actionState) {
         case FIGURE_ACTION_150_ATTACK:
-            FigureAction_Common_handleAttack(f);
+            figure_combat_handle_attack(f);
             break;
         case FIGURE_ACTION_149_CORPSE:
-            FigureAction_Common_handleCorpse(f);
+            figure_combat_handle_corpse(f);
             break;
         case FIGURE_ACTION_50_WAREHOUSEMAN_CREATED: {
             building *b = building_get(f->buildingId);

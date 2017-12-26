@@ -9,6 +9,7 @@
 
 #include "building/building.h"
 #include "core/calc.h"
+#include "figure/combat.h"
 #include "figure/route.h"
 #include "game/time.h"
 #include "map/bridge.h"
@@ -133,7 +134,7 @@ static void figureMoveToNextTile(figure *f)
 	} else {
 		f->isOnRoad = 0;
 	}
-	FigureAction_Combat_attackFigureAt(f, f->gridOffset);
+	figure_combat_attack_figure_at(f, f->gridOffset);
 	f->previousTileX = oldX;
 	f->previousTileY = oldY;
 }

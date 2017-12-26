@@ -10,6 +10,7 @@
 #include "city/message.h"
 #include "core/calc.h"
 #include "core/random.h"
+#include "figure/combat.h"
 #include "figure/enemy_army.h"
 #include "figure/formation.h"
 #include "figure/formation_layout.h"
@@ -661,7 +662,7 @@ static void moveAnimals(const formation *m, int attackingAnimals)
 		}
 		f->waitTicks = 401;
 		if (attackingAnimals) {
-			int targetId = FigureAction_CombatWolf_getTarget(f->x, f->y, 6);
+			int targetId = figure_combat_get_target_for_wolf(f->x, f->y, 6);
 			if (targetId) {
                 figure *target = figure_get(targetId);
 				f->actionState = FIGURE_ACTION_199_WOLF_ATTACKING;

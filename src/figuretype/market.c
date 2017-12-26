@@ -3,12 +3,12 @@
 #include "building/building.h"
 #include "building/granary.h"
 #include "building/warehouse.h"
+#include "figure/combat.h"
 #include "figure/image.h"
 #include "figure/route.h"
 #include "game/resource.h"
 #include "graphics/image.h"
 
-#include "FigureAction.h"
 #include "FigureMovement.h"
 
 static int createDeliveryBoy(int leader_id, figure *f)
@@ -113,10 +113,10 @@ void figure_market_buyer_action(figure *f)
     figure_image_increase_offset(f, 12);
     switch (f->actionState) {
         case FIGURE_ACTION_150_ATTACK:
-            FigureAction_Common_handleAttack(f);
+            figure_combat_handle_attack(f);
             break;
         case FIGURE_ACTION_149_CORPSE:
-            FigureAction_Common_handleCorpse(f);
+            figure_combat_handle_corpse(f);
             break;
         case FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE:
             FigureMovement_walkTicks(f, 1);

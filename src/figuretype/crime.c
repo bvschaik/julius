@@ -4,6 +4,7 @@
 #include "city/finance.h"
 #include "city/message.h"
 #include "core/random.h"
+#include "figure/combat.h"
 #include "figure/image.h"
 #include "figure/route.h"
 #include "game/tutorial.h"
@@ -17,7 +18,6 @@
 #include "../CityInfo.h"
 #include "../Building.h"
 #include "../Formation.h"
-#include "FigureAction.h"
 #include "FigureMovement.h"
 
 static const int CRIMINAL_OFFSETS[] = {
@@ -204,10 +204,10 @@ void figure_rioter_action(figure *f)
     f->isGhost = 0;
     switch (f->actionState) {
         case FIGURE_ACTION_150_ATTACK:
-            FigureAction_Common_handleAttack(f);
+            figure_combat_handle_attack(f);
             break;
         case FIGURE_ACTION_149_CORPSE:
-            FigureAction_Common_handleCorpse(f);
+            figure_combat_handle_corpse(f);
             break;
         case FIGURE_ACTION_120_RIOTER_CREATED:
             figure_image_increase_offset(f, 32);

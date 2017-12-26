@@ -1,6 +1,7 @@
 #include "soldier.h"
 
 #include "core/calc.h"
+#include "figure/combat.h"
 #include "figure/formation.h"
 #include "figure/formation_layout.h"
 #include "figure/image.h"
@@ -87,7 +88,7 @@ static void javelin_launch_missile(figure *f)
     f->waitTicksMissile++;
     if (f->waitTicksMissile > figure_properties_for_type(f->type)->missile_delay) {
         f->waitTicksMissile = 0;
-        if (FigureAction_CombatSoldier_getMissileTarget(f, 10, &x_tile, &y_tile)) {
+        if (figure_combat_get_missile_target_for_soldier(f, 10, &x_tile, &y_tile)) {
             f->attackGraphicOffset = 1;
             f->direction = calc_missile_shooter_direction(f->x, f->y, x_tile, y_tile);
         } else {
@@ -108,9 +109,8 @@ static void javelin_launch_missile(figure *f)
 
 static void legionary_attack_adjacent_enemy(figure *f)
 {
-    // TODO WUT?
     for (int i = 0; i < 8 && f->actionState != FIGURE_ACTION_150_ATTACK; i++) {
-        FigureAction_Combat_attackFigureAt(f, f->gridOffset + map_grid_direction_delta(i));
+        figure_combat_attack_figure_at(f, f->gridOffset + map_grid_direction_delta(i));
     }
 }
 
@@ -122,7 +122,7 @@ static int find_mop_up_target(figure *f)
         target_id = 0;
     }
     if (target_id <= 0) {
-        target_id = FigureAction_CombatSoldier_getTarget(f->x, f->y, 20);
+        target_id = figure_combat_get_target_for_soldier(f->x, f->y, 20);
         if (target_id) {
             figure *target = figure_get(target_id);
             f->destinationX = target->x;
@@ -247,10 +247,10 @@ void figure_soldier_action(figure *f)
     
     switch (f->actionState) {
         case FIGURE_ACTION_150_ATTACK:
-            FigureAction_Common_handleAttack(f);
+            figure_combat_handle_attack(f);
             break;
         case FIGURE_ACTION_149_CORPSE:
-            FigureAction_Common_handleCorpse(f);
+            figure_combat_handle_corpse(f);
             break;
         case FIGURE_ACTION_80_SOLDIER_AT_REST:
             map_figure_update(f);
