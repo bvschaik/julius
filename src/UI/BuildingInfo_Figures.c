@@ -241,7 +241,7 @@ static void drawFigureInfoCartpusher(BuildingInfoContext *c, figure *f)
 	int width = Widget_GameText_draw(64, f->type,
 		c->xOffset + 92, c->yOffset + 139, FONT_SMALL_BLACK);
 	
-	if (f->actionState != FigureActionState_132_DockerIdling && f->resourceId) {
+	if (f->actionState != FIGURE_ACTION_132_DOCKER_IDLING && f->resourceId) {
 		int resource = f->resourceId;
 		Graphics_drawImage(image_group(GROUP_RESOURCE_ICONS) +
 			resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON),
@@ -262,13 +262,13 @@ static void drawFigureInfoCartpusher(BuildingInfoContext *c, figure *f)
 		case FIGURE_ACTION_53_WAREHOUSEMAN_RETURNING_EMPTY:
 		case FIGURE_ACTION_56_WAREHOUSEMAN_RETURNING_WITH_FOOD:
 		case FIGURE_ACTION_59_WAREHOUSEMAN_RETURNING_WITH_RESOURCE:
-		case FigureActionState_134_DockerExportQueue:
-		case FigureActionState_137_DockerExportReturning:
-		case FigureActionState_138_DockerImportReturning:
+		case FIGURE_ACTION_134_DOCKER_EXPORT_QUEUE:
+		case FIGURE_ACTION_137_DOCKER_EXPORT_RETURNING:
+		case FIGURE_ACTION_138_DOCKER_IMPORT_RETURNING:
 			isReturning = 1;
 			break;
 	}
-	if (f->actionState != FigureActionState_132_DockerIdling) {
+	if (f->actionState != FIGURE_ACTION_132_DOCKER_IDLING) {
 		if (isReturning) {
 			width = Widget_GameText_draw(129, 16,
 				c->xOffset + 40, c->yOffset + 200, FONT_SMALL_BLACK);

@@ -462,7 +462,7 @@ static int tradeShipDoneTrading(figure *f)
 		for (int i = 0; i < 3; i++) {
             if (b->data.other.dockFigureIds[i]) {
                 figure *docker = figure_get(b->data.other.dockFigureIds[i]);
-                if (docker->state == FigureState_Alive && docker->actionState != FigureActionState_132_DockerIdling) {
+                if (docker->state == FigureState_Alive && docker->actionState != FIGURE_ACTION_132_DOCKER_IDLING) {
                     return 0;
                 }
             }
@@ -625,15 +625,15 @@ int FigureAction_TradeShip_isBuyingOrSelling(int figureId)
 			continue;
 		}
 		switch (f->actionState) {
-			case FigureActionState_133_DockerImportQueue:
-			case FigureActionState_135_DockerImportGoingToWarehouse:
-			case FigureActionState_138_DockerImportReturning:
-			case FigureActionState_139_DockerImportAtWarehouse:
+			case FIGURE_ACTION_133_DOCKER_IMPORT_QUEUE:
+			case FIGURE_ACTION_135_DOCKER_IMPORT_GOING_TO_WAREHOUSE:
+			case FIGURE_ACTION_138_DOCKER_IMPORT_RETURNING:
+			case FIGURE_ACTION_139_DOCKER_IMPORT_AT_WAREHOUSE:
 				return TradeShipState_Buying;
-			case FigureActionState_134_DockerExportQueue:
-			case FigureActionState_136_DockerExportGoingToWarehouse:
-			case FigureActionState_137_DockerExportReturning:
-			case FigureActionState_140_DockerExportAtWarehouse:
+			case FIGURE_ACTION_134_DOCKER_EXPORT_QUEUE:
+			case FIGURE_ACTION_136_DOCKER_EXPORT_GOING_TO_WAREHOUSE:
+			case FIGURE_ACTION_137_DOCKER_EXPORT_RETURNING:
+			case FIGURE_ACTION_140_DOCKER_EXPORT_AT_WAREHOUSE:
 				return TradeShipState_Selling;
 		}
 	}

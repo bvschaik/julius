@@ -15,8 +15,8 @@ int building_dock_count_idle_dockers(building *dock)
     for (int i = 0; i < 3; i++) {
         if (dock->data.other.dockFigureIds[i]) {
             figure *f = figure_get(dock->data.other.dockFigureIds[i]);
-            if (f->actionState == FigureActionState_132_DockerIdling ||
-                f->actionState == FigureActionState_133_DockerImportQueue) {
+            if (f->actionState == FIGURE_ACTION_132_DOCKER_IDLING ||
+                f->actionState == FIGURE_ACTION_133_DOCKER_IMPORT_QUEUE) {
                 numIdle++;
             }
         }

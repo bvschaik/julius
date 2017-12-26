@@ -1072,7 +1072,7 @@ static void spawn_figure_dock(building *b)
             }
         } else if (existingDockers < maxDockers) {
             figure *f = figure_create(FIGURE_DOCKER, x_road, y_road, DIR_4_BOTTOM);
-            f->actionState = FigureActionState_132_DockerIdling;
+            f->actionState = FIGURE_ACTION_132_DOCKER_IDLING;
             f->buildingId = b->id;
             for (int i = 0; i < 3; i++) {
                 if (!b->data.other.dockFigureIds[i]) {

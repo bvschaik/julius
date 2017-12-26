@@ -453,8 +453,8 @@ static int soldier_phrase(figure *f)
 
 static int docker_phrase(figure *f)
 {
-    if (f->actionState == FigureActionState_135_DockerImportGoingToWarehouse ||
-        f->actionState == FigureActionState_136_DockerExportGoingToWarehouse) {
+    if (f->actionState == FIGURE_ACTION_135_DOCKER_IMPORT_GOING_TO_WAREHOUSE ||
+        f->actionState == FIGURE_ACTION_136_DOCKER_EXPORT_GOING_TO_WAREHOUSE) {
         if (calc_maximum_distance(
             f->destinationX, f->destinationY, f->sourceX, f->sourceY) >= 25) {
             return 9; // too far
