@@ -1,14 +1,20 @@
 #include "crime.h"
 
 #include "building/building.h"
+#include "city/finance.h"
 #include "city/message.h"
+#include "core/random.h"
 #include "figure/image.h"
 #include "figure/route.h"
+#include "game/tutorial.h"
 #include "graphics/image.h"
 #include "map/building.h"
 #include "map/grid.h"
+#include "map/road_access.h"
+#include "scenario/property.h"
 
 #include "Data/CityInfo.h"
+#include "../CityInfo.h"
 #include "../Building.h"
 #include "../Formation.h"
 #include "FigureAction.h"
@@ -17,6 +23,134 @@
 static const int CRIMINAL_OFFSETS[] = {
     0, 0, 1, 2, 3, 4, 5, 6, 7, 7, 6, 5, 4, 3, 2, 1
 };
+
+static void generate_rioter(building *b)
+{
+    int x_road, y_road;
+    if (!map_closest_road_within_radius(b->x, b->y, b->size, 4, &x_road, &y_road)) {
+        return;
+    }
+    Data_CityInfo.numCriminalsThisMonth++;
+    int people_in_mob;
+    if (Data_CityInfo.population <= 150) {
+        people_in_mob = 1;
+    } else if (Data_CityInfo.population <= 300) {
+        people_in_mob = 2;
+    } else if (Data_CityInfo.population <= 800) {
+        people_in_mob = 3;
+    } else if (Data_CityInfo.population <= 1200) {
+        people_in_mob = 4;
+    } else if (Data_CityInfo.population <= 2000) {
+        people_in_mob = 5;
+    } else {
+        people_in_mob = 6;
+    }
+    int x_target, y_target;
+    int target_building_id = Formation_Rioter_getTargetBuilding(&x_target, &y_target);
+    for (int i = 0; i < people_in_mob; i++) {
+        figure *f = figure_create(FIGURE_RIOTER, x_road, y_road, DIR_4_BOTTOM);
+        f->actionState = FIGURE_ACTION_120_RIOTER_CREATED;
+        f->roamLength = 0;
+        f->waitTicks = 10 + 4 * i;
+        if (target_building_id) {
+            f->destinationX = x_target;
+            f->destinationY = y_target;
+            f->destinationBuildingId = target_building_id;
+        } else {
+            f->state = FigureState_Dead;
+        }
+    }
+    Building_collapseOnFire(b->id, 0);
+    Data_CityInfo.ratingPeaceNumRiotersThisYear++;
+    Data_CityInfo.riotCause = Data_CityInfo.populationEmigrationCause;
+    CityInfo_Population_changeHappiness(20);
+    tutorial_on_crime();
+    city_message_apply_sound_interval(MESSAGE_CAT_RIOT);
+    city_message_post_with_popup_delay(MESSAGE_CAT_RIOT, MESSAGE_RIOT, b->type, map_grid_offset(x_road, y_road));
+}
+
+static void generate_mugger(building *b)
+{
+    Data_CityInfo.numCriminalsThisMonth++;
+    if (b->houseCriminalActive < 2) {
+        b->houseCriminalActive = 2;
+        int xRoad, yRoad;
+        if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
+            figure *f = figure_create(FIGURE_CRIMINAL, xRoad, yRoad, DIR_4_BOTTOM);
+            f->waitTicks = 10 + (b->houseGenerationDelay & 0xf);
+            Data_CityInfo.ratingPeaceNumCriminalsThisYear++;
+            if (Data_CityInfo.financeTaxesThisYear > 20) {
+                int moneyStolen = Data_CityInfo.financeTaxesThisYear / 4;
+                if (moneyStolen > 400) {
+                    moneyStolen = 400 - random_byte() / 2;
+                }
+                city_message_post(1, MESSAGE_THEFT, moneyStolen, f->gridOffset);
+                city_finance_process_stolen(moneyStolen);
+            }
+        }
+    }
+}
+
+static void generate_protestor(building *b)
+{
+    Data_CityInfo.numProtestersThisMonth++;
+    if (b->houseCriminalActive < 1) {
+        b->houseCriminalActive = 1;
+        int xRoad, yRoad;
+        if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
+            figure *f = figure_create(FIGURE_PROTESTER, xRoad, yRoad, DIR_4_BOTTOM);
+            f->waitTicks = 10 + (b->houseGenerationDelay & 0xf);
+            Data_CityInfo.ratingPeaceNumCriminalsThisYear++;
+        }
+    }
+}
+
+void figure_generate_criminals()
+{
+    building *min_building = 0;
+    int min_happiness = 50;
+    for (int i = 1; i <= Data_Buildings_Extra.highestBuildingIdInUse; i++) {
+        building *b = building_get(i);
+        if (BuildingIsInUse(b) && b->houseSize) {
+            if (b->sentiment.houseHappiness >= 50) {
+                b->houseCriminalActive = 0;
+            } else if (b->sentiment.houseHappiness < min_happiness) {
+                min_happiness = b->sentiment.houseHappiness;
+                min_building = b;
+            }
+        }
+    }
+    if (min_building) {
+        if (scenario_is_tutorial_1() || scenario_is_tutorial_2()) {
+            return;
+        }
+        if (Data_CityInfo.citySentiment < 30) {
+            if (random_byte() >= Data_CityInfo.citySentiment + 50) {
+                if (min_happiness <= 10) {
+                    generate_rioter(min_building);
+                } else if (min_happiness < 30) {
+                    generate_mugger(min_building);
+                } else if (min_happiness < 50) {
+                    generate_protestor(min_building);
+                }
+            }
+        } else if (Data_CityInfo.citySentiment < 60) {
+            if (random_byte() >= Data_CityInfo.citySentiment + 40) {
+                if (min_happiness < 30) {
+                    generate_mugger(min_building);
+                } else if (min_happiness < 50) {
+                    generate_protestor(min_building);
+                }
+            }
+        } else {
+            if (random_byte() >= Data_CityInfo.citySentiment + 20) {
+                if (min_happiness < 50) {
+                    generate_protestor(min_building);
+                }
+            }
+        }
+    }
+}
 
 void figure_protestor_action(figure *f)
 {

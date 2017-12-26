@@ -7,7 +7,6 @@
 #include "GameFile.h"
 #include "HouseEvolution.h"
 #include "HousePopulation.h"
-#include "Security.h"
 #include "SidebarMenu.h"
 #include "TerrainGraphics.h"
 #include "Trader.h"
@@ -29,6 +28,7 @@
 #include "city/message.h"
 #include "core/random.h"
 #include "empire/city.h"
+#include "figuretype/crime.h"
 #include "game/settings.h"
 #include "game/time.h"
 #include "game/tutorial.h"
@@ -112,7 +112,7 @@ void GameTick_advance()
 		case 40: Building_GameTick_updateState(); break;
 		case 43: building_maintenance_update_burning_ruins(); break;
 		case 44: building_maintenance_check_fire_collapse(); break;
-		case 45: Security_Tick_generateCriminal(); break;
+		case 45: figure_generate_criminals(); break;
 		case 46: building_industry_update_wheat_production(); break;
 		case 48: Building_decayTaxCollectorAccess(); break;
 		case 49: CityInfo_Culture_calculateEntertainment(); break;

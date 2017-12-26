@@ -3,6 +3,8 @@
 
 #include "figure/figure.h"
 
+void figure_generate_criminals();
+
 void figure_protestor_action(figure *f);
 
 void figure_criminal_action(figure *f);
