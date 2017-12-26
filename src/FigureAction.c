@@ -10,6 +10,7 @@
 #include "figuretype/maintenance.h"
 #include "figuretype/market.h"
 #include "figuretype/migrant.h"
+#include "figuretype/missile.h"
 #include "figuretype/native.h"
 #include "figuretype/service.h"
 #include "figuretype/trader.h"
@@ -27,7 +28,7 @@ static void (*figureActionCallbacks[])(figure *f) = {
 	figure_homeless_action,
 	figure_cartpusher_action,
 	figure_labor_seeker_action,
-	FigureAction_explosionCloud,
+	figure_explosion_cloud_action,
 	figure_tax_collector_action,
 	figure_engineer_action,
 	figure_warehouseman_action,
@@ -80,9 +81,9 @@ static void (*figureActionCallbacks[])(figure *f) = {
 	figure_nobody_action,
 	FigureAction_enemyCaesarLegionary,
 	figure_native_trader_action,
-	FigureAction_arrow,
-	FigureAction_javelin, //60
-	FigureAction_bolt,
+	figure_arrow_action,
+	figure_javelin_action, //60
+	figure_bolt_action,
 	figure_ballista_action,
 	figure_nobody_action,
 	figure_missionary_action,
@@ -92,7 +93,7 @@ static void (*figureActionCallbacks[])(figure *f) = {
 	figure_sheep_action,
 	figure_wolf_action,
 	figure_zebra_action, //70
-	FigureAction_spear,
+	figure_spear_action,
 	figure_hippodrome_horse_action,
 	figure_nobody_action,
 	figure_nobody_action,

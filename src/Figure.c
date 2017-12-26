@@ -71,44 +71,6 @@ void Figure_createMissile(int buildingId, int x, int y, int xDst, int yDst, int 
 	}
 }
 
-static int is_citizen(figure *f)
-{
-    if (f->actionState != FigureActionState_149_Corpse) {
-        if (f->type && f->type != FIGURE_EXPLOSION && f->type != FIGURE_FORT_STANDARD &&
-            f->type != FIGURE_MAP_FLAG && f->type != FIGURE_FLOTSAM && f->type < FIGURE_INDIGENOUS_NATIVE) {
-            return f->id;
-        }
-    }
-    return 0;
-}
-
-int Figure_getCitizenOnSameTile(int figureId)
-{
-    return map_figure_foreach_until(figure_get(figureId)->gridOffset, is_citizen);
-}
-
-static int is_non_citizen(figure *f)
-{
-    if (f->actionState == FigureActionState_149_Corpse) {
-        return 0;
-    }
-    if (FigureIsEnemy(f->type)) {
-        return f->id;
-    }
-    if (f->type == FIGURE_INDIGENOUS_NATIVE && f->actionState == FIGURE_ACTION_159_NATIVE_ATTACKING) {
-        return f->id;
-    }
-    if (f->type == FIGURE_WOLF || f->type == FIGURE_SHEEP || f->type == FIGURE_ZEBRA) {
-        return f->id;
-    }
-    return 0;
-}
-
-int Figure_getNonCitizenOnSameTile(int figureId)
-{
-    return map_figure_foreach_until(figure_get(figureId)->gridOffset, is_non_citizen);
-}
-
 int Figure_hasNearbyEnemy(int xStart, int yStart, int xEnd, int yEnd)
 {
 	for (int i = 1; i < MAX_FIGURES; i++) {

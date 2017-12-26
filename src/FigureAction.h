@@ -25,12 +25,6 @@ void FigureAction_Combat_attackFigureAt(figure *f, int grid_offset);
 // soldier
 void FigureAction_soldier(figure *f);
 void FigureAction_militaryStandard(figure *f);
-// missile
-void FigureAction_explosionCloud(figure *f);
-void FigureAction_arrow(figure *f);
-void FigureAction_spear(figure *f);
-void FigureAction_javelin(figure *f);
-void FigureAction_bolt(figure *f);
 // rioter
 void FigureAction_protestor(figure *f);
 void FigureAction_criminal(figure *f);
