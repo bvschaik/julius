@@ -3,20 +3,9 @@
 
 #include "figure/figure.h"
 
-enum {
-	TradeShipState_None = 0,
-	TradeShipState_Buying = 1,
-	TradeShipState_Selling = 2,
-};
-
 void FigureAction_handle();
 
 int FigureAction_Rioter_collapseBuilding(figure *f);
-
-int FigureAction_TradeCaravan_canBuy(int figureId, int buildingId, int empireCityId);
-int FigureAction_TradeCaravan_canSell(int figureId, int buildingId, int empireCityId);
-
-int FigureAction_TradeShip_isBuyingOrSelling(int figureId);
 
 int FigureAction_HerdEnemy_moveFormationTo(int formationId, int x, int y, int *xTile, int *yTile);
 
@@ -33,11 +22,6 @@ int FigureAction_CombatEnemy_getMissileTarget(figure *enemy, int maxDistance, in
 void FigureAction_Combat_attackFigureAt(figure *f, int grid_offset);
 
 // figure action callbacks
-// trader
-void FigureAction_tradeCaravan(figure *f);
-void FigureAction_tradeCaravanDonkey(figure *f);
-void FigureAction_tradeShip(figure *f);
-void FigureAction_nativeTrader(figure *f);
 // soldier
 void FigureAction_soldier(figure *f);
 void FigureAction_militaryStandard(figure *f);

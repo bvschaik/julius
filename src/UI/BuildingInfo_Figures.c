@@ -94,22 +94,22 @@ static void drawFigureInfoTrade(BuildingInfoContext *c, figure *f)
 	if (f->type == FIGURE_TRADE_SHIP) {
 		int textId;
 		switch (f->actionState) {
-			case FigureActionState_114_TradeShipAnchored: textId = 6; break;
-			case FigureActionState_112_TradeShipMoored: textId = 7; break;
-			case FigureActionState_115_TradeShipLeaving: textId = 8; break;
+			case FIGURE_ACTION_114_TRADE_SHIP_ANCHORED: textId = 6; break;
+			case FIGURE_ACTION_112_TRADE_SHIP_MOORED: textId = 7; break;
+			case FIGURE_ACTION_115_TRADE_SHIP_LEAVING: textId = 8; break;
 			default: textId = 9; break;
 		}
 		Widget_GameText_draw(129, textId, c->xOffset + 40, c->yOffset + 150, FONT_SMALL_BLACK);
 	} else {
 		int textId;
 		switch (f->actionState) {
-			case FigureActionState_101_TradeCaravanArriving:
+			case FIGURE_ACTION_101_TRADE_CARAVAN_ARRIVING:
 				textId = 12;
 				break;
-			case FigureActionState_102_TradeCaravanTrading:
+			case FIGURE_ACTION_102_TRADE_CARAVAN_TRADING:
 				textId = 10;
 				break;
-			case FigureActionState_103_TradeCaravanLeaving:
+			case FIGURE_ACTION_103_TRADE_CARAVAN_LEAVING:
 				if (trader_has_traded(traderId)) {
 					textId = 11;
 				} else {

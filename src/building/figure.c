@@ -1115,7 +1115,7 @@ static void spawn_figure_native_meeting(building *b)
             if (b->figureSpawnDelay > 8) {
                 b->figureSpawnDelay = 0;
                 figure *f = figure_create(FIGURE_NATIVE_TRADER, xOut, yOut, DIR_0_TOP);
-                f->actionState = FigureActionState_162_NativeTraderCreated;
+                f->actionState = FIGURE_ACTION_162_NATIVE_TRADER_CREATED;
                 f->buildingId = b->id;
                 b->figureId = f->id;
             }

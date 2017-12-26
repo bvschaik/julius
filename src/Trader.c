@@ -86,7 +86,7 @@ static int generateTrader(int cityId, empire_city *city)
 			figure *ship = figure_create(FIGURE_TRADE_SHIP, river_entry.x, river_entry.y, DIR_0_TOP);
 			city->trader_figure_ids[index] = ship->id;
 			ship->empireCityId = cityId;
-			ship->actionState = FigureActionState_110_TradeShipCreated;
+			ship->actionState = FIGURE_ACTION_110_TRADE_SHIP_CREATED;
 			ship->waitTicks = 10;
 			return 1;
 		}
@@ -98,17 +98,17 @@ static int generateTrader(int cityId, empire_city *city)
 				Data_CityInfo.entryPointX, Data_CityInfo.entryPointY, DIR_0_TOP);
 			city->trader_figure_ids[index] = caravan->id;
 			caravan->empireCityId = cityId;
-			caravan->actionState = FigureActionState_100_TradeCaravanCreated;
+			caravan->actionState = FIGURE_ACTION_100_TRADE_CARAVAN_CREATED;
 			caravan->waitTicks = 10;
 			// donkey 1
 			figure *donkey1 = figure_create(FIGURE_TRADE_CARAVAN_DONKEY,
 				Data_CityInfo.entryPointX, Data_CityInfo.entryPointY, DIR_0_TOP);
-			donkey1->actionState = FigureActionState_100_TradeCaravanCreated;
+			donkey1->actionState = FIGURE_ACTION_100_TRADE_CARAVAN_CREATED;
 			donkey1->inFrontFigureId = caravan->id;
 			// donkey 2
 			figure *donkey2 = figure_create(FIGURE_TRADE_CARAVAN_DONKEY,
 				Data_CityInfo.entryPointX, Data_CityInfo.entryPointY, DIR_0_TOP);
-			donkey2->actionState = FigureActionState_100_TradeCaravanCreated;
+			donkey2->actionState = FIGURE_ACTION_100_TRADE_CARAVAN_CREATED;
 			donkey2->inFrontFigureId = donkey1->id;
 			return 1;
 		}
@@ -158,95 +158,3 @@ void Trader_tick()
 	empire_city_foreach_open_until(canGenerateTraderForCity);
 }
 
-int Trader_getClosestWarehouseForTradeCaravan(const figure *f, int x, int y, int cityId, int distanceFromEntry, int *warehouseX, int *warehouseY)
-{
-	int exportable[RESOURCE_MAX];
-	int importable[RESOURCE_MAX];
-	exportable[RESOURCE_NONE] = 0;
-	importable[RESOURCE_NONE] = 0;
-	for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
-		exportable[r] = empire_can_export_resource_to_city(cityId, r);
-		if (f->traderAmountBought >= 8) {
-			exportable[r] = 0;
-		}
-		if (cityId) {
-			importable[r] = empire_can_import_resource_from_city(cityId, r);
-		} else { // exclude own city (id=0), shouldn't happen, but still..
-			importable[r] = 0;
-		}
-		if (f->loadsSoldOrCarrying >= 8) {
-			importable[r] = 0;
-		}
-	}
-	int numImportable = 0;
-	for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
-		if (importable[r]) {
-			numImportable++;
-		}
-	}
-	int minDistance = 10000;
-	int minBuildingId = 0;
-	for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
-		if (!BuildingIsInUse(b) || b->type != BUILDING_WAREHOUSE) {
-			continue;
-		}
-		if (!b->hasRoadAccess || b->distanceFromEntry <= 0) {
-			continue;
-		}
-		const building_storage *s = building_storage_get(b->storage_id);
-		int numImportsForWarehouse = 0;
-		for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
-			if (s->resource_state[r] != BUILDING_STORAGE_STATE_NOT_ACCEPTING && empire_can_import_resource_from_city(cityId, r)) {
-				numImportsForWarehouse++;
-			}
-		}
-		int distancePenalty = 32;
-		building *space = b;
-		for (int spaceCounter = 0; spaceCounter < 8; spaceCounter++) {
-			space = building_next(space);
-			if (space->id && exportable[space->subtype.warehouseResourceId]) {
-				distancePenalty -= 4;
-			}
-			if (numImportable && numImportsForWarehouse && !s->empty_all) {
-				for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
-					Data_CityInfo.tradeNextImportResourceCaravan++;
-					if (Data_CityInfo.tradeNextImportResourceCaravan > 15) {
-						Data_CityInfo.tradeNextImportResourceCaravan = 1;
-					}
-					if (s->resource_state[Data_CityInfo.tradeNextImportResourceCaravan] != BUILDING_STORAGE_STATE_NOT_ACCEPTING) {
-						break;
-					}
-				}
-				if (s->resource_state[Data_CityInfo.tradeNextImportResourceCaravan] != BUILDING_STORAGE_STATE_NOT_ACCEPTING) {
-					if (space->subtype.warehouseResourceId == RESOURCE_NONE) {
-						distancePenalty -= 16;
-					}
-					if (space->id && importable[space->subtype.warehouseResourceId] && space->loadsStored < 4 &&
-						space->subtype.warehouseResourceId == Data_CityInfo.tradeNextImportResourceCaravan) {
-						distancePenalty -= 8;
-					}
-				}
-			}
-		}
-		if (distancePenalty < 32) {
-			int distance = calc_distance_with_penalty(b->x, b->y, x, y, distanceFromEntry, b->distanceFromEntry);
-			distance += distancePenalty;
-			if (distance < minDistance) {
-				minDistance = distance;
-				minBuildingId = i;
-			}
-		}
-	}
-	if (!minBuildingId) {
-		return 0;
-	}
-	building *min = building_get(minBuildingId);
-	if (min->hasRoadAccess == 1) {
-		*warehouseX = min->x;
-		*warehouseY = min->y;
-	} else if (!map_has_road_access(min->x, min->y, 3, warehouseX, warehouseY)) {
-		return 0;
-	}
-	return minBuildingId;
-}

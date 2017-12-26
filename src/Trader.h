@@ -5,6 +5,4 @@
 
 void Trader_tick();
 
-int Trader_getClosestWarehouseForTradeCaravan(const figure *f, int x, int y, int cityId, int distanceFromEntry, int *warehouseX, int *warehouseY);
-
 #endif

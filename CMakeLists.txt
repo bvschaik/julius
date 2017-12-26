@@ -89,6 +89,7 @@ set(FIGURETYPE_FILES
     ${PROJECT_SOURCE_DIR}/src/figuretype/migrant.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/native.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/service.c
+    ${PROJECT_SOURCE_DIR}/src/figuretype/trader.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/wall.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/water.c
 )
@@ -184,7 +185,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/FigureAction_Missile.c
 	${PROJECT_SOURCE_DIR}/src/FigureAction_Rioter.c
 	${PROJECT_SOURCE_DIR}/src/FigureAction_Soldier.c
-	${PROJECT_SOURCE_DIR}/src/FigureAction_Trader.c
 	${PROJECT_SOURCE_DIR}/src/FigureMovement.c
 	${PROJECT_SOURCE_DIR}/src/Figure_Service.c
 	${PROJECT_SOURCE_DIR}/src/Formation.c

@@ -12,6 +12,7 @@
 #include "figuretype/migrant.h"
 #include "figuretype/native.h"
 #include "figuretype/service.h"
+#include "figuretype/trader.h"
 #include "figuretype/wall.h"
 #include "figuretype/water.h"
 
@@ -39,9 +40,9 @@ static void (*figureActionCallbacks[])(figure *f) = {
 	figure_entertainer_action,
 	figure_entertainer_action,
 	figure_entertainer_action,
-	FigureAction_tradeCaravan,
-	FigureAction_tradeShip, //20
-	FigureAction_tradeCaravanDonkey,
+	figure_trade_caravan_action,
+	figure_trade_ship_action, //20
+	figure_trade_caravan_donkey_action,
 	FigureAction_protestor,
 	FigureAction_criminal,
 	FigureAction_rioter,
@@ -78,7 +79,7 @@ static void (*figureActionCallbacks[])(figure *f) = {
 	figure_nobody_action,
 	figure_nobody_action,
 	FigureAction_enemyCaesarLegionary,
-	FigureAction_nativeTrader,
+	figure_native_trader_action,
 	FigureAction_arrow,
 	FigureAction_javelin, //60
 	FigureAction_bolt,

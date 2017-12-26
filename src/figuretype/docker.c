@@ -220,7 +220,7 @@ static int deliver_import_resource(figure *f, building *dock)
         return 0;
     }
     figure *ship = figure_get(ship_id);
-    if (ship->actionState != FigureActionState_112_TradeShipMoored || ship->loadsSoldOrCarrying <= 0) {
+    if (ship->actionState != FIGURE_ACTION_112_TRADE_SHIP_MOORED || ship->loadsSoldOrCarrying <= 0) {
         return 0;
     }
     int x, y;
@@ -255,7 +255,7 @@ static int fetch_export_resource(figure *f, building *dock)
         return 0;
     }
     figure *ship = figure_get(ship_id);
-    if (ship->actionState != FigureActionState_112_TradeShipMoored || ship->traderAmountBought >= 12) {
+    if (ship->actionState != FIGURE_ACTION_112_TRADE_SHIP_MOORED || ship->traderAmountBought >= 12) {
         return 0;
     }
     int x, y;
@@ -309,7 +309,7 @@ void figure_docker_action(figure *f)
             b->data.other.boatFigureId = 0;
         } else if (trader_has_traded_max(ship->traderId)) {
             b->data.other.boatFigureId = 0;
-        } else if (ship->actionState == FigureActionState_115_TradeShipLeaving) {
+        } else if (ship->actionState == FIGURE_ACTION_115_TRADE_SHIP_LEAVING) {
             b->data.other.boatFigureId = 0;
         }
     }

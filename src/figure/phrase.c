@@ -5,11 +5,11 @@
 #include "building/market.h"
 #include "core/calc.h"
 #include "figure/trader.h"
+#include "figuretype/trader.h"
 #include "sound/speech.h"
 
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
-#include "FigureAction.h"
 
 #include <string.h>
 
@@ -468,14 +468,14 @@ static int trade_caravan_phrase(figure *f)
     if (++f->phraseSequenceExact >= 2) {
         f->phraseSequenceExact = 0;
     }
-    if (f->actionState == FigureActionState_103_TradeCaravanLeaving) {
+    if (f->actionState == FIGURE_ACTION_103_TRADE_CARAVAN_LEAVING) {
         if (!trader_has_traded(f->traderId)) {
             return 7; // no trade
         }
-    } else if (f->actionState == FigureActionState_102_TradeCaravanTrading) {
-        if (FigureAction_TradeCaravan_canBuy(f->id, f->destinationBuildingId, f->empireCityId)) {
+    } else if (f->actionState == FIGURE_ACTION_102_TRADE_CARAVAN_TRADING) {
+        if (figure_trade_caravan_can_buy(f, f->destinationBuildingId, f->empireCityId)) {
             return 11; // buying goods
-        } else if (FigureAction_TradeCaravan_canSell(f->id, f->destinationBuildingId, f->empireCityId)) {
+        } else if (figure_trade_caravan_can_sell(f, f->destinationBuildingId, f->empireCityId)) {
             return 10; // selling goods
         }
     }
@@ -484,17 +484,17 @@ static int trade_caravan_phrase(figure *f)
 
 static int trade_ship_phrase(figure *f)
 {
-    if (f->actionState == FigureActionState_115_TradeShipLeaving) {
+    if (f->actionState == FIGURE_ACTION_115_TRADE_SHIP_LEAVING) {
         if (!trader_has_traded(f->traderId)) {
             return 9; // no trade
         } else {
             return 11; // good trade
         }
-    } else if (f->actionState == FigureActionState_112_TradeShipMoored) {
-        int state = FigureAction_TradeShip_isBuyingOrSelling(f->id);
-        if (state == TradeShipState_Buying) {
+    } else if (f->actionState == FIGURE_ACTION_112_TRADE_SHIP_MOORED) {
+        int state = figure_trade_ship_is_trading(f);
+        if (state == TRADE_SHIP_BUYING) {
             return 8; // buying goods
-        } else if (state == TradeShipState_Selling) {
+        } else if (state == TRADE_SHIP_SELLING) {
             return 7; // selling goods
         } else {
             return 9; // no trade
