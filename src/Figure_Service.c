@@ -11,372 +11,292 @@
 #include "map/building.h"
 #include "map/grid.h"
 
-#define FOR_XY_RADIUS \
-	int x_min, y_min, x_max, y_max;\
-	map_grid_get_area(x, y, 1, 2, &x_min, &y_min, &x_max, &y_max);\
-	int gridOffset = map_grid_offset(x_min, y_min);\
-	for (int yy = y_min; yy <= y_max; yy++) {\
-		for (int xx = x_min; xx <= x_max; xx++) {\
-			int building_id = map_building_at(gridOffset);\
-			if (building_id) {\
+static int provide_culture(int x, int y, void (*callback)(building *))
+{
+    int serviced = 0;
+    int x_min, y_min, x_max, y_max;
+    map_grid_get_area(x, y, 1, 2, &x_min, &y_min, &x_max, &y_max);
+    for (int yy = y_min; yy <= y_max; yy++) {
+        for (int xx = x_min; xx <= x_max; xx++) {
+            int grid_offset = map_grid_offset(xx, yy);
+            int building_id = map_building_at(grid_offset);
+            if (building_id) {
                 building *b = building_get(building_id);
-
-#define END_FOR_XY_RADIUS \
-			}\
-			++gridOffset;\
-		}\
-		gridOffset += 162 - (x_max - x_min + 1);\
-	}
-
-static int provideEngineerCoverage(int x, int y, int *maxDamageRiskSeen)
-{
-	int serviced = 0;
-	FOR_XY_RADIUS {
-		if (b->type == BUILDING_HIPPODROME) {
-			b = building_main(b);
-		}
-		if (b->damageRisk > *maxDamageRiskSeen) {
-			*maxDamageRiskSeen = b->damageRisk;
-		}
-		b->damageRisk = 0;
-		if (b->houseSize && b->housePopulation > 0) {
-			serviced++;
-		}
-	} END_FOR_XY_RADIUS;
-	return serviced;
+                if (b->houseSize && b->housePopulation > 0) {
+                    callback(b);
+                    serviced++;
+                }
+            }
+        }
+    }
+    return serviced;
 }
 
-static int providePrefectFireCoverage(int x, int y)
+static int provide_entertainment(int x, int y, int shows, void (*callback)(building *, int))
 {
-	int serviced = 0;
-	FOR_XY_RADIUS {
-		if (b->type == BUILDING_HIPPODROME) {
-			b = building_main(b);
-		}
-		b->fireRisk = 0;
-		if (b->houseSize && b->housePopulation > 0) {
-			serviced++;
-		}
-	} END_FOR_XY_RADIUS;
-	return serviced;
+    int serviced = 0;
+    int x_min, y_min, x_max, y_max;
+    map_grid_get_area(x, y, 1, 2, &x_min, &y_min, &x_max, &y_max);
+    for (int yy = y_min; yy <= y_max; yy++) {
+        for (int xx = x_min; xx <= x_max; xx++) {
+            int grid_offset = map_grid_offset(xx, yy);
+            int building_id = map_building_at(grid_offset);
+            if (building_id) {
+                building *b = building_get(building_id);
+                if (b->houseSize && b->housePopulation > 0) {
+                    callback(b, shows);
+                    serviced++;
+                }
+            }
+        }
+    }
+    return serviced;
 }
 
-static int getPrefectCrimeCoverage(int x, int y)
+static void labor_seeker_coverage(building *b)
 {
-	int minHappinessSeen = 100;
-	FOR_XY_RADIUS {
-		if (b->sentiment.houseHappiness < minHappinessSeen) {
-			minHappinessSeen = b->sentiment.houseHappiness;
-		}
-	} END_FOR_XY_RADIUS;
-	return minHappinessSeen;
 }
 
-static int provideTheaterCoverage(int x, int y)
+static void theater_coverage(building *b)
 {
-	int serviced = 0;
-	FOR_XY_RADIUS {
-		if (b->houseSize && b->housePopulation > 0) {
-			b->data.house.theater = 96;
-			serviced++;
-		}
-	} END_FOR_XY_RADIUS;
-	return serviced;
+    b->data.house.theater = 96;
 }
 
-static int provideAmphitheaterCoverage(int x, int y, int numShows)
+static void amphitheater_coverage(building *b, int shows)
 {
-	int serviced = 0;
-	FOR_XY_RADIUS {
-		if (b->houseSize && b->housePopulation > 0) {
-			b->data.house.amphitheaterActor = 96;
-			if (numShows == 2) {
-				b->data.house.amphitheaterGladiator = 96;
-			}
-			serviced++;
-		}
-	} END_FOR_XY_RADIUS;
-	return serviced;
+    b->data.house.amphitheaterActor = 96;
+    if (shows == 2) {
+        b->data.house.amphitheaterGladiator = 96;
+    }
 }
 
-static int provideColosseumCoverage(int x, int y, int numShows)
+static void colosseum_coverage(building *b, int shows)
 {
-	int serviced = 0;
-	FOR_XY_RADIUS {
-		if (b->houseSize && b->housePopulation > 0) {
-			b->data.house.colosseumGladiator = 96;
-			if (numShows == 2) {
-				b->data.house.colosseumLion = 96;
-			}
-			serviced++;
-		}
-	} END_FOR_XY_RADIUS;
-	return serviced;
+    b->data.house.colosseumGladiator = 96;
+    if (shows == 2) {
+        b->data.house.colosseumLion = 96;
+    }
 }
 
-static int provideHippodromeCoverage(int x, int y)
+static void hippodrome_coverage(building *b)
 {
-	int serviced = 0;
-	FOR_XY_RADIUS {
-		if (b->houseSize && b->housePopulation > 0) {
-			b->data.house.hippodrome = 96;
-			serviced++;
-		}
-	} END_FOR_XY_RADIUS;
-	return serviced;
+    b->data.house.hippodrome = 96;
 }
 
-static int provideMarketGoods(int marketBuildingId, int x, int y)
+static void bathhouse_coverage(building *b)
 {
-	int serviced = 0;
-	building *market = building_get(marketBuildingId);
-	FOR_XY_RADIUS {
-		if (b->houseSize && b->housePopulation > 0) {
-			serviced++;
-			int level = b->subtype.houseLevel;
-			if (level < HOUSE_LUXURY_PALACE) {
-				level++;
-			}
-			int maxFoodStocks = 4 * b->houseMaxPopulationSeen;
-			int foodTypesStoredMax = 0;
-			for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
-				if (b->data.house.inventory[i] >= maxFoodStocks) {
-					foodTypesStoredMax++;
-				}
-			}
-			const model_house *model = model_get_house(level);
-			if (model->food_types > foodTypesStoredMax) {
-				for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
-					if (b->data.house.inventory[i] >= maxFoodStocks) {
-						continue;
-					}
-					if (market->data.market.inventory[i] >= maxFoodStocks) {
-						b->data.house.inventory[i] += maxFoodStocks;
-						market->data.market.inventory[i] -= maxFoodStocks;
-						break;
-					} else if (market->data.market.inventory[i]) {
-						b->data.house.inventory[i] += market->data.market.inventory[i];
-						market->data.market.inventory[i] = 0;
-						break;
-					}
-				}
-			}
-			if (model->pottery) {
-				market->data.market.potteryDemand = 10;
-				int potteryWanted = 8 * model->pottery - b->data.house.inventory[INVENTORY_POTTERY];
-				if (market->data.market.inventory[INVENTORY_POTTERY] > 0 && potteryWanted > 0) {
-					if (potteryWanted <= market->data.market.inventory[INVENTORY_POTTERY]) {
-						b->data.house.inventory[INVENTORY_POTTERY] += potteryWanted;
-						market->data.market.inventory[INVENTORY_POTTERY] -= potteryWanted;
-					} else {
-						b->data.house.inventory[INVENTORY_POTTERY] += market->data.market.inventory[INVENTORY_POTTERY];
-						market->data.market.inventory[INVENTORY_POTTERY] = 0;
-					}
-				}
-			}
-			if (model->furniture) {
-				market->data.market.furnitureDemand = 10;
-				int furnitureWanted = 4 * model->furniture - b->data.house.inventory[INVENTORY_FURNITURE];
-				if (market->data.market.inventory[INVENTORY_FURNITURE] > 0 && furnitureWanted > 0) {
-					if (furnitureWanted <= market->data.market.inventory[INVENTORY_FURNITURE]) {
-						b->data.house.inventory[INVENTORY_FURNITURE] += furnitureWanted;
-						market->data.market.inventory[INVENTORY_FURNITURE] -= furnitureWanted;
-					} else {
-						b->data.house.inventory[INVENTORY_FURNITURE] += market->data.market.inventory[INVENTORY_FURNITURE];
-						market->data.market.inventory[INVENTORY_FURNITURE] = 0;
-					}
-				}
-			}
-			if (model->oil) {
-				market->data.market.oilDemand = 10;
-				int oilWanted = 4 * model->oil - b->data.house.inventory[INVENTORY_OIL];
-				if (market->data.market.inventory[INVENTORY_OIL] > 0 && oilWanted > 0) {
-					if (oilWanted <= market->data.market.inventory[INVENTORY_OIL]) {
-						b->data.house.inventory[INVENTORY_OIL] += oilWanted;
-						market->data.market.inventory[INVENTORY_OIL] -= oilWanted;
-					} else {
-						b->data.house.inventory[INVENTORY_OIL] += market->data.market.inventory[INVENTORY_OIL];
-						market->data.market.inventory[INVENTORY_OIL] = 0;
-					}
-				}
-			}
-			if (model->wine) {
-				market->data.market.wineDemand = 10;
-				int wineWanted = 4 * model->wine - b->data.house.inventory[INVENTORY_WINE];
-				if (market->data.market.inventory[INVENTORY_WINE] > 0 && wineWanted > 0) {
-					if (wineWanted <= market->data.market.inventory[INVENTORY_WINE]) {
-						b->data.house.inventory[INVENTORY_WINE] += wineWanted;
-						market->data.market.inventory[INVENTORY_WINE] -= wineWanted;
-					} else {
-						b->data.house.inventory[INVENTORY_WINE] += market->data.market.inventory[INVENTORY_WINE];
-						market->data.market.inventory[INVENTORY_WINE] = 0;
-					}
-				}
-			}
-		}
-	} END_FOR_XY_RADIUS;
-	return serviced;
+    b->data.house.bathhouse = 96;
 }
 
-static int provideBathhouseCoverage(int x, int y)
+static void religion_coverage_ceres(building *b)
 {
-	int serviced = 0;
-	FOR_XY_RADIUS {
-		if (b->houseSize && b->housePopulation > 0) {
-			b->data.house.bathhouse = 96;
-			serviced++;
-		}
-	} END_FOR_XY_RADIUS;
-	return serviced;
+    b->data.house.templeCeres = 96;
 }
 
-static int provideReligionCoverage(int x, int y, int god)
+static void religion_coverage_neptune(building *b)
 {
-	int serviced = 0;
-	FOR_XY_RADIUS {
-		if (b->houseSize && b->housePopulation > 0) {
-			switch (god) {
-				case GOD_CERES:
-					b->data.house.templeCeres = 96;
-					break;
-				case GOD_NEPTUNE:
-					b->data.house.templeNeptune = 96;
-					break;
-				case GOD_MERCURY:
-					b->data.house.templeMercury = 96;
-					break;
-				case GOD_MARS:
-					b->data.house.templeMars = 96;
-					break;
-				case GOD_VENUS:
-					b->data.house.templeVenus = 96;
-					break;
-			}
-			serviced++;
-		}
-	} END_FOR_XY_RADIUS;
-	return serviced;
+    b->data.house.templeNeptune = 96;
 }
 
-static int provideSchoolCoverage(int x, int y)
+static void religion_coverage_mercury(building *b)
 {
-	int serviced = 0;
-	FOR_XY_RADIUS {
-		if (b->houseSize && b->housePopulation > 0) {
-			b->data.house.school = 96;
-			serviced++;
-		}
-	} END_FOR_XY_RADIUS;
-	return serviced;
+    b->data.house.templeMercury = 96;
 }
 
-static int provideAcademyCoverage(int x, int y)
+static void religion_coverage_mars(building *b)
 {
-	int serviced = 0;
-	FOR_XY_RADIUS {
-		if (b->houseSize && b->housePopulation > 0) {
-			b->data.house.academy = 96;
-			serviced++;
-		}
-	} END_FOR_XY_RADIUS;
-	return serviced;
+    b->data.house.templeMars = 96;
 }
 
-static int provideLibraryCoverage(int x, int y)
+static void religion_coverage_venus(building *b)
 {
-	int serviced = 0;
-	FOR_XY_RADIUS {
-		if (b->houseSize && b->housePopulation > 0) {
-			b->data.house.library = 96;
-			serviced++;
-		}
-	} END_FOR_XY_RADIUS;
-	return serviced;
+    b->data.house.templeVenus = 96;
 }
 
-static int provideBarberCoverage(int x, int y)
+static void school_coverage(building *b)
 {
-	int serviced = 0;
-	FOR_XY_RADIUS {
-		if (b->houseSize && b->housePopulation > 0) {
-			b->data.house.barber = 96;
-			serviced++;
-		}
-	} END_FOR_XY_RADIUS;
-	return serviced;
+    b->data.house.school = 96;
 }
 
-static int provideClinicCoverage(int x, int y)
+static void academy_coverage(building *b)
 {
-	int serviced = 0;
-	FOR_XY_RADIUS {
-		if (b->houseSize && b->housePopulation > 0) {
-			b->data.house.clinic = 96;
-			serviced++;
-		}
-	} END_FOR_XY_RADIUS;
-	return serviced;
+    b->data.house.academy = 96;
 }
 
-static int provideHospitalCoverage(int x, int y)
+static void library_coverage(building *b)
 {
-	int serviced = 0;
-	FOR_XY_RADIUS {
-		if (b->houseSize && b->housePopulation > 0) {
-			b->data.house.hospital = 96;
-			serviced++;
-		}
-	} END_FOR_XY_RADIUS;
-	return serviced;
+    b->data.house.library = 96;
 }
 
-static int provideMissionaryCoverage(int x, int y)
+static void barber_coverage(building *b)
+{
+    b->data.house.barber = 96;
+}
+
+static void clinic_coverage(building *b)
+{
+    b->data.house.clinic = 96;
+}
+
+static void hospital_coverage(building *b)
+{
+    b->data.house.hospital = 96;
+}
+
+static int provide_missionary_coverage(int x, int y)
 {
     int x_min, y_min, x_max, y_max;
     map_grid_get_area(x, y, 1, 4, &x_min, &y_min, &x_max, &y_max);
-	int gridOffset = map_grid_offset(x_min, y_min);
-	for (int yy = y_min; yy <= y_max; yy++) {
-		for (int xx = x_min; xx <= x_max; xx++) {
-			int buildingId = map_building_at(gridOffset);
-			if (buildingId) {
+    for (int yy = y_min; yy <= y_max; yy++) {
+        for (int xx = x_min; xx <= x_max; xx++) {
+            int buildingId = map_building_at(map_grid_offset(xx, yy));
+            if (buildingId) {
                 building *b = building_get(buildingId);
-				if (b->type == BUILDING_NATIVE_HUT || b->type == BUILDING_NATIVE_MEETING) {
-					b->sentiment.nativeAnger = 0;
-				}
-			}
-			++gridOffset;
-		}
-		gridOffset += 162 - (x_max - x_min + 1);
-	}
-	return 1;
+                if (b->type == BUILDING_NATIVE_HUT || b->type == BUILDING_NATIVE_MEETING) {
+                    b->sentiment.nativeAnger = 0;
+                }
+            }
+        }
+    }
+    return 1;
 }
 
-static int provideLaborSeekerCoverage(int x, int y)
+static int provide_service(int x, int y, int *data, void (*callback)(building *, int *))
 {
-	int serviced = 0;
-	FOR_XY_RADIUS {
-		if (b->houseSize && b->housePopulation > 0) {
-			serviced++;
-		}
-	} END_FOR_XY_RADIUS;
-	return serviced;
+    int serviced = 0;
+    int x_min, y_min, x_max, y_max;
+    map_grid_get_area(x, y, 1, 2, &x_min, &y_min, &x_max, &y_max);
+    for (int yy = y_min; yy <= y_max; yy++) {
+        for (int xx = x_min; xx <= x_max; xx++) {
+            int grid_offset = map_grid_offset(xx, yy);
+            int building_id = map_building_at(grid_offset);
+            if (building_id) {
+                building *b = building_get(building_id);
+                callback(b, data);
+                if (b->houseSize && b->housePopulation > 0) {
+                    serviced++;
+                }
+            }
+        }
+    }
+    return serviced;
 }
 
-static int provideTaxCollectorCoverage(int x, int y, unsigned char *maxTaxMultiplier)
+static void engineer_coverage(building *b, int *max_damage_seen)
 {
-	int serviced = 0;
-	*maxTaxMultiplier = 0;
-	FOR_XY_RADIUS {
-		if (b->houseSize && b->housePopulation > 0) {
-			int taxMultiplier = model_get_house(b->subtype.houseLevel)->tax_multiplier;
-			if (taxMultiplier > *maxTaxMultiplier) {
-				*maxTaxMultiplier = taxMultiplier;
-			}
-			b->houseTaxCoverage = 50;
-			serviced++;
-		}
-	} END_FOR_XY_RADIUS;
-	return serviced;
+    if (b->type == BUILDING_HIPPODROME) {
+        b = building_main(b);
+    }
+    if (b->damageRisk > *max_damage_seen) {
+        *max_damage_seen = b->damageRisk;
+    }
+    b->damageRisk = 0;
+}
+
+static void prefect_coverage(building *b, int *min_happiness_seen)
+{
+    if (b->type == BUILDING_HIPPODROME) {
+        b = building_main(b);
+    }
+    b->fireRisk = 0;
+    if (b->sentiment.houseHappiness < *min_happiness_seen) {
+        *min_happiness_seen = b->sentiment.houseHappiness;
+    }
+}
+
+static void tax_collector_coverage(building *b, int *max_tax_multiplier)
+{
+    if (b->houseSize && b->housePopulation > 0) {
+        int tax_multiplier = model_get_house(b->subtype.houseLevel)->tax_multiplier;
+        if (tax_multiplier > *max_tax_multiplier) {
+            *max_tax_multiplier = tax_multiplier;
+        }
+        b->houseTaxCoverage = 50;
+    }
+}
+
+static void distribute_good(building *b, building *market, int stock_wanted, int inventory_resource)
+{
+    int amount_wanted = stock_wanted - b->data.house.inventory[inventory_resource];
+    if (market->data.market.inventory[inventory_resource] > 0 && amount_wanted > 0) {
+        if (amount_wanted <= market->data.market.inventory[inventory_resource]) {
+            b->data.house.inventory[inventory_resource] += amount_wanted;
+            market->data.market.inventory[inventory_resource] -= amount_wanted;
+        } else {
+            b->data.house.inventory[inventory_resource] += market->data.market.inventory[inventory_resource];
+            market->data.market.inventory[inventory_resource] = 0;
+        }
+    }
+}
+
+static void distribute_market_resources(building *b, building *market)
+{
+    int level = b->subtype.houseLevel;
+    if (level < HOUSE_LUXURY_PALACE) {
+        level++;
+    }
+    int max_food_stocks = 4 * b->houseMaxPopulationSeen;
+    int food_types_stored_max = 0;
+    for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
+        if (b->data.house.inventory[i] >= max_food_stocks) {
+            food_types_stored_max++;
+        }
+    }
+    const model_house *model = model_get_house(level);
+    if (model->food_types > food_types_stored_max) {
+        for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
+            if (b->data.house.inventory[i] >= max_food_stocks) {
+                continue;
+            }
+            if (market->data.market.inventory[i] >= max_food_stocks) {
+                b->data.house.inventory[i] += max_food_stocks;
+                market->data.market.inventory[i] -= max_food_stocks;
+                break;
+            } else if (market->data.market.inventory[i]) {
+                b->data.house.inventory[i] += market->data.market.inventory[i];
+                market->data.market.inventory[i] = 0;
+                break;
+            }
+        }
+    }
+    if (model->pottery) {
+        market->data.market.potteryDemand = 10;
+        distribute_good(b, market, 8 * model->pottery, INVENTORY_POTTERY);
+    }
+    if (model->furniture) {
+        market->data.market.furnitureDemand = 10;
+        distribute_good(b, market, 4 * model->furniture, INVENTORY_FURNITURE);
+    }
+    if (model->oil) {
+        market->data.market.oilDemand = 10;
+        distribute_good(b, market, 4 * model->oil, INVENTORY_OIL);
+    }
+    if (model->wine) {
+        market->data.market.wineDemand = 10;
+        distribute_good(b, market, 4 * model->wine, INVENTORY_WINE);
+    }
+}
+
+static int provide_market_goods(int market_building_id, int x, int y)
+{
+    int serviced = 0;
+    building *market = building_get(market_building_id);
+    int x_min, y_min, x_max, y_max;
+    map_grid_get_area(x, y, 1, 2, &x_min, &y_min, &x_max, &y_max);
+    for (int yy = y_min; yy <= y_max; yy++) {
+        for (int xx = x_min; xx <= x_max; xx++) {
+            int grid_offset = map_grid_offset(xx, yy);
+            int building_id = map_building_at(grid_offset);
+            if (building_id) {
+                building *b = building_get(building_id);
+                if (b->houseSize && b->housePopulation > 0) {
+                    distribute_market_resources(b, market);
+                    serviced++;
+                }
+            }
+        }
+    }
+    return serviced;
 }
 
 static building *get_entertainment_building(const figure *f)
@@ -391,7 +311,7 @@ static building *get_entertainment_building(const figure *f)
 
 int Figure_provideServiceCoverage(figure *f)
 {
-	int numHousesServiced = 0;
+	int houses_serviced = 0;
 	int x = f->x;
 	int y = f->y;
 	building *b;
@@ -399,60 +319,63 @@ int Figure_provideServiceCoverage(figure *f)
 		case FIGURE_PATRICIAN:
 			return 0;
 		case FIGURE_LABOR_SEEKER:
-			numHousesServiced = provideLaborSeekerCoverage(x, y);
+			houses_serviced = provide_culture(x, y, labor_seeker_coverage);
 			break;
-		case FIGURE_TAX_COLLECTOR:
-			numHousesServiced = provideTaxCollectorCoverage(x, y, &f->minMaxSeen);
+		case FIGURE_TAX_COLLECTOR: {
+            int max_tax_rate = 0;
+			houses_serviced = provide_service(x, y, &max_tax_rate, tax_collector_coverage);
+            f->minMaxSeen = max_tax_rate;
 			break;
+        }
 		case FIGURE_MARKET_TRADER:
 		case FIGURE_MARKET_BUYER:
-			numHousesServiced = provideMarketGoods(f->buildingId, x, y);
+			houses_serviced = provide_market_goods(f->buildingId, x, y);
 			break;
 		case FIGURE_BATHHOUSE_WORKER:
-			numHousesServiced = provideBathhouseCoverage(x, y);
+			houses_serviced = provide_culture(x, y, bathhouse_coverage);
 			break;
 		case FIGURE_SCHOOL_CHILD:
-			numHousesServiced = provideSchoolCoverage(x, y);
+			houses_serviced = provide_culture(x, y, school_coverage);
 			break;
 		case FIGURE_TEACHER:
-			numHousesServiced = provideAcademyCoverage(x, y);
+			houses_serviced = provide_culture(x, y, academy_coverage);
 			break;
 		case FIGURE_LIBRARIAN:
-			numHousesServiced = provideLibraryCoverage(x, y);
+			houses_serviced = provide_culture(x, y, library_coverage);
 			break;
 		case FIGURE_BARBER:
-			numHousesServiced = provideBarberCoverage(x, y);
+			houses_serviced = provide_culture(x, y, barber_coverage);
 			break;
 		case FIGURE_DOCTOR:
-			numHousesServiced = provideClinicCoverage(x, y);
+			houses_serviced = provide_culture(x, y, clinic_coverage);
 			break;
 		case FIGURE_SURGEON:
-			numHousesServiced = provideHospitalCoverage(x, y);
+			houses_serviced = provide_culture(x, y, hospital_coverage);
 			break;
 		case FIGURE_MISSIONARY:
-			numHousesServiced = provideMissionaryCoverage(x, y);
+			houses_serviced = provide_missionary_coverage(x, y);
 			break;
 		case FIGURE_PRIEST:
 			switch (building_get(f->buildingId)->type) {
 				case BUILDING_SMALL_TEMPLE_CERES:
 				case BUILDING_LARGE_TEMPLE_CERES:
-					numHousesServiced = provideReligionCoverage(x, y, GOD_CERES);
+					houses_serviced = provide_culture(x, y, religion_coverage_ceres);
 					break;
 				case BUILDING_SMALL_TEMPLE_NEPTUNE:
 				case BUILDING_LARGE_TEMPLE_NEPTUNE:
-					numHousesServiced = provideReligionCoverage(x, y, GOD_NEPTUNE);
+					houses_serviced = provide_culture(x, y, religion_coverage_neptune);
 					break;
 				case BUILDING_SMALL_TEMPLE_MERCURY:
 				case BUILDING_LARGE_TEMPLE_MERCURY:
-					numHousesServiced = provideReligionCoverage(x, y, GOD_MERCURY);
+					houses_serviced = provide_culture(x, y, religion_coverage_mercury);
 					break;
 				case BUILDING_SMALL_TEMPLE_MARS:
 				case BUILDING_LARGE_TEMPLE_MARS:
-					numHousesServiced = provideReligionCoverage(x, y, GOD_MARS);
+					houses_serviced = provide_culture(x, y, religion_coverage_mars);
 					break;
 				case BUILDING_SMALL_TEMPLE_VENUS:
 				case BUILDING_LARGE_TEMPLE_VENUS:
-					numHousesServiced = provideReligionCoverage(x, y, GOD_VENUS);
+					houses_serviced = provide_culture(x, y, religion_coverage_venus);
 					break;
 				default:
 					break;
@@ -461,45 +384,48 @@ int Figure_provideServiceCoverage(figure *f)
 		case FIGURE_ACTOR:
 			b = get_entertainment_building(f);
 			if (b->type == BUILDING_THEATER) {
-				numHousesServiced = provideTheaterCoverage(x, y);
+				houses_serviced = provide_culture(x, y, theater_coverage);
 			} else if (b->type == BUILDING_AMPHITHEATER) {
-				numHousesServiced = provideAmphitheaterCoverage(x, y,
-					b->data.entertainment.days1 ? 2 : 1);
+				houses_serviced = provide_entertainment(x, y,
+					b->data.entertainment.days1 ? 2 : 1, amphitheater_coverage);
 			}
 			break;
 		case FIGURE_GLADIATOR:
 			b = get_entertainment_building(f);
 			if (b->type == BUILDING_AMPHITHEATER) {
-				numHousesServiced = provideAmphitheaterCoverage(x, y,
-					b->data.entertainment.days2 ? 2 : 1);
+				houses_serviced = provide_entertainment(x, y,
+					b->data.entertainment.days2 ? 2 : 1, amphitheater_coverage);
 			} else if (b->type == BUILDING_COLOSSEUM) {
-				numHousesServiced = provideColosseumCoverage(x, y,
-					b->data.entertainment.days1 ? 2 : 1);
+				houses_serviced = provide_entertainment(x, y,
+					b->data.entertainment.days1 ? 2 : 1, colosseum_coverage);
 			}
 			break;
 		case FIGURE_LION_TAMER:
 			b = get_entertainment_building(f);
-			numHousesServiced = provideColosseumCoverage(x, y,
-				b->data.entertainment.days2 ? 2 : 1);
+			houses_serviced = provide_entertainment(x, y,
+				b->data.entertainment.days2 ? 2 : 1, colosseum_coverage);
 			break;
 		case FIGURE_CHARIOTEER:
-			numHousesServiced = provideHippodromeCoverage(x, y);
+			houses_serviced = provide_culture(x, y, hippodrome_coverage);
 			break;
-		case FIGURE_ENGINEER:
-			{int maxDamage = 0;
-			numHousesServiced = provideEngineerCoverage(x, y, &maxDamage);
-			if (maxDamage > f->minMaxSeen) {
-				f->minMaxSeen = maxDamage;
+		case FIGURE_ENGINEER: {
+			int max_damage = 0;
+			houses_serviced = provide_service(x, y, &max_damage, engineer_coverage);
+			if (max_damage > f->minMaxSeen) {
+				f->minMaxSeen = max_damage;
 			} else if (f->minMaxSeen <= 10) {
 				f->minMaxSeen = 0;
 			} else {
 				f->minMaxSeen -= 10;
-			}}
+			}
 			break;
-		case FIGURE_PREFECT:
-			numHousesServiced = providePrefectFireCoverage(x, y);
-			f->minMaxSeen = getPrefectCrimeCoverage(x, y);
+        }
+		case FIGURE_PREFECT: {
+            int min_happiness = 100;
+			houses_serviced = provide_service(x, y, &min_happiness, prefect_coverage);
+            f->minMaxSeen = min_happiness;
 			break;
+        }
 		case FIGURE_RIOTER:
 			if (figure_rioter_collapse_building(f) == 1) {
 				return 1;
@@ -508,7 +434,7 @@ int Figure_provideServiceCoverage(figure *f)
 	}
 	if (f->buildingId) {
 		b = building_get(f->buildingId);
-		b->housesCovered += numHousesServiced;
+		b->housesCovered += houses_serviced;
 		if (b->housesCovered > 300) {
 			b->housesCovered = 300;
 		}
