@@ -12,8 +12,7 @@
 #include "VideoIntermezzo.h"
 #include "Warning.h"
 
-#include "../Cursor.h"
-
+#include "input/cursor.h"
 #include "input/mouse.h"
 
 struct Window {
@@ -102,7 +101,7 @@ static void updateMouseBefore()
 static void updateMouseAfter()
 {
     mouse_set_scroll(SCROLL_NONE);
-	Cursor_set();
+	input_cursor_update(currentWindow);
 }
 
 void UI_Window_refresh(int force)

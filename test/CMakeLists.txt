@@ -17,6 +17,7 @@ endfunction(except_file)
 except_file(TEST_CORE_FILES "core/lang.c" ${CORE_FILES})
 except_file(TEST_BUILDING_FILES "building/model.c" ${BUILDING_FILES})
 except_file(TEST_INPUT_FILES "input/keyboard.c" ${INPUT_FILES})
+except_file(TEST_INPUT_FILES "input/cursor.c" ${TEST_INPUT_FILES})
 
 add_executable(compare
     sav/compare.c
@@ -59,7 +60,6 @@ add_executable(autopilot
     ${PROJECT_SOURCE_DIR}/src/CityInfo_Tick.c
     ${PROJECT_SOURCE_DIR}/src/CityInfo_Victory.c
     ${PROJECT_SOURCE_DIR}/src/CityView.c
-    ${PROJECT_SOURCE_DIR}/src/Cursor.c
     ${PROJECT_SOURCE_DIR}/src/Formation.c
     ${PROJECT_SOURCE_DIR}/src/FormationUpdate.c
     ${PROJECT_SOURCE_DIR}/src/Game.c

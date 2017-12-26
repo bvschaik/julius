@@ -110,6 +110,7 @@ set(GAME_FILES
     ${PROJECT_SOURCE_DIR}/src/game/undo.c
 )
 set(INPUT_FILES
+    ${PROJECT_SOURCE_DIR}/src/input/cursor.c
     ${PROJECT_SOURCE_DIR}/src/input/keyboard.c
     ${PROJECT_SOURCE_DIR}/src/input/mouse.c
     ${PROJECT_SOURCE_DIR}/src/input/scroll.c
@@ -184,7 +185,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/CityInfo_Tick.c
 	${PROJECT_SOURCE_DIR}/src/CityInfo_Victory.c
 	${PROJECT_SOURCE_DIR}/src/CityView.c
-	${PROJECT_SOURCE_DIR}/src/Cursor.c
 	${PROJECT_SOURCE_DIR}/src/Formation.c
 	${PROJECT_SOURCE_DIR}/src/FormationUpdate.c
 	${PROJECT_SOURCE_DIR}/src/Game.c

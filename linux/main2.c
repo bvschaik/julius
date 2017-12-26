@@ -9,7 +9,7 @@
 #include "../src/core/time.h"
 #include "../src/Runner.h"
 #include "../src/Screen.h"
-#include "../src/Cursor.h"
+#include "../src/input/cursor.h"
 #include "../src/KeyboardHotkey.h"
 #include "../src/input/keyboard.h"
 #include "../src/Widget.h" // debug
@@ -116,7 +116,7 @@ void System_setCursor(int cursorId)
 	SDL_SetCursor(Cursors[cursorId]);
 }
 
-static SDL_Cursor *initCursor(const struct Cursor *cursor)
+static SDL_Cursor *initCursor(const cursor *c)
 {
 	Uint8 data[4*32];
 	Uint8 mask[4*32];
@@ -129,7 +129,7 @@ static SDL_Cursor *initCursor(const struct Cursor *cursor)
 			b++;
 			data[b] = mask[b] = 0;
 		}
-		switch (cursor->data[i]) {
+		switch (c->data[i]) {
 			case 'X':
 				data[b] |= 0x01;
 				mask[b] |= 0x01;
@@ -139,14 +139,14 @@ static SDL_Cursor *initCursor(const struct Cursor *cursor)
 				break;
 		}
 	}
-	return SDL_CreateCursor(data, mask, 32, 32, cursor->hotspotX, cursor->hotspotY);
+	return SDL_CreateCursor(data, mask, 32, 32, c->hotspotX, c->hotspotY);
 }
 
 void System_initCursors()
 {
 	if (autopilot) return;
 	for (int i = 0; i < 3; i++) {
-		Cursors[i] = initCursor(Cursor_getData(i));
+		Cursors[i] = initCursor(input_cursor_data(i));
 	}
 	System_setCursor(0);
 }
