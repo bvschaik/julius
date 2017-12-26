@@ -5,6 +5,7 @@
 #include "figure/figure.h"
 #include "figuretype/animal.h"
 #include "figuretype/cartpusher.h"
+#include "figuretype/docker.h"
 #include "figuretype/entertainer.h"
 #include "figuretype/maintenance.h"
 #include "figuretype/market.h"
@@ -57,7 +58,7 @@ static void (*figureActionCallbacks[])(figure *f) = {
 	figure_worker_action,
 	figure_nobody_action, // mapFlag: editor only
 	figure_flotsam_action,
-	FigureAction_docker,
+	figure_docker_action,
 	figure_market_buyer_action,
 	figure_patrician_action, //40
 	figure_indigenous_native_action,

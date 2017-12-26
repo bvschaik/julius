@@ -82,6 +82,7 @@ set(FIGURE_FILES
 set(FIGURETYPE_FILES
     ${PROJECT_SOURCE_DIR}/src/figuretype/animal.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/cartpusher.c
+    ${PROJECT_SOURCE_DIR}/src/figuretype/docker.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/entertainer.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/maintenance.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/market.c
@@ -179,7 +180,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/FigureAction.c
 	${PROJECT_SOURCE_DIR}/src/FigureAction_Combat.c
 	${PROJECT_SOURCE_DIR}/src/FigureAction_Common.c
-	${PROJECT_SOURCE_DIR}/src/FigureAction_Docker.c
 	${PROJECT_SOURCE_DIR}/src/FigureAction_Enemy.c
 	${PROJECT_SOURCE_DIR}/src/FigureAction_Missile.c
 	${PROJECT_SOURCE_DIR}/src/FigureAction_Rioter.c

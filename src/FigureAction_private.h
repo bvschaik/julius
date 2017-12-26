@@ -12,8 +12,6 @@
 #define FigureActionFormationLayoutPositionX(layout, index) formation_layout_position_x(layout, index)
 #define FigureActionFormationLayoutPositionY(layout, index) formation_layout_position_y(layout, index)
 
-#define FigureActionUpdateGraphic(f,g) figure_image_update(f, g)
-
 extern const int figureActionMissileLauncherGraphicOffsets[128];
 
 #include "FigureAction.h"
