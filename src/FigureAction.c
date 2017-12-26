@@ -5,6 +5,7 @@
 #include "figure/figure.h"
 #include "figuretype/animal.h"
 #include "figuretype/cartpusher.h"
+#include "figuretype/crime.h"
 #include "figuretype/docker.h"
 #include "figuretype/entertainer.h"
 #include "figuretype/maintenance.h"
@@ -44,9 +45,9 @@ static void (*figureActionCallbacks[])(figure *f) = {
 	figure_trade_caravan_action,
 	figure_trade_ship_action, //20
 	figure_trade_caravan_donkey_action,
-	FigureAction_protestor,
-	FigureAction_criminal,
-	FigureAction_rioter,
+	figure_protestor_action,
+	figure_criminal_action,
+	figure_rioter_action,
 	figure_fishing_boat_action,
 	figure_market_trader_action,
 	figure_priest_action,

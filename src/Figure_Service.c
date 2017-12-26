@@ -7,6 +7,7 @@
 #include "building/model.h"
 #include "city/culture.h"
 #include "figure/type.h"
+#include "figuretype/crime.h"
 #include "game/resource.h"
 #include "map/building.h"
 #include "map/grid.h"
@@ -501,7 +502,7 @@ int Figure_provideServiceCoverage(figure *f)
 			f->minMaxSeen = getPrefectCrimeCoverage(x, y);
 			break;
 		case FIGURE_RIOTER:
-			if (FigureAction_Rioter_collapseBuilding(f) == 1) {
+			if (figure_rioter_collapse_building(f) == 1) {
 				return 1;
 			}
 			break;

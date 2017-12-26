@@ -5,8 +5,6 @@
 
 void FigureAction_handle();
 
-int FigureAction_Rioter_collapseBuilding(figure *f);
-
 int FigureAction_HerdEnemy_moveFormationTo(int formationId, int x, int y, int *xTile, int *yTile);
 
 void FigureAction_Common_handleCorpse(figure *f);
@@ -25,10 +23,6 @@ void FigureAction_Combat_attackFigureAt(figure *f, int grid_offset);
 // soldier
 void FigureAction_soldier(figure *f);
 void FigureAction_militaryStandard(figure *f);
-// rioter
-void FigureAction_protestor(figure *f);
-void FigureAction_criminal(figure *f);
-void FigureAction_rioter(figure *f);
 // enemy
 void FigureAction_enemy43_Spear(figure *f);
 void FigureAction_enemy44_Sword(figure *f);

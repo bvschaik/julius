@@ -51,7 +51,7 @@ static void generateRioter(building *b)
 	int targetBuildingId = Formation_Rioter_getTargetBuilding(&targetX, &targetY);
 	for (int i = 0; i < peopleInMob; i++) {
 		figure *f = figure_create(FIGURE_RIOTER, xRoad, yRoad, DIR_4_BOTTOM);
-		f->actionState = FigureActionState_120_RioterCreated;
+		f->actionState = FIGURE_ACTION_120_RIOTER_CREATED;
 		f->roamLength = 0;
 		f->waitTicks = 10 + 4 * i;
 		if (targetBuildingId) {
