@@ -4,6 +4,7 @@
 #include "city/message.h"
 #include "core/calc.h"
 #include "core/random.h"
+#include "figuretype/missile.h"
 #include "game/time.h"
 #include "map/building.h"
 #include "map/grid.h"
@@ -15,7 +16,6 @@
 #include "Data/State.h"
 
 #include "../Building.h"
-#include "Figure.h"
 #include "TerrainGraphics.h"
 
 enum {
@@ -96,7 +96,7 @@ static void advance_earthquake_to_tile(int x, int y)
     map_routing_update_land();
     map_routing_update_walls();
     
-    Figure_createDustCloud(x, y, 1);
+    figure_create_explosion_cloud(x, y, 1);
 }
 
 void scenario_earthquake_process()

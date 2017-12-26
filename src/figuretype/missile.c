@@ -5,16 +5,66 @@
 #include "figure/sound.h"
 #include "graphics/image.h"
 #include "map/figure.h"
+#include "map/point.h"
 #include "sound/effect.h"
 
 #include "Data/State.h"
 #include "../Formation.h"
 #include "FigureMovement.h"
 
+static const int CLOUD_TILE_OFFSETS[] = {0, 0, 0, 1, 1, 2};
+
+static const int CLOUD_CC_OFFSETS[] = {0, 7, 14, 7, 14, 7};
+
+static const int CLOUD_SPEED[] = {
+    1, 2, 1, 3, 2, 1, 3, 2, 1, 1, 2, 1, 2, 1, 3, 1
+};
+
+static const map_point CLOUD_DIRECTION[] = {
+    {0, -6}, {-2, -5}, {-4, -4}, {-5, -2}, {-6, 0}, {-5, -2}, {-4, -4}, {-2, -5},
+    {0, -6}, {-2, -5}, {-4, -4}, {-5, -2}, {-6, 0}, {-5, -2}, {-4, -4}, {-2, -5}
+};
+
 static const int CLOUD_IMAGE_OFFSETS[] = {
     0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2,
     2, 2, 2, 2, 3, 3, 3, 4, 4, 5, 6, 7
 };
+
+void figure_create_explosion_cloud(int x, int y, int size)
+{
+    int tileOffset = CLOUD_TILE_OFFSETS[size];
+    int ccOffset = CLOUD_CC_OFFSETS[size];
+    for (int i = 0; i < 16; i++) {
+        figure *f = figure_create(FIGURE_EXPLOSION,
+            x + tileOffset, y + tileOffset, DIR_0_TOP);
+        if (f->id) {
+            f->crossCountryX += ccOffset;
+            f->crossCountryY += ccOffset;
+            f->destinationX += CLOUD_DIRECTION[i].x;
+            f->destinationY += CLOUD_DIRECTION[i].y;
+            FigureMovement_crossCountrySetDirection(f,
+                f->crossCountryX, f->crossCountryY,
+                15 * f->destinationX + ccOffset,
+                15 * f->destinationY + ccOffset, 0);
+            f->speedMultiplier = CLOUD_SPEED[i];
+        }
+    }
+    sound_effect_play(SOUND_EFFECT_EXPLOSION);
+}
+
+void figure_create_missile(int building_id, int x, int y, int x_dst, int y_dst, figure_type type)
+{
+    figure *f = figure_create(type, x, y, DIR_0_TOP);
+    if (f->id) {
+        f->missileDamage = (type == FIGURE_BOLT) ? 60 : 10;
+        f->buildingId = building_id;
+        f->destinationX = x_dst;
+        f->destinationY = y_dst;
+        FigureMovement_crossCountrySetDirection(
+            f, f->crossCountryX, f->crossCountryY,
+            15 * x_dst, 15 * y_dst, 1);
+    }
+}
 
 static int is_citizen(figure *f)
 {

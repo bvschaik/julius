@@ -1,6 +1,5 @@
 #include "Formation.h"
 
-#include "Figure.h"
 #include "FigureAction.h"
 #include "TerrainGraphics.h"
 

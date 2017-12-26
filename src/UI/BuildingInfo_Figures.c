@@ -3,7 +3,6 @@
 #include "CityBuildings.h"
 #include "Window.h"
 #include "../CityView.h"
-#include "../Figure.h"
 #include "../Graphics.h"
 #include "../Widget.h"
 

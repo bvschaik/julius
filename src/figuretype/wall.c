@@ -6,6 +6,7 @@
 #include "figure/image.h"
 #include "figure/properties.h"
 #include "figure/route.h"
+#include "figuretype/missile.h"
 #include "graphics/image.h"
 #include "map/figure.h"
 #include "map/grid.h"
@@ -14,7 +15,6 @@
 #include "sound/effect.h"
 
 #include "Data/State.h"
-#include "Figure.h"
 #include "FigureAction.h"
 #include "FigureMovement.h"
 #include "Terrain.h"
@@ -88,7 +88,7 @@ void figure_ballista_action(figure *f)
                 if (FigureAction_CombatSoldier_getMissileTarget(f, 15, &x_tile, &y_tile)) {
                     f->direction = calc_missile_shooter_direction(f->x, f->y, x_tile, y_tile);
                     f->waitTicksMissile = 0;
-                    Figure_createMissile(f->id, f->x, f->y, x_tile, y_tile, FIGURE_BOLT);
+                    figure_create_missile(f->id, f->x, f->y, x_tile, y_tile, FIGURE_BOLT);
                     sound_effect_play(SOUND_EFFECT_BALLISTA_SHOOT);
                 } else {
                     f->actionState = FIGURE_ACTION_180_BALLISTA_CREATED;
@@ -221,7 +221,7 @@ void figure_tower_sentry_action(figure *f)
                 if (FigureAction_CombatSoldier_getMissileTarget(f, 10, &x_tile, &y_tile)) {
                     f->direction = calc_missile_shooter_direction(f->x, f->y, x_tile, y_tile);
                     f->waitTicksMissile = 0;
-                    Figure_createMissile(f->id, f->x, f->y, x_tile, y_tile, FIGURE_JAVELIN);
+                    figure_create_missile(f->id, f->x, f->y, x_tile, y_tile, FIGURE_JAVELIN);
                 } else {
                     f->actionState = FIGURE_ACTION_173_TOWER_SENTRY_RETURNING;
                     f->destinationX = f->sourceX;

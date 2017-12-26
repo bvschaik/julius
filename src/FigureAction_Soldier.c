@@ -1,13 +1,12 @@
 #include "FigureAction_private.h"
 
-#include "Figure.h"
-
 #include "Data/CityInfo.h"
 
 #include "core/calc.h"
 #include "figure/formation.h"
 #include "figure/properties.h"
 #include "figure/route.h"
+#include "figuretype/missile.h"
 #include "map/figure.h"
 #include "map/grid.h"
 
@@ -94,7 +93,7 @@ static void javelinLaunchMissile(figure *f)
 	}
 	if (f->attackGraphicOffset) {
 		if (f->attackGraphicOffset == 1) {
-			Figure_createMissile(f->id, f->x, f->y, xTile, yTile, FIGURE_JAVELIN);
+			figure_create_missile(f->id, f->x, f->y, xTile, yTile, FIGURE_JAVELIN);
             formation_record_missile_fired(f->formationId);
 		}
 		f->attackGraphicOffset++;

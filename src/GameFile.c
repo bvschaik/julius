@@ -2,7 +2,6 @@
 
 #include "Building.h"
 #include "CityView.h"
-#include "Figure.h"
 #include "Loader.h"
 #include "SidebarMenu.h"
 #include "TerrainGraphics.h"

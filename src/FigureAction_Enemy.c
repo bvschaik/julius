@@ -1,6 +1,5 @@
 #include "FigureAction_private.h"
 
-#include "Figure.h"
 #include "Formation.h"
 
 #include "Data/CityInfo.h"
@@ -9,6 +8,7 @@
 #include "figure/formation.h"
 #include "figure/properties.h"
 #include "figure/route.h"
+#include "figuretype/missile.h"
 #include "map/figure.h"
 #include "map/grid.h"
 #include "map/routing.h"
@@ -72,7 +72,7 @@ static void enemyInitial(figure *f, const formation *m)
 					break;
 			}
 			if (f->attackGraphicOffset == 1) {
-				Figure_createMissile(f->id, f->x, f->y, xTile, yTile, missileType);
+				figure_create_missile(f->id, f->x, f->y, xTile, yTile, missileType);
 				formation_record_missile_fired(m->id);
 			}
 			if (missileType == FIGURE_ARROW) {

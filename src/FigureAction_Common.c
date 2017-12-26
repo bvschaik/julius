@@ -1,6 +1,5 @@
 #include "FigureAction_private.h"
 
-#include "Figure.h"
 #include "Formation.h"
 
 #include "figure/formation.h"

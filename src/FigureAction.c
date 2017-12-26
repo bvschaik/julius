@@ -1,7 +1,7 @@
 #include "FigureAction_private.h"
 
-#include "Figure.h"
 #include "Data/CityInfo.h"
+
 #include "figure/figure.h"
 #include "figuretype/animal.h"
 #include "figuretype/cartpusher.h"

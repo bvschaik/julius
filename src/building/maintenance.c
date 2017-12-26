@@ -5,6 +5,7 @@
 #include "city/message.h"
 #include "core/calc.h"
 #include "core/random.h"
+#include "figuretype/missile.h"
 #include "game/tutorial.h"
 #include "game/undo.h"
 #include "map/building.h"
@@ -16,7 +17,6 @@
 
 #include "Data/CityInfo.h"
 #include "../Building.h"
-#include "../Figure.h"
 #include "../TerrainGraphics.h"
 
 static int fire_spread_direction = 0;
@@ -139,7 +139,7 @@ static void collapse_building(int building_id, building *b)
     game_undo_disable();
     b->state = BuildingState_Rubble;
     TerrainGraphics_setBuildingAreaRubble(building_id, b->x, b->y, b->size);
-    Figure_createDustCloud(b->x, b->y, b->size);
+    figure_create_explosion_cloud(b->x, b->y, b->size);
     Building_collapseLinked(building_id, 0);
 }
 

@@ -5,7 +5,6 @@
 #include "core/calc.h"
 #include "CityInfo.h"
 #include "CityView.h"
-#include "Figure.h"
 #include "Formation.h"
 #include "GameFile.h"
 #include "Loader.h"

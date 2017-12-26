@@ -2,7 +2,6 @@
 
 #include "Building.h"
 #include "CityInfo.h"
-#include "Figure.h"
 #include "FigureAction.h"
 #include "Formation.h"
 #include "SidebarMenu.h"

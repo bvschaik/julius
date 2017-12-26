@@ -2,7 +2,6 @@
 
 #include "CityInfo.h"
 #include "CityView.h"
-#include "Figure.h"
 #include "FigureAction.h"
 #include "Formation.h"
 #include "HousePopulation.h"
@@ -15,6 +14,7 @@
 #include "building/storage.h"
 #include "city/message.h"
 #include "city/warning.h"
+#include "figuretype/missile.h"
 #include "figuretype/wall.h"
 #include "game/undo.h"
 #include "graphics/image.h"
@@ -253,7 +253,7 @@ void Building_collapseLastPlaced()
 		game_undo_disable();
 		b->state = BuildingState_Rubble;
 		TerrainGraphics_setBuildingAreaRubble(buildingId, b->x, b->y, b->size);
-		Figure_createDustCloud(b->x, b->y, b->size);
+		figure_create_explosion_cloud(b->x, b->y, b->size);
 		Building_collapseLinked(buildingId, 0);
 		map_routing_update_land();
 	}
@@ -311,7 +311,7 @@ void Building_destroyByEnemy(int x, int y, int gridOffset)
 				Data_CityInfo.ratingPeaceNumDestroyedBuildingsThisYear = 12;
 			}
 			b->state = BuildingState_Rubble;
-			Figure_createDustCloud(b->x, b->y, b->size);
+			figure_create_explosion_cloud(b->x, b->y, b->size);
 			Building_collapseLinked(buildingId, 0);
 		}
 	} else {
