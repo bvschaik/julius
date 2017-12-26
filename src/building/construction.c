@@ -1,6 +1,5 @@
 #include "construction.h"
 
-#include "Figure.h"
 #include "Terrain.h"
 #include "TerrainGraphics.h"
 #include "UI/Window.h"

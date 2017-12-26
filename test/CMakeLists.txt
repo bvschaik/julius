@@ -61,7 +61,6 @@ add_executable(autopilot
     ${PROJECT_SOURCE_DIR}/src/CityView.c
     ${PROJECT_SOURCE_DIR}/src/Cursor.c
     ${PROJECT_SOURCE_DIR}/src/FigureMovement.c
-    ${PROJECT_SOURCE_DIR}/src/Figure_Service.c
     ${PROJECT_SOURCE_DIR}/src/Formation.c
     ${PROJECT_SOURCE_DIR}/src/FormationUpdate.c
     ${PROJECT_SOURCE_DIR}/src/Game.c

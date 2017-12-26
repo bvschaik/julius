@@ -78,6 +78,7 @@ set(FIGURE_FILES
     ${PROJECT_SOURCE_DIR}/src/figure/phrase.c
     ${PROJECT_SOURCE_DIR}/src/figure/properties.c
     ${PROJECT_SOURCE_DIR}/src/figure/route.c
+    ${PROJECT_SOURCE_DIR}/src/figure/service.c
     ${PROJECT_SOURCE_DIR}/src/figure/sound.c
     ${PROJECT_SOURCE_DIR}/src/figure/trader.c
 )
@@ -184,7 +185,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/CityView.c
 	${PROJECT_SOURCE_DIR}/src/Cursor.c
 	${PROJECT_SOURCE_DIR}/src/FigureMovement.c
-	${PROJECT_SOURCE_DIR}/src/Figure_Service.c
 	${PROJECT_SOURCE_DIR}/src/Formation.c
 	${PROJECT_SOURCE_DIR}/src/FormationUpdate.c
 	${PROJECT_SOURCE_DIR}/src/Game.c

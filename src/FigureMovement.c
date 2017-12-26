@@ -1,7 +1,6 @@
 #include "FigureMovement.h"
 
 #include "Building.h"
-#include "Figure.h"
 #include "Terrain.h"
 
 #include "Data/CityInfo.h"
@@ -10,6 +9,7 @@
 #include "core/calc.h"
 #include "figure/combat.h"
 #include "figure/route.h"
+#include "figure/service.h"
 #include "game/time.h"
 #include "map/bridge.h"
 #include "map/building.h"
@@ -234,7 +234,7 @@ void FigureMovement_roamTicks(figure *f, int numTicks)
 			f->progressOnTile = 15;
 			f->roamRandomCounter++;
 			int cameFromDirection = (f->previousTileDirection + 4) % 8;
-			if (Figure_provideServiceCoverage(f)) {
+			if (figure_service_provide_coverage(f)) {
 				return;
 			}
 			int roadTiles[8];
@@ -412,7 +412,7 @@ static void FigureMovement_walkTicksInternal(figure *f, int numTicks, int roamin
 		if (f->progressOnTile < 15) {
 			FigureMovement_advanceTick(f);
 		} else {
-			Figure_provideServiceCoverage(f);
+			figure_service_provide_coverage(f);
 			f->progressOnTile = 15;
 			if (f->routingPathId <= 0) {
 				figure_route_add(f);
