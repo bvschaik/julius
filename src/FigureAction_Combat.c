@@ -105,7 +105,7 @@ int FigureAction_CombatWolf_getTarget(int x, int y, int maxDistance)
 		if (FigureIsEnemy(f->type) || FigureIsHerd(f->type)) {
 			continue;
 		}
-		if (FigureIsLegion(f->type) && f->actionState == FigureActionState_80_SoldierAtRest) {
+		if (FigureIsLegion(f->type) && f->actionState == FIGURE_ACTION_80_SOLDIER_AT_REST) {
 			continue;
 		}
 		int distance = calc_maximum_distance(x, y, f->x, f->y);
@@ -214,7 +214,7 @@ void FigureAction_Combat_attackFigureAt(figure *f, int grid_offset)
 {
 	int figureCategory = figure_properties_for_type(f->type)->category;
 	if (figureCategory <= FIGURE_CATEGORY_INACTIVE || figureCategory >= FIGURE_CATEGORY_CRIMINAL ||
-			f->actionState == FigureActionState_150_Attack) {
+			f->actionState == FIGURE_ACTION_150_ATTACK) {
 		return;
 	}
 	int guard = 0;
@@ -233,7 +233,7 @@ void FigureAction_Combat_attackFigureAt(figure *f, int grid_offset)
 		int attack = 0;
 		if (opponent->state != FigureState_Alive) {
 			attack = 0;
-		} else if (opponent->actionState == FigureActionState_149_Corpse) {
+		} else if (opponent->actionState == FIGURE_ACTION_149_CORPSE) {
 			attack = 0;
 		} else if (figureCategory == FIGURE_CATEGORY_ARMED && opponentCategory == FIGURE_CATEGORY_NATIVE) {
 			if (opponent->actionState == FIGURE_ACTION_159_NATIVE_ATTACKING) {
@@ -254,12 +254,12 @@ void FigureAction_Combat_attackFigureAt(figure *f, int grid_offset)
 		} else if (figureCategory == FIGURE_CATEGORY_HOSTILE && opponentCategory == FIGURE_CATEGORY_ANIMAL) {
 			attack = 1;
 		}
-		if (attack && opponent->actionState == FigureActionState_150_Attack && opponent->numAttackers >= 2) {
+		if (attack && opponent->actionState == FIGURE_ACTION_150_ATTACK && opponent->numAttackers >= 2) {
 			attack = 0;
 		}
 		if (attack) {
 			f->actionStateBeforeAttack = f->actionState;
-			f->actionState = FigureActionState_150_Attack;
+			f->actionState = FIGURE_ACTION_150_ATTACK;
 			f->opponentId = opponentId;
 			f->attackerId1 = opponentId;
 			f->numAttackers = 1;
@@ -274,9 +274,9 @@ void FigureAction_Combat_attackFigureAt(figure *f, int grid_offset)
 			if (f->attackDirection >= 8) {
 				f->attackDirection = 0;
 			}
-			if (opponent->actionState != FigureActionState_150_Attack) {
+			if (opponent->actionState != FIGURE_ACTION_150_ATTACK) {
 				opponent->actionStateBeforeAttack = opponent->actionState;
-				opponent->actionState = FigureActionState_150_Attack;
+				opponent->actionState = FIGURE_ACTION_150_ATTACK;
 				opponent->attackGraphicOffset = 0;
 				opponent->attackDirection = (f->attackDirection + 4) % 8;
 			}

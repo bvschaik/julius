@@ -39,10 +39,10 @@ void figure_immigrant_action(figure *f)
     figure_image_increase_offset(f, 12);
     
     switch (f->actionState) {
-        case FigureActionState_150_Attack:
+        case FIGURE_ACTION_150_ATTACK:
             FigureAction_Common_handleAttack(f);
             break;
-        case FigureActionState_149_Corpse:
+        case FIGURE_ACTION_149_CORPSE:
             FigureAction_Common_handleCorpse(f);
             break;
         case FIGURE_ACTION_1_IMMIGRANT_CREATED:
@@ -119,10 +119,10 @@ void figure_emigrant_action(figure *f)
     figure_image_increase_offset(f, 12);
     
     switch (f->actionState) {
-        case FigureActionState_150_Attack:
+        case FIGURE_ACTION_150_ATTACK:
             FigureAction_Common_handleAttack(f);
             break;
-        case FigureActionState_149_Corpse:
+        case FIGURE_ACTION_149_CORPSE:
             FigureAction_Common_handleCorpse(f);
             break;
         case FIGURE_ACTION_4_EMIGRANT_CREATED:
@@ -171,10 +171,10 @@ void figure_homeless_action(figure *f)
     f->terrainUsage = FigureTerrainUsage_PreferRoads;
     
     switch (f->actionState) {
-        case FigureActionState_150_Attack:
+        case FIGURE_ACTION_150_ATTACK:
             FigureAction_Common_handleAttack(f);
             break;
-        case FigureActionState_149_Corpse:
+        case FIGURE_ACTION_149_CORPSE:
             FigureAction_Common_handleCorpse(f);
             break;
         case FIGURE_ACTION_7_HOMELESS_CREATED:

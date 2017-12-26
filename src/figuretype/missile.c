@@ -68,7 +68,7 @@ void figure_create_missile(int building_id, int x, int y, int x_dst, int y_dst, 
 
 static int is_citizen(figure *f)
 {
-    if (f->actionState != FigureActionState_149_Corpse) {
+    if (f->actionState != FIGURE_ACTION_149_CORPSE) {
         if (f->type && f->type != FIGURE_EXPLOSION && f->type != FIGURE_FORT_STANDARD &&
             f->type != FIGURE_MAP_FLAG && f->type != FIGURE_FLOTSAM && f->type < FIGURE_INDIGENOUS_NATIVE) {
             return f->id;
@@ -84,7 +84,7 @@ static int get_citizen_on_tile(int grid_offset)
 
 static int is_non_citizen(figure *f)
 {
-    if (f->actionState == FigureActionState_149_Corpse) {
+    if (f->actionState == FIGURE_ACTION_149_CORPSE) {
         return 0;
     }
     if (FigureIsEnemy(f->type)) {
@@ -140,7 +140,7 @@ static void missile_hit_target(figure *f, int target_id, figure_type legionary_t
         target->damage = target_damage;
     } else { // kill target
         target->damage = max_damage + 1;
-        target->actionState = FigureActionState_149_Corpse;
+        target->actionState = FIGURE_ACTION_149_CORPSE;
         target->waitTicks = 0;
         figure_play_die_sound(target->type);
         Formation_updateAfterDeath(m->id);
@@ -232,7 +232,7 @@ void figure_bolt_action(figure *f)
             target->damage = target_damage;
         } else { // kill target
             target->damage = max_damage + 1;
-            target->actionState = FigureActionState_149_Corpse;
+            target->actionState = FIGURE_ACTION_149_CORPSE;
             target->waitTicks = 0;
             figure_play_die_sound(target->type);
             Formation_updateAfterDeath(target->formationId);

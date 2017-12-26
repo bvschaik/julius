@@ -314,10 +314,10 @@ void figure_trade_caravan_action(figure *f)
     figure_image_increase_offset(f, 12);
     f->cartGraphicId = 0;
     switch (f->actionState) {
-        case FigureActionState_150_Attack:
+        case FIGURE_ACTION_150_ATTACK:
             FigureAction_Common_handleAttack(f);
             break;
-        case FigureActionState_149_Corpse:
+        case FIGURE_ACTION_149_CORPSE:
             FigureAction_Common_handleCorpse(f);
             break;
         case FIGURE_ACTION_100_TRADE_CARAVAN_CREATED:
@@ -422,7 +422,7 @@ void figure_trade_caravan_donkey_action(figure *f)
     if (f->inFrontFigureId <= 0) {
         f->state = FigureState_Dead;
     } else {
-        if (leader->actionState == FigureActionState_149_Corpse) {
+        if (leader->actionState == FIGURE_ACTION_149_CORPSE) {
             f->state = FigureState_Dead;
         } else if (leader->state != FigureState_Alive) {
             f->state = FigureState_Dead;
@@ -447,10 +447,10 @@ void figure_native_trader_action(figure *f)
     figure_image_increase_offset(f, 12);
     f->cartGraphicId = 0;
     switch (f->actionState) {
-        case FigureActionState_150_Attack:
+        case FIGURE_ACTION_150_ATTACK:
             FigureAction_Common_handleAttack(f);
             break;
-        case FigureActionState_149_Corpse:
+        case FIGURE_ACTION_149_CORPSE:
             FigureAction_Common_handleCorpse(f);
             break;
         case FIGURE_ACTION_160_NATIVE_TRADER_GOING_TO_WAREHOUSE:
@@ -521,7 +521,7 @@ void figure_native_trader_action(figure *f)
     }
     int dir = figure_image_normalize_direction(f->direction < 8 ? f->direction : f->previousTileDirection);
     
-    if (f->actionState == FigureActionState_149_Corpse) {
+    if (f->actionState == FIGURE_ACTION_149_CORPSE) {
         f->graphicId = image_group(GROUP_FIGURE_CARTPUSHER) + 96 + figure_image_corpse_offset(f);
         f->cartGraphicId = 0;
     } else {
@@ -601,10 +601,10 @@ void figure_trade_ship_action(figure *f)
     figure_image_increase_offset(f, 12);
     f->cartGraphicId = 0;
     switch (f->actionState) {
-        case FigureActionState_150_Attack:
+        case FIGURE_ACTION_150_ATTACK:
             FigureAction_Common_handleAttack(f);
             break;
-        case FigureActionState_149_Corpse:
+        case FIGURE_ACTION_149_CORPSE:
             FigureAction_Common_handleCorpse(f);
             break;
         case FIGURE_ACTION_110_TRADE_SHIP_CREATED:

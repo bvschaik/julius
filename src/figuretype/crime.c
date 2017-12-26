@@ -157,7 +157,7 @@ void figure_protestor_action(figure *f)
     f->terrainUsage = FigureTerrainUsage_Roads;
     figure_image_increase_offset(f, 64);
     f->cartGraphicId = 0;
-    if (f->actionState == FigureActionState_149_Corpse) {
+    if (f->actionState == FIGURE_ACTION_149_CORPSE) {
         f->state = FigureState_Dead;
     }
     f->waitTicks++;
@@ -165,7 +165,7 @@ void figure_protestor_action(figure *f)
         f->state = FigureState_Dead;
         f->graphicOffset = 0;
     }
-    if (f->actionState == FigureActionState_149_Corpse) {
+    if (f->actionState == FIGURE_ACTION_149_CORPSE) {
         f->graphicId = image_group(GROUP_FIGURE_CRIMINAL) + figure_image_corpse_offset(f) + 96;
     } else {
         f->graphicId = image_group(GROUP_FIGURE_CRIMINAL) + CRIMINAL_OFFSETS[f->graphicOffset / 4] + 104;
@@ -177,7 +177,7 @@ void figure_criminal_action(figure *f)
     f->terrainUsage = FigureTerrainUsage_Roads;
     figure_image_increase_offset(f, 32);
     f->cartGraphicId = 0;
-    if (f->actionState == FigureActionState_149_Corpse) {
+    if (f->actionState == FIGURE_ACTION_149_CORPSE) {
         f->state = FigureState_Dead;
     }
     f->waitTicks++;
@@ -185,7 +185,7 @@ void figure_criminal_action(figure *f)
         f->state = FigureState_Dead;
         f->graphicOffset = 0;
     }
-    if (f->actionState == FigureActionState_149_Corpse) {
+    if (f->actionState == FIGURE_ACTION_149_CORPSE) {
         f->graphicId = image_group(GROUP_FIGURE_CRIMINAL) + figure_image_corpse_offset(f) + 96;
     } else {
         f->graphicId = image_group(GROUP_FIGURE_CRIMINAL) + CRIMINAL_OFFSETS[f->graphicOffset / 2] + 104;
@@ -203,10 +203,10 @@ void figure_rioter_action(figure *f)
     f->cartGraphicId = 0;
     f->isGhost = 0;
     switch (f->actionState) {
-        case FigureActionState_150_Attack:
+        case FIGURE_ACTION_150_ATTACK:
             FigureAction_Common_handleAttack(f);
             break;
-        case FigureActionState_149_Corpse:
+        case FIGURE_ACTION_149_CORPSE:
             FigureAction_Common_handleCorpse(f);
             break;
         case FIGURE_ACTION_120_RIOTER_CREATED:
@@ -260,7 +260,7 @@ void figure_rioter_action(figure *f)
     }
     dir = figure_image_normalize_direction(dir);
     
-    if (f->actionState == FigureActionState_149_Corpse) {
+    if (f->actionState == FIGURE_ACTION_149_CORPSE) {
         f->graphicId = image_group(GROUP_FIGURE_CRIMINAL) + 96 + figure_image_corpse_offset(f);
     } else if (f->direction == DIR_FIGURE_ATTACK) {
         f->graphicId = image_group(GROUP_FIGURE_CRIMINAL) + 104 + CRIMINAL_OFFSETS[f->graphicOffset];

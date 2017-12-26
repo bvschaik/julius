@@ -86,15 +86,15 @@ int building_barracks_create_soldier(building *barracks, int x, int y)
             int x_road, y_road;
             building *academy = building_get(academy_id);
             if (map_has_road_access(academy->x, academy->y, academy->size, &x_road, &y_road)) {
-                f->actionState = FigureActionState_85_SoldierGoingToMilitaryAcademy;
+                f->actionState = FIGURE_ACTION_85_SOLDIER_GOING_TO_MILITARY_ACADEMY;
                 f->destinationX = x_road;
                 f->destinationY = y_road;
                 f->destinationGridOffsetSoldier = map_grid_offset(f->destinationX, f->destinationY);
             } else {
-                f->actionState = FigureActionState_81_SoldierGoingToFort;
+                f->actionState = FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT;
             }
         } else {
-            f->actionState = FigureActionState_81_SoldierGoingToFort;
+            f->actionState = FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT;
         }
     }
     Formation_calculateFigures();

@@ -283,7 +283,7 @@ static int start_invasion(int enemy_type, int amount, int invasion_point, int at
                 figure *f = figure_create(figure_type, x, y, orientation);
                 f->faction_id = 0;
                 f->isFriendly = 0;
-                f->actionState = FigureActionState_151_EnemyInitial;
+                f->actionState = FIGURE_ACTION_151_ENEMY_INITIAL;
                 f->waitTicks = 200 * seq + 10 * fig + 10;
                 f->formationId = formation_id;
                 f->name = figure_name_get(figure_type, enemy_type);

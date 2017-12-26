@@ -96,8 +96,8 @@ static void update_image(figure *f)
 
     if (f->type == FIGURE_CHARIOTEER) {
         f->cartGraphicId = 0;
-        if (f->actionState == FigureActionState_150_Attack ||
-            f->actionState == FigureActionState_149_Corpse) {
+        if (f->actionState == FIGURE_ACTION_150_ATTACK ||
+            f->actionState == FIGURE_ACTION_149_CORPSE) {
             f->graphicId = image_group(GROUP_FIGURE_CHARIOTEER) + dir;
         } else {
             f->graphicId = image_group(GROUP_FIGURE_CHARIOTEER) +
@@ -119,13 +119,13 @@ static void update_image(figure *f)
     } else {
         return;
     }
-    if (f->actionState == FigureActionState_150_Attack) {
+    if (f->actionState == FIGURE_ACTION_150_ATTACK) {
         if (f->type == FIGURE_GLADIATOR) {
             f->graphicId = image_id + 104 + dir + 8 * (f->graphicOffset / 2);
         } else {
             f->graphicId = image_id + dir;
         }
-    } else if (f->actionState == FigureActionState_149_Corpse) {
+    } else if (f->actionState == FIGURE_ACTION_149_CORPSE) {
         f->graphicId = image_id + 96 + figure_image_corpse_offset(f);
         f->cartGraphicId = 0;
     } else {
@@ -162,11 +162,11 @@ void figure_entertainer_action(figure *f)
     }
     int speed_factor = f->type == FIGURE_CHARIOTEER ? 2 : 1;
     switch (f->actionState) {
-        case FigureActionState_150_Attack:
+        case FIGURE_ACTION_150_ATTACK:
             FigureAction_Common_handleAttack(f);
             figure_image_increase_offset(f, 32);
             break;
-        case FigureActionState_149_Corpse:
+        case FIGURE_ACTION_149_CORPSE:
             FigureAction_Common_handleCorpse(f);
             break;
         case FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED:

@@ -100,7 +100,7 @@ static void hitOpponent(figure *f)
 	if (opponent->damage <= maxDamage) {
 		figure_play_hit_sound(f->type);
 	} else {
-		opponent->actionState = FigureActionState_149_Corpse;
+		opponent->actionState = FIGURE_ACTION_149_CORPSE;
 		opponent->waitTicks = 0;
 		figure_play_die_sound(opponent->type);
 		Formation_updateAfterDeath(opponent->formationId);

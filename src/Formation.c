@@ -100,13 +100,13 @@ void Formation_legionMoveTo(int formationId, int x, int y)
 	}
 	for (int i = 0; i < MAX_FORMATION_FIGURES && m->figures[i]; i++) {
 		figure *f = figure_get(m->figures[i]);
-		if (f->actionState == FigureActionState_149_Corpse ||
-			f->actionState == FigureActionState_150_Attack) {
+		if (f->actionState == FIGURE_ACTION_149_CORPSE ||
+			f->actionState == FIGURE_ACTION_150_ATTACK) {
 			continue;
 		}
         if (formation_legion_prepare_to_move(m->id)) {
             f->alternativeLocationIndex = 0;
-            f->actionState = FigureActionState_83_SoldierGoingToStandard;
+            f->actionState = FIGURE_ACTION_83_SOLDIER_GOING_TO_STANDARD;
             figure_route_remove(f);
         }
 	}
@@ -126,12 +126,12 @@ void Formation_legionReturnHome(int formationId)
     formation_restore_layout(m->id);
 	for (int i = 0; i < MAX_FORMATION_FIGURES && m->figures[i]; i++) {
 		figure *f = figure_get(m->figures[i]);
-		if (f->actionState == FigureActionState_149_Corpse ||
-			f->actionState == FigureActionState_150_Attack) {
+		if (f->actionState == FIGURE_ACTION_149_CORPSE ||
+			f->actionState == FIGURE_ACTION_150_ATTACK) {
 			continue;
 		}
         if (formation_legion_prepare_to_move(m->id)) {
-            f->actionState = FigureActionState_81_SoldierGoingToFort;
+            f->actionState = FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT;
             figure_route_remove(f);
         }
 	}
@@ -211,7 +211,7 @@ void Formation_setNewSoldierRequest(building *fort)
 		int tooMany = m->num_figures - m->max_figures;
 		for (int i = MAX_FORMATION_FIGURES - 1; i >= 0 && tooMany > 0; i--) {
 			if (m->figures[i]) {
-				figure_get(m->figures[i])->actionState = FigureActionState_82_SoldierReturningToBarracks;
+				figure_get(m->figures[i])->actionState = FIGURE_ACTION_82_SOLDIER_RETURNING_TO_BARRACKS;
 				tooMany--;
 			}
 		}
@@ -344,7 +344,7 @@ static void dispatch_soldiers(const formation *m, void *data)
         if (m->figures[fig] > 0) {
             figure *f = figure_get(m->figures[fig]);
             if (!figure_is_dead(f)) {
-                f->actionState = FigureActionState_87_SoldierGoingToDistantBattle;
+                f->actionState = FIGURE_ACTION_87_SOLDIER_GOING_TO_DISTANT_BATTLE;
             }
         }
     }
@@ -370,7 +370,7 @@ static void return_soldiers(const formation *m, void *data)
         if (m->figures[fig] > 0) {
             figure *f = figure_get(m->figures[fig]);
             if (!figure_is_dead(f)) {
-                f->actionState = FigureActionState_88_SoldierReturningFromDistantBattle;
+                f->actionState = FIGURE_ACTION_88_SOLDIER_RETURNING_FROM_DISTANT_BATTLE;
                 f->formationAtRest = 1;
             }
         }
@@ -444,7 +444,7 @@ int Formation_marsCurseFort()
 	const formation *m = formation_get(bestLegionId);
 	for (int i = 0; i < MAX_FORMATION_FIGURES - 1; i++) { // BUG: last figure not cursed
 		if (m->figures[i] > 0) {
-			figure_get(m->figures[i])->actionState = FigureActionState_82_SoldierReturningToBarracks;
+			figure_get(m->figures[i])->actionState = FIGURE_ACTION_82_SOLDIER_RETURNING_TO_BARRACKS;
 		}
 	}
 	formation_set_cursed(bestLegionId);

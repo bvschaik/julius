@@ -125,7 +125,7 @@ static void update_image(figure *f)
     int dir = figure_image_normalize_direction(
         f->direction < 8 ? f->direction : f->previousTileDirection);
 
-    if (f->actionState == FigureActionState_149_Corpse) {
+    if (f->actionState == FIGURE_ACTION_149_CORPSE) {
         f->graphicId = image_group(GROUP_FIGURE_CARTPUSHER) + figure_image_corpse_offset(f) + 96;
         f->cartGraphicId = 0;
     } else {
@@ -158,10 +158,10 @@ void figure_cartpusher_action(figure *f)
     building *b = building_get(f->buildingId);
     
     switch (f->actionState) {
-        case FigureActionState_150_Attack:
+        case FIGURE_ACTION_150_ATTACK:
             FigureAction_Common_handleAttack(f);
             break;
-        case FigureActionState_149_Corpse:
+        case FIGURE_ACTION_149_CORPSE:
             FigureAction_Common_handleCorpse(f);
             break;
         case FIGURE_ACTION_20_CARTPUSHER_INITIAL:
@@ -413,10 +413,10 @@ void figure_warehouseman_action(figure *f)
     int road_network_id = map_road_network_get(f->gridOffset);
     
     switch (f->actionState) {
-        case FigureActionState_150_Attack:
+        case FIGURE_ACTION_150_ATTACK:
             FigureAction_Common_handleAttack(f);
             break;
-        case FigureActionState_149_Corpse:
+        case FIGURE_ACTION_149_CORPSE:
             FigureAction_Common_handleCorpse(f);
             break;
         case FIGURE_ACTION_50_WAREHOUSEMAN_CREATED: {

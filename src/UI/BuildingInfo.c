@@ -254,7 +254,7 @@ void UI_BuildingInfo_init()
 		while (figureId > 0 && context.figure.count < 7) {
             figure *figure = figure_get(figureId);
 			if (figure->state != FigureState_Dead &&
-				figure->actionState != FigureActionState_149_Corpse) {
+				figure->actionState != FIGURE_ACTION_149_CORPSE) {
 				switch (figure->type) {
 					case FIGURE_NONE:
 					case FIGURE_EXPLOSION:

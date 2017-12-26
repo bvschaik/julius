@@ -117,7 +117,7 @@ void figure_delete(figure *f)
 
 int figure_is_dead(figure *f)
 {
-    return f->state != FigureState_Alive || f->actionState == FigureActionState_149_Corpse;
+    return f->state != FigureState_Alive || f->actionState == FIGURE_ACTION_149_CORPSE;
 }
 
 void figure_init_scenario()

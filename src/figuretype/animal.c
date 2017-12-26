@@ -135,10 +135,10 @@ void figure_sheep_action(figure *f)
     figure_image_increase_offset(f, 6);
 
     switch (f->actionState) {
-        case FigureActionState_150_Attack:
+        case FIGURE_ACTION_150_ATTACK:
             FigureAction_Common_handleAttack(f);
             break;
-        case FigureActionState_149_Corpse:
+        case FIGURE_ACTION_149_CORPSE:
             FigureAction_Common_handleCorpse(f);
             break;
         case FIGURE_ACTION_196_HERD_ANIMAL_AT_REST:
@@ -163,7 +163,7 @@ void figure_sheep_action(figure *f)
             break;
     }
     int dir = figure_image_direction(f);
-    if (f->actionState == FigureActionState_149_Corpse) {
+    if (f->actionState == FIGURE_ACTION_149_CORPSE) {
         f->graphicId = image_group(GROUP_FIGURE_SHEEP) + 104 +
             figure_image_corpse_offset(f);
     } else if (f->actionState == FIGURE_ACTION_196_HERD_ANIMAL_AT_REST) {
@@ -188,10 +188,10 @@ void figure_wolf_action(figure *f)
     figure_image_increase_offset(f, 12);
 
     switch (f->actionState) {
-        case FigureActionState_150_Attack:
+        case FIGURE_ACTION_150_ATTACK:
             FigureAction_Common_handleAttack(f);
             break;
-        case FigureActionState_149_Corpse:
+        case FIGURE_ACTION_149_CORPSE:
             FigureAction_Common_handleCorpse(f);
             break;
         case FIGURE_ACTION_196_HERD_ANIMAL_AT_REST:
@@ -241,9 +241,9 @@ void figure_wolf_action(figure *f)
             break;
     }
     int dir = figure_image_direction(f);
-    if (f->actionState == FigureActionState_149_Corpse) {
+    if (f->actionState == FIGURE_ACTION_149_CORPSE) {
         f->graphicId = image_group(GROUP_FIGURE_WOLF) + 96 + figure_image_corpse_offset(f);
-    } else if (f->actionState == FigureActionState_150_Attack) {
+    } else if (f->actionState == FIGURE_ACTION_150_ATTACK) {
         f->graphicId = image_group(GROUP_FIGURE_WOLF) + 104 +
             dir + 8 * (f->attackGraphicOffset / 4);
     } else if (f->actionState == FIGURE_ACTION_196_HERD_ANIMAL_AT_REST) {
@@ -263,10 +263,10 @@ void figure_zebra_action(figure *f)
     figure_image_increase_offset(f, 12);
 
     switch (f->actionState) {
-        case FigureActionState_150_Attack:
+        case FIGURE_ACTION_150_ATTACK:
             FigureAction_Common_handleAttack(f);
             break;
-        case FigureActionState_149_Corpse:
+        case FIGURE_ACTION_149_CORPSE:
             FigureAction_Common_handleCorpse(f);
             break;
         case FIGURE_ACTION_196_HERD_ANIMAL_AT_REST:
@@ -291,7 +291,7 @@ void figure_zebra_action(figure *f)
             break;
     }
     int dir = figure_image_direction(f);
-    if (f->actionState == FigureActionState_149_Corpse) {
+    if (f->actionState == FIGURE_ACTION_149_CORPSE) {
         f->graphicId = image_group(GROUP_FIGURE_ZEBRA) + 96 + figure_image_corpse_offset(f);
     } else if (f->actionState == FIGURE_ACTION_196_HERD_ANIMAL_AT_REST) {
         f->graphicId = image_group(GROUP_FIGURE_ZEBRA) + dir;

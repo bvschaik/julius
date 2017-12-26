@@ -144,7 +144,7 @@ static void tickDecreaseLegionDamage()
 	for (int i = 1; i < MAX_FIGURES; i++) {
 		figure *f = figure_get(i);
 		if (f->state == FigureState_Alive && FigureIsLegion(f->type)) {
-			if (f->actionState == FigureActionState_80_SoldierAtRest) {
+			if (f->actionState == FIGURE_ACTION_80_SOLDIER_AT_REST) {
 				if (f->damage) {
 					f->damage--;
 				}
@@ -174,7 +174,7 @@ static void tickUpdateLegions()
 			formation_clear_monthly_counters(m->id);
 		}
 		for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {
-			if (figure_get(m->figures[n])->actionState == FigureActionState_150_Attack) {
+			if (figure_get(m->figures[n])->actionState == FIGURE_ACTION_150_ATTACK) {
                 formation_record_fight(m->id);
 			}
 		}
@@ -182,10 +182,10 @@ static void tickUpdateLegions()
 			// flee back to fort
 			for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {
 				figure *f = figure_get(m->figures[n]);
-				if (f->actionState != FigureActionState_150_Attack &&
-					f->actionState != FigureActionState_149_Corpse &&
-					f->actionState != FigureActionState_148_Fleeing) {
-					f->actionState = FigureActionState_148_Fleeing;
+				if (f->actionState != FIGURE_ACTION_150_ATTACK &&
+					f->actionState != FIGURE_ACTION_149_CORPSE &&
+					f->actionState != FIGURE_ACTION_148_FLEEING) {
+					f->actionState = FIGURE_ACTION_148_FLEEING;
 					figure_route_remove(f);
 				}
 			}
@@ -196,9 +196,9 @@ static void tickUpdateLegions()
 				for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {
                     if (m->figures[n] != 0) {
                         figure *f = figure_get(m->figures[n]);
-                        if (f->actionState != FigureActionState_150_Attack &&
-                            f->actionState != FigureActionState_149_Corpse) {
-                            f->actionState = FigureActionState_86_SoldierMoppingUp;
+                        if (f->actionState != FIGURE_ACTION_150_ATTACK &&
+                            f->actionState != FIGURE_ACTION_149_CORPSE) {
+                            f->actionState = FIGURE_ACTION_86_SOLDIER_MOPPING_UP;
                         }
                     }
 				}
@@ -362,7 +362,7 @@ static void marsKillEnemies()
 			continue;
 		}
 		if (FigureIsEnemy(f->type) && f->type != FIGURE_ENEMY54_GLADIATOR) {
-			f->actionState = FigureActionState_149_Corpse;
+			f->actionState = FIGURE_ACTION_149_CORPSE;
 			toKill--;
 			if (!gridOffset) {
 				gridOffset = f->gridOffset;
@@ -379,9 +379,9 @@ static void setFormationFiguresToEnemyInitial(int formationId)
 	for (int i = 0; i < MAX_FORMATION_FIGURES; i++) {
 		if (m->figures[i] > 0) {
 			figure *f = figure_get(m->figures[i]);
-			if (f->actionState != FigureActionState_149_Corpse &&
-				f->actionState != FigureActionState_150_Attack) {
-				f->actionState = FigureActionState_151_EnemyInitial;
+			if (f->actionState != FIGURE_ACTION_149_CORPSE &&
+				f->actionState != FIGURE_ACTION_150_ATTACK) {
+				f->actionState = FIGURE_ACTION_151_ENEMY_INITIAL;
 				f->waitTicks = 0;
 			}
 		}
@@ -532,7 +532,7 @@ static void update_enemy_formation(const formation *m, void *data)
     }
     for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {
         figure *f = figure_get(m->figures[n]);
-        if (f->actionState == FigureActionState_150_Attack) {
+        if (f->actionState == FIGURE_ACTION_150_ATTACK) {
             figure *opponent = figure_get(f->opponentId);
             if (!figure_is_dead(opponent) && FigureIsLegion(opponent->type)) {
                 formation_record_fight(m->id);
@@ -542,10 +542,10 @@ static void update_enemy_formation(const formation *m, void *data)
     if (formation_has_low_morale(m->id)) {
         for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {
             figure *f = figure_get(m->figures[n]);
-            if (f->actionState != FigureActionState_150_Attack &&
-                f->actionState != FigureActionState_149_Corpse &&
-                f->actionState != FigureActionState_148_Fleeing) {
-                f->actionState = FigureActionState_148_Fleeing;
+            if (f->actionState != FIGURE_ACTION_150_ATTACK &&
+                f->actionState != FIGURE_ACTION_149_CORPSE &&
+                f->actionState != FIGURE_ACTION_148_FLEEING) {
+                f->actionState = FIGURE_ACTION_148_FLEEING;
                 figure_route_remove(f);
             }
         }
@@ -655,8 +655,8 @@ static void moveAnimals(const formation *m, int attackingAnimals)
 	for (int i = 0; i < MAX_FORMATION_FIGURES; i++) {
 		if (m->figures[i] <= 0) continue;
 		figure *f = figure_get(m->figures[i]);
-		if (f->actionState == FigureActionState_149_Corpse ||
-			f->actionState == FigureActionState_150_Attack) {
+		if (f->actionState == FIGURE_ACTION_149_CORPSE ||
+			f->actionState == FIGURE_ACTION_150_ATTACK) {
 			continue;
 		}
 		f->waitTicks = 401;
@@ -694,7 +694,7 @@ static void update_herd_formation(const formation *m)
     int attackingAnimals = 0;
     for (int fig = 0; fig < MAX_FORMATION_FIGURES; fig++) {
         int figureId = m->figures[fig];
-        if (figureId > 0 && figure_get(figureId)->actionState == FigureActionState_150_Attack) {
+        if (figureId > 0 && figure_get(figureId)->actionState == FIGURE_ACTION_150_ATTACK) {
             attackingAnimals++;
         }
     }

@@ -29,10 +29,10 @@ void figure_engineer_action(figure *f)
     figure_image_increase_offset(f, 12);
     
     switch (f->actionState) {
-        case FigureActionState_150_Attack:
+        case FIGURE_ACTION_150_ATTACK:
             FigureAction_Common_handleAttack(f);
             break;
-        case FigureActionState_149_Corpse:
+        case FIGURE_ACTION_149_CORPSE:
             FigureAction_Common_handleCorpse(f);
             break;
         case FIGURE_ACTION_60_ENGINEER_CREATED:
@@ -129,8 +129,8 @@ static int fight_enemy(figure *f)
         return 0;
     }
     switch (f->actionState) {
-        case FigureActionState_150_Attack:
-        case FigureActionState_149_Corpse:
+        case FIGURE_ACTION_150_ATTACK:
+        case FIGURE_ACTION_149_CORPSE:
         case FIGURE_ACTION_70_PREFECT_CREATED:
         case FIGURE_ACTION_71_PREFECT_ENTERING_EXITING:
         case FIGURE_ACTION_74_PREFECT_GOING_TO_FIRE:
@@ -167,8 +167,8 @@ static int fight_fire(figure *f)
         return 0;
     }
     switch (f->actionState) {
-        case FigureActionState_150_Attack:
-        case FigureActionState_149_Corpse:
+        case FIGURE_ACTION_150_ATTACK:
+        case FIGURE_ACTION_149_CORPSE:
         case FIGURE_ACTION_70_PREFECT_CREATED:
         case FIGURE_ACTION_71_PREFECT_ENTERING_EXITING:
         case FIGURE_ACTION_74_PREFECT_GOING_TO_FIRE:
@@ -258,10 +258,10 @@ void figure_prefect_action(figure *f)
         fight_fire(f);
     }
     switch (f->actionState) {
-        case FigureActionState_150_Attack:
+        case FIGURE_ACTION_150_ATTACK:
             FigureAction_Common_handleAttack(f);
             break;
-        case FigureActionState_149_Corpse:
+        case FIGURE_ACTION_149_CORPSE:
             FigureAction_Common_handleCorpse(f);
             break;
         case FIGURE_ACTION_70_PREFECT_CREATED:
@@ -362,7 +362,7 @@ void figure_prefect_action(figure *f)
     // graphic id
     int dir;
     if (f->actionState == FIGURE_ACTION_75_PREFECT_AT_FIRE ||
-        f->actionState == FigureActionState_150_Attack) {
+        f->actionState == FIGURE_ACTION_150_ATTACK) {
         dir = f->attackDirection;
     } else if (f->direction < 8) {
         dir = f->direction;
@@ -379,7 +379,7 @@ void figure_prefect_action(figure *f)
             f->graphicId = image_group(GROUP_FIGURE_PREFECT_WITH_BUCKET) +
                 dir + 96 + 8 * (f->graphicOffset / 2);
             break;
-        case FigureActionState_150_Attack:
+        case FIGURE_ACTION_150_ATTACK:
             if (f->attackGraphicOffset >= 12) {
                 f->graphicId = image_group(GROUP_FIGURE_PREFECT) +
                     104 + dir + 8 * ((f->attackGraphicOffset - 12) / 2);
@@ -387,7 +387,7 @@ void figure_prefect_action(figure *f)
                 f->graphicId = image_group(GROUP_FIGURE_PREFECT) + 104 + dir;
             }
             break;
-        case FigureActionState_149_Corpse:
+        case FIGURE_ACTION_149_CORPSE:
             f->graphicId = image_group(GROUP_FIGURE_PREFECT) +
                 96 + figure_image_corpse_offset(f);
             break;

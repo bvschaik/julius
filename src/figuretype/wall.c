@@ -67,7 +67,7 @@ void figure_ballista_action(figure *f)
     map_figure_add(f);
 
     switch (f->actionState) {
-        case FigureActionState_149_Corpse:
+        case FIGURE_ACTION_149_CORPSE:
             f->state = FigureState_Dead;
             break;
         case FIGURE_ACTION_180_BALLISTA_CREATED:
@@ -110,8 +110,8 @@ static void tower_sentry_pick_target(figure *f)
     if (enemy_army_total_enemy_formations() <= 0) {
         return;
     }
-    if (f->actionState == FigureActionState_150_Attack ||
-        f->actionState == FigureActionState_149_Corpse) {
+    if (f->actionState == FIGURE_ACTION_150_ATTACK ||
+        f->actionState == FIGURE_ACTION_149_CORPSE) {
         return;
     }
     if (f->inBuildingWaitTicks) {
@@ -182,10 +182,10 @@ void figure_tower_sentry_action(figure *f)
     
     tower_sentry_pick_target(f);
     switch (f->actionState) {
-        case FigureActionState_150_Attack:
+        case FIGURE_ACTION_150_ATTACK:
             FigureAction_Common_handleAttack(f);
             break;
-        case FigureActionState_149_Corpse:
+        case FIGURE_ACTION_149_CORPSE:
             FigureAction_Common_handleCorpse(f);
             break;
         case FIGURE_ACTION_170_TOWER_SENTRY_AT_REST:
@@ -268,7 +268,7 @@ void figure_tower_sentry_action(figure *f)
         f->heightAdjustedTicks = 0;
     }
     int dir = figure_image_direction(f);
-    if (f->actionState == FigureActionState_149_Corpse) {
+    if (f->actionState == FIGURE_ACTION_149_CORPSE) {
         f->graphicId = image_group(GROUP_FIGURE_TOWER_SENTRY) +
             136 + figure_image_corpse_offset(f);
     } else if (f->actionState == FIGURE_ACTION_172_TOWER_SENTRY_FIRING) {

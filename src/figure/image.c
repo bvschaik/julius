@@ -29,7 +29,7 @@ static const int CART_OFFSETS_Y[] = {-7, -1, 7, 11, 6, -1, -7, -12};
 
 void figure_image_update(figure *f, int image_base)
 {
-    if (f->actionState == FigureActionState_149_Corpse) {
+    if (f->actionState == FIGURE_ACTION_149_CORPSE) {
         f->graphicId = image_base + CORPSE_IMAGE_OFFSETS[f->waitTicks / 2] + 96;
     } else {
         f->graphicId = image_base + figure_image_direction(f) + 8 * f->graphicOffset;

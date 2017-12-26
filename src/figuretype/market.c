@@ -112,10 +112,10 @@ void figure_market_buyer_action(figure *f)
     }
     figure_image_increase_offset(f, 12);
     switch (f->actionState) {
-        case FigureActionState_150_Attack:
+        case FIGURE_ACTION_150_ATTACK:
             FigureAction_Common_handleAttack(f);
             break;
-        case FigureActionState_149_Corpse:
+        case FIGURE_ACTION_149_CORPSE:
             FigureAction_Common_handleCorpse(f);
             break;
         case FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE:
@@ -160,7 +160,7 @@ void figure_delivery_boy_action(figure *f)
     f->cartGraphicId = 0;
     
     figure *leader = figure_get(f->inFrontFigureId);
-    if (f->inFrontFigureId <= 0 || leader->actionState == FigureActionState_149_Corpse) {
+    if (f->inFrontFigureId <= 0 || leader->actionState == FIGURE_ACTION_149_CORPSE) {
         f->state = FigureState_Dead;
     } else {
         if (leader->state == FigureState_Alive) {
@@ -178,7 +178,7 @@ void figure_delivery_boy_action(figure *f)
         f->isGhost = 1;
     }
     int dir = figure_image_normalize_direction(f->direction < 8 ? f->direction : f->previousTileDirection);
-    if (f->actionState == FigureActionState_149_Corpse) {
+    if (f->actionState == FIGURE_ACTION_149_CORPSE) {
         f->graphicId = image_group(GROUP_FIGURE_DELIVERY_BOY) + 96 +
             figure_image_corpse_offset(f);
     } else {

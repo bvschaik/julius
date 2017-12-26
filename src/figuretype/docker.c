@@ -315,10 +315,10 @@ void figure_docker_action(figure *f)
     }
     f->terrainUsage = FigureTerrainUsage_Roads;
     switch (f->actionState) {
-        case FigureActionState_150_Attack:
+        case FIGURE_ACTION_150_ATTACK:
             FigureAction_Common_handleAttack(f);
             break;
-        case FigureActionState_149_Corpse:
+        case FIGURE_ACTION_149_CORPSE:
             FigureAction_Common_handleCorpse(f);
             break;
         case FIGURE_ACTION_132_DOCKER_IDLING:
@@ -497,7 +497,7 @@ void figure_docker_action(figure *f)
 
     int dir = figure_image_normalize_direction(f->direction < 8 ? f->direction : f->previousTileDirection);
 
-    if (f->actionState == FigureActionState_149_Corpse) {
+    if (f->actionState == FIGURE_ACTION_149_CORPSE) {
         f->graphicId = image_group(GROUP_FIGURE_CARTPUSHER) + figure_image_corpse_offset(f) + 96;
         f->cartGraphicId = 0;
     } else {

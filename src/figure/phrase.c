@@ -282,7 +282,7 @@ int figure_phrase_play(figure *f)
 
 static int lion_tamer_phrase(figure *f)
 {
-    if (f->actionState == FigureActionState_150_Attack) {
+    if (f->actionState == FIGURE_ACTION_150_ATTACK) {
         if (++f->phraseSequenceExact >= 3) {
             f->phraseSequenceExact = 0;
         }
@@ -293,7 +293,7 @@ static int lion_tamer_phrase(figure *f)
 
 static int gladiator_phrase(figure *f)
 {
-    return f->actionState == FigureActionState_150_Attack ? 7 : 0;
+    return f->actionState == FIGURE_ACTION_150_ATTACK ? 7 : 0;
 }
 
 static int tax_collector_phrase(figure *f)
@@ -369,7 +369,7 @@ static int prefect_phrase(figure *f)
         return 10;
     } else if (f->actionState == FIGURE_ACTION_75_PREFECT_AT_FIRE) {
         return 11 + (f->phraseSequenceExact % 2);
-    } else if (f->actionState == FigureActionState_150_Attack) {
+    } else if (f->actionState == FIGURE_ACTION_150_ATTACK) {
         return 13 + f->phraseSequenceExact;
     } else if (f->minMaxSeen >= 50) {
         return 7;
