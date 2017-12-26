@@ -9,6 +9,7 @@
 #include "empire/trade_route.h"
 #include "figure/combat.h"
 #include "figure/image.h"
+#include "figure/movement.h"
 #include "figure/route.h"
 #include "figure/trader.h"
 #include "game/resource.h"
@@ -16,7 +17,6 @@
 #include "map/road_access.h"
 
 #include "Data/CityInfo.h"
-#include "FigureMovement.h"
 
 static int try_import_resource(int building_id, int resource, int city_id)
 {
@@ -389,7 +389,7 @@ void figure_docker_action(figure *f)
             break;
         case FIGURE_ACTION_135_DOCKER_IMPORT_GOING_TO_WAREHOUSE:
             set_cart_graphic(f);
-            FigureMovement_walkTicks(f, 1);
+            figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->actionState = FIGURE_ACTION_139_DOCKER_IMPORT_AT_WAREHOUSE;
             } else if (f->direction == DIR_FIGURE_REROUTE) {
@@ -403,7 +403,7 @@ void figure_docker_action(figure *f)
             break;
         case FIGURE_ACTION_136_DOCKER_EXPORT_GOING_TO_WAREHOUSE:
             f->cartGraphicId = image_group(GROUP_FIGURE_CARTPUSHER_CART); // empty
-            FigureMovement_walkTicks(f, 1);
+            figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->actionState = FIGURE_ACTION_140_DOCKER_EXPORT_AT_WAREHOUSE;
             } else if (f->direction == DIR_FIGURE_REROUTE) {
@@ -417,7 +417,7 @@ void figure_docker_action(figure *f)
             break;
         case FIGURE_ACTION_137_DOCKER_EXPORT_RETURNING:
             set_cart_graphic(f);
-            FigureMovement_walkTicks(f, 1);
+            figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->actionState = FIGURE_ACTION_134_DOCKER_EXPORT_QUEUE;
                 f->waitTicks = 0;
@@ -432,7 +432,7 @@ void figure_docker_action(figure *f)
             break;
         case FIGURE_ACTION_138_DOCKER_IMPORT_RETURNING:
             set_cart_graphic(f);
-            FigureMovement_walkTicks(f, 1);
+            figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->actionState = FIGURE_ACTION_132_DOCKER_IDLING;
             } else if (f->direction == DIR_FIGURE_REROUTE) {

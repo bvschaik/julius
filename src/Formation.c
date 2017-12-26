@@ -1,7 +1,5 @@
 #include "Formation.h"
 
-#include "FigureMovement.h"
-
 #include "Data/CityInfo.h"
 
 #include "building/building.h"

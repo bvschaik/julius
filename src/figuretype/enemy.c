@@ -5,6 +5,7 @@
 #include "figure/formation.h"
 #include "figure/formation_layout.h"
 #include "figure/image.h"
+#include "figure/movement.h"
 #include "figure/properties.h"
 #include "figure/route.h"
 #include "figuretype/missile.h"
@@ -15,7 +16,6 @@
 #include "sound/speech.h"
 
 #include "Data/CityInfo.h"
-#include "FigureMovement.h"
 #include "../Formation.h"
 
 static void enemy_initial(figure *f, const formation *m)
@@ -105,7 +105,7 @@ static void enemy_marching(figure *f, const formation *m)
         f->destinationBuildingId = m->destination_building_id;
         figure_route_remove(f);
     }
-    FigureMovement_walkTicks(f, f->speedMultiplier);
+    figure_movement_move_ticks(f, f->speedMultiplier);
     if (f->direction == DIR_FIGURE_AT_DESTINATION ||
         f->direction == DIR_FIGURE_REROUTE ||
         f->direction == DIR_FIGURE_LOST) {
@@ -151,7 +151,7 @@ static void enemy_fighting(figure *f, const formation *m)
         }
     }
     if (target_id > 0) {
-        FigureMovement_walkTicks(f, f->speedMultiplier);
+        figure_movement_move_ticks(f, f->speedMultiplier);
         if (f->direction == DIR_FIGURE_AT_DESTINATION) {
             figure *target = figure_get(f->targetFigureId);
             f->destinationX = target->x;
@@ -184,7 +184,7 @@ static void enemy_action(figure *f, const formation *m)
         case FIGURE_ACTION_148_FLEEING:
             f->destinationX = f->sourceX;
             f->destinationY = f->sourceY;
-            FigureMovement_walkTicks(f, f->speedMultiplier);
+            figure_movement_move_ticks(f, f->speedMultiplier);
             if (f->direction == DIR_FIGURE_AT_DESTINATION ||
                 f->direction == DIR_FIGURE_REROUTE ||
                 f->direction == DIR_FIGURE_LOST) {
@@ -607,7 +607,7 @@ void figure_enemy_gladiator_action(figure *f)
         case FIGURE_ACTION_159_NATIVE_ATTACKING:
             Data_CityInfo.numAttackingNativesInCity = 10;
             f->terrainUsage = FigureTerrainUsage_Enemy;
-            FigureMovement_walkTicks(f, 1);
+            figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION ||
                 f->direction == DIR_FIGURE_REROUTE ||
                 f->direction == DIR_FIGURE_LOST) {

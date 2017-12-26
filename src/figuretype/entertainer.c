@@ -5,14 +5,13 @@
 #include "core/calc.h"
 #include "figure/combat.h"
 #include "figure/image.h"
+#include "figure/movement.h"
 #include "figure/route.h"
 #include "graphics/image.h"
 #include "map/grid.h"
 #include "map/road_access.h"
 #include "map/road_network.h"
 #include "scenario/gladiator_revolt.h"
-
-#include "FigureMovement.h"
 
 static int determine_destination(int x, int y, building_type type1, building_type type2)
 {
@@ -178,7 +177,7 @@ void figure_entertainer_action(figure *f)
                 int x_road, y_road;
                 if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
                     f->actionState = FIGURE_ACTION_91_ENTERTAINER_EXITING_SCHOOL;
-                    FigureMovement_setCrossCountryDestination(f, x_road, y_road);
+                    figure_movement_set_cross_country_destination(f, x_road, y_road);
                     f->roamLength = 0;
                 } else {
                     f->state = FigureState_Dead;
@@ -188,7 +187,7 @@ void figure_entertainer_action(figure *f)
         case FIGURE_ACTION_91_ENTERTAINER_EXITING_SCHOOL:
             f->useCrossCountry = 1;
             f->isGhost = 1;
-            if (FigureMovement_crossCountryWalkTicks(f, 1) == 1) {
+            if (figure_movement_move_ticks_cross_country(f, 1) == 1) {
                 int dst_building_id = 0;
                 switch (f->type) {
                     case FIGURE_ACTOR:
@@ -228,7 +227,7 @@ void figure_entertainer_action(figure *f)
             if (f->roamLength >= 3200) {
                 f->state = FigureState_Dead;
             }
-            FigureMovement_walkTicks(f, speed_factor);
+            figure_movement_move_ticks(f, speed_factor);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 update_shows(f);
                 f->state = FigureState_Dead;
@@ -251,10 +250,10 @@ void figure_entertainer_action(figure *f)
                     f->state = FigureState_Dead;
                 }
             }
-            FigureMovement_roamTicks(f, speed_factor);
+            figure_movement_roam_ticks(f, speed_factor);
             break;
         case FIGURE_ACTION_95_ENTERTAINER_RETURNING:
-            FigureMovement_walkTicks(f, speed_factor);
+            figure_movement_move_ticks(f, speed_factor);
             if (f->direction == DIR_FIGURE_AT_DESTINATION ||
                 f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
                 f->state = FigureState_Dead;

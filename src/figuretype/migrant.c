@@ -5,13 +5,13 @@
 #include "building/model.h"
 #include "figure/combat.h"
 #include "figure/image.h"
+#include "figure/movement.h"
 #include "figure/route.h"
 #include "graphics/image.h"
 #include "map/road_access.h"
 
 #include "Data/CityInfo.h"
 #include "CityInfo.h"
-#include "FigureMovement.h"
 #include "HousePopulation.h"
 
 static void update_direction_and_image(figure *f)
@@ -63,11 +63,11 @@ void figure_immigrant_action(figure *f)
             break;
         case FIGURE_ACTION_2_IMMIGRANT_ARRIVING:
             f->isGhost = 0;
-            FigureMovement_walkTicks(f, 1);
+            figure_movement_move_ticks(f, 1);
             switch (f->direction) {
                 case DIR_FIGURE_AT_DESTINATION:
                     f->actionState = FIGURE_ACTION_3_IMMIGRANT_ENTERING_HOUSE;
-                    FigureMovement_setCrossCountryDestination(f, b->x, b->y);
+                    figure_movement_set_cross_country_destination(f, b->x, b->y);
                     f->roamLength = 0;
                     break;
                 case DIR_FIGURE_REROUTE:
@@ -83,7 +83,7 @@ void figure_immigrant_action(figure *f)
         case FIGURE_ACTION_3_IMMIGRANT_ENTERING_HOUSE:
             f->useCrossCountry = 1;
             f->isGhost = 1;
-            if (FigureMovement_crossCountryWalkTicks(f, 1) == 1) {
+            if (figure_movement_move_ticks_cross_country(f, 1) == 1) {
                 f->state = FigureState_Dead;
                 int maxPeople = model_get_house(b->subtype.houseLevel)->max_people;
                 if (b->houseIsMerged) {
@@ -135,14 +135,14 @@ void figure_emigrant_action(figure *f)
                     f->state = FigureState_Dead;
                 }
                 f->actionState = FIGURE_ACTION_5_EMIGRANT_EXITING_HOUSE;
-                FigureMovement_setCrossCountryDestination(f, xRoad, yRoad);
+                figure_movement_set_cross_country_destination(f, xRoad, yRoad);
                 f->roamLength = 0;
             }
             break;
         case FIGURE_ACTION_5_EMIGRANT_EXITING_HOUSE:
             f->useCrossCountry = 1;
             f->isGhost = 1;
-            if (FigureMovement_crossCountryWalkTicks(f, 1) == 1) {
+            if (figure_movement_move_ticks_cross_country(f, 1) == 1) {
                 f->actionState = FIGURE_ACTION_6_EMIGRANT_LEAVING;
                 f->destinationX = Data_CityInfo.entryPointX;
                 f->destinationY = Data_CityInfo.entryPointY;
@@ -154,7 +154,7 @@ void figure_emigrant_action(figure *f)
         case FIGURE_ACTION_6_EMIGRANT_LEAVING:
             f->useCrossCountry = 0;
             f->isGhost = 0;
-            FigureMovement_walkTicks(f, 1);
+            figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION ||
                 f->direction == DIR_FIGURE_REROUTE ||
                 f->direction == DIR_FIGURE_LOST) {
@@ -206,21 +206,21 @@ void figure_homeless_action(figure *f)
             break;
         case FIGURE_ACTION_8_HOMELESS_GOING_TO_HOUSE:
             f->isGhost = 0;
-            FigureMovement_walkTicks(f, 1);
+            figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
                 building_get(f->immigrantBuildingId)->immigrantFigureId = 0;
                 f->state = FigureState_Dead;
             } else if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 building *b = building_get(f->immigrantBuildingId);
                 f->actionState = FIGURE_ACTION_9_HOMELESS_ENTERING_HOUSE;
-                FigureMovement_setCrossCountryDestination(f, b->x, b->y);
+                figure_movement_set_cross_country_destination(f, b->x, b->y);
                 f->roamLength = 0;
             }
             break;
         case FIGURE_ACTION_9_HOMELESS_ENTERING_HOUSE:
             f->useCrossCountry = 1;
             f->isGhost = 1;
-            if (FigureMovement_crossCountryWalkTicks(f, 1) == 1) {
+            if (figure_movement_move_ticks_cross_country(f, 1) == 1) {
                 f->state = FigureState_Dead;
                 building *b = building_get(f->immigrantBuildingId);
                 if (f->immigrantBuildingId && BuildingIsHouse(b->type)) {
@@ -246,7 +246,7 @@ void figure_homeless_action(figure *f)
             }
             break;
         case FIGURE_ACTION_10_HOMELESS_LEAVING:
-            FigureMovement_walkTicks(f, 1);
+            figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST) {
                 f->state = FigureState_Dead;
             } else if (f->direction == DIR_FIGURE_REROUTE) {

@@ -7,6 +7,7 @@
 #include "figure/combat.h"
 #include "figure/enemy_army.h"
 #include "figure/image.h"
+#include "figure/movement.h"
 #include "figure/route.h"
 #include "graphics/image.h"
 #include "map/building.h"
@@ -14,7 +15,6 @@
 #include "sound/effect.h"
 
 #include "Data/CityInfo.h"
-#include "FigureMovement.h"
 
 void figure_engineer_action(figure *f)
 {
@@ -43,7 +43,7 @@ void figure_engineer_action(figure *f)
                 int x_road, y_road;
                 if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
                     f->actionState = FIGURE_ACTION_61_ENGINEER_ENTERING_EXITING;
-                    FigureMovement_setCrossCountryDestination(f, x_road, y_road);
+                    figure_movement_set_cross_country_destination(f, x_road, y_road);
                     f->roamLength = 0;
                 } else {
                     f->state = FigureState_Dead;
@@ -53,13 +53,13 @@ void figure_engineer_action(figure *f)
         case FIGURE_ACTION_61_ENGINEER_ENTERING_EXITING:
             f->useCrossCountry = 1;
             f->isGhost = 1;
-            if (FigureMovement_crossCountryWalkTicks(f, 1) == 1) {
+            if (figure_movement_move_ticks_cross_country(f, 1) == 1) {
                 if (map_building_at(f->gridOffset) == f->buildingId) {
                     // returned to own building
                     f->state = FigureState_Dead;
                 } else {
                     f->actionState = FIGURE_ACTION_62_ENGINEER_ROAMING;
-                    FigureMovement_initRoaming(f);
+                    figure_movement_init_roaming(f);
                     f->roamLength = 0;
                 }
             }
@@ -77,13 +77,13 @@ void figure_engineer_action(figure *f)
                     f->state = FigureState_Dead;
                 }
             }
-            FigureMovement_roamTicks(f, 1);
+            figure_movement_roam_ticks(f, 1);
             break;
         case FIGURE_ACTION_63_ENGINEER_RETURNING:
-            FigureMovement_walkTicks(f, 1);
+            figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->actionState = FIGURE_ACTION_61_ENGINEER_ENTERING_EXITING;
-                FigureMovement_setCrossCountryDestination(f, b->x, b->y);
+                figure_movement_set_cross_country_destination(f, b->x, b->y);
                 f->roamLength = 0;
             } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
                 f->state = FigureState_Dead;
@@ -272,7 +272,7 @@ void figure_prefect_action(figure *f)
                 int x_road, y_road;
                 if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
                     f->actionState = FIGURE_ACTION_71_PREFECT_ENTERING_EXITING;
-                    FigureMovement_setCrossCountryDestination(f, x_road, y_road);
+                    figure_movement_set_cross_country_destination(f, x_road, y_road);
                     f->roamLength = 0;
                 } else {
                     f->state = FigureState_Dead;
@@ -282,13 +282,13 @@ void figure_prefect_action(figure *f)
         case FIGURE_ACTION_71_PREFECT_ENTERING_EXITING:
             f->useCrossCountry = 1;
             f->isGhost = 1;
-            if (FigureMovement_crossCountryWalkTicks(f, 1) == 1) {
+            if (figure_movement_move_ticks_cross_country(f, 1) == 1) {
                 if (map_building_at(f->gridOffset) == f->buildingId) {
                     // returned to own building
                     f->state = FigureState_Dead;
                 } else {
                     f->actionState = FIGURE_ACTION_72_PREFECT_ROAMING;
-                    FigureMovement_initRoaming(f);
+                    figure_movement_init_roaming(f);
                     f->roamLength = 0;
                 }
             }
@@ -307,13 +307,13 @@ void figure_prefect_action(figure *f)
                     f->state = FigureState_Dead;
                 }
             }
-            FigureMovement_roamTicks(f, 1);
+            figure_movement_roam_ticks(f, 1);
             break;
         case FIGURE_ACTION_73_PREFECT_RETURNING:
-            FigureMovement_walkTicks(f, 1);
+            figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->actionState = FIGURE_ACTION_71_PREFECT_ENTERING_EXITING;
-                FigureMovement_setCrossCountryDestination(f, b->x, b->y);
+                figure_movement_set_cross_country_destination(f, b->x, b->y);
                 f->roamLength = 0;
             } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
                 f->state = FigureState_Dead;
@@ -321,7 +321,7 @@ void figure_prefect_action(figure *f)
             break;
         case FIGURE_ACTION_74_PREFECT_GOING_TO_FIRE:
             f->terrainUsage = FigureTerrainUsage_Any;
-            FigureMovement_walkTicks(f, 1);
+            figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->actionState = FIGURE_ACTION_75_PREFECT_AT_FIRE;
                 figure_route_remove(f);
@@ -348,7 +348,7 @@ void figure_prefect_action(figure *f)
                     f->state = FigureState_Dead;
                 }
             }
-            FigureMovement_walkTicks(f, 1);
+            figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 figure *target = figure_get(f->targetFigureId);
                 f->destinationX = target->x;

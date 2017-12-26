@@ -6,6 +6,7 @@
 #include "core/calc.h"
 #include "core/random.h"
 #include "figure/image.h"
+#include "figure/movement.h"
 #include "figure/route.h"
 #include "graphics/image.h"
 #include "map/figure.h"
@@ -14,7 +15,6 @@
 #include "scenario/map.h"
 
 #include "Data/CityInfo.h"
-#include "FigureMovement.h"
 
 static const int FLOTSAM_RESOURCE_IDS[] = {
     3, 1, 3, 2, 1, 3, 2, 3, 2, 1, 3, 3, 2, 3, 3, 3, 1, 2, 0, 1
@@ -84,7 +84,7 @@ void figure_flotsam_action(figure *f)
             } else {
                 f->flotsamVisible = 1;
                 f->waitTicks++;
-                FigureMovement_walkTicks(f, 1);
+                figure_movement_move_ticks(f, 1);
                 f->isGhost = 0;
                 f->heightAdjustedTicks = 0;
                 if (f->direction == DIR_FIGURE_AT_DESTINATION ||
@@ -213,7 +213,7 @@ void figure_fishing_boat_action(figure *f)
             }
             break;
         case FIGURE_ACTION_191_FISHING_BOAT_GOING_TO_FISH:
-            FigureMovement_walkTicks(f, 1);
+            figure_movement_move_ticks(f, 1);
             f->heightAdjustedTicks = 0;
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 int x_tile, y_tile;
@@ -243,7 +243,7 @@ void figure_fishing_boat_action(figure *f)
             }
             break;
         case FIGURE_ACTION_193_FISHING_BOAT_GOING_TO_WHARF:
-            FigureMovement_walkTicks(f, 1);
+            figure_movement_move_ticks(f, 1);
             f->heightAdjustedTicks = 0;
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->actionState = FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF;
@@ -279,7 +279,7 @@ void figure_fishing_boat_action(figure *f)
             }
             break;
         case FIGURE_ACTION_195_FISHING_BOAT_RETURNING_WITH_FISH:
-            FigureMovement_walkTicks(f, 1);
+            figure_movement_move_ticks(f, 1);
             f->heightAdjustedTicks = 0;
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->actionState = FIGURE_ACTION_194_FISHING_BOAT_AT_WHARF;

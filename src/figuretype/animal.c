@@ -7,6 +7,7 @@
 #include "figure/formation.h"
 #include "figure/formation_layout.h"
 #include "figure/image.h"
+#include "figure/movement.h"
 #include "figure/route.h"
 #include "graphics/image.h"
 #include "map/figure.h"
@@ -17,7 +18,6 @@
 
 #include "Data/CityInfo.h"
 #include "Data/State.h"
-#include "FigureMovement.h"
 
 static const map_point SEAGULL_OFFSETS[] = {
     {0, 0}, {0, -2}, {-2, 0}, {1, 2}, {2, 0}, {-3, 1}, {4, -3}, {-2, 4}, {0, 0}
@@ -55,7 +55,7 @@ static void create_fishing_point(int x, int y)
     figure *fish = figure_create(FIGURE_FISH_GULLS, x, y, DIR_0_TOP);
     fish->graphicOffset = random_byte() & 0x1f;
     fish->progressOnTile = random_byte() & 7;
-    FigureMovement_crossCountrySetDirection(fish,
+    figure_movement_set_cross_country_direction(fish,
         fish->crossCountryX, fish->crossCountryY,
         15 * fish->destinationX, 15 * fish->destinationY, 0);
 }
@@ -107,12 +107,12 @@ void figure_seagulls_action(figure *f)
     f->terrainUsage = FigureTerrainUsage_Any;
     f->isGhost = 0;
     f->useCrossCountry = 1;
-    if (!(f->graphicOffset & 3) && FigureMovement_crossCountryWalkTicks(f, 1)) {
+    if (!(f->graphicOffset & 3) && figure_movement_move_ticks_cross_country(f, 1)) {
         f->progressOnTile++;
         if (f->progressOnTile > 8) {
             f->progressOnTile = 0;
         }
-        FigureMovement_setCrossCountryDestination(f,
+        figure_movement_set_cross_country_destination(f,
             f->sourceX + SEAGULL_OFFSETS[f->progressOnTile].x,
             f->sourceY + SEAGULL_OFFSETS[f->progressOnTile].y);
     }
@@ -152,7 +152,7 @@ void figure_sheep_action(figure *f)
             }
             break;
         case FIGURE_ACTION_197_HERD_ANIMAL_MOVING:
-            FigureMovement_walkTicks(f, 1);
+            figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST) {
                 f->direction = f->previousTileDirection;
                 f->actionState = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
@@ -205,7 +205,7 @@ void figure_wolf_action(figure *f)
             }
             break;
         case FIGURE_ACTION_197_HERD_ANIMAL_MOVING:
-            FigureMovement_walkTicks(f, 2);
+            figure_movement_move_ticks(f, 2);
             if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST) {
                 f->direction = f->previousTileDirection;
                 f->actionState = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
@@ -215,7 +215,7 @@ void figure_wolf_action(figure *f)
             }
             break;
         case FIGURE_ACTION_199_WOLF_ATTACKING:
-            FigureMovement_walkTicks(f, 2);
+            figure_movement_move_ticks(f, 2);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 int target_id = figure_combat_get_target_for_wolf(f->x, f->y, 6);
                 if (target_id) {
@@ -280,7 +280,7 @@ void figure_zebra_action(figure *f)
             }
             break;
         case FIGURE_ACTION_197_HERD_ANIMAL_MOVING:
-            FigureMovement_walkTicks(f, 2);
+            figure_movement_move_ticks(f, 2);
             if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST) {
                 f->direction = f->previousTileDirection;
                 f->actionState = FIGURE_ACTION_196_HERD_ANIMAL_AT_REST;
@@ -398,22 +398,22 @@ void figure_hippodrome_horse_action(figure *f)
                 }
                 set_horse_destination(f, HORSE_RACING);
                 f->direction = calc_general_direction(f->x, f->y, f->destinationX, f->destinationY);
-                FigureMovement_crossCountrySetDirection(f,
+                figure_movement_set_cross_country_direction(f,
                     f->crossCountryX, f->crossCountryY, 15 * f->destinationX, 15 * f->destinationY, 0);
             }
             if (f->actionState != FIGURE_ACTION_202_HIPPODROME_HORSE_DONE) {
-                FigureMovement_crossCountryWalkTicks(f, f->speedMultiplier);
+                figure_movement_move_ticks_cross_country(f, f->speedMultiplier);
             }
             break;
         case FIGURE_ACTION_202_HIPPODROME_HORSE_DONE:
             if (!f->waitTicks) {
                 set_horse_destination(f, HORSE_FINISHED);
                 f->direction = calc_general_direction(f->x, f->y, f->destinationX, f->destinationY);
-                FigureMovement_crossCountrySetDirection(f,
+                figure_movement_set_cross_country_direction(f,
                     f->crossCountryX, f->crossCountryY, 15 * f->destinationX, 15 * f->destinationY, 0);
             }
             if (f->direction != DIR_FIGURE_AT_DESTINATION) {
-                FigureMovement_crossCountryWalkTicks(f, 1);
+                figure_movement_move_ticks_cross_country(f, 1);
             }
             f->waitTicks++;
             if (f->waitTicks > 30) {

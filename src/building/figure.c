@@ -1,6 +1,5 @@
 #include "building/figure.h"
 
-#include "FigureMovement.h"
 #include "Formation.h"
 #include "Terrain.h"
 #include "TerrainGraphics.h"
@@ -17,6 +16,7 @@
 #include "city/message.h"
 #include "core/calc.h"
 #include "figure/figure.h"
+#include "figure/movement.h"
 #include "figure/type.h"
 #include "graphics/image.h"
 #include "game/resource.h"
@@ -53,7 +53,7 @@ static void generate_labor_seeker(building *b, int x, int y)
         f->actionState = FIGURE_ACTION_125_ROAMING;
         f->buildingId = b->id;
         b->figureId2 = f->id;
-        FigureMovement_initRoaming(f);
+        figure_movement_init_roaming(f);
     }
 }
 
@@ -107,7 +107,7 @@ static void create_roaming_figure(building *b, int x, int y, figure_type type)
     f->actionState = FIGURE_ACTION_125_ROAMING;
     f->buildingId = b->id;
     b->figureId = f->id;
-    FigureMovement_initRoaming(f);
+    figure_movement_init_roaming(f);
 }
 
 static int spawn_patrician(building *b, int spawned)
@@ -120,7 +120,7 @@ static int spawn_patrician(building *b, int spawned)
             figure *f = figure_create(FIGURE_PATRICIAN, x_road, y_road, DIR_4_BOTTOM);
             f->actionState = FIGURE_ACTION_125_ROAMING;
             f->buildingId = b->id;
-            FigureMovement_initRoaming(f);
+            figure_movement_init_roaming(f);
             return 1;
         }
     }
@@ -418,7 +418,7 @@ static void spawn_figure_amphitheater(building *b)
             f->actionState = FIGURE_ACTION_94_ENTERTAINER_ROAMING;
             f->buildingId = b->id;
             b->figureId = f->id;
-            FigureMovement_initRoaming(f);
+            figure_movement_init_roaming(f);
         }
     }
 }
@@ -445,7 +445,7 @@ static void spawn_figure_theater(building *b)
             f->actionState = FIGURE_ACTION_94_ENTERTAINER_ROAMING;
             f->buildingId = b->id;
             b->figureId = f->id;
-            FigureMovement_initRoaming(f);
+            figure_movement_init_roaming(f);
         }
     }
 }
@@ -493,7 +493,7 @@ static void spawn_figure_hippodrome(building *b)
             f->actionState = FIGURE_ACTION_94_ENTERTAINER_ROAMING;
             f->buildingId = b->id;
             b->figureId = f->id;
-            FigureMovement_initRoaming(f);
+            figure_movement_init_roaming(f);
 
             if (!Data_CityInfo.entertainmentHippodromeHasShow) {
                 // create mini-horses
@@ -559,7 +559,7 @@ static void spawn_figure_colosseum(building *b)
             f->actionState = FIGURE_ACTION_94_ENTERTAINER_ROAMING;
             f->buildingId = b->id;
             b->figureId = f->id;
-            FigureMovement_initRoaming(f);
+            figure_movement_init_roaming(f);
             if (b->data.entertainment.days1 > 0 || b->data.entertainment.days2 > 0) {
                 if (!Data_CityInfo.messageShownColosseum) {
                     Data_CityInfo.messageShownColosseum = 1;
@@ -721,22 +721,22 @@ static void spawn_figure_school(building *b)
             child1->actionState = FIGURE_ACTION_125_ROAMING;
             child1->buildingId = b->id;
             b->figureId = child1->id;
-            FigureMovement_initRoaming(child1);
+            figure_movement_init_roaming(child1);
 
             figure *child2 = figure_create(FIGURE_SCHOOL_CHILD, x_road, y_road, DIR_0_TOP);
             child2->actionState = FIGURE_ACTION_125_ROAMING;
             child2->buildingId = b->id;
-            FigureMovement_initRoaming(child2);
+            figure_movement_init_roaming(child2);
 
             figure *child3 = figure_create(FIGURE_SCHOOL_CHILD, x_road, y_road, DIR_0_TOP);
             child3->actionState = FIGURE_ACTION_125_ROAMING;
             child3->buildingId = b->id;
-            FigureMovement_initRoaming(child3);
+            figure_movement_init_roaming(child3);
 
             figure *child4 = figure_create(FIGURE_SCHOOL_CHILD, x_road, y_road, DIR_0_TOP);
             child4->actionState = FIGURE_ACTION_125_ROAMING;
             child4->buildingId = b->id;
-            FigureMovement_initRoaming(child4);
+            figure_movement_init_roaming(child4);
         }
     }
 }

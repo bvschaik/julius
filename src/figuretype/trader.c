@@ -13,6 +13,7 @@
 #include "empire/trade_route.h"
 #include "figure/combat.h"
 #include "figure/image.h"
+#include "figure/movement.h"
 #include "figure/route.h"
 #include "figure/trader.h"
 #include "graphics/image.h"
@@ -21,7 +22,6 @@
 #include "scenario/map.h"
 
 #include "Data/CityInfo.h"
-#include "FigureMovement.h"
 
 static void advance_next_import_resource_caravan()
 {
@@ -339,7 +339,7 @@ void figure_trade_caravan_action(figure *f)
             f->graphicOffset = 0;
             break;
         case FIGURE_ACTION_101_TRADE_CARAVAN_ARRIVING:
-            FigureMovement_walkTicks(f, 1);
+            figure_movement_move_ticks(f, 1);
             switch (f->direction) {
                 case DIR_FIGURE_AT_DESTINATION:
                     f->actionState = FIGURE_ACTION_102_TRADE_CARAVAN_TRADING;
@@ -392,7 +392,7 @@ void figure_trade_caravan_action(figure *f)
             f->graphicOffset = 0;
             break;
         case FIGURE_ACTION_103_TRADE_CARAVAN_LEAVING:
-            FigureMovement_walkTicks(f, 1);
+            figure_movement_move_ticks(f, 1);
             switch (f->direction) {
                 case DIR_FIGURE_AT_DESTINATION:
                     f->actionState = FIGURE_ACTION_100_TRADE_CARAVAN_CREATED;
@@ -429,7 +429,7 @@ void figure_trade_caravan_donkey_action(figure *f)
         } else if (leader->type != FIGURE_TRADE_CARAVAN && leader->type != FIGURE_TRADE_CARAVAN_DONKEY) {
             f->state = FigureState_Dead;
         } else {
-            FigureMovement_followTicks(f, 1);
+            figure_movement_follow_ticks(f, 1);
         }
     }
 
@@ -454,7 +454,7 @@ void figure_native_trader_action(figure *f)
             figure_combat_handle_corpse(f);
             break;
         case FIGURE_ACTION_160_NATIVE_TRADER_GOING_TO_WAREHOUSE:
-            FigureMovement_walkTicks(f, 1);
+            figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->actionState = FIGURE_ACTION_163_NATIVE_TRADER_AT_WAREHOUSE;
             } else if (f->direction == DIR_FIGURE_REROUTE) {
@@ -468,7 +468,7 @@ void figure_native_trader_action(figure *f)
             }
             break;
         case FIGURE_ACTION_161_NATIVE_TRADER_RETURNING:
-            FigureMovement_walkTicks(f, 1);
+            figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST) {
                 f->state = FigureState_Dead;
             } else if (f->direction == DIR_FIGURE_REROUTE) {
@@ -632,7 +632,7 @@ void figure_trade_ship_action(figure *f)
             f->graphicOffset = 0;
             break;
         case FIGURE_ACTION_111_TRADE_SHIP_GOING_TO_DOCK:
-            FigureMovement_walkTicks(f, 1);
+            figure_movement_move_ticks(f, 1);
             f->heightAdjustedTicks = 0;
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->actionState = FIGURE_ACTION_112_TRADE_SHIP_MOORED;
@@ -682,7 +682,7 @@ void figure_trade_ship_action(figure *f)
             city_message_reset_category_count(MESSAGE_CAT_BLOCKED_DOCK);
             break;
         case FIGURE_ACTION_113_TRADE_SHIP_GOING_TO_DOCK_QUEUE:
-            FigureMovement_walkTicks(f, 1);
+            figure_movement_move_ticks(f, 1);
             f->heightAdjustedTicks = 0;
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->actionState = FIGURE_ACTION_114_TRADE_SHIP_ANCHORED;
@@ -713,7 +713,7 @@ void figure_trade_ship_action(figure *f)
             f->graphicOffset = 0;
             break;
         case FIGURE_ACTION_115_TRADE_SHIP_LEAVING:
-            FigureMovement_walkTicks(f, 1);
+            figure_movement_move_ticks(f, 1);
             f->heightAdjustedTicks = 0;
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->actionState = FIGURE_ACTION_110_TRADE_SHIP_CREATED;

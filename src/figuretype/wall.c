@@ -5,6 +5,7 @@
 #include "figure/combat.h"
 #include "figure/enemy_army.h"
 #include "figure/image.h"
+#include "figure/movement.h"
 #include "figure/properties.h"
 #include "figure/route.h"
 #include "figuretype/missile.h"
@@ -16,7 +17,6 @@
 #include "sound/effect.h"
 
 #include "Data/State.h"
-#include "FigureMovement.h"
 #include "Terrain.h"
 
 static const int BALLISTA_FIRING_OFFSETS[] = {
@@ -203,7 +203,7 @@ void figure_tower_sentry_action(figure *f)
             }
             break;
         case FIGURE_ACTION_171_TOWER_SENTRY_PATROLLING:
-            FigureMovement_walkTicks(f, 1);
+            figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->actionState = FIGURE_ACTION_173_TOWER_SENTRY_RETURNING;
                 f->destinationX = f->sourceX;
@@ -214,7 +214,7 @@ void figure_tower_sentry_action(figure *f)
             }
             break;
         case FIGURE_ACTION_172_TOWER_SENTRY_FIRING:
-            FigureMovement_walkTicksTowerSentry(f, 1);
+            figure_movement_move_ticks_tower_sentry(f, 1);
             f->waitTicksMissile++;
             if (f->waitTicksMissile > figure_properties_for_type(f->type)->missile_delay) {
                 int x_tile, y_tile;
@@ -231,7 +231,7 @@ void figure_tower_sentry_action(figure *f)
             }
             break;
         case FIGURE_ACTION_173_TOWER_SENTRY_RETURNING:
-            FigureMovement_walkTicks(f, 1);
+            figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->actionState = FIGURE_ACTION_170_TOWER_SENTRY_AT_REST;
             } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
@@ -242,7 +242,7 @@ void figure_tower_sentry_action(figure *f)
             f->terrainUsage = FigureTerrainUsage_Roads;
             f->isGhost = 0;
             f->heightAdjustedTicks = 0;
-            FigureMovement_walkTicks(f, 1);
+            figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 map_figure_delete(f);
                 f->sourceX = f->x = b->x;

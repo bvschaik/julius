@@ -74,6 +74,7 @@ set(FIGURE_FILES
     ${PROJECT_SOURCE_DIR}/src/figure/formation.c
     ${PROJECT_SOURCE_DIR}/src/figure/formation_layout.c
     ${PROJECT_SOURCE_DIR}/src/figure/image.c
+    ${PROJECT_SOURCE_DIR}/src/figure/movement.c
     ${PROJECT_SOURCE_DIR}/src/figure/name.c
     ${PROJECT_SOURCE_DIR}/src/figure/phrase.c
     ${PROJECT_SOURCE_DIR}/src/figure/properties.c
@@ -184,7 +185,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/CityInfo_Victory.c
 	${PROJECT_SOURCE_DIR}/src/CityView.c
 	${PROJECT_SOURCE_DIR}/src/Cursor.c
-	${PROJECT_SOURCE_DIR}/src/FigureMovement.c
 	${PROJECT_SOURCE_DIR}/src/Formation.c
 	${PROJECT_SOURCE_DIR}/src/FormationUpdate.c
 	${PROJECT_SOURCE_DIR}/src/Game.c

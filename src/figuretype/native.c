@@ -4,10 +4,10 @@
 #include "figure/combat.h"
 #include "figure/formation.h"
 #include "figure/image.h"
+#include "figure/movement.h"
 #include "figure/route.h"
 
 #include "Data/CityInfo.h"
-#include "FigureMovement.h"
 #include "Terrain.h"
 
 void figure_indigenous_native_action(figure *f)
@@ -28,7 +28,7 @@ void figure_indigenous_native_action(figure *f)
             figure_combat_handle_corpse(f);
             break;
         case FIGURE_ACTION_156_NATIVE_GOING_TO_MEETING_CENTER:
-            FigureMovement_walkTicks(f, 1);
+            figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->actionState = FIGURE_ACTION_157_NATIVE_RETURNING_FROM_MEETING;
                 f->destinationX = f->sourceX;
@@ -38,7 +38,7 @@ void figure_indigenous_native_action(figure *f)
             }
             break;
         case FIGURE_ACTION_157_NATIVE_RETURNING_FROM_MEETING:
-            FigureMovement_walkTicks(f, 1);
+            figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION ||
                 f->direction == DIR_FIGURE_REROUTE ||
                 f->direction == DIR_FIGURE_LOST) {
@@ -72,7 +72,7 @@ void figure_indigenous_native_action(figure *f)
             Data_CityInfo.riotersOrAttackingNativesInCity = 10;
             Data_CityInfo.numAttackingNativesInCity++;
             f->terrainUsage = FigureTerrainUsage_Enemy;
-            FigureMovement_walkTicks(f, 1);
+            figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION ||
                 f->direction == DIR_FIGURE_REROUTE ||
                 f->direction == DIR_FIGURE_LOST) {

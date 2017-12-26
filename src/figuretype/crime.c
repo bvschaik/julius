@@ -6,6 +6,7 @@
 #include "core/random.h"
 #include "figure/combat.h"
 #include "figure/image.h"
+#include "figure/movement.h"
 #include "figure/route.h"
 #include "game/tutorial.h"
 #include "graphics/image.h"
@@ -18,7 +19,6 @@
 #include "../CityInfo.h"
 #include "../Building.h"
 #include "../Formation.h"
-#include "FigureMovement.h"
 
 static const int CRIMINAL_OFFSETS[] = {
     0, 0, 1, 2, 3, 4, 5, 6, 7, 7, 6, 5, 4, 3, 2, 1
@@ -228,7 +228,7 @@ void figure_rioter_action(figure *f)
             break;
         case FIGURE_ACTION_121_RIOTER_MOVING:
             figure_image_increase_offset(f, 12);
-            FigureMovement_walkTicks(f, 1);
+            figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 int xTile, yTile;
                 int buildingId = Formation_Rioter_getTargetBuilding(&xTile, &yTile);

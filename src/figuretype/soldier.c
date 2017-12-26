@@ -5,6 +5,7 @@
 #include "figure/formation.h"
 #include "figure/formation_layout.h"
 #include "figure/image.h"
+#include "figure/movement.h"
 #include "figure/properties.h"
 #include "figure/route.h"
 #include "figuretype/missile.h"
@@ -14,7 +15,6 @@
 #include "map/point.h"
 
 #include "Data/CityInfo.h"
-#include "FigureMovement.h"
 
 static const map_point ALTERNATIVE_POINTS[] = {{-1, -6},
     {0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1},
@@ -267,7 +267,7 @@ void figure_soldier_action(figure *f)
             f->destinationX = f->formationPositionX;
             f->destinationY = f->formationPositionY;
             f->destinationGridOffsetSoldier = map_grid_offset(f->destinationX, f->destinationY);
-            FigureMovement_walkTicks(f, speed_factor);
+            figure_movement_move_ticks(f, speed_factor);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->actionState = FIGURE_ACTION_80_SOLDIER_AT_REST;
             } else if (f->direction == DIR_FIGURE_REROUTE) {
@@ -280,7 +280,7 @@ void figure_soldier_action(figure *f)
             f->formationAtRest = 1;
             f->destinationX = f->sourceX;
             f->destinationY = f->sourceY;
-            FigureMovement_walkTicks(f, speed_factor);
+            figure_movement_move_ticks(f, speed_factor);
             if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST) {
                 f->state = FigureState_Dead;
             } else if (f->direction == DIR_FIGURE_REROUTE) {
@@ -296,7 +296,7 @@ void figure_soldier_action(figure *f)
                 f->destinationY += ALTERNATIVE_POINTS[f->alternativeLocationIndex].y;
             }
             f->destinationGridOffsetSoldier = map_grid_offset(f->destinationX, f->destinationY);
-            FigureMovement_walkTicks(f, speed_factor);
+            figure_movement_move_ticks(f, speed_factor);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->actionState = FIGURE_ACTION_84_SOLDIER_AT_STANDARD;
                 f->graphicOffset = 0;
@@ -337,7 +337,7 @@ void figure_soldier_action(figure *f)
         case FIGURE_ACTION_85_SOLDIER_GOING_TO_MILITARY_ACADEMY:
             formation_legion_set_trained(m->id);
             f->formationAtRest = 1;
-            FigureMovement_walkTicks(f, speed_factor);
+            figure_movement_move_ticks(f, speed_factor);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->actionState = FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT;
             } else if (f->direction == DIR_FIGURE_REROUTE) {
@@ -349,7 +349,7 @@ void figure_soldier_action(figure *f)
         case FIGURE_ACTION_86_SOLDIER_MOPPING_UP:
             f->formationAtRest = 0;
             if (find_mop_up_target(f)) {
-                FigureMovement_walkTicks(f, speed_factor);
+                figure_movement_move_ticks(f, speed_factor);
                 if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                     figure *target = figure_get(f->targetFigureId);
                     f->destinationX = target->x;
@@ -366,7 +366,7 @@ void figure_soldier_action(figure *f)
             f->formationAtRest = 0;
             f->destinationX = Data_CityInfo.exitPointX;
             f->destinationY = Data_CityInfo.exitPointY;
-            FigureMovement_walkTicks(f, speed_factor);
+            figure_movement_move_ticks(f, speed_factor);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->actionState = FIGURE_ACTION_89_SOLDIER_AT_DISTANT_BATTLE;
                 figure_route_remove(f);
@@ -383,7 +383,7 @@ void figure_soldier_action(figure *f)
             f->destinationX = f->formationPositionX;
             f->destinationY = f->formationPositionY;
             f->destinationGridOffsetSoldier = map_grid_offset(f->destinationX, f->destinationY);
-            FigureMovement_walkTicks(f, speed_factor);
+            figure_movement_move_ticks(f, speed_factor);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->actionState = FIGURE_ACTION_80_SOLDIER_AT_REST;
             } else if (f->direction == DIR_FIGURE_REROUTE) {

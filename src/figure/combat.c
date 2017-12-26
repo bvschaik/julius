@@ -2,6 +2,7 @@
 
 #include "core/calc.h"
 #include "figure/formation.h"
+#include "figure/movement.h"
 #include "figure/properties.h"
 #include "figure/route.h"
 #include "figure/sound.h"
@@ -10,7 +11,6 @@
 #include "sound/effect.h"
 
 #include "../Formation.h"
-#include "FigureMovement.h"
 
 void figure_combat_handle_corpse(figure *f)
 {
@@ -112,10 +112,7 @@ static void hit_opponent(figure *f)
 
 void figure_combat_handle_attack(figure *f)
 {
-    if (f->progressOnTile <= 5) {
-        f->progressOnTile++;
-        FigureMovement_advanceTick(f);
-    }
+    figure_movement_advance_attack(f);
     if (f->numAttackers == 0) {
         resume_activity_after_attack(f);
         return;
@@ -283,7 +280,7 @@ int figure_combat_get_missile_target_for_soldier(figure *shooter, int max_distan
         if (FigureIsEnemy(f->type) || FigureIsHerd(f->type) ||
             (f->type == FIGURE_INDIGENOUS_NATIVE && f->actionState == FIGURE_ACTION_159_NATIVE_ATTACKING)) {
             int distance = calc_maximum_distance(x, y, f->x, f->y);
-            if (distance < min_distance && FigureMovement_canLaunchCrossCountryMissile(x, y, f->x, f->y)) {
+            if (distance < min_distance && figure_movement_can_launch_cross_country_missile(x, y, f->x, f->y)) {
                 min_distance = distance;
                 min_figure = f;
             }
@@ -338,7 +335,7 @@ int figure_combat_get_missile_target_for_enemy(figure *enemy, int max_distance, 
         } else {
             continue;
         }
-        if (distance < min_distance && FigureMovement_canLaunchCrossCountryMissile(x, y, f->x, f->y)) {
+        if (distance < min_distance && figure_movement_can_launch_cross_country_missile(x, y, f->x, f->y)) {
             min_distance = distance;
             min_figure = f;
         }

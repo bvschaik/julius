@@ -5,13 +5,12 @@
 #include "building/warehouse.h"
 #include "figure/combat.h"
 #include "figure/image.h"
+#include "figure/movement.h"
 #include "figure/route.h"
 #include "game/resource.h"
 #include "graphics/image.h"
 
-#include "FigureMovement.h"
-
-static int createDeliveryBoy(int leader_id, figure *f)
+static int create_delivery_boy(int leader_id, figure *f)
 {
     figure *boy = figure_create(FIGURE_DELIVERY_BOY, f->x, f->y, 0);
     boy->inFrontFigureId = leader_id;
@@ -20,7 +19,7 @@ static int createDeliveryBoy(int leader_id, figure *f)
     return boy->id;
 }
 
-static int marketBuyerTakeFoodFromGranary(figure *f, int market_id, int granary_id)
+static int take_food_from_granary(figure *f, int market_id, int granary_id)
 {
     int resource;
     switch (f->collectingItemId) {
@@ -64,12 +63,12 @@ static int marketBuyerTakeFoodFromGranary(figure *f, int market_id, int granary_
     // create delivery boys
     int previous_boy = f->id;
     for (int i = 0; i < num_loads; i++) {
-        previous_boy = createDeliveryBoy(previous_boy, f);
+        previous_boy = create_delivery_boy(previous_boy, f);
     }
     return 1;
 }
 
-static int marketBuyerTakeResourceFromWarehouse(figure *f, int marketId, int warehouseId)
+static int take_resource_from_warehouse(figure *f, int warehouse_id)
 {
     int resource;
     switch (f->collectingItemId) {
@@ -79,7 +78,7 @@ static int marketBuyerTakeResourceFromWarehouse(figure *f, int marketId, int war
         case INVENTORY_WINE: resource = RESOURCE_WINE; break;
         default: return 0;
     }
-    building *warehouse = building_get(warehouseId);
+    building *warehouse = building_get(warehouse_id);
     int numLoads;
     int stored = building_warehouse_get_amount(warehouse, resource);
     if (stored < 2) {
@@ -93,9 +92,9 @@ static int marketBuyerTakeResourceFromWarehouse(figure *f, int marketId, int war
     building_warehouse_remove_resource(warehouse, resource, numLoads);
     
     // create delivery boys
-    int boy1 = createDeliveryBoy(f->id, f);
+    int boy1 = create_delivery_boy(f->id, f);
     if (numLoads > 1) {
-        createDeliveryBoy(boy1, f);
+        create_delivery_boy(boy1, f);
     }
     return 1;
 }
@@ -119,14 +118,14 @@ void figure_market_buyer_action(figure *f)
             figure_combat_handle_corpse(f);
             break;
         case FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE:
-            FigureMovement_walkTicks(f, 1);
+            figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 if (f->collectingItemId > 3) {
-                    if (!marketBuyerTakeResourceFromWarehouse(f, f->buildingId, f->destinationBuildingId)) {
+                    if (!take_resource_from_warehouse(f, f->destinationBuildingId)) {
                         f->state = FigureState_Dead;
                     }
                 } else {
-                    if (!marketBuyerTakeFoodFromGranary(f, f->buildingId, f->destinationBuildingId)) {
+                    if (!take_food_from_granary(f, f->buildingId, f->destinationBuildingId)) {
                         f->state = FigureState_Dead;
                     }
                 }
@@ -141,7 +140,7 @@ void figure_market_buyer_action(figure *f)
             }
             break;
         case FIGURE_ACTION_146_MARKET_BUYER_RETURNING:
-            FigureMovement_walkTicks(f, 1);
+            figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST) {
                 f->state = FigureState_Dead;
             } else if (f->direction == DIR_FIGURE_REROUTE) {
@@ -165,7 +164,7 @@ void figure_delivery_boy_action(figure *f)
     } else {
         if (leader->state == FigureState_Alive) {
             if (leader->type == FIGURE_MARKET_BUYER || leader->type == FIGURE_DELIVERY_BOY) {
-                FigureMovement_followTicks(f, 1);
+                figure_movement_follow_ticks(f, 1);
             } else {
                 f->state = FigureState_Dead;
             }

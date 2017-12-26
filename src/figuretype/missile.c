@@ -1,6 +1,7 @@
 #include "missile.h"
 
 #include "figure/formation.h"
+#include "figure/movement.h"
 #include "figure/properties.h"
 #include "figure/sound.h"
 #include "graphics/image.h"
@@ -10,7 +11,6 @@
 
 #include "Data/State.h"
 #include "../Formation.h"
-#include "FigureMovement.h"
 
 static const int CLOUD_TILE_OFFSETS[] = {0, 0, 0, 1, 1, 2};
 
@@ -42,7 +42,7 @@ void figure_create_explosion_cloud(int x, int y, int size)
             f->crossCountryY += ccOffset;
             f->destinationX += CLOUD_DIRECTION[i].x;
             f->destinationY += CLOUD_DIRECTION[i].y;
-            FigureMovement_crossCountrySetDirection(f,
+            figure_movement_set_cross_country_direction(f,
                 f->crossCountryX, f->crossCountryY,
                 15 * f->destinationX + ccOffset,
                 15 * f->destinationY + ccOffset, 0);
@@ -60,7 +60,7 @@ void figure_create_missile(int building_id, int x, int y, int x_dst, int y_dst, 
         f->buildingId = building_id;
         f->destinationX = x_dst;
         f->destinationY = y_dst;
-        FigureMovement_crossCountrySetDirection(
+        figure_movement_set_cross_country_direction(
             f, f->crossCountryX, f->crossCountryY,
             15 * x_dst, 15 * y_dst, 1);
     }
@@ -111,7 +111,7 @@ void figure_explosion_cloud_action(figure *f)
     if (f->progressOnTile > 44) {
         f->state = FigureState_Dead;
     }
-    FigureMovement_crossCountryWalkTicks(f, f->speedMultiplier);
+    figure_movement_move_ticks_cross_country(f, f->speedMultiplier);
     if (f->progressOnTile < 48) {
         f->graphicId = image_group(GROUP_FIGURE_EXPLOSION) +
                        CLOUD_IMAGE_OFFSETS[f->progressOnTile / 2];
@@ -158,7 +158,7 @@ void figure_arrow_action(figure *f)
     if (f->progressOnTile > 120) {
         f->state = FigureState_Dead;
     }
-    int should_die = FigureMovement_crossCountryWalkTicks(f, 4);
+    int should_die = figure_movement_move_ticks_cross_country(f, 4);
     int target_id = get_citizen_on_tile(f->gridOffset);
     if (target_id) {
         missile_hit_target(f, target_id, FIGURE_FORT_LEGIONARY);
@@ -177,7 +177,7 @@ void figure_spear_action(figure *f)
     if (f->progressOnTile > 120) {
         f->state = FigureState_Dead;
     }
-    int should_die = FigureMovement_crossCountryWalkTicks(f, 4);
+    int should_die = figure_movement_move_ticks_cross_country(f, 4);
     int target_id = get_citizen_on_tile(f->gridOffset);
     if (target_id) {
         missile_hit_target(f, target_id, FIGURE_FORT_LEGIONARY);
@@ -196,7 +196,7 @@ void figure_javelin_action(figure *f)
     if (f->progressOnTile > 120) {
         f->state = FigureState_Dead;
     }
-    int should_die = FigureMovement_crossCountryWalkTicks(f, 4);
+    int should_die = figure_movement_move_ticks_cross_country(f, 4);
     int target_id = get_non_citizen_on_tile(f->gridOffset);
     if (target_id) {
         missile_hit_target(f, target_id, FIGURE_ENEMY_CAESAR_LEGIONARY);
@@ -215,7 +215,7 @@ void figure_bolt_action(figure *f)
     if (f->progressOnTile > 120) {
         f->state = FigureState_Dead;
     }
-    int should_die = FigureMovement_crossCountryWalkTicks(f, 4);
+    int should_die = figure_movement_move_ticks_cross_country(f, 4);
     int target_id = get_non_citizen_on_tile(f->gridOffset);
     if (target_id) {
         figure *target = figure_get(target_id);

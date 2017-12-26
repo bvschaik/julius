@@ -4,12 +4,11 @@
 #include "building/market.h"
 #include "figure/combat.h"
 #include "figure/image.h"
+#include "figure/movement.h"
 #include "figure/route.h"
 #include "graphics/image.h"
 #include "map/building.h"
 #include "map/road_access.h"
-
-#include "FigureMovement.h"
 
 static void roamer_action(figure *f, int num_ticks)
 {
@@ -36,10 +35,10 @@ static void roamer_action(figure *f, int num_ticks)
                     f->state = FigureState_Dead;
                 }
             }
-            FigureMovement_roamTicks(f, num_ticks);
+            figure_movement_roam_ticks(f, num_ticks);
             break;
         case FIGURE_ACTION_126_ROAMER_RETURNING:
-            FigureMovement_walkTicks(f, num_ticks);
+            figure_movement_move_ticks(f, num_ticks);
             if (f->direction == DIR_FIGURE_AT_DESTINATION ||
                 f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
                 f->state = FigureState_Dead;
@@ -90,7 +89,7 @@ void figure_school_child_action(figure *f)
             if (f->roamLength >= f->maxRoamLength) {
                 f->state = FigureState_Dead;
             }
-            FigureMovement_roamTicks(f, 2);
+            figure_movement_roam_ticks(f, 2);
             break;
     }
     figure_image_update(f, image_group(GROUP_FIGURE_SCHOOL_CHILD));
@@ -211,7 +210,7 @@ void figure_tax_collector_action(figure *f)
                 int x_road, y_road;
                 if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
                     f->actionState = FIGURE_ACTION_41_TAX_COLLECTOR_ENTERING_EXITING;
-                    FigureMovement_setCrossCountryDestination(f, x_road, y_road);
+                    figure_movement_set_cross_country_destination(f, x_road, y_road);
                     f->roamLength = 0;
                 } else {
                     f->state = FigureState_Dead;
@@ -221,13 +220,13 @@ void figure_tax_collector_action(figure *f)
         case FIGURE_ACTION_41_TAX_COLLECTOR_ENTERING_EXITING:
             f->useCrossCountry = 1;
             f->isGhost = 1;
-            if (FigureMovement_crossCountryWalkTicks(f, 1) == 1) {
+            if (figure_movement_move_ticks_cross_country(f, 1) == 1) {
                 if (map_building_at(f->gridOffset) == f->buildingId) {
                     // returned to own building
                     f->state = FigureState_Dead;
                 } else {
                     f->actionState = FIGURE_ACTION_42_TAX_COLLECTOR_ROAMING;
-                    FigureMovement_initRoaming(f);
+                    figure_movement_init_roaming(f);
                     f->roamLength = 0;
                 }
             }
@@ -245,13 +244,13 @@ void figure_tax_collector_action(figure *f)
                     f->state = FigureState_Dead;
                 }
             } 
-            FigureMovement_roamTicks(f, 1);
+            figure_movement_roam_ticks(f, 1);
             break;
         case FIGURE_ACTION_43_TAX_COLLECTOR_RETURNING:
-            FigureMovement_walkTicks(f, 1);
+            figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->actionState = FIGURE_ACTION_41_TAX_COLLECTOR_ENTERING_EXITING;
-                FigureMovement_setCrossCountryDestination(f, b->x, b->y);
+                figure_movement_set_cross_country_destination(f, b->x, b->y);
                 f->roamLength = 0;
             } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
                 f->state = FigureState_Dead;
