@@ -20,9 +20,6 @@ int FigureAction_CombatEnemy_getMissileTarget(figure *enemy, int maxDistance, in
 void FigureAction_Combat_attackFigureAt(figure *f, int grid_offset);
 
 // figure action callbacks
-// soldier
-void FigureAction_soldier(figure *f);
-void FigureAction_militaryStandard(figure *f);
 // enemy
 void FigureAction_enemy43_Spear(figure *f);
 void FigureAction_enemy44_Sword(figure *f);

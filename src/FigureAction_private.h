@@ -7,11 +7,9 @@
 #define FigureActionIncreaseGraphicOffset(f, max) figure_image_increase_offset(f, max);
 #define FigureActionNormalizeDirection(d) ((d) = (8 + (d) - Data_State.map.orientation) % 8)
 #define FigureActionCorpseGraphicOffset(f) figure_image_corpse_offset(f)
-#define FigureActionMissileLauncherGraphicOffset(f) figureActionMissileLauncherGraphicOffsets[f->attackGraphicOffset / 2]
+#define FigureActionMissileLauncherGraphicOffset(f) figure_image_missile_launcher_offset(f)
 #define FigureActionFormationLayoutPositionX(layout, index) formation_layout_position_x(layout, index)
 #define FigureActionFormationLayoutPositionY(layout, index) formation_layout_position_y(layout, index)
-
-extern const int figureActionMissileLauncherGraphicOffsets[128];
 
 #include "FigureAction.h"
 #include "FigureMovement.h"

@@ -546,6 +546,27 @@ void building_construction_update(int x, int y)
     data.cost = current_cost;
 }
 
+static int has_nearby_enemy(int x_start, int y_start, int x_end, int y_end)
+{
+    for (int i = 1; i < MAX_FIGURES; i++) {
+        figure *f = figure_get(i);
+        if (f->state != FigureState_Alive || !FigureIsEnemy(f->type)) {
+            continue;
+        }
+        int dx = (f->x > x_start) ? (f->x - x_start) : (x_start - f->x);
+        int dy = (f->y > y_start) ? (f->y - y_start) : (y_start - f->y);
+        if (dx <= 12 && dy <= 12) {
+            return 1;
+        }
+        dx = (f->x > x_end) ? (f->x - x_end) : (x_end - f->x);
+        dy = (f->y > y_end) ? (f->y - y_end) : (y_end - f->y);
+        if (dx <= 12 && dy <= 12) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
 void building_construction_place(int orientation)
 {
     data.in_progress = 0;
@@ -573,7 +594,7 @@ void building_construction_place(int orientation)
         city_warning_show(WARNING_MARBLE_NEEDED_ORACLE);
         return;
     }
-    if (type != BUILDING_CLEAR_LAND && Figure_hasNearbyEnemy(x_start, y_start, x_end, y_end)) {
+    if (type != BUILDING_CLEAR_LAND && has_nearby_enemy(x_start, y_start, x_end, y_end)) {
         if (type == BUILDING_WALL || type == BUILDING_ROAD || type == BUILDING_AQUEDUCT) {
             game_undo_restore_map(0);
         } else if (type == BUILDING_PLAZA || type == BUILDING_GARDENS) {

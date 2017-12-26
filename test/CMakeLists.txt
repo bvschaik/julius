@@ -60,12 +60,10 @@ add_executable(autopilot
     ${PROJECT_SOURCE_DIR}/src/CityInfo_Victory.c
     ${PROJECT_SOURCE_DIR}/src/CityView.c
     ${PROJECT_SOURCE_DIR}/src/Cursor.c
-    ${PROJECT_SOURCE_DIR}/src/Figure.c
     ${PROJECT_SOURCE_DIR}/src/FigureAction.c
     ${PROJECT_SOURCE_DIR}/src/FigureAction_Combat.c
     ${PROJECT_SOURCE_DIR}/src/FigureAction_Common.c
     ${PROJECT_SOURCE_DIR}/src/FigureAction_Enemy.c
-    ${PROJECT_SOURCE_DIR}/src/FigureAction_Soldier.c
     ${PROJECT_SOURCE_DIR}/src/FigureMovement.c
     ${PROJECT_SOURCE_DIR}/src/Figure_Service.c
     ${PROJECT_SOURCE_DIR}/src/Formation.c

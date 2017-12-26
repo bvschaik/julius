@@ -91,6 +91,7 @@ set(FIGURETYPE_FILES
     ${PROJECT_SOURCE_DIR}/src/figuretype/missile.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/native.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/service.c
+    ${PROJECT_SOURCE_DIR}/src/figuretype/soldier.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/trader.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/wall.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/water.c
@@ -179,12 +180,10 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/CityInfo_Victory.c
 	${PROJECT_SOURCE_DIR}/src/CityView.c
 	${PROJECT_SOURCE_DIR}/src/Cursor.c
-	${PROJECT_SOURCE_DIR}/src/Figure.c
 	${PROJECT_SOURCE_DIR}/src/FigureAction.c
 	${PROJECT_SOURCE_DIR}/src/FigureAction_Combat.c
 	${PROJECT_SOURCE_DIR}/src/FigureAction_Common.c
 	${PROJECT_SOURCE_DIR}/src/FigureAction_Enemy.c
-	${PROJECT_SOURCE_DIR}/src/FigureAction_Soldier.c
 	${PROJECT_SOURCE_DIR}/src/FigureMovement.c
 	${PROJECT_SOURCE_DIR}/src/Figure_Service.c
 	${PROJECT_SOURCE_DIR}/src/Formation.c

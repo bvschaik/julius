@@ -14,6 +14,7 @@
 #include "figuretype/missile.h"
 #include "figuretype/native.h"
 #include "figuretype/service.h"
+#include "figuretype/soldier.h"
 #include "figuretype/trader.h"
 #include "figuretype/wall.h"
 #include "figuretype/water.h"
@@ -34,10 +35,10 @@ static void (*figureActionCallbacks[])(figure *f) = {
 	figure_engineer_action,
 	figure_warehouseman_action,
 	figure_prefect_action, //10
-	FigureAction_soldier,
-	FigureAction_soldier,
-	FigureAction_soldier,
-	FigureAction_militaryStandard,
+	figure_soldier_action,
+	figure_soldier_action,
+	figure_soldier_action,
+	figure_military_standard_action,
 	figure_entertainer_action,
 	figure_entertainer_action,
 	figure_entertainer_action,
