@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "city/warning.h"
+#include "figuretype/migrant.h"
 #include "game/undo.h"
 #include "map/aqueduct.h"
 #include "map/bridge.h"
@@ -11,7 +12,6 @@
 #include "map/terrain.h"
 
 #include "Data/State.h"
-#include "../HousePopulation.h"
 #include "../TerrainGraphics.h"
 #include "UI/PopupDialog.h"
 #include "UI/Window.h"
@@ -62,7 +62,7 @@ static int clear_land_confirmed(int measureOnly, int x_start, int y_start, int x
                     }
                 }
                 if (b->houseSize && b->housePopulation && !measureOnly) {
-                    HousePopulation_createHomeless(b->x, b->y, b->housePopulation);
+                    figure_create_homeless(b->x, b->y, b->housePopulation);
                     b->housePopulation = 0;
                 }
                 if (b->state != BuildingState_DeletedByPlayer) {

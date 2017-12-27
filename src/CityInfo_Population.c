@@ -1,12 +1,12 @@
 #include "CityInfo.h"
 
 #include "Building.h"
-#include "HousePopulation.h"
 
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 
 #include "building/building.h"
+#include "building/house_population.h"
 #include "building/model.h"
 #include "city/message.h"
 #include "core/calc.h"
@@ -124,7 +124,7 @@ static int getSentimentPenaltyForTentDwellers()
 
 void CityInfo_Population_calculateSentiment()
 {
-	int peopleInHouses = HousePopulation_calculatePeoplePerType();
+	int peopleInHouses = house_population_calculate_people_per_type();
 	if (peopleInHouses < Data_CityInfo.population) {
 		removePeopleFromCensus(Data_CityInfo.population - peopleInHouses);
 	}
@@ -597,7 +597,7 @@ void CityInfo_Population_removePeopleHomeless(int numPeople)
 
 void CityInfo_Population_removePeopleForTroopRequest(int amount)
 {
-	int removed = HousePopulation_removePeople(amount);
+	int removed = house_population_remove_from_city(amount);
 	removePeopleFromCensus(removed);
 	Data_CityInfo.populationLostTroopRequest += amount;
 	recalculatePopulation();
@@ -641,7 +641,7 @@ static void yearlyAdvanceAgesAndCalculateDeaths()
 		int people = getPeopleInAgeDecennium(decennium);
 		int deaths = calc_adjust_with_percentage(people,
 			yearlyDeathsPerHealthPerDecennium[Data_CityInfo.healthRate / 10][decennium]);
-		int removed = HousePopulation_removePeople(deaths + aged100);
+		int removed = house_population_remove_from_city(deaths + aged100);
 		removePeopleFromCensusInDecennium(decennium, removed);
 		// ^ BUGFIX should be deaths only, now aged100 are removed from census while they weren't *in* the census
 		Data_CityInfo.populationYearlyDeaths += removed;
@@ -655,7 +655,7 @@ static void yearlyCalculateBirths()
 	for (int decennium = 9; decennium >= 0; decennium--) {
 		int people = getPeopleInAgeDecennium(decennium);
 		int births = calc_adjust_with_percentage(people, yearlyBirthsPerDecennium[decennium]);
-		int added = HousePopulation_addPeople(births);
+		int added = house_population_add_to_city(births);
 		Data_CityInfo.populationPerAge[0] += added;
 		Data_CityInfo.populationYearlyBirths += added;
 	}
@@ -676,7 +676,7 @@ static void yearlyUpdateAfterDeathsBirths()
 void CityInfo_Population_requestYearlyUpdate()
 {
 	Data_CityInfo.populationYearlyUpdatedNeeded = 1;
-	HousePopulation_calculatePeoplePerType();
+	house_population_calculate_people_per_type();
 }
 
 void CityInfo_Population_yearlyUpdate()

@@ -66,7 +66,6 @@ add_executable(autopilot
     ${PROJECT_SOURCE_DIR}/src/GameFile.c
     ${PROJECT_SOURCE_DIR}/src/GameTick.c
     ${PROJECT_SOURCE_DIR}/src/HouseEvolution.c
-    ${PROJECT_SOURCE_DIR}/src/HousePopulation.c
     ${PROJECT_SOURCE_DIR}/src/Loader.c
     ${PROJECT_SOURCE_DIR}/src/Runner.c
     ${PROJECT_SOURCE_DIR}/src/SidebarMenu.c

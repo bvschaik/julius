@@ -44,6 +44,7 @@ set(BUILDING_FILES
     ${PROJECT_SOURCE_DIR}/src/building/granary.c
     ${PROJECT_SOURCE_DIR}/src/building/house.c
     ${PROJECT_SOURCE_DIR}/src/building/house_evolution.c
+    ${PROJECT_SOURCE_DIR}/src/building/house_population.c
     ${PROJECT_SOURCE_DIR}/src/building/industry.c
     ${PROJECT_SOURCE_DIR}/src/building/list.c
     ${PROJECT_SOURCE_DIR}/src/building/maintenance.c
@@ -193,7 +194,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/Graphics.c
 	${PROJECT_SOURCE_DIR}/src/Graphics_Footprint.c
 	${PROJECT_SOURCE_DIR}/src/HouseEvolution.c
-	${PROJECT_SOURCE_DIR}/src/HousePopulation.c
 	${PROJECT_SOURCE_DIR}/src/KeyboardHotkey.c
 	${PROJECT_SOURCE_DIR}/src/Loader.c
 	${PROJECT_SOURCE_DIR}/src/Runner.c

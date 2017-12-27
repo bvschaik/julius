@@ -1,8 +1,8 @@
 #include "migrant.h"
 
-#include "building/building.h"
 #include "building/house.h"
 #include "building/model.h"
+#include "core/calc.h"
 #include "figure/combat.h"
 #include "figure/image.h"
 #include "figure/movement.h"
@@ -12,7 +12,40 @@
 
 #include "Data/CityInfo.h"
 #include "CityInfo.h"
-#include "HousePopulation.h"
+
+void figure_create_immigrant(building *house, int num_people)
+{
+    figure *f = figure_create(FIGURE_IMMIGRANT, Data_CityInfo.entryPointX, Data_CityInfo.entryPointY, DIR_0_TOP);
+    f->actionState = FIGURE_ACTION_1_IMMIGRANT_CREATED;
+    f->immigrantBuildingId = house->id;
+    house->immigrantFigureId = f->id;
+    f->waitTicks = 10 + (house->houseGenerationDelay & 0x7f);
+    f->migrantNumPeople = num_people;
+}
+
+void figure_create_emigrant(building *house, int num_people)
+{
+    CityInfo_Population_addPeople(-num_people);
+    if (num_people < house->housePopulation) {
+        house->housePopulation -= num_people;
+    } else {
+        house->housePopulation = 0;
+        building_house_change_to_vacant_lot(house);
+    }
+    figure *f = figure_create(FIGURE_EMIGRANT, house->x, house->y, DIR_0_TOP);
+    f->actionState = FIGURE_ACTION_4_EMIGRANT_CREATED;
+    f->waitTicks = 0;
+    f->migrantNumPeople = num_people;
+}
+
+void figure_create_homeless(int x, int y, int num_people)
+{
+    figure *f = figure_create(FIGURE_HOMELESS, x, y, DIR_0_TOP);
+    f->actionState = FIGURE_ACTION_7_HOMELESS_CREATED;
+    f->waitTicks = 0;
+    f->migrantNumPeople = num_people;
+    CityInfo_Population_removePeopleHomeless(num_people);
+}
 
 static void update_direction_and_image(figure *f)
 {
@@ -23,6 +56,26 @@ static void update_direction_and_image(figure *f)
         f->cartGraphicId = image_group(GROUP_FIGURE_MIGRANT_CART) + dir;
         figure_image_set_cart_offset(f, (dir + 4) % 8);
     }
+}
+
+static int closest_house_with_room(int x, int y)
+{
+    int min_dist = 1000;
+    int min_building_id = 0;
+    for (int i = 1; i <= Data_Buildings_Extra.highestBuildingIdInUse; i++) {
+        building *b = building_get(i);
+        if (BuildingIsInUse(b) && b->houseSize && b->distanceFromEntry > 0 && b->housePopulationRoom > 0) {
+            if (!b->immigrantFigureId) {
+                int dist = calc_maximum_distance(x, y, b->x, b->y);
+                if (dist < min_dist) {
+                    min_dist = dist;
+                    min_building_id = i;
+                }
+            }
+        }
+    }
+    return min_building_id;
+
 }
 
 void figure_immigrant_action(figure *f)
@@ -181,13 +234,13 @@ void figure_homeless_action(figure *f)
             f->graphicOffset = 0;
             f->waitTicks++;
             if (f->waitTicks > 51) {
-                int buildingId = HousePopulation_getClosestHouseWithRoom(f->x, f->y);
-                if (buildingId) {
-                    building *b = building_get(buildingId);
+                int building_id = closest_house_with_room(f->x, f->y);
+                if (building_id) {
+                    building *b = building_get(building_id);
                     int xRoad, yRoad;
                     if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
                         b->immigrantFigureId = f->id;
-                        f->immigrantBuildingId = buildingId;
+                        f->immigrantBuildingId = building_id;
                         f->actionState = FIGURE_ACTION_8_HOMELESS_GOING_TO_HOUSE;
                         f->destinationX = xRoad;
                         f->destinationY = yRoad;
@@ -255,13 +308,13 @@ void figure_homeless_action(figure *f)
             f->waitTicks++;
             if (f->waitTicks > 30) {
                 f->waitTicks = 0;
-                int buildingId = HousePopulation_getClosestHouseWithRoom(f->x, f->y);
-                if (buildingId > 0) {
-                    building *b = building_get(buildingId);
+                int building_id = closest_house_with_room(f->x, f->y);
+                if (building_id > 0) {
+                    building *b = building_get(building_id);
                     int xRoad, yRoad;
                     if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
                         b->immigrantFigureId = f->id;
-                        f->immigrantBuildingId = buildingId;
+                        f->immigrantBuildingId = building_id;
                         f->actionState = FIGURE_ACTION_8_HOMELESS_GOING_TO_HOUSE;
                         f->destinationX = xRoad;
                         f->destinationY = yRoad;

@@ -5,7 +5,6 @@
 #include "Formation.h"
 #include "GameFile.h"
 #include "HouseEvolution.h"
-#include "HousePopulation.h"
 #include "SidebarMenu.h"
 #include "TerrainGraphics.h"
 #include "Trader.h"
@@ -20,6 +19,7 @@
 #include "building/dock.h"
 #include "building/figure.h"
 #include "building/granary.h"
+#include "building/house_population.h"
 #include "building/industry.h"
 #include "building/maintenance.h"
 #include "building/warehouse.h"
@@ -93,9 +93,9 @@ void GameTick_advance()
 		case 19: building_dock_update_open_water_access(); break;
 		case 20: building_industry_update_production(); break;
 		case 21: Building_GameTick_checkAccessToRome(); break;
-		case 22: HousePopulation_updateRoom(); break;
-		case 23: HousePopulation_updateMigration(); break;
-		case 24: HousePopulation_evictOvercrowded(); break;
+		case 22: house_population_update_room(); break;
+		case 23: house_population_update_migration(); break;
+		case 24: house_population_evict_overcrowded(); break;
 		case 25: CityInfo_Labor_update(); break;
 		case 27: map_water_supply_update_reservoir_fountain(); break;
 		case 28: map_water_supply_update_houses(); break;

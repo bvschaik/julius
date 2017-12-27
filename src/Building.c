@@ -3,7 +3,6 @@
 #include "CityInfo.h"
 #include "CityView.h"
 #include "Formation.h"
-#include "HousePopulation.h"
 #include "Terrain.h"
 #include "TerrainGraphics.h"
 
@@ -13,6 +12,7 @@
 #include "building/storage.h"
 #include "city/message.h"
 #include "city/warning.h"
+#include "figuretype/migrant.h"
 #include "figuretype/missile.h"
 #include "figuretype/wall.h"
 #include "game/undo.h"
@@ -510,7 +510,7 @@ void Building_GameTick_checkAccessToRome()
 				b->houseUnreachableTicks++;
 				if (b->houseUnreachableTicks > 4) {
 					if (b->housePopulation) {
-						HousePopulation_createHomeless(b->x, b->y, b->housePopulation);
+						figure_create_homeless(b->x, b->y, b->housePopulation);
 						b->housePopulation = 0;
 						b->houseUnreachableTicks = 0;
 					}
