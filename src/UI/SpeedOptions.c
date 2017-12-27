@@ -135,7 +135,7 @@ static void arrowButtonScroll(int param1, int param2)
 {
 	if (param1) {
 	    setting_decrease_scroll_speed();
-	} else if (param1 == 0) {
+	} else {
 	    setting_increase_scroll_speed();
 	}
 	UI_Window_requestRefresh();

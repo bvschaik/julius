@@ -513,7 +513,6 @@ static int phrase_based_on_figure_state(figure *f)
             return gladiator_phrase(f);
         case FIGURE_TAX_COLLECTOR:
             return tax_collector_phrase(f);
-            break;
         case FIGURE_MARKET_TRADER:
             return market_trader_phrase(f);
         case FIGURE_MARKET_BUYER:
