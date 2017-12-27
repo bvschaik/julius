@@ -28,6 +28,7 @@
 #include "core/random.h"
 #include "empire/city.h"
 #include "figure/action.h"
+#include "figure/formation.h"
 #include "figuretype/crime.h"
 #include "game/settings.h"
 #include "game/time.h"
@@ -148,7 +149,7 @@ static void advanceMonth()
 	scenario_demand_change_process();
 	scenario_price_change_process();
 	CityInfo_Victory_updateMonthsToGovern();
-	Formation_Tick_updateRestMorale();
+	formation_update_monthly_morale_at_rest();
 	city_message_decrease_delays();
 
 	TerrainGraphics_updateAllRoads();

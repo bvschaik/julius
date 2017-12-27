@@ -33,7 +33,6 @@ int Formation_marsCurseFort();
 
 int Formation_Rioter_getTargetBuilding(int *xTile, int *yTile);
 
-void Formation_Tick_updateRestMorale();
 void Formation_Tick_updateAll(int secondTime);
 
 #endif

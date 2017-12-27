@@ -449,8 +449,3 @@ int Formation_marsCurseFort()
 	Formation_calculateFigures();
 	return 1;
 }
-
-void Formation_Tick_updateRestMorale()
-{
-    formation_update_monthly_morale_at_rest();
-}
