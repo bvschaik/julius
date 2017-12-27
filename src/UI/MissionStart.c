@@ -188,9 +188,9 @@ void UI_MissionStart_Briefing_drawBackground()
 {
 	if (!Data_State.missionBriefingShown) {
 		Data_State.missionBriefingShown = 1;
-		Scenario_initialize(string_to_ascii(scenario_name()));
-		if (UI_Window_getId() == Window_City) {
-			return;
+		if (!Scenario_initialize(string_to_ascii(scenario_name()))) {
+            UI_Window_goTo(Window_City);
+            return;
 		}
 	}
 	

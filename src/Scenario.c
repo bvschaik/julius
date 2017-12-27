@@ -12,8 +12,6 @@
 #include "Terrain.h"
 #include "TerrainGraphics.h"
 
-#include "UI/Window.h"
-
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
 #include "Data/State.h"
@@ -78,21 +76,19 @@ static void readScenarioAndInitGraphics(const char *scenarioName);
 
 static void initGrids();
 
-void Scenario_initialize(const char *scenarioName)
+int Scenario_initialize(const char *scenarioName)
 {
 	int mission = scenario_campaign_mission();
 	int rank = scenario_campaign_rank();
 	map_bookmarks_clear();
 	if (scenario_is_custom()) {
 		if (!mapFileExists(scenarioName)) {
-			UI_Window_goTo(Window_City);
-			return;
+			return 0;
 		}
 		initCustomScenario(scenarioName);
 	} else {
 		if (!GameFile_loadSavedGameFromMissionPack(mission)) {
-			UI_Window_goTo(Window_City);
-			return;
+			return 0;
 		}
 		Data_CityInfo.treasury = difficulty_adjust_money(Data_CityInfo.treasury);
 	}
@@ -123,6 +119,7 @@ void Scenario_initialize(const char *scenarioName)
 
 	SidebarMenu_enableBuildingMenuItemsAndButtons();
 	city_message_init_scenario();
+	return 1;
 }
 
 static int mapFileExists(const char *scenarioName)
