@@ -6,8 +6,9 @@
 #include "empire/city.h"
 #include "empire/trade_route.h"
 #include "empire/type.h"
-#include "graphics/image.h"
+#include "game/animation.h"
 #include "game/resource.h"
+#include "graphics/image.h"
 #include "scenario/empire.h"
 
 #define HEADER_SIZE 1280
@@ -321,8 +322,49 @@ static int is_sea_trade_route(int route_id)
     return 0;
 }
 
-void empire_object_update_animation(int object_id, int new_animation_index)
+static int get_animation_offset(int image_id, int current_index)
 {
-    objects[object_id].obj.animation_index = new_animation_index;
+    if (current_index <= 0) {
+        current_index = 1;
+    }
+    const image *img = image_get(image_id);
+    int animation_speed = img->animation_speed_id;
+    if (!game_animation_should_advance(animation_speed)) {
+        return current_index;
+    }
+    if (img->animation_can_reverse) {
+        int is_reverse = 0;
+        if (current_index & 0x80) {
+            is_reverse = 1;
+        }
+        int current_sprite = current_index & 0x7f;
+        if (is_reverse) {
+            current_index = current_sprite - 1;
+            if (current_index < 1) {
+                current_index = 1;
+                is_reverse = 0;
+            }
+        } else {
+            current_index = current_sprite + 1;
+            if (current_index > img->num_animation_sprites) {
+                current_index = img->num_animation_sprites;
+                is_reverse = 1;
+            }
+        }
+        if (is_reverse) {
+            current_index = current_index | 0x80;
+        }
+    } else {
+        // Absolutely normal case
+        current_index++;
+        if (current_index > img->num_animation_sprites) {
+            current_index = 1;
+        }
+    }
+    return current_index;
 }
 
+int empire_object_update_animation(const empire_object *obj, int image_id)
+{
+    return objects[obj->id].obj.animation_index = get_animation_offset(image_id, obj->animation_index);
+}

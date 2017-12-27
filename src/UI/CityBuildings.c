@@ -8,6 +8,7 @@
 #include "../Formation.h"
 #include "../Widget.h"
 
+#include "building/animation.h"
 #include "building/building.h"
 #include "building/construction.h"
 #include "building/dock.h"
@@ -363,7 +364,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 		// draw animation
 		FOREACH_X_VIEW {
 			int graphicId = map_image_at(gridOffset);
-			const image *img = image_get(graphicId);{}
+			const image *img = image_get(graphicId);
 			if (img->num_animation_sprites) {
 				if (map_property_is_draw_tile(gridOffset)) {
 					int buildingId = map_building_at(gridOffset);
@@ -431,7 +432,7 @@ static void drawBuildingTopsFiguresAnimation(int selectedFigureId, struct UI_Cit
 						Graphics_drawImageMasked(image_group(GROUP_PLAGUE_SKULL),
 							xGraphic + 18, yGraphic - 32, colorMask);
 					}
-					int animationOffset = Animation_getIndexForCityBuilding(graphicId, gridOffset);
+					int animationOffset = building_animation_offset(b, graphicId, gridOffset);
 					if (b->type != BUILDING_HIPPODROME && animationOffset > 0) {
 						if (animationOffset > img->num_animation_sprites) {
 							animationOffset = img->num_animation_sprites;

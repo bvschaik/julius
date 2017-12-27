@@ -47,7 +47,6 @@ add_executable(autopilot
     ${MAP_FILES}
     ${SCENARIO_FILES}
     ${SOUND_FILES}
-    ${PROJECT_SOURCE_DIR}/src/Animation.c
     ${PROJECT_SOURCE_DIR}/src/Building.c
     ${PROJECT_SOURCE_DIR}/src/CityInfo.c
     ${PROJECT_SOURCE_DIR}/src/CityInfo_Culture.c

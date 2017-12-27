@@ -32,6 +32,7 @@ set(CORE_FILES
     ${PROJECT_SOURCE_DIR}/src/core/zip.c
 )
 set(BUILDING_FILES
+    ${PROJECT_SOURCE_DIR}/src/building/animation.c
     ${PROJECT_SOURCE_DIR}/src/building/barracks.c
     ${PROJECT_SOURCE_DIR}/src/building/building.c
     ${PROJECT_SOURCE_DIR}/src/building/construction.c
@@ -103,6 +104,7 @@ set(FIGURETYPE_FILES
     ${PROJECT_SOURCE_DIR}/src/figuretype/water.c
 )
 set(GAME_FILES
+    ${PROJECT_SOURCE_DIR}/src/game/animation.c
     ${PROJECT_SOURCE_DIR}/src/game/difficulty.c
     ${PROJECT_SOURCE_DIR}/src/game/resource.c
     ${PROJECT_SOURCE_DIR}/src/game/settings.c
@@ -173,7 +175,6 @@ set(SOUND_FILES
 add_executable(julius
 	${PROJECT_SOURCE_DIR}/linux/main2.c
 	${PROJECT_SOURCE_DIR}/linux/SDLSoundDevice.c
-	${PROJECT_SOURCE_DIR}/src/Animation.c
 	${PROJECT_SOURCE_DIR}/src/Building.c
 	${PROJECT_SOURCE_DIR}/src/CityInfo.c
 	${PROJECT_SOURCE_DIR}/src/CityInfo_Culture.c

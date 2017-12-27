@@ -1,6 +1,5 @@
 #include "Scenario.h"
 
-#include "Animation.h"
 #include "Building.h"
 #include "core/calc.h"
 #include "CityInfo.h"
@@ -32,6 +31,7 @@
 #include "figure/trader.h"
 #include "figuretype/animal.h"
 #include "figuretype/water.h"
+#include "game/animation.h"
 #include "game/difficulty.h"
 #include "game/settings.h"
 #include "game/time.h"
@@ -140,7 +140,7 @@ static void initCustomScenario(const char *scenarioName)
 	Data_CityInfo_Extra.ciid = 1;
 	city_message_init_scenario();
 	Loader_GameState_init();
-	Animation_resetTimers();
+	game_animation_init();
 	sound_city_init();
 	sound_music_reset();
 	SidebarMenu_enableAllBuildingMenuItems();

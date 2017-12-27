@@ -1,5 +1,6 @@
 #include "CityBuildings_private.h"
 
+#include "building/animation.h"
 #include "building/building.h"
 #include "building/industry.h"
 #include "figure/figure.h"
@@ -274,7 +275,7 @@ void UI_CityBuildings_drawOverlayTopsFiguresAnimation(int overlay)
 								xGraphic + 117, yGraphic - 62, colorMask);
 						}
 					} else {
-						int animationOffset = Animation_getIndexForCityBuilding(graphicId, gridOffset);
+						int animationOffset = building_animation_offset(b, graphicId, gridOffset);
 						if (animationOffset > 0) {
 							if (animationOffset > img->num_animation_sprites) {
 								animationOffset = img->num_animation_sprites;

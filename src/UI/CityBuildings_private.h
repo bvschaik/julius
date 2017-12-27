@@ -8,7 +8,6 @@
 #include "../Data/Constants.h"
 #include "../Data/State.h"
 
-#include "../Animation.h"
 #include "core/calc.h"
 #include "../Graphics.h"
 

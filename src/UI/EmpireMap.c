@@ -4,7 +4,6 @@
 #include "PopupDialog.h"
 #include "MessageDialog.h"
 
-#include "../Animation.h"
 #include "core/calc.h"
 #include "../CityInfo.h"
 #include "../Graphics.h"
@@ -443,8 +442,7 @@ static void drawEmpireObject(const empire_object *obj)
     Graphics_drawImage(image_id, data.xDrawOffset + x, data.yDrawOffset + y);
     const image *img = image_get(image_id);
     if (img->animation_speed_id) {
-        int new_animation = Animation_getIndexForEmpireMap(image_id, obj->animation_index);
-        empire_object_update_animation(obj->id, new_animation);
+        int new_animation = empire_object_update_animation(obj, image_id);
         Graphics_drawImage(image_id + new_animation,
             data.xDrawOffset + x + img->sprite_offset_x,
             data.yDrawOffset + y + img->sprite_offset_y);

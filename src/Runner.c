@@ -1,6 +1,5 @@
 #include "Runner.h"
 
-#include "Animation.h"
 #include "GameFile.h"
 #include "GameTick.h"
 #include "UI/Window.h"
@@ -9,6 +8,7 @@
 
 #include "building/construction.h"
 #include "core/time.h"
+#include "game/animation.h"
 #include "game/settings.h"
 #include "input/scroll.h"
 #include "sound/city.h"
@@ -62,7 +62,7 @@ static int getElapsedTicks()
 
 void Runner_run()
 {
-	Animation_updateTimers();
+	game_animation_update();
 	int numTicks = getElapsedTicks();
 	for (int i = 0; i < numTicks; i++) {
 		GameTick_doTick();
