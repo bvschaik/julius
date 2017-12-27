@@ -1,7 +1,6 @@
 #include "cursor.h"
 
 #include "System.h"
-#include "UI/Window.h"
 
 #include "building/construction.h"
 
