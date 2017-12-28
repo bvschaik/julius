@@ -70,7 +70,6 @@ add_executable(autopilot
     ${PROJECT_SOURCE_DIR}/src/SidebarMenu.c
     ${PROJECT_SOURCE_DIR}/src/Terrain.c
     ${PROJECT_SOURCE_DIR}/src/TerrainGraphics.c
-    ${PROJECT_SOURCE_DIR}/src/TerrainGraphics_Context.c
     ${PROJECT_SOURCE_DIR}/src/Trader.c
     ${PROJECT_SOURCE_DIR}/src/Data/Model.c
 )

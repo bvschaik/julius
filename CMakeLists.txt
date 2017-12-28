@@ -128,6 +128,7 @@ set(MAP_FILES
     ${PROJECT_SOURCE_DIR}/src/map/figure.c
     ${PROJECT_SOURCE_DIR}/src/map/grid.c
     ${PROJECT_SOURCE_DIR}/src/map/image.c
+    ${PROJECT_SOURCE_DIR}/src/map/image_context.c
     ${PROJECT_SOURCE_DIR}/src/map/natives.c
     ${PROJECT_SOURCE_DIR}/src/map/property.c
     ${PROJECT_SOURCE_DIR}/src/map/random.c
@@ -203,7 +204,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/SidebarMenu.c
 	${PROJECT_SOURCE_DIR}/src/Terrain.c
 	${PROJECT_SOURCE_DIR}/src/TerrainGraphics.c
-	${PROJECT_SOURCE_DIR}/src/TerrainGraphics_Context.c
 	${PROJECT_SOURCE_DIR}/src/Trader.c
 	${PROJECT_SOURCE_DIR}/src/Video.c
 	${PROJECT_SOURCE_DIR}/src/Widget_Button.c

@@ -608,7 +608,7 @@ int Terrain_canSpawnFishingBoatInWater(int x, int y, int size, int *xTile, int *
 	FOR_XY_ADJACENT {
 		if (map_terrain_is(gridOffset, TERRAIN_WATER)) {
 			if (!map_terrain_is(gridOffset, TERRAIN_BUILDING)) {
-				if (TerrainGraphicsContext_getNumWaterTiles(gridOffset) >= 8) {
+				if (TerrainGraphics_getNumWaterTiles(gridOffset) >= 8) {
 					STORE_XY_ADJACENT(xTile, yTile);
 					return 1;
 				}

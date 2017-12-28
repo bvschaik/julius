@@ -12,6 +12,7 @@
 #include "map/elevation.h"
 #include "map/grid.h"
 #include "map/image.h"
+#include "map/image_context.h"
 #include "map/property.h"
 #include "map/random.h"
 #include "map/soldier_strength.h"
@@ -82,9 +83,9 @@ static void setRoadWithAqueductGraphic(int gridOffset)
 	} else {
 		waterOffset = 15;
 	}
-	const struct TerrainGraphic *graphic = TerrainGraphicsContext_getAqueduct(gridOffset, 0);
-	int groupOffset = graphic->groupOffset;
-	if (!graphic->aqueductOffset) {
+	const terrain_image *image = map_image_context_get_aqueduct(gridOffset, 0);
+	int groupOffset = image->group_offset;
+	if (!image->aqueduct_offset) {
 		if (map_terrain_is(gridOffset + map_grid_delta(0, -1), TERRAIN_ROAD)) {
 			groupOffset = 3;
 		} else {
@@ -110,13 +111,13 @@ static void setRoadGraphic(int gridOffset)
 		return;
 	}
 	if (TerrainGraphics_isPavedRoadTile(gridOffset)) {
-		const struct TerrainGraphic *graphic = TerrainGraphicsContext_getPavedRoad(gridOffset);
+		const terrain_image *image = map_image_context_get_paved_road(gridOffset);
 		map_image_set(gridOffset, image_group(GROUP_TERRAIN_ROAD) +
-			graphic->groupOffset + graphic->itemOffset);
+			          image->group_offset + image->item_offset);
 	} else {
-		const struct TerrainGraphic *graphic = TerrainGraphicsContext_getDirtRoad(gridOffset);
+		const terrain_image *image = map_image_context_get_dirt_road(gridOffset);
 		map_image_set(gridOffset, image_group(GROUP_TERRAIN_ROAD) +
-			graphic->groupOffset + graphic->itemOffset + 49);
+			          image->group_offset + image->item_offset + 49);
 	}
 	map_property_set_multi_tile_size(gridOffset, 1);
 	map_property_mark_draw_tile(gridOffset);
@@ -124,11 +125,11 @@ static void setRoadGraphic(int gridOffset)
 
 static void setTileAqueduct(int gridOffset, int waterOffset, int includeOverlay)
 {
-	const struct TerrainGraphic *graphic = TerrainGraphicsContext_getAqueduct(gridOffset, includeOverlay);
-	int groupOffset = graphic->groupOffset;
+	const terrain_image *image = map_image_context_get_aqueduct(gridOffset, includeOverlay);
+	int groupOffset = image->group_offset;
 	if (map_terrain_is(gridOffset, TERRAIN_ROAD)) {
 		map_property_clear_plaza_or_earthquake(gridOffset);
-		if (!graphic->aqueductOffset) {
+		if (!image->aqueduct_offset) {
 			if (map_terrain_is(gridOffset + map_grid_delta(0, -1), TERRAIN_ROAD)) {
 				groupOffset = 3;
 			} else {
@@ -142,10 +143,10 @@ static void setTileAqueduct(int gridOffset, int waterOffset, int includeOverlay)
 		}
 	}
 	map_image_set(gridOffset, image_group(GROUP_BUILDING_AQUEDUCT) +
-		waterOffset + groupOffset + graphic->itemOffset);
+		waterOffset + groupOffset + image->item_offset);
 	map_property_set_multi_tile_size(gridOffset, 1);
 	map_property_mark_draw_tile(gridOffset);
-	map_aqueduct_set(gridOffset, graphic->aqueductOffset);
+	map_aqueduct_set(gridOffset, image->aqueduct_offset);
 }
 
 void TerrainGraphics_updateAllRocks()
@@ -348,9 +349,8 @@ void TerrainGraphics_updateRegionElevation(int xMin, int yMin, int xMax, int yMa
 			}
 		}
 		if (map_elevation_at(gridOffset) && !map_terrain_is(gridOffset, TERRAIN_ACCESS_RAMP)) {
-			const TerrainGraphic *g = TerrainGraphicsContext_getElevation(
-				gridOffset, map_elevation_at(gridOffset));
-			if (g->groupOffset == 44) {
+			const terrain_image *image = map_image_context_get_elevation(gridOffset, map_elevation_at(gridOffset));
+			if (image->group_offset == 44) {
 				map_terrain_remove(gridOffset, TERRAIN_ELEVATION);
 				int terrain = map_terrain_get(gridOffset);
 				if (!(terrain & TERRAIN_BUILDING)) {
@@ -372,7 +372,7 @@ void TerrainGraphics_updateRegionElevation(int xMin, int yMin, int xMax, int yMa
 			} else {
 				map_property_set_multi_tile_xy(gridOffset, 0, 0, 1);
 				map_terrain_add(gridOffset, TERRAIN_ELEVATION);
-				map_image_set(gridOffset, image_group(GROUP_TERRAIN_ELEVATION) + g->groupOffset + g->itemOffset);
+				map_image_set(gridOffset, image_group(GROUP_TERRAIN_ELEVATION) + image->group_offset + image->item_offset);
 			}
 		}
 	});
@@ -679,12 +679,12 @@ void TerrainGraphics_setTileWater(int x, int y)
 	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
 	FOREACH_REGION({
 		if ((map_terrain_get(gridOffset) & (TERRAIN_WATER | TERRAIN_BUILDING)) == TERRAIN_WATER) {
-			const TerrainGraphic *g = TerrainGraphicsContext_getShore(gridOffset);
-			int graphicId = image_group(GROUP_TERRAIN_WATER) + g->groupOffset + g->itemOffset;
+			const terrain_image *image = map_image_context_get_shore(gridOffset);
+			int graphicId = image_group(GROUP_TERRAIN_WATER) + image->group_offset + image->item_offset;
 			if (Terrain_existsTileWithinRadiusWithType(xx, yy, 1, 2, TERRAIN_BUILDING)) {
 				// fortified shore
 				int base = image_group(GROUP_TERRAIN_WATER_SHORE);
-				switch (g->groupOffset) {
+				switch (image->group_offset) {
 					case 8: graphicId = base + 10; break;
 					case 12: graphicId = base + 11; break;
 					case 16: graphicId = base + 9; break;
@@ -721,11 +721,11 @@ void TerrainGraphics_setTileEarthquake(int x, int y)
 	FOREACH_REGION({
 		if (map_terrain_is(gridOffset, TERRAIN_ROCK) &&
 			map_property_is_plaza_or_earthquake(gridOffset)) {
-			const TerrainGraphic *g = TerrainGraphicsContext_getEarthquake(gridOffset);
-			if (g->isValid) {
+			const terrain_image *image = map_image_context_get_earthquake(gridOffset);
+			if (image->is_valid) {
 				map_image_set(gridOffset,
 					image_group(GROUP_TERRAIN_EARTHQUAKE) +
-					g->groupOffset + g->itemOffset);
+					image->group_offset + image->item_offset);
 			} else {
 				map_image_set(gridOffset, image_group(GROUP_TERRAIN_EARTHQUAKE));
 			}
@@ -1034,16 +1034,16 @@ static void setWallGraphic(int gridOffset)
 		map_terrain_is(gridOffset, TERRAIN_BUILDING)) {
 		return;
 	}
-	const TerrainGraphic *graphic = TerrainGraphicsContext_getWall(gridOffset);
+	const terrain_image *image = map_image_context_get_wall(gridOffset);
 	map_image_set(gridOffset, image_group(GROUP_BUILDING_WALL) +
-		graphic->groupOffset + graphic->itemOffset);
+		          image->group_offset + image->item_offset);
 	map_property_set_multi_tile_size(gridOffset, 1);
 	map_property_mark_draw_tile(gridOffset);
 	if (isAdjacentToGatehouse(gridOffset)) {
-		graphic = TerrainGraphicsContext_getWallGatehouse(gridOffset);
-		if (graphic->isValid) {
+		image = map_image_context_get_wall_gatehouse(gridOffset);
+		if (image->is_valid) {
 			map_image_set(gridOffset, image_group(GROUP_BUILDING_WALL) +
-				graphic->groupOffset + graphic->itemOffset);
+				          image->group_offset + image->item_offset);
 		} else {
 			setWallGatehouseGraphicManually(gridOffset);
 		}
@@ -1215,4 +1215,16 @@ int TerrainGraphics_getFreeTileForHerd(int x, int y, int allowNegDes, int *xTile
 	*xTile = tileX;
 	*yTile = tileY;
 	return tileFound;
+}
+
+
+int TerrainGraphics_getNumWaterTiles(int gridOffset)
+{
+    int amount = 0;
+    for (int i = 0; i < DIR_8_NONE; i++) {
+        if (map_terrain_is(gridOffset + map_grid_direction_delta(i), TERRAIN_WATER)) {
+            amount++;
+        }
+    }
+    return amount;
 }

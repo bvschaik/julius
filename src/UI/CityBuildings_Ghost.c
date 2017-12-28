@@ -15,6 +15,7 @@
 #include "map/building.h"
 #include "map/figure.h"
 #include "map/grid.h"
+#include "map/image_context.h"
 #include "map/road_aqueduct.h"
 #include "map/terrain.h"
 #include "map/water.h"
@@ -426,10 +427,10 @@ static void drawBuildingGhostAqueduct()
 	} else {
 		int gridOffset = Data_State.map.current.gridOffset;
 		int graphicId = image_group(GROUP_BUILDING_AQUEDUCT);
-		const struct TerrainGraphic *graphic = TerrainGraphicsContext_getAqueduct(gridOffset, 0);
+		const terrain_image *image = map_image_context_get_aqueduct(gridOffset, 0);
 		if (map_terrain_is(gridOffset, TERRAIN_ROAD)) {
-			int groupOffset = graphic->groupOffset;
-			if (!graphic->aqueductOffset) {
+			int groupOffset = image->group_offset;
+			if (!image->aqueduct_offset) {
 				if (map_terrain_is(gridOffset - 162, TERRAIN_ROAD)) {
 					groupOffset = 3;
 				} else {
@@ -442,7 +443,7 @@ static void drawBuildingGhostAqueduct()
 				graphicId += groupOffset + 21;
 			}
 		} else {
-			graphicId += graphic->groupOffset + 15;
+			graphicId += image->group_offset + 15;
 		}
 		Graphics_drawIsometricFootprint(graphicId, xOffset, yOffset, COLOR_MASK_GREEN);
 		Graphics_drawIsometricTop(graphicId, xOffset, yOffset, COLOR_MASK_GREEN);

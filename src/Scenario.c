@@ -1,7 +1,6 @@
 #include "Scenario.h"
 
 #include "Building.h"
-#include "core/calc.h"
 #include "CityInfo.h"
 #include "CityView.h"
 #include "Formation.h"
@@ -18,6 +17,7 @@
 #include "building/construction.h"
 #include "building/storage.h"
 #include "city/message.h"
+#include "core/calc.h"
 #include "core/file.h"
 #include "core/io.h"
 #include "core/random.h"
@@ -45,6 +45,7 @@
 #include "map/figure.h"
 #include "map/grid.h"
 #include "map/image.h"
+#include "map/image_context.h"
 #include "map/natives.h"
 #include "map/property.h"
 #include "map/random.h"
@@ -256,6 +257,6 @@ static void initGrids()
 	map_soldier_strength_clear();
 	map_road_network_clear();
 
-	TerrainGraphicsContext_init();
+	map_image_context_init();
 	map_random_init();
 }

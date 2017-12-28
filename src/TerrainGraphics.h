@@ -34,35 +34,7 @@ int TerrainGraphics_setTileAqueductTerrain(int x, int y);
 int TerrainGraphics_isPavedRoadTile(int gridOffset);
 int TerrainGraphics_getFreeTileForHerd(int x, int y, int allowNegDes, int *xTile, int *yTile);
 
-enum {
-	TerrainGraphicsContext_Water,
-	TerrainGraphicsContext_Wall,
-	TerrainGraphicsContext_WallGatehouse,
-	TerrainGraphicsContext_Elevation,
-	TerrainGraphicsContext_Earthquake,
-	TerrainGraphicsContext_DirtRoad,
-	TerrainGraphicsContext_PavedRoad,
-	TerrainGraphicsContext_Aqueduct,
-	TerrainGraphicsContext_NumItems
-};
-
-typedef struct TerrainGraphic {
-	int isValid;
-	int groupOffset;
-	int itemOffset;
-	int aqueductOffset;
-} TerrainGraphic;
-
-void TerrainGraphicsContext_init();
-const TerrainGraphic *TerrainGraphicsContext_getElevation(int gridOffset, int elevation);
-const TerrainGraphic *TerrainGraphicsContext_getEarthquake(int gridOffset);
-const TerrainGraphic *TerrainGraphicsContext_getShore(int gridOffset);
-const TerrainGraphic *TerrainGraphicsContext_getWall(int gridOffset);
-const TerrainGraphic *TerrainGraphicsContext_getWallGatehouse(int gridOffset);
-const TerrainGraphic *TerrainGraphicsContext_getDirtRoad(int gridOffset);
-const TerrainGraphic *TerrainGraphicsContext_getPavedRoad(int gridOffset);
-const TerrainGraphic *TerrainGraphicsContext_getAqueduct(int gridOffset, int includeOverlay);
-int TerrainGraphicsContext_getNumWaterTiles(int gridOffset);
+int TerrainGraphics_getNumWaterTiles(int gridOffset);
 
 
 #endif
