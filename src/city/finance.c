@@ -2,7 +2,7 @@
 
 #include "Data/CityInfo.h"
 
-#define MIN_TREASURY -5000
+#define MIN_TREASURY (-5000)
 
 int city_finance_treasury()
 {

@@ -6,7 +6,7 @@
 #define FOOTPRINT_WIDTH 58
 #define FOOTPRINT_HEIGHT 30
 
-#define DATA(index) &data[900 * index]
+#define DATA(index) &data[900 * (index)]
 
 #include <string.h>
 

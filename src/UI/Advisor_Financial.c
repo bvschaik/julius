@@ -6,10 +6,11 @@
 #include "core/calc.h"
 
 #define VAL(val,x,y) Widget_Text_drawNumber(val, '@', " ", baseOffsetX + x, baseOffsetY + y, FONT_NORMAL_BLACK)
+#define VAL(val,x,y) Widget_Text_drawNumber(val, '@', " ", baseOffsetX + (x), baseOffsetY + (y), FONT_NORMAL_BLACK)
 #define ROW(tgr,tid,y,valLy,valTy) \
-	Widget_GameText_draw(tgr, tid, baseOffsetX + 80, baseOffsetY + y, FONT_NORMAL_BLACK);\
-	Widget_Text_drawNumber(valLy, '@', " ", baseOffsetX + 290, baseOffsetY + y, FONT_NORMAL_BLACK);\
-	Widget_Text_drawNumber(valTy, '@', " ", baseOffsetX + 430, baseOffsetY + y, FONT_NORMAL_BLACK)
+	Widget_GameText_draw(tgr, tid, baseOffsetX + 80, baseOffsetY + (y), FONT_NORMAL_BLACK);\
+	Widget_Text_drawNumber(valLy, '@', " ", baseOffsetX + 290, baseOffsetY + (y), FONT_NORMAL_BLACK);\
+	Widget_Text_drawNumber(valTy, '@', " ", baseOffsetX + 430, baseOffsetY + (y), FONT_NORMAL_BLACK)
 
 static void buttonChangeTaxes(int param1, int param2);
 
