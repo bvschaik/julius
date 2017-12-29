@@ -1,6 +1,5 @@
 #include "BuildingInfo.h"
 #include "../Graphics.h"
-#include "../Terrain.h"
 #include "../Widget.h"
 
 #include "building/building.h"

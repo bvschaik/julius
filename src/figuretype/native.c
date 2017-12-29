@@ -6,9 +6,9 @@
 #include "figure/image.h"
 #include "figure/movement.h"
 #include "figure/route.h"
+#include "map/terrain.h"
 
 #include "Data/CityInfo.h"
-#include "Terrain.h"
 
 void figure_indigenous_native_action(figure *f)
 {
@@ -53,7 +53,7 @@ void figure_indigenous_native_action(figure *f)
                 if (Data_CityInfo.nativeAttackDuration == 0) {
                     int xTile, yTile;
                     building *meeting = building_get(b->subtype.nativeMeetingCenterId);
-                    if (Terrain_getAdjacentRoadOrClearLand(meeting->x, meeting->y, meeting->size, &xTile, &yTile)) {
+                    if (map_terrain_get_adjacent_road_or_clear_land(meeting->x, meeting->y, meeting->size, &xTile, &yTile)) {
                         f->actionState = FIGURE_ACTION_156_NATIVE_GOING_TO_MEETING_CENTER;
                         f->destinationX = xTile;
                         f->destinationY = yTile;

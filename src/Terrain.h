@@ -12,21 +12,11 @@ int Terrain_getOrientationTriumphalArch(int x, int y);
 
 int Terrain_isClear(int x, int y, int size, int disallowedTerrain, int graphicSet);
 
-int Terrain_isAdjacentToWall(int x, int y, int size);
-int Terrain_isAdjacentToWater(int x, int y, int size);
-int Terrain_isAdjacentToOpenWater(int x, int y, int size);
-int Terrain_getAdjacentRoadOrClearLand(int x, int y, int size, int *xTile, int *yTile);
-
-int Terrain_getClosestReachableRoadWithinRadius(int x, int y, int size, int radius, int *xTile, int *yTile);
-int Terrain_getRoadToLargestRoadNetwork(int x, int y, int size, int *xTile, int *yTile);
-int Terrain_getRoadToLargestRoadNetworkHippodrome(int x, int y, int size, int *xTile, int *yTile);
-
 void Terrain_updateEntryExitFlags(int remove);
 
 int Terrain_isClearToBuild(int size, int x, int y, int terrainMask);
 void Terrain_updateToPlaceBuildingToOverlay(int size, int x, int y, int terrainMask, int isAbsoluteXY);
 
-int Terrain_getWallTileWithinRadius(int x, int y, int radius, int *xTile, int *yTile);
 void Terrain_rotateMap(int direction);
 
 #endif

@@ -6,9 +6,9 @@
 #include "game/undo.h"
 #include "map/grid.h"
 #include "map/random.h"
+#include "map/terrain.h"
 
 #include "Data/CityInfo.h"
-#include "Terrain.h"
 
 #include <string.h>
 
@@ -146,7 +146,7 @@ building *building_create(building_type type, int x, int y)
     b->houseGenerationDelay = map_random_get(b->gridOffset) & 0x7f;
     b->figureRoamDirection = b->houseGenerationDelay & 6;
     b->fireProof = props->fire_proof;
-    b->isAdjacentToWater = Terrain_isAdjacentToWater(x, y, b->size);
+    b->isAdjacentToWater = map_terrain_is_adjacent_to_water(x, y, b->size);
 
     return b;
 }

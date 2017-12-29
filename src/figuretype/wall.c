@@ -17,7 +17,6 @@
 #include "sound/effect.h"
 
 #include "Data/State.h"
-#include "Terrain.h"
 
 static const int BALLISTA_FIRING_OFFSETS[] = {
     0, 1, 2, 3, 4, 5, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -142,7 +141,7 @@ static int tower_sentry_init_patrol(building *b, int *x_tile, int *y_tile)
     }
     map_grid_bound(&x, &y);
 
-    if (Terrain_getWallTileWithinRadius(x, y, 6, x_tile, y_tile)) {
+    if (map_routing_wall_tile_in_radius(x, y, 6, x_tile, y_tile)) {
         b->figureRoamDirection += 2;
         if (b->figureRoamDirection > 6) b->figureRoamDirection = 0;
         return 1;
@@ -160,7 +159,7 @@ static int tower_sentry_init_patrol(building *b, int *x_tile, int *y_tile)
             case DIR_6_LEFT: x -= 3; break;
         }
         map_grid_bound(&x, &y);
-        if (Terrain_getWallTileWithinRadius(x, y, 6, x_tile, y_tile)) {
+        if (map_routing_wall_tile_in_radius(x, y, 6, x_tile, y_tile)) {
             return 1;
         }
     }
@@ -289,7 +288,7 @@ void figure_tower_sentry_reroute()
         }
         // tower sentry got off wall due to rotation
         int x_tile, y_tile;
-        if (Terrain_getWallTileWithinRadius(f->x, f->y, 2, &x_tile, &y_tile)) {
+        if (map_routing_wall_tile_in_radius(f->x, f->y, 2, &x_tile, &y_tile)) {
             figure_route_remove(f);
             f->progressOnTile = 0;
             map_figure_delete(f);

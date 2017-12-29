@@ -1092,7 +1092,7 @@ static void spawn_figure_native_hut(building *b)
         return;
     }
     int xOut, yOut;
-    if (b->subtype.nativeMeetingCenterId > 0 && Terrain_getAdjacentRoadOrClearLand(b->x, b->y, b->size, &xOut, &yOut)) {
+    if (b->subtype.nativeMeetingCenterId > 0 && map_terrain_get_adjacent_road_or_clear_land(b->x, b->y, b->size, &xOut, &yOut)) {
         b->figureSpawnDelay++;
         if (b->figureSpawnDelay > 4) {
             b->figureSpawnDelay = 0;
@@ -1111,7 +1111,7 @@ static void spawn_figure_native_meeting(building *b)
     if (Data_CityInfo.nativeMissionPostOperational > 0 &&
         !has_figure_of_type(b, FIGURE_NATIVE_TRADER)) {
         int xOut, yOut;
-        if (Terrain_getAdjacentRoadOrClearLand(b->x, b->y, b->size, &xOut, &yOut)) {
+        if (map_terrain_get_adjacent_road_or_clear_land(b->x, b->y, b->size, &xOut, &yOut)) {
             b->figureSpawnDelay++;
             if (b->figureSpawnDelay > 8) {
                 b->figureSpawnDelay = 0;

@@ -28,34 +28,6 @@
 #include "map/terrain.h"
 #include "scenario/map.h"
 
-#define FOR_XY_ADJACENT \
-	{int baseOffset = map_grid_offset(x, y);\
-	const int *tile_delta = map_grid_adjacent_offsets(size);\
-	while (*tile_delta) {\
-		int gridOffset = baseOffset + *tile_delta;
-
-#define END_FOR_XY_ADJACENT tile_delta++;}}
-
-#define STORE_XY_ADJACENT(xTile,yTile) \
-	*(xTile) = x + (*tile_delta + 172) % 162 - 10;\
-	*(yTile) = y + (*tile_delta + 162) / 161 - 1;
-
-#define FOR_XY_RADIUS \
-	int x_min, y_min, x_max, y_max;\
-	map_grid_get_area(x, y, size, radius, &x_min, &y_min, &x_max, &y_max);\
-	int gridOffset = map_grid_offset(x_min, y_min);\
-	for (int yy = y_min; yy <= y_max; yy++) {\
-		for (int xx = x_min; xx <= x_max; xx++) {
-
-#define END_FOR_XY_RADIUS \
-			++gridOffset;\
-		}\
-		gridOffset += 162 - (x_max - x_min + 1);\
-	}
-
-#define STORE_XY_RADIUS(xTile,yTile) \
-	*(xTile) = xx; *(yTile) = yy;
-
 void Terrain_addBuildingToGrids(int buildingId, int x, int y, int size, int graphicId, int terrain)
 {
 	if (!map_grid_is_inside(x, y, size)) {
@@ -379,122 +351,6 @@ int Terrain_getOrientationTriumphalArch(int x, int y)
 	return 0;
 }
 
-static int getReachableRoadWithinRadius(int x, int y, int size, int radius, int *xTile, int *yTile)
-{
-	FOR_XY_RADIUS {
-		if (map_terrain_is(gridOffset, TERRAIN_ROAD)) {
-			if (map_routing_distance(gridOffset) > 0) {
-				if (xTile && yTile) {
-					STORE_XY_RADIUS(xTile, yTile);
-				}
-				return 1;
-			}
-		}
-	} END_FOR_XY_RADIUS;
-	return 0;
-}
-
-int Terrain_getClosestReachableRoadWithinRadius(int x, int y, int size, int radius, int *xTile, int *yTile)
-{
-	for (int r = 1; r <= radius; r++) {
-		if (getReachableRoadWithinRadius(x, y, size, r, xTile, yTile)) {
-			return 1;
-		}
-	}
-	return 0;
-}
-
-// NOTE: return value not 0 = no tile / gridOffset + 1; but: -1 = no tile / gridOffset
-int Terrain_getRoadToLargestRoadNetwork(int x, int y, int size, int *xTile, int *yTile)
-{
-	int minIndex = 12;
-	int minGridOffset = -1;
-	FOR_XY_ADJACENT {
-		if (map_terrain_is(gridOffset, TERRAIN_ROAD) && map_routing_distance(gridOffset) > 0) {
-			int index = 11;
-			for (int n = 0; n < 10; n++) {
-				if (Data_CityInfo.largestRoadNetworks[n].id == map_road_network_get(gridOffset)) {
-					index = n;
-					break;
-				}
-			}
-			if (index < minIndex) {
-				minIndex = index;
-				minGridOffset = gridOffset;
-			}
-		}
-	} END_FOR_XY_ADJACENT;
-	if (minIndex < 12) {
-		*xTile = map_grid_offset_to_x(minGridOffset);
-		*yTile = map_grid_offset_to_y(minGridOffset);
-		return minGridOffset;
-	}
-	int minDist = 100000;
-	minGridOffset = -1;
-	FOR_XY_ADJACENT {
-		int dist = map_routing_distance(gridOffset);
-		if (dist > 0 && dist < minDist) {
-			minDist = dist;
-			minGridOffset = gridOffset;
-		}
-	} END_FOR_XY_ADJACENT;
-	if (minGridOffset >= 0) {
-		*xTile = map_grid_offset_to_x(minGridOffset);
-		*yTile = map_grid_offset_to_y(minGridOffset);
-		return minGridOffset;
-	}
-	return -1;
-}
-
-// NOTE: return value not 0 = no tile / gridOffset + 1; but: -1 = no tile / gridOffset
-int Terrain_getRoadToLargestRoadNetworkHippodrome(int x, int y, int size, int *xTile, int *yTile)
-{
-	int xBase = x;
-	int minIndex = 12;
-	int minGridOffset = -1;
-	for (int xOffset = 0; xOffset <= 10; xOffset += 5) {
-		x = xBase + xOffset;
-		FOR_XY_ADJACENT {
-			if (map_terrain_is(gridOffset, TERRAIN_ROAD) && map_routing_distance(gridOffset) > 0) {
-				int index = 11;
-				for (int n = 0; n < 10; n++) {
-					if (Data_CityInfo.largestRoadNetworks[n].id == map_road_network_get(gridOffset)) {
-						index = n;
-						break;
-					}
-				}
-				if (index < minIndex) {
-					minIndex = index;
-					minGridOffset = gridOffset;
-				}
-			}
-		} END_FOR_XY_ADJACENT;
-	}
-	if (minIndex < 12) {
-		*xTile = map_grid_offset_to_x(minGridOffset);
-		*yTile = map_grid_offset_to_y(minGridOffset);
-		return minGridOffset;
-	}
-	int minDist = 100000;
-	minGridOffset = -1;
-	for (int xOffset = 0; xOffset <= 10; xOffset += 5) {
-		x = xBase + xOffset;
-		FOR_XY_ADJACENT {
-			int dist = map_routing_distance(gridOffset);
-			if (dist > 0 && dist < minDist) {
-				minDist = dist;
-				minGridOffset = gridOffset;
-			}
-		} END_FOR_XY_ADJACENT;
-	}
-	if (minGridOffset >= 0) {
-		*xTile = map_grid_offset_to_x(minGridOffset);
-		*yTile = map_grid_offset_to_y(minGridOffset);
-		return minGridOffset;
-	}
-	return -1;
-}
-
 int Terrain_isClear(int x, int y, int size, int disallowedTerrain, int graphicSet)
 {
 	if (!map_grid_is_inside(x, y, size)) {
@@ -513,49 +369,6 @@ int Terrain_isClear(int x, int y, int size, int disallowedTerrain, int graphicSe
 		}
 	}
 	return 1;
-}
-
-int Terrain_isAdjacentToWall(int x, int y, int size)
-{
-	FOR_XY_ADJACENT {
-		if (map_terrain_is(gridOffset, TERRAIN_WALL)) {
-			return 1;
-		}
-	} END_FOR_XY_ADJACENT;
-	return 0;
-}
-
-int Terrain_isAdjacentToWater(int x, int y, int size)
-{
-	FOR_XY_ADJACENT {
-		if (map_terrain_is(gridOffset, TERRAIN_WATER)) {
-			return 1;
-		}
-	} END_FOR_XY_ADJACENT;
-	return 0;
-}
-
-int Terrain_isAdjacentToOpenWater(int x, int y, int size)
-{
-	FOR_XY_ADJACENT {
-		if (map_terrain_is(gridOffset, TERRAIN_WATER) &&
-			map_routing_distance(gridOffset)) {
-			return 1;
-		}
-	} END_FOR_XY_ADJACENT;
-	return 0;
-}
-
-int Terrain_getAdjacentRoadOrClearLand(int x, int y, int size, int *xTile, int *yTile)
-{
-	FOR_XY_ADJACENT {
-		if (map_terrain_is(gridOffset, TERRAIN_ROAD) ||
-			!map_terrain_is(gridOffset, TERRAIN_NOT_CLEAR)) {
-			STORE_XY_ADJACENT(xTile, yTile);
-			return 1;
-		}
-	} END_FOR_XY_ADJACENT;
-	return 0;
 }
 
 void Terrain_updateEntryExitFlags(int remove)
@@ -702,29 +515,6 @@ static void determineLeftmostTile()
 			}
 		}
 	}
-}
-
-static int getWallTileWithinRadius(int x, int y, int radius, int *xTile, int *yTile)
-{
-	int size = 1;
-	FOR_XY_RADIUS {
-		if (map_routing_is_wall_passable(gridOffset)) {
-			*xTile = xx;
-			*yTile = yy;
-			return 1;
-		}
-	} END_FOR_XY_RADIUS;
-	return 0;
-}
-
-int Terrain_getWallTileWithinRadius(int x, int y, int radius, int *xTile, int *yTile)
-{
-	for (int i = 1; i <= radius; i++) {
-		if (getWallTileWithinRadius(x, y, i, xTile, yTile)) {
-			return 1;
-		}
-	}
-	return 0;
 }
 
 void Terrain_rotateMap(int ccw)

@@ -8,6 +8,7 @@ void map_routing_update_water();
 void map_routing_update_walls();
 
 int map_routing_is_wall_passable(int grid_offset);
+int map_routing_wall_tile_in_radius(int x, int y, int radius, int *x_wall, int *y_wall);
 
 int map_routing_citizen_is_passable(int grid_offset);
 int map_routing_citizen_is_road(int grid_offset);

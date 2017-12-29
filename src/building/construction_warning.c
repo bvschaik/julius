@@ -13,7 +13,6 @@
 
 #include "Data/CityInfo.h"
 #include "Data/Constants.h"
-#include "Terrain.h"
 
 static int has_warning = 0;
 
@@ -126,7 +125,7 @@ static void checkWeaponsAccess(int buildingType)
 static void checkWall(int buildingType, int x, int y, int size)
 {
     if (!has_warning && buildingType == BUILDING_TOWER) {
-        if (!Terrain_isAdjacentToWall(x, y, size)) {
+        if (!map_terrain_is_adjacent_to_wall(x, y, size)) {
             show(WARNING_SENTRIES_NEED_WALL);
         }
     }

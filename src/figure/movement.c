@@ -17,7 +17,6 @@
 #include "map/terrain.h"
 
 #include "../Building.h"
-#include "../Terrain.h"
 
 static void advance_tick(figure *f)
 {

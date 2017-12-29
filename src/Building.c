@@ -520,7 +520,7 @@ void Building_GameTick_checkAccessToRome()
 				// reachable from rome
 				b->distanceFromEntry = map_routing_distance(map_grid_offset(xRoad, yRoad));
 				b->houseUnreachableTicks = 0;
-			} else if (Terrain_getClosestReachableRoadWithinRadius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
+			} else if (map_closest_reachable_road_within_radius(b->x, b->y, b->size, 2, &xRoad, &yRoad)) {
 				b->distanceFromEntry = map_routing_distance(map_grid_offset(xRoad, yRoad));
 				b->houseUnreachableTicks = 0;
 			} else {
@@ -540,7 +540,7 @@ void Building_GameTick_checkAccessToRome()
 				Data_CityInfo.buildingTradeCenterBuildingId = i;
 			}
 			b->distanceFromEntry = 0;
-			int roadGridOffset = Terrain_getRoadToLargestRoadNetwork(b->x, b->y, 3, &xRoad, &yRoad);
+			int roadGridOffset = map_road_to_largest_network(b->x, b->y, 3, &xRoad, &yRoad);
 			if (roadGridOffset >= 0) {
 				b->roadNetworkId = map_road_network_get(roadGridOffset);
 				b->distanceFromEntry = map_routing_distance(roadGridOffset);
@@ -556,7 +556,7 @@ void Building_GameTick_checkAccessToRome()
 			b->roadAccessY = mainBuilding->roadAccessY;
 		} else if (b->type == BUILDING_HIPPODROME) {
 			b->distanceFromEntry = 0;
-			int roadGridOffset = Terrain_getRoadToLargestRoadNetworkHippodrome(b->x, b->y, 5, &xRoad, &yRoad);
+			int roadGridOffset = map_road_to_largest_network_hippodrome(b->x, b->y, &xRoad, &yRoad);
 			if (roadGridOffset >= 0) {
 				b->roadNetworkId = map_road_network_get(roadGridOffset);
 				b->distanceFromEntry = map_routing_distance(roadGridOffset);
@@ -565,7 +565,7 @@ void Building_GameTick_checkAccessToRome()
 			}
 		} else { // other building
 			b->distanceFromEntry = 0;
-			int roadGridOffset = Terrain_getRoadToLargestRoadNetwork(b->x, b->y, b->size, &xRoad, &yRoad);
+			int roadGridOffset = map_road_to_largest_network(b->x, b->y, b->size, &xRoad, &yRoad);
 			if (roadGridOffset >= 0) {
 				b->roadNetworkId = map_road_network_get(roadGridOffset);
 				b->distanceFromEntry = map_routing_distance(roadGridOffset);

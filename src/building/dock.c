@@ -4,10 +4,10 @@
 #include "map/figure.h"
 #include "map/grid.h"
 #include "map/routing.h"
+#include "map/terrain.h"
 #include "scenario/map.h"
 
 #include "Data/CityInfo.h"
-#include "Terrain.h"
 
 int building_dock_count_idle_dockers(building *dock)
 {
@@ -31,7 +31,7 @@ void building_dock_update_open_water_access()
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (BuildingIsInUse(b) && !b->houseSize && b->type == BUILDING_DOCK) {
-            if (Terrain_isAdjacentToOpenWater(b->x, b->y, 3)) {
+            if (map_terrain_is_adjacent_to_open_water(b->x, b->y, 3)) {
                 b->hasWaterAccess = 1;
             } else {
                 b->hasWaterAccess = 0;
@@ -44,7 +44,7 @@ int building_dock_is_connected_to_open_water(int x, int y)
 {
     map_point river_entry = scenario_map_river_entry();
     map_routing_calculate_distances_water_boat(river_entry.x, river_entry.y);
-    if (Terrain_isAdjacentToOpenWater(x, y, 3)) {
+    if (map_terrain_is_adjacent_to_open_water(x, y, 3)) {
         return 1;
     } else {
         return 0;
