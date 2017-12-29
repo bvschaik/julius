@@ -25,7 +25,10 @@
 #include "game/settings.h"
 #include "input/mouse.h"
 
+#ifndef __MINGW32__
 #include <execinfo.h>
+#endif
+
 #include <signal.h>
 
 static struct {
@@ -52,6 +55,7 @@ enum {
 };
 
 void handler(int sig) {
+#ifndef __MINGW32__
 	void *array[100];
 	size_t size;
 	
@@ -62,6 +66,7 @@ void handler(int sig) {
 	fprintf(stderr, "Error: signal %d:\n", sig);
 	backtrace_symbols_fd(array, size, STDERR_FILENO);
 	exit(1);
+#endif
 }
 
 void assert(const char *msg, int expected, int actual)

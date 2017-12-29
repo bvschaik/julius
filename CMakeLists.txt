@@ -31,6 +31,12 @@ set(CORE_FILES
     ${PROJECT_SOURCE_DIR}/src/core/time.c
     ${PROJECT_SOURCE_DIR}/src/core/zip.c
 )
+
+set(PLATFORM_FILES
+    ${PROJECT_SOURCE_DIR}/platform/main2.c
+    ${PROJECT_SOURCE_DIR}/platform/SDLSoundDevice.c
+)
+
 set(BUILDING_FILES
     ${PROJECT_SOURCE_DIR}/src/building/animation.c
     ${PROJECT_SOURCE_DIR}/src/building/barracks.c
@@ -173,8 +179,7 @@ set(SOUND_FILES
     ${PROJECT_SOURCE_DIR}/src/sound/system.c
 )
 add_executable(julius
-	${PROJECT_SOURCE_DIR}/linux/main2.c
-	${PROJECT_SOURCE_DIR}/linux/SDLSoundDevice.c
+	${PLATFORM_FILES}
 	${PROJECT_SOURCE_DIR}/src/Building.c
 	${PROJECT_SOURCE_DIR}/src/CityInfo.c
 	${PROJECT_SOURCE_DIR}/src/CityInfo_Culture.c

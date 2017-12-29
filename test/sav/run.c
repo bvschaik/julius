@@ -5,7 +5,10 @@
 #include "Game.h"
 #include "GameFile.h"
 
+#ifndef __MINGW32__
 #include <execinfo.h>
+#endif
+
 #include <signal.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -15,16 +18,18 @@
 
 static void handler(int sig)
 {
+#ifndef __MINGW32__
     void *array[100];
     size_t size;
-    
+
     // get void*'s for all entries on the stack
     size = backtrace(array, 100);
-    
+
     // print out all the frames to stderr
     fprintf(stderr, "Error: signal %d:\n", sig);
     backtrace_symbols_fd(array, size, STDERR_FILENO);
     exit(1);
+#endif
 }
 
 static void run_ticks(int ticks)
