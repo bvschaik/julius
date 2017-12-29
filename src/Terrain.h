@@ -19,14 +19,6 @@ int Terrain_isAdjacentToWater(int x, int y, int size);
 int Terrain_isAdjacentToOpenWater(int x, int y, int size);
 int Terrain_getAdjacentRoadOrClearLand(int x, int y, int size, int *xTile, int *yTile);
 
-void Terrain_setWithRadius(int x, int y, int size, int radius, unsigned short typeToAdd);
-void Terrain_clearWithRadius(int x, int y, int size, int radius, unsigned short typeToKeep);
-
-int Terrain_existsTileWithinRadiusWithType(int x, int y, int size, int radius, unsigned short type);
-int Terrain_existsClearTileWithinRadius(int x, int y, int size, int radius, int exceptGridOffset, int *xTile, int *yTile);
-int Terrain_allTilesWithinRadiusHaveType(int x, int y, int size, int radius, unsigned short type);
-int Terrain_allHousesWithinWellRadiusHaveFountain(int buildingId, int radius);
-
 int Terrain_getClosestReachableRoadWithinRadius(int x, int y, int size, int radius, int *xTile, int *yTile);
 int Terrain_getRoadToLargestRoadNetwork(int x, int y, int size, int *xTile, int *yTile);
 int Terrain_getRoadToLargestRoadNetworkHippodrome(int x, int y, int size, int *xTile, int *yTile);
@@ -35,8 +27,6 @@ int Terrain_getAdjacentRoadTilesForRoaming(int gridOffset, int *roadTiles);
 int Terrain_getSurroundingRoadTilesForRoaming(int gridOffset, int *roadTiles);
 
 int Terrain_getAdjacentRoadTilesForAqueduct(int gridOffset);
-
-void Terrain_markBuildingsWithinWellRadius(int buildingId, int radius);
 
 void Terrain_updateEntryExitFlags(int remove);
 

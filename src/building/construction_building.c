@@ -417,7 +417,7 @@ static void add_to_map(int type, building *b, int size,
             break;
         // defense
         case BUILDING_TOWER:
-            Terrain_clearWithRadius(b->x, b->y, 2, 0, TERRAIN_WALL);
+            map_terrain_remove_with_radius(b->x, b->y, 2, 0, TERRAIN_WALL);
             Terrain_addBuildingToGrids(b->id, b->x, b->y, size, image_group(GROUP_BUILDING_TOWER),
                 TERRAIN_BUILDING | TERRAIN_GATEHOUSE);
             TerrainGraphics_updateAreaWalls(b->x, b->y, 5);
@@ -571,27 +571,27 @@ int building_construction_place_building(building_type type, int x, int y)
             return 0;
         }
         if (Data_State.selectedBuilding.meadowRequired) {
-            if (!Terrain_existsTileWithinRadiusWithType(x, y, 3, 1, TERRAIN_MEADOW)) {
+            if (!map_terrain_exists_tile_in_radius_with_type(x, y, 3, 1, TERRAIN_MEADOW)) {
                 city_warning_show(WARNING_MEADOW_NEEDED);
                 return 0;
             }
         } else if (Data_State.selectedBuilding.rockRequired) {
-            if (!Terrain_existsTileWithinRadiusWithType(x, y, 2, 1, TERRAIN_ROCK)) {
+            if (!map_terrain_exists_tile_in_radius_with_type(x, y, 2, 1, TERRAIN_ROCK)) {
                 city_warning_show(WARNING_ROCK_NEEDED);
                 return 0;
             }
         } else if (Data_State.selectedBuilding.treesRequired) {
-            if (!Terrain_existsTileWithinRadiusWithType(x, y, 2, 1, TERRAIN_SCRUB | TERRAIN_TREE)) {
+            if (!map_terrain_exists_tile_in_radius_with_type(x, y, 2, 1, TERRAIN_SCRUB | TERRAIN_TREE)) {
                 city_warning_show(WARNING_TREE_NEEDED);
                 return 0;
             }
         } else if (Data_State.selectedBuilding.waterRequired) {
-            if (!Terrain_existsTileWithinRadiusWithType(x, y, 2, 3, TERRAIN_WATER)) {
+            if (!map_terrain_exists_tile_in_radius_with_type(x, y, 2, 3, TERRAIN_WATER)) {
                 city_warning_show(WARNING_WATER_NEEDED);
                 return 0;
             }
         } else if (Data_State.selectedBuilding.wallRequired) {
-            if (!Terrain_allTilesWithinRadiusHaveType(x, y, 2, 0, TERRAIN_WALL)) {
+            if (!map_terrain_all_tiles_in_radius_are(x, y, 2, 0, TERRAIN_WALL)) {
                 city_warning_show(WARNING_WALL_NEEDED);
                 return 0;
             }

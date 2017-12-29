@@ -81,7 +81,7 @@ static int place_houses(int measure_only, int x_start, int y_start, int x_end, i
                     items_placed++;
                     Terrain_addBuildingToGrids(b->id, x, y, 1,
                         image_group(GROUP_BUILDING_HOUSE_VACANT_LOT), TERRAIN_BUILDING);
-                    if (!Terrain_existsTileWithinRadiusWithType(x, y, 1, 2, TERRAIN_ROAD)) {
+                    if (!map_terrain_exists_tile_in_radius_with_type(x, y, 1, 2, TERRAIN_ROAD)) {
                         needs_road_warning = 1;
                     }
                 }
@@ -525,15 +525,15 @@ void building_construction_update(int x, int y)
             Data_State.selectedBuilding.drawAsConstructing = 1;
         }
     } else if (Data_State.selectedBuilding.meadowRequired) {
-        Terrain_existsTileWithinRadiusWithType(x, y, 3, 1, TERRAIN_MEADOW);
+        map_terrain_exists_tile_in_radius_with_type(x, y, 3, 1, TERRAIN_MEADOW);
     } else if (Data_State.selectedBuilding.rockRequired) {
-        Terrain_existsTileWithinRadiusWithType(x, y, 2, 1, TERRAIN_ROCK);
+        map_terrain_exists_tile_in_radius_with_type(x, y, 2, 1, TERRAIN_ROCK);
     } else if (Data_State.selectedBuilding.treesRequired) {
-        Terrain_existsTileWithinRadiusWithType(x, y, 2, 1, TERRAIN_TREE | TERRAIN_SCRUB);
+        map_terrain_exists_tile_in_radius_with_type(x, y, 2, 1, TERRAIN_TREE | TERRAIN_SCRUB);
     } else if (Data_State.selectedBuilding.waterRequired) {
-        Terrain_existsTileWithinRadiusWithType(x, y, 2, 3, TERRAIN_WATER);
+        map_terrain_exists_tile_in_radius_with_type(x, y, 2, 3, TERRAIN_WATER);
     } else if (Data_State.selectedBuilding.wallRequired) {
-        Terrain_allTilesWithinRadiusHaveType(x, y, 2, 0, TERRAIN_WALL);
+        map_terrain_all_tiles_in_radius_are(x, y, 2, 0, TERRAIN_WALL);
     } else {
         if (!(type == BUILDING_SENATE_UPGRADED && Data_CityInfo.buildingSenatePlaced) &&
             !(type == BUILDING_BARRACKS && building_count_total(BUILDING_BARRACKS) > 0) &&

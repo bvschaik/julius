@@ -4,6 +4,7 @@
 #include "../Widget.h"
 
 #include "building/building.h"
+#include "map/water_supply.h"
 
 void UI_BuildingInfo_drawAqueduct(BuildingInfoContext *c)
 {
@@ -72,13 +73,13 @@ void UI_BuildingInfo_drawWell(BuildingInfoContext *c)
 	PLAY_SOUND("wavs/well.wav");
 	Widget_Panel_drawOuterPanel(c->xOffset, c->yOffset, c->widthBlocks, c->heightBlocks);
 	Widget_GameText_drawCentered(109, 0, c->xOffset, c->yOffset + 10, 16 * c->widthBlocks, FONT_LARGE_BLACK);
-	int fountainAccess = Terrain_allHousesWithinWellRadiusHaveFountain(c->buildingId, 2);
+	int wellNecessity = map_water_supply_is_well_unnecessary(c->buildingId, 2);
 	int textId = 0;
-	if (fountainAccess == 0) { // well is OK
+	if (wellNecessity == WELL_NECESSARY) { // well is OK
 		textId = 1;
-	} else if (fountainAccess == 1) { // all houses have fountain
+	} else if (wellNecessity == WELL_UNNECESSARY_FOUNTAIN) { // all houses have fountain
 		textId = 2;
-	} else if (fountainAccess == 2) { // no houses around
+	} else if (wellNecessity == WELL_UNNECESSARY_NO_HOUSES) { // no houses around
 		textId = 3;
 	}
 	if (textId) {

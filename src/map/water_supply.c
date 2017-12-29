@@ -28,6 +28,22 @@ static struct {
     int tail;
 } queue;
 
+static void mark_well_access(int wellId, int radius)
+{
+    building *well = building_get(wellId);
+    int x_min, y_min, x_max, y_max;
+    map_grid_get_area(well->x, well->y, 1, radius, &x_min, &y_min, &x_max, &y_max);
+
+    for (int yy = y_min; yy <= y_max; yy++) {
+        for (int xx = x_min; xx <= x_max; xx++) {
+            int building_id = map_building_at(map_grid_offset(xx, yy));
+            if (building_id) {
+                building_get(building_id)->hasWellAccess = 1;
+            }
+        }
+    }
+}
+
 void map_water_supply_update_houses()
 {
     building_list_small_clear();
@@ -50,7 +66,7 @@ void map_water_supply_update_houses()
     int total_wells = building_list_small_size();
     const int *wells = building_list_small_items();
     for (int i = 0; i < total_wells; i++) {
-        Terrain_markBuildingsWithinWellRadius(wells[i], 2);
+        mark_well_access(wells[i], 2);
     }
 }
 
@@ -167,7 +183,7 @@ void map_water_supply_update_reservoir_fountain()
     for (int i = 0; i < total_reservoirs; i++) {
         building *b = building_get(reservoirs[i]);
         if (b->hasWaterAccess) {
-            Terrain_setWithRadius(b->x, b->y, 3, 10, TERRAIN_RESERVOIR_RANGE);
+            map_terrain_add_with_radius(b->x, b->y, 3, 10, TERRAIN_RESERVOIR_RANGE);
         }
     }
     // fountains
@@ -190,11 +206,33 @@ void map_water_supply_update_reservoir_fountain()
         Terrain_addBuildingToGrids(i, b->x, b->y, 1, image_id, TERRAIN_BUILDING);
         if (map_terrain_is(b->gridOffset, TERRAIN_RESERVOIR_RANGE) && b->numWorkers) {
             b->hasWaterAccess = 1;
-            Terrain_setWithRadius(b->x, b->y, 1,
+            map_terrain_add_with_radius(b->x, b->y, 1,
                 scenario_property_climate() == CLIMATE_DESERT ? 3 : 4,
                 TERRAIN_FOUNTAIN_RANGE);
         } else {
             b->hasWaterAccess = 0;
         }
     }
+}
+
+int map_water_supply_is_well_unnecessary(int well_id, int radius)
+{
+    building *well = building_get(well_id);
+    int num_houses = 0;
+    int x_min, y_min, x_max, y_max;
+    map_grid_get_area(well->x, well->y, 1, radius, &x_min, &y_min, &x_max, &y_max);
+
+    for (int yy = y_min; yy <= y_max; yy++) {
+        for (int xx = x_min; xx <= x_max; xx++) {
+            int grid_offset = map_grid_offset(xx, yy);
+            int building_id = map_building_at(grid_offset);
+            if (building_id && building_get(building_id)->houseSize) {
+                num_houses++;
+                if (!map_terrain_is(grid_offset, TERRAIN_FOUNTAIN_RANGE)) {
+                    return WELL_NECESSARY;
+                }
+            }
+        }
+    }
+    return num_houses ? WELL_UNNECESSARY_FOUNTAIN : WELL_UNNECESSARY_NO_HOUSES;
 }

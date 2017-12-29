@@ -31,6 +31,30 @@ void map_terrain_remove(int grid_offset, int terrain)
     terrain_grid.items[grid_offset] &= ~terrain;
 }
 
+void map_terrain_add_with_radius(int x, int y, int size, int radius, int terrain)
+{
+    int x_min, y_min, x_max, y_max;
+    map_grid_get_area(x, y, size, radius, &x_min, &y_min, &x_max, &y_max);
+
+    for (int yy = y_min; yy <= y_max; yy++) {
+        for (int xx = x_min; xx <= x_max; xx++) {
+            map_terrain_add(map_grid_offset(xx, yy), terrain);
+        }
+    }
+}
+
+void map_terrain_remove_with_radius(int x, int y, int size, int radius, int terrain)
+{
+    int x_min, y_min, x_max, y_max;
+    map_grid_get_area(x, y, size, radius, &x_min, &y_min, &x_max, &y_max);
+
+    for (int yy = y_min; yy <= y_max; yy++) {
+        for (int xx = x_min; xx <= x_max; xx++) {
+            map_terrain_remove(map_grid_offset(xx, yy), terrain);
+        }
+    }
+}
+
 void map_terrain_remove_all(int terrain)
 {
     map_grid_and_u16(terrain_grid.items, ~terrain);
@@ -100,6 +124,57 @@ int map_terrain_exists_tile_in_area_with_type(int x, int y, int size, int terrai
         }
     }
     return 0;
+}
+
+int map_terrain_exists_tile_in_radius_with_type(int x, int y, int size, int radius, int terrain)
+{
+    int x_min, y_min, x_max, y_max;
+    map_grid_get_area(x, y, size, radius, &x_min, &y_min, &x_max, &y_max);
+
+    for (int yy = y_min; yy <= y_max; yy++) {
+        for (int xx = x_min; xx <= x_max; xx++) {
+            if (map_terrain_is(map_grid_offset(xx, yy), terrain)) {
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
+int map_terrain_exists_clear_tile_in_radius(int x, int y, int size, int radius, int except_grid_offset,
+                                            int *x_tile, int *y_tile)
+{
+    int x_min, y_min, x_max, y_max;
+    map_grid_get_area(x, y, size, radius, &x_min, &y_min, &x_max, &y_max);
+
+    for (int yy = y_min; yy <= y_max; yy++) {
+        for (int xx = x_min; xx <= x_max; xx++) {
+            int grid_offset = map_grid_offset(xx, yy);
+            if (grid_offset != except_grid_offset && !terrain_grid.items[grid_offset]) {
+                *x_tile = xx;
+                *y_tile = yy;
+                return 1;
+            }
+        }
+    }
+    *x_tile = x_max;
+    *y_tile = y_max;
+    return 0;
+}
+
+int map_terrain_all_tiles_in_radius_are(int x, int y, int size, int radius, int terrain)
+{
+    int x_min, y_min, x_max, y_max;
+    map_grid_get_area(x, y, size, radius, &x_min, &y_min, &x_max, &y_max);
+
+    for (int yy = y_min; yy <= y_max; yy++) {
+        for (int xx = x_min; xx <= x_max; xx++) {
+            if (!map_terrain_is(map_grid_offset(xx, yy), terrain)) {
+                return 0;
+            }
+        }
+    }
+    return 1;
 }
 
 int map_terrain_has_only_meadow_in_ring(int x, int y, int distance)

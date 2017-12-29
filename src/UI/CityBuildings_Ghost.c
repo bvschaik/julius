@@ -169,27 +169,27 @@ static void drawBuildingGhostDefault()
 	}
 	// check if we can place building
 	if (Data_State.selectedBuilding.meadowRequired) {
-		if (!Terrain_existsTileWithinRadiusWithType(xStart, yStart, 3, 1, TERRAIN_MEADOW)) {
+		if (!map_terrain_exists_tile_in_radius_with_type(xStart, yStart, 3, 1, TERRAIN_MEADOW)) {
 			fullyObstructed = 1;
 			placementObstructed = 1;
 		}
 	} else if (Data_State.selectedBuilding.rockRequired) {
-		if (!Terrain_existsTileWithinRadiusWithType(xStart, yStart, 2, 1, TERRAIN_ROCK)) {
+		if (!map_terrain_exists_tile_in_radius_with_type(xStart, yStart, 2, 1, TERRAIN_ROCK)) {
 			fullyObstructed = 1;
 			placementObstructed = 1;
 		}
 	} else if (Data_State.selectedBuilding.treesRequired) {
-		if (!Terrain_existsTileWithinRadiusWithType(xStart, yStart, 2, 1, TERRAIN_TREE | TERRAIN_SCRUB)) {
+		if (!map_terrain_exists_tile_in_radius_with_type(xStart, yStart, 2, 1, TERRAIN_TREE | TERRAIN_SCRUB)) {
 			fullyObstructed = 1;
 			placementObstructed = 1;
 		}
 	} else if (Data_State.selectedBuilding.waterRequired) {
-		if (!Terrain_existsTileWithinRadiusWithType(xStart, yStart, 2, 3, TERRAIN_WATER)) {
+		if (!map_terrain_exists_tile_in_radius_with_type(xStart, yStart, 2, 3, TERRAIN_WATER)) {
 			fullyObstructed = 1;
 			placementObstructed = 1;
 		}
 	} else if (Data_State.selectedBuilding.wallRequired) {
-		if (!Terrain_existsTileWithinRadiusWithType(xStart, yStart, 2, 0, TERRAIN_WALL)) {
+		if (!map_terrain_exists_tile_in_radius_with_type(xStart, yStart, 2, 0, TERRAIN_WALL)) {
 			fullyObstructed = 1;
 			placementObstructed = 1;
 		}

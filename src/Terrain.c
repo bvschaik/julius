@@ -661,85 +661,6 @@ int Terrain_getAdjacentRoadOrClearLand(int x, int y, int size, int *xTile, int *
 	return 0;
 }
 
-void Terrain_setWithRadius(int x, int y, int size, int radius, unsigned short typeToAdd)
-{
-	FOR_XY_RADIUS {
-		map_terrain_add(gridOffset, typeToAdd);
-	} END_FOR_XY_RADIUS;
-}
-
-void Terrain_clearWithRadius(int x, int y, int size, int radius, unsigned short typeToClear)
-{
-	FOR_XY_RADIUS {
-		map_terrain_remove(gridOffset, typeToClear);
-	} END_FOR_XY_RADIUS;
-}
-
-int Terrain_existsTileWithinRadiusWithType(int x, int y, int size, int radius, unsigned short type)
-{
-	FOR_XY_RADIUS {
-		if (map_terrain_is(gridOffset, type)) {
-			return 1;
-		}
-	} END_FOR_XY_RADIUS;
-	return 0;
-}
-
-int Terrain_existsClearTileWithinRadius(int x, int y, int size, int radius, int exceptGridOffset, int *xTile, int *yTile)
-{
-	FOR_XY_RADIUS {
-		if (gridOffset != exceptGridOffset && !map_terrain_get(gridOffset)) {
-			STORE_XY_RADIUS(xTile, yTile);
-			return 1;
-		}
-	} END_FOR_XY_RADIUS;
-	*xTile = x_max;
-	*yTile = y_max;
-	return 0;
-}
-
-int Terrain_allTilesWithinRadiusHaveType(int x, int y, int size, int radius, unsigned short type)
-{
-	FOR_XY_RADIUS {
-		if (!map_terrain_is(gridOffset, type)) {
-			return 0;
-		}
-	} END_FOR_XY_RADIUS;
-	return 1;
-}
-
-void Terrain_markBuildingsWithinWellRadius(int wellId, int radius)
-{
-    building *well = building_get(wellId);
-	int x = well->x;
-	int y = well->y;
-	int size = 1;
-	FOR_XY_RADIUS {
-		if (map_building_at(gridOffset)) {
-			building_get(map_building_at(gridOffset))->hasWellAccess = 1;
-		}
-	} END_FOR_XY_RADIUS;
-}
-
-int Terrain_allHousesWithinWellRadiusHaveFountain(int wellId, int radius)
-{
-    building *well = building_get(wellId);
-	int numHouses = 0;
-	int x = well->x;
-	int y = well->y;
-	int size = 1;
-	FOR_XY_RADIUS {
-		int buildingId = map_building_at(gridOffset);
-		if (buildingId > 0 && building_get(buildingId)->houseSize) {
-			numHouses++;
-			if (!map_terrain_is(gridOffset, TERRAIN_FOUNTAIN_RANGE)) {
-				return 0;
-			}
-		}
-	} END_FOR_XY_RADIUS;
-	return numHouses ? 1 : 2;
-}
-
 void Terrain_updateEntryExitFlags(int remove)
 {
 	if (remove) {
@@ -779,7 +700,7 @@ void Terrain_updateEntryExitFlags(int remove)
 		int gridOffset = map_grid_offset(entry_point.x, entry_point.y);
 		int xTile, yTile;
 		for (int i = 1; i < 10; i++) {
-			if (Terrain_existsClearTileWithinRadius(
+			if (map_terrain_exists_clear_tile_in_radius(
 					    entry_point.x, entry_point.y,
 					1, i, gridOffset, &xTile, &yTile)) {
 				break;
@@ -797,7 +718,7 @@ void Terrain_updateEntryExitFlags(int remove)
 		int gridOffset = map_grid_offset(exit_point.x, exit_point.y);
 		int xTile, yTile;
 		for (int i = 1; i < 10; i++) {
-			if (Terrain_existsClearTileWithinRadius(
+			if (map_terrain_exists_clear_tile_in_radius(
 					    exit_point.x, exit_point.y,
 					1, i, gridOffset, &xTile, &yTile)) {
 				break;

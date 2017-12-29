@@ -165,7 +165,7 @@ void TerrainGraphics_updateAllRocks()
 			if (!map_image_at(gridOffset)) {
 				if (isAllTerrainInArea(x, y, 3, TERRAIN_ROCK)) {
 					int graphicId = 12 + (map_random_get(gridOffset) & 1);
-					if (Terrain_existsTileWithinRadiusWithType(x, y, 3, 4, TERRAIN_ELEVATION)) {
+					if (map_terrain_exists_tile_in_radius_with_type(x, y, 3, 4, TERRAIN_ELEVATION)) {
 						graphicId += graphicIdElevation;
 					} else {
 						graphicId += graphicIdRock;
@@ -173,7 +173,7 @@ void TerrainGraphics_updateAllRocks()
 					Terrain_addBuildingToGrids(0, x, y, 3, graphicId, TERRAIN_ROCK);
 				} else if (isAllTerrainInArea(x, y, 2, TERRAIN_ROCK)) {
 					int graphicId = 8 + (map_random_get(gridOffset) & 3);
-					if (Terrain_existsTileWithinRadiusWithType(x, y, 2, 4, TERRAIN_ELEVATION)) {
+					if (map_terrain_exists_tile_in_radius_with_type(x, y, 2, 4, TERRAIN_ELEVATION)) {
 						graphicId += graphicIdElevation;
 					} else {
 						graphicId += graphicIdRock;
@@ -181,7 +181,7 @@ void TerrainGraphics_updateAllRocks()
 					Terrain_addBuildingToGrids(0, x, y, 2, graphicId, TERRAIN_ROCK);
 				} else {
 					int graphicId = map_random_get(gridOffset) & 7;
-					if (Terrain_existsTileWithinRadiusWithType(x, y, 1, 4, TERRAIN_ELEVATION)) {
+					if (map_terrain_exists_tile_in_radius_with_type(x, y, 1, 4, TERRAIN_ELEVATION)) {
 						graphicId += graphicIdElevation;
 					} else {
 						graphicId += graphicIdRock;
@@ -681,7 +681,7 @@ void TerrainGraphics_setTileWater(int x, int y)
 		if ((map_terrain_get(gridOffset) & (TERRAIN_WATER | TERRAIN_BUILDING)) == TERRAIN_WATER) {
 			const terrain_image *image = map_image_context_get_shore(gridOffset);
 			int graphicId = image_group(GROUP_TERRAIN_WATER) + image->group_offset + image->item_offset;
-			if (Terrain_existsTileWithinRadiusWithType(xx, yy, 1, 2, TERRAIN_BUILDING)) {
+			if (map_terrain_exists_tile_in_radius_with_type(xx, yy, 1, 2, TERRAIN_BUILDING)) {
 				// fortified shore
 				int base = image_group(GROUP_TERRAIN_WATER_SHORE);
 				switch (image->group_offset) {
