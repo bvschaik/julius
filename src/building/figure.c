@@ -25,6 +25,7 @@
 #include "map/random.h"
 #include "map/road_access.h"
 #include "map/terrain.h"
+#include "map/water.h"
 
 static int worker_percentage(const building *b)
 {
@@ -1024,7 +1025,7 @@ static void spawn_figure_shipyard(building *b)
         if (b->data.industry.progress >= 160) {
             b->data.industry.progress = 0;
             int xBoat, yBoat;
-            if (Terrain_canSpawnFishingBoatInWater(b->x, b->y, b->size, &xBoat, &yBoat)) {
+            if (map_water_can_spawn_fishing_boat(b->x, b->y, b->size, &xBoat, &yBoat)) {
                 figure *f = figure_create(FIGURE_FISHING_BOAT, xBoat, yBoat, DIR_0_TOP);
                 f->actionState = FIGURE_ACTION_190_FISHING_BOAT_CREATED;
                 f->buildingId = b->id;

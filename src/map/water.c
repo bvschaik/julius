@@ -277,3 +277,32 @@ int map_water_find_shipwreck_tile(figure *wreck, int *x_tile, int *y_tile)
     }
     return 0;
 }
+
+static int num_surrounding_water_tiles(int grid_offset)
+{
+    int amount = 0;
+    for (int i = 0; i < DIR_8_NONE; i++) {
+        if (map_terrain_is(grid_offset + map_grid_direction_delta(i), TERRAIN_WATER)) {
+            amount++;
+        }
+    }
+    return amount;
+}
+
+int map_water_can_spawn_fishing_boat(int x, int y, int size, int *x_tile, int *y_tile)
+{
+    int base_offset = map_grid_offset(x, y);
+    for (const int *tile_delta = map_grid_adjacent_offsets(size); *tile_delta; tile_delta++) {
+        int grid_offset = base_offset + *tile_delta;
+        if (map_terrain_is(grid_offset, TERRAIN_WATER)) {
+            if (!map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+                if (num_surrounding_water_tiles(grid_offset) >= 8) {
+                    *x_tile = map_grid_offset_to_x(grid_offset);
+                    *y_tile = map_grid_offset_to_y(grid_offset);
+                    return 1;
+                }
+            }
+        }
+    }
+    return 0;
+}

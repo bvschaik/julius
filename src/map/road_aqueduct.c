@@ -1,10 +1,13 @@
 #include "road_aqueduct.h"
 
+#include "building/building.h"
 #include "core/direction.h"
 #include "graphics/image.h"
+#include "map/building.h"
 #include "map/grid.h"
 #include "map/image.h"
 #include "map/routing.h"
+#include "map/routing_terrain.h"
 #include "map/terrain.h"
 
 #include "Data/State.h"
@@ -112,4 +115,38 @@ int map_get_aqueduct_with_road_image(int grid_offset)
             // shouldn't happen
             return 8;
     }
+}
+
+
+static int get_road_tile_for_aqueduct(int grid_offset, int gate_orientation)
+{
+    int is_road = map_terrain_is(grid_offset, TERRAIN_ROAD) ? 1 : 0;
+    if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+        building *b = building_get(map_building_at(grid_offset));
+        if (b->type == BUILDING_GATEHOUSE) {
+            if (b->subtype.orientation == gate_orientation) {
+                is_road = 1;
+            }
+        } else if (b->type == BUILDING_GRANARY) {
+            if (map_routing_citizen_is_road(grid_offset)) {
+                is_road = 1;
+            }
+        }
+    }
+    return is_road;
+}
+
+int map_get_adjacent_road_tiles_for_aqueduct(int grid_offset)
+{
+    int road_tiles = 0;
+    road_tiles += get_road_tile_for_aqueduct(grid_offset + map_grid_delta(0, -1), 1);
+    road_tiles += get_road_tile_for_aqueduct(grid_offset + map_grid_delta(1, 0), 2);
+    road_tiles += get_road_tile_for_aqueduct(grid_offset + map_grid_delta(0, 1), 1);
+    road_tiles += get_road_tile_for_aqueduct(grid_offset + map_grid_delta(-1, 0), 2);
+    if (road_tiles == 4) {
+        if (building_get(map_building_at(grid_offset))->type == BUILDING_GRANARY) {
+            road_tiles = 2;
+        }
+    }
+    return road_tiles;
 }

@@ -7,4 +7,6 @@ int map_can_place_aqueduct_on_road(int grid_offset);
 
 int map_get_aqueduct_with_road_image(int grid_offset);
 
+int map_get_adjacent_road_tiles_for_aqueduct(int grid_offset);
+
 #endif // MAP_ROAD_AQUEDUCT_H

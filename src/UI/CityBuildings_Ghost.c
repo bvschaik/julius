@@ -412,7 +412,7 @@ static void drawBuildingGhostAqueduct()
 	} else {
 		int gridOffset = map_grid_offset(Data_State.map.current.x, Data_State.map.current.y);
 		if (map_terrain_is(gridOffset, TERRAIN_ROAD)) {
-			placementObstructed = Terrain_getAdjacentRoadTilesForAqueduct(gridOffset) == 2 ? 0 : 1;
+			placementObstructed = map_get_adjacent_road_tiles_for_aqueduct(gridOffset) == 2 ? 0 : 1;
 		} else if (map_terrain_is(gridOffset, TERRAIN_NOT_CLEAR)) {
 			placementObstructed = 1;
 		}

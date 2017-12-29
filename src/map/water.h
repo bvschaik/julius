@@ -17,4 +17,6 @@ int map_water_find_alternative_fishing_boat_tile(figure *boat, int *x_tile, int 
 
 int map_water_find_shipwreck_tile(figure *wreck, int *x_tile, int *y_tile);
 
+int map_water_can_spawn_fishing_boat(int x, int y, int size, int *x_tile, int *y_tile);
+
 #endif // MAP_WATER_H

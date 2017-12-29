@@ -1216,15 +1216,3 @@ int TerrainGraphics_getFreeTileForHerd(int x, int y, int allowNegDes, int *xTile
 	*yTile = tileY;
 	return tileFound;
 }
-
-
-int TerrainGraphics_getNumWaterTiles(int gridOffset)
-{
-    int amount = 0;
-    for (int i = 0; i < DIR_8_NONE; i++) {
-        if (map_terrain_is(gridOffset + map_grid_direction_delta(i), TERRAIN_WATER)) {
-            amount++;
-        }
-    }
-    return amount;
-}

@@ -34,7 +34,4 @@ int TerrainGraphics_setTileAqueductTerrain(int x, int y);
 int TerrainGraphics_isPavedRoadTile(int gridOffset);
 int TerrainGraphics_getFreeTileForHerd(int x, int y, int allowNegDes, int *xTile, int *yTile);
 
-int TerrainGraphics_getNumWaterTiles(int gridOffset);
-
-
 #endif

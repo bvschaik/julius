@@ -391,8 +391,8 @@ void figure_movement_roam_ticks(figure *f, int num_ticks)
                 return;
             }
             int road_tiles[8];
-            int adjacent_road_tiles = Terrain_getAdjacentRoadTilesForRoaming(f->gridOffset, road_tiles);
-            if (adjacent_road_tiles == 3 && Terrain_getSurroundingRoadTilesForRoaming(f->gridOffset, road_tiles) >= 5) {
+            int adjacent_road_tiles = map_get_adjacent_road_tiles_for_roaming(f->gridOffset, road_tiles);
+            if (adjacent_road_tiles == 3 && map_get_diagonal_road_tiles_for_roaming(f->gridOffset, road_tiles) >= 5) {
                 // go in the straight direction of a double-wide road
                 adjacent_road_tiles = 2;
                 if (came_from_direction == DIR_0_TOP || came_from_direction == DIR_4_BOTTOM) {
@@ -409,7 +409,7 @@ void figure_movement_roam_ticks(figure *f, int num_ticks)
                     }
                 }
             }
-            if (adjacent_road_tiles == 4 && Terrain_getSurroundingRoadTilesForRoaming(f->gridOffset, road_tiles) >= 8) {
+            if (adjacent_road_tiles == 4 && map_get_diagonal_road_tiles_for_roaming(f->gridOffset, road_tiles) >= 8) {
                 // go straight on when all surrounding tiles are road
                 adjacent_road_tiles = 2;
                 if (came_from_direction == DIR_0_TOP || came_from_direction == DIR_4_BOTTOM) {

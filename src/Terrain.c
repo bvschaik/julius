@@ -495,94 +495,6 @@ int Terrain_getRoadToLargestRoadNetworkHippodrome(int x, int y, int size, int *x
 	return -1;
 }
 
-static int getRoadTileForAqueduct(int gridOffset, int gateOrientation)
-{
-	int isRoad = map_terrain_is(gridOffset, TERRAIN_ROAD) ? 1 : 0;
-	if (map_terrain_is(gridOffset, TERRAIN_BUILDING)) {
-		building *b = building_get(map_building_at(gridOffset));
-		if (b->type == BUILDING_GATEHOUSE) {
-			if (b->subtype.orientation == gateOrientation) {
-				isRoad = 1;
-			}
-		} else if (b->type == BUILDING_GRANARY) {
-			if (map_routing_citizen_is_road(gridOffset)) {
-				isRoad = 1;
-			}
-		}
-	}
-	return isRoad;
-}
-
-int Terrain_getAdjacentRoadTilesForAqueduct(int gridOffset)
-{
-	int roadTiles = 0;
-	roadTiles += getRoadTileForAqueduct(gridOffset + map_grid_delta(0, -1), 1);
-	roadTiles += getRoadTileForAqueduct(gridOffset + map_grid_delta(1, 0), 2);
-	roadTiles += getRoadTileForAqueduct(gridOffset + map_grid_delta(0, 1), 1);
-	roadTiles += getRoadTileForAqueduct(gridOffset + map_grid_delta(-1, 0), 2);
-	if (roadTiles == 4) {
-		if (building_get(map_building_at(gridOffset))->type == BUILDING_GRANARY) {
-			roadTiles = 2;
-		}
-	}
-	return roadTiles;
-}
-
-static int terrain_is_road_like(int grid_offset)
-{
-    return map_terrain_is(grid_offset, TERRAIN_ROAD | TERRAIN_ACCESS_RAMP) ? 1 : 0;
-}
-
-static int getAdjacentRoadTileForRoaming(int gridOffset)
-{
-	int isRoad = terrain_is_road_like(gridOffset);
-	if (map_terrain_is(gridOffset, TERRAIN_BUILDING)) {
-		building *b = building_get(map_building_at(gridOffset));
-		if (b->type == BUILDING_GATEHOUSE) {
-			isRoad = 0;
-		} else if (b->type == BUILDING_GRANARY) {
-			if (map_routing_citizen_is_road(gridOffset)) {
-				isRoad = 1;
-			}
-		}
-	}
-	return isRoad;
-}
-
-int Terrain_getAdjacentRoadTilesForRoaming(int gridOffset, int *roadTiles)
-{
-	roadTiles[1] = roadTiles[3] = roadTiles[5] = roadTiles[7] = 0;
-
-	roadTiles[0] = getAdjacentRoadTileForRoaming(gridOffset + map_grid_delta(0, -1));
-	roadTiles[2] = getAdjacentRoadTileForRoaming(gridOffset + map_grid_delta(1, 0));
-	roadTiles[4] = getAdjacentRoadTileForRoaming(gridOffset + map_grid_delta(0, 1));
-	roadTiles[6] = getAdjacentRoadTileForRoaming(gridOffset + map_grid_delta(-1, 0));
-
-	return roadTiles[0] + roadTiles[2] + roadTiles[4] + roadTiles[6];
-}
-
-int Terrain_getSurroundingRoadTilesForRoaming(int gridOffset, int *roadTiles)
-{
-	roadTiles[1] = terrain_is_road_like(gridOffset + map_grid_delta(1, -1));
-	roadTiles[3] = terrain_is_road_like(gridOffset + map_grid_delta(1, 1));
-	roadTiles[5] = terrain_is_road_like(gridOffset + map_grid_delta(-1, 1));
-	roadTiles[7] = terrain_is_road_like(gridOffset + map_grid_delta(-1, -1));
-	
-	int maxStretch = 0;
-	int stretch = 0;
-	for (int i = 0; i < 16; i++) {
-		if (roadTiles[i % 8]) {
-			stretch++;
-			if (stretch > maxStretch) {
-				maxStretch = stretch;
-			}
-		} else {
-			stretch = 0;
-		}
-	}
-	return maxStretch;
-}
-
 int Terrain_isClear(int x, int y, int size, int disallowedTerrain, int graphicSet)
 {
 	if (!map_grid_is_inside(x, y, size)) {
@@ -601,21 +513,6 @@ int Terrain_isClear(int x, int y, int size, int disallowedTerrain, int graphicSe
 		}
 	}
 	return 1;
-}
-
-int Terrain_canSpawnFishingBoatInWater(int x, int y, int size, int *xTile, int *yTile)
-{
-	FOR_XY_ADJACENT {
-		if (map_terrain_is(gridOffset, TERRAIN_WATER)) {
-			if (!map_terrain_is(gridOffset, TERRAIN_BUILDING)) {
-				if (TerrainGraphics_getNumWaterTiles(gridOffset) >= 8) {
-					STORE_XY_ADJACENT(xTile, yTile);
-					return 1;
-				}
-			}
-		}
-	} END_FOR_XY_ADJACENT;
-	return 0;
 }
 
 int Terrain_isAdjacentToWall(int x, int y, int size)

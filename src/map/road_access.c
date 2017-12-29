@@ -4,6 +4,7 @@
 #include "map/building.h"
 #include "map/grid.h"
 #include "map/road_network.h"
+#include "map/routing_terrain.h"
 #include "map/terrain.h"
 
 #include "Data/CityInfo.h"
@@ -118,4 +119,59 @@ int map_closest_road_within_radius(int x, int y, int size, int radius, int *x_ro
         }
     }
     return 0;
+}
+
+static int terrain_is_road_like(int grid_offset)
+{
+    return map_terrain_is(grid_offset, TERRAIN_ROAD | TERRAIN_ACCESS_RAMP) ? 1 : 0;
+}
+
+static int get_adjacent_road_tile_for_roaming(int gridOffset)
+{
+    int isRoad = terrain_is_road_like(gridOffset);
+    if (map_terrain_is(gridOffset, TERRAIN_BUILDING)) {
+        building *b = building_get(map_building_at(gridOffset));
+        if (b->type == BUILDING_GATEHOUSE) {
+            isRoad = 0;
+        } else if (b->type == BUILDING_GRANARY) {
+            if (map_routing_citizen_is_road(gridOffset)) {
+                isRoad = 1;
+            }
+        }
+    }
+    return isRoad;
+}
+
+int map_get_adjacent_road_tiles_for_roaming(int grid_offset, int *road_tiles)
+{
+    road_tiles[1] = road_tiles[3] = road_tiles[5] = road_tiles[7] = 0;
+
+    road_tiles[0] = get_adjacent_road_tile_for_roaming(grid_offset + map_grid_delta(0, -1));
+    road_tiles[2] = get_adjacent_road_tile_for_roaming(grid_offset + map_grid_delta(1, 0));
+    road_tiles[4] = get_adjacent_road_tile_for_roaming(grid_offset + map_grid_delta(0, 1));
+    road_tiles[6] = get_adjacent_road_tile_for_roaming(grid_offset + map_grid_delta(-1, 0));
+
+    return road_tiles[0] + road_tiles[2] + road_tiles[4] + road_tiles[6];
+}
+
+int map_get_diagonal_road_tiles_for_roaming(int grid_offset, int *road_tiles)
+{
+    road_tiles[1] = terrain_is_road_like(grid_offset + map_grid_delta(1, -1));
+    road_tiles[3] = terrain_is_road_like(grid_offset + map_grid_delta(1, 1));
+    road_tiles[5] = terrain_is_road_like(grid_offset + map_grid_delta(-1, 1));
+    road_tiles[7] = terrain_is_road_like(grid_offset + map_grid_delta(-1, -1));
+    
+    int max_stretch = 0;
+    int stretch = 0;
+    for (int i = 0; i < 16; i++) {
+        if (road_tiles[i % 8]) {
+            stretch++;
+            if (stretch > max_stretch) {
+                max_stretch = stretch;
+            }
+        } else {
+            stretch = 0;
+        }
+    }
+    return max_stretch;
 }
