@@ -36,22 +36,6 @@ enum {
 	TradeStatus_Export = 2
 };
 
-enum {
-	EmigrationCause_None = 0,
-	EmigrationCause_NoFood = 1,
-	EmigrationCause_NoJobs = 2,
-	EmigrationCause_HighTaxes = 3,
-	EmigrationCause_LowWages = 4,
-	EmigrationCause_ManyTents = 5,
-};
-
-enum {
-	Festival_None = 0,
-	Festival_Small = 1,
-	Festival_Large = 2,
-	Festival_Grand = 3
-};
-
 extern const int Constant_SalaryForRank[11];
 
 struct MissionId {

@@ -8,6 +8,7 @@
 #include "building/building.h"
 #include "building/house_population.h"
 #include "building/model.h"
+#include "city/constants.h"
 #include "city/message.h"
 #include "core/calc.h"
 #include "core/random.h"
@@ -276,26 +277,26 @@ void CityInfo_Population_calculateSentiment()
 	}
 
 	int worstSentiment = 0;
-	Data_CityInfo.populationEmigrationCause = EmigrationCause_None;
+	Data_CityInfo.populationEmigrationCause = EMIGRATION_CAUSE_NONE;
 	if (sentimentContributionFood < worstSentiment) {
 		worstSentiment = sentimentContributionFood;
-		Data_CityInfo.populationEmigrationCause = EmigrationCause_NoFood;
+		Data_CityInfo.populationEmigrationCause = EMIGRATION_CAUSE_NO_FOOD;
 	}
 	if (sentimentContributionEmployment < worstSentiment) {
 		worstSentiment = sentimentContributionEmployment;
-		Data_CityInfo.populationEmigrationCause = EmigrationCause_NoJobs;
+		Data_CityInfo.populationEmigrationCause = EMIGRATION_CAUSE_NO_JOBS;
 	}
 	if (sentimentContributionTaxes < worstSentiment) {
 		worstSentiment = sentimentContributionTaxes;
-		Data_CityInfo.populationEmigrationCause = EmigrationCause_HighTaxes;
+		Data_CityInfo.populationEmigrationCause = EMIGRATION_CAUSE_HIGH_TAXES;
 	}
 	if (sentimentContributionWages < worstSentiment) {
 		worstSentiment = sentimentContributionWages;
-		Data_CityInfo.populationEmigrationCause = EmigrationCause_LowWages;
+		Data_CityInfo.populationEmigrationCause = EMIGRATION_CAUSE_LOW_WAGES;
 	}
 	if (sentimentContributionTents < worstSentiment) {
 		worstSentiment = sentimentContributionTents;
-		Data_CityInfo.populationEmigrationCause = EmigrationCause_ManyTents;
+		Data_CityInfo.populationEmigrationCause = EMIGRATION_CAUSE_MANY_TENTS;
 	}
 	Data_CityInfo.citySentimentLastTime = Data_CityInfo.citySentiment;
 }

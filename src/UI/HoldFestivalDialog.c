@@ -10,6 +10,7 @@
 #include "../Data/Screen.h"
 
 #include "building/warehouse.h"
+#include "city/constants.h"
 #include "city/finance.h"
 #include "game/resource.h"
 
@@ -149,7 +150,7 @@ static void buttonGod(int god, int param2)
 static void buttonSize(int size, int param2)
 {
 	if (!city_finance_out_of_money()) {
-		if (size != Festival_Grand || !Data_CityInfo.festivalNotEnoughWine) {
+		if (size != FESTIVAL_GRAND || !Data_CityInfo.festivalNotEnoughWine) {
 			Data_CityInfo.festivalSize = size;
 			UI_Window_requestRefresh();
 		}
@@ -174,10 +175,10 @@ static void buttonHoldFestival(int param1, int param2)
 	Data_CityInfo.plannedFestivalGod = Data_CityInfo.festivalGod;
 	Data_CityInfo.plannedFestivalSize = Data_CityInfo.festivalSize;
 	int cost;
-	if (Data_CityInfo.festivalSize == Festival_Small) {
+	if (Data_CityInfo.festivalSize == FESTIVAL_SMALL) {
 		Data_CityInfo.plannedFestivalMonthsToGo = 2;
 		cost = Data_CityInfo.festivalCostSmall;
-	} else if (Data_CityInfo.festivalSize == Festival_Large) {
+	} else if (Data_CityInfo.festivalSize == FESTIVAL_LARGE) {
 		Data_CityInfo.plannedFestivalMonthsToGo = 3;
 		cost = Data_CityInfo.festivalCostLarge;
 	} else {
@@ -187,7 +188,7 @@ static void buttonHoldFestival(int param1, int param2)
 
 	city_finance_process_sundry(cost);
 
-	if (Data_CityInfo.festivalSize == Festival_Grand) {
+	if (Data_CityInfo.festivalSize == FESTIVAL_GRAND) {
 		building_warehouses_remove_resource(RESOURCE_WINE, Data_CityInfo.festivalWineGrand);
 	}
 	UI_Window_goTo(Window_Advisors);

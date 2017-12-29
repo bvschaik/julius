@@ -91,7 +91,7 @@ void UI_Advisors_init()
 	CityInfo_Finance_updateSalary();
 	CityInfo_Finance_calculateTotals();
 
-	CityInfo_Culture_calculateDemandsForAdvisors();
+	city_culture_calculate_demands();
 	city_culture_update_coverage();
 
 	CityInfo_Resource_calculateFoodAndSupplyRomeWheat();

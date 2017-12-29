@@ -184,7 +184,6 @@ add_executable(julius
 	${PLATFORM_FILES}
 	${PROJECT_SOURCE_DIR}/src/Building.c
 	${PROJECT_SOURCE_DIR}/src/CityInfo.c
-	${PROJECT_SOURCE_DIR}/src/CityInfo_Culture.c
 	${PROJECT_SOURCE_DIR}/src/CityInfo_Finance.c
 	${PROJECT_SOURCE_DIR}/src/CityInfo_Gods.c
 	${PROJECT_SOURCE_DIR}/src/CityInfo_Labor.c

@@ -116,7 +116,7 @@ void GameTick_advance()
 		case 45: figure_generate_criminals(); break;
 		case 46: building_industry_update_wheat_production(); break;
 		case 48: Building_decayTaxCollectorAccess(); break;
-		case 49: CityInfo_Culture_calculateEntertainment(); break;
+		case 49: city_culture_calculate_entertainment(); break;
 	}
 	if (game_time_advance_tick()) {
 		advanceDay();

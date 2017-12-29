@@ -1,0 +1,21 @@
+#ifndef CITY_CONSTANTS_H
+#define CITY_CONSTANTS_H
+
+typedef enum {
+    EMIGRATION_CAUSE_NONE = 0,
+    EMIGRATION_CAUSE_NO_FOOD = 1,
+    EMIGRATION_CAUSE_NO_JOBS = 2,
+    EMIGRATION_CAUSE_HIGH_TAXES = 3,
+    EMIGRATION_CAUSE_LOW_WAGES = 4,
+    EMIGRATION_CAUSE_MANY_TENTS = 5,
+} emigration_cause;
+
+typedef enum {
+    FESTIVAL_NONE = 0,
+    FESTIVAL_SMALL = 1,
+    FESTIVAL_LARGE = 2,
+    FESTIVAL_GRAND = 3
+} festival_size;
+
+
+#endif // CITY_CONSTANTS_H

@@ -65,9 +65,6 @@ void CityInfo_Resource_calculateFoodAndSupplyRomeWheat();
 void CityInfo_Resource_calculateFood();
 void CityInfo_Resource_housesConsumeFood();
 
-void CityInfo_Culture_calculateDemandsForAdvisors();
-void CityInfo_Culture_calculateEntertainment();
-
 void CityInfo_Victory_check();
 void CityInfo_Victory_updateMonthsToGovern();
 

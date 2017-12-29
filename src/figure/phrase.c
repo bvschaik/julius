@@ -3,13 +3,13 @@
 #include "building/building.h"
 #include "building/type.h"
 #include "building/market.h"
+#include "city/constants.h"
 #include "core/calc.h"
 #include "figure/trader.h"
 #include "figuretype/trader.h"
 #include "sound/speech.h"
 
 #include "Data/CityInfo.h"
-#include "Data/Constants.h"
 
 #include <string.h>
 
@@ -410,13 +410,13 @@ static int house_seeker_phrase(figure *f)
 static int emigrant_phrase(figure *f)
 {
     switch (Data_CityInfo.populationEmigrationCause) {
-        case EmigrationCause_NoJobs:
+        case EMIGRATION_CAUSE_NO_JOBS:
             return 7;
-        case EmigrationCause_NoFood:
+        case EMIGRATION_CAUSE_NO_FOOD:
             return 8;
-        case EmigrationCause_HighTaxes:
+        case EMIGRATION_CAUSE_HIGH_TAXES:
             return 9;
-        case EmigrationCause_LowWages:
+        case EMIGRATION_CAUSE_LOW_WAGES:
             return 10;
         default:
             return 11;

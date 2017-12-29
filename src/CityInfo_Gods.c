@@ -9,6 +9,7 @@
 #include "building/count.h"
 #include "building/granary.h"
 #include "building/industry.h"
+#include "city/constants.h"
 #include "city/culture.h"
 #include "city/message.h"
 #include "core/calc.h"
@@ -374,7 +375,7 @@ void CityInfo_Gods_checkFestival()
 	if (Data_CityInfo.festivalEffectMonthsDelaySecond) {
 		--Data_CityInfo.festivalEffectMonthsDelaySecond;
 	}
-	if (Data_CityInfo.plannedFestivalSize <= Festival_None) {
+	if (Data_CityInfo.plannedFestivalSize <= FESTIVAL_NONE) {
 		return;
 	}
 	Data_CityInfo.plannedFestivalMonthsToGo--;
@@ -385,26 +386,26 @@ void CityInfo_Gods_checkFestival()
 	if (Data_CityInfo.festivalEffectMonthsDelayFirst <= 0) {
 		Data_CityInfo.festivalEffectMonthsDelayFirst = 12;
 		switch (Data_CityInfo.plannedFestivalSize) {
-			case Festival_Small: CityInfo_Population_changeHappiness(7); break;
-			case Festival_Large: CityInfo_Population_changeHappiness(9); break;
-			case Festival_Grand: CityInfo_Population_changeHappiness(12); break;
+			case FESTIVAL_SMALL: CityInfo_Population_changeHappiness(7); break;
+			case FESTIVAL_LARGE: CityInfo_Population_changeHappiness(9); break;
+			case FESTIVAL_GRAND: CityInfo_Population_changeHappiness(12); break;
 		}
 	} else if (Data_CityInfo.festivalEffectMonthsDelaySecond <= 0) {
 		Data_CityInfo.festivalEffectMonthsDelaySecond = 12;
 		switch (Data_CityInfo.plannedFestivalSize) {
-			case Festival_Small: CityInfo_Population_changeHappiness(2); break;
-			case Festival_Large: CityInfo_Population_changeHappiness(3); break;
-			case Festival_Grand: CityInfo_Population_changeHappiness(5); break;
+			case FESTIVAL_SMALL: CityInfo_Population_changeHappiness(2); break;
+			case FESTIVAL_LARGE: CityInfo_Population_changeHappiness(3); break;
+			case FESTIVAL_GRAND: CityInfo_Population_changeHappiness(5); break;
 		}
 	}
 	Data_CityInfo.monthsSinceFestival = 1;
 	Data_CityInfo.godMonthsSinceFestival[Data_CityInfo.plannedFestivalGod] = 0;
 	switch (Data_CityInfo.plannedFestivalSize) {
-		case Festival_Small: city_message_post(1, MESSAGE_SMALL_FESTIVAL, 0, 0); break;
-		case Festival_Large: city_message_post(1, MESSAGE_LARGE_FESTIVAL, 0, 0); break;
-		case Festival_Grand: city_message_post(1, MESSAGE_GRAND_FESTIVAL, 0, 0); break;
+		case FESTIVAL_SMALL: city_message_post(1, MESSAGE_SMALL_FESTIVAL, 0, 0); break;
+		case FESTIVAL_LARGE: city_message_post(1, MESSAGE_LARGE_FESTIVAL, 0, 0); break;
+		case FESTIVAL_GRAND: city_message_post(1, MESSAGE_GRAND_FESTIVAL, 0, 0); break;
 	}
-	Data_CityInfo.plannedFestivalSize = Festival_None;
+	Data_CityInfo.plannedFestivalSize = FESTIVAL_NONE;
 	Data_CityInfo.plannedFestivalMonthsToGo = 0;
 }
 
