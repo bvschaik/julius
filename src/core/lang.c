@@ -3,7 +3,6 @@
 #include <stdlib.h>
 
 #include "core/buffer.h"
-#include "core/debug.h"
 #include "core/io.h"
 
 #define MAX_TEXT_ENTRIES 1000

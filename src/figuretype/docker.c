@@ -12,7 +12,6 @@
 #include "figure/movement.h"
 #include "figure/route.h"
 #include "figure/trader.h"
-#include "game/resource.h"
 #include "graphics/image.h"
 #include "map/road_access.h"
 

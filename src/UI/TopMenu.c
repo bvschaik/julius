@@ -19,7 +19,6 @@
 #include "game/settings.h"
 #include "game/time.h"
 #include "game/undo.h"
-#include "graphics/image.h"
 #include "scenario/property.h"
 
 static void refreshSidebarButtons();

@@ -1,13 +1,10 @@
 #include "AllWindows.h"
 
-#include "Window.h"
 #include "../Graphics.h"
 #include "../Widget.h"
 
 #include "../Data/CityView.h"
 #include "../Data/State.h"
-
-#include "core/time.h"
 
 static void handleSubmenu();
 

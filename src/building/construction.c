@@ -7,7 +7,6 @@
 #include "Data/CityInfo.h"
 #include "Data/State.h"
 
-#include "building/building.h"
 #include "building/construction_building.h"
 #include "building/construction_clear.h"
 #include "building/construction_warning.h"

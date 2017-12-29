@@ -7,7 +7,6 @@
 #include "Data/State.h"
 
 #include "building/construction.h"
-#include "core/time.h"
 #include "game/animation.h"
 #include "game/settings.h"
 #include "input/scroll.h"

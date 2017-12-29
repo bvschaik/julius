@@ -1,7 +1,6 @@
 #include "routing_terrain.h"
 
 #include "building/building.h"
-#include "building/type.h"
 #include "core/direction.h"
 #include "graphics/image.h"
 #include "map/building.h"

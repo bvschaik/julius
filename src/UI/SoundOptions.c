@@ -1,5 +1,4 @@
 #include "AllWindows.h"
-#include "Window.h"
 #include "../Widget.h"
 
 #include "../Data/Screen.h"

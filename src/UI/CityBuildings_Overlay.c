@@ -1,7 +1,6 @@
 #include "CityBuildings_private.h"
 
 #include "building/animation.h"
-#include "building/building.h"
 #include "building/industry.h"
 #include "figure/figure.h"
 #include "game/resource.h"

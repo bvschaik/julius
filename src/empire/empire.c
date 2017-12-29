@@ -2,13 +2,11 @@
 
 #include "building/count.h"
 #include "city/constants.h"
-#include "city/message.h"
 #include "core/calc.h"
 #include "core/io.h"
 #include "empire/city.h"
 #include "empire/object.h"
 #include "empire/trade_route.h"
-#include "game/time.h"
 
 #include "Data/CityInfo.h"
 

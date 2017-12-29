@@ -2,7 +2,6 @@
 
 #include "UI/AllWindows.h"
 #include "UI/VideoIntermezzo.h"
-#include "UI/Window.h"
 
 #include "Data/CityInfo.h"
 #include "Data/State.h"
@@ -11,7 +10,6 @@
 #include "city/message.h"
 #include "game/settings.h"
 #include "game/time.h"
-#include "input/mouse.h"
 #include "scenario/criteria.h"
 #include "scenario/property.h"
 #include "sound/music.h"

@@ -7,7 +7,6 @@
 
 #include "city/finance.h"
 #include "empire/city.h"
-#include "game/resource.h"
 #include "scenario/property.h"
 #include "scenario/request.h"
 

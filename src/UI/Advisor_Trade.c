@@ -4,7 +4,6 @@
 #include "MessageDialog.h"
 #include "../CityInfo.h"
 
-#include "../Data/CityInfo.h"
 
 #include "building/count.h"
 #include "city/constants.h"

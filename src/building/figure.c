@@ -5,7 +5,6 @@
 #include "Data/CityInfo.h"
 
 #include "building/barracks.h"
-#include "building/building.h"
 #include "building/granary.h"
 #include "building/industry.h"
 #include "building/market.h"
@@ -15,7 +14,6 @@
 #include "core/calc.h"
 #include "figure/figure.h"
 #include "figure/movement.h"
-#include "figure/type.h"
 #include "graphics/image.h"
 #include "game/resource.h"
 #include "map/building_tiles.h"

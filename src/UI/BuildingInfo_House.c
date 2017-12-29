@@ -9,7 +9,6 @@
 #include "building/building.h"
 #include "building/model.h"
 #include "game/resource.h"
-#include "graphics/image.h"
 #include "map/building.h"
 #include "map/grid.h"
 #include "map/road_access.h"

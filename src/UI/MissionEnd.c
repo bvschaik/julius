@@ -1,5 +1,4 @@
 #include "AllWindows.h"
-#include "Window.h"
 
 #include "../CityInfo.h"
 #include "../Graphics.h"
@@ -13,7 +12,6 @@
 #include "city/finance.h"
 #include "game/settings.h"
 #include "game/undo.h"
-#include "graphics/image.h"
 #include "scenario/property.h"
 #include "scenario/scenario.h"
 #include "sound/music.h"

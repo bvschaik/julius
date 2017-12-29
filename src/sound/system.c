@@ -10,7 +10,6 @@
 #include "sound/speech.h"
 
 #include <string.h>
-#include <stdio.h>
 
 static char channel_filenames[SOUND_CHANNEL_MAX][CHANNEL_FILENAME_MAX] = {
     "", // speech channel

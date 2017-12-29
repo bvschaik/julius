@@ -8,7 +8,6 @@
 #include "../Widget.h"
 
 #include "city/warning.h"
-#include "graphics/image.h"
 
 static const int TOP_OFFSETS[] = {30, 55, 80, 105, 130};
 

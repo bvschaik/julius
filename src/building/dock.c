@@ -1,6 +1,5 @@
 #include "dock.h"
 
-#include "building/building.h"
 #include "map/figure.h"
 #include "map/grid.h"
 #include "map/routing.h"

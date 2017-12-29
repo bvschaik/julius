@@ -5,17 +5,10 @@
 #include "building/building.h"
 #include "building/count.h"
 #include "building/storage.h"
-#include "building/warehouse.h"
 #include "city/constants.h"
 #include "city/message.h"
-#include "core/calc.h"
 #include "empire/city.h"
-#include "empire/empire.h"
-#include "empire/trade_prices.h"
 #include "empire/trade_route.h"
-#include "figure/figure.h"
-#include "figure/type.h"
-#include "map/road_access.h"
 #include "scenario/map.h"
 
 #include <string.h>

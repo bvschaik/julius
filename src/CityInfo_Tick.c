@@ -1,10 +1,8 @@
 #include "CityInfo.h"
-#include "Data/CityInfo.h"
 
 #include "building/building.h"
 #include "building/count.h"
 #include "city/finance.h"
-#include "figure/figure.h"
 
 void CityInfo_Tick_distributeTreasuryOverForumsAndSenates()
 {

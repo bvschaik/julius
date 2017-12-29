@@ -1,14 +1,11 @@
 #include "Window.h"
 
-#include "../Graphics.h"
 #include "../System.h"
 #include "../Widget.h"
 
 #include "../Data/Screen.h"
 
 #include "game/settings.h"
-
-#include "input/mouse.h"
 
 static void buttonFullscreen(int param1, int param2);
 static void buttonSetResolution(int param1, int param2);

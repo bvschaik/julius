@@ -1,14 +1,11 @@
 #include "AllWindows.h"
 #include "FileDialog.h"
 #include "PopupDialog.h"
-#include "Window.h"
 
 #include "../Widget.h"
 #include "../Graphics.h"
 #include "../System.h"
 #include "../Data/Screen.h"
-
-#include "graphics/image.h"
 
 static void buttonClick(int param1, int param2);
 

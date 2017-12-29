@@ -1,7 +1,6 @@
 #include "soldier_strength.h"
 
 #include "figure/figure.h"
-#include "figure/type.h"
 #include "map/figure.h"
 #include "map/grid.h"
 #include "map/routing.h"

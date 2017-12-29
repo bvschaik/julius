@@ -2,18 +2,15 @@
 
 #include "AllWindows.h"
 #include "BuildingInfo.h"
-#include "CityBuildings.h"
 #include "FileDialog.h"
 #include "PopupDialog.h"
 #include "MessageDialog.h"
 #include "Sidebar.h"
-#include "Tooltip.h"
 #include "TopMenu.h"
 #include "VideoIntermezzo.h"
 #include "Warning.h"
 
 #include "input/cursor.h"
-#include "input/mouse.h"
 
 struct Window {
 	void (*init)(void);

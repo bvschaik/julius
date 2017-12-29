@@ -4,7 +4,6 @@
 #include "Advisors.h"
 #include "MessageDialog.h"
 #include "Minimap.h"
-#include "Window.h"
 
 #include "../CityView.h"
 #include "../Graphics.h"
@@ -12,15 +11,12 @@
 #include "../Terrain.h"
 #include "../Widget.h"
 
-#include "../Data/CityInfo.h"
 #include "../Data/Screen.h"
 #include "../Data/State.h"
 
 #include "city/message.h"
 #include "city/warning.h"
 #include "core/direction.h"
-#include "core/time.h"
-#include "graphics/image.h"
 #include "game/tutorial.h"
 #include "game/undo.h"
 #include "input/scroll.h"

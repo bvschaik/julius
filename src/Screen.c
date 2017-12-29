@@ -5,7 +5,6 @@
 #include "Data/Screen.h"
 
 #include "city/warning.h"
-#include "graphics/color.h"
 
 #include <stdlib.h>
 #include <string.h>

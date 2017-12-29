@@ -6,7 +6,6 @@
 
 #include "building/building.h"
 #include "game/resource.h"
-#include "graphics/image.h"
 
 static void drawFarm(BuildingInfoContext *c, int helpId, const char *soundFile, int groupId, int resourceId)
 {

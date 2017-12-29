@@ -3,7 +3,6 @@
 #include "Data/State.h"
 #include "Terrain.h"
 
-#include "building/building.h"
 #include "core/direction.h"
 #include "graphics/image.h"
 #include "map/aqueduct.h"

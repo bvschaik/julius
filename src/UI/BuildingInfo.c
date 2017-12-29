@@ -3,7 +3,6 @@
 #include "AllWindows.h"
 #include "Advisors.h"
 #include "MessageDialog.h"
-#include "Window.h"
 
 #include "../Building.h"
 #include "../CityInfo.h"
@@ -16,7 +15,6 @@
 #include "../Data/Screen.h"
 #include "../Data/State.h"
 
-#include "building/building.h"
 #include "building/house_evolution.h"
 #include "building/model.h"
 #include "building/warehouse.h"

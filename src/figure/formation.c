@@ -1,7 +1,6 @@
 #include "formation.h"
 
 #include "core/calc.h"
-#include "figure/type.h"
 
 #include <string.h>
 

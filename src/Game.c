@@ -20,8 +20,6 @@
 #include "scenario/scenario.h"
 #include "sound/system.h"
 
-#include <string.h>
-
 static void errlog(const char *msg)
 {
     debug_log(msg, 0, 0);

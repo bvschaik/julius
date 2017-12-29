@@ -1,12 +1,9 @@
 #include "AllWindows.h"
-#include "Window.h"
 #include "MessageDialog.h"
 #include "../Widget.h"
 #include "../Graphics.h"
-#include "../CityInfo.h"
 #include "Advisors_private.h"
-#include "../Data/CityInfo.h"
-#include "../Data/Screen.h"
+#include "../Data/Constants.h"
 
 #include "building/warehouse.h"
 #include "city/constants.h"

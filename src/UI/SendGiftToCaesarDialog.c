@@ -1,11 +1,8 @@
 #include "AllWindows.h"
-#include "Window.h"
 #include "../Widget.h"
 #include "../Graphics.h"
 #include "../CityInfo.h"
 #include "Advisors_private.h"
-#include "../Data/CityInfo.h"
-#include "../Data/Screen.h"
 
 static void buttonSetGift(int param1, int param2);
 static void buttonSendGift(int param1, int param2);

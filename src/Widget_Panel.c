@@ -2,8 +2,6 @@
 
 #include "Graphics.h"
 
-#include "graphics/image.h"
-
 void Widget_Panel_drawOuterPanel(int xOffset, int yOffset, int widthInBlocks, int heightInBlocks)
 {
 	int graphicBase = image_group(GROUP_DIALOG_BACKGROUND);

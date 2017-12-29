@@ -1,13 +1,11 @@
 #include "warehouse.h"
 
-#include "building/building.h"
 #include "building/count.h"
 #include "building/model.h"
 #include "building/storage.h"
 #include "city/finance.h"
 #include "core/calc.h"
 #include "empire/trade_prices.h"
-#include "game/resource.h"
 #include "game/tutorial.h"
 #include "graphics/image.h"
 #include "map/image.h"

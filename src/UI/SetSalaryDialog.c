@@ -1,5 +1,4 @@
 #include "AllWindows.h"
-#include "Window.h"
 #include "Advisors_private.h"
 #include "../CityInfo.h"
 #include "../Data/Constants.h"

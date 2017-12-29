@@ -5,7 +5,6 @@
 
 #include "../Data/Screen.h"
 
-#include "graphics/image.h"
 #include "sound/music.h"
 
 void UI_Logo_init()

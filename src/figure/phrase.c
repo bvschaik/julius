@@ -1,7 +1,6 @@
 #include "phrase.h"
 
 #include "building/building.h"
-#include "building/type.h"
 #include "building/market.h"
 #include "city/constants.h"
 #include "core/calc.h"

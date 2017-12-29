@@ -5,12 +5,11 @@
 #include "../Widget.h"
 #include "../UI/Window.h"
 
-#include "../Data/CityInfo.h"
 #include "../Data/State.h"
 
-#include "building/building.h"
 #include "building/count.h"
 #include "core/calc.h"
+#include "core/debug.h"
 #include "figure/formation.h"
 
 static void buttonReturnToFort(int param1, int param2);

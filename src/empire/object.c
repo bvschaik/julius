@@ -1,13 +1,10 @@
 #include "object.h"
 
-#include "core/buffer.h"
 #include "core/calc.h"
-#include "core/io.h"
 #include "empire/city.h"
 #include "empire/trade_route.h"
 #include "empire/type.h"
 #include "game/animation.h"
-#include "game/resource.h"
 #include "graphics/image.h"
 #include "scenario/empire.h"
 

@@ -6,7 +6,6 @@
 
 #include "city/labor.h"
 #include "core/calc.h"
-#include "input/mouse.h"
 
 static void arrowButtonWages(int param1, int param2);
 static void buttonPriority(int param1, int param2);

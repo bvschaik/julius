@@ -1,7 +1,6 @@
 #include "Advisors_private.h"
 
 #include "AllWindows.h"
-#include "Window.h"
 #include "MessageDialog.h"
 
 #include "../CityInfo.h"

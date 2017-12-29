@@ -1,12 +1,9 @@
 
 #include "Window.h"
 #include "../Widget.h"
-#include "../Graphics.h"
 #include "../Data/Screen.h"
 
 #include "game/settings.h"
-
-#include "input/mouse.h"
 
 static void arrowButtonDifficulty(int param1, int param2);
 static void arrowButtonGods(int param1, int param2);

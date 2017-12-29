@@ -2,7 +2,6 @@
 
 #include "CityView.h"
 
-#include "Data/Screen.h"
 #include "Data/State.h"
 
 #include "city/warning.h"
