@@ -18,6 +18,7 @@
 #include "game/undo.h"
 #include "graphics/image.h"
 #include "map/building.h"
+#include "map/building_tiles.h"
 #include "map/desirability.h"
 #include "map/elevation.h"
 #include "map/grid.h"
@@ -106,7 +107,7 @@ void Building_GameTick_updateState()
 				if (b->type == BUILDING_TOWER || b->type == BUILDING_GATEHOUSE) {
 					wallRecalc = 1;
 				}
-				Terrain_removeBuildingFromGrids(i, b->x, b->y);
+				map_building_tiles_remove(i, b->x, b->y);
 				landRecalc = 1;
 				Building_delete(b);
 			} else if (b->state == BuildingState_Rubble) {
@@ -154,7 +155,7 @@ void Building_collapseOnFire(int buildingId, int hasPlague)
 	} else {
 		numTiles = 0;
 	}
-	Terrain_removeBuildingFromGrids(buildingId, b->x, b->y);
+	map_building_tiles_remove(buildingId, b->x, b->y);
 	if (map_terrain_is(b->gridOffset, TERRAIN_WATER)) {
 		b->state = BuildingState_DeletedByGame;
 	} else {
@@ -172,7 +173,7 @@ void Building_collapseOnFire(int buildingId, int hasPlague)
 			int random = map_random_get(b->gridOffset) & 3;
 			graphicId = image_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9 * random;
 		}
-		Terrain_addBuildingToGrids(buildingId, b->x, b->y, 1, graphicId, TERRAIN_BUILDING);
+		map_building_tiles_add(buildingId, b->x, b->y, 1, graphicId, TERRAIN_BUILDING);
 	}
 	static const int xTiles[] = {0, 1, 1, 0, 2, 2, 2, 1, 0, 3, 3, 3, 3, 2, 1, 0, 4, 4, 4, 4, 4, 3, 2, 1, 0, 5, 5, 5, 5, 5, 5, 4, 3, 2, 1, 0};
 	static const int yTiles[] = {0, 0, 1, 1, 0, 1, 2, 2, 2, 0, 1, 2, 3, 3, 3, 3, 0, 1, 2, 3, 4, 4, 4, 4, 4, 0, 1, 2, 3, 4, 5, 5, 5, 5, 5, 5};
@@ -190,7 +191,7 @@ void Building_collapseOnFire(int buildingId, int hasPlague)
 			int random = map_random_get(ruin->gridOffset) & 3;
 			graphicId = image_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9 * random;
 		}
-		Terrain_addBuildingToGrids(ruin->id, ruin->x, ruin->y, 1, graphicId, TERRAIN_BUILDING);
+		map_building_tiles_add(ruin->id, ruin->x, ruin->y, 1, graphicId, TERRAIN_BUILDING);
 		ruin->fireDuration = (ruin->houseGenerationDelay & 7) + 1;
 		ruin->figureId4 = 0;
 		ruin->fireProof = 1;
@@ -213,7 +214,7 @@ void Building_collapseLinked(int buildingId, int onFire)
 		if (onFire) {
 			Building_collapseOnFire(spaceId, 0);
 		} else {
-			TerrainGraphics_setBuildingAreaRubble(spaceId, space->x, space->y, space->size);
+			map_building_tiles_set_rubble(spaceId, space->x, space->y, space->size);
 			space->state = BuildingState_Rubble;
 		}
 	}
@@ -227,7 +228,7 @@ void Building_collapseLinked(int buildingId, int onFire)
 		if (onFire) {
 			Building_collapseOnFire(space->id, 0);
 		} else {
-			TerrainGraphics_setBuildingAreaRubble(space->id, space->x, space->y, space->size);
+			map_building_tiles_set_rubble(space->id, space->x, space->y, space->size);
 			space->state = BuildingState_Rubble;
 		}
 	}
@@ -251,7 +252,7 @@ void Building_collapseLastPlaced()
 		city_message_post(1, MESSAGE_ROAD_TO_ROME_BLOCKED, 0, b->gridOffset);
 		game_undo_disable();
 		b->state = BuildingState_Rubble;
-		TerrainGraphics_setBuildingAreaRubble(buildingId, b->x, b->y, b->size);
+		map_building_tiles_set_rubble(buildingId, b->x, b->y, b->size);
 		figure_create_explosion_cloud(b->x, b->y, b->size);
 		Building_collapseLinked(buildingId, 0);
 		map_routing_update_land();
@@ -267,7 +268,7 @@ int Building_collapseFirstOfType(int buildingType)
 			game_undo_disable();
 			b->state = BuildingState_Rubble;
 			
-			TerrainGraphics_setBuildingAreaRubble(i, b->x, b->y, b->size);
+			map_building_tiles_set_rubble(i, b->x, b->y, b->size);
 			sound_effect_play(SOUND_EFFECT_EXPLOSION);
 			map_routing_update_land();
 			return gridOffset;
@@ -289,7 +290,7 @@ void Building_destroyByEnemy(int x, int y, int gridOffset)
 	int buildingId = map_building_at(gridOffset);
 	if (buildingId > 0) {
 		building *b = building_get(buildingId);
-		TerrainGraphics_setBuildingAreaRubble(buildingId, b->x, b->y, b->size);
+		map_building_tiles_set_rubble(buildingId, b->x, b->y, b->size);
 		if (BuildingIsInUse(b)) {
 			switch (b->type) {
 				case BUILDING_HOUSE_SMALL_TENT:
@@ -317,7 +318,7 @@ void Building_destroyByEnemy(int x, int y, int gridOffset)
 		if (map_terrain_is(gridOffset, TERRAIN_WALL)) {
 			figure_kill_tower_sentries_at(x, y);
 		}
-		TerrainGraphics_setBuildingAreaRubble(0, x, y, 1);
+		map_building_tiles_set_rubble(0, x, y, 1);
 	}
 	figure_tower_sentry_reroute();
 	TerrainGraphics_updateAreaWalls(x, y, 3);
@@ -398,8 +399,7 @@ void Building_determineGraphicIdsForOrientedBuildings()
 						image_id = image_group(GROUP_BUILDING_TOWER) + 1;
 					}
 				}
-				Terrain_addBuildingToGrids(i, b->x, b->y, b->size,
-					                   image_id, TERRAIN_GATEHOUSE | TERRAIN_BUILDING);
+				map_building_tiles_add(i, b->x, b->y, b->size, image_id, TERRAIN_GATEHOUSE | TERRAIN_BUILDING);
 				Terrain_addRoadsForGatehouse(b->x, b->y, b->subtype.orientation);
 				break;
 			case BUILDING_TRIUMPHAL_ARCH:
@@ -416,8 +416,7 @@ void Building_determineGraphicIdsForOrientedBuildings()
 						image_id = image_group(GROUP_BUILDING_TRIUMPHAL_ARCH);
 					}
 				}
-				Terrain_addBuildingToGrids(i, b->x, b->y, b->size,
-					                   image_id, TERRAIN_BUILDING);
+				map_building_tiles_add(i, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
 				Terrain_addRoadsForTriumphalArch(b->x, b->y, b->subtype.orientation);
 				break;
 			case BUILDING_HIPPODROME:
@@ -462,8 +461,7 @@ void Building_determineGraphicIdsForOrientedBuildings()
                     image_id += 0; break;
 					}
 				}
-				Terrain_addBuildingToGrids(i, b->x, b->y, b->size,
-					                   image_id, TERRAIN_BUILDING);
+				map_building_tiles_add(i, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
 				break;
 			case BUILDING_SHIPYARD:
 				graphicOffset = (4 + b->data.other.dockOrientation - mapOrientation / 2) % 4;

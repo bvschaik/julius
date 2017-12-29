@@ -8,6 +8,7 @@
 #include "graphics/image.h"
 #include "map/aqueduct.h"
 #include "map/building.h"
+#include "map/building_tiles.h"
 #include "map/grid.h"
 #include "map/image.h"
 #include "map/property.h"
@@ -17,8 +18,6 @@
 #include "scenario/earthquake.h"
 
 #include "Data/State.h"
-#include "../Terrain.h"
-#include "../TerrainGraphics.h"
 #include "UI/Window.h"
 
 #include <string.h>
@@ -182,11 +181,11 @@ static void add_building_to_terrain(building *b)
             case BUILDING_VINES_FARM: graphicOffset = 20; break;
             case BUILDING_PIG_FARM: graphicOffset = 25; break;
         }
-        TerrainGraphics_setBuildingFarm(b->id, b->x, b->y,
+        map_building_tiles_add_farm(b->id, b->x, b->y,
             image_group(GROUP_BUILDING_FARM_CROPS) + graphicOffset, 0);
     } else {
         int size = building_properties_for_type(b->type)->size;
-        Terrain_addBuildingToGrids(b->id, b->x, b->y, size, 0, 0);
+        map_building_tiles_add(b->id, b->x, b->y, size, 0, 0);
         if (b->type == BUILDING_WHARF) {
             b->data.other.boatFigureId = 0;
         }

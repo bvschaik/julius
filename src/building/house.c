@@ -3,12 +3,12 @@
 #include "game/resource.h"
 #include "graphics/image.h"
 #include "map/building.h"
+#include "map/building_tiles.h"
 #include "map/grid.h"
 #include "map/image.h"
 #include "map/random.h"
 #include "map/terrain.h"
 
-#include "Terrain.h"
 #include "Data/State.h"
 
 #define MAX_DIR 4
@@ -63,7 +63,7 @@ void building_house_change_to(building *house, building_type type)
         image_id += HOUSE_IMAGE[house->subtype.houseLevel].offset;
         image_id += map_random_get(house->gridOffset) & (HOUSE_IMAGE[house->subtype.houseLevel].num_types - 1);
     }
-    Terrain_addBuildingToGrids(house->id, house->x, house->y, house->size, image_id, TERRAIN_BUILDING);
+    map_building_tiles_add(house->id, house->x, house->y, house->size, image_id, TERRAIN_BUILDING);
 }
 
 static void create_vacant_lot(int x, int y, int image_id)
@@ -71,7 +71,7 @@ static void create_vacant_lot(int x, int y, int image_id)
     building *b = building_create(BUILDING_HOUSE_VACANT_LOT, x, y);
     b->housePopulation = 0;
     b->distanceFromEntry = 0;
-    Terrain_addBuildingToGrids(b->id, b->x + 1, b->y, 1, image_id, TERRAIN_BUILDING);
+    map_building_tiles_add(b->id, b->x + 1, b->y, 1, image_id, TERRAIN_BUILDING);
 }
 
 void building_house_change_to_vacant_lot(building *house)
@@ -80,10 +80,10 @@ void building_house_change_to_vacant_lot(building *house)
     house->subtype.houseLevel = house->type - 10;
     int image_id = image_group(GROUP_BUILDING_HOUSE_VACANT_LOT);
     if (house->houseIsMerged) {
-        Terrain_removeBuildingFromGrids(house->id, house->x, house->y);
+        map_building_tiles_remove(house->id, house->x, house->y);
         house->houseIsMerged = 0;
         house->size = house->houseSize = 1;
-        Terrain_addBuildingToGrids(house->id, house->x, house->y, 1, image_id, TERRAIN_BUILDING);
+        map_building_tiles_add(house->id, house->x, house->y, 1, image_id, TERRAIN_BUILDING);
 
         create_vacant_lot(house->x + 1, house->y, image_id);
         create_vacant_lot(house->x, house->y + 1, image_id);
@@ -130,12 +130,12 @@ static void merge(building *b)
         image_id += 1;
     }
     
-    Terrain_removeBuildingFromGrids(b->id, b->x, b->y);
+    map_building_tiles_remove(b->id, b->x, b->y);
     b->x = merge_data.x;
     b->y = merge_data.y;
     b->gridOffset = map_grid_offset(b->x, b->y);
     b->houseIsMerged = 1;
-    Terrain_addBuildingToGrids(b->id, b->x, b->y, 2, image_id, TERRAIN_BUILDING);
+    map_building_tiles_add(b->id, b->x, b->y, 2, image_id, TERRAIN_BUILDING);
 }
 
 void building_house_merge(building *house)
@@ -261,8 +261,8 @@ static void create_house_tile(building_type type, int x, int y, int image_id, in
         house->data.house.inventory[i] = inventory[i];
     }
     house->distanceFromEntry = 0;
-    Terrain_addBuildingToGrids(house->id, house->x, house->y, 1,
-                               image_id + (map_random_get(house->gridOffset) & 1), TERRAIN_BUILDING);
+    map_building_tiles_add(house->id, house->x, house->y, 1,
+                           image_id + (map_random_get(house->gridOffset) & 1), TERRAIN_BUILDING);
 }
 
 static void split_size2(building *house, building_type new_type)
@@ -276,7 +276,7 @@ static void split_size2(building *house, building_type new_type)
     int population_per_tile = house->housePopulation / 4;
     int population_remainder = house->housePopulation % 4;
 
-    Terrain_removeBuildingFromGrids(house->id, house->x, house->y);
+    map_building_tiles_remove(house->id, house->x, house->y);
 
     // main tile
     house->type = new_type;
@@ -290,8 +290,8 @@ static void split_size2(building *house, building_type new_type)
     house->distanceFromEntry = 0;
 
     int image_id = house_image_group(house->subtype.houseLevel);
-    Terrain_addBuildingToGrids(house->id, house->x, house->y, house->size,
-                               image_id + (map_random_get(house->gridOffset) & 1), TERRAIN_BUILDING);
+    map_building_tiles_add(house->id, house->x, house->y, house->size,
+                           image_id + (map_random_get(house->gridOffset) & 1), TERRAIN_BUILDING);
 
     // the other tiles (new buildings)
     create_house_tile(house->type, house->x + 1, house->y, image_id, population_per_tile, inventory_per_tile);
@@ -310,7 +310,7 @@ static void split_size3(building *house)
     int population_per_tile = house->housePopulation / 9;
     int population_remainder = house->housePopulation % 9;
 
-    Terrain_removeBuildingFromGrids(house->id, house->x, house->y);
+    map_building_tiles_remove(house->id, house->x, house->y);
 
     // main tile
     house->type = BUILDING_HOUSE_MEDIUM_INSULA;
@@ -324,8 +324,8 @@ static void split_size3(building *house)
     house->distanceFromEntry = 0;
 
     int image_id = house_image_group(house->subtype.houseLevel);
-    Terrain_addBuildingToGrids(house->id, house->x, house->y, house->size,
-                               image_id + (map_random_get(house->gridOffset) & 1), TERRAIN_BUILDING);
+    map_building_tiles_add(house->id, house->x, house->y, house->size,
+                           image_id + (map_random_get(house->gridOffset) & 1), TERRAIN_BUILDING);
 
     // the other tiles (new buildings)
     create_house_tile(house->type, house->x, house->y + 1, image_id, population_per_tile, inventory_per_tile);
@@ -371,11 +371,11 @@ void building_house_expand_to_large_insula(building *house)
         house->data.house.inventory[i] += merge_data.inventory[i];
     }
     int image_id = house_image_group(house->subtype.houseLevel) + (map_random_get(house->gridOffset) & 1);
-    Terrain_removeBuildingFromGrids(house->id, house->x, house->y);
+    map_building_tiles_remove(house->id, house->x, house->y);
     house->x = merge_data.x;
     house->y = merge_data.y;
     house->gridOffset = map_grid_offset(house->x, house->y);
-    Terrain_addBuildingToGrids(house->id, house->x, house->y, house->size, image_id, TERRAIN_BUILDING);
+    map_building_tiles_add(house->id, house->x, house->y, house->size, image_id, TERRAIN_BUILDING);
 }
 
 void building_house_expand_to_large_villa(building *house)
@@ -391,11 +391,11 @@ void building_house_expand_to_large_villa(building *house)
         house->data.house.inventory[i] += merge_data.inventory[i];
     }
     int image_id = house_image_group(house->subtype.houseLevel);
-    Terrain_removeBuildingFromGrids(house->id, house->x, house->y);
+    map_building_tiles_remove(house->id, house->x, house->y);
     house->x = merge_data.x;
     house->y = merge_data.y;
     house->gridOffset = map_grid_offset(house->x, house->y);
-    Terrain_addBuildingToGrids(house->id, house->x, house->y, house->size, image_id, TERRAIN_BUILDING);
+    map_building_tiles_add(house->id, house->x, house->y, house->size, image_id, TERRAIN_BUILDING);
 }
 
 void building_house_expand_to_large_palace(building *house)
@@ -411,11 +411,11 @@ void building_house_expand_to_large_palace(building *house)
         house->data.house.inventory[i] += merge_data.inventory[i];
     }
     int image_id = house_image_group(house->subtype.houseLevel);
-    Terrain_removeBuildingFromGrids(house->id, house->x, house->y);
+    map_building_tiles_remove(house->id, house->x, house->y);
     house->x = merge_data.x;
     house->y = merge_data.y;
     house->gridOffset = map_grid_offset(house->x, house->y);
-    Terrain_addBuildingToGrids(house->id, house->x, house->y, house->size, image_id, TERRAIN_BUILDING);
+    map_building_tiles_add(house->id, house->x, house->y, house->size, image_id, TERRAIN_BUILDING);
 }
 
 void building_house_devolve_from_large_insula(building *house)
@@ -434,7 +434,7 @@ void building_house_devolve_from_large_villa(building *house)
     int population_per_tile = house->housePopulation / 6;
     int population_remainder = house->housePopulation % 6;
 
-    Terrain_removeBuildingFromGrids(house->id, house->x, house->y);
+    map_building_tiles_remove(house->id, house->x, house->y);
 
     // main tile
     house->type = BUILDING_HOUSE_MEDIUM_VILLA;
@@ -448,8 +448,8 @@ void building_house_devolve_from_large_villa(building *house)
     house->distanceFromEntry = 0;
 
     int image_id = house_image_group(house->subtype.houseLevel);
-    Terrain_addBuildingToGrids(house->id, house->x, house->y, house->size,
-                               image_id + (map_random_get(house->gridOffset) & 1), TERRAIN_BUILDING);
+    map_building_tiles_add(house->id, house->x, house->y, house->size,
+                           image_id + (map_random_get(house->gridOffset) & 1), TERRAIN_BUILDING);
 
     // the other tiles (new buildings)
     image_id = house_image_group(HOUSE_MEDIUM_INSULA);
@@ -471,7 +471,7 @@ void building_house_devolve_from_large_palace(building *house)
     int population_per_tile = house->housePopulation / 8;
     int population_remainder = house->housePopulation % 8;
 
-    Terrain_removeBuildingFromGrids(house->id, house->x, house->y);
+    map_building_tiles_remove(house->id, house->x, house->y);
 
     // main tile
     house->type = BUILDING_HOUSE_MEDIUM_PALACE;
@@ -485,7 +485,7 @@ void building_house_devolve_from_large_palace(building *house)
     house->distanceFromEntry = 0;
 
     int image_id = house_image_group(house->subtype.houseLevel);
-    Terrain_addBuildingToGrids(house->id, house->x, house->y, house->size, image_id, TERRAIN_BUILDING);
+    map_building_tiles_add(house->id, house->x, house->y, house->size, image_id, TERRAIN_BUILDING);
 
     // the other tiles (new buildings)
     image_id = house_image_group(HOUSE_MEDIUM_INSULA);

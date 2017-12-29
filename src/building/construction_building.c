@@ -12,6 +12,7 @@
 #include "figure/formation.h"
 #include "game/undo.h"
 #include "graphics/image.h"
+#include "map/building_tiles.h"
 #include "map/grid.h"
 #include "map/routing_terrain.h"
 #include "map/terrain.h"
@@ -28,7 +29,7 @@
 static void add_fort(int type, building *b)
 {
     b->prevPartBuildingId = 0;
-    Terrain_addBuildingToGrids(b->id, b->x, b->y, b->size, image_group(GROUP_BUILDING_FORT), TERRAIN_BUILDING);
+    map_building_tiles_add(b->id, b->x, b->y, b->size, image_group(GROUP_BUILDING_FORT), TERRAIN_BUILDING);
     b->formationId = Formation_createLegion(b);
     if (type == BUILDING_FORT_LEGIONARIES) {
         b->subtype.fortFigureType = FIGURE_FORT_LEGIONARY;
@@ -49,7 +50,7 @@ static void add_fort(int type, building *b)
     ground->prevPartBuildingId = b->id;
     b->nextPartBuildingId = ground->id;
     ground->nextPartBuildingId = 0;
-    Terrain_addBuildingToGrids(ground->id, b->x + 3, b->y - 1, 4,
+    map_building_tiles_add(ground->id, b->x + 3, b->y - 1, 4,
         image_group(GROUP_BUILDING_FORT) + 1, TERRAIN_BUILDING);
 }
 
@@ -74,7 +75,7 @@ static void add_hippodrome(building *b)
         case DIR_6_LEFT:   image_id = image1; break;
         default: return;
     }
-    Terrain_addBuildingToGrids(b->id, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
+    map_building_tiles_add(b->id, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
 
     building *part2 = building_create(BUILDING_HIPPODROME, b->x + 5, b->y);
     game_undo_add_building(part2);
@@ -92,7 +93,7 @@ static void add_hippodrome(building *b)
         case DIR_2_RIGHT: case DIR_6_LEFT: 
         image_id = image1 + 2; break;
     }
-    Terrain_addBuildingToGrids(part2->id, b->x + 5, b->y, b->size, image_id, TERRAIN_BUILDING);
+    map_building_tiles_add(part2->id, b->x + 5, b->y, b->size, image_id, TERRAIN_BUILDING);
 
     building *part3 = building_create(BUILDING_HIPPODROME, b->x + 10, b->y);
     game_undo_add_building(part3);
@@ -114,7 +115,7 @@ static void add_hippodrome(building *b)
         case DIR_6_LEFT: 
         image_id = image1 + 4; break;
     }
-    Terrain_addBuildingToGrids(part3->id, b->x + 10, b->y, b->size, image_id, TERRAIN_BUILDING);
+    map_building_tiles_add(part3->id, b->x + 10, b->y, b->size, image_id, TERRAIN_BUILDING);
 }
 
 static building *add_warehouse_space(int x, int y, building *prev)
@@ -123,7 +124,7 @@ static building *add_warehouse_space(int x, int y, building *prev)
     game_undo_add_building(b);
     b->prevPartBuildingId = prev->id;
     prev->nextPartBuildingId = b->id;
-    Terrain_addBuildingToGrids(b->id, x, y, 1,
+    map_building_tiles_add(b->id, x, y, 1,
         image_group(GROUP_BUILDING_WAREHOUSE_STORAGE_EMPTY), TERRAIN_BUILDING);
     return b;
 }
@@ -132,7 +133,7 @@ static void add_warehouse(building *b)
 {
     b->storage_id = building_storage_create();
     b->prevPartBuildingId = 0;
-    Terrain_addBuildingToGrids(b->id, b->x, b->y, 1, image_group(GROUP_BUILDING_WAREHOUSE), TERRAIN_BUILDING);
+    map_building_tiles_add(b->id, b->x, b->y, 1, image_group(GROUP_BUILDING_WAREHOUSE), TERRAIN_BUILDING);
 
     building *prev = b;
     prev = add_warehouse_space(b->x + 1, b->y, prev);
@@ -148,7 +149,7 @@ static void add_warehouse(building *b)
 
 static void add_building(building *b, int image_id)
 {
-    Terrain_addBuildingToGrids(b->id, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
+    map_building_tiles_add(b->id, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
 }
 
 static void add_to_map(int type, building *b, int size,
@@ -274,22 +275,22 @@ static void add_to_map(int type, building *b, int size,
             break;
         // farms
         case BUILDING_WHEAT_FARM:
-            TerrainGraphics_setBuildingFarm(b->id, b->x, b->y, image_group(GROUP_BUILDING_FARM_CROPS), 0);
+            map_building_tiles_add_farm(b->id, b->x, b->y, image_group(GROUP_BUILDING_FARM_CROPS), 0);
             break;
         case BUILDING_VEGETABLE_FARM:
-            TerrainGraphics_setBuildingFarm(b->id, b->x, b->y, image_group(GROUP_BUILDING_FARM_CROPS) + 5, 0);
+            map_building_tiles_add_farm(b->id, b->x, b->y, image_group(GROUP_BUILDING_FARM_CROPS) + 5, 0);
             break;
         case BUILDING_FRUIT_FARM:
-            TerrainGraphics_setBuildingFarm(b->id, b->x, b->y, image_group(GROUP_BUILDING_FARM_CROPS) + 10, 0);
+            map_building_tiles_add_farm(b->id, b->x, b->y, image_group(GROUP_BUILDING_FARM_CROPS) + 10, 0);
             break;
         case BUILDING_OLIVE_FARM:
-            TerrainGraphics_setBuildingFarm(b->id, b->x, b->y, image_group(GROUP_BUILDING_FARM_CROPS) + 15, 0);
+            map_building_tiles_add_farm(b->id, b->x, b->y, image_group(GROUP_BUILDING_FARM_CROPS) + 15, 0);
             break;
         case BUILDING_VINES_FARM:
-            TerrainGraphics_setBuildingFarm(b->id, b->x, b->y, image_group(GROUP_BUILDING_FARM_CROPS) + 20, 0);
+            map_building_tiles_add_farm(b->id, b->x, b->y, image_group(GROUP_BUILDING_FARM_CROPS) + 20, 0);
             break;
         case BUILDING_PIG_FARM:
-            TerrainGraphics_setBuildingFarm(b->id, b->x, b->y, image_group(GROUP_BUILDING_FARM_CROPS) + 25, 0);
+            map_building_tiles_add_farm(b->id, b->x, b->y, image_group(GROUP_BUILDING_FARM_CROPS) + 25, 0);
             break;
         // industry
         case BUILDING_MARBLE_QUARRY:
@@ -418,12 +419,12 @@ static void add_to_map(int type, building *b, int size,
         // defense
         case BUILDING_TOWER:
             map_terrain_remove_with_radius(b->x, b->y, 2, 0, TERRAIN_WALL);
-            Terrain_addBuildingToGrids(b->id, b->x, b->y, size, image_group(GROUP_BUILDING_TOWER),
+            map_building_tiles_add(b->id, b->x, b->y, size, image_group(GROUP_BUILDING_TOWER),
                 TERRAIN_BUILDING | TERRAIN_GATEHOUSE);
             TerrainGraphics_updateAreaWalls(b->x, b->y, 5);
             break;
         case BUILDING_GATEHOUSE:
-            Terrain_addBuildingToGrids(b->id, b->x, b->y, size,
+            map_building_tiles_add(b->id, b->x, b->y, size,
                 image_group(GROUP_BUILDING_TOWER) + orientation, TERRAIN_BUILDING | TERRAIN_GATEHOUSE);
             b->subtype.orientation = orientation;
             Building_determineGraphicIdsForOrientedBuildings();

@@ -3,11 +3,11 @@
 #include "core/calc.h"
 #include "game/resource.h"
 #include "graphics/image.h"
+#include "map/building_tiles.h"
 #include "map/road_access.h"
 #include "scenario/property.h"
 
 #include "Data/CityInfo.h"
-#include "TerrainGraphics.h"
 
 #define MAX_PROGRESS_RAW 200
 #define MAX_PROGRESS_WORKSHOP 400
@@ -29,7 +29,7 @@ static int max_progress(const building *b)
 
 static void update_farm_image(const building *b)
 {
-    TerrainGraphics_setBuildingFarm(b->id, b->x, b->y,
+    map_building_tiles_add_farm(b->id, b->x, b->y,
         image_group(GROUP_BUILDING_FARM_CROPS) + 5 * (b->outputResourceId - 1),
         b->data.industry.progress);
 }

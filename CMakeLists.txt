@@ -123,6 +123,7 @@ set(MAP_FILES
     ${PROJECT_SOURCE_DIR}/src/map/bookmark.c
     ${PROJECT_SOURCE_DIR}/src/map/bridge.c
     ${PROJECT_SOURCE_DIR}/src/map/building.c
+    ${PROJECT_SOURCE_DIR}/src/map/building_tiles.c
     ${PROJECT_SOURCE_DIR}/src/map/desirability.c
     ${PROJECT_SOURCE_DIR}/src/map/elevation.c
     ${PROJECT_SOURCE_DIR}/src/map/figure.c

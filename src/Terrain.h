@@ -1,9 +1,6 @@
 #ifndef TERRAIN_H
 #define TERRAIN_H
 
-void Terrain_addBuildingToGrids(int buildingId, int x, int y, int size, int graphicId, int terrain);
-void Terrain_removeBuildingFromGrids(int buildingId, int x, int y);
-
 void Terrain_addRoadsForGatehouse(int x, int y, int orientation);
 void Terrain_addRoadsForTriumphalArch(int x, int y, int orientation);
 

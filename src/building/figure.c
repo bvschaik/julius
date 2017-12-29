@@ -1,8 +1,6 @@
 #include "building/figure.h"
 
 #include "Formation.h"
-#include "Terrain.h"
-#include "TerrainGraphics.h"
 
 #include "Data/CityInfo.h"
 
@@ -20,6 +18,7 @@
 #include "figure/type.h"
 #include "graphics/image.h"
 #include "game/resource.h"
+#include "map/building_tiles.h"
 #include "map/desirability.h"
 #include "map/image.h"
 #include "map/random.h"
@@ -577,10 +576,10 @@ static void set_market_graphic(building *b)
         return;
     }
     if (map_desirability_get(b->gridOffset) <= 30) {
-        Terrain_addBuildingToGrids(b->id, b->x, b->y, b->size,
+        map_building_tiles_add(b->id, b->x, b->y, b->size,
             image_group(GROUP_BUILDING_MARKET), TERRAIN_BUILDING);
     } else {
-        Terrain_addBuildingToGrids(b->id, b->x, b->y, b->size,
+        map_building_tiles_add(b->id, b->x, b->y, b->size,
             image_group(GROUP_BUILDING_MARKET_FANCY), TERRAIN_BUILDING);
     }
 }
@@ -659,18 +658,18 @@ static void set_bathhouse_graphic(building *b)
     }
     if (b->hasWaterAccess && b->numWorkers) {
         if (map_desirability_get(b->gridOffset) <= 30) {
-            Terrain_addBuildingToGrids(b->id, b->x, b->y, b->size,
+            map_building_tiles_add(b->id, b->x, b->y, b->size,
                 image_group(GROUP_BUILDING_BATHHOUSE_WATER), TERRAIN_BUILDING);
         } else {
-            Terrain_addBuildingToGrids(b->id, b->x, b->y, b->size,
+            map_building_tiles_add(b->id, b->x, b->y, b->size,
                 image_group(GROUP_BUILDING_BATHHOUSE_FANCY_WATER), TERRAIN_BUILDING);
         }
     } else {
         if (map_desirability_get(b->gridOffset) <= 30) {
-            Terrain_addBuildingToGrids(b->id, b->x, b->y, b->size,
+            map_building_tiles_add(b->id, b->x, b->y, b->size,
                 image_group(GROUP_BUILDING_BATHHOUSE_NO_WATER), TERRAIN_BUILDING);
         } else {
-            Terrain_addBuildingToGrids(b->id, b->x, b->y, b->size,
+            map_building_tiles_add(b->id, b->x, b->y, b->size,
                 image_group(GROUP_BUILDING_BATHHOUSE_FANCY_NO_WATER), TERRAIN_BUILDING);
         }
     }
@@ -887,10 +886,10 @@ static void set_senate_graphic(building *b)
         return;
     }
     if (map_desirability_get(b->gridOffset) <= 30) {
-        Terrain_addBuildingToGrids(b->id, b->x, b->y, b->size,
+        map_building_tiles_add(b->id, b->x, b->y, b->size,
             image_group(GROUP_BUILDING_SENATE), TERRAIN_BUILDING);
     } else {
-        Terrain_addBuildingToGrids(b->id, b->x, b->y, b->size,
+        map_building_tiles_add(b->id, b->x, b->y, b->size,
             image_group(GROUP_BUILDING_SENATE_FANCY), TERRAIN_BUILDING);
     }
 }
@@ -1106,7 +1105,7 @@ static void spawn_figure_native_hut(building *b)
 
 static void spawn_figure_native_meeting(building *b)
 {
-    Terrain_addBuildingToGrids(b->id, b->x, b->y, 2,
+    map_building_tiles_add(b->id, b->x, b->y, 2,
         image_group(GROUP_BUILDING_NATIVE) + 2, TERRAIN_BUILDING);
     if (Data_CityInfo.nativeMissionPostOperational > 0 &&
         !has_figure_of_type(b, FIGURE_NATIVE_TRADER)) {
@@ -1164,6 +1163,16 @@ static void spawn_figure_military_academy(building *b)
         spawn_labor_seeker(b, x_road, y_road, 100);
     }
 }
+
+static void update_native_crop_progress(building *b)
+{
+    b->data.industry.progress++;
+    if (b->data.industry.progress >= 5) {
+        b->data.industry.progress = 0;
+    }
+    map_image_set(b->gridOffset, image_group(GROUP_BUILDING_FARM_CROPS) + b->data.industry.progress);
+}
+
 
 void building_figure_generate()
 {
@@ -1274,7 +1283,7 @@ void building_figure_generate()
                     spawn_figure_native_meeting(b);
                     break;
                 case BUILDING_NATIVE_CROPS:
-                    TerrainGraphics_updateNativeCropProgress(b);
+                    update_native_crop_progress(b);
                     break;
                 case BUILDING_FORT:
                     Formation_setNewSoldierRequest(b);

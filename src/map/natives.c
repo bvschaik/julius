@@ -5,6 +5,7 @@
 #include "core/calc.h"
 #include "graphics/image.h"
 #include "map/building.h"
+#include "map/building_tiles.h"
 #include "map/grid.h"
 #include "map/image.h"
 #include "map/property.h"
@@ -14,7 +15,6 @@
 
 #include "Data/CityInfo.h"
 #include "Data/State.h"
-#include "../Terrain.h"
 
 static void mark_native_land(int x, int y, int size, int radius)
 {
@@ -112,7 +112,7 @@ void map_natives_init()
                 buildingType = BUILDING_NATIVE_CROPS;
                 map_image_set(gridOffset, image_group(GROUP_BUILDING_FARM_CROPS) + randomBit);
             } else { //unknown building
-                Terrain_removeBuildingFromGrids(0, x, y);
+                map_building_tiles_remove(0, x, y);
                 continue;
             }
             building *b = building_create(buildingType, x, y);

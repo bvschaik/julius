@@ -8,6 +8,7 @@
 #include "graphics/image.h"
 #include "map/aqueduct.h"
 #include "map/building.h"
+#include "map/building_tiles.h"
 #include "map/desirability.h"
 #include "map/elevation.h"
 #include "map/grid.h"
@@ -170,7 +171,7 @@ void TerrainGraphics_updateAllRocks()
 					} else {
 						graphicId += graphicIdRock;
 					}
-					Terrain_addBuildingToGrids(0, x, y, 3, graphicId, TERRAIN_ROCK);
+					map_building_tiles_add(0, x, y, 3, graphicId, TERRAIN_ROCK);
 				} else if (isAllTerrainInArea(x, y, 2, TERRAIN_ROCK)) {
 					int graphicId = 8 + (map_random_get(gridOffset) & 3);
 					if (map_terrain_exists_tile_in_radius_with_type(x, y, 2, 4, TERRAIN_ELEVATION)) {
@@ -178,7 +179,7 @@ void TerrainGraphics_updateAllRocks()
 					} else {
 						graphicId += graphicIdRock;
 					}
-					Terrain_addBuildingToGrids(0, x, y, 2, graphicId, TERRAIN_ROCK);
+					map_building_tiles_add(0, x, y, 2, graphicId, TERRAIN_ROCK);
 				} else {
 					int graphicId = map_random_get(gridOffset) & 7;
 					if (map_terrain_exists_tile_in_radius_with_type(x, y, 1, 4, TERRAIN_ELEVATION)) {
@@ -212,7 +213,7 @@ void TerrainGraphics_updateAllGardens()
 						case 2: graphicId += 5; break;
 						case 3: graphicId += 4; break;
 					}
-					Terrain_addBuildingToGrids(0, x, y, 2, graphicId, TERRAIN_GARDEN);
+					map_building_tiles_add(0, x, y, 2, graphicId, TERRAIN_GARDEN);
 				} else {
 					if (y & 1) {
 						switch (x & 3) {
@@ -344,7 +345,7 @@ void TerrainGraphics_updateRegionElevation(int xMin, int yMin, int xMax, int yMa
 						image_group(GROUP_TERRAIN_GRASS_1) + (map_random_get(gridOffset) & 7));
 				}
 			} else {
-				Terrain_addBuildingToGrids(0, xx, yy, 2,
+				map_building_tiles_add(0, xx, yy, 2,
 					image_group(GROUP_TERRAIN_ACCESS_RAMP) + graphicOffset, TERRAIN_ACCESS_RAMP);
 			}
 		}
@@ -428,7 +429,7 @@ void TerrainGraphics_updateRegionPlazas(int xMin, int yMin, int xMax, int yMax)
 				} else {
 					graphicId += 6;
 				}
-				Terrain_addBuildingToGrids(0, xx, yy, 2, graphicId, TERRAIN_ROAD);
+				map_building_tiles_add(0, xx, yy, 2, graphicId, TERRAIN_ROAD);
 			} else {
 				// single tile plaza
 				switch ((xx & 1) + (yy & 1)) {
@@ -553,120 +554,6 @@ void TerrainGraphics_updateRegionRubble(int xMin, int yMin, int xMax, int yMax)
 			TerrainGraphics_setTileRubble(xx, yy);
 		}
 	});
-}
-
-void TerrainGraphics_setBuildingAreaRubble(int buildingId, int x, int y, int size)
-{
-	if (!map_grid_is_inside(x, y, size)) {
-		return;
-	}
-	building *b = building_get(buildingId);
-	for (int dy = 0; dy < size; dy++) {
-		for (int dx = 0; dx < size; dx++) {
-			int gridOffset = map_grid_offset(x + dx, y + dy);
-			if (map_building_at(gridOffset) != buildingId) {
-				continue;
-			}
-			if (buildingId && building_get(map_building_at(gridOffset))->type != BUILDING_BURNING_RUIN) {
-				map_set_rubble_building_type(gridOffset, b->type);
-			}
-			map_property_clear_constructing(gridOffset);
-			map_property_set_multi_tile_size(gridOffset, 1);
-			map_aqueduct_set(gridOffset, 0);
-			map_building_set(gridOffset, 0);
-			map_building_damage_clear(gridOffset);
-			map_sprite_clear_tile(gridOffset);
-			map_property_set_multi_tile_xy(gridOffset, 0, 0, 1);
-			if (map_terrain_is(gridOffset, TERRAIN_WATER)) {
-				map_terrain_set(gridOffset, TERRAIN_WATER); // clear other flags
-				TerrainGraphics_setTileWater(x + dx, y + dy);
-			} else {
-				map_terrain_remove(gridOffset, TERRAIN_CLEARABLE);
-				map_terrain_add(gridOffset, TERRAIN_RUBBLE);
-				map_image_set(gridOffset, image_group(GROUP_TERRAIN_RUBBLE) + (map_random_get(gridOffset) & 7));
-			}
-		}
-	}
-}
-
-static void setFarmCropTile(int buildingId, int x, int y, int dx, int dy, int cropGraphicId, int growth)
-{
-	int gridOffset = map_grid_offset(x + dx, y + dy);
-	map_terrain_remove(gridOffset, TERRAIN_CLEARABLE);
-	map_terrain_add(gridOffset, TERRAIN_BUILDING);
-	map_building_set(gridOffset, buildingId);
-	map_property_clear_constructing(gridOffset);
-	map_property_set_multi_tile_xy(gridOffset, dx, dy, 1);
-	map_image_set(gridOffset, cropGraphicId + (growth < 4 ? growth : 4));
-}
-
-void TerrainGraphics_setBuildingFarm(int buildingId, int x, int y, int cropGraphicId, int progress)
-{
-	if (!map_grid_is_inside(x, y, 3)) {
-		return;
-	}
-	// farmhouse
-	int leftmostX, leftmostY;
-	switch (Data_State.map.orientation) {
-		case DIR_0_TOP: leftmostX = 0; leftmostY = 1; break;
-		case DIR_2_RIGHT: leftmostX = 0; leftmostY = 0; break;
-		case DIR_4_BOTTOM: leftmostX = 1; leftmostY = 0; break;
-		case DIR_6_LEFT: leftmostX = 1; leftmostY = 1; break;
-		default: return;
-	}
-	for (int dy = 0; dy < 2; dy++) {
-		for (int dx = 0; dx < 2; dx++) {
-			int gridOffset = map_grid_offset(x + dx, y + dy);
-			map_terrain_remove(gridOffset, TERRAIN_CLEARABLE);
-			map_terrain_add(gridOffset, TERRAIN_BUILDING);
-			map_building_set(gridOffset, buildingId);
-			map_property_clear_constructing(gridOffset);
-			map_property_set_multi_tile_size(gridOffset, 2);
-			map_image_set(gridOffset, image_group(GROUP_BUILDING_FARM_HOUSE));
-			map_property_set_multi_tile_xy(gridOffset, dx, dy,
-			    dx == leftmostX && dy == leftmostY);
-		}
-	}
-	// crop tile 1
-	int growth = progress / 10;
-	setFarmCropTile(buildingId, x, y, 0, 2, cropGraphicId, growth);
-	
-	// crop tile 2
-	growth -= 4;
-	if (growth < 0) {
-		growth = 0;
-	}
-	setFarmCropTile(buildingId, x, y, 1, 2, cropGraphicId, growth);
-	
-	// crop tile 3
-	growth -= 4;
-	if (growth < 0) {
-		growth = 0;
-	}
-	setFarmCropTile(buildingId, x, y, 2, 2, cropGraphicId, growth);
-	
-	// crop tile 4
-	growth -= 4;
-	if (growth < 0) {
-		growth = 0;
-	}
-	setFarmCropTile(buildingId, x, y, 2, 1, cropGraphicId, growth);
-	
-	// crop tile 5
-	growth -= 4;
-	if (growth < 0) {
-		growth = 0;
-	}
-	setFarmCropTile(buildingId, x, y, 2, 0, cropGraphicId, growth);
-}
-
-void TerrainGraphics_updateNativeCropProgress(building *b)
-{
-	b->data.industry.progress++;
-	if (b->data.industry.progress >= 5) {
-		b->data.industry.progress = 0;
-	}
-	map_image_set(b->gridOffset, image_group(GROUP_BUILDING_FARM_CROPS) + b->data.industry.progress);
 }
 
 void TerrainGraphics_setTileWater(int x, int y)

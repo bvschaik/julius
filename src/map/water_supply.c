@@ -4,6 +4,7 @@
 #include "building/list.h"
 #include "graphics/image.h"
 #include "map/aqueduct.h"
+#include "map/building_tiles.h"
 #include "map/desirability.h"
 #include "map/building.h"
 #include "map/grid.h"
@@ -11,8 +12,6 @@
 #include "map/property.h"
 #include "map/terrain.h"
 #include "scenario/property.h"
-
-#include "../Terrain.h"
 
 #include "Data/State.h"
 
@@ -203,7 +202,7 @@ void map_water_supply_update_reservoir_fountain()
         } else {
             image_id = image_group(GROUP_BUILDING_FOUNTAIN_1);
         }
-        Terrain_addBuildingToGrids(i, b->x, b->y, 1, image_id, TERRAIN_BUILDING);
+        map_building_tiles_add(i, b->x, b->y, 1, image_id, TERRAIN_BUILDING);
         if (map_terrain_is(b->gridOffset, TERRAIN_RESERVOIR_RANGE) && b->numWorkers) {
             b->hasWaterAccess = 1;
             map_terrain_add_with_radius(b->x, b->y, 1,

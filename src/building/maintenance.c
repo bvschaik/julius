@@ -9,6 +9,7 @@
 #include "game/tutorial.h"
 #include "game/undo.h"
 #include "map/building.h"
+#include "map/building_tiles.h"
 #include "map/grid.h"
 #include "map/random.h"
 #include "map/routing_terrain.h"
@@ -17,7 +18,6 @@
 
 #include "Data/CityInfo.h"
 #include "../Building.h"
-#include "../TerrainGraphics.h"
 
 static int fire_spread_direction = 0;
 
@@ -43,7 +43,7 @@ void building_maintenance_update_burning_ruins()
         if (b->fireDuration > 32) {
             game_undo_disable();
             b->state = BuildingState_Rubble;
-            TerrainGraphics_setBuildingAreaRubble(i, b->x, b->y, b->size);
+            map_building_tiles_set_rubble(i, b->x, b->y, b->size);
             recalculate_terrain = 1;
             continue;
         }
@@ -138,7 +138,7 @@ static void collapse_building(int building_id, building *b)
     
     game_undo_disable();
     b->state = BuildingState_Rubble;
-    TerrainGraphics_setBuildingAreaRubble(building_id, b->x, b->y, b->size);
+    map_building_tiles_set_rubble(building_id, b->x, b->y, b->size);
     figure_create_explosion_cloud(b->x, b->y, b->size);
     Building_collapseLinked(building_id, 0);
 }
