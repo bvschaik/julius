@@ -23,8 +23,8 @@ static void drawScenarioList();
 static void drawScrollbarDot();
 static void drawScenarioInfo();
 static int handleScrollbarClick(const mouse *m);
-static void buttonSelectItem(int param1, int param2);
-static void buttonScroll(int param1, int param2);
+static void buttonSelectItem(int index, int param2);
+static void buttonScroll(int isDown, int numLines);
 static void buttonStartScenario(int param1, int param2);
 
 static ImageButton imageButtons[] = {

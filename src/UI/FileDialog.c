@@ -243,7 +243,7 @@ static void buttonScroll(int isDown, int numLines)
 	}
 }
 
-static void buttonSelectItem(int index, int param2)
+static void buttonSelectItem(int index, int numLines)
 {
 	if (index < savedGames->num_files) {
 		strncpy(saved_game, savedGames->files[scrollPosition + index], FILE_NAME_MAX);

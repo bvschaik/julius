@@ -11,7 +11,7 @@
 
 static void buttonHelp(int param1, int param2);
 static void buttonClose(int param1, int param2);
-static void buttonScroll(int param1, int param2);
+static void buttonScroll(int isDown, int numLines);
 static void buttonMessage(int param1, int param2);
 static void buttonDelete(int param1, int param2);
 

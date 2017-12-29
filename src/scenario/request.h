@@ -22,7 +22,7 @@ void scenario_request_init();
 
 void scenario_request_process();
 
-void scenario_request_dispatch();
+void scenario_request_dispatch(int id);
 
 const scenario_request *scenario_request_get(int id);
 

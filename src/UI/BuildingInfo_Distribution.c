@@ -13,7 +13,7 @@
 #include "figure/figure.h"
 #include "scenario/property.h"
 
-static void toggleResourceState(int param1, int param2);
+static void toggleResourceState(int index, int param2);
 static void granaryOrders(int index, int param2);
 static void warehouseOrders(int index, int param2);
 

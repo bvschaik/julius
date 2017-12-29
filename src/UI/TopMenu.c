@@ -40,7 +40,7 @@ static void menuHelp_mouseHelp(int param);
 static void menuHelp_warnings(int param);
 static void menuHelp_about(int param);
 
-static void menuAdvisors_goTo(int param);
+static void menuAdvisors_goTo(int advisor);
 
 static MenuItem menuFile[] = {
 	{0, 1, menuFile_newGame, 0},

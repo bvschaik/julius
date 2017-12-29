@@ -28,7 +28,7 @@ static void drawForegroundVideo();
 static void buttonBack(int param1, int param2);
 static void buttonClose(int param1, int param2);
 static void buttonHelp(int param1, int param2);
-static void buttonAdvisor(int param1, int param2);
+static void buttonAdvisor(int advisor, int param2);
 static void buttonGoToProblem(int param1, int param2);
 
 static ImageButton imageButtonBack = {

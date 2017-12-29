@@ -10,7 +10,7 @@
 #include "sound/music.h"
 #include "sound/speech.h"
 
-static void buttonToggle(int param1, int param2);
+static void buttonToggle(int type, int param2);
 static void buttonOk(int param1, int param2);
 static void buttonCancel(int param1, int param2);
 

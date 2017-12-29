@@ -5,14 +5,13 @@
 #include "city/finance.h"
 #include "core/calc.h"
 
-#define VAL(val,x,y) Widget_Text_drawNumber(val, '@', " ", baseOffsetX + x, baseOffsetY + y, FONT_NORMAL_BLACK)
 #define VAL(val,x,y) Widget_Text_drawNumber(val, '@', " ", baseOffsetX + (x), baseOffsetY + (y), FONT_NORMAL_BLACK)
 #define ROW(tgr,tid,y,valLy,valTy) \
 	Widget_GameText_draw(tgr, tid, baseOffsetX + 80, baseOffsetY + (y), FONT_NORMAL_BLACK);\
 	Widget_Text_drawNumber(valLy, '@', " ", baseOffsetX + 290, baseOffsetY + (y), FONT_NORMAL_BLACK);\
 	Widget_Text_drawNumber(valTy, '@', " ", baseOffsetX + 430, baseOffsetY + (y), FONT_NORMAL_BLACK)
 
-static void buttonChangeTaxes(int param1, int param2);
+static void buttonChangeTaxes(int isDown, int param2);
 
 static ArrowButton arrowButtonsTaxes[] = {
 	{180, 70, 17, 24, buttonChangeTaxes, 1, 0},

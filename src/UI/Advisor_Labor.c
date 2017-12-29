@@ -7,9 +7,9 @@
 #include "city/labor.h"
 #include "core/calc.h"
 
-static void arrowButtonWages(int param1, int param2);
-static void buttonPriority(int param1, int param2);
-static void buttonSetPriority(int param1, int param2);
+static void arrowButtonWages(int isDown, int param2);
+static void buttonPriority(int category, int param2);
+static void buttonSetPriority(int newPriority, int param2);
 
 static CustomButton categoryButtons[] = {
 	{40, 77, 600, 99, CustomButton_Immediate, buttonPriority, Widget_Button_doNothing, 0, 0},

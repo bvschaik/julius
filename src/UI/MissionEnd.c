@@ -18,7 +18,7 @@
 #include "sound/speech.h"
 
 static void victoryAccept(int param1, int param2);
-static void victoryContinueGoverning(int param1, int param2);
+static void victoryContinueGoverning(int duration, int param2);
 static void firedAccept(int param1, int param2);
 
 static CustomButton victoryButtons[] = {

@@ -14,11 +14,11 @@
 
 static void buttonPrices(int param1, int param2);
 static void buttonEmpire(int param1, int param2);
-static void buttonResource(int param1, int param2);
+static void buttonResource(int resourceIndex, int param2);
 
 static void resourceSettingsHelp(int param1, int param2);
 static void resourceSettingsOk(int param1, int param2);
-static void resourceSettingsExportUpDown(int param1, int param2);
+static void resourceSettingsExportUpDown(int isDown, int param2);
 
 static void resourceSettingsToggleIndustry(int param1, int param2);
 static void resourceSettingsToggleTrade(int param1, int param2);

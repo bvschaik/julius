@@ -8,7 +8,7 @@
 #include "game/settings.h"
 
 static void buttonFullscreen(int param1, int param2);
-static void buttonSetResolution(int param1, int param2);
+static void buttonSetResolution(int id, int param2);
 static void buttonCancel(int param1, int param2);
 
 static CustomButton buttons[] = {
