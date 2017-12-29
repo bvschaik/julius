@@ -464,7 +464,7 @@ static int determine_granary_get_foods(int resources[RESOURCE_MAX_FOOD])
     return can_get;
 }
 
-static int contains_non_stockpiled_food(building *space, int *resources)
+static int contains_non_stockpiled_food(building *space, const int *resources)
 {
     if (space->id <= 0) {
         return 0;
