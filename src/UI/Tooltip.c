@@ -7,7 +7,6 @@
 #include "../Widget.h"
 
 #include "../Data/CityInfo.h"
-#include "../Data/Constants.h"
 #include "../Data/Screen.h"
 
 #include "core/lang.h"
@@ -111,9 +110,9 @@ static void drawButtonTooltip(struct TooltipContext *c)
 			if (c->mouse_y < Data_Screen.offset640x480.y + 432) {
 				y = c->mouse_y;
 				switch (UI_Advisors_getId()) {
-					case Advisor_Labor: y -= 74; break;
-					case Advisor_Trade: y -= 54; break;
-					case Advisor_Population: y -= 58; break;
+					case ADVISOR_LABOR: y -= 74; break;
+					case ADVISOR_TRADE: y -= 54; break;
+					case ADVISOR_POPULATION: y -= 58; break;
 					default: y -= 64; break;
 				}
 			} else {

@@ -13,7 +13,6 @@
 #include "../Widget.h"
 
 #include "../Data/CityInfo.h"
-#include "../Data/Constants.h"
 #include "../Data/Screen.h"
 #include "../Data/State.h"
 

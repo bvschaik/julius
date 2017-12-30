@@ -3,7 +3,6 @@
 #include "Building.h"
 
 #include "Data/CityInfo.h"
-#include "Data/Constants.h"
 
 #include "building/building.h"
 #include "building/house_population.h"

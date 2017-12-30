@@ -5,7 +5,6 @@
 
 #include "../Data/CityInfo.h"
 #include "../Data/CityView.h"
-#include "../Data/Constants.h"
 #include "../Data/State.h"
 
 #include "core/calc.h"

@@ -6,7 +6,6 @@
 #include "../UI/Window.h"
 
 #include "../Data/CityInfo.h"
-#include "../Data/Constants.h"
 #include "../Data/State.h"
 
 #include "building/building.h"

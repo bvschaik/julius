@@ -11,7 +11,6 @@
 
 #include "../Data/Buttons.h"
 #include "../Data/CityInfo.h"
-#include "../Data/Constants.h"
 #include "../Data/Screen.h"
 
 #include "city/message.h"
@@ -49,25 +48,25 @@ static ImageButton imageButtonHelp = {
 	0, 0, 18, 27, ImageButton_Normal, 134, 0, buttonHelp, Widget_Button_doNothing, 1, 0, 1
 };
 static ImageButton imageButtonLabor = {
-	0, 0, 27, 27, ImageButton_Normal, 199, 0, buttonAdvisor, Widget_Button_doNothing, Advisor_Labor, 0, 1
+	0, 0, 27, 27, ImageButton_Normal, 199, 0, buttonAdvisor, Widget_Button_doNothing, ADVISOR_LABOR, 0, 1
 };
 static ImageButton imageButtonTrade = {
-	0, 0, 27, 27, ImageButton_Normal, 199, 12, buttonAdvisor, Widget_Button_doNothing, Advisor_Trade, 0, 1
+	0, 0, 27, 27, ImageButton_Normal, 199, 12, buttonAdvisor, Widget_Button_doNothing, ADVISOR_TRADE, 0, 1
 };
 static ImageButton imageButtonPopulation = {
-	0, 0, 27, 27, ImageButton_Normal, 199, 15, buttonAdvisor, Widget_Button_doNothing, Advisor_Population, 0, 1
+	0, 0, 27, 27, ImageButton_Normal, 199, 15, buttonAdvisor, Widget_Button_doNothing, ADVISOR_POPULATION, 0, 1
 };
 static ImageButton imageButtonImperial = {
-	0, 0, 27, 27, ImageButton_Normal, 199, 6, buttonAdvisor, Widget_Button_doNothing, Advisor_Imperial, 0, 1
+	0, 0, 27, 27, ImageButton_Normal, 199, 6, buttonAdvisor, Widget_Button_doNothing, ADVISOR_IMPERIAL, 0, 1
 };
 static ImageButton imageButtonMilitary = {
-	0, 0, 27, 27, ImageButton_Normal, 199, 3, buttonAdvisor, Widget_Button_doNothing, Advisor_Military, 0, 1
+	0, 0, 27, 27, ImageButton_Normal, 199, 3, buttonAdvisor, Widget_Button_doNothing, ADVISOR_MILITARY, 0, 1
 };
 static ImageButton imageButtonHealth = {
-	0, 0, 27, 27, ImageButton_Normal, 199, 18, buttonAdvisor, Widget_Button_doNothing, Advisor_Health, 0, 1
+	0, 0, 27, 27, ImageButton_Normal, 199, 18, buttonAdvisor, Widget_Button_doNothing, ADVISOR_HEALTH, 0, 1
 };
 static ImageButton imageButtonReligion = {
-	0, 0, 27, 27, ImageButton_Normal, 199, 27, buttonAdvisor, Widget_Button_doNothing, Advisor_Religion, 0, 1
+	0, 0, 27, 27, ImageButton_Normal, 199, 27, buttonAdvisor, Widget_Button_doNothing, ADVISOR_RELIGION, 0, 1
 };
 
 static struct {

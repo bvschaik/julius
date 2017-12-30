@@ -2,7 +2,6 @@
 
 #include "Data/Building.h"
 #include "Data/CityInfo.h"
-#include "Data/Constants.h"
 
 #include "city/constants.h"
 #include "game/time.h"

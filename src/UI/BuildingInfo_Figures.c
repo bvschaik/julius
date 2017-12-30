@@ -6,7 +6,6 @@
 #include "../Graphics.h"
 #include "../Widget.h"
 
-#include "../Data/Constants.h"
 #include "../Data/State.h"
 
 #include "building/building.h"

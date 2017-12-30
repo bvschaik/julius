@@ -1,6 +1,7 @@
 #include "building_tiles.h"
 
 #include "building/building.h"
+#include "building/industry.h"
 #include "core/direction.h"
 #include "graphics/image.h"
 #include "map/aqueduct.h"
@@ -164,7 +165,7 @@ void map_building_tiles_remove(int building_id, int x, int y)
         return;
     }
     building *b = building_get(building_id);
-    if (building_id && BuildingIsFarm(b->type)) {
+    if (building_id && building_is_farm(b->type)) {
         size = 3;
     }
     for (int dy = 0; dy < size; dy++) {

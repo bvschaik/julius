@@ -45,7 +45,7 @@ int building_animation_offset(building *b, int image_id, int grid_offset)
             map_sprite_animation_set(grid_offset, 1);
             return 1;
         }
-    } else if (BuildingIsEntertainment(b->type) &&
+    } else if (b->type >= BUILDING_THEATER && b->type <= BUILDING_CHARIOT_MAKER &&
         b->type != BUILDING_HIPPODROME && b->numWorkers <= 0) {
         return 0;
     }

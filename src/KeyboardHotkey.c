@@ -12,10 +12,10 @@
 #include "UI/Window.h"
 
 #include "Data/CityInfo.h"
-#include "Data/Constants.h"
 #include "Data/State.h"
 
 #include "building/type.h"
+#include "city/constants.h"
 #include "city/finance.h"
 #include "city/warning.h"
 #include "figure/formation.h"
@@ -88,7 +88,7 @@ static void togglePause()
 	}
 }
 
-static void showAdvisor(int advisor)
+static void showAdvisor(advisor_type advisor)
 {
 	ExitMilitaryCommand();
 	if (UI_Window_getId() == Window_Advisors) {
@@ -206,40 +206,40 @@ void KeyboardHotkey_character(int c)
 			cycleLegion();
 			break;
 		case '1':
-			showAdvisor(Advisor_Labor);
+			showAdvisor(ADVISOR_LABOR);
 			break;
 		case '2':
-			showAdvisor(Advisor_Military);
+			showAdvisor(ADVISOR_MILITARY);
 			break;
 		case '3':
-			showAdvisor(Advisor_Imperial);
+			showAdvisor(ADVISOR_IMPERIAL);
 			break;
 		case '4':
-			showAdvisor(Advisor_Ratings);
+			showAdvisor(ADVISOR_RATINGS);
 			break;
 		case '5':
-			showAdvisor(Advisor_Trade);
+			showAdvisor(ADVISOR_TRADE);
 			break;
 		case '6':
-			showAdvisor(Advisor_Population);
+			showAdvisor(ADVISOR_POPULATION);
 			break;
 		case '7':
-			showAdvisor(Advisor_Health);
+			showAdvisor(ADVISOR_HEALTH);
 			break;
 		case '8':
-			showAdvisor(Advisor_Education);
+			showAdvisor(ADVISOR_EDUCATION);
 			break;
 		case '9':
-			showAdvisor(Advisor_Entertainment);
+			showAdvisor(ADVISOR_ENTERTAINMENT);
 			break;
 		case '0':
-			showAdvisor(Advisor_Religion);
+			showAdvisor(ADVISOR_RELIGION);
 			break;
 		case '-':
-			showAdvisor(Advisor_Financial);
+			showAdvisor(ADVISOR_FINANCIAL);
 			break;
 		case '=':
-			showAdvisor(Advisor_Chief);
+			showAdvisor(ADVISOR_CHIEF);
 			break;
 	}
 }

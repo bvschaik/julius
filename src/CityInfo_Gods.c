@@ -4,7 +4,6 @@
 #include "Formation.h"
 
 #include "Data/CityInfo.h"
-#include "Data/Constants.h"
 
 #include "building/count.h"
 #include "building/granary.h"

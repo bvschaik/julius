@@ -1,12 +1,12 @@
 #include "Trader.h"
 
 #include "Data/CityInfo.h"
-#include "Data/Constants.h"
 
 #include "building/building.h"
 #include "building/count.h"
 #include "building/storage.h"
 #include "building/warehouse.h"
+#include "city/constants.h"
 #include "city/message.h"
 #include "core/calc.h"
 #include "empire/city.h"
@@ -140,7 +140,7 @@ void Trader_tick()
 	Data_CityInfo.tradeNumOpenLandRoutes = 0;
 	// Wine types
 	Data_CityInfo.resourceWineTypesAvailable = building_count_industry_total(RESOURCE_WINE) > 0 ? 1 : 0;
-    if (Data_CityInfo.resourceTradeStatus[RESOURCE_WINE] == TradeStatus_Import) {
+    if (Data_CityInfo.resourceTradeStatus[RESOURCE_WINE] == TRADE_STATUS_IMPORT) {
         Data_CityInfo.resourceWineTypesAvailable += empire_city_count_wine_sources();
     }
 	// Update trade problems

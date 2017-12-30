@@ -7,8 +7,7 @@
 #include "../CityInfo.h"
 #include "../Formation.h"
 
-#include "../Data/Constants.h"
-
+#include "city/constants.h"
 #include "city/culture.h"
 #include "city/warning.h"
 #include "game/settings.h"
@@ -41,7 +40,7 @@ static const int advisorToMessageTextId[] = {
 	0, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31
 };
 
-static int currentAdvisor = Advisor_None;
+static advisor_type currentAdvisor = ADVISOR_NONE;
 
 static int focusButtonId;
 static int advisorHeight;
@@ -51,7 +50,7 @@ int UI_Advisors_getId()
 	return currentAdvisor;
 }
 
-void UI_Advisors_goToFromMessage(int advisor)
+void UI_Advisors_goToFromMessage(advisor_type advisor)
 {
     tutorial_availability avail = tutorial_advisor_empire_availability();
     if (avail == NOT_AVAILABLE || avail == NOT_AVAILABLE_YET) {
@@ -102,9 +101,8 @@ void UI_Advisors_init()
 	CityInfo_Ratings_updatePeaceExplanation();
 	CityInfo_Ratings_updateFavorExplanation();
 
-	switch (currentAdvisor) {
-		case Advisor_Entertainment:
-			UI_Advisor_Entertainment_init();
+	if (currentAdvisor == ADVISOR_ENTERTAINMENT) {
+        UI_Advisor_Entertainment_init();
 	}
 }
 
@@ -112,42 +110,44 @@ void UI_Advisors_drawBackground()
 {
 	UI_Advisor_drawGeneralBackground();
 	switch (currentAdvisor) {
-		case Advisor_Labor:
+		case ADVISOR_LABOR:
 			UI_Advisor_Labor_drawBackground(&advisorHeight);
 			break;
-		case Advisor_Military:
+		case ADVISOR_MILITARY:
 			UI_Advisor_Military_drawBackground(&advisorHeight);
 			break;
-		case Advisor_Imperial:
+		case ADVISOR_IMPERIAL:
 			UI_Advisor_Imperial_drawBackground(&advisorHeight);
 			break;
-		case Advisor_Ratings:
+		case ADVISOR_RATINGS:
 			UI_Advisor_Ratings_drawBackground(&advisorHeight);
 			break;
-		case Advisor_Trade:
+		case ADVISOR_TRADE:
 			UI_Advisor_Trade_drawBackground(&advisorHeight);
 			break;
-		case Advisor_Population:
+		case ADVISOR_POPULATION:
 			UI_Advisor_Population_drawBackground(&advisorHeight);
 			break;
-		case Advisor_Health:
+		case ADVISOR_HEALTH:
 			UI_Advisor_Health_drawBackground(&advisorHeight);
 			break;
-		case Advisor_Education:
+		case ADVISOR_EDUCATION:
 			UI_Advisor_Education_drawBackground(&advisorHeight);
 			break;
-		case Advisor_Entertainment:
+		case ADVISOR_ENTERTAINMENT:
 			UI_Advisor_Entertainment_drawBackground(&advisorHeight);
 			break;
-		case Advisor_Religion:
+		case ADVISOR_RELIGION:
 			UI_Advisor_Religion_drawBackground(&advisorHeight);
 			break;
-		case Advisor_Financial:
+		case ADVISOR_FINANCIAL:
 			UI_Advisor_Financial_drawBackground(&advisorHeight);
 			break;
-		case Advisor_Chief:
+		case ADVISOR_CHIEF:
 			UI_Advisor_Chief_drawBackground(&advisorHeight);
 			break;
+        default:
+            break;
 	}
 }
 
@@ -158,30 +158,32 @@ void UI_Advisors_drawForeground()
 		&helpButton, 1);
 
 	switch (currentAdvisor) {
-		case Advisor_Labor:
+		case ADVISOR_LABOR:
 			UI_Advisor_Labor_drawForeground();
 			break;
-		case Advisor_Military:
+		case ADVISOR_MILITARY:
 			UI_Advisor_Military_drawForeground();
 			break;
-		case Advisor_Imperial:
+		case ADVISOR_IMPERIAL:
 			UI_Advisor_Imperial_drawForeground();
 			break;
-		case Advisor_Ratings:
+		case ADVISOR_RATINGS:
 			UI_Advisor_Ratings_drawForeground();
 			break;
-		case Advisor_Trade:
+		case ADVISOR_TRADE:
 			UI_Advisor_Trade_drawForeground();
 			break;
-		case Advisor_Population:
+		case ADVISOR_POPULATION:
 			UI_Advisor_Population_drawForeground();
 			break;
-		case Advisor_Entertainment:
+		case ADVISOR_ENTERTAINMENT:
 			UI_Advisor_Entertainment_drawForeground();
 			break;
-		case Advisor_Financial:
+		case ADVISOR_FINANCIAL:
 			UI_Advisor_Financial_drawForeground();
 			break;
+        default:
+            break;
 	}
 }
 
@@ -224,30 +226,32 @@ void UI_Advisors_handleMouse(const mouse *m)
 	}
 
 	switch (currentAdvisor) {
-		case Advisor_Labor:
+		case ADVISOR_LABOR:
 			UI_Advisor_Labor_handleMouse();
 			break;
-		case Advisor_Military:
+		case ADVISOR_MILITARY:
 			UI_Advisor_Military_handleMouse();
 			break;
-		case Advisor_Imperial:
+		case ADVISOR_IMPERIAL:
 			UI_Advisor_Imperial_handleMouse();
 			break;
-		case Advisor_Ratings:
+		case ADVISOR_RATINGS:
 			UI_Advisor_Ratings_handleMouse();
 			break;
-		case Advisor_Trade:
+		case ADVISOR_TRADE:
 			UI_Advisor_Trade_handleMouse();
 			break;
-		case Advisor_Population:
+		case ADVISOR_POPULATION:
 			UI_Advisor_Population_handleMouse();
 			break;
-		case Advisor_Entertainment:
+		case ADVISOR_ENTERTAINMENT:
 			UI_Advisor_Entertainment_handleMouse();
 			break;
-		case Advisor_Financial:
+		case ADVISOR_FINANCIAL:
 			UI_Advisor_Financial_handleMouse();
 			break;
+        default:
+            break;
 	}
 }
 
@@ -282,27 +286,29 @@ void UI_Advisors_getTooltip(struct TooltipContext *c)
 	}
 	int textId = 0;
 	switch (currentAdvisor) {
-		case Advisor_Labor:
+		case ADVISOR_LABOR:
 			textId = UI_Advisor_Labor_getTooltip();
 			break;
-		case Advisor_Imperial:
+		case ADVISOR_IMPERIAL:
 			textId = UI_Advisor_Imperial_getTooltip();
 			break;
-		case Advisor_Ratings:
+		case ADVISOR_RATINGS:
 			textId = UI_Advisor_Ratings_getTooltip();
 			break;
-		case Advisor_Trade:
+		case ADVISOR_TRADE:
 			textId = UI_Advisor_Trade_getTooltip();
 			break;
-		case Advisor_Population:
+		case ADVISOR_POPULATION:
 			textId = UI_Advisor_Population_getTooltip();
 			break;
-		case Advisor_Entertainment:
+		case ADVISOR_ENTERTAINMENT:
 			textId = UI_Advisor_Entertainment_getTooltip();
 			break;
-		case Advisor_Financial:
+		case ADVISOR_FINANCIAL:
 			textId = UI_Advisor_Financial_getTooltip();
 			break;
+        default:
+            break;
 	}
 	if (textId) {
 		c->textId = textId;

@@ -1,15 +1,27 @@
 #include "CityInfo.h"
 #include "Data/CityInfo.h"
-#include "Data/Constants.h"
 
 #include "building/building.h"
 #include "building/model.h"
+#include "city/constants.h"
 #include "city/message.h"
 #include "core/calc.h"
 #include "game/time.h"
 #include "scenario/property.h"
 
 #define MAX_CATS 10
+
+typedef enum {
+    LABOR_CATEGORY_INDUSTRY_COMMERCE = 0,
+    LABOR_CATEGORY_FOOD_PRODUCTION = 1,
+    LABOR_CATEGORY_ENGINEERING = 2,
+    LABOR_CATEGORY_WATER = 3,
+    LABOR_CATEGORY_PREFECTURES = 4,
+    LABOR_CATEGORY_MILITARY = 5,
+    LABOR_CATEGORY_ENTERTAINMENT = 6,
+    LABOR_CATEGORY_HEALTH_EDUCATION = 7,
+    LABOR_CATEGORY_GOVERNANCE_RELIGION = 8
+} labor_category;
 
 static int buildingTypeToLaborCategory[] = {
 	-1, -1, -1, -1, -1, -1, -1, -1, -1, -1,//0
@@ -28,18 +40,18 @@ static int buildingTypeToLaborCategory[] = {
 };
 
 static struct {
-	int category;
+	labor_category category;
 	int workers;
 } builtInPriority[MAX_CATS] = {
-	{LaborCategory_Engineering, 3},
-	{LaborCategory_Water, 1},
-	{LaborCategory_Prefectures, 3},
-	{LaborCategory_Military, 2},
-	{LaborCategory_FoodProduction, 4},
-	{LaborCategory_IndustryCommerce, 2},
-	{LaborCategory_Entertainment, 1},
-	{LaborCategory_HealthEducation, 1},
-	{LaborCategory_GovernanceReligion, 1},
+    {LABOR_CATEGORY_ENGINEERING, 3},
+    {LABOR_CATEGORY_WATER, 1},
+    {LABOR_CATEGORY_PREFECTURES, 3},
+    {LABOR_CATEGORY_MILITARY, 2},
+    {LABOR_CATEGORY_FOOD_PRODUCTION, 4},
+    {LABOR_CATEGORY_INDUSTRY_COMMERCE, 2},
+    {LABOR_CATEGORY_ENTERTAINMENT, 1},
+    {LABOR_CATEGORY_HEALTH_EDUCATION, 1},
+    {LABOR_CATEGORY_GOVERNANCE_RELIGION, 1},
 };
 
 static void setBuildingWorkerWeight();
@@ -64,17 +76,17 @@ static int shouldHaveWorkers(building *b, int category, int checkAccess)
 	}
 
 	// exceptions: hippodrome 'other' tiles and disabled industries
-	if (category == LaborCategory_Entertainment) {
+	if (category == LABOR_CATEGORY_ENTERTAINMENT) {
 		if (b->type == BUILDING_HIPPODROME && b->prevPartBuildingId) {
 			return 0;
 		}
-	} else if (category == LaborCategory_FoodProduction || category == LaborCategory_IndustryCommerce) {
+	} else if (category == LABOR_CATEGORY_FOOD_PRODUCTION || category == LABOR_CATEGORY_INDUSTRY_COMMERCE) {
 		if (isIndustryDisabled(b)) {
 			return 0;
 		}
 	}
 	// engineering and water are always covered
-	if (category == LaborCategory_Engineering || category == LaborCategory_Water) {
+	if (category == LABOR_CATEGORY_ENGINEERING || category == LABOR_CATEGORY_WATER) {
 		return 1;
 	}
 	if (checkAccess) {
@@ -210,14 +222,14 @@ void CityInfo_Labor_allocateWorkersToBuildings()
 
 static void setBuildingWorkerWeight()
 {
-	int waterPer10kPerBuilding = calc_percentage(100, Data_CityInfo.laborCategory[LaborCategory_Water].buildings);
+	int waterPer10kPerBuilding = calc_percentage(100, Data_CityInfo.laborCategory[LABOR_CATEGORY_WATER].buildings);
 	for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
 		if (!BuildingIsInUse(b)) {
 			continue;
 		}
 		int cat = buildingTypeToLaborCategory[b->type];
-		if (cat == LaborCategory_Water) {
+		if (cat == LABOR_CATEGORY_WATER) {
 			b->percentageHousesCovered = waterPer10kPerBuilding;
 		} else if (cat >= 0) {
 			b->percentageHousesCovered = 0;
@@ -246,7 +258,7 @@ static void allocateWorkersToBuildings()
 			continue;
 		}
 		int cat = buildingTypeToLaborCategory[b->type];
-		if (cat == LaborCategory_Water || cat < 0) {
+		if (cat == LABOR_CATEGORY_WATER || cat < 0) {
 			// water is handled by allocateWorkersToWater()
 			continue;
 		}
@@ -287,7 +299,7 @@ static void allocateWorkersToBuildings()
 			continue;
 		}
 		int cat = buildingTypeToLaborCategory[b->type];
-		if (cat < 0 || cat == LaborCategory_Water || cat == LaborCategory_Military) {
+		if (cat < 0 || cat == LABOR_CATEGORY_WATER || cat == LABOR_CATEGORY_MILITARY) {
 			continue;
 		}
 		if (!shouldHaveWorkers(b, cat, 0)) {
@@ -314,18 +326,18 @@ static void allocateWorkersToWater()
 	static int startBuildingId = 1;
 
 	int percentageNotFilled = 100 - calc_percentage(
-		Data_CityInfo.laborCategory[LaborCategory_Water].workersAllocated,
-		Data_CityInfo.laborCategory[LaborCategory_Water].workersNeeded);
+		Data_CityInfo.laborCategory[LABOR_CATEGORY_WATER].workersAllocated,
+		Data_CityInfo.laborCategory[LABOR_CATEGORY_WATER].workersNeeded);
 
 	int buildingsToSkip = calc_adjust_with_percentage(
-		Data_CityInfo.laborCategory[LaborCategory_Water].buildings, percentageNotFilled);
+		Data_CityInfo.laborCategory[LABOR_CATEGORY_WATER].buildings, percentageNotFilled);
 
 	int workersPerBuilding;
-	if (buildingsToSkip == Data_CityInfo.laborCategory[LaborCategory_Water].buildings) {
+	if (buildingsToSkip == Data_CityInfo.laborCategory[LABOR_CATEGORY_WATER].buildings) {
 		workersPerBuilding = 1;
 	} else {
-		workersPerBuilding = Data_CityInfo.laborCategory[LaborCategory_Water].workersAllocated /
-			(Data_CityInfo.laborCategory[LaborCategory_Water].buildings - buildingsToSkip);
+		workersPerBuilding = Data_CityInfo.laborCategory[LABOR_CATEGORY_WATER].workersAllocated /
+			(Data_CityInfo.laborCategory[LABOR_CATEGORY_WATER].buildings - buildingsToSkip);
 	}
 	int buildingId = startBuildingId;
 	startBuildingId = 0;
@@ -334,7 +346,7 @@ static void allocateWorkersToWater()
 			buildingId = 1;
 		}
 		building *b = building_get(buildingId);
-		if (!BuildingIsInUse(b) || buildingTypeToLaborCategory[b->type] != LaborCategory_Water) {
+		if (!BuildingIsInUse(b) || buildingTypeToLaborCategory[b->type] != LABOR_CATEGORY_WATER) {
 			continue;
 		}
 		b->numWorkers = 0;

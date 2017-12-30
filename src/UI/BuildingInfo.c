@@ -13,7 +13,6 @@
 
 #include "../Data/CityInfo.h"
 #include "../Data/CityView.h"
-#include "../Data/Constants.h"
 #include "../Data/Screen.h"
 #include "../Data/State.h"
 
@@ -44,7 +43,7 @@ static ImageButton imageButtonsHelpExit[] = {
 };
 
 static ImageButton imageButtonsAdvisor[] = {
-	{350, -38, 28, 28, ImageButton_Normal, 199, 9, buttonAdvisor, Widget_Button_doNothing, Advisor_Ratings, 0, 1}
+	{350, -38, 28, 28, ImageButton_Normal, 199, 9, buttonAdvisor, Widget_Button_doNothing, ADVISOR_RATINGS, 0, 1}
 };
 
 static BuildingInfoContext context;
@@ -644,5 +643,5 @@ static void buttonExit(int param1, int param2)
 
 static void buttonAdvisor(int param1, int param2)
 {
-	UI_Advisors_goToFromMessage(Advisor_Ratings);
+	UI_Advisors_goToFromMessage(ADVISOR_RATINGS);
 }

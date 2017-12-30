@@ -6,6 +6,7 @@
 #include "building/building.h"
 #include "building/construction.h"
 #include "building/count.h"
+#include "building/industry.h"
 #include "building/properties.h"
 #include "city/finance.h"
 #include "core/direction.h"
@@ -279,7 +280,7 @@ static void drawBuildingGhostDefault()
 		}
 	} else {
 		// can place, draw ghost
-		if (BuildingIsFarm(type)) {
+		if (building_is_farm(type)) {
 			Graphics_drawIsometricFootprint(graphicId,
 				xOffsetBase, yOffsetBase, COLOR_MASK_GREEN);
 			Graphics_drawIsometricTop(graphicId,
