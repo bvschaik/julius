@@ -19,7 +19,6 @@ void Building_destroyByEnemy(int x, int y, int gridOffset);
 
 void Building_setDesirability();
 void Building_decayHousesCovered();
-void Building_decayTaxCollectorAccess();
 void Building_determineGraphicIdsForOrientedBuildings();
 
 void Building_GameTick_checkAccessToRome();

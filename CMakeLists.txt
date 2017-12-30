@@ -52,6 +52,7 @@ set(BUILDING_FILES
     ${PROJECT_SOURCE_DIR}/src/building/house.c
     ${PROJECT_SOURCE_DIR}/src/building/house_evolution.c
     ${PROJECT_SOURCE_DIR}/src/building/house_population.c
+    ${PROJECT_SOURCE_DIR}/src/building/house_service.c
     ${PROJECT_SOURCE_DIR}/src/building/industry.c
     ${PROJECT_SOURCE_DIR}/src/building/list.c
     ${PROJECT_SOURCE_DIR}/src/building/maintenance.c

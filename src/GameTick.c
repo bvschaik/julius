@@ -17,6 +17,7 @@
 #include "building/figure.h"
 #include "building/granary.h"
 #include "building/house_population.h"
+#include "building/house_service.h"
 #include "building/industry.h"
 #include "building/maintenance.h"
 #include "building/warehouse.h"
@@ -107,8 +108,8 @@ void GameTick_advance()
 		case 32: Trader_tick(); break;
 		case 33: building_count_update(); city_culture_update_coverage(); break;
 		case 34: CityInfo_Tick_distributeTreasuryOverForumsAndSenates(); break;
-		case 35: HouseEvolution_Tick_decayCultureService(); break;
-		case 36: HouseEvolution_Tick_calculateCultureServiceAggregates(); break;
+		case 35: house_service_decay_culture(); break;
+		case 36: house_service_calculate_culture_aggregates(); break;
 		case 37: map_desirability_update(); break;
 		case 38: Building_setDesirability(); break;
 		case 39: HouseEvolution_Tick_evolveAndConsumeResources(); break;
@@ -117,7 +118,7 @@ void GameTick_advance()
 		case 44: building_maintenance_check_fire_collapse(); break;
 		case 45: figure_generate_criminals(); break;
 		case 46: building_industry_update_wheat_production(); break;
-		case 48: Building_decayTaxCollectorAccess(); break;
+		case 48: house_service_decay_tax_collector(); break;
 		case 49: city_culture_calculate_entertainment(); break;
 	}
 	if (game_time_advance_tick()) {

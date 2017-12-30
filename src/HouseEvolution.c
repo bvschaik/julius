@@ -32,42 +32,24 @@ void HouseEvolution_Tick_evolveAndConsumeResources()
 	}
 }
 
+static void consume_resource(building *b, int inventory, int amount)
+{
+    if (amount > 0) {
+        if (amount > b->data.house.inventory[inventory]) {
+            b->data.house.inventory[inventory] = 0;
+        } else {
+            b->data.house.inventory[inventory] -= amount;
+        }
+    }
+}
+
 static void consumeResources(building *b)
 {
     const model_house *model = model_get_house(b->subtype.houseLevel);
-	int pottery = model->pottery;
-	int furniture = model->furniture;
-	int oil = model->oil;
-	int wine = model->wine;
-
-	if (pottery > 0) {
-		if (pottery > b->data.house.inventory[INVENTORY_POTTERY]) {
-			b->data.house.inventory[INVENTORY_POTTERY] = 0;
-		} else {
-			b->data.house.inventory[INVENTORY_POTTERY] -= pottery;
-		}
-	}
-	if (furniture > 0) {
-		if (furniture > b->data.house.inventory[INVENTORY_FURNITURE]) {
-			b->data.house.inventory[INVENTORY_FURNITURE] = 0;
-		} else {
-			b->data.house.inventory[INVENTORY_FURNITURE] -= furniture;
-		}
-	}
-	if (oil > 0) {
-		if (oil > b->data.house.inventory[INVENTORY_OIL]) {
-			b->data.house.inventory[INVENTORY_OIL] = 0;
-		} else {
-			b->data.house.inventory[INVENTORY_OIL] -= oil;
-		}
-	}
-	if (wine > 0) {
-		if (wine > b->data.house.inventory[INVENTORY_WINE]) {
-			b->data.house.inventory[INVENTORY_WINE] = 0;
-		} else {
-			b->data.house.inventory[INVENTORY_WINE] -= wine;
-		}
-	}
+    consume_resource(b, INVENTORY_POTTERY, model->pottery);
+    consume_resource(b, INVENTORY_FURNITURE, model->furniture);
+    consume_resource(b, INVENTORY_OIL, model->oil);
+    consume_resource(b, INVENTORY_WINE, model->wine);
 }
 
 static void resetCityInfoServiceRequiredCounters()
@@ -93,112 +75,4 @@ static void resetCityInfoServiceRequiredCounters()
 	Data_CityInfo.housesRequiringBathhouse = 0;
 	Data_CityInfo.housesRequiringClinic = 0;
 	Data_CityInfo.housesRequiringReligion = 0;
-}
-
-#define DECAY(svc) \
-	if (b->data.house.svc > 0) \
-		--b->data.house.svc; \
-	else b->data.house.svc = 0
-
-void HouseEvolution_Tick_decayCultureService()
-{
-	for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
-		if (!BuildingIsInUse(b) || !b->houseSize) {
-			continue;
-		}
-		DECAY(theater);
-		DECAY(amphitheaterActor);
-		DECAY(amphitheaterGladiator);
-		DECAY(colosseumGladiator);
-		DECAY(colosseumLion);
-		DECAY(hippodrome);
-		DECAY(school);
-		DECAY(library);
-		DECAY(academy);
-		DECAY(barber);
-		DECAY(clinic);
-		DECAY(bathhouse);
-		DECAY(hospital);
-		DECAY(templeCeres);
-		DECAY(templeNeptune);
-		DECAY(templeMercury);
-		DECAY(templeMars);
-		DECAY(templeVenus);
-	}
-}
-
-void HouseEvolution_Tick_calculateCultureServiceAggregates()
-{
-    int baseEntertainment = city_culture_coverage_average_entertainment() / 5;
-	for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
-		if (!BuildingIsInUse(b) || !b->houseSize) {
-			continue;
-		}
-
-		b->data.house.entertainment = 0;
-		b->data.house.education = 0;
-		b->data.house.health = 0;
-		b->data.house.numGods = 0;
-
-		// entertainment
-		b->data.house.entertainment = baseEntertainment;
-		if (b->data.house.theater) {
-			b->data.house.entertainment += 10;
-		}
-		if (b->data.house.amphitheaterActor) {
-			if (b->data.house.amphitheaterGladiator) {
-				b->data.house.entertainment += 15;
-			} else {
-				b->data.house.entertainment += 10;
-			}
-		}
-		if (b->data.house.colosseumGladiator) {
-			if (b->data.house.colosseumLion) {
-				b->data.house.entertainment += 25;
-			} else {
-				b->data.house.entertainment += 15;
-			}
-		}
-		if (b->data.house.hippodrome) {
-			b->data.house.entertainment += 30;
-		}
-
-		// education
-		if (b->data.house.school || b->data.house.library) {
-			b->data.house.education = 1;
-			if (b->data.house.school && b->data.house.library) {
-				b->data.house.education = 2;
-				if (b->data.house.academy) {
-					b->data.house.education = 3;
-				}
-			}
-		}
-
-		// religion
-		if (b->data.house.templeCeres) {
-			++b->data.house.numGods;
-		}
-		if (b->data.house.templeNeptune) {
-			++b->data.house.numGods;
-		}
-		if (b->data.house.templeMercury) {
-			++b->data.house.numGods;
-		}
-		if (b->data.house.templeMars) {
-			++b->data.house.numGods;
-		}
-		if (b->data.house.templeVenus) {
-			++b->data.house.numGods;
-		}
-
-		// health
-		if (b->data.house.clinic) {
-			++b->data.house.health;
-		}
-		if (b->data.house.hospital) {
-			++b->data.house.health;
-		}
-	}
 }
