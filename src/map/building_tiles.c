@@ -6,6 +6,7 @@
 #include "graphics/image.h"
 #include "map/aqueduct.h"
 #include "map/building.h"
+#include "map/figure.h"
 #include "map/grid.h"
 #include "map/image.h"
 #include "map/property.h"
@@ -233,4 +234,62 @@ void map_building_tiles_set_rubble(int building_id, int x, int y, int size)
             }
         }
     }
+}
+
+static void adjust_to_absolute_xy(int *x, int *y, int size)
+{
+    switch (Data_State.map.orientation) {
+        case DIR_2_RIGHT:
+            *x = *x - size + 1;
+            break;
+        case DIR_4_BOTTOM:
+            *x = *x - size + 1;
+            // fall-through
+        case DIR_6_LEFT:
+            *y = *y - size + 1;
+            break;
+    }
+}
+
+void map_building_tiles_mark_construction(int x, int y, int size, int terrain, int absolute_xy)
+{
+    if (!absolute_xy) {
+        adjust_to_absolute_xy(&x, &y, size);
+    }
+    if (!map_grid_is_inside(x, y, size)) {
+        return;
+    }
+    for (int dy = 0; dy < size; dy++) {
+        for (int dx = 0; dx < size; dx++) {
+            int grid_offset = map_grid_offset(x + dx, y + dy);
+            if (map_terrain_is(grid_offset, terrain & TERRAIN_NOT_CLEAR) || map_has_figure_at(grid_offset)) {
+                return;
+            }
+        }
+    }
+    // mark as being constructed
+    Data_State.selectedBuilding.drawAsConstructing = 1;
+    for (int dy = 0; dy < size; dy++) {
+        for (int dx = 0; dx < size; dx++) {
+            int grid_offset = map_grid_offset(x + dx, y + dy);
+            map_property_mark_constructing(grid_offset);
+        }
+    }
+}
+
+int map_building_tiles_are_clear(int x, int y, int size, int terrain)
+{
+    adjust_to_absolute_xy(&x, &y, size);
+    if (!map_grid_is_inside(x, y, size)) {
+        return 0;
+    }
+    for (int dy = 0; dy < size; dy++) {
+        for (int dx = 0; dx < size; dx++) {
+            int grid_offset = map_grid_offset(x + dx, y + dy);
+            if (map_terrain_is(grid_offset, terrain & TERRAIN_NOT_CLEAR)) {
+                return 0;
+            }
+        }
+    }
+    return 1;
 }

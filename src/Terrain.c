@@ -342,58 +342,6 @@ void Terrain_updateEntryExitFlags(int remove)
 	}
 }
 
-int Terrain_isClearToBuild(int size, int x, int y, int terrainMask)
-{
-	switch (Data_State.map.orientation) {
-		case 2: x = x - size + 1; break;
-		case 4: x = x - size + 1; // fall-through
-		case 6: y = y - size + 1; break;
-	}
-	if (!map_grid_is_inside(x, y, size)) {
-		return 0;
-	}
-	for (int dy = 0; dy < size; dy++) {
-		for (int dx = 0; dx < size; dx++) {
-			int gridOffset = map_grid_offset(x + dx, y + dy);
-			if (map_terrain_is(gridOffset, terrainMask & TERRAIN_NOT_CLEAR)) {
-				return 0;
-			}
-		}
-	}
-	return 1;
-}
-
-void Terrain_updateToPlaceBuildingToOverlay(int size, int x, int y, int terrainMask, int isAbsoluteXY)
-{
-	if (!isAbsoluteXY) {
-		switch (Data_State.map.orientation) {
-			case 2: x = x - size + 1; break;
-			case 4: x = x - size + 1; // fall-through
-			case 6: y = y - size + 1; break;
-		}
-	}
-	if (!map_grid_is_inside(x, y, size)) {
-		return;
-	}
-	for (int dy = 0; dy < size; dy++) {
-		for (int dx = 0; dx < size; dx++) {
-			int gridOffset = map_grid_offset(x + dx, y + dy);
-			if (map_terrain_is(gridOffset, terrainMask & TERRAIN_NOT_CLEAR) ||
-				map_has_figure_at(gridOffset)) {
-				return;
-			}
-		}
-	}
-	// mark as being constructed
-	Data_State.selectedBuilding.drawAsConstructing = 1;
-	for (int dy = 0; dy < size; dy++) {
-		for (int dx = 0; dx < size; dx++) {
-			int gridOffset = map_grid_offset(x + dx, y + dy);
-			map_property_mark_constructing(gridOffset);
-		}
-	}
-}
-
 static void determineLeftmostTile()
 {
 	for (int y = 0; y < Data_State.map.height; y++) {

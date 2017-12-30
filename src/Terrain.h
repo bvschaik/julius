@@ -11,9 +11,6 @@ int Terrain_isClear(int x, int y, int size, int disallowedTerrain, int graphicSe
 
 void Terrain_updateEntryExitFlags(int remove);
 
-int Terrain_isClearToBuild(int size, int x, int y, int terrainMask);
-void Terrain_updateToPlaceBuildingToOverlay(int size, int x, int y, int terrainMask, int isAbsoluteXY);
-
 void Terrain_rotateMap(int direction);
 
 #endif
