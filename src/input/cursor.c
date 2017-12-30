@@ -112,7 +112,7 @@ static const cursor SHOVEL = {
     "                                "
 };
 
-const cursor *input_cursor_data(int cursor_id)
+const cursor *input_cursor_data(cursor_shape cursor_id)
 {
     switch (cursor_id) {
         case CURSOR_ARROW: return &ARROW;

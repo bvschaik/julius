@@ -44,7 +44,7 @@ static struct {
 
 static int autopilot = 0;
 
-static SDL_Cursor *Cursors[3];
+static SDL_Cursor *Cursors[CURSOR_NB];
 
 enum {
 	UserEventRefresh = 0,
@@ -150,10 +150,10 @@ static SDL_Cursor *initCursor(const cursor *c)
 void System_initCursors()
 {
 	if (autopilot) return;
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < CURSOR_NB; i++) {
 		Cursors[i] = initCursor(input_cursor_data(i));
 	}
-	System_setCursor(0);
+	System_setCursor(CURSOR_ARROW);
 }
 
 #include "../src/GameFile.h"

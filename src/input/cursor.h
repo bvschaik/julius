@@ -3,11 +3,12 @@
 
 #include "UI/Window.h"
 
-enum {
+typedef enum {
     CURSOR_ARROW = 0,
     CURSOR_SHOVEL = 1,
     CURSOR_SWORD = 2,
-};
+    CURSOR_NB,
+} cursor_shape;
 
 typedef struct {
     int hotspotX;
@@ -15,7 +16,7 @@ typedef struct {
     char data[32*32+1];
 } cursor;
 
-const cursor *input_cursor_data(int cursor_id);
+const cursor *input_cursor_data(cursor_shape cursor_id);
 
 void input_cursor_update(WindowId window);
 
