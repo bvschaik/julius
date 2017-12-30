@@ -3,7 +3,6 @@
 #include "../Widget.h"
 
 #include "building/building.h"
-#include "graphics/image.h"
 
 static void drawInfo(BuildingInfoContext *c, int helpId, const char *soundFile, int groupId)
 {

@@ -19,7 +19,6 @@
 #include "game/settings.h"
 #include "game/time.h"
 #include "game/undo.h"
-#include "graphics/image.h"
 #include "scenario/property.h"
 
 static void refreshSidebarButtons();
@@ -41,7 +40,7 @@ static void menuHelp_mouseHelp(int param);
 static void menuHelp_warnings(int param);
 static void menuHelp_about(int param);
 
-static void menuAdvisors_goTo(int param);
+static void menuAdvisors_goTo(int advisor);
 
 static MenuItem menuFile[] = {
 	{0, 1, menuFile_newGame, 0},

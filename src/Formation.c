@@ -2,7 +2,6 @@
 
 #include "Data/CityInfo.h"
 
-#include "building/building.h"
 #include "building/model.h"
 #include "city/warning.h"
 #include "core/calc.h"

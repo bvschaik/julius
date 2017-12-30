@@ -253,7 +253,7 @@ static int house_image_group(int level)
     return image_group(HOUSE_IMAGE[level].group) + HOUSE_IMAGE[level].offset;
 }
 
-static void create_house_tile(building_type type, int x, int y, int image_id, int population, int *inventory)
+static void create_house_tile(building_type type, int x, int y, int image_id, int population, const int *inventory)
 {
     building *house = building_create(type, x, y);
     house->housePopulation = population;

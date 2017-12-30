@@ -1,7 +1,6 @@
 #include "soldier_strength.h"
 
 #include "figure/figure.h"
-#include "figure/type.h"
 #include "map/figure.h"
 #include "map/grid.h"
 #include "map/routing.h"
@@ -43,7 +42,7 @@ int map_soldier_strength_get_max(int x, int y, int radius, int *out_x, int *out_
     map_grid_get_area(x, y, 1, radius, &x_min, &y_min, &x_max, &y_max);
 
     int max_value = 0;
-    int max_tile_x, max_tile_y;
+    int max_tile_x = 0, max_tile_y = 0;
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
             int grid_offset = map_grid_offset(xx, yy);

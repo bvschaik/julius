@@ -1,9 +1,6 @@
 #include "Widget.h"
 #include "Graphics.h"
 
-#include "core/time.h"
-#include "graphics/image.h"
-#include "input/mouse.h"
 #include "sound/effect.h"
 
 #define PRESSED_EFFECT_MILLIS 100

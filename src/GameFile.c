@@ -2,7 +2,6 @@
 
 #include "Building.h"
 #include "CityView.h"
-#include "Loader.h"
 #include "SidebarMenu.h"
 #include "TerrainGraphics.h"
 
@@ -10,14 +9,12 @@
 #include "Data/State.h"
 #include "UI/AllWindows.h" // TODO: try to eliminate this
 
-#include "building/building.h"
 #include "building/count.h"
 #include "building/granary.h"
 #include "building/list.h"
 #include "building/storage.h"
 #include "city/culture.h"
 #include "city/message.h"
-#include "core/buffer.h"
 #include "core/file.h"
 #include "core/io.h"
 #include "core/random.h"
@@ -65,7 +62,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 #define SCENARIO_PARTS 12
 #define SAVEGAME_PARTS 300

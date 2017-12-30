@@ -9,16 +9,12 @@
 #include "../Video.h"
 #include "../Widget.h"
 
-#include "../Data/Buttons.h"
 #include "../Data/CityInfo.h"
 #include "../Data/Screen.h"
 
 #include "city/message.h"
-#include "core/calc.h"
 #include "core/lang.h"
 #include "empire/city.h"
-#include "graphics/image.h"
-#include "input/mouse.h"
 #include "scenario/property.h"
 #include "scenario/request.h"
 
@@ -32,7 +28,7 @@ static void drawForegroundVideo();
 static void buttonBack(int param1, int param2);
 static void buttonClose(int param1, int param2);
 static void buttonHelp(int param1, int param2);
-static void buttonAdvisor(int param1, int param2);
+static void buttonAdvisor(int advisor, int param2);
 static void buttonGoToProblem(int param1, int param2);
 
 static ImageButton imageButtonBack = {

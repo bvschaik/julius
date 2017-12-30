@@ -1,11 +1,10 @@
 #include "AllWindows.h"
-#include "Window.h"
 #include "Advisors_private.h"
 #include "../CityInfo.h"
 #include "../Data/Constants.h"
 
 static void buttonCancel(int param1, int param2);
-static void buttonSetSalary(int param1, int param2);
+static void buttonSetSalary(int rank, int param2);
 
 static CustomButton buttons[] = {
 	{240, 395, 400, 415, CustomButton_Immediate, buttonCancel, Widget_Button_doNothing, 0, 0},

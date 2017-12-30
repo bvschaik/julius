@@ -1,13 +1,11 @@
 #include "warehouse.h"
 
-#include "building/building.h"
 #include "building/count.h"
 #include "building/model.h"
 #include "building/storage.h"
 #include "city/finance.h"
 #include "core/calc.h"
 #include "empire/trade_prices.h"
-#include "game/resource.h"
 #include "game/tutorial.h"
 #include "graphics/image.h"
 #include "map/image.h"
@@ -466,7 +464,7 @@ static int determine_granary_get_foods(int resources[RESOURCE_MAX_FOOD])
     return can_get;
 }
 
-static int contains_non_stockpiled_food(building *space, int *resources)
+static int contains_non_stockpiled_food(building *space, const int *resources)
 {
     if (space->id <= 0) {
         return 0;

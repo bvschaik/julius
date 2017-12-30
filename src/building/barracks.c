@@ -5,7 +5,6 @@
 #include "figure/action.h"
 #include "figure/figure.h"
 #include "figure/formation.h"
-#include "game/resource.h"
 #include "map/grid.h"
 #include "map/road_access.h"
 

@@ -7,14 +7,13 @@
 
 #include "city/finance.h"
 #include "empire/city.h"
-#include "game/resource.h"
 #include "scenario/property.h"
 #include "scenario/request.h"
 
 static void buttonDonateToCity(int param1, int param2);
 static void buttonSetSalary(int param1, int param2);
 static void buttonGiftToCaesar(int param1, int param2);
-static void buttonRequest(int param1, int param2);
+static void buttonRequest(int index, int param2);
 
 static int getRequestStatus(int index);
 

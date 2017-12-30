@@ -11,10 +11,7 @@
 
 #include "core/lang.h"
 #include "core/string.h"
-#include "core/time.h"
 #include "game/settings.h"
-
-#include <string.h>
 
 static int shouldDrawTooltip(struct TooltipContext *c);
 static void resetTooltip(struct TooltipContext *c);

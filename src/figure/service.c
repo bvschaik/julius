@@ -2,7 +2,6 @@
 
 #include "building/building.h"
 #include "building/model.h"
-#include "figure/action.h"
 #include "figuretype/crime.h"
 #include "game/resource.h"
 #include "map/building.h"

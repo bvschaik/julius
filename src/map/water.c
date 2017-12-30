@@ -1,7 +1,6 @@
 #include "water.h"
 
 #include "building/building.h"
-#include "core/direction.h"
 #include "map/building.h"
 #include "map/figure.h"
 #include "map/grid.h"
@@ -10,7 +9,6 @@
 #include "map/property.h"
 #include "map/terrain.h"
 
-#include "Data/CityInfo.h"
 #include "Data/State.h"
 
 void map_water_add_building(int building_id, int x, int y, int size, int image_id)

@@ -6,7 +6,6 @@
 #include "Data/CityInfo.h"
 #include "Data/State.h"
 
-#include "building/building.h"
 #include "core/calc.h"
 #include "figuretype/animal.h"
 #include "figuretype/wall.h"

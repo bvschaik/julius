@@ -251,12 +251,12 @@ static char compress_buffer[COMPRESS_BUFFER_SIZE];
 static unsigned char file1_data[1300000];
 static unsigned char file2_data[1300000];
 
-static unsigned int to_uint(unsigned char *buffer)
+static unsigned int to_uint(const unsigned char *buffer)
 {
     return buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
 }
 
-static unsigned int to_ushort(unsigned char *buffer)
+static unsigned int to_ushort(const unsigned char *buffer)
 {
     return buffer[0] | (buffer[1] << 8);
 }

@@ -2,19 +2,14 @@
 #include "CityBuildings.h"
 #include "Sidebar.h"
 #include "TopMenu.h"
-#include "Window.h"
 
-#include "../Graphics.h"
 #include "../Widget.h"
 
-#include "../Data/CityInfo.h"
 #include "../Data/CityView.h"
-#include "../Data/Screen.h"
 #include "../Data/State.h"
 
 #include "city/message.h"
 #include "game/time.h"
-#include "graphics/image.h"
 #include "scenario/criteria.h"
 
 void UI_City_drawBackground()

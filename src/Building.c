@@ -31,8 +31,6 @@
 #include "map/water.h"
 #include "sound/effect.h"
 
-#include <string.h>
-
 void Building_updateHighestIds()
 {
 	Data_Buildings_Extra.highestBuildingIdInUse = 0;

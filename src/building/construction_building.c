@@ -13,7 +13,6 @@
 #include "game/undo.h"
 #include "graphics/image.h"
 #include "map/building_tiles.h"
-#include "map/grid.h"
 #include "map/routing_terrain.h"
 #include "map/terrain.h"
 #include "map/water.h"
@@ -88,9 +87,9 @@ static void add_hippodrome(building *b)
     part1->nextPartBuildingId = part2->id;
     part2->nextPartBuildingId = 0;
     switch (Data_State.map.orientation) {
-        case DIR_0_TOP: case DIR_4_BOTTOM: 
+        case DIR_0_TOP: case DIR_4_BOTTOM:
         image_id = image2 + 2; break;
-        case DIR_2_RIGHT: case DIR_6_LEFT: 
+        case DIR_2_RIGHT: case DIR_6_LEFT:
         image_id = image1 + 2; break;
     }
     map_building_tiles_add(part2->id, b->x + 5, b->y, b->size, image_id, TERRAIN_BUILDING);
@@ -106,13 +105,13 @@ static void add_hippodrome(building *b)
     part2->nextPartBuildingId = part3->id;
     part3->nextPartBuildingId = 0;
     switch (Data_State.map.orientation) {
-        case DIR_0_TOP: 
+        case DIR_0_TOP:
         image_id = image2 + 4; break;
-        case DIR_2_RIGHT: 
+        case DIR_2_RIGHT:
         image_id = image1; break;
-        case DIR_4_BOTTOM: 
+        case DIR_4_BOTTOM:
         image_id = image2; break;
-        case DIR_6_LEFT: 
+        case DIR_6_LEFT:
         image_id = image1 + 4; break;
     }
     map_building_tiles_add(part3->id, b->x + 10, b->y, b->size, image_id, TERRAIN_BUILDING);

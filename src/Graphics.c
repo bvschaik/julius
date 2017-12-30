@@ -1,10 +1,7 @@
 #include "Graphics.h"
 #include "Graphics_Footprint.h"
-#include "Loader.h"
 
 #include "Data/Screen.h"
-
-#include "graphics/image.h"
 
 #include <stdio.h> // remove later
 #include <stdlib.h> // remove later

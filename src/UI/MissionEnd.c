@@ -1,5 +1,4 @@
 #include "AllWindows.h"
-#include "Window.h"
 
 #include "../CityInfo.h"
 #include "../Graphics.h"
@@ -13,14 +12,13 @@
 #include "city/finance.h"
 #include "game/settings.h"
 #include "game/undo.h"
-#include "graphics/image.h"
 #include "scenario/property.h"
 #include "scenario/scenario.h"
 #include "sound/music.h"
 #include "sound/speech.h"
 
 static void victoryAccept(int param1, int param2);
-static void victoryContinueGoverning(int param1, int param2);
+static void victoryContinueGoverning(int duration, int param2);
 static void firedAccept(int param1, int param2);
 
 static CustomButton victoryButtons[] = {

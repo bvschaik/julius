@@ -7,7 +7,6 @@
 #include "Data/CityInfo.h"
 #include "Data/State.h"
 
-#include "building/building.h"
 #include "building/construction_building.h"
 #include "building/construction_clear.h"
 #include "building/construction_warning.h"
@@ -352,7 +351,7 @@ static int place_reservoir_and_aqueducts(int measure_only, int x_start, int y_st
     const int aqueduct_offsets_x[] = {0, 2, 0, -2};
     const int aqueduct_offsets_y[] = {-2, 0, 2, 0};
     int min_dist = 10000;
-    int min_dir_start, min_dir_end;
+    int min_dir_start = 0, min_dir_end = 0;
     for (int dir_start = 0; dir_start < 4; dir_start++) {
         int dx_start = aqueduct_offsets_x[dir_start];
         int dy_start = aqueduct_offsets_y[dir_start];

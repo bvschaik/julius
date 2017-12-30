@@ -26,9 +26,9 @@
 #define TIE 10
 
 #define UPDATE(x,val,min,max) \
-	Data_CityInfo.x += val;\
-	if (Data_CityInfo.x < min) Data_CityInfo.x = min; \
-	else if (Data_CityInfo.x > max) Data_CityInfo.x = max;
+	Data_CityInfo.x += (val);\
+	if (Data_CityInfo.x < (min)) Data_CityInfo.x = (min); \
+	else if (Data_CityInfo.x > (max)) Data_CityInfo.x = (max);
 
 static void performBlessing(int god)
 {

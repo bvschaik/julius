@@ -2,7 +2,6 @@
 
 #include "building/count.h"
 #include "building/model.h"
-#include "building/type.h"
 #include "city/constants.h"
 #include "city/warning.h"
 #include "core/calc.h"

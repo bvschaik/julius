@@ -4,7 +4,6 @@
 
 #include "Data/CityInfo.h"
 
-#include "building/building.h"
 #include "building/house_population.h"
 #include "building/model.h"
 #include "city/constants.h"

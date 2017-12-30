@@ -6,7 +6,7 @@ static int getMenuItem(const mouse *m, MenuBarItem *menu);
 
 void Widget_Menu_drawMenuBar(MenuBarItem *items, int numItems)
 {
-	int xOffset = items[0].xStart;
+	short xOffset = items[0].xStart;
 	for (int i = 0; i < numItems; i++) {
 		items[i].xStart = xOffset;
 		xOffset += Widget_GameText_draw(items[i].textGroup, 0, xOffset, items[i].yStart, FONT_NORMAL_GREEN);

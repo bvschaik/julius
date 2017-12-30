@@ -7,8 +7,6 @@
 
 #include "building/building.h"
 #include "figure/figure.h"
-#include "figure/type.h"
-#include "graphics/image.h"
 #include "map/building.h"
 #include "map/figure.h"
 #include "map/property.h"

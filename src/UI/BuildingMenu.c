@@ -1,7 +1,6 @@
 #include "AllWindows.h"
 
 #include "Sidebar.h"
-#include "Window.h"
 #include "../Graphics.h"
 #include "../SidebarMenu.h"
 #include "../Widget.h"
@@ -11,7 +10,6 @@
 
 #include "building/construction.h"
 #include "building/model.h"
-#include "core/time.h"
 #include "scenario/property.h"
 
 static void drawMenuButtons();

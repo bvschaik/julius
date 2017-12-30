@@ -308,7 +308,7 @@ void map_image_context_init()
     }
 }
 
-static int contextMatchesTiles(struct terrain_image_context *context, int tiles[MAX_TILES])
+static int contextMatchesTiles(const struct terrain_image_context *context, const int tiles[MAX_TILES])
 {
     for (int i = 0; i < MAX_TILES; i++) {
         if (context->tiles[i] != 2 && tiles[i] != context->tiles[i]) {

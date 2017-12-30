@@ -1,6 +1,5 @@
 
 #include "AllWindows.h"
-#include "Window.h"
 
 #include "../Graphics.h"
 #include "../Scenario.h"

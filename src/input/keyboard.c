@@ -68,7 +68,7 @@ void keyboard_return()
     data.accepted = 1;
 }
 
-static void move_left(uint8_t *start, uint8_t *end)
+static void move_left(uint8_t *start, const uint8_t *end)
 {
     while (start < end) {
         start[0] = start[1];
@@ -77,7 +77,7 @@ static void move_left(uint8_t *start, uint8_t *end)
     *start = 0; // TODO ? trailing \0 should have been copied...
 }
 
-static void move_right(uint8_t *start, uint8_t *end)
+static void move_right(const uint8_t *start, uint8_t *end)
 {
     end[1] = 0;
     while (end > start) {

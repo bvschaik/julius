@@ -16,7 +16,7 @@
 #include "figure/trader.h"
 #include "scenario/property.h"
 
-static void selectFigure(int param1, int param2);
+static void selectFigure(int index, int param2);
 
 static const int figureTypeToBigPeopleGraphicId[] = {
 	8, 13, 13, 9, 4, 13, 8, 16, 7, 4,

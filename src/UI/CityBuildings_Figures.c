@@ -1,15 +1,10 @@
 #include "CityBuildings.h"
 #include "CityBuildings_private.h"
 
-#include "../Graphics.h"
-
-#include "../Data/State.h"
-
 #include "building/building.h"
 #include "figure/figure.h"
 #include "figure/formation.h"
 #include "game/resource.h"
-#include "graphics/image.h"
 
 static building *get_entertainment_building(const figure *f)
 {

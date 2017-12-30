@@ -2,7 +2,6 @@
 
 #include "Data/CityInfo.h"
 
-#include "building/building.h"
 #include "building/house.h"
 #include "building/house_evolution.h"
 #include "building/model.h"

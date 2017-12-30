@@ -1,12 +1,9 @@
 #include "AllWindows.h"
-#include "Window.h"
 
 #include "../Widget.h"
 
 #include "../Data/Screen.h"
-#include "../Data/Buttons.h"
 
-#include "core/calc.h"
 #include "game/settings.h"
 
 static void buttonOk(int param1, int param2);

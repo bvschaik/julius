@@ -8,9 +8,9 @@
 #include "map/grid.h"
 #include "scenario/invasion.h"
 
-static void buttonGoToLegion(int param1, int param2);
-static void buttonReturnToFort(int param1, int param2);
-static void buttonEmpireService(int param1, int param2);
+static void buttonGoToLegion(int legionId, int param2);
+static void buttonReturnToFort(int legionId, int param2);
+static void buttonEmpireService(int legionId, int param2);
 
 static CustomButton fortCustomButtons[] = {
 	{400, 83, 430, 113, CustomButton_Immediate, buttonGoToLegion, Widget_Button_doNothing, 1, 0},

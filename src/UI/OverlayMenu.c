@@ -1,18 +1,15 @@
 #include "AllWindows.h"
 
-#include "Window.h"
 #include "../Graphics.h"
 #include "../Widget.h"
 
 #include "../Data/CityView.h"
 #include "../Data/State.h"
 
-#include "core/time.h"
-
 static void handleSubmenu();
 
-static void buttonMenuItem(int param1, int param2);
-static void buttonSubmenuItem(int param1, int param2);
+static void buttonMenuItem(int index, int param2);
+static void buttonSubmenuItem(int index, int param2);
 
 static CustomButton menuCustomButtons[] = {
 	{0, 0, 160, 24, CustomButton_Immediate, buttonMenuItem, Widget_Button_doNothing, 0, 0},

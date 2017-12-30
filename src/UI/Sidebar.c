@@ -4,7 +4,6 @@
 #include "Advisors.h"
 #include "MessageDialog.h"
 #include "Minimap.h"
-#include "Window.h"
 
 #include "../CityView.h"
 #include "../Graphics.h"
@@ -12,15 +11,12 @@
 #include "../Terrain.h"
 #include "../Widget.h"
 
-#include "../Data/CityInfo.h"
 #include "../Data/Screen.h"
 #include "../Data/State.h"
 
 #include "city/message.h"
 #include "city/warning.h"
 #include "core/direction.h"
-#include "core/time.h"
-#include "graphics/image.h"
 #include "game/tutorial.h"
 #include "game/undo.h"
 #include "input/scroll.h"
@@ -39,7 +35,7 @@ static void drawOverlayText(int xOffset);
 
 static void buttonOverlay(int param1, int param2);
 static void buttonCollapseExpand(int param1, int param2);
-static void buttonBuild(int param1, int param2);
+static void buttonBuild(int submenu, int param2);
 static void buttonUndo(int param1, int param2);
 static void buttonMessages(int param1, int param2);
 static void buttonHelp(int param1, int param2);
@@ -48,7 +44,7 @@ static void buttonAdvisors(int param1, int param2);
 static void buttonEmpire(int param1, int param2);
 static void buttonMissionBriefing(int param1, int param2);
 static void buttonRotateNorth(int param1, int param2);
-static void buttonRotate(int param1, int param2);
+static void buttonRotate(int clockWise, int param2);
 
 static ImageButton buttonOverlaysCollapseSidebar[] = {
 	{127, 5, 31, 20, ImageButton_Normal, 90, 0, buttonCollapseExpand, Widget_Button_doNothing, 0, 0, 1},

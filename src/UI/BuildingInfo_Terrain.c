@@ -3,7 +3,6 @@
 #include "../Widget.h"
 
 #include "figure/figure.h"
-#include "figure/type.h"
 
 void UI_BuildingInfo_drawNoPeople(BuildingInfoContext *c)
 {

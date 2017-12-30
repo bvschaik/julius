@@ -5,7 +5,6 @@
 #include "building/warehouse.h"
 #include "city/message.h"
 #include "core/calc.h"
-#include "game/resource.h"
 #include "map/routing_terrain.h"
 #include "scenario/property.h"
 #include "sound/effect.h"

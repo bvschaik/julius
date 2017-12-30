@@ -1,5 +1,4 @@
 #include "AllWindows.h"
-#include "Window.h"
 #include "MessageDialog.h"
 #include "core/calc.h"
 #include "../Graphics.h"
@@ -9,11 +8,10 @@
 
 #include "city/message.h"
 #include "core/lang.h"
-#include "graphics/image.h"
 
 static void buttonHelp(int param1, int param2);
 static void buttonClose(int param1, int param2);
-static void buttonScroll(int param1, int param2);
+static void buttonScroll(int isDown, int numLines);
 static void buttonMessage(int param1, int param2);
 static void buttonDelete(int param1, int param2);
 

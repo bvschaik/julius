@@ -1,7 +1,6 @@
 #include "storage.h"
 
 #include "building/building.h"
-#include "building/type.h"
 
 #include <string.h>
 

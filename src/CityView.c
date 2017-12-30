@@ -1,7 +1,5 @@
 #include "CityView.h"
 
-#include "UI/CityBuildings.h"
-
 #include "Data/CityView.h"
 #include "Data/Screen.h"
 #include "Data/State.h"

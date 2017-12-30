@@ -1,6 +1,5 @@
 #include "core/file.h"
 
-#include <ctype.h>
 #include <stdlib.h>
 
 #include "core/dir.h"

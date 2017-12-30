@@ -1,9 +1,6 @@
 #include "PopupDialog.h"
 #include "Window.h"
 #include "../Widget.h"
-#include "../Graphics.h"
-#include "../CityInfo.h"
-#include "../Data/CityInfo.h"
 #include "../Data/Screen.h"
 
 #define GROUP 5

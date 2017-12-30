@@ -5,16 +5,15 @@
 #include "../Widget.h"
 #include "../UI/Window.h"
 
-#include "../Data/CityInfo.h"
 #include "../Data/State.h"
 
-#include "building/building.h"
 #include "building/count.h"
 #include "core/calc.h"
+#include "core/debug.h"
 #include "figure/formation.h"
 
 static void buttonReturnToFort(int param1, int param2);
-static void buttonLayout(int param1, int param2);
+static void buttonLayout(int index, int param2);
 
 static CustomButton layoutButtons[] = {
 	{19, 139, 103, 223, CustomButton_Immediate, buttonLayout, Widget_Button_doNothing, 0, 0},
@@ -406,6 +405,11 @@ void UI_BuildingInfo_drawLegionInfoForeground(BuildingInfoContext *c)
 				case FORMATION_COLUMN:
 					titleId = 13;
 					textId = 19;
+					break;
+				default:
+					titleId = 16;
+					textId = 22;
+					debug_log("Unknown formation", 0, m->layout);
 					break;
 			}
 			break;

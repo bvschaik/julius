@@ -1,10 +1,7 @@
 #include "route.h"
 
-#include "figure/figure.h"
 #include "map/routing.h"
 #include "map/routing_path.h"
-
-#include <stdint.h>
 
 #define MAX_PATH_LENGTH 500
 #define MAX_ROUTES 600

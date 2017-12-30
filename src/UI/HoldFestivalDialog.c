@@ -1,12 +1,9 @@
 #include "AllWindows.h"
-#include "Window.h"
 #include "MessageDialog.h"
 #include "../Widget.h"
 #include "../Graphics.h"
-#include "../CityInfo.h"
 #include "Advisors_private.h"
-#include "../Data/CityInfo.h"
-#include "../Data/Screen.h"
+#include "../Data/Constants.h"
 
 #include "building/warehouse.h"
 #include "city/constants.h"
@@ -14,8 +11,8 @@
 #include "game/resource.h"
 
 static void drawButtons();
-static void buttonGod(int param1, int param2);
-static void buttonSize(int param1, int param2);
+static void buttonGod(int god, int param2);
+static void buttonSize(int size, int param2);
 static void buttonHelp(int param1, int param2);
 static void buttonClose(int param1, int param2);
 static void buttonHoldFestival(int param1, int param2);

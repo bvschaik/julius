@@ -4,8 +4,6 @@
 #include "PopupDialog.h"
 #include "MessageDialog.h"
 
-#include "core/calc.h"
-#include "../CityInfo.h"
 #include "../Graphics.h"
 #include "../SidebarMenu.h"
 #include "../Widget.h"
@@ -19,7 +17,6 @@
 #include "empire/object.h"
 #include "empire/trade_route.h"
 #include "empire/type.h"
-#include "graphics/image.h"
 #include "input/scroll.h"
 #include "scenario/empire.h"
 #include "scenario/invasion.h"
@@ -604,7 +601,7 @@ static void buttonReturnToCity(int param1, int param2)
 	UI_Window_goTo(Window_City);
 }
 
-static void buttonAdvisor(int advisor, int param2)
+static void buttonAdvisor(int param1, int param2)
 {
 	UI_Advisors_goToFromMessage(ADVISOR_TRADE);
 }
