@@ -11,6 +11,7 @@
 #include "city/constants.h"
 #include "city/culture.h"
 #include "city/message.h"
+#include "city/sentiment.h"
 #include "core/calc.h"
 #include "core/random.h"
 #include "figuretype/water.h"
@@ -51,7 +52,7 @@ static void performBlessing(int god)
 			break;
 		case GOD_VENUS:
 			city_message_post(1, MESSAGE_BLESSING_FROM_VENUS, 0, 0);
-			CityInfo_Population_changeHappiness(25);
+			city_sentiment_change_happiness(25);
 			break;
 	}
 }
@@ -81,10 +82,10 @@ static void performSmallCurse(int god)
 			break;
 		case GOD_VENUS:
 			city_message_post(1, MESSAGE_VENUS_IS_UPSET, 0, 0);
-			CityInfo_Population_setMaxHappiness(50);
-			CityInfo_Population_changeHappiness(-5);
+			city_sentiment_set_max_happiness(50);
+			city_sentiment_change_happiness(-5);
 			CityInfo_Population_changeHealthRate(-10);
-			CityInfo_Population_calculateSentiment();
+			city_sentiment_update();
 			break;
 	}
 }
@@ -121,8 +122,8 @@ static int performLargeCurse(int god)
 			break;
 		case GOD_VENUS:
 			city_message_post(1, MESSAGE_WRATH_OF_VENUS, 0, 0);
-			CityInfo_Population_setMaxHappiness(40);
-			CityInfo_Population_changeHappiness(-10);
+			city_sentiment_set_max_happiness(40);
+			city_sentiment_change_happiness(-10);
 			if (Data_CityInfo.healthRate >= 80) {
 				CityInfo_Population_changeHealthRate(-50);
 			} else if (Data_CityInfo.healthRate >= 60) {
@@ -131,7 +132,7 @@ static int performLargeCurse(int god)
 				CityInfo_Population_changeHealthRate(-20);
 			}
 			Data_CityInfo.godCurseVenusActive = 1;
-			CityInfo_Population_calculateSentiment();
+			city_sentiment_update();
 			break;
 	}
 	return 1;
@@ -385,16 +386,16 @@ void CityInfo_Gods_checkFestival()
 	if (Data_CityInfo.festivalEffectMonthsDelayFirst <= 0) {
 		Data_CityInfo.festivalEffectMonthsDelayFirst = 12;
 		switch (Data_CityInfo.plannedFestivalSize) {
-			case FESTIVAL_SMALL: CityInfo_Population_changeHappiness(7); break;
-			case FESTIVAL_LARGE: CityInfo_Population_changeHappiness(9); break;
-			case FESTIVAL_GRAND: CityInfo_Population_changeHappiness(12); break;
+			case FESTIVAL_SMALL: city_sentiment_change_happiness(7); break;
+			case FESTIVAL_LARGE: city_sentiment_change_happiness(9); break;
+			case FESTIVAL_GRAND: city_sentiment_change_happiness(12); break;
 		}
 	} else if (Data_CityInfo.festivalEffectMonthsDelaySecond <= 0) {
 		Data_CityInfo.festivalEffectMonthsDelaySecond = 12;
 		switch (Data_CityInfo.plannedFestivalSize) {
-			case FESTIVAL_SMALL: CityInfo_Population_changeHappiness(2); break;
-			case FESTIVAL_LARGE: CityInfo_Population_changeHappiness(3); break;
-			case FESTIVAL_GRAND: CityInfo_Population_changeHappiness(5); break;
+			case FESTIVAL_SMALL: city_sentiment_change_happiness(2); break;
+			case FESTIVAL_LARGE: city_sentiment_change_happiness(3); break;
+			case FESTIVAL_GRAND: city_sentiment_change_happiness(5); break;
 		}
 	}
 	Data_CityInfo.monthsSinceFestival = 1;

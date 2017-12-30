@@ -24,6 +24,7 @@
 #include "city/labor.h"
 #include "city/message.h"
 #include "city/population.h"
+#include "city/sentiment.h"
 #include "core/random.h"
 #include "empire/city.h"
 #include "figure/formation.h"
@@ -127,7 +128,7 @@ static void advanceDay()
 		advanceMonth();
 	}
 	if (game_time_day() == 0 || game_time_day() == 8) {
-		CityInfo_Population_calculateSentiment();
+		city_sentiment_update();
 	}
 	tutorial_on_day_tick();
 }

@@ -34,12 +34,8 @@ void CityInfo_Finance_handleYearChange();
 
 void CityInfo_Finance_updateDebtState();
 
-void CityInfo_Population_changeHappiness(int amount);
-void CityInfo_Population_setMaxHappiness(int amount);
 void CityInfo_Population_changeHealthRate(int amount);
 void CityInfo_Population_updateHealthRate();
-void CityInfo_Population_calculateSentiment();
-void CityInfo_Population_calculateMigrationSentiment();
 
 void CityInfo_Resource_calculateAvailableResources();
 void CityInfo_Resource_calculateFoodAndSupplyRomeWheat();

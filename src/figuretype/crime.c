@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "city/finance.h"
 #include "city/message.h"
+#include "city/sentiment.h"
 #include "core/random.h"
 #include "figure/combat.h"
 #include "figure/image.h"
@@ -63,7 +64,7 @@ static void generate_rioter(building *b)
     Building_collapseOnFire(b->id, 0);
     Data_CityInfo.ratingPeaceNumRiotersThisYear++;
     Data_CityInfo.riotCause = Data_CityInfo.populationEmigrationCause;
-    CityInfo_Population_changeHappiness(20);
+    city_sentiment_change_happiness(20);
     tutorial_on_crime();
     city_message_apply_sound_interval(MESSAGE_CAT_RIOT);
     city_message_post_with_popup_delay(MESSAGE_CAT_RIOT, MESSAGE_RIOT, b->type, map_grid_offset(x_road, y_road));

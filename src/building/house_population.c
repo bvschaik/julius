@@ -5,6 +5,7 @@
 #include "building/model.h"
 #include "city/message.h"
 #include "city/population.h"
+#include "city/sentiment.h"
 #include "core/calc.h"
 #include "figuretype/migrant.h"
 
@@ -229,7 +230,7 @@ static void calculate_working_population()
 
 void house_population_update_migration()
 {
-    CityInfo_Population_calculateMigrationSentiment();
+    city_sentiment_update_migration_status();
     Data_CityInfo.populationImmigratedToday = 0;
     Data_CityInfo.populationEmigratedToday = 0;
     Data_CityInfo.populationRefusedImmigrantsNoRoom = 0;
