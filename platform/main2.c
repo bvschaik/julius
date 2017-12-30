@@ -44,7 +44,7 @@ static struct {
 
 static int autopilot = 0;
 
-static SDL_Cursor *Cursors[CURSOR_NB];
+static SDL_Cursor *Cursors[CURSOR_MAX];
 
 enum {
 	UserEventRefresh = 0,
@@ -150,7 +150,7 @@ static SDL_Cursor *initCursor(const cursor *c)
 void System_initCursors()
 {
 	if (autopilot) return;
-	for (int i = 0; i < CURSOR_NB; i++) {
+	for (int i = 0; i < CURSOR_MAX; i++) {
 		Cursors[i] = initCursor(input_cursor_data(i));
 	}
 	System_setCursor(CURSOR_ARROW);

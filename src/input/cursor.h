@@ -7,7 +7,7 @@ typedef enum {
     CURSOR_ARROW = 0,
     CURSOR_SHOVEL = 1,
     CURSOR_SWORD = 2,
-    CURSOR_NB,
+    CURSOR_MAX,
 } cursor_shape;
 
 typedef struct {
