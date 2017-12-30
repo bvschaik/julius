@@ -1,8 +1,13 @@
 #include "city.h"
 
+#include "city/message.h"
 #include "empire/object.h"
 #include "empire/trade_route.h"
 #include "empire/type.h"
+#include "figuretype/trader.h"
+#include "scenario/map.h"
+
+#include "Data/CityInfo.h"
 
 #include <string.h>
 
@@ -235,6 +240,109 @@ void empire_city_expand_empire()
     }
 }
 
+static int generate_trader(int cityId, empire_city *city)
+{
+    int maxTradersOnMap = 0;
+    int numResources = 0;
+    for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
+        if (city->buys_resource[r] || city->sells_resource[r]) {
+            ++numResources;
+            switch (trade_route_limit(city->route_id, r)) {
+                case 15: maxTradersOnMap += 1; break;
+                case 25: maxTradersOnMap += 2; break;
+                case 40: maxTradersOnMap += 3; break;
+            }
+        }
+    }
+    if (numResources > 1) {
+        if (maxTradersOnMap % numResources) {
+            maxTradersOnMap = maxTradersOnMap / numResources + 1;
+        } else {
+            maxTradersOnMap = maxTradersOnMap / numResources;
+        }
+    }
+    if (maxTradersOnMap <= 0) {
+        return 0;
+    }
+
+    int index;
+    if (maxTradersOnMap == 1) {
+        if (!city->trader_figure_ids[0]) {
+            index = 0;
+        } else {
+            return 0;
+        }
+    } else if (maxTradersOnMap == 2) {
+        if (!city->trader_figure_ids[0]) {
+            index = 0;
+        } else if (!city->trader_figure_ids[1]) {
+            index = 1;
+        } else {
+            return 0;
+        }
+    } else { // 3
+        if (!city->trader_figure_ids[0]) {
+            index = 0;
+        } else if (!city->trader_figure_ids[1]) {
+            index = 1;
+        } else if (!city->trader_figure_ids[2]) {
+            index = 2;
+        } else {
+            return 0;
+        }
+    }
+
+    if (city->trader_entry_delay > 0) {
+        city->trader_entry_delay--;
+        return 0;
+    }
+    city->trader_entry_delay = city->is_sea_trade ? 30 : 4;
+
+    if (city->is_sea_trade) {
+        // generate ship
+        if (Data_CityInfo.numWorkingDocks > 0 && scenario_map_has_river_entry() &&
+            !Data_CityInfo.tradeSeaProblemDuration) {
+            map_point river_entry = scenario_map_river_entry();
+            city->trader_figure_ids[index] = figure_create_trade_ship(river_entry.x, river_entry.y, cityId);
+            return 1;
+        }
+    } else {
+        // generate caravan and donkeys
+        if (!Data_CityInfo.tradeLandProblemDuration) {
+            // caravan head
+            city->trader_figure_ids[index] = figure_create_trade_caravan(
+                Data_CityInfo.entryPointX, Data_CityInfo.entryPointY, cityId);
+            return 1;
+        }
+    }
+    return 0;
+}
+
+void empire_city_generate_trader()
+{
+    for (int i = 1; i < MAX_CITIES; i++) {
+        if (!cities[i].in_use || !cities[i].is_open) {
+            continue;
+        }
+        if (cities[i].is_sea_trade) {
+            if (Data_CityInfo.numWorkingDocks <= 0) {
+                // delay of 384 = 1 year
+                city_message_post_with_message_delay(MESSAGE_CAT_NO_WORKING_DOCK, 1, MESSAGE_NO_WORKING_DOCK, 384);
+                continue;
+            }
+            if (!scenario_map_has_river_entry()) {
+                continue;
+            }
+            Data_CityInfo.tradeNumOpenSeaRoutes++;
+        } else {
+            Data_CityInfo.tradeNumOpenLandRoutes++;
+        }
+        if (generate_trader(i, &cities[i])) {
+            break;
+        }
+    }
+}
+
 void empire_city_remove_trader(int city_id, int figure_id)
 {
     for (int i = 0; i < 3; i++) {
@@ -244,7 +352,6 @@ void empire_city_remove_trader(int city_id, int figure_id)
     }
 }
 
-
 void empire_city_set_vulnerable(int city_id)
 {
     cities[city_id].type = EMPIRE_CITY_VULNERABLE_ROMAN;
@@ -253,18 +360,6 @@ void empire_city_set_vulnerable(int city_id)
 void empire_city_set_foreign(int city_id)
 {
     cities[city_id].type = EMPIRE_CITY_DISTANT_FOREIGN;
-}
-
-void empire_city_foreach_open_until(int (*until_func)(int, empire_city*))
-{
-    for (int i = 1; i < MAX_CITIES; i++) {
-        if (!cities[i].in_use || !cities[i].is_open) {
-            continue;
-        }
-        if (until_func(i, &cities[i])) {
-            return;
-        }
-    }
 }
 
 

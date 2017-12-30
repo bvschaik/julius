@@ -53,7 +53,7 @@ void empire_city_set_vulnerable(int city_id);
 
 void empire_city_set_foreign(int city_id);
 
-void empire_city_foreach_open_until(int (*until_func)(int, empire_city*));
+void empire_city_generate_trader();
 
 void empire_city_remove_trader(int city_id, int figure_id);
 

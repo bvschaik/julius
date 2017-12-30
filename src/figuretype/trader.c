@@ -23,6 +23,32 @@
 
 #include "Data/CityInfo.h"
 
+int figure_create_trade_caravan(int x, int y, int city_id)
+{
+    figure *caravan = figure_create(FIGURE_TRADE_CARAVAN, x, y, DIR_0_TOP);
+    caravan->empireCityId = city_id;
+    caravan->actionState = FIGURE_ACTION_100_TRADE_CARAVAN_CREATED;
+    caravan->waitTicks = 10;
+    // donkey 1
+    figure *donkey1 = figure_create(FIGURE_TRADE_CARAVAN_DONKEY, x, y, DIR_0_TOP);
+    donkey1->actionState = FIGURE_ACTION_100_TRADE_CARAVAN_CREATED;
+    donkey1->inFrontFigureId = caravan->id;
+    // donkey 2
+    figure *donkey2 = figure_create(FIGURE_TRADE_CARAVAN_DONKEY, x, y, DIR_0_TOP);
+    donkey2->actionState = FIGURE_ACTION_100_TRADE_CARAVAN_CREATED;
+    donkey2->inFrontFigureId = donkey1->id;
+    return caravan->id;
+}
+
+int figure_create_trade_ship(int x, int y, int city_id)
+{
+    figure *ship = figure_create(FIGURE_TRADE_SHIP, x, y, DIR_0_TOP);
+    ship->empireCityId = city_id;
+    ship->actionState = FIGURE_ACTION_110_TRADE_SHIP_CREATED;
+    ship->waitTicks = 10;
+    return ship->id;
+}
+
 static void advance_next_import_resource_caravan()
 {
     Data_CityInfo.tradeNextImportResourceCaravan++;

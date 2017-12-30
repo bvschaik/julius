@@ -6,7 +6,6 @@
 #include "GameFile.h"
 #include "HouseEvolution.h"
 #include "TerrainGraphics.h"
-#include "Trader.h"
 #include "UI/Sidebar.h"
 
 #include "Data/CityInfo.h"
@@ -29,6 +28,7 @@
 #include "city/population.h"
 #include "city/resource.h"
 #include "city/sentiment.h"
+#include "city/trade.h"
 #include "core/random.h"
 #include "empire/city.h"
 #include "figure/formation.h"
@@ -105,7 +105,7 @@ void GameTick_advance()
 		case 29: Formation_Tick_updateAll(1); break;
 		case 30: UI_Sidebar_requestMinimapRefresh(); break;
 		case 31: building_figure_generate(); break;
-		case 32: Trader_tick(); break;
+		case 32: city_trade_update(); break;
 		case 33: building_count_update(); city_culture_update_coverage(); break;
 		case 34: CityInfo_Tick_distributeTreasuryOverForumsAndSenates(); break;
 		case 35: house_service_decay_culture(); break;

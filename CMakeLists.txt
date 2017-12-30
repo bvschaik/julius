@@ -73,6 +73,7 @@ set(CITY_FILES
     ${PROJECT_SOURCE_DIR}/src/city/population.c
     ${PROJECT_SOURCE_DIR}/src/city/resource.c
     ${PROJECT_SOURCE_DIR}/src/city/sentiment.c
+    ${PROJECT_SOURCE_DIR}/src/city/trade.c
     ${PROJECT_SOURCE_DIR}/src/city/warning.c
 )
 set(EMPIRE_FILES
@@ -213,7 +214,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/Screen.c
 	${PROJECT_SOURCE_DIR}/src/Terrain.c
 	${PROJECT_SOURCE_DIR}/src/TerrainGraphics.c
-	${PROJECT_SOURCE_DIR}/src/Trader.c
 	${PROJECT_SOURCE_DIR}/src/Video.c
 	${PROJECT_SOURCE_DIR}/src/Widget_Button.c
 	${PROJECT_SOURCE_DIR}/src/Widget_Menu.c
