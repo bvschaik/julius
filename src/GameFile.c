@@ -2,7 +2,6 @@
 
 #include "Building.h"
 #include "CityView.h"
-#include "SidebarMenu.h"
 #include "TerrainGraphics.h"
 
 #include "Data/CityInfo.h"
@@ -12,6 +11,7 @@
 #include "building/count.h"
 #include "building/granary.h"
 #include "building/list.h"
+#include "building/menu.h"
 #include "building/storage.h"
 #include "city/culture.h"
 #include "city/message.h"
@@ -752,7 +752,7 @@ static void setupFromSavedGame()
 	map_road_network_update();
 	Building_GameTick_checkAccessToRome();
 	building_granaries_calculate_stocks();
-	SidebarMenu_enableBuildingMenuItemsAndButtons();
+	building_menu_update();
 	city_message_init_problem_areas();
 
 	sound_city_init();

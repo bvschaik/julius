@@ -65,7 +65,6 @@ add_executable(autopilot
     ${PROJECT_SOURCE_DIR}/src/HouseEvolution.c
     ${PROJECT_SOURCE_DIR}/src/Loader.c
     ${PROJECT_SOURCE_DIR}/src/Runner.c
-    ${PROJECT_SOURCE_DIR}/src/SidebarMenu.c
     ${PROJECT_SOURCE_DIR}/src/Terrain.c
     ${PROJECT_SOURCE_DIR}/src/TerrainGraphics.c
     ${PROJECT_SOURCE_DIR}/src/Trader.c

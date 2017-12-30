@@ -56,6 +56,7 @@ set(BUILDING_FILES
     ${PROJECT_SOURCE_DIR}/src/building/list.c
     ${PROJECT_SOURCE_DIR}/src/building/maintenance.c
     ${PROJECT_SOURCE_DIR}/src/building/market.c
+    ${PROJECT_SOURCE_DIR}/src/building/menu.c
     ${PROJECT_SOURCE_DIR}/src/building/model.c
     ${PROJECT_SOURCE_DIR}/src/building/properties.c
     ${PROJECT_SOURCE_DIR}/src/building/storage.c
@@ -206,7 +207,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/Runner.c
 	${PROJECT_SOURCE_DIR}/src/Scenario.c
 	${PROJECT_SOURCE_DIR}/src/Screen.c
-	${PROJECT_SOURCE_DIR}/src/SidebarMenu.c
 	${PROJECT_SOURCE_DIR}/src/Terrain.c
 	${PROJECT_SOURCE_DIR}/src/TerrainGraphics.c
 	${PROJECT_SOURCE_DIR}/src/Trader.c

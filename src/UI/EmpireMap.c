@@ -5,12 +5,12 @@
 #include "MessageDialog.h"
 
 #include "../Graphics.h"
-#include "../SidebarMenu.h"
 #include "../Widget.h"
 
 #include "../Data/CityInfo.h"
 #include "../Data/Screen.h"
 
+#include "building/menu.h"
 #include "city/finance.h"
 #include "empire/city.h"
 #include "empire/empire.h"
@@ -622,7 +622,7 @@ static void confirmOpenTrade(int accepted)
         empire_city *city = empire_city_get(data.selectedCity);
 		city_finance_process_construction(city->cost_to_open);
 		city->is_open = 1;
-		SidebarMenu_enableBuildingMenuItemsAndButtons();
+		building_menu_update();
 		UI_Window_goTo(Window_TradeOpenedDialog);
 	}
 }

@@ -1,9 +1,8 @@
 #include "tutorial.h"
 
-#include "SidebarMenu.h"
-
 #include "Data/CityInfo.h"
 
+#include "building/menu.h"
 #include "city/message.h"
 #include "game/resource.h"
 #include "game/time.h"
@@ -158,12 +157,6 @@ int tutorial_extra_damage_risk()
     return data.tutorial1.fire && !data.tutorial1.collapse;
 }
 
-
-static void refresh_buttons()
-{
-    SidebarMenu_enableBuildingMenuItemsAndButtons();
-}
-
 static void post_message(int message)
 {
     city_message_post(1, message, 0, 0);
@@ -175,7 +168,7 @@ int tutorial_handle_fire()
         return 0;
     }
     data.tutorial1.fire = 1;
-    refresh_buttons();
+    building_menu_update();
     post_message(MESSAGE_TUTORIAL_FIRE);
     return 1;
 }
@@ -186,7 +179,7 @@ int tutorial_handle_collapse()
         return 0;
     }
     data.tutorial1.collapse = 1;
-    refresh_buttons();
+    building_menu_update();
     post_message(MESSAGE_TUTORIAL_COLLAPSE);
     return 1;
 }
@@ -195,7 +188,7 @@ void tutorial_on_crime()
 {
     if (!data.tutorial1.crime) {
         data.tutorial1.crime = 1;
-        refresh_buttons();
+        building_menu_update();
     }
 }
 
@@ -208,7 +201,7 @@ void tutorial_on_filled_granary()
 {
     if (!data.tutorial2.granary_built) {
         data.tutorial2.granary_built = 1;
-        refresh_buttons();
+        building_menu_update();
         post_message(MESSAGE_TUTORIAL_WATER);
     }
 }
@@ -219,7 +212,7 @@ void tutorial_on_add_to_warehouse()
             !data.tutorial2.pottery_made) {
         data.tutorial2.pottery_made = 1;
         data.tutorial2.pottery_made_year = game_time_year();
-        refresh_buttons();
+        building_menu_update();
         post_message(MESSAGE_TUTORIAL_TRADE);
     }
 }
@@ -236,14 +229,14 @@ void tutorial_on_day_tick()
     if (data.tutorial2.granary_built) {
         if (!data.tutorial2.population_250_reached && Data_CityInfo.population >= 250) {
             data.tutorial2.population_250_reached = 1;
-            refresh_buttons();
+            building_menu_update();
             post_message(MESSAGE_TUTORIAL_GROWING_YOUR_CITY);
         }
     }
     if (data.tutorial2.population_250_reached) {
         if (!data.tutorial2.population_450_reached && Data_CityInfo.population >= 450) {
             data.tutorial2.population_450_reached = 1;
-            refresh_buttons();
+            building_menu_update();
             post_message(MESSAGE_TUTORIAL_TAXES_INDUSTRY);
         }
     }
@@ -255,7 +248,7 @@ void tutorial_on_day_tick()
             }
             if (Data_CityInfo.tutorial1SenateBuilt > 0 || population_almost) {
                 data.tutorial1.senate_built = 1;
-                refresh_buttons();
+                building_menu_update();
                 post_message(MESSAGE_TUTORIAL_RELIGION);
             }
         }

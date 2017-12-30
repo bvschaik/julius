@@ -1,5 +1,6 @@
 #include "distant_battle.h"
 
+#include "building/menu.h"
 #include "city/message.h"
 #include "core/calc.h"
 #include "empire/city.h"
@@ -11,7 +12,6 @@
 #include "Data/CityInfo.h"
 #include "CityInfo.h"
 #include "Formation.h"
-#include "SidebarMenu.h"
 
 int scenario_distant_battle_roman_travel_months()
 {
@@ -154,7 +154,7 @@ static void fight_distant_battle()
         city_message_post(1, MESSAGE_DISTANT_BATTLE_WON, 0, 0);
         CityInfo_Ratings_changeFavor(25);
         Data_CityInfo.triumphalArchesAvailable++;
-        SidebarMenu_enableBuildingMenuItems();
+        building_menu_update();
         Data_CityInfo.distantBattleWonCount++;
         Data_CityInfo.distantBattleCityMonthsUntilRoman = 0;
         Data_CityInfo.distantBattleRomanMonthsToReturn = Data_CityInfo.distantBattleRomanMonthsTraveled;

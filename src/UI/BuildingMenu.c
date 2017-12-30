@@ -2,13 +2,13 @@
 
 #include "Sidebar.h"
 #include "../Graphics.h"
-#include "../SidebarMenu.h"
 #include "../Widget.h"
 
 #include "../Data/CityView.h"
 #include "../Data/State.h"
 
 #include "building/construction.h"
+#include "building/menu.h"
 #include "building/model.h"
 #include "scenario/property.h"
 
@@ -68,7 +68,7 @@ static struct {
 void UI_BuildingMenu_init(int submenu)
 {
 	menu.selectedSubmenu = submenu;
-	menu.numItems = SidebarMenu_countBuildingMenuItems(submenu);
+	menu.numItems = building_menu_count_items(submenu);
 	menu.yOffset = yMenuOffsets[menu.numItems];
 	if (submenu == 0 || submenu == 1 || submenu == 2) {
 		buttonMenuItem(0);
@@ -163,10 +163,10 @@ static void drawMenuButtons()
 	int xOffset = Data_CityView.widthInPixels;
 	int itemIndex = -1;
 	for (int i = 0; i < menu.numItems; i++) {
-		itemIndex = SidebarMenu_getNextBuildingItemIndex(menu.selectedSubmenu, itemIndex);
+		itemIndex = building_menu_next_index(menu.selectedSubmenu, itemIndex);
 		Widget_Panel_drawSmallLabelButton(xOffset - 266, menu.yOffset + 110 + 24 * i,
 			16, buildMenuFocusButtonId == i + 1 ? 1 : 2);
-		int buildingType = SidebarMenu_getBuildingType(menu.selectedSubmenu, itemIndex);
+		int buildingType = building_menu_type(menu.selectedSubmenu, itemIndex);
 		Widget_GameText_drawCentered(28, buildingType,
 			xOffset - 266, menu.yOffset + 113 + 24 * i, 176, FONT_NORMAL_GREEN);
 		if (buildingType == BUILDING_DRAGGABLE_RESERVOIR) {
@@ -206,7 +206,7 @@ static int buttonIndexToSubmenuItem(int index)
 {
 	int item = -1;
 	for (int i = 0; i <= index; i++) {
-		item = SidebarMenu_getNextBuildingItemIndex(menu.selectedSubmenu, item);
+		item = building_menu_next_index(menu.selectedSubmenu, item);
 	}
 	return item;
 }
@@ -229,7 +229,7 @@ static void buttonMenuItem(int item)
 
 	Data_State.map.current.gridOffset = 0;
 
-	building_type type = SidebarMenu_getBuildingType(menu.selectedSubmenu, item);
+	building_type type = building_menu_type(menu.selectedSubmenu, item);
 	building_construction_reset(type);
 
 	if (type == BUILDING_MENU_FARMS || type == BUILDING_MENU_RAW_MATERIALS ||
@@ -257,7 +257,7 @@ static void buttonMenuItem(int item)
             default:
                 break;
 		}
-		menu.numItems = SidebarMenu_countBuildingMenuItems(menu.selectedSubmenu);
+		menu.numItems = building_menu_count_items(menu.selectedSubmenu);
 		menu.yOffset = yMenuOffsets[menu.numItems];
 		building_construction_clear_type();
 	} else {

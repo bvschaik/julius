@@ -7,13 +7,13 @@
 
 #include "../CityView.h"
 #include "../Graphics.h"
-#include "../SidebarMenu.h"
 #include "../Terrain.h"
 #include "../Widget.h"
 
 #include "../Data/Screen.h"
 #include "../Data/State.h"
 
+#include "building/menu.h"
 #include "city/message.h"
 #include "city/warning.h"
 #include "core/direction.h"
@@ -117,16 +117,16 @@ void UI_Sidebar_requestMinimapRefresh()
 	minimapRedrawRequested = 1;
 }
 
-void UI_Sidebar_enableBuildingButtons()
+static void enableBuildingButtons()
 {
 	for (int i = 0; i < 12; i++) {
 		buttonBuildExpanded[i].enabled = 1;
-		if (SidebarMenu_countBuildingMenuItems(buttonBuildExpanded[i].parameter1) <= 0) {
+		if (building_menu_count_items(buttonBuildExpanded[i].parameter1) <= 0) {
 			buttonBuildExpanded[i].enabled = 0;
 		}
 
 		buttonBuildCollapsed[i].enabled = 1;
-		if (SidebarMenu_countBuildingMenuItems(buttonBuildCollapsed[i].parameter1) <= 0) {
+		if (building_menu_count_items(buttonBuildCollapsed[i].parameter1) <= 0) {
 			buttonBuildCollapsed[i].enabled = 0;
 		}
 	}
@@ -140,6 +140,9 @@ void UI_Sidebar_drawBackground()
 
 void UI_Sidebar_drawForeground()
 {
+    if (building_menu_has_changed()) {
+        enableBuildingButtons();
+    }
 	int xOffsetPanel = Data_Screen.width - SIDEBAR_BORDER;
 	if (Data_State.sidebarCollapsed) {
 		xOffsetPanel -= 42;

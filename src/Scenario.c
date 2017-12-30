@@ -5,7 +5,6 @@
 #include "CityView.h"
 #include "GameFile.h"
 #include "Loader.h"
-#include "SidebarMenu.h"
 #include "Terrain.h"
 #include "TerrainGraphics.h"
 
@@ -14,6 +13,7 @@
 #include "Data/State.h"
 
 #include "building/construction.h"
+#include "building/menu.h"
 #include "building/storage.h"
 #include "city/message.h"
 #include "core/calc.h"
@@ -115,7 +115,7 @@ int Scenario_initialize(const char *scenarioName)
 
 	tutorial_init();
 
-	SidebarMenu_enableBuildingMenuItemsAndButtons();
+	building_menu_update();
 	city_message_init_scenario();
 	return 1;
 }
@@ -141,7 +141,7 @@ static void initCustomScenario(const char *scenarioName)
 	game_animation_init();
 	sound_city_init();
 	sound_music_reset();
-	SidebarMenu_enableAllBuildingMenuItems();
+	building_menu_enable_all();
 	Building_clearList();
 	building_storage_clear_all();
 	figure_init_scenario();
@@ -201,7 +201,7 @@ static void loadScenario(const char *scenarioName)
 	scenario_request_init();
 	scenario_demand_change_init();
 	scenario_price_change_init();
-	SidebarMenu_enableBuildingMenuItemsAndButtons();
+	building_menu_update();
 	image_load_climate(scenario_property_climate());
 	image_load_enemy(scenario_property_enemy());
 }

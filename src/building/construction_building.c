@@ -5,6 +5,7 @@
 #include "building/construction_warning.h"
 #include "building/count.h"
 #include "building/dock.h"
+#include "building/menu.h"
 #include "building/properties.h"
 #include "building/storage.h"
 #include "city/warning.h"
@@ -21,7 +22,6 @@
 #include "Data/CityInfo.h"
 #include "../Building.h"
 #include "../Formation.h"
-#include "../SidebarMenu.h"
 #include "../Terrain.h"
 #include "../TerrainGraphics.h"
 
@@ -440,7 +440,7 @@ static void add_to_map(int type, building *b, int size,
             TerrainGraphics_updateAreaRoads(b->x, b->y, 5);
             TerrainGraphics_updateRegionPlazas(0, 0, Data_State.map.width - 1, Data_State.map.height - 1);
             Data_CityInfo.triumphalArchesPlaced++;
-            SidebarMenu_enableBuildingMenuItems();
+            building_menu_update();
             building_construction_clear_type();
             break;
         case BUILDING_SENATE_UPGRADED:
