@@ -4,6 +4,7 @@
 #include "Data/CityInfo.h"
 
 #include "city/constants.h"
+#include "city/gods.h"
 #include "game/time.h"
 
 #include <string.h>
@@ -32,7 +33,7 @@ void CityInfo_init()
 	Data_CityInfo.giftCost_generous = 0;
 	Data_CityInfo.giftCost_lavish = 0;
 
-	CityInfo_Gods_reset();
+	city_gods_reset();
 }
 
 void CityInfo_initGameTime()

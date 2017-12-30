@@ -4,6 +4,7 @@
 
 #include "building/count.h"
 #include "city/culture.h"
+#include "city/gods.h"
 
 static void drawFestivalBackground();
 
@@ -22,7 +23,7 @@ void UI_Advisor_Entertainment_init()
 
 void UI_Advisor_Entertainment_drawBackground(int *advisorHeight)
 {
-	CityInfo_Gods_calculateMoods(0);
+	city_gods_calculate_moods(0);
 	city_culture_calculate_entertainment();
 
 	int baseOffsetX = Data_Screen.offset640x480.x;

@@ -1,6 +1,7 @@
 #include "random_event.h"
 
 #include "building/type.h"
+#include "city/health.h"
 #include "city/message.h"
 #include "core/random.h"
 #include "scenario/data.h"
@@ -90,7 +91,7 @@ static void contaminate_water()
             } else {
                 change = -25;
             }
-            CityInfo_Population_changeHealthRate(change);
+            city_health_change(change);
             city_message_post(1, MESSAGE_CONTAMINATED_WATER, 0, 0);
         }
     }

@@ -3,6 +3,7 @@
 
 #include "building/count.h"
 #include "city/culture.h"
+#include "city/gods.h"
 #include "game/settings.h"
 
 void UI_Advisor_Religion_drawBackground(int *advisorHeight)
@@ -166,7 +167,7 @@ void UI_Advisor_Religion_drawBackground(int *advisorHeight)
 		baseOffsetX + 230, baseOffsetY + 166, 50, FONT_NORMAL_WHITE
 	);
 	
-	CityInfo_Gods_calculateLeastHappy();
+	city_gods_calculate_least_happy();
 
 	int adviceId;
 	if (Data_CityInfo.godLeastHappy > 0 && Data_CityInfo.godWrathBolts[Data_CityInfo.godLeastHappy - 1] > 4) {

@@ -21,6 +21,8 @@
 #include "building/maintenance.h"
 #include "building/warehouse.h"
 #include "city/culture.h"
+#include "city/gods.h"
+#include "city/health.h"
 #include "city/labor.h"
 #include "city/message.h"
 #include "city/population.h"
@@ -76,7 +78,7 @@ void GameTick_advance()
 	// NB: these ticks are noop:
 	// 0, 9, 11, 13, 14, 15, 26, 41, 42, 47
 	switch (game_time_tick()) {
-		case 1: CityInfo_Gods_calculateMoods(1); break;
+		case 1: city_gods_calculate_moods(1); break;
 		case 2: sound_music_update(); break;
 		case 3: UI_Sidebar_requestMinimapRefresh(); break;
 		case 4: CityInfo_Finance_updateDebtState(); scenario_invasion_process_caesar(); break;
@@ -138,7 +140,7 @@ static void advanceMonth()
 	Data_CityInfo.populationNewcomersThisMonth = 0;
 	Data_CityInfo.monthsSinceFestival++;
 
-	CityInfo_Population_updateHealthRate();
+	city_health_update();
 	scenario_random_event_process();
 	CityInfo_Finance_handleMonthChange();
 	CityInfo_Resource_housesConsumeFood();
@@ -163,7 +165,7 @@ static void advanceMonth()
 	}
 
 	city_population_record_monthly();
-	CityInfo_Gods_checkFestival();
+	city_gods_check_festival();
 	tutorial_on_month_tick();
 	if (setting_monthly_autosave()) {
 		GameFile_writeSavedGame("last.sav");

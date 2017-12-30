@@ -35,6 +35,14 @@ typedef enum {
 } festival_size;
 
 typedef enum {
+    GOD_CERES = 0,
+    GOD_NEPTUNE = 1,
+    GOD_MERCURY = 2,
+    GOD_MARS = 3,
+    GOD_VENUS = 4
+} god_type;
+
+typedef enum {
     TRADE_STATUS_NONE = 0,
     TRADE_STATUS_IMPORT = 1,
     TRADE_STATUS_EXPORT = 2

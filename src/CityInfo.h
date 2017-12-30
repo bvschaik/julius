@@ -6,11 +6,6 @@ void CityInfo_initGameTime();
 
 void CityInfo_Imperial_calculateGiftCosts();
 
-void CityInfo_Gods_reset();
-void CityInfo_Gods_calculateMoods(int updateMood);
-int CityInfo_Gods_calculateLeastHappy();
-void CityInfo_Gods_checkFestival();
-
 void CityInfo_Ratings_calculate(int isYearlyUpdate);
 void CityInfo_Ratings_updateCultureExplanation();
 void CityInfo_Ratings_updateFavorExplanation();
@@ -33,9 +28,6 @@ void CityInfo_Finance_handleMonthChange();
 void CityInfo_Finance_handleYearChange();
 
 void CityInfo_Finance_updateDebtState();
-
-void CityInfo_Population_changeHealthRate(int amount);
-void CityInfo_Population_updateHealthRate();
 
 void CityInfo_Resource_calculateAvailableResources();
 void CityInfo_Resource_calculateFoodAndSupplyRomeWheat();
