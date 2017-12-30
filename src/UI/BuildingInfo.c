@@ -18,6 +18,7 @@
 #include "building/house_evolution.h"
 #include "building/model.h"
 #include "building/warehouse.h"
+#include "city/resource.h"
 #include "core/calc.h"
 #include "figure/figure.h"
 #include "figure/formation.h"
@@ -146,7 +147,7 @@ void UI_BuildingInfo_init()
 	context.hasReservoirPipes = map_terrain_is(gridOffset, TERRAIN_RESERVOIR_RANGE);
 	context.aqueductHasWater = map_aqueduct_at(gridOffset) && map_image_at(gridOffset) - image_group(GROUP_BUILDING_AQUEDUCT) < 15;
 
-	CityInfo_Resource_calculateAvailableResources();
+	city_resource_determine_available();
 	context.type = BuildingInfoType_Terrain;
 	context.figure.drawn = 0;
 	if (!context.buildingId && map_sprite_bridge_at(gridOffset) > 0) {

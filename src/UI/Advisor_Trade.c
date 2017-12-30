@@ -7,6 +7,7 @@
 
 #include "building/count.h"
 #include "city/constants.h"
+#include "city/resource.h"
 #include "core/calc.h"
 #include "empire/city.h"
 #include "empire/trade_prices.h"
@@ -67,7 +68,7 @@ static int resourceFocusButtonId;
 
 void UI_Advisor_Trade_drawBackground(int *advisorHeight)
 {
-	CityInfo_Resource_calculateAvailableResources();
+	city_resource_determine_available();
 
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;

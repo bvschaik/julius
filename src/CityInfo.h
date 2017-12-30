@@ -29,11 +29,6 @@ void CityInfo_Finance_handleYearChange();
 
 void CityInfo_Finance_updateDebtState();
 
-void CityInfo_Resource_calculateAvailableResources();
-void CityInfo_Resource_calculateFoodAndSupplyRomeWheat();
-void CityInfo_Resource_calculateFood();
-void CityInfo_Resource_housesConsumeFood();
-
 void CityInfo_Victory_check();
 void CityInfo_Victory_updateMonthsToGovern();
 

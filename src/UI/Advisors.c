@@ -9,6 +9,7 @@
 #include "city/constants.h"
 #include "city/culture.h"
 #include "city/labor.h"
+#include "city/resource.h"
 #include "city/warning.h"
 #include "game/settings.h"
 #include "game/tutorial.h"
@@ -92,7 +93,7 @@ void UI_Advisors_init()
 	city_culture_calculate_demands();
 	city_culture_update_coverage();
 
-	CityInfo_Resource_calculateFoodAndSupplyRomeWheat();
+	city_resource_calculate_food_stocks_and_supply_wheat();
 	Formation_calculateFigures();
 
 	CityInfo_Ratings_updateCultureExplanation();

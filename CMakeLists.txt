@@ -65,9 +65,12 @@ set(BUILDING_FILES
 set(CITY_FILES
     ${PROJECT_SOURCE_DIR}/src/city/culture.c
     ${PROJECT_SOURCE_DIR}/src/city/finance.c
+    ${PROJECT_SOURCE_DIR}/src/city/gods.c
+    ${PROJECT_SOURCE_DIR}/src/city/health.c
     ${PROJECT_SOURCE_DIR}/src/city/labor.c
     ${PROJECT_SOURCE_DIR}/src/city/message.c
     ${PROJECT_SOURCE_DIR}/src/city/population.c
+    ${PROJECT_SOURCE_DIR}/src/city/resource.c
     ${PROJECT_SOURCE_DIR}/src/city/sentiment.c
     ${PROJECT_SOURCE_DIR}/src/city/warning.c
 )
@@ -189,10 +192,7 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/Building.c
 	${PROJECT_SOURCE_DIR}/src/CityInfo.c
 	${PROJECT_SOURCE_DIR}/src/CityInfo_Finance.c
-	${PROJECT_SOURCE_DIR}/src/CityInfo_Gods.c
-	${PROJECT_SOURCE_DIR}/src/CityInfo_Population.c
 	${PROJECT_SOURCE_DIR}/src/CityInfo_Ratings.c
-	${PROJECT_SOURCE_DIR}/src/CityInfo_Resource.c
 	${PROJECT_SOURCE_DIR}/src/CityInfo_Tick.c
 	${PROJECT_SOURCE_DIR}/src/CityInfo_Victory.c
 	${PROJECT_SOURCE_DIR}/src/CityView.c

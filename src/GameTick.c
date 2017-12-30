@@ -26,6 +26,7 @@
 #include "city/labor.h"
 #include "city/message.h"
 #include "city/population.h"
+#include "city/resource.h"
 #include "city/sentiment.h"
 #include "core/random.h"
 #include "empire/city.h"
@@ -89,7 +90,7 @@ void GameTick_advance()
 		case 10: Building_updateHighestIds(); break;
 		case 12: Building_decayHousesCovered(); break;
 		case 16: building_warehouses_calculate_stocks(); break;
-		case 17: CityInfo_Resource_calculateFoodAndSupplyRomeWheat(); break;
+		case 17: city_resource_calculate_food_stocks_and_supply_wheat(); break;
 		case 18: building_calculate_workshop_stocks(); break;
 		case 19: building_dock_update_open_water_access(); break;
 		case 20: building_industry_update_production(); break;
@@ -143,7 +144,7 @@ static void advanceMonth()
 	city_health_update();
 	scenario_random_event_process();
 	CityInfo_Finance_handleMonthChange();
-	CityInfo_Resource_housesConsumeFood();
+	city_resource_consume_food();
 	scenario_distant_battle_process();
 	scenario_invasion_process();
 	scenario_request_process();
