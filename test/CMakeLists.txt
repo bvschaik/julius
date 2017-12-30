@@ -51,7 +51,6 @@ add_executable(autopilot
     ${PROJECT_SOURCE_DIR}/src/CityInfo.c
     ${PROJECT_SOURCE_DIR}/src/CityInfo_Finance.c
     ${PROJECT_SOURCE_DIR}/src/CityInfo_Gods.c
-    ${PROJECT_SOURCE_DIR}/src/CityInfo_Labor.c
     ${PROJECT_SOURCE_DIR}/src/CityInfo_Population.c
     ${PROJECT_SOURCE_DIR}/src/CityInfo_Ratings.c
     ${PROJECT_SOURCE_DIR}/src/CityInfo_Resource.c

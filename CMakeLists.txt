@@ -64,6 +64,7 @@ set(BUILDING_FILES
 set(CITY_FILES
     ${PROJECT_SOURCE_DIR}/src/city/culture.c
     ${PROJECT_SOURCE_DIR}/src/city/finance.c
+    ${PROJECT_SOURCE_DIR}/src/city/labor.c
     ${PROJECT_SOURCE_DIR}/src/city/message.c
     ${PROJECT_SOURCE_DIR}/src/city/warning.c
 )
@@ -186,7 +187,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/CityInfo.c
 	${PROJECT_SOURCE_DIR}/src/CityInfo_Finance.c
 	${PROJECT_SOURCE_DIR}/src/CityInfo_Gods.c
-	${PROJECT_SOURCE_DIR}/src/CityInfo_Labor.c
 	${PROJECT_SOURCE_DIR}/src/CityInfo_Population.c
 	${PROJECT_SOURCE_DIR}/src/CityInfo_Ratings.c
 	${PROJECT_SOURCE_DIR}/src/CityInfo_Resource.c

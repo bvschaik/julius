@@ -4,6 +4,7 @@
 #include "Window.h"
 #include "../CityInfo.h"
 
+#include "city/labor.h"
 #include "core/calc.h"
 #include "input/mouse.h"
 
@@ -166,16 +167,7 @@ static void arrowButtonWages(int isDown, int param2)
 static void buttonPriority(int category, int param2)
 {
 	prioritySelectedCategory = category;
-	priorityMaxItems = 0;
-	for (int i = 0; i < 9; i++) {
-		if (Data_CityInfo.laborCategory[i].priority > 0) {
-			++priorityMaxItems;
-		}
-	}
-	if (priorityMaxItems < 9 && !Data_CityInfo.laborCategory[prioritySelectedCategory].priority) {
-		// allow space for new priority...
-		++priorityMaxItems;
-	}
+	priorityMaxItems = city_labor_max_selectable_priority(category);
 	UI_Window_goTo(Window_LaborPriorityDialog);
 }
 
@@ -247,45 +239,7 @@ void UI_LaborPriorityDialog_handleMouse(const mouse *m)
 
 static void buttonSetPriority(int newPriority, int param2)
 {
-	int oldPriority = Data_CityInfo.laborCategory[prioritySelectedCategory].priority;
-	if (oldPriority != newPriority) {
-		int shift;
-		int fromPrio;
-		int toPrio;
-		if (!oldPriority && newPriority) {
-			// shift all bigger than 'newPriority' by one down (+1)
-			shift = 1;
-			fromPrio = newPriority;
-			toPrio = 9;
-		} else if (oldPriority && !newPriority) {
-			// shift all bigger than 'oldPriority' by one up (-1)
-			shift = -1;
-			fromPrio = oldPriority;
-			toPrio = 9;
-		} else if (newPriority < oldPriority) {
-			// shift all between new and old by one down (+1)
-			shift = 1;
-			fromPrio = newPriority;
-			toPrio = oldPriority;
-		} else {
-			// shift all between old and new by one up (-1)
-			shift = -1;
-			fromPrio = oldPriority;
-			toPrio = newPriority;
-		}
-		Data_CityInfo.laborCategory[prioritySelectedCategory].priority = newPriority;
-		for (int i = 0; i < 9; i++) {
-			if (i == prioritySelectedCategory) {
-				continue;
-			}
-			int curPrio = Data_CityInfo.laborCategory[i].priority;
-			if (fromPrio <= curPrio && curPrio <= toPrio) {
-				Data_CityInfo.laborCategory[i].priority += shift;
-			}
-		}
-		CityInfo_Labor_allocateWorkersToCategories();
-		CityInfo_Labor_allocateWorkersToBuildings();
-	}
+    city_labor_set_priority(prioritySelectedCategory, newPriority);
 	UI_Window_goTo(Window_Advisors);
 }
 

@@ -24,6 +24,7 @@
 #include "building/maintenance.h"
 #include "building/warehouse.h"
 #include "city/culture.h"
+#include "city/labor.h"
 #include "city/message.h"
 #include "core/random.h"
 #include "empire/city.h"
@@ -96,7 +97,7 @@ void GameTick_advance()
 		case 22: house_population_update_room(); break;
 		case 23: house_population_update_migration(); break;
 		case 24: house_population_evict_overcrowded(); break;
-		case 25: CityInfo_Labor_update(); break;
+		case 25: city_labor_update(); break;
 		case 27: map_water_supply_update_reservoir_fountain(); break;
 		case 28: map_water_supply_update_houses(); break;
 		case 29: Formation_Tick_updateAll(1); break;

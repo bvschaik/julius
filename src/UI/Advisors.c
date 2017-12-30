@@ -9,6 +9,7 @@
 
 #include "city/constants.h"
 #include "city/culture.h"
+#include "city/labor.h"
 #include "city/warning.h"
 #include "game/settings.h"
 #include "game/tutorial.h"
@@ -81,8 +82,7 @@ void UI_Advisors_goToFromSidepanel()
 
 void UI_Advisors_init()
 {
-	CityInfo_Labor_allocateWorkersToCategories();
-	CityInfo_Labor_allocateWorkersToBuildings();
+	city_labor_allocate_workers();
 
 	CityInfo_Finance_calculateEstimatedTaxes();
 	CityInfo_Finance_calculateEstimatedWages();

@@ -54,12 +54,6 @@ void CityInfo_Population_removePeopleHomeRemoved(int numPeople);
 void CityInfo_Population_removePeopleHomeless(int numPeople);
 void CityInfo_Population_removePeopleForTroopRequest(int amount);
 
-void CityInfo_Labor_calculateWorkersNeededPerCategory();
-void CityInfo_Labor_checkEmployment();
-void CityInfo_Labor_allocateWorkersToCategories();
-void CityInfo_Labor_allocateWorkersToBuildings();
-void CityInfo_Labor_update();
-
 void CityInfo_Resource_calculateAvailableResources();
 void CityInfo_Resource_calculateFoodAndSupplyRomeWheat();
 void CityInfo_Resource_calculateFood();
