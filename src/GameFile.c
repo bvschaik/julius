@@ -96,7 +96,7 @@ static const char missionSavedGames[][32] = {
 	"Aedile.sav",
 	"Praetor.sav",
 	"Consul.sav",
-	"Proconsul.sav"
+	"Proconsul.sav",
 	"Caesar.sav",
 	"Caesar2.sav"
 };
