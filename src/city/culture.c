@@ -3,10 +3,10 @@
 #include "building/building.h"
 #include "building/count.h"
 #include "city/constants.h"
+#include "city/population.h"
 #include "core/calc.h"
 
 #include "Data/CityInfo.h"
-#include "CityInfo.h"
 
 static struct {
     int theater;
@@ -129,8 +129,8 @@ void city_culture_update_coverage()
     Data_CityInfo.cultureCoverageReligion /= 5;
 
     // education
-    Data_CityInfo.populationSchoolAge = CityInfo_Population_getNumberOfSchoolAgeChildren();
-    Data_CityInfo.populationAcademyAge = CityInfo_Population_getNumberOfAcademyChildren();
+    Data_CityInfo.populationSchoolAge = city_population_number_of_school_children();
+    Data_CityInfo.populationAcademyAge = city_population_number_of_academy_children();
 
     coverage.school = top(calc_percentage(
         75 * building_count_active(BUILDING_SCHOOL), Data_CityInfo.populationSchoolAge));

@@ -8,51 +8,20 @@
 #include "building/model.h"
 #include "city/constants.h"
 #include "city/message.h"
+#include "city/population.h"
 #include "core/calc.h"
 #include "core/random.h"
 #include "game/difficulty.h"
 #include "game/tutorial.h"
 #include "scenario/property.h"
 
-static void addPeopleToCensus(int numPeople);
-static void removePeopleFromCensus(int numPeople);
-static void removePeopleFromCensusInDecennium(int decennium, int numPeople);
-static int getPeopleInAgeDecennium(int decennium);
-static void recalculatePopulation();
 static void healthCauseDisease(int totalPeople);
-
-static const int yearlyBirthsPerDecennium[10] = {
-	0, 3, 16, 9, 2, 0, 0, 0, 0, 0
-};
-
-static const int yearlyDeathsPerHealthPerDecennium[11][10] = {
-	{20, 10, 5, 10, 20, 30, 50, 85, 100, 100},
-	{15, 8, 4, 8, 16, 25, 45, 70, 90, 100},
-	{10, 6, 2, 6, 12, 20, 30, 55, 80, 90},
-	{5, 4, 0, 4, 8, 15, 25, 40, 65, 80},
-	{3, 2, 0, 2, 6, 12, 20, 30, 50, 70},
-	{2, 0, 0, 0, 4, 8, 15, 25, 40, 60},
-	{1, 0, 0, 0, 2, 6, 12, 20, 30, 50},
-	{0, 0, 0, 0, 0, 4, 8, 15, 20, 40},
-	{0, 0, 0, 0, 0, 2, 6, 10, 15, 30},
-	{0, 0, 0, 0, 0, 0, 4, 5, 10, 20},
-	{0, 0, 0, 0, 0, 0, 0, 2, 5, 10}
-};
 
 static const int sentimentPerTaxRate[26] = {
 	3, 2, 2, 2, 1, 1, 1, 0, 0, -1,
 	-2, -2, -3, -3, -3, -5, -5, -5, -5, -6,
 	-6, -6, -6, -6, -6, -6
 };
-
-void CityInfo_Population_recordMonthlyPopulation()
-{
-	Data_CityInfo.monthlyPopulation[Data_CityInfo.monthlyPopulationNextIndex++] = Data_CityInfo.population;
-	if (Data_CityInfo.monthlyPopulationNextIndex >= 2400) {
-		Data_CityInfo.monthlyPopulationNextIndex = 0;
-	}
-	++Data_CityInfo.monthsSinceStart;
-}
 
 void CityInfo_Population_changeHappiness(int amount)
 {
@@ -123,10 +92,7 @@ static int getSentimentPenaltyForTentDwellers()
 
 void CityInfo_Population_calculateSentiment()
 {
-	int peopleInHouses = house_population_calculate_people_per_type();
-	if (peopleInHouses < Data_CityInfo.population) {
-		removePeopleFromCensus(Data_CityInfo.population - peopleInHouses);
-	}
+	city_population_check_consistency();
 
 	int sentimentPenaltyTents;
 	int sentimentContributionEmployment = 0;
@@ -473,216 +439,4 @@ static void healthCauseDisease(int totalPeople)
 void CityInfo_Population_changeHealthRate(int amount)
 {
 	Data_CityInfo.healthRate = calc_bound(Data_CityInfo.healthRate + amount, 0, 100);
-}
-
-static void recalculatePopulation()
-{
-	Data_CityInfo.population = 0;
-	for (int i = 0; i < 100; i++) {
-		Data_CityInfo.population += Data_CityInfo.populationPerAge[i];
-	}
-	if (Data_CityInfo.population > Data_CityInfo.populationHighestEver) {
-		Data_CityInfo.populationHighestEver = Data_CityInfo.population;
-	}
-}
-
-static int getPeopleInAgeDecennium(int decennium)
-{
-	int pop = 0;
-	for (int i = 0; i < 10; i++) {
-		pop += Data_CityInfo.populationPerAge[10 * decennium + i];
-	}
-	return pop;
-}
-
-static void removePeopleFromCensusInDecennium(int decennium, int numPeople)
-{
-	int emptyBuckets = 0;
-	int age = 0;
-	while (numPeople > 0 && emptyBuckets < 10) {
-		if (Data_CityInfo.populationPerAge[10 * decennium + age] <= 0) {
-			emptyBuckets++;
-		} else {
-			Data_CityInfo.populationPerAge[10 * decennium + age]--;
-			numPeople--;
-			emptyBuckets = 0;
-		}
-		age++;
-		if (age >= 10) {
-			age = 0;
-		}
-	}
-}
-
-static void removePeopleFromCensus(int numPeople)
-{
-	int index = 0;
-	int emptyBuckets = 0;
-	// remove people randomly up to age 63
-	while (numPeople > 0 && emptyBuckets < 100) {
-		int age = random_from_pool(index++) & 0x3f;
-		if (Data_CityInfo.populationPerAge[age] <= 0) {
-			emptyBuckets++;
-		} else {
-			Data_CityInfo.populationPerAge[age]--;
-			numPeople--;
-			emptyBuckets = 0;
-		}
-	}
-	// if random didn't work: remove from age 10 and up
-	emptyBuckets = 0;
-	int age = 10;
-	while (numPeople > 0 && emptyBuckets < 100) {
-		if (Data_CityInfo.populationPerAge[age] <= 0) {
-			emptyBuckets++;
-		} else {
-			Data_CityInfo.populationPerAge[age]--;
-			numPeople--;
-			emptyBuckets = 0;
-		}
-		age++;
-		if (age >= 100) {
-			age = 0;
-		}
-	}
-}
-
-static void addPeopleToCensus(int numPeople)
-{
-	int odd = 0;
-	int index = 0;
-	for (int i = 0; i < numPeople; i++, odd = 1 - odd) {
-		int age = random_from_pool(index++) & 0x3f; // 63
-		if (age > 50) {
-			age -= 30;
-		} else if (age < 10 && odd) {
-			age += 20;
-		}
-		Data_CityInfo.populationPerAge[age]++;
-	}
-}
-
-void CityInfo_Population_addPeople(int numPeople)
-{
-	Data_CityInfo.populationLastChange = numPeople;
-	if (numPeople > 0) {
-		addPeopleToCensus(numPeople);
-	} else if (numPeople < 0) {
-		removePeopleFromCensus(-numPeople);
-	}
-	recalculatePopulation();
-}
-
-void CityInfo_Population_removePeopleHomeRemoved(int numPeople)
-{
-	Data_CityInfo.populationLostInRemoval += numPeople;
-	removePeopleFromCensus(numPeople);
-	recalculatePopulation();
-}
-
-void CityInfo_Population_addPeopleHomeless(int numPeople)
-{
-	Data_CityInfo.populationLostHomeless -= numPeople;
-	addPeopleToCensus(numPeople);
-	recalculatePopulation();
-}
-
-void CityInfo_Population_removePeopleHomeless(int numPeople)
-{
-	Data_CityInfo.populationLostHomeless += numPeople;
-	removePeopleFromCensus(numPeople);
-	recalculatePopulation();
-}
-
-void CityInfo_Population_removePeopleForTroopRequest(int amount)
-{
-	int removed = house_population_remove_from_city(amount);
-	removePeopleFromCensus(removed);
-	Data_CityInfo.populationLostTroopRequest += amount;
-	recalculatePopulation();
-}
-
-int CityInfo_Population_getPeopleOfWorkingAge()
-{
-	return
-		getPeopleInAgeDecennium(2) +
-		getPeopleInAgeDecennium(3) +
-		getPeopleInAgeDecennium(4);
-}
-
-int CityInfo_Population_getNumberOfSchoolAgeChildren()
-{
-	int pop = 0;
-	for (int i = 0; i < 14; i++) {
-		pop += Data_CityInfo.populationPerAge[i];
-	}
-	return pop;
-}
-
-int CityInfo_Population_getNumberOfAcademyChildren()
-{
-	int pop = 0;
-	for (int i = 14; i < 21; i++) {
-		pop += Data_CityInfo.populationPerAge[i];
-	}
-	return pop;
-}
-
-static void yearlyAdvanceAgesAndCalculateDeaths()
-{
-	int aged100 = Data_CityInfo.populationPerAge[99];
-	for (int age = 99; age > 0; age--) {
-		Data_CityInfo.populationPerAge[age] = Data_CityInfo.populationPerAge[age-1];
-	}
-	Data_CityInfo.populationPerAge[0] = 0;
-	Data_CityInfo.populationYearlyDeaths = 0;
-	for (int decennium = 9; decennium >= 0; decennium--) {
-		int people = getPeopleInAgeDecennium(decennium);
-		int deaths = calc_adjust_with_percentage(people,
-			yearlyDeathsPerHealthPerDecennium[Data_CityInfo.healthRate / 10][decennium]);
-		int removed = house_population_remove_from_city(deaths + aged100);
-		removePeopleFromCensusInDecennium(decennium, removed);
-		// ^ BUGFIX should be deaths only, now aged100 are removed from census while they weren't *in* the census
-		Data_CityInfo.populationYearlyDeaths += removed;
-		aged100 = 0;
-	}
-}
-
-static void yearlyCalculateBirths()
-{
-	Data_CityInfo.populationYearlyBirths = 0;
-	for (int decennium = 9; decennium >= 0; decennium--) {
-		int people = getPeopleInAgeDecennium(decennium);
-		int births = calc_adjust_with_percentage(people, yearlyBirthsPerDecennium[decennium]);
-		int added = house_population_add_to_city(births);
-		Data_CityInfo.populationPerAge[0] += added;
-		Data_CityInfo.populationYearlyBirths += added;
-	}
-}
-
-static void yearlyUpdateAfterDeathsBirths()
-{
-	Data_CityInfo.populationYearlyUpdatedNeeded = 0;
-	Data_CityInfo.populationLastYear = Data_CityInfo.population;
-	recalculatePopulation();
-
-	Data_CityInfo.populationLostInRemoval = 0;
-	Data_CityInfo.populationTotalAllYears += Data_CityInfo.population;
-	Data_CityInfo.populationTotalYears++;
-	Data_CityInfo.populationAveragePerYear = Data_CityInfo.populationTotalAllYears / Data_CityInfo.populationTotalYears;
-}
-
-void CityInfo_Population_requestYearlyUpdate()
-{
-	Data_CityInfo.populationYearlyUpdatedNeeded = 1;
-	house_population_calculate_people_per_type();
-}
-
-void CityInfo_Population_yearlyUpdate()
-{
-	if (Data_CityInfo.populationYearlyUpdatedNeeded) {
-		yearlyAdvanceAgesAndCalculateDeaths();
-		yearlyCalculateBirths();
-		yearlyUpdateAfterDeathsBirths();
-	}
 }

@@ -2,6 +2,7 @@
 
 #include "building/house.h"
 #include "building/model.h"
+#include "city/population.h"
 #include "core/calc.h"
 #include "figure/combat.h"
 #include "figure/image.h"
@@ -11,7 +12,6 @@
 #include "map/road_access.h"
 
 #include "Data/CityInfo.h"
-#include "CityInfo.h"
 
 void figure_create_immigrant(building *house, int num_people)
 {
@@ -25,7 +25,7 @@ void figure_create_immigrant(building *house, int num_people)
 
 void figure_create_emigrant(building *house, int num_people)
 {
-    CityInfo_Population_addPeople(-num_people);
+    city_population_remove(num_people);
     if (num_people < house->housePopulation) {
         house->housePopulation -= num_people;
     } else {
@@ -44,7 +44,7 @@ void figure_create_homeless(int x, int y, int num_people)
     f->actionState = FIGURE_ACTION_7_HOMELESS_CREATED;
     f->waitTicks = 0;
     f->migrantNumPeople = num_people;
-    CityInfo_Population_removePeopleHomeless(num_people);
+    city_population_remove_homeless(num_people);
 }
 
 static void update_direction_and_image(figure *f)
@@ -154,7 +154,7 @@ void figure_immigrant_action(figure *f)
                 }
                 b->housePopulation += f->migrantNumPeople;
                 b->housePopulationRoom = maxPeople - b->housePopulation;
-                CityInfo_Population_addPeople(f->migrantNumPeople);
+                city_population_add(f->migrantNumPeople);
                 b->immigrantFigureId = 0;
             }
             f->isGhost = f->inBuildingWaitTicks ? 1 : 0;
@@ -293,7 +293,7 @@ void figure_homeless_action(figure *f)
                     }
                     b->housePopulation += f->migrantNumPeople;
                     b->housePopulationRoom = maxPeople - b->housePopulation;
-                    CityInfo_Population_addPeopleHomeless(f->migrantNumPeople);
+                    city_population_add_homeless(f->migrantNumPeople);
                     b->immigrantFigureId = 0;
                 }
             }

@@ -23,6 +23,7 @@
 #include "city/culture.h"
 #include "city/labor.h"
 #include "city/message.h"
+#include "city/population.h"
 #include "core/random.h"
 #include "empire/city.h"
 #include "figure/formation.h"
@@ -160,7 +161,7 @@ static void advanceMonth()
 		CityInfo_Ratings_calculate(0);
 	}
 
-	CityInfo_Population_recordMonthlyPopulation();
+	city_population_record_monthly();
 	CityInfo_Gods_checkFestival();
 	tutorial_on_month_tick();
 	if (setting_monthly_autosave()) {
@@ -173,7 +174,7 @@ static void advanceYear()
 	scenario_empire_process_expansion();
 	game_undo_disable();
 	game_time_advance_year();
-	CityInfo_Population_requestYearlyUpdate();
+	city_population_request_yearly_update();
 	CityInfo_Finance_handleYearChange();
 	empire_city_reset_yearly_trade_amounts();
 	building_maintenance_update_fire_direction();

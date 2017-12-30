@@ -4,6 +4,7 @@
 #include "building/list.h"
 #include "building/model.h"
 #include "city/message.h"
+#include "city/population.h"
 #include "core/calc.h"
 #include "figuretype/migrant.h"
 
@@ -220,7 +221,7 @@ static void calculate_working_population()
         }
     }
     Data_CityInfo.populationPercentagePlebs = calc_percentage(num_plebs, num_plebs + num_patricians);
-    int working_age = CityInfo_Population_getPeopleOfWorkingAge();
+    int working_age = city_population_people_of_working_age();
     Data_CityInfo.populationWorkingAge = calc_adjust_with_percentage(working_age, 60);
     Data_CityInfo.workersAvailable = calc_adjust_with_percentage(
         Data_CityInfo.populationWorkingAge, Data_CityInfo.populationPercentagePlebs);
@@ -270,7 +271,7 @@ void house_population_update_migration()
     Data_CityInfo.populationImmigrationAmountPerBatch = 0;
     Data_CityInfo.populationEmigrationAmountPerBatch = 0;
 
-    CityInfo_Population_yearlyUpdate();
+    city_population_yearly_update();
     calculate_working_population();
     // population messages
     if (Data_CityInfo.population >= 500 && city_message_mark_population_shown(500)) {

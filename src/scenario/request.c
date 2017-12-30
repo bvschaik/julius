@@ -3,6 +3,7 @@
 #include "building/warehouse.h"
 #include "city/finance.h"
 #include "city/message.h"
+#include "city/population.h"
 #include "core/random.h"
 #include "game/resource.h"
 #include "game/time.h"
@@ -110,7 +111,7 @@ void scenario_request_dispatch(int id)
     if (scenario.requests[id].resource == RESOURCE_DENARII) {
         city_finance_process_sundry(amount);
     } else if (scenario.requests[id].resource == RESOURCE_TROOPS) {
-        CityInfo_Population_removePeopleForTroopRequest(amount);
+        city_population_remove_for_troop_request(amount);
         building_warehouses_remove_resource(RESOURCE_WEAPONS, amount);
     } else {
         building_warehouses_remove_resource(scenario.requests[id].resource, amount);

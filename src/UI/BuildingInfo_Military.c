@@ -479,7 +479,7 @@ static void buttonLayout(int index, int param2)
 		return;
 	}
 	// store layout in case of mop up
-	int new_layout;
+	int new_layout = m->layout;
 	if (m->figure_type == FIGURE_FORT_LEGIONARY) {
 		switch (index) {
 			case 0: new_layout = FORMATION_TORTOISE; break;

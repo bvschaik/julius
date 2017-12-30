@@ -67,6 +67,7 @@ set(CITY_FILES
     ${PROJECT_SOURCE_DIR}/src/city/finance.c
     ${PROJECT_SOURCE_DIR}/src/city/labor.c
     ${PROJECT_SOURCE_DIR}/src/city/message.c
+    ${PROJECT_SOURCE_DIR}/src/city/population.c
     ${PROJECT_SOURCE_DIR}/src/city/warning.c
 )
 set(EMPIRE_FILES

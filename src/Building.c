@@ -11,6 +11,7 @@
 
 #include "building/storage.h"
 #include "city/message.h"
+#include "city/population.h"
 #include "city/warning.h"
 #include "figuretype/migrant.h"
 #include "figuretype/missile.h"
@@ -110,7 +111,7 @@ void Building_GameTick_updateState()
 				Building_delete(b);
 			} else if (b->state == BuildingState_Rubble) {
 				if (b->houseSize) {
-					CityInfo_Population_removePeopleHomeRemoved(b->housePopulation);
+					city_population_remove_home_removed(b->housePopulation);
 				}
 				Building_delete(b);
 			} else if (b->state == BuildingState_DeletedByGame) {
@@ -133,7 +134,7 @@ void Building_collapseOnFire(int buildingId, int hasPlague)
 	b->fireRisk = 0;
 	b->damageRisk = 0;
 	if (b->houseSize && b->housePopulation) {
-		CityInfo_Population_removePeopleHomeRemoved(b->housePopulation);
+		city_population_remove_home_removed(b->housePopulation);
 	}
 	// FIXED wasTent was always false because houseSize was reset above it
 	int wasTent = b->houseSize && b->subtype.houseLevel <= HOUSE_LARGE_TENT;
