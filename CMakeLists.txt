@@ -65,6 +65,7 @@ set(BUILDING_FILES
 )
 set(CITY_FILES
     ${PROJECT_SOURCE_DIR}/src/city/culture.c
+    ${PROJECT_SOURCE_DIR}/src/city/data.c
     ${PROJECT_SOURCE_DIR}/src/city/emperor.c
     ${PROJECT_SOURCE_DIR}/src/city/finance.c
     ${PROJECT_SOURCE_DIR}/src/city/gods.c
@@ -195,7 +196,6 @@ set(SOUND_FILES
 add_executable(julius
 	${PLATFORM_FILES}
 	${PROJECT_SOURCE_DIR}/src/Building.c
-	${PROJECT_SOURCE_DIR}/src/CityInfo.c
 	${PROJECT_SOURCE_DIR}/src/CityInfo_Tick.c
 	${PROJECT_SOURCE_DIR}/src/CityInfo_Victory.c
 	${PROJECT_SOURCE_DIR}/src/CityView.c

@@ -3,7 +3,6 @@
 #include "AllWindows.h"
 #include "MessageDialog.h"
 
-#include "../CityInfo.h"
 #include "../Formation.h"
 
 #include "city/constants.h"

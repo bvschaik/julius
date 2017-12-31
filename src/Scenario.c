@@ -1,7 +1,6 @@
 #include "Scenario.h"
 
 #include "Building.h"
-#include "CityInfo.h"
 #include "CityView.h"
 #include "GameFile.h"
 #include "Loader.h"
@@ -14,6 +13,7 @@
 #include "building/construction.h"
 #include "building/menu.h"
 #include "building/storage.h"
+#include "city/data.h"
 #include "city/emperor.h"
 #include "city/message.h"
 #include "core/calc.h"
@@ -134,7 +134,7 @@ static void initCustomScenario(const char *scenarioName)
 	Data_State.winState = WinState_None;
 	Data_State.forceWinCheat = 0;
 	building_construction_clear_type();
-	CityInfo_init();
+	city_data_init();
 	Data_CityInfo_Extra.ciid = 1;
 	city_message_init_scenario();
 	Loader_GameState_init();
@@ -149,7 +149,11 @@ static void initCustomScenario(const char *scenarioName)
 	figure_name_init();
     formations_clear();
 	figure_route_clear_all();
-	CityInfo_initGameTime();
+
+    game_time_init(2098);
+    Data_Buildings_Extra.incorrectHousePositions = 0;
+    Data_Buildings_Extra.unfixableHousePositions = 0;
+    Data_Buildings_Extra.highestBuildingIdEver = 0;
 
 	loadScenario(scenarioName);
 

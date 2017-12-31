@@ -5,7 +5,6 @@
 #include "MessageDialog.h"
 
 #include "../Building.h"
-#include "../CityInfo.h"
 #include "../Formation.h"
 #include "../Graphics.h"
 #include "../Widget.h"

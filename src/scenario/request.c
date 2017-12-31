@@ -12,7 +12,6 @@
 #include "scenario/data.h"
 
 #include "Data/CityInfo.h"
-#include "CityInfo.h"
 
 void scenario_request_init()
 {
