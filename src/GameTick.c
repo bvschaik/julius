@@ -21,6 +21,7 @@
 #include "building/maintenance.h"
 #include "building/warehouse.h"
 #include "city/culture.h"
+#include "city/emperor.h"
 #include "city/gods.h"
 #include "city/health.h"
 #include "city/labor.h"
@@ -83,7 +84,7 @@ void GameTick_advance()
 		case 1: city_gods_calculate_moods(1); break;
 		case 2: sound_music_update(); break;
 		case 3: UI_Sidebar_requestMinimapRefresh(); break;
-		case 4: CityInfo_Finance_updateDebtState(); scenario_invasion_process_caesar(); break;
+		case 4: city_emperor_update(); break;
 		case 5: Formation_Tick_updateAll(0); break;
 		case 6: map_natives_check_land(); break;
 		case 7: map_road_network_update(); break;

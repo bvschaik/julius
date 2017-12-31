@@ -65,6 +65,7 @@ set(BUILDING_FILES
 )
 set(CITY_FILES
     ${PROJECT_SOURCE_DIR}/src/city/culture.c
+    ${PROJECT_SOURCE_DIR}/src/city/emperor.c
     ${PROJECT_SOURCE_DIR}/src/city/finance.c
     ${PROJECT_SOURCE_DIR}/src/city/gods.c
     ${PROJECT_SOURCE_DIR}/src/city/health.c

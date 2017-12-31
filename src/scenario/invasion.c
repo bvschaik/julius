@@ -391,6 +391,16 @@ int scenario_invasion_start_from_mars()
     return 1;
 }
 
+int scenario_invasion_start_from_caesar(int size)
+{
+    int grid_offset = start_invasion(ENEMY_11_CAESAR, size, 0, FORMATION_ATTACK_BEST_BUILDINGS, 24);
+    if (grid_offset > 0) {
+        city_message_post(1, MESSAGE_CAESAR_ARMY_ATTACK, data.last_internal_invasion_id, grid_offset);
+        return 1;
+    }
+    return 0;
+}
+
 void scenario_invasion_start_from_cheat()
 {
     int enemy_id = scenario.enemy_id;
@@ -400,85 +410,6 @@ void scenario_invasion_start_from_cheat()
             city_message_post(1, MESSAGE_ENEMY_ARMY_ATTACK, data.last_internal_invasion_id, grid_offset);
         } else {
             city_message_post(1, MESSAGE_BARBARIAN_ATTACK, data.last_internal_invasion_id, grid_offset);
-        }
-    }
-}
-
-static void caesar_invasion_pause()
-{
-    formation_caesar_pause();
-}
-
-static void caesar_invasion_retreat()
-{
-    formation_caesar_retreat();
-    if (!Data_CityInfo.caesarInvasionRetreatMessageShown) {
-        Data_CityInfo.caesarInvasionRetreatMessageShown = 1;
-        city_message_post(1, MESSAGE_CAESAR_ARMY_RETREAT, 0, 0);
-    }
-}
-
-void scenario_invasion_process_caesar()
-{
-    if (Data_CityInfo.numImperialSoldiersInCity) {
-        // caesar invasion in progress
-        Data_CityInfo.caesarInvasionDurationDayCountdown--;
-        if (Data_CityInfo.ratingFavor >= 35 && Data_CityInfo.caesarInvasionDurationDayCountdown < 176) {
-            caesar_invasion_retreat();
-        } else if (Data_CityInfo.ratingFavor >= 22) {
-            if (Data_CityInfo.caesarInvasionDurationDayCountdown > 0) {
-                caesar_invasion_pause();
-            } else if (Data_CityInfo.caesarInvasionDurationDayCountdown == 0) {
-                city_message_post(1, MESSAGE_CAESAR_ARMY_CONTINUE, 0, 0); // a year has passed (11 months), siege goes on
-            }
-        }
-    } else if (Data_CityInfo.caesarInvasionSoldiersDied && Data_CityInfo.caesarInvasionSoldiersDied >= Data_CityInfo.caesarInvasionSize) {
-        // player defeated caesar army
-        Data_CityInfo.caesarInvasionSize = 0;
-        Data_CityInfo.caesarInvasionSoldiersDied = 0;
-        if (Data_CityInfo.ratingFavor < 35) {
-            CityInfo_Ratings_changeFavor(10);
-            if (Data_CityInfo.caesarInvasionCount < 2) {
-                city_message_post(1, MESSAGE_CAESAR_RESPECT_1, 0, 0);
-            } else if (Data_CityInfo.caesarInvasionCount < 3) {
-                city_message_post(1, MESSAGE_CAESAR_RESPECT_2, 0, 0);
-            } else {
-                city_message_post(1, MESSAGE_CAESAR_RESPECT_3, 0, 0);
-            }
-        }
-    } else if (Data_CityInfo.caesarInvasionDaysUntilInvasion <= 0) {
-        if (Data_CityInfo.ratingFavor <= 10) {
-            // warn player that caesar is angry and will invade in a year
-            Data_CityInfo.caesarInvasionWarningsGiven++;
-            Data_CityInfo.caesarInvasionDaysUntilInvasion = 192;
-            if (Data_CityInfo.caesarInvasionWarningsGiven <= 1) {
-                city_message_post(1, MESSAGE_CAESAR_WRATH, 0, 0);
-            }
-        }
-    } else {
-        Data_CityInfo.caesarInvasionDaysUntilInvasion--;
-        if (Data_CityInfo.caesarInvasionDaysUntilInvasion == 0) {
-            // invade!
-            int size;
-            if (Data_CityInfo.caesarInvasionCount == 0) {
-                size = 32;
-            } else if (Data_CityInfo.caesarInvasionCount == 1) {
-                size = 64;
-            } else if (Data_CityInfo.caesarInvasionCount == 2) {
-                size = 96;
-            } else {
-                size = 144;
-            }
-            int invasion_id = start_invasion(
-                ENEMY_11_CAESAR, size, 0, FORMATION_ATTACK_BEST_BUILDINGS, 24);
-            if (invasion_id > 0) {
-                Data_CityInfo.caesarInvasionCount++;
-                Data_CityInfo.caesarInvasionDurationDayCountdown = 192;
-                Data_CityInfo.caesarInvasionRetreatMessageShown = 0;
-                city_message_post(1, MESSAGE_CAESAR_ARMY_ATTACK, data.last_internal_invasion_id, invasion_id);
-                Data_CityInfo.caesarInvasionSize = size;
-                Data_CityInfo.caesarInvasionSoldiersDied = 0;
-            }
         }
     }
 }
