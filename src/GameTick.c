@@ -14,6 +14,7 @@
 #include "building/count.h"
 #include "building/dock.h"
 #include "building/figure.h"
+#include "building/government.h"
 #include "building/granary.h"
 #include "building/house_population.h"
 #include "building/house_service.h"
@@ -110,7 +111,7 @@ void GameTick_advance()
 		case 31: building_figure_generate(); break;
 		case 32: city_trade_update(); break;
 		case 33: building_count_update(); city_culture_update_coverage(); break;
-		case 34: CityInfo_Tick_distributeTreasuryOverForumsAndSenates(); break;
+		case 34: building_government_distribute_treasury(); break;
 		case 35: house_service_decay_culture(); break;
 		case 36: house_service_calculate_culture_aggregates(); break;
 		case 37: map_desirability_update(); break;

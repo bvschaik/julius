@@ -48,6 +48,7 @@ set(BUILDING_FILES
     ${PROJECT_SOURCE_DIR}/src/building/count.c
     ${PROJECT_SOURCE_DIR}/src/building/dock.c
     ${PROJECT_SOURCE_DIR}/src/building/figure.c
+    ${PROJECT_SOURCE_DIR}/src/building/government.c
     ${PROJECT_SOURCE_DIR}/src/building/granary.c
     ${PROJECT_SOURCE_DIR}/src/building/house.c
     ${PROJECT_SOURCE_DIR}/src/building/house_evolution.c
@@ -196,7 +197,6 @@ set(SOUND_FILES
 add_executable(julius
 	${PLATFORM_FILES}
 	${PROJECT_SOURCE_DIR}/src/Building.c
-	${PROJECT_SOURCE_DIR}/src/CityInfo_Tick.c
 	${PROJECT_SOURCE_DIR}/src/CityInfo_Victory.c
 	${PROJECT_SOURCE_DIR}/src/CityView.c
 	${PROJECT_SOURCE_DIR}/src/Formation.c
