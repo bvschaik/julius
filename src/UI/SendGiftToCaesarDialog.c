@@ -1,7 +1,6 @@
 #include "AllWindows.h"
 #include "../Widget.h"
 #include "../Graphics.h"
-#include "../CityInfo.h"
 #include "Advisors_private.h"
 
 #include "city/emperor.h"

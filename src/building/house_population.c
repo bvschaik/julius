@@ -10,7 +10,6 @@
 #include "figuretype/migrant.h"
 
 #include "Data/CityInfo.h"
-#include "CityInfo.h"
 
 int house_population_add_to_city(int num_people)
 {

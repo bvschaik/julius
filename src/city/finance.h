@@ -19,4 +19,17 @@ void city_finance_process_sundry(int cost);
 
 void city_finance_process_construction(int cost);
 
+void city_finance_update_interest();
+
+void city_finance_update_salary();
+
+void city_finance_calculate_totals();
+
+void city_finance_estimate_wages();
+
+void city_finance_estimate_taxes();
+
+void CityInfo_Finance_handleMonthChange();
+void CityInfo_Finance_handleYearChange();
+
 #endif // CITY_FINANCE_H

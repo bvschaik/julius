@@ -8,6 +8,7 @@
 
 #include "city/constants.h"
 #include "city/culture.h"
+#include "city/finance.h"
 #include "city/labor.h"
 #include "city/resource.h"
 #include "city/warning.h"
@@ -84,11 +85,11 @@ void UI_Advisors_init()
 {
 	city_labor_allocate_workers();
 
-	CityInfo_Finance_calculateEstimatedTaxes();
-	CityInfo_Finance_calculateEstimatedWages();
-	CityInfo_Finance_updateInterest();
-	CityInfo_Finance_updateSalary();
-	CityInfo_Finance_calculateTotals();
+	city_finance_estimate_taxes();
+	city_finance_estimate_wages();
+	city_finance_update_interest();
+	city_finance_update_salary();
+	city_finance_calculate_totals();
 
 	city_culture_calculate_demands();
 	city_culture_update_coverage();

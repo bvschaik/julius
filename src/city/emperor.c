@@ -23,8 +23,7 @@ static void update_debt_state()
         // provide bailout
         int rescue_loan = difficulty_adjust_money(scenario_rescue_loan());
         city_finance_process_donation(rescue_loan);
-        
-        CityInfo_Finance_calculateTotals();
+        city_finance_calculate_totals();
         
         Data_CityInfo.debtState = 1;
         Data_CityInfo.monthsInDebt = 0;

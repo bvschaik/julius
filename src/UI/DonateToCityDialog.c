@@ -1,7 +1,6 @@
 #include "AllWindows.h"
 #include "../Widget.h"
 #include "../Graphics.h"
-#include "../CityInfo.h"
 #include "Advisors_private.h"
 
 #include "city/finance.h"
@@ -119,7 +118,7 @@ static void buttonDonate(int param1, int param2)
 {
     city_finance_process_donation(Data_CityInfo.donateAmount);
     Data_CityInfo.personalSavings -= Data_CityInfo.donateAmount;
-	CityInfo_Finance_calculateTotals();
+	city_finance_calculate_totals();
 	UI_Window_goTo(Window_Advisors);
 }
 

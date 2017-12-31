@@ -9,7 +9,6 @@
 #include "TerrainGraphics.h"
 
 #include "Data/CityInfo.h"
-#include "Data/Constants.h"
 #include "Data/State.h"
 
 #include "building/construction.h"

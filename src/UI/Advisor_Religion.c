@@ -1,5 +1,4 @@
 #include "Advisors_private.h"
-#include "../CityInfo.h"
 
 #include "building/count.h"
 #include "city/culture.h"

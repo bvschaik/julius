@@ -1,6 +1,5 @@
 #include "Building.h"
 
-#include "CityInfo.h"
 #include "CityView.h"
 #include "Formation.h"
 #include "Terrain.h"

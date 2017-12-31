@@ -2,8 +2,8 @@
 
 #include "Tooltip.h"
 #include "Window.h"
-#include "../CityInfo.h"
 
+#include "city/finance.h"
 #include "city/labor.h"
 #include "core/calc.h"
 
@@ -158,8 +158,8 @@ static void arrowButtonWages(int isDown, int param2)
 		Data_CityInfo.wages++;
 	}
 	Data_CityInfo.wages = calc_bound(Data_CityInfo.wages, 0, 100);
-	CityInfo_Finance_calculateEstimatedWages();
-	CityInfo_Finance_calculateTotals();
+	city_finance_estimate_wages();
+	city_finance_calculate_totals();
 	UI_Window_requestRefresh();
 }
 

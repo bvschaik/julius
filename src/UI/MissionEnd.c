@@ -209,13 +209,13 @@ static void victoryContinueGoverning(int duration, int param2)
 		Data_CityInfo.victoryContinueMonthsChosen = 24;
 		Data_CityInfo.salaryRank = 0;
 		Data_CityInfo.salaryAmount = 0;
-		CityInfo_Finance_updateSalary();
+		city_finance_update_salary();
 	} else if (duration == 2) {
 		Data_CityInfo.victoryContinueMonths += 60;
 		Data_CityInfo.victoryContinueMonthsChosen = 60;
 		Data_CityInfo.salaryRank = 0;
 		Data_CityInfo.salaryAmount = 0;
-		CityInfo_Finance_updateSalary();
+		city_finance_update_salary();
 	}
 	UI_Window_goTo(Window_City);
 	Data_State.winState = WinState_None;

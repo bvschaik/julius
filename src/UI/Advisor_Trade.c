@@ -2,8 +2,6 @@
 #include "Tooltip.h"
 #include "Window.h"
 #include "MessageDialog.h"
-#include "../CityInfo.h"
-
 
 #include "building/count.h"
 #include "city/constants.h"

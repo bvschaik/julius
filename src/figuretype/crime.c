@@ -17,7 +17,6 @@
 #include "scenario/property.h"
 
 #include "Data/CityInfo.h"
-#include "../CityInfo.h"
 #include "../Building.h"
 #include "../Formation.h"
 

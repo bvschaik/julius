@@ -19,7 +19,6 @@
 
 #include "Data/CityInfo.h"
 #include "../Building.h"
-#include "CityInfo.h"
 
 #define MAX_INVASION_WARNINGS 101
 

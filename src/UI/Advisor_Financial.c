@@ -1,6 +1,5 @@
 #include "Advisors_private.h"
 #include "Window.h"
-#include "../CityInfo.h"
 
 #include "city/finance.h"
 #include "core/calc.h"
@@ -123,8 +122,8 @@ static void buttonChangeTaxes(int isDown, int param2)
 	}
 	Data_CityInfo.taxPercentage = calc_bound(Data_CityInfo.taxPercentage, 0, 25);
 
-	CityInfo_Finance_calculateEstimatedTaxes();
-	CityInfo_Finance_calculateTotals();
+	city_finance_estimate_taxes();
+	city_finance_calculate_totals();
 	UI_Window_requestRefresh();
 }
 

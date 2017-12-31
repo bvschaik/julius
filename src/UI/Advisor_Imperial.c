@@ -2,7 +2,6 @@
 #include "PopupDialog.h"
 #include "Window.h"
 
-#include "../CityInfo.h"
 #include "../Formation.h"
 
 #include "city/emperor.h"

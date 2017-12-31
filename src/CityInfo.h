@@ -14,13 +14,6 @@ void CityInfo_Ratings_reduceProsperityAfterBailout();
 void CityInfo_Ratings_changeFavor(int amount);
 void CityInfo_Ratings_setMaxFavor(int maxFavor);
 
-void CityInfo_Finance_calculateTotals();
-void CityInfo_Finance_calculateEstimatedWages();
-void CityInfo_Finance_calculateEstimatedTaxes();
-
-void CityInfo_Finance_updateInterest();
-void CityInfo_Finance_updateSalary();
-
 void CityInfo_Finance_handleMonthChange();
 void CityInfo_Finance_handleYearChange();
 

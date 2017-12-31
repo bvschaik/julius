@@ -3,7 +3,6 @@
 #include "../Widget.h"
 #include "../Graphics.h"
 #include "Advisors_private.h"
-#include "../Data/Constants.h"
 
 #include "building/warehouse.h"
 #include "city/constants.h"
