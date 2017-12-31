@@ -44,11 +44,3 @@ void CityInfo_initGameTime()
 	Data_Buildings_Extra.highestBuildingIdEver = 0;
 }
 
-void CityInfo_Imperial_calculateGiftCosts()
-{
-	int savings = Data_CityInfo.personalSavings;
-	Data_CityInfo.giftCost_modest = savings / 8 + 20;
-	Data_CityInfo.giftCost_generous = savings / 4 + 50;
-	Data_CityInfo.giftCost_lavish = savings / 2 + 100;
-}
-

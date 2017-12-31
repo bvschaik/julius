@@ -4,6 +4,8 @@
 #include "../CityInfo.h"
 #include "Advisors_private.h"
 
+#include "city/emperor.h"
+
 static void buttonSetGift(int param1, int param2);
 static void buttonSendGift(int param1, int param2);
 static void buttonCancel(int param1, int param2);
@@ -125,7 +127,7 @@ static void buttonSetGift(int param1, int param2)
 static void buttonSendGift(int param1, int param2)
 {
 	if (Data_CityInfo.giftCost_modest <= Data_CityInfo.personalSavings) {
-		CityInfo_Ratings_sendGiftToCaesar();
+		city_emperor_send_gift();
 		UI_Window_goTo(Window_Advisors);
 	}
 }

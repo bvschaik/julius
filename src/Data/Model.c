@@ -17,8 +17,6 @@ struct _Data_Buildings_Extra Data_Buildings_Extra;
 
 struct Data_CityView Data_CityView;
 
-const int Constant_SalaryForRank[11] = {0, 2, 5, 8, 12, 20, 30, 40, 60, 80, 100};
-
 const struct MissionId Constant_MissionIds[12] = {
 	{0, 0},
 	{1, 1},

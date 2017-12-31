@@ -5,6 +5,7 @@
 #include "../CityInfo.h"
 #include "../Formation.h"
 
+#include "city/emperor.h"
 #include "city/finance.h"
 #include "empire/city.h"
 #include "scenario/property.h"
@@ -90,7 +91,7 @@ static void draw_request(int index, const scenario_request *request)
 
 void UI_Advisor_Imperial_drawBackground(int *advisorHeight)
 {
-	CityInfo_Imperial_calculateGiftCosts();
+	city_emperor_calculate_gift_costs();
 
 	int baseOffsetX = Data_Screen.offset640x480.x;
 	int baseOffsetY = Data_Screen.offset640x480.y;

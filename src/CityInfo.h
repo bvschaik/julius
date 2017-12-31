@@ -4,8 +4,6 @@
 void CityInfo_init();
 void CityInfo_initGameTime();
 
-void CityInfo_Imperial_calculateGiftCosts();
-
 void CityInfo_Ratings_calculate(int isYearlyUpdate);
 void CityInfo_Ratings_updateCultureExplanation();
 void CityInfo_Ratings_updateFavorExplanation();
@@ -13,7 +11,6 @@ void CityInfo_Ratings_updateProsperityExplanation();
 void CityInfo_Ratings_updatePeaceExplanation();
 void CityInfo_Ratings_reduceProsperityAfterBailout();
 
-void CityInfo_Ratings_sendGiftToCaesar();
 void CityInfo_Ratings_changeFavor(int amount);
 void CityInfo_Ratings_setMaxFavor(int maxFavor);
 

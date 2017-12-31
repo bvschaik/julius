@@ -15,6 +15,7 @@
 #include "building/construction.h"
 #include "building/menu.h"
 #include "building/storage.h"
+#include "city/emperor.h"
 #include "city/message.h"
 #include "core/calc.h"
 #include "core/file.h"
@@ -102,16 +103,16 @@ int Scenario_initialize(const char *scenarioName)
 	Data_CityInfo.ratingFavor = scenario_starting_favor();
 	Data_CityInfo.personalSavings = scenario_starting_personal_savings();
 	Data_CityInfo.playerRank = rank;
-	Data_CityInfo.salaryRank = rank;
+	int salary_rank = rank;
 	if (scenario_is_custom()) {
 		Data_CityInfo.personalSavings = 0;
 		Data_CityInfo.playerRank = scenario_property_player_rank();
-		Data_CityInfo.salaryRank = scenario_property_player_rank();
+		salary_rank = scenario_property_player_rank();
 	}
-	if (Data_CityInfo.salaryRank > 10) {
-		Data_CityInfo.salaryRank = 10;
+	if (salary_rank > 10) {
+		salary_rank = 10;
 	}
-	Data_CityInfo.salaryAmount = Constant_SalaryForRank[Data_CityInfo.salaryRank];
+	city_emperor_set_salary_rank(salary_rank);
 
 	tutorial_init();
 

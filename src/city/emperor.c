@@ -11,6 +11,8 @@
 #include "Data/CityInfo.h"
 #include "CityInfo.h"
 
+const int SALARY_FOR_RANK[11] = {0, 2, 5, 8, 12, 20, 30, 40, 60, 80, 100};
+
 static void update_debt_state()
 {
     if (Data_CityInfo.treasury >= 0) {
@@ -137,4 +139,100 @@ void city_emperor_update()
 {
     update_debt_state();
     process_caesar_invasion();
+}
+
+void city_emperor_calculate_gift_costs()
+{
+    int savings = Data_CityInfo.personalSavings;
+    Data_CityInfo.giftCost_modest = savings / 8 + 20;
+    Data_CityInfo.giftCost_generous = savings / 4 + 50;
+    Data_CityInfo.giftCost_lavish = savings / 2 + 100;
+}
+
+void city_emperor_send_gift()
+{
+    int cost;
+    if (Data_CityInfo.giftSizeSelected == 0) {
+        cost = Data_CityInfo.giftCost_modest;
+    } else if (Data_CityInfo.giftSizeSelected == 1) {
+        cost = Data_CityInfo.giftCost_generous;
+    } else if (Data_CityInfo.giftSizeSelected == 2) {
+        cost = Data_CityInfo.giftCost_lavish;
+    } else {
+        return;
+    }
+
+    if (cost > Data_CityInfo.personalSavings) {
+        return;
+    }
+
+    if (Data_CityInfo.giftOverdosePenalty <= 0) {
+        Data_CityInfo.giftOverdosePenalty = 1;
+        if (Data_CityInfo.giftSizeSelected == 0) {
+            CityInfo_Ratings_changeFavor(3);
+        } else if (Data_CityInfo.giftSizeSelected == 1) {
+            CityInfo_Ratings_changeFavor(5);
+        } else if (Data_CityInfo.giftSizeSelected == 2) {
+            CityInfo_Ratings_changeFavor(10);
+        }
+    } else if (Data_CityInfo.giftOverdosePenalty == 1) {
+        Data_CityInfo.giftOverdosePenalty = 2;
+        if (Data_CityInfo.giftSizeSelected == 0) {
+            CityInfo_Ratings_changeFavor(1);
+        } else if (Data_CityInfo.giftSizeSelected == 1) {
+            CityInfo_Ratings_changeFavor(3);
+        } else if (Data_CityInfo.giftSizeSelected == 2) {
+            CityInfo_Ratings_changeFavor(5);
+        }
+    } else if (Data_CityInfo.giftOverdosePenalty == 2) {
+        Data_CityInfo.giftOverdosePenalty = 3;
+        if (Data_CityInfo.giftSizeSelected == 0) {
+            CityInfo_Ratings_changeFavor(0);
+        } else if (Data_CityInfo.giftSizeSelected == 1) {
+            CityInfo_Ratings_changeFavor(1);
+        } else if (Data_CityInfo.giftSizeSelected == 2) {
+            CityInfo_Ratings_changeFavor(3);
+        }
+    } else if (Data_CityInfo.giftOverdosePenalty == 3) {
+        Data_CityInfo.giftOverdosePenalty = 4;
+        if (Data_CityInfo.giftSizeSelected == 0) {
+            CityInfo_Ratings_changeFavor(0);
+        } else if (Data_CityInfo.giftSizeSelected == 1) {
+            CityInfo_Ratings_changeFavor(0);
+        } else if (Data_CityInfo.giftSizeSelected == 2) {
+            CityInfo_Ratings_changeFavor(1);
+        }
+    }
+
+    Data_CityInfo.giftMonthsSinceLast = 0;
+    // rotate gift type
+    if (Data_CityInfo.giftSizeSelected == 0) {
+        Data_CityInfo.giftId_modest++;
+    } else if (Data_CityInfo.giftSizeSelected == 1) {
+        Data_CityInfo.giftId_generous++;
+    } else if (Data_CityInfo.giftSizeSelected == 2) {
+        Data_CityInfo.giftId_lavish++;
+    }
+    if (Data_CityInfo.giftId_modest >= 4) {
+        Data_CityInfo.giftId_modest = 0;
+    }
+    if (Data_CityInfo.giftId_generous >= 4) {
+        Data_CityInfo.giftId_generous = 0;
+    }
+    if (Data_CityInfo.giftId_lavish >= 4) {
+        Data_CityInfo.giftId_lavish = 0;
+    }
+
+    Data_CityInfo.personalSavings -= cost;
+}
+
+int city_emperor_salary_for_rank(int rank)
+{
+    return SALARY_FOR_RANK[rank];
+}
+
+void city_emperor_set_salary_rank(int rank)
+{
+    Data_CityInfo.salaryRank = rank;
+    Data_CityInfo.salaryAmount = SALARY_FOR_RANK[rank];
 }

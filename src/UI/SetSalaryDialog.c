@@ -3,6 +3,8 @@
 #include "../CityInfo.h"
 #include "../Data/Constants.h"
 
+#include "city/emperor.h"
+
 static void buttonCancel(int param1, int param2);
 static void buttonSetSalary(int rank, int param2);
 
@@ -46,7 +48,7 @@ void UI_SetSalaryDialog_drawForeground()
 		font_t font = (focusButtonId == rank + 2) ? FONT_NORMAL_RED : FONT_NORMAL_WHITE;
 		int width = Widget_GameText_draw(52, rank + 4,
 			baseOffsetX + 176, baseOffsetY + 90 + 20 * rank, font);
-		Widget_Text_drawMoney(Constant_SalaryForRank[rank],
+		Widget_Text_drawMoney(city_emperor_salary_for_rank(rank),
 			baseOffsetX + 176 + width, baseOffsetY + 90 + 20 * rank, font);
 	}
 
@@ -87,8 +89,7 @@ static void buttonCancel(int param1, int param2)
 static void buttonSetSalary(int rank, int param2)
 {
 	if (Data_CityInfo.victoryContinueMonths <= 0) {
-		Data_CityInfo.salaryRank = rank;
-		Data_CityInfo.salaryAmount = Constant_SalaryForRank[rank];
+		city_emperor_set_salary_rank(rank);
 		CityInfo_Finance_updateSalary();
 		CityInfo_Ratings_updateFavorExplanation();
 		UI_Window_goTo(Window_Advisors);
