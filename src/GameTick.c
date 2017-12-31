@@ -22,6 +22,7 @@
 #include "building/warehouse.h"
 #include "city/culture.h"
 #include "city/emperor.h"
+#include "city/finance.h"
 #include "city/gods.h"
 #include "city/health.h"
 #include "city/labor.h"
@@ -145,7 +146,7 @@ static void advanceMonth()
 
 	city_health_update();
 	scenario_random_event_process();
-	CityInfo_Finance_handleMonthChange();
+	city_finance_handle_month_change();
 	city_resource_consume_food();
 	scenario_distant_battle_process();
 	scenario_invasion_process();
@@ -181,7 +182,7 @@ static void advanceYear()
 	game_undo_disable();
 	game_time_advance_year();
 	city_population_request_yearly_update();
-	CityInfo_Finance_handleYearChange();
+	city_finance_handle_year_change();
 	empire_city_reset_yearly_trade_amounts();
 	building_maintenance_update_fire_direction();
 	CityInfo_Ratings_calculate(1);

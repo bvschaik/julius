@@ -14,9 +14,6 @@ void CityInfo_Ratings_reduceProsperityAfterBailout();
 void CityInfo_Ratings_changeFavor(int amount);
 void CityInfo_Ratings_setMaxFavor(int maxFavor);
 
-void CityInfo_Finance_handleMonthChange();
-void CityInfo_Finance_handleYearChange();
-
 void CityInfo_Victory_check();
 void CityInfo_Victory_updateMonthsToGovern();
 

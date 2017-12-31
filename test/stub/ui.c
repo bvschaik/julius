@@ -35,9 +35,6 @@ void UI_Intermezzo_show(int type, WindowId nextWindowId, int timeMillis)
 void UI_VideoIntermezzo_show(const char* filename, int width, int height, WindowId nextWindowId)
 {}
 
-void UI_Sidebar_enableBuildingButtons()
-{}
-
 void UI_Sidebar_requestMinimapRefresh()
 {}
 

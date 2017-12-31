@@ -29,7 +29,8 @@ void city_finance_estimate_wages();
 
 void city_finance_estimate_taxes();
 
-void CityInfo_Finance_handleMonthChange();
-void CityInfo_Finance_handleYearChange();
+void city_finance_handle_month_change();
+
+void city_finance_handle_year_change();
 
 #endif // CITY_FINANCE_H
