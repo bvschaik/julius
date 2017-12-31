@@ -2,6 +2,7 @@
 
 #include "building/menu.h"
 #include "city/message.h"
+#include "city/ratings.h"
 #include "core/calc.h"
 #include "empire/city.h"
 #include "empire/object.h"
@@ -10,7 +11,6 @@
 #include "scenario/data.h"
 
 #include "Data/CityInfo.h"
-#include "CityInfo.h"
 #include "Formation.h"
 
 int scenario_distant_battle_roman_travel_months()
@@ -134,25 +134,25 @@ static void fight_distant_battle()
 {
     if (Data_CityInfo.distantBattleRomanMonthsToTravel <= 0) {
         city_message_post(1, MESSAGE_DISTANT_BATTLE_LOST_NO_TROOPS, 0, 0);
-        CityInfo_Ratings_changeFavor(-50);
+        city_ratings_change_favor(-50);
         set_city_foreign();
         Data_CityInfo.distantBattleCityMonthsUntilRoman = 24;
     } else if (Data_CityInfo.distantBattleRomanMonthsToTravel > 2) {
         city_message_post(1, MESSAGE_DISTANT_BATTLE_LOST_TOO_LATE, 0, 0);
-        CityInfo_Ratings_changeFavor(-25);
+        city_ratings_change_favor(-25);
         set_city_foreign();
         Data_CityInfo.distantBattleCityMonthsUntilRoman = 24;
         Data_CityInfo.distantBattleRomanMonthsToReturn = Data_CityInfo.distantBattleRomanMonthsTraveled;
     } else if (!player_has_won()) {
         city_message_post(1, MESSAGE_DISTANT_BATTLE_LOST_TOO_WEAK, 0, 0);
-        CityInfo_Ratings_changeFavor(-10);
+        city_ratings_change_favor(-10);
         set_city_foreign();
         Data_CityInfo.distantBattleCityMonthsUntilRoman = 24;
         Data_CityInfo.distantBattleRomanMonthsTraveled = 0;
         // no return: all soldiers killed
     } else {
         city_message_post(1, MESSAGE_DISTANT_BATTLE_WON, 0, 0);
-        CityInfo_Ratings_changeFavor(25);
+        city_ratings_change_favor(25);
         Data_CityInfo.triumphalArchesAvailable++;
         building_menu_update();
         Data_CityInfo.distantBattleWonCount++;

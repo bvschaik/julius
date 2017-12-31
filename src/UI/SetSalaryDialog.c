@@ -1,9 +1,9 @@
 #include "AllWindows.h"
 #include "Advisors_private.h"
-#include "../CityInfo.h"
 
 #include "city/emperor.h"
 #include "city/finance.h"
+#include "city/ratings.h"
 
 static void buttonCancel(int param1, int param2);
 static void buttonSetSalary(int rank, int param2);
@@ -91,7 +91,7 @@ static void buttonSetSalary(int rank, int param2)
 	if (Data_CityInfo.victoryContinueMonths <= 0) {
 		city_emperor_set_salary_rank(rank);
 		city_finance_update_salary();
-		CityInfo_Ratings_updateFavorExplanation();
+		city_ratings_update_favor_explanation();
 		UI_Window_goTo(Window_Advisors);
 	}
 }

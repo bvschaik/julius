@@ -4,6 +4,7 @@
 #include "city/finance.h"
 #include "city/message.h"
 #include "city/population.h"
+#include "city/ratings.h"
 #include "core/random.h"
 #include "game/resource.h"
 #include "game/time.h"
@@ -36,10 +37,10 @@ void scenario_request_process()
             if (scenario.requests[i].months_to_comply <= 0) {
                 if (state == REQUEST_STATE_DISPATCHED) {
                     city_message_post(1, MESSAGE_REQUEST_RECEIVED, i, 0);
-                    CityInfo_Ratings_changeFavor(scenario.requests[i].favor);
+                    city_ratings_change_favor(scenario.requests[i].favor);
                 } else {
                     city_message_post(1, MESSAGE_REQUEST_RECEIVED_LATE, i, 0);
-                    CityInfo_Ratings_changeFavor(scenario.requests[i].favor / 2);
+                    city_ratings_change_favor(scenario.requests[i].favor / 2);
                 }
                 scenario.requests[i].state = REQUEST_STATE_RECEIVED;
                 scenario.requests[i].visible = 0;
@@ -56,7 +57,7 @@ void scenario_request_process()
                         city_message_post(1, MESSAGE_REQUEST_REFUSED, i, 0);
                         scenario.requests[i].state = REQUEST_STATE_OVERDUE;
                         scenario.requests[i].months_to_comply = 24;
-                        CityInfo_Ratings_changeFavor(-3);
+                        city_ratings_change_favor(-3);
                         Data_CityInfo.ratingFavorIgnoredRequestPenalty = 3;
                     }
                 } else if (state == REQUEST_STATE_OVERDUE) {
@@ -64,7 +65,7 @@ void scenario_request_process()
                         city_message_post(1, MESSAGE_REQUEST_REFUSED_OVERDUE, i, 0);
                         scenario.requests[i].state = REQUEST_STATE_IGNORED;
                         scenario.requests[i].visible = 0;
-                        CityInfo_Ratings_changeFavor(-5);
+                        city_ratings_change_favor(-5);
                         Data_CityInfo.ratingFavorIgnoredRequestPenalty = 5;
                     }
                 }

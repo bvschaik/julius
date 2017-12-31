@@ -10,6 +10,7 @@
 #include "city/culture.h"
 #include "city/finance.h"
 #include "city/labor.h"
+#include "city/ratings.h"
 #include "city/resource.h"
 #include "city/warning.h"
 #include "game/settings.h"
@@ -97,10 +98,7 @@ void UI_Advisors_init()
 	city_resource_calculate_food_stocks_and_supply_wheat();
 	Formation_calculateFigures();
 
-	CityInfo_Ratings_updateCultureExplanation();
-	CityInfo_Ratings_updateProsperityExplanation();
-	CityInfo_Ratings_updatePeaceExplanation();
-	CityInfo_Ratings_updateFavorExplanation();
+	city_ratings_update_explanations();
 
 	if (currentAdvisor == ADVISOR_ENTERTAINMENT) {
         UI_Advisor_Entertainment_init();

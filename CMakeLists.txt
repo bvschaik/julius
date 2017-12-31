@@ -72,6 +72,7 @@ set(CITY_FILES
     ${PROJECT_SOURCE_DIR}/src/city/labor.c
     ${PROJECT_SOURCE_DIR}/src/city/message.c
     ${PROJECT_SOURCE_DIR}/src/city/population.c
+    ${PROJECT_SOURCE_DIR}/src/city/ratings.c
     ${PROJECT_SOURCE_DIR}/src/city/resource.c
     ${PROJECT_SOURCE_DIR}/src/city/sentiment.c
     ${PROJECT_SOURCE_DIR}/src/city/trade.c
@@ -195,7 +196,6 @@ add_executable(julius
 	${PLATFORM_FILES}
 	${PROJECT_SOURCE_DIR}/src/Building.c
 	${PROJECT_SOURCE_DIR}/src/CityInfo.c
-	${PROJECT_SOURCE_DIR}/src/CityInfo_Ratings.c
 	${PROJECT_SOURCE_DIR}/src/CityInfo_Tick.c
 	${PROJECT_SOURCE_DIR}/src/CityInfo_Victory.c
 	${PROJECT_SOURCE_DIR}/src/CityView.c

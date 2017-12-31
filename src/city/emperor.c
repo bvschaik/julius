@@ -2,6 +2,7 @@
 
 #include "city/finance.h"
 #include "city/message.h"
+#include "city/ratings.h"
 #include "figure/formation.h"
 #include "game/difficulty.h"
 #include "game/time.h"
@@ -9,7 +10,6 @@
 #include "scenario/invasion.h"
 
 #include "Data/CityInfo.h"
-#include "CityInfo.h"
 
 const int SALARY_FOR_RANK[11] = {0, 2, 5, 8, 12, 20, 30, 40, 60, 80, 100};
 
@@ -28,12 +28,12 @@ static void update_debt_state()
         Data_CityInfo.debtState = 1;
         Data_CityInfo.monthsInDebt = 0;
         city_message_post(1, MESSAGE_CITY_IN_DEBT, 0, 0);
-        CityInfo_Ratings_reduceProsperityAfterBailout();
+        city_ratings_reduce_prosperity_after_bailout();
     } else if (Data_CityInfo.debtState == 1) {
         Data_CityInfo.debtState = 2;
         Data_CityInfo.monthsInDebt = 0;
         city_message_post(1, MESSAGE_CITY_IN_DEBT_AGAIN, 0, 0);
-        CityInfo_Ratings_changeFavor(-5);
+        city_ratings_change_favor(-5);
     } else if (Data_CityInfo.debtState == 2) {
         if (Data_CityInfo.monthsInDebt == -1) {
             city_message_post(1, MESSAGE_CITY_IN_DEBT_AGAIN, 0, 0);
@@ -47,7 +47,7 @@ static void update_debt_state()
             Data_CityInfo.monthsInDebt = 0;
             if (!Data_CityInfo.numImperialSoldiersInCity) {
                 city_message_post(1, MESSAGE_CITY_STILL_IN_DEBT, 0, 0);
-                CityInfo_Ratings_changeFavor(-10);
+                city_ratings_change_favor(-10);
             }
         }
     } else if (Data_CityInfo.debtState == 3) {
@@ -62,7 +62,7 @@ static void update_debt_state()
             Data_CityInfo.debtState = 4;
             Data_CityInfo.monthsInDebt = 0;
             if (!Data_CityInfo.numImperialSoldiersInCity) {
-                CityInfo_Ratings_setMaxFavor(10);
+                city_ratings_limit_favor(10);
             }
         }
     }
@@ -91,7 +91,7 @@ static void process_caesar_invasion()
         Data_CityInfo.caesarInvasionSize = 0;
         Data_CityInfo.caesarInvasionSoldiersDied = 0;
         if (Data_CityInfo.ratingFavor < 35) {
-            CityInfo_Ratings_changeFavor(10);
+            city_ratings_change_favor(10);
             if (Data_CityInfo.caesarInvasionCount < 2) {
                 city_message_post(1, MESSAGE_CAESAR_RESPECT_1, 0, 0);
             } else if (Data_CityInfo.caesarInvasionCount < 3) {
@@ -168,38 +168,38 @@ void city_emperor_send_gift()
     if (Data_CityInfo.giftOverdosePenalty <= 0) {
         Data_CityInfo.giftOverdosePenalty = 1;
         if (Data_CityInfo.giftSizeSelected == 0) {
-            CityInfo_Ratings_changeFavor(3);
+            city_ratings_change_favor(3);
         } else if (Data_CityInfo.giftSizeSelected == 1) {
-            CityInfo_Ratings_changeFavor(5);
+            city_ratings_change_favor(5);
         } else if (Data_CityInfo.giftSizeSelected == 2) {
-            CityInfo_Ratings_changeFavor(10);
+            city_ratings_change_favor(10);
         }
     } else if (Data_CityInfo.giftOverdosePenalty == 1) {
         Data_CityInfo.giftOverdosePenalty = 2;
         if (Data_CityInfo.giftSizeSelected == 0) {
-            CityInfo_Ratings_changeFavor(1);
+            city_ratings_change_favor(1);
         } else if (Data_CityInfo.giftSizeSelected == 1) {
-            CityInfo_Ratings_changeFavor(3);
+            city_ratings_change_favor(3);
         } else if (Data_CityInfo.giftSizeSelected == 2) {
-            CityInfo_Ratings_changeFavor(5);
+            city_ratings_change_favor(5);
         }
     } else if (Data_CityInfo.giftOverdosePenalty == 2) {
         Data_CityInfo.giftOverdosePenalty = 3;
         if (Data_CityInfo.giftSizeSelected == 0) {
-            CityInfo_Ratings_changeFavor(0);
+            city_ratings_change_favor(0);
         } else if (Data_CityInfo.giftSizeSelected == 1) {
-            CityInfo_Ratings_changeFavor(1);
+            city_ratings_change_favor(1);
         } else if (Data_CityInfo.giftSizeSelected == 2) {
-            CityInfo_Ratings_changeFavor(3);
+            city_ratings_change_favor(3);
         }
     } else if (Data_CityInfo.giftOverdosePenalty == 3) {
         Data_CityInfo.giftOverdosePenalty = 4;
         if (Data_CityInfo.giftSizeSelected == 0) {
-            CityInfo_Ratings_changeFavor(0);
+            city_ratings_change_favor(0);
         } else if (Data_CityInfo.giftSizeSelected == 1) {
-            CityInfo_Ratings_changeFavor(0);
+            city_ratings_change_favor(0);
         } else if (Data_CityInfo.giftSizeSelected == 2) {
-            CityInfo_Ratings_changeFavor(1);
+            city_ratings_change_favor(1);
         }
     }
 

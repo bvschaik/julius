@@ -28,6 +28,7 @@
 #include "city/labor.h"
 #include "city/message.h"
 #include "city/population.h"
+#include "city/ratings.h"
 #include "city/resource.h"
 #include "city/sentiment.h"
 #include "city/trade.h"
@@ -165,7 +166,7 @@ static void advanceMonth()
 	if (game_time_advance_month()) {
 		advanceYear();
 	} else {
-		CityInfo_Ratings_calculate(0);
+		city_ratings_update(0);
 	}
 
 	city_population_record_monthly();
@@ -185,6 +186,6 @@ static void advanceYear()
 	city_finance_handle_year_change();
 	empire_city_reset_yearly_trade_amounts();
 	building_maintenance_update_fire_direction();
-	CityInfo_Ratings_calculate(1);
+	city_ratings_update(1);
 	Data_CityInfo.godBlessingNeptuneDoubleTrade = 0;
 }
