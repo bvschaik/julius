@@ -18,6 +18,7 @@ except_file(TEST_CORE_FILES "core/lang.c" ${CORE_FILES})
 except_file(TEST_BUILDING_FILES "building/model.c" ${BUILDING_FILES})
 except_file(TEST_INPUT_FILES "input/keyboard.c" ${INPUT_FILES})
 except_file(TEST_INPUT_FILES "input/cursor.c" ${TEST_INPUT_FILES})
+except_file(TEST_INPUT_FILES "input/hotkey.c" ${TEST_INPUT_FILES})
 
 add_executable(compare
     sav/compare.c

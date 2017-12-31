@@ -10,7 +10,7 @@
 #include "../src/Runner.h"
 #include "../src/Screen.h"
 #include "../src/input/cursor.h"
-#include "../src/KeyboardHotkey.h"
+#include "../src/input/hotkey.h"
 #include "../src/input/keyboard.h"
 #include "../src/Widget.h" // debug
 #include "../src/Graphics.h" // debug
@@ -251,58 +251,58 @@ void handleKey(SDL_KeyboardEvent *event)
 			break;
 		case SDLK_LEFT:
 			keyboard_left();
-			KeyboardHotkey_left();
+			hotkey_left();
 			break;
 		case SDLK_RIGHT:
 			keyboard_right();
-			KeyboardHotkey_right();
+			hotkey_right();
 			break;
 		case SDLK_UP:
 			keyboard_left();
-			KeyboardHotkey_up();
+			hotkey_up();
 			break;
 		case SDLK_DOWN:
 			keyboard_right();
-			KeyboardHotkey_down();
+			hotkey_down();
 			break;
 		case SDLK_HOME:
 			keyboard_home();
-			KeyboardHotkey_home();
+			hotkey_home();
 			break;
 		case SDLK_END:
 			keyboard_end();
-			KeyboardHotkey_end();
+			hotkey_end();
 			break;
 		case SDLK_ESCAPE:
-			KeyboardHotkey_esc();
+			hotkey_esc();
 			break;
-		case SDLK_F1: KeyboardHotkey_func(1); break;
-		case SDLK_F2: KeyboardHotkey_func(2); break;
-		case SDLK_F3: KeyboardHotkey_func(3); break;
-		case SDLK_F4: KeyboardHotkey_func(4); break;
-		case SDLK_F5: KeyboardHotkey_func(5); break;
-		case SDLK_F6: KeyboardHotkey_func(6); break;
-		case SDLK_F7: KeyboardHotkey_func(7); break;
-		case SDLK_F8: KeyboardHotkey_func(8); break;
-		case SDLK_F9: KeyboardHotkey_func(9); break;
-		case SDLK_F10: KeyboardHotkey_func(10); break;
-		case SDLK_F11: KeyboardHotkey_func(11); break;
-		case SDLK_F12: KeyboardHotkey_func(12); break;
+		case SDLK_F1: hotkey_func(1); break;
+		case SDLK_F2: hotkey_func(2); break;
+		case SDLK_F3: hotkey_func(3); break;
+		case SDLK_F4: hotkey_func(4); break;
+		case SDLK_F5: hotkey_func(5); break;
+		case SDLK_F6: hotkey_func(6); break;
+		case SDLK_F7: hotkey_func(7); break;
+		case SDLK_F8: hotkey_func(8); break;
+		case SDLK_F9: hotkey_func(9); break;
+		case SDLK_F10: hotkey_func(10); break;
+		case SDLK_F11: hotkey_func(11); break;
+		case SDLK_F12: hotkey_func(12); break;
 		case SDLK_LCTRL:
 		case SDLK_RCTRL:
-			KeyboardHotkey_ctrl(1);
+			hotkey_ctrl(1);
 			break;
 		case SDLK_LALT:
 		case SDLK_RALT:
-			KeyboardHotkey_alt(1);
+			hotkey_alt(1);
 			break;
 		case SDLK_LSHIFT:
 		case SDLK_RSHIFT:
-			KeyboardHotkey_shift(1);
+			hotkey_shift(1);
 			break;
 		default:
 			if ((event->keysym.sym & SDLK_SCANCODE_MASK) == 0) {
-				KeyboardHotkey_character(event->keysym.sym);
+				hotkey_character(event->keysym.sym);
 			}
 			break;
 	}
@@ -313,15 +313,15 @@ static void handleKeyUp(SDL_KeyboardEvent *event)
 	switch (event->keysym.sym) {
 		case SDLK_LCTRL:
 		case SDLK_RCTRL:
-			KeyboardHotkey_ctrl(0);
+			hotkey_ctrl(0);
 			break;
 		case SDLK_LALT:
 		case SDLK_RALT:
-			KeyboardHotkey_alt(0);
+			hotkey_alt(0);
 			break;
 		case SDLK_LSHIFT:
 		case SDLK_RSHIFT:
-			KeyboardHotkey_shift(0);
+			hotkey_shift(0);
 			break;
 		default:
 			break;
