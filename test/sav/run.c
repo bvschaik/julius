@@ -1,7 +1,6 @@
 #include "core/time.h"
 #include "game/settings.h"
 
-#include "Runner.h"
 #include "Game.h"
 #include "GameFile.h"
 
@@ -38,7 +37,7 @@ static void run_ticks(int ticks)
     time_set_millis(0);
     for (int i = 1; i <= ticks; i++) {
         time_set_millis(2 * i);
-        Runner_run();
+        Game_run();
     }
 }
 

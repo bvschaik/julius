@@ -7,7 +7,6 @@
 
 #include "../src/UI/Window.h"
 #include "../src/core/time.h"
-#include "../src/Runner.h"
 #include "../src/Screen.h"
 #include "../src/input/cursor.h"
 #include "../src/input/hotkey.h"
@@ -166,7 +165,7 @@ void runTicks(int ticks)
 	for (int i = 1; i <= ticks; i++) {
 		UI_Window_goTo(Window_City);
 		time_set_millis(2 * i);
-		Runner_run();
+		Game_run();
 	}
 	setting_reset_speeds(originalSpeed, setting_scroll_speed());
 }
@@ -209,12 +208,12 @@ void refresh()
 	
 	Uint32 now = SDL_GetTicks();
 	time_set_millis(now);
-	Runner_run();
+	Game_run();
 	
 	// debug
 	Uint32 then = SDL_GetTicks();
 	
-	Runner_draw();
+	Game_draw();
 	numFrames++;
 	Uint32 then2 = SDL_GetTicks();
 	if (then2 - lastFpsTime > 1000) {
@@ -579,8 +578,8 @@ int runPerformance(const char *savedGameToLoad, int ticksToRun)
     for (int i = 1; i <= ticksToRun; i++) {
         UI_Window_goTo(Window_City);
         time_set_millis(2 * i);
-        Runner_run();
-        Runner_draw();
+        Game_run();
+        Game_draw();
         SDL_UpdateTexture(SDL.texture, NULL, Data_Screen.drawBuffer, Data_Screen.width * 4);
         //SDL_RenderClear(SDL.renderer);
         SDL_RenderCopy(SDL.renderer, SDL.texture, NULL, NULL);

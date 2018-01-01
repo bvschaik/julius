@@ -54,7 +54,6 @@ add_executable(autopilot
     ${PROJECT_SOURCE_DIR}/src/GameFile.c
     ${PROJECT_SOURCE_DIR}/src/GameTick.c
     ${PROJECT_SOURCE_DIR}/src/HouseEvolution.c
-    ${PROJECT_SOURCE_DIR}/src/Runner.c
     ${PROJECT_SOURCE_DIR}/src/Terrain.c
     ${PROJECT_SOURCE_DIR}/src/TerrainGraphics.c
     ${PROJECT_SOURCE_DIR}/src/Data/Model.c
