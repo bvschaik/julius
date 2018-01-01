@@ -29,6 +29,8 @@ enum {
     OVERLAY_PROBLEMS = 29
 };
 
+void game_state_init();
+
 int game_state_is_paused();
 
 void game_state_toggle_paused();

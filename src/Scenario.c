@@ -3,7 +3,6 @@
 #include "Building.h"
 #include "CityView.h"
 #include "GameFile.h"
-#include "Loader.h"
 #include "Terrain.h"
 #include "TerrainGraphics.h"
 
@@ -31,6 +30,7 @@
 #include "game/animation.h"
 #include "game/difficulty.h"
 #include "game/settings.h"
+#include "game/state.h"
 #include "game/time.h"
 #include "game/tutorial.h"
 #include "graphics/image.h"
@@ -137,7 +137,7 @@ static void initCustomScenario(const char *scenarioName)
 	city_data_init();
 	Data_CityInfo_Extra.ciid = 1;
 	city_message_init_scenario();
-	Loader_GameState_init();
+	game_state_init();
 	game_animation_init();
 	sound_city_init();
 	sound_music_reset();

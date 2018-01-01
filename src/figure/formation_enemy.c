@@ -18,7 +18,7 @@
 
 #include "Data/CityInfo.h"
 
-static const int enemyAttackBuildingPriority[4][100] = {
+static const int ENEMY_ATTACK_PRIORITY[4][100] = {
     {
         BUILDING_GRANARY, BUILDING_WAREHOUSE, BUILDING_MARKET,
         BUILDING_WHEAT_FARM, BUILDING_VEGETABLE_FARM, BUILDING_FRUIT_FARM,
@@ -46,7 +46,7 @@ static const int enemyAttackBuildingPriority[4][100] = {
     }
 };
 
-static const int rioterAttackBuildingPriority[100] = {
+static const int RIOTER_ATTACK_PRIORITY[100] = {
     79, 78, 77, 29, 28, 27, 26, 25, 85, 84, 32, 33, 98, 65, 66, 67,
     68, 69, 87, 86, 30, 31, 47, 52, 46, 48, 53, 51, 24, 23, 22, 21,
     20, 46, 48, 114, 113, 112, 111, 110, 71, 72, 70, 74, 75, 76, 60, 61,
@@ -54,7 +54,7 @@ static const int rioterAttackBuildingPriority[100] = {
     109, 108, 90, 100, 101, 102, 103, 104, 105, 55, 81, 91, 92, 14, 13, 12, 11, 10, 0
 };
 
-static const int layoutOrientationLegionIndexOffsets[13][4][40] = {
+static const int LAYOUT_ORIENTATION_OFFSETS[13][4][40] = {
     {
         {0, 0, -3, 0, 3, 0, -8, 0, 8, 0, -3, 8, 3, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         {0, 0, 0, -3, 0, 3, 0, -8, 0, 8, 8, -3, 8, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -144,8 +144,8 @@ int formation_rioter_get_target_building(int *x_tile, int *y_tile)
         if (!BuildingIsInUse(b)) {
             continue;
         }
-        for (int t = 0; t < 100 && t <= best_type_index && rioterAttackBuildingPriority[t]; t++) {
-            if (b->type == rioterAttackBuildingPriority[t]) {
+        for (int t = 0; t < 100 && t <= best_type_index && RIOTER_ATTACK_PRIORITY[t]; t++) {
+            if (b->type == RIOTER_ATTACK_PRIORITY[t]) {
                 if (t < best_type_index) {
                     best_type_index = t;
                     best_building = b;
@@ -182,8 +182,8 @@ static void set_enemy_target_building(formation *m)
         if (!BuildingIsInUse(b) || map_soldier_strength_get(b->gridOffset)) {
             continue;
         }
-        for (int n = 0; n < 100 && n <= best_type_index && enemyAttackBuildingPriority[attack][n]; n++) {
-            if (b->type == enemyAttackBuildingPriority[attack][n]) {
+        for (int n = 0; n < 100 && n <= best_type_index && ENEMY_ATTACK_PRIORITY[attack][n]; n++) {
+            if (b->type == ENEMY_ATTACK_PRIORITY[attack][n]) {
                 int distance = calc_maximum_distance(m->x_home, m->y_home, b->x, b->y);
                 if (n < best_type_index) {
                     best_type_index = n;
@@ -204,8 +204,8 @@ static void set_enemy_target_building(formation *m)
             if (!BuildingIsInUse(b) || map_soldier_strength_get(b->gridOffset)) {
                 continue;
             }
-            for (int n = 0; n < 100 && n <= best_type_index && rioterAttackBuildingPriority[n]; n++) {
-                if (b->type == rioterAttackBuildingPriority[n]) {
+            for (int n = 0; n < 100 && n <= best_type_index && RIOTER_ATTACK_PRIORITY[n]; n++) {
+                if (b->type == RIOTER_ATTACK_PRIORITY[n]) {
                     int distance = calc_maximum_distance(m->x_home, m->y_home, b->x, b->y);
                     if (n < best_type_index) {
                         best_type_index = n;
@@ -476,9 +476,9 @@ static void update_enemy_movement(formation *m, int roman_distance)
         }
     } else if (regroup) {
         int layout = army->layout;
-        int x_offset = layoutOrientationLegionIndexOffsets[layout][m->orientation / 2][2 * m->enemy_legion_index] +
+        int x_offset = LAYOUT_ORIENTATION_OFFSETS[layout][m->orientation / 2][2 * m->enemy_legion_index] +
             army->home_x;
-        int y_offset = layoutOrientationLegionIndexOffsets[layout][m->orientation / 2][2 * m->enemy_legion_index + 1] +
+        int y_offset = LAYOUT_ORIENTATION_OFFSETS[layout][m->orientation / 2][2 * m->enemy_legion_index + 1] +
             army->home_y;
         int x_tile, y_tile;
         if (formation_enemy_move_formation_to(m, x_offset, y_offset, &x_tile, &y_tile)) {
@@ -486,9 +486,9 @@ static void update_enemy_movement(formation *m, int roman_distance)
         }
     } else if (advance) {
         int layout = army->layout;
-        int x_offset = layoutOrientationLegionIndexOffsets[layout][m->orientation / 2][2 * m->enemy_legion_index] +
+        int x_offset = LAYOUT_ORIENTATION_OFFSETS[layout][m->orientation / 2][2 * m->enemy_legion_index] +
             army->destination_x;
-        int y_offset = layoutOrientationLegionIndexOffsets[layout][m->orientation / 2][2 * m->enemy_legion_index + 1] +
+        int y_offset = LAYOUT_ORIENTATION_OFFSETS[layout][m->orientation / 2][2 * m->enemy_legion_index + 1] +
             army->destination_y;
         int x_tile, y_tile;
         if (formation_enemy_move_formation_to(m, x_offset, y_offset, &x_tile, &y_tile)) {

@@ -210,7 +210,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/Graphics.c
 	${PROJECT_SOURCE_DIR}/src/Graphics_Footprint.c
 	${PROJECT_SOURCE_DIR}/src/HouseEvolution.c
-	${PROJECT_SOURCE_DIR}/src/Loader.c
 	${PROJECT_SOURCE_DIR}/src/Runner.c
 	${PROJECT_SOURCE_DIR}/src/Scenario.c
 	${PROJECT_SOURCE_DIR}/src/Screen.c

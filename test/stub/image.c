@@ -57,18 +57,3 @@ const image *image_get(int id)
 {
     return 0;
 }
-
-const image *image_get_enemy(int id)
-{
-    return 0;
-}
-
-const color_t *image_data(int id)
-{
-    return 0;
-}
-
-const color_t *image_data_enemy(int id)
-{
-    return 0;
-}

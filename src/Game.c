@@ -1,6 +1,5 @@
 #include "Game.h"
 
-#include "Loader.h"
 #include "System.h"
 #include "Video.h"
 
@@ -25,12 +24,6 @@ static void errlog(const char *msg)
     debug_log(msg, 0, 0);
 }
 
-static void loadDefaultNames()
-{
-    // TODO move out
-    scenario_set_player_name(lang_get_string(9, 5));
-}
-
 int Game_preInit()
 {
     settings_load();
@@ -42,7 +35,7 @@ int Game_preInit()
 		errlog("ERR: 'c3.eng' or 'c3_mm.eng' files not found or too large.");
 		return 0;
 	}
-	loadDefaultNames();
+	scenario_set_player_name(lang_get_string(9, 5));
 	random_init();
 	return 1;
 }
@@ -70,7 +63,7 @@ int Game_init()
 	}
 
 	sound_system_init();
-	Loader_GameState_init();
+	game_state_init();
 	UI_Window_goTo(Window_Logo);
 	return 1;
 }
