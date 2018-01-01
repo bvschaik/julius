@@ -157,7 +157,6 @@ void formation_caesar_retreat();
 void formation_foreach(void (*callback)(const formation*));
 void formation_foreach_herd(void (*callback)(const formation*));
 void formation_foreach_non_herd(void (*callback)(const formation*, void*), void *data);
-void formation_foreach_legion(void (*callback)(const formation*, void*), void *data);
 
 void formation_legion_set_trained(int formation_id);
 void formation_legion_set_max_figures();

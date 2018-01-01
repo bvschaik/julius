@@ -225,15 +225,6 @@ void formation_foreach_herd(void (*callback)(const formation *))
     }
 }
 
-void formation_foreach_legion(void (*callback)(const formation *, void *), void *data)
-{
-    for (int i = 1; i < MAX_FORMATIONS; i++) {
-        if (formations[i].in_use && formations[i].is_legion) {
-            callback(&formations[i], data);
-        }
-    }
-}
-
 void formation_foreach_non_herd(void (*callback)(const formation *, void *), void *data)
 {
     for (int i = 1; i < MAX_FORMATIONS; i++) {

@@ -117,15 +117,6 @@ static void update_legion_enemy_totals(const formation *m, void *data)
     }
 }
 
-static void update_soldier_totals(const formation *m, void *data)
-{
-    Data_CityInfo.militaryTotalLegions++;
-    Data_CityInfo.militaryTotalSoldiers += m->num_figures;
-    if (m->empire_service && m->num_figures > 0) {
-        Data_CityInfo.militaryTotalLegionsEmpireService++;
-    }
-}
-
 void Formation_calculateFigures()
 {
     formation_clear_figures();
@@ -153,7 +144,16 @@ void Formation_calculateFigures()
     Data_CityInfo.militaryTotalLegionsEmpireService = 0;
     Data_CityInfo.militaryTotalSoldiers = 0;
     Data_CityInfo.militaryTotalLegions = 0;
-    formation_foreach_legion(update_soldier_totals, 0);
+    for (int i = 1; i < MAX_FORMATIONS; i++) {
+        const formation *m = formation_get(i);
+        if (m->in_use && m->is_legion) {
+            Data_CityInfo.militaryTotalLegions++;
+            Data_CityInfo.militaryTotalSoldiers += m->num_figures;
+            if (m->empire_service && m->num_figures > 0) {
+                Data_CityInfo.militaryTotalLegionsEmpireService++;
+            }
+        }
+    }
 }
 
 void Formation_updateAfterDeath(int formationId)
