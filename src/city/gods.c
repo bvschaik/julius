@@ -10,6 +10,7 @@
 #include "city/sentiment.h"
 #include "core/calc.h"
 #include "core/random.h"
+#include "figure/formation_legion.h"
 #include "figuretype/water.h"
 #include "game/settings.h"
 #include "game/time.h"
@@ -17,7 +18,6 @@
 #include "scenario/invasion.h"
 
 #include "Data/CityInfo.h"
-#include "Formation.h"
 
 #define MAX_GODS 5
 #define TIE 10
@@ -120,7 +120,7 @@ static int perform_large_curse(god_type god)
             building_granary_warehouse_curse(1);
             break;
         case GOD_MARS:
-            if (Formation_marsCurseFort()) {
+            if (formation_legion_curse()) {
                 city_message_post(1, MESSAGE_WRATH_OF_MARS, 0, 0);
                 scenario_invasion_start_from_mars();
             } else {

@@ -135,7 +135,6 @@ int formation_create_enemy(int figure_type, int x, int y, int layout, int orient
 formation *formation_get(int formation_id);
 
 void formation_set_halted(int formation_id, int halted);
-void formation_set_cursed(int formation_id);
 
 void formation_toggle_empire_service(int formation_id);
 

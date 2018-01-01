@@ -13,8 +13,6 @@ int Formation_getFormationForBuilding(int gridOffset);
 
 void Formation_calculateFigures();
 
-int Formation_marsCurseFort();
-
 void Formation_Tick_updateAll(int secondTime);
 
 #endif

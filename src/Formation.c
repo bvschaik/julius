@@ -187,34 +187,3 @@ void Formation_updateAfterDeath(int formationId)
 	}
 	formation_change_morale(formationId, morale);
 }
-
-int Formation_marsCurseFort()
-{
-	int bestLegionId = 0;
-	int bestLegionWeight = 0;
-	for (int i = 1; i <= 6; i++) { // BUG assumes no legions beyond index 6
-		const formation *m = formation_get(i);
-		if (m->in_use == 1 && m->is_legion) {
-			int weight = m->num_figures;
-			if (m->figure_type == FIGURE_FORT_LEGIONARY) {
-				weight *= 2;
-			}
-			if (weight > bestLegionWeight) {
-				bestLegionWeight = weight;
-				bestLegionId = i;
-			}
-		}
-	}
-	if (bestLegionId <= 0) {
-		return 0;
-	}
-	const formation *m = formation_get(bestLegionId);
-	for (int i = 0; i < MAX_FORMATION_FIGURES - 1; i++) { // BUG: last figure not cursed
-		if (m->figures[i] > 0) {
-			figure_get(m->figures[i])->actionState = FIGURE_ACTION_82_SOLDIER_RETURNING_TO_BARRACKS;
-		}
-	}
-	formation_set_cursed(bestLegionId);
-	Formation_calculateFigures();
-	return 1;
-}

@@ -26,4 +26,6 @@ void formation_legions_kill_in_distant_battle(int kill_percentage);
 
 void formation_legions_return_from_distant_battle();
 
+int formation_legion_curse();
+
 #endif // FIGURE_FORMATION_LEGION_H

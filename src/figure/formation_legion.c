@@ -263,3 +263,33 @@ void formation_legions_return_from_distant_battle()
         }
     }
 }
+
+int formation_legion_curse()
+{
+    formation *best_legion = 0;
+    int best_legion_weight = 0;
+    for (int i = 1; i <= 6; i++) { // BUG assumes no legions beyond index 6
+        formation *m = formation_get(i);
+        if (m->in_use == 1 && m->is_legion) {
+            int weight = m->num_figures;
+            if (m->figure_type == FIGURE_FORT_LEGIONARY) {
+                weight *= 2;
+            }
+            if (weight > best_legion_weight) {
+                best_legion_weight = weight;
+                best_legion = m;
+            }
+        }
+    }
+    if (!best_legion) {
+        return 0;
+    }
+    for (int i = 0; i < MAX_FORMATION_FIGURES - 1; i++) { // BUG: last figure not cursed
+        if (best_legion->figures[i] > 0) {
+            figure_get(best_legion->figures[i])->actionState = FIGURE_ACTION_82_SOLDIER_RETURNING_TO_BARRACKS;
+        }
+    }
+    best_legion->cursed_by_mars = 96;
+    Formation_calculateFigures();
+    return 1;
+}

@@ -133,11 +133,6 @@ void formation_set_halted(int formation_id, int halted)
     formations[formation_id].is_halted = halted;
 }
 
-void formation_set_cursed(int formation_id)
-{
-    formations[formation_id].cursed_by_mars = 96;
-}
-
 void formation_toggle_empire_service(int formation_id)
 {
     formations[formation_id].empire_service = formations[formation_id].empire_service ? 0 : 1;
