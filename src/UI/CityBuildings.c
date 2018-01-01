@@ -17,6 +17,7 @@
 #include "figure/formation.h"
 #include "game/resource.h"
 #include "game/settings.h"
+#include "game/state.h"
 #include "input/scroll.h"
 #include "map/building.h"
 #include "map/desirability.h"
@@ -52,9 +53,9 @@ void UI_CityBuildings_drawForeground(int x, int y)
 		advanceWaterAnimation = 1;
 	}
 
-	if (Data_State.currentOverlay) {
+	if (game_state_overlay()) {
 		UI_CityBuildings_drawOverlayFootprints();
-		UI_CityBuildings_drawOverlayTopsFiguresAnimation(Data_State.currentOverlay);
+		UI_CityBuildings_drawOverlayTopsFiguresAnimation(game_state_overlay());
 		UI_CityBuildings_drawSelectedBuildingGhost();
 		drawHippodromeAndElevatedFigures(9999);
 	} else {
@@ -572,7 +573,7 @@ static void drawHippodromeAndElevatedFigures(int selectedFigureId)
             }
 		} END_FOREACH_X_VIEW;
 		FOREACH_X_VIEW {
-			if (!Data_State.currentOverlay) {
+			if (!game_state_overlay()) {
 				int graphicId = map_image_at(gridOffset);
 				const image *img = image_get(graphicId);
 				if (img->num_animation_sprites &&
@@ -725,21 +726,21 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 	}
 	int gridOffset = Data_State.map.current.gridOffset;
 	int buildingId = map_building_at(gridOffset);
-	int overlay = Data_State.currentOverlay;
+	int overlay = game_state_overlay();
 	// regular tooltips
-	if (overlay == Overlay_None && buildingId && building_get(buildingId)->type == BUILDING_SENATE_UPGRADED) {
+	if (overlay == OVERLAY_NONE && buildingId && building_get(buildingId)->type == BUILDING_SENATE_UPGRADED) {
 		c->type = TooltipType_Senate;
 		c->priority = TooltipPriority_High;
 		return;
 	}
 	// overlay tooltips
-	if (overlay != Overlay_Water && overlay != Overlay_Desirability && !buildingId) {
+	if (overlay != OVERLAY_WATER && overlay != OVERLAY_DESIRABILITY && !buildingId) {
 		return;
 	}
 	int overlayRequiresHouse =
-		overlay != Overlay_Water && overlay != Overlay_Fire &&
-		overlay != Overlay_Damage && overlay != Overlay_Native;
-	int overlayForbidsHouse = overlay == Overlay_Native;
+		overlay != OVERLAY_WATER && overlay != OVERLAY_FIRE &&
+		overlay != OVERLAY_DAMAGE && overlay != OVERLAY_NATIVE;
+	int overlayForbidsHouse = overlay == OVERLAY_NATIVE;
 	building *b = building_get(buildingId);
 	if (overlayRequiresHouse && !b->houseSize) {
 		return;
@@ -751,7 +752,7 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 	c->textId = 0;
 	c->hasNumericPrefix = 0;
 	switch (overlay) {
-		case Overlay_Water:
+		case OVERLAY_WATER:
 			if (map_terrain_is(gridOffset, TERRAIN_RESERVOIR_RANGE)) {
 				if (map_terrain_is(gridOffset, TERRAIN_FOUNTAIN_RANGE)) {
 					c->textId = 2;
@@ -765,7 +766,7 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 				return;
 			}
 			break;
-		case Overlay_Religion:
+		case OVERLAY_RELIGION:
 			if (b->data.house.numGods <= 0) {
 				c->textId = 12;
 			} else if (b->data.house.numGods == 1) {
@@ -782,7 +783,7 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 				c->textId = 18; // >5 gods, shouldn't happen...
 			}
 			break;
-		case Overlay_Fire:
+		case OVERLAY_FIRE:
 			if (b->fireRisk <= 0) {
 				c->textId = 46;
 			} else if (b->fireRisk <= 20) {
@@ -797,7 +798,7 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 				c->textId = 51;
 			}
 			break;
-		case Overlay_Damage:
+		case OVERLAY_DAMAGE:
 			if (b->damageRisk <= 0) {
 				c->textId = 52;
 			} else if (b->damageRisk <= 40) {
@@ -812,7 +813,7 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 				c->textId = 57;
 			}
 			break;
-		case Overlay_Crime:
+		case OVERLAY_CRIME:
 			if (b->sentiment.houseHappiness <= 0) {
 				c->textId = 63;
 			} else if (b->sentiment.houseHappiness <= 10) {
@@ -827,7 +828,7 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 				c->textId = 58;
 			}
 			break;
-		case Overlay_Entertainment:
+		case OVERLAY_ENTERTAINMENT:
 			if (b->data.house.entertainment <= 0) {
 				c->textId = 64;
 			} else if (b->data.house.entertainment < 10) {
@@ -852,7 +853,7 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 				c->textId = 74;
 			}
 			break;
-		case Overlay_Theater:
+		case OVERLAY_THEATER:
 			if (b->data.house.theater <= 0) {
 				c->textId = 75;
 			} else if (b->data.house.theater >= 80) {
@@ -863,7 +864,7 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 				c->textId = 78;
 			}
 			break;
-		case Overlay_Amphitheater:
+		case OVERLAY_AMPHITHEATER:
 			if (b->data.house.amphitheaterActor <= 0) {
 				c->textId = 79;
 			} else if (b->data.house.amphitheaterActor >= 80) {
@@ -874,7 +875,7 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 				c->textId = 82;
 			}
 			break;
-		case Overlay_Colosseum:
+		case OVERLAY_COLOSSEUM:
 			if (b->data.house.colosseumGladiator <= 0) {
 				c->textId = 83;
 			} else if (b->data.house.colosseumGladiator >= 80) {
@@ -885,7 +886,7 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 				c->textId = 86;
 			}
 			break;
-		case Overlay_Hippodrome:
+		case OVERLAY_HIPPODROME:
 			if (b->data.house.hippodrome <= 0) {
 				c->textId = 87;
 			} else if (b->data.house.hippodrome >= 80) {
@@ -896,7 +897,7 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 				c->textId = 90;
 			}
 			break;
-		case Overlay_Education:
+		case OVERLAY_EDUCATION:
 			switch (b->data.house.education) {
 				case 0: c->textId = 100; break;
 				case 1: c->textId = 101; break;
@@ -904,7 +905,7 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 				case 3: c->textId = 103; break;
 			}
 			break;
-		case Overlay_School:
+		case OVERLAY_SCHOOL:
 			if (b->data.house.school <= 0) {
 				c->textId = 19;
 			} else if (b->data.house.school >= 80) {
@@ -915,7 +916,7 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 				c->textId = 22;
 			}
 			break;
-		case Overlay_Library:
+		case OVERLAY_LIBRARY:
 			if (b->data.house.library <= 0) {
 				c->textId = 23;
 			} else if (b->data.house.library >= 80) {
@@ -926,7 +927,7 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 				c->textId = 26;
 			}
 			break;
-		case Overlay_Academy:
+		case OVERLAY_ACADEMY:
 			if (b->data.house.academy <= 0) {
 				c->textId = 27;
 			} else if (b->data.house.academy >= 80) {
@@ -937,7 +938,7 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 				c->textId = 30;
 			}
 			break;
-		case Overlay_Barber:
+		case OVERLAY_BARBER:
 			if (b->data.house.barber <= 0) {
 				c->textId = 31;
 			} else if (b->data.house.barber >= 80) {
@@ -948,7 +949,7 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 				c->textId = 34;
 			}
 			break;
-		case Overlay_Bathhouse:
+		case OVERLAY_BATHHOUSE:
 			if (b->data.house.bathhouse <= 0) {
 				c->textId = 8;
 			} else if (b->data.house.bathhouse >= 80) {
@@ -959,7 +960,7 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 				c->textId = 11;
 			}
 			break;
-		case Overlay_Clinic:
+		case OVERLAY_CLINIC:
 			if (b->data.house.clinic <= 0) {
 				c->textId = 35;
 			} else if (b->data.house.clinic >= 80) {
@@ -970,7 +971,7 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 				c->textId = 38;
 			}
 			break;
-		case Overlay_Hospital:
+		case OVERLAY_HOSPITAL:
 			if (b->data.house.hospital <= 0) {
 				c->textId = 39;
 			} else if (b->data.house.hospital >= 80) {
@@ -981,7 +982,7 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 				c->textId = 42;
 			}
 			break;
-		case Overlay_TaxIncome: {
+		case OVERLAY_TAX_INCOME: {
 			int denarii = calc_adjust_with_percentage(
 				b->taxIncomeOrStorage / 2, Data_CityInfo.taxPercentage);
 			if (denarii > 0) {
@@ -995,7 +996,7 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 			}
 			break;
 		}
-		case Overlay_FoodStocks:
+		case OVERLAY_FOOD_STOCKS:
 			if (b->housePopulation <= 0) {
 				return;
 			}
@@ -1018,7 +1019,7 @@ void UI_CityBuildings_getTooltip(struct TooltipContext *c)
 				}
 			}
 			break;
-		case Overlay_Desirability: {
+		case OVERLAY_DESIRABILITY: {
 			int desirability = map_desirability_get(gridOffset);
 			if (desirability < 0) {
 				c->textId = 91;

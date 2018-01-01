@@ -333,7 +333,6 @@ static void briefingBack(int param1, int param2)
 
 static void startMission(int param1, int param2)
 {
-	Data_State.previousOverlay = 0;
 	switch (UI_Window_getId()) {
 		case Window_NewCareerDialog:
 		case Window_MissionSelection:

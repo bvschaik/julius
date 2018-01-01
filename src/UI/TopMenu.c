@@ -11,12 +11,12 @@
 #include "../Widget.h"
 #include "../Data/CityInfo.h"
 #include "../Data/Screen.h"
-#include "../Data/State.h"
 
 #include "building/construction.h"
 #include "core/string.h"
 #include "city/finance.h"
 #include "game/settings.h"
+#include "game/state.h"
 #include "game/time.h"
 #include "game/undo.h"
 #include "scenario/property.h"
@@ -321,8 +321,7 @@ static void menuFile_newGame(int param)
 	clearState();
 	building_construction_clear_type();
 	game_undo_disable();
-	Data_State.currentOverlay = 0;
-	Data_State.previousOverlay = 0;
+	game_state_reset_overlay();
 	UI_Window_goTo(Window_MainMenu);
 }
 

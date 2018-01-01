@@ -11,6 +11,7 @@
 
 #include "city/finance.h"
 #include "game/settings.h"
+#include "game/state.h"
 #include "game/undo.h"
 #include "scenario/property.h"
 #include "scenario/scenario.h"
@@ -105,7 +106,7 @@ static void advanceToNextMission()
 	Data_CityInfo.victoryContinueMonthsChosen = 0;
 
 	game_undo_disable();
-	Data_State.currentOverlay = 0;
+	game_state_reset_overlay();
 
 	if (scenario_campaign_rank() >= 11 || scenario_is_custom()) {
 		UI_Window_goTo(Window_MainMenu);

@@ -18,6 +18,7 @@
 #include "empire/trade_prices.h"
 #include "figure/route.h"
 #include "game/file_io.h"
+#include "game/state.h"
 #include "game/undo.h"
 #include "graphics/image.h"
 #include "map/road_network.h"
@@ -135,8 +136,7 @@ static void setupFromSavedGame()
 	sound_music_reset();
 
 	game_undo_disable();
-	Data_State.currentOverlay = 0;
-	Data_State.previousOverlay = 0;
+	game_state_reset_overlay();
 	Data_State.missionBriefingShown = 1;
 
 	Data_CityInfo.tutorial1FireMessageShown = 1;
@@ -149,7 +149,7 @@ static void setupFromSavedGame()
 
     UI_PlayerMessageList_resetScroll();
 
-	Data_State.gamePaused = 0;
+	game_state_unpause();
 }
 
 void GameFile_writeMissionSavedGameIfNeeded()

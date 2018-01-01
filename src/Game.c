@@ -6,7 +6,6 @@
 
 #include "UI/Window.h"
 
-#include "Data/State.h"
 #include "UI/TopMenu.h"
 
 #include "building/model.h"
@@ -15,6 +14,7 @@
 #include "core/random.h"
 #include "figure/type.h"
 #include "game/settings.h"
+#include "game/state.h"
 #include "graphics/image.h"
 #include "scenario/property.h"
 #include "scenario/scenario.h"
@@ -35,7 +35,7 @@ int Game_preInit()
 {
     settings_load();
     scenario_settings_init();
-    Data_State.gamePaused = 0;
+    game_state_unpause();
     UI_TopMenu_initFromSettings(); // TODO eliminate need for this
 
 	if (!lang_load("c3.eng", "c3_mm.eng")) {

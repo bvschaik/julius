@@ -5,6 +5,7 @@
 #include "figure/figure.h"
 #include "figure/formation.h"
 #include "game/resource.h"
+#include "game/state.h"
 
 static building *get_entertainment_building(const figure *f)
 {
@@ -18,63 +19,63 @@ static building *get_entertainment_building(const figure *f)
 
 static int showOnOverlay(figure *f)
 {
-	switch (Data_State.currentOverlay) {
-		case Overlay_Water:
-		case Overlay_Desirability:
+	switch (game_state_overlay()) {
+		case OVERLAY_WATER:
+		case OVERLAY_DESIRABILITY:
 			return 0;
-		case Overlay_Native:
+		case OVERLAY_NATIVE:
 			return f->type == FIGURE_INDIGENOUS_NATIVE || f->type == FIGURE_MISSIONARY;
-		case Overlay_Fire:
+		case OVERLAY_FIRE:
 			return f->type == FIGURE_PREFECT;
-		case Overlay_Damage:
+		case OVERLAY_DAMAGE:
 			return f->type == FIGURE_ENGINEER;
-		case Overlay_TaxIncome:
+		case OVERLAY_TAX_INCOME:
 			return f->type == FIGURE_TAX_COLLECTOR;
-		case Overlay_Crime:
+		case OVERLAY_CRIME:
 			return f->type == FIGURE_PREFECT || f->type == FIGURE_PROTESTER ||
 				f->type == FIGURE_CRIMINAL || f->type == FIGURE_RIOTER;
-		case Overlay_Entertainment:
+		case OVERLAY_ENTERTAINMENT:
 			return f->type == FIGURE_ACTOR || f->type == FIGURE_GLADIATOR ||
 				f->type == FIGURE_LION_TAMER || f->type == FIGURE_CHARIOTEER;
-		case Overlay_Education:
+		case OVERLAY_EDUCATION:
 			return f->type == FIGURE_SCHOOL_CHILD || f->type == FIGURE_LIBRARIAN ||
 				f->type == FIGURE_TEACHER;
-		case Overlay_Theater:
+		case OVERLAY_THEATER:
 			if (f->type == FIGURE_ACTOR) {
 				return get_entertainment_building(f)->type == BUILDING_THEATER;
 			}
 			return 0;
-		case Overlay_Amphitheater:
+		case OVERLAY_AMPHITHEATER:
 			if (f->type == FIGURE_ACTOR || f->type == FIGURE_GLADIATOR) {
 				return get_entertainment_building(f)->type == BUILDING_AMPHITHEATER;
 			}
 			return 0;
-		case Overlay_Colosseum:
+		case OVERLAY_COLOSSEUM:
 			if (f->type == FIGURE_GLADIATOR) {
 				return get_entertainment_building(f)->type == BUILDING_COLOSSEUM;
 			} else if (f->type == FIGURE_LION_TAMER) {
 				return 1;
 			}
 			return 0;
-		case Overlay_Hippodrome:
+		case OVERLAY_HIPPODROME:
 			return f->type == FIGURE_CHARIOTEER;
-		case Overlay_Religion:
+		case OVERLAY_RELIGION:
 			return f->type == FIGURE_PRIEST;
-		case Overlay_School:
+		case OVERLAY_SCHOOL:
 			return f->type == FIGURE_SCHOOL_CHILD;
-		case Overlay_Library:
+		case OVERLAY_LIBRARY:
 			return f->type == FIGURE_LIBRARIAN;
-		case Overlay_Academy:
+		case OVERLAY_ACADEMY:
 			return f->type == FIGURE_TEACHER;
-		case Overlay_Barber:
+		case OVERLAY_BARBER:
 			return f->type == FIGURE_BARBER;
-		case Overlay_Bathhouse:
+		case OVERLAY_BATHHOUSE:
 			return f->type == FIGURE_BATHHOUSE_WORKER;
-		case Overlay_Clinic:
+		case OVERLAY_CLINIC:
 			return f->type == FIGURE_DOCTOR;
-		case Overlay_Hospital:
+		case OVERLAY_HOSPITAL:
 			return f->type == FIGURE_SURGEON;
-		case Overlay_FoodStocks:
+		case OVERLAY_FOOD_STOCKS:
 			if (f->type == FIGURE_MARKET_BUYER || f->type == FIGURE_MARKET_TRADER ||
 				f->type == FIGURE_DELIVERY_BOY || f->type == FIGURE_FISHING_BOAT) {
 				return 1;
@@ -82,7 +83,7 @@ static int showOnOverlay(figure *f)
 				return resource_is_food(f->resourceId);
 			}
 			return 0;
-		case Overlay_Problems:
+		case OVERLAY_PROBLEMS:
 			if (f->type == FIGURE_LABOR_SEEKER) {
 				return building_get(f->buildingId)->showOnProblemOverlay;
 			} else if (f->type == FIGURE_CART_PUSHER) {

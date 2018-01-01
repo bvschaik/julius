@@ -4,11 +4,11 @@
 #include "GameTick.h"
 #include "UI/Window.h"
 
-#include "Data/State.h"
-
 #include "building/construction.h"
+#include "core/time.h"
 #include "game/animation.h"
 #include "game/settings.h"
+#include "game/state.h"
 #include "input/scroll.h"
 #include "sound/city.h"
 
@@ -34,7 +34,7 @@ static int getElapsedTicks()
 		gameSpeedIndex = 0;
 	}
 
-	if (Data_State.gamePaused) {
+	if (game_state_is_paused()) {
 		return 0;
 	}
 	switch (UI_Window_getId()) {

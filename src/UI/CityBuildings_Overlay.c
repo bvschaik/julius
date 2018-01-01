@@ -4,6 +4,7 @@
 #include "building/industry.h"
 #include "figure/figure.h"
 #include "game/resource.h"
+#include "game/state.h"
 #include "map/desirability.h"
 #include "map/bridge.h"
 #include "map/building.h"
@@ -88,6 +89,7 @@ static void draw_top_with_size(int grid_offset, int image_x, int image_y)
 
 void UI_CityBuildings_drawOverlayFootprints()
 {
+    int overlay = game_state_overlay();
 	FOREACH_XY_VIEW {
 		int gridOffset = ViewToGridOffset(xView, yView);
 		if (gridOffset == Data_State.selectedBuilding.gridOffsetStart) {
@@ -98,13 +100,13 @@ void UI_CityBuildings_drawOverlayFootprints()
 			// Outside map: draw black tile
 			DRAWFOOT_SIZE1(image_group(GROUP_TERRAIN_BLACK),
 				xGraphic, yGraphic);
-		} else if (Data_State.currentOverlay == Overlay_Desirability) {
+		} else if (overlay == OVERLAY_DESIRABILITY) {
 			drawBuildingFootprintForDesirabilityOverlay(gridOffset, xGraphic, yGraphic);
 		} else if (map_property_is_draw_tile(gridOffset)) {
 			int terrain = map_terrain_get(gridOffset);
-			if (Data_State.currentOverlay == Overlay_Water) {
+			if (overlay == OVERLAY_WATER) {
 				drawFootprintForWaterOverlay(gridOffset, xGraphic, yGraphic);
-			} else if (Data_State.currentOverlay == Overlay_Native) {
+			} else if (overlay == OVERLAY_NATIVE) {
 				drawFootprintForNativeOverlay(gridOffset, xGraphic, yGraphic);
 			} else if (terrain & (TERRAIN_AQUEDUCT | TERRAIN_WALL)) {
 				// display grass
@@ -138,75 +140,75 @@ void UI_CityBuildings_drawOverlayTopsFiguresAnimation(int overlay)
 		} END_FOREACH_X_VIEW;
 		// draw animation
 		FOREACH_X_VIEW {
-			if (overlay == Overlay_Desirability) {
+			if (overlay == OVERLAY_DESIRABILITY) {
 				drawBuildingTopForDesirabilityOverlay(gridOffset, xGraphic, yGraphic);
 			} else if (map_property_is_draw_tile(gridOffset)) {
-				if (overlay == Overlay_Water) {
+				if (overlay == OVERLAY_WATER) {
 					drawTopForWaterOverlay(gridOffset, xGraphic, yGraphic);
-				} else if (overlay == Overlay_Native) {
+				} else if (overlay == OVERLAY_NATIVE) {
 					drawTopForNativeOverlay(gridOffset, xGraphic, yGraphic);
 				} else if (!map_terrain_is(gridOffset, TERRAIN_WALL | TERRAIN_AQUEDUCT | TERRAIN_ROAD)) {
 					if (map_terrain_is(gridOffset, TERRAIN_BUILDING) && map_building_at(gridOffset)) {
 						building *b = building_get(map_building_at(gridOffset));
 						switch (overlay) {
-							case Overlay_Fire:
+							case OVERLAY_FIRE:
 								drawBuildingTopForFireOverlay(gridOffset, b, xGraphic, yGraphic);
 								break;
-							case Overlay_Damage:
+							case OVERLAY_DAMAGE:
 								drawBuildingTopForDamageOverlay(gridOffset, b, xGraphic, yGraphic);
 								break;
-							case Overlay_Crime:
+							case OVERLAY_CRIME:
 								drawBuildingTopForCrimeOverlay(gridOffset, b, xGraphic, yGraphic);
 								break;
-							case Overlay_Entertainment:
+							case OVERLAY_ENTERTAINMENT:
 								drawBuildingTopForEntertainmentOverlay(gridOffset, b, xGraphic, yGraphic);
 								break;
-							case Overlay_Theater:
+							case OVERLAY_THEATER:
 								drawBuildingTopForTheaterOverlay(gridOffset, b, xGraphic, yGraphic);
 								break;
-							case Overlay_Amphitheater:
+							case OVERLAY_AMPHITHEATER:
 								drawBuildingTopForAmphitheaterOverlay(gridOffset, b, xGraphic, yGraphic);
 								break;
-							case Overlay_Colosseum:
+							case OVERLAY_COLOSSEUM:
 								drawBuildingTopForColosseumOverlay(gridOffset, b, xGraphic, yGraphic);
 								break;
-							case Overlay_Hippodrome:
+							case OVERLAY_HIPPODROME:
 								drawBuildingTopForHippodromeOverlay(gridOffset, b, xGraphic, yGraphic);
 								break;
-							case Overlay_Religion:
+							case OVERLAY_RELIGION:
 								drawBuildingTopForReligionOverlay(gridOffset, b, xGraphic, yGraphic);
 								break;
-							case Overlay_Education:
+							case OVERLAY_EDUCATION:
 								drawBuildingTopForEducationOverlay(gridOffset, b, xGraphic, yGraphic);
 								break;
-							case Overlay_School:
+							case OVERLAY_SCHOOL:
 								drawBuildingTopForSchoolOverlay(gridOffset, b, xGraphic, yGraphic);
 								break;
-							case Overlay_Library:
+							case OVERLAY_LIBRARY:
 								drawBuildingTopForLibraryOverlay(gridOffset, b, xGraphic, yGraphic);
 								break;
-							case Overlay_Academy:
+							case OVERLAY_ACADEMY:
 								drawBuildingTopForAcademyOverlay(gridOffset, b, xGraphic, yGraphic);
 								break;
-							case Overlay_Barber:
+							case OVERLAY_BARBER:
 								drawBuildingTopForBarberOverlay(gridOffset, b, xGraphic, yGraphic);
 								break;
-							case Overlay_Bathhouse:
+							case OVERLAY_BATHHOUSE:
 								drawBuildingTopForBathhouseOverlay(gridOffset, b, xGraphic, yGraphic);
 								break;
-							case Overlay_Clinic:
+							case OVERLAY_CLINIC:
 								drawBuildingTopForClinicsOverlay(gridOffset, b, xGraphic, yGraphic);
 								break;
-							case Overlay_Hospital:
+							case OVERLAY_HOSPITAL:
 								drawBuildingTopForHospitalOverlay(gridOffset, b, xGraphic, yGraphic);
 								break;
-							case Overlay_FoodStocks:
+							case OVERLAY_FOOD_STOCKS:
 								drawBuildingTopForFoodStocksOverlay(gridOffset, b, xGraphic, yGraphic);
 								break;
-							case Overlay_TaxIncome:
+							case OVERLAY_TAX_INCOME:
 								drawBuildingTopForTaxIncomeOverlay(gridOffset, b, xGraphic, yGraphic);
 								break;
-							case Overlay_Problems:
+							case OVERLAY_PROBLEMS:
 								drawBuildingTopForProblemsOverlay(gridOffset, b, xGraphic, yGraphic);
 								break;
 						}
@@ -222,23 +224,23 @@ void UI_CityBuildings_drawOverlayTopsFiguresAnimation(int overlay)
 			if (map_building_at(gridOffset)) {
 				int btype = building_get(map_building_at(gridOffset))->type;
 				switch (overlay) {
-					case Overlay_Fire:
-					case Overlay_Crime:
+					case OVERLAY_FIRE:
+					case OVERLAY_CRIME:
 						if (btype == BUILDING_PREFECTURE || btype == BUILDING_BURNING_RUIN) {
 							draw = 1;
 						}
 						break;
-					case Overlay_Damage:
+					case OVERLAY_DAMAGE:
 						if (btype == BUILDING_ENGINEERS_POST) {
 							draw = 1;
 						}
 						break;
-					case Overlay_Water:
+					case OVERLAY_WATER:
 						if (btype == BUILDING_RESERVOIR || btype == BUILDING_FOUNTAIN) {
 							draw = 1;
 						}
 						break;
-					case Overlay_FoodStocks:
+					case OVERLAY_FOOD_STOCKS:
 						if (btype == BUILDING_MARKET || btype == BUILDING_GRANARY) {
 							draw = 1;
 						}
@@ -494,35 +496,35 @@ static void drawBuildingFootprintForOverlay(int buildingId, int gridOffset, int 
 		if (b->houseSize) {
 			graphicId += 4;
 		}
-		switch (Data_State.currentOverlay) {
-			case Overlay_Damage:
+		switch (game_state_overlay()) {
+			case OVERLAY_DAMAGE:
 				if (b->type == BUILDING_ENGINEERS_POST) {
 					graphicId = origGraphicId;
 				}
 				break;
-			case Overlay_Barber:
+			case OVERLAY_BARBER:
 				if (b->type == BUILDING_BARBER) {
 					graphicId = origGraphicId;
 				}
 				break;
-			case Overlay_Clinic:
+			case OVERLAY_CLINIC:
 				if (b->type == BUILDING_DOCTOR) {
 					graphicId = origGraphicId;
 				}
 				break;
-			case Overlay_Native:
+			case OVERLAY_NATIVE:
 				if (b->type == BUILDING_NATIVE_HUT) {
 					graphicId = origGraphicId;
 					graphicOffset = 0;
 				}
 				break;
-			case Overlay_Problems:
+			case OVERLAY_PROBLEMS:
 				if (b->showOnProblemOverlay) {
 					graphicId = origGraphicId;
 				}
 				break;
-			case Overlay_Fire:
-			case Overlay_Crime:
+			case OVERLAY_FIRE:
+			case OVERLAY_CRIME:
 				if (b->type == BUILDING_PREFECTURE || b->type == BUILDING_BURNING_RUIN) {
 					graphicId = origGraphicId;
 				}
@@ -532,56 +534,56 @@ static void drawBuildingFootprintForOverlay(int buildingId, int gridOffset, int 
 		DRAWFOOT_SIZE1(graphicId, xOffset, yOffset);
 	} else if (b->size == 2) {
 		int drawOrig = 0;
-		switch (Data_State.currentOverlay) {
-			case Overlay_Entertainment:
-			case Overlay_Theater:
+		switch (game_state_overlay()) {
+			case OVERLAY_ENTERTAINMENT:
+			case OVERLAY_THEATER:
 				if (b->type == BUILDING_THEATER) {
 					drawOrig = 1;
 				}
 				break;
-			case Overlay_Education:
+			case OVERLAY_EDUCATION:
 				if (b->type == BUILDING_SCHOOL || b->type == BUILDING_LIBRARY) {
 					drawOrig = 1;
 				}
 				break;
-			case Overlay_School:
+			case OVERLAY_SCHOOL:
 				if (b->type == BUILDING_SCHOOL) {
 					drawOrig = 1;
 				}
 				break;
-			case Overlay_Library:
+			case OVERLAY_LIBRARY:
 				if (b->type == BUILDING_LIBRARY) {
 					drawOrig = 1;
 				}
 				break;
-			case Overlay_Bathhouse:
+			case OVERLAY_BATHHOUSE:
 				if (b->type == BUILDING_BATHHOUSE) {
 					drawOrig = 1;
 				}
 				break;
-			case Overlay_Religion:
+			case OVERLAY_RELIGION:
 				if (b->type == BUILDING_ORACLE || b->type == BUILDING_SMALL_TEMPLE_CERES ||
 					b->type == BUILDING_SMALL_TEMPLE_NEPTUNE || b->type == BUILDING_SMALL_TEMPLE_MERCURY ||
 					b->type == BUILDING_SMALL_TEMPLE_MARS || b->type == BUILDING_SMALL_TEMPLE_VENUS) {
 					drawOrig = 1;
 				}
 				break;
-			case Overlay_FoodStocks:
+			case OVERLAY_FOOD_STOCKS:
 				if (b->type == BUILDING_MARKET || b->type == BUILDING_WHARF) {
 					drawOrig = 1;
 				}
 				break;
-			case Overlay_TaxIncome:
+			case OVERLAY_TAX_INCOME:
 				if (b->type == BUILDING_FORUM) {
 					drawOrig = 1;
 				}
 				break;
-			case Overlay_Native:
+			case OVERLAY_NATIVE:
 				if (b->type == BUILDING_NATIVE_MEETING || b->type == BUILDING_MISSION_POST) {
 					drawOrig = 1;
 				}
 				break;
-			case Overlay_Problems:
+			case OVERLAY_PROBLEMS:
 				if (b->showOnProblemOverlay) {
 					drawOrig = 1;
 				}
@@ -603,59 +605,59 @@ static void drawBuildingFootprintForOverlay(int buildingId, int gridOffset, int 
 		}
 	} else if (b->size == 3) {
 		int drawOrig = 0;
-		switch (Data_State.currentOverlay) {
-			case Overlay_Entertainment:
+		switch (game_state_overlay()) {
+			case OVERLAY_ENTERTAINMENT:
 				if (b->type == BUILDING_AMPHITHEATER || b->type == BUILDING_GLADIATOR_SCHOOL ||
 					b->type == BUILDING_LION_HOUSE || b->type == BUILDING_ACTOR_COLONY ||
 					b->type == BUILDING_CHARIOT_MAKER) {
 					drawOrig = 1;
 				}
 				break;
-			case Overlay_Theater:
+			case OVERLAY_THEATER:
 				if (b->type == BUILDING_ACTOR_COLONY) {
 					drawOrig = 1;
 				}
 				break;
-			case Overlay_Amphitheater:
+			case OVERLAY_AMPHITHEATER:
 				if (b->type == BUILDING_ACTOR_COLONY || b->type == BUILDING_GLADIATOR_SCHOOL ||
 					b->type == BUILDING_AMPHITHEATER) {
 					drawOrig = 1;
 				}
 				break;
-			case Overlay_Colosseum:
+			case OVERLAY_COLOSSEUM:
 				if (b->type == BUILDING_GLADIATOR_SCHOOL || b->type == BUILDING_LION_HOUSE) {
 					drawOrig = 1;
 				}
 				break;
-			case Overlay_Hippodrome:
+			case OVERLAY_HIPPODROME:
 				if (b->type == BUILDING_CHARIOT_MAKER) {
 					drawOrig = 1;
 				}
 				break;
-			case Overlay_Education:
-			case Overlay_Academy:
+			case OVERLAY_EDUCATION:
+			case OVERLAY_ACADEMY:
 				if (b->type == BUILDING_ACADEMY) {
 					drawOrig = 1;
 				}
 				break;
-			case Overlay_Hospital:
+			case OVERLAY_HOSPITAL:
 				if (b->type == BUILDING_HOSPITAL) {
 					drawOrig = 1;
 				}
 				break;
-			case Overlay_Religion:
+			case OVERLAY_RELIGION:
 				if (b->type == BUILDING_LARGE_TEMPLE_CERES || b->type == BUILDING_LARGE_TEMPLE_NEPTUNE ||
 					b->type == BUILDING_LARGE_TEMPLE_MERCURY || b->type == BUILDING_LARGE_TEMPLE_MARS ||
 					b->type == BUILDING_LARGE_TEMPLE_VENUS) {
 					drawOrig = 1;
 				}
 				break;
-			case Overlay_FoodStocks:
+			case OVERLAY_FOOD_STOCKS:
 				if (b->type == BUILDING_GRANARY) {
 					drawOrig = 1;
 				}
 				break;
-			case Overlay_Problems:
+			case OVERLAY_PROBLEMS:
 				if (b->showOnProblemOverlay) {
 					drawOrig = 1;
 				}
@@ -721,28 +723,28 @@ static void drawBuildingFootprintForOverlay(int buildingId, int gridOffset, int 
 		}
 	} else if (b->size == 5) {
 		int drawOrig = 0;
-		switch (Data_State.currentOverlay) {
-			case Overlay_Entertainment:
+		switch (game_state_overlay()) {
+			case OVERLAY_ENTERTAINMENT:
 				if (b->type == BUILDING_HIPPODROME || b->type == BUILDING_COLOSSEUM) {
 					drawOrig = 1;
 				}
 				break;
-			case Overlay_Colosseum:
+			case OVERLAY_COLOSSEUM:
 				if (b->type == BUILDING_COLOSSEUM) {
 					drawOrig = 1;
 				}
 				break;
-			case Overlay_Hippodrome:
+			case OVERLAY_HIPPODROME:
 				if (b->type == BUILDING_HIPPODROME) {
 					drawOrig = 1;
 				}
 				break;
-			case Overlay_TaxIncome:
+			case OVERLAY_TAX_INCOME:
 				if (b->type == BUILDING_SENATE_UPGRADED) {
 					drawOrig = 1;
 				}
 				break;
-			case Overlay_Problems:
+			case OVERLAY_PROBLEMS:
 				if (b->showOnProblemOverlay) {
 					drawOrig = 1;
 				}

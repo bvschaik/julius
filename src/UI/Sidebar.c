@@ -17,6 +17,7 @@
 #include "city/message.h"
 #include "city/warning.h"
 #include "core/direction.h"
+#include "game/state.h"
 #include "game/tutorial.h"
 #include "game/undo.h"
 #include "input/scroll.h"
@@ -238,8 +239,8 @@ static void drawButtons()
 static void drawOverlayText(int xOffset)
 {
 	if (!Data_State.sidebarCollapsed) {
-		if (Data_State.currentOverlay) {
-			Widget_GameText_drawCentered(14, Data_State.currentOverlay, xOffset, 32, 117, FONT_NORMAL_GREEN);
+		if (game_state_overlay()) {
+			Widget_GameText_drawCentered(14, game_state_overlay(), xOffset, 32, 117, FONT_NORMAL_GREEN);
 		} else {
 			Widget_GameText_drawCentered(6, 4, xOffset, 32, 117, FONT_NORMAL_GREEN);
 		}

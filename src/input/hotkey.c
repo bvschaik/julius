@@ -18,6 +18,7 @@
 #include "city/warning.h"
 #include "figure/formation.h"
 #include "game/settings.h"
+#include "game/state.h"
 #include "input/scroll.h"
 #include "map/bookmark.h"
 #include "map/grid.h"
@@ -52,9 +53,7 @@ static void toggle_overlay()
 {
     exit_military_command();
     if (UI_Window_getId() == Window_City) {
-        int tmp = Data_State.previousOverlay;
-        Data_State.previousOverlay = Data_State.currentOverlay;
-        Data_State.currentOverlay = tmp;
+        game_state_toggle_overlay();
         UI_Window_requestRefresh();
     }
 }
@@ -64,12 +63,10 @@ static void show_overlay(int overlay)
     exit_military_command();
     WindowId window = UI_Window_getId();
     if (window == Window_City) {
-        if (Data_State.currentOverlay == overlay) {
-            Data_State.previousOverlay = overlay;
-            Data_State.currentOverlay = 0;
+        if (game_state_overlay() == overlay) {
+            game_state_set_overlay(OVERLAY_NONE);
         } else {
-            Data_State.previousOverlay = 0;
-            Data_State.currentOverlay = overlay;
+            game_state_set_overlay(overlay);
         }
         UI_Window_requestRefresh();
     }
@@ -79,11 +76,7 @@ static void toggle_pause()
 {
     exit_military_command();
     if (UI_Window_getId() == Window_City) {
-        if (Data_State.gamePaused) {
-            Data_State.gamePaused = 0;
-        } else {
-            Data_State.gamePaused = 1;
-        }
+        game_state_toggle_paused();
         city_warning_clear_all();
     }
 }
@@ -188,19 +181,19 @@ void hotkey_character(int c)
             toggle_pause();
             break;
         case 'F': case 'f':
-            show_overlay(Overlay_Fire);
+            show_overlay(OVERLAY_FIRE);
             break;
         case 'D': case 'd':
-            show_overlay(Overlay_Damage);
+            show_overlay(OVERLAY_DAMAGE);
             break;
         case 'C': case 'c':
-            show_overlay(Overlay_Crime);
+            show_overlay(OVERLAY_CRIME);
             break;
         case 'T': case 't':
-            show_overlay(Overlay_Problems);
+            show_overlay(OVERLAY_PROBLEMS);
             break;
         case 'W': case 'w':
-            show_overlay(Overlay_Water);
+            show_overlay(OVERLAY_WATER);
             break;
         case 'L': case 'l':
             cycle_legion();

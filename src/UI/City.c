@@ -9,6 +9,7 @@
 #include "../Data/State.h"
 
 #include "city/message.h"
+#include "game/state.h"
 #include "game/time.h"
 #include "scenario/criteria.h"
 
@@ -70,7 +71,7 @@ void UI_City_drawPausedAndTimeLeft()
 		int width = Widget_GameText_draw(6, 3, 6, 29, FONT_NORMAL_BLACK);
 		Widget_Text_drawNumber(totalMonths, '@', " ", 6 + width, 29, FONT_NORMAL_BLACK);
 	}
-	if (Data_State.gamePaused) {
+	if (game_state_is_paused()) {
 		int width = Data_CityView.widthInPixels;
 		Widget_Panel_drawOuterPanel((width - 448) / 2, 40, 28, 3);
 		Widget_GameText_drawCentered(13, 2,

@@ -4,7 +4,8 @@
 #include "../Widget.h"
 
 #include "../Data/CityView.h"
-#include "../Data/State.h"
+
+#include "game/state.h"
 
 static void handleSubmenu();
 
@@ -134,12 +135,8 @@ static void handleSubmenu()
 static void buttonMenuItem(int index, int param2)
 {
 	int overlay = menuIdToOverlayId[index];
-	if (!overlay) {
-		Data_State.previousOverlay = Data_State.currentOverlay;
-		Data_State.currentOverlay = 0;
-	} else if (overlay == Overlay_Water || overlay == Overlay_Religion) {
-		Data_State.previousOverlay = 0;
-		Data_State.currentOverlay = overlay;
+	if (overlay == OVERLAY_NONE || overlay == OVERLAY_WATER || overlay == OVERLAY_RELIGION) {
+		game_state_set_overlay(overlay);
 	}
 	UI_Window_goTo(Window_City);
 }
@@ -148,12 +145,7 @@ static void buttonSubmenuItem(int index, int param2)
 {
 	int overlay = submenuIdToOverlayId[selectedSubmenu][index];
 	if (overlay) {
-		if (Data_State.currentOverlay) {
-			Data_State.previousOverlay = 0;
-		} else {
-			Data_State.previousOverlay = Data_State.currentOverlay;
-		}
-		Data_State.currentOverlay = overlay;
+		game_state_set_overlay(overlay);
 	}
 	UI_Window_goTo(Window_City);
 }

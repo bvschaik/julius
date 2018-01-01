@@ -2,12 +2,12 @@
 #include "Window.h"
 
 #include "../Data/Screen.h"
-#include "../Data/State.h"
 
 #include "../Graphics.h"
 #include "../Widget.h"
 
 #include "city/warning.h"
+#include "game/state.h"
 
 static const int TOP_OFFSETS[] = {30, 55, 80, 105, 130};
 
@@ -39,7 +39,7 @@ void UI_Warning_draw()
             continue;
         }
         int top_offset = TOP_OFFSETS[i];
-        if (Data_State.gamePaused) {
+        if (game_state_is_paused()) {
             top_offset += 70;
         }
         int box_width = determine_width(text);
