@@ -1069,36 +1069,3 @@ void TerrainGraphics_updateAreaRoads(int x, int y, int size)
 		}
 	});
 }
-
-int TerrainGraphics_getFreeTileForHerd(int x, int y, int allowNegDes, int *xTile, int *yTile)
-{
-	int xMin = x - 4;
-	int xMax = x + 4;
-	int yMin = y - 4;
-	int yMax = y + 4;
-	unsigned short disallowedTerrain = ~(TERRAIN_ACCESS_RAMP | TERRAIN_MEADOW);
-	int tileFound = 0;
-	int tileX = 0, tileY = 0;
-	map_grid_bound_area(&xMin, &yMin, &xMax, &yMax);
-	FOREACH_REGION({
-		if (!map_terrain_is(gridOffset, disallowedTerrain)) {
-			if (map_soldier_strength_get(gridOffset)) {
-				return 0;
-			}
-			int desirability = map_desirability_get(gridOffset);
-			if (allowNegDes) {
-				if (desirability > 1) {
-					return 0;
-				}
-			} else if (desirability) {
-				return 0;
-			}
-			tileFound = 1;
-			tileX = xx;
-			tileY = yy;
-		}
-	});
-	*xTile = tileX;
-	*yTile = tileY;
-	return tileFound;
-}

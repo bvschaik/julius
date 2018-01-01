@@ -94,6 +94,7 @@ set(FIGURE_FILES
     ${PROJECT_SOURCE_DIR}/src/figure/figure.c
     ${PROJECT_SOURCE_DIR}/src/figure/formation.c
     ${PROJECT_SOURCE_DIR}/src/figure/formation_enemy.c
+    ${PROJECT_SOURCE_DIR}/src/figure/formation_herd.c
     ${PROJECT_SOURCE_DIR}/src/figure/formation_layout.c
     ${PROJECT_SOURCE_DIR}/src/figure/formation_legion.c
     ${PROJECT_SOURCE_DIR}/src/figure/image.c
@@ -203,8 +204,6 @@ add_executable(julius
 	${PROJECT_SOURCE_DIR}/src/Building.c
 	${PROJECT_SOURCE_DIR}/src/CityInfo_Victory.c
 	${PROJECT_SOURCE_DIR}/src/CityView.c
-	${PROJECT_SOURCE_DIR}/src/Formation.c
-	${PROJECT_SOURCE_DIR}/src/FormationUpdate.c
 	${PROJECT_SOURCE_DIR}/src/Game.c
 	${PROJECT_SOURCE_DIR}/src/GameFile.c
 	${PROJECT_SOURCE_DIR}/src/GameTick.c

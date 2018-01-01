@@ -1,9 +1,14 @@
 #include "formation.h"
 
 #include "core/calc.h"
+#include "figure/enemy_army.h"
 #include "figure/figure.h"
+#include "figure/formation_enemy.h"
+#include "figure/formation_herd.h"
 #include "figure/formation_legion.h"
+#include "figure/properties.h"
 #include "map/grid.h"
+#include "sound/effect.h"
 
 #include "Data/CityInfo.h"
 
@@ -190,16 +195,7 @@ int formation_has_low_morale(formation *m)
     return m->months_low_morale || m->months_very_low_morale;
 }
 
-void formation_legion_set_max_figures()
-{
-    for (int i = 1; i < MAX_FORMATIONS; i++) {
-        if (formations[i].in_use && formations[i].is_legion) {
-            formations[i].max_figures = 16;
-        }
-    }
-}
-
-int formation_totals_get_num_legions()
+int formation_get_num_legions_cached()
 {
     return data.num_legions;
 }
@@ -281,6 +277,27 @@ void formation_change_morale(formation *m, int amount)
         }
     }
     m->morale = calc_bound(m->morale + amount, 0, max_morale);
+}
+
+void formation_update_morale_after_death(formation *m)
+{
+    formation_calculate_figures();
+    int pct_dead = calc_percentage(1, m->num_figures);
+    int morale;
+    if (pct_dead < 8) {
+        morale = -5;
+    } else if (pct_dead < 10) {
+        morale = -7;
+    } else if (pct_dead < 14) {
+        morale = -10;
+    } else if (pct_dead < 20) {
+        morale = -12;
+    } else if (pct_dead < 30) {
+        morale = -15;
+    } else {
+        morale = -20;
+    }
+    formation_change_morale(m, morale);
 }
 
 static void change_all_morale(int legion, int enemy)
@@ -447,20 +464,79 @@ void formation_move_herds_away(int x, int y)
     }
 }
 
-int formation_can_spawn_wolf(int formation_id)
+void formation_calculate_figures()
 {
-    formation *f = &formations[formation_id];
-    if (f->num_figures < f->max_figures && f->figure_type == FIGURE_WOLF) {
-        f->herd_wolf_spawn_delay++;
-        if (f->herd_wolf_spawn_delay > 32) {
-            f->herd_wolf_spawn_delay = 0;
-            return 1;
+    formation_clear_figures();
+    for (int i = 1; i < MAX_FIGURES; i++) {
+        figure *f = figure_get(i);
+        if (f->state != FigureState_Alive) {
+            continue;
+        }
+        if (!FigureIsLegion(f->type) && !FigureIsEnemy(f->type) && !FigureIsHerd(f->type)) {
+            continue;
+        }
+        if (f->type == FIGURE_ENEMY54_GLADIATOR) {
+            continue;
+        }
+        int index = formation_add_figure(f->formationId, i,
+            f->formationAtRest != 1, f->damage,
+            figure_properties_for_type(f->type)->max_damage
+        );
+        f->indexInFormation = index;
+    }
+
+    enemy_army_totals_clear();
+    for (int i = 1; i < MAX_FORMATIONS; i++) {
+        formation *m = formation_get(i);
+        if (m->in_use && !m->is_herd) {
+            if (m->is_legion) {
+                if (m->num_figures > 0) {
+                    int wasHalted = m->is_halted;
+                    m->is_halted = 1;
+                    for (int fig = 0; fig < m->num_figures; fig++) {
+                        int figureId = m->figures[fig];
+                        if (figureId && figure_get(figureId)->direction != DIR_8_NONE) {
+                            m->is_halted = 0;
+                        }
+                    }
+                    int total_strength = m->num_figures;
+                    if (m->figure_type == FIGURE_FORT_LEGIONARY) {
+                        total_strength += m->num_figures / 2;
+                    }
+                    enemy_army_totals_add_legion_formation(total_strength);
+                    if (m->figure_type == FIGURE_FORT_LEGIONARY) {
+                        if (!wasHalted && m->is_halted) {
+                            sound_effect_play(SOUND_EFFECT_FORMATION_SHIELD);
+                        }
+                    }
+                }
+            } else {
+                // enemy
+                if (m->num_figures <= 0) {
+                    formation_clear(m->id);
+                } else {
+                    enemy_army_totals_add_enemy_formation(m->num_figures);
+                }
+            }
         }
     }
-    return 0;
+
+    Data_CityInfo.militaryTotalLegionsEmpireService = 0;
+    Data_CityInfo.militaryTotalSoldiers = 0;
+    Data_CityInfo.militaryTotalLegions = 0;
+    for (int i = 1; i < MAX_FORMATIONS; i++) {
+        const formation *m = formation_get(i);
+        if (m->in_use && m->is_legion) {
+            Data_CityInfo.militaryTotalLegions++;
+            Data_CityInfo.militaryTotalSoldiers += m->num_figures;
+            if (m->empire_service && m->num_figures > 0) {
+                Data_CityInfo.militaryTotalLegionsEmpireService++;
+            }
+        }
+    }
 }
 
-void formation_update_direction(int formation_id, int first_figure_direction)
+static void update_direction(int formation_id, int first_figure_direction)
 {
     formation *f = &formations[formation_id];
     if (f->unknown_fired) {
@@ -498,6 +574,40 @@ void formation_update_direction(int formation_id, int first_figure_direction)
     }
     f->prev.x_home = f->x_home;
     f->prev.y_home = f->y_home;
+}
+
+static void update_directions()
+{
+    for (int i = 1; i < MAX_FORMATIONS; i++) {
+        formation *m = &formations[i];
+        if (m->in_use && !m->is_herd) {
+            update_direction(m->id, figure_get(m->figures[0])->direction);
+        }
+    }
+}
+
+static void set_legion_max_figures()
+{
+    for (int i = 1; i < MAX_FORMATIONS; i++) {
+        if (formations[i].in_use && formations[i].is_legion) {
+            formations[i].max_figures = 16;
+        }
+    }
+}
+
+void formation_update_all(int second_time)
+{
+    formation_calculate_legion_totals();
+    formation_calculate_figures();
+    update_directions();
+    formation_legion_decrease_damage();
+    if (!second_time) {
+        formation_update_monthly_morale_deployed();
+    }
+    set_legion_max_figures();
+    formation_legion_update();
+    formation_enemy_update();
+    formation_herd_update();
 }
 
 

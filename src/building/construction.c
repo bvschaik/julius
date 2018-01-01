@@ -499,7 +499,7 @@ void building_construction_update(int x, int y)
     } else if (type == BUILDING_WAREHOUSE) {
         map_building_tiles_mark_construction(x, y, 3, TERRAIN_ALL, 0);
     } else if (type == BUILDING_FORT_LEGIONARIES || type == BUILDING_FORT_JAVELIN || type == BUILDING_FORT_MOUNTED) {
-        if (formation_totals_get_num_legions() < 6) {
+        if (formation_get_num_legions_cached() < 6) {
             const int offsets_x[] = {3, 4, 4, 3};
             const int offsets_y[] = {-1, -1, 0, 0};
             int orient_index = Data_State.map.orientation / 2;

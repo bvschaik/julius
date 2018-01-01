@@ -2,7 +2,6 @@
 
 #include "Building.h"
 #include "CityInfo.h"
-#include "Formation.h"
 #include "GameFile.h"
 #include "HouseEvolution.h"
 #include "TerrainGraphics.h"
@@ -88,7 +87,7 @@ void GameTick_advance()
 		case 2: sound_music_update(); break;
 		case 3: UI_Sidebar_requestMinimapRefresh(); break;
 		case 4: city_emperor_update(); break;
-		case 5: Formation_Tick_updateAll(0); break;
+		case 5: formation_update_all(0); break;
 		case 6: map_natives_check_land(); break;
 		case 7: map_road_network_update(); break;
 		case 8: building_granaries_calculate_stocks(); break;
@@ -106,7 +105,7 @@ void GameTick_advance()
 		case 25: city_labor_update(); break;
 		case 27: map_water_supply_update_reservoir_fountain(); break;
 		case 28: map_water_supply_update_houses(); break;
-		case 29: Formation_Tick_updateAll(1); break;
+		case 29: formation_update_all(1); break;
 		case 30: UI_Sidebar_requestMinimapRefresh(); break;
 		case 31: building_figure_generate(); break;
 		case 32: city_trade_update(); break;

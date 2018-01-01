@@ -51,8 +51,6 @@ add_executable(autopilot
     ${PROJECT_SOURCE_DIR}/src/Building.c
     ${PROJECT_SOURCE_DIR}/src/CityInfo_Victory.c
     ${PROJECT_SOURCE_DIR}/src/CityView.c
-    ${PROJECT_SOURCE_DIR}/src/Formation.c
-    ${PROJECT_SOURCE_DIR}/src/FormationUpdate.c
     ${PROJECT_SOURCE_DIR}/src/Game.c
     ${PROJECT_SOURCE_DIR}/src/GameFile.c
     ${PROJECT_SOURCE_DIR}/src/GameTick.c

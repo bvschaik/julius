@@ -3,8 +3,6 @@
 #include "AllWindows.h"
 #include "MessageDialog.h"
 
-#include "../Formation.h"
-
 #include "city/constants.h"
 #include "city/culture.h"
 #include "city/finance.h"
@@ -12,6 +10,7 @@
 #include "city/ratings.h"
 #include "city/resource.h"
 #include "city/warning.h"
+#include "figure/formation.h"
 #include "game/settings.h"
 #include "game/tutorial.h"
 
@@ -95,7 +94,7 @@ void UI_Advisors_init()
 	city_culture_update_coverage();
 
 	city_resource_calculate_food_stocks_and_supply_wheat();
-	Formation_calculateFigures();
+	formation_calculate_figures();
 
 	city_ratings_update_explanations();
 

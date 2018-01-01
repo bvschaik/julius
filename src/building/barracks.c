@@ -10,7 +10,6 @@
 #include "map/road_access.h"
 
 #include "Data/CityInfo.h"
-#include "../Formation.h"
 
 int building_get_barracks_for_weapon(int resource, int road_network_id, int *x_dst, int *y_dst)
 {
@@ -114,7 +113,7 @@ int building_barracks_create_soldier(building *barracks, int x, int y)
             f->actionState = FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT;
         }
     }
-    Formation_calculateFigures();
+    formation_calculate_figures();
     return formation_id ? 1 : 0;
 }
 

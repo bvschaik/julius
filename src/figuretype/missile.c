@@ -10,7 +10,6 @@
 #include "sound/effect.h"
 
 #include "Data/State.h"
-#include "../Formation.h"
 
 static const int CLOUD_TILE_OFFSETS[] = {0, 0, 0, 1, 1, 2};
 
@@ -143,7 +142,7 @@ static void missile_hit_target(figure *f, int target_id, figure_type legionary_t
         target->actionState = FIGURE_ACTION_149_CORPSE;
         target->waitTicks = 0;
         figure_play_die_sound(target->type);
-        Formation_updateAfterDeath(m->id);
+        formation_update_morale_after_death(m);
     }
     f->state = FigureState_Dead;
     // for missiles: building_id contains the figure who shot it
@@ -235,7 +234,7 @@ void figure_bolt_action(figure *f)
             target->actionState = FIGURE_ACTION_149_CORPSE;
             target->waitTicks = 0;
             figure_play_die_sound(target->type);
-            Formation_updateAfterDeath(target->formationId);
+            formation_update_morale_after_death(formation_get(target->formationId));
         }
         sound_effect_play(SOUND_EFFECT_BALLISTA_HIT_PERSON);
         f->state = FigureState_Dead;

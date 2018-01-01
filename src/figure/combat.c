@@ -10,8 +10,6 @@
 #include "map/figure.h"
 #include "sound/effect.h"
 
-#include "../Formation.h"
-
 void figure_combat_handle_corpse(figure *f)
 {
     if (f->waitTicks < 0) {
@@ -54,7 +52,7 @@ static void hit_opponent(figure *f)
 {
     const formation *m = formation_get(f->formationId);
     figure *opponent = figure_get(f->opponentId);
-    const formation *opponent_formation = formation_get(opponent->formationId);
+    formation *opponent_formation = formation_get(opponent->formationId);
     
     const figure_properties *props = figure_properties_for_type(f->type);
     const figure_properties *opponent_props = figure_properties_for_type(opponent->type);
@@ -106,7 +104,7 @@ static void hit_opponent(figure *f)
         opponent->actionState = FIGURE_ACTION_149_CORPSE;
         opponent->waitTicks = 0;
         figure_play_die_sound(opponent->type);
-        Formation_updateAfterDeath(opponent->formationId);
+        formation_update_morale_after_death(opponent_formation);
     }
 }
 

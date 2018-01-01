@@ -146,9 +146,7 @@ void formation_caesar_pause();
 
 void formation_caesar_retreat();
 
-void formation_legion_set_max_figures();
-
-int formation_totals_get_num_legions();
+int formation_get_num_legions_cached();
 void formation_calculate_legion_totals();
 
 int formation_get_num_legions();
@@ -157,6 +155,7 @@ int formation_for_legion(int legion_index);
 
 void formation_change_morale(formation *m, int amount);
 int formation_has_low_morale(formation *m);
+void formation_update_morale_after_death(formation *m);
 
 void formation_update_monthly_morale_deployed();
 void formation_update_monthly_morale_at_rest();
@@ -171,9 +170,10 @@ void formation_clear_figures();
 int formation_add_figure(int formation_id, int figure_id, int deployed, int damage, int max_damage);
 
 void formation_move_herds_away(int x, int y);
-int formation_can_spawn_wolf(int formation_id);
 
-void formation_update_direction(int formation_id, int first_figure_direction);
+void formation_calculate_figures();
+
+void formation_update_all(int second_time);
 
 
 void formations_save_state(buffer *buf, buffer *totals);

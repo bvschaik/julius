@@ -2,7 +2,6 @@
 #include "Window.h"
 
 #include "../CityView.h"
-#include "../Formation.h"
 
 #include "figure/formation_legion.h"
 #include "map/grid.h"
@@ -192,7 +191,7 @@ static void buttonEmpireService(int legionId, int param2)
 {
 	int formationId = formation_for_legion(legionId);
     formation_toggle_empire_service(formationId);
-	Formation_calculateFigures();
+	formation_calculate_figures();
 	UI_Window_requestRefresh();
 }
 

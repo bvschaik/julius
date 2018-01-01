@@ -12,7 +12,6 @@
 #include "scenario/distant_battle.h"
 
 #include "Data/CityInfo.h"
-#include "../Formation.h"
 
 int formation_legion_create_for_fort(building *fort)
 {
@@ -79,7 +78,7 @@ void formation_legion_update_recruit_status(building *fort)
                 tooMany--;
             }
         }
-        Formation_calculateFigures();
+        formation_calculate_figures();
     }
 }
 
@@ -293,7 +292,7 @@ int formation_legion_curse()
         }
     }
     best_legion->cursed_by_mars = 96;
-    Formation_calculateFigures();
+    formation_calculate_figures();
     return 1;
 }
 
@@ -364,6 +363,20 @@ void formation_legion_update()
                 }
             } else {
                 formation_legion_restore_layout(m);
+            }
+        }
+    }
+}
+
+void formation_legion_decrease_damage()
+{
+    for (int i = 1; i < MAX_FIGURES; i++) {
+        figure *f = figure_get(i);
+        if (f->state == FigureState_Alive && FigureIsLegion(f->type)) {
+            if (f->actionState == FIGURE_ACTION_80_SOLDIER_AT_REST) {
+                if (f->damage) {
+                    f->damage--;
+                }
             }
         }
     }

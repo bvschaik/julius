@@ -34,4 +34,6 @@ int formation_legion_at_building(int grid_offset);
 
 void formation_legion_update();
 
+void formation_legion_decrease_damage();
+
 #endif // FIGURE_FORMATION_LEGION_H
