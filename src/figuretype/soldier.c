@@ -221,7 +221,7 @@ static void update_image(figure *f, const formation *m)
 
 void figure_soldier_action(figure *f)
 {
-    const formation *m = formation_get(f->formationId);
+    formation *m = formation_get(f->formationId);
     Data_CityInfo.numSoldiersInCity++;
     f->terrainUsage = FigureTerrainUsage_Any;
     figure_image_increase_offset(f, 12);
@@ -335,7 +335,7 @@ void figure_soldier_action(figure *f)
             }
             break;
         case FIGURE_ACTION_85_SOLDIER_GOING_TO_MILITARY_ACADEMY:
-            formation_legion_set_trained(m->id);
+            m->has_military_training = 1;
             f->formationAtRest = 1;
             figure_movement_move_ticks(f, speed_factor);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {

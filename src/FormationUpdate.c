@@ -12,6 +12,7 @@
 #include "figure/enemy_army.h"
 #include "figure/formation.h"
 #include "figure/formation_layout.h"
+#include "figure/formation_legion.h"
 #include "figure/route.h"
 #include "map/figure.h"
 #include "map/grid.h"
@@ -202,7 +203,7 @@ static void tickUpdateLegions()
                     }
 				}
 			} else {
-				formation_restore_layout(m);
+				formation_legion_restore_layout(m);
 			}
 		}
 	}

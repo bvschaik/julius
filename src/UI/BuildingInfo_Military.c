@@ -496,7 +496,7 @@ static void buttonLayout(int index, int param2)
 			case 4: new_layout = FORMATION_MOP_UP; break;
 		}
 	}
-	formation_change_layout(m, new_layout);
+	formation_legion_change_layout(m, new_layout);
 	switch (index) {
 		case 0: sound_speech_play_file("wavs/cohort1.wav"); break;
 		case 1: sound_speech_play_file("wavs/cohort2.wav"); break;

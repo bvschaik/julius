@@ -80,6 +80,21 @@ void formation_legion_update_recruit_status(building *fort)
     }
 }
 
+void formation_legion_change_layout(formation *m, int new_layout)
+{
+    if (new_layout == FORMATION_MOP_UP && m->layout != FORMATION_MOP_UP) {
+        m->prev.layout = m->layout;
+    }
+    m->layout = new_layout;
+}
+
+void formation_legion_restore_layout(formation *m)
+{
+    if (m->layout == FORMATION_MOP_UP) {
+        m->layout = m->prev.layout;
+    }
+}
+
 static int prepare_to_move(formation *m)
 {
     if (m->months_very_low_morale || m->months_low_morale > 1) {
@@ -134,7 +149,7 @@ void formation_legion_return_home(formation *m)
         return;
     }
     m->is_at_fort = 1;
-    formation_restore_layout(m);
+    formation_legion_restore_layout(m);
     for (int i = 0; i < MAX_FORMATION_FIGURES && m->figures[i]; i++) {
         figure *f = figure_get(m->figures[i]);
         if (f->actionState == FIGURE_ACTION_149_CORPSE ||

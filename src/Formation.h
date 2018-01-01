@@ -3,8 +3,6 @@
 
 #include "building/building.h"
 
-void Formation_deleteFortAndBanner(int formationId);
-
 void Formation_calculateLegionTotals();
 int Formation_getClosestMilitaryAcademy(int formationId);
 

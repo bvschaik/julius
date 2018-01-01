@@ -1,6 +1,7 @@
 #include "formation.h"
 
 #include "core/calc.h"
+#include "figure/formation_legion.h"
 
 #include <string.h>
 
@@ -141,21 +142,6 @@ void formation_set_cursed(int formation_id)
     formations[formation_id].cursed_by_mars = 96;
 }
 
-void formation_change_layout(formation *m, int new_layout)
-{
-    if (new_layout == FORMATION_MOP_UP && m->layout != FORMATION_MOP_UP) {
-        m->prev.layout = m->layout;
-    }
-    m->layout = new_layout;
-}
-
-void formation_restore_layout(formation *m)
-{
-    if (m->layout == FORMATION_MOP_UP) {
-        m->layout = m->prev.layout;
-    }
-}
-
 void formation_toggle_empire_service(int formation_id)
 {
     formations[formation_id].empire_service = formations[formation_id].empire_service ? 0 : 1;
@@ -238,11 +224,6 @@ int formation_has_low_morale(int formation_id)
 {
     return formations[formation_id].months_low_morale ||
            formations[formation_id].months_very_low_morale;
-}
-
-void formation_legion_set_trained(int formation_id)
-{
-    formations[formation_id].has_military_training = 1;
 }
 
 void formation_legion_set_max_figures()
@@ -383,7 +364,7 @@ void formation_update_monthly_morale_at_rest()
                 f->months_very_low_morale = 0;
                 f->months_low_morale = 0;
                 formation_change_morale(i, 5);
-                formation_restore_layout(f);
+                formation_legion_restore_layout(f);
             } else if (!f->recent_fight) {
                 f->months_from_home++;
                 if (f->months_from_home > 3) {

@@ -138,10 +138,6 @@ formation_state *formation_get_state(int formation_id);
 void formation_set_halted(int formation_id, int halted);
 void formation_set_cursed(int formation_id);
 
-void formation_change_layout(formation *m, int new_layout);
-
-void formation_restore_layout(formation *m);
-
 void formation_toggle_empire_service(int formation_id);
 
 void formation_record_missile_fired(int formation_id);
@@ -158,7 +154,6 @@ void formation_foreach(void (*callback)(const formation*));
 void formation_foreach_herd(void (*callback)(const formation*));
 void formation_foreach_non_herd(void (*callback)(const formation*, void*), void *data);
 
-void formation_legion_set_trained(int formation_id);
 void formation_legion_set_max_figures();
 
 int formation_totals_get_num_legions();
