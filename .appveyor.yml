@@ -28,3 +28,6 @@ after_build:
   - mingw32-make test
   - dir
 
+artifacts:
+  - path: build\julius.exe
+    name: julius
