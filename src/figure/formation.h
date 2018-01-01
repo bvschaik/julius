@@ -143,7 +143,7 @@ void formation_record_missile_fired(formation *m);
 void formation_record_missile_attack(formation *m, int from_formation_id);
 void formation_record_fight(formation *m);
 
-int formation_for_invasion(int invasion_sequence);
+int formation_grid_offset_for_invasion(int invasion_sequence);
 
 void formation_caesar_pause();
 

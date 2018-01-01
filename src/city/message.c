@@ -4,10 +4,10 @@
 #include "core/lang.h"
 #include "core/string.h"
 #include "core/time.h"
+#include "figure/formation.h"
 #include "game/time.h"
 #include "sound/effect.h"
 
-#include "Formation.h"
 #include "UI/Tooltip.h"
 #include "UI/MessageDialog.h"
 #include "UI/Window.h"
@@ -430,7 +430,7 @@ int city_message_next_problem_area_grid_offset()
             const lang_message *lang_msg = lang_get_message(city_message_get_text_id(msg->message_type));
             lang_message_type lang_message_type = lang_msg->message_type;
             if (lang_message_type == MESSAGE_TYPE_DISASTER || lang_message_type == MESSAGE_TYPE_INVASION) {
-                if (lang_message_type != MESSAGE_TYPE_INVASION || Formation_getInvasionGridOffset(msg->param1) > 0) {
+                if (lang_message_type != MESSAGE_TYPE_INVASION || formation_grid_offset_for_invasion(msg->param1) > 0) {
                     data.problem_count++;
                 }
             }
@@ -451,13 +451,13 @@ int city_message_next_problem_area_grid_offset()
             int text_id = city_message_get_text_id(msg->message_type);
             lang_message_type langMessageType = lang_get_message(text_id)->message_type;
             if (langMessageType == MESSAGE_TYPE_DISASTER || langMessageType == MESSAGE_TYPE_INVASION) {
-                if (langMessageType != MESSAGE_TYPE_INVASION || Formation_getInvasionGridOffset(msg->param1) > 0) {
+                if (langMessageType != MESSAGE_TYPE_INVASION || formation_grid_offset_for_invasion(msg->param1) > 0) {
                     index++;
                     if (data.problem_index < index) {
                         data.problem_index++;
                         int gridOffset = msg->param2;
                         if (langMessageType == MESSAGE_TYPE_INVASION) {
-                            gridOffset = Formation_getInvasionGridOffset(msg->param1);
+                            gridOffset = formation_grid_offset_for_invasion(msg->param1);
                         }
                         return gridOffset;
                     }

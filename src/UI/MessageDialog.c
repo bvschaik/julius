@@ -4,7 +4,6 @@
 #include "Advisors.h"
 
 #include "../CityView.h"
-#include "../Formation.h"
 #include "../Graphics.h"
 #include "../Video.h"
 #include "../Widget.h"
@@ -15,6 +14,7 @@
 #include "city/message.h"
 #include "core/lang.h"
 #include "empire/city.h"
+#include "figure/formation.h"
 #include "scenario/property.h"
 #include "scenario/request.h"
 
@@ -547,7 +547,7 @@ static void buttonGoToProblem(int param1, int param2)
 	const lang_message *msg = lang_get_message(data.textId);
 	int gridOffset = playerMessage.param2;
 	if (msg->message_type == MESSAGE_TYPE_INVASION) {
-		int invasionGridOffset = Formation_getInvasionGridOffset(playerMessage.param1);
+		int invasionGridOffset = formation_grid_offset_for_invasion(playerMessage.param1);
 		if (invasionGridOffset > 0) {
 			gridOffset = invasionGridOffset;
 		}

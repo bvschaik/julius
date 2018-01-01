@@ -188,19 +188,6 @@ void Formation_updateAfterDeath(int formationId)
 	formation_change_morale(formationId, morale);
 }
 
-int Formation_getInvasionGridOffset(int invasionSeq)
-{
-    int formationId = formation_for_invasion(invasionSeq);
-    if (formationId) {
-        const formation *m = formation_get(formationId);
-        if (m->x_home > 0 || m->y_home > 0) {
-            return map_grid_offset(m->x_home, m->y_home);
-        }
-    }
-    return 0;
-}
-
-
 int Formation_marsCurseFort()
 {
 	int bestLegionId = 0;

@@ -2,6 +2,7 @@
 
 #include "core/calc.h"
 #include "figure/formation_legion.h"
+#include "map/grid.h"
 
 #include <string.h>
 
@@ -158,12 +159,16 @@ void formation_record_fight(formation *m)
     m->recent_fight = 6;
 }
 
-int formation_for_invasion(int invasion_sequence)
+int formation_grid_offset_for_invasion(int invasion_sequence)
 {
     for (int i = 1; i < MAX_FORMATIONS; i++) {
-        formation *f = &formations[i];
-        if (f->in_use == 1 && !f->is_legion && !f->is_herd && f->invasion_sequence == invasion_sequence) {
-            return i;
+        formation *m = &formations[i];
+        if (m->in_use == 1 && !m->is_legion && !m->is_herd && m->invasion_sequence == invasion_sequence) {
+            if (m->x_home > 0 || m->y_home > 0) {
+                return map_grid_offset(m->x_home, m->y_home);
+            } else {
+                return 0;
+            }
         }
     }
     return 0;

@@ -21,7 +21,6 @@
 #include "Data/State.h"
 #include "Data/CityInfo.h"
 #include "../Building.h"
-#include "../Formation.h"
 #include "../Terrain.h"
 #include "../TerrainGraphics.h"
 

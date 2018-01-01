@@ -8,7 +8,6 @@ int Formation_getClosestMilitaryAcademy(int formationId);
 
 void Formation_updateAfterDeath(int formationId);
 
-int Formation_getInvasionGridOffset(int invasionSeq);
 int Formation_getLegionFormationAtGridOffset(int gridOffset);
 int Formation_getFormationForBuilding(int gridOffset);
 

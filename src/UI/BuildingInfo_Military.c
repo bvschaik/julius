@@ -1,6 +1,5 @@
 #include "BuildingInfo.h"
 
-#include "../Formation.h"
 #include "../Graphics.h"
 #include "../Widget.h"
 #include "../UI/Window.h"
