@@ -78,6 +78,7 @@ set(CITY_FILES
     ${PROJECT_SOURCE_DIR}/src/city/resource.c
     ${PROJECT_SOURCE_DIR}/src/city/sentiment.c
     ${PROJECT_SOURCE_DIR}/src/city/trade.c
+    ${PROJECT_SOURCE_DIR}/src/city/victory.c
     ${PROJECT_SOURCE_DIR}/src/city/warning.c
 )
 set(EMPIRE_FILES
@@ -202,7 +203,6 @@ set(SOUND_FILES
 add_executable(julius
 	${PLATFORM_FILES}
 	${PROJECT_SOURCE_DIR}/src/Building.c
-	${PROJECT_SOURCE_DIR}/src/CityInfo_Victory.c
 	${PROJECT_SOURCE_DIR}/src/CityView.c
 	${PROJECT_SOURCE_DIR}/src/Game.c
 	${PROJECT_SOURCE_DIR}/src/GameFile.c

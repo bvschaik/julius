@@ -1,6 +1,5 @@
 #include "AllWindows.h"
 
-#include "../CityInfo.h"
 #include "../Graphics.h"
 #include "../Widget.h"
 

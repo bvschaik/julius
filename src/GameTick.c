@@ -1,7 +1,6 @@
 #include "GameTick.h"
 
 #include "Building.h"
-#include "CityInfo.h"
 #include "GameFile.h"
 #include "HouseEvolution.h"
 #include "TerrainGraphics.h"
@@ -32,6 +31,7 @@
 #include "city/resource.h"
 #include "city/sentiment.h"
 #include "city/trade.h"
+#include "city/victory.h"
 #include "core/random.h"
 #include "empire/city.h"
 #include "figure/formation.h"
@@ -75,7 +75,7 @@ void GameTick_doTick()
 	scenario_earthquake_process();
 	scenario_gladiator_revolt_process();
 	scenario_emperor_change_process();
-	CityInfo_Victory_check();
+	city_victory_check();
 }
 
 void GameTick_advance()
@@ -154,7 +154,7 @@ static void advanceMonth()
 	scenario_request_process();
 	scenario_demand_change_process();
 	scenario_price_change_process();
-	CityInfo_Victory_updateMonthsToGovern();
+	city_victory_update_months_to_govern();
 	formation_update_monthly_morale_at_rest();
 	city_message_decrease_delays();
 
