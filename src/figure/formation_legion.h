@@ -16,4 +16,10 @@ void formation_legion_move_to(formation *m, int x, int y);
 
 void formation_legion_return_home(formation *m);
 
+void formation_legions_dispatch_to_distant_battle();
+
+void formation_legions_kill_in_distant_battle(int kill_percentage);
+
+void formation_legions_return_from_distant_battle();
+
 #endif // FIGURE_FORMATION_LEGION_H

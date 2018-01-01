@@ -16,10 +16,6 @@ int Formation_getFormationForBuilding(int gridOffset);
 
 void Formation_calculateFigures();
 
-void Formation_dispatchLegionsToDistantBattle();
-void Formation_legionsReturnFromDistantBattle();
-void Formation_legionKillSoldiersInDistantBattle(int killPercentage);
-
 int Formation_marsCurseFort();
 
 int Formation_Rioter_getTargetBuilding(int *xTile, int *yTile);

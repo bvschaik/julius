@@ -136,11 +136,9 @@ formation *formation_get(int formation_id);
 formation_state *formation_get_state(int formation_id);
 
 void formation_set_halted(int formation_id, int halted);
-void formation_set_distant_battle(int formation_id, int distant_battle);
-void formation_set_at_fort(int formation_id, int at_fort);
 void formation_set_cursed(int formation_id);
 
-void formation_change_layout(int formation_id, int new_layout);
+void formation_change_layout(formation *m, int new_layout);
 
 void formation_restore_layout(formation *m);
 

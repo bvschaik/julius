@@ -7,11 +7,11 @@
 #include "empire/city.h"
 #include "empire/object.h"
 #include "empire/type.h"
+#include "figure/formation_legion.h"
 #include "game/time.h"
 #include "scenario/data.h"
 
 #include "Data/CityInfo.h"
-#include "Formation.h"
 
 int scenario_distant_battle_roman_travel_months()
 {
@@ -87,7 +87,7 @@ static void update_aftermath()
                 city_message_post(1, MESSAGE_TROOPS_RETURN_VICTORIOUS, 0, Data_CityInfo.exitPointGridOffset);
             }
             Data_CityInfo.distantBattleRomanMonthsTraveled = 0;
-            Formation_legionsReturnFromDistantBattle();
+            formation_legions_return_from_distant_battle();
         }
     } else if (Data_CityInfo.distantBattleCityMonthsUntilRoman > 0) {
         Data_CityInfo.distantBattleCityMonthsUntilRoman--;
@@ -101,32 +101,32 @@ static void update_aftermath()
 static int player_has_won()
 {
     int won;
-    int pctLoss;
+    int pct_loss;
     if (Data_CityInfo.distantBattleRomanStrength < Data_CityInfo.distantBattleEnemyStrength) {
         won = 0;
-        pctLoss = 100;
+        pct_loss = 100;
     } else {
         won = 1;
         int pctAdvantage = calc_percentage(
             Data_CityInfo.distantBattleRomanStrength - Data_CityInfo.distantBattleEnemyStrength,
             Data_CityInfo.distantBattleRomanStrength);
         if (pctAdvantage < 10) {
-            pctLoss = 70;
+            pct_loss = 70;
         } else if (pctAdvantage < 25) {
-            pctLoss = 50;
+            pct_loss = 50;
         } else if (pctAdvantage < 50) {
-            pctLoss = 25;
+            pct_loss = 25;
         } else if (pctAdvantage < 75) {
-            pctLoss = 15;
+            pct_loss = 15;
         } else if (pctAdvantage < 100) {
-            pctLoss = 10;
+            pct_loss = 10;
         } else if (pctAdvantage < 150) {
-            pctLoss = 5;
+            pct_loss = 5;
         } else {
-            pctLoss = 0;
+            pct_loss = 0;
         }
     }
-    Formation_legionKillSoldiersInDistantBattle(pctLoss);
+    formation_legions_kill_in_distant_battle(pct_loss);
     return won;
 }
 

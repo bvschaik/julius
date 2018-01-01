@@ -136,28 +136,17 @@ void formation_set_halted(int formation_id, int halted)
     formations[formation_id].is_halted = halted;
 }
 
-void formation_set_at_fort(int formation_id, int at_fort)
-{
-    formations[formation_id].is_at_fort = at_fort;
-}
-
-void formation_set_distant_battle(int formation_id, int distant_battle)
-{
-    formations[formation_id].in_distant_battle = distant_battle;
-}
-
 void formation_set_cursed(int formation_id)
 {
     formations[formation_id].cursed_by_mars = 96;
 }
 
-void formation_change_layout(int formation_id, int new_layout)
+void formation_change_layout(formation *m, int new_layout)
 {
-    formation *f = &formations[formation_id];
-    if (new_layout == FORMATION_MOP_UP && f->layout != FORMATION_MOP_UP) {
-        f->prev.layout = f->layout;
+    if (new_layout == FORMATION_MOP_UP && m->layout != FORMATION_MOP_UP) {
+        m->prev.layout = m->layout;
     }
-    f->layout = new_layout;
+    m->layout = new_layout;
 }
 
 void formation_restore_layout(formation *m)

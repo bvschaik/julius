@@ -2,11 +2,10 @@
 #include "PopupDialog.h"
 #include "Window.h"
 
-#include "../Formation.h"
-
 #include "city/emperor.h"
 #include "city/finance.h"
 #include "empire/city.h"
+#include "figure/formation_legion.h"
 #include "scenario/property.h"
 #include "scenario/request.h"
 
@@ -279,7 +278,7 @@ static void confirmNothing(int accepted)
 static void confirmSendTroops(int accepted)
 {
 	if (accepted) {
-		Formation_dispatchLegionsToDistantBattle();
+		formation_legions_dispatch_to_distant_battle();
 		UI_Window_goTo(Window_Empire);
 	}
 }
