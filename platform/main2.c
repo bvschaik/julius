@@ -68,18 +68,6 @@ void handler(int sig) {
 #endif
 }
 
-void assert(const char *msg, int expected, int actual)
-{
-	if (expected != actual) {
-		printf("Assert failed: %s; expected: %d, actual %d\n", msg, expected, actual);
-	}
-}
-
-void sanityCheck()
-{
-	assert("City info", 2*18068, sizeof(Data_CityInfo));
-}
-
 void System_exit()
 {
 	SDL_Event event;
@@ -157,7 +145,7 @@ void System_initCursors()
 
 #include "../src/GameFile.h"
 
-void runTicks(int ticks)
+static void runTicks(int ticks)
 {
 	int originalSpeed = setting_game_speed();
 	setting_reset_speeds(100, setting_scroll_speed());
@@ -170,7 +158,7 @@ void runTicks(int ticks)
 	setting_reset_speeds(originalSpeed, setting_scroll_speed());
 }
 
-int runAutopilot(const char *savedGameToLoad, const char *savedGameToWrite, int ticksToRun)
+static int runAutopilot(const char *savedGameToLoad, const char *savedGameToWrite, int ticksToRun)
 {
 	autopilot = 1;
 	printf("Running autopilot: %s --> %s in %d ticks\n", savedGameToLoad, savedGameToWrite, ticksToRun);
@@ -198,9 +186,9 @@ int runAutopilot(const char *savedGameToLoad, const char *savedGameToWrite, int 
 	return 0;
 }
 
-Uint32 last;
+static Uint32 last;
 
-void refresh()
+static void refresh()
 {
 	static Uint32 lastFpsTime = 0;
 	static int lastFps = 0;
@@ -232,7 +220,7 @@ void refresh()
 	last = now;
 }
 
-void handleKey(SDL_KeyboardEvent *event)
+static void handleKey(SDL_KeyboardEvent *event)
 {
 	switch (event->keysym.sym) {
 		case SDLK_RETURN:
@@ -327,14 +315,14 @@ static void handleKeyUp(SDL_KeyboardEvent *event)
 	}
 }
 
-void handleText(SDL_TextInputEvent *event)
+static void handleText(SDL_TextInputEvent *event)
 {
 	if (event->text[0] && !event->text[1]) {
 		keyboard_character(event->text[0]);
 	}
 }
 
-void createWindowAndRenderer(int fullscreen)
+static void createWindowAndRenderer(int fullscreen)
 {
 	printf("Fullscreen? %d\n", fullscreen);
 	if (SDL.window) {
@@ -363,7 +351,7 @@ void createWindowAndRenderer(int fullscreen)
 	SDL.renderer = SDL_CreateRenderer(SDL.window, -1, SDL_RENDERER_PRESENTVSYNC);
 }
 
-void createSurface(int width, int height, int fullscreen)
+static void createSurface(int width, int height, int fullscreen)
 {
 	if (SDL.texture) {
 		SDL_DestroyTexture(SDL.texture);
@@ -411,7 +399,7 @@ void createSurface(int width, int height, int fullscreen)
 	}
 }
 
-void mainLoop()
+static void mainLoop()
 {
 	SDL_Event event;
 	SDL_Event refreshEvent;
@@ -532,7 +520,7 @@ void mainLoop()
 	}
 }
 
-void initSdl()
+static void initSdl()
 {
 	printf("Initializing SDL.\n");
 	
@@ -552,60 +540,12 @@ void initSdl()
 	Desktop.height = mode.h;
 }
 
-int runPerformance(const char *savedGameToLoad, int ticksToRun)
-{
-    printf("Running performance test on %s for %d ticks\n", savedGameToLoad, ticksToRun);
-    signal(SIGSEGV, handler);
-    initSdl();
-    chdir("../data");
-
-    if (!Game_preInit()) {
-        return 1;
-    }
-    
-    createWindowAndRenderer(0);
-    createSurface(1024, 768, 0);
-
-    if (!Game_init()) {
-        return 2;
-    }
-
-    GameFile_loadSavedGame(savedGameToLoad);
-    
-    int originalSpeed = setting_game_speed();
-    setting_reset_speeds(100, setting_scroll_speed());
-    time_set_millis(0);
-    for (int i = 1; i <= ticksToRun; i++) {
-        UI_Window_goTo(Window_City);
-        time_set_millis(2 * i);
-        Game_run();
-        Game_draw();
-        SDL_UpdateTexture(SDL.texture, NULL, Data_Screen.drawBuffer, Data_Screen.width * 4);
-        //SDL_RenderClear(SDL.renderer);
-        SDL_RenderCopy(SDL.renderer, SDL.texture, NULL, NULL);
-        SDL_RenderPresent(SDL.renderer);
-    }
-    setting_reset_speeds(originalSpeed, setting_scroll_speed());
-
-    
-    Game_exit();
-
-    // Shutdown all subsystems
-    SDL_Quit();
-    
-    return 0;
-}
-
 int main(int argc, char **argv)
 {
 	if (argc == 4) {
-		return runAutopilot(argv[1], argv[2], atoi(argv[3]));
-	} else if (argc == 3) {
-        return runPerformance(argv[1], atoi(argv[2]));
-    }
+		return runAutopilot(argv[1], argv[2], atoi(argv[3]));{}
+	}
 	signal(SIGSEGV, handler);
-	
-	sanityCheck();
 	
 	initSdl();
 	
